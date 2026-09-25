@@ -8096,3 +8096,34 @@ RUN_SCOPE: `source_digest 518d4f63076b77e3 → c2ef1a811e70bb4c`. 영수증 재�
 
 **하지 않은 것:** 계획 항목 작성/커밋 없음 · 본실행 없음 · 복원/재채점은 영수증 재생성뿐 · 리뷰어 스크립트 미실행 · 과거 레코드 재작성 없음.
 
+## §98 73차 접수 — **E3-R 종결 수용 · 조건부 한정 실행 GO** (62차 이후 첫 GO)
+
+2026-09-25 접수. 리뷰어 고정 요청/HEAD `b0c0b9ca10743d83950c29322d30f581fecf884d` · 코드 `7a7945564e6a94803b4d3bc72e8202534189ccdb` · 독립 계산 `source_digest c2ef1a811e70bb4c`
+(RUN_SCOPE 57 파일) · 코드→HEAD RUN_SCOPE diff 0 · 요청문 blob 동일 (6,735 bytes, sha256 `032cb437…`) · `cfacfe6b → b0c0b9ca` 문서 3개만 · 72차 ZIP 바이트 동일·48/48 · 등록부 367 불변 ·
+prospective `grid_fit_v5` 없음(검토자 미작성). 패키지 원본 `docs/22p_gap/gate73_review/` (zip sha256 `5999253ecf4cc16ef9ef48aaf01d81a669c737921d63423d3876d32c1141d73d`,
+MANIFEST 49 files · 커밋 뒤 blob 대조 49/49, `-text !eol` 규칙 먼저 커밋).
+
+**§3 답 (그대로):** ① E3-R §4.5 ①②③ 종결 **예** — "필수 비공백 문자열·실행 자리 일치가 멱등 반환보다 앞서 확인되며, 누락/불일치 거부와 과거 기록 비재작성 조건을 충족한다."
+② 한정 실행 GO **조건부 예** — "코드 `7a794556` / source_digest `c2ef1a811e70bb4c` 를 유지하고, 사람이 실행 기계에서 생성·확인한 `grid_fit_v5` prospective 항목을 커밋한 최종 승인 HEAD 및
+기존 E6/E9 조건에 한정한다." 새 차단 P1/P2 없음. "**현재 prospective 는 없으므로 지금 즉시 본 실행 가능 상태라는 뜻은 아니다.**"
+
+| 리뷰어가 직접 확인한 것 | 결과 |
+|---|---|
+| `_assert_ledger_run_bound` (:7864–7875) | 비공백 문자열 필수 · posix 정규화 · `bound_run` 대조 · 추측 채움 없음 |
+| attach 호출 순서 | lock 안에서 leg/evidence/status 읽은 뒤 **:7941 결속 → :7942 full_bundle 분기 → :7945 멱등** — 같은 receipt identity 로 out 결손/모순을 덮는 우회 닫힘 |
+| 국소 검사 16건 (실제 AST 본문 · inert 협력 함수 · 쓰기 차단 sink) | 6경우 표: pending 일치만 쓰기 지점 도달(차단), full_bundle 일치만 멱등, 나머지 거부 · 빈/공백/정수/리스트 ×2 상태 8건 · A06 · A07 실물 사본 — 전부 거부, fixture 바이트 불변 |
+| 실물 영수증·묶음 | reader/결속 양성, index 25 + 26 파일 집합·크기·SHA 일치 (재채점/복원 아님) |
+| 변이 | preimage 각 1회 · selector 겨냥 확인. **g72 변이의 5 node 실패 일부는 TypeError** (타입 검사 제거 뒤 Path 변환) — 의도된 PreserveError 계약 검증으로 수용하되 "다섯 경우 전부 승격 우회" 로 확대하지 않음 |
+| 구조 시험 제외 | `docs/22p_gap/gate…_review/` 아래 증거 사본 112개 제외, 나머지 48개 독립 AST 대조 — RUN_SCOPE 운영 경로와 교집합 없음 · 첫 회귀 실패 신고 유지 |
+
+**조건부 GO 의 경계 (§6, 그대로 받는다):**
+1. 사람이 **실행할 기계에서 현행 코드/환경으로** 계획 출력을 만들고 확인해 `grid_fit_v5` prospective 항목과 cohort 연결을 커밋한다. `authorized_source_digest` = **현재 `c2ef1a811e70bb4c`**. 과거 문서의 dry 출력·구 digest·다른 기계 캐시 식별을 복사하지 않는다.
+2. 실행 checkout = 그 계획을 담은 최종 승인 HEAD · 코드 기준 `7a794556` 과 RUN_SCOPE diff 0 · clean 시작 · `configs/grid_fine.yaml` · `results/grid_fit_v5` · 계획과 실제 환경/입력 식별 일치.
+3. E6 배타 운영 창 + 전후 등록부 snapshot 유지. 실행 중 pytest/smoke/다른 publisher/커밋 금지. 367 과거 기록 삭제·이관은 선행 조건이 아니다.
+4. E9: synthetic grid/fit 범위 · 정확 argv · `unset CANONICAL_RUN LEG` · archive→receipt→attach→사람의 역할 문구 순서 · 실패 즉시 정지 → 확인 → `--resume` 최대 1회 · finalize/archive/receipt/attach 실패의 자동 재실행 아님.
+5. E1·E2·E4 한계 라벨 · E6 운영 전제 · `inference_role` 자동 승격 없음 · 실셀 타당성/object-lock/power-loss/새 class 보증 없음.
+"이 조건이 충족된 합의된 synthetic grid/fit 한정 실행에 대한 리뷰 GO 다. 실행 결과 PASS 를 미리 부여하지 않는다."
+
+**다음 (사람의 단계):** 실행 기계에서 `python3 docs/22p_gap/plan_leg.py --leg grid_fit_v5 --cohort g18_2026_09_15 --config configs/grid_fine.yaml --out results/grid_fit_v5 --recorded-on <날짜> --근거 "…"` 의 출력을 사용자가 확인하고
+`LEG_PRESERVATION.yaml` `planned:` + cohort `prospective_legs` 에 넣어 커밋한다 (승인 행위). 이 컨테이너(HEAD `02dd7342`, `source_digest c2ef1a811e70bb4c`, nproc 4)에서 뽑은 dry 출력은 스크래치패드에만 두었다 —
+`discharged_cache_sha256` 은 **그 기계의 캐시 바이트**를 묶으므로(이 컨테이너에서 smoke 가 캐시를 다시 쓰면 값이 바뀐다 — 2026-09-24 `872b80e1…` → 2026-09-25 `00ebb05f…` 실측), 계획 커밋과 실행 시작 사이에 smoke/pytest 를 돌리지 않는다.

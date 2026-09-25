@@ -56,6 +56,10 @@ E3-R: 소비자가 짝·실제 일치·source fits·복원 자리·봉인 summar
 
 `_assert_ledger_run_bound`: out 필수(부재 = 미결속 거부) · full_bundle 멱등 반환보다 먼저 (`7a794556`, `tests/test_gate72_defensive.py` 10, 변이 g72 1 + g71 재조준). 실물 `paired_fixed5_v4` 는 out 없는 소급 다리 — 소급 채우지 않고 미결속 거부. 판정 대상 `7a794556` · `source_digest c2ef1a811e70bb4c`.
 
+## 73차 회신 (2026-09-25) — **E3-R 종결 수용 · 조건부 한정 실행 GO** (원장 §98)
+
+코드 `7a794556` · `source_digest c2ef1a811e70bb4c` 유지 + 사람이 실행 기계에서 생성·확인한 `grid_fit_v5` prospective 항목을 커밋한 최종 승인 HEAD + E6/E9 조건. 새 차단 없음. 현재 prospective 없음 = 아직 실행 가능 상태 아님.
+
 ## 다음
 
-`docs/22p_gap/GATE73_REQUEST.md` (한정 실행 GO 재요청) · ~~`docs/22p_gap/GATE72_REQUEST.md`~~ (한정 실행 GO 재요청) · ~~`docs/22p_gap/GATE71_REQUEST.md`~~ — 판정 대상 `876429562f6a69b59793c70700cb5b375391ab67` · `source_digest b705a21a1237ec73` 로 **한정 실행 GO** 를 묻는다 (원장 §92·§93). 발송문은 요청문 SHA + 브랜치 head SHA, 커밋 뒤 실측.
+**사람의 단계** — 실행 기계에서 `plan_leg.py` 출력 확인 → 원장 `planned:` + cohort `prospective_legs` 커밋(승인 행위) → 승인 HEAD 에서 E9-3 순서로 한정 실행. 요청문 이력: ~~`GATE73_REQUEST.md`~~ (한정 실행 GO 재요청) · ~~`docs/22p_gap/GATE72_REQUEST.md`~~ (한정 실행 GO 재요청) · ~~`docs/22p_gap/GATE71_REQUEST.md`~~ — 판정 대상 `876429562f6a69b59793c70700cb5b375391ab67` · `source_digest b705a21a1237ec73` 로 **한정 실행 GO** 를 묻는다 (원장 §92·§93). 발송문은 요청문 SHA + 브랜치 head SHA, 커밋 뒤 실측.
