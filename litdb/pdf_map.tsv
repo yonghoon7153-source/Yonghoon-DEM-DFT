@@ -118,6 +118,17 @@ wang2025_ai_ecosystems_electrolyte_interface_ssb	127. SciAdv_2025_Wang_Zeier_You
 #   ⭐ Fig. 1 이 이 논문을 구한 이유다 — 잃어버리면 digest 의 §4 근거가 사라진다.
 #   SI(Tables S1–S5)는 별도 PDF 이고 **우리 미확보**.
 #
+# ── σ_ion 측정 신뢰도 (연구실 간 round robin) ──────────────
+# 가드: 파일명이 출판사 SI 이름(nz9b02764_si_001.pdf)이라 제목 토큰이 안 겹친다 → 파일명 조각으로 잡는다.
+#   ⚠ **본문 PDF 없음 — SI 만** (사용자가 본문을 받을 수 없었다, 2026-09-25). 본문을 구하면 --pdf <본문> --pdf <SI> 로 추가하되 --clean 금지.
+ohno2020_interlab_ionic_conductivity_argyrodite	nz9b02764_si_001
+#   ↑ 2026-09-25. 자동 크롭 31장 + **손이 들어간 표 4장** (figures.json 의 note):
+#   tab_S8 = 자동 크로퍼가 '영역 없음' 으로 제외(8쪽 벡터 그래픽 0) → page 8(0-based 7) clip (51.4, 88.0, 539.3, 416.1) @300 dpi 수동.
+#   tab_S6 = 하단 각주 1–7 이 잘림 → y1 395.0 · tab_S10 = 마지막 행(시료 5 Average/St Dev)이 잘림 → y1 426.0 ·
+#   tab_S11 = 표 아래 주("8 → 11 점")까지 포함 → clip (51.4, 67.0, 727.0, 434.0).
+#   [!] '--slug ohno2020_interlab_ionic_conductivity_argyrodite --clean' 을 돌리면 tab_S8 이 사라지고 S6·S10·S11 이 다시 잘린다.
+#       ('--inbox --run --skip-done' 은 안전.) 재생성이 필요하면 위 bbox 를 그대로 다시 쓴다.
+#
 # ── CAM 고유 전달물성 (σ_e / σ_i 단상 펠릿) ──────────────
 # 가드: 파일명이 출판사 해시(1-s2.0-S037877531830466X-main.pdf / …-mmc1.pdf)라 제목 토큰이 안 겹친다
 #   → PII 조각으로 본문·SI 를 같이 잡는다 (SI 는 'mmc' 로 자동 판정).
