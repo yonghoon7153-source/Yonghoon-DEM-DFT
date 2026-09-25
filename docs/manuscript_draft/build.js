@@ -195,7 +195,7 @@ body.push(Cap('**Table S2.** Material parameters used for the microstructure and
    ['','Compaction pressure','300','MPa','Experimental value'],
    ['','Voxel edge length','0.15','μm','–'],
    ['NCM811','Particle radius','2.5','μm','Experimental value'],
-   ['','Young’s modulus','140','GPa','Ref. S6 (measured 138 ± 24)'],
+   ['','Young’s modulus','140','GPa','Ref. S6'],
    ['','Electronic conductivity','1.0 × 10^−2^','S cm^−1^','Effective value'],
    ['LPSCl','Particle radius','0.5','μm','Experimental value'],
    ['','Young’s modulus (dense)','24','GPa','Ref. S7'],
@@ -411,8 +411,9 @@ NOTE('D16.', '**DFT 파트와 규약을 맞췄다 (신규, 2026-08-23).** 같은
 NOTE('D17.', '**SI 참고문헌 정정 (2026-09-25, 원장 SELF-51 · CL-90 · CL-91).** 공저자 검토에서 NCM811 영률의 출처 S6 이 검색되지 '
 + '않는다는 지적 — 확인해 보니 그 인용 (옛 S6, "Wang 2020") 은 이 리포의 주석에서 원문 확인 없이 생겨 제목까지 붙은 것이었다 (인용 금지).  '
 + '⇒ S6 을 Sedlatschek *et al.*, *J. Power Sources* **681** (2026) 240276 으로 교체 — 원문 확인: 다결정 NCM811 나노압입 **138 ± 24 GPa** '
-+ '(압입 29 회, ν = 0.32 가정).  표의 140 은 **DEM 입력**이라 Source 에 측정값을 병기했다 — 140 이라는 숫자는 S6 에 없으니 *"140 GPa (S6)"* '
-+ '처럼 쓰지 말 것.  같은 부류의 값: NMC532 2차입자 142.5 ± 11.3 GPa (Xu *et al.*, *J. Electrochem. Soc.* **164** (2017) A3333).  '
++ '(압입 29 회, ν = 0.32 가정).  표의 140 은 **DEM 입력**이고 그 측정 범위 (평균의 95 % 구간 129–147) 안이라 Source 는 `Ref. S6` '
++ '로 충분하다 (사용자 결정 09-25 밤 — 측정값 병기는 선택).  같은 부류의 값: NMC532 2차입자 142.5 ± 11.3 GPa (Xu *et al.*, '
++ '*J. Electrochem. Soc.* **164** (2017) A3333).  '
 + '이온 전도도 행은 09-25 오후에 `Assumed` 로 바꿨다가 **되돌렸다** (철회) — Cronau 2021 (S8) 은 본문이 아니라 **SI 그림 S2c** 에 '
 + 'µC-Li_6_PS_5_Cl 펠릿의 적층압 ≥146 MPa 평탄 2.88–3.46 mS cm^−1^ (그림 판독) 을 준다.  3.0 은 그 하단이고, 단결정 값이 아니라 '
 + '입계를 포함한 펠릿값이라 행 이름의 *(grain interior)* 를 뺐다.  정본: docs/reviews/si_table_response_20260925.md §7.');

@@ -2302,7 +2302,7 @@
    "provenance": "원장 SELF-51 · docs/reviews/si_table_response_20260925.md §7-1",
    "reviews_work_dated": "2026-04-29 ~ 2026-08-24",
    "shared_input": null,
-   "verdict": "⇒ 이 인용은 **어디에도 쓰지 않는다** (등록부 `quotation_ban` 두 패턴).  값 140 GPa (NCM811 E) 는 측정 범위 안이라 재계산 불요 — 대체 출처 후보는 Sedlatschek *et al.*, J. Power Sources 681 (2026) 240276 (PDF 확인 전 인용 금지).  24 GPa 는 LPSCl 측정값이 아니라 Li2S–P2S5 유리 값 (Sakuda 2013).  ★ 교훈 = CLAUDE.md 작업 규율 ⑥: 원문을 보지 않은 서지는 제목·권호·값을 채우지 않고 `[미확인]` 으로 둔다."
+   "verdict": "⇒ 이 인용은 **어디에도 쓰지 않는다** (등록부 `quotation_ban` 두 패턴).  값 140 GPa (NCM811 E) 는 측정 범위 안이라 재계산 불요 — 대체 출처 후보는 Sedlatschek *et al.*, J. Power Sources 681 (2026) 240276 (PDF 확인 전 인용 금지).  24 GPa 는 LPSCl 측정값이 아니라 Li2S–P2S5 유리 값 (Sakuda 2013).  ★ 교훈 = CLAUDE.md 작업 규율 ⑥: 원문을 보지 않은 서지는 제목·권호·값을 채우지 않고 `[미확인]` 으로 둔다.  ✅ 갱신 09-25 밤 PDF 확인 (정본 canon 7d23f44d9): Sedlatschek 2026 나노압입 138 ± 24 GPa (n = 29, ν 0.32 가정) — 표는 \"140 GPa · Ref. S4\" (사용자 결정, 140 은 측정 범위 안)."
   },
   {
    "id": "CL-91",

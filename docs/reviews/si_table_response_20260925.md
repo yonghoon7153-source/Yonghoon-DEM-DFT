@@ -220,7 +220,7 @@ DBE/SBE 비 R̄ (8 origin 쌍대응 평균, vox 0.15 · centerline):
 | # | 행 | 값 | docx 라벨 | 판정 | 조치 |
 |---|---|---|---|---|---|
 | 1 | NCM811 입자 반지름 | 2.5 µm | Experimental value | ⚠ 출처 기록이 리포에 없다 (본문: *"sized after the experimental powders"*) | 측정 방법 · D50 확인 → 측정이면 `Measured` 로 #4 와 통일, 공급사 값이면 `Supplier data`.  D14 (원고의 다결정 기술 ↔ 침대의 AM_S 클래스) 와 함께 |
-| 2 | NCM811 영률 | 140 GPa | Ref. S4 | ⛔ **인용 불성립** (7-1).  값 140 은 측정 범위 안 | **교체 문헌 (사용자 제공 서지, 09-25)**: T. Sedlatschek *et al.*, *Characterization of the grain boundary strength of polycrystalline NMC811 using in situ micro tensile tests*, *J. Power Sources* **681** (2026) 240276 — 다결정 NMC811 나노압입 E = 138 ± 24 GPa (압입 29 회).  ✅ **PDF 확인 (09-25 밤 — 정본 카드 `sedlatschek2026_nmc811_grain_boundary_strength_micro_tensile`, canon `7d23f44d9`)**: 138 ± 24 GPa · ν 0.32 **가정** · 인장 165 ± 7 GPa (n = 3).  ⛔ 표에 *"140 GPa (Ref. S4)"* 처럼 쓰지 않는다 — **140 은 논문에 없다** (S5 와 같은 오귀속을 새로 만든다) → Source `Ref. S4 (measured 138 ± 24)` 또는 각주 (§8-2).  같은 부류: NMC532 2차입자 142.5 ± 11.3 GPa (Xu 2017, JES 164, A3333 — canon `eef51c83b`) |
+| 2 | NCM811 영률 | 140 GPa | Ref. S4 | ⛔ **인용 불성립** (7-1).  값 140 은 측정 범위 안 | **교체 문헌 (사용자 제공 서지, 09-25)**: T. Sedlatschek *et al.*, *Characterization of the grain boundary strength of polycrystalline NMC811 using in situ micro tensile tests*, *J. Power Sources* **681** (2026) 240276 — 다결정 NMC811 나노압입 E = 138 ± 24 GPa (압입 29 회).  ✅ **PDF 확인 (09-25 밤 — 정본 카드 `sedlatschek2026_nmc811_grain_boundary_strength_micro_tensile`, canon `7d23f44d9`)**: 138 ± 24 GPa · ν 0.32 **가정** · 인장 165 ± 7 GPa (n = 3).  ✅ **표는 *140 GPa · Ref. S4* 로 충분하다** (사용자 결정 09-25 밤 — *"모델로 140 을 채택했으면 140 이라 적고 그 reference 를 넣으면 된다"*): 140 은 측정값 138 ± 24 (평균의 95 % 구간 129–147) 안이고 접촉 강성 E/(1−ν²) 차도 3 % 안이다.  ~~표에 "140 GPa (Ref. S4)" 처럼 쓰지 않는다~~ (내 과한 제한 — 철회).  측정값 병기 (§8-2 ᶠ) 는 선택.  같은 부류: NMC532 2차입자 142.5 ± 11.3 GPa (Xu 2017, JES 164, A3333 — canon `eef51c83b`) |
 | 3 | NCM811 σ_e | 1.0 × 10⁻² S cm⁻¹ | Assumed | ✅ §1 (Wang 2018 원문 · Amin & Chiang 정본 카드) | `Assumed` 유지 + 각주 ᵃ — 결정 A/B 대기 |
 | 4 | LPSCl 입자 반지름 | 0.5 µm | Measured | ⚠ 출처 기록이 리포에 없다 | #1 과 같다 |
 | 5 | LPSCl 영률 (DEM 접촉) | 1.35 GPa | Calibrated | ✅ 보정값 (`docs/esse_calibration_2mAh_real_9.md`) | 각주에 보정 표적.  ⚠ docx 에서 `E (dense) 24 GPa` 행이 빠졌다 — 09-01 시트 §3-1 은 *"둘 다 남긴다 (지우면 연화 배수를 감춘다)"* 였다.  되살린다면 출처를 LPSCl 값으로 (Sakuda 2013 의 24 GPa 는 **75Li₂S·25P₂S₅ 유리**).  본문 *"(24 GPa)[34] is listed beside it in Table S2"* 도 표와 맞출 것 |
@@ -328,10 +328,10 @@ DBE/SBE 비 R̄ (8 origin 쌍대응 평균, vox 0.15 · centerline):
 
 | 행 | 값 | Source (최종) | 각주 |
 |---|---|---|---|
-| NCM811 Young's modulus | 140 GPa | `Ref. S4`ᶠ (S4 = Sedlatschek 2026 으로 교체) | ᶠ 아래 |
+| NCM811 Young's modulus | 140 GPa | `Ref. S4` (S4 = Sedlatschek 2026 으로 교체) | 없어도 된다 — ᶠ 는 측정값을 보여 주고 싶을 때만 (선택) |
 | LPSCl ionic conductivity | 3.0 × 10⁻³ S cm⁻¹ | `Ref. S5`ᵍ (유지) | ᵍ 아래 — 행 이름에 *(grain interior)* 를 쓰지 않는다 |
 
-> ᶠ DEM input.  Nanoindentation of polycrystalline NCM811 gave 138 ± 24 GPa (n = 29; ν = 0.32 assumed) [S4: T. Sedlatschek et al.,
+> ᶠ (선택) DEM input.  Nanoindentation of polycrystalline NCM811 gave 138 ± 24 GPa (n = 29; ν = 0.32 assumed) [S4: T. Sedlatschek et al.,
 > J. Power Sources 681 (2026) 240276]; pristine NMC532 secondary particles gave 142.5 ± 11.3 GPa [R. Xu et al., J. Electrochem. Soc.
 > 164 (2017) A3333].
 >
@@ -339,8 +339,10 @@ DBE/SBE 비 R̄ (8 origin 쌍대응 평균, vox 0.15 · centerline):
 > SI Fig. S2c of Ref. S5) — a grain-boundary-inclusive pellet value, not a single-crystal value.  An inter-laboratory study of one
 > Li₆PS₅Cl batch reported 0.44–2.98 mS cm⁻¹ at room temperature (Ohno et al., ACS Energy Lett. 2020).
 
-- ⛔ ᶠ 에 *"140 GPa (Sedlatschek 2026)"* 처럼 쓰지 않는다 — 140 은 그 논문에 없다.
+- ✅ 표는 *140 GPa · Ref. S4* 로 충분하다 (사용자 결정 09-25 밤) — 140 은 측정값 138 ± 24 (평균의 95 % 구간 129–147) 안이다.
+  ~~ᶠ 에 "140 GPa (Sedlatschek 2026)" 처럼 쓰지 않는다~~ (과한 제한이라 철회 — S5 사고는 *없는 인용* · *다른 양 (단결정)* 이었고, 이번은
+  실재하는 논문이 같은 양을 재서 그 범위 안에 있는 경우다).
 - ᵍ 의 Ohno 2020 은 **SI 만** 확인했다 — 권·쪽은 원문 미확인 (DOI 접미 `9b02764` 는 SI 파일명과 일치).  빼도 ᵍ 는 선다.
 - 준희에게 (초안): *"S4 는 우리 쪽 코드 주석에서 원문 확인 없이 생긴 인용이 표까지 퍼진 거였어 — 미안. Sedlatschek 2026 (다결정 NCM811
-  나노압입 138 ± 24 GPa) 으로 바꾸고 측정값을 같이 적을게. S5 (Cronau 2021) 는 3.0 이 본문이 아니라 SI 그림 S2c 에 있어서 검색에 안 걸린
+  나노압입 138 ± 24 GPa) 으로 바꿀게 — 140 은 그 측정 범위 안이라 값은 그대로 둬. S5 (Cronau 2021) 는 3.0 이 본문이 아니라 SI 그림 S2c 에 있어서 검색에 안 걸린
   거였고, 단결정이 아니라 고압 펠릿값이라 조건을 각주로 달게."*
