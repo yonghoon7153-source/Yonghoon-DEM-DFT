@@ -139,6 +139,7 @@ REFERENCES: dict[str, tuple[str, ...]] = {
                                       "VADHVA2021.electrode-types"),
     "cpe_like_diffusion": ("LASIA1999.cpe-exponent-limits",
                            "ISW1990.diffusion-spike-45-degrees"),
+    "transmission_line_one_rail": ("LASIA1999.de-levie-porous-electrode",),
     # 곡선이 점을 지나가나
     "misfit_everywhere": ("LASIA1999.residuals-should-be-random",),
     "misfit_somewhere": ("LASIA1999.residuals-should-be-random",),
@@ -1017,6 +1018,22 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
                                                 fit.circuit, arcs=len(arcs) + 1,
                                                 exact=True), limit=1)))
             continue
+        # 전송선의 레일 하나가 0 이면 레일 하나짜리 de Levie 선이다 — 틀린 것이
+        # 아니다.  두 레일은 맞바꿔도 같은 곡선이라 (`transmission_line`) 어느 쪽이
+        # 0 인지는 맞춤의 우연이다: "경계가 물리적으로 맞는지 보세요" 는 스펙트럼이
+        # 답하지 못하는 물음이었다 (실측 풀셀 #1 · #10 의 TL1_Re).  둘 다 0 이면 선이
+        # 무너진 것이라 전처럼 따로 본다.
+        if side == "lower" and suffix in ("Ri", "Re") \
+                and re.fullmatch(r"TLR?\d*", element):
+            pair = f"{element}_{'Re' if suffix == 'Ri' else 'Ri'}"
+            if railed.get(pair) != "lower":
+                out.findings.append(Finding(
+                    NOTE, "transmission_line_one_rail",
+                    f"{element} 의 레일 하나({parameter.name})가 0 에 붙었습니다 — "
+                    f"레일이 하나인 de Levie 전송선이 된 것으로, 틀린 것은 아닙니다. "
+                    f"두 레일은 맞바꿔도 같은 곡선이라 0 이 된 쪽이 이온 레일인지 전자 "
+                    f"레일인지는 스펙트럼이 정하지 않습니다"))
+                continue
         edges = model.lower if side == "lower" else model.upper
         bound = (float(edges[model.parameter_names.index(parameter.name)])
                  if parameter.name in model.parameter_names else None)

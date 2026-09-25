@@ -1035,7 +1035,9 @@ def test_a_tail_cut_off_with_the_low_end_is_one_note_not_a_check_per_bound():
         "0 으로, 꼬리가 끝나는 곳(TL1_Wt)이 맞춘 구간 아래로 갔습니다")
     assert f"{cut:.3g} Hz 부터라" in tail.message
     bounds = " / ".join(f.message for f in cut_off.findings if f.code == "at_bound")
-    assert "TL1_Re" in bounds and "TL1_W" not in bounds
+    assert "TL1_W" not in bounds and "TL1_Re" not in bounds
+    (rail,) = [f for f in cut_off.findings if f.code == "transmission_line_one_rail"]
+    assert "(TL1_Re)" in rail.message
     (unsettled,) = [f for f in cut_off.findings if f.code == "undetermined"]
     assert "TL1_W" not in unsettled.message and "TL1_Ri" in unsettled.message
 
@@ -1107,6 +1109,56 @@ def test_the_tail_note_says_only_what_the_fit_did_to_the_tail():
                    {"TL1_Wn": "at_upper_bound"}, {"TL1_Ri", "TL1_Re", "TL1_Wn"}, 0.05)
     assert "tail_outside_window" not in codes(shaped)
     assert "TL1_Wn" in said(shaped, "at_bound")
+
+
+def test_one_rail_of_a_transmission_line_at_zero_is_de_levie_not_a_check():
+    """실측 풀셀 #1 · #10 — TL1_Re 가 0 에 붙자 "경계가 물리적으로 맞는 값인지
+    보세요" 가 붙었다.  레일 하나가 0 인 선은 de Levie 의 기공 모델이고, 두 레일은
+    맞바꿔도 같은 곡선이라 (`transmission_line`) 어느 쪽이 0 인지는 스펙트럼이
+    말하지 않는다 — 물을 것이 없다.  둘 다 0 이면 선이 무너진 것이라 따로 본다."""
+    circuit = "L1-R0-p(R1,CPE1)-TL1"
+    values = {"L1": 4.46e-07, "R0": 11.8, "R1": 147, "CPE1_Q": 3.93e-05,
+              "CPE1_n": 0.769, "TL1_Ri": 23.1, "TL1_Re": 1e-09, "TL1_Rct": 34,
+              "TL1_Q": 7.62e-05, "TL1_n": 0.529, "TL1_Wr": 10.3, "TL1_Wn": 0.147,
+              "TL1_Wt": 0.132}
+
+    def audit(values, rails, circuit=circuit):
+        fit = Fit(circuit, [P(name, value, reason=rails.get(name, ""))
+                            for name, value in values.items()])
+        return audit_fit(fit, spectrum_of(circuit, values), kind=SOLID, config=FULL,
+                         band=BAND)
+
+    def bounds(result):
+        return " / ".join(f.message for f in result.findings if f.code == "at_bound")
+
+    one = audit(values, {"TL1_Re": "at_lower_bound"})
+    (rail,) = [f for f in one.findings if f.code == "transmission_line_one_rail"]
+    assert rail.severity == NOTE
+    assert rail.message.startswith("TL1 의 레일 하나(TL1_Re)가 0 에 붙었습니다 — 레일이 "
+                                   "하나인 de Levie 전송선")
+    assert "LASIA1999.de-levie-porous-electrode" in rail.refs
+    assert "TL1_Re" not in bounds(one)
+
+    # 맞바꾼 짝도 같은 말이다.
+    swapped = dict(values, TL1_Ri=1e-09, TL1_Re=23.1)
+    (rail,) = [f for f in audit(swapped, {"TL1_Ri": "at_lower_bound"}).findings
+               if f.code == "transmission_line_one_rail"]
+    assert "(TL1_Ri)" in rail.message
+
+    # 둘 다 0 이면 선이 무너졌다 — 경계마다 본다.
+    both = audit(dict(values, TL1_Ri=1e-09),
+                 {"TL1_Ri": "at_lower_bound", "TL1_Re": "at_lower_bound"})
+    assert "transmission_line_one_rail" not in codes(both)
+    assert "TL1_Ri" in bounds(both) and "TL1_Re" in bounds(both)
+
+    # 확산 꼬리가 없는 전송선(TLR)도 같은 두 레일이다.
+    plain = {"L1": 5.0e-07, "R0": 5.2, "R1": 161, "CPE1_Q": 6.41e-05, "CPE1_n": 0.762,
+             "TLR1_Ri": 60.0, "TLR1_Re": 1e-09, "TLR1_Rct": 200.0, "TLR1_Q": 1e-3,
+             "TLR1_n": 0.7}
+    (rail,) = [f for f in audit(plain, {"TLR1_Re": "at_lower_bound"},
+                                circuit="L1-R0-p(R1,CPE1)-TLR1").findings
+               if f.code == "transmission_line_one_rail"]
+    assert rail.message.startswith("TLR1 의 레일 하나(TLR1_Re)가")
 
 
 def test_an_end_that_still_rises_gently_is_not_said_to_come_down():
