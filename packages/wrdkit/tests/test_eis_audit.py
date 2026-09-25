@@ -18,6 +18,7 @@ from wrdkit.eis.audit import (
     CHECK,
     NOTE,
     PROBLEM,
+    _summed_parts,
     _with_wiring,
     audit_conductivity_scan,
     audit_fit,
@@ -774,6 +775,40 @@ def test_an_inductor_on_zero_with_r0_above_the_crossing_is_an_arc_above_the_wind
     one_arc = fit_circuit(spectrum, "L1-R0-p(R1,CPE1)-CPE2",
                           frequency_range=SULFIDE_BAND).values()
     assert one_arc["R0"] + one_arc["R1"] == pytest.approx(136.0, rel=0.01)
+
+
+def test_an_arc_counted_only_through_the_sum_may_have_its_apex_above_the_window():
+    """아크 하나를 더해 맞춘 차가운 펠릿 — 새 아크의 꼭지(300 kHz)는 맞춘 구간 위다.
+    그래서 판정이 떴다.  구간이 정하는 것은 그 아크의 저주파 끝, 곧 R0 + R1 이고
+    σ 는 그 합만 쓴다 (중립 이름이라 제 칸이 없다) — 꼭지 판정은 참고다.  σ 를 모르는
+    검수와, 합이 아닌 길로 σ 에 드는 아크는 전처럼 확인이다 (ADR 0045 보완 10)."""
+    spectrum = cold_pellet()
+    fit = Fit("L1-R0-p(R1,CPE1)-CPE2",
+              [P("L1", 2e-6), P("R0", 90.0), P("R1", 46.0),
+               P("CPE1_Q", 1 / (46.0 * (2 * np.pi * 3e5) ** 0.9)), P("CPE1_n", 0.9),
+               P("CPE2_Q", 6.3e-7), P("CPE2_n", 0.87)])
+    band = (10.0, 1.71e5)
+    summed = {"total_from": "series_and_arcs", "total_parts": ["R0", "R1"]}
+    audit = audit_fit(fit, spectrum, kind=SOLID, config=SYMMETRIC, thickness_cm=PELLET_CM,
+                      area_cm2=AREA_CM2, band=band, conductivity=summed,
+                      alternatives=PRESETS)
+    assert audit.above_crossing is None                     # R0 가 교점 아래로 내려왔다
+    assert "arc_above_window" not in codes(audit)
+    (apex,) = [f for f in audit.findings if f.code == "arc_apex_above_window"]
+    assert apex.severity == NOTE
+    assert apex.message.endswith("— σ 에는 R0 + R1 의 합으로만 들고, 그 합은 아크의 "
+                                 "저주파 끝(맞춘 구간 안)이 정합니다. 구간이 못 보는 것은 "
+                                 "저항을 나누는 자리뿐입니다")
+    for conductivity in (None, {"total_from": "series", "total_parts": ["R0"]}):
+        plain = audit_fit(fit, spectrum, kind=SOLID, config=SYMMETRIC,
+                          thickness_cm=PELLET_CM, area_cm2=AREA_CM2, band=band,
+                          conductivity=conductivity, alternatives=PRESETS)
+        (apex,) = [f for f in plain.findings if f.code == "arc_apex_above_window"]
+        assert apex.severity == CHECK and apex.message.endswith("정한 저항입니다")
+    # 입계라 부른 아크는 입계 σ 를 제 저항 하나로 낸다 — 나누는 자리가 그 수다.
+    assert _summed_parts(summed, {"R1": None}) == ("R0", "R1")
+    assert _summed_parts(summed, {"R1": "grain_boundary"}) == ()
+    assert _summed_parts({"total_from": "arcs", "total_parts": ["R1"]}, {}) == ()
 
 
 def test_an_inductor_on_zero_says_what_the_sweep_shows():

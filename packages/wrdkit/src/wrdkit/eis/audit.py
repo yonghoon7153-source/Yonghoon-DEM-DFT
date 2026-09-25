@@ -1050,12 +1050,15 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
                                         arcs=0, exact=True))
     # σ 가 뺀 전극 쪽 아크 — 그 저항은 이 셀의 어느 수에도 들지 않는다 (ADR 0047 보완 1).
     unused = set((conductivity or {}).get("electrode_arcs") or ())
+    # 직렬 저항과의 합으로만 σ 에 드는 아크 — 제 칸(벌크·입계)이 없다 (ADR 0045 보완 10).
+    summed = _summed_parts(conductivity, claims)
     for arc in arcs:
         if arc.resistor in explained:
             continue
         _arc_findings(out, arc, labels.get(arc.resistor, ""), claims.get(arc.resistor),
                       statuses, railed, low_edge, high_edge, offer=face_offer,
-                      unused=arc.resistor in unused)
+                      unused=arc.resistor in unused,
+                      summed=summed if arc.resistor in summed else ())
 
     # -- 잡음이 판정보다 크면 ---------------------------------------------------
     # 점 자체의 잡음(KK 잔차의 σ)이 회로를 판정하는 문턱보다 크면, 회로가 틀린 것과
@@ -1343,11 +1346,28 @@ def _arc_row(arc: ArcCapacitance, label: str, claim: str | None) -> dict:
     }
 
 
+def _summed_parts(conductivity: dict | None,
+                  claims: dict[str, str | None]) -> tuple[str, ...]:
+    """The resistors σ adds to the series resistance, when **none** of the arcs
+    among them has a σ of its own -- ``("R0", "R1")``, or ``()``.
+
+    Such an arc counts only through the sum, and the sum is the arc's
+    low-frequency end.  An arc named bulk or grain boundary has its own σ from
+    its own resistance (`ionic_conductivity`), so there the split matters.
+    """
+    if not conductivity or conductivity.get("total_from") != "series_and_arcs":
+        return ()
+    parts = tuple(conductivity.get("total_parts") or ())
+    if any(claims.get(name) in ("bulk", "grain_boundary") for name in parts):
+        return ()
+    return parts
+
+
 def _arc_findings(out: FitAudit, arc: ArcCapacitance, label: str,
                   claim: str | None, statuses: dict[str, str],
                   railed: dict[str, str], low: float | None,
                   high: float | None, *, offer: tuple[str, ...] = (),
-                  unused: bool = False) -> None:
+                  unused: bool = False, summed: tuple[str, ...] = ()) -> None:
     # 경계에 붙은 아크의 꼭지는 뜻이 없다 — 경계 붙음이 이미 그 말을 했다
     # (실측: R2 = 1e9 Ω 인 아크마다 "꼭지가 1e-5 Hz" 가 한 줄 더 붙었다).
     # 반원이 아닌 것(n < 0.6)의 꼭지도 없다 — 목록이 이미 "판정 안 함" 이라
@@ -1358,23 +1378,31 @@ def _arc_findings(out: FitAudit, arc: ArcCapacitance, label: str,
     # 실측 2026-09-25: 배선 L 을 붙여 다시 맞춘 B14 #1 · B18 #1–#5 의 전극 아크
     # 꼭지가 8.5–9.5 Hz 로 옮겨 10 Hz 창 끝 바로 아래가 되자, 그 줄 하나로
     # 확인에 남았다 (ADR 0047 보완 1).
+    #
+    # 직렬 저항과의 합으로만 σ 에 드는 아크(``summed``)의 꼭지가 구간 **위**여도
+    # 참고다 — 구간이 정하는 것은 아크의 저주파 끝, 곧 그 합이다.  못 보는 것은
+    # 둘을 나누는 자리뿐이다.  차가운 펠릿 쌍둥이 열다섯에서 합은 모두 참값의
+    # 0.2 % 안, R0 는 0–121 Ω (참값 40–110 Ω) 이었다 (ADR 0045 보완 10).  꼭지가
+    # 구간 아래면 저주파 끝을 못 봤으니 합도 모른다 — 전처럼 확인이다.
     if arc.peak_hz is not None and arc.n >= LOWEST_N \
             and not _is_railed_arc(arc, railed):
-        severity = NOTE if unused else CHECK
-        aside = (" — σ 에 안 드는 전극 쪽 아크라 이 셀의 수에는 들지 않습니다"
-                 if unused else "")
+        electrode = " — σ 에 안 드는 전극 쪽 아크라 이 셀의 수에는 들지 않습니다"
         if high is not None and arc.peak_hz > high:
+            aside = (electrode if unused else
+                     f" — σ 에는 {' + '.join(summed)} 의 합으로만 들고, 그 합은 아크의 "
+                     f"저주파 끝(맞춘 구간 안)이 정합니다. 구간이 못 보는 것은 저항을 "
+                     f"나누는 자리뿐입니다" if summed else "")
             out.findings.append(Finding(
-                severity, "arc_apex_above_window",
+                NOTE if unused or summed else CHECK, "arc_apex_above_window",
                 f"{arc.resistor} 아크의 꼭지(f₀ = {arc.peak_hz:.3g} Hz)가 맞춘 구간 "
                 f"위(≤ {high:.3g} Hz)에 있습니다 — 반원의 꼭대기를 못 보고 정한 "
                 f"저항입니다{aside}"))
         elif low is not None and arc.peak_hz < low:
             out.findings.append(Finding(
-                severity, "arc_apex_below_window",
+                NOTE if unused else CHECK, "arc_apex_below_window",
                 f"{arc.resistor} 아크의 꼭지(f₀ = {arc.peak_hz:.3g} Hz)가 맞춘 구간 "
                 f"아래(≥ {low:.3g} Hz)에 있습니다 — 반원이 닫히는 것을 못 보고 정한 "
-                f"저항입니다{aside}"))
+                f"저항입니다{electrode if unused else ''}"))
     # 커패시턴스로 붙인 이름(``"face"``)이나 과정을 말하지 않는 이름은 검사할
     # 것이 없다 — 이름이 곧 커패시턴스의 말이다 (ADR 0047).
     if claim not in _PROCESS_KEYS or arc.candidates is None \

@@ -431,6 +431,9 @@ def test_a_cold_pellet_gets_its_arc_back_and_the_electrolyte_its_whole_resistanc
     assert sigma["total_parts"] == ["R0", "R1"]
     assert sigma["total_ohm"] == pytest.approx(136.0, rel=0.002)
     assert sigma["total_ohm"] > crossing
+    # 나누는 자리는 구간이 못 본다 — 합만 σ 에 드니 꼭지 판정은 참고다.
+    assert not [f for f in after.findings if f.code == "arc_apex_above_window"
+                and f.severity != NOTE]
 
 
 def test_a_cold_pellet_whose_split_is_undetermined_is_left_to_a_person():
