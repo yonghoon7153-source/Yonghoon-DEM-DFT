@@ -260,3 +260,45 @@ DBE/SBE 비 R̄ (8 origin 쌍대응 평균, vox 0.15 · centerline):
   - ⬜ **다른 미확인 서지** — 같은 04-29 목록의 *"Xu 2017"* 범위값 · *"Cheng 2017"* · LPSCl 경도 0.85 GPa 의 *"Sakuda 2013"* 귀속 (그 논문은
     Li₂S–P₂S₅ 유리) — 전수 점검은 게이트와 함께.
   - ⬜ **사용자 docx** — S4 · S5 교체 · 각주는 사용자 원고에서 (생성기는 08-23 판).
+
+## 8. 준희 1차 요청 4 건 — 최종안 (09-25 밤, *"얘네만 해결해줘 일단"*) · ⏳ 사용자 확인 뒤 docx 반영
+
+> 범위: NCM σ_e · LPSCl ν · VGCF E · VGCF σ_e.  근거는 §1 · §4 · §7 에 있고 여기는 **붙여 넣을 문안**만 둔다.  수치 인용은 원문 확인분만
+> (규율 ⑥) — 공급사 VGCF-H 데이터시트는 원본 파일이 리포에 없어 **각주 인용 전 파일 확보 필요**.
+
+| 행 | 값 | 라벨 (최종) | 각주 |
+|---|---|---|---|
+| NCM811 electronic conductivity | 1.0 × 10⁻² S cm⁻¹ | `Assumed`ᵃ | ᵃ (§1 ④ 판 그대로 — Amin & Chiang 2016 · Wang 2018 · CL-70 민감도) |
+| LPSCl Poisson's ratio (DEM contact) | 0.3 | `Assumed`ᶜ | ᶜ 아래 |
+| VGCF Young's modulus | 10 GPa | `Assumed`ᵇ | ᵇ (§4 ③ 판 그대로 — 1 / 10 / 100 GPa 민감도) |
+| VGCF electronic conductivity — 행 이름 *(compressed powder)* → ***(effective, fibre network)*** | 1.0 × 10² S cm⁻¹ | `Assumed`ᵈ | ᵈ 아래 |
+| VGCF electronic conductivity (voxel, diameter-preserving) | 78.5 S cm⁻¹ | `Calculated`ᵉ | ᵉ 아래 (또는 행을 빼고 Methods 식으로 — 09-01 시트 §3-1 권고) |
+
+> ᶜ Conventional value for the DEM contact model.  The Poisson's ratio enters the Hertzian contact stiffness only through
+> E* = E/(1 − ν²) (a 4 % change between 0.30 and 0.36), and the DEM contact modulus (1.35 GPa) was calibrated with ν = 0.3,
+> so a different choice is absorbed by the calibrated modulus.
+>
+> ᵈ Effective conductivity assigned to the VGCF phase in the voxel model; not calibrated.  Because the voxel model merges touching
+> fibres, this value represents the fibre network including fibre–fibre contact losses rather than a single fibre; for reference,
+> the supplier reports ~10⁴ S cm⁻¹ for a single VGCF-H filament and ~83 S cm⁻¹ for compressed powder (Ref. S(new3) — 데이터시트 파일 확보 뒤).
+>
+> ᵉ σ_voxel = σ·πd²/(4h²) with the fibre diameter d = 0.15 µm and the voxel edge h = 0.15 µm, so that a fibre rendered one voxel wide
+> carries the axial conductance of a 0.15 µm fibre.
+
+- ⛔ ᵈ 에 *"83 을 반올림했다 / 압착 분말값을 썼다"* 라고 쓰지 않는다 — 100 은 83 감사보다 먼저 들어온 값이다 (09-01 시트 R20).
+- ⚠ VGCF σ 의 민감도는 **현행 규약으로 잰 것이 없다** — 옛 침대 (08-12, CL-39) 에서 ×1.44 에 DBE/SBE 비가 −0.3 % 움직인 것뿐이고,
+  공급사 밴드 [83, 10⁴] 전체를 보는 프로브 `CL-48` 은 **등록만 되고 미실행**이다.  준희가 방어를 더 원하면 CL-48 을 돌린다 (GPU, 짧다).
+- ν 행: 원고의 DFT 절은 흡착에너지만 다뤄 LPSCl 탄성상수가 없다 → 각주에 DFT 수치를 넣지 않았다.  문헌 DFT (Deng et al., JES 2016 —
+  Cronau 2021 SI ref S4) 는 원문 확인 뒤에만 추가.  ⊕ DEM 입력 NCM811 ν = 0.25 행도 표에 넣는 것을 권한다 (`Assumed`).
+
+**준희에게 보낼 답 (초안)**
+> 1) NCM σ_e 1e-2: Assumed 유지. 문헌값을 가져온 게 아니라 모델 유효값이야. NCM811 pristine 실측은 4.1e-3 (Wang 2018, DC 분극)이고,
+>    NMC 전자전도도는 조성·충전상태·연구실에 따라 5e-8~1.4e-2 로 흔들려서 단일 Ref 로 달 값이 없어. 각주에 문헌 범위 + Wang 값 +
+>    민감도 (σ_NCM 을 ÷30~×30 해도 DBE > SBE) 를 달게.
+> 2) LPSCl ν 0.3: Assumed 가 맞아. DEM 접촉모델 관례값이고 E* = E/(1−ν²) 로만 들어가서 0.30↔0.36 차이가 4 % 인데, DEM 탄성률
+>    (1.35 GPa) 을 이 ν 로 보정했기 때문에 그 차이는 보정값에 흡수돼. 각주로 달게.
+> 3) VGCF E 10 GPa: Assumed 유지. 1 / 10 / 100 GPa 로 바꿔 전극을 다시 압밀하고 전자전도도까지 계산했더니 porosity 0.18 %p,
+>    σ_e 0.25 % 안에서만 움직였어 (런 전에 정한 기준 안). 각주 + SI 표로 붙일게.
+> 4) VGCF σ_e: 100 S/cm 은 Assumed — 섬유 하나의 값이 아니라 접촉 손실을 포함한 섬유망 유효값이야 (공급사 기준 단섬유 ~1e4,
+>    압착 분말 ~83 S/cm). 행 이름 "compressed powder" 는 오해 소지가 있어서 "effective, fibre network" 로 바꿀게.
+>    78.5 는 그 100 을 복셀 한 칸 굵기로 그린 섬유에 맞게 환산한 계산값 (σ·πd²/4h²) 이라 Calculated 가 맞고, 식은 Methods 에 적을게.
