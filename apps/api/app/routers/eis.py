@@ -897,8 +897,10 @@ def _scan_point(session: Session, record: SpectrumRecord) -> ScanPointOut:
     if parameters:
         stub = _FitStub(circuit=fit.circuit, parameters=[
             *_stub_parameters(fit.circuit, parameters)])
+        thickness_cm, area = _geometry(session, record)
         point.labels = {m.parameter: m.label
-                        for m in label_arcs(stub, record.kind, record.cell_config)}
+                        for m in label_arcs(stub, record.kind, record.cell_config,
+                                            thickness_cm=thickness_cm, area_cm2=area)}
     return point
 
 
@@ -2004,7 +2006,9 @@ def _fit_out(session: Session, record: SpectrumRecord,
     if parameters:
         stub = _FitStub(circuit=fit.circuit, parameters=[
             *_stub_parameters(fit.circuit, parameters)])
-        for meaning in label_arcs(stub, record.kind, record.cell_config):
+        # 두께·면적이 있으면 이름이 커패시턴스를 따른다 (ADR 0047) — 검수와 같은 이름.
+        for meaning in label_arcs(stub, record.kind, record.cell_config,
+                                  thickness_cm=thickness_cm, area_cm2=area):
             arcs.append({"parameter": meaning.parameter, "label": meaning.label,
                          "note": meaning.note, "value_ohm": meaning.value_ohm,
                          "determined": meaning.determined})

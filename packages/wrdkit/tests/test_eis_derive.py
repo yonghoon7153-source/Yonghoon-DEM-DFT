@@ -395,10 +395,11 @@ class _Fit:
 
 
 def test_a_bulk_arc_of_boundary_size_keeps_the_total_but_not_its_name():
-    """벌크라 부른 아크가 입계 크기 (C·l/A 4.5e-10) — 전해질이긴 하니 합계엔
-    들어가지만, '벌크 σ' 라는 이름으로는 내지 않는다.  그리고 벌크 크기의
-    아크가 없으니 벌크는 잰 주파수 위, R0 에 있다 (Irvine–Sinclair–West 그림
-    4b) — 합계는 R0 부터."""
+    """벌크 자리의 아크가 입계 크기 (C·l/A 4.5e-10) — 전해질이긴 하니 합계엔
+    들어가지만, 벌크 σ 는 없다.  C/A 6.4e-9 는 표면층에도 닿아 입계라고도 못
+    박으니 이름은 "고주파 아크" 다 (ADR 0047).  그리고 벌크 크기의 아크가 없으니
+    벌크는 잰 주파수 위, R0 에 있다 (Irvine–Sinclair–West 그림 4b) — 합계는 R0
+    부터."""
     fit = _Fit("R0-p(R1,CPE1)-p(R2,CPE2)-CPE3",
                {"R0": 5.0, "R1": 2e4, "CPE1_Q": 5e-9, "CPE1_n": 1.0,
                 "R2": 4e4, "CPE2_Q": 3e-8, "CPE2_n": 1.0,
@@ -406,8 +407,12 @@ def test_a_bulk_arc_of_boundary_size_keeps_the_total_but_not_its_name():
     out = ionic_conductivity(fit, thickness_cm=PELLET_CM, area_cm2=PELLET_AREA)
     assert out["bulk_s_cm"] is None
     assert out["missing"] == []
-    assert any("R1 (벌크 저항)" in line and "벌크 크기가 아닙니다" in line
-               for line in out["notes"])
+    names = {one.parameter: one for one in label_arcs(
+        fit, SOLID, SYMMETRIC, thickness_cm=PELLET_CM, area_cm2=PELLET_AREA)}
+    assert (names["R1"].label, names["R1"].claims) == ("고주파 아크", None)
+    assert "벌크일 수 없고" in names["R1"].note
+    assert (names["R2"].label, names["R2"].claims) == ("입계 저항", "grain_boundary")
+    assert "notes" not in out
     assert out["grain_boundary_s_cm"] == pytest.approx(
         PELLET_CM / (4e4 * PELLET_AREA))
     assert out["total_from"] == "series_and_arcs"
@@ -484,6 +489,87 @@ def test_an_undecided_size_falls_back_to_the_names():
                              blocking={"blocking": True})
     assert out["total_from"] == "arcs"
     assert out["total_parts"] == ["R1", "R2"]
+
+
+# --- 이름도 커패시턴스를 따른다 (ADR 0047) ------------------------------------
+
+B11_M10 = {"R0": 52.9, "R1": 7.35e3, "CPE1_Q": 4.69e-6, "CPE1_n": 0.759,
+           "R2": 4.49e5, "CPE2_Q": 5.02e-7, "CPE2_n": 0.997,
+           "CPE3_Q": 2.54e-3, "CPE3_n": 0.3}
+
+
+def names_of(fit, **geometry):
+    return {one.parameter: one for one in label_arcs(fit, SOLID, SYMMETRIC, **geometry)}
+
+
+def test_an_arc_the_capacitance_rules_out_as_bulk_is_named_by_it():
+    """실측 B11 −10 °C (#66): "R1 (벌크 저항)" 의 C 1.61e-6 F 는 전극 계면
+    크기였고, 아크 없는 `L1-R0-CPE1` 은 그 스펙트럼을 3.7 % 어긋나게 그렸다 —
+    아크는 있고 이름만 틀렸다.  두께·면적이 있으면 이름이 커패시턴스를 따른다."""
+    fit = _Fit("R0-p(R1,CPE1)-p(R2,CPE2)-CPE3", B11_M10)
+    named = names_of(fit, thickness_cm=0.079, area_cm2=0.785)
+    assert (named["R1"].label, named["R1"].claims) == ("전극 계면 저항", "face")
+    assert "전극 계면" in named["R1"].note and "자리로는 벌크였습니다" in named["R1"].note
+    assert named["R0"].claims is None
+
+    # 두께·면적이 없으면 커패시턴스로 볼 수 없다 — 전처럼 자리로.
+    assert names_of(fit)["R1"].label == "벌크 저항"
+
+
+def test_a_capacitance_that_reaches_both_sides_gets_the_neutral_name():
+    """실측 막지 않는 대칭셀 (#31, 60 µm): "벌크" 의 C·l/A 1.49e-9 는 입계,
+    C/A 2.5e-7 은 표면층·전극 계면에도 닿는다 — 벌크는 아니지만 어느 쪽인지는
+    못 정한다.  "입계" 의 C/A 4.8e-5 는 전기화학 반응뿐이다."""
+    fit = _Fit("R0-p(R1,CPE1)-p(R2,CPE2)",
+               {"R0": 9.41, "R1": 11.6, "CPE1_Q": 2.62e-6, "CPE1_n": 0.8,
+                "R2": 11.8, "CPE2_Q": 7.36e-4, "CPE2_n": 0.615})
+    named = names_of(fit, thickness_cm=0.006, area_cm2=0.785)
+    assert (named["R1"].label, named["R1"].claims) == ("고주파 아크", None)
+    assert named["R1"].note == ("커패시턴스가 입계·표면층·전극 계면 크기라 벌크일 수 "
+                                "없고, 어느 쪽인지는 가르지 못합니다")
+    assert (named["R2"].label, named["R2"].claims) == ("전극 계면 저항", "face")
+
+
+def test_a_name_near_the_edge_of_its_range_is_kept():
+    """C·l/A 1.5e-11 은 벌크 상한(1e-11)의 1.5 배 — 식이 세 배 흔들리니 벌크일 수
+    있다.  배제될 때만 이름을 바꾼다 (ADR 0041 이 이름 바꾸기를 거절한 까닭이
+    겹치는 범위였다).  σ 는 전처럼 그 이름의 칸만 비운다."""
+    fit = _Fit("R0-p(R1,CPE1)-CPE2", {"R0": 3.0, "R1": 1e4, "CPE1_Q": 1.68e-10,
+                                      "CPE1_n": 1.0, "CPE2_Q": 1e-5, "CPE2_n": 0.9})
+    named = names_of(fit, thickness_cm=PELLET_CM, area_cm2=PELLET_AREA)
+    assert (named["R1"].label, named["R1"].claims) == ("벌크 저항", "bulk")
+    out = ionic_conductivity(fit, thickness_cm=PELLET_CM, area_cm2=PELLET_AREA,
+                             blocking={"blocking": True})
+    assert out["bulk_s_cm"] is None
+    assert any("R1 (벌크 저항)" in line and "벌크 크기가 아닙니다" in line
+               for line in out["notes"])
+
+
+def test_the_sigma_slots_follow_the_names():
+    """1 cm 두께면 C·l/A 7e-11 은 입계뿐이다 (C/A 1.4e-10 은 표면층 아래) —
+    첫 자리여도 "입계 저항" 이고 그 σ 는 입계 칸이다.  전에는 벌크 칸에서
+    "이름이 틀렸다" 로 비웠다.  한 칸에 둘이면 어느 것인지 고르지 않는다."""
+    thick = {"thickness_cm": 0.5, "area_cm2": 1.0}
+    fit = _Fit("R0-p(R1,CPE1)-p(R2,CPE2)-CPE3",
+               {"R0": 2.0, "R1": 40.0, "CPE1_Q": 1.4e-10, "CPE1_n": 1.0,
+                "R2": 300.0, "CPE2_Q": 1e-5, "CPE2_n": 0.9,
+                "CPE3_Q": 1e-4, "CPE3_n": 0.9})
+    named = names_of(fit, **thick)
+    assert (named["R1"].label, named["R1"].claims) == ("입계 저항", "grain_boundary")
+    assert named["R2"].claims == "face"
+    out = ionic_conductivity(fit, **thick, blocking={"blocking": True})
+    assert out["grain_boundary_s_cm"] == pytest.approx(0.5 / 40.0)
+    assert out["bulk_s_cm"] is None
+    assert out["total_parts"] == ["R0", "R1"] and out["electrode_arcs"] == ["R2"]
+
+    both = _Fit("R0-p(R1,CPE1)-p(R2,CPE2)-CPE3",
+                {"R0": 2.0, "R1": 40.0, "CPE1_Q": 1.4e-10, "CPE1_n": 1.0,
+                 "R2": 60.0, "CPE2_Q": 1e-9, "CPE2_n": 1.0,
+                 "CPE3_Q": 1e-4, "CPE3_n": 0.9})
+    out = ionic_conductivity(both, **thick, blocking={"blocking": True})
+    assert out["grain_boundary_s_cm"] is None
+    assert any(line.startswith("R1, R2 가 모두 입계 저항") for line in out["notes"])
+    assert out["total_parts"] == ["R0", "R1", "R2"]
 
 
 def test_a_composite_electrode_cell_gets_no_sigma_from_r0():

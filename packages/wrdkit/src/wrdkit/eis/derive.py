@@ -46,6 +46,11 @@ class ArcMeaning:
     note: str
     value_ohm: float
     determined: bool
+    #: What the name asserts the arc is: ``"bulk"`` / ``"grain_boundary"``
+    #: (a `capacitance.PROCESSES` key), ``"face"`` (the electrode side, named
+    #: by its capacitance), or ``None`` -- a name that claims no process
+    #: ("고주파 아크", "세 번째 아크", a full cell's names).
+    claims: str | None = None
 
 
 #: Arc names by measurement kind, high frequency first.  The order matches the
@@ -115,8 +120,21 @@ BY_CONFIG: dict[tuple[str, str], list[tuple[str, str]]] = {
 #: end to end, which is what a conductivity means.
 CONDUCTIVITY_CONFIGS = {(SOLID, SYMMETRIC)}
 
+#: The process each positional name asserts, high frequency first.  Only where
+#: the names assert one -- "고주파 아크" cannot be wrong, "벌크 저항" can.
+POSITIONAL_CLAIMS: dict[tuple[str, str], tuple[str | None, ...]] = {
+    (SOLID, SYMMETRIC): ("bulk", "grain_boundary", None),
+}
 
-def label_arcs(result: FitResult, kind: str, config: str = "") -> list[ArcMeaning]:
+#: The name of an arc whose capacitance allows only processes on a face.
+ELECTRODE_ARC = ("전극 계면 저항",
+                 "커패시턴스가 {reached} 크기 — 전해질(벌크·입계)이 아니라 전극 쪽 "
+                 "아크입니다. 자리로는 {claim}였습니다")
+
+
+def label_arcs(result: FitResult, kind: str, config: str = "", *,
+               thickness_cm: float | None = None,
+               area_cm2: float | None = None) -> list[ArcMeaning]:
     """Name each fitted resistance for the cell it came from.
 
     Resistances are taken in circuit order: the first plain ``R`` is the series
@@ -130,6 +148,17 @@ def label_arcs(result: FitResult, kind: str, config: str = "") -> list[ArcMeanin
     "low-frequency" and the note asks for the missing answer, because the same
     two arcs mean different things in a blocking symmetric cell and in a full
     cell.
+
+    **With a thickness and an area, a positional name the capacitance rules
+    out is replaced** (ADR 0047).  실측 2026-09-25: 막는 황화물 펠릿의 µF 대
+    아크가 "R1 (벌크 저항)" 이었고, 아크 없는 회로로는 그 스펙트럼을 못
+    그렸다 (`bml refit` 여덟 개가 3.1–5.9 % 어긋남) — 아크는 있고 이름만
+    틀렸다.  Ruled out means outside every process the capacitance reaches
+    within its uncertainty (`capacitance.reachable`, ×3 or ×10 as for σ), so a
+    value near a table edge keeps its name.  The replacement says only what
+    the capacitance says: the electrode side when nothing else is reached, one
+    electrolyte process when only that one is, and otherwise the neutral
+    "고주파·저주파 아크" with the candidates in the note.
     """
     if kind not in KINDS:
         raise ValueError(f"unknown measurement kind {kind!r}; "
@@ -141,21 +170,74 @@ def label_arcs(result: FitResult, kind: str, config: str = "") -> list[ArcMeanin
     specific = BY_CONFIG.get((kind, config))
     if specific:
         scheme["arcs"] = specific
+    positional = POSITIONAL_CLAIMS.get((kind, config), ())
+    reached = (_reached(result, thickness_cm, area_cm2) if positional else {})
     series = _series_resistor_names(result)
     plain = [p for p in result.parameters if "_" not in p.name and p.name[0] == "R"]
     out: list[ArcMeaning] = []
     arc_index = 0
     for parameter in plain:
+        claims = None
         if parameter.name in series:
             label, note = scheme["series"]
         else:
             names = scheme["arcs"]
             label, note = names[min(arc_index, len(names) - 1)]
+            claims = positional[min(arc_index, len(positional) - 1)] if positional else None
+            if claims is not None and parameter.name in reached:
+                label, note, claims = _by_capacitance(
+                    arc_index, claims, reached[parameter.name]) or (label, note, claims)
             arc_index += 1
         out.append(ArcMeaning(parameter=parameter.name, label=label, note=note,
                               value_ohm=parameter.value,
-                              determined=parameter.determined))
+                              determined=parameter.determined, claims=claims))
     return out
+
+
+def _reached(result, thickness_cm: float | None,
+             area_cm2: float | None) -> dict[str, tuple[str, ...]]:
+    """``{R 이름: 닿는 과정}`` -- what each arc's capacitance can be, within the
+    same uncertainty σ uses.  Empty without a geometry."""
+    from .capacitance import arc_capacitances, reachable, spread_for
+
+    if not thickness_cm or not area_cm2 or thickness_cm <= 0 or area_cm2 <= 0:
+        return {}
+    values = {p.name: float(p.value) for p in result.parameters}
+    undetermined = {p.name for p in result.parameters if not p.determined}
+    try:
+        arcs = arc_capacitances(result.circuit, values, thickness_cm=thickness_cm,
+                                area_cm2=area_cm2)
+    except CircuitError:
+        return {}
+    out: dict[str, tuple[str, ...]] = {}
+    for arc in arcs:
+        found = reachable(arc, spread=spread_for(arc, undetermined))
+        if found is not None:
+            out[arc.resistor] = found
+    return out
+
+
+def _by_capacitance(position: int, claim: str,
+                    reached: tuple[str, ...]) -> tuple[str, str, str | None] | None:
+    """``(label, note, claims)`` when ``claim`` is ruled out, else ``None``."""
+    from .capacitance import AREA, PROCESSES, process
+
+    if claim in reached:
+        return None
+    listed = "·".join(process(key).label for key in reached) or "표의 어느 범위"
+    was = process(claim).label
+    face = {one.key for one in PROCESSES if one.scaling == AREA}
+    if reached and set(reached) <= face:
+        label, note = ELECTRODE_ARC
+        return label, note.format(reached=listed, claim=was), FACE
+    if reached in (("bulk",), ("grain_boundary",)):
+        (only,) = reached
+        label = "벌크 저항" if only == "bulk" else "입계 저항"
+        return (label, f"커패시턴스가 {process(only).label} 크기입니다 — 자리로는 "
+                       f"{was}였습니다", only)
+    neutral = KINDS[SOLID]["arcs"][min(position, 1)][0]
+    return (neutral, f"커패시턴스가 {listed} 크기라 {was}일 수 없고, 어느 쪽인지는 "
+                     f"가르지 못합니다", None)
 
 
 def _series_resistor_names(result: FitResult) -> set[str]:
@@ -371,7 +453,9 @@ def ionic_conductivity(result: FitResult, *, thickness_cm: float | None,
     아크는 그 이름의 σ 만 비우고(``notes``) 합계에는 넣는다.
     """
     series = _series_resistor_names(result)
-    arcs = [meaning for meaning in label_arcs(result, SOLID, config)
+    arcs = [meaning for meaning in label_arcs(result, SOLID, config,
+                                              thickness_cm=thickness_cm,
+                                              area_cm2=area_cm2)
             if meaning.parameter not in series]
     out: dict = {"bulk_s_cm": None, "grain_boundary_s_cm": None,
                  "total_s_cm": None, "missing": [], "excluded": []}
@@ -439,9 +523,12 @@ def ionic_conductivity(result: FitResult, *, thickness_cm: float | None,
             return out
         intercept = found
 
+    # 벌크·입계 칸은 **이름을 따른다** (ADR 0047) — 커패시턴스가 자리 이름을
+    # 배제한 아크는 이미 다른 이름이다.  중립 이름("고주파 아크")은 칸이 없다.
     misnamed = _misnamed(named, sized)
-    for key, meaning in zip(("bulk_s_cm", "grain_boundary_s_cm"), named, strict=False):
-        if meaning in face:
+    slotted: dict[str, list[ArcMeaning]] = {}
+    for meaning in named:
+        if meaning in face or meaning.claims not in _SLOTS:
             continue
         if meaning.parameter in misnamed:
             # 합계에는 들어간다 (전해질 쪽 크기이므로) — 그 이름으로 따로 내지만
@@ -449,8 +536,16 @@ def ionic_conductivity(result: FitResult, *, thickness_cm: float | None,
             # 필요합니다" 로 읽어 전체 σ 까지 가린다.
             out.setdefault("notes", []).append(misnamed[meaning.parameter])
             continue
-        out[key] = conductivity(meaning.value_ohm, thickness_cm=thickness_cm,
-                                area_cm2=area_cm2)
+        slotted.setdefault(meaning.claims, []).append(meaning)
+    for claim, meanings in slotted.items():
+        if len(meanings) > 1:
+            # 한 칸에 둘이면 어느 것의 σ 인지 고르지 않는다 — 둘 다 합계에는 든다.
+            out.setdefault("notes", []).append(
+                f"{', '.join(m.parameter for m in meanings)} 가 모두 {meanings[0].label}"
+                f"이라 그 칸의 σ 는 하나로 내지 않습니다 — 전체 σ 에는 모두 들었습니다")
+            continue
+        out[_SLOTS[claim]] = conductivity(meanings[0].value_ohm,
+                                          thickness_cm=thickness_cm, area_cm2=area_cm2)
     total_ohm = intercept + sum(meaning.value_ohm for meaning in electrolyte)
     out["total_s_cm"] = conductivity(total_ohm, thickness_cm=thickness_cm,
                                      area_cm2=area_cm2)
@@ -489,13 +584,22 @@ def _sized_arcs(result, arcs: list[ArcMeaning], thickness_cm: float,
     return out
 
 
+#: σ 칸 — 이름이 말하는 과정마다 하나.
+_SLOTS = {"bulk": "bulk_s_cm", "grain_boundary": "grain_boundary_s_cm"}
+
+
 def _misnamed(arcs: list[ArcMeaning], sized: dict[str, tuple]) -> dict[str, str]:
-    """Arcs whose capacitance rules out the name they were given (bulk, then
-    grain boundary), with the sentence that says so."""
+    """Arcs whose capacitance, read as it is, is not the process their name
+    claims, with the sentence that says so.  After ADR 0047 only a name kept
+    because its value sits within the uncertainty of the table edge can be
+    here -- a name the capacitance rules out has already been replaced."""
     from .capacitance import process
 
     out: dict[str, str] = {}
-    for claim, meaning in zip(("bulk", "grain_boundary"), arcs, strict=False):
+    for meaning in arcs:
+        claim = meaning.claims
+        if claim not in _SLOTS:
+            continue
         arc = sized.get(meaning.parameter, (None, None))[0]
         if arc is None or arc.candidates is None or claim in arc.candidates:
             continue

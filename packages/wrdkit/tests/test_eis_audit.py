@@ -160,21 +160,17 @@ def test_an_ideal_capacitor_that_stays_is_only_a_note():
     assert audit.findings[0].severity == NOTE
 
 
-def test_both_names_are_ruled_out_by_the_capacitances():
+def test_both_names_the_capacitances_rule_out_are_replaced():
+    """처음 받은 실측 (2026-09-23): "벌크" 4.66e-7 F 와 "입계" 3.0e-4 F.  그때는
+    문제 둘이었다.  이제 이름이 커패시턴스를 따르니 (ADR 0047) 어긋날 것이
+    없다 — "벌크" 자리는 입계·전극 계면 어느 쪽인지 못 정해 "고주파 아크",
+    "입계" 자리는 전기화학 반응뿐이라 "전극 계면 저항"."""
     audit = audit_user()
-    wrong = [f for f in audit.findings if f.code == "label_contradicts_capacitance"]
-    assert len(wrong) == 2
-    bulk, boundary = wrong
-    assert bulk.severity == PROBLEM
-    assert "R1" in bulk.message and "벌크" in bulk.message
-    assert "입계 또는 전극 계면의 크기" in bulk.message   # 무엇일 수는 있는지
-    assert "R2" in boundary.message and "입계일 수 없습니다" in boundary.message
-    assert "전기화학 반응" in boundary.message
-    # 벌크라는 이름에는 누구나 확인할 수 있는 수가 하나 더 — 겉보기 εr (ISW 1990).
-    assert "겉보기 εr ≈ 4e+04" in bulk.message
-    assert "εr" not in boundary.message
+    assert "label_contradicts_capacitance" not in codes(audit)
     rows = {row["resistor"]: row for row in audit.arcs}
-    assert rows["R1"]["claims"] == "bulk"
+    assert (rows["R1"]["label"], rows["R1"]["claims"]) == ("고주파 아크", None)
+    assert (rows["R2"]["label"], rows["R2"]["claims"]) == ("전극 계면 저항", "face")
+    # 겉보기 εr 는 아크 줄에 그대로 있다 — 누구나 확인할 수 있는 수다 (ISW 1990).
     assert rows["R1"]["capacitance_f"] == pytest.approx(4.66e-7, rel=0.01)
     assert rows["R1"]["permittivity"] == pytest.approx(4.0e4, rel=0.02)
     assert rows["R2"]["candidates"] == ["reaction"]
@@ -424,18 +420,19 @@ def test_a_cpe_that_is_really_a_diffusion_line_is_not_read_as_an_arc():
         f.code for f in audit.findings if "R2" in f.message]
 
 
-def test_an_undetermined_arc_far_outside_is_still_judged():
+def test_an_undetermined_arc_far_outside_is_still_renamed():
     """미결정 값은 몇 배 흔들리지, 벌크와 이중층 사이의 네 자릿수를 건너지
     않는다.  실측 B11 스캔의 "벌크" 들은 벌크 상한의 수만 배였는데 전부
-    미결정이라 판정에서 빠졌었다."""
+    미결정이라 판정에서 빠졌었다 — 열 배 흔들어도 벌크가 아니면 이름이
+    바뀐다 (ADR 0047)."""
     parameters = [P(name, value) for name, value in USER.items()]
     parameters[1] = P("R1", USER["R1"], "undetermined", "seed_spread")
     fit = Fit("R0-p(R1,CPE1)-p(R2,CPE2)", parameters)
     audit = audit_fit(fit, USER_SPECTRUM, kind=SOLID, config=SYMMETRIC,
                       thickness_cm=THICKNESS_CM, area_cm2=AREA_CM2, band=BAND)
-    judged = [f for f in audit.findings if f.code == "label_contradicts_capacitance"]
-    assert [("R1" in f.message, "미결정" in f.message) for f in judged] == [
-        (True, True), (False, False)]
+    rows = {row["resistor"]: row for row in audit.arcs}
+    assert rows["R1"]["label"] == "고주파 아크"
+    assert "label_contradicts_capacitance" not in codes(audit)
     assert "capacitance_not_judged" not in codes(audit)
 
 
@@ -621,7 +618,7 @@ def test_an_arc_that_is_the_blocking_tail_is_said_once():
                       alternatives=["R0-TL1", "L1-R0-CPE1", "R0-p(R1,CPE1)-CPE2"])
     (tail,) = [f for f in audit.findings if f.code == "tail_mimicked_by_arc"]
     assert tail.severity == PROBLEM
-    assert "R1 (벌크 저항)" in tail.message
+    assert "R1 (전극 계면 저항)" in tail.message         # 커패시턴스가 붙인 이름
     assert "R0 = 7.89 Ω" in tail.message                 # 전해질이 어디 있는지
     # 막는 계면의 커패시턴스는 Brug 의 식(Hirschorn 2010 식 12)에 옴 저항 R0 를
     # 넣어 낸다.  R1 (꼬리의 높이, 외삽값) 로 낸 1.56e-6 F 는 그 경계를 따라간다.
@@ -730,20 +727,21 @@ def spectrum_of_at(circuit, values, frequency):
 
 
 def test_arcs_that_are_all_electrode_sized_point_at_r0():
-    """B11–B14·B7: 벌크·입계라 부른 두 아크가 모두 µF 대 — 전극 계면.  벌크·입계
-    아크는 7 MHz 위에 있어 R0 에 들어 있다 (R0 84.3 Ω ≈ 적은 저항 78.1 Ω)."""
+    """B11–B14·B7: 벌크·입계 자리의 두 아크가 모두 µF 대 — 전극 계면.  벌크·입계
+    아크는 7 MHz 위에 있어 R0 에 들어 있다 (R0 84.3 Ω ≈ 적은 저항 78.1 Ω).
+    이름이 이미 커패시턴스를 따르니 (ADR 0047) 고칠 것은 없고 읽기만 남는다 —
+    참고이고, 다시 맞출 회로가 없다."""
     audit = audit_fit(Fit(B14_CIRCUIT, B14), b14_spectrum(), kind=SOLID,
                       config=SYMMETRIC, thickness_cm=850e-4, area_cm2=AREA_CM2,
                       band=(10.0, 1.71e5), alternatives=["L1-R0-CPE1"])
     (merged,) = [f for f in audit.findings if f.code == "arcs_are_electrode"]
-    assert merged.severity == PROBLEM
-    assert "R1 (벌크 저항)" in merged.message and "R2 (입계 저항)" in merged.message
+    assert merged.severity == NOTE and merged.circuits == ()
+    assert "R1 (전극 계면 저항)" in merged.message
+    assert "R2 (전극 계면 저항)" in merged.message
     assert "R0 = 84.3 Ω" in merged.message
-    assert "`L1-R0-CPE1`" in merged.message
-    # 묶인 아크의 증상은 다시 적지 않는다.
-    for repeated in ("label_contradicts_capacitance", "capacitance_not_judged",
-                     "arc_apex_below_window"):
-        assert repeated not in codes(audit)
+    assert "L1-R0-CPE1" not in merged.message
+    for wrong_name in ("label_contradicts_capacitance", "capacitance_not_judged"):
+        assert wrong_name not in codes(audit)
 
 
 def test_a_boundary_arc_with_the_bulk_above_the_window_is_said_once():
@@ -758,8 +756,9 @@ def test_a_boundary_arc_with_the_bulk_above_the_window_is_said_once():
                       thickness_cm=PELLET_CM, area_cm2=AREA_CM2,
                       band=(10.0, 7e6))
     (merged,) = [f for f in audit.findings if f.code == "bulk_above_window"]
-    assert merged.severity == PROBLEM
-    assert "R1 (벌크 저항) 는 입계 쪽(C·l/A 4.46e-10 F/cm)" in merged.message
+    assert merged.severity == NOTE and merged.circuits == ()
+    # C/A 6.4e-9 은 표면층에도 닿아 입계라고 못 박지 않는다 — 중립 이름 (ADR 0047).
+    assert "R1 (고주파 아크) 는 입계 쪽(C·l/A 4.46e-10 F/cm)" in merged.message
     assert "R0 + R1 = 13 Ω" in merged.message
     assert "arcs_are_electrode" not in codes(audit)
     assert "label_contradicts_capacitance" not in codes(audit)
@@ -932,19 +931,8 @@ PRESETS = ["R0-TL1", "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3", "L1-R0-CPE1",
 
 def test_the_refit_offered_first_has_the_cable_and_the_arcs_worth_keeping():
     """실측: 꼬리를 흉내 낸 27 개 맞춤에 L 없는 두 아크 회로를 첫 줄로 권했다.
-    L 이 든 것, 그리고 남길 만한 아크 수가 먼저다.
-
-    전극 쪽 크기의 아크는 남길 만하지 않다 — 다시 맞춰도 자리 순서로 같은
-    이름(벌크·입계)이 붙어 같은 문제가 뜬다.  이름이 맞는 것은 아크가 없는
-    회로이고, 아크가 정말 보이는 셀을 위한 아크 하나짜리는 따로 적는다."""
-    audit = audit_fit(Fit(B14_CIRCUIT, B14), b14_spectrum(), kind=SOLID,
-                      config=SYMMETRIC, thickness_cm=850e-4, area_cm2=AREA_CM2,
-                      band=(10.0, 1.71e5), alternatives=PRESETS)
-    (merged,) = [f for f in audit.findings if f.code == "arcs_are_electrode"]
-    assert "; `L1-R0-CPE1` 로 다시 맞추면 이름이 맞습니다" in merged.message
-    assert "안 그려지면 `L1-R0-p(R1,CPE1)-CPE2` — 그 아크는 전극 계면" in merged.message
-    assert "`L1-R0-p(R1,CPE1)-p(R2,CPE2)-CPE3`" not in merged.message
-
+    L 이 든 것, 그리고 남길 만한 아크 수가 먼저다.  꼬리를 흉내 낸 아크는
+    아크가 아니다."""
     fit = Fit("R0-p(R1,CPE1)", [P("R0", 7.89), P("R1", 1.37e5), P("CPE1_Q", 1.95e-6),
                                 P("CPE1_n", 0.856)])
     audit = audit_fit(fit, sulfide_pellet(), kind=SOLID, config=SYMMETRIC,
@@ -954,7 +942,24 @@ def test_the_refit_offered_first_has_the_cable_and_the_arcs_worth_keeping():
     assert ". `L1-R0-CPE1` 또는" in tail.message      # 꼬리는 아크가 아니다
     # 전송선의 끝도 막지만 펠릿에 권하지 않는다 — 복합전극이라는 주장은 셀
     # 구성(대칭셀)도 스펙트럼도 하지 않는다.
-    assert "TL1" not in merged.message and "TL1" not in tail.message
+    assert "TL1" not in tail.message
+
+
+def test_an_electrode_arc_counts_as_an_arc_worth_keeping():
+    """전극 크기 아크 하나 + 꼬리를 흉내 낸 아크.  예전에는 전극 아크를 "다시
+    맞춰도 벌크라 불린다" 며 세지 않아 아크 없는 회로부터 권했다.  이제 다시
+    맞추면 "전극 계면" 이라 불리니 (ADR 0047) 그 아크를 남기는 회로가 먼저다."""
+    circuit = "L1-R0-p(R1,CPE1)-p(R2,CPE2)"
+    values = {"L1": 1.7e-6, "R0": 8.0, "R1": 200.0, "CPE1_Q": 2e-6, "CPE1_n": 0.9,
+              "R2": 1e7, "CPE2_Q": 1e-5, "CPE2_n": 0.9}
+    spectrum = spectrum_of_at(circuit, values, SULFIDE_FREQUENCY)
+    fit = Fit(circuit, [P(name, value) for name, value in values.items()])
+    audit = audit_fit(fit, spectrum, kind=SOLID, config=SYMMETRIC,
+                      thickness_cm=PELLET_CM, area_cm2=AREA_CM2, band=SULFIDE_BAND,
+                      alternatives=PRESETS)
+    (tail,) = [f for f in audit.findings if f.code == "tail_mimicked_by_arc"]
+    assert "R2" in tail.message
+    assert tail.circuits[0] == "L1-R0-p(R1,CPE1)-CPE2"
 
 
 def test_a_transmission_line_is_not_told_its_end_closes():
@@ -1318,15 +1323,16 @@ def test_the_tail_and_open_cell_findings_carry_the_circuits_they_quote():
     assert open_.circuits == ("R0-p(R1,CPE1)-p(R2,CPE2)",)
 
 
-def test_the_one_arc_circuit_is_quoted_but_not_carried():
-    """아크 하나짜리로 맞추면 그 아크가 다시 "벌크" 라 불려 같은 판정이 뜬다
-    (ADR 0041) — 문장에는 남기되, 판정을 푸는 회로로는 싣지 않는다."""
+def test_electrode_arcs_are_not_sent_to_be_refitted_away():
+    """실측 `bml refit` (2026-09-25): 전극 아크가 있는 펠릿 여덟에 아크 없는
+    `L1-R0-CPE1` 을 맞췄고 모두 3.1–5.9 % 어긋나 그대로였다 — 아크는 있다.
+    이름이 커패시턴스를 따르니 (ADR 0047) 권할 회로가 없다."""
     audit = audit_fit(Fit(B14_CIRCUIT, B14), b14_spectrum(), kind=SOLID,
                       config=SYMMETRIC, thickness_cm=850e-4, area_cm2=AREA_CM2,
                       band=(10.0, 1.71e5), alternatives=PRESETS)
-    (merged,) = [f for f in audit.findings if f.code == "arcs_are_electrode"]
-    assert merged.circuits == ("L1-R0-CPE1",)
-    assert "L1-R0-p(R1,CPE1)-CPE2" in quoted(merged.message)
+    assert not [f for f in audit.findings if f.circuits and f.code in (
+        "arcs_are_electrode", "bulk_above_window", "label_contradicts_capacitance")]
+    assert worst(audit.findings) != PROBLEM
 
 
 #: 실측 B11 #8 (-10 °C, 790 µm): R1 은 전극 크기, R2 는 미결정 — 묶음 판정을 비껴가
@@ -1339,18 +1345,25 @@ B11_8 = [P("R0", 52.9), P("R1", 7.35e3), P("CPE1_Q", 4.69e-6), P("CPE1_n", 0.759
          P("CPE3_n", 0.3, "undetermined", "at_lower_bound")]
 
 
-def test_an_electrode_sized_arc_named_bulk_is_told_what_to_refit_with():
-    """이름만 틀렸다고 하고 무엇으로 다시 맞출지 말하지 않았다 — 실측 열넷."""
+def test_an_electrode_sized_arc_is_named_for_it_not_sent_to_a_refit():
+    """실측 B11 #8 (#66): R1 7.35e3 Ω 의 C 1.61e-6 F 는 전극 계면 — 예전에는
+    "벌크일 수 없습니다" 문제에 `L1-R0-CPE1` 을 실었고, `bml refit` 이 그것으로
+    맞추자 3.7 % 어긋났다.  이제 그 아크의 이름이 "전극 계면 저항" 이다
+    (ADR 0047).  R2 는 미결정이라 열 배 흔들면 입계에도 닿는다 — 이름은 그대로
+    두고 참고로 적는다."""
     values = {p.name: p.value for p in B11_8}
     spectrum = spectrum_of_at(B14_CIRCUIT, values, SULFIDE_FREQUENCY)
     audit = audit_fit(Fit(B14_CIRCUIT, B11_8), spectrum, kind=SOLID, config=SYMMETRIC,
                       thickness_cm=790e-4, area_cm2=AREA_CM2, band=SULFIDE_BAND,
                       alternatives=PRESETS)
     assert audit.blocking["blocking"] is True
-    (wrong,) = [f for f in audit.findings if f.code == "label_contradicts_capacitance"]
-    assert wrong.circuits == ("L1-R0-CPE1",)
-    assert wrong.message.endswith("전해질이 아니므로 `L1-R0-CPE1` 로 다시 맞추면 이름이 "
-                                  "맞습니다")
+    rows = {row["resistor"]: row for row in audit.arcs}
+    assert rows["R1"]["label"] == "전극 계면 저항"
+    assert rows["R2"]["label"] == "입계 저항"
+    assert "label_contradicts_capacitance" not in codes(audit)
+    (shaky,) = [f for f in audit.findings if f.code == "capacitance_not_judged"]
+    assert shaky.severity == NOTE and "R2" in shaky.message
+    assert not [f for f in audit.findings if f.circuits]
 
     # 셀 구성을 모르면 이름이 없고, 처방도 없다.
     blind = audit_fit(Fit(B14_CIRCUIT, B11_8), spectrum, kind=SOLID, config="",

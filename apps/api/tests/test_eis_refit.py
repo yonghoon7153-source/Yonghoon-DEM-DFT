@@ -1,8 +1,9 @@
 """`bml refit` — 검수가 권한 회로로 한꺼번에 다시 맞춘다 (ADR 0045).
 
 두 합성 펠릿이 이 기능의 전부다.  꼬리를 아크로 흉내 낸 맞춤은 권한 회로로
-바뀌고, 옛 맞춤은 남고, 되돌리면 돌아간다.  아크가 정말 보이는 펠릿은 아크 없는
-회로로 바꾸지 않고, 그 까닭을 검수의 문장으로 적는다.
+바뀌고, 옛 맞춤은 남고, 되돌리면 돌아간다.  아크가 정말 보이는 펠릿은 대상이
+아니다 — 그 아크는 커패시턴스대로 "전극 계면" 이라 불린다 (ADR 0047).  권한
+회로가 모양을 못 그리는 길은 후보를 직접 넣어 본다.
 """
 
 import numpy as np
@@ -100,16 +101,42 @@ def test_the_audit_refits_what_it_can_and_the_old_fit_stays(client):
     assert client.post("/api/eis/audit/refit/undo").json()["origin"] == ""
 
 
-def test_an_arc_that_is_really_there_is_kept_with_the_reason(client):
-    """아크 없는 회로는 보이는 아크를 못 그린다.  이름을 고치려고 모양을 버리지
-    않는다 — 그대로 두고 검수의 문장으로 까닭을 적는다."""
+def offer_anyway(monkeypatch, circuit="L1-R0-CPE1"):
+    """검수가 권할 것이 없는 스펙트럼에도 ``circuit`` 을 권하게 한다 — 권한 회로가
+    모양을 못 그리거나 σ 의 저항을 옮기는 길을 보려고.  권할 것이 있으면 그대로."""
+    from app.routers import eis_refit
+    from wrdkit.eis.refit import Candidate
+
+    original = eis_refit.refit_candidates
+    monkeypatch.setattr(eis_refit, "refit_candidates", lambda findings, **kw: (
+        original(findings, **kw) or [Candidate(circuit, ())]))
+
+
+def test_an_arc_that_is_really_there_is_not_a_target(client):
+    """실측 `bml refit` (2026-09-25): 전극 아크가 보이는 펠릿 여덟에 아크 없는
+    `L1-R0-CPE1` 을 맞춰 모두 3.1–5.9 % 어긋나 그대로 두었다 — 돌릴 때마다.
+    이제 그 아크는 "전극 계면 저항" 이고 (ADR 0047) 고칠 것이 없으니 대상이
+    아니다."""
     spectrum_id, _ = pellet(client, "B14_arc.mpr", VISIBLE_ARC, VISIBLE_ARC[0])
+    body = client.post("/api/eis/audit/refit").json()
+    assert (body["targets"], body["changed"], body["kept"], body["unoffered"]) == (
+        0, 0, 0, 0)
+    one, _ = audit_codes(client, spectrum_id)
+    assert [f for f in one["findings"] if f["severity"] == "problem"] == []
+    (arc,) = one["arcs"]
+    assert arc["label"] == "전극 계면 저항"
+    assert len(fits_of(client, spectrum_id)) == 1
+
+
+def test_a_circuit_that_cannot_draw_the_arc_is_kept_with_the_reason(client, monkeypatch):
+    """아크 없는 회로는 보이는 아크를 못 그린다 — 그대로 두고 까닭을 적는다.
+    쓰던 값에서, 그다음 기본 시작점에서 둘 다 해 본다."""
+    spectrum_id, _ = pellet(client, "B14_arc.mpr", VISIBLE_ARC, VISIBLE_ARC[0])
+    offer_anyway(monkeypatch)
     body = client.post("/api/eis/audit/refit").json()
     assert (body["targets"], body["changed"], body["kept"]) == (1, 0, 1)
     (one,) = body["spectra"]
-    assert [p["code"] for p in one["problems"]] == ["arcs_are_electrode"]
     assert one["new_circuit"] == ""
-    # 쓰던 값에서, 그다음 기본 시작점에서 — 둘 다 모양을 못 그린다.
     assert [t["start"] for t in one["tries"]] == ["seeded", "default"]
     assert all("모양을 못 그립니다" in t["reason"] for t in one["tries"])
     assert len(fits_of(client, spectrum_id)) == 1
@@ -145,9 +172,11 @@ def test_the_undo_shows_what_it_would_remove_before_removing_it(client):
     assert next(fit for fit in fits_of(client, spectrum_id) if fit["in_use"])["id"] == old["id"]
 
 
-def test_the_text_streams_a_line_per_spectrum_and_ends_with_the_way_back(client):
+def test_the_text_streams_a_line_per_spectrum_and_ends_with_the_way_back(client,
+                                                                         monkeypatch):
     pellet(client, "B15_pellet.mpr", BLOCKING, "R0-p(R1,CPE1)")
     pellet(client, "B14_arc.mpr", VISIBLE_ARC, VISIBLE_ARC[0])
+    offer_anyway(monkeypatch)
 
     dry = client.post("/api/eis/audit/refit", params={"dry_run": True, "format": "text"})
     assert dry.headers["content-type"].startswith("text/plain")
@@ -162,7 +191,6 @@ def test_the_text_streams_a_line_per_spectrum_and_ends_with_the_way_back(client)
     assert "[2/2] #2  B14_arc  그대로  (L1-R0-CPE1 · 기본 시작점에서 — 맞춤이" in text
     assert "━━ 바꾼 것 (1)" in text and "━━ 그대로 둔 것 (1)" in text
     assert "풀린 문제: 꼬리를 흉내 낸 아크" in text
-    assert "풀려던 문제: 전극 크기 아크를 벌크·입계로 부름" in text
     assert "대상 2 · 바꾼 것 1 · 그대로 1 · 건너뜀 0" in text
     assert "`bml refit --undo`" in text
 
@@ -403,11 +431,27 @@ def test_a_problem_with_no_circuit_to_offer_is_counted_not_touched(client, monke
     assert len(fits_of(client, spectrum_id)) == 1
 
 
+def test_the_progress_line_counts_every_problem_not_only_the_one_that_offered_a_circuit():
+    """첫 실측 맞춰 보기는 "문제 1 → 2" 라고 적었다: 회로를 실은 판정 하나만 세고,
+    원래 있던 판정 둘은 새로 생긴 것처럼 셌다.  사실은 3 → 2 다."""
+    from app.routers.eis_refit import _Progress, _progress_line
+    from app.schemas import AuditFindingOut, RefitSpectrumOut
+
+    def problem(code):
+        return AuditFindingOut(severity="problem", label="문제", code=code, message=code)
+
+    offered, other = problem("blocking_element_on_open_cell"), problem("other")
+    one = RefitSpectrumOut(id=31, name="sym", old_fit_id=1, old_circuit="A",
+                           new_circuit="B", problems=[offered],
+                           old_problems=[offered, other, other],
+                           new_problems=[other, other])
+    assert _progress_line(_Progress(1, 1, spectrum=one)) == (
+        "[1/1] #31  sym  바꿈  A → B · 문제 3 → 2")
+
+
 def test_an_open_cell_counts_every_problem_not_only_the_one_that_offered_a_circuit(client):
-    """실측 #31 의 쌍둥이 — 막지 않는 대칭셀에 쓸데없는 막는 CPE3, 그리고 이름이
-    커패시턴스와 어긋난 두 아크.  첫 맞춰 보기는 "문제 1 → 2" 라고 적었다:
-    회로를 실은 판정 하나만 세고, 원래 있던 이름 판정 둘은 새로 생긴 것처럼
-    셌다.  사실은 3 → 2 다."""
+    """실측 #31 의 쌍둥이 — 막지 않는 대칭셀에 쓸데없는 막는 CPE3.  두 아크의
+    이름은 이제 커패시턴스를 따르니 (ADR 0047) 문제는 그 CPE3 하나다."""
     frequency = S.log_sweep(1e6, 1e-2, 12)
     created = client.post("/api/eis/spectra/upload",
                           params={"kind": "solid", "cell_config": "sym"},
@@ -421,21 +465,24 @@ def test_an_open_cell_counts_every_problem_not_only_the_one_that_offered_a_circu
                 params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3"})
 
     text = client.post("/api/eis/audit/refit", params={"dry_run": True, "format": "text"}).text
-    assert ("바꿈  R0-p(R1,CPE1)-p(R2,CPE2)-CPE3 → R0-p(R1,CPE1)-p(R2,CPE2) · 문제 3 → 2"
+    assert ("바꿈  R0-p(R1,CPE1)-p(R2,CPE2)-CPE3 → R0-p(R1,CPE1)-p(R2,CPE2) · 문제 1 → 0"
             in text)
     assert "    풀린 문제: 안 막는 셀에 막는 소자\n" in text
-    assert text.count("    남은 문제: 이름과 커패시턴스가 어긋남 — ") == 2
+    assert "남은 문제" not in text
     # 막지 않는 셀은 σ 를 안 낸다 — 적을 저항이 없다.
     assert "σ 저항" not in text
 
 
-def test_a_refit_that_draws_worse_does_not_move_the_resistance_behind_sigma(client):
+def test_a_refit_that_draws_worse_does_not_move_the_resistance_behind_sigma(client,
+                                                                          monkeypatch):
     """전극 크기 아크(2 Ω)가 구간 안에 보이는 펠릿.  아크 없는 회로는 그것을 R0 로
     삼키고도 평균 2.5 % 로 맞아 검수는 받아들인다 — σ 에 쓰는 저항은 8 → 9.65 Ω
-    (+21 %) 로 간다.  이름은 맞아지고 수는 틀려지는 경우라 받지 않는다."""
+    (+21 %) 로 간다.  수가 틀려지는 경우라 받지 않는다.  (ADR 0047 뒤로 검수는
+    이 펠릿에 아크 없는 회로를 권하지 않는다 — 후보를 직접 넣는다.)"""
     truth = ("L1-R0-p(R1,CPE1)-CPE2", {"L1": 1.7e-6, "R0": 8.0, "R1": 2.0, "CPE1_Q": 1e-5,
                                         "CPE1_n": 0.85, "CPE2_Q": 1e-4, "CPE2_n": 0.9})
     spectrum_id, _ = pellet(client, "B14_small_arc.mpr", truth, truth[0])
+    offer_anyway(monkeypatch)
     body = client.post("/api/eis/audit/refit").json()
     assert (body["targets"], body["changed"], body["kept"]) == (1, 0, 1)
     (one,) = body["spectra"]

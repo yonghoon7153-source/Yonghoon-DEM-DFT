@@ -36,11 +36,12 @@ from .capacitance import (
     BULK,
     FACE,
     LOWEST_N,
-    UNDETERMINED_SPREAD,
+    PROCESSES,
     ArcCapacitance,
     arc_capacitances,
     effective_capacitance,
     process,
+    reachable,
     size_class,
     spread_for,
 )
@@ -53,7 +54,7 @@ from .circuit import (
     series_parts,
 )
 from .conductivity import BOLTZMANN_EV_PER_K, backwards_warning, real_axis_crossing
-from .derive import SOLID, SYMMETRIC, blocking_verdict, label_arcs
+from .derive import POSITIONAL_CLAIMS, SOLID, SYMMETRIC, blocking_verdict, label_arcs
 from .fit import edge_misfit
 from .guess import inductive_mask
 from .kk import KKResult, lin_kk
@@ -101,12 +102,9 @@ FEWEST_POINTS = 10
 #: 스펙트럼에 아무것도 그리지 않는다 — 좋은 스윕의 잡음(0.1 %)보다 작다.
 VANISHED_ARC_SHARE = 1e-3
 
-#: 셀 구성이 아크에 붙이는 이름이 **어느 과정**을 말하는가.  고주파부터.
-#: 여기 없는 조합은 이름이 과정을 주장하지 않으므로 판정하지 않는다
-#: ("고주파 아크" 는 틀릴 수가 없다).
-EXPECTED_PROCESSES: dict[tuple[str, str], tuple[str | None, ...]] = {
-    (SOLID, SYMMETRIC): ("bulk", "grain_boundary", None),
-}
+#: 이름이 주장할 수 있는 과정 — `derive.ArcMeaning.claims` 가 이 밖의 값
+#: (``"face"``: 커패시턴스로 붙인 전극 쪽 이름)이면 검사할 것이 없다.
+_PROCESS_KEYS = frozenset(one.key for one in PROCESSES)
 
 
 #: 판정 코드마다 그 판정이 기대는 논문 기록 (ADR 0042, `wrdkit.eis.knowledge`).
@@ -628,22 +626,12 @@ def _compatible(alternatives: Iterable[str], ends: set[str], current: str, *,
     return [one for _, _, one in sorted(ranked)]
 
 
-def _arcs_to_keep(arcs: Sequence[ArcCapacitance], claims: dict[str, str | None],
-                  statuses: dict[str, str], drop: set[str]) -> int:
-    """How many arcs a refit should keep: not ``drop`` (a cause explained them
-    away), and not an arc named bulk / grain boundary whose capacitance is the
-    electrode's -- the refit would give it the same wrong name (the names go
-    by position, `derive.label_arcs`)."""
-    undetermined = {name for name, status in statuses.items() if status == "undetermined"}
-    keep = 0
-    for arc in arcs:
-        if arc.resistor in drop:
-            continue
-        if claims.get(arc.resistor) in ("bulk", "grain_boundary") and \
-                size_class(arc, spread=spread_for(arc, undetermined)) == FACE:
-            continue
-        keep += 1
-    return keep
+def _arcs_to_keep(arcs: Sequence[ArcCapacitance], drop: set[str]) -> int:
+    """How many arcs a refit should keep: all but ``drop`` (a cause explained
+    them away).  An electrode-sized arc counts too -- a refit names it by its
+    capacitance (ADR 0047); before that it came back as "벌크" and was left
+    out of the count."""
+    return sum(1 for arc in arcs if arc.resistor not in drop)
 
 
 def _has_line(model: Circuit) -> bool:
@@ -699,28 +687,6 @@ def _series_resistance(model: Circuit, values: dict[str, float]) -> float | None
     if not names:
         return None
     return float(sum(values[name] for name in names))
-
-
-#: 미결정 파라미터로 만든 커패시턴스라도 이름이 말하는 범위에서 이만큼(배)
-#: 넘게 떨어져 있으면 판정한다.  미결정의 문턱은 값이 세 배 흔들리거나 오차
-#: 막대가 50 % 인 것이다 — Q 가 세 배 흔들리면 C_eff 는 3^{1/n} 배(n=0.87
-#: 에서 3.5 배)라 한 자릿수면 그 흔들림을 넉넉히 넘는다.  실측 B11 스캔의
-#: "벌크" 들은 벌크 상한의 수만 배였고 전부 미결정이라 판정에서 빠졌었다.
-FAR_OUTSIDE = UNDETERMINED_SPREAD
-
-
-def _distance_outside(arc: ArcCapacitance, claim: str) -> float | None:
-    """How many times outside the claimed process's range the arc sits
-    (``1.0`` = on the boundary), or ``None`` when it cannot be said."""
-    row = process(claim)
-    value = arc.per_length if row.scaling == "thickness" else arc.per_area
-    if value is None or value <= 0:
-        return None
-    if row.high is not None and value >= row.high:
-        return value / row.high
-    if row.low is not None and value < row.low:
-        return row.low / value
-    return 1.0
 
 
 def _is_railed_arc(arc: ArcCapacitance, railed: dict[str, str]) -> bool:
@@ -788,22 +754,23 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
     arcs = arc_capacitances(model, values, thickness_cm=thickness_cm,
                             area_cm2=area_cm2)
     try:
-        labels = {meaning.parameter: meaning.label
-                  for meaning in label_arcs(fit, kind, config)}
+        # 화면과 같은 이름 — 두께·면적이 있으면 커패시턴스가 배제한 자리 이름은
+        # 이미 바뀌어 있다 (ADR 0047).
+        meanings = label_arcs(fit, kind, config, thickness_cm=thickness_cm,
+                              area_cm2=area_cm2)
     except ValueError:
         # 모르는 종류·구성 — 이름이 없으면 이름을 검사할 것도 없다.
-        labels = {}
+        meanings = []
+    labels = {meaning.parameter: meaning.label for meaning in meanings}
     series_r = {name for name, element_kind in series_kinds if element_kind == "R"}
-    arc_order = [name for name in labels if name not in series_r]
-    expected = EXPECTED_PROCESSES.get((kind, config))
-    claims: dict[str, str | None] = {}
+    claims: dict[str, str | None] = {meaning.parameter: meaning.claims
+                                     for meaning in meanings
+                                     if meaning.parameter not in series_r}
+    #: 자리로 전해질(벌크·입계)인 두 아크 — 이름이 바뀌었어도 그 자리다.
+    places = list(claims)[:2] if (kind, config) in POSITIONAL_CLAIMS else []
     for arc in arcs:
-        position = arc_order.index(arc.resistor) if arc.resistor in arc_order else None
-        claim = None
-        if expected is not None and position is not None:
-            claim = expected[min(position, len(expected) - 1)]
-        claims[arc.resistor] = claim
-        out.arcs.append(_arc_row(arc, labels.get(arc.resistor, ""), claim))
+        out.arcs.append(_arc_row(arc, labels.get(arc.resistor, ""),
+                                 claims.get(arc.resistor)))
 
     #: 한 원인으로 묶인 아크 — 그 아크의 증상은 따로 적지 않는다.
     explained: set[str] = set()
@@ -895,8 +862,7 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
         # 꼬리를 흉내 낸 아크는 아크가 아니다 — 권하는 회로는 그만큼 아크가 적다.
         offered = _offer(_compatible(
             alternatives, {"blocking"}, fit.circuit,
-            arcs=_arcs_to_keep(arcs, claims, statuses,
-                               {arc.resistor for arc in vanished}
+            arcs=_arcs_to_keep(arcs, {arc.resistor for arc in vanished}
                                | ({tail.resistor} if tail is not None else set()))))
         suggestion = _quote(offered)
         if tail is not None:
@@ -938,22 +904,12 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
     # Irvine–Sinclair–West 그림 4b 의 읽기다.  황화물 펠릿에서 흔하다: 실측
     # B11–B14·B7 스캔 44개 스윕은 두 아크가 모두 전극 쪽(이중층) 크기였다.
     if sym_solid and blocking is True:
-        hidden = _hidden_bulk(arcs, claims, statuses, railed, explained)
+        hidden = _hidden_bulk(arcs, places, statuses, railed, explained)
         if hidden is not None:
-            face, boundary = hidden
-            for arc in face + boundary:
-                explained.add(arc.resistor)
-                quiet.update({arc.resistor, f"{arc.element}_Q", f"{arc.element}_n",
-                              arc.element})
-            # 전극 쪽 아크를 남기면 다시 맞춰도 같은 이름(벌크·입계)이 붙는다 —
-            # 이름이 맞는 것은 아크가 없는 회로다.  아크가 정말 보이는 셀에는
-            # 아크 하나짜리를 따로 적는다.
-            out.findings.append(_hidden_bulk_finding(
-                face, boundary, labels, r0, crossing,
-                _offer(_compatible(alternatives, {"blocking"}, fit.circuit,
-                                   arcs=0, exact=True)),
-                _suggest(_compatible(alternatives, {"blocking"}, fit.circuit,
-                                     arcs=1, exact=True), limit=1)))
+            # 이름은 이미 커패시턴스를 따른다 (ADR 0047) — 고칠 것은 없고, 전해질
+            # 저항을 어디서 읽는지만 남는다.  실측 `bml refit` 이 그 여덟에 아크
+            # 없는 회로를 맞춰 3.1–5.9 % 어긋났다: 아크는 정말 있다.
+            out.findings.append(_hidden_bulk_finding(*hidden, labels, r0, crossing))
 
     if sym_solid and blocking is False and arcs:
         out.findings.append(Finding(
@@ -1269,22 +1225,23 @@ def _blocking_capacitance(tail: ArcCapacitance, arcs: list[ArcCapacitance],
     return effective_capacitance(r_e, tail.q, tail.n) if r_e > 0 else None
 
 
-def _hidden_bulk(arcs: list[ArcCapacitance], claims: dict[str, str | None],
+def _hidden_bulk(arcs: list[ArcCapacitance], places: Sequence[str],
                  statuses: dict[str, str], railed: dict[str, str],
                  explained: set[str]
                  ) -> tuple[list[ArcCapacitance], list[ArcCapacitance]] | None:
-    """``(face, boundary)`` -- the arcs named bulk / grain boundary, split by
-    what their capacitance says, when **none** of them can be the bulk;
-    otherwise ``None`` (the names are then checked arc by arc).
+    """``(face, boundary)`` -- the arcs in the bulk / grain-boundary places,
+    split by what their capacitance says, when **none** of them can be the
+    bulk; otherwise ``None``.
 
     Each arc's side has to hold when its capacitance moves by the formula's
     own uncertainty, or by an undetermined value's (``size_class`` /
     ``spread_for``) -- the same rule `ionic_conductivity` uses to put R0 into
     the electrolyte, so the report and the number say the same thing.  실측
     B14 #9: "입계" 아크는 n 만 미결정(상한)인 이상적 축전기로 입계 상한의
-    9.9 배, "벌크" 는 4 만 배 — 둘 다 전극 쪽이다.
+    9.9 배, "벌크" 는 4 만 배 — 둘 다 전극 쪽이다.  Places, not names: the
+    names already follow the capacitance (ADR 0047).
     """
-    claimed = [arc for arc in arcs if claims.get(arc.resistor) in ("bulk", "grain_boundary")
+    claimed = [arc for arc in arcs if arc.resistor in places
                and arc.resistor not in explained]
     if not claimed:
         return None
@@ -1303,9 +1260,10 @@ def _hidden_bulk(arcs: list[ArcCapacitance], claims: dict[str, str | None],
 
 def _hidden_bulk_finding(face: list[ArcCapacitance], boundary: list[ArcCapacitance],
                          labels: dict[str, str], r0: float | None,
-                         crossing: float | None, offered: tuple[str, ...],
-                         with_arc: str = "") -> Finding:
-    suggestion = _quote(offered)
+                         crossing: float | None) -> Finding:
+    """Where the electrolyte resistance is read -- a note (ADR 0047): the arcs
+    are already named for what their capacitance is, and `ionic_conductivity`
+    already takes the total from R0, so there is nothing left to fix."""
     def named(arc: ArcCapacitance) -> str:
         label = labels.get(arc.resistor, "")
         return f"{arc.resistor}" + (f" ({label})" if label else "")
@@ -1315,17 +1273,11 @@ def _hidden_bulk_finding(face: list[ArcCapacitance], boundary: list[ArcCapacitan
         listed = ", ".join(f"{named(arc)} C/A {_fmt(arc.per_area, 'F/cm²')}"
                            for arc in face)
         return Finding(
-            PROBLEM, "arcs_are_electrode",
-            f"벌크·입계라 부른 아크가 모두 전극 쪽 크기입니다 — {listed}. "
-            f"벌크·입계 아크는 잰 주파수 위에 있어 고주파 절편에 들어 있습니다"
+            NOTE, "arcs_are_electrode",
+            f"아크가 모두 전극 쪽 크기라 전해질이 아닙니다 — {listed}. 벌크·입계 "
+            f"반원은 잰 주파수 위에 있어 고주파 절편에 들어 있습니다"
             + (f": 전해질 저항 ≈ R0 = {r0:.4g} Ω" if r0 is not None else "")
-            + where + ". 이 아크들로 낸 벌크·입계 σ 는 쓰지 마세요"
-            + (f"; {suggestion} 로 다시 맞추면 이름이 맞습니다" if suggestion
-               else "")
-            + (f". 꼬리 앞에 아크가 정말 보여 그것으로 안 그려지면 {with_arc} — "
-               f"그 아크는 전극 계면입니다 (화면의 σ 는 이미 R0 로 냅니다)"
-               if suggestion and with_arc else ""),
-            circuits=offered)
+            + where)
     sides = ([f"{named(arc)} 는 입계 쪽(C·l/A {_fmt(arc.per_length, 'F/cm')})"
               for arc in boundary]
              + [f"{named(arc)} 는 전극 쪽(C/A {_fmt(arc.per_area, 'F/cm²')})"
@@ -1334,12 +1286,12 @@ def _hidden_bulk_finding(face: list[ArcCapacitance], boundary: list[ArcCapacitan
              if r0 is not None else None)
     parts = " + ".join(["R0"] + [arc.resistor for arc in boundary])
     return Finding(
-        PROBLEM, "bulk_above_window",
+        NOTE, "bulk_above_window",
         "벌크 크기의 아크가 없습니다 — 벌크 반원은 잰 주파수 위에 있어 고주파 "
         "절편 R0 에 들어 있습니다 (Irvine–Sinclair–West 그림 4b 의 읽기). "
         + ", ".join(sides)
         + (f": 전해질 저항 ≈ {parts} = {total:.4g} Ω" if total is not None else "")
-        + where + ". 이름대로 낸 벌크 σ 는 쓰지 마세요")
+        + where)
 
 
 def _arc_row(arc: ArcCapacitance, label: str, claim: str | None) -> dict:
@@ -1379,7 +1331,10 @@ def _arc_findings(out: FitAudit, arc: ArcCapacitance, label: str,
                 f"{arc.resistor} 아크의 꼭지(f₀ = {arc.peak_hz:.3g} Hz)가 맞춘 구간 "
                 f"아래(≥ {low:.3g} Hz)에 있습니다 — 반원이 닫히는 것을 못 보고 정한 "
                 f"저항입니다"))
-    if claim is None or arc.candidates is None or _is_railed_arc(arc, railed):
+    # 커패시턴스로 붙인 이름(``"face"``)이나 과정을 말하지 않는 이름은 검사할
+    # 것이 없다 — 이름이 곧 커패시턴스의 말이다 (ADR 0047).
+    if claim not in _PROCESS_KEYS or arc.candidates is None \
+            or _is_railed_arc(arc, railed):
         return
     if claim in arc.candidates:
         return
@@ -1387,12 +1342,18 @@ def _arc_findings(out: FitAudit, arc: ArcCapacitance, label: str,
     names += ([f"{arc.element}_Q", f"{arc.element}_n"] if arc.element_kind == "CPE"
               else [arc.element])
     shaky = [name for name in names if statuses.get(name) == "undetermined"]
-    distance = _distance_outside(arc, claim)
-    if shaky and (distance is None or distance < FAR_OUTSIDE):
+    undetermined = {name for name, status in statuses.items() if status == "undetermined"}
+    # **불확실성 안에서 그 과정일 수 있으면 이름은 남는다** — `label_arcs` 가 같은
+    # 잣대(`reachable`, ×3 · 미결정 ×10)로 이름을 두었다.  "일 수 없습니다" 는 식의
+    # 흔들림으로도 배제될 때만이다.
+    if claim in (reachable(arc, spread=spread_for(arc, undetermined)) or ()):
         out.findings.append(Finding(
             NOTE, "capacitance_not_judged",
             f"{arc.resistor} 아크는 {', '.join(shaky)} 가 미결정이라 커패시턴스로 "
-            f"이름을 검사하지 않았습니다"))
+            f"이름을 검사하지 않았습니다" if shaky else
+            f"{arc.resistor} ({label}) 의 커패시턴스(C·l/A {_fmt(arc.per_length)}, "
+            f"C/A {_fmt(arc.per_area, 'F/cm²')})가 {process(claim).label} 범위의 경계 "
+            f"근처라 이름을 그대로 두었습니다 — 식이 세 배 흔들리는 안쪽입니다"))
         return
     allowed = " 또는 ".join(process(key).label for key in arc.candidates)
     # 벌크라는 이름에는 누구나 확인할 수 있는 수가 하나 더 있다: 겉보기 유전율.

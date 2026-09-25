@@ -59,8 +59,8 @@ from .circuit import Circuit, parse_circuit
 __all__ = ["AREA", "ArcCapacitance", "BOUNDARY", "BULK", "DETERMINED_SPREAD",
            "FACE", "LOWEST_N", "PROCESSES", "Process", "THICKNESS",
            "UNDETERMINED_SPREAD", "arc_capacitances", "candidate_processes",
-           "effective_capacitance", "peak_frequency", "process", "size_class",
-           "spread_for"]
+           "effective_capacitance", "peak_frequency", "process", "reachable",
+           "size_class", "spread_for"]
 
 #: ``C · l/A`` -- a capacitor across the whole thickness (bulk, boundary).
 THICKNESS = "thickness"
@@ -284,6 +284,26 @@ def size_class(arc: ArcCapacitance, *, spread: float = 1.0) -> str | None:
              for k in (1.0 / spread, 1.0, spread)}
     side = sides.pop()
     return side if not sides else None
+
+
+def reachable(arc: ArcCapacitance, *, spread: float = 1.0) -> tuple[str, ...] | None:
+    """Every process the arc's capacitance reaches when it moves up to
+    ``spread`` times either way -- the processes it **can** be.  ``None`` is
+    *not judged*, as in :func:`size_class`.
+
+    A name outside this set is ruled out even by the formula's own
+    uncertainty, which is when ADR 0047 renames the arc.  An interval, not
+    three samples: a range narrower than the spread could fall between them.
+    """
+    if arc.candidates is None or arc.per_length is None or arc.per_area is None:
+        return None
+    out: list[str] = []
+    for one in PROCESSES:
+        value = arc.per_length if one.scaling == THICKNESS else arc.per_area
+        low, high = value / spread, value * spread
+        if (one.high is None or low < one.high) and (one.low is None or high >= one.low):
+            out.append(one.key)
+    return tuple(out)
 
 
 def spread_for(arc: ArcCapacitance, undetermined: Iterable[str]) -> float:

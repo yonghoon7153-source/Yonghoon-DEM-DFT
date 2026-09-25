@@ -8,11 +8,10 @@
 import math
 from dataclasses import dataclass
 
-import numpy as np
 import pytest
 import synthetic_eis as S
 
-from wrdkit.eis.audit import CHECK, PROBLEM, Finding, audit_fit
+from wrdkit.eis.audit import CHECK, NOTE, PROBLEM, Finding, audit_fit
 from wrdkit.eis.circuit import parse_circuit
 from wrdkit.eis.derive import SOLID, SYMMETRIC, blocking_verdict, ionic_conductivity
 from wrdkit.eis.fit import fit_circuit
@@ -231,27 +230,24 @@ def test_a_tail_mimicked_by_an_arc_is_refitted_with_the_offered_circuit():
     assert result.values()["R0"] == pytest.approx(8.3, rel=1e-3)
 
 
-def test_an_arc_that_is_really_there_is_not_refitted_away():
-    """아크가 정말 보이는 펠릿 — 아크 없는 회로는 그 모양을 못 그린다.  그 아크는
-    전극 크기라 "벌크" 라는 이름이 틀렸지만, 이름을 고치려고 모양을 버리지
-    않는다 (ADR 0045 의 비용: 이것은 랩이 이름 규칙을 정할 일이다)."""
+def test_an_arc_that_is_really_there_is_not_a_refit_target():
+    """아크가 정말 보이는 펠릿 — 아크 없는 회로는 그 모양을 못 그린다.  실측
+    `bml refit` (2026-09-25) 이 그런 여덟에 `L1-R0-CPE1` 을 맞춰 모두 3.1–5.9 %
+    어긋났다.  이제 그 아크는 커패시턴스대로 "전극 계면" 이라 불리고 (ADR 0047),
+    고칠 이름이 없으니 다시 맞출 대상도 아니다 — 매번 헛되이 맞추지 않는다."""
     circuit = "L1-R0-p(R1,CPE1)-CPE2"
     values = {"L1": 1.7e-6, "R0": 8.0, "R1": 200.0, "CPE1_Q": 2e-6, "CPE1_n": 0.9,
               "CPE2_Q": 1e-5, "CPE2_n": 0.9}
     spectrum = spectrum_of(circuit, values)
     before = audit(Fit(circuit, [P(name, value) for name, value in values.items()]),
                    spectrum)
-    (only,) = refit_candidates(before.findings)
-    assert only == Candidate("L1-R0-CPE1", ("arcs_are_electrode",))
-
-    seeded = seed_values(circuit, values, only.circuit)
-    assert seeded["CPE1_Q"] == 1e-5                      # 꼬리에서, 아크가 아니라
-    result = fit_circuit(spectrum, only.circuit, start_from=seeded, frequency_range=BAND)
-    verdict = accept_refit(before.findings, audit(result, spectrum).findings,
-                           only.triggers, converged=result.converged)
-    assert not verdict.accepted
-    assert "모양을 못 그립니다" in verdict.reason
-    assert np.isfinite(result.chi_squared)
+    assert refit_candidates(before.findings) == []
+    assert remaining_problems(before.findings) == 0
+    (arc,) = before.arcs
+    assert arc["label"] == "전극 계면 저항"
+    (note,) = [f for f in before.findings if f.code == "arcs_are_electrode"]
+    assert note.severity == NOTE and not note.circuits
+    assert "R0 = 8 Ω" in note.message
 
 
 # -- 수를 옮기는가 ----------------------------------------------------------------
@@ -269,29 +265,20 @@ def test_a_worse_drawing_does_not_get_to_move_the_number():
     assert moved_number(8.0, 9.34, None, 0.01) == ""
 
 
-def test_an_electrode_arc_swallowed_into_r0_is_caught_even_when_the_audit_passes():
-    """작은 전극 크기 아크 — 아크 없는 회로가 그것을 R0 로 삼켜도 평균 오차는 1 %
-    라 검수는 받아들인다.  σ 에 쓰는 저항은 17 % 옮겨 간다."""
+def test_a_small_electrode_arc_is_no_longer_swallowed_into_r0():
+    """작은 전극 크기 아크 — 예전에는 이름을 고치려고 아크 없는 회로를 권했고,
+    그 회로는 아크를 R0 로 삼켜 σ 에 쓰는 저항이 17 % 옮겨 갔다 (그래서
+    `moved_number` 가 막았다).  이름이 커패시턴스를 따르니 (ADR 0047) 권할 것이
+    없고, σ 는 처음부터 R0 로 맞다."""
     circuit = "L1-R0-p(R1,CPE1)-CPE2"
     values = {"L1": 1.7e-6, "R0": 8.0, "R1": 1.5, "CPE1_Q": 5e-6, "CPE1_n": 0.85,
               "CPE2_Q": 1e-5, "CPE2_n": 0.9}
     spectrum = spectrum_of(circuit, values)
     verdict = blocking_verdict(spectrum.frequency_hz, spectrum.z_re, spectrum.z_im)
-
-    def sigma(fit):
-        return ionic_conductivity(fit, thickness_cm=PELLET_CM, area_cm2=AREA_CM2,
-                                  config=SYMMETRIC, blocking=verdict)
-
     old_fit = Fit(circuit, [P(name, value) for name, value in values.items()])
     before = audit(old_fit, spectrum)
-    (only,) = refit_candidates(before.findings)
-    result = fit_circuit(spectrum, only.circuit,
-                         start_from=seed_values(circuit, values, only.circuit),
-                         frequency_range=BAND)
-    after = audit(result, spectrum)
-    assert accept_refit(before.findings, after.findings, only.triggers,
-                        converged=result.converged).accepted
-    assert sigma(old_fit)["total_ohm"] == 8.0                  # 아크는 전극 쪽이라 뺐다
-    moved = moved_number(sigma(old_fit)["total_ohm"], sigma(result)["total_ohm"],
-                         before.misfit.mean, after.misfit.mean)
-    assert "8 → 9.3" in moved and "(+17 %)" in moved
+    assert refit_candidates(before.findings) == []
+    sigma = ionic_conductivity(old_fit, thickness_cm=PELLET_CM, area_cm2=AREA_CM2,
+                               config=SYMMETRIC, blocking=verdict)
+    assert sigma["total_ohm"] == 8.0                           # 아크는 전극 쪽이라 뺐다
+    assert sigma["electrode_arcs"] == ["R1"]
