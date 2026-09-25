@@ -588,12 +588,21 @@ def parse_pw(out_path, calc, d3):
     if not os.path.isfile(out_path):
         raise SlabError(f"{out_path} 없음")
     t = open(out_path, errors="ignore").read()
-    if "JOB DONE" not in t or "convergence has been achieved" not in t:
-        raise SlabError(f"{out_path}: 미완료 또는 SCF 미수렴")
+    # ⛔ 2026-09-25 Codex BX P0 — **마지막 실행**만 본다 (앞선 실행의 성공 문구가 살아남지 않게).
+    #   옛 판은 `End final coordinates` **또는** `bfgs converged` 로 이완 완료를 인정했는데, QE 7.4.1 은
+    #   `bfgs failed after … convergence not achieved` (bfgs_module.f90) 로 **실패**해도 최종 좌표와 JOB DONE 을 찍는다
+    #   → 실패한 이완이 집계까지 갔다 (합성 출력으로 재현). 이제 `bfgs converged` 를 명시적으로 요구하고 실패 문구를 거부한다.
+    #   ⚠ 실패 문구 거부는 '명시적 성공 요구 + 마지막 실행' 과 **겹친다** (한 실행에 두 문구가 같이 나오지 않는다) —
+    #   그래서 그 줄만 끄는 돌연변이는 빨간불이 안 난다. 남겨 두는 이유는 QE 가 문구를 바꿔도 의도가 코드에 남게 하는 것뿐이다.
+    #   run_sese_gpu.sh 의 _done 과 같은 규칙이다 (한 곳이 바뀌면 둘 다 본다).
+    k = t.rfind("Program PWSCF")
+    t = t[k:] if k >= 0 else t
+    if "JOB DONE" not in t or "convergence has been achieved" not in t or "convergence NOT achieved" in t:
+        raise SlabError(f"{out_path}: 미완료 또는 SCF 미수렴 (마지막 실행)")
     if calc == "relax":
-        if not re.search(r"End final coordinates|bfgs converged", t) or \
-                "The maximum number of steps has been reached" in t:
-            raise SlabError(f"{out_path}: 이완 미수렴")
+        if "bfgs converged" not in t or \
+                re.search(r"bfgs failed|convergence not achieved|maximum number of steps has been reached", t, re.I):
+            raise SlabError(f"{out_path}: 이완 미수렴·실패 (마지막 실행 · 'bfgs converged' 가 명시돼야 한다)")
     E = re.findall(_RE_E, t, re.M)
     if not E:
         raise SlabError(f"{out_path}: '!    total energy' 줄 없음")
@@ -869,7 +878,7 @@ def _selftest_collect(ck):
     E = {"01_bulk_scf": (-1000.0, -0.5), "02_s_outer_scf": (-3020.0, -1.4), "02_li_outer_scf": (-2979.0, -1.3),
          "03_s_outer_relax_pbe": (-3018.61, None), "03_li_outer_relax_pbe": (-2977.71, None)}
 
-    def fake(root, skip=(), no_d3=(), unconv=(), maxstep=()):
+    def fake(root, skip=(), no_d3=(), unconv=(), maxstep=(), bfgsfail=(), stale_ok=(), nobfgs=(), stale_killed=()):
         for j in jobs:
             if j["dir"] in skip:
                 continue
@@ -886,10 +895,23 @@ def _selftest_collect(ck):
             if j["calc"] == "relax":
                 if j["dir"] in maxstep:     # nstep 소진 — QE 는 이때도 JOB DONE 과 최종 좌표를 찍는다
                     L += ["     The maximum number of steps has been reached.", "End final coordinates"]
+                elif j["dir"] in bfgsfail:  # QE 7.4.1 bfgs_module.f90 실패 문구 — 이때도 최종 좌표·JOB DONE 이 찍힌다 (BX P0)
+                    L += ["     bfgs failed after 200 scf cycles and 199 bfgs steps, convergence not achieved",
+                          "End final coordinates"]
+                elif j["dir"] in nobfgs:    # 최종 좌표는 있는데 bfgs 판정 줄이 없다 — 성공을 **명시적으로** 요구해야 잡힌다
+                    L += ["End final coordinates"]
                 else:
                     L += ["     bfgs converged in  20 scf cycles", "End final coordinates"]
             L.append("   JOB DONE.")
-            open(os.path.join(d, "pw.out"), "w").write("\n".join(L) + "\n")
+            txt = "\n".join(L) + "\n"
+            if j["dir"] in stale_killed:    # 앞 실행은 성공 · 마지막 실행은 중간에 죽음(JOB DONE 없음) — 전체를 보면 앞 실행이 통과시킨다
+                txt = "     Program PWSCF v.7.4.1 starts\n" + txt + "     Program PWSCF v.7.4.1 starts\n     iteration #  3     ecut=    52.00 Ry\n"
+            if j["dir"] in stale_ok:        # 앞 실행은 성공 · 마지막 실행은 실패 — 마지막 실행만 봐야 잡힌다
+                good = txt
+                bad = txt.replace("     bfgs converged in  20 scf cycles",
+                                  "     bfgs failed after 200 scf cycles and 199 bfgs steps, convergence not achieved")
+                txt = "     Program PWSCF v.7.4.1 starts\n" + good + "     Program PWSCF v.7.4.1 starts\n" + bad
+            open(os.path.join(d, "pw.out"), "w").write(txt)
 
     with tempfile.TemporaryDirectory() as r:
         fake(r)
@@ -929,6 +951,27 @@ def _selftest_collect(ck):
         fake(r, unconv=("01_bulk_scf",))
         o = collect(r, qe_in)
         ck("⛔집계: 벌크 미수렴 → W 전부 안 냄", not o["W_J_m2"], o["W_J_m2"])
+    # ⛔ Codex BX P0 (2026-09-25) — 실패한 이완이 집계로 새는 경로
+    with tempfile.TemporaryDirectory() as r:
+        fake(r, bfgsfail=("03_s_outer_relax_pbe",))
+        o = collect(r, qe_in)
+        ck("⛔집계: 'bfgs failed … convergence not achieved' + 최종 좌표 + JOB DONE → W_cleave 안 냄 (BX P0 재현)",
+           "W_cleave_relaxed_PBE" not in o["W_J_m2"] and "03_s_outer_relax_pbe" in o["missing"], o["W_J_m2"])
+    with tempfile.TemporaryDirectory() as r:
+        fake(r, stale_ok=("03_li_outer_relax_pbe",))
+        o = collect(r, qe_in)
+        ck("⛔집계: 앞 실행 성공 · 마지막 실행 실패 → 안 냄 (마지막 실행만 본다)",
+           "W_cleave_relaxed_PBE" not in o["W_J_m2"] and "03_li_outer_relax_pbe" in o["missing"], o["W_J_m2"])
+    with tempfile.TemporaryDirectory() as r:
+        fake(r, stale_killed=("03_li_outer_relax_pbe",))
+        o = collect(r, qe_in)
+        ck("⛔집계: 앞 실행 성공 · 마지막 실행은 도중에 죽음 → 안 냄 (전체를 보면 앞 실행이 통과시킨다)",
+           "W_cleave_relaxed_PBE" not in o["W_J_m2"] and "03_li_outer_relax_pbe" in o["missing"], o["W_J_m2"])
+    with tempfile.TemporaryDirectory() as r:
+        fake(r, nobfgs=("03_s_outer_relax_pbe",))
+        o = collect(r, qe_in)
+        ck("⛔집계: 최종 좌표만 있고 'bfgs converged' 없음 → 안 냄 (성공을 명시적으로 요구)",
+           "W_cleave_relaxed_PBE" not in o["W_J_m2"] and "03_s_outer_relax_pbe" in o["missing"], o["W_J_m2"])
 
 
 def _selftest():

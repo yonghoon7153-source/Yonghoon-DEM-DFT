@@ -63,20 +63,31 @@ IN=${1:-}; RUN=${2:-}
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # ── 완료 판정 (한 곳에만 둔다 — 재개와 성공이 같은 기준이어야 한다) ─────────────
+#   ⛔ 2026-09-25 Codex BX P0 — 옛 판은 relax 를 `End final coordinates` **또는** `bfgs converged` 로 인정했다.
+#   QE 7.4.1 은 이완이 **실패**해도(`bfgs failed after … convergence not achieved` · bfgs_module.f90) 최종 좌표와
+#   JOB DONE 을 찍으므로, 실패한 이완이 완료로 통과해 집계까지 갔다 (합성 출력으로 재현됨). 이제:
+#   ① **마지막 실행**(마지막 `Program PWSCF` 헤더 이후)만 본다 — 앞선 실행의 성공 문구가 살아남지 않게
+#   ② relax 는 `bfgs converged` 를 **명시적으로** 요구하고 `bfgs failed` · `convergence not achieved` · nstep 소진을 거부한다
+#   ③ scf 도 마지막 실행에서 `convergence has been achieved` 를 요구하고 `convergence NOT achieved` 를 거부한다
+_last_run() {  # $1 = pw.out → 마지막 실행의 텍스트 (헤더가 없으면 전체)
+  awk '/Program PWSCF/{buf=""} {buf=buf $0 "\n"} END{printf "%s", buf}' "$1"
+}
 _done() {   # $1 = pw.out · $2 = calc (scf|relax|probe)
   [ -f "$1" ] || return 1
-  grep -aq "JOB DONE" "$1" || return 1
+  local T; T=$(_last_run "$1")
+  printf '%s' "$T" | grep -aq "JOB DONE" || return 1
   if [ "$2" = probe ]; then
     # 비용 프로브(electron_maxstep 을 자른 SCF)는 수렴이 목적이 아니다 — iteration 이 실제로 돌았는지만 본다.
     # ⛔ 이 갈래로 끝난 잡의 에너지는 값이 아니다 (build_neb_inputs.py --scf_probe 의 금지문).
-    grep -aqE "convergence (NOT achieved|has been achieved)" "$1" || return 1
-    grep -aq "total energy" "$1" || return 1
+    printf '%s' "$T" | grep -aqE "convergence (NOT achieved|has been achieved)" || return 1
+    printf '%s' "$T" | grep -aq "total energy" || return 1
     return 0
   fi
-  grep -aq "convergence has been achieved" "$1" || return 1
+  printf '%s' "$T" | grep -aq "convergence has been achieved" || return 1
+  printf '%s' "$T" | grep -aq "convergence NOT achieved" && return 1
   if [ "$2" = relax ]; then
-    grep -aqE "End final coordinates|bfgs converged" "$1" || return 1
-    grep -aq "The maximum number of steps has been reached" "$1" && return 1
+    printf '%s' "$T" | grep -aq "bfgs converged" || return 1
+    printf '%s' "$T" | grep -aqiE "bfgs failed|convergence not achieved|maximum number of steps has been reached" && return 1
   fi
   return 0
 }
@@ -200,6 +211,19 @@ if [ "$IN" = "--selftest" ]; then
   printf "     convergence NOT achieved after   3 iterations: stopping\nJOB DONE\n" > "$T/e.out"
   ck "⛔probe · 판정 줄만 있고 에너지 줄 없음"     "! _done $T/e.out probe"
   ck "⛔파일 없음 → 미완료"               "! _done $T/없음.out scf"
+  # ⛔ Codex BX P0 (2026-09-25) — QE 7.4.1 실패 문구 · 마지막 실행 규칙
+  printf "convergence has been achieved\n!    total energy = -2152.35487740 Ry\n     bfgs failed after 200 scf cycles and 199 bfgs steps, convergence not achieved\nEnd final coordinates\nJOB DONE\n" > "$T/f.out"
+  ck "⛔bfgs failed + 최종 좌표 + JOB DONE → 미완료 (BX P0 재현)" "! _done $T/f.out relax"
+  printf "convergence has been achieved\nEnd final coordinates\nJOB DONE\n" > "$T/g.out"
+  ck "⛔최종 좌표만 있고 bfgs converged 없음 → 미완료 (성공을 명시적으로 요구)" "! _done $T/g.out relax"
+  printf "     Program PWSCF v.7.4.1 starts\nconvergence has been achieved\nbfgs converged in 20 scf cycles\nEnd final coordinates\nJOB DONE\n     Program PWSCF v.7.4.1 starts\nconvergence has been achieved\n     bfgs failed after 200 scf cycles, convergence not achieved\nEnd final coordinates\nJOB DONE\n" > "$T/h.out"
+  ck "⛔앞 실행은 성공 · 마지막 실행은 실패 → 미완료 (마지막 실행만 본다)" "! _done $T/h.out relax"
+  printf "     Program PWSCF v.7.4.1 starts\nconvergence has been achieved\n     bfgs failed after 200 scf cycles, convergence not achieved\nEnd final coordinates\nJOB DONE\n     Program PWSCF v.7.4.1 starts\nconvergence has been achieved\nbfgs converged in 20 scf cycles\nEnd final coordinates\nJOB DONE\n" > "$T/i.out"
+  ck "앞 실행은 실패 · 마지막 실행은 성공 → 완료" "_done $T/i.out relax"
+  printf "     Program PWSCF v.7.4.1 starts\nconvergence has been achieved\n!    total energy = -1.0 Ry\nJOB DONE\n     Program PWSCF v.7.4.1 starts\n     convergence NOT achieved after 200 iterations: stopping\nJOB DONE\n" > "$T/j.out"
+  ck "⛔scf: 앞 실행 성공 · 마지막 실행 미수렴 → 미완료" "! _done $T/j.out scf"
+  printf "     Program PWSCF v.7.4.1 starts\nconvergence has been achieved\nbfgs converged in 20 scf cycles\nEnd final coordinates\nJOB DONE\n     Program PWSCF v.7.4.1 starts\n     iteration #  3     ecut=    52.00 Ry\n" > "$T/k.out"
+  ck "⛔앞 실행 성공 · 마지막 실행은 도중에 죽음(JOB DONE 없음) → 미완료" "! _done $T/k.out relax"
   printf "  vdw_corr = 'grimme-d3'\n  dftd3_version = 4\n  dftd3_threebody = .false.\n" > "$T/a.in"
   ck "D3 + threebody 명시 → 통과"        "_d3_ok $T/a.in"
   printf "  vdw_corr = 'grimme-d3'\n  dftd3_version = 4\n" > "$T/b.in"

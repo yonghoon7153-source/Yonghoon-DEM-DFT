@@ -178,7 +178,7 @@
     }
    ],
    "vram_total_mib": 32768,
-   "verdict": "⚠ **경보 v2 발화** — 이완 PBE W_cleave 가 운영 구간 **아래** · 합격선이 아니다. 후속 점검: PS₄ 온전 · 벌크 원자 이완 0 · **기준 벌크의 셀 모양(갇힌 y–z 전단)** 이 차이의 일부를 설명 (실행 전 문턱 넘음). 값·사후 보정값은 결과 기록 `db/properties/wad_sese_4L_result_2026_09_25.json` (인용 불가).",
+   "verdict": "⚠ **경보 v2 발화 · 유지** — 입방 벌크 기준 이완 PBE W_cleave 가 운영 구간 아래. c-벡터 이완 벌크 참조로 바꾸면 값이 오르지만 그 차이는 **참조 상태 민감도**다 (순수 전단·문헌 차 원인으로 해석 안 함). Codex BX: 원인 진단 조건부 GO · 방법 검증 완료·DEM 승격 **NO-GO**. 값은 결과 기록 `db/properties/wad_sese_4L_result_2026_09_25.json` (인용 불가 · 내부 방법 점검용).",
    "values_policy": "무이완 중간값은 `kb/open_items.md` ⏭-NOW-w 에만 ‘중간 · 인용 금지’ 로 적었다 — 이 원장·화면에는 싣지 않는다",
    "records": [
     "kb/platforms/v100_uma_setup_2026_09_14.md",
@@ -209,6 +209,13 @@
    "verdict": "조건부 GO (A′)",
    "one_line": "전체 계면 절대 W 로 넘기기는 NO-GO · 작은 주기 모델 파일럿은 조건부 GO · 4층 식 계수 4",
    "record": "kb/reviews/codex_BW_reply_wad_validation_without_cluster_2026_09_23.md"
+  },
+  {
+   "who": "Codex (BX)",
+   "target": "SE|SE 4층 대조 — 경보 원인 진단 (A·B·B′)",
+   "verdict": "조건부 GO",
+   "one_line": "원인 진단은 조건부 GO · **'방법 검증 완료'·DEM 입력 승격은 NO-GO**. P0: 실패한 이완을 완료로 받는 판정기 (수정됨). W′ 0.354 는 일관되게 정의되나 +0.0775 는 **참조 변경 효과**이지 순수 전단이 아니다. ±0.16 문헌 귀속 철회.",
+   "record": "kb/reviews/codex_BX_reply_wad_sese_4L_alarm_2026_09_25.md"
   }
  ],
  "hazards": [
@@ -253,6 +260,10 @@
   {
    "text": "DEM 회신 2‴ — 1저자 발송 승인 · 발송 확인 대기",
    "state": "대기"
+  },
+  {
+   "state": "1저자",
+   "text": "SE|SE 후속 (Codex BX Q5): ① 기존 pw.out 마지막 실행 확인 (블록 전달) ② P1 작은 계산 — 52 원자 벌크 기존/이완 셀의 cutoff·k 응력·참조 에너지 차 안정성 (벌크 1 meV/atom = 0.0165 J/m²) ③ W′ 운영 판정 새 ID 여부 ④ Q3″ — comp1 V0 셀 응력이 P1·P2 정의에 미치는 영향 점검 3항 (일괄 교체 NO-GO · 두 참조 구별 보존)"
   }
  ],
  "log": [
@@ -350,6 +361,11 @@
    "date": "2026-09-25",
    "stage": "dft",
    "text": "SE|SE 경보 후속 — **점검 B** 벌크 원자 이완: 0 스텝 (이미 극소 · ΔW 0) · 그러나 벌크 응력 y–z 전단 10.8 kbar. **점검 B′** a·b 고정 c 자유 vc-relax: c 가 y 로 3.4° 기울고 z −1.7 % · ΔW′ 가 실행 전 문턱 0.05 J/m² 를 넘었다 ⇒ **원인 후보 ②′ (기준 벌크의 셀 모양)** 가 차이의 일부를 설명. Li 바깥 슬랩 뼈대의 전단이 벌크 기울기와 거의 같다 (S 바깥은 절반). 사후 보정값은 경보 판정을 대체하지 않는다 → Codex BX. ⚠ 범위 밖 발견: comp1 V0 셀이 이 설정에서 전단 응력을 품는다 — 다른 계산 영향은 1저자 결정."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**Codex BX 회신** — 원인 진단 조건부 GO · '방법 검증 완료'·DEM 승격 NO-GO. **P0**: 완료 판정기가 QE 실패 문구(`bfgs failed … convergence not achieved`)를 완료로 통과시켰다 → 러너·집계기 둘 다 '마지막 실행 · bfgs converged 명시 요구 · 실패 문구 거부' 로 수정 (selftest 62/62 · 54/0 · 음성 5). **P1 정정**: 4층 값은 '선택한 참조에 대한 슬랩 쌍 초과에너지'(두께 수렴 γ 합 아님) · 'Pustorino ±0.16 보고' 귀속 철회(우리 산술) · '이미 원자 극소' → '힘 기준 만족 · BFGS 가 추가 감소 못 찾음' · +0.0775 는 참조 변경 효과(순수 전단 아님) · Pulay 등방성 보장 아님 · 절반 전단은 미수렴 근거 아님. DEM 허용 서술 확정 (Q6). W′ 운영 판정은 새 ID 로 — 1저자."
   }
  ],
  "related_decisions": [

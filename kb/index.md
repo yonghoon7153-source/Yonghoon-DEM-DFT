@@ -1,14 +1,15 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-25 · managed-files: 447
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-25 · managed-files: 448
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 246건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 247건)
 - 2026-09-25 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
-- 2026-09-25 · `kb/reviews/codex_BX_prompt_wad_sese_4L_alarm_2026_09_25.md` — 리뷰 BX 프롬프트 — SE|SE 4층 대조: 이완 W_cleave 가 경보 구간 아래 — 원인 가르기(이완 점검 A · 벌크 이완 B)가 맞나 · 발송 대기 → 1저자 발송 (§4 에 B · B′ 결과 · 최종 응력…
+- 2026-09-25 · `kb/reviews/codex_BX_prompt_wad_sese_4L_alarm_2026_09_25.md` — 리뷰 BX 프롬프트 — SE|SE 4층 대조: 이완 W_cleave 가 경보 구간 아래 — 원인 가르기(이완 점검 A · 벌크 이완 B)가 맞나 · 발송됨 · 회신 수령 (조건부 GO — 진단 · 검증 완료·DEM 승…
+- 2026-09-25 · `kb/reviews/codex_BX_reply_wad_sese_4L_alarm_2026_09_25.md` — 리뷰 BX 회신 — SE|SE 4층 경보: 원인 진단 조건부 GO · 방법 검증 완료/DEM 승격 NO-GO · P0 완료 판정기 결함 · 수신됨 (2026-09-25 · 1저자 붙여넣기) — 원문 그대로 ·…
 - 2026-09-24 · `kb/platforms/v100_uma_setup_2026_09_14.md` — 임대 V100 에 UMA 를 올리는 레시피 — 함정 일곱과 순서 · 완료
 - 2026-09-23 · `kb/concepts/cv_vs_dqdv_and_two_windows.md` — CV · dQ/dV · 그리고 두 개의 "안정창" — 처음 보는 사람을 위한 정리 · 진행 — 개념 정리. 우리 수치 주장은 담지 않는다(경로만 가리킨다)
 - 2026-09-23 · `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md` — SDCP vs PTFE 흡착에너지 (C-12 v41) — 숫자의 지위 · PTFE 크기 검증 · 세미나 대응 · 진단 정리 — 값은 citable:false (사전등록 게이트 미통과…
@@ -26,7 +27,6 @@
 - 2026-09-22 · `kb/reviews/li2s1a_BU_addendum_block_rule_guards_2026_09_22.md` — BU 부록 — 합의한 블록 규칙을 코드로 내리다가 **규칙이 잡음에 걸리는 것**을 찾았다 · 보낼것
 - 2026-09-22 · `kb/reviews/li2s1a_BU_prompt_variance_ratio_rule_2026_09_22.md` — BU 수신 원문 — 정확값 대조 다음 수 · 분산비 판정 규칙 · 블록 규칙 선박기 · 수신됨-회신함
 - 2026-09-22 · `kb/reviews/li2s1a_BU_reply_variance_ratio_rule_2026_09_22.md` — BU 회신 — 판정 규칙을 분산비로 교체 · 내 IQR 초안은 두 번 틀렸다 · 블록 규칙 선박기 · 회신문-작성됨
-- 2026-09-20 · `kb/reports/weekly_2026_09_20.md` — 주간 정리 2026-09-14 ~ 09-20 (주간보고 초안) · 완료 (2026-09-20 · 다음 주 문서는 새 파일)
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -212,7 +212,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (154)
+## reviews/ (155)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-25 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -293,7 +293,8 @@
 - `kb/reviews/codex_BV_reply_wad_lpscl_ag_c_vgcf_2026_09_23.md` — 리뷰 BV 회신 (Codex) — LPSCl | Ag–C | VGCF 점착일 계획 v2: NO-GO · 구조 검증부터  (2026-09-23 · 수신됨 — NO-GO (v2 대상 · 5687c4fa7). 새 P0 …)
 - `kb/reviews/codex_BW_prompt_wad_validation_without_cluster_2026_09_23.md` — 리뷰 BW 프롬프트 — W_ad: 클러스터 없이(단일 노드 48 GB) 무엇을 검증할 수 있나 · MLIP+D3 본계산 + 작은 모델 DFT 검증으로 바꿔도 되는가  (2026-09-23 · 발송됨 · 회신 수령 (NO-GO · 제한 파일럿 조건부 GO) → …)
 - `kb/reviews/codex_BW_reply_wad_validation_without_cluster_2026_09_23.md` — 리뷰 BW 회신 — W_ad: (A) 를 검증된 전체 계면 절대 W 로 전달 NO-GO · 범위를 좁힌 파일럿 조건부 GO (A′)  (2026-09-23 · 회신 수령 — NO-GO(현재 (A) 의 절대값 승인 논리) · 제한…)
-- `kb/reviews/codex_BX_prompt_wad_sese_4L_alarm_2026_09_25.md` — 리뷰 BX 프롬프트 — SE|SE 4층 대조: 이완 W_cleave 가 경보 구간 아래 — 원인 가르기(이완 점검 A · 벌크 이완 B)가 맞나  (2026-09-25 · 발송 대기 → 1저자 발송 (§4 에 B · B′ 결과 · 최종 응력…)
+- `kb/reviews/codex_BX_prompt_wad_sese_4L_alarm_2026_09_25.md` — 리뷰 BX 프롬프트 — SE|SE 4층 대조: 이완 W_cleave 가 경보 구간 아래 — 원인 가르기(이완 점검 A · 벌크 이완 B)가 맞나  (2026-09-25 · 발송됨 · 회신 수령 (조건부 GO — 진단 · 검증 완료·DEM 승…)
+- `kb/reviews/codex_BX_reply_wad_sese_4L_alarm_2026_09_25.md` — 리뷰 BX 회신 — SE|SE 4층 경보: 원인 진단 조건부 GO · 방법 검증 완료/DEM 승격 NO-GO · P0 완료 판정기 결함  (2026-09-25 · 수신됨 (2026-09-25 · 1저자 붙여넣기) — 원문 그대로 ·…)
 - `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서)  (2026-08-20 · 리뷰대기)
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료)  (2026-08-20 · v2.1 — codex 2라운드 종료 (manifest 지적 철회 ·…)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
