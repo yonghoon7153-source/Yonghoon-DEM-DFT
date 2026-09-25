@@ -1068,114 +1068,207 @@ def relax_check(pw_in_text, final_text, mid_thr=RELAX_MID_THR_A, vac_tol=RELAX_V
             "⛔": "신호만 낸다 — 원인 분류·판정 아님 (경보 v2 는 원인 미분류)"}
 
 
-# ─────────────────── 계면 구조 점검 G2 (A′ 카드 v2 · Codex BY Q7 [P0] · 2026-09-25) ───────────────────
-#: 결과 전 문턱 — 카드 v2 `4_게이트.G2` 와 같은 값. ⛔ 결과를 보고 바꾸지 않는다.
-IFC_PEN_THR_A = 1.5        # SE 원자가 첫 흡착층 평면 아래 이 거리보다 가까우면 '선언한 비혼합 기하 범위를 벗어남'
-IFC_BOND_TOL = 0.15        # 흡착층 결합 길이 허용 (초기 변형 구조의 결합 목록 기준 ±15 %)
-IFC_FIRST_LAYER_A = 0.8    # '첫 흡착층' = SE 에 가장 가까운 흡착 원자에서 이 두께 안
-IFC_NN_FAC = 1.15          # 결합 목록 = 초기 구조에서 같은 원소쌍 최단거리 × 이 배수 안의 쌍
-IFC_FIXED_TOL_A = 1e-3     # 고정 마스크 원자의 허용 변위 (넘으면 마스크가 안 걸린 것)
+# ─────────────────── 계면 구조 점검 G2 (A′ 카드 v3 · Codex BY Q7 [P0] → BZ Q2 우회 4경로 차단 · 2026-09-25) ───────────────────
+#: 결과 전 문턱 — 카드 v3 `4_게이트.G2` 와 같은 값. ⛔ 결과를 보고 바꾸지 않는다.
+IFC_PEN_THR_A = 1.5        # 기판 원자가 첫 흡착층 평면 아래 이 거리보다 가까우면 '선언한 비혼합 기하 범위를 벗어남'
+IFC_BOND_TOL = 0.15        # 결합 길이 허용 (초기 변형 구조의 결합 목록 기준 ±15 %)
+IFC_FIRST_LAYER_A = 0.8    # '첫 흡착층' = 기판에 가장 가까운 흡착 원자에서 이 두께 안
+IFC_NN_FAC = 1.15          # 결합 목록 = 초기 구조에서 같은 몸체·같은 원소쌍 최단거리 × 이 배수 안의 쌍
+IFC_FIXED_TOL_A = 1e-3     # 고정 마스크·측방 제약 원자의 허용 변위 (넘으면 제약이 안 걸린 것)
 SE_ELEMENTS = ("Li", "P", "S", "Cl")
 
 
-def interface_check(init, final, ads_elements=("Ag", "C", "H"), fixed_idx=(), pen_thr=IFC_PEN_THR_A, bond_tol=IFC_BOND_TOL):
-    """UMA 이완 전(init) ↔ 후(final) 계면 모델 — 같은 셀·원자 · PS₄ 온전·짝 · 흡착층 결합 ±15 % · 비혼합 범위 · 고정 마스크.
+def _finite_or_die(atoms, name):
+    """⛔ BZ Q2: `NaN > 문턱` 은 거짓이라 비교식만으로는 안 잡힌다 — 비교 **전에** 유한성을 본다."""
+    if not np.isfinite(atoms.cell.array).all():
+        raise SlabError(f"{name}: 셀에 NaN/inf 가 있다")
+    if not np.isfinite(atoms.get_positions()).all():
+        raise SlabError(f"{name}: 좌표에 NaN/inf 가 있다")
 
-    정의 (카드 v2 G2 · 봉인 대상):
-      · 법선 = +z 를 SE → 흡착층 방향으로 잡는다 (흡착층 평균 z 가 SE 평균 z 보다 작으면 부호를 뒤집는다). z 는 비주기 · 면내는 최소영상.
-      · 첫 흡착층 평면 z_ref = 최종 구조에서 SE 에 가장 가까운 흡착 원자로부터 IFC_FIRST_LAYER_A 안에 있는 흡착 원자들의 평균 z.
-      · 침투 깊이 p_i = z_i(final) − z_ref (SE 원자 i 전부 — Li·P·S·Cl 원자 ID 는 init 의 SE 원소 인덱스). 비혼합 범위 = 모든 p_i ≤ −pen_thr.
-      · 흡착층 결합 목록 = init 에서 같은 원소쌍(Ag–Ag · C–C · C–H …) 최단거리 × IFC_NN_FAC 안의 쌍. final 에서 각 결합이 ±bond_tol 안.
-      · PS₄ = P 마다 R_PS Å 안 S 4 개 · 짝 동일 (relax_check 와 같은 규칙).
-      · fixed_idx 원자는 변위 < IFC_FIXED_TOL_A (마스크가 실제로 걸렸는지 — 조용히 틀린 경로 방지).
-    ⛔ 못 하는 것: 반응·전하이동을 판정하지 않는다 (구조 경보다) · 원인을 정하지 않는다 · 에너지를 보지 않는다 ·
-      측방 영상 효과를 재지 않는다 (셀이 작으면 '고립 조각' 이라 부르지 않는다).
+
+def _roles(atoms, ads_elements, substrate_elements):
+    sym = np.array(atoms.get_chemical_symbols())
+    ads, sub = set(ads_elements), set(substrate_elements)
+    if ads & sub:
+        raise SlabError(f"흡착층 원소와 기판 원소가 겹친다 {sorted(ads & sub)}")
+    is_ads, is_sub = np.isin(sym, sorted(ads)), np.isin(sym, sorted(sub))
+    other = sorted(set(sym[~is_ads & ~is_sub]))
+    if other:
+        raise SlabError(f"기판도 흡착층도 아닌 원소 {other} — ads_elements / substrate_elements 를 선언한다")
+    if not is_ads.any() or not is_sub.any():
+        raise SlabError("기판 원자 또는 흡착층 원자가 없다 (V2 는 substrate_elements=Ag · ads_elements=C 로 부른다)")
+    return sym, is_ads, is_sub
+
+
+def normal_sign(init, ads_elements=("Ag", "C", "H"), substrate_elements=SE_ELEMENTS):
+    """법선 부호 — **초기 구조에서만** 정한다 (+1: 흡착층이 기판보다 +z). ⛔ 최종 구조로 다시 추론하지 않는다 (BZ Q2 3번 경로)."""
+    _finite_or_die(init, "init")
+    _, is_ads, is_sub = _roles(init, ads_elements, substrate_elements)
+    z = init.get_positions()[:, 2]
+    dz = float(z[is_ads].mean() - z[is_sub].mean())
+    if abs(dz) < 1e-6:
+        raise SlabError("흡착층과 기판의 평균 z 가 같다 — 법선을 정할 수 없다")
+    return 1.0 if dz > 0 else -1.0
+
+
+def fixed_mask_policy(init, ads_elements=("Ag", "C", "H"), substrate_elements=SE_ELEMENTS, policy="far_half"):
+    """고정 마스크 **생성 규칙** (카드 S1 에서 봉인 · 결정적).
+
+    far_half: 기판 원자 중, 초기 구조의 기판 중심면 (z_min + z_max)/2 (법선 부호 적용) 보다 **계면 반대쪽**에 있는 원자 전부.
+    동률(중심면 ±1e-6 Å)은 '고정' 쪽으로 — 결정적 처리. 반환은 정렬된 인덱스 목록.
+    ⛔ 못 하는 것: 층 단위 선택이 아니다 (중심면 기준 원자 단위) · 정책이 바뀌면 이 함수와 카드가 같이 바뀌어야 한다.
+    """
+    if policy != "far_half":
+        raise SlabError(f"모르는 마스크 정책 '{policy}' (허용: far_half)")
+    sgn = normal_sign(init, ads_elements, substrate_elements)
+    _, _, is_sub = _roles(init, ads_elements, substrate_elements)
+    zs = sgn * init.get_positions()[:, 2]
+    mid = 0.5 * (zs[is_sub].min() + zs[is_sub].max())
+    return sorted(int(i) for i in np.where(is_sub)[0] if zs[i] <= mid + 1e-6)
+
+
+def _validate_idx(idx, n, name):
+    if idx is None:
+        raise SlabError(f"{name} 는 필수다 — 생략하면 검사가 성립하지 않는다 (BZ Q2 1번 경로)")
+    try:
+        out = sorted({int(i) for i in idx})
+    except (TypeError, ValueError):
+        raise SlabError(f"{name} 에 정수가 아닌 값이 있다")
+    bad = [i for i in out if i < 0 or i >= n]
+    if bad:
+        raise SlabError(f"{name} 범위 밖 인덱스 {bad[:5]} (허용 0..{n - 1})")
+    return out
+
+
+def interface_check(init, final, ads_elements=("Ag", "C", "H"), substrate_elements=SE_ELEMENTS, fixed_idx=None,
+                    fixed_policy="far_half", lateral_fixed_idx=(), pen_thr=IFC_PEN_THR_A, bond_tol=IFC_BOND_TOL):
+    """UMA 이완 전(init) ↔ 후(final) 계면 모델 — 같은 셀·원자 · 유한성 · 고정 마스크(필수 · 정책 집합과 일치) · 흡착면 고정 ·
+    PS₄ 온전·짝 (기판에 P·S 가 있을 때 · 아니면 '해당 없음') · 몸체 안 결합 ±15 % · 비혼합 범위 · 측방 제약.
+
+    정의 (카드 v3 G2 · 봉인 대상):
+      · 역할: 기판 = substrate_elements (SE 는 Li·P·S·Cl · V2 는 Ag) · 흡착층 = ads_elements. 둘 밖의 원소가 있으면 멈춘다.
+      · 법선 = **초기 구조**에서 흡착층 평균 z − 기판 평균 z 의 부호 (최종 구조로 다시 정하지 않는다). z 비주기 · 면내 최소영상.
+      · 고정 마스크 = 필수 · 정수 · 범위 안 · 흡착층 원자 없음 · `fixed_mask_policy(init)` 와 **집합이 같아야** 한다 (다르면 깃발).
+      · 흡착면: 최종 구조에서 흡착층 평균 z 가 기판 쪽으로 넘어가거나 흡착 원자가 기판 중심면 너머로 가면 깃발.
+      · 첫 흡착층 평면 z_ref = 최종 구조에서 기판에 가장 가까운 흡착 원자로부터 IFC_FIRST_LAYER_A 안 흡착 원자들의 평균 z.
+      · 침투 p_i = z_i(final) − z_ref (기판 원자 전부). 비혼합 범위 = 모든 p_i ≤ −pen_thr.
+      · 결합 목록 = 초기 구조에서 **같은 몸체 안**(흡착층끼리 · 금속 기판끼리 — PS₄ 기판은 PS₄ 검사로 대신) 같은 원소쌍 최단거리 × IFC_NN_FAC 안의 쌍.
+        final 에서 각 결합이 ±bond_tol 안. 몸체 사이(흡착 높이)는 결합 목록에 넣지 않는다.
+      · fixed_idx 원자 변위 < IFC_FIXED_TOL_A · lateral_fixed_idx 원자 면내 변위 < IFC_FIXED_TOL_A (제약이 실제로 걸렸는지).
+    ⛔ 못 하는 것: 반응·전하이동 판정 (구조 경보다) · 원인 분류 · 에너지 · 측방 영상 효과 (셀이 작으면 '고립 조각' 이라 부르지 않는다).
     """
     from ase import Atoms
+    _finite_or_die(init, "init")
+    _finite_or_die(final, "final")
     s0, s1 = init.get_chemical_symbols(), final.get_chemical_symbols()
     if s0 != s1:
         raise SlabError(f"원자 수·순서가 다르다 (처음 {len(s0)} · 나중 {len(s1)})")
     C0, C1 = init.cell.array, final.cell.array
     if np.abs(C0 - C1).max() > 1e-6:
         raise SlabError("셀이 다르다 — MoLE (같은 셀) 위반")
-    sym = np.array(s1)
-    is_se = np.isin(sym, SE_ELEMENTS)
-    is_ads = np.isin(sym, list(ads_elements))
-    other = sorted(set(sym[~is_se & ~is_ads]))
-    if other:
-        raise SlabError(f"SE 도 흡착층도 아닌 원소 {other} — ads_elements 를 선언한다")
-    if not is_ads.any() or not is_se.any():
-        raise SlabError("SE 원자 또는 흡착층 원자가 없다")
+    sym, is_ads, is_sub = _roles(init, ads_elements, substrate_elements)
+    n = len(sym)
+    fixed = _validate_idx(fixed_idx, n, "fixed_idx (고정 마스크)")
+    if not fixed:
+        raise SlabError("고정 마스크가 비었다")
+    lat = _validate_idx(lateral_fixed_idx if lateral_fixed_idx is not None else (), n, "lateral_fixed_idx")
+    flags = []
+    ads_in_mask = [i for i in fixed if is_ads[i]]
+    if ads_in_mask:
+        flags.append(f"고정 마스크에 흡착층 원자 {len(ads_in_mask)} 개 — 기판 마스크가 아니다")
+    expected = fixed_mask_policy(init, ads_elements, substrate_elements, fixed_policy)
+    missing, extra = sorted(set(expected) - set(fixed)), sorted(set(fixed) - set(expected))
+    if missing or extra:
+        flags.append(f"고정 마스크가 정책 '{fixed_policy}' 집합({len(expected)} 개)과 다르다 — 빠짐 {len(missing)} · 남음 {len(extra)}")
+    sgn = normal_sign(init, ads_elements, substrate_elements)
     pbc = (True, True, False)
     x0, x1 = init.get_positions(), final.get_positions()
     d = _mic(x1 - x0, C0, pbc)
     disp = np.linalg.norm(d, axis=1)
-    flags = []
-    # ① PS₄ (relax_check 와 같은 규칙)
-    def partners(x):
-        i, j, _, _ = _pairs(Atoms(s1, positions=x, cell=C0, pbc=pbc), "P", "S", R_PS)
-        return {int(p): sorted(int(v) for v in j[i == p]) for p in np.where(sym == "P")[0]}
-    p0, p1 = partners(x0), partners(x1)
-    broken = {p: len(v) for p, v in p1.items() if len(v) != 4}
-    swapped = [p for p in p0 if p0[p] != p1[p] and p not in broken]
-    if broken:
-        flags.append(f"PS₄ 깨짐 — P {sorted(broken)} 의 {R_PS} Å 안 S 수 ≠ 4")
-    if swapped:
-        flags.append(f"PS₄ 짝 바뀜 — P {swapped}")
-    # ② 흡착층 결합 목록 (init) → final 길이 ±tol
-    ads_i = np.where(is_ads)[0]
+    z1s = sgn * x1[:, 2]
+    # ① 흡착면 고정 — 최종 구조가 선언한 면을 뒤집지 못한다
+    if float(z1s[is_ads].mean() - z1s[is_sub].mean()) <= 0:
+        flags.append("흡착면 뒤집힘 — 최종 구조에서 흡착층 평균 z 가 선언한 법선의 반대쪽")
+    sub_mid1 = 0.5 * (z1s[is_sub].min() + z1s[is_sub].max())
+    crossed = [int(i) for i in np.where(is_ads)[0] if z1s[i] < sub_mid1]
+    if crossed:
+        flags.append(f"흡착 원자 {len(crossed)} 개가 기판 중심면 너머(반대면)로 갔다 {crossed[:5]}")
+    # ② PS₄ (기판에 P·S 가 있을 때만 — 없으면 '해당 없음' 으로 **구분해** 적는다)
+    sub_el = set(sym[is_sub])
+    has_ps4 = ("P" in sub_el) and ("S" in sub_el)
+    if has_ps4:
+        def partners(x):
+            i, j, _, _ = _pairs(Atoms(s1, positions=x, cell=C0, pbc=pbc), "P", "S", R_PS)
+            return {int(p): sorted(int(v) for v in j[i == p]) for p in np.where(sym == "P")[0]}
+        p0, p1 = partners(x0), partners(x1)
+        broken = {p: len(v) for p, v in p1.items() if len(v) != 4}
+        swapped = [p for p in p0 if p0[p] != p1[p] and p not in broken]
+        if broken:
+            flags.append(f"PS₄ 깨짐 — P {sorted(broken)} 의 {R_PS} Å 안 S 수 ≠ 4")
+        if swapped:
+            flags.append(f"PS₄ 짝 바뀜 — P {swapped}")
+    else:
+        broken, swapped = "해당 없음", "해당 없음"
+    # ③ 몸체 안 결합 목록 (init) → final 길이 ±tol
+    bodies = [np.where(is_ads)[0]]
+    if not has_ps4:
+        bodies.append(np.where(is_sub)[0])          # 금속 기판 (V2 의 Ag) — 그 안의 결합도 본다
     def dist(x, i, j):
         return float(np.linalg.norm(_mic(x[j] - x[i], C0, pbc)))
     bonds, bad = [], []
-    for a in sorted(set(sym[ads_i])):
-        for b in sorted(set(sym[ads_i])):
-            if a > b:
-                continue
-            ia, ib = ads_i[sym[ads_i] == a], ads_i[sym[ads_i] == b]
-            dd = [(dist(x0, i, j), int(i), int(j)) for i in ia for j in ib if (a != b or i < j)]
-            if not dd:
-                continue
-            dmin = min(v[0] for v in dd)
-            for r0, i, j in dd:
-                if r0 <= IFC_NN_FAC * dmin:
-                    r1 = dist(x1, i, j)
-                    bonds.append((i, j, r0, r1))
-                    if abs(r1 / r0 - 1) > bond_tol:
-                        bad.append({"i": i, "j": j, "pair": f"{a}-{b}", "r0_A": round(r0, 3), "r1_A": round(r1, 3), "dev_pct": round(100 * (r1 / r0 - 1), 1)})
+    for body in bodies:
+        els = sorted(set(sym[body]))
+        for a in els:
+            for b in els:
+                if a > b:
+                    continue
+                ia, ib_ = body[sym[body] == a], body[sym[body] == b]
+                dd = [(dist(x0, i, j), int(i), int(j)) for i in ia for j in ib_ if (a != b or i < j)]
+                if not dd:
+                    continue
+                dmin = min(v[0] for v in dd)
+                for r0, i, j in dd:
+                    if r0 <= IFC_NN_FAC * dmin:
+                        r1 = dist(x1, i, j)
+                        bonds.append((i, j, r0, r1))
+                        if abs(r1 / r0 - 1) > bond_tol:
+                            bad.append({"i": i, "j": j, "pair": f"{a}-{b}", "r0_A": round(r0, 3), "r1_A": round(r1, 3), "dev_pct": round(100 * (r1 / r0 - 1), 1)})
     if bad:
-        flags.append(f"흡착층 결합 {len(bad)}/{len(bonds)} 개가 초기 변형 구조 대비 ±{int(bond_tol * 100)} % 밖 (예 {bad[0]})")
-    # ③ 비혼합 범위 — 첫 흡착층 평면 기준 침투 깊이
-    sgn = 1.0 if x1[is_ads, 2].mean() > x1[is_se, 2].mean() else -1.0
-    z1 = sgn * x1[:, 2]
-    zads_min = z1[is_ads].min()
-    first = is_ads & (z1 <= zads_min + IFC_FIRST_LAYER_A)
-    z_ref = float(z1[first].mean())
-    pen = z1[is_se] - z_ref
-    se_idx = np.where(is_se)[0]
+        flags.append(f"결합 {len(bad)}/{len(bonds)} 개가 초기 변형 구조 대비 ±{int(bond_tol * 100)} % 밖 (예 {bad[0]})")
+    # ④ 비혼합 범위 — 첫 흡착층 평면 기준 침투 깊이 (법선은 초기 선언)
+    zads_min = z1s[is_ads].min()
+    first = is_ads & (z1s <= zads_min + IFC_FIRST_LAYER_A)
+    z_ref = float(z1s[first].mean())
+    sub_idx = np.where(is_sub)[0]
+    pen = z1s[is_sub] - z_ref
     k = int(np.argmax(pen))
-    worst = {"i": int(se_idx[k]), "el": str(sym[se_idx[k]]), "p_A": round(float(pen[k]), 3)}
-    mixed = [int(se_idx[m]) for m in np.where(pen > -pen_thr)[0]]
+    worst = {"i": int(sub_idx[k]), "el": str(sym[sub_idx[k]]), "p_A": round(float(pen[k]), 3)}
+    mixed = [int(sub_idx[m]) for m in np.where(pen > -pen_thr)[0]]
     if mixed:
-        flags.append(f"비혼합 기하 범위 벗어남 — SE 원자 {mixed} 가 첫 흡착층 평면 아래 {pen_thr} Å 안 (최대 p {worst['p_A']} Å · 구조 경보 · 반응 판정 아님)")
-    gap = float(z1[is_ads].min() - z1[is_se].max())
-    # ④ 고정 마스크 실제 적용 여부
-    fixed_idx = [int(i) for i in fixed_idx]
-    moved_fixed = [i for i in fixed_idx if disp[i] > IFC_FIXED_TOL_A]
+        flags.append(f"비혼합 기하 범위 벗어남 — 기판 원자 {mixed[:8]} 가 첫 흡착층 평면 아래 {pen_thr} Å 안 (최대 p {worst['p_A']} Å · 구조 경보 · 반응 판정 아님)")
+    gap = float(z1s[is_ads].min() - z1s[is_sub].max())
+    # ⑤ 제약이 실제로 걸렸는가
+    moved_fixed = [i for i in fixed if disp[i] > IFC_FIXED_TOL_A]
     if moved_fixed:
-        flags.append(f"고정 마스크 원자 {len(moved_fixed)}/{len(fixed_idx)} 개가 움직였다 (max {disp[moved_fixed].max():.3f} Å) — 마스크가 안 걸렸다")
-    return {"n_atoms": len(s1), "n_se": int(is_se.sum()), "n_ads": int(is_ads.sum()), "normal_sign": sgn,
+        flags.append(f"고정 마스크 원자 {len(moved_fixed)}/{len(fixed)} 개가 움직였다 (max {disp[moved_fixed].max():.3f} Å) — 마스크가 안 걸렸다")
+    lat_moved = [i for i in lat if float(np.linalg.norm(d[i, :2])) > IFC_FIXED_TOL_A]
+    if lat_moved:
+        flags.append(f"측방 제약 원자 {len(lat_moved)}/{len(lat)} 개가 면내로 움직였다 — 측방 제약이 안 걸렸다")
+    return {"n_atoms": n, "n_substrate": int(is_sub.sum()), "n_ads": int(is_ads.sum()), "substrate_kind": "PS4" if has_ps4 else "metal",
+            "normal_sign_declared_from_init": sgn, "fixed_policy": fixed_policy, "fixed_n": len(fixed), "policy_expected_n": len(expected),
+            "mask_matches_policy": not (missing or extra), "lateral_fixed_n": len(lat),
             "z_ref_first_ads_layer_A": round(z_ref * sgn, 3), "n_first_layer_atoms": int(first.sum()),
-            "penetration_max": worst, "mixed_se_atoms": mixed, "se_ads_min_gap_A": round(gap, 3),
+            "penetration_max": worst, "mixed_substrate_atoms": mixed, "sub_ads_min_gap_A": round(gap, 3),
             "bonds_listed": len(bonds), "bonds_out_of_tol": bad, "ps4_broken": broken, "ps4_partner_changed": swapped,
             "disp_max_A": round(float(disp.max()), 3), "disp_rms_A": round(float(np.sqrt((disp ** 2).mean())), 3),
-            "fixed_idx_n": len(fixed_idx), "fixed_moved": moved_fixed, "flags": flags,
+            "fixed_moved": moved_fixed, "lateral_moved": lat_moved, "flags": flags,
             "thresholds": {"pen_thr_A": pen_thr, "bond_tol": bond_tol, "first_layer_A": IFC_FIRST_LAYER_A, "nn_fac": IFC_NN_FAC,
                            "fixed_tol_A": IFC_FIXED_TOL_A, "R_PS_A": R_PS},
             "⛔": "구조 경보만 낸다 — 반응·전하이동 판정 아님 · 원인 분류 아님 · 측방 영상 효과 미측정"}
 
 
 def _selftest_interface_check(ck):
-    """G2: 실제 4층 S 바깥 슬랩 + 합성 Ag 층으로 양성 1 + 음성 4 (Li 침투 · Ag–Ag 결합 · PS₄ 절단 · 고정 마스크)."""
+    """G2: 실제 4층 S 바깥 슬랩 + 합성 Ag 층 (V3 형) · 합성 Ag 슬랩 + C 층 (V2 형) — 양성 + 음성 (BY 4경로 + BZ 4경로)."""
     from ase import Atoms
     from ase.io import read
     p = os.path.join(REPO, "db", "structures", "wad_se_slabs_4L_2026_09_24", "comp1_001_s_outer_L4.vasp")
@@ -1185,52 +1278,105 @@ def _selftest_interface_check(ck):
     se = read(p)
     C = se.cell.array
     ztop = se.get_positions()[:, 2].max()
-    # 합성 Ag 층 2겹 — 면내 격자 a/3 (3.35 Å · 실제 Ag 2.89 보다 넉넉) · 층간 2.36 · SE 위 2.8 Å
     a = float(np.linalg.norm(C[0])) / 3
     pos = [[i * a + (0.5 * a if L else 0), j * a + (0.5 * a if L else 0), ztop + 2.8 + 2.36 * L] for L in range(2) for i in range(3) for j in range(3)]
     ads = Atoms("Ag" * len(pos), positions=pos, cell=C, pbc=(True, True, False))
     init = se + ads
     init.set_cell(C); init.set_pbc((True, True, False))
     n_se = len(se)
-    fixed = [i for i in range(n_se) if se.get_positions()[i, 2] < se.get_positions()[:, 2].mean()]   # 계면 반대쪽 절반 고정
+    fixed = fixed_mask_policy(init)
+    zs = init.get_positions()[:n_se, 2]
+    ck("fixed_mask_policy: 기판 중심면 아래 원자 전부 · 흡착층 없음 · 결정적", all(i < n_se for i in fixed) and 0 < len(fixed) < n_se
+       and fixed == fixed_mask_policy(init) and max(zs[fixed]) <= 0.5 * (zs.min() + zs.max()) + 1e-6, (len(fixed), n_se))
+    free_se = [i for i in range(n_se) if i not in fixed]
 
     fin = init.copy()
     o = interface_check(init, fin, fixed_idx=fixed)
-    ck("interface_check 양성: 같은 구조 → 깃발 0 · SE·Ag 원자수 맞음", not o["flags"] and o["n_se"] == n_se and o["n_ads"] == len(pos), o["flags"])
-    ck("interface_check: 첫 흡착층 평면 = 아래 Ag 9개 · 간격 2.8 Å", o["n_first_layer_atoms"] == 9 and abs(o["se_ads_min_gap_A"] - 2.8) < 1e-3, o)
+    ck("interface_check 양성: 같은 구조 → 깃발 0 · 마스크 정책 일치 · PS4 기판", not o["flags"] and o["mask_matches_policy"] and o["substrate_kind"] == "PS4", o["flags"])
+    ck("interface_check: 첫 흡착층 평면 = 아래 Ag 9개 · 간격 2.8 Å · 법선 +1", o["n_first_layer_atoms"] == 9 and abs(o["sub_ads_min_gap_A"] - 2.8) < 1e-3 and o["normal_sign_declared_from_init"] == 1.0, o)
     fin = init.copy(); x = fin.get_positions()
-    free_se = [i for i in range(n_se) if i not in fixed]
     x[free_se] += np.random.default_rng(0).normal(0, 0.03, (len(free_se), 3)); fin.set_positions(x)
     o = interface_check(init, fin, fixed_idx=fixed)
     ck("interface_check 양성: 자유 원자 0.03 Å 흔들림 → 깃발 0", not o["flags"], o["flags"])
-    # ⛔ 음성 ① Li 하나를 첫 Ag 평면 1.0 Å 아래로 (p = −1.0 > −1.5)
+    # ⛔ BY 4경로
     fin = init.copy(); x = fin.get_positions()
     li = next(i for i in free_se if init.get_chemical_symbols()[i] == "Li" and x[i, 2] > ztop - 3)
     x[li, 2] = ztop + 2.8 - 1.0; fin.set_positions(x)
     o = interface_check(init, fin, fixed_idx=fixed)
-    ck("⛔음성: Li 가 첫 Ag 평면 1.0 Å 아래까지 올라옴 → 비혼합 범위 깃발 + 원자 ID", any("비혼합" in f for f in o["flags"]) and li in o["mixed_se_atoms"], o["flags"])
-    # ⛔ 음성 ② Ag–Ag 결합 20 % 늘림 (Ag 하나를 x 로 0.67 Å 이동)
+    ck("⛔음성: Li 가 첫 Ag 평면 1.0 Å 아래까지 → 비혼합 깃발 + 원자 ID", any("비혼합" in f for f in o["flags"]) and li in o["mixed_substrate_atoms"], o["flags"])
     fin = init.copy(); x = fin.get_positions(); x[n_se, 0] += 0.2 * a; fin.set_positions(x)
     o = interface_check(init, fin, fixed_idx=fixed)
     ck("⛔음성: Ag 원자 이동으로 결합 ±15 % 밖 → 결합 깃발", any("결합" in f for f in o["flags"]) and o["bonds_out_of_tol"], o["flags"])
-    # ⛔ 음성 ③ PS₄ 절단 — 자유 S 하나를 2 Å 밀어낸다
     fin = init.copy(); x = fin.get_positions()
-    P0 = next(i for i in free_se if init.get_chemical_symbols()[i] == "P")
+    P0 = max((i for i in free_se if init.get_chemical_symbols()[i] == "P"), key=lambda i: x[i, 2])
     ii, jj, _, _ = _pairs(init, "P", "S", R_PS)
     S0 = int(jj[ii == P0][0]); x[S0] += 2.0 * (x[S0] - x[P0]) / np.linalg.norm(x[S0] - x[P0]); fin.set_positions(x)
-    o = interface_check(init, fin, fixed_idx=[i for i in fixed if i != S0])
+    o = interface_check(init, fin, fixed_idx=fixed)
     ck("⛔음성: S 를 P 에서 2 Å 밀어냄 → PS₄ 깨짐 깃발", any("PS₄" in f for f in o["flags"]), o["flags"])
-    # ⛔ 음성 ④ 고정 마스크 원자가 움직임 (마스크가 안 걸린 실행)
     fin = init.copy(); x = fin.get_positions(); x[fixed[0], 0] += 0.05; fin.set_positions(x)
     o = interface_check(init, fin, fixed_idx=fixed)
-    ck("⛔음성: 고정 마스크 원자 0.05 Å 이동 → '마스크 안 걸림' 깃발", any("마스크" in f for f in o["flags"]) and fixed[0] in o["fixed_moved"], o["flags"])
-    # ⛔ 음성 ⑤ 셀이 다르면 멈춤 (MoLE)
+    ck("⛔음성: 고정 마스크 원자 0.05 Å 이동 → '마스크 안 걸림' 깃발", any("마스크가 안 걸렸다" in f for f in o["flags"]) and fixed[0] in o["fixed_moved"], o["flags"])
     fin = init.copy(); fin.set_cell(C * 1.001, scale_atoms=False)
     try:
-        interface_check(init, fin); bad = False
+        interface_check(init, fin, fixed_idx=fixed); bad = False
     except SlabError:
         bad = True
     ck("⛔음성: 셀이 다르면 SlabError (같은 셀 위반)", bad)
+    # ⛔ BZ Q2 경로 ① 마스크 누락·잘못된 마스크 (같은 '고정 원자 0.05 Å 이동' 입력으로)
+    fin = init.copy(); x = fin.get_positions(); x[fixed[0], 0] += 0.05; fin.set_positions(x)
+    try:
+        interface_check(init, fin); bad = False
+    except SlabError as e:
+        bad = "필수" in str(e)      # 빈 마스크 오류가 아니라 '필수' 오류여야 한다 (돌연변이 ⑤ 를 가른다)
+    ck("⛔음성 (BZ①): 마스크 생략 → '필수' SlabError (조용히 통과하지 않는다)", bad)
+    o = interface_check(init, fin, fixed_idx=list(range(n_se, len(init))))
+    ck("⛔음성 (BZ①): 흡착층 원자만 마스크 → '흡착층 원자' + '정책 집합과 다르다' 깃발", any("흡착층 원자" in f for f in o["flags"]) and any("정책" in f for f in o["flags"]), o["flags"])
+    try:
+        interface_check(init, fin, fixed_idx=[-1]); bad = False
+    except SlabError:
+        bad = True
+    ck("⛔음성 (BZ①): fixed_idx=[-1] → SlabError (범위 밖)", bad)
+    o = interface_check(init, fin, fixed_idx=fixed[:-1])
+    ck("⛔음성 (BZ①): 정책 집합에서 원자 하나 빠진 마스크 → '정책 집합과 다르다' 깃발", any("정책" in f for f in o["flags"]) and not o["mask_matches_policy"], o["flags"])
+    # ⛔ BZ Q2 경로 ② NaN
+    for what in ("ads", "fixed_se", "cell"):
+        fin = init.copy()
+        if what == "cell":
+            cc = C.copy(); cc[2, 2] = np.nan; fin.set_cell(cc, scale_atoms=False)
+        else:
+            x = fin.get_positions(); x[(n_se if what == "ads" else fixed[0]), 2] = np.nan; fin.set_positions(x)
+        try:
+            interface_check(init, fin, fixed_idx=fixed); bad = False
+        except SlabError:
+            bad = True
+        ck(f"⛔음성 (BZ②): NaN ({what}) → SlabError (비교 전 유한성 검사)", bad)
+    # ⛔ BZ Q2 경로 ③ 흡착층을 반대 면으로
+    fin = init.copy(); x = fin.get_positions(); zbot = se.get_positions()[:, 2].min()
+    x[n_se:, 2] = x[n_se:, 2] - (x[n_se:, 2].min() - zbot) - 2.8 - 2.36; fin.set_positions(x)
+    o = interface_check(init, fin, fixed_idx=fixed)
+    ck("⛔음성 (BZ③): 흡착층을 −z 면으로 옮김 → '흡착면 뒤집힘' 깃발 (법선은 초기 선언)", any("뒤집힘" in f for f in o["flags"]) and o["normal_sign_declared_from_init"] == 1.0, o["flags"])
+    # ⛔ BZ Q2 경로 ④ V2 형 — Ag 기판 4층 + C 층 (기판 = Ag · 흡착층 = C)
+    aAg, dz = 2.9, 2.36
+    Cv = np.diag([3 * aAg, 3 * aAg, 40.0])
+    agpos = [[i * aAg + (0.5 * aAg if L % 2 else 0), j * aAg + (0.5 * aAg if L % 2 else 0), 5.0 + dz * L] for L in range(4) for i in range(3) for j in range(3)]
+    cpos = [[i * 1.45, j * 1.45, 5.0 + 3 * dz + 3.3] for i in range(6) for j in range(6)]
+    v2 = Atoms("Ag" * len(agpos) + "C" * len(cpos), positions=agpos + cpos, cell=Cv, pbc=(True, True, False))
+    fx = fixed_mask_policy(v2, ads_elements=("C",), substrate_elements=("Ag",))
+    lat = list(range(len(agpos), len(v2)))
+    ck("V2 형: 정책 마스크 = 아래 Ag 2층 (18 개)", fx == list(range(18)), fx)
+    o = interface_check(v2, v2.copy(), ads_elements=("C",), substrate_elements=("Ag",), fixed_idx=fx, lateral_fixed_idx=lat)
+    ck("V2 형 양성: 깃발 0 · PS₄ '해당 없음' · Ag–Ag·C–C 결합 목록 있음", not o["flags"] and o["ps4_broken"] == "해당 없음" and o["substrate_kind"] == "metal" and o["bonds_listed"] > 0, (o["flags"], o["bonds_listed"]))
+    fin = v2.copy(); x = fin.get_positions(); x[len(agpos), 0] += 0.1; fin.set_positions(x)
+    o = interface_check(v2, fin, ads_elements=("C",), substrate_elements=("Ag",), fixed_idx=fx, lateral_fixed_idx=lat)
+    ck("⛔음성 (BZ④): 그래핀 원자 면내 0.1 Å 이동 → 측방 제약 깃발", any("측방" in f for f in o["flags"]), o["flags"])
+    fin = v2.copy(); x = fin.get_positions(); x[0, 2] += 0.05; fin.set_positions(x)
+    o = interface_check(v2, fin, ads_elements=("C",), substrate_elements=("Ag",), fixed_idx=fx, lateral_fixed_idx=lat)
+    ck("⛔음성 (BZ④): 아래 Ag 층 원자 이동 → 마스크 깃발", any("마스크가 안 걸렸다" in f for f in o["flags"]), o["flags"])
+    try:
+        interface_check(v2, v2.copy(), fixed_idx=fx); bad = False
+    except SlabError:
+        bad = True
+    ck("⛔음성 (BZ④): V2 구조를 SE 기본값으로 부르면 SlabError (역할 선언 강제 · 조용히 통과 아님)", bad)
 
 
 # ─────────────────────────────── selftest ───────────────────────────────
@@ -1722,9 +1868,13 @@ def main():
     ap.add_argument("--bulk_sens", metavar="RUN", help="벌크 수치 민감도 집계 (--qe_in 필수 · 결과 <RUN>/bulk_sens_result.json · 진단 R1·R2)")
     ap.add_argument("--aprime_prep", metavar="RUN", help="A′ 선행 배치 집계 (--qe_in 필수 · 결과 <RUN>/aprime_prep_result.json · Ag·그래핀 a₀ · 변형률 · 라벨 응력)")
     ap.add_argument("--interface_check", nargs=2, metavar=("INIT", "FINAL"),
-                    help="G2: UMA 이완 전·후 계면 구조 (xyz/vasp · 같은 셀) — PS₄ · 흡착층 결합 ±15 % · 비혼합 범위 1.5 Å · 고정 마스크 (구조 경보 · 판정 아님)")
+                    help="G2: UMA 이완 전·후 계면 구조 (xyz/vasp · 같은 셀) — 유한성 · 필수 마스크(정책 일치) · 흡착면 고정 · PS₄ · 몸체 안 결합 ±15 % · 비혼합 1.5 Å · 측방 제약 (구조 경보 · 판정 아님)")
     ap.add_argument("--ads_elements", default="Ag,C,H", help="--interface_check 의 흡착층 원소 (기본 Ag,C,H)")
-    ap.add_argument("--fixed_idx", default="", help="--interface_check 의 고정 마스크 원자 인덱스 (쉼표 · 또는 JSON 파일 경로)")
+    ap.add_argument("--fixed_idx", default="", help="--interface_check 의 고정 마스크 (필수 · 쉼표 인덱스 또는 JSON 파일) — fixed_mask_policy(init) 와 같아야 한다")
+    ap.add_argument("--substrate_elements", default="Li,P,S,Cl", help="기판 원소 (SE 기본 · V2 는 Ag)")
+    ap.add_argument("--lateral_fixed_idx", default="", help="측방(x·y) 제약 원자 (V2 그래핀) — 쉼표 인덱스 또는 JSON 파일")
+    ap.add_argument("--fixed_policy", default="far_half", help="고정 마스크 생성 규칙 (far_half)")
+    ap.add_argument("--mask_policy", metavar="INIT", help="초기 구조에서 정책 마스크 인덱스를 JSON 으로 찍는다 (S2 입력 생성용)")
     ap.add_argument("--relax_check", nargs=2, metavar=("PW_IN", "FINAL"),
                     help="이완 전 pw.in ↔ 최종 좌표(pw.out 또는 붙여넣은 Begin/End final coordinates) — PS₄ · 짝 · 진공 · 층별 변위 (판정 아님)")
     a = ap.parse_args()
@@ -1747,15 +1897,24 @@ def main():
         print(json.dumps({k: o[k] for k in ("ag_fcc", "graphene", "strain", "label_stress", "bulk_control", "flags", "missing")},
                          ensure_ascii=False, indent=1, default=float))
         return 0 if not o["missing"] and not o["flags"] else 2
+    if a.mask_policy:
+        from ase.io import read as _read
+        print(json.dumps(fixed_mask_policy(_read(a.mask_policy), ads_elements=tuple(a.ads_elements.split(",")),
+                                           substrate_elements=tuple(a.substrate_elements.split(",")), policy=a.fixed_policy)))
+        return 0
     if a.interface_check:
         from ase.io import read as _read
-        fx = a.fixed_idx.strip()
-        if fx and os.path.isfile(fx):
-            fixed = json.load(open(fx))
-        else:
-            fixed = [int(v) for v in fx.split(",") if v.strip()]
+        def _idx(txt, name):
+            t = txt.strip()
+            if not t:
+                return None
+            return json.load(open(t)) if os.path.isfile(t) else [int(v) for v in t.split(",") if v.strip()]
+        fixed = _idx(a.fixed_idx, "fixed_idx")
+        if fixed is None:
+            ap.error("--interface_check 에는 --fixed_idx 가 필수다 (BZ Q2 — 생략하면 검사가 성립하지 않는다)")
         r = interface_check(_read(a.interface_check[0]), _read(a.interface_check[1]),
-                            ads_elements=tuple(a.ads_elements.split(",")), fixed_idx=fixed)
+                            ads_elements=tuple(a.ads_elements.split(",")), substrate_elements=tuple(a.substrate_elements.split(",")),
+                            fixed_idx=fixed, fixed_policy=a.fixed_policy, lateral_fixed_idx=_idx(a.lateral_fixed_idx, "lateral_fixed_idx") or ())
         print(json.dumps(r, ensure_ascii=False, indent=1, default=float))
         return 0 if not r["flags"] else 2
     if a.relax_check:

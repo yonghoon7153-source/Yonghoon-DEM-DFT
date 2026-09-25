@@ -3,7 +3,7 @@ title: "리뷰 BZ 프롬프트 — A′ 파일럿 사전등록 카드 v2: BY NO-
 date: 2026-09-25
 updated: 2026-09-25
 tags: [review, codex, adhesion, wad, prereg, estimand, lpscl, silver, graphite, uma, d3, pilot, re-review]
-status: 발송 대기 (1저자) — 카드 v2 는 draft · 1저자 권고 5 비준 완료 · 봉인 전 · 계산 0
+status: 발송 완료 · 회신 수령 2026-09-25 밤 **NO-GO** (`codex_BZ_reply_…`) → 카드 v3 + G2 재작성 → CA 재심 대기
 confidence: medium
 verificationStatus: unverified
 explored: false

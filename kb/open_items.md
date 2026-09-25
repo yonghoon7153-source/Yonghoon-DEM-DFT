@@ -245,6 +245,10 @@
     ⏭ **1저자 확인 권고 5** (카드 v2 `⭐_1저자_확인_필요`): ① 부분 마스크 + 개정 비준 ② Ag₁₃ 제외 ③ 갈래0 내부 전용 ④ 표본 5 정의 ⑤ V5 자원 현실 → Codex BY 재심 → S1 봉인.
     📨 **DEM 3차 회신 수령** (정합·라벨 수용 · 부록 값 미사용 · 부탁 1 잔류 응력 GPa · 부탁 2 시나리오는 DEM 초안) → 회신 4 초안 (`wad_dem_reply_draft_2026_09_23.md` §회신 4 · PBE 응력 GPa 지금 · PBE+D3 는 선행 배치 12·13 뒤).
     🧪 **선행 배치** `db/inputs/wad_aprime_prep_2026_09_25` (08–11 Ag fcc·그래핀 vc-relax PBE/PBE+D3 · 12·13 comp1 D3 relax/vc-relax · 읽는 규칙 결과 전) · 집계 `se_sym_slab.py --aprime_prep` (음성 6) · ⛔ Ag/C(/H) PP 해시 kgy 에서 받아 채운 뒤 V100 발사.
+    🔴 **Codex BZ NO-GO (09-25 밤)** — v2 봉인·S2 보류 · 비준 5 유지 · G2 우회 4경로 실측(마스크 누락/[-1]/흡착층만 통과 · NaN 통과 · 흡착면 뒤집힘 통과 · V2 경로 없음) · G5 종결별 평균 누락(상쇄 반례) · G3 조작 미정의 · G5↔G3/G4 · S1/S3 경계.
+    → **G2 재작성** (`interface_check` 마스크 필수 + `fixed_mask_policy` 집합 일치 · 비교 전 유한성 · `normal_sign(init)` · V2 모드 substrate/ads + 측방 제약 · CLI `--fixed_idx` 필수 · `--mask_policy`) selftest **110/110** · BZ 음성 9 · 돌연변이 5 빨간불 · **카드 v3** `wad_aprime_pilot_prereg_v3_2026_09_25.json`
+    (G5 종결별 평균 복구 + G3·G4 PASS 전제 · G3 두 셀(영상/거리 분리) · Ag₄ 비영 초기 자화·절대자화 · S3 전 예외 4 · S1 봉인 범위 확대 · registry 결정적 규칙 · 결정 내용 digest · RESOURCE_BLOCKED 예상/실측) · DEM 회신 4 §3 → 확인 요청.
+    ⏭ **1저자 확인 3** (`⭐_1저자_확인_v3`: G5 v1 기준 복구 · Ag₄ 절차 · S1 범위) → **Codex CA** `codex_CA_prompt_wad_aprime_pilot_prereg_v3_2026_09_25.md` (발송 대기) → S1 봉인 전 채울 것: UMA 체크포인트 sha·fairchem 버전 · 선행 배치 값 · 흡착층 빌더.
     🔧 `run_sese_gpu.sh _done`·`parse_pw` **vc-relax 갈래 추가** (옛 판은 vc-relax 를 SCF 기준으로 통과 — 실제 통과한 실패 이완은 없음 · 05 는 bfgs converged 확인) · `watch_lpsocl_400ps.sh` 남은 런 수 표 기준 (kgy b2o3 '남은 0런' 오기 · 음성 2).
     🔴 **러너 결함**: 기록된 `pw.x PID 563677` 이 **없다** (ps 빈 줄) — `pgrep -P mpirun | head -1` 이 pw.x 가 아닌 자식을 잡았거나 사라진 PID 다.
     완료표 `peak_self_MiB` 가 **세 잡 모두 0** = 자기 VRAM 측정이 한 번도 안 됐다 (컨테이너 PID 공간 ≠ nvidia-smi PID 도 의심). 가드는 mpirun 을 죽이므로 안전은 유지 ·

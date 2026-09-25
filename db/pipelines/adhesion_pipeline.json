@@ -293,6 +293,14 @@
    "prompt": "kb/reviews/codex_BY_prompt_wad_aprime_pilot_prereg_2026_09_25.md",
    "reply": "kb/reviews/codex_BY_reply_wad_aprime_pilot_prereg_2026_09_25.md",
    "response": "db/properties/wad_aprime_pilot_prereg_v2_2026_09_25.json"
+  },
+  {
+   "id": "BZ",
+   "date": "2026-09-25",
+   "verdict": "NO-GO (v2 봉인·S2 보류 · 설계·비준 5 선택 유지) — G2 우회 4경로 · G5 종결별 평균 · G3 조작 · S1/S3 경계",
+   "prompt": "kb/reviews/codex_BZ_prompt_wad_aprime_pilot_prereg_v2_2026_09_25.md",
+   "reply": "kb/reviews/codex_BZ_reply_wad_aprime_pilot_prereg_v2_2026_09_25.md",
+   "response": "db/properties/wad_aprime_pilot_prereg_v3_2026_09_25.json"
   }
  ],
  "hazards": [
@@ -330,14 +338,14 @@
  "open": [
   {
    "state": "진행",
-   "text": "**파이프라인 v4** (`D-2026-09-25-wad-reference-state-policy`): ① P0 ✅ → ② 벌크 수치 민감도 ✅ → ③ A′ 카드 v1 → BY NO-GO → **v2** ⏳ 재심·비준·S1 봉인 → S2 기하 생성·프로브 → S3 좌표 봉인 → S4 DFT. ④ DEM 발송판 ✅ 발송·3차 회신 수령 (부탁 1 잔류 응력 GPa · 부탁 2 시나리오 초안은 DEM) → 회신 4 초안."
+   "text": "**파이프라인 v4** (`D-2026-09-25-wad-reference-state-policy`): ① P0 ✅ → ② 벌크 수치 민감도 ✅ → ③ A′ 카드 v1 → BY NO-GO → v2 → BZ NO-GO → **v3** ⏳ CA 재심·S1 봉인 → S2 기하 생성·프로브 → S3 좌표 봉인 → S4 DFT. ④ DEM 발송판 ✅ 발송·3차 회신 수령 (부탁 1 잔류 응력 GPa · 부탁 2 시나리오 초안은 DEM) → 회신 4 초안."
   },
   {
    "text": "✅ 격자 정합 규칙 = **(a) 흡착층을 SE 에 맞춘다** (`D-2026-09-25-wad-lattice-matching-rule-a` · 09-25) — SE 슬랩 한 기하 · 변형률 x·y·Å·원자당·면적당·밀도 병기",
    "state": "결정"
   },
   {
-   "text": "A′ 파일럿 사전등록 — v1 **Codex BY NO-GO** → **v2** `db/properties/wad_aprime_pilot_prereg_v2_2026_09_25.json` (조성 4층 정정 · SE 부분 고정 마스크 + 결정 7 개정 proposed · G5 = 비자명한 W 쌍 5 · 분모 고정 · Ag₁₃ 제외 · −TS 규칙 삭제 · 분리 끝점 양쪽 간격 ≥ 8 Å + dipfield 규약 · G2 `--interface_check` 구현 · G3/G4 대상군별 · 장치별 한도 · 허용 문구 P1′ 한정 · 단계별 봉인 S1–S4) → ✅ 1저자 권고 5 비준 (`…-card-v2-choices`) → **Codex BZ 재심** (프롬프트 발송 대기) → GO 면 S1 봉인. ⚠ V5 ≈ 246 GB 추정 → RESOURCE_BLOCKED 예상",
+   "text": "A′ 파일럿 사전등록 — v1 BY NO-GO → v2 BZ **NO-GO** (설계·비준 5 유지 · G2 우회 4경로 재현 · G5 종결별 평균 누락 · S1/S3 경계) → **v3** `db/properties/wad_aprime_pilot_prereg_v3_2026_09_25.json` (G2 재작성: 마스크 필수+정책 집합 · 유한성 · 법선 초기 고정 · V2 모드 · selftest 110/110 · 돌연변이 5 빨간불 / G5 종결별 평균 복구 + G3·G4 전제 / G3 두 셀 조작 / Ag₄ 절차 / S3 전 예외 4 / S1 봉인 범위 확대 / RESOURCE_BLOCKED 예상·실측) → 1저자 확인 3 → **Codex CA** 재심 → S1 봉인",
    "state": "재심"
   },
   {
@@ -474,6 +482,11 @@
    "date": "2026-09-25",
    "stage": "dft",
    "text": "**1저자 비준 — A′ 카드 v2 권고 5 그대로** ('ㅇㅇ 권장하는걸로 진행' · 설명 5건 재청취): `D-2026-09-25-wad-aprime-card-v2-choices` active · 결정 7 개정 `…-amend-1` active. 값이 바뀌는 것은 없다 (계산 전 설계·절차 선택 · SE|SE·벌크 민감도 값 무영향). Ag·C·H PP 해시 kgy 원본에서 채움 (Ag z 19 실측 → V5 246 GB 추정 근거). → **Codex BZ 재심 프롬프트** `codex_BZ_prompt_wad_aprime_pilot_prereg_v2_2026_09_25.md` (Q1–Q7 · 발송 대기) · 선행 배치는 카드 밖으로 두고 V100 전송 준비."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**Codex BZ 회신 NO-GO** (v2 봉인·S2 보류 · 비준 5 선택 유지): G2 우회 4경로 실측 재현(마스크 누락/잘못됨 통과 · NaN 통과 · 흡착면 뒤집힘 통과 · V2 검사 경로 없음) · G5 전체 평균만(종결별 상쇄 반례) · G3 조작 미정의(8→10 이동은 영상 6) · G5↔G3/G4 미연결 · S1/S3 경계(UMA sha 를 S3 로 미룸). → **G2 재작성** (`interface_check`: 마스크 필수·정책 집합 일치 `fixed_mask_policy` · 비교 전 유한성 · 법선 초기 선언 `normal_sign` · V2 모드 substrate/ads 선언 + 측방 제약 · CLI `--fixed_idx` 필수 · `--mask_policy`) selftest 110/110 · BZ 음성 9 · 돌연변이 5 빨간불. **카드 v3**: G5 종결별 평균 복구 + G3·G4 PASS 전제 · G3 두 셀 조작(영상/거리 분리) · Ag₄ 비영 초기 자화·절대자화 · S3 전 예외 4 · S1 봉인 범위(UMA sha·D3·코드·마스크 규칙·registry 규칙·결정 내용 digest) · RESOURCE_BLOCKED 예상/실측 · DEM 회신 4 §3 을 '확인 요청' 으로. → Codex CA 프롬프트."
   }
  ],
  "related_decisions": [
