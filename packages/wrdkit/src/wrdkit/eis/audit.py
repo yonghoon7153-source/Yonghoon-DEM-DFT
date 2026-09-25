@@ -1038,11 +1038,14 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
     if sym_solid and (blocking is True or (blocking is None and out.end == "blocking")):
         face_offer = _offer(_compatible(alternatives, {"blocking"}, fit.circuit,
                                         arcs=0, exact=True))
+    # σ 가 뺀 전극 쪽 아크 — 그 저항은 이 셀의 어느 수에도 들지 않는다 (ADR 0047 보완 1).
+    unused = set((conductivity or {}).get("electrode_arcs") or ())
     for arc in arcs:
         if arc.resistor in explained:
             continue
         _arc_findings(out, arc, labels.get(arc.resistor, ""), claims.get(arc.resistor),
-                      statuses, railed, low_edge, high_edge, offer=face_offer)
+                      statuses, railed, low_edge, high_edge, offer=face_offer,
+                      unused=arc.resistor in unused)
 
     # -- 잡음이 판정보다 크면 ---------------------------------------------------
     # 점 자체의 잡음(KK 잔차의 σ)이 회로를 판정하는 문턱보다 크면, 회로가 틀린 것과
@@ -1333,25 +1336,35 @@ def _arc_row(arc: ArcCapacitance, label: str, claim: str | None) -> dict:
 def _arc_findings(out: FitAudit, arc: ArcCapacitance, label: str,
                   claim: str | None, statuses: dict[str, str],
                   railed: dict[str, str], low: float | None,
-                  high: float | None, *, offer: tuple[str, ...] = ()) -> None:
+                  high: float | None, *, offer: tuple[str, ...] = (),
+                  unused: bool = False) -> None:
     # 경계에 붙은 아크의 꼭지는 뜻이 없다 — 경계 붙음이 이미 그 말을 했다
     # (실측: R2 = 1e9 Ω 인 아크마다 "꼭지가 1e-5 Hz" 가 한 줄 더 붙었다).
     # 반원이 아닌 것(n < 0.6)의 꼭지도 없다 — 목록이 이미 "판정 안 함" 이라
     # 적는 소자에 실측 여덟 건이 "반원의 꼭대기를 못 보고" 를 달았다.
+    #
+    # σ 가 뺀 전극 쪽 아크(``unused``)는 참고다 — 그 저항은 이 셀의 어느 수에도
+    # 들지 않고, 다시 맞춰서 고칠 것도 없다 (창의 끝이 잰 주파수의 끝이다).
+    # 실측 2026-09-25: 배선 L 을 붙여 다시 맞춘 B14 #1 · B18 #1–#5 의 전극 아크
+    # 꼭지가 8.5–9.5 Hz 로 옮겨 10 Hz 창 끝 바로 아래가 되자, 그 줄 하나로
+    # 확인에 남았다 (ADR 0047 보완 1).
     if arc.peak_hz is not None and arc.n >= LOWEST_N \
             and not _is_railed_arc(arc, railed):
+        severity = NOTE if unused else CHECK
+        aside = (" — σ 에 안 드는 전극 쪽 아크라 이 셀의 수에는 들지 않습니다"
+                 if unused else "")
         if high is not None and arc.peak_hz > high:
             out.findings.append(Finding(
-                CHECK, "arc_apex_above_window",
+                severity, "arc_apex_above_window",
                 f"{arc.resistor} 아크의 꼭지(f₀ = {arc.peak_hz:.3g} Hz)가 맞춘 구간 "
                 f"위(≤ {high:.3g} Hz)에 있습니다 — 반원의 꼭대기를 못 보고 정한 "
-                f"저항입니다"))
+                f"저항입니다{aside}"))
         elif low is not None and arc.peak_hz < low:
             out.findings.append(Finding(
-                CHECK, "arc_apex_below_window",
+                severity, "arc_apex_below_window",
                 f"{arc.resistor} 아크의 꼭지(f₀ = {arc.peak_hz:.3g} Hz)가 맞춘 구간 "
                 f"아래(≥ {low:.3g} Hz)에 있습니다 — 반원이 닫히는 것을 못 보고 정한 "
-                f"저항입니다"))
+                f"저항입니다{aside}"))
     # 커패시턴스로 붙인 이름(``"face"``)이나 과정을 말하지 않는 이름은 검사할
     # 것이 없다 — 이름이 곧 커패시턴스의 말이다 (ADR 0047).
     if claim not in _PROCESS_KEYS or arc.candidates is None \
@@ -1979,7 +1992,8 @@ def audit_conductivity_scan(sweeps: Sequence[dict], *,
         out.append(wrong_way)
     if reason:
         out.append(Finding(NOTE, "activation_missing", f"활성화에너지 없음 — {reason}"))
-    beside = _fitted_activation(typed_ev, fit_ev, fit_missing, len(sweeps))
+    beside = _fitted_activation(typed_ev, fit_ev,
+                                "" if fit_missing == reason else fit_missing, len(sweeps))
     if beside is not None:
         out.append(beside)
     return sort_findings(out)

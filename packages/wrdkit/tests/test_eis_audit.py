@@ -247,6 +247,39 @@ def test_an_arc_whose_apex_is_above_the_sweep_is_extrapolated():
     assert finding.severity == CHECK and "R1" in finding.message
 
 
+def test_an_electrode_arc_that_sigma_leaves_out_is_only_noted_when_its_apex_is_outside():
+    """ADR 0047 보완 1 — 실측 B18 #5 (2026-09-25, 배선 L 을 붙여 다시 맞춘 뒤): 막는
+    펠릿의 전극 아크 꼭지가 9.35 Hz 로 옮겨 10 Hz 창 끝 바로 아래가 되자 "꼭지가 구간
+    아래" 하나로 확인에 남았다.  σ 는 그 아크를 빼고 R0 로 낸다 — 그 저항은 이 셀의
+    어느 수에도 들지 않는다.  참고로 적는다."""
+    from wrdkit.eis.derive import blocking_verdict, ionic_conductivity
+
+    circuit = "L1-R0-p(R1,CPE1)-CPE3"
+    values = {"L1": 1.88e-6, "R0": 9.61, "R1": 2.94e3, "CPE1_Q": 1.43e-5,
+              "CPE1_n": 0.777, "CPE3_Q": 1.53e-6, "CPE3_n": 0.908}
+    frequency = S.log_sweep(7e6, 10.0, 10)
+    model = parse_circuit(circuit)
+    z = model.impedance([values[name] for name in model.parameter_names], frequency)
+    spectrum = Spectrum(frequency, z.real, z.imag)
+    fit = Fit(circuit, [P(n, v) for n, v in values.items()])
+    band = (10.0, 1.71e5)
+    cell = {"kind": SOLID, "config": SYMMETRIC, "thickness_cm": 0.08, "area_cm2": 0.785}
+    sigma = ionic_conductivity(fit, thickness_cm=0.08, area_cm2=0.785, config=SYMMETRIC,
+                               blocking=blocking_verdict(spectrum.frequency_hz,
+                                                         spectrum.z_re, spectrum.z_im))
+    assert sigma["electrode_arcs"] == ["R1"] and sigma["total_ohm"] == 9.61
+
+    noted = audit_fit(fit, spectrum, band=band, conductivity=sigma, **cell)
+    (apex,) = [f for f in noted.findings if f.code == "arc_apex_below_window"]
+    assert apex.severity == NOTE
+    assert apex.message.endswith("σ 에 안 드는 전극 쪽 아크라 이 셀의 수에는 들지 않습니다")
+    assert codes(noted, CHECK) == [] and codes(noted, PROBLEM) == []
+    # σ 를 모르면(전도도를 안 물었으면) 전처럼 확인이다 — 그 저항이 쓰일 수 있다.
+    (bare,) = [f for f in audit_fit(fit, spectrum, band=band, **cell).findings
+               if f.code == "arc_apex_below_window"]
+    assert bare.severity == CHECK
+
+
 def test_the_only_series_resistor_at_zero_is_not_to_be_left_out():
     """실측 하프셀 #28: R0 = 1e-9 Ω 에 "이 저항은 없어도 되는 소자입니다" 가 붙었다.
     셀의 직렬 저항(배선·전해질)은 0 이 될 수 없다 — n = 0.40 인 첫 아크가 고주파
@@ -594,6 +627,10 @@ def test_the_ea_the_fits_draw_is_said_beside_the_typed_one():
     (why,) = audit_scan(sweeps, typed_ev=0.297, fit_missing="점이 모자랍니다")
     assert why.message == "맞춤의 전해질 저항으로는 Ea 가 안 나옵니다 — 점이 모자랍니다"
     assert audit_scan(sweeps, typed_ev=0.297) == []
+    # 까닭이 적은 값의 것과 같으면 (실측 B17_ACTI E: 온도를 안 적었다) 한 번만 적는다.
+    same = "온도와 이온전도도가 모두 적힌 스윕이 둘 이상이어야 직선이 섭니다 (지금 0개)"
+    assert [f.code for f in audit_scan(sweeps, reason=same, fit_missing=same)] == [
+        "activation_missing"]
 
 
 def test_a_scan_with_nothing_written_yet_is_only_noted():
