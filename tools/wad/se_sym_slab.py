@@ -708,6 +708,88 @@ def collect(run, qe_in=None):
     return out
 
 
+# ─────────────── 벌크 수치 민감도 집계 (Codex BX Q5 권고 3 · 2026-09-25) ───────────────
+_RE_STRESS = r"total\s+stress\s*\(Ry/bohr\*\*3\)\s*\(kbar\)\s*P=\s*(-?\d+\.\d+)\n((?:.*\n){3})"
+
+
+def parse_stress_kbar(text):
+    """pw.out 의 **마지막** 'total stress' 블록 → {xx,yy,zz,xy,xz,yz,P} [kbar]. 없으면 SlabError."""
+    import re
+    k = text.rfind("Program PWSCF")
+    t = text[k:] if k >= 0 else text
+    m = list(re.finditer(_RE_STRESS, t))
+    if not m:
+        raise SlabError("'total stress' 블록이 없다 (tstress = .true. 였나)")
+    P = float(m[-1].group(1))
+    rows = [ln.split() for ln in m[-1].group(2).strip().splitlines()]
+    kb = [[float(v) for v in r[3:6]] for r in rows]
+    return {"xx": kb[0][0], "yy": kb[1][1], "zz": kb[2][2], "xy": kb[0][1], "xz": kb[0][2], "yz": kb[1][2], "P": P}
+
+
+def bulk_sens_collect(run, qe_in):
+    """<run>/<잡>/pw.out (52 원자 벌크 SCF · cubic/epi × ecut × k) → 응력·에너지 표 + 진단 규칙 R1·R2 (jobs.json 에 미리 적힌 것).
+
+    ⛔ 못 하는 것: 슬랩 W 의 수렴을 인증하지 않는다 · 합격/불합격을 내지 않는다 (규칙은 결과 뒤 정한 **진단**이다) ·
+      내장 대조(07_epi_e52_k3 ↔ 05 최종 SCF)가 어긋나면 epi 잡을 **전부 쓰지 않는다**.
+    """
+    J = json.load(open(os.path.join(qe_in, "jobs.json"), encoding="utf-8"))
+    rules = J.get("reading_rules_diagnostic_set_before_running", {})
+    conv = J["w_conversion"]["n_bulk_cells"] * RY_J / (2 * J["w_conversion"]["area_A2"] * 1e-20)
+    rows, miss = {}, {}
+    for cell, b in (J.get("baselines_already_run") or {}).items():          # 이미 돈 기준점 (52 Ry · k3)
+        c, e, k = cell.split("_")
+        rows[(c, int(e[1:]), int(k[1:]))] = {"E_Ry": b["E_Ry"], "stress_kbar": b["stress_kbar"], "source": b["job"]}
+    for j in J["jobs"]:
+        key = (j["cell"], int(j["ecutwfc"]), int(j["kpts"][0]))
+        try:
+            po = os.path.join(run, j["dir"], "pw.out")
+            r = parse_pw(po, "scf", False)
+            if r["nat"] is not None and r["nat"] != j["nat"]:
+                raise SlabError(f"nat {r['nat']} ≠ 입력 {j['nat']}")
+            st = parse_stress_kbar(open(po, errors="ignore").read())
+            rows[key] = {"E_Ry": r["E_pbe_Ry"], "stress_kbar": st, "source": j["dir"]}
+        except SlabError as e:
+            miss[j["dir"]] = str(e)
+    out = {"run": run, "missing": miss, "table": {f"{c}_e{e}_k{k}": v for (c, e, k), v in sorted(rows.items())},
+           "conv_J_m2_per_Ry": conv, "rules": rules, "flags": [], "diagnostics": {}}
+    # 내장 대조 — epi 좌표 이식
+    ctrl_ok = None
+    if ("epi", 52, 3) in rows and "07_epi_e52_k3" in {j["dir"] for j in J["jobs"]} and "07_epi_e52_k3" not in miss:
+        e_base = J["baselines_already_run"]["epi_e52_k3"]["E_Ry"]
+        e_new = next(v["E_Ry"] for v in rows.values() if v["source"] == "07_epi_e52_k3")
+        ctrl_ok = abs(e_new - e_base) <= 1e-5
+        out["diagnostics"]["epi_control"] = {"E_05_Ry": e_base, "E_07_Ry": e_new, "diff_Ry": e_new - e_base, "ok": ctrl_ok}
+        if not ctrl_ok:
+            out["flags"].append(f"⛔ epi 내장 대조 실패 — |ΔE| {abs(e_new - e_base):.2e} Ry > 1e-5 → epi 잡 전부 사용 안 함 (좌표 이식 의심)")
+    # R1 — cubic 전단의 부호·크기
+    yz = {f"e{e}_k{k}": v["stress_kbar"]["yz"] for (c, e, k), v in rows.items() if c == "cubic"}
+    if yz:
+        same = len({np.sign(v) for v in yz.values()}) == 1
+        mn = min(abs(v) for v in yz.values())
+        out["diagnostics"]["R1"] = {"sigma_yz_kbar": yz, "same_sign": same, "min_abs_kbar": mn,
+                                    "read": ("전단 성분은 기저·k 의 수치 아티팩트가 아니다 (원인 분류 아님)" if same and mn >= 5
+                                             else "전단 성분이 설정에 따라 부호·크기가 흔들린다 — 수치 아티팩트 가능성을 배제하지 못한다")}
+    # R2 — 참조 차의 안정성
+    dW = {}
+    if ctrl_ok is not False:
+        for (c, e, k), v in rows.items():
+            if c == "cubic" and ("epi", e, k) in rows:
+                dW[f"e{e}_k{k}"] = round((v["E_Ry"] - rows[("epi", e, k)]["E_Ry"]) * conv, 4)
+    if dW:
+        spread = max(dW.values()) - min(dW.values())
+        out["diagnostics"]["R2"] = {"dW_prime_J_m2": dW, "spread_J_m2": round(spread, 4),
+                                    "read": ("참조 변경 효과는 수치 설정에 강건하다 (≤ 0.02)" if spread <= 0.02
+                                             else f"스프레드 {spread:.3f} J/m² — W 계열 값의 수치 불확실도로 명시한다")}
+    # R3 — 정보
+    if ("cubic", 52, 3) in rows and ("cubic", 70, 4) in rows:
+        a, b = rows[("cubic", 52, 3)], rows[("cubic", 70, 4)]
+        out["diagnostics"]["R3"] = {"dE_70k4_minus_52k3_meV_per_atom": round((b["E_Ry"] - a["E_Ry"]) * 13605.693 / 52, 2),
+                                    "dP_70_minus_52_same_cell_kbar": round(rows[("cubic", 70, 3)]["stress_kbar"]["P"] - a["stress_kbar"]["P"], 2)
+                                    if ("cubic", 70, 3) in rows else None}
+    out["⛔"] = "진단이다 — 합격선 아님 · 슬랩 W 의 수렴 인증 아님 (Codex BX Q5)"
+    return out
+
+
 # ─────────────────── 이완 점검 (경보 v2 후속 · 점검 제안 A · 2026-09-25) ───────────────────
 #: 결과 전 문턱 — db/properties/wad_sese_4L_result_2026_09_25.json `다음_점검_제안_1저자_결정.A` 와 같은 값.
 #:   ⛔ 결과를 보고 바꾸지 않는다 (바꾸면 그 기록과 갈린다).
@@ -819,6 +901,68 @@ def relax_check(pw_in_text, final_text, mid_thr=RELAX_MID_THR_A, vac_tol=RELAX_V
 
 
 # ─────────────────────────────── selftest ───────────────────────────────
+def _selftest_bulk_sens(ck):
+    """--bulk_sens: 합성 pw.out 로 표·R1·R2·내장 대조 (양성 + 음성)."""
+    import tempfile
+    qe_in = os.path.join(REPO, "db", "inputs", "wad_sese_bulk_sensitivity_2026_09_25")
+    if not os.path.isfile(os.path.join(qe_in, "jobs.json")):
+        ck("bulk_sens: 입력 폴더가 repo 에 있다", False, qe_in)
+        return
+    J = json.load(open(os.path.join(qe_in, "jobs.json"), encoding="utf-8"))
+    Eb = J["baselines_already_run"]
+    def stress_block(xx, yy, zz, yz, P):
+        return (f"          total   stress  (Ry/bohr**3)                   (kbar)     P=  {P:10.2f}\n"
+                f"   0.00009414   0.00000000   0.00000000   {xx:12.2f}         0.00         0.00\n"
+                f"   0.00000000  -0.00002425  -0.00000104         0.00   {yy:12.2f}   {yz:12.2f}\n"
+                f"   0.00000000  -0.00000104  -0.00000045         0.00   {yz:12.2f}   {zz:12.2f}\n")
+    def fake(root, e_shift=None, yz_flip=False, no_stress=(), ctrl_off=0.0):
+        e_shift = e_shift or {}
+        for j in J["jobs"]:
+            d = os.path.join(root, j["dir"]); os.makedirs(d, exist_ok=True)
+            base = Eb["cubic_e52_k3"]["E_Ry"] if j["cell"] == "cubic" else Eb["epi_e52_k3"]["E_Ry"]
+            e = base + e_shift.get(j["dir"], 0.0) + (ctrl_off if j["dir"] == "07_epi_e52_k3" else 0.0)
+            yz = (10.8 if j["cell"] == "cubic" else -0.15)
+            if yz_flip and j["dir"] == "06_cubic_e70_k4":
+                yz = -10.8
+            L = ["     Program PWSCF v.7.4.1 starts", "     number of atoms/cell      =           52",
+                 "     convergence has been achieved in  12 iterations", f"!    total energy              =   {e:.8f} Ry"]
+            if j["dir"] not in no_stress:
+                L.append(stress_block(13.0, -6.5, -6.6, yz, 0.0).rstrip("\n"))
+            L.append("   JOB DONE.")
+            open(os.path.join(d, "pw.out"), "w").write("\n".join(L) + "\n")
+    with tempfile.TemporaryDirectory() as r:
+        fake(r)
+        o = bulk_sens_collect(r, qe_in)
+        ck("bulk_sens 양성: 누락 0 · 표 8줄 (기준 2 + 잡 7 — 07_epi_e52_k3 가 epi 기준 칸을 대신한다)", not o["missing"] and len(o["table"]) == 8, (o["missing"], len(o["table"])))
+        ck("bulk_sens: 내장 대조 통과 (07 = 05)", o["diagnostics"]["epi_control"]["ok"] is True)
+        ck("bulk_sens: R1 — 부호 같고 ≥ 5 kbar → '아티팩트 아님'", o["diagnostics"]["R1"]["same_sign"] and "아티팩트가 아니다" in o["diagnostics"]["R1"]["read"])
+        ck("bulk_sens: R2 — ΔW′ 스프레드 0 → 강건", o["diagnostics"]["R2"]["spread_J_m2"] == 0 and "강건" in o["diagnostics"]["R2"]["read"])
+        dW = o["diagnostics"]["R2"]["dW_prime_J_m2"]["e52_k3"]
+        ck("bulk_sens: ΔW′(52,k3) 가 기준점에서 0.0775 를 재현", abs(dW - 0.0775) < 5e-4, dW)
+    with tempfile.TemporaryDirectory() as r:
+        fake(r, yz_flip=True)
+        o = bulk_sens_collect(r, qe_in)
+        ck("⛔음성: 한 설정에서 σ_yz 부호가 뒤집히면 R1 '아티팩트 배제 못 함'", not o["diagnostics"]["R1"]["same_sign"] and "배제하지 못한다" in o["diagnostics"]["R1"]["read"])
+    with tempfile.TemporaryDirectory() as r:
+        fake(r, e_shift={"06_cubic_e70_k4": +0.0060})      # 6 mRy ≈ 0.026 J/m²
+        o = bulk_sens_collect(r, qe_in)
+        ck("⛔음성: 참조 차가 설정에 따라 0.02 넘게 흔들리면 R2 가 '불확실도로 명시' 로 간다",
+           o["diagnostics"]["R2"]["spread_J_m2"] > 0.02 and "불확실도" in o["diagnostics"]["R2"]["read"], o["diagnostics"]["R2"])
+    with tempfile.TemporaryDirectory() as r:
+        fake(r, ctrl_off=1e-4)
+        o = bulk_sens_collect(r, qe_in)
+        ck("⛔음성: 내장 대조 실패(1e-4 Ry) → epi 전부 사용 안 함 · R2 없음 · 깃발", o["flags"] and "R2" not in o["diagnostics"], o["flags"])
+    with tempfile.TemporaryDirectory() as r:
+        fake(r, no_stress=("06_cubic_e70_k3",))
+        o = bulk_sens_collect(r, qe_in)
+        ck("⛔음성: 응력 블록이 없는 잡은 누락으로 (0 으로 채우지 않는다)", "06_cubic_e70_k3" in o["missing"], o["missing"])
+    try:
+        parse_stress_kbar("아무 것도 없음"); bad = False
+    except SlabError:
+        bad = True
+    ck("⛔음성: 응력 블록 없음 → SlabError", bad)
+
+
 def _selftest_relax_check(ck):
     """--relax_check: 실제 4층 S 바깥 입력을 출발로, 합성 '최종 좌표' 로 양성·음성을 본다."""
     src = os.path.join(REPO, "db", "inputs", "wad_sese_control_4L_2026_09_24", "03_s_outer_relax_pbe", "pw.in")
@@ -1108,6 +1252,7 @@ def _selftest():
     ck("QE 입력 원자 수 일치", f"nat = {len(slab)}" in txt)
     _selftest_collect(ck)
     _selftest_relax_check(ck)
+    _selftest_bulk_sens(ck)
     print(f"{'✅' if n_bad == 0 else '⛔'} se_sym_slab selftest {n_ok}/{n_ok + n_bad} 통과")
     return 0 if n_bad == 0 else 1
 
@@ -1127,11 +1272,20 @@ def main():
     ap.add_argument("--kbulk", default="4 4 4")
     ap.add_argument("--collect", metavar="RUN", help="실행 폴더의 pw.out 들 → W (J/m²) · <RUN>/sese_result.json")
     ap.add_argument("--qe_in", help="--collect 가 대조할 입력 폴더 (기본 db/inputs/wad_sese_control_2026_09_23)")
+    ap.add_argument("--bulk_sens", metavar="RUN", help="벌크 수치 민감도 집계 (--qe_in 필수 · 결과 <RUN>/bulk_sens_result.json · 진단 R1·R2)")
     ap.add_argument("--relax_check", nargs=2, metavar=("PW_IN", "FINAL"),
                     help="이완 전 pw.in ↔ 최종 좌표(pw.out 또는 붙여넣은 Begin/End final coordinates) — PS₄ · 짝 · 진공 · 층별 변위 (판정 아님)")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
+    if a.bulk_sens:
+        if not a.qe_in:
+            ap.error("--bulk_sens 에는 --qe_in 이 필요하다")
+        o = bulk_sens_collect(a.bulk_sens, a.qe_in)
+        with open(os.path.join(a.bulk_sens, "bulk_sens_result.json"), "w", encoding="utf-8") as f:
+            json.dump(o, f, ensure_ascii=False, indent=1)
+        print(json.dumps({k: o[k] for k in ("table", "diagnostics", "flags", "missing")}, ensure_ascii=False, indent=1))
+        return 0 if not o["missing"] and not o["flags"] else 2
     if a.relax_check:
         r = relax_check(open(a.relax_check[0], encoding="utf-8").read(), open(a.relax_check[1], encoding="utf-8", errors="ignore").read())
         print(json.dumps(r, ensure_ascii=False, indent=1))

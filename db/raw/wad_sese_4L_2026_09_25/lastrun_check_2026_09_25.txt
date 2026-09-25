@@ -1,0 +1,28 @@
+=== 03_s_outer_relax_pbe sha 773594d7a0112ef8
+Program PWSCF 헤더 수: 1 · 'convergence NOT achieved': 0 · 'bfgs failed': 0 · 'maximum number of steps': 0
+     bfgs converged in 200 scf cycles and 199 bfgs steps
+     End of BFGS Geometry Optimization
+   JOB DONE.
+!    total energy              =   -2152.35487740 Ry
+마지막 힘 블록 최대 성분 0.000298 Ry/Bohr (forc_conv_thr 1e-3 · 성분별)
+=== 03_li_outer_relax_pbe sha 3a38f37c1cb08741
+Program PWSCF 헤더 수: 1 · 'convergence NOT achieved': 0 · 'bfgs failed': 0 · 'maximum number of steps': 0
+     bfgs converged in 106 scf cycles and 105 bfgs steps
+     End of BFGS Geometry Optimization
+   JOB DONE.
+!    total energy              =   -1939.17321425 Ry
+마지막 힘 블록 최대 성분 0.000382 Ry/Bohr (forc_conv_thr 1e-3 · 성분별)
+=== 04_bulk_relax_pbe sha c1f1edea059582e2
+Program PWSCF 헤더 수: 1 · 'convergence NOT achieved': 0 · 'bfgs failed': 0 · 'maximum number of steps': 0
+     bfgs converged in   1 scf cycles and   0 bfgs steps
+     End of BFGS Geometry Optimization
+   JOB DONE.
+!    total energy              =   -1022.94625093 Ry
+마지막 힘 블록 최대 성분 0.000044 Ry/Bohr (forc_conv_thr 1e-3 · 성분별)
+=== 05_bulk_vcrelax_epi_pbe sha 9a6e88631934a3b9
+Program PWSCF 헤더 수: 1 · 'convergence NOT achieved': 0 · 'bfgs failed': 0 · 'maximum number of steps': 0
+     bfgs converged in  27 scf cycles and  26 bfgs steps
+     End of BFGS Geometry Optimization
+   JOB DONE.
+!    total energy              =   -1022.96421634 Ry
+마지막 힘 블록 최대 성분 0.000269 Ry/Bohr (forc_conv_thr 1e-3 · 성분별)

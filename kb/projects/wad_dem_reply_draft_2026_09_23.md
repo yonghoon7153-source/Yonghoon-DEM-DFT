@@ -1,9 +1,9 @@
 ---
 title: "DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청"
 date: 2026-09-23
-updated: 2026-09-23
+updated: 2026-09-25
 tags: [adhesion, wad, dem-input, reply-draft, lpscl, silver, graphite]
-status: 1차 발송 완료 · DEM 회신 수령(2026-09-23 저녁) · 회신 2‴ 1저자 발송 승인(2026-09-23 밤) — 발송 확인 대기
+status: 1차 발송 완료 · DEM 회신 수령(09-23 저녁) · 회신 2‴ 1저자 발송 승인(09-23 밤 · 발송 확인 대기) · 회신 3 (SE|SE 현황 · Codex BX Q6) 초안 — 2‴ 부록 또는 별도 (1저자)
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -212,3 +212,14 @@ evidenceScope: multi-source-primary
 6. SE 값 사다리 정리와 *"상한 = 약한 쪽"* 철회, 잘 받았습니다. 우리 SE|SE 앵커 0.47 J/m² 는 합격선이 아닌 경보로만 씁니다.
 
 근거(정본 브랜치 `claude/friendly-meitner-lldvar`): 외부 리뷰 `kb/reviews/codex_BW_reply_wad_validation_without_cluster_2026_09_23.md` · 결정 `D-2026-09-23-wad-a-prime-scope` · `D-2026-09-23-wad-p2-lpscl-graphite-scope` · `D-2026-09-23-wad-se-termination-symmetric` · `D-2026-09-23-wad-sese-alarm-band-v2` · 계획 `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` §0′ *BW 회신 반영*.
+
+## 회신 3 (DFT → DEM · SE|SE 대조 현황 · 2026-09-25) — Codex BX Q6 허용 서술 **그대로** · 2‴ 미발송이면 부록으로, 발송했으면 별도 짧은 회신
+
+> 1저자 결정 '권장하는걸로' → 권고 = **2‴ 가 아직 안 나갔으면 아래를 2‴ 끝에 "부록 — SE|SE 대조 현황" 으로 붙인다**, 나갔으면 이 문단만 따로 보낸다.
+> 값은 인용 불가(내부 방법 점검용)라 DEM 이 파라미터로 옮기지 못하게 마지막 문장을 빼지 않는다.
+
+**부록 — SE|SE 대조 현황 (내부 방법 점검)**
+
+SE|SE 4층 PBE 대조에서 조성 상쇄와 PS₄ 연결 보존을 확인했습니다. 기존 입방 벌크 기준 값은 0.277 J/m² 로 사전 경보가 유지됩니다. 동일한 면내 격자에서 c-벡터를 이완한 벌크 참조를 사용하면 0.354 J/m² 이며, 두 값의 차이는 참조 상태에 대한 민감도입니다. 이를 순수 전단 에너지나 문헌 차이의 확정 원인으로 해석하지 않습니다. 현재 결과는 내부 방법 점검용이며, DEM 파라미터·계면 점착성 서열·파괴 위치 판정에는 사용하지 않습니다.
+
+근거: 외부 리뷰 `kb/reviews/codex_BX_reply_wad_sese_4L_alarm_2026_09_25.md` · 결과 기록 `db/properties/wad_sese_4L_result_2026_09_25.json` · 결정 `D-2026-09-25-wad-reference-state-policy` (정본 브랜치 `claude/friendly-meitner-lldvar`).
