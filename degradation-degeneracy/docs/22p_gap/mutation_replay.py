@@ -1800,10 +1800,16 @@ MUTANTS = [
      '    if False:\n        raise PreserveError("plan", f"{leg_id!r} 영수증의 복원 자리',
      "g71_e3r_07 and not 07b and not 07c"),
     # ── 71차 E3-R ── 원장 evidence.out 대조 제거 (다른 실행 기록에 묶음이 붙는다)
-    ("attach-binds-the-ledger-run-location-g71", PRESERVE,                  # R07
-     '        if "out" in ev:\n            led_out = ',
-     '        if False:\n            led_out = ',
-     "g71_e3r_07b"),
+    ("attach-binds-the-ledger-run-location-g71", PRESERVE,                  # R07 (72차: helper 로 옮긴 자리를 겨냥)
+     '    led_out = Path(led_out).as_posix().strip("/")\n    if led_out != bound_run:',
+     '    led_out = Path(led_out).as_posix().strip("/")\n    if False:',
+     "g71_e3r_07b or g72_a04"),
+    # ── 72차 E3-R 잔여 ── 실행 자리 부재를 다시 skip 으로 (A02·A05 가 성공으로 돌아간다)
+    ("ledger-run-location-is-mandatory-g72", PRESERVE,                      # A02·A05
+     '    if not (isinstance(led_out, str) and led_out.strip()):\n        raise PreserveError(',
+     '    if False:\n        raise PreserveError(',
+     # a07 은 실물 영수증 양성이라 preserve.py 의 어떤 변이에서도 digest 가 달라져 빨개진다 — 이 변이가 무는 node 가 아니다
+     "g72_a02 or g72_a05 or g72_a06"),
     ("the-replay-context-is-measured-once-g66", MR,                          # 정적 관측
      '    ctx = ctx if ctx is not None else _\u0072eplay_context()\n'
      '    want = _parent_customization_view(ctx)',
@@ -5303,9 +5309,27 @@ EXPECT: dict = {
     "attach-binds-the-ledger-run-location-g71": {
         "fail": [
             "tests/test_gate71_defensive.py::test_g71_e3r_07b_the_ledger_run_location_must_match_the_receipt",
+            "tests/test_gate72_defensive.py::test_g72_a04_idempotent_return_is_refused_when_out_disagrees",
         ],
         "witness": {
             "tests/test_gate71_defensive.py::test_g71_e3r_07b_the_ledger_run_location_must_match_the_receipt": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate72_defensive.py::test_g72_a04_idempotent_return_is_refused_when_out_disagrees": "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "ledger-run-location-is-mandatory-g72": {
+        "fail": [
+            "tests/test_gate72_defensive.py::test_g72_a02_a_pending_record_without_out_cannot_be_lifted",
+            "tests/test_gate72_defensive.py::test_g72_a02b_an_out_that_is_not_a_nonempty_string_is_no_binding[17]",
+            "tests/test_gate72_defensive.py::test_g72_a02b_an_out_that_is_not_a_nonempty_string_is_no_binding[value3]",
+            "tests/test_gate72_defensive.py::test_g72_a05_idempotent_return_is_refused_when_out_is_missing",
+            "tests/test_gate72_defensive.py::test_g72_a06_the_binding_is_checked_before_the_receipt_identity_on_full_bundle",
+        ],
+        "witness": {
+            "tests/test_gate72_defensive.py::test_g72_a02_a_pending_record_without_out_cannot_be_lifted": "TypeError: expected str, bytes or os.PathLike object, not NoneType",
+            "tests/test_gate72_defensive.py::test_g72_a02b_an_out_that_is_not_a_nonempty_string_is_no_binding[17]": "TypeError: expected str, bytes or os.PathLike object, not int",
+            "tests/test_gate72_defensive.py::test_g72_a02b_an_out_that_is_not_a_nonempty_string_is_no_binding[value3]": "TypeError: expected str, bytes or os.PathLike object, not list",
+            "tests/test_gate72_defensive.py::test_g72_a05_idempotent_return_is_refused_when_out_is_missing": "TypeError: expected str, bytes or os.PathLike object, not NoneType",
+            "tests/test_gate72_defensive.py::test_g72_a06_the_binding_is_checked_before_the_receipt_identity_on_full_bundle": "TypeError: expected str, bytes or os.PathLike object, not NoneType",
         }
     },
     "exec-class-reader-is-typed-g70": {

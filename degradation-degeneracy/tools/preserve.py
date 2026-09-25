@@ -7852,6 +7852,29 @@ def _assert_receipt_bound_to_bundle(core: dict, bundle_dir: Path, leg_id: str) -
     return want
 
 
+def _assert_ledger_run_bound(ev: dict, bound_run: str, leg_id: str, status) -> str:
+    """원장 실행 기록의 자리(`evidence.out`)가 영수증·묶음이 결속한 복원 자리와 같은가 (72차 E3-R 잔여).
+
+    **필수**다 — 없으면 결속할 수 없으므로 거부한다 ("미결속"). 71차판은 `if "out" in ev:` 로 필드가 없으면
+    대조를 건너뛰었고(리뷰어 A02), full_bundle 의 멱등 반환이 이 대조보다 앞에 있어 out 이 다르거나 없어도
+    성공을 돌려줬다(A04·A05). `LIFECYCLE_OWNED_EVIDENCE_KEYS` 에 `out` 이 없어 앞의 검사도 막지 않았다.
+    역사적 기록(소급 `retrospective` 다리 — 실물 `paired_fixed5_v4`)에는 `out` 이 없다: 그것은 읽을 수 있는
+    과거 자료이지 **현재 결속 성공**이 아니다. 소급해서 채우지 않고 여기서 미결속으로 거부한다.
+    """
+    led_out = ev.get("out")
+    if not (isinstance(led_out, str) and led_out.strip()):
+        raise PreserveError(
+            "plan", f"{leg_id!r} 원장 실행 기록(preservation_status={status!r})에 실행 자리 evidence.out 이 없다 — "
+                    f"영수증·묶음의 복원 자리 {bound_run!r} 와 결속할 근거가 없으므로 **미결속**으로 거부한다 "
+                    "(72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)")
+    led_out = Path(led_out).as_posix().strip("/")
+    if led_out != bound_run:
+        raise PreserveError(
+            "plan", f"{leg_id!r} 원장 evidence.out={led_out!r} 가 영수증·묶음의 복원 자리 {bound_run!r} 와 "
+                    "다르다 — 다른 실행 기록에 묶음을 붙이지 않는다 (R07)")
+    return led_out
+
+
 def attach_bundle_evidence(leg_id: str, receipt_path, ledger=None, *,
                            repo_root=None) -> dict:
     """finalize 된 다리(`preservation_pending`)를 **영수증을 소비해** `full_bundle` 로 올린다 (70차 E3).
@@ -7914,6 +7937,8 @@ def attach_bundle_evidence(leg_id: str, receipt_path, ledger=None, *,
         leg = legs[0]
         ev = dict(leg.get("evidence") or {})
         status = leg.get("preservation_status")
+        # ★ 72차 E3-R 잔여 — 실행 자리 결속을 **멱등 반환보다 먼저, 필수로** 확인한다 (A02·A04·A05).
+        _assert_ledger_run_bound(ev, bound_run, leg_id, status)
         if status == "full_bundle":
             if ev.get("verification_receipt_core_sha256") == core_sha \
                     and ev.get("verification_receipt") == rel_receipt:
@@ -7931,14 +7956,7 @@ def attach_bundle_evidence(leg_id: str, receipt_path, ledger=None, *,
                 raise PreserveError(
                     "plan", f"{leg_id!r} 의 실행 기록에 lifecycle 소유 키 {k!r} 가 없다 — "
                             "finalize 가 남긴 기록이 아니므로 그 위에 묶음을 붙이지 않는다")
-        # ★ 71차 E3-R — finalize 가 적은 실행 자리(`evidence.out`, run.sh `leg_finalize` 가 준다)와
-        #   영수증·묶음이 결속한 복원 자리가 같아야 한다. 다른 실행 기록에 이 묶음을 붙이지 않는다.
-        if "out" in ev:
-            led_out = Path(str(ev["out"])).as_posix().strip("/")
-            if led_out != bound_run:
-                raise PreserveError(
-                    "plan", f"{leg_id!r} 원장 evidence.out={led_out!r} 가 영수증·묶음의 복원 자리 {bound_run!r} 와 "
-                            "다르다 — 다른 실행 기록에 묶음을 붙이지 않는다 (R07)")
+        # (실행 자리 결속은 위 `_assert_ledger_run_bound` — 71차의 `if "out" in ev:` 선택적 분기는 72차에 지웠다)
         ev.update(bundle_ev)
         ev.update({
             "member_rehash_by": b["member_rehash"],
