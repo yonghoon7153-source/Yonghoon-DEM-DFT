@@ -36,7 +36,8 @@ from .circuit import Circuit, parse_circuit, series_blocks
 from .guess import inductive_mask, initial_guess
 from .spectrum import Spectrum
 
-__all__ = ["FitResult", "Parameter", "fit_circuit", "SCIPY_MISSING"]
+__all__ = ["FitResult", "Parameter", "fit_circuit", "is_exponent", "seed_spread_exceeded",
+           "SCIPY_MISSING"]
 
 SCIPY_MISSING = (
     "이 피팅에는 scipy 가 필요합니다 — `pip install 'wrdkit[eis]'` "
@@ -112,7 +113,7 @@ class Parameter:
             return "undetermined"
         if self.spread is None:
             return "not_checked"
-        if self.spread >= _SPREAD_LIMIT:
+        if self._spread_exceeded:
             return "undetermined"
         return "determined"
 
@@ -161,9 +162,14 @@ class Parameter:
             # 사람이 다음에 할 일을 못 정한다 — 재시작을 늘릴 일인지, 회로가
             # 다른 최소로 갈린 것인지, 수치 문제인지가 다 다르다.
             return self.spread_missing or "scatter_not_measured"
-        if self.spread >= _SPREAD_LIMIT:
+        if self._spread_exceeded:
             return "seed_spread"
         return ""
+
+    @property
+    def _spread_exceeded(self) -> bool:
+        return seed_spread_exceeded(self.name, spread=self.spread, value=self.value,
+                                    low=self.spread_low, high=self.spread_high)
 
     @property
     def value_available(self) -> bool:
@@ -196,7 +202,9 @@ class Parameter:
            through (relative error 0.38, comfortably "determined") while
            re-seeding moved the same number across nine decades at an
            indistinguishable chi-square.  A number like that is a starting
-           guess wearing a measurement's clothes.
+           guess wearing a measurement's clothes.  An exponent is judged by
+           how far apart the answers are, not by their ratio -- on 0.1–1 a
+           factor of three is nearly the whole range (`seed_spread_exceeded`).
 
         3. **The circuit cannot tell it from another parameter.**  The two
            transmission-line rails are exchangeable *exactly*: swap them and
@@ -295,6 +303,46 @@ _TIE_FLOOR_RESIDUAL = 1e-8
 #: 평균의 [1/sqrt(r), sqrt(r)] 안에 있으므로, r=3 이 대략 -42% / +73% 다.
 #: 오차 막대로 ±50% 를 못 넘게 했으면서 씨앗 사이의 3 배를 통과시킬 이유가 없다.
 _SPREAD_LIMIT = 3.0
+
+#: 지수는 비율이 아니라 **차이**(최대 − 최소)가 이만큼 넘으면 미결정 (ADR 0045 보완 9).
+#:
+#: 지수는 0.1–1 사이라 3 배는 거의 전 범위다.  실측 #33 쌍둥이의 CPE1_n 은 같은 χ² 에서
+#: 0.33 과 0.97 이었는데 (비 2.998) 정해짐이었다.  0.2 는 판단이다: 검수가 n 으로 소자를
+#: 읽는 두 자리 — 0.6 아래는 확산 닮음, 0.8 위는 반원 — 사이의 폭이다.  n 이 그보다
+#: 흔들리면 그 소자를 무엇으로 읽을지가 흔들린다.
+_EXPONENT_SPREAD_LIMIT = 0.2
+
+#: 지수 파라미터의 이름 끝 — CPE·TLR·TL 의 ``n``, TL 꼬리의 ``Wn``.
+_EXPONENT_SUFFIXES = ("_n", "_Wn")
+
+
+def is_exponent(name: str) -> bool:
+    """``CPE1_n``·``TL1_Wn`` 처럼 지수인 파라미터."""
+    return name.endswith(_EXPONENT_SUFFIXES)
+
+
+def seed_spread_exceeded(name: str, *, spread: float | None, value: float | None = None,
+                         low: float | None = None, high: float | None = None) -> bool:
+    """같은 χ² 에 닿은 답들 사이에서 값이 문턱 넘게 움직였나.
+
+    - 지수(`is_exponent`)는 차이(``high − low``)가 `_EXPONENT_SPREAD_LIMIT` 를 넘을 때,
+      나머지는 비(``spread``)가 `_SPREAD_LIMIT` 이상일 때다.
+    - 지수인데 양 끝이 없으면 — 보완 9 전에 저장한 행은 비와 값만 남겼다 — 값이 양 끝
+      사이에 있으니 차이는 ``v(r−1)/r`` 과 ``v(r−1)`` 사이다.  위 끝(``v(r−1)``)까지
+      문턱 안일 때만 넘지 않았다고 한다: 0.2 안인지 모르는 수를 측정값으로 내지
+      않는다 (§0.4).
+    - 흩어짐을 못 쟀으면(``spread`` 가 없으면) 넘지 않았다 — 그것은 따로 ``not_checked``
+      로 적힌다.
+    """
+    if spread is None:
+        return False
+    if not is_exponent(name):
+        return spread >= _SPREAD_LIMIT
+    if low is not None and high is not None:
+        return high - low > _EXPONENT_SPREAD_LIMIT
+    if value is None or not np.isfinite(value):
+        return spread >= _SPREAD_LIMIT
+    return abs(value) * (spread - 1.0) > _EXPONENT_SPREAD_LIMIT
 
 
 def _is_warburg_sigma(model, name: str) -> bool:

@@ -48,6 +48,7 @@ from wrdkit.eis.derive import (
     SYMMETRIC,
     blocking_verdict,
 )
+from wrdkit.eis.fit import is_exponent, seed_spread_exceeded
 
 from .. import storage
 from ..db import get_session
@@ -85,7 +86,11 @@ from ..settings import settings
 #: 이 값을 만든 판정 규칙의 이름.  저장한 행마다 함께 남긴다 — 문턱을 나중에
 #: 옮기면 옛 숫자가 어느 규칙으로 나온 것인지 알아야 다시 판정할 수 있다
 #: (Codex 판정 리뷰 #6).  규칙을 바꾸면 이 이름도 올린다.
-DETERMINATION_POLICY = "eis-ident-v1"
+#:
+#: v2 (ADR 0045 보완 9): 지수는 흩어짐을 비가 아니라 차이로 보고, 그 양 끝
+#: (``spread_low``·``spread_high``)도 남긴다.  v1 행의 지수는 읽을 때 새 규칙을
+#: 씌운다 (`apply_exchangeable`).
+DETERMINATION_POLICY = "eis-ident-v2"
 
 router = APIRouter(prefix="/api/eis", tags=["eis"])
 
@@ -2106,7 +2111,7 @@ def _stub_parameters(circuit: str, parameters: list[dict]) -> list[_ParameterStu
 def apply_exchangeable(circuit: str, parameters: list[dict]) -> list[dict]:
     """저장된 파라미터 dict 에 **지금 규칙**을 씌운다 — 응답에 실리는 것에도.
 
-    둘을 한다.
+    셋을 한다.
 
     1. **옛 행을 강등한다.**  `policy` 열쇠가 없는 행은 이 규칙이 생기기 전에
        저장된 것이다.  그 `determined: true` 가 흩어짐을 통과해서 참인지,
@@ -2116,13 +2121,17 @@ def apply_exchangeable(circuit: str, parameters: list[dict]) -> list[dict]:
        **다시 맞추면 사라지는 표시다** (`POST /api/eis/refit`).
     2. **회로가 아는 축퇴를 씌운다.**  통계 문턱과 달리 이것은 식의 성질이라
        옛 행에도 소급할 수 있다 (Codex 판정 리뷰 #3).
+    3. **지수의 흩어짐을 차이로 다시 본다** (ADR 0045 보완 9).  v1 행은 비와 값만
+       남겼지만, 값이 두 끝 사이에 있으니 차이의 범위가 나온다 — 그것으로 판정할
+       수 있는 만큼 씌운다 (`seed_spread_exceeded`).  행을 고치지 않고 읽을 때마다
+       씌운다.  `bml reparse` 는 옛 맞춤을 지워 `bml refit --undo` 의 길을 없앤다.
 
     스텁에만 씌우면 아크 이름과 전도도만 고쳐지고, 화면이 실제로 그리는
     `parameters` 목록에는 옛 `determined: true` 가 그대로 남는다.  같은 응답
     안에서 두 자리가 서로 다른 말을 하게 된다.
     """
     parameters = [
-        one if one.get("policy") else {
+        _exponent_spread(one) if one.get("policy") else {
             **one, "determined": False, "status": "legacy_unknown",
             "reason": "legacy_no_diagnostics",
         }
@@ -2146,6 +2155,27 @@ def apply_exchangeable(circuit: str, parameters: list[dict]) -> list[dict]:
             one["status"] = "undetermined"
             one["reason"] = "structural_alias"
     return out
+
+
+def _exponent_spread(one: dict) -> dict:
+    """정해짐인 지수 행이 차이 규칙(보완 9)으로는 미결정이면 그렇게 낸다."""
+    if one.get("status") != "determined" or not is_exponent(str(one.get("name", ""))):
+        return one
+    try:
+        exceeded = seed_spread_exceeded(
+            str(one["name"]), spread=_float_or_none(one.get("spread")),
+            value=_float_or_none(one.get("value")),
+            low=_float_or_none(one.get("spread_low")),
+            high=_float_or_none(one.get("spread_high")))
+    except (TypeError, ValueError):
+        return one
+    if not exceeded:
+        return one
+    return {**one, "determined": False, "status": "undetermined", "reason": "seed_spread"}
+
+
+def _float_or_none(value) -> float | None:
+    return float(value) if isinstance(value, (int, float)) else None
 
 
 class _FitStub:
@@ -2253,7 +2283,8 @@ def _fit_row(record: SpectrumRecord, spectrum, circuit: str, *, drop_inductive: 
              "stderr": p.stderr, "determined": p.determined,
              "relative_error": p.relative_error,
              "status": p.status, "reason": p.reason,
-             "spread": p.spread, "alias_of": p.alias_of,
+             "spread": p.spread, "spread_low": p.spread_low,
+             "spread_high": p.spread_high, "alias_of": p.alias_of,
              "policy": DETERMINATION_POLICY}
             for p in result.parameters], ensure_ascii=False),
         dropped_inductive=result.dropped_inductive,

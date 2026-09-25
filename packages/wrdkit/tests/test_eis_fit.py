@@ -11,7 +11,7 @@ import pytest
 import synthetic_eis as S
 
 from wrdkit.eis.circuit import parse_circuit
-from wrdkit.eis.fit import Parameter, fit_circuit
+from wrdkit.eis.fit import Parameter, fit_circuit, is_exponent, seed_spread_exceeded
 from wrdkit.eis.guess import find_arcs, initial_guess, series_resistance
 from wrdkit.eis.spectrum import Spectrum
 
@@ -203,6 +203,32 @@ def test_the_determined_rule_reads_both_the_error_bar_and_the_scatter():
     assert not Parameter("R0", 10.0, stderr=1.0, spread=None).determined
 
 
+def test_an_exponent_is_judged_by_how_far_apart_the_answers_are():
+    """ADR 0045 보완 9: 지수는 0.1–1 사이라 3 배가 거의 전 범위다.  실측 #33 쌍둥이의
+    CPE1_n 은 같은 χ² 에서 0.33 과 0.97 (비 2.998) 인데 정해짐이었다."""
+    wide = Parameter("CPE1_n", 0.97, stderr=0.01, spread=0.97 / 0.33,
+                     spread_low=0.33, spread_high=0.97)
+    assert not wide.determined and wide.reason == "seed_spread"
+    assert Parameter("CPE1_n", 0.85, stderr=0.01, spread=0.85 / 0.7,
+                     spread_low=0.7, spread_high=0.85).determined
+    assert not Parameter("TL1_Wn", 0.5, stderr=0.01, spread=2.0,
+                         spread_low=0.25, spread_high=0.5).determined
+    # 저항은 전처럼 비로 본다.
+    assert Parameter("R1", 0.97, stderr=0.01, spread=2.9,
+                     spread_low=0.33, spread_high=0.96).determined
+    assert is_exponent("TL1_n") and is_exponent("TL1_Wn") and not is_exponent("Ws1_tau")
+
+
+def test_an_old_row_without_the_ends_is_judged_from_its_ratio_and_value():
+    """v1 행은 비(r)와 값(v)만 남겼다.  값은 두 끝 사이에 있으니 차이는
+    v(r−1)/r … v(r−1) 이다 — 위 끝까지 문턱 안일 때만 정해짐으로 둔다 (§0.4)."""
+    assert seed_spread_exceeded("CPE1_n", spread=2.94, value=0.33)       # ≥ 0.22
+    assert not seed_spread_exceeded("CPE1_n", spread=1.2, value=0.9)     # ≤ 0.18
+    assert seed_spread_exceeded("CPE1_n", spread=1.25, value=0.9)        # 0.18–0.225
+    assert not seed_spread_exceeded("CPE1_n", spread=None, value=0.9)
+    assert not seed_spread_exceeded("R1", spread=2.9, value=0.9)
+
+
 
 def _flat_valley_spectrum():
     """전고체 풀셀 모양 — `Rct` 가 측정창에 안 보이게 작다.
@@ -271,6 +297,11 @@ def test_a_seed_does_not_hide_an_equally_good_valley():
     r1 = next(p for p in seeded.parameters if p.name == "R1")
     assert r1.spread_low < 1.0 and r1.spread_high > 5.0      # 두 골짜기를 다 봤다
     assert not r1.determined
+    # 그 두 골짜기의 CPE1_n 은 0.33 과 0.97 쯤이다 — 비로는 3 배 아래라 정해짐이었다
+    # (보완 5 의 "남긴 것").  차이로 보면 미결정이다 (보완 9).
+    cpe_n = next(p for p in seeded.parameters if p.name == "CPE1_n")
+    assert cpe_n.spread_high - cpe_n.spread_low > 0.5
+    assert not cpe_n.determined and cpe_n.reason == "seed_spread"
     # 데이터로 잡은 식구가 따로 돌았다 — 시작점이 한 식구보다 많다.
     alone = fit_circuit(data, circuit, frequency_range=window, restarts=4)
     assert seeded.starts > alone.starts
@@ -281,10 +312,16 @@ def test_the_scatter_check_does_not_downgrade_a_parameter_that_holds_still():
     """한쪽으로만 틀린다 — 못 보고 지나칠 수는 있어도 없는 흩어짐을 만들지 않는다."""
     circuit, data = _flat_valley_spectrum()
     result = fit_circuit(data, circuit, seed=0)
-    for name in ("CPE1_n", "TL1_n", "R1"):
+    for name in ("CPE1_n", "R1"):
         parameter = next(p for p in result.parameters if p.name == name)
         assert parameter.spread is None or parameter.spread < 3.0, parameter
         assert parameter.determined, parameter
+    # TL1_n 은 붙어 있지 않았다: 같은 χ² 에서 0.42–1.0 이고, 낸 값은 0.52 다 (참값
+    # 0.993).  비(2.4)로는 정해짐이었다 — 차이(0.58)로 보면 미결정이다 (ADR 0045
+    # 보완 9).  이 시험이 옛 규칙의 맹점을 정해짐으로 못 박고 있었다.
+    tl_n = next(p for p in result.parameters if p.name == "TL1_n")
+    assert tl_n.spread < 3.0 and tl_n.spread_high - tl_n.spread_low > 0.2
+    assert not tl_n.determined and tl_n.reason == "seed_spread"
 
 
 def test_scatter_is_none_when_there_was_nothing_to_compare_against():

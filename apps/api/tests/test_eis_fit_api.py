@@ -58,6 +58,58 @@ def test_the_circuit_s_exact_degeneracy_is_applied_to_old_rows_too(client):
     assert r0["value"] == 5.0          # 값 자체는 그대로 보인다
 
 
+def test_an_old_exponent_is_judged_again_by_how_far_apart_its_answers_can_be(client):
+    """ADR 0045 보완 9: 지수는 흩어짐을 비가 아니라 차이로 본다.  v1 행은 비(r)와
+    값(v)만 남겼지만, 값이 두 끝 사이에 있으니 차이는 v(r−1)/r … v(r−1) 이다.
+    행은 그대로 두고 읽을 때 씌운다 — `bml reparse` 는 옛 맞춤을 지워 되돌리기
+    길을 없앤다."""
+    import json
+
+    from sqlmodel import Session
+
+    from app.db import engine
+    from app.models import SpectrumFit, SpectrumRecord
+
+    def row(name, value, spread, unit="", policy="eis-ident-v1", **extra):
+        return {"name": name, "value": value, "unit": unit, "stderr": abs(value) * 0.01,
+                "determined": True, "relative_error": 0.01, "status": "determined",
+                "reason": "", "spread": spread, "alias_of": "", "policy": policy, **extra}
+
+    with Session(engine) as session:
+        record = SpectrumRecord(sha256="c" * 64, original_name="v1.mpr",
+                                name="v1 셀", kind="solid", n_points=40)
+        session.add(record)
+        session.commit()
+        session.refresh(record)
+        spectrum_id = record.id
+    with Session(engine) as session:
+        session.add(SpectrumFit(
+            spectrum_id=spectrum_id, circuit="R0-p(R1,CPE1)-p(R2,CPE2)-CPE3",
+            kind="solid", converged=True, chi_squared=1e-4, reason="",
+            parameters_json=json.dumps([
+                row("R0", 5.0, 1.1, "Ω"),
+                row("R1", 20.0, 2.9, "Ω"),                 # 저항은 전처럼 비로
+                row("CPE1_Q", 1e-6, 1.1, "S·sⁿ"),
+                row("CPE1_n", 0.33, 2.94),                 # #33: 0.33 과 0.97
+                row("R2", 50.0, 1.1, "Ω"),
+                row("CPE2_Q", 1e-5, 1.1, "S·sⁿ"),
+                row("CPE2_n", 0.9, 1.2),                   # 차이 ≤ 0.18
+                row("CPE3_Q", 1e-4, 1.1, "S·sⁿ"),
+                row("CPE3_n", 0.9, 1.25),                  # 0.18–0.225 — 모른다
+            ]),
+        ))
+        session.commit()
+
+    got = client.get(f"/api/eis/fits?ids={spectrum_id}").json()
+    by_name = {p["name"]: p for p in got[0]["parameters"]}
+    assert by_name["CPE1_n"]["determined"] is False
+    assert by_name["CPE1_n"]["reason"] == "seed_spread"
+    assert by_name["CPE2_n"]["determined"] is True
+    assert by_name["CPE3_n"]["determined"] is False
+    assert by_name["R1"]["determined"] is True
+    assert by_name["CPE1_n"]["value"] == 0.33          # 값은 그대로 보인다
+
+
 def test_refit_all_replaces_legacy_rows_and_clears_the_demotion(client):
     """강등만 하고 끝내면 올려 둔 셀의 전도도·추세가 통째로 빈다.
 
