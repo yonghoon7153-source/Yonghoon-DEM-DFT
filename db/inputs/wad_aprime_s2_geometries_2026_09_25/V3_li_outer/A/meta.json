@@ -1,0 +1,152 @@
+{
+ "model": "V3",
+ "term": "li_outer",
+ "registry": "A",
+ "registry_rule": {
+  "species": "Li",
+  "z_tol_A": 0.05,
+  "tie_tol_A": 0.001,
+  "Sigma": [
+   93,
+   94
+  ],
+  "A": 93,
+  "A_xy_A": [
+   8.6853,
+   5.767
+  ],
+  "B_neighbor": 94,
+  "B_image": [
+   0,
+   0
+  ],
+  "d_min_A": 7.11,
+  "n_ties": 4,
+  "tie_set": [
+   [
+    94,
+    0,
+    0
+   ],
+   [
+    94,
+    0,
+    1
+   ],
+   [
+    94,
+    1,
+    0
+   ],
+   [
+    94,
+    1,
+    1
+   ]
+  ],
+  "delta_mic_A": [
+   -5.0275,
+   -5.0275
+  ],
+  "midpoint_xy_A": [
+   6.1715,
+   3.2532
+  ],
+  "midpoint_frac": [
+   0.613768,
+   0.323537
+  ],
+  "z_surface_A": 24.4991
+ },
+ "fragment": "Ag4",
+ "n_sub": 98,
+ "n_ads": 4,
+ "fixed_idx": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  26,
+  27,
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34,
+  35,
+  36,
+  43,
+  44,
+  47,
+  48,
+  57,
+  58,
+  61,
+  62,
+  79,
+  80,
+  82,
+  86
+ ],
+ "lateral_fixed_idx": [],
+ "substrate_source": "db/raw/wad_sese_4L_2026_09_25/li_outer_relaxed_final_coords.txt",
+ "substrate_source_sha256": "7e0b1daea3467b1f25e72d9689ca41f76646907ed74cbad1ad628507f66fcce5",
+ "lateral_image_gap_A": 7.165,
+ "d0_A": 2.8,
+ "endpoints": {
+  "c_A": 37.0458,
+  "delta_A": 5.2,
+  "d0_A": 2.8,
+  "gap_rule_A": 8.0,
+  "bound_gap_direct_image_A": [
+   2.8,
+   14.2
+  ],
+  "far_gap_direct_image_A": [
+   8.0,
+   9.0
+  ],
+  "dipfield": {
+   "tefield": true,
+   "dipfield": true,
+   "edir": 3,
+   "eamp": 0.0,
+   "emaxpos": 0.95951,
+   "eopreg": 0.02699,
+   "region_A": [
+    35.546,
+    36.546
+   ],
+   "empty_in_both_endpoints": true
+  }
+ },
+ "interface_check_flags": [],
+ "sha256": {
+  "bound": "1eac3d1af0c1ed7b63d1c01c1fde4f04e4f87e0662f15a655c351948199703b1",
+  "far": "a4cca5aecdf56e82e21b56a55c3db0885538a45693b5a44a6d7c64171c63c6b4"
+ }
+}

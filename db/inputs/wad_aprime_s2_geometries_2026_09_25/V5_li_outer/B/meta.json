@@ -1,0 +1,171 @@
+{
+ "model": "V5",
+ "term": "li_outer",
+ "registry": "B",
+ "registry_rule": {
+  "species": "Li",
+  "z_tol_A": 0.05,
+  "tie_tol_A": 0.001,
+  "Sigma": [
+   43,
+   44,
+   89,
+   90
+  ],
+  "A": 43,
+  "A_xy_A": [
+   5.2396,
+   6.6124
+  ],
+  "B_neighbor": 44,
+  "B_image": [
+   0,
+   0
+  ],
+  "d_min_A": 7.1099,
+  "n_ties": 4,
+  "tie_set": [
+   [
+    44,
+    0,
+    0
+   ],
+   [
+    44,
+    1,
+    0
+   ],
+   [
+    90,
+    0,
+    0
+   ],
+   [
+    90,
+    1,
+    0
+   ]
+  ],
+  "delta_mic_A": [
+   -5.0275,
+   -5.0276
+  ],
+  "midpoint_xy_A": [
+   2.7258,
+   4.0986
+  ],
+  "midpoint_frac": [
+   0.271088,
+   0.203808
+  ],
+  "z_surface_A": 16.2015
+ },
+ "se_layers": 2,
+ "se_lateral": [
+  1,
+  2
+ ],
+ "se_cut_meta": {
+  "term": "li_outer",
+  "cut_kinds": [
+   "B",
+   "A"
+  ],
+  "n_layers": 2,
+  "vacuum_A": 16.0,
+  "z_cut_bottom_bulk": 3.1253,
+  "z_cut_top_bulk": 11.9574,
+  "thickness_A": 8.2015,
+  "c_A": 24.2015
+ },
+ "n_se": 92,
+ "n_Ag": 84,
+ "ag_layers": 3,
+ "ag_strain_pct_x_y": [
+  0.848,
+  -0.186
+ ],
+ "anchor_Ag_index_in_layer": 0,
+ "fixed_idx": [
+  0,
+  1,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  12,
+  13,
+  16,
+  17,
+  18,
+  19,
+  22,
+  23,
+  26,
+  27,
+  30,
+  31,
+  33,
+  34,
+  35,
+  46,
+  47,
+  50,
+  51,
+  52,
+  53,
+  54,
+  55,
+  58,
+  59,
+  62,
+  63,
+  64,
+  65,
+  68,
+  69,
+  72,
+  73,
+  76,
+  77,
+  79,
+  80,
+  81
+ ],
+ "lateral_fixed_idx": [],
+ "d0_A": 2.8,
+ "endpoints": {
+  "c_A": 29.9017,
+  "delta_A": 5.2,
+  "d0_A": 2.8,
+  "gap_rule_A": 8.0,
+  "bound_gap_direct_image_A": [
+   2.8,
+   14.2
+  ],
+  "far_gap_direct_image_A": [
+   8.0,
+   9.0
+  ],
+  "dipfield": {
+   "tefield": true,
+   "dipfield": true,
+   "edir": 3,
+   "eamp": 0.0,
+   "emaxpos": 0.94984,
+   "eopreg": 0.03344,
+   "region_A": [
+    28.402,
+    29.402
+   ],
+   "empty_in_both_endpoints": true
+  }
+ },
+ "interface_check_flags": [],
+ "sha256": {
+  "bound": "606e5a723353077f4211e5ca1907e3a5fa1cd092a7ca4ff6d0b70891857c7f8e",
+  "far": "a2f0f593117a71f6563b86ba882ca48063f231ef16b2af83566bff2a95e518fb"
+ }
+}

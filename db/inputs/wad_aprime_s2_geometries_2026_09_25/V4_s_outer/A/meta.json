@@ -1,0 +1,157 @@
+{
+ "model": "V4",
+ "term": "s_outer",
+ "registry": "A",
+ "registry_rule": {
+  "species": "S",
+  "z_tol_A": 0.05,
+  "tie_tol_A": 0.001,
+  "Sigma": [
+   108,
+   109
+  ],
+  "A": 108,
+  "A_xy_A": [
+   2.2922,
+   10.3647
+  ],
+  "B_neighbor": 109,
+  "B_image": [
+   -1,
+   0
+  ],
+  "d_min_A": 7.1099,
+  "n_ties": 4,
+  "tie_set": [
+   [
+    109,
+    -1,
+    0
+   ],
+   [
+    109,
+    -1,
+    1
+   ],
+   [
+    109,
+    0,
+    0
+   ],
+   [
+    109,
+    0,
+    1
+   ]
+  ],
+  "delta_mic_A": [
+   -5.0276,
+   -5.0277
+  ],
+  "midpoint_xy_A": [
+   9.8335,
+   7.8508
+  ],
+  "midpoint_frac": [
+   0.97796,
+   0.780782
+  ],
+  "z_surface_A": 27.7783
+ },
+ "fragment": "C6H6",
+ "n_sub": 110,
+ "n_ads": 12,
+ "fixed_idx": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  26,
+  27,
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34,
+  35,
+  36,
+  37,
+  38,
+  39,
+  40,
+  41,
+  42,
+  49,
+  50,
+  53,
+  54,
+  63,
+  64,
+  67,
+  68,
+  85,
+  86,
+  88
+ ],
+ "lateral_fixed_idx": [],
+ "substrate_source": "db/raw/wad_sese_4L_2026_09_25/s_outer_relaxed_final_coords.txt",
+ "substrate_source_sha256": "504e0b081aa2d05a71b55ee97c6ae0129250bd1a820e41a00c55446ee89b86c8",
+ "lateral_image_gap_A": 5.09,
+ "d0_A": 2.8,
+ "endpoints": {
+  "c_A": 37.0882,
+  "delta_A": 5.2,
+  "d0_A": 2.8,
+  "gap_rule_A": 8.0,
+  "bound_gap_direct_image_A": [
+   2.8,
+   14.2
+  ],
+  "far_gap_direct_image_A": [
+   8.0,
+   9.0
+  ],
+  "dipfield": {
+   "tefield": true,
+   "dipfield": true,
+   "edir": 3,
+   "eamp": 0.0,
+   "emaxpos": 0.95956,
+   "eopreg": 0.02696,
+   "region_A": [
+    35.588,
+    36.588
+   ],
+   "empty_in_both_endpoints": true
+  }
+ },
+ "interface_check_flags": [],
+ "sha256": {
+  "bound": "cf08e93eb581844871ee8e74e014c574e494a67861808233d605e0b28995c52f",
+  "far": "03723b4a623a336741d06b038132e8b6706dcbb21da9babbabaca4f4513fb2b1"
+ }
+}

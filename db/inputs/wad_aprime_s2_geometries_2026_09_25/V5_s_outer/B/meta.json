@@ -1,0 +1,185 @@
+{
+ "model": "V5",
+ "term": "s_outer",
+ "registry": "B",
+ "registry_rule": {
+  "species": "S",
+  "z_tol_A": 0.05,
+  "tie_tol_A": 0.001,
+  "Sigma": [
+   56,
+   57,
+   114,
+   115
+  ],
+  "A": 56,
+  "A_xy_A": [
+   2.1926,
+   2.5138
+  ],
+  "B_neighbor": 57,
+  "B_image": [
+   -1,
+   0
+  ],
+  "d_min_A": 7.11,
+  "n_ties": 4,
+  "tie_set": [
+   [
+    57,
+    -1,
+    0
+   ],
+   [
+    57,
+    0,
+    0
+   ],
+   [
+    115,
+    -1,
+    -1
+   ],
+   [
+    115,
+    0,
+    -1
+   ]
+  ],
+  "delta_mic_A": [
+   -5.0275,
+   5.0275
+  ],
+  "midpoint_xy_A": [
+   9.7339,
+   5.0275
+  ],
+  "midpoint_frac": [
+   0.968061,
+   0.25
+  ],
+  "z_surface_A": 18.3514
+ },
+ "se_layers": 2,
+ "se_lateral": [
+  1,
+  2
+ ],
+ "se_cut_meta": {
+  "term": "s_outer",
+  "cut_kinds": [
+   "A",
+   "B"
+  ],
+  "n_layers": 2,
+  "vacuum_A": 16.0,
+  "z_cut_bottom_bulk": 1.9023,
+  "z_cut_top_bulk": 13.1804,
+  "thickness_A": 10.6477,
+  "c_A": 26.6477
+ },
+ "n_se": 116,
+ "n_Ag": 84,
+ "ag_layers": 3,
+ "ag_strain_pct_x_y": [
+  0.848,
+  -0.186
+ ],
+ "anchor_Ag_index_in_layer": 0,
+ "fixed_idx": [
+  0,
+  1,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  12,
+  13,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  24,
+  25,
+  28,
+  29,
+  30,
+  31,
+  34,
+  35,
+  37,
+  38,
+  39,
+  40,
+  41,
+  42,
+  58,
+  59,
+  62,
+  63,
+  64,
+  65,
+  66,
+  67,
+  70,
+  71,
+  74,
+  75,
+  76,
+  77,
+  78,
+  79,
+  82,
+  83,
+  86,
+  87,
+  88,
+  89,
+  92,
+  93,
+  95,
+  96,
+  97,
+  98,
+  99,
+  100
+ ],
+ "lateral_fixed_idx": [],
+ "d0_A": 2.8,
+ "endpoints": {
+  "c_A": 32.3478,
+  "delta_A": 5.2,
+  "d0_A": 2.8,
+  "gap_rule_A": 8.0,
+  "bound_gap_direct_image_A": [
+   2.8,
+   14.2
+  ],
+  "far_gap_direct_image_A": [
+   8.0,
+   9.0
+  ],
+  "dipfield": {
+   "tefield": true,
+   "dipfield": true,
+   "edir": 3,
+   "eamp": 0.0,
+   "emaxpos": 0.95363,
+   "eopreg": 0.03091,
+   "region_A": [
+    30.848,
+    31.848
+   ],
+   "empty_in_both_endpoints": true
+  }
+ },
+ "interface_check_flags": [],
+ "sha256": {
+  "bound": "38011a60da03d6876c26b5dd3b12e578ea2c0162e1987623e127eca6fabb3d7f",
+  "far": "d5e88615d83360be25ecf080824f4941a6ad713cc666676c47529d2f1fe468b8"
+ }
+}
