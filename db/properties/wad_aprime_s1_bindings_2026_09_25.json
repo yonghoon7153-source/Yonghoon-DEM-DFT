@@ -1,0 +1,44 @@
+{
+ "schema": "prereg_bindings/v1",
+ "date": "2026-09-25",
+ "card": "db/properties/wad_aprime_pilot_prereg_v4_2026_09_25.json (draft · CB 재심 중)",
+ "what": "A′ 카드 S1 봉인에 넣을 **결박값** — 카드 파일을 재심 중에 건드리지 않기 위해 따로 모은다 (Codex 는 첨부 카드와 저장소 카드의 SHA256 일치를 확인한다). S1 봉인 때 카드(v5 또는 봉인판)에 그대로 옮긴다.",
+ "⛔": "값을 채웠다고 S1 이 열리는 것이 아니다 — Codex CB GO + 1저자 비준 뒤. 빈 항목이 남아 있으면 봉인 불가 (CA Q6).",
+ "UMA": {
+  "기계": "gabia (`/data/apps/miniforge3/envs/uma/bin/python`) · 09-25 실측",
+  "fairchem.core": "2.19.0 (최상위 `fairchem.__version__` 은 없음 — 네임스페이스 패키지)",
+  "torch": "2.8.0+cu128",
+  "cuda": "12.8",
+  "체크포인트": {
+   "이름": "uma-s-1p1",
+   "파일": "/root/.cache/fairchem/models--facebook--UMA/snapshots/be2896459a03fcde05e20d2fcefd11f450601fce/checkpoints/uma-s-1p1.pt",
+   "sha256_앞16": "07068e9c76702ca1",
+   "크기_MB": 1119,
+   "HF_snapshot": "be2896459a03fcde05e20d2fcefd11f450601fce"
+  },
+  "task": "omat",
+  "추론_설정_제안": "기하 생성(UMA+D3 이완)은 **default 모드** (turbo 는 MD 캠페인 관례 · 이완에도 쓸 수 있지만 S1 에서 하나로 고정해야 한다 — 1저자 확인) · device cuda · fmax 0.02 eV/Å · 셀 고정 · 마스크 `fixed_mask_policy far_half`",
+  "⚠_다른_기계": "kgy 의 uma env 를 쓰면 같은 sha 인지 다시 잰다 — 기계마다 결박한다"
+ },
+ "D3": {
+  "QE": "vdw_corr='grimme-d3' · dftd3_version=4 (BJ) · dftd3_threebody=.false. · PBE 매개변수는 QE 내장 (s6 1.0 · s8 0.7875 · a1 0.4289 · a2 4.4407)",
+  "UMA쪽": "외부 dftd3 구현 (버전·명령을 S2 결박 검사 때 기록) · 같은 매개변수 · 2체 · 결박 검사 |ΔE_D3| ≤ 1e-5 Ry"
+ },
+ "PP_sha256": {
+  "Li": "02cc4b3810e28a43…",
+  "P": "2d112dfec2e2d9b7…",
+  "S": "84ad731864187f41…",
+  "Cl": "5b1ebdea1e5ba743…",
+  "Ag": "0494aa5927b754b4… (z 19)",
+  "C": "9900d1efd50b9848… (z 4)",
+  "H": "27f8a7e87851d59a… (z 1)",
+  "전체": "db/inputs/wad_aprime_prep_2026_09_25/jobs.json settings.pp_sha256"
+ },
+ "코드": {
+  "se_sym_slab.py": "S1 봉인 시점의 커밋으로 (현재 0eedaf687 · interface_check 측방 정책·타입 검사 포함)",
+  "run_sese_gpu.sh": "같은 커밋",
+  "흡착층_빌더": "⏳ 미작성 — registry 규칙 구현 + selftest 뒤 커밋"
+ },
+ "선행_배치_값": "⏳ V100 `--aprime_prep` 출력 대기 (Ag·그래핀 a₀ PBE/PBE+D3 · comp1 D3 응력 GPa) → 여기와 카드 `S1_전에_이미_본_것` 에",
+ "결정_내용_digest": "카드 v4 `decisions_content_digest_S1_봉인에_넣는_것` 그대로 (Codex CA 가 9 개 재계산 일치 확인)"
+}
