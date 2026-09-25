@@ -87,6 +87,13 @@ def test_every_callsite_of_the_raw_sink_is_inside_the_publisher():
         rel = py.relative_to(REPO).as_posix()
         if rel == "tools/preserve.py":
             continue
+        # ★ 72차 — 보존한 리뷰 패키지(`docs/22p_gap/gate*_review/`)는 **증거의 바이트 사본**이지 이 저장소의
+        #   코드가 아니다. 72차 패키지가 `codex/reference/tools/preserve.py` 전문을 담아 오자 그 안의 sink
+        #   정의·호출이 "publisher 밖의 callsite" 로 잡혔다 (실측: 54d50763 전체 회귀 1 failed). 패키지는
+        #   `-text !eol` 로 바이트를 굳혀 두는 자료이므로 고치지 않고, 여기서 코드 검사 대상에서 뺀다.
+        #   RUN_SCOPE(`src tools configs scripts run.sh`) 는 그대로 전부 본다.
+        if rel.startswith("docs/22p_gap/gate") and "_review/" in rel:
+            continue
         try:
             tree = ast.parse(py.read_text(encoding="utf-8"))
         except (SyntaxError, UnicodeDecodeError):       # pragma: no cover
