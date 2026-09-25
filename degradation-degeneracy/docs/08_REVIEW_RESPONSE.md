@@ -8053,3 +8053,46 @@ D9 E4 표본 = premise 4 + g70 4 + g71 3 = 11 시나리오. `GATE71_REQUEST.md` 
 
 **하지 않은 것:** 계획 항목 작성/커밋 없음 · 본실행 없음 · 복원/재채점은 `make_receipt.py` 의 영수증 재생성(RUN_SCOPE 변경에 따른 검증기 identity 갱신, F50b·G70-N1·E5 때와 같은 절차)뿐 · 리뷰어 스크립트 미실행.
 
+## §96 72차 접수 — **한정 실행 GO 보류 · 잔여 하나 (E3-R 원장 `evidence.out` 결속, P1)** · E9-R 수용
+
+2026-09-25 접수. 리뷰어 고정 요청/HEAD `c4b77ccf71d736dec9162cd5a5377f60f66c0782` · 코드 기준 `82854571` · 독립 byte 계산 `source_digest 518d4f63076b77e3` ·
+코드→HEAD RUN_SCOPE diff 0 · 요청문 blob 동일 (9,561 bytes, sha256 `1db93f99…`) · `b9213333 → c4b77ccf` 문서 3개만 · 71차 ZIP 바이트 동일·37/37 · `_exec_class` 367 이름·바이트 동일 ·
+prospective `grid_fit_v5` 미관측(검토자 미작성) · 검토 checkout 2,500 파일 불변. 패키지 원본 `docs/22p_gap/gate72_review/`
+(zip sha256 `9ae5356c96e26de3f2cc87ff521337e7c67b58e67951f1d8030bdc0a5df59d91`, MANIFEST 48 files · 커밋 뒤 blob 대조 48/48, `-text !eol` 규칙 먼저 커밋).
+
+**§3 답 (그대로):** ① E3-R 종결 **아니오 — 대부분 수용, 원장 `evidence.out` 필수 대조만 잔여** ② E9-R **예** ③ 한정 실행 GO **현재는 아니오**.
+"서로 다른 항목을 합쳐 '전부 실패' 로 처리하지 않는다. 영수증 비교 쌍·semantic 값 일치·fits 결속·복원 지도·봉인 summary 의 보완은 확인했다."
+
+| 항목 | 판정 | 리뷰어가 직접 확인한 것 |
+|---|---|---|
+| E3-R 소비 보완 | 수용 | 지정 reader/helper AST 국소 검사 14건: 실물 양성 1 수용, 결손/불일치 13 거부 (R07·R11 은 helper 에서 거부 — 구분 유지). 실물 index 25 구성원·26 파일 23,863,555 bytes·fits SHA 데이터 재계산 일치. "플래그를 전혀 읽지 않는다" 보다 "플래그만 신뢰하지 않는다" 가 정확 |
+| **E3-R 잔여** | **P1** | `attach_bundle_evidence` `:7936` `if "out" in ev:` 가 **선택적** — `LIFECYCLE_OWNED_EVIDENCE_KEYS` 에 `out` 없음 → pending 원장에서 out 만 빠져도 대조 없이 `:7959–7961` full_bundle/current_validated 쓰기 지점 도달 (**A02**). `:7917–7921` full_bundle 멱등 반환이 out 대조보다 **앞** → 같은 영수증이면 out 이 다르거나(**A04**) 없어도(**A05**) idempotent 성공. 실제 attach 본문을 inert collaborators + 쓰기 차단 sink 로 6경우 확인(운영 원장 write 0). 새 회귀 `test_g71_e3r_07b` 와 변이는 "필드가 있는 불일치" 만 봤다. 실물 `paired_fixed5_v4` 원장에는 out 이 없다 — "새 가짜 실행 증거의 증명으로 단정하지도, 소급 채우라고 요청하지도 않는다" |
+| E9-R | **수용** | 최초 실행 1회 + 확인 후 `--resume` 최대 1회 → 재승인. finalize/archive/영수증/attach 실패를 자동 resume 한다는 뜻 아님. `run.sh:522–557` 전달 · `precheck_leg_run:7319–7354` resume 분기 확인 |
+| D7 · D8 · D9 · E6 requirements | 수용 | 72차 정본 문구. 자식 프로세스·전체 pytest 는 수신 측 미실행 |
+| E1/E2/E4 · E5 · E6 · E7 · E8 · E10 | 유지 | — |
+
+**유한 종결 조건 (§4.5):** ① 신규 pending→full_bundle 에서 `evidence.out` 을 **필수 비어 있지 않은 문자열**로 확인하고 결속 자리와 일치해야 진행 — 부재 skip 금지 ② 멱등 성공 이전에도 결속 확인; 역사적 out 부재는 소급·재작성 없이 **미결속/거부** ③ 정상 + pending 누락/불일치 + full_bundle 누락/불일치 회귀와 거부 시 원장 불변. "위 6개 경우로 충분하며 E1/E2/E4 전면 구현·서명·새 principal·과거 class 이관을 추가 요구하지 않는다."
+"GO 가 아직 없으므로 prospective 를 쓰거나 본 실행을 시작하지 않는다." — 그대로 받는다.
+
+## §97 72차 대응 — 실행 자리 결속을 필수로, 멱등 반환보다 먼저 (`7a7945564e6a94803b4d3bc72e8202534189ccdb` · 영수증 `54d50763e2aa86b8b8558e95930ad067888cffbf`)
+
+**RED 먼저.** `tests/test_gate72_defensive.py` 10 node — 리뷰어 표의 A02·A04·A05 그대로 + A06(full_bundle·다른 영수증·out 누락: 결속 검사가 영수증 identity 비교보다 먼저 나와야 한다) +
+A07(실물 `paired_fixed5_v4` — out 없는 역사적 full_bundle 을 원장 **사본** 위에서 attach → 미결속 거부, 운영 원장 바이트 불변) + A03 양성(같은 영수증·일치 out → 멱등, 바이트 불변) +
+A02b(빈 문자열·공백·int·list 는 결속이 아님): 패치 전 **5 failed / 5 passed** (A02·A04·A05·A06·A07 실패 — 리뷰어 실측 그대로).
+
+**고침 (`tools/preserve.py`, RUN_SCOPE):** `_assert_ledger_run_bound(ev, bound_run, leg_id, status)` — `evidence.out` 이 비어 있지 않은 str 이 아니면 **미결속**으로 거부(부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다),
+있으면 posix 정규화 뒤 결속 자리와 같아야 한다. `attach_bundle_evidence` 는 원장 lock 안에서 실행 기록을 읽자마자 — **full_bundle 멱등 분기보다 먼저** — 이것을 부른다. 71차의 `if "out" in ev:` 선택적 분기는 지웠다.
+GREEN: g72 10 + g71 14 + g70 48 + docs-lint full_bundle = 73 (실물 양성은 영수증 재생성 뒤). 변이: `ledger-run-location-is-mandatory-g72` (부재 검사 제거 → A02·A02b×2·A05·A06 실패) ·
+`attach-binds-the-ledger-run-location-g71` 을 helper 자리로 옮겨 재조준 (불일치 검사 제거 → g71 07b + g72 A04 실패). `--check-preimages` 전 지점 1회.
+
+**역사적 기록:** 실물 `paired_fixed5_v4` 는 소급(`retrospective`) 다리라 `out` 이 없다. 이제 같은 영수증으로 attach 를 불러도 **미결속 거부**다 (A07) — 그 원장 기록은 읽을 수 있는 과거 자료이고 현재 결속 성공이 아니다.
+소급해서 채우지 않았다 (리뷰어 §4.4). 새 실행(`grid_fit_v5`)은 run.sh `leg_finalize` 가 `out` 을 적으므로 결속된다.
+
+RUN_SCOPE: `source_digest 518d4f63076b77e3 → c2ef1a811e70bb4c`. 영수증 재생성 (clean 트리 `7a7945564e6a94803b4d3bc72e8202534189ccdb`, 34/34, core `5e26232e741b5e68`), 원장 두 값만 (`54d50763e2aa86b8b8558e95930ad067888cffbf`).
+
+**실측 1 (`54d50763e2aa86b8b8558e95930ad067888cffbf`, clean tree, 시작 HEAD = 끝 HEAD):** 전체 pytest **1 failed · 1878 passed · 2 xfailed (35:36, rc 1)** · strict smoke EXIT 0 · 미추적 0 · gate63~72 묶음 162 passed · 1 xfailed · premise 4/4.
+실패 1 = `tests/test_issuance_authority_60.py::test_every_callsite_of_the_raw_sink_is_inside_the_publisher` — 저장소 전체 `*.py` 를 걷는 구조 회귀가 72차 패키지가 담아 온 `codex/reference/tools/preserve.py` **사본**(리뷰어 증거) 안의 sink 정의·호출을 "publisher 밖 callsite" 로 세었다. 패키지는 `-text !eol` 로 굳힌 증거라 고치지 않고, 검사가 `docs/22p_gap/gate*_review/` 를 건너뛰게 했다 (시험만 — RUN_SCOPE 불변, `cfacfe6b44a27ee34af536cc84f29806d916f392`).
+**실측 2 (`cfacfe6b44a27ee34af536cc84f29806d916f392`, clean tree, 시작 HEAD = 끝 HEAD):** 전체 pytest `0 failed · 1879 passed · 2 xfailed (35:26)` · strict smoke `EXIT 0` · 미추적 `0` · gate63~72 묶음 `162 passed · 1 xfailed (gate63~68 + gate70~72, 21.2 s)` · g70 4/4 · g71 3/3 · g72 1/1.
+
+**하지 않은 것:** 계획 항목 작성/커밋 없음 · 본실행 없음 · 복원/재채점은 영수증 재생성뿐 · 리뷰어 스크립트 미실행 · 과거 레코드 재작성 없음.
+

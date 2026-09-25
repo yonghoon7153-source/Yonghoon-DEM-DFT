@@ -52,6 +52,10 @@ Q3 **그 셋만으로는 아니오** (E6·E9·E10 을 더 닫으면 E1/E2/E4 를
 
 E3-R: 소비자가 짝·실제 일치·source fits·복원 자리·봉인 summary 를 다시 대조 (`82854571`, `tests/test_gate71_defensive.py` 14, 변이 3). E9-R: 실패 즉시 정지 → 명시적 `--resume` 1회 → 재승인 (D6). D7 승인 HEAD · D8 `unset CANONICAL_RUN LEG` · D9 E4 = 11 · E6 requirements 복사. 판정 대상 `82854571` · `source_digest 518d4f63076b77e3`.
 
+## 72차 회신 (2026-09-25) — 한정 GO 보류 · 잔여 E3-R 원장 `evidence.out` 결속(P1) → 닫음 (원장 §96·§97) · E9-R 수용
+
+`_assert_ledger_run_bound`: out 필수(부재 = 미결속 거부) · full_bundle 멱등 반환보다 먼저 (`7a794556`, `tests/test_gate72_defensive.py` 10, 변이 g72 1 + g71 재조준). 실물 `paired_fixed5_v4` 는 out 없는 소급 다리 — 소급 채우지 않고 미결속 거부. 판정 대상 `7a794556` · `source_digest c2ef1a811e70bb4c`.
+
 ## 다음
 
-`docs/22p_gap/GATE72_REQUEST.md` (한정 실행 GO 재요청) · ~~`docs/22p_gap/GATE71_REQUEST.md`~~ — 판정 대상 `876429562f6a69b59793c70700cb5b375391ab67` · `source_digest b705a21a1237ec73` 로 **한정 실행 GO** 를 묻는다 (원장 §92·§93). 발송문은 요청문 SHA + 브랜치 head SHA, 커밋 뒤 실측.
+`docs/22p_gap/GATE73_REQUEST.md` (한정 실행 GO 재요청) · ~~`docs/22p_gap/GATE72_REQUEST.md`~~ (한정 실행 GO 재요청) · ~~`docs/22p_gap/GATE71_REQUEST.md`~~ — 판정 대상 `876429562f6a69b59793c70700cb5b375391ab67` · `source_digest b705a21a1237ec73` 로 **한정 실행 GO** 를 묻는다 (원장 §92·§93). 발송문은 요청문 SHA + 브랜치 head SHA, 커밋 뒤 실측.
