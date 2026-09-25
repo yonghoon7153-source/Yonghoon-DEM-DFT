@@ -231,3 +231,11 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
 - ✅ 비준 → A · B · C 구현 (수확기 20 · 생성기 3 빨간불 먼저): STL 평판 검사 · 덱 활성 벽 (fix/unfix · group · 흐름 제어) · cap 깊이 ≠ 접촉 겹침 ·
   상별 cap · (다) clipped · 적격성 (HOLD 코드) · `handover_qc` · τ 벽 밴드 진단 · 생성기 QC 열 46 개 + 기본 스냅샷 09-24.  다음 = WSL 재수확 v2 → 인계표.
 
+## ⑪ Methods SI 표 리뷰 (강준희 09-25) → 출처 정리 · VGCF E 민감도 (비준)
+- 다섯 항목 판정: NCM σ_e 1e-2 = 코퍼스 끝점 (문헌: Wang 2018 JPS 393 75 pristine 811 ~4e-3 · Amin&Chiang 2016 SOC 밴드 → "Effective, Ref.") ·
+  LPSCl ν 0.3 = Ref. (Cronk 2026 0.3 · Bazzoun 2026 0.37 · 우리 DFT 0.36) · VGCF Ø 0.15 = SEM 실측 있음 (이종기술, 원본 등재 대기) ·
+  VGCF E 10 = 미앵커 (Ozkan 2010 단섬유 180–245 GPa) · VGCF σ 100 = 분말급 유효값 (VGCF-H 0.012 Ω·cm = 83 S/cm · 단섬유 1e-4 Ω·cm).
+- 관련 선행: 07-02 `--fibre-stiff` strut 극한 (+0.75 %p @4 wt%) · 생산 침대는 dilation 모드 (E=10 실제 사용) · E 스윕은 없었음.
+- ✅ 사전등록 `vgcf_e_sensitivity_prereg_20260925.md` · `--add-e-override` 구현 (빨간불 11 → 초록 152/152).  다음 = kgy 3팔.
+- 대기: WSL 재수확 v2 · SEM 직경 원본 · Wang 2018 / Endo 2001 / Ozkan 2010 PDF (정본 카드).
+

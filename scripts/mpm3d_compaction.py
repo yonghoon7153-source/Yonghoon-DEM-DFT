@@ -153,6 +153,48 @@ ADD_E_NU = {                    # 상: (E GPa, ν)
     'SDCP':   (9.00,  0.35),    # 2026-08-18: 23.6 → 9.00
     'SWCNT':  (0.50,  0.30),
 }
+_ADD_E_NU_BASE = dict(ADD_E_NU)          # 원상 (override 적용/해제의 기준)
+#: 침대가 들고 다니는 물성 세대 태그 — override 가 없으면 옛 침대와 **같은 문자열** (CL-42 · CL-56 의 세대 판별이 그대로 선다)
+E_ANCHOR_TAG = 'ADD_E_SET_20260818_9.0GPa'
+
+
+def parse_add_e_override(spec):
+    """`--add-e-override "VGCF=1.0,PTFE=2"` → {상: E GPa}.  미지 상 · 비수치 · 0 이하 · 형식 오류는 ValueError.
+
+    사전등록 `docs/reviews/vgcf_e_sensitivity_prereg_20260925.md` §6 — 민감도 팔 전용.  생산 상수 (ADD_E_SET) 는 안 바꾼다.
+    """
+    out = {}
+    for tok in (spec or '').split(','):
+        tok = tok.strip()
+        if not tok:
+            continue
+        if '=' not in tok:
+            raise ValueError(f'--add-e-override: 형식은 상=E (받은 것: {tok!r})')
+        k, v = (x.strip() for x in tok.split('=', 1))
+        if k not in _ADD_E_NU_BASE:
+            raise ValueError(f'--add-e-override: 미지 상 {k!r} (허용: {sorted(_ADD_E_NU_BASE)})')
+        try:
+            e = float(v)
+        except ValueError:
+            raise ValueError(f'--add-e-override: E 가 수치가 아니다 ({k}={v!r})')
+        if not (e > 0.0) or e != e or e == float('inf'):
+            raise ValueError(f'--add-e-override: E 는 0 보다 큰 유한값이어야 한다 ({k}={v!r})')
+        out[k] = e
+    return out
+
+
+def apply_add_e_override(over):
+    """ADD_E_NU 를 원상에서 다시 채우고 override 를 얹는다 (ν 는 유지).  태그를 돌려주고 `E_ANCHOR_TAG` 에 새긴다."""
+    global E_ANCHOR_TAG
+    ADD_E_NU.clear()
+    ADD_E_NU.update(_ADD_E_NU_BASE)
+    if not over:
+        E_ANCHOR_TAG = 'ADD_E_SET_20260818_9.0GPa'
+        return E_ANCHOR_TAG
+    for k, e in over.items():
+        ADD_E_NU[k] = (float(e), _ADD_E_NU_BASE[k][1])
+    E_ANCHOR_TAG = ADD_E_SET_ID + '+override:' + ','.join(f'{k}={e}GPa' for k, e in sorted(over.items()))
+    return E_ANCHOR_TAG
 
 
 def state_fingerprint(am_pos, am_r_pristine):
@@ -708,6 +750,10 @@ def parse_args(argv):
                          '×cos²θ×(local AM fraction), so open-pore fibres buckle far less → mean straightness '
                          '≈0.96-0.97 (SEM-consistent band).  A SEM-match MORPHOLOGY KNOB, not a derived transport '
                          'result (the shape is sub-voxel → does not change σ_e at production resolution).')
+    ap.add_argument('--add-e-override', default='',
+                    help='민감도 팔 전용: 첨가제 탄성계수를 상별로 덮어쓴다 ("VGCF=1.0,PTFE=2" GPa).  ν 는 유지.  '
+                         '생산 상수 ADD_E_SET 는 안 바뀌고, 매니페스트 add_e_override · E_anchor 에 태그가 찍힌다 '
+                         '(사전등록 vgcf_e_sensitivity_prereg_20260925).')
     ap.add_argument('--fibre-stiff', action='store_true',
                     help='VGCF as a LOAD-BEARING rigid strut: pin the VGCF-occupied grid cells (v=0, like the '
                          'frozen AM), because real graphite VGCF (E~200 GPa, σ_y≫0.3 GPa press) does NOT compress '
@@ -1035,6 +1081,34 @@ def _selftest():
         else:
             fail.append(name)
 
+    # ── --add-e-override (사전등록 vgcf_e_sensitivity_prereg_20260925 §6, 비준 09-25) — 재현 먼저 ──
+    _p = globals().get('parse_add_e_override'); _a = globals().get('apply_add_e_override')
+    def _try(fn, *xs):
+        try:
+            return fn(*xs) if fn else None
+        except ValueError:
+            return 'REJECT'
+        except Exception:                                                # noqa: BLE001
+            return None
+    chk('add-e-override: "VGCF=1.0" → {VGCF: 1.0}', _try(_p, 'VGCF=1.0') == {'VGCF': 1.0})
+    chk('add-e-override: 둘 이상 · 공백 허용', _try(_p, 'VGCF=100, PTFE=2') == {'VGCF': 100.0, 'PTFE': 2.0})
+    chk('add-e-override: 빈 문자열 → {}', _try(_p, '') == {})
+    for bad in ('FOO=1', 'VGCF=abc', 'VGCF=0', 'VGCF=-3', 'VGCF'):
+        chk(f'add-e-override: 거부 {bad!r} (미지 상 · 비수치 · 0 이하 · 형식)', _try(_p, bad) == 'REJECT')
+    _base = dict(ADD_E_NU)
+    _tag = _try(_a, {'VGCF': 1.0})
+    chk('add-e-override: 적용 → ADD_E_NU[VGCF] = (1.0, ν 0.30 유지) · 다른 상 불변',
+        ADD_E_NU.get('VGCF') == (1.0, 0.30) and all(ADD_E_NU.get(k) == _base[k] for k in _base if k != 'VGCF'))
+    chk('add-e-override: E_anchor 태그 = ADD_E_SET_ID + override 표기',
+        isinstance(_tag, str) and _tag.startswith(ADD_E_SET_ID) and 'override' in _tag and 'VGCF=1.0' in _tag)
+    _try(_a, {})
+    chk('add-e-override: 빈 override 는 원상 (ADD_E_SET 그대로 · 태그 = 옛 침대와 같은 문자열)',
+        ADD_E_NU == _base and globals().get('E_ANCHOR_TAG') == 'ADD_E_SET_20260818_9.0GPa')
+    #  ⚠ 자기 문자열에 걸리지 않게 **main 이후** 구간만 본다 (초판은 이 테스트 문장 자체가 검사를 초록으로 만들었다)
+    _src = open(__file__, encoding='utf-8').read().split('def main(', 1)[1]
+    chk('add-e-override: 매니페스트 · 첨가제 메타에 태그가 찍힌다 (소스 배선, main 이후)',
+        "m['add_e_override']" in _src and "m['E_anchor']" in _src and "'E_anchor': E_ANCHOR_TAG" in _src
+        and "_add_meta[nm]['E_anchor'] = E_ANCHOR_TAG" in _src)
     rng = np.random.default_rng(0)
     n_am = 7
     am_pos = rng.uniform(0.1, 0.9, (n_am, 3))
@@ -1587,6 +1661,13 @@ def main(argv):
     args = parse_args(argv)
     if args.selftest:                                          # numpy-only; must run without taichi
         raise SystemExit(_selftest())
+    try:                                                       # ★ 첨가제 E override — CFL 가드 · ADD 표보다 먼저 (단일 출처 유지)
+        _ov = parse_add_e_override(args.add_e_override)
+    except ValueError as _e:
+        raise SystemExit(f'[add-e-override] {_e}')
+    apply_add_e_override(_ov)
+    if _ov:
+        print(f'[add-e-override] {E_ANCHOR_TAG}  (ADD_E_NU now {ADD_E_NU})')
     _amg = am_load_guard_errors(args)                          # ★ FAMV2-01 B — GPU 를 잡기 전에 거부
     if _amg:
         raise SystemExit('[am-load-frac] ' + '\n[am-load-frac] '.join(_amg))
@@ -2490,6 +2571,7 @@ def main(argv):
                     'wt_pct': float(cnt[nm]['wt_pct']), 'vol_pct_of_solid': float(cnt[nm]['vol_pct_of_solid']),
                     'vol_um3': round(float(cnt[nm]['vol_um3']), 2), 'n_objects': int(_n_obj_rep), 'n_points': int(len(pts)),
                     'E_GPa': float(E), 'sigma_y_GPa': float(sy), 'phase_code': int(code),
+                    'E_anchor': E_ANCHOR_TAG,                                   # 물성 세대 (+override 표기)
                     'mixing': args.mixing, 'mixing_regime': _proc_regime,   # NAME + regime: ballmill & handmix BOTH regime='bulk' → the NAME is what tells them apart (regime alone can't)
                 }
                 if kind == 'cblack' and not _coated:         # CB_MIX params — only when seed_carbon_black RAN
@@ -2531,7 +2613,7 @@ def main(argv):
                                                    else 'particle_0.3um_S3')     # mixing-dependent dispersion state
                     #  ★ 침대가 **자기가 어떤 물성 세트로 압밀됐는지** 를 들고 다녀야 옛/새
                     #    침대를 조용히 섞지 않는다 (2026-08-18).  이전 침대는 'AFM_S6_23.6GPa'.
-                    _add_meta[nm]['E_anchor'] = 'ADD_E_SET_20260818_9.0GPa'
+                    _add_meta[nm]['E_anchor'] = E_ANCHOR_TAG
                     _add_meta[nm]['variant'] = 'neutral' if args.sdcp_neutral else 'doped'
                     _add_meta[nm]['coh_sdcp'] = float(_coh)
                     _add_meta[nm]['agg_d_um'] = round(float(_aggd), 2)           # 0 = milled S3 singles
@@ -3796,6 +3878,8 @@ def main(argv):
             m['additives'] = _add_meta                       # {VGCF:{wt_pct,vol%,n_obj,n_pts,E,σ_y,curl}, …} → 요약
             m['fibre_rod'] = bool(FIBRE_ROD)                 # Tier-2 emergent buckling on?
             m['fibre_stiff'] = bool(args.fibre_stiff)        # VGCF load-bearing rigid strut (compaction-resistance)?
+            m['add_e_override'] = args.add_e_override        # 민감도 팔 표기 ('' = 생산 상수)
+            m['E_anchor'] = E_ANCHOR_TAG                      # 첨가제 물성 세대 (+override)
             if FIBRE_ROD:                                    # record the rod knobs so runs are distinguishable
                 m['rod_stiff'] = float(args.rod_stiff); m['rod_iters'] = int(args.rod_iters)
         _json.dump(m, open(args.save_metrics, 'w'), indent=2)
