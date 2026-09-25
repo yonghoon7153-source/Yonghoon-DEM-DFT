@@ -123,6 +123,15 @@ if [ "${1:-}" = "--selftest" ]; then
   OUTM2=$(SEEDS=2 TEMPS=600 bash "$0" "$RM" 2>&1)
   chk "$(echo "$OUTM2" | grep -q 'turbo (전 시드 동일 · run_meta 로 확인)' && echo 1 || echo 0)" \
       "양성: 전건 읽히면 '확인' 이라고 말한다"
+  # ⛔음성 (2026-09-25): 셀을 글자로 박지 않는다 — run_meta 에 없으면 '셀 기록 없음', 있으면 그 값
+  chk "$(echo "$OUTM2" | grep -q '셀 기록 없음' && echo 1 || echo 0)" \
+      "⛔음성: run_meta 에 셀이 없으면 '셀 기록 없음' 이라고 말한다 (3×3×1 을 지어내지 않는다)"
+  echo '{"uma_inference_mode":"turbo","supercell":[2,2,1],"n_atoms":512}' > "$RM/s2/run_meta.json"
+  OUTM3=$(SEEDS=2 TEMPS=600 bash "$0" "$RM" 2>&1)
+  chk "$(echo "$OUTM3" | grep -q '2×2×1 (512 원자)' && echo 1 || echo 0)" \
+      "양성: run_meta 의 셀·원자수를 그대로 찍는다 (b2o3 2×2×1)"
+  chk "$(echo "$OUTM3" | grep -q '3×3×1' && echo 0 || echo 1)" \
+      "⛔음성: 2×2×1 런에 3×3×1 이라고 말하지 않는다"
   rm -rf "$T"; echo "selftest: $ok 통과 / $bad 실패"
   [ "$bad" = 0 ] || exit 1; exit 0
 fi
@@ -163,7 +172,11 @@ for R in "${ROOTS[@]}"; do
 # ⚠ 런 수는 **세어서** 찍는다. 종전엔 "9런" 이 글자로 박혀 있어, 시드를 늘려 15런이 돼도
 #   머리말은 계속 9 라고 말했다 (손으로 쓴 숫자는 반드시 낡는다).
 _nrun=$(( $(echo $SEEDS | wc -w) * $(echo $TEMPS | wc -w) ))
-echo "════════ $(basename "$R") · 3×3×1 ${PROD} ps × ${_nrun}런 · $(date '+%m-%d %H:%M:%S') ════════"
+# ⚠ 2026-09-25 — 셀도 **읽어서** 찍는다. 종전엔 "3×3×1" 이 글자로 박혀 있어 b2o3 2×2×1(512 원자) 런에도
+#   3×3×1 이라고 말했다 (위 런 수와 같은 병 — 손으로 쓴 값은 다른 캠페인에 붙는 순간 거짓말이 된다).
+#   run_meta.json 의 supercell·n_atoms 가 시드마다 다르면 그대로 다 찍고, 못 읽으면 "셀 기록 없음".
+_cells=$(for d in "$R"/s*/run_meta.json; do [ -f "$d" ] && python3 -c "import json,sys;m=json.load(open(sys.argv[1]));sc=m.get('supercell');n=m.get('n_atoms');print(('×'.join(map(str,sc))+(f' ({n} 원자)' if n else '')) if sc else '셀 기록 없음')" "$d" 2>/dev/null; done | sort -u | paste -sd'/' -)
+echo "════════ $(basename "$R") · ${_cells:-셀 기록 없음} ${PROD} ps × ${_nrun}런 · $(date '+%m-%d %H:%M:%S') ════════"
 
 if command -v nvidia-smi >/dev/null; then
   echo "  GPU: $(nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total \

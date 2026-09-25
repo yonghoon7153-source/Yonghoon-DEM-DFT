@@ -89,12 +89,19 @@ def test_screen_follows_the_ledger_not_a_copy(client):
 
 
 def test_missing_vram_is_dash_not_zero(client):
-    """⛔ 없는 값을 0 으로 그리지 않는다 — 진행 중 잡의 VRAM 은 `—`."""
-    h = _html(client)
-    running = [j for j in LEDGER["runs"][0]["jobs"] if j.get("peak_vram_mib") is None]
-    assert running, "시험 전제: VRAM 이 비어 있는 잡이 원장에 있어야 한다"
-    row = h.split(running[0]["dir"], 1)[1].split("</tr>", 1)[0]
-    assert "—" in row and "0 MiB" not in row, "없는 VRAM 을 0 으로 그렸다"
+    """⛔ 없는 값을 0 으로 그리지 않는다 — VRAM·벽시계가 빈 잡은 `—`.
+
+    2026-09-25: 원장의 실제 잡이 다 끝나 VRAM 이 다 찼다 → 전제를 원장에 기대면 시험이 조용히
+    할 일을 잃는다. **합성 잡**(값 None)을 넣어 본다.
+    """
+    led = copy.deepcopy(LEDGER)
+    led["runs"][0]["jobs"].append({"dir": "99_synthetic_empty_vram", "state": "run",
+                                   "wall_s": None, "peak_vram_mib": None})
+    with _with_ledger(led):
+        h = _html(client)
+    row = h.split("99_synthetic_empty_vram", 1)[1].split("</tr>", 1)[0]
+    assert "—" in row, "빈 값 자리에 — 가 없다"
+    assert "0 MiB" not in row and "0 s" not in _txt(row), "없는 VRAM·벽시계를 0 으로 그렸다"
 
 
 def test_ledger_markdown_is_rendered_not_literal(client):
