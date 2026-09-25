@@ -13,8 +13,15 @@
   "허용_문구_영향": "'UMA+D3 로 생성한 지정 기하에서 평가한 PBE+D3(BJ) 고정기하 분리일' 은 그대로 · UMA 쪽 값의 이름은 **'UMA + QE-D3(같은 끝점)'** 로 적는다"
  },
  "왜_결과_뒤_변경이_정당한가": "바뀌는 것은 문턱이 아니라 **비교량의 구성**이다 — 두 방법에 같은 D3 숫자를 쓰는 것은 상쇄 가정을 정확하게 만드는 쪽이고, W 값을 어느 방향으로도 유리하게 만들지 않는다. UMA·DFT 에너지는 아직 하나도 보지 않았다 (S4 미착수).",
- "status": "proposed — 1저자 비준 대기 (트랙 W_ad · 사용자)",
+ "status": "ratified — 1저자 '비준' 2026-09-26 (S3 봉인과 함께)",
  "ratification": {
-  "state": "proposed"
+  "state": "ratified",
+  "role": "scientific_owner",
+  "by": "1저자 (사용자 · 트랙 W_ad)",
+  "actor_id": "yonghoon7153@gmail.com",
+  "timestamp": "2026-09-26T00:20:00Z",
+  "commit_before_seal": "49c0fdc5972fcfc35170e66a9965847308800b0d",
+  "content_digest": "b0288bd3116c68900f66f869b9850147dbf93824c3d2cf5b4e40cba1b6044039",
+  "⚠_digest_의_뜻": "ratification 을 뺀 개정 내용의 sha256"
  }
 }

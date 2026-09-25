@@ -4650,6 +4650,134 @@
     "decision_digest": "sha256:83b8601993049be46a215e6b844a0a87513277ae12a817ea791e646fbb89b90a",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
+  },
+  {
+   "id": "D-2026-09-26-wad-aprime-amend-1-d3-from-qe",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "adhesion.wad_lpscl_agc.aprime_pilot",
+   "slot": "wad_aprime_d3_term_source",
+   "applies_to": {
+    "systems": [
+     "comp1"
+    ],
+    "tasks": [
+     "wad_aprime_pilot"
+    ],
+    "methods": [
+     "qe_pbe_d3bj",
+     "uma_d3"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "A′ 카드 v5 개정 1 — UMA+D3 W 의 D3 항을 QE 출력(같은 끝점)으로 정의 · 외부 D3 는 기하 생성 라벨 (D3 결박 검사 FAIL 대응)",
+   "statement": "`db/properties/wad_aprime_pilot_prereg_v5_amendment_1_2026_09_26.json` (content_digest sha256:b0288bd3116c68900f66f869b9850147dbf93824c3d2cf5b4e40cba1b6044039). D3 결박 검사(S3 전 예외 ②)가 QE −0.50431702 vs simple-dftd3 −0.5037974 Ry (|Δ| 5.2e-4 > 1e-5) 로 실패했다 — 컷오프가 ~60 % · 잔차 0.2 mRy 구현 차. 문턱은 바꾸지 않고, **W_UMA+D3 := W_UMA + ΔE_D3,QE (같은 두 끝점의 QE D3 값)** 로 비교량의 구성을 바꾼다 — 두 방법에 같은 D3 숫자를 쓰므로 상쇄가 구성상 정확하다. 외부 D3(simple-dftd3 1.6.0)는 UMA+D3 이완(기하 생성)에만 쓴 것으로 라벨. 표본·게이트·좌표 불변 · 새 계산 0 · UMA·DFT 에너지 미열람 상태에서 결정.",
+   "rationale": "결과 뒤 문턱 완화가 아니라 비교량 정의의 정정 — 어느 쪽 W 도 유리하게 만들지 않는다. 1저자 '비준' 2026-09-26.",
+   "decision_state": "active",
+   "record_kind": "prospective",
+   "results_seen": false,
+   "results_seen_note": "S4 미착수 · UMA/DFT 에너지 0 열람 (D3 항 두 값만)",
+   "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json",
+   "record": "db/properties/wad_aprime_pilot_prereg_v5_amendment_1_2026_09_26.json",
+   "depends_on": [
+    "D-2026-09-25-wad-aprime-s1-seal",
+    "D-2026-09-23-wad-d3-twobody-atm-separate"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "db/raw/wad_aprime_d3check_2026_09_25/d3_binding_check_2026_09_26.json"
+   ],
+   "method_ref": "tools/wad/se_sym_slab.py parse_pw (E_d3_Ry) · build_aprime_s3.py",
+   "reopen_criteria": [
+    "S4 에서 ΔD3 잔차(QE−외부)가 끝점 차로 |ΔW| > 0.01 J/m² 면 기하 생성 D3 의 영향을 별도 보고 (판정 변경 없음)"
+   ],
+   "enforcement": "S4 집계기가 UMA+D3 W 의 D3 를 QE 출력에서만 읽는다 · 외부 D3 값은 '기하 생성' 칸에만",
+   "proposed_by": "claude-session-2026-09-26",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-26",
+     "state": "active",
+     "note": "1저자 '비준' (S3 봉인과 동시)"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-26T00:20:00Z",
+    "commit": "49c0fdc5972fcfc35170e66a9965847308800b0d",
+    "decision_digest": "sha256:6b05d9a6c0df9ebf0c452c6e320ec4fa72685beddf0f4505046772fa8edb7972",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
+  },
+  {
+   "id": "D-2026-09-26-wad-aprime-s3-seal",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "adhesion.wad_lpscl_agc.aprime_pilot",
+   "slot": "wad_aprime_pilot_prereg_s3",
+   "applies_to": {
+    "systems": [
+     "comp1"
+    ],
+    "tasks": [
+     "wad_aprime_pilot"
+    ],
+    "methods": [
+     "qe_pbe_d3bj",
+     "uma_d3"
+    ],
+    "use_cases": [
+     "internal",
+     "dem_handoff"
+    ]
+   },
+   "title": "A′ S3 봉인 — 이완 좌표·끝점·마스크·registry·QE 입력 (후보 9 · INCOMPLETE 3 · V5 RESOURCE_BLOCKED 실측) · S4 실행 집합",
+   "statement": "`db/properties/wad_aprime_s3_seal_2026_09_26.json` (content_digest sha256:a1074e51b64d98d21b00f1b87970da6cde93e9c93cc95485b41d4e11d072711f) — s3_manifest sha256:2a0e9a9b5f5fef4a6d81ed8a34e53fbdb08d9723d48e3663ff378ec2e11576c1. 후보 9 (V2×4 · V4_s_outer_A · V5×4) 의 bound/far 끝점 좌표·마스크·registry·계보와 QE 입력 38 을 봉인. **S4 실행 집합** = V2 relax 4 (V100 · 2단계 규칙으로 E(d)·far·G3·G4) + V4_s_outer_A 9 잡 (gabia · GPU 시험 통과 시). **제외** = V5 ×4 · 표본 ⑤ · V5 G3/G4 · 프로브 (RESOURCE_BLOCKED 실측 89–109 GB) · V4 G4 e70 (52.4 GB). ⇒ **G5 = NOT_TESTED** (갈래0 · UMA 전체 계면 예측 내부 전용 · DEM 전달 없음). INCOMPLETE 3 (V3 두 종결 Ag₄ 개방 · V4_li_outer Li 상승) 은 세고 제외. 개정 1 (D3 항 = QE 출력) 적용. 본 계산(S4) 결과의 인용은 결과 기록·게이트 뒤.",
+   "rationale": "카드 v5 §0 S3 규정대로 — S2 산출물의 sha 계보를 확인하고 실행 집합을 자원 실측으로 좁혔다. 1저자 '비준' 2026-09-26.",
+   "decision_state": "active",
+   "record_kind": "prospective",
+   "results_seen": false,
+   "results_seen_note": "UMA/DFT 에너지 미열람 (구조·프로브·D3 항만)",
+   "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json",
+   "record": "db/properties/wad_aprime_s3_seal_2026_09_26.json",
+   "depends_on": [
+    "D-2026-09-25-wad-aprime-s1-seal",
+    "D-2026-09-26-wad-aprime-amend-1-d3-from-qe"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "db/inputs/wad_aprime_s3_2026_09_25/s3_manifest.json",
+    "db/properties/wad_aprime_s2_result_2026_09_25.json",
+    "db/raw/wad_aprime_s3_probe_2026_09_25/probe_cpu_e70_2026_09_25.json"
+   ],
+   "method_ref": "tools/wad/build_aprime_s3.py · tools/wad/run_sese_gpu.sh · tools/wad/se_sym_slab.py",
+   "reopen_criteria": [
+    "V4 GPU 시험이 44,000 MiB 를 넘으면 V4 도 RESOURCE_BLOCKED → 실행 집합 = V2 만 (결정 개정으로 기록)",
+    "V2 relax 가 P0 실패면 그 registry 는 INCOMPLETE (교체 없음)"
+   ],
+   "enforcement": "러너 ⑨ PP·입력 해시 · JOBS 는 실행 집합만 · 집계기는 봉인 sha 와 대조",
+   "proposed_by": "claude-session-2026-09-26",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-26",
+     "state": "active",
+     "note": "1저자 '비준'"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-26T00:20:00Z",
+    "commit": "49c0fdc5972fcfc35170e66a9965847308800b0d",
+    "decision_digest": "sha256:acb469592953bbedd92317a139285caf104c3fce2ee6658541dc8624859cdfa1",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
   }
  ]
 }

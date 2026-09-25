@@ -514,15 +514,15 @@
  "open": [
   {
    "state": "진행",
-   "text": "**파이프라인 v4** (`D-2026-09-25-wad-reference-state-policy`): ① P0 ✅ → ② 벌크 수치 민감도 ✅ → ③ A′ 카드 v1 → BY NO-GO → v2 → BZ NO-GO → v3 → CA NO-GO → v4 → CB 조건부 GO → v5 → **S1 봉인 ✅ (09-25)** → ⏭ S2 → S2 기하 생성·프로브 → S3 좌표 봉인 → S4 DFT. ④ DEM 발송판 ✅ 발송·3차 회신 수령 (부탁 1 잔류 응력 GPa · 부탁 2 시나리오 초안은 DEM) → 회신 4 초안."
+   "text": "**파이프라인 v4** (`D-2026-09-25-wad-reference-state-policy`): ① P0 ✅ → ② 벌크 수치 민감도 ✅ → ③ A′ 카드 v1 → BY NO-GO → v2 → BZ NO-GO → v3 → CA NO-GO → v4 → CB 조건부 GO → v5 → S1 봉인 ✅ → S2 ✅ → **S3 봉인 ✅ (09-26)** → ⏭ **S4** (V2 relax V100 → 2단계 → V4 GPU 시험 → V4 9잡) · V5 RESOURCE_BLOCKED → G5 NOT_TESTED → S2 기하 생성·프로브 → S3 좌표 봉인 → S4 DFT. ④ DEM 발송판 ✅ 발송·3차 회신 수령 (부탁 1 잔류 응력 GPa · 부탁 2 시나리오 초안은 DEM) → 회신 4 초안."
   },
   {
    "text": "✅ 격자 정합 규칙 = **(a) 흡착층을 SE 에 맞춘다** (`D-2026-09-25-wad-lattice-matching-rule-a` · 09-25) — SE 슬랩 한 기하 · 변형률 x·y·Å·원자당·면적당·밀도 병기",
    "state": "결정"
   },
   {
-   "text": "A′ — S1 봉인 ✅ · **S2 끝** (UMA+D3 이완 12 · 후보 9 · INCOMPLETE 3 · `wad_aprime_s2_result_2026_09_25.json`) · **S3 패키지** `db/inputs/wad_aprime_s3_2026_09_25` (manifest sha 2a0e9a9b5f5fef4a… · QE 잡 38: V2 relax 4 · scf 11 · probe 5 · G3 6 · G4 12) → ⏳ **1저자 S3 비준** → S4 (V2 relax V100 · V4/V5 gabia 프로브 뒤). 예외 ②③ (D3 결박 검사 V100 · CPU 프로브 gabia) 는 비준 전 가능. 🔎 프로브: **V5 RESOURCE_BLOCKED (실측 89–109 GB @70 Ry)** → G5 NOT_TESTED · V4 G4 e70 불가 · V4 기본 52 Ry 프로브 다음. ⚠ D3 결박 검사 FAIL (5.2e-4 Ry) → 개정 1 proposed (D3 항 = QE 출력 · 문턱 불변).",
-   "state": "S3 비준 대기"
+   "text": "A′ — S1 ✅ · S2 ✅ · **S3 봉인 ✅ (09-26 · 1저자 비준 · `db/properties/wad_aprime_s3_seal_2026_09_26.json` · manifest 2a0e9a9b5f5fef4a…)** · 개정 1 ✅ (D3 항 = QE 출력). **S4 실행 집합**: V2 relax 4 (V100 · 지금) → 2단계 → V4_s_outer_A 9 (gabia GPU 시험 뒤). 제외: V5 전부 (RESOURCE_BLOCKED 실측 → G5 NOT_TESTED · 갈래0) · V4 e70. INCOMPLETE 3 세고 제외.",
+   "state": "S4"
   },
   {
    "text": "D3 3체(ATM) 후처리 — 같은 기하에서 따로 보고",
@@ -708,6 +708,11 @@
    "date": "2026-09-26",
    "stage": "dft",
    "text": "**D3 결박 검사 FAIL** (S3 전 예외 ② · V100 20원자 255 s): QE `DFT-D3 Dispersion` **−0.50431702** vs simple-dftd3 **−0.5037974 Ry** → |Δ| 5.2e-4 (문턱 1e-5 의 52배). 컷오프 스캔(30–200 Bohr): 기본 60 Bohr 가 외부값 재현 · 200 Bohr 로 −0.50410 까지 접근 — 격차의 ~60 % 는 컷오프, **0.2 mRy 는 구현 차(미확정)**. 문턱 안 바꿈. → **개정 1 (proposed)**: UMA+D3 W 의 D3 항을 **QE 출력 D3(같은 끝점)** 로 정의 (W_UMA+D3 := W_UMA + ΔE_D3,QE) · 외부 D3 는 기하 생성 라벨 · 새 계산 0. 1저자 비준 대기 (S3 비준과 함께)."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**S3 봉인 + 개정 1 비준** (1저자 '비준'): `db/properties/wad_aprime_s3_seal_2026_09_26.json` content_digest a1074e51b64d98d2… · 결정 `D-2026-09-26-wad-aprime-s3-seal` · `D-2026-09-26-wad-aprime-amend-1-d3-from-qe` active. S4 실행 집합 = V2 relax 4 (V100) + V4_s_outer_A 9 (gabia GPU 시험 뒤) · V5·⑤·V4 e70 제외 (RESOURCE_BLOCKED 실측) ⇒ **G5 NOT_TESTED** (갈래0 · UMA 전체 계면 예측 내부 전용 · DEM 회신 5 §3 과 일치). W_UMA+D3 := W_UMA + ΔE_D3,QE. 다음: V100 에 V2 relax 4 발사."
   }
  ],
  "related_decisions": [

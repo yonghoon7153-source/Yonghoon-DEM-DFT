@@ -1,0 +1,188 @@
+{
+ "schema": "prereg_stage_seal/v1",
+ "stage": "S3",
+ "date": "2026-09-26",
+ "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json",
+ "card_content_digest": "126aa58ebdc4803b9615efe165619162fb087dccc201dd699f9c0a09a90e09b1",
+ "amendments_active": [
+  {
+   "file": "db/properties/wad_aprime_pilot_prereg_v5_amendment_1_2026_09_26.json",
+   "content_digest": "b0288bd3116c68900f66f869b9850147dbf93824c3d2cf5b4e40cba1b6044039",
+   "뜻": "UMA+D3 W 의 D3 항 = QE 출력 (같은 끝점) · 외부 D3 는 기하 생성 라벨"
+  }
+ ],
+ "sealed": {
+  "s3_manifest": "db/inputs/wad_aprime_s3_2026_09_25/s3_manifest.json",
+  "s3_manifest_sha256": "2a0e9a9b5f5fef4a6d81ed8a34e53fbdb08d9723d48e3663ff378ec2e11576c1",
+  "geometries_manifest_sha256": "88ceedf1914cc5f441239714b3541fe095d391cee6cdbf77824603635a7312dd",
+  "structures_sha256": {
+   "V2_bridge_bound": "46c2c9493ca3227b2977b025e6a542b9ebc56ca4da39d167f7831bf4656933b4",
+   "V2_bridge_far": "aa025695dc3e56639404807e3a36a9a7610345d8d26c1150e2f4c2c12bd87f9f",
+   "V2_hollow_fcc_bound": "6219d727dc8e8a30551f619b4267f8fe5d05581c6f11ddbe72ef9f3633203453",
+   "V2_hollow_fcc_far": "53e699b680fd3330842f46cd5e00df103eb27c65f67b7dff6e60f1c13ee27175",
+   "V2_top_fcc_bound": "f7a0a376db2cbfe58d5fd548c4cf9c224b1fe8b23afebf2b873dc53d11a182ab",
+   "V2_top_fcc_far": "0316e2764203da897797f838fb23ba09d8cf994507d674c6bdfc4ac7286aa842",
+   "V2_top_hcp_bound": "827c49da18e24a46d9cfeec847426aa14b7aba5a54557355404e9672caca8727",
+   "V2_top_hcp_far": "8f4525ea14471038a2b1cecd90be9383e67d67a8e992827c99f12038d35557ce",
+   "V4_s_outer_A_bound": "aaa10bd70ea3f5d2f7fa00aa1bb20f9596ad4924f94992e418437d97776e9834",
+   "V4_s_outer_A_far": "20260c9c03514a6158ec17df81b4a607990ba7f3213e969ff1fdffee871d5b5f",
+   "V4_s_outer_A_G3_c2_bound": "046551c3350918fad20720697d328343545d2470300d8af4dc8248b9d7203caa",
+   "V4_s_outer_A_G3_c2_far_i": "e215b50fd30ab85172d81d509070143d8af685fe4dc040184b3d7c2f7a3d4a87",
+   "V4_s_outer_A_G3_c2_far_ii": "713e63a9099f61518c47bc0987c7f381e0ef07df5e462b55dbd266340a90c22b",
+   "V5_li_outer_A_bound": "def48d251c0d85b8cbfd0d7bba0ab51146cec46b3241534190b666d6af87081a",
+   "V5_li_outer_A_far": "ae1e45971d1d236411a8ff1fd5230649ab93614bf8019a7eacad1094d1fc6f24",
+   "V5_li_outer_B_bound": "19be9edae8bc91948ea0b4724b1ceffe08c10659c77ac50db9958a4c469b9c8f",
+   "V5_li_outer_B_far": "727e44983e7557786e4afe29f7b28434bb2351f2f26bf541fdd6ae50121a87cb",
+   "V5_s_outer_A_bound": "21f2d5a4f7eb746d054dd853708db0f3f0eb79238e20afcfc2554c819523a44e",
+   "V5_s_outer_A_far": "520bbfa9b2838f1001b898aec0ef03ed85facfdc13733846d4bc09f9bfd68a84",
+   "V5_s_outer_A_G3_c2_bound": "940f6b54443a2d3e3b4a2fb346eb1912d4da8d7caad3d19eea8e81df23f0de0e",
+   "V5_s_outer_A_G3_c2_far_i": "4ebdc83001cb2bce00edb3ca16362af69927fdb40a41d7cc744efbd866c9e9ff",
+   "V5_s_outer_A_G3_c2_far_ii": "a4b34a65eafcb1e488127b4cb87c233b9919ce409009f86b76fbb05bef8f20eb",
+   "V5_s_outer_A_p05_bound": "61c08e1497518f86f301ed0e0da9952ae99e0fe4188b0c408269ee0fed62f8d4",
+   "V5_s_outer_A_p05_far": "520bbfa9b2838f1001b898aec0ef03ed85facfdc13733846d4bc09f9bfd68a84",
+   "V5_s_outer_B_bound": "3e5ff11d0205fed36a092784dfa31e49dd76d7e5aad0e0aa9da0b7347c4e0f44",
+   "V5_s_outer_B_far": "894263ea0330881705630f0dc30be519b9922d2ba4160e3b338cd6754aa6342a"
+  },
+  "jobs_pw_in_sha256": {
+   "V2_bridge_relax": "2ec6fbe99d2980be91e7c71049892c1b70da3bb64a1fd7d4cecb005298aced70",
+   "V2_hollow_fcc_relax": "590b6eebc6e7fab1a29a2916e0e0cced8b5a8d716fa78872325b75155d156da1",
+   "V2_top_fcc_relax": "3cfe06c1daa7f0a6abd731ac19e36c7d61483d644cde9d5b77ac6262229bd4ce",
+   "V2_top_hcp_relax": "23b3f9746b8f728d8a5e50cbee6eea1f3f62fc1106e3412ef1bce9e870879024",
+   "V4_s_outer_A_bound": "05adb7d28ec75a00b0975b373b7d0bfd71d2972bd0f68aa02968caa6ce58a9ba",
+   "V4_s_outer_A_far": "63861062dddc5bef66e6f34ea1b268af4348de7473ee31eae97bf0948b3468d6",
+   "probe_V4_s_outer_A_far_e70": "c2fe355ce334ec98b972ec73110e4aa9d3b5a9de9c3b88f676a47986a04d9d99",
+   "V4_s_outer_A_G3_c2_bound": "b9150458b9d3fc2253d9bc3e2aeb41410c191b08e135418f176dc5640763e784",
+   "V4_s_outer_A_G3_c2_far_i": "f969cc36e4f06d8844e4d42e145946f02eedc7e9ad4c07cdd2632f729accb55b",
+   "V4_s_outer_A_G3_c2_far_ii": "b64c2fa058de6e59197a28da9471ad8280c805fb067476d8db518bb538a11c7d",
+   "V4_s_outer_A_G4_e70_bound": "f2c43ce08530c5c48cf782294713f6256353aa6edcccf2ddbc30523ca400cf6d",
+   "V4_s_outer_A_G4_e70_far": "df7f074c09c49dfef00ded96ce8d47b52ef95718a8e8965347cff0afc4defd4e",
+   "V4_s_outer_A_G4_k1_bound": "7ccb59636c03cf4effa933fe7c9f84461dc7013f9971175c81acc8531d5db599",
+   "V4_s_outer_A_G4_k1_far": "d156257018fa5bbeca096875c26c9c8e21a185f63213151bcdd5e1da9cb4dd8e",
+   "V4_s_outer_A_G4_s05_bound": "012134b57140e533a0942ad726f10cfa8c2735d9e929230b26ce3b1bc252d54a",
+   "V4_s_outer_A_G4_s05_far": "d5c49f39c86cb77d0d5a40a37b55eeae9d1606462ba4009b4b10d6ffd5023c71",
+   "V5_li_outer_A_bound": "7dcd3ad0e32ef9a841cb3d9b568a513ee80254ae61438d6c9716e66b280a1f79",
+   "V5_li_outer_A_far": "d0f230eadf6b5b3f005643f7f8fe45857fc9d81b512f9db8fce9b00a753dd80d",
+   "probe_V5_li_outer_A_far_e70": "fe4897e8842e30f0ce5857a067aa7f8aa5a23ba462616bba298c43d0723cb0f4",
+   "V5_li_outer_B_bound": "4bbc4ffe158b774857fede75f1c5b5b34a18962ce8ac4059f32436c4c10c96e0",
+   "V5_li_outer_B_far": "3057dafdc44a2111836510d68507e6bf22d8dbec73df0fe322b089a3fcd2a018",
+   "probe_V5_li_outer_B_far_e70": "3b3b66a9f199dc97ab76b083c3f332b92495de432a8fff0866e41bd85cb63202",
+   "V5_s_outer_A_bound": "41c5ba63ceed6193bf5d325d9b9f5e92d1bf1f6d930fe88f803147d332a684bd",
+   "V5_s_outer_A_far": "92f746c40509f1a4e1ce1686bd5b6d4ca82bc9de0cbfe6f287d18f63257b4fdc",
+   "probe_V5_s_outer_A_far_e70": "455a3ffdf37bd5effd7994990037aab5fd2c187d01102a82469c4060fb49f31b",
+   "V5_s_outer_A_G3_c2_bound": "6f50d37955762c4bfcbb0c197ca9cae186f236e945c6c4a128d638e36b0fcf79",
+   "V5_s_outer_A_G3_c2_far_i": "09e2d8926613c738cca199d4e290be6d5c70626a3540aacffb18152f423eefc1",
+   "V5_s_outer_A_G3_c2_far_ii": "17af550cdef5e1f29221e266f96b9897c46f9583faca9d8c1da8e109a2e29e03",
+   "V5_s_outer_A_G4_e70_bound": "d52a227c6affbed9f95a8f5b9db6784c6fa86011b47d5b87761cdd5a94866200",
+   "V5_s_outer_A_G4_e70_far": "c17ecff209e12b5a9df9bd225ca962783bcdb6f8fca828275b5ccd6cc44ef9e4",
+   "V5_s_outer_A_G4_k1_bound": "d5be380caa4dc4065ca125a819d1058da1a864788caf0909e0ad551ece458409",
+   "V5_s_outer_A_G4_k1_far": "476dbd48d563f9cbeb88299ebc9193a1b744563c5f963479928c8d109c347196",
+   "V5_s_outer_A_G4_s05_bound": "a2cc4bc377ee806a44075303ae764838cd1c0cb27aa3b7ec2180aac3fe012f82",
+   "V5_s_outer_A_G4_s05_far": "c21af849e5067a71ed33057af9d3172b22d0da1bc057ac9a91c61379fedfbd9d",
+   "V5_s_outer_A_p05_bound": "ecd2ae6cebf770e553d438f3c0cd04d9d8d4edc97be37d5df371aded49fd3151",
+   "V5_s_outer_B_bound": "d0805443cae6eb345cc1c77fb4ca7766158fc5702a2214162e55f4374bc89f0f",
+   "V5_s_outer_B_far": "4f24b96a9b0d00676827700ef1b167fb1610ce143ba8a8ccf7e0ef6a4c8f88da",
+   "probe_V5_s_outer_B_far_e70": "c3cee70088e4e952010d6622307c1f55fbfc1082116b369a33b4feb3819b0df4"
+  },
+  "code_sha256": {
+   "tools/wad/build_aprime_s3.py": "c35f18a2fde2a569d25f502ae579f644dac02af324f90106047862642f23335d",
+   "tools/wad/build_aprime_interfaces.py": "d1e996c7142544e034d7cc199af951643afc8a0b4fe6f52d7a034e26f5cf990a",
+   "tools/wad/se_sym_slab.py": "7ec9e7b6c6538662d4c311a13b8af2f99c3103392e4722ac03724c371f23d3a1",
+   "tools/wad/relax_uma_d3.py": "75393f9ac096ea0f7518c9810e7316d87f7ceef8b9f6ea9a20aa6d9dbd56eb7d"
+  },
+  "S2_records": {
+   "relax_dir": "db/raw/wad_aprime_s2_relax_2026_09_25 (gabia 커밋 30e1e90eb)",
+   "s2_result": "db/properties/wad_aprime_s2_result_2026_09_25.json",
+   "probe": "db/raw/wad_aprime_s3_probe_2026_09_25/probe_cpu_e70_2026_09_25.json",
+   "d3_check": "db/raw/wad_aprime_d3check_2026_09_25/d3_binding_check_2026_09_26.json (FAIL · 개정 1 로 처리)"
+  }
+ },
+ "status": {
+  "S3_후보_9": [
+   "V2_bridge",
+   "V2_hollow_fcc",
+   "V2_top_fcc",
+   "V2_top_hcp",
+   "V4_s_outer_A",
+   "V5_li_outer_A",
+   "V5_li_outer_B",
+   "V5_s_outer_A",
+   "V5_s_outer_B"
+  ],
+  "INCOMPLETE_3": [
+   "V3_li_outer_A",
+   "V3_s_outer_A",
+   "V4_li_outer_A"
+  ],
+  "V5_전부": "RESOURCE_BLOCKED (실측 · CPU 추정 89–109 GB @70 Ry) → G5 **NOT_TESTED** · 갈래0 (UMA 예측 내부 전용)",
+  "V4_s_outer_A_G4_e70": "RESOURCE_BLOCKED (52.4 GB @70 Ry) → V4 군 'ecut 미검증'"
+ },
+ "S4_실행_집합": {
+  "V100": [
+   "V2_bridge_relax",
+   "V2_hollow_fcc_relax",
+   "V2_top_fcc_relax",
+   "V2_top_hcp_relax"
+  ],
+  "gabia_GPU시험_뒤": [
+   "V4_s_outer_A_bound",
+   "V4_s_outer_A_far",
+   "V4_s_outer_A_G3_c2_bound",
+   "V4_s_outer_A_G3_c2_far_i",
+   "V4_s_outer_A_G3_c2_far_ii",
+   "V4_s_outer_A_G4_k1_bound",
+   "V4_s_outer_A_G4_k1_far",
+   "V4_s_outer_A_G4_s05_bound",
+   "V4_s_outer_A_G4_s05_far"
+  ],
+  "제외": [
+   "probe_V4_s_outer_A_far_e70",
+   "V4_s_outer_A_G4_e70_bound",
+   "V4_s_outer_A_G4_e70_far",
+   "V5_li_outer_A_bound",
+   "V5_li_outer_A_far",
+   "probe_V5_li_outer_A_far_e70",
+   "V5_li_outer_B_bound",
+   "V5_li_outer_B_far",
+   "probe_V5_li_outer_B_far_e70",
+   "V5_s_outer_A_bound",
+   "V5_s_outer_A_far",
+   "probe_V5_s_outer_A_far_e70",
+   "V5_s_outer_A_G3_c2_bound",
+   "V5_s_outer_A_G3_c2_far_i",
+   "V5_s_outer_A_G3_c2_far_ii",
+   "V5_s_outer_A_G4_e70_bound",
+   "V5_s_outer_A_G4_e70_far",
+   "V5_s_outer_A_G4_k1_bound",
+   "V5_s_outer_A_G4_k1_far",
+   "V5_s_outer_A_G4_s05_bound",
+   "V5_s_outer_A_G4_s05_far",
+   "V5_s_outer_A_p05_bound",
+   "V5_s_outer_B_bound",
+   "V5_s_outer_B_far",
+   "probe_V5_s_outer_B_far_e70"
+  ],
+  "V2_2단계": "각 V2 relax 완료 뒤 `build_aprime_s3.py --v2_ed` 로 E(d)·far·G3·G4 입력 생성 → 부록 봉인(좌표 sha) → 실행",
+  "순서": "V2 relax 4 (V100 · 지금) → V2 2단계 → V4 GPU 시험(electron_maxstep 2 · 44,000 MiB 한도 · b2o3 s4 종료 뒤 · UMA 공존 금지) → 통과 시 V4 9 잡"
+ },
+ "W_정의_개정1_반영": "W_PBE+D3 = [E_far − E_bound]/(n_if·A) (QE `!` F · E_int 병기) · W_UMA+D3 := W_UMA + [E_D3,QE(far) − E_D3,QE(bound)]/(n_if·A) · n_if = 1 · A = 변형된 셀 면적 (V2 는 Ag 셀 · V4 는 SE 1×1) · ΔD3 잔차(QE−외부) 정보 보고",
+ "⛔": "봉인된 좌표·끝점·입력을 바꾸지 않는다 · S4 결과를 보고 표본을 더하거나 빼지 않는다 · INCOMPLETE 3 · RESOURCE_BLOCKED 는 세고 제외 · 본 계산 결과의 인용은 결과 기록·게이트 판정 뒤",
+ "status_history": [
+  {
+   "at": "2026-09-26",
+   "state": "sealed",
+   "by": "1저자",
+   "note": "'비준' — S3 봉인 + 개정 1 동시 비준"
+  }
+ ],
+ "ratification": {
+  "state": "ratified",
+  "stage": "S3",
+  "role": "scientific_owner",
+  "by": "1저자 (사용자 · 트랙 W_ad)",
+  "actor_id": "yonghoon7153@gmail.com",
+  "timestamp": "2026-09-26T00:20:00Z",
+  "commit_before_seal": "49c0fdc5972fcfc35170e66a9965847308800b0d",
+  "content_digest": "a1074e51b64d98d21b00f1b87970da6cde93e9c93cc95485b41d4e11d072711f",
+  "⚠_digest_의_뜻": "ratification 을 뺀 봉인 기록의 sha256"
+ }
+}

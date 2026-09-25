@@ -71,7 +71,7 @@ evidenceScope: multi-source-mixed
 |---|---|---|---|
 | ① | P0 완료 판정기 수정 · 원출력 마지막 실행 확인 | ✅ | 네 잡 모두 명시 수렴 · 성분별 힘 < 1e-3 |
 | ② | **벌크 수치 민감도** — 52 원자 · cubic/epi × (52,k4 · 70,k3 · 70,k4) + epi 내장 대조 = 7 SCF (V100 · 27 min) | ✅ R1·R2 통과 (σ_yz 10.8 kbar · ΔW′ 0.0775 네 설정 동일 · 70/k4 대비 −0.16 meV/atom) | `db/inputs/wad_sese_bulk_sensitivity_2026_09_25` · 집계 `se_sym_slab.py --bulk_sens` · 진단 R1(전단 실재)·R2(ΔW′ 스프레드 ≤ 0.02) — **결과 뒤 정한 진단 규칙**임을 명시 · 슬랩 W 수렴 인증 아님 |
-| ③ | **A′ 파일럿 사전등록 — S1 봉인 ✅ (09-25)** 카드 v5 `db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json` (content_digest 126aa58ebdc4803b… · `D-2026-09-25-wad-aprime-s1-seal`) · 빌더 `build_aprime_interfaces.py` · UMA default | ⏭ **S2** 기하 생성·기록·UMA 이완·interface_check·프로브 (S3 전 예외만) → S3 → S4 | 봉인 = 설계·결박 · 본 계산 승인 아님 |
+| ③ | **A′ — S1 ✅ · S2 ✅ (UMA+D3 이완 12 · 후보 9 · INCOMPLETE 3) · S3 봉인 ✅ (09-26)** `db/properties/wad_aprime_s3_seal_2026_09_26.json` · 개정 1 (D3 항 = QE 출력) · V5 RESOURCE_BLOCKED (실측) → **G5 NOT_TESTED** | ⏭ **S4** V2 relax 4 (V100) → 2단계 → V4 GPU 시험 → V4 9잡 | 갈래0: UMA 전체 계면 예측 내부 전용 |
 | ④ | DEM 회신 **2‴+부록 발송판** (정합 규칙 (a) · 라벨 · Q6 부록) | ✅ 초안 완료 → 1저자 발송 | `kb/projects/wad_dem_reply_draft_2026_09_23.md` §회신 2‴+부록 |
 | — | 5층 · 여러 Li 배열 · 슬랩 재계산 | 안 함 | Codex: 지금 필수 아님 |
 
