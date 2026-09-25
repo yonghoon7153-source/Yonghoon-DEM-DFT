@@ -48,6 +48,10 @@ Q3 **그 셋만으로는 아니오** (E6·E9·E10 을 더 닫으면 E1/E2/E4 를
 - RUN_SCOPE(`run.sh`)를 고치면 보존 영수증의 검증기 identity 가 낡는다 — F50b 때와 같은 절차(clean 트리에서 `make_receipt.py`, 원장은 검증기 digest·core sha 두 값만)로 닫는다. 산출물의 실행 digest(`d50295f9…`)는 안 움직인다.
 - 라벨은 `N/M` 이 아니라 **미닫힌 ID 와 실제 명령·rc·실패/skip/xfail** 을 적는다.
 
+## 71차 회신 (2026-09-25) — 한정 GO 보류 · 잔여 E3-R(P1)·E9-R(P2) → 둘 다 닫음 (원장 §94·§95)
+
+E3-R: 소비자가 짝·실제 일치·source fits·복원 자리·봉인 summary 를 다시 대조 (`82854571`, `tests/test_gate71_defensive.py` 14, 변이 3). E9-R: 실패 즉시 정지 → 명시적 `--resume` 1회 → 재승인 (D6). D7 승인 HEAD · D8 `unset CANONICAL_RUN LEG` · D9 E4 = 11 · E6 requirements 복사. 판정 대상 `82854571` · `source_digest 518d4f63076b77e3`.
+
 ## 다음
 
-`docs/22p_gap/GATE71_REQUEST.md` — 판정 대상 `876429562f6a69b59793c70700cb5b375391ab67` · `source_digest b705a21a1237ec73` 로 **한정 실행 GO** 를 묻는다 (원장 §92·§93). 발송문은 요청문 SHA + 브랜치 head SHA, 커밋 뒤 실측.
+`docs/22p_gap/GATE72_REQUEST.md` (한정 실행 GO 재요청) · ~~`docs/22p_gap/GATE71_REQUEST.md`~~ — 판정 대상 `876429562f6a69b59793c70700cb5b375391ab67` · `source_digest b705a21a1237ec73` 로 **한정 실행 GO** 를 묻는다 (원장 §92·§93). 발송문은 요청문 SHA + 브랜치 head SHA, 커밋 뒤 실측.
