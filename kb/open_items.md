@@ -204,6 +204,9 @@
     이완이 W 를 75 % 낮췄다 (슬랩 속까지 움직였는지 미상). 결과 기록 `db/properties/wad_sese_4L_result_2026_09_25.json` (인용 불가 · 원인 후보 5 · 점검 제안 2 — 1저자 결정).
     ✅ **1저자: A·B 둘 다 → A 본 뒤 Codex 리뷰.** A = `se_sym_slab.py --relax_check` (새 플래그 · 문턱은 결과 기록과 같은 값 · selftest 58/58) —
     V100 에서 최종 좌표를 찍어 받아 여기서 돌린다. B = 벌크 이완 입력 `db/inputs/wad_sese_bulkrelax_4L_2026_09_25/` (V100 tmux `bulkrelax`) — 첫 SCF 가 −1022.94625093 Ry 와 같아야 한다.
+    ✅ **A 결과 (09-25)**: 두 슬랩 다 **PS₄ 온전 · 짝 바뀜 0 · 진공 이탈 0** · Li 가 자리 하나 거리(1.6–2.8 Å) 이동 ·
+    **속층 이완 신호** S 바깥 1.241 Å (Li) · Li 바깥 0.302 Å (겨우) — 원인은 안 가른다 (②·①·Li 재배치 열림). 원자료 `db/raw/wad_sese_4L_2026_09_25/`.
+    ⏳ B 결과 → **Codex BX** `kb/reviews/codex_BX_prompt_wad_sese_4L_alarm_2026_09_25.md` (발송 대기 · B 를 §4 에 붙여 보내기 권함).
     🔴 **러너 결함**: 기록된 `pw.x PID 563677` 이 **없다** (ps 빈 줄) — `pgrep -P mpirun | head -1` 이 pw.x 가 아닌 자식을 잡았거나 사라진 PID 다.
     완료표 `peak_self_MiB` 가 **세 잡 모두 0** = 자기 VRAM 측정이 한 번도 안 됐다 (컨테이너 PID 공간 ≠ nvidia-smi PID 도 의심). 가드는 mpirun 을 죽이므로 안전은 유지 ·
     기록 필드가 거짓 0 이다 ('조용히 틀린 경로'). V100 진단: 트리 = 래퍼 563671 → mpirun 563691 → **pw.x 563705** · nvidia-smi 는 **호스트 PID 3312066**.

@@ -1,0 +1,24 @@
+{
+ "schema": "raw_bundle/v1",
+ "date": "2026-09-25",
+ "무엇": "SE|SE 4층 이완 최종 좌표 (V100 pw.out 의 Begin/End final coordinates 를 소수 6자리로 찍어 붙여넣은 것) + --relax_check 출력",
+ "출처": {
+  "s_outer": {
+   "pw_out": "V100 /home/ubuntu/runs/wad_sese_4L_2026_09_24/03_s_outer_relax_pbe/pw.out",
+   "pw_out_sha256_앞16": "773594d7a0112ef8"
+  },
+  "li_outer": {
+   "pw_out": "V100 …/03_li_outer_relax_pbe/pw.out",
+   "pw_out_sha256_앞16": "3a38f37c1cb08741"
+  }
+ },
+ "찍은_명령": "awk '/Begin final coordinates/{f=1;next} /End final coordinates/{f=0} f && /ATOMIC_POSITIONS/{print; next} f && NF>=4 {printf \"%s %.6f %.6f %.6f\\n\",$1,$2,$3,$4}' pw.out",
+ "⚠": "소수 6자리로 잘랐다 (원본 10자리) — 변위 점검(0.3 Å 문턱)에는 충분하지만 에너지 재계산 입력으로 쓰지 않는다. 원본은 V100 과 $STORE 백업에 있다.",
+ "점검": "python3 tools/wad/se_sym_slab.py --relax_check db/inputs/wad_sese_control_4L_2026_09_24/03_<종결>_relax_pbe/pw.in <이 폴더의 좌표>",
+ "files": {
+  "s_outer_relaxed_final_coords.txt": "504e0b081aa2d05a",
+  "li_outer_relaxed_final_coords.txt": "7e0b1daea3467b1f",
+  "relax_check_s_outer.json": "c9e06935be6643c6",
+  "relax_check_li_outer.json": "e9df167c77bb5603"
+ }
+}

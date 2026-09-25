@@ -1,13 +1,13 @@
 ---
 title: "리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)"
-date: 2026-09-23
-updated: 2026-09-23
+date: 2026-09-25
+updated: 2026-09-25
 tags: [index, review, codex]
 status: 자동생성
 kind: index
 confidence: high
 verificationStatus: verified
-verifiedAt: 2026-09-23
+verifiedAt: 2026-09-25
 verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)
 explored: false
 authoredBy: agent
@@ -97,6 +97,7 @@ evidenceScope: multi-source-primary
 | BU | 2026-09-22 | `li2s1a_BU_prompt_variance_ratio_rule_2026_09_22.md` | `li2s1a_BU_reply_variance_ratio_rule_2026_09_22.md` | 수신됨-회신함 | 같은 라벨 · 주제 토큰 일치 ['ratio', 'rule', 'variance'] |
 | BV | 2026-09-23 | `codex_BV_prompt_wad_lpscl_ag_c_vgcf_2026_09_23.md` | `codex_BV_reply_wad_lpscl_ag_c_vgcf_2026_09_23.md` | 발송됨 · 회신 수령 (NO-GO) → codex_BV_reply_wad_lpscl_ag_c_vgcf_2026_09_23.md | 회신 본문의 `요청:` 역링크 |
 | BW | 2026-09-23 | `codex_BW_prompt_wad_validation_without_cluster_2026_09_23.md` | `codex_BW_reply_wad_validation_without_cluster_2026_09_23.md` | 발송됨 · 회신 수령 (NO-GO · 제한 파일럿 조건부 GO) → codex_BW_reply_wad_validation_without_cluster_2026_09_23.md | 회신 본문의 `요청:` 역링크 |
+| BX | 2026-09-25 | `codex_BX_prompt_wad_sese_4L_alarm_2026_09_25.md` | — | 발송 대기 (1저자 — 점검 B 결과를 §4 에 붙여 보내는 것을 권함) | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
