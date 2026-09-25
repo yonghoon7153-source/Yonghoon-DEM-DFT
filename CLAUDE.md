@@ -541,7 +541,9 @@ the other; their agreement quantifies model trust.
   정본 `docs/voxel_contact_free_gap.md`.  접촉망은 접촉마다 **Holm `R = 1/(2σa)`** 를 직렬로
   넣고 그것을 뺀 가지를 코드가 스스로 **`CONTACT_FREE — upper bound, ideal contact limit`**
   이라 부른다.  복셀 FV 는 면을 **harmonic mean** 으로만 잇는다 ⇒ SE 셀↔SE 셀 = 3.0 mS/cm,
-  **계면 저항 항이 정확히 0** 이고, 먹이는 σ 도 Cronau **단결정 grain-interior** 다 (펠릿 아님).
+  **계면 저항 항이 정확히 0** 이고, 먹이는 σ 도 **grain-interior 가정값** 3.0 mS/cm 다 (펠릿 아님).
+  ⛔ 정정 2026-09-25 (원장 `SELF-51`) — 옛 표기 *"Cronau 단결정"* 은 사실이 아니었다: Cronau 2021 원문에 3.0 도 단결정도 없고
+  (측정은 Li₆PS₅Br 펠릿), Cronau 2022 는 Li₅.₅PS₄.₅Cl₁.₅ 연구다.  3.0 은 **직접 근거 문헌이 없는 프로젝트 채택값**이다.
   ★ 크기는 **이미 저장돼 있었다** — `case_master.csv` 의 `R_brug_over_full`(= σ_cf/σ_full,
   이온 채널) **n=157 중앙값 4.04×(Hertz) · 6.69×(소성면적), 범위 2.3~13.6×**.
   ⛔ **철회 2026-09-13 (L2 판정 `SELF-24`·`L2-07`)** — 옛 문장 *"문헌 삼각측량: kim2025 EIS 의
@@ -1683,6 +1685,8 @@ p=AM_P fraction. C_blend(τ) still refits live; φc_P/φc_S/δ are FROZEN.
   (`run_network_full_corrections.py:88`), σ_grain depends on r_SE: 1.0 ≥0.5µm,
   0.90 at 0.3–0.5, 0.65 at 0.1–0.3, smooth to 0.33 ≤30nm. This is an SE
   MATERIAL property (amorphization at sub-µm), NOT a GB/geometric correction.
+  ⛔ 정정 2026-09-25 (`SELF-51`): *"literature factor"* 는 원문 대조가 없었다 — Cronau 2022 는 Li₅.₅PS₄.₅Cl₁.₅
+  볼밀링 연구라 이 계수값들이 그 논문에 있는지 PDF 확인 전이다.  (아래 원문은 이력으로 둔다.)
   Applied as a FIXED literature factor (no fit, no DoF) to the production
   σ_grain: `σ_grain_eff = 3.0 × Cronau(r_SE)` in `_sat_baselog`. LOOCV (frozen
   φc/δ) 0.9579 → 0.9622 (Δ=+0.0043, even with only 1/91 sub-0.5µm in the
@@ -1788,7 +1792,8 @@ Sub-definitions (all FROZEN):
   Cronau(r)  = 0.33 + 0.32·σ(50(r−0.10)) + 0.25·σ(50(r−0.30)) + 0.10·σ(50(r−0.50))
                                                     [smooth 3-sigmoid]
 Constants:
-  σ_grain = 3.0 mS/cm     (Cronau 2022 Li6PS5Cl single-crystal)
+  σ_grain = 3.0 mS/cm     (project value — no literature source; the old "Cronau 2022 single-crystal"
+                           label was false, SELF-51)
   φc_P = 0.200            (P-heavy threshold, FROZEN)
   φc_S = 0.195            (S-heavy threshold, FROZEN)
   δ = 0.040               (disorder rounding, FROZEN)
@@ -1798,8 +1803,8 @@ Constants:
 5 LIVE-fit params: (a, b, c, β_P2, β_F).  n=90/k=5 = 18:1 (safe).
 
 Per-term meaning & confidence:
-  σ_grain               HIGH      Cronau 2022 single-crystal literature
-  Cronau(r_SE)          HIGH      Cronau 2022 piecewise smoothed (3-sigmoid)
+  σ_grain               —         project value, no literature source (SELF-51; old "Cronau 2022 single-crystal" was false)
+  Cronau(r_SE)          unverified  Cronau 2022 (Li5.5PS4.5Cl1.5 study) — factor values not checked against the PDF (SELF-51)
   (φ_eff)^½             MED-HIGH  mean-field 3D percolation; data-locked 91/91
   CN²                   MED-HIGH  Kirchhoff #paths × bond-strength; locked 91/91
   cov_Hertz^½           HIGH      Holm 1967 + effective Li⁺ conduction area
@@ -1947,7 +1952,7 @@ with smooth label-free g_phys replacing g₀₁₀ (canonical):
   δ=0.040; σ_grain=3.0 mS/cm; Cronau piecewise (literature)
 
 Adoption rationale (each change separately validated):
-  • Cronau(r_SE) σ_grain factor — Cronau 2022 literature, +0.0048 LOOCV
+  • Cronau(r_SE) σ_grain factor — (source unverified, SELF-51), +0.0048 LOOCV
   • f_small (smooth two-sigmoid) — replaces g₀₁₀ with size-derived gate;
     LOOCV equivalent (+0.0001) but no label-convention dependency
   • C_blend → logpoly2 (3 params instead of dual-branch 6) — +0.0020 LOOCV,
@@ -1963,7 +1968,7 @@ LOOCV that doesn't generalize.  Always benchmark against the FROZEN-φc
 LOOCV in `final_form_status.py`, not the nested-CV with re-selection.
 
 Confidence:
-  • σ_grain × Cronau(r_SE) — Cronau 2022 (HIGH literature)
+  • σ_grain × Cronau(r_SE) — σ_grain: project value (no source) · Cronau(r): unverified (SELF-51)
   • cov^½ — Holm 1967 constriction (HIGH literature)
   • CN² and (φ_eff)^½ — data-locked 91/91, derivable physics
   • f_p³ — 3D isotropy + Stauffer-Bruggeman backbone scaling

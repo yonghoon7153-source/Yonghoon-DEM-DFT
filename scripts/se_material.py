@@ -42,13 +42,15 @@ MUST be pinned.  This module implements ONLY the σ·T (Kraft) form.
 
 ★ T_ref = 25 °C is OUR CONVENTION DECISION, NOT AN ANCHOR ★
 ───────────────────────────────────────────────────────────
-σ_grain = 3.0 mS/cm comes from Cronau 2021/2022 (Li6PS5Cl single-crystal), whose data
-are ALL room-temperature-single-point with NO Arrhenius analysis — i.e. "what °C is
-3.0 mS/cm?" is genuinely UNDEFINED in the source.  We therefore DECLARE T_ref = 25 °C
+σ_grain = 3.0 mS/cm is a PROJECT-ADOPTED value with NO direct literature source.
+⛔ Corrected 2026-09-25 (SELF-51): the old label "Cronau 2021/2022 (Li6PS5Cl single-crystal)"
+was false — Cronau 2021 (ACS Energy Lett. 6, 3072) reports no 3.0 mS/cm and measured no single
+crystal (pellets; the argyrodite it measured is Li6PS5Br), and Cronau 2022 (Batteries & Supercaps
+5, e202200041) studies ball-milled Li5.5PS4.5Cl1.5.  So "what °C is 3.0 mS/cm?" has no source at all.  We therefore DECLARE T_ref = 25 °C
 and re-state 3.0 mS/cm as the prefactor under that convention.  The supporting (not
 proving) datum is Minnmann 2021 (LPSCl bulk 1.6 mS/cm @ 25 °C, 380 MPa fabrication) —
 one of the rare cards that states temperature AND pressure together.  If a future card
-pins Cronau's actual measurement temperature, T_REF_C changes and every σ moves with it.
+ever anchors σ_grain to a measured temperature, T_REF_C changes and every σ moves with it.
 
 ★ Eₐ IS A BAND — SINGLE-VALUE USE IS FORBIDDEN ★
 ────────────────────────────────────────────────
@@ -76,8 +78,10 @@ Selftest:  python3 scripts/se_material.py --selftest
 import math
 
 # ── LPSCl (Li6PS5Cl) argyrodite grain-interior ionic conductivity ──────────────
-# Cronau 2021/2022 single-crystal σ_grain.  NOT the pellet value (pellet includes GB
-# + porosity; e.g. Bazzoun 2026 pellet 1.02 mS/cm).  Declared at T_REF_C (see header).
+# Project-adopted grain-interior value — NO direct literature source (SELF-51: the old
+# "Cronau single-crystal" label was false).  Not a pellet value; measured Li6PS5Cl pellets
+# (GB-inclusive, canon cards) span 1.0 (Bazzoun 2026) … 4.8 mS/cm (Cho 2024).  Declared at
+# T_REF_C (see header).
 SIGMA_GRAIN_MS_CM_25C = 3.0        # mS/cm
 SIGMA_GRAIN_S_CM_25C = 3.0e-3      # S/cm  (same number, the unit the solvers use)
 
@@ -180,8 +184,8 @@ def provenance(T_C=None, ea_ev=None, T_ref_C=None, sigma_e_modelled=False):
         'convention': _CONVENTION,
         'Ea_band_eV': dict(EA_ION_EV_BAND),
         'trust': (
-            'T_ref=25 °C is OUR CONVENTION, not an anchor — Cronau σ_grain=3.0 mS/cm is a '
-            'single RT point with no Arrhenius (docs/temp_pressure_capability.md T1-b). '
+            'T_ref=25 °C is OUR CONVENTION, not an anchor — σ_grain=3.0 mS/cm is a project value '
+            'with no literature source (SELF-51; docs/temp_pressure_capability.md T1-b). '
             'Ea is a BAND 0.29-0.46 eV (1.8x wide = x2.47..x4.44 at 30->60 °C); single-value '
             'reporting is forbidden — sweep EA_ION_EV_BAND. '
             + ('T_dependence=NOT_MODELLED: sigma is the 25 °C value; a run at any other cell '

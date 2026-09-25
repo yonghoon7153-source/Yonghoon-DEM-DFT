@@ -25,7 +25,7 @@ from __future__ import annotations
 import os, json, math, csv
 
 
-SIGMA_GRAIN_MS = 3.0  # mS/cm, LPSCl bulk (MLIP-MD [S4])
+SIGMA_GRAIN_MS = 3.0  # mS/cm, LPSCl grain interior — project value, no literature source (SELF-51; the old "MLIP-MD [S4]" tag was unsupported)
 
 
 def _find_meta(cid: str) -> dict:

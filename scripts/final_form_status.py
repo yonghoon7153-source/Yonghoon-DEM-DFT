@@ -30,7 +30,7 @@ EQUATION = r"""
   ┌───────────────────────────────────────────────────────────────────────┐
   │ FROZEN (literature / physics-derived)                                  │
   ├───────────────────────────────────────────────────────────────────────┤
-  │ σ_grain   = 3.0 mS/cm  Cronau 2022 Li6PS5Cl single-crystal     HIGH   │
+  │ σ_grain   = 3.0 mS/cm  project value, no literature source (SELF-51) │
   │ Cronau(r) = 0.33 + 0.32σ(50(r−0.10))                                  │
   │                + 0.25σ(50(r−0.30))                                    │
   │                + 0.10σ(50(r−0.50))     smooth 3-sigmoid        HIGH   │
@@ -55,7 +55,7 @@ Sub-definitions:
   f_intact   = 1 − fracture_aware_excluded_pct / 100   ← intact contact fraction
 
 Per-term meaning:
-  σ_grain · Cronau  — material baseline (Cronau 2022 literature)
+  σ_grain · Cronau  — material baseline (σ_grain: project value, no source; Cronau(r): unverified — SELF-51)
   (φ_eff)^½         — mean-field 3D percolation, well-above-threshold
   CN²               — Kirchhoff #paths × bond-strength (Holm parallel paths)
   cov_Hertz^½       — Holm 1967 constriction at elastic Hertz contact area

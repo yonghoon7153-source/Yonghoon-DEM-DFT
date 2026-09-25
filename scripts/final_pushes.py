@@ -16,8 +16,9 @@
      etc) disappear?  Reports new LOOCV and outlier landscape.
 
   C. σ_grain RE-FIT
-     Cronau 2022 says σ_grain = 3.0 mS/cm.  Scan in [1.5, 5] and see
-     if data prefers different baseline.  3.0 confirmed → ★ literature.
+     σ_grain = 3.0 mS/cm is a project value with no literature source (the old
+     'Cronau 2022 says 3.0' was false — SELF-51).  Scan in [1.5, 5]: the corpus
+     cannot tell (C(τ) absorbs a constant).
 
   D. PER-COMPOSITION LOOCV
      Does the form work equally well across P:S groups?  For each
@@ -229,12 +230,12 @@ def main():
         base_sg = base_ref + log_sg_diff
         lo, _, _ = _loocv_with_extras(base_sg, logsf, taus, extras)
         d = lo - lo_ref
-        mark = " ←Cronau 2022" if sg_try == 3.0 else ""
+        mark = " ←project value" if sg_try == 3.0 else ""
         print(f"  {sg_try:>10.1f} {lo:7.4f} {d:+10.4f}{mark}")
     print(f"  (NOTE: σ_grain is a CONSTANT scale factor; (a) of C(τ) absorbs any")
     print(f"   constant change → LOOCV is IDENTICAL for all σ_grain values.")
     print(f"   This confirms σ_grain is unobservable from corpus alone; LITERATURE")
-    print(f"   value 3.0 mS/cm is the right anchor — Cronau 2022 ★ HIGH confidence.)")
+    print(f"   value 3.0 mS/cm has NO literature source — a project convention (SELF-51).)")
 
     # =========================================================================
     # SECTION D — Per-composition LOOCV

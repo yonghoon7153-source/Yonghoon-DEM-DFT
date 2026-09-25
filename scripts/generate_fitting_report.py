@@ -479,11 +479,14 @@ def generate_report(data_list, names, outdir):
     L.append("각 항이 무슨 물리를 잡고 있는지, 왜 그 지수/형태가 채택됐는지를 한 줄씩.\n")
 
     L.append("### σ_grain · Cronau(r_SE) — 재료 기준선")
-    L.append("- **σ_grain = 3.0 mS/cm** — Cronau 2022가 측정한 Li₆PS₅Cl **single-crystal** ionic conductivity.")
+    L.append("- **σ_grain = 3.0 mS/cm** — **직접 근거 문헌이 없는 프로젝트 채택값**이다 (⛔ 2026-09-25 정정, SELF-51: "
+             "옛 표기 *'Cronau 2022 가 측정한 Li₆PS₅Cl single-crystal'* 은 사실이 아니었다 — Cronau 2021 에는 3.0 도 단결정도 "
+             "없고, Cronau 2022 는 Li₅.₅PS₄.₅Cl₁.₅ 입자크기 연구).  측정된 Li₆PS₅Cl 펠릿값 (입계 포함) 은 1.0–4.8 mS/cm.")
     L.append("  pellet 값(1.3 mS/cm)이 아니라 grain interior 값을 써야 form이 '입자 안→입자 안'의 전도를")
     L.append("  계산하는 게 됨. GB/접촉 손실은 다른 항이 따로 잡음.")
-    L.append("- **Cronau(r_SE)** — 같은 Cronau 2022가 보고한 sub-µm grain interior 자체의 conductivity 감소.")
-    L.append("  r_SE ≥ 1µm: ×1.0, 0.5µm: ×0.65, 0.3µm: ×0.50, 0.1µm 이하: ×0.33.")
+    L.append("- **Cronau(r_SE)** — 입자 크기 보정 계수.  ⚠ **원문 미확인** (SELF-51) — Cronau 2022 는 Li₅.₅PS₄.₅Cl₁.₅ "
+             "볼밀링 연구라 계수값이 그 논문에 있는지 PDF 로 확인 전이다.")
+    L.append("  현행 식 값: r_SE ≥ 1µm ×1.00 · 0.5 ×0.95 · 0.3 ×0.78 · 0.1 ×0.49 · ≤30 nm ×0.34 (옛 표기 0.65/0.50 은 식과 달랐다).")
     L.append("  3개 sigmoid를 매끄럽게 이어붙인 형태 (불연속 piecewise 대신).")
     L.append("  물리: 작은 입자는 표면 amorphization 비율이 커서 grain bulk 자체 conductivity가 낮아짐.\n")
 
@@ -546,8 +549,8 @@ def generate_report(data_list, names, outdir):
     L.append("### 항별 신뢰도 요약\n")
     L.append("| 항 | 신뢰도 | 근거 |")
     L.append("|---|---|---|")
-    L.append("| σ_grain | HIGH | Cronau 2022 literature |")
-    L.append("| Cronau(r_SE) | HIGH | Cronau 2022 piecewise (smoothed) |")
+    L.append("| σ_grain | 근거 문헌 없음 | 프로젝트 채택값 (값은 측정 범위 1.0–4.8 안) — 옛 'Cronau 2022' 귀속은 사실이 아니었다 (SELF-51) |")
+    L.append("| Cronau(r_SE) | 미확인 | 원문 대조 전 (Cronau 2022 = Li₅.₅PS₄.₅Cl₁.₅ 연구) — SELF-51 |")
     L.append("| (φ_eff)^½ | MED-HIGH | mean-field 3D percolation; data-locked 91/91 |")
     L.append("| CN² | MED-HIGH | Kirchhoff network; locked 91/91 |")
     L.append("| cov_Hertz^½ | HIGH | Holm 1967 + Spearman 0.697>0.476 |")
