@@ -166,3 +166,18 @@ cronau2021_stack_pressure_ionic_conductivity	nz1c01299
 #   [!] 이 슬러그에 '--clean' 금지 — 본문·SI 를 둘 다 주지 않으면 한쪽 그림이 색인에서 빠지고, 둘 다 줘도 세 재크롭이 되돌아간다.
 #   ⭐ fS2 패널 c (µC-Li₆PS₅Cl, 고적층압 평탄 ≈2.9–3.5 mS/cm, digitized) 가 우리 σ_grain = 3.0 의 출처 판정 근거다.
 #   디지타이즈 = tools/litdb/cronau2021_si_digitize.py → litdb/figures/<slug>/si_digitized.csv
+
+# ── Ketter 2025 Nat. Commun. 16:1411 — voxel 저항망(RN) + σ_ion/σ_e/κ 실측 (Zeier 그룹) ──
+ketter2025_resistor_network_models_predict_transport_properties	56514
+#   ↑ 2026-09-25. 출판사 이름 `s41467-025-56514-5.pdf`(본문) · `41467_2025_56514_MOESM1_ESM.pdf`(SI) 를 DOI 조각 56514 로 같이 잡는다.
+#   ⚠ SI 이름 `MOESM1_ESM` 은 SI_TAG(sup/mmc/si) 에 안 걸린다 → 크롭 때는 사본을 `…_Sup.pdf` 로 붙여 넘겼다
+#     (캡션이 "Figure S1:" 라 라벨은 어차피 S 번호로 나오지만, 판정이 갈리지 않게).
+#   ⚠ **31장 중 14장에 손이 들어가 있다** (figures.json 의 `recrop` · 전부 `viewed: true`, 백색여백 트림 >244 · 14 px):
+#     · 본문 fig_2·fig_3 — 자동 크롭이 x=410.9/332.7 pt 에서 멈춰 **오른쪽 패널이 잘렸다** (Fig 3 은 panel d = σ vs φ_NCM 통째로 누락)
+#       → 전폭 clip (33.7, 42.8, 561.3, 249.0) / (33.7, 42.8, 561.3, 255.5)
+#     · 본문 fig_4 — 위쪽 색 범례 라벨(LPSCl→NCM83) 잘림 → clip (33.7, 45.0, 300.8, 420.0)
+#     · 본문 fig_5 — 위쪽 띠(패널 라벨 a/c · σ_e 범례) 잘림 → clip (33.7, 42.8, 561.3, 238.5)
+#     · SI fig_S3·S4·S7·S8·S9·S12·S13·S14·S22 · tab_S1 — 그림 위에 **본문 문장이 섞였다** (S3 은 식 S8/S9 문단 통째)
+#       → 상단을 임베디드 래스터 윗변(tab_S1 은 "Table S1" 캡션 윗변) −4 pt 로 내렸다
+#   [!] '--slug ketter2025_resistor_network_models_predict_transport_properties --clean' 을 돌리면 위 14장이 되돌아간다.
+#   ⭐ fig_3 panel d(σ_e·σ_ion vs φ_NCM) 와 tab_S3(입력 전도도 표) 가 이 카드의 근거다 — 수치는 Source Data(MOESM3) 로 확인했다.
