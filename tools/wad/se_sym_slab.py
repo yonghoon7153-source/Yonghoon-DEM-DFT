@@ -31,6 +31,7 @@
   python3 tools/wad/se_sym_slab.py --scan                    # 창·틈·전하만 본다
   python3 tools/wad/se_sym_slab.py --out db/structures/wad_se_slabs_2026_09_23
   python3 tools/wad/se_sym_slab.py --out <구조폴더> --qe_out <입력폴더>   # SE|SE 대조 QE 입력까지
+  python3 tools/wad/se_sym_slab.py --relax_check <잡>/pw.in <최종좌표.txt|pw.out>   # 이완 점검 (PS₄·짝·진공·층별 변위 · 판정 아님)
 
 ⛔ 이 도구가 **못 하는 것**
   · 이완하지 않는다 — 벌크 절단 좌표 그대로다. 이완은 QE 입력(relax)으로 따로 돈다.
@@ -698,7 +699,165 @@ def collect(run, qe_in=None):
     return out
 
 
+# ─────────────────── 이완 점검 (경보 v2 후속 · 점검 제안 A · 2026-09-25) ───────────────────
+#: 결과 전 문턱 — db/properties/wad_sese_4L_result_2026_09_25.json `다음_점검_제안_1저자_결정.A` 와 같은 값.
+#:   ⛔ 결과를 보고 바꾸지 않는다 (바꾸면 그 기록과 갈린다).
+RELAX_MID_THR_A = 0.3      # 가운데 층 원자 변위 max 가 이걸 넘으면 '속층 이완' 신호 (원인 후보 ②)
+RELAX_VAC_TOL_A = 1.0      # 처음 슬랩 z 범위 밖으로 이만큼 넘게 나간 원자 = 진공 쪽 이탈
+RELAX_MID_FRAC = 1.0 / 3   # '가운데 층' = 처음 z 범위의 가운데 1/3
+
+
+def _read_positions_block(text):
+    """ATOMIC_POSITIONS (angstrom) → (기호 목록, (n,3) 배열).
+
+    'Begin final coordinates … End final coordinates' 가 있으면 **그 안만** 본다 (pw.out 통째도 된다).
+    ⛔ angstrom 이 아니면 멈춘다 — bohr·crystal 을 조용히 Å 로 읽으면 변위가 통째로 틀린다.
+    """
+    import re
+    m = re.search(r"Begin final coordinates(.*?)End final coordinates", text, re.S)
+    body = m.group(1) if m else text
+    h = re.search(r"ATOMIC_POSITIONS\s*[({]?\s*([A-Za-z]+)", body)
+    if not h:
+        raise SlabError("ATOMIC_POSITIONS 줄이 없다")
+    if h.group(1).lower() != "angstrom":
+        raise SlabError(f"좌표 단위가 angstrom 이 아니다 ({h.group(1)}) — 이 점검은 angstrom 만 읽는다")
+    sym, xyz = [], []
+    for ln in body[h.end():].splitlines()[1:]:
+        p = ln.split()
+        if len(p) >= 4 and re.fullmatch(r"[A-Z][a-z]?", p[0]):
+            try:
+                xyz.append([float(v) for v in p[1:4]])
+                sym.append(p[0])
+                continue
+            except ValueError:
+                pass
+        if sym:
+            break
+    if not sym:
+        raise SlabError("ATOMIC_POSITIONS 아래에 원자 줄이 없다")
+    return sym, np.array(xyz)
+
+
+def _read_cell_block(text):
+    import re
+    h = re.search(r"CELL_PARAMETERS\s*[({]?\s*([A-Za-z]+)", text)
+    if not h or h.group(1).lower() != "angstrom":
+        raise SlabError("CELL_PARAMETERS (angstrom) 가 없다")
+    rows = [ln.split() for ln in text[h.end():].splitlines()[1:4]]
+    return np.array([[float(v) for v in r[:3]] for r in rows])
+
+
+def relax_check(pw_in_text, final_text, mid_thr=RELAX_MID_THR_A, vac_tol=RELAX_VAC_TOL_A, mid_frac=RELAX_MID_FRAC):
+    """이완 전(pw.in) ↔ 이완 끝(최종 좌표) 비교 — PS₄ 온전 · 결합 짝 · 진공 이탈 · 층별 변위.
+
+    ⛔ 이 함수가 못 하는 것
+      · 원인을 정하지 않는다 — 신호만 낸다 (경보 v2 는 원인 미분류 규칙이다).
+      · 에너지를 보지 않는다 — 기준 벌크 불일치의 **크기**는 벌크 이완 잡(점검 B)이 잰다.
+      · 면내는 주기, z 는 비주기(진공)로 본다 — (001) 대칭 슬랩 전용.
+    """
+    from ase import Atoms
+    cell = _read_cell_block(pw_in_text)
+    s0, x0 = _read_positions_block(pw_in_text)
+    s1, x1 = _read_positions_block(final_text)
+    if s0 != s1:
+        raise SlabError(f"원자 수·순서가 다르다 (처음 {len(s0)} · 나중 {len(s1)}) — 같은 잡의 좌표인가")
+    pbc = (True, True, False)
+    d = _mic(x1 - x0, cell, pbc)
+    disp = np.linalg.norm(d, axis=1)
+    sym = np.array(s1)
+    z0 = x0[:, 2]
+    zlo, zhi = float(z0.min()), float(z0.max())
+    th = zhi - zlo
+    lo_m, hi_m = zlo + th * (1 - mid_frac) / 2, zhi - th * (1 - mid_frac) / 2
+    mid = (z0 >= lo_m) & (z0 <= hi_m)
+
+    def partners(x):
+        i, j, _, _ = _pairs(Atoms(s1, positions=x, cell=cell, pbc=pbc), "P", "S", R_PS)
+        return {int(p): sorted(int(v) for v in j[i == p]) for p in np.where(sym == "P")[0]}
+    p0, p1 = partners(x0), partners(x1)
+    broken = {p: len(v) for p, v in p1.items() if len(v) != 4}
+    swapped = [p for p in p0 if p0[p] != p1[p] and p not in broken]
+    z1 = x1[:, 2]
+    out_vac = [int(k) for k in np.where((z1 < zlo - vac_tol) | (z1 > zhi + vac_tol))[0]]
+    edges = np.linspace(zlo, zhi + 1e-9, 9)
+    prof = []
+    for b in range(8):
+        m = (z0 >= edges[b]) & (z0 < edges[b + 1])
+        if m.any():
+            prof.append({"z_from_A": round(float(edges[b] - zlo), 2), "z_to_A": round(float(edges[b + 1] - zlo), 2),
+                         "n": int(m.sum()), "disp_max_A": round(float(disp[m].max()), 3),
+                         "disp_mean_A": round(float(disp[m].mean()), 3)})
+    mid_by_el = {el: round(float(disp[mid & (sym == el)].max()), 3) for el in sorted(set(s1)) if (mid & (sym == el)).any()}
+    mid_max = float(disp[mid].max()) if mid.any() else None
+    top = [{"i": int(k), "el": s1[k], "z0_rel_A": round(float(z0[k] - zlo), 2), "disp_A": round(float(disp[k]), 3)}
+           for k in np.argsort(-disp)[:5]]
+    flags = []
+    if broken:
+        flags.append(f"PS₄ 깨짐 — P {len(broken)} 개가 {R_PS} Å 안 S 수 ≠ 4 ({broken}) → 원인 후보 ③")
+    if swapped:
+        flags.append(f"PS₄ 결합 짝 바뀜 — P {swapped} (S 수는 4 인데 다른 S) → 원인 후보 ③")
+    if out_vac:
+        flags.append(f"진공 쪽 이탈 — 원자 {out_vac} 가 처음 z 범위 ± {vac_tol} Å 밖")
+    if mid_max is not None and mid_max > mid_thr:
+        flags.append(f"속층 이완 신호 — 가운데 1/3 원자 변위 max {mid_max:.3f} Å > {mid_thr} Å (원인 후보 ②)")
+    return {"n_atoms": len(s1), "slab_z_A": [round(zlo, 3), round(zhi, 3)], "mid_band_A": [round(lo_m - zlo, 2), round(hi_m - zlo, 2)],
+            "disp_max_A": round(float(disp.max()), 3), "disp_rms_A": round(float(np.sqrt((disp ** 2).mean())), 3),
+            "mid_disp_max_A": round(mid_max, 3) if mid_max is not None else None, "mid_disp_max_by_element_A": mid_by_el,
+            "layer_profile": prof, "top5": top, "ps4_broken": broken, "ps4_partner_changed": swapped,
+            "out_to_vacuum": out_vac, "flags": flags,
+            "thresholds": {"mid_disp_A": mid_thr, "vac_tol_A": vac_tol, "mid_frac": mid_frac, "R_PS_A": R_PS},
+            "⛔": "신호만 낸다 — 원인 분류·판정 아님 (경보 v2 는 원인 미분류)"}
+
+
 # ─────────────────────────────── selftest ───────────────────────────────
+def _selftest_relax_check(ck):
+    """--relax_check: 실제 4층 S 바깥 입력을 출발로, 합성 '최종 좌표' 로 양성·음성을 본다."""
+    src = os.path.join(REPO, "db", "inputs", "wad_sese_control_4L_2026_09_24", "03_s_outer_relax_pbe", "pw.in")
+    if not os.path.isfile(src):
+        ck("relax_check: 시험 입력(4층 S 바깥 pw.in)이 repo 에 있다", False, src)
+        return
+    t = open(src, encoding="utf-8").read()
+    sym, x = _read_positions_block(t)
+    rng = np.random.default_rng(5)
+
+    def fin(xx, unit="angstrom", drop=False):
+        rows = [f"{a:2s} {p[0]:14.8f} {p[1]:14.8f} {p[2]:14.8f}" for a, p in zip(sym, xx)]
+        if drop:
+            rows = rows[:-1]
+        return "Begin final coordinates\n\nATOMIC_POSITIONS (" + unit + ")\n" + "\n".join(rows) + "\n\nEnd final coordinates\n"
+    base = x + rng.normal(0, 0.02, x.shape)
+    r0 = relax_check(t, fin(base))
+    ck("relax_check 양성: 작은 흔들림 → 신호 없음", not r0["flags"], r0["flags"])
+    ck("relax_check: 층 8 칸 · 가운데 1/3 띠", len(r0["layer_profile"]) >= 6 and r0["mid_disp_max_A"] is not None, r0["layer_profile"])
+    S = [i for i, a in enumerate(sym) if a == "S"]
+    P = [i for i, a in enumerate(sym) if a == "P"]
+    D = np.linalg.norm(_mic(x[S][:, None, :] - x[P][None, :, :], _read_cell_block(t), (True, True, False)), axis=2)
+    s_b = S[int(np.argmin(D.min(axis=1)))]                      # P 에 붙은 S 하나
+    xb = base.copy(); xb[s_b, 2] += 1.2 * np.sign(xb[s_b, 2] - x[:, 2].mean() or 1.0)
+    rb = relax_check(t, fin(xb))
+    ck("⛔음성: P–S 하나를 1.2 Å 떼면 PS₄ 깨짐을 잡는다", bool(rb["ps4_broken"]), rb["flags"])
+    zc = x[:, 2].mean()
+    li_mid = min((i for i, a in enumerate(sym) if a == "Li"), key=lambda i: abs(x[i, 2] - zc))
+    xm = base.copy(); xm[li_mid, 0] += 0.5
+    rm = relax_check(t, fin(xm))
+    ck("⛔음성: 가운데 Li 를 0.5 Å 옮기면 속층 이완 신호", any("속층" in f for f in rm["flags"]), rm["flags"])
+    top = int(np.argmax(x[:, 2]))
+    xv = base.copy(); xv[top, 2] += 3.0
+    rv = relax_check(t, fin(xv))
+    ck("⛔음성: 바깥 원자를 3 Å 띄우면 진공 이탈을 잡는다", top in rv["out_to_vacuum"], rv["flags"])
+    pa, pb = P[0], P[1]
+    sa = S[int(np.argmin(D[:, P.index(pa)]))]; sb = S[int(np.argmin(D[:, P.index(pb)]))]
+    xs = base.copy(); xs[[sa, sb]] = xs[[sb, sa]]
+    rs = relax_check(t, fin(xs))
+    ck("⛔음성: 두 PS₄ 의 S 자리를 맞바꾸면 짝 바뀜을 잡는다 (개수 검사만으로는 통과)", bool(rs["ps4_partner_changed"]) and not rs["ps4_broken"], rs["flags"])
+    for name, kw in (("원자 하나 빠짐", {"drop": True}), ("단위 bohr", {"unit": "bohr"})):
+        try:
+            relax_check(t, fin(base, **kw)); ok = False
+        except SlabError:
+            ok = True
+        ck(f"⛔음성: {name} → 멈춘다 (조용히 읽지 않는다)", ok)
+
+
 def _selftest_collect(ck):
     """합성 pw.out 로 집계 식을 검산 (양성 + 음성)."""
     import tempfile
@@ -905,6 +1064,7 @@ def _selftest():
     ck("QE relax 입력은 vdw_corr='none' (PBE)", "vdw_corr = 'none'" in txr and "grimme" not in txr)
     ck("QE 입력 원자 수 일치", f"nat = {len(slab)}" in txt)
     _selftest_collect(ck)
+    _selftest_relax_check(ck)
     print(f"{'✅' if n_bad == 0 else '⛔'} se_sym_slab selftest {n_ok}/{n_ok + n_bad} 통과")
     return 0 if n_bad == 0 else 1
 
@@ -924,9 +1084,15 @@ def main():
     ap.add_argument("--kbulk", default="4 4 4")
     ap.add_argument("--collect", metavar="RUN", help="실행 폴더의 pw.out 들 → W (J/m²) · <RUN>/sese_result.json")
     ap.add_argument("--qe_in", help="--collect 가 대조할 입력 폴더 (기본 db/inputs/wad_sese_control_2026_09_23)")
+    ap.add_argument("--relax_check", nargs=2, metavar=("PW_IN", "FINAL"),
+                    help="이완 전 pw.in ↔ 최종 좌표(pw.out 또는 붙여넣은 Begin/End final coordinates) — PS₄ · 짝 · 진공 · 층별 변위 (판정 아님)")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
+    if a.relax_check:
+        r = relax_check(open(a.relax_check[0], encoding="utf-8").read(), open(a.relax_check[1], encoding="utf-8", errors="ignore").read())
+        print(json.dumps(r, ensure_ascii=False, indent=1))
+        return 0 if not r["flags"] else 2
     if a.collect:
         o = collect(a.collect, a.qe_in)
         with open(os.path.join(a.collect, "sese_result.json"), "w", encoding="utf-8") as f:

@@ -1,0 +1,23 @@
+{
+ "schema": "qe_input_set/derived",
+ "date": "2026-09-25",
+ "무엇": "SE|SE 경보 v2 후속 점검 B — 벌크 52 원자를 **슬랩 이완과 같은 설정**(PBE · D3 없음 · 원자만 이완 · 셀 고정 · forc 1e-3 · etot 1e-5 · nstep 200 · k 3×3×3 · 52/520 Ry · 같은 PP)으로 이완",
+ "왜": "이완 W_cleave 는 이완 슬랩에서 **미이완 벌크 SCF** 를 뺐다. 슬랩 속이 벌크 기준보다 편한 배열로 풀리면 W 가 낮게 나온다 (원인 후보 ②). 같은 설정의 이완 벌크를 기준으로 다시 빼 본다.",
+ "유도": {
+  "원본": "db/inputs/wad_sese_control_4L_2026_09_24/01_bulk_scf/pw.in",
+  "원본_sha256": "6c0432e684608146d47b4664c406666baad2e7e651b83d45ae0eecbddf76ff43",
+  "바꾼_것": [
+   "calculation scf → relax",
+   "prefix 01_bulk_scf → 04_bulk_relax_pbe",
+   "&CONTROL 에 etot_conv_thr 1.0d-5 · forc_conv_thr 1.0d-3 · nstep 200 (슬랩 이완 입력과 같다)",
+   "vdw_corr grimme-d3 (+ dftd3_version · dftd3_threebody) → none (슬랩 이완은 PBE 만)",
+   "&IONS ion_dynamics bfgs 추가"
+  ],
+  "안_바꾼_것": "셀 · 원자 좌표(출발) · k 3×3×3 · ecut · PP · smearing · conv_thr · mixing_beta · electron_maxstep"
+ },
+ "pw_in_sha256": "d26894d6c3fa4e57e2192f50bb102177197939eb2506c08b1f6510f2a941ef98",
+ "⭐_내장_대조": "이완의 **첫 SCF 에너지**는 01_bulk_scf 의 E_pbe (= E_tot − E_d3) **−1022.94625093 Ry** 와 같아야 한다 (D3 는 비자기일관 덧셈이라 PBE 부분이 같다). |차| > 1e-5 Ry 면 설정이 갈린 것 — 이완 결과를 쓰지 않는다.",
+ "⭐_판정_결과_전": "ΔW = n · (E_bulk,SCF − E_bulk,이완) · Ry/(2A) , n = 4 · A = 101.1049 Å² → 1 Ry = 1.07802 J/m² 이므로 ΔW = 4.312 × ΔE[Ry] J/m². ΔW > 0.05 J/m² (ΔE > 0.0116 Ry = 0.158 eV/셀) 이면 원인 후보 ② 가 W 를 그만큼 설명한다 — 결과 기록 wad_sese_4L_result_2026_09_25.json 의 점검 제안 B 문턱.",
+ "⛔": "경보 v2 판정(원래 W_cleave 에 건 것)을 다시 내리지 않는다 — 이 값은 원인 후보를 재는 **진단**이다.",
+ "기계": "V100 (GPU · 52 원자 SCF 104 s · 10.4 GB 실측)"
+}
