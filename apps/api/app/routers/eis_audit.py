@@ -66,6 +66,7 @@ from ..schemas import (
 from .eis import (
     MIN_SCAN_SWEEPS,
     _best_fit,
+    _cell_config,
     _FitStub,
     _geometry,
     _is_symmetric,
@@ -221,9 +222,17 @@ def _audit_parts(session: Session, record: SpectrumRecord,
     spectrum, found = _points(record, originals)
     tagged: list[tuple[Finding, str]] = [(one, RECORD) for one in found]
     thickness_cm, area = _geometry(session, record)
+    config = _cell_config(record)
+    if config and not record.cell_config:
+        # 읽은 구성을 기록인 것처럼 말하지 않는다 (ADR 0047 결정 4).
+        tagged.append((Finding(
+            NOTE, "config_from_purpose",
+            f"셀 구성이 비어 있어 목적({record.purpose})대로 대칭셀로 읽었습니다 — "
+            f"아크 이름·σ·이 검수가 대칭셀 기준입니다. 대칭셀이 아니면 셀 구성을 "
+            f"적어 주세요"), RECORD))
     tagged += [(one, RECORD) for one in audit_record(
         name=record.name or record.original_name, kind=record.kind,
-        config=record.cell_config,
+        config=config,
         thickness_um=thickness_cm * 1e4 if thickness_cm else None, area_cm2=area,
         n_points=len(spectrum) if spectrum is not None else record.n_points,
         file_name=record.original_name if record.original_name != record.name
@@ -231,7 +240,7 @@ def _audit_parts(session: Session, record: SpectrumRecord,
 
     out = AuditSpectrumOut(
         id=record.id or 0, name=record.name or record.original_name,
-        kind=record.kind, cell_config=record.cell_config, purpose=record.purpose,
+        kind=record.kind, cell_config=config, purpose=record.purpose,
         sweep_index=record.sweep_index, sweep_count=record.sweep_count,
         sha256=record.sha256,
         n_points=len(spectrum) if spectrum is not None else record.n_points,
@@ -332,9 +341,9 @@ def audit_of_fit(session: Session, record: SpectrumRecord, spectrum: Spectrum | 
     if record.kind == SOLID and spectrum is not None:
         verdict = blocking_verdict(spectrum.frequency_hz, spectrum.z_re, spectrum.z_im)
         conductivity = ionic_conductivity(stub, thickness_cm=thickness_cm,
-                                          area_cm2=area, config=record.cell_config,
+                                          area_cm2=area, config=_cell_config(record),
                                           blocking=verdict)
-    audit = audit_fit(stub, spectrum, kind=record.kind, config=record.cell_config,
+    audit = audit_fit(stub, spectrum, kind=record.kind, config=_cell_config(record),
                       thickness_cm=thickness_cm, area_cm2=area,
                       band=(fit.frequency_low_hz, fit.frequency_high_hz),
                       conductivity=conductivity, alternatives=_offered(record),
@@ -345,7 +354,7 @@ def audit_of_fit(session: Session, record: SpectrumRecord, spectrum: Spectrum | 
 def _offered(record: SpectrumRecord) -> list[str]:
     """The circuits this kind of cell is offered — the audit recommends from these."""
     try:
-        return [one["circuit"] for one in presets_for(record.kind, record.cell_config)]
+        return [one["circuit"] for one in presets_for(record.kind, _cell_config(record))]
     except KeyError:
         return []
 

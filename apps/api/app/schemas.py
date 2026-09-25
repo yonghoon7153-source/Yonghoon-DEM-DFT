@@ -790,6 +790,9 @@ class SpectrumOut(BaseModel):
     #: 없는지를 상세를 하나씩 열어 봐야 알 수 있으면, 그 화면은 면적이 없는
     #: 것을 조용히 섞게 된다 (§0.4).  없으면 `None` 이다.
     area_cm2_effective: float | None = None
+    #: 셀 구성으로 **읽는** 것 (ADR 0047 결정 4) — 적힌 것, 비었으면 목적이
+    #: 이온전도도 스윕인 전고체는 ``sym``.  기록(`cell_config`)은 그대로다.
+    cell_config_effective: str = ""
 
 
 class SpectrumFitOut(BaseModel):

@@ -120,6 +120,38 @@ def test_a_real_blocking_cell_fitted_right_has_no_problem(client):
     assert not [f for f in item["findings"] if f["code"].startswith("kk_")]
 
 
+def test_a_conductivity_sweep_without_a_cell_configuration_is_read_as_symmetric(client):
+    """실측 B18 아홉 — 셀 구성이 비어 "셀 구성이 비어 있습니다 — … 전도도도 안
+    나옵니다" (확인) 가 붙었는데, 대칭셀 파트는 목적(이온전도도)으로 대칭셀로 보고
+    Ea 를 냈다.  검수·화면·맞춤이 같은 것을 읽는다 (ADR 0047).  기록은 안 고친다."""
+    out = upload(client, mpr(q_block=1e-6, rs=2.0, r1=1e4, q1=6.3e-11, n1=0.95,
+                             r2=2e4, q2=1.3e-8, n2=0.85),
+                 "B18_activationE_C04.mpr", cell_config="", purpose="이온전도도")
+    client.patch(f"/api/eis/spectra/{out['id']}",
+                 json={"thickness_um": 700.0, "diameter_mm": 10.0})
+    fitted = fit(client, out["id"], BLOCKING_TAIL)
+    item = entry(audit(client), out["id"])
+    assert item["cell_config"] == "sym"
+    assert "config_missing" not in codes(item)
+    (note,) = [f for f in item["findings"] if f["code"] == "config_from_purpose"]
+    assert note["severity"] == "note" and "목적(이온전도도)" in note["message"]
+    record = client.get(f"/api/eis/spectra/{out['id']}").json()
+    assert (record["cell_config"], record["cell_config_effective"]) == ("", "sym")
+    assert fitted["conductivity"]["total_s_cm"] is not None
+    assert [arc["label"] for arc in fitted["arcs"][1:]] == ["벌크 저항", "입계 저항"]
+
+    # 적으면 그것이 이긴다.
+    client.patch(f"/api/eis/spectra/{out['id']}", json={"cell_config": "full"})
+    item = entry(audit(client), out["id"])
+    assert item["cell_config"] == "full" and "config_from_purpose" not in codes(item)
+
+    # 액체는 읽지 않는다 — 액체 대칭셀의 이름은 전도도 셀의 아크가 아니다.
+    liquid = upload(client, mpr(**USER), "liquid_conductivity.mpr", kind="liquid",
+                    cell_config="", purpose="이온전도도")
+    assert client.get(f"/api/eis/spectra/{liquid['id']}").json()[
+        "cell_config_effective"] == ""
+
+
 def test_a_current_range_switch_is_named_on_the_kk_line(client):
     """EC-Lab 의 ``I Range`` 가 스윕 중에 바뀐 자리에서 이득이 4 % 뛴 펠릿 —
     검수가 그 주파수를 적고, 옆의 KK 어긋남을 셀이 아니라 기기 쪽으로 읽는다

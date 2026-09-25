@@ -616,6 +616,9 @@ export interface Spectrum {
   kind: EisKind
   /** 빈 문자열은 "아직 안 정함" 이다. */
   cell_config: CellConfig | ''
+  /** 셀 구성으로 **읽는** 것 (ADR 0047) — 비었으면 목적이 이온전도도 스윕인
+   *  전고체는 `sym`.  기록(`cell_config`)은 그대로다. */
+  cell_config_effective?: CellConfig | ''
   original_name: string
   sha256: string
   size_bytes: number

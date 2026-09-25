@@ -65,9 +65,12 @@ export function SpectrumDetail() {
   // 아크의 이름이 이미 이 축에서 갈리므로 회로도 같이 갈린다 — 리튬 대극
   // 하프셀은 대극 계면이 아크를 하나 더 얹고, 대칭셀은 아크가 두 배다.
   const combinations = circuits.data?.combinations ?? []
+  // 셀 구성은 **읽는** 것으로 — 비었어도 목적이 이온전도도 스윕이면 대칭셀이다
+  // (ADR 0047).  서버의 기본 회로·자동 맞춤과 같은 보기를 보인다.
+  const readConfig = record?.cell_config_effective || record?.cell_config
   const presets: CircuitPreset[] =
     combinations.find(
-      (entry) => entry.kind === record?.kind && entry.cell_config === record?.cell_config,
+      (entry) => entry.kind === record?.kind && entry.cell_config === readConfig,
     )?.presets
     ?? kinds.find((entry) => entry.kind === record?.kind)?.presets
     ?? []
@@ -1065,6 +1068,15 @@ function CellFields({
           )}
         </select>
       </Field>
+      {/* 비어 있어도 앱은 목적으로 읽는다 (ADR 0047) — 그렇다고 말한다.  기록은
+          고치지 않으니, 그 읽기가 틀렸으면 위에서 고르면 된다. */}
+      {!record.cell_config && record.cell_config_effective ? (
+        <div className="tiny faint">
+          구성이 비어 있어 목적({record.purpose})대로{' '}
+          {CONFIG_LABEL[record.cell_config_effective]}로 읽습니다 — 아크 이름·σ·검수가 그
+          기준입니다. 아니면 위에서 고르세요.
+        </div>
+      ) : null}
 
       {/* 무엇을 보려고 잰 측정인가.  자유 입력이되 흔한 것은 한 번에 —
           랩이 새 목적을 계속 만들어서 목록을 고정하면 그때마다 코드를
@@ -1234,7 +1246,8 @@ function CellFields({
       </Field>
 
       <div className="tiny faint">
-        {record.kind === 'solid' && record.cell_config !== 'sym'
+        {record.kind === 'solid'
+        && (record.cell_config_effective || record.cell_config) !== 'sym'
           ? '전도도는 이온 블로킹 대칭셀에서만 냅니다 — 풀셀의 저주파 아크는 계면입니다.'
           : '전도도는 조회할 때 계산합니다 — 두께·면적을 고치면 바로 따라옵니다.'}
       </div>

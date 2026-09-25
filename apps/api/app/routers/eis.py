@@ -341,6 +341,7 @@ def _out(session: Session, record: SpectrumRecord, *,
         duplicate=duplicate,
         spread_to_sweeps=spread_to,
         area_cm2_effective=_geometry(session, record)[1],
+        cell_config_effective=_cell_config(record),
     )
 
 
@@ -899,7 +900,7 @@ def _scan_point(session: Session, record: SpectrumRecord) -> ScanPointOut:
             *_stub_parameters(fit.circuit, parameters)])
         thickness_cm, area = _geometry(session, record)
         point.labels = {m.parameter: m.label
-                        for m in label_arcs(stub, record.kind, record.cell_config,
+                        for m in label_arcs(stub, record.kind, _cell_config(record),
                                             thickness_cm=thickness_cm, area_cm2=area)}
     return point
 
@@ -1191,6 +1192,23 @@ CONDUCTIVITY_PURPOSE = "이온전도도"
 
 def _is_symmetric(record: SpectrumRecord) -> bool:
     return CONDUCTIVITY_PURPOSE in (record.purpose or "") or record.cell_config == SYMMETRIC
+
+
+def _cell_config(record: SpectrumRecord) -> str:
+    """셀 구성으로 **읽을** 것 — 적힌 것, 없으면 목적이 이온전도도 스윕인 전고체는
+    대칭셀 (ADR 0047 결정 4).
+
+    대칭셀 파트는 목적으로 이미 그렇게 본다 (`_is_symmetric`) — 스캔 칸의 Ea 가
+    나오는데 스펙트럼 검수만 "셀 구성이 비어 있습니다 — 전도도도 안 나옵니다" 였다
+    (실측 B18 아홉).  이름·σ·검수가 이것 하나를 쓴다.  **기록은 고치지 않는다**:
+    사람이 적지 않은 구성을 지어내지 않고, 적으면 그것이 이긴다.  액체는 하지
+    않는다 — 액체 대칭셀의 이름(필름·계면)은 전도도 셀의 아크가 아니다.
+    """
+    if record.cell_config:
+        return record.cell_config
+    if record.kind == SOLID and CONDUCTIVITY_PURPOSE in (record.purpose or ""):
+        return SYMMETRIC
+    return ""
 
 
 @router.get("/sym/dashboard", response_model=SymDashboardOut)
@@ -2007,7 +2025,7 @@ def _fit_out(session: Session, record: SpectrumRecord,
         stub = _FitStub(circuit=fit.circuit, parameters=[
             *_stub_parameters(fit.circuit, parameters)])
         # 두께·면적이 있으면 이름이 커패시턴스를 따른다 (ADR 0047) — 검수와 같은 이름.
-        for meaning in label_arcs(stub, record.kind, record.cell_config,
+        for meaning in label_arcs(stub, record.kind, _cell_config(record),
                                   thickness_cm=thickness_cm, area_cm2=area):
             arcs.append({"parameter": meaning.parameter, "label": meaning.label,
                          "note": meaning.note, "value_ohm": meaning.value_ohm,
@@ -2021,7 +2039,7 @@ def _fit_out(session: Session, record: SpectrumRecord,
                                             points.z_im)
             conductivity = ionic_conductivity(stub, thickness_cm=thickness_cm,
                                               area_cm2=area,
-                                              config=record.cell_config,
+                                              config=_cell_config(record),
                                               blocking=blocking)
         total = total_resistance(stub)
         if total is not None:
@@ -2180,7 +2198,7 @@ def _run_fit(session: Session, spectrum_id: int, *, circuit: str | None,
                          frequency_high_hz=frequency_high_hz,
                          restarts=restarts)
 
-    text = circuit or presets_for(record.kind, record.cell_config)[0]["circuit"]
+    text = circuit or presets_for(record.kind, _cell_config(record))[0]["circuit"]
     window = None
     if frequency_low_hz is not None or frequency_high_hz is not None:
         window = (frequency_low_hz or 0.0,
@@ -2263,7 +2281,7 @@ def _run_auto(session: Session, record: SpectrumRecord, spectrum, *,
     converge the first one is returned, so the reply still says why.
     """
     outs: list[SpectrumFitOut] = []
-    for preset in presets_for(record.kind, record.cell_config):
+    for preset in presets_for(record.kind, _cell_config(record)):
         outs.append(_run_fit(session, record.id or 0, circuit=preset["circuit"],
                              drop_inductive=drop_inductive,
                              frequency_low_hz=frequency_low_hz,
