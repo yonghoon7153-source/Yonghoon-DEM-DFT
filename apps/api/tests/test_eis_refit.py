@@ -577,3 +577,70 @@ def test_the_text_says_what_the_cable_refit_did(client):
     assert "문제 0 → 0" not in text
     assert "    풀린 확인: 배선 인덕턴스 없음\n" in text
     assert "풀린 문제:" not in text
+
+
+#: 식은 황화물 펠릿 — 전해질 아크가 잰 주파수 안으로 내려왔다 (실측 B15 #9 의 쌍둥이,
+#: 꼭지 300 kHz).  전해질 저항은 90 + 46 = 136 Ω 이다.
+COLD = ("L1-R0-p(R1,CPE1)-CPE2",
+        {"L1": 2e-6, "R0": 90.0, "R1": 46.0,
+         "CPE1_Q": (1 / (2 * np.pi * 3e5)) ** 0.9 / 46.0, "CPE1_n": 0.9,
+         "CPE2_Q": 6.3e-7, "CPE2_n": 0.87})
+
+
+def test_a_cold_pellet_is_refitted_with_the_arc_the_audit_offers(client):
+    """보완 10: 아크 없는 `L1-R0-CPE1` 은 L1 을 0 으로 보내고 R0 를 교점 위에 둔다
+    (`arc_above_window`, 확인).  `bml refit` 이 아크 하나를 더한 회로로 맞추고, σ 는
+    R0 + R1 — 참값 136 Ω 이다.  실측 10:24 검수의 일곱 (#77 #95 #103 #113 #114 #122
+    #123)."""
+    spectrum_id, _ = pellet(client, "B15_cold.mpr", COLD, "L1-R0-CPE1")
+    before, _ = audit_codes(client, spectrum_id)
+    arc = next(f for f in before["findings"] if f["code"] == "arc_above_window")
+    assert arc["severity"] == "check" and arc["circuits"] == ["L1-R0-p(R1,CPE1)-CPE2"]
+
+    done = client.post("/api/eis/audit/refit").json()
+    assert (done["targets"], done["arcs"], done["wiring"], done["changed"]) == (1, 1, 0, 1)
+    (one,) = done["spectra"]
+    assert one["new_circuit"] == "L1-R0-p(R1,CPE1)-CPE2"
+    assert [p["code"] for p in one["checks"]] == ["arc_above_window"]
+    assert one["new_checks"] == []
+    chosen = next(t for t in one["tries"] if t["accepted"])
+    assert chosen["start"] == "arc"
+    assert one["new_sigma_ohm"] == pytest.approx(136.0, rel=0.002)
+    assert one["old_sigma_ohm"] < one["new_sigma_ohm"]
+    assert one["new_misfit_mean"] < one["old_misfit_mean"]
+    after, codes = audit_codes(client, spectrum_id)
+    assert after["circuit"] == "L1-R0-p(R1,CPE1)-CPE2" and "arc_above_window" not in codes
+    assert client.post("/api/eis/audit/refit").json()["targets"] == 0
+
+
+def test_the_text_says_what_the_arc_refit_did(client):
+    """σ 가 바뀌는 다시 맞추기다 — 머리에 그렇게 적고, 줄마다 σ 저항이 어떻게 됐는지
+    적는다.  더한 아크는 "교점에서" 시작했다."""
+    pellet(client, "B15_cold.mpr", COLD, "L1-R0-CPE1")
+    text = client.post("/api/eis/audit/refit", params={"format": "text"}).text
+    assert ("구간 위 아크가 걸친 1개는 아크 하나를 더한 회로로 맞춥니다 — σ 저항이 R0 에서 "
+            "R0 + R1 로 바뀝니다") in text
+    assert "바꿈  L1-R0-CPE1 → L1-R0-p(R1,CPE1)-CPE2 · 오차 평균 " in text
+    assert "문제 0 → 0" not in text
+    assert " (교점에서) · χ² " in text
+    assert "    풀린 확인: 구간 위 아크\n" in text
+    assert "· σ 저항 " in text
+
+
+def test_an_arc_refit_whose_sigma_falls_short_of_the_crossing_is_kept(client, monkeypatch):
+    """σ 저항이 교점에 못 미치거나 σ 를 못 내면 받지 않는다 — 판정의 까닭(그 아크가
+    전해질)을 새 맞춤에서 확인하지 못했다."""
+    from app.routers import eis_refit
+
+    spectrum_id, _ = pellet(client, "B15_cold.mpr", COLD, "L1-R0-CPE1")
+    monkeypatch.setattr(eis_refit, "electrolyte_short",
+                        lambda crossing, sigma, missing=(): "σ 저항이 교점보다 작습니다")
+    body = client.post("/api/eis/audit/refit").json()
+    assert (body["targets"], body["changed"], body["kept"]) == (1, 0, 1)
+    (one,) = body["spectra"]
+    assert one["new_circuit"] == ""
+    arc = next(t for t in one["tries"] if t["start"] == "arc")
+    assert arc["converged"] and not arc["accepted"]
+    assert arc["reason"] == "σ 저항이 교점보다 작습니다"
+    assert arc["sigma_ohm"] == pytest.approx(136.0, rel=0.002)
+    assert len(fits_of(client, spectrum_id)) == 1

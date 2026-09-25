@@ -405,6 +405,12 @@ class FitAudit:
     #: `bml refit` asks whether the fit with ``L1-`` in front made it go away
     #: (ADR 0045 보완 8).
     top_misfit: tuple[float, float] | None = None
+    #: ``(직렬 저항, 실수축 교점)`` in Ω, when a circuit that ends blocking has its
+    #: series resistance above where the sweep crosses the axis by more than
+    #: `ARC_ABOVE_SHARE` -- the symptom ``arc_above_window`` names.  Kept whatever
+    #: the inductor does: `bml refit` asks whether the fit with one more arc
+    #: brought the series resistance down to the crossing (ADR 0045 보완 10).
+    above_crossing: tuple[float, float] | None = None
 
 
 def _status(parameter) -> str:
@@ -523,7 +529,7 @@ ARC_ABOVE_SHARE = 0.05
 
 def _inductor_at_zero(name: str, *, inductive_top: int, series: str | None,
                       series_ohm: float | None, crossing: float | None,
-                      blocking_end: bool, suggestion: str = "") -> Finding:
+                      blocking_end: bool, offered: tuple[str, ...] = ()) -> Finding:
     """What an inductor on its lower bound says -- it depends on the sweep.
 
     No point above the axis at the top of the sweep: the file shows no cable
@@ -544,6 +550,9 @@ def _inductor_at_zero(name: str, *, inductive_top: int, series: str | None,
     L1 = 1e-12, R0 118 Ω, 교점 96 Ω — 참값 136 Ω 은 아크 하나를 더한 회로의
     R0 + R1 (135.8 Ω) 만 맞혔다.  아크를 빼면 같은 회로가 L 1.9 µH, R0 136 Ω 을
     그대로 찾는다.
+
+    ``offered`` is the circuit with that arc added; the finding carries it so
+    `bml refit` refits the cold pellets with it (ADR 0045 보완 10).
     """
     if inductive_top <= 0:
         return Finding(NOTE, "no_inductance",
@@ -560,8 +569,9 @@ def _inductor_at_zero(name: str, *, inductive_top: int, series: str | None,
             f"실수부를 그리지 못하니, 맞춘 구간 위에 회로에 없는 아크가 걸쳐 있습니다 "
             f"(펠릿이 식으면 전해질 아크가 이렇게 잰 주파수 안으로 내려옵니다). 교점은 "
             f"그 아크 도중이라 전해질 저항을 작게 읽고, {series} 도 모자랄 수 있습니다"
-            + (f" — 아크를 하나 더한 {suggestion} 로 맞추면 그 아크까지 전해질 저항에 "
-               f"들어갑니다" if suggestion else ""))
+            + (f" — 아크를 하나 더한 {_quote(offered)} 로 맞추면 그 아크까지 전해질 "
+               f"저항에 들어갑니다" if offered else ""),
+            circuits=offered)
     return Finding(NOTE, "no_inductance",
                    f"{name} 이 0 에 붙었습니다 — 꼭대기 {inductive_top}점이 유도성이라 "
                    f"배선 인덕턴스는 있지만, 그 점들을 뺀 맞춘 구간에서는 드러나지 "
@@ -653,11 +663,6 @@ def _offer(candidates: Iterable[str], limit: int = 3) -> tuple[str, ...]:
 def _quote(circuits: Iterable[str]) -> str:
     """```a` 또는 `b```."""
     return " 또는 ".join(f"`{c}`" for c in circuits)
-
-
-def _suggest(candidates: Iterable[str], limit: int = 3) -> str:
-    """```a` 또는 `b``` -- at most ``limit``, first come first."""
-    return _quote(_offer(candidates, limit))
 
 
 def _intercept_taker(circuit: str, values: dict[str, float], ohmic: str,
@@ -755,6 +760,12 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
         crossing = real_axis_crossing(spectrum.frequency_hz, spectrum.z_re,
                                       spectrum.z_im)
         inductive_top = int(np.count_nonzero(inductive_mask(spectrum)))
+    # 회로는 직렬 저항보다 작은 실수부를 못 그린다 — 교점이 그 아래면 회로에 없는
+    # 아크가 구간 위에 있다 (`_inductor_at_zero`).  판정은 L 이 0 일 때만 뜨지만
+    # 증상은 이것이다.
+    if out.end == "blocking" and r0 and crossing \
+            and r0 > crossing * (1.0 + ARC_ABOVE_SHARE):
+        out.above_crossing = (float(r0), float(crossing))
 
     # -- 아크와 그 이름 ---------------------------------------------------------
     arcs = arc_capacitances(model, values, thickness_cm=thickness_cm,
@@ -976,9 +987,8 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
                 series=ohmic if steady else None,
                 series_ohm=values[ohmic] if steady else None, crossing=crossing,
                 blocking_end=out.end == "blocking",
-                suggestion=_suggest(_compatible(alternatives, {"blocking"},
-                                                fit.circuit, arcs=len(arcs) + 1,
-                                                exact=True), limit=1)))
+                offered=_offer(_compatible(alternatives, {"blocking"}, fit.circuit,
+                                           arcs=len(arcs) + 1, exact=True), limit=1)))
             continue
         # 전송선의 레일 하나가 0 이면 레일 하나짜리 de Levie 선이다 — 틀린 것이
         # 아니다.  두 레일은 맞바꿔도 같은 곡선이라 (`transmission_line`) 어느 쪽이

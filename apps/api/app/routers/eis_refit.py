@@ -17,6 +17,10 @@
 배선 인덕턴스가 빠진 스펙트럼(확인)은 쓰던 회로 앞에 ``L1-`` 를 붙여 맞춘다
 (보완 8).  고주파 끝이 풀리고 평균이 나빠지지 않을 때만 받는다.
 
+차가운 펠릿의 아크가 구간 위에 걸친 스펙트럼(확인)은 아크 하나를 더한 회로로
+맞춘다 (보완 10).  더한 아크는 판정이 아는 수(교점, 옛 R0)에서 시작한다.  직렬
+저항이 교점까지 내려오고, σ 저항이 교점 이상이고, 평균이 나빠지지 않을 때만 받는다.
+
 글(``format=text``)은 **흘려 보낸다.**  실측 82 건이면 십수 분이 걸릴 수 있는데,
 끝에 한꺼번에 찍으면 그동안 터미널이 말이 없다.  스펙트럼 하나가 끝날 때마다 한
 줄씩 나가고, 끝에 정리가 붙는다.  도중에 끊기면 거기까지 저장된 것이 남는다 —
@@ -41,12 +45,16 @@ from sqlmodel import Session, select
 from wrdkit.eis import Spectrum
 from wrdkit.eis.audit import PROBLEM, FitAudit, audit_spectrum
 from wrdkit.eis.refit import (
+    ARC_CODES,
+    REFIT_CHECKS,
     WIRING_CODES,
     Candidate,
     accept_refit,
+    electrolyte_short,
     moved_number,
     refit_candidates,
     remaining_problems,
+    seed_arc,
     seed_values,
 )
 
@@ -79,8 +87,10 @@ _PROBLEM_WORDS = {
     "label_contradicts_capacitance": "이름과 커패시턴스가 어긋남",
     "blocking_element_on_open_cell": "안 막는 셀에 막는 소자",
     "inductance_missing": "배선 인덕턴스 없음",
+    "arc_above_window": "구간 위 아크",
 }
-_START_WORDS = {"seeded": "쓰던 값에서", "default": "기본 시작점에서"}
+#: ``arc`` — 더한 아크는 교점과 옛 R0 에서, 나머지는 쓰던 값에서 (보완 10).
+_START_WORDS = {"seeded": "쓰던 값에서", "arc": "교점에서", "default": "기본 시작점에서"}
 
 
 def _now() -> datetime:
@@ -123,6 +133,7 @@ class _Started:
     unoffered: int = 0
     windows: int = 0
     wiring: int = 0
+    arcs: int = 0
 
 
 @dataclass
@@ -164,7 +175,8 @@ def _announce() -> None:
 
 def _targets(session: Session) -> tuple[int, list[_Target], list[RefitSkipOut], int]:
     """쓰는 맞춤을 전부 검수해, 회로를 실은 문제 판정이 있거나 저주파 끝의 하한이
-    권해졌거나 (보완 4) 배선 인덕턴스가 빠진 것 (보완 8) 만 고른다.  점의 검수에
+    권해졌거나 (보완 4) 배선 인덕턴스가 빠졌거나 (보완 8) 구간 위에 아크가 걸친 것
+    (보완 10) 만 고른다.  점의 검수에
     쓰는 맞춤의 하한을 넣는다 — 이미 그 하한부터 맞춘 스펙트럼은 하한을 싣지 않아
     대상이 아니다.
 
@@ -211,6 +223,10 @@ def _refit_one(session: Session, target: _Target, origin: str,
 
     판정이 하한을 권했으면 (보완 4) 후보마다 그 하한부터 쓰는 맞춤의 상한까지
     맞춘다.  하한 아래 점은 셀이 변하는 동안 잰 것이다.
+
+    구간 위 아크 판정이 권한 회로는 (보완 10) 더한 아크를 교점과 옛 R0 에서 시작하고
+    (`seed_arc`), 받아들여도 σ 저항이 교점에 못 미치면 받지 않는다
+    (`electrolyte_short`).
     """
     record, best, spectrum = target.record, target.fit, target.spectrum
     stored = json.loads(best.parameters_json) if best.parameters_json else []
@@ -235,13 +251,19 @@ def _refit_one(session: Session, target: _Target, origin: str,
         old_problems=[_finding_out(one) for one in target.audit.findings
                       if one.severity == PROBLEM],
         checks=[_finding_out(one) for one in target.audit.findings
-                if one.code in WIRING_CODES and one.circuits],
+                if one.code in REFIT_CHECKS and one.circuits],
         old_low_hz=old_low, low_hz=target.low_hz)
 
     chosen: tuple[int, SpectrumFit, FitAudit, float | None, list[dict]] | None = None
     for candidate in target.candidates:
-        seed = seed_values(best.circuit, values, candidate.circuit, skip=railed)
-        starts = ([("seeded", seed)] if seed else []) + [("default", None)]
+        arc = _triggered([candidate], ARC_CODES) and target.audit.above_crossing is not None
+        if arc:
+            series, crossing = target.audit.above_crossing
+            seed = seed_arc(best.circuit, values, candidate.circuit, skip=railed,
+                            series_ohm=series, crossing_ohm=crossing, top_hz=top)
+        else:
+            seed = seed_values(best.circuit, values, candidate.circuit, skip=railed)
+        starts = ([("arc" if arc else "seeded", seed)] if seed else []) + [("default", None)]
         # 창과 유도성 점 빼기는 쓰는 맞춤의 것 — `bml reparse` 와 같다.  하한을
         # 권했으면 그 하한부터.
         span = window if candidate.low_hz is None else (candidate.low_hz, top)
@@ -269,8 +291,13 @@ def _refit_one(session: Session, target: _Target, origin: str,
                                    candidate.triggers, converged=True,
                                    old_misfit=old_misfit, new_misfit=misfit,
                                    new_top_misfit=audit.top_misfit,
-                                   old_top_misfit=target.audit.top_misfit)
+                                   old_top_misfit=target.audit.top_misfit,
+                                   new_above_crossing=audit.above_crossing)
             accepted, reason = verdict.accepted, verdict.reason
+            if accepted and arc:
+                reason = electrolyte_short(crossing, sigma,
+                                           (conductivity or {}).get("missing") or ())
+                accepted = not reason
             if accepted:
                 reason = moved_number(old_sigma, sigma, old_misfit, misfit)
                 accepted = not reason
@@ -297,7 +324,7 @@ def _refit_one(session: Session, target: _Target, origin: str,
     out.new_problems = [_finding_out(one) for one in audit.findings
                         if one.severity == PROBLEM]
     out.new_checks = [_finding_out(one) for one in audit.findings
-                      if one.code in WIRING_CODES]
+                      if one.code in REFIT_CHECKS]
     out.new_low_hz = row.frequency_low_hz
     if out.new_low_hz is not None and out.new_low_hz > old_low:
         frequency = np.asarray(spectrum.frequency_hz, dtype=float)
@@ -347,9 +374,9 @@ def _value_changes(old: list[dict], new: list[dict]) -> list[RefitValueOut]:
     return out
 
 
-def _wired(candidates: Iterable[Candidate]) -> bool:
-    """배선 판정이 권한 회로가 후보에 있다 (보완 8)."""
-    return any(code in WIRING_CODES for one in candidates for code in one.triggers)
+def _triggered(candidates: Iterable[Candidate], codes: tuple[str, ...]) -> bool:
+    """이 판정들(배선 L, 보완 8 · 구간 위 아크, 보완 10)이 권한 회로가 후보에 있다."""
+    return any(code in codes for one in candidates for code in one.triggers)
 
 
 def _run(dry_run: bool) -> Iterator[_Started | _Progress | EisRefitOut]:
@@ -359,9 +386,11 @@ def _run(dry_run: bool) -> Iterator[_Started | _Progress | EisRefitOut]:
     with Session(engine) as session:
         total, targets, skipped, unoffered = _targets(session)
         windows = sum(1 for target in targets if target.low_hz is not None)
-        wiring = sum(1 for target in targets if _wired(target.candidates))
+        wiring = sum(1 for target in targets
+                     if _triggered(target.candidates, WIRING_CODES))
+        arcs = sum(1 for target in targets if _triggered(target.candidates, ARC_CODES))
         yield _Started(origin, started, total, len(targets), list(skipped), unoffered,
-                       windows, wiring)
+                       windows, wiring, arcs)
         spectra: list[RefitSpectrumOut] = []
         for index, target in enumerate(targets, start=1):
             try:
@@ -382,7 +411,7 @@ def _run(dry_run: bool) -> Iterator[_Started | _Progress | EisRefitOut]:
             _announce()
         yield EisRefitOut(origin=origin, dry_run=dry_run, generated_at=started,
                           total=total, targets=len(targets), windows=windows,
-                          wiring=wiring, unoffered=unoffered, changed=changed,
+                          wiring=wiring, arcs=arcs, unoffered=unoffered, changed=changed,
                           kept=len(spectra) - changed, spectra=spectra, skipped=skipped)
 
 
@@ -520,7 +549,7 @@ def _resolved(one: RefitSpectrumOut) -> list[str]:
 
 
 def _eased(one: RefitSpectrumOut) -> list[str]:
-    """풀린 배선 판정의 코드 — 새 맞춤의 검수에 그 코드가 없다 (보완 8)."""
+    """풀린 확인의 코드 — 새 맞춤의 검수에 그 코드가 없다 (보완 8 · 10)."""
     left = {p.code for p in one.new_checks}
     return [code for code in dict.fromkeys(p.code for p in one.checks) if code not in left]
 
@@ -570,7 +599,8 @@ def _progress_line(event: _Progress) -> str:
             if one.old_problems or one.new_problems or not one.checks:
                 changes.append(f"문제 {len(one.old_problems)} → {len(one.new_problems)}")
             if one.checks:
-                # 배선 L 만 더했다 (보완 8) — 문제 수는 0 → 0 이라 그림을 적는다.
+                # 배선 L 이나 아크를 더했다 (보완 8 · 10) — 문제 수는 0 → 0 이라
+                # 그림을 적는다.  σ 저항이 어떻게 됐는지는 끝에 붙는다.
                 changes.append(f"오차 평균 {_percent(one.old_misfit_mean)} → "
                                f"{_percent(one.new_misfit_mean)}")
         return (f"{head} #{one.id}  {one.name}  바꿈  " + " · ".join(changes)
@@ -588,7 +618,7 @@ def _render(events: Iterable[_Started | _Progress | EisRefitOut]) -> Iterator[st
             lines = [f"EIS 다시 맞추기 — {when} · 묶음 {event.origin}",
                      f"맞춘 스펙트럼 {event.total}개 중 대상 {event.targets}개 — 회로를 "
                      f"권한 문제 판정이 있거나, 저주파 끝이 KK 를 어겨 하한이 권해졌거나, "
-                     f"배선 인덕턴스가 빠진 것"]
+                     f"배선 인덕턴스가 빠졌거나, 구간 위에 아크가 걸친 것"]
             if event.windows:
                 lines.append(f"하한이 권해진 {event.windows}개는 그 하한부터 맞춥니다 — 그 "
                              f"아래 점은 셀이 변하는 동안 잰 것입니다. 권한 회로가 없으면 "
@@ -596,6 +626,11 @@ def _render(events: Iterable[_Started | _Progress | EisRefitOut]) -> Iterator[st
             if event.wiring:
                 lines.append(f"배선 L 이 빠진 {event.wiring}개는 쓰던 회로 앞에 `L1-` 를 "
                              f"붙여 맞춥니다 — 아크는 그대로이고, 고주파 끝이 풀릴 때만 "
+                             f"바꿉니다")
+            if event.arcs:
+                lines.append(f"구간 위 아크가 걸친 {event.arcs}개는 아크 하나를 더한 회로로 "
+                             f"맞춥니다 — σ 저항이 R0 에서 R0 + R1 로 바뀝니다. 새 R0 가 "
+                             f"교점 아래이고, σ 저항이 교점 이상이며, 오차가 안 나빠질 때만 "
                              f"바꿉니다")
             if event.unoffered:
                 lines.append(f"맞춤 판정에 문제가 있지만 권할 회로가 없는 {event.unoffered}개는 "

@@ -8,6 +8,7 @@
 import math
 from dataclasses import dataclass
 
+import numpy as np
 import pytest
 import synthetic_eis as S
 
@@ -18,9 +19,11 @@ from wrdkit.eis.fit import fit_circuit
 from wrdkit.eis.refit import (
     Candidate,
     accept_refit,
+    electrolyte_short,
     moved_number,
     refit_candidates,
     remaining_problems,
+    seed_arc,
     seed_values,
 )
 from wrdkit.eis.spectrum import Spectrum
@@ -117,6 +120,17 @@ def test_a_missing_cable_inductance_is_refitted_though_it_is_a_check():
     ]
 
 
+def test_an_arc_above_the_window_is_refitted_though_it_is_a_check():
+    """보완 10: 차가운 펠릿의 구간 위 아크 판정(확인)도 회로를 부른다 — 판정이 까닭을
+    말하고, 받아들이는 조건이 새 맞춤에서 그 까닭을 확인한다 (실측 10:24 검수: 일곱)."""
+    arc = Finding(CHECK, "arc_above_window", "구간 위 아크",
+                  circuits=("L1-R0-p(R1,CPE1)-CPE2",))
+    assert refit_candidates([arc], circuit="L1-R0-CPE1") == [
+        Candidate("L1-R0-p(R1,CPE1)-CPE2", ("arc_above_window",))]
+    # 회로를 못 찾은 판정은 부를 것이 없다.
+    assert refit_candidates([Finding(CHECK, "arc_above_window", "구간 위 아크")]) == []
+
+
 # -- 어디서 시작할까 -------------------------------------------------------------
 
 OLD = "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3"
@@ -153,6 +167,32 @@ def test_a_value_on_its_bound_is_not_a_start():
     assert seeded["CPE2_Q"] == 2.68e-5
     assert seed_values("R0-p(R1", OLD_VALUES, "L1-R0-CPE1") == {}
     assert seed_values(OLD, {"R0": float("nan")}, "L1-R0-CPE1") == {}
+
+
+def test_the_added_arc_starts_where_the_audit_puts_it():
+    """보완 10: 더한 아크는 데이터가 못 보여 준다 — 꼭지가 구간 위라 −Z'' 에 봉우리가
+    없다.  그래서 판정이 아는 수에서 시작한다: 직렬 저항은 교점, 아크의 R 은 옛 직렬
+    저항 − 교점, 꼭지는 맞춘 구간의 꼭대기, n 0.85.  꼬리는 옛 꼬리에서 온다.
+    실측 B15 #9 (#114): R0 135.9 Ω, 교점 114.9 Ω."""
+    old = {"L1": 1e-12, "R0": 135.9, "CPE1_Q": 6.5e-7, "CPE1_n": 0.86}
+    seeded = seed_arc("L1-R0-CPE1", old, "L1-R0-p(R1,CPE1)-CPE2", skip=["L1"],
+                      series_ohm=135.9, crossing_ohm=114.9, top_hz=1.71e5)
+    assert seeded.pop("CPE1_Q") == pytest.approx(1 / (21.0 * (2 * np.pi * 1.71e5) ** 0.85))
+    assert seeded == pytest.approx({"R0": 114.9, "R1": 21.0, "CPE1_n": 0.85,
+                                    "CPE2_Q": 6.5e-7, "CPE2_n": 0.86})
+    # 아크가 있던 회로면 옛 아크는 한 자리 뒤로 간다 — 새 아크가 가장 빠르다.
+    two = seed_arc("L1-R0-p(R1,CPE1)-CPE2",
+                   {"L1": 2e-6, "R0": 90.0, "R1": 300.0, "CPE1_Q": 2e-6, "CPE1_n": 0.9,
+                    "CPE2_Q": 1e-5, "CPE2_n": 0.8},
+                   "L1-R0-p(R1,CPE1)-p(R2,CPE2)-CPE3",
+                   series_ohm=90.0, crossing_ohm=80.0, top_hz=1e5)
+    assert {name: two[name] for name in ("L1", "R0", "R1", "CPE1_n", "R2", "CPE2_Q",
+                                         "CPE2_n", "CPE3_Q", "CPE3_n")} == pytest.approx(
+        {"L1": 2e-6, "R0": 80.0, "R1": 10.0, "CPE1_n": 0.85, "R2": 300.0, "CPE2_Q": 2e-6,
+         "CPE2_n": 0.9, "CPE3_Q": 1e-5, "CPE3_n": 0.8})
+    # 아크가 하나 늘지 않았으면 이름으로 옮긴 그대로다.
+    assert seed_arc("L1-R0-CPE1", old, "L1-R0-CPE1", series_ohm=135.9, crossing_ohm=114.9,
+                    top_hz=1.71e5) == seed_values("L1-R0-CPE1", old, "L1-R0-CPE1")
 
 
 def test_the_fitter_starts_from_the_seed_and_fills_the_rest_from_the_data():
@@ -256,6 +296,36 @@ def test_a_wiring_refit_is_taken_only_when_the_top_end_is_drawn():
                         new_top_misfit=(0.12, 2.15e5)).accepted
 
 
+def test_an_arc_refit_is_taken_only_when_r0_comes_down_and_the_arc_is_electrolyte():
+    """보완 10: 판정은 L 이 0 일 때만 떠서 코드로는 풀린 것처럼 보일 수 있다.  그래서
+    증상 — 직렬 저항이 교점 위 — 이 사라졌는지, 아크 하나를 더했으니 평균이 나빠지지
+    않았는지 본다.  σ 저항이 교점 이상인지는 σ 를 아는 쪽이 본다 (`electrolyte_short`)."""
+    arc = Finding(CHECK, "arc_above_window", "구간 위 아크", circuits=("NEW",))
+    triggers = ("arc_above_window",)
+    assert accept_refit([arc], [], triggers, converged=True,
+                        old_misfit=0.024, new_misfit=0.004).accepted
+    still = accept_refit([arc], [], triggers, converged=True, old_misfit=0.024,
+                         new_misfit=0.004, new_above_crossing=(130.0, 114.9))
+    assert not still.accepted
+    assert still.reason == ("직렬 저항 130 Ω 이 아직 실수축 교점 114.9 Ω 보다 13 % 큽니다 — "
+                            "더한 아크가 구간 위의 아크를 그리지 않았습니다")
+    worse = accept_refit([arc], [], triggers, converged=True,
+                         old_misfit=0.024, new_misfit=0.035)
+    assert worse.reason == ("오차 평균이 2.4 → 3.5 % 로 늘었습니다 — 아크 하나를 더했는데 "
+                            "더 어긋나면 다른 골짜기입니다")
+    assert not accept_refit([arc], [], triggers, converged=True).accepted
+
+    assert electrolyte_short(114.9, 142.0) == ""
+    assert electrolyte_short(114.9, 114.9) == ""
+    assert electrolyte_short(114.9, 99.3) == (
+        "σ 저항 99.3 Ω 이 실수축 교점 114.9 Ω 보다 작습니다 — 새 맞춤이 구간 위의 아크를 "
+        "전해질 저항으로 읽지 않았습니다. 판정의 까닭과 어긋나니 사람이 봅니다")
+    assert electrolyte_short(114.9, None, ["결정되지 않은 저항"]) == (
+        "σ 를 못 냅니다 (결정되지 않은 저항) — 더한 아크가 전해질 저항에 드는지 확인할 수 "
+        "없습니다")
+    assert electrolyte_short(None, 142.0) == "실수축 교점을 몰라 σ 저항과 견줄 수 없습니다"
+
+
 # -- 끝에서 끝까지 ----------------------------------------------------------------
 
 def pellet():
@@ -304,6 +374,74 @@ def test_a_fit_without_the_cable_gets_l1_in_front_and_draws_the_top_end():
                         new_misfit=after.misfit.mean,
                         new_top_misfit=after.top_misfit).accepted
     assert result.values()["L1"] == pytest.approx(1.73e-6, rel=1e-3)
+
+
+def cold_pellet(noise_seed: int):
+    """B15 #9 (-20 °C) 꼴의 식은 펠릿 — 배선 L 2 µH, 90 Ω 뒤에 잰 주파수 안으로 내려온
+    전해질 아크 (46 Ω, 꼭지 300 kHz), 블로킹 꼬리, 잡음 0.3 %.  전해질 저항은 136 Ω."""
+    w = 2 * np.pi * FREQUENCY
+    tau = 1 / (2 * np.pi * 3e5)
+    z = (2e-6j * w + 90.0 + 46.0 / (1 + (1j * w * tau) ** 0.9)
+         + 1 / (6.3e-7 * (1j * w) ** 0.87))
+    rng = np.random.default_rng(noise_seed)
+    z = z * (1 + 0.003 * (rng.standard_normal(z.size) + 1j * rng.standard_normal(z.size)))
+    return Spectrum(FREQUENCY, z.real, z.imag)
+
+
+def refit_cold(noise_seed: int):
+    """`bml refit` 이 하는 대로 — 옛 맞춤의 검수, 판정의 회로, 판정이 아는 수의 시작점,
+    같은 창, 새 검수와 σ."""
+    spectrum = cold_pellet(noise_seed)
+    verdict = blocking_verdict(spectrum.frequency_hz, spectrum.z_re, spectrum.z_im)
+    old = fit_circuit(spectrum, "L1-R0-CPE1", frequency_range=BAND)
+    window = (float(old.frequency_hz.min()), float(old.frequency_hz.max()))
+
+    def judged(fit):
+        sigma = ionic_conductivity(fit, thickness_cm=PELLET_CM, area_cm2=AREA_CM2,
+                                   config=SYMMETRIC, blocking=verdict)
+        return sigma, audit_fit(fit, spectrum, kind=SOLID, config=SYMMETRIC,
+                                thickness_cm=PELLET_CM, area_cm2=AREA_CM2, band=window,
+                                conductivity=sigma, alternatives=PRESETS)
+
+    _, before = judged(old)
+    (candidate,) = refit_candidates(before.findings, circuit=old.circuit)
+    series, crossing = before.above_crossing
+    railed = [p.name for p in old.parameters if p.reason in ("at_lower_bound",
+                                                             "at_upper_bound")]
+    seeded = seed_arc(old.circuit, old.values(), candidate.circuit, skip=railed,
+                      series_ohm=series, crossing_ohm=crossing, top_hz=window[1])
+    new = fit_circuit(spectrum, candidate.circuit, start_from=seeded, frequency_range=window)
+    sigma, after = judged(new)
+    verdict = accept_refit(before.findings, after.findings, candidate.triggers,
+                           converged=new.converged, old_misfit=before.misfit.mean,
+                           new_misfit=after.misfit.mean,
+                           new_above_crossing=after.above_crossing)
+    return (candidate, crossing, new, sigma, after, verdict,
+            electrolyte_short(crossing, sigma.get("total_ohm"), sigma["missing"]))
+
+
+@pytest.mark.parametrize("noise_seed", [1, 3])
+def test_a_cold_pellet_gets_its_arc_back_and_the_electrolyte_its_whole_resistance(noise_seed):
+    """보완 10: 아크 하나를 더한 회로가 구간 위의 아크를 그리고, σ 는 R0 + R1 — 참값
+    136 Ω 의 0.2 % 안이다.  옛 `L1-R0-CPE1` 의 R0 (130.8 Ω) 도, 교점 (96 Ω) 도 작았다."""
+    candidate, crossing, new, sigma, after, verdict, short = refit_cold(noise_seed)
+    assert candidate == Candidate("L1-R0-p(R1,CPE1)-CPE2", ("arc_above_window",))
+    assert verdict.accepted and short == ""
+    assert after.above_crossing is None
+    assert sigma["total_parts"] == ["R0", "R1"]
+    assert sigma["total_ohm"] == pytest.approx(136.0, rel=0.002)
+    assert sigma["total_ohm"] > crossing
+
+
+def test_a_cold_pellet_whose_split_is_undetermined_is_left_to_a_person():
+    """쌍둥이 열다섯 중 여섯은 합이 맞는데 R0 나 R1 이 미결정이다 — σ 는 쓰는 저항
+    하나하나가 정해졌는지만 보니 σ 를 못 내고, 그러면 받지 않는다 (보완 10 남긴 것)."""
+    _, _, new, sigma, _, verdict, short = refit_cold(2)
+    values = new.values()
+    assert values["R0"] + values["R1"] == pytest.approx(136.0, rel=0.002)
+    assert verdict.accepted                                 # 증상은 풀렸다
+    assert sigma.get("total_ohm") is None
+    assert short.startswith("σ 를 못 냅니다 (결정되지 않은 저항)")
 
 
 def test_an_arc_that_is_really_there_is_not_a_refit_target():

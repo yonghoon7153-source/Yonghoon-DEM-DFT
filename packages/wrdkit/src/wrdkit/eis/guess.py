@@ -22,7 +22,11 @@ import numpy as np
 from .circuit import ELEMENTS, Circuit
 from .spectrum import Spectrum
 
-__all__ = ["Arc", "find_arcs", "initial_guess", "inductive_mask"]
+__all__ = ["ARC_START_N", "Arc", "find_arcs", "initial_guess", "inductive_mask"]
+
+#: 아크의 CPE 지수를 어디서 시작하나.  1.0 이 아니라 0.85 다: 실제 아크는 눌려
+#: 있고, 경계에서 시작하면 최적화가 경계에 눌린 채로 남는다.
+ARC_START_N = 0.85
 
 
 @dataclass
@@ -341,9 +345,7 @@ def initial_guess(spectrum: Spectrum, circuit: Circuit) -> np.ndarray:
             else:
                 values[i] = _CPE_FALLBACK_Q[slot]
         elif name.endswith("_n"):
-            # 0.85 rather than 1.0: real arcs are depressed, and starting at
-            # the boundary leaves the optimiser pressed against it.
-            values[i] = 0.85
+            values[i] = ARC_START_N
         elif kind == "C":
             values[i] = 1e-6
         elif kind == "L":

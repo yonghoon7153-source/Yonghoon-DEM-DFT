@@ -1720,7 +1720,8 @@ class RefitSpectrumOut(BaseModel):
     problems: list[AuditFindingOut] = []
     #: 옛 맞춤의 문제 판정 **전부** (회로를 안 실은 것까지) — 새 것과 견주는 수.
     old_problems: list[AuditFindingOut] = []
-    #: 이 스펙트럼을 대상으로 만든 확인 — 배선 인덕턴스가 빠졌다는 판정 (보완 8).
+    #: 이 스펙트럼을 대상으로 만든 확인 — 배선 인덕턴스가 빠졌다는 판정 (보완 8),
+    #: 구간 위에 아크가 걸쳤다는 판정 (보완 10).
     checks: list[AuditFindingOut] = []
     #: 옛 맞춤이 쓴 가장 낮은 점 (Hz).
     old_low_hz: float | None = None
@@ -1736,7 +1737,7 @@ class RefitSpectrumOut(BaseModel):
     new_sigma_ohm: float | None = None
     #: 새 맞춤에 남은 문제 판정.
     new_problems: list[AuditFindingOut] = []
-    #: 새 맞춤에 남은 배선 판정 — ``checks`` 와 견주어 풀린 것을 적는다.
+    #: 새 맞춤에 남은 그 확인들 — ``checks`` 와 견주어 풀린 것을 적는다.
     new_checks: list[AuditFindingOut] = []
     #: 새 맞춤이 쓴 가장 낮은 점 (Hz).
     new_low_hz: float | None = None
@@ -1764,12 +1765,14 @@ class EisRefitOut(BaseModel):
     #: 쓰는 맞춤이 있는 스펙트럼 수 — 본 것.
     total: int
     #: 회로를 실은 문제 판정이 있거나, 저주파 끝이 KK 를 어겨 하한이 권해졌거나,
-    #: 배선 인덕턴스가 빠진 것 — 맞춰 본 것.
+    #: 배선 인덕턴스가 빠졌거나, 구간 위에 아크가 걸친 것 — 맞춰 본 것.
     targets: int
     #: 대상 중 하한이 권해진 것 (보완 4).  회로를 권한 문제도 있으면 둘 다 센다.
     windows: int = 0
     #: 대상 중 배선 인덕턴스가 빠져 ``L1-`` 를 붙여 맞춘 것 (보완 8).
     wiring: int = 0
+    #: 대상 중 구간 위에 아크가 걸쳐 아크 하나를 더한 회로로 맞춘 것 (보완 10).
+    arcs: int = 0
     #: 맞춤 판정에 문제가 있지만 권할 회로가 없는 것 — 건드리지 않았다.
     unoffered: int = 0
     changed: int = 0

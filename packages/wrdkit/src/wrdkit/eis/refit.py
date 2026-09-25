@@ -5,10 +5,13 @@
 
 - `refit_candidates` — 문제 판정이 실은 회로를 어떤 순서로, 어느 하한부터 맞춰
   볼지.  저주파 끝이 KK 를 어겼으면 쓰는 회로도 그 하한부터 다시 맞춰 본다 (보완 4).
-  배선 인덕턴스가 빠졌으면 앞에 ``L1-`` 를 붙인 회로도 맞춰 본다 (보완 8).
+  배선 인덕턴스가 빠졌으면 앞에 ``L1-`` 를 붙인 회로도 맞춰 본다 (보완 8).  차가운
+  펠릿의 아크가 구간 위에 걸쳤으면 아크 하나를 더한 회로도 맞춰 본다 (보완 10).
 - `seed_values` — 쓰는 맞춤의 값을 새 회로의 어느 파라미터로 옮길지.
+  `seed_arc` — 더한 아크는 판정이 아는 수(교점, 옛 직렬 저항)에서 시작한다.
 - `accept_refit` — 새 맞춤을 다시 검수한 결과를 받아들일지.
 - `moved_number` — 받아들여도, 모양을 덜 그리면서 σ 의 저항을 옮기면 안 받는다.
+- `electrolyte_short` — 아크를 더한 맞춤의 σ 저항이 교점에 못 미치면 안 받는다.
 - `remaining_problems` — 받아들여진 것이 여럿이면 무엇을 고를지.
 
 **받아들이는 잣대는 검수 자신이다.**  χ² 는 파라미터 수가 다른 회로를 견주지
@@ -25,8 +28,9 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from .audit import PROBLEM, Finding
+from .audit import ARC_ABOVE_SHARE, PROBLEM, Finding
 from .circuit import BLOCKING_KINDS, Circuit, CircuitError, parse_circuit
+from .guess import ARC_START_N
 
 #: σ 에 쓰는 저항이 이 비율보다 많이 움직이면서 맞춤이 더 어긋나면 받지 않는다
 #: (`moved_number`).  판단이다: 합성 펠릿에서 아크 없는 회로가 전극 크기 아크(1.5 Ω)를
@@ -53,6 +57,16 @@ SHAPE_CODES = ("misfit_everywhere",)
 #: 없다.  다른 확인은 사람 몫이다 (결정 3).
 WIRING_CODES = ("inductance_missing",)
 
+#: 확인인데도 실은 회로로 다시 맞추는 판정 중, 셀을 읽는 방식이 바뀌는 것 (보완 10).
+#: 차가운 펠릿의 전해질 아크가 구간 위에 걸쳐, 아크 없는 회로의 R0 도 교점도 전해질
+#: 저항을 작게 읽는다.  아크를 더하면 σ 의 저항이 R0 에서 R0 + R1 로 간다.  그래도
+#: 사람이 고를 것이 없다 — 판정이 까닭을 말하고, `accept_refit` 과
+#: `electrolyte_short` 가 새 맞춤에서 그 까닭을 확인한다.
+ARC_CODES = ("arc_above_window",)
+
+#: 회로를 부르는 확인 전부.
+REFIT_CHECKS = WIRING_CODES + ARC_CODES
+
 
 @dataclass(frozen=True)
 class Candidate:
@@ -76,13 +90,15 @@ def refit_candidates(findings: Iterable[Finding], *,
     정할 일이라 한꺼번에 바꾸지 않는다 (ADR 0045).  같은 회로를 여러 판정이 권하면
     한 후보로 합치고 그 판정들을 모두 적는다 — 다시 맞춘 뒤 그 모두가 풀려야 한다.
 
-    예외가 둘이다.  사람이 고를 것이 없는 것들이다.
+    예외가 셋이다.  사람이 고를 것이 없는 것들이다.
 
     - 저주파 끝이 KK 를 어긴 판정(확인)이 싣는 하한(``low_hz``).  그 아래 점은
       셀이 변하는 동안 잰 것이라 **어느 회로로 맞추든** 뺀다 — 권한 회로도 그
       하한부터 맞춘다.  회로를 바꾸는 것이 아니라 점을 덜 쓰는 것이다 (보완 4).
     - 배선 인덕턴스가 빠졌다는 판정(`WIRING_CODES`, 확인)이 싣는 ``L1-`` 회로.
       셀을 읽는 방식은 그대로이고 케이블의 소자 하나를 더한다 (보완 8).
+    - 구간 위에 아크가 걸쳤다는 판정(`ARC_CODES`, 확인)이 싣는, 아크 하나를 더한
+      회로 (보완 10).
 
     ``findings`` 에는 맞춤의 판정과 점의 판정을 같이 준다.
     """
@@ -92,7 +108,7 @@ def refit_candidates(findings: Iterable[Finding], *,
         if finding.low_hz is not None:
             # 한 스펙트럼에 하한은 하나다 (`KKReference.low_limit_hz`).
             low_hz = finding.low_hz if low_hz is None else max(low_hz, finding.low_hz)
-        if finding.severity != PROBLEM and finding.code not in WIRING_CODES:
+        if finding.severity != PROBLEM and finding.code not in REFIT_CHECKS:
             continue
         for offered in finding.circuits:
             codes = order.setdefault(offered, [])
@@ -165,6 +181,60 @@ def seed_values(old_circuit: str, old_values: Mapping[str, float],
     return seeded
 
 
+def seed_arc(old_circuit: str, old_values: Mapping[str, float], new_circuit: str, *,
+             series_ohm: float, crossing_ohm: float, top_hz: float,
+             skip: Iterable[str] = ()) -> dict[str, float]:
+    """아크 하나를 앞에 더한 회로의 시작점 — `seed_values` 위에 더한 아크를 얹는다 (보완 10).
+
+    `seed_values` 는 이름으로 옮긴다.  아크를 앞에 더하면 이름이 한 자리씩 어긋난다 —
+    옛 ``R1`` 은 새 ``R2`` 다 (가지는 빠른 것부터, `fit_circuit`).  그래서 가지는 가지끼리
+    한 자리 뒤로 옮기고, 맨 앞 가지는 판정이 아는 수로 채운다.
+
+    - 직렬 저항은 교점(``crossing_ohm``)에서.  회로의 고주파 절편은 교점 위일 수 없다.
+    - 더한 아크의 R 은 옛 직렬 저항 − 교점에서 — 옛 회로가 직렬 저항에 넣은, 교점
+      너머의 몫이다.
+    - 그 꼭지는 맞춘 구간의 꼭대기(``top_hz``)에 두고 n 은 `ARC_START_N` 이다.  꼭지는
+      그 위 어딘가다.
+
+    **왜 데이터로 잡는 시작점이 아닌가.**  `initial_guess` 는 −Z'' 의 봉우리에서 아크를
+    찾는데, 이 아크는 꼭지가 구간 위라 봉우리가 없다.  차가운 펠릿 쌍둥이에서 새 아크가
+    꼬리의 봉우리(R1 8.8 kΩ, Q 1e-4)에서 시작했다.  옛 값만 옮기면 쌍둥이 열다섯 중
+    여섯에서 아크가 꼬리를 삼켰다 (R1 10⁶ Ω, 꼬리의 n 0.3).  이 시작점에서는 열다섯
+    모두 아크를 찾았다.
+
+    가지가 정확히 하나 늘지 않았거나 직렬 저항이 하나가 아니면 `seed_values` 그대로다.
+    """
+    seeded = seed_values(old_circuit, old_values, new_circuit, skip=skip)
+    try:
+        old = parse_circuit(old_circuit)
+        new = parse_circuit(new_circuit)
+    except CircuitError:
+        return seeded
+    old_arcs = old.parallel_rc_branches()
+    new_arcs = new.parallel_rc_branches()
+    series = [name for name, kind in new.series_element_kinds() if kind == "R"]
+    if len(new_arcs) != len(old_arcs) + 1 or len(series) != 1 \
+            or not (crossing_ohm > 0 and top_hz > 0):
+        return seeded
+    for resistor, element in new_arcs:
+        for name in (resistor, f"{element}_Q", f"{element}_n"):
+            seeded.pop(name, None)
+    skipped = set(skip)
+    for (old_r, old_e), (new_r, new_e) in zip(old_arcs, new_arcs[1:], strict=True):
+        for source, target in ((old_r, new_r), (f"{old_e}_Q", f"{new_e}_Q"),
+                               (f"{old_e}_n", f"{new_e}_n")):
+            value = old_values.get(source)
+            if source not in skipped and value is not None and np.isfinite(value):
+                seeded[target] = float(value)
+    resistor, element = new_arcs[0]
+    arc_ohm = max(series_ohm - crossing_ohm, ARC_ABOVE_SHARE * crossing_ohm)
+    seeded[series[0]] = float(crossing_ohm)
+    seeded[resistor] = float(arc_ohm)
+    seeded[f"{element}_Q"] = float(1.0 / (arc_ohm * (2 * np.pi * top_hz) ** ARC_START_N))
+    seeded[f"{element}_n"] = ARC_START_N
+    return seeded
+
+
 @dataclass(frozen=True)
 class Acceptance:
     accepted: bool
@@ -181,13 +251,15 @@ def accept_refit(old: Sequence[Finding], new: Sequence[Finding],
                  old_misfit: float | None = None,
                  new_misfit: float | None = None,
                  new_top_misfit: tuple[float, float] | None = None,
-                 old_top_misfit: tuple[float, float] | None = None) -> Acceptance:
+                 old_top_misfit: tuple[float, float] | None = None,
+                 new_above_crossing: tuple[float, float] | None = None) -> Acceptance:
     """다시 맞춘 것을 받아들일까 — 넷 다 만족해야 한다 (ADR 0045).
 
     ``old``·``new`` 는 옛 맞춤과 새 맞춤을 **같은 점·같은 주파수 창**에서
     검수한 판정이다 (맞춤에 딸린 것만 — 점 자체의 KK 판정은 둘에 같다).
     ``old_misfit``·``new_misfit`` 는 두 맞춤의 평균 오차(비율)다.
     ``new_top_misfit``·``old_top_misfit`` 는 두 맞춤의 `FitAudit.top_misfit` 이다.
+    ``new_above_crossing`` 는 새 맞춤의 `FitAudit.above_crossing` 이다.
 
     1. 수렴했다.
     2. 이 회로를 권한 판정(``triggers``)이 문제로 남지 않았다.
@@ -204,6 +276,13 @@ def accept_refit(old: Sequence[Finding], new: Sequence[Finding],
       문턱을 넘지 않는다 (``new_top_misfit`` 가 비었다).
     - 평균이 더 어긋나지 않았다.  옛 회로에 소자 하나를 더한 회로라 제대로 맞으면
       늘 수 없다 — 늘었으면 다른 골짜기다.
+
+    구간 위 아크 판정(`ARC_CODES`)이 권한 회로도 증상을 본다 (보완 10).  판정은 L 이
+    0 일 때만 뜨니 코드로는 풀린 것처럼 보일 수 있다.
+
+    - 직렬 저항이 교점까지 내려왔다 (``new_above_crossing`` 이 비었다).
+    - 평균이 더 어긋나지 않았다 — 아크 하나를 더한 회로다.
+    - σ 저항이 교점 이상인지는 σ 를 아는 쪽이 따로 본다 (`electrolyte_short`).
     """
     if not converged:
         return Acceptance(False, "수렴하지 않았습니다")
@@ -215,15 +294,20 @@ def accept_refit(old: Sequence[Finding], new: Sequence[Finding],
         message = next(f.message for f in new if f.code == left[0]
                        and f.severity == PROBLEM)
         return Acceptance(False, f"그 문제가 그대로입니다 — {message}")
-    if any(code in WIRING_CODES for code in triggers):
-        if new_top_misfit is not None:
-            return Acceptance(False, _top_left(old_top_misfit, new_top_misfit))
+    wiring = any(code in WIRING_CODES for code in triggers)
+    arc = any(code in ARC_CODES for code in triggers)
+    if wiring and new_top_misfit is not None:
+        return Acceptance(False, _top_left(old_top_misfit, new_top_misfit))
+    if arc and new_above_crossing is not None:
+        return Acceptance(False, _still_above(*new_above_crossing))
+    if wiring or arc:
         if old_misfit is None or new_misfit is None:
             return Acceptance(False, "오차 평균을 몰라 옛 맞춤과 견줄 수 없습니다")
         if not _no_worse(old_misfit, new_misfit):
             return Acceptance(False, f"오차 평균이 {_percent(old_misfit)} → "
-                                     f"{_percent(new_misfit)} % 로 늘었습니다 — 소자 하나를 "
-                                     f"더했는데 더 어긋나면 다른 골짜기입니다")
+                                     f"{_percent(new_misfit)} % 로 늘었습니다 — "
+                                     f"{'아크' if arc else '소자'} 하나를 더했는데 더 "
+                                     f"어긋나면 다른 골짜기입니다")
     worse = [code for code in after if after[code] > before[code]]
     if worse:
         message = next(f.message for f in new if f.code == worse[0]
@@ -255,6 +339,38 @@ def _top_left(old: tuple[float, float] | None, new: tuple[float, float]) -> str:
 #: 고주파 끝의 어긋남이 옛것의 이 비율 아래로 내려가야 "줄었다" 고 적는다 — 반올림
 #: 한 자리 안의 차이를 줄었다고 하지 않는다.
 _LESS = 0.95
+
+
+def _still_above(series_ohm: float, crossing_ohm: float) -> str:
+    """아크를 더하고도 직렬 저항이 교점 위일 때의 까닭."""
+    more = (series_ohm / crossing_ohm - 1.0) * 100.0
+    return (f"직렬 저항 {series_ohm:.4g} Ω 이 아직 실수축 교점 {crossing_ohm:.4g} Ω 보다 "
+            f"{more:.0f} % 큽니다 — 더한 아크가 구간 위의 아크를 그리지 않았습니다")
+
+
+def electrolyte_short(crossing_ohm: float | None, sigma_ohm: float | None,
+                      missing: Iterable[str] = ()) -> str:
+    """아크를 더한 맞춤의 σ 저항이 교점에 못 미치면 그 까닭 — 아니면 빈 문자열 (보완 10).
+
+    판정의 까닭은 "구간 위에 걸친 아크가 전해질이다" 다.  그러면 전해질 저항은 교점
+    이상이다 — 교점은 그 아크 도중이다.  새 맞춤의 σ 저항이 교점보다 작으면 σ 가 그
+    아크를 전해질로 읽지 않은 것이다 (커패시턴스가 전극 쪽이라 하면 뺀다, ADR 0041).
+    까닭과 어긋나니 사람이 본다.
+
+    σ 를 못 내도 (``missing`` — 미결정 저항 등) 받지 않는다.  확인할 수가 없다.  교점을
+    몰라도 그렇다.
+    """
+    if sigma_ohm is None:
+        why = ", ".join(missing)
+        return (f"σ 를 못 냅니다{f' ({why})' if why else ''} — 더한 아크가 전해질 저항에 "
+                f"드는지 확인할 수 없습니다")
+    if crossing_ohm is None:
+        return "실수축 교점을 몰라 σ 저항과 견줄 수 없습니다"
+    if sigma_ohm < crossing_ohm:
+        return (f"σ 저항 {sigma_ohm:.4g} Ω 이 실수축 교점 {crossing_ohm:.4g} Ω 보다 "
+                f"작습니다 — 새 맞춤이 구간 위의 아크를 전해질 저항으로 읽지 않았습니다. "
+                f"판정의 까닭과 어긋나니 사람이 봅니다")
+    return ""
 
 
 def _no_worse(old_misfit: float | None, new_misfit: float | None) -> bool:

@@ -763,7 +763,10 @@ def test_an_inductor_on_zero_with_r0_above_the_crossing_is_an_arc_above_the_wind
     assert "L1 이 0 에 붙었는데 꼭대기 9점은 유도성입니다" in arc.message
     assert "R0 130.9 Ω 이 실수축 교점 96.04 Ω 보다 36 % 큽니다" in arc.message
     assert "`L1-R0-p(R1,CPE1)-CPE2`" in arc.message
-    assert arc.circuits == ()                               # 확인이다 — refit 은 안 건드린다
+    # 확인인데도 회로를 싣는다 — `bml refit` 이 차가운 펠릿을 다시 맞춘다 (ADR 0045 보완 10).
+    assert arc.circuits == ("L1-R0-p(R1,CPE1)-CPE2",)
+    series, crossing = audit.above_crossing
+    assert series == pytest.approx(values["R0"]) and crossing == pytest.approx(96.04, abs=0.01)
     assert "no_inductance" not in codes(audit)
     assert not any("안 보입니다" in f.message for f in audit.findings)
     # "R0 도 모자랄 수 있습니다": 교점 < R0 < 참값.  아크 하나를 더한 회로가 참값을 낸다.
