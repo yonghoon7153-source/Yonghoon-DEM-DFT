@@ -6,6 +6,9 @@
 > 민감도 런으로** 한다.  **(3) 형식은 저널 SI 관행** — 분류 어휘를 표 범례로 정의하고, 한정은 각주로, 문헌은 SI 참고문헌 번호로, 근거 수치는
 > Supplementary Figure/Table 로.
 > 진행: 항목마다 ① 사실 ② 이미 한 런 ③ 논문 형식 수정안 ④ 답변 초안 ⑤ 남은 일.  상태 = ✅ 정리됨 · ⏳ 진행 · ⬜ 미착수.
+> ★ **준희가 본 표 = 사용자 원고 docx 의 Table S2** (09-03/04 검토로 라벨 확정 — `docs/reviews/ms_readthrough_20260903.md`).  리포의
+> 생성기 `docs/manuscript_draft/build.js` 는 08-23 판에서 멈춰 있어 라벨이 다르다 (NCM σ_e `Effective value` · VGCF 직경 `Supplier data` ·
+> DEM ν 행 없음 · 참고문헌 S6–S8).  ⇒ 이 문서의 "현 표기" 는 **준희가 본 docx 판** 기준이다.
 
 ## 0. 공통 — 표 범례 (분류 어휘 정의) · 제안
 
@@ -21,66 +24,96 @@
 - SI 참고문헌은 SI 첫 인용 순서로 번호를 매긴다.  ⚠ `[S6]` · `[S7]` (PTFE 기하) 는 `CL-66/67` 로 표에서 빠져 번호가 재배열될 수 있다 —
   새 문헌은 아래에서 `S(new)` 로 두고 최종 조립 때 번호를 확정한다.
 
-## 1. NCM811 electronic conductivity — 1.0 × 10⁻² S cm⁻¹ · 현 표기 `Assumed` · ✅ 정리됨 (문헌 1 건 PDF 확인 대기)
+## 1. NCM811 electronic conductivity — 1.0 × 10⁻² S cm⁻¹ · 현 표기 `Assumed` · ✅ 재검토 완료 (09-25 오후) — 사용자 결정 1 건 대기
 
 **코멘트**: *"ncm 의 electronic conductivity 는 assumed 여야 하나? reference 가 있지 않나?"*
 
-### ① 사실 (이 값이 어디서 왔나)
-- 복셀 솔버의 `nmc811` 프리셋 기본값 (`mpm_webapp_payload.py`: `sigma_am_s None → 0.010`).  기원은 DEM σ_e 스케일링 법칙의
-  **코퍼스-적합 끝점** σ_S ≈ 9.1 mS cm⁻¹ → 10 반올림 (Stage 22.5 LOCKED).  측정값이 아니다.
-- Trevisanello 2021 은 이 크기를 뒷받침하지 않는다 (입경 방향만 — A1 정정, `docs/contradiction_audit_20260720.md`).
-  ⇒ **`Ref.` 로 바꾸면 오귀속**이다.  분류는 `Assumed` 가 사실이고, 코멘트의 요지 ("문헌이 있지 않나") 는 **각주의 문헌 밴드**로 받는다.
+**결론**: `Assumed` 유지가 맞다.  문헌 측정값은 있지만 NMC 의 σ_e 는 조성·충전상태에 따라 여러 자릿수 움직여 **"NCM811 = 얼마" 로 가져다 쓸 단일
+참고값이 없고**, 우리 1.0 × 10⁻² 는 문헌에서 가져온 값도 아니다.  문헌 범위와 이미 돌린 민감도 (CL-70) 를 각주로 붙인다.
 
-#### ①-b 왜 1.0 × 10⁻² 를 채택했나 — 이력 (사용자 질문 09-25)
-1. **출발 (2026-06, Stage 22.5)**: DEM σ_e 스케일링 법칙 `σ_e = (σ_S·NCM_S)^(1−p)·(σ_P·NCM_P)^p·…` 의 AM 계수를 코퍼스 (DEM 접촉망 솔버 출력) 에
-   적합 → **σ_S 9.13 · σ_P 4.14 mS cm⁻¹ → 10 · 5 로 반올림해 LOCKED**.  = 솔버 출력을 가장 잘 재현하는 **유효 AM 계수**.
-2. **당시 라벨**: "Trevisanello 2021 — 단결정 ≈10 · 다결정 ≈5 mS cm⁻¹" 인 문헌값으로 믿고 썼다.
-3. **A1 정정 (2026-06-30, `docs/a1_sigma_e_direction_closeout.md`)**: Trevisanello 는 σ_e 가 아니라 Li⁺ 화학확산 · BET · R_ct 를 쟀다 →
-   입경 **방향**만 지지, 크기는 아님 → 문헌 귀속 **철회**, 라벨을 "corpus-fit endpoint" 로.  값은 **생산 팔 연속성** 때문에 유지.
-4. **STEP3 (복셀) 이식**: SDCP 원고 NCM811 (r 2.5 µm) = AM_S 급 → `nmc811` 프리셋 기본값 **0.010 S cm⁻¹** (`scripts/step3_sigma.py` 21–27행).
-   ⚠ 거시 유효식의 계수를 복셀 **상(phase) σ** 로 옮긴 것이라 미상 배수가 붙는다 — 코드 자신이 *"order-of-magnitude hook"* 이라 적는다.
-5. **방어 전환 (2026-09-02)**: 문헌 앵커가 없으니 **민감도로** — closure 스윕 ÷30~×30 → 방향 강건 (③).
-⇒ **1.0 × 10⁻² 는 물리로 고른 값이 아니라 DEM 스케일링 법칙 적합값을 이어받은 것**이다.  문헌 밴드 상단 (탈리튬 NMC) 과 맞는 것은
-**사후 정합**이지 채택 근거가 아니다 — 각주에 "문헌에서 골랐다" 로 읽히는 문장을 쓰지 않는다 ("effective value … lies within the range …").
+> **09-25 재검토에서 고친 것** (앞 판 대비): ① Wang 2018 수치는 여전히 PDF 미확인 — 인용 보류 유지.  ② 앞 판의 *"리포에 격자점별 수치가 없다"* 는
+> **틀렸다** — 원장 `CL-70` `measured` 에 9 격자점 표가 있다 (③).  ③ 원고 생성기 메모 D14 의 *"문헌 두 출처가 NMC bulk 를 5 × 10⁻⁵ 로 준다 = 1/200"*
+> 은 **모델 입력값을 측정값으로 읽은 것** — 같은 커밋에서 정정 (②).  ④ 표 라벨 이력과 AM 클래스 한정을 ① 에 추가.
 
-### ② 문헌
-| 문헌 | 계 · 조건 | σ_e | 쓰임 |
+### ① 사실 — 이 값은 어디서 왔나 (코드·원장 원문 대조)
+- 복셀 솔버 `nmc811` 프리셋 기본값 — `scripts/mpm_webapp_payload.py:1423` `a.sigma_am_s = 0.010`.
+- `scripts/step3_sigma.py:20–27` 원문: *"AM_S 0.010 / AM_P 0.005 ⚠ corpus-fit endpoints, NOT a Trevisanello measurement … 10/5 = our σ_e
+  scaling-law fit endpoints (live 9.13/4.14) rounded.  ⚠ scale transplant: … using them as a voxel phase σ has an unknown multiplier …
+  Treat as an order-of-magnitude hook."*
+- 이력:
+  1. **출발 (2026-06, Stage 22.5)**: DEM σ_e 스케일링 법칙의 AM 계수를 코퍼스 (DEM 접촉망 솔버 출력) 에 적합 → **σ_S 9.13 · σ_P 4.14 mS cm⁻¹ →
+     10 · 5 로 반올림해 LOCKED**.  = 솔버 출력을 가장 잘 재현하는 **유효 AM 계수** (실험 적합이 아니다).
+  2. 당시 라벨 "Trevisanello 2021 — 단결정 ≈10 · 다결정 ≈5" 는 **A1 정정 (2026-06-30, `docs/a1_sigma_e_direction_closeout.md`)** 으로 철회 —
+     Trevisanello 는 σ_e 가 아니라 Li⁺ 화학확산 · BET · R_ct 를 쟀고, 입경 **방향**만 지지한다.
+  3. STEP3 (복셀) 이식: SDCP 원고 NCM811 (r 2.5 µm) 에 AM_S 끝점 **0.010 S cm⁻¹** 을 상 σ 로 부여.
+  4. 방어 전환 (2026-09-02): 문헌 앵커가 없으니 **민감도로** — closure 스윕 (③).
+  ⇒ **1.0 × 10⁻² 는 물리로 고른 값이 아니라 DEM 스케일링 법칙 적합값을 이어받은 것**이다.  문헌 범위 상단과 맞는 것은 **사후 정합**이지 채택
+  근거가 아니다 — 각주에 "문헌에서 골랐다" 로 읽히는 문장을 쓰지 않는다.
+- 표 라벨 이력: 08-23 까지 생성기 라벨 `Effective value ᵃ` + 각주 ᵃ *"calibrated against the measured electrode response"* — ⚠ **이 각주는 사실이
+  아니었다** (실험이 아니라 DEM 솔버 출력에 적합했다).  08-23 각주 제거 (D14 로 이동) → 09-03 원고 표 검토에서 `Assumed` 로 정정.  준희가 본 판이 그것이다.
+- 내부 한정 (원고에는 쓰지 않는다): 침대의 NCM (r 2.5 µm) 은 **크기로** AM_S 끝점 (10 mS cm⁻¹) 을 받았다.  원고는 다결정으로 기술하고, 우리 DEM
+  규약의 다결정 끝점은 AM_P 5 mS cm⁻¹ 다 (2 배 차 — D14 가 확인을 요청해 둔 것).  둘 다 ③ 스윕 범위 안이라 순서 결론은 안 바뀐다.
+
+### ② 문헌 — "reference 가 있지 않나" 에 대한 사실
+| 출처 | 무엇을 쟀나 | σ_e (S cm⁻¹) | 지위 |
 |---|---|---|---|
-| Amin & Chiang, *J. Electrochem. Soc.* **163**, A1512 (2016) | NMC333 · NMC532 소결 펠릿 (첨가제 없음, 상대밀도 96–98 %), 이온차단 DC, 30 °C | x (Li₁₋ₓNMC) 0 → 0.75 에서 **~10⁻⁷ → ~10⁻² S cm⁻¹** (SOC 에 따라 4–5 자릿수) | 밴드 · "단일 스칼라 = 운전점 평균" 의 근거.  정본 카드 `aminchiang2016_nmc_electronic_ionic_transport_vs_li` (확인됨).  ⚠ 811 은 안 쟀다 |
-| Wang, Yan, Li, Vinado, Yang, *J. Power Sources* **393**, 75–82 (2018), DOI 10.1016/j.jpowsour.2018.05.005 | LiCoO₂ · NMC333/532/622/811 펠릿, 전자/이온 분리 측정, 20 °C | Ni-rich (532–811) 는 **~10⁻³ S cm⁻¹ 급**, 333 대비 약 3 자릿수 높음 | 811 직접 값.  ⚠ 검색 요약본마다 **4.1 × 10⁻³ 을 532 · 811 에 달리 붙인다** — PDF 로 확인하기 전 값 인용 금지 |
+| Amin & Chiang, *J. Electrochem. Soc.* **163**, A1512 (2016), DOI 10.1149/2.0131608jes | NMC333 · NMC532 단상 소결 펠릿 (첨가제 없음), 전자/이온 분리 DC, 30 °C | x = 0 (방전): **5.0 × 10⁻⁸** (333) · **1.9 × 10⁻⁶** (532) → x = 0.75: **7.9 × 10⁻³** · **1.4 × 10⁻²** | ✅ 정본 카드 `aminchiang2016_nmc_electronic_ionic_transport_vs_li` (Fig. 2c 디지타이즈 3 중 검증).  ⚠ 811 은 없다 |
+| Wang, Yan, Li, Vinado, Yang, *J. Power Sources* **393**, 75–82 (2018), DOI 10.1016/j.jpowsour.2018.05.005 | LiCoO₂ · NMC333/532/622/811 펠릿, 전자/이온 분리 | 검색 요약: NMC333 ≈ 2.2 × 10⁻⁶ → **NMC811 ≈ 4.1 × 10⁻³** (20 °C) | ⚠ **PDF 미확인** (출판사 · OSTI · ADS · Semantic Scholar 전부 이 컨테이너에서 차단).  요약본마다 4.1 × 10⁻³ 을 붙이는 조성이 달랐다 — 확인 전 수치 인용 금지 |
+| 모델 논문 입력값: Sangrós 2020 (1 × 10⁻⁵, Amin & Chiang 인용) · Alabdali 2023 (5 × 10⁻⁵, NMC622) · Zhang 2023 (5 × 10⁻⁵, Wang 2018 인용) | 시뮬레이션 **입력** | 10⁻⁵ … 5 × 10⁻⁵ | ⛔ **측정이 아니다** — 방전 상태 · 저 Ni NMC 의 입력값.  811 참고값으로 쓰면 안 된다 (정본 카드 `sangros2020_lib_electrode_dem_mech_elec_ionic` · `alabdali2023_cgmd_wet_manufacturing_ssb_cathode` · `zhang2023_pfib_multiscale_imaging_4d_thick_cathode`) |
+| Lee 2026 (LPSCl 코팅 NCM811) | 본문 서술 | *"in the range of 10⁻⁴"* | ⛔ 인용 없는 서술 (정본 카드 `lee2026_lpscl_coating_thickness_ncm811`) |
 
-⇒ 우리 1.0 × 10⁻² 는 **탈리튬 상태 밴드의 상단**이고, pristine NMC811 (~10⁻³) 보다 높다.
+⇒ 정리:
+1. **단일 참고값이 없다** — NMC 측정값이 조성·충전상태에 따라 ~10⁻⁸ … 10⁻² S cm⁻¹ 로 움직인다 (Amin & Chiang: 333 은 x = 0 → 0.75 에서 5 자릿수).
+2. **pristine NCM811 은 10⁻³ 급**이다 (Wang 2018 요약값 — 미확인.  Amin & Chiang 을 Ni 함량에 로그-선형으로 외삽하면 1.3 × 10⁻³ — 가정에 기댄 값).
+3. 우리 1.0 × 10⁻² 는 이 범위의 **상단 (충전 쪽)** 이고 pristine NCM811 보다 높다.
+4. 준희가 떠올린 "reference" 가 모델 논문의 5 × 10⁻⁵ 라면, 그것은 입력값이지 NCM811 측정값이 아니다.
 
-### ③ 이미 돌린 시뮬레이션 (이 표를 위해 한 것)
-- **σ_NCM · σ_SDCP 공동 closure 스윕** — 사전등록 `docs/reviews/sigma_closure_sweep_prereg_20260902.md` (런 전 커밋 6cd1fb03), 원장 `CL-70` (live).
-  - 설계: σ_AM_S ∈ {3.33 × 10⁻⁴, **1.0 × 10⁻²**, 0.30} S cm⁻¹ (= ÷30 … ×30) × σ_SDCP ∈ {2.5, 250, 25000} · 각 8 origin · vox 0.15 · centerline.
-    kgy 완주 2026-09-06.
-  - 판정 (**런 전 등록 규칙**) = **DIRECTION-ROBUST**: 9 격자점 전부 `R̄ − 3·SD > 1.01` (최소 1.052) ⇒ *"이 범위 전체에서 DBE 가 SBE 를 넘는다"*.
-  - 크기는 σ_NCM 에 의존한다: 생산 σ_SDCP 열에서 R ≈ 1.34 → 1.20 (σ_NCM 낮은 끝 → 높은 끝).  ⇒ **순서는 강건, 이득의 크기는 아니다** — 이것을 그대로 적는다.
-  - 중심점이 원고 헤드라인을 다른 기계에서 재현 (SBE 54.0 · DBE 70.6 mS cm⁻¹ · R 1.3078).
-  - 한정어 (등록대로 유지): 격자점 9 (등록 25) · origin SD 는 표준오차가 아니다 (한 침대의 {0,½}³ factorial) · 격자점 사이 폭은 시나리오 범위다.
-- 문헌 밴드 (10⁻³ … 10⁻²) 는 이 스윕 창 (3.3 × 10⁻⁴ … 0.3) **안에 들어간다**.
+### ③ 이미 돌린 런 — σ_NCM · σ_SDCP 공동 closure 스윕 (원장 `CL-70` live · 사전등록 `docs/reviews/sigma_closure_sweep_prereg_20260902.md`, 런 전 커밋 6cd1fb03 · kgy 완주 09-06)
+DBE/SBE 비 R̄ (8 origin 쌍대응 평균, vox 0.15 · centerline):
+
+| σ_NCM (S cm⁻¹) \ σ_SDCP (S cm⁻¹) | 2.5 (÷100) | **250 (생산)** | 25 000 (×100) |
+|---|---|---|---|
+| 3.33 × 10⁻⁴ (÷30) | 1.0578 | 1.3403 | 1.3530 |
+| **1.0 × 10⁻² (생산)** | 1.0668 | **1.3078** | 1.3185 |
+| 0.30 (×30) | 1.0666 | 1.1979 | 1.2035 |
+
+- 판정 (**런 전 등록 규칙**) = **DIRECTION-ROBUST**: 9 격자점 전부 `R̄ − 3·SD > 1.01` (최소 1.0522) · 미수렴 팔 0/144.
+- **σ_NCM 이 클수록 이득이 작다** (생산 σ_SDCP 열 1.3403 → 1.3078 → 1.1979).  ⇒ 문헌 pristine NCM811 (≈10⁻³, 우리보다 낮다) 쪽이면 비는 1.31 보다
+  **커지는 방향**이다 — 이득 측면에서 우리 값은 보수적인 편이다.  (⚠ 격자점 사이 값은 시나리오 보간이지 측정이 아니다.)
+- 생산점이 원고 헤드라인을 다른 기계에서 재현 — σ_e(SBE) 53.9 (원고 54.0) · σ_e(DBE) 70.6 mS cm⁻¹ · R 1.307824.
+- 등록된 한정어 (유지): 격자점 9 (등록 25) · origin SD 는 표준오차가 아니다 (한 침대의 {0,½}³ factorial) · 격자점 사이 폭은 시나리오 범위 ·
+  참 σ 값 · 격자 수렴 · 접촉저항 분배는 답하지 않는다.
+- ✅ **원자료가 리포에 있다** — 위 표 · `R̄ − 3·SD` · 쌍대응 산포가 원장 `CL-70` `measured` 에 그대로 있어 **SI 그림을 지금 만들 수 있다**.  kgy
+  `~/sdcp/verdicts_9pt.log` 는 출처 보강용 (선택).
 
 ### ④ 논문 형식 수정안
-1. **SI 표**: `Assumed` → `Assumedᵃ`.
-   > ᵃ Effective value at the upper end of the range reported for layered NMC cathodes (≈10⁻⁷–10⁻² S cm⁻¹ depending on the state of
-   > charge; Refs. S(new1), S(new2)).  The DBE > SBE ordering holds for σ_NCM between 3.3 × 10⁻⁴ and 0.30 S cm⁻¹ (Supplementary Fig. S(new));
-   > the magnitude of the gain decreases as σ_NCM increases.
-2. **SI 참고문헌**: Amin & Chiang 2016 · Wang 2018 (PDF 확인 뒤) 추가.
-3. **Supplementary Figure (신설)**: closure 스윕 R̄ 격자 (σ_NCM × σ_SDCP 3 × 3), 중심점 표시 · 한정어 캡션.
-4. **Methods 한 문장**: *"The electronic conductivity of NCM811 was set to an effective value of 1.0 × 10⁻² S cm⁻¹; the DBE/SBE ordering is
-   insensitive to this choice over two orders of magnitude on either side (Supplementary Fig. S(new))."*
+1. **Table S2 행**: `Electronic conductivity · 1.0 × 10⁻² · S cm⁻¹ · Assumedᵃ`
+   > ᵃ Effective model input, not an intrinsic property of NCM811.  Reported electronic conductivities of layered LiNiₓMnᵧCo_zO₂ range from
+   > ~10⁻⁸ to ~10⁻² S cm⁻¹ depending on composition and state of charge (Refs. S(new1), S(new2)); the value used lies at the upper end of this
+   > range.  The DBE > SBE ordering holds for σ_NCM from 3.3 × 10⁻⁴ to 0.30 S cm⁻¹, over which the DBE/SBE ratio decreases from 1.34 to 1.20
+   > at the SDCP conductivity used here (Supplementary Fig. S(new)).
+   - S(new2) (Wang 2018) 은 **PDF 확인 뒤에만** 넣는다 — 그 전이면 S(new1) 하나로 쓴다 (문장은 그대로 성립: Amin & Chiang 이 두 조성 · x 0 → 0.75 를 덮는다).
+2. **Supplementary Figure (신설)**: 3 × 3 격자 (σ_NCM × σ_SDCP) 의 R̄, 생산점 표시.  캡션 한정어: *"Nine closure combinations evaluated on one
+   SBE/DBE bed pair; bars show the spread over eight grid-origin phases of a single bed, not a standard error; no interpolation between grid
+   points."*
+3. **Methods 한 문장** (Stage 3 문단 뒤): *"The electronic conductivity assigned to NCM811 (1.0 × 10⁻² S cm⁻¹) is an effective input rather
+   than a measured property; the DBE/SBE ordering is unchanged when it is varied thirty-fold in either direction (Supplementary Fig. S(new))."*
+4. **SI 참고문헌**: Amin & Chiang 2016 (+ Wang 2018 — 확인 뒤).
 
 ### ⑤ 답변 초안 (강준희에게)
-> 맞아, 문헌은 있어. 다만 우리 1e-2 는 문헌값을 가져온 게 아니라 운전점 유효값이라 "Ref." 로 쓰면 오귀속이 돼서 Assumed 는 유지하고,
-> 각주에 문헌 밴드를 달게 — Amin & Chiang 2016 (NMC, SOC 에 따라 1e-7~1e-2 S/cm) · Wang 2018 (NMC811 펠릿 ~1e-3 급).
-> 그리고 이 값은 이미 민감도를 돌려 놨어: σ_NCM 을 ÷30~×30 (3e-4~0.3 S/cm) 로 흔들어도 9 격자점 전부 DBE > SBE 라서
-> (사전등록 판정 DIRECTION-ROBUST), 결론이 이 값에 안 걸려. 그 격자를 SI 그림으로 붙일게. 크기(이득 %)는 σ_NCM 에 따라 달라지는 것도 같이 적을게.
+> reference 는 있긴 한데 "NCM811 σ_e = 얼마" 로 가져다 쓸 단일 값이 없어. NMC 전자전도도는 조성이랑 충전상태에 따라 10⁻⁸~10⁻² S/cm 까지 움직여
+> (Amin & Chiang 2016 JES — 333/532 펠릿, 30 °C). 모델 논문들이 쓰는 1e-5~5e-5 는 방전 상태·저 Ni 입력값이라 811 측정값도 아니고.
+> 우리 1e-2 는 그중 하나를 가져온 게 아니라 모델 유효값이라 Ref. 로 달면 오귀속이 돼서, Assumed 로 두고 각주에 문헌 범위랑 민감도를 달게.
+> 민감도는 이미 돌려 놨어: σ_NCM 을 3.3e-4~0.3 (÷30~×30) 으로 바꿔도 9 조건 전부 DBE > SBE (사전등록 판정 DIRECTION-ROBUST).
+> σ_NCM 이 클수록 이득이 작아져서 (비 1.34 → 1.20), pristine 811 처럼 더 낮은 값이면 오히려 이득이 커지는 쪽이야 — 우리 값이 보수적인 편.
+> 이 격자는 SI 그림으로 붙일게.
 
-### ⑥ 남은 일
-- [ ] Wang 2018 PDF 로 NMC811 값 확인 (랩 접근) → 정본 카드.
-- [ ] kgy `~/sdcp/verdicts_9pt.log` (9 격자점 R̄ · SD 표) 를 리포 `docs/data/` 로 — **지금 리포에 격자점별 수치가 없다** (CL-70 요약만).  SI 그림의 원자료.
-- [ ] SI 그림 · 각주 · Methods 문장 반영 (`scripts/build_methods_docx.py`).
+### ⑥ 결정할 것 · 남은 일
+- [ ] **결정 (사용자)** — A (권장): `Assumed` + 각주 ᵃ + SI 그림 · 재계산 없음.  B: 문헌값 (예: NCM811 pristine ≈ 4 × 10⁻³) 으로 바꿔 `Ref.` —
+  생산 STEP3 팔 전부 재실행 + 헤드라인 (54.0 · 70.6 · 1.308) 이 바뀌고, 그래도 충전상태 의존이라 가정은 남는다.
+- [ ] Wang 2018 PDF 확인 (랩 접근) → 정본 카드 → 각주 S(new2).
+- [ ] SI 그림 (CL-70 표로 지금 가능) · 각주 · Methods 문장을 사용자 docx 에 반영.  리포 `build.js` 는 08-23 판이라 라벨 동기화 필요 여부는 사용자 판단.
+- [x] 원고 생성기 메모 D14 정정 (모델 입력값 5 × 10⁻⁵ 를 "문헌 두 출처의 NMC bulk" 로 적은 것) — 이 커밋.
 
 ## 2. LPSCl Poisson's ratio (DEM contact) — 0.3 · `Assumed` · ⬜
 
