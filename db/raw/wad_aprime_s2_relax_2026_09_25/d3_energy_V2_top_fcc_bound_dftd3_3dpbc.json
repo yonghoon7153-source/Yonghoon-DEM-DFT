@@ -1,0 +1,28 @@
+{
+ "struct": "/data/work/aprime_s2/db/inputs/wad_aprime_s2_geometries_2026_09_25/V2/top_fcc/bound.extxyz",
+ "sha256": "19207c1f707a8a14691c129eb485df7348ee1c285bcec02a6d07990e911eb44b",
+ "n_atoms": 20,
+ "pbc": [
+  true,
+  true,
+  true
+ ],
+ "E_D3_eV": -6.854512579023981,
+ "E_D3_Ry": -0.5037973822472642,
+ "d3": {
+  "impl": "simple-dftd3 (python)",
+  "version": "1.6.0",
+  "method": "PBE",
+  "damping": "d3bj (2체)",
+  "params_expected": {
+   "functional": "PBE",
+   "damping": "BJ",
+   "s6": 1.0,
+   "s8": 0.7875,
+   "a1": 0.4289,
+   "a2": 4.4407,
+   "three_body": false
+  }
+ },
+ "⛔": "QE 의 'DFT-D3 Dispersion' 줄과 대조하는 용도 — 총 에너지·W 에 쓰지 않는다"
+}

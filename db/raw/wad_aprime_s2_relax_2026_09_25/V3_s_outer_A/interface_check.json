@@ -1,0 +1,58 @@
+{
+ "n_atoms": 114,
+ "n_substrate": 110,
+ "n_ads": 4,
+ "substrate_kind": "PS4",
+ "normal_sign_declared_from_init": 1.0,
+ "fixed_policy": "far_half",
+ "fixed_n": 54,
+ "policy_expected_n": 54,
+ "mask_matches_policy": true,
+ "lateral_fixed_n": 0,
+ "z_ref_first_ads_layer_A": 22.491,
+ "n_first_layer_atoms": 1,
+ "penetration_max": {
+  "i": 104,
+  "el": "Li",
+  "p_A": -2.287
+ },
+ "mixed_substrate_atoms": [],
+ "sub_ads_min_gap_A": 2.287,
+ "bonds_listed": 6,
+ "bonds_out_of_tol": [
+  {
+   "i": 110,
+   "j": 111,
+   "pair": "Ag-Ag",
+   "r0_A": 2.89,
+   "r1_A": 3.384,
+   "dev_pct": 17.1
+  },
+  {
+   "i": 110,
+   "j": 112,
+   "pair": "Ag-Ag",
+   "r0_A": 2.89,
+   "r1_A": 3.347,
+   "dev_pct": 15.8
+  }
+ ],
+ "ps4_broken": {},
+ "ps4_partner_changed": [],
+ "disp_max_A": 2.299,
+ "disp_rms_A": 0.458,
+ "fixed_moved": [],
+ "lateral_moved": [],
+ "flags": [
+  "결합 2/6 개가 초기 변형 구조 대비 ±15 % 밖 (예 {'i': 110, 'j': 111, 'pair': 'Ag-Ag', 'r0_A': 2.89, 'r1_A': 3.384, 'dev_pct': 17.1})"
+ ],
+ "thresholds": {
+  "pen_thr_A": 1.5,
+  "bond_tol": 0.15,
+  "first_layer_A": 0.8,
+  "nn_fac": 1.15,
+  "fixed_tol_A": 0.001,
+  "R_PS_A": 2.5
+ },
+ "⛔": "구조 경보만 낸다 — 반응·전하이동 판정 아님 · 원인 분류 아님 · 측방 영상 효과 미측정"
+}

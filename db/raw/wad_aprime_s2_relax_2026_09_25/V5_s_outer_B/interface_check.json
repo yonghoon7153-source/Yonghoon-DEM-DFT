@@ -1,0 +1,39 @@
+{
+ "n_atoms": 200,
+ "n_substrate": 116,
+ "n_ads": 84,
+ "substrate_kind": "PS4",
+ "normal_sign_declared_from_init": 1.0,
+ "fixed_policy": "far_half",
+ "fixed_n": 60,
+ "policy_expected_n": 60,
+ "mask_matches_policy": true,
+ "lateral_fixed_n": 0,
+ "z_ref_first_ads_layer_A": 12.662,
+ "n_first_layer_atoms": 28,
+ "penetration_max": {
+  "i": 47,
+  "el": "Li",
+  "p_A": -2.071
+ },
+ "mixed_substrate_atoms": [],
+ "sub_ads_min_gap_A": 1.933,
+ "bonds_listed": 420,
+ "bonds_out_of_tol": [],
+ "ps4_broken": {},
+ "ps4_partner_changed": [],
+ "disp_max_A": 2.459,
+ "disp_rms_A": 0.977,
+ "fixed_moved": [],
+ "lateral_moved": [],
+ "flags": [],
+ "thresholds": {
+  "pen_thr_A": 1.5,
+  "bond_tol": 0.15,
+  "first_layer_A": 0.8,
+  "nn_fac": 1.15,
+  "fixed_tol_A": 0.001,
+  "R_PS_A": 2.5
+ },
+ "⛔": "구조 경보만 낸다 — 반응·전하이동 판정 아님 · 원인 분류 아님 · 측방 영상 효과 미측정"
+}

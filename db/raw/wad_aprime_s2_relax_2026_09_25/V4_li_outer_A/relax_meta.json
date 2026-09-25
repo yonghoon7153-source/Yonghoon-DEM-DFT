@@ -1,0 +1,72 @@
+{
+ "model_dir": "/data/work/aprime_s2/db/inputs/wad_aprime_s2_geometries_2026_09_25/V4_li_outer/A",
+ "model": "V4",
+ "registry": "A",
+ "term": "li_outer",
+ "init_sha256": "1c4c5367da94004770a657f7b276941d887f0539e92c41b4869bfa03b2ddde12",
+ "n_atoms": 110,
+ "fixed_n": 49,
+ "lateral_n": 0,
+ "preflight": {
+  "flags": [],
+  "mask_matches_policy": true
+ },
+ "ase": "3.28.0",
+ "fmax_target_eV_A": 0.02,
+ "max_steps": 3000,
+ "optimizer": "fire",
+ "cell_fixed": true,
+ "calculator": {
+  "calc": "uma",
+  "device": "cuda",
+  "fairchem.core": "2.19.0",
+  "torch": "2.8.0+cu128",
+  "cuda": "12.8",
+  "model": "uma-s-1p1",
+  "task": "omat",
+  "inference_settings": "default",
+  "checkpoint": [
+   {
+    "path": "/root/.cache/fairchem/models--facebook--UMA/snapshots/be2896459a03fcde05e20d2fcefd11f450601fce/checkpoints/uma-s-1p1.pt",
+    "sha256": "07068e9c76702ca173d13155095f2117c1b327ec228557e64cd2709c777b824a",
+    "MB": 1119
+   }
+  ],
+  "d3": {
+   "impl": "simple-dftd3 (python)",
+   "version": "1.6.0",
+   "method": "PBE",
+   "damping": "d3bj (2체)",
+   "params_expected": {
+    "functional": "PBE",
+    "damping": "BJ",
+    "s6": 1.0,
+    "s8": 0.7875,
+    "a1": 0.4289,
+    "a2": 4.4407,
+    "three_body": false
+   }
+  }
+ },
+ "calculator_pbc": [
+  true,
+  true,
+  true
+ ],
+ "calculator_pbc_why": "UMA 는 균일 pbc 만 받는다 · z 영상 간격 ≥ 8 Å > UMA 컷오프 6 Å · QE 와 같은 3축 관례",
+ "steps_taken": 921,
+ "converged_fmax": true,
+ "fmax_free_final_eV_A": 0.01947,
+ "wall_s": 216.1,
+ "relaxed_sha256": "cd9ad6ef501809d9127eb0ed37397088cf414fc21024afe0df358d46aeb25b3f",
+ "disp_max_A": 2.151,
+ "disp_rms_A": 0.435,
+ "interface_check_flags": [
+  "비혼합 기하 범위 벗어남 — 기판 원자 [89, 90] 가 첫 흡착층 평면 아래 1.5 Å 안 (최대 p -1.458 Å · 구조 경보 · 반응 판정 아님)"
+ ],
+ "energies_raw_log_only": {
+  "E_init_eV": -504.24424629525413,
+  "E_final_eV": -504.82313219623626,
+  "⛔": "원출력 기록용 — 결과표·W·후보 선택·게이트 조정에 쓰지 않는다 (카드 v5 S3 전 예외 규칙)"
+ }
+}
