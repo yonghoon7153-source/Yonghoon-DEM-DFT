@@ -232,6 +232,13 @@
     ✅ **1저자 '이거 하게 전체적으로 하고 DEM 보낼 회신도' (09-25)** → **결정 7 = (a)** `D-2026-09-25-wad-lattice-matching-rule-a` · **A′ 카드 초안** `db/properties/wad_aprime_pilot_prereg_2026_09_25.json`
     (draft · 봉인 전 · 계산 0 — V2 직접 DFT · V3/V4 진단 · V5 프로브 조건 · G1–G6 · 갈래 0–3 · 140 GPU-h 제안) → ⏳ **Codex BY** `codex_BY_prompt_wad_aprime_pilot_prereg_2026_09_25.md` (발송 대기 · Q1–Q8).
     📨 **DEM 회신 2‴+부록 발송판** (`wad_dem_reply_draft_2026_09_23.md` §회신 2‴+부록 · 2‴ 미발송 확인 → 이 판) — 1저자 발송 대기. 선행 확인(카드 §선행): Ag PBE a · Ag/C PP 해시 · 빌더 selftest · V5 CPU 프로브.
+    🔴 **Codex BY NO-GO (09-25 저녁)** — 봉인·본계산 보류 · 경로 찬성 · 재승인 최소조건 6 (`codex_BY_reply_wad_aprime_pilot_prereg_2026_09_25.md` · 원문). → **카드 v2** `wad_aprime_pilot_prereg_v2_2026_09_25.json`
+    (조성 4층 정정 · SE 부분 고정 마스크 + 결정 7 개정 `D-2026-09-25-wad-lattice-matching-rule-a-amend-1` **proposed** · G5 비자명 W 쌍 5 · 분모 고정 · Ag₁₃·C₂₄H₁₂ 제외 · −TS 삭제 · 끝점 양쪽 ≥ 8 Å + dipfield eamp=0 · G2 `--interface_check` 구현(96/96 · 돌연변이 4 빨간불) ·
+    G3/G4 대상군별 · 장치별 한도 · 허용 문구 P1′ 한정 · 단계별 봉인 S1–S4). ⚠ **V5 ≈ 246 GB 추정** (SE|SE 32 GB 스케일 · Ag 19 e) → RESOURCE_BLOCKED 예상 → 갈래0 (G5 NOT_TESTED · UMA 예측 내부 전용). V3/V4 37–42 GB gabia 만.
+    ⏭ **1저자 확인 권고 5** (카드 v2 `⭐_1저자_확인_필요`): ① 부분 마스크 + 개정 비준 ② Ag₁₃ 제외 ③ 갈래0 내부 전용 ④ 표본 5 정의 ⑤ V5 자원 현실 → Codex BY 재심 → S1 봉인.
+    📨 **DEM 3차 회신 수령** (정합·라벨 수용 · 부록 값 미사용 · 부탁 1 잔류 응력 GPa · 부탁 2 시나리오는 DEM 초안) → 회신 4 초안 (`wad_dem_reply_draft_2026_09_23.md` §회신 4 · PBE 응력 GPa 지금 · PBE+D3 는 선행 배치 12·13 뒤).
+    🧪 **선행 배치** `db/inputs/wad_aprime_prep_2026_09_25` (08–11 Ag fcc·그래핀 vc-relax PBE/PBE+D3 · 12·13 comp1 D3 relax/vc-relax · 읽는 규칙 결과 전) · 집계 `se_sym_slab.py --aprime_prep` (음성 6) · ⛔ Ag/C(/H) PP 해시 kgy 에서 받아 채운 뒤 V100 발사.
+    🔧 `run_sese_gpu.sh _done`·`parse_pw` **vc-relax 갈래 추가** (옛 판은 vc-relax 를 SCF 기준으로 통과 — 실제 통과한 실패 이완은 없음 · 05 는 bfgs converged 확인) · `watch_lpsocl_400ps.sh` 남은 런 수 표 기준 (kgy b2o3 '남은 0런' 오기 · 음성 2).
     🔴 **러너 결함**: 기록된 `pw.x PID 563677` 이 **없다** (ps 빈 줄) — `pgrep -P mpirun | head -1` 이 pw.x 가 아닌 자식을 잡았거나 사라진 PID 다.
     완료표 `peak_self_MiB` 가 **세 잡 모두 0** = 자기 VRAM 측정이 한 번도 안 됐다 (컨테이너 PID 공간 ≠ nvidia-smi PID 도 의심). 가드는 mpirun 을 죽이므로 안전은 유지 ·
     기록 필드가 거짓 0 이다 ('조용히 틀린 경로'). V100 진단: 트리 = 래퍼 563671 → mpirun 563691 → **pw.x 563705** · nvidia-smi 는 **호스트 PID 3312066**.

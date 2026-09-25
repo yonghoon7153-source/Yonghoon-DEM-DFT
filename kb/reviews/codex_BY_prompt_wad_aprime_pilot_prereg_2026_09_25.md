@@ -3,7 +3,7 @@ title: "리뷰 BY 프롬프트 — A′ 파일럿 사전등록 카드 (LPSCl | A
 date: 2026-09-25
 updated: 2026-09-25
 tags: [review, codex, adhesion, wad, prereg, estimand, lpscl, silver, graphite, uma, d3, pilot]
-status: 발송 대기 (1저자) — 카드는 draft · 봉인 전 · 계산 0
+status: 발송 완료 · 회신 수령 2026-09-25 **NO-GO** (`codex_BY_reply_…`) → 카드 v2 로 대응 (`wad_aprime_pilot_prereg_v2_2026_09_25.json`) · 재심 대기
 confidence: medium
 verificationStatus: unverified
 explored: false

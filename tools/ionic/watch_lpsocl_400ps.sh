@@ -132,6 +132,19 @@ if [ "${1:-}" = "--selftest" ]; then
       "양성: run_meta 의 셀·원자수를 그대로 찍는다 (b2o3 2×2×1)"
   chk "$(echo "$OUTM3" | grep -q '3×3×1' && echo 0 || echo 1)" \
       "⛔음성: 2×2×1 런에 3×3×1 이라고 말하지 않는다"
+  # ⛔음성 (2026-09-25 kgy 실측): 남은 런 수는 **표**에서 센다. 속도를 재는 범위(루트 전체)의
+  #   완료 수를 표의 런 수에서 빼면 안 된다 — b2o3 kgy 루트에 s6 3런 완료(옮기기 전 원본)가 있고
+  #   SEEDS=5 로 s5 만 볼 때, 화면이 s5 600 K 도는중 · 650/700 미착수인데 "남은 0런 ≈ 0.0 h" 라고 했다.
+  RE="$T/re"
+  for K in 600 650 700; do mkdir -p "$RE/s6/d0.00_cfg0/T$K"; echo '{"a":1}' > "$RE/s6/d0.00_cfg0/T$K/msd.json"; done
+  touch -d '20 hours ago' "$RE/s6/d0.00_cfg0/T600/msd.json"; touch -d '10 hours ago' "$RE/s6/d0.00_cfg0/T650/msd.json"
+  mkdir -p "$RE/s5/d0.00_cfg0/T600"
+  printf 'Time Etot Epot Ekin T\n0.0 -1 -1 0 600\n100.0 -1 -1 0 600\n' > "$RE/s5/d0.00_cfg0/T600/md.log"
+  OUTE=$(SEEDS=5 TEMPS="600 650 700" bash "$0" "$RE" 2>&1)
+  chk "$(echo "$OUTE" | grep -q '남은 3런' && echo 1 || echo 0)" \
+      "⛔음성: 남은 런을 표에서 센다 (s5 3런 미완 → 남은 3런)"
+  chk "$(echo "$OUTE" | grep -q '남은 0런' && echo 0 || echo 1)" \
+      "⛔음성: 표 밖 시드(s6)의 완료로 남은 수를 지우지 않는다 ('남은 0런' 아님)"
   rm -rf "$T"; echo "selftest: $ok 통과 / $bad 실패"
   [ "$bad" = 0 ] || exit 1; exit 0
 fi
@@ -231,18 +244,22 @@ echo "  완료 $_done/$_tot · 도는중 $_run · 미착수 $((_tot-_done-_run))
 if [ -n "${NEW_SEEDS// /}" ]; then
   _scope=""; for _s in $NEW_SEEDS; do [ -d "$R/s$_s" ] && _scope="$_scope $R/s$_s"; done
   _label="이번 라운드(시드 $NEW_SEEDS)"
-  _rem=$(( $(echo $NEW_SEEDS | wc -w) * $(echo $TEMPS | wc -w) ))
 else
-  _scope="$R"; _label="이 루트 전체"; _rem=$_tot
+  _scope="$R"; _label="이 루트 전체"
 fi
+# ⛔ 2026-09-25 — **남은 런 수는 표에서 센다** (위 표의 완료가 아닌 것 = 도는 것 + 미착수).
+#   종전엔 '속도를 재는 범위'(이 루트 전체)의 msd.json 수를 표의 런 수에서 뺐다. 범위가 다르다 —
+#   kgy b2o3 루트에 s6 3런 완료(옮기기 전 원본)가 있고 SEEDS=5 로 s5 만 볼 때 3 − 3 = 0 이 되어
+#   s5 가 막 시작했는데 "남은 0런 ≈ 0.0 h" 라고 찍었다. 속도는 넓은 범위로 재도 되지만 남은 수는 아니다.
+_left=$((_tot - _done))
 if [ -n "${_scope// /}" ]; then
   _n=$(find $_scope -name msd.json 2>/dev/null | wc -l)
   _first=$(find $_scope -name msd.json -printf '%T@\n' 2>/dev/null | sort -n | head -1)
   _last=$(find $_scope -name msd.json -printf '%T@\n' 2>/dev/null | sort -n | tail -1)
   if [ "$_n" -gt 1 ]; then
-    awk -v f="$_first" -v l="$_last" -v n="$_n" -v tot="$_rem" 'BEGIN{
+    awk -v f="$_first" -v l="$_last" -v n="$_n" -v left="$_left" 'BEGIN{
       per=(l-f)/(n-1)/3600;
-      printf "  실측(%s): 런당 %.1f h · 남은 %d런 ≈ %.1f h (%.1f 일)\n", "LBL", per, tot-n, per*(tot-n), per*(tot-n)/24;
+      printf "  실측(%s): 런당 %.1f h · 남은 %d런(표 기준 · 도는 것 포함) ≈ %.1f h (%.1f 일)\n", "LBL", per, left, per*left, per*left/24;
     }' | sed "s/LBL/$_label/"
     echo "  ⚠ 이건 **지금까지의 평균**이지 예측이 아니다 — 온도마다 속도가 다르다"
   else

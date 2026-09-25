@@ -599,7 +599,8 @@ def parse_pw(out_path, calc, d3):
     t = t[k:] if k >= 0 else t
     if "JOB DONE" not in t or "convergence has been achieved" not in t or "convergence NOT achieved" in t:
         raise SlabError(f"{out_path}: 미완료 또는 SCF 미수렴 (마지막 실행)")
-    if calc == "relax":
+    # ⛔ 2026-09-25 — vc-relax 도 같은 이완 규칙 (runner _done 과 같이 고침)
+    if calc in ("relax", "vc-relax"):
         if "bfgs converged" not in t or \
                 re.search(r"bfgs failed|convergence not achieved|maximum number of steps has been reached", t, re.I):
             raise SlabError(f"{out_path}: 이완 미수렴·실패 (마지막 실행 · 'bfgs converged' 가 명시돼야 한다)")
@@ -790,6 +791,173 @@ def bulk_sens_collect(run, qe_in):
     return out
 
 
+# ─────────────────── A′ 선행 배치 집계 (2026-09-25 · DEM 부탁 1 · 카드 선행 확인) ───────────────────
+BOHR_A = 0.529177210903
+
+
+def _final_cell_A(text):
+    """vc-relax **마지막 실행**의 `Begin final coordinates` 안 CELL_PARAMETERS → Å (3×3). 없으면 SlabError.
+
+    중복을 안 만들려고 기존 `tools/comp1_v3/build_lobster_paw_inputs.parse_final_cell` 을 쓴다
+    (그 함수가 '중간 BFGS 셀을 대신 쓰지 않는다' 를 이미 지킨다). ⛔ alat 단위는 값이 없어 환산하지 않고 멈춘다.
+    """
+    import importlib.util
+    p = os.path.join(REPO, "tools", "comp1_v3", "build_lobster_paw_inputs.py")
+    if not os.path.isfile(p):
+        raise SlabError(f"{p} 없음 — 최종 셀 판독기를 못 불러온다 (V100 이면 archive 목록에 tools/comp1_v3/build_lobster_paw_inputs.py 를 넣는다)")
+    spec = importlib.util.spec_from_file_location("_lobster_builder_for_cell", p)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    k = text.rfind("Program PWSCF")
+    t = text[k:] if k >= 0 else text
+    cell, unit = mod.parse_final_cell(t)
+    if cell is None:
+        raise SlabError("최종 좌표 블록(Begin final coordinates)의 CELL_PARAMETERS 가 없다 — 중간 스텝 셀을 대신 쓰지 않는다")
+    if unit == "bohr":
+        return cell * BOHR_A
+    if unit != "angstrom":
+        raise SlabError(f"최종 셀 단위 '{unit}' — Å 로 환산할 값이 없다 (입력을 CELL_PARAMETERS angstrom 으로 준다)")
+    return cell
+
+
+def _first_scf_pbe(text):
+    """마지막 실행의 **첫 SCF** 의 PBE 부분 = 첫 '!' 에너지 − 첫 D3 줄 (D3 는 비자기일관 덧셈)."""
+    import re
+    k = text.rfind("Program PWSCF")
+    t = text[k:] if k >= 0 else text
+    E = re.findall(_RE_E, t, re.M)
+    D = re.findall(_RE_D3, t)
+    if not E or not D:
+        raise SlabError("첫 SCF 의 에너지·D3 줄이 없다")
+    return float(E[0]) - float(D[0])
+
+
+def _stress_gpa_tension(st):
+    """QE 응력 [kbar · **압축 +**] → GPa · **인장 +** (역학 관례). 압력 p [GPa] 는 QE 의 P/10 그대로 (압축 +)."""
+    o = {c: round(-st[c] / 10.0, 4) for c in ("xx", "yy", "zz", "xy", "xz", "yz")}
+    o["p_GPa"] = round(st["P"] / 10.0, 4)
+    return o
+
+
+def aprime_prep_collect(run, qe_in):
+    """A′ 선행 배치 (db/inputs/wad_aprime_prep_2026_09_25) → Ag · 그래핀 a₀ · 정합 변형률 · 라벨 응력 (PBE / PBE+D3).
+
+    읽는 규칙은 jobs.json `reading_rules_set_before_running` 에 **결과 전에** 적혀 있다 — 여기는 그 규칙을 옮긴 것이다.
+    ⛔ 못 하는 것: 계면 W 를 재지 않는다 · 라벨 응력은 조건 설명이지 판정량이 아니다 (문턱 없음) ·
+      Ag 격자상수의 '정답' 을 고르지 않는다 (PBE · PBE+D3 · 실험을 나란히 둔다) · 합격/불합격을 내지 않는다.
+    """
+    import math
+    J = json.load(open(os.path.join(qe_in, "jobs.json"), encoding="utf-8"))
+    lat = J["se_lateral_A"]
+    base = J["baselines_already_run"]
+    out = {"run": run, "missing": {}, "flags": [], "rules": J.get("reading_rules_set_before_running", {})}
+    res = {}
+    for j in J["jobs"]:
+        po = os.path.join(run, j["dir"], "pw.out")
+        try:
+            r = parse_pw(po, j["calc"], bool(j.get("d3")))
+            if r["nat"] is not None and r["nat"] != j["nat"]:
+                raise SlabError(f"nat {r['nat']} ≠ 입력 {j['nat']}")
+            txt = open(po, errors="ignore").read()
+            r["stress_kbar"] = parse_stress_kbar(txt)
+            if j["calc"] == "vc-relax":
+                r["cell_A"] = _final_cell_A(txt)
+            if j.get("kind") == "bulk":
+                r["E_pbe_first_Ry"] = _first_scf_pbe(txt)
+            res[j["dir"]] = r
+        except SlabError as e:
+            out["missing"][j["dir"]] = str(e)
+
+    def a_of(d, kind):
+        c = res[d]["cell_A"]
+        L = [float(np.linalg.norm(v)) for v in c]
+        if kind == "ag_fcc":
+            if max(L) - min(L) > 1e-4:
+                out["flags"].append(f"⚠ {d}: fcc 원시 벡터 길이가 갈렸다 {[round(x, 5) for x in L]} — 셀 모양이 변했다")
+            return math.sqrt(2) * sum(L) / 3
+        if abs(L[0] - L[1]) > 1e-4 or abs(L[2] - 15.0) > 1e-4:
+            out["flags"].append(f"⚠ {d}: 그래핀 면내 벡터 {L[0]:.5f}/{L[1]:.5f} · c {L[2]:.4f} (15 Å 고정이어야 한다)")
+        return (L[0] + L[1]) / 2
+
+    def pick(kind, d52, d70, d70k=None):
+        """R_a0_conv — 결과 전 규칙: 수렴하면 52 Ry 값, 아니면 깃발 + 가장 조밀한 값."""
+        need = [x for x in (d52, d70, d70k) if x]
+        if any(x not in res for x in need):
+            return None, None
+        a = {x: a_of(x, kind) for x in need}
+        conv = abs(a[d52] - a[d70]) <= 0.002 and (d70k is None or abs(a[d70] - a[d70k]) <= 0.002)
+        if not conv:
+            out["flags"].append(f"⚠ {kind}: 기저·k 수렴 규칙(≤ 0.002 Å) 밖 {({k: round(v, 4) for k, v in a.items()})} → 가장 조밀한 값을 쓴다")
+        return a, (a[d52] if conv else a[d70k or d70])
+
+    def final_stress_ok(d, kind):
+        st = res[d]["stress_kbar"]
+        v = abs(st["P"]) if kind == "ag_fcc" else max(abs(st["xx"]), abs(st["yy"]))
+        if v > 0.5:
+            out["flags"].append(f"⚠ {d}: vc-relax 마지막 SCF 응력 {v:.2f} kbar > 0.5 (Pulay 잔류) — 이 잡의 a 는 재평가 필요")
+        return round(v, 3)
+
+    sections = {}
+    for kind, d52, d70, d70k, dd3, a_exp in (("ag_fcc", "08_ag_fcc_pbe_e52_k20", "08_ag_fcc_pbe_e70_k20", "08_ag_fcc_pbe_e70_k24", "09_ag_fcc_pbe_d3_e52_k20", 4.086),
+                                             ("graphene", "10_graphene_pbe_e52_k24", "10_graphene_pbe_e70_k24", None, "11_graphene_pbe_d3_e52_k24", 2.46)):
+        a_all, a_pbe = pick(kind, d52, d70, d70k)
+        sec = {"a_A_by_job": {k: round(v, 5) for k, v in (a_all or {}).items()}, "a_PBE_A": round(a_pbe, 5) if a_pbe else None,
+               "a_exp_A_plan_table": a_exp}
+        if a_all:
+            sec["final_scf_stress_kbar"] = {d: final_stress_ok(d, kind) for d in a_all}
+        if a_pbe and dd3 in res and d52 in res:
+            da = a_of(dd3, kind) - a_of(d52, kind)
+            sec["da_D3_A"] = round(da, 5)
+            sec["a_PBE_D3_A"] = round(a_pbe + da, 5)
+            sec["final_scf_stress_kbar"][dd3] = final_stress_ok(dd3, kind)
+        sections[kind] = sec
+    out["ag_fcc"], out["graphene"] = sections["ag_fcc"], sections["graphene"]
+
+    # R_strain — 흡착층을 SE 에 맞춘다 (결정 7): ε = L_SE / L_흡착층 − 1 [%]
+    def eps(Lse, Lads):
+        return [round(100 * (Lse[0] / Lads[0] - 1), 3), round(100 * (Lse[1] / Lads[1] - 1), 3)]
+    strain = {"P1_Ag111_2r3x7_on_SE1x2": {}, "P2_graphene_4x7r3_on_SE1x3": {}}
+    for lab, a in (("PBE", out["ag_fcc"].get("a_PBE_A")), ("PBE+D3", out["ag_fcc"].get("a_PBE_D3_A")), ("exp_plan_table", 4.086)):
+        if a:
+            s = a / math.sqrt(2)
+            strain["P1_Ag111_2r3x7_on_SE1x2"][lab] = {"a_A": a, "cell_A": [round(2 * math.sqrt(3) * s, 4), round(7 * s, 4)],
+                                                      "eps_pct_x_y": eps(lat["SE_1x2"], (2 * math.sqrt(3) * s, 7 * s))}
+    for lab, a in (("PBE", out["graphene"].get("a_PBE_A")), ("PBE+D3", out["graphene"].get("a_PBE_D3_A")), ("exp_plan_table", 2.46)):
+        if a:
+            strain["P2_graphene_4x7r3_on_SE1x3"][lab] = {"a_A": a, "cell_A": [round(4 * a, 4), round(7 * math.sqrt(3) * a, 4)],
+                                                         "eps_pct_x_y": eps(lat["SE_1x3"], (4 * a, 7 * math.sqrt(3) * a))}
+    out["strain"] = strain
+
+    # R_ctrl_bulk + R_label_stress
+    ls = {"sign": "GPa · 인장 + (QE 출력 kbar 의 부호를 뒤집고 /10) · p_GPa 는 압력 (압축 +)",
+          "axes": "x·y = 입방 [100]·[010] (면내) · z = [001] (슬랩 법선)",
+          "cubic_fixed_cell": {"PBE": _stress_gpa_tension(base["cubic_pbe"]["stress_kbar"])},
+          "epi_inplane_fixed": {"PBE": _stress_gpa_tension(base["epi_pbe"]["stress_kbar"])}}
+    ctrl = {}
+    for d, key in (("12_cubic_relax_pbe_d3", "cubic_fixed_cell"), ("13_epi_vcrelax_pbe_d3", "epi_inplane_fixed")):
+        if d not in res:
+            continue
+        e0 = res[d]["E_pbe_first_Ry"]
+        ok = abs(e0 - base["cubic_pbe"]["E_pbe_first_scf_Ry"]) <= 1e-5
+        ctrl[d] = {"E_pbe_first_Ry": e0, "ref_Ry": base["cubic_pbe"]["E_pbe_first_scf_Ry"], "diff_Ry": e0 - base["cubic_pbe"]["E_pbe_first_scf_Ry"], "ok": ok}
+        if not ok:
+            out["flags"].append(f"⛔ {d}: 첫 SCF PBE 부분이 01·04 와 {abs(ctrl[d]['diff_Ry']):.2e} Ry 다르다 (> 1e-5) — 설정이 갈렸다 · 라벨에 쓰지 않는다")
+            continue
+        ls[key]["PBE+D3"] = _stress_gpa_tension(res[d]["stress_kbar"])
+        if key == "epi_inplane_fixed":
+            c = res[d]["cell_A"]
+            ab = [float(np.linalg.norm(c[0])), float(np.linalg.norm(c[1]))]
+            if max(abs(x - lat["a_SE"]) for x in ab) > 1e-4:
+                out["flags"].append(f"⛔ {d}: epitaxial_ab 인데 면내 벡터가 변했다 {ab} — 제약이 안 걸렸다")
+            cz = c[2]
+            ls[key]["PBE+D3_c_vector_A"] = {"c_A": round(float(np.linalg.norm(cz)), 4),
+                                            "tilt_deg": round(math.degrees(math.acos(abs(cz[2]) / np.linalg.norm(cz))), 3)}
+    out["bulk_control"] = ctrl
+    out["label_stress"] = ls
+    out["⛔"] = "선행 확인이다 — 계면 W 아님 · 라벨 응력은 조건 설명 (DEM 파라미터 아님) · a₀ 는 PBE · PBE+D3 · 실험을 나란히 (정답을 고르지 않는다)"
+    return out
+
+
 # ─────────────────── 이완 점검 (경보 v2 후속 · 점검 제안 A · 2026-09-25) ───────────────────
 #: 결과 전 문턱 — db/properties/wad_sese_4L_result_2026_09_25.json `다음_점검_제안_1저자_결정.A` 와 같은 값.
 #:   ⛔ 결과를 보고 바꾸지 않는다 (바꾸면 그 기록과 갈린다).
@@ -900,6 +1068,171 @@ def relax_check(pw_in_text, final_text, mid_thr=RELAX_MID_THR_A, vac_tol=RELAX_V
             "⛔": "신호만 낸다 — 원인 분류·판정 아님 (경보 v2 는 원인 미분류)"}
 
 
+# ─────────────────── 계면 구조 점검 G2 (A′ 카드 v2 · Codex BY Q7 [P0] · 2026-09-25) ───────────────────
+#: 결과 전 문턱 — 카드 v2 `4_게이트.G2` 와 같은 값. ⛔ 결과를 보고 바꾸지 않는다.
+IFC_PEN_THR_A = 1.5        # SE 원자가 첫 흡착층 평면 아래 이 거리보다 가까우면 '선언한 비혼합 기하 범위를 벗어남'
+IFC_BOND_TOL = 0.15        # 흡착층 결합 길이 허용 (초기 변형 구조의 결합 목록 기준 ±15 %)
+IFC_FIRST_LAYER_A = 0.8    # '첫 흡착층' = SE 에 가장 가까운 흡착 원자에서 이 두께 안
+IFC_NN_FAC = 1.15          # 결합 목록 = 초기 구조에서 같은 원소쌍 최단거리 × 이 배수 안의 쌍
+IFC_FIXED_TOL_A = 1e-3     # 고정 마스크 원자의 허용 변위 (넘으면 마스크가 안 걸린 것)
+SE_ELEMENTS = ("Li", "P", "S", "Cl")
+
+
+def interface_check(init, final, ads_elements=("Ag", "C", "H"), fixed_idx=(), pen_thr=IFC_PEN_THR_A, bond_tol=IFC_BOND_TOL):
+    """UMA 이완 전(init) ↔ 후(final) 계면 모델 — 같은 셀·원자 · PS₄ 온전·짝 · 흡착층 결합 ±15 % · 비혼합 범위 · 고정 마스크.
+
+    정의 (카드 v2 G2 · 봉인 대상):
+      · 법선 = +z 를 SE → 흡착층 방향으로 잡는다 (흡착층 평균 z 가 SE 평균 z 보다 작으면 부호를 뒤집는다). z 는 비주기 · 면내는 최소영상.
+      · 첫 흡착층 평면 z_ref = 최종 구조에서 SE 에 가장 가까운 흡착 원자로부터 IFC_FIRST_LAYER_A 안에 있는 흡착 원자들의 평균 z.
+      · 침투 깊이 p_i = z_i(final) − z_ref (SE 원자 i 전부 — Li·P·S·Cl 원자 ID 는 init 의 SE 원소 인덱스). 비혼합 범위 = 모든 p_i ≤ −pen_thr.
+      · 흡착층 결합 목록 = init 에서 같은 원소쌍(Ag–Ag · C–C · C–H …) 최단거리 × IFC_NN_FAC 안의 쌍. final 에서 각 결합이 ±bond_tol 안.
+      · PS₄ = P 마다 R_PS Å 안 S 4 개 · 짝 동일 (relax_check 와 같은 규칙).
+      · fixed_idx 원자는 변위 < IFC_FIXED_TOL_A (마스크가 실제로 걸렸는지 — 조용히 틀린 경로 방지).
+    ⛔ 못 하는 것: 반응·전하이동을 판정하지 않는다 (구조 경보다) · 원인을 정하지 않는다 · 에너지를 보지 않는다 ·
+      측방 영상 효과를 재지 않는다 (셀이 작으면 '고립 조각' 이라 부르지 않는다).
+    """
+    from ase import Atoms
+    s0, s1 = init.get_chemical_symbols(), final.get_chemical_symbols()
+    if s0 != s1:
+        raise SlabError(f"원자 수·순서가 다르다 (처음 {len(s0)} · 나중 {len(s1)})")
+    C0, C1 = init.cell.array, final.cell.array
+    if np.abs(C0 - C1).max() > 1e-6:
+        raise SlabError("셀이 다르다 — MoLE (같은 셀) 위반")
+    sym = np.array(s1)
+    is_se = np.isin(sym, SE_ELEMENTS)
+    is_ads = np.isin(sym, list(ads_elements))
+    other = sorted(set(sym[~is_se & ~is_ads]))
+    if other:
+        raise SlabError(f"SE 도 흡착층도 아닌 원소 {other} — ads_elements 를 선언한다")
+    if not is_ads.any() or not is_se.any():
+        raise SlabError("SE 원자 또는 흡착층 원자가 없다")
+    pbc = (True, True, False)
+    x0, x1 = init.get_positions(), final.get_positions()
+    d = _mic(x1 - x0, C0, pbc)
+    disp = np.linalg.norm(d, axis=1)
+    flags = []
+    # ① PS₄ (relax_check 와 같은 규칙)
+    def partners(x):
+        i, j, _, _ = _pairs(Atoms(s1, positions=x, cell=C0, pbc=pbc), "P", "S", R_PS)
+        return {int(p): sorted(int(v) for v in j[i == p]) for p in np.where(sym == "P")[0]}
+    p0, p1 = partners(x0), partners(x1)
+    broken = {p: len(v) for p, v in p1.items() if len(v) != 4}
+    swapped = [p for p in p0 if p0[p] != p1[p] and p not in broken]
+    if broken:
+        flags.append(f"PS₄ 깨짐 — P {sorted(broken)} 의 {R_PS} Å 안 S 수 ≠ 4")
+    if swapped:
+        flags.append(f"PS₄ 짝 바뀜 — P {swapped}")
+    # ② 흡착층 결합 목록 (init) → final 길이 ±tol
+    ads_i = np.where(is_ads)[0]
+    def dist(x, i, j):
+        return float(np.linalg.norm(_mic(x[j] - x[i], C0, pbc)))
+    bonds, bad = [], []
+    for a in sorted(set(sym[ads_i])):
+        for b in sorted(set(sym[ads_i])):
+            if a > b:
+                continue
+            ia, ib = ads_i[sym[ads_i] == a], ads_i[sym[ads_i] == b]
+            dd = [(dist(x0, i, j), int(i), int(j)) for i in ia for j in ib if (a != b or i < j)]
+            if not dd:
+                continue
+            dmin = min(v[0] for v in dd)
+            for r0, i, j in dd:
+                if r0 <= IFC_NN_FAC * dmin:
+                    r1 = dist(x1, i, j)
+                    bonds.append((i, j, r0, r1))
+                    if abs(r1 / r0 - 1) > bond_tol:
+                        bad.append({"i": i, "j": j, "pair": f"{a}-{b}", "r0_A": round(r0, 3), "r1_A": round(r1, 3), "dev_pct": round(100 * (r1 / r0 - 1), 1)})
+    if bad:
+        flags.append(f"흡착층 결합 {len(bad)}/{len(bonds)} 개가 초기 변형 구조 대비 ±{int(bond_tol * 100)} % 밖 (예 {bad[0]})")
+    # ③ 비혼합 범위 — 첫 흡착층 평면 기준 침투 깊이
+    sgn = 1.0 if x1[is_ads, 2].mean() > x1[is_se, 2].mean() else -1.0
+    z1 = sgn * x1[:, 2]
+    zads_min = z1[is_ads].min()
+    first = is_ads & (z1 <= zads_min + IFC_FIRST_LAYER_A)
+    z_ref = float(z1[first].mean())
+    pen = z1[is_se] - z_ref
+    se_idx = np.where(is_se)[0]
+    k = int(np.argmax(pen))
+    worst = {"i": int(se_idx[k]), "el": str(sym[se_idx[k]]), "p_A": round(float(pen[k]), 3)}
+    mixed = [int(se_idx[m]) for m in np.where(pen > -pen_thr)[0]]
+    if mixed:
+        flags.append(f"비혼합 기하 범위 벗어남 — SE 원자 {mixed} 가 첫 흡착층 평면 아래 {pen_thr} Å 안 (최대 p {worst['p_A']} Å · 구조 경보 · 반응 판정 아님)")
+    gap = float(z1[is_ads].min() - z1[is_se].max())
+    # ④ 고정 마스크 실제 적용 여부
+    fixed_idx = [int(i) for i in fixed_idx]
+    moved_fixed = [i for i in fixed_idx if disp[i] > IFC_FIXED_TOL_A]
+    if moved_fixed:
+        flags.append(f"고정 마스크 원자 {len(moved_fixed)}/{len(fixed_idx)} 개가 움직였다 (max {disp[moved_fixed].max():.3f} Å) — 마스크가 안 걸렸다")
+    return {"n_atoms": len(s1), "n_se": int(is_se.sum()), "n_ads": int(is_ads.sum()), "normal_sign": sgn,
+            "z_ref_first_ads_layer_A": round(z_ref * sgn, 3), "n_first_layer_atoms": int(first.sum()),
+            "penetration_max": worst, "mixed_se_atoms": mixed, "se_ads_min_gap_A": round(gap, 3),
+            "bonds_listed": len(bonds), "bonds_out_of_tol": bad, "ps4_broken": broken, "ps4_partner_changed": swapped,
+            "disp_max_A": round(float(disp.max()), 3), "disp_rms_A": round(float(np.sqrt((disp ** 2).mean())), 3),
+            "fixed_idx_n": len(fixed_idx), "fixed_moved": moved_fixed, "flags": flags,
+            "thresholds": {"pen_thr_A": pen_thr, "bond_tol": bond_tol, "first_layer_A": IFC_FIRST_LAYER_A, "nn_fac": IFC_NN_FAC,
+                           "fixed_tol_A": IFC_FIXED_TOL_A, "R_PS_A": R_PS},
+            "⛔": "구조 경보만 낸다 — 반응·전하이동 판정 아님 · 원인 분류 아님 · 측방 영상 효과 미측정"}
+
+
+def _selftest_interface_check(ck):
+    """G2: 실제 4층 S 바깥 슬랩 + 합성 Ag 층으로 양성 1 + 음성 4 (Li 침투 · Ag–Ag 결합 · PS₄ 절단 · 고정 마스크)."""
+    from ase import Atoms
+    from ase.io import read
+    p = os.path.join(REPO, "db", "structures", "wad_se_slabs_4L_2026_09_24", "comp1_001_s_outer_L4.vasp")
+    if not os.path.isfile(p):
+        ck("interface_check: 4층 정본 슬랩이 repo 에 있다", False, p)
+        return
+    se = read(p)
+    C = se.cell.array
+    ztop = se.get_positions()[:, 2].max()
+    # 합성 Ag 층 2겹 — 면내 격자 a/3 (3.35 Å · 실제 Ag 2.89 보다 넉넉) · 층간 2.36 · SE 위 2.8 Å
+    a = float(np.linalg.norm(C[0])) / 3
+    pos = [[i * a + (0.5 * a if L else 0), j * a + (0.5 * a if L else 0), ztop + 2.8 + 2.36 * L] for L in range(2) for i in range(3) for j in range(3)]
+    ads = Atoms("Ag" * len(pos), positions=pos, cell=C, pbc=(True, True, False))
+    init = se + ads
+    init.set_cell(C); init.set_pbc((True, True, False))
+    n_se = len(se)
+    fixed = [i for i in range(n_se) if se.get_positions()[i, 2] < se.get_positions()[:, 2].mean()]   # 계면 반대쪽 절반 고정
+
+    fin = init.copy()
+    o = interface_check(init, fin, fixed_idx=fixed)
+    ck("interface_check 양성: 같은 구조 → 깃발 0 · SE·Ag 원자수 맞음", not o["flags"] and o["n_se"] == n_se and o["n_ads"] == len(pos), o["flags"])
+    ck("interface_check: 첫 흡착층 평면 = 아래 Ag 9개 · 간격 2.8 Å", o["n_first_layer_atoms"] == 9 and abs(o["se_ads_min_gap_A"] - 2.8) < 1e-3, o)
+    fin = init.copy(); x = fin.get_positions()
+    free_se = [i for i in range(n_se) if i not in fixed]
+    x[free_se] += np.random.default_rng(0).normal(0, 0.03, (len(free_se), 3)); fin.set_positions(x)
+    o = interface_check(init, fin, fixed_idx=fixed)
+    ck("interface_check 양성: 자유 원자 0.03 Å 흔들림 → 깃발 0", not o["flags"], o["flags"])
+    # ⛔ 음성 ① Li 하나를 첫 Ag 평면 1.0 Å 아래로 (p = −1.0 > −1.5)
+    fin = init.copy(); x = fin.get_positions()
+    li = next(i for i in free_se if init.get_chemical_symbols()[i] == "Li" and x[i, 2] > ztop - 3)
+    x[li, 2] = ztop + 2.8 - 1.0; fin.set_positions(x)
+    o = interface_check(init, fin, fixed_idx=fixed)
+    ck("⛔음성: Li 가 첫 Ag 평면 1.0 Å 아래까지 올라옴 → 비혼합 범위 깃발 + 원자 ID", any("비혼합" in f for f in o["flags"]) and li in o["mixed_se_atoms"], o["flags"])
+    # ⛔ 음성 ② Ag–Ag 결합 20 % 늘림 (Ag 하나를 x 로 0.67 Å 이동)
+    fin = init.copy(); x = fin.get_positions(); x[n_se, 0] += 0.2 * a; fin.set_positions(x)
+    o = interface_check(init, fin, fixed_idx=fixed)
+    ck("⛔음성: Ag 원자 이동으로 결합 ±15 % 밖 → 결합 깃발", any("결합" in f for f in o["flags"]) and o["bonds_out_of_tol"], o["flags"])
+    # ⛔ 음성 ③ PS₄ 절단 — 자유 S 하나를 2 Å 밀어낸다
+    fin = init.copy(); x = fin.get_positions()
+    P0 = next(i for i in free_se if init.get_chemical_symbols()[i] == "P")
+    ii, jj, _, _ = _pairs(init, "P", "S", R_PS)
+    S0 = int(jj[ii == P0][0]); x[S0] += 2.0 * (x[S0] - x[P0]) / np.linalg.norm(x[S0] - x[P0]); fin.set_positions(x)
+    o = interface_check(init, fin, fixed_idx=[i for i in fixed if i != S0])
+    ck("⛔음성: S 를 P 에서 2 Å 밀어냄 → PS₄ 깨짐 깃발", any("PS₄" in f for f in o["flags"]), o["flags"])
+    # ⛔ 음성 ④ 고정 마스크 원자가 움직임 (마스크가 안 걸린 실행)
+    fin = init.copy(); x = fin.get_positions(); x[fixed[0], 0] += 0.05; fin.set_positions(x)
+    o = interface_check(init, fin, fixed_idx=fixed)
+    ck("⛔음성: 고정 마스크 원자 0.05 Å 이동 → '마스크 안 걸림' 깃발", any("마스크" in f for f in o["flags"]) and fixed[0] in o["fixed_moved"], o["flags"])
+    # ⛔ 음성 ⑤ 셀이 다르면 멈춤 (MoLE)
+    fin = init.copy(); fin.set_cell(C * 1.001, scale_atoms=False)
+    try:
+        interface_check(init, fin); bad = False
+    except SlabError:
+        bad = True
+    ck("⛔음성: 셀이 다르면 SlabError (같은 셀 위반)", bad)
+
+
 # ─────────────────────────────── selftest ───────────────────────────────
 def _selftest_bulk_sens(ck):
     """--bulk_sens: 합성 pw.out 로 표·R1·R2·내장 대조 (양성 + 음성)."""
@@ -961,6 +1294,118 @@ def _selftest_bulk_sens(ck):
     except SlabError:
         bad = True
     ck("⛔음성: 응력 블록 없음 → SlabError", bad)
+
+
+def _selftest_aprime_prep(ck):
+    """--aprime_prep: 합성 pw.out 로 a₀ · 수렴 규칙 · 변형률 · 라벨 응력 부호 · 내장 대조 (양성 + 음성)."""
+    import tempfile
+    import math
+    qe_in = os.path.join(REPO, "db", "inputs", "wad_aprime_prep_2026_09_25")
+    if not os.path.isfile(os.path.join(qe_in, "jobs.json")):
+        ck("aprime_prep: 입력 폴더가 repo 에 있다", False, qe_in)
+        return
+    J = json.load(open(os.path.join(qe_in, "jobs.json"), encoding="utf-8"))
+    E0 = J["baselines_already_run"]["cubic_pbe"]["E_pbe_first_scf_Ry"]
+    aS = J["se_lateral_A"]["a_SE"]
+
+    def sblock(xx, yy, zz, yz, P):
+        return (f"          total   stress  (Ry/bohr**3)                   (kbar)     P=  {P:10.2f}\n"
+                f"   0.00009414   0.00000000   0.00000000   {xx:12.2f}         0.00         0.00\n"
+                f"   0.00000000  -0.00002425  -0.00000104         0.00   {yy:12.2f}   {yz:12.2f}\n"
+                f"   0.00000000  -0.00000104  -0.00000045         0.00   {yz:12.2f}   {zz:12.2f}")
+    A = {"08_ag_fcc_pbe_e52_k20": 4.1520, "08_ag_fcc_pbe_e70_k20": 4.1530, "08_ag_fcc_pbe_e70_k24": 4.1528,
+         "09_ag_fcc_pbe_d3_e52_k20": 4.0700, "10_graphene_pbe_e52_k24": 2.4670, "10_graphene_pbe_e70_k24": 2.4672,
+         "11_graphene_pbe_d3_e52_k24": 2.4665}
+
+    def fake(root, a_over=None, fail=(), nofinal=(), nod3=(), ctrl_off=0.0, P_over=None, cubic_xx=20.0):
+        a_over, P_over = a_over or {}, P_over or {}
+        for j in J["jobs"]:
+            d = os.path.join(root, j["dir"]); os.makedirs(d, exist_ok=True)
+            ed = -0.0123 if j.get("d3") else None
+            e1 = (E0 + ctrl_off if j["kind"] == "bulk" else -300.0) + (ed or 0.0)
+            L = ["     Program PWSCF v.7.4.1 starts", f"     number of atoms/cell      =  {j['nat']:10d}",
+                 "     convergence has been achieved in  10 iterations", f"!    total energy              =   {e1:.8f} Ry"]
+            if ed is not None and j["dir"] not in nod3:
+                L.append(f"     DFT-D3 Dispersion         =   {ed:.8f} Ry")
+            if j["dir"] in fail:
+                L.append("     bfgs failed after 100 scf cycles and  99 bfgs steps, convergence not achieved")
+            else:
+                L.append("     bfgs converged in   5 scf cycles and   4 bfgs steps")
+            if j["calc"] == "vc-relax" and j["dir"] not in nofinal:
+                L += ["Begin final coordinates", "     new unit-cell volume = 100.0 a.u.^3", "", "CELL_PARAMETERS (angstrom)"]
+                if j["kind"] == "ag_fcc":
+                    h = a_over.get(j["dir"], A[j["dir"]]) / 2
+                    L += [f"   0.000000000   {h:.9f}   {h:.9f}", f"   {h:.9f}   0.000000000   {h:.9f}", f"   {h:.9f}   {h:.9f}   0.000000000",
+                          "", "ATOMIC_POSITIONS (angstrom)", "Ag            0.0000000000        0.0000000000        0.0000000000"]
+                elif j["kind"] == "graphene":
+                    a = a_over.get(j["dir"], A[j["dir"]])
+                    L += [f"   {a:.9f}   0.000000000   0.000000000", f"  {-a / 2:.9f}   {a * math.sqrt(3) / 2:.9f}   0.000000000",
+                          "   0.000000000   0.000000000  15.000000000", "", "ATOMIC_POSITIONS (crystal)",
+                          "C             0.3333333333        0.6666666667        0.5000000000"]
+                else:
+                    L += [f"  {aS:.9f}   0.000000000   0.000000000", f"   0.000000000  {aS:.9f}   0.000000000",
+                          "   0.000000000   0.150000000  10.020000000", "", "ATOMIC_POSITIONS (angstrom)",
+                          "Li            0.0000000000        0.0000000000        0.0000000000"]
+                L += ["End final coordinates", "     A final scf calculation at the relaxed structure.",
+                      "     convergence has been achieved in   8 iterations", f"!    total energy              =   {e1 - 0.001:.8f} Ry"]
+                if ed is not None and j["dir"] not in nod3:
+                    L.append(f"     DFT-D3 Dispersion         =   {ed:.8f} Ry")
+            P = P_over.get(j["dir"], 0.05)
+            if j["kind"] == "bulk" and j["cell"] == "cubic":
+                L.append(sblock(cubic_xx, -8.0, -8.5, 11.0, (cubic_xx - 16.5) / 3))
+            elif j["kind"] == "bulk":
+                L.append(sblock(15.0, -2.0, -0.05, -0.10, 4.3))
+            else:
+                L.append(sblock(P, P, 0.0 if j["kind"] == "graphene" else P, 0.0, P))
+            L.append("   JOB DONE.")
+            open(os.path.join(d, "pw.out"), "w").write("\n".join(L) + "\n")
+
+    with tempfile.TemporaryDirectory() as r:
+        fake(r)
+        o = aprime_prep_collect(r, qe_in)
+        ck("aprime_prep 양성: 누락 0 · 깃발 0", not o["missing"] and not o["flags"], (o["missing"], o["flags"]))
+        ck("aprime_prep: Ag a_PBE = 52 Ry 값 (수렴 규칙 안)", abs((o["ag_fcc"]["a_PBE_A"] or 0) - 4.1520) < 1e-4, o["ag_fcc"])
+        ck("aprime_prep: Ag Δa_D3 = −0.082 · a_PBE+D3 = 4.070", abs(o["ag_fcc"].get("da_D3_A", 9) + 0.082) < 1e-4
+           and abs(o["ag_fcc"].get("a_PBE_D3_A", 0) - 4.070) < 1e-4, o["ag_fcc"])
+        ck("aprime_prep: 그래핀 a_PBE = 2.467", abs((o["graphene"]["a_PBE_A"] or 0) - 2.4670) < 1e-4, o["graphene"])
+        ex = o["strain"]["P1_Ag111_2r3x7_on_SE1x2"]["exp_plan_table"]["eps_pct_x_y"]
+        ck("aprime_prep: 계획표 변형률 재현 — Ag(111) a 4.086 → +0.46 / −0.57 %", abs(ex[0] - 0.46) < 0.01 and abs(ex[1] + 0.57) < 0.01, ex)
+        eg = o["strain"]["P2_graphene_4x7r3_on_SE1x3"]["exp_plan_table"]["eps_pct_x_y"]
+        ck("aprime_prep: 계획표 변형률 재현 — 그래핀 a 2.46 → +2.19 / +1.14 %", abs(eg[0] - 2.19) < 0.01 and abs(eg[1] - 1.14) < 0.01, eg)
+        lsd = o["label_stress"]
+        ck("aprime_prep: 부호 — QE +20 kbar(압축) → 인장 + 관례 −2.0 GPa", lsd["cubic_fixed_cell"].get("PBE+D3", {}).get("xx") == -2.0, lsd["cubic_fixed_cell"])
+        ck("aprime_prep: PBE 판은 04 기준점에서 — xx −1.298 · yz −1.08 GPa", lsd["cubic_fixed_cell"]["PBE"]["xx"] == -1.298
+           and lsd["cubic_fixed_cell"]["PBE"]["yz"] == -1.08, lsd["cubic_fixed_cell"]["PBE"])
+        ck("aprime_prep: 내장 대조 통과 (12·13 첫 SCF PBE 부분 = 04)", all(v["ok"] for v in o["bulk_control"].values()) and len(o["bulk_control"]) == 2, o["bulk_control"])
+        ck("aprime_prep: epi c 벡터 기울기를 잰다", o["label_stress"]["epi_inplane_fixed"].get("PBE+D3_c_vector_A", {}).get("tilt_deg", 0) > 0.5)
+    with tempfile.TemporaryDirectory() as r:
+        fake(r, fail=("08_ag_fcc_pbe_e52_k20",))
+        o = aprime_prep_collect(r, qe_in)
+        ck("⛔음성: vc-relax 가 bfgs failed 면 누락 (최종 셀·JOB DONE 이 있어도)", "08_ag_fcc_pbe_e52_k20" in o["missing"]
+           and o["ag_fcc"]["a_PBE_A"] is None and "PBE" not in o["strain"]["P1_Ag111_2r3x7_on_SE1x2"], o["missing"])
+    with tempfile.TemporaryDirectory() as r:
+        fake(r, a_over={"08_ag_fcc_pbe_e70_k20": 4.1580})
+        o = aprime_prep_collect(r, qe_in)
+        ck("⛔음성: 기저 수렴 규칙 밖(0.006 Å) → 깃발 + 가장 조밀한 값(e70·k24)", any("수렴 규칙" in f for f in o["flags"])
+           and abs(o["ag_fcc"]["a_PBE_A"] - 4.1528) < 1e-4, (o["flags"], o["ag_fcc"]["a_PBE_A"]))
+    with tempfile.TemporaryDirectory() as r:
+        fake(r, ctrl_off=1e-4)
+        o = aprime_prep_collect(r, qe_in)
+        ck("⛔음성: 내장 대조 실패(1e-4 Ry) → 깃발 · 라벨에 PBE+D3 안 실음", len([f for f in o["flags"] if "첫 SCF" in f]) == 2
+           and "PBE+D3" not in o["label_stress"]["cubic_fixed_cell"] and "PBE+D3" not in o["label_stress"]["epi_inplane_fixed"], o["flags"])
+    with tempfile.TemporaryDirectory() as r:
+        fake(r, nofinal=("10_graphene_pbe_e52_k24",))
+        o = aprime_prep_collect(r, qe_in)
+        ck("⛔음성: 최종 좌표 블록 없는 vc-relax → 누락 (중간 셀을 대신 쓰지 않는다)", "10_graphene_pbe_e52_k24" in o["missing"]
+           and "최종 좌표" in o["missing"]["10_graphene_pbe_e52_k24"], o["missing"])
+    with tempfile.TemporaryDirectory() as r:
+        fake(r, nod3=("09_ag_fcc_pbe_d3_e52_k20",))
+        o = aprime_prep_collect(r, qe_in)
+        ck("⛔음성: D3 잡에 분산 줄 없음 → 누락 (0 으로 채우지 않는다)", "09_ag_fcc_pbe_d3_e52_k20" in o["missing"] and "da_D3_A" not in o["ag_fcc"], o["missing"])
+    with tempfile.TemporaryDirectory() as r:
+        fake(r, P_over={"08_ag_fcc_pbe_e52_k20": 0.8})
+        o = aprime_prep_collect(r, qe_in)
+        ck("⛔음성: 마지막 SCF 응력 0.8 kbar > 0.5 → Pulay 깃발", any("Pulay" in f for f in o["flags"]), o["flags"])
 
 
 def _selftest_relax_check(ck):
@@ -1253,6 +1698,8 @@ def _selftest():
     _selftest_collect(ck)
     _selftest_relax_check(ck)
     _selftest_bulk_sens(ck)
+    _selftest_aprime_prep(ck)
+    _selftest_interface_check(ck)
     print(f"{'✅' if n_bad == 0 else '⛔'} se_sym_slab selftest {n_ok}/{n_ok + n_bad} 통과")
     return 0 if n_bad == 0 else 1
 
@@ -1273,6 +1720,11 @@ def main():
     ap.add_argument("--collect", metavar="RUN", help="실행 폴더의 pw.out 들 → W (J/m²) · <RUN>/sese_result.json")
     ap.add_argument("--qe_in", help="--collect 가 대조할 입력 폴더 (기본 db/inputs/wad_sese_control_2026_09_23)")
     ap.add_argument("--bulk_sens", metavar="RUN", help="벌크 수치 민감도 집계 (--qe_in 필수 · 결과 <RUN>/bulk_sens_result.json · 진단 R1·R2)")
+    ap.add_argument("--aprime_prep", metavar="RUN", help="A′ 선행 배치 집계 (--qe_in 필수 · 결과 <RUN>/aprime_prep_result.json · Ag·그래핀 a₀ · 변형률 · 라벨 응력)")
+    ap.add_argument("--interface_check", nargs=2, metavar=("INIT", "FINAL"),
+                    help="G2: UMA 이완 전·후 계면 구조 (xyz/vasp · 같은 셀) — PS₄ · 흡착층 결합 ±15 % · 비혼합 범위 1.5 Å · 고정 마스크 (구조 경보 · 판정 아님)")
+    ap.add_argument("--ads_elements", default="Ag,C,H", help="--interface_check 의 흡착층 원소 (기본 Ag,C,H)")
+    ap.add_argument("--fixed_idx", default="", help="--interface_check 의 고정 마스크 원자 인덱스 (쉼표 · 또는 JSON 파일 경로)")
     ap.add_argument("--relax_check", nargs=2, metavar=("PW_IN", "FINAL"),
                     help="이완 전 pw.in ↔ 최종 좌표(pw.out 또는 붙여넣은 Begin/End final coordinates) — PS₄ · 짝 · 진공 · 층별 변위 (판정 아님)")
     a = ap.parse_args()
@@ -1286,6 +1738,26 @@ def main():
             json.dump(o, f, ensure_ascii=False, indent=1)
         print(json.dumps({k: o[k] for k in ("table", "diagnostics", "flags", "missing")}, ensure_ascii=False, indent=1))
         return 0 if not o["missing"] and not o["flags"] else 2
+    if a.aprime_prep:
+        if not a.qe_in:
+            ap.error("--aprime_prep 에는 --qe_in 이 필요하다")
+        o = aprime_prep_collect(a.aprime_prep, a.qe_in)
+        with open(os.path.join(a.aprime_prep, "aprime_prep_result.json"), "w", encoding="utf-8") as f:
+            json.dump(o, f, ensure_ascii=False, indent=1, default=float)
+        print(json.dumps({k: o[k] for k in ("ag_fcc", "graphene", "strain", "label_stress", "bulk_control", "flags", "missing")},
+                         ensure_ascii=False, indent=1, default=float))
+        return 0 if not o["missing"] and not o["flags"] else 2
+    if a.interface_check:
+        from ase.io import read as _read
+        fx = a.fixed_idx.strip()
+        if fx and os.path.isfile(fx):
+            fixed = json.load(open(fx))
+        else:
+            fixed = [int(v) for v in fx.split(",") if v.strip()]
+        r = interface_check(_read(a.interface_check[0]), _read(a.interface_check[1]),
+                            ads_elements=tuple(a.ads_elements.split(",")), fixed_idx=fixed)
+        print(json.dumps(r, ensure_ascii=False, indent=1, default=float))
+        return 0 if not r["flags"] else 2
     if a.relax_check:
         r = relax_check(open(a.relax_check[0], encoding="utf-8").read(), open(a.relax_check[1], encoding="utf-8", errors="ignore").read())
         print(json.dumps(r, ensure_ascii=False, indent=1))

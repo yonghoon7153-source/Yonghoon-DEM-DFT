@@ -71,7 +71,7 @@ evidenceScope: multi-source-mixed
 |---|---|---|---|
 | ① | P0 완료 판정기 수정 · 원출력 마지막 실행 확인 | ✅ | 네 잡 모두 명시 수렴 · 성분별 힘 < 1e-3 |
 | ② | **벌크 수치 민감도** — 52 원자 · cubic/epi × (52,k4 · 70,k3 · 70,k4) + epi 내장 대조 = 7 SCF (V100 · 27 min) | ✅ R1·R2 통과 (σ_yz 10.8 kbar · ΔW′ 0.0775 네 설정 동일 · 70/k4 대비 −0.16 meV/atom) | `db/inputs/wad_sese_bulk_sensitivity_2026_09_25` · 집계 `se_sym_slab.py --bulk_sens` · 진단 R1(전단 실재)·R2(ΔW′ 스프레드 ≤ 0.02) — **결과 뒤 정한 진단 규칙**임을 명시 · 슬랩 W 수렴 인증 아님 |
-| ③ | **A′ 파일럿 사전등록** — 카드 초안 `db/properties/wad_aprime_pilot_prereg_2026_09_25.json` (V1 대조 · V2 Ag\|graphene 직접 DFT · V3/V4 조각 진단 · V5 작은 주기 계면은 프로브 통과 시 · G1–G6 · 갈래 0–3 · 자원 140 GPU-h 제안) | ⏳ **Codex BY** `kb/reviews/codex_BY_prompt_wad_aprime_pilot_prereg_2026_09_25.md` (발송 대기) | 리뷰 → 1저자 비준 → 봉인 → 선행 확인(Ag PBE a · PP 해시 · 빌더 selftest · V5 프로브) → 계산 |
+| ③ | **A′ 파일럿 사전등록** — v1 초안 → **Codex BY NO-GO** (`codex_BY_reply_…` · 재승인 최소조건 6: 4층 조성·SE 고정 정책 / G5 계수 / Ag₁₃·−TS / 분리 끝점 / G2·G3G4·자원 / 허용 문구) → **카드 v2** `db/properties/wad_aprime_pilot_prereg_v2_2026_09_25.json` (단계별 봉인 S1–S4 · G2 `--interface_check` 구현 · 1저자 확인 권고 5 · **V5 ≈ 246 GB 추정 → RESOURCE_BLOCKED 예상 → 갈래0 내부 전용**) | ⏳ Codex BY 재심 → 1저자 비준 → S1 봉인 | 결정 7 개정 `D-2026-09-25-wad-lattice-matching-rule-a-amend-1` proposed |
 | ④ | DEM 회신 **2‴+부록 발송판** (정합 규칙 (a) · 라벨 · Q6 부록) | ✅ 초안 완료 → 1저자 발송 | `kb/projects/wad_dem_reply_draft_2026_09_23.md` §회신 2‴+부록 |
 | — | 5층 · 여러 Li 배열 · 슬랩 재계산 | 안 함 | Codex: 지금 필수 아님 |
 

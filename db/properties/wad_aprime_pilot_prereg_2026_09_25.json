@@ -3,7 +3,7 @@
  "kind": "estimand",
  "record_kind": "prospective",
  "date": "2026-09-25",
- "status": "draft — Codex BY 리뷰 → 1저자 비준 → 봉인 (content_digest). ⛔ 봉인 전엔 계산을 던지지 않는다.",
+ "status": "superseded — Codex BY NO-GO (2026-09-25) → v2 `wad_aprime_pilot_prereg_v2_2026_09_25.json`. 이 판은 봉인된 적 없는 초안이다 (content_digest 없음 · 계산 0). 회신 BY 의 행 번호는 이 파일 기준이라 내용은 그대로 둔다.",
  "results_seen": false,
  "results_seen_note": "이 카드의 표본(V2–V5)은 계산 0 건. V1(SE|SE 4층)은 이미 끝났고 그 결과(경보 · 두 참조)는 봤다 — V1 은 여기서 **대조 기록**일 뿐 판정 표본이 아니다.",
  "track": "W_ad (우리 DFT 기준선) → 1저자 = 사용자",
@@ -163,6 +163,12 @@
    "state": "draft",
    "by": "agent",
    "note": "v4 ③ — 1저자 '이거 하게 전체적으로 하고'. Codex BY 리뷰 뒤 1저자 비준·봉인. 봉인 전 계산 0."
+  },
+  {
+   "at": "2026-09-25",
+   "state": "superseded",
+   "by": "agent",
+   "note": "Codex BY NO-GO — 재승인 최소조건 6 · v2 로 대체. 봉인 전 초안이라 개정이 사전등록으로 성립한다 (BY Q7)."
   }
  ]
 }

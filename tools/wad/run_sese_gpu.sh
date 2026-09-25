@@ -72,7 +72,7 @@ HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 _last_run() {  # $1 = pw.out → 마지막 실행의 텍스트 (헤더가 없으면 전체)
   awk '/Program PWSCF/{buf=""} {buf=buf $0 "\n"} END{printf "%s", buf}' "$1"
 }
-_done() {   # $1 = pw.out · $2 = calc (scf|relax|probe)
+_done() {   # $1 = pw.out · $2 = calc (scf|relax|vc-relax|probe)
   [ -f "$1" ] || return 1
   local T; T=$(_last_run "$1")
   printf '%s' "$T" | grep -aq "JOB DONE" || return 1
@@ -85,7 +85,8 @@ _done() {   # $1 = pw.out · $2 = calc (scf|relax|probe)
   fi
   printf '%s' "$T" | grep -aq "convergence has been achieved" || return 1
   printf '%s' "$T" | grep -aq "convergence NOT achieved" && return 1
-  if [ "$2" = relax ]; then
+  # ⛔ 2026-09-25 — vc-relax 도 같은 이완 규칙 (옛 판은 relax 만 갈라 vc-relax 를 SCF 기준으로 통과시켰다)
+  if [ "$2" = relax ] || [ "$2" = vc-relax ]; then
     printf '%s' "$T" | grep -aq "bfgs converged" || return 1
     printf '%s' "$T" | grep -aqiE "bfgs failed|convergence not achieved|maximum number of steps has been reached" && return 1
   fi
@@ -224,6 +225,11 @@ if [ "$IN" = "--selftest" ]; then
   ck "⛔scf: 앞 실행 성공 · 마지막 실행 미수렴 → 미완료" "! _done $T/j.out scf"
   printf "     Program PWSCF v.7.4.1 starts\nconvergence has been achieved\nbfgs converged in 20 scf cycles\nEnd final coordinates\nJOB DONE\n     Program PWSCF v.7.4.1 starts\n     iteration #  3     ecut=    52.00 Ry\n" > "$T/k.out"
   ck "⛔앞 실행 성공 · 마지막 실행은 도중에 죽음(JOB DONE 없음) → 미완료" "! _done $T/k.out relax"
+  # ⛔ 2026-09-25 — vc-relax 도 이완이다. 옛 판은 `[ "$2" = relax ]` 로만 갈라 vc-relax 가 SCF 기준으로 통과했다
+  #   (A′ 선행 배치에 vc-relax 가 들어가며 발견 · 실제로 통과한 실패 이완은 없다 — 05 는 bfgs converged 확인됨).
+  ck "⛔vc-relax: bfgs failed + 최종 좌표 + JOB DONE → 미완료" "! _done $T/f.out vc-relax"
+  ck "⛔vc-relax: bfgs converged 없음 → 미완료"               "! _done $T/g.out vc-relax"
+  ck "vc-relax: 앞 실패 · 마지막 성공 → 완료"                  "_done $T/i.out vc-relax"
   printf "  vdw_corr = 'grimme-d3'\n  dftd3_version = 4\n  dftd3_threebody = .false.\n" > "$T/a.in"
   ck "D3 + threebody 명시 → 통과"        "_d3_ok $T/a.in"
   printf "  vdw_corr = 'grimme-d3'\n  dftd3_version = 4\n" > "$T/b.in"

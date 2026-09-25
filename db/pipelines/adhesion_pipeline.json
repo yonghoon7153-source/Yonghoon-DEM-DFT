@@ -285,6 +285,14 @@
    "verdict": "조건부 GO",
    "one_line": "원인 진단은 조건부 GO · **'방법 검증 완료'·DEM 입력 승격은 NO-GO**. P0: 실패한 이완을 완료로 받는 판정기 (수정됨). W′ 0.354 는 일관되게 정의되나 +0.0775 는 **참조 변경 효과**이지 순수 전단이 아니다. ±0.16 문헌 귀속 철회.",
    "record": "kb/reviews/codex_BX_reply_wad_sese_4L_alarm_2026_09_25.md"
+  },
+  {
+   "id": "BY",
+   "date": "2026-09-25",
+   "verdict": "NO-GO (봉인·본계산 보류 · A′ 경로 찬성) — 재승인 최소조건 6",
+   "prompt": "kb/reviews/codex_BY_prompt_wad_aprime_pilot_prereg_2026_09_25.md",
+   "reply": "kb/reviews/codex_BY_reply_wad_aprime_pilot_prereg_2026_09_25.md",
+   "response": "db/properties/wad_aprime_pilot_prereg_v2_2026_09_25.json"
   }
  ],
  "hazards": [
@@ -322,15 +330,15 @@
  "open": [
   {
    "state": "진행",
-   "text": "**파이프라인 v4** (`D-2026-09-25-wad-reference-state-policy`): ① P0·원출력 확인 ✅ → ② 벌크 수치 민감도 ✅ → ③ A′ 카드 초안 ✅ → **Codex BY** ⏳ → 비준·봉인 → 선행 확인(Ag PBE a · PP 해시 · 빌더 · V5 프로브) → 계산. ④ DEM 발송판 ✅ (발송 대기)."
+   "text": "**파이프라인 v4** (`D-2026-09-25-wad-reference-state-policy`): ① P0 ✅ → ② 벌크 수치 민감도 ✅ → ③ A′ 카드 v1 → BY NO-GO → **v2** ⏳ 재심·비준·S1 봉인 → S2 기하 생성·프로브 → S3 좌표 봉인 → S4 DFT. ④ DEM 발송판 ✅ 발송·3차 회신 수령 (부탁 1 잔류 응력 GPa · 부탁 2 시나리오 초안은 DEM) → 회신 4 초안."
   },
   {
    "text": "✅ 격자 정합 규칙 = **(a) 흡착층을 SE 에 맞춘다** (`D-2026-09-25-wad-lattice-matching-rule-a` · 09-25) — SE 슬랩 한 기하 · 변형률 x·y·Å·원자당·면적당·밀도 병기",
    "state": "결정"
   },
   {
-   "text": "A′ 파일럿 사전등록 — **카드 초안** `db/properties/wad_aprime_pilot_prereg_2026_09_25.json` (V2 직접 DFT · V3/V4 진단 · V5 프로브 조건 · G1–G6 · 갈래 · 140 GPU-h 제안) → **Codex BY** 발송 대기 → 1저자 비준 → 봉인",
-   "state": "리뷰"
+   "text": "A′ 파일럿 사전등록 — v1 **Codex BY NO-GO** → **v2** `db/properties/wad_aprime_pilot_prereg_v2_2026_09_25.json` (조성 4층 정정 · SE 부분 고정 마스크 + 결정 7 개정 proposed · G5 = 비자명한 W 쌍 5 · 분모 고정 · Ag₁₃ 제외 · −TS 규칙 삭제 · 분리 끝점 양쪽 간격 ≥ 8 Å + dipfield 규약 · G2 `--interface_check` 구현 · G3/G4 대상군별 · 장치별 한도 · 허용 문구 P1′ 한정 · 단계별 봉인 S1–S4) → Codex 재심 → 1저자 비준(권고 5건) → S1 봉인. ⚠ V5 ≈ 246 GB 추정 → RESOURCE_BLOCKED 예상",
+   "state": "재심"
   },
   {
    "text": "D3 3체(ATM) 후처리 — 같은 기하에서 따로 보고",
@@ -456,6 +464,11 @@
    "date": "2026-09-25",
    "stage": "dft",
    "text": "1저자 '이거 하게 전체적으로 하고 DEM 보낼 회신도': **결정 7 = (a) 흡착층을 SE 에 맞춘다** (`…-lattice-matching-rule-a`) · **A′ 파일럿 사전등록 카드 초안** (V1 대조 · V2 Ag|graphene 직접 DFT registry ≥ 4 · V3/V4 조각 진단 eV/조각 · V5 SE 2층+Ag 3층 ≈ 200 원자는 CPU 프로브 41 GB 통과 시에만 · UMA 대조 5점 ≤ 0.10/0.05 · Li→Ag 침투 1.5 Å = 반응 계면 무효 · 갈래 0–3 · 총상한 140 GPU-h 제안) → **Codex BY 프롬프트** 발송 대기 · **DEM 회신 2‴+부록 발송판** (정합 규칙 · 라벨 · Q6 부록 · 숫자는 부록 둘뿐 · '내부 점검용' 문장 고정)."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**Codex BY 회신 NO-GO** (A′ 카드 v1 · 봉인·본계산 보류 · 경로 찬성): 핵심 차단 = SE 고정↔전 원자 이완 상충 · G5 5점 계수(분리 끝점 하나는 W 아님) · Ag₁₃ 홀수 전자. **카드 v2** 로 대응 — 4층 조성 정정(Li₅₂P₈S₄₂Cl₈ 110 · Li₄₄P₈S₃₈Cl₈ 98) · SE **부분 고정 마스크**(계면 반대쪽 절반) + 결정 7 개정 proposed · G5 = P1′ 비자명한 W 쌍 5 · 분모 5 고정 · 상태 어휘(PASS/FAIL/INCOMPLETE/BLOCKED/RESOURCE_BLOCKED/NOT_TESTED) · Ag₁₃·C₂₄H₁₂ 제외 · −TS 무효 규칙 삭제 · W = `!` 자유에너지 + E_int 병기 · 분리 끝점 양쫑 간격 ≥ 8 Å + dipfield(eamp=0) 규약 · **G2 `--interface_check` 구현**(음성 5 · 돌연변이 4 빨간불) · G3/G4 대상군별 대표점 · 장치별 한도(gabia 44,000 / V100 31,000 MiB) · GPU-h ≠ 경과시간 · 허용 문구 P1′ 한정 · 단계별 봉인 S1–S4. ⚠ 자원 추정(SE|SE 실측 32 GB 스케일): **V5 ≈ 246 GB** (Ag 19 e PP) → RESOURCE_BLOCKED 예상 → 갈래0(G5 NOT_TESTED · UMA 예측 내부 전용) 이 기본 경로일 가능성. V3/V4 37–42 GB = gabia 만 · V2 3 GB. **DEM 3차 회신 수령** — 정합 규칙·라벨 수용 · 부록 값 미사용 확약 · 부탁 1(잔류 응력 GPa) · 부탁 2(민감도 시나리오는 DEM 초안). 선행 배치 `db/inputs/wad_aprime_prep_2026_09_25` (Ag·그래핀 a₀ · comp1 D3 응력 · 9 잡 · 읽는 규칙 결과 전 등록) · 집계 `--aprime_prep` · vc-relax P0 갈래 (`_done`·`parse_pw`)."
   }
  ],
  "related_decisions": [

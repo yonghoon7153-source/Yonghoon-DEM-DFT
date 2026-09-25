@@ -1,17 +1,18 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-25 · managed-files: 449
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-25 · managed-files: 450
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 248건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 249건)
 - 2026-09-25 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-25 · `kb/reviews/codex_BX_prompt_wad_sese_4L_alarm_2026_09_25.md` — 리뷰 BX 프롬프트 — SE|SE 4층 대조: 이완 W_cleave 가 경보 구간 아래 — 원인 가르기(이완 점검 A · 벌크 이완 B)가 맞나 · 발송됨 · 회신 수령 (조건부 GO — 진단 · 검증 완료·DEM 승…
 - 2026-09-25 · `kb/reviews/codex_BX_reply_wad_sese_4L_alarm_2026_09_25.md` — 리뷰 BX 회신 — SE|SE 4층 경보: 원인 진단 조건부 GO · 방법 검증 완료/DEM 승격 NO-GO · P0 완료 판정기 결함 · 수신됨 (2026-09-25 · 1저자 붙여넣기) — 원문 그대로 ·…
-- 2026-09-25 · `kb/reviews/codex_BY_prompt_wad_aprime_pilot_prereg_2026_09_25.md` — 리뷰 BY 프롬프트 — A′ 파일럿 사전등록 카드 (LPSCl | Ag · 흑연 점착일): 봉인 전 설계 검토 · 발송 대기 (1저자) — 카드는 draft · 봉인 전 · 계산 0
-- 2026-09-25 · `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청 · 1차 발송 완료 · DEM 회신 수령(09-23 저녁) · **회신 …
+- 2026-09-25 · `kb/reviews/codex_BY_prompt_wad_aprime_pilot_prereg_2026_09_25.md` — 리뷰 BY 프롬프트 — A′ 파일럿 사전등록 카드 (LPSCl | Ag · 흑연 점착일): 봉인 전 설계 검토 · 발송 완료 · 회신 수령 2026-09-25 **NO-GO** (`c…
+- 2026-09-25 · `kb/reviews/codex_BY_reply_wad_aprime_pilot_prereg_2026_09_25.md` — 리뷰 BY 회신 — A′ 파일럿 사전등록 카드: NO-GO (봉인·본계산 보류 · A′ 경로 자체는 찬성) · 수령 (2026-09-25 · 1저자 붙여넣기) — 회신 원문 · 고…
+- 2026-09-25 · `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청 · 1차 · 2‴+부록 발송 완료 · **DEM 3차 회신 수령 (09-…
 - 2026-09-25 · `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` — LPSCl | Ag–C | VGCF 점착일(W_ad) — 계획 v4 (Codex BX 뒤 파이프라인 재편 · v3 = Fable · Codex BV 반영) · 보고량 카드 초안 · 계획 v4 — SE|SE 4층 대조 끝(경보 v2 유지 · Codex…
 - 2026-09-24 · `kb/platforms/v100_uma_setup_2026_09_14.md` — 임대 V100 에 UMA 를 올리는 레시피 — 함정 일곱과 순서 · 완료
 - 2026-09-23 · `kb/concepts/cv_vs_dqdv_and_two_windows.md` — CV · dQ/dV · 그리고 두 개의 "안정창" — 처음 보는 사람을 위한 정리 · 진행 — 개념 정리. 우리 수치 주장은 담지 않는다(경로만 가리킨다)
@@ -26,7 +27,6 @@
 - 2026-09-22 · `kb/reviews/li2s1a_BT_prompt_neff_window_bootstrap_2026_09_22.md` — BT 수신 원문 — 정확값 지문 · N_eff 창 불일치 지적 · 부트스트랩 제안 · 수신됨-회신함
 - 2026-09-22 · `kb/reviews/li2s1a_BT_reply_neff_window_bootstrap_2026_09_22.md` — BT 회신 — relax 프레임은 36 중에 없다 · §6 N_eff 철회 · 부트스트랩 전환 · 회신문-작성됨
 - 2026-09-22 · `kb/reviews/li2s1a_BU_addendum_block_rule_guards_2026_09_22.md` — BU 부록 — 합의한 블록 규칙을 코드로 내리다가 **규칙이 잡음에 걸리는 것**을 찾았다 · 보낼것
-- 2026-09-22 · `kb/reviews/li2s1a_BU_prompt_variance_ratio_rule_2026_09_22.md` — BU 수신 원문 — 정확값 대조 다음 수 · 분산비 판정 규칙 · 블록 규칙 선박기 · 수신됨-회신함
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -212,7 +212,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (156)
+## reviews/ (157)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-25 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -295,7 +295,8 @@
 - `kb/reviews/codex_BW_reply_wad_validation_without_cluster_2026_09_23.md` — 리뷰 BW 회신 — W_ad: (A) 를 검증된 전체 계면 절대 W 로 전달 NO-GO · 범위를 좁힌 파일럿 조건부 GO (A′)  (2026-09-23 · 회신 수령 — NO-GO(현재 (A) 의 절대값 승인 논리) · 제한…)
 - `kb/reviews/codex_BX_prompt_wad_sese_4L_alarm_2026_09_25.md` — 리뷰 BX 프롬프트 — SE|SE 4층 대조: 이완 W_cleave 가 경보 구간 아래 — 원인 가르기(이완 점검 A · 벌크 이완 B)가 맞나  (2026-09-25 · 발송됨 · 회신 수령 (조건부 GO — 진단 · 검증 완료·DEM 승…)
 - `kb/reviews/codex_BX_reply_wad_sese_4L_alarm_2026_09_25.md` — 리뷰 BX 회신 — SE|SE 4층 경보: 원인 진단 조건부 GO · 방법 검증 완료/DEM 승격 NO-GO · P0 완료 판정기 결함  (2026-09-25 · 수신됨 (2026-09-25 · 1저자 붙여넣기) — 원문 그대로 ·…)
-- `kb/reviews/codex_BY_prompt_wad_aprime_pilot_prereg_2026_09_25.md` — 리뷰 BY 프롬프트 — A′ 파일럿 사전등록 카드 (LPSCl | Ag · 흑연 점착일): 봉인 전 설계 검토  (2026-09-25 · 발송 대기 (1저자) — 카드는 draft · 봉인 전 · 계산 0)
+- `kb/reviews/codex_BY_prompt_wad_aprime_pilot_prereg_2026_09_25.md` — 리뷰 BY 프롬프트 — A′ 파일럿 사전등록 카드 (LPSCl | Ag · 흑연 점착일): 봉인 전 설계 검토  (2026-09-25 · 발송 완료 · 회신 수령 2026-09-25 **NO-GO** (`c…)
+- `kb/reviews/codex_BY_reply_wad_aprime_pilot_prereg_2026_09_25.md` — 리뷰 BY 회신 — A′ 파일럿 사전등록 카드: NO-GO (봉인·본계산 보류 · A′ 경로 자체는 찬성)  (2026-09-25 · 수령 (2026-09-25 · 1저자 붙여넣기) — 회신 원문 · 고…)
 - `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서)  (2026-08-20 · 리뷰대기)
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료)  (2026-08-20 · v2.1 — codex 2라운드 종료 (manifest 지적 철회 ·…)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
@@ -403,7 +404,7 @@
 - `kb/projects/sdcp_v7c_structure_spectroscopy_report_2026_07_10.md` — SDCP v7c — 구조·분광 판정 보고 (입문자용 완전판)
 - `kb/projects/sei_products_2026_08_06.md` — SEI 분해상 6종 캠페인 — 확산장벽 · 형성전위 · 밴드갭
 - `kb/projects/symposium_2026_competitive_analysis.md` — 전지기술 심포지엄 2026 — 경쟁 좌표 분석 (이상욱 / 문장혁)
-- `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청  (2026-09-25 · 1차 발송 완료 · DEM 회신 수령(09-23 저녁) · **회신 …)
+- `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청  (2026-09-25 · 1차 · 2‴+부록 발송 완료 · **DEM 3차 회신 수령 (09-…)
 - `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` — LPSCl | Ag–C | VGCF 점착일(W_ad) — 계획 v4 (Codex BX 뒤 파이프라인 재편 · v3 = Fable · Codex BV 반영) · 보고량 카드 초안  (2026-09-25 · 계획 v4 — SE|SE 4층 대조 끝(경보 v2 유지 · Codex…)
 - `kb/projects/zn_alzib_dft_md_contribution_2026_09_03.md` — Zn ALZIB 세미나(2026-09-02) — 우리가 DFT/MD 로 기여할 수 있는 지점  (2026-09-03 · 진행)
 
