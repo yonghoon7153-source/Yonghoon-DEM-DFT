@@ -1689,6 +1689,12 @@ class RefitTryOut(BaseModel):
     #: 맞춘 창의 하한 (Hz) — 저주파 끝이 KK 를 어겨 판정이 권한 것 (보완 4).
     #: 비면 쓰는 맞춤의 창 그대로다.
     low_hz: float | None = None
+    #: 맞춘 창의 상한 (Hz) — 구간 위에 아크가 걸쳐 판정이 권한 것 (보완 10).
+    #: 비면 쓰는 맞춤의 창 그대로다.
+    high_hz: float | None = None
+    #: 아크를 더한 맞춤이 그 아크를 어떻게 그렸나 — ``R0 97.5 Ω + R1 (고주파 아크,
+    #: 30.4 Ω, 꼭지 1.03e+06 Hz)``.  왜 안 받았는지 사람이 볼 수 있게 (보완 10).
+    detail: str = ""
 
 
 class RefitValueOut(BaseModel):
@@ -1727,6 +1733,10 @@ class RefitSpectrumOut(BaseModel):
     old_low_hz: float | None = None
     #: 저주파 끝이 KK 를 어겨 판정이 권한 하한 (Hz) — 비면 하한은 그대로 두었다.
     low_hz: float | None = None
+    #: 옛 맞춤이 쓴 가장 높은 점 (Hz).
+    old_high_hz: float | None = None
+    #: 구간 위에 아크가 걸쳐 판정이 권한 상한 (Hz) — 비면 상한은 그대로 두었다.
+    high_hz: float | None = None
     tries: list[RefitTryOut] = []
     #: 고른 새 맞춤.  비면 아무것도 받아들여지지 않아 그대로 뒀다.
     new_circuit: str = ""
@@ -1744,6 +1754,13 @@ class RefitSpectrumOut(BaseModel):
     #: 하한을 올려 맞춤에서 뺀 점의 수와 그 주파수 범위 ``[낮은, 높은]``.
     dropped_points: int = 0
     dropped_band_hz: list[float] = []
+    #: 새 맞춤이 쓴 가장 높은 점 (Hz).
+    new_high_hz: float | None = None
+    #: 상한을 올려 맞춤에 더한 점의 수와 그 주파수 범위 ``[낮은, 높은]`` (보완 10).
+    added_points: int = 0
+    added_band_hz: list[float] = []
+    #: 더한 아크를 새 맞춤이 어떻게 그렸나 (`RefitTryOut.detail`).
+    added_arc: str = ""
     #: 회로가 그대로일 때 파라미터마다 옛 값 → 새 값.  회로가 바뀌면 이름이
     #: 가리키는 소자가 달라 견주지 않는다 (비었다).
     values: list[RefitValueOut] = []

@@ -79,6 +79,9 @@ class Candidate:
     #: 맞출 주파수 창의 하한 — 저주파 끝이 Kramers–Kronig 를 어겨 판정이 권한 것
     #: (``Finding.low_hz``).  ``None`` 이면 쓰는 맞춤의 창 그대로다.
     low_hz: float | None = None
+    #: 맞출 주파수 창의 상한 — 구간 위에 아크가 걸쳐 판정이 권한 것 (``Finding.high_hz``,
+    #: 보완 10).  ``None`` 이면 쓰는 맞춤의 창 그대로다.
+    high_hz: float | None = None
 
 
 def refit_candidates(findings: Iterable[Finding], *,
@@ -98,11 +101,13 @@ def refit_candidates(findings: Iterable[Finding], *,
     - 배선 인덕턴스가 빠졌다는 판정(`WIRING_CODES`, 확인)이 싣는 ``L1-`` 회로.
       셀을 읽는 방식은 그대로이고 케이블의 소자 하나를 더한다 (보완 8).
     - 구간 위에 아크가 걸쳤다는 판정(`ARC_CODES`, 확인)이 싣는, 아크 하나를 더한
-      회로 (보완 10).
+      회로 (보완 10).  판정이 상한(``high_hz``)도 실으면 그 회로는 거기까지 맞춘다 —
+      아크가 쓰는 맞춤의 구간 위에 있다.
 
     ``findings`` 에는 맞춤의 판정과 점의 판정을 같이 준다.
     """
     order: dict[str, list[str]] = {}
+    high: dict[str, float] = {}
     low_hz: float | None = None
     for finding in findings:
         if finding.low_hz is not None:
@@ -114,7 +119,10 @@ def refit_candidates(findings: Iterable[Finding], *,
             codes = order.setdefault(offered, [])
             if finding.code not in codes:
                 codes.append(finding.code)
-    out = [Candidate(offered, tuple(codes), low_hz) for offered, codes in order.items()]
+            if finding.high_hz is not None:
+                high[offered] = max(high.get(offered, 0.0), finding.high_hz)
+    out = [Candidate(offered, tuple(codes), low_hz, high.get(offered))
+           for offered, codes in order.items()]
     if low_hz is not None and circuit and circuit not in order:
         out.append(Candidate(circuit, (), low_hz))
     return out
@@ -181,6 +189,24 @@ def seed_values(old_circuit: str, old_values: Mapping[str, float],
     return seeded
 
 
+def added_arc(old_circuit: str, new_circuit: str) -> tuple[str, str] | None:
+    """``(R, CPE)`` of the arc the new circuit puts in front -- its fastest branch,
+    when it has exactly one branch more than the old one.  ``None`` otherwise.
+
+    Branches are reported fastest first (`fit_circuit`), so an arc added above the
+    window is the new circuit's first branch.
+    """
+    try:
+        old = parse_circuit(old_circuit)
+        new = parse_circuit(new_circuit)
+    except CircuitError:
+        return None
+    branches = new.parallel_rc_branches()
+    if len(branches) != len(old.parallel_rc_branches()) + 1:
+        return None
+    return branches[0]
+
+
 def seed_arc(old_circuit: str, old_values: Mapping[str, float], new_circuit: str, *,
              series_ohm: float, crossing_ohm: float, top_hz: float,
              skip: Iterable[str] = ()) -> dict[str, float]:
@@ -193,8 +219,7 @@ def seed_arc(old_circuit: str, old_values: Mapping[str, float], new_circuit: str
     - 직렬 저항은 교점(``crossing_ohm``)에서.  회로의 고주파 절편은 교점 위일 수 없다.
     - 더한 아크의 R 은 옛 직렬 저항 − 교점에서 — 옛 회로가 직렬 저항에 넣은, 교점
       너머의 몫이다.
-    - 그 꼭지는 맞춘 구간의 꼭대기(``top_hz``)에 두고 n 은 `ARC_START_N` 이다.  꼭지는
-      그 위 어딘가다.
+    - 그 꼭지는 맞출 구간의 꼭대기(``top_hz``)에 두고 n 은 `ARC_START_N` 이다.
 
     **왜 데이터로 잡는 시작점이 아닌가.**  `initial_guess` 는 −Z'' 의 봉우리에서 아크를
     찾는데, 이 아크는 꼭지가 구간 위라 봉우리가 없다.  차가운 펠릿 쌍둥이에서 새 아크가
@@ -282,7 +307,8 @@ def accept_refit(old: Sequence[Finding], new: Sequence[Finding],
 
     - 직렬 저항이 교점까지 내려왔다 (``new_above_crossing`` 이 비었다).
     - 평균이 더 어긋나지 않았다 — 아크 하나를 더한 회로다.
-    - σ 저항이 교점 이상인지는 σ 를 아는 쪽이 따로 본다 (`electrolyte_short`).
+    - 더한 아크가 σ 에 들고 σ 저항이 교점 이상인지는 σ 를 아는 쪽이 따로 본다
+      (`electrolyte_short`).
     """
     if not converged:
         return Acceptance(False, "수렴하지 않았습니다")
@@ -348,26 +374,39 @@ def _still_above(series_ohm: float, crossing_ohm: float) -> str:
             f"{more:.0f} % 큽니다 — 더한 아크가 구간 위의 아크를 그리지 않았습니다")
 
 
-def electrolyte_short(crossing_ohm: float | None, sigma_ohm: float | None,
-                      missing: Iterable[str] = ()) -> str:
-    """아크를 더한 맞춤의 σ 저항이 교점에 못 미치면 그 까닭 — 아니면 빈 문자열 (보완 10).
+def electrolyte_short(crossing_ohm: float | None, conductivity: Mapping | None,
+                      added: str) -> str:
+    """아크를 더한 맞춤이 그 아크를 전해질 저항으로 읽지 않으면 그 까닭 — 아니면 빈
+    문자열 (보완 10).
 
-    판정의 까닭은 "구간 위에 걸친 아크가 전해질이다" 다.  그러면 전해질 저항은 교점
-    이상이다 — 교점은 그 아크 도중이다.  새 맞춤의 σ 저항이 교점보다 작으면 σ 가 그
-    아크를 전해질로 읽지 않은 것이다 (커패시턴스가 전극 쪽이라 하면 뺀다, ADR 0041).
-    까닭과 어긋나니 사람이 본다.
+    판정의 까닭은 "구간 위에 걸친 아크가 전해질이다" 다.  그래서 새 맞춤에서 둘을 본다.
 
-    σ 를 못 내도 (``missing`` — 미결정 저항 등) 받지 않는다.  확인할 수가 없다.  교점을
-    몰라도 그렇다.
+    1. **더한 아크(``added``)가 σ 에 든다** — `ionic_conductivity` 의 ``total_parts``.
+       커패시턴스가 전극 쪽이라 하면 σ 가 뺀다 (ADR 0041).  그 아크는 구간 위의 아크가
+       아니라 다른 것(꼬리의 굽이)을 그린 것이다.
+    2. **σ 저항이 교점 이상이다.**  교점은 그 아크 도중이다.  벌크 크기로 읽혀 R0 를
+       배선으로 뺀 것도 여기서 걸린다.
+
+    처음에는 2 만 봤다.  실측 첫 맞춰 보기(2026-09-25 11:15 UTC)의 #114 가 σ 135.9 →
+    120.1 Ω 으로 받아들여졌다.  새 R0 가 교점(114.9 Ω)보다 5 % 안으로 크면, 아크가 σ 에서
+    빠져도 σ = R0 가 교점 위라 통과한다 — 1 이 그 틈을 막는다.
+
+    σ 를 못 내도 (미결정 저항 등) 교점을 몰라도 받지 않는다.  확인할 수가 없다.
     """
-    if sigma_ohm is None:
-        why = ", ".join(missing)
+    conductivity = conductivity or {}
+    total = (conductivity.get("total_ohm")
+             if conductivity.get("total_s_cm") is not None else None)
+    if total is None:
+        why = ", ".join(conductivity.get("missing") or ())
         return (f"σ 를 못 냅니다{f' ({why})' if why else ''} — 더한 아크가 전해질 저항에 "
                 f"드는지 확인할 수 없습니다")
+    if added not in (conductivity.get("total_parts") or ()):
+        return (f"더한 아크 {added} 이 σ 에 안 듭니다 — 커패시턴스가 전극 쪽이라 구간 위의 "
+                f"아크가 아닙니다")
     if crossing_ohm is None:
         return "실수축 교점을 몰라 σ 저항과 견줄 수 없습니다"
-    if sigma_ohm < crossing_ohm:
-        return (f"σ 저항 {sigma_ohm:.4g} Ω 이 실수축 교점 {crossing_ohm:.4g} Ω 보다 "
+    if total < crossing_ohm:
+        return (f"σ 저항 {total:.4g} Ω 이 실수축 교점 {crossing_ohm:.4g} Ω 보다 "
                 f"작습니다 — 새 맞춤이 구간 위의 아크를 전해질 저항으로 읽지 않았습니다. "
                 f"판정의 까닭과 어긋나니 사람이 봅니다")
     return ""

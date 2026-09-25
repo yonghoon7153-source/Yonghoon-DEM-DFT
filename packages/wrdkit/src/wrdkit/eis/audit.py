@@ -193,6 +193,11 @@ class Finding:
     #: 싣는다 (ADR 0045 보완 4).  `bml refit` 이 같은 회로를 이 하한부터 다시
     #: 맞춘다.  쓰는 맞춤이 이미 그 위에서 맞췄으면 비었다 — 할 일이 없다.
     low_hz: float | None = None
+    #: 다시 맞출 때 둘 주파수 상한 — 구간 위에 아크가 걸친 판정만 싣는다 (ADR 0045
+    #: 보완 10).  유도성이 아닌 가장 높은 점이다.  그 아크는 쓰는 맞춤의 구간 **위**에
+    #: 있어, 같은 구간으로 다시 맞추면 더한 아크가 그릴 점이 없다.  쓰는 맞춤이 이미
+    #: 거기까지 맞췄으면 비었다.
+    high_hz: float | None = None
 
     @property
     def label(self) -> str:
@@ -529,7 +534,8 @@ ARC_ABOVE_SHARE = 0.05
 
 def _inductor_at_zero(name: str, *, inductive_top: int, series: str | None,
                       series_ohm: float | None, crossing: float | None,
-                      blocking_end: bool, offered: tuple[str, ...] = ()) -> Finding:
+                      blocking_end: bool, offered: tuple[str, ...] = (),
+                      widen_to: float | None = None) -> Finding:
     """What an inductor on its lower bound says -- it depends on the sweep.
 
     No point above the axis at the top of the sweep: the file shows no cable
@@ -552,7 +558,11 @@ def _inductor_at_zero(name: str, *, inductive_top: int, series: str | None,
     그대로 찾는다.
 
     ``offered`` is the circuit with that arc added; the finding carries it so
-    `bml refit` refits the cold pellets with it (ADR 0045 보완 10).
+    `bml refit` refits the cold pellets with it (ADR 0045 보완 10).  ``widen_to``
+    is the highest point that is not inductive, when the fit stopped below it:
+    the arc lives in between, so the refit fits up to there.  실측 일곱은 맞춘
+    구간이 171–215 kHz 에서 끝나고 교점은 그 위(유도성 점 3–11개 아래)였다 —
+    같은 구간으로 다시 맞춘 여섯이 R0 를 교점까지 못 내렸다.
     """
     if inductive_top <= 0:
         return Finding(NOTE, "no_inductance",
@@ -569,9 +579,11 @@ def _inductor_at_zero(name: str, *, inductive_top: int, series: str | None,
             f"실수부를 그리지 못하니, 맞춘 구간 위에 회로에 없는 아크가 걸쳐 있습니다 "
             f"(펠릿이 식으면 전해질 아크가 이렇게 잰 주파수 안으로 내려옵니다). 교점은 "
             f"그 아크 도중이라 전해질 저항을 작게 읽고, {series} 도 모자랄 수 있습니다"
-            + (f" — 아크를 하나 더한 {_quote(offered)} 로 맞추면 그 아크까지 전해질 "
-               f"저항에 들어갑니다" if offered else ""),
-            circuits=offered)
+            + (f" — 아크를 하나 더한 {_quote(offered)} 로"
+               + (f", 구간을 유도성이 아닌 꼭대기({widen_to:.3g} Hz)까지 넓혀"
+                  if widen_to else "")
+               + " 맞추면 그 아크까지 전해질 저항에 들어갑니다" if offered else ""),
+            circuits=offered, high_hz=widen_to if offered else None)
     return Finding(NOTE, "no_inductance",
                    f"{name} 이 0 에 붙었습니다 — 꼭대기 {inductive_top}점이 유도성이라 "
                    f"배선 인덕턴스는 있지만, 그 점들을 뺀 맞춘 구간에서는 드러나지 "
@@ -756,10 +768,17 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
     # 스펙트럼이 실수축을 건너는 자리와, 맞춤 전에 뺀 꼭대기 유도성 점의 수.
     crossing: float | None = None
     inductive_top = 0
+    #: 유도성이 아닌 가장 높은 점 — 맞춘 구간이 그 아래에서 끝났을 때만.
+    widen_to: float | None = None
     if spectrum is not None and len(spectrum):
         crossing = real_axis_crossing(spectrum.frequency_hz, spectrum.z_re,
                                       spectrum.z_im)
-        inductive_top = int(np.count_nonzero(inductive_mask(spectrum)))
+        wiring = inductive_mask(spectrum)
+        inductive_top = int(np.count_nonzero(wiring))
+        usable = np.asarray(spectrum.frequency_hz, dtype=float)[~wiring]
+        if usable.size and high_edge is not None \
+                and float(usable.max()) > high_edge * (1.0 + _SAME_HZ):
+            widen_to = float(usable.max())
     # 회로는 직렬 저항보다 작은 실수부를 못 그린다 — 교점이 그 아래면 회로에 없는
     # 아크가 구간 위에 있다 (`_inductor_at_zero`).  판정은 L 이 0 일 때만 뜨지만
     # 증상은 이것이다.
@@ -988,7 +1007,8 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
                 series_ohm=values[ohmic] if steady else None, crossing=crossing,
                 blocking_end=out.end == "blocking",
                 offered=_offer(_compatible(alternatives, {"blocking"}, fit.circuit,
-                                           arcs=len(arcs) + 1, exact=True), limit=1)))
+                                           arcs=len(arcs) + 1, exact=True), limit=1),
+                widen_to=widen_to))
             continue
         # 전송선의 레일 하나가 0 이면 레일 하나짜리 de Levie 선이다 — 틀린 것이
         # 아니다.  두 레일은 맞바꿔도 같은 곡선이라 (`transmission_line`) 어느 쪽이
@@ -1381,9 +1401,10 @@ def _arc_findings(out: FitAudit, arc: ArcCapacitance, label: str,
     #
     # 직렬 저항과의 합으로만 σ 에 드는 아크(``summed``)의 꼭지가 구간 **위**여도
     # 참고다 — 구간이 정하는 것은 아크의 저주파 끝, 곧 그 합이다.  못 보는 것은
-    # 둘을 나누는 자리뿐이다.  차가운 펠릿 쌍둥이 열다섯에서 합은 모두 참값의
-    # 0.2 % 안, R0 는 0–121 Ω (참값 40–110 Ω) 이었다 (ADR 0045 보완 10).  꼭지가
-    # 구간 아래면 저주파 끝을 못 봤으니 합도 모른다 — 전처럼 확인이다.
+    # 둘을 나누는 자리뿐이다.  구간이 꼭지 아래에서 끝난 차가운 펠릿 쌍둥이 열다섯:
+    # 합은 모두 참값의 0.2 % 안, R0 는 0–121 Ω (참값 40–110 Ω) 이었다.  구간을
+    # 꼭지 위까지 넓히면 R0 도 2 % 안이다 (ADR 0045 보완 10).  꼭지가 구간 아래면
+    # 저주파 끝을 못 봤으니 합도 모른다 — 전처럼 확인이다.
     if arc.peak_hz is not None and arc.n >= LOWEST_N \
             and not _is_railed_arc(arc, railed):
         electrode = " — σ 에 안 드는 전극 쪽 아크라 이 셀의 수에는 들지 않습니다"

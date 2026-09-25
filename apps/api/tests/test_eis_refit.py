@@ -618,8 +618,8 @@ def test_the_text_says_what_the_arc_refit_did(client):
     적는다.  더한 아크는 "교점에서" 시작했다."""
     pellet(client, "B15_cold.mpr", COLD, "L1-R0-CPE1")
     text = client.post("/api/eis/audit/refit", params={"format": "text"}).text
-    assert ("구간 위 아크가 걸친 1개는 아크 하나를 더한 회로로 맞춥니다 — σ 저항이 R0 에서 "
-            "R0 + R1 로 바뀝니다") in text
+    assert ("구간 위 아크가 걸친 1개는 아크 하나를 더한 회로로, 구간을 유도성이 아닌 "
+            "꼭대기까지 넓혀 맞춥니다 — σ 저항이 R0 에서 R0 + R1 로 바뀝니다") in text
     assert "바꿈  L1-R0-CPE1 → L1-R0-p(R1,CPE1)-CPE2 · 오차 평균 " in text
     assert "문제 0 → 0" not in text
     assert " (교점에서) · χ² " in text
@@ -644,3 +644,69 @@ def test_an_arc_refit_whose_sigma_falls_short_of_the_crossing_is_kept(client, mo
     assert arc["reason"] == "σ 저항이 교점보다 작습니다"
     assert arc["sigma_ohm"] == pytest.approx(136.0, rel=0.002)
     assert len(fits_of(client, spectrum_id)) == 1
+
+
+#: B16 #9 (#123) 꼴 — 배선 L 0.3 µH 라 꼭대기 유도성 점이 셋뿐이고, 아크(1 MHz)가 쓰던
+#: 구간(215 kHz 까지)과 교점(MHz) 사이에 통째로 있다.  전해질 저항은 98 + 30 = 128 Ω.
+GAP = ("L1-R0-p(R1,CPE1)-CPE2",
+       {"L1": 3e-7, "R0": 98.0, "R1": 30.0,
+        "CPE1_Q": (1 / (2 * np.pi * 1e6)) ** 0.9 / 30.0, "CPE1_n": 0.9,
+        "CPE2_Q": 1.03e-6, "CPE2_n": 0.852})
+
+
+def test_an_arc_above_the_old_window_is_fitted_up_to_the_top_of_the_sweep(client):
+    """실측 첫 맞춰 보기 (2026-09-25 11:15 UTC): 일곱 중 여섯이 그대로였다.  쓰던 맞춤이
+    171–215 kHz 에서 끝났고 아크는 그 위와 교점 사이에 있었다 — 같은 구간으로는 더한
+    아크가 그릴 점이 없다.  판정이 상한(유도성이 아닌 꼭대기)을 싣고, `bml refit` 이
+    거기까지 넓혀 맞춘다 (보완 10)."""
+    created = client.post("/api/eis/spectra/upload",
+                          params={"kind": "solid", "cell_config": "sym"},
+                          files={"file": ("B16_cold.mpr", pellet_mpr(*GAP),
+                                          "application/octet-stream")})
+    spectrum_id = created.json()["id"]
+    client.patch(f"/api/eis/spectra/{spectrum_id}",
+                 json={"thickness_um": 780, "area_cm2": 0.785})
+    old = client.post(f"/api/eis/spectra/{spectrum_id}/fit",
+                      params={"circuit": "L1-R0-CPE1", "frequency_high_hz": 2.15e5}).json()
+    assert old["converged"] and old["frequency_high_hz"] <= 2.15e5
+    before, _ = audit_codes(client, spectrum_id)
+    arc = next(f for f in before["findings"] if f["code"] == "arc_above_window")
+    assert "까지 넓혀 맞추면" in arc["message"]
+
+    done = client.post("/api/eis/audit/refit").json()
+    assert (done["targets"], done["arcs"], done["changed"]) == (1, 1, 1)
+    (one,) = done["spectra"]
+    assert one["high_hz"] > 3e6 and one["old_high_hz"] <= 2.15e5
+    assert one["new_high_hz"] == pytest.approx(one["high_hz"])
+    assert one["added_points"] > 10
+    assert one["new_sigma_ohm"] == pytest.approx(128.0, rel=0.001)
+    assert one["added_arc"].startswith("R0 98 Ω + R1 30 Ω (")
+    chosen = next(t for t in one["tries"] if t["accepted"])
+    assert chosen["high_hz"] == one["high_hz"] and chosen["start"] == "arc"
+
+    text = client.post("/api/eis/audit/refit", params={"format": "text",
+                                                       "dry_run": True}).text
+    assert "대상 0" in text                                  # 이미 바꿨다
+
+    after, codes = audit_codes(client, spectrum_id)
+    assert after["circuit"] == "L1-R0-p(R1,CPE1)-CPE2" and "arc_above_window" not in codes
+
+
+def test_the_text_says_the_window_went_up_and_what_the_arc_became(client):
+    """상한을 넓힌 것과, 더한 아크가 무엇이 됐는지(이름·꼭지·σ 에 드는지)를 적는다 —
+    받지 않은 시도에도.  첫 실측 맞춰 보기는 여섯이 왜 그대로인지 글로 알 수 없었다."""
+    created = client.post("/api/eis/spectra/upload",
+                          params={"kind": "solid", "cell_config": "sym"},
+                          files={"file": ("B16_cold.mpr", pellet_mpr(*GAP),
+                                          "application/octet-stream")})
+    spectrum_id = created.json()["id"]
+    client.patch(f"/api/eis/spectra/{spectrum_id}",
+                 json={"thickness_um": 780, "area_cm2": 0.785})
+    client.post(f"/api/eis/spectra/{spectrum_id}/fit",
+                params={"circuit": "L1-R0-CPE1", "frequency_high_hz": 2.15e5})
+    text = client.post("/api/eis/audit/refit", params={"format": "text",
+                                                       "dry_run": True}).text
+    assert "구간을 유도성이 아닌 꼭대기까지 넓혀 맞춥니다" in text
+    assert " · 상한 1.71e+05 → " in text or " · 상한 2.15e+05 → " in text
+    assert "    더한 점: " in text and " — 쓰던 구간 위, 아크가 걸친 곳" in text
+    assert "    더한 아크: R0 98 Ω + R1 30 Ω (고주파 아크, 꼭지 " in text

@@ -33,6 +33,7 @@ from wrdkit.eis.circuit import parse_circuit
 from wrdkit.eis.conductivity import backwards_steps, backwards_warning
 from wrdkit.eis.derive import FULL, LIQUID, SOLID, SYMMETRIC
 from wrdkit.eis.fit import fit_circuit
+from wrdkit.eis.guess import inductive_mask
 from wrdkit.eis.spectrum import Spectrum
 
 FREQUENCY = S.log_sweep(7e6, 1e-2, 10)
@@ -766,6 +767,11 @@ def test_an_inductor_on_zero_with_r0_above_the_crossing_is_an_arc_above_the_wind
     assert "`L1-R0-p(R1,CPE1)-CPE2`" in arc.message
     # 확인인데도 회로를 싣는다 — `bml refit` 이 차가운 펠릿을 다시 맞춘다 (ADR 0045 보완 10).
     assert arc.circuits == ("L1-R0-p(R1,CPE1)-CPE2",)
+    # 아크는 맞춘 구간(215 kHz 까지) 위에 있다 — 유도성이 아닌 꼭대기까지 넓혀 맞추라고
+    # 상한을 싣는다.
+    usable = float(spectrum.frequency_hz[~inductive_mask(spectrum)].max())
+    assert arc.high_hz == usable and usable > SULFIDE_BAND[1]
+    assert f"구간을 유도성이 아닌 꼭대기({usable:.3g} Hz)까지 넓혀 맞추면" in arc.message
     series, crossing = audit.above_crossing
     assert series == pytest.approx(values["R0"]) and crossing == pytest.approx(96.04, abs=0.01)
     assert "no_inductance" not in codes(audit)
