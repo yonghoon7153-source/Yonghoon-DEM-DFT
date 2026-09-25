@@ -71,14 +71,42 @@ frozen AM) 이 상한이므로 100 GPa 팔이 그것을 넘으면 코드 결함�
 - ⚠ kgy 의 `~/pa/kits/VGCF_PTFE_3_1/run_mpm.sh` 는 **스모크 변형** (`--frames 150` · `--platen-mach` 없음 · align 0.665 · target 0.1585) 이었다 →
   세 팔 모두 리포 등록본 `docs/data/phase_a_6mah/kits/VGCF_PTFE_3_1/run_mpm.sh` (2500 프레임 · mach 0.03 · 0.666 · 0.1589) 로 덮고 `--add-e-override` 만 추가.
   scaffold CSV 두 개는 kgy 사본 그대로.
+- STEP3 준비 (09-25 16:2x ~ 17:0x): `ti310` 에 `cupy-cuda12x` 14.2.0 설치 → `step3_sigma._solve_cg` 소형 계에서 `LAST_BACKEND used = gpu` 확인 ·
+  `pyflakes` 설치 (러너의 미정의-이름 게이트가 없으면 오탐으로 선다 — Phase A · Lee 전례).  판정용 러너는 `--step3-require-gpu` 라 세 팔 모두 GPU.
+  ⚠ payload 미리보기 (vox 0.4) 의 STEP3 는 E=1 · E=10 CPU (cupy 설치 전) · E=100 GPU — 미리보기는 판정에 안 쓴다.
+- GPU 공유: kgy 에 **우리 것이 아닌 GPU 작업**이 ~12.2 GB · 98 % 로 떠 있었다 (16:13 · 17:03 · 18:09 관측, 그때 우리 GPU 작업 없음).
+  E=100 압밀은 taichi VRAM 상한 (빈 VRAM 의 90 %, `scripts/mpm3d_compaction.py:1737`) 안에서 돌았다.
+
+#### 7-1-b. 운영 사고 셋 (결과에 영향 없음 — 기록)
+1. **watch 명령의 자기매칭** — 내가 준 watch 명령줄에 `mpm3d_compaction.py` 문자열이 들어 있어, `run_mpm.sh` 의 "다른 MPM 이 도는 중"
+   검사 (`pgrep -f mpm3d_compaction.py`) 가 watch 를 런으로 오인했다.  16:21 루프의 E=100 발사가 `ABORT — an MPM run is already active` 로
+   막혔고, 루프도 같은 검사에 속아 E=100 마커를 기다렸다 → 17:10 수동 발사 (약 50 분 손실).  고친 watch 는 `[m]pm3d_…` 패턴.
+   ⬜ 재발 방지 제안 (미비준): 킷 생성기 (`scripts/mpm_input_from_case.py`) 의 검사를 python 프로세스만 보게.
+2. **E=10 GPU 재실행 지시는 불필요했다** — E=10 은 16:20 에 CPU payload 로 이미 완주했다 (마커 시각 16:20 그대로 = 재실행 스크립트는 효과 없음).
+3. **자동 실행 스크립트 두 판** — 두 번째 블록이 실행 중이던 `after_arms.sh` 를 덮어써, 첫 판이 18:07 에 바뀐 파일을 이어 읽었다
+   (로그 섞임 · `Permission denied` 한 줄).  러너는 하나 (18:07, 둘째 판 PID 2342285 의 자식) — 18:10 에 둘로 보인 것은 러너가 팔마다 만드는
+   하위 셸이라 명령줄이 같게 보인 것으로 판단 (중복이었다 해도 그 PID 는 이미 종료).  E=1 팔 JSON 생성 · 러너 로그에 ABORT/FAILED/OOM 없음.
 
 ### 7-2. 팔별 (mpm_metrics.json)
 
 | E_VGCF | 시작 → 마커 | override / E_anchor | additives.VGCF.E_GPa | porosity@target (%) | settled (%) | 두께 (µm) | wall_z | settled/target | wallP 정착 (GPa) | 유효 |
 |---|---|---|---|---|---|---|---|---|---|---|
 | **1** | 13:32:49 → 15:09:36 (압밀 ~32 분 + payload ~65 분) | `VGCF=1` / `ADD_E_SET_20260818+override:VGCF=1.0GPa` | 1.0 | 14.749 | 14.749 | 121.669 | 2.2881 | 0.4662 | 0.1403 | ✅ (§4 충족: 태그 · 도달 non-None) |
-| 10 | 15:10:34 → (진행) | | | | | | | | | |
-| 100 | | | | | | | | | | |
+| **10** | 15:10:34 → 16:20 | `VGCF=10` / `ADD_E_SET_20260818+override:VGCF=10.0GPa` | (tgz) | 14.889 | 14.889 | 121.869 | 2.2918 | 0.467 | (tgz) | ✅ |
+| **100** | ~17:10 → 18:06 | `VGCF=100` / `ADD_E_SET_20260818+override:VGCF=100.0GPa` | (tgz) | 14.929 | 14.929 | 121.926 | 2.2928 | 0.4558 | (tgz) | ✅ |
 
-- 공통: `stop_mode legacy_moving` · `frames_budget 2500` · `wall_z_at_floor False`.  σ_e 는 STEP3 (§2 4) 뒤 추가.
-- 판정 (§3) 은 세 팔 완주 뒤.
+- 공통: `stop_mode legacy_moving` · `frames_budget 2500` · `wall_z_at_floor False`.  출처 = kgy `vgcf_e_tags_20260925.txt` (세 팔 `mpm_metrics.json` 발췌).
+  `(tgz)` 칸은 결과 묶음 수신 뒤 채운다.
+- **재현성 (§4 셋째)**: E=10 이 Phase A 생산 침대 재생성값 (`docs/data/phase_a_6mah/regen_20260914_metrics.tsv` 의 `VGCF_PTFE_3_1` 행:
+  14.889 · 14.889 · 0.467 · 121.869) 과 **인쇄 자릿수까지 같다** ⇒ Δ 0.000 %p (허용 0.05) ✅.
+- ⚠ **등록 결함 — 지표 이름**: §2 ① 이 적은 `porosity_sphere` 는 `mpm_metrics.json` 에 **없다** (있는 것은 `porosity_at_target_pct` ·
+  `porosity_settled_pct`, MPM 규약).  세 팔은 고체 부피가 같아 (1 − ε)·H = 103.724 · 103.724 · 103.724 µm 로 일정하다 ⇒ 팔 사이 차이는
+  두께 H 하나로만 정해지고, 규약을 바꿔도 그 규약의 (1 − ε) 비만큼 (~1 %) 만 달라진다.  ⇒ 판정은 `porosity_at_target_pct` 로 한다.
+- **porosity 축 (§3)**: 1 → 100 GPa 에서 **Δε = +0.180 %p** (14.749 → 14.889 → 14.929, 단조) ≤ 0.3 ⇒ **통과**.
+  §5 예측 (< 0.1 %p) 보다는 컸다 — 기록.  두께 +0.257 µm < 한 셀 (0.39 µm @256) ⇒ 원인 서술 불요 (§3).
+- ⚠ **E=100 만의 비대칭 (런 뒤 발견, 설계는 그대로)**: 100 GPa 섬유의 P 파 탄성률 (λ + 2μ = 134.6 GPa) 이 SE 스택 (26.2) 을 넘어 CFL 가드가
+  dt 를 2.0 × 10⁻⁴ → 1.347 × 10⁻⁴ 로 줄였다.  플래튼 속도는 SE 파속 기준이라 **물리 재하율은 세 팔이 같다** (`scripts/mpm3d_compaction.py:2917`).
+  다만 (i) 프레임당 플래튼 걸음이 0.068 → 0.046 µm 로 작아 정지 위치의 양자화가 다르다 — E=10 → 100 차이 (+0.057 µm · +0.04 %p) 는
+  이 걸음 크기 수준이고, E=1 → 10 (+0.200 µm · +0.14 %p, 같은 dt) 은 약 3 걸음이다.  (ii) hold 40 프레임의 물리 이완시간이 1.485 배 짧다 —
+  porosity 는 무관 (플래튼 고정), `settled_over_target` (0.4558 vs 0.467) · SE 형상에는 영향 가능.
+- σ_e 축: STEP3 (vox 0.15 · origin 1 팔 · GPU) 진행 중 — E=1 팔 완료 (18:4x 확인), E=10 · E=100 대기.  판정 (§3) 은 σ_e 까지 받은 뒤.
