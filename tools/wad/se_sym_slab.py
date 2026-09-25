@@ -1128,12 +1128,20 @@ def fixed_mask_policy(init, ads_elements=("Ag", "C", "H"), substrate_elements=SE
 
 
 def _validate_idx(idx, n, name):
+    """인덱스 목록 검증 — **변환하지 않는다** (CA P1: `int(0.9)`·`int(True)` 가 잘못된 값을 조용히 고쳤다).
+    허용 = Python int · numpy 정수 (bool 제외) · 중복 없음 · 0 ≤ i < n. 문자열·소수·불리언은 오류."""
     if idx is None:
         raise SlabError(f"{name} 는 필수다 — 생략하면 검사가 성립하지 않는다 (BZ Q2 1번 경로)")
-    try:
-        out = sorted({int(i) for i in idx})
-    except (TypeError, ValueError):
-        raise SlabError(f"{name} 에 정수가 아닌 값이 있다")
+    if isinstance(idx, (str, bytes)):
+        raise SlabError(f"{name} 는 정수 목록이어야 한다 (문자열은 CLI 가 먼저 푼다 — 여기서는 받지 않는다)")
+    out = []
+    for i in idx:
+        if isinstance(i, (bool, np.bool_)) or not isinstance(i, (int, np.integer)):
+            raise SlabError(f"{name} 에 정수가 아닌 값 {i!r} ({type(i).__name__}) — 소수·불리언을 자동 변환하지 않는다 (CA P1)")
+        out.append(int(i))
+    if len(set(out)) != len(out):
+        raise SlabError(f"{name} 에 중복 인덱스가 있다")
+    out = sorted(out)
     bad = [i for i in out if i < 0 or i >= n]
     if bad:
         raise SlabError(f"{name} 범위 밖 인덱스 {bad[:5]} (허용 0..{n - 1})")
@@ -1155,6 +1163,8 @@ def interface_check(init, final, ads_elements=("Ag", "C", "H"), substrate_elemen
       · 결합 목록 = 초기 구조에서 **같은 몸체 안**(흡착층끼리 · 금속 기판끼리 — PS₄ 기판은 PS₄ 검사로 대신) 같은 원소쌍 최단거리 × IFC_NN_FAC 안의 쌍.
         final 에서 각 결합이 ±bond_tol 안. 몸체 사이(흡착 높이)는 결합 목록에 넣지 않는다.
       · fixed_idx 원자 변위 < IFC_FIXED_TOL_A · lateral_fixed_idx 원자 면내 변위 < IFC_FIXED_TOL_A (제약이 실제로 걸렸는지).
+      · 측방 제약 정책: 금속 기판(V2) 에서는 **필수**이고 흡착층 원자 전체와 집합이 같아야 한다 (부분집합·다른 몸체 = 깃발 · 생략 = 오류);
+        PS₄ 기판 모델(V3·V4·V5) 에는 측방 제약이 없다 (주면 깃발). 인덱스는 정수만 — 소수·불리언은 변환하지 않고 오류.
     ⛔ 못 하는 것: 반응·전하이동 판정 (구조 경보다) · 원인 분류 · 에너지 · 측방 영상 효과 (셀이 작으면 '고립 조각' 이라 부르지 않는다).
     """
     from ase import Atoms
@@ -1171,8 +1181,22 @@ def interface_check(init, final, ads_elements=("Ag", "C", "H"), substrate_elemen
     fixed = _validate_idx(fixed_idx, n, "fixed_idx (고정 마스크)")
     if not fixed:
         raise SlabError("고정 마스크가 비었다")
-    lat = _validate_idx(lateral_fixed_idx if lateral_fixed_idx is not None else (), n, "lateral_fixed_idx")
     flags = []
+    # 측방 제약 **정책** (CA P0): 금속 기판(V2) = 필수 · 흡착층 원자 **전체**와 집합 일치 / PS₄ 기판(V3·V4·V5) = 정책에 없음 (주면 깃발)
+    sub_el = set(sym[is_sub])
+    has_ps4 = ("P" in sub_el) and ("S" in sub_el)
+    ads_all = sorted(int(i) for i in np.where(is_ads)[0])
+    if has_ps4:
+        lat = _validate_idx(list(lateral_fixed_idx) if lateral_fixed_idx is not None else [], n, "lateral_fixed_idx")
+        if lat:
+            flags.append(f"정책에 없는 측방 제약 {len(lat)} 개 — PS₄ 기판 모델(V3·V4·V5)에는 측방 제약이 선언돼 있지 않다")
+    else:
+        if lateral_fixed_idx is None or len(list(lateral_fixed_idx)) == 0:
+            raise SlabError("금속 기판(V2) 모드에서 lateral_fixed_idx 는 필수다 — 흡착층(그래핀) 원자 전체 (CA P0 · 생략·빈 목록은 검사 대상을 비우는 우회다)")
+        lat = _validate_idx(lateral_fixed_idx, n, "lateral_fixed_idx")
+        lm, lx = sorted(set(ads_all) - set(lat)), sorted(set(lat) - set(ads_all))
+        if lm or lx:
+            flags.append(f"측방 제약 집합이 흡착층 전체({len(ads_all)} 개)와 다르다 — 빠짐 {len(lm)} · 다른 몸체 {len(lx)} (부분집합·다른 몸체 우회 차단)")
     ads_in_mask = [i for i in fixed if is_ads[i]]
     if ads_in_mask:
         flags.append(f"고정 마스크에 흡착층 원자 {len(ads_in_mask)} 개 — 기판 마스크가 아니다")
@@ -1194,8 +1218,6 @@ def interface_check(init, final, ads_elements=("Ag", "C", "H"), substrate_elemen
     if crossed:
         flags.append(f"흡착 원자 {len(crossed)} 개가 기판 중심면 너머(반대면)로 갔다 {crossed[:5]}")
     # ② PS₄ (기판에 P·S 가 있을 때만 — 없으면 '해당 없음' 으로 **구분해** 적는다)
-    sub_el = set(sym[is_sub])
-    has_ps4 = ("P" in sub_el) and ("S" in sub_el)
     if has_ps4:
         def partners(x):
             i, j, _, _ = _pairs(Atoms(s1, positions=x, cell=C0, pbc=pbc), "P", "S", R_PS)
@@ -1377,6 +1399,29 @@ def _selftest_interface_check(ck):
     except SlabError:
         bad = True
     ck("⛔음성 (BZ④): V2 구조를 SE 기본값으로 부르면 SlabError (역할 선언 강제 · 조용히 통과 아님)", bad)
+    # ⛔ CA P0 — 측방 마스크는 V2 에서 필수이고 흡착층 전체와 같아야 한다 (누락·빈 목록·부분집합·다른 몸체)
+    fin = v2.copy(); x = fin.get_positions(); x[len(agpos):, 0] += 0.1; fin.set_positions(x)      # 그래핀 전체를 x 로 0.1 Å
+    for lat_bad, label in ((None, "생략"), ([], "빈 목록")):
+        try:
+            interface_check(v2, fin, ads_elements=("C",), substrate_elements=("Ag",), fixed_idx=fx, lateral_fixed_idx=lat_bad); bad = False
+        except SlabError as e:
+            bad = "필수" in str(e)
+        ck(f"⛔음성 (CA P0): V2 측방 마스크 {label} → '필수' SlabError (검사 대상을 비우는 우회 차단)", bad)
+    o = interface_check(v2, fin, ads_elements=("C",), substrate_elements=("Ag",), fixed_idx=fx, lateral_fixed_idx=list(range(len(agpos))))
+    ck("⛔음성 (CA P0): 측방 마스크에 (안 움직인) Ag 원자만 → '흡착층 전체와 다르다' 깃발", any("흡착층 전체" in f for f in o["flags"]), o["flags"])
+    fin = v2.copy(); x = fin.get_positions(); x[len(agpos), 0] += 0.1; fin.set_positions(x)        # C 하나만 움직이고
+    o = interface_check(v2, fin, ads_elements=("C",), substrate_elements=("Ag",), fixed_idx=fx, lateral_fixed_idx=lat[1:])   # 그 원자만 빼고 제공
+    ck("⛔음성 (CA P0): 움직인 그래핀 원자만 측방 마스크에서 빼고 제공 → 부분집합 깃발", any("흡착층 전체" in f for f in o["flags"]), o["flags"])
+    o = interface_check(init, init.copy(), fixed_idx=fixed, lateral_fixed_idx=[n_se])
+    ck("⛔음성 (CA P0): PS₄ 기판 모델에 측방 제약을 주면 '정책에 없는' 깃발", any("정책에 없는" in f for f in o["flags"]), o["flags"])
+    # ⛔ CA P1 — 인덱스 자동 변환 거부 (소수 · 불리언 · 중복)
+    for bad_idx, label in (([float(i) + 0.9 for i in fixed], "소수 [0.9, …]"), ([-0.9] + fixed[1:], "-0.9"), ([False, True] + fixed[2:], "불리언"), (fixed + [fixed[0]], "중복")):
+        try:
+            interface_check(init, init.copy(), fixed_idx=bad_idx); bad = False
+        except SlabError:
+            bad = True
+        ck(f"⛔음성 (CA P1): fixed_idx {label} → SlabError (변환하지 않는다)", bad)
+    ck("양성 (CA P1): numpy 정수 인덱스는 허용", not interface_check(init, init.copy(), fixed_idx=np.array(fixed, dtype=np.int64))["flags"])
 
 
 # ─────────────────────────────── selftest ───────────────────────────────
@@ -1904,11 +1949,22 @@ def main():
         return 0
     if a.interface_check:
         from ase.io import read as _read
+        import re as _re
         def _idx(txt, name):
+            """CLI 문자열 → 목록. 여기서는 **형식만** 푼다 (쉼표 정수 문자열 · 또는 JSON 파일의 목록). 타입·범위·정책 검증은 _validate_idx 가 한다 (CA P1: 파싱과 검증 분리)."""
             t = txt.strip()
             if not t:
                 return None
-            return json.load(open(t)) if os.path.isfile(t) else [int(v) for v in t.split(",") if v.strip()]
+            if os.path.isfile(t):
+                v = json.load(open(t))
+                if not isinstance(v, list):
+                    ap.error(f"--{name}: JSON 파일은 목록이어야 한다")
+                return v                                    # 원소 타입은 _validate_idx 가 거른다 (소수·불리언 → 오류)
+            toks = [x.strip() for x in t.split(",") if x.strip()]
+            bad = [x for x in toks if not _re.fullmatch(r"-?\d+", x)]
+            if bad:
+                ap.error(f"--{name}: 정수가 아닌 토큰 {bad[:3]} — 소수·불리언을 받지 않는다")
+            return [int(x) for x in toks]
         fixed = _idx(a.fixed_idx, "fixed_idx")
         if fixed is None:
             ap.error("--interface_check 에는 --fixed_idx 가 필수다 (BZ Q2 — 생략하면 검사가 성립하지 않는다)")

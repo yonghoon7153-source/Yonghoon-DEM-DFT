@@ -249,6 +249,9 @@
     → **G2 재작성** (`interface_check` 마스크 필수 + `fixed_mask_policy` 집합 일치 · 비교 전 유한성 · `normal_sign(init)` · V2 모드 substrate/ads + 측방 제약 · CLI `--fixed_idx` 필수 · `--mask_policy`) selftest **110/110** · BZ 음성 9 · 돌연변이 5 빨간불 · **카드 v3** `wad_aprime_pilot_prereg_v3_2026_09_25.json`
     (G5 종결별 평균 복구 + G3·G4 PASS 전제 · G3 두 셀(영상/거리 분리) · Ag₄ 비영 초기 자화·절대자화 · S3 전 예외 4 · S1 봉인 범위 확대 · registry 결정적 규칙 · 결정 내용 digest · RESOURCE_BLOCKED 예상/실측) · DEM 회신 4 §3 → 확인 요청.
     ⏭ **1저자 확인 3** (`⭐_1저자_확인_v3`: G5 v1 기준 복구 · Ag₄ 절차 · S1 범위) → **Codex CA** `codex_CA_prompt_wad_aprime_pilot_prereg_v3_2026_09_25.md` (발송 대기) → S1 봉인 전 채울 것: UMA 체크포인트 sha·fairchem 버전 · 선행 배치 값 · 흡착층 빌더.
+    🔴 **Codex CA NO-GO (09-25 밤)** — BZ 이행 인정 · 남은 것: V2 측방 마스크 **선택 입력**(생략·Ag 만·부분집합 통과 · P0) · `int(i)` 자동 변환(0.9·−0.9·True · P1) · G3 |ΔW|·끝점별 기록·문구 · G5 문구 종결별 · CPU 프로브 예외 누락·electron_maxstep · registry 중점 주기영상 반례.
+    → 코드: 금속 기판 모드 측방 마스크 **필수 + 흡착층 전체 집합** · PS₄ 모델 측방 제약 깃발 · `_validate_idx` 타입 검사(변환 없음) · CLI 파싱/검증 분리 — **120/120** · CA 음성 10 · 돌연변이 8 빨간불 · CLI JSON 소수 rc 2. **카드 v4** `wad_aprime_pilot_prereg_v4_2026_09_25.json` (G3 기록·문구 · G5 종결별 · 프로브 CPU/GPU·scf·원출력 보존 · registry Σ·최소영상·동률·감기 · Ag₄ 정책 문구 · S1 빈 항목 봉인 불가).
+    ⏭ **Codex CB** `codex_CB_prompt_wad_aprime_pilot_prereg_v4_2026_09_25.md` (발송 대기) → S1 봉인 전 채울 것 셋 (UMA 체크포인트 sha·fairchem 버전 → gabia uma env 블록 · 선행 배치 값 · 흡착층 빌더 + registry 구현).
     🔧 `run_sese_gpu.sh _done`·`parse_pw` **vc-relax 갈래 추가** (옛 판은 vc-relax 를 SCF 기준으로 통과 — 실제 통과한 실패 이완은 없음 · 05 는 bfgs converged 확인) · `watch_lpsocl_400ps.sh` 남은 런 수 표 기준 (kgy b2o3 '남은 0런' 오기 · 음성 2).
     🔴 **러너 결함**: 기록된 `pw.x PID 563677` 이 **없다** (ps 빈 줄) — `pgrep -P mpirun | head -1` 이 pw.x 가 아닌 자식을 잡았거나 사라진 PID 다.
     완료표 `peak_self_MiB` 가 **세 잡 모두 0** = 자기 VRAM 측정이 한 번도 안 됐다 (컨테이너 PID 공간 ≠ nvidia-smi PID 도 의심). 가드는 mpirun 을 죽이므로 안전은 유지 ·

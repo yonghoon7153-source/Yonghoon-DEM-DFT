@@ -100,7 +100,8 @@ evidenceScope: multi-source-primary
 | BX | 2026-09-25 | `codex_BX_prompt_wad_sese_4L_alarm_2026_09_25.md` | `codex_BX_reply_wad_sese_4L_alarm_2026_09_25.md` | 발송됨 · 회신 수령 (조건부 GO — 진단 · 검증 완료·DEM 승격 NO-GO · P0 완료판정기) → codex_BX_reply_wad_sese_4L_alarm_2026_09_25.md | 회신 본문의 `요청:` 역링크 |
 | BY | 2026-09-25 | `codex_BY_prompt_wad_aprime_pilot_prereg_2026_09_25.md` | `codex_BY_reply_wad_aprime_pilot_prereg_2026_09_25.md` | 발송 완료 · 회신 수령 2026-09-25 **NO-GO** (`codex_BY_reply_…`) → 카드 v2 로 대응 (`wad_aprime_pilot_prereg_v2_2026_09_25.json`) · 재심 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'pilot', 'prereg', 'wad'] |
 | BZ | 2026-09-25 | `codex_BZ_prompt_wad_aprime_pilot_prereg_v2_2026_09_25.md` | `codex_BZ_reply_wad_aprime_pilot_prereg_v2_2026_09_25.md` | 발송 완료 · 회신 수령 2026-09-25 밤 **NO-GO** (`codex_BZ_reply_…`) → 카드 v3 + G2 재작성 → CA 재심 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'pilot', 'prereg', 'v2', 'wad'] |
-| CA | 2026-09-25 | `codex_CA_prompt_wad_aprime_pilot_prereg_v3_2026_09_25.md` | — | 발송 대기 (1저자) — 카드 v3 는 draft · 봉인 전 · 계산 0 (선행 배치는 카드 밖 · 진행 중) | — |
+| CA | 2026-09-25 | `codex_CA_prompt_wad_aprime_pilot_prereg_v3_2026_09_25.md` | `codex_CA_reply_wad_aprime_pilot_prereg_v3_2026_09_25.md` | 발송 완료 · 회신 수령 2026-09-25 밤 **NO-GO** (`codex_CA_reply_…` · V2 측방 마스크 P0 등 5) → 카드 v4 → CB 재심 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'pilot', 'prereg', 'v3', 'wad'] |
+| CB | 2026-09-25 | `codex_CB_prompt_wad_aprime_pilot_prereg_v4_2026_09_25.md` | — | 발송 대기 (1저자) — 카드 v4 는 draft · 봉인 전 · 계산 0 (선행 배치는 카드 밖 · V100 진행 중) | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 

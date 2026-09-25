@@ -71,7 +71,7 @@ evidenceScope: multi-source-mixed
 |---|---|---|---|
 | ① | P0 완료 판정기 수정 · 원출력 마지막 실행 확인 | ✅ | 네 잡 모두 명시 수렴 · 성분별 힘 < 1e-3 |
 | ② | **벌크 수치 민감도** — 52 원자 · cubic/epi × (52,k4 · 70,k3 · 70,k4) + epi 내장 대조 = 7 SCF (V100 · 27 min) | ✅ R1·R2 통과 (σ_yz 10.8 kbar · ΔW′ 0.0775 네 설정 동일 · 70/k4 대비 −0.16 meV/atom) | `db/inputs/wad_sese_bulk_sensitivity_2026_09_25` · 집계 `se_sym_slab.py --bulk_sens` · 진단 R1(전단 실재)·R2(ΔW′ 스프레드 ≤ 0.02) — **결과 뒤 정한 진단 규칙**임을 명시 · 슬랩 W 수렴 인증 아님 |
-| ③ | **A′ 파일럿 사전등록** — v1 → BY NO-GO → v2 → **BZ NO-GO** (설계·비준 5 유지 · G2 우회 4경로 · G5 종결별 평균 · G3 조작 · S1/S3 경계) → **카드 v3** `db/properties/wad_aprime_pilot_prereg_v3_2026_09_25.json` + `interface_check` 재작성 (마스크 필수·정책 · 유한성 · 법선 초기 고정 · V2 모드 · 110/110 · 돌연변이 5 빨간불) | ⏳ 1저자 확인 3 → Codex CA 재심 → S1 봉인 | S1 에 UMA sha·D3·코드·마스크 규칙·registry 규칙·결정 digest 고정 |
+| ③ | **A′ 파일럿 사전등록** — v1 BY · v2 BZ · v3 **CA NO-GO** (V2 측방 마스크 선택 입력 P0 · 인덱스 자동 변환 P1 · G3/G5 문구 · 프로브 예외 · registry 주기영상) → **카드 v4** `db/properties/wad_aprime_pilot_prereg_v4_2026_09_25.json` + `interface_check` 측방 정책·타입 검사 (120/120 · 돌연변이 8) | ⏳ Codex CB 재심 → S1 봉인 (UMA sha·선행 값·빌더 채운 뒤) | 비준 5 유지 |
 | ④ | DEM 회신 **2‴+부록 발송판** (정합 규칙 (a) · 라벨 · Q6 부록) | ✅ 초안 완료 → 1저자 발송 | `kb/projects/wad_dem_reply_draft_2026_09_23.md` §회신 2‴+부록 |
 | — | 5층 · 여러 Li 배열 · 슬랩 재계산 | 안 함 | Codex: 지금 필수 아님 |
 
