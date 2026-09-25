@@ -4,7 +4,8 @@
  "maxpx": 3000,
  "generated": "2026-08-05",
  "sources": [
-  "건식전극 논문/02. How to Measure a Reliable Ionic ConductivityThe Stack Pressure Dilemma ofMicrocrystalline Sulfide-Based SolidElectrolytes.pdf"
+  "건식전극 논문/02. How to Measure a Reliable Ionic ConductivityThe Stack Pressure Dilemma ofMicrocrystalline Sulfide-Based SolidElectrolytes.pdf",
+  "nz1c01299_si_001.pdf"
  ],
  "figures": [
   {
@@ -101,6 +102,186 @@
    "dpi": 300,
    "src": "02. How to Measure a Reliable Ionic ConductivityThe Stack Pressure Dilemma ofMicrocrystalline Sulfide-Based SolidElectrolytes.pdf",
    "blank": 0.685
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Stack pressure dependence of the ionic conductivity of AM and GC solid electrolytes at different fabrication pressures. a) AM-Li7P3S11 , b) AM-80 Li2O – 20 P2S5, c) GC-Li7P3S11, d) GC-Li6PS5Br, e) GC- Li6PS5Cl, f) GC-Li5.5PS4.5Cl1.5.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    92.0,
+    530.6,
+    626.8
+   ],
+   "w": 1941,
+   "h": 2229,
+   "dpi": 300,
+   "src": "nz1c01299_si_001.pdf",
+   "blank": 0.41,
+   "recrop": "2026-09-25 수동 재크롭 — 자동 bbox 상단(y 65.3)이 절 제목 \"3. Results:\" 를 포함 → y 92.0 로 올림 (그림 래스터는 y 99.5 에서 시작)",
+   "si": true,
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Stack pressure dependence of the ionic conductivity of different µC SEs at different fabrication pressures. a) µC-Li6PS5Br, b) µC-Li10GeP2S12, c) µC-Li6PS5Cl, d) µC-Li5.5PS4.5Cl1.5.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    529.8,
+    432.3
+   ],
+   "w": 1938,
+   "h": 1532,
+   "dpi": 300,
+   "src": "nz1c01299_si_001.pdf",
+   "blank": 0.427,
+   "si": true,
+   "viewed": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Fabrication pressure dependence of the density of the solid electrolyte pellets.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.9,
+    64.8,
+    483.9,
+    303.3
+   ],
+   "w": 1543,
+   "h": 994,
+   "dpi": 300,
+   "src": "nz1c01299_si_001.pdf",
+   "blank": 0.937,
+   "si": true,
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. a) Fabrication pressure dependence of the ionic conductivity of GC-Li6PS5Br (blue), a non-annealed pellet of µC-Li6PS5Br (orange) and an annealed pellet of µC-Li6PS5Br (green). Au electrodes were sputtered on the faces of the samples before the conductivity measurements, and the applied stack pressure was in the range of 10 MPa. b) Fabrication pressure dependence of the activation energy of GC-Li6PS5Br (blue), a non-annealed pellet of µC-Li6PS5Br (orange) and an annealed pellet of µC-Li6PS5Br (green). Au electrodes were sputtered on the faces of the samples before the conductivity measurements, and the applied stack pressure was in the range of 10 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    365.6,
+    533.0,
+    559.9
+   ],
+   "w": 1951,
+   "h": 811,
+   "dpi": 300,
+   "src": "nz1c01299_si_001.pdf",
+   "blank": 0.918,
+   "si": true,
+   "viewed": true
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Exemplary EIS spectra of GC-Li6PS5Br pellets at -80 °C using different fabrication pressures. Frequency range 105-10-1 Hz.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    89.3,
+    533.0,
+    326.0
+   ],
+   "w": 1951,
+   "h": 987,
+   "dpi": 300,
+   "src": "nz1c01299_si_001.pdf",
+   "blank": 0.967,
+   "recrop": "2026-09-25 수동 재크롭 — 자동 bbox 하단(y 310.8)이 x축 제목 \"Z′(ω) / Ω·cm²\" 를 잘랐다. 원인: 캡션 앞의 빈 공백 줄(y 312.8)을 캡션 시작으로 읽음. 실제 캡션 첫 줄 y 326.8 → 하단 326.0",
+   "si": true,
+   "viewed": true
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Powder XRD patterns of the synthesized solid electrolytes. a) GC-Li5.5PS4.5Cl1.5, b) µC-Li5.5PS4.5Cl1.5, c) GC-Li6PS5Br, d) µC-Li6PS5Br, e) GC-Li6PS5Cl, f) µC-Li6PS5Cl, g) AM Li7P3S11, h) GC-Li7P3S11, i) AM 80 Li2 – 20 P2S5, j) µC-Li10GeP2S12.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.7,
+    64.8,
+    532.2,
+    728.2
+   ],
+   "w": 1945,
+   "h": 2765,
+   "dpi": 300,
+   "src": "nz1c01299_si_001.pdf",
+   "blank": 0.942,
+   "si": true,
+   "viewed": true
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 9,
+   "file": "fig_S7.png",
+   "caption": "Fig S7. SEM images of the synthesized solid electrolytes. a) GC-Li5.5PS4.5Cl1.5, b) µC-Li5.5PS4.5Cl1.5, c) GC- Li6PS5Br, d) µC-Li6PS5Br, e) GC-Li6PS5Cl, f) µC-Li6PS5Cl, g) AM Li7P3S11, h) GC-Li7P3S11, i) AM 80 Li2 – 20 P2S5, j) µC-Li10GeP2S12.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    64.8,
+    530.8,
+    736.7
+   ],
+   "w": 1933,
+   "h": 2800,
+   "dpi": 300,
+   "src": "nz1c01299_si_001.pdf",
+   "blank": 0.255,
+   "si": true,
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 7,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Summary of favorable measurement conditions for obtaining reliable ionic conductivities. Sample type Minimum fabrication Sputtered sample faces Minimum Stack pressure / MPa GC- or µC-SE 400 No 100 GC- or µC-SE 400 Yes 5 µC-SE 400 No 250 µC-SE 400 Yes 250 µC-SE pellet annealed 400 Yes 5 pressure / MPA",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    376.0,
+    524.9,
+    486.0
+   ],
+   "w": 1914,
+   "h": 459,
+   "dpi": 300,
+   "src": "nz1c01299_si_001.pdf",
+   "blank": 0.936,
+   "recrop": "2026-09-25 수동 재크롭 — 자동 bbox 상단(y 322.7)이 Fig. S5 캡션·축제목 조각을 포함 → Table S1 캡션 위(y 376.0)부터",
+   "si": true,
+   "viewed": true
   }
- ]
+ ],
+ "si_note": "2026-09-25 SI(ACS nz1c01299_si_001.pdf, 10 pp) 크롭 추가 — 본문 f1–f5 는 그대로 두고 SI 8장(fS1–fS7, tS1)을 extract_figures.extract() 를 임시 슬러그로 돌려 병합했다 (같은 슬러그로 SI 만 주면 figures.json 이 SI 만으로 덮여 본문 5장이 색인에서 빠진다). fS1·fS5·tS1 은 수동 재크롭(각 recrop 참조). 8장 전부 육안 확인(viewed). S1/S2 디지타이즈 값 = si_digitized.csv (tools/litdb/cronau2021_si_digitize.py). ⚠ --clean 재실행 금지: 본문 PDF 와 SI 를 둘 다 주지 않으면 한쪽이 사라지고, 줘도 세 수동 재크롭이 자동 bbox 로 되돌아간다."
 }

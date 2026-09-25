@@ -141,3 +141,16 @@ sedlatschek2026_nmc811_grain_boundary_strength_micro_tensile	s0378775326010268
 #   ↑ 2026-09-25. 자동 크롭 8장 전부 육안 확인 — 캡션 혼입·라벨/축/스케일바 잘림 **0** → 수동 크롭 없음.
 #     이 논문에는 표가 없다. '--clean' 재추출은 안전하다 (손 들어간 그림이 없다).
 #   ⭐ Fig 6a (응력–변형률 · 입계 강도)와 p. 4 본문 (나노압입 138 ± 24 GPa, n = 29) 이 이 카드의 근거다.
+#
+# ── SE 고유 전달물성 (σ_ion 단상 펠릿 · 적층압/제작압) ──────────────
+# 가드: ACS SI 파일명(nz1c01299_si_001.pdf)은 원고번호뿐이라 제목 토큰이 안 겹친다 → 원고번호 조각으로 SI 만 잡는다.
+#   본문 PDF("02. How to Measure a Reliable Ionic Conductivity…")는 자동 매칭으로 이미 붙어 있다 (이 줄은 SI 전용).
+#   같은 그룹의 2022 논문(cronau2022_…) 두 줄은 위 '소재 · 바인더 · 복합양극' 절에 있다 — 별개 논문이다.
+cronau2021_stack_pressure_ionic_conductivity	nz1c01299
+#   ↑ 2026-09-25.  SI 8장(fS1–fS7, tS1) 중 **3장이 수동 재크롭**이다 (figures.json 의 recrop):
+#   · fS1 — 자동 bbox 가 절 제목 "3. Results:" 를 포함 → 상단 y 92.0
+#   · fS5 — 캡션 앞 **빈 공백 줄**(y 312.8)을 캡션 시작으로 읽어 x축 제목 "Z′(ω) / Ω·cm²" 가 잘렸다 → 하단 y 326.0
+#   · tS1 — 위 Fig. S5 캡션·축제목 조각이 섞였다 → 상단 y 376.0
+#   [!] 이 슬러그에 '--clean' 금지 — 본문·SI 를 둘 다 주지 않으면 한쪽 그림이 색인에서 빠지고, 둘 다 줘도 세 재크롭이 되돌아간다.
+#   ⭐ fS2 패널 c (µC-Li₆PS₅Cl, 고적층압 평탄 ≈2.9–3.5 mS/cm, digitized) 가 우리 σ_grain = 3.0 의 출처 판정 근거다.
+#   디지타이즈 = tools/litdb/cronau2021_si_digitize.py → litdb/figures/<slug>/si_digitized.csv

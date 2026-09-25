@@ -369,7 +369,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | `papers/bielefeld2020_effective_ionic_conductivity_binder.md` | Bielefeld 2020 (ACS Appl. Mater. Interfaces 12, 12821−12833) — 유효 이온전도도 + 바인더 영향 모델링 (Janek 그룹, GeoDict — ★ Bi | FEM·digital-twin |
 | `papers/cho2026_eipc_zn_anode_azib.md` | Cho 2026 (Energy Storage Materials 89 (2026) 105186, DOI 10.1016/j.ensm.2026.105186) — 전자-이온 폴리머 복합막(EIPC=GO+P | DEM |
 | `papers/choi2026_elastomeric_li_metal_anode.md` | Choi 2026 (Advanced Energy Materials, DOI 10.1002/aenm.71104) — 친리튬(lithiophilic) 단분자층 + 나노-크럼플/마이크로-오목 탄성 Li  | DEM |
-| `papers/cronau2021_stack_pressure_ionic_conductivity.md` | Cronau 2021 (ACS Energy Lett. 6, 3072−3077) — Stack-pressure 딜레마: 미세결정 황화물 SE의 "신뢰할 수 있는" σ_ion 측정법 | experiment |
+| `papers/cronau2021_stack_pressure_ionic_conductivity.md` **(본문 6 pp + SI 10 pp · SI 그림 S1–S7 + 표 S1 실독 2026-09-25 · S1/S2 전 점 디지타이즈 `si_digitized.csv`)** | Cronau 2021 (ACS Energy Lett. 6, 3072−3077) — Stack-pressure 딜레마: 미세결정 황화물 SE의 "신뢰할 수 있는" σ_ion 측정법 · ⛔ **2026-09-25 SI 정정**: Li₆PS₅Cl **측정 있음**(SI Fig. S1e GC · S2c µC) — µC-LPSCl 고적층압 평탄 **≈2.9–3.5 mS/cm (digitized)** = 우리 σ_grain 3.0 의 출처(하단), 단 **펠릿·적층압 값 — 단결정 아님** (유형 B) | experiment |
 | `papers/doux2020_stack_pressure_assb.md` | Doux 2020 (Adv. Energy Mater. 10, 1903253) — Stack Pressure: 작동압력(operating) vs 제조압력(fabrication)의 정전적(canonic | DEM |
 | `papers/hong2026_cbd_viscoelasticity_springback.md` | Hong 2026 (Energy Storage Materials, ENSM 105321) — CBD 점탄성이 단결정 cathode의 시간의존 Spring-Back을 억제 | FEM·digital-twin |
 | `papers/hong2026_sulfide_cathode_binder_digitaltwin.md` | Hong 2026 (Energy Storage Materials 86, 104930) — 황화물 복합양극 열화 메커니즘 (디지털트윈): Dry(PTFE) vs Wet(NBR) 바인더 ★우리 소재계( | FEM·digital-twin |
