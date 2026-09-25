@@ -203,7 +203,7 @@ body.push(Cap('**Table S2.** Material parameters used for the microstructure and
    ['','Young’s modulus (MPM continuum)','1.53','GPa','Calibrated'],
    ['','Poisson’s ratio (MPM continuum)','0.49','–','Calibrated'],
    ['','Yield strength','0.30','GPa','Calibrated'],
-   ['','Ionic conductivity (grain interior)','3.0 × 10^−3^','S cm^−1^','Ref. S8'],
+   ['','Ionic conductivity (grain interior)','3.0 × 10^−3^','S cm^−1^','Assumed'],
    ['VGCF','Fiber diameter','0.15','μm','Supplier data'],
    ['','Young’s modulus','10','GPa','Assumed'],
    ['','Electronic conductivity (compressed powder)','1.0 × 10^2^','S cm^−1^','Effective value'],
@@ -272,7 +272,7 @@ body.push(P('**Main text** — numbering continues from [32] in Manuscript v5.1;
   indent: { left: 500, hanging: 500 } })));
 body.push(P('**Supporting Information** — continues from [S5] in the DFT part (Table S1).'));
 [
- '[S6]\tH. Wang, et al., Elastic properties of layered lithium transition-metal oxides, *J. Power Sources* **470** (2020) 228413.',
+ '[S6]\tT. Sedlatschek, et al., Characterization of the grain boundary strength of polycrystalline NMC811 using in situ micro tensile tests, *J. Power Sources* **681** (2026) 240276.',
  '[S7]\tA. Sakuda, A. Hayashi, M. Tatsumisago, Sulfide solid electrolyte with favorable mechanical property for all-solid-state lithium battery, *Sci. Rep.* **3** (2013) 2261.',
  '[S8]\tM. Cronau, M. Szabo, C. König, T. B. Wassermann, B. Roling, How to measure a reliable ionic conductivity? The stack pressure dilemma of microcrystalline sulfide-based solid electrolytes, *ACS Energy Lett.* **6** (2021) 3072–3077.',
 ].forEach(r => body.push(new Paragraph({ children: runs(r), spacing: { after: 60 },
@@ -408,6 +408,12 @@ NOTE('D16.', '**DFT 파트와 규약을 맞췄다 (신규, 2026-08-23).** 같은
 + 'Wiley 식(*저널* **연도**, *권*, 쪽), DFT 의 SI 목록은 제목 포함 (저널 **권** (연도) 쪽) 이다.  '
 + '나는 SI 항목을 DFT 스타일에 맞췄으나, 최종적으로 **SI 목록 스타일을 한 가지로 통일**해야 한다.');
 
+NOTE('D17.', '**SI 참고문헌 정정 (2026-09-25, 원장 SELF-51).** 공저자 검토에서 NCM811 영률의 출처 S6 이 검색되지 않는다는 지적 — '
++ '확인해 보니 그 인용 (옛 S6, "Wang 2020") 은 이 리포의 주석에서 원문 확인 없이 생겨 제목까지 붙은 것이었다 (인용 금지).  '
++ '⇒ S6 을 Sedlatschek *et al.*, *J. Power Sources* **681** (2026) 240276 (다결정 NMC811 나노압입) 으로 교체 — **값 138 ± 24 GPa 는 '
++ 'PDF 확인 전이라 본문·각주에 쓰지 않는다**.  이온 전도도 행은 `Ref. S8` → `Assumed` — Cronau 2021 원문에 3.0 mS cm^−1^ 이 없고 '
++ '단결정 측정도 없다 (측정 argyrodite 는 Li_6_PS_5_Br).  S8 은 각주의 비교 문헌으로만 남긴다.  정본: '
++ 'docs/reviews/si_table_response_20260925.md §7.');
 NOTE('D11.', '**레퍼런스.** Methods 는 이제 인용 5개만 쓴다 — LIGGGHTS · MPM · 치밀 LPSCl 영률 · '
 + 'NCM 영률 · 전해질 grain 이온전도도.  이 논문에서 보정하거나 측정한 것이 아닌 **모든 정량 입력**은 '
 + 'Table S2 의 Source 열에 출처가 있다.  임의로 붙였던 [100]/[102]/[107]/[109]/[110] 은 없앴다.');

@@ -2285,7 +2285,9 @@ which automatically recovers the elastic limit when the Tabor parameter
 (Brake 2012, Storakers 1997). For sulfide solid electrolytes (LPSCl
 real lab values: E_SE = 24 GPa, ν_SE = 0.30 → E*_SE-SE ≈ 13.2 GPa;
 H_SE = 0.85 GPa, σ_y = H/2.8 ≈ 0.30 GPa per Brake 2012 ceramic
-convention; Wang 2020, Cheng 2017, McGrogan 2017), our SE-SE contact
+convention; Cheng 2017, McGrogan 2017 — ⚠ SELF-51 (2026-09-25): an unverifiable
+'Wang 2020' citation was removed here (인용 금지), and E_SE = 24 GPa is a Li2S–P2S5
+sulfide-glass value (Sakuda 2013), not an LPSCl measurement), our SE-SE contact
 ensemble populates the transitional regime with **median μ_T = 12.1
 (IQR 8.5 – 15.8, n = 36 042 312 contacts across the full case
 ensemble)**, placing every single contact within the [0.1, 100]
@@ -2325,8 +2327,9 @@ Effective contact area 는 A_eff = min(A_Hertz, A_Tabor, A_volume),
 을, ≫ 1 일 때 fully-plastic limit 을 자동 회복한다 (Brake 2012,
 Storakers 1997). Sulfide SE (LPSCl real lab values: E_SE = 24 GPa,
 ν_SE = 0.30 → E*_SE-SE ≈ 13.2 GPa; H_SE = 0.85 GPa, σ_y = H/2.8 ≈
-0.30 GPa per Brake 2012 ceramic convention; Wang 2020, Cheng 2017,
-McGrogan 2017) 의 경우 본 SE-SE contact ensemble 이 transitional
+0.30 GPa per Brake 2012 ceramic convention; Cheng 2017, McGrogan 2017 —
+⚠ SELF-51 (2026-09-25): 실재 미확인 'Wang 2020' 인용을 뺐다 (인용 금지) · E_SE 24 GPa 는
+LPSCl 측정값이 아니라 Li₂S–P₂S₅ 유리 값 (Sakuda 2013)) 의 경우 본 SE-SE contact ensemble 이 transitional
 regime 에 위치하며, **median μ_T = 12.1 (IQR 8.5 – 15.8, n = 36 042 312
 total contacts across the full case ensemble)** 로 모든 contact 가
 [0.1, 100] transitional band 안에 있다: **0 % 가 fully-elastic limit

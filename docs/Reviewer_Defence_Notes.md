@@ -76,7 +76,7 @@ H = 0.6 GPa 로 변경 시 σ_y → 0.21 GPa 로 줄어 μ_T 가 1/0.7 = 1.43 �
 | 사용처 | 값 | 이유 |
 |-------|---|-----|
 | **DEM 시뮬레이션 (compaction)** | 1.35 GPa | Time-step 효율 (E* 클수록 dt ↓) — softened E 가 표준 DEM 관행 (Bielefeld 2019, Wang 2023) |
-| **분석적 post-correction (Tabor)** | **24 GPa** | LPSCl 의 진짜 lab 값 (Wang 2020 nanoindentation) |
+| **분석적 post-correction (Tabor)** | **24 GPa** | 황화물 유리 (75Li₂S·25P₂S₅) 문헌값 — Sakuda 2013.  ⚠ **LPSCl 직접 측정값이 아니다** (LPSCl 참고: DFT ≈ 22 GPa).  옛 출처 'Wang 2020 nanoindentation' 은 실재 미확인 — 인용 금지 (원장 `SELF-51`, 2026-09-25) |
 
 → Compaction kinematics (= 도달 porosity) 는 두 E 모두에서 같은 결과
    (외력 BC 가 dominant), 그러므로 softened sim E 가 무해.
@@ -87,8 +87,10 @@ H = 0.6 GPa 로 변경 시 σ_y → 0.21 GPa 로 줄어 μ_T 가 1/0.7 = 1.43 �
 > "DEM 시뮬레이션은 cold-press kinematics 만 결정하므로 E_SE 의
 > softened value (1.35 GPa) 를 써도 도달 porosity 와 contact 분포가
 > 변하지 않습니다 — 표준 DEM 관행 (Bielefeld 2019). Post-correction
-> Tabor 분석에는 lab-measured E_SE = 24 GPa (Wang 2020) 를 사용하여
+> Tabor 분석에는 황화물 유리 문헌값 E = 24 GPa (Sakuda 2013 — LPSCl DFT ≈ 22 GPa 와 같은 급) 를 사용하여
 > contact-mechanics 결과를 정확히 재현합니다."
+>
+> ⚠ 2026-09-25 정정 (원장 `SELF-51`): 옛 문장의 *"lab-measured … (Wang 2020)"* 는 실재가 확인되지 않는 인용이었다 — 인용 금지.  24 GPa 는 LPSCl 측정값이 아니라 Li₂S–P₂S₅ 유리 값이다.
 
 이 점이 So et al. 2022 framework 와도 일치 — 그들도 sim-vs-real E 를
 구분 사용.

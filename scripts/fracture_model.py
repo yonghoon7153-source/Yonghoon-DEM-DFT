@@ -17,9 +17,9 @@ Material constants (ASSB cathode, NCM)
 ──────────────────────────────────────
   K_IC_AM_S = 1.0 MPa·m^0.5   single-crystal NCM       Liu 2020
   K_IC_AM_P = 0.3 MPa·m^0.5   polycryst secondary NCM  Quinn 2020
-  E_AM      = 140 GPa         Young's modulus          Xu 2017
+  E_AM      = 140 GPa         Young's modulus          project convention (SELF-51)
   NU_AM     = 0.25            Poisson ratio (ceramic)
-  H_AM      = 6.0 GPa         hardness (informational) Wang 2020
+  H_AM      = 6.0 GPa         hardness (informational) source unverified (SELF-51)
 
 Dimensionless geometric constant
 ────────────────────────────────
@@ -42,8 +42,11 @@ References
   Liu 2020       Nat. Energy 5, 304        (single crystal K_IC)
   Quinn 2020     Joule 4, 2466             (polycryst K_IC, fragmentation)
   de Vasconcelos 2019  Acta Mater. 178, 35 (fracture toughness method)
-  Xu 2017        Phys. Rev. X 7, 041038    (NCM811 nanoindentation)
-  Wang 2020      J. Power Sources 470, 228413 (NCM hardness)
+  Xu 2017        J. Electrochem. Soc. 164, A3333 (NMC532 nanoindentation;
+                 the old 'Phys. Rev. X 7, 041038' was wrong — SELF-51)
+  (removed 2026-09-25: an unverifiable 'Wang 2020' J. Power Sources citation —
+   인용 금지, SELF-51.  NCM811 E: Sedlatschek et al., J. Power Sources 681 (2026)
+   240276, value pending PDF check)
 
 Units
 ─────

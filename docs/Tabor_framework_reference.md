@@ -99,8 +99,9 @@ edge cases 자연스레 처리).
 ```
 Material constant       Value         Source
 ──────────────────────  ────────────  ─────────────────────────
-E_SE  (real, lab)       24.0 GPa      Wang 2020 nanoindentation
-                                       McGrogan 2017 (LPSCl)
+E_SE  (real, lab)       24.0 GPa      Sakuda 2013 (75Li₂S·25P₂S₅ 유리 — LPSCl 아님)
+                                       McGrogan 2017 (Li₂S–P₂S₅ — LPSCl 아님)
+                                       ⛔ 옛 출처 'Wang 2020' 은 실재 미확인 — 인용 금지 (SELF-51)
                         (DEM sim 1.35 GPa: time-step 효율 위해 softened,
                          post-correction 분석에는 real 24 GPa 사용)
 ν_SE                    0.30          LIGGGHTS poissonsRatio
@@ -273,7 +274,7 @@ Layer 4 (FFT):      Voxel-grid 독립 검증 (Moulinec-Suquet 1998)
 | 6 | Sakuda et al. 2013 — *Sci. Rep.* 3: 2261. | Sulfide glass H ≈ 0.6 GPa nanoindentation |
 | 7 | McGrogan et al. 2017 — *Adv. Energy Mater.* 7: 1602011. | LPSCl mechanical properties |
 | 8 | So et al. 2022 — *MethodsX* 9: 101857. | Equilibrium-overlap DEM (Storakers 의 simplified version) |
-| 9 | Wang 2020 — *J. Power Sources* 470: 228413. | NCM E_AM = 140 GPa |
+| 9 | ~~Wang 2020 — J. Power Sources 470~~ ⛔ 실재 미확인 인용 — 인용 금지 (원장 `SELF-51`).  NCM811 E 대체 후보: Sedlatschek *et al.*, *J. Power Sources* **681** (2026) 240276 (PDF 확인 대기) | NCM E_AM = 140 GPa |
 | 10 | Moulinec & Suquet 1998 — *Comput. Methods Appl. Mech. Eng.* 157: 69. | FFT homogenization (Layer 4 link) |
 
 ---

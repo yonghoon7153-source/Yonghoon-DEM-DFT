@@ -122,10 +122,26 @@ def main():
     chk('9) 기준선이 클레임과 결함 **둘 다**의 최신 등재다',
         stale['newest'] == LV.newest_ledger_date()
         and LV.newest_ledger_date() >= newest)
-    #  ★ 판별력 — 결함 축이 실제로 기준선을 움직였는가 (안 움직였으면 이 검사는 공허하다).
-    chk('9a) ★ 결함 등재가 클레임보다 최신이라 기준선이 실제로 움직였다',
-        LV.newest_finding_date() is not None
-        and LV.newest_ledger_date() > newest)
+    #  ★ 판별력 — 결함 축이 실제로 기준선을 움직이는가 (안 움직이면 이 검사는 공허하다).
+    #  ⛔ 정정 2026-09-25 — 옛 판은 **실데이터**가 "결함이 클레임보다 최신" 이기를 요구했다.
+    #    같은 날 클레임과 결함이 함께 등재되면 (CL-90 · SELF-51, 둘 다 09-25) 구현이 옳아도
+    #    빨간불이 난다 = 판별력을 데이터의 우연에 맡긴 것.  ⇒ 클레임보다 하루 늦은 결함 **픽스처**를
+    #    캐시에 잠깐 넣어 기준선이 그 날짜로 움직이는지 본다 (원장 파일은 건드리지 않는다).
+    import datetime as _dt
+    _d0 = LV._load()
+    _base = _dt.date.fromisoformat(newest) if newest else _dt.date(2000, 1, 1)
+    _next = _base + _dt.timedelta(days=1)
+    _fake = {'id': 'TEST-9A', 'status': 'open',
+             'opened_in': f"docs/reviews/_fixture_{_next.strftime('%Y%m%d')}.md"}
+    _saved = LV._cache['data']
+    try:
+        LV._cache['data'] = dict(_d0, findings=list(_d0['findings']) + [_fake])
+        _moved = LV.newest_ledger_date() == _next.isoformat()
+    finally:
+        LV._cache['data'] = _saved
+    chk('9a) ★ 결함 축이 기준선을 실제로 움직인다 (클레임보다 하루 늦은 결함 픽스처 → 기준선이 그 날짜)',
+        LV.newest_finding_date() is not None and _moved
+        and LV.newest_ledger_date() == max(newest, LV.newest_finding_date()))
     #  ★★ 이 검사가 이번 감사의 본체다 — **날짜가 최신이어도** 선언된 결함이 열려 있으면
     #    초록이 나오면 안 된다.  옛 판은 여기서 초록이었다.
     _f_open = LV.freshness('2999-01-01', ledger_ids=[],

@@ -13,7 +13,9 @@ Tabor (1951) regime boundaries (per Brake 2012, Greenwood 1992):
 Material constants — imported from scripts/plastic_coverage.py
 (single source of truth for the entire DEM-postprocess pipeline):
 
-  E_SE_real    = 24.0  GPa     (LPSCl lab value — Wang 2020, McGrogan 2017)
+  E_SE_real    = 24.0  GPa     (Li2S–P2S5 sulfide-glass value, Sakuda 2013 /
+                               McGrogan 2017 — NOT an LPSCl measurement; the old
+                               'Wang 2020' source was unverifiable — SELF-51)
   ν_SE         = 0.30          (LIGGGHTS poissonsRatio for SE atom type)
   H_SE         = 0.85 GPa      (LPSCl Vickers, Sakuda 2013)
   σ_y_SE       = 0.30 GPa      (= H / 2.8, Tabor relation; not the textbook H/3)

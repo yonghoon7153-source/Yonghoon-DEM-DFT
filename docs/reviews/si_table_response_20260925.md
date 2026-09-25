@@ -193,16 +193,16 @@ DBE/SBE 비 R̄ (8 origin 쌍대응 평균, vox 0.15 · centerline):
 > 확인 결과 **그 인용은 실재가 확인되지 않는다** — 이 리포의 자동 작성 커밋이 만든 인용이다 (7-1).  그래서 동그라미 6 행만이 아니라
 > **표 14 행 전부**를 원문 카드 · 코드와 다시 대조했다.
 > 표기: ✅ = 원문 PDF 카드 또는 코드와 대조함 · ⚠ = 대조 못 함 (**미확인 — 인용 전에 확인 필요**).
-> 가정: docx 의 `Ref. S4` = 생성기 `[S6]` ("Wang 2020, JPS 470, 228413"), `Ref. S5` = 생성기 `[S8]` (Cronau 2021).  번호 체계가 다르므로
+> 가정: docx 의 `Ref. S4` = 생성기 `[S6]` ("Wang 2020, JPS 470, 228413" — 인용 금지, `CL-90`), `Ref. S5` = 생성기 `[S8]` (Cronau 2021).  번호 체계가 다르므로
 > (§0) docx 참고문헌 목록으로 확인할 것.
 
 ### 7-1. S4 인용은 어떻게 생겼나 (리포 이력 — 전부 이 리포의 자동 작성 커밋)
 1. 04-29 `b1c8262fe` · `0a040f2b0` — 균열 모듈 (`scripts/fracture_model.py`) 과 문헌표 주석에 *"Wang 2020, J. Power Sources 470, 228413 —
-   NCM **hardness**"* 가 **출처 확인 없이** 들어갔다.  같은 코드에서 E_AM = 140 GPa 의 출처는 *"Xu 2017 / project-wide convention"* 이었다.
+   NCM **hardness**"* 가 **출처 확인 없이** 들어갔다 (이 절의 서지는 전부 인용 금지 — `CL-90`).  같은 코드에서 E_AM = 140 GPa 의 출처는 *"Xu 2017 / project-wide convention"* 이었다.
 2. 05-04 `bd4d6fe0b` — `docs/Tabor_framework_reference.md` 참고문헌표로 옮기며 역할이 *"NCM E_AM = 140 GPa"* 로 **바뀌었다**.
-3. 08-23 `c2670de6e` — 원고 SI 표 초안: `[36] H. Wang, et al., J. Power Sources 2020, 470, 228413` 을 E = 140 의 출처로.
-4. 08-24 `9aa882135` — S6 으로 번호를 바꾸며 제목 *"Elastic properties of layered lithium transition-metal oxides"* 를 **붙였다** — 원문을 본 적이 없다.
-- 검증: 그 제목·저자의 논문은 웹 검색에 나오지 않는다.  DOI `10.1016/j.jpowsour.2020.228413` 은 이 컨테이너에서 해석할 수 없다 (doi.org ·
+3. 08-23 `c2670de6e` — 원고 SI 표 초안: `[36] H. Wang, et al., J. Power Sources 2020, 470, 228413` 을 E = 140 의 출처로 (인용 금지).
+4. 08-24 `9aa882135` — S6 으로 번호를 바꾸며 제목 *"Elastic properties of layered lithium transition-metal oxides"* 를 **붙였다** — 원문을 본 적이 없다 (지어진 제목 — 인용 금지).
+- 검증 (인용 금지 — `CL-90`): 그 제목·저자의 논문은 웹 검색에 나오지 않는다.  DOI `10.1016/j.jpowsour.2020.228413` 은 이 컨테이너에서 해석할 수 없다 (doi.org ·
   Crossref · ScienceDirect 차단) — 그 번호가 어느 논문인지는 **미확인**이지만 어느 쪽이든 교체 대상이다.
 - 같은 04-29 목록의 다른 서지도 미확인이다 (예: *"Xu 2017 PRX 7, 041038"* — 실제 Xu 2017 은 *J. Electrochem. Soc.* **164**, A3333).
 - ⚠⚠ **"Wang 2020" 은 이미 세 가지 다른 값의 출처로 퍼져 있다** (09-25 밤 전수 grep — litdb 제외) — 한 논문이 NCM 경도 · NCM 영률 ·
@@ -242,9 +242,21 @@ DBE/SBE 비 R̄ (8 origin 쌍대응 평균, vox 0.15 · centerline):
 - 본문 확인 1 — *"(24 GPa)[34] is listed beside it in Table S2"* 가 표와 맞는지.
 - 동그라미 6 행 (#3 · #6 · #11 · #12 · #13 · #14) 중 라벨이 **틀린** 것은 없다 — #11 만 증빙이 없다.  **틀린 것은 동그라미 밖의 `Ref.` 두 행이다.**
 
-### 7-4. 재발 방지 (제안 — 비준 대기)
+### 7-4. 재발 방지 — 비준 (09-25 밤 *"ㅇㅇ 고치고"*) · 진행 상태
 1. **원고 참고문헌 게이트** — 원고 (생성기 · docx 에서 뽑은 목록) 의 인용마다 원문을 확인한 litdb 정본 카드 (DOI) 에 연결하고, 연결 안 된
    인용이 있으면 `check_all.sh` 가 실패한다.
 2. **내부 서지 점검** — 코드 주석 · docs 의 서지 (특히 04-29 균열 모듈 목록) 를 훑어 카드 없는 것에 `미확인` 표시.
 3. **작성 규율** — 원문을 보지 않은 서지는 제목 · 권호를 채우지 않고 `[미확인]` 으로 둔다.  CLAUDE.md 에 한 줄로 상주시킨다
    (세션이 바뀌어도 남도록).
+- 진행 (09-25 밤):
+  - ✅ **등록부** — `claims.json` `CL-90` + `quotation_ban` 두 패턴 (그 인용의 논문 번호 · 지어진 제목).  스윕이 기록 문서 속 언급까지
+    잡는 것을 확인했고, 기록 줄에는 *인용 금지* 표지를 달았다.
+  - ✅ **"Wang 2020" 9 곳 정정** — 코드 주석 3 (`scripts/fracture_model.py` · `scripts/build_literature_reference.py` ·
+    `scripts/analyze_tabor_regime.py`) · docs 3 (`docs/Tabor_framework_reference.md` · `docs/Reviewer_Defence_Notes.md` ·
+    `docs/paper_brittle_caveat.md`) · 웹앱 툴팁 (`webapp/templates/single.html`) · 원고 생성기 S6 → Sedlatschek 2026 · S8 행 `Assumed`.
+    **값은 하나도 바꾸지 않았다** — 출처 표기만.  24 GPa 는 LPSCl 측정이 아니라 Li₂S–P₂S₅ 유리 값으로 적었다.
+  - ✅ **CLAUDE.md 작업 규율 ⑥** 상주.
+  - ⬜ **원고 참고문헌 ↔ 정본 카드 게이트** — 설계 필요 (생성기만 보면 docx 를 못 본다 = 규율 ⑤ 의 부분집합 초록 위험).
+  - ⬜ **다른 미확인 서지** — 같은 04-29 목록의 *"Xu 2017"* 범위값 · *"Cheng 2017"* · LPSCl 경도 0.85 GPa 의 *"Sakuda 2013"* 귀속 (그 논문은
+    Li₂S–P₂S₅ 유리) — 전수 점검은 게이트와 함께.
+  - ⬜ **사용자 docx** — S4 · S5 교체 · 각주는 사용자 원고에서 (생성기는 08-23 판).

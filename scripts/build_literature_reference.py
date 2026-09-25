@@ -12,8 +12,9 @@ Sources (all open-access or institutional access):
   de Vasconcelos    Acta Mater. 178, 35    — fracture-toughness; 15-25% microcrack
    2019                                       observable post-compaction
   Liu 2020          Nat. Energy 5, 304     — single-crystal robustness ratio (~10×)
-  Xu 2017           PRX 7, 041038          — NCM811 nanoindentation (E, H)
-  Wang 2020         JPS 470, 228413        — NCM hardness measurement
+  Xu 2017           JES 164, A3333         — NMC532 nanoindentation (E, H)
+                    [old 'PRX 7, 041038' was wrong; ranges below unverified — SELF-51]
+  (removed 2026-09-25: an unverifiable 'Wang 2020' JPS citation — 인용 금지, SELF-51)
   Bielefeld 2020    J. Electrochem. Soc.   — relaxation-included DEM, max overlap 5%
   Wang 2023         J. Power Sources 555   — DEM, max overlap 0.05-0.15
   Minnmann 2021     Adv. Energy Mater. 11  — DEM with relaxation, max overlap 0.08
@@ -69,12 +70,12 @@ REFERENCE = [
      'note': 'Single/poly fracture-toughness ratio (we used 1.0/0.3 = 3.3)'},
     {'category': 'material', 'metric': 'E_NCM811_GPa',
      'lit_low': 130.0, 'lit_high': 165.0,
-     'unit': 'GPa', 'source': 'Xu 2017',
+     'unit': 'GPa', 'source': 'Xu 2017 (JES; NMC532) — range unverified (SELF-51)',
      'note': 'Nanoindentation; project-wide use 140 GPa'},
     {'category': 'material', 'metric': 'H_NCM_GPa',
      'lit_low': 5.0, 'lit_high': 8.0,
-     'unit': 'GPa', 'source': 'Wang 2020',
-     'note': 'Vickers hardness, NCM811'},
+     'unit': 'GPa', 'source': 'unverified (SELF-51)',
+     'note': 'Vickers hardness, NCM811 — source unverified; old Wang 2020 citation removed'},
 
     # DEM literature comparison
     {'category': 'dem_overlap', 'metric': 'max_dr_R_typical',
