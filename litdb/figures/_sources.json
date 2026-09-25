@@ -250,6 +250,14 @@
    "건식전극 논문/02. How to Measure a Reliable Ionic ConductivityThe Stack Pressure Dilemma ofMicrocrystalline Sulfide-Based SolidElectrolytes.pdf"
   ]
  },
+ "cronau2022_wet_milling_particle_size_ionic_conductivity": {
+  "figures": 9,
+  "generated": "2026-09-25",
+  "pdfs": [
+   "ce19f839-Batteries___Supercaps_-_2022_-_Cronau_-_Ionic_Conductivity_versus_Particle_Size_of_Ball_Milled_Sulfide_Based_Solid.pdf",
+   "53052ebd-batt202200041-sup-0001-misc_information.pdf"
+  ]
+ },
  "cronk2026_lis_cathode_interphase_chemistry": {
   "figures": 50,
   "generated": "2026-09-11",

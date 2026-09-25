@@ -40,6 +40,19 @@ lim2025_virtual_calendering_framework	validating the virtual calendering process
 # ── 소재 · 바인더 · 복합양극 ───────────────────────────────────────
 sakuda2013_sulfide_mechanical_property	sulfide solid electrolyte with favorable mechanical property
 shi2019_high_am_loading_particle_size_assb	high active material loading in all
+#   ↓ SE 공정 이력 ↔ σ (습식 볼밀링) — SELF-51 원문 대조 (2026-09-25). [20] 이 위 shi2019 다.
+# 가드: 본문 파일명은 제목 토큰이 있지만 digest 제목이 의역(습식 저에너지 볼밀링 …)이라 토큰 겹침이 약하고,
+#   SI 파일명은 DOI 조각(batt202200041)뿐이다 → 본문·SI 를 각각 한 줄씩 잡는다 (SI 는 'sup' 로 자동 판정).
+cronau2022_wet_milling_particle_size_ionic_conductivity	ionic_conductivity_versus_particle_size_of_ball_milled
+cronau2022_wet_milling_particle_size_ionic_conductivity	batt202200041
+#   ↑ 2026-09-25. **9장 전부 손이 들어가 있다** (figures.json 의 manual_crop / recrop):
+#   · fig_S1 = SI page 2 (0-based 1) — **벡터 전용 그림**이라 자동 크로퍼가 못 보고 **S2(XRD) 래스터를 S1 로 잘랐다**
+#     → clip = S1 캡션 위 벡터 영역의 비백색 범위 (192.0, 113.5, 432.2, 316.0) @300 dpi → 1002x845
+#   · fig_4 = 자동 크롭이 **쪽 전폭**이라 머리말 괘선 + 오른쪽 세로 "Downloaded from … Wiley Online Library" 도장이 섞였다
+#     → 임베디드 래스터 경계 (+2 pt) 로 재크롭. 나머지 7장도 래스터 경계 (+2 pt) 로 재크롭 (쪽 여백 제거).
+#   [!] '--slug cronau2022_wet_milling_particle_size_ionic_conductivity --clean' 을 돌리면
+#       fig_S1 이 다시 S2 복제가 되고 fig_4 오염이 되돌아온다. ('--inbox --run --skip-done' 은 안전.)
+#   ⭐ Fig 2 (σ vs 밀링 시간 × 볼 크기)와 Fig 5b (λ · σ · 용량 vs 시간) 가 이 카드 판정의 근거다.
 oh2026_bimodal_composite_cathode	bimodal composite cathodes advancing the chemo-mechanical
 kim2026_charge_engineered_cnf_binder	charge-engineered cellulose nanofibril binders
 park2026_thiolene_sbr_binder_assb	thiol-ene click

@@ -863,6 +863,14 @@
 
 ## B. 전달 삼중항 — σ_ionic은 교차검증, σ_e/σ_thermal은 우리만
 
+> ⭐⭐ **2026-09-25 추가 — [Cronau22]: 우리 σ_ionic 재료 prefactor `σ_grain · Cronau(r_SE)` 의 "Cronau" 는 이 논문의 값이 아니다 (원장 SELF-51 원문 대조).**
+> (`papers/cronau2022_wet_milling_particle_size_ionic_conductivity.md` §0·§7; ⚠ **측정 재료 Li₅.₅PS₄.₅Cl₁.₅ · 펠릿 EIS @ 98 MPa stack · 측정 온도 미기재 · 실험 전용**)
+> - **`σ_grain = 3.0`**: 논문 속 "about 3 mS/cm" 는 서론 p.1 의 **무인용** 일반 서술 (인접 `[4–10]` 은 앞 문장 인용). Li₆PS₅Cl·단결정 측정 **0** ⇒ 작업 브랜치 `se_material.py` 의 09-25 정정 라벨 (*"project-adopted, no direct literature source"*) 이 맞다.
+> - **`Cronau(r_SE)` 구간값 (1.00 / 0.90 / 0.65 / 0.33 @ r 0.5 / 0.3 / 0.1 / 0.03 µm)**: **전부 이 논문 밖** — σ 는 **밀링 시간**의 함수로만 있고 최소 입경 d ≈ 1.0 µm (r ≈ 0.5). 0.33 은 p.2 문헌 요약 *"LWM > 40 h → ≈ 1/3"* `[20,25]` (시간 서술, 입경 없음) 을 입경 축에 옮긴 것으로 보인다 (추정). 자체 50 h 값은 **0.14**.
+> - **"입경 자체" 가 아니다 (자체 데이터, digitized)**: 4 h 고정 볼 크기 스윕 — 입경 1.0 / 1.6 / (Ø≈20 µm 덩어리) µm ↔ σ 1.38 / 1.41 / 1.51; 4 h → 50 h — 입경 ≈1.0 → 0.9 µm (λ 역산) ↔ σ 1.52 → 0.39. + **`schlautmann2023_se_particle_size_composite_transport`** 순수 LPSCl D50vol 4–40 µm σ **평평** ⇒ 변수는 **밀링 손상** (저자: 부분 비정질화).
+> - **frame[5]**: 이 입력은 DEM σ_ionic 폼 (`σ_grain · Cronau(r_SE)`) 과 STEP3 복셀 (`σ_grain` 만, `step3_sigma.py:76`) 이 **공유**한다 — 라벨 정정은 두 솔버의 출처 표기에 다 걸리지만 **값은 불변** (검증도 반증도 아님).
+> - ⚠ 적당한 밀링의 펠릿 σ 손실이 정본 세 편에서 **×0.69–0.75** 로 모인다 (Cronau22 2 h · `minnmann2021_jes_charge_transport_bottlenecks` 10 h wet-mill · `lee2025_corolling_dryprocess_lpscl_ptfe` 볼밀) — 우리 r = 0.5 µm 계수 **1.00** 과는 **다른 축** (펠릿 공정 이력 vs grain-interior 규약) 이라 직접 교정 근거가 아니다. 쓰려면 r 의 함수가 아닌 **별도 "공정 이력" 인자**로 (σ_ionic 폼 동결 규약과 충돌 → **1저자 판단**).
+
 > ⭐⭐ **2026-09-22 추가 — [Islam26]: 연속체 임피던스 모델이 우리 CL-81 결손(계면항)을 *상(phase)으로* 넣었다가 0 을 얻었다.**
 > (`papers/islam2026_microstructure_resolved_impedance_lpscl_symmetric_cell.md` §6·§7·§10; ⚠ **Li/Li₆PS₅Cl/Li 대칭셀 · 2D · 시뮬 전용(실험 0) · manuscript(DOI 없음)**)
 > - **같은 층위**: phase map(grain/GB/pore/SEI) 에 상별 σ 를 주고 COMSOL 옴 전도를 푼다 = 우리 STEP3 복셀 FV 와 동형 — 즉 **`CONTACT_FREE` 가지의 연속체판**

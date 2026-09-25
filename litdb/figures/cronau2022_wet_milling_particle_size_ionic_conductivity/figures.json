@@ -1,0 +1,210 @@
+{
+ "slug": "cronau2022_wet_milling_particle_size_ionic_conductivity",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-25",
+ "sources": [
+  "ce19f839-Batteries___Supercaps_-_2022_-_Cronau_-_Ionic_Conductivity_versus_Particle_Size_of_Ball_Milled_Sulfide_Based_Solid.pdf",
+  "53052ebd-batt202200041-sup-0001-misc_information.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic illustration of the opposing effect of milling time on the ionic conductivity of the solid electrolyte (orange dotted line) and on the size ratio λ of the cathode active material particles to the solid electrolyte particles (blue dotted line). This opposing effect should lead to an optimum milling time for achieving a maximum cathode capacity (green line).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.7,
+    271.5,
+    270.6,
+    488.8
+   ],
+   "w": 851,
+   "h": 906,
+   "dpi": 300,
+   "src": "ce19f839-Batteries___Supercaps_-_2022_-_Cronau_-_Ionic_Conductivity_versus_Particle_Size_of_Ball_Milled_Sulfide_Based_Solid.pdf",
+   "blank": 0.093,
+   "recrop": "re-cropped to the embedded raster bounds (+2 pt); original auto crop had wide white page margins (2026-09-25)",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Time-dependent evolution of ionic conductivity of gc-LPSC+ and μc-LPSC+ samples milled with balls of different sizes in the low energy wet milling (LWM) step.",
+   "rotated_deg": 0,
+   "bbox": [
+    110.0,
+    562.8,
+    485.2,
+    718.1
+   ],
+   "w": 1564,
+   "h": 649,
+   "dpi": 300,
+   "src": "ce19f839-Batteries___Supercaps_-_2022_-_Cronau_-_Ionic_Conductivity_versus_Particle_Size_of_Ball_Milled_Sulfide_Based_Solid.pdf",
+   "blank": 0.942,
+   "recrop": "re-cropped to the embedded raster bounds (+2 pt); original auto crop had wide white page margins (2026-09-25)",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. SEM images of gc-LPSC+ powders after low energy wet milling (LWM) at 200 rpm for 4 h, but with different ball sizes. a) pristine – without any LWM treatment, b) LWM with 10 mm balls, c) LWM with 3 mm balls, d) LWM with 1 mm balls. The scale bars are 4 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    96.7,
+    415.7,
+    498.6,
+    718.1
+   ],
+   "w": 1676,
+   "h": 1262,
+   "dpi": 300,
+   "src": "ce19f839-Batteries___Supercaps_-_2022_-_Cronau_-_Ionic_Conductivity_versus_Particle_Size_of_Ball_Milled_Sulfide_Based_Solid.pdf",
+   "blank": 0.025,
+   "recrop": "re-cropped to the embedded raster bounds (+2 pt); original auto crop had wide white page margins (2026-09-25)",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. SEM images of gc-LPSC+ powders after low energy wet milling (LWM) at 200 rpm (Øballs=1 mm) for different milling times. a) 0.5 h, b) 1 h, c) 2 h, d) 4 h. The scale bars are 3 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    97.2,
+    64.6,
+    498.1,
+    366.3
+   ],
+   "w": 1672,
+   "h": 1258,
+   "dpi": 300,
+   "src": "ce19f839-Batteries___Supercaps_-_2022_-_Cronau_-_Ionic_Conductivity_versus_Particle_Size_of_Ball_Milled_Sulfide_Based_Solid.pdf",
+   "blank": 0.024,
+   "recrop": "auto crop spanned the full page width and caught the page-header rule + the vertical \"Downloaded from … Wiley Online Library\" stamp; re-cropped to the embedded raster bounds (+2 pt) (2026-09-25)",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) Comparison of six In-based cells cycled at RT and at a rate of 0.6 C (1.27 mA/cm2) using a stack pressure of 98 MPa. The gc-LPSC+ powders inside the composite cathode were synthesized via LWM treatment with different milling times. b) Dependence of the attained first discharge capacities of the batteries on the LWM milling time of the gc-LPSC+ SE in the composite cathode (0.5–50 h). In addition, the ionic conductivities and the particle size ratio λ are plotted.",
+   "rotated_deg": 0,
+   "bbox": [
+    103.4,
+    413.2,
+    491.8,
+    565.6
+   ],
+   "w": 1619,
+   "h": 636,
+   "dpi": 300,
+   "src": "ce19f839-Batteries___Supercaps_-_2022_-_Cronau_-_Ionic_Conductivity_versus_Particle_Size_of_Ball_Milled_Sulfide_Based_Solid.pdf",
+   "blank": 0.92,
+   "recrop": "re-cropped to the embedded raster bounds (+2 pt); original auto crop had wide white page margins (2026-09-25)",
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Li+ ion conductivity of dry-milled samples versus ball size.",
+   "rotated_deg": 0,
+   "bbox": [
+    192.0,
+    113.5,
+    432.2,
+    316.0
+   ],
+   "w": 1002,
+   "h": 845,
+   "dpi": 300,
+   "src": "53052ebd-batt202200041-sup-0001-misc_information.pdf",
+   "blank": 0.97,
+   "manual_crop": "auto crop pointed at the Figure S2 (XRD) raster — S1 is a vector-only plot above its caption that the tool did not see; clip = non-white extent of the vector region above the S1 caption (SI p.2) (2026-09-25)",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Powder X-ray diffraction patterns of gc-Li5.5PS4.5Cl1.5 after different wet ball milling times.",
+   "rotated_deg": 0,
+   "bbox": [
+    162.9,
+    373.3,
+    432.4,
+    599.5
+   ],
+   "w": 1124,
+   "h": 944,
+   "dpi": 300,
+   "src": "53052ebd-batt202200041-sup-0001-misc_information.pdf",
+   "blank": 0.945,
+   "recrop": "re-cropped to the embedded raster bounds (+2 pt); original auto crop had wide white page margins (2026-09-25)",
+   "viewed": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. ASSB with optimized solid electrolyte (2 h LWM time) cycled vs. In/Li at 0.1 C (stack pressure: 98 MPa).",
+   "rotated_deg": 0,
+   "bbox": [
+    159.9,
+    68.8,
+    434.6,
+    297.1
+   ],
+   "w": 1146,
+   "h": 952,
+   "dpi": 300,
+   "src": "53052ebd-batt202200041-sup-0001-misc_information.pdf",
+   "blank": 0.955,
+   "recrop": "re-cropped to the embedded raster bounds (+2 pt); original auto crop had wide white page margins (2026-09-25)",
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 3,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Comparison of the discharge capacity of three different ASSBs with optimized solid electrolyte (2 h LWM time) cycled vs. In/Li at 0.1 C (stack pressure: 98 MPa).",
+   "rotated_deg": 0,
+   "bbox": [
+    159.9,
+    472.3,
+    434.9,
+    700.3
+   ],
+   "w": 1146,
+   "h": 950,
+   "dpi": 300,
+   "src": "53052ebd-batt202200041-sup-0001-misc_information.pdf",
+   "blank": 0.943,
+   "recrop": "re-cropped to the embedded raster bounds (+2 pt); original auto crop had wide white page margins (2026-09-25)",
+   "viewed": true
+  }
+ ]
+}
