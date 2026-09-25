@@ -1428,12 +1428,16 @@ def scan_conductivity(sha256: str, basis: str = Query("sigma"),
         raise HTTPException(404, f"스캔 {sha256[:12]} 을 찾을 수 없습니다")
 
     rows: list[ConductivityRowOut] = []
+    fit_sigmas: list[float | None] = []
     for record in records:
         thickness_cm, area_cm2 = _geometry(session, record)
         thickness_mm = thickness_cm * 10.0 if thickness_cm else None
         resistance, source = _sweep_resistance(record)
         point = _scan_point(session, record)
         fit_ohm = point.total_resistance_ohm
+        electrolyte = fit_electrolyte_ohm(session, record)
+        fit_sigmas.append(conductivity_ms_cm(electrolyte, thickness_mm=thickness_mm,
+                                             area_cm2=area_cm2))
         rows.append(ConductivityRowOut(
             spectrum_id=record.id or 0,
             sweep_index=record.sweep_index,
@@ -1447,10 +1451,13 @@ def scan_conductivity(sha256: str, basis: str = Query("sigma"),
             fit_ohm=fit_ohm if fit_ohm and fit_ohm > 0 else None,
             sigma_ms_cm=conductivity_ms_cm(resistance, thickness_mm=thickness_mm,
                                            area_cm2=area_cm2),
+            fit_electrolyte_ohm=electrolyte,
         ))
 
     result = activation_energy([row.temperature_c for row in rows],
                                [row.sigma_ms_cm for row in rows], basis=basis)
+    fitted = activation_energy([row.temperature_c for row in rows], fit_sigmas,
+                               basis=basis)
     missing = [name for name, absent in (
         ("온도", all(row.temperature_c is None for row in rows)),
         ("두께", all(row.thickness_mm is None for row in rows)),
@@ -1463,7 +1470,44 @@ def scan_conductivity(sha256: str, basis: str = Query("sigma"),
         sha256=sha256, name=head.name or head.original_name,
         sweeps=len(records), rows=rows, missing=missing,
         activation=_activation_out(result),
+        fit_activation=_activation_out(fitted),
     )
+
+
+def fit_electrolyte_ohm(session: Session, record: SpectrumRecord,
+                        spectrum: Spectrum | None = None) -> float | None:
+    """쓰는 맞춤이 말하는 전해질 저항 — σ 에 쓰는 것 (ADR 0039 보완 1).
+
+    `ionic_conductivity` 의 ``total_ohm`` 이다: 막는 펠릿은 R0 (벌크가 R0 에
+    숨었으면 R0 + 입계 크기 아크), 벌크 아크가 보이면 그 아크들.  전극 계면 크기
+    아크는 뺀다 (ADR 0041·0047).  스펙트럼 화면의 σ 와 같은 길이다.
+
+    맞춤이 없거나, 저항이 미결정이거나, 안 막는 셀이면 ``None`` — 모르는 수로
+    Ea 를 내지 않는다 (§0.4).  사람이 적은 저항을 바꾸지 않는다: 옆에 적는 값이다.
+    """
+    fit = _best_fit(session, record.id or 0)
+    if fit is None or record.kind != SOLID:
+        return None
+    if spectrum is None:
+        try:
+            spectrum = _load_points(record)
+        except HTTPException:
+            return None
+    if spectrum is None:
+        return None
+    parameters = apply_exchangeable(
+        fit.circuit, json.loads(fit.parameters_json) if fit.parameters_json else [])
+    stub = _FitStub(circuit=fit.circuit,
+                    parameters=_stub_parameters(fit.circuit, parameters))
+    thickness_cm, area = _geometry(session, record)
+    try:
+        found = ionic_conductivity(
+            stub, thickness_cm=thickness_cm, area_cm2=area, config=_cell_config(record),
+            blocking=blocking_verdict(spectrum.frequency_hz, spectrum.z_re, spectrum.z_im))
+    except (KeyError, TypeError, ValueError, CircuitError):
+        return None
+    value = found.get("total_ohm")
+    return float(value) if value is not None and value > 0 else None
 
 
 def _crossing_of(record: SpectrumRecord) -> float | None:

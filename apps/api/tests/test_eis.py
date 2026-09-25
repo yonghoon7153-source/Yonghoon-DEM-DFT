@@ -1958,6 +1958,74 @@ def test_the_whole_table_and_the_activation_energy_come_back(client):
     assert len(activation["inverse_temperature"]) == 9
 
 
+def blocking_scan_mpt(temperatures, *, ea_ev=0.33, r_at_60=8.0):
+    """막는 펠릿의 온도 스캔 — 배선 L + 전해질 R0 + 이중층 CPE (B15 쌍둥이).  R0 는
+    Ea 를 따라 온도마다 바뀌고, L 과 CPE 는 그대로다."""
+    boltzmann = 8.617333262e-5
+    frequency = np.logspace(np.log10(7e6), 1.0, 40)
+    columns = {name: [] for name in ("freq/Hz", "Re(Z)/Ohm", "-Im(Z)/Ohm", "|Z|/Ohm",
+                                     "Phase(Z)/deg", "time/s", "Ewe/V", "Ns")}
+    clock, sequence, truth = 0.0, 0, []
+    for celsius in temperatures:
+        r0 = r_at_60 * np.exp(ea_ev / boltzmann * (1 / (celsius + 273.15) - 1 / 333.15))
+        truth.append(float(r0))
+        for _ in range(4):
+            S._mpt_row(columns, clock, 0.0, 0j, sequence)
+            clock += 3600.0
+        sequence += 1
+        for f in frequency:
+            w = 2 * np.pi * f
+            S._mpt_row(columns, clock, f,
+                       1j * w * 1.73e-6 + r0 + 1.0 / (1.9e-6 * (1j * w) ** 0.86), sequence)
+            clock += 1.0
+        sequence += 1
+    text = S.build_mpt({name: np.array(values, dtype=float)
+                        for name, values in columns.items()})
+    return text, truth
+
+
+def test_the_ea_the_fits_draw_is_offered_beside_the_typed_one(client):
+    """ADR 0039 보완 1: 스캔의 Ea 는 사람이 적은 저항으로 낸다 — 그대로다.  맞춤의
+    전해질 저항(σ 에 쓰는 것)으로 낸 Ea 를 옆에 적는다.  적은 값이 실수축 교점이면
+    배선 L·CPE 가 교점을 R0 보다 오른쪽으로 민다 (뜨거울수록 더) — Ea 가 작아진다."""
+    temperatures = [60, 40, 20, 0, -20]
+    text, truth = blocking_scan_mpt(temperatures)
+    sha = client.post(
+        "/api/eis/spectra/upload",
+        params={"kind": "solid", "cell_config": "sym", "purpose": "이온전도도"},
+        files={"file": ("B15_activationE.mpt", text.encode("utf-8"),
+                        "text/plain")}).json()["sha256"]
+    client.put(f"/api/eis/scans/{sha}/temperature", json={"temperature_c": temperatures})
+    for row in client.get("/api/eis/spectra").json():
+        client.patch(f"/api/eis/spectra/{row['id']}",
+                     json={"thickness_um": 700.0, "area_cm2": 0.785})
+    fitted = client.post(f"/api/eis/scans/{sha}/fit", params={"circuit": "L1-R0-CPE1"})
+    assert fitted.json()["converged"] == len(temperatures)
+
+    before = client.get(f"/api/eis/scans/{sha}/conductivity").json()
+    # 적은 저항이 없으면 스캔의 Ea 는 없다 — 맞춤의 것은 옆에만 선다.
+    assert before["activation"]["activation_energy_ev"] is None
+    assert [row["resistance_ohm"] for row in before["rows"]] == [None] * 5
+    assert [row["fit_electrolyte_ohm"] for row in before["rows"]] == pytest.approx(
+        truth, rel=1e-3)
+    assert before["fit_activation"]["activation_energy_ev"] == pytest.approx(0.33, abs=1e-3)
+
+    crossings = [row["crossing_ohm"] for row in before["rows"]]
+    client.put(f"/api/eis/scans/{sha}/resistance", json={"resistance_ohm": crossings})
+    after = client.get(f"/api/eis/scans/{sha}/conductivity").json()
+    typed = after["activation"]["activation_energy_ev"]
+    assert typed < 0.33 - 2e-3                        # 교점으로는 작게 나온다
+    assert after["fit_activation"]["activation_energy_ev"] == pytest.approx(0.33, abs=1e-3)
+
+    # 검수의 스캔 칸도 옆에 적는다 (참고) — 스캔의 Ea 는 적은 값 그대로다.
+    report = client.get("/api/eis/audit").json()
+    (scan,) = [one for one in report["scans"] if one["sha256"] == sha]
+    (beside,) = [f for f in scan["findings"] if f["code"] == "activation_from_fit"]
+    assert beside["severity"] == "note"
+    assert beside["message"].startswith("맞춤의 전해질 저항으로 내면 Ea = 0.330 eV")
+    assert f"Ea({typed:.3f} eV)보다" in beside["message"]
+
+
 def test_what_is_still_missing_is_named_rather_than_guessed(client):
     sha = upload_mpt_scan(client, [9.69, 14.56, 34.66])
     out = client.get(f"/api/eis/scans/{sha}/conductivity").json()

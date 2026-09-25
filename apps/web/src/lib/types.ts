@@ -860,6 +860,10 @@ export interface ConductivityRow {
   crossing_ohm: number | null
   fit_ohm: number | null
   sigma_ms_cm: number | null
+  /** 쓰는 맞춤의 **전해질 저항** — σ 에 쓰는 것 (막는 펠릿은 R0, 전극 계면 크기
+   *  아크는 뺀다).  `fit_ohm`(총저항)과 다르다.  `fit_activation` 이 이것으로
+   *  나온다 (ADR 0039 보완 1).  미결정·안 막음·맞춤 없음이면 비었다. */
+  fit_electrolyte_ohm?: number | null
 }
 
 /** 대칭셀 대시보드의 한 줄 — 전해질 한 파일과, 거기서 나온 두 수.
@@ -910,6 +914,9 @@ export interface ScanConductivity {
   sweeps: number
   rows: ConductivityRow[]
   activation: ActivationEnergy
+  /** 같은 온도·기하·기준을 **맞춤의 전해질 저항**으로 낸 것 — 옆에 적는 값이다
+   *  (ADR 0039 보완 1).  이 스캔의 Ea 는 `activation` (적은 저항) 이다. */
+  fit_activation?: ActivationEnergy | null
   /** 아직 없는 것들 — `온도` `두께` `면적` `저항`. */
   missing: string[]
 }

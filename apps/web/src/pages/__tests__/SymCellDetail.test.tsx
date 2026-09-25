@@ -281,3 +281,58 @@ describe('대칭셀 상세 — 값은 나왔는데 먼저 봐야 할 것', () =>
     expect(value.parentElement?.className ?? '').not.toMatch(/muted/)
   })
 })
+
+//: ADR 0039 보완 1 — 맞춤의 전해질 저항으로 낸 Ea 는 **옆에 적는 값**이다.  이
+//  스캔의 Ea 는 적은 저항으로 낸 것 그대로이고, 옆 칸은 흐리게 선다.
+describe('대칭셀 상세 — 맞춤 저항으로 낸 Ea 를 옆에', () => {
+  beforeEach(() => window.localStorage.clear())
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    vi.restoreAllMocks()
+  })
+
+  const line = (ev: number, points: number) => ({
+    activation_energy_ev: ev, stderr_ev: 0.004, basis: 'sigma', points_used: points,
+    reason: '', warnings: [],
+    fit: { slope: -3.6, intercept: 6.5, slope_stderr: 0.05, intercept_stderr: 0.2,
+           n_points: points, dof: points - 2, rss: 0.01, pearson_r: -0.999,
+           r_squared: 0.998, adj_r_squared: 0.997, slope_t: -70, slope_p: 1e-9,
+           intercept_t: 30, intercept_p: 1e-8, f_value: 4900, f_p: 1e-9 },
+    inverse_temperature: [3.0, 3.2, 3.4], log_sigma: [-4.6, -5.1, -5.9],
+  })
+
+  it('두 Ea 를 나란히 — 적은 값이 또렷하고 맞춤 것은 흐리게, 몇 % 다른지 적는다', async () => {
+    draw(conductivity({
+      missing: [],
+      rows: [row(1, { temperature_c: 60, resistance_ohm: 9.69, sigma_ms_cm: 9.59,
+                      resistance_source: 'typed', fit_electrolyte_ohm: 9.21 }),
+             row(2, { temperature_c: 40, resistance_ohm: 14.56, sigma_ms_cm: 6.38,
+                      resistance_source: 'typed', fit_electrolyte_ohm: 14.02 }),
+             row(3, { temperature_c: 20, resistance_ohm: 34.66, sigma_ms_cm: 2.68,
+                      resistance_source: 'typed', fit_electrolyte_ohm: null })],
+      activation: line(0.297, 3),
+      fit_activation: line(0.311, 2),
+    }))
+    const typed = await screen.findByText('0.297 eV')
+    expect(typed.parentElement?.className ?? '').not.toMatch(/muted/)
+    const fitted = screen.getByText('0.311 eV')
+    expect(fitted.parentElement?.className).toMatch(/muted/)
+    expect(screen.getByText('맞춤 저항으로')).toBeInTheDocument()
+    expect(screen.getByText('적은 값보다 +4.7 % · 점 2 / 3')).toBeInTheDocument()
+    // 그 Ea 가 나온 저항을 줄마다 — 미결정이면 줄표.
+    expect(screen.getByText('맞춤 전해질 저항 (Ω)')).toBeInTheDocument()
+    expect(screen.getByText('9.210')).toBeInTheDocument()
+  })
+
+  it('맞춤 저항이 하나도 없으면 옆 칸을 세우지 않는다', async () => {
+    draw(conductivity({
+      missing: [],
+      activation: line(0.297, 3),
+      fit_activation: { ...line(0.311, 0), activation_energy_ev: null, points_used: 0,
+                        fit: null, inverse_temperature: [], log_sigma: [],
+                        reason: '온도와 이온전도도가 모두 적힌 스윕이 둘 이상이어야 합니다' },
+    }))
+    expect(await screen.findByText('0.297 eV')).toBeInTheDocument()
+    expect(screen.queryByText('맞춤 저항으로')).not.toBeInTheDocument()
+  })
+})

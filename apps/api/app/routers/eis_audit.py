@@ -76,6 +76,7 @@ from .eis import (
     _stub_parameters,
     _sweep_resistance,
     apply_exchangeable,
+    fit_electrolyte_ohm,
     presets_for,
 )
 
@@ -385,6 +386,9 @@ def _audit_scan(session: Session, records: list[SpectrumRecord],
     if out.symmetric:
         temperatures: list[float | None] = []
         sigmas: list[float | None] = []
+        # 맞춤의 전해질 저항으로 낸 σ — 같은 온도·기하로, 옆에 적을 Ea 를 낸다
+        # (ADR 0039 보완 1).  사람이 적은 저항이 그대로 이 스캔의 Ea 다.
+        fit_sigmas: list[float | None] = []
         for record in records:
             typed, _ = _sweep_resistance(record)
             spectrum = storage.load_spectrum(record.id, record.sha256)
@@ -414,10 +418,21 @@ def _audit_scan(session: Session, records: list[SpectrumRecord],
                              "phase_deg": verdict.get("phase_deg"),
                              "start_s": start, "end_s": end})
             temperatures.append(record.temperature_c)
-            sigmas.append(conductivity_ms_cm(
-                typed, thickness_mm=thickness_cm * 10.0 if thickness_cm else None,
-                area_cm2=area))
+            millimetres = thickness_cm * 10.0 if thickness_cm else None
+            sigmas.append(conductivity_ms_cm(typed, thickness_mm=millimetres,
+                                             area_cm2=area))
+            electrolyte = (fit_electrolyte_ohm(session, record, spectrum)
+                           if spectrum is not None else None)
+            fit_sigmas.append(conductivity_ms_cm(electrolyte, thickness_mm=millimetres,
+                                                 area_cm2=area))
         result = activation_energy(temperatures, sigmas)
+        fitted = activation_energy(temperatures, fit_sigmas)
+        fit_ev = ((fitted.activation_energy_ev, fitted.fit.r_squared, fitted.points_used)
+                  if fitted.activation_energy_ev is not None and fitted.fit else None)
+        # 맞춤 저항이 하나라도 있는데 Ea 가 안 나왔으면 왜인지 — 하나도 없으면
+        # (맞추지 않은 스캔) 말할 것이 없다.
+        fit_missing = ((fitted.reason or "") if fit_ev is None
+                       and any(one is not None for one in fit_sigmas) else "")
         # 첫 스윕을 뺀 Ea — 첫 걸음만 거꾸로 갈 때 무엇이 달라지는지 같이 낸다
         # (실측 9개 스캔 중 5개가 60 °C 저항이 50 °C 보다 컸다).
         rest = activation_energy(temperatures[1:], sigmas[1:])
@@ -428,7 +443,9 @@ def _audit_scan(session: Session, records: list[SpectrumRecord],
                                             reason=result.reason or "",
                                             without_first=without_first,
                                             backwards=backwards_steps(temperatures,
-                                                                      sigmas))
+                                                                      sigmas),
+                                            typed_ev=result.activation_energy_ev,
+                                            fit_ev=fit_ev, fit_missing=fit_missing)
     elif all(record.soc_percent is None for record in records) \
             and "SOC" in (head.purpose or "").upper():
         findings.append(Finding(NOTE, "soc_missing",

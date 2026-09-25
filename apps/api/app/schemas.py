@@ -1068,6 +1068,10 @@ class ConductivityRowOut(BaseModel):
     crossing_ohm: float | None = None
     fit_ohm: float | None = None
     sigma_ms_cm: float | None = None
+    #: 쓰는 맞춤의 **전해질 저항** — σ 에 쓰는 것 (ADR 0041·0047: 막는 펠릿은 R0,
+    #: 전극 계면 크기 아크는 뺀다).  ``fit_ohm`` (총저항)과 다르다.  `fit_activation`
+    #: 이 이것으로 나온다 (ADR 0039 보완 1).  미결정·안 막음·맞춤 없음이면 비었다.
+    fit_electrolyte_ohm: float | None = None
 
 
 class ScanConductivityOut(BaseModel):
@@ -1078,6 +1082,9 @@ class ScanConductivityOut(BaseModel):
     sweeps: int
     rows: list[ConductivityRowOut] = []
     activation: ActivationEnergyOut
+    #: 같은 온도·기하·기준을 **맞춤의 전해질 저항**으로 낸 것 — 옆에 적는 값이다
+    #: (ADR 0039 보완 1).  `activation` (적은 저항) 이 이 스캔의 Ea 다.
+    fit_activation: ActivationEnergyOut | None = None
     #: 아직 없는 것들 — ``온도`` ``두께`` ``면적`` ``저항``.  화면이 "무엇을 더
     #: 적어야 표가 서는가" 를 그대로 말할 수 있게 (§0.4).
     missing: list[str] = []

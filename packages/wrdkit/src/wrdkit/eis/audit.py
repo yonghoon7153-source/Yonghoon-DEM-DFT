@@ -1899,7 +1899,10 @@ def audit_conductivity_scan(sweeps: Sequence[dict], *,
                             warnings: Sequence[str] = (),
                             reason: str = "",
                             without_first: tuple[float, float] | None = None,
-                            backwards: Sequence[tuple[float, float]] = ()
+                            backwards: Sequence[tuple[float, float]] = (),
+                            typed_ev: float | None = None,
+                            fit_ev: tuple[float, float, int] | None = None,
+                            fit_missing: str = ""
                             ) -> list[Finding]:
     """The per-sweep numbers a conductivity scan rests on.
 
@@ -1912,6 +1915,10 @@ def audit_conductivity_scan(sweeps: Sequence[dict], *,
     left out; ``backwards`` the steps it found going the wrong way
     (``conductivity.backwards_steps``) -- said here instead of in its warning,
     without the steps a sweep named below already explains.
+    ``typed_ev`` is the scan's Ea (from the typed resistances); ``fit_ev`` is
+    ``(Ea eV, R², points)`` of the same line drawn through each sweep's fitted
+    electrolyte resistance, said beside it (ADR 0039 보완 1), and
+    ``fit_missing`` why that line did not stand when some sweeps had one.
     """
     out: list[Finding] = []
     blank = [str(one["index"]) for one in sweeps if one.get("temperature_c") is None]
@@ -1972,7 +1979,39 @@ def audit_conductivity_scan(sweeps: Sequence[dict], *,
         out.append(wrong_way)
     if reason:
         out.append(Finding(NOTE, "activation_missing", f"활성화에너지 없음 — {reason}"))
+    beside = _fitted_activation(typed_ev, fit_ev, fit_missing, len(sweeps))
+    if beside is not None:
+        out.append(beside)
     return sort_findings(out)
+
+
+def _fitted_activation(typed_ev: float | None, fit_ev: tuple[float, float, int] | None,
+                       fit_missing: str, sweeps: int) -> Finding | None:
+    """The Ea the fitted electrolyte resistances draw, beside the typed one.
+
+    적은 저항은 대개 실수축 교점이다.  교점은 양 끝에서 반대로 틀린다 — 뜨거운
+    끝은 배선 L 때문에 크게, 차가운 끝은 아크 도중에서 작게 — 둘 다 Ea 를 작게
+    만든다.  실측 B12–B16 에서 맞춤 R0 로 낸 Ea 가 4.5–9 % 컸다 (2026-09-24).
+    어느 것을 쓸지는 랩이 정한다: 스캔의 Ea 는 적은 값이고, 이것은 옆에 적는다.
+    """
+    if fit_ev is None:
+        if not fit_missing:
+            return None
+        return Finding(NOTE, "activation_from_fit",
+                       f"맞춤의 전해질 저항으로는 Ea 가 안 나옵니다 — {fit_missing}")
+    ea, r_squared, points = fit_ev
+    used = f"스윕 {points}개" if points >= sweeps else f"스윕 {sweeps}개 중 {points}개"
+    head = f"맞춤의 전해질 저항으로 내면 Ea = {ea:.3f} eV (R² = {r_squared:.3f}, {used})"
+    if typed_ev is None:
+        return Finding(NOTE, "activation_from_fit",
+                       f"{head} — 적은 저항으로는 아직 Ea 가 없습니다")
+    typed = f"적은 저항으로 낸 이 스캔의 Ea({typed_ev:.3f} eV)"
+    change = (ea - typed_ev) / abs(typed_ev) * 100 if typed_ev else 0.0
+    if round(change, 1) == 0:
+        return Finding(NOTE, "activation_from_fit", f"{head} — {typed}와 같습니다")
+    return Finding(NOTE, "activation_from_fit",
+                   f"{head} — {typed}보다 {abs(change):.1f} % "
+                   f"{'큽니다' if change > 0 else '작습니다'}")
 
 
 #: 한 스윕의 저주파 위상이 스캔의 나머지(중앙값)에서 이만큼(도) 떨어지면 튄다.

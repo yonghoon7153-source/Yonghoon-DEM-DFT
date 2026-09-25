@@ -575,6 +575,27 @@ def test_the_activation_energy_warnings_come_along():
     assert [f.code for f in found] == ["activation_warning", "activation_missing"]
 
 
+def test_the_ea_the_fits_draw_is_said_beside_the_typed_one():
+    """ADR 0039 보완 1: 적은 저항(대개 실수축 교점)은 양 끝에서 반대로 틀려 Ea 를
+    작게 만든다 — 실측 B14 는 0.297 eV, 맞춤 R0 로는 0.311 eV 였다.  스캔의 Ea 는
+    적은 값 그대로이고, 맞춤의 것은 옆에 적는다 (참고)."""
+    sweeps = [{"index": i, "temperature_c": t, "typed_ohm": 10.0,
+               "re_min_ohm": 5.0, "re_max_ohm": 50.0}
+              for i, t in enumerate((60.0, 40.0, 20.0), start=1)]
+    (beside,) = audit_scan(sweeps, typed_ev=0.297, fit_ev=(0.311, 0.998, 3))
+    assert beside.severity == NOTE and beside.code == "activation_from_fit"
+    assert beside.message == (
+        "맞춤의 전해질 저항으로 내면 Ea = 0.311 eV (R² = 0.998, 스윕 3개) — 적은 "
+        "저항으로 낸 이 스캔의 Ea(0.297 eV)보다 4.7 % 큽니다")
+    (fewer,) = audit_scan(sweeps, typed_ev=0.311, fit_ev=(0.297, 0.99, 2))
+    assert "스윕 3개 중 2개" in fewer.message and "4.5 % 작습니다" in fewer.message
+    (alone,) = audit_scan(sweeps, fit_ev=(0.311, 0.998, 3))
+    assert alone.message.endswith("적은 저항으로는 아직 Ea 가 없습니다")
+    (why,) = audit_scan(sweeps, typed_ev=0.297, fit_missing="점이 모자랍니다")
+    assert why.message == "맞춤의 전해질 저항으로는 Ea 가 안 나옵니다 — 점이 모자랍니다"
+    assert audit_scan(sweeps, typed_ev=0.297) == []
+
+
 def test_a_scan_with_nothing_written_yet_is_only_noted():
     sweeps = [{"index": i, "temperature_c": None, "typed_ohm": None,
                "re_min_ohm": 6.9, "re_max_ohm": 30.0} for i in (1, 2, 3)]

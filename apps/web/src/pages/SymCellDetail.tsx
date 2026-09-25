@@ -32,7 +32,7 @@ import { arrheniusTsv, conductivityTableTsv } from '../lib/origin'
 import {
   describeValues, listProblem, parseValueList,
 } from '../lib/valuelist'
-import type { ConductivityRow, ScanConductivity } from '../lib/types'
+import type { ActivationEnergy, ConductivityRow, ScanConductivity } from '../lib/types'
 
 /** 활성화에너지는 소수 셋째 자리까지 그대로 적는다.
  *
@@ -82,6 +82,7 @@ export function SymCellDetail() {
   const head = scan.data
   const data = cond.data
   const activation = data.activation
+  const fitted = data.fit_activation ?? null
 
   return (
     <main className="page">
@@ -128,6 +129,21 @@ export function SymCellDetail() {
           muted={activation.activation_energy_ev === null
                  || activation.warnings.length > 0}
         />
+        {/* **옆에 적는 값이다** (ADR 0039 보완 1).  이 스캔의 Ea 는 적은 저항으로 낸
+            왼쪽 칸이고, 이것은 쓰는 맞춤의 전해질 저항(σ 에 쓰는 것)으로 같은 온도·
+            기하·기준에서 낸 것이다.  적은 값이 실수축 교점이면 뜨거운 끝은 배선 L
+            때문에 크게, 차가운 끝은 아크 도중이라 작게 읽혀 Ea 가 작게 나온다 —
+            나란히 두면 그 차이가 보인다.  어느 것을 쓸지는 사람이 정하므로 흐리게. */}
+        {fitted && fitted.points_used > 0 ? (
+          <Metric
+            label="맞춤 저항으로"
+            value={fitted.activation_energy_ev === null
+              ? '—'
+              : `${ev(fitted.activation_energy_ev)} eV`}
+            muted
+            note={fittedNote(activation, fitted, data.sweeps)}
+          />
+        ) : null}
         <Metric
           label="직선에 쓴 점"
           value={`${activation.points_used} / ${data.sweeps}`}
@@ -205,6 +221,9 @@ export function SymCellDetail() {
                 <th>저항 (Ω)</th>
                 <th style={{ textAlign: 'left' }}>어디서</th>
                 <th>이온전도도 (mS cm⁻¹)</th>
+                <th title="쓰는 맞춤의 전해질 저항 — σ 에 쓰는 것 (막는 펠릿은 R0, 전극 계면 아크는 뺌). 옆 칸의 Ea 가 이것으로 나옵니다">
+                  맞춤 전해질 저항 (Ω)
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -232,6 +251,10 @@ export function SymCellDetail() {
                   <td className="text dim tiny">{readings(row)}</td>
                   <td className={row.sigma_ms_cm === null ? 'dim' : ''}>
                     {row.sigma_ms_cm === null ? '—' : num(row.sigma_ms_cm, 3)}
+                  </td>
+                  <td className="dim">
+                    {row.fit_electrolyte_ohm === null || row.fit_electrolyte_ohm === undefined
+                      ? '—' : num(row.fit_electrolyte_ohm, 4)}
                   </td>
                 </tr>
               ))}
@@ -287,26 +310,24 @@ export function SymCellDetail() {
  */
 function ArrheniusPlot({ data }: { data: ScanConductivity }) {
   const activation = data.activation
+  const fitted = data.fit_activation ?? null
   const series = useMemo<PlotSeries[]>(() => {
     const x = activation.inverse_temperature
     const y = activation.log_sigma
-    if (!x.length) return []
-    const out: PlotSeries[] = [
-      { label: '측정', x, y, points: true, width: 0 },
-    ]
-    const fit = activation.fit
-    if (fit) {
-      const low = Math.min(...x)
-      const high = Math.max(...x)
-      out.push({
-        label: '맞춘 직선',
-        x: [low, high],
-        y: [fit.intercept + fit.slope * low, fit.intercept + fit.slope * high],
-        dash: [6, 4],
-      })
+    const out: PlotSeries[] = []
+    if (x.length) {
+      out.push({ label: '측정', x, y, points: true, width: 0 })
+      const fit = activation.fit
+      if (fit) out.push(line('맞춘 직선', x, fit))
+    }
+    // 맞춤의 전해질 저항으로 낸 점과 직선 — 옆에 적는 값을 같은 그림에 (보완 1).
+    if (fitted && fitted.inverse_temperature.length) {
+      const fx = fitted.inverse_temperature
+      out.push({ label: '맞춤 저항', x: fx, y: fitted.log_sigma, points: true, width: 0 })
+      if (fitted.fit) out.push(line('맞춤 저항 직선', fx, fitted.fit, [2, 3]))
     }
     return out
-  }, [activation])
+  }, [activation, fitted])
 
   if (!series.length) {
     return (
@@ -332,6 +353,31 @@ function ArrheniusPlot({ data }: { data: ScanConductivity }) {
       ].filter(Boolean).join(' · ')}
     />
   )
+}
+
+/** 점들의 x 범위 **안에서만** 그은 직선. */
+function line(label: string, x: number[], fit: { intercept: number, slope: number },
+              dash: number[] = [6, 4]): PlotSeries {
+  const low = Math.min(...x)
+  const high = Math.max(...x)
+  return {
+    label, x: [low, high],
+    y: [fit.intercept + fit.slope * low, fit.intercept + fit.slope * high], dash,
+  }
+}
+
+/** 맞춤 저항으로 낸 Ea 칸의 밑줄 — 적은 값과 몇 % 다른지, 몇 점으로 냈는지. */
+function fittedNote(typed: ActivationEnergy, fitted: ActivationEnergy,
+                    sweeps: number): string {
+  const parts: string[] = []
+  const a = typed.activation_energy_ev
+  const b = fitted.activation_energy_ev
+  if (a !== null && b !== null && a !== 0) {
+    const change = ((b - a) / Math.abs(a)) * 100
+    parts.push(`적은 값보다 ${change >= 0 ? '+' : '−'}${Math.abs(change).toFixed(1)} %`)
+  }
+  parts.push(`점 ${fitted.points_used} / ${sweeps}`)
+  return parts.join(' · ')
 }
 
 /** Origin 의 Linear Fit 보고서 — 그 회색 표 그대로.
