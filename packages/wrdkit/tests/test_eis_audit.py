@@ -772,6 +772,11 @@ def test_an_inductor_on_zero_with_r0_above_the_crossing_is_an_arc_above_the_wind
     usable = float(spectrum.frequency_hz[~inductive_mask(spectrum)].max())
     assert arc.high_hz == usable and usable > SULFIDE_BAND[1]
     assert f"구간을 유도성이 아닌 꼭대기({usable:.3g} Hz)까지 넓혀 맞추면" in arc.message
+    # 실측 일곱은 넓혀도 깨끗한 아크가 안 나왔다 — 교점이 작게 읽는다고 단정하지 않고
+    # 두 읽기의 자리를 적는다 (ADR 0045 보완 10, 11:44 맞춰 보기).
+    assert ("R0 는 꼬리가 시작하는 자리입니다 — 그 사이가 전해질(입계·벌크 아크의 일부)이면 "
+            "전해질 저항은 R0 쪽이고, 아니면 교점 쪽입니다") in arc.message
+    assert "작게 읽고" not in arc.message
     series, crossing = audit.above_crossing
     assert series == pytest.approx(values["R0"]) and crossing == pytest.approx(96.04, abs=0.01)
     assert "no_inductance" not in codes(audit)

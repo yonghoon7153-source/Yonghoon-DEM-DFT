@@ -709,4 +709,4 @@ def test_the_text_says_the_window_went_up_and_what_the_arc_became(client):
     assert "구간을 유도성이 아닌 꼭대기까지 넓혀 맞춥니다" in text
     assert " · 상한 1.71e+05 → " in text or " · 상한 2.15e+05 → " in text
     assert "    더한 점: " in text and " — 쓰던 구간 위, 아크가 걸친 곳" in text
-    assert "    더한 아크: R0 98 Ω + R1 30 Ω (고주파 아크, 꼭지 " in text
+    assert "    더한 아크: R0 98 Ω + R1 30 Ω (고주파 아크, 꼭지 1e+06 Hz, n 0.90)" in text

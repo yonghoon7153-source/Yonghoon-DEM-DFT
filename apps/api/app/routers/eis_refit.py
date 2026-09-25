@@ -366,8 +366,8 @@ def _refit_one(session: Session, target: _Target, origin: str,
 
 def _arc_detail(circuit: str, parameters: list[dict], arcs: list[dict],
                 added: str) -> str:
-    """``R0 97.5 Ω + R1 (고주파 아크, 30.4 Ω, 꼭지 1.03e+06 Hz)`` — 아크를 더한 맞춤이
-    그 아크를 어떻게 그렸나 (보완 10).  ``?`` 는 미결정 (검수 글과 같다)."""
+    """``R0 97.5 Ω + R1 30.4 Ω (고주파 아크, 꼭지 1.03e+06 Hz, n 0.90)`` — 아크를 더한
+    맞춤이 그 아크를 어떻게 그렸나 (보완 10).  ``?`` 는 미결정 (검수 글과 같다)."""
     rows = {str(row.get("name")): row for row in parameters}
 
     def ohm(name: str) -> str:
@@ -384,6 +384,10 @@ def _arc_detail(circuit: str, parameters: list[dict], arcs: list[dict],
     about = [str(arc.get("label") or "")]
     if arc.get("peak_hz") is not None:
         about.append(f"꼭지 {_hz(arc['peak_hz'])}")
+    # n 이 낮으면 반원이 아니다 — 11:44 맞춰 보기의 #114 "벌크 저항" (4.94 kHz) 은 이름이
+    # 자리로 붙은 것인지 커패시턴스로 붙은 것인지 글로 알 수 없었다.
+    if _number(arc.get("n")) is not None:
+        about.append(f"n {float(arc['n']):.2f}")
     head = " + ".join(f"{name} {ohm(name)} Ω" for name in series)
     tail = f"{added} {ohm(added)} Ω" + (f" ({', '.join(one for one in about if one)})"
                                         if any(about) else "")

@@ -563,6 +563,13 @@ def _inductor_at_zero(name: str, *, inductive_top: int, series: str | None,
     the arc lives in between, so the refit fits up to there.  실측 일곱은 맞춘
     구간이 171–215 kHz 에서 끝나고 교점은 그 위(유도성 점 3–11개 아래)였다 —
     같은 구간으로 다시 맞춘 여섯이 R0 를 교점까지 못 내렸다.
+
+    **실측에서는 깨끗한 아크가 아니었다** (2026-09-25 11:44 맞춰 보기).  교점과 구간
+    꼭대기 사이에서 실수부가 4–30 Ω 오르는데 — 꼬리가 거기서 주는 실수부는 1 Ω 안팎이다
+    — 넓힌 구간에서도 반원 하나로는 안 그려졌다.  더한 아크는 여섯에서 꼬리(0.19–0.29 Hz)
+    로 갔고 R0 는 교점의 −8…+3 % 에 왔다.  그 오름이 전해질인지는 회로가 가르지 못한다.
+    그래서 문장은 "교점이 작게 읽는다" 고 단정하지 않고, 두 읽기의 자리를 적는다: 이
+    회로의 R0 (꼬리가 시작하는 자리) 와 교점.
     """
     if inductive_top <= 0:
         return Finding(NOTE, "no_inductance",
@@ -576,13 +583,14 @@ def _inductor_at_zero(name: str, *, inductive_top: int, series: str | None,
             f"{name} 이 0 에 붙었는데 꼭대기 {inductive_top}점은 유도성입니다 — 배선 "
             f"인덕턴스가 없는 것이 아닙니다. {series} {series_ohm:.4g} Ω 이 실수축 교점 "
             f"{crossing:.4g} Ω 보다 {more:.0f} % 큽니다: 이 회로는 {series} 보다 작은 "
-            f"실수부를 그리지 못하니, 맞춘 구간 위에 회로에 없는 아크가 걸쳐 있습니다 "
-            f"(펠릿이 식으면 전해질 아크가 이렇게 잰 주파수 안으로 내려옵니다). 교점은 "
-            f"그 아크 도중이라 전해질 저항을 작게 읽고, {series} 도 모자랄 수 있습니다"
-            + (f" — 아크를 하나 더한 {_quote(offered)} 로"
+            f"실수부를 그리지 못하니, 맞춘 구간 위에서 실수부가 교점까지 내려가는 것을 "
+            f"설명하지 못합니다 (펠릿이 식으면 이렇게 됩니다). {series} 는 꼬리가 시작하는 "
+            f"자리입니다 — 그 사이가 전해질(입계·벌크 아크의 일부)이면 전해질 저항은 "
+            f"{series} 쪽이고, 아니면 교점 쪽입니다"
+            + (f". 아크를 하나 더한 {_quote(offered)} 로"
                + (f", 구간을 유도성이 아닌 꼭대기({widen_to:.3g} Hz)까지 넓혀"
                   if widen_to else "")
-               + " 맞추면 그 아크까지 전해질 저항에 들어갑니다" if offered else ""),
+               + " 맞추면 가를 수 있을 때가 있습니다" if offered else ""),
             circuits=offered, high_hz=widen_to if offered else None)
     return Finding(NOTE, "no_inductance",
                    f"{name} 이 0 에 붙었습니다 — 꼭대기 {inductive_top}점이 유도성이라 "

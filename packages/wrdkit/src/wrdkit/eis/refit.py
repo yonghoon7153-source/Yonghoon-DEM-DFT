@@ -67,6 +67,12 @@ ARC_CODES = ("arc_above_window",)
 #: 회로를 부르는 확인 전부.
 REFIT_CHECKS = WIRING_CODES + ARC_CODES
 
+#: 아크를 더한 맞춤에 **새로** 뜨면 받지 않는 판정 — 고주파 절편이 0 으로 갔다
+#: (보완 10).  판정의 까닭은 "R0 뒤, 교점 너머에 아크가 있다" 인데, R0 가 0 이면 더한
+#: 소자가 절편까지 가져간 것이다.  실측 #123 (11:44 맞춰 보기): R0 1e-9 Ω (경계),
+#: R1 143 Ω 한 덩어리의 넓은 분산(꼭지 74.5 MHz)이 σ 142.7 Ω 으로 받아들여졌다.
+INTERCEPT_LOST = ("series_resistance_gone",)
+
 
 @dataclass(frozen=True)
 class Candidate:
@@ -306,6 +312,8 @@ def accept_refit(old: Sequence[Finding], new: Sequence[Finding],
     0 일 때만 뜨니 코드로는 풀린 것처럼 보일 수 있다.
 
     - 직렬 저항이 교점까지 내려왔다 (``new_above_crossing`` 이 비었다).
+    - 그 직렬 저항이 0 으로 가지 않았다 (`INTERCEPT_LOST` 가 새로 뜨지 않았다) — 교점
+      아래로 내려온 것이 절편을 잃어서면 까닭과 다르다.
     - 평균이 더 어긋나지 않았다 — 아크 하나를 더한 회로다.
     - 더한 아크가 σ 에 들고 σ 저항이 교점 이상인지는 σ 를 아는 쪽이 따로 본다
       (`electrolyte_short`).
@@ -326,6 +334,12 @@ def accept_refit(old: Sequence[Finding], new: Sequence[Finding],
         return Acceptance(False, _top_left(old_top_misfit, new_top_misfit))
     if arc and new_above_crossing is not None:
         return Acceptance(False, _still_above(*new_above_crossing))
+    if arc:
+        lost = next((f for f in new if f.code in INTERCEPT_LOST
+                     and not any(one.code == f.code for one in old)), None)
+        if lost is not None:
+            return Acceptance(False, f"더한 아크가 고주파 절편까지 가져갔습니다 — "
+                                     f"{lost.message}")
     if wiring or arc:
         if old_misfit is None or new_misfit is None:
             return Acceptance(False, "오차 평균을 몰라 옛 맞춤과 견줄 수 없습니다")

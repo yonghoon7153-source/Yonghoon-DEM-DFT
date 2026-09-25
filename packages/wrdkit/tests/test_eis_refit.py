@@ -327,6 +327,18 @@ def test_an_arc_refit_is_taken_only_when_r0_comes_down_and_the_arc_is_electrolyt
                          old_misfit=0.024, new_misfit=0.035)
     assert worse.reason == ("오차 평균이 2.4 → 3.5 % 로 늘었습니다 — 아크 하나를 더했는데 "
                             "더 어긋나면 다른 골짜기입니다")
+    # 실측 #123 (11:44 맞춰 보기): R0 가 0 (경계) 으로 가 교점 아래가 됐다 — 더한 소자가
+    # 절편까지 가져간 것이지, 교점 너머의 아크를 그린 것이 아니다.
+    gone = Finding(CHECK, "series_resistance_gone", "R0 이 0 에 붙었습니다 (1.06e-09 Ω)")
+    lost = accept_refit([arc], [gone], triggers, converged=True,
+                        old_misfit=0.033, new_misfit=0.018)
+    assert not lost.accepted
+    assert lost.reason == ("더한 아크가 고주파 절편까지 가져갔습니다 — R0 이 0 에 붙었습니다 "
+                           "(1.06e-09 Ω)")
+    # 옛 맞춤에도 있었으면 그 때문에 막지 않는다.  배선·문제 판정의 회로도 전처럼.
+    assert accept_refit([arc, gone], [gone], triggers, converged=True,
+                        old_misfit=0.033, new_misfit=0.018).accepted
+    assert accept_refit([TAIL], [gone], ("tail_mimicked_by_arc",), converged=True).accepted
     assert not accept_refit([arc], [], triggers, converged=True).accepted
 
     def sigma(ohm, *parts):
