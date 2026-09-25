@@ -337,7 +337,7 @@
    "state": "결정"
   },
   {
-   "text": "A′ 파일럿 사전등록 — v1 **Codex BY NO-GO** → **v2** `db/properties/wad_aprime_pilot_prereg_v2_2026_09_25.json` (조성 4층 정정 · SE 부분 고정 마스크 + 결정 7 개정 proposed · G5 = 비자명한 W 쌍 5 · 분모 고정 · Ag₁₃ 제외 · −TS 규칙 삭제 · 분리 끝점 양쪽 간격 ≥ 8 Å + dipfield 규약 · G2 `--interface_check` 구현 · G3/G4 대상군별 · 장치별 한도 · 허용 문구 P1′ 한정 · 단계별 봉인 S1–S4) → Codex 재심 → 1저자 비준(권고 5건) → S1 봉인. ⚠ V5 ≈ 246 GB 추정 → RESOURCE_BLOCKED 예상",
+   "text": "A′ 파일럿 사전등록 — v1 **Codex BY NO-GO** → **v2** `db/properties/wad_aprime_pilot_prereg_v2_2026_09_25.json` (조성 4층 정정 · SE 부분 고정 마스크 + 결정 7 개정 proposed · G5 = 비자명한 W 쌍 5 · 분모 고정 · Ag₁₃ 제외 · −TS 규칙 삭제 · 분리 끝점 양쪽 간격 ≥ 8 Å + dipfield 규약 · G2 `--interface_check` 구현 · G3/G4 대상군별 · 장치별 한도 · 허용 문구 P1′ 한정 · 단계별 봉인 S1–S4) → ✅ 1저자 권고 5 비준 (`…-card-v2-choices`) → **Codex BZ 재심** (프롬프트 발송 대기) → GO 면 S1 봉인. ⚠ V5 ≈ 246 GB 추정 → RESOURCE_BLOCKED 예상",
    "state": "재심"
   },
   {
@@ -469,6 +469,11 @@
    "date": "2026-09-25",
    "stage": "dft",
    "text": "**Codex BY 회신 NO-GO** (A′ 카드 v1 · 봉인·본계산 보류 · 경로 찬성): 핵심 차단 = SE 고정↔전 원자 이완 상충 · G5 5점 계수(분리 끝점 하나는 W 아님) · Ag₁₃ 홀수 전자. **카드 v2** 로 대응 — 4층 조성 정정(Li₅₂P₈S₄₂Cl₈ 110 · Li₄₄P₈S₃₈Cl₈ 98) · SE **부분 고정 마스크**(계면 반대쪽 절반) + 결정 7 개정 proposed · G5 = P1′ 비자명한 W 쌍 5 · 분모 5 고정 · 상태 어휘(PASS/FAIL/INCOMPLETE/BLOCKED/RESOURCE_BLOCKED/NOT_TESTED) · Ag₁₃·C₂₄H₁₂ 제외 · −TS 무효 규칙 삭제 · W = `!` 자유에너지 + E_int 병기 · 분리 끝점 양쫑 간격 ≥ 8 Å + dipfield(eamp=0) 규약 · **G2 `--interface_check` 구현**(음성 5 · 돌연변이 4 빨간불) · G3/G4 대상군별 대표점 · 장치별 한도(gabia 44,000 / V100 31,000 MiB) · GPU-h ≠ 경과시간 · 허용 문구 P1′ 한정 · 단계별 봉인 S1–S4. ⚠ 자원 추정(SE|SE 실측 32 GB 스케일): **V5 ≈ 246 GB** (Ag 19 e PP) → RESOURCE_BLOCKED 예상 → 갈래0(G5 NOT_TESTED · UMA 예측 내부 전용) 이 기본 경로일 가능성. V3/V4 37–42 GB = gabia 만 · V2 3 GB. **DEM 3차 회신 수령** — 정합 규칙·라벨 수용 · 부록 값 미사용 확약 · 부탁 1(잔류 응력 GPa) · 부탁 2(민감도 시나리오는 DEM 초안). 선행 배치 `db/inputs/wad_aprime_prep_2026_09_25` (Ag·그래핀 a₀ · comp1 D3 응력 · 9 잡 · 읽는 규칙 결과 전 등록) · 집계 `--aprime_prep` · vc-relax P0 갈래 (`_done`·`parse_pw`)."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**1저자 비준 — A′ 카드 v2 권고 5 그대로** ('ㅇㅇ 권장하는걸로 진행' · 설명 5건 재청취): `D-2026-09-25-wad-aprime-card-v2-choices` active · 결정 7 개정 `…-amend-1` active. 값이 바뀌는 것은 없다 (계산 전 설계·절차 선택 · SE|SE·벌크 민감도 값 무영향). Ag·C·H PP 해시 kgy 원본에서 채움 (Ag z 19 실측 → V5 246 GB 추정 근거). → **Codex BZ 재심 프롬프트** `codex_BZ_prompt_wad_aprime_pilot_prereg_v2_2026_09_25.md` (Q1–Q7 · 발송 대기) · 선행 배치는 카드 밖으로 두고 V100 전송 준비."
   }
  ],
  "related_decisions": [

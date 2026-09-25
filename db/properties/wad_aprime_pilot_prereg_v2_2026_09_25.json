@@ -5,7 +5,7 @@
  "date": "2026-09-25",
  "version": "v2 (Codex BY NO-GO 대응 · 재승인 최소조건 1–6 반영)",
  "supersedes": "db/properties/wad_aprime_pilot_prereg_2026_09_25.json (v1 · 봉인된 적 없는 초안)",
- "status": "draft v2 — Codex BY 재심 → 1저자 비준 → **단계별 봉인 S1** (설계·선택 규칙). ⛔ S1 봉인 전엔 기하 생성도 하지 않는다 · S3 봉인 전엔 DFT 대조를 던지지 않는다.",
+ "status": "draft v2 — 1저자 권고 5 비준 ✅ (09-25) → **Codex BZ 재심** → GO 면 S1 봉인 (content_digest). ⛔ S1 봉인 전엔 기하 생성도 하지 않는다 (선행 배치는 카드 밖) · S3 봉인 전엔 DFT 대조를 던지지 않는다.",
  "results_seen": false,
  "results_seen_note": "V2–V5 계산 0 건 · 기하 생성 0 건. V1(SE|SE 4층)은 끝났고 봤다 — 대조 기록일 뿐 판정 표본 아님. 선행 배치(Ag·그래핀 a₀ · comp1 D3 응력 · `db/inputs/wad_aprime_prep_2026_09_25`)는 이 카드의 표본이 아니다 (읽는 규칙은 그 jobs.json 에 결과 전 등록).",
  "track": "W_ad (우리 DFT 기준선) → 1저자 = 사용자. 회신 BY 는 외부 리뷰(Codex)지 1저자가 아니다 — 재승인은 Codex 재심 + 1저자 비준 둘 다.",
@@ -18,7 +18,8 @@
   "D-2026-09-23-wad-sese-alarm-band-v2",
   "D-2026-09-25-wad-reference-state-policy",
   "D-2026-09-25-wad-lattice-matching-rule-a",
-  "D-2026-09-25-wad-lattice-matching-rule-a-amend-1 (proposed — 1저자 비준 필요)"
+  "D-2026-09-25-wad-lattice-matching-rule-a-amend-1",
+  "D-2026-09-25-wad-aprime-card-v2-choices"
  ],
  "리뷰": {
   "BW": "kb/reviews/codex_BW_reply_wad_validation_without_cluster_2026_09_23.md",
@@ -30,7 +31,8 @@
   "②_Ag13_제외": "**권고: 이번 제한 파일럿에서 Ag₁₃ 제외** (BY Q3 최소 처방 1). V3 = Ag₄ 만 · 비편극 선언 + 고립 Ag₄ 스핀 편극 단일점으로 |M_tot| < 0.05 μB 확인 (안 되면 Ag₄ 표본 INCOMPLETE). C₂₄H₁₂ 도 제외 (1×1 셀에서 측방 영상이 맞닿는다) → V4 = C₆H₆ 만.",
   "③_갈래0_DEM_전달": "**권고: V5 가 없거나 RESOURCE_BLOCKED 면 G5 = NOT_TESTED · UMA 전체 계면 예측은 내부 탐색 전용 · DEM 전달 없음.** 넘기려면 1저자 별도 결정 + 'G5 NOT_TESTED' 라벨. (A′ ③ 이 미검증 시나리오를 허용하는 것과 G5 통과는 다른 명제 — BY Q8.)",
   "④_G5_표본_5_정의": "아래 `표본_G5` — 비자명한 W(결합·분리 끝점 쌍) 5 개 · 대상군 P1′ 하나. 예산으로 4 로 줄이면 **축소 파일럿으로 사전 개정**하고 BW 5점 충족이라 쓰지 않는다.",
-  "⑤_V5_자원_현실": "부피×밴드 스케일(SE|SE 4층 SCF 실측 32 GB 기준)로 V5 ≈ **246 GB** (Ag SG15 PP 19 전자 → 84 Ag = 1596 전자). 우리 GPU(48/32/24 GB) 어디에도 안 들어간다 — **프로브는 기록용으로 돌리고 RESOURCE_BLOCKED 를 예상한다.** 그러면 이 카드가 낼 수 있는 것은 V2 직접 DFT + V3/V4 조각 진단 + 전체 계면 미검증 예측(내부) 이다. 더 줄인 V5 를 조용히 대신 넣지 않는다 (2층 1×2 + Ag 2층도 171 GB)."
+  "⑤_V5_자원_현실": "부피×밴드 스케일(SE|SE 4층 SCF 실측 32 GB 기준)로 V5 ≈ **246 GB** (Ag SG15 PP 19 전자 → 84 Ag = 1596 전자). 우리 GPU(48/32/24 GB) 어디에도 안 들어간다 — **프로브는 기록용으로 돌리고 RESOURCE_BLOCKED 를 예상한다.** 그러면 이 카드가 낼 수 있는 것은 V2 직접 DFT + V3/V4 조각 진단 + 전체 계면 미검증 예측(내부) 이다. 더 줄인 V5 를 조용히 대신 넣지 않는다 (2층 1×2 + Ag 2층도 171 GB).",
+  "✅_비준_2026_09_25": "1저자 'ㅇㅇ 권장하는걸로 진행' — 다섯 다 권고대로. 결정 `D-2026-09-25-wad-aprime-card-v2-choices` (active) · 개정 `D-2026-09-25-wad-lattice-matching-rule-a-amend-1` active. 다음: Codex BZ 재심 → GO 면 S1 봉인 (content_digest · 그때 비준 한 번 더)."
  },
  "BY_대응표_재승인_최소조건": {
   "1_조성·고정정책": "조성 4층 정본으로 정정 (Li₅₂P₈S₄₂Cl₈ 110 · Li₄₄P₈S₃₈Cl₈ 98 — manifest·이완 좌표 파일과 일치 확인) · 고정 정책 = 부분 마스크 (권고 ①) + 결정 7 개정 proposed · 봉인 조건에 '설명·좌표·원자수 일치' 추가",
@@ -42,7 +44,7 @@
  },
  "0_단계별_봉인": {
   "S1_설계·선택_규칙": "이 카드 (v2) — Codex 재심 GO + 1저자 비준 → content_digest 봉인. 여기까지는 계산 0.",
-  "S2_허용된_기하_생성·사전_프로브": "S1 뒤에만: Ag·그래핀 a₀ (선행 배치 · 이미 입력 있음) → 변형률 재기입(3 % 규칙) → 2층 절단(V5) · 흡착층 빌더 · UMA+D3 이완(마스크 적용) · `--interface_check` · 분리 셀 CPU 프로브 → GPU 시험(1–2 iteration) 피크 기록. **DFT 대조 에너지는 여기서 만들지 않는다.**",
+  "S2_허용된_기하_생성·사전_프로브": "⚠ 선행 배치 08–13 (Ag·그래핀 a₀ · comp1 D3 응력) 은 **카드 밖**이다 — 결정 7 시행(변형률을 PBE 격자로 재기입)과 DEM 부탁 1 용이라 S1 전에 돌려도 된다 (읽는 규칙은 그 jobs.json 에 결과 전 등록 · 표본 아님). S1 뒤에만: 변형률 재기입(3 % 규칙) → 2층 절단(V5) · 흡착층 빌더 · UMA+D3 이완(마스크 적용) · `--interface_check` · 분리 셀 CPU 프로브 → GPU 시험(1–2 iteration) 피크 기록. **DFT 대조 에너지는 여기서 만들지 않는다.**",
   "S3_좌표·끝점_목록_봉인": "S2 산출물의 sha(초기·최종 좌표 · 마스크 인덱스 · 끝점 쌍 목록 · registry 좌표 · PP·UMA·D3 결박) 를 카드 부록으로 봉인 → 1저자 비준.",
   "S4_DFT_대조": "S3 뒤에만 pw.x. 결과 기록은 `db/properties/wad_aprime_pilot_result_<날짜>.json`.",
   "⛔": "단계를 건너뛰지 않는다. S2 의 UMA 이완은 '기하 생성' 이지 결과가 아니다 — 그 에너지를 W 로 미리 읽지 않는다."
@@ -119,7 +121,7 @@
   "끝점_MoLE": "W_sep = [E(A+B, far) − E(A+B, bound)] / (n_if · A_실제) — 같은 셀·원자·제약·전자상태 정책·D3 구현·쌍극자 보정. **far = 흡착층 +z 강체 이동 Δ** 로, 이동 뒤 **직접 간격 ≥ 8 Å 그리고 반대편 주기영상 간격 ≥ 8 Å** (둘 다 계산해 기록) → 이 조건이 c 를 정하고 결합 끝점도 그 c 를 쓴다. n_if = 분리하는 계면 수 (한 면 흡착 모델 **1** · SE|SE 2) — 집계기가 모델별로 검사한다. δ_add = [E(A+B,far) − (E_A + E_B)]/(n_if·A) 기록 (교환 금지 · ⚠ 같은 총전하가 분리된 두 조각 각각의 중성을 보장하지 않는다).",
   "기하_생성": "결합 기하 = UMA+D3(2체) 이완 (셀 고정 · 마스크 적용 · fmax 0.02 eV/Å) → **그 좌표에서** DFT 단일점 두 끝점 · UMA+D3 W 는 같은 두 끝점의 UMA+D3 에너지. 같은 기하·끝점이면 DFT@UMA ≡ DFT 고정기하 W. D3 상쇄: W_PBE+D3 − W_UMA+D3 = W_PBE − W_UMA — ⚠ 이 상쇄가 D3 의 물리적 정확성이나 금속 차폐 재현을 검증하지는 않는다 (BY Q4 · Maurer).",
   "분산": "DFT: PBE + D3(BJ) 2체 (`vdw_corr='grimme-d3' · dftd3_version=4 · dftd3_threebody=.false.`) · ATM 따로. UMA(omat) 쪽 D3 = 같은 매개변수(PBE-BJ s6 1.0 · s8 0.7875 · a1 0.4289 · a2 4.4407 · 2체)의 외부 dftd3 구현 — **결박 검사**: 기하 하나에서 QE 내장 D3 와 외부 구현의 E_D3 차 ≤ 1e-5 Ry (S2).",
-  "수치_설정": "52/520 Ry · GBRV US Li/S/Cl + psl P (SE|SE 와 같은 PP · 해시) · **Ag** SG15 ONCV `Ag_ONCV_PBE-1.0.oncvpsp.upf` (19 e) · **C** `C.pbe-n-kjpaw_psl.1.0.0.UPF` · **H** SSSP `H.pbe-rrkjus_psl.1.0.0.UPF` — 셋의 내용 해시는 kgy 원본에서 받아 S1 봉인에 넣는다. k: SE 1×1 3×3×1 · V2 6×6×1. UMA: uma-s-1p1 (omat) 체크포인트 sha · fairchem 버전 · 추론 모드(turbo/default) 결박."
+  "수치_설정": "52/520 Ry · GBRV US Li/S/Cl + psl P (SE|SE 와 같은 PP · 해시) · **Ag** SG15 ONCV `Ag_ONCV_PBE-1.0.oncvpsp.upf` (19 e) · **C** `C.pbe-n-kjpaw_psl.1.0.0.UPF` · **H** SSSP `H.pbe-rrkjus_psl.1.0.0.UPF` — 내용 해시 (kgy 원본 · 09-25): Ag 0494aa5927b754b4… (z 19) · C 9900d1efd50b9848… (z 4) · H 27f8a7e87851d59a… (z 1) — 전체 64자는 `db/inputs/wad_aprime_prep_2026_09_25/jobs.json settings.pp_sha256`. k: SE 1×1 3×3×1 · V2 6×6×1. UMA: uma-s-1p1 (omat) 체크포인트 sha · fairchem 버전 · 추론 모드(turbo/default) 결박."
  },
  "1c_답하지_않는_것": [
   "전체 계면(P1 ~436 · P2 ~820)의 검증된 절대 W",
@@ -197,7 +199,7 @@
   "DEM 접촉법칙"
  ],
  "선행_확인_S1_봉인_전": [
-  "Ag·C·H PP 내용 해시 (kgy 원본 sha256 + z_valence) → 이 카드와 `wad_aprime_prep` jobs.json",
+  "✅ Ag·C·H PP 내용 해시 + z_valence (kgy 원본 09-25 → jobs.json · 카드 §수치_설정)",
   "4층 조성·좌표·원자수 일치 (✅ 09-25 manifest·이완 좌표 파일 대조)",
   "G2 도구 selftest 음성 빨간불 재확인 (✅ 09-25)",
   "결정 7 개정 D-2026-09-25-wad-lattice-matching-rule-a-amend-1 1저자 비준"
@@ -240,6 +242,12 @@
    "state": "draft v2",
    "by": "agent",
    "note": "Codex BY NO-GO (재승인 최소조건 6) 대응 · 1저자 확인 권고 5 · G2 구현 · 자원 추정(V5 246 GB) 반영. 다음: Codex BY 재심 → 1저자 비준 → S1 봉인."
+  },
+  {
+   "at": "2026-09-25",
+   "state": "draft v2 · 권고 5 비준",
+   "by": "1저자",
+   "note": "'ㅇㅇ 권장하는걸로 진행' — D-2026-09-25-wad-aprime-card-v2-choices · D-2026-09-25-wad-lattice-matching-rule-a-amend-1 active"
   }
  ]
 }
