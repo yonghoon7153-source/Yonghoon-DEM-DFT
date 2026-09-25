@@ -133,3 +133,11 @@ wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni	s037877531830466x
 #   [!] '--slug wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni --clean' 을 돌리면
 #       Fig 1·Fig 6 이 사라지고 S4 오염이 되돌아온다. ('--inbox --run --skip-done' 은 안전.)
 #   ⭐ Fig 6 (E_a 요약)과 Fig 4f (σ_e vs T) 가 이 카드의 근거다.
+#
+# ── CAM 고유 기계물성 (E · 입계 강도 · 파괴) ─────────────────
+# 가드: 파일명이 출판사 해시(1-s2.0-S0378775326010268-main.pdf)라 제목 토큰이 안 겹친다 → PII 조각으로 잡는다.
+#   SI(시편 기하 · 동영상 3 · 하중–변위 원자료)는 **우리 미확보** — 본문 PDF 하나뿐.
+sedlatschek2026_nmc811_grain_boundary_strength_micro_tensile	s0378775326010268
+#   ↑ 2026-09-25. 자동 크롭 8장 전부 육안 확인 — 캡션 혼입·라벨/축/스케일바 잘림 **0** → 수동 크롭 없음.
+#     이 논문에는 표가 없다. '--clean' 재추출은 안전하다 (손 들어간 그림이 없다).
+#   ⭐ Fig 6a (응력–변형률 · 입계 강도)와 p. 4 본문 (나노압입 138 ± 24 GPa, n = 29) 이 이 카드의 근거다.

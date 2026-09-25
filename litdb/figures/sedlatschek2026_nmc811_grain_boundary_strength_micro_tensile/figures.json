@@ -1,0 +1,171 @@
+{
+ "slug": "sedlatschek2026_nmc811_grain_boundary_strength_micro_tensile",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-25",
+ "sources": [
+  "a4510882-1-s2.0-S0378775326010268-main.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic representation of different methods for micro tensile tests: (a) direct-pull test, (b) dedicated push-to-pull device by Ganesan et al. [5,6], (c) dedicated push-to-pull device by Hysitron Incorporated [7], (d) integrated push-to-pull design by Durelli et al. [8] and Quinn et al. [9], (e) integrated push-to-pull design by Ding et al. [10], (f) integrated push-to-pull design by Kiener et al. [11], (g) integrated push-to-pull design by Schwiedrzik et al. [12].",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    298.0,
+    175.6
+   ],
+   "w": 1111,
+   "h": 525,
+   "dpi": 300,
+   "src": "a4510882-1-s2.0-S0378775326010268-main.pdf",
+   "blank": 0.765
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) Backscattered electron image of the ion polished NMC811 sample and (b) FIB-polished cross-section of an exemplary secondary particle (dashed line) with the flat punch indenter tip and the loading direction (large arrow) above the secondary particle. Several binder regions are indicated exemplarily with small arrows. The primary particles are visible as faint brightness differ- ences on the cross-section.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.5,
+    298.0,
+    422.1
+   ],
+   "w": 1111,
+   "h": 1553,
+   "dpi": 300,
+   "src": "a4510882-1-s2.0-S0378775326010268-main.pdf",
+   "blank": 0.151
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Homogeneous and uniaxial stress state in vertical direction in the testing section of the optimized sample geometry deformed under the acting load. A deformation scale factor of 20 was applied.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    61.7,
+    567.0,
+    208.9
+   ],
+   "w": 1111,
+   "h": 614,
+   "dpi": 300,
+   "src": "a4510882-1-s2.0-S0378775326010268-main.pdf",
+   "blank": 0.542
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a) Fracture of a secondary particle during compression with intercrys- talline fracture surfaces (A), individual primary particles (B) as well as binder detachment (C) and (b) corresponding load–displacement curve.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    49.4,
+    567.0,
+    427.8
+   ],
+   "w": 1111,
+   "h": 1577,
+   "dpi": 300,
+   "src": "a4510882-1-s2.0-S0378775326010268-main.pdf",
+   "blank": 0.57
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. EBSD of a secondary particle with cracks from the electrode manu- facturing process. The crack path in the region of interest is marked with a dotted line and two grains that show transcrystalline fracture are highlighted with arrows.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.1,
+    298.0,
+    336.5
+   ],
+   "w": 1111,
+   "h": 1199,
+   "dpi": 300,
+   "src": "a4510882-1-s2.0-S0378775326010268-main.pdf",
+   "blank": 0.25
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (a) Stress–strain curves of the micro tensile tests where the light gray curve is an outlier and (b) fracture surface after the micro tensile test.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    49.5,
+    567.0,
+    402.8
+   ],
+   "w": 1111,
+   "h": 1473,
+   "dpi": 300,
+   "src": "a4510882-1-s2.0-S0378775326010268-main.pdf",
+   "blank": 0.58
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. STEM examination of the testing section after the micro tensile test. The loading direction was vertical. The contours of the testing section are marked with dashed lines with an intended offset and the fracture surface is indicated with an arrow. Two regions with increased dislocation density are marked with rectangles.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.5,
+    298.0,
+    498.7
+   ],
+   "w": 1111,
+   "h": 1872,
+   "dpi": 300,
+   "src": "a4510882-1-s2.0-S0378775326010268-main.pdf",
+   "blank": 0.144
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. TKD examination of the testing section after the micro tensile test. The loading direction was vertical. The contours of the testing section are marked with dashed lines with an intended offset and the fracture surfaces are indicated with arrows.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    49.5,
+    567.0,
+    540.5
+   ],
+   "w": 1111,
+   "h": 2047,
+   "dpi": 300,
+   "src": "a4510882-1-s2.0-S0378775326010268-main.pdf",
+   "blank": 0.121
+  }
+ ]
+}
