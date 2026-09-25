@@ -141,6 +141,18 @@ sedlatschek2026_nmc811_grain_boundary_strength_micro_tensile	s0378775326010268
 #   ↑ 2026-09-25. 자동 크롭 8장 전부 육안 확인 — 캡션 혼입·라벨/축/스케일바 잘림 **0** → 수동 크롭 없음.
 #     이 논문에는 표가 없다. '--clean' 재추출은 안전하다 (손 들어간 그림이 없다).
 #   ⭐ Fig 6a (응력–변형률 · 입계 강도)와 p. 4 본문 (나노압입 138 ± 24 GPa, n = 29) 이 이 카드의 근거다.
+#   (같은 절 · 짝 카드) NMC532 이차입자 E·H·K_c 원문 = xu2017 (SELF-51 의 옛 "Xu 2017" 서지의 실체)
+# 가드: 업로드 파일명이 'Xu_2017_J._Electrochem._Soc._164_A3333' 형식이라 digest 제목 토큰과 안 겹친다
+#   → 저널·권·쪽 조각으로 잡는다 (SI 는 미보유).
+xu2017_nmc532_nanoindentation_modulus_hardness_toughness	xu_2017_j._electrochem._soc._164_a3333
+#   ↑ 2026-09-25.  9장 = 자동 7 (Fig 2–8, 캡션 앵커 · 쪽 여백 포함) + **수동 2**:
+#   · fig_1 = PDF page 3(1-based) clip (35, 67, 323, 329) @300 dpi → 1201x1092
+#     ↑ 캡션이 **그림 오른쪽 옆**이라 자동 크로퍼가 '그래픽 없음(img0/draw0)' 으로 제외한다.
+#   · tab_1 = PDF page 6(1-based) clip (35, 648, 285, 758) @300 dpi → 1041x442 (벡터 텍스트 표)
+#     ↑ 원문 라벨이 **로마 숫자 'Table I'** 라 도구(아라비아 숫자만)가 못 잡는다.
+#   [!] '--slug xu2017_nmc532_nanoindentation_modulus_hardness_toughness --clean' 을 돌리면
+#       Fig 1 · Table 1 이 사라진다. ('--inbox --run --skip-done' 은 안전.)
+#   ⭐ Table 1 (E·H·K_c: 이차입자 / 펠릿 / DFT) 과 Fig 5 · Fig 8 (SOC·사이클 궤적) 이 이 카드의 근거다.
 #
 # ── SE 고유 전달물성 (σ_ion 단상 펠릿 · 적층압/제작압) ──────────────
 # 가드: ACS SI 파일명(nz1c01299_si_001.pdf)은 원고번호뿐이라 제목 토큰이 안 겹친다 → 원고번호 조각으로 SI 만 잡는다.

@@ -1,0 +1,201 @@
+{
+ "slug": "xu2017_nmc532_nanoindentation_modulus_hardness_toughness",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-25",
+ "sources": [
+  "12b057a2-Xu_2017_J._Electrochem._Soc._164_A3333.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematics of the mechanical, structural, and electrochemical degradation of NMC cathode materials. Electrochemical cycles induce damage accumulation and deteriorate the mechanical stability of NMC particles. The mechanical degradation promotes the structural decohesion of NMC secondary particles. Consequently, the cracked particles facilitate the formation of resistance layer on the fresh surface which increases the ionic and electric impedance and ultimately leads to the failure of batteries. The cavitation figure is reproduced with permission from Kim et al.12 Copyright 2016 by Elsevier.",
+   "rotated_deg": 0,
+   "manual_crop": "side caption (caption set to the RIGHT of the raster, x 335-550 pt) -> extract_figures.py rejects it as '그래픽 없음(img0/draw0)'; clip = embedded raster bounds (35, 67, 323, 329) pt @300 dpi + white-border trim (2026-09-25)",
+   "bbox": [
+    35.0,
+    67.0,
+    323.0,
+    329.0
+   ],
+   "w": 1201,
+   "h": 1092,
+   "dpi": 300,
+   "src": "12b057a2-Xu_2017_J._Electrochem._Soc._164_A3333.pdf",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Charge/discharge curves of the NMC/Li half-cell in the 1st, 50th, and 100th cycles. (b) Speciﬁc discharge capacity and Coulombic efﬁciency of NMC cathode as a function of the cycles. Insets show the microstructure of the local regions where indentation tests are performed.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    61.0,
+    556.0,
+    254.2
+   ],
+   "w": 2193,
+   "h": 806,
+   "dpi": 300,
+   "src": "12b057a2-Xu_2017_J._Electrochem._Soc._164_A3333.pdf",
+   "blank": 0.796,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. SEM images showing the surface morphologies of the NMC particles (a) before and (b) after polishing. (c) Local view of a NMC secondary particle after nanoindentation. Inset shows the load-displacement response of indentation.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    61.5,
+    555.2,
+    190.2
+   ],
+   "w": 2193,
+   "h": 537,
+   "dpi": 300,
+   "src": "12b057a2-Xu_2017_J._Electrochem._Soc._164_A3333.pdf",
+   "blank": 0.235,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Young’s modulus E measured at different locations across the NMC secondary particles. The measurement is independent of the particle size and the indentation location as long as the indentation sites are away from the particle/matrix interface. (b) Young’s modulus and hardness of NMC secondary particles measured in two types of matrixes: PVDF+CB and PR. The small-scale measurement of mechanical properties is insensitive to the selection of the matrix material. (c) Young’s modulus of NMC extrapolated from different indentation loads using both the quasi-static and CSM methods. The load-displacement curves in the inset show that the reduction of E at high load is due to the cracks induced by indentation.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    60.7,
+    556.1,
+    494.2
+   ],
+   "w": 2193,
+   "h": 1807,
+   "dpi": 300,
+   "src": "12b057a2-Xu_2017_J._Electrochem._Soc._164_A3333.pdf",
+   "blank": 0.626,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Young’s modulus and hardness of NMC secondary particles as a function of (a) the state of charge and (b) cycle number.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    60.8,
+    532.6,
+    232.2
+   ],
+   "w": 2099,
+   "h": 715,
+   "dpi": 300,
+   "src": "12b057a2-Xu_2017_J._Electrochem._Soc._164_A3333.pdf",
+   "blank": 0.933,
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. First-principles results on (a) the Young’s modulus and cohesive energies, (b) the Bader charge of O and transition metal ions, and (c) the map of electron density difference in NMC at different states of charge.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    61.1,
+    556.1,
+    358.2
+   ],
+   "w": 2193,
+   "h": 1239,
+   "dpi": 300,
+   "src": "12b057a2-Xu_2017_J._Electrochem._Soc._164_A3333.pdf",
+   "blank": 0.776,
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. (a) Schematics of crack patterns within the NMC secondary particle after nanoindentation. Black dashed, blue, and orange lines represent the interface between the primary particles, the radial and lateral cracks, and the indentation impression, respectively. Inset shows the post AFM image of the indentation impression and the indentation-induced cracks. (b) Load-displacement curve showing the pop-in event and the hx, hm, ht, and P in the calculation of Kc. The pop-in method is validated by comparing the crack length c calculated from the inset equation in (b) with the AFM measurement shown in the inset of (a).",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    61.2,
+    555.2,
+    218.2
+   ],
+   "w": 2193,
+   "h": 655,
+   "dpi": 300,
+   "src": "12b057a2-Xu_2017_J._Electrochem._Soc._164_A3333.pdf",
+   "blank": 0.744,
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Interfacial fracture toughness Kc of NMC secondary particles as a function of (a) the state of charge and (b) cycle number.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    563.6,
+    514.2,
+    740.4
+   ],
+   "w": 2022,
+   "h": 738,
+   "dpi": 300,
+   "src": "12b057a2-Xu_2017_J._Electrochem._Soc._164_A3333.pdf",
+   "blank": 0.953,
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table I. Experimental values of the mechanical properties of NMC secondary particles and NMC pellets, as well as the theoretical value of Young's modulus obtained by first-principles modeling.",
+   "rotated_deg": 0,
+   "manual_crop": "Roman-numeral label 'Table I' -> extract_figures.py handles Arabic labels only; vector text table rendered from page 6 (1-based) clip (35, 648, 285, 758) pt @300 dpi + white-border trim. Values re-read from the text layer: E 142.5±11.3 / 177.5±19.5 / 190.0 GPa; H 8.6±1.3 / 12.6±1.4 / N/A GPa; Kc 0.102±0.03 / 0.309±0.04 / N/A MPa m^1/2 (2026-09-25)",
+   "bbox": [
+    35.0,
+    648.0,
+    285.0,
+    758.0
+   ],
+   "w": 1041,
+   "h": 442,
+   "dpi": 300,
+   "src": "12b057a2-Xu_2017_J._Electrochem._Soc._164_A3333.pdf",
+   "viewed": true
+  }
+ ],
+ "note": "All 9 crops opened and checked by eye 2026-09-25. fig_1 and tab_1 are manual (see manual_crop); fig_2..fig_8 are the automatic caption-anchored crops (page margins included, content complete). No SI in this PDF (Figs S1-S7 not available)."
+}
