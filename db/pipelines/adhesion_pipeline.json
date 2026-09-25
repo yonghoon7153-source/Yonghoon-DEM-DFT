@@ -255,6 +255,77 @@
     "db/raw/wad_sese_4L_2026_09_25/bulk_sens_result_2026_09_25.json",
     "db/properties/wad_sese_4L_result_2026_09_25.json"
    ]
+  },
+  {
+   "id": "aprime_prep_v100_2026_09_25",
+   "system": "prep",
+   "machine": "V100 · QE 7.4.1 GPU · code_id 3fc5613d8",
+   "check": "CODE_ID·도구 sha 일치 · PP 7종 해시 ⑨ · DRY_RUN ⛔ 0 · 내장 대조 12·13 첫 SCF = 01/04 (차 0.0)",
+   "started": "2026-09-25 20:19",
+   "vram_total_mib": 32768,
+   "jobs": [
+    {
+     "dir": "08_ag_fcc_pbe_e52_k20",
+     "state": "done",
+     "wall_s": 61,
+     "peak_vram_mib": 848
+    },
+    {
+     "dir": "08_ag_fcc_pbe_e70_k20",
+     "state": "done",
+     "wall_s": 66,
+     "peak_vram_mib": 866
+    },
+    {
+     "dir": "08_ag_fcc_pbe_e70_k24",
+     "state": "done",
+     "wall_s": 113,
+     "peak_vram_mib": 868
+    },
+    {
+     "dir": "09_ag_fcc_pbe_d3_e52_k20",
+     "state": "done",
+     "wall_s": 85,
+     "peak_vram_mib": 848
+    },
+    {
+     "dir": "10_graphene_pbe_e52_k24",
+     "state": "done",
+     "wall_s": 34,
+     "peak_vram_mib": 1102
+    },
+    {
+     "dir": "10_graphene_pbe_e70_k24",
+     "state": "done",
+     "wall_s": 38,
+     "peak_vram_mib": 1214
+    },
+    {
+     "dir": "11_graphene_pbe_d3_e52_k24",
+     "state": "done",
+     "wall_s": 33,
+     "peak_vram_mib": 1102
+    },
+    {
+     "dir": "12_cubic_relax_pbe_d3",
+     "state": "done",
+     "wall_s": 103,
+     "peak_vram_mib": 10350
+    },
+    {
+     "dir": "13_epi_vcrelax_pbe_d3",
+     "state": "done",
+     "wall_s": 3161,
+     "peak_vram_mib": 10372
+    }
+   ],
+   "verdict": "선행 배치 (카드 밖 · 결정 7 시행 · DEM 부탁 1) — 수렴 규칙·Pulay·내장 대조 전부 통과 · 깃발 0. Ag a₀ PBE/PBE+D3 · 그래핀 a₀ · 정합 변형률 재기입 (3 % 규칙 미발동) · comp1 셀 PBE+D3 응력 = 라벨용. 값은 원자료.",
+   "values_policy": "a₀·변형률·응력은 원자료·결박 파일·계획 표에 — 화면에는 판정 문장만",
+   "records": [
+    "db/inputs/wad_aprime_prep_2026_09_25/jobs.json",
+    "db/raw/wad_aprime_prep_2026_09_25/aprime_prep_result_2026_09_25.json",
+    "db/properties/wad_aprime_s1_bindings_2026_09_25.json"
+   ]
   }
  ],
  "reviews": [
@@ -500,6 +571,11 @@
    "date": "2026-09-25",
    "stage": "dft",
    "text": "**Codex CA 회신 NO-GO** (v3 봉인·S2 보류 · BZ 주요 수정은 이행 인정): **P0** V2 측방 마스크가 선택 입력 — 생략·Ag 만·움직인 원자 제외 부분집합이 통과 (실측 재현) · **P1** `int(i)` 가 0.9·−0.9·True 를 조용히 변환 · G3 절댓값·끝점별 기록·문구 · G5 문구 '종결별' 누락 · CPU 프로브 예외 누락 + electron_maxstep 오해 · registry 중점의 주기영상 반례(x 0.1·9.9). → 코드: 금속 기판 모드 측방 마스크 **필수 + 흡착층 전체 집합 일치** · PS₄ 모델 측방 제약 금지 깃발 · `_validate_idx` 타입 검사(변환 없음 · bool/float/중복 오류) · CLI 파싱/검증 분리 — selftest 120/120 · CA 음성 10 · 돌연변이 8 빨간불 · CLI JSON 소수 rc 2. **카드 v4**: G3 |ΔW|·ΔE_far/ΔE_bound/ΔW 기록·허용 문구 · G5 문구 종결별 · 프로브 예외 CPU/GPU·scf 한정·원출력 보존 · registry Σ 집합·최소영상 중점·동률(ID→오프셋)·감기 · Ag₄ '정책' 문구 · S1 빈 항목 봉인 불가. → Codex CB 프롬프트."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**선행 배치 9 잡 끝** (V100 62 min · rc 0 · 깃발 0): Ag a₀ **PBE 4.1448 · PBE+D3 4.0705** (실험 4.086) · 그래핀 2.4668/2.4660 · 수렴 규칙 ✓ · Pulay ✓ · 내장 대조 ✓. **정합 변형률 (헤드라인 PBE+D3 격자 · 결정 7 시행)**: P1 Ag +0.85/−0.19 % · P2 흑연 +1.94/+0.89 % · V2 그래핀-on-Ag +1.08 % → 3 % 재개 규칙 미발동. **라벨 응력 PBE+D3** (GPa 인장+): 입방 고정 xx +0.71 · yy +2.65 · zz +2.66 · yz −1.11 · **p −2.01 (인장 정수압)** / 면내 고정·c 이완 c 9.40 Å (−6.5 %). ⚠ 지정 comp1 셀은 PBE 평형이라 D3 아래서 −2 GPa 인장 상태 — 라벨 조건 (참조 셀 변경은 새 결정). DEM 회신 4 표에 PBE+D3 줄 채움 · S1 결박 파일에 값 기록."
   }
  ],
  "related_decisions": [

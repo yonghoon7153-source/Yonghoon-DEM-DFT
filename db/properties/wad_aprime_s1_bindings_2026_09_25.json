@@ -35,10 +35,83 @@
   "전체": "db/inputs/wad_aprime_prep_2026_09_25/jobs.json settings.pp_sha256"
  },
  "코드": {
-  "se_sym_slab.py": "S1 봉인 시점의 커밋으로 (현재 0eedaf687 · interface_check 측방 정책·타입 검사 포함)",
+  "se_sym_slab.py": "S1 봉인 시점의 커밋으로 (0eedaf687 이후 · interface_check 측방 정책·타입 검사 · aprime_prep 집계 포함)",
   "run_sese_gpu.sh": "같은 커밋",
   "흡착층_빌더": "⏳ 미작성 — registry 규칙 구현 + selftest 뒤 커밋"
  },
- "선행_배치_값": "⏳ V100 `--aprime_prep` 출력 대기 (Ag·그래핀 a₀ PBE/PBE+D3 · comp1 D3 응력 GPa) → 여기와 카드 `S1_전에_이미_본_것` 에",
+ "선행_배치_값": {
+  "원자료": "db/raw/wad_aprime_prep_2026_09_25/aprime_prep_result_2026_09_25.json",
+  "a_Ag_A": {
+   "PBE": 4.14482,
+   "PBE+D3": 4.07045,
+   "exp": 4.086
+  },
+  "a_graphene_A": {
+   "PBE": 2.46681,
+   "PBE+D3": 2.46604,
+   "exp": 2.46
+  },
+  "정합_변형률_pct_x_y_PBE+D3": {
+   "P1_Ag111_2r3x7_on_SE1x2": [
+    0.848,
+    -0.186
+   ],
+   "P2_graphene_4x7r3_on_SE1x3": [
+    1.936,
+    0.89
+   ],
+   "V2_graphene2x2_on_Ag111_r3": 1.08
+  },
+  "3pct_재개규칙": "미발동 (전부 |ε| < 3 %)",
+  "라벨_응력_GPa_인장+": {
+   "sign": "GPa · 인장 + (QE 출력 kbar 의 부호를 뒤집고 /10) · p_GPa 는 압력 (압축 +)",
+   "axes": "x·y = 입방 [100]·[010] (면내) · z = [001] (슬랩 법선)",
+   "cubic_fixed_cell": {
+    "PBE": {
+     "xx": -1.298,
+     "yy": 0.654,
+     "zz": 0.661,
+     "xy": 0.0,
+     "xz": 0.0,
+     "yz": -1.08,
+     "p_GPa": -0.006
+    },
+    "PBE+D3": {
+     "xx": 0.706,
+     "yy": 2.651,
+     "zz": 2.658,
+     "xy": 0.0,
+     "xz": 0.0,
+     "yz": -1.109,
+     "p_GPa": -2.005
+    }
+   },
+   "epi_inplane_fixed": {
+    "PBE": {
+     "xx": -1.385,
+     "yy": 0.357,
+     "zz": 0.007,
+     "xy": 0.0,
+     "xz": 0.0,
+     "yz": 0.015,
+     "p_GPa": 0.341
+    },
+    "PBE+D3": {
+     "xx": -0.209,
+     "yy": 1.08,
+     "zz": 0.006,
+     "xy": 0.0,
+     "xz": 0.0,
+     "yz": 0.02,
+     "p_GPa": -0.292
+    },
+    "PBE+D3_c_vector_A": {
+     "c_A": 9.4024,
+     "tilt_deg": 3.561
+    }
+   }
+  },
+  "쓴_곳": "결정 7 시행(변형률 재기입) · DEM 부탁 1 (PBE+D3 판) · V2 셀 (a_Ag PBE+D3 4.0705 · 그래핀 +1.08 % 변형) · 카드 S1_전에_이미_본_것"
+ },
  "결정_내용_digest": "카드 v4 `decisions_content_digest_S1_봉인에_넣는_것` 그대로 (Codex CA 가 9 개 재계산 일치 확인)"
 }
