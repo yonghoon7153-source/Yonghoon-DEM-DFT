@@ -435,8 +435,8 @@ PTFE는 연속 채널·layered 구조 보존.**
 - **조성 매핑 필요:** Hong은 NCM 75 wt% 고정(vol% 미명시; 디지털트윈 AM ~36–41 vol%). Bazzoun vol% CAM:SE
   (45/53–60/38)와 우리 φ_SE 정의로 **셋을 같은 축에 올려야** 정밀 비교 가능(현재는 자릿수·추세 수준 일치).
 - **σ_grain 앵커 정합:** Hong **pristine LPSCl bulk σ = 1.87 mS/cm**(Fig S7). Bazzoun pellet 1.02, Cronau
-  단결정 3.0. → **1.87(Hong) 은 1.02(Bazzoun pellet)와 3.0(Cronau 단결정) 사이** = GB-포함 다결정 LPSCl의
-  전형적 범위(셋 다 일관: 단결정 > 다결정 pellet, 측정셀·입경 차로 1.02~1.87 분산). 우리 σ_grain=3.0(단결정)
+  ~~단결정~~ 3.0 (펠릿값 — Cronau 2021 SI 그림 S2c µC 고적층압; SELF-51 철회). → **1.87(Hong) 은 1.02(Bazzoun pellet)와 3.0(Cronau 펠릿) 사이**
+  = ~~전형적 범위(셋 다 일관: 단결정 > 다결정 pellet, 측정셀·입경 차로 1.02~1.87 분산)~~ 펠릿끼리의 분산 (서열 논증 철회). 우리 σ_grain=3.0(~~단결정~~ 펠릿)
   + Cronau(r_SE) GB인자가 이 범위를 포괄하는지 점검 가치(이중계상 주의 — Bazzoun digest의 σ_grain 재검토
   항목과 동일).
 
@@ -528,7 +528,7 @@ PTFE는 연속 채널·layered 구조 보존.**
 | 소재 | **LPSCl SE + NCM CAM** | **동일 ✓** | ★ 절대값 전이 가능(검증 앵커) |
 | σ_ionic 절대 | Pwd 0.087 / PTFE 0.064 / NBR 0.042 mS/cm | DEM ~0.04–0.18 | ✅ **in-range**(+ Bazzoun 0.065–0.137 → envelope 0.04–0.14) |
 | σ_ionic 추세 | coverage↓(LPSCl AM 35→26%) → σ↓ | φ_SE/coverage↓ → σ↓ | ✅ 일치(우리 coverage 물리 확증) |
-| bulk LPSCl σ | **1.87 mS/cm**(pristine) | Cronau 단결정 3.0 / Bazzoun pellet 1.02 | ✅ 1.02 < 1.87 < 3.0 일관(GB) |
+| bulk LPSCl σ | **1.87 mS/cm**(pristine) | ~~Cronau 단결정 3.0~~ Cronau 2021 SI µC 펠릿 3.0 / Bazzoun pellet 1.02 | 1.02 < 1.87 < 3.0 — ~~일관(GB)~~ 펠릿끼리의 분산 (서열 논증 철회, SELF-51) |
 | pore volume | PTFE 22.3 / Pwd 28.7 / NBR 29.4 vol% | DEM ε_sphere 예측 | ★ PTFE densification = audit #5 신규 |
 | PTFE 역할 | **void-억제(−6.4%p)·접착·팽창↓(1.74)** | **σ=0 obstacle(차단만)** | ❗ **양의 역학효과 누락**(audit #5) |
 | NBR(wet) | 광범위 coverage·sulfate·rock-salt | **모델 없음** | ⚠ process-specific(비전이) |
@@ -577,7 +577,7 @@ PTFE는 연속 채널·layered 구조 보존.**
     "Hong"이나 **다른 논문·다른 소재** — 혼동 금지: #271=Seung-Bo Hong/ASSB, #285=Rakhwi Hong/액체.)
   - **σ/porosity 절대앵커 = Bazzoun(LPSCl) + #271(LPSCl) + Varkey(halide, 비교용) + Minnmann(LPSCl cold-press)**
     — #271이 **LPSCl σ_ionic 앵커군에 합류**(Bazzoun과 짝).
-- **σ_grain 재검토(선택):** Hong bulk LPSCl 1.87 + Bazzoun pellet 1.02 + Cronau 단결정 3.0 → 우리 σ_grain=3.0
+- **σ_grain 재검토(선택):** Hong bulk LPSCl 1.87 + Bazzoun pellet 1.02 + ~~Cronau 단결정 3.0~~ Cronau 2021 SI µC 펠릿 3.0 (SELF-51 철회) → 우리 σ_grain=3.0
   + Cronau(r_SE) GB인자가 1.02–1.87 다결정 범위를 포괄하는지 (이중계상 주의; Bazzoun digest 동일 항목과 통합).
 
 ---

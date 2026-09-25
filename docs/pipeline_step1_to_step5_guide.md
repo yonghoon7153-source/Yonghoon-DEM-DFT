@@ -286,7 +286,8 @@ flowchart TB
   **Tabor(F/H)·부피 재유도**로 실제 소성 접촉면적을 다시 구한다. 5-영역 분해에 min(caps) 천장이
   있어 과압축 시에도 면적이 비물리적으로 커지지 않는다.
 - **3종 전도도**:
-  - **σ_ion**: SE 골격. 앵커 = Cronau 단결정 3.0 mS/cm × 결정립 크기 보정 Cronau(r_SE).
+  - **σ_ion**: SE 골격. 입력 = 3.0 mS/cm (Cronau 2021 SI 그림 S2c µC-Li₆PS₅Cl **펠릿** 고적층압 평탄의 하단 — 옛 *단결정* 라벨 철회,
+    SELF-51) × 크기 보정 Cronau(r_SE) (출처 없는 모델 가정 · DEM 쪽만).
   - **σ_e**: AM(NCM) 골격 + 탄소. 단결정(입계 없음, 10 mS/cm) vs 다결정(입계 있음, 5)로 분리.
   - **σ_thermal**: AM-AM / AM-SE / SE-SE **다경로 병렬** — 그래서 단일 스케일링 법칙이 안 나오고
     Ridge 회귀가 유일한 표현이다(순수 멱법칙 0.59, EMT는 음의 R²로 실패).
@@ -527,7 +528,7 @@ step 30 t=975.0s [cc] V=4.0100 I=8.302e-08 x̄=0.4237 ηkin=17.0mV E-bal 1.6e-05
 | STEP2 | 복합 **두께** | LIGGGHTS(독립 모델) | 29.95 vs 30.28 µm.  ⛔ 다공도 쌍은 철회 — 관례 오프셋 1.251 %p 를 빼면 0.93 %p **과압축**이고, 스캐폴드에서 다공도는 독립 정보가 없다 (§5) |
 | STEP2 | 모폴로지 | SEM(코어보존+경계평탄) | 정성 일치 |
 | STEP3 | σ_ion **압력 의존 방향** | **Bazzoun 2026** EIS+FEM | 방향 정합.  ⚠ **절대값 대조는 아직 닫히지 않았다** — 우리 복셀 FV 는 계면 저항 항이 **정확히 0** 인 `CONTACT_FREE` 가지 위에 있다 (코퍼스 실측 4.04×/6.69×, 원장 CL-81) + intrinsic σ 를 안 맞춘 비교였다 (CL-26) |
-| STEP3 | σ_grain 결정립 | Cronau 2022 단결정 3.0 | Cronau(r_SE) 보정 |
+| STEP3 | σ_grain (SE 상) | Cronau 2021 SI 그림 S2c µC 펠릿 평탄 하단 3.0 (단결정 라벨 철회 — SELF-51) | Cronau(r_SE) 는 STEP3 미적용 (DEM Stage-E·스케일링식만 · 모델 가정) |
 | STEP3 | coverage | 기하 ground-truth(독립) | Hertz 16 / Tabor 52% |
 | STEP4 | OCP·용량 | Chen 2020 NMC811 | c_max 기계추출 |
 | STEP4 | 수치 패리티 | PyBaMM/COMSOL | ⏳ **매치드-조건 런 대기** |

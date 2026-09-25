@@ -208,13 +208,13 @@ def base_log_baseline(a):
 
 
 def cronau_factor(rse_um, smooth=True):
-    """Stage-E σ_ionic SE-size factor (Cronau 2022 piecewise).
+    """Stage-E σ_ionic SE-size factor (model assumption — values not in Cronau 2022, SELF-51).
 
     smooth=True (default) — three-sigmoid approximation, fully differentiable:
         Cronau(r) = 0.33 + 0.32·σ(K(r−0.10)) + 0.25·σ(K(r−0.30)) + 0.10·σ(K(r−0.50))
-        with K = 50/µm.  Plateau values match the literature within <1% at
+        with K = 50/µm.  Plateau values match the old piecewise table (no literature source) within <1% at
         interior points (r ∈ {0.05, 0.20, 0.40, 1.0µm}); transitions are
-        softened over ~0.04µm windows at the literature breakpoints.
+        softened over ~0.04µm windows at the table breakpoints.
 
     smooth=False — original piecewise literature curve:
         r≥0.5µm→1.00, 0.3–0.5→0.90, 0.1–0.3→0.65, 0.03–0.1→linear interp,

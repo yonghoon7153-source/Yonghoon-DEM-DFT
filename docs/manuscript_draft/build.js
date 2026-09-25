@@ -195,7 +195,7 @@ body.push(Cap('**Table S2.** Material parameters used for the microstructure and
    ['','Compaction pressure','300','MPa','Experimental value'],
    ['','Voxel edge length','0.15','μm','–'],
    ['NCM811','Particle radius','2.5','μm','Experimental value'],
-   ['','Young’s modulus','140','GPa','Ref. S6'],
+   ['','Young’s modulus','140','GPa','Ref. S6 (measured 138 ± 24)'],
    ['','Electronic conductivity','1.0 × 10^−2^','S cm^−1^','Effective value'],
    ['LPSCl','Particle radius','0.5','μm','Experimental value'],
    ['','Young’s modulus (dense)','24','GPa','Ref. S7'],
@@ -203,7 +203,7 @@ body.push(Cap('**Table S2.** Material parameters used for the microstructure and
    ['','Young’s modulus (MPM continuum)','1.53','GPa','Calibrated'],
    ['','Poisson’s ratio (MPM continuum)','0.49','–','Calibrated'],
    ['','Yield strength','0.30','GPa','Calibrated'],
-   ['','Ionic conductivity (grain interior)','3.0 × 10^−3^','S cm^−1^','Assumed'],
+   ['','Ionic conductivity','3.0 × 10^−3^','S cm^−1^','Ref. S8 (pellet, SI Fig. S2c)'],
    ['VGCF','Fiber diameter','0.15','μm','Supplier data'],
    ['','Young’s modulus','10','GPa','Assumed'],
    ['','Electronic conductivity (compressed powder)','1.0 × 10^2^','S cm^−1^','Effective value'],
@@ -408,12 +408,14 @@ NOTE('D16.', '**DFT 파트와 규약을 맞췄다 (신규, 2026-08-23).** 같은
 + 'Wiley 식(*저널* **연도**, *권*, 쪽), DFT 의 SI 목록은 제목 포함 (저널 **권** (연도) 쪽) 이다.  '
 + '나는 SI 항목을 DFT 스타일에 맞췄으나, 최종적으로 **SI 목록 스타일을 한 가지로 통일**해야 한다.');
 
-NOTE('D17.', '**SI 참고문헌 정정 (2026-09-25, 원장 SELF-51).** 공저자 검토에서 NCM811 영률의 출처 S6 이 검색되지 않는다는 지적 — '
-+ '확인해 보니 그 인용 (옛 S6, "Wang 2020") 은 이 리포의 주석에서 원문 확인 없이 생겨 제목까지 붙은 것이었다 (인용 금지).  '
-+ '⇒ S6 을 Sedlatschek *et al.*, *J. Power Sources* **681** (2026) 240276 (다결정 NMC811 나노압입) 으로 교체 — **값 138 ± 24 GPa 는 '
-+ 'PDF 확인 전이라 본문·각주에 쓰지 않는다**.  이온 전도도 행은 `Ref. S8` → `Assumed` — Cronau 2021 원문에 3.0 mS cm^−1^ 이 없고 '
-+ '단결정 측정도 없다 (측정 argyrodite 는 Li_6_PS_5_Br).  S8 은 각주의 비교 문헌으로만 남긴다.  정본: '
-+ 'docs/reviews/si_table_response_20260925.md §7.');
+NOTE('D17.', '**SI 참고문헌 정정 (2026-09-25, 원장 SELF-51 · CL-90 · CL-91).** 공저자 검토에서 NCM811 영률의 출처 S6 이 검색되지 '
++ '않는다는 지적 — 확인해 보니 그 인용 (옛 S6, "Wang 2020") 은 이 리포의 주석에서 원문 확인 없이 생겨 제목까지 붙은 것이었다 (인용 금지).  '
++ '⇒ S6 을 Sedlatschek *et al.*, *J. Power Sources* **681** (2026) 240276 으로 교체 — 원문 확인: 다결정 NCM811 나노압입 **138 ± 24 GPa** '
++ '(압입 29 회, ν = 0.32 가정).  표의 140 은 **DEM 입력**이라 Source 에 측정값을 병기했다 — 140 이라는 숫자는 S6 에 없으니 *"140 GPa (S6)"* '
++ '처럼 쓰지 말 것.  같은 부류의 값: NMC532 2차입자 142.5 ± 11.3 GPa (Xu *et al.*, *J. Electrochem. Soc.* **164** (2017) A3333).  '
++ '이온 전도도 행은 09-25 오후에 `Assumed` 로 바꿨다가 **되돌렸다** (철회) — Cronau 2021 (S8) 은 본문이 아니라 **SI 그림 S2c** 에 '
++ 'µC-Li_6_PS_5_Cl 펠릿의 적층압 ≥146 MPa 평탄 2.88–3.46 mS cm^−1^ (그림 판독) 을 준다.  3.0 은 그 하단이고, 단결정 값이 아니라 '
++ '입계를 포함한 펠릿값이라 행 이름의 *(grain interior)* 를 뺐다.  정본: docs/reviews/si_table_response_20260925.md §7.');
 NOTE('D11.', '**레퍼런스.** Methods 는 이제 인용 5개만 쓴다 — LIGGGHTS · MPM · 치밀 LPSCl 영률 · '
 + 'NCM 영률 · 전해질 grain 이온전도도.  이 논문에서 보정하거나 측정한 것이 아닌 **모든 정량 입력**은 '
 + 'Table S2 의 Source 열에 출처가 있다.  임의로 붙였던 [100]/[102]/[107]/[109]/[110] 은 없앴다.');

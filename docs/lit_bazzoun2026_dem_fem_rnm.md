@@ -93,14 +93,14 @@ Z_SE-SE = (1/N_SE)·Σ z_i                      (19)   SE-SE 배위수(coordinat
 | 전류해 | Kirchhoff `Σ(φi−φj)/R=0` | **동일 ✓** |
 | 네트워크 지표 | θ_SE, Z_SE-SE, R̄_SE-SE | percolation f_p, CN, coverage 대응 ✓ |
 | E_SE | **22.1 GPa** | 우리 real 24 ✓ (E_eff 1.35는 연화프록시) |
-| σ_grain 앵커 | bulk pellet **1.02 mS/cm** | Cronau 단결정 3.0 (pellet<단결정, GB 때문 — 일관) |
+| σ_grain 앵커 | bulk pellet **1.02 mS/cm** | ~~Cronau 단결정 3.0 (pellet<단결정, GB 때문 — 일관)~~ 3.0 도 펠릿값 (Cronau 2021 SI 그림 S2c µC 고적층압) — 서열 논증 철회 (SELF-51) |
 | 검증 | **실험 EIS** (조성+압력) | (우리는 solver=ground truth, 실험 직접앵커 부족) |
 | FEM 연속체 기준 | **있음** (COMSOL) | 없음 (우리 MPM은 역학, 전달 FEM은 안 함) |
 
 **그들이 앞서는 점 (우리가 흡수할 것):**
 - **실험 σ_eff,ion 다중검증** (조성 3 + 압력 100–400 MPa) — 우리의 "missing direct validation".
 - **FEM 연속체 σ_ionic 기준** — RNM(=우리 솔버)을 FEM continuum과 대조 → 우리 솔버 신뢰도 평가틀.
-- **bulk LPSCl pellet σ=1.02 mS/cm** 실측 — 우리 σ_grain 3.0(단결정) 대비 GB-포함 하한 앵커.
+- **bulk LPSCl pellet σ=1.02 mS/cm** 실측 — 우리 σ_grain ~~3.0(단결정) 대비 GB-포함 하한 앵커~~ 3.0 (역시 펠릿값 — Cronau 2021 SI 그림 S2c µC 고적층압; 단결정 라벨 철회, SELF-51) 보다 낮은 쪽의 펠릿 앵커.
 
 **우리가 앞서는 점:**
 - **σ_e + σ_thermal 삼중항** (그들은 이온만).  우리 네트워크 솔버는 전자/열까지.
@@ -170,5 +170,5 @@ SE 치밀화·접촉 저해 → R̄↑.  ★ 우리 "작은 SE → σ↑" 및 si
 2. **다중압력 검증:** 그들 σ-vs-P(100–400 MPa, 포화@400) ↔ 우리 Heckel P_y 138 + σ_ionic-vs-ε.
 3. **RNM↔우리 솔버 대조:** 둘 다 Holm+Kirchhoff인데 그들은 구속만(과소), 우리는 Stage-E 소성면적
    보정 → 같은 구조에서 σ 차이가 Stage-E 기여를 정량화하는지 비교 연구.
-4. **σ_grain 재검토(선택):** 그들 pellet 1.02 vs 우리 단결정 3.0 — GB 인자가 우리 Cronau(r_SE)에
+4. **σ_grain 재검토(선택):** 그들 pellet 1.02 vs 우리 3.0 (~~단결정~~ 고적층압 µC 펠릿 — SELF-51 철회) — GB 인자가 우리 Cronau(r_SE)에
    이미 포함되는지 점검 (이중계상 주의).

@@ -286,8 +286,8 @@ Yonsei DTBL).  접수 2025-12-01 / 게재확정 2026-01-26.  ★ **풀 디제스
     (~0.04–0.18); Bazzoun(0.065–0.137)과 합쳐 **LPSCl+NCM 실측 envelope ≈ 0.04–0.14 mS/cm** → **우리 절대
     σ_ionic이 "외삽 1점(Bazzoun)"에서 "2개 독립 EIS 실측에 둘러싸인" 상태로 격상**(audit #1 다점화).  추세
     (coverage/φ_SE↓→σ↓) 일치.  ⚠ 압력 350/400/300 MPa + vol% 매핑은 정밀 1:1 전 보정 필요.
-  - **(b) ✅ bulk σ_grain 정합:** Hong 1.87 ∈ (Bazzoun pellet 1.02, Cronau 단결정 3.0) — GB-포함 다결정
-    범위 일관.  우리 σ_grain=3.0+Cronau(r_SE) 점검(이중계상 주의).
+  - **(b) bulk σ_grain 정합:** Hong 1.87 ∈ (Bazzoun pellet 1.02, Cronau 2021 SI µC 펠릿 3.0 — ~~단결정~~ 라벨 철회, SELF-51)
+    — 펠릿끼리의 분산.  우리 σ_grain=3.0+Cronau(r_SE) 점검(이중계상 주의).
   - **(c) ❗ PTFE 양의 역학효과(audit #5):** 우리는 PTFE를 **σ=0 obstacle(차단=음효과)**로만 모델 → 이
     논문의 **PTFE void-억제(−6.4%p pore)·팽창↓(1.74)·접착 2×**(양효과, retention 지배)를 누락.  ⇒ MPM에서
     **PTFE를 cohesion-부여 결합상(`--coh` PTFE항)**으로 → void-억제 재현; net σ_ionic = "차단 − densification

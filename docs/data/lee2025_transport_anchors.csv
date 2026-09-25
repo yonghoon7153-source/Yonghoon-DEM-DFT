@@ -10,6 +10,6 @@ lee2025,Fig4ef_electrode_free,cathode,Li6PS5Cl,NCM82_SC,VGCF,PTFE,0.5,80:17:3,fr
 # --- Fig 4c,d: SSE layer (LPSCl + PTFE 0.1 wt%). sigma_ionic = INTRINSIC (not conductance); sigma_e shows SSE is e-insulating ---
 lee2025,Fig4cd_SSE_co,separator,Li6PS5Cl,none,none,PTFE,0.1,100:0:0,co-rolled,75,1.04,1.4e-7,exact_text,co-rolled SSE 50um; conductance 164 mS (thin)
 lee2025,Fig4cd_SSE_free,separator,Li6PS5Cl,none,none,PTFE,0.1,100:0:0,freestanding,75,1.29,2.6e-7,exact_text,freestanding SSE 500um; conductance 20 mS; intrinsic sigma higher but conductance lower (thickness) -- do NOT read co<free as worse compaction
-# --- SI Fig 4e,f: bulk LPSCl pellet (pristine vs ball-milled <1um). 3rd LPSCl bulk anchor (cf Bazzoun pellet 1.02, Cronau single-crystal 3.0) ---
+# --- SI Fig 4e,f: bulk LPSCl pellet (pristine vs ball-milled <1um). 3rd LPSCl bulk anchor (cf Bazzoun pellet 1.02, Cronau 2021 SI µC pellet 3.0 — old single-crystal label 철회 SELF-51) ---
 lee2025,SI_Fig4_bulk_pristine,bulk,Li6PS5Cl,none,none,none,0,100:0:0,pellet,,2.19,5.0e-4,exact_text,pristine LPSCl pellet
 lee2025,SI_Fig4_bulk_ballmill,bulk,Li6PS5Cl,none,none,none,0,100:0:0,pellet,,1.64,3.3e-4,exact_text,ball-milled <1um; sigma maintained (small drop) after particle-size reduction

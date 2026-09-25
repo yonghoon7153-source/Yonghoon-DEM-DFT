@@ -36,7 +36,7 @@ from step3_sigma import solve_sigma_z                            # noqa: E402
 from measure_provenance import provenance                        # noqa: E402  (CL-75)
 
 SID_AM, SID_SE, SID_SDCP = 1, 6, 5
-SIGMA_ION_SE = 3.0e-3                                            # S/cm (Cronau, se_material)
+SIGMA_ION_SE = 3.0e-3                                            # S/cm (se_material; Cronau 2021 SI µC pellet plateau — SELF-51)
 SIGMA_E_AM = 0.010                                               # S/cm (AM_S, SIGMA_DEFAULT)
 SIGMA_E_SDCP = 250.0    # S/cm — EFFECTIVE PHASE conductivity, voxel-network convention
 #   ⚠ not a material property (ledger §15, same category as sigma_vgcf / CL-47): the grid

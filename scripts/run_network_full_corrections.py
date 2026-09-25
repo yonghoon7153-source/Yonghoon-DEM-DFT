@@ -9,8 +9,9 @@ Combines two literature corrections on top of the network solver:
        (literature-realistic central estimate for σ_e_loss)
 
   (2) Per-particle σ_grain factor — material/synthesis correction
-       (a) σ_ionic_grain_SE(r_SE) — Cronau 2022 amorphization
-            r_SE 1.5 μm → 1.00, 1.0 → 0.85, 0.5 → 0.70, <0.3 → 0.33
+       (a) σ_ionic_grain_SE(r_SE) — size factor = model assumption (SELF-51: not in Cronau 2022)
+            [old table, history only — not the current function below:
+             r_SE 1.5 μm → 1.00, 1.0 → 0.85, 0.5 → 0.70, <0.3 → 0.33]
        (b) σ_e_grain_AM(crystal) — Trevisanello 2021 SC vs PC
             AM_S (single-crystal): 1.00
             AM_P (polycrystalline): 0.65
@@ -106,9 +107,14 @@ def _fracture_factor(m: float) -> tuple[float, str]:
     return 1.0, 'intact'
 
 
-# ── (2a) σ_ionic_grain_SE(r_SE) — literature-grounded, smooth size-effect ──
+# ── (2a) σ_ionic_grain_SE(r_SE) — smooth size-effect (model assumption — SELF-51) ──
 def sigma_ionic_grain_factor_SE(r_SE_real_um: float) -> float:
-    """SE σ_grain factor — literature-grounded with smooth transition zone.
+    """SE σ_grain factor — smooth transition zone.
+
+    ⛔ SELF-51 (2026-09-25): NOT literature-grounded.  The plateau values below are not in
+    Cronau 2022 (checked against the PDF — its own data show σ following milling damage, not
+    particle size), and the other citations in this docstring were never checked against an
+    original.  Treat the whole table as a model assumption (values unchanged).
 
     Reference table (literature consensus):
       r_SE ≥ 1.5 μm  → 1.00   ✓ very high (산업 표준, multiple measurements)
@@ -1192,7 +1198,7 @@ def main() -> None:
 
     print(f'Stage E (literature-grounded full corrections) on {len(cases)} cases',
           flush=True)
-    print('  Channel 1 (σ_ionic) : SE size-dependent σ_grain (Cronau 2022)')
+    print('  Channel 1 (σ_ionic) : SE size-dependent σ_grain (model assumption — SELF-51)')
     print('  Channel 2 (σ_e)     : fracture stagewise × AM crystal (Trevisanello 2021)')
     print('  Channel 3 (κ)       : AM crystal grain (Wang 2022, SE size-invariant)\n')
     if args.temp_c is not None:

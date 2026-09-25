@@ -16,9 +16,9 @@
      etc) disappear?  Reports new LOOCV and outlier landscape.
 
   C. σ_grain RE-FIT
-     σ_grain = 3.0 mS/cm is a project value with no literature source (the old
-     'Cronau 2022 says 3.0' was false — SELF-51).  Scan in [1.5, 5]: the corpus
-     cannot tell (C(τ) absorbs a constant).
+     σ_grain = 3.0 mS/cm is a project value = lower end of the µC-Li6PS5Cl pellet
+     plateau in Cronau 2021 SI Fig. S2c (the old 'Cronau 2022 says 3.0' was false —
+     SELF-51).  Scan in [1.5, 5]: the corpus cannot tell (C(τ) absorbs a constant).
 
   D. PER-COMPOSITION LOOCV
      Does the form work equally well across P:S groups?  For each
@@ -235,7 +235,7 @@ def main():
     print(f"  (NOTE: σ_grain is a CONSTANT scale factor; (a) of C(τ) absorbs any")
     print(f"   constant change → LOOCV is IDENTICAL for all σ_grain values.")
     print(f"   This confirms σ_grain is unobservable from corpus alone; LITERATURE")
-    print(f"   value 3.0 mS/cm has NO literature source — a project convention (SELF-51).)")
+    print(f"   value 3.0 mS/cm is a project value = lower end of the Cronau 2021 SI Fig. S2c pellet plateau (SELF-51).)")
 
     # =========================================================================
     # SECTION D — Per-composition LOOCV

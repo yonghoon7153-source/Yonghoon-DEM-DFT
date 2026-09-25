@@ -358,7 +358,7 @@ MJ/m³) (c) σ_ion 실측·시뮬+τ_ion (d) 평균 pore size + CAM-SSE 비표�
 - **★★ Table S15 재료 물성(우리 캘리브레이션 정합 검증):**
   | Symbol | Value | Unit | 설명 | ★우리 대응 |
   |---|---|---|---|---|
-  | σ_SE | 10 | mS/cm | SE 이온전도 | 우리 σ_grain 3.0(단결정)·계 |
+  | σ_SE | 10 | mS/cm | SE 이온전도 | 우리 σ_grain 3.0 (~~단결정~~ 펠릿 — SELF-51 철회)·계 |
   | σ_NCWA | 13.7 | mS/cm | NCWA 전자전도 | 우리 σ_AM(e) ~5–50 mS/cm 범위 |
   | σ_NCM | 2.45 | mS/cm | NCM 전자전도 | ★ **NCWA(13.7) ≫ NCM(2.45)** = σ_e가 큰 NCWA서 높은 이유 |
   | σ_CB | 1000 | mS/cm | carbon black 전자전도 | 우리 CBD(SuperP) |
@@ -610,7 +610,7 @@ CAM0:10,0:10,0.034,0.95,16.08,11.58,17.72,100,exact_TableS5_S6_S9,UCC all-single
 ```
 ⚠ σ_eff,ion은 **100 MPa 측정압 + SE σ_bulk 3.09(LPSCl1.5)** — Bazzoun(400 MPa, Li6PS5Cl) / #271(30 MPa, Li6PS5Cl)과
 압력·SE변종 차 → **같은 자릿수 envelope로 통합**(정밀 1:1 아님).  σ_grain 매핑 시 LPSCl1.5(Cl-rich)는 σ_bulk 3.09로
-별도(우리 Cronau 단결정 3.0과 우연히 근접하나 조성 다름).
+별도(우리 3.0 (~~Cronau 단결정~~ Cronau 2021 SI µC 펠릿 — SELF-51 철회) 과 우연히 근접하나 조성 다름).
 
 ---
 

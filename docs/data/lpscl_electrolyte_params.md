@@ -8,12 +8,12 @@ Stage-2 voxel-solver SE σ (= 3.0 mS/cm, already used).
 ## Ionic conductivity (RT ~25 °C)
 | condition | σ_ion | source |
 |---|---|---|
-| single-crystal / grain-interior (project value) | **3.0 mS/cm** (Cronau adopted) | Cronau 2021 ACS Energy Lett. doi:10.1021/acsenergylett.1c01299 ⚠ exact single-crystal digit NOT verified (proxy) — verify from ACS PDF before manuscript |
+| ~~single-crystal / grain-interior~~ µC pellet, stack ≥146 MPa plateau (project value = its lower end) | **3.0 mS/cm** | Cronau 2021 ACS Energy Lett. 6, 3072, **SI Fig. S2c** (µC-Li6PS5Cl 2.88–3.46 mS/cm, digitized — canon card) · ✅ checked 2026-09-25; the single-crystal label is 철회 (SELF-51 · CL-91) |
 | cold-pressed pellet (robust bracket) | **1–3 mS/cm** | Boulineau 2012 (1.33), Frontiers 2021 (dry 2.39 / wet 1.0–1.9) |
 | densified / sintered / annealed | **3–6 mS/cm** (up to 6.11) | Yu 2018 (3.15→4.96), Zhou 2020 (6.11) |
 - Key: measured (cold-pressed) σ UNDER-estimates true bulk by ~1 order at low stack pressure
-  (GB + contact resistance) → >50 MPa needed for reliable σ (Cronau 2021).  Mirrors our DEM
-  σ_grain=3.0 × Cronau(r_SE) GB factor.
+  (GB + contact resistance) → >50 MPa needed for reliable σ (Cronau 2021).  Our σ_grain
+  3.0 is itself such a high-stack-pressure pellet value (Cronau(r_SE) = model assumption — SELF-51).
 
 ## Density
 - **1.64 g/cm³** theoretical (argyrodite cubic F-43m; Yu 2018 + Ampcera/MSE datasheet).

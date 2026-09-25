@@ -123,7 +123,7 @@ pressure sintering"(Li⁺·PS₄³⁻ 이온이 입계로 확산·회전)으로 
 | **E_SE** | **18–25 GPa**, 75Li₂S·25P₂S₅ = **24 GPa** (초음파, stated) | real-bulk **22–24** / E_eff **1.35**(DEM)·**1.53**(MPM) | ★ **우리 real 24의 원전.** 1.35/1.53 = 이 24의 *연화 프록시*(granular 재배열 럼핑) — Sakuda가 real E가 뻣뻣함을 *측정*으로 확정 |
 | **냉간 치밀화 물리** | "상온 가압소결"(이온 확산·유합, Fig 2·3 입계소멸) | DEM cold-press @300 + MPM 소성 void-fill·morphology | ★ **우리 모델 전제의 실험 토대.** Sakuda SEM(입자 유합)= 우리 MPM SHAPE 소성이 모사하려는 현상 |
 | **입자 거동** | 가압 시 입자 *유합·성장*(SHAPE 변화, SEM) | DEM=강체 구(형상 불변, δ 프록시) / MPM=진짜 SHAPE 소성 | **Sakuda는 진짜 SHAPE 변화를 관찰** → 우리 강체-구 DEM 한계를 *실험이 직접 지적* → MPM이 메우는 것이 옳음(frame[5]) |
-| **σ** | 냉간 0.31 / bulk 0.34 mS/cm (75Li₂S·25P₂S₅) | σ_grain **3.0 mS/cm**(Cronau LPSCl 단결정) | **소재가 다름**: Li₃PS₄ glass σ(~0.3) ≪ LPSCl(~1–3) — σ는 argyrodite가 ~10× 높음. **σ 절대값 전이 금지**, σ-vs-P *형태*만 |
+| **σ** | 냉간 0.31 / bulk 0.34 mS/cm (75Li₂S·25P₂S₅) | σ_grain **3.0 mS/cm** (Cronau 2021 SI µC-LPSCl 펠릿 — ~~단결정~~ 라벨 철회, SELF-51) | **소재가 다름**: Li₃PS₄ glass σ(~0.3) ≪ LPSCl(~1–3) — σ는 argyrodite가 ~10× 높음. **σ 절대값 전이 금지**, σ-vs-P *형태*만 |
 | **σ-vs-P 형태** | 70 MPa 급상승→포화(Fig 4) | Heckel knee P_y 138; Bazzoun σ-포화@400; Doux 접촉@~25 MPa | **같은 계열**(접촉↑→σ↑→수확체감) — frame[4] 추세 교차검증 |
 | **porosity floor / Heckel 수치** | n/a (밀도곡선만, fit·floor 수치 없음) | rigid-sphere floor ~20 %; Heckel R²0.965 | Sakuda는 fit 안 함 — 곡선 자체가 우리 Heckel/DPC 타깃 *형태* 제공 |
 

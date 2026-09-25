@@ -1,5 +1,10 @@
 # Cronau 2021 (ACS Energy Lett. 6, 3072−3077) — Stack-pressure 딜레마: 미세결정 황화물 SE의 "신뢰할 수 있는" σ_ion 측정법
 
+> ⛔ **이 리포 사본은 2026-07-28 판이다 — 정본 카드가 2026-09-25 에 SI 로 정정됐다** (`claims.json` `CL-91` · 원장 `SELF-51`).
+> 아래의 *"3.0 은 이 논문에 없다 · Li₆PS₅Cl 미측정 · 최고값은 µC-Li₆PS₅Br"* 판정은 **철회** — SI 그림 S2c 에 µC-Li₆PS₅Cl 펠릿
+> (적층압 ≥146 MPa 평탄 2.88–3.46 mS/cm, 판독) 이 있고 σ_grain 3.0 은 그 하단이다.  *단결정이 아니다* 는 판정은 그대로다.
+> 인용 금지 — 정본 `litdb/papers/cronau2021_stack_pressure_ionic_conductivity.md` (friendly-meitner-lldvar) 를 볼 것.
+
 **인용:** M. Cronau, M. Szabo, C. König, T. B. Wassermann, B. Roling\*,
 "How to Measure a Reliable Ionic Conductivity? The Stack Pressure Dilemma of
 Microcrystalline Sulfide-Based Solid Electrolytes," *ACS Energy Letters*

@@ -43,7 +43,7 @@ LPSCl 양극 EIS σ_ionic = **Pwd 0.087 / S-Pwd 0.079 / PTFE 0.064 / NBR 0.042 m
 production 범위(**~0.04–0.18**) 안에 정확히 들어가고, Bazzoun(0.065–0.137)과 합쳐 **LPSCl+NCM σ_ionic
 엔벨로프 ≈ 0.04–0.14**를 형성 → **우리 DEM 출력이 그 안에 앉는다.**  조성추세도 정합(coverage/φ_SE↓→σ↓:
 Pwd LPSCl-coverage 35%/σ 0.087 → NBR 26%/σ 0.042).  bulk LPSCl **1.87** mS/cm도 (Bazzoun pellet 1.02,
-Cronau single-crystal 3.0) 사이 = GB-incl 다결정 범위로 일관.  ⇒ **audit #1: 1점 외삽(Bazzoun) → 2독립
+~~Cronau single-crystal 3.0~~ Cronau 2021 SI µC 펠릿 3.0 — SELF-51 철회) 사이 = 펠릿끼리의 분산.  ⇒ **audit #1: 1점 외삽(Bazzoun) → 2독립
 EIS 데이터셋이 둘러싸는 다점 검증.**
 ⏳ 잔여(point-to-point): 압력 차(Hong 350 / Bazzoun 400 / 우리 300 MPa) + Hong vol% 미제공 → 엔벨로프
 정합이지 1:1은 아님; 압력·vol%→φ_SE 매핑하면 점대점 확정.  하지만 **절대값 검증은 사실상 닫힘**(envelope).
@@ -182,9 +182,10 @@ SE 접촉망(Kirchhoff/Holm)** → **절대값 전이 금지**.  ⇒ #286은 **�
 - **#1 (σ_ionic 절대값) ✅✅** — Bazzoun + #271 + #266 = 3 독립 LPSCl+NCM EIS가 우리 DEM(~0.04–0.18)을
   감싸는 엔벨로프 ~0.03–0.14 형성.
 - **★ Tier-1 Cronau 2021 (σ_grain 출처) — 값 OK / 라벨 3중 오류** (`docs/lit_cronau2021_stack_pressure_ionic_conductivity.md`):
-  우리 σ_grain=3.0 mS/cm "**Cronau 2022 Li6PS5Cl single-crystal**"은 **(i) 연도 2022→2021, (ii) 소재 Cl→실제 Br
-  (그 논문은 Li6PS5Cl 미측정; Li6PS5Br만), (iii) "single-crystal" 거짓 — 전부 GB-포함 pellet σ**.  실제 최댓값은
-  µC-Li6PS5Br **2.40 mS/cm**(550℃ anneal, 392MPa-fab).  ⇒ **값 3.0은 방어가능**(2.4 plateau + 타 LPSCl 1–6 문헌
+  우리 σ_grain=3.0 mS/cm 의 옛 라벨 (연도 2022 · *단결정* — 철회) 은 **(i) 연도 2022→2021, ~~(ii) 소재 Cl→실제 Br
+  (그 논문은 Li6PS5Cl 미측정; Li6PS5Br만)~~, (iii) "single-crystal" 거짓 — 전부 GB-포함 pellet σ**.  ~~실제 최댓값은
+  µC-Li6PS5Br 2.40 mS/cm(550℃ anneal, 392MPa-fab)~~  ⛔ 정정 2026-09-25 (SELF-51 · CL-91): (ii) 와 최댓값 문장은 본문만 본
+  판정이라 철회 — SI 그림 S2c 에 µC-Li6PS5Cl 펠릿 고적층압 평탄 2.88–3.46 mS/cm (판독) 이 있고 3.0 은 그 하단이다.  ⇒ **값 3.0은 방어가능**(2.4 plateau + 타 LPSCl 1–6 문헌
   blend, well-sintered 상단) but **라벨 정정 필요**(연도·Br·GB-pellet; NOT single-crystal).  Cronau(r_SE) 서브-µm
   sigmoid도 **반경법칙 아님**(논문은 σ-vs-radius 미플롯) — 실제는 **결정성(sintering) class 효과**(µC→GB gap→σ↓)
   → 방향만 맞고 breakpoint(0.5/0.3/0.1/0.03µm)는 **경험적 외삽** → "particle-size decay"를 **"crystallinity/

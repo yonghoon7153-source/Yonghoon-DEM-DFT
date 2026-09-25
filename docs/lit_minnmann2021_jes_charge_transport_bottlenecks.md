@@ -77,7 +77,7 @@ CLAUDE.md / our_dem_baseline.md / comparison_vs_ours.md 가 "Minnmann ~14 %", "�
 ### 2.1 재료 (intrinsic 물성 — 우리 σ_grain 교차점)
 | 재료 | 물성 | 값 | 비고 |
 |---|---|---|---|
-| LPSCl (NEI) | **이온 bulk σ** | **1.6 mS/cm @ 25 °C** | EIS 측정 (★ 우리 Cronau 단결정 3.0 / Bazzoun pellet 1.02 / Lee 2.19 사이) |
+| LPSCl (NEI) | **이온 bulk σ** | **1.6 mS/cm @ 25 °C** | EIS 측정 (★ 우리 3.0 (~~Cronau 단결정~~ Cronau 2021 SI µC 펠릿 — SELF-51 철회) / Bazzoun pellet 1.02 / Lee 2.19 사이) |
 | LPSCl | **전자 bulk σ** | **1×10⁻⁶ S/cm** | DC polarization (이온의 1600×↓ → 전자 무시 가능) |
 | LPSCl (fine) | 밀링 σ | 1.6 → **1.2 mS/cm** | wet-mill(heptane/dibutyl-ether 8:1, 30:1 media, 200 rpm, 10 h) 후 약간↓ (GB/분해) |
 | NCM-622 (BASF) | **전자 partial σ** | **10 mS/cm** | SI Table S2; 이온 σ는 무시(혼합전도 무시 단순화) |
@@ -287,7 +287,7 @@ Fig 2a = σ_i,eff·σ_el,eff vs φ_NCM(0–100 %); Fig 2b = τ_i² vs φ_NCM. (a
 | **porosity** | **14 % (13–17 %)** @ dry-mix **380 MPa** (복합 양극) | pure-SE ~10 % / real_14 15.6 % @300 MPa | ★ 우리 앵커 출처 확정; **복합 13–17 %는 우리 real_14 15.6 %와 직접 정합**(±조건). pure-SE 10 %는 이 논문 아님 |
 | **σ_ion,eff** | **0.17 mS/cm @ 42 vol% NCM** (EIS-TLM, 측정 ~40 MPa) | DEM σ_ionic 0.04–0.18 mS/cm, envelope 0.03–0.14 | ★ **같은 소재 → 직접 비교 가능**; 0.17이 우리 상단(0.18)과 일치. 우리 솔버의 절대 앵커 |
 | **τ_ion** | **2.07** (=√(τ²=4.3)) @ 42 vol% | 우리 τ_Laplace,eff (솔버 geodesic/Laplace) | ★ **같은 정의(Eq 4 = σ_0·φ/σ_eff)**; ⚠ 그들 = constriction 미포함, 우리 = 솔버 의존 명시 필요. τ vs τ² 혼동 주의 |
-| **σ_grain (bulk)** | LPSCl **1.6 mS/cm @25°C** (제품 단결정/응집 EIS) | Cronau 단결정 **3.0** ×Cronau(r_SE) | 1.6 < 3.0 → 측정·GB·입자 차이. **Bazzoun 1.02 / Lee 2.19 / 이 논문 1.6** = bulk LPSCl 앵커 스프레드(절대 직접대조 금지, 범위로) |
+| **σ_grain (bulk)** | LPSCl **1.6 mS/cm @25°C** (제품 단결정/응집 EIS) | ~~Cronau 단결정~~ Cronau 2021 SI µC 펠릿 **3.0** ×Cronau(r_SE) (SELF-51 철회) | 1.6 < 3.0 → 측정·GB·입자 차이. **Bazzoun 1.02 / Lee 2.19 / 이 논문 1.6** = bulk LPSCl 앵커 스프레드(절대 직접대조 금지, 범위로) |
 | **CAM 전자 bulk** | NCM-622 **10 mS/cm** (SI S2) | NMC811 우리 σ_AM(e) Trevisanello 10/5 | ★ **우리 σ_e LOCKED endpoint 10 mS/cm 와 일치**(같은 NCM 계열) |
 | **CAM vol% 스윕** | 25–61 vol%, σ↓/τ↑(이온), 최적 42 | AM:SE 스윕 + Furnas + percolation | ★ CAM↑→σ_ion↓ 추세 일치; 42 vol% 최적 = 우리 core |
 | **utilization (dead)** | ion+e 둘 다 연결돼야 active; 고-CAM서 고립 | f_AM^cc / dead-AM / ionically-vulnerable | ★ **개념 동일** — 우리 dead-AM 경고의 실험 근거 |
@@ -316,7 +316,7 @@ Fig 2a = σ_i,eff·σ_el,eff vs φ_NCM(0–100 %); Fig 2b = τ_i² vs φ_NCM. (a
    25 vol%서 τ_el²=120(전자 percolation 실패) = 우리 σ_e percolation 항 검증점.
 4. **Stage-E constriction 기여 정량**: 그들 Eq 4 τ는 constriction 미포함 → 우리 Stage-E(Holm 구속) 포함
    σ_eff와 같은 구조서 비교하면 **Stage-E가 더하는 보정폭** 정량 가능 (Bazzoun RNM 과소 보정과 같은 lever).
-5. **bulk σ 스프레드 확장**: LPSCl 1.6 mS/cm 추가 → {Cronau 단결정 3.0, Lee pristine 2.19, 이 논문 1.6,
+5. **bulk σ 스프레드 확장**: LPSCl 1.6 mS/cm 추가 → {~~Cronau 단결정~~ Cronau 2021 SI µC 펠릿 3.0 (SELF-51 철회), Lee pristine 2.19, 이 논문 1.6,
    Bazzoun pellet 1.02} 의 측정/입자/GB 스프레드 (절대 직접대조 금지, 범위·민감도로만).
 6. **σ_e endpoint 확인**: NCM-622 전자 10 mS/cm = 우리 σ_e LOCKED 10 mS/cm 와 일치 → 우리 endpoint 재확인.
 

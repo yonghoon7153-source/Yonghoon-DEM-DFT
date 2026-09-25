@@ -30,10 +30,10 @@ EQUATION = r"""
   ┌───────────────────────────────────────────────────────────────────────┐
   │ FROZEN (literature / physics-derived)                                  │
   ├───────────────────────────────────────────────────────────────────────┤
-  │ σ_grain   = 3.0 mS/cm  project value, no literature source (SELF-51) │
+  │ σ_grain   = 3.0 mS/cm  project value = µC pellet plateau (SELF-51)    │
   │ Cronau(r) = 0.33 + 0.32σ(50(r−0.10))                                  │
   │                + 0.25σ(50(r−0.30))                                    │
-  │                + 0.10σ(50(r−0.50))     smooth 3-sigmoid        HIGH   │
+  │                + 0.10σ(50(r−0.50))     smooth 3-sigmoid  (no source)  │
   │ exponents (½, 2, ½, 3) for (φ_eff, CN, cov, f_p)   data-locked        │
   │ φc_P=0.200  φc_S=0.195  δ=0.040        joint screen on full corpus    │
   │ r_cut=3.5µm  α=2                       audit-midpoint AM_S/AM_P gap   │
@@ -55,7 +55,8 @@ Sub-definitions:
   f_intact   = 1 − fracture_aware_excluded_pct / 100   ← intact contact fraction
 
 Per-term meaning:
-  σ_grain · Cronau  — material baseline (σ_grain: project value, no source; Cronau(r): unverified — SELF-51)
+  σ_grain · Cronau  — material baseline (σ_grain: project value ≈ lower end of the Cronau 2021 SI Fig. S2c
+                      µC-Li6PS5Cl pellet plateau; Cronau(r): model assumption, values not in Cronau 2022 — SELF-51)
   (φ_eff)^½         — mean-field 3D percolation, well-above-threshold
   CN²               — Kirchhoff #paths × bond-strength (Holm parallel paths)
   cov_Hertz^½       — Holm 1967 constriction at elastic Hertz contact area

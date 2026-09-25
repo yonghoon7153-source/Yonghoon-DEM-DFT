@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""σ_electronic Stage 22 — lock σ_AM = 50 (Trevisanello literature reference)
+"""σ_electronic Stage 22 — lock σ_AM = 50 (project value — no literature source; the Trevisanello label was unsupported, SELF-51)
 and test if form STRUCTURE still matches data shape.
 
-User insight (2026-06-02): σ_ionic uses single fixed σ_grain=3 (Cronau)
+User insight (2026-06-02): σ_ionic uses single fixed σ_grain=3 (project value — SELF-51)
 and shape matches perfectly.  σ_e fits σ_S=9.13, σ_P=4.14 LIVE — 2 free
 endpoint parameters that can absorb structural form errors.  This test:
 
-  1. LOCK σ_AM = 50 mS/cm (Trevisanello NCM811 single-crystal literature)
+  1. LOCK σ_AM = 50 mS/cm (project value; measured NCM σ_e = 4.1 (Wang 2018) · 5.22 mS/cm (Ketter 2025) — SELF-51)
   2. APPLY Trevisanello NCM(r) grain-size correction:
        NCM(r) = 1 / (1 + (r/2)^1.5)
        NCM_mix = (1-p)·NCM_S + p·NCM_P  (linear, not geometric)

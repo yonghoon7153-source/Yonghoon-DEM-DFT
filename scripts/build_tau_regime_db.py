@@ -25,7 +25,7 @@ from __future__ import annotations
 import os, json, math, csv
 
 
-SIGMA_GRAIN_MS = 3.0  # mS/cm, LPSCl grain interior — project value, no literature source (SELF-51; the old "MLIP-MD [S4]" tag was unsupported)
+SIGMA_GRAIN_MS = 3.0  # mS/cm, LPSCl SE phase — project value (04-24 origin: own MLIP-MD estimate); = lower end of the Cronau 2021 SI Fig. S2c µC pellet plateau (SELF-51)
 
 
 def _find_meta(cid: str) -> dict:

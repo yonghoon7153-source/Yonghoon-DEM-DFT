@@ -302,7 +302,7 @@ Fig 7은 *타 논문 그림 재인용*. 따라서 σ/porosity 수치 CSV를 만�
 | **압력: 제조 vs 작동** | ★ **작동 수~수십 MPa**, 고압 상업화 불가 명시 | 우리 300 MPa = **제조(cold-press)** 표적 | ★ **중요 구분** — 우리 300 MPa는 *제조* 압력(2021 JES 380과 같은 regime). *작동* 압력(40 MPa)과 혼동 금지 |
 | **CAM 부피변화/균열** | NCM811 −5 %@4.3V, 이방성(Fig 5); 균열 SE=손실 | fracture(Auerbach) + dead-AM; AM_P 균열(92:8 8mAh 37–40 %) | ★ **부호 일치**(고체: 균열=손실). Trevisanello(액체=이득)와 반대 케이스로 우리 고체부호 재확인 |
 | **σ_e: CAM 종류 의존** | LFP 10⁻⁹·LMO 10⁻⁶·CuS 870 S/cm; carbon-free >60 vol% | σ_e Stage 22.5(NCM endpoint LOCKED) | 우리는 NCM만; 그들 CAM σ_e 스펙트럼이 σ_AM 입력화의 근거(Trevisanello 권고와 같은 방향) |
-| **σ_grain 상한** | sulfide ~25 mS/cm, halide ~1 mS/cm(cold-press) | σ_grain 3.0(Cronau 단결정); Bazzoun pellet 1.02 | ★ 우리 3.0(단결정)·Bazzoun 1.02(pellet)·halide 1·sulfide bulk 상한 25 = 일관된 스프레드 |
+| **σ_grain 상한** | sulfide ~25 mS/cm, halide ~1 mS/cm(cold-press) | σ_grain 3.0 (~~Cronau 단결정~~ Cronau 2021 SI µC 펠릿 — SELF-51 철회); Bazzoun pellet 1.02 | ★ 우리 3.0 (펠릿)·Bazzoun 1.02 (pellet)·halide 1·sulfide bulk 상한 25 = 스프레드 |
 | **시뮬레이션 방법** | ★ **없음**(설계 Perspective) | DEM Kirchhoff/Holm + MPM J2 | ★ **§5.4가 호명한 "결합 mechanical-echem-thermal 미세구조 모델"의 한 구현이 우리** |
 | **입자 형상** | "구형 CAM 패킹 유리" + "비구형 다시 생각" 권고(§5.4) | DEM 구만; MPM 진짜 SHAPE 소성 | ★ 형상이 미해결 설계축임을 이 논문도 인정 = 우리 MPM 가치 + frame[5] 확증 |
 

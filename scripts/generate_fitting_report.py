@@ -479,16 +479,17 @@ def generate_report(data_list, names, outdir):
     L.append("각 항이 무슨 물리를 잡고 있는지, 왜 그 지수/형태가 채택됐는지를 한 줄씩.\n")
 
     L.append("### σ_grain · Cronau(r_SE) — 재료 기준선")
-    L.append("- **σ_grain = 3.0 mS/cm** — **직접 근거 문헌이 없는 프로젝트 채택값**이다 (⛔ 2026-09-25 정정, SELF-51: "
-             "옛 표기 *'Cronau 2022 가 측정한 Li₆PS₅Cl single-crystal'* 은 사실이 아니었다 — Cronau 2021 에는 3.0 도 단결정도 "
-             "없고, Cronau 2022 는 Li₅.₅PS₄.₅Cl₁.₅ 입자크기 연구).  측정된 Li₆PS₅Cl 펠릿값 (입계 포함) 은 1.0–4.8 mS/cm.")
-    L.append("  pellet 값(1.3 mS/cm)이 아니라 grain interior 값을 써야 form이 '입자 안→입자 안'의 전도를")
-    L.append("  계산하는 게 됨. GB/접촉 손실은 다른 항이 따로 잡음.")
-    L.append("- **Cronau(r_SE)** — 입자 크기 보정 계수.  ⚠ **원문 미확인** (SELF-51) — Cronau 2022 는 Li₅.₅PS₄.₅Cl₁.₅ "
-             "볼밀링 연구라 계수값이 그 논문에 있는지 PDF 로 확인 전이다.")
+    L.append("- **σ_grain = 3.0 mS/cm** — 프로젝트 채택값.  가장 가까운 측정 = Cronau 2021 SI 그림 S2c 의 µC-Li₆PS₅Cl "
+             "**펠릿** 고적층압 (≥146 MPa) 평탄 2.88–3.46 mS/cm (판독) 의 하단.  입계 포함 펠릿값이지 단결정이 아니다 "
+             "(⛔ SELF-51 · CL-91: 옛 *'Cronau 2022 가 측정한 single-crystal'* 표기는 사실이 아니었고, 09-25 오후의 "
+             "*'Cronau 2021 에 3.0 없음'* 도 본문만 본 판정이라 철회 — SI 에 Li₆PS₅Cl 이 있다).")
+    L.append("  ⚠ 3.0 자체가 고압 펠릿값이라 순수 SE 수준의 입계 저항은 이미 들어 있다 — form 의 다른 항 (협착·cov) 이")
+    L.append("  잡는 것은 복합체 접촉 손실이다 (두 몫의 이중계상 여부는 미정량).")
+    L.append("- **Cronau(r_SE)** — 입자 크기 보정 계수 = **출처 없는 모델 가정** (SELF-51 — 정본 카드 cronau2022 로 원문 확인: "
+             "구간값이 그 논문에 없고, 논문 데이터는 σ 가 입경이 아니라 **밀링 손상**을 따른다).")
     L.append("  현행 식 값: r_SE ≥ 1µm ×1.00 · 0.5 ×0.95 · 0.3 ×0.78 · 0.1 ×0.49 · ≤30 nm ×0.34 (옛 표기 0.65/0.50 은 식과 달랐다).")
     L.append("  3개 sigmoid를 매끄럽게 이어붙인 형태 (불연속 piecewise 대신).")
-    L.append("  물리: 작은 입자는 표면 amorphization 비율이 커서 grain bulk 자체 conductivity가 낮아짐.\n")
+    L.append("  가정한 물리: 작은 입자일수록 밀링 비정질화 비율이 크다 (Cronau 2022 는 σ 저하를 밀링 손상·부분 비정질화로 해석).\n")
 
     L.append("### (φ_eff)^½ — Mean-field 3D percolation")
     L.append("- **φ = SE 부피분율**, **φc = SE percolation threshold (~0.20)**.")
@@ -549,8 +550,8 @@ def generate_report(data_list, names, outdir):
     L.append("### 항별 신뢰도 요약\n")
     L.append("| 항 | 신뢰도 | 근거 |")
     L.append("|---|---|---|")
-    L.append("| σ_grain | 근거 문헌 없음 | 프로젝트 채택값 (값은 측정 범위 1.0–4.8 안) — 옛 'Cronau 2022' 귀속은 사실이 아니었다 (SELF-51) |")
-    L.append("| Cronau(r_SE) | 미확인 | 원문 대조 전 (Cronau 2022 = Li₅.₅PS₄.₅Cl₁.₅ 연구) — SELF-51 |")
+    L.append("| σ_grain | 측정 근거 있음 (펠릿) | 프로젝트 채택값 = Cronau 2021 SI 그림 S2c µC 펠릿 평탄 (2.88–3.46) 의 하단 — 단결정 아님 (SELF-51) |")
+    L.append("| Cronau(r_SE) | 출처 없음 | 모델 가정 — 구간값이 Cronau 2022 원문에 없다 (SELF-51) |")
     L.append("| (φ_eff)^½ | MED-HIGH | mean-field 3D percolation; data-locked 91/91 |")
     L.append("| CN² | MED-HIGH | Kirchhoff network; locked 91/91 |")
     L.append("| cov_Hertz^½ | HIGH | Holm 1967 + Spearman 0.697>0.476 |")

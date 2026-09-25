@@ -73,7 +73,7 @@ import se_material  # single source of truth for σ_ion(SE) + its temperature co
 # (mpm_webapp_payload --sigma-ion-se).  Re-export it here so every STEP3 consumer reads the
 # same number/convention instead of a fresh 0.003 literal, and so the temperature helpers are
 # importable from the module that owns the solve.  docs/temp_pressure_capability.md T1-b.
-SIGMA_ION_SE_S_CM_25C = se_material.SIGMA_GRAIN_S_CM_25C   # 3.0e-3 S/cm = 3.0 mS/cm (Cronau)
+SIGMA_ION_SE_S_CM_25C = se_material.SIGMA_GRAIN_S_CM_25C   # 3.0e-3 S/cm = 3.0 mS/cm (project value = Cronau 2021 SI Fig. S2c µC pellet plateau, lower end — SELF-51)
 
 
 def sigma_ion_se_S_cm(T_C=None, ea_ev=None):

@@ -4269,11 +4269,12 @@ def _cov_frac(d, physics=True):
 # σ = C_blend(τ)·σ_grain(r_SE)·(φ_eff)^0.5·CN²·cov^0.5·f_p³, with a COMPOSITION-
 # dependent percolation threshold and near-threshold saturation, both blended
 # by the P:S sigmoid g_010 (same structure as C_blend(τ)).  σ_grain is the SE
-# MATERIAL property — size-dependent via the Cronau (2022) factor that the
-# Stage-E target itself applies, so the form mirrors how the target was built.
+# MATERIAL property — size-dependent via the Cronau(r_SE) factor (a model assumption: its
+# values are not in Cronau 2022 — SELF-51) that the Stage-E target itself applies, so the form
+# mirrors how the target was built.
 # Validated by nested CV (scripts/nested_cv_sat.py): unbiased SAT 0.949→0.953
 # (+0.0045, ~2.8× noise SE); × Cronau then adds Δ=+0.0043 at frozen φc/δ
-# (literature factor, no DoF, deterministic).
+# (fixed factor, no DoF, deterministic — not a literature value, SELF-51).
 # ★ σ_grain now comes from se_material (repo-wide single definition, declared at T_ref = 25 °C).
 # The VALUE IS UNCHANGED (3.0 mS/cm, bitwise) — `_sat_baselog` below is byte-for-byte the same
 # expression it has always been.  Temperature is applied ONLY by set_se_temperature() (opt-in,
@@ -4340,7 +4341,7 @@ def _sat_g010(p):
 
 
 def _cronau_factor(r_SE_um):
-    """Stage-E σ_ionic SE-size factor (Cronau 2022; from
+    """Stage-E σ_ionic SE-size factor (model assumption — not in Cronau 2022, SELF-51; from
     run_network_full_corrections.py:88).  Applied to σ_grain — the SE's
     intrinsic grain conductivity drops for sub-µm SE (amorphization).
     r≥0.5µm→1.00, 0.3–0.5→0.90, 0.1–0.3→0.65, 0.03–0.1→smooth interp, <0.03→0.33.

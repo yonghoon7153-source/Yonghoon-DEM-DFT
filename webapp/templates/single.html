@@ -2400,9 +2400,9 @@ const METRIC_TIPS = {
   // ───────── Stage E (literature-grounded σ_grain corrections) ─────────
   'σ_ionic — SE size factor': {
     title: 'σ_ionic — SE size factor (Cronau 2022)',
-    formula: 'f_SE_ionic = 1.0  if r_SE ≥ 0.5 μm\n              = (r_SE / 0.5)^0.5  if r_SE < 0.5 μm',
-    desc: 'SE 입자 크기에 따른 이온 전도도 σ_grain 의 보정 인자.\nLPSCl (Cronau 2022) 의 *grain-size-dependent ionic conductivity* 측정값 기반.\n0.5 μm 이상에서는 size-invariant (intrinsic σ_grain = 3.0 mS/cm @ T_ref 25 °C — 런이 --temp-c 로 풀렸다면 이 상수에 Arrhenius 배수가 곱해진다).\nSub-μm 에서는 amorphization + grain-boundary 밀도 증가로 감소.',
-    meaning: '본 ensemble 의 r_SE 분포 (0.25–1.5 μm) 에서 대부분 ×1.00.\nr_SE = 0.25 μm 인 fine-particle case 만 ×0.71 정도로 약간 감소.\nStage E channel 1 의 보정값 — σ_ionic_corrected = σ_baseline × f_SE_ionic.'
+    formula: 'f_SE_ionic = 1.00 (r_SE ≥ 0.5 μm) · 0.90 (0.3–0.5) · 0.65 (0.1–0.3)\n              · 0.33→0.65 linear (0.03–0.1) · 0.33 (< 0.03 μm)',
+    desc: 'SE 입자 크기에 따른 이온 전도도 σ_grain 의 보정 인자.\n모델 가정 — 구간값은 Cronau 2022 원문에 없다 (SELF-51).\n0.5 μm 이상에서는 size-invariant (intrinsic σ_grain = 3.0 mS/cm @ T_ref 25 °C — 런이 --temp-c 로 풀렸다면 이 상수에 Arrhenius 배수가 곱해진다).\nSub-μm 에서는 amorphization + grain-boundary 밀도 증가로 감소.',
+    meaning: '본 ensemble 의 r_SE 분포 (0.25–1.5 μm) 에서 대부분 ×1.00.\nr_SE = 0.25 μm 인 fine-particle case 만 ×0.65 로 감소.\nStage E channel 1 의 보정값 — σ_ionic_corrected = σ_baseline × f_SE_ionic.'
   },
   'σ_e — AM crystal × size': {
     title: 'σ_e — AM crystal grain factor (Trevisanello 2021)',
@@ -2419,7 +2419,7 @@ const METRIC_TIPS = {
   'σ_ionic (Stage E corrected)': {
     title: 'σ_ionic (Stage E — full corrections)',
     formula: 'σ_ionic_E = σ_ionic_baseline × Σ(g_i · f_SE_size_i) / Σ g_i\n(channel-aware Bruggeman-style weighted mean)',
-    desc: 'Cronau 2022 의 SE size-dependent σ_grain 보정을 Network Solver 에 반영한 σ_ionic.\nBaseline 은 intrinsic σ_grain = 3.0 mS/cm @ T_ref 25 °C (Cronau 문헌 상수; --temp-c 런은 Arrhenius 로 스케일).\nStage E 는 각 SE 입자의 r_SE 에 따라 σ_grain 을 동적으로 조정.',
+    desc: 'SE 크기 보정 (모델 가정 — SELF-51) 을 Network Solver 에 반영한 σ_ionic.\nBaseline 은 intrinsic σ_grain = 3.0 mS/cm @ T_ref 25 °C (프로젝트 값 = Cronau 2021 SI 그림 S2c µC 펠릿 평탄의 하단; --temp-c 런은 Arrhenius 로 스케일).\nStage E 는 각 SE 입자의 r_SE 에 따라 σ_grain 을 동적으로 조정.',
     meaning: '본 ensemble median: 0.0987 mS/cm (baseline 0.1247 대비 −11.7%).\nfine SE (<0.7 μm) 에서 손실 가장 큼.\nΔ% < 0 = baseline 보다 낮음 (정상, factor ≤ 1 제약 만족).\n[⚡Bruggeman fallback] tag = 7-Layer 솔버의 직접 해가 numerically unstable 하여 weighted-mean 근사로 대체.'
   },
   'σ_electronic (Stage E corrected)': {

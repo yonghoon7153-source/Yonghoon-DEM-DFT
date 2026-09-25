@@ -25,4 +25,4 @@ threshold,AMGC_recommended_fab,400-500,NA,NA,NA,Fig5_text,caption_stated,irrever
 threshold,AMGC_recommended_stack_sputter,NA,5-10,NA,NA,Fig5_text,caption_stated,sputtered electrodes, after high fab
 threshold,AMGC_recommended_stack_WC,NA,30-50,NA,NA,Fig5_text,caption_stated,WC direct contact
 context,interlab_round_robin_spread,NA,NA,NA,NA,intro_ref23,caption_stated,~1 order of magnitude over 8 labs (Ohno/Zeier 2020)
-# PROVENANCE: 3.0 mS/cm single-crystal LPSCl is NOT in this paper (no single-crystal, no Cl measured, no r-law). See lit_cronau2021_*.md §0.
+# PROVENANCE: no single-crystal and no r-law in this paper.  ⛔ 2026-09-25 (SELF-51 · CL-91): "no Cl measured / 3.0 not in paper" was wrong (철회) — SI Fig. S2c has µC-Li6PS5Cl (stack >=146 MPa plateau 2.88-3.46 mS/cm, digitized) and 3.0 is its lower end. See canon card cronau2021_stack_pressure_ionic_conductivity.

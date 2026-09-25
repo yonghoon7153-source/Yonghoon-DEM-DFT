@@ -1284,7 +1284,7 @@ function createDerivationBox() {
   box.className = 'derivation-box';
         box.innerHTML = `
           <h4>📐 유효 이온전도도 — T1 production form (2026-05-29 최신)</h4>
-          <div class="deriv-desc" style="opacity:.7;margin-bottom:8px">n≈92 (multi-seed 추가 진행 중) | corpus에 live-refit | σ_grain=3.0 mS/cm @25 °C (Cronau 2022, Li₆PS₅Cl 단결정 — 코퍼스 전체가 25 °C 기준)</div>
+          <div class="deriv-desc" style="opacity:.7;margin-bottom:8px">n≈92 (multi-seed 추가 진행 중) | corpus에 live-refit | σ_grain=3.0 mS/cm @25 °C (프로젝트 값 = Cronau 2021 SI 그림 S2c µC-Li₆PS₅Cl 펠릿 평탄의 하단 · 단결정 아님 · 코퍼스 전체가 25 °C 기준)</div>
 
           <div class="deriv-section">
             <div class="deriv-label">Production Formula (T1, 2026-05-28 채택)</div>
@@ -1295,8 +1295,8 @@ function createDerivationBox() {
 
           <div class="deriv-section">
             <div class="deriv-label">각 항의 물리</div>
-            <div class="deriv-desc"><b>σ_grain = 3.0 mS/cm</b>: Cronau 2022 Li₆PS₅Cl 단결정 grain conductivity (literature anchor, HIGH confidence)</div>
-            <div class="deriv-desc"><b>Cronau(r_SE)</b>: 3-sigmoid 부드러운 SE 크기 보정. r_SE ≥ 0.5μm 평탄(=1), sub-µm 영역 amorphization 감쇠 (Cronau 2022 piecewise smooth)</div>
+            <div class="deriv-desc"><b>σ_grain = 3.0 mS/cm</b>: 프로젝트 값 — Cronau 2021 SI 그림 S2c 의 µC-Li₆PS₅Cl <b>펠릿</b> 고적층압 (≥146 MPa) 평탄 2.88–3.46 mS/cm (그림 판독) 의 하단.  단결정 측정이 아니다 (SELF-51)</div>
+            <div class="deriv-desc"><b>Cronau(r_SE)</b>: 3-sigmoid 부드러운 SE 크기 보정. r_SE ≥ 1 μm 평탄(=1), sub-µm 영역 감쇠 (모델 가정 — 구간값은 Cronau 2022 원문에 없다, SELF-51)</div>
             <div class="deriv-desc"><b>(φ_eff)^½</b>: SAT-blend percolation. φ_eff = √[(φ−φc_eff)² + (δ·g_phys)²] — 0:10 corner 안전성 위한 disorder rounding</div>
             <div class="deriv-desc">  └ φc_eff = (1−g_phys)·0.200 + g_phys·0.195 (composition-dependent threshold)</div>
             <div class="deriv-desc">  └ g_phys = (min(r_cut/r_AM_eff, 1))^α, α=2, r_cut=3.5µm — POWER GATE (label-free, smooth)</div>

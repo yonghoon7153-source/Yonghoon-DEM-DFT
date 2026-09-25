@@ -1229,7 +1229,7 @@ def main():
                          'skin 가정의 기하 상한을 수송모델로 구현.  기본 OFF = SE-투명(σ_i=σ_ion_se): '
                          '실제 skin 2-10nm sub-voxel이라 1-voxel 차단은 40-200× 과대표현(이중계상).')
     ap.add_argument('--sigma-ion-se', type=float, default=se_material.SIGMA_GRAIN_S_CM_25C,
-                    help='σ_ion SE (S/cm) = 3.0 mS/cm LPSCl grain (Cronau — production σ_grain anchor). '
+                    help='σ_ion SE (S/cm) = 3.0 mS/cm LPSCl (production σ_grain = lower end of the Cronau 2021 SI Fig. S2c µC pellet plateau; not single-crystal — SELF-51). '
                          f'★ declared AT T_ref = {se_material.T_REF_C:.0f} °C (se_material convention); '
                          '--temp-c multiplies THIS value by the Arrhenius factor.')
     ap.add_argument('--collector-rint', type=float, default=-1.0,

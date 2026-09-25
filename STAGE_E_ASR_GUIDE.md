@@ -116,7 +116,7 @@ DEM + Network solver 까지는 "입자가 perfect crystal 이고 σ_grain 은 �
 
 **무엇을 설명하나**: 이 케이스의 SE 입자 반경 r_SE=0.5μm 의 σ_ionic 보정 인자.
 
-**물리** (Cronau 2022, *Adv. Energy Mater.*):
+**물리** (⛔ SELF-51: 옛 출처 *"Cronau 2022, Adv. Energy Mater."* 는 틀렸다 — 저널도 다르고 (Batteries & Supercaps) 그 논문에 아래 구간값이 없다.  아래는 **모델 가정**이다):
 - LPSCl (sulfide) 의 σ_grain 은 **r_SE ≥ 0.5μm 에서 size-invariant** = 3.0 mS/cm
 - 그 이하 (< 0.5μm) 는 ball-milling amorphization 으로 σ ↓
   - r_SE = 0.25μm: factor ≈ 0.65 (~35% 감소)

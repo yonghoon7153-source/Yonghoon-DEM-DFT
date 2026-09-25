@@ -77,7 +77,7 @@ JES** 복합양극 **13–17%**@380 MPa(NCM622+LPSCl), **Sakuda 2013** 황화물
 **σ_ionic 외부 절대 앵커(frame[4]).**  같은 NCM/LPSCl 계에서 실험 σ가 우리 DEM σ_ionic(0.04–0.18 mS/cm)을 *둘러싼다*:
 **Minnmann 2021** 0.17 @42 vol% NCM(+ τ_ion 2.07=√(τ²=4.3), Eq4 = 우리 τ_Laplace,eff 정의), **Bazzoun 2026**
 0.137/0.101/0.065 @f_CAM 70/75/80(EIS@400 MPa), **Kim 2025**(우리-랩) R_ion 분해 62/72/82 wt%, **interfacial-impedance
-(Choi/Samsung 2024)** TLM 분해.  bulk LPSCl σ 앵커 스프레드 {Cronau 3.0(단결정) · Lee2025 2.19 · Minnmann/Kim2025 1.6 ·
+(Choi/Samsung 2024)** TLM 분해.  bulk LPSCl σ 앵커 스프레드 {Cronau 3.0 (~~단결정~~ SI µC 펠릿 — SELF-51 철회) · Lee2025 2.19 · Minnmann/Kim2025 1.6 ·
 Bazzoun 1.02(펠릿)} — 절대 직접대조 금지, 스프레드로만.
 
 **솔버 골격이 우리와 동일(frame[4] 독립 재현).**  네 편이 우리 `network_conductivity.py`의 골격을 *독립적으로 재현*한다:

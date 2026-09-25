@@ -1147,7 +1147,8 @@ def inject_stage_e_rows(tables, metrics):
     """Append a 'Stage E (literature-grounded grain corrections)' section
     showing the per-channel σ_grain factors applied + corrected σ values.
 
-    Three orthogonal corrections per Cronau 2022 / Trevisanello 2021 / Wang 2022:
+    Three orthogonal corrections (old labels "Cronau 2022 / Trevisanello 2021 / Wang 2022" were never
+    checked against an original — model assumptions, SELF-51):
       σ_ionic : SE r_SE-dependent (size-invariant ≥ 0.3 μm in our range)
       σ_e     : AM crystallinity (AM_S=1.0, AM_P=0.65)
       κ       : AM crystallinity (AM_S=1.0, AM_P=0.50), SE size-invariant
@@ -1260,8 +1261,8 @@ def inject_stage_e_rows(tables, metrics):
             '  σ_ionic — SE size factor',
             '',
             f'r_SE={r_se:.2f}μm   ×{f_se_ionic:.2f}',
-            'Cronau 2022 — size-invariant ≥0.5μm' if f_se_ionic >= 0.99
-            else f'Cronau 2022 — sub-μm amorphization'
+            'size-invariant ≥0.5μm (model assumption)' if f_se_ionic >= 0.99
+            else f'sub-μm amorphization (model assumption)'
         ])
 
     # σ_e correction — always emit (— placeholder for missing factors)
@@ -2024,7 +2025,7 @@ _PAPER_SECTION_MAP = {
     '── 응력 ──':
         '── 응력 분포 (Particle-stress distribution — von Mises) ──',
     '── Stage E (literature-grounded σ_grain corrections) ──':
-        '── Stage E · 문헌 기반 σ_grain 보정 (Stage E — Literature-grounded σ_grain corrections, Cronau / Trevisanello / Wang) ──',
+        '── Stage E · σ_grain 보정 (Stage E — σ_grain corrections; model assumptions, not literature values) ──',
     '── Cell-level ASR (Ohm slab: R = L_cathode / σ) ──':
         '── 셀 단위 ASR · 두께·전도도 슬랩 (Cell-level area-specific resistance — Ohm slab: R = L_cathode / σ) ──',
 }
@@ -2138,7 +2139,7 @@ _PAPER_LABEL_MAP = {
         'von-Mises stress ratio, ⟨σ_VM⟩_SE / ⟨σ_VM⟩_all',
     # Stage E (already paper-style; tightened wording only)
     'σ_ionic — SE size factor':
-        'σ_ionic correction — SE-size factor (Cronau 2022)',
+        'σ_ionic correction — SE-size factor (model assumption)',
     'σ_e — AM crystal × size':
         'σ_e correction — AM-crystallinity × size factor (Trevisanello 2021)',
     'κ — AM crystal × size + SE':

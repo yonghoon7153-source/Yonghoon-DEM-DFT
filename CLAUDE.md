@@ -427,10 +427,12 @@ GPU 런을 막았다** (규율 검사는 런 시작 **전에** 걸린다) — �
 **⑥ 원문을 보지 않은 서지는 채우지 않는다** (2026-09-25, 원장 `SELF-51` · `CL-90`).  실사고: 04-29 코드 주석에 원문 확인 없이
 들어간 *"Wang 2020, J. Power Sources 470"* 이 NCM 경도 · NCM 영률 140 GPa · LPSCl 영률 24 GPa **세 값의 출처**로 퍼졌고, 원고 SI
 표에서는 **제목까지 지어 붙은 채** 공저자 검토에서 *"검색해도 안 나온다"* 로 발견됐다 (반박 대응 노트 · 논문 초고 · 웹앱 툴팁에도
-있었다).  같은 표의 다른 `Ref.` (Cronau 2021 → 3.0 mS/cm) 도 원문에 그 값이 없었다 — 우리 정본 카드가 이미 그렇게 적고 있었는데
-원고 표를 카드와 대조하지 않았다.  ⇒ 서지·수치는 **원문 PDF 로 확인한 litdb 정본 카드**에서만 가져온다.  카드가 없으면 제목 ·
-권호 · 값을 채우지 말고 `[미확인]` 으로 둔다.  검색 요약·기억으로 만든 서지를 원고 · 표 · 반박 노트 · 웹앱 문구에 넣지 않는다.
-지어진 인용이 드러나면 `claims.json` `quotation_ban` 에 올려 스윕이 막게 한다.
+있었다).  ⚠ 같은 날 나는 같은 표의 다른 `Ref.` (Cronau 2021 → 3.0 mS/cm) 도 *"원문에 그 값이 없다"* 고 적었는데 **그것도 틀렸다**
+(철회 — `CL-91`) — 정본 카드가 **본문만** 읽었고, 값은 **SI 그림 S2c** (µC-Li₆PS₅Cl 펠릿, 고적층압 평탄) 에 있었다.  틀린 것은 값이
+아니라 *"단결정"* 라벨이었다.  ⇒ 서지·수치는 **원문 PDF (SI 포함) 로 확인한 litdb 정본 카드**에서만 가져오고, *"원문에 없다"* 는
+판정은 **SI 까지 본 뒤에만** 쓴다.  카드가 없으면 제목 · 권호 · 값을 채우지 말고 `[미확인]` 으로 둔다.  검색 요약·기억으로 만든 서지를
+원고 · 표 · 반박 노트 · 웹앱 문구에 넣지 않는다.  지어진 인용이 드러나면 `claims.json` `quotation_ban` 에 올려 스윕이 막게 한다 —
+**쟀지만 다른 양인 인용** (펠릿값을 *"단결정"* 으로) 도 같다 (`CL-91`).
 
 ## ★★★ DEM ↔ MPM Complementary Simulation Frame (FINALIZED 2026-06-07) ★★★
 
@@ -541,9 +543,13 @@ the other; their agreement quantifies model trust.
   정본 `docs/voxel_contact_free_gap.md`.  접촉망은 접촉마다 **Holm `R = 1/(2σa)`** 를 직렬로
   넣고 그것을 뺀 가지를 코드가 스스로 **`CONTACT_FREE — upper bound, ideal contact limit`**
   이라 부른다.  복셀 FV 는 면을 **harmonic mean** 으로만 잇는다 ⇒ SE 셀↔SE 셀 = 3.0 mS/cm,
-  **계면 저항 항이 정확히 0** 이고, 먹이는 σ 도 **grain-interior 가정값** 3.0 mS/cm 다 (펠릿 아님).
-  ⛔ 정정 2026-09-25 (원장 `SELF-51`) — 옛 표기 *"Cronau 단결정"* 은 사실이 아니었다: Cronau 2021 원문에 3.0 도 단결정도 없고
-  (측정은 Li₆PS₅Br 펠릿), Cronau 2022 는 Li₅.₅PS₄.₅Cl₁.₅ 연구다.  3.0 은 **직접 근거 문헌이 없는 프로젝트 채택값**이다.
+  **계면 저항 항이 정확히 0** 이다.  ~~먹이는 σ 도 grain-interior 가정값 3.0 mS/cm 다 (펠릿 아님)~~
+  ⛔ 정정 2026-09-25 밤 (원장 `SELF-51` · `CL-91`) — **먹이는 3.0 은 펠릿값이다**: Cronau 2021 **SI 그림 S2c** 의 µC-Li₆PS₅Cl
+  펠릿, 적층압 ≥146 MPa 평탄 2.88–3.46 mS/cm (판독) 의 하단.  옛 *"단결정"* 라벨은 거짓이었고 (철회), 같은 날 오후의 *"Cronau 2021
+  원문에 3.0 없음 · Br 만 측정"* 도 본문만 읽은 거짓 음성이었다 (철회).  ⇒ 순수 SE 펠릿 수준의 입계 저항은 입력 σ 안에 **이미 있고**,
+  펠릿의 잔류기공 벌점은 STEP3 의 명시 기공과 **부분 이중계상**될 수 있다 (반대 방향 · 크기 미상 — SI 에 밀도 없음).  아래의
+  *"CONTACT_FREE 상한"* 은 입력 펠릿에 없는 **복합체 접촉 저항**에 대한 서술로 한정하고, 기공 이중계상이 정량될 때까지 **엄밀한
+  상한**이라 부르지 않는다 (⬜ 재해석 = 저자 결정).
   ★ 크기는 **이미 저장돼 있었다** — `case_master.csv` 의 `R_brug_over_full`(= σ_cf/σ_full,
   이온 채널) **n=157 중앙값 4.04×(Hertz) · 6.69×(소성면적), 범위 2.3~13.6×**.
   ⛔ **철회 2026-09-13 (L2 판정 `SELF-24`·`L2-07`)** — 옛 문장 *"문헌 삼각측량: kim2025 EIS 의
@@ -1685,8 +1691,10 @@ p=AM_P fraction. C_blend(τ) still refits live; φc_P/φc_S/δ are FROZEN.
   (`run_network_full_corrections.py:88`), σ_grain depends on r_SE: 1.0 ≥0.5µm,
   0.90 at 0.3–0.5, 0.65 at 0.1–0.3, smooth to 0.33 ≤30nm. This is an SE
   MATERIAL property (amorphization at sub-µm), NOT a GB/geometric correction.
-  ⛔ 정정 2026-09-25 (`SELF-51`): *"literature factor"* 는 원문 대조가 없었다 — Cronau 2022 는 Li₅.₅PS₄.₅Cl₁.₅
-  볼밀링 연구라 이 계수값들이 그 논문에 있는지 PDF 확인 전이다.  (아래 원문은 이력으로 둔다.)
+  ⛔ 정정 2026-09-25 (`SELF-51`): *"literature factor"* 는 거짓이었다 — 정본 카드 `cronau2022_wet_milling_particle_size_ionic_conductivity`
+  로 원문 확인: Cronau 2022 (Li₅.₅PS₄.₅Cl₁.₅ 습식 볼밀링) 에 이 구간값들이 **없고** (최소 입경 ≈1 µm), 그 논문 자신의 데이터는 σ 가
+  입경이 아니라 **밀링 손상**을 따른다 (2 h → 50 h 에 입경은 ~1 µm 로 거의 그대로인데 σ 1.73 → 0.36 mS/cm, 본문 값).
+  ⇒ Cronau(r_SE) = **출처 없는 모델 가정** (값·동결은 그대로 — 폼을 바꿀지는 저자 결정).  (아래 원문은 이력으로 둔다.)
   Applied as a FIXED literature factor (no fit, no DoF) to the production
   σ_grain: `σ_grain_eff = 3.0 × Cronau(r_SE)` in `_sat_baselog`. LOOCV (frozen
   φc/δ) 0.9579 → 0.9622 (Δ=+0.0043, even with only 1/91 sub-0.5µm in the
@@ -1792,8 +1800,8 @@ Sub-definitions (all FROZEN):
   Cronau(r)  = 0.33 + 0.32·σ(50(r−0.10)) + 0.25·σ(50(r−0.30)) + 0.10·σ(50(r−0.50))
                                                     [smooth 3-sigmoid]
 Constants:
-  σ_grain = 3.0 mS/cm     (project value — no literature source; the old "Cronau 2022 single-crystal"
-                           label was false, SELF-51)
+  σ_grain = 3.0 mS/cm     (project value = lower end of the µC-Li6PS5Cl pellet plateau, Cronau 2021
+                           SI Fig. S2c; the old single-crystal label was false — SELF-51 · CL-91)
   φc_P = 0.200            (P-heavy threshold, FROZEN)
   φc_S = 0.195            (S-heavy threshold, FROZEN)
   δ = 0.040               (disorder rounding, FROZEN)
@@ -1803,8 +1811,8 @@ Constants:
 5 LIVE-fit params: (a, b, c, β_P2, β_F).  n=90/k=5 = 18:1 (safe).
 
 Per-term meaning & confidence:
-  σ_grain               —         project value, no literature source (SELF-51; old "Cronau 2022 single-crystal" was false)
-  Cronau(r_SE)          unverified  Cronau 2022 (Li5.5PS4.5Cl1.5 study) — factor values not checked against the PDF (SELF-51)
+  σ_grain               pellet    project value = lower end of Cronau 2021 SI Fig. S2c µC pellet plateau (2.88–3.46); not single-crystal (SELF-51)
+  Cronau(r_SE)          NONE      model assumption — values not in Cronau 2022 (checked vs PDF: σ follows milling damage, not size) (SELF-51)
   (φ_eff)^½             MED-HIGH  mean-field 3D percolation; data-locked 91/91
   CN²                   MED-HIGH  Kirchhoff #paths × bond-strength; locked 91/91
   cov_Hertz^½           HIGH      Holm 1967 + effective Li⁺ conduction area
@@ -1949,10 +1957,10 @@ with smooth label-free g_phys replacing g₀₁₀ (canonical):
   φ_eff    = √[(φ−φc_eff)² + (δ·g_phys)²]
   φc_eff   = (1−g_phys)·0.200 + g_phys·0.195
   C_blend(τ) = a + b·ln τ + c·(ln τ)²   (logpoly2, 3 OLS params live-fit)
-  δ=0.040; σ_grain=3.0 mS/cm; Cronau piecewise (literature)
+  δ=0.040; σ_grain=3.0 mS/cm; Cronau piecewise (model assumption — SELF-51)
 
 Adoption rationale (each change separately validated):
-  • Cronau(r_SE) σ_grain factor — (source unverified, SELF-51), +0.0048 LOOCV
+  • Cronau(r_SE) σ_grain factor — (model assumption, not in Cronau 2022 — SELF-51), +0.0048 LOOCV
   • f_small (smooth two-sigmoid) — replaces g₀₁₀ with size-derived gate;
     LOOCV equivalent (+0.0001) but no label-convention dependency
   • C_blend → logpoly2 (3 params instead of dual-branch 6) — +0.0020 LOOCV,
@@ -1968,7 +1976,7 @@ LOOCV that doesn't generalize.  Always benchmark against the FROZEN-φc
 LOOCV in `final_form_status.py`, not the nested-CV with re-selection.
 
 Confidence:
-  • σ_grain × Cronau(r_SE) — σ_grain: project value (no source) · Cronau(r): unverified (SELF-51)
+  • σ_grain × Cronau(r_SE) — σ_grain: project value = Cronau 2021 SI S2c µC pellet plateau (lower end) · Cronau(r): model assumption (SELF-51)
   • cov^½ — Holm 1967 constriction (HIGH literature)
   • CN² and (φ_eff)^½ — data-locked 91/91, derivable physics
   • f_p³ — 3D isotropy + Stauffer-Bruggeman backbone scaling

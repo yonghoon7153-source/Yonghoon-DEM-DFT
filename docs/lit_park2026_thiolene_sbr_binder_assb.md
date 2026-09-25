@@ -386,8 +386,8 @@ binder-cohesion 레버(E3) 보강 + (B) 같은-소재계 binder-disruption 정�
   **SI Note 1의 LPSCl 내성 테스트(pristine 2.6 → p-xylene 1.6 mS/cm)** = "시약이 LPSCl를 망치나"의
   **공정 안전성**(Li⁺-blocking 대칭셀)이지 양극 σ_ionic이 아니다. → **LPSCl+NCM σ_ionic 절대 앵커는
   여전히 #266/#271(Pwd 0.087/PTFE 0.064/NBR 0.042)·Bazzoun(0.065–0.137)이 보유**, #264는 합류 안 함.
-  (참고로 #264의 bulk LPSCl 2.6 mS/cm는 #271 pristine 1.87, Bazzoun pellet 1.02, Cronau 단결정 3.0과
-  같은 자릿수 — 셋·넷 다 GB-포함 다결정~단결정 LPSCl 범위. 단 이건 σ_grain 앵커 참고지 양극 σ 앵커 아님.)
+  (참고로 #264의 bulk LPSCl 2.6 mS/cm는 #271 pristine 1.87, Bazzoun pellet 1.02, Cronau 2021 SI µC 펠릿 3.0 (~~단결정~~ 라벨 철회, SELF-51) 과
+  같은 자릿수 — 넷 다 GB-포함 펠릿 LPSCl 범위. 단 이건 σ_grain 앵커 참고지 양극 σ 앵커 아님.)
 
 ### 비교 요약표
 | 축 | Park 2026 #264 (LPSCl+NCM ASSB, SBR thiol-ene) | 우리 (LPSCl ASSB, DEM+MPM) | 전이/판정 |

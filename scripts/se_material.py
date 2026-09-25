@@ -42,11 +42,17 @@ MUST be pinned.  This module implements ONLY the σ·T (Kraft) form.
 
 ★ T_ref = 25 °C is OUR CONVENTION DECISION, NOT AN ANCHOR ★
 ───────────────────────────────────────────────────────────
-σ_grain = 3.0 mS/cm is a PROJECT-ADOPTED value with NO direct literature source.
-⛔ Corrected 2026-09-25 (SELF-51): the old label "Cronau 2021/2022 (Li6PS5Cl single-crystal)"
-was false — Cronau 2021 (ACS Energy Lett. 6, 3072) reports no 3.0 mS/cm and measured no single
-crystal (pellets; the argyrodite it measured is Li6PS5Br), and Cronau 2022 (Batteries & Supercaps
-5, e202200041) studies ball-milled Li5.5PS4.5Cl1.5.  So "what °C is 3.0 mS/cm?" has no source at all.  We therefore DECLARE T_ref = 25 °C
+σ_grain = 3.0 mS/cm is a PROJECT-ADOPTED value.  Its nearest measurement is the µC-Li6PS5Cl
+PELLET plateau in Cronau 2021 (ACS Energy Lett. 6, 3072) SI Fig. S2c — 2.88–3.46 mS/cm at stack
+pressure ≥146 MPa (digitized; canon card cronau2021_stack_pressure_ionic_conductivity); 3.0 is its
+lower end.  A GB-inclusive pellet value, NOT a single crystal.  An 8-lab round robin on one Li6PS5Cl
+batch (Ohno 2020, SI Table S11) spans 0.44–2.98 mS/cm with 3.0 at its top.  (Origin: the 04-24
+import cited an own MLIP-MD estimate, 300 K perfect crystal — raw data not in the repo.)
+⛔ Corrected twice (SELF-51 · CL-91): the old single-crystal label was false, and the 2026-09-25
+afternoon line "Cronau 2021 reports no 3.0 / measured only Li6PS5Br" was also wrong (철회) — it read
+the main text only; the SI has GC- and µC-Li6PS5Cl.  Cronau 2022 (Batteries & Supercaps 5, e202200041)
+studies ball-milled Li5.5PS4.5Cl1.5.  The canon card does not record the temperature of the S2c
+(CompreCell) measurement, so "what °C is 3.0 mS/cm?" stays open.  We therefore DECLARE T_ref = 25 °C
 and re-state 3.0 mS/cm as the prefactor under that convention.  The supporting (not
 proving) datum is Minnmann 2021 (LPSCl bulk 1.6 mS/cm @ 25 °C, 380 MPa fabrication) —
 one of the rare cards that states temperature AND pressure together.  If a future card
@@ -78,10 +84,11 @@ Selftest:  python3 scripts/se_material.py --selftest
 import math
 
 # ── LPSCl (Li6PS5Cl) argyrodite grain-interior ionic conductivity ──────────────
-# Project-adopted grain-interior value — NO direct literature source (SELF-51: the old
-# "Cronau single-crystal" label was false).  Not a pellet value; measured Li6PS5Cl pellets
-# (GB-inclusive, canon cards) span 1.0 (Bazzoun 2026) … 4.8 mS/cm (Cho 2024).  Declared at
-# T_REF_C (see header).
+# Project value used as the SE-phase σ.  Nearest measurement = µC-Li6PS5Cl PELLET plateau at
+# stack ≥146 MPa, 2.88–3.46 mS/cm (Cronau 2021 SI Fig. S2c, digitized) — 3.0 is its lower end.
+# NOT a single crystal (SELF-51 · CL-91: the old single-crystal label is 철회).  Other measured
+# Li6PS5Cl pellets (GB-inclusive, canon cards) span 1.0 (Bazzoun 2026) … 4.8 mS/cm (Cho 2024).
+# Declared at T_REF_C (see header).
 SIGMA_GRAIN_MS_CM_25C = 3.0        # mS/cm
 SIGMA_GRAIN_S_CM_25C = 3.0e-3      # S/cm  (same number, the unit the solvers use)
 
@@ -185,7 +192,8 @@ def provenance(T_C=None, ea_ev=None, T_ref_C=None, sigma_e_modelled=False):
         'Ea_band_eV': dict(EA_ION_EV_BAND),
         'trust': (
             'T_ref=25 °C is OUR CONVENTION, not an anchor — σ_grain=3.0 mS/cm is a project value '
-            'with no literature source (SELF-51; docs/temp_pressure_capability.md T1-b). '
+            '(lower end of the Cronau 2021 SI Fig. S2c µC-LPSCl pellet plateau; not single-crystal — '
+            'SELF-51; docs/temp_pressure_capability.md T1-b). '
             'Ea is a BAND 0.29-0.46 eV (1.8x wide = x2.47..x4.44 at 30->60 °C); single-value '
             'reporting is forbidden — sweep EA_ION_EV_BAND. '
             + ('T_dependence=NOT_MODELLED: sigma is the 25 °C value; a run at any other cell '

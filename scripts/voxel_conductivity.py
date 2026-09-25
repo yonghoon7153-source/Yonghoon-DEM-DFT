@@ -89,8 +89,10 @@ def _cg_solve(A, b, tol=1e-6, label=''):
 
 # Per-phase conductivity for the FV solve.  void = 0 always.  Units: ionic/electronic mS/cm, thermal W/m·K.
 # PROVENANCE (so these aren't magic numbers) — keep as-is; tighten citations for the manuscript later:
-#   • SE 3.0 (ionic)        = Cronau 2022 Li6PS5Cl single-crystal σ_grain (the DEM σ_grain).  ✅ literature.
-#   • AM 50 (electronic)    = project σ_AM (NCM811, Trevisanello 2021 — same value the DEM σ_e form uses). ✅
+#   • SE 3.0 (ionic)        = project σ_grain (the DEM σ_grain) = lower end of the µC-Li6PS5Cl PELLET plateau in
+#                             Cronau 2021 SI Fig. S2c — not single-crystal (SELF-51 · CL-91).
+#   • AM 50 (electronic)    = project σ_AM (same value the DEM σ_e form uses) — no literature source; measured
+#                             NCM σ_e 4.1 (Wang 2018) · 5.22 mS/cm (Ketter 2025) (SELF-51).
 #   • SuperP 1e5 / VGCF 5e5 (electronic) = 100 / 500 S/cm — carbon-black (~10–100 S/cm) & VGCF
 #       (~100–1000 S/cm) MATERIAL-conductivity literature BALLPARK, rounded O(magnitude) (⚠ not a single
 #       cited digit).  The exact value barely matters: the 200× contrast cap in effective_sigma clamps any

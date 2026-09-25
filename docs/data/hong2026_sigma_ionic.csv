@@ -3,7 +3,7 @@ Pwd,0.087,1.11,28.7,92.0,none,pristine powder no binder/solvent — closest anal
 S-Pwd,0.079,1.07,,87.1,solvent_only,solvent-exposed (butyl butyrate) no binder — solvent alone = minor loss
 PTFE,0.064,1.10,22.3,94.6,dry,confined fibril; void-suppress (28.7->22.3); = our additives.py PTFE; sigma 74% of Pwd (blocking-densification net)
 NBR,0.042,0.85,29.4,85.4,wet,extensive deep coverage; void-grow; PROCESS-SPECIFIC wet — NON-transferable to our dry-side trends
-bulk_LPSCl_pristine,1.87,,,,none,bulk SE pellet GB-incl (cf Bazzoun pellet 1.02 / Cronau single-crystal 3.0)
+bulk_LPSCl_pristine,1.87,,,,none,bulk SE pellet GB-incl (cf Bazzoun pellet 1.02 / Cronau 2021 SI µC pellet 3.0 — old single-crystal label 철회 SELF-51)
 bulk_LPSCl_solvent,0.53,,,,butyl_butyrate,28% retained after solvent exposure (XRD unchanged -> amorphization/surface not bulk crystal)
 # System: Li6PS5Cl (LPSCl) + NCM ASSB composite cathode, ~350 MPa assembly, EIS full-blocking. Source: Hong 2026 ESM 86 (2026) 104930, Table S1/S2.
 # USE: 2nd absolute sigma_ionic anchor (after Bazzoun 0.065-0.137). Our DEM production sigma_ionic ~0.04-0.18 mS/cm -> #271(0.042-0.087)+Bazzoun bracket it (envelope ~0.04-0.14). Pwd (no binder) is the cleanest comparison to our binder-free SE network.
