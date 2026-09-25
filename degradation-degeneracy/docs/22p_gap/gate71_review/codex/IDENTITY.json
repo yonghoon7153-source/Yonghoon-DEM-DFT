@@ -1,0 +1,29 @@
+{
+  "head": "4505b70c6e63453e0424239cac7d48488fee022a",
+  "code_target": "876429562f6a69b59793c70700cb5b375391ab67",
+  "status_before": "",
+  "tracked_DD_files": 2459,
+  "source_digest_independent_byte_calculation": "b705a21a1237ec73",
+  "source_digest_declared": "b705a21a1237ec73",
+  "scope_files": 57,
+  "code_to_head_scope_diff_bytes": 0,
+  "request_sha256": "9f8d453b7245000d67ec24fa26dbe1ecbc26397fa4730cc4da15307e945a9748",
+  "request_blob_equals_checkout": true,
+  "registry_disk_top_level_json": 367,
+  "registry_evidence_text_census": {
+    "legacy": 4,
+    "rekey": 12,
+    "fixture": 174,
+    "leg_L": 177,
+    "other": 0
+  },
+  "registry_keyset_census": {
+    "modern": 351,
+    "legacy": 16,
+    "other": 0
+  },
+  "registry_tracked_paths": 367,
+  "limits": "Registry census is a text/keyset classification, not independent verification of the historical scientific runs.",
+  "project_modules_imported": 0,
+  "main_runs_restores_class_changes": 0
+}

@@ -1,0 +1,190 @@
+{
+  "scope": "Gate71 receiver review artifacts; not executable authorization",
+  "payload": [
+    {
+      "path": "CLAUDE_REPLY_GATE71.md",
+      "bytes": 5177,
+      "sha256": "f5ccba23a9c1747dae27ac3c130922744dc6443cabe2bbd6dddfbf3d42119fc4"
+    },
+    {
+      "path": "CODE_TO_HEAD_SCOPE.diff",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "collect_evidence.py",
+      "bytes": 3488,
+      "sha256": "8ea400facddb69b79f38d62fe128b5fa89e1ef12b7ecd2c17202d7d2492d5b0c"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 2399,
+      "sha256": "1f6b62b85a3300f4292fe3b0d4ab90ab5c5afc112ba361c82e25e3f9c04bdec0"
+    },
+    {
+      "path": "E10_TO_HEAD.diff",
+      "bytes": 59355,
+      "sha256": "2ed05ead74df392ffeb6078a76a4d61a0626031ca2266919e5d8b7e875c40fb5"
+    },
+    {
+      "path": "EXCERPT_IDENTITIES.json",
+      "bytes": 1569,
+      "sha256": "03ac1a03ccd445703db910e6728a9d032b2973bbd34370ad28ce5b812468fa51"
+    },
+    {
+      "path": "GATE71_REQUEST_GIT_BLOB.md",
+      "bytes": 22939,
+      "sha256": "9f8d453b7245000d67ec24fa26dbe1ecbc26397fa4730cc4da15307e945a9748"
+    },
+    {
+      "path": "GATE71_REVIEW_KO.md",
+      "bytes": 13810,
+      "sha256": "9320977f9b6b3a286510a1268d47b96767c7d04846568eae605ad9eb7c791e24"
+    },
+    {
+      "path": "IDENTITY.json",
+      "bytes": 991,
+      "sha256": "78931806304f6832af73060ff53ed61631bc2e7a8763d94fcc5f957b0ab641df"
+    },
+    {
+      "path": "identity_check.py",
+      "bytes": 4273,
+      "sha256": "eb696ab6dae410d2d3b0298da3de51d8b0fb549a50152c72deb179063f1a4aaa"
+    },
+    {
+      "path": "package_review.py",
+      "bytes": 2274,
+      "sha256": "6cb38742f4013522aeac465a390febab5238bba9b17923709f0c7f3231a64fae"
+    },
+    {
+      "path": "PRESERVATION_AFTER.json",
+      "bytes": 1170,
+      "sha256": "8bdc1bb1b683c52da43b7ca3438340cd64d48728f2556f281f6c6f2d8cfd1e90"
+    },
+    {
+      "path": "READER_CHECKS.json",
+      "bytes": 8319,
+      "sha256": "cc9cc5066ebb169f0162471df58b91afbe3c9dc55ed675ee04c59acc132e4aab"
+    },
+    {
+      "path": "receiver_reader_checks.py",
+      "bytes": 8238,
+      "sha256": "d1b18329cfa233ee1fff4237e61ea1735f4cd6c205cf7ee1a745d925c9d84619"
+    },
+    {
+      "path": "receiver_readonly_inputs/R00_real_receipt_control.yaml",
+      "bytes": 3768,
+      "sha256": "fb89da4b85f05801ae58a46ed58cbd209f0119a79a6b4674e69ab026eeaef676"
+    },
+    {
+      "path": "receiver_readonly_inputs/R01_wrong_leg_control.yaml",
+      "bytes": 3765,
+      "sha256": "3a1ba5fd72d4f11c9eb216f4b246e05fa3924fa1ed77ff116e17874e7796930d"
+    },
+    {
+      "path": "receiver_readonly_inputs/R02_wrong_core_hash_control.yaml",
+      "bytes": 3770,
+      "sha256": "de0d7246d8e178cc06e88110f15e41b6dcf49fe5060d255c6ac670579b3e8f71"
+    },
+    {
+      "path": "receiver_readonly_inputs/R03_validator_fail_control.yaml",
+      "bytes": 3769,
+      "sha256": "ca6c3a24ccc666c89652fe39c0265f302c9165dcfaa0a31733285d2d0900c716"
+    },
+    {
+      "path": "receiver_readonly_inputs/R04_missing_sealed_summary.yaml",
+      "bytes": 3387,
+      "sha256": "23a8cf35d5298b8e83fea487e159bdd1d5fd4d54a5a4b4bfbb6fea164c122574"
+    },
+    {
+      "path": "receiver_readonly_inputs/R05_disagreeing_semantic_pair.yaml",
+      "bytes": 3770,
+      "sha256": "ff76f139188b9254f4677d55990507c41786e47da382d0efe413b290e7b34577"
+    },
+    {
+      "path": "receiver_readonly_inputs/R06_wrong_source_fits.yaml",
+      "bytes": 3770,
+      "sha256": "9c2327797ba39dfaaca6df84c33f409d3e4c595c1c0488de3bdad14248508174"
+    },
+    {
+      "path": "receiver_readonly_inputs/R07_wrong_restore_run.yaml",
+      "bytes": 3763,
+      "sha256": "cee8d2de022e8a4cea982d21a4ebbca107c86c38a8a27804418a9c233c94e637"
+    },
+    {
+      "path": "receiver_readonly_inputs/R08_nonhex_semantic.yaml",
+      "bytes": 3716,
+      "sha256": "f317131ff688845f47a1daf0efe112cbf0be265abf257894b88d450e5fe30429"
+    },
+    {
+      "path": "receiver_readonly_inputs/R09_missing_source_fits.yaml",
+      "bytes": 3679,
+      "sha256": "1ca8e216b0a725be20852be22c179debae3b777cb2875396bc73d59b9c2fef08"
+    },
+    {
+      "path": "receiver_readonly_inputs/R10_declared_identity_null.yaml",
+      "bytes": 3756,
+      "sha256": "f18abbcfcd96c23755f7e3d92cc977aa3c9a66465ce699dfb507a6e6d41cf76e"
+    },
+    {
+      "path": "receiver_readonly_inputs/unsupported_index.json",
+      "bytes": 3,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    },
+    {
+      "path": "RUN_SCOPE_DIFF.diff",
+      "bytes": 30927,
+      "sha256": "3e594daa13d11de89863bd4fdcb899b20d0e020125b28a861422ccbad8021211"
+    },
+    {
+      "path": "SOURCE_BEFORE.json",
+      "bytes": 533395,
+      "sha256": "068cb8b4f78448a1c75eff3f4c9e38f36e0ae964f7d13ecfb69740ef7c5cc8f9"
+    },
+    {
+      "path": "source_excerpts/docs__22p_gap__GATE71_REQUEST.md.txt",
+      "bytes": 22701,
+      "sha256": "95729c4bae2882429aeb07d4b53609c3a6e03b5c3d8886e00c9071d624555234"
+    },
+    {
+      "path": "source_excerpts/docs__22p_gap__make_receipt.py.txt",
+      "bytes": 11307,
+      "sha256": "cbdb63261706ad024eee6d704efa4c587c38f2afd7aabaf5095988db693dd88f"
+    },
+    {
+      "path": "source_excerpts/run.sh.txt",
+      "bytes": 10102,
+      "sha256": "2bfa98b2184472c295d56e7407ad8309f4d2d6e1ecfebdc72e95e2dcdab2be20"
+    },
+    {
+      "path": "source_excerpts/src__fitting.py.txt",
+      "bytes": 1753,
+      "sha256": "1f65ab786cc954271daaed7d2d3733d4601dd0c7199f92c4a433203e66b817b4"
+    },
+    {
+      "path": "source_excerpts/src__grid.py.txt",
+      "bytes": 1680,
+      "sha256": "f24b13000a3f0012dcb389f1974e6a642bf544cb2d0fb53a6a79931af223ea3a"
+    },
+    {
+      "path": "source_excerpts/tests__conftest.py.txt",
+      "bytes": 10280,
+      "sha256": "74439454d091138b1f598ef4f8056828bfc896843dd35623bb2e696b7381dd5d"
+    },
+    {
+      "path": "source_excerpts/tests__test_gate70_defensive.py.txt",
+      "bytes": 8216,
+      "sha256": "66154c690279a29a4b2462bd9b52d5f728da3469a9f6842652858001e4129c34"
+    },
+    {
+      "path": "source_excerpts/tools__preserve.py.txt",
+      "bytes": 34839,
+      "sha256": "129108b09ee94dad721e035d96a170b1307e128a38fef6823729108b9588345b"
+    },
+    {
+      "path": "TESTS_AND_DOCS.diff",
+      "bytes": 71474,
+      "sha256": "fa6578453198699e135318d4eabf224a7d4749d2da810ae1b74162fca1032409"
+    }
+  ]
+}

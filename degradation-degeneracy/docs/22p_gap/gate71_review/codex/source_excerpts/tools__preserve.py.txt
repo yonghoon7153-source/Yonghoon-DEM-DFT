@@ -1,0 +1,531 @@
+SOURCE: tools/preserve.py
+SOURCE_SHA256: f327dcede8cbe7747790826c2d49f47ff9eb5513b301508e0dabe585be19624f
+COMMIT: 4505b70c6e63453e0424239cac7d48488fee022a
+
+### 4947-5038
+4947:     return _seal_exec_class_record(path, cid, cls)
+4948: 
+4949: 
+4950: #: ★ 70차 E5 — 실행 class 등록 레코드의 **닫힌 typed variant** 둘.
+4951: #:
+4952: #:   modern — `_record_execution_class_locked()` 가 62차 P0-1 이후 쓰는 형태.
+4953: #:            `sealed` 는 "봉인(`.run_identity.json`)과 함께 등록됐다" 는 사실이고,
+4954: #:            그 결속은 `content_id` 자체다: 승격은 `_promotion_content_id()` 가
+4955: #:            **봉인에서** identity 를 다시 만들어 이 키와 맞추므로, 봉인이 없거나
+4956: #:            낡으면 이 레코드에 닿지 못한다 (62차 P0-1). 그래서 봉인 digest 를
+4957: #:            레코드에 따로 적지 않는다 — 적으면 같은 사실을 두 곳에 두는 것이다.
+4958: #:   legacy — 62차 이전(`sealed` 키가 생기기 전)의 레코드. 저장소의 tracked
+4959: #:            등록부에 16건 있고(58차 legacy 분류 4 · re-key 12), 전부
+4960: #:            2026-09-04~09-09 에 적혔다. **새로 만들어지지 않는다** — writer 는
+4961: #:            항상 modern 을 쓴다.
+4962: #:
+4963: #:   리뷰어(70차)는 두 키(`content_id`·`execution_class`)만 있는 레코드와
+4964: #:   `sealed=[]`·`evidence=17`·`recorded_at=false`·임의 추가 키가 있는 레코드를
+4965: #:   원래 reader 가 **수용**하는 것을 실측했다. 그 reader 는 class enum 과
+4966: #:   content_id 만 봤다. 여기서부터 키 집합·타입이 닫힌다.
+4967: EXEC_CLASS_RECORD_KEYS_MODERN = frozenset(
+4968:     {"content_id", "execution_class", "evidence", "recorded_at", "sealed"})
+4969: EXEC_CLASS_RECORD_KEYS_LEGACY = frozenset(
+4970:     {"content_id", "execution_class", "evidence", "recorded_at"})
+4971: _EXEC_CLASS_RECORDED_AT = re.compile(r"\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z\Z")
+4972: 
+4973: 
+4974: def _typed_exec_class_record(rec, content_id: str, where) -> dict:
+4975:     """레코드가 닫힌 variant 중 하나인지 **타입까지** 확인한다 (70차 E5).
+4976: 
+4977:     통과하면 그 dict 를 그대로 돌려주고, 아니면 `PreserveError` — `None` 이
+4978:     아니다. 등록부 안의 잘못된 레코드는 "없음" 이 아니라 **authority 의 손상**
+4979:     이고, 없음으로 읽으면 `classify_legacy_run()` 같은 "없으면 만든다" 경로가
+4980:     그 위에 새 판단을 얹는다.
+4981:     """
+4982:     def _bad(why: str) -> PreserveError:
+4983:         return PreserveError(
+4984:             "promote",
+4985:             f"실행 class 등록 레코드가 닫힌 typed variant 가 아니다 ({where}): "
+4986:             f"{why} — modern {sorted(EXEC_CLASS_RECORD_KEYS_MODERN)} 또는 legacy "
+4987:             f"{sorted(EXEC_CLASS_RECORD_KEYS_LEGACY)} 만 authority 다 (70차 E5). "
+4988:             "class 를 정할 수 없으므로 거부한다")
+4989:     if not isinstance(rec, dict):
+4990:         raise _bad(f"dict 가 아니다 ({type(rec).__name__})")
+4991:     keys = frozenset(rec)
+4992:     if keys == EXEC_CLASS_RECORD_KEYS_MODERN:
+4993:         variant = "modern"
+4994:     elif keys == EXEC_CLASS_RECORD_KEYS_LEGACY:
+4995:         variant = "legacy"
+4996:     else:
+4997:         raise _bad(f"키 집합 {sorted(keys)}")
+4998:     if rec["execution_class"] not in EXEC_CLASSES:
+4999:         raise _bad(f"execution_class={rec['execution_class']!r}")
+5000:     if not _is_hex64(rec["content_id"]):
+5001:         raise _bad("content_id 가 hex64 가 아니다")
+5002:     if rec["content_id"] != content_id:
+5003:         raise _bad(f"content_id {str(rec['content_id'])[:16]}… 가 조회 키 "
+5004:                    f"{content_id[:16]}… 와 어긋난다")
+5005:     if not (isinstance(rec["evidence"], str) and rec["evidence"].strip()):
+5006:         raise _bad(f"evidence 가 비어 있지 않은 문자열이 아니다 ({type(rec['evidence']).__name__})")
+5007:     if not (isinstance(rec["recorded_at"], str)
+5008:             and _EXEC_CLASS_RECORDED_AT.match(rec["recorded_at"])):
+5009:         raise _bad(f"recorded_at={rec['recorded_at']!r} (UTC `%Y-%m-%dT%H:%M:%SZ` 가 아니다)")
+5010:     if variant == "modern" and type(rec["sealed"]) is not bool:
+5011:         raise _bad(f"sealed={rec['sealed']!r} 는 bool 이 아니다 (truthiness 로 읽지 않는다)")
+5012:     return rec
+5013: 
+5014: 
+5015: def _read_exec_class_at(p: Path, content_id: str) -> dict | None:
+5016:     if not p.is_file():
+5017:         return None
+5018:     # ★ 60차 P1-1 — **이름이 둘인 레코드는 authority 가 아니다.**
+5019:     #
+5020:     #   게시 경로를 아무리 고쳐도 crash 로 남은 alias 는 있을 수 있다. 그때
+5021:     #   읽는 쪽이 그것을 그대로 받으면 방어가 없는 것과 같다 — 두 번째 문으로
+5022:     #   내용을 바꾸고도 등록부가 authority 인 척한다. 층을 둘로 둔다.
+5023:     _st = os.stat(p, follow_symlinks=False)
+5024:     if _st.st_nlink != 1:
+5025:         raise PreserveError(
+5026:             "promote",
+5027:             f"등록 레코드의 이름이 {_st.st_nlink}개다 ({p}) — 같은 내용을 "
+5028:             "가리키는 두 번째 문이 있으면 그리로 쓴 값이 등록부의 답이 된다. "
+5029:             "authority 는 이름이 하나여야 한다 (60차 P1-1). 남은 alias 를 "
+5030:             "지우고 다시 읽으라")
+5031:     # ★ 70차 E5 — 읽을 수 없거나 형식이 닫힌 variant 밖이면 **`None` 이 아니라
+5032:     #   오류**다. 60차까지는 `None`("없음")으로 접었고, 그래서 두 키만 있는
+5033:     #   레코드·타입이 틀린 레코드가 통과했다 (리뷰어 실측). 파일이 있는데 못
+5034:     #   읽는 것은 "없음" 과 다른 사실이다.
+5035:     try:
+5036:         rec = json.loads(p.read_text(encoding="utf-8"))
+5037:     except (OSError, ValueError) as exc:
+5038:         raise PreserveError(
+
+### 7380-7407
+7380: #: 묶음 주장이 담아야 할 필드. 하나라도 있으면 **전부** 있어야 하고, 전부
+7381: #: 디스크에서 다시 계산해 맞아야 한다.
+7382: BUNDLE_EVIDENCE_KEYS = ("bundle_uri", "bundle_files", "payload_bytes",
+7383:                         "payload_index", "payload_index_sha256")
+7384: 
+7385: 
+7386: LIFECYCLE_OWNED_EVIDENCE_KEYS = ("phases", "attempt_id", "run_spec_digest",
+7387:                                   "attempt_verifier", "verifier_origin")
+7388: 
+7389: 
+7390: def _assert_evidence_domain(evidence: dict) -> None:
+7391:     """caller evidence 의 **도메인을 닫는다** (58차 L10).
+7392: 
+7393:     이 다섯은 lifecycle 이 정하는 값이다. 그 중 셋은 지금 나중에 덮어쓰므로
+7394:     caller 가 줘도 무해해 **보인다** — 그러나 그것은 "덮어쓰는 순서" 에 기댄
+7395:     안전이고, 순서가 바뀌면 조용히 뚫린다. 특히 `verifier_origin` 은 일부러
+7396:     약한 migration 경로를 표시하는 값이라(57차 P0-5), caller 가 쓸 수 있으면
+7397:     정상 기록과 migration 기록이 **유일한 provenance 표시로 구분되지 않는다.**
+7398: 
+7399:     한 개만 막지 않고 **전부** 막는다. 하나만 막으면 나머지가 열려 있고,
+7400:     "지금은 무해하다" 는 다음 라운드의 결함이다.
+7401:     """
+7402:     bad = [k for k in LIFECYCLE_OWNED_EVIDENCE_KEYS if k in (evidence or {})]
+7403:     if bad:
+7404:         raise PreserveError(
+7405:             "plan",
+7406:             f"evidence 에 lifecycle 소유 키가 들어 있다: {bad} — 이 값들은 "
+7407:             "호출자가 정할 수 없다 (원장에 봉인되는 provenance 다)")
+
+### 7563-7755
+7563:     # ★ 70차 E3 — index 를 **해석할 수 없으면 거부**한다. 60차는 `None`("이
+7564:     #   형식은 구성원을 열거하지 않는다")으로 양방향 대조를 건너뛰었고, 실물
+7565:     #   `payload_sha256.yaml`(YAML `경로: sha256`)이 정확히 그 경로로 빠졌다 —
+7566:     #   production 묶음에서 index↔묶음 대조는 한 번도 돈 적이 없었다 (리뷰어
+7567:     #   E3: "알 수 없는 index 형식을 완전 coverage 로 간주하지 말아야 한다").
+7568:     declared, why = _declared_index(idx)
+7569:     if declared is None:
+7570:         bad.append(
+7571:             f"payload index 를 해석할 수 없다 ({evidence['payload_index']}): {why} "
+7572:             "— 구성원을 열거하지 않는 index 는 `full_bundle` 의 근거가 아니다 "
+7573:             "(70차 E3, fail-closed)")
+7574:         return bad
+7575:     walked = {x.relative_to(d).as_posix() for x in member_paths if x != idx}
+7576:     only_walk = sorted(walked - set(declared))
+7577:     only_index = sorted(set(declared) - walked)
+7578:     if only_walk or only_index:
+7579:         bad.append(
+7580:             f"index 와 실제 묶음이 다르다 — index 가 모르는 구성원 "
+7581:             f"{only_walk}, 없는데 이름한 것 {only_index} (60차 P0-8)")
+7582:         return bad
+7583:     # ★ 70차 E3 — index 가 sha 를 적었으면 **바이트도** 대조한다. 개수·합계
+7584:     #   바이트·index 자신의 sha 만으로는 같은 길이의 다른 바이트를 못 잡는다
+7585:     #   (60차 P0-9 리뷰어 실측). `make_receipt.py` 가 `archive_bundle.check` 로
+7586:     #   같은 대조를 하지만 그것은 영수증 경로이고, 원장에 `full_bundle` 을 쓰는
+7587:     #   이 자리가 스스로 봐야 한다.
+7588:     mismatched = []
+7589:     for rel, want in sorted(declared.items()):
+7590:         if want is None:
+7591:             continue                       # 목록형 index — 이름만 열거한다
+7592:         got = hashlib.sha256((d / rel).read_bytes()).hexdigest()
+7593:         if not secrets.compare_digest(got, want):
+7594:             mismatched.append(f"{rel}: {got[:16]} ≠ index {want[:16]}")
+7595:     if mismatched:
+7596:         bad.append("묶음 구성원의 바이트가 index 와 다르다 (70차 E3): "
+7597:                    + "; ".join(mismatched[:6]))
+7598:     return bad
+7599: 
+7600: 
+7601: def _declared_index(idx: Path) -> tuple[dict | None, str | None]:
+7602:     """payload index 가 이름한 구성원 → 선언 sha (없으면 `None`) (70차 E3).
+7603: 
+7604:     받는 형식 셋 — 그 밖은 `(None, 이유)` 이고 호출자는 **거부**한다:
+7605:       · mapping `{상대경로: hex64}` — `tools/archive_bundle.py` 의
+7606:         `payload_sha256.yaml` (YAML; JSON 도 YAML 이므로 함께 읽힌다).
+7607:       · `{"members"|"files"|"payload": [상대경로, …]}` · `[상대경로, …]` — 이름만
+7608:         열거하는 목록형 (60차 시험 fixture 형식). sha 는 `None`.
+7609:     60차 `_declared_index_members()` 는 JSON 만 읽고 나머지를 `None` 으로
+7610:     돌려줬다 — 그 `None` 이 "대조 생략" 이었다. 이제 `None` 은 거부 사유다.
+7611:     """
+7612:     import yaml
+7613:     try:
+7614:         raw = idx.read_text(encoding="utf-8")
+7615:     except (OSError, UnicodeDecodeError) as exc:
+7616:         return None, f"읽을 수 없다: {exc}"
+7617:     try:
+7618:         body = yaml.safe_load(raw)
+7619:     except yaml.YAMLError as exc:
+7620:         return None, f"YAML/JSON 이 아니다: {str(exc).splitlines()[0]}"
+7621:     if isinstance(body, dict) and body:
+7622:         if all(isinstance(k, str) and k and _is_hex64(v) for k, v in body.items()):
+7623:             return dict(body), None
+7624:         for key in ("members", "files", "payload"):
+7625:             v = body.get(key)
+7626:             if isinstance(v, list) and v and all(isinstance(x, str) and x for x in v):
+7627:                 return {x: None for x in v}, None
+7628:         return None, f"mapping 인데 `경로: hex64` 도 목록형 키({'members'!r}·{'files'!r}·{'payload'!r})도 아니다"
+7629:     if isinstance(body, list) and body and all(isinstance(x, str) and x for x in body):
+7630:         return {x: None for x in body}, None
+7631:     return None, (f"구성원을 열거하지 않는다 ({type(body).__name__}"
+7632:                   f"{' 비어 있음' if not body else ''})")
+7633: 
+7634: 
+7635: 
+7636: # ═══════════════════════════════════════════════════════════════════════════
+7637: # ★ 70차 E3 — 검증 영수증(`docs/22p_gap/make_receipt.py`)의 **typed 소비**
+7638: # ═══════════════════════════════════════════════════════════════════════════
+7639: #: 영수증의 닫힌 key 집합 — `make_receipt.py` 가 쓰는 그대로. 남거나 모자라면 거부.
+7640: VERIFICATION_RECEIPT_KEYS = frozenset({"schema_version", "_주의", "core_sha256", "core", "stamp"})
+7641: VERIFICATION_RECEIPT_CORE_KEYS = frozenset(
+7642:     {"leg_id", "bundle", "restore", "validation", "identity", "outputs", "outputs_agree"})
+7643: VERIFICATION_RECEIPT_BUNDLE_KEYS = frozenset(
+7644:     {"uri", "files", "bytes", "payload_index", "payload_index_sha256",
+7645:      "member_rehash", "member_mismatches", "fits_sha256"})
+7646: VERIFICATION_RECEIPT_RESTORE_KEYS = frozenset(
+7647:     {"mode", "command", "files_written", "run_dir_relative", "conflicts"})
+7648: VERIFICATION_RECEIPT_VALIDATION_KEYS = frozenset(
+7649:     {"validator", "ok", "fail", "n_checks", "checks"})
+7650: VERIFICATION_RECEIPT_IDENTITY_KEYS = frozenset(
+7651:     {"validator_source_digest", "src_io_sha256", "src_scoring_sha256",
+7652:      "archive_bundle_sha256", "make_receipt_sha256", "row_projection_sha256",
+7653:      "row_projection_compute_sha256"})
+7654: VERIFICATION_RECEIPT_SCHEMA_VERSION = 2
+7655: VERIFICATION_RECEIPT_GENERATOR = "docs/22p_gap/make_receipt.py"
+7656: 
+7657: 
+7658: def _receipt_core_sha256(core: dict) -> str:
+7659:     """`make_receipt.py::_dump` 와 **같은 바이트**로 core 를 굳혀 해시한다."""
+7660:     import yaml
+7661:     return hashlib.sha256(
+7662:         yaml.safe_dump(core, allow_unicode=True, sort_keys=False, width=100)
+7663:         .encode("utf-8")).hexdigest()
+7664: 
+7665: 
+7666: def read_verification_receipt(path, leg_id: str, *, repo_root=None) -> dict:
+7667:     """검증 영수증을 **닫힌 schema 로** 읽어 이 다리의 것인지 확인한다 (70차 E3).
+7668: 
+7669:     돌려주는 것은 `core` (검증된 dict). 어긋나면 `PreserveError` — 부분 성공은
+7670:     없다. 보는 것:
+7671:       · 파일이 저장소 안의 정규 상대경로인가 (`_repo_relative_or_refuse`)
+7672:       · 최상위·core·bundle·restore·validation·identity 의 key 집합이 정확히 닫혔는가
+7673:       · `core_sha256` 이 core 바이트에서 다시 계산한 값과 같은가 (자기 일관성)
+7674:       · `core.leg_id == leg_id`
+7675:       · `validation.ok is True` · `fail == []` · `n_checks == len(checks)` · 검사 이름 정렬 unique
+7676:       · `restore.mode == "empty_root"` · `conflicts == 0` · `bundle.member_mismatches == 0`
+7677:       · `outputs` 에 `rescored_summary` 역할이 있고 모두 semantic digest 를 가졌으며 `outputs_agree is True`
+7678:       · `identity.validator_source_digest` 가 **지금** `source_digest()` 와 같은가
+7679:         (다른 검증기의 영수증은 "현행 검증" 이 아니다 — 낡은 영수증으로 원장을 올리지 않는다)
+7680:     """
+7681:     import yaml
+7682:     from src.io import source_digest as _sd
+7683: 
+7684:     root = Path(repo_root or REPO_ROOT)
+7685:     rp = _repo_relative_or_refuse(root, path, "verification_receipt")
+7686:     if not rp.is_file():
+7687:         raise PreserveError("plan", f"검증 영수증이 없다: {path}")
+7688: 
+7689:     def _bad(why: str) -> PreserveError:
+7690:         return PreserveError(
+7691:             "plan", f"{leg_id!r} 의 검증 영수증({path})이 typed schema 밖이다: {why} "
+7692:                     "— 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)")
+7693: 
+7694:     try:
+7695:         rec = yaml.safe_load(rp.read_text(encoding="utf-8"))
+7696:     except (OSError, UnicodeDecodeError, yaml.YAMLError) as exc:
+7697:         raise _bad(f"읽을 수 없다: {exc}") from exc
+7698:     if not isinstance(rec, dict) or frozenset(rec) != VERIFICATION_RECEIPT_KEYS:
+7699:         raise _bad(f"최상위 key 집합 {sorted(rec) if isinstance(rec, dict) else type(rec).__name__}")
+7700:     if rec["schema_version"] != VERIFICATION_RECEIPT_SCHEMA_VERSION:
+7701:         raise _bad(f"schema_version={rec['schema_version']!r}")
+7702:     core = rec["core"]
+7703:     if not isinstance(core, dict) or frozenset(core) != VERIFICATION_RECEIPT_CORE_KEYS:
+7704:         raise _bad(f"core key 집합 {sorted(core) if isinstance(core, dict) else type(core).__name__}")
+7705:     for name, want in (("bundle", VERIFICATION_RECEIPT_BUNDLE_KEYS),
+7706:                        ("restore", VERIFICATION_RECEIPT_RESTORE_KEYS),
+7707:                        ("validation", VERIFICATION_RECEIPT_VALIDATION_KEYS),
+7708:                        ("identity", VERIFICATION_RECEIPT_IDENTITY_KEYS)):
+7709:         got = core[name]
+7710:         if not isinstance(got, dict) or frozenset(got) != want:
+7711:             raise _bad(f"core.{name} key 집합 {sorted(got) if isinstance(got, dict) else type(got).__name__}")
+7712:     if not (isinstance(rec["core_sha256"], str) and _is_hex64(rec["core_sha256"])):
+7713:         raise _bad("core_sha256 이 hex64 가 아니다")
+7714:     if not secrets.compare_digest(_receipt_core_sha256(core), rec["core_sha256"]):
+7715:         raise _bad("core_sha256 이 core 바이트와 다르다")
+7716:     if core["leg_id"] != leg_id:
+7717:         raise _bad(f"다른 다리의 영수증이다 ({core['leg_id']!r})")
+7718:     v = core["validation"]
+7719:     if v["ok"] is not True or v["fail"] != []:
+7720:         raise _bad(f"검증이 통과를 말하지 않는다 (ok={v['ok']!r}, fail={v['fail']!r}) — "
+7721:                    "실패·부분 상태는 `full_bundle` 이 아니다")
+7722:     if not isinstance(v["checks"], dict) or not v["checks"] \
+7723:             or type(v["n_checks"]) is not int or v["n_checks"] != len(v["checks"]):
+7724:         raise _bad(f"n_checks={v['n_checks']!r} 가 checks({type(v['checks']).__name__}) 와 안 맞는다")
+7725:     r = core["restore"]
+7726:     if r["mode"] != "empty_root" or r["conflicts"] != 0:
+7727:         raise _bad(f"empty-root 복원 기록이 아니다 (mode={r['mode']!r}, conflicts={r['conflicts']!r})")
+7728:     b = core["bundle"]
+7729:     if b["member_mismatches"] != 0:
+7730:         raise _bad(f"member 불일치 {b['member_mismatches']!r} 를 기록했다")
+7731:     for k in ("files", "bytes"):
+7732:         if type(b[k]) is not int or b[k] <= 0:
+7733:             raise _bad(f"bundle.{k}={b[k]!r}")
+7734:     for k in ("payload_index_sha256", "fits_sha256"):
+7735:         if not _is_hex64(b[k]):
+7736:             raise _bad(f"bundle.{k} 가 hex64 가 아니다")
+7737:     outs = core["outputs"]
+7738:     if not isinstance(outs, list) or not outs:
+7739:         raise _bad("outputs 가 비었다")
+7740:     roles = set()
+7741:     for o in outs:
+7742:         if not isinstance(o, dict) or not _nonempty_str(o.get("semantic_sha256") or "") \
+7743:                 or not _nonempty_str(o.get("canonicalizer") or ""):
+7744:             raise _bad(f"산출 {o.get('role') if isinstance(o, dict) else o!r} 에 semantic digest/canonicalizer 없음")
+7745:         roles.add(o.get("role"))
+7746:     if "rescored_summary" not in roles:
+7747:         raise _bad("복원본 재채점 산출(`rescored_summary`)이 없다")
+7748:     if core["outputs_agree"] is not True:
+7749:         raise _bad(f"outputs_agree={core['outputs_agree']!r}")
+7750:     ident = core["identity"]
+7751:     now = _sd()
+7752:     if ident["validator_source_digest"] != now:
+7753:         raise _bad(f"영수증이 낡았다 — validator {ident['validator_source_digest']!r} ≠ 현행 "
+7754:                    f"{now!r}. `python3 {VERIFICATION_RECEIPT_GENERATOR} {leg_id}` 로 다시 만들라")
+7755:     return core
+
+### 7758-7885
+7758: def attach_bundle_evidence(leg_id: str, receipt_path, ledger=None, *,
+7759:                            repo_root=None) -> dict:
+7760:     """finalize 된 다리(`preservation_pending`)를 **영수증을 소비해** `full_bundle` 로 올린다 (70차 E3).
+7761: 
+7762:     순서 — 무엇 하나 어긋나면 원장에 아무것도 쓰지 않는다:
+7763:       1. 영수증을 typed 로 읽는다 (`read_verification_receipt`).
+7764:       2. 영수증이 말하는 묶음을 **디스크에서** 확인한다 (`_verify_declared_bundle`
+7765:          — 개수·바이트·index sha·index↔묶음 양방향·구성원 sha).
+7766:       3. 원장 lock 안에서: 이 다리의 실행 기록(`legs`)이 있어야 하고(finalize 먼저 —
+7767:          `unperformed` 는 올릴 수 없다), 상태가 `preservation_pending` 이거나 같은
+7768:          영수증으로 이미 `full_bundle` 이면 멱등, 다른 영수증이면 거부.
+7769:       4. lifecycle 이 남긴 evidence(phases·attempt·…)는 **그대로** 두고 묶음·영수증·
+7770:          검증기 identity 키만 더한다. `preservation_status=full_bundle`,
+7771:          `validation_status=current_validated` (현행 검증기로 통과한 것만 여기 온다 —
+7772:          계약 §8: current_validated ⇒ full_bundle). `inference_role` 은 건드리지
+7773:          않는다 (사람이 증거를 보고 올린다).
+7774: 
+7775:     `claim_roles`·`근거` 같은 사람의 문장은 쓰지 않는다 — docs-lint 가 그것을
+7776:     따로 요구하므로, 이 함수 뒤에 사람이 적어야 lint 가 초록이 된다. 그 순서를
+7777:     숨기지 않는다.
+7778:     """
+7779:     import yaml
+7780:     check_id(leg_id)
+7781:     root = Path(repo_root or REPO_ROOT)
+7782:     core = read_verification_receipt(receipt_path, leg_id, repo_root=root)
+7783:     b = core["bundle"]
+7784:     bundle_ev = {
+7785:         "bundle_uri": b["uri"],
+7786:         "bundle_files": b["files"],
+7787:         "payload_bytes": b["bytes"],
+7788:         "payload_index": b["payload_index"],
+7789:         "payload_index_sha256": b["payload_index_sha256"],
+7790:     }
+7791:     bad = _verify_declared_bundle(bundle_ev, repo_root=root)
+7792:     if bad:
+7793:         raise PreserveError(
+7794:             "plan", f"{leg_id!r} 의 영수증이 말하는 묶음이 실물과 다르다 — 원장에 쓰지 않는다:\n  "
+7795:                     + "\n  ".join(bad))
+7796:     fits = _repo_relative_or_refuse(root, b["uri"], "bundle_uri") / "fits.parquet"
+7797:     if not fits.is_file():
+7798:         raise PreserveError("plan", f"{leg_id!r} 묶음에 fits.parquet 이 없다")
+7799:     got_fits = hashlib.sha256(fits.read_bytes()).hexdigest()
+7800:     if not secrets.compare_digest(got_fits, b["fits_sha256"]):
+7801:         raise PreserveError(
+7802:             "plan", f"{leg_id!r} 묶음의 fits.parquet sha {got_fits[:16]} ≠ 영수증 {b['fits_sha256'][:16]}")
+7803:     rel_receipt = _repo_relative_or_refuse(root, receipt_path, "verification_receipt") \
+7804:         .relative_to(root).as_posix()
+7805:     core_sha = _receipt_core_sha256(core)
+7806: 
+7807:     path = canonical_ledger(ledger)
+7808:     with _ledger_lock(path):
+7809:         doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+7810:         legs = [e for e in (doc.get("legs") or []) if e.get("leg_id") == leg_id]
+7811:         if len(legs) != 1:
+7812:             raise PreserveError(
+7813:                 "plan", f"{leg_id!r} 의 실행 기록이 원장에 {len(legs)}개다 — finalize 로 닫힌 다리 "
+7814:                         "하나에만 묶음을 붙인다 (0 이면 `unperformed`: 먼저 실행·finalize 하라)")
+7815:         leg = legs[0]
+7816:         ev = dict(leg.get("evidence") or {})
+7817:         status = leg.get("preservation_status")
+7818:         if status == "full_bundle":
+7819:             if ev.get("verification_receipt_core_sha256") == core_sha \
+7820:                     and ev.get("verification_receipt") == rel_receipt:
+7821:                 return {"leg_id": leg_id, "preservation_status": "full_bundle",
+7822:                         "idempotent": True, "receipt_core_sha256": core_sha}
+7823:             raise PreserveError(
+7824:                 "plan", f"{leg_id!r} 은 이미 다른 영수증({str(ev.get('verification_receipt_core_sha256'))[:16]}…)"
+7825:                         f"으로 `full_bundle` 이다 — 영수증을 갈아 끼우지 않는다 (사람이 원장을 본다)")
+7826:         if status != "preservation_pending":
+7827:             raise PreserveError(
+7828:                 "plan", f"{leg_id!r} 의 preservation_status={status!r} 에는 묶음을 붙이지 않는다 "
+7829:                         "(`preservation_pending` 만 올린다; `recorded_projection`·`missing` 은 원자료가 없다)")
+7830:         for k in LIFECYCLE_OWNED_EVIDENCE_KEYS:
+7831:             if k not in ev:
+7832:                 raise PreserveError(
+7833:                     "plan", f"{leg_id!r} 의 실행 기록에 lifecycle 소유 키 {k!r} 가 없다 — "
+7834:                             "finalize 가 남긴 기록이 아니므로 그 위에 묶음을 붙이지 않는다")
+7835:         ev.update(bundle_ev)
+7836:         ev.update({
+7837:             "member_rehash_by": b["member_rehash"],
+7838:             "fits_sha256": b["fits_sha256"],
+7839:             "verification_receipt": rel_receipt,
+7840:             "verification_receipt_core_sha256": core_sha,
+7841:             "verification_receipt_generator": VERIFICATION_RECEIPT_GENERATOR,
+7842:             "empty_root_restore": True,
+7843:             "rescored_from_restored_fits": True,
+7844:             "validator_identity": {
+7845:                 "source_digest": core["identity"]["validator_source_digest"],
+7846:                 "n_checks": core["validation"]["n_checks"],
+7847:                 "ok": True,
+7848:             },
+7849:         })
+7850:         ev["bundle_content_id"] = bundle_content_id(ev, repo_root=root)
+7851:         leg["evidence"] = ev
+7852:         leg["preservation_status"] = "full_bundle"
+7853:         leg["validation_status"] = "current_validated"
+7854:         _atomic_write_text(path, yaml.safe_dump(doc, allow_unicode=True, sort_keys=False))
+7855:     return {"leg_id": leg_id, "preservation_status": "full_bundle",
+7856:             "validation_status": "current_validated", "idempotent": False,
+7857:             "receipt_core_sha256": core_sha}
+7858: 
+7859: 
+7860: def bundle_content_id(evidence: dict, repo_root=None) -> str:
+7861:     """검증한 묶음의 **내용 주소** (60차 P0-9).
+7862: 
+7863:     59차 M9 는 caller 의 dict 를 진입 시점에 정규 바이트로 굳혔다. 그런데 그
+7864:     dict 가 **가리키는 묶음**은 안 굳혔다 — 리뷰어는 검증 직후·ledger commit
+7865:     전에 member 하나를 같은 길이의 다른 바이트로 갈아 끼우고 그대로
+7866:     `full_bundle` 을 받았다.
+7867: 
+7868:     그래서 검증이 **무엇을 봤는지**를 값으로 만들어 봉인에 넣는다. 이름과
+7869:     바이트를 함께 담으므로, 나중에 바뀐 사실이 기록 자체에서 드러난다.
+7870: 
+7871:     **남는 한계**: 묶음이 mutable directory 인 한 "검증 → 봉인" 사이의 창 자체는
+7872:     없어지지 않는다. 없애려면 묶음을 immutable content-addressed object 로 먼저
+7873:     게시해야 하고, 그것은 이 라운드의 범위 밖이다 — 요청문에 적는다.
+7874:     """
+7875:     d = _bundle_root(evidence, repo_root)
+7876:     parts = []
+7877:     for x in sorted(d.rglob("*")):
+7878:         st = os.stat(x, follow_symlinks=False)
+7879:         if not stat.S_ISREG(st.st_mode):
+7880:             continue
+7881:         parts.append([x.relative_to(d).as_posix(),
+7882:                       hashlib.sha256(x.read_bytes()).hexdigest()])
+7883:     body = json.dumps({"kind": "bundle-content-id/v1", "members": parts},
+7884:                       sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+7885:     return hashlib.sha256(body.encode("utf-8")).hexdigest()
+
+### 8175-8221
+8175:         missing = [p for p in CLAIM_PHASES
+8176:                    if p not in (snap.get("phases") or {})]
+8177:         if missing:
+8178:             raise PreserveError(
+8179:                 "plan", f"{leg_id!r} 의 phase 가 남았다: {missing} — 모든 phase 가 "
+8180:                         "끝나야 executed 로 닫는다")
+8181:         # ★ 58차 L6 — **존재만 보지 않는다.** 소비자가 적어 둔 생산자 해시를
+8182:         #   지금 봉인하려는 생산자 receipt 와 대조한다. 어긋나면 그 짝은
+8183:         #   "이 fit 이 이 grid 를 보고 계산했다" 를 뜻하지 않으므로 닫을 수 없다.
+8184:         #
+8185:         # ★ 59차 M7 — 58차는 `if not _want: continue` 였다. 결속이 있으면
+8186:         #   검사하고 **없으면 넘어간다** — 그러면 그것은 검사가 아니라 선택
+8187:         #   사항이고, 결속 없는 durable state 는 아무 저항 없이 `executed` 가
+8188:         #   된다. 리뷰어가 `fit → grid` 역순으로 정확히 그 상태를 만들었다.
+8189:         #
+8190:         #   그러므로 **없으면 오류**다. 뒤 phase 는 자기보다 앞선 **모든**
+8191:         #   phase 를 결속해야 하고, 하나라도 빠지거나 어긋나면 닫지 않는다.
+8192:         _phases = snap.get("phases") or {}
+8193:         _order = list(CLAIM_PHASES)
+8194:         for _ph, _ent in _phases.items():
+8195:             if _ph not in _order:                          # pragma: no cover
+8196:                 continue                    # 도메인 검사는 `phase_done` 이 한다
+8197:             _before = _order[:_order.index(_ph)]
+8198:             if not _before:
+8199:                 continue                                   # 첫 phase 는 소비자가 아니다
+8200:             _consumed = _ent.get("consumed") or {}
+8201:             _missing = [p for p in _before if not _consumed.get(p)]
+8202:             if _missing:
+8203:                 raise PreserveError(
+8204:                     "plan",
+8205:                     f"{leg_id!r}: phase {_ph!r} 가 선행 phase {_missing} 를 "
+8206:                     "결속한 기록(`consumed`)이 없다 — 이 산출이 그 생산자를 보고 "
+8207:                     "계산했다고 말할 근거가 없으므로 닫을 수 없다. 역순 실행이나 "
+8208:                     "59차 이전 코드가 남긴 durable state 다 (59차 M7)")
+8209:             for _p in _before:
+8210:                 _want = _consumed[_p]
+8211:                 _got = hashlib.sha256(
+8212:                     _canon_json((_phases.get(_p) or {}).get("receipt"))
+8213:                     .encode("utf-8")).hexdigest()
+8214:                 if not secrets.compare_digest(str(_want), _got):
+8215:                     raise PreserveError(
+8216:                         "plan",
+8217:                         f"{leg_id!r}: phase {_ph!r} 는 {_p!r} receipt "
+8218:                         f"{str(_want)[:16]}… 를 보고 계산했는데 지금 봉인하려는 "
+8219:                         f"것은 {_got[:16]}… 다 — 생산자-소비자 결속이 끊긴 채로 "
+8220:                         "닫을 수 없다 (늦은 writer 가 덮었거나 durable state 가 "
+8221:                         "어긋났다)")
+
+### 8269-8295
+8269:             rec_evidence = dict(evidence)
+8270:             rec_evidence["verifier_origin"] = "normal_finalize"
+8271:             rec_evidence["phases"] = {ph: snap["phases"][ph]
+8272:                                       for ph in CLAIM_PHASES}
+8273:             rec_evidence["attempt_id"] = claim.attempt_id
+8274:             rec_evidence["run_spec_digest"] = claim.run_spec_digest
+8275:             # ★ 56차 P0-3 — 소유 증명의 **검증자를 원장에** 봉인한다. 55차까지
+8276:             #   그것은 claim 파일에만 있었고, 원장 commit 뒤 claim 삭제에서
+8277:             #   죽으면 인증할 근거가 사라져 재시도가 영영 막혔다 (리뷰어 실측:
+8278:             #   `finalize_retry FAILED: no claim to resume`). 원장이 스스로
+8279:             #   소유자를 확인할 수 있어야 claim 이 없어도 완주할 수 있다.
+8280:             rec_evidence["attempt_verifier"] = _token_verifier(token)
+8281:             # ★ 49차 P0-4 — 계약 §8 은 **세 축의 튜플**을 요구한다. 48차는
+8282:             #   `preservation_status` 하나만 적고 나머지를 비웠으므로 그 기록은
+8283:             #   `test_registry_rejects_impossible_status_tuples` 를 통과할 수
+8284:             #   없었다 — production 이 쓴 원장을 자기 lint 가 거부하는 상태였다.
+8285:             #   묶음을 확인하지 못한 다리는 `preservation_pending` 이고, 나머지
+8286:             #   두 축은 계약 제약이 강제하는 바닥값이다.
+8287:             doc.setdefault("legs", []).append(
+8288:                 {"leg_id": leg_id,
+8289:                  "preservation_status": "full_bundle" if claimed_bundle
+8290:                  else "preservation_pending",
+8291:                  # 묶음을 확인했어도 **검증**은 별개 단계다 (validator 가 복원해
+8292:                  # 재채점한다). finalize 는 그것을 하지 않았으므로 unvalidated 다.
+8293:                  "validation_status": PENDING_VALIDATION_STATUS,
+8294:                  "inference_role": PENDING_INFERENCE_ROLE,
+8295:                  "evidence": rec_evidence})
+

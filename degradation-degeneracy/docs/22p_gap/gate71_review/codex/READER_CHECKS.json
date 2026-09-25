@@ -1,0 +1,245 @@
+{
+  "scope": "Selected exact AST readers and one pure producer predicate; src.io digest stubbed to independent measurement. Not a full module/attach/restore/promotion run.",
+  "source_sha256": "f327dcede8cbe7747790826c2d49f47ff9eb5513b301508e0dabe585be19624f",
+  "selected_definitions": [
+    {
+      "name": null,
+      "line": 105,
+      "end_line": 105
+    },
+    {
+      "name": "PreserveError",
+      "line": 125,
+      "end_line": 131
+    },
+    {
+      "name": "_is_hex64",
+      "line": 153,
+      "end_line": 155
+    },
+    {
+      "name": "_nonempty_str",
+      "line": 3042,
+      "end_line": 3043
+    },
+    {
+      "name": null,
+      "line": 4233,
+      "end_line": 4233
+    },
+    {
+      "name": null,
+      "line": 4234,
+      "end_line": 4234
+    },
+    {
+      "name": null,
+      "line": 4235,
+      "end_line": 4235
+    },
+    {
+      "name": null,
+      "line": 4967,
+      "end_line": 4968
+    },
+    {
+      "name": null,
+      "line": 4969,
+      "end_line": 4970
+    },
+    {
+      "name": null,
+      "line": 4971,
+      "end_line": 4971
+    },
+    {
+      "name": "_typed_exec_class_record",
+      "line": 4974,
+      "end_line": 5012
+    },
+    {
+      "name": "_repo_relative_or_refuse",
+      "line": 7410,
+      "end_line": 7436
+    },
+    {
+      "name": "_declared_index",
+      "line": 7601,
+      "end_line": 7632
+    },
+    {
+      "name": null,
+      "line": 7640,
+      "end_line": 7640
+    },
+    {
+      "name": null,
+      "line": 7641,
+      "end_line": 7642
+    },
+    {
+      "name": null,
+      "line": 7643,
+      "end_line": 7645
+    },
+    {
+      "name": null,
+      "line": 7646,
+      "end_line": 7647
+    },
+    {
+      "name": null,
+      "line": 7648,
+      "end_line": 7649
+    },
+    {
+      "name": null,
+      "line": 7650,
+      "end_line": 7653
+    },
+    {
+      "name": null,
+      "line": 7654,
+      "end_line": 7654
+    },
+    {
+      "name": null,
+      "line": 7655,
+      "end_line": 7655
+    },
+    {
+      "name": "_receipt_core_sha256",
+      "line": 7658,
+      "end_line": 7663
+    },
+    {
+      "name": "read_verification_receipt",
+      "line": 7666,
+      "end_line": 7755
+    }
+  ],
+  "reader_cases": [
+    {
+      "id": "R00_real_receipt_control",
+      "input_sha256": "fb89da4b85f05801ae58a46ed58cbd209f0119a79a6b4674e69ab026eeaef676",
+      "reader_outcome": "ACCEPTED",
+      "core_returned_unchanged": true
+    },
+    {
+      "id": "R01_wrong_leg_control",
+      "input_sha256": "3a1ba5fd72d4f11c9eb216f4b246e05fa3924fa1ed77ff116e17874e7796930d",
+      "reader_outcome": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 의 검증 영수증(R01_wrong_leg_control.yaml)이 typed schema 밖이다: 다른 다리의 영수증이다 ('different_leg') — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+    },
+    {
+      "id": "R02_wrong_core_hash_control",
+      "input_sha256": "de0d7246d8e178cc06e88110f15e41b6dcf49fe5060d255c6ac670579b3e8f71",
+      "reader_outcome": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 의 검증 영수증(R02_wrong_core_hash_control.yaml)이 typed schema 밖이다: core_sha256 이 core 바이트와 다르다 — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+    },
+    {
+      "id": "R03_validator_fail_control",
+      "input_sha256": "ca6c3a24ccc666c89652fe39c0265f302c9165dcfaa0a31733285d2d0900c716",
+      "reader_outcome": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 의 검증 영수증(R03_validator_fail_control.yaml)이 typed schema 밖이다: 검증이 통과를 말하지 않는다 (ok=False, fail=[]) — 실패·부분 상태는 `full_bundle` 이 아니다 — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+    },
+    {
+      "id": "R04_missing_sealed_summary",
+      "input_sha256": "23a8cf35d5298b8e83fea487e159bdd1d5fd4d54a5a4b4bfbb6fea164c122574",
+      "reader_outcome": "ACCEPTED",
+      "core_returned_unchanged": true
+    },
+    {
+      "id": "R05_disagreeing_semantic_pair",
+      "input_sha256": "ff76f139188b9254f4677d55990507c41786e47da382d0efe413b290e7b34577",
+      "reader_outcome": "ACCEPTED",
+      "core_returned_unchanged": true
+    },
+    {
+      "id": "R06_wrong_source_fits",
+      "input_sha256": "9c2327797ba39dfaaca6df84c33f409d3e4c595c1c0488de3bdad14248508174",
+      "reader_outcome": "ACCEPTED",
+      "core_returned_unchanged": true
+    },
+    {
+      "id": "R07_wrong_restore_run",
+      "input_sha256": "cee8d2de022e8a4cea982d21a4ebbca107c86c38a8a27804418a9c233c94e637",
+      "reader_outcome": "ACCEPTED",
+      "core_returned_unchanged": true
+    },
+    {
+      "id": "R08_nonhex_semantic",
+      "input_sha256": "f317131ff688845f47a1daf0efe112cbf0be265abf257894b88d450e5fe30429",
+      "reader_outcome": "ACCEPTED",
+      "core_returned_unchanged": true
+    },
+    {
+      "id": "R09_missing_source_fits",
+      "input_sha256": "1ca8e216b0a725be20852be22c179debae3b777cb2875396bc73d59b9c2fef08",
+      "reader_outcome": "ACCEPTED",
+      "core_returned_unchanged": true
+    },
+    {
+      "id": "R10_declared_identity_null",
+      "input_sha256": "f18abbcfcd96c23755f7e3d92cc977aa3c9a66465ce699dfb507a6e6d41cf76e",
+      "reader_outcome": "ACCEPTED",
+      "core_returned_unchanged": true
+    }
+  ],
+  "producer_pure_predicate_cases": [
+    {
+      "id": "P00_real_pair",
+      "outcome": "ACCEPTED",
+      "value": true
+    },
+    {
+      "id": "P01_single_output",
+      "outcome": "REJECTED",
+      "reason": "✗ 대조할 짝이 없다: [('degeneracy-summary/v5', 'score-semantic/v3')] — 산출이 하나뿐이면 '일치' 가 아니라 **비교 불가**다 (27차 P1-6)"
+    },
+    {
+      "id": "P02_different_pair",
+      "outcome": "REJECTED",
+      "reason": "✗ 같은 schema·canonicalizer 인데 semantic digest 가 갈렸다: [('degeneracy-summary/v5', 'score-semantic/v3')]\n  같은 object 가 아니면 schema/role 을 갈라라 (26차 P1-6)"
+    }
+  ],
+  "exec_class_cases": [
+    {
+      "id": "C00_modern",
+      "outcome": "ACCEPTED"
+    },
+    {
+      "id": "C01_legacy",
+      "outcome": "ACCEPTED"
+    },
+    {
+      "id": "C02_two_keys",
+      "outcome": "REJECTED",
+      "reason": "[promote] 실행 class 등록 레코드가 닫힌 typed variant 가 아니다 (in-memory fixture): 키 집합 ['content_id', 'execution_class'] — modern ['content_id', 'evidence', 'execution_class', 'recorded_at', 'sealed'] 또는 legacy ['content_id', 'evidence', 'execution_class', 'recorded_at'] 만 authority 다 (70차 E5). class 를 정할 수 없으므로 거부한다"
+    },
+    {
+      "id": "C03_ill_typed",
+      "outcome": "REJECTED",
+      "reason": "[promote] 실행 class 등록 레코드가 닫힌 typed variant 가 아니다 (in-memory fixture): 키 집합 ['content_id', 'evidence', 'execution_class', 'extra', 'recorded_at', 'sealed'] — modern ['content_id', 'evidence', 'execution_class', 'recorded_at', 'sealed'] 또는 legacy ['content_id', 'evidence', 'execution_class', 'recorded_at'] 만 authority 다 (70차 E5). class 를 정할 수 없으므로 거부한다"
+    },
+    {
+      "id": "C04_nonbool_sealed",
+      "outcome": "REJECTED",
+      "reason": "[promote] 실행 class 등록 레코드가 닫힌 typed variant 가 아니다 (in-memory fixture): sealed='true' 는 bool 이 아니다 (truthiness 로 읽지 않는다) — modern ['content_id', 'evidence', 'execution_class', 'recorded_at', 'sealed'] 또는 legacy ['content_id', 'evidence', 'execution_class', 'recorded_at'] 만 authority 다 (70차 E5). class 를 정할 수 없으므로 거부한다"
+    }
+  ],
+  "historical_registry_records_typed_only": 367,
+  "actual_bundle_data_check": {
+    "index_members": 25,
+    "exact_set": true,
+    "hash_mismatches": [],
+    "unsupported_index_result": null,
+    "unsupported_index_reason": "구성원을 열거하지 않는다 (dict 비어 있음)"
+  },
+  "attach_calls": 0,
+  "restores": 0,
+  "class_writes": 0,
+  "calculations": 0,
+  "project_module_imports": 0,
+  "reviewer_input_fixture_writes": 12
+}

@@ -1,0 +1,42 @@
+{
+  "tools/preserve.py": {
+    "source_bytes": 467528,
+    "source_sha256": "f327dcede8cbe7747790826c2d49f47ff9eb5513b301508e0dabe585be19624f",
+    "excerpt": "tools__preserve.py.txt"
+  },
+  "docs/22p_gap/make_receipt.py": {
+    "source_bytes": 19016,
+    "source_sha256": "9c8cf71af310de03d2ee9a72d31fcc9172d8920af65fdf097277513c8106c07c",
+    "excerpt": "docs__22p_gap__make_receipt.py.txt"
+  },
+  "tests/test_gate70_defensive.py": {
+    "source_bytes": 32939,
+    "source_sha256": "b3e2fd87474405890c293b8e8eb14adc2a31a2d60cd42919b03a19b4eb00ad45",
+    "excerpt": "tests__test_gate70_defensive.py.txt"
+  },
+  "tests/conftest.py": {
+    "source_bytes": 16267,
+    "source_sha256": "cc3401b816ac230f32e74538ddcc0942610b5b16144a0e575426ede960d4ceb6",
+    "excerpt": "tests__conftest.py.txt"
+  },
+  "run.sh": {
+    "source_bytes": 29922,
+    "source_sha256": "9af9fd1bad2cf613b9ca1d24287c9c79886033fb787036df6a928fff98ef8703",
+    "excerpt": "run.sh.txt"
+  },
+  "src/grid.py": {
+    "source_bytes": 50583,
+    "source_sha256": "0b70f3f109ee79654c40535ea22c1f87f57feccde77ed45afaadcea6b9ef6f01",
+    "excerpt": "src__grid.py.txt"
+  },
+  "src/fitting.py": {
+    "source_bytes": 99176,
+    "source_sha256": "7b852ce9fa67fe4eec0e7f382420ae5d449698104395211f3c71bb92d82c01e4",
+    "excerpt": "src__fitting.py.txt"
+  },
+  "docs/22p_gap/GATE71_REQUEST.md": {
+    "source_bytes": 22939,
+    "source_sha256": "9f8d453b7245000d67ec24fa26dbe1ecbc26397fa4730cc4da15307e945a9748",
+    "excerpt": "docs__22p_gap__GATE71_REQUEST.md.txt"
+  }
+}

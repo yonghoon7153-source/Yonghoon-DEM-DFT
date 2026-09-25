@@ -1,0 +1,124 @@
+SOURCE: tests/test_gate70_defensive.py
+SOURCE_SHA256: b3e2fd87474405890c293b8e8eb14adc2a31a2d60cd42919b03a19b4eb00ad45
+COMMIT: 4505b70c6e63453e0424239cac7d48488fee022a
+
+### 302-419
+302: def _receipt_core(root: Path, leg: str, ev: dict, *, validator=None, ok=True, fail=None,
+303:                   outputs=None, mode="empty_root", conflicts=0, mismatches=0) -> dict:
+304:     from src.io import source_digest
+305:     fits = root / ev["bundle_uri"] / "fits.parquet"
+306:     return {
+307:         "leg_id": leg,
+308:         "bundle": {"uri": ev["bundle_uri"], "files": ev["bundle_files"], "bytes": ev["payload_bytes"],
+309:                    "payload_index": ev["payload_index"], "payload_index_sha256": ev["payload_index_sha256"],
+310:                    "member_rehash": "tools.archive_bundle.check", "member_mismatches": mismatches,
+311:                    "fits_sha256": _sha(fits.read_bytes())},
+312:         "restore": {"mode": mode, "command": "restore(...)", "files_written": ev["bundle_files"],
+313:                     "run_dir_relative": f"results/{leg}", "conflicts": conflicts},
+314:         "validation": {"validator": "src.io.validate_provenance", "ok": ok,
+315:                        "fail": list(fail or []), "n_checks": 2,
+316:                        "checks": {"a": "ok", "b": "ok"}},
+317:         "identity": {"validator_source_digest": validator or source_digest(),
+318:                      "src_io_sha256": "0" * 16, "src_scoring_sha256": "0" * 16,
+319:                      "archive_bundle_sha256": "0" * 16, "make_receipt_sha256": "0" * 16,
+320:                      "row_projection_sha256": "0" * 16, "row_projection_compute_sha256": "0" * 16},
+321:         "outputs": outputs if outputs is not None else [
+322:             {"role": "rescored_summary", "semantic_sha256": "1" * 64, "canonicalizer": "score-semantic/v1"}],
+323:         "outputs_agree": True,
+324:     }
+325: 
+326: 
+327: def _write_receipt(root: Path, leg: str, core: dict, *, extra_top=None, core_sha=None) -> str:
+328:     rec = {"schema_version": 2, "_주의": "시험", "core_sha256": core_sha or P._receipt_core_sha256(core),
+329:            "core": core, "stamp": {"validator_commit": "x"}}
+330:     if extra_top:
+331:         rec.update(extra_top)
+332:     rp = root / "docs" / "22p_gap" / "receipts" / f"{leg}.validate.yaml"
+333:     rp.parent.mkdir(parents=True, exist_ok=True)
+334:     rp.write_text(yaml.safe_dump(rec, allow_unicode=True, sort_keys=False), encoding="utf-8")
+335:     return rp.relative_to(root).as_posix()
+336: 
+337: 
+338: def _fixture_repo(tmp_path: Path, *, status="preservation_pending", with_lifecycle=True) -> tuple[Path, Path, dict]:
+339:     """finalize 가 남긴 형태의 원장 + `fits.parquet` 이 있는 묶음 (YAML index)."""
+340:     root = tmp_path / "repo"
+341:     d = root / "artifacts" / "L"
+342:     d.mkdir(parents=True)
+343:     (d / "fits.parquet").write_bytes(b"PAR1-fits")
+344:     (d / "manifest.yaml").write_text("fits_sha256: x\n", encoding="utf-8")
+345:     idx = d / "payload_sha256.yaml"
+346:     idx.write_text(yaml.safe_dump({"fits.parquet": _sha(b"PAR1-fits"),
+347:                                    "manifest.yaml": _sha(b"fits_sha256: x\n")}), encoding="utf-8")
+348:     files = [x for x in sorted(d.rglob("*")) if x.is_file()]
+349:     ev = {"bundle_uri": "artifacts/L", "bundle_files": len(files),
+350:           "payload_bytes": sum(x.stat().st_size for x in files),
+351:           "payload_index": "artifacts/L/payload_sha256.yaml",
+352:           "payload_index_sha256": _sha(idx.read_bytes())}
+353:     leg_ev = {"leg_source_digest": "0123456789abcdef", "cohorts": ["gA"], "out": "results/L"}
+354:     if with_lifecycle:
+355:         leg_ev.update({"phases": {"grid": {}, "fit": {}}, "attempt_id": "a" * 32,
+356:                        "run_spec_digest": "b" * 64, "attempt_verifier": "c" * 64,
+357:                        "verifier_origin": "normal_finalize"})
+358:     doc = {"schema_version": 4, "cohorts": [{"cohort_id": "gA", "status": "active", "legs": ["L"]}],
+359:            "planned": [{"leg_id": "L", "cohort_id": "gA", "status": "executed"}],
+360:            "legs": [{"leg_id": "L", "preservation_status": status, "validation_status": "unvalidated",
+361:                      "inference_role": "diagnostic", "evidence": leg_ev}]}
+362:     led = root / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
+363:     led.parent.mkdir(parents=True, exist_ok=True)
+364:     led.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False), encoding="utf-8")
+365:     return root, led, ev
+366: 
+367: 
+368: def _leg(led: Path) -> dict:
+369:     return yaml.safe_load(led.read_text(encoding="utf-8"))["legs"][0]
+370: 
+371: 
+372: def test_g70_e3_10_attach_consumes_a_typed_receipt_and_lifts_pending_to_full_bundle(tmp_path):
+373:     """정상 경로 — 영수증 → 디스크 대조 → 원장 전이. lifecycle 소유 키는 그대로, inference_role 불변."""
+374:     root, led, ev = _fixture_repo(tmp_path)
+375:     rp = _write_receipt(root, "L", _receipt_core(root, "L", ev))
+376:     r = P.attach_bundle_evidence("L", rp, ledger=led, repo_root=root)
+377:     assert r["preservation_status"] == "full_bundle" and r["idempotent"] is False
+378:     leg = _leg(led)
+379:     assert (leg["preservation_status"], leg["validation_status"], leg["inference_role"]) == \
+380:         ("full_bundle", "current_validated", "diagnostic")
+381:     e = leg["evidence"]
+382:     for k in ("bundle_uri", "payload_index_sha256", "payload_bytes", "bundle_files", "fits_sha256",
+383:               "member_rehash_by", "verification_receipt", "verification_receipt_core_sha256",
+384:               "validator_identity", "empty_root_restore", "bundle_content_id"):
+385:         assert e.get(k), k                              # docs-lint 의 anchor 요구와 같은 키
+386:     for k in P.LIFECYCLE_OWNED_EVIDENCE_KEYS:
+387:         assert k in e, k                                # finalize 가 남긴 것을 지우지 않는다
+388:     assert e["verification_receipt"] == rp
+389:     # 멱등 — 같은 영수증으로 다시 붙이면 같은 답, 원장 바이트 불변
+390:     before = led.read_bytes()
+391:     r2 = P.attach_bundle_evidence("L", rp, ledger=led, repo_root=root)
+392:     assert r2["idempotent"] is True and led.read_bytes() == before
+393: 
+394: 
+395: @pytest.mark.parametrize("mutate,why", [
+396:     (lambda c: c["validation"].update(ok=False, fail=["코드_identity"]), "통과를 말하지 않는다"),
+397:     (lambda c: c["validation"].update(fail=["x"]), "통과를 말하지 않는다"),
+398:     (lambda c: c.update(leg_id="M"), "다른 다리"),
+399:     (lambda c: c["identity"].update(validator_source_digest="deadbeefdeadbeef"), "낡았다"),
+400:     (lambda c: c["restore"].update(mode="in_place"), "empty-root"),
+401:     (lambda c: c["restore"].update(conflicts=1), "empty-root"),
+402:     (lambda c: c["bundle"].update(member_mismatches=1), "member 불일치"),
+403:     (lambda c: c.update(outputs=[{"role": "other", "semantic_sha256": "1" * 64, "canonicalizer": "v"}]), "rescored_summary"),
+404:     (lambda c: c.update(outputs_agree=False), "outputs_agree"),
+405:     (lambda c: c.update(surplus=1), "core key 집합"),
+406:     (lambda c: c["bundle"].pop("fits_sha256"), "core.bundle key 집합"),
+407:     (lambda c: c["validation"].update(n_checks=3), "n_checks"),
+408: ])
+409: def test_g70_e3_11_a_receipt_that_does_not_say_full_current_validation_is_refused(tmp_path, mutate, why):
+410:     """부정 경로 — 실패·부분·다른 다리·낡은 검증기·열린 key 집합은 전부 원장에 쓰지 않는다."""
+411:     root, led, ev = _fixture_repo(tmp_path)
+412:     core = _receipt_core(root, "L", ev)
+413:     mutate(core)
+414:     rp = _write_receipt(root, "L", core)
+415:     before = led.read_bytes()
+416:     with pytest.raises(P.PreserveError) as ei:
+417:         P.attach_bundle_evidence("L", rp, ledger=led, repo_root=root)
+418:     assert why in str(ei.value), str(ei.value)
+419:     assert led.read_bytes() == before, "거부하면서 원장을 건드렸다"
+

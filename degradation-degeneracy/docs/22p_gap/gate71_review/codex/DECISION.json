@@ -1,0 +1,51 @@
+{
+  "review": "Gate71",
+  "date": "2026-09-25",
+  "request_head": "4505b70c6e63453e0424239cac7d48488fee022a",
+  "code_commit": "876429562f6a69b59793c70700cb5b375391ab67",
+  "source_digest": "b705a21a1237ec73",
+  "limited_execution_decision": "NO_GO_PENDING_E3_E9_CORRECTIONS",
+  "execution_authorized_by_this_review": false,
+  "findings": [
+    {
+      "id": "G71-E3-R",
+      "existing_exit_item": "E3",
+      "priority": "P1",
+      "title": "Receipt consumer accepts missing/disagreeing comparison and unbound source/run claims",
+      "evidence": "READER_CHECKS.json plus static attach dataflow",
+      "dynamic_scope": "Selected exact reader AST only; no full module import or attach/promotion/restore",
+      "required": "Consume existing producer comparison/source identity contract and bind it to finalized run evidence; retain real positive and negative controls"
+    },
+    {
+      "id": "G71-E9-R",
+      "existing_exit_item": "E9",
+      "priority": "P2",
+      "title": "Documented same-command retry omits chunk --resume",
+      "evidence": "Request 119-120; run.sh 56,522-557; grid.py 601-612; fitting.py 1524-1526",
+      "dynamic_scope": "Static only; did not induce a failed/resumed scientific run",
+      "required": "Specify exact guarded resume command and limit, or stop and request separate approval after failure"
+    }
+  ],
+  "exit_matrix": {
+    "E1": "ACCEPTED_AS_EXPLICIT_LIMITATION",
+    "E2": "ACCEPTED_AS_EXPLICIT_LIMITATION",
+    "E3": "PARTIAL_INDEX_ACCEPTED_CONSUMPTION_OPEN",
+    "E4": "ACCEPTED_AS_EXPLICIT_LIMITATION_CORRECT_REPLAY_COUNT",
+    "E5": "ACCEPTED",
+    "E6": "ACCEPTED_WITH_STATED_EXCLUSIVE_OPERATIONAL_WINDOW",
+    "E7": "PREVIOUS_ACCEPTANCE_RETAINED",
+    "E8": "PREVIOUS_CLOSURE_RETAINED",
+    "E9": "PARTIAL_RETRY_SPEC_OPEN",
+    "E10": "ACCEPTED_SOURCE_FIX_AND_PRODUCER_REPORTED_LINUX_EVIDENCE_NOT_LOCALLY_RERUN"
+  },
+  "G70_N1": "CLOSED_STATIC_FIX_AND_REGRESSION_REVIEW",
+  "direct_verification": {
+    "receipt_reader_cases": 11,
+    "pure_producer_predicate_cases": 3,
+    "typed_class_fixture_cases": 5,
+    "historical_class_records_typed_read": 367,
+    "real_bundle_members_rehashed": 25,
+    "tracked_DD_files_unchanged": 2459
+  },
+  "not_performed": ["full_pytest", "strict_smoke", "COMSOL", "Java", "scientific_analysis_programs", "main_grid_fit", "restore", "class_changes", "operational_ledger_writes", "prospective_plan_commit"]
+}

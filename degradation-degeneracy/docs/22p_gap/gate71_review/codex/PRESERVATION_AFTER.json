@@ -1,0 +1,26 @@
+{
+  "tracked_DD_files": 2459,
+  "changed": [],
+  "git_status_after": "",
+  "e10_evidence_head_to_request_changed_paths": [
+    "degradation-degeneracy/docs/08_REVIEW_RESPONSE.md",
+    "degradation-degeneracy/docs/22p_gap/GATE71_REQUEST.md",
+    "degradation-degeneracy/docs/GATE70_WORKING_STATE.md"
+  ],
+  "operational_registry_writes": 0,
+  "operational_ledger_writes": 0,
+  "COMSOL_calls": 0,
+  "main_grid_fit_runs": 0,
+  "restores": 0,
+  "class_changes": 0,
+  "full_pytest_or_smoke_reruns": 0,
+  "reviewer_selected_AST_reader_script_rc": 0,
+  "reader_script_tool_chunk": "0f2f90",
+  "identity_tool_chunk": "959347",
+  "identity_tool_rc": 0,
+  "limits": "Tracks 2459 DD files in the detached review checkout, not every file on the producer PC. Reviewer output/fixtures and git checkout/fetch writes are outside product state.",
+  "diagnostic_failures_retained_in_report": [
+    "Identity check first stopped on missing promisor Git blob/network denial (rc 1); after turn network permission, same read-only identity check completed rc 0.",
+    "Several lookup-only shell calls named non-existent guessed files; no product run occurred."
+  ]
+}

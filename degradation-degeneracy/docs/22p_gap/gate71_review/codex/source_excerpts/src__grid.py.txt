@@ -1,0 +1,28 @@
+SOURCE: src/grid.py
+SOURCE_SHA256: 0b70f3f109ee79654c40535ea22c1f87f57feccde77ed45afaadcea6b9ef6f01
+COMMIT: 4505b70c6e63453e0424239cac7d48488fee022a
+
+### 591-612
+591:         #   바뀌었을 때 바이트가 밖으로 나가고, 마지막 검사는 그것을 못 되돌린다.
+592:         named_out = out_dir                         # 사람이 준 이름 — 기록과 다음
+593:                                                     # phase 가 여는 자리
+594:         if _exec_cap is not None:
+595:             from tools.preserve import staged_root
+596:             out_dir = staged_root(_exec_cap)
+597:         else:                                       # dry-run 등 권한이 없는 경로
+598:             out_dir.mkdir(parents=True, exist_ok=True)
+599:         protocol_name = cfg.get(GRID_PROTOCOL_KEY, "charge_first")
+600: 
+601:         # ── resume: 완료 조건 건너뛰기 ──
+602:         done: set[str] = load_completed(out_dir) if resume else set()
+603:         todo = [c for c in conditions if c.cond_id not in done]
+604:         if resume and done:
+605:             log.info("resume: %d개 완료 확인, %d개 남음", len(done), len(todo))
+606:         elif not resume and not dry_run:
+607:             prev = load_completed(out_dir)
+608:             if prev:
+609:                 log.warning(
+610:                     "출력 디렉터리에 이미 완료 기록 %d건이 있는데 --resume 없이 실행합니다. "
+611:                     "전부 재계산되고 청크가 중복 누적됩니다. "
+612:                     "이어서 하려면 --resume, 새로 하려면 다른 --out 을 쓰세요.", len(prev))
+
