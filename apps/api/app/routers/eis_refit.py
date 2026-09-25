@@ -268,7 +268,8 @@ def _refit_one(session: Session, target: _Target, origin: str,
             verdict = accept_refit(target.audit.findings, audit.findings,
                                    candidate.triggers, converged=True,
                                    old_misfit=old_misfit, new_misfit=misfit,
-                                   new_top_misfit=audit.top_misfit)
+                                   new_top_misfit=audit.top_misfit,
+                                   old_top_misfit=target.audit.top_misfit)
             accepted, reason = verdict.accepted, verdict.reason
             if accepted:
                 reason = moved_number(old_sigma, sigma, old_misfit, misfit)

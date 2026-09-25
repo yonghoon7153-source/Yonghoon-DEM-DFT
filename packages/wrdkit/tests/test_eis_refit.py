@@ -232,7 +232,19 @@ def test_a_wiring_refit_is_taken_only_when_the_top_end_is_drawn():
                        new_misfit=0.018, new_top_misfit=(0.12, 2.15e5))
     assert not top.accepted
     assert top.reason == ("고주파 끝이 그대로입니다 — L 을 넣어도 2.15e+05 Hz 가 12 % "
-                          "어긋납니다. L 하나로는 그 끝을 못 그립니다")
+                          "어긋납니다. L 로는 그 끝이 안 그려집니다")
+    # 실측 #105: 38 → 11 % 로 줄었는데 "그대로" 라고 적었다 — 줄었으면 그렇게 적는다.
+    less = accept_refit([cable], [], triggers, converged=True, old_misfit=0.05,
+                        new_misfit=0.02, new_top_misfit=(0.11, 8.72e5),
+                        old_top_misfit=(0.38, 8.72e5))
+    assert not less.accepted
+    assert less.reason == ("고주파 끝이 아직 가장 크게 어긋납니다 — L 을 넣어 8.72e+05 Hz 가 "
+                           "38 → 11 % 로 줄었지만 문턱을 넘습니다. L 하나로는 그 끝을 다 "
+                           "못 그립니다")
+    same = accept_refit([cable], [], triggers, converged=True, old_misfit=0.05,
+                        new_misfit=0.05, new_top_misfit=(0.37, 8.72e5),
+                        old_top_misfit=(0.38, 8.72e5))
+    assert same.reason.startswith("고주파 끝이 그대로입니다")
 
     worse = accept_refit([cable], [], triggers, converged=True,
                          old_misfit=0.021, new_misfit=0.03)

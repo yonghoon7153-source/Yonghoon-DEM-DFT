@@ -180,13 +180,14 @@ def accept_refit(old: Sequence[Finding], new: Sequence[Finding],
                  triggers: Iterable[str], *, converged: bool,
                  old_misfit: float | None = None,
                  new_misfit: float | None = None,
-                 new_top_misfit: tuple[float, float] | None = None) -> Acceptance:
+                 new_top_misfit: tuple[float, float] | None = None,
+                 old_top_misfit: tuple[float, float] | None = None) -> Acceptance:
     """다시 맞춘 것을 받아들일까 — 넷 다 만족해야 한다 (ADR 0045).
 
     ``old``·``new`` 는 옛 맞춤과 새 맞춤을 **같은 점·같은 주파수 창**에서
     검수한 판정이다 (맞춤에 딸린 것만 — 점 자체의 KK 판정은 둘에 같다).
     ``old_misfit``·``new_misfit`` 는 두 맞춤의 평균 오차(비율)다.
-    ``new_top_misfit`` 는 새 맞춤의 `FitAudit.top_misfit` 이다.
+    ``new_top_misfit``·``old_top_misfit`` 는 두 맞춤의 `FitAudit.top_misfit` 이다.
 
     1. 수렴했다.
     2. 이 회로를 권한 판정(``triggers``)이 문제로 남지 않았다.
@@ -216,10 +217,7 @@ def accept_refit(old: Sequence[Finding], new: Sequence[Finding],
         return Acceptance(False, f"그 문제가 그대로입니다 — {message}")
     if any(code in WIRING_CODES for code in triggers):
         if new_top_misfit is not None:
-            share, hz = new_top_misfit
-            return Acceptance(False, f"고주파 끝이 그대로입니다 — L 을 넣어도 {hz:.3g} Hz 가 "
-                                     f"{share * 100:.0f} % 어긋납니다. L 하나로는 그 끝을 "
-                                     f"못 그립니다")
+            return Acceptance(False, _top_left(old_top_misfit, new_top_misfit))
         if old_misfit is None or new_misfit is None:
             return Acceptance(False, "오차 평균을 몰라 옛 맞춤과 견줄 수 없습니다")
         if not _no_worse(old_misfit, new_misfit):
@@ -237,6 +235,26 @@ def accept_refit(old: Sequence[Finding], new: Sequence[Finding],
         if not (inherited and _no_worse(old_misfit, new_misfit)):
             return Acceptance(False, shape.message)
     return Acceptance(True)
+
+
+def _top_left(old: tuple[float, float] | None, new: tuple[float, float]) -> str:
+    """L 을 넣고도 고주파 끝이 문턱을 넘을 때의 까닭 — 줄었으면 얼마에서 얼마로.
+
+    실측 #105 (2026-09-25 맞춰 보기): 38 → 11 % 로 줄었는데 "고주파 끝이
+    그대로입니다" 라고 적었다.  줄었는지 아닌지를 옛 맞춤의 증상과 견주어 적는다.
+    """
+    share, hz = new
+    if old is not None and share < old[0] * _LESS:
+        return (f"고주파 끝이 아직 가장 크게 어긋납니다 — L 을 넣어 {hz:.3g} Hz 가 "
+                f"{old[0] * 100:.0f} → {share * 100:.0f} % 로 줄었지만 문턱을 넘습니다. "
+                f"L 하나로는 그 끝을 다 못 그립니다")
+    return (f"고주파 끝이 그대로입니다 — L 을 넣어도 {hz:.3g} Hz 가 {share * 100:.0f} % "
+            f"어긋납니다. L 로는 그 끝이 안 그려집니다")
+
+
+#: 고주파 끝의 어긋남이 옛것의 이 비율 아래로 내려가야 "줄었다" 고 적는다 — 반올림
+#: 한 자리 안의 차이를 줄었다고 하지 않는다.
+_LESS = 0.95
 
 
 def _no_worse(old_misfit: float | None, new_misfit: float | None) -> bool:
