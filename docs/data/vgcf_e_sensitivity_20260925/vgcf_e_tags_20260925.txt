@@ -1,0 +1,3 @@
+1 VGCF=1 ADD_E_SET_20260818+override:VGCF=1.0GPa {'porosity_settled_pct': 14.749, 'porosity_at_target_pct': 14.749, 'thickness_um': 121.669, 'wall_z': 2.2881, 'settled_over_target': 0.4662, 'wall_z_at_floor': False, 'floor_porosity_pct': None}
+10 VGCF=10 ADD_E_SET_20260818+override:VGCF=10.0GPa {'porosity_settled_pct': 14.889, 'porosity_at_target_pct': 14.889, 'thickness_um': 121.869, 'wall_z': 2.2918, 'settled_over_target': 0.467, 'wall_z_at_floor': False, 'floor_porosity_pct': None}
+100 VGCF=100 ADD_E_SET_20260818+override:VGCF=100.0GPa {'porosity_settled_pct': 14.929, 'porosity_at_target_pct': 14.929, 'thickness_um': 121.926, 'wall_z': 2.2928, 'settled_over_target': 0.4558, 'wall_z_at_floor': False, 'floor_porosity_pct': None}

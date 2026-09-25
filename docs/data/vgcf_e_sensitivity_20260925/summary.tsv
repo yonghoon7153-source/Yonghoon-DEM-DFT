@@ -1,0 +1,4 @@
+E_VGCF_GPa	add_e_override	E_anchor	additives_VGCF_E_GPa	porosity_at_target_pct	porosity_settled_pct	thickness_um	wall_z	settled_over_target	final_stress_GPa	stop_mode	sigma_e_S_cm	n_dof	cg_info	cg_resid	unconverged	sigma_vgcf_voxel_S_cm
+1	VGCF=1	ADD_E_SET_20260818+override:VGCF=1.0GPa	1.0	14.749	14.749	121.669	2.2881	0.4662	0.1403	legacy_moving	0.059274025385408095	49251000	0	9.98512352349007e-09	False	78.5398
+10	VGCF=10	ADD_E_SET_20260818+override:VGCF=10.0GPa	10.0	14.889	14.889	121.869	2.2918	0.467	0.1403	legacy_moving	0.05915422279573881	49256267	0	9.954329246391048e-09	False	78.5398
+100	VGCF=100	ADD_E_SET_20260818+override:VGCF=100.0GPa	100.0	14.929	14.929	121.926	2.2928	0.4558	0.1368	legacy_moving	0.05930302082495344	49257192	0	9.980287989451174e-09	False	78.5398

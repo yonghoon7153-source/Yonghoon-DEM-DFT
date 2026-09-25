@@ -1,0 +1,103 @@
+[p2] ⚠ ARMS=1 ≠ 사전등록 8 — **진단 런**이다.
+     OUTDIR 에 _arm1 를 붙여 생산 산출물과 갈라 놓는다.  생산 봉인은 걸지 않는다.
+[p2] ★ **진단 팔** — PTFE 스탬프 centerline · σ_PTFE 미지정 = **exact-zero DOF**.  생산 규약 아님 (CDXR2-6)
+[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)
+[p2] 런 영수증 → /home/kgy/dem-vgcfE/kits/vgcf_e_sens_20260925_arm1/run_receipt.json
+  [p2] origin 이동 CLI 확인
+[p2] 규율 검사 통과
+[p2] 미정의 이름 없음 (런 경로 5 파일)
+[p2] vox 0.15 · 브리지 0.24 µm 고정 · 섬유 segment · 1 팔 · out /home/kgy/dem-vgcfE/kits/vgcf_e_sens_20260925_arm1
+  [p2] vox 0.15: σ_VGCF 100 → 78.5398
+[p2] ── p2_VGCF_PTFE_3_1_E1_a0  shift=(0 0 0)  σ_VGCF=78.5398
+loaded 70,936,856 SE pts from se_dump.npy
+  void (pore) cloud: 180,000 of 2,588,242 internal-pore voxels (below global top z=467/473; headspace+empty cols dropped; raw void 2,770,687)
+  SE surface: 307,228 triangles (n_vox=192, step=4)
+  SE strain points: 200,000  (total (vs seed): mean 0.063 max 5.132 vmax98 0.7467)
+  SE morphology points: 200,000 (#4b 2D 단면 morphology)
+  SEED SE surface: 288,806 triangles  (loose void 23.5%)
+  econn: 100.0% AM connected to the collector (0 isolated; 2696 carbon clusters)
+  입력 digest 3de0cf6d9958a8cf (6 파일) — CDXIJ-10 ③
+  STEP3: fid 의미 파일 로드 (fibre_kind.npy) — 경로 2,788,904 / 그룹 68,147,952 점
+  STEP3: per-fibril 직경 로드 (fibre_dia.npy) — 70,936,856 점
+  STEP3: 섬유 **선분 스탬프** ON — 도체점 2,788,904 · 섬유 81,639개
+  STEP3: voxelizing conductive+SE grid (풀해상도 — 이후 전자/이온 CG 솔브, 침묵 수 분 정상)…
+  STEP3: AM 접촉 브리지 반경 **고정** 0.24 µm (기본은 1.2·vox = 0.180) — 격자 수렴 시험용
+    STEP3 solve: 49,251,000 dof, plate contacts 17,731/16,748 — CG running (GPU, 수 분 소요 가능)…
+  STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.003 (작을수록 집중) · conc 3692.9× — 어디서 발열 몰리나
+  STEP3 σ_e_eff = [봉인 — --show-results 로 열림] S/cm  (vox 0.15µm, 49,251,000 dof, resid 1.0e-08, 1688s)
+  STEP3 collector scenarios(cycled): bulk [봉인 — --show-results 로 열림] → [봉인] S/cm  (R_bulk [봉인 — --show-results 로 열림] Ωcm² [봉인])
+  STEP3 collector PRISTINE(시간-일관, panel-e≈): [봉인] S/cm  (위 cycled 세트=aged-접촉 민감도)
+  STEP3: --no-collector — 집전체 기하 솔브 2회 건너뜀 (wetted/bare)
+  STEP3: --no-ion — 이온 솔브 건너뜀 (σ_e 전용).  σ_ion·τ_full·Track-B 는 이 payload 에 **없다**
+  STEP3 carbon–SE 계면 177200.0 µm² (VGCF-촉매 SE분해 화학열화 STEP5 입력)
+  STEP3: --no-pore — pore-τ·PNM 건너뜀 (σ_e 전용)
+  STEP4-v2 grid → step4_grid_p2_VGCF_PTFE_3_1_E1_a0.npz  (sid (334, 334, 821), n_am 1498, vox 0.15µm)
+  additives → VGCF 2,412,333pts→103,797 shown  PTFE 376,571pts→16,202 shown
+  additive_fibres: 3979 fibres as polylines (of 81639 total)  Ø rel 0.20..10.79
+  additive dispersion (A5/E2): VGCF D=17.15 nn_med=0.3µm(×1.4)  PTFE D=25.59 nn_med=0.908µm(×2.28)  conductive_all D=17.15 nn_med=0.3µm(×1.4)
+saved p2_VGCF_PTFE_3_1_E1_a0.json  (154.5 MB)  porosity 14.8% · SE/solid 33.8% · thickness 121.7µm · coverage(@0.13/0.26µm) AM_P plastic 33/62% vs rigid 55/80% (Δ +-22/+-18 = plastic conforming) · 1498 AM · 307,228 SE tris (n_vox=192)  [voxel-preview por/SE/cov 16/34/44% vary with n_vox — not reported]
+[p2] ▸ p2_VGCF_PTFE_3_1_E1_a0 피크 호스트 RSS = 28.3 GB
+  [p2] vox 0.15: σ_VGCF 100 → 78.5398
+[p2] ── p2_VGCF_PTFE_3_1_E10_a0  shift=(0 0 0)  σ_VGCF=78.5398
+loaded 70,936,856 SE pts from se_dump.npy
+  void (pore) cloud: 180,000 of 2,588,242 internal-pore voxels (below global top z=467/473; headspace+empty cols dropped; raw void 2,770,687)
+  SE surface: 308,698 triangles (n_vox=192, step=4)
+  SE strain points: 200,000  (total (vs seed): mean 0.0477 max 4.732 vmax98 0.5771)
+  SE morphology points: 200,000 (#4b 2D 단면 morphology)
+  SEED SE surface: 288,806 triangles  (loose void 23.5%)
+  econn: 100.0% AM connected to the collector (0 isolated; 2692 carbon clusters)
+  입력 digest f45931734f51d7d7 (6 파일) — CDXIJ-10 ③
+  STEP3: fid 의미 파일 로드 (fibre_kind.npy) — 경로 2,788,904 / 그룹 68,147,952 점
+  STEP3: per-fibril 직경 로드 (fibre_dia.npy) — 70,936,856 점
+  STEP3: 섬유 **선분 스탬프** ON — 도체점 2,788,904 · 섬유 81,639개
+  STEP3: voxelizing conductive+SE grid (풀해상도 — 이후 전자/이온 CG 솔브, 침묵 수 분 정상)…
+  STEP3: AM 접촉 브리지 반경 **고정** 0.24 µm (기본은 1.2·vox = 0.180) — 격자 수렴 시험용
+    STEP3 solve: 49,256,267 dof, plate contacts 17,736/15,373 — CG running (GPU, 수 분 소요 가능)…
+  STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.003 (작을수록 집중) · conc 3669.9× — 어디서 발열 몰리나
+  STEP3 σ_e_eff = [봉인 — --show-results 로 열림] S/cm  (vox 0.15µm, 49,256,267 dof, resid 1.0e-08, 1650s)
+  STEP3 collector scenarios(cycled): bulk [봉인 — --show-results 로 열림] → [봉인] S/cm  (R_bulk [봉인 — --show-results 로 열림] Ωcm² [봉인])
+  STEP3 collector PRISTINE(시간-일관, panel-e≈): [봉인] S/cm  (위 cycled 세트=aged-접촉 민감도)
+  STEP3: --no-collector — 집전체 기하 솔브 2회 건너뜀 (wetted/bare)
+  STEP3: --no-ion — 이온 솔브 건너뜀 (σ_e 전용).  σ_ion·τ_full·Track-B 는 이 payload 에 **없다**
+  STEP3 carbon–SE 계면 177100.0 µm² (VGCF-촉매 SE분해 화학열화 STEP5 입력)
+  STEP3: --no-pore — pore-τ·PNM 건너뜀 (σ_e 전용)
+  STEP4-v2 grid → step4_grid_p2_VGCF_PTFE_3_1_E10_a0.npz  (sid (334, 334, 821), n_am 1498, vox 0.15µm)
+  additives → VGCF 2,412,333pts→103,797 shown  PTFE 376,571pts→16,202 shown
+  additive_fibres: 3979 fibres as polylines (of 81639 total)  Ø rel 0.20..10.79
+  additive dispersion (A5/E2): VGCF D=17.13 nn_med=0.3µm(×1.4)  PTFE D=25.58 nn_med=0.908µm(×2.28)  conductive_all D=17.13 nn_med=0.3µm(×1.4)
+saved p2_VGCF_PTFE_3_1_E10_a0.json  (154.7 MB)  porosity 14.9% · SE/solid 33.8% · thickness 121.9µm · coverage(@0.13/0.26µm) AM_P plastic 32/62% vs rigid 55/80% (Δ +-23/+-18 = plastic conforming) · 1498 AM · 308,698 SE tris (n_vox=192)  [voxel-preview por/SE/cov 16/34/43% vary with n_vox — not reported]
+[p2] ▸ p2_VGCF_PTFE_3_1_E10_a0 피크 호스트 RSS = 28.3 GB
+  [p2] vox 0.15: σ_VGCF 100 → 78.5398
+[p2] ── p2_VGCF_PTFE_3_1_E100_a0  shift=(0 0 0)  σ_VGCF=78.5398
+loaded 70,936,856 SE pts from se_dump.npy
+  void (pore) cloud: 180,000 of 2,623,462 internal-pore voxels (below global top z=468/473; headspace+empty cols dropped; raw void 2,770,687)
+  SE surface: 309,346 triangles (n_vox=192, step=4)
+  SE strain points: 200,000  (total (vs seed): mean 0.03 max 4.14 vmax98 0.3911)
+  SE morphology points: 200,000 (#4b 2D 단면 morphology)
+  SEED SE surface: 288,806 triangles  (loose void 23.5%)
+  econn: 100.0% AM connected to the collector (0 isolated; 2695 carbon clusters)
+  입력 digest 7d2aa0f9569b6c2c (6 파일) — CDXIJ-10 ③
+  STEP3: fid 의미 파일 로드 (fibre_kind.npy) — 경로 2,788,904 / 그룹 68,147,952 점
+  STEP3: per-fibril 직경 로드 (fibre_dia.npy) — 70,936,856 점
+  STEP3: 섬유 **선분 스탬프** ON — 도체점 2,788,904 · 섬유 81,639개
+  STEP3: voxelizing conductive+SE grid (풀해상도 — 이후 전자/이온 CG 솔브, 침묵 수 분 정상)…
+  STEP3: AM 접촉 브리지 반경 **고정** 0.24 µm (기본은 1.2·vox = 0.180) — 격자 수렴 시험용
+    STEP3 solve: 49,257,192 dof, plate contacts 17,749/17,223 — CG running (GPU, 수 분 소요 가능)…
+  STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.003 (작을수록 집중) · conc 3651.3× — 어디서 발열 몰리나
+  STEP3 σ_e_eff = [봉인 — --show-results 로 열림] S/cm  (vox 0.15µm, 49,257,192 dof, resid 1.0e-08, 1629s)
+  STEP3 collector scenarios(cycled): bulk [봉인 — --show-results 로 열림] → [봉인] S/cm  (R_bulk [봉인 — --show-results 로 열림] Ωcm² [봉인])
+  STEP3 collector PRISTINE(시간-일관, panel-e≈): [봉인] S/cm  (위 cycled 세트=aged-접촉 민감도)
+  STEP3: --no-collector — 집전체 기하 솔브 2회 건너뜀 (wetted/bare)
+  STEP3: --no-ion — 이온 솔브 건너뜀 (σ_e 전용).  σ_ion·τ_full·Track-B 는 이 payload 에 **없다**
+  STEP3 carbon–SE 계면 177100.0 µm² (VGCF-촉매 SE분해 화학열화 STEP5 입력)
+  STEP3: --no-pore — pore-τ·PNM 건너뜀 (σ_e 전용)
+  STEP4-v2 grid → step4_grid_p2_VGCF_PTFE_3_1_E100_a0.npz  (sid (334, 334, 821), n_am 1498, vox 0.15µm)
+  additives → VGCF 2,412,333pts→103,797 shown  PTFE 376,571pts→16,202 shown
+  additive_fibres: 3979 fibres as polylines (of 81639 total)  Ø rel 0.20..10.79
+  additive dispersion (A5/E2): VGCF D=17.11 nn_med=0.3µm(×1.4)  PTFE D=25.56 nn_med=0.908µm(×2.27)  conductive_all D=17.11 nn_med=0.3µm(×1.4)
+saved p2_VGCF_PTFE_3_1_E100_a0.json  (154.9 MB)  porosity 14.9% · SE/solid 33.8% · thickness 121.9µm · coverage(@0.13/0.26µm) AM_P plastic 32/62% vs rigid 55/80% (Δ +-23/+-18 = plastic conforming) · 1498 AM · 309,346 SE tris (n_vox=192)  [voxel-preview por/SE/cov 16/34/43% vary with n_vox — not reported]
+[p2] ▸ p2_VGCF_PTFE_3_1_E100_a0 피크 호스트 RSS = 28.3 GB
+
+[p2] ⚠ 킷이 SDCP 기본이 아니다 (VGCF_PTFE_3_1_E1 VGCF_PTFE_3_1_E10 VGCF_PTFE_3_1_E100) — 계약 봉인을 **돌리지 않는다.**
+     이 러너는 팔만 낸다.  봉인·판정은 그 캠페인의 판정기 소관이다
+     (Phase A 6 mAh → scripts/phase_a_order_verdict.py).  OUTDIR: /home/kgy/dem-vgcfE/kits/vgcf_e_sens_20260925_arm1

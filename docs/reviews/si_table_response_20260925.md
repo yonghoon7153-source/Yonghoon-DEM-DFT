@@ -119,7 +119,43 @@ DBE/SBE 비 R̄ (8 origin 쌍대응 평균, vox 0.15 · centerline):
 
 ## 3. VGCF fiber diameter — 0.15 µm · `Measured` · ⬜ (이종기술 SEM 원본 대기)
 
-## 4. VGCF Young's modulus — 10 GPa · `Assumed` · ⏳ (kgy 민감도 3 팔 진행 중 — `docs/reviews/vgcf_e_sensitivity_prereg_20260925.md`)
+## 4. VGCF Young's modulus — 10 GPa · `Assumed` · ✅ 정리됨 (09-25 민감도 판정 h0) — 원고 반영 비준 대기
+
+**코멘트**: *"young's modulus 도 그냥 assumed?"*
+
+**결론**: `Assumed` 가 맞다 — 측정·문헌 앵커가 없는 모델 입력이다.  대신 **이 값이 결과를 안 움직인다는 것을 오늘 런으로 보였다** (사전등록 판정 h0).
+
+### ① 사실
+- 원장 `CL-42` (`ADD_E_SET_20260818`): 사용자 지정 · 근거 문헌/측정 미기재.  MPM 압밀에서 섬유 재료점의 Lamé 상수 · CFL dt 가드에만 들어가고
+  STEP3 σ 에는 기하를 거쳐서만 들어간다.  생산 침대는 dilation + buckle 모드라 두께는 dilation 이 정한다.
+- 문헌 단섬유 탄성계수는 180–245 GPa (Ozkan 2010, Carbon 48, 239 — 웹 검색 기준, PDF 미확인) 로 우리 값의 약 20 배다.
+
+### ② 이미 돌린 런 — VGCF E 민감도 3 팔 (사전등록 `docs/reviews/vgcf_e_sensitivity_prereg_20260925.md` · 원자료 `docs/data/vgcf_e_sensitivity_20260925/`)
+| E_VGCF | porosity (%) | 두께 (µm) | σ_e (mS cm⁻¹) |
+|---|---|---|---|
+| 1 GPa | 14.749 | 121.669 | 59.274 |
+| **10 GPa (생산)** | **14.889** | **121.869** | **59.154** |
+| 100 GPa | 14.929 | 121.926 | 59.303 |
+- 판정선 (런 전 등록): 1 ↔ 100 GPa 에서 |Δε| ≤ 0.3 %p **그리고** |Δσ_e / σ_e(10)| ≤ 2 %.  실측 **0.18 %p · 0.05 %** (팔마다 E=10 대비 ≤ 0.25 %) ⇒ **h0**.
+- E=10 재압밀이 생산 침대 (Phase A 09-14 재생성) 와 인쇄 자릿수까지 같다 — 같은 코드 · 같은 입력 재현 확인.
+- 한정어: 한 침대 · origin 1 팔 (위상 산포 0.68 % > 팔 간 차이) · 시험 범위 1–100 GPa (문헌 180–245 GPa 는 범위 밖) · E=100 은 CFL 로 dt 가 달랐다.
+
+### ③ 논문 형식 수정안
+1. **Table S2 행**: `Young's modulus · 10 · GPa · Assumedᵇ`
+   > ᵇ Effective modulus assigned to the sub-grid fibre material points in the MPM compaction.  Varying it from 1 to 100 GPa changed the
+   > compacted porosity by 0.18 %p and the electronic conductivity by ≤ 0.25 % (Supplementary Table S(new)).
+   - 문헌 단섬유값 (180–245 GPa) 을 각주에 넣으려면 Ozkan 2010 PDF 확인 뒤에 — 넣으면 *"above the tested range"* 를 같이 적는다.
+2. **Supplementary Table (신설)**: 위 3 팔 표 (porosity · 두께 · σ_e) + 한정어 캡션.
+
+### ④ 답변 초안 (강준희에게)
+> 응 assumed 가 맞아 — 문헌 단섬유값 (~200 GPa) 을 쓴 것도 아니고 잰 것도 아니야. 대신 오늘 민감도를 돌렸어: VGCF E 를 1 / 10 / 100 GPa 로
+> 바꿔서 같은 전극을 다시 압밀하고 전자전도도까지 계산했더니 porosity 는 0.18 %p, σ_e 는 0.25 % 이내로만 움직였어 (런 전에 정한 기준
+> 0.3 %p · 2 % 안). 그래서 결과가 이 값에 안 걸린다는 걸 각주랑 SI 표로 붙일게.
+
+### ⑤ 남은 일
+- [ ] 원고 반영 (Table S2 각주 ᵇ · SI 표) — 사용자 비준 뒤 docx 에.
+- [ ] Ozkan 2010 PDF 확인 → 정본 카드 (각주에 문헌값을 넣을 경우).
+- [ ] 원장 `SELF-50` (metrics `dt` 가 요청값) — 결과 해석에는 영향 없음, 코드 수정은 비준 뒤.
 
 ## 5. VGCF electronic conductivity (compressed powder) — 1.0 × 10² S cm⁻¹ · `Assumed` · ⬜
 

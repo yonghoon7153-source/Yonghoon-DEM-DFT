@@ -1,0 +1,1286 @@
+{
+ "vgcf_e_sens_20260925_arm1/p2_VGCF_PTFE_3_1_E100_a0.json": {
+  "kind": "mpm",
+  "case": "input_6mAh_real_4",
+  "particles": "<list len 1498 dropped>",
+  "econn_summary": {
+   "connected_pct": 100.0,
+   "n_isolated": 0,
+   "n_carbon_clusters": 2695,
+   "tol_am_um": 0.1,
+   "band_um": 0.15,
+   "vox_um": 0.3,
+   "conductive_phases": "AM + VGCF/SuperP/SDCP/SWCNT-sheath (SE\u00b7PTFE excluded = e-insulators)",
+   "connected_pct_AM_P": 100.0,
+   "connected_pct_AM_S": 100.0
+  },
+  "am_coverage_patches": "<list 12887489 bytes dropped>",
+  "se_strain_points": "<list 6051958 bytes dropped>",
+  "se_morph_points": "<list 4473119 bytes dropped>",
+  "mesh_triangles": "<list 56185923 bytes dropped>",
+  "seed_mesh_triangles": "<list 52412135 bytes dropped>",
+  "additive_points": "<list 3290068 bytes dropped>",
+  "additive_fibres": "<list 6007153 bytes dropped>",
+  "electronic_field": null,
+  "ionic_field": null,
+  "thermal_field": null,
+  "joule_field": "<list 2749354 bytes dropped>",
+  "void_points": "<list 10607741 bytes dropped>",
+  "box": {
+   "x_min": 0.0,
+   "x_max": 50.01,
+   "y_min": 0.0,
+   "y_max": 50.01,
+   "z_min": 0.0,
+   "z_max": 123.03
+  },
+  "atoms_only": false,
+  "temperature_provenance": {
+   "T_C": null,
+   "T_ref_C": 25.0,
+   "Ea_ion_eV": null,
+   "T_dependence": "NOT_MODELLED",
+   "sigma_ion_T_factor": 1.0,
+   "sigma_e_T_dependence": "NOT_MODELLED",
+   "convention": "sigma*T = sigma0*exp(-Ea/(kB*T))  [Kraft 2017 eq 5]",
+   "Ea_band_eV": {
+    "ma2024": 0.29,
+    "reisacher2023": 0.41,
+    "kraft2017": 0.46
+   },
+   "trust": "T_ref=25 \u00b0C is OUR CONVENTION, not an anchor \u2014 Cronau \u03c3_grain=3.0 mS/cm is a single RT point with no Arrhenius (docs/temp_pressure_capability.md T1-b). Ea is a BAND 0.29-0.46 eV (1.8x wide = x2.47..x4.44 at 30->60 \u00b0C); single-value reporting is forbidden \u2014 sweep EA_ION_EV_BAND. T_dependence=NOT_MODELLED: sigma is the 25 \u00b0C value; a run at any other cell temperature UNDER-states sigma_ion (and over-states the ionic ohmic drop).",
+   "scaled_phases": [
+    "SE"
+   ],
+   "unscaled_phases": {
+    "SDCP": "no Ea anchor for the Li-hopping polymer (\u00a7F1) \u2014 held at T_ref",
+    "AM/carbon (sigma_e)": "ohmic regime is T-independent (Reisacher, qualitative)",
+    "thermal k": "no anchor (\u00a7F1)",
+    "i0 / D_s / OCP dU/dT": "no anchor (\u00a7F1) \u2014 STEP4 kinetics are NOT temperature-scaled"
+   }
+  },
+  "mpm_metrics": {
+   "porosity_mpm_pct": 14.93,
+   "thickness_mpm_um": 121.93,
+   "coverage_AM_P_mpm_pct": 15.3,
+   "coverage_AM_S_mpm_pct": 25.0,
+   "coverage_AM_P_add_mpm_pct": 14.1,
+   "coverage_AM_S_add_mpm_pct": 13.8,
+   "se_fraction_pct": 33.77,
+   "n_am": 1498,
+   "se_surface_tris": 309346,
+   "n_vox": 192,
+   "coverage_AM_P_hertz_pct": 32.4,
+   "coverage_AM_P_tabor_pct": 62.0,
+   "coverage_AM_S_hertz_pct": 48.9,
+   "coverage_AM_S_tabor_pct": 80.1,
+   "coverage_AM_P_rigid_hertz_pct": 55.4,
+   "coverage_AM_P_rigid_tabor_pct": 80.1,
+   "coverage_AM_S_rigid_hertz_pct": 57.0,
+   "coverage_AM_S_rigid_tabor_pct": 81.2,
+   "cov_hertz_um": 0.13,
+   "cov_tabor_um": 0.26,
+   "cov_method": "plastic_deformed_vs_rigid_geometric",
+   "step3": {
+    "sigma_e_eff_S_cm": 0.05930302082495344,
+    "vox_um": 0.15,
+    "n_dof": 49257192,
+    "k_plates": [
+     0,
+     816
+    ],
+    "n_floating_dropped": 70306,
+    "cg_resid": 9.980287989451174e-09,
+    "cg_info": 0,
+    "unconverged": false,
+    "dissipation_share": {
+     "AM_S": 0.0406,
+     "AM_P": 0.0502,
+     "VGCF": 0.9092,
+     "SE": 0.0,
+     "PTFE": 0.0
+    },
+    "sigma_table_S_cm": {
+     "AM_S": 0.01,
+     "AM_P": 0.005,
+     "VGCF": 78.5398,
+     "SuperP": 10.0,
+     "SDCP": 250.0,
+     "SWCNT": 100.0,
+     "SWCNT_ion_mode": "SE_transparent_default"
+    },
+    "cam_preset": {
+     "cam": "nmc811"
+    },
+    "trust": "RELATIVE_v1 (same settings between runs; pressed-to-plate beds \u2014 plate contacts abundant; carbon/SDCP \u03c3 = F1 hooks; AM_S/P = A1-locked 10/5 mS/cm; lateral Neumann; sub-voxel constriction not modelled)",
+    "collector": {
+     "kind": "SCENARIO series load \u2014 measured R_int applied externally (NOT a model prediction; the model's own interface OUTPUT is collector_geometric.R_geom)",
+     "R_bulk_ohm_cm2": 0.206,
+     "anchors": "Fig6e R_int (cycled=1000cyc@2C, pristine=panel-e\u2248); S14 primer 1.3e4 S/cm 200nm",
+     "anchors_source": "docs/data/rint_eis_anchors.csv (\uc815\ubcf8, scenario keys)",
+     "sigma_apparent_S_cm": {
+      "ideal_R0": 0.0593,
+      "SBE_bare_110": 0.000111,
+      "DBE_bare_46": 0.000264,
+      "SBE_CSUS_30_proxy_DBE_anchored": 0.000404,
+      "isotech_SUS_150": 8.12e-05
+     },
+     "sigma_apparent_pristine_S_cm": {
+      "ideal_R0": 0.0593,
+      "SBE_bare_18": 0.00067,
+      "DBE_bare_12": 0.000999,
+      "SBE_CSUS_10_proxy_DBE_anchored": 0.00119,
+      "isotech_SUS_50": 0.000243
+     },
+     "time_axis": "sigma_apparent_S_cm = aged R_int(1000cyc@2C) \u00d7 BOL \ubc8c\ud06c = \ubbfc\uac10\ub3c4 \uc2dc\ub098\ub9ac\uc624; sigma_apparent_pristine_S_cm = pristine R_int \u00d7 BOL \ubc8c\ud06c = \uc2dc\uac04-\uc77c\uad00(\ubb3c\ub9ac\uc801 BOL \ud480\uc140)",
+     "pristine_precision": "measured/panel_e_approx \u2014 CSV precision \uceec\ub7fc\uc5d0\uc11c \uc720\ub3c4(\uc815\ubc00 \ub514\uc9c0\ud0c0\uc774\uc988 \uc2dc CSV\ub9cc \uac31\uc2e0\ud558\uba74 \uc77c\uad04 \ubc18\uc601); docs/data/rint_eis_anchors.csv scenario keys"
+    },
+    "joule": {
+     "hot_frac_50": 0.0025162186154822717,
+     "conc_ratio": 3651.28,
+     "n_pts": 90000,
+     "note": "Joule \ubc1c\uc5f4\ubc00\ub3c4 q\u221d|J|\u00b2/\u03c3 (\uc804\uc790\ub9dd, run-relative) \u2014 \uc5b4\ub514\uc11c \ubc1c\uc5f4 \ubab0\ub9ac\ub098. hot_frac_50=q \ucd1d\ud569 50% \ub2f4\ub294 \uc0c1\uc704\ubcf5\uc140 \ubd84\uc728(\uc791\uc744\uc218\ub85d \uc9d1\uc911).  \u2605\uc808\ub300 \u0394T(K)\u00b7STEP5 R(N) Arrhenius \uc5f0\ub3d9 = LPSCl \ubd84\ud574 E\u2090 \uc575\ucee4 \ub300\uae30(v2)."
+    },
+    "carbon_se_area_um2": 177100.0,
+    "manifest": {
+     "schema_version": 3,
+     "status": "partial",
+     "components": {
+      "electronic": {
+       "status": "complete",
+       "backend": {
+        "requested": "gpu",
+        "used": "gpu",
+        "fallback_reason": null,
+        "precond": "jacobi"
+       }
+      },
+      "collector_geom": {
+       "status": "disabled",
+       "reason": "--no-collector (\u03c3_e \uc804\uc6a9 \uc2a4\uc715; shift \ud314\uc5d0\uc11c\ub294 _bot_mask \uac00 origin \uc744 \uc548 \ub354\ud574 \uac12 \uc790\uccb4\uac00 \ubb34\ud6a8)"
+      },
+      "ionic": {
+       "status": "disabled",
+       "reason": "--no-ion (\u03c3_e \uc804\uc6a9 \uc2a4\uc715; DR3-07 \ub85c vox \u2264 0.125 \u03c3_ion \uc740 \uc5b4\ucc28\ud53c \uc778\uc6a9 \uae08\uc9c0)"
+      },
+      "thermal": {
+       "status": "disabled",
+       "reason": "--no-thermal (\u03c3_e \uc804\uc6a9 \uc2a4\uc715)"
+      },
+      "pore": {
+       "status": "disabled",
+       "reason": "--no-pore (\u03c3_e \uc804\uc6a9 \uc2a4\uc715; DR3-07 \ub85c vox \u2264 0.125 pore-\u03c4 \ub294 \uc5b4\ucc28\ud53c \uc778\uc6a9 \uae08\uc9c0)"
+      },
+      "pnm": {
+       "status": "disabled",
+       "reason": "--no-pore (\u03c3_e \uc804\uc6a9 \uc2a4\uc715)"
+      }
+     },
+     "expected": [
+      "electronic",
+      "ionic",
+      "thermal",
+      "pore",
+      "pnm"
+     ],
+     "missing": [],
+     "failed": [],
+     "fibre_stamp": "segment",
+     "fibre_stamp_requested": "segment",
+     "fibre_stamp_applied": true,
+     "origin_shift_um": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "ptfe_stamp": "centerline",
+     "ptfe_stamp_requested": "centerline",
+     "ptfe_zero_dof": true,
+     "sdcp_stamp": "point",
+     "sdcp_sphere_d_um": 0.0,
+     "sdcp_yield_to_vgcf": false,
+     "sdcp_bridge_um": 0.0,
+     "ptfe_block_um": 0.0,
+     "ptfe_block_scope": "se",
+     "ptfe_block_cells": {},
+     "dilate_z": 1.0798,
+     "se_source": "npy",
+     "input_digest": "7d2aa0f9569b6c2c",
+     "input_files": {
+      "scaffold": "3c76ec09f5da0bc7",
+      "se": "016044d7a456ed35",
+      "phase": "bb64cea2b4122cab",
+      "fibre": "b1aa63575887ee5e",
+      "metrics_json": "15f94a1458b07f0c",
+      "fibre_dia": "fb560cd69e5bdcf4"
+     },
+     "code_sha": "9da8df0e",
+     "exec_env": {
+      "python": "/home/kgy/apps/miniforge3/envs/ti310/bin/python3",
+      "py_version": "3.10.21",
+      "pythonpath": "",
+      "sitecustomize": null,
+      "usercustomize": null,
+      "untracked_codelike": [],
+      "loaded_project_modules": 6,
+      "project_module_digest": "1e5e6744ef80f913",
+      "risk": []
+     },
+     "vox_um": 0.15,
+     "periodic_xy": false,
+     "plate_rule": "p2-occupied-surface-first",
+     "component_plan": {
+      "electronic": true,
+      "ionic": false,
+      "thermal": false,
+      "pore": false,
+      "collector": false
+     },
+     "field_requested": false,
+     "fibre_segment_ledger": {
+      "2": {
+       "fid_total": 77802,
+       "fid_segment": 77166,
+       "fid_point_nonpath": 0,
+       "fid_point_singleton": 636,
+       "split_singleton_pieces": 9675
+      },
+      "4": {
+       "fid_total": 3837,
+       "fid_segment": 3825,
+       "fid_point_nonpath": 0,
+       "fid_point_singleton": 12,
+       "split_singleton_pieces": 1154
+      }
+     },
+     "electronic_field_pts": 0,
+     "ionic_field_pts": 0,
+     "ptfe_cells_observed": 537870,
+     "bridge_um": 0.24,
+     "bridge_um_explicit": true,
+     "sigma_vgcf_S_cm": 78.5398,
+     "sigma_sdcp_S_cm": 250.0,
+     "sigma_ptfe_S_cm": 0.0,
+     "sigma_superp_S_cm": 10.0,
+     "sigma_swcnt_S_cm": 100.0,
+     "swcnt_ion_block": false,
+     "sigma_ion_se_S_cm": 0.003,
+     "sigma_ion_se_ref_S_cm": 0.003,
+     "sigma_ion_sdcp_S_cm": 0.001,
+     "sigma_am_s_S_cm": 0.01,
+     "sigma_am_p_S_cm": 0.005,
+     "cam": "nmc811",
+     "temp_c": null,
+     "ea_ion_ev": null,
+     "mpm_seed": 3,
+     "se_E_GPa": 1.53,
+     "se_nu": 0.49,
+     "se_sigma_y_GPa": 0.3,
+     "additive_E_GPa": {
+      "VGCF": 100.0,
+      "PTFE": 1.8
+     },
+     "plate_z_grid_um": [
+      0.0,
+      121.926
+     ],
+     "mesh_unavailable": null,
+     "backend_last_solve": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     },
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     },
+     "physics_protocol_id": "p2-79ade1a5c2b0c9fb"
+    }
+   },
+   "seed_porosity_pct": 21.17,
+   "compacted_porosity_pct": 14.93,
+   "E_SE_GPa": 1.53,
+   "nu_SE": 0.49,
+   "sigma_y_GPa": 0.3,
+   "K_SE_GPa": 25.5,
+   "final_stress_GPa": 0.1368,
+   "target_GPa": 0.3,
+   "bulk_density_g_cm3": 3.039,
+   "seed_AM_frac_pct": 52.21,
+   "seed_SE_frac_pct": 26.62,
+   "n_grid": 256,
+   "protocol": "hold",
+   "additives": {
+    "VGCF": {
+     "wt_pct": 3.0,
+     "vol_pct_of_solid": 6.023,
+     "vol_um3": 14547.42,
+     "n_objects": 82322,
+     "n_points": 2412333,
+     "E_GPa": 100.0,
+     "sigma_y_GPa": 2.0,
+     "phase_code": 2,
+     "E_anchor": "ADD_E_SET_20260818+override:VGCF=100.0GPa",
+     "mixing": "thinky",
+     "mixing_regime": "bulk",
+     "curl": 0.0,
+     "buckle_lam_um": 1.5,
+     "buckle_strain_confined": 0.42,
+     "buckle_am_position_dependent": true,
+     "align_lambda_z": 0.666
+    },
+    "PTFE": {
+     "wt_pct": 1.0,
+     "vol_pct_of_solid": 1.825,
+     "vol_um3": 4408.31,
+     "n_objects": 2245,
+     "n_points": 376571,
+     "E_GPa": 1.8,
+     "sigma_y_GPa": 0.05,
+     "phase_code": 4,
+     "E_anchor": "ADD_E_SET_20260818+override:VGCF=100.0GPa",
+     "mixing": "thinky",
+     "mixing_regime": "bulk",
+     "align_lambda_z": 0.666,
+     "coh_ptfe": 0.093,
+     "binder_cap": 0.93,
+     "fibrillation": 1.0,
+     "branch_frac_effective": 0.5,
+     "curl": 0.4,
+     "press_curl": false,
+     "am_bind": true,
+     "am_bind_frac": 0.5
+    }
+   },
+   "fibre_rod": false,
+   "dg_mean": 0.03,
+   "dg_max": 4.14,
+   "dg_vmax98": 0.3911,
+   "dg_nonzero_pct": 100.0,
+   "n_strain_pts": 200000,
+   "strain_kind": "total (vs seed)",
+   "additive_counts": {
+    "VGCF": 2412333,
+    "PTFE": 376571
+   },
+   "additive_dispersion": {
+    "VGCF": {
+     "n_pts": 2412333,
+     "cell_um": 2.0,
+     "matrix_vol_frac": 0.475,
+     "n_cells_masked_am": 19222,
+     "n_cells": 18278,
+     "mean_per_cell": 104.28,
+     "cov": 0.405,
+     "cov_poisson_floor": 0.098,
+     "index_of_dispersion": 17.11,
+     "nn_med_um": 0.3,
+     "nn_p90_um": 0.545,
+     "nn_med_random_um": 0.215,
+     "nn_clustering": 1.4
+    },
+    "PTFE": {
+     "n_pts": 376571,
+     "cell_um": 2.0,
+     "matrix_vol_frac": 0.475,
+     "n_cells_masked_am": 19222,
+     "n_cells": 18278,
+     "mean_per_cell": 16.37,
+     "cov": 1.25,
+     "cov_poisson_floor": 0.247,
+     "index_of_dispersion": 25.56,
+     "nn_med_um": 0.908,
+     "nn_p90_um": 2.034,
+     "nn_med_random_um": 0.399,
+     "nn_clustering": 2.27
+    },
+    "conductive_all": {
+     "n_pts": 2412333,
+     "cell_um": 2.0,
+     "matrix_vol_frac": 0.475,
+     "n_cells_masked_am": 19222,
+     "n_cells": 18278,
+     "mean_per_cell": 104.28,
+     "cov": 0.405,
+     "cov_poisson_floor": 0.098,
+     "index_of_dispersion": 17.11,
+     "nn_med_um": 0.3,
+     "nn_p90_um": 0.545,
+     "nn_med_random_um": 0.215,
+     "nn_clustering": 1.4
+    }
+   },
+   "n_fibres": 3979,
+   "fibre_straightness_mean": 0.6892,
+   "fibre_straightness_p10": 0.2003,
+   "fibre_buckled_frac_pct": 49.6
+  },
+  "mpm_source": {
+   "se": "se_dump.npy",
+   "scaffold": "/home/kgy/dem-vgcfE/kits/VGCF_PTFE_3_1_E100/am_scaffold.csv",
+   "metrics_json": "mpm_metrics.json",
+   "target_porosity": 0.1589,
+   "target_coverage": null,
+   "smooth": 1.5
+  }
+ },
+ "vgcf_e_sens_20260925_arm1/p2_VGCF_PTFE_3_1_E10_a0.json": {
+  "kind": "mpm",
+  "case": "input_6mAh_real_4",
+  "particles": "<list len 1498 dropped>",
+  "econn_summary": {
+   "connected_pct": 100.0,
+   "n_isolated": 0,
+   "n_carbon_clusters": 2692,
+   "tol_am_um": 0.1,
+   "band_um": 0.15,
+   "vox_um": 0.3,
+   "conductive_phases": "AM + VGCF/SuperP/SDCP/SWCNT-sheath (SE\u00b7PTFE excluded = e-insulators)",
+   "connected_pct_AM_P": 100.0,
+   "connected_pct_AM_S": 100.0
+  },
+  "am_coverage_patches": "<list 12890610 bytes dropped>",
+  "se_strain_points": "<list 6051188 bytes dropped>",
+  "se_morph_points": "<list 4472979 bytes dropped>",
+  "mesh_triangles": "<list 56066606 bytes dropped>",
+  "seed_mesh_triangles": "<list 52412135 bytes dropped>",
+  "additive_points": "<list 3290137 bytes dropped>",
+  "additive_fibres": "<list 6007022 bytes dropped>",
+  "electronic_field": null,
+  "ionic_field": null,
+  "thermal_field": null,
+  "joule_field": "<list 2749231 bytes dropped>",
+  "void_points": "<list 10606356 bytes dropped>",
+  "box": {
+   "x_min": 0.0,
+   "x_max": 50.01,
+   "y_min": 0.0,
+   "y_max": 50.01,
+   "z_min": 0.0,
+   "z_max": 123.03
+  },
+  "atoms_only": false,
+  "temperature_provenance": {
+   "T_C": null,
+   "T_ref_C": 25.0,
+   "Ea_ion_eV": null,
+   "T_dependence": "NOT_MODELLED",
+   "sigma_ion_T_factor": 1.0,
+   "sigma_e_T_dependence": "NOT_MODELLED",
+   "convention": "sigma*T = sigma0*exp(-Ea/(kB*T))  [Kraft 2017 eq 5]",
+   "Ea_band_eV": {
+    "ma2024": 0.29,
+    "reisacher2023": 0.41,
+    "kraft2017": 0.46
+   },
+   "trust": "T_ref=25 \u00b0C is OUR CONVENTION, not an anchor \u2014 Cronau \u03c3_grain=3.0 mS/cm is a single RT point with no Arrhenius (docs/temp_pressure_capability.md T1-b). Ea is a BAND 0.29-0.46 eV (1.8x wide = x2.47..x4.44 at 30->60 \u00b0C); single-value reporting is forbidden \u2014 sweep EA_ION_EV_BAND. T_dependence=NOT_MODELLED: sigma is the 25 \u00b0C value; a run at any other cell temperature UNDER-states sigma_ion (and over-states the ionic ohmic drop).",
+   "scaled_phases": [
+    "SE"
+   ],
+   "unscaled_phases": {
+    "SDCP": "no Ea anchor for the Li-hopping polymer (\u00a7F1) \u2014 held at T_ref",
+    "AM/carbon (sigma_e)": "ohmic regime is T-independent (Reisacher, qualitative)",
+    "thermal k": "no anchor (\u00a7F1)",
+    "i0 / D_s / OCP dU/dT": "no anchor (\u00a7F1) \u2014 STEP4 kinetics are NOT temperature-scaled"
+   }
+  },
+  "mpm_metrics": {
+   "porosity_mpm_pct": 14.89,
+   "thickness_mpm_um": 121.87,
+   "coverage_AM_P_mpm_pct": 15.6,
+   "coverage_AM_S_mpm_pct": 25.1,
+   "coverage_AM_P_add_mpm_pct": 14.1,
+   "coverage_AM_S_add_mpm_pct": 13.8,
+   "se_fraction_pct": 33.77,
+   "n_am": 1498,
+   "se_surface_tris": 308698,
+   "n_vox": 192,
+   "coverage_AM_P_hertz_pct": 32.5,
+   "coverage_AM_P_tabor_pct": 62.1,
+   "coverage_AM_S_hertz_pct": 48.9,
+   "coverage_AM_S_tabor_pct": 80.1,
+   "coverage_AM_P_rigid_hertz_pct": 55.4,
+   "coverage_AM_P_rigid_tabor_pct": 80.1,
+   "coverage_AM_S_rigid_hertz_pct": 57.0,
+   "coverage_AM_S_rigid_tabor_pct": 81.2,
+   "cov_hertz_um": 0.13,
+   "cov_tabor_um": 0.26,
+   "cov_method": "plastic_deformed_vs_rigid_geometric",
+   "step3": {
+    "sigma_e_eff_S_cm": 0.05915422279573881,
+    "vox_um": 0.15,
+    "n_dof": 49256267,
+    "k_plates": [
+     0,
+     816
+    ],
+    "n_floating_dropped": 70322,
+    "cg_resid": 9.954329246391048e-09,
+    "cg_info": 0,
+    "unconverged": false,
+    "dissipation_share": {
+     "AM_S": 0.0407,
+     "AM_P": 0.0504,
+     "VGCF": 0.9089,
+     "SE": 0.0,
+     "PTFE": 0.0
+    },
+    "sigma_table_S_cm": {
+     "AM_S": 0.01,
+     "AM_P": 0.005,
+     "VGCF": 78.5398,
+     "SuperP": 10.0,
+     "SDCP": 250.0,
+     "SWCNT": 100.0,
+     "SWCNT_ion_mode": "SE_transparent_default"
+    },
+    "cam_preset": {
+     "cam": "nmc811"
+    },
+    "trust": "RELATIVE_v1 (same settings between runs; pressed-to-plate beds \u2014 plate contacts abundant; carbon/SDCP \u03c3 = F1 hooks; AM_S/P = A1-locked 10/5 mS/cm; lateral Neumann; sub-voxel constriction not modelled)",
+    "collector": {
+     "kind": "SCENARIO series load \u2014 measured R_int applied externally (NOT a model prediction; the model's own interface OUTPUT is collector_geometric.R_geom)",
+     "R_bulk_ohm_cm2": 0.206,
+     "anchors": "Fig6e R_int (cycled=1000cyc@2C, pristine=panel-e\u2248); S14 primer 1.3e4 S/cm 200nm",
+     "anchors_source": "docs/data/rint_eis_anchors.csv (\uc815\ubcf8, scenario keys)",
+     "sigma_apparent_S_cm": {
+      "ideal_R0": 0.0592,
+      "SBE_bare_110": 0.000111,
+      "DBE_bare_46": 0.000264,
+      "SBE_CSUS_30_proxy_DBE_anchored": 0.000403,
+      "isotech_SUS_150": 8.11e-05
+     },
+     "sigma_apparent_pristine_S_cm": {
+      "ideal_R0": 0.0592,
+      "SBE_bare_18": 0.000669,
+      "DBE_bare_12": 0.000998,
+      "SBE_CSUS_10_proxy_DBE_anchored": 0.00119,
+      "isotech_SUS_50": 0.000243
+     },
+     "time_axis": "sigma_apparent_S_cm = aged R_int(1000cyc@2C) \u00d7 BOL \ubc8c\ud06c = \ubbfc\uac10\ub3c4 \uc2dc\ub098\ub9ac\uc624; sigma_apparent_pristine_S_cm = pristine R_int \u00d7 BOL \ubc8c\ud06c = \uc2dc\uac04-\uc77c\uad00(\ubb3c\ub9ac\uc801 BOL \ud480\uc140)",
+     "pristine_precision": "measured/panel_e_approx \u2014 CSV precision \uceec\ub7fc\uc5d0\uc11c \uc720\ub3c4(\uc815\ubc00 \ub514\uc9c0\ud0c0\uc774\uc988 \uc2dc CSV\ub9cc \uac31\uc2e0\ud558\uba74 \uc77c\uad04 \ubc18\uc601); docs/data/rint_eis_anchors.csv scenario keys"
+    },
+    "joule": {
+     "hot_frac_50": 0.002517381175635322,
+     "conc_ratio": 3669.93,
+     "n_pts": 90000,
+     "note": "Joule \ubc1c\uc5f4\ubc00\ub3c4 q\u221d|J|\u00b2/\u03c3 (\uc804\uc790\ub9dd, run-relative) \u2014 \uc5b4\ub514\uc11c \ubc1c\uc5f4 \ubab0\ub9ac\ub098. hot_frac_50=q \ucd1d\ud569 50% \ub2f4\ub294 \uc0c1\uc704\ubcf5\uc140 \ubd84\uc728(\uc791\uc744\uc218\ub85d \uc9d1\uc911).  \u2605\uc808\ub300 \u0394T(K)\u00b7STEP5 R(N) Arrhenius \uc5f0\ub3d9 = LPSCl \ubd84\ud574 E\u2090 \uc575\ucee4 \ub300\uae30(v2)."
+    },
+    "carbon_se_area_um2": 177100.0,
+    "manifest": {
+     "schema_version": 3,
+     "status": "partial",
+     "components": {
+      "electronic": {
+       "status": "complete",
+       "backend": {
+        "requested": "gpu",
+        "used": "gpu",
+        "fallback_reason": null,
+        "precond": "jacobi"
+       }
+      },
+      "collector_geom": {
+       "status": "disabled",
+       "reason": "--no-collector (\u03c3_e \uc804\uc6a9 \uc2a4\uc715; shift \ud314\uc5d0\uc11c\ub294 _bot_mask \uac00 origin \uc744 \uc548 \ub354\ud574 \uac12 \uc790\uccb4\uac00 \ubb34\ud6a8)"
+      },
+      "ionic": {
+       "status": "disabled",
+       "reason": "--no-ion (\u03c3_e \uc804\uc6a9 \uc2a4\uc715; DR3-07 \ub85c vox \u2264 0.125 \u03c3_ion \uc740 \uc5b4\ucc28\ud53c \uc778\uc6a9 \uae08\uc9c0)"
+      },
+      "thermal": {
+       "status": "disabled",
+       "reason": "--no-thermal (\u03c3_e \uc804\uc6a9 \uc2a4\uc715)"
+      },
+      "pore": {
+       "status": "disabled",
+       "reason": "--no-pore (\u03c3_e \uc804\uc6a9 \uc2a4\uc715; DR3-07 \ub85c vox \u2264 0.125 pore-\u03c4 \ub294 \uc5b4\ucc28\ud53c \uc778\uc6a9 \uae08\uc9c0)"
+      },
+      "pnm": {
+       "status": "disabled",
+       "reason": "--no-pore (\u03c3_e \uc804\uc6a9 \uc2a4\uc715)"
+      }
+     },
+     "expected": [
+      "electronic",
+      "ionic",
+      "thermal",
+      "pore",
+      "pnm"
+     ],
+     "missing": [],
+     "failed": [],
+     "fibre_stamp": "segment",
+     "fibre_stamp_requested": "segment",
+     "fibre_stamp_applied": true,
+     "origin_shift_um": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "ptfe_stamp": "centerline",
+     "ptfe_stamp_requested": "centerline",
+     "ptfe_zero_dof": true,
+     "sdcp_stamp": "point",
+     "sdcp_sphere_d_um": 0.0,
+     "sdcp_yield_to_vgcf": false,
+     "sdcp_bridge_um": 0.0,
+     "ptfe_block_um": 0.0,
+     "ptfe_block_scope": "se",
+     "ptfe_block_cells": {},
+     "dilate_z": 1.0798,
+     "se_source": "npy",
+     "input_digest": "f45931734f51d7d7",
+     "input_files": {
+      "scaffold": "3c76ec09f5da0bc7",
+      "se": "2db6424d8ab98ec0",
+      "phase": "bb64cea2b4122cab",
+      "fibre": "b1aa63575887ee5e",
+      "metrics_json": "11e476e10720586f",
+      "fibre_dia": "fb560cd69e5bdcf4"
+     },
+     "code_sha": "9da8df0e",
+     "exec_env": {
+      "python": "/home/kgy/apps/miniforge3/envs/ti310/bin/python3",
+      "py_version": "3.10.21",
+      "pythonpath": "",
+      "sitecustomize": null,
+      "usercustomize": null,
+      "untracked_codelike": [],
+      "loaded_project_modules": 6,
+      "project_module_digest": "1e5e6744ef80f913",
+      "risk": []
+     },
+     "vox_um": 0.15,
+     "periodic_xy": false,
+     "plate_rule": "p2-occupied-surface-first",
+     "component_plan": {
+      "electronic": true,
+      "ionic": false,
+      "thermal": false,
+      "pore": false,
+      "collector": false
+     },
+     "field_requested": false,
+     "fibre_segment_ledger": {
+      "2": {
+       "fid_total": 77802,
+       "fid_segment": 77166,
+       "fid_point_nonpath": 0,
+       "fid_point_singleton": 636,
+       "split_singleton_pieces": 9777
+      },
+      "4": {
+       "fid_total": 3837,
+       "fid_segment": 3825,
+       "fid_point_nonpath": 0,
+       "fid_point_singleton": 12,
+       "split_singleton_pieces": 1174
+      }
+     },
+     "electronic_field_pts": 0,
+     "ionic_field_pts": 0,
+     "ptfe_cells_observed": 537344,
+     "bridge_um": 0.24,
+     "bridge_um_explicit": true,
+     "sigma_vgcf_S_cm": 78.5398,
+     "sigma_sdcp_S_cm": 250.0,
+     "sigma_ptfe_S_cm": 0.0,
+     "sigma_superp_S_cm": 10.0,
+     "sigma_swcnt_S_cm": 100.0,
+     "swcnt_ion_block": false,
+     "sigma_ion_se_S_cm": 0.003,
+     "sigma_ion_se_ref_S_cm": 0.003,
+     "sigma_ion_sdcp_S_cm": 0.001,
+     "sigma_am_s_S_cm": 0.01,
+     "sigma_am_p_S_cm": 0.005,
+     "cam": "nmc811",
+     "temp_c": null,
+     "ea_ion_ev": null,
+     "mpm_seed": 3,
+     "se_E_GPa": 1.53,
+     "se_nu": 0.49,
+     "se_sigma_y_GPa": 0.3,
+     "additive_E_GPa": {
+      "VGCF": 10.0,
+      "PTFE": 1.8
+     },
+     "plate_z_grid_um": [
+      0.0,
+      121.869
+     ],
+     "mesh_unavailable": null,
+     "backend_last_solve": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     },
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     },
+     "physics_protocol_id": "p2-79ade1a5c2b0c9fb"
+    }
+   },
+   "seed_porosity_pct": 21.17,
+   "compacted_porosity_pct": 14.89,
+   "E_SE_GPa": 1.53,
+   "nu_SE": 0.49,
+   "sigma_y_GPa": 0.3,
+   "K_SE_GPa": 25.5,
+   "final_stress_GPa": 0.1403,
+   "target_GPa": 0.3,
+   "bulk_density_g_cm3": 3.039,
+   "seed_AM_frac_pct": 52.21,
+   "seed_SE_frac_pct": 26.62,
+   "n_grid": 256,
+   "protocol": "hold",
+   "additives": {
+    "VGCF": {
+     "wt_pct": 3.0,
+     "vol_pct_of_solid": 6.023,
+     "vol_um3": 14547.42,
+     "n_objects": 82322,
+     "n_points": 2412333,
+     "E_GPa": 10.0,
+     "sigma_y_GPa": 2.0,
+     "phase_code": 2,
+     "E_anchor": "ADD_E_SET_20260818+override:VGCF=10.0GPa",
+     "mixing": "thinky",
+     "mixing_regime": "bulk",
+     "curl": 0.0,
+     "buckle_lam_um": 1.5,
+     "buckle_strain_confined": 0.42,
+     "buckle_am_position_dependent": true,
+     "align_lambda_z": 0.666
+    },
+    "PTFE": {
+     "wt_pct": 1.0,
+     "vol_pct_of_solid": 1.825,
+     "vol_um3": 4408.31,
+     "n_objects": 2245,
+     "n_points": 376571,
+     "E_GPa": 1.8,
+     "sigma_y_GPa": 0.05,
+     "phase_code": 4,
+     "E_anchor": "ADD_E_SET_20260818+override:VGCF=10.0GPa",
+     "mixing": "thinky",
+     "mixing_regime": "bulk",
+     "align_lambda_z": 0.666,
+     "coh_ptfe": 0.093,
+     "binder_cap": 0.93,
+     "fibrillation": 1.0,
+     "branch_frac_effective": 0.5,
+     "curl": 0.4,
+     "press_curl": false,
+     "am_bind": true,
+     "am_bind_frac": 0.5
+    }
+   },
+   "fibre_rod": false,
+   "dg_mean": 0.0477,
+   "dg_max": 4.732,
+   "dg_vmax98": 0.5771,
+   "dg_nonzero_pct": 100.0,
+   "n_strain_pts": 200000,
+   "strain_kind": "total (vs seed)",
+   "additive_counts": {
+    "VGCF": 2412333,
+    "PTFE": 376571
+   },
+   "additive_dispersion": {
+    "VGCF": {
+     "n_pts": 2412333,
+     "cell_um": 2.0,
+     "matrix_vol_frac": 0.475,
+     "n_cells_masked_am": 19222,
+     "n_cells": 18278,
+     "mean_per_cell": 104.33,
+     "cov": 0.405,
+     "cov_poisson_floor": 0.098,
+     "index_of_dispersion": 17.13,
+     "nn_med_um": 0.3,
+     "nn_p90_um": 0.545,
+     "nn_med_random_um": 0.215,
+     "nn_clustering": 1.4
+    },
+    "PTFE": {
+     "n_pts": 376571,
+     "cell_um": 2.0,
+     "matrix_vol_frac": 0.475,
+     "n_cells_masked_am": 19222,
+     "n_cells": 18278,
+     "mean_per_cell": 16.38,
+     "cov": 1.25,
+     "cov_poisson_floor": 0.247,
+     "index_of_dispersion": 25.58,
+     "nn_med_um": 0.908,
+     "nn_p90_um": 2.034,
+     "nn_med_random_um": 0.399,
+     "nn_clustering": 2.28
+    },
+    "conductive_all": {
+     "n_pts": 2412333,
+     "cell_um": 2.0,
+     "matrix_vol_frac": 0.475,
+     "n_cells_masked_am": 19222,
+     "n_cells": 18278,
+     "mean_per_cell": 104.33,
+     "cov": 0.405,
+     "cov_poisson_floor": 0.098,
+     "index_of_dispersion": 17.13,
+     "nn_med_um": 0.3,
+     "nn_p90_um": 0.545,
+     "nn_med_random_um": 0.215,
+     "nn_clustering": 1.4
+    }
+   },
+   "n_fibres": 3979,
+   "fibre_straightness_mean": 0.689,
+   "fibre_straightness_p10": 0.2004,
+   "fibre_buckled_frac_pct": 49.6
+  },
+  "mpm_source": {
+   "se": "se_dump.npy",
+   "scaffold": "/home/kgy/dem-vgcfE/kits/VGCF_PTFE_3_1_E10/am_scaffold.csv",
+   "metrics_json": "mpm_metrics.json",
+   "target_porosity": 0.1589,
+   "target_coverage": null,
+   "smooth": 1.5
+  }
+ },
+ "vgcf_e_sens_20260925_arm1/p2_VGCF_PTFE_3_1_E1_a0.json": {
+  "kind": "mpm",
+  "case": "input_6mAh_real_4",
+  "particles": "<list len 1498 dropped>",
+  "econn_summary": {
+   "connected_pct": 100.0,
+   "n_isolated": 0,
+   "n_carbon_clusters": 2696,
+   "tol_am_um": 0.1,
+   "band_um": 0.15,
+   "vox_um": 0.3,
+   "conductive_phases": "AM + VGCF/SuperP/SDCP/SWCNT-sheath (SE\u00b7PTFE excluded = e-insulators)",
+   "connected_pct_AM_P": 100.0,
+   "connected_pct_AM_S": 100.0
+  },
+  "am_coverage_patches": "<list 12902442 bytes dropped>",
+  "se_strain_points": "<list 6050462 bytes dropped>",
+  "se_morph_points": "<list 4473063 bytes dropped>",
+  "mesh_triangles": "<list 55796103 bytes dropped>",
+  "seed_mesh_triangles": "<list 52412135 bytes dropped>",
+  "additive_points": "<list 3290119 bytes dropped>",
+  "additive_fibres": "<list 6007116 bytes dropped>",
+  "electronic_field": null,
+  "ionic_field": null,
+  "thermal_field": null,
+  "joule_field": "<list 2749382 bytes dropped>",
+  "void_points": "<list 10609654 bytes dropped>",
+  "box": {
+   "x_min": 0.0,
+   "x_max": 50.01,
+   "y_min": 0.0,
+   "y_max": 50.01,
+   "z_min": 0.0,
+   "z_max": 123.03
+  },
+  "atoms_only": false,
+  "temperature_provenance": {
+   "T_C": null,
+   "T_ref_C": 25.0,
+   "Ea_ion_eV": null,
+   "T_dependence": "NOT_MODELLED",
+   "sigma_ion_T_factor": 1.0,
+   "sigma_e_T_dependence": "NOT_MODELLED",
+   "convention": "sigma*T = sigma0*exp(-Ea/(kB*T))  [Kraft 2017 eq 5]",
+   "Ea_band_eV": {
+    "ma2024": 0.29,
+    "reisacher2023": 0.41,
+    "kraft2017": 0.46
+   },
+   "trust": "T_ref=25 \u00b0C is OUR CONVENTION, not an anchor \u2014 Cronau \u03c3_grain=3.0 mS/cm is a single RT point with no Arrhenius (docs/temp_pressure_capability.md T1-b). Ea is a BAND 0.29-0.46 eV (1.8x wide = x2.47..x4.44 at 30->60 \u00b0C); single-value reporting is forbidden \u2014 sweep EA_ION_EV_BAND. T_dependence=NOT_MODELLED: sigma is the 25 \u00b0C value; a run at any other cell temperature UNDER-states sigma_ion (and over-states the ionic ohmic drop).",
+   "scaled_phases": [
+    "SE"
+   ],
+   "unscaled_phases": {
+    "SDCP": "no Ea anchor for the Li-hopping polymer (\u00a7F1) \u2014 held at T_ref",
+    "AM/carbon (sigma_e)": "ohmic regime is T-independent (Reisacher, qualitative)",
+    "thermal k": "no anchor (\u00a7F1)",
+    "i0 / D_s / OCP dU/dT": "no anchor (\u00a7F1) \u2014 STEP4 kinetics are NOT temperature-scaled"
+   }
+  },
+  "mpm_metrics": {
+   "porosity_mpm_pct": 14.75,
+   "thickness_mpm_um": 121.67,
+   "coverage_AM_P_mpm_pct": 16.2,
+   "coverage_AM_S_mpm_pct": 25.6,
+   "coverage_AM_P_add_mpm_pct": 14.1,
+   "coverage_AM_S_add_mpm_pct": 13.8,
+   "se_fraction_pct": 33.77,
+   "n_am": 1498,
+   "se_surface_tris": 307228,
+   "n_vox": 192,
+   "coverage_AM_P_hertz_pct": 32.9,
+   "coverage_AM_P_tabor_pct": 62.3,
+   "coverage_AM_S_hertz_pct": 49.1,
+   "coverage_AM_S_tabor_pct": 80.2,
+   "coverage_AM_P_rigid_hertz_pct": 55.4,
+   "coverage_AM_P_rigid_tabor_pct": 80.1,
+   "coverage_AM_S_rigid_hertz_pct": 57.0,
+   "coverage_AM_S_rigid_tabor_pct": 81.2,
+   "cov_hertz_um": 0.13,
+   "cov_tabor_um": 0.26,
+   "cov_method": "plastic_deformed_vs_rigid_geometric",
+   "step3": {
+    "sigma_e_eff_S_cm": 0.059274025385408095,
+    "vox_um": 0.15,
+    "n_dof": 49251000,
+    "k_plates": [
+     0,
+     816
+    ],
+    "n_floating_dropped": 69878,
+    "cg_resid": 9.98512352349007e-09,
+    "cg_info": 0,
+    "unconverged": false,
+    "dissipation_share": {
+     "AM_S": 0.0407,
+     "AM_P": 0.0504,
+     "VGCF": 0.9089,
+     "SE": 0.0,
+     "PTFE": 0.0
+    },
+    "sigma_table_S_cm": {
+     "AM_S": 0.01,
+     "AM_P": 0.005,
+     "VGCF": 78.5398,
+     "SuperP": 10.0,
+     "SDCP": 250.0,
+     "SWCNT": 100.0,
+     "SWCNT_ion_mode": "SE_transparent_default"
+    },
+    "cam_preset": {
+     "cam": "nmc811"
+    },
+    "trust": "RELATIVE_v1 (same settings between runs; pressed-to-plate beds \u2014 plate contacts abundant; carbon/SDCP \u03c3 = F1 hooks; AM_S/P = A1-locked 10/5 mS/cm; lateral Neumann; sub-voxel constriction not modelled)",
+    "collector": {
+     "kind": "SCENARIO series load \u2014 measured R_int applied externally (NOT a model prediction; the model's own interface OUTPUT is collector_geometric.R_geom)",
+     "R_bulk_ohm_cm2": 0.205,
+     "anchors": "Fig6e R_int (cycled=1000cyc@2C, pristine=panel-e\u2248); S14 primer 1.3e4 S/cm 200nm",
+     "anchors_source": "docs/data/rint_eis_anchors.csv (\uc815\ubcf8, scenario keys)",
+     "sigma_apparent_S_cm": {
+      "ideal_R0": 0.0593,
+      "SBE_bare_110": 0.00011,
+      "DBE_bare_46": 0.000263,
+      "SBE_CSUS_30_proxy_DBE_anchored": 0.000403,
+      "isotech_SUS_150": 8.1e-05
+     },
+     "sigma_apparent_pristine_S_cm": {
+      "ideal_R0": 0.0593,
+      "SBE_bare_18": 0.000668,
+      "DBE_bare_12": 0.000997,
+      "SBE_CSUS_10_proxy_DBE_anchored": 0.00119,
+      "isotech_SUS_50": 0.000242
+     },
+     "time_axis": "sigma_apparent_S_cm = aged R_int(1000cyc@2C) \u00d7 BOL \ubc8c\ud06c = \ubbfc\uac10\ub3c4 \uc2dc\ub098\ub9ac\uc624; sigma_apparent_pristine_S_cm = pristine R_int \u00d7 BOL \ubc8c\ud06c = \uc2dc\uac04-\uc77c\uad00(\ubb3c\ub9ac\uc801 BOL \ud480\uc140)",
+     "pristine_precision": "measured/panel_e_approx \u2014 CSV precision \uceec\ub7fc\uc5d0\uc11c \uc720\ub3c4(\uc815\ubc00 \ub514\uc9c0\ud0c0\uc774\uc988 \uc2dc CSV\ub9cc \uac31\uc2e0\ud558\uba74 \uc77c\uad04 \ubc18\uc601); docs/data/rint_eis_anchors.csv scenario keys"
+    },
+    "joule": {
+     "hot_frac_50": 0.0025164774797539766,
+     "conc_ratio": 3692.93,
+     "n_pts": 90000,
+     "note": "Joule \ubc1c\uc5f4\ubc00\ub3c4 q\u221d|J|\u00b2/\u03c3 (\uc804\uc790\ub9dd, run-relative) \u2014 \uc5b4\ub514\uc11c \ubc1c\uc5f4 \ubab0\ub9ac\ub098. hot_frac_50=q \ucd1d\ud569 50% \ub2f4\ub294 \uc0c1\uc704\ubcf5\uc140 \ubd84\uc728(\uc791\uc744\uc218\ub85d \uc9d1\uc911).  \u2605\uc808\ub300 \u0394T(K)\u00b7STEP5 R(N) Arrhenius \uc5f0\ub3d9 = LPSCl \ubd84\ud574 E\u2090 \uc575\ucee4 \ub300\uae30(v2)."
+    },
+    "carbon_se_area_um2": 177200.0,
+    "manifest": {
+     "schema_version": 3,
+     "status": "partial",
+     "components": {
+      "electronic": {
+       "status": "complete",
+       "backend": {
+        "requested": "gpu",
+        "used": "gpu",
+        "fallback_reason": null,
+        "precond": "jacobi"
+       }
+      },
+      "collector_geom": {
+       "status": "disabled",
+       "reason": "--no-collector (\u03c3_e \uc804\uc6a9 \uc2a4\uc715; shift \ud314\uc5d0\uc11c\ub294 _bot_mask \uac00 origin \uc744 \uc548 \ub354\ud574 \uac12 \uc790\uccb4\uac00 \ubb34\ud6a8)"
+      },
+      "ionic": {
+       "status": "disabled",
+       "reason": "--no-ion (\u03c3_e \uc804\uc6a9 \uc2a4\uc715; DR3-07 \ub85c vox \u2264 0.125 \u03c3_ion \uc740 \uc5b4\ucc28\ud53c \uc778\uc6a9 \uae08\uc9c0)"
+      },
+      "thermal": {
+       "status": "disabled",
+       "reason": "--no-thermal (\u03c3_e \uc804\uc6a9 \uc2a4\uc715)"
+      },
+      "pore": {
+       "status": "disabled",
+       "reason": "--no-pore (\u03c3_e \uc804\uc6a9 \uc2a4\uc715; DR3-07 \ub85c vox \u2264 0.125 pore-\u03c4 \ub294 \uc5b4\ucc28\ud53c \uc778\uc6a9 \uae08\uc9c0)"
+      },
+      "pnm": {
+       "status": "disabled",
+       "reason": "--no-pore (\u03c3_e \uc804\uc6a9 \uc2a4\uc715)"
+      }
+     },
+     "expected": [
+      "electronic",
+      "ionic",
+      "thermal",
+      "pore",
+      "pnm"
+     ],
+     "missing": [],
+     "failed": [],
+     "fibre_stamp": "segment",
+     "fibre_stamp_requested": "segment",
+     "fibre_stamp_applied": true,
+     "origin_shift_um": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "ptfe_stamp": "centerline",
+     "ptfe_stamp_requested": "centerline",
+     "ptfe_zero_dof": true,
+     "sdcp_stamp": "point",
+     "sdcp_sphere_d_um": 0.0,
+     "sdcp_yield_to_vgcf": false,
+     "sdcp_bridge_um": 0.0,
+     "ptfe_block_um": 0.0,
+     "ptfe_block_scope": "se",
+     "ptfe_block_cells": {},
+     "dilate_z": 1.0798,
+     "se_source": "npy",
+     "input_digest": "3de0cf6d9958a8cf",
+     "input_files": {
+      "scaffold": "3c76ec09f5da0bc7",
+      "se": "fdff1ea8bd1f6489",
+      "phase": "bb64cea2b4122cab",
+      "fibre": "b1aa63575887ee5e",
+      "metrics_json": "0a77811558a72c19",
+      "fibre_dia": "fb560cd69e5bdcf4"
+     },
+     "code_sha": "9da8df0e",
+     "exec_env": {
+      "python": "/home/kgy/apps/miniforge3/envs/ti310/bin/python3",
+      "py_version": "3.10.21",
+      "pythonpath": "",
+      "sitecustomize": null,
+      "usercustomize": null,
+      "untracked_codelike": [],
+      "loaded_project_modules": 6,
+      "project_module_digest": "1e5e6744ef80f913",
+      "risk": []
+     },
+     "vox_um": 0.15,
+     "periodic_xy": false,
+     "plate_rule": "p2-occupied-surface-first",
+     "component_plan": {
+      "electronic": true,
+      "ionic": false,
+      "thermal": false,
+      "pore": false,
+      "collector": false
+     },
+     "field_requested": false,
+     "fibre_segment_ledger": {
+      "2": {
+       "fid_total": 77802,
+       "fid_segment": 77166,
+       "fid_point_nonpath": 0,
+       "fid_point_singleton": 636,
+       "split_singleton_pieces": 9805
+      },
+      "4": {
+       "fid_total": 3837,
+       "fid_segment": 3825,
+       "fid_point_nonpath": 0,
+       "fid_point_singleton": 12,
+       "split_singleton_pieces": 1184
+      }
+     },
+     "electronic_field_pts": 0,
+     "ionic_field_pts": 0,
+     "ptfe_cells_observed": 536864,
+     "bridge_um": 0.24,
+     "bridge_um_explicit": true,
+     "sigma_vgcf_S_cm": 78.5398,
+     "sigma_sdcp_S_cm": 250.0,
+     "sigma_ptfe_S_cm": 0.0,
+     "sigma_superp_S_cm": 10.0,
+     "sigma_swcnt_S_cm": 100.0,
+     "swcnt_ion_block": false,
+     "sigma_ion_se_S_cm": 0.003,
+     "sigma_ion_se_ref_S_cm": 0.003,
+     "sigma_ion_sdcp_S_cm": 0.001,
+     "sigma_am_s_S_cm": 0.01,
+     "sigma_am_p_S_cm": 0.005,
+     "cam": "nmc811",
+     "temp_c": null,
+     "ea_ion_ev": null,
+     "mpm_seed": 3,
+     "se_E_GPa": 1.53,
+     "se_nu": 0.49,
+     "se_sigma_y_GPa": 0.3,
+     "additive_E_GPa": {
+      "VGCF": 1.0,
+      "PTFE": 1.8
+     },
+     "plate_z_grid_um": [
+      0.0,
+      121.669
+     ],
+     "mesh_unavailable": null,
+     "backend_last_solve": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     },
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     },
+     "physics_protocol_id": "p2-79ade1a5c2b0c9fb"
+    }
+   },
+   "seed_porosity_pct": 21.17,
+   "compacted_porosity_pct": 14.75,
+   "E_SE_GPa": 1.53,
+   "nu_SE": 0.49,
+   "sigma_y_GPa": 0.3,
+   "K_SE_GPa": 25.5,
+   "final_stress_GPa": 0.1403,
+   "target_GPa": 0.3,
+   "bulk_density_g_cm3": 3.039,
+   "seed_AM_frac_pct": 52.21,
+   "seed_SE_frac_pct": 26.62,
+   "n_grid": 256,
+   "protocol": "hold",
+   "additives": {
+    "VGCF": {
+     "wt_pct": 3.0,
+     "vol_pct_of_solid": 6.023,
+     "vol_um3": 14547.42,
+     "n_objects": 82322,
+     "n_points": 2412333,
+     "E_GPa": 1.0,
+     "sigma_y_GPa": 2.0,
+     "phase_code": 2,
+     "E_anchor": "ADD_E_SET_20260818+override:VGCF=1.0GPa",
+     "mixing": "thinky",
+     "mixing_regime": "bulk",
+     "curl": 0.0,
+     "buckle_lam_um": 1.5,
+     "buckle_strain_confined": 0.42,
+     "buckle_am_position_dependent": true,
+     "align_lambda_z": 0.666
+    },
+    "PTFE": {
+     "wt_pct": 1.0,
+     "vol_pct_of_solid": 1.825,
+     "vol_um3": 4408.31,
+     "n_objects": 2245,
+     "n_points": 376571,
+     "E_GPa": 1.8,
+     "sigma_y_GPa": 0.05,
+     "phase_code": 4,
+     "E_anchor": "ADD_E_SET_20260818+override:VGCF=1.0GPa",
+     "mixing": "thinky",
+     "mixing_regime": "bulk",
+     "align_lambda_z": 0.666,
+     "coh_ptfe": 0.093,
+     "binder_cap": 0.93,
+     "fibrillation": 1.0,
+     "branch_frac_effective": 0.5,
+     "curl": 0.4,
+     "press_curl": false,
+     "am_bind": true,
+     "am_bind_frac": 0.5
+    }
+   },
+   "fibre_rod": false,
+   "dg_mean": 0.063,
+   "dg_max": 5.132,
+   "dg_vmax98": 0.7467,
+   "dg_nonzero_pct": 100.0,
+   "n_strain_pts": 200000,
+   "strain_kind": "total (vs seed)",
+   "additive_counts": {
+    "VGCF": 2412333,
+    "PTFE": 376571
+   },
+   "additive_dispersion": {
+    "VGCF": {
+     "n_pts": 2412333,
+     "cell_um": 2.0,
+     "matrix_vol_frac": 0.474,
+     "n_cells_masked_am": 19222,
+     "n_cells": 18278,
+     "mean_per_cell": 104.47,
+     "cov": 0.405,
+     "cov_poisson_floor": 0.098,
+     "index_of_dispersion": 17.15,
+     "nn_med_um": 0.3,
+     "nn_p90_um": 0.545,
+     "nn_med_random_um": 0.215,
+     "nn_clustering": 1.4
+    },
+    "PTFE": {
+     "n_pts": 376571,
+     "cell_um": 2.0,
+     "matrix_vol_frac": 0.474,
+     "n_cells_masked_am": 19222,
+     "n_cells": 18278,
+     "mean_per_cell": 16.39,
+     "cov": 1.25,
+     "cov_poisson_floor": 0.247,
+     "index_of_dispersion": 25.59,
+     "nn_med_um": 0.908,
+     "nn_p90_um": 2.034,
+     "nn_med_random_um": 0.399,
+     "nn_clustering": 2.28
+    },
+    "conductive_all": {
+     "n_pts": 2412333,
+     "cell_um": 2.0,
+     "matrix_vol_frac": 0.474,
+     "n_cells_masked_am": 19222,
+     "n_cells": 18278,
+     "mean_per_cell": 104.47,
+     "cov": 0.405,
+     "cov_poisson_floor": 0.098,
+     "index_of_dispersion": 17.15,
+     "nn_med_um": 0.3,
+     "nn_p90_um": 0.545,
+     "nn_med_random_um": 0.215,
+     "nn_clustering": 1.4
+    }
+   },
+   "n_fibres": 3979,
+   "fibre_straightness_mean": 0.6891,
+   "fibre_straightness_p10": 0.2009,
+   "fibre_buckled_frac_pct": 49.6
+  },
+  "mpm_source": {
+   "se": "se_dump.npy",
+   "scaffold": "/home/kgy/dem-vgcfE/kits/VGCF_PTFE_3_1_E1/am_scaffold.csv",
+   "metrics_json": "mpm_metrics.json",
+   "target_porosity": 0.1589,
+   "target_coverage": null,
+   "smooth": 1.5
+  }
+ }
+}

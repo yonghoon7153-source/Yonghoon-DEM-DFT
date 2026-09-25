@@ -92,11 +92,12 @@ frozen AM) 이 상한이므로 100 GPa 팔이 그것을 넘으면 코드 결함�
 | E_VGCF | 시작 → 마커 | override / E_anchor | additives.VGCF.E_GPa | porosity@target (%) | settled (%) | 두께 (µm) | wall_z | settled/target | wallP 정착 (GPa) | 유효 |
 |---|---|---|---|---|---|---|---|---|---|---|
 | **1** | 13:32:49 → 15:09:36 (압밀 ~32 분 + payload ~65 분) | `VGCF=1` / `ADD_E_SET_20260818+override:VGCF=1.0GPa` | 1.0 | 14.749 | 14.749 | 121.669 | 2.2881 | 0.4662 | 0.1403 | ✅ (§4 충족: 태그 · 도달 non-None) |
-| **10** | 15:10:34 → 16:20 | `VGCF=10` / `ADD_E_SET_20260818+override:VGCF=10.0GPa` | (tgz) | 14.889 | 14.889 | 121.869 | 2.2918 | 0.467 | (tgz) | ✅ |
-| **100** | ~17:10 → 18:06 | `VGCF=100` / `ADD_E_SET_20260818+override:VGCF=100.0GPa` | (tgz) | 14.929 | 14.929 | 121.926 | 2.2928 | 0.4558 | (tgz) | ✅ |
+| **10** | 15:10:34 → 16:20 | `VGCF=10` / `ADD_E_SET_20260818+override:VGCF=10.0GPa` | 10.0 | 14.889 | 14.889 | 121.869 | 2.2918 | 0.467 | 0.1403 | ✅ |
+| **100** | ~17:10 → 18:06 | `VGCF=100` / `ADD_E_SET_20260818+override:VGCF=100.0GPa` | 100.0 | 14.929 | 14.929 | 121.926 | 2.2928 | 0.4558 | 0.1368 | ✅ |
 
 - 공통: `stop_mode legacy_moving` · `frames_budget 2500` · `wall_z_at_floor False`.  출처 = kgy `vgcf_e_tags_20260925.txt` (세 팔 `mpm_metrics.json` 발췌).
-  `(tgz)` 칸은 결과 묶음 수신 뒤 채운다.
+  결과 원자료 = `docs/data/vgcf_e_sensitivity_20260925/` (요약 `summary.tsv` · README).  ⚠ metrics 의 `dt` 는 요청값이라 E=100 의 실제 dt 가
+  안 적힌다 (원장 `SELF-50`).
 - **재현성 (§4 셋째)**: E=10 이 Phase A 생산 침대 재생성값 (`docs/data/phase_a_6mah/regen_20260914_metrics.tsv` 의 `VGCF_PTFE_3_1` 행:
   14.889 · 14.889 · 0.467 · 121.869) 과 **인쇄 자릿수까지 같다** ⇒ Δ 0.000 %p (허용 0.05) ✅.
 - ⚠ **등록 결함 — 지표 이름**: §2 ① 이 적은 `porosity_sphere` 는 `mpm_metrics.json` 에 **없다** (있는 것은 `porosity_at_target_pct` ·
@@ -109,4 +110,20 @@ frozen AM) 이 상한이므로 100 GPa 팔이 그것을 넘으면 코드 결함�
   다만 (i) 프레임당 플래튼 걸음이 0.068 → 0.046 µm 로 작아 정지 위치의 양자화가 다르다 — E=10 → 100 차이 (+0.057 µm · +0.04 %p) 는
   이 걸음 크기 수준이고, E=1 → 10 (+0.200 µm · +0.14 %p, 같은 dt) 은 약 3 걸음이다.  (ii) hold 40 프레임의 물리 이완시간이 1.485 배 짧다 —
   porosity 는 무관 (플래튼 고정), `settled_over_target` (0.4558 vs 0.467) · SE 형상에는 영향 가능.
-- σ_e 축: STEP3 (vox 0.15 · origin 1 팔 · GPU) 진행 중 — E=1 팔 완료 (18:4x 확인), E=10 · E=100 대기.  판정 (§3) 은 σ_e 까지 받은 뒤.
+### 7-3. STEP3 σ_e · 판정 (09-25 19:38 러너 완주 · rc 0)
+
+| E_VGCF | σ_e (mS cm⁻¹) | E=10 대비 | dof | CG | 잔차 |
+|---|---|---|---|---|---|
+| 1 GPa | 59.274 | +0.20 % | 49,251,000 | 0 (수렴) | 9.99 × 10⁻⁹ |
+| **10 GPa** | **59.154** | — | 49,256,267 | 0 | 9.95 × 10⁻⁹ |
+| 100 GPa | 59.303 | +0.25 % | 49,257,192 | 0 | 9.98 × 10⁻⁹ |
+
+- 세 팔 공통: σ_VGCF (복셀) 78.5398 · vox 0.15 · bridge 0.24 µm · PTFE centerline · `expect_backend gpu` (러너가 팔마다 검증, rc 0) · 피크 RSS 28.3 GB.
+- **σ_e 축 (§3)**: 1 ↔ 100 GPa 에서 |Δσ_e / σ_e(10)| = **0.049 %** (팔마다 E=10 대비 최대 0.25 %) ≤ 2 % ⇒ **통과**.  §5 예측 (< 1 %) 적중.
+- **porosity 축**: |Δε| = **0.180 %p** ≤ 0.3 ⇒ 통과 (§7-2).
+- ⇒ **판정 = h0 "2차 입력"** — 1 → 100 GPa 에서 VGCF 탄성계수는 압밀 porosity 와 σ_e 를 판정선 안에서만 움직인다.
+- 한정어 (떼지 말 것): ① 한 침대 (SBE 조성 킷) · ② origin 1 팔 — origin 위상 산포 (0.68 %, `CL-33/34`) 가 팔 간 σ_e 차이 (≤ 0.25 %) 보다
+  크다 ⇒ σ_e 순서 (10 이 가장 낮음) 는 **해석하지 않는다** · ③ 시험 범위 1–100 GPa — 문헌 단섬유 180–245 GPa (Ozkan 2010, PDF 미확인) 는
+  **범위 밖** · ④ E=100 은 dt 가 달라 정지 양자화 · hold 이완시간이 다르다 (§7-2) · ⑤ `stop_mode legacy_moving`.
+- Methods 표 라벨 제안 (§3 문안): *"10 GPa — Assumed (effective modulus of the sub-grid fibre material points; varying it from 1 to
+  100 GPa changed the compacted porosity by 0.18 %p and σ_e by ≤ 0.25 %)."*  — 원고 반영은 준희 대응 §4 에서 결정.
