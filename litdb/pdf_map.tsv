@@ -104,3 +104,19 @@ wang2025_ai_ecosystems_electrolyte_interface_ssb	127. SciAdv_2025_Wang_Zeier_You
 #       Fig. 1·2 가 사라지고 나머지 5장이 다시 잘린다. ('--inbox --run --skip-done' 은 안전.)
 #   ⭐ Fig. 1 이 이 논문을 구한 이유다 — 잃어버리면 digest 의 §4 근거가 사라진다.
 #   SI(Tables S1–S5)는 별도 PDF 이고 **우리 미확보**.
+#
+# ── CAM 고유 전달물성 (σ_e / σ_i 단상 펠릿) ──────────────
+# 가드: 파일명이 출판사 해시(1-s2.0-S037877531830466X-main.pdf / …-mmc1.pdf)라 제목 토큰이 안 겹친다
+#   → PII 조각으로 본문·SI 를 같이 잡는다 (SI 는 'mmc' 로 자동 판정).
+wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni	s037877531830466x
+#   ↑ 2026-09-25. **20장 전부 손이 들어가 있다** (figures.json 의 manual_crop / recrop):
+#   모든 그림이 쪽당 임베디드 래스터 1장이고 래스터 밖 그림 요소가 없다(3쪽 벡터 350개 = 크기 0 인공물)
+#   → 클립 = 래스터 경계 + 백색 여백 제거(흰색 = 세 채널 > 244, 여백 14 px @300 dpi).
+#   · fig_1 = 본문 page 3(0-based 2) clip (37.6, 56.6, 352.2, 260.5) → 1312x851
+#     fig_6 = 본문 page 6(0-based 5) clip (37.6, 56.6, 378.8, 398.9) → 1423x1428
+#     ↑ 둘 다 **캡션이 그림 오른쪽 옆**이라 자동 크로퍼가 '그래픽 없음' 으로 제외한다.
+#   · 자동 크롭은 fig_S4 상단에 **Fig S3 캡션 끝줄이 섞였고**, 본문 그림에 페이지 여백이 들어갔다
+#     → 나머지 18장도 래스터 경계로 재크롭 (bbox 는 figures.json 에 그대로 있다).
+#   [!] '--slug wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni --clean' 을 돌리면
+#       Fig 1·Fig 6 이 사라지고 S4 오염이 되돌아온다. ('--inbox --run --skip-done' 은 안전.)
+#   ⭐ Fig 6 (E_a 요약)과 Fig 4f (σ_e vs T) 가 이 카드의 근거다.
