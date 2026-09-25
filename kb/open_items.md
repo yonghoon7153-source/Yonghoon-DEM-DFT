@@ -229,6 +229,9 @@
     ✅ **② 끝 (09-25 18:14 · V100 27 min · 7/7 rc 0)** — 내장 대조 ✅ (2e-8 Ry) · **R1 ✅** σ_yz 10.8 kbar 네 설정 동일 · **R2 ✅** ΔW′ 0.0775 네 설정 동일(스프레드 0) ·
     70 Ry/k4 대비 −0.16 meV/atom (52/k3 가 벌크 에너지 차·응력에 사실상 수렴). 원자료 `db/raw/wad_sese_4L_2026_09_25/bulk_sens_result_2026_09_25.json`. ⛔ 슬랩 W 수렴 인증 아님.
     ⚠ ~/wad4l 은 git 저장소가 아니라 kgy rsync 사본 — 갱신은 플랫폼 문서 함정 ⑦ 식 (kgy `v100-serve` ref → `git archive | tar`) · `CODE_ID` 파일로 커밋 기록. ⏭ **③ A′ 파일럿 사전등록 카드**.
+    ✅ **1저자 '이거 하게 전체적으로 하고 DEM 보낼 회신도' (09-25)** → **결정 7 = (a)** `D-2026-09-25-wad-lattice-matching-rule-a` · **A′ 카드 초안** `db/properties/wad_aprime_pilot_prereg_2026_09_25.json`
+    (draft · 봉인 전 · 계산 0 — V2 직접 DFT · V3/V4 진단 · V5 프로브 조건 · G1–G6 · 갈래 0–3 · 140 GPU-h 제안) → ⏳ **Codex BY** `codex_BY_prompt_wad_aprime_pilot_prereg_2026_09_25.md` (발송 대기 · Q1–Q8).
+    📨 **DEM 회신 2‴+부록 발송판** (`wad_dem_reply_draft_2026_09_23.md` §회신 2‴+부록 · 2‴ 미발송 확인 → 이 판) — 1저자 발송 대기. 선행 확인(카드 §선행): Ag PBE a · Ag/C PP 해시 · 빌더 selftest · V5 CPU 프로브.
     🔴 **러너 결함**: 기록된 `pw.x PID 563677` 이 **없다** (ps 빈 줄) — `pgrep -P mpirun | head -1` 이 pw.x 가 아닌 자식을 잡았거나 사라진 PID 다.
     완료표 `peak_self_MiB` 가 **세 잡 모두 0** = 자기 VRAM 측정이 한 번도 안 됐다 (컨테이너 PID 공간 ≠ nvidia-smi PID 도 의심). 가드는 mpirun 을 죽이므로 안전은 유지 ·
     기록 필드가 거짓 0 이다 ('조용히 틀린 경로'). V100 진단: 트리 = 래퍼 563671 → mpirun 563691 → **pw.x 563705** · nvidia-smi 는 **호스트 PID 3312066**.
