@@ -1789,6 +1789,21 @@ MUTANTS = [
      # e3_17 은 "현행 검증기의 영수증" 양성 대조군이라 preserve.py 의 **어떤** 변이에서도 digest 가 달라져
      # 빨개진다 — 이 변이가 무는 node 가 아니므로 뺀다
      "g70_e3_1 and not e3_17"),
+    # ── 71차 E3-R ── 소비자가 outputs_agree 주장을 믿던 70차 형태로 되돌린다 (semantic 재비교 제거)
+    ("receipt-pair-agreement-is-recomputed-g71", PRESERVE,                  # R05
+     '    split = [k for k, v in groups.items() if len(set(v)) > 1]\n    if split:',
+     '    split = [k for k, v in groups.items() if len(set(v)) > 1]\n    if False:',
+     "g71_e3r_05 and not 05b"),
+    # ── 71차 E3-R ── 복원 자리 결속 제거 (다른 실행의 영수증이 붙는다)
+    ("receipt-restore-run-is-bound-to-the-bundle-g71", PRESERVE,            # R07
+     '    if got != want:\n        raise PreserveError("plan", f"{leg_id!r} 영수증의 복원 자리',
+     '    if False:\n        raise PreserveError("plan", f"{leg_id!r} 영수증의 복원 자리',
+     "g71_e3r_07 and not 07b and not 07c"),
+    # ── 71차 E3-R ── 원장 evidence.out 대조 제거 (다른 실행 기록에 묶음이 붙는다)
+    ("attach-binds-the-ledger-run-location-g71", PRESERVE,                  # R07
+     '        if "out" in ev:\n            led_out = ',
+     '        if False:\n            led_out = ',
+     "g71_e3r_07b"),
     ("the-replay-context-is-measured-once-g66", MR,                          # 정적 관측
      '    ctx = ctx if ctx is not None else _\u0072eplay_context()\n'
      '    want = _parent_customization_view(ctx)',
@@ -5267,6 +5282,30 @@ EXPECT: dict = {
                 "Failed: DID NOT RAISE AssertionError",
             "tests/test_gate68_defensive.py::test_g68_04_a_node_without_a_call_record_is_unrun":
                 "Failed: DID NOT RAISE AssertionError",
+        }
+    },
+    "receipt-pair-agreement-is-recomputed-g71": {
+        "fail": [
+            "tests/test_gate71_defensive.py::test_g71_e3r_05_a_disagreeing_semantic_pair_is_refused_even_if_it_claims_agreement",
+        ],
+        "witness": {
+            "tests/test_gate71_defensive.py::test_g71_e3r_05_a_disagreeing_semantic_pair_is_refused_even_if_it_claims_agreement": "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "receipt-restore-run-is-bound-to-the-bundle-g71": {
+        "fail": [
+            "tests/test_gate71_defensive.py::test_g71_e3r_07_a_receipt_restored_into_another_run_dir_is_refused",
+        ],
+        "witness": {
+            "tests/test_gate71_defensive.py::test_g71_e3r_07_a_receipt_restored_into_another_run_dir_is_refused": "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "attach-binds-the-ledger-run-location-g71": {
+        "fail": [
+            "tests/test_gate71_defensive.py::test_g71_e3r_07b_the_ledger_run_location_must_match_the_receipt",
+        ],
+        "witness": {
+            "tests/test_gate71_defensive.py::test_g71_e3r_07b_the_ledger_run_location_must_match_the_receipt": "Failed: DID NOT RAISE PreserveError",
         }
     },
     "exec-class-reader-is-typed-g70": {

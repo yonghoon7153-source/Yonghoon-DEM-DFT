@@ -33,8 +33,8 @@
 
 > **실행 허용 범위:** 합의된 synthetic grid/fit 재실행 (E9-0), 계획 항목 `grid_fit_v5` (승인 커밋 (아직 없음 — 한정 GO 뒤 사람이 계획 항목을 붙여 커밋한다; plan_leg.py dry 출력은 §2 E9-2)).
 > **코드/입력/실행 식별:** 판정 대상 `876429562f6a69b59793c70700cb5b375391ab67` · `source_digest b705a21a1237ec73` · config `configs/grid_fine.yaml` · OUT `results/grid_fit_v5`.
-> **현지 검증:** `python -m pytest tests/ -q` → 0 failed · 1855 passed · 2 xfailed (43:10) (rc 0) · `./scripts/smoke_e2e.sh` → rc 0 · `mutation_replay.py --check-preimages` 전 지점 1회 · `-k premise` 4/4 · `-k g70` 4/4.
-> **E1:** projection producer 독립 결속 미검증. **E2:** 실행 source 자기 측정, 독립 launcher attestation 미구현. **E4:** 변이 보고서 일관성 검사 + 표본 replay 8 시나리오(우리 실행), 독립 replay 범위 = 리뷰어 정적 대조.
+> **현지 검증:** `python -m pytest tests/ -q` → 0 failed · 1855 passed · 2 xfailed (43:10) (rc 0) · `./scripts/smoke_e2e.sh` → rc 0 · `mutation_replay.py --check-preimages` 전 지점 1회 · `-k premise` 4/4 · `-k g70` 4/4 · `-k g71` 3/3.
+> **E1:** projection producer 독립 결속 미검증. **E2:** 실행 source 자기 측정, 독립 launcher attestation 미구현. **E4:** 변이 보고서 일관성 검사 + 표본 replay ~~8~~ 11 시나리오(우리 실행 — premise 4 · g70 4 · g71 3), 독립 replay 범위 = 리뷰어 정적 대조.
 > **E6:** 이번 실행 권한 영역의 격리/배타 사용 근거 = 시험 authority 격리 + 운영 불변 검사 + 배타 운영 창(전후 snapshot, delta +2 기대); 과거 351 시험 레코드 이관은 별건.
 > **execution_class / 보존 / validation / inference_role:** 실행 뒤 실제 값으로 채운다 (기대: canonical·sealed / full_bundle / current_validated / diagnostic).
 > **archive / 복원 / retention:** archive_results.sh + make_receipt(empty-root 복원·재채점) 수행, `attach_bundle_evidence` 수행; retention/object-lock/power-loss 는 **미수행·보증 안 함**.
@@ -57,7 +57,10 @@
 ### E9-1 정확한 명령 (문자 그대로 — `./run.sh` 만으로는 `--mode` 필수 rc 1)
 
 ```bash
-# 실행 전용 checkout · 최종 커밋 876429562f6a69b59793c70700cb5b375391ab67 · clean tree · 실행 중 커밋/pytest/smoke 금지 (E6-b 창)
+# 실행 전용 checkout · ~~최종 커밋 876429562f6a69b59793c70700cb5b375391ab67~~ D7 정정 (71차): checkout 은 사람이 prospective 항목을 커밋한 **최종 승인 HEAD** 다
+#   (87642956 은 코드 기준 — 그 옛 커밋에는 새 계획이 없다). 승인 HEAD 와 87642956 의 RUN_SCOPE diff 0 을 함께 적는다.
+#   clean tree · 실행 중 커밋/pytest/smoke 금지 (E6-b 창)
+unset CANONICAL_RUN LEG          # D8 정정 (71차): 상속된 환경변수를 **명시적으로** 지운다 — 보고서가 docs/RESULTS.md 를 덮지 않게
 cd degradation-degeneracy
 ./run.sh --mode all --leg grid_fit_v5 --config configs/grid_fine.yaml --nproc "$(nproc)" --out results/grid_fit_v5
 ```
@@ -70,7 +73,7 @@ cd degradation-degeneracy
 | `--out results/grid_fit_v5` | grid·fit 이 **같은** 디렉터리에 굳는다 (`all` 은 `--in "$D"` = `--out`). 기본 OUT 은 timestamp 경로(`results/run_YYYYmmdd_HHMMSS`)라 명시한다 | 계획 `run_spec.grid.out` = `run_spec.fit.out` = `run_spec.fit.in` = `results/grid_fit_v5` 와 문자 그대로 같아야 claim 이 열린다 |
 | fit 옵션 | 주지 않는다 → objectives.yaml 전체 4종 · `--bounds expanded` · `n_restarts` auto=5 · adaptive · warm-start · `--reference grid` · `--halfcell-method ocp` | RESULTS.md §재현의 fit 과 같은 protocol (그쪽은 `--objective` 네 이름과 `--n-restarts 5` 를 명시했지만 값이 기본과 같다) |
 | `--nproc $(nproc)` | 결과를 바꾸지 않는 축 — 승인 spec 에 없다 (48차 P0-5) | 기계마다 다르다 |
-| 환경변수 | `CANONICAL_RUN` 을 **주지 않는다** → 기본 `grid_fit_v4` → 보고서는 `docs/RESULTS_grid_fit_v5.md` 로 간다 (`run.sh` :492–495) | `docs/RESULTS.md`(인용 정본)를 실행이 덮지 않는다. 정본 교체는 사람이 결과를 보고 따로 한다 |
+| 환경변수 | ~~`CANONICAL_RUN` 을 **주지 않는다**~~ D8 정정 (71차): `unset CANONICAL_RUN LEG` 로 상속을 **명시적으로 끊는다** ("주지 않음" 은 상속 제거가 아니다) → 기본 `grid_fit_v4` → 보고서는 `docs/RESULTS_grid_fit_v5.md` 로 간다 (`run.sh` :492–495) | `docs/RESULTS.md`(인용 정본)를 실행이 덮지 않는다. 정본 교체는 사람이 결과를 보고 따로 한다 |
 
 ### E9-2 계획 항목 (prospective) — 사람이 적고 커밋한다
 
@@ -116,8 +119,8 @@ cd degradation-degeneracy
 
 | 어디서 | 무엇을 한다 | 무엇을 하지 않는다 |
 |---|---|---|
-| grid 도중 (28 분) | 로그 전문 보존 · claim 은 `running` 으로 남는다 → `precheck_leg_run` 의 resume 경로(같은 token·같은 source_digest)로 **같은 명령을 다시** 돌려 이어간다 (`--resume` 은 chunk 재개) | 계획 항목을 고치지 않는다 · RUN_SCOPE 를 고치지 않는다 (고치면 claim 이 거부) |
-| fit 도중 (10 h) | 같다 — chunk 단위 `fit_completed.jsonl` 재개 | 부분 fits 로 report/archive 하지 않는다 (finalize 가 phase 미완으로 거부한다) |
+| grid 도중 (28 분) | ~~로그 전문 보존 · claim 은 `running` 으로 남는다 → `precheck_leg_run` 의 resume 경로(같은 token·같은 source_digest)로 **같은 명령을 다시** 돌려 이어간다 (`--resume` 은 chunk 재개)~~ **D6 정정 (71차 E9-R): 같은 초기 명령은 chunk 재개가 아니다** — 초기 argv 에 `--resume` 이 없고 `run.sh` `RESUME=false` 기본이라 하위 grid/fit 은 완료 집합을 읽지 않는다 (`src/grid.py` 601–612 · `src/fitting.py` 1524–1526). **정책: 실패 즉시 정지.** 로그 전문 보존 → 사람이 (a) 같은 plan/token/`source_digest` 인지 (`precheck_leg_run` 의 `kind == resume`) (b) 부분 산출(`results/grid_fit_v5/` 의 chunk 기록 · `fit_completed.jsonl`)이 온전한지 확인한 뒤 **명시적 재개 argv 를 정확히 1회**: `./run.sh --mode all --leg grid_fit_v5 --config configs/grid_fine.yaml --nproc "$(nproc)" --out results/grid_fit_v5 --resume`. 2회째 실패는 재승인(새 계획 항목) 대상 | 계획 항목을 고치지 않는다 · RUN_SCOPE 를 고치지 않는다 (고치면 claim 이 거부) · `--resume` 이 모든 실패를 복구한다고 보증하지 않는다 |
+| fit 도중 (10 h) | 같다 — 실패 즉시 정지 → 확인 → 명시적 `--resume` argv 1회 (chunk 단위 `fit_completed.jsonl` 재개는 `--resume` 일 때만 읽힌다) | 부분 fits 로 report/archive 하지 않는다 (finalize 가 phase 미완으로 거부한다) |
 | finalize 거부 | 사유 그대로 보존 (`phase 가 남았다` / `결속 없음`) → 코드 결함이면 **실행 실패로 기록**하고 게이트로 돌아간다 | 원장을 손으로 `executed` 로 만들지 않는다 |
 | archive/영수증/attach 거부 | 사유 보존 · `preservation_pending` 유지 | 영수증을 손으로 쓰지 않는다 (`_주의` 문장 그대로) |
 | 어느 단계든 | INCOMPLETE 라벨 — "실행 시작 SHA · 실패 단계 · rc · stderr 마지막 줄" 을 원장 §에 적는다 (COMSOL 갈래와 같은 규칙) | 실패를 성공으로 바꾸는 재실행을 조용히 하지 않는다 |
@@ -129,7 +132,7 @@ cd degradation-degeneracy
 | P0-1 producer 결속 (`row_projection.py` projection/restart 압축 payload · typed manifest · producer receipt) — **E1** | — | — | ✔ 미구현. 라벨: "projection producer 독립 결속 미검증". 이 실행은 `row_projection.py` 의 강한 producer 주장을 쓰지 않는다 |
 | trusted launcher 의 source 측정 — **E2** | — | — | ✔ `source_digest` 는 실행 코드의 디스크 **자기 측정**이다. 독립 launcher attestation 없음 |
 | P0-4 typed 보존 영수증 **소비** — **E3** | ✔ `attach_bundle_evidence()` (70차) 가 `make_receipt.py` 영수증을 닫힌 schema 로 읽어 원장을 올린다 · `_verify_declared_bundle` 이 YAML index 를 해석하고 구성원 sha 를 대조한다 · 회귀 `test_gate70_defensive.py::test_g70_e3_*` | — | 영수증 서명은 없다 (같은 principal 이 만든다) |
-| 변이 증거의 독립 replay — **E4** | — | — | ✔ `mutation_replay.py` 는 우리가 돌리고 리뷰어는 정적 대조. 표본(premise 4건 + g70 1건)만 실행. "전수 독립 replay 완료" 라 적지 않는다 |
+| 변이 증거의 독립 replay — **E4** | — | — | ✔ `mutation_replay.py` 는 우리가 돌리고 리뷰어는 정적 대조. 표본(~~premise 4건 + g70 1건~~ D9 정정 (71차): premise 4 + g70 4 + g71 3 = **11 시나리오**, §1 과 통일)만 실행. "전수 독립 replay 완료" 라 적지 않는다 |
 | 묶음을 immutable content-addressed object 로 먼저 게시 | — | — | ✔ `artifacts/` 는 mutable directory + Git 이다. `bundle_content_id` 가 내용 주소를 기록하지만 object-lock 은 없다 |
 | 실행 class 5종 중 3종 미구현 · 등록부 삭제 절차 | 사용하는 것: `canonical`·`smoke` 둘 | ✔ 나머지 class · 삭제 절차는 이 실행이 부르지 않는다 (과거 351 시험 레코드 정리는 별건 — `registry_impact.md` §5) | — |
 | baseline·sweep1d·wsweep 계획 gate | — | ✔ `all` 체인은 wsweep/sweep1d/baseline 을 부르지 않는다. `docs/RESULTS_grid_fit_v5.md` 에는 wsweep 절이 없다 (RESULTS.md 의 §재현 wsweep 줄은 이 실행 밖) | — |

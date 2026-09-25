@@ -48,12 +48,17 @@ def _isolate_test_authority() -> Path:
     #   가 49차부터 쓰는 방식). 자식(`scripts/archive_results.sh` · `python -m tools.archive_bundle` …)은
     #   자기 `tools/preserve.py` 의 **위치**에서 `DEFAULT_LEDGER` 를 유도하므로, RUN_SCOPE 를 바이트
     #   그대로 복사한 tree 안의 스크립트를 부르면 in-process 와 자식이 같은 사본 원장을 본다 — 환경변수
-    #   같은 override 문을 production 에 뚫지 않고도 격리된다. `source_digest()` 도 같은 값을 낸다.
+    #   같은 override 문을 production 에 뚫지 않고도 격리된다. `source_digest()` 도 같은 값을 낸다 (RUN_SCOPE 의 `requirements*.txt` 까지 복사한다 — 71차).
     #   자식을 띄우는 시험은 `isolated_tree()` 의 스크립트를 부른다 (`test_compare.py` 의 archive wrapper 회귀).
     tmp = Path(tempfile.mkdtemp(prefix="dd-test-authority-"))
     for name in ("src", "tools", "configs", "scripts"):
         shutil.copytree(ROOT / name, tmp / name, ignore=shutil.ignore_patterns("__pycache__"))
     shutil.copy2(ROOT / "run.sh", tmp / "run.sh")
+    # ★ 71차 리뷰어 §3 — RUN_SCOPE 에는 `requirements*.txt` 도 든다 (`src/io.py::_SCOPE_FILE_GLOBS`).
+    #   70차 초판은 그것을 빼놓고 "격리 tree 의 source_digest 도 같다" 고 적었다 — 성립하지 않는 문장이었다.
+    #   이제 복사하고, `test_gate71_defensive.py::test_g71_e6_*` 가 자식 프로세스로 같은 값을 잰다.
+    for q in ROOT.glob("requirements*.txt"):
+        shutil.copy2(q, tmp / q.name)
     gap = tmp / "docs" / "22p_gap"
     gap.mkdir(parents=True)
     for q in (ROOT / "docs" / "22p_gap").glob("*.py"):       # row_projection 등 — 자식이 import 할 수 있다

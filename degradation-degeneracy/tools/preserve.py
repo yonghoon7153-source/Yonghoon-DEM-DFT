@@ -7652,6 +7652,19 @@ VERIFICATION_RECEIPT_IDENTITY_KEYS = frozenset(
      "archive_bundle_sha256", "make_receipt_sha256", "row_projection_sha256",
      "row_projection_compute_sha256"})
 VERIFICATION_RECEIPT_SCHEMA_VERSION = 2
+#: ★ 71차 E3-R — 산출 항목도 **역할별 닫힌 키 집합**이다 (`make_receipt._score_manifest` 가 쓰는 그대로).
+#:   70차 초판은 "비어 있지 않은 semantic 문자열·canonicalizer·rescored 역할 존재·outputs_agree=True" 만 봤고,
+#:   그래서 생산자(`_outputs_agree`)가 거부하는 영수증 — 짝 없음 · 두 digest 불일치 · source fits 다름/없음 ·
+#:   다른 복원 자리 · 비hex — 를 소비자가 받았다 (리뷰어 R04~R10 실측).
+VERIFICATION_RECEIPT_OUTPUT_KEYS = {
+    "rescored_summary": frozenset(
+        {"role", "produced_from", "source_file_sha256", "relative_path", "byte_size", "file_sha256",
+         "n_rows", "semantic_schema", "canonicalizer", "semantic_view_drops", "semantic_sha256"}),
+    "sealed_summary": frozenset(
+        {"role", "relative_path", "byte_size", "file_sha256", "semantic_schema", "canonicalizer",
+         "semantic_view_drops", "semantic_sha256"}),
+}
+_HEX16 = re.compile(r"\A[0-9a-f]{16}\Z")
 VERIFICATION_RECEIPT_GENERATOR = "docs/22p_gap/make_receipt.py"
 
 
@@ -7734,25 +7747,109 @@ def read_verification_receipt(path, leg_id: str, *, repo_root=None) -> dict:
     for k in ("payload_index_sha256", "fits_sha256"):
         if not _is_hex64(b[k]):
             raise _bad(f"bundle.{k} 가 hex64 가 아니다")
-    outs = core["outputs"]
-    if not isinstance(outs, list) or not outs:
-        raise _bad("outputs 가 비었다")
-    roles = set()
-    for o in outs:
-        if not isinstance(o, dict) or not _nonempty_str(o.get("semantic_sha256") or "") \
-                or not _nonempty_str(o.get("canonicalizer") or ""):
-            raise _bad(f"산출 {o.get('role') if isinstance(o, dict) else o!r} 에 semantic digest/canonicalizer 없음")
-        roles.add(o.get("role"))
-    if "rescored_summary" not in roles:
-        raise _bad("복원본 재채점 산출(`rescored_summary`)이 없다")
+    # ★ 71차 E3-R — `outputs_agree` 는 **주장**이다. 주장을 읽지 않고 짝·일치·결속을 다시 계산한다.
+    try:
+        pair = _receipt_output_pair(core)
+    except PreserveError as exc:
+        raise _bad(str(exc)) from exc
+    if not secrets.compare_digest(pair["rescored_summary"]["source_file_sha256"], b["fits_sha256"]):
+        raise _bad("rescored_summary.source_file_sha256 ≠ bundle.fits_sha256 — 재채점이 읽은 fits 가 이 묶음의 "
+                   "fits 가 아니므로 그 재채점은 이 묶음의 검증이 아니다 (R06)")
     if core["outputs_agree"] is not True:
         raise _bad(f"outputs_agree={core['outputs_agree']!r}")
     ident = core["identity"]
+    for k, v in ident.items():
+        if not (isinstance(v, str) and _HEX16.match(v)):
+            raise _bad(f"identity.{k}={v!r} 는 hex16 이 아니다 (R10)")
     now = _sd()
     if ident["validator_source_digest"] != now:
         raise _bad(f"영수증이 낡았다 — validator {ident['validator_source_digest']!r} ≠ 현행 "
                    f"{now!r}. `python3 {VERIFICATION_RECEIPT_GENERATOR} {leg_id}` 로 다시 만들라")
     return core
+
+
+def _receipt_output_pair(core: dict) -> dict:
+    """영수증 `outputs` 를 생산 계약대로 읽는다 — 역할마다 정확히 하나, 닫힌 키, hex64, **실제 일치** (71차 E3-R).
+
+    `make_receipt._outputs_agree` 와 같은 판단을 소비 쪽에서 다시 한다: 같은 `semantic_schema`·`canonicalizer`
+    의 산출은 둘 이상이어야 하고(짝이 없으면 "일치" 가 아니라 **비교 불가**, 27차 P1-6) 그 semantic digest 는
+    전부 같아야 한다. 돌려주는 것은 `{role: 산출}`.
+    """
+    outs = core.get("outputs")
+    if not isinstance(outs, list) or not outs:
+        raise PreserveError("plan", "outputs 가 비었다")
+    by_role: dict = {}
+    for o in outs:
+        if not isinstance(o, dict):
+            raise PreserveError("plan", f"산출이 dict 가 아니다: {o!r}")
+        role = o.get("role")
+        want = VERIFICATION_RECEIPT_OUTPUT_KEYS.get(role)
+        if want is None:
+            raise PreserveError("plan", f"알 수 없는 산출 역할 {role!r} — {sorted(VERIFICATION_RECEIPT_OUTPUT_KEYS)} 만 받는다")
+        if frozenset(o) != want:
+            raise PreserveError("plan", f"산출 {role!r} 의 키 집합이 닫혀 있지 않다: 남음 {sorted(set(o) - want)} · "
+                                        f"모자람 {sorted(want - set(o))}")
+        if role in by_role:
+            raise PreserveError("plan", f"산출 역할 {role!r} 이 둘이다 — 역할마다 하나 (짝은 sealed_summary 다)")
+        for k in ("semantic_sha256", "file_sha256") + (("source_file_sha256",) if role == "rescored_summary" else ()):
+            if not _is_hex64(o[k]):
+                raise PreserveError("plan", f"산출 {role!r}.{k} 가 hex64 가 아니다 (R08)")
+        for k in ("semantic_schema", "canonicalizer", "relative_path"):
+            if not _nonempty_str(o[k]):
+                raise PreserveError("plan", f"산출 {role!r}.{k} 가 비었다")
+        if type(o["byte_size"]) is not int or o["byte_size"] <= 0:
+            raise PreserveError("plan", f"산출 {role!r}.byte_size={o['byte_size']!r}")
+        by_role[role] = o
+    missing = sorted(set(VERIFICATION_RECEIPT_OUTPUT_KEYS) - set(by_role))
+    if missing:
+        raise PreserveError("plan", f"비교 상대가 없다 — 산출 {missing} 이 없으면 '일치' 가 아니라 비교 불가다 (R04)")
+    groups: dict = {}
+    for o in by_role.values():
+        groups.setdefault((o["semantic_schema"], o["canonicalizer"]), []).append(o["semantic_sha256"])
+    lonely = [k for k, v in groups.items() if len(v) < 2]
+    if lonely:
+        raise PreserveError("plan", f"같은 schema·canonicalizer 의 짝이 없다: {lonely} — 비교 불가 (R04)")
+    split = [k for k, v in groups.items() if len(set(v)) > 1]
+    if split:
+        raise PreserveError("plan", f"같은 schema·canonicalizer 인데 semantic digest 가 갈렸다: {split} — "
+                                    "`outputs_agree` 주장과 무관하게 불일치다 (R05)")
+    return by_role
+
+
+def _assert_receipt_bound_to_bundle(core: dict, bundle_dir: Path, leg_id: str) -> str:
+    """영수증이 **이 묶음·이 실행**의 것인가 — 묶음에 있는 값으로 대조한다 (71차 E3-R R07).
+
+    · 묶음의 복원 지도(`restore_map.yaml`, `tools/archive_bundle.py` 가 쓴다)의 `run_dir` 와 영수증
+      `restore.run_dir_relative` 가 같아야 한다. 지도가 없으면 결속할 근거가 없다 — 거부.
+    · 영수증의 `sealed_summary` 가 말하는 파일 sha 가 묶음 구성원 `degeneracy_summary.yaml` 의 바이트와
+      같아야 한다 — 영수증이 이 묶음의 봉인 summary 를 대조했다는 뜻이 그것이다.
+    돌려주는 것: 결속된 run_dir (저장소 상대, posix).
+    """
+    import yaml
+    rm = bundle_dir / "restore_map.yaml"
+    if not rm.is_file():
+        raise PreserveError("plan", f"{leg_id!r} 묶음에 restore_map.yaml 이 없다 — 영수증의 복원 자리를 묶음과 결속할 수 없다 (R07)")
+    try:
+        meta = yaml.safe_load(rm.read_text(encoding="utf-8")) or {}
+    except (OSError, UnicodeDecodeError, yaml.YAMLError) as exc:
+        raise PreserveError("plan", f"{leg_id!r} 묶음의 restore_map.yaml 을 읽을 수 없다: {exc}") from exc
+    run_dir = meta.get("run_dir") if isinstance(meta, dict) else None
+    if not _nonempty_str(run_dir or ""):
+        raise PreserveError("plan", f"{leg_id!r} 묶음의 restore_map.yaml 에 run_dir 가 없다 (R07)")
+    want = Path(str(run_dir)).as_posix().strip("/")
+    got = Path(str(core["restore"]["run_dir_relative"])).as_posix().strip("/")
+    if got != want:
+        raise PreserveError("plan", f"{leg_id!r} 영수증의 복원 자리 restore.run_dir_relative={got!r} 가 묶음의 "
+                                    f"restore_map.run_dir={want!r} 와 다르다 — 다른 실행의 영수증이다 (R07)")
+    pair = _receipt_output_pair(core)
+    sealed = bundle_dir / "degeneracy_summary.yaml"
+    if not sealed.is_file():
+        raise PreserveError("plan", f"{leg_id!r} 묶음에 degeneracy_summary.yaml 이 없다 — 봉인 summary 대조를 결속할 수 없다")
+    got_sha = hashlib.sha256(sealed.read_bytes()).hexdigest()
+    if not secrets.compare_digest(got_sha, pair["sealed_summary"]["file_sha256"]):
+        raise PreserveError("plan", f"{leg_id!r} 영수증의 sealed_summary.file_sha256 {pair['sealed_summary']['file_sha256'][:16]} ≠ "
+                                    f"묶음 degeneracy_summary.yaml {got_sha[:16]} — 이 묶음의 봉인 summary 를 대조한 영수증이 아니다")
+    return want
 
 
 def attach_bundle_evidence(leg_id: str, receipt_path, ledger=None, *,
@@ -7800,6 +7897,8 @@ def attach_bundle_evidence(leg_id: str, receipt_path, ledger=None, *,
     if not secrets.compare_digest(got_fits, b["fits_sha256"]):
         raise PreserveError(
             "plan", f"{leg_id!r} 묶음의 fits.parquet sha {got_fits[:16]} ≠ 영수증 {b['fits_sha256'][:16]}")
+    # ★ 71차 E3-R — 영수증이 **이 묶음·이 실행**의 것인가 (복원 지도 · 봉인 summary 바이트)
+    bound_run = _assert_receipt_bound_to_bundle(core, _repo_relative_or_refuse(root, b["uri"], "bundle_uri"), leg_id)
     rel_receipt = _repo_relative_or_refuse(root, receipt_path, "verification_receipt") \
         .relative_to(root).as_posix()
     core_sha = _receipt_core_sha256(core)
@@ -7832,6 +7931,14 @@ def attach_bundle_evidence(leg_id: str, receipt_path, ledger=None, *,
                 raise PreserveError(
                     "plan", f"{leg_id!r} 의 실행 기록에 lifecycle 소유 키 {k!r} 가 없다 — "
                             "finalize 가 남긴 기록이 아니므로 그 위에 묶음을 붙이지 않는다")
+        # ★ 71차 E3-R — finalize 가 적은 실행 자리(`evidence.out`, run.sh `leg_finalize` 가 준다)와
+        #   영수증·묶음이 결속한 복원 자리가 같아야 한다. 다른 실행 기록에 이 묶음을 붙이지 않는다.
+        if "out" in ev:
+            led_out = Path(str(ev["out"])).as_posix().strip("/")
+            if led_out != bound_run:
+                raise PreserveError(
+                    "plan", f"{leg_id!r} 원장 evidence.out={led_out!r} 가 영수증·묶음의 복원 자리 {bound_run!r} 와 "
+                            "다르다 — 다른 실행 기록에 묶음을 붙이지 않는다 (R07)")
         ev.update(bundle_ev)
         ev.update({
             "member_rehash_by": b["member_rehash"],

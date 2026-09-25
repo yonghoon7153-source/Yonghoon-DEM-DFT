@@ -299,8 +299,35 @@ def test_g70_e3_06_the_real_paired_fixed5_v4_bundle_passes_the_closed_index_chec
 # ═══════════════════════════════════════════════════════════════════════════
 # E3 — 검증 영수증의 typed 소비 (`attach_bundle_evidence`)
 # ═══════════════════════════════════════════════════════════════════════════
+_SEM = "a" * 64          # 두 summary 의 semantic digest — 생산 계약은 **같아야** 한다 (27차 P1-6)
+
+
+def _production_outputs(root: Path, ev: dict, *, sem_rescored=None, sem_sealed=None,
+                        source_fits=None) -> list[dict]:
+    """`make_receipt._score_manifest` 가 만드는 그대로 — rescored_summary + sealed_summary 한 쌍.
+
+    ★ 71차 E3-R — 초판 fixture 는 `rescored_summary` **하나**에 `outputs_agree=True` 를 얹었다.
+      생산자(`_outputs_agree`)는 짝이 없으면 "비교 불가" 로 멈추므로 그런 영수증은 생산될 수
+      없다 — 소비자가 생산 계약보다 약한 fixture 를 정답으로 삼고 있었다 (리뷰어 실측).
+    """
+    fits = root / ev["bundle_uri"] / "fits.parquet"
+    sealed = root / ev["bundle_uri"] / "degeneracy_summary.yaml"
+    return [
+        {"role": "rescored_summary", "produced_from": "restored fits.parquet only",
+         "source_file_sha256": source_fits or _sha(fits.read_bytes()),
+         "relative_path": "_rescored_summary.yaml", "byte_size": 10, "file_sha256": "b" * 64,
+         "n_rows": 3, "semantic_schema": "degeneracy-summary/v5", "canonicalizer": "score-semantic/v3",
+         "semantic_view_drops": ["_채점원본"], "semantic_sha256": sem_rescored or _SEM},
+        {"role": "sealed_summary", "relative_path": "degeneracy_summary.yaml",
+         "byte_size": sealed.stat().st_size, "file_sha256": _sha(sealed.read_bytes()),
+         "semantic_schema": "degeneracy-summary/v5", "canonicalizer": "score-semantic/v3",
+         "semantic_view_drops": ["_채점원본"], "semantic_sha256": sem_sealed or _SEM},
+    ]
+
+
 def _receipt_core(root: Path, leg: str, ev: dict, *, validator=None, ok=True, fail=None,
-                  outputs=None, mode="empty_root", conflicts=0, mismatches=0) -> dict:
+                  outputs=None, mode="empty_root", conflicts=0, mismatches=0,
+                  run_dir_relative=None) -> dict:
     from src.io import source_digest
     fits = root / ev["bundle_uri"] / "fits.parquet"
     return {
@@ -310,7 +337,7 @@ def _receipt_core(root: Path, leg: str, ev: dict, *, validator=None, ok=True, fa
                    "member_rehash": "tools.archive_bundle.check", "member_mismatches": mismatches,
                    "fits_sha256": _sha(fits.read_bytes())},
         "restore": {"mode": mode, "command": "restore(...)", "files_written": ev["bundle_files"],
-                    "run_dir_relative": f"results/{leg}", "conflicts": conflicts},
+                    "run_dir_relative": run_dir_relative or f"results/{leg}", "conflicts": conflicts},
         "validation": {"validator": "src.io.validate_provenance", "ok": ok,
                        "fail": list(fail or []), "n_checks": 2,
                        "checks": {"a": "ok", "b": "ok"}},
@@ -318,8 +345,7 @@ def _receipt_core(root: Path, leg: str, ev: dict, *, validator=None, ok=True, fa
                      "src_io_sha256": "0" * 16, "src_scoring_sha256": "0" * 16,
                      "archive_bundle_sha256": "0" * 16, "make_receipt_sha256": "0" * 16,
                      "row_projection_sha256": "0" * 16, "row_projection_compute_sha256": "0" * 16},
-        "outputs": outputs if outputs is not None else [
-            {"role": "rescored_summary", "semantic_sha256": "1" * 64, "canonicalizer": "score-semantic/v1"}],
+        "outputs": outputs if outputs is not None else _production_outputs(root, ev),
         "outputs_agree": True,
     }
 
@@ -342,9 +368,13 @@ def _fixture_repo(tmp_path: Path, *, status="preservation_pending", with_lifecyc
     d.mkdir(parents=True)
     (d / "fits.parquet").write_bytes(b"PAR1-fits")
     (d / "manifest.yaml").write_text("fits_sha256: x\n", encoding="utf-8")
+    # ★ 71차 E3-R — 실물 묶음이 가진 것: 복원 지도(어느 실행 자리로 돌아가는가)와 봉인 summary
+    (d / "restore_map.yaml").write_text("run_dir: results/L\ninputs: {}\nnested: []\n", encoding="utf-8")
+    (d / "degeneracy_summary.yaml").write_text("_채점원본: {canonical: true}\nn: 3\n", encoding="utf-8")
     idx = d / "payload_sha256.yaml"
-    idx.write_text(yaml.safe_dump({"fits.parquet": _sha(b"PAR1-fits"),
-                                   "manifest.yaml": _sha(b"fits_sha256: x\n")}), encoding="utf-8")
+    idx.write_text(yaml.safe_dump({n: _sha((d / n).read_bytes())
+                                   for n in ("fits.parquet", "manifest.yaml", "restore_map.yaml",
+                                             "degeneracy_summary.yaml")}), encoding="utf-8")
     files = [x for x in sorted(d.rglob("*")) if x.is_file()]
     ev = {"bundle_uri": "artifacts/L", "bundle_files": len(files),
           "payload_bytes": sum(x.stat().st_size for x in files),
