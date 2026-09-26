@@ -356,3 +356,15 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
   G3 FAIL (직접 8→10 Å +0.0136) · G4 k INCOMPLETE 전부 일치.  우리 환산 73 meV/C → 0.4347 J/m² ✓.
 - ✅ **사용자 결정 (09-26 밤): SE 쌍 = H (보류)** — DEM 회신 5 비준 · 1저자 발송.  읽기 · 발송문 = `docs/dft_reply5_adhesion_20260926.md` §3.
   결정 뒤 3 단 (DEM 박리) 은 질문 ② 기하 (Ag–C ↔ VGCF 호스트) 부터 · 탄소–탄소 쌍 w 는 문헌 카드 몫.
+- 📨 **6차 회신 (09-26 밤)**: 48 GB 안에 드는 SE 소모델 **없음** (Ag 2 층 · 가벼운 퍼텐셜로도 ≈ 61 GB) → SE 쌍 보류 **확정**.  기록 = 같은 파일 §5.
+
+## ⑱ 일괄 런 사전등록 — Phase A 재현 (100 GPa) · ps45 d_h 전이 · d_h 288 (09-26 밤)
+- ✅ 사용자 결정: 104 팔 전부 100 GPa 재현 + 같은 기계 10 GPa 대조 32 팔 (짝 비교) · ps45 5 침대 MPM (동결선 288/φ0.75) · d_h 288 8 런 · v100 분담.
+- 사전등록 2 건: `docs/reviews/phase_a_replication_vgcf100_prereg_20260926.md` (P1–P5 · 판정선 §4 · kgy 명령 §6 · ≈ 90 GPU-h) ·
+  `docs/reviews/ps45_dh_transfer_prereg_20260926.md` (동결선 `docs/data/dh_frozen_288_phi075_20260926.json`: a −0.68317 · b −0.57533 · sd 0.07671 ·
+  띠 ±2 sd · TRANSFERS/PARTIAL/FAILS/HOLD · v100 명령 §5).  d_h 288 은 verdict §⑩ (08-11) 그대로.
+- 도구 신설 (런 전): `scripts/phase_a_pair_e_arms.py` (짝 비교 · selftest 14/14) · `scripts/score_dh_transfer.py` (동결선 채점 · 12/12) ·
+  `fit_dh_collapse.py --freeze-json` (+selftest 12).  SELF-50 → claimed_fixed `248fd9516`.
+- 레시피 근거 (에이전트 2 · 파일:행 전수, 스크래치 보존): 원판 STEP2 = 킷 run_mpm.sh K:77,88-94 · STEP3 러너 LEAN=2 centerline 0.24 · physics_protocol_id
+  p2-79ade1a5c2b0c9fb · 재압밀 잡음 실측 +0.064 % (kgy E=10 vs v100 원판 3_1 v015 o0) ⇒ 대조군 필요 · d_h 288 ≈ 15 GB (kgy 캡 = min(85 % 총, 90 % 여유)).
+- ⚠ 자기매칭 함정 재발 (게이트 런처 명령줄의 "bash scripts/check_all.sh" 를 같은 명령의 kill 루프가 잡아 자살, exit 144) → 런처는 변수 (`G=scripts/check_all; bash "$G.sh"`).

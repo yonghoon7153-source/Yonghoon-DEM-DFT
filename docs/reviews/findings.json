@@ -4944,15 +4944,16 @@
   {
    "id": "SELF-50",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (VGCF E 민감도 채점 중 실측, 2026-09-25)",
    "opened_in": "docs/reviews/vgcf_e_sensitivity_prereg_20260925.md",
    "title": "`mpm_metrics.json` 의 `dt` 가 요청값 (args.dt) 이다 — CFL 가드가 줄인 실제 dt 가 기록되지 않는다 (첨가제가 SE 스택보다 뻣뻣하면 둘이 다르다)",
-   "note": "`scripts/mpm3d_compaction.py` 가 metrics 에 `'dt': float(args.dt)` 를 적는다 (3702행).  실제 dt 는 `min(args.dt, 0.4·dx/√M_max)` (1778행).  VGCF 100 GPa 팔: 실제 1.347e-4 인데 metrics 는 2.0e-4 (1 · 10 GPa 팔은 둘이 같다).  영향: 프레임당 플래튼 걸음 · hold 이완시간을 metrics 만으로 재구성할 수 없다.  처방 제안 (미비준): `dt_effective` · `dt_cfl_cap` 를 함께 기록.",
+   "note": "`scripts/mpm3d_compaction.py` 가 metrics 에 `'dt': float(args.dt)` 를 적는다 (3702행).  실제 dt 는 `min(args.dt, 0.4·dx/√M_max)` (1778행).  VGCF 100 GPa 팔: 실제 1.347e-4 인데 metrics 는 2.0e-4 (1 · 10 GPa 팔은 둘이 같다).  영향: 프레임당 플래튼 걸음 · hold 이완시간을 metrics 만으로 재구성할 수 없다.  처방 제안 (미비준): `dt_effective` · `dt_cfl_cap` 를 함께 기록.  ✅ 수정 (2026-09-26, 248fd9516 — 사용자 비준 \"다 진행\"): metrics 에 dt_requested · dt_effective (CFL 가드 · load-state 조임 뒤 실제값) · dt_cfl_cap (0.4·dx/√M_max) · dt_cfl_limited 를 함께 기록.  옛 키 dt 는 요청값 그대로 (하위호환).  재현 검사 먼저 (153/154 FAIL) → 수정 (154/154).  Phase A 100 GPa 재현 런 (VGCF P 파 134.6 > SE 26.2 라 dt 가 줄어드는 세대) 전에 넣었다.",
    "evidence_tests": [
     "scripts/mpm3d_compaction.py"
-   ]
+   ],
+   "claimed_fixed_sha": "248fd9516"
   },
   {
    "id": "SELF-51",

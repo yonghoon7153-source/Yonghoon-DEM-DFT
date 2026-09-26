@@ -249,6 +249,9 @@ def main(argv=None):
     ap.add_argument('--list', dest='list_points', action='store_true',
                     help='적합 없이 킷별 후보점(φ·σ·V/c_P·파일)만 나열 — 섞임 진단용')
     ap.add_argument('--allow-rate-mismatch', action='store_true')
+    ap.add_argument('--freeze-json', default=None, metavar='PATH',
+                    help='적합 결과 (b · a · R² · 잔차sd · LOO · 킷별 점) 를 JSON 으로 **동결**한다 — '
+                         'score_dh_transfer.py 가 새 침대를 이 선으로 채점한다 (2026-09-26, ps45 표본 밖 시험).')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
@@ -360,7 +363,26 @@ def main(argv=None):
           + ('' if corrected else '  (φ 보정 없음)'))
     print(f'   ⚠ |기울기| {abs(b):.3f} 은 n_grid {a.n_grid} 에서의 **하한** — 수렴 안 함'
           '(차수 ≈0.10).  물리상수로 인용 금지; R² 만 해상도에 걸쳐 뜻이 있다.')
+    if a.freeze_json:
+        frozen = freeze_record(a, b, _a0, r2, sd, loo, good)
+        with open(a.freeze_json, 'w', encoding='utf-8') as f:
+            json.dump(frozen, f, ensure_ascii=False, indent=1)
+        print(f'   ❄ 동결 → {a.freeze_json}  (ln σ = {_a0:+.4f} {b:+.4f}·ln d_h · sd {sd:.4f})')
     return 0
+
+
+def freeze_record(a, b, a0, r2, sd, loo, rows):
+    """동결 선 레코드 (schema dh_frozen_line_v1) — score_dh_transfer.py 의 입력.  단위: σ GPa · d_h µm."""
+    return {
+        'schema': 'dh_frozen_line_v1',
+        'form': 'ln sigma_GPa = a + b * ln d_h_um',
+        'a': float(a0), 'b': float(b), 'r2': float(r2), 'resid_sd': float(sd), 'loo_max_db': float(loo),
+        'n': int(len(rows)), 'n_grid': int(a.n_grid), 'phi': float(a.phi), 'mach': a.mach,
+        'slope_grid': int(a.slope_grid), 'void_free': bool(a.void_free),
+        'kits': [{'kit': r['kit'], 'phi': float(r['phi']), 'method': r['method'],
+                  'sigma_raw': float(r['sigma_raw']), 'sigma_use': float(r['sigma']),
+                  'd_h_um': float(r['d_h_um']), 'slope': r['slope'], 'file': r['file']} for r in rows],
+    }
 
 
 def _selftest():
@@ -442,6 +464,20 @@ def _selftest():
        all(abs(got[k] - v[2]) < 0.001 for k, v in real.items())
        and abs(fr[0] + 0.542) < 0.002 and abs(fr[2] - 0.933) < 0.002)
     print(f'\nselftest: {n[0]}/{n[1]} PASS')
+    # 12) 동결 레코드 (2026-09-26 · score_dh_transfer.py 의 입력) — 키 · 값 · 킷 행이 그대로 실리고 JSON 왕복이 된다
+    import argparse as _ap
+    _args = _ap.Namespace(n_grid=288, phi=0.75, mach=0.03, slope_grid=192, void_free=False)
+    _rows = [{'kit': 'k1', 'phi': 0.75, 'method': 'interp', 'sigma_raw': 0.5, 'sigma': 0.5, 'd_h_um': 0.8,
+              'slope': None, 'file': 'x|y'},
+             {'kit': 'k2', 'phi': 0.752, 'method': 'nearest', 'sigma_raw': 0.4, 'sigma': 0.41, 'd_h_um': 1.1,
+              'slope': 3.8, 'file': 'z'}]
+    _fz = freeze_record(_args, -0.575, -0.683, 0.926, 0.077, 0.155, _rows)
+    ok('12) freeze_record: schema · a/b/sd · n_grid/φ/mach · 킷 2행 (sigma_use = 보정값) · JSON 왕복',
+       _fz['schema'] == 'dh_frozen_line_v1' and _fz['b'] == -0.575 and _fz['a'] == -0.683
+       and _fz['resid_sd'] == 0.077 and _fz['loo_max_db'] == 0.155 and _fz['n_grid'] == 288 and _fz['phi'] == 0.75
+       and _fz['mach'] == 0.03 and _fz['n'] == 2 and _fz['kits'][1]['sigma_use'] == 0.41
+       and _fz['kits'][1]['method'] == 'nearest' and _fz['kits'][0]['slope'] is None
+       and json.loads(json.dumps(_fz)) == _fz)
     return 0 if n[0] == n[1] else 1
 
 
