@@ -1,0 +1,39 @@
+{
+ "schema": "qe_input_set/v1",
+ "date": "2026-09-26",
+ "what": "탄성 modelc_2x 분할 — strain_12_p/12_m 을 V100 에서 (run_sese_gpu.sh 호환 · 입력은 gabia 원본 그대로 · pseudo_dir 만 러너가 교체)",
+ "settings": {
+  "pp": {
+   "Li": "li_pbe_v1.4.uspp.F.UPF",
+   "P": "P.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "S": "s_pbe_v1.4.uspp.F.UPF",
+   "Cl": "cl_pbe_v1.4.uspp.F.UPF"
+  },
+  "pp_sha256": {
+   "cl_pbe_v1.4.uspp.F.UPF": "5b1ebdea1e5ba743fba0100806206287e1f7f00460c7e6f19791446beaee0655",
+   "li_pbe_v1.4.uspp.F.UPF": "02cc4b3810e28a43b570277840d9631ca24f634d922928200c047b72c0a86bf5",
+   "P.pbe-n-rrkjus_psl.1.0.0.UPF": "2d112dfec2e2d9b75a971574d9116aa92249988177791659bbcd2ba15f23c20c",
+   "s_pbe_v1.4.uspp.F.UPF": "84ad731864187f416f714e961c3ad2f04dcbf811618e724d277885c18cb470df"
+  },
+  "pseudo_dir_note": "러너가 PSEUDO_DIR 로 바꾼다"
+ },
+ "coordination": "gabia 러너 순서 23_p → 23_m → 13_p → 13_m → 12_p → 12_m. V100 결과(pw.out)를 gabia $WORK/strain_12_{p,m}.out 로 **gabia 가 12_p 에 닿기 전에** 넣는다 — 안 넣으면 gabia 가 같은 점을 다시 돈다 (러너는 running 상태를 건너뛰지 않는다).",
+ "jobs": [
+  {
+   "dir": "strain_12_p",
+   "calc": "relax",
+   "kind": "relax",
+   "pw_in_sha256": "1bbf449efb12ac1afd82688f0c899ed65f03bf1df7516a08575bf3c55400b4ec",
+   "source": "gabia /data/work/runs/elastic_modelc_2x/strain_12_p.in (러너 run_elastic_relaxedion_gabia.sh SYS=modelc_2x 가 09-26 18:11 에 패치: nstep 200 · trust_radius_max 0.05 · from_scratch)",
+   "machine": "V100 (분할 · gabia 러너와 같은 입력)"
+  },
+  {
+   "dir": "strain_12_m",
+   "calc": "relax",
+   "kind": "relax",
+   "pw_in_sha256": "db10e3dab1ef3320926e30f4d6ba1283eb7fb93a022038f0d9890aa1e5d75890",
+   "source": "gabia /data/work/runs/elastic_modelc_2x/strain_12_m.in (러너 run_elastic_relaxedion_gabia.sh SYS=modelc_2x 가 09-26 18:11 에 패치: nstep 200 · trust_radius_max 0.05 · from_scratch)",
+   "machine": "V100 (분할 · gabia 러너와 같은 입력)"
+  }
+ ]
+}
