@@ -219,6 +219,20 @@ wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem	batt202300032
 #       (본문·SI 둘 다 안 주면 한쪽이 색인에서 빠진다).  ('--inbox --run --skip-done' 은 안전.)
 #   판독 원자료 = litdb/figures/<slug>/digitized.csv ← tools/litdb/wheatcroft2023_digitize.py (--check 로 본문 평균과 대조)
 #   ⭐ Fig 2f (평판·원뿔 P_f vs D = 207 ± 49 / 67 ± 21 의 원자료) · Fig 5–6 (SOC·입경) · SI Fig S4 (H_f) 가 이 카드의 근거다.
+#   (같은 절 · 같은 Zhao 그룹) 단결정 NMC622 C_ij + 소결 펠릿 M·H·K_c = sharma2023 ([Sedl26] 의 [23] 원문)
+# 가드: 파일명이 출판사 해시(1-s2.0-S2352431622001961-main.pdf / …-mmc1.pdf)라 제목 토큰이 안 겹친다
+#   → PII 조각으로 본문·SI 를 같이 잡는다 (SI 는 'mmc' 로 자동 판정 — 사본 이름 바꾸기 불필요).
+sharma2023_nmc_single_crystal_anisotropic_nanoindentation	s2352431622001961
+#   ↑ 2026-09-26.  12장 (본문 Fig 1–6 + SI Fig S1–S4 + SI Table S1–S2) **전부 손으로 다시 렌더** (figures.json 의 recrop / manual_crop, 전부 viewed):
+#   · fig_S1 = SI page 4(1-based) clip (93.6, 68.0, 518.4, 282.5) — 자동 크롭이 y 265.1 에서 멈춰 **패널 라벨 'h_min = 50/100/150nm' 이 잘렸다**
+#   · tab_S1 = SI page 2 clip (110, 68, 509, 450) — 자동 크롭이 **알고리즘 상자 윗선을 떨어뜨리고 5줄 캡션을 끌어들였다**
+#   · tab_S2 = SI page 3 clip (97, 68, 516, 310) — 자동 추출이 '거의 백지(1.000)' 로 **제외** (표가 캡션 위에 있다) → 수동 (벡터 표)
+#   · 나머지 9장 = 임베디드 래스터 경계 + 2 pt 로 좁힌 **백색 여백 제거** (내용 동일; 흰색 = 세 채널 > 244, 여백 14 px @300 dpi)
+#   [!] '--slug sharma2023_nmc_single_crystal_anisotropic_nanoindentation --clean' 을 돌리면 **12장 손질이 전부 사라진다**
+#       (tab_S2 소실 · fig_S1 라벨 잘림 · tab_S1 캡션 혼입이 돌아온다) + `digitized.csv` 의 축 보정 상수가 어긋난다.
+#       ('--inbox --run --skip-done' 은 안전.) 재생성이 필요하면 figures.json 의 bbox 를 그대로 다시 쓴다.
+#   ⭐ Fig 5 (C_ij · 방위별 M) · Fig 6 (M · H · K_c) · SI Table S2 (K 식) · SI Fig S1 (h_min 감도) 가 이 카드의 근거다.
+#   판독 재현 = tools/litdb/sharma2023_verify.py → litdb/figures/<slug>/digitized.csv
 #
 # ── SE 고유 전달물성 (σ_ion 단상 펠릿 · 적층압/제작압) ──────────────
 # 가드: ACS SI 파일명(nz1c01299_si_001.pdf)은 원고번호뿐이라 제목 토큰이 안 겹친다 → 원고번호 조각으로 SI 만 잡는다.

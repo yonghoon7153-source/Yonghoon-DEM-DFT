@@ -3719,6 +3719,39 @@ S. A. Corr, M. F. L. De Volder, B. J. Inkson, N. A. Fleck (Cambridge + Sheffield
   ③ `am_load_balance_jam.py` 밴드 = **"stage-III 압입 경도 (NMC532 이차입자 3.2–5.5 GPa)" 로 런 전 재등록** — 과거 PASS 의 소급 정당화 금지.  이 H_AM 은 **AM 하중분담 ②** 의 양이다.
   ④ `analyze_tabor_regime.py` σ_y,AM = H/3 — 리뷰는 인장강도가 H/3 보다 **10× 이상 낮다**고 강조 → "압축 소성의 대용" 한정어 추가.
   ⑤ 강도 기준 입자 파쇄를 넣는다면 식 4 (σ_F = 2.8 P_C/(π d²)) + NMC333 중앙 185.6 MPa → **0.208 mN·(d/µm)²** (d 5 µm 5.2 mN vs Auerbach 개시 K 0.3 0.60 mN) · NMC811 값은 Wheatcroft 2023 원문 후.
+**[Sharma23]** `papers/sharma2023_nmc_single_crystal_anisotropic_nanoindentation.md` — **N. Sharma, D. Meng, X. Wu, L. S. de Vasconcelos, L. Li\*, K. Zhao\*,
+*Extreme Mech. Lett.* 58 (2023) 101920** (Purdue · SJTU) (2026-09-26 추가; 원장 **SELF-51** — [Sedl26] 이 [23] 으로 2차 인용한 *"230 GPa · 14.2 GPa · 0.271 MPa√m"* 의 원문).
+**[Xu17-NMC] 와 같은 Zhao 그룹 · 같은 글러브박스 나노압입 · 같은 pop-in 법** — 세 카드를 합치면 **결정립 ↔ 치밀 소결체 ↔ 이차입자 계면** 이 한 방법으로 이어진다.
+본문 8 pp + SI 7 pp 전부 실독, 그림·표 12장 수동 재크롭, 판독 재현 `tools/litdb/sharma2023_verify.py`.
+
+- **무엇을 쟀나**: (i) **단결정 NMC622 분말**을 볼밀·성형 (4 톤, Ø13 mm)·대기 소결 (≈120 → 450 → 880 °C 단계, 3 °C/min; Fig 2c 판독) 해 결정립을 키운 **펠릿**에서, 결정립 108 개에
+  Berkovich **CSM 200 nm** + **같은 자리 EBSD 방위** → Vlassak 이방 압입 역산 → **C₁₁ 194.89 · C₁₂ 133.74 · C₁₃ 11.85 · C₁₄ 8.61 · C₄₄ 74.14 · C₃₃ 177.24 GPa**
+  → VRH **E 140.16 GPa · ν 0.253**; 압입탄성률 기저면 **172.2** ↔ 기둥면 **127 GPa** (Fig 5b).  (ii) 소결 펠릿 **NMC111 · 622 · 811** (+ 선행 NMC532 재수록) 의
+  **M_exp 192.78 / 200.81 / 150.88 / 229.9 GPa** · **H 9.37 / 14.29 / 9.92 / 14.17 GPa** · cube-corner pop-in **K_c 평균 0.162 / 0.296 / 0.258 / 0.271 MPa m^½** (Fig 6).
+- **축 G 에 주는 것 = 입자 아래 한 칸의 "결정 한 알" 층**: [Sedl26] (입계 · 응집체) · [Xu17-NMC] (이차입자 국소 · 펠릿) 에 **단결정 결정립의 탄성 이방성 (±15 % 압입탄성률, NMC622)** 과
+  **K_c (NMC622 결정립 0.258 · NMC811 펠릿 0.271)** 이 붙는다.  같은 방법의 서열: **결정립·치밀 펠릿 0.26–0.31 ≫ 이차입자 계면 0.10** — **"입계가 인성을 ⅓ 로 깎는다"** 가 한 그룹 안에서 선다 (조성은 섞여 있다).
+- **우리와 같은 점**: ★ 우리 **E_AM 140 · ν_AM 0.25 = 이 논문 NMC622 VRH 쌍 (140.16 · 0.253) 과 −0.10 % · −1.2 %** — 원출처 후보 1순위 (리포 이력으로 확인 불가).
+  상태도 같다 — **pristine · 전기화학 이력 없음** ([Xu17-NMC] 의 SOC·사이클 교란이 없다).
+- **다른 점 / 왜**: ① 그 140 은 **NMC622 결정립의 등방 평균** — NCM811 도 이차입자도 아니다 ⇒ [Xu17-NMC] 의 *"140 = 응집체 부류"* 는 NMC532/811 과의 정합으로는 옳지만
+  **값만으로 부류를 판정할 수는 없다**.  NMC811 치밀체는 이 논문 기준 M 229.9 → **E ≈ 206–230** (정의 모호) = AM_S 에 쓰면 ≈ 1.5×.
+  ② **K_IC_AM_S 1.0 은 이 논문의 3.7–3.9×** (NMC622 결정립 0.258 · NMC811 펠릿 0.271) → Auerbach P_c × 0.067–0.073.  ③ **H 9.4–14.3 GPa** — "3–6 문헌대" 는 작은 압흔
+  (stage I) 부류로는 반증; 밴드 안의 값은 다른 양뿐 — stage-III 압입 (Stallard 리뷰의 NMC532 3.2–5.5, 2차) · 입자 파괴 명목 접촉압 ([Wheat23] NMC811 H_f 3.6 ± 0.9).
+  ④ 우리 SC/PC K 비 3.33 (→ P_c 11×) ↔ 같은 법의 문헌 비 **2.5–2.7 (→ 6.4–7.1×)** — 방향은 맞고 **두 절대값이 모두 ≈ 3–4× 크다**.
+- **⚠ 통제 경고 (차이를 주장하기 전에)**:
+  (a) **C_ij 는 비유일 적합** — 자리마다 스칼라 1 개 (M_exp) 로 미지수 6 개, 초기값 미보고; 판독상 C₃₃ 상자가 ≲ 1 GPa 로 뭉침.  그 C_ij 가 주는 방향 영률은 **c축 176 > 기저면 100**
+  (우리 산수) 으로 층상 산화물 통념의 반대 ⇒ **방향 강성은 쓰지 말고 VRH 평균만**.
+  (b) **230 은 영률이 아니다** — 소결 펠릿의 **방위 평균 압입탄성률**, 그리고 SI Table S2 의 M_exp 식이 E 꼴인데 E′ 로 쓰이는 **정의 모호** (ν 미기재).
+  (c) **조성 비교가 통제 실험이 아니다** — 622 만 시료 이력이 있고 111·811 은 "sintered pellets" 뿐, 532 는 선행 재수록 (N 25).
+  (d) **K 는 방법 조건부** — h_min 50 → 150 nm 에 분포 봉우리 0.20 → 0.32 (SI Fig S1 판독), ± · N 미기재, 전단띠 (Fig S3) 가 LEFM 가정을 약화.
+  (e) **스케일** — 압흔 1.5–2.5 µm 가 결정립 ≈ 9 µm 안 (NMC622): 입자 스케일 접촉·파괴 (Auerbach 원뿔균열) 와 **다른 양**, 나노 H 는 입자 지지압의 **상한 쪽**.
+- **판정 · 행동 (비준 대기, 이 항목이 코드를 바꾸지 않는다)**:
+  ① ν_AM 0.25 라벨 = *"≈ 0.253 (VRH, NMC622) [Sharma 2023]"* — **값 불변, 라벨만** (`docs/Reviewer_Defence_Notes.md:114` 의 *"(Xu 2017)"* 교체).
+  ② E_AM: AM_P 는 [Sedl26]·[Xu17-NMC] 유지 · AM_S 는 *"Assumed (= AM_P)"* + **감도 팔 {140, 215}** (압밀 영향 ≈ 0, AM_S 파괴 분류 P_c × 0.65).
+  ③ K_IC: **{AM_S 1.0 ↔ 0.26} × {AM_P 0.3 ↔ 0.10}** 감도 팔을 먼저 등록 → `fracture_aware_excluded_pct` · `frac_severe_force_pct` 영향 확인 후 1저자 결정
+  (⚠ [Wheat23] 의 실측 분할 하중이 유효 K 0.21–0.37 을 요구 — K 단독 교체가 아니라 A_AUERBACH · Lawn 배수와 **함께** 재보정).
+  원고 `docs/paper_brittle_caveat.md` 의 *"K 비 3.3 (Liu vs Quinn) → P_c 11×"* 는 한정어 또는 문헌 비 2.5–2.7 로.
+  ④ H_AM "3–6" 밴드 = [Xu17-NMC] 판정 ③ 과 같다 — 작은 압흔 원문이 3편으로 늘었고, **stage-III 부류로 재등록**하는 길은 Stallard 리뷰 카드가 연다.
+  ⑤ ⛔ 코드 주석의 *"Quinn 2020 Joule"* 을 이 논문 [31] (A. Quinn … *Cell Rep. Phys. Sci.* 1, 100137 = **EBSD 방법 논문**) 으로 **바꿔 달지 말 것**.
 
 **[Wheat23]** `papers/wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem.md` — **L. Wheatcroft, A. Bird, J. C. Stallard, R. L. Mitchell,
 S. G. Booth, A. J. Nedoma, M. F. L. De Volder, S. A. Cussen, N. A. Fleck, B. J. Inkson, *Batteries & Supercaps* 6, e202300032 (2023)** (Sheffield + Cambridge ·

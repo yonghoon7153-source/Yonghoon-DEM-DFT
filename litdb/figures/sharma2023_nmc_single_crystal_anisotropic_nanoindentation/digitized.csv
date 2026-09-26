@@ -1,0 +1,98 @@
+figure,item,value,unit,grade,note
+Fig 6a,NMC111 M_exp mean_dot,192.7858,GPa,digitized,stated mean 192.78; dot-vs-stated +0.0058
+Fig 6a,NMC111 M_exp Q3,207.0288,GPa,digitized,
+Fig 6a,NMC111 M_exp median,193.6102,GPa,digitized,
+Fig 6a,NMC111 M_exp Q1,179.7125,GPa,digitized,
+Fig 6a,NMC111 M_exp whisker_hi,227.1565,GPa,digitized,
+Fig 6a,NMC111 M_exp whisker_lo,147.8435,GPa,digitized,
+Fig 6a,NMC111 M_exp whisker half-width,39.6565,GPa,digitized,stated ± 39.59; whisker centre 187.500
+Fig 6a,NMC532 M_exp mean_dot,200.9246,GPa,digitized,stated mean 200.81; dot-vs-stated +0.1146
+Fig 6a,NMC532 M_exp Q3,211.5815,GPa,digitized,
+Fig 6a,NMC532 M_exp median,199.361,GPa,digitized,
+Fig 6a,NMC532 M_exp Q1,188.8179,GPa,digitized,
+Fig 6a,NMC532 M_exp whisker_hi,235.3035,GPa,digitized,
+Fig 6a,NMC532 M_exp whisker_lo,168.2109,GPa,digitized,
+Fig 6a,NMC532 M_exp whisker half-width,33.5463,GPa,digitized,stated ± 33.61; whisker centre 201.757
+Fig 6a,NMC622 M_exp mean_dot,150.8737,GPa,digitized,stated mean 150.88; dot-vs-stated -0.0063
+Fig 6a,NMC622 M_exp Q3,166.7732,GPa,digitized,
+Fig 6a,NMC622 M_exp median,149.5208,GPa,digitized,
+Fig 6a,NMC622 M_exp Q1,135.3834,GPa,digitized,
+Fig 6a,NMC622 M_exp whisker_hi,209.6645,GPa,digitized,
+Fig 6a,NMC622 M_exp whisker_lo,92.7316,GPa,digitized,
+Fig 6a,NMC622 M_exp whisker half-width,58.4665,GPa,digitized,stated ± 58.35; whisker centre 151.198
+Fig 6a,NMC811 M_exp mean_dot,229.8562,GPa,digitized,stated mean 229.9; dot-vs-stated -0.0438
+Fig 6a,NMC811 M_exp Q3,242.0128,GPa,digitized,
+Fig 6a,NMC811 M_exp median,231.4696,GPa,digitized,
+Fig 6a,NMC811 M_exp Q1,221.4058,GPa,digitized,
+Fig 6a,NMC811 M_exp whisker_hi,271.9649,GPa,digitized,
+Fig 6a,NMC811 M_exp whisker_lo,190.9744,GPa,digitized,
+Fig 6a,NMC811 M_exp whisker half-width,40.4952,GPa,digitized,stated ± 40.55; whisker centre 231.470
+Fig 6b,NMC111 H mean_dot,9.3793,GPa,digitized,stated mean 9.37; dot-vs-stated +0.0093
+Fig 6b,NMC111 H Q3,10.1914,GPa,digitized,
+Fig 6b,NMC111 H median,9.4418,GPa,digitized,
+Fig 6b,NMC111 H Q1,8.4848,GPa,digitized,
+Fig 6b,NMC111 H whisker_hi,12.2488,GPa,digitized,
+Fig 6b,NMC111 H whisker_lo,6.3477,GPa,digitized,
+Fig 6b,NMC111 H whisker half-width,2.9506,GPa,digitized,stated ± 2.94; whisker centre 9.298
+Fig 6b,NMC532 H mean_dot,14.2871,GPa,digitized,stated mean 14.29; dot-vs-stated -0.0029
+Fig 6b,NMC532 H Q3,15.1196,GPa,digitized,
+Fig 6b,NMC532 H median,14.3541,GPa,digitized,
+Fig 6b,NMC532 H Q1,13.6045,GPa,digitized,
+Fig 6b,NMC532 H whisker_hi,16.874,GPa,digitized,
+Fig 6b,NMC532 H whisker_lo,11.8341,GPa,digitized,
+Fig 6b,NMC532 H whisker half-width,2.5199,GPa,digitized,stated ± 2.53; whisker centre 14.354
+Fig 6b,NMC622 H mean_dot,9.923,GPa,digitized,stated mean 9.92; dot-vs-stated +0.0030
+Fig 6b,NMC622 H Q3,10.7496,GPa,digitized,
+Fig 6b,NMC622 H median,10.0478,GPa,digitized,
+Fig 6b,NMC622 H Q1,9.0909,GPa,digitized,
+Fig 6b,NMC622 H whisker_hi,13.0463,GPa,digitized,
+Fig 6b,NMC622 H whisker_lo,6.8262,GPa,digitized,
+Fig 6b,NMC622 H whisker half-width,3.11,GPa,digitized,stated ± 3.11; whisker centre 9.936
+Fig 6b,NMC811 H mean_dot,14.1796,GPa,digitized,stated mean 14.17; dot-vs-stated +0.0096
+Fig 6b,NMC811 H Q3,15.1834,GPa,digitized,
+Fig 6b,NMC811 H median,14.3222,GPa,digitized,
+Fig 6b,NMC811 H Q1,13.3333,GPa,digitized,
+Fig 6b,NMC811 H whisker_hi,17.6077,GPa,digitized,
+Fig 6b,NMC811 H whisker_lo,10.9729,GPa,digitized,
+Fig 6b,NMC811 H whisker half-width,3.3174,GPa,digitized,stated ± 3.32; whisker centre 14.290
+Fig 6d,NMC111 K_c mean_dot,0.162,MPa m^1/2,digitized,stated mean 0.162; dot-vs-stated +0.0000
+Fig 6d,NMC111 K_c Q3,0.2003,MPa m^1/2,digitized,
+Fig 6d,NMC111 K_c median,0.1033,MPa m^1/2,digitized,
+Fig 6d,NMC111 K_c Q1,0.0652,MPa m^1/2,digitized,
+Fig 6d,NMC111 K_c whisker_hi,0.3515,MPa m^1/2,digitized,
+Fig 6d,NMC111 K_c whisker_lo,0.0291,MPa m^1/2,digitized,
+Fig 6d,NMC532 K_c mean_dot,0.2964,MPa m^1/2,digitized,stated mean 0.296; dot-vs-stated +0.0004
+Fig 6d,NMC532 K_c Q3,0.4166,MPa m^1/2,digitized,
+Fig 6d,NMC532 K_c median,0.2267,MPa m^1/2,digitized,
+Fig 6d,NMC532 K_c Q1,0.174,MPa m^1/2,digitized,
+Fig 6d,NMC532 K_c whisker_hi,0.6357,MPa m^1/2,digitized,
+Fig 6d,NMC532 K_c whisker_lo,0.1172,MPa m^1/2,digitized,
+Fig 6d,NMC622 K_c mean_dot,0.2577,MPa m^1/2,digitized,stated mean 0.258; dot-vs-stated -0.0003
+Fig 6d,NMC622 K_c Q3,0.3667,MPa m^1/2,digitized,
+Fig 6d,NMC622 K_c median,0.2121,MPa m^1/2,digitized,
+Fig 6d,NMC622 K_c Q1,0.131,MPa m^1/2,digitized,
+Fig 6d,NMC622 K_c whisker_hi,0.5955,MPa m^1/2,digitized,
+Fig 6d,NMC622 K_c whisker_lo,0.0804,MPa m^1/2,digitized,
+Fig 6d,NMC811 K_c mean_dot,0.2719,MPa m^1/2,digitized,stated mean 0.271; dot-vs-stated +0.0009
+Fig 6d,NMC811 K_c Q3,0.2718,MPa m^1/2,digitized,
+Fig 6d,NMC811 K_c median,0.2211,MPa m^1/2,digitized,
+Fig 6d,NMC811 K_c Q1,0.1837,MPa m^1/2,digitized,
+Fig 6d,NMC811 K_c whisker_hi,0.2821,MPa m^1/2,digitized,
+Fig 6d,NMC811 K_c whisker_lo,0.1657,MPa m^1/2,digitized,
+Fig 5a,C11 mean_dot,194.87,GPa,digitized,stated 194.89
+Fig 5a,C12 mean_dot,133.84,GPa,digitized,stated 133.74
+Fig 5a,C13 mean_dot,11.89,GPa,digitized,stated 11.85
+Fig 5a,C14 mean_dot,8.42,GPa,digitized,stated 8.61
+Fig 5a,C44 mean_dot,74.28,GPa,digitized,stated 74.14
+Fig 5a,C33 mean_dot,178.34,GPa,digitized,stated 177.24
+Fig 2c,furnace node,-0.01 h / 28 C,h / degC,digitized,
+Fig 2c,furnace node,0.47 h / 118 C,h / degC,digitized,rate 3.10 °C/min
+Fig 2c,furnace node,1.49 h / 121 C,h / degC,digitized,rate 0.04 °C/min
+Fig 2c,furnace node,3.32 h / 449 C,h / degC,digitized,rate 2.99 °C/min
+Fig 2c,furnace node,4.32 h / 449 C,h / degC,digitized,rate -0.00 °C/min
+Fig 2c,furnace node,6.72 h / 880 C,h / degC,digitized,rate 3.01 °C/min
+Fig 2c,furnace node,8.72 h / 880 C,h / degC,digitized,rate -0.00 °C/min
+Fig 2c,furnace node,13.38 h / 30 C,h / degC,digitized,rate -3.04 °C/min
+Fig S1,h_min 50 nm normal-curve peak,0.202,MPa m^1/2,digitized,"NMC622, N = 174 (SI caption)"
+Fig S1,h_min 100 nm normal-curve peak,0.229,MPa m^1/2,digitized,"NMC622, N = 174 (SI caption)"
+Fig S1,h_min 150 nm normal-curve peak,0.315,MPa m^1/2,digitized,"NMC622, N = 174 (SI caption)"
