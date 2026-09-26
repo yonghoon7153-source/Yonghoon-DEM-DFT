@@ -1,0 +1,337 @@
+{
+ "n_frames": 4000,
+ "dt_ps": 0.1,
+ "total_ps": 400.0,
+ "min_frames": 100,
+ "thresholds": {
+  "o_bond_A": 2.0,
+  "s_bond_A": 2.6,
+  "o_escape_A": 2.5,
+  "s_escape_A": 3.0,
+  "disp_escape_A": 2.0,
+  "min_ps": 10.0
+ },
+ "n_framework": 280,
+ "n_P_bonded_anions": 128,
+ "n_free": 144,
+ "verdict": "framework_mobile",
+ "n_events": 33,
+ "by_elem": {
+  "Cl": {
+   "events": 13,
+   "n_atoms": 5,
+   "atoms": [
+    54,
+    59,
+    310,
+    438,
+    443
+   ]
+  },
+  "P": {
+   "events": 20,
+   "n_atoms": 3,
+   "atoms": [
+    157,
+    285,
+    413
+   ]
+  }
+ },
+ "events": [
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 54,
+   "start_ps": 22.5,
+   "length_ps": 377.5,
+   "peak_disp_A": 8.295155373731381
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 59,
+   "start_ps": 200.8,
+   "length_ps": 14.3,
+   "peak_disp_A": 3.7516809794258426
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 157,
+   "start_ps": 28.3,
+   "length_ps": 13.8,
+   "peak_disp_A": 3.242213836660312
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 157,
+   "start_ps": 74.60000000000001,
+   "length_ps": 15.600000000000001,
+   "peak_disp_A": 3.3161644703236783
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 157,
+   "start_ps": 123.0,
+   "length_ps": 11.4,
+   "peak_disp_A": 3.0903990417973155
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 157,
+   "start_ps": 144.8,
+   "length_ps": 10.3,
+   "peak_disp_A": 3.484263627655076
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 157,
+   "start_ps": 238.20000000000002,
+   "length_ps": 10.3,
+   "peak_disp_A": 3.478985248076793
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 157,
+   "start_ps": 264.7,
+   "length_ps": 27.8,
+   "peak_disp_A": 3.4843688448166943
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 157,
+   "start_ps": 306.40000000000003,
+   "length_ps": 11.9,
+   "peak_disp_A": 3.5848425523617315
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 157,
+   "start_ps": 352.1,
+   "length_ps": 14.5,
+   "peak_disp_A": 3.52134840526178
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 157,
+   "start_ps": 377.70000000000005,
+   "length_ps": 22.3,
+   "peak_disp_A": 3.73346575022062
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 285,
+   "start_ps": 15.600000000000001,
+   "length_ps": 14.200000000000001,
+   "peak_disp_A": 3.6290462302732105
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 285,
+   "start_ps": 33.800000000000004,
+   "length_ps": 12.200000000000001,
+   "peak_disp_A": 3.2355108221984192
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 285,
+   "start_ps": 75.0,
+   "length_ps": 20.1,
+   "peak_disp_A": 3.130872793651855
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 285,
+   "start_ps": 125.60000000000001,
+   "length_ps": 13.600000000000001,
+   "peak_disp_A": 3.2232634845782835
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 285,
+   "start_ps": 193.3,
+   "length_ps": 10.200000000000001,
+   "peak_disp_A": 3.144745915044758
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 285,
+   "start_ps": 204.0,
+   "length_ps": 19.5,
+   "peak_disp_A": 3.0650362498191486
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 285,
+   "start_ps": 237.0,
+   "length_ps": 15.9,
+   "peak_disp_A": 3.1437455017000215
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 285,
+   "start_ps": 253.10000000000002,
+   "length_ps": 12.5,
+   "peak_disp_A": 3.246742323129999
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 310,
+   "start_ps": 3.6,
+   "length_ps": 396.40000000000003,
+   "peak_disp_A": 10.709565466280681
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 413,
+   "start_ps": 127.80000000000001,
+   "length_ps": 13.200000000000001,
+   "peak_disp_A": 3.000518306090229
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 413,
+   "start_ps": 146.1,
+   "length_ps": 15.600000000000001,
+   "peak_disp_A": 3.818871503944505
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 413,
+   "start_ps": 197.5,
+   "length_ps": 20.5,
+   "peak_disp_A": 3.3978492120749104
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 438,
+   "start_ps": 24.200000000000003,
+   "length_ps": 78.60000000000001,
+   "peak_disp_A": 5.186402733989293
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 443,
+   "start_ps": 36.0,
+   "length_ps": 14.0,
+   "peak_disp_A": 3.566367388113905
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 443,
+   "start_ps": 53.300000000000004,
+   "length_ps": 23.0,
+   "peak_disp_A": 3.2976487844625515
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 443,
+   "start_ps": 80.9,
+   "length_ps": 105.0,
+   "peak_disp_A": 4.076724184682217
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 443,
+   "start_ps": 197.4,
+   "length_ps": 21.6,
+   "peak_disp_A": 3.979491090653837
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 443,
+   "start_ps": 219.10000000000002,
+   "length_ps": 11.4,
+   "peak_disp_A": 3.48701239445694
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 443,
+   "start_ps": 230.60000000000002,
+   "length_ps": 63.5,
+   "peak_disp_A": 4.2869754113003085
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 443,
+   "start_ps": 294.2,
+   "length_ps": 12.0,
+   "peak_disp_A": 3.6266549260644867
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 443,
+   "start_ps": 306.3,
+   "length_ps": 62.800000000000004,
+   "peak_disp_A": 4.253948449346358
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 443,
+   "start_ps": 374.5,
+   "length_ps": 25.5,
+   "peak_disp_A": 4.017684972862425
+  }
+ ],
+ "margin_max_by_elem_kind": {
+  "S/P-bonded": {
+   "max_A": 2.604191481091109,
+   "escape_A": 3.0,
+   "atom": 232
+  },
+  "O/P-bonded": {
+   "max_A": 1.8741251386481124,
+   "escape_A": 2.5,
+   "atom": 491
+  },
+  "P/free": {
+   "max_A": 3.818871503944505,
+   "escape_A": 2.0,
+   "atom": 413
+  },
+  "S/free": {
+   "max_A": 3.6156980637366942,
+   "escape_A": 2.0,
+   "atom": 429
+  },
+  "Cl/free": {
+   "max_A": 10.709565466280681,
+   "escape_A": 2.0,
+   "atom": 310
+  }
+ },
+ "⛔": "이 판정은 '자리를 떠났나' 만 본다. β 경보는 지우지 않는다 — 결과 파일에 병기한다.",
+ "traj": "/root/work/runs/b2o3_221_eventrate_400ps/s3/d0.00_cfg0/T700/traj.xyz",
+ "card": "db/properties/lpsocl_box331_closure_amendment_2026_09_11.json"
+}

@@ -1,0 +1,230 @@
+{
+ "runs": {
+  "s2/T600": {
+   "machine": "gabia",
+   "n_atoms": 512,
+   "supercell": [
+    2,
+    2,
+    1
+   ],
+   "formula": "B8Cl64Li232O12P32S164",
+   "n_frames": 4000,
+   "save_fs": 100.0,
+   "prod_ps": 400.0,
+   "uma_inference_mode": "turbo",
+   "valid": true
+  },
+  "s2/T650": {
+   "machine": "gabia",
+   "n_atoms": 512,
+   "supercell": [
+    2,
+    2,
+    1
+   ],
+   "formula": "B8Cl64Li232O12P32S164",
+   "n_frames": 4000,
+   "save_fs": 100.0,
+   "prod_ps": 400.0,
+   "uma_inference_mode": "turbo",
+   "valid": true
+  },
+  "s2/T700": {
+   "machine": "gabia",
+   "n_atoms": 512,
+   "supercell": [
+    2,
+    2,
+    1
+   ],
+   "formula": "B8Cl64Li232O12P32S164",
+   "n_frames": 4000,
+   "save_fs": 100.0,
+   "prod_ps": 400.0,
+   "uma_inference_mode": "turbo",
+   "valid": true
+  },
+  "s3/T600": {
+   "machine": "gabia",
+   "n_atoms": 512,
+   "supercell": [
+    2,
+    2,
+    1
+   ],
+   "formula": "B8Cl64Li232O12P32S164",
+   "n_frames": 4000,
+   "save_fs": 100.0,
+   "prod_ps": 400.0,
+   "uma_inference_mode": "turbo",
+   "valid": true
+  },
+  "s3/T650": {
+   "machine": "gabia",
+   "n_atoms": 512,
+   "supercell": [
+    2,
+    2,
+    1
+   ],
+   "formula": "B8Cl64Li232O12P32S164",
+   "n_frames": 4000,
+   "save_fs": 100.0,
+   "prod_ps": 400.0,
+   "uma_inference_mode": "turbo",
+   "valid": true
+  },
+  "s3/T700": {
+   "machine": "gabia",
+   "n_atoms": 512,
+   "supercell": [
+    2,
+    2,
+    1
+   ],
+   "formula": "B8Cl64Li232O12P32S164",
+   "n_frames": 4000,
+   "save_fs": 100.0,
+   "prod_ps": 400.0,
+   "uma_inference_mode": "turbo",
+   "valid": true
+  },
+  "s4/T600": {
+   "machine": "gabia",
+   "n_atoms": 512,
+   "supercell": [
+    2,
+    2,
+    1
+   ],
+   "formula": "B8Cl64Li232O12P32S164",
+   "n_frames": 4000,
+   "save_fs": 100.0,
+   "prod_ps": 400.0,
+   "uma_inference_mode": "turbo",
+   "valid": true
+  },
+  "s4/T650": {
+   "machine": "gabia",
+   "n_atoms": 512,
+   "supercell": [
+    2,
+    2,
+    1
+   ],
+   "formula": "B8Cl64Li232O12P32S164",
+   "n_frames": 4000,
+   "save_fs": 100.0,
+   "prod_ps": 400.0,
+   "uma_inference_mode": "turbo",
+   "valid": true
+  },
+  "s4/T700": {
+   "machine": "gabia",
+   "n_atoms": 512,
+   "supercell": [
+    2,
+    2,
+    1
+   ],
+   "formula": "B8Cl64Li232O12P32S164",
+   "n_frames": 4000,
+   "save_fs": 100.0,
+   "prod_ps": 400.0,
+   "uma_inference_mode": "turbo",
+   "valid": true
+  },
+  "s5/T600": {
+   "machine": "kgy",
+   "n_atoms": 512,
+   "supercell": [
+    2,
+    2,
+    1
+   ],
+   "formula": "B8Cl64Li232O12P32S164",
+   "n_frames": 4000,
+   "save_fs": 100.0,
+   "prod_ps": 400.0,
+   "uma_inference_mode": "turbo",
+   "valid": true
+  },
+  "s5/T650": {
+   "machine": "kgy",
+   "n_atoms": 512,
+   "supercell": [
+    2,
+    2,
+    1
+   ],
+   "formula": "B8Cl64Li232O12P32S164",
+   "n_frames": 4000,
+   "save_fs": 100.0,
+   "prod_ps": 400.0,
+   "uma_inference_mode": "turbo",
+   "valid": true
+  },
+  "s5/T700": {
+   "machine": "kgy",
+   "n_atoms": 512,
+   "supercell": [
+    2,
+    2,
+    1
+   ],
+   "formula": "B8Cl64Li232O12P32S164",
+   "n_frames": 4000,
+   "save_fs": 100.0,
+   "prod_ps": 400.0,
+   "uma_inference_mode": "turbo",
+   "valid": true
+  },
+  "s6/T600": {
+   "machine": "kgy",
+   "n_atoms": 512,
+   "supercell": [
+    2,
+    2,
+    1
+   ],
+   "formula": "B8Cl64Li232O12P32S164",
+   "n_frames": 4000,
+   "save_fs": 100.0,
+   "prod_ps": 400.0,
+   "uma_inference_mode": "turbo",
+   "valid": true
+  },
+  "s6/T650": {
+   "machine": "kgy",
+   "n_atoms": 512,
+   "supercell": [
+    2,
+    2,
+    1
+   ],
+   "formula": "B8Cl64Li232O12P32S164",
+   "n_frames": 4000,
+   "save_fs": 100.0,
+   "prod_ps": 400.0,
+   "uma_inference_mode": "turbo",
+   "valid": true
+  },
+  "s6/T700": {
+   "machine": "kgy",
+   "n_atoms": 512,
+   "supercell": [
+    2,
+    2,
+    1
+   ],
+   "formula": "B8Cl64Li232O12P32S164",
+   "n_frames": 4000,
+   "save_fs": 100.0,
+   "prod_ps": 400.0,
+   "uma_inference_mode": "turbo",
+   "valid": true
+  }
+ },
+ "bad": []
+}

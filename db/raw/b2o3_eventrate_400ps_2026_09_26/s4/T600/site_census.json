@@ -1,0 +1,319 @@
+{
+ "n_frames": 4000,
+ "dt_ps": 0.1,
+ "total_ps": 400.0,
+ "min_frames": 100,
+ "thresholds": {
+  "o_bond_A": 2.0,
+  "s_bond_A": 2.6,
+  "o_escape_A": 2.5,
+  "s_escape_A": 3.0,
+  "disp_escape_A": 2.0,
+  "min_ps": 10.0
+ },
+ "n_framework": 280,
+ "n_P_bonded_anions": 128,
+ "n_free": 144,
+ "verdict": "framework_mobile",
+ "n_events": 30,
+ "by_elem": {
+  "P": {
+   "events": 7,
+   "n_atoms": 2,
+   "atoms": [
+    29,
+    285
+   ]
+  },
+  "S": {
+   "events": 8,
+   "n_atoms": 1,
+   "atoms": [
+    45
+   ]
+  },
+  "Cl": {
+   "events": 15,
+   "n_atoms": 5,
+   "atoms": [
+    54,
+    182,
+    183,
+    310,
+    311
+   ]
+  }
+ },
+ "events": [
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 29,
+   "start_ps": 247.4,
+   "length_ps": 30.900000000000002,
+   "peak_disp_A": 3.5062147357800644
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 45,
+   "start_ps": 86.30000000000001,
+   "length_ps": 13.5,
+   "peak_disp_A": 3.4479956858463687
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 45,
+   "start_ps": 103.5,
+   "length_ps": 15.600000000000001,
+   "peak_disp_A": 3.5201474715613137
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 45,
+   "start_ps": 179.60000000000002,
+   "length_ps": 11.700000000000001,
+   "peak_disp_A": 3.2867305037992187
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 45,
+   "start_ps": 210.10000000000002,
+   "length_ps": 19.400000000000002,
+   "peak_disp_A": 3.4521945451077953
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 45,
+   "start_ps": 288.0,
+   "length_ps": 15.3,
+   "peak_disp_A": 3.190915002295339
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 45,
+   "start_ps": 321.3,
+   "length_ps": 12.100000000000001,
+   "peak_disp_A": 3.2756028798499996
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 45,
+   "start_ps": 338.20000000000005,
+   "length_ps": 19.700000000000003,
+   "peak_disp_A": 3.6689377556552496
+  },
+  {
+   "kind": "free",
+   "elem": "S",
+   "atom": 45,
+   "start_ps": 382.5,
+   "length_ps": 17.5,
+   "peak_disp_A": 4.176209323574752
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 54,
+   "start_ps": 117.10000000000001,
+   "length_ps": 20.200000000000003,
+   "peak_disp_A": 4.4429034395163765
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 54,
+   "start_ps": 239.10000000000002,
+   "length_ps": 44.2,
+   "peak_disp_A": 6.64267974913406
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 182,
+   "start_ps": 25.700000000000003,
+   "length_ps": 13.5,
+   "peak_disp_A": 3.9117365153106207
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 182,
+   "start_ps": 39.400000000000006,
+   "length_ps": 35.2,
+   "peak_disp_A": 4.018729900803291
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 182,
+   "start_ps": 74.9,
+   "length_ps": 27.400000000000002,
+   "peak_disp_A": 4.166885329480869
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 182,
+   "start_ps": 102.5,
+   "length_ps": 59.6,
+   "peak_disp_A": 4.165623170508583
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 182,
+   "start_ps": 162.3,
+   "length_ps": 49.2,
+   "peak_disp_A": 4.133343291937095
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 182,
+   "start_ps": 215.8,
+   "length_ps": 21.6,
+   "peak_disp_A": 4.1610982726125165
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 182,
+   "start_ps": 239.9,
+   "length_ps": 48.1,
+   "peak_disp_A": 4.297978101539387
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 182,
+   "start_ps": 288.7,
+   "length_ps": 51.2,
+   "peak_disp_A": 4.304133499062762
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 182,
+   "start_ps": 340.0,
+   "length_ps": 32.800000000000004,
+   "peak_disp_A": 4.488776210993617
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 182,
+   "start_ps": 373.0,
+   "length_ps": 27.0,
+   "peak_disp_A": 4.376144181990259
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 183,
+   "start_ps": 21.1,
+   "length_ps": 378.90000000000003,
+   "peak_disp_A": 11.26555556486305
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 285,
+   "start_ps": 155.9,
+   "length_ps": 11.8,
+   "peak_disp_A": 2.7887524880015713
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 285,
+   "start_ps": 306.3,
+   "length_ps": 11.4,
+   "peak_disp_A": 3.0688552639002316
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 285,
+   "start_ps": 317.90000000000003,
+   "length_ps": 14.5,
+   "peak_disp_A": 3.231121572315485
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 285,
+   "start_ps": 332.5,
+   "length_ps": 25.900000000000002,
+   "peak_disp_A": 3.3360346342372513
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 285,
+   "start_ps": 372.6,
+   "length_ps": 10.9,
+   "peak_disp_A": 3.0750112135626635
+  },
+  {
+   "kind": "free",
+   "elem": "P",
+   "atom": 285,
+   "start_ps": 383.8,
+   "length_ps": 16.2,
+   "peak_disp_A": 3.3437311471156255
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 310,
+   "start_ps": 53.800000000000004,
+   "length_ps": 13.100000000000001,
+   "peak_disp_A": 3.6445901913473486
+  },
+  {
+   "kind": "free",
+   "elem": "Cl",
+   "atom": 311,
+   "start_ps": 88.9,
+   "length_ps": 13.700000000000001,
+   "peak_disp_A": 4.481395836791844
+  }
+ ],
+ "margin_max_by_elem_kind": {
+  "S/P-bonded": {
+   "max_A": 2.4618846889027792,
+   "escape_A": 3.0,
+   "atom": 421
+  },
+  "O/P-bonded": {
+   "max_A": 1.7649110879972787,
+   "escape_A": 2.5,
+   "atom": 423
+  },
+  "P/free": {
+   "max_A": 3.5062147357800644,
+   "escape_A": 2.0,
+   "atom": 29
+  },
+  "S/free": {
+   "max_A": 4.176209323574752,
+   "escape_A": 2.0,
+   "atom": 45
+  },
+  "Cl/free": {
+   "max_A": 11.26555556486305,
+   "escape_A": 2.0,
+   "atom": 183
+  }
+ },
+ "⛔": "이 판정은 '자리를 떠났나' 만 본다. β 경보는 지우지 않는다 — 결과 파일에 병기한다.",
+ "traj": "/root/work/runs/b2o3_221_eventrate_400ps/s4/d0.00_cfg0/T600/traj.xyz",
+ "card": "db/properties/lpsocl_box331_closure_amendment_2026_09_11.json"
+}
