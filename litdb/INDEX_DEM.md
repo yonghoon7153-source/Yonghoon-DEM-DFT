@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 144편 · 생성 2026-09-26
+> digest 145편 · 생성 2026-09-26
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -20,7 +20,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | — |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (30편)
+## 접촉역학 · 소성 (DEM 이론) (31편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -45,6 +45,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `schreiner2020_dem_calendering_lib` | LIB 전극 calendering(압연)을 DEM으로 — NMC622 양극 · EDEM(상용) + EEPA 탄소성 접촉 + Bonding(Potyondy–Cundall) · 3-모듈 "USER TOOL"(공정 파라미터 예측) — Schreiner·Klinger·Reinhart (Procedia CIRP 2020, 짧은 학 | DEM (EDEM 상용, EEPA+Bonding; 나노압입 보정 + 공정 USER TOOL) | 2026-06-27 | 🖼 6 |
 | `shi2019_high_am_loading_particle_size_assb` | 입자 크기비 λ=D_CAM/D_SE 로 고-CAM 로딩(>50 vol%) 달성 — 우리와 같은 LIGGGHTS DEM + Hertz 로 "작은 SE + 큰 CAM"을 모델+실험 동시 증명 — Shi (Ceder 그룹, Adv. Energy Mater. 2019/2020) | mixed (DEM-LIGGGHTS modeling + experiment) | 2026-06-26 | 🖼 7 |
 | `so2022_dem_contact_model_assb_compaction_sintering` | ASSB 전극 압밀·소결 DEM을 위한 접촉모델 (탄성+소성+점탄성 + 소결 + 면적/스프링 인자) — So (MethodsX 2022) | DEM | 2026-06-26 | 🖼 10 |
+| `stallard2022_cathode_mechanical_properties_review` | LIB 양극재 기계물성 리뷰 — Berkovich indentation E·H 는 압흔 크기 ÷ 결정립 크기 (A_P^½/d) 로 접히고 0.1 을 넘으면 입계 파쇄로 떨어지며, 입자 인장강도는 H/3 보다 한 자릿수 이상 낮고, σ_F = K_IC/√(π·d/2) 로 다결정 NMC333 의 K_IC ≈ 0.05–0.3  | review (compilation of published experimental data: Berkovic | 2026-09-26 | 🖼 13 |
 | `storakers1997_similarity_inelastic_contact` | 비탄성 접촉의 자기상사(similarity) 해석 — Storåkers, Biwa & Larsson (Int. J. Solids Struct. 1997) | continuum (self-similar inelastic single/pair contact theory | 2026-06-26 | 🖼 5 |
 | `thakur2014_eepa_adhesive_elastoplastic_dem` | EEPA 점착 탄소성 접촉모델 (면적의존 점착) — 응집 분말의 미시역학 — Thakur (Granular Matter 2014) | DEM (contact-LAW theory + uniaxial calibration) | 2026-06-26 | 🖼 22 |
 | `thorntonning1998_adhesive_elastoplastic_contact` | 점착 탄소성 구의 stick/bounce — 항복압 캡(p_y) 접촉 LAW의 정의서 — Thornton & Ning (Powder Technology 1998) | DEM (contact-LAW theory) | 2026-06-26 | 🖼 7 |

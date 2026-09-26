@@ -1,0 +1,298 @@
+{
+ "slug": "stallard2022_cathode_mechanical_properties_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-26",
+ "sources": [
+  "2e77cdde-PIIS2542435122001398.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. The structure of a Li-ion cell illustrating the typical porous cathode microstructure of active particles bonded together with a conductive binder",
+   "rotated_deg": 0,
+   "bbox": [
+    55.9,
+    103.4,
+    378.9,
+    390.2
+   ],
+   "w": 1346,
+   "h": 1195,
+   "dpi": 300,
+   "src": "2e77cdde-PIIS2542435122001398.pdf",
+   "blank": 0.303,
+   "viewed": true,
+   "recrop": "auto crop started at y 45-70 pt and swallowed the running head ('Joule / Review' logo, CellPress tab) -> hand clip [53.5, 100.0, 383.0, 394.0] pt on PDF page 2 @300 dpi + white-border trim (white = all channels > 244, 8 px margin) (2026-09-26)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. The atomic structures of cathode materials, and different cathode particle architectures (A–G) The atomic structures of (A) olivine, (B) layered, and (C) spinel-cathode materials. Sketches of different cathode particle architectures: (D) secondary particle, (E) separate single crystals,11 (F) plate-shaped particles,12 and (G) nano-sized particles.13",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    97.6,
+    384.8,
+    446.0
+   ],
+   "w": 1389,
+   "h": 1453,
+   "dpi": 300,
+   "src": "2e77cdde-PIIS2542435122001398.pdf",
+   "blank": 0.79,
+   "viewed": true,
+   "checked": "auto crop opened and checked 2026-09-26 — no caption bleed, no running head, labels/axes/legend complete"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. The speciﬁc power and speciﬁc energy of cathode materials and cathode architectures (A–C) Plots of the speciﬁc power versus speciﬁc energy for (A) different cathode materials as reported in the literature12–14,22–30 and (B) of LFP cathodes with a variety of different cathode particle architectures.12–14,23,28–30 (C) The speciﬁc power of LFP cathodes versus particle dimension, for speciﬁc energy below 350 Wh kg\u00011.",
+   "rotated_deg": 0,
+   "bbox": [
+    57.3,
+    103.6,
+    382.1,
+    437.7
+   ],
+   "w": 1353,
+   "h": 1392,
+   "dpi": 300,
+   "src": "2e77cdde-PIIS2542435122001398.pdf",
+   "blank": 0.844,
+   "viewed": true,
+   "recrop": "auto crop started at y 159.2 pt and cut off the top of panels A-B (panel labels, y-axes 10^4-10^6, legend 'Olivine LiFePO4' / '50 nm') -> hand clip [53.5, 99.5, 384.5, 441.0] pt on PDF page 4 @300 dpi + white-border trim (white = all channels > 244, 8 px margin) (2026-09-26)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Dimensional changes of atomic lattice dimensions during cell charge (delithiation of the cathode) (A–C) Normalized lattice constants (A) a/a0 = b/b0 and (B) c/c0 plotted against degree of lithiation x in LixMOb as measured for a variety of layered and spinel cathode materials over the ﬁrst cell charge.37–43 (C) Plot of c/c0 versus ab/(a0b0).",
+   "rotated_deg": 0,
+   "src": "2e77cdde-PIIS2542435122001398.pdf",
+   "bbox": [
+    102.6,
+    102.9,
+    330.4,
+    702.4
+   ],
+   "w": 949,
+   "h": 2498,
+   "dpi": 300,
+   "blank": 0.917,
+   "viewed": true,
+   "manual_crop": "missed by the auto cropper: the caption is on the NEXT page (p6, y 103-151) and p5 carries the three plots only -> rejected as 'no graphics (img0/draw5)' on p6 -> hand clip [100.0, 100.0, 334.0, 705.0] pt on PDF page 5 @300 dpi + white-border trim (white = all channels > 244, 8 px margin) (2026-09-26)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Sketch of the intergranular fracture caused by the anisotropic straining of layered primary particles within a secondary particle. The arrows in each primary particle denote the direction of the c axis. Calculations reported in the literature suggestthat the stresses that arise within cathode particles during charge and discharge are sufﬁcient to lead to their fracture.56–58 In the case of polycrystalline secondary particles of layered active materials such as NMC, differential swelling between adjacent primary grains upon charging can give rise to intergranular cracking,9 as sketched in Figure 5; electrolyte may inﬁltrate along these intergranular cracks. Numerical simulations conﬁrm that the magnitude of swelling- induced stresses depends upon the charging rate, particle size, particle shape, and ionic and electrical conductivities.59–61 Polycrystalline active material partic",
+   "rotated_deg": 0,
+   "bbox": [
+    55.7,
+    101.7,
+    381.6,
+    260.5
+   ],
+   "w": 1358,
+   "h": 662,
+   "dpi": 300,
+   "src": "2e77cdde-PIIS2542435122001398.pdf",
+   "blank": 0.37,
+   "viewed": true,
+   "recrop": "auto crop started at y 45-70 pt and swallowed the running head ('Joule / Review' logo, CellPress tab) -> hand clip [54.5, 99.5, 386.0, 262.5] pt on PDF page 8 @300 dpi + white-border trim (white = all channels > 244, 8 px margin) (2026-09-26)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Indentation of cathode materials (A–D) (A) Sketch of the indentation method used to measure hardness and modulus. (B) Sketch of a typical force-displacement response measured in indentation; the gradient used to deduce the Young’s modulus from the elastic unloading response is identiﬁed. Sketch of the indentation of (C) secondary particle set in resin and (D) a polycrystalline pellet of macroscopic dimensions. Note the differences in the ratio of indent size A1=2 P to grain size d.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    98.7,
+    390.2,
+    465.0
+   ],
+   "w": 1411,
+   "h": 1527,
+   "dpi": 300,
+   "src": "2e77cdde-PIIS2542435122001398.pdf",
+   "blank": 0.757,
+   "viewed": true,
+   "checked": "auto crop opened and checked 2026-09-26 — no caption bleed, no running head, labels/axes/legend complete"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Figure 7. The modulus and hardness of a variety of cathode materials as measured after manufacture in the fully lithiated state with Berkovich indentation66–77 and compared against the modulus and hardness of other engineering ceramics and glasses83,84",
+   "rotated_deg": 0,
+   "bbox": [
+    56.9,
+    103.1,
+    378.5,
+    402.6
+   ],
+   "w": 1340,
+   "h": 1248,
+   "dpi": 300,
+   "src": "2e77cdde-PIIS2542435122001398.pdf",
+   "blank": 0.618,
+   "viewed": true,
+   "recrop": "auto crop started at y 45-70 pt and swallowed the running head ('Joule / Review' logo, CellPress tab) -> hand clip [53.5, 99.5, 381.0, 406.0] pt on PDF page 10 @300 dpi + white-border trim (white = all channels > 244, 8 px margin) (2026-09-26)"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 11,
+   "file": "fig_8.png",
+   "caption": "Figure 8. The idealized stages I, II, and III of micromechanical deformation upon the indentation of a polycrystalline ceramic that give rise to decreasing hardness with an increasing indentation area for indentations of dimension comparable with the grain size",
+   "rotated_deg": 0,
+   "bbox": [
+    60.6,
+    102.8,
+    543.0,
+    262.0
+   ],
+   "w": 2010,
+   "h": 663,
+   "dpi": 300,
+   "src": "2e77cdde-PIIS2542435122001398.pdf",
+   "blank": 0.578,
+   "viewed": true,
+   "recrop": "auto crop started at y 70.1 pt and kept a fragment of the running head ('Review', top right) -> hand clip [58.0, 99.0, 545.5, 265.5] pt on PDF page 11 @300 dpi + white-border trim (white = all channels > 244, 8 px margin) (2026-09-26)"
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 12,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Effect of indent size and grain size (A–D) Young’s modulus (A) and indentation hardness (B) plotted as a function of indentation size A1=2 I for a range of polycrystalline LiNi0.5Mn0.3Co0.2O2 and LiNi1/3Mn1/3Co1/3O2 cathode materials.66,74–77,98 The modulus and hardness are plotted in (C) and (D), with the indentation size A1=2 normalized by the grain size d. Data from secondary particles are indicated with ﬁlled symbols ( , ); data from sintered pellets are plotted with hollow symbols ( , , , , ). dislocation motion and twinning within the atomic lattice.93,99 For indentations in this range, an increase in hardness with decreasing indentation size without any similar increase in elastic modulus is taken as evidence of similar strain gradient ef- fects to those measured in many other crystalline materials where plasticity is due to dislocation glide.100,101 If an indentation is",
+   "rotated_deg": 0,
+   "bbox": [
+    57.6,
+    102.9,
+    381.4,
+    425.9
+   ],
+   "w": 1349,
+   "h": 1346,
+   "dpi": 300,
+   "src": "2e77cdde-PIIS2542435122001398.pdf",
+   "blank": 0.916,
+   "viewed": true,
+   "recrop": "auto crop started at y 45-70 pt and swallowed the running head ('Joule / Review' logo, CellPress tab) -> hand clip [55.0, 100.0, 384.5, 428.0] pt on PDF page 12 @300 dpi + white-border trim (white = all channels > 244, 8 px margin) (2026-09-26)"
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 14,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Methods of measuring the fracture strength of cathode materials and experimental data (A–C) (A) The compression of secondary particles that leads to transverse tensile stress, and (B) ﬂexural bend tests on macroscopic cylindrical samples. (C) Plot of fracture strength sF versus d\u0001 1=2 for NMC333 samples.107,109 Predictions of the fracture strength are included as contours for various values of fracture toughness, KIC; the measured percentage of sample porosity are written alongside the data where available.",
+   "rotated_deg": 0,
+   "bbox": [
+    56.9,
+    102.9,
+    376.6,
+    537.5
+   ],
+   "w": 1332,
+   "h": 1811,
+   "dpi": 300,
+   "src": "2e77cdde-PIIS2542435122001398.pdf",
+   "blank": 0.887,
+   "viewed": true,
+   "recrop": "auto crop started at y 45-70 pt and swallowed the running head ('Joule / Review' logo, CellPress tab) -> hand clip [54.0, 100.0, 379.0, 540.0] pt on PDF page 14 @300 dpi + white-border trim (white = all channels > 244, 8 px margin) (2026-09-26)"
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 15,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Fast fracture from ﬂaws (A) Geometry of a ﬂaw within a brittle material subjected to macroscopic stress, and (B) typical ﬂaws within a polycrystalline material of similar size to individual grains.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    98.2,
+    382.5,
+    295.5
+   ],
+   "w": 1379,
+   "h": 823,
+   "dpi": 300,
+   "src": "2e77cdde-PIIS2542435122001398.pdf",
+   "blank": 0.637,
+   "viewed": true,
+   "checked": "auto crop opened and checked 2026-09-26 — no caption bleed, no running head, labels/axes/legend complete"
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 16,
+   "file": "fig_12.png",
+   "caption": "Figure 12. Effects of electrolyte immersion and degree of lithiation (A–D) (A) The effect of electrolyte immersion upon the modulus E and hardness H of sintered pellets and secondary particles of NMC532. (B) The Young’s modulus E and (C) indentation hardness H of cathode materials as a function of their degree of lithiation x over the ﬁrst cell charge.69,73,75,98 The hardness H and modulus E of layered cathode materials are normalized by their values in a fully lithiated state, H0 and E0, and plotted against one another in (D). Dependence of modulus and hardness upon the degree of lithiation The effect of delithiation upon the modulus, hardness, and fracture of cathode ma- terials is now addressed. However, ﬁrst, a word of caution. Sometimes in mechanical studies, high values of upper cutoff voltage (UCV) are chosen in order to exaggerate the degree of cracking, which is not representati",
+   "rotated_deg": 0,
+   "bbox": [
+    57.6,
+    102.9,
+    377.3,
+    428.6
+   ],
+   "w": 1332,
+   "h": 1357,
+   "dpi": 300,
+   "src": "2e77cdde-PIIS2542435122001398.pdf",
+   "blank": 0.936,
+   "viewed": true,
+   "recrop": "auto crop started at y 45-70 pt and swallowed the running head ('Joule / Review' logo, CellPress tab) -> hand clip [55.0, 100.0, 380.0, 431.0] pt on PDF page 16 @300 dpi + white-border trim (white = all channels > 244, 8 px margin) (2026-09-26)"
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 18,
+   "file": "fig_13.png",
+   "caption": "Figure 13. The effect of cycling upon mechanical properties (A–D) (A) Effect of the ﬁrst delithiation/relithiation cycle107 upon fracture strength sF for layered LixNi1/3Mn1/3Co1/3O2. (B) Young’s modulus E, and (C) hardness H of cathode materials as a function of the number of applied charge/discharge cycles, as measured in the lithiated state.71,75 Dotted lines are used where data span the ﬁrst charge/discharge cycle, where the decrease in E and H is typically greatest. The hardness H and modulus E of layered cathode materials measured after successive charge/discharge cycles are normalized by their values before cycling, H0 and E0, and plotted against one another in (D).",
+   "rotated_deg": 0,
+   "bbox": [
+    57.1,
+    103.4,
+    377.1,
+    425.9
+   ],
+   "w": 1333,
+   "h": 1344,
+   "dpi": 300,
+   "src": "2e77cdde-PIIS2542435122001398.pdf",
+   "blank": 0.95,
+   "viewed": true,
+   "recrop": "auto crop started at y 137.5 pt and cut off the top of panels A-B (panel labels, the 'NMC333 secondary particles, grain size 0.5 um to 1 um' note, E-axis 200-250) -> hand clip [54.5, 100.5, 380.0, 428.0] pt on PDF page 18 @300 dpi + white-border trim (white = all channels > 244, 8 px margin) (2026-09-26)"
+  }
+ ],
+ "note": "13 figures, no tables, no SI (the review mentions none). 3 auto crops kept (Fig 2, 6, 11); 9 hand re-crops (Fig 1, 5, 7, 8, 9, 10, 12 = running head removed; Fig 3, 13 = top of panels A-B restored); Fig 4 hand-cropped from PDF page 5 (its caption sits on page 6). Re-running extract_figures.py --clean for this slug LOSES the 10 hand crops."
+}

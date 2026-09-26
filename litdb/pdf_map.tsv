@@ -177,6 +177,22 @@ xu2017_nmc532_nanoindentation_modulus_hardness_toughness	xu_2017_j._electrochem.
 #   [!] '--slug xu2017_nmc532_nanoindentation_modulus_hardness_toughness --clean' 을 돌리면
 #       Fig 1 · Table 1 이 사라진다. ('--inbox --run --skip-done' 은 안전.)
 #   ⭐ Table 1 (E·H·K_c: 이차입자 / 펠릿 / DFT) 과 Fig 5 · Fig 8 (SOC·사이클 궤적) 이 이 카드의 근거다.
+#   (같은 절 · 리뷰 층) [Sedl26] 이 [30] 으로 인용한 "Stallard 추정" (K_IC 0.05–0.3) 의 원문 = stallard2022 리뷰
+# 가드: Cell Press 파일명이 PII 뿐('PIIS2542435122001398.pdf' / ScienceDirect '1-s2.0-S2542435122001398-main.pdf')이라
+#   제목 토큰이 안 겹친다 → PII 조각으로 잡는다 (두 이름 모두 부분 일치).  이 리뷰는 **SI 가 없다** (본문 24 pp 하나).
+stallard2022_cathode_mechanical_properties_review	s2542435122001398
+#   ↑ 2026-09-26.  13장 (Fig 1–13, 표 0) 중 **손이 들어간 것 10장** (figures.json 의 recrop / manual_crop):
+#   · 머리말('Joule / Review' 로고 · CellPress 탭) 혼입 7장 = fig_1 · 5 · 7 · 8 · 9 · 10 · 12 — 자동 bbox 가 y 45–70 pt 에서 시작.
+#   · 패널 A–B 윗부분 잘림 2장 = fig_3 (자동 y0 159.2) · fig_13 (자동 y0 137.5) — 패널 라벨 · 윗축 · 주석이 빠졌다.
+#   · fig_4 = PDF page 5(1-based) clip (100, 100, 334, 705) @300 dpi → 949x2498 (**수동 신규**)
+#     ↑ 캡션이 **다음 쪽** (page 6, y 103–151) 에 있고 그림 쪽에는 캡션이 없어 자동 크로퍼가 '그래픽 없음(img0/draw5)' 으로 제외한다.
+#   · 손 클립 = 그래픽 경계(벡터 경로 ∪ 이미지 ∪ 그림 안 글자) + 3–4 pt → 흰 여백 trim (세 채널 > 244, 8 px @300 dpi).
+#     fig_8 은 높이 0 인 표면선(x 62.5 pt)이 합집합에서 빠져 첫 클립이 2 pt 잘렸다 → x0 58 로 다시.
+#   · 자동 그대로 3장 = fig_2 · 6 · 11 (육안 확인 — 결함 없음).
+#   [!] '--slug stallard2022_cathode_mechanical_properties_review --clean' 을 돌리면 **손 크롭 10장이 사라지고**
+#       머리말 섞인 7장 · 잘린 2장 · Fig 4 없음으로 돌아간다. ('--inbox --run --skip-done' 은 안전.)
+#       재생성이 필요하면 figures.json 의 bbox · dpi 를 그대로 다시 쓴다.
+#   ⭐ Fig 9 (E·H vs A_P^½ · A_P^½/d — 부류 차의 원인) 와 Fig 10C (σ_F vs d^-½ + K_IC 등고선 = "Stallard 추정" 의 원천) 가 이 카드의 근거다.
 #
 # ── SE 고유 전달물성 (σ_ion 단상 펠릿 · 적층압/제작압) ──────────────
 # 가드: ACS SI 파일명(nz1c01299_si_001.pdf)은 원고번호뿐이라 제목 토큰이 안 겹친다 → 원고번호 조각으로 SI 만 잡는다.

@@ -3669,6 +3669,29 @@ F. Weber, C. Broeckmann (RWTH Aachen), *J. Power Sources* 681 (2026) 240276** (2
   ④ `analyze_tabor_regime.py` 의 σ_y,AM = H/3 = 2.0 GPa (H 6.0) 는 이 논문 기준 ≈ 2.9 GPa (H 8.6) — 진단용이라 영향 작음.
   ⑤ A10 `cycle_contact_ledger` poly 입계 열화 (ASSUMED-FORM) 에 **형태** (첫 사이클 계단 + 완만한 감쇠) 만 참고 — **크기 전이 금지**.
 
+**[Stallard22]** `papers/stallard2022_cathode_mechanical_properties_review.md` — **J. C. Stallard, L. Wheatcroft, S. G. Booth, R. Boston,
+S. A. Corr, M. F. L. De Volder, B. J. Inkson, N. A. Fleck (Cambridge + Sheffield), *Joule* 6, 984–1007 (2022)** (2026-09-26 추가; 원장 **SELF-51**).
+**리뷰 — 자체 측정 0, 전 수치 2차 인용**.  [Sedl26] 이 [30] 으로 인용한 *"estimation made by Stallard et al."* 의 원문이자, 이 축 (G) 에 **해석 틀 하나**를 준다:
+**입자 안의 E · H · 인성은 "몇 개의 결정립과 입계를 건드리느냐" = A_P^½/d 로 정해진다.**
+- **축 G 에 주는 것 — 3단계 틀 (Fig 8 · 9, p. 994–996)**: Stage I (압흔 ≪ 결정립, 전위 소성) → II (압자 근처 입계 균열) → III (부서진 결정립의 **입상 유동**, H = 입상체 응집 강도).
+  NMC 자료는 A_P^½/d 로 한 곡선에 모이고 **> 0.1 에서 E·H 동반 하락** (입계 파쇄).  vector-read: NMC532 이차입자 **E 143 → 51 · H 11.7 → 3.2 GPa**, 펠릿 **E 210 → 166 · H 11.2 → 6.8**.
+  ⇒ [Xu17-NMC] 의 *"응집체 : 펠릿 : DFT = 1 : 1.25 : 1.33"* 은 **고정 비가 아니라 압흔 크기에 따라 움직이는 비**다 (같은 A_P^½ 에서 이차입자/펠릿 ≈ 0.5–0.7).
+- **파괴 쪽 (Fig 10 · 11, p. 996–998)**: 입자 인장강도는 **H/3 보다 한 자릿수 이상 낮고** σ_F ∝ d^−½ = 결정립 크기 결함에서 시작하는 취성 파괴.  **σ_F = K_IC/√(π·d/2)** (a = d/2) 등고선으로
+  다결정 NMC333 **K_IC 0.05–0.3** 추정 — 이차입자 (Dang 2019, 중앙 185.6 MPa, vector-read) 역산 중앙 **0.19**, 윗수염 **0.300**; 치밀 펠릿 (Huddleston 2020) 0.09–0.14 (우리 산술).
+  단결정 쪽 짝은 **LiCoO₂ 큰 결정립 입내 0.2–6.5** 뿐 — *"intergranular toughness is much below the transgranular toughness"* 가 **"충전 시 입계 파괴"** 를 설명.
+- **우리와 같은 점**: DEM 입자 = 이차입자 1개 → E_AM 140 은 **이차입자 · 작은 압흔 부류** (Fig 9 파란 계열 = Xu 2017, 우리 식별).  A10 의 *"poly = 입계 내부 void"* 가정과 Fig 5 (비등방 변형 → 입계 균열) 가 같은 그림.
+- **다른 점 / 왜**: ① **액체 전용** — Fig 5 의 *"electrolyte-filled fractures"* 는 황화물 ASSB 에서 **공극**으로 남는다 (SE 침투 불가) ② NMC811 역학값 · 단결정 NMC · ν · DFT **없음** ③ 계열↔문헌 미표기 (Fig 7 · 9).
+- **⚠ 통제 경고 (차이를 주장하기 전에)**:
+  (a) **크기 의존 값의 대표값은 없다** — H·E 는 A_P^½/d 를 병기해야 의미가 있다.  우리 **H_AM 역산 3.83–3.85** 는 NMC532 이차입자의 **stage III (A_P^½/d ≈ 3.1)** 값과 같다 — 그러나 **사후 부합**이다 (밴드 등록 당시 출처 없음).
+  (b) **K_IC 는 추정** — a = d/2 가정 (a = d 면 ×1.41) · Hiramatsu–Oka 2.8 인자 (불규칙 조각용) · 하한 0.05 는 본문이 추세에서 뺀 고기공 펠릿이 정한다.
+  (c) **헤르츠 AM–AM 접촉 ↔ Berkovich 압입** — 스케일은 비교할 수 있지만 (F 0.1–10 mN → √π·a 0.24–1.12 µm, A_P^½/d ≈ 0.25–2, 우리 산술) 응력장이 달라 **기전 전이는 아니다**.
+- **판정 · 행동 (비준 대기, 이 항목이 코드를 바꾸지 않는다)**:
+  ① `fracture_model.py` K_IC_AM_P 0.3 라벨 = *"Stallard 2022 추정 범위 (0.05–0.3, NMC333, a = d/2) 의 상한"* · **{0.10 · 0.19 · 0.30} 민감도 팔 등록** (교체는 1저자 결정).
+  ② K_IC_AM_S 1.0 = **"Assumed" 유지** (NMC 단결정 근거 없음 — σ_F 186 MPa 에서 결함 9.2 µm 를 요구, 우리 산술).
+  ③ `am_load_balance_jam.py` 밴드 = **"stage-III 압입 경도 (NMC532 이차입자 3.2–5.5 GPa)" 로 런 전 재등록** — 과거 PASS 의 소급 정당화 금지.  이 H_AM 은 **AM 하중분담 ②** 의 양이다.
+  ④ `analyze_tabor_regime.py` σ_y,AM = H/3 — 리뷰는 인장강도가 H/3 보다 **10× 이상 낮다**고 강조 → "압축 소성의 대용" 한정어 추가.
+  ⑤ 강도 기준 입자 파쇄를 넣는다면 식 4 (σ_F = 2.8 P_C/(π d²)) + NMC333 중앙 185.6 MPa → **0.208 mN·(d/µm)²** (d 5 µm 5.2 mN vs Auerbach 개시 K 0.3 0.60 mN) · NMC811 값은 Wheatcroft 2023 원문 후.
+
 ---
 
 ## H. 혼합 공정 축 — **우리에게 통째로 없는 단계** (2026-09-20 신설, 9 편)
