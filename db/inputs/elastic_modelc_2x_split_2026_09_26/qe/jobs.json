@@ -35,5 +35,6 @@
    "source": "gabia /data/work/runs/elastic_modelc_2x/strain_12_m.in (러너 run_elastic_relaxedion_gabia.sh SYS=modelc_2x 가 09-26 18:11 에 패치: nstep 200 · trust_radius_max 0.05 · from_scratch)",
    "machine": "V100 (분할 · gabia 러너와 같은 입력)"
   }
- ]
+ ],
+ "status": "미사용 — 1저자 '안 옮겨도 돼' (2026-09-26) · 탄성은 gabia 러너가 12 점 전부"
 }
