@@ -1,0 +1,50 @@
+{
+ "schema": "resource_probe_inputs/v1",
+ "date": "2026-09-26",
+ "what": "LPSCl|Ag 소모델 축소 변형의 **메모리 추정 프로브** (DEM 5차 질문: 48 GB 안의 더 작은 SE 소모델 가능성) — CPU pw.x 로 추정 줄만 읽고 PID kill · 에너지 사용 없음 · 새 카드 전 탐색",
+ "base": "build_aprime_interfaces.build_v5('s_outer') registry A · far 끝점 (가장 큰 표본) · 52/520 Ry · k 3×2×1 · D3 2체 · 쌍극자 dip_region",
+ "pp_11e": {
+  "file": "Ag.pbe-n-kjpaw_psl.1.0.0.UPF",
+  "source": "pslibrary 1.0.0 (QE 사이트 upf_files) · 4d10 5s1 · 전자 11 — gabia 에서 받아 sha 를 적는다",
+  "status": "⚠ 카드 봉인 PP 아님 — 채택하려면 V2 대조 검증(0.435 와 |ΔW| ≤ 0.01) 먼저"
+ },
+ "판정_규칙(결과_전)": "GPU 피크 ≈ CPU 추정 총량 × 1.2–1.45 (SE|SE 실측) → 상한 쪽(×1.45)이 44 GB(gabia KILL) 이하인 변형만 탄성 끝난 뒤 gabia GPU 시험 (electron_maxstep 2) · 넘으면 그 변형 불가",
+ "variants": {
+  "A_ag2_pp19": {
+   "ag_layers": 2,
+   "ag_pp": "Ag_ONCV_PBE-1.0.oncvpsp.upf",
+   "nat": 172,
+   "n_Ag": 56,
+   "n_electrons": 1592,
+   "cell_c_A": 29.998,
+   "pw_in_sha256": "ad7268a8a35d0a359f64c0297b80353503b552bb790d7a579bc0ba187c9ffed5"
+  },
+  "B_ag2_pp11": {
+   "ag_layers": 2,
+   "ag_pp": "Ag.pbe-n-kjpaw_psl.1.0.0.UPF",
+   "nat": 172,
+   "n_Ag": 56,
+   "n_electrons": 1144,
+   "cell_c_A": 29.998,
+   "pw_in_sha256": "06cd4f26d77508c1b716fa0bbb79c0d93deff0a97d21f73af43e4cd3fbedb31c"
+  },
+  "C_ag3_pp11": {
+   "ag_layers": 3,
+   "ag_pp": "Ag.pbe-n-kjpaw_psl.1.0.0.UPF",
+   "nat": 200,
+   "n_Ag": 84,
+   "n_electrons": 1452,
+   "cell_c_A": 32.348,
+   "pw_in_sha256": "e74a2ef9d9bb9f75628091c5ccb791447d902af9665aa227ff1598d84df8a513"
+  }
+ },
+ "reference_V5_sealed": {
+  "ag_layers": 3,
+  "ag_pp": "Ag_ONCV (19)",
+  "nat": 200,
+  "n_electrons": 2124,
+  "cell_c_A": 32.348,
+  "probe_70Ry_total_GB": 108.99,
+  "note": "S3 프로브 실측 (70/700 Ry · 4 랭크)"
+ }
+}
