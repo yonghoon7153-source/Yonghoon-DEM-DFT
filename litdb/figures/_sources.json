@@ -2050,6 +2050,14 @@
    "DEM 논문/44. Simulating solid-state battery cathode manufacturing via wet-processing with resolved active material geometries.pdf"
   ]
  },
+ "wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem": {
+  "figures": 16,
+  "generated": "2026-09-26",
+  "pdfs": [
+   "d97771ae-Batteries___Supercaps_-_2023_-_Wheatcroft_-_Fracture_Testing_of_Lithium_Ion_Battery_Cathode_Secondary_Particles_in_situ.pdf",
+   "2dfc1c88-batt202300032-sup-0001-misc_information.pdf"
+  ]
+ },
  "whitten2023_ups_practical_best_practices": {
   "figures": 6,
   "generated": "2026-08-05",

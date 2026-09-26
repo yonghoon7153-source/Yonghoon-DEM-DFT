@@ -1,0 +1,399 @@
+{
+ "slug": "wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-26",
+ "sources": [
+  "d97771ae-Batteries___Supercaps_-_2023_-_Wheatcroft_-_Fracture_Testing_of_Lithium_Ion_Battery_Cathode_Secondary_Particles_in_situ.pdf",
+  "2dfc1c88-batt202300032-sup-0001-misc_information.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a–c) SEM images of a pristine NMC811 particle taken at different points during indentation (1, 2, and 3, respectively) on the load-displacement curve in (d). e) Image of the particle post-fracture at point 4 on the load displacement curve, and f) a magnified image of the indentation crater in (e).",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    406.6,
+    552.7,
+    722.1
+   ],
+   "w": 2134,
+   "h": 1316,
+   "dpi": 300,
+   "src": "d97771ae-Batteries___Supercaps_-_2023_-_Wheatcroft_-_Fracture_Testing_of_Lithium_Ion_Battery_Cathode_Secondary_Particles_in_situ.pdf",
+   "blank": 0.542,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a–d) Dynamical SEM images of particles indented with a flat platen with each image corresponding to the points labelled 1, 2, 3, and 4 on the Load (P)-Displacement curve in (e). f) Graph showing Peak Load (Pf) against secondary particle diameter (D) measured by micro-indentation using a flat platen (hollow red squares), and a cono-spherical tip (blue circles).",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    394.5,
+    549.8,
+    713.1
+   ],
+   "w": 2122,
+   "h": 1329,
+   "dpi": 300,
+   "src": "d97771ae-Batteries___Supercaps_-_2023_-_Wheatcroft_-_Fracture_Testing_of_Lithium_Ion_Battery_Cathode_Secondary_Particles_in_situ.pdf",
+   "blank": 0.636,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Dimensionless contour plots of hoop (tensile) stress distribution (σθθ) predicted by elastic axisymmetric simulation of a 10 μm diameter elastic secondary particle subjected to a) cono-spherical indentation and b) flat platen indentation at load P=10 mN. c) Plot of sqq along the secondary particle centreline from flat platen and cono-spherical indentation. d) Predictions of the initiation and propagation of fracture upon cono-spherical indentation, and e) comparison of the measured (hollow red square- flat platen, and blue circle- cono-spherical tip) and predicted Pf/D2 values (solid black and dotted black lines) for NMC811 secondary particle fracture.",
+   "rotated_deg": 0,
+   "bbox": [
+    122.7,
+    64.6,
+    472.6,
+    535.1
+   ],
+   "w": 1459,
+   "h": 1961,
+   "dpi": 300,
+   "src": "d97771ae-Batteries___Supercaps_-_2023_-_Wheatcroft_-_Fracture_Testing_of_Lithium_Ion_Battery_Cathode_Secondary_Particles_in_situ.pdf",
+   "blank": 0.695,
+   "px": 2861099,
+   "recrop": "2026-09-26 수동 재크롭 — 자동 bbox 가 쪽 전폭 (0.0, 41.8, 595.3, 539.1) 이라 머리말 괘선(y 46.9–48.6)과 오른쪽 여백의 Wiley 다운로드 도장(x 578–586, 세로쓰기)이 들어갔다. 원인: 쪽 전체를 덮는 벡터 사각형이 그래픽 합집합을 넓혔다. clip = 그림 래스터 경계 [124.7, 66.6, 470.6, 533.1] + 2 pt",
+   "auto_bbox": [
+    0.0,
+    41.8,
+    595.3,
+    539.1
+   ],
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Galvanostatic charge/ discharge curves of NMC811 electrodes cycled between 3.0 V and 4.3 V vs. Li/ Li+. The protocol consisted of two initial formation cycles at C/20 (pink dashes- cycle one, green dots- cycle 2), followed by a complete cycle at C/10 between 3.0 V and 4.3 V vs. Li/ Li+ (blue dots), and a charge at C/10 to 4.3 V. Mechanical testing on cycled cathode secondary particles was performed on the second C/10 charging cycle at the potentials indicated by 1, 2, 3, and 4.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.7,
+    552.1,
+    549.8,
+    677.1
+   ],
+   "w": 1048,
+   "h": 522,
+   "dpi": 300,
+   "src": "d97771ae-Batteries___Supercaps_-_2023_-_Wheatcroft_-_Fracture_Testing_of_Lithium_Ion_Battery_Cathode_Secondary_Particles_in_situ.pdf",
+   "blank": 0.757,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Influence of electrode cycling history on the average indentation strength σf=Pf/D2 of NMC811 secondary particles. The average strength in the blue region represents secondary particle strength measured from uncycled secondary particles: direct from the manufacturerer (Pristine- P), extracted from an uncycled electrode with no electrolyte contact (Electrode - E), and extracted from an electrode soaked in electrolyte for 12 h (Electrolyte Exposed- Ex). The average strength in the red regions represents secondary particle strength calculated for cycled secondary particles: secondary particles charged to different potentials (3.0 V, 3.4 V, 3.9 V, and 4.3 V vs. Li/ Li+) following conditioning cycles. All results presented in Figure 5 were obtained with a cono-spherical tip.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    282.1,
+    296.5,
+    420.0
+   ],
+   "w": 1067,
+   "h": 575,
+   "dpi": 300,
+   "src": "d97771ae-Batteries___Supercaps_-_2023_-_Wheatcroft_-_Fracture_Testing_of_Lithium_Ion_Battery_Cathode_Secondary_Particles_in_situ.pdf",
+   "blank": 0.604,
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Indentation strength σf=Pf/D2 variation with secondary particle diameter for the NMC811 secondary particles tested in Figure 5. The coloured regions represent the range of strengths measured for each type of secondary particle listed in the key. Mechanical testing was performed with the cono-spherical tip.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    539.9,
+    296.1,
+    695.1
+   ],
+   "w": 1065,
+   "h": 648,
+   "dpi": 300,
+   "src": "d97771ae-Batteries___Supercaps_-_2023_-_Wheatcroft_-_Fracture_Testing_of_Lithium_Ion_Battery_Cathode_Secondary_Particles_in_situ.pdf",
+   "blank": 0.819,
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Representative SEM images of NMC811 secondary particles extracted from a and b) uncycled electrodes, and electrodes charged on the second C/ 10 cycle to c and d) 3.0 V, e and f) 3.9 V, and g, and h) 4.3 V. a, c, e and g) were taken before microindentation with the cono-spherical tip, and b, d, f and h) after microindentation.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    489.3,
+    546.1,
+    713.1
+   ],
+   "w": 2107,
+   "h": 934,
+   "dpi": 300,
+   "src": "d97771ae-Batteries___Supercaps_-_2023_-_Wheatcroft_-_Fracture_Testing_of_Lithium_Ion_Battery_Cathode_Secondary_Particles_in_situ.pdf",
+   "blank": 0.449,
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Schematic of the Alemnis SEM Microindenter set-up",
+   "rotated_deg": 0,
+   "bbox": [
+    68.8,
+    137.8,
+    526.4,
+    394.3
+   ],
+   "w": 1908,
+   "h": 1069,
+   "dpi": 300,
+   "src": "2dfc1c88-batt202300032-sup-0001-misc_information.pdf",
+   "blank": 0.602,
+   "px": 2039652,
+   "recrop": "2026-09-26 수동 재크롭 — 자동 bbox 상단이 SI 절 제목 \"Alemnis Micro-Indenter Set-Up\" (y 119.6–132.9, 본문 활자) 을 포함 → 그림 래스터 경계 [70.8, 139.8, 524.4, 392.3] + 2 pt",
+   "auto_bbox": [
+    64.8,
+    113.6,
+    530.4,
+    397.8
+   ],
+   "viewed": true,
+   "si": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. (a) Finite element mesh of the indentation model for studying the initiation and propagation of NMC811 secondary particle fracture. (b) detail of the symmetry boundary conditions, showing the fixed and prescribed nodal displacements 𝑢𝑥, 𝑢𝑦 and 𝑢𝑧. (c) The cohesive zone behaviour as characterised by the normal traction 𝑡𝑛 versus separation 𝛿 response. Crack opening is characterised by the fracture energy per unit of crack area GIC, the cohesive strength 𝜎0 and crack opening displacements for the initiation of damage and final failure, 𝛿0 and 𝛿𝑓 respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    533.5,
+    602.9
+   ],
+   "w": 1953,
+   "h": 2242,
+   "dpi": 300,
+   "src": "2dfc1c88-batt202300032-sup-0001-misc_information.pdf",
+   "blank": 0.699,
+   "viewed": true,
+   "si": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Cono-spherical tip area calculated using the tip area function, A(h), at displacement, h, (black squares) compared with the experimentally measured tip area (red circles). The tip area was measured using a TEM image of the cono-spherical indentation tip, supplied by the manufacturer. The calculated area and measured area values closely match, indicating that the area function has been correctly calibrated to the tip.",
+   "rotated_deg": 0,
+   "bbox": [
+    131.1,
+    338.2,
+    464.1,
+    595.0
+   ],
+   "w": 1388,
+   "h": 1071,
+   "dpi": 300,
+   "src": "2dfc1c88-batt202300032-sup-0001-misc_information.pdf",
+   "blank": 0.934,
+   "px": 1486548,
+   "recrop": "2026-09-26 수동 재크롭 — 자동 bbox 상단이 본문 문장 조각 \"spherical tip area formula calibration.\" (y 320.0–333.2) 을 포함 → 그림 래스터 경계 [133.1, 340.2, 462.1, 593.0] + 2 pt (하단은 캡션 y 601.1 앞)",
+   "auto_bbox": [
+    64.8,
+    314.6,
+    533.4,
+    599.0
+   ],
+   "viewed": true,
+   "si": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Graph showing how secondary particle diameter affects Hardness measured at the point of fracture, Hf, for pristine secondary particles (red squares), secondary particles extracted from an uncycled electrode (green hexagon), secondary particles extracted from an electrode soaked in electrolyte for 12 hours (blue triangle), and secondary particles extracted from electrodes cycled for 2 formation cycles, and one entire C/10 cycle before charging during the second C/10 cycle to 3.0 V (pink triangle), 3.4 V (blue-green diamond), 3.9 V (orange horizontal triangle), and 4.3 V vs. Li/ Li+ (purple hexagon). X-ray Computed Tomography (XCT) of NMC811 Electrodes Non-destructive 3D imaging of NMC811 electrodes was carried out using a Zeiss Xradia Versa 620 X-ray Microscope (Pleasanton, Ca, USA) housed within the Sheffield Tomography Centre (STC) at the University of Sheffield, UK. X-rays w",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    251.1,
+    533.5,
+    515.5
+   ],
+   "w": 1953,
+   "h": 1102,
+   "dpi": 300,
+   "src": "2dfc1c88-batt202300032-sup-0001-misc_information.pdf",
+   "blank": 0.876,
+   "viewed": true,
+   "si": true
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 8,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. (a) XCT 2D slice image of an uncycled NMC811 electrode showing intergranular cracking present in the larger NMC secondary particles. (b,c) 3D reconstruction of an uncycled electrode imaged with XCT showing multi-ROI segmentation of secondary particles with diameters >15 µm (b) and with diameters between 10 and 15 µm (c). The spatial resolution of the X-ray Microscope and the temporal resolution of the XCT data allowed crack widths as small as 2 µm to be assessed. The number of secondary particles found to have cracks with widths bigger than 2 µm were counted. The proportion of secondary particles containing cracks found in each of the secondary particle diameter ranges are shown in Table S2. Table showing proportion of NMC811 secondary particles within defined secondary particle size ranges in an uncycled electrode, and an electrode charged to 4.3 V vs. Li/ Li+, which containe",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    533.5,
+    323.7
+   ],
+   "w": 1954,
+   "h": 1079,
+   "dpi": 300,
+   "src": "2dfc1c88-batt202300032-sup-0001-misc_information.pdf",
+   "blank": 0.339,
+   "viewed": true,
+   "si": true
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 10,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. NMC811 electrode cross-section images of (a,c) an uncycled electrode, and (b,d) an electrode charged to 4.3 V vs. Li/ Li+ on the second cycle. Significant intergranular cracking is only observed after electrochemical cycling (b,d). (e) Pristine NMC811 fracture surface showing the primary particle size distribution, and morphology",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.9,
+    533.5,
+    504.0
+   ],
+   "w": 1953,
+   "h": 1830,
+   "dpi": 300,
+   "src": "2dfc1c88-batt202300032-sup-0001-misc_information.pdf",
+   "blank": 0.716,
+   "viewed": true,
+   "si": true
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 11,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Example differential (dQ/dV) of the complete C/10 cycle. Points 1, 2, 3, and 4 represent the potentials mechanical testing was performed at in Figures 5 and 6.",
+   "rotated_deg": 0,
+   "bbox": [
+    130.9,
+    89.5,
+    464.1,
+    345.5
+   ],
+   "w": 1389,
+   "h": 1068,
+   "dpi": 300,
+   "src": "2dfc1c88-batt202300032-sup-0001-misc_information.pdf",
+   "blank": 0.927,
+   "px": 1483452,
+   "recrop": "2026-09-26 수동 재크롭 — 자동 bbox 상단이 SI 절 제목 \"Differential Capacity Plot\" (y 71.3–84.6) 을 포함 → 그림 래스터 경계 [132.9, 91.5, 462.1, 343.5] + 2 pt",
+   "auto_bbox": [
+    64.8,
+    65.3,
+    533.1,
+    348.9
+   ],
+   "viewed": true,
+   "si": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Mechanical properties used in finite element simulation",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    129.5,
+    531.0,
+    377.5
+   ],
+   "w": 1938,
+   "h": 1034,
+   "dpi": 300,
+   "src": "2dfc1c88-batt202300032-sup-0001-misc_information.pdf",
+   "blank": 0.95,
+   "px": 2003892,
+   "recrop": "2026-09-26 수동 재크롭 — 자동 bbox 가 'Silicon Substrate' 행 직후에서 끊겨 표 아래 괘선(y ≈ 298.8)과 각주 a)–c) (y 298.3–374.6: a) Stallard 2022 Joule · b) tip manufacturer (Alemnis) · c) Hopcroft 2010) 가 빠졌다. 각주는 표 값의 출처를 정하므로 표의 일부로 넣는다 → 캡션(y 133.4)부터 각주 끝(y 374.6)까지",
+   "auto_bbox": [
+    65.8,
+    128.4,
+    465.5,
+    297.5
+   ],
+   "viewed": true,
+   "si": true
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 9,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Table showing proportion of NMC811 secondary particles within defined secondary particle size ranges in an uncycled electrode, and an electrode charged to 4.3 V vs. Li/ Li+, which contained cracks greater than 2 µm wide as imaged with XCT.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    66.3,
+    532.5,
+    264.3
+   ],
+   "w": 1945,
+   "h": 826,
+   "dpi": 300,
+   "src": "2dfc1c88-batt202300032-sup-0001-misc_information.pdf",
+   "blank": 0.943,
+   "viewed": true,
+   "si": true
+  }
+ ],
+ "note_manual": "2026-09-26 — 자동 크롭 16장(본문 Fig 1–7 · SI Fig S1–S7 · SI Table S1–S2; 본문에는 표가 없다)을 전부 Read 로 열어 확인. 수동 재크롭 5장: fig_3(머리말 괘선 + 오른쪽 Wiley 다운로드 도장 혼입) · fig_S1 · fig_S7(SI 절 제목 혼입) · fig_S3(본문 문장 조각 혼입) · tab_S1(아래 괘선·각주 a–c 잘림) — 각 항목 recrop 참조, 자동 bbox 는 auto_bbox 에 보존. 나머지 11장은 캡션 혼입·축/라벨/스케일바/범례 잘림 없음. 표 크롭은 도구 규약대로 표 캡션을 위에 포함한다. fig_S6 상단의 'Electrode Cross-sections' 는 그림 래스터 안의 제목이라 둔다. SI 는 파일명의 '-sup-' 로 자동 인식돼 S 번호가 붙었다 (_Sup 사본 불필요). ⚠ '--slug wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem --clean' 으로 재추출하면 위 5장의 수동 크롭이 자동 bbox 로 되돌아간다.",
+ "digitized_note": "2026-09-26 — 같은 폴더 digitized.csv (179 행, 전부 그림 판독 = digitized) 는 tools/litdb/wheatcroft2023_digitize.py 가 본문 PDF 의 임베디드 래스터 (Fig. 1d · 2e · 2f · 3c · 3e · 5 · 6) 에서 만든다. '--check' 가 본문 평균 ± 과의 대조를 출력한다 (평판 207.0 / SD(N) 48.7 ⇔ 본문 207 ± 49 · 원뿔 67.2 ⇔ 67 ± 21 등). Fig. 6 군 판정은 스크립트 안 ANCHOR6 (눈으로 정한 앵커) 에 최근접 대응."
+}

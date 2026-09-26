@@ -193,6 +193,19 @@ stallard2022_cathode_mechanical_properties_review	s2542435122001398
 #       머리말 섞인 7장 · 잘린 2장 · Fig 4 없음으로 돌아간다. ('--inbox --run --skip-done' 은 안전.)
 #       재생성이 필요하면 figures.json 의 bbox · dpi 를 그대로 다시 쓴다.
 #   ⭐ Fig 9 (E·H vs A_P^½ · A_P^½/d — 부류 차의 원인) 와 Fig 10C (σ_F vs d^-½ + K_IC 등고선 = "Stallard 추정" 의 원천) 가 이 카드의 근거다.
+#   (같은 절 · 짝 카드) 2차입자 **통째**의 분할 하중 (in situ SEM 압축) = wheatcroft2023
+# 가드: 본문 업로드 이름 '…Batteries___Supercaps_-_2023_-_Wheatcroft_-_Fracture_Testing_…' (Wiley 기본 이름의 변형) 은 저자명으로,
+#   SI 'batt202300032-sup-0001-misc_information.pdf' 는 원고번호로 잡는다 (SI 는 파일명의 '-sup-' 로 자동 SI 판정 → S 번호).
+wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem	wheatcroft
+wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem	batt202300032
+#   ↑ 2026-09-26.  16장 = 본문 Fig 1–7 · SI Fig S1–S7 · SI Table S1–S2 (본문에 표 없음), 전부 viewed.  **5장 수동 재크롭** (figures.json 의 recrop · auto_bbox):
+#   · fig_3  — 자동 bbox 가 쪽 전폭 (0, 41.8, 595.3, 539.1) → 머리말 괘선 + 오른쪽 Wiley 다운로드 도장 혼입 → 래스터 경계 (122.7, 64.6, 472.6, 535.1)
+#   · fig_S1 · fig_S7 — SI 절 제목 혼입 → 래스터 경계 +2 pt  ·  fig_S3 — 위 본문 문장 조각 혼입 → 래스터 경계 +2 pt
+#   · tab_S1 — 마지막 행 직후에서 끊겨 아래 괘선·각주 a)–c) 누락 → 캡션~각주 (66.0, 129.5, 531.0, 377.5)
+#   [!] '--slug wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem --clean' 을 돌리면 위 5장이 자동 bbox 로 되돌아간다
+#       (본문·SI 둘 다 안 주면 한쪽이 색인에서 빠진다).  ('--inbox --run --skip-done' 은 안전.)
+#   판독 원자료 = litdb/figures/<slug>/digitized.csv ← tools/litdb/wheatcroft2023_digitize.py (--check 로 본문 평균과 대조)
+#   ⭐ Fig 2f (평판·원뿔 P_f vs D = 207 ± 49 / 67 ± 21 의 원자료) · Fig 5–6 (SOC·입경) · SI Fig S4 (H_f) 가 이 카드의 근거다.
 #
 # ── SE 고유 전달물성 (σ_ion 단상 펠릿 · 적층압/제작압) ──────────────
 # 가드: ACS SI 파일명(nz1c01299_si_001.pdf)은 원고번호뿐이라 제목 토큰이 안 겹친다 → 원고번호 조각으로 SI 만 잡는다.

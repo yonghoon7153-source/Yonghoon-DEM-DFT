@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 145편 · 생성 2026-09-26
+> digest 146편 · 생성 2026-09-26
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -127,7 +127,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `wet_processing_resolved_am_ssb_cathode_manufacturing` | ASSB 양극을 습식공정(슬러리→건조→압연)으로 — 실제 형상(resolved, multisphere) AM 입자를 nano-CT에서 추출해 DEM 제조 시뮬 + GeoDict로 σ_ionic·σ_e 산출 — Weitze / Franco (Energy Storage Materials 2024) | DEM (LAMMPS, multisphere resolved-AM; wet-process slurry→dry | 2026-06-26 | 🖼 8 |
 | `xu2023_realistic_am_shape_cgmd_calendering` | XCT 로 뜬 실제 3D 형상의 NMC 2차입자로 LIB 전극 제조(슬러리→건조→압연)를 다시 돌리다 — Franco 그룹 ARTISTIC 의 "구(球) 근사 탈출" 1호 — Xu (J. Power Sources 2023) | CGMD/DEM (LAMMPS, Lennard-Jones + JKR; 슬러리·건조·압연) + µ-XCT 실험 | 2026-09-11 | 🖼 7 |
 
-## 화학-기계 열화 · 계면 (14편)
+## 화학-기계 열화 · 계면 (15편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -144,6 +144,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `so2021_dem_fabrication_degradation_ductile_particles` | frame[5] 사이클 열화 DEM — Simulation of Fabrication and Degradation of All-Solid-State Batteries with Ductile Particles — So, Inoue, Hirate, Nunoshita, Ishikawa, Tsuge (J. Electrochem. | DEM (소성 ductile-particle contact model + 2-step fabrication→ | 2026-06-26 | 🖼 10 |
 | `spencerjolly2023_ag_graphite_interlayer_operando_xrd` | Ag–흑연 복합 인터레이어(anodeless Li₆PS₅Cl)의 구조 변화를 operando XRD 로 — 충전: Li 가 흑연에 전기화학적으로 들어간 뒤 Ag 와 화학적으로 합금화 (Li_xAg → LiAg → Li₉Ag₄ → Li₁₀Ag₃) · 방전은 역경로가 아니다 · Ag 는 CCD 를 올리지 않고 CC 쪽 Li/ | exp (operando PXRD — lab Cu Kα reflection + Diamond I12 sync | 2026-09-23 | 🖼 11 |
 | `tabakovic2026_mechanical_stress_eis_ica_drt_dfn` | 기계 응력(정수압 σ_h 1–10 MPa)이 LIB 의 EIS · DRT · ICA 를 어떻게 바꾸나 — DFN(PyBaMM) + 2-스케일 선형탄성 역학 완전 결합 시뮬레이션 · "우세 전극" 가설 — Tabaković · Katrašnik · Zelič (SSRN 프리프린트, 동료심사 전) | continuum (DFN/P2D in PyBaMM + 2-scale linear-elastic partic | 2026-09-23 | 🖼 10 |
+| `wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem` | 다결정 NMC811 2차입자 파괴강도 σ_F = P_f/D² — 평판 압축 207 ± 49 MPa · 원뿔-구형 팁 67 ± 21 MPa (pristine) → 3 사이클 뒤 36 ± 15 · 4.3 V 에서 11 ± 4 MPa, 큰 입자일수록 약함, 파괴 양식은 입계(intergranular) Mode I crackin | exp (in situ SEM micro-indentation of isolated secondary par | 2026-09-26 | 🖼 16 |
 | `yun2023_deciphering_degradation_halide_vs_sulfide` | 필독 / 우리-랩 / ★최애 — Deciphering the critical degradation factors of solid composite electrodes with halide electrolytes: Interfacial reaction versus ionic transport — Yun, Shin, Hoan | exp (impedance decoupling, SSRM/FS local mapping) + FEM (vol | 2026-06-26 | 🖼 5 |
 
 ## Digital twin · ML 최적화 (3편)
