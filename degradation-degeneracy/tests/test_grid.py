@@ -227,8 +227,12 @@ def test_a_dry_run_does_not_strand_the_plan_in_running(monkeypatch, tmp_path):
     # ★ 74차 G74-1 — 계획은 고정 캐시 SHA 를 담아야 한다. 이 시험은 `get_discharged_state` 를
     #   가짜로 바꿨으므로(위) 캐시 파일을 **명시적으로** 둔다 — 본체는 그 바이트를 승인 축과
     #   대조한 뒤 (가짜) reader 에 넘긴다.
+    #   자리는 **이 시험만의** 디렉터리다 — conftest 의 세션 공용 캐시 dir 에 placeholder 를 두면
+    #   뒤 시험(test_regression·test_runner)이 그것을 진짜 캐시로 읽어 baseline identity 오류가 난다
+    #   (전체 회귀 실측, 8765068a).
     import json as _json
-    _cp = G.discharged_cache_path_for(cfg)
+    _cp = out_dir / "cache" / "discharged_state.json"
+    monkeypatch.setattr(G, "discharged_cache_path_for", lambda cfg: _cp)
     _cp.parent.mkdir(parents=True, exist_ok=True)
     _cp.write_text(_json.dumps({"_fixture": "74차 dry-run — reader 는 monkeypatch"}), encoding="utf-8")
     _plan_for_live_grid(led, "L49", out_dir, cfg, source_digest())

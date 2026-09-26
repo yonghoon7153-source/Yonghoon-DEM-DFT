@@ -5400,7 +5400,8 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_gate74_defensive.py::test_g74_4_01_a_single_run_archive_keeps_every_other_index_entry_byte_for_byte": "AssertionError: ['res']",
-            "tests/test_gate74_defensive.py::test_g74_4_02_re_archiving_the_same_run_is_idempotent_for_the_index": "AssertionError: assert {'res'} == {'a_v4', 'b_v...'d_v4', 'res'}",
+            # 값 직전에서 끊는다 (G67-T1-b — 잘린 repr 꼬리를 담지 않는다)
+            "tests/test_gate74_defensive.py::test_g74_4_02_re_archiving_the_same_run_is_idempotent_for_the_index": "AssertionError: assert {'res'} ==",
         }
     },
     "same-name-different-identity-is-refused-g74": {
