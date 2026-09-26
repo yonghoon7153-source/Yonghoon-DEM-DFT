@@ -141,21 +141,30 @@ _STATE_HARD_META = ('n_grid', 'nz', 'lateral_box', 'periodic')
 #     하드코딩돼 있었다.  한쪽만 고치면 dt 가드가 실제 물성보다 낮은 강성으로 계산돼
 #     **조용히 CFL 이 터진다** (터지는 시점은 값을 올릴 때라 그때는 원인을 못 찾는다).
 #     ⇒ 여기서만 정의하고 두 곳이 이것을 읽는다 (작업규율 ① "이 리포에 이미 있나").
-#   ⚠ 출처: 사용자 지정 2026-08-18.  **근거 문헌/측정 미기재** — 인용 전에 채울 것.
+#   ⚠ 출처: 사용자 지정 2026-08-18.  **근거 문헌/측정 미기재** (VGCF 제외 — 아래) — 인용 전에 채울 것.
 #     이전 세대: PTFE 0.30 · SDCP 23.6 (AFM S6 맵 판독은 PTFE 5.6 · SDCP 23.6).
+#   ★ VGCF 10 → 100 GPa (2026-09-26, 사용자 비준 · 원장 CL-93).  근거 = 정본 litdb 카드 (원문 PDF):
+#     단일 기상성장 탄소나노섬유 AFM 3점 굽힘 93 · 95 · 105 GPa (Lawrence 2008 ACS Nano 2, 1230, Table 1 — D 170–227 nm) ·
+#     흑연화 VGCF 인장 ≈110–310 GPa (Endo 2001 Carbon 39, 1287, Fig. 6 판독).  옛 10 은 2026-06-24 모델 선택값 (출처 없음) —
+#     그 세대 침대의 태그는 `ADD_E_SET_20260818_9.0GPa` 다.  민감도 (SELF-50): 1 ↔ 100 GPa 에서 σ_e ≤ 0.25 % · porosity 0.18 %p.
+#   ⚠ 100 GPa 섬유의 P 파 탄성률 (134.6 GPa) 이 SE (26.2) 를 넘어 CFL dt 가 줄어든다 (6 mAh 킷 2.0e-4 → 1.347e-4) ⇒
+#     프레임당 플래튼 걸음이 짧다 (0.068 → 0.046 µm).  두꺼운 침대는 `porosity_at_target_pct` 가 non-None (목표 도달) 인지
+#     확인하고, 모자라면 프레임 수를 늘린다.
 #   ⚠ E 는 STEP3 σ 에 **직접** 안 들어가지만 MPM 압밀 기하를 바꾼다 ⇒ 옛/새 물성으로
 #     압밀한 침대의 σ 를 나란히 비교 금지 (침대는 `_add_meta['E_anchor']` 로 자기 세대를 안다).
-ADD_E_SET_ID = 'ADD_E_SET_20260818'
+ADD_E_SET_ID = 'ADD_E_SET_20260926'          # 2026-09-26: VGCF 10 → 100 (옛 세대 'ADD_E_SET_20260818')
 ADD_E_NU = {                    # 상: (E GPa, ν)
-    'VGCF':   (10.00, 0.30),
+    'VGCF':   (100.00, 0.30),   # 2026-09-26: 10 → 100 (Lawrence 2008 · Endo 2001 — 원장 CL-93)
     'SuperP': (0.50,  0.30),
     'PTFE':   (1.80,  0.30),    # 2026-08-18: 0.30 → 1.80
     'SDCP':   (9.00,  0.35),    # 2026-08-18: 23.6 → 9.00
     'SWCNT':  (0.50,  0.30),
 }
 _ADD_E_NU_BASE = dict(ADD_E_NU)          # 원상 (override 적용/해제의 기준)
-#: 침대가 들고 다니는 물성 세대 태그 — override 가 없으면 옛 침대와 **같은 문자열** (CL-42 · CL-56 의 세대 판별이 그대로 선다)
-E_ANCHOR_TAG = 'ADD_E_SET_20260818_9.0GPa'
+#: 침대가 들고 다니는 물성 세대 태그 — override 가 없으면 **기본 세대 문자열** (CL-42 · CL-56 · CL-93 의 세대 판별이 이것으로 선다).
+#: 2026-09-26 부터 새 세대 (VGCF 100) — 옛 침대의 `ADD_E_SET_20260818_9.0GPa` 와 문자열이 **다르다** (섞어 비교하면 세대가 보인다).
+_E_ANCHOR_DEFAULT = 'ADD_E_SET_20260926_VGCF100GPa'
+E_ANCHOR_TAG = _E_ANCHOR_DEFAULT
 
 
 def parse_add_e_override(spec):
@@ -189,7 +198,7 @@ def apply_add_e_override(over):
     ADD_E_NU.clear()
     ADD_E_NU.update(_ADD_E_NU_BASE)
     if not over:
-        E_ANCHOR_TAG = 'ADD_E_SET_20260818_9.0GPa'
+        E_ANCHOR_TAG = _E_ANCHOR_DEFAULT
         return E_ANCHOR_TAG
     for k, e in over.items():
         ADD_E_NU[k] = (float(e), _ADD_E_NU_BASE[k][1])
@@ -1102,8 +1111,11 @@ def _selftest():
     chk('add-e-override: E_anchor 태그 = ADD_E_SET_ID + override 표기',
         isinstance(_tag, str) and _tag.startswith(ADD_E_SET_ID) and 'override' in _tag and 'VGCF=1.0' in _tag)
     _try(_a, {})
-    chk('add-e-override: 빈 override 는 원상 (ADD_E_SET 그대로 · 태그 = 옛 침대와 같은 문자열)',
-        ADD_E_NU == _base and globals().get('E_ANCHOR_TAG') == 'ADD_E_SET_20260818_9.0GPa')
+    chk('add-e-override: 빈 override 는 원상 (ADD_E_SET 그대로 · 태그 = 기본 세대 문자열)',
+        ADD_E_NU == _base and globals().get('E_ANCHOR_TAG') == _E_ANCHOR_DEFAULT)
+    chk('ADD_E_SET 2026-09-26: VGCF 기본 E = 100 GPa (ν 0.30) · 기본 태그가 옛 세대 (ADD_E_SET_20260818_9.0GPa) 와 다르다 (CL-93)',
+        _ADD_E_NU_BASE.get('VGCF') == (100.0, 0.30) and _E_ANCHOR_DEFAULT != 'ADD_E_SET_20260818_9.0GPa'
+        and _E_ANCHOR_DEFAULT.startswith(ADD_E_SET_ID))
     #  ⚠ 자기 문자열에 걸리지 않게 **main 이후** 구간만 본다 (초판은 이 테스트 문장 자체가 검사를 초록으로 만들었다)
     _src = open(__file__, encoding='utf-8').read().split('def main(', 1)[1]
     chk('add-e-override: 매니페스트 · 첨가제 메타에 태그가 찍힌다 (소스 배선, main 이후)',
