@@ -27,7 +27,9 @@
 - 🟢 **b2o3 사건빈도 — gabia 몫 종료 (09-26 17:48 KST 실측)**: s2·s3·s4·s6 × 3 온도 = **12/15 완료**(msd.json) · s5 ×3 은 kgy 몫(개정 2) · 드라이버 0 · GPU 유휴. ⏭ kgy s5 끝나면 `.incoming` 옮김 → 자격(`--mto`) → census 15런.
 - ⏭ **탄성 modelc_2x (사용자 1저자) 재개 — 1저자 09-26 "b2o3 끝나서 modelC 영률 다시 이어가자"** (09-23 순서 b2o3 → 탄성 → Li₂S 그대로). 러너 `run_elastic_relaxedion_gabia.sh`
   **`SYS=modelc_2x` 명시**(09-23 함정: SYS 없이 comp2 기본값으로 대기했었다) · 수렴점 skip · 소진점(23_p 등) nstep 200 · trust 0.05 재실행 · VRAM 가드 32000 · host 30 GB.
-  순서: 점검 블록(GPU 유휴 · 러너 커밋 `71f179d97` 포함 · `watch_elastic.sh ALL=1` · `DRY_RUN=1`) → 발사(tmux `el_mc2x`) → watch.
+  ✅ **발사 09-26 18:11:49** (tmux `el_mc2x` · repo `/data/work/repo` @30e1e90eb · 로그 `/root/logs/el_modelc2x_0926.log`): 점검 = GPU 1 MiB · host 55 GB · 러너 최신판 ✓ · V0 ✓ · 6/12 수렴 ·
+  `23_p` 옛 .out → `strain_23_p.out.exhausted_0926_1811` 보관 · **`restart_mode='restart'`(BFGS 이력 승계) · nstep 200 · trust 0.05** · 18:19 실측 SCF 11 반복 · pw.x **30,018 MiB**(PID 248767).
+  남은 순서 23_p → 23_m(찌꺼기 덮어씀) → 13_p/m → 12_p/m → 12/12 면 fit → `elastic_fit.txt` 붙여받기. watch: `ALL=1 bash tools/elastic/watch_elastic.sh`.
 - 📚 **논문 에이전트** — Oginni et al., *Next Materials* 13 (2026) 103432 (리뷰 · 계산 설계 방법론) → litdb-curator 진행 중 (inbox `0926-1.`) → 끝나면 litdb 파일만 커밋.
 
 ### ⏭-NOW-w. 2026-09-23 새벽 — **SDCP/PTFE 세미나 정리 · [Li26MCI] 병합 · 🔴 웹앱 cascade 화면이 어제부터 닫혀 있다**
