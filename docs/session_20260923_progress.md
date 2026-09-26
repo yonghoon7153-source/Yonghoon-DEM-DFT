@@ -290,3 +290,8 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
 - 준희 회신 최종판 = `docs/reviews/si_table_response_20260925.md` **§9** (표 S2 전 행 · 각주 ᵃ–ⁱ · Methods 두 문장 · 표 각주 ※ (M) ·
   "experimental porosity anchor" 확인 · SI 참고문헌 · 회신문).  `main.tex` σ_grain 잔재 1 문장 정정 (3단계가 놓침).
 - ⬜ 사용자 결정: §9-5 여덟 항목 · 종합 §4.  ⬜ 정정 묶음 1–11.
+
+## ⑬ 믹서 L 10 런 재개 도구 (09-26 저녁)
+- 18:02–18:07 WSL 이 죽었다 18:27 재부팅 → L 10 런 53–61 % 에서 끊김 (체크포인트 a/b 27–29 MB 온전, 최신 = a 9 · b 1).
+- `FORCE=1` 은 처음부터 (런당 ~3 일 손실) → 체크포인트 재개 도구: `scripts/make_mixer_resume.py` (selftest) · `resume_all.sh` (SMOKE/DRY/발사) ·
+  `test_launcher.sh` R①–R③c.  사용자 순서: git pull → SMOKE=L0_s32452843 → DRY=1 → 발사.  prereg §3 2b 에 실행 기록.

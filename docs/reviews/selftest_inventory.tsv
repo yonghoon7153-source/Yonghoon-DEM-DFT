@@ -87,6 +87,7 @@ scripts/make_heckel_manifest.py	--selftest	fast	check_all	claude	초록 0.1s (�
 scripts/make_pressure_sweep_decks.py	--selftest	fast	none	claude	초록 0.1s (실측)
 scripts/make_ps_sweep_decks.py	--selftest	fast	none	claude	초록 0.1s (실측)
 scripts/make_mixer_deck.py	--selftest	fast	none	claude	초록 0.1s (실측) — 순수 함수(파일 안 씀), 외부 데이터 불요.  LIGGGHTS 실행으로 배운 제약 셋(분율=mass%% · multisphere type 1부터 연속 · cohesion 키워드 순서)과 사슬 겹침 보정을 변이 대조로 지킨다
+scripts/make_mixer_resume.py	--selftest	fast	none	claude	초록 <1s (실측) — 생성기 덱(LA·E1)을 재개 덱으로 바꿔 read_restart 1 · `run 합 upto` 1 · 삽입/정착/write_restart 삭제 · 나머지 명령 글자 그대로 · 체크포인트 선택(최신/하나 앞/회전 전 거부) · 보존(복사·덤프 이동·두 번째 재개 새 폴더) · 잘린 a/b 거부를 변이 대조로 지킨다 (2026-09-26 WSL 재시작으로 끊긴 L 10 런 재개용)
 scripts/make_mixer_baffles.py	--selftest	fast	none	claude	초록 0.1s (실측) — 순수 기하, 외부 데이터 불요.  배플 평판의 높이·각도·법선을 설계값과 대조하고, 퇴화 높이(0·1·음수)를 거부하는 것을 변이 대조로 지킨다
 scripts/repair_focus_top.py	--selftest	fast	both	claude	초록 0.1s (실측) — SELF-45 복원기
 scripts/viz_mixer_bed.py	--selftest	fast	none	claude	초록 1s (실측) — 합성 덤프로 PNG 를 실제로 만들어 본다.  **matplotlib 필요**.  색은 viz_mpm_continuum 의 dem 팔레트를 가져다 쓰고(두 벌 금지), CJK 폰트가 없으면 한글이 조용히 □ 가 되므로 폰트 선택을 시험으로 강제한다.  덤프 없는 디렉터리는 거부

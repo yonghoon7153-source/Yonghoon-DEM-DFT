@@ -76,5 +76,61 @@ chk '⑪b 새 덱 옆에 n_expected · r_container 가 생긴다' "[ -s '$G/$vic
 chk '⑪c 임시 디렉터리 .new 가 남지 않는다' "! [ -d '$G/$victim.new' ]"
 kill "$SL" 2>/dev/null
 
+echo "── resume_all.sh: 체크포인트 재개 (2026-09-26 — WSL 재시작으로 L 10 런이 53–61 % 에서 끊김) ──"
+R="$T/rs"; mkdir -p "$R"
+#  실물 생성기 덱 (LA) 으로 '회전 중 죽은' 런을 꾸민다: thermo 가 ckpt+5000 까지 있고 a (최신) · b 체크포인트
+read -r EVERY THERMO CK < <(python3 - "$ROOT" "$R/proto.in" <<'PY'
+import sys, importlib.util, re
+spec = importlib.util.spec_from_file_location('m', sys.argv[1] + '/scripts/make_mixer_deck.py')
+m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+dk = m.deck(m.plan(8000), rpm=75, revolutions=8, arm='LA'); open(sys.argv[2], 'w').write(dk)
+runs = [int(x) for x in re.findall(r'^run (\d+)', dk, re.M)]; rot = sum(runs) - runs[-1]
+every = int(re.search(r'^restart (\d+) ', dk, re.M).group(1)); th = int(re.search(r'^thermo (\d+)$', dk, re.M).group(1))
+print(every, th, (rot // every + 2) * every)
+PY
+)
+mkres() {  # mkres <이름> <마지막 thermo step> <배너 0/1>
+  local d="$R/$1"; mkdir -p "$d/restart" "$d/post"; cp "$R/proto.in" "$d/in.mixer"
+  for f in Drum Front Back; do echo "solid $f" > "$d/$f.stl"; done
+  { echo "   Step Atoms KinEng c_rke Volume"
+    for s in $((CK - THERMO)) "$CK" $((CK + THERMO)); do [ "$s" -le "$2" ] && printf '%12d %8d %s\n' "$s" 8000 "1.0e-06 1.0e-07 2.7e-05"; done
+    [ "$3" = 1 ] && echo "Total wall time: 0:00:01"; } > "$d/log.lmp"
+  head -c 5000 /dev/zero > "$d/restart/b.bin"; sleep 1; head -c 5000 /dev/zero > "$d/restart/a.bin"
+  echo x > "$d/post/mix_$((CK + 1000)).liggghts"
+}
+mkres dead_s9 $((CK + THERMO)) 0
+mkres banner_s9 $((CK + THERMO)) 1
+mkres alive_s9 $((CK + THERMO)) 0; sleep 30 & SL2=$!; echo "$SL2" > "$R/alive_s9/pid"
+mkres X_old_20260921_s9 $((CK + THERMO)) 0
+mkdir -p "$R/fresh_s9"; cp "$R/proto.in" "$R/fresh_s9/in.mixer"
+r1=$(OUT="$R" DRY=1 bash "$HERE/resume_all.sh" 2>&1)
+chk 'R① DRY: 죽은 런만 in.resume — 체크포인트 = 최신 a · step ckpt'  "[ -f '$R/dead_s9/in.resume' ] && python3 -c \"import json,sys;r=json.load(open('$R/dead_s9/resume_receipt.json'));sys.exit(0 if r['checkpoint_file']=='restart/a.bin' and r['checkpoint_step']==$CK else 1)\""
+chk 'R①b DRY: 완주(배너) · 실행 중 · 아직 안 돈 · _old_ 런은 건드리지 않는다' "! [ -f '$R/banner_s9/in.resume' ] && ! [ -f '$R/alive_s9/in.resume' ] && ! [ -f '$R/fresh_s9/in.resume' ] && ! [ -f '$R/X_old_20260921_s9/in.resume' ]"
+chk 'R①c DRY: 띄우지 않는다 (pid 없음) · ckpt 뒤 덤프는 post_pre_resume_<ckpt>/ 로 (지우지 않음)' "! [ -f '$R/dead_s9/pid' ] && [ -f '$R/dead_s9/post_pre_resume_$CK/mix_$((CK + 1000)).liggghts' ]"
+first=$(head -1 "$R/dead_s9/log.lmp")
+FAKE_ARGS="$T/lmp_args"; printf '#!/usr/bin/env bash\necho "FAKE_ARGS $*"\nsleep 2\n' > "$FAKE_ARGS"; chmod +x "$FAKE_ARGS"
+r2=$(OUT="$R" LMP="$FAKE_ARGS" MAXJ=8 ONLY=dead_s9 bash "$HERE/resume_all.sh" 2>&1)
+sleep 3
+chk 'R② 발사: pid = 실제 PID · -in in.resume 로 떴다'            "[ -s '$R/dead_s9/pid' ] && grep -q 'FAKE_ARGS -in in.resume' '$R/dead_s9/log.lmp'"
+chk 'R②b ★ 로그는 이어 붙인다 — 옛 첫 줄 · 옛 thermo 가 그대로 · RESUME 표지' "[ \"\$(head -1 '$R/dead_s9/log.lmp')\" = \"$first\" ] && grep -qE '^ +$CK ' '$R/dead_s9/log.lmp' && grep -q '# ==== RESUME' '$R/dead_s9/log.lmp'"
+chk 'R②c 사용 체크포인트를 복사 보존 (resume_from_<ckpt>.bin)'    "[ -f '$R/dead_s9/restart/resume_from_$CK.bin' ]"
+kill "$SL2" 2>/dev/null
+#  스모크 — 가짜 LIGGGHTS 가 RESUME_STEP 과 원 로그의 thermo 줄을 되찍으면 통과, 한 글자라도 다르면 실패
+mkres smoke_s9 $((CK + THERMO)) 0
+FS_OK="$T/lmp_smoke_ok"; FS_NG="$T/lmp_smoke_ng"
+cat > "$FS_OK" <<'SH'
+#!/usr/bin/env bash
+c=$(python3 -c "import json;print(json.load(open('smoke_receipt.json'))['checkpoint_step'])")
+s=$(python3 -c "import json;print(json.load(open('smoke_receipt.json'))['smoke_steps'])")
+echo "RESUME_STEP $c"; grep -E "^ +$c " log.lmp | tail -1; grep -E "^ +$((c+s)) " log.lmp | tail -1
+SH
+sed 's/grep -E "^ +$c " log.lmp | tail -1;/printf "%12d %8d %s\\n" $c 8000 "9.9e-06 1.0e-07 2.7e-05";/' "$FS_OK" > "$FS_NG"
+chmod +x "$FS_OK" "$FS_NG"
+s_ok=$(OUT="$R" LMP="$FS_OK" SMOKE=smoke_s9 SMOKE_STEPS="$THERMO" SMOKE_DIR="$T/smk1" bash "$HERE/resume_all.sh" 2>&1); rc_ok=$?
+s_ng=$(OUT="$R" LMP="$FS_NG" SMOKE=smoke_s9 SMOKE_STEPS="$THERMO" SMOKE_DIR="$T/smk2" bash "$HERE/resume_all.sh" 2>&1); rc_ng=$?
+chk 'R③ 스모크: RESUME_STEP · 재개 직후 thermo 가 원 로그와 같으면 통과'   "[ $rc_ok -eq 0 ] && grep -q '스모크 통과' <<<\"\$s_ok\""
+chk 'R③b 변이: 재개 직후 thermo 가 다르면 실패 (발사 금지)'              "[ $rc_ng -ne 0 ] && grep -q '스모크 실패' <<<\"\$s_ng\""
+chk 'R③c 스모크는 원 폴더를 안 건드린다 (in.smoke · 영수증 · pid 없음)'   "! [ -f '$R/smoke_s9/in.smoke' ] && ! [ -f '$R/smoke_s9/smoke_receipt.json' ] && ! [ -f '$R/smoke_s9/pid' ]"
+
 echo "test_launcher: $pass PASS / $fail FAIL"
 [ "$fail" -eq 0 ]
