@@ -57,6 +57,33 @@ if [[ ${#RUNS[@]} -eq 0 ]]; then
 fi
 
 mkdir -p "$DEST"
+# ★ 74차 G74-4 — 기존 `artifact_index.yaml` 을 **먼저** 읽는다. 있으면 `runs:` mapping 을 담은
+#   mapping 이어야 하고, 아니면 아무것도 승격하지 않고 멈춘다 (불명확한 index 를 비우고 쓰지 않는다).
+#   아래 index 갱신은 이 파일에 검증된 entry 를 **병합**한다 — 73차까지는 `runs = {}` 에서 시작해
+#   이번 호출의 묶음만으로 다시 썼고, `results/grid_fit_v5` 하나를 보관하는 호출이 v4 네 항목을
+#   지웠다 (원장 §101 G74-4).
+if [[ -f "$DEST/artifact_index.yaml" ]]; then
+  if ! "$PY" - "$DEST/artifact_index.yaml" <<'PYIDX'
+import os, sys, yaml
+p = sys.argv[1]
+try:
+    doc = yaml.safe_load(open(p, encoding="utf-8"))
+except Exception as exc:
+    print(f"  ✗ 기존 index 를 읽을 수 없다 ({exc}) — 승격하지 않는다", file=sys.stderr)
+    sys.stderr.flush(); os._exit(1)
+runs = doc.get("runs") if isinstance(doc, dict) else None
+if not isinstance(doc, dict) or not isinstance(runs, dict) \
+        or any(not isinstance(k, str) or not isinstance(v, dict) for k, v in runs.items()):
+    print(f"  ✗ 기존 index 가 `runs:` mapping 을 담은 mapping 이 아니다: {p} — 비우고 다시 쓰지 않는다 "
+          "(사람이 본다)", file=sys.stderr)
+    sys.stderr.flush(); os._exit(1)
+sys.stdout.flush(); os._exit(0)
+PYIDX
+  then
+    echo "기존 artifact_index.yaml 이 불명확합니다 — 아무것도 승격하지 않습니다 (74차 G74-4)" >&2
+    exit 1
+  fi
+fi
 # ★ 13차 발견 8 — 이전 실행이 중단되면 `.previous_*`/`.candidate_*` 가 남아
 #   다음 `git add artifacts` 에 옛 중복 묶음이 들어갈 수 있다. 시작 시 정리하되,
 #   본 묶음이 사라진 상태면 `.previous_*` 를 **복구**한다 (중단 내구성).
@@ -183,6 +210,39 @@ PYEOF
   fi
 
   if [[ "$ok" == "1" ]]; then
+    # ★ 74차 G74-4 — 같은 이름이 index 에 **다른 identity** 로 이미 있으면 조용히 덮지 않는다.
+    #   재보관(파생 재생성 등)은 `ARCHIVE_REPLACE=1` 로 **명시**해야 한다. 승격(mv) 전에 보므로
+    #   거부하면 묶음도 index 도 그대로다 — 둘이 어긋나는 상태를 만들지 않는다.
+    if ! ARCHIVE_REPLACE="${ARCHIVE_REPLACE:-}" "$PY" - "$DEST/artifact_index.yaml" "$name" "$cand/payload_sha256.yaml" <<'PYSAME'
+import hashlib, os, sys, yaml
+idx, name, pi = sys.argv[1:4]
+
+def _leave(rc):                                   # heredoc 은 flush 뒤 os._exit (docs-lint 규칙)
+    sys.stdout.flush(); sys.stderr.flush(); os._exit(rc)
+
+if not os.path.isfile(idx):
+    _leave(0)
+runs = (yaml.safe_load(open(idx, encoding="utf-8")) or {}).get("runs") or {}
+ent = runs.get(name)
+if not isinstance(ent, dict):
+    _leave(0)
+got = hashlib.sha256(open(pi, "rb").read()).hexdigest()
+if ent.get("payload_index_sha256") == got:
+    _leave(0)                                     # 같은 identity — 멱등
+if os.environ.get("ARCHIVE_REPLACE") == "1":
+    print(f"  index 의 {name} 을 명시적으로 교체한다 (ARCHIVE_REPLACE=1): "
+          f"{str(ent.get('payload_index_sha256'))[:16]} → {got[:16]}")
+    _leave(0)
+print(f"  ✗ index 에 같은 이름 {name!r} 이 다른 identity 로 있다 "
+      f"({str(ent.get('payload_index_sha256'))[:16]} ≠ {got[:16]}) — 조용히 덮지 않는다. "
+      "재보관이 맞으면 ARCHIVE_REPLACE=1 로 명시하라 (74차 G74-4)", file=sys.stderr)
+_leave(1)
+PYSAME
+    then
+      rm -rf "$cand"
+      n_bad=$((n_bad+1))
+      continue
+    fi
     # ★ 12차 — `rm -rf out && mv cand out` 은 두 명령 사이에 중단되면 기존
     #   묶음이 사라진다. 옛 것을 먼저 옆으로 치우고, 새 것을 제자리에 놓은
     #   **뒤에** 지운다 (중단돼도 둘 중 하나는 항상 남는다).
@@ -244,7 +304,14 @@ def _sha(p):
     h.update(Path(p).read_bytes())
     return h.hexdigest()
 
+# ★ 74차 G74-4 — **병합**이다. 기존 index 의 다른 entry 는 바이트 그대로 보존하고(재검증한 것처럼
+#   stamp 를 갱신하지 않는다), 이번에 승격한 이름만 새 값으로 넣는다. 기존 index 는 스크립트
+#   진입에서 이미 형식을 검사했다 (불명확하면 여기까지 오지 않는다).
+out = dest / "artifact_index.yaml"
 runs = {}
+if out.is_file():
+    _prev = yaml.safe_load(out.read_text(encoding="utf-8")) or {}
+    runs = dict(_prev.get("runs") or {})
 # ★ 12차 발견 5-c — 이번에 check→격리 복원→validator 를 통과해 **승격한** 것만
 #   싣는다 (예전엔 DEST 아래 모든 디렉터리를 무검증으로 순회했다).
 for name in names:
@@ -316,7 +383,6 @@ _uniq = {c for c in _commits.values() if c}
 commit = next(iter(_uniq)) if len(_uniq) == 1 else None
 if len(_uniq) > 1:
     print(f"  ⚠ 묶음마다 계산 commit 이 다릅니다: {_commits}", file=sys.stderr)
-out = dest / "artifact_index.yaml"
 # ★ 12차 발견 5-b — 여기 적히는 SHA 는 **계산에 쓴 코드**의 commit 이다.
 #   이 파일 자신을 담을 artifact commit 은 아직 존재하지 않으므로 그 이름을
 #   쓸 수 없다 (artifact commit A → 이 index 를 갱신하는 commit B 순서).
@@ -324,14 +390,18 @@ out = dest / "artifact_index.yaml"
 #   **한 번**이라 index 와 묶음은 같은 commit 에 담긴다. 그 commit 의 이름은
 #   자기참조라 이 파일 안에 쓸 수 없다 — source_commit(계산 시작 코드 commit)
 #   과 혼동하지 말 것.
-out.write_text(yaml.safe_dump(
+# ★ 74차 G74-4 — 원자 교체: 임시 파일에 다 쓴 뒤 `os.replace`. 쓰기 도중 죽어도 기존 index 는 그대로다.
+_body = yaml.safe_dump(
     {"_주의": ("RESULTS.md 의 앵커(fits/curves digest)와 여기 값이 같아야 그 보고서의 "
              "근거 묶음이다. source_commit 은 **계산을 시작한 코드**의 commit 이다. "
              "이 index 와 묶음 bytes 는 `git add artifacts` 로 함께 커밋되며, 그 "
              "artifact commit 의 이름은 자기참조라 여기 쓸 수 없다 (12차 5-b·14차 8)."),
      "source_commit": commit, "runs": runs},
-    allow_unicode=True, sort_keys=False), encoding="utf-8")
-print(f"\n인덱스: {out} ({len(runs)}개 승격 묶음, full 64자리 digest)")
+    allow_unicode=True, sort_keys=False)
+_tmp = out.with_name(f".artifact_index.{os.getpid()}.tmp")
+_tmp.write_text(_body, encoding="utf-8")
+os.replace(_tmp, out)
+print(f"\n인덱스: {out} ({len(names)}개 승격 · 전체 {len(runs)}개 묶음, full 64자리 digest)")
 PYEOF
 fi
 

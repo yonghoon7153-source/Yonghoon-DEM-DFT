@@ -2248,7 +2248,10 @@ def test_preservation_registry_covers_every_warm_probe_leg():
     assert not missing, (
         f"투영은 있는데 보존 상태가 기록되지 않은 다리: {missing}\n"
         f"  `docs/22p_gap/LEG_PRESERVATION.yaml` 에 3축을 적어라")
-    extra = sorted(set(recorded) - have)
+    # ★ 74차 G74-3 — `claim_scope: no_active_claim` 다리는 정의상 투영이 없다 (실행 명부에만 있다).
+    #   면제가 아니라 다른 계약이다 — `_scope_problems`·`_no_active_claim_evidence_problems` 가 본다.
+    extra = sorted(l for l in set(recorded) - have
+                   if recorded[l].get("claim_scope") != "no_active_claim")
     assert not extra, f"보존 원장에만 있고 투영이 없는 다리: {extra}"
 
     # ★ 24차 보충 발견 1 — enum 을 여기 옮겨 적지 않는다. 계약이 정본이다.
@@ -2431,9 +2434,138 @@ def test_every_leg_binds_its_evidence_to_verifiable_anchors():
                     bad.append(f"{leg}: evidence.{k} 없음")
         if not ev.get("cohorts"):
             bad.append(f"{leg}: evidence.cohorts 없음 — 어느 투영 세대인지 불명")
-        if not e.get("claim_roles"):
-            bad.append(f"{leg}: claim_roles 없음 — 어느 주장에 쓰이는지 불명")
+        # ★ 74차 G74-3 — `claim_roles` 가 비어도 되는 것은 **명시된** `no_active_claim` 뿐이다.
+        #   diagnostic 이라는 leg-level 라벨은 면제가 아니다. 분류 자체는 `_scope_problems` 가 본다.
+        if not e.get("claim_roles") and e.get("claim_scope") != "no_active_claim":
+            bad.append(f"{leg}: claim_roles 없음 — 어느 주장에 쓰이는지 불명 "
+                       "(진단 전용이면 claim_scope: no_active_claim 을 명시한다)")
+    bad += _scope_problems(reg)
+    bad += _no_active_claim_evidence_problems(reg)
     assert not bad, "보존 증거가 anchor 에 묶이지 않았다:\n  " + "\n  ".join(bad)
+
+
+#: ★ 74차 G74-3 — 다리의 주장 범위 enum (production `tools.preserve.CLAIM_SCOPE` 와 같은 값).
+_CLAIM_SCOPES = ("active_claims", "no_active_claim")
+
+
+def _scope_problems(reg: dict) -> list[str]:
+    """`claim_scope` 분류 계약 위반 목록 — 순수 함수 (74차 G74-3).
+
+    실행 명부(`cohort.executed_legs`)와 투영 membership(`cohort.legs`)은 **분리**돼 있고, 어느
+    명부에 있는가는 다리의 `claim_scope` 가 정한다. 누락·모름·모순은 전부 거부다 — 이름을
+    skip 하거나 diagnostic 을 일괄 면제하면 다음 같은 종류의 다리가 검증을 우회한다.
+    """
+    bad: list[str] = []
+    scopes: dict[str, str | None] = {}
+    for e in reg["legs"]:
+        leg = e["leg_id"]
+        sc = e.get("claim_scope")
+        if sc not in _CLAIM_SCOPES:
+            bad.append(f"{leg}: claim_scope 가 없거나 계약 enum 이 아니다: {sc!r} — "
+                       f"{list(_CLAIM_SCOPES)} 중 하나를 명시한다 (누락·모름은 거부)")
+            scopes[leg] = None
+            continue
+        scopes[leg] = sc
+        if sc == "no_active_claim" and e.get("claim_roles"):
+            bad.append(f"{leg}: claim_scope=no_active_claim 인데 claim_roles 가 있다 — 진단 전용 "
+                       "다리는 어떤 활성 주장도 참조하지 않는다")
+    for c in reg.get("cohorts") or []:
+        cid = c.get("cohort_id")
+        legs = set(c.get("legs") or [])
+        ex = c.get("executed_legs") or []
+        if ex and (not isinstance(ex, list) or any(type(x) is not str for x in ex)):
+            bad.append(f"{cid}: executed_legs 가 문자열 목록이 아니다: {ex!r}")
+            continue
+        for lid in sorted(legs):
+            if scopes.get(lid) == "no_active_claim":
+                bad.append(f"{cid}: {lid} 은 claim_scope=no_active_claim 인데 투영 명부 `legs` 에 "
+                           "있다 — 실행 명부(executed_legs)에만 있어야 한다")
+        for lid in ex:
+            if lid in legs:
+                bad.append(f"{cid}: {lid} 이 `legs` 와 `executed_legs` 에 동시에 있다")
+            if lid not in scopes:
+                bad.append(f"{cid}: executed_legs 의 {lid} 가 실행 기록(legs:)에 없다")
+            elif scopes[lid] != "no_active_claim":
+                bad.append(f"{cid}: {lid} 은 claim_scope={scopes[lid]!r} 인데 실행 명부 "
+                           "`executed_legs` 에 있다 — no_active_claim 만 거기 있는다")
+    return bad
+
+
+#: full_bundle 진단 전용 다리가 **그대로** 져야 하는 증거 계약 (74차 리뷰어 ③).
+_NO_ACTIVE_CLAIM_EVIDENCE_KEYS = ("bundle_uri", "payload_index_sha256", "payload_bytes",
+                                  "bundle_files", "fits_sha256", "member_rehash_by",
+                                  "verification_receipt", "verification_receipt_core_sha256",
+                                  "validator_identity", "empty_root_restore", "out",
+                                  "leg_source_digest", "attempt_id", "run_spec_digest")
+
+
+def _no_active_claim_evidence_problems(reg: dict) -> list[str]:
+    """`no_active_claim` 은 면제가 아니다 — 묶음·영수증·실행 자리·소스·상태가 전부 있어야 한다."""
+    import re
+
+    bad: list[str] = []
+    for e in reg["legs"]:
+        if e.get("claim_scope") != "no_active_claim":
+            continue
+        leg = e["leg_id"]
+        ev = e.get("evidence") or {}
+        if e.get("preservation_status") != "full_bundle":
+            bad.append(f"{leg}: 진단 전용 실행 기록은 full_bundle 이어야 한다: "
+                       f"{e.get('preservation_status')!r}")
+        if e.get("validation_status") != "current_validated":
+            bad.append(f"{leg}: 진단 전용 실행 기록은 current_validated 여야 한다: "
+                       f"{e.get('validation_status')!r}")
+        for k in _NO_ACTIVE_CLAIM_EVIDENCE_KEYS:
+            if not ev.get(k):
+                bad.append(f"{leg}: evidence.{k} 없음")
+        out = ev.get("out")
+        if not (isinstance(out, str) and out.strip()):
+            bad.append(f"{leg}: evidence.out 이 비어 있지 않은 문자열이 아니다: {out!r}")
+        core = ev.get("verification_receipt_core_sha256")
+        rp = ev.get("verification_receipt")
+        if isinstance(rp, str) and (_REPO / rp).is_file():
+            import yaml as _y
+            try:
+                from tools.preserve import _receipt_core_sha256, read_verification_receipt
+                got = _receipt_core_sha256(read_verification_receipt(rp, leg, repo_root=_REPO)["core"])
+                if got != core:
+                    bad.append(f"{leg}: 영수증 core sha 가 원장과 다르다 "
+                               f"({str(core)[:16]} ≠ {got[:16]})")
+            except Exception as exc:                       # noqa: BLE001 — 거부 사유를 그대로 싣는다
+                bad.append(f"{leg}: 영수증을 typed 로 읽지 못한다: {exc}")
+        elif rp:
+            bad.append(f"{leg}: evidence.verification_receipt 가 가리키는 파일이 없다: {rp!r}")
+        vid = ev.get("validator_identity") or {}
+        if not isinstance(vid, dict) or vid.get("ok") is not True \
+                or not isinstance(vid.get("n_checks"), int) or vid.get("n_checks") <= 0 \
+                or not isinstance(vid.get("source_digest"), str) or len(vid.get("source_digest")) != 16:
+            bad.append(f"{leg}: evidence.validator_identity 가 닫힌 typed 값이 아니다: {vid!r}")
+        # validator 식별은 **영수증이 말한 것**과 같아야 한다 (producer source 와는 다를 수 있다 —
+        # 리뷰어 ⑥: 새 validator 식별은 별도 기록이고 producer 식별을 덮지 않는다).
+        if isinstance(rp, str) and (_REPO / rp).is_file() and isinstance(vid, dict):
+            try:
+                from tools.preserve import read_verification_receipt as _rvr
+                _vd = _rvr(rp, leg, repo_root=_REPO)["core"]["identity"]["validator_source_digest"]
+                if _vd != vid.get("source_digest"):
+                    bad.append(f"{leg}: validator_identity.source_digest {vid.get('source_digest')!r} 가 "
+                               f"영수증의 validator {_vd!r} 와 다르다")
+            except Exception as exc:                   # noqa: BLE001
+                bad.append(f"{leg}: 영수증 validator 식별을 읽지 못한다: {exc}")
+    return bad
+
+
+def test_claim_scope_classifies_every_leg_and_separates_execution_from_projection():
+    """★ 74차 G74-3 — 원장의 모든 다리가 명시적 분류를 갖고, 명부가 그 분류와 맞는다."""
+    reg = _leg_preservation()
+    bad = _scope_problems(reg)
+    assert not bad, "분류 계약 위반:\n  " + "\n  ".join(bad)
+
+
+def test_no_active_claim_legs_still_carry_the_full_bundle_evidence_contract():
+    """★ 74차 G74-3 — 진단 전용은 면제가 아니다 (리뷰어 ③)."""
+    reg = _leg_preservation()
+    bad = _no_active_claim_evidence_problems(reg)
+    assert not bad, "진단 전용 증거 계약 위반:\n  " + "\n  ".join(bad)
 
 
 def _current_analyzer() -> dict:
@@ -2628,7 +2760,9 @@ def test_preservation_registry_holds_executed_legs_only():
 
     reg = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
     recorded = {e["leg_id"] for e in reg["legs"]}
-    in_cohorts = {leg for c in _cohorts() for leg in c["legs"]}
+    # ★ 74차 G74-3 — 실행 명부(`executed_legs`)도 cohort 구성원이다 (투영 명부와 분리돼 있을 뿐).
+    in_cohorts = {leg for c in _cohorts()
+                  for leg in list(c["legs"]) + list(c.get("executed_legs") or [])}
 
     assert recorded == in_cohorts, (
         f"원장 다리와 cohort 구성원이 다르다 — "
@@ -3092,7 +3226,9 @@ def _claim_role_problems(reg: dict, creg: dict, roles_ok: set[str],
 
     seen: set[tuple[str, str]] = set()
     used: set[str] = set()
-    bad: list[str] = []
+    # ★ 74차 G74-3 — 분류 계약이 먼저다. `no_active_claim` 다리에 role 이 붙어 있으면 그것이
+    #   곧 "활성 주장 참조" 이고 아래 loop 가 그 role 을 정상 role 처럼 세어서는 안 된다.
+    bad: list[str] = list(_scope_problems(reg))
 
     # ★ 30차 — 세대표가 **봉인되지 않은 digest** 를 담으면 `_current_generation`
     #   이 위조된다. 원장에 `deadbeef: v6` 한 줄을 더하는 것만으로 현행 세대가
@@ -3107,6 +3243,8 @@ def _claim_role_problems(reg: dict, creg: dict, roles_ok: set[str],
     for e in reg["legs"]:
         leg = e["leg_id"]
         cap = (e.get("evidence") or {}).get("regeneration_capability")
+        if e.get("claim_scope") == "no_active_claim":
+            continue                     # role 이 있으면 `_scope_problems` 가 이미 거부했다
         for r in e.get("claim_roles") or []:
             cid = r.get("claim_id")
             if cid in retracted:
@@ -3450,7 +3588,10 @@ def test_evidence_cohorts_and_the_cohort_registry_agree_both_ways():
     import yaml
 
     reg = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
-    by_cohort = {c["cohort_id"]: set(c["legs"]) for c in _cohorts()}
+    # ★ 74차 G74-3 — evidence.cohorts 는 "어느 cohort 의 승인 아래 돌았는가" 다: 투영 명부와
+    #   실행 명부 둘 다 cohort 소속이다.
+    by_cohort = {c["cohort_id"]: set(c["legs"]) | set(c.get("executed_legs") or [])
+                 for c in _cohorts()}
     bad = []
     for e in reg["legs"]:
         declared = set((e.get("evidence") or {}).get("cohorts") or [])
@@ -3803,7 +3944,9 @@ def test_a_projection_manifest_digest_is_rehashed_from_actual_bytes():
         assert (e["evidence"]["leg_source_digest"] == src), (
             f"{leg}: 원장의 leg_source_digest 가 봉인 manifest 와 다르다")
         anchored.append(leg)
-    assert anchored == ["paired_fixed5_v4"], (
+    # ★ 74차 G74-3 — `grid_fit_v5`(진단 전용, 투영 없음, 묶음 있음)가 두 번째 앵커가 됐다 (실측).
+    #   투영이 없으므로 위 loop 의 투영 대조는 비지만, 원장의 `leg_source_digest` 는 봉인 manifest 와 같아야 한다.
+    assert anchored == ["paired_fixed5_v4", "grid_fit_v5"], (
         f"실물에 묶인 다리 목록이 바뀌었다: {anchored}")
 
 

@@ -38,16 +38,18 @@ if str(REPO) not in sys.path:
 def build_entry(leg: str, cohort: str, config: str, out_rel: str, *, objective: str | None,
                 bounds: str, n_restarts: int | None, clean: bool, adaptive: bool, warm_start: bool,
                 reference: str, halfcell_method: str, halfcell_args: list[str],
-                recorded_on: str, 근거: str) -> tuple[dict, dict]:
+                recorded_on: str, 근거: str, claim_scope: str) -> tuple[dict, dict]:
     """production 과 **같은 함수**로 spec 을 만든다 — 여기서 새 규칙을 만들지 않는다."""
     from src.config import load_config
     from src.fitting import live_fit_axis, parse_halfcell_kw
     from src.grid import conditions_from_config, live_grid_axis
     from src.io import source_digest
-    from tools.preserve import (check_id, leg_run_spec, planned_index,
+    from tools.preserve import (CLAIM_SCOPE, check_id, leg_run_spec, planned_index,
                                 run_spec_digest)
 
     check_id(leg)
+    if claim_scope not in CLAIM_SCOPE:
+        raise SystemExit(f"✗ --claim-scope 는 {list(CLAIM_SCOPE)} 중 하나여야 한다: {claim_scope!r}")
     if leg in planned_index():
         raise SystemExit(f"✗ {leg!r} 은 이미 계획 index 에 있다 — 같은 이름을 두 번 적지 않는다 "
                          "(실행 기록은 다음 실행의 승인이 아니다)")
@@ -58,6 +60,13 @@ def build_entry(leg: str, cohort: str, config: str, out_rel: str, *, objective: 
     conds = conditions_from_config(cfg, cli={})
     out_dir = REPO / out_rel
     grid_axis = live_grid_axis(cfg, conds, out_dir)
+    # ★ 74차 G74-1 — 계획 도구가 실제 진입(`assert_planned_leg`)과 **같은 규칙**을 먼저 말한다.
+    #   null 계획은 첫 시작이 캐시를 저장하는 순간 소유한 재개가 성립하지 않는다 (§99·§102).
+    if grid_axis.get("discharged_cache_sha256") is None:
+        raise SystemExit(
+            "✗ 완방상태 캐시가 없어 `discharged_cache_sha256` 이 null 이 된다 — 그런 계획은 실행 진입에서 "
+            "거부된다 (74차 G74-1). 실행할 기계에서 먼저 `python -m src.baseline --config "
+            f"{config}` 로 캐시를 만들고 다시 뽑으라 (cache: false 모드는 계획할 수 없다)")
 
     ocfg = load_config("configs/objectives.yaml")
     objectives = dict(ocfg["objectives"])
@@ -88,6 +97,7 @@ def build_entry(leg: str, cohort: str, config: str, out_rel: str, *, objective: 
         "run_spec": spec,
         "recorded_on": recorded_on,
         "근거": 근거,
+        "claim_scope": claim_scope,
     }
     fit_argv = []
     if objective:
@@ -137,6 +147,10 @@ def main(argv=None) -> int:
     ap.add_argument("--halfcell-arg", dest="halfcell_arg", action="append", default=[])
     ap.add_argument("--recorded-on", required=True, help="YYYY-MM-DD — 사람이 승인하는 날")
     ap.add_argument("--근거", dest="근거", required=True, help="왜 이 실행인가 (한 문장)")
+    ap.add_argument("--claim-scope", dest="claim_scope", required=True,
+                    choices=["active_claims", "no_active_claim"],
+                    help="74차 G74-3 — 진단 전용(no_active_claim → cohort.executed_legs) 인가, "
+                         "투영을 게시해 활성 주장을 지지할 것(active_claims → cohort.legs)인가")
     a = ap.parse_args(argv)
     if (REPO / a.out).exists():
         raise SystemExit(f"✗ {a.out} 이 이미 있다 — 기존 산출을 덮는 계획은 만들지 않는다 (새 이름을 쓰라)")
@@ -144,10 +158,11 @@ def main(argv=None) -> int:
         a.leg, a.cohort, a.config, a.out, objective=a.objective, bounds=a.bounds,
         n_restarts=a.n_restarts, clean=a.clean, adaptive=a.adaptive, warm_start=a.warm_start,
         reference=a.reference, halfcell_method=a.halfcell_method, halfcell_args=a.halfcell_arg,
-        recorded_on=a.recorded_on, 근거=a.근거)
+        recorded_on=a.recorded_on, 근거=a.근거, claim_scope=a.claim_scope)
     print("# ── LEG_PRESERVATION.yaml 의 `planned:` 에 **사람이** 붙여 넣는 항목 (이 도구는 쓰지 않는다) ──")
     print(yaml.safe_dump([entry], allow_unicode=True, sort_keys=False, width=100), end="")
-    print("# ── cohort 항목의 `prospective_legs:` 에도 이 leg_id 를 더한다 ──")
+    print("# ── cohort 항목의 `prospective_legs:` 에도 이 leg_id 를 더한다 (finalize 가 claim_scope 대로 "
+          "`executed_legs`/`legs` 로 옮긴다 — 74차 G74-3) ──")
     print("# ── 요약 (사람이 확인) ──")
     print(json.dumps(summary, ensure_ascii=False, indent=1))
     return 0

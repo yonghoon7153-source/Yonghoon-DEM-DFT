@@ -5560,7 +5560,10 @@ def _with_run_spec(body: str) -> str:
             continue
         e.setdefault("run_spec", {"leg_id": e["leg_id"], "mode": "fit",
                                   "objective": "pocv_dvdq", "n_restarts": 3,
-                                  "reference": "grid"})
+                                  "reference": "grid",
+                                  # ★ 74차 G74-1 — 새 실행이 지나는 계획은 고정 캐시 SHA 를 담는다
+                                  "grid": {"discharged_cache_sha256": "ab" * 32}})
+        e.setdefault("claim_scope", "active_claims")        # ★ 74차 G74-3
         e["run_spec_digest"] = run_spec_digest(e["run_spec"])
     return yaml.safe_dump(doc, allow_unicode=True, sort_keys=False)
 
@@ -5857,18 +5860,25 @@ _LIFECYCLE_LEDGER = textwrap.dedent('''\
           objective: pocv_dvdq
           n_restarts: 3
           reference: grid
+          grid:
+            discharged_cache_sha256: "abababababababababababababababababababababababababababababababab"
         recorded_on: "2026-08-28"
         근거: "시험용 — 계획"
+        claim_scope: active_claims
     legs:
       - leg_id: done
         preservation_status: full_bundle
+        claim_scope: active_claims
         evidence:
           leg_source_digest: "fedcba9876543210"
           cohorts: ["gA"]
     ''')
 
+# ★ 74차 G74-1·G74-3 — 새 실행이 지나는 계획은 고정 캐시 SHA(hex64)와 `claim_scope` 를 담아야 한다
+#   (`assert_planned_leg`). 이 fixture 가 그 규칙 앞에서 **먼저 깨졌다** — 그것이 맞다.
 _RUN_SPEC_L = {"leg_id": "L", "mode": "fit", "objective": "pocv_dvdq",
-               "n_restarts": 3, "reference": "grid"}
+               "n_restarts": 3, "reference": "grid",
+               "grid": {"discharged_cache_sha256": "ab" * 32}}
 
 
 def _spec_digest(spec: dict) -> str:
@@ -6492,7 +6502,8 @@ def test_two_concurrent_finalizations_lose_no_leg(tmp_path):
         "authorization_kind": "prospective",
         "authorized_source_digest": "0123456789abcdef",
         "run_spec_digest": _spec_digest(spec_m), "run_spec": dict(spec_m),
-        "recorded_on": "2026-08-28", "근거": "시험용 — 계획 2"})
+        "recorded_on": "2026-08-28", "근거": "시험용 — 계획 2",
+        "claim_scope": "active_claims"})
     doc.pop("planned_extra_marker", None)
     led.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False),
                    encoding="utf-8")

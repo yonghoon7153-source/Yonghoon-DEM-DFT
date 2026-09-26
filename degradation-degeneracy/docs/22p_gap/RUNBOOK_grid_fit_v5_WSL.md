@@ -39,11 +39,15 @@ env | grep -E "CANONICAL_RUN|^LEG=|DD_SMOOTH" || echo "env clean"
 ## 3. 계획 항목 생성 (출력만 — 원장은 사람이 쓴다)
 
 ```bash
+python -m src.baseline --config configs/grid_fine.yaml        # 74차 G74-1 — 캐시를 계획 **앞에** 만든다 (없으면 plan_leg 가 거부한다)
 python3 docs/22p_gap/plan_leg.py --leg grid_fit_v5 --cohort g18_2026_09_15 \
     --config configs/grid_fine.yaml --out results/grid_fit_v5 \
-    --recorded-on $(date +%F) \
+    --recorded-on $(date +%F) --claim-scope no_active_claim \
     --근거 "73차 조건부 한정 GO (원장 §98) — 현행 code identity 로 grid_fine 격자 grid/fit 재실행 (GATE71 §2 E9-0), WSL 로컬"
 ```
+
+`--claim-scope` (74차 G74-3): `no_active_claim` = 진단 전용 — 투영을 게시하지 않고 어떤 활성 주장도 참조하지 않는다. finalize 가 이 값을 실행 기록에
+옮기고 cohort 의 **실행 명부** `executed_legs` 에 넣는다 (투영 명부 `legs` 가 아니다). `active_claims` 는 투영 게시·`claim_roles` 를 전제한다.
 
 확인할 것: `authorized_source_digest: c2ef1a811e70bb4c` · `n_conditions 3993` · 목적함수 4 · `discharged_cache_sha256: null` (fresh clone) ·
 `smoothing_backend` 값 · `in = out = results/grid_fit_v5` · `command` 줄. **출력 전문을 그대로 보관한다** (승인 근거).
@@ -111,7 +115,7 @@ nohup ./run.sh --mode all --leg grid_fit_v5 --config configs/grid_fine.yaml --np
       > ~/grid_fit_v5_window/resume_$(date -u +%Y%m%dT%H%M%SZ).log 2>&1 &
 ```
 2회째 실패 → 재승인(새 계획 항목). finalize/archive/영수증/attach 의 실패는 `--resume` 대상이 아니다 — 사유를 보존하고 게이트로.
-**주의 (G74-1):** `discharged_cache_sha256: null` 계획에서는 이 `--resume` 이 **항상** `살아 있는 claim 은 다른 run_spec 을 봉인했다` 로 거부된다. 캐시를 묶은 계획에서만 재개가 성립한다. crash 뒤 재승인으로 갈 때는 `release_leg_run('grid_fit_v5')`(소유 token 필요) → 부분 산출·캐시를 창 디렉터리로 **옮기고**(지우지 않는다) → `precheck_leg_run` 이 `new` 인지 확인.
+**주의 (G74-1):** ~~`discharged_cache_sha256: null` 계획에서는 이 `--resume` 이 **항상** `살아 있는 claim 은 다른 run_spec 을 봉인했다` 로 거부된다.~~ null 계획은 강제 재계산이 저장한 캐시를 그대로 둔 채 다음 프로세스를 시작하면 거부된다 (74차 R2). 74차 뒤 `assert_planned_leg` 가 null 계획의 진입 자체를 거부하므로 이 상황은 새 계획에서는 생기지 않는다 (원장 §103). crash 뒤 재승인으로 갈 때는 `release_leg_run('grid_fit_v5')`(소유 token 필요) → 부분 산출·캐시를 창 디렉터리로 **옮기고**(지우지 않는다) → `precheck_leg_run` 이 `new` 인지 확인.
 
 ## 8. 실행 뒤 — 보존·영수증·원장 (E9-3 2~5)
 

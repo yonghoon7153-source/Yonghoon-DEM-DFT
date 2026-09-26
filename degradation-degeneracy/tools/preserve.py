@@ -3626,6 +3626,22 @@ PLANNED_KEYS = ("leg_id", "cohort_id", "status", "authorization_kind",
 #:   소급 항목에는 없다 (그때는 봉인된 계획 자체가 없었다).
 PLANNED_KEYS_PROSPECTIVE = PLANNED_KEYS + ("run_spec",)
 
+#: ★ 74차 G74-3 — prospective 항목이 **선택적으로** 담는 키. 계획이 "이 다리는 어느 주장 체계에
+#:   속하는가" 를 미리 말하면 finalize 가 그것을 실행 기록에 옮기고 roster 를 고른다.
+#:   옛 항목(74차 이전)은 이 키가 없고, 그때는 실행 기록의 `claim_scope` 가 답한다 — 둘 다
+#:   있으면 같아야 하고 둘 다 없으면 거부다 (`planned_index`). 옛 계획을 다시 쓰지 않는다.
+PLANNED_KEYS_PROSPECTIVE_OPTIONAL = ("claim_scope",)
+
+#: ★ 74차 G74-3 — 다리의 **주장 범위**. 실행 명부(`cohort.executed_legs`)와 투영 membership
+#:   (`cohort.legs`)을 분리하는 분류다.
+#:     active_claims    투영을 게시하고 `claim_roles` 로 활성 주장을 지지한다 → `legs`
+#:     no_active_claim  진단 전용 — 어떤 활성 주장도 참조하지 않는다 (`claim_roles` 금지) →
+#:                      `executed_legs`. full_bundle 증거 계약(묶음·영수증·실행 자리)은 그대로 진다.
+#:   누락·모름·모순은 생산자(finalize·planned_index)와 소비자(docs-lint·row_projection) 모두
+#:   거부한다 — 어느 한쪽만 알면 그것이 곧 우회다.
+CLAIM_SCOPE = ("active_claims", "no_active_claim")
+CLAIM_SCOPE_ROSTER = {"active_claims": "legs", "no_active_claim": "executed_legs"}
+
 #: ★ 47차 — 승인의 **종류**. 46차는 이 구분이 없어서 소급 기록 8건과 진짜
 #:   실행 전 승인이 같은 schema 로 섞였고, 그래서 "실행 전 gate 가 실제로
 #:   작동한 적이 있는가" 를 기계가 답할 수 없었다 (자유문자 근거 안에만
@@ -5756,6 +5772,24 @@ def planned_index(ledger=None) -> dict:
         dirs[resolved] = cid
         cohorts[cid] = c
 
+    # ★ 74차 G74-3 — cohort 의 `executed_legs` 는 문자열 집합이고 `legs`·`prospective_legs` 와
+    #   겹치지 않는다. 투영 소비자(`row_projection._ledger_authority`)와 같은 규칙이다.
+    for cid, c in cohorts.items():
+        ex = c.get("executed_legs")
+        if ex is None:
+            continue
+        if not isinstance(ex, list) or any(type(x) is not str or not x for x in ex):
+            raise PreserveError(
+                "plan", f"cohort {cid!r} 의 `executed_legs` 가 문자열 목록이 아니다: {ex!r}")
+        if len(set(ex)) != len(ex):
+            raise PreserveError("plan", f"cohort {cid!r} 의 `executed_legs` 에 중복이 있다: {ex!r}")
+        clash = sorted(set(ex) & (set(c.get("legs") or []) | set(c.get("prospective_legs") or [])))
+        if clash:
+            raise PreserveError(
+                "plan", f"cohort {cid!r} 의 `executed_legs` 가 `legs`/`prospective_legs` 와 겹친다: "
+                        f"{clash} — 실행 명부와 투영 명부는 분리돼 있다 (74차 G74-3)")
+    record_scopes = _record_claim_scopes(doc)
+
     out: dict = {}
     for e in raw:
         # ★ 48차 P0-5 — 승인 종류마다 닫힌 schema 가 다르다. prospective 는
@@ -5769,13 +5803,22 @@ def planned_index(ledger=None) -> dict:
                 "plan", f"계획 항목의 `authorization_kind` 가 계약 enum 이 "
                         f"아니다: {(e.get('authorization_kind') if isinstance(e, dict) else e)!r}"
                         f" — {list(AUTHORIZATION_KIND)} 중 하나여야 한다")
-        if set(e) != set(want_keys):
+        # ★ 74차 G74-3 — prospective 는 `claim_scope` 를 **선택적으로** 더 담을 수 있다. 그 밖의
+        #   여분 키는 여전히 닫힌 schema 위반이다.
+        optional = PLANNED_KEYS_PROSPECTIVE_OPTIONAL \
+            if e.get("authorization_kind") == "prospective" else ()
+        if set(e) - set(optional) != set(want_keys):
             raise PreserveError(
                 "plan",
                 f"계획 항목이 닫힌 schema 가 아니다: "
                 f"{sorted(e) if isinstance(e, dict) else e!r} — "
                 f"{e.get('authorization_kind')} 항목은 {sorted(want_keys)} 를 "
-                "정확히 담아야 한다")
+                f"정확히 담아야 한다 (선택: {sorted(optional)})")
+        if "claim_scope" in e and e["claim_scope"] not in CLAIM_SCOPE:
+            raise PreserveError(
+                "plan", f"계획 항목 {e.get('leg_id')!r} 의 `claim_scope` 가 계약 enum 이 "
+                        f"아니다: {e['claim_scope']!r} — {list(CLAIM_SCOPE)} 중 하나여야 한다 "
+                        "(74차 G74-3: 분류 누락·모름은 거부다)")
         for k in PLANNED_KEYS:
             if not _nonempty_str(e[k] if isinstance(e[k], str) else ""):
                 raise PreserveError(
@@ -5838,8 +5881,30 @@ def planned_index(ledger=None) -> dict:
         #   publisher 중 하나가 반드시 깨졌다 (리뷰어의 4행 표). 계획 중인
         #   leg 는 `prospective_legs` 에, 끝난 leg 는 `legs` 에 있는다.
         coh = cohorts[e["cohort_id"]]
-        want = "prospective_legs" if e["status"] in ("planned", "running") \
-            else "legs"
+        # ★ 74차 G74-3 — 끝난 다리의 roster 는 **분류가 고른다.** 47차의 단일 실행 roster
+        #   (`legs`)는 투영 소비자에게는 "투영 명부" 였고, 그래서 투영 없는 진단 실행이 그
+        #   명부에 들어가는 순간 투영·주장 lint 전체가 거부됐다 (74차 §101 G74-3). 실행 이력은
+        #   `executed_legs`, 투영 membership 은 `legs` — 둘은 겹치지 않는다.
+        if e["status"] in ("planned", "running"):
+            want = "prospective_legs"
+        elif e["authorization_kind"] == "retrospective":
+            want = "legs"
+            rec_scope = record_scopes.get(e["leg_id"])
+            if rec_scope is not None and rec_scope != "active_claims":
+                raise PreserveError(
+                    "plan", f"소급 항목 {e['leg_id']!r} 의 실행 기록 claim_scope 가 "
+                            f"{rec_scope!r} 다 — 소급 다리는 투영 명부의 다리이고 "
+                            "`active_claims` 만 성립한다")
+        else:
+            scope = _executed_scope(e, record_scopes)
+            want = CLAIM_SCOPE_ROSTER[scope]
+            other = "executed_legs" if want == "legs" else "legs"
+            if e["leg_id"] in (coh.get(other) or []):
+                raise PreserveError(
+                    "plan",
+                    f"계획 항목 {e['leg_id']!r} 은 claim_scope={scope!r} 인데 cohort "
+                    f"{e['cohort_id']!r} 의 `{other}` 에도 있다 — 실행 명부와 투영 명부는 "
+                    "겹치지 않는다 (74차 G74-3: 분류 모순은 거부다)")
         roster = coh.get(want) or []
         if not isinstance(roster, list) or e["leg_id"] not in roster:
             raise PreserveError(
@@ -5848,7 +5913,57 @@ def planned_index(ledger=None) -> dict:
                 f"{e['cohort_id']!r} 의 `{want}` 에 없다: {roster!r} — 계획 "
                 "roster 와 실행 roster 는 분리돼 있고 둘 다 원장이 정본이다")
         out[e["leg_id"]] = dict(e, _cohort=coh)
+    # ★ 74차 G74-3 — 반대 방향: `executed_legs` 의 모든 이름은 **끝난 prospective · no_active_claim**
+    #   다리여야 한다. 한 방향만 보면 명부에 아무 이름이나 적을 수 있다.
+    for cid, coh in cohorts.items():
+        for lid in (coh.get("executed_legs") or []):
+            ent = out.get(lid)
+            if ent is None or ent["status"] != "executed" \
+                    or ent["authorization_kind"] != "prospective" \
+                    or _executed_scope(ent, record_scopes) != "no_active_claim":
+                raise PreserveError(
+                    "plan",
+                    f"cohort {cid!r} 의 `executed_legs` 에 있는 {lid!r} 가 끝난 prospective · "
+                    "no_active_claim 다리가 아니다 — 실행 명부는 그런 다리만 담는다 (74차 G74-3)")
     return out
+
+
+def _record_claim_scopes(doc: dict) -> dict:
+    """실행 기록(`legs:`)이 적은 `claim_scope` — 있으면 enum 이어야 한다 (74차 G74-3)."""
+    out: dict = {}
+    for leg in (doc.get("legs") or []):
+        if not isinstance(leg, dict):
+            continue
+        lid = leg.get("leg_id")
+        if "claim_scope" not in leg:
+            continue
+        sc = leg["claim_scope"]
+        if sc not in CLAIM_SCOPE:
+            raise PreserveError(
+                "plan", f"실행 기록 {lid!r} 의 `claim_scope` 가 계약 enum 이 아니다: {sc!r} — "
+                        f"{list(CLAIM_SCOPE)} 중 하나여야 한다 (74차 G74-3)")
+        out[lid] = sc
+    return out
+
+
+def _executed_scope(e: dict, record_scopes: dict) -> str:
+    """끝난 prospective 항목의 분류 — 계획과 실행 기록이 **같은 답**을 해야 한다 (74차 G74-3).
+
+    계획에 있으면 그것, 없으면(74차 이전 항목) 실행 기록의 것. 둘 다 있으면 같아야 하고 둘 다
+    없으면 거부다 — 옛 계획을 다시 쓰지 않으면서도 분류 없는 실행을 남기지 않는다.
+    """
+    plan_scope = e.get("claim_scope")
+    rec_scope = record_scopes.get(e["leg_id"])
+    if plan_scope is not None and rec_scope is not None and plan_scope != rec_scope:
+        raise PreserveError(
+            "plan", f"{e['leg_id']!r} 의 claim_scope 가 계획({plan_scope!r})과 실행 기록"
+                    f"({rec_scope!r})에서 다르다 — 어느 쪽이 분류인지 정할 수 없다 (74차 G74-3)")
+    scope = plan_scope if plan_scope is not None else rec_scope
+    if scope is None:
+        raise PreserveError(
+            "plan", f"끝난 계획 항목 {e['leg_id']!r} 에 claim_scope 가 없다 (계획에도 실행 기록에도) — "
+                    f"{list(CLAIM_SCOPE)} 중 하나를 실행 기록에 적어야 한다 (74차 G74-3: 분류 누락은 거부다)")
+    return scope
 
 
 def assert_planned_leg(leg_id: str, source_digest: str, ledger=None,
@@ -5887,7 +6002,44 @@ def assert_planned_leg(leg_id: str, source_digest: str, ledger=None,
             f"(승인 source_digest {e['authorized_source_digest']} ≠ 현재 "
             f"{source_digest}) — 승인 이후 RUN_SCOPE 가 바뀌었다. 사람이 다시 "
             "승인해야 한다")
+    if e["authorization_kind"] == "prospective":
+        _assert_prospective_plan_is_startable(e)
     return e
+
+
+def _is_hex64(v) -> bool:
+    return type(v) is str and len(v) == 64 and all(c in "0123456789abcdef" for c in v)
+
+
+def _assert_prospective_plan_is_startable(e: dict) -> None:
+    """새 실행이 지나는 계획 항목의 **두 결속** (74차 G74-1 · G74-3).
+
+    G74-1 — `run_spec.grid.discharged_cache_sha256` 은 **고정된 hex64** 여야 한다. `null`("이
+      실행이 계산한다") 계획은 첫 시작이 완방상태를 재계산해 캐시를 **저장**하고, 그 뒤의 어떤
+      프로세스도 `live_grid_axis()` 가 그 파일의 sha 를 넣어 봉인 spec 과 어긋난다 — 즉 소유한
+      재개가 성립하지 않는다 (§99 1-r·3-d, §102 R2). 우회(캐시 이동)는 권장하지 않으므로 계획
+      단계에서 막는다. `plan_leg.py` 가 같은 규칙을 먼저 말하지만, 손으로 쓴 항목도 여기서 같은
+      검사를 지난다. live 축은 여전히 `assert_run_is_authorized()` 가 claim 과 **비교**한다 — 이
+      검사는 그것을 대신하지 않는다. `discharged_state.cache: false` 로 축을 `null` 로 만드는
+      모드도 같은 이유로 계획할 수 없다 (명시).
+    G74-3 — `claim_scope` 가 있어야 시작한다. finalize 가 그것으로 roster 를 고르고 실행 기록에
+      옮기므로, 없이 시작하면 끝날 때 분류할 수 없는 실행이 된다.
+    """
+    lid = e.get("leg_id")
+    if e.get("claim_scope") not in CLAIM_SCOPE:
+        raise PreserveError(
+            "plan", f"{lid!r} 의 계획에 `claim_scope` 가 없거나 계약 enum 이 아니다: "
+                    f"{e.get('claim_scope')!r} — {list(CLAIM_SCOPE)} 중 하나를 적어야 시작한다 "
+                    "(74차 G74-3: finalize 가 이것으로 실행 명부/투영 명부를 고른다)")
+    spec = e.get("run_spec")
+    grid = spec.get("grid") if isinstance(spec, dict) else None
+    cache = grid.get("discharged_cache_sha256") if isinstance(grid, dict) else None
+    if not _is_hex64(cache):
+        raise PreserveError(
+            "plan", f"{lid!r} 의 계획 `run_spec.grid.discharged_cache_sha256` 이 고정된 hex64 가 "
+                    f"아니다: {cache!r} — 완방상태 캐시를 먼저 만들고(`python -m src.baseline "
+                    "--config <config>`) 계획이 그 바이트를 묶게 하라. null 계획은 첫 시작이 캐시를 "
+                    "저장하는 순간 소유한 재개가 성립하지 않는다 (74차 G74-1)")
 
 
 #: 한 다리의 승인 spec — **결과를 바꾸는 축만** 담는다 (48차 P0-5).
@@ -8383,7 +8535,17 @@ def finalize_leg(leg_id: str, evidence: dict, ledger=None, *,
             plan["status"] = "executed"
             coh["prospective_legs"] = sorted(
                 x for x in (coh.get("prospective_legs") or []) if x != leg_id)
-            coh["legs"] = sorted(set(coh.get("legs") or []) | {leg_id})
+            # ★ 74차 G74-3 — 어느 명부에 넣을지는 **계획의 분류**가 정한다. 47차부터 여기는
+            #   무조건 `legs` 였고, 그 명부를 투영 소비자가 "투영을 가진 다리" 로 읽었다 — 투영
+            #   없는 진단 실행 하나가 들어가자 cohort 전체 lint 가 거부됐다 (§101 G74-3).
+            #   `assert_planned_leg()` 가 위에서 enum 을 이미 확인했다.
+            scope = plan.get("claim_scope")
+            if scope not in CLAIM_SCOPE:
+                raise PreserveError(
+                    "plan", f"{leg_id!r} 의 계획에 `claim_scope` 가 없어 실행 명부/투영 명부를 "
+                            "고를 수 없다 — executed 로 닫지 않는다 (74차 G74-3)")
+            roster = CLAIM_SCOPE_ROSTER[scope]
+            coh[roster] = sorted(set(coh.get(roster) or []) | {leg_id})
             # ★ 48차 P0-4 — **검증한 만큼만** 적고, lifecycle 이 실제로 남긴
             #   증거(phase receipt)를 기록에 넣는다. 47차는 phase receipt 를 다
             #   버리고 caller 의 주장만 옮겼다 — 그러면 원장에 남는 것은 "누가
@@ -8417,6 +8579,9 @@ def finalize_leg(leg_id: str, evidence: dict, ledger=None, *,
                  # 재채점한다). finalize 는 그것을 하지 않았으므로 unvalidated 다.
                  "validation_status": PENDING_VALIDATION_STATUS,
                  "inference_role": PENDING_INFERENCE_ROLE,
+                 # ★ 74차 G74-3 — 생산자가 적은 분류를 소비자가 읽는다. 사람이 나중에 고르는
+                 #   것이 아니라 계획(승인 커밋)이 말한 값이다.
+                 "claim_scope": scope,
                  "evidence": rec_evidence})
             # 원장 write 는 원자적이고, 여기부터 claim 삭제 사이에 죽어도
             # `_already_finalized()` 가 **원장에서** 그 사실을 알아낸다.

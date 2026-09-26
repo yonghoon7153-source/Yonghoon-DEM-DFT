@@ -146,6 +146,9 @@ def _plan_for_live_grid(led, leg, out_dir, cfg, src_digest):
     # ★ 51차 — 계획 축은 production 과 **같은 함수**로 만든다. 손으로 적으면
     #   축이 하나 늘 때마다 시험이 낡은 축을 승인하고, 그 낡음이 곧 false green
     #   이다 (49차에 fit 축에서 같은 일이 있었다).
+    # ★ 74차 G74-1 — 새 실행이 지나는 계획은 **고정 캐시 SHA** 를 담아야 한다. 캐시를 계획
+    #   앞에 만든다 (production 이 같은 바이트를 읽는다 — `cache_bytes` 경로, 재저장 없음).
+    G.get_discharged_state(cfg)
     grid_axis = G.live_grid_axis(cfg, [], out_dir)
     fit_axis = {"config_digest": "0" * 16, "objective_order": ["pocv_dvdq"],
                 "objectives_digest": "0" * 16,
@@ -179,7 +182,8 @@ def _plan_for_live_grid(led, leg, out_dir, cfg, src_digest):
                      "run_spec_digest": run_spec_digest(spec),
                      "run_spec": spec,
                      "recorded_on": "2026-08-28",
-                     "근거": "시험용 — dry-run lifecycle"}],
+                     "근거": "시험용 — dry-run lifecycle",
+                     "claim_scope": "active_claims"}],       # 74차 G74-3
         "legs": []}
     led.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False),
                    encoding="utf-8")
@@ -220,6 +224,13 @@ def test_a_dry_run_does_not_strand_the_plan_in_running(monkeypatch, tmp_path):
                         lambda cfg, *a, **k: DischargedState(1.0, 2.0, 3.0))
 
     cfg = load_config("configs/grid_coarse.yaml")
+    # ★ 74차 G74-1 — 계획은 고정 캐시 SHA 를 담아야 한다. 이 시험은 `get_discharged_state` 를
+    #   가짜로 바꿨으므로(위) 캐시 파일을 **명시적으로** 둔다 — 본체는 그 바이트를 승인 축과
+    #   대조한 뒤 (가짜) reader 에 넘긴다.
+    import json as _json
+    _cp = G.discharged_cache_path_for(cfg)
+    _cp.parent.mkdir(parents=True, exist_ok=True)
+    _cp.write_text(_json.dumps({"_fixture": "74차 dry-run — reader 는 monkeypatch"}), encoding="utf-8")
     _plan_for_live_grid(led, "L49", out_dir, cfg, source_digest())
 
     summary = G.run_grid(cfg, [], nproc=1, chunk_size=1, out_dir=out_dir,

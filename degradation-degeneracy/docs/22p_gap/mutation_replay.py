@@ -47,6 +47,7 @@ G63T = ROOT / "tests" / "test_gate63_defensive.py"                 # 64차 E2-R
 IF = ROOT / "tests" / "interpreter_fixture.py"                      # 65차 T1
 G66T = ROOT / "tests" / "test_gate66_defensive.py"                  # 67차 T1
 RUNSH = ROOT / "run.sh"                                              # 70차 G70-N1
+ARCHSH = ROOT / "scripts" / "archive_results.sh"                     # 74차 G74-4
 
 #: ★ 46차 #9 조건 9 — 변이는 **작업 트리에 손대지 않는다.** 45차 runner 는
 #:   실제 저장소 파일을 고쳤다가 `finally` 로 되돌렸다. 그러면 (a) 중단되면
@@ -1810,6 +1811,34 @@ MUTANTS = [
      '    if False:\n        raise PreserveError(',
      # a07 은 실물 영수증 양성이라 preserve.py 의 어떤 변이에서도 digest 가 달라져 빨개진다 — 이 변이가 무는 node 가 아니다
      "g72_a02 or g72_a05 or g72_a06"),
+    # ── 74차 (G74-1 · G74-3 · G74-4) — 실물 영수증 양성(g74_3_01·g74_3_03)은 preserve.py 변이에서 digest 가
+    #    달라져 어차피 빨개지므로 selector 에서 뺀다. 각 변이는 자기 회귀 node 만 겨눈다.
+    ("cache-sha-must-be-fixed-hex64-g74", PRESERVE,                        # G74-1
+     '    if not _is_hex64(cache):\n        raise PreserveError(',
+     '    if False:\n        raise PreserveError(',
+     "g74_1_01 or g74_1_02 or g74_1_03 or g74_1_05"),
+    ("plan-scope-required-at-entry-g74", PRESERVE,                         # G74-3 진입
+     '    if e.get("claim_scope") not in CLAIM_SCOPE:\n        raise PreserveError(',
+     '    if False:\n        raise PreserveError(',
+     "g74_3_06c"),
+    ("finalize-routes-by-scope-g74", PRESERVE,                             # G74-3 생산
+     '            roster = CLAIM_SCOPE_ROSTER[scope]\n',
+     '            roster = "legs"\n',
+     "g74_3_06a"),
+    ("executed-legs-only-hold-no-active-claim-legs-g74", PRESERVE,         # G74-3 반대 방향
+     '            if ent is None or ent["status"] != "executed" \\\n'
+     '                    or ent["authorization_kind"] != "prospective" \\\n'
+     '                    or _executed_scope(ent, record_scopes) != "no_active_claim":',
+     '            if False:',
+     "g74_3_04c"),
+    ("index-merge-keeps-other-entries-g74", ARCHSH,                        # G74-4 병합
+     '    runs = dict(_prev.get("runs") or {})\n',
+     '    runs = {}\n',
+     "g74_4_01 or g74_4_02"),
+    ("same-name-different-identity-is-refused-g74", ARCHSH,               # G74-4 동명 충돌
+     'if ent.get("payload_index_sha256") == got:\n    _leave(0)',
+     'if True:\n    _leave(0)',
+     "g74_4_03"),
     ("the-replay-context-is-measured-once-g66", MR,                          # 정적 관측
      '    ctx = ctx if ctx is not None else _\u0072eplay_context()\n'
      '    want = _parent_customization_view(ctx)',

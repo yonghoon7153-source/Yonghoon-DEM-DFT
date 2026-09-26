@@ -636,8 +636,9 @@ cohorts:
   dir: docs/22p_gap/proj_g18
   status: active
   legs:
-  - grid_fit_v5
   - paired_fixed5_v4
+  executed_legs:
+  - grid_fit_v5
   prospective_legs: []
   cross_leg_comparison: not_applicable_single_leg
   무엇이_달라졌나: 63차 게이트 리뷰(방어적 코드·회귀 검토)가 새 P1 3건 · P2 1건과 증거 공백 둘을 냈고 전부 코드에서 닫혔다 (원장
@@ -791,6 +792,7 @@ legs:
   preservation_status: full_bundle
   validation_status: historical_validated
   inference_role: diagnostic
+  claim_scope: active_claims
   근거: '2026-08-16 백업 `v4_run_extras` 에서 복구. `validate_provenance` 34검사 전부 통과 (ok=True,
     fail=[]). 다만 **현행 정본은 아니다**: run_spec 이 `source_digest: d50295f980ccaa81` 로 현행과
     다르고, `코드_identity` 검사는 (`src/io.py:1514`) run_spec 이 digest 를 갖고 dirty 가 아닌지만
@@ -852,6 +854,7 @@ legs:
   preservation_status: recorded_projection
   validation_status: unvalidated
   inference_role: diagnostic
+  claim_scope: active_claims
   근거: 현행 digest 무-warm 1차. 투영·restart 투영·summary·manifest 가 git 에 있고 자기정합은 검사된다. 원자료가
     없어 `validate_provenance` 는 영구 불가.
   evidence:
@@ -869,6 +872,7 @@ legs:
   preservation_status: recorded_projection
   validation_status: unvalidated
   inference_role: diagnostic
+  claim_scope: active_claims
   근거: 위 다리와 warm 축 하나만 다른 짝. 같은 digest·같은 예산.
   evidence:
     leg_source_digest: a72c0f3a485c19bb
@@ -885,6 +889,7 @@ legs:
   preservation_status: recorded_projection
   validation_status: unvalidated
   inference_role: confounded
+  claim_scope: active_claims
   근거: half-cell 기준. warm 이 `p_ini` 까지 함께 움직인다 (`src/fitting.py:862`) → warm 단일 축 귀속에
     쓸 수 없다 (21차 발견 4).
   evidence:
@@ -902,6 +907,7 @@ legs:
   preservation_status: recorded_projection
   validation_status: unvalidated
   inference_role: confounded
+  claim_scope: active_claims
   근거: 위 짝의 무-warm 쪽. 같은 이유로 교란 (`_CONFOUNDED_PAIRS`).
   evidence:
     leg_source_digest: a72c0f3a485c19bb
@@ -916,6 +922,7 @@ legs:
   preservation_status: recorded_projection
   validation_status: unvalidated
   inference_role: confounded
+  claim_scope: active_claims
   근거: 위와 같다. adaptive 도 켜져 있어 실제 예산 분포까지 달라진다.
   evidence:
     leg_source_digest: a72c0f3a485c19bb
@@ -930,6 +937,7 @@ legs:
   preservation_status: recorded_projection
   validation_status: unvalidated
   inference_role: diagnostic
+  claim_scope: active_claims
   근거: 교차-digest 라 애초에 diagnostic 이었다 (21차 발견 5).
   evidence:
     leg_source_digest: d842894dbbc2a0f9
@@ -945,6 +953,7 @@ legs:
   preservation_status: recorded_projection
   validation_status: unvalidated
   inference_role: diagnostic
+  claim_scope: active_claims
   근거: 위 짝의 무-warm 쪽. digest 가 달라 warm 축 짝이 아니다.
   evidence:
     leg_source_digest: a72c0f3a485c19bb
@@ -960,6 +969,11 @@ legs:
   preservation_status: full_bundle
   validation_status: current_validated
   inference_role: diagnostic
+  claim_scope: no_active_claim
+  근거: '74차 조건부 한정 실행 (원장 §98~§102). 사람의 분류 (E9 단계 5, 74차 리뷰어 권고 (c)+(b)): **진단 전용** — 어떤 활성 주장도 참조하지 않는다
+    (claim_roles 없음). cohort g18 의 승인 아래 돌았지만 투영(row projection)을 게시하지 않았으므로 투영 명부 `legs` 가 아니라 실행 명부
+    `executed_legs` 에 있다. 묶음·영수증·실행 자리·소스 결속은 full_bundle 계약 그대로 (evidence). regeneration_capability 는 사실 기록이다
+    — 묶음 payload index 에 fits.parquet·curves.parquet 원자료가 있다 (투영 생성/검증 완료를 뜻하지 않는다). 수치는 인용하지 않는다.'
   evidence:
     cohorts:
     - g18_2026_09_15
@@ -999,6 +1013,7 @@ legs:
     verification_receipt_core_sha256: 2aadd24b1de88b070e48bdda428050e6475fa7a245c4571df4771ca04ffde83a
     verification_receipt_generator: docs/22p_gap/make_receipt.py
     empty_root_restore: true
+    regeneration_capability: available_raw_present
     rescored_from_restored_fits: true
     validator_identity:
       source_digest: c2ef1a811e70bb4c

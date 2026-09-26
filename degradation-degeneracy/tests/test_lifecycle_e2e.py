@@ -78,7 +78,11 @@ conds = conditions_from_config(cfg, cli={
     "lam_pe_type": None, "lam_ne_type": None, "noise": None})
 cond_ids = sorted(c.cond_id for c in conds)
 from src.grid import live_grid_axis
+# ★ 74차 G74-1 — 계획은 고정 캐시 SHA 를 담아야 한다: 캐시를 계획 **앞에** 만든다 (runbook §0 정정).
+from src.baseline import get_discharged_state
+get_discharged_state(cfg)
 grid_axis = live_grid_axis(cfg, conds, root / out_rel)
+assert grid_axis["discharged_cache_sha256"], grid_axis
 
 ocfg = load_config("configs/objectives.yaml")
 objectives = {objective: ocfg["objectives"][objective]}
@@ -111,7 +115,8 @@ doc = {
                  "run_spec_digest": run_spec_digest(spec),
                  "run_spec": spec,
                  "recorded_on": "2026-08-28",
-                 "근거": "49차 lifecycle e2e"}],
+                 "근거": "49차 lifecycle e2e",
+                 "claim_scope": "active_claims"}],       # 74차 G74-3
     "legs": []}
 p = root / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
 p.parent.mkdir(parents=True, exist_ok=True)

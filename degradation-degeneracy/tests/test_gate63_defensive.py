@@ -465,7 +465,8 @@ def test_fit_phase_receipt_is_written_while_the_kernel_lock_is_held(monkeypatch)
                          "authorized_source_digest": source_digest(),
                          "run_spec_digest": P.run_spec_digest(spec),
                          "run_spec": spec, "recorded_on": "2026-09-15",
-                         "근거": "시험용 — 63차 E2 planned lifecycle"}],
+                         "근거": "시험용 — 63차 E2 planned lifecycle",
+                         "claim_scope": "active_claims"}],       # 74차 G74-3
             "legs": []}, allow_unicode=True, sort_keys=False), encoding="utf-8")
 
         # grid phase — production 진입점, 진짜 solver, 조건 1개
