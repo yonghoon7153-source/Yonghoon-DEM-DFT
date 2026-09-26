@@ -1,0 +1,162 @@
+{
+ "schema": "qe_input_set/v1",
+ "what": "A′ V2 2단계 (V2_hollow_fcc)",
+ "settings": {
+  "pp": {
+   "Li": "li_pbe_v1.4.uspp.F.UPF",
+   "P": "P.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "S": "s_pbe_v1.4.uspp.F.UPF",
+   "Cl": "cl_pbe_v1.4.uspp.F.UPF",
+   "Ag": "Ag_ONCV_PBE-1.0.oncvpsp.upf",
+   "C": "C.pbe-n-kjpaw_psl.1.0.0.UPF",
+   "H": "H.pbe-rrkjus_psl.1.0.0.UPF"
+  },
+  "pp_sha256": {
+   "li_pbe_v1.4.uspp.F.UPF": "02cc4b3810e28a43b570277840d9631ca24f634d922928200c047b72c0a86bf5",
+   "P.pbe-n-rrkjus_psl.1.0.0.UPF": "2d112dfec2e2d9b75a971574d9116aa92249988177791659bbcd2ba15f23c20c",
+   "s_pbe_v1.4.uspp.F.UPF": "84ad731864187f416f714e961c3ad2f04dcbf811618e724d277885c18cb470df",
+   "cl_pbe_v1.4.uspp.F.UPF": "5b1ebdea1e5ba743fba0100806206287e1f7f00460c7e6f19791446beaee0655",
+   "Ag_ONCV_PBE-1.0.oncvpsp.upf": "0494aa5927b754b42d3e72535636f215b4658e9b437e639dbc09674c36c8059a",
+   "C.pbe-n-kjpaw_psl.1.0.0.UPF": "9900d1efd50b9848e31849f39094b33348486b400ee51e0f3922f716137cf3d7",
+   "H.pbe-rrkjus_psl.1.0.0.UPF": "27f8a7e87851d59a2698237d6ab4578d62950640f4f175781b015a0ce731f962"
+  }
+ },
+ "jobs": [
+  {
+   "dir": "V2_hollow_fcc_dft_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81289,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "ba2f95ae5a5dfa146378ce35c054dd9c99df7fcd360fc652812f0d39bc302626",
+   "structure": "V2_hollow_fcc_dft_bound",
+   "tags": {
+    "structure": "V2_hollow_fcc_dft_bound",
+    "endpoint": "bound",
+    "d0_A": 3.3045
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_hollow_fcc_dft_far",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81289,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "130213d598a7f35c7f6e352bf990c4f43c3c985003fc239ebaec22aef5dc9abb",
+   "structure": "V2_hollow_fcc_dft_far",
+   "tags": {
+    "structure": "V2_hollow_fcc_dft_far",
+    "endpoint": "far"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_hollow_fcc_Ed_m03",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81289,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "4311db8f637c6f9be0fe4f2e6e58324d684dd8c27f693cb848344280d589e007",
+   "structure": "V2_hollow_fcc_Ed_m03",
+   "tags": {
+    "structure": "V2_hollow_fcc_Ed_m03",
+    "E(d)": "d0-0.3"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_hollow_fcc_Ed_p03",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81289,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "6560bcd3b92dd3f60f7a99db110221f10027722feeb732555074f91d9c6fc2ec",
+   "structure": "V2_hollow_fcc_Ed_p03",
+   "tags": {
+    "structure": "V2_hollow_fcc_Ed_p03",
+    "E(d)": "d0+0.3"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_hollow_fcc_Ed_p06",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81289,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "4793f2ba0116f89726b291e637a6f8708ad34d7e0d0a6044833181df2860c1ff",
+   "structure": "V2_hollow_fcc_Ed_p06",
+   "tags": {
+    "structure": "V2_hollow_fcc_Ed_p06",
+    "E(d)": "d0+0.6"
+   },
+   "machine": "V100 (≈3 GB)"
+  }
+ ]
+}

@@ -1,0 +1,186 @@
+{
+ "schema": "aprime_s3_v2_stage2/v1",
+ "model": "V2_hollow_fcc",
+ "pw_out_sha256": "0952dafe9b30c377cf953fb7a4618ac61d2545f0490b83bdf3eec334dec4fdfc",
+ "d0_A": 3.3045,
+ "endpoints": {
+  "c_A": 24.0501,
+  "delta_A": 4.6955,
+  "d0_A": 3.3045,
+  "gap_rule_A": 8.0,
+  "bound_gap_direct_image_A": [
+   3.3045,
+   13.6955
+  ],
+  "far_gap_direct_image_A": [
+   8.0,
+   9.0
+  ],
+  "dipfield": {
+   "tefield": true,
+   "dipfield": true,
+   "edir": 3,
+   "eamp": 0.0,
+   "emaxpos": 0.81289,
+   "eopreg": 0.04158,
+   "region_A": [
+    19.55,
+    20.55
+   ],
+   "clearance_A": {
+    "to_top_atom": 4.0,
+    "to_substrate_bottom_image": 4.0
+   },
+   "min_clear_rule_A": 4.0,
+   "width_A": 1.0,
+   "empty_in_both_endpoints": true,
+   "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+  }
+ },
+ "structures_sha256": {
+  "V2_hollow_fcc_dft_bound": "de233665846871474dda6e762929e438ebd6a97f3dc333c2159db75b885e008a",
+  "V2_hollow_fcc_dft_far": "e624e5ce05a7828adff24b360afc197d571c5898b2df936d233ac48b8667f44a",
+  "V2_hollow_fcc_Ed_m03": "442493ff585ca8a32b883194fa2d3f588813eb61eed199909c0bd1ac79da2e03",
+  "V2_hollow_fcc_Ed_p03": "40904547d551cb497c639d88116cfd09813dd91030183152252ac00174ee9983",
+  "V2_hollow_fcc_Ed_p06": "36029adfa48663882a48dcbb100a73c6c8b26d334d85e0b19d6ed5a1d633bb73"
+ },
+ "jobs": [
+  {
+   "dir": "V2_hollow_fcc_dft_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81289,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "ba2f95ae5a5dfa146378ce35c054dd9c99df7fcd360fc652812f0d39bc302626",
+   "structure": "V2_hollow_fcc_dft_bound",
+   "tags": {
+    "structure": "V2_hollow_fcc_dft_bound",
+    "endpoint": "bound",
+    "d0_A": 3.3045
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_hollow_fcc_dft_far",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81289,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "130213d598a7f35c7f6e352bf990c4f43c3c985003fc239ebaec22aef5dc9abb",
+   "structure": "V2_hollow_fcc_dft_far",
+   "tags": {
+    "structure": "V2_hollow_fcc_dft_far",
+    "endpoint": "far"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_hollow_fcc_Ed_m03",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81289,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "4311db8f637c6f9be0fe4f2e6e58324d684dd8c27f693cb848344280d589e007",
+   "structure": "V2_hollow_fcc_Ed_m03",
+   "tags": {
+    "structure": "V2_hollow_fcc_Ed_m03",
+    "E(d)": "d0-0.3"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_hollow_fcc_Ed_p03",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81289,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "6560bcd3b92dd3f60f7a99db110221f10027722feeb732555074f91d9c6fc2ec",
+   "structure": "V2_hollow_fcc_Ed_p03",
+   "tags": {
+    "structure": "V2_hollow_fcc_Ed_p03",
+    "E(d)": "d0+0.3"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_hollow_fcc_Ed_p06",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81289,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "4793f2ba0116f89726b291e637a6f8708ad34d7e0d0a6044833181df2860c1ff",
+   "structure": "V2_hollow_fcc_Ed_p06",
+   "tags": {
+    "structure": "V2_hollow_fcc_Ed_p06",
+    "E(d)": "d0+0.6"
+   },
+   "machine": "V100 (≈3 GB)"
+  }
+ ],
+ "rule": "카드 v5 V2: d₀ = 제약 아래 DFT 국소 이완 간격 · E(d) = d₀−0.3 · +0.3 · +0.6 · far (≥ 8/8) · G3 (i)(ii) · G4 (e70 · k 7×7×1 · smearing ½)"
+}

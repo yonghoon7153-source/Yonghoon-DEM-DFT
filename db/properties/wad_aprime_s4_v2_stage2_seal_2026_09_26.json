@@ -1,0 +1,600 @@
+{
+ "schema": "prereg_stage_seal/v1",
+ "stage": "S4-1 부록 (V2 2단계 좌표)",
+ "date": "2026-09-26",
+ "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json",
+ "card_content_digest": "126aa58ebdc4803b9615efe165619162fb087dccc201dd699f9c0a09a90e09b1",
+ "parent_seal": {
+  "file": "db/properties/wad_aprime_s3v2_seal_2026_09_26.json",
+  "content_digest": "6df8c01382a17b61f5f49248c09f55d459cb7856d8edf5de911110dc26618d58"
+ },
+ "rule": "카드 v5 V2 · S3v2 봉인 'V2_2단계': 각 registry 의 제약 DFT relax(S4-1) 최종 좌표에서 d₀ = min z(C) − max z(Ag) · E(d) = d₀ −0.3 · +0.3 · +0.6 (흡착층 강체 이동) · far (직접·영상 ≥ 8 · 여유 1 · 같은 c) · 대표점 V2_top_fcc 에 G3 (c+2 · bound · far i·ii) · G4 (e70/700 · k 7×7×1 · smearing ½) · 쌍극자 구간 = 개정 2 (dip_region)",
+ "S4-1_input": {
+  "S3v2_manifest_sha256": "069894c62daa1bf863cebba3533fb0c79e70fd16a9b4d77cf7ea5ac41512246d",
+  "raw": "db/raw/wad_aprime_s4_v2_s3v2_2026_09_26 (commit 43cf9c6fe · V100 · 4 잡 bfgs converged 1 스텝 · Potential amp. 0.0035 Ry · 벽시계 232–307 s · 피크 2752 MiB)"
+ },
+ "builder": {
+  "tools/wad/build_aprime_s3.py": "a64c998e8ec67cd97d8c73423b27e936064ff3f4370bc0dbd8dd048e1848facc",
+  "tools/wad/build_aprime_interfaces.py": "85c7338c63266674d43403c6d6d0a73e6712433d884e9ef0221d3d80b93f29f7",
+  "tools/wad/se_sym_slab.py": "7ec9e7b6c6538662d4c311a13b8af2f99c3103392e4722ac03724c371f23d3a1"
+ },
+ "registries": {
+  "V2_bridge": {
+   "d0_A": 3.3017,
+   "pw_out": "db/raw/wad_aprime_s4_v2_s3v2_2026_09_26/V2_bridge_relax/pw.out",
+   "pw_out_sha256": "2b64c0d1e19213a8a6328aac4f9b9810231eade035ce12331ffd2bdc1b135bae",
+   "c_A": 24.0527,
+   "far_gap_direct_image_A": [
+    8.0,
+    9.0
+   ],
+   "dipfield_region_A": [
+    19.553,
+    20.553
+   ],
+   "dip_clearance_A": {
+    "to_top_atom": 4.0,
+    "to_substrate_bottom_image": 4.0
+   },
+   "E(d)_d_A": [
+    3.0017,
+    3.6017,
+    3.9017
+   ],
+   "structures_sha256": {
+    "V2_bridge_dft_bound": "2ff655dde17e9ff5414279099ce7aa661e0adc54b0252c27fe9c86f9ec9c9269",
+    "V2_bridge_dft_far": "2fc5b53713965461b2063ba85d509649c1d95a9ed2411929823c8794552f26a4",
+    "V2_bridge_Ed_m03": "908927d931302f49192763c364ddf1a175c9c1c487b6485633db12e4dc2c3f13",
+    "V2_bridge_Ed_p03": "f91c18b366f4e8a6531e3932b632fb4598906bf04a90e14b4e9fc4ce6f67d9cd",
+    "V2_bridge_Ed_p06": "cbcdc4e21669cb6e8b195d08a4d42e3f84a18e8e091b3784b9dfdc205a02c9a0"
+   },
+   "jobs": {
+    "V2_bridge_dft_bound": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "84279a56672145cf14f3dd61ea4648198b488e7b874c81019b011875e498fee3",
+     "tags": {
+      "structure": "V2_bridge_dft_bound",
+      "endpoint": "bound",
+      "d0_A": 3.3017
+     }
+    },
+    "V2_bridge_dft_far": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "efc7b84dcaceee14180206835a2dc144af591acd1685befd7f889a160b35833e",
+     "tags": {
+      "structure": "V2_bridge_dft_far",
+      "endpoint": "far"
+     }
+    },
+    "V2_bridge_Ed_m03": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "583e523007f89c068965a014bd3627d8db423c227c5664cbcb26221091b40797",
+     "tags": {
+      "structure": "V2_bridge_Ed_m03",
+      "E(d)": "d0-0.3"
+     }
+    },
+    "V2_bridge_Ed_p03": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "b747a469d58c1b9b14716c42475c95afd613fc7e6f92c268b3b8e34930a01a0c",
+     "tags": {
+      "structure": "V2_bridge_Ed_p03",
+      "E(d)": "d0+0.3"
+     }
+    },
+    "V2_bridge_Ed_p06": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "864e36f842b4541e4e93633d3d8939d0f4c24d4677454174e1176106bae2d656",
+     "tags": {
+      "structure": "V2_bridge_Ed_p06",
+      "E(d)": "d0+0.6"
+     }
+    }
+   },
+   "manifest_sha256": "cce2e65ca26e1b7bc93aa9a462aa8c780f2d707befdc91ec87817746f9625d7b",
+   "jobs_json_sha256": "7ca8d3048b8bd37aeb4c2ea1e69ae7933b0b51dcb3b98ea462b9eb03a198fe37",
+   "qe_jobs_json_copy_identical": true
+  },
+  "V2_hollow_fcc": {
+   "d0_A": 3.3045,
+   "pw_out": "db/raw/wad_aprime_s4_v2_s3v2_2026_09_26/V2_hollow_fcc_relax/pw.out",
+   "pw_out_sha256": "0952dafe9b30c377cf953fb7a4618ac61d2545f0490b83bdf3eec334dec4fdfc",
+   "c_A": 24.0501,
+   "far_gap_direct_image_A": [
+    8.0,
+    9.0
+   ],
+   "dipfield_region_A": [
+    19.55,
+    20.55
+   ],
+   "dip_clearance_A": {
+    "to_top_atom": 4.0,
+    "to_substrate_bottom_image": 4.0
+   },
+   "E(d)_d_A": [
+    3.0045,
+    3.6045,
+    3.9045
+   ],
+   "structures_sha256": {
+    "V2_hollow_fcc_dft_bound": "de233665846871474dda6e762929e438ebd6a97f3dc333c2159db75b885e008a",
+    "V2_hollow_fcc_dft_far": "e624e5ce05a7828adff24b360afc197d571c5898b2df936d233ac48b8667f44a",
+    "V2_hollow_fcc_Ed_m03": "442493ff585ca8a32b883194fa2d3f588813eb61eed199909c0bd1ac79da2e03",
+    "V2_hollow_fcc_Ed_p03": "40904547d551cb497c639d88116cfd09813dd91030183152252ac00174ee9983",
+    "V2_hollow_fcc_Ed_p06": "36029adfa48663882a48dcbb100a73c6c8b26d334d85e0b19d6ed5a1d633bb73"
+   },
+   "jobs": {
+    "V2_hollow_fcc_dft_bound": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "ba2f95ae5a5dfa146378ce35c054dd9c99df7fcd360fc652812f0d39bc302626",
+     "tags": {
+      "structure": "V2_hollow_fcc_dft_bound",
+      "endpoint": "bound",
+      "d0_A": 3.3045
+     }
+    },
+    "V2_hollow_fcc_dft_far": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "130213d598a7f35c7f6e352bf990c4f43c3c985003fc239ebaec22aef5dc9abb",
+     "tags": {
+      "structure": "V2_hollow_fcc_dft_far",
+      "endpoint": "far"
+     }
+    },
+    "V2_hollow_fcc_Ed_m03": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "4311db8f637c6f9be0fe4f2e6e58324d684dd8c27f693cb848344280d589e007",
+     "tags": {
+      "structure": "V2_hollow_fcc_Ed_m03",
+      "E(d)": "d0-0.3"
+     }
+    },
+    "V2_hollow_fcc_Ed_p03": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "6560bcd3b92dd3f60f7a99db110221f10027722feeb732555074f91d9c6fc2ec",
+     "tags": {
+      "structure": "V2_hollow_fcc_Ed_p03",
+      "E(d)": "d0+0.3"
+     }
+    },
+    "V2_hollow_fcc_Ed_p06": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "4793f2ba0116f89726b291e637a6f8708ad34d7e0d0a6044833181df2860c1ff",
+     "tags": {
+      "structure": "V2_hollow_fcc_Ed_p06",
+      "E(d)": "d0+0.6"
+     }
+    }
+   },
+   "manifest_sha256": "1ce2d30f923f9dd05891735576c255ec3ab6954a362ee94ed6a2a69f34fb545f",
+   "jobs_json_sha256": "afe209fa1758b8fbb57b6eda4f49089158c085f73ea45e821e001d4227da0700",
+   "qe_jobs_json_copy_identical": true
+  },
+  "V2_top_fcc": {
+   "d0_A": 3.3017,
+   "pw_out": "db/raw/wad_aprime_s4_v2_s3v2_2026_09_26/V2_top_fcc_relax/pw.out",
+   "pw_out_sha256": "f8f60724e427fd7176fab6ed15d74ed1814214e7030a345c436810c7d6637068",
+   "c_A": 24.0527,
+   "far_gap_direct_image_A": [
+    8.0,
+    9.0
+   ],
+   "dipfield_region_A": [
+    19.553,
+    20.553
+   ],
+   "dip_clearance_A": {
+    "to_top_atom": 4.0,
+    "to_substrate_bottom_image": 4.0
+   },
+   "E(d)_d_A": [
+    3.0017,
+    3.6017,
+    3.9017
+   ],
+   "structures_sha256": {
+    "V2_top_fcc_dft_bound": "085195d675a30e1257e0814c6cc0eff0d5ef57595c8d63bf8c6784e94df20f2b",
+    "V2_top_fcc_dft_far": "ccf34b2a3d68faff520220c38e829296342cfca87745b2b67cab137795a831fc",
+    "V2_top_fcc_Ed_m03": "2d4fb3f3892be4e31c2bc6c0ac55daa95f828a338ead3fb1bffccfc6cc264c63",
+    "V2_top_fcc_Ed_p03": "d32ba7632aece2e524399c2c1ad30817a3d1c6d2540deb90e1dbc22778ba9f01",
+    "V2_top_fcc_Ed_p06": "d3717be51f9fa368e74030e0875ad7014582365e5f05e0ee07b0a3a75a72ca53",
+    "V2_top_fcc_G3_c2_bound": "074e5ec148bab41ee9a48a74392f05110e0b616a260260578a8735299159d1f3",
+    "V2_top_fcc_G3_c2_far_i": "a21bc3642d9382f728473e0ac9e01d00a62688a1041f121c604b50fbac453072",
+    "V2_top_fcc_G3_c2_far_ii": "9a50360294456ebc7828798324e2f99d4bdb0df94a8b0ad615363f07967bb2f0"
+   },
+   "jobs": {
+    "V2_top_fcc_dft_bound": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "7eb4fc802de4a5058692bb9342919cba89be77b1c9e8597d5d4dc5578d990260",
+     "tags": {
+      "structure": "V2_top_fcc_dft_bound",
+      "endpoint": "bound",
+      "d0_A": 3.3017
+     }
+    },
+    "V2_top_fcc_dft_far": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "3f50a3c0d18ee173432c2420841fc69302db06d8795b01bc557b1274fdb55911",
+     "tags": {
+      "structure": "V2_top_fcc_dft_far",
+      "endpoint": "far"
+     }
+    },
+    "V2_top_fcc_Ed_m03": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "6f7aa4fa3b533d36babcdc7d3cfbdebef74f755090fb5019cd2ff65f3ad11846",
+     "tags": {
+      "structure": "V2_top_fcc_Ed_m03",
+      "E(d)": "d0-0.3"
+     }
+    },
+    "V2_top_fcc_Ed_p03": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "b6fc48b35819515d7899120f17cb15c39ab69560a673d42dd24f87477a80b37a",
+     "tags": {
+      "structure": "V2_top_fcc_Ed_p03",
+      "E(d)": "d0+0.3"
+     }
+    },
+    "V2_top_fcc_Ed_p06": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "d52d7631e5927d06c9f286c2bd7d785a16c40f4c5a61519324ee28067bcd21b0",
+     "tags": {
+      "structure": "V2_top_fcc_Ed_p06",
+      "E(d)": "d0+0.6"
+     }
+    },
+    "V2_top_fcc_G3_c2_bound": {
+     "kind": "g3",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "4aa9e0c53fa2f7bbe9fe5511ffcac6d7d285d34b2129504b0935c0326c587002",
+     "tags": {
+      "structure": "V2_top_fcc_G3_c2_bound",
+      "G3": "G3_c2_bound"
+     }
+    },
+    "V2_top_fcc_G3_c2_far_i": {
+     "kind": "g3",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "9d3814cfcc4cfbddbca8e277de06cf12d58e7a7f2b7bc92507b7714886767ca0",
+     "tags": {
+      "structure": "V2_top_fcc_G3_c2_far_i",
+      "G3": "G3_c2_far_i"
+     }
+    },
+    "V2_top_fcc_G3_c2_far_ii": {
+     "kind": "g3",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "3d9720992e87ef020547691655e7de918f90d9118366841f7344e98d8fb89727",
+     "tags": {
+      "structure": "V2_top_fcc_G3_c2_far_ii",
+      "G3": "G3_c2_far_ii"
+     }
+    },
+    "V2_top_fcc_G4_e70_bound": {
+     "kind": "g4",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 70.0,
+     "pw_in_sha256": "815fc45aabf4efcb1bf2f9d32bdc048eb7418fabdbd8bdc5d2d7d54099fad676",
+     "tags": {
+      "structure": "V2_top_fcc_dft_bound",
+      "G4": "G4_e70_bound"
+     }
+    },
+    "V2_top_fcc_G4_e70_far": {
+     "kind": "g4",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 70.0,
+     "pw_in_sha256": "f31dc27819e5947e5b124e399b02d6da964ea6ee98ec2e115b86496084bd421d",
+     "tags": {
+      "structure": "V2_top_fcc_dft_far",
+      "G4": "G4_e70_far"
+     }
+    },
+    "V2_top_fcc_G4_k1_bound": {
+     "kind": "g4",
+     "kpts": [
+      7,
+      7,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "ef56138059a85d8ef0e66e27f43771d4818b31eba6710c636fcaa1e1ce354696",
+     "tags": {
+      "structure": "V2_top_fcc_dft_bound",
+      "G4": "G4_k1_bound"
+     }
+    },
+    "V2_top_fcc_G4_k1_far": {
+     "kind": "g4",
+     "kpts": [
+      7,
+      7,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "38e16d82a2592c20f3950addcbc7c83b7f570b07d7c860047782038c5cf3fb70",
+     "tags": {
+      "structure": "V2_top_fcc_dft_far",
+      "G4": "G4_k1_far"
+     }
+    },
+    "V2_top_fcc_G4_s05_bound": {
+     "kind": "g4",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "tags": {
+      "structure": "V2_top_fcc_dft_bound",
+      "G4": "G4_s05_bound",
+      "degauss_halved": true
+     }
+    },
+    "V2_top_fcc_G4_s05_far": {
+     "kind": "g4",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "tags": {
+      "structure": "V2_top_fcc_dft_far",
+      "G4": "G4_s05_far",
+      "degauss_halved": true
+     }
+    }
+   },
+   "manifest_sha256": "73bec756e048f14fc7112a73605ccaa3265154fbe85606bc9fb9fe2c16a3a563",
+   "jobs_json_sha256": "8628f611e085eeb280592601d4b8d1a95f54cc3e948f478cce2b4cf72d338dfc",
+   "qe_jobs_json_copy_identical": true
+  },
+  "V2_top_hcp": {
+   "d0_A": 3.3045,
+   "pw_out": "db/raw/wad_aprime_s4_v2_s3v2_2026_09_26/V2_top_hcp_relax/pw.out",
+   "pw_out_sha256": "3ef558f8b73e69ec0d53c329b9a8baf1b24d1ba265c6c28a9dcdb9889bcd4716",
+   "c_A": 24.0501,
+   "far_gap_direct_image_A": [
+    8.0,
+    9.0
+   ],
+   "dipfield_region_A": [
+    19.55,
+    20.55
+   ],
+   "dip_clearance_A": {
+    "to_top_atom": 4.0,
+    "to_substrate_bottom_image": 4.0
+   },
+   "E(d)_d_A": [
+    3.0045,
+    3.6045,
+    3.9045
+   ],
+   "structures_sha256": {
+    "V2_top_hcp_dft_bound": "b98e9ac067b75500be6df39e2ae9c2254497304d050bb2153ffc89c058f84d4d",
+    "V2_top_hcp_dft_far": "239b418df63a64921eaeaafa16060645b8ca3a7c39d678cc25aa53b09b002c19",
+    "V2_top_hcp_Ed_m03": "7f7955c57954dacd76e4185fd164876579629282dc686e38558fbb62b7f43228",
+    "V2_top_hcp_Ed_p03": "473abe5f84f9e94b8ce10d35d0d96d69299ee18f0ef58403d5510e2a57636bce",
+    "V2_top_hcp_Ed_p06": "1c11dc523bd1a0b9439b9df89d46dca02e45e6a02284d6faad9ace56c6a8b810"
+   },
+   "jobs": {
+    "V2_top_hcp_dft_bound": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "c124d182ce4bff34d44c6ff14d1033f8430e4b2cdf9f339753a7b3f3efeca0c0",
+     "tags": {
+      "structure": "V2_top_hcp_dft_bound",
+      "endpoint": "bound",
+      "d0_A": 3.3045
+     }
+    },
+    "V2_top_hcp_dft_far": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "b491b35d707d525707f9eac82b6f1002cc536a8f4d31008b4dcf6b372e6781d0",
+     "tags": {
+      "structure": "V2_top_hcp_dft_far",
+      "endpoint": "far"
+     }
+    },
+    "V2_top_hcp_Ed_m03": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "08a55e058bcb7088dbc3e460b027f28e6ebff7b539971b436268ac8a347234eb",
+     "tags": {
+      "structure": "V2_top_hcp_Ed_m03",
+      "E(d)": "d0-0.3"
+     }
+    },
+    "V2_top_hcp_Ed_p03": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "310b86895d42c757d2a0ae285cac7d640bb14fe8602cb549128d519a996298ad",
+     "tags": {
+      "structure": "V2_top_hcp_Ed_p03",
+      "E(d)": "d0+0.3"
+     }
+    },
+    "V2_top_hcp_Ed_p06": {
+     "kind": "scf",
+     "kpts": [
+      6,
+      6,
+      1
+     ],
+     "ecutwfc": 52.0,
+     "pw_in_sha256": "0f54ac6e0950fcd0b8bd39eb9db2eced55650938763b072b57837c3bfba191ea",
+     "tags": {
+      "structure": "V2_top_hcp_Ed_p06",
+      "E(d)": "d0+0.6"
+     }
+    }
+   },
+   "manifest_sha256": "1c63ae2ea29f3a28d4c9d4496dbad664e71a4646c426525ed57fadd5fed69362",
+   "jobs_json_sha256": "8585ee934a36e61ae1be0c1652a3db2b29dc6eb01fc9417ec16cf7f8e2ff1cb2",
+   "qe_jobs_json_copy_identical": true
+  }
+ },
+ "n_jobs": 29,
+ "읽기_결과_전": {
+  "d0": "네 registry 의 d₀ 가 3.3017/3.3045 Å 로 UMA+D3 시작값(3.30)과 사실상 같다 — S4-1 이 1 BFGS 스텝에 수렴한 것과 정합. registry 별 차이 0.003 Å 는 물리흡착 그래핀의 registry 둔감성과 맞다 (판정 아님 · 기록).",
+  "실행_집합": "29 잡 전부 (V100 · 20 원자 · scf) — dft_bound · dft_far · Ed ×3 (registry 4) + G3 ×3 · G4 ×6 (대표점 top_fcc)",
+  "W_읽기": "W_PBE+D3(registry) = [E_far − E_bound]/A (QE `!` F · E_int 병기) · E(d) 3 점은 d₀ 가 DFT 국소 최소인지(카드 G-rule) 보는 진단 · G3·G4 는 카드 문턱(|ΔW| ≤ 0.01/0.02 J/m²) · UMA 쪽 W 는 개정 1 (D3 = QE 출력)"
+ },
+ "⛔": "이 부록의 좌표·입력을 바꾸지 않는다 · 결과를 보고 잡을 더하거나 빼지 않는다 · 실패 잡은 세고 기록",
+ "status": "proposed — 1저자 '비준' 대기 (좌표는 사전 봉인 규칙의 기계적 산출 · 새 선택 없음)",
+ "status_history": [
+  {
+   "at": "2026-09-26",
+   "state": "proposed",
+   "by": "claude-session-2026-09-26",
+   "note": "S4-1 원출력(43cf9c6fe)에서 --v2_ed 로 생성"
+  }
+ ],
+ "ratification": {
+  "state": "proposed",
+  "role": "scientific_owner",
+  "by": "1저자 (사용자 · 트랙 W_ad)",
+  "⚠_digest_의_뜻": "비준 시 ratification 을 뺀 봉인 기록의 sha256 을 기입"
+ }
+}

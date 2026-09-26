@@ -1,0 +1,407 @@
+{
+ "schema": "qe_input_set/v1",
+ "what": "A′ V2 2단계 (V2_top_fcc)",
+ "settings": {
+  "pp": {
+   "Li": "li_pbe_v1.4.uspp.F.UPF",
+   "P": "P.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "S": "s_pbe_v1.4.uspp.F.UPF",
+   "Cl": "cl_pbe_v1.4.uspp.F.UPF",
+   "Ag": "Ag_ONCV_PBE-1.0.oncvpsp.upf",
+   "C": "C.pbe-n-kjpaw_psl.1.0.0.UPF",
+   "H": "H.pbe-rrkjus_psl.1.0.0.UPF"
+  },
+  "pp_sha256": {
+   "li_pbe_v1.4.uspp.F.UPF": "02cc4b3810e28a43b570277840d9631ca24f634d922928200c047b72c0a86bf5",
+   "P.pbe-n-rrkjus_psl.1.0.0.UPF": "2d112dfec2e2d9b75a971574d9116aa92249988177791659bbcd2ba15f23c20c",
+   "s_pbe_v1.4.uspp.F.UPF": "84ad731864187f416f714e961c3ad2f04dcbf811618e724d277885c18cb470df",
+   "cl_pbe_v1.4.uspp.F.UPF": "5b1ebdea1e5ba743fba0100806206287e1f7f00460c7e6f19791446beaee0655",
+   "Ag_ONCV_PBE-1.0.oncvpsp.upf": "0494aa5927b754b42d3e72535636f215b4658e9b437e639dbc09674c36c8059a",
+   "C.pbe-n-kjpaw_psl.1.0.0.UPF": "9900d1efd50b9848e31849f39094b33348486b400ee51e0f3922f716137cf3d7",
+   "H.pbe-rrkjus_psl.1.0.0.UPF": "27f8a7e87851d59a2698237d6ab4578d62950640f4f175781b015a0ce731f962"
+  }
+ },
+ "jobs": [
+  {
+   "dir": "V2_top_fcc_dft_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "7eb4fc802de4a5058692bb9342919cba89be77b1c9e8597d5d4dc5578d990260",
+   "structure": "V2_top_fcc_dft_bound",
+   "tags": {
+    "structure": "V2_top_fcc_dft_bound",
+    "endpoint": "bound",
+    "d0_A": 3.3017
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_dft_far",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "3f50a3c0d18ee173432c2420841fc69302db06d8795b01bc557b1274fdb55911",
+   "structure": "V2_top_fcc_dft_far",
+   "tags": {
+    "structure": "V2_top_fcc_dft_far",
+    "endpoint": "far"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_Ed_m03",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "6f7aa4fa3b533d36babcdc7d3cfbdebef74f755090fb5019cd2ff65f3ad11846",
+   "structure": "V2_top_fcc_Ed_m03",
+   "tags": {
+    "structure": "V2_top_fcc_Ed_m03",
+    "E(d)": "d0-0.3"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_Ed_p03",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "b6fc48b35819515d7899120f17cb15c39ab69560a673d42dd24f87477a80b37a",
+   "structure": "V2_top_fcc_Ed_p03",
+   "tags": {
+    "structure": "V2_top_fcc_Ed_p03",
+    "E(d)": "d0+0.3"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_Ed_p06",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "d52d7631e5927d06c9f286c2bd7d785a16c40f4c5a61519324ee28067bcd21b0",
+   "structure": "V2_top_fcc_Ed_p06",
+   "tags": {
+    "structure": "V2_top_fcc_Ed_p06",
+    "E(d)": "d0+0.6"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G3_c2_bound",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.82727,
+    "eopreg": 0.03838
+   },
+   "pw_in_sha256": "4aa9e0c53fa2f7bbe9fe5511ffcac6d7d285d34b2129504b0935c0326c587002",
+   "structure": "V2_top_fcc_G3_c2_bound",
+   "tags": {
+    "structure": "V2_top_fcc_G3_c2_bound",
+    "G3": "G3_c2_bound"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G3_c2_far_i",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.82727,
+    "eopreg": 0.03838
+   },
+   "pw_in_sha256": "9d3814cfcc4cfbddbca8e277de06cf12d58e7a7f2b7bc92507b7714886767ca0",
+   "structure": "V2_top_fcc_G3_c2_far_i",
+   "tags": {
+    "structure": "V2_top_fcc_G3_c2_far_i",
+    "G3": "G3_c2_far_i"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G3_c2_far_ii",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.82727,
+    "eopreg": 0.03838
+   },
+   "pw_in_sha256": "3d9720992e87ef020547691655e7de918f90d9118366841f7344e98d8fb89727",
+   "structure": "V2_top_fcc_G3_c2_far_ii",
+   "tags": {
+    "structure": "V2_top_fcc_G3_c2_far_ii",
+    "G3": "G3_c2_far_ii"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G4_e70_bound",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 70.0,
+   "ecutrho": 700.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "815fc45aabf4efcb1bf2f9d32bdc048eb7418fabdbd8bdc5d2d7d54099fad676",
+   "structure": "V2_top_fcc_dft_bound",
+   "tags": {
+    "structure": "V2_top_fcc_dft_bound",
+    "G4": "G4_e70_bound"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G4_e70_far",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 70.0,
+   "ecutrho": 700.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "f31dc27819e5947e5b124e399b02d6da964ea6ee98ec2e115b86496084bd421d",
+   "structure": "V2_top_fcc_dft_far",
+   "tags": {
+    "structure": "V2_top_fcc_dft_far",
+    "G4": "G4_e70_far"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G4_k1_bound",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    7,
+    7,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "ef56138059a85d8ef0e66e27f43771d4818b31eba6710c636fcaa1e1ce354696",
+   "structure": "V2_top_fcc_dft_bound",
+   "tags": {
+    "structure": "V2_top_fcc_dft_bound",
+    "G4": "G4_k1_bound"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G4_k1_far",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    7,
+    7,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "38e16d82a2592c20f3950addcbc7c83b7f570b07d7c860047782038c5cf3fb70",
+   "structure": "V2_top_fcc_dft_far",
+   "tags": {
+    "structure": "V2_top_fcc_dft_far",
+    "G4": "G4_k1_far"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G4_s05_bound",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "structure": "V2_top_fcc_dft_bound",
+   "tags": {
+    "structure": "V2_top_fcc_dft_bound",
+    "G4": "G4_s05_bound",
+    "degauss_halved": true
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G4_s05_far",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "structure": "V2_top_fcc_dft_far",
+   "tags": {
+    "structure": "V2_top_fcc_dft_far",
+    "G4": "G4_s05_far",
+    "degauss_halved": true
+   },
+   "machine": "V100 (≈3 GB)"
+  }
+ ]
+}

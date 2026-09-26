@@ -771,6 +771,11 @@
    "date": "2026-09-26",
    "stage": "dft",
    "text": "**S4-1 완료 (V100 · S3v2 입력 · 18:58–19:16)** — V2 relax 4 잡 전부 `bfgs converged in 2 scf cycles and 1 bfgs steps` (잡당 ≈4 분 · 2.75 GB) · 첫 SCF 톱니 진폭 **0.0035 Ry** (실패본 7.26 Ry 의 1/2000) · 초기 Total force 0.0028–0.0032 → 0.0025–0.0027 Ry/Bohr · uphill 0 ⇒ **재개 규칙 통과**. 읽기: UMA+D3 이완 기하에서 PBE+D3 힘의 최대 성분이 이미 forc_conv_thr(1e-3 Ry/Bohr ≈ 0.026 eV/Å) 아래 — d₀ 는 UMA 값과 사실상 같다(2단계에서 수치로 확인). 다음: 원출력 회수(V100 → kgy → repo db/raw) → `--v2_ed` 2단계 입력 4 세트 → 부록 봉인 → V100 실행."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**V2 2단계 입력 생성** (`build_aprime_s3.py --v2_ed` × 4 · S4-1 원출력 43cf9c6fe): d₀ = 3.3017 (top_fcc·bridge) / 3.3045 Å (hollow_fcc·top_hcp) — UMA+D3 시작값 3.30 과 사실상 같음 · E(d) = d₀ −0.3/+0.3/+0.6 · far 8/9 Å · 쌍극자 여유 4.0/4.0 · 잡 **29** (registry 4 × 5 + 대표점 top_fcc 의 G3 3 · G4 6). 부록 봉인 `db/properties/wad_aprime_s4_v2_stage2_seal_2026_09_26.json` **proposed** → 1저자 비준 → V100 실행."
   }
  ],
  "related_decisions": [
