@@ -1,7 +1,7 @@
 {
  "schema": "qe_input_set/v1",
  "date": "2026-09-26",
- "what": "A′ V2 2단계 보조 잡 (부록 정오 1) — V2_top_fcc_G4_k1_far 재실행 · mixing_beta 0.1 · run_sese_gpu.sh 호환",
+ "what": "A′ V2 2단계 보조 잡 (부록 정오 1·2) — k1_far_b01 (mixing 0.1) · s05_bound_r1 · s05_far_r1 (빈 입력 재생성) · run_sese_gpu.sh 호환",
  "decisions": null,
  "settings": {
   "pp": {
@@ -52,6 +52,68 @@
     "substitutes": "V2_top_fcc_G4_k1_far",
     "changed": "mixing_beta 0.3 → 0.1 (local-TF · 그 외 동일)",
     "why": "원 잡 SCF 200 회 미수렴 (정확도 1e-6 진동 · sloshing) — 1저자 (가) 2026-09-26"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G4_s05_bound_r1",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "4005920de96f1aada707a2f9887291f6d43e30e9531838fa072635f0bdc2f1f9",
+   "structure": "V2_top_fcc_dft_bound",
+   "tags": {
+    "structure": "V2_top_fcc_dft_bound",
+    "G4": "G4_s05_bound",
+    "degauss_halved": true,
+    "substitutes": "V2_top_fcc_G4_s05_bound",
+    "changed": "없음 — 원 잡 입력이 빈 파일(빌더 결함)이라 규칙대로 다시 생성 (base 에 degauss 0.01 → 0.005 · prefix 만 다름)",
+    "why": "부록 정오 2"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_G4_s05_far_r1",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "ccc0cf34a0a377c7eb255209af845ead392dcc3a045f735d2706040fc8b3db7c",
+   "structure": "V2_top_fcc_dft_far",
+   "tags": {
+    "structure": "V2_top_fcc_dft_far",
+    "G4": "G4_s05_far",
+    "degauss_halved": true,
+    "substitutes": "V2_top_fcc_G4_s05_far",
+    "changed": "없음 — 원 잡 입력이 빈 파일(빌더 결함)이라 규칙대로 다시 생성 (base 에 degauss 0.01 → 0.005 · prefix 만 다름)",
+    "why": "부록 정오 2"
    },
    "machine": "V100 (≈3 GB)"
   }

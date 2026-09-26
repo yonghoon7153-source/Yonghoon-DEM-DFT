@@ -20,6 +20,7 @@
 """
 import argparse
 import datetime as _dt
+import glob
 import hashlib
 import json
 import os
@@ -304,7 +305,12 @@ def v2_stage2(pw_out, model_dir, out, s3_manifest, pseudo_dir="/data/work/pseudo
             P.add_job(f"{name}_{tag}", a2, "V2", dip=dd, kind="g4", tags={"structure": f"{name}_dft_{'bound' if 'bound' in tag else 'far'}", "G4": tag}, **kw)
         for ep, a2 in (("bound", b), ("far", f)):
             p = P.add_job(f"{name}_G4_s05_{ep}", a2, "V2", dip=dd, kind="g4", tags={"structure": f"{name}_dft_{ep}", "G4": f"G4_s05_{ep}"})
-            open(p, "w").write(open(p).read().replace("degauss = 0.01\n", "degauss = 0.005\n")); P.jobs[-1]["pw_in_sha256"] = _sha(p); P.jobs[-1]["tags"]["degauss_halved"] = True
+            # ⛔ 2026-09-26 실측 결함: `open(p, "w").write(open(p).read()…)` 는 **쓰기용으로 먼저 열어 파일을 비운 뒤** 읽어 빈 파일을 썼다
+            #   (V100 에서 s05 두 잡이 'could not find namelist &control' 로 3 초 rc 1). build_s3 처럼 **읽고 나서** 쓴다.
+            t = open(p).read()
+            if "degauss = 0.01\n" not in t:
+                raise SlabError(f"{p}: degauss = 0.01 줄이 없다 — smearing ½ 치환 대상이 아니다")
+            open(p, "w").write(t.replace("degauss = 0.01\n", "degauss = 0.005\n")); P.jobs[-1]["pw_in_sha256"] = _sha(p); P.jobs[-1]["tags"]["degauss_halved"] = True
     add = {"schema": "aprime_s3_v2_stage2/v1", "model": name, "pw_out_sha256": _sha(pw_out), "d0_A": round(d0, 4), "endpoints": em, "structures_sha256": P.struct, "jobs": P.jobs,
            "rule": "카드 v5 V2: d₀ = 제약 아래 DFT 국소 이완 간격 · E(d) = d₀−0.3 · +0.3 · +0.6 · far (≥ 8/8) · G3 (i)(ii) · G4 (e70 · k 7×7×1 · smearing ½)"}
     json.dump(add, open(os.path.join(out, "s3_v2_stage2_manifest.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=float)
@@ -372,6 +378,12 @@ def _selftest():
         lines += ["End final coordinates", "     convergence has been achieved in   8 iterations", "!    total energy              =   -300.00100000 Ry", "     DFT-D3 Dispersion         =   -0.50000000 Ry", "   JOB DONE."]
         po = os.path.join(T, "v2.out"); open(po, "w").write("\n".join(lines) + "\n")
         add = v2_stage2(po, os.path.join(T, "a", "V2_top_fcc"), os.path.join(T, "v2s2"), os.path.join(T, "a", "s3_manifest.json"))
+        # ⛔ 2026-09-26: s05 입력이 빈 파일이었던 결함 — 내용 · degauss 0.005 · 그 외 base 와 동일 · 두 패키지(S3 · 2단계) 전수 비어 있음 0
+        for ep in ("bound", "far"):
+            s05 = open(os.path.join(T, "v2s2", "qe", f"V2_top_fcc_G4_s05_{ep}", "pw.in")).read(); base = open(os.path.join(T, "v2s2", "qe", f"V2_top_fcc_dft_{ep}", "pw.in")).read()
+            ck(f"2단계 s05_{ep}: 비어 있지 않고 degauss 0.005 · 그 외 base 와 동일", len(s05) > 500 and "degauss = 0.005" in s05 and s05.replace("degauss = 0.005\n", "degauss = 0.01\n").replace(f"G4_s05_{ep}", f"dft_{ep}") == base, len(s05))
+        empties = [q for q in glob.glob(os.path.join(T, "**", "pw.in"), recursive=True) if os.path.getsize(q) < 100]
+        ck("두 패키지 전수: 빈 pw.in 0", not empties, empties)
         d0_expect = float(b0.get_positions()[ads, 2].min() - b0.get_positions()[~ads, 2].max()) - 0.2
         ck("V2 2단계: d₀ = (S3 bound 간격 − 0.2) · E(d) 3 · far · G3 3 · G4 6 · sha 기록", abs(add["d0_A"] - d0_expect) < 1e-3 and sum(1 for j in add["jobs"] if "Ed_" in j["dir"]) == 3 and sum(1 for j in add["jobs"] if j["kind"] == "g3") == 3 and sum(1 for j in add["jobs"] if j["kind"] == "g4") == 6, (add["d0_A"], len(add["jobs"])))
         # ⛔ 음성: 이완 실패 출력 → 거부

@@ -791,6 +791,11 @@
    "date": "2026-09-26",
    "stage": "dft",
    "text": "**V2 2단계 V100 진행 — 27/29 + 1 실패**: top_hcp·bridge 5/5 · hollow_fcc 진행 · top_fcc 12/14 — `V2_top_fcc_G4_k1_far` (k 7×7 far) SCF **200 회 미수렴**(정확도 1.1e-6 ↔ 5.3e-6 진동 · sloshing · 1212 s) → 러너 정지로 G4_s05 2 잡 미실행. **1저자 (가)**: 보조 잡 `V2_top_fcc_G4_k1_far_b01` (mixing_beta 0.3 → 0.1 만 · `db/inputs/wad_aprime_s4_v2_stage2_supp_2026_09_26`) 재실행 + s05 2 잡 실행 · 원 잡 입력·실패 출력 보존 · 부록 정오 1 `wad_aprime_s4_v2_stage2_erratum_1_2026_09_26.json`. 집계기 `--supp` 대체 규칙(원 FAILED 보존 · 보조 OK 만 대체 · selftest 14/14)."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**부록 정오 2 — 빌더 결함**: V2 2단계 G4 smearing ½ 두 잡(s05_bound · s05_far)의 pw.in 이 **빈 파일**이었다 (`open(p,'w').write(open(p).read()…)` — 쓰기용으로 먼저 열어 비운 뒤 읽음 · V100 에서 3 s rc 1 'could not find namelist &control'). S3 본 패키지(V4·V5 s05)는 읽고-쓰기 순서라 정상. 고침: 빌더 순서 + degauss 가드 + selftest(s05 내용 · base 동일 · 두 패키지 빈 pw.in 0 → 19/19). 보조 잡 `V2_top_fcc_G4_s05_{bound,far}_r1` (규칙대로 재생성 · sha 4005920d… · ccc0cf34…) 을 supp 패키지에 추가 (정오 1 의 k1_far_b01 과 함께 3 잡) · 원 잡 상태 보존 · 집계기 --supp 대체. 부록 봉인은 빈 파일 sha 를 봉인한 셈 — 정오로 기록(봉인 파일 불변)."
   }
  ],
  "related_decisions": [
