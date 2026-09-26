@@ -1,0 +1,1702 @@
+table:
+- objective: pocv
+  n: 1476
+  degenerate_frac: 0.7859078590785907
+  degenerate_frac_corrected: 0.5718157181571816
+  mean_abs_err: 0.046543792934644036
+  mean_abs_err_lam_pe: 0.024575342527458202
+  mean_abs_err_lam_ne: 0.03931046635094687
+  mean_abs_err_lli: 0.016111848918568396
+  pe_ne_antisym_frac: 0.2940379403794038
+  alpha_wall_frac: 0.08333333333333333
+- objective: pocv_dvdq
+  n: 1476
+  degenerate_frac: 0.6185636856368564
+  degenerate_frac_corrected: 0.15040650406504066
+  mean_abs_err: 0.025073610613701735
+  mean_abs_err_lam_pe: 0.01907989635606358
+  mean_abs_err_lam_ne: 0.013615320315590115
+  mean_abs_err_lli: 0.015834734706932047
+  pe_ne_antisym_frac: 0.6781842818428184
+  alpha_wall_frac: 0.11788617886178862
+- objective: pocv_dvdq_dqdv
+  n: 1476
+  degenerate_frac: 0.6341463414634146
+  degenerate_frac_corrected: 0.23306233062330622
+  mean_abs_err: 0.023768922564655667
+  mean_abs_err_lam_pe: 0.021447868321661193
+  mean_abs_err_lam_ne: 0.012080894642082018
+  mean_abs_err_lli: 0.01835291353021419
+  pe_ne_antisym_frac: 0.4742547425474255
+  alpha_wall_frac: 0.09552845528455285
+- objective: dqdv_only
+  n: 1476
+  degenerate_frac: 0.7655826558265583
+  degenerate_frac_corrected: 0.6361788617886179
+  mean_abs_err: 0.04863171309536549
+  mean_abs_err_lam_pe: 0.024423163861368325
+  mean_abs_err_lam_ne: 0.04379682593865708
+  mean_abs_err_lli: 0.025528036415135957
+  pe_ne_antisym_frac: 0.21951219512195122
+  alpha_wall_frac: 0.05758807588075881
+table_all_conditions:
+- objective: pocv
+  n: 3069
+  degenerate_frac: 0.8077549690452916
+  degenerate_frac_corrected: 0.7520364939719778
+  mean_abs_err: 0.05216820961286362
+  mean_abs_err_lam_pe: 0.03414193455044917
+  mean_abs_err_lam_ne: 0.045722099903826134
+  mean_abs_err_lli: 0.018154665354291534
+  pe_ne_antisym_frac: 0.2750081459758879
+  alpha_wall_frac: 0.2261322906484197
+- objective: pocv_dvdq
+  n: 3069
+  degenerate_frac: 0.7396546106223526
+  degenerate_frac_corrected: 0.5249266862170088
+  mean_abs_err: 0.03772138771279958
+  mean_abs_err_lam_pe: 0.033501794272597515
+  mean_abs_err_lam_ne: 0.014758721619673528
+  mean_abs_err_lli: 0.01961767120448677
+  pe_ne_antisym_frac: 0.5477354187031607
+  alpha_wall_frac: 0.39459107201042687
+- objective: pocv_dvdq_dqdv
+  n: 3069
+  degenerate_frac: 0.7201042684913652
+  degenerate_frac_corrected: 0.476376669925057
+  mean_abs_err: 0.037380481914536925
+  mean_abs_err_lam_pe: 0.035418323170734504
+  mean_abs_err_lam_ne: 0.014079883829927873
+  mean_abs_err_lli: 0.022057698284165407
+  pe_ne_antisym_frac: 0.43727598566308246
+  alpha_wall_frac: 0.3496252851091561
+- objective: dqdv_only
+  n: 3069
+  degenerate_frac: 0.8025415444770283
+  degenerate_frac_corrected: 0.6937113066145324
+  mean_abs_err: 0.053470434159525466
+  mean_abs_err_lam_pe: 0.037037731164663384
+  mean_abs_err_lam_ne: 0.04587872970333415
+  mean_abs_err_lli: 0.03575528422327398
+  pe_ne_antisym_frac: 0.20462691430433366
+  alpha_wall_frac: 0.18670576735092864
+table_by_noise:
+- objective: pocv
+  noise: 0.0
+  n: 492
+  degenerate_frac: 0.7865853658536586
+  degenerate_frac_corrected: 0.5487804878048781
+  mean_abs_err: 0.045146664478814456
+  mean_abs_err_lam_pe: 0.024948673036412926
+  mean_abs_err_lam_ne: 0.03738691674719482
+  mean_abs_err_lli: 0.01631413105504171
+  pe_ne_antisym_frac: 0.28252032520325204
+  alpha_wall_frac: 0.09552845528455285
+- objective: pocv
+  noise: 0.001
+  n: 492
+  degenerate_frac: 0.7947154471544715
+  degenerate_frac_corrected: 0.6036585365853658
+  mean_abs_err: 0.04626244056446428
+  mean_abs_err_lam_pe: 0.024305873050918504
+  mean_abs_err_lam_ne: 0.03951225233930938
+  mean_abs_err_lli: 0.01599973834566819
+  pe_ne_antisym_frac: 0.2926829268292683
+  alpha_wall_frac: 0.08130081300813008
+- objective: pocv
+  noise: 0.005
+  n: 492
+  degenerate_frac: 0.7764227642276422
+  degenerate_frac_corrected: 0.5630081300813008
+  mean_abs_err: 0.048222273760653384
+  mean_abs_err_lam_pe: 0.024471481495043163
+  mean_abs_err_lam_ne: 0.041032229966336424
+  mean_abs_err_lli: 0.016021677354995288
+  pe_ne_antisym_frac: 0.30691056910569103
+  alpha_wall_frac: 0.07317073170731707
+- objective: pocv_dvdq
+  noise: 0.0
+  n: 492
+  degenerate_frac: 0.6097560975609756
+  degenerate_frac_corrected: 0.13414634146341464
+  mean_abs_err: 0.02506249306754886
+  mean_abs_err_lam_pe: 0.01932880792819737
+  mean_abs_err_lam_ne: 0.013530842384135454
+  mean_abs_err_lli: 0.015862787489789167
+  pe_ne_antisym_frac: 0.6829268292682927
+  alpha_wall_frac: 0.11585365853658537
+- objective: pocv_dvdq
+  noise: 0.001
+  n: 492
+  degenerate_frac: 0.6117886178861789
+  degenerate_frac_corrected: 0.13211382113821138
+  mean_abs_err: 0.024636528483687487
+  mean_abs_err_lam_pe: 0.018759299270993516
+  mean_abs_err_lam_ne: 0.013141637768936879
+  mean_abs_err_lli: 0.0157246731203997
+  pe_ne_antisym_frac: 0.7012195121951219
+  alpha_wall_frac: 0.11585365853658537
+- objective: pocv_dvdq
+  noise: 0.005
+  n: 492
+  degenerate_frac: 0.6341463414634146
+  degenerate_frac_corrected: 0.18495934959349594
+  mean_abs_err: 0.025521810289868864
+  mean_abs_err_lam_pe: 0.019151581868999852
+  mean_abs_err_lam_ne: 0.01417348079369801
+  mean_abs_err_lli: 0.015916743510607265
+  pe_ne_antisym_frac: 0.6504065040650406
+  alpha_wall_frac: 0.12195121951219512
+- objective: pocv_dvdq_dqdv
+  noise: 0.0
+  n: 492
+  degenerate_frac: 0.6239837398373984
+  degenerate_frac_corrected: 0.2073170731707317
+  mean_abs_err: 0.024053023561278565
+  mean_abs_err_lam_pe: 0.021837412537467082
+  mean_abs_err_lam_ne: 0.011623387050828144
+  mean_abs_err_lli: 0.018662015360600373
+  pe_ne_antisym_frac: 0.48577235772357724
+  alpha_wall_frac: 0.08130081300813008
+- objective: pocv_dvdq_dqdv
+  noise: 0.001
+  n: 492
+  degenerate_frac: 0.6463414634146342
+  degenerate_frac_corrected: 0.25203252032520324
+  mean_abs_err: 0.023863058157443162
+  mean_abs_err_lam_pe: 0.021492697855993875
+  mean_abs_err_lam_ne: 0.013085216933822119
+  mean_abs_err_lli: 0.01838273872829507
+  pe_ne_antisym_frac: 0.4613821138211382
+  alpha_wall_frac: 0.09349593495934959
+- objective: pocv_dvdq_dqdv
+  noise: 0.005
+  n: 492
+  degenerate_frac: 0.6321138211382114
+  degenerate_frac_corrected: 0.23983739837398374
+  mean_abs_err: 0.02339068597524528
+  mean_abs_err_lam_pe: 0.021013494571522618
+  mean_abs_err_lam_ne: 0.011534079941595788
+  mean_abs_err_lli: 0.018013986501747136
+  pe_ne_antisym_frac: 0.47560975609756095
+  alpha_wall_frac: 0.11178861788617886
+- objective: dqdv_only
+  noise: 0.0
+  n: 492
+  degenerate_frac: 0.7479674796747967
+  degenerate_frac_corrected: 0.6524390243902439
+  mean_abs_err: 0.04816712872910245
+  mean_abs_err_lam_pe: 0.02601699464409245
+  mean_abs_err_lam_ne: 0.04164939633165374
+  mean_abs_err_lli: 0.02600145387421636
+  pe_ne_antisym_frac: 0.23373983739837398
+  alpha_wall_frac: 0.056910569105691054
+- objective: dqdv_only
+  noise: 0.001
+  n: 492
+  degenerate_frac: 0.7621951219512195
+  degenerate_frac_corrected: 0.6036585365853658
+  mean_abs_err: 0.046882066719820925
+  mean_abs_err_lam_pe: 0.023405689697764426
+  mean_abs_err_lam_ne: 0.04250851804939224
+  mean_abs_err_lli: 0.02446620908207368
+  pe_ne_antisym_frac: 0.21138211382113822
+  alpha_wall_frac: 0.06097560975609756
+- objective: dqdv_only
+  noise: 0.005
+  n: 492
+  degenerate_frac: 0.7865853658536586
+  degenerate_frac_corrected: 0.6524390243902439
+  mean_abs_err: 0.05084594383717312
+  mean_abs_err_lam_pe: 0.023846807242248094
+  mean_abs_err_lam_ne: 0.047232563434925254
+  mean_abs_err_lli: 0.02611644628911784
+  pe_ne_antisym_frac: 0.21341463414634146
+  alpha_wall_frac: 0.054878048780487805
+verdict_22p:
+  pocv:
+    objective: pocv
+    noise: 0.0
+    radius: 0.021
+    radius_fallback: false
+    n_near: 8
+    nearest_distance: 0.017320508075688773
+    recoverable: true
+    degenerate_frac: 0.875
+    mean_abs_err: 0.029629958427895453
+    mean_err_lam_pe: -0.01427699700198369
+    mean_err_lam_ne: 0.008514714311497543
+    mean_err_lli: -0.013115410142583286
+    pe_ne_antisym_frac: 0.5
+    recovered_pe_ne_gap: 0.024133482158658626
+    true_pe_ne_gap: 0.010000000000000009
+    degenerate_frac_corrected: 0.625
+  pocv_dvdq:
+    objective: pocv_dvdq
+    noise: 0.0
+    radius: 0.021
+    radius_fallback: false
+    n_near: 8
+    nearest_distance: 0.017320508075688773
+    recoverable: true
+    degenerate_frac: 0.25
+    mean_abs_err: 0.017198014357167335
+    mean_err_lam_pe: -0.017198014357167335
+    mean_err_lam_ne: -0.0005057231598549761
+    mean_err_lli: -0.014133106534028494
+    pe_ne_antisym_frac: 0.375
+    recovered_pe_ne_gap: 0.018686310698490805
+    true_pe_ne_gap: 0.010000000000000009
+    degenerate_frac_corrected: 0.0
+  pocv_dvdq_dqdv:
+    objective: pocv_dvdq_dqdv
+    noise: 0.0
+    radius: 0.021
+    radius_fallback: false
+    n_near: 8
+    nearest_distance: 0.017320508075688773
+    recoverable: true
+    degenerate_frac: 0.0
+    mean_abs_err: 0.015446224486173051
+    mean_err_lam_pe: -0.01541613558039548
+    mean_err_lam_ne: 0.001162417147744857
+    mean_err_lli: -0.013870215139962616
+    pe_ne_antisym_frac: 0.5
+    recovered_pe_ne_gap: 0.018878753351628016
+    true_pe_ne_gap: 0.010000000000000009
+    degenerate_frac_corrected: 0.0
+  dqdv_only:
+    objective: dqdv_only
+    noise: 0.0
+    radius: 0.021
+    radius_fallback: false
+    n_near: 8
+    nearest_distance: 0.017320508075688773
+    recoverable: true
+    degenerate_frac: 0.625
+    mean_abs_err: 0.042585389353693215
+    mean_err_lam_pe: -0.014495968556070798
+    mean_err_lam_ne: -0.03788855904864938
+    mean_err_lli: -0.020022754009131213
+    pe_ne_antisym_frac: 0.125
+    recovered_pe_ne_gap: 0.03167039867626742
+    true_pe_ne_gap: 0.010000000000000009
+    degenerate_frac_corrected: 1.0
+gap_analysis:
+  pocv:
+    objective: pocv
+    noise: 0.0
+    gap_thresh: 0.06
+    tol: 0.02
+    population: recoverable
+    n_wide_gap_true: 245
+    n_small_gap_true: 66
+    n_exact_zero_gap_true: 66
+    gap_collapse_frac: 0.05714285714285714
+    mean_true_gap_wide: 0.0989387755102041
+    min_true_gap_wide: 0.06
+    mean_recovered_gap_wide: 0.10260361862946306
+    shrinkage: 1.0501472503084555
+    collapse_requires_gap_err: 0.039999999999999994
+    gap_err_median: 0.02283113467909996
+    gap_err_p99: 0.11292375002537605
+    collapse_margin_median: -0.0766083512782564
+    collapse_margin_max: 0.019345168812165286
+    n_wide_gap_toward_collapse: 99
+    false_split_frac: 0.5
+    likelihood_ratio_equal: 8.75
+    lr_sensitivity_min: 2.6893939393939394
+    lr_sensitivity_max: 9.621872103799815
+    lr_sensitivity_median: 5.999278499278499
+    lr_sensitivity_n_infinite: 0
+    lr_sensitivity_max_exact_zero: 11.265734265734265
+    lr_neighbour_median: 5.999278499278499
+    lr_neighbour_n: 8
+    lr_is_local_spike: false
+    _주의: ★ 이 우도비를 단독으로 인용하지 말 것. (1) posterior가 아니라 사건 우도비다 — '참값이 같을 확률'로 바꾸려면 사전확률과
+      2~6%p 중간 구간의 주변분포가 필요하다. (2) gap_thresh·tol 선택에 크게 의존한다 (임계 격자 위 범위 2.7~9.6,
+      중앙값 6.0). (3) 복원가능군(population=recoverable)으로 조건화한 값이라, 실제 셀이 그 부분집단에 속한다는 독립
+      근거가 없으면 적용할 수 없다. gap_sensitivity 표 전체와 함께 볼 것.
+  pocv_dvdq:
+    objective: pocv_dvdq
+    noise: 0.0
+    gap_thresh: 0.06
+    tol: 0.02
+    population: recoverable
+    n_wide_gap_true: 245
+    n_small_gap_true: 66
+    n_exact_zero_gap_true: 66
+    gap_collapse_frac: 0.004081632653061225
+    mean_true_gap_wide: 0.0989387755102041
+    min_true_gap_wide: 0.06
+    mean_recovered_gap_wide: 0.10538666379066262
+    shrinkage: 1.0658338456009093
+    collapse_requires_gap_err: 0.039999999999999994
+    gap_err_median: 0.02603711538442749
+    gap_err_p99: 0.05341415275384403
+    collapse_margin_median: -0.081372705163141
+    collapse_margin_max: 0.017614740310919013
+    n_wide_gap_toward_collapse: 96
+    false_split_frac: 0.5909090909090909
+    likelihood_ratio_equal: 100.2272727272727
+    lr_sensitivity_min: 1.997835497835498
+    lr_sensitivity_max: 130.47590361445782
+    lr_sensitivity_median: 16.166146947535662
+    lr_sensitivity_n_infinite: 0
+    lr_sensitivity_max_exact_zero: 168.15151515151516
+    lr_neighbour_median: 24.27035414384812
+    lr_neighbour_n: 8
+    lr_is_local_spike: true
+    _주의: ★ 이 우도비를 단독으로 인용하지 말 것. (1) posterior가 아니라 사건 우도비다 — '참값이 같을 확률'로 바꾸려면 사전확률과
+      2~6%p 중간 구간의 주변분포가 필요하다. (2) gap_thresh·tol 선택에 크게 의존한다 (임계 격자 위 범위 2.0~130.5,
+      중앙값 16.2). (3) 복원가능군(population=recoverable)으로 조건화한 값이라, 실제 셀이 그 부분집단에 속한다는
+      독립 근거가 없으면 적용할 수 없다. gap_sensitivity 표 전체와 함께 볼 것.
+  pocv_dvdq_dqdv:
+    objective: pocv_dvdq_dqdv
+    noise: 0.0
+    gap_thresh: 0.06
+    tol: 0.02
+    population: recoverable
+    n_wide_gap_true: 245
+    n_small_gap_true: 66
+    n_exact_zero_gap_true: 66
+    gap_collapse_frac: 0.004081632653061225
+    mean_true_gap_wide: 0.0989387755102041
+    min_true_gap_wide: 0.06
+    mean_recovered_gap_wide: 0.1076256333215217
+    shrinkage: 1.0973071596023534
+    collapse_requires_gap_err: 0.039999999999999994
+    gap_err_median: 0.020603205205962483
+    gap_err_p99: 0.08347946011710262
+    collapse_margin_median: -0.07912976444958765
+    collapse_margin_max: 0.0008336713003005251
+    n_wide_gap_toward_collapse: 89
+    false_split_frac: 0.5303030303030303
+    likelihood_ratio_equal: 115.07575757575758
+    lr_sensitivity_min: 3.0659090909090914
+    lr_sensitivity_max: 146.65060240963854
+    lr_sensitivity_median: 44.86079947319643
+    lr_sensitivity_n_infinite: 2
+    lr_sensitivity_max_exact_zero: 160.0151515151515
+    lr_neighbour_median: 47.559807411464035
+    lr_neighbour_n: 6
+    lr_is_local_spike: false
+    _주의: ★ 이 우도비를 단독으로 인용하지 말 것. (1) posterior가 아니라 사건 우도비다 — '참값이 같을 확률'로 바꾸려면 사전확률과
+      2~6%p 중간 구간의 주변분포가 필요하다. (2) gap_thresh·tol 선택에 크게 의존한다 (임계 격자 위 범위 3.1~146.7,
+      중앙값 44.9). (3) 복원가능군(population=recoverable)으로 조건화한 값이라, 실제 셀이 그 부분집단에 속한다는
+      독립 근거가 없으면 적용할 수 없다. gap_sensitivity 표 전체와 함께 볼 것.
+  dqdv_only:
+    objective: dqdv_only
+    noise: 0.0
+    gap_thresh: 0.06
+    tol: 0.02
+    population: recoverable
+    n_wide_gap_true: 245
+    n_small_gap_true: 66
+    n_exact_zero_gap_true: 66
+    gap_collapse_frac: 0.04081632653061224
+    mean_true_gap_wide: 0.0989387755102041
+    min_true_gap_wide: 0.06
+    mean_recovered_gap_wide: 0.10398368248832844
+    shrinkage: 1.0725436156890507
+    collapse_requires_gap_err: 0.039999999999999994
+    gap_err_median: 0.019087142186084205
+    gap_err_p99: 0.1702948258346578
+    collapse_margin_median: -0.07463380186535563
+    collapse_margin_max: 0.01556727509343701
+    n_wide_gap_toward_collapse: 120
+    false_split_frac: 0.4090909090909091
+    likelihood_ratio_equal: 14.477272727272727
+    lr_sensitivity_min: 6.94331983805668
+    lr_sensitivity_max: 89.5
+    lr_sensitivity_median: 13.695714676889377
+    lr_sensitivity_n_infinite: 0
+    lr_sensitivity_max_exact_zero: 89.5
+    lr_neighbour_median: 16.9
+    lr_neighbour_n: 8
+    lr_is_local_spike: false
+    _주의: ★ 이 우도비를 단독으로 인용하지 말 것. (1) posterior가 아니라 사건 우도비다 — '참값이 같을 확률'로 바꾸려면 사전확률과
+      2~6%p 중간 구간의 주변분포가 필요하다. (2) gap_thresh·tol 선택에 크게 의존한다 (임계 격자 위 범위 6.9~89.5,
+      중앙값 13.7). (3) 복원가능군(population=recoverable)으로 조건화한 값이라, 실제 셀이 그 부분집단에 속한다는
+      독립 근거가 없으면 적용할 수 없다. gap_sensitivity 표 전체와 함께 볼 것.
+gap_analysis_all_conditions:
+  pocv:
+    objective: pocv
+    noise: 0.0
+    gap_thresh: 0.06
+    tol: 0.02
+    population: all
+    n_wide_gap_true: 604
+    n_small_gap_true: 93
+    n_exact_zero_gap_true: 93
+    gap_collapse_frac: 0.06291390728476821
+    mean_true_gap_wide: 0.10539735099337748
+    min_true_gap_wide: 0.06
+    mean_recovered_gap_wide: 0.09884181162962737
+    shrinkage: 0.9463978674584534
+    collapse_requires_gap_err: 0.039999999999999994
+    gap_err_median: 0.021916038930848994
+    gap_err_p99: 0.115671230483692
+    collapse_margin_median: -0.07586610950876523
+    collapse_margin_max: 0.019659222330688158
+    n_wide_gap_toward_collapse: 368
+    false_split_frac: 0.3978494623655914
+    likelihood_ratio_equal: 9.571024335031126
+    lr_sensitivity_min: 4.253099173553719
+    lr_sensitivity_max: 10.463560334528077
+    lr_sensitivity_median: 8.463690321720645
+    lr_sensitivity_n_infinite: 0
+    lr_sensitivity_max_exact_zero: 10.932551319648093
+    lr_neighbour_median: 8.802307837735643
+    lr_neighbour_n: 8
+    lr_is_local_spike: false
+    _주의: ★ 이 우도비를 단독으로 인용하지 말 것. (1) posterior가 아니라 사건 우도비다 — '참값이 같을 확률'로 바꾸려면 사전확률과
+      2~6%p 중간 구간의 주변분포가 필요하다. (2) gap_thresh·tol 선택에 크게 의존한다 (임계 격자 위 범위 4.3~10.5,
+      중앙값 8.5). (3) 복원가능군(population=all)으로 조건화한 값이라, 실제 셀이 그 부분집단에 속한다는 독립 근거가 없으면
+      적용할 수 없다. gap_sensitivity 표 전체와 함께 볼 것.
+  pocv_dvdq:
+    objective: pocv_dvdq
+    noise: 0.0
+    gap_thresh: 0.06
+    tol: 0.02
+    population: all
+    n_wide_gap_true: 604
+    n_small_gap_true: 93
+    n_exact_zero_gap_true: 93
+    gap_collapse_frac: 0.09602649006622517
+    mean_true_gap_wide: 0.10539735099337748
+    min_true_gap_wide: 0.06
+    mean_recovered_gap_wide: 0.09241042780790823
+    shrinkage: 0.8816577324050375
+    collapse_requires_gap_err: 0.039999999999999994
+    gap_err_median: 0.02894193581740958
+    gap_err_p99: 0.10783135278190409
+    collapse_margin_median: -0.07270748050749039
+    collapse_margin_max: 0.019554477723840873
+    n_wide_gap_toward_collapse: 391
+    false_split_frac: 0.6021505376344086
+    likelihood_ratio_equal: 4.1431219873934
+    lr_sensitivity_min: 1.6296296296296295
+    lr_sensitivity_max: 7.394553644553645
+    lr_sensitivity_median: 3.8577119772161046
+    lr_sensitivity_n_infinite: 0
+    lr_sensitivity_max_exact_zero: 8.01720430107527
+    lr_neighbour_median: 3.7976877160144364
+    lr_neighbour_n: 8
+    lr_is_local_spike: false
+    _주의: ★ 이 우도비를 단독으로 인용하지 말 것. (1) posterior가 아니라 사건 우도비다 — '참값이 같을 확률'로 바꾸려면 사전확률과
+      2~6%p 중간 구간의 주변분포가 필요하다. (2) gap_thresh·tol 선택에 크게 의존한다 (임계 격자 위 범위 1.6~7.4,
+      중앙값 3.9). (3) 복원가능군(population=all)으로 조건화한 값이라, 실제 셀이 그 부분집단에 속한다는 독립 근거가 없으면
+      적용할 수 없다. gap_sensitivity 표 전체와 함께 볼 것.
+  pocv_dvdq_dqdv:
+    objective: pocv_dvdq_dqdv
+    noise: 0.0
+    gap_thresh: 0.06
+    tol: 0.02
+    population: all
+    n_wide_gap_true: 604
+    n_small_gap_true: 93
+    n_exact_zero_gap_true: 93
+    gap_collapse_frac: 0.09437086092715231
+    mean_true_gap_wide: 0.10539735099337748
+    min_true_gap_wide: 0.06
+    mean_recovered_gap_wide: 0.09623119536967607
+    shrinkage: 0.9230017006369337
+    collapse_requires_gap_err: 0.039999999999999994
+    gap_err_median: 0.024038095232075
+    gap_err_p99: 0.11773785283370755
+    collapse_margin_median: -0.07365333078365567
+    collapse_margin_max: 0.01914940549896214
+    n_wide_gap_toward_collapse: 357
+    false_split_frac: 0.5591397849462365
+    likelihood_ratio_equal: 4.671571401622336
+    lr_sensitivity_min: 2.076923076923077
+    lr_sensitivity_max: 7.192992424242425
+    lr_sensitivity_median: 4.508115054958704
+    lr_sensitivity_n_infinite: 0
+    lr_sensitivity_max_exact_zero: 7.516129032258064
+    lr_neighbour_median: 4.498044965786902
+    lr_neighbour_n: 8
+    lr_is_local_spike: false
+    _주의: ★ 이 우도비를 단독으로 인용하지 말 것. (1) posterior가 아니라 사건 우도비다 — '참값이 같을 확률'로 바꾸려면 사전확률과
+      2~6%p 중간 구간의 주변분포가 필요하다. (2) gap_thresh·tol 선택에 크게 의존한다 (임계 격자 위 범위 2.1~7.2,
+      중앙값 4.5). (3) 복원가능군(population=all)으로 조건화한 값이라, 실제 셀이 그 부분집단에 속한다는 독립 근거가 없으면
+      적용할 수 없다. gap_sensitivity 표 전체와 함께 볼 것.
+  dqdv_only:
+    objective: dqdv_only
+    noise: 0.0
+    gap_thresh: 0.06
+    tol: 0.02
+    population: all
+    n_wide_gap_true: 604
+    n_small_gap_true: 93
+    n_exact_zero_gap_true: 93
+    gap_collapse_frac: 0.03642384105960265
+    mean_true_gap_wide: 0.10539735099337748
+    min_true_gap_wide: 0.06
+    mean_recovered_gap_wide: 0.09649660121033166
+    shrinkage: 0.928239023065501
+    collapse_requires_gap_err: 0.039999999999999994
+    gap_err_median: 0.0191137274450041
+    gap_err_p99: 0.1328279292563721
+    collapse_margin_median: -0.06907044573303307
+    collapse_margin_max: 0.017220555600246695
+    n_wide_gap_toward_collapse: 430
+    false_split_frac: 0.4731182795698925
+    likelihood_ratio_equal: 14.465298142717497
+    lr_sensitivity_min: 5.833333333333333
+    lr_sensitivity_max: 87.68817204301075
+    lr_sensitivity_median: 13.564880163852171
+    lr_sensitivity_n_infinite: 0
+    lr_sensitivity_max_exact_zero: 87.68817204301075
+    lr_neighbour_median: 18.506720430107528
+    lr_neighbour_n: 8
+    lr_is_local_spike: false
+    _주의: ★ 이 우도비를 단독으로 인용하지 말 것. (1) posterior가 아니라 사건 우도비다 — '참값이 같을 확률'로 바꾸려면 사전확률과
+      2~6%p 중간 구간의 주변분포가 필요하다. (2) gap_thresh·tol 선택에 크게 의존한다 (임계 격자 위 범위 5.8~87.7,
+      중앙값 13.6). (3) 복원가능군(population=all)으로 조건화한 값이라, 실제 셀이 그 부분집단에 속한다는 독립 근거가 없으면
+      적용할 수 없다. gap_sensitivity 표 전체와 함께 볼 것.
+gap_sensitivity:
+  pocv:
+  - gap_thresh: 0.02
+    tol: 0.01
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 426
+    n_same_called_same: 15
+    n_wide_called_same: 36
+    p_same_given_same: 0.22727272727272727
+    p_same_given_wide: 0.08450704225352113
+    likelihood_ratio: 2.6893939393939394
+  - gap_thresh: 0.02
+    tol: 0.01
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 426
+    n_same_called_same: 15
+    n_wide_called_same: 36
+    p_same_given_same: 0.22727272727272727
+    p_same_given_wide: 0.08450704225352113
+    likelihood_ratio: 2.6893939393939394
+  - gap_thresh: 0.04
+    tol: 0.01
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 15
+    n_wide_called_same: 19
+    p_same_given_same: 0.22727272727272727
+    p_same_given_wide: 0.05828220858895705
+    likelihood_ratio: 3.8995215311004787
+  - gap_thresh: 0.04
+    tol: 0.01
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 15
+    n_wide_called_same: 19
+    p_same_given_same: 0.22727272727272727
+    p_same_given_wide: 0.05828220858895705
+    likelihood_ratio: 3.8995215311004787
+  - gap_thresh: 0.04
+    tol: 0.02
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 33
+    n_wide_called_same: 41
+    p_same_given_same: 0.5
+    p_same_given_wide: 0.12576687116564417
+    likelihood_ratio: 3.975609756097561
+  - gap_thresh: 0.04
+    tol: 0.02
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 33
+    n_wide_called_same: 41
+    p_same_given_same: 0.5
+    p_same_given_wide: 0.12576687116564417
+    likelihood_ratio: 3.975609756097561
+  - gap_thresh: 0.04
+    tol: 0.03
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 326
+    n_same_called_same: 95
+    n_wide_called_same: 54
+    p_same_given_same: 0.572289156626506
+    p_same_given_wide: 0.1656441717791411
+    likelihood_ratio: 3.454930834448907
+  - gap_thresh: 0.04
+    tol: 0.03
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 47
+    n_wide_called_same: 54
+    p_same_given_same: 0.7121212121212122
+    p_same_given_wide: 0.1656441717791411
+    likelihood_ratio: 4.299102132435467
+  - gap_thresh: 0.06
+    tol: 0.01
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 15
+    n_wide_called_same: 9
+    p_same_given_same: 0.22727272727272727
+    p_same_given_wide: 0.036734693877551024
+    likelihood_ratio: 6.186868686868686
+  - gap_thresh: 0.06
+    tol: 0.01
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 15
+    n_wide_called_same: 9
+    p_same_given_same: 0.22727272727272727
+    p_same_given_wide: 0.036734693877551024
+    likelihood_ratio: 6.186868686868686
+  - gap_thresh: 0.06
+    tol: 0.02
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 33
+    n_wide_called_same: 14
+    p_same_given_same: 0.5
+    p_same_given_wide: 0.05714285714285714
+    likelihood_ratio: 8.75
+  - gap_thresh: 0.06
+    tol: 0.02
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 33
+    n_wide_called_same: 14
+    p_same_given_same: 0.5
+    p_same_given_wide: 0.05714285714285714
+    likelihood_ratio: 8.75
+  - gap_thresh: 0.06
+    tol: 0.03
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 245
+    n_same_called_same: 95
+    n_wide_called_same: 21
+    p_same_given_same: 0.572289156626506
+    p_same_given_wide: 0.08571428571428572
+    likelihood_ratio: 6.676706827309237
+  - gap_thresh: 0.06
+    tol: 0.03
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 47
+    n_wide_called_same: 21
+    p_same_given_same: 0.7121212121212122
+    p_same_given_wide: 0.08571428571428572
+    likelihood_ratio: 8.308080808080808
+  - gap_thresh: 0.06
+    tol: 0.04
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 245
+    n_same_called_same: 116
+    n_wide_called_same: 30
+    p_same_given_same: 0.6987951807228916
+    p_same_given_wide: 0.12244897959183673
+    likelihood_ratio: 5.706827309236949
+  - gap_thresh: 0.06
+    tol: 0.04
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 54
+    n_wide_called_same: 30
+    p_same_given_same: 0.8181818181818182
+    p_same_given_wide: 0.12244897959183673
+    likelihood_ratio: 6.6818181818181825
+  - gap_thresh: 0.06
+    tol: 0.05
+    same_def: lt_tol
+    n_same: 247
+    n_wide: 245
+    n_same_called_same: 186
+    n_wide_called_same: 38
+    p_same_given_same: 0.7530364372469636
+    p_same_given_wide: 0.15510204081632653
+    likelihood_ratio: 4.855103345408055
+  - gap_thresh: 0.06
+    tol: 0.05
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 59
+    n_wide_called_same: 38
+    p_same_given_same: 0.8939393939393939
+    p_same_given_wide: 0.15510204081632653
+    likelihood_ratio: 5.763556618819776
+  - gap_thresh: 0.08
+    tol: 0.01
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 15
+    n_wide_called_same: 7
+    p_same_given_same: 0.22727272727272727
+    p_same_given_wide: 0.03910614525139665
+    likelihood_ratio: 5.811688311688312
+  - gap_thresh: 0.08
+    tol: 0.01
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 15
+    n_wide_called_same: 7
+    p_same_given_same: 0.22727272727272727
+    p_same_given_wide: 0.03910614525139665
+    likelihood_ratio: 5.811688311688312
+  - gap_thresh: 0.08
+    tol: 0.02
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 33
+    n_wide_called_same: 10
+    p_same_given_same: 0.5
+    p_same_given_wide: 0.055865921787709494
+    likelihood_ratio: 8.950000000000001
+  - gap_thresh: 0.08
+    tol: 0.02
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 33
+    n_wide_called_same: 10
+    p_same_given_same: 0.5
+    p_same_given_wide: 0.055865921787709494
+    likelihood_ratio: 8.950000000000001
+  - gap_thresh: 0.08
+    tol: 0.03
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 179
+    n_same_called_same: 95
+    n_wide_called_same: 12
+    p_same_given_same: 0.572289156626506
+    p_same_given_wide: 0.0670391061452514
+    likelihood_ratio: 8.536646586345382
+  - gap_thresh: 0.08
+    tol: 0.03
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 47
+    n_wide_called_same: 12
+    p_same_given_same: 0.7121212121212122
+    p_same_given_wide: 0.0670391061452514
+    likelihood_ratio: 10.622474747474747
+  - gap_thresh: 0.08
+    tol: 0.04
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 179
+    n_same_called_same: 116
+    n_wide_called_same: 13
+    p_same_given_same: 0.6987951807228916
+    p_same_given_wide: 0.07262569832402235
+    likelihood_ratio: 9.621872103799815
+  - gap_thresh: 0.08
+    tol: 0.04
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 54
+    n_wide_called_same: 13
+    p_same_given_same: 0.8181818181818182
+    p_same_given_wide: 0.07262569832402235
+    likelihood_ratio: 11.265734265734265
+  - gap_thresh: 0.08
+    tol: 0.05
+    same_def: lt_tol
+    n_same: 247
+    n_wide: 179
+    n_same_called_same: 186
+    n_wide_called_same: 15
+    p_same_given_same: 0.7530364372469636
+    p_same_given_wide: 0.08379888268156424
+    likelihood_ratio: 8.986234817813767
+  - gap_thresh: 0.08
+    tol: 0.05
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 59
+    n_wide_called_same: 15
+    p_same_given_same: 0.8939393939393939
+    p_same_given_wide: 0.08379888268156424
+    likelihood_ratio: 10.667676767676769
+  pocv_dvdq:
+  - gap_thresh: 0.02
+    tol: 0.01
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 426
+    n_same_called_same: 13
+    n_wide_called_same: 42
+    p_same_given_same: 0.19696969696969696
+    p_same_given_wide: 0.09859154929577464
+    likelihood_ratio: 1.997835497835498
+  - gap_thresh: 0.02
+    tol: 0.01
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 426
+    n_same_called_same: 13
+    n_wide_called_same: 42
+    p_same_given_same: 0.19696969696969696
+    p_same_given_wide: 0.09859154929577464
+    likelihood_ratio: 1.997835497835498
+  - gap_thresh: 0.04
+    tol: 0.01
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 13
+    n_wide_called_same: 19
+    p_same_given_same: 0.19696969696969696
+    p_same_given_wide: 0.05828220858895705
+    likelihood_ratio: 3.379585326953748
+  - gap_thresh: 0.04
+    tol: 0.01
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 13
+    n_wide_called_same: 19
+    p_same_given_same: 0.19696969696969696
+    p_same_given_wide: 0.05828220858895705
+    likelihood_ratio: 3.379585326953748
+  - gap_thresh: 0.04
+    tol: 0.02
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 27
+    n_wide_called_same: 34
+    p_same_given_same: 0.4090909090909091
+    p_same_given_wide: 0.10429447852760736
+    likelihood_ratio: 3.9224598930481287
+  - gap_thresh: 0.04
+    tol: 0.02
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 27
+    n_wide_called_same: 34
+    p_same_given_same: 0.4090909090909091
+    p_same_given_wide: 0.10429447852760736
+    likelihood_ratio: 3.9224598930481287
+  - gap_thresh: 0.04
+    tol: 0.03
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 326
+    n_same_called_same: 99
+    n_wide_called_same: 46
+    p_same_given_same: 0.5963855421686747
+    p_same_given_wide: 0.1411042944785276
+    likelihood_ratio: 4.226558407543217
+  - gap_thresh: 0.04
+    tol: 0.03
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 46
+    n_wide_called_same: 46
+    p_same_given_same: 0.696969696969697
+    p_same_given_wide: 0.1411042944785276
+    likelihood_ratio: 4.93939393939394
+  - gap_thresh: 0.06
+    tol: 0.01
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 13
+    n_wide_called_same: 1
+    p_same_given_same: 0.19696969696969696
+    p_same_given_wide: 0.004081632653061225
+    likelihood_ratio: 48.25757575757575
+  - gap_thresh: 0.06
+    tol: 0.01
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 13
+    n_wide_called_same: 1
+    p_same_given_same: 0.19696969696969696
+    p_same_given_wide: 0.004081632653061225
+    likelihood_ratio: 48.25757575757575
+  - gap_thresh: 0.06
+    tol: 0.02
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 27
+    n_wide_called_same: 1
+    p_same_given_same: 0.4090909090909091
+    p_same_given_wide: 0.004081632653061225
+    likelihood_ratio: 100.22727272727272
+  - gap_thresh: 0.06
+    tol: 0.02
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 27
+    n_wide_called_same: 1
+    p_same_given_same: 0.4090909090909091
+    p_same_given_wide: 0.004081632653061225
+    likelihood_ratio: 100.22727272727272
+  - gap_thresh: 0.06
+    tol: 0.03
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 245
+    n_same_called_same: 99
+    n_wide_called_same: 11
+    p_same_given_same: 0.5963855421686747
+    p_same_given_wide: 0.044897959183673466
+    likelihood_ratio: 13.283132530120483
+  - gap_thresh: 0.06
+    tol: 0.03
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 46
+    n_wide_called_same: 11
+    p_same_given_same: 0.696969696969697
+    p_same_given_wide: 0.044897959183673466
+    likelihood_ratio: 15.523415977961434
+  - gap_thresh: 0.06
+    tol: 0.04
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 245
+    n_same_called_same: 121
+    n_wide_called_same: 25
+    p_same_given_same: 0.7289156626506024
+    p_same_given_wide: 0.10204081632653061
+    likelihood_ratio: 7.143373493975903
+  - gap_thresh: 0.06
+    tol: 0.04
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 62
+    n_wide_called_same: 25
+    p_same_given_same: 0.9393939393939394
+    p_same_given_wide: 0.10204081632653061
+    likelihood_ratio: 9.206060606060607
+  - gap_thresh: 0.06
+    tol: 0.05
+    same_def: lt_tol
+    n_same: 247
+    n_wide: 245
+    n_same_called_same: 184
+    n_wide_called_same: 36
+    p_same_given_same: 0.7449392712550608
+    p_same_given_wide: 0.1469387755102041
+    likelihood_ratio: 5.069725596041385
+  - gap_thresh: 0.06
+    tol: 0.05
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 64
+    n_wide_called_same: 36
+    p_same_given_same: 0.9696969696969697
+    p_same_given_wide: 0.1469387755102041
+    likelihood_ratio: 6.599326599326599
+  - gap_thresh: 0.08
+    tol: 0.01
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 13
+    n_wide_called_same: 1
+    p_same_given_same: 0.19696969696969696
+    p_same_given_wide: 0.00558659217877095
+    likelihood_ratio: 35.25757575757576
+  - gap_thresh: 0.08
+    tol: 0.01
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 13
+    n_wide_called_same: 1
+    p_same_given_same: 0.19696969696969696
+    p_same_given_wide: 0.00558659217877095
+    likelihood_ratio: 35.25757575757576
+  - gap_thresh: 0.08
+    tol: 0.02
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 27
+    n_wide_called_same: 1
+    p_same_given_same: 0.4090909090909091
+    p_same_given_wide: 0.00558659217877095
+    likelihood_ratio: 73.22727272727273
+  - gap_thresh: 0.08
+    tol: 0.02
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 27
+    n_wide_called_same: 1
+    p_same_given_same: 0.4090909090909091
+    p_same_given_wide: 0.00558659217877095
+    likelihood_ratio: 73.22727272727273
+  - gap_thresh: 0.08
+    tol: 0.03
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 179
+    n_same_called_same: 99
+    n_wide_called_same: 1
+    p_same_given_same: 0.5963855421686747
+    p_same_given_wide: 0.00558659217877095
+    likelihood_ratio: 106.75301204819276
+  - gap_thresh: 0.08
+    tol: 0.03
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 46
+    n_wide_called_same: 1
+    p_same_given_same: 0.696969696969697
+    p_same_given_wide: 0.00558659217877095
+    likelihood_ratio: 124.75757575757576
+  - gap_thresh: 0.08
+    tol: 0.04
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 179
+    n_same_called_same: 121
+    n_wide_called_same: 1
+    p_same_given_same: 0.7289156626506024
+    p_same_given_wide: 0.00558659217877095
+    likelihood_ratio: 130.47590361445782
+  - gap_thresh: 0.08
+    tol: 0.04
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 62
+    n_wide_called_same: 1
+    p_same_given_same: 0.9393939393939394
+    p_same_given_wide: 0.00558659217877095
+    likelihood_ratio: 168.15151515151516
+  - gap_thresh: 0.08
+    tol: 0.05
+    same_def: lt_tol
+    n_same: 247
+    n_wide: 179
+    n_same_called_same: 184
+    n_wide_called_same: 7
+    p_same_given_same: 0.7449392712550608
+    p_same_given_wide: 0.03910614525139665
+    likelihood_ratio: 19.04916136495084
+  - gap_thresh: 0.08
+    tol: 0.05
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 64
+    n_wide_called_same: 7
+    p_same_given_same: 0.9696969696969697
+    p_same_given_wide: 0.03910614525139665
+    likelihood_ratio: 24.796536796536795
+  pocv_dvdq_dqdv:
+  - gap_thresh: 0.02
+    tol: 0.01
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 426
+    n_same_called_same: 19
+    n_wide_called_same: 40
+    p_same_given_same: 0.2878787878787879
+    p_same_given_wide: 0.09389671361502347
+    likelihood_ratio: 3.0659090909090914
+  - gap_thresh: 0.02
+    tol: 0.01
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 426
+    n_same_called_same: 19
+    n_wide_called_same: 40
+    p_same_given_same: 0.2878787878787879
+    p_same_given_wide: 0.09389671361502347
+    likelihood_ratio: 3.0659090909090914
+  - gap_thresh: 0.04
+    tol: 0.01
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 19
+    n_wide_called_same: 8
+    p_same_given_same: 0.2878787878787879
+    p_same_given_wide: 0.024539877300613498
+    likelihood_ratio: 11.731060606060607
+  - gap_thresh: 0.04
+    tol: 0.01
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 19
+    n_wide_called_same: 8
+    p_same_given_same: 0.2878787878787879
+    p_same_given_wide: 0.024539877300613498
+    likelihood_ratio: 11.731060606060607
+  - gap_thresh: 0.04
+    tol: 0.02
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 31
+    n_wide_called_same: 19
+    p_same_given_same: 0.4696969696969697
+    p_same_given_wide: 0.05828220858895705
+    likelihood_ratio: 8.059011164274324
+  - gap_thresh: 0.04
+    tol: 0.02
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 31
+    n_wide_called_same: 19
+    p_same_given_same: 0.4696969696969697
+    p_same_given_wide: 0.05828220858895705
+    likelihood_ratio: 8.059011164274324
+  - gap_thresh: 0.04
+    tol: 0.03
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 326
+    n_same_called_same: 113
+    n_wide_called_same: 38
+    p_same_given_same: 0.6807228915662651
+    p_same_given_wide: 0.1165644171779141
+    likelihood_ratio: 5.83988585922638
+  - gap_thresh: 0.04
+    tol: 0.03
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 50
+    n_wide_called_same: 38
+    p_same_given_same: 0.7575757575757576
+    p_same_given_wide: 0.1165644171779141
+    likelihood_ratio: 6.499202551834131
+  - gap_thresh: 0.06
+    tol: 0.01
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 19
+    n_wide_called_same: 0
+    p_same_given_same: 0.2878787878787879
+    p_same_given_wide: 0.0
+    likelihood_ratio: .inf
+  - gap_thresh: 0.06
+    tol: 0.01
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 19
+    n_wide_called_same: 0
+    p_same_given_same: 0.2878787878787879
+    p_same_given_wide: 0.0
+    likelihood_ratio: .inf
+  - gap_thresh: 0.06
+    tol: 0.02
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 31
+    n_wide_called_same: 1
+    p_same_given_same: 0.4696969696969697
+    p_same_given_wide: 0.004081632653061225
+    likelihood_ratio: 115.07575757575758
+  - gap_thresh: 0.06
+    tol: 0.02
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 31
+    n_wide_called_same: 1
+    p_same_given_same: 0.4696969696969697
+    p_same_given_wide: 0.004081632653061225
+    likelihood_ratio: 115.07575757575758
+  - gap_thresh: 0.06
+    tol: 0.03
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 245
+    n_same_called_same: 113
+    n_wide_called_same: 2
+    p_same_given_same: 0.6807228915662651
+    p_same_given_wide: 0.00816326530612245
+    likelihood_ratio: 83.38855421686746
+  - gap_thresh: 0.06
+    tol: 0.03
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 50
+    n_wide_called_same: 2
+    p_same_given_same: 0.7575757575757576
+    p_same_given_wide: 0.00816326530612245
+    likelihood_ratio: 92.8030303030303
+  - gap_thresh: 0.06
+    tol: 0.04
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 245
+    n_same_called_same: 136
+    n_wide_called_same: 13
+    p_same_given_same: 0.8192771084337349
+    p_same_given_wide: 0.053061224489795916
+    likelihood_ratio: 15.440222428174236
+  - gap_thresh: 0.06
+    tol: 0.04
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 59
+    n_wide_called_same: 13
+    p_same_given_same: 0.8939393939393939
+    p_same_given_wide: 0.053061224489795916
+    likelihood_ratio: 16.84731934731935
+  - gap_thresh: 0.06
+    tol: 0.05
+    same_def: lt_tol
+    n_same: 247
+    n_wide: 245
+    n_same_called_same: 205
+    n_wide_called_same: 19
+    p_same_given_same: 0.8299595141700404
+    p_same_given_wide: 0.07755102040816327
+    likelihood_ratio: 10.702109524824206
+  - gap_thresh: 0.06
+    tol: 0.05
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 60
+    n_wide_called_same: 19
+    p_same_given_same: 0.9090909090909091
+    p_same_given_wide: 0.07755102040816327
+    likelihood_ratio: 11.722488038277511
+  - gap_thresh: 0.08
+    tol: 0.01
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 19
+    n_wide_called_same: 0
+    p_same_given_same: 0.2878787878787879
+    p_same_given_wide: 0.0
+    likelihood_ratio: .inf
+  - gap_thresh: 0.08
+    tol: 0.01
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 19
+    n_wide_called_same: 0
+    p_same_given_same: 0.2878787878787879
+    p_same_given_wide: 0.0
+    likelihood_ratio: .inf
+  - gap_thresh: 0.08
+    tol: 0.02
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 31
+    n_wide_called_same: 1
+    p_same_given_same: 0.4696969696969697
+    p_same_given_wide: 0.00558659217877095
+    likelihood_ratio: 84.07575757575758
+  - gap_thresh: 0.08
+    tol: 0.02
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 31
+    n_wide_called_same: 1
+    p_same_given_same: 0.4696969696969697
+    p_same_given_wide: 0.00558659217877095
+    likelihood_ratio: 84.07575757575758
+  - gap_thresh: 0.08
+    tol: 0.03
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 179
+    n_same_called_same: 113
+    n_wide_called_same: 1
+    p_same_given_same: 0.6807228915662651
+    p_same_given_wide: 0.00558659217877095
+    likelihood_ratio: 121.84939759036145
+  - gap_thresh: 0.08
+    tol: 0.03
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 50
+    n_wide_called_same: 1
+    p_same_given_same: 0.7575757575757576
+    p_same_given_wide: 0.00558659217877095
+    likelihood_ratio: 135.6060606060606
+  - gap_thresh: 0.08
+    tol: 0.04
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 179
+    n_same_called_same: 136
+    n_wide_called_same: 1
+    p_same_given_same: 0.8192771084337349
+    p_same_given_wide: 0.00558659217877095
+    likelihood_ratio: 146.65060240963854
+  - gap_thresh: 0.08
+    tol: 0.04
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 59
+    n_wide_called_same: 1
+    p_same_given_same: 0.8939393939393939
+    p_same_given_wide: 0.00558659217877095
+    likelihood_ratio: 160.0151515151515
+  - gap_thresh: 0.08
+    tol: 0.05
+    same_def: lt_tol
+    n_same: 247
+    n_wide: 179
+    n_same_called_same: 205
+    n_wide_called_same: 2
+    p_same_given_same: 0.8299595141700404
+    p_same_given_wide: 0.0111731843575419
+    likelihood_ratio: 74.28137651821862
+  - gap_thresh: 0.08
+    tol: 0.05
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 60
+    n_wide_called_same: 2
+    p_same_given_same: 0.9090909090909091
+    p_same_given_wide: 0.0111731843575419
+    likelihood_ratio: 81.36363636363636
+  dqdv_only:
+  - gap_thresh: 0.02
+    tol: 0.01
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 426
+    n_same_called_same: 33
+    n_wide_called_same: 27
+    p_same_given_same: 0.5
+    p_same_given_wide: 0.06338028169014084
+    likelihood_ratio: 7.888888888888889
+  - gap_thresh: 0.02
+    tol: 0.01
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 426
+    n_same_called_same: 33
+    n_wide_called_same: 27
+    p_same_given_same: 0.5
+    p_same_given_wide: 0.06338028169014084
+    likelihood_ratio: 7.888888888888889
+  - gap_thresh: 0.04
+    tol: 0.01
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 33
+    n_wide_called_same: 10
+    p_same_given_same: 0.5
+    p_same_given_wide: 0.03067484662576687
+    likelihood_ratio: 16.3
+  - gap_thresh: 0.04
+    tol: 0.01
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 33
+    n_wide_called_same: 10
+    p_same_given_same: 0.5
+    p_same_given_wide: 0.03067484662576687
+    likelihood_ratio: 16.3
+  - gap_thresh: 0.04
+    tol: 0.02
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 39
+    n_wide_called_same: 21
+    p_same_given_same: 0.5909090909090909
+    p_same_given_wide: 0.06441717791411043
+    likelihood_ratio: 9.173160173160174
+  - gap_thresh: 0.04
+    tol: 0.02
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 39
+    n_wide_called_same: 21
+    p_same_given_same: 0.5909090909090909
+    p_same_given_wide: 0.06441717791411043
+    likelihood_ratio: 9.173160173160174
+  - gap_thresh: 0.04
+    tol: 0.03
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 326
+    n_same_called_same: 105
+    n_wide_called_same: 29
+    p_same_given_same: 0.6325301204819277
+    p_same_given_wide: 0.08895705521472393
+    likelihood_ratio: 7.110511009555463
+  - gap_thresh: 0.04
+    tol: 0.03
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 326
+    n_same_called_same: 45
+    n_wide_called_same: 29
+    p_same_given_same: 0.6818181818181818
+    p_same_given_wide: 0.08895705521472393
+    likelihood_ratio: 7.6645768025078365
+  - gap_thresh: 0.06
+    tol: 0.01
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 33
+    n_wide_called_same: 7
+    p_same_given_same: 0.5
+    p_same_given_wide: 0.02857142857142857
+    likelihood_ratio: 17.5
+  - gap_thresh: 0.06
+    tol: 0.01
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 33
+    n_wide_called_same: 7
+    p_same_given_same: 0.5
+    p_same_given_wide: 0.02857142857142857
+    likelihood_ratio: 17.5
+  - gap_thresh: 0.06
+    tol: 0.02
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 39
+    n_wide_called_same: 10
+    p_same_given_same: 0.5909090909090909
+    p_same_given_wide: 0.04081632653061224
+    likelihood_ratio: 14.477272727272728
+  - gap_thresh: 0.06
+    tol: 0.02
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 39
+    n_wide_called_same: 10
+    p_same_given_same: 0.5909090909090909
+    p_same_given_wide: 0.04081632653061224
+    likelihood_ratio: 14.477272727272728
+  - gap_thresh: 0.06
+    tol: 0.03
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 245
+    n_same_called_same: 105
+    n_wide_called_same: 12
+    p_same_given_same: 0.6325301204819277
+    p_same_given_wide: 0.04897959183673469
+    likelihood_ratio: 12.914156626506024
+  - gap_thresh: 0.06
+    tol: 0.03
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 45
+    n_wide_called_same: 12
+    p_same_given_same: 0.6818181818181818
+    p_same_given_wide: 0.04897959183673469
+    likelihood_ratio: 13.920454545454545
+  - gap_thresh: 0.06
+    tol: 0.04
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 245
+    n_same_called_same: 116
+    n_wide_called_same: 19
+    p_same_given_same: 0.6987951807228916
+    p_same_given_wide: 0.07755102040816327
+    likelihood_ratio: 9.010779961953077
+  - gap_thresh: 0.06
+    tol: 0.04
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 47
+    n_wide_called_same: 19
+    p_same_given_same: 0.7121212121212122
+    p_same_given_wide: 0.07755102040816327
+    likelihood_ratio: 9.182615629984051
+  - gap_thresh: 0.06
+    tol: 0.05
+    same_def: lt_tol
+    n_same: 247
+    n_wide: 245
+    n_same_called_same: 182
+    n_wide_called_same: 26
+    p_same_given_same: 0.7368421052631579
+    p_same_given_wide: 0.10612244897959183
+    likelihood_ratio: 6.94331983805668
+  - gap_thresh: 0.06
+    tol: 0.05
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 245
+    n_same_called_same: 54
+    n_wide_called_same: 26
+    p_same_given_same: 0.8181818181818182
+    p_same_given_wide: 0.10612244897959183
+    likelihood_ratio: 7.709790209790211
+  - gap_thresh: 0.08
+    tol: 0.01
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 33
+    n_wide_called_same: 1
+    p_same_given_same: 0.5
+    p_same_given_wide: 0.00558659217877095
+    likelihood_ratio: 89.5
+  - gap_thresh: 0.08
+    tol: 0.01
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 33
+    n_wide_called_same: 1
+    p_same_given_same: 0.5
+    p_same_given_wide: 0.00558659217877095
+    likelihood_ratio: 89.5
+  - gap_thresh: 0.08
+    tol: 0.02
+    same_def: lt_tol
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 39
+    n_wide_called_same: 2
+    p_same_given_same: 0.5909090909090909
+    p_same_given_wide: 0.0111731843575419
+    likelihood_ratio: 52.88636363636364
+  - gap_thresh: 0.08
+    tol: 0.02
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 39
+    n_wide_called_same: 2
+    p_same_given_same: 0.5909090909090909
+    p_same_given_wide: 0.0111731843575419
+    likelihood_ratio: 52.88636363636364
+  - gap_thresh: 0.08
+    tol: 0.03
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 179
+    n_same_called_same: 105
+    n_wide_called_same: 3
+    p_same_given_same: 0.6325301204819277
+    p_same_given_wide: 0.01675977653631285
+    likelihood_ratio: 37.74096385542169
+  - gap_thresh: 0.08
+    tol: 0.03
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 45
+    n_wide_called_same: 3
+    p_same_given_same: 0.6818181818181818
+    p_same_given_wide: 0.01675977653631285
+    likelihood_ratio: 40.68181818181818
+  - gap_thresh: 0.08
+    tol: 0.04
+    same_def: lt_tol
+    n_same: 166
+    n_wide: 179
+    n_same_called_same: 116
+    n_wide_called_same: 6
+    p_same_given_same: 0.6987951807228916
+    p_same_given_wide: 0.0335195530726257
+    likelihood_ratio: 20.847389558232933
+  - gap_thresh: 0.08
+    tol: 0.04
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 47
+    n_wide_called_same: 6
+    p_same_given_same: 0.7121212121212122
+    p_same_given_wide: 0.0335195530726257
+    likelihood_ratio: 21.244949494949495
+  - gap_thresh: 0.08
+    tol: 0.05
+    same_def: lt_tol
+    n_same: 247
+    n_wide: 179
+    n_same_called_same: 182
+    n_wide_called_same: 12
+    p_same_given_same: 0.7368421052631579
+    p_same_given_wide: 0.0670391061452514
+    likelihood_ratio: 10.991228070175438
+  - gap_thresh: 0.08
+    tol: 0.05
+    same_def: exact_zero
+    n_same: 66
+    n_wide: 179
+    n_same_called_same: 54
+    n_wide_called_same: 12
+    p_same_given_same: 0.8181818181818182
+    p_same_given_wide: 0.0670391061452514
+    likelihood_ratio: 12.204545454545455
+figures:
+  gap_pocv: results/grid_fit_v5/figures/gap_recovery_pocv.png
+  gap_pocv_dvdq: results/grid_fit_v5/figures/gap_recovery_pocv_dvdq.png
+  gap_pocv_dvdq_dqdv: results/grid_fit_v5/figures/gap_recovery_pocv_dvdq_dqdv.png
+  gap_dqdv_only: results/grid_fit_v5/figures/gap_recovery_dqdv_only.png
+  noise_0: results/grid_fit_v5/figures/objective_panel_noise0.png
+  noise_0.001: results/grid_fit_v5/figures/objective_panel_noise0.001.png
+  noise_0.005: results/grid_fit_v5/figures/objective_panel_noise0.005.png
+unrecoverable_frac: 0.5190615835777126
+population_sensitivity:
+  dqdv_minus_base_recoverable: 0.015582655826558267
+  dqdv_minus_base_all: -0.019550342130987386
+  direction_flips: true
+  _주의: 복원가능군과 전체 격자에서 33p·34p의 우열이 뒤집힌다. 결론 2를 인용할 때 어느 모집단인지 반드시 함께 쓸 것.
+_analysis:
+  schema_version: 1
+  analysis_spec_id: 0c843c8907be6cec8ff85daa828c9d8c8da5dd0f1586c8bb660e4c126b6712c4
+  fits_sha256: 378ffde80b2a44d99efa3bff3e712b7cd44b41e0073d712fdf63d4efca864042
+  _주의: 이 파일의 숫자는 위 fits 에서 이 spec 으로 계산됐다. spec 이나 fits 가 다르면 인용하지 말 것.

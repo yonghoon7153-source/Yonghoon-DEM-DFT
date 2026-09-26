@@ -1,0 +1,46 @@
+attempt_id: 20260926T195857_273064_000
+started_at: '2026-09-26T19:58:57'
+resume: false
+source_digest: c2ef1a811e70bb4c
+git_commit: e34eea8455d87f8e33c6ae7113fe3d16ddb600e3
+git_commit_short: e34eea84
+git_dirty: false
+git_dirty_tracked: false
+git_dirty_files_in_scope: []
+git_dirty_out_of_scope:
+- degradation-degeneracy/docs/22p_gap/LEG_PRESERVATION.yaml
+git_dirty_repo_wide: true
+git_dirty_scope:
+- src/
+- tools/
+- configs/
+- scripts/
+- run.sh
+- requirements*.txt
+git_untracked_count: 5
+git_untracked_critical: []
+env:
+  python: 3.12.14
+  platform: Linux-6.8.0-110-generic-x86_64-with-glibc2.39
+  machine: x86_64
+  smoothing_backend: banded_cache
+  numpy: 2.5.3
+  scipy: 1.18.1
+  pandas: 3.0.6
+  joblib: 1.6.0
+  pyarrow: 25.0.1
+  pybamm: 26.8.0.0
+  matplotlib: 3.11.2
+  yaml: 6.0.3
+  pybammsolvers: 0.9.1
+  casadi: 3.7.2
+input_sha256:
+  results/grid_fit_v5/curves.parquet: 29da452a04ca17d7
+  configs/base.yaml: 26fe6c7cc2a2d719
+  results/grid_fit_v5/curves_manifest.yaml: ba21378676a0f535
+  results/grid_fit_v5/curves_manifest_start.yaml: c0bc64a45e6dafd7
+  results/grid_fit_v5/failed.csv: 5c72f87cd12c0e4f
+halfcell_cache: null
+halfcell_recipe: null
+_주의: 실행 **시작** 시점 상태다 (입력 로드·self-fit 이전). manifest.yaml 은 종료 시점이므로 둘이 다르면 실행 도중 코드나
+  입력이 바뀐 것이다 (F42/F51). half-cell 캐시 digest 는 기준 곡선을 고른 뒤 attempt 파일에 추가된다.

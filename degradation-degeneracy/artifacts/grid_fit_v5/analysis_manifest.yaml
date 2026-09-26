@@ -1,0 +1,43 @@
+analysis_schema_version: 1
+analysis_spec_id: 0c843c8907be6cec8ff85daa828c9d8c8da5dd0f1586c8bb660e4c126b6712c4
+raw_inputs:
+  fits_sha256: 378ffde80b2a44d99efa3bff3e712b7cd44b41e0073d712fdf63d4efca864042
+  curves_sha256: 29da452a04ca17d778f448ad9504f21d1b8a22db8dd64bf1e0ba7c95804a6adc
+  run_manifest_sha256: 464c8035031a85ce3f81b54dd495bc574554a93c4311dfcef229ea00d541181c
+generator:
+  git_commit: e34eea8455d87f8e33c6ae7113fe3d16ddb600e3
+  source_digest: c2ef1a811e70bb4c
+  git_dirty: false
+  env:
+    python: 3.12.14
+    platform: Linux-6.8.0-110-generic-x86_64-with-glibc2.39
+    machine: x86_64
+    smoothing_backend: banded_cache
+    numpy: 2.5.3
+    scipy: 1.18.1
+    pandas: 3.0.6
+    joblib: 1.6.0
+    pyarrow: 25.0.1
+    pybamm: 26.8.0.0
+    matplotlib: 3.11.2
+    yaml: 6.0.3
+    pybammsolvers: 0.9.1
+    casadi: 3.7.2
+parameters:
+  tol: 0.02
+  gap_thresh: 0.06
+  gap_atol: 1.0e-09
+  population: recoverable(alpha_true >= 1 - atol) / all 두 벌 모두 기록
+  noise: 0.0
+  noise_unit: sigma[V] of independent Gaussian voltage noise
+  p22_center:
+  - 0.13
+  - 0.13
+  - 0.17
+  p22_radius: 0.021
+  p22_metric: unscaled_euclidean_fractional_coordinates
+  p22_empty_radius_policy: nearest_fallback
+  selected_condition_ids_sha256: f4e633ebe62924a6e79a1a0505a85840b39b9b8ea090ee9ff258fe6686d1a1a9
+derived_outputs:
+  objective_comparison.yaml: 1de38da483cef792e4c9acfee5d394c2a9167bbdaef881acd4b0a78201e99d96
+  degeneracy_summary.yaml: 8567d1159e6b13cc7629f9ff4db1a6f8e6475ffa5e04395c2296dcbe7f0b2a0e
