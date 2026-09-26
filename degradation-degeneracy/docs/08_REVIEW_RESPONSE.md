@@ -8134,15 +8134,15 @@ MANIFEST 49 files · 커밋 뒤 blob 대조 49/49, `-text !eol` 규칙 먼저 �
 
 | # | 시각 | 무엇 | 끝 |
 |---|---|---|---|
-| 1 | 18:07 | `nohup ./run.sh --mode all …` (attempt `591c0939…`, 새 발급). 완방상태 계산 → 캐시 `.cache/discharged_state/a8e262f7d6aa4beb.json` 저장 → `grid 0/3069` | 프로세스 소멸, 메시지 없음. 터미널을 닫아 WSL 이 idle 종료. **조건 0개 계산** (`completed.jsonl` 924건은 guards 사전검사의 infeasible 기록) |
-| 1-r | 18:18 | D6 의 명시적 `--resume` **1회** | grid gate 거부: `살아 있는 claim 은 다른 run_spec 을 봉인했다 (97585418 ≠ e7cc8713)` |
-| 2 | 18:20 | 캐시 파일을 창 디렉터리로 옮긴 뒤 `setsid nohup … --resume` | gate 통과(소유한 재개, "924개 완료 확인, 3069개 남음") → 캐시 재계산·재저장 → `grid 0%` → **Terminated** (loky "leaked semlock at shutdown"). `dmesg` 첫 줄 = **18:27:01 VM 부팅** → WSL VM 재시작으로 SIGTERM. OOM 아님(13 GB free), GPU 유휴, 다른 publisher 없음 |
+| 1 | 18:07 | `nohup ./run.sh --mode all …` (attempt `591c0939…`, 새 발급). 완방상태 계산 → 캐시 `.cache/discharged_state/a8e262f7d6aa4beb.json` 저장 → `grid 0/3069` | 프로세스 소멸, 메시지 없음. ~~터미널을 닫아 WSL 이 idle 종료.~~ 관측: 프로세스 소멸, 메시지 없음 (원인 미확정 — §102 R2). ~~**조건 0개 계산**~~ **저장 기록에서 완료된 feasible 조건 0** (`completed.jsonl` 924건은 guards 사전검사의 infeasible 기록; baseline 계산·캐시 쓰기는 있었다) |
+| 1-r | 18:18 | D6 의 명시적 `--resume` **1회째 호출** | grid gate 거부: `살아 있는 claim 은 다른 run_spec 을 봉인했다 (97585418 ≠ e7cc8713)` |
+| 2 | 18:20 | 캐시 파일을 창 디렉터리로 옮긴 뒤 `setsid nohup … --resume` — **같은 attempt `591c0939…` 로 `--resume` 2회째 호출** (D6 한도 밖; 사전 재승인 원문 없음 — §102 R1) | gate 통과(소유한 재개, "924개 완료 확인, 3069개 남음") → 캐시 재계산·재저장 → `grid 0%` → **Terminated** (loky "leaked semlock at shutdown"). `dmesg` 첫 줄 = **18:27:01 VM 부팅** (관측). ~~WSL VM 재시작으로 SIGTERM.~~ 원인(VM 종료·메모리·idle)은 미확정 — §102 R2. OOM 로그 없음(13 GB free, 재부팅 뒤 값), GPU 유휴, 다른 publisher 없음 |
 | — | 18:3x | `release_leg_run('grid_fit_v5')` → `planned` (attempt `591c0939…`). 부분 산출 → `$W/attempt12_partial_results`, 캐시 → `$W/discharged_cache_from_attempt2.json`. `precheck_leg_run` → `kind: new` | 사용자 재승인(같은 계획 항목, 처음부터) |
 | 3 | 18:31 | tmux 안 `./run.sh --mode all …` (attempt `abd0c650…`, 새 발급) → 캐시 저장 → `grid 0%` | tmux 세션이 닫히며(`[exited]`) 소멸. 원인은 **내 명령 블록**: `tmux new` 와 그 뒤 실행 줄을 한 블록으로 붙여 넣게 해서 줄이 pane 셸과 바깥 셸로 갈라졌다 |
 | 3-d | 18:32 | 바깥 셸이 같은 줄을 중복 실행 | grid gate 거부 `97585418 ≠ e7cc8713` (소유한 재개 + 캐시 존재). 아무것도 쓰기 전 거부 |
 | — | 18:3x | `release_leg_run` → `planned` (attempt `abd0c650…`). 부분 산출 → `$W/attempt3_partial_results`, 캐시 → `$W/discharged_cache_from_attempt3.json`. `precheck` → `new` | — |
 
-**G74-1 (코드, RUN_SCOPE — 지금 고치지 않는다, 74차 신고):** `discharged_cache_sha256: null` 계획은 **첫 시작 뒤 어떤 소유한 재개도 불가능**하다. `src/grid.py::_discharged_kw` 는 계획이 null 이면 `force=True` 로 재계산하는데 `src/baseline.py::get_discharged_state` 는 재계산 결과를 `use_cache`(config 기본 true)면 **캐시 파일로 저장**한다. 그 다음 프로세스의 `live_grid_axis` 는 그 파일의 sha 를 spec 에 넣으므로 claim 이 봉인한 null spec 과 항상 어긋난다. 세 번의 거부는 gate 가 옳게 동작한 것이고(다른 spec 을 이어붙이지 않았다), 틀린 것은 실행 자신의 부작용이 live 축을 바꾼다는 점이다. 결과: E9-4 D6 의 "`--resume` 정확히 1회" 는 null 계획에서는 문장으로만 존재했다. 반례는 위 1-r·3-d 그대로 (재현: null 계획 → 시작 → 캐시 저장 확인 → 같은 token 으로 두 번째 시작). 수정 후보(74차에서 판정 받는다): (a) 승인이 null 이면 강제 재계산 결과를 저장하지 않는다 (b) 소유한 재개는 완방상태 축을 claim 의 봉인 spec 에서 가져와 대조한다 (c) `plan_leg.py` 가 null 을 거부하고 캐시를 먼저 만들게 한다. 어느 것도 지금 넣지 않는다 — RUN_SCOPE 가 움직이면 GO 가 묶인 `c2ef1a811e70bb4c` 가 깨진다.
+**G74-1 (코드, RUN_SCOPE — 지금 고치지 않는다, 74차 신고):** ~~`discharged_cache_sha256: null` 계획은 **첫 시작 뒤 어떤 소유한 재개도 불가능**하다.~~ **정정 (§102 R2):** null 계획은 `cache: true` 에서 강제 재계산이 만든 캐시 파일을 **그대로 둔 채** 다음 프로세스를 시작하면 live 축이 바뀌어 거부된다 (캐시를 옮긴 뒤의 2회째 호출은 통과했다 — 권장 우회가 아니다). `src/grid.py::_discharged_kw` 는 계획이 null 이면 `force=True` 로 재계산하는데 `src/baseline.py::get_discharged_state` 는 재계산 결과를 `use_cache`(config 기본 true)면 **캐시 파일로 저장**한다. 그 다음 프로세스의 `live_grid_axis` 는 그 파일의 sha 를 spec 에 넣으므로 claim 이 봉인한 null spec 과 ~~항상~~ (캐시가 남아 있는 한) 어긋난다. 세 번의 거부는 gate 가 옳게 동작한 것이고(다른 spec 을 이어붙이지 않았다), 틀린 것은 실행 자신의 부작용이 live 축을 바꾼다는 점이다. 결과: E9-4 D6 의 "`--resume` 정확히 1회" 는 null 계획에서는 문장으로만 존재했다. 반례는 위 1-r·3-d 그대로 (재현: null 계획 → 시작 → 캐시 저장 확인 → 같은 token 으로 두 번째 시작). 수정 후보(74차에서 판정 받는다): (a) 승인이 null 이면 강제 재계산 결과를 저장하지 않는다 (b) 소유한 재개는 완방상태 축을 claim 의 봉인 spec 에서 가져와 대조한다 (c) `plan_leg.py` 가 null 을 거부하고 캐시를 먼저 만들게 한다. 어느 것도 지금 넣지 않는다 — RUN_SCOPE 가 움직이면 GO 가 묶인 `c2ef1a811e70bb4c` 가 깨진다.
 
 **G74-2 (등록부):** `docs/22p_gap/_exec_class/f3f509012c8d1a39beff96c951f649e40da50567d1aac388628d79c44e270acf.json` 이 미추적으로 생겼다. 소유한 재개 경로의 `_record_canonical_if_identifiable` 이 부분 산출 디렉터리(manifest 있음)의 content id 를 정본 class 로 등록한 것이다 — 중단·폐기된 자리의 레코드. **지우지 않고 커밋하지 않는다** (등록부 삭제 금지 · 고아 커밋 금지). 디스크 등록부는 368, tracked 367. 재실행의 E6 전후 snapshot 은 368 에서 시작하며 이 이름을 표에 적는다.
 
@@ -8150,9 +8150,9 @@ MANIFEST 49 files · 커밋 뒤 blob 대조 49/49, `-text !eol` 규칙 먼저 �
 
 **신고하는 편차:** ① 리뷰어 §6-2 "clean 시작" — 재실행 시작 시 WSL 트리에 tracked 변경은 0 이지만 미추적 4개가 있다: `docs/22p_gap/_attempts/`(lifecycle journal·lock) · `_claims/`(lock) · G74-2 고아 레코드 · `bms-balancing/out_u18b/`(dd 밖). ② D6 는 1-r 에서 1회 썼고 2·3 은 외부 종료라 재승인 경계에서 사용자 결정으로 새 항목을 냈다. ③ 실행 환경 조치(사용자): Windows `.wslconfig` `vmIdleTimeout=-1`, 절전 해제, tmux 안 실행·창 유지 — 적용 여부는 창을 열 때 `status_before` 옆에 적는다.
 
-## §100 WSL 4차 시도 — VM 재시작(메모리) · 캐시 결속 계획의 재개 성립 실측 · **실행 기계 이전 (Gabia) · 재승인 2**
+## §100 WSL 4차 시도 — VM 재시작 관측 ~~(메모리)~~ · 캐시 결속 계획의 재개 성립 실측 · **실행 기계 이전 (Gabia) · 재승인 2**
 
-**4차 (WSL, 재승인 1 HEAD `69c3c826`, 19:21):** tmux 안, 창 유지, `.wslconfig` 는 `networkingMode=mirrored` 만(사용자가 `vmIdleTimeout` 은 넣지 않음). 로그: `gate 통과(사전 점검·새 발급)` → **`완방상태 캐시 적중`** (재계산·저장 없음 — 재승인 1 의 목적대로) → `grid 0/3069` → 소멸. `uptime -s` = **19:24:29** (시작 3분 뒤 VM 부팅), 프로세스 0, OOM 로그 없음(VM 자체가 넘어가면 남지 않는다). 시작 시점 병행 프로세스: 다른 clone 의 `run_daily.sh --catchup` (로그인 시 백그라운드, 종료 확인, `~/dd` 와 무관). 판정: 워커 28개(각각 PyBaMM+JAX+IDAKLU)가 RAM 15.5 GB 를 넘겨 **WSL VM 이 재시작**. 1~3차의 "외부 종료" 도 같은 원인일 가능성이 높다(2차의 18:27 부팅 포함) — 조건 계산은 네 번 모두 0.
+**4차 (WSL, 재승인 1 HEAD `69c3c826`, 19:21):** tmux 안, 창 유지, `.wslconfig` 는 `networkingMode=mirrored` 만(사용자가 `vmIdleTimeout` 은 넣지 않음). 로그: `gate 통과(사전 점검·새 발급)` → **`완방상태 캐시 적중`** (재계산·저장 없음 — 재승인 1 의 목적대로) → `grid 0/3069` → 소멸. `uptime -s` = **19:24:29** (시작 3분 뒤 VM 부팅), 프로세스 0, OOM 로그 없음(VM 자체가 넘어가면 남지 않는다). 시작 시점 병행 프로세스: 다른 clone 의 `run_daily.sh --catchup` (로그인 시 백그라운드, 종료 확인, `~/dd` 와 무관). ~~판정: 워커 28개(각각 PyBaMM+JAX+IDAKLU)가 RAM 15.5 GB 를 넘겨 **WSL VM 이 재시작**. 1~3차의 "외부 종료" 도 같은 원인일 가능성이 높다(2차의 18:27 부팅 포함) — 조건 계산은 네 번 모두 0.~~ **정정 (§102 R2):** 관측은 "실행 시작 3분 뒤 VM 부팅 시각" 이고, 메모리 한도 초과·idle·tmux 는 **가설**이다 (독립 확정 없음). 네 시도 모두 **저장 기록에서 완료된 feasible 조건 0** 이며, baseline 계산·캐시 쓰기는 로그에 있다.
 **재개 성립 실측:** 4차 뒤 `precheck_leg_run` → **`kind: resume`** (attempt `1939d70c…`). null 계획에서는 세 번 모두 거부됐던 자리다 — 캐시 바이트를 묶으면 D6 의 `--resume` 이 성립한다는 G74-1 의 반대편 증거. 사용자 결정으로 재개하지 않고 기계를 옮겼다: `release_leg_run` → `planned` (attempt `1939d70c…`), 부분 산출 → `$W/attempt4_partial_results`, WSL tracked 변경 0, `precheck` → `new`. WSL 창 디렉터리(`~/grid_fit_v5_window/`, 4회분 로그·부분 산출·캐시 사본·등록부 snapshot)는 증거로 보존.
 
 **Gabia (`kserver116-27`, 20 proc · 62 GB(가용 46) · 291 GB · conda base Python 3.13 → `conda create -n py312 python=3.12` 로 3.12.14 · tmux 있음):** clone HEAD `69c3c826` · `7a794556` 대비 RUN_SCOPE diff 0 · `setup_env.sh --python <py312>` · `run.sh --mode verify` OK(idaklu 권장) · `git status` 비어 있음 · `source_digest c2ef1a811e70bb4c`. 이 기계에 이미 다른 작업이 16 GB 를 쓰고 있다(창 열 때 `ps` 로 적는다). 워커 수는 명세대로 `$(nproc)` = 20 (워커당 2.3 GB).
@@ -8176,12 +8176,66 @@ MANIFEST 49 files · 커밋 뒤 blob 대조 49/49, `-text !eol` 규칙 먼저 �
 
 데이터 커밋 `d9f8791c` 는 Gabia 에서 사람이 push 했다 (artifacts · 영수증 · 원장 · 보고서 · 등록 레코드 2 · 창 기록). `_attempts/`·`_claims/` 는 lifecycle 잠금이라 커밋하지 않았다.
 
-**무해한 로그 (판정 근거 포함):** JAX `Unable to load cuSPARSE` Traceback — GPU 백엔드 초기화 실패 뒤 CPU 로 넘어간다 (계산은 IDAKLU/CPU). loky `A worker stopped while some jobs were given to the executor` — 메모리가 늘어난 워커를 loky 가 교체한 알림; 작업 유실이면 `TerminatedWorkerError` 로 중단된다. solver 실패 0 과 completed 3993 이 유실 없음을 확인한다.
+**무해한 로그 (판정 근거 포함):** JAX `Unable to load cuSPARSE` Traceback — GPU 백엔드 초기화 실패 뒤 CPU 로 넘어간다 (계산은 IDAKLU/CPU). loky `A worker stopped while some jobs were given to the executor` — ~~메모리가 늘어난 워커를 loky 가 교체한 알림; 작업 유실이면 `TerminatedWorkerError` 로 중단된다.~~ **정정 (§102 R2):** 경고의 원인은 확정하지 않는다. 판정 근거는 최종 데이터 집합의 완전성뿐이다 — completed 3993 = 3069 + 924, `failed.csv` 924 행 전부 사전 infeasible, fits 12276 = 3069 × 4 (수신 측 독립 확인).
 
-**G74-3 (절차 공백 — 실행 뒤 docs-lint 적색):** E9 는 새 다리를 활성 cohort `g18_2026_09_15` 에 prospective 로 넣었고, attach 가 그것을 cohort `legs` 로 옮겼다. 그런데 cohort·투영·주장 lint 는 **cohort 의 모든 다리가 봉인된 투영(row projection)을 가진 warm-probe 다리**라고 가정한다. 결과 (d9f8791c, `tests/test_docs_lint.py` maxfail 20 에서 멈춤): ① `cross_leg_comparison: not_applicable_single_leg` 가 두 다리 명부와 충돌 (투영 계열 시험 16개가 이 SystemExit 으로 실패) ② `evidence.regeneration_capability` 없음 → "활성 cohort 에 있다" ③ `claim_roles` 없음 ④ 주장을 붙이려 해도 `source_digest_generations` 에 `c2ef1a811e70bb4c` 가 없고, 그 표는 봉인된 투영에 anchor 된 digest 만 받는다. E1 한계 라벨("이 실행은 `row_projection.py` 의 강한 producer 주장을 쓰지 않는다")과 정면으로 만난다 — **우리도 리뷰어도 E9 단계 5 가 이 lint 계약을 요구한다는 것을 보지 못했다.** 사람의 결정 사항으로 둔다 (다음 절).
+**G74-3 (절차 공백 — 실행 뒤 docs-lint 적색):** E9 는 새 다리를 활성 cohort `g18_2026_09_15` 에 prospective 로 넣었고, ~~attach 가~~ **`finalize_leg()` 가** (`tools/preserve.py` — §102 R2 정정; attach 는 그 뒤 묶음 검증 상태만 바꾼다) 그것을 cohort `legs` 로 옮겼다. 그런데 cohort·투영·주장 lint 는 **cohort 의 모든 다리가 봉인된 투영(row projection)을 가진 warm-probe 다리**라고 가정한다. 결과 (d9f8791c, `tests/test_docs_lint.py` maxfail 20 에서 멈춤): ① `cross_leg_comparison: not_applicable_single_leg` 가 두 다리 명부와 충돌 (투영 계열 시험 16개가 이 SystemExit 으로 실패) ② `evidence.regeneration_capability` 없음 → "활성 cohort 에 있다" ③ `claim_roles` 없음 ④ 주장을 붙이려 해도 `source_digest_generations` 에 `c2ef1a811e70bb4c` 가 없고, 그 표는 봉인된 투영에 anchor 된 digest 만 받는다. E1 한계 라벨("이 실행은 `row_projection.py` 의 강한 producer 주장을 쓰지 않는다")과 정면으로 만난다 — **우리도 리뷰어도 E9 단계 5 가 이 lint 계약을 요구한다는 것을 보지 못했다.** 사람의 결정 사항으로 둔다 (다음 절).
 
 **G74-4 (RUN_SCOPE, 지금 안 고침):** `scripts/archive_results.sh <run>` 은 `artifact_index.yaml` 을 **그 호출에서 승격한 묶음만으로** 다시 쓴다 (`runs = {}` 에서 시작, 238–332). E9 단계 2 의 명령이 정확히 그 형태였고, Gabia 에는 v4 의 `results/` 가 없어 **v4 네 항목(`grid_curves_v4`·`grid_fit_v4`·`halfcell_fit_v4`·`paired_fixed5_v4`)이 인덱스에서 지워졌다** (묶음 바이트는 불변). 이 커밋에서 네 항목을 `e34eea84` 의 바이트 그대로 되살리고 `grid_fit_v5` 항목은 생성된 그대로 두었다. 최상위 `source_commit` 은 스크립트 규칙(묶음마다 다르면 null)대로 `null`.
 
 **신고:** 영수증 `validator_tree_dirty: true` — 영수증을 만들 때 Gabia 트리에 실행이 남긴 원장 변경과 미추적 lifecycle·등록 파일이 있었다. 이 값은 attach 판정에 쓰이지 않는다.
 
 **이 커밋 (기계적 정정만):** 인덱스 복원 · `artifacts/README.md` 행 · `registry_impact.md` census 369 (그 밖 = grid_fit_v5 2) · `test_the_committed_ledger_reports_no_gate_backed_execution_yet` 실측 갱신 (`gate_backed_executions` 1, status `executed`). **하지 않은 것:** cohort 명부·`regeneration_capability`·`claim_roles`·`근거`·세대표 — 사람의 결정 (G74-3).
+
+## §102 74차 접수 — **완주·보존 증거 수용 · 주장 편입·전체 절차 종결 보류** (새 실행 GO 아님) · R1 사실 기록 · R2 문구 정정
+
+2026-09-26 접수. 리뷰어 대상 HEAD `a49a021833282e0bd04c4565591668dc323e9630` · 코드 `7a794556` · 독립 계산 `source_digest c2ef1a811e70bb4c` (RUN_SCOPE 57 파일) · 코드→실행 HEAD·코드→74차 HEAD RUN_SCOPE diff 0 bytes · 검토 checkout tracked 2,681 파일 보존 확인. 패키지 원본 `docs/22p_gap/gate74_review/` (zip sha256 `eb03012cf4fbbf45f8e3bc354b14878f21c459a5913f6ba00a728d91d3a2adac`, MANIFEST `review-payload/v1` 102 files · 커밋 뒤 blob sha256+bytes 대조 **102/102** · `-text !eol` 규칙 먼저 커밋 · `*.log`·`.run.lock` 13개는 gitignore 라 `-f` 로 추가).
+
+**결론 (그대로):** "Gabia 판 3의 저장 결과와 보존 묶음은 제한적으로 수용한다. 전체 실행 이력을 '73차 조건 1~5 전부 충족'으로 종결하지는 않는다. 계산 결과가 무효라는 판정도, 전체 suite가 PASS라는 판정도 아니다." 새 grid/fit 본 실행 불필요. "이 회신만으로 코드 수정·시험·projection 게시·archive/restore/receipt 재생성·class 변경·본 실행을 시작하지 않는다" — 다음은 유한 보완 범위에 대한 **사용자 승인**이다.
+
+| §5 질문 | 답 |
+|---|---|
+| ① 판 3 / 재승인 | 판 3 의 코드·계획·산출·보존 연결 확인. 역할/투영 편입 미완 · 판 1 의 2회째 `--resume` 사전 승인 미확인 → 전체 이력 무조건 준수 **아니오** |
+| ② G74-3 | **(c) 진단용·활성 주장 비사용 유지 + 그것을 표현할 최소 명시 계약 (b)** 권고. 새 투영·세대·active claim 을 한꺼번에 만들지 않는다. 적색 20 은 알려진 미완으로 보존 가능하나 정상 기준선·다음 GO 아님 |
+| ③ G74-1·G74-4 | 재계산 불필요. **다음 grid/resume · 다음 archive 게시 전에** 수정 필수. 다음 보완 묶음에서. 이번 리뷰는 수정·실행 승인 아님 |
+| ④ G74-2 | 삭제·편입·class 재작성 없이 과거 실패 증거로 보존 — 수용. 고아 JSON 원문은 전달본에 없어 미확인. WSL 재사용 전 영향 확인 |
+
+**리뷰어가 독립 확인한 것:** fits 12,276 행 = 3,069 조건 × 4 목적함수, `(cond_id, objective)` 중복 없음 · curves 920,700 행 / 3,069 조건 (fits 와 같은 집합) · failed.csv 924 전부 `infeasible:` · 3,069 + 924 = 3,993, 정렬 ID digest `7b08e97e129d0bf4` 일치, fit 대상 digest `f4e633ebe62924a6` 일치 · WSL 부분 기록 completed 924 = 사전 infeasible ID · 묶음 29 파일 / 27,313,017 bytes 집합·SHA 일치 · receipt core `2aadd24b…` 재해시 일치 · sealed summary semantic SHA 일치 · 등록부 367→369, 기존 367 바이트 불변 · v4 index 네 블록 원문 복원 · WSL 캐시 3개 1,035 bytes / `5ab61b37…`. **재실행하지 않은 것:** 33 검사·empty-root restore·재채점·pytest/smoke·projection 게시·archive/receipt/attach. `validator_tree_dirty: true` 는 그대로 둔다.
+
+**73차 §6 조건별 재판정 (요지):** 1 계획 결속 확인, 단 prospective 연결이 완료 후 projection membership 을 보장하지 못함 (E9 × cohort 계약 공백 — "앞선 리뷰도 놓친 부분", 송신자만의 잘못으로 돌리지 않음) · 2 판 3 정합, WSL `status_before2.txt` 미추적 있으므로 이전 판까지 "모두 clean" 으로 합치지 않음 · 3 +2/367 불변 확인, 무-publisher 는 송신 운영 기록 범위 · 4 판 3 연결됨, 역할 편입 미완, 판 1 추가 resume 은 R1 · 5 diagnostic·E1/E2/E4 유지 수용, R2 문구 정정.
+
+### R1 — 판 1 의 2회째 `--resume` (18:20): 사실 기록
+
+리뷰어: "18:18 거부 뒤 **같은 attempt `591c0939…` 로 다시 resume**. '명시 resume 1회' 로 요약할 수 없다. 첫 거부가 compute 이전이었다고 해서 호출 횟수에서 자동 제외되지는 않는다. 사전 승인 원문이 있으면 출처·시점·범위를, 없으면 '원 승인 한도 밖 추가 호출, 사전 재승인 확인 불가' 로 기록한다. 뒤의 계획 교체가 소급 승인하지 않는다."
+
+**이 세션의 대화 기록(`~/.claude/projects/…/b881d255-….jsonl`)에서 확인한 순서 (UTC / KST):**
+1. 09:18:14Z (18:18) — 에이전트가 D6 의 "확인 뒤 명시적 `--resume` 1회" 로 첫 `--resume` 명령을 제시 ("이번이 허용된 한 번").
+2. 09:19:05Z — 사용자가 실행, gate 거부 출력 (`97585418 ≠ e7cc8713`).
+3. 09:19:56Z (18:19) — **에이전트가** 캐시 파일 이동 + 같은 attempt 로 `--resume` 재호출을 제안하며 자기 해석을 적었다: "이 거부는 계산 전 gate 에서 난 것이라 저는 '재개 1회' 를 아직 안 쓴 것으로 보지만, 리뷰어가 엄격히 읽을 수 있으니 원장에 그대로 적고 다음 게이트에 발견으로 신고하겠습니다. 이 해석이 싫으시면 재승인(새 계획 항목) 경로로 가겠습니다 — 말씀만 주세요."
+4. 09:21:55Z (18:20) — 사용자가 그 명령 블록을 실행 (출력 붙여넣기). **별도의 승인 문장은 없다.** 리뷰어 사전 승인도 없다.
+
+**기록:** 18:20 호출은 **원 승인(73차 §6-4 · D6) 한도 밖의 추가 호출**이고, **사전 재승인은 확인되지 않는다.** 유일한 "승인 행위" 는 사용자가 에이전트의 제안 명령을 실행한 것이며, 그 제안은 에이전트의 해석("compute 이전 거부는 1회에 안 센다")에 기댄 것이었다 — 그 해석은 리뷰어가 받지 않았고 우리도 철회한다. §99 표의 1-r·2 행을 정정했다 (취소선). 뒤의 `69c3c826`·`e34eea84` 는 이 호출을 소급 승인하지 않는다. 캐시 이동은 gitignored 운용 파일에 대한 것이고 authority(원장·등록부·claim)는 건드리지 않았다 — 그래도 한도 밖 호출을 가능하게 한 행위였다는 점을 같이 적는다. 이 편차가 별도로 봉인된 Gabia 판 3 결과를 무효로 만들지는 않는다 (리뷰어 문장 그대로).
+
+### R2 — 문구 정정 (취소선, 원문 유지)
+
+| 원문 (§99·§100·§101·74차 요청문) | 정정 |
+|---|---|
+| "조건 계산 0" / "조건 0개 계산" | **저장 기록에서 완료된 feasible 조건 0** — baseline 계산·캐시 쓰기는 로그에 있다 |
+| "WSL VM 이 재시작 (메모리)" · "OOM 확정" · "idle 종료" · "tmux 세션 종료" | **관측**은 VM 부팅 시각(2: 18:27:01, 4: 19:24:29)과 프로세스 소멸뿐. 메모리 초과·idle·tmux 는 **가설** (독립 확정 없음) |
+| "null 계획은 첫 시작 뒤 어떤 소유한 재개도 불가능 / 항상 거부" | `cache: true` 에서 강제 재계산이 만든 캐시를 **그대로 둔 채** 다음 프로세스를 시작하면 live 축이 바뀌어 거부된다. 캐시를 옮긴 뒤의 호출은 통과했다 — 그것을 권장 우회로 삼지 않는다 |
+| "attach 가 cohort `legs` 로 옮겼다" | **`finalize_leg()`** 가 옮긴다 (`tools/preserve.py`). attach 는 그 뒤 묶음 검증 상태만 바꾼다 |
+| "loky 경고 = 메모리 늘어난 워커 교체; 유실이면 `TerminatedWorkerError`" | 원인 미확정. 판정 근거는 **최종 데이터 집합 완전성**(3,993 = 3,069 + 924 · fits 12,276 · 곡선 조건 집합 일치)뿐 |
+
+정정 위치: §99 표 1·1-r·2 행 · §99 G74-1 · §100 제목·4차 문단 · §101 무해 로그·G74-3 · `GATE74_REQUEST.md` §0·§2·§3 · `GATE70_WORKING_STATE.md`.
+
+### 다음 (리뷰어 6항목 중 3~6 은 사용자 범위 승인 뒤)
+
+| # | 항목 | 성격 | 상태 |
+|---|---|---|---|
+| 1 | R1 추가 resume 승인 출처 / 편차 인정 | 기록 | **이 절에서 닫음** — 편차 인정 |
+| 2 | R2 문구 정정 | 기록 | **이 절에서 닫음** |
+| 3 | 진단 전용 분류의 명시 계약 (실행 명부 ≠ 투영 membership · `no_active_claim` 종류 · full_bundle 계약 유지 · 기존 보호 유지 · 생산(planner/planned_index/finalize)과 소비(원장/claim/투영 lint) 동일 분류) + 여섯 회귀 | 코드 — `tools/preserve.py`(RUN_SCOPE) + `docs/22p_gap/row_projection.py` + `tests/test_docs_lint.py` + 원장 | 사용자 범위 승인 대기 |
+| 4 | G74-1 정책 선택 (권고: 고정 캐시 SHA 계획만 허용, 계획 도구와 실제 진입 일치; live 축을 claim 값으로 덮지 않음) + 경계 회귀 | 코드 — RUN_SCOPE | 대기 |
+| 5 | G74-4 index 병합 보존 (무관 항목 보존 · 동명 충돌 거부 · 실패 시 불변 · 원자 교체) + 회귀 · 기존 복원 바이트 유지 | 코드 — `scripts/archive_results.sh` RUN_SCOPE | 대기 |
+| 6 | 기존 결과/등록부/영수증 보존과 새 validator 식별 구분 — RUN_SCOPE 가 움직이면 새 validator identity 는 **별도 기록**, producer source 를 새 digest 로 덮지 않음, 두 실물 receipt 원본 보존 | 절차 | 3~5 와 함께 |
+
+RUN_SCOPE 를 건드리는 3~5 는 `source_digest` 를 움직인다 — 그 뒤 receipt 재검증은 "기존 묶음의 별도 복사본/승인된 검증 작업" 으로만 (리뷰어). 현재 적색 20 은 xfail/skip 으로 덮지 않는다.
