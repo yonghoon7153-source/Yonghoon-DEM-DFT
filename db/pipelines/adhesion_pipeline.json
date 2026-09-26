@@ -781,6 +781,11 @@
    "date": "2026-09-26",
    "stage": "dft",
    "text": "**V2 2단계 부록 봉인 비준** (1저자 '비준' · content_digest 9085cb4aec2bf184…) → V100 29 잡 실행 (kgy serve → archive → 4 세트 순차 · tmux s4v2c)."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**UMA 쪽 S4 에너지 (kgy · fairchem 2.21.0 · 체크포인트 결박값 07068e9c… · default)**: S1 결박(gabia 2.19.0)과 버전이 달라 S2 relaxed 4 구조로 교차대조 → |Δ| ≤ 0.005 meV ⇒ 등가로 기록 (`wad_aprime_s4_uma_env_xcheck_2026_09_26.json`). 미리 본 것(판정 아님): UMA 단독 W −0.088 · 외부 D3 항 +0.488 → UMA+D3 ≈ 0.40 J/m² (정본은 QE D3 항 · 개정 1). V100 29 잡 진행 중 → 원출력 회수 → `collect_aprime_s4.py`."
   }
  ],
  "related_decisions": [
