@@ -737,7 +737,7 @@ planned:
   status: planned
   authorization_kind: prospective
   authorized_source_digest: c2ef1a811e70bb4c
-  run_spec_digest: e7cc8713bb88d941e2d5532f0308e1c7f257b9b06ebaf57a2cc0ad8667fe04ef
+  run_spec_digest: 0838df841ae7e4e694a3938d281e92284c27fb04393e0008b15f7a3fd4e10337
   run_spec:
     leg_spec_version: 2
     leg_id: grid_fit_v5
@@ -745,7 +745,7 @@ planned:
       config_digest: 696bf7d2cf9697d3
       condition_ids_sha256: 7b08e97e129d0bf4
       n_conditions: 3993
-      discharged_cache_sha256: 5ab61b3799d4e18e0233038d6c9dccfb53882a027d36a8721af3796f4c33a064
+      discharged_cache_sha256: 66d84e76ef88e0b65fdf9f432db89818348814e28e7345731216de149cb5fee1
       out: results/grid_fit_v5
     fit:
       config_digest: 87482fa38d72802d
@@ -778,7 +778,7 @@ planned:
       in_digest: null
       out: results/grid_fit_v5
   recorded_on: '2026-09-26'
-  근거: 73차 조건부 한정 GO (원장 §98) — 현행 code identity 로 grid_fine 격자 grid/fit 재실행 (GATE71 §2 E9-0), WSL 로컬. 재승인 (2026-09-26, 원장 §99) —1차 승인(951b6136)의 항목은 discharged_cache_sha256 null 이었고, 세 차례 시도가 전부 외부 종료(WSL VM idle 종료·VM 재시작·tmux 세션 종료)된 뒤 소유한 재개가 매번 "claim 97585418 ≠ live e7cc8713" 로 거부됐다 — null 계획은 첫 시작이 캐시를 저장하는 순간 재개가 불가능하다(74차 신고 G74-1). 이 항목은 실행 기계(WSL, 28 proc)에서 `python -m src.baseline --config configs/grid_fine.yaml` 로 만든 캐시 바이트(sha256 5ab61b37…)를 묶고, plan_leg.py 출력 그대로다(작업 사본에서 옛 항목을 잠시 뺀 뒤 뽑고 되돌림). 그 밖의 축은 1차 승인과 같다. 이 실행은 그 캐시 바이트만 읽는다.
+  근거: '73차 조건부 한정 GO (원장 §98) — 재승인 2 (2026-09-26, 원장 §100): WSL 4차 시도가 워커 기동 시 VM 종료로 반복 실패(메모리 15.5 GB · 28 proc), 실행 기계를 Gabia 서버(kserver116-27, 20 proc, 62 GB, Python 3.12.14)로 이전. 이 기계에서 `python -m src.baseline --config configs/grid_fine.yaml` 로 만든 완방상태 캐시 바이트(sha256 66d84e76…)를 묶고, plan_leg.py 출력 그대로다(작업 사본에서 옛 항목을 잠시 뺀 뒤 뽑고 되돌림). 이력: 1차 승인 951b6136 (null 캐시, 재개 불능 G74-1) → 재승인 1 69c3c826 (WSL 캐시 5ab61b37…, precheck resume 성립 실측) → 이 항목. 그 밖의 축·authorized_source_digest 는 세 항목 모두 같다.'
 legs:
 - leg_id: paired_fixed5_v4
   preservation_status: full_bundle
