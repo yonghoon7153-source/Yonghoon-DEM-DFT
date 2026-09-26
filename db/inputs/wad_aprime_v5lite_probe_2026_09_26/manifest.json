@@ -6,7 +6,9 @@
  "pp_11e": {
   "file": "Ag.pbe-n-kjpaw_psl.1.0.0.UPF",
   "source": "pslibrary 1.0.0 (QE 사이트 upf_files) · 4d10 5s1 · 전자 11 — gabia 에서 받아 sha 를 적는다",
-  "status": "⚠ 카드 봉인 PP 아님 — 채택하려면 V2 대조 검증(0.435 와 |ΔW| ≤ 0.01) 먼저"
+  "status": "⚠ 카드 봉인 PP 아님 — 채택하려면 V2 대조 검증(0.435 와 |ΔW| ≤ 0.01) 먼저",
+  "sha256_16_gabia": "1bf3b9d1ea5c878e",
+  "z_valence": 11.0
  },
  "판정_규칙(결과_전)": "GPU 피크 ≈ CPU 추정 총량 × 1.2–1.45 (SE|SE 실측) → 상한 쪽(×1.45)이 44 GB(gabia KILL) 이하인 변형만 탄성 끝난 뒤 gabia GPU 시험 (electron_maxstep 2) · 넘으면 그 변형 불가",
  "variants": {
@@ -46,5 +48,6 @@
   "cell_c_A": 32.348,
   "probe_70Ry_total_GB": 108.99,
   "note": "S3 프로브 실측 (70/700 Ry · 4 랭크)"
- }
+ },
+ "result": "db/raw/wad_aprime_v5lite_probe_2026_09_26/probe_cpu_52Ry_2026_09_26.json — 셋 다 불합격 (61–80 GB)"
 }
