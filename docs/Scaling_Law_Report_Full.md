@@ -358,7 +358,7 @@ Distance: 0.039 (excellent match!)
 ### 4.1 Electronic (AM-AM Network)
 
 Network Solver가 AM-AM 접촉으로 Kirchhoff 네트워크를 구성하여 전자 전도도 계산.
-σ_AM = 50 mS/cm (NCM, discharged state)
+σ_AM = 50 mS/cm (모델 기준값 — 문헌값 아님, CL-92; 측정 pristine NCM811 4.1 mS/cm 의 약 10 배)
 
 **2-Regime Structure**:
 - T/d ≥ 10 (Thick): topology 지배 → R²=0.97

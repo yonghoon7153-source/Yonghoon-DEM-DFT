@@ -2319,6 +2319,22 @@
    "reviews_work_dated": "2026-04-24 ~ 2026-09-25",
    "shared_input": null,
    "verdict": "⇒ 값 3.0 은 그대로 (재계산 없음).  라벨은 *\"고적층압 µC 펠릿 평탄의 하단\"* 으로만 쓴다.  같은 배치를 8 개 연구실이 잰 σ25 는 0.44–2.98 mS/cm (Ohno 2020 SI Table S11) — 3.0 은 그 최댓값 자리.  ⬜ 저자 결정으로 남는 것: 복셀 σ 의 CONTACT_FREE 상한 서술 한정 (CL-81) · 펠릿 잔류기공과 STEP3 명시 기공의 이중계상 · κ_SE 0.7 (치밀 규약) 과의 규약 불일치."
+  },
+  {
+   "id": "CL-92",
+   "date": "2026-09-26",
+   "status": "live",
+   "kind": "convention",
+   "claim": "**DEM 접촉망의 전자 σ 입력 σ_AM = 50 mS/cm (`network_conductivity.SIGMA_AM_ELECTRONIC`) 는 모델 기준값이다 — 문헌값이 아니다.**  2026-04-24 도입 때 인용이 없었고, 옛 라벨 *\"NCM811 literature reference\"* · *\"grain interior, discharged\"* 는 인용 금지 (quotation_ban).  *discharged* 는 거꾸로다 — 완전 리튬화 (방전) 상태가 NMC σ_e 의 최저다.",
+   "measured": {
+    "metric": "정본 litdb 카드 대조 (원문 PDF 확인된 카드만)",
+    "value": "pristine NCM811 **4.1 mS/cm** (Wang 2018 JPS 393, 20 °C DC 분극 — 카드 wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni, canon 35b481d0d) · NCM83 **5.22 mS/cm** (Ketter 2025 SI, DC — canon 6d641f6cf) · NMC333/532 x = 0 → 0.75 에서 5.0 × 10⁻⁸ … 1.4 × 10⁻² S/cm (Amin & Chiang 2016, 30 °C).  ⇒ 50 mS/cm 는 측정 pristine NCM811 의 약 12 배이고, 카드에 있는 상온 측정 최댓값 (14 mS/cm, 탈리튬 x = 0.75) 보다도 크다."
+   },
+   "asserted": "04-24 import 주석 `0.05 # discharged NCM` (인용 없음) → electronic_conductivity_derivation.md §6.3 의 \"0.01–0.1 S/cm, ACS Mater. Lett. (2024)\" 는 확인 불가 → 라벨 표류 (literature reference · grain interior · 단결정).  뿌리 감사 (원장 SELF-51, 2026-09-25) 가 근거 없음을 확정.",
+   "provenance": "원장 SELF-51 · docs/reviews/citation_root_audit_20260925.md §3 행 10 · docs/reviews/si_table_response_20260925.md §1 · 사용자 비준 2026-09-26 (A: 값 유지 · 라벨 정정)",
+   "reviews_work_dated": "2026-04-24 ~ 2026-09-26",
+   "shared_input": null,
+   "verdict": "⇒ **값은 그대로 둔다 (재계산 없음 — 사용자 비준 A, 2026-09-26).**  접촉망 σ_e 는 σ_AM 에 정비례한다 (선형 저항망 — 입자 벌크 저항과 Holm 협착 1/(2σa) 가 둘 다 1/σ_AM) ⇒ 비 · 추세 · 스케일링 법칙의 모양은 무영향이고 절대값만 이 기준에 걸린다.  ⚠ 예외: 등급 엔진의 ASR_electronic · ASR_total 은 **절대 문턱**이라 이 기준 위에서만 뜻이 있다 (측정 NCM811 기준이면 ASR_e 약 12 배).  ⚠ SDCP 원고의 STEP3 σ_NCM 1.0 × 10⁻² S/cm 는 **다른 솔버의 다른 값**이다 (표 S2 각주 ᵇ · CL-70) — 이 항목과 섞지 않는다.  ⚠ scripts/network_conductivity.py 의 옛 주석은 이번에 고치지 않았다 — S3 봉인 수치 모듈 (seal_s3_prerun.NUMERIC_MODULES) 이라 주석 한 줄도 바이트 지문을 바꿔 봉인된 S3 실런을 거부시킨다 (run_s3_psi.verify_code_bundle).  정정은 S3 실런 (L2-01) 뒤 — 그동안 이 CL 이 정본이다."
   }
  ],
  "quotation_ban": [
@@ -2534,6 +2550,38 @@
    "pattern": "Cronau (단결정)",
    "claim": "CL-91",
    "why": "CL-91 — σ_grain 3.0 은 Cronau 2021 SI 그림 S2c 의 µC-Li6PS5Cl 펠릿 (고적층압 평탄 하단) 이다.  \"단결정\" 라벨은 거짓이었다 (04-29 Sakuda → 05-28 Cronau 2022 로 옮겨 다닌 라벨, SELF-51)",
+   "allowed_in": []
+  },
+  {
+   "pattern": "NCM811 literature reference",
+   "claim": "CL-92",
+   "why": "CL-92 — σ_AM 50 mS/cm 는 DEM 접촉망의 모델 기준값이다 (출처 없음, 04-24 도입).  \"literature reference\" · \"grain interior, discharged\" 라벨은 거짓이었다 — 측정 pristine NCM811 은 4.1 mS/cm (Wang 2018) 이고 방전 상태가 σ_e 최저다 (SELF-51)",
+   "allowed_in": []
+  },
+  {
+   "pattern": "NCM811, discharged",
+   "claim": "CL-92",
+   "why": "CL-92 — σ_AM 50 mS/cm 는 DEM 접촉망의 모델 기준값이다 (출처 없음, 04-24 도입).  \"literature reference\" · \"grain interior, discharged\" 라벨은 거짓이었다 — 측정 pristine NCM811 은 4.1 mS/cm (Wang 2018) 이고 방전 상태가 σ_e 최저다 (SELF-51)",
+   "allowed_in": []
+  },
+  {
+   "pattern": "NCM, discharged",
+   "claim": "CL-92",
+   "why": "CL-92 — σ_AM 50 mS/cm 는 DEM 접촉망의 모델 기준값이다 (출처 없음, 04-24 도입).  \"literature reference\" · \"grain interior, discharged\" 라벨은 거짓이었다 — 측정 pristine NCM811 은 4.1 mS/cm (Wang 2018) 이고 방전 상태가 σ_e 최저다 (SELF-51)",
+   "allowed_in": []
+  },
+  {
+   "pattern": "grain interior, discharged",
+   "claim": "CL-92",
+   "why": "CL-92 — σ_AM 50 mS/cm 는 DEM 접촉망의 모델 기준값이다 (출처 없음, 04-24 도입).  \"literature reference\" · \"grain interior, discharged\" 라벨은 거짓이었다 — 측정 pristine NCM811 은 4.1 mS/cm (Wang 2018) 이고 방전 상태가 σ_e 최저다 (SELF-51) · scripts/network_conductivity.py 만 예외: S3 봉인 수치 모듈이라 주석도 못 고친다 (바이트가 바뀌면 봉인된 S3 실런이 거부) — S3 실런 뒤 정정.",
+   "allowed_in": [
+    "scripts/network_conductivity.py"
+   ]
+  },
+  {
+   "pattern": "NCM811 grain bulk; literature",
+   "claim": "CL-92",
+   "why": "CL-92 — σ_AM 50 mS/cm 는 DEM 접촉망의 모델 기준값이다 (출처 없음, 04-24 도입).  \"literature reference\" · \"grain interior, discharged\" 라벨은 거짓이었다 — 측정 pristine NCM811 은 4.1 mS/cm (Wang 2018) 이고 방전 상태가 σ_e 최저다 (SELF-51)",
    "allowed_in": []
   }
  ],

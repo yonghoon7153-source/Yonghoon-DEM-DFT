@@ -115,6 +115,14 @@ DBE/SBE 비 R̄ (8 origin 쌍대응 평균, vox 0.15 · centerline):
 2. **Supplementary Figure (신설)**: 3 × 3 격자 (σ_NCM × σ_SDCP) 의 R̄, 생산점 표시.  캡션 한정어: *"Nine closure combinations evaluated on one
    SBE/DBE bed pair; bars show the spread over eight grid-origin phases of a single bed, not a standard error; no interpolation between grid
    points."*
+   ✅ **09-26 생성** (사용자 비준 — 리포 기본 형식): `docs/figures/sigma_closure_3x3.png` (+ svg · csv · Origin csv), 생성기
+   `scripts/plot_sigma_closure_3x3.py` — 원장 CL-70 에서 직접 읽고 9 칸을 검산한다 (selftest 음성 대조 3).  (a) 격자 9 칸의 R̄ · (b) σ_NCM 축의 점 (잇지 않는다).
+   ⚠ ±3·SD 막대는 기호보다 작다 · Wang 2018 NCM811 값은 축에 그리지 않았다 (격자점 사이 값을 읽게 만든다 — 보간 금지).  캡션 (제안):
+   > *Supplementary Fig. S(new). DBE/SBE electronic-conductivity ratio over nine closure combinations of σ_NCM (3.3 × 10⁻⁴, 1.0 × 10⁻²,
+   > 0.30 S cm⁻¹) and σ_SDCP (2.5, 250, 2.5 × 10⁴ S cm⁻¹), evaluated on one SBE/DBE bed pair. (a) Mean ratio at each grid point; the outlined
+   > cell is the combination used in this work. (b) The same values against σ_NCM; error bars (±3 SD) show the spread over eight grid-origin
+   > phases of a single bed, not a standard error, and are smaller than the symbols. Points are not connected: no interpolation between grid
+   > points is implied. All nine points exceed the pre-registered threshold (mean − 3 SD > 1.01, dashed line).*
 3. **Methods 한 문장** (Stage 3 문단 뒤): *"The electronic conductivity assigned to NCM811 (1.0 × 10⁻² S cm⁻¹) is an effective input rather
    than a measured property; the DBE/SBE ordering is unchanged when it is varied thirty-fold in either direction (Supplementary Fig. S(new))."*
 4. **SI 참고문헌**: S(new1) Amin & Chiang, *J. Electrochem. Soc.* **163**, A1512 (2016) · S(new2) Wang *et al.*, *J. Power Sources* **393**,
@@ -136,9 +144,11 @@ DBE/SBE 비 R̄ (8 origin 쌍대응 평균, vox 0.15 · centerline):
   가정은 남으며, 같은 조성에서 연구실 간 ~3 자릿수 산포라 **한 연구실의 값을 고르는 것**이 된다.  ⇒ Wang 확인 뒤에도 권장은 A.
 - [x] Wang 2018 PDF 확인 (사용자 제공 본문 + SI) → 정본 카드 `wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni` (canon `35b481d0d`) →
   각주 S(new2) 초안 투입 (09-25 밤).
-- [ ] 정본 카드 `zhang2023_pfib_multiscale_imaging_4d_thick_cathode` · `aminchiang2016_nmc_electronic_ionic_transport_vs_li` 의
-  "Wang 2018 = 5 × 10⁻⁵" 귀속에 정정 주석 — 논문 에이전트가 **비준을 청해 두고 손대지 않았다** (사용자 결정).
-- [ ] SI 그림 (CL-70 표로 지금 가능) · 각주 · Methods 문장을 사용자 docx 에 반영.  리포 `build.js` 는 08-23 판이라 라벨 동기화 필요 여부는 사용자 판단.
+- [x] 정본 카드 `zhang2023_pfib_multiscale_imaging_4d_thick_cathode` · `aminchiang2016_nmc_electronic_ionic_transport_vs_li` 의
+  "Wang 2018 = 5 × 10⁻⁵" 귀속에 정정 주석 — **사용자 비준 (09-26) → canon d1e64f0a1** (본문 불변, 맨 위 주석만).
+- [x] SI 그림 생성 (09-26 — ④-2).
+- [x] DEM 접촉망 σ_AM 50 mS/cm (이 표의 1.0 × 10⁻² 와 **다른 솔버의 다른 값**) — 비준 A (09-26): 값 유지 · 라벨 정정 · 원장 CL-92 + 인용 금지 5.
+- [ ] 각주 · Methods 문장 · SI 그림을 사용자 docx 에 반영.  리포 `build.js` 는 08-23 판이라 라벨 동기화 필요 여부는 사용자 판단.
 - [x] 원고 생성기 메모 D14 정정 (모델 입력값 5 × 10⁻⁵ 를 "문헌 두 출처의 NMC bulk" 로 적은 것) — 이 커밋.
 
 ## 2. LPSCl Poisson's ratio (DEM contact) — 0.3 · `Assumed` · ⏳ 판정은 §7 #6

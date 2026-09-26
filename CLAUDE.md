@@ -1619,7 +1619,7 @@ configs as natural LAYERS inside one composite cathode.
         σ_e = σ_AM · φ_AM^2.83 · f_p_e^1.21
               · exp(-1.01·p_amp + 0.10·log r̄_AM - 0.36·log(T/d_AM))
               · exp[0.05 + 2.19·ln τ - 1.41·(ln τ)²]
-        σ_AM = 50 mS/cm (NCM811 literature reference)
+        σ_AM = 50 mS/cm (모델 기준값 — 옛 라벨 "literature reference" 는 철회 · 원장 CL-92: 측정 NCM811 4.1–5.2 mS/cm 의 약 10 배)
         → σ_AM_eff(S-heavy single-crystal NCM) ≈ 10 mS/cm   [A1 정정: 소입자 AM_S=single, GB無 → σ_e↑]
         → σ_AM_eff(P-heavy polycrystalline NCM) ≈ 5 mS/cm    [대입자 AM_P=poly, GB감소]
     Stack-up (Stage 0 → 4 progression):

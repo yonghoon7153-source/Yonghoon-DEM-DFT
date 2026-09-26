@@ -20,7 +20,7 @@ PHYSICS-FIRST FORM (starting point — iterate from here):
   always deep into percolation).  Bruggeman-style power on φ_AM.
 
 CONSTANTS:
-  σ_AM    = 50.0 mS/cm   (NCM811 grain bulk; literature)
+  σ_AM    = 50.0 mS/cm   (모델 기준값 — 문헌값 아님, 옛 "literature" 라벨 철회: 원장 CL-92)
   exponents (a, b, c, d) live-fit initially; we'll lock to integers/halves
     once data identifies stable values (same pattern as σ_ionic CN²).
 
@@ -94,7 +94,7 @@ _TARGET_KEYS_E = (
 )
 
 # Reject σ_e values above this — composite cannot exceed σ_AM × (volume frac).
-# σ_AM(NCM811) ~ 50 mS/cm literature; cap at 100 mS/cm with 2× margin.
+# σ_AM = 50 mS/cm 모델 기준값 (문헌값 아님 — CL-92); cap at 100 mS/cm with 2× margin.
 SIGMA_E_MAX = 100.0
 
 _last_used_key: dict = {}   # case_id → which σ key supplied its target

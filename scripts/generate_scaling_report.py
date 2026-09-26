@@ -235,7 +235,7 @@ FORM X에서 각 항을 제거했을 때의 R² 변화:
 Network Solver는 ionic 외에 electronic(AM-AM)과 thermal(ALL contacts)도 동시 계산.
 
 ### Electronic (AM-AM Network)
-- σ_AM = 50 mS/cm (NCM, discharged)
+- σ_AM = 50 mS/cm (모델 기준값 — 문헌값 아님, CL-92; 측정 pristine NCM811 4.1 mS/cm 의 약 10 배)
 - AM-AM 접촉만으로 저항 네트워크 구성
 - 2-Regime: T/d ≥ 10 (thick) vs T/d < 10 (thin)
 - Thick R²≈0.97, Thin R²≈0.81 (스크리닝 진행 중)

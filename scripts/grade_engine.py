@@ -525,7 +525,9 @@ AXES: list[dict[str, Any]] = [
      'direction': 'lower', 'thresholds': [2, 5, 10, 20, 40, 80],
      'formula': 'ASR_e = L_cathode × 0.1 / σ_e_stage_e',
      'meaning': '전자전도 영역 저항.  σ_e 동일 — VGCF/도전재로 회복 가능하므로 '
-                '가중치 낮음.  본질적 차별 측면 아님.',
+                '가중치 낮음.  본질적 차별 측면 아님.  ⚠ 절대값은 접촉망 σ_AM 50 mS/cm '
+                '(모델 기준값, 원장 CL-92) 에 정비례한다 — 측정 NCM811 (4.1 mS/cm) 기준이면 '
+                'ASR_e 가 약 12 배라, 이 문턱의 등급은 그 기준 위에서만 뜻이 있다.',
      'weight': 0.35},
 
     {'category': '셀 단위 ASR',

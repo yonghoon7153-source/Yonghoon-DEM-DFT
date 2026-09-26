@@ -179,10 +179,14 @@ The contributions of this work are:
   \caption{Schematic of the DEM-driven multi-physics network solver
     pipeline used in this work.
     \textbf{(a)} DEM-generated cathode microstructure with bimodal
-    active material (\AMP, polycrystalline \NCM, D12, $\sigmagrain
-    = 50$\,mS/cm, gray/black particles; \AMS, single-crystal \NCM,
+    active material (\AMP, polycrystalline \NCM, D12, $\sigma_\mathrm{AM}
+    = 50$\,mS/cm as a model reference input, not a measured property,
+    gray/black particles; \AMS, single-crystal \NCM,
     D4, smaller particles) and solid electrolyte (SE, \LPSCl, D1,
     $\sigmagrain = 3$\,mS/cm, yellowish particles).
+    % SELF-51 / CL-92 (2026-09-26): sigma_AM 50 mS/cm has no literature source.  Measured pristine NCM811
+    % = 4.1 mS/cm (Wang 2018 JPS 393, 20 C DC) and NCM83 = 5.22 mS/cm (Ketter 2025 SI); DEM sigma_e scales
+    % linearly with sigma_AM, so ratios/trends are unaffected.  The old "grain" label is withdrawn.
     \textbf{(b)} Contact network extracted from particle overlaps,
     color-coded by phase pair (SE-SE for $\sigmaionic$; AM-SE for
     ionic + interface; AM-AM for $\sigmae$, severe at \AMP-\AMP).
