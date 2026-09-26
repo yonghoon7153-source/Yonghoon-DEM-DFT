@@ -210,6 +210,8 @@ jobs:
       #    설명하느라 그 값을 인용한다) = app.py:4035 감사 지적과 같은 양식.
       - name: 웹앱 — 원장 렌더 (신선도 + 금지값 누수)
         run: python webapp/test_ledger_view.py
+      - name: webapp — 깨진 meta.json 이 있어도 / 200 · meta.json 원자적 쓰기 (09-26 회귀)
+        run: python webapp/test_meta_json_robust.py
 
       #  ★ 2026-09-09 (Codex Q2-1) — 커버리지 재현기의 두 반례를 고정한다:
       #    디렉터리 항목을 **현재** 파일 집합으로 펼쳐 감사 이후 생긴 파일까지 세는 것과

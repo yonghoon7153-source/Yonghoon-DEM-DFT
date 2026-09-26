@@ -295,3 +295,10 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
 - 18:02–18:07 WSL 이 죽었다 18:27 재부팅 → L 10 런 53–61 % 에서 끊김 (체크포인트 a/b 27–29 MB 온전, 최신 = a 9 · b 1).
 - `FORCE=1` 은 처음부터 (런당 ~3 일 손실) → 체크포인트 재개 도구: `scripts/make_mixer_resume.py` (selftest) · `resume_all.sh` (SMOKE/DRY/발사) ·
   `test_launcher.sh` R①–R③c.  사용자 순서: git pull → SMOKE=L0_s32452843 → DRY=1 → 발사.  prereg §3 2b 에 실행 기록.
+
+## ⑭ dem-web / 500 — WSL 크래시로 잘린 meta.json (09-26 저녁)
+- uploads/260925_000001_0bee25 (0 B) · 260925_000448_bd85f9 (반쪽) — mtime 18:09·18:10, 권한 0600 = 전날 원자적 쓰기로 만든 파일을
+  제자리 `open(…,'w')` 가 잘랐다는 흔적.  사용자가 `.broken_20260926` 로 옮기고 복구 (bd85f9 앞부분 12 키 · 0bee25 는 bd85f9 틀로 재구성, 원래 이름 미상).
+- 코드: `list_cases` 가 깨진 meta.json 을 건너뛰고 status `meta_broken` 로 표시 · meta.json 쓰기 7 곳을 `_ps.atomic_write_json`
+  (temp→fsync→replace) 으로 · 회귀 `webapp/test_meta_json_robust.py` (옛 판 6 FAIL 재현 → 8/8) · check_all · CI 배선.
+

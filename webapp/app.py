@@ -445,8 +445,17 @@ def list_cases():
             continue
         meta_file = os.path.join(case_dir, 'meta.json')
         if os.path.exists(meta_file):
-            with open(meta_file) as f:
-                meta = json.load(f)
+            try:
+                with open(meta_file) as f:
+                    meta = json.load(f)
+                if not isinstance(meta, dict):
+                    raise ValueError('meta.json is not an object')
+            except (ValueError, OSError) as _e:
+                # ★ 2026-09-26 — WSL 이 죽을 때 0 B · 반쪽이 된 meta.json 하나가 목록 전체(/)를 500 으로 만들었다.
+                #   건너뛰고 기본값 + 표지로 보인다 (파일은 건드리지 않는다 — 복구는 사람이).  webapp/test_meta_json_robust.py
+                print(f'[list_cases] ⚠ 깨진 meta.json — 기본값으로 표시: {meta_file} ({type(_e).__name__}: {_e})')
+                meta = {'name': case_id, 'created': '', 'mode': 'unknown', 'status': 'meta_broken',
+                        'meta_error': f'{type(_e).__name__}: {_e}'}
         else:
             meta = {'name': case_id, 'created': '', 'mode': 'unknown', 'status': 'uploaded'}
         meta['id'] = case_id
@@ -5582,8 +5591,7 @@ def upload():
         'files': filenames,
         'status': 'uploaded'
     }
-    with open(os.path.join(case_dir, 'meta.json'), 'w') as f:
-        json.dump(meta, f, indent=2)
+    _ps.atomic_write_json(os.path.join(case_dir, 'meta.json'), meta)   # ★ 09-26 원자적 쓰기 (temp→fsync→replace) — 제자리 'w' 는 크래시 때 반쪽을 남겼다
 
     # Sync to Supabase
     storage_sync.sync_dir_to_remote(case_dir, f'uploads/{case_id}')
@@ -5619,8 +5627,7 @@ def analyze(case_id):
         meta = json.load(f)
 
     meta['status'] = 'running'
-    with open(meta_file, 'w') as f:
-        json.dump(meta, f, indent=2)
+    _ps.atomic_write_json(meta_file, meta)   # ★ 09-26 원자적 쓰기 (temp→fsync→replace) — 제자리 'w' 는 크래시 때 반쪽을 남겼다
     # (σ 키 목록은 모듈 전역 _NET_MERGE_KEYS 로 승격 — run_pipeline 이 지역 사본을
     #  참조해 NameError 로 죽던 문제를 없앤다)
 
@@ -5726,8 +5733,7 @@ def analyze(case_id):
             try:
                 meta['status'] = 'error'
                 meta['analysis_error'] = f'{type(_e).__name__}: {_e}'
-                with open(meta_file, 'w') as f:
-                    json.dump(meta, f, indent=2)
+                _ps.atomic_write_json(meta_file, meta)   # ★ 09-26 원자적 쓰기 (temp→fsync→replace) — 제자리 'w' 는 크래시 때 반쪽을 남겼다
             except Exception:
                 pass
 
@@ -7612,8 +7618,7 @@ def mpm_lab_fav(pid):
     try:
         m = json.load(open(mp))
         m['fav'] = not m.get('fav')
-        with open(mp, 'w') as f:
-            json.dump(m, f)
+        _ps.atomic_write_json(mp, m)   # ★ 09-26 원자적 쓰기 (temp→fsync→replace) — 제자리 'w' 는 크래시 때 반쪽을 남겼다
         return jsonify({'ok': True, 'fav': m['fav']})
     except Exception as e:
         return jsonify({'ok': False, 'error': str(e)}), 500
@@ -7831,8 +7836,7 @@ def mpm_lab_rename(pid):
         return jsonify({'ok': False, 'error': 'empty name'}), 400
     m = json.load(open(mp))
     m['name'] = name
-    with open(mp, 'w') as f:
-        json.dump(m, f)
+    _ps.atomic_write_json(mp, m)   # ★ 09-26 원자적 쓰기 (temp→fsync→replace) — 제자리 'w' 는 크래시 때 반쪽을 남겼다
     return jsonify({'ok': True, 'name': name})
 
 
@@ -9728,8 +9732,7 @@ def rename_case(case_id):
     with open(meta_file) as f:
         meta = json.load(f)
     meta['name'] = new_name
-    with open(meta_file, 'w') as f:
-        json.dump(meta, f, indent=2)
+    _ps.atomic_write_json(meta_file, meta)   # ★ 09-26 원자적 쓰기 (temp→fsync→replace) — 제자리 'w' 는 크래시 때 반쪽을 남겼다
     storage_sync.upload_file(f'uploads/{case_id}/meta.json', meta_file)
     return jsonify({'success': True})
 
@@ -9741,8 +9744,7 @@ def toggle_favorite(case_id):
     with open(meta_file) as f:
         meta = json.load(f)
     meta['favorite'] = not meta.get('favorite', False)
-    with open(meta_file, 'w') as f:
-        json.dump(meta, f, indent=2)
+    _ps.atomic_write_json(meta_file, meta)   # ★ 09-26 원자적 쓰기 (temp→fsync→replace) — 제자리 'w' 는 크래시 때 반쪽을 남겼다
     return jsonify({'success': True, 'favorite': meta['favorite']})
 
 @app.route('/delete/<case_id>', methods=['POST'])

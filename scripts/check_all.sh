@@ -167,6 +167,7 @@ run 'webapp: temp_pressure'       python3 webapp/test_temp_pressure_wiring.py
 #    2 건을 흘렸다 (원장 본문·`why` 가 *왜 철회됐나* 를 설명하느라 그 값을 인용한다).
 #    감사가 `app.py:4035` 에서 찾은 것과 **같은 양식**이라 회귀로 못박는다.
 run 'webapp: ledger_view'         python3 webapp/test_ledger_view.py
+run 'webapp: meta_json_robust'    python3 webapp/test_meta_json_robust.py   # 09-26 깨진 meta.json → / 500 회귀
 #  ★ 2026-09-09 (Codex Q2-1) — 커버리지 재현기를 산문 스니펫에서 도구로 옮겼다.
 #    옛 스니펫은 디렉터리 항목을 **현재** 파일 집합으로 펼쳐 감사 이후 생긴 파일까지 셌고
 #    `.lstrip('./')` 가 dotfile 경로를 망가뜨렸다.  selftest 가 두 반례를 고정한다.
