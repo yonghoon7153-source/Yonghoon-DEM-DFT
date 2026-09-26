@@ -19,6 +19,7 @@
 ⛔ 못 하는 것: 계산·판정을 하지 않는다 · 이완 좌표를 고치지 않는다 (sha 가 relax_meta 와 다르면 거부) · V2 2단계 좌표는 이완 출력이 있어야 만든다.
 """
 import argparse
+import datetime as _dt
 import hashlib
 import json
 import os
@@ -109,9 +110,9 @@ def _c_plus(atoms, dc):
     return a
 
 
-def _dip_for(cell_c, top=(1.5, 0.5)):
-    lo, hi = cell_c - top[0], cell_c - top[1]
-    return {"emaxpos": lo / cell_c, "eopreg": (hi - lo) / cell_c, "region_A": [round(lo, 3), round(hi, 3)]}
+def _dip_for(structs):
+    """G3 변형 집합(c+2 · bound · far (i)(ii)) 에 **같은** 쌍극자 구간 — 개정 2 규칙 (집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å)."""
+    return B.dip_region(structs)
 
 
 class Pack:
@@ -154,8 +155,9 @@ def load_relaxed(relax_dir, name):
                             "interface_check_sha256": _sha(os.path.join(d, "interface_check.json")), "init_sha256": meta["init_sha256"]}
 
 
-def build_s3(relax_dir, geom_dir, out, pseudo_dir="/data/work/pseudo", gap=8.0):
+def build_s3(relax_dir, geom_dir, out, pseudo_dir="/data/work/pseudo", gap=8.0, date=None):
     from ase.io import read
+    date = date or _dt.date.today().isoformat()
     card = json.load(open(os.path.join(REPO, CARD), encoding="utf-8"))
     card_digest = card.get("ratification", {}).get("content_digest")
     if not card_digest:
@@ -204,7 +206,7 @@ def build_s3(relax_dir, geom_dir, out, pseudo_dir="/data/work/pseudo", gap=8.0):
             # G3 · G4 (대표점)
             if n == G3_REPS.get(model):
                 b2 = _c_plus(b, 2.0); f2i = _c_plus(f, 2.0); f2ii = _rigid_shift(_c_plus(f, 2.0), is_ads, 2.0)
-                d2 = _dip_for(b2.cell.array[2, 2])
+                d2 = _dip_for([b2, f2i, f2ii])
                 for tag, a2 in (("G3_c2_bound", b2), ("G3_c2_far_i", f2i), ("G3_c2_far_ii", f2ii)):
                     P.add_struct(f"{n}_{tag}", a2)
                     P.add_job(f"{n}_{tag}", a2, model, dip={"emaxpos": d2["emaxpos"], "eopreg": d2["eopreg"]}, kind="g3", tags={"structure": f"{n}_{tag}", "G3": tag})
@@ -233,7 +235,8 @@ def build_s3(relax_dir, geom_dir, out, pseudo_dir="/data/work/pseudo", gap=8.0):
             sample5 = {"from": n, "shift_A": 0.5, "bound_sha256": P.struct["V5_s_outer_A_p05_bound"], "far_sha256": P.struct["V5_s_outer_A_p05_far"], "far_same_as_sample1": same_far,
                        "endpoints": em5, "⚠": "표본 ①과 같은 registry — 독립 표본 주장 금지 (카드)"}
         endpoints[n] = rec
-    idx = {"schema": "aprime_s3_package/v1", "date": "2026-09-25", "card": CARD, "card_content_digest": card_digest,
+    idx = {"schema": "aprime_s3_package/v2", "date": date, "card": CARD, "card_content_digest": card_digest,
+           "dipole_rule": "개정 2 (2026-09-26) — build_aprime_interfaces.dip_region: 집합(bound·far·G3 변형)의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å (v1 패키지의 '[c−1.5, c−0.5]' 는 기판 바닥 영상 1 Å 아래 → 비물리 힘 · 폐기)",
            "geometries_manifest_sha256": _sha(os.path.join(geom_dir, "manifest.json")), "relax_dir": relax_dir,
            "code_sha256": {os.path.relpath(__file__, REPO): _sha(__file__), "tools/wad/build_aprime_interfaces.py": _sha(os.path.join(HERE, "build_aprime_interfaces.py")),
                            "tools/wad/se_sym_slab.py": _sha(os.path.join(HERE, "se_sym_slab.py")), "tools/wad/relax_uma_d3.py": _sha(os.path.join(HERE, "relax_uma_d3.py"))},
@@ -241,13 +244,13 @@ def build_s3(relax_dir, geom_dir, out, pseudo_dir="/data/work/pseudo", gap=8.0):
            "incomplete_findings": findings, "endpoints": endpoints, "sample5": sample5,
            "G5_samples": {"①": "V5_s_outer_A", "②": "V5_s_outer_B", "③": "V5_li_outer_A", "④": "V5_li_outer_B", "⑤": "V5_s_outer_A_p05 (①과 상관)", "⚠": "V5 는 RESOURCE_BLOCKED (예상) — 프로브 뒤 (실측) 로 · 막히면 G5 NOT_TESTED"},
            "settings": {"ecutwfc": 52.0, "ecutrho": 520.0, "functional": "PBE + D3(BJ) 2체 (dftd3_version 4 · threebody .false.)", "smearing": "Ag 포함 mv 0.01 · SE 만 gaussian 0.005 · nspin 1",
-                        "dipole": "tefield · dipfield · edir 3 · eamp 0 · emaxpos/eopreg = 셀 위끝 [c−1.5, c−0.5] Å (두 끝점 빈 공간)", "kpts": {k: list(v) for k, v in KPTS.items()},
+                        "dipole": "tefield · dipfield · edir 3 · eamp 0 · 불연속 구간(emaxpos/eopreg) = 집합(bound·far·G3 변형)의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å (개정 2 · build_aprime_interfaces.dip_region 이 여유 검사 · 종전 '[c−1.5, c−0.5] Å' 는 기판 바닥 영상 1 Å 아래여서 폐기)", "kpts": {k: list(v) for k, v in KPTS.items()},
                         "pp": {e: PP[e][1] for e in ORDER}, "pp_sha256": {PP[e][1]: PP_SHA[PP[e][1]] for e in ORDER}, "pseudo_dir_note": "러너가 PSEUDO_DIR 로 바꾼다",
                         "W_energy": "`!` total energy (자유에너지 F) · E_int=F+TS 병기", "n_interfaces": 1, "area": "변형된 SE 셀 면적 (V2 는 Ag 셀 면적)"},
            "structures_sha256": P.struct, "jobs": P.jobs,
            "⛔": "S3 봉인 대상 = 이 manifest (좌표 sha · 끝점 · 마스크 · 계보). V2 2단계 좌표는 --v2_ed 부록. INCOMPLETE 3 은 S4 입력 없음 (세고 제외)."}
     json.dump(idx, open(os.path.join(out, "s3_manifest.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=float)
-    json.dump({"schema": "qe_input_set/v1", "date": "2026-09-25", "what": "A′ S4 QE 입력 (S3 패키지) — run_sese_gpu.sh 호환", "decisions": card["decisions_이_카드가_따르는"],
+    json.dump({"schema": "qe_input_set/v1", "date": date, "what": "A′ S4 QE 입력 (S3 패키지 · 쌍극자 구간 개정 2) — run_sese_gpu.sh 호환", "decisions": card["decisions_이_카드가_따르는"],
                "settings": {"pp": {e: PP[e][1] for e in ORDER}, "pp_sha256": idx["settings"]["pp_sha256"], "pseudo_dir_note": "러너가 PSEUDO_DIR 로 바꾼다"},
                "s3_manifest_sha256": _sha(os.path.join(out, "s3_manifest.json")), "jobs": P.jobs}, open(os.path.join(out, "jobs.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=float)
     return idx
@@ -293,7 +296,7 @@ def v2_stage2(pw_out, model_dir, out, s3_manifest, pseudo_dir="/data/work/pseudo
         a2 = _rigid_shift(b, is_ads, s); tag = f"{name}_Ed_{'m' if s < 0 else 'p'}{abs(s):.1f}".replace(".", "")
         P.add_struct(tag, a2); P.add_job(tag, a2, "V2", dip=dd, tags={"structure": tag, "E(d)": f"d0{s:+.1f}"})
     if name == G3_REPS["V2"]:
-        b2 = _c_plus(b, 2.0); f2i = _c_plus(f, 2.0); f2ii = _rigid_shift(_c_plus(f, 2.0), is_ads, 2.0); d2 = _dip_for(b2.cell.array[2, 2])
+        b2 = _c_plus(b, 2.0); f2i = _c_plus(f, 2.0); f2ii = _rigid_shift(_c_plus(f, 2.0), is_ads, 2.0); d2 = _dip_for([b2, f2i, f2ii])
         for tag, a2 in (("G3_c2_bound", b2), ("G3_c2_far_i", f2i), ("G3_c2_far_ii", f2ii)):
             P.add_struct(f"{name}_{tag}", a2); P.add_job(f"{name}_{tag}", a2, "V2", dip={"emaxpos": d2["emaxpos"], "eopreg": d2["eopreg"]}, kind="g3", tags={"structure": f"{name}_{tag}", "G3": tag})
         k1 = (7, 7, 1)
@@ -341,6 +344,12 @@ def _selftest():
         ck("S3: 잡 종류 — relax(V2 4) · scf · probe · g3 · g4", kinds.get("relax") == 4 and kinds.get("probe", 0) >= 5 and kinds.get("g3", 0) == 6 and kinds.get("g4", 0) == 12, kinds)
         v2 = open(os.path.join(T, "a", "qe", "V2_top_fcc_relax", "pw.in")).read()
         ck("V2 relax 입력: Ag 6개 '0 0 0' · C 8개 '0 0 1' · 나머지 Ag '1 1 1' · D3 2체 · mv 0.01 · dipfield", v2.count("  0 0 0") == 6 and v2.count("  0 0 1") == 8 and v2.count("  1 1 1") == 6 and "dftd3_threebody = .false." in v2 and "smearing = 'mv'" in v2 and "dipfield = .true." in v2 and "eamp = 0.0d0" in v2, (v2.count("  0 0 0"), v2.count("  0 0 1"), v2.count("  1 1 1")))
+        # 개정 2 (2026-09-26): 쌍극자 불연속 구간 = 진공 중앙 — 바닥 영상(c+0.5) 에서 4 Å · 폭 1 Å · 종전 0.93764 (= (c−1.5)/c) 아님
+        em_ = float(re.search(r"emaxpos = ([0-9.]+)", v2).group(1)); eo_ = float(re.search(r"eopreg = ([0-9.]+)", v2).group(1)); c_ = ep["V2_top_fcc"]["endpoints"]["c_A"]
+        ck("V2 relax 입력: 쌍극자 구간 [c−4.5, c−3.5] (바닥 영상 4 Å · 꼭대기(far) 4 Å) · 종전 [c−1.5, c−0.5] 아님", abs(em_ * c_ - (c_ - 4.5)) < 0.01 and abs(eo_ * c_ - 1.0) < 0.01 and abs(em_ - (c_ - 1.5) / c_) > 0.05, (em_, eo_, c_))
+        ck("S3: 모든 후보 쌍극자 여유 ≥ 4/4 Å (dip_region 기록)", all(e["endpoints"]["dipfield"]["clearance_A"]["to_top_atom"] >= 4 - 1e-6 and e["endpoints"]["dipfield"]["clearance_A"]["to_substrate_bottom_image"] >= 4 - 1e-6 for e in ep.values()))
+        g3d = ep["V5_s_outer_A"]["G3"]["dip_region_A"]; c5 = ep["V5_s_outer_A"]["endpoints"]["c_A"] + 2.0
+        ck("G3 집합(c+2 · bound · far i·ii): 같은 구간 · far(ii) 꼭대기·바닥 영상 양쪽 4 Å", abs(g3d[1] - (c5 + 0.5 - 4.0)) < 0.01 and abs((g3d[1] - g3d[0]) - 1.0) < 0.01, (g3d, c5))
         v4 = open(os.path.join(T, "a", "qe", "V4_s_outer_A_bound", "pw.in")).read()
         ck("V4 입력: gaussian 0.005 · ntyp 6 (Li P S Cl C H) · nat 122 · k 3 3 1", "smearing = 'gaussian'" in v4 and "ntyp = 6" in v4 and "nat = 122" in v4 and "  3 3 1 0 0 0" in v4)
         pr = open(os.path.join(T, "a", "qe", "probe_V5_s_outer_A_far_e70", "pw.in")).read()

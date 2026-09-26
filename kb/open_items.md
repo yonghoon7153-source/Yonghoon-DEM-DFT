@@ -3,13 +3,32 @@
 > 세션이 바뀌어도 유지되는 미결 사항 추적. 닫을 때 날짜+근거를 남기고 ✅로 옮긴다.
 > 등록: 2026-07-27 (MAX 감사 후속).
 
-## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-24 아침 — ⏭-NOW-w 가 최신 (li2s 유리 MD: seed5 · 파일럿 · final.xyz=relax 정오 · SE|SE V100 · b2o3 s6 kgy · Nd k-탐침 · webapp 점착 화면 · BW 결정 3건). 앞 블록 ⏭-NOW-v 는 09-22 낮(논문 4편 · 원장 정정 3건), ⏭-NOW-u 는 같은 날 오전**)
+## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-26 저녁 — ⏭-NOW-x 가 최신 (A′ S4-1 첫 잡 실패 → 개정 2 쌍극자 구간 · S3v2 proposed · 탄성 modelc_2x 재개 · Oginni 리뷰 digest). 앞 블록 ⏭-NOW-w 는 09-24 아침 (li2s 유리 MD: seed5 · 파일럿 · final.xyz=relax 정오 · SE|SE V100 · b2o3 s6 kgy · Nd k-탐침 · webapp 점착 화면 · BW 결정 3건). 앞 블록 ⏭-NOW-v 는 09-22 낮(논문 4편 · 원장 정정 3건), ⏭-NOW-u 는 같은 날 오전**)
 
 > 순서가 있다. 앞이 끝나야 뒤가 뜻이 있다.
 >
 > ⚠ **이 절의 상태 문장은 실측으로만 쓴다.** 2026-09-07 까지 여기 머리가 "ORCA 8잡 실행 중"
 > 이었는데 같은 날 실측은 **프로세스 0개**였다 — 워처·기억이 아니라 `ps`·receipt·git log 로
 > 받친다(`kb/projects/restart_runbook_2026_09_07.md`). 세션을 닫을 때 이 절을 갱신한다.
+
+### ⏭-NOW-x. 2026-09-26 저녁 — **A′ S4-1 첫 잡 실패(기술) → 개정 2 · S3v2 비준 대기 · gabia 탄성 재개 · 논문 에이전트 1편**
+
+- 🔴 **A′ (W_ad · 사용자 1저자) — S4-1 `V2_top_fcc_relax` (V100 · 00:17–03:12 UTC · 10069 s) 가 nstep 200 을 헛돌았다**: 199/199 스텝 `energy_new > energy_old` · bfgs 이력 초기화 22 회 ·
+  Total force 0.1297–0.1322 Ry/Bohr 제자리 · 고정 Ag 바닥층 3 원자(z 0.50) 에 **+0.195 Ry/Bohr 씩 같은 +z 힘** = 에너지·힘 불일치. 러너는 "미완료 · 뒤 잡 안 돌림" 으로 멈춤 (뒤 3 잡 미착수 · GPU 유휴).
+  · **원인** = 쌍극자 보정 톱니 불연속 구간 `[c−1.5, c−0.5] Å` 가 기판 바닥층의 **주기 영상(z = c+0.5) 1.0 Å 아래** — QE 문서 *"change of slope must be located in the empty region, or else unphysical forces"*.
+    종전 `make_endpoints` 검사는 흡착층 쪽만 보고 `empty_in_both_endpoints: True` 를 **상수**로 적었다 (한쪽 검사 + 상수 깃발 · 내 설계 오류 · `silent_wrong_path` 사례 8).
+  · ✅ 고침 `build_aprime_interfaces.dip_region` (집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 미달 SlabError · selftest **26/26** · s3 **16/16** · 음성 3) → **S3v2 패키지** `db/inputs/wad_aprime_s3v2_2026_09_26`
+    (구조 sha 38 = v1 동일 · pw.in 38/38 emaxpos/eopreg 만 · 후보 9 여유 4.0/4.0 Å · manifest `069894c6…`). v1 패키지는 보존 · 실행 금지.
+  · 📄 **개정 2** `wad_aprime_pilot_prereg_v5_amendment_2_2026_09_26.json` · **S3v2 봉인** `wad_aprime_s3v2_seal_2026_09_26.json` · 결정 `D-2026-09-26-wad-aprime-amend-2-dipole-region` ·
+    `D-2026-09-26-wad-aprime-s3v2-seal` (supersedes s3-seal) — **전부 proposed · ⏳ 1저자 '비준' 대기**. 진단 기록 `db/raw/wad_aprime_s4_v2_2026_09_26/…_fail1_dipreg_diag_2026_09_26.json` (실패 실행 값 사용 금지).
+  · ⏭ 비준되면: 개정 2 · 봉인 v2 · 결정 2 를 active/ratified 로 (digest 기입 · v1 seal 결정 superseded) → 커밋·푸시 → **V100 코드 갱신은 kgy `v100-serve` 경로** (kgy fetch → update-ref → V100 `git archive | tar`) →
+    V100 에서 실패 폴더 `V2_top_fcc_relax_fail1_dipreg` 보관 확인 → 러너 `IN=db/inputs/wad_aprime_s3v2_2026_09_26/qe` 로 4 잡 재발사 → **재개 규칙**(첫 10 BFGS 스텝 Total force 감소 · energy_new < energy_old 다수) 확인.
+  · ⚠ V4 GPU 시험(gabia) 은 **탄성(modelc_2x · 41 GB) 이 끝난 뒤** — GPU pw.x 둘을 겹치지 않는다.
+- 🟢 **b2o3 사건빈도 — gabia 몫 종료 (09-26 17:48 KST 실측)**: s2·s3·s4·s6 × 3 온도 = **12/15 완료**(msd.json) · s5 ×3 은 kgy 몫(개정 2) · 드라이버 0 · GPU 유휴. ⏭ kgy s5 끝나면 `.incoming` 옮김 → 자격(`--mto`) → census 15런.
+- ⏭ **탄성 modelc_2x (사용자 1저자) 재개 — 1저자 09-26 "b2o3 끝나서 modelC 영률 다시 이어가자"** (09-23 순서 b2o3 → 탄성 → Li₂S 그대로). 러너 `run_elastic_relaxedion_gabia.sh`
+  **`SYS=modelc_2x` 명시**(09-23 함정: SYS 없이 comp2 기본값으로 대기했었다) · 수렴점 skip · 소진점(23_p 등) nstep 200 · trust 0.05 재실행 · VRAM 가드 32000 · host 30 GB.
+  순서: 점검 블록(GPU 유휴 · 러너 커밋 `71f179d97` 포함 · `watch_elastic.sh ALL=1` · `DRY_RUN=1`) → 발사(tmux `el_mc2x`) → watch.
+- 📚 **논문 에이전트** — Oginni et al., *Next Materials* 13 (2026) 103432 (리뷰 · 계산 설계 방법론) → litdb-curator 진행 중 (inbox `0926-1.`) → 끝나면 litdb 파일만 커밋.
 
 ### ⏭-NOW-w. 2026-09-23 새벽 — **SDCP/PTFE 세미나 정리 · [Li26MCI] 병합 · 🔴 웹앱 cascade 화면이 어제부터 닫혀 있다**
 

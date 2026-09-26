@@ -1,0 +1,110 @@
+{
+ "schema": "wad_aprime_s4_run_diag/v1",
+ "date": "2026-09-26",
+ "job": "V2_top_fcc_relax",
+ "stage": "S4-1 (V2 제약 DFT 이완 · 첫 잡)",
+ "machine": "V100 (runyour · ubuntu · pw.x GPU · tmux s4v2 · tools/wad/run_sese_gpu.sh)",
+ "run_dir_on_machine": "$HOME/runs/wad_aprime_s4_v2_2026_09_26/V2_top_fcc_relax → V2_top_fcc_relax_fail1_dipreg 로 이름 바꿔 보관 (pw.out 원출력 · 감사용)",
+ "input": {
+  "package": "db/inputs/wad_aprime_s3_2026_09_25 (S3 v1 · 봉인 a1074e51…)",
+  "pw_in": "qe/V2_top_fcc_relax/pw.in",
+  "pw_in_sha256": "3cfe06c1daa7f0a6abd731ac19e36c7d61483d644cde9d5b77ac6262229bd4ce",
+  "nat": 20,
+  "c_A": 24.0532318,
+  "fixed": "Ag 1·2·5 (z 2.850) · Ag 4·8·11 (z 0.500) = 아래 2층 '0 0 0' · C 13–20 '0 0 1' · Ag 3·6·7·9·10·12 자유",
+  "dipfield": {
+   "emaxpos": 0.93764,
+   "eopreg": 0.04157,
+   "region_A": [
+    22.553,
+    23.553
+   ],
+   "rule": "S1 카드 '[c−1.5, c−0.5] Å'",
+   "distance_region_top_to_substrate_bottom_image_A": 1.0,
+   "distance_region_bottom_to_far_adsorbate_top_A": 7.0,
+   "⛔": "기판 바닥층(z 0.5) 의 주기 영상 z 24.553 에서 1.0 Å 아래 — Ag 바닥층 전자밀도 안에 톱니 급경사"
+  }
+ },
+ "runner_log": [
+  "[2026-09-26 03:12:58] ■ V2_top_fcc_relax rc=0 완료=0 벽시계 10069s · 피크 합계 2752 MiB · 호스트 최저 118391 MiB · 중단=0",
+  "[2026-09-26 03:12:58] ⛔ V2_top_fcc_relax 미완료 — 뒤 잡을 돌리지 않는다."
+ ],
+ "observed": {
+  "scf_cycles": 201,
+  "bfgs": "nstep 200 소진 · `bfgs converged` 없음 · JOB DONE (rc 0)",
+  "total_force_Ry_per_Bohr": {
+   "first": 0.132173,
+   "last": 0.129749,
+   "min": 0.129721,
+   "max": 0.132206,
+   "pattern": "주기 10 — 이력 초기화 직후 0.12972–0.12976 → 신뢰반경 반감마다 0.13097 · 0.13159 · 0.13190 · 0.13200 · 0.13211 · 0.13213 · 0.13214 · 0.13220 (기하가 초기값으로 되돌아감) → 초기화 → 반복 (22 회)"
+  },
+  "energy_vs_first_mRy": "모든 스텝 0.0 ~ +0.2 (초기 아래로 내려간 스텝 0 · 첫 스텝 대비 +0.2 · +0.1 · 0.0 …)",
+  "bfgs_diag": {
+   "CASE energy_new > energy_old": 199,
+   "resetting bfgs history": 22,
+   "trust_radius_bohr": "0.0376 → 0.0186 → 0.0092 → 0.0046 → 0.0023 → 0.0011 → 5.7e-4 → 2.8e-4 → 1.4e-4 → 7.0e-5 (trust_radius_min 아래) → 초기화 → 0.0186 …"
+  },
+  "forces_last_step_top6_Ry_per_Bohr": [
+   {
+    "atom": 11,
+    "type": "Ag 고정(바닥층)",
+    "f": [
+     -2.22e-06,
+     -0.0003323,
+     0.19490213
+    ]
+   },
+   {
+    "atom": 8,
+    "type": "Ag 고정(바닥층)",
+    "f": [
+     -2.62e-06,
+     -0.00033207,
+     0.19488141
+    ]
+   },
+   {
+    "atom": 4,
+    "type": "Ag 고정(바닥층)",
+    "f": [
+     -2.37e-06,
+     -0.00033238,
+     0.1949019
+    ]
+   },
+   {
+    "atom": 19,
+    "type": "C (z 자유)",
+    "f": [
+     -0.00089091,
+     -0.00053164,
+     -0.03555226
+    ]
+   },
+   {
+    "atom": 18,
+    "type": "C (z 자유)",
+    "f": [
+     -0.00089067,
+     0.00051558,
+     -0.03554607
+    ]
+   },
+   {
+    "atom": 17,
+    "type": "C (z 자유)",
+    "f": [
+     -1.183e-05,
+     0.00102578,
+     -0.03555226
+    ]
+   }
+  ],
+  "note": "QE 의 `Total force` 는 if_pos 를 곱한 뒤의 노름 — 고정층의 0.195 는 안 들어가고 자유 원자(C 8 · Ag 6) 의 ≈0.035 씩이 0.132 를 만든다 (√(8·0.0356²+6·0.035²) ≈ 0.132). `Forces acting on atoms` 는 곱하기 전 값이라 고정층의 큰 힘이 보인다."
+ },
+ "interpretation": "에너지·힘 불일치 — 힘 방향으로 가면 에너지가 오른다(199/199). 고정 바닥층 3 원자에 **같은 크기의 큰 +z 힘**(0.1949 · 5.0 eV/Å) 은 화학 힘이 아니라 균일 외부장 성격이고, 그 위치가 톱니 불연속 구간과 1 Å 거리다. UMA↔DFT 힘 차로는 설명이 안 된다 — 그 경우 DFT 에너지는 DFT 힘 방향으로 내려가야 한다. QE 문서(tefield/dipfield · emaxpos/eopreg): 'the change of slope of this potential must be located in the empty region, or else unphysical forces will result.'",
+ "confirmation_pending": "pw.out 의 dipole / 'Potential amp.' 줄 (사용자 붙여넣기 대기) — 진폭·장 세기가 힘 0.195 와 정합하는지",
+ "decision": "이 실행의 값은 어디에도 쓰지 않는다 (W · d₀ · 표 · 게이트) · 개정 2 (쌍극자 구간 = 진공 중앙 · 양쪽 핵 ≥ 4 Å) proposed · S3v2 패키지(db/inputs/wad_aprime_s3v2_2026_09_26) 로 4 잡 재실행 · GPU 2.80 h 손실",
+ "my_error": "make_endpoints 의 한쪽 검사(흡착층 꼭대기가 구간 아래인가만) + `empty_in_both_endpoints: True` 상수 깃발 — 기판 바닥의 주기 영상을 안 봤다. build_aprime_interfaces/build_aprime_s3 selftest 는 그 깃발을 읽어 초록이었고 S2 manifest · S3 봉인이 그대로 신뢰했다 (한쪽 검사 + 상수 깃발 = 조용히 틀린 경로 · kb/methodology/silent_wrong_path_2026_09_13.md 사례 추가)."
+}

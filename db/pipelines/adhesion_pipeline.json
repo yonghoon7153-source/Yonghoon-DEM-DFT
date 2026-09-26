@@ -415,6 +415,49 @@
     "db/inputs/wad_aprime_s3_2026_09_25/s3_manifest.json",
     "db/raw/wad_aprime_s2_relax_2026_09_25"
    ]
+  },
+  {
+   "id": "aprime_s4_v2_v100_2026_09_26",
+   "system": "aprime_s4",
+   "machine": "V100 pw.x GPU (runyour) · tmux s4v2 · run_sese_gpu.sh KILL 31000 MiB",
+   "check": "S3 v1 입력 (V2_top_fcc_relax pw_in sha 3cfe06c1…) · ⑨ PP 해시 통과 · DRY_RUN ok",
+   "started": "2026-09-26 00:17 UTC",
+   "vram_total_mib": 32768,
+   "jobs": [
+    {
+     "dir": "V2_top_fcc_relax",
+     "state": "failed_technical",
+     "wall_s": 10069,
+     "peak_vram_mib": 2752,
+     "note": "nstep 200 소진 · bfgs converged 없음 · 199/199 energy_new > energy_old · 고정 Ag 바닥층 +0.195 Ry/Bohr — 쌍극자 불연속 구간이 바닥층 주기영상 1 Å 아래 → 개정 2 · 결과 사용 금지"
+    },
+    {
+     "dir": "V2_top_hcp_relax",
+     "state": "not_started",
+     "wall_s": null,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V2_bridge_relax",
+     "state": "not_started",
+     "wall_s": null,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V2_hollow_fcc_relax",
+     "state": "not_started",
+     "wall_s": null,
+     "peak_vram_mib": null
+    }
+   ],
+   "verdict": "⛔ 기술 실패 (QE 입력 설정 · 물리 판정 아님) — S3v2 패키지로 4 잡 재실행 예정 (개정 2 비준 뒤)",
+   "values_policy": "실패 실행(V2_top_fcc_relax · v1 입력)의 에너지·힘·좌표는 어디에도 쓰지 않는다 — QE 입력 설정(쌍극자 구간) 기술 실패 · 물리 판정 아님 · S3v2 로 재실행",
+   "records": [
+    "db/raw/wad_aprime_s4_v2_2026_09_26/V2_top_fcc_relax_fail1_dipreg_diag_2026_09_26.json",
+    "db/properties/wad_aprime_pilot_prereg_v5_amendment_2_2026_09_26.json",
+    "db/properties/wad_aprime_s3v2_seal_2026_09_26.json",
+    "db/inputs/wad_aprime_s3v2_2026_09_26/s3_manifest.json"
+   ]
   }
  ],
  "reviews": [
@@ -514,7 +557,7 @@
  "open": [
   {
    "state": "진행",
-   "text": "**파이프라인 v4** (`D-2026-09-25-wad-reference-state-policy`): ① P0 ✅ → ② 벌크 수치 민감도 ✅ → ③ A′ 카드 v1 → BY NO-GO → v2 → BZ NO-GO → v3 → CA NO-GO → v4 → CB 조건부 GO → v5 → S1 봉인 ✅ → S2 ✅ → **S3 봉인 ✅ (09-26)** → ⏭ **S4** (V2 relax V100 → 2단계 → V4 GPU 시험 → V4 9잡) · V5 RESOURCE_BLOCKED → G5 NOT_TESTED → S2 기하 생성·프로브 → S3 좌표 봉인 → S4 DFT. ④ DEM 발송판 ✅ 발송·3차 회신 수령 (부탁 1 잔류 응력 GPa · 부탁 2 시나리오 초안은 DEM) → 회신 4 초안."
+   "text": "**파이프라인 v4** (`D-2026-09-25-wad-reference-state-policy`): ① P0 ✅ → ② 벌크 수치 민감도 ✅ → ③ A′ 카드 v1 → BY NO-GO → v2 → BZ NO-GO → v3 → CA NO-GO → v4 → CB 조건부 GO → v5 → S1 봉인 ✅ → S2 ✅ → **S3 봉인 ✅ (09-26)** → 🔴 **S4-1 첫 잡 실패 (09-26 · 쌍극자 구간 → 개정 2 · S3v2 proposed)** → ⏭ **S4** (V2 relax V100 · S3v2 입력 → 2단계 → V4 GPU 시험 → V4 9잡) · V5 RESOURCE_BLOCKED → G5 NOT_TESTED → S2 기하 생성·프로브 → S3 좌표 봉인 → S4 DFT. ④ DEM 발송판 ✅ 발송·3차 회신 수령 (부탁 1 잔류 응력 GPa · 부탁 2 시나리오 초안은 DEM) → 회신 4 초안."
   },
   {
    "text": "✅ 격자 정합 규칙 = **(a) 흡착층을 SE 에 맞춘다** (`D-2026-09-25-wad-lattice-matching-rule-a` · 09-25) — SE 슬랩 한 기하 · 변형률 x·y·Å·원자당·면적당·밀도 병기",
@@ -713,6 +756,11 @@
    "date": "2026-09-26",
    "stage": "dft",
    "text": "**S3 봉인 + 개정 1 비준** (1저자 '비준'): `db/properties/wad_aprime_s3_seal_2026_09_26.json` content_digest a1074e51b64d98d2… · 결정 `D-2026-09-26-wad-aprime-s3-seal` · `D-2026-09-26-wad-aprime-amend-1-d3-from-qe` active. S4 실행 집합 = V2 relax 4 (V100) + V4_s_outer_A 9 (gabia GPU 시험 뒤) · V5·⑤·V4 e70 제외 (RESOURCE_BLOCKED 실측) ⇒ **G5 NOT_TESTED** (갈래0 · UMA 전체 계면 예측 내부 전용 · DEM 회신 5 §3 과 일치). W_UMA+D3 := W_UMA + ΔE_D3,QE. 다음: V100 에 V2 relax 4 발사."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**S4-1 첫 잡 V2_top_fcc_relax 실패 (V100 · 2.8 h · 기술)** — nstep 200 소진 · 199/199 스텝 energy_new > energy_old · bfgs 이력 초기화 22 회 · 고정 Ag 바닥층 3 원자에 +0.195 Ry/Bohr 씩 같은 +z 힘 = 에너지·힘 불일치. **원인** = 쌍극자 보정 톱니 불연속 구간 '[c−1.5, c−0.5] Å' 가 기판 바닥층(z 0.5) 의 **주기 영상 1.0 Å 아래** (QE 문서: 'change of slope must be in the empty region, or unphysical forces'). 종전 검사는 흡착층 쪽만 보고 `empty_in_both_endpoints: True` 를 상수로 적었다 (한쪽 검사 + 상수 깃발 · 내 설계 오류). → `dip_region` (집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 미달 SlabError · selftest 26/26 · 16/16) → **S3v2 패키지** `db/inputs/wad_aprime_s3v2_2026_09_26` (구조 sha 38 동일 · pw.in 38/38 emaxpos/eopreg 만 변경 · 여유 4.0/4.0 Å) → **개정 2 · S3v2 봉인 proposed** (`D-2026-09-26-wad-aprime-amend-2-dipole-region` · `D-2026-09-26-wad-aprime-s3v2-seal`) · 재개 규칙(첫 10 스텝) 결과 전에 박음. 실패 실행 값 사용 금지 · 진단 기록 `db/raw/wad_aprime_s4_v2_2026_09_26/…_fail1_dipreg_diag_2026_09_26.json`. 1저자 비준 대기 → V100 재발사 (코드 갱신 kgy v100-serve 경로)."
   }
  ],
  "related_decisions": [

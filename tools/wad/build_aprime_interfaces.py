@@ -189,8 +189,43 @@ def _top_layer_primitive(sub, tol=0.3):
 
 
 # ─────────────────────────────── 끝점 ───────────────────────────────
-def make_endpoints(bound, is_ads, gap=8.0, margin=1.0, dip_top=(1.5, 0.5)):
-    """bound(흡착층 +z) → (bound′, far, meta). 같은 셀 · far = 흡착층 +Δ · 직접·영상 간격 ≥ gap · c 결정."""
+DIP_WIDTH_A = 1.0        # 쌍극자 보정 톱니 불연속 구간(eopreg) 폭
+DIP_MIN_CLEAR_A = 4.0    # 구간 가장자리 ↔ 어느 핵이든 최소 거리 (흡착층 꼭대기 · 기판 바닥의 주기 영상)
+
+
+def dip_region(structs, width=DIP_WIDTH_A, min_clear=DIP_MIN_CLEAR_A):
+    """쌍극자 보정(tefield+dipfield · edir 3) 톱니의 **불연속 구간을 진공 한가운데**에 놓는다 (개정 2 · 2026-09-26).
+
+    structs = 같은 c · 같은 기판 바닥을 공유하는 구조 집합 (bound · far · G3 변형 …) — 집합 전체가 **같은** 구간을 쓴다.
+    중심 = (집합의 최고 원자 z + (c + 최저 원자 z)) / 2, 즉 가장 높은 흡착층 꼭대기와 기판 바닥의 **주기 영상** 사이 한가운데.
+    가장자리에서 어느 핵까지든 ≥ min_clear 가 아니면 SlabError (조용히 c 를 늘리거나 구간을 옮기지 않는다).
+    배경: 종전 규칙 '[c−1.5, c−0.5] Å' 는 기판 바닥(z = margin/2 = 0.5 Å) 의 주기 영상에서 **1.0 Å 아래**여서 Ag 바닥층
+    전자밀도 속에 불연속이 놓였고, QE 문서의 경고("change of slope must be in the empty region, or unphysical forces")
+    그대로 V2_top_fcc_relax 가 200 스텝 동안 199 오르막 · 고정층 +0.195 Ry/Bohr 로 멈췼다. 종전 검사는 흡착층 쪽만
+    보고 `empty_in_both_endpoints: True` 를 상수로 적었다 (한쪽 검사 + 상수 깃발 = 조용히 틀린 경로).
+    이 함수가 못 하는 것: 전자밀도를 직접 보지 않는다 — 핵 거리 기준이다 (4 Å 이면 금속·그래핀 꼬리가 표면값의 ~1e-4)."""
+    cs = {round(float(a.cell.array[2, 2]), 6) for a in structs}
+    if len(cs) != 1:
+        raise SlabError(f"dip_region: 구조들의 c 가 다르다 {sorted(cs)}")
+    c = cs.pop()
+    z_top = max(float(a.get_positions()[:, 2].max()) for a in structs)
+    z_bot = min(float(a.get_positions()[:, 2].min()) for a in structs)
+    if z_bot < 0 or z_top >= c:
+        raise SlabError(f"dip_region: 원자 z 가 셀 [0, c) 밖 (min {z_bot:.3f} · max {z_top:.3f} · c {c:.3f})")
+    center = 0.5 * (z_top + c + z_bot)
+    lo, hi = center - width / 2, center + width / 2
+    clear_top, clear_img = lo - z_top, (c + z_bot) - hi
+    if min(clear_top, clear_img) < min_clear - 1e-6:
+        raise SlabError(f"dip_region: 불연속 구간 여유 부족 — 흡착층 꼭대기까지 {clear_top:.3f} · 기판 바닥 영상까지 {clear_img:.3f} Å "
+                        f"< {min_clear} Å (진공 {c + z_bot - z_top:.3f} Å · 폭 {width} Å)")
+    return {"tefield": True, "dipfield": True, "edir": 3, "eamp": 0.0, "emaxpos": round(lo / c, 5), "eopreg": round((hi - lo) / c, 5),
+            "region_A": [round(lo, 3), round(hi, 3)], "clearance_A": {"to_top_atom": round(clear_top, 3), "to_substrate_bottom_image": round(clear_img, 3)},
+            "min_clear_rule_A": min_clear, "width_A": width, "empty_in_both_endpoints": True,
+            "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"}
+
+
+def make_endpoints(bound, is_ads, gap=8.0, margin=1.0):
+    """bound(흡착층 +z) → (bound′, far, meta). 같은 셀 · far = 흡착층 +Δ · 직접·영상 간격 ≥ gap · c 결정 · 쌍극자 구간 = dip_region([b, f])."""
     x = bound.get_positions().copy()
     z_sub_min, z_sub_max = x[~is_ads, 2].min(), x[~is_ads, 2].max()
     z_ads_min, z_ads_max = x[is_ads, 2].min(), x[is_ads, 2].max()
@@ -211,14 +246,9 @@ def make_endpoints(bound, is_ads, gap=8.0, margin=1.0, dip_top=(1.5, 0.5)):
     gb, gf = gaps(b), gaps(f)
     if gf[0] < gap - 1e-6 or gf[1] < gap - 1e-6:
         raise SlabError(f"far 끝점 간격 부족 직접 {gf[0]} · 영상 {gf[1]} < {gap}")
-    lo, hi = c - dip_top[0], c - dip_top[1]
-    top_atom = max(xb[:, 2].max(), xf[:, 2].max())
-    if top_atom >= lo:
-        raise SlabError("쌍극자 보정 불연속 구간에 원자가 있다")
     meta = {"c_A": round(c, 4), "delta_A": round(delta, 4), "d0_A": round(d0, 4), "gap_rule_A": gap,
             "bound_gap_direct_image_A": gb, "far_gap_direct_image_A": gf,
-            "dipfield": {"tefield": True, "dipfield": True, "edir": 3, "eamp": 0.0, "emaxpos": round(lo / c, 5), "eopreg": round((hi - lo) / c, 5),
-                         "region_A": [round(lo, 3), round(hi, 3)], "empty_in_both_endpoints": True}}
+            "dipfield": dip_region([b, f])}
     return b, f, meta
 
 
@@ -396,6 +426,32 @@ def _selftest():
     ck("V2: registry 4 개의 C0 위치가 서로 다르다", len(anchors) == 4, anchors)
     ep = m["endpoints"]
     ck("V2: 끝점 — far 직접·영상 간격 ≥ 8 · 쌍극자 구간 빈 공간", ep["far_gap_direct_image_A"][0] >= 8 and ep["far_gap_direct_image_A"][1] >= 8 and ep["dipfield"]["empty_in_both_endpoints"], ep)
+    # ⑦-d 쌍극자 구간 (개정 2 · 2026-09-26): 진공 중앙 · 양쪽 핵 ≥ 4 Å · 종전 '[c−1.5, c−0.5]' 는 기판 바닥 영상 1 Å 아래였다
+    from ase import Atoms
+    dp, cA = ep["dipfield"], ep["c_A"]
+    ck("V2: 쌍극자 구간 = 진공 중앙 · 꼭대기·바닥 영상 양쪽 ≥ 4 Å · 폭 1 Å", dp["clearance_A"]["to_top_atom"] >= 4 - 1e-6 and dp["clearance_A"]["to_substrate_bottom_image"] >= 4 - 1e-6 and abs((dp["region_A"][1] - dp["region_A"][0]) - 1.0) < 2e-3, dp)
+    ck("V2: 종전 규칙이 아니다 — 구간 위끝이 바닥 영상(c+0.5) 에서 ≥ 4 Å · emaxpos ≠ (c−1.5)/c", dp["region_A"][1] <= cA + 0.5 - 4 + 1e-6 and abs(dp["emaxpos"] - (cA - 1.5) / cA) > 0.05, (dp["region_A"], cA, dp["emaxpos"]))
+    slab = Atoms("Ag2C", positions=[[0, 0, 0.5], [0, 0, 2.9], [0, 0, 6.2]], cell=[[4, 0, 0], [0, 4, 0], [0, 0, 20.0]], pbc=(True, True, False))
+    d1 = dip_region([slab])
+    ck("dip_region: 중심 = (꼭대기 6.2 + c 20 + 바닥 0.5)/2 = 13.35 · 여유 6.65/6.65", abs(sum(d1["region_A"]) / 2 - 13.35) < 2e-3 and abs(d1["clearance_A"]["to_top_atom"] - 6.65) < 2e-3 and abs(d1["clearance_A"]["to_substrate_bottom_image"] - 6.65) < 2e-3, d1)
+    narrow = slab.copy(); C = narrow.cell.array.copy(); C[2, 2] = 12.0; narrow.set_cell(C)
+    try:
+        dip_region([narrow]); bad = False
+    except SlabError as e:
+        bad = "여유 부족" in str(e)
+    ck("⛔음성 dip_region: 진공 6.3 Å (여유 2.65 < 4) → SlabError (c 확대·구간 이동 없음)", bad)
+    other = slab.copy(); C = other.cell.array.copy(); C[2, 2] = 22.0; other.set_cell(C)
+    try:
+        dip_region([slab, other]); bad = False
+    except SlabError as e:
+        bad = "c 가 다르다" in str(e)
+    ck("⛔음성 dip_region: 집합의 c 가 다르면 SlabError", bad)
+    isC = np.array([s == "C" for s in v2["top_fcc"]["bound"].get_chemical_symbols()])
+    try:
+        make_endpoints(v2["top_fcc"]["bound"], isC, gap=4.0); bad = False
+    except SlabError as e:
+        bad = "여유 부족" in str(e)
+    ck("⛔음성 make_endpoints: gap 4 (영상 간격 5 Å → 여유 2 Å) → 쌍극자 여유 부족으로 거부", bad)
     try:
         build_v2(a_c=2.35); bad = False
     except SlabError as e:

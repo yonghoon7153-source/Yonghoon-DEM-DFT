@@ -1,0 +1,1071 @@
+{
+ "schema": "qe_input_set/v1",
+ "date": "2026-09-26",
+ "what": "A′ S4 QE 입력 (S3 패키지 · 쌍극자 구간 개정 2) — run_sese_gpu.sh 호환",
+ "decisions": [
+  "D-2026-09-23-wad-a-prime-scope",
+  "D-2026-09-23-wad-p2-lpscl-graphite-scope",
+  "D-2026-09-23-wad-se-termination-symmetric",
+  "D-2026-09-23-wad-d3-twobody-atm-separate",
+  "D-2026-09-23-wad-sese-alarm-band-v2",
+  "D-2026-09-25-wad-reference-state-policy",
+  "D-2026-09-25-wad-lattice-matching-rule-a",
+  "D-2026-09-25-wad-lattice-matching-rule-a-amend-1",
+  "D-2026-09-25-wad-aprime-card-v2-choices"
+ ],
+ "settings": {
+  "pp": {
+   "Li": "li_pbe_v1.4.uspp.F.UPF",
+   "P": "P.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "S": "s_pbe_v1.4.uspp.F.UPF",
+   "Cl": "cl_pbe_v1.4.uspp.F.UPF",
+   "Ag": "Ag_ONCV_PBE-1.0.oncvpsp.upf",
+   "C": "C.pbe-n-kjpaw_psl.1.0.0.UPF",
+   "H": "H.pbe-rrkjus_psl.1.0.0.UPF"
+  },
+  "pp_sha256": {
+   "li_pbe_v1.4.uspp.F.UPF": "02cc4b3810e28a43b570277840d9631ca24f634d922928200c047b72c0a86bf5",
+   "P.pbe-n-rrkjus_psl.1.0.0.UPF": "2d112dfec2e2d9b75a971574d9116aa92249988177791659bbcd2ba15f23c20c",
+   "s_pbe_v1.4.uspp.F.UPF": "84ad731864187f416f714e961c3ad2f04dcbf811618e724d277885c18cb470df",
+   "cl_pbe_v1.4.uspp.F.UPF": "5b1ebdea1e5ba743fba0100806206287e1f7f00460c7e6f19791446beaee0655",
+   "Ag_ONCV_PBE-1.0.oncvpsp.upf": "0494aa5927b754b42d3e72535636f215b4658e9b437e639dbc09674c36c8059a",
+   "C.pbe-n-kjpaw_psl.1.0.0.UPF": "9900d1efd50b9848e31849f39094b33348486b400ee51e0f3922f716137cf3d7",
+   "H.pbe-rrkjus_psl.1.0.0.UPF": "27f8a7e87851d59a2698237d6ab4578d62950640f4f175781b015a0ce731f962"
+  },
+  "pseudo_dir_note": "러너가 PSEUDO_DIR 로 바꾼다"
+ },
+ "s3_manifest_sha256": "069894c62daa1bf863cebba3533fb0c79e70fd16a9b4d77cf7ea5ac41512246d",
+ "jobs": [
+  {
+   "dir": "V2_bridge_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04157
+   },
+   "pw_in_sha256": "9cbcc1afcda4703ff55b8aedfd68959d1f6487eef2d0a65ce54850293acadc2e",
+   "structure": "V2_bridge_bound",
+   "tags": {
+    "structure": "V2_bridge_bound",
+    "stage": "S4-1 · 제약 DFT 이완 (Ag 아래 2층 고정 · 그래핀 x·y 고정) · 2단계 E(d) 는 --v2_ed"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_hollow_fcc_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81289,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "ee343dcdb5aa59334deaf10b3eaae97e7048003d5855d32c19df2d97188a2ddf",
+   "structure": "V2_hollow_fcc_bound",
+   "tags": {
+    "structure": "V2_hollow_fcc_bound",
+    "stage": "S4-1 · 제약 DFT 이완 (Ag 아래 2층 고정 · 그래핀 x·y 고정) · 2단계 E(d) 는 --v2_ed"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_fcc_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04157
+   },
+   "pw_in_sha256": "74708ac9a348d7388c7c32e2f64dd6a10576ad6b00565737f906341dbdb5d9ee",
+   "structure": "V2_top_fcc_bound",
+   "tags": {
+    "structure": "V2_top_fcc_bound",
+    "stage": "S4-1 · 제약 DFT 이완 (Ag 아래 2층 고정 · 그래핀 x·y 고정) · 2단계 E(d) 는 --v2_ed"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V2_top_hcp_relax",
+   "kind": "relax",
+   "calc": "relax",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81289,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "b778e965602481f45f6c9191ce278222f50547a370b56cae44bea34fda758ddf",
+   "structure": "V2_top_hcp_bound",
+   "tags": {
+    "structure": "V2_top_hcp_bound",
+    "stage": "S4-1 · 제약 DFT 이완 (Ag 아래 2층 고정 · 그래핀 x·y 고정) · 2단계 E(d) 는 --v2_ed"
+   },
+   "machine": "V100 (≈3 GB)"
+  },
+  {
+   "dir": "V4_s_outer_A_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V4",
+   "nat": 122,
+   "kpts": [
+    3,
+    3,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.87798,
+    "eopreg": 0.02712
+   },
+   "pw_in_sha256": "59d6554a55b005162e204054e53984c52c3d02dab2e4c17ec07a35c57117a9ca",
+   "structure": "V4_s_outer_A_bound",
+   "tags": {
+    "structure": "V4_s_outer_A_bound",
+    "endpoint": "bound"
+   },
+   "machine": "gabia (≈37 GB · 프로브 뒤)"
+  },
+  {
+   "dir": "V4_s_outer_A_far",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V4",
+   "nat": 122,
+   "kpts": [
+    3,
+    3,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.87798,
+    "eopreg": 0.02712
+   },
+   "pw_in_sha256": "75a37357e0f66ba4e82ff44a684347167377049239c57ce65f8b6b721cde4110",
+   "structure": "V4_s_outer_A_far",
+   "tags": {
+    "structure": "V4_s_outer_A_far",
+    "endpoint": "far"
+   },
+   "machine": "gabia (≈37 GB · 프로브 뒤)"
+  },
+  {
+   "dir": "probe_V4_s_outer_A_far_e70",
+   "kind": "probe",
+   "calc": "scf",
+   "model": "V4",
+   "nat": 122,
+   "kpts": [
+    3,
+    3,
+    1
+   ],
+   "ecutwfc": 70.0,
+   "ecutrho": 700.0,
+   "electron_maxstep": 2,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.87798,
+    "eopreg": 0.02712
+   },
+   "pw_in_sha256": "38fe2cd15fb353a436a14a0913bfd6a52d4df523582c4414a2f18de5399678ec",
+   "structure": "V4_s_outer_A_far",
+   "tags": {
+    "structure": "V4_s_outer_A_far",
+    "⛔": "S3 전 예외 ③ — 원출력 보존 · 에너지 사용 금지 · CPU 추정 → GPU 허가 → 피크 실측"
+   },
+   "machine": "gabia (≈37 GB · 프로브 뒤)"
+  },
+  {
+   "dir": "V4_s_outer_A_G3_c2_bound",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "V4",
+   "nat": 122,
+   "kpts": [
+    3,
+    3,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.88425,
+    "eopreg": 0.02572
+   },
+   "pw_in_sha256": "ff70b49fe728e79e60817b69efb9811223973bed0f482b93c25151bba018d8bf",
+   "structure": "V4_s_outer_A_G3_c2_bound",
+   "tags": {
+    "structure": "V4_s_outer_A_G3_c2_bound",
+    "G3": "G3_c2_bound"
+   },
+   "machine": "gabia (≈37 GB · 프로브 뒤)"
+  },
+  {
+   "dir": "V4_s_outer_A_G3_c2_far_i",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "V4",
+   "nat": 122,
+   "kpts": [
+    3,
+    3,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.88425,
+    "eopreg": 0.02572
+   },
+   "pw_in_sha256": "47bb3637b83c9fe1296e38d1c4a482d6280227a7104ee61d932267054734a3c9",
+   "structure": "V4_s_outer_A_G3_c2_far_i",
+   "tags": {
+    "structure": "V4_s_outer_A_G3_c2_far_i",
+    "G3": "G3_c2_far_i"
+   },
+   "machine": "gabia (≈37 GB · 프로브 뒤)"
+  },
+  {
+   "dir": "V4_s_outer_A_G3_c2_far_ii",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "V4",
+   "nat": 122,
+   "kpts": [
+    3,
+    3,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.88425,
+    "eopreg": 0.02572
+   },
+   "pw_in_sha256": "4fe89dd6d54bf81b3556e67b96c4b193d6b5078e5dca1e5a0913a31c40a4d934",
+   "structure": "V4_s_outer_A_G3_c2_far_ii",
+   "tags": {
+    "structure": "V4_s_outer_A_G3_c2_far_ii",
+    "G3": "G3_c2_far_ii"
+   },
+   "machine": "gabia (≈37 GB · 프로브 뒤)"
+  },
+  {
+   "dir": "V4_s_outer_A_G4_e70_bound",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V4",
+   "nat": 122,
+   "kpts": [
+    3,
+    3,
+    1
+   ],
+   "ecutwfc": 70.0,
+   "ecutrho": 700.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.87798,
+    "eopreg": 0.02712
+   },
+   "pw_in_sha256": "eacb2d114b020db7bf9dd4b8a913a7bf13a180e45d1739911c0fb359d868fbbf",
+   "structure": "V4_s_outer_A_bound",
+   "tags": {
+    "structure": "V4_s_outer_A_bound",
+    "G4": "G4_e70_bound"
+   },
+   "machine": "gabia (≈37 GB · 프로브 뒤)"
+  },
+  {
+   "dir": "V4_s_outer_A_G4_e70_far",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V4",
+   "nat": 122,
+   "kpts": [
+    3,
+    3,
+    1
+   ],
+   "ecutwfc": 70.0,
+   "ecutrho": 700.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.87798,
+    "eopreg": 0.02712
+   },
+   "pw_in_sha256": "3607b3be2437374aeca649591d6c89414fb17e9d06aa884305329ac345ba20c0",
+   "structure": "V4_s_outer_A_far",
+   "tags": {
+    "structure": "V4_s_outer_A_far",
+    "G4": "G4_e70_far"
+   },
+   "machine": "gabia (≈37 GB · 프로브 뒤)"
+  },
+  {
+   "dir": "V4_s_outer_A_G4_k1_bound",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V4",
+   "nat": 122,
+   "kpts": [
+    4,
+    4,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.87798,
+    "eopreg": 0.02712
+   },
+   "pw_in_sha256": "aa8fead70e7863e87034ebae347cbb1c811ab94b940491ac455c61742da03f79",
+   "structure": "V4_s_outer_A_bound",
+   "tags": {
+    "structure": "V4_s_outer_A_bound",
+    "G4": "G4_k1_bound"
+   },
+   "machine": "gabia (≈37 GB · 프로브 뒤)"
+  },
+  {
+   "dir": "V4_s_outer_A_G4_k1_far",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V4",
+   "nat": 122,
+   "kpts": [
+    4,
+    4,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.87798,
+    "eopreg": 0.02712
+   },
+   "pw_in_sha256": "d4767b6d65633b7f4a558af0e475fc66cbd18e2e83ca2f62dec665bad58cbc14",
+   "structure": "V4_s_outer_A_far",
+   "tags": {
+    "structure": "V4_s_outer_A_far",
+    "G4": "G4_k1_far"
+   },
+   "machine": "gabia (≈37 GB · 프로브 뒤)"
+  },
+  {
+   "dir": "V4_s_outer_A_G4_s05_bound",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V4",
+   "nat": 122,
+   "kpts": [
+    3,
+    3,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.87798,
+    "eopreg": 0.02712
+   },
+   "pw_in_sha256": "486424f1781bcca29389335c3d88b1f0f87a94b64d924ec94e098143fd00abc8",
+   "structure": "V4_s_outer_A_bound",
+   "tags": {
+    "structure": "V4_s_outer_A_bound",
+    "G4": "G4_s05_bound",
+    "degauss_halved": true
+   },
+   "machine": "gabia (≈37 GB · 프로브 뒤)"
+  },
+  {
+   "dir": "V4_s_outer_A_G4_s05_far",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V4",
+   "nat": 122,
+   "kpts": [
+    3,
+    3,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.87798,
+    "eopreg": 0.02712
+   },
+   "pw_in_sha256": "338bcf76dcc3e047d6317d432101e0deee41f49f30edd38b926f677f59969b70",
+   "structure": "V4_s_outer_A_far",
+   "tags": {
+    "structure": "V4_s_outer_A_far",
+    "G4": "G4_s05_far",
+    "degauss_halved": true
+   },
+   "machine": "gabia (≈37 GB · 프로브 뒤)"
+  },
+  {
+   "dir": "V5_li_outer_A_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 176,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.8478,
+    "eopreg": 0.03382
+   },
+   "pw_in_sha256": "9a3196c37823a35882116c7c19994f7eb4e4bb425bf31f18c3d14b62cb8ece91",
+   "structure": "V5_li_outer_A_bound",
+   "tags": {
+    "structure": "V5_li_outer_A_bound",
+    "endpoint": "bound"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "V5_li_outer_A_far",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 176,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.8478,
+    "eopreg": 0.03382
+   },
+   "pw_in_sha256": "c2018ed77acb6092836f891f7412e8f636246242cdfc8e81eef8bb2e8e78c150",
+   "structure": "V5_li_outer_A_far",
+   "tags": {
+    "structure": "V5_li_outer_A_far",
+    "endpoint": "far"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "probe_V5_li_outer_A_far_e70",
+   "kind": "probe",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 176,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 70.0,
+   "ecutrho": 700.0,
+   "electron_maxstep": 2,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.8478,
+    "eopreg": 0.03382
+   },
+   "pw_in_sha256": "8966e64319ba7e0cf6b53c58826c9c59ec603111cd3593b9dc81987f23325e2f",
+   "structure": "V5_li_outer_A_far",
+   "tags": {
+    "structure": "V5_li_outer_A_far",
+    "⛔": "S3 전 예외 ③ — 원출력 보존 · 에너지 사용 금지 · CPU 추정 → GPU 허가 → 피크 실측"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "V5_li_outer_B_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 176,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.84756,
+    "eopreg": 0.03388
+   },
+   "pw_in_sha256": "b61d2b7d49e30e78d8cd6fac284033f535ecb977965d65aec26e312cd87052dc",
+   "structure": "V5_li_outer_B_bound",
+   "tags": {
+    "structure": "V5_li_outer_B_bound",
+    "endpoint": "bound"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "V5_li_outer_B_far",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 176,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.84756,
+    "eopreg": 0.03388
+   },
+   "pw_in_sha256": "98a1272ee9755794ab08e2216b1220dbafa08054793caf4103cf3d09fa6d47bb",
+   "structure": "V5_li_outer_B_far",
+   "tags": {
+    "structure": "V5_li_outer_B_far",
+    "endpoint": "far"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "probe_V5_li_outer_B_far_e70",
+   "kind": "probe",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 176,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 70.0,
+   "ecutrho": 700.0,
+   "electron_maxstep": 2,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.84756,
+    "eopreg": 0.03388
+   },
+   "pw_in_sha256": "02bc16ff4ee90915aa36043e40e83336d0a6d996d9a924029253194edb3afcc8",
+   "structure": "V5_li_outer_B_far",
+   "tags": {
+    "structure": "V5_li_outer_B_far",
+    "⛔": "S3 전 예외 ③ — 원출력 보존 · 에너지 사용 금지 · CPU 추정 → GPU 허가 → 피크 실측"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "V5_s_outer_A_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 200,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.85963,
+    "eopreg": 0.03119
+   },
+   "pw_in_sha256": "329520695e85d98add7dfd097633517ee684a4998034f7e6c878695552ae1996",
+   "structure": "V5_s_outer_A_bound",
+   "tags": {
+    "structure": "V5_s_outer_A_bound",
+    "endpoint": "bound"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "V5_s_outer_A_far",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 200,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.85963,
+    "eopreg": 0.03119
+   },
+   "pw_in_sha256": "b38f37cb1ad0181fd70a4611fd31bdad397d3c9247bfcb36d11b42227414de53",
+   "structure": "V5_s_outer_A_far",
+   "tags": {
+    "structure": "V5_s_outer_A_far",
+    "endpoint": "far"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "probe_V5_s_outer_A_far_e70",
+   "kind": "probe",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 200,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 70.0,
+   "ecutrho": 700.0,
+   "electron_maxstep": 2,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.85963,
+    "eopreg": 0.03119
+   },
+   "pw_in_sha256": "51b279c08671cca46abc0881d9e4981e660098d84e9437edd375bc0f089e994b",
+   "structure": "V5_s_outer_A_far",
+   "tags": {
+    "structure": "V5_s_outer_A_far",
+    "⛔": "S3 전 예외 ③ — 원출력 보존 · 에너지 사용 금지 · CPU 추정 → GPU 허가 → 피크 실측"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "V5_s_outer_A_G3_c2_bound",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 200,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.86787,
+    "eopreg": 0.02936
+   },
+   "pw_in_sha256": "99498a30856e23b323358b2b6c63775c86f8a6d4bacc82965dfbe67703fe4ba5",
+   "structure": "V5_s_outer_A_G3_c2_bound",
+   "tags": {
+    "structure": "V5_s_outer_A_G3_c2_bound",
+    "G3": "G3_c2_bound"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "V5_s_outer_A_G3_c2_far_i",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 200,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.86787,
+    "eopreg": 0.02936
+   },
+   "pw_in_sha256": "b09411a09b4291d3f40889dc08fd270164c255dd047fb322087e463173186bd5",
+   "structure": "V5_s_outer_A_G3_c2_far_i",
+   "tags": {
+    "structure": "V5_s_outer_A_G3_c2_far_i",
+    "G3": "G3_c2_far_i"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "V5_s_outer_A_G3_c2_far_ii",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 200,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.86787,
+    "eopreg": 0.02936
+   },
+   "pw_in_sha256": "c18939a463b79398a167a5c5570e0b3764e3b568a67e2d91e727437e815aa552",
+   "structure": "V5_s_outer_A_G3_c2_far_ii",
+   "tags": {
+    "structure": "V5_s_outer_A_G3_c2_far_ii",
+    "G3": "G3_c2_far_ii"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "V5_s_outer_A_G4_e70_bound",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 200,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 70.0,
+   "ecutrho": 700.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.85963,
+    "eopreg": 0.03119
+   },
+   "pw_in_sha256": "d346039f4cabede16723ba78a967b773e8791d1a3728c737e408dc41b0079306",
+   "structure": "V5_s_outer_A_bound",
+   "tags": {
+    "structure": "V5_s_outer_A_bound",
+    "G4": "G4_e70_bound"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "V5_s_outer_A_G4_e70_far",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 200,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 70.0,
+   "ecutrho": 700.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.85963,
+    "eopreg": 0.03119
+   },
+   "pw_in_sha256": "b898038f80ccafbca051c7e679c89bce62c087400a4c36ae169f57c491d8e1de",
+   "structure": "V5_s_outer_A_far",
+   "tags": {
+    "structure": "V5_s_outer_A_far",
+    "G4": "G4_e70_far"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "V5_s_outer_A_G4_k1_bound",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 200,
+   "kpts": [
+    4,
+    3,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.85963,
+    "eopreg": 0.03119
+   },
+   "pw_in_sha256": "4fc456744b4ea6fa106531b2ba28242b131656bf7fcaebbc78f7c7a1533a62d4",
+   "structure": "V5_s_outer_A_bound",
+   "tags": {
+    "structure": "V5_s_outer_A_bound",
+    "G4": "G4_k1_bound"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "V5_s_outer_A_G4_k1_far",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 200,
+   "kpts": [
+    4,
+    3,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.85963,
+    "eopreg": 0.03119
+   },
+   "pw_in_sha256": "eddf8b78b1103bc89940e129558fec0f7bc7a5fc112bd26cbf1ef8203ffce77f",
+   "structure": "V5_s_outer_A_far",
+   "tags": {
+    "structure": "V5_s_outer_A_far",
+    "G4": "G4_k1_far"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "V5_s_outer_A_G4_s05_bound",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 200,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.85963,
+    "eopreg": 0.03119
+   },
+   "pw_in_sha256": "5dcfc6df6171e68802b3225aadddd181e2977b163b689045ff90a939e9d116f6",
+   "structure": "V5_s_outer_A_bound",
+   "tags": {
+    "structure": "V5_s_outer_A_bound",
+    "G4": "G4_s05_bound",
+    "degauss_halved": true
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "V5_s_outer_A_G4_s05_far",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 200,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.85963,
+    "eopreg": 0.03119
+   },
+   "pw_in_sha256": "2354772b8c2fb65ab3ba48601dfe616df05f5bc91fd3949422281268d2ca5410",
+   "structure": "V5_s_outer_A_far",
+   "tags": {
+    "structure": "V5_s_outer_A_far",
+    "G4": "G4_s05_far",
+    "degauss_halved": true
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "V5_s_outer_A_p05_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 200,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.85963,
+    "eopreg": 0.03119
+   },
+   "pw_in_sha256": "6921005c6de57fe546fa9aadb74e362267b23b436cc36594d2152a68040c92eb",
+   "structure": "V5_s_outer_A_p05_bound",
+   "tags": {
+    "structure": "V5_s_outer_A_p05_bound",
+    "endpoint": "bound",
+    "sample": "⑤ (S·A +0.5 Å 인장)"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "V5_s_outer_B_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 200,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.85942,
+    "eopreg": 0.03124
+   },
+   "pw_in_sha256": "77674d0686d6d26c01d1d4c69d37a83c58bd618275a96a5ec6a9935c7a67d6b1",
+   "structure": "V5_s_outer_B_bound",
+   "tags": {
+    "structure": "V5_s_outer_B_bound",
+    "endpoint": "bound"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "V5_s_outer_B_far",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 200,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.85942,
+    "eopreg": 0.03124
+   },
+   "pw_in_sha256": "8b6d48d363976d69800ba5f280ea4d249c02c7b07d28826a6eff38df39217545",
+   "structure": "V5_s_outer_B_far",
+   "tags": {
+    "structure": "V5_s_outer_B_far",
+    "endpoint": "far"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  },
+  {
+   "dir": "probe_V5_s_outer_B_far_e70",
+   "kind": "probe",
+   "calc": "scf",
+   "model": "V5",
+   "nat": 200,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "ecutwfc": 70.0,
+   "ecutrho": 700.0,
+   "electron_maxstep": 2,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.85942,
+    "eopreg": 0.03124
+   },
+   "pw_in_sha256": "0600151602fe8da0c7393197416ad7522aa46fcead11c27fb1b0bb2a44ee8424",
+   "structure": "V5_s_outer_B_far",
+   "tags": {
+    "structure": "V5_s_outer_B_far",
+    "⛔": "S3 전 예외 ③ — 원출력 보존 · 에너지 사용 금지 · CPU 추정 → GPU 허가 → 피크 실측"
+   },
+   "machine": "RESOURCE_BLOCKED (예상 ≈246 GB) — 프로브로 확정"
+  }
+ ]
+}
