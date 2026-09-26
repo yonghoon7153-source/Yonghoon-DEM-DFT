@@ -1,0 +1,327 @@
+{
+ "slug": "boger2023_thermal_conductivity_argyrodite_lgps",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-26",
+ "sources": [
+  "ae3c01977_si_001.pdf"
+ ],
+ "figures": [
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Nyquist representation of the impedance responses of (a) Li5.5PS4.5Cl1.5, (b) Li6PS5Br, (c) Li6PS5I, and (d) Li10GeP2S12 at 233 K, including the corresponding equivalent circuit fits.",
+   "rotated_deg": 0,
+   "bbox": [
+    112.5,
+    271.1,
+    482.1,
+    645.2
+   ],
+   "w": 1998,
+   "h": 2022,
+   "dpi": 389,
+   "src": "ae3c01977_si_001.pdf",
+   "blank": 0.845,
+   "note": "recropped by curator 2026-09-26 — auto crop (full text width) carried the body line 'via a simple linear fitting routine.' (p.2 y 249.8–263.2 pt) and cut 1 pt off the image bottom; new clip = embedded-raster union + 5 pt pad, top clamped below that text line, bottom clamped above the caption (y 645.4)"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Arrhenius plot of all investigated electrolytes in a temperature range from 233 K to 273 K showing that Li6PS5I, as expected, possesses the lowest ionic conductivity. Activation energies are obtained from the slope of the Arrhenius plot and presented in Figure 1a of the main text.",
+   "rotated_deg": 0,
+   "bbox": [
+    168.8,
+    65.9,
+    426.2,
+    354.6
+   ],
+   "w": 1431,
+   "h": 1604,
+   "dpi": 400,
+   "src": "ae3c01977_si_001.pdf",
+   "blank": 0.933,
+   "note": "recropped by curator 2026-09-26 — tight clip to the embedded raster (auto crop was full text width, 96 % blank; bottom 1.3 pt short of the raster). ⚠ the x-axis title '1000·T⁻¹ / K⁻¹' is clipped INSIDE the SI's own raster (raster ends at y 354.1, caption starts 354.8) — not recoverable"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Sections of the phonon band structures from the Γ-point to the X-point (left panels) and atom-projected phonon density of states (rights panels) obtained from lattice dynamics calculations on two orderings of Li6PS5Cl, shown in (a) and (b), respectively. Both permutations result in very similar band structures and projected density of states, proving the independence of the calculated properties from the choice of ordering.",
+   "rotated_deg": 0,
+   "bbox": [
+    100.6,
+    65.9,
+    532.8,
+    241.2
+   ],
+   "w": 2000,
+   "h": 812,
+   "dpi": 333,
+   "src": "ae3c01977_si_001.pdf",
+   "blank": 0.825,
+   "note": "recropped by curator 2026-09-26 — tight clip to the embedded raster (auto crop was full text width). No content change"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 7,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Section of the phonon band structure from the Γ-point to the X-point (left panel) and atom-projected phonon density of state (rights panel) obtained from lattice dynamics calculations on an ordering of Li6PS5I. Conclusions similar to those of Li6PS5Cl can be drawn, with the distinction of lower frequencies of iodine vibrations due to the increase in mass.",
+   "rotated_deg": 0,
+   "bbox": [
+    149.0,
+    394.1,
+    460.6,
+    630.8
+   ],
+   "w": 1732,
+   "h": 1316,
+   "dpi": 400,
+   "src": "ae3c01977_si_001.pdf",
+   "blank": 0.837,
+   "note": "recropped by curator 2026-09-26 — tight clip to the embedded raster (auto crop was full text width). No content change"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Comparison of heat capacities per mole of atoms of Li6PS5Cl, Li6PS5I, and Li10GeP2S12 approaching the Dulong-Petit limit at high temperatures. Given the similarities in the phonon densities of states, the temperature dependencies of the respective heat capacities are almost identical. With that, the phonon density of states of Li6PS5Cl is used to approximate the heat capacities of Li5.5PS4.5Cl1.5 and Li6PS5Br. Section S5: Thermal conductivity by ionic transport",
+   "rotated_deg": 0,
+   "bbox": [
+    143.9,
+    65.9,
+    450.6,
+    359.0
+   ],
+   "w": 1705,
+   "h": 1629,
+   "dpi": 400,
+   "src": "ae3c01977_si_001.pdf",
+   "blank": 0.924,
+   "note": "recropped by curator 2026-09-26 — tight clip to the embedded raster (auto crop was full text width, 95 % blank). No content change"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 12,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Comparison of different models for calculation the effective thermal conductivity. Despite the edge cases of Voigt- and Reuss-model all models show very similar relative thermal conductivities for high volume fractions of solid electrolyte. The influence of conducting pores is equally small. Calculations were performed with κSE = 0.5 W m−1 K−1 and κg = 0.017 W m−1 K−1.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.8,
+    113.3,
+    522.2,
+    294.0
+   ],
+   "w": 1998,
+   "h": 804,
+   "dpi": 320,
+   "src": "ae3c01977_si_001.pdf",
+   "blank": 0.937,
+   "note": "recropped by curator 2026-09-26 — auto crop carried the body word 'conductivity.' (p.12 y 92.0–105.4 pt); new clip starts at 113.3. ⚠ both x-axis titles 'φ_SE' are clipped INSIDE the SI's own raster (raster ends at y 289.0) — not recoverable"
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 13,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Temperature-dependent thermal diffusivities of (a) Li5.5PS4.5Cl1.5, (c) Li6PS5Br, and (e) Li6PS5I. The volume fractions of solid electrolyte (relative densities) are color coded. The respective heat capacities in (b), (d) and (f) approach the Dulong- Petit limit at high temperatures. Due to the increasing average molar mass bromine and iodine containing argyrodites have lower specific heat capacities.",
+   "rotated_deg": 0,
+   "bbox": [
+    112.8,
+    76.8,
+    494.4,
+    532.5
+   ],
+   "w": 1999,
+   "h": 2387,
+   "dpi": 377,
+   "src": "ae3c01977_si_001.pdf",
+   "blank": 0.905,
+   "note": "recropped by curator 2026-09-26 — tight clip to the embedded raster (auto crop was full text width). No content change"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 13,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Temperature-dependent thermal diffusivities of (a) Li5.5PS4.5Cl1.5, (b) Li6PS5Br, and (c) Li6PS5I. The volume fractions of solid electrolyte (relative densities) are color coded.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    638.0,
+    515.7,
+    750.8
+   ],
+   "w": 1996,
+   "h": 516,
+   "dpi": 329,
+   "src": "ae3c01977_si_001.pdf",
+   "blank": 0.877,
+   "note": "manual crop by curator 2026-09-26 — extract_figures.py dropped S8 ('그래픽 없음(img0/draw0)') because the caption sits at the top of p.14 while the image is at the bottom of p.13 (page break). clip = p.13 embedded-raster union (84.1, 643.0, 510.7, 745.8) + 5 pt pad. ⚠ the caption says 'thermal diffusivities' but every panel's y-axis is κ / W m⁻¹ K⁻¹ (a caption error in the SI); the x-axis title (T / K) is absent in the SI raster"
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 15,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Temperature dependence of the Bruggeman exponent obtained from effective medium theory fits of the thermal conductivity. It can be seen that the Bruggeman exponents are constant within uncertainty in the investigated temperature range.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.8,
+    65.9,
+    490.5,
+    329.2
+   ],
+   "w": 2000,
+   "h": 1365,
+   "dpi": 373,
+   "src": "ae3c01977_si_001.pdf",
+   "blank": 0.938,
+   "note": "recropped by curator 2026-09-26 — tight clip to the embedded raster. No content change"
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 15,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Volume fraction dependent thermal conductivities and corresponding effective medium fits of all samples at 173 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.1,
+    414.2,
+    484.0,
+    679.2
+   ],
+   "w": 2001,
+   "h": 1396,
+   "dpi": 379,
+   "src": "ae3c01977_si_001.pdf",
+   "blank": 0.923,
+   "note": "recropped by curator 2026-09-26 — tight clip to the embedded raster. ⚠ x-axis title 'φ_SE' half-clipped INSIDE the SI's own raster (raster ends y 674.2) — not recoverable"
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 16,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Volume fraction dependent thermal conductivities and corresponding effective medium fits of all samples at 523 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.1,
+    65.9,
+    484.0,
+    330.9
+   ],
+   "w": 2001,
+   "h": 1396,
+   "dpi": 379,
+   "src": "ae3c01977_si_001.pdf",
+   "blank": 0.921,
+   "note": "recropped by curator 2026-09-26 — tight clip to the embedded raster. ⚠ x-axis title 'φ_SE' half-clipped INSIDE the SI's own raster (raster ends y 325.9) — not recoverable"
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 16,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Volume fraction-dependent thermal diffusivity at room temperature plotted against volume fraction of solid electrolyte with effective medium theory. In the top right panel, an exemplarily microstructure is shown with pores in white and solid electrolyte in brown, having thermal diffusivities of Dg and DSE, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    91.1,
+    374.3,
+    498.3,
+    639.3
+   ],
+   "w": 1998,
+   "h": 1300,
+   "dpi": 353,
+   "src": "ae3c01977_si_001.pdf",
+   "blank": 0.888,
+   "note": "recropped by curator 2026-09-26 — tight clip to the embedded raster. No content change"
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 18,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. X-ray diffractograms of Li6PS5Cl, Li5.5PS4.5Cl1.5, Li6PS5Br, Li6PS5I, and Li10GeP2S12 acquired as received or as synthesized, respectively, proving the high phase purity of the investigated samples.",
+   "rotated_deg": 0,
+   "bbox": [
+    71.3,
+    68.4,
+    532.2,
+    418.4
+   ],
+   "w": 1999,
+   "h": 1518,
+   "dpi": 312,
+   "src": "ae3c01977_si_001.pdf",
+   "blank": 0.92,
+   "note": "recropped by curator 2026-09-26 — tight clip to the embedded raster. No content change"
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 19,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. X-ray diffractograms of Li6PS5Cl, Li5.5PS4.5Cl1.5, Li6PS5Br, Li6PS5I, and Li10GeP2S12 acquired after conducting laser-flash analysis measurements. No significant degradations occur during the measurements and sample transfer. The lithium argyrodites, i.e., Li6PS5Cl, Li6PS5Br, Li6PS5I, Li5.5PS4.5Cl1.5, crystallize in the cubic 𝐹4ത3𝑚 space group that is characterized by a rigid substructure of PS43-- tetrahedra and a complex, partially occupied lithium ion substructure (Figure S15a). In this substructure, lithium ions are distributed across various lattice sites forming interlinked cages that result in a three-dimensional diffusion path for lithium ions.18,34 Due to the similar ionic radii of Cl- (181 pm), Br- (196 pm), and S2- (184 pm) a significant degree of anion disorder is present in the respective argyrodites. In contrast, no disorder is present in Li6PS5I.18,34,35 Refine",
+   "rotated_deg": 0,
+   "bbox": [
+    68.2,
+    68.4,
+    527.2,
+    424.3
+   ],
+   "w": 1996,
+   "h": 1548,
+   "dpi": 313,
+   "src": "ae3c01977_si_001.pdf",
+   "blank": 0.92,
+   "note": "recropped by curator 2026-09-26 — tight clip to the embedded raster. No content change"
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 20,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Crystal structures of (a) Li6PS5X (X=Cl, Br, I) showing lithium cages surrounding the 4c position and (b) Li10GeP2S12, in which the fast diffusion occurs along the c-axis via the 16h positions visualized in green.",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    266.4,
+    527.5,
+    538.5
+   ],
+   "w": 1999,
+   "h": 1183,
+   "dpi": 313,
+   "src": "ae3c01977_si_001.pdf",
+   "blank": 0.611,
+   "note": "recropped by curator 2026-09-26 — tight clip to the embedded raster. (legend label '(4c)(16e)' overlap is in the original)"
+  }
+ ],
+ "note": "2026-09-26 curator: all 15 SI figures recropped tight to the embedded rasters (Microsoft Print-to-PDF strips, ~2,900 dpi source) at 312–400 dpi, width ≈2000 px; S8 added manually (page-break caption). The SI has no tables. [!] '--slug boger2023_thermal_conductivity_argyrodite_lgps --clean' would drop S8 and restore the text-contaminated S1/S6 crops — see pdf_map.tsv."
+}

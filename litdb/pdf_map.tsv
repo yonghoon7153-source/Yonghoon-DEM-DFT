@@ -129,6 +129,19 @@ ohno2020_interlab_ionic_conductivity_argyrodite	nz9b02764_si_001
 #   [!] '--slug ohno2020_interlab_ionic_conductivity_argyrodite --clean' 을 돌리면 tab_S8 이 사라지고 S6·S10·S11 이 다시 잘린다.
 #       ('--inbox --run --skip-done' 은 안전.) 재생성이 필요하면 위 bbox 를 그대로 다시 쓴다.
 #
+# ── SE 고유 열전도 (κ_SE · 공극 지수 α) ──────────────
+# 가드: 파일명이 출판사 SI 이름(ae3c01977_si_001.pdf)이라 제목 토큰이 안 겹친다 → 파일명 조각으로 잡는다 ('_si_' 로 SI 자동 판정됨).
+#   ⚠ **본문 PDF 없음 — SI 만** (사용자가 본문을 받을 수 없었다, 2026-09-26). 본문을 구하면 --pdf <본문> --pdf <SI> 로 추가하되 --clean 금지.
+boger2023_thermal_conductivity_argyrodite_lgps	ae3c01977_si_001
+#   ↑ 2026-09-26. **15장 전부 손이 들어가 있다** (figures.json 의 note). SI 그림은 Microsoft Print-to-PDF 가로 띠 래스터(원 ≈2,900 dpi) —
+#   클립 = 쪽별 임베디드 래스터 합집합 + 5 pt 여백 (위·아래는 이웃 텍스트 줄에 맞춰 자름) · dpi = min(400, max(300, 2000 px / 폭)) → 폭 ≈ 2000 px.
+#   · fig_S8 = 자동 크로퍼가 제외 ('그래픽 없음' — 캡션은 14쪽 맨 위, 그림은 13쪽 맨 아래) → page 13(0-based 12) clip (79.1, 638.0, 515.7, 750.8) @329 dpi 수동.
+#   · fig_S1 = 본문 줄 'via a simple linear fitting routine.' 혼입 → clip (112.5, 271.1, 482.1, 645.2) · fig_S6 = 본문 낱말 'conductivity.' 혼입 → clip (72.8, 113.3, 522.2, 294.0).
+#   · 나머지 12장 = 전폭(64.8–533.8 pt) 자동 클립을 래스터 경계로 좁힘 (내용 변화 없음) — bbox 는 figures.json.
+#   ⚠ S2 · S6 · S10 · S11 의 x 축 제목이 잘린 것은 **SI 원 래스터 자체**다 (래스터 끝 = 캡션 시작 직전) — 크롭으로 복구 불가.
+#   [!] '--slug boger2023_thermal_conductivity_argyrodite_lgps --clean' 을 돌리면 fig_S8 이 사라지고 S1·S6 에 본문 텍스트가 다시 섞이며 나머지는 전폭으로 돌아간다.
+#       ('--inbox --run --skip-done' 은 안전.) 재생성이 필요하면 figures.json 의 bbox·dpi 를 그대로 다시 쓴다.
+#
 # ── CAM 고유 전달물성 (σ_e / σ_i 단상 펠릿) ──────────────
 # 가드: 파일명이 출판사 해시(1-s2.0-S037877531830466X-main.pdf / …-mmc1.pdf)라 제목 토큰이 안 겹친다
 #   → PII 조각으로 본문·SI 를 같이 잡는다 (SI 는 'mmc' 로 자동 판정).
