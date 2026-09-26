@@ -104,7 +104,18 @@
   "note": "QE 의 `Total force` 는 if_pos 를 곱한 뒤의 노름 — 고정층의 0.195 는 안 들어가고 자유 원자(C 8 · Ag 6) 의 ≈0.035 씩이 0.132 를 만든다 (√(8·0.0356²+6·0.035²) ≈ 0.132). `Forces acting on atoms` 는 곱하기 전 값이라 고정층의 큰 힘이 보인다."
  },
  "interpretation": "에너지·힘 불일치 — 힘 방향으로 가면 에너지가 오른다(199/199). 고정 바닥층 3 원자에 **같은 크기의 큰 +z 힘**(0.1949 · 5.0 eV/Å) 은 화학 힘이 아니라 균일 외부장 성격이고, 그 위치가 톱니 불연속 구간과 1 Å 거리다. UMA↔DFT 힘 차로는 설명이 안 된다 — 그 경우 DFT 에너지는 DFT 힘 방향으로 내려가야 한다. QE 문서(tefield/dipfield · emaxpos/eopreg): 'the change of slope of this potential must be located in the empty region, or else unphysical forces will result.'",
- "confirmation_pending": "pw.out 의 dipole / 'Potential amp.' 줄 (사용자 붙여넣기 대기) — 진폭·장 세기가 힘 0.195 와 정합하는지",
  "decision": "이 실행의 값은 어디에도 쓰지 않는다 (W · d₀ · 표 · 게이트) · 개정 2 (쌍극자 구간 = 진공 중앙 · 양쪽 핵 ≥ 4 Å) proposed · S3v2 패키지(db/inputs/wad_aprime_s3v2_2026_09_26) 로 4 잡 재실행 · GPU 2.80 h 손실",
- "my_error": "make_endpoints 의 한쪽 검사(흡착층 꼭대기가 구간 아래인가만) + `empty_in_both_endpoints: True` 상수 깃발 — 기판 바닥의 주기 영상을 안 봤다. build_aprime_interfaces/build_aprime_s3 selftest 는 그 깃발을 읽어 초록이었고 S2 manifest · S3 봉인이 그대로 신뢰했다 (한쪽 검사 + 상수 깃발 = 조용히 틀린 경로 · kb/methodology/silent_wrong_path_2026_09_13.md 사례 추가)."
+ "my_error": "make_endpoints 의 한쪽 검사(흡착층 꼭대기가 구간 아래인가만) + `empty_in_both_endpoints: True` 상수 깃발 — 기판 바닥의 주기 영상을 안 봤다. build_aprime_interfaces/build_aprime_s3 selftest 는 그 깃발을 읽어 초록이었고 S2 manifest · S3 봉인이 그대로 신뢰했다 (한쪽 검사 + 상수 깃발 = 조용히 틀린 경로 · kb/methodology/silent_wrong_path_2026_09_13.md 사례 추가).",
+ "confirmation": {
+  "source": "pw.out 첫 SCF 의 dipfield 출력 (사용자 붙여넣기 2026-09-26 · 폴더 V2_top_fcc_relax_fail1_dipreg 로 보관 완료)",
+  "lines": [
+   "Computed dipole along edir(3) :",
+   "Dipole              -23.1806 Ry au,        -58.9193 Debye",
+   "Dipole field         -0.0834 Ry au,",
+   "Potential amp.        7.2648 Ry",
+   "Total length         43.5645 bohr"
+  ],
+  "reading": "Potential amp. 7.26 Ry ≈ 98.8 eV — 비대칭 슬랩의 물리적 표면 쌍극자 낙차(수 십분의 1 eV)의 ~200 배. Dipole −58.9 D ÷ (c 24.05 Å × 4.803 D/(e·Å)) ≈ 0.51 e 가 셀 반대편에 있는 것으로 계산됨 = 톱니 절단면이 Ag 바닥층 전자밀도를 갈라 절단면 너머 전하가 z+c 자리로 세어진 가짜 쌍극자 → 거대 보상장 → 고정층 +0.195 Ry/Bohr 힘 · 자유 원자 에너지·힘 불일치. 원인 확정.",
+  "expected_after_fix": "S3v2 (구간을 진공 중앙으로) 재실행 첫 SCF 의 Potential amp. 는 수 십 mRy 급 (≲ 0.05 Ry) 이어야 한다 — 재개 규칙과 함께 본다"
+ }
 }
