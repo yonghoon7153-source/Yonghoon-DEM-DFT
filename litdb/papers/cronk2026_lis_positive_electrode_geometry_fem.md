@@ -8,6 +8,9 @@
 >
 > 🔗 **같은 논문의 두 번째 읽기축 (2026-09-11)** — 계면상 화학(S 양극 Li₃PS₄₊ₙ · **Li₂S 양극의 LPSCl→LPS-like 분해**)·공정 조건(500 rpm·1 h·1:30)·복합체 σ(Fig S4c/f·S10c)·Source Data 대조는 `cronk2026_lis_cathode_interphase_chemistry.md` 가 **정본**. 이 카드 §6.1–6.2 의 계면상 요약과 어긋나면 그쪽이 이긴다 (예: Source Data 상 탄소 없는 milled S/LPSCl 의 Raman 152 cm⁻¹ 은 **이동이 없다**).
 
+>
+> ✅ **원고 사용 기록 (2026-09-26, 사용자 결정 — 작업 브랜치 `docs/reviews/si_table_response_20260925.md` §9-1 #6)**: SDCP 원고 SI 표 S2 *LPSCl Poisson's ratio (DEM contact) 0.3* 의 출처 칸 = `Ref. [S(Cronk)]` — 근거는 이 카드 §4.2 Table S6 *"Poisson ratio of LPSCl · ν_SE · 0.3"*.
+> ⚠ 그 0.3 은 이 논문의 **FEM 입력값** (출처 표기 없음) 이다 — 원고 · 답변에서 *측정값* 으로 인용하지 않는다.
 ---
 
 ## 0. 서지 · 실물 확인
