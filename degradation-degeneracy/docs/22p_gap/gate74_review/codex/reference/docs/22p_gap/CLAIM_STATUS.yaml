@@ -1,0 +1,524 @@
+# 22p 주장 상태 원장 — 철회·격하된 결론의 **정본 목록**
+#
+# 왜 이 파일이 있나 (21차 리뷰 발견 8):
+#   19~20차에서 여러 결론을 철회하면서 **배너만 붙였다.** 배너 아래·위의 활성
+#   본문은 그대로 남아 같은 결론을 다시 말했고, 21차 리뷰가 7곳을 찾아냈다.
+#   "배너만 추가하는 방식은 다시 실패했다 … 철회된 claim ID 가 결론 구역에
+#   나타나면 실패시키는 구조가 필요하다."
+#
+# 어떻게 동작하나:
+#   `tests/test_docs_lint.py::test_retracted_claims_do_not_reappear_in_active_prose`
+#   이 아래 `banned` 정규식을 각 `files` 의 **활성 본문**에서 찾는다. 하나라도
+#   걸리면 실패한다. 활성 본문 = 격리 구역 밖 전부.
+#
+#   격리 구역은 마크다운에 보이지 않는 HTML 주석 울타리로만 만든다:
+#       <!-- QUARANTINE:CLAIM_ID -->
+#       > **⛔ 철회[CLAIM_ID]** … 옛 문장을 기록으로 인용해도 되는 유일한 자리
+#       <!-- /QUARANTINE -->
+#   인용(blockquote)이라는 사실만으로는 격리가 아니다 — §20.4 처럼 정정 블록
+#   전체가 인용인 경우가 있어, 인용을 격리로 치면 정정문이 검사에서 빠진다.
+#
+#   `record: quarantined` 인 주장은 울타리가 **적어도 하나** 있어야 한다
+#   (양성 결속 — 배너를 지우면 실패한다). `record: removed` 는 옛 문장을
+#   남기지 않고 지운 것이라 울타리가 없어도 된다.
+#
+# 새 철회를 넣는 법: 여기 항목을 추가하고 → 테스트를 돌려 RED 를 눈으로 본 뒤
+# → 문서를 고친다. 순서를 뒤집으면 fixture 가 진실을 가린다 (CLAUDE.md 규율 2).
+#
+# ⚠ regex 는 **철회된 의미**에 묶어라, 인접한 단어가 아니라.
+#   22차에 세 번 틀렸다: `3/51` 이 실측 붕괴 건수를 잡았고, THRESH_FREE 의
+#   "두 오류가 동시에 ~1%" 와 "판정선을 어디에 두든" 이 각각 배너가 명시적으로
+#   **유지**한다고 적은 문장과 정반대 주장을 잡았다. 원장이 참인 문장을 금지하면
+#   문서를 거짓으로 만든다 — 금지어를 넣기 전에 그 배너가 무엇을 유지하는지 읽어라.
+schema_version: 5
+
+# ── protocol 세대의 닫힌 집합 (★ 26차 P2-11) ─────────────────────────────
+# 왜: 초판 회귀는 role 의 `protocol_generation` 을 claim 의 것과 대조하지
+#   않았다. `v6_prep` 을 `v999` 로 바꿔도 통과했다. 세대를 여기 못 박고,
+#   role 의 세대가 claim 의 세대와 다르면 **명시적 compatibility** 를
+#   요구한다 (한 다리가 옛 세대 claim 에는 canonical, 새 세대 claim 에는
+#   diagnostic 일 수 있으므로 단일 equality 는 틀렸다).
+protocol_generations:
+  - v5          # 옛 fixed-budget / no-warm 세대
+  - v6_prep     # 현행 digest 의 warm-probe 준비 실행
+  - v6          # 단계 3 (아직 산출물 없음)
+
+# ── source digest → protocol 세대 (★ 28차 P2) ────────────────────────────
+# 왜: 초판은 각 `claim_roles` 행의 `protocol_generation` 을 **그대로 믿었다.**
+#   리뷰가 준 반례 — role 과 generation 을 **함께** v6/canonical 로 바꾸면
+#   표의 (v6 → v6) 규칙에 걸려 통과했다. 실제 실행이 v5 라는 사실은 대조하지
+#   않았다. `reason` loophole 이 두 필드 loophole 로 옮겨간 것이다.
+#
+#   이제 role 행에 `protocol_generation` 을 적지 않는다. 다리의 봉인된
+#   `evidence.leg_source_digest` 에서 **도출**한다.
+source_digest_generations:
+  d50295f980ccaa81: v5        # paired_fixed5_v4 (옛 fixed-budget 실행)
+  7250c6e689399381: v5        # fit_22p_seed_404_hc
+  d842894dbbc2a0f9: v5        # fit_seed404_pe5mv
+  a72c0f3a485c19bb: v6_prep   # 21~24차 내내 고정이던 현행 digest
+
+# ── 세대표의 **근거** (★ 30차 P2) ────────────────────────────────────────
+# 왜: 30차 리뷰가 "mapping key 가 projection 에 등장하는지만 본다.
+#   `digest → generation` **값**의 봉인 근거는 없다" 고 지적했다. 아래 표는
+#   각 digest 를 실제로 얻은 다리를 이름하고, 회귀
+#   (`test_every_generation_entry_names_the_legs_that_attained_it`) 가 그
+#   다리의 **봉인 투영**이 정말 그 digest 를 적었는지 확인한다.
+#
+# ⚠ 닫히지 않은 것을 그대로 적는다. 실행이 남긴 어떤 산출물에도
+#   "protocol generation" 이라는 필드는 **없다** — 그 이름은 이 원장의
+#   분류다. 그래서 `digest → generation` 화살표는 도출이 아니라 **선언**이고,
+#   여기서 할 수 있는 것은 그 선언을 봉인물이 지지하는 digest 에 묶어 두는
+#   것까지다. 묶음 9 로 등록되는 새 다리부터는 registered receipt 의
+#   `planned_envelope.protocol_generation` 이 정본이 되며
+#   (`test_a_registered_leg_binds_its_generation_to_the_receipt`),
+#   지금은 등록된 다리가 하나도 없으므로 그 검사가 "없음" 을 고정하고 있다.
+source_digest_evidence:
+  d50295f980ccaa81: [paired_fixed5_v4]
+  7250c6e689399381: [fit_22p_seed_404_hc]
+  d842894dbbc2a0f9: [fit_seed404_pe5mv]
+  a72c0f3a485c19bb: [paired_fixed5_v4_nowarm_now, paired_fixed5_v4_warm,
+                     fit_22p_seed_404_hc_nowarm, fit_22p_seed_404_hc_warm_now,
+                     fit_seed404_pe5mv_nowarm]
+
+# ── 세대 간 role 허용표 (★ 27차 P2-10) ───────────────────────────────────
+# 왜: 초판 회귀는 role 세대가 claim 세대와 다르면 **nonempty `reason` 하나만**
+#   있으면 통과시켰다. 리뷰가 준 반례 — `P22_STAGE3_PRIMARY` 의 v5 role 을
+#   `diagnostic` → `canonical` 로 바꿔도 기존 `reason` 때문에 통과했다.
+#   그 문서가 적은 `v5_to_v6_promotion_forbidden` 의 **정반대**다.
+#
+#   (role 세대, claim 세대) 쌍마다 허용 role 을 못 박는다. 표에 없는 쌍은
+#   fail-closed 다 — 새 세대를 만들면 여기 규칙을 먼저 적어야 한다.
+role_compatibility:
+  - source: v5
+    target: v5
+    allowed_roles: [canonical, diagnostic, confounded, superseded, excluded]
+  - source: v5
+    target: v6_prep
+    allowed_roles: [diagnostic, confounded, excluded]
+    왜: 세대가 다르면 인과 크기를 옮길 수 없다 — 교란의 **존재**까지만
+  - source: v5
+    target: v6
+    allowed_roles: [diagnostic, excluded]
+    왜: v5 → v6 승격 금지 (계약 §2.1). `canonical` 은 표에 없다
+  - source: v6_prep
+    target: v5
+    allowed_roles: [diagnostic, confounded, excluded]
+    왜: >-
+      현행 digest 다리가 옛 세대 주장의 **진단 증거**는 될 수 있다 (교차-digest
+      짝의 무-warm 쪽이 그 예다). 다만 옛 세대의 정본이 될 수는 없다.
+  - source: v6_prep
+    target: v6_prep
+    allowed_roles: [canonical, diagnostic, confounded, superseded, excluded]
+  - source: v6_prep
+    target: v6
+    allowed_roles: [diagnostic, excluded]
+    왜: 준비 실행은 단계 3 primary 를 지지할 수 없다
+  - source: v6
+    target: v6
+    allowed_roles: [canonical, diagnostic, confounded, superseded, excluded]
+
+# ── 활성 주장 원장 (★ 25차 발견 6) ─────────────────────────────────────────
+# 왜 여기 있나: `LEG_PRESERVATION.yaml` 의 `claim_roles` 가 자유문장이라
+#   "어느 주장에 이 다리를 쓸 수 있는가" 가 기계 계약이 아니었다. claim ID 를
+#   여기 한 곳에 두고 원장이 그것을 참조한다 — Q1 이 요구한 "claim authority 는
+#   `CLAIM_STATUS.yaml` 하나" 를 활성 주장까지 넓힌 것이다.
+#
+#   `protocol_generation` 이 핵심이다. 한 다리가 옛 protocol 주장에는 쓸 수
+#   있고 새 protocol 주장에는 못 쓰는 상황을 leg-level 필드 하나로는 적을 수
+#   없다 (25차 발견 3 이 지적한 것).
+#
+#   `requires_leg: true` 면 적어도 한 다리가 이 주장에 role 을 선언해야 한다
+#   (양방향 coverage).
+active_claims:
+  - id: P22_NOWARM_PRIMARY
+    protocol_generation: v6_prep
+    requires_leg: true
+    무엇: >-
+      현행 digest 무-warm 짝의 1차 전이표와 Δ. 정본 수치는 투영과
+      `docs/09_22P_GAP.md` — 여기 옮겨 적지 않는다.
+  - id: P22_WARM_PAIR
+    protocol_generation: v6_prep
+    requires_leg: true
+    무엇: 같은 digest·같은 예산에서 warm 만 켠 짝의 전이표.
+  - id: WARM_REPLACES_SLOT
+    protocol_generation: v6_prep
+    requires_leg: true
+    무엇: >-
+      warm 은 후보를 **더하지 않고** 결정론 slot 을 교체한다. 근거는 restart
+      투영의 `source` 구성이다 (계약 v4 §0).
+  - id: HALFCELL_PAIR_CONFOUNDED
+    protocol_generation: v6_prep
+    requires_leg: true
+    무엇: >-
+      half-cell 짝은 warm 이 `p_ini` 까지 움직여 warm 단일 축이 아니다
+      (21차 발견 4). 이 주장 자체는 교란 다리가 **증거**다.
+  - id: XDIGEST_NUMERICALLY_HARMLESS
+    protocol_generation: v5
+    requires_leg: true
+    무엇: >-
+      교차-digest 짝의 1번째가 같다는 것 — 그 digest 구간이 수치적으로
+      무해하다는 별도 증거. regime 병기 필수.
+  - id: RANDOM_ONLY_MULTIMODALITY
+    protocol_generation: v6_prep
+    requires_leg: true
+    무엇: >-
+      random-only 다봉성 지표. **수렴한 국소최소의 다봉성이 아니라** endpoint
+      dispersion / optimizer sensitivity 까지만 지지한다 (24차 보충 Q4).
+  - id: LEGACY_PAIRED_FIXED5
+    protocol_generation: v5
+    requires_leg: true
+    무엇: >-
+      옛 v4 fixed-budget · no-warm 주장. `RESULTS_PAIRED_FIXED5.md` 가 지지하던
+      범위이며, **그 protocol 세대를 명시한 채로만** 인용 가능하다.
+  - id: P22_STAGE3_PRIMARY
+    protocol_generation: v6
+    requires_leg: false          # 아직 아무 다리도 이 주장을 지지하지 않는다
+    무엇: >-
+      단계 3 의 사전 등록 primary estimand. v5 산출물을 여기로 승격하는 것은
+      계약 §2.1 이 금지한다.
+
+claims:
+  - id: RULE_OF_THREE
+    status: retracted
+    round: 20
+    record: quarantined
+    무엇: >-
+      `0/518`·`0/306` 을 rule of three 로 확률 상한(0.58%)·군집 보정 상한
+      (3/51 ≈ 5.9%)으로 옮긴 것. 두 계산 모두 iid 베르누이 표집을 전제하는데
+      518건은 결정론적 등간격 격자의 이질적 조건이고 조건당 optimizer draw 가
+      1회다. 유지되는 것은 "이 계산 격자에서 0/518, 0/306" 이라는 기술통계뿐.
+    files: [docs/09_22P_GAP.md]
+    banned:
+      # ★ `3/51` 단독은 쓰면 안 된다 — `203/518`(§7.8 ROC 표) 과 `3/51 (5.9%)`
+      #   (seed_101 10 mV 다리의 실제 붕괴 건수) 를 같이 잡는다. 철회된 것은
+      #   저 건수가 아니라 **그것을 확률 상한으로 옮긴 계산**이므로 ≈ 까지 본다.
+      - 'rule\s*of\s*three'
+      - '0\.58\s*%'
+      - '3/51\s*≈'
+      - '(?<!\d)3/306'      # `13/306`·`30/306` 은 실제 붕괴 건수다 — 잡지 않는다
+      - '보수적\s*상한'
+
+  - id: OP_EQUIV
+    status: retracted
+    round: 20
+    record: quarantined
+    무엇: >-
+      "§0 의 거짓 분리율이 동작점에도 그대로 적용된다 / '평균이 동작점을
+      대표하지 못한다' 는 우려는 기각됐다". 축별 쏠림 검정은 **이질성을 검출
+      못했다**는 음성 결과다. `0/9` 의 Wilson 95% 상한이 ~29.9% 라 §0 의 6.2%
+      와도, 30% 와도 양립한다. 사전 equivalence margin 과 검정력이 없다.
+    files: [docs/09_22P_GAP.md]
+    banned:
+      - '동작점에도\s*(그대로\s*)?적용된다'
+      - '우려는\s*기각'
+      - '동작점이\s*나쁜\s*무리에\s*있지\s*않다'
+      - '참\s*격차\s*0\s*칸은\s*균질하다'
+
+  - id: AXIS_RANK
+    status: retracted
+    round: 20
+    record: quarantined
+    무엇: >-
+      "PE 가 NE 보다 치명적 · 전압 축이 화학량론 축보다 치명적" 을 **문턱에
+      의존하지 않는 결론**으로 재사용한 것. 축마다 다리 수가 극단으로 다르고
+      (PE 28 다리 vs 나머지 각 1), 비교된 다리들의 원점·예산이 matched 가
+      아니다.
+    # ★ 23차 발견 7 — wiki 와 LEG_INVENTORY 가 이 ID 를 쓰는데 files 에
+    #   없어 그 두 파일에서는 금지어가 자유로웠다.
+    files: [docs/09_22P_GAP.md, docs/22p_gap/LEG_INVENTORY.md,
+            wiki/questions/22p-physics-or-degeneracy.md]
+    banned:
+      - 'PE\s*가\s*NE\s*보다\s*(훨씬\s*)?치명적'
+      - '전압\s*축이\s*화학량론\s*축보다\s*치명적'
+      - '문턱\s*값에\s*의존하지\s*않는\s*세\s*결론'
+
+  - id: BIAS_MONOTONE
+    status: retracted
+    round: 19
+    record: quarantined
+    무엇: >-
+      "PE 오프셋을 키우면 파탄이 단조 증가하고 2 mV 에서 상전이가 있다".
+      근거였던 dense 세 다리가 Case 1 좌표 원점 오염(`a_ne` 1.03)의 산물이었다.
+    files: [docs/09_22P_GAP.md]
+    banned:
+      - '2\s*mV\s*상전이'
+      - '1\.5\s*(↔|→)\s*2\s*mV'
+
+  - id: NOISE_INERT
+    status: retracted
+    round: 21
+    record: quarantined
+    무엇: >-
+      "잡음은 거의 영향이 없다 / 바닥값은 구조적이다 / 잡음 층에서도 문턱은
+      불변이다". 비교된 두 다리는 조건집합도 optimizer draw 도 matched 가
+      아니다 — `cond_id` 가 noise 를 포함해 noise 층마다 restart 난수가
+      갈린다 (20차 발견 4). 6격자 재분석에서 10 mV 가 noise 0 에서 6/6,
+      noise 0.005 에서 2/6 으로 갈렸으므로 "불변" 은 관측과도 어긋난다.
+    files: [docs/09_22P_GAP.md]
+    banned:
+      - '잡음은\s*거의\s*영향이\s*없다'
+      - '바닥값은\s*측정\s*잡음이\s*아니라'
+      - '잡음을\s*줄여도\s*사라지지\s*않는다'
+      - '문턱\s*불변'
+      - '문턱은\s*불변'
+
+  - id: SEED101_ONLY
+    status: retracted
+    round: 21
+    record: removed          # 옛 문장을 남기지 않고 지웠다 — 사실 오류라 기록 가치가 없다
+    무엇: >-
+      "잡음 층 문턱은 seed_101 만 봤고 다른 격자는 미실행". 단계 C 재분석이
+      커밋된 정본에서 6격자 × 3오프셋 × 2잡음층 = 36 관측을 이미 뽑았다.
+      "미실행" 은 사실이 아니다.
+    files: [docs/09_22P_GAP.md]
+    banned:
+      - '다른\s*격자(는)?\s*미실행'
+
+  - id: R20_RX
+    status: retracted
+    round: 21
+    record: quarantined
+    무엇: >-
+      "restart 20 한 다리가 원점 처방을 실증했다 / 파탄이 완전히 사라졌다 /
+      `|bias| < 2%p → 무해` 규칙과 정합한다". 그 다리는 원점 `p_ini` 예산과
+      조건별 예산을 **동시에** 바꿨고 adaptive 가 켜져 있어 실제 실행 횟수도
+      달라졌다. 처방 확증이 아니라 세 축이 엉킨 진단 pilot 이다. 그리고
+      `|bias| < 2%p → 무해` 는 파라미터 오차 판정선이지 실패율 동등성 margin
+      이 아니다 (같은 오용을 21차 발견 2 가 warm 쪽에서도 지적했다).
+    files: [docs/09_22P_GAP.md, wiki/questions/22p-physics-or-degeneracy.md]
+    banned:
+      - '처방을\s*실측했다'
+      - 'restart\s*증량이\s*실증됐다'
+      - '파탄이\s*완전히\s*사라졌다'
+      - '원점이\s*회복되고\s*파탄이\s*사라졌다'
+      - 'bias\|\s*<\s*2%p\s*→\s*무해'
+
+  - id: WARM_NO_IMPROVE_ANY
+    status: retracted
+    round: 21
+    record: removed
+    무엇: >-
+      "dQ/dV 추가의 개선은 **어디서도** 관측되지 않았다". aggregate raw
+      degeneracy 에서는 맞지만, 같은 warm 다리의 noise=0.005 층에서 34p 가
+      313/492 → 304/492 로 **1.83%p 낫고**, aggregate `mean_abs_err` 도
+      0.024220 → 0.023653 으로 34p 가 낫다. 방어 가능한 형태는 endpoint 를
+      명시한 "사전 지정한 aggregate raw-degeneracy endpoint 에서는 34p 개선이
+      관측되지 않았다" 까지다.
+    files: [docs/08_REVIEW_RESPONSE.md, docs/22p_gap/LEG_INVENTORY.md]
+    banned:
+      - '개선은\s*어디서도\s*관측되지\s*않았다'
+      - '개선은\s*어디서도\s*없다'
+
+  - id: WARM_TIE
+    status: retracted
+    round: 21
+    record: removed
+    무엇: >-
+      "+1.29%p 는 사실상 동률이다". 동등성 주장에는 **사전에 정한** equivalence
+      margin 과 조건별 paired 전이표(McNemar 등)가 필요하다. 파라미터 오차
+      판정에 쓰는 2%p 를 실패율 동등성 margin 으로 재사용할 수 없다.
+    files: [docs/08_REVIEW_RESPONSE.md, docs/22p_gap/LEG_INVENTORY.md,
+            docs/09_22P_GAP.md]
+    banned:
+      - '사실상\s*동률'
+
+  - id: WARM_BETTER_VALLEY
+    status: retracted
+    round: 21
+    record: removed
+    무엇: >-
+      "warm 이 다봉성을 없앤 것이 아니라 같은 지형에서 더 나은 골짜기에 앉게
+      했다 / F20 의 '초기값을 주면 multimodal 이 사라진다' 가 직접 측정됐다".
+      `multistart_random_only` 블록은 두 arm 이 **완전히 동일**하다 (34p
+      multimodal 0.969512, flat_valley 0.008130 양쪽 같음). 같은 random
+      restart 는 그대로 다봉이었고, warm 이 바꾼 것은 slot 0 의 결정론적
+      후보가 `base_init` 에서 `warm` 으로 **교체**된 것뿐이다 (22차 발견 1 —
+      초판은 여기 "하나를 더했다" 고 썼고 그것도 틀렸다).
+      "더 나은 골짜기" 는 per-condition `J` 비교 없이 truth error 만으로 말할
+      수 없다.
+    files: [docs/08_REVIEW_RESPONSE.md, docs/22p_gap/LEG_INVENTORY.md,
+            docs/09_22P_GAP.md]
+    banned:
+      - '더\s*나은\s*골짜기'
+      - '초기값을\s*주면\s*사라진다'
+
+  - id: WARM_SYSTEMATIC
+    status: retracted
+    round: 21
+    record: removed
+    무엇: >-
+      "정본 → nowarm_now 의 차이는 **코드만** 이다" 와 5 mV 교차-digest 짝을
+      "계통적 warm 효과" 의 증거로 쓴 것. 두 다리는 Python·OS·NumPy·SciPy 가
+      함께 바뀌었으므로 code+runtime drift 다. 5 mV 짝은 digest 가 달라
+      (`a72c0f3a` vs `d842894`) warm 인과에 쓸 수 없는 교차-digest 기술
+      비교다.
+    files: [docs/08_REVIEW_RESPONSE.md, docs/22p_gap/LEG_INVENTORY.md]
+    banned:
+      - '\*\*코드만\*\*'
+      - '계통적\s*warm'
+      - 'paired\s*밖에서도\s*계통적'
+
+  - id: MV_1P5
+    status: retracted
+    round: 20
+    record: quarantined
+    무엇: >-
+      "OCP 오차를 ~1.5 mV 이내로 알아야 한다" 는 허용 오차. 폐기된 dense 2 mV
+      다리를 문턱으로 삼아야만 나오는 값이고 실제보다 최소 3.3배 과소평가다.
+    files: [docs/09_22P_GAP.md]
+    banned:
+      - '~?1\.5\s*mV\s*이내'
+
+  - id: THRESH_FREE
+    status: retracted
+    round: 20
+    record: quarantined
+    무엇: >-
+      "판정선을 어디에 두든 성능이 유지된다" 는 문턱 무관 주장. 자기 ROC 표와
+      모순된다 — 판정선 6%p 의 ≥4%p 놓침이 `203/518 = 39.2%` 다. 20차 발견 7.
+
+      ★ 초판 regex 가 "두 오류가 동시에 ~1%" 를 금지했는데 **틀렸다** (22차
+        자체 발견). 그 관측은 철회 대상이 아니라 배너가 명시적으로 **유지**하는
+        것이다 ("표가 지지하는 것은 2.5~3%p 부근의 좁은 운용 창뿐"). 철회된
+        주장에 인접한 참인 문장을 금지하면 원장이 문서를 거짓으로 만든다.
+    files: [docs/09_22P_GAP.md]
+    banned:
+      # ★★ 이 regex 는 두 번 틀렸다 (22차 자체 발견). 초판은 "두 오류가 동시에
+      #   ~1%" 를, 2판은 "판정선을 어디에 두든" 을 금지했는데 둘 다 **철회되지
+      #   않은 참인 문장**을 잡았다 (§0 의 "판정선을 어디에 두든 고칠 수 없다"
+      #   는 정반대 주장이다). 금지어는 **철회된 의미**에 묶여야 한다.
+      - '판정선을\s*어디에\s*두든\s*성능'
+      - '문턱(에|과)\s*(관계|상관)\s*없이\s*성능'
+      - '어디에\s*두든\s*성능이\s*유지'
+
+  - id: FPR_AS_FDR
+    status: retracted
+    round: 20
+    record: quarantined
+    무엇: >-
+      거짓 분리율(FPR)을 거짓 발견율(FDR)처럼 읽은 것 — "격차를 냈다는 대체로
+      믿을 만하되 10건 중 1건은 헛것", "놓칠 확률 1% 미만". FDR 은 실제 격차의
+      base rate 없이 계산할 수 없고, 유리한 가정에서도 ~35.7~47.4% 다.
+      20차 리뷰 발견 5.
+    files: [docs/09_22P_GAP.md]
+    banned:
+      - '10건\s*중\s*1건은\s*헛것'
+      - '놓칠\s*확률\s*1%\s*미만'
+
+  - id: WARM_UNION
+    status: retracted
+    round: 22
+    record: removed
+    무엇: >-
+      "warm 은 후보 집합에 결정론적 점 하나를 **더했다**" 는 서술. 22차 리뷰
+      발견 1 이 코드와 커밋된 투영으로 반증했다 — `src/fitting.py` 의 restart
+      루프는 정확히 `n_restarts` 번 돌고 slot 0 이 `base_init` **또는** `warm`
+      이다. 실측(투영 `restart_sources`): no-warm 34p `base_init=1;random=4`,
+      warm 34p `random=4;warm=1` — 양쪽 다 5개. 추가가 아니라 **교체**다.
+      따라서 21차 실험은 union 이 아니라 `legacy_slot_replace` 다.
+    files: [docs/08_REVIEW_RESPONSE.md, docs/22p_gap/LEG_INVENTORY.md,
+            docs/22p_gap/STAGE3_CONTRACT.md]
+    banned:
+      # ★ 23차 리뷰가 **이 regex 자신의 구멍**을 지적했다. 아래 넷은 실제로
+      #   활성 본문에 남아 빠져나간 형태다 — 조사(를/가)와 어미(더한/늘어난/
+      #   더했을)가 초판 패턴의 인접 단어 가정을 깼다. 21차 NOISE_INERT 때
+      #   배운 것과 같은 교훈이다: **철회된 의미**에 묶어라.
+      - '점\s*하나를?\s*(더한|더했|늘)'
+      - '후보\s*하나를?\s*(더한|더했|추가|늘)'
+      - '(결정론적\s*)?(후보|점)\s*하나가?\s*늘어'
+      - '후보\s*집합에\s*.{0,12}(추가|늘)'
+      - '그\s*추가\s*후보'
+      - '추가된\s*(warm\s*)?후보'
+
+  # ── 옛 절-단위 마커 체계(17~18차)의 claim ── ─────────────────────────────
+  # ★ 23차 자체 발견 — 관할을 발견 기반으로 바꾸자마자 이 8건이 **원장에 없다**
+  #   고 잡혔다. 이 저장소에는 철회 체계가 **둘** 있었다:
+  #     (구) tests/test_docs_lint.py 의 `RETRACTED` dict + 절별 `⛔ 철회[ID]`
+  #          마커 — `05_HANDOFF.md` · `GATE14_CYCLE_SUMMARY.md` 담당
+  #     (신) 이 원장 + `<!-- QUARANTINE:ID -->` 울타리 — 21차 이후
+  #   둘 다 동작하지만 **서로를 모른다.** 한쪽에서 claim 이 사라져도 다른 쪽은
+  #   조용하다. 여기 등록해 양쪽을 묶는다 (`test_legacy_and_registry_claim_systems_agree`).
+  #
+  #   `record: legacy_section_marker` 는 "금지어 패턴이 이 파일이 아니라
+  #   `RETRACTED` dict 에 있다" 는 뜻이다. 울타리도 요구하지 않는다 — 옛 문서는
+  #   절 단위 마커를 쓴다. 단일 체계로의 이전은 단계 3 이후로 미룬다.
+  - id: LR_POSTERIOR
+    status: retracted
+    round: 17
+    record: legacy_section_marker
+    무엇: >-
+      우도비 90 을 사후확률처럼 읽은 것 (46:1 등). 금지어 패턴은 `tests/test_docs_lint.py` 의 `RETRACTED` dict 에 있고
+      절별 `⛔ 철회` 마커로 면제된다.
+    files: [docs/05_HANDOFF.md, docs/GATE14_CYCLE_SUMMARY.md]
+    banned: []          # (구) 체계가 검사한다 — 여기서 중복 정의하지 않는다
+
+  - id: P22_ALL_EQUAL
+    status: retracted
+    round: 17
+    record: legacy_section_marker
+    무엇: >-
+      22p 근방의 참값이 애초에 전부 같다는 서술. 금지어 패턴은 `tests/test_docs_lint.py` 의 `RETRACTED` dict 에 있고
+      절별 `⛔ 철회` 마커로 면제된다.
+    files: [docs/05_HANDOFF.md, docs/GATE14_CYCLE_SUMMARY.md]
+    banned: []          # (구) 체계가 검사한다 — 여기서 중복 정의하지 않는다
+
+  - id: PRINCIPALLY_UNRECOVERABLE
+    status: retracted
+    round: 17
+    record: legacy_section_marker
+    무엇: >-
+      원리적으로 복원 불가 / feasible domain 밖이라는 단정. 금지어 패턴은 `tests/test_docs_lint.py` 의 `RETRACTED` dict 에 있고
+      절별 `⛔ 철회` 마커로 면제된다.
+    files: [docs/05_HANDOFF.md, docs/GATE14_CYCLE_SUMMARY.md]
+    banned: []          # (구) 체계가 검사한다 — 여기서 중복 정의하지 않는다
+
+  - id: ANTISYM_AS_IMPROVEMENT
+    status: retracted
+    round: 17
+    record: legacy_section_marker
+    무엇: >-
+      PE-NE 상쇄 지문이 68%→48% 로 옅어진 것을 개선으로 읽은 것. 금지어 패턴은 `tests/test_docs_lint.py` 의 `RETRACTED` dict 에 있고
+      절별 `⛔ 철회` 마커로 면제된다.
+    files: [docs/05_HANDOFF.md, docs/GATE14_CYCLE_SUMMARY.md]
+    banned: []          # (구) 체계가 검사한다 — 여기서 중복 정의하지 않는다
+
+  - id: REFERENCE_SOLE_CAUSE
+    status: retracted
+    round: 17
+    record: legacy_section_marker
+    무엇: >-
+      기준 곡선만이 원인이라는 단일 인과. 금지어 패턴은 `tests/test_docs_lint.py` 의 `RETRACTED` dict 에 있고
+      절별 `⛔ 철회` 마커로 면제된다.
+    files: [docs/05_HANDOFF.md, docs/GATE14_CYCLE_SUMMARY.md]
+    banned: []          # (구) 체계가 검사한다 — 여기서 중복 정의하지 않는다
+
+  - id: HESSIAN_EPS_ORDER
+    status: retracted
+    round: 17
+    record: legacy_section_marker
+    무엇: >-
+      같은 eps 에서의 Hessian 순서를 결론으로 쓴 것. 금지어 패턴은 `tests/test_docs_lint.py` 의 `RETRACTED` dict 에 있고
+      절별 `⛔ 철회` 마커로 면제된다.
+    files: [docs/05_HANDOFF.md, docs/GATE14_CYCLE_SUMMARY.md]
+    banned: []          # (구) 체계가 검사한다 — 여기서 중복 정의하지 않는다
+
+  - id: SYNTHETIC_IS_LOWER_BOUND
+    status: retracted
+    round: 17
+    record: legacy_section_marker
+    무엇: >-
+      합성 결과가 하한이고 실제는 더 나쁘다는 외삽. 금지어 패턴은 `tests/test_docs_lint.py` 의 `RETRACTED` dict 에 있고
+      절별 `⛔ 철회` 마커로 면제된다.
+    files: [docs/05_HANDOFF.md, docs/GATE14_CYCLE_SUMMARY.md]
+    banned: []          # (구) 체계가 검사한다 — 여기서 중복 정의하지 않는다
+
+  - id: STALE_GAP_NUMBERS
+    status: retracted
+    round: 17
+    record: legacy_section_marker
+    무엇: >-
+      경계 규약 수정 이전 수치 (36/98 · 61/156 · 3.69 · 90.0). 금지어 패턴은 `tests/test_docs_lint.py` 의 `RETRACTED` dict 에 있고
+      절별 `⛔ 철회` 마커로 면제된다.
+    files: [docs/05_HANDOFF.md, docs/GATE14_CYCLE_SUMMARY.md]
+    banned: []          # (구) 체계가 검사한다 — 여기서 중복 정의하지 않는다
+

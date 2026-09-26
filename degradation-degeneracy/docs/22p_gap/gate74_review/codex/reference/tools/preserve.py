@@ -1,0 +1,8514 @@
+"""preserve.py — 다리 생성을 **트랜잭션**으로 만든다 (계약 v4 묶음 9).
+
+왜 이것이 필요한가
+──────────────────
+2026-08-20 에 warm 실험 7다리를 만들고 보존 없이 끝냈다. 나흘 뒤 작업 기계가
+바뀌면서 원자료가 전부 사라졌다. **도구가 없어서가 아니다** —
+`tools/archive_bundle.py` 는 이미 fail-closed 였고 `paired_fixed5_v4` 에서 실제로
+작동했다. 없었던 것은 **강제**다: 다리를 만들고 보존을 안 해도 아무 일도
+일어나지 않았다.
+
+★ 26차 리뷰가 초판을 P0 둘로 반려했다. 둘 다 **false-green** 이었다:
+
+  P0-1  복원이 CAS 가 아니라 **원본 `run_dir` 를 복사**했다. member 와
+        manifest 를 backend 에 넣고 되읽기까지 했지만 되읽은 bytes 는 해시만
+        확인하고 버렸다. read-back 직후 CAS 를 통째로 비워도 publish 까지
+        성공했다. "빈 root 로 복원해 검증했다" 는 주장이 거짓이었다.
+        → 복원은 이제 `backend + payload_manifest_digest` 만 본다.
+          `drop_source_after_seal=True` 로 원본을 지우고도 통과하는 것을
+          회귀가 확인한다.
+
+  P0-2  receipt 를 메모리에서 만들고 **digest 만** index 에 적었다. 그 digest
+        로 아무 것도 회수할 수 없으니 감사가 불가능했고, "등록" 은 상태 변경이
+        아니라 단순 `return` 이었다.
+        → receipt bytes 를 CAS 에 넣고 되읽는다. 등록은 durable journal 이고,
+          crash 뒤에는 `finalize_only()` 가 **원본 없이** 이어서 끝낸다.
+
+두 단계 불변식 (초판의 "어느 단계에서 멈추든 index 가 깨끗하다" 는 틀렸다 —
+publish 뒤 crash 는 durable 한 중간 상태를 남긴다. 그것을 숨기지 않고 적는다):
+
+    publish **전** 실패  →  public index 에 항목이 없다
+    publish **후** 실패  →  항목은 durable 하게 남고 **등록되지 않은** 상태다.
+                            `finalize_only()` 로만 닫힌다 (재계산 없이).
+
+순서
+────
+    planned_leg seal            내용 주소. run_spec 이 없으면 시작하지 않는다
+    → private temp 로 실행 (호출자)
+    → payload seal              exact member manifest + root digest
+    → CAS staging put-if-absent staging → os.replace 로만 objects/ 승격
+    → read-back                 backend 에서 되읽어 다시 해시
+    → **CAS 에서** 빈 root 복원  원본은 이 시점에 없어도 된다
+    → validate + rescore        복원본만으로. hook 없으면 시작조차 안 한다
+    → receipt 를 CAS 에 저장     + read-back
+    → per-leg exclusive publish  read-modify-write 가 아니다
+    → durable registration
+
+backend
+───────
+`file+cas://<root>` 만 구현한다. 실제 cloud store 는 이 브랜치에서 검증할 수
+없고 (자격증명·외부 인프라), 25차 Q1 이 "fault injection 가능한 local
+content-addressed backend 로 트랜잭션 의미를 완전히 검증하면 된다" 고 답했다.
+실제 운영 backend 의 canary receipt 는 첫 pilot 전 **별도 gate** 다.
+"""
+
+from __future__ import annotations
+
+import contextlib
+import datetime as dt
+import errno
+import hashlib
+import json
+import logging
+import os
+import re
+import secrets
+import stat
+import shutil
+import tempfile
+import unicodedata
+import uuid
+from dataclasses import dataclass
+from typing import ClassVar, NamedTuple
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+
+#: 주입 가능한 실패 모드. 회귀가 이 이름들을 그대로 쓴다.
+FAULTS = frozenset({
+    "member_bit_flip",        # 봉인 뒤 member 한 바이트 변경
+    "member_missing",         # manifest 에 있는 member 를 뺀다
+    "member_extra",           # manifest 에 없는 파일이 run_dir 에 있다
+    "stale_payload_index",    # payload manifest 가 실물보다 낡았다
+    "partial_upload",         # CAS put 중간에 죽는다
+    "crash_before_publish",   # 전부 성공했는데 publish 직전에 죽는다
+    "crash_after_publish",    # publish 직후 등록 전에 죽는다
+    "read_back_corrupt",      # backend 에서 되읽은 바이트가 다르다
+    "restore_incomplete",     # 복원이 일부만 된다
+    "cas_drop_member",        # ★ read-back 뒤 CAS 에서 member 를 지운다
+    "cas_drop_manifest",      # ★ read-back 뒤 CAS 에서 manifest 를 지운다
+    "cas_drop_all",           # ★ read-back 뒤 CAS 를 통째로 비운다
+    "cas_mutate_member",      # ★ CAS 안의 바이트를 바꾼다
+    "validator_raises",       # 검증기가 예외로 죽는다
+    "validator_fails",        # 검증기가 ok=False 를 돌려준다
+    "score_raises",           # 재채점이 예외로 죽는다
+    "wrong_semantic_digest",  # 재채점 결과가 봉인과 다르다
+    "wrong_planned_id",       # 실행이 다른 planned leg 를 가리킨다
+    "wrong_source_digest",    # run_spec 의 code identity 가 계획과 다르다
+    "receipt_drop_after_readback",   # ★ receipt 를 되읽은 직후 지운다
+    "receipt_mutate_after_readback",  # ★ 되읽은 직후 바이트를 바꾼다
+    "receipt_drop_after_publish",     # ★ publish 뒤 등록 전에 지운다
+    "retention_too_short",    # backend 의 보존 기간이 요구를 못 채운다
+    "no_read_access",         # backend 를 되읽을 권한이 없다
+})
+
+_HEX64 = 64
+
+#: opaque ID 의 허용 문자·길이. ★ 27차 P1-4 — `leg_id` 가 path component 로
+#: 그대로 보간돼 `../../escaped` 가 index 디렉터리 **밖에** 파일을 만들었다.
+_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$")
+#: Windows 예약 device 이름 — 파일로 만들 수 없거나 이상하게 동작한다
+_RESERVED = frozenset({"con", "prn", "aux", "nul"}
+                      | {f"com{i}" for i in range(1, 10)}
+                      | {f"lpt{i}" for i in range(1, 10)})
+
+
+def check_id(name: str, kind: str = "leg_id") -> None:
+    """separator · `.`/`..` · device name · 길이를 닫는다."""
+    if not isinstance(name, str) or not _ID_RE.match(name):
+        raise PreserveError("id", f"{kind} 가 허용 형식이 아니다: {name!r} "
+                                  "(첫 글자 영숫자, 이후 [A-Za-z0-9_.-], 64자 이내)")
+    if name in (".", "..") or name.lower().split(".")[0] in _RESERVED:
+        raise PreserveError("id", f"{kind} 로 쓸 수 없는 이름이다: {name!r}")
+
+
+class PreserveError(RuntimeError):
+    """트랜잭션이 멈춘 이유. `stage` 가 어디서 멈췄는지 들고 있다."""
+
+    def __init__(self, stage: str, msg: str):
+        super().__init__(f"[{stage}] {msg}")
+        self.stage = stage
+        self.msg = msg
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# canonical bytes — 묶음 2 와 같은 규칙을 쓴다 (한 곳에서 정의)
+# ─────────────────────────────────────────────────────────────────────────────
+
+def canonical_bytes(obj) -> bytes:
+    """정규 직렬화. 키 정렬 · UTF-8 · 구분자 고정 · 후행 개행 없음."""
+    return json.dumps(obj, sort_keys=True, ensure_ascii=False,
+                      separators=(",", ":"), allow_nan=False).encode("utf-8")
+
+
+def load_canonical(raw: bytes):
+    """`canonical_bytes` 의 역. 회수한 object 를 되돌린다."""
+    return json.loads(raw.decode("utf-8"))
+
+
+def digest(obj) -> str:
+    return hashlib.sha256(canonical_bytes(obj)).hexdigest()
+
+
+def _is_hex64(s) -> bool:
+    return isinstance(s, str) and len(s) == _HEX64 and \
+        all(c in "0123456789abcdef" for c in s)
+
+
+#: ★ 29차 P1-1 — Windows 에서 `O_BINARY` 가 없으면 newline 이 번역된다.
+#:   리뷰 실측: `b"a\nb"` 를 넣으면 `b"a\r\nb"` 가 저장돼 digest 가 어긋났다.
+_O_BIN = getattr(os, "O_BINARY", 0)
+
+
+def _write_all(fd: int, data: bytes, where) -> None:
+    """`write(2)` 가 **요청한 만큼 쓴다고 약속하지 않는다** — 다 쓸 때까지 쓴다.
+
+    ★ 53차 P0-2 — 이 저장소에는 이 loop 가 `_write_exact()` 안에 이미 있었는데
+      claim·소유 증명 발급 경로는 맨손 `os.write()` 를 썼다. 같은 규칙을 두 곳에서
+      다르게 정하면 **약한 쪽이 실효 규칙**이다 (48차 P0-6 에서 배운 것과 같다).
+    """
+    n = 0
+    while n < len(data):
+        w = os.write(fd, data[n:])
+        if w <= 0:                                        # pragma: no cover
+            raise PreserveError("write", f"쓰기가 0을 돌려줬다 ({where})")
+        n += w
+
+
+def _assert_bytes_on_disk(path: Path, want: bytes, what: str) -> None:
+    """쓴 뒤 **실물에서 다시 읽어** 대조한다 (53차 P0-2).
+
+    `write()` 의 반환 길이도 자기 보고다. 권한을 나르는 파일(claim · 소유 증명)
+    은 자기 보고가 아니라 실물로 확인한다.
+    """
+    try:
+        got = Path(path).read_bytes()
+    except OSError as exc:
+        raise PreserveError(
+            "write", f"{what} 를 쓴 뒤 다시 읽을 수 없다 ({path}): {exc}") from exc
+    if got != want:
+        raise PreserveError(
+            "write",
+            f"{what} 를 쓴 뒤 다시 읽었더니 바이트가 다르다 ({path}) — "
+            f"디스크 {len(got)}B ≠ 쓴 것 {len(want)}B")
+
+
+def _write_exact(path: Path, data: bytes) -> None:
+    """binary 로 **전부** 쓰고 fsync 한다. zero-return 은 오류로 본다."""
+    fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY | _O_BIN, 0o644)
+    try:
+        _write_all(fd, data, path)
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
+def _fsync_dir(d: Path) -> bool:
+    """directory entry 를 flush 한다. **실패를 삼키지 않는다.**
+
+    ★ 30차 P0-3 — 초판은 실패를 `False` 로 돌렸고 object publish 와 pin 은
+      그 반환값을 **무시했다**. CAS 와 index 가 다른 filesystem 이면 power
+      loss 뒤 journal 만 남는 ordering 이 그대로 가능했다. 지금은
+      `_fsync_dir_strict()` 가 오류로 전파하고, capability 가 아예 없는
+      filesystem 은 `dir_fsync_supported()` 가 **만들기 전에** 걸러낸다.
+    """
+    try:
+        fd = os.open(d, os.O_RDONLY)
+    except OSError:
+        return False
+    try:
+        os.fsync(fd)
+        return True
+    except OSError:                                       # pragma: no cover
+        return False
+    finally:
+        os.close(fd)
+
+
+def _fsync_dir_strict(d: Path, stage: str) -> None:
+    """directory entry 를 굳힌다. 못 굳히면 **그 자리에서 멈춘다**.
+
+    ★ 31차 P0-3 — 30차판은 capability 가 없으면 조용히 `return` 했다. 주석은
+      "publish 경로가 이미 막는다" 였는데, 그것은 CAS 와 index 가 **같은
+      filesystem** 일 때만 참이다. CAS 에서 directory fsync 가 안 되고 index
+      에서는 되는 구성이면 graph 이름은 비내구적으로 진행하고 journal 만
+      durable 하게 commit 된다 — 리뷰가 지목한 ordering 이 그대로 열린다.
+      (실측: 그 구성에서 `put_if_absent()` 가 그냥 성공했다.)
+    """
+    if not dir_fsync_supported(d):
+        raise PreserveError(
+            stage, f"이 filesystem 은 directory fsync 를 지원하지 않는다 ({d}) — "
+                   "graph 이름이 durable 하지 않으면 journal 만 남는 ordering 이 "
+                   "가능하다. backend capability 를 확인하고 멈춘다")
+    if not _fsync_dir(d):
+        raise PreserveError(
+            stage, f"directory fsync 가 실패했다 ({d}) — 이름이 durable 하지 "
+                   "않으면 crash 뒤 journal 만 남는 ordering 이 가능하다")
+
+
+def _mkdir_durable(d: Path, stage: str) -> None:
+    """directory 를 만들고 **새로 만들어진 모든 층의 부모 edge** 를 flush 한다.
+
+    ★ 30차 P0-3 — 초판은 `objects/<prefix>` 와 `pins/<leg>` 를
+      `mkdir(parents=True)` 로 만든 뒤 **자기 자신만** flush 했다. 그 이름을
+      담는 `objects/` · `pins/` entry 는 flush 되지 않아, crash 뒤 상위
+      directory 에서 이름이 사라질 수 있었다.
+    """
+    d = Path(d)
+    # ★ 32차 P0-3 — 초판은 `d.is_dir()` 이면 즉시 return 했다. "mkdir 은
+    #   성공했지만 parent fsync 가 실패한" 상태와 "이미 durable" 한 상태를
+    #   구별하지 못하므로, 재시도가 edge 를 다시 굳히지 않았다. 구별할 방법이
+    #   없으면 **항상 굳힌다** — fsync 는 멱등이고 비용은 재시도 때만 든다.
+    missing = []
+    p = d
+    while not p.exists():
+        missing.append(p)
+        p = p.parent
+    d.mkdir(parents=True, exist_ok=True)
+    layers = list(reversed(missing)) or [d]
+    for made in layers:               # 얕은 층부터 — 부모 entry 를 먼저 굳힌다
+        _fsync_dir_strict(made.parent, stage)
+
+
+def _is_uuid_hex(s) -> bool:
+    return isinstance(s, str) and len(s) == 32 and all(c in "0123456789abcdef" for c in s)
+
+
+#: ★ 30차 P0-1 — `ok=True` 가 durable retention 을 뜻하면 안 된다.
+#:
+#:   리뷰의 문장: "그 전에는 `ok=True`를 durable retention 성공으로 부르면
+#:   안 된다." local filesystem 에서는 **어떤 검사를 몇 번 하든** 마지막
+#:   검사와 반환 사이의 창을 닫을 수 없다. 이 환경은 uid 0 이라 directory
+#:   mode bit 도 잠금이 아니다 (실측: `chmod 0o500` 뒤에도 unlink 가 성공).
+#:
+#:   그래서 검사를 더 두는 대신 **성공의 뜻을 좁힌다.** 강제 수준을 값으로
+#:   신고하고, durable retention 을 요구하는 자리는 그 값을 보고 거부한다.
+#:   비싼 본 실행을 승인하는 gate 가 그 자리다.
+ENFORCEMENT_ADVISORY = "advisory_local"
+ENFORCEMENT_OBJECT_LOCK = "object_lock"
+RETENTION_SCHEMA = "retention-lease/v1"
+STORE_SCHEMA = "cas-store/v1"
+
+#: 최소 보존 기간 정책 — lease·receipt 가 이보다 짧다고 적으면 거부한다
+MIN_RETENTION_DAYS = 365
+
+#: ★ 36차 P0-1 — adapter 계약의 **유일한 authority**.
+#:
+#:   35차까지 계약은 `ObjectLockBackend` docstring 의 산문 7줄이었는데 코드는
+#:   `store_uri`·`head_version` 도 불렀다. 그 문서만 보고 adapter 를 쓰면
+#:   실물에서 `PreserveError("capability")` 로 죽는다. 산문과 호출이 갈라지는
+#:   것을 사람이 지키게 두지 않는다 — 이 상수가 정본이고,
+#:   `tests/test_preserve.py::test_the_provider_contract_is_the_only_authority`
+#:   가 소스를 AST 로 읽어 **실제 호출 집합과 정확히 일치**하는지 대조한다.
+PROVIDER_CONTRACT: tuple[str, ...] = (
+    "describe",         # describe() -> {mode, min_retain_days}
+    "describe_object",  # describe_object(key, version) -> {version_id, mode, retain_until} | None
+    "get",              # get(key, version=None) -> bytes
+    # list_versions(prefix) -> [(key, version_id)]
+    #   ★ 40차 — 39차 주석은 "marker 를 넘는다" 였는데 구현은 **data version 만**
+    #     돌려준다 (delete marker 는 제외). 실물 `ListObjectVersions` 는 marker 도
+    #     함께 주지만 우리가 쓰는 것은 data version 이고, marker 뒤의 담보를 볼 수
+    #     있으면 목적은 달성된다. 계약을 구현에 맞춘다 — 산문이 더 강하면 adapter
+    #     작성자가 없는 보장을 믿는다.
+    "list_versions",
+    "lock",             # lock(key, version, until)
+    "put",              # put(key, data) -> version_id — **새 version 을 만든다**
+    "store_uri",        # store_uri() -> str — 재시작을 견디는 안정 식별자
+    "versions",         # versions(key) -> [version_id] (최신순)
+)
+
+
+class VerifiedBytes(NamedTuple):
+    """검증이 **읽은 바로 그것** — key·version·digest·bytes 를 함께 든다.
+
+    ★ 42차 P1 — 41차까지 검증 phase 는 exact `(key, version)` 을 읽어 판정하고
+      **digest 문자열 하나만** 다음 phase 로 넘겼다. 다음 phase 는 그 digest 로
+      namespace 를 다시 뒤졌고, 그 사이 hostile locked head 하나가 있으면
+      **검증에 성공한 바이트가 있는데도** 재개가 막혔다 (orphan 입양 ·
+      content 수리 둘 다 그랬다).
+
+      즉시 bool 로 끝나는 predicate 는 digest 로 충분하다. 판정이 **phase 를
+      넘어가면** 그때는 locator 여야 한다 — 이것이 그 경계다.
+    """
+
+    key: str
+    version: str
+    digest: str
+    data: bytes
+
+
+class RetentionProof(NamedTuple):
+    """수리가 **실제로 만든** 담보 proof — 기한까지 함께 든다 (43차 P1).
+
+    ★ 42차까지 `repair_lease_locks()` 는 두 wrapper 가 돌려준 proof ID 를
+      버리고 `None` 을 반환했다. 호출자는 곧바로 **기한 인자 없는**
+      `recover_*()` 로 다시 찾았고, 같은 바이트의 더 최신·더 짧은 Compliance
+      version 이 있으면 그것을 골라 검증에서 죽었다 — 기한을 덮는 v1 이
+      그대로 있는데도. 찾은 것을 버리고 다시 찾으면 phase 결속이 풀린다.
+    """
+
+    lease_version: str
+    content_version: str
+    until: str
+
+
+#: store record 의 **닫힌** schema. 남는 key 도 모자란 key 도 거부한다 (37차 P0-1).
+_STORE_KEYS = {"schema", "store_id"}
+
+
+def _is_store_record(rec) -> bool:
+    """계약 그대로의 store record 인가.
+
+    ★ 37차 P0-1 — 36차판은 mapping 과 32-hex `store_id` 만 봤다. exact key
+      set 도 `schema` 값도 안 봐서, 남는 key 를 단 record 나 다른 schema 의
+      record 가 잠겨서 canonical identity 로 받아들여졌다.
+    """
+    return (isinstance(rec, dict)
+            and set(rec) == _STORE_KEYS
+            and rec.get("schema") == STORE_SCHEMA
+            and _is_uuid_hex(rec.get("store_id") or ""))
+
+
+def _is_utc_stamp(v) -> bool:
+    """`YYYY-MM-DDTHH:MM:SSZ` 인가 (39차 P0-1).
+
+    ★ `_lease_expired()` 는 **문자열 비교**라 `"not-a-date"` 를 미래처럼
+      받아들인다. 그 값이 provider lock 까지 흘러간 뒤에야 strict parser 가
+      거부했다 — 되돌릴 수 없는 상태가 검증보다 앞섰다.
+    """
+    if not isinstance(v, str):
+        return False
+    try:
+        dt.datetime.strptime(v, "%Y-%m-%dT%H:%M:%SZ")
+    except ValueError:
+        return False
+    return True
+
+
+def _horizon_covers(state, want: str, what: str, stage: str = "retention"):
+    """provider 가 신고한 `retain_until` 이 `want` 를 **덮는가** (40차 P0-1).
+
+    ★ 39차까지는 문자열 비교였다:
+
+            str(state.get("retain_until") or "") < lease["retain_until_utc"]
+
+      `"zzzz"` 는 어떤 ISO 문자열보다 사전식으로 크므로 "충분한 미래
+      horizon" 으로 통과했다. lease record 쪽에는 문법 검사를 넣어 놓고
+      **provider 응답**은 열어 뒀다. 실제 adapter 가 아직 없다는 것은 검사를
+      생략할 이유가 아니라 계약을 fail-closed 로 고정할 이유다.
+    """
+    got = (state or {}).get("retain_until")
+    if not _is_utc_stamp(got):
+        raise PreserveError(
+            stage, f"{what} 의 retain_until 이 UTC timestamp 가 아니다: "
+                   f"{got!r} — 문자열 순서는 기한 증명이 아니다")
+    if not _is_utc_stamp(want):
+        raise PreserveError(stage, f"{what} 와 대조할 기한이 이상하다: {want!r}")
+    if _stamp(got) < _stamp(want):
+        raise PreserveError(
+            stage, f"{what} 의 기한이 짧다: {got} < {want}")
+
+
+def _stamp(v: str) -> dt.datetime:
+    return dt.datetime.strptime(v, "%Y-%m-%dT%H:%M:%SZ").replace(
+        tzinfo=dt.timezone.utc)
+
+
+def _durable_mode(state, want_mode, what: str, modes, stage: str = "retention"):
+    """그 version 의 mode 가 lease 가 신고한 mode 와 같은가.
+
+    ★ 40차 P0-1 — 39차는 이 **동등성만** 봤고, 그 값이 허용된 담보 mode 인지는
+      아무도 안 봤다. 둘 다 Governance 인 self-consistent state 가 durable
+      false-green 이었다. "서로 같다" 와 "허용된 값이다" 는 다른 축이다.
+
+      membership 은 **lease record 쪽 한 곳**에서 본다 (`lock_mode` ·
+      `store_lock_mode`). lease mode 가 담보 mode 이고 모든 version 이 그것과
+      같으면 모든 version 이 담보 mode 다 — 여기에 membership 을 한 번 더 두면
+      같은 규칙이 두 곳에 생기고, 강한 쪽을 지워도 초록이 된다 (변이로
+      확인했다). `modes` 는 호출부 호환을 위해 남기고 쓰지 않는다.
+    """
+    got = (state or {}).get("mode")
+    if want_mode is not None and got != want_mode:
+        raise PreserveError(
+            stage, f"{what} 의 lock mode 가 lease 와 다르다: {got!r} ≠ {want_mode!r}")
+
+
+def _lease_expired(lease: dict) -> bool:
+    """lease 의 담보 기간이 지났는가 (37차 P0-1).
+
+    "만료라서 새로 만든다" 와 "어긋나서 거부한다" 를 가르는 유일한 기준이다 —
+    36차판은 둘을 같은 `None` 으로 접었다.
+    """
+    until = str((lease or {}).get("retain_until_utc") or "")
+    now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return not until or until <= now
+
+
+def pin_set_digest(leg_id: str, objects) -> str:
+    """pin 집합의 정본 digest — journal·lease·backend 가 **같은 함수**를 쓴다.
+
+    ★ 30차 P1-1 — 초판은 `backend.pin()` 안에만 이 계산이 있었고, journal 의
+      `pin_set_digest` 는 64-hex 모양만 검사했다. 기대 graph 로 다시 계산하지
+      않으니 **journal 자기 checksum** 이었다.
+    """
+    return digest({"leg_id": leg_id, "objects": sorted(set(objects))})
+
+
+def _is_unique_hex64_list(v) -> bool:
+    """정렬된 unique 64-hex 목록인가.
+
+    ★ 30차 P1-1 — 초판은 `set(journal.objects) == expected` 만 봤다. 정상
+      목록의 digest 하나를 **한 번 더** 넣어도 통과했다.
+    """
+    if not isinstance(v, list) or not all(_is_hex64(x) for x in v):
+        return False
+    return len(set(v)) == len(v) and v == sorted(v)
+
+
+
+def _file_sha(p: Path) -> str:
+    h = hashlib.sha256()
+    with p.open("rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# content-addressed backend
+# ─────────────────────────────────────────────────────────────────────────────
+
+@dataclass
+class CasBackend:
+    """`file+cas://<root>` — digest 로 주소가 정해지는 object store.
+
+    `objects/` 에는 **검증을 통과한 것만** 들어간다. 쓰기는 `staging/` 에
+    임시 이름으로 하고 `os.replace` 로 원자적으로 옮긴다. 중간에 죽으면
+    staging 에 orphan 이 남고 `objects/` 는 오염되지 않는다.
+    """
+
+    root: Path
+    retention_days: int = 3650
+    readable: bool = True
+
+    #: 이 **클래스**가 강제할 수 있는 retention 수준. local filesystem 은
+    #: object-lock 을 강제하지 못한다 — 이 저장소의 실행 환경은 uid 0 이라
+    #: mode bit 조차 잠금이 아니다.
+    #:
+    #: ★ 31차 P0-1 — 30차판은 이것이 **dataclass field** 였다. 리뷰의 정적
+    #:   반례가 그대로 통했다: `CasBackend(root=cas, enforcement="object_lock")`
+    #:   하나로 구현은 그대로인 채 `durable=True` 가 나오고
+    #:   `assert_durable_retention()` 이 통과했다. "durable 의 뜻을 좁혔다" 는
+    #:   경계가 문자열 하나로 무너진 것이다.
+    #:
+    #:   이제 ClassVar 다 — 생성자 인자가 아니고, 대입도 `__setattr__` 이
+    #:   막는다. 강제 수준은 **구현이 정하는 것**이지 호출자가 붙이는 이름이
+    #:   아니다. `object_lock` 을 주장하려면 `probe_enforcement()` 를 실제로
+    #:   통과하는 다른 클래스를 만들어야 한다.
+    ENFORCEMENT: ClassVar[str] = ENFORCEMENT_ADVISORY
+
+    #: capability 를 바꿔치기하려는 대입을 막는다 (읽기는 자유)
+    _LOCKED_ATTRS: ClassVar[frozenset] = frozenset({"ENFORCEMENT", "enforcement"})
+
+    def __post_init__(self):
+        # ★ 31차 P0-2 hardening — `root` 를 **생성 시** 고정한다. 초판은
+        #   `uri` property 가 호출 때마다 cwd 기준으로 다시 계산해, 같은
+        #   backend 객체가 cwd 변경만으로 다른 store 를 가리켰다.
+        object.__setattr__(self, "root", Path(self.root).absolute())
+
+    def __setattr__(self, name, value):
+        if name in type(self)._LOCKED_ATTRS:
+            raise PreserveError(
+                "capability",
+                f"{name} 은 backend capability 다 — 대입으로 바꿀 수 없다. "
+                "강제 수준은 구현이 정한다")
+        object.__setattr__(self, name, value)
+
+    @property
+    def enforcement(self) -> str:
+        return type(self).ENFORCEMENT
+
+    def probe_enforcement(self) -> str:
+        """**지금** 이 store 가 실제로 강제하는 수준을 조회한다.
+
+        ★ 31차 P0-1 — 리뷰: "저장 문자열이 아니라 provider 의 live lock
+          state 조회". local 은 조회할 provider 가 없고 강제하는 것도 없다.
+          object-lock backend 는 이 자리에서 provider 에 물어 version ID ·
+          lock mode · retain-until 을 확인하고 그 결과로 답해야 한다.
+        """
+        return ENFORCEMENT_ADVISORY
+
+    #: ★ 38차 P0-1 — local backend 에는 version 이 없다. lease 계약을 맞추기
+    #:   위한 빈 값이다 (object-lock backend 가 실제 proof 를 채운다).
+    store_version_id = ""
+    store_lock_mode = ""
+
+    @property
+    def uri(self) -> str:
+        """★ 30차 P0-2 — 초판은 `f"file+cas://{self.root}"` 였다.
+
+        `root=Path("cas")` 로 등록한 뒤 cwd 를 바꾸면 **다른** store 를 가리키면서
+        URI 는 그대로였다. 절대 경로로 정규화한다.
+        """
+        return Path(self.root).resolve().as_uri().replace("file://", "file+cas://", 1)
+
+    @property
+    def store_id(self) -> str:
+        """store 를 만들 때 한 번 정해지는 불변 식별자.
+
+        ★ 30차 P0-2 — 경로는 재사용·재마운트·bind mount 로 겹칠 수 있다.
+        절대 URI 만으로는 "같은 store 인가" 를 답할 수 없어서, 생성 시각에
+        고정되는 UUID 를 store 안에 두고 receipt 에 결속한다.
+        """
+        p = Path(self.root) / "store.json"
+        if p.is_file():
+            rec = load_canonical(p.read_bytes())
+            sid = rec.get("store_id") if isinstance(rec, dict) else None
+            if not _is_hex64(sid or "") and not _is_uuid_hex(sid or ""):
+                raise PreserveError("store", f"store.json 의 store_id 가 이상하다: {sid!r}")
+            return sid
+        # ★ 32차 P0-3 — 초판은 `mkdir(parents=True)` 만 했다. CAS root 라는
+        #   **이름**을 담은 parent entry 를 굳히지 않아, power loss 뒤 CAS 가
+        #   통째로 사라지고 다른 filesystem 의 journal 만 남을 수 있었다.
+        _mkdir_durable(Path(self.root), "store")
+        data = canonical_bytes({"schema": STORE_SCHEMA, "store_id": uuid.uuid4().hex})
+        _exclusive_write(p, data)                 # 경쟁하면 먼저 쓴 쪽이 이긴다
+        return load_canonical(p.read_bytes())["store_id"]
+
+    def identity(self) -> dict:
+        return {"uri": self.uri, "store_id": self.store_id,
+                "enforcement": self.enforcement}
+
+    def _obj(self, dg: str) -> Path:
+        return self.root / "objects" / dg[:2] / dg
+
+    def put_if_absent(self, data: bytes, *, faults: frozenset[str] = frozenset()) -> dict:
+        dg = hashlib.sha256(data).hexdigest()
+        dst = self._obj(dg)
+        if dst.exists():
+            if dst.read_bytes() != data:
+                raise PreserveError("cas_put",
+                                    f"같은 digest 인데 저장된 바이트가 다르다: {dg[:16]}")
+            # ★ 32차 P0-3 — 이름이 보인다고 durable 한 것이 아니다. `os.replace`
+            #   성공 뒤 fsync 가 실패해 예외가 나갔어도 final name 은 남는다.
+            #   재시도가 여기로 들어와 그냥 성공하면 graph 이름은 비내구적인 채
+            #   journal 만 durable 하게 commit 될 수 있다. 성공 전에 굳힌다.
+            _fsync_dir_strict(dst.parent, "cas_put")
+            return {"digest": dg, "stored": False, "idempotent": True}
+
+        staging = self.root / "staging"
+        _mkdir_durable(staging, "cas_put")
+        tmp = staging / f"{dg}.{uuid.uuid4().hex}.part"
+        payload = data[: len(data) // 2] if "partial_upload" in faults else data
+        # ★ 28차 P1-2 / 29차 P1-1 — binary 로 전부 쓰고 fsync 한다.
+        _write_exact(tmp, payload)
+        if "partial_upload" in faults:
+            raise PreserveError("cas_put", "업로드가 중간에 끊겼다 (주입)")
+        # ★ 30차 P0-3 — `objects/<prefix>` 를 새로 만들면 그 이름을 담은
+        #   `objects/` entry 도 굳혀야 한다. 초판은 자기 자신만 flush 했다.
+        _mkdir_durable(dst.parent, "cas_put")
+        os.replace(tmp, dst)
+        # ★ 29차 P0-2 / 30차 P0-3 — 실패를 삼키지 않는다.
+        _fsync_dir_strict(dst.parent, "cas_put")
+        return {"digest": dg, "stored": True, "idempotent": False}
+
+    def read_back(self, dg: str, *, faults: frozenset[str] = frozenset()) -> bytes:
+        if "no_read_access" in faults or not self.readable:
+            raise PreserveError("read_back", "backend 를 되읽을 권한이 없다")
+        p = self._obj(dg)
+        if not p.is_file():
+            raise PreserveError("read_back", f"object 가 없다: {dg[:16]}")
+        data = p.read_bytes()
+        if "read_back_corrupt" in faults:
+            data = data + b"\x00"
+        got = hashlib.sha256(data).hexdigest()
+        if got != dg:
+            raise PreserveError("read_back",
+                                f"되읽은 바이트가 다르다: {got[:16]} ≠ {dg[:16]}")
+        return data
+
+    def has(self, dg: str) -> bool:
+        return self._obj(dg).is_file()
+
+    # ── retention / pin ─────────────────────────────────────────────────
+    # ★ 28차 P0-1 — "등록 직전 한 번 더 읽는다" 는 **또 하나의 검사 시점**일
+    #   뿐 retention 구조가 아니다. 마지막 read 가 bytes 를 돌려준 직후 지우면
+    #   등록이 성립하면서 receipt 가 사라졌다.
+    #
+    #   local 에서 object-lock 의 대응물은 **hardlink** 다. `pins/<leg>/<dg>`
+    #   가 inode 를 붙들므로 `objects/` 에서 지워도 회수 가능성이 유지된다.
+    #   원격 backend 에서는 object-lock / retention-until 로 구현한다.
+
+    def _pin(self, leg_id: str, dg: str) -> Path:
+        return self.root / "pins" / leg_id / dg
+
+    def pin(self, leg_id: str, digests) -> dict:
+        """도달 가능한 object 를 전부 붙든다. 하나라도 없으면 실패한다."""
+        check_id(leg_id)
+        made = []
+        for dg in sorted(set(digests)):
+            src, dst = self._obj(dg), self._pin(leg_id, dg)
+            # ★ 29차 P0-4 — 초판은 `os.link` 의 **모든** OSError 를 잡아
+            #   `dst.write_bytes(...)` 로 떨어졌다. `EEXIST` 도 그리로 갔고
+            #   `dst` 는 CAS `src` 와 같은 inode 라 `O_TRUNC` 로 열리는 순간
+            #   content-addressed **원본까지 잘렸다**. 보존 체계가 보존 대상을
+            #   지우는 경로였다. 기존 경로에는 **절대 쓰지 않는다.**
+            if os.path.lexists(dst):
+                if dst.is_symlink():
+                    raise PreserveError("pin", f"pin 자리에 symlink 가 있다: {dg[:16]}")
+                got = hashlib.sha256(dst.read_bytes()).hexdigest()
+                if got != dg:
+                    raise PreserveError(
+                        "pin", f"pin 자리에 다른 내용이 있다: {dg[:16]} ≠ {got[:16]}")
+                # ★ 32차 P0-3 — object 와 같은 이유로 성공 전에 굳힌다.
+                _fsync_dir_strict(dst.parent, "pin")
+                made.append(dg)
+                continue
+            if not src.is_file():
+                raise PreserveError("pin", f"pin 할 object 가 없다: {dg[:16]}")
+            # ★ 30차 P0-3 — `pins/<leg>` 를 새로 만들면 `pins/` entry 도 굳힌다
+            _mkdir_durable(dst.parent, "pin")
+            try:
+                os.link(src, dst)
+            except FileExistsError:               # 경쟁 — 위와 같은 규칙으로
+                got = hashlib.sha256(dst.read_bytes()).hexdigest()
+                if got != dg:
+                    raise PreserveError("pin", f"경쟁 pin 의 내용이 다르다: {dg[:16]}")
+            except OSError:                       # hardlink 불가 FS — 안전 복사
+                t = dst.parent / f".{dg}.{uuid.uuid4().hex}.tmp"
+                _write_exact(t, src.read_bytes())
+                try:
+                    os.link(t, dst)               # no-replace commit
+                except FileExistsError:
+                    pass
+                finally:
+                    t.unlink(missing_ok=True)
+            _fsync_dir_strict(dst.parent, "pin")
+            made.append(dg)
+        return {"leg_id": leg_id, "pinned": made,
+                "pin_set_digest": pin_set_digest(leg_id, made)}
+
+    def pinned(self, leg_id: str) -> set:
+        d = self.root / "pins" / leg_id
+        return {p.name for p in d.iterdir()} if d.is_dir() else set()
+
+    def read_pinned(self, leg_id: str, dg: str, *, version=None) -> bytes:
+        """**pin 에서** 읽는다. `objects/` 가 비어도 회수돼야 한다.
+
+        local backend 에는 version 이 없으므로 `version` 은 무시한다 (계약을
+        맞추기 위한 인자다 — 37차 P0-1).
+        """
+        p = self._pin(leg_id, dg)
+        if not p.is_file():
+            raise PreserveError("pin", f"pin 이 없다: {dg[:16]}")
+        data = p.read_bytes()
+        if hashlib.sha256(data).hexdigest() != dg:
+            raise PreserveError("pin", f"pin 바이트가 digest 와 다르다: {dg[:16]}")
+        return data
+
+    def verify_pins(self, leg_id: str, digests, versions: dict | None = None) -> list:
+        """pin 집합이 완전하고 **바이트가 맞는지** 확인한다.
+
+        ★ 38차 P0-1 — `versions` 를 주면 **그 version 을** 읽는다. 37차판은
+          lease 의 `object_versions` 를 버리고 최신 담보 version 을 다시
+          찾았다. 그래서 적대적 새 version 하나가 등록 검증을 깼다 — 봉인된
+          version 은 멀쩡한데도.
+        """
+        bad = []
+        vs = versions or {}
+        for dg in sorted(set(digests)):
+            try:
+                self.read_pinned(leg_id, dg, version=vs.get(dg))
+            except PreserveError as e:
+                bad.append(f"{dg[:16]}: {e.msg}")
+        return bad
+
+    def orphans(self) -> list[Path]:
+        st = self.root / "staging"
+        return sorted(st.glob("*.part")) if st.is_dir() else []
+
+    # ── retention primitive (★ 30차 P0-1) ───────────────────────────────
+    # 리뷰가 요구한 세 연산이다:
+    #
+    #     retain(graph, minimum_until) -> immutable retention receipt / lease
+    #     verify_retention(receipt, actual_backend)
+    #     retrieve_retained(receipt, digest)
+    #
+    # lease 자체가 CAS object 이고 pin 된다 — 그래프의 일부다. 그래서 lease 를
+    # 위조하려면 graph digest 를 통째로 바꿔야 하고, 그러면 journal 과 어긋난다.
+
+    def retain(self, leg_id: str, digests, *, min_retention_days: int) -> dict:
+        """graph 를 붙들고 **lease** 를 만든다. lease 도 pin 된다."""
+        check_id(leg_id)
+        if not isinstance(min_retention_days, int) or isinstance(min_retention_days, bool) \
+                or min_retention_days < MIN_RETENTION_DAYS:
+            raise PreserveError(
+                "retain", f"min_retention_days 가 정책 하한 미만이다: "
+                          f"{min_retention_days!r} < {MIN_RETENTION_DAYS}")
+        if self.retention_days < min_retention_days:
+            raise PreserveError(
+                "retain", f"backend 의 retention({self.retention_days}일)이 요구 "
+                          f"하한({min_retention_days}일)보다 짧다")
+        objs = sorted(set(digests))
+        # ★ 30차 자체 발견 — lease 에 `retain_until_utc` 가 들어가므로 부를
+        #   때마다 다른 바이트가 된다. 재실행이 초 경계를 넘으면 lease 가 하나
+        #   더 pin 되어 pin 집합에 여분이 생겼다 (전체 시험이 확률적으로
+        #   빨갰다). 같은 graph 를 담보하는 유효한 lease 가 이미 있으면
+        #   **그것을 돌려준다** — 재시도가 상태를 늘리지 않는다.
+        existing = self._existing_lease(leg_id, objs, min_retention_days)
+        if existing is not None:
+            return existing        # `lease_version` 은 재발견된 값이 들어 있다
+        self.pin(leg_id, objs)
+        live = self.probe_enforcement()
+        if live != self.enforcement:
+            raise PreserveError(
+                "retain", f"backend 가 신고한 enforcement({self.enforcement!r}) 를 "
+                          f"조회가 지지하지 않는다 ({live!r}) — 강제는 이름이 아니라 "
+                          "구현이다")
+        until = (dt.datetime.now(dt.timezone.utc)
+                 + dt.timedelta(days=min_retention_days))
+        until_s = until.strftime("%Y-%m-%dT%H:%M:%SZ")
+        # ★ 35차 P0-1 — control plane 이 graph 보다 먼저 풀리면 안 된다.
+        # ★ 37차 — store record 가 **먼저** 있어야 연장할 대상이 있다. 초판은
+        #   record 생성 전에 `ensure_store_lock()` 을 불러, 이 경로로 처음
+        #   들어오면 "store.json 의 version 을 알 수 없다" 로 죽었다.
+        _ = self.store_id
+        ensure = getattr(self, "ensure_store_lock", None)
+        if callable(ensure):
+            ensure(until_s)
+        lock = self.query_object_lock() or {}
+        lease = {
+            "schema": RETENTION_SCHEMA,
+            "leg_id": leg_id,
+            "store_id": self.store_id,
+            # ★ 38차 P0-1 — identity 를 **exact version 으로** 봉인한다.
+            #   `store_id` 만으로는 reopen 시점의 lock census 가 답을 바꾼다.
+            "store_version_id": self.store_version_id or "",
+            "store_lock_mode": self.store_lock_mode or "",
+            "backend_uri": self.uri,
+            # ★ 31차 P0-1 — 신고값이 아니라 **조회한** 강제 수준을 적는다
+            "enforcement": live,
+            # ★ 31차 P0-1 — provider 가 강제하는 **모드**와 그것이 만든
+            #   immutable version ID 를 lease 에 싣는다. 검증 때 다시 조회한다.
+            "lock_mode": lock.get("mode"),
+            "object_versions": self.lock_objects(leg_id, objs, until_s),
+            "min_retention_days": min_retention_days,
+            "retain_until_utc": until_s,
+            "objects": objs,
+            "pin_set_digest": pin_set_digest(leg_id, objs),
+        }
+        raw = canonical_bytes(lease)
+        l_obj = self.put_if_absent(raw)["digest"]
+        self.pin(leg_id, [l_obj])          # lease 도 graph 의 일부다
+        # ★ 33차 P0-1 — lease 는 **durable graph 의 증거**인데 잠금 밖이었다.
+        #   정확한 lease digest 는 `lock_objects()` 뒤에야 존재하므로 순서상
+        #   빠져 있었다. graph 가 durable 하다는 증거만 mutable 이면 모순이다.
+        #   lease 도 같은 기한까지 잠근다.
+        lv = (self.lock_objects(leg_id, [l_obj], until_s) or {}).get(l_obj)
+        cv = self.lock_content_object(l_obj, until_s)
+        return dict(lease, lease_digest=l_obj, lease_version=lv,
+                    lease_content_version=cv or "")
+
+    def _existing_lease(self, leg_id: str, objs: list,
+                        min_retention_days: int) -> dict | None:
+        """이 leg 에 이미 있고 **같은 graph 를 같은 정책으로** 담보하는 lease.
+
+        pin 집합에서 graph object 를 뺀 나머지가 lease 후보다. 여러 개가 남아
+        있으면 이미 상태가 오염된 것이므로 `None` 을 돌려 새로 만들지 않고
+        아래 검증이 그것을 잡게 둔다.
+        """
+        extra = sorted(self.pinned(leg_id) - set(objs))
+        if not extra:
+            # ★ 37차 P0-1 — pin 만 보면 `after_lease_put` 잔여를 못 본다.
+            #   lease content 는 put 됐는데 pin 전에 죽으면 orphan 이 되고,
+            #   재개가 그것을 못 보고 새 lease 를 만든다. 재시도마다 orphan 이
+            #   하나씩 쌓인다 (lease 바이트가 초마다 달라져 dedup 도 안 된다).
+            orphan = self._orphan_lease(leg_id, objs, min_retention_days)
+            if orphan is None:
+                return None             # 후보가 없다 — 새로 만드는 것이 맞다
+            # ★ 42차 P1 — 검증이 읽은 **exact version/bytes** 로 입양한다.
+            self.adopt_orphan(leg_id, orphan)
+            extra = [orphan.digest]
+        # ★ 37차 P0-1 — **후보가 하나라도 있으면 새 state 를 만들지 않는다.**
+        #   36차판은 후보 손상·모호성·repair 실패를 전부 `None` 으로 접어
+        #   "기존 lease 없음" 과 같이 취급했고, 그래서 두 번째 WORM lease 가
+        #   생겼다. 되돌릴 수 없는 상태를 만드는 쪽이 조용한 기본값이면 안
+        #   된다 — 여기서부터는 성공 아니면 **fail-closed** 다.
+        if len(extra) != 1:
+            raise PreserveError(
+                "retention",
+                f"{leg_id}: graph 밖 pin 이 {len(extra)}개다 — 어느 것이 lease "
+                f"인지 정할 수 없다 ({[d[:16] for d in extra]}). 새 lease 를 "
+                "만들면 지울 수 없는 WORM 잔여가 하나 더 생긴다")
+        # ★ 39차 P0-1 — proof 를 **먼저 재발견**하고 그 version 으로 읽는다.
+        #   38차판은 version 없이 먼저 읽어, 같은 pin key 에 wrong-bytes 의
+        #   더 최신 locked version 이 있으면 온전한 후보를 못 읽었다.
+        # ★ 40차 P1 — 담보 proof 가 있으면 그것으로, 아직 없으면(crash 창)
+        #   **exact bytes** 로 읽는다. 39차는 proof 만 봐서 `after_lease_pin`
+        #   창의 잠기지 않은 v1 을 못 읽고 hostile v2 를 읽었다.
+        try:
+            pv = self.recover_lease_version(leg_id, extra[0])
+        except PreserveError:
+            pv = None
+        if pv is None:
+            src = getattr(self, "_repair_source", None)
+            if callable(src):
+                pv = src(self._provider_key(leg_id, extra[0]), extra[0])
+        try:
+            lease = self.read_lease(leg_id, extra[0], version=pv)
+        except (PreserveError, ValueError, UnicodeDecodeError) as ex:
+            raise PreserveError(
+                "retention",
+                f"{leg_id}: lease 후보 {extra[0][:16]} 를 읽을 수 없다 ({ex}) — "
+                "손상된 후보 위에 새 lease 를 얹지 않는다") from ex
+        # ★ 38차 P0-1 — **mutation 보다 검증이 먼저다.** 37차판은 여기서
+        #   `None` 을 돌려 두 번째 lease 를 만들었고 (반례: 같은 graph 에 더
+        #   강한 `min_retention_days` 를 요청), 통과했을 때는 곧바로
+        #   `repair_lease_locks()` 로 pin·content 를 WORM 으로 만든 뒤에야
+        #   exact key/schema 를 봤다. forged candidate 를 잠근 다음 거부하는
+        #   순서였다 — 거부는 맞지만 되돌릴 수 없는 상태가 앞섰다.
+        #
+        #   이제 순수 validator 가 **전부** 먼저 본다. 통과 못 하면 아무것도
+        #   바꾸지 않고 거부한다.
+        # 만료는 **다른 사건**이다 — 사람이 판단할 일이고, 메시지가 그것을
+        # 말해야 한다 (아래 일반 불일치와 섞지 않는다).
+        if _lease_expired(lease):
+            raise PreserveError(
+                "retention",
+                f"{leg_id}: lease {extra[0][:16]} 의 담보 기간이 지났다. "
+                "자동 갱신은 지원하지 않는다: historical WORM pin 을 퇴역시킬 수 "
+                "없어 새 lease 를 만들어도 exact pin set 이 깨진다. 사람이 "
+                "판단해 새 leg 로 다시 담보하라")
+        if not self._matches_lease(leg_id, objs, min_retention_days, lease):
+            raise PreserveError(
+                "retention",
+                f"{leg_id}: lease 후보 {extra[0][:16]} 가 이 요청과 맞지 않는다 "
+                f"(graph·정책·store·URI·enforcement·계약 key 중 하나) — "
+                "그 위에 두 번째 lease 를 얹지 않는다. 정책을 바꾸려면 사람이 "
+                "판단해 새 leg 로 담보하라")
+        # ★ 35차 P0-1 — 검증 **전에** 누락 잠금을 채운다. `retain()` 내부에서
+        #   죽으면 pin 또는 content 한쪽만 잠긴 lease 가 남는데, 초판은 그것을
+        #   "기존 lease 없음" 으로 보고 두 번째 WORM lease 를 만들었다.
+        try:
+            proof = self.repair_lease_locks(leg_id, extra[0],
+                                            lease["retain_until_utc"])
+        except (PreserveError, KeyError, TypeError) as ex:
+            raise PreserveError(
+                "retention",
+                f"{leg_id}: lease {extra[0][:16]} 를 수리하지 못했다 ({ex}) — "
+                "수리 실패는 후보 부재가 아니다") from ex
+        try:
+            # ★ 34차 P0-1 — proof 를 **provider 에서 재발견**해 넘긴다.
+            #   초판은 넘기지 않아 object-lock lease 재사용이 언제나 실패했다.
+            # ★ 38차 P0-1 — content version proof 도 **재발견**해서 넘긴다.
+            #   안 넘기면 재개가 만든 journal 이 최초 등록과 달라져
+            #   `_register()` 가 거부한다 (재실행이 실패한다).
+            # ★ 41차 P1 — `pv` 는 **repair source** 다 (바이트를 읽으려고 잠금
+            #   여부를 안 묻고 고른 version). 그것을 proof 로 넘기면 수리가
+            #   만든 담보 version 대신 우회 가능한 head 를 봉인한다 — 실제로
+            #   같은 바이트의 Governance head 가 있으면 그것이 넘어가서
+            #   "lock mode 가 lease 와 다르다" 로 죽었다. 수리가 끝난 **뒤**
+            #   proof selector 를 다시 돌린다.
+            # ★ 43차 P1 — 수리가 **만든 그 proof** 를 그대로 넘긴다. 42차는
+            #   버리고 기한 없는 `recover_*()` 로 다시 찾았고, 같은 바이트의
+            #   더 최신·더 짧은 Compliance version 이 있으면 그것을 골라
+            #   검증에서 죽었다 (기한을 덮는 v1 이 그대로 있는데도).
+            # ★ 44차 P2 — `proof.until` 은 지금까지 반환만 되고 아무도 안
+            #   봤다. horizon 의 정본은 검증된 lease record 이므로, 여기서
+            #   **둘이 같은 값인지** 한 번 못 박는다 (그러지 않으면 필드가
+            #   이름만 있고 계약은 없다 — 이 저장소가 반복해서 겪은 형태다).
+            if proof.until != lease["retain_until_utc"]:
+                raise PreserveError(
+                    "retention",
+                    f"{leg_id}: 수리 proof 의 기한이 lease 와 다르다 "
+                    f"({proof.until} ≠ {lease['retain_until_utc']})")
+            return self.verify_retention(
+                leg_id, extra[0], expected=set(objs),
+                lease_version=proof.lease_version,
+                lease_content_version=proof.content_version)
+        except PreserveError as ex:
+            # ★ 38차 P0-1 — 37차판은 만료면 `None` 을 돌려 **자동 갱신**했다.
+            #   그 갱신은 production 에서 동작한 적이 없다: 새 L1 을 만들어도
+            #   `pinned()` 이 historical WORM L0 를 active 로 세므로 바로 뒤의
+            #   exact pin-set 검사가 같은 호출 안에서 실패한다. 37차 시험은
+            #   `retain()` 반환값만 봐서 그것을 못 봤다.
+            #
+            #   셋이 동시에 성립할 수 없다:
+            #     · 모든 historical pin version 을 active 로 센다
+            #     · `delete` 가 계약에 없다 (우리는 지우지 않는다)
+            #     · 만료되면 새 lease 를 만든다
+            #
+            #   세 번째를 **뺀다.** 자동 갱신은 되돌릴 수 없는 WORM 잔여를
+            #   남기면서 아무것도 담보하지 못하는 가짜 기능이었다. 담보 기간이
+            #   지났다는 것은 사람이 판단할 사건이지 조용히 재발급할 일이 아니다.
+            #
+            #   언젠가 갱신이 실제로 필요해지면 필요한 것은 다음 둘 중 하나다:
+            #     · active lease pointer (historical WORM 과 active 를 구분)
+            #     · exact-version retirement primitive
+            #   둘 다 설계 항목이지 여기서 흉내낼 것이 아니다.
+            raise PreserveError(
+                "retention",
+                f"{leg_id}: lease {extra[0][:16]} 검증에 실패했다 ({ex})"
+                + (" — 담보 기간이 지났다. 자동 갱신은 지원하지 않는다: "
+                   "historical WORM pin 을 퇴역시킬 수 없어 새 lease 를 만들어도 "
+                   "exact pin set 이 깨진다. 사람이 판단해 새 leg 로 다시 담보하라."
+                   if _lease_expired(lease) else
+                   " — 만료 전 불일치 위에 새 lease 를 얹지 않는다")) from ex
+
+    def _orphan_lease(self, leg_id: str, objs: list,
+                      min_retention_days: int) -> "VerifiedBytes | None":
+        """pin 되지 않은 채 남은 lease content. local backend 에는 없다."""
+        return None
+
+    def adopt_orphan(self, leg_id: str, lease: "VerifiedBytes") -> None:
+        """local backend 는 version 이 없으므로 digest 로 pin 해도 같다."""
+        self.pin(leg_id, [lease.digest])
+
+    #: lease record 의 **닫힌** 계약. `verify_retention()` 이 쓰는 것과 같은
+    #: 집합이며, 여기서 먼저 본다 — 검증이 mutation 보다 앞서야 한다.
+    LEASE_KEYS: ClassVar[frozenset] = frozenset({
+        "schema", "leg_id", "store_id", "store_version_id", "store_lock_mode",
+        "backend_uri", "enforcement", "lock_mode", "object_versions",
+        "min_retention_days", "retain_until_utc", "objects", "pin_set_digest"})
+
+    def _matches_lease(self, leg_id: str, objs: list, min_retention_days: int,
+                       rec) -> bool:
+        """이 record 가 **지금 만들려는 것과 같은** lease 인가.
+
+        ★ 38차 P0-1 — 37차판은 schema·leg·objects·정책일수·만료만 봤다.
+          store ID·URI·enforcement·exact key set 을 안 봐서, 남의 store 의
+          lease 나 남는 key 가 있는 record 도 orphan 으로 **입양**됐다.
+          입양은 pin 을 만드는 mutation 이므로, 이 판정이 느슨하면 검증 전에
+          되돌릴 수 없는 상태가 생긴다.
+
+        **순수 함수다.** provider 를 읽기만 하고 아무것도 바꾸지 않는다.
+        """
+        if not isinstance(rec, dict) or set(rec) != set(self.LEASE_KEYS):
+            return False
+        if rec.get("schema") != RETENTION_SCHEMA:
+            return False
+        if rec.get("leg_id") != leg_id or rec.get("objects") != objs:
+            return False
+        if rec.get("min_retention_days") != min_retention_days:
+            return False
+        if rec.get("pin_set_digest") != pin_set_digest(leg_id, objs):
+            return False
+        # ★ 39차 P0-1 — timestamp 는 **문법부터** 본다 (문자열 비교 전에).
+        if not _is_utc_stamp(rec.get("retain_until_utc")):
+            return False
+        if rec.get("store_id") != self.inspect_store_id() \
+                or rec.get("backend_uri") != self.uri:
+            return False
+        live = self.probe_enforcement()
+        if rec.get("enforcement") != live:
+            return False
+        # ★ 39차 P0-1 — 38차 뒤에 **추가된 locator 의미**를 여기서 본다.
+        #   그것을 안 보고 repair 로 넘기면 위조 candidate 를 WORM 으로 만든
+        #   뒤에야 strict verifier 가 거부한다.
+        if live == ENFORCEMENT_OBJECT_LOCK:
+            if rec.get("lock_mode") not in self.DURABLE_MODES:
+                return False
+            if rec.get("store_lock_mode") not in self.DURABLE_MODES:
+                return False
+            if not _nonempty_str(rec.get("store_version_id") or ""):
+                return False
+            ov = rec.get("object_versions")
+            if not isinstance(ov, dict) or set(ov) != set(objs):
+                return False
+            if any(not _nonempty_str(v or "") for v in ov.values()):
+                return False
+            # ★ 40차 P0-1 — **nonempty 는 "존재한다" 가 아니다.** 39차는
+            #   모양만 봤고, 그 ID 가 provider 에 실제로 있는지·bytes 가
+            #   맞는지·mode·기한이 candidate 를 지지하는지는 안 봤다. 그래서
+            #   존재하지 않는 locator 를 가진 candidate 가 앞단을 통과해
+            #   repair 가 WORM 을 만든 뒤에야 거부됐다.
+            #
+            #   여기서 **읽기만** 해서 전부 확인한다.
+            # ★ 41차 P0-1 — locator 는 **두 종류**이고 결속하는 것이 다르다.
+            #   40차는 하나의 `_locator_holds(key, version, dg, ...)` 로 둘을
+            #   함께 봤고, store 는 `dg=None` 으로 불러 bytes 분기를 통째로
+            #   건너뛰었다. 그래서 "그 version 이 존재하고 잠겨 있다" 를 "그
+            #   version 이 이 candidate 의 store record 다" 라고 불렀다 —
+            #   `store_id` 가 다른 record 나 record 도 아닌 바이트를 가리키는
+            #   locator 가 앞단을 통과했다.
+            if not self._store_locator_holds(rec["store_version_id"],
+                                             rec["store_lock_mode"], rec):
+                return False
+            for dg, v in ov.items():
+                if not self._object_locator_holds(
+                        self._provider_key(leg_id, dg), v, dg,
+                        rec["lock_mode"], rec):
+                    return False
+        elif rec.get("object_versions"):
+            return False
+        return not _lease_expired(rec)
+
+    def _locator_state(self, key: str, version: str, want_mode, rec):
+        """그 exact version 이 **지금 담보되어 있는가** — 상태를 준다 (없으면 `None`).
+
+        존재 · mode 동등 · 기한 덮음까지만 본다. **여기서 끝내면 안 된다** —
+        "그 version 이 담보돼 있다" 는 "그 version 이 내가 봉인한 그것이다" 가
+        아니다. 무엇으로 결속하는지는 아래 두 typed 검사가 정한다.
+
+        **읽기만 한다.**
+        """
+        prov = getattr(self, "provider", None)
+        if prov is None:
+            return None
+        st = prov.describe_object(key, version)
+        if not isinstance(st, dict) or st.get("mode") != want_mode:
+            return None
+        try:
+            _horizon_covers(st, rec["retain_until_utc"], key)
+        except PreserveError:
+            return None
+        return st
+
+    def _object_locator_holds(self, key: str, version: str, dg: str,
+                              want_mode, rec) -> bool:
+        """graph pin locator — 담보 상태 **+ 그 version 의 바이트가 `dg`**."""
+        if self._locator_state(key, version, want_mode, rec) is None:
+            return False
+        return self._bytes_match(key, version, dg)
+
+    def _store_locator_holds(self, version: str, want_mode, rec) -> bool:
+        """store locator — 담보 상태 **+ 그 version 이 이 candidate 의 store record**.
+
+        ★ 41차 P0-1 — 40차는 store 를 `dg=None` 으로 불러 bytes 를 아예 안
+          봤다. 그래서 이런 candidate 가 앞단을 통과했다::
+
+              canonical store v1 = record(store_id=A), Compliance, 충분한 기한
+              newer     store v2 = record(store_id=B) 또는 record 가 아닌 바이트
+              candidate: store_id=A · store_version_id=v2
+
+          `inspect_store_id()` 는 canonical v1 의 A 를 돌려주고 locator 검사는
+          존재·mode·기한만 봤으므로 통과했다. 그 뒤 `repair_lease_locks()` 가
+          pin·content 를 WORM 으로 만든 **다음에야** strict verifier 가 exact
+          v2 를 읽고 거부했다 — 거부는 맞지만 되돌릴 수 없는 상태가 앞섰다.
+
+          `store_id` 는 identity **root** 다. locator 가 그것과 결속되지 않으면
+          reopen 이 남의 record 를 가리키는 receipt 를 만들 수 있다.
+        """
+        if self._locator_state("store.json", version, want_mode, rec) is None:
+            return False
+        prov = self.provider
+        try:
+            got = load_canonical(prov.get("store.json", version))
+        except (KeyError, ValueError, UnicodeDecodeError):
+            return False
+        return _is_store_record(got) and got["store_id"] == rec.get("store_id")
+
+    def inspect_store_id(self):
+        """store identity 를 **읽기만** 한다. 없으면 `None` (39·41차 P0-1).
+
+        ★ 39차 — `store_id` 는 record 가 없으면 만들고, 있으면
+          `ensure_store_lock()` 으로 기한을 연장한다. "순수 validator" 가 그것을
+          부르면 검증 자체가 상태를 바꾼다. inspect 와 ensure 를 가른다.
+
+        ★ 41차 P1 — 그런데 base 구현이 `return self.store_id` 한 줄이었다.
+          object-lock backend 쪽만 순수해졌고 **local backend 의 candidate
+          validation 은 그대로 만들고 굳혔다** — 이름이 predicate 보다 강한
+          그 형태다. 여기서 진짜로 읽기만 한다.
+        """
+        p = Path(self.root) / "store.json"
+        if not p.is_file():
+            return None
+        try:
+            rec = load_canonical(p.read_bytes())
+        except (ValueError, UnicodeDecodeError):
+            return None
+        if not isinstance(rec, dict):
+            return None
+        sid = rec.get("store_id") or ""
+        # `store_id` 가 받아들이는 것과 같은 형태만 identity 로 인정한다.
+        # 이상하면 `None` — 검증 경로에서 예외를 던지면 그 자체가 부작용 있는
+        # 판정이 되고, `None` 은 어느 비교와도 안 맞아 fail-closed 다.
+        return sid if (_is_hex64(sid) or _is_uuid_hex(sid)) else None
+
+    def read_lease(self, leg_id: str, lease_digest: str, *, version=None) -> dict:
+        """lease 를 **pin 에서** 읽는다."""
+        lease = load_canonical(
+            self.read_pinned(leg_id, lease_digest, version=version))
+        if not isinstance(lease, dict):
+            raise PreserveError("retention", "lease 가 dict 가 아니다")
+        return lease
+
+    def verify_retention(self, leg_id: str, lease_digest: str,
+                         expected: set | None = None,
+                         lease: dict | None = None,
+                         lease_version: str | None = None,
+                         lease_content_version: str | None = None) -> dict:
+        """lease 가 **이 backend 에서 지금** 유효한가.
+
+        읽은 바이트가 아니라 **상태**를 본다 — 그래서 전수 읽기가 끝난 뒤에
+        한 번 더 부르면 그 사이의 삭제가 잡힌다 (30차 P0-1 의 마지막 창).
+        """
+        stage = "retention"
+        # `lease` 를 주면 그것을 본다 — 회귀가 lease 축만 변이할 수 있게 한다.
+        # ★ 38차 P0-1 — 봉인된 lease version 으로 **바이트를 읽는다.**
+        #   37차판은 version 없이 읽고 나서야 그 version 의 lock 을 조회했다.
+        #   같은 pin key 에 더 최신 locked bytes 가 있으면 exact locator 를
+        #   들고 있으면서도 남의 바이트를 읽고 실패했다.
+        lease = (dict(lease) if lease is not None
+                 else self.read_lease(leg_id, lease_digest, version=lease_version))
+        lease_version = lease_version or lease.pop("lease_version", None)
+        lease_content_version = (lease_content_version
+                                 or lease.pop("lease_content_version", None))
+        lease.pop("lease_digest", None)
+        lease.pop("lease_version", None)
+        lease.pop("lease_content_version", None)
+        want = set(self.LEASE_KEYS)
+        if set(lease) != want:
+            raise PreserveError(stage, f"lease 키가 계약과 다르다: "
+                                       f"{sorted(set(lease) ^ want)[:4]}")
+        if lease["schema"] != RETENTION_SCHEMA:
+            raise PreserveError(stage, f"lease schema 가 다르다: {lease['schema']!r}")
+        if lease["leg_id"] != leg_id:
+            raise PreserveError(stage, "lease 가 다른 leg 의 것이다")
+        # ★ 30차 P0-2 — 두 축을 **따로** 본다. store 를 통째로 복사하면
+        #   `store.json` 까지 딸려와 UUID 가 같아지므로 URI 축이 잡고,
+        #   같은 경로를 재사용하면 UUID 축이 잡는다. 어느 쪽이 어긋났는지
+        #   메시지가 말해야 반례를 다시 만들 수 있다.
+        if lease["backend_uri"] != self.uri:
+            raise PreserveError(
+                stage, f"lease 가 다른 backend 의 것이다 — "
+                       f"{lease['backend_uri']!r} ≠ {self.uri!r}")
+        # ★ 39차 P0-1 — **검증은 수리하지 않는다.** `store_id` 는 record 가
+        #   없으면 만들고 있으면 기한을 연장한다. 그것을 검증 경로에서 부르면
+        #   "봉인이 풀렸다" 를 스스로 고쳐 놓고 통과시킨다 — 실제로 그랬다
+        #   (담보 해제·기한 단축 반례가 둘 다 self-healing 으로 초록이었다).
+        # ★ 41차 P1 — 읽은 값을 **지역변수에 담고 오류 문자열도 그것만 쓴다.**
+        #   40차는 불일치를 `inspect_store_id()` 로 발견해 놓고 메시지에서
+        #   `self.store_id` 를 다시 평가했다 — 오류를 설명하는 과정에서 없는
+        #   store record 를 만들거나 기한을 연장할 수 있었다. read-only 경로에
+        #   mutation 을 남기는 마지막 자리였다.
+        live_sid = self.inspect_store_id()
+        if lease["store_id"] != live_sid:
+            raise PreserveError(
+                stage, f"lease 가 다른 store 의 것이다 — backend URI 는 같은데 "
+                       f"store {lease['store_id'][:8]} ≠ {str(live_sid)[:8]}")
+        # ★ 30차 P1-3 — receipt 가 적은 숫자가 아니라 **지금 backend** 를 본다
+        if self.retention_days < lease["min_retention_days"]:
+            raise PreserveError(
+                stage, f"backend 의 현재 retention({self.retention_days}일)이 lease 의 "
+                       f"하한({lease['min_retention_days']}일)보다 짧다")
+        if lease["min_retention_days"] < MIN_RETENTION_DAYS:
+            raise PreserveError(stage, "lease 의 하한이 정책 하한 미만이다")
+        # ★ 31차 P0-1 — lease 에 적힌 강제 수준을 **지금 backend 가 증명하는
+        #   것**과 대조한다. 초판은 저장만 하고 다시 보지 않아, lease 를
+        #   위조하거나 강한 backend 의 lease 를 약한 backend 에서 열어도
+        #   아무 일이 없었다.
+        live = self.probe_enforcement()
+        if lease["enforcement"] != live:
+            raise PreserveError(
+                stage, f"lease 의 enforcement 가 이 backend 가 지금 증명하는 것과 "
+                       f"다르다: {lease['enforcement']!r} ≠ {live!r}")
+        if live != self.enforcement:
+            raise PreserveError(
+                stage, f"backend 가 신고한 enforcement({self.enforcement!r}) 를 "
+                       f"조회가 지지하지 않는다 ({live!r})")
+        # ★ 38차 P0-1 — **봉인된 version 으로** identity 를 확인한다.
+        #   live-lock census 는 시간이 지나면 답이 바뀌므로 proof 가 아니다.
+        sv = lease.get("store_version_id") or ""
+        prov = getattr(self, "provider", None)
+        if live == ENFORCEMENT_OBJECT_LOCK and prov is not None:
+            # ★ 39차 P0-1 — **optional 이면 sealed locator 가 아니라 hint 다.**
+            #   38차판은 `if sv and ...` 라 빈 값이 조용히 넘어갔다.
+            if not _nonempty_str(sv):
+                raise PreserveError(
+                    stage, "object-lock lease 에 store version proof 가 없다 — "
+                           "빈 값은 live 재탐색으로 돌아가는 통로다")
+            if lease.get("store_lock_mode") not in self.DURABLE_MODES:
+                raise PreserveError(
+                    stage, f"store lock mode 가 담보 mode 가 아니다: "
+                           f"{lease.get('store_lock_mode')!r}")
+        if sv and prov is not None:
+            st = prov.describe_object("store.json", sv)
+            if not isinstance(st, dict):
+                raise PreserveError(
+                    stage, f"lease 가 봉인한 store version 이 담보되지 않는다: {sv}")
+            _durable_mode(st, lease.get("store_lock_mode"), "store version",
+                          self.DURABLE_MODES, stage)
+            try:
+                rec = load_canonical(prov.get("store.json", sv))
+            except (KeyError, ValueError, UnicodeDecodeError) as ex:
+                raise PreserveError(stage, "봉인 store record 를 읽을 수 없다") from ex
+            if not _is_store_record(rec) or rec["store_id"] != lease["store_id"]:
+                raise PreserveError(
+                    stage, "봉인 store version 의 record 가 lease 와 다르다")
+            # ★ 39차 P0-1 — identity root 가 graph 보다 **먼저 풀리면** 안 된다.
+            #   exact graph version 이 살아 있어도 reopen locator 를 잃는다.
+            _horizon_covers(st, lease["retain_until_utc"], "store version", stage)
+        try:
+            until = dt.datetime.strptime(lease["retain_until_utc"], "%Y-%m-%dT%H:%M:%SZ")
+        except (TypeError, ValueError) as ex:
+            raise PreserveError(stage, f"retain_until_utc 가 이상하다: "
+                                       f"{lease.get('retain_until_utc')!r}") from ex
+        if until.replace(tzinfo=dt.timezone.utc) <= dt.datetime.now(dt.timezone.utc):
+            raise PreserveError(stage, "lease 가 이미 만료됐다")
+        objs = lease["objects"]
+        if not _is_unique_hex64_list(objs):
+            raise PreserveError(stage, "lease 의 objects 가 unique 64-hex 목록이 아니다")
+        if lease["pin_set_digest"] != pin_set_digest(leg_id, objs):
+            raise PreserveError(stage, "lease 의 pin_set_digest 가 objects 와 다르다")
+        if expected is not None and set(objs) != set(expected):
+            raise PreserveError(
+                stage, f"lease 가 유도한 graph 와 다르다 — 없음 "
+                       f"{sorted(set(expected) - set(objs))[:2]}")
+        # ★ 31차 P0-1 — provider 의 version ID 를 **다시 조회**한다. 등록
+        #   시점에 잠겼다는 사실이 지금도 잠겨 있다는 뜻이 아니다.
+        want_v = lease["object_versions"]
+        if not isinstance(want_v, dict):
+            raise PreserveError(stage, "lease 의 object_versions 가 dict 가 아니다")
+        if live == ENFORCEMENT_OBJECT_LOCK:
+            if set(want_v) != set(objs):
+                raise PreserveError(
+                    stage, "object-lock lease 인데 version 이 없는 object 가 있다: "
+                           f"{sorted(set(objs) - set(want_v))[:2]}")
+            # ★ 40차 P0-1 — 값이 **허용된 담보 mode** 여야 한다. 39차는
+            #   nonempty 만 봐서 Governance 가 그대로 지나갔다.
+            if lease["lock_mode"] not in self.DURABLE_MODES:
+                raise PreserveError(
+                    stage, f"lease 의 lock_mode 가 담보 mode 가 아니다: "
+                           f"{lease['lock_mode']!r} (허용 "
+                           f"{sorted(self.DURABLE_MODES)})")
+            # ★ 32차 P0-1 — version **값**이 유효해야 한다. 초판은 key set 만
+            #   봐서 `{digest: None}` 도 durable 로 통과했다.
+            weak = sorted(d for d, v in want_v.items() if not _nonempty_str(v or ""))
+            if weak:
+                raise PreserveError(
+                    stage, f"lease 의 object version 이 비었다: {weak[:2]}")
+            # ★ 32차 P0-1 — 그 version 이 **지금도** 잠겨 있는지, 어떤 mode 로,
+            #   언제까지인지 provider 에 묻는다. 초판은 셋 다 안 물었다.
+            live_locks = self.describe_locks(leg_id, want_v)
+            gone = sorted(d for d, st in live_locks.items() if not isinstance(st, dict))
+            if gone:
+                raise PreserveError(
+                    stage, f"provider 에 잠긴 version 이 없다: {gone[:2]} — "
+                           "더 이상 잠겨 있지 않다")
+            for dg, st in sorted(live_locks.items()):
+                # `describe_locks` 가 version 을 **키로** 조회하므로 dict 가
+                # 돌아온 것 자체가 일치를 뜻한다 — 중복 비교를 두지 않는다.
+                _durable_mode(st, lease["lock_mode"], f"graph pin {dg[:16]}",
+                              self.DURABLE_MODES, stage)
+                _horizon_covers(st, lease["retain_until_utc"],
+                                f"graph pin {dg[:16]}", stage)
+        elif want_v:
+            raise PreserveError(stage, "advisory lease 인데 version 이 적혀 있다")
+        # ★ 33차 P0-1 — lease **자신**도 잠겨 있어야 한다. proof 는 journal 이
+        #   들고 있다 (lease 는 자기 digest 를 담을 수 없으므로 밖에 둔다).
+        if live == ENFORCEMENT_OBJECT_LOCK:
+            if not _nonempty_str(lease_version or ""):
+                raise PreserveError(
+                    stage, "lease 자신의 version proof 가 없다 — durable graph 의 "
+                           "증거가 잠금 밖이면 그 증거를 지울 수 있다")
+            st = (self.describe_locks(leg_id, {lease_digest: lease_version})
+                  or {}).get(lease_digest)
+            if not isinstance(st, dict):
+                raise PreserveError(stage, "lease 가 provider 에 잠겨 있지 않다")
+            # ★ 35차 P0-1 — lease **CAS content** 도 잠겨 있어야 한다. 초판은
+            #   pin version 만 다시 조회해서, content lock 직전에 죽으면 한쪽이
+            #   unlocked 인 채 `durable=True` 까지 갔다.
+            # ★ 39차 P0-1 — content locator 도 **필수**다. 빈 값이면 live
+            #   재탐색으로 돌아가므로 sealed proof 가 아니다.
+            if not _nonempty_str(lease_content_version or ""):
+                raise PreserveError(
+                    stage, "object-lock lease 에 content version proof 가 없다")
+            cst = self.describe_content_lock(
+                lease_digest, version=lease_content_version)
+            if not isinstance(cst, dict):
+                raise PreserveError(
+                    stage, "lease 의 CAS content 가 잠겨 있지 않다 — 증거의 "
+                           "원본을 지울 수 있다")
+            _durable_mode(cst, lease["lock_mode"], "lease content",
+                          self.DURABLE_MODES, stage)
+            _horizon_covers(cst, lease["retain_until_utc"], "lease content", stage)
+            # ★ `describe_locks` 는 **그 version 을 키로** 조회하므로 dict 가
+            #   돌아온 것 자체가 version 일치를 뜻한다. 여기서 다시 비교하면
+            #   같은 규칙이 두 곳에 생기고, 강한 쪽을 지워도 초록이 된다
+            #   (변이로 확인했다).
+            _durable_mode(st, lease["lock_mode"], "lease pin",
+                          self.DURABLE_MODES, stage)
+            _horizon_covers(st, lease["retain_until_utc"], "lease pin", stage)
+        # ★ 38차 P0-1 — graph pin 도 **봉인 version** 으로 되읽는다.
+        pbad = self.verify_pins(leg_id, objs, versions=want_v or None)
+        if pbad:
+            raise PreserveError(stage, "봉인 version 의 pin 이 어긋난다: "
+                                       + "; ".join(pbad[:3]))
+        on_disk = self.pinned(leg_id)
+        want_disk = set(objs) | {lease_digest}
+        if on_disk != want_disk:
+            raise PreserveError(
+                stage, f"pin 상태가 lease 와 다르다 — 없음 "
+                       f"{sorted(want_disk - on_disk)[:2]} · 여분 "
+                       f"{sorted(on_disk - want_disk)[:2]}")
+        return dict(lease, lease_digest=lease_digest, lease_version=lease_version,
+                    lease_content_version=lease_content_version or "")
+
+    # ── object-lock adapter 가 채워야 하는 자리 (★ 31차 P0-1) ───────────
+    # local 은 아무 것도 잠그지 않으므로 빈 값을 돌려준다. 강제하는 backend 는
+    # provider 가 만든 **immutable version ID** 를 돌려주고, 검증 때 그것을
+    # 다시 조회해 살아 있는지 본다.
+
+    def query_object_lock(self) -> dict | None:
+        """provider 의 live lock 설정. local 은 잠글 provider 가 없다."""
+        return None
+
+    def lock_objects(self, leg_id: str, digests, until: str) -> dict:
+        return {}
+
+    def lock_content_object(self, dg: str, until: str, *, data: bytes = None):
+        """CAS object 쪽도 잠근다 — local 에는 잠글 것이 없다."""
+        return None
+
+    def repair_lease_locks(self, leg_id: str, lease_digest: str,
+                           until: str) -> "RetentionProof":
+        """lease 의 **누락된 잠금**을 채우고 proof 를 준다 (advisory 는 빈 proof).
+
+        ★ 35차 P0-1 — `retain()` 의 네 durable 단계 사이에서 죽으면 lease 의
+          pin 또는 CAS content 한쪽만 잠긴 상태가 남는다. 초판은 그 상태를
+          **repair 하지 않아서**, 앞 경계는 두 번째 WORM lease 를 만들고 뒤
+          경계는 content 가 삭제 가능한데도 `durable=True` 까지 갔다.
+          `lock` 은 멱등이므로 재개가 빠진 쪽을 채우면 된다.
+
+        ★ 43차 P1 — advisory backend 에는 version 이 없으므로 빈 proof 다.
+          `None` 을 돌려주면 호출자가 다시 분기해야 하고, 그 분기가 곧
+          "찾은 것을 버리고 다시 찾는" 통로가 된다.
+        """
+        return RetentionProof(lease_version=None, content_version=None,
+                              until=until)
+
+    def recover_content_version(self, lease_digest: str, until: str = None):
+        """local 에는 version 이 없다."""
+        return None
+
+    def recover_lease_version(self, leg_id: str, lease_digest: str,
+                              until: str = None):
+        """이미 잠긴 lease 의 version 을 **digest 로 재조회**한다.
+
+        ★ 34차 P0-1 — lease version proof 는 journal 을 쓰기 전까지 메모리에만
+          있었다. 그래서 기존 lease 를 재사용하려는 모든 경로(재실행,
+          pre-journal crash 재개)가 proof 없이 verifier 를 불러 **반드시**
+          실패했고, 그때마다 두 번째 WORM lease 가 생겨 exact pin set 이
+          오염됐다. WORM 이라 지울 수도 없어 복구가 막혔다.
+
+          불변식: **lease 가 한 번 잠겼다면 어느 지점에서 죽어도 reopen 이
+          같은 lease digest 와 같은 provider version 을 재발견한다.**
+        """
+        return None
+
+    def describe_content_lock(self, dg: str):
+        """CAS content object 의 **현재** lock 상태. local 은 잠글 것이 없다."""
+        return None
+
+    def describe_locks(self, leg_id: str, versions: dict) -> dict:
+        """version 별 **현재** lock 상태를 provider 에 묻는다.
+
+        ★ 32차 P0-1 — 31차는 version **존재**만 봤다. 값이 유효한지, 지금 어떤
+          mode 인지, 그 version 의 retain-until 이 언제인지 하나도 안 물었다.
+          local 은 잠글 provider 가 없으므로 전부 `None` 이다.
+        """
+        return {dg: None for dg in versions}
+
+    def retrieve_retained(self, lease: dict, dg: str) -> bytes:
+        """lease 가 담보한 object 를 **봉인한 version 그대로** 회수한다.
+
+        ★ 37차 P0-1 — 36차판은 `read_pinned()` 만 불렀고, 그것은 "가장 최신
+          잠긴 version" 을 다시 골랐다. lease 가 v1 을 봉인했는데 같은 pin
+          key 에 다른 바이트의 v2 가 올라와 잠기면, v1 은 그대로 durable 한데
+          회수는 v2 를 읽고 digest mismatch 로 실패했다. receipt 의 목적은
+          locator 재발견이 아니라 **exact immutable version 회수**다.
+        """
+        if dg not in set(lease.get("objects") or []):
+            raise PreserveError("retention", f"lease 가 담보하지 않은 object: {dg[:16]}")
+        sealed = (lease.get("object_versions") or {}).get(dg)
+        return self.read_pinned(lease["leg_id"], dg, version=sealed)
+
+
+class ObjectLockBackend(CasBackend):
+    """provider 가 **바이트를 소유하고 강제하는** retention.
+
+    ★ 31차 P0-1 — 타입 경계를 만들었지만, 그 backend 가 `CasBackend` 의
+      저장 연산을 **그대로 상속**해서 바이트는 여전히 local `objects/`·`pins/`
+      에 있었다. provider 에는 version/mode 장부만 적혔다. 32차 리뷰의 문장:
+
+          "강제가 있는 쪽이 아니라 local bytes 와 독립된 metadata 장부가
+           있는 쪽이다."
+
+      그래서 `durable=True` 뒤에도 local pin 을 지울 수 있었다. 잠갔다는 말이
+      거짓이었다.
+
+    ★ 32차 P0-1 — **바이트의 소유자를 provider 로 옮긴다.** put·read·pin·
+      read_pinned 가 전부 provider 를 지난다. local root 를 통째로 없애도
+      graph 가 회수돼야 하고, 약속 기간 전 delete/overwrite 는 provider 가
+      거부해야 한다.
+
+    ★ 36차 P0-1 — **계약의 정본은 이 산문이 아니라 `PROVIDER_CONTRACT` 다.**
+      35차 docstring 은 7개만 열거했는데 코드는 `store_uri`·`head_version`
+      도 불렀다. 이제 상수가 authority 이고 시험이 소스와 대조한다. 아래는
+      그 상수의 **의미** 설명이다 (이름 목록은 상수가 정본):
+
+        put(key, data) -> version_id          # 언제나 **새 version** (덮어쓰기 아님)
+        get(key, version=None) -> bytes       # version 생략 시 head
+        versions(key) -> [version_id]         # 최신순 — per-version locator
+        (delete 는 계약에 **없다** — 우리는 어떤 경로로도 지우지 않는다.
+         37차: 계약은 우리가 **부르는** 것의 폐쇄이고, 안 부르는 연산을
+         adapter 에게 요구할 근거가 없다.)
+        lock(key, version, until)
+        describe() -> {mode, min_retain_days}
+        describe_object(key, version) -> {version_id, mode, retain_until} | None
+        list_versions(prefix) -> [(key, version_id)]   # ListObjectVersions
+                                              # ★ 37차 — 열거 primitive 는 이것
+                                              #   하나다. ListObjectsV2 는 delete
+                                              #   marker 뒤의 담보를 못 본다
+        store_uri() -> str                    # 재시작을 견디는 안정 식별자
+
+    ★ 36차 P0-1 — **per-version 의미.** 실물 Object Lock 은 key 가 아니라
+      version 을 지킨다. 잠긴 v1 위에 잠기지 않은 v2 를 올리는 것은 실패가
+      아니라 정상이고, `head_version` 을 보는 코드는 전부 그 v2 를 본다.
+      35차 fake 는 그 put 을 거부해서 이 창을 통째로 가리고 있었다. 그래서
+      durable 한 읽기는 전부 `protected_version()` 을 지난다.
+    """
+
+    ENFORCEMENT: ClassVar[str] = ENFORCEMENT_OBJECT_LOCK
+    #: ★ 36차 P0-1 — GOVERNANCE 는 여기 없다. `s3:BypassGovernanceRetention`
+    #:   을 가진 principal 이 우회 삭제할 수 있으므로, 그 모드의 담보는
+    #:   저장소가 아니라 IAM **설정**에 대한 주장이다. GOVERNANCE 를 받으려면
+    #:   우회가 실제로 거부되는 것을 `probe_bypass()` 로 **실측**해야 한다.
+    DURABLE_MODES: ClassVar[frozenset] = frozenset({"COMPLIANCE"})
+    BYPASSABLE_MODES: ClassVar[frozenset] = frozenset({"GOVERNANCE"})
+    LOCK_MODES: ClassVar[frozenset] = DURABLE_MODES | BYPASSABLE_MODES
+
+    #: 서브클래스가 붙이는 provider. 없으면 강제가 없는 것이다.
+    provider: object = None
+
+    # ── 계약 ────────────────────────────────────────────────────────────
+    def assert_provider_contract(self) -> None:
+        """provider 가 `PROVIDER_CONTRACT` 전부를 주는지 확인한다 (36차 P0-1).
+
+        하나라도 없으면 durable 을 주장할 수 없다. 어느 연산이 없는지 이름을
+        말한다 — adapter 작성자가 문서를 다시 읽지 않아도 되게.
+        """
+        missing = [op for op in PROVIDER_CONTRACT
+                   if not callable(getattr(self.provider, op, None))]
+        if missing:
+            raise PreserveError(
+                "capability",
+                f"provider 가 계약 연산을 주지 않는다: {missing} — "
+                "durable 은 계약 전체를 만족할 때만 주장할 수 있다")
+
+    # ── per-version locator ─────────────────────────────────────────────
+    def _version_candidates(self, key: str, required: bool = True) -> list:
+        """`provider.versions(key)` 를 **검증해서** 돌려주는 유일한 통로 (46차 P0-8).
+
+        45차까지는 `put()` 이 돌려준 VersionId 만 "비어 있지 않은 문자열" 로
+        봤다. 그런데 담보 version 은 **열거**에서도 온다
+        (`protected_version` · `_locked_versions` · store identity 선택).
+        거기서 falsy·비문자열 후보가 들어오면 `lock(key, "", until)` 을 부르고,
+        그 빈 문자열이 lease proof·receipt locator 로 굳는다 — "정확히 이
+        version 을 담보했다" 가 아무것도 가리키지 않는 값이 된다.
+
+        되돌릴 수 없는 `lock()` **앞**에서 fail-closed 한다. 후보를 조용히
+        걸러내지 않는다: 이런 provider 는 계약 위반이고, 남은 후보로 계속
+        진행하면 "무엇을 담보했는지" 가 provider 의 응답 순서에 달린다.
+        """
+        vs = getattr(self.provider, "versions", None)
+        if not callable(vs):
+            if required:
+                raise PreserveError(
+                    "capability",
+                    "provider 가 versions() 를 주지 않는다 — per-version 잠금에서 "
+                    "담보 version 을 찾을 수 없으면 durable 을 주장할 수 없다")
+            return []
+        got = vs(key)
+        if got is None:
+            return []
+        if not isinstance(got, list):
+            raise PreserveError(
+                "capability",
+                f"provider.versions({key!r}) 가 목록이 아니다: {type(got).__name__}")
+        bad = [v for v in got if not _nonempty_str(v if isinstance(v, str) else "")]
+        if bad:
+            raise PreserveError(
+                "capability",
+                f"provider.versions({key!r}) 가 version 이 아닌 후보를 담고 있다: "
+                f"{bad!r} — version locator 는 비어 있지 않은 문자열이어야 한다 "
+                "(falsy locator 를 잠그면 무엇을 담보했는지 되찾을 수 없다)")
+        return list(got)
+
+    def protected_version(self, key: str):
+        """그 key 에서 **지금 잠겨 있는** 가장 최신 version (36차 P0-1).
+
+        35차는 `head_version(key)` 를 썼다. 실물에서 head 는 적대적/사고성
+        put 이 올린 **잠기지 않은** version 일 수 있고, 그러면 identity 재조회
+        도 lease proof 재발견도 잠금 밖의 바이트를 가리킨다. 담보를 들고 있는
+        것은 head 가 아니라 잠긴 version 이다.
+        """
+        now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        for v in self._version_candidates(key):
+            st = self.provider.describe_object(key, v)
+            if not isinstance(st, dict):
+                continue
+            if st.get("mode") in self.LOCK_MODES \
+                    and str(st.get("retain_until") or "") > now:
+                return v
+        return None
+
+    def _locked_versions(self, key: str, modes=None, until: str | None = None) -> list:
+        """그 key 에서 **지금 잠겨 있는** version 전부 (최신순).
+
+        ★ 40차 P1 — `modes` 를 주면 그 mode 만 후보다. proof lookup 은 담보
+          mode 만 봐야 한다 — 같은 바이트의 newer Governance version 이 older
+          Compliance proof 를 가릴 수 있었다.
+        """
+        want = self.DURABLE_MODES if modes is None else modes
+        cands = self._version_candidates(key, required=False)
+        now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        out = []
+        for v in cands:
+            st = self.provider.describe_object(key, v)
+            if not (isinstance(st, dict) and st.get("mode") in want
+                    and _is_utc_stamp(st.get("retain_until"))
+                    and _stamp(st["retain_until"]) > _stamp(now)):
+                continue
+            # ★ 42차 P1 — `until` 을 주면 **그 기한을 덮는** version 만 proof 다.
+            #   이것이 없으면 "이미 담보인가" 를 물을 수 없어서, 기한이 짧은
+            #   version 위에 새로 잠그거나 반대로 충분한 proof 를 못 알아본다.
+            if until is not None and (not _is_utc_stamp(until)
+                                      or _stamp(st["retain_until"]) < _stamp(until)):
+                continue
+            out.append(v)
+        return out
+
+    def _bytes_match(self, key: str, version: str, dg: str) -> bool:
+        try:
+            return hashlib.sha256(self.provider.get(key, version)).hexdigest() == dg
+        except KeyError:
+            return False
+
+    def _read_protected(self, key: str) -> bytes:
+        """담보 version 을 우선 읽고, 아직 잠긴 것이 없을 때만 head 를 읽는다."""
+        v = self.protected_version(key)
+        return self.provider.get(key, v) if v else self.provider.get(key)
+
+    # ── 키 공간 ─────────────────────────────────────────────────────────
+    def _provider_obj_key(self, dg: str) -> str:
+        return f"objects/{dg}"
+
+    def _provider_key(self, leg_id: str, dg: str) -> str:
+        return f"pins/{leg_id}/{dg}"
+
+    @property
+    def store_id(self) -> str:
+        """store 식별자도 **provider 안에** 둔다.
+
+        ★ 32차 P0-1 — 초판은 `<root>/store.json` 을 읽었다. local root 를
+          지우면 정체성이 사라져 "provider 가 소유한다" 가 거짓이 됐다.
+        """
+        key = "store.json"
+        # ★ 37차 P0-1 — canonical identity 는 "최신 잠긴 version" 이 아니라
+        #   **가장 오래된 유효 잠금 version** 이다. 더 최신의 유효하고 잠긴
+        #   record 하나가 생기면 reopen 이 identity 를 조용히 갈아치웠고,
+        #   그 순간 예전 receipt 전부가 foreign store 가 됐다 (바이트는 다
+        #   살아 있는데 locator 를 잃는다). 최초 잠금이 root-of-authority 다.
+        vid = self._canonical_store_version(key)
+        # ★ 39차 P0-1 — Compliance canonical 이 없는데 **잠긴 record 는 있는**
+        #   상태에서 fallback 으로 읽으면, Compliance selector 를 우회해
+        #   우회 가능한 identity root 로 durable 을 주장하게 된다.
+        # 담보(Compliance)가 아니어도 **잠긴 것이 있으면** 그 위에 새 identity 를
+        # 발급하지 않는다 — 그래서 여기서는 `LOCK_MODES` 전체를 본다.
+        if vid is None and self._locked_versions(key, modes=self.LOCK_MODES):
+            raise PreserveError(
+                "store",
+                "store.json 에 COMPLIANCE 담보 version 이 없다 (잠긴 version 은 "
+                "있다) — 우회 가능한 identity root 위에 담보를 주장하지 않는다")
+        try:
+            raw = self.provider.get(key, vid) if vid else self._read_protected(key)
+            rec = load_canonical(raw)
+        except (KeyError, ValueError, UnicodeDecodeError):
+            rec = None
+        if _is_store_record(rec):
+            # ★ 35차 P0-1 — 초판은 여기서 **즉시 반환**했다. `put` 뒤 `lock`
+            #   전에 죽으면 valid 하지만 unlocked 인 record 가 남는데, reopen 이
+            #   그것을 그냥 믿었다. 그 상태에서 durable 을 주장한 뒤 record 를
+            #   지우면 다음 reopen 이 새 UUID 를 발급해 locator 를 잃는다.
+            #   잠금이 없으면 **repair 한다** (lock 은 멱등이다).
+            self.ensure_store_lock(self._store_horizon())
+            return rec["store_id"]
+        # ★ 34차 P0-1 — `store.json` 은 잠기지 않은 control-plane object 였다.
+        #   지우면 새 UUID 가 발급돼, content 와 lease 가 남아 있어도 기존
+        #   receipt 가 복구 불가가 된다.
+        if vid is not None:
+            raise PreserveError(
+                "store",
+                "store.json 의 담보 version 이 계약 record 가 아니다 — "
+                "identity 를 새로 발급하면 예전 receipt 의 locator 를 잃는다")
+        self.provider.put(key, canonical_bytes(
+            {"schema": STORE_SCHEMA, "store_id": uuid.uuid4().hex}))
+        self.ensure_store_lock(self._store_horizon())
+        new = load_canonical(self.provider.get(
+            key, self._canonical_store_version(key)))
+        if not _is_store_record(new):
+            raise PreserveError("store", "발급한 store record 가 계약이 아니다")
+        return new["store_id"]
+
+    def inspect_store_id(self):
+        """만들지도 연장하지도 않고 **본다**. 없으면 `None` (39차 P0-1)."""
+        vid = self._canonical_store_version()
+        try:
+            raw = self.provider.get("store.json", vid) if vid \
+                else self.provider.get("store.json")
+            rec = load_canonical(raw)
+        except (KeyError, ValueError, UnicodeDecodeError):
+            return None
+        return rec["store_id"] if _is_store_record(rec) else None
+
+    @property
+    def store_version_id(self):
+        """canonical store record 의 **exact version ID** (38차 P0-1)."""
+        self.store_id                       # 없으면 만들고 잠근다
+        return self._canonical_store_version()
+
+    @property
+    def store_lock_mode(self):
+        v = self._canonical_store_version()
+        st = self.provider.describe_object("store.json", v) if v else None
+        return (st or {}).get("mode")
+
+    def _canonical_store_version(self, key: str = "store.json"):
+        """정본 store version — **가장 오래된** 유효 잠금 version (37차 P0-1).
+
+        `protected_version()` 은 최신을 고르므로 identity 에는 쓸 수 없다.
+        최초 잠금이 authority 이고, 그 뒤에 무엇이 올라오든 바뀌지 않는다.
+        """
+        cands = self._version_candidates(key, required=False)
+        now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        oldest = None
+        for v in cands:                               # 최신순 → 마지막이 가장 오래됨
+            st = self.provider.describe_object(key, v)
+            if not isinstance(st, dict):
+                continue
+            # ★ 38차 P0-1 — **Compliance 만** identity root 후보다.
+            #   Governance 를 durable 에서 뺐는데 selector 는 `LOCK_MODES` 로
+            #   골라서, 우회 가능한 version 이 identity root 가 될 수 있었다.
+            if st.get("mode") in self.DURABLE_MODES \
+                    and str(st.get("retain_until") or "") > now:
+                oldest = v
+        return oldest
+
+    def _store_horizon(self) -> str:
+        return (dt.datetime.now(dt.timezone.utc)
+                + dt.timedelta(days=MIN_RETENTION_DAYS * 10)
+                ).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    def ensure_store_lock(self, until: str) -> None:
+        """store identity 를 **적어도 `until` 까지** 잠근다 (35차 P0-1).
+
+        기한을 graph 와 결속한다 — 초판은 생성 시 한 번 고정 기한으로 잠그고
+        후속 lease 기한과 대조·연장하지 않아, 오래된 store 에 새 lease 를
+        만들면 담보 기간 대부분에 identity 가 삭제 가능했다.
+        """
+        key = "store.json"
+        # ★ 36차 P0-1 — head 가 아니라 **담보 version** 을 연장한다. head 는
+        #   적대적 put 이 올린 잠기지 않은 version 일 수 있고, 그것을 잠그면
+        #   identity 가 아닌 남의 바이트를 담보하게 된다. 아직 담보가 없을
+        #   때(생성 직후)만 head 를 잠근다.
+        # ★ 37차 P0-1 — 최신이 아니라 **정본** version 을 연장한다.
+        vid = self._canonical_store_version(key)
+        if vid is None:
+            vs = self._version_candidates(key)
+            if not vs:
+                raise PreserveError("store", "store.json 의 version 을 알 수 없다")
+            vid = vs[-1]                       # 아직 담보가 없다 → 가장 오래된 것
+        cur = self.provider.describe_object(key, vid)
+        have = str((cur or {}).get("retain_until") or "")
+        if have < until:
+            self.provider.lock(key, vid, until)
+
+    @property
+    def uri(self) -> str:
+        """provider 가 주는 **안정 식별자**. receipt·lease 가 이것을 봉인한다.
+
+        ★ 33차 P0-1 — 초판은 `id(provider)` 를 썼다. process-local 객체
+          주소라 재시작 뒤 달라지고 재사용될 수도 있다. receipt 가 URI 를
+          봉인해 대조하므로 그 기본값으로는 reopen locator 가 될 수 없었다.
+          안정 식별자를 못 주는 provider 는 durable 을 주장할 수 없다.
+        """
+        u = getattr(self.provider, "store_uri", None)
+        u = u() if callable(u) else None
+        if not _nonempty_str(u or ""):
+            raise PreserveError(
+                "capability",
+                "provider 가 안정 식별자(store_uri)를 주지 않는다 — 재시작 뒤 "
+                "같은 store 를 다시 열 수 없으면 durable 을 주장할 수 없다")
+        return f"objectlock+cas://{u}"
+
+    # ── capability ──────────────────────────────────────────────────────
+    def query_object_lock(self) -> dict | None:
+        return self.provider.describe() if self.provider is not None else None
+
+    def lock_content_object(self, dg: str, until: str, *, data: bytes = None):
+        """CAS object 쪽도 잠근다. 잠근 **version ID** 를 돌려준다.
+
+        ★ 42차 P1 — `data` 를 주면 **그 바이트**로 새 version 을 만든다.
+          호출자가 이미 digest 검증을 지난 바이트를 들고 있는데 여기서
+          namespace 를 다시 뒤지면 phase 결속이 풀린다.
+
+
+        ★ 38차 P0-1 — 그 version 이 journal 에 봉인할 content proof 다.
+
+        ★ 37차 P0-1 — 36차판은 **무조건 `put`** 했다. 실물 `PutObject` 는
+          요청마다 새 version 을 만들므로, 재개·수리를 반복할 때마다 새
+          version 이 생기고 그것이 WORM 으로 잠겼다. 36차 fake 가 "같은
+          바이트면 같은 version" shortcut 을 갖고 있어서 이 누적이 안 보였다.
+          이미 있는 version 을 **재사용**하고, 없을 때만 만든다.
+
+        ★ 41차 P1 — target 을 `_repair_target()` 이 고르고, 잠근 뒤 proof 를
+          **재유도**한다. 40차는 `_existing_version()` 이 고른 최신 same-bytes
+          version 을 그대로 proof 로 돌려줬다.
+        """
+        return self._lock_to_proof(
+            self._provider_obj_key(dg), dg, until,
+            (lambda: data) if data is not None else (lambda: self.read_back(dg)))
+
+    def _version_for(self, key: str, dg: str, until: str | None = None):
+        """**담보 proof** — 잠겨 있고 mode 가 담보이고 바이트가 `dg` 인 version.
+
+        ★ 40차 P1 — 39차는 이 하나로 proof lookup 과 **수리 source** 를 함께
+          맡았다. 중복이 아니라 phase contract 가 다르다:
+
+            proof lookup : 잠긴 담보 version 이어야 한다 (이 함수)
+            repair source: **아직 안 잠긴** exact bytes 도 후보다 (아래)
+
+          `after_lease_pin` 창에서는 올바른 v1 이 아직 안 잠겼으므로, 이 함수
+          하나로는 복구 가능한 상태를 못 찾았다.
+        """
+        for v in self._locked_versions(key, until=until):
+            if self._bytes_match(key, v, dg):
+                return v
+        return None
+
+    def _repair_source(self, key: str, dg: str):
+        """수리가 읽을 version — **잠금 여부를 묻지 않고** 바이트로 고른다.
+
+        찾은 version 은 아직 proof 가 아니다. 호출자가 잠근 **뒤**
+        `_version_for()` 로 다시 확인해야 proof 로 승격된다.
+        """
+        # ★ 47차 P0-5 — 수리 경로도 **검증된 snapshot** 만 본다. 46차는 여기서
+        #   `provider.versions()` 를 직접 다시 불렀고, provider 가 호출마다 다른
+        #   목록을 주면 (실물 SDK 의 재시도·eventual consistency) 검증되지 않은
+        #   후보가 되돌릴 수 없는 `lock()` 까지 갔다.
+        for v in self._version_candidates(key, required=False):
+            if self._bytes_match(key, v, dg):
+                return v
+        return None
+
+    def _repair_target(self, key: str, dg: str):
+        """수리가 **담보로 만들 수 있는** version — 없으면 `None` (41차 P1).
+
+        ★ 40차는 `_existing_version(key, data)` 하나로 골랐다. 그것은 "바이트가
+          같은 **가장 최신** version" 이라, 우회 가능한 head 하나가 아래의
+          수리 가능한 version 을 가렸다::
+
+              after_lease_pin crash
+              v1 = correct bytes, **unlocked**       ← 잠글 수 있다
+              v2 = same bytes, **Governance**, newer ← 승격 불가능
+
+          40차는 v2 를 target 으로 골라 잠갔고, Governance 는 Compliance 로
+          승격되지 않으므로 재개가 영영 실패했다. 40차 시험은 두 성분(wrong
+          bytes locked head / same-bytes Governance head)을 **따로** 봤을 뿐
+          결합을 안 봤다.
+
+          네 phase 는 각자 다른 것을 묻는다::
+
+              proof lookup   `_version_for()`     잠긴 담보 + exact bytes
+              repair source  `_repair_source()`   바이트를 **읽을** 수 있는가
+              repair target  여기                 담보로 **만들** 수 있는가
+              journal verify `recover_*()`        봉인된 exact ID 만 조회
+
+          담보로 만들 수 있는 것: 아직 안 잠긴 version, 그리고 이미 담보 mode 인
+          version (`lock` 은 멱등이고 기한은 연장만 된다). 우회 가능한 mode 는
+          후보가 아니다 — 잠그면 되돌릴 수 없이 막힌다. 하나도 없으면 `None`
+          이고 호출자가 **새 version** 을 만든다.
+        """
+        # ★ 47차 P0-5 — `_repair_source()` 와 같은 이유로 검증된 snapshot 만.
+        for v in self._version_candidates(key, required=False):
+            if not self._bytes_match(key, v, dg):
+                continue
+            st = self.provider.describe_object(key, v)
+            mode = st.get("mode") if isinstance(st, dict) else None
+            if mode is None or mode in self.DURABLE_MODES:
+                return v
+        return None
+
+    def _lock_to_proof(self, key: str, dg: str, until: str, make_bytes) -> str:
+        """그 key 를 `dg` 바이트로 **담보로 만들고 proof 를 재유도한다** (41차 P1).
+
+        수리가 고른 target ID 를 그대로 proof 로 믿지 않는다 — target selector
+        와 proof selector 는 묻는 것이 다르므로, 잠근 **뒤** proof selector 를
+        다시 돌려 typed proof 를 얻는다. 그것이 없으면 수리가 실패한 것이다.
+
+        ★ 42차 P1 — 순서가 틀려 있었다. 41차판은 무조건
+        `repair target → lock → proof 재탐색` 이라, **요청 기한을 이미 덮는
+        Compliance proof 가 있는데도** 그 위의 same-bytes unlocked head 를
+        새로 WORM-lock 했다. 수리가 필요 없는 상태에서 되돌릴 수 없는 version
+        을 늘리는 비멱등 경로였다.
+
+            proof lookup(요청 기한 포함) → 없을 때만 target → 없으면 검증된
+            bytes 로 새 version → lock → proof 재유도(같은 기한)
+
+        `make_bytes` 는 **이미 digest 검증을 지난 바이트**를 줘야 한다.
+        namespace 를 다시 뒤지는 callback 을 넘기면 phase 결속이 다시 풀린다
+        (42차 P1: hostile locked head 하나에 수리가 막혔다).
+        """
+        proof = self._version_for(key, dg, until=until)
+        if proof is not None:
+            return proof                    # 이미 담보다 — 아무것도 만들지 않는다
+        vid = self._repair_target(key, dg)
+        if vid is None:
+            # ★ 43차 — **되돌릴 수 없는 lock 보다 검증이 먼저다.** 42차판은
+            #   `put` 한 version 을 곧바로 잠갔다. caller 의 bytes 가 digest 와
+            #   다르거나 provider 가 계약을 어기고 다른 version ID 를 신고하면,
+            #   먼저 WORM 잔여가 생기고 그 다음에야 proof 재탐색이 실패했다.
+            data = make_bytes()
+            if hashlib.sha256(data).hexdigest() != dg:
+                raise PreserveError(
+                    "retention",
+                    f"{key} 에 넣으려는 바이트가 digest 와 다르다 — 잠그기 전에 "
+                    "거부한다 (lock 은 되돌릴 수 없다)")
+            vid = self.provider.put(key, data)
+            # ★ 45차 — **falsy·비문자열 VersionId 를 먼저 거부한다.** provider
+            #   의 `get(key, version)` 은 version 이 falsy 면 exact lookup 이
+            #   아니라 **head lookup** 이 된다 (실물 adapter 도 VersionId 생략
+            #   으로 매핑하기 쉽다). 그러면 read-back 은 head 를 읽어 통과하고,
+            #   그 사이 head 가 바뀌면 남의 version 을 잠근다.
+            if not _nonempty_str(vid if isinstance(vid, str) else ""):
+                raise PreserveError(
+                    "retention",
+                    f"{key}: provider 가 exact version ID 를 주지 않았다 "
+                    f"({vid!r}) — head 조회로 떨어지면 남의 version 을 잠근다")
+            if not self._bytes_match(key, vid, dg):
+                raise PreserveError(
+                    "retention",
+                    f"{key} 의 새 version {str(vid)[:16]} 이 방금 넣은 바이트가 "
+                    "아니다 — provider 가 신고한 version 을 확인 없이 잠그지 않는다")
+        self.provider.lock(key, vid, until)
+        proof = self._version_for(key, dg, until=until)
+        if proof is None:
+            raise PreserveError(
+                "retention",
+                f"{key} 를 담보로 만들지 못했다 (version {str(vid)[:16]}) — "
+                "잠근 뒤에도 요청 기한을 덮는 담보 proof 가 없다")
+        return proof
+
+    def repair_lease_locks(self, leg_id: str, lease_digest: str,
+                           until: str) -> "RetentionProof":
+        """lease 의 pin 과 CAS content **둘 다** 잠그고 그 proof 를 준다 (35차 P0-1).
+
+        ★ 37차 P0-1 — 36차판은 `pin()` 부터 불렀고, `pin()` 은 CAS content 를
+          `read_back()` 한다. lease content 가 아직 안 잠긴 창에서 그것이
+          삭제됐으면 여기서 실패했고, 호출자가 그 실패를 "기존 lease 없음"
+          으로 바꿔 두 번째 WORM lease 를 만들었다.
+
+          순서를 뒤집는다: **살아남은 pin 바이트가 정본**이다. pin 은 잠겨
+          있거나 최소한 남아 있고, 그 바이트로 CAS content 를 되살릴 수 있다.
+          pin 도 content 도 없으면 그때야 진짜 후보 부재다.
+        """
+        # ★ 39차 P0-1 — 수리도 **담보 version** 에서 읽는다. 적대적 최신
+        #   version 이 있으면 그것을 읽어 digest 대조에서 죽었다.
+        # ★ 40차 P1 — 수리는 **잠금 여부를 묻지 않고** exact bytes 를 찾는다.
+        #   담보 version 만 보면 `after_lease_pin` 창의 v1 을 못 찾는다.
+        key = self._provider_key(leg_id, lease_digest)
+        data = self.read_pinned(leg_id, lease_digest,
+                                version=self._repair_source(key, lease_digest))
+        # ★ 42차 P1 — 41차판은 여기서 `has()` 에 물어 content 존재를 판단하고,
+        #   없을 때만 `put_if_absent(data)` 로 되살렸다. `has()` 는 protected
+        #   version 을 **읽을 수 있으면** True 이고 바이트 hash 를 안 본다.
+        #   그래서 올바른 content 가 지워지고 wrong-bytes locked head 가
+        #   올라온 창에서, 방금 pin 에서 **검증해 읽은 정본 bytes 를 들고
+        #   있으면서** 복원을 건너뛰고 그 head 를 다시 읽다가 죽었다.
+        #   (`has()` 만 strict 하게 고쳐도 뒤이어 부를 `put_if_absent()` 가
+        #    같은 protected read 로 collision 을 낸다 — 검사 하나의 문제가
+        #    아니라 검증된 bytes 를 버리는 것이 문제였다.)
+        #
+        #   존재 판정과 복원을 함께 없앤다: `lock_content_object()` 에 **그
+        #   bytes 를 직접 준다.** exact bytes version 이 없으면 그것으로 새
+        #   version 을 만들고, 있으면 그것을 잠근다.
+        # ★ 43차 P1 — 만든 proof 를 **그대로 돌려준다.** 42차는 버리고
+        #   호출자가 기한 없는 live search 로 다시 찾게 했다.
+        pinned = self.lock_objects(leg_id, [lease_digest], until)
+        return RetentionProof(
+            lease_version=pinned[lease_digest],
+            content_version=self.lock_content_object(lease_digest, until,
+                                                     data=data),
+            until=until)
+
+    def recover_content_version(self, lease_digest: str, until: str = None):
+        """lease CAS content 의 **담보 version** 을 재발견한다 (38차 P0-1).
+
+        잠긴 version 중 **바이트가 digest 와 같은** 것이다. "아무 잠긴
+        version" 은 proof 가 아니다.
+        """
+        return self._version_for(self._provider_obj_key(lease_digest),
+                                 lease_digest, until=until)
+
+    def recover_lease_version(self, leg_id: str, lease_digest: str,
+                              until: str = None):
+        """lease pin 의 **담보 version** 을 재발견한다 (34차 P0-1 · 39차 P0-1).
+
+        ★ 39차 — 38차판은 "가장 최신 담보 version" 을 돌려주고 **그 version 의
+          바이트가 lease digest 와 같은지** 보지 않았다. 올바른 v1 위에 wrong
+          bytes 의 locked v2 가 올라오면, v1 과 graph 가 온전한데도 재개가
+          실패했다. content 쪽은 `_bytes_match()` 로 고쳤는데 pin 쪽엔 같은
+          결속이 없었다.
+        """
+        return self._version_for(self._provider_key(leg_id, lease_digest),
+                                 lease_digest, until=until)
+
+    def _orphan_lease(self, leg_id: str, objs: list,
+                      min_retention_days: int) -> "VerifiedBytes | None":
+        """`objects/` 에만 남은 lease content 를 찾는다 (37차 P0-1).
+
+        `after_lease_put` 창의 잔여다 — content 는 있고 pin 은 없다. 이것을
+        못 보면 재개가 새 lease 를 만들고, 그 창을 지날 때마다 orphan 이
+        하나씩 쌓인다 (lease 바이트가 초마다 달라져 CAS dedup 도 안 걸린다).
+
+        ★ 42차 P1 — **검증한 exact version 과 그 bytes 를 함께 돌려준다.**
+          41차판은 `(key, version)` 을 읽어 판정하고 digest 만 넘겼고,
+          호출자의 `pin()` 이 그 digest 로 namespace 를 다시 읽었다 —
+          `read_back()` 은 최신 담보 version 을 고르므로, 같은 key 에
+          wrong-bytes locked head 가 하나 있으면 온전한 orphan 이 있는데도
+          입양이 digest mismatch 로 죽었다.
+        """
+        pins = self.pinned(leg_id)
+        graph = set(objs)
+        found: list[VerifiedBytes] = []
+        seen = {v.digest for v in found}
+        for key, ver in self.provider.list_versions("objects/"):
+            dg = key.split("/", 1)[1]
+            if dg in pins or dg in graph or dg in seen:
+                continue
+            try:
+                raw = self.provider.get(key, ver)
+                rec = load_canonical(raw)
+            except (KeyError, ValueError, UnicodeDecodeError):
+                continue
+            # 읽은 바이트가 정말 그 digest 인가 — locator 로 넘길 것이므로
+            # 여기서 못 박는다 (다음 phase 는 다시 안 읽는다).
+            if hashlib.sha256(raw).hexdigest() != dg:
+                continue
+            if self._matches_lease(leg_id, objs, min_retention_days, rec):
+                found.append(VerifiedBytes(key, ver, dg, raw))
+                seen.add(dg)
+        if len(found) > 1:
+            raise PreserveError(
+                "retention",
+                f"{leg_id}: pin 없는 lease 잔여가 {len(found)}개다 "
+                f"({[v.digest[:16] for v in found]}) — 어느 것이 정본인지 정할 수 없다")
+        return found[0] if found else None
+
+    def adopt_orphan(self, leg_id: str, lease: "VerifiedBytes") -> None:
+        """검증이 읽은 **바로 그 바이트**로 pin 을 만든다 (42차 P1).
+
+        `pin()` 은 digest 로 CAS namespace 를 다시 읽으므로 hostile head 하나에
+        막힌다. 여기서는 locator 가 든 bytes 를 그대로 쓴다 — 이미 digest
+        검증을 지났으므로 다시 탐색할 이유가 없다.
+        """
+        key = self._provider_key(leg_id, lease.digest)
+        if self._repair_source(key, lease.digest) is None:
+            self.provider.put(key, lease.data)
+
+    def probe_enforcement(self) -> str:
+        # ★ 36차 P0-1 — 계약 전체를 만족하지 못하는 provider 는 담보가 아니다.
+        #   helper 를 만들어 두고 durable 경로가 안 부르면 고친 것이 아니다.
+        try:
+            self.assert_provider_contract()
+        except PreserveError:
+            return ENFORCEMENT_ADVISORY
+        st = self.query_object_lock()
+        if not isinstance(st, dict):
+            return ENFORCEMENT_ADVISORY
+        mode = st.get("mode")
+        if mode not in self.LOCK_MODES:
+            return ENFORCEMENT_ADVISORY
+        days = st.get("min_retain_days")
+        if isinstance(days, bool) or not isinstance(days, int) \
+                or days < MIN_RETENTION_DAYS:
+            return ENFORCEMENT_ADVISORY
+        # ★ 37차 P0-1 — GOVERNANCE 는 **어떤 probe 결과로도** 담보가 아니다.
+        #   36차는 우회 삭제를 canary 로 실측해 거부되면 승격했다. 그러나 그
+        #   한 요청이 증명하는 것은 "현재 credential 의 version-delete 한 경로"
+        #   뿐이다. retention 단축·제거 권한, 다른 principal, 이후 IAM 변경은
+        #   그 요청으로 관측되지 않는다. 31차에 local mode bit 를 uid 0 이
+        #   우회할 수 있다는 이유로 durable 에서 뺐으니, 같은 잣대를 쓴다.
+        #   받아들이려면 bucket policy·principal 집합·retention mutation API
+        #   전체를 봉인하고 계속 재검증해야 하는데, 그것은 data-plane 9연산
+        #   계약으로 표현되지 않는다.
+        if mode not in self.DURABLE_MODES:
+            return ENFORCEMENT_ADVISORY
+        return ENFORCEMENT_OBJECT_LOCK
+
+    # ── 바이트는 provider 가 소유한다 ───────────────────────────────────
+    def put_if_absent(self, data: bytes, *,
+                      faults: frozenset[str] = frozenset()) -> dict:
+        dg = hashlib.sha256(data).hexdigest()
+        key = self._provider_obj_key(dg)
+        try:
+            old = self._read_protected(key)
+        except KeyError:
+            old = None
+        if old is not None:
+            if old != data:
+                raise PreserveError("cas_put",
+                                    f"같은 digest 인데 저장된 바이트가 다르다: {dg[:16]}")
+            return {"digest": dg, "stored": False, "idempotent": True}
+        if "partial_upload" in faults:
+            raise PreserveError("cas_put", "업로드가 중간에 끊겼다 (주입)")
+        self.provider.put(key, data)
+        return {"digest": dg, "stored": True, "idempotent": False}
+
+    def read_back(self, dg: str, *,
+                  faults: frozenset[str] = frozenset()) -> bytes:
+        if "no_read_access" in faults or not self.readable:
+            raise PreserveError("read_back", "backend 를 되읽을 권한이 없다")
+        try:
+            data = self._read_protected(self._provider_obj_key(dg))
+        except KeyError as ex:
+            raise PreserveError("read_back", f"object 가 없다: {dg[:16]}") from ex
+        if "read_back_corrupt" in faults:
+            data = data + b"\x00"
+        got = hashlib.sha256(data).hexdigest()
+        if got != dg:
+            raise PreserveError("read_back",
+                                f"되읽은 바이트가 다르다: {got[:16]} ≠ {dg[:16]}")
+        return data
+
+    def has(self, dg: str) -> bool:
+        try:
+            self._read_protected(self._provider_obj_key(dg))
+            return True
+        except KeyError:
+            return False
+
+    def pin(self, leg_id: str, digests) -> dict:
+        check_id(leg_id)
+        made = []
+        for dg in sorted(set(digests)):
+            data = self.read_back(dg)          # object 가 없으면 여기서 실패
+            key = self._provider_key(leg_id, dg)
+            try:
+                cur = self._read_protected(key)
+            except KeyError:
+                cur = None
+            if cur is not None and cur != data:
+                raise PreserveError("pin", f"pin 자리에 다른 내용이 있다: {dg[:16]}")
+            if cur is None:
+                self.provider.put(key, data)
+            made.append(dg)
+        return {"leg_id": leg_id, "pinned": made,
+                "pin_set_digest": pin_set_digest(leg_id, made)}
+
+    def pinned(self, leg_id: str) -> set:
+        """★ 37차 P0-1 — **version 층**에서 열거한다.
+
+        `keys_under()` 는 실물 `ListObjectsV2` 이고, version 없는 DELETE 가
+        얹은 delete marker 가 head 면 그 key 는 목록에서 사라진다. 담보
+        version 은 살아 있는데 pin 집합만 줄어들면, 등록 직전 exact pin-set
+        검사가 실패하거나 — 더 나쁘게 — 재개가 담보를 못 보고 새로 만든다.
+        """
+        pre = f"pins/{leg_id}/"
+        return {k[len(pre):] for k, _v in self.provider.list_versions(pre)}
+
+    def read_pinned(self, leg_id: str, dg: str, *, version=None) -> bytes:
+        """★ 37차 P0-1 — `version` 이 오면 **그 version 만** 읽는다.
+
+        lease 가 봉인한 version 을 그대로 provider 에 넘기는 자리다. 없으면
+        (내부 호출) 담보 version 을 재탐색한다.
+        """
+        key = self._provider_key(leg_id, dg)
+        try:
+            data = (self.provider.get(key, version) if version
+                    else self._read_protected(key))
+        except KeyError as ex:
+            raise PreserveError(
+                "pin",
+                f"pin 이 없다: {dg[:16]}"
+                + (f" (봉인 version {version})" if version else "")) from ex
+        if hashlib.sha256(data).hexdigest() != dg:
+            raise PreserveError("pin", f"pin 바이트가 digest 와 다르다: {dg[:16]}")
+        return data
+
+    def orphans(self) -> list[Path]:
+        return []
+
+    # ── lock ────────────────────────────────────────────────────────────
+    def lock_objects(self, leg_id: str, digests, until: str) -> dict:
+        out = {}
+        for dg in sorted(set(digests)):
+            key = self._provider_key(leg_id, dg)
+            # ★ 37차 P0-1 — 무조건 put 하면 재시도마다 WORM version 이 쌓인다.
+            # ★ 41차 P1 — 그래서 기존 version 을 재사용하는데, 재사용 후보는
+            #   "바이트가 같은 최신" 이 아니라 **담보로 만들 수 있는** 것이어야
+            #   한다 (`_repair_target`). 바이트를 **읽는** 후보는 또 다르다
+            #   (`_repair_source` — 잠금 여부를 묻지 않는다).
+            out[dg] = self._lock_to_proof(
+                key, dg, until,
+                lambda dg=dg, key=key: self.read_pinned(
+                    leg_id, dg, version=self._repair_source(key, dg)))
+        return out
+
+    def describe_locks(self, leg_id: str, versions: dict) -> dict:
+        """version 별 **현재** lock 상태. 없으면 `None` 이 들어간다."""
+        return {dg: self.provider.describe_object(self._provider_key(leg_id, dg), v)
+                for dg, v in sorted(versions.items())}
+
+    def describe_content_lock(self, dg: str, version=None):
+        """lease CAS content 의 lock 상태 — **봉인 version 을 주면 그것만.**
+
+        ★ 38차 P0-1 — 37차판은 언제나 newest live locked version 을 다시
+          골랐고, 그 version 의 **바이트가 digest 와 같은지**는 보지 않았다.
+          그래서 wrong bytes 를 올려 잠그면 "content 가 잠겼다" 가 통과했다.
+          version 을 받으면 그것만 보고, 바이트도 digest 와 대조한다.
+        """
+        key = self._provider_obj_key(dg)
+        cands = [version] if version else self._locked_versions(key)
+        v = next((c for c in cands if c and self._bytes_match(key, c, dg)), None)
+        if not v:
+            return None
+        # 바이트 대조는 위 후보 filter(`_bytes_match`)가 이미 한다 — 여기에
+        # 한 번 더 두면 같은 규칙이 두 곳에 생기고, 강한 쪽을 지워도 초록이
+        # 된다 (변이로 확인했다). 규칙은 한 곳에 둔다.
+        return self.provider.describe_object(key, v) or None
+
+
+class LockedCasBackend(ObjectLockBackend):
+    """시험·canary 가 쓰는 구체 backend — provider 를 주입받는다."""
+
+
+#: payload manifest 의 닫힌 schema#: payload manifest 의 닫힌 schema. 키가 남거나 모자라면 거부한다.
+_MANIFEST_KEYS = {"schema", "n_members", "total_bytes", "members", "root_digest"}
+_MEMBER_KEYS = {"path", "bytes", "sha256"}
+MANIFEST_SCHEMA = "payload-manifest/v1"
+
+
+def _safe_member_path(root: Path, rel: str, stage: str) -> Path:
+    """member 경로를 root **안**으로 가둔다.
+
+    ★ 27차 P1-4 — `../escaped.bin` 이 restore root 밖에 파일을 썼다. CAS
+      object 의 content SHA 만 확인하고 안의 경로는 아무 것도 안 봤기 때문이다.
+    """
+    if not isinstance(rel, str) or not rel or rel != rel.strip():
+        raise PreserveError(stage, f"member 경로가 이상하다: {rel!r}")
+    if "\\" in rel or rel.startswith("/") or ":" in rel:
+        raise PreserveError(stage, f"member 경로는 상대 POSIX 여야 한다: {rel!r}")
+    parts = rel.split("/")
+    if any(pt in ("", ".", "..") for pt in parts):
+        raise PreserveError(stage, f"member 경로에 traversal 이 있다: {rel!r}")
+    root = Path(root).resolve()
+    out = (root / rel).resolve()
+    if root not in out.parents and out != root:
+        raise PreserveError(stage, f"member 경로가 root 밖이다: {rel!r}")
+    return out
+
+
+def check_manifest(man) -> list[str]:
+    """schema · 집계 · root digest · 중복 경로를 **전부** 본다."""
+    if not isinstance(man, dict):
+        return [f"manifest 가 dict 가 아니다: {type(man).__name__}"]
+    bad = []
+    if set(man) != _MANIFEST_KEYS:
+        bad.append(f"키 집합이 다르다: {sorted(set(man) ^ _MANIFEST_KEYS)}")
+        return bad
+    if man["schema"] != MANIFEST_SCHEMA:
+        bad.append(f"schema={man['schema']!r} ≠ {MANIFEST_SCHEMA}")
+    ms = man["members"]
+    if not isinstance(ms, list):
+        return bad + ["members 가 목록이 아니다"]
+    paths = []
+    for i, m in enumerate(ms):
+        if not isinstance(m, dict) or set(m) != _MEMBER_KEYS:
+            bad.append(f"members[{i}] 키 집합이 다르다")
+            continue
+        if not _is_hex64(m["sha256"]):
+            bad.append(f"members[{i}].sha256 이 64-hex 가 아니다")
+        if isinstance(m["bytes"], bool) or not isinstance(m["bytes"], int) \
+                or m["bytes"] < 0:
+            bad.append(f"members[{i}].bytes 가 음이 아닌 정수가 아니다")
+        # ★ 30차 P1-2 — 초판은 member path 에 `_safe_member_path()` 를 적용하지
+        #   않았다. `path=7` · `../x` · absolute · backslash · colon 을 가진
+        #   self-consistent manifest 가 graph 검증을 통과하고 **실제 복원에서만**
+        #   실패했다. 경로 domain 을 seal·verify 양쪽에서 같은 함수로 본다.
+        try:
+            _safe_member_path(Path("/__manifest_domain__"), m["path"], "manifest")
+        except PreserveError as ex:
+            bad.append(f"members[{i}].path: {ex.msg}")
+        paths.append(m["path"])
+    dup = sorted({q for q in paths if paths.count(q) > 1})
+    if dup:
+        bad.append(f"중복 member 경로: {dup[:3]}")
+    # ★ 29차 P1-3 — exact 문자열 중복만 봤다. `A.txt`/`a.txt` 와 NFC/NFD 짝이
+    #   같은 대상 파일이 되는 filesystem 이 있다. seal 전에 막는다.
+    folded: dict = {}
+    for q in paths:
+        if not isinstance(q, str):
+            continue
+        key = unicodedata.normalize("NFC", q).casefold()
+        folded.setdefault(key, []).append(q)
+    collide = sorted(v for v in folded.values() if len(set(v)) > 1)
+    if collide:
+        bad.append(f"case/NFC 충돌 경로: {collide[:2]}")
+    non_nfc = sorted({q for q in paths if isinstance(q, str)
+                      and unicodedata.normalize("NFC", q) != q})
+    if non_nfc:
+        bad.append(f"NFC 가 아닌 member 경로: {non_nfc[:3]}")
+    for k in ("n_members", "total_bytes"):
+        if isinstance(man[k], bool) or not isinstance(man[k], int) or man[k] < 0:
+            bad.append(f"{k} 가 음이 아닌 정수가 아니다: {man[k]!r} "
+                       "(`True == 1` 이므로 bool 을 따로 막는다)")
+    if man["n_members"] != len(ms):
+        bad.append(f"n_members={man['n_members']} ≠ 실제 {len(ms)}")
+    tot = sum(m["bytes"] for m in ms if isinstance(m, dict)
+              and isinstance(m.get("bytes"), int))
+    if man["total_bytes"] != tot:
+        bad.append(f"total_bytes={man['total_bytes']} ≠ 합계 {tot}")
+    want = digest({k: v for k, v in man.items() if k != "root_digest"})
+    if man["root_digest"] != want:
+        bad.append(f"root_digest 가 재계산과 다르다 ({man['root_digest'][:16]} "
+                   f"≠ {want[:16]})")
+    return bad
+
+
+def restore_from_cas(backend: CasBackend, manifest_digest: str, root: Path, *,
+                     faults: frozenset[str] = frozenset()) -> dict:
+    """**backend 에서만** 복원한다. 원본 run_dir 은 쳐다보지 않는다.
+
+    ★ 26차 P0-1 — 초판은 원본을 복사했다. 그래서 CAS 를 비워도 통과했다.
+      여기서 원본 경로를 받지 않는 것 자체가 그 재발을 막는 구조다.
+    """
+    stage = "cas_restore"
+    try:
+        man = load_canonical(backend.read_back(manifest_digest, faults=faults))
+    except PreserveError as e:
+        raise PreserveError(stage, f"manifest 를 회수하지 못했다: {e.msg}") from e
+
+    bad = check_manifest(man)
+    if bad:
+        raise PreserveError(stage, "manifest 가 자기 자신과 어긋난다: "
+                                   + "; ".join(bad[:4]))
+
+    root = Path(root)
+    root.mkdir(parents=True, exist_ok=True)
+    # ★ 28차 P1-3 — 이름이 `truly empty root` 인데 기존 파일이 있어도 성공했다.
+    stray = [p.name for p in root.iterdir()]
+    if stray:
+        raise PreserveError(stage, f"복원 root 가 비어 있지 않다: {stray[:3]}")
+    written = []
+    members = man["members"]
+    if "restore_incomplete" in faults:
+        members = members[:-1] if len(members) > 1 else members
+    for m in members:
+        try:
+            data = backend.read_back(m["sha256"], faults=faults)
+        except PreserveError as e:
+            raise PreserveError(stage,
+                                f"member 를 회수하지 못했다 {m['path']}: {e.msg}") from e
+        out = _safe_member_path(root, m["path"], stage)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_bytes(data)
+        written.append(m["path"])
+    return {"manifest": man, "written": written}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 1단계 — planned leg seal
+# ─────────────────────────────────────────────────────────────────────────────
+
+@dataclass
+class PlannedLeg:
+    """실행 **전에** 못 박는 것. 이것 없이는 트랜잭션이 시작되지 않는다.
+
+    묶음 1 의 최소 envelope 다 — 무엇을 돌리기로 했는가. 실제로 무엇이
+    돌았는가는 `execution_receipt` 가 따로 적는다.
+
+    ★ 26차 P1-7 — `design_id` 자유문자만으로는 설계 변경이 planned_id 에
+      반영되지 않는다. **정본은 `pairing_design_sha256`** 이고 `design_label`
+      은 사람용 별칭이다 (계약 §4.2). label 은 hash 에 들어가지 않는다.
+    """
+
+    leg_id: str
+    protocol_generation: str
+    pairing_design_sha256: str
+    source_digest: str
+    objectives: tuple[str, ...]
+    total_start_budget: int
+    candidate_mode: str
+    #: ★ 30차 P1-3 — 원래 요구한 retention 하한을 **봉인**한다. `Hooks` 에만
+    #:   있으면 나중 verifier 가 "무엇을 요구했었나" 를 복원할 수 없다.
+    min_retention_days: int = MIN_RETENTION_DAYS
+    design_label: str = ""          # 사람용 — hash 밖
+    notes: str = ""
+
+    def __post_init__(self):
+        # ★ 30차 P1-2 — 초판은 design SHA 하나만 봤다. `protocol_generation=7`
+        #   `source_digest=7` `objectives=[7]` `total_start_budget=-1`
+        #   `candidate_mode=7` 이 domain 오류 없이 transaction 에 도달했다.
+        #   생성과 복구가 **같은 validator** 를 쓴다.
+        bad = check_envelope(self.envelope())
+        if bad:
+            raise PreserveError("planned_seal", "; ".join(bad[:4]))
+
+    def envelope(self) -> dict:
+        """hash 대상. **label 과 notes 는 들어가지 않는다** (사람용)."""
+        return {
+            "schema": "planned-leg/v3",
+            "leg_id": self.leg_id,
+            "protocol_generation": self.protocol_generation,
+            "pairing_design_sha256": self.pairing_design_sha256,
+            "source_digest": self.source_digest,
+            "objectives": list(self.objectives),
+            # ★ 30차 P1-2 — 초판은 `int(...)` 로 **강제 변환**했다. `True` 가
+            #   `1` 이 되어 domain 검사에 도달하지 못했다. 값을 그대로 두고
+            #   validator 가 보게 한다.
+            "total_start_budget": self.total_start_budget,
+            "candidate_mode": self.candidate_mode,
+            "min_retention_days": self.min_retention_days,
+        }
+
+    def planned_id(self) -> str:
+        """계획의 내용 주소. 계획을 한 글자 고치면 다른 다리가 된다."""
+        return digest(self.envelope())
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 2단계 — payload seal
+# ─────────────────────────────────────────────────────────────────────────────
+
+def seal_payload(run_dir: Path, *, faults: frozenset[str] = frozenset()) -> dict:
+    """run_dir 의 **exact member manifest**. 경로·바이트수·sha256."""
+    run_dir = Path(run_dir)
+    members = []
+    for p in sorted(run_dir.rglob("*")):
+        if not p.is_file():
+            continue
+        rel = p.relative_to(run_dir).as_posix()
+        members.append({"path": rel, "bytes": p.stat().st_size,
+                        "sha256": _file_sha(p)})
+    if "member_missing" in faults and members:
+        members = members[:-1]
+    if "stale_payload_index" in faults and members:
+        members[0] = dict(members[0], sha256="0" * 64)
+    man = {"schema": "payload-manifest/v1", "n_members": len(members),
+           "total_bytes": sum(m["bytes"] for m in members), "members": members}
+    man["root_digest"] = digest(man)
+    return man
+
+
+def verify_payload(run_dir: Path, man: dict) -> list[str]:
+    """manifest 와 디스크가 정확히 같은가 — 누락·추가·변조를 전부 본다."""
+    run_dir = Path(run_dir)
+    on_disk = {p.relative_to(run_dir).as_posix(): p
+               for p in run_dir.rglob("*") if p.is_file()}
+    listed = {m["path"]: m for m in man["members"]}
+    bad = []
+    for miss in sorted(set(on_disk) - set(listed)):
+        bad.append(f"manifest 에 없는 파일: {miss}")
+    for miss in sorted(set(listed) - set(on_disk)):
+        bad.append(f"실물이 없는 member: {miss}")
+    for rel in sorted(set(on_disk) & set(listed)):
+        if _file_sha(on_disk[rel]) != listed[rel]["sha256"]:
+            bad.append(f"바이트 불일치: {rel}")
+        elif on_disk[rel].stat().st_size != listed[rel]["bytes"]:
+            bad.append(f"크기 불일치: {rel}")
+    return bad
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# public index — per-leg exclusive create (read-modify-write 가 아니다)
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# ★ 26차 P1-4 — 초판은 YAML 하나를 읽고·고치고·`os.replace` 했다. 파일 교체는
+#   원자적이지만 **read-modify-write 전체는 아니다.** 동시 writer 둘이 같은 옛
+#   index 를 읽으면 마지막 쓰기가 앞 항목을 지운다 (실측으로 재현됐다).
+#
+#   leg 마다 **독립 파일**을 `O_EXCL` 로 만든다. 다른 leg 끼리는 서로를 볼 일이
+#   없고, 같은 leg 는 정확히 하나만 성공한다.
+
+def _leg_file(index_path: Path, leg_id: str) -> Path:
+    return Path(index_path) / "legs" / f"{leg_id}.json"
+
+
+def _reg_file(index_path: Path, leg_id: str) -> Path:
+    return Path(index_path) / "registered" / f"{leg_id}.json"
+
+
+_DIR_FSYNC: dict[str, bool] = {}
+
+
+def dir_fsync_supported(where: Path) -> bool:
+    """이 filesystem 에서 directory fsync 가 되는가 — 한 번만 재 본다.
+
+    ★ 28차 P1-2 — 초판은 final hardlink 를 만든 **뒤** parent 를
+      `os.open(..., O_RDONLY)` 해 fsync 했다. Windows 는 directory open 을
+      거부하므로 파일은 이미 보이는데 API 는 예외였다 — 상태를 바꿔 놓고
+      실패한 것이다. capability 는 **아무 것도 만들기 전에** 확인한다.
+    """
+    # ★ 30차 P0-3 — 초판의 캐시 키는 `resolve().anchor` 였다. POSIX 에서는
+    #   서로 다른 ext4/NFS/FUSE mount 가 전부 `/` 하나로 합쳐져, 한 mount 의
+    #   capability 가 다른 mount 의 답이 됐다. mount 를 실제로 가르는 것은
+    #   device number 다.
+    try:
+        key = f"dev:{os.stat(where).st_dev}"
+    except OSError:
+        key = f"path:{where}"
+    if key in _DIR_FSYNC:
+        return _DIR_FSYNC[key]
+    ok = True
+    try:
+        fd = os.open(where, os.O_RDONLY)
+        try:
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+    except OSError:
+        ok = False
+    _DIR_FSYNC[key] = ok
+    return ok
+
+
+def _exclusive_write(path: Path, data: bytes, *,
+                     require_durable: bool = True) -> bool:
+    """**완성된 파일**에만 final name 을 붙인다. 이미 있으면 False.
+
+    ★ 27차 P1-3 — 초판은 final pathname 을 먼저 `O_EXCL` 로 만들고 `os.write`
+      를 한 번 호출했다. 부분 쓰기를 확인하지 않고 parent 도 fsync 하지 않아,
+      5 bytes 만 쓰이면 "생성 성공" 인데 다음 읽기가 `JSONDecodeError` 였고
+      immutable 파일 때문에 재시도로도 복구가 안 됐다.
+
+      temp 에 **전부** 쓰고 fsync 한 뒤 `os.link` 로 no-replace commit 한다
+      (link 는 대상이 있으면 EEXIST 로 실패하는 원자적 연산이다).
+    """
+    # ★ 31차 P0-3 — 초판은 `mkdir(parents=True)` 뒤 **자기 부모만** flush 했다.
+    #   새 `index/legs`·`index/registered` 를 담는 `index/` edge 와, 새 `index/`
+    #   를 담는 그 부모 edge 는 굳히지 않았다. "모든 새 directory parent edge"
+    #   주장이 이 경로에는 적용되지 않았던 것이다.
+    _mkdir_durable(path.parent, "durability")
+    # ★ capability 를 먼저 본다. 못 하면 **만들기 전에** 실패한다.
+    durable = dir_fsync_supported(path.parent)
+    if require_durable and not durable:
+        raise PreserveError(
+            "durability",
+            f"이 filesystem 은 directory fsync 를 지원하지 않는다 ({path.parent}) — "
+            "이름이 durable 하지 않으면 crash 뒤 pointer 가 사라질 수 있다. "
+            "backend capability 를 확인하고 publish 전에 멈춘다")
+    tmp = path.parent / f"{path.name}.tmp-{uuid.uuid4().hex}"
+    fd = os.open(tmp, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+    try:
+        n = 0
+        while n < len(data):
+            n += os.write(fd, data[n:])
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+    try:
+        os.link(tmp, path)          # 원자적 · 대상이 있으면 실패
+        created = True
+    except FileExistsError:
+        created = False
+    except OSError as e:                                  # pragma: no cover
+        if e.errno != errno.EEXIST:
+            raise
+        created = False
+    finally:
+        tmp.unlink(missing_ok=True)
+    # ★ 31차 P0-3 — 초판은 `created` 일 때만 fsync 했다. final link 뒤 fsync 가
+    #   실패해 예외가 나가도 **final pathname 은 이미 존재**하므로, 재시도는
+    #   `EEXIST → created=False` 가 되어 fsync 를 건너뛰고 상위 `publish()` ·
+    #   `_register()` 가 "같은 바이트" 라는 이유로 성공했다. 실패 전파가
+    #   재시도까지 fail-closed 가 아니었다. 이름이 있는 한 **항상** 굳힌다.
+    if durable:
+        _fsync_dir_strict(path.parent, "durability")
+    return created
+
+
+def publish(index_path: Path, entry: dict) -> dict:
+    """final index 에 leg 하나를 **배타적으로** 등재한다.
+
+    같은 leg 를 다른 내용으로 덮지 않는다 (immutable). 같은 내용이면 멱등이다.
+    """
+    # ★ 27차 P1-3 — `finalize_only()` 가 무조건 쓰는 키를 필수 목록에서
+    #   빠뜨렸다. publish 성공 뒤 finalize 가 KeyError 로 죽을 수 있었다.
+    for k in ("leg_id", "planned_id", "receipt_digest", "receipt_object",
+              "payload_root_digest", "payload_manifest_digest", "backend_uri"):
+        if not entry.get(k):
+            raise PreserveError("publish", f"index entry 에 {k} 가 없다")
+    check_id(entry["leg_id"])
+    path = _leg_file(index_path, entry["leg_id"])
+    data = canonical_bytes(entry)
+    if _exclusive_write(path, data):
+        return {"created": True, "entry": entry}
+    old = path.read_bytes()
+    if old != data:
+        raise PreserveError("publish",
+                            f"{entry['leg_id']} 가 이미 다른 내용으로 등록돼 있다 "
+                            "— immutable index 는 덮지 않는다")
+    return {"created": False, "entry": entry}
+
+
+def index_entries(index_path: Path) -> dict:
+    d = Path(index_path) / "legs"
+    if not d.is_dir():
+        return {}
+    return {p.stem: load_canonical(p.read_bytes()) for p in sorted(d.glob("*.json"))}
+
+
+def registration(index_path: Path, leg_id: str) -> dict | None:
+    """등록 journal 을 **파싱해서** 돌려준다. 깨졌으면 None.
+
+    ★ 27차 P0-2 — `is_registered()` 가 파일 존재만 봤다. 빈 파일·잘린 JSON·
+      남의 `receipt_object` 를 가진 journal 도 "등록 완료" 였다.
+    """
+    p = _reg_file(index_path, leg_id)
+    if not p.is_file():
+        return None
+    try:
+        rec = load_canonical(p.read_bytes())
+    except (ValueError, UnicodeDecodeError):
+        return None
+    if not isinstance(rec, dict) or set(rec) != _JOURNAL_KEYS:
+        # ★ 30차 P1-1 — 초판은 surplus key 를 허용했다. journal 은 등록 graph
+        #   의 exact typed 표현이어야 하므로 키가 남거나 모자라면 거부한다.
+        return None
+    if rec.get("leg_id") != leg_id:
+        return None
+    if not _is_hex64(rec.get("receipt_object") or ""):
+        return None
+    if not _is_hex64(rec.get("lease_digest") or ""):
+        return None
+    # ★ 39차 P0-1 — 두 locator **모두** type 을 본다. 38차판은 content 쪽을
+    #   아무것도 안 봐서 int·None·dict 가 journal 을 통과했다.
+    if any(not isinstance(rec.get(k), str) for k in _JOURNAL_LOCATORS):
+        return None
+    if not isinstance(rec.get("lease_version"), str):
+        return None
+    # ★ 30차 P1-1 — 초판은 `isinstance(list)` 였다. 정상 목록의 digest 를 한 번
+    #   더 넣은 duplicate journal 이 `set(...) == expected` 를 통과했다.
+    if not _is_unique_hex64_list(rec.get("objects")):
+        return None
+    # ★ 30차 — 여기서는 **모양**만 본다. `pin_set_digest` 가 journal 자기
+    #   목록과 맞는지 다시 세는 것은 자기일관성일 뿐이고, 실제 결속은
+    #   `verify_registered_graph()` 가 **유도한 graph** 로 재계산한다. 같은
+    #   계산을 두 곳에 두면 강한 쪽을 지워도 시험이 초록이 된다 (변이로 확인).
+    if not _is_hex64(rec.get("pin_set_digest") or ""):
+        return None
+    return rec
+
+
+def has_registration_journal(index_path: Path, leg_id: str) -> bool:
+    """등록 journal 이 **있다는 주장**만 본다 — 보존 완료가 아니다.
+
+    ★ 30차 P0-2 — 초판은 `is_registered(index, leg)` 가 backend 없이도 참을
+      돌려줬다. 정상 등록 뒤 `pins/` 와 `objects/` 를 모두 지워도 참이었다.
+      이름 하나가 "journal 주장" 과 "보존 완료" 두 뜻을 가졌던 것이다.
+      판정 API 는 backend 를 **필수**로 받고, 주장 확인은 이 이름을 쓴다.
+    """
+    rec = registration(index_path, leg_id)
+    if rec is None:
+        return False
+    e = index_entries(index_path).get(leg_id)
+    return bool(e) and rec["receipt_object"] == e.get("receipt_object")
+
+
+def is_registered(index_path: Path, leg_id: str, backend: CasBackend) -> bool:
+    """**이 backend 에서** 등록이 지금 성립하는가.
+
+    저장된 비트가 아니라 backend 에 대고 평가하는 술어다. `backend` 는
+    필수다 (30차 P0-2).
+    """
+    if not has_registration_journal(index_path, leg_id):
+        return False
+    try:
+        verify_registered_graph(backend, index_path, leg_id)
+    except PreserveError:
+        return False
+    return True
+
+
+def verified_retention(backend: CasBackend, index_path: Path,
+                       leg_id: str) -> dict:
+    """graph 를 검증하고 그 검증이 인정한 **lease** 를 돌려준다.
+
+    ★ 31차 P0-1 — `enforcement` 의 권위를 한 곳에 둔다. 호출자가 다시
+      `probe_enforcement()` 를 부르면 같은 판단이 두 곳에 생긴다.
+    """
+    verify_registered_graph(backend, index_path, leg_id)
+    j = registration(index_path, leg_id)
+    return backend.verify_retention(
+        leg_id, j["lease_digest"], lease_version=j["lease_version"],
+        lease_content_version=j.get("lease_content_version") or None)
+
+
+def assert_durable_retention(backend: CasBackend, index_path: Path,
+                             leg_id: str) -> dict:
+    """등록이 **강제되는** retention 아래 있는지 — 아니면 거부한다.
+
+    ★ 30차 P0-1 — local filesystem 은 object-lock 을 강제하지 못하므로
+      `ok=True` 를 durable retention 성공이라고 부를 수 없다. 비싼 본 실행을
+      승인하는 자리는 이 함수를 통과해야 한다.
+    """
+    # ★ 31차 P0-1 — 강제 수준의 권위는 **한 곳**이다: `verify_retention()` 이
+    #   lease 에 적힌 값을 `probe_enforcement()` 조회 결과와 대조하고, 어긋나면
+    #   거기서 실패한다. 여기서 다시 조회하면 같은 계산이 두 곳에 있게 되고,
+    #   그러면 강한 쪽을 지워도 시험이 초록이 된다 (30차에 세 번 겪은 형태 —
+    #   실제로 이 자리의 변이가 물지 않았다).
+    lease = verified_retention(backend, index_path, leg_id)
+    live = lease["enforcement"]
+    if live != ENFORCEMENT_OBJECT_LOCK:
+        raise PreserveError(
+            "durable_retention",
+            f"이 backend 는 retention 을 강제하지 못한다 (조회 결과 {live!r}). "
+            "local filesystem 의 pin 은 advisory 다 — 마지막 검사와 반환 사이의 "
+            "창을 닫을 수 없고, uid 0 에서는 mode bit 도 잠금이 아니다. "
+            "object-lock 을 강제하는 backend 에서만 durable retention 을 주장한다")
+    return lease
+
+
+#: 등록 journal 의 닫힌 schema (★ 30차 P1-1)
+#: ★ 38차 P0-1 — `lease_content_version` 을 더한다. 37차까지 `lease_version`
+#:   은 lease **pin** version 하나뿐이었고, lease CAS content version 은
+#:   어디에도 봉인되지 않았다. 그래서 content lock 검사가 `objects/<lease>` 의
+#:   "아무 잠긴 version" 이나 받아들였다 — 그 version 의 바이트가 lease digest
+#:   와 같은지도 안 보고.
+_JOURNAL_KEYS = frozenset({"leg_id", "receipt_object", "pin_set_digest",
+                           "objects", "lease_digest", "lease_version",
+                           "lease_content_version"})
+
+#: ★ 39차 P0-1 — 두 locator 는 **둘 다** typed 여야 한다. 38차판은
+#:   `lease_version` 의 type 만 봤고 content 쪽은 아무것도 안 봤다.
+#:   (빈 값 자체는 advisory backend 에서 정상이므로, "nonempty" 요구는
+#:    object-lock 판정을 하는 `verify_retention()` 이 진다.)
+_JOURNAL_LOCATORS = ("lease_version", "lease_content_version")
+
+
+def _register(index_path: Path, leg_id: str, receipt_object: str,
+              pin_digest: str, objects: list, lease_digest: str,
+              lease_version: str = "", lease_content_version: str = "") -> None:
+    """durable 상태 변경. 기존 journal 이 다르면 **거부**한다.
+
+    ★ 33차 P0-1 — `lease_version` 은 lease 자신의 lock proof 다. lease 는
+      자기 digest 를 담을 수 없으므로 그 증거가 밖에 있어야 한다.
+    """
+    data = canonical_bytes({"leg_id": leg_id, "receipt_object": receipt_object,
+                            "pin_set_digest": pin_digest,
+                            "objects": sorted(set(objects)),
+                            "lease_digest": lease_digest,
+                            "lease_version": lease_version,
+                            "lease_content_version": lease_content_version})
+    path = _reg_file(index_path, leg_id)
+    if _exclusive_write(path, data):
+        return
+    old = path.read_bytes()
+    if old != data:
+        raise PreserveError(
+            "register",
+            f"{leg_id} 의 등록 journal 이 이미 다른 내용이다 — 남의 receipt 를 "
+            f"가리키거나 잘린 파일이다 ({old[:40]!r})")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 산출 manifest schema — optional 이 아니다 (26차 P1-3)
+# ─────────────────────────────────────────────────────────────────────────────
+
+#: 산출 role 별 **필수** 필드 — tagged union 의 tag 가 `role` 이다.
+#:
+#: ★ 30차 P1-2 — 초판은 8개 키의 nonempty 여부만 봤다. 리뷰가 그대로 적었듯
+#:   `role = 7 · canonicalizer = {} · semantic_schema = [1] · producer = False`
+#:   에 실제 path/hash/size 를 붙이면 등록됐다. `measured_by`·`produced_from`
+#:   ·`source_file_sha256`·`n_rows`·`semantic_view_drops` 의 role 별 필수
+#:   여부와 타입은 아예 정의돼 있지 않았다.
+_OUTPUT_ROLES = {
+    "rescored_summary": frozenset({"measured_by", "produced_from",
+                                   "source_file_sha256", "n_rows",
+                                   "semantic_view_drops"}),
+    "rescored_rows": frozenset({"measured_by", "produced_from",
+                                "source_file_sha256", "n_rows"}),
+}
+#: ★ 31차 P1-2 — role 마다 **exact** key set 이다. 초판은 전체 `_OUTPUT_KEYS`
+#:   의 subset 인지만 봐서, `rescored_rows` 에 summary 전용
+#:   `semantic_view_drops` 를 넣어도 통과했다. tagged union 이라는 이름이
+#:   실제로 하는 일보다 강했다.
+#: 모든 role 이 공유하는 필수 필드
+_OUTPUT_BASE = ("role", "canonicalizer", "semantic_schema", "semantic_sha256",
+                "relative_path", "byte_size", "file_sha256", "producer",
+                "object_digest")
+
+
+#: wrapper 가 **측정해서** 붙이는 필드. hook 이 신고하는 것이 아니다 (28차 P1-1).
+_OUTPUT_MEASURED = ("object_digest", "measured_by")
+
+
+def check_output_claim(out) -> list[str]:
+    """hook 이 신고한 descriptor — wrapper 가 측정할 필드는 아직 없다."""
+    return check_output(out, measured=False)
+
+
+def check_output(out, *, measured: bool = True) -> list[str]:
+    """재채점 산출이 계약을 만족하는가. 비면 통과. role 별 tagged union 이다."""
+    if not isinstance(out, dict):
+        return [f"산출이 dict 가 아니다: {type(out).__name__}"]
+    bad = []
+    role0 = out.get("role")
+    if role0 in _OUTPUT_ROLES:
+        want = set(_OUTPUT_BASE) | set(_OUTPUT_ROLES[role0])
+        if not measured:
+            want -= set(_OUTPUT_MEASURED)
+        if set(out) != want:
+            bad.append(f"role={role0} 의 키 집합이 정확하지 않다 — 남음 "
+                       f"{sorted(set(out) - want)} · 모자람 {sorted(want - set(out))}")
+    elif not set(out) <= _OUTPUT_KEYS:
+        bad.append(f"산출 키 집합이 닫혀 있지 않다: {sorted(set(out) - _OUTPUT_KEYS)}")
+    if not measured:
+        stray = [k for k in _OUTPUT_MEASURED if k in out]
+        if stray:
+            bad.append(f"hook 이 wrapper 측정 필드를 신고했다: {stray} — "
+                       "증명과 주장의 주체가 같으면 안 된다")
+    role = out.get("role")
+    if role not in _OUTPUT_ROLES:
+        bad.append(f"role 이 계약 enum 이 아니다: {role!r} "
+                   f"(허용: {sorted(_OUTPUT_ROLES)})")
+    # ★ 27차 P1-5 — semantic digest 만 요구하면 "무슨 파일을 만들었는가" 가
+    #   receipt 어디에도 없다. byte 축을 함께 강제한다 (25차 Q2 는 둘 다 요구).
+    # ★ 30차 P1-2 — nonempty 가 아니라 **타입**을 본다.
+    # ★ 31차 P1-2 — role 을 아는 경우 위의 exact key set 비교가 "모자람" 까지
+    #   말한다. 여기서 다시 세면 같은 규칙이 두 곳에 있게 되고, 그러면 강한
+    #   쪽(exact 비교)을 subset 으로 되돌려도 시험이 초록이 된다 (변이로 확인).
+    #   role 을 모를 때만 base 필드를 따로 본다.
+    if role0 not in _OUTPUT_ROLES:
+        for k in _OUTPUT_BASE:
+            if (measured or k not in _OUTPUT_MEASURED) and k not in out:
+                bad.append(f"산출에 {k} 가 없다")
+    for k in ("canonicalizer", "semantic_schema", "producer", "relative_path"):
+        if k in out and not _nonempty_str(out[k]):
+            bad.append(f"{k} 가 비어 있지 않은 NFC 문자열이 아니다: {out.get(k)!r}")
+    for k in ("semantic_sha256", "file_sha256", "object_digest"):
+        if k in out and (measured or k not in _OUTPUT_MEASURED) \
+                and not _is_hex64(out.get(k)):
+            bad.append(f"{k} 이 64-hex 가 아니다: {out.get(k)!r}")
+    n = out.get("byte_size")
+    if isinstance(n, bool) or not isinstance(n, int) or n < 0:
+        bad.append(f"byte_size 가 음이 아닌 정수가 아니다: {n!r}")
+    # ★ 31차 P1-2 — 생성과 복구가 **같은** path validator 를 쓴다. 초판은
+    #   여기서 leading slash 와 `..` 만 봤고 `_safe_member_path()` 는 backslash·
+    #   colon·빈/`.` segment 까지 거부했다. 저장된 receipt 를 검증하는 쪽이,
+    #   만드는 쪽이라면 거부했을 경로를 받아들였다는 뜻이다.
+    try:
+        _safe_member_path(Path("/__output_domain__"), out.get("relative_path"),
+                          "output")
+    except PreserveError as ex:
+        bad.append(f"relative_path: {ex.msg}")
+    # role 별 필수 필드와 타입
+    for k in sorted(_OUTPUT_ROLES.get(role, frozenset())):
+        if not measured and k in _OUTPUT_MEASURED:
+            continue
+        if k not in out:
+            bad.append(f"role={role} 에는 {k} 가 필수다")
+        elif k == "n_rows":
+            if isinstance(out[k], bool) or not isinstance(out[k], int) or out[k] < 0:
+                bad.append(f"n_rows 가 음이 아닌 정수가 아니다: {out[k]!r}")
+        elif k == "semantic_view_drops":
+            v = out[k]
+            if not isinstance(v, list) or not all(_nonempty_str(x) for x in v):
+                bad.append(f"semantic_view_drops 가 문자열 목록이 아니다: {v!r}")
+        elif k == "source_file_sha256":
+            if not _is_hex64(out[k]):
+                bad.append(f"source_file_sha256 이 64-hex 가 아니다: {out[k]!r}")
+        elif not _nonempty_str(out[k]):
+            bad.append(f"{k} 가 비어 있지 않은 NFC 문자열이 아니다: {out[k]!r}")
+    return bad
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 트랜잭션
+# ─────────────────────────────────────────────────────────────────────────────
+
+@dataclass
+class Hooks:
+    """검증·재채점을 주입한다. 과학 코드를 이 모듈에 넣지 않기 위해서다.
+
+    ★ 26차 P1-3 — `expected_semantic` 은 이제 **필수**다. `None` 이면 재채점
+      결과를 아무 것도 대조하지 않으므로 검증이라 부를 수 없다.
+      복원 hook 은 사라졌다 — 복원은 CAS 에서만 나온다 (P0-1).
+    """
+
+    validate: object = None          # (root) -> {"ok":…, "fail":[…], "checks":{}}
+    rescore: object = None           # (root) -> 산출 manifest dict
+    min_retention_days: int = 365
+    expected_semantic: str | None = None
+
+
+def _require_hooks(hooks: Hooks) -> None:
+    for name in ("validate", "rescore"):
+        if getattr(hooks, name) is None:
+            raise PreserveError("hooks", f"{name} hook 이 없다 — 검증 없이 통과할 수 없다")
+    if not hooks.expected_semantic:
+        raise PreserveError(
+            "hooks", "expected_semantic 이 없다 — 재채점 결과를 대조할 기준이 "
+                     "없으면 그것은 검증이 아니다 (26차 P1-3)")
+
+
+def _drop_from_cas(backend: CasBackend, man: dict, man_dg: str,
+                   faults: frozenset[str]) -> None:
+    """read-back 뒤 CAS 를 훼손한다 — 복원이 backend 를 보는지 확인하는 주입."""
+    if "cas_drop_all" in faults:
+        shutil.rmtree(backend.root / "objects", ignore_errors=True)
+        return
+    if "cas_drop_manifest" in faults:
+        backend._obj(man_dg).unlink(missing_ok=True)
+    if "cas_drop_member" in faults and man["members"]:
+        backend._obj(man["members"][0]["sha256"]).unlink(missing_ok=True)
+    if "cas_mutate_member" in faults and man["members"]:
+        p = backend._obj(man["members"][0]["sha256"])
+        if p.is_file():
+            b = bytearray(p.read_bytes())
+            b[0] ^= 0x01
+            p.write_bytes(bytes(b))
+
+
+def check_hook_validation(v) -> list[str]:
+    """validator hook 이 돌려준 것이 계약인가 (★ 30차 P1-2).
+
+    `ok` 는 **exact bool**, `checks` 는 dict, `fail` 은 문자열 목록이다.
+    """
+    if not isinstance(v, dict):
+        return [f"검증 결과가 dict 가 아니다: {type(v).__name__}"]
+    bad = []
+    if set(v) != {"ok", "fail", "checks"}:
+        bad.append(f"키 집합이 닫혀 있지 않다: {sorted(set(v) ^ {'ok', 'fail', 'checks'})}")
+        return bad
+    if v["ok"] is not True and v["ok"] is not False:
+        bad.append(f"ok 가 exact bool 이 아니다: {v['ok']!r}")
+    if not isinstance(v["checks"], dict) or not v["checks"]:
+        bad.append(f"checks 가 비어 있지 않은 dict 가 아니다: {v['checks']!r}")
+    elif not all(_nonempty_str(k) for k in v["checks"]):
+        bad.append("checks 의 키가 비어 있지 않은 NFC 문자열이 아니다")
+    else:
+        # ★ 31차 P1-1 — 초판은 `checks` 의 **값**을 보지 않았다.
+        #   `{"ok": True, "fail": [], "checks": {"payload": False}}` 가
+        #   통과했고, receipt 는 `{"ok": true, "n_checks": 1}` 로 축약해
+        #   false subcheck 를 지웠다. 통과한 검증에서는 모든 검사가 참이어야
+        #   한다 — 아니면 그것은 `fail` 에 있어야 한다.
+        wrong = sorted(k for k, x in v["checks"].items() if x is not True)
+        if wrong:
+            bad.append(f"통과했다는데 참이 아닌 검사가 있다: {wrong[:4]}")
+    if not isinstance(v["fail"], list) or not all(isinstance(x, str) for x in v["fail"]):
+        bad.append(f"fail 이 문자열 목록이 아니다: {v['fail']!r}")
+    elif bool(v["fail"]) == (v["ok"] is True):
+        bad.append(f"ok={v['ok']!r} 와 fail={v['fail']!r} 이 서로 모순이다")
+    return bad
+
+
+def _validate_and_rescore(root: Path, hooks: Hooks, backend: CasBackend,
+                          faults: frozenset[str]) -> tuple[dict, dict]:
+    if "validator_raises" in faults:
+        raise PreserveError("validate", "검증기가 예외로 죽었다 (주입)")
+    v = hooks.validate(root)
+    if "validator_fails" in faults:
+        v = {"ok": False, "fail": ["주입된 실패"]}
+    # ★ 30차 P1-2 — 초판은 `v.get("ok")` 를 **truthiness** 로 봤고 `checks` 가
+    #   dict 인지 확인하지 않았다. `{"ok": "yes", "checks": "x"}` 가 통과한 뒤
+    #   receipt 에는 `{"ok": true, "n_checks": 1}` 로 정규화됐다 — 저장된
+    #   nested object 가 exact 여도 그 값이 실제 validator 결과를 증명하지
+    #   못한다는 뜻이다. hook 결과의 domain 을 여기서 닫는다.
+    vbad = check_hook_validation(v)
+    if vbad:
+        raise PreserveError("validate", "검증기 결과가 계약이 아니다: "
+                                        + "; ".join(vbad[:3]))
+    if v["ok"] is not True:
+        raise PreserveError("validate", f"검증 실패: {v.get('fail')}")
+
+    if "score_raises" in faults:
+        raise PreserveError("rescore", "재채점이 예외로 죽었다 (주입)")
+    out = hooks.rescore(root)
+    bad = check_output_claim(out)
+    if bad:
+        raise PreserveError("rescore", "; ".join(bad))
+    sem = ("f" * 64 if "wrong_semantic_digest" in faults
+           else out.get("semantic_sha256"))
+    if sem != hooks.expected_semantic:
+        raise PreserveError("rescore",
+                            f"재채점 semantic digest 가 봉인과 다르다: {sem!r}")
+
+    # ★ 28차 P1-1 — hook 이 자기 파일의 SHA·크기·producer 를 **자기신고**했다.
+    #   `check_output()` 은 root 를 받지 않아 파일을 열지도 않았고, 산출은
+    #   temp root 와 함께 삭제됐다. 증명과 주장이 같은 주체였다.
+    #   wrapper 가 안전한 경로에서 bytes 를 **한 번 읽어** 측정하고 CAS 에 넣는다.
+    fp = _safe_member_path(root, out["relative_path"], "rescore")
+    if not fp.is_file():
+        raise PreserveError("rescore",
+                            f"산출 파일이 없다: {out['relative_path']!r}")
+    data = fp.read_bytes()
+    measured_sha = hashlib.sha256(data).hexdigest()
+    if out["file_sha256"] != measured_sha or out["byte_size"] != len(data):
+        raise PreserveError(
+            "rescore",
+            f"산출 descriptor 가 실물과 다르다 — 신고 "
+            f"{out['file_sha256'][:16]}/{out['byte_size']} vs 실측 "
+            f"{measured_sha[:16]}/{len(data)}")
+    obj = backend.put_if_absent(data)["digest"]
+    backend.read_back(obj)
+    return v, dict(out, semantic_sha256=sem, file_sha256=measured_sha,
+                   byte_size=len(data), object_digest=obj,
+                   measured_by="tools.preserve")
+
+
+def _hit_receipt(backend: CasBackend, r_obj: str, faults: frozenset[str],
+                 when: str) -> None:
+    """receipt object 를 훼손하는 주입 (27차 P0-1 의 반례를 fixture 로 고정)."""
+    p = backend._obj(r_obj)
+    if f"receipt_drop_{when}" in faults:
+        p.unlink(missing_ok=True)
+    if when == "after_readback" and "receipt_mutate_after_readback" in faults \
+            and p.is_file():
+        b = bytearray(p.read_bytes())
+        b[0] ^= 0x01
+        p.write_bytes(bytes(b))
+
+
+#: receipt 의 **닫힌** 키 집합. ★ 28차 P0-2 — 초판 validator 는 일곱 키만 있는
+#: self-consistent receipt 도 통과시켰다. `planned_envelope`·`outputs`·
+#: `validation` 이 없어도 등록됐다.
+_RECEIPT_KEYS = frozenset({
+    "schema", "leg_id", "planned_id", "planned_envelope", "backend_uri",
+    "backend_store_id",
+    "payload_root_digest", "payload_manifest_digest", "n_members",
+    "total_bytes", "validation", "outputs", "retention_days", "receipt_digest",
+})
+
+
+#: `planned_envelope` 의 닫힌 키 집합 (`PlannedLeg.envelope()` 와 같은 규격).
+_ENVELOPE_KEYS = frozenset({
+    "schema", "leg_id", "protocol_generation", "pairing_design_sha256",
+    "source_digest", "objectives", "total_start_budget", "candidate_mode",
+    "min_retention_days"})
+_VALIDATION_KEYS = frozenset({"ok", "n_checks", "checks"})
+
+#: planned envelope 의 **값 domain** (★ 30차 P1-2)
+#:
+#: 초판은 design SHA 하나만 봤다. JSON 으로 표현 가능한 다음이 오류 없이
+#: transaction 에 도달했다 — 리뷰가 그대로 적었다:
+#:
+#:     protocol_generation = 7 · source_digest = 7 · objectives = [7]
+#:     total_start_budget = -1 · candidate_mode = 7
+_GENERATION_RE = re.compile(r"^v[0-9]+(_[a-z0-9]+)*$")
+
+#: 계약 §3 의 후보 정책 표에서 mode 이름을 뽑는 정규식.
+_MODE_ROW = re.compile(r"^\|\s*`([a-z][a-z0-9_]*)`\s*\|")
+_CONTRACT = Path(__file__).resolve().parent.parent / "docs" / "22p_gap" \
+    / "STAGE3_CONTRACT.md"
+_MODE_CACHE: dict[str, frozenset] = {}
+
+
+def candidate_modes() -> frozenset:
+    """후보 정책 enum — **계약 §3 표가 정본**이다.
+
+    ★ 31차 P1-3 — 30차판은 여기에 목록을 **옮겨 적었고** 그것이 계약과
+      달랐다. validator 는 `warm_slot_replace · random_only · base_init_only`
+      를 허용하고 계약의 `equal_start_count_base_retained · union` 을
+      거부했다. 계약상 유효한 두 mode 를 거부하고 계약에 없는 세 mode 를
+      허용한 것이다. 30차 회귀가 `whatever` 하나만 넣어 봐서 못 잡았다.
+
+      값을 두 곳에 두지 않는다 (CLAUDE.md 의 "정본" 규칙). 계약을 고치면
+      validator 가 따라오고, 계약을 못 읽으면 fail-closed 다.
+    """
+    if "modes" in _MODE_CACHE:
+        return _MODE_CACHE["modes"]
+    try:
+        txt = _CONTRACT.read_text(encoding="utf-8")
+    except OSError as ex:
+        raise PreserveError("contract",
+                            f"계약 문서를 읽을 수 없다 ({_CONTRACT}) — "
+                            "후보 정책 enum 의 정본이 없으면 멈춘다") from ex
+    sec = re.search(r"(?ms)^## 3\. 후보 정책.*?(?=^## )", txt)
+    if not sec:
+        raise PreserveError("contract", "계약에 §3 후보 정책 절이 없다")
+    modes = frozenset(m.group(1) for m in
+                      (_MODE_ROW.match(ln) for ln in sec.group(0).split("\n"))
+                      if m)
+    if not modes:
+        raise PreserveError("contract", "계약 §3 표에서 mode 를 하나도 못 읽었다")
+    _MODE_CACHE["modes"] = modes
+    return modes
+
+
+def _nonempty_str(v) -> bool:
+    return isinstance(v, str) and v.strip() != "" and v == unicodedata.normalize("NFC", v)
+
+
+def _pos_int(v) -> bool:
+    return isinstance(v, int) and not isinstance(v, bool) and v > 0
+
+
+def check_envelope(env) -> list[str]:
+    """planned envelope 의 키 **와 값** 을 본다. 생성·복구가 같은 함수를 쓴다."""
+    if not isinstance(env, dict):
+        return [f"planned_envelope 가 dict 가 아니다: {type(env).__name__}"]
+    bad = []
+    if set(env) != _ENVELOPE_KEYS:
+        return [f"planned_envelope 가 닫혀 있지 않다: "
+                f"{sorted(set(env) ^ _ENVELOPE_KEYS)}"]
+    if env["schema"] != "planned-leg/v3":
+        bad.append(f"planned_envelope schema: {env['schema']!r}")
+    if not _nonempty_str(env["leg_id"]):
+        bad.append(f"leg_id 가 비어 있지 않은 NFC 문자열이 아니다: {env['leg_id']!r}")
+    if not _nonempty_str(env["protocol_generation"]) or \
+            not _GENERATION_RE.match(env["protocol_generation"]):
+        bad.append(f"protocol_generation 이 세대 문법이 아니다: "
+                   f"{env['protocol_generation']!r}")
+    if not _is_hex64(env["pairing_design_sha256"] or ""):
+        bad.append("pairing_design_sha256 이 64-hex 가 아니다")
+    if not _nonempty_str(env["source_digest"]) or \
+            not re.fullmatch(r"[0-9a-f]{16}", env["source_digest"]):
+        bad.append(f"source_digest 가 16-hex 가 아니다: {env['source_digest']!r}")
+    objs = env["objectives"]
+    if not isinstance(objs, list) or not objs or \
+            not all(_nonempty_str(o) for o in objs) or \
+            len(set(objs)) != len(objs) or objs != sorted(objs):
+        bad.append(f"objectives 가 정렬된 unique 문자열 목록이 아니다: {objs!r}")
+    if not _pos_int(env["total_start_budget"]):
+        bad.append(f"total_start_budget 이 양의 정수가 아니다: "
+                   f"{env['total_start_budget']!r}")
+    if env["candidate_mode"] not in candidate_modes():
+        bad.append(f"candidate_mode 가 계약 enum 이 아니다: {env['candidate_mode']!r}")
+    # ★ 30차 P1-3 — 원래 요구한 하한을 envelope 에 **봉인**한다. 이것이 없으면
+    #   나중 verifier 가 "무엇을 요구했었나" 를 복원할 수 없다.
+    if not _pos_int(env["min_retention_days"]) or \
+            env["min_retention_days"] < MIN_RETENTION_DAYS:
+        bad.append(f"min_retention_days 가 정책 하한 미만이다: "
+                   f"{env['min_retention_days']!r}")
+    return bad
+#: 산출 descriptor 의 닫힌 키 집합
+_OUTPUT_KEYS = frozenset({
+    "role", "canonicalizer", "semantic_schema", "semantic_sha256",
+    "relative_path", "byte_size", "file_sha256", "producer",
+    "object_digest", "measured_by", "produced_from", "source_file_sha256",
+    "n_rows", "semantic_view_drops"})
+
+
+def check_receipt(rec, entry: dict, backend: "CasBackend",
+                  manifest: dict | None = None) -> list[str]:
+    """receipt 를 exact schema 와 결속으로 검사한다 — run 과 finalize 가 공유.
+
+    ★ 29차 P0-3 — 초판은 **바깥 키만** 닫았다. `planned_envelope` 가
+      `{"anything": "goes"}` 여도, `validation` 에 surplus key 가 있어도,
+      receipt 의 집계·root 가 실제 manifest 와 달라도, `retention_days=0`
+      이어도 통과했다.
+    """
+    if not isinstance(rec, dict):
+        return [f"receipt 가 dict 가 아니다: {type(rec).__name__}"]
+    bad = []
+    if set(rec) != _RECEIPT_KEYS:
+        bad.append(f"키 집합이 닫혀 있지 않다: 남음 {sorted(set(rec) - _RECEIPT_KEYS)} "
+                   f"· 모자람 {sorted(_RECEIPT_KEYS - set(rec))}")
+        return bad
+    if rec["schema"] != "execution-receipt/v1":
+        bad.append(f"schema: {rec['schema']!r}")
+    want = digest({k: v for k, v in rec.items() if k != "receipt_digest"})
+    if rec["receipt_digest"] != want:
+        bad.append("receipt 안의 digest 가 자기 내용과 다르다")
+    # ★ 계획이 실제로 그 계획인가 — 내용 주소를 다시 계산한다
+    env = rec["planned_envelope"]
+    bad += check_envelope(env)
+    if isinstance(env, dict) and set(env) == _ENVELOPE_KEYS:
+        if env["leg_id"] != rec["leg_id"]:
+            bad.append("planned_envelope 의 leg_id 가 receipt 와 다르다")
+        if digest(env) != rec["planned_id"]:
+            bad.append("planned_id 가 planned_envelope 의 digest 와 다르다")
+    # ★ **손에 든 backend** 와 대조한다. receipt·index 가 서로 같은 문자열만
+    #   가지면 통과하던 것이 28차 P0-2 의 반례였다.
+    # ★ 30차 P0-2 — URI 문자열만으로는 부족하다. `root=Path("cas")` 로 등록한
+    #   뒤 cwd 를 바꾸면 다른 store 를 가리키면서 URI 가 같았다. 생성 시각에
+    #   고정된 store UUID 를 함께 본다.
+    if rec["backend_uri"] != backend.uri:
+        bad.append(f"receipt 의 backend_uri 가 실제 backend 와 다르다 "
+                   f"({rec['backend_uri']!r} ≠ {backend.uri!r})")
+    if rec["backend_store_id"] != backend.store_id:
+        bad.append(f"receipt 의 backend_store_id 가 실제 store 와 다르다 "
+                   f"({str(rec['backend_store_id'])[:8]} ≠ {backend.store_id[:8]})")
+    v = rec["validation"]
+    if not isinstance(v, dict) or set(v) != _VALIDATION_KEYS:
+        bad.append(f"validation 키 집합이 닫혀 있지 않다: {v!r}")
+    elif v["ok"] is not True or isinstance(v["n_checks"], bool) \
+            or not isinstance(v["n_checks"], int) or v["n_checks"] <= 0:
+        bad.append(f"validation 값이 이상하다: {v!r}")
+    elif not isinstance(v["checks"], list) \
+            or not all(_nonempty_str(x) for x in v["checks"]) \
+            or v["checks"] != sorted(set(v["checks"])) \
+            or len(v["checks"]) != v["n_checks"]:
+        bad.append(f"validation.checks 가 정렬된 unique 이름 목록이 아니거나 "
+                   f"n_checks 와 다르다: {v['checks']!r}")
+    outs = rec["outputs"]
+    if not isinstance(outs, list) or not outs:
+        bad.append("outputs 가 비었다")
+    else:
+        for i, o in enumerate(outs):
+            for e in check_output(o):
+                bad.append(f"outputs[{i}]: {e}")
+            if not isinstance(o, dict) or not set(o) <= _OUTPUT_KEYS:
+                bad.append(f"outputs[{i}]: 키 집합이 닫혀 있지 않다 "
+                           f"({sorted(set(o) - _OUTPUT_KEYS) if isinstance(o, dict) else o!r})")
+            if not _is_hex64(o.get("object_digest") or ""):
+                bad.append(f"outputs[{i}]: object_digest 가 없다")
+            # ★ 29차 P0-3 — descriptor 의 파일 SHA 가 곧 그 object 의 주소다.
+            elif o.get("file_sha256") != o.get("object_digest"):
+                bad.append(f"outputs[{i}]: file_sha256 이 object_digest 와 다르다")
+    for k in ("n_members", "total_bytes", "retention_days"):
+        if isinstance(rec[k], bool) or not isinstance(rec[k], int) or rec[k] < 0:
+            bad.append(f"{k} 가 음이 아닌 정수가 아니다: {rec[k]!r}")
+    if isinstance(rec["retention_days"], int) and \
+            not isinstance(rec["retention_days"], bool) and \
+            rec["retention_days"] < MIN_RETENTION_DAYS:
+        bad.append(f"retention_days={rec['retention_days']} < 정책 "
+                   f"{MIN_RETENTION_DAYS}")
+    # ★ 29차 P0-3 — receipt 의 집계·root 를 **실제 manifest** 와 대조한다.
+    if manifest is not None:
+        if manifest.get("root_digest") != rec["payload_root_digest"]:
+            bad.append("payload_root_digest 가 실제 manifest 와 다르다")
+        if manifest.get("n_members") != rec["n_members"]:
+            bad.append(f"n_members={rec['n_members']} ≠ manifest "
+                       f"{manifest.get('n_members')}")
+        if manifest.get("total_bytes") != rec["total_bytes"]:
+            bad.append(f"total_bytes={rec['total_bytes']} ≠ manifest "
+                       f"{manifest.get('total_bytes')}")
+    for k in ("leg_id", "planned_id", "payload_root_digest",
+              "payload_manifest_digest", "backend_uri", "receipt_digest"):
+        if rec[k] != entry.get(k):
+            bad.append(f"receipt.{k} 가 index 와 다르다")
+    return bad
+
+
+def reachable_objects(rec: dict, manifest: dict) -> set:
+    """receipt 가 도달할 수 있는 object 전부 — pin 대상이다."""
+    objs = {rec["payload_manifest_digest"], rec["receipt_object"]} \
+        if "receipt_object" in rec else {rec["payload_manifest_digest"]}
+    objs |= {m["sha256"] for m in manifest["members"]}
+    objs |= {o["object_digest"] for o in rec["outputs"]}
+    return {o for o in objs if _is_hex64(o)}
+
+
+def verify_registered_graph(backend: CasBackend, index_path: Path,
+                            leg_id: str) -> dict:
+    """등록 graph 를 **pinned receipt 에서 재유도**해 pin 집합과 대조한다.
+
+    ★ 29차 P0-1 — 초판은 journal 이 스스로 적은 `objects` 목록과 그것으로 다시
+      계산한 `pin_set_digest` 만 봤다. pinned receipt 를 열어 graph 를
+      재유도하지 않으므로, receipt 하나만 적은 journal 도 자기일관되기만 하면
+      "등록 완료" 였다. `pin_set_digest` 는 receipt graph 와의 결속이 아니라
+      **journal 자기 checksum** 이었다.
+
+    ★ 29차 P0-2 — 그리고 `registered` 는 저장된 비트가 아니라 **backend 에 대고
+      지금 평가하는 술어**여야 한다. 성공 반환과 journal 존재가 retention 을
+      뜻할 수 없다 (local filesystem 에서 검증과 commit 을 한 트랜잭션으로
+      묶을 수 없기 때문이다). 그래서 이 함수가 매번 다시 본다.
+
+    순서:
+      1. actual backend 의 **pin** 에서 receipt bytes 를 읽는다
+      2. closed schema · planned envelope · **손에 든 backend** · policy
+      3. pin 에서 manifest 를 읽고 receipt 집계·root 와 결속
+      4. member + output 을 포함한 expected graph 를 재유도
+      5. expected == journal.objects == 디스크의 pin 이름 (정확히 같아야 한다)
+      6. 모든 pinned bytes 와 output descriptor 를 확인
+    """
+    stage = "verify_graph"
+    check_id(leg_id)
+    e = index_entries(index_path).get(leg_id)
+    if not e:
+        raise PreserveError(stage, f"{leg_id} 가 public index 에 없다")
+    r_obj = e.get("receipt_object")
+    if not _is_hex64(r_obj or ""):
+        raise PreserveError(stage, f"index 의 receipt_object 가 이상하다: {r_obj!r}")
+
+    # 1. journal — **없으면 fail-closed**. 등록 상태 검증에 journal 은 필수다.
+    #    ★ 30차 P1-1 — 초판은 journal 이 None 이면 대조를 건너뛰고 성공했다.
+    #    등록 **전** graph 검증은 이름이 다른 함수를 쓴다.
+    j = registration(index_path, leg_id)
+    if j is None:
+        raise PreserveError(stage, f"{leg_id} 의 등록 journal 이 없거나 계약을 "
+                                   "만족하지 않는다")
+    if j["receipt_object"] != r_obj:
+        raise PreserveError(stage, "journal 이 다른 receipt 를 가리킨다")
+
+    # 2. **retention lease 를 먼저** 본다. 성공의 근거는 읽은 바이트가 아니라
+    #    상태다 (30차 P0-1).
+    lease = backend.verify_retention(
+        leg_id, j["lease_digest"], lease_version=j["lease_version"],
+        lease_content_version=j.get("lease_content_version") or None)
+
+    # 3. receipt·manifest 를 **lease 가 담보한 pin 에서** 읽는다
+    try:
+        rec = load_canonical(backend.retrieve_retained(lease, r_obj))
+    except PreserveError as ex:
+        raise PreserveError(stage, f"pinned receipt 를 회수하지 못했다: {ex.msg}") from ex
+    if not isinstance(rec, dict) or not _is_hex64(rec.get("payload_manifest_digest") or ""):
+        raise PreserveError(stage, "receipt 에 payload_manifest_digest 가 없다")
+    try:
+        man = load_canonical(
+            backend.retrieve_retained(lease, rec["payload_manifest_digest"]))
+    except PreserveError as ex:
+        raise PreserveError(stage, f"pinned manifest 를 회수하지 못했다: {ex.msg}") from ex
+    mbad = check_manifest(man)
+    if mbad:
+        raise PreserveError(stage, "manifest 가 깨졌다: " + "; ".join(mbad[:3]))
+
+    # 4. closed schema + 결속 (manifest 를 함께 넘겨 집계까지 본다)
+    bad = check_receipt(rec, e, backend, manifest=man)
+    if bad:
+        raise PreserveError(stage, "; ".join(bad[:4]))
+
+    # 5. expected graph 재유도 · journal · lease · 디스크가 **정확히** 같아야
+    expected = reachable_objects(dict(rec, receipt_object=r_obj), man)
+    if set(j["objects"]) != expected:
+        raise PreserveError(
+            stage, "journal 의 objects 가 receipt 에서 유도한 graph 와 다르다 "
+                   f"(journal {len(j['objects'])} · 유도 {len(expected)})")
+    # ★ 30차 P1-1 — journal 의 pin_set_digest 를 **기대 graph 로 재계산**한다.
+    #   초판은 64-hex 모양만 봤다 — journal 자기 checksum 이었다.
+    if j["pin_set_digest"] != pin_set_digest(leg_id, expected):
+        raise PreserveError(stage, "journal 의 pin_set_digest 가 유도한 graph 와 다르다")
+    if set(lease["objects"]) != expected:
+        raise PreserveError(stage, "lease 가 담보한 graph 가 유도한 graph 와 다르다")
+
+    # 6. 모든 retained bytes + output object 확인
+    # ★ 38차 P0-1 — lease 가 봉인한 version 으로 되읽는다 (locator 재탐색 금지)
+    pbad = backend.verify_pins(leg_id, expected,
+                               versions=lease.get("object_versions") or None)
+    if pbad:
+        raise PreserveError(stage, "pin 이 불완전하다: " + "; ".join(pbad[:3]))
+    for o in rec["outputs"]:
+        data = backend.retrieve_retained(lease, o["object_digest"])
+        if len(data) != o["byte_size"]:
+            raise PreserveError(stage, f"산출 {o['role']} 의 크기가 object 와 다르다")
+
+    # 7. ★ 30차 P0-1 — 전수 읽기 **뒤에** lease 상태를 다시 본다.
+    #    초판은 `on_disk` snapshot 이 전수 읽기 **앞**이라, 읽는 족족 지우는
+    #    backend 에서 member pin 이 사라진 채 성공했다. 마지막 검사가 바이트가
+    #    아니라 상태여야 그 창이 닫힌다. (그 뒤의 창은 local 에서 닫을 수
+    #    없다 — 그래서 이 backend 는 `advisory_local` 이라고 신고한다.)
+    backend.verify_retention(leg_id, j["lease_digest"], expected=expected,
+                             lease_content_version=j.get("lease_content_version") or None,
+                             lease_version=j["lease_version"])
+    return rec
+
+
+def verify_graph_before_registration(backend: CasBackend, index_path: Path,
+                                     leg_id: str, lease: dict) -> dict:
+    """등록 **전** graph 검증 — journal 이 아직 없다.
+
+    ★ 30차 P1-1 — 초판은 `verify_registered_graph()` 하나가 두 상태를 겸했다.
+      journal 이 `None` 이면 대조를 건너뛰었으므로, 이름은 "registered" 인데
+      등록되지 않은 상태에도 성공했다. 이름과 API 를 가른다.
+    """
+    stage = "verify_before_commit"
+    e = index_entries(index_path).get(leg_id)
+    if not e:
+        raise PreserveError(stage, f"{leg_id} 가 public index 에 없다")
+    rec = load_canonical(backend.retrieve_retained(lease, e["receipt_object"]))
+    man = load_canonical(backend.retrieve_retained(lease, rec["payload_manifest_digest"]))
+    if check_manifest(man):
+        raise PreserveError(stage, "manifest 가 깨졌다")
+    bad = check_receipt(rec, e, backend, manifest=man)
+    if bad:
+        raise PreserveError(stage, "; ".join(bad[:4]))
+    expected = reachable_objects(dict(rec, receipt_object=e["receipt_object"]), man)
+    if set(lease["objects"]) != expected:
+        raise PreserveError(stage, "lease 가 담보한 graph 가 유도한 graph 와 다르다")
+    # ★ 39차 P0-1 — 최초 성공 판정부터 **두 locator 를 모두** 쓴다. 38차판은
+    #   `retain()` 이 돌려준 content version 을 여기서 버렸다.
+    backend.verify_retention(
+        leg_id, lease["lease_digest"], expected=expected,
+        lease_version=lease.get("lease_version"),
+        lease_content_version=lease.get("lease_content_version"))
+    return rec
+
+
+def verify_registered_receipt(backend: CasBackend, index_path: Path,
+                              leg_id: str) -> dict:
+    """index 가 가리키는 receipt 를 **다시 회수해** 전 결속을 대조한다.
+
+    ★ 27차 P0-1·P0-2 — 이것이 없으면 "등록됐다" 가 "그 순간 한 번 읽혔다" 밖에
+      뜻하지 않는다. 등록 직전과 `finalize_only()` 가 같은 함수를 쓴다.
+    """
+    stage = "verify_before_register"
+    e = index_entries(index_path).get(leg_id)
+    if not e:
+        raise PreserveError(stage, f"{leg_id} 가 public index 에 없다")
+    r_obj = e.get("receipt_object")
+    if not _is_hex64(r_obj or ""):
+        raise PreserveError(stage, f"index entry 의 receipt_object 가 이상하다: {r_obj!r}")
+    try:
+        raw = backend.read_back(r_obj)
+    except PreserveError as ex:
+        raise PreserveError(stage, f"receipt 를 회수하지 못했다: {ex.msg}") from ex
+    rec = load_canonical(raw)
+    bad = check_receipt(rec, e, backend)
+    if bad:
+        raise PreserveError(stage, "; ".join(bad[:4]))
+    return rec
+
+
+def run_transaction(planned: PlannedLeg, run_dir: Path, backend: CasBackend,
+                    index_path: Path, hooks: Hooks, *,
+                    faults: frozenset[str] = frozenset(),
+                    drop_source_after_seal: bool = False) -> dict:
+    """10단계를 순서대로. publish 전에 멈추면 public index 는 비어 있다.
+
+    `drop_source_after_seal` 은 회귀용이 아니라 **증명용**이다 — 업로드 뒤
+    원본을 지우고도 끝까지 간다면, 복원이 backend 에서 나온 것이 확실하다.
+    """
+    faults = frozenset(faults)
+    unknown = faults - FAULTS
+    if unknown:
+        raise ValueError(f"모르는 fault: {sorted(unknown)}")
+    run_dir = Path(run_dir)
+    _require_hooks(hooks)
+
+    # ── 0. backend 능력 ─────────────────────────────────────────────────
+    retention = 1 if "retention_too_short" in faults else backend.retention_days
+    if retention < hooks.min_retention_days:
+        raise PreserveError("capability",
+                            f"보존 기간 {retention}일 < 요구 {hooks.min_retention_days}일")
+
+    # ── 1. planned leg seal — run_spec 이 **있어야** 한다 (P1-3) ─────────
+    pid = planned.planned_id()
+    spec_path = run_dir / "run_spec.json"
+    if not spec_path.is_file():
+        raise PreserveError("planned_seal",
+                            "run_spec.json 이 없다 — 실행이 계획을 기록했다는 "
+                            "증명이 없으면 봉인값으로 채우지 않는다")
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    for k in ("planned_id", "source_digest"):
+        if not spec.get(k):
+            raise PreserveError("planned_seal", f"run_spec 에 {k} 가 없다")
+    claimed = "다른-계획" if "wrong_planned_id" in faults else spec["planned_id"]
+    if claimed != pid:
+        raise PreserveError("planned_seal",
+                            f"실행이 가리키는 계획 {claimed[:16]!r} ≠ 봉인한 계획 {pid[:16]}")
+    got = "다른-digest" if "wrong_source_digest" in faults else spec["source_digest"]
+    if got != planned.source_digest:
+        raise PreserveError("planned_seal", f"code identity 가 계획과 다르다: {got!r}")
+
+    # ── 2. payload seal ─────────────────────────────────────────────────
+    man = seal_payload(run_dir, faults=faults)
+    # 봉인 **뒤** 손상 — 전송·보관 중 변조가 실제 모양이다
+    if "member_bit_flip" in faults:
+        victim = next(p for p in sorted(run_dir.rglob("*")) if p.is_file())
+        b = bytearray(victim.read_bytes())
+        b[0] ^= 0x01
+        victim.write_bytes(bytes(b))
+    if "member_extra" in faults:
+        (run_dir / "__stowaway__").write_bytes(b"not in the manifest")
+    bad = verify_payload(run_dir, man)
+    if bad:
+        raise PreserveError("payload_seal", "; ".join(bad[:4]))
+
+    # ── 3. CAS staging put-if-absent ────────────────────────────────────
+    for m in man["members"]:
+        backend.put_if_absent((run_dir / m["path"]).read_bytes(), faults=faults)
+    man_dg = backend.put_if_absent(canonical_bytes(man), faults=faults)["digest"]
+
+    # ── 4. read-back ────────────────────────────────────────────────────
+    for m in man["members"]:
+        backend.read_back(m["sha256"], faults=faults)
+    backend.read_back(man_dg, faults=faults)
+
+    _drop_from_cas(backend, man, man_dg, faults)
+
+    # 여기서 원본을 지운다 — 이후는 backend 만으로 가야 한다
+    if drop_source_after_seal:
+        shutil.rmtree(run_dir)
+
+    # ── 5~9 ─────────────────────────────────────────────────────────────
+    return _finalize(planned.leg_id, pid, planned.envelope(), man_dg,
+                     man["root_digest"], backend, index_path, hooks,
+                     retention, faults)
+
+
+def _finalize(leg_id: str, pid: str, envelope: dict, man_dg: str,
+              root_digest: str, backend: CasBackend, index_path: Path,
+              hooks: Hooks, retention: int, faults: frozenset[str]) -> dict:
+    """CAS 복원 → 검증 → 재채점 → receipt 저장 → publish → 등록.
+
+    **원본 run_dir 을 받지 않는다.** `finalize_only()` 가 같은 경로를 쓴다.
+    """
+    root = Path(tempfile.mkdtemp(prefix=f"preserve_{leg_id}_"))
+    try:
+        # ── 5. CAS 에서만 복원 ──────────────────────────────────────────
+        res = restore_from_cas(backend, man_dg, root, faults=faults)
+        man = res["manifest"]
+        rbad = verify_payload(root, man)
+        if rbad:
+            raise PreserveError("empty_root_restore", "; ".join(rbad[:4]))
+
+        # ── 6~7. 검증 + 복원본만으로 재채점 ─────────────────────────────
+        v, out = _validate_and_rescore(root, hooks, backend, faults)
+
+        # ── 8. receipt 를 **CAS 에 저장**하고 되읽는다 (P0-2) ───────────
+        receipt = {
+            "schema": "execution-receipt/v1",
+            "leg_id": leg_id,
+            "planned_id": pid,
+            "planned_envelope": envelope,
+            "backend_uri": backend.uri,
+            # ★ 30차 P0-2 — 경로는 겹칠 수 있다. store 생성 시각에 고정된
+            #   UUID 를 함께 봉인해야 "같은 store 인가" 에 답할 수 있다.
+            "backend_store_id": backend.store_id,
+            "payload_root_digest": root_digest,
+            "payload_manifest_digest": man_dg,
+            "n_members": man["n_members"],
+            "total_bytes": man["total_bytes"],
+            # ★ 31차 P1-1 — 숫자 하나로 축약하면 **무엇을 봤는지** 사라진다.
+            #   검사 이름 집합을 봉인해 검사를 바꿔치기해도 개수만 같으면
+            #   통과하던 자리를 막는다.
+            "validation": {"ok": True,
+                           "n_checks": len(v["checks"]),
+                           "checks": sorted(v["checks"])},
+            "outputs": [out],
+            "retention_days": retention,
+        }
+        receipt["receipt_digest"] = digest(receipt)   # 이 시점엔 키가 없다
+        r_obj = backend.put_if_absent(canonical_bytes(receipt), faults=faults)["digest"]
+        back = load_canonical(backend.read_back(r_obj, faults=faults))
+        if back != receipt:
+            raise PreserveError("receipt", "저장한 receipt 를 되읽었더니 다르다")
+
+        # ★ 27차 P0-1 — 한 번의 read-back 은 **회수 가능성 불변식이 아니다.**
+        #   되읽은 직후 지워도 초판은 publish 와 등록까지 갔다. 주입으로
+        #   그 상황을 만들고, 등록 직전에 다시 회수해 대조한다.
+        _hit_receipt(backend, r_obj, faults, "after_readback")
+
+        # ── 9. per-leg 배타 publish ─────────────────────────────────────
+        if "crash_before_publish" in faults:
+            raise PreserveError("publish", "publish 직전에 죽었다 (주입)")
+        publish(index_path, {"leg_id": leg_id, "planned_id": pid,
+                             # ★ envelope 를 함께 싣는다 — `finalize_only` 가
+                             #   **바이트 동일한** receipt 를 다시 만들려면
+                             #   원본 run_dir 없이도 계획을 알아야 한다.
+                             "planned_envelope": envelope,
+                             "receipt_digest": receipt["receipt_digest"],
+                             "receipt_object": r_obj,
+                             "payload_root_digest": root_digest,
+                             "payload_manifest_digest": man_dg,
+                             "backend_uri": backend.uri})
+
+        _hit_receipt(backend, r_obj, faults, "after_publish")
+
+        # ── 10. 등록 = **object graph retention commit** ─────────────────
+        if "crash_after_publish" in faults:
+            raise PreserveError("register", "publish 뒤 등록 전에 죽었다 (주입)")
+        lease = _commit_registration(backend, index_path, leg_id)
+        # ★ 30차 P0-1 — `ok=True` 가 durable retention 을 뜻하지 않는다.
+        #   강제 수준을 값으로 돌려주고, 호출자가 그것을 보고 판단한다.
+        return {"ok": True, "receipt": receipt, "planned_id": pid,
+                "payload_root_digest": root_digest, "receipt_object": r_obj,
+                "retention": lease,
+                "durable": lease["enforcement"] == ENFORCEMENT_OBJECT_LOCK}
+    finally:
+        shutil.rmtree(root, ignore_errors=True)
+
+
+def _commit_registration(backend: CasBackend, index_path: Path,
+                         leg_id: str) -> dict:
+    """도달 가능한 graph 를 **전부 pin 한 뒤**에만 등록 기록을 남긴다.
+
+    ★ 28차 P0-1 — 초판은 receipt 를 한 번 더 읽고 journal 을 썼다. 두 연산이
+      같은 retention 안에 없으므로, 마지막 read 직후 지우면 등록이 성립하면서
+      회수가 불가능해졌다. 성공 불변식을 구조로 만든다:
+
+        registered(leg) ⇒ receipt · manifest · member · 산출 전부 회수 가능
+    """
+    e = index_entries(index_path).get(leg_id)
+    if not e:
+        raise PreserveError("register", f"{leg_id} 가 public index 에 없다")
+    rec = verify_registered_receipt(backend, index_path, leg_id)
+    man = load_canonical(backend.read_back(rec["payload_manifest_digest"]))
+    if check_manifest(man):
+        raise PreserveError("register", "receipt 가 가리키는 manifest 가 깨졌다")
+
+    objs = reachable_objects(dict(rec, receipt_object=e["receipt_object"]), man)
+
+    # ★ 30차 P0-1 — pin 을 하나씩 만들고 나서 "다 있나" 를 세는 것이 아니라,
+    #   graph 를 **하나의 retention lease** 로 붙든다. lease 자체가 CAS object
+    #   이고 pin 되므로 위조하면 graph digest 가 어긋난다.
+    lease = backend.retain(leg_id, objs,
+                           min_retention_days=rec["planned_envelope"]["min_retention_days"])
+    verify_graph_before_registration(backend, index_path, leg_id, lease)
+
+    _register(index_path, leg_id, e["receipt_object"],
+              pin_set_digest(leg_id, objs), sorted(objs), lease["lease_digest"],
+              lease.get("lease_version") or "",
+              lease.get("lease_content_version") or "")
+
+    # ★ 29차 P0-2 / 30차 P0-1 — commit 뒤에 **다시** 본다. 그 검증의 마지막
+    #   단계는 바이트 읽기가 아니라 lease 상태 확인이다.
+    verify_registered_graph(backend, index_path, leg_id)
+    return lease
+
+
+def finalize_only(leg_id: str, backend: CasBackend, index_path: Path) -> dict:
+    """publish 는 됐는데 등록 전에 죽은 다리를 **회수만으로** 닫는다.
+
+    ★ 27차 P0-2 — 초판은 `_finalize()` 를 다시 호출했다. 그러면 CAS payload
+      restore → validate → `hooks.rescore` → **새 receipt 생성**까지 반복한다.
+      원본 12시간 fitting 을 다시 돌리지 않는다는 좁은 뜻은 맞지만, "재계산
+      없이 CAS 만으로" 는 사실이 아니었다. analyzer 환경이 조금만 달라도 새
+      receipt 가 달라져 immutable publish 에서 복구가 실패한다.
+
+      이제 **hook 을 인자로 받지 않는다.** 재계산이 구조적으로 불가능하다.
+      receipt 가 없거나 결속이 어긋나면 재생성하지 말고 멈춘다.
+    """
+    check_id(leg_id)
+    e = index_entries(index_path).get(leg_id)
+    if e is None:
+        raise PreserveError("finalize_only",
+                            f"{leg_id} 가 public index 에 없다 — 이어 붙일 것이 없다")
+    # ★ 28차 P0-1 — 초판은 journal 만 보고 `already=True` 를 돌려줬다.
+    #   등록된 뒤에 object 를 잃으면 그 말이 거짓이 된다. 항상 graph 를 본다.
+    # ★ 29차 P0-1 — 초판은 listed pins 만 맞으면 `verify_registered_receipt()`
+    #   를 부르지 않고 `already=True` 를 돌려줬다. 그래서 subset journal 과
+    #   foreign backend 복사가 통과했다. 항상 graph 를 재유도한다.
+    # ★ 31차 P0-1 — 초판은 두 경로 모두 `ok=True` 만 돌려줬다. "`ok=True` 의
+    #   뜻을 좁혔다" 가 **모든 public 성공 경로**에 적용되지 않았다는 뜻이다.
+    #   `run_transaction` 과 같은 typed retention 결과를 돌려준다.
+    if registration(index_path, leg_id) is not None:
+        lease = verified_retention(backend, index_path, leg_id)  # 실패하면 예외
+        # ★ 32차 P0-3 — journal 이 **보인다**고 durable 한 것이 아니다.
+        #   `during_journal_fsync` 에서 죽으면 이름은 보이는데 그 directory 가
+        #   아직 안 굳었다. 초판은 여기서 그대로 `ok=True` 를 돌려줘
+        #   interrupted commit 을 완료하지 않았다 — 뒤의 power loss 에서
+        #   journal 이 사라질 수 있었다. 재개가 commit 을 **끝낸다**.
+        _fsync_dir_strict(_reg_file(index_path, leg_id).parent, "register")
+        return {"ok": True, "already": True, "retention": lease,
+                "durable": lease["enforcement"] == ENFORCEMENT_OBJECT_LOCK,
+                "receipt_object": e["receipt_object"]}
+    lease = _commit_registration(backend, index_path, leg_id)
+    return {"ok": True, "already": False,
+            "pin_set_digest": pin_set_digest(leg_id, lease["objects"]),
+            "retention": lease,
+            "durable": lease["enforcement"] == ENFORCEMENT_OBJECT_LOCK,
+            "receipt_object": e["receipt_object"]}
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# 46차 P0-11 — planned leg index (계약 §13.4 가 신고하던 "묶음 9 의 남은 절반")
+#
+# 왜: 보존 원장의 coverage 기준이 **커밋된 투영**이었다. 그래서 새 다리를 돌려도
+#   투영을 만들기 전에는 아무 회귀도 깨지지 않았다 — 2026-08-20 에 warm 7다리를
+#   그렇게 돌렸고 보존 없이 잃었다. 실행 **전에** 막으려면 계획 index 와 그것을
+#   보는 gate 가 있어야 한다.
+#
+# 무엇이 authority 인가: 사람이 원장에 적은 `planned` 항목 하나다. 그 항목은
+#   (a) 어느 다리를 (b) 어느 **active** cohort 아래 (c) **어떤 code identity 로**
+#   돌려도 좋은지를 말한다. 셋 중 하나라도 다르면 실행하지 않는다.
+#
+# 무엇이 authority 가 아닌가: 실행기가 계산해서 넣는 값. 계획은 실행기의 출력이
+#   아니라 입력이다 (자기 출력이 자기 근거가 되면 gate 가 아니다 — 37차 #9 에서
+#   같은 형태를 이미 겪었다).
+# ═════════════════════════════════════════════════════════════════════════════
+
+#: 계획 항목의 **닫힌** key 집합. 빠진 key 의 `None` 은 "선언하지 않았다" 와
+#: 구별되지 않는다 — 이 저장소가 pointer schema 에서 이미 겪은 형태다.
+PLANNED_KEYS = ("leg_id", "cohort_id", "status", "authorization_kind",
+                "authorized_source_digest", "run_spec_digest",
+                "recorded_on", "근거")
+
+#: ★ 48차 P0-5 — prospective 항목은 `run_spec:` 도 담는다. 47차는 계획이
+#:   `run_spec_digest`(불투명 64hex)만 들고 있어서, 그 digest 가 **무엇의**
+#:   주소인지 원장만 보고는 알 수 없었다. 사람이 승인한 내용이 기계가 읽을 수
+#:   없는 형태면 gate 는 "어떤 dict 든 이 digest 를 내면 통과" 가 된다.
+#:   소급 항목에는 없다 (그때는 봉인된 계획 자체가 없었다).
+PLANNED_KEYS_PROSPECTIVE = PLANNED_KEYS + ("run_spec",)
+
+#: ★ 47차 — 승인의 **종류**. 46차는 이 구분이 없어서 소급 기록 8건과 진짜
+#:   실행 전 승인이 같은 schema 로 섞였고, 그래서 "실행 전 gate 가 실제로
+#:   작동한 적이 있는가" 를 기계가 답할 수 없었다 (자유문자 근거 안에만
+#:   있었다).
+#:
+#:   prospective  — 실행 **전에** 사람이 승인했다. `run_spec_digest` 가 실제
+#:                  계획의 내용 주소이고 claim 이 이것만 받는다.
+#:   retrospective— index 도입 **전에** 이미 돌았다. 역사 목록일 뿐이며
+#:                  실행 gate 증거로 세지 않는다. claim 대상이 아니다.
+AUTHORIZATION_KIND = ("prospective", "retrospective")
+
+#: 소급 항목의 `run_spec_digest` 자리. 그때는 봉인된 계획이 없었다 — 없는 것을
+#: 있는 척하는 대신 **없었다고 적는다**.
+RETROSPECTIVE_SPEC = "retrospective:no-preauthorization"
+
+#: 계획 항목의 정확한 상태 enum (47차 P0-1 — lifecycle 로 넓혔다).
+#:
+#:   planned   — 아직 안 돌렸다. **이것만이 claim 대상**이다.
+#:   running   — claim 이 살아 있다. 재개(resume)만 가능하고 새 claim 은 못 한다.
+#:   executed  — 끝났다. 기록이지 승인이 아니다.
+#:   abandoned — 사람이 접었다. claim 도 finalize 도 안 된다.
+PLANNED_STATUS = ("planned", "running", "executed", "abandoned")
+
+#: lifecycle 의 phase — 둘 다 끝나야 finalize 된다.
+CLAIM_PHASES = ("grid", "fit")
+
+#: claim 파일이 담는 **닫힌** key 집합.
+#:
+#: ★ 49차 P0-3 — `attempt` 하나를 **공개 식별자와 비밀 credential 로 가른다.**
+#:   48차는 재개 credential 을 claim 파일에 평문으로 담았다. 그러면 claims
+#:   root 를 읽을 수 있는 누구나 소유 증명을 만들 수 있으므로 "소유 증명이
+#:   있어야 재개한다" 는 규칙이 파일 권한 하나로 무너진다 — credential 이
+#:   곧 파일 내용이었다.
+#:
+#:   `attempt_id`       — 공개. 원장·로그·진단 API 에 그대로 적는다.
+#:   `attempt_verifier` — `sha256(token)`. 저장하는 것은 이것뿐이고 token 자체는
+#:                        디스크의 이 파일에 **없다**.
+CLAIM_KEYS = ("leg_id", "cohort_id", "attempt_id", "attempt_verifier",
+              "run_spec_digest", "source_digest", "opened_at", "phases")
+
+DEFAULT_LEDGER = (Path(__file__).resolve().parents[1]
+                  / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml")
+
+
+def _load_ledger(ledger=None) -> dict:
+    import yaml
+
+    path = canonical_ledger(ledger)
+    if not path.is_file():
+        raise PreserveError(
+            "plan", f"보존 원장이 없다: {path} — 계획 index 를 읽을 수 없으므로 "
+                    "아무 것도 실행하지 않는다")
+    doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    if not isinstance(doc, dict):
+        raise PreserveError("plan", f"보존 원장이 map 이 아니다: {path}")
+    return doc
+
+
+#: cohort 상태 enum — publisher(`row_projection._LEDGER_STATUS`)와 같은 값이다.
+#: 두 곳에 적혀 있으므로 `test_the_two_parsers_agree_on_the_cohort_contract` 가
+#: 둘이 갈라지지 않는지 본다.
+#: ★ 54차 P0-1 — `freezing` 이 들어온다. 동결의 **시작**이 발급자에게 보이지
+#:   않으면, 사전검사를 지난 발급이 얼리는 중인 cohort 로 들어간다 (리뷰어가
+#:   두 schedule 로 실측했다: 대기 중 freeze 완주 · journal 만 쓰고 죽은 freeze).
+#:   동결을 원장에 먼저 선형화하면 그 창이 **표현 불가능**해진다.
+COHORT_STATUS = ("active", "freezing", "frozen")
+
+
+def _cohort_dir_of(cohort: dict, where) -> Path:
+    """cohort `dir` 을 **정규 · 저장소-상대 · 격리**로 강제한다 (47차).
+
+    `pathlib` 의 `/` 는 오른쪽이 절대 경로면 왼쪽을 버린다. 그래서 검사 없이
+    join 하면 `dir: /etc` 가 저장소 밖을 가리킨다. 같은 곳을 여러 표기로 적을
+    수 있으면 중복 선언 검사도 무의미해진다.
+    """
+    import posixpath
+
+    raw = cohort.get("dir")
+    cid = cohort.get("cohort_id")
+    if type(raw) is not str or not raw:
+        raise PreserveError(
+            "plan", f"cohort {cid!r} 의 `dir` 이 비어 있지 않은 문자열이 아니다: "
+                    f"{raw!r} ({where})")
+    if posixpath.isabs(raw) or posixpath.normpath(raw) != raw \
+            or ".." in raw.split("/"):
+        raise PreserveError(
+            "plan", f"cohort {cid!r} 의 `dir` 이 정규 저장소-상대 경로가 아니다: "
+                    f"{raw!r} — 절대 경로·`..`·`.`·중복 slash 를 쓰지 않는다")
+    root = REPO_ROOT.resolve()
+    got = (REPO_ROOT / raw).resolve()
+    if got != root and root not in got.parents:
+        raise PreserveError(
+            "plan", f"cohort {cid!r} 의 `dir` 이 저장소 밖을 가리킨다: {raw!r} → {got}")
+    return got
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+SMOKE_NAMESPACE = REPO_ROOT / "results" / "_smoke"
+
+
+def assert_run_is_authorized(leg_id: str, phase: str, paths, run_spec: dict,
+                             source_digest: str, ledger=None,
+                             token: str | None = None, may_open: bool = False):
+    """비싼 계산 **직전**에 부르는 단 하나의 gate (47차 P0-2 조건 11-c).
+
+    46차 gate 는 `run.sh` **안에만** 있었다. `--leg` 는 shell 이 소비했고
+    `python -m src.grid` · `python -m src.fitting` 직접 호출은 계획을 전혀
+    보지 않았다. gate 가 wrapper 에 있으면 wrapper 를 안 쓰면 그만이다.
+
+    `paths` 의 **모든** 경로가 smoke namespace 안이면 면제한다 — smoke 자신이
+    pipeline 을 돌아야 하기 때문이다. 판정은 어휘가 아니라
+    `is_inside_namespace()` 의 정규 격리다.
+
+    돌려주는 것은 살아 있는 claim 이다. 없으면 만들고(계획 대조 + 원자적
+    발급), 있으면 같은 attempt 를 이어받는다. 두 phase(grid·fit)가 한 claim 을
+    공유하므로 `all` 이 두 process 로 갈라져도 attempt 는 하나다.
+    """
+    real = [Path(x) for x in paths if x]
+    if real and all(is_inside_namespace(x, SMOKE_NAMESPACE) for x in real):
+        # ★ 58차 P0-8 — 면제를 **기록으로 남긴다.**
+        #   여기가 "이 실행은 smoke 다" 를 authority 가 정하는 유일한 자리다
+        #   (계획 gate 면제의 근거이기도 하다). 48~57차는 그 판단을 쓰고
+        #   버렸고, 그래서 나중에 승격 sink 가 **같은 판단을 경로로 다시**
+        #   해야 했다 — 두 번 하면 두 번째는 옮겨진 바이트를 못 잡는다.
+        #   한 번 정하고 등록부에 굳히면 sink 는 다시 정할 필요가 없다.
+        for x in real:
+            try:
+                _record_execution_class(
+                    x, EXEC_CLASS_SMOKE,
+                    evidence=(f"실행 전 gate 면제 (계약 §13.3.3): "
+                              f"{x} 가 {SMOKE_NAMESPACE} 안이라 계획 gate 를 "
+                              f"면제했다 · leg={leg_id} phase={phase}"),
+                    ledger=ledger)
+            except PreserveError as exc:
+                # ★ 58차 L2 — **"아직 identity 가 없다" 만 삼킨다.**
+                #   57차는 `except PreserveError: pass` 였다. 주석은 이 한
+                #   경우만 뜻했지만 실제로는 **class 충돌**(이미 canonical 로
+                #   등록된 내용을 smoke 로 적으려는 것)까지 같이 삼켰다.
+                #   삼키면 등록부가 authority 이기를 그만둔다 — 충돌은 바로
+                #   그 순간에 사람이 봐야 하는 사건이다.
+                if not _is_missing_manifest(exc):
+                    raise
+                # 실행 **직전**이라 manifest 가 아직 없다. identity 가 없으므로
+                # 여기서는 못 적는다. 산출이 굳는 순간 `record_run_outputs()` 가
+                # 적는다 (58차 L1 — 그 함수가 없어서 아무것도 안 굳었었다).
+        return None
+    # ★ 57차 P0-1 — **여기서 token 파일을 읽지 않는다.** 49차는 caller 가 준
+    #   경로의 파일을 읽었고, 그 "경로를 줬다" 는 행위 자체가 소유 주장이었다.
+    #   경로 인자를 없앤 뒤 같은 자리에서 자동으로 읽으면, 다리 **이름만** 아는
+    #   호출이 남의 실행에 붙는다 — 48차 P0-3 이 막은 바로 그것이다 (회귀를
+    #   `test_two_public_authorizations_do_not_both_enter_compute` 가 잡았다).
+    #
+    #   재개하려는 process 는 `attach_leg_run(leg_id)` 로 **명시적으로** 붙어
+    #   credential 을 얻고, 그것을 `token=` 으로 넘긴다. 읽는 자리는 한 곳
+    #   (`attach_leg_run`)이고 이 gate 는 받은 것만 본다.
+    # ★ 54차 P0-1 — claim 의 자리는 **원장이 정한다** (caller 가 아니다).
+    claims_root = claims_root_for_ledger(ledger)
+    path = _claim_path(leg_id, claims_root)
+    if path.is_file():
+        # ★ 48차 P0-3 — **자동 재개하지 않는다.** 47차는 claim 이 보이면
+        #   credential 없이 이어받았고, 그래서 같은 public 호출 둘이 모두
+        #   compute 에 들어갔다. 재개는 소유 증명을 든 실행만 한다.
+        if not _nonempty_str(token or ""):
+            raise PreserveError(
+                "plan",
+                f"{leg_id!r} 은 이미 실행 중이다 (claim: {path}) — 두 번째 "
+                "실행을 시작할 수 없다. 중단된 실행을 이으려면 그 실행의 "
+                "소유 증명(token 파일)을 주라")
+        claim = resume_claim(leg_id, token=token, ledger=ledger)
+        want = run_spec_digest(run_spec)
+        if claim.run_spec_digest != want:
+            raise PreserveError(
+                "plan",
+                f"{leg_id!r} 의 살아 있는 claim 은 다른 run_spec 을 봉인했다 "
+                f"({claim.run_spec_digest[:16]} ≠ {want[:16]}) — 같은 claim 으로 "
+                "다른 실행을 이어붙일 수 없다")
+        if claim.source_digest != source_digest:
+            raise PreserveError(
+                "plan",
+                f"{leg_id!r} 의 claim 이 다른 code identity 로 열렸다 "
+                f"({claim.source_digest} ≠ {source_digest}) — 실행 도중 "
+                "RUN_SCOPE 가 바뀌었다")
+        _record_canonical_if_identifiable(real, leg_id, phase, ledger)
+        return claim
+    # 아직 없다 — 지금 발급한다. **coordinator 만** 발급한다.
+    if not may_open:
+        # ★ 54차 P0-6 — 직접 호출은 **발급하지 않는다.** 53차까지 이 경로는
+        #   소유 증명을 아무 데도 남기지 않는 claim 을 만들 수 있었다 (§0 에
+        #   신고했고, 리뷰어가 그 위에서 회수 불가 상태를 실측했다). 발급은
+        #   coordinator 의 일이다.
+        #
+        # ★ 57차 P0-1 — 54차는 이 구분을 **`--attempt-file` 이 주어졌는가**로
+        #   했다. 그 인자가 sink 라 없앴으므로, 구분도 pathname 이 아니라
+        #   **명시적 의사표시**로 옮긴다. 보장은 그대로다 — 오히려 더 좁다:
+        #   경로를 아무거나 지어내면 coordinator 가 되던 것이, 이제는
+        #   `may_open=True` 를 스스로 적어야 한다.
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 실행권이 아직 발급되지 않았다 — 이 호출은 발급자가 "
+            "아니다 (`may_open=False`). 발급은 coordinator 가 한다: "
+            "`./run.sh` 또는 `--mode open`")
+    claim = open_leg_run(leg_id, run_spec, source_digest, ledger=ledger)
+    _record_canonical_if_identifiable(real, leg_id, phase, ledger)
+    return claim
+
+
+def _record_canonical_if_identifiable(paths, leg_id, phase, ledger) -> None:
+    """계획 gate 를 **통과한** 산출을 정본으로 등록한다 (58차 P0-8).
+
+    smoke 쪽 면제와 **같은 authority·같은 순간**이다. 한쪽만 등록하면 등록부가
+    "smoke 목록" 이 되고, 그러면 등록 없음이 다시 "아마 정본" 을 뜻하게 된다 —
+    그 순간 fail-closed 가 무너진다. 두 분기가 모두 적어야 "등록 없음 = 모른다"
+    가 성립한다.
+
+    manifest 가 아직 없는 단계(첫 grid 호출)면 identity 가 없어 조용히 건너뛴다.
+    이후 phase(fit·finalize)가 같은 산출을 다시 지나며 등록한다.
+    """
+    for x in paths or []:
+        try:
+            _record_execution_class(
+                x, EXEC_CLASS_CANONICAL,
+                evidence=(f"실행 전 계획 gate 통과: leg={leg_id} phase={phase} "
+                          f"(계획 원장이 승인한 다리)"),
+                ledger=ledger)
+        except PreserveError:
+            # identity 없음(=manifest 전) 또는 이미 다른 class 로 등록됨.
+            # 후자는 진짜 모순이지만 gate 를 여기서 깨뜨리지 않는다 — 승격
+            # sink 가 같은 등록부를 보고 거부한다.
+            pass
+
+
+
+# ── 58차 L4 — 경계 판정을 **커널 좌표**로 (묶음 β) ──────────────────────────
+#
+# 아래 넷은 57차가 `docs/22p_gap/row_projection.py` 에 만든 것을 **여기로
+# 옮긴 것**이다. 왜 옮기는가:
+#
+#   1. **한 경계, 한 함수.** smoke containment(`is_inside_namespace`)와 frozen
+#      guard 가 서로 다른 판정을 쓰고 있었다 — 하나는 어휘/symlink, 하나는
+#      커널 좌표. 두 규칙이 갈리면 어느 쪽이 경계인지 정할 수 없다. 리뷰어의
+#      L4 반례가 정확히 그 틈이었다: bind mount 는 symlink 가 아니므로 어휘
+#      판정을 그냥 통과하고, 저장소 밖 디렉터리가 smoke 면제를 받았다.
+#
+#   2. **봉인 범위.** `row_projection.py` 는 RUN_SCOPE 밖이라 거기 있는 경계
+#      판정은 `source_digest` 가 덮지 않았다. 여기(`tools/`)로 올리면 경계
+#      규칙이 봉인된 code identity **안**으로 들어온다 — 커버리지가 넓어지지
+#      좁아지지 않는다.
+#
+# `[해석]` 이 이동은 **우리가 정한 것**이고 되돌릴 수 있다. 리뷰어가 "경계
+# helper 는 투영 쪽에 있어야 한다" 고 보면 반대로 옮기면 된다. 다만 그때도
+# **한 자리**여야 한다 — 두 벌은 안 된다.
+
+_MOUNTINFO_ESC = {"040": " ", "011": "\t", "012": "\n", "134": "\\"}
+_O_LOOKUP = getattr(os, "O_PATH", os.O_RDONLY)
+
+
+class BoundaryUnknown(PreserveError):
+    """경계를 **답할 수 없다**. 부르는 쪽은 fail-closed 해야 한다 (58차 L4)."""
+
+
+def _mountinfo_unescape(raw: str) -> str:
+    """`\\040` 류를 되돌린다 (56차 P0-5).
+
+    55차는 field 를 그대로 `Path` 에 넣었고, 공백이 든 alias 는 어떤 mount 와도
+    매치되지 않아 guard 가 통과했다 (리뷰어 실측: `published true`).
+    """
+    out, i = [], 0
+    while i < len(raw):
+        if raw[i] == "\\" and raw[i + 1:i + 4] in _MOUNTINFO_ESC:
+            out.append(_MOUNTINFO_ESC[raw[i + 1:i + 4]])
+            i += 4
+        else:
+            out.append(raw[i])
+            i += 1
+    return "".join(out)
+
+
+def _mount_table() -> list:
+    """이 namespace 의 mount **그래프** (56차 P0-5·6·7).
+
+    55차는 `(mountpoint, root)` 문자열 쌍만 들고 첫 매치를 골랐다. 리뷰어는 그
+    모델의 세 축을 전부 쳤다:
+
+      · 공백 경로가 `\\040` 이라 매치되지 않았다 (P0-5)
+      · 겹친 bind 에서 **바깥** 조상을 먼저 골라 더 깊은 mount 를 잃었다 (P0-6)
+      · `root` 는 **그 filesystem 안의** 경로인데 namespace 절대경로로 읽었다
+        (P0-7 — 별도 tmpfs 의 child 를 bind 하면 `root=/child` 다)
+
+    그래서 major:minor 와 mount/parent ID 를 함께 들고 다닌다. 읽을 수 없거나
+    형식이 어긋나면 **비어 있다고 하지 않고** 예외로 알린다 — 알 수 없는 것을
+    "mount 가 없다" 로 바꾸면 그것이 fail-open 이다.
+    """
+    try:
+        body = Path("/proc/self/mountinfo").read_text(encoding="utf-8")
+    except OSError as exc:
+        raise BoundaryUnknown(
+            "boundary",
+            f"✗ mount 관계를 읽을 수 없다 ({exc}) — 목적지가 얼린 tree 의 "
+            "별칭인지 답할 수 없으므로 게시하지 않는다 (fail-closed)")
+    out = []
+    for ln in body.splitlines():
+        if not ln.strip():
+            continue
+        f = ln.split()
+        if len(f) < 7:
+            raise BoundaryUnknown("boundary", f"✗ mountinfo 행을 해석할 수 없다: {ln[:120]!r}")
+        out.append({"id": f[0], "parent": f[1], "dev": f[2],
+                    "root": _mountinfo_unescape(f[3]),
+                    "mp": _mountinfo_unescape(f[4])})
+    return out
+
+
+#: 대상을 **열기만** 하는 flag — 읽기 권한도 directory 여부도 묻지 않는다.
+_O_LOOKUP = getattr(os, "O_PATH", os.O_RDONLY)
+
+
+def _kernel_mount_id(path) -> str:
+    """이 경로가 **실제로 올라앉은** mount 의 ID — 커널이 답한다 (57차 P0-2).
+
+    ★ 왜 mountinfo 재현을 그만두는가 — 55·56차는 mountinfo 를 파이썬에서
+      다시 풀어 "어느 mount 냐" 를 **추측**했다. 그 추측은 세 번 틀렸다
+      (P0-5 escape · P0-6 깊이 · P0-7 root 의 좌표계). 57차 반례는 네 번째다:
+      같은 mountpoint 에 mount 를 **겹쳐 쌓으면** 깊이가 같아 구별할 수 없고,
+      "행 순서상 먼저" 를 고르면 **아래** mount 를 고른다 — 무해한 bind 를
+      깔고 얼린 child 를 덮으면 번역이 무해한 쪽으로 풀려 guard 가 통과했다.
+
+      56차 verdict 가 못 박은 것: **행 순서와 pathname 깊이로 stacked top 을
+      추측하면 안 된다.** 추측을 더 정교하게 만드는 수정은 다음 반례를 부를
+      뿐이고, 종결이 아니다. 겹침·전파·순서는 커널이 **이미 푼** 문제이므로
+      경로를 열고 그 fd 의 mount ID 를 묻는다 (`/proc/self/fdinfo/<fd>`).
+
+    답을 못 얻으면 예외다. "모른다" 를 "mount 가 없다" 로 바꾸는 것이
+    fail-open 이라는 규칙은 `_mount_table()` 과 같다.
+    """
+    try:
+        fd = os.open(str(path), _O_LOOKUP)
+    except OSError as exc:
+        raise BoundaryUnknown(
+            "boundary",
+            f"✗ 목적지를 열 수 없다 ({path}: {exc}) — 어느 mount 위인지 커널에게 "
+            "물을 수 없으므로 게시하지 않는다 (fail-closed)")
+    try:
+        info = Path(f"/proc/self/fdinfo/{fd}").read_text(encoding="utf-8")
+    except OSError as exc:
+        raise BoundaryUnknown(
+            "boundary",
+            f"✗ fd 의 mount ID 를 읽을 수 없다 ({path}: {exc}) — 얼린 tree 의 "
+            "별칭인지 답할 수 없으므로 게시하지 않는다 (fail-closed)")
+    finally:
+        os.close(fd)
+    for ln in info.splitlines():
+        if ln.startswith("mnt_id:"):
+            return ln.split(":", 1)[1].strip()
+    raise BoundaryUnknown(
+            "boundary",
+        f"✗ fdinfo 에 mnt_id 가 없다 ({path}) — 이 커널에서는 목적지의 mount 를 "
+        "확정할 수 없으므로 게시하지 않는다 (fail-closed)")
+
+
+def _fs_identity(path) -> tuple:
+    """`(major:minor, 그 filesystem **안**의 경로)` — 이름이 아니라 **대상**의 좌표.
+
+    이 좌표는 bind·겹침·symlink·이름 변경에 불변이다. 그러므로 "얼린 tree 안인가"
+    를 이 좌표에서 물으면 "어떤 이름으로 왔는가" 는 더 물을 필요가 없다
+    (57차 P0-4). 55·56차가 이름을 하나 골라 되돌리려다 세 번 틀린 자리다.
+
+    `root` 는 **그 filesystem 안의** 경로다 (56차 P0-7) — namespace 절대경로가
+    아니다. 별도 tmpfs 의 child 를 bind 하면 `root=/child` 다.
+
+    목적지는 **아직 없을 수 있다** (새 cohort 디렉터리를 만들기 직전에 묻는
+    것이 이 검사의 정상 용례다). 그래서 존재하는 가장 깊은 조상에게 커널에
+    묻고, 없는 나머지는 그 좌표 뒤에 그대로 붙인다 — 없는 이름 위에는 아무 것도
+    mount 되어 있지 않으므로 그 이어붙임에 추측이 없다.
+    """
+    table = _mount_table()
+    probe, tail = Path(path).resolve(), []
+    while not probe.exists() and probe.parent != probe:
+        tail.append(probe.name)
+        probe = probe.parent
+    mid = _kernel_mount_id(probe)
+    m = next((x for x in table if x["id"] == mid), None)
+    if m is None:
+        raise BoundaryUnknown(
+            "boundary",
+            f"✗ 커널이 답한 mount {mid} 가 mountinfo 에 없다 ({path}) — "
+            "mount 표가 그 사이에 바뀌었을 수 있으므로 게시하지 않는다")
+    try:
+        rel = probe.relative_to(Path(m["mp"]))
+    except ValueError:
+        raise BoundaryUnknown(
+            "boundary",
+            f"✗ 커널이 답한 mount 를 목적지 경로에 맞출 수 없다 "
+            f"({probe} 가 {m['mp']!r} 아래가 아니다) — 게시하지 않는다")
+    fs = Path(m["root"]) / rel if str(rel) != "." else Path(m["root"])
+    for name in reversed(tail):
+        fs = fs / name
+    return (m["dev"], fs)
+
+
+def _names_for(dev: str, fs: Path, table) -> list:
+    """이 namespace 가 `(dev, fs)` 를 보여 주는 **모든** 이름 (57차 P1-4).
+
+    창을 하나 고르지 않는다. 56차는 `root` 가 가장 짧은 창을 골랐고, **고른다는
+    것 자체**가 다음 반례의 자리였다. 후보는 전부 만들고, 각각을 **커널에
+    되물어** 정말 그 대상인지 확인한다 — 위에 덮어씌운 mount 로 가려진 이름은
+    그 되물음에서 떨어진다.
+
+    이름이 하나도 없으면 빈 목록이다. 그 조상은 이 namespace 가 아예 보여 주지
+    않는다는 뜻이고 (예: 컨테이너의 `/` 위쪽), 보여 주지 않는 것은 목적지로도
+    쓸 수 없으므로 거부 사유가 아니다.
+    """
+    out = []
+    for c in table:
+        if c["dev"] != dev:
+            continue
+        root = Path(c["root"])
+        if not (root == fs or root in fs.parents):
+            continue
+        sub = fs.relative_to(root)
+        cand = Path(c["mp"]) / sub if str(sub) != "." else Path(c["mp"])
+        try:
+            if _fs_identity(cand) == (dev, fs):
+                out.append(cand)
+        except BoundaryUnknown:
+            # ★ 58차 L5 — **삼키지 않는다.** 이 예외는 "좌표를 못 밝히겠다" 는
+            #   fail-closed 신호인데, 57차는 그것을 `continue` 로 후보 부재로
+            #   번역했다. 호출자는 후보가 없으면 "안전하다" 로 읽으므로 의미가
+            #   정확히 뒤집힌다. 못 밝히면 그대로 올린다.
+            raise
+        except OSError:
+            continue                      # 그 이름이 사라졌을 뿐 — 후보만 제외
+    return out
+
+
+# ── 58차 L5 — frozen 좌표를 **freeze 시점에 봉인**한다 ─────────────────────
+
+def frozen_coords_root_for_ledger(ledger=None) -> Path:
+    """얼린 좌표의 봉인이 사는 곳 — claim·attempt·실행 class 와 같은 authority.
+
+    ★ 왜 이 등록부가 필요한가 (58차 L5).
+
+    `_assert_writable()` 의 마지막 층은 "이 좌표를 보여 주는 **이름**을 찾아
+    그 안의 marker 를 읽는다" 였다. 리뷰어는 frozen root 를 가리키는 이름을
+    무해한 bind 로 **덮어** 그 층을 통과시켰다 — 예외가 난 것이 아니라
+    **후보가 진짜로 없어졌다**. 그래서 `_names_for()` 의 예외 삼킴을 고쳐도
+    (고쳤다, 위) 이 반례는 안 막힌다.
+
+    물음이 틀렸다. "지금 이 좌표를 볼 수 있는 이름이 있는가" 는 공격자가
+    mount 로 바꿀 수 있는 질문이다. 바꿀 수 없는 질문은 **"우리가 얼릴 때
+    적어 둔 좌표 아래인가"** 다. 얼리는 순간의 `(major:minor, filesystem 안의
+    경로)` 를 여기 봉인해 두면 그 뒤로 이름이 몇 겹으로 덮이든 판정이 안
+    바뀐다 — 조회에 이름이 들어가지 않기 때문이다.
+    """
+    return canonical_ledger(ledger).parent / "_frozen_coords"
+
+
+def record_frozen_coordinate(dest, cohort_id: str, ledger=None) -> Path:
+    """얼리는 순간의 좌표를 봉인한다. `_write_frozen_marker()` 가 부른다."""
+    dev, fs = _fs_identity(dest)
+    # ★ 58차 — **원장 자신을 덮는 봉인은 거부한다.**
+    #
+    #   처음에는 "filesystem 뿌리(`fs == "/"`)는 무조건 거부" 로 썼다. **너무
+    #   넓었다.** 회귀가 잡았다 — 별도 파일시스템을 bind 한 정당한 경우
+    #   (`test_a_bind_from_a_separate_filesystem_is_resolved_by_the_mount_graph`)
+    #   에서 그 fs 의 mount root 가 `/` 이고, 그 봉인은 **그 장치만** 덮는
+    #   정확히 좁은 봉인이다. `(dev, /)` 는 "모든 경로" 가 아니라 "그 장치의
+    #   경로" 다.
+    #
+    #   `[해석]` 내가 막으려던 진짜 위험은 "뿌리" 가 아니라 **봉인이 authority
+    #   자신을 삼키는 것**이다. 원장이 사는 자리를 덮는 봉인이 들어오면 그 뒤로
+    #   원장에 아무것도 못 쓴다 — fail-closed 가 자기 발을 문다. 그것만 막는다.
+    #
+    #   교훈: fail-closed 를 늘리는 방향은 대체로 안전하지만 **근거 없이 넓은
+    #   거부**는 안전이 아니라 고장이다. 무엇이 위험한지를 정확히 짚어야 한다.
+    _led_dev, _led_fs = _fs_identity(canonical_ledger(ledger).parent)
+    if dev == _led_dev and (fs == _led_fs or fs in _led_fs.parents):
+        raise PreserveError(
+            "promote",
+            f"이 좌표는 원장 자신을 덮는다 ({dest} → {dev}:{fs}) — 봉인하면 "
+            "그 뒤로 authority 에 아무것도 쓸 수 없다")
+    root = frozen_coords_root_for_ledger(ledger)
+    root.mkdir(parents=True, exist_ok=True)
+    key = hashlib.sha256(f"{dev}\x00{fs}".encode("utf-8")).hexdigest()
+    rec = {"cohort_id": str(cohort_id), "dev": dev, "fs": str(fs),
+           "at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
+    path = root / f"{key}.json"
+    _atomic_write_json(path, rec)
+    return path
+
+
+def sealed_frozen_coordinates(ledger=None) -> list:
+    """봉인된 좌표 전부 — `(cohort_id, dev, fs)`."""
+    root = frozen_coords_root_for_ledger(ledger)
+    if not root.is_dir():
+        return []
+    out = []
+    for f in sorted(root.glob("*.json")):
+        try:
+            rec = json.loads(f.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            raise PreserveError(
+                "promote",
+                f"얼린 좌표 봉인을 읽을 수 없다: {f} — 읽을 수 없는 봉인은 "
+                "통과가 아니다 (fail-closed)")
+        if not (rec.get("cohort_id") and rec.get("dev") and rec.get("fs")):
+            raise PreserveError("promote", f"얼린 좌표 봉인이 불완전하다: {f}")
+        out.append((rec["cohort_id"], rec["dev"], Path(rec["fs"])))
+    return out
+
+
+def frozen_coordinate_covering(dest, ledger=None):
+    """이 목적지를 덮는 **봉인된 얼린 좌표**의 cohort_id (없으면 `None`).
+
+    이름을 한 번도 안 본다 — 좌표만 비교한다. 그래서 mount 로 이름을 덮어도
+    답이 안 바뀐다.
+    """
+    dev, fs = _fs_identity(dest)
+    for cid, fdev, ffs in sealed_frozen_coordinates(ledger):
+        if fdev == dev and (ffs == fs or ffs in fs.parents):
+            return cid
+    return None
+
+
+def is_inside_namespace(path, namespace) -> bool:
+    """`path` 가 `namespace` **안**인가 — 어휘가 아니라 실물로 (47차 P0-3).
+
+    46차 gate 는 shell `case` pattern 이었다. 그래서 다음이 면제를 받았다::
+
+        --out results/_smoke/../grid_fit_v4      # 문자열은 안, 실물은 밖
+        --out results/_smoke/link/x              # link 가 밖을 가리킨다
+
+    규칙 셋을 모두 만족해야 안이다:
+
+      1. `..` 성분이 없다 (정규 형태)
+      2. namespace 부터 마지막 **존재하는** 성분까지 어느 것도 symlink 가 아니다
+      3. 그 실물 경로가 namespace 의 실물 경로 아래다
+
+    아직 없는 하위 경로는 허용한다 (출력 디렉터리는 실행이 만든다). 다만 없는
+    성분 **앞**까지는 위 규칙이 그대로 적용된다.
+    """
+    ns = Path(namespace)
+    try:
+        ns_real = ns.resolve(strict=True)
+    except OSError:
+        return False
+    p = Path(path)
+    if ".." in p.parts:
+        return False
+    # namespace 실물부터 한 성분씩 내려가며 symlink 를 거부한다
+    try:
+        rel = p.absolute().relative_to(ns.absolute())
+    except ValueError:
+        return False
+    cur = ns_real
+    for part in rel.parts:
+        if part in (".", ""):
+            continue
+        nxt = cur / part
+        try:
+            st = os.stat(nxt, follow_symlinks=False)
+        except FileNotFoundError:
+            # ★ 58차 L4 — 여기서 `return True` 하면 **아래 좌표 검사에 안 닿는다.**
+            #   원래 판본이 그랬고, 그래서 아직 없는 꼬리를 붙인 목적지는 어휘
+            #   검사만 통과하면 무조건 "안" 이 됐다. bind alias 아래의 새 디렉터리가
+            #   정확히 그 모양이다. 없는 꼬리는 `_fs_identity()` 가 이미 다루므로
+            #   (존재하는 가장 깊은 조상에 커널이 답하고 나머지를 잇는다) 여기서는
+            #   **loop 만 끝내고** 좌표 판정으로 내려간다.
+            break
+        except OSError:
+            return False
+        if stat.S_ISLNK(st.st_mode):
+            return False                # alias 는 언제든 밖을 가리킬 수 있다
+        cur = nxt
+    # ★ 58차 L4 — 어휘·symlink 검사를 통과했다고 끝이 아니다. **커널 좌표로
+    #   담김을 다시 묻는다.**
+    #
+    #   위 loop 는 symlink 만 거부한다. bind mount 는 symlink 가 아니므로 그냥
+    #   통과했고, 리뷰어가 실물 mount 로 재현했다 — 저장소 밖 디렉터리를
+    #   `results/_smoke/alias` 에 bind 하면 계획에 없는 다리가 면제를 받고
+    #   **쓴 것이 namespace 밖에 떨어졌다** (우리도 재현했다).
+    #
+    #   금지 목록을 늘리지 않는다 (56차가 거절한 방식이다). 대신 물음을 바꾼다:
+    #   `(major:minor, filesystem 안의 경로)` 는 bind·겹침·이름 변경에
+    #   불변이므로, 그 좌표에서 담김을 물으면 "어떤 이름으로 왔는가" 를 더
+    #   물을 필요가 없다. publisher guard 가 이미 쓰는 좌표와 **같은 함수**다.
+    #
+    #   좌표를 못 얻으면 `BoundaryUnknown` 이 올라온다 — 삼키지 않는다.
+    #   "모른다" 를 "안이다" 로 바꾸면 그것이 fail-open 이고, 이 검사는 계획
+    #   gate 면제를 정하는 자리다.
+    ns_dev, ns_fs = _fs_identity(ns_real)
+    p_dev, p_fs = _fs_identity(p)
+    if ns_dev != p_dev:
+        return False                    # 다른 filesystem — 담길 수 없다
+    return p_fs == ns_fs or ns_fs in p_fs.parents
+
+
+#: 승격 거부의 **고유 표식**. 경로에 "smoke" 가 들어 있으므로 그 단어만으로는
+#: 회귀가 거부 이유를 증명하지 못한다 — sink 는 이 문장을 낸다.
+SMOKE_REFUSAL = "smoke namespace 산출은 승격 대상이 아니다"
+
+
+#: 실행 class 의 도메인. `unknown` 은 값이 아니라 **없음**이며 저장하지 않는다.
+EXEC_CLASS_SMOKE = "smoke"
+EXEC_CLASS_CANONICAL = "canonical"
+EXEC_CLASSES = (EXEC_CLASS_SMOKE, EXEC_CLASS_CANONICAL)
+
+#: 이 저장소의 run 디렉터리가 담는 manifest 의 **완전한 schema** (59차 M2).
+#:
+#: ★ 왜 목록을 다시 쓰나. 58차의 `_EXEC_ID_MANIFESTS` 는
+#:   `curves_manifest.yaml`·`fits_manifest.yaml`·`manifest.yaml` 이었는데
+#:   production 이 쓰는 이름과 **두 방향으로** 어긋나 있었다:
+#:
+#:     · 빠진 것 — `curves_manifest_start.yaml` (`src/grid.py`) ·
+#:                 `manifest_start.yaml` (`src/fitting.py`) ·
+#:                 `analysis_manifest.yaml` · `manifest_grid.yaml`
+#:     · 없는 것 — `fits_manifest.yaml` 은 **쓰는 곳이 저장소에 0곳**이다
+#:
+#:   그래서 시작 manifest 만 다른 두 실행이 같은 내용 identity 를 가졌다.
+#:
+#: **이름을 하나 더하는 수정은 하지 않는다** — 그러면 다음 manifest 가 또
+#: 빠진다. 대신 (a) 이 선언을 authority 로 두고, (b) production 의 실제 이름
+#: 집합과 **양방향으로 같은지**를 구조 시험이 강제하며
+#: (`tests/test_run_schema_binding_59.py`), (c) 런타임에 선언 밖의 manifest 를
+#: 만나면 **멈춘다** (identity 가 이미 불완전하기 때문이다).
+#: ★ 61차 P0-1 — 선언을 **둘로 가른다.**
+#:
+#:   60차는 identity 를 "지금 있는 것 전부" 에서 "굳히는 순간 있었던 것 전부"
+#:   로 옮겼다. 그런데 그 "전부" 는 여전히 **우연한 파일 존재**로 정해졌다.
+#:   `run.sh` 의 정상 순서를 두 번 돌면(=재개) 두 번째 commit 이 **첫 번째
+#:   report 가 남긴 `analysis_manifest.yaml` 을 봉인에 흡수**하고, 이어지는
+#:   정상 report 갱신이 그 member 를 바꿔 봉인을 stale 로 만든다. 그러면
+#:   fallback 이 새 키를 만들고 그 키에는 class 가 없다 — **정상 실행이
+#:   마지막 승격에서 거부된다** (리뷰어 실측: `class_after_refresh: null`).
+#:
+#:   "재개 때만 흡수한다" 를 고치는 것으로는 부족하다. 흡수 여부가 **순서**에
+#:   달려 있으면 다음 순서가 또 반례다. 그러므로 규칙은 순서가 아니라
+#:   **선언**이다:
+#:
+#:     · `RUN_IDENTITY_MANIFESTS` — **실행이 만든 것.** 내용 identity 는 이것만
+#:       담는다. 어느 순서에서 굳히든 member 집합이 같다.
+#:     · `RUN_DERIVED_MANIFESTS` — 실행이 **끝난 뒤** 파생이 만드는 것
+#:       (`report` 의 `analysis_manifest.yaml`). identity 밖이고, 봉인은
+#:       그것을 **기록만** 한다 (갱신돼도 봉인은 유효한 채로 남는다).
+#:
+#:   파생을 선언에서 아예 빼면 안 된다 — 그러면 `_MANIFEST_NAME_RE` 가 그것을
+#:   "선언 밖 manifest" 로 보고 정상 report 를 거부한다 (P0-1 을 고치다 또
+#:   정상 순서를 죽이는 형태다). 그래서 `RUN_MANIFEST_SCHEMA` 는 둘의 합이다.
+RUN_IDENTITY_MANIFESTS = ("curves_manifest.yaml", "curves_manifest_start.yaml",
+                          "manifest.yaml", "manifest_grid.yaml",
+                          "manifest_start.yaml")
+
+#: 실행 뒤 파생이 쓰는 manifest — 선언돼 있으나 **identity 밖**이다 (61차 P0-1).
+RUN_DERIVED_MANIFESTS = ("analysis_manifest.yaml",)
+
+RUN_MANIFEST_SCHEMA = tuple(sorted(RUN_IDENTITY_MANIFESTS
+                                   + RUN_DERIVED_MANIFESTS))
+
+#: run dir 안에서 "이것은 manifest 다" 를 뜻하는 이름 꼴. 선언 밖의 manifest 를
+#: **발견**하는 데 쓴다 (선언과 실물이 어긋나면 그 사실이 보여야 한다).
+_MANIFEST_NAME_RE = re.compile(r"^[a-z0-9_]*manifest[a-z0-9_]*\.yaml$")
+
+#: 내용 identity descriptor 의 형식 표시. 형식이 바뀌면 **모든 키가 바뀐다** —
+#: 그러면 기존 등록부는 re-key 가 필요하고, 그 사실이 여기 적혀 있어야
+#: "등록 없음" 과 "형식이 바뀜" 을 구별할 수 있다.
+#:
+#:   v1 — 첫 번째로 발견한 manifest 하나만 해시 (58차 L2 에서 폐기)
+#:   v2 — `_EXEC_ID_MANIFESTS` 중 존재하는 것 전부 (59차 M2 에서 폐기:
+#:        그 목록이 production schema 보다 작았다)
+#:   v3 — `RUN_MANIFEST_SCHEMA` 전부 + 선언 밖 manifest 는 거부 (61차 P0-1 에서
+#:        폐기: 그 "전부" 가 **우연한 파일 존재**로 정해져서, 재개가 옛 파생
+#:        산출을 봉인에 흡수하고 이어지는 정상 report 갱신이 키를 갈아 치웠다)
+#:   v4 — `RUN_IDENTITY_MANIFESTS` 만. 파생(`RUN_DERIVED_MANIFESTS`)은 선언
+#:        안이지만 identity 밖이므로 몇 번 갱신돼도 키가 안 움직인다.
+#:
+#: ★ v3 → v4 는 **모든 키를 바꾼다.** 그러므로 기존 등록부는 re-key 가 필요하고,
+#:   그 절차는 58차 L2 가 이미 만들어 뒀다 — 새 키에 레코드를 하나 더 쓰고
+#:   `evidence` 에 "어느 레코드의 판단을 승계했는가" 를 적는다 (판단을 새로
+#:   하지 않는다). 승계 기록은 새 레코드의 `evidence` 안에 있다.
+_CONTENT_ID_KIND = "run-content-id/v4"
+
+#: 굳히는 순간의 **시간 봉인**이 사는 이름 (60차 P0-1).
+#:
+#:   59차는 identity 가 담는 **이름 집합**을 schema 로 승격했다. 그런데 빠진
+#:   것은 집합이 아니라 **시간**이었다: 이름 집합 시험은 writer 들의 순서를
+#:   증명하지 않는다. production 의 정상 순서는
+#:   `grid/fit(=class 등록) → finalize → score → report(=analysis_manifest 추가)`
+#:   이고, report 가 쓰는 순간 "지금 있는 것 전부" 로 만든 identity 가 바뀐다.
+#:   새 키에는 class 가 없으므로 **정상 실행이 마지막 승격에서 거부됐다**
+#:   (리뷰어 실측 — 공격이 아니라 가용성 결함이다).
+#:
+#:   그래서 identity 는 "지금 무엇이 있는가" 가 아니라 **"굳히는 순간 무엇이
+#:   있었는가"** 다. 굳히는 자리(`commit_run_outputs()`)가 그때의 member 목록과
+#:   digest 를 이 파일에 봉인하고, 이후 독자는 전부 그것에서 유도한다.
+#:
+#:   봉인이 무결성을 버리지 않는 이유: 봉인은 **digest 를 담고 독자가 다시
+#:   계산한다.** 그러므로 (a) 뒤에 다른 manifest 가 더해져도 identity 는 그대로고,
+#:   (b) 봉인이 담은 member 의 바이트가 바뀌면 검증이 실패하며, (c) 봉인 파일만
+#:   훔쳐 가도 같은 바이트가 없으면 떨어진다.
+RUN_SEAL_NAME = ".run_identity.json"
+
+#: 봉인 자신의 형식 표시.
+_RUN_SEAL_KIND = "run-content-seal/v1"
+
+
+def exec_class_root_for_ledger(ledger=None) -> Path:
+    """실행 class 등록부가 사는 곳 — claims·attempts 와 **같은 authority**.
+
+    ★ 58차 P0-8 — 왜 run dir 안이 아니라 원장 옆인가.
+
+    P0-8 의 요구는 "경로 무관 typed·sealed 실행 class marker" 다. 그런데
+    marker 를 **run dir 안에** 두면 경로 의존만 옮겨 갈 뿐이다 — 바이트를 통째로
+    복사한 사람이 그 파일도 같이 고칠 수 있기 때문이다. marker 가 진짜 marker 이려면
+    **쓰는 쪽이 authority** 여야 하고, 그 자리는 이미 이 저장소에 있다:
+    claim 과 attempt 가 사는 원장 옆이다 (54차 P0-1 · 57차 P0-1).
+
+    등록부의 **키는 경로가 아니라 내용**(`run_content_id()`)이다. 그래서
+    smoke 산출을 namespace 밖으로 옮겨도 같은 키로 같은 답이 나온다 — 그것이
+    48~57차가 못 닫은 자리다 (`[재현]` 옮기기 전 거부 · 옮긴 뒤 통과).
+    """
+    return canonical_ledger(ledger).parent / "_exec_class"
+
+
+def _dir_entries(d: Path, dir_fd) -> set:
+    """이 디렉터리가 담은 **일반 파일**의 이름 (59차 M5).
+
+    `dir_fd` 가 있으면 그 handle 로 본다 — 이름을 다시 해석하지 않으므로
+    판정 뒤에 이름 아래가 바뀌어도 우리가 보는 것은 판정한 대상이다.
+    """
+    if dir_fd is not None:
+        names = os.listdir(dir_fd)
+        return {n for n in names
+                if stat.S_ISREG(os.stat(n, dir_fd=dir_fd,
+                                        follow_symlinks=False).st_mode)}
+    if not d.is_dir():
+        return set()
+    return {p.name for p in d.iterdir() if p.is_file()}
+
+
+def _read_member(d: Path, name: str, dir_fd) -> bytes | None:
+    """`dir_fd` 가 있으면 handle 로, 없으면 이름으로 읽는다 (59차 M5)."""
+    if dir_fd is None:
+        f = d / name
+        return f.read_bytes() if f.is_file() else None
+    try:
+        fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=dir_fd)
+    except (FileNotFoundError, NotADirectoryError):
+        return None
+    except OSError as exc:
+        raise PreserveError(
+            "promote",
+            f"{name} 을 handle 로 열 수 없다 ({exc}) — symlink 이거나 일반 "
+            "파일이 아니다 (59차 M5)") from exc
+    try:
+        chunks = []
+        while True:
+            b = os.read(fd, 1 << 20)
+            if not b:
+                break
+            chunks.append(b)
+        return b"".join(chunks)
+    finally:
+        os.close(fd)
+
+
+def _sealed_manifest_parts(d: Path, dir_fd) -> list | None:
+    """봉인이 있으면 **그 목록을 지금 바이트로 검증해서** 돌려준다 (60차 P0-1).
+
+    `None` 은 **"지금 쓸 수 있는 봉인이 없다"** 는 뜻이고, 두 경우가 있다:
+    아직 아무것도 안 굳혔거나(봉인 파일 없음), 봉인이 **낡았거나**(그때 담은
+    member 가 사라졌거나 바이트가 달라졌다). 형식 자체가 깨진 경우만 예외를
+    낸다 — 그것은 표류가 아니라 손상이다.
+
+    ★ 왜 낡은 봉인이 **거부가 아니라 무시**인가 (두 번째 실측이 뒤집었다).
+
+      첫 판은 낡은 봉인을 `PreserveError` 로 거부했다. 그런데 이 저장소의 run
+      디렉터리는 phase 를 넘어 이어서 쓰인다: grid 가 굳힌 뒤 fit 프로세스가
+      같은 자리에서 `curves_manifest.yaml` 을 다시 쓰고, 그 다음 자기 gate 를
+      지난다. 그 gate 는 아직 아무것도 안 굳혔으므로 재봉인 기회가 없고,
+      그래서 **정상 cross-process e2e 가 죽었다** (실측:
+      `test_grid_then_fit_then_finalize_completes_across_processes`).
+      P0-1 을 고치다 P0-1 과 같은 종류의 가용성 결함을 두 번 만든 것이다.
+
+      낡은 봉인을 무시해도 잃는 것이 없다: 그러면 identity 는 **지금 있는
+      manifest** 로 계산되고(59차 v3 그대로), 그 값은 등록부에 없으므로
+      승격은 여전히 거부된다. 즉 "봉인한 member 를 고치면 class 를 잃는다" 는
+      성질은 그대로이고, 바뀐 것은 **잃는 방식이 예외가 아니라 미등록**이라는
+      점뿐이다. 그리고 그것이 60차 이전의 의미와 정확히 같다.
+    """
+    body = _read_member(d, RUN_SEAL_NAME, dir_fd)
+    if body is None:
+        return None
+    try:
+        seal = json.loads(body.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise PreserveError(
+            "promote",
+            f"{d} 의 내용 봉인({RUN_SEAL_NAME})을 읽을 수 없다 ({exc}) — "
+            "봉인이 깨졌으면 identity 를 만들지 않는다 (60차 P0-1)") from exc
+    if not isinstance(seal, dict) or seal.get("kind") != _RUN_SEAL_KIND:
+        raise PreserveError(
+            "promote",
+            f"{d} 의 내용 봉인이 아는 형식이 아니다 — {_RUN_SEAL_KIND!r} 이어야 "
+            "한다 (60차 P0-1)")
+    parts = seal.get("manifests")
+    if (not isinstance(parts, list) or not parts
+            or not all(isinstance(x, list) and len(x) == 2
+                       and all(isinstance(y, str) for y in x) for x in parts)):
+        raise PreserveError(
+            "promote",
+            f"{d} 의 내용 봉인이 담은 목록이 형식에 안 맞는다 — "
+            "`[[이름, digest], …]` 여야 한다 (60차 P0-1)")
+    out = []
+    for name, digest in parts:
+        if name not in RUN_IDENTITY_MANIFESTS:
+            raise PreserveError(
+                "promote",
+                f"{d} 의 봉인이 identity 선언 밖의 이름 {name!r} 을 담았다 — "
+                "봉인의 `manifests` 는 **실행이 만든** manifest 만 담는다 "
+                "(60차 P0-1 · 61차 P0-1)")
+        got = _read_member(d, name, dir_fd)
+        if got is None:
+            return None             # 봉인이 낡았다 — 아래 설명을 보라
+        real = hashlib.sha256(got).hexdigest()
+        if not secrets.compare_digest(real, digest):
+            return None             # 봉인이 낡았다 — 아래 설명을 보라
+        out.append([name, real])
+    return out
+
+
+def _present_manifest_parts(d: Path, dir_fd) -> list:
+    """지금 이 디렉터리에 있는 **선언된** manifest 의 `(이름, digest)`.
+
+    선언 밖의 manifest 를 만나면 멈춘다 (59차 M2). 봉인 전에도, 봉인이 없는
+    자리에서도 같은 규칙이다.
+    """
+    present = _dir_entries(d, dir_fd)
+    unknown = sorted(n for n in present
+                     if _MANIFEST_NAME_RE.match(n)
+                     and n not in RUN_MANIFEST_SCHEMA)
+    if unknown:
+        raise PreserveError(
+            "promote",
+            f"{d} 에 schema 선언 밖의 manifest 가 있다: {unknown} — 내용 "
+            "identity 가 그 파일을 안 담으므로 불완전하고, 불완전한 identity 로 "
+            "정한 class 는 다른 내용에도 적용된다. `RUN_MANIFEST_SCHEMA` 에 "
+            "선언하거나 그 파일을 run 디렉터리 밖에 두라 (59차 M2)")
+    parts = []
+    # ★ 61차 P0-1 — **identity 선언만** 돈다. 파생 manifest 는 선언 안이라
+    #   "선언 밖" 검사에는 안 걸리지만 identity 에는 안 들어간다.
+    for name in RUN_IDENTITY_MANIFESTS:
+        if name not in present:
+            continue
+        body = _read_member(d, name, dir_fd)
+        if body is not None:
+            parts.append((name, hashlib.sha256(body).hexdigest()))
+    return parts
+
+
+def _derived_manifest_parts(d: Path, dir_fd) -> list:
+    """파생 manifest 의 `(이름, digest)` — **기록용**이다 (61차 P0-1).
+
+    identity 밖이므로 이것이 바뀌어도 봉인은 유효하다. 그래도 굳히는 순간
+    무엇이 옆에 있었는지는 기록에 남긴다 — 나중에 "그때 report 가 있었나" 를
+    묻는 자리가 사본이 아니라 봉인을 보게 하기 위해서다.
+    """
+    present = _dir_entries(d, dir_fd)
+    out = []
+    for name in RUN_DERIVED_MANIFESTS:
+        if name not in present:
+            continue
+        body = _read_member(d, name, dir_fd)
+        if body is not None:
+            out.append((name, hashlib.sha256(body).hexdigest()))
+    return out
+
+
+def seal_run_identity(run_dir, dir_fd=None) -> str:
+    """굳히는 순간의 manifest 집합을 **한 번** 봉인한다 (60차 P0-1).
+
+    봉인은 이 함수 밖에서 만들어지지 않는다 — 그래야 "언제 굳었는가" 가 한
+    자리에서만 정해진다. 그리고 이 함수는 **권한을 소비하는 자리에서만** 불린다.
+
+    ★ 왜 "한 번 봉인하고 끝" 이 아닌가 (첫 판을 실측이 뒤집었다).
+
+      이 저장소의 run 디렉터리는 **여러 phase 가 이어서 쓴다.** grid 가 굳힌
+      뒤 fit 이 같은 자리에 `manifest_start.yaml`·`manifest.yaml` 을 쓰고,
+      재개(resume)는 `manifest.yaml` 자체를 다시 쓴다. 첫 판은 봉인을 한 번만
+      만들고 이후의 member 변경을 전부 거부했고, 그래서 **정상 재개가 죽었다**
+      (실측: `test_start_manifest_is_not_overwritten_by_resume` 등 4건).
+      P0-1 을 고치다가 P0-1 과 같은 종류의 가용성 결함을 새로 만든 것이다.
+
+      그러므로 규칙은 "한 번" 이 아니라 **"굳히는 순간마다"** 다. 굳히는 것은
+      gate 가 발행한 권한을 소비하는 자리뿐이므로 봉인을 새로 쓸 수 있는 것도
+      그 자리뿐이고, 권한 없는 쪽에서 본 member 변경은 여전히 거부된다.
+      마지막 commit 이 정한 값이 그 뒤 report 가 무엇을 더 쓰든 안 흔들린다 —
+      그것이 P0-1 이 요구한 성질이다.
+
+    게시는 다른 durable 게시와 같은 계단이다: temp 에 write-all → fsync →
+    **바이트 read-back** → `os.link()` 무대체 CAS → 부모 fsync. 이름만 잡는
+    `O_EXCL` 로는 "이름은 생겼는데 내용이 없다" 를 못 막는다 (59차 M3).
+    """
+    d = Path(run_dir)
+    parts = [[n, h] for n, h in _present_manifest_parts(d, dir_fd)]
+    if not parts:
+        raise PreserveError(
+            "promote",
+            f"{d} {_MISSING_MANIFEST_MARK} — 봉인할 것이 없으므로 굳히지 않는다")
+    # ★ 61차 P0-1 — `derived` 는 **identity preimage 가 아니다.** 굳히는 순간
+    #   옆에 무엇이 있었는지의 기록이고, 그것이 나중에 갱신돼도 봉인은 유효한
+    #   채로 남는다 (`_sealed_manifest_parts()` 는 `manifests` 만 검증한다).
+    body = (json.dumps({"kind": _RUN_SEAL_KIND, "manifests": parts,
+                        "derived": [[n, h]
+                                    for n, h in _derived_manifest_parts(d, dir_fd)]},
+                       sort_keys=True, ensure_ascii=False,
+                       separators=(",", ":")) + "\n").encode("utf-8")
+    tmp_name = f".{RUN_SEAL_NAME}.{os.getpid()}.{uuid.uuid4().hex[:8]}.tmp"
+    published = False
+    try:
+        if dir_fd is not None:
+            fd = os.open(tmp_name, os.O_WRONLY | os.O_CREAT | os.O_EXCL,
+                         0o644, dir_fd=dir_fd)
+        else:
+            fd = os.open(d / tmp_name, os.O_WRONLY | os.O_CREAT | os.O_EXCL,
+                         0o644)
+        try:
+            _write_all(fd, body, "run-identity-seal")
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+        if _read_member(d, tmp_name, dir_fd) != body:
+            raise PreserveError(
+                "promote",
+                f"{d} 의 내용 봉인을 다시 읽었더니 쓴 바이트와 다르다 — "
+                "이름을 붙이지 않는다 (60차 P0-1)")
+        # 굳힐 때마다 다시 쓰므로 **대체**가 정상이다 (무대체 CAS 가 아니다).
+        # 대체는 원자적이고, 대체하기 전에 이미 바이트를 되읽어 확인했다.
+        if dir_fd is not None:
+            os.replace(tmp_name, RUN_SEAL_NAME,
+                       src_dir_fd=dir_fd, dst_dir_fd=dir_fd)
+        else:
+            os.replace(d / tmp_name, d / RUN_SEAL_NAME)
+        published = True
+    finally:
+        if not published:
+            try:
+                if dir_fd is not None:
+                    os.unlink(tmp_name, dir_fd=dir_fd)
+                else:
+                    os.unlink(d / tmp_name)
+            except OSError:
+                pass
+    if dir_fd is not None:
+        os.fsync(dir_fd)
+    else:
+        _fsync_dir_strict(d, "run-identity-seal")
+    if _sealed_manifest_parts(d, dir_fd) is None:
+        raise PreserveError(
+            "promote",
+            f"{d} 에 내용 봉인을 남기지 못했다 — 굳히지 않는다 (60차 P0-1)")
+    return run_content_id(d, dir_fd=dir_fd)
+
+
+def run_content_id(run_dir, dir_fd=None) -> str:
+    """이 산출의 **내용 identity**. 경로가 아니라 바이트가 정한다.
+
+    manifest 파일 하나의 sha256 이다. 복사·이동해도 안 바뀌고, 내용이 바뀌면
+    바뀐다 — 그래서 "옮겨서 정본인 척하기" 와 "고쳐서 정본인 척하기" 가 **둘 다**
+    같은 검사에 걸린다.
+
+    manifest 가 없으면 identity 가 없다 → 호출자는 fail-closed 해야 한다.
+
+    ★ 59차 M5 — `dir_fd` 를 주면 **그 handle 로** 읽는다. gate 가 판정한 대상을
+      끝까지 들고 가는 경로다 (`ExecutionClassCapability.dir_fd`). 안 주면
+      이름으로 읽는다 — legacy 분류나 진단처럼 handle 이 없는 자리다.
+    """
+    d = Path(run_dir)
+
+    # ★ 58차 L2 — **있는 것 전부를 담는다.** 57차는 `_EXEC_ID_MANIFESTS` 중
+    #   첫 파일 하나만 해시했다. 순서가 `curves → fits → manifest` 이므로,
+    #   같은 곡선에서 갈라진 두 fit 실행이 **같은 identity** 를 가졌다. 해시
+    #   충돌이 아니라 투영이 손실적이었던 것이다 — 그러면 한쪽의 class 가
+    #   다른 쪽에 적용되고, smoke fit 을 옮겨 정본 판정을 받을 수 있다.
+    #
+    #   후보 목록을 늘리는 수정은 하지 않는다 (그러면 다음 manifest 가 또
+    #   빠진다). 대신 **이 산출에 적용되는 모든 manifest 를 이름과 함께**
+    #   닫힌 descriptor 로 묶어 해시한다. 이름을 같이 넣는 이유: 바이트가
+    #   같아도 `curves_manifest.yaml` 인지 `manifest.yaml` 인지가 다르면
+    #   다른 실행이다.
+    #
+    # ★ 59차 M2 — 그런데 58차의 "전부" 는 **후보 목록 안에서의 전부**였고, 그
+    #   목록이 production 보다 작았다. `curves_manifest_start.yaml` 과
+    #   `manifest_start.yaml` 이 밖에 있어서 **시작 조건만 다른 두 실행**이 같은
+    #   키를 가졌다. 그래서 목록을 schema 선언(`RUN_MANIFEST_SCHEMA`)으로
+    #   승격하고, 그 선언이 production 의 실제 이름 집합과 같은지를 구조 시험이
+    #   양방향으로 강제한다.
+    #
+    #   그리고 **선언 밖의 manifest 를 만나면 멈춘다.** 그것이 이 라운드 판정의
+    #   셋째 형태("닫힌 집합이라고 부른 것이 실제 schema 보다 작다")에 대한
+    #   답이다 — 모르는 manifest 가 있는데 identity 를 만들면, 그 identity 는
+    #   내용을 다 담지 않았으므로 **다른 내용에도 적용된다.**
+    #
+    # ★ 60차 P0-1 — 그런데 "지금 있는 것 전부" 는 **시간에 열려 있었다.** 굳힌
+    #   뒤에 파생 산출(report 의 `analysis_manifest.yaml`)이 하나 더 생기면
+    #   같은 실행의 키가 갈아 치워지고, 새 키에는 class 가 없어 **정상 실행이
+    #   마지막 승격에서 거부됐다.** 그래서 굳히는 자리가 그 순간의 목록을
+    #   봉인하고(`seal_run_identity()`), 봉인이 있으면 그것이 정본이다.
+    #   봉인은 digest 를 담고 여기서 **다시 계산**하므로 무결성은 그대로다.
+    sealed = _sealed_manifest_parts(d, dir_fd)
+    if sealed is not None:
+        descriptor = json.dumps(
+            {"kind": _CONTENT_ID_KIND,
+             "manifests": [tuple(x) for x in sealed]},
+            sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+        return hashlib.sha256(descriptor.encode("utf-8")).hexdigest()
+    parts: list[tuple[str, str]] = _present_manifest_parts(d, dir_fd)
+    if not parts:
+        raise PreserveError(
+            "promote",
+            f"{d} {_MISSING_MANIFEST_MARK} "
+            f"(찾은 이름: {list(RUN_MANIFEST_SCHEMA)}) — 정본 여부를 판정할 수 "
+            "없으므로 승격을 거부한다")
+    descriptor = json.dumps({"kind": _CONTENT_ID_KIND, "manifests": parts},
+                            sort_keys=True, ensure_ascii=False,
+                            separators=(",", ":"))
+    return hashlib.sha256(descriptor.encode("utf-8")).hexdigest()
+
+
+_MISSING_MANIFEST_MARK = "에 manifest 가 없어 내용 identity 를 만들 수 없다"
+
+
+def _is_missing_marker(exc: PreserveError) -> bool:                # noqa: D401
+    """(내부) 이 오류가 '아직 manifest 가 없다' 인가.
+
+    문자열 대조가 마음에 들지 않지만, `PreserveError` 에 사유 코드가 없고
+    코드를 넓게 고치는 것은 이 라운드의 범위가 아니다. 대신 **한 자리**
+    (`run_content_id()`)에서만 나는 문장에 묶고, 그 문장을 상수로 뽑아
+    두 곳이 같이 움직이게 한다. 회귀가 이 결속을 지킨다.
+    """
+    return _MISSING_MANIFEST_MARK in str(exc)
+
+
+_is_missing_manifest = _is_missing_marker
+
+
+def local_exec_class_root_for_ledger(ledger=None) -> Path:
+    """**국소** 실행 class 등록부 — smoke 면제가 사는 곳 (58차 L14).
+
+    왜 공유 등록부와 갈랐는가. smoke 는 실행마다 다른 내용을 만들고(실측:
+    연속 두 번에 서로 다른 content id) **끝나면 자기 산출을 지운다.** 그래서
+    공유 자리에 적으면 (a) 등록부가 무한히 자라고 (b) smoke 를 돌릴 때마다
+    저장소가 더러워진다 — 이 저장소의 "smoke 는 clean 커밋에서 돈다" 규율과
+    정면으로 충돌한다. 게다가 남는 레코드는 **가리키는 바이트가 이미 없는**
+    죽은 무게다.
+
+    **방어는 안 잃는다.** 등록이 없으면 승격은 거부다(fail-closed). 그러므로
+    smoke 레코드를 공유하지 않아도 다른 머신에서는 여전히 거부이고, 오히려
+    더 엄격하다. 잃는 것이 없으므로 공유할 이유가 없다.
+
+    반대로 `canonical`·legacy 분류는 **감사 대상**이다 — 리뷰어가 인용하고
+    오래 살아야 하므로 공유 등록부에 남는다.
+    """
+    return exec_class_root_for_ledger(ledger) / "local"
+
+
+def _exec_class_root_for_class(cls: str, ledger=None) -> Path:
+    """이 class 의 레코드가 사는 자리. **class 가 자리를 정한다.**"""
+    return (local_exec_class_root_for_ledger(ledger) if cls == EXEC_CLASS_SMOKE
+            else exec_class_root_for_ledger(ledger))
+
+
+def _exec_class_path(content_id: str, ledger=None) -> Path:
+    if not (isinstance(content_id, str) and len(content_id) == 64
+            and all(c in "0123456789abcdef" for c in content_id)):
+        raise PreserveError("promote", f"내용 identity 형식이 아니다: {content_id!r}")
+    return exec_class_root_for_ledger(ledger) / f"{content_id}.json"
+
+
+#: `renameat2(2)` 의 무대체 플래그 (Linux ≥ 3.15).
+_RENAME_NOREPLACE = 1
+
+
+def _rename_noreplace(src: Path, dst: Path) -> bool:
+    """`src` 를 `dst` 로 **옮긴다** — 이미 있으면 실패, 이름은 하나 (60차 P1-1).
+
+    `os.link()` + `unlink()` 는 잠깐이라도 **이름을 둘** 만든다. 그 사이에 죽거나
+    `unlink` 가 실패하면 같은 inode 를 가리키는 쓸 수 있는 두 번째 문이 남고,
+    그리로 쓰면 등록부의 내용이 바뀐다 (리뷰어 실측: `final_nlink: 2` ·
+    그 문으로 쓴 값이 그대로 읽혔다).
+
+    `renameat2(RENAME_NOREPLACE)` 는 무대체 보장을 유지하면서 **원자적으로
+    옮긴다** — 성공하면 이름은 언제나 하나다.
+
+    돌려주는 값: 이 커널에서 그 연산을 쓸 수 있었으면 `True`. 없으면 `False` 고,
+    호출자는 link + unlink 로 물러서되 **정리 실패를 삼키지 않는다.**
+    """
+    global _RENAMEAT2
+    if _RENAMEAT2 is False:
+        return False
+    if _RENAMEAT2 is None:
+        try:
+            import ctypes
+            import ctypes.util
+
+            _lib = ctypes.CDLL(ctypes.util.find_library("c") or "libc.so.6",
+                               use_errno=True)
+            _fn = _lib.renameat2
+            _fn.restype = ctypes.c_int
+            _fn.argtypes = [ctypes.c_int, ctypes.c_char_p,
+                            ctypes.c_int, ctypes.c_char_p, ctypes.c_uint]
+            _RENAMEAT2 = (_fn, ctypes)
+        except (OSError, AttributeError):                # pragma: no cover
+            _RENAMEAT2 = False
+            return False
+    fn, ctypes = _RENAMEAT2
+    AT_FDCWD = -100
+    rc = fn(AT_FDCWD, os.fsencode(str(src)), AT_FDCWD, os.fsencode(str(dst)),
+            _RENAME_NOREPLACE)
+    if rc == 0:
+        return True
+    err = ctypes.get_errno()
+    if err == errno.EEXIST:
+        raise FileExistsError(err, os.strerror(err), str(dst))
+    if err in (errno.ENOSYS, errno.EINVAL, errno.ENOTTY, errno.EOPNOTSUPP):
+        _RENAMEAT2 = False                               # pragma: no cover
+        return False                                     # pragma: no cover
+    raise OSError(err, os.strerror(err), str(dst))       # pragma: no cover
+
+
+#: `None` = 아직 안 물어봤다 · `False` = 이 커널에 없다 · tuple = 쓸 수 있다.
+_RENAMEAT2 = None
+
+
+def _record_execution_class(run_dir, cls: str, evidence: str,
+                           ledger=None, dir_fd=None) -> Path:
+    """이 산출의 실행 class 를 **등록부에 굳힌다.** (모듈 비공개 sink)
+
+    ★ 60차 P0-2 — 이 함수는 **공개 이름이 아니다.** 59차까지는
+      `record_execution_class(run_dir, cls, …)` 라는 공개 이름이 raw class 를
+      받았고, 그래서 gate 를 한 번도 안 지난 산출을 canonical 로 등록할 수
+      있었다 (리뷰어 실측). 계약 §13.3.4 는 "공개 API 를 지나는 호출은 전부
+      범위 안" 이라고 적었으므로, "같은 프로세스의 적대적 writer 는 범위 밖"
+      이라는 변명으로 그 표면을 남길 수 없었다.
+
+      class 를 정하는 자리는 이제 `issue_execution_class()` 하나이고, 이
+      sink 를 부르는 자리는 publisher 안에만 있다 (구조 회귀가 열거한다).
+
+
+    `evidence` 는 "무엇을 보고 그렇게 정했는가" 를 사람이 읽을 문장으로 남긴다.
+    경로를 보고 정했다면 **그 사실이 여기 적힌다** — 그것이 이 설계의 요점이다:
+    경로 판정을 없애는 것이 아니라 **한 번만, 기록을 남기고** 하게 만든다.
+
+    ★ 59차 M5 — `dir_fd` 는 gate 가 판정한 대상의 handle 이다. 주면 identity 를
+      **그 handle 로 읽은 바이트**에서 만든다 (`commit_run_outputs()` 가 준다).
+    """
+    if cls not in EXEC_CLASSES:
+        raise PreserveError("promote",
+                            f"실행 class 는 {EXEC_CLASSES} 중 하나여야 한다: {cls!r}")
+    cid = run_content_id(run_dir, dir_fd=dir_fd)
+    # ★ 62차 P0-1 — 레코드가 **봉인과 함께 등록됐는지** 스스로 말한다. commit 은
+    #   봉인 뒤에 등록하므로 True, legacy 분류는 봉인이 없으므로 False. 승격은
+    #   `sealed` 레코드를 봉인 없이 받지 않는다 (봉인 파일을 지워 "지금 있는
+    #   것" 으로 되돌아가는 길을 막는다).
+    sealed = _read_member(Path(run_dir), RUN_SEAL_NAME, dir_fd) is not None
+    name = _exec_class_path(cid, ledger).name
+    path = _exec_class_root_for_class(cls, ledger) / name
+    # ★ 59차 M13 — 등록부 **층 자체**도 durable 해야 한다. 레코드 이름만 굳히고
+    #   그 이름을 담는 `_exec_class/`·`_exec_class/local/` 을 안 굳히면 crash 뒤
+    #   층째로 사라진다. 30차 P0-3 이 CAS·pin 에서 고친 것과 같은 형태라
+    #   그때 만든 helper 를 그대로 쓴다 (새로 만들어진 모든 층의 부모 edge).
+    _mkdir_durable(path.parent, "execution-class-register")
+
+    # ★ 58차 L14 의 되돌아온 L3 — **자리를 나누자 CAS 가 깨졌다.**
+    #   L3 은 `O_EXCL` 하나로 닫았는데, class 마다 파일이 달라지자 두 writer 가
+    #   **서로 다른 이름**을 만들어 충돌하지 않는다. 둘 다 성공했다(실측).
+    #   반대쪽을 읽는 교차 검사를 붙였지만 그것은 read-then-write 라 경쟁
+    #   아래 무력하다 — 57차가 정확히 이 형태로 틀렸다.
+    #
+    #   그러므로 **배타 지점을 class 와 무관한 한 자리**로 되돌린다. 내용
+    #   하나당 lock 하나를 잡고, 그 안에서 양쪽을 읽고 쓴다. lock 은 국소
+    #   자리에 둔다 (운용 상태이고 gitignore 된다).
+    _lk = local_exec_class_root_for_ledger(ledger) / f"{cid}.classlock"
+    _mkdir_durable(_lk.parent, "execution-class-register")
+    with _ledger_lock(_lk):
+        return _record_execution_class_locked(cid, cls, evidence, name, path,
+                                              ledger, sealed=sealed)
+
+
+def _seal_exec_class_record(rec_path: Path, cid: str, cls: str) -> Path:
+    """레코드를 **다시 읽어 확인하고 그 이름을 durable 하게** 만든다 (59차 M13).
+
+    등록이 성공을 보고하는 유일한 출구다 — 새로 만들었든, 같은 class 의 멱등
+    재시도든 **똑같이** 여기를 지난다.
+
+    ★ 왜 재시도도 지나야 하는가. `os.link()` 는 성공하고 그 뒤
+      `_fsync_dir_strict()` 가 실패하면 호출자는 오류를 받는다. 그런데 그 상태와
+      "이미 durable 한 상태" 는 filesystem 에서 **구별할 방법이 없다**. 58차판은
+      재시도가 파일을 발견하고 곧장 반환해서, 실패한 parent fsync 를 영원히 안
+      고쳤다 — 이름이 비내구적인 채로 성공이 보고되고, crash 뒤 등록이 사라지면
+      승격은 fail-closed 라 **정본 산출이 되살릴 수 없게 막힌다**.
+
+      32차 P0-3 이 `_mkdir_durable()` 에서 이미 내린 결론과 같다: 구별할 수
+      없으면 **항상 굳힌다**. fsync 는 멱등이고 비용은 재시도 때만 든다.
+    """
+    prev = _read_exec_class_at(rec_path, cid)
+    if prev is None:
+        # 파일은 있는데 못 읽는다 (또는 아예 없다) — 등록부가 authority 이므로
+        # fail-closed. 이름을 굳혀 "읽을 수 없는 레코드" 를 영속화하지 않는다.
+        raise PreserveError(
+            "promote",
+            f"내용 {cid[:16]}… 의 등록 레코드를 게시 뒤 다시 읽을 수 없다 — "
+            "class 를 정할 수 없으므로 거부한다")
+    if prev.get("execution_class") != cls:
+        raise PreserveError(
+            "promote",
+            f"이 산출은 이미 {prev.get('execution_class')!r} 로 등록돼 있다 — "
+            f"{cls!r} 로 바꿀 수 없다 (내용 {cid[:16]}…)")
+    _fsync_dir_strict(rec_path.parent, "execution-class-register")
+    return rec_path
+
+
+def _record_execution_class_locked(cid: str, cls: str, evidence, name: str,
+                                   path: Path, ledger, sealed: bool = False
+                                   ) -> Path:
+    """(내부) 내용별 lock 을 쥔 채 등록한다. 자리는 갈라도 불변식은 하나다."""
+    # 두 자리를 **다** 본다 — 같은 내용이 한쪽엔 smoke, 다른 쪽엔 canonical 로
+    # 적히면 읽는 쪽이 무엇을 믿을지 정할 수 없다.
+    for root in (exec_class_root_for_ledger(ledger),
+                 local_exec_class_root_for_ledger(ledger)):
+        prev = _read_exec_class_at(root / name, cid)
+        if prev is None:
+            continue
+        if prev.get("execution_class") != cls:
+            raise PreserveError(
+                "promote",
+                f"이 산출은 이미 {prev.get('execution_class')!r} 로 등록돼 "
+                f"있다 — {cls!r} 로 바꿀 수 없다 (내용 {cid[:16]}…)")
+        # 같은 class 의 멱등 재시도 — **그래도 durability 를 다시 굳힌다** (M13)
+        return _seal_exec_class_record(root / name, cid, cls)
+
+    # ★ 58차 L3 — **create-if-absent 로 만든다.** 57차는 read → 검사 →
+    #   `os.replace` 였다. `os.replace` 는 torn write 를 막을 뿐 lost update 를
+    #   막지 않는다. 두 writer 가 "없음" 을 함께 관측하면 둘 다 성공했고 마지막
+    #   replace 가 authority 를 정했다 — 리뷰어가 canonical/smoke 로 실제 재현했고
+    #   반복하면 이긴 쪽이 바뀌었다. "한 내용은 한 class" 가 경쟁 아래 깨진다.
+    #
+    #   `O_CREAT|O_EXCL` 은 커널이 보장하는 원자적 생성이다. 진 writer 는
+    #   `FileExistsError` 를 받고, 그때 **읽어서 같은 class 인지 본다** —
+    #   같으면 멱등 재시도이므로 성공, 다르면 거부. 이 순서라야 "먼저 만든
+    #   쪽이 authority" 가 성립한다. 검사를 read 로 먼저 하면 그 사이가 창이다.
+    rec = {
+        "content_id": cid,
+        "execution_class": cls,
+        "evidence": str(evidence),
+        "recorded_at": dt.datetime.now(dt.timezone.utc)
+                         .strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "sealed": bool(sealed),                      # 62차 P0-1
+    }
+    body = (json.dumps(rec, sort_keys=True, ensure_ascii=False,
+                       separators=(",", ":")) + "\n").encode("utf-8")
+    # ★ 59차 M3 — **완전한 inode 를 만든 뒤에 이름을 붙인다.**
+    #
+    #   58차는 final 이름을 `O_CREAT|O_EXCL` 로 먼저 만들고 그 fd 에 썼다.
+    #   `O_EXCL` 은 writer **사이의 이름 배타**를 줄 뿐 내용 완전성을 주지
+    #   않는다. 리뷰어가 첫 `os.write()` 를 한 바이트 short write 로 만들자
+    #   등록이 성공 경로로 반환하고 final 파일은 `{` 하나였다 — 읽으면 `None`,
+    #   같은 class 재시도는 "있는데 못 읽는 파일" 때문에 영구 거부. **final
+    #   key 가 poison 된다.**
+    #
+    #   그래서 순서를 뒤집는다: temp 에 write-all → file fsync → **바이트
+    #   read-back** → `os.link()` 로 final 이름에 no-replace 게시 → parent
+    #   fsync. `link()` 는 대상이 있으면 `FileExistsError` 이므로 `O_EXCL` 과
+    #   같은 배타를 주면서, 이름이 붙는 순간 내용은 이미 완전하다.
+    _tmp = path.parent / f".{name}.{os.getpid()}.{uuid.uuid4().hex[:8]}.tmp"
+    try:
+        _fd = os.open(_tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o644)
+        try:
+            _write_all(_fd, body, "execution-class-register")
+            os.fsync(_fd)
+        finally:
+            os.close(_fd)
+        got = _tmp.read_bytes()
+        if got != body:
+            raise PreserveError(
+                "promote",
+                f"등록 레코드를 다시 읽었더니 쓴 것과 다르다 ({len(got)} ≠ "
+                f"{len(body)} 바이트) — 이름을 붙이지 않는다 (내용 {cid[:16]}…)")
+        # ★ 60차 P1-1 — **이름을 하나만 만든다.** `link` + `unlink` 는 잠깐이라도
+        #   이름을 둘 만들고, 그 사이에 죽거나 정리가 실패하면 쓸 수 있는 두
+        #   번째 문이 남는다 (리뷰어 실측: 평범한 `OSError` 로도 그 상태가 됐고
+        #   그 문으로 쓴 값이 그대로 읽혔다).
+        try:
+            _moved = _rename_noreplace(_tmp, path)
+        except FileExistsError:            # pragma: no cover
+            # lock 안에서 두 자리를 읽고 왔으므로 정상 경로에서는 안 온다.
+            # 그래도 삼키지 않는다 — 아래 seal 이 그 파일을 **읽어서** 같은
+            # class 인지 확인하고, 아니면 거기서 멈춘다.
+            _moved = False
+        if not _moved:
+            # 이 커널에 `renameat2` 가 없다 — 물러서되 **정리 실패를 안 삼킨다.**
+            try:
+                os.link(_tmp, path)
+            except FileExistsError:        # pragma: no cover
+                pass
+    finally:
+        if _tmp.exists():
+            try:
+                os.unlink(_tmp)
+            except OSError as exc:
+                raise PreserveError(
+                    "promote",
+                    f"게시 뒤 temp 이름을 못 지웠다 ({_tmp}: {exc}) — 같은 "
+                    "레코드를 가리키는 **두 번째 문**이 남았고 그리로 쓰면 "
+                    "등록부의 내용이 바뀐다. 성공으로 보고하지 않는다 "
+                    "(60차 P1-1)") from exc
+    # ★ 59차 M13 — 성공의 출구는 하나다. temp 를 치운 **뒤에** 굳혀야 게시와
+    #   정리가 같은 directory entry 갱신 안에서 durable 해진다.
+    return _seal_exec_class_record(path, cid, cls)
+
+
+#: ★ 70차 E5 — 실행 class 등록 레코드의 **닫힌 typed variant** 둘.
+#:
+#:   modern — `_record_execution_class_locked()` 가 62차 P0-1 이후 쓰는 형태.
+#:            `sealed` 는 "봉인(`.run_identity.json`)과 함께 등록됐다" 는 사실이고,
+#:            그 결속은 `content_id` 자체다: 승격은 `_promotion_content_id()` 가
+#:            **봉인에서** identity 를 다시 만들어 이 키와 맞추므로, 봉인이 없거나
+#:            낡으면 이 레코드에 닿지 못한다 (62차 P0-1). 그래서 봉인 digest 를
+#:            레코드에 따로 적지 않는다 — 적으면 같은 사실을 두 곳에 두는 것이다.
+#:   legacy — 62차 이전(`sealed` 키가 생기기 전)의 레코드. 저장소의 tracked
+#:            등록부에 16건 있고(58차 legacy 분류 4 · re-key 12), 전부
+#:            2026-09-04~09-09 에 적혔다. **새로 만들어지지 않는다** — writer 는
+#:            항상 modern 을 쓴다.
+#:
+#:   리뷰어(70차)는 두 키(`content_id`·`execution_class`)만 있는 레코드와
+#:   `sealed=[]`·`evidence=17`·`recorded_at=false`·임의 추가 키가 있는 레코드를
+#:   원래 reader 가 **수용**하는 것을 실측했다. 그 reader 는 class enum 과
+#:   content_id 만 봤다. 여기서부터 키 집합·타입이 닫힌다.
+EXEC_CLASS_RECORD_KEYS_MODERN = frozenset(
+    {"content_id", "execution_class", "evidence", "recorded_at", "sealed"})
+EXEC_CLASS_RECORD_KEYS_LEGACY = frozenset(
+    {"content_id", "execution_class", "evidence", "recorded_at"})
+_EXEC_CLASS_RECORDED_AT = re.compile(r"\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z\Z")
+
+
+def _typed_exec_class_record(rec, content_id: str, where) -> dict:
+    """레코드가 닫힌 variant 중 하나인지 **타입까지** 확인한다 (70차 E5).
+
+    통과하면 그 dict 를 그대로 돌려주고, 아니면 `PreserveError` — `None` 이
+    아니다. 등록부 안의 잘못된 레코드는 "없음" 이 아니라 **authority 의 손상**
+    이고, 없음으로 읽으면 `classify_legacy_run()` 같은 "없으면 만든다" 경로가
+    그 위에 새 판단을 얹는다.
+    """
+    def _bad(why: str) -> PreserveError:
+        return PreserveError(
+            "promote",
+            f"실행 class 등록 레코드가 닫힌 typed variant 가 아니다 ({where}): "
+            f"{why} — modern {sorted(EXEC_CLASS_RECORD_KEYS_MODERN)} 또는 legacy "
+            f"{sorted(EXEC_CLASS_RECORD_KEYS_LEGACY)} 만 authority 다 (70차 E5). "
+            "class 를 정할 수 없으므로 거부한다")
+    if not isinstance(rec, dict):
+        raise _bad(f"dict 가 아니다 ({type(rec).__name__})")
+    keys = frozenset(rec)
+    if keys == EXEC_CLASS_RECORD_KEYS_MODERN:
+        variant = "modern"
+    elif keys == EXEC_CLASS_RECORD_KEYS_LEGACY:
+        variant = "legacy"
+    else:
+        raise _bad(f"키 집합 {sorted(keys)}")
+    if rec["execution_class"] not in EXEC_CLASSES:
+        raise _bad(f"execution_class={rec['execution_class']!r}")
+    if not _is_hex64(rec["content_id"]):
+        raise _bad("content_id 가 hex64 가 아니다")
+    if rec["content_id"] != content_id:
+        raise _bad(f"content_id {str(rec['content_id'])[:16]}… 가 조회 키 "
+                   f"{content_id[:16]}… 와 어긋난다")
+    if not (isinstance(rec["evidence"], str) and rec["evidence"].strip()):
+        raise _bad(f"evidence 가 비어 있지 않은 문자열이 아니다 ({type(rec['evidence']).__name__})")
+    if not (isinstance(rec["recorded_at"], str)
+            and _EXEC_CLASS_RECORDED_AT.match(rec["recorded_at"])):
+        raise _bad(f"recorded_at={rec['recorded_at']!r} (UTC `%Y-%m-%dT%H:%M:%SZ` 가 아니다)")
+    if variant == "modern" and type(rec["sealed"]) is not bool:
+        raise _bad(f"sealed={rec['sealed']!r} 는 bool 이 아니다 (truthiness 로 읽지 않는다)")
+    return rec
+
+
+def _read_exec_class_at(p: Path, content_id: str) -> dict | None:
+    if not p.is_file():
+        return None
+    # ★ 60차 P1-1 — **이름이 둘인 레코드는 authority 가 아니다.**
+    #
+    #   게시 경로를 아무리 고쳐도 crash 로 남은 alias 는 있을 수 있다. 그때
+    #   읽는 쪽이 그것을 그대로 받으면 방어가 없는 것과 같다 — 두 번째 문으로
+    #   내용을 바꾸고도 등록부가 authority 인 척한다. 층을 둘로 둔다.
+    _st = os.stat(p, follow_symlinks=False)
+    if _st.st_nlink != 1:
+        raise PreserveError(
+            "promote",
+            f"등록 레코드의 이름이 {_st.st_nlink}개다 ({p}) — 같은 내용을 "
+            "가리키는 두 번째 문이 있으면 그리로 쓴 값이 등록부의 답이 된다. "
+            "authority 는 이름이 하나여야 한다 (60차 P1-1). 남은 alias 를 "
+            "지우고 다시 읽으라")
+    # ★ 70차 E5 — 읽을 수 없거나 형식이 닫힌 variant 밖이면 **`None` 이 아니라
+    #   오류**다. 60차까지는 `None`("없음")으로 접었고, 그래서 두 키만 있는
+    #   레코드·타입이 틀린 레코드가 통과했다 (리뷰어 실측). 파일이 있는데 못
+    #   읽는 것은 "없음" 과 다른 사실이다.
+    try:
+        rec = json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise PreserveError(
+            "promote",
+            f"실행 class 등록 레코드를 읽을 수 없다 ({p}): {exc} — 등록부의 "
+            "손상이지 미등록이 아니다 (70차 E5)") from exc
+    return _typed_exec_class_record(rec, content_id, p)
+
+
+def read_execution_class(content_id: str, ledger=None) -> dict | None:
+    """**두 자리를 다 읽고, 어긋나면 멈춘다** (58차 L14 · 59차 M4).
+
+    자리를 나눈 뒤에도 읽는 쪽은 하나여야 한다. 호출자가 "어느 등록부를
+    볼까" 를 정하게 되면 그 선택 자체가 새 우회로가 된다 — 48~57차의 경로
+    판정이 정확히 그 형태였다.
+
+    ★ 59차 M4 — 58차판은 공유를 **먼저 찾으면 즉시 반환**했다. 주석은 "양쪽에
+      있으면 `_record_execution_class()` 가 애초에 막는다" 였는데, 그 배타는
+      **내용당 lock 으로 이 clone 안에서만** 성립한다. 리뷰어 반례: clone A 가
+      local smoke 로, clone B 가 tracked canonical 로 각각 합법 등록한 뒤 B 의
+      tracked record 가 평범한 VCS 동기화로 A 에 들어온다. lock 은 Git 을
+      직렬화하지 못한다. 그러면 두 valid record 가 공존하고 reader 는 반대말을
+      **안 읽은 채** canonical 을 돌려줬다 (`conflict_was_reported: false`).
+
+      `[해석]` 우선순위는 충돌 **해결**이 아니라 충돌 **은폐**다. 어느 쪽이
+      옳은지 이 함수는 모른다 — 모르는 것을 아는 척하지 않고 멈춘다.
+    """
+    name = _exec_class_path(content_id, ledger).name
+    seen = {}
+    for label, root in (("shared", exec_class_root_for_ledger(ledger)),
+                        ("local", local_exec_class_root_for_ledger(ledger))):
+        rec = _read_exec_class_at(root / name, content_id)
+        if rec is not None:
+            seen[label] = rec
+    classes = {label: r.get("execution_class") for label, r in seen.items()}
+    if len(set(classes.values())) > 1:
+        raise PreserveError(
+            "promote",
+            f"내용 {content_id[:16]}… 의 실행 class 가 두 등록부에서 충돌한다: "
+            + " · ".join(f"{k}={v!r}" for k, v in sorted(classes.items()))
+            + " — 어느 쪽이 옳은지 이 자리에서 정할 수 없다. 한쪽은 다른 clone "
+              "에서 왔을 수 있고 내용당 lock 은 Git 동기화를 직렬화하지 않는다. "
+              "사람이 보고 하나를 지워야 한다 (fail-closed)")
+    return seen.get("shared") or seen.get("local")
+
+
+def _promotion_content_id(d: Path, dir_fd=None) -> tuple:
+    """**승격**을 위한 내용 identity — 봉인이 온전할 때만 (62차 P0-1).
+
+    `run_content_id()` 의 두 관용은 **전이**를 위한 것이다: 낡은 봉인은 무시하고
+    지금 있는 것으로 identity 를 만들며(60차 — 다음 phase 의 gate 가 아직
+    아무것도 안 굳혔으므로), 봉인은 자기가 담은 이름만 검증한다(61차 — grid
+    가 굳힌 뒤 fit 이 같은 자리에 실행 manifest 를 더하므로). 둘 다 "commit 이
+    곧 다시 봉인한다" 를 전제로 한다.
+
+    승격에는 그 전제가 없다 — 승격은 **지금 이 상태**를 인용 자리로 옮기는
+    것이다. 리뷰어 실측 (62차 P0-1): grid 가 굳힌 자리에서 fit 이 진행 중이어도
+    봉인은 grid 목록만 검증해 통과하고 → grid 의 identity → canonical → 승격.
+    fit 이 굳힌 뒤 fit member 를 지우면 봉인이 낡아 무시되고 → 지금 있는 것
+    = grid 목록 → 같은 길. 즉 temporal seal 이 "등록된 실행의 고정 identity"
+    가 아니라 **우연히 남은, 과거에 등록된 prefix** 로 되돌아갔다.
+
+    그래서 승격의 규칙은 셋이다:
+      · 봉인이 있으면 **바이트가 맞아야** 한다 (낡음 → 거부).
+      · 봉인은 지금 있는 실행 manifest 를 **정확히 다** 담아야 한다 (모자람 →
+        거부: 굳힌 뒤 더 생긴 실행 manifest 는 아직 아무 commit 도 안 본 것이다).
+      · 봉인이 없으면 identity 는 지금 있는 것으로 만들되, 그 레코드가
+        `sealed` 면 거부한다 (봉인 파일을 지운 것이지 legacy 가 아니다 —
+        판정은 호출자 `resolve_execution_class(for_promotion=True)` 가 한다).
+
+    **범위 (62차 자체 리뷰 실측)**: 봉인에는 서명이 없다. 그러므로 이 규칙이
+    막는 것은 "**등록되지 않은** 상태로 되돌아가는 것" 이고, 과거에 봉인·등록된
+    **어느** 상태든 그 member 집합과 바이트를 그대로 되살리면(예: fit member
+    를 지우고 grid 시점의 봉인을 복원) 그 상태의 class 로 승격된다. 그것은
+    grid commit 이 실제로 봉인·등록한 상태이므로 세탁이 아니라 그 상태 자체다
+    — 방어선은 봉인이 아니라 **원장 등록**이고, 등록되지 않은 조합은 여전히
+    거부다.
+
+    반환: `(content_id, had_seal)`.
+    """
+    body = _read_member(d, RUN_SEAL_NAME, dir_fd)
+    if body is None:
+        return run_content_id(d, dir_fd=dir_fd), False
+    sealed = _sealed_manifest_parts(d, dir_fd)
+    if sealed is None:
+        raise PreserveError(
+            "promote",
+            f"{d} 의 내용 봉인({RUN_SEAL_NAME})이 **낡았다** — 봉인이 담은 "
+            "member 가 사라졌거나 바이트가 달라졌다. 승격은 '지금 있는 것' 으로 "
+            "되돌아가지 않는다: 그 identity 는 과거에 등록된 다른 상태(예: fit "
+            "이 지워진 grid)의 것일 수 있다 (62차 P0-1). 다시 굳히거나(commit) "
+            "그 상태를 승격하지 마라")
+    present = {n for n, _ in _present_manifest_parts(d, dir_fd)}
+    covered = {n for n, _ in sealed}
+    extra = sorted(present - covered)
+    if extra:
+        raise PreserveError(
+            "promote",
+            f"{d} 의 내용 봉인이 지금 있는 실행 manifest 를 다 안 담는다 — "
+            f"봉인 밖: {extra}. 굳힌 뒤에 생긴 실행 manifest 는 아직 어느 "
+            "commit 도 보지 않은 상태(진행 중이거나 죽은 다음 phase)이고, 그 "
+            "상태는 봉인이 담은 identity 의 class 를 물려받지 않는다 (62차 P0-1)")
+    descriptor = json.dumps(
+        {"kind": _CONTENT_ID_KIND, "manifests": [tuple(x) for x in sealed]},
+        sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256(descriptor.encode("utf-8")).hexdigest(), True
+
+
+def resolve_execution_class(run_dir, ledger=None, *,
+                            for_promotion: bool = False) -> dict:
+    """이 산출이 무슨 class 인가. **경로를 보지 않는다.**
+
+    등록부에 없으면 `PreserveError` 다 — fail-closed. 예전 산출(등록 이전에
+    만들어진 것)은 `classify_legacy_run()` 으로 **한 번** 분류해야 하고, 그
+    분류가 무엇을 보고 이뤄졌는지가 등록부에 남는다.
+
+    `[해석]` 이것이 "migration 창" 을 **기간이 아니라 산출별 1회 행위**로 바꾼다.
+    창을 열어 두면 그동안 경로 판정이 조용히 계속 살아 있지만, 이렇게 하면
+    경로를 본 순간이 **영수증으로 남고** 그 뒤로는 다시 보지 않는다.
+
+    ★ 62차 P0-1 — `for_promotion=True` 면 identity 를 `_promotion_content_id()`
+      로 만든다 (낡은/모자란 봉인 거부 · `sealed` 레코드는 봉인 없이 거부).
+      전이 조회(기본값)는 60차·61차의 관용을 그대로 둔다.
+    """
+    d = Path(run_dir)
+    if for_promotion:
+        cid, had_seal = _promotion_content_id(d)
+    else:
+        cid, had_seal = run_content_id(d), None
+    rec = read_execution_class(cid, ledger=ledger)
+    if rec is None:
+        raise PreserveError(
+            "promote",
+            f"{d} 의 실행 class 가 등록돼 있지 않다 (내용 "
+            f"{cid[:16]}…). 이 산출이 정본 실행인지 smoke 인지 **바이트만 보고는 "
+            "알 수 없으므로** 승격을 거부한다. 예전 산출이면 "
+            "`classify_legacy_run()` 으로 한 번 분류하라 — 무엇을 보고 정했는지가 "
+            "등록부에 남는다")
+    # ★ 70차 E5 — typed reader 가 `sealed` 를 bool 로 닫았으므로 여기서는
+    #   `is True` 로 묻는다 (legacy variant 에는 키가 없다 → 봉인 없는 승격 허용,
+    #   62차 규칙 그대로). truthiness 는 `[]`·`"yes"`·`1` 을 다르게 읽는다.
+    if for_promotion and not had_seal and rec.get("sealed", False) is True:
+        raise PreserveError(
+            "promote",
+            f"{d} 의 내용 {cid[:16]}… 은 **봉인과 함께** 등록됐는데 지금 봉인"
+            f"({RUN_SEAL_NAME})이 없다 — 봉인이 지워진 것이지 legacy 산출이 "
+            "아니다. 봉인 없는 승격은 legacy 레코드에만 허용된다 (62차 P0-1)")
+    return rec
+
+
+#: gate 가 발행한 권한의 **일련번호 등록부** (프로세스 지역).
+#:
+#:   capability 를 dataclass 로만 두면 아무나 만들 수 있다. 발행 사실을 여기
+#:   적어 두고 소비할 때 대조하면, `issue_execution_class()` 를 지나지 않은
+#:   객체는 통과하지 못한다. 프로세스 밖으로 나가지 않는다 — 산출을 굳히는
+#:   것은 gate 를 지난 **그 실행**이고, 다른 프로세스가 대신 굳히는 경로는
+#:   애초에 없어야 한다.
+_ISSUED_EXEC_CAPS: dict = {}
+
+#: **소비된** 일련번호. 재사용을 "발행한 적 없다" 와 구별해서 말하기 위한 것이고,
+#: 그 구별이 없으면 재사용 버그가 위조로 오인돼 진단이 어긋난다 (60차 P0-3).
+_SPENT_EXEC_CAPS: set = set()
+
+
+@dataclass
+class _IssuedExecCap:
+    """gate 가 발행한 권한의 **정본 기록** (60차 P0-2·P0-3).
+
+    caller 는 이 객체를 받지 않는다 — 받는 것은 일련번호뿐이다. 그래서 여기
+    적힌 class·leg·phase·원장·대상은 caller 가 고칠 수 없다.
+
+    `state` 는 소비의 일회성을 강제한다:
+
+        issued  → 아직 아무도 안 굳혔다
+        consuming → 지금 굳히는 중이다 (재진입 금지)
+
+    성공하면 기록 자체가 사라지고 `nonce` 는 `_SPENT_EXEC_CAPS` 로 간다.
+    실패하면 `issued` 로 되돌아가되 **결속(fd·ident)은 그대로다** — 최소 조건이
+    말한 "bound live nonce 를 unbound live nonce 로 바꾸는 상태" 를 만들지
+    않기 위해서다.
+    """
+    leg_id: str
+    phase: str
+    execution_class: str
+    ledger: str | None
+    dir_fd: int | None
+    dir_ident: tuple | None
+    state: str = "issued"
+
+
+@dataclass(frozen=True)
+class ExecutionClassCapability:
+    """gate 가 발행하는 **봉인된 실행 class 권한** (59차 M1).
+
+    ★ 왜 목록이 아니라 권한인가.
+
+    58차는 `note_smoke_exemption()` 이 "기록 못 한 자리" 목록을 돌려주고
+    호출자가 그것을 무시해도 된다고 **docstring 에 적었다.** 그리고 산출이
+    굳는 순간 기록한다던 `record_run_outputs()` 는 저장소에 실호출이 0곳이었다
+    (리뷰어 실측). 두 문장은 동시에 참일 수 없었다.
+
+    목록은 버릴 수 있다. 권한은 버릴 수 없다 — 산출을 굳히는 함수가 그것을
+    **요구**하기 때문이다. class 는 gate 가 정해 권한이 나르므로, 호출자가
+    raw `cls` 를 다시 줄 자리가 없다 (최소 조건이 명시한 우회로).
+
+    ★ 59차 마감 — `note_smoke_exemption()` 은 **삭제했다.** 권한이 그 자리를
+      대신한 뒤 호출자가 0곳이 됐고, 호출자 없는 방어 표면은 "있는 척" 이다
+      (전수 재생의 조각 3 이 그 함수를 겨눈 변이가 아무것도 안 문다고
+      알려 줘서 발견했다 — 죽은 축은 죽은 코드를 가리킨다).
+
+    ★ 59차 M5 — 권한은 class 만이 아니라 **gate 가 판정한 대상**도 나른다.
+
+      58차까지 판정은 한 시점의 pathname 을 보고 끝났고, 실제 쓰기는 나중에
+      그 이름을 **다시 열었다.** 리뷰어는 그 사이에 bind 로 이름 아래를 바꿔
+      smoke 판정을 받은 실행이 namespace 밖에 쓰게 만들었다.
+
+      그래서 발행 시점에 그 디렉터리를 `O_DIRECTORY|O_NOFOLLOW` 로 열어
+      `dir_fd` 를 들고 간다. 굳히는 자리는 (a) 그 handle 로 manifest 를 읽어
+      identity 를 만들고 (b) 지금 그 이름이 가리키는 것이 **같은 커널 객체**
+      인지 확인한다. 이름이 바뀌었으면 그 사실이 보인다 — 이름은 시점의
+      성질이고 handle 은 대상의 성질이다.
+
+    ★ 60차 P0-2 — 권한 객체는 **일련번호만** 든다.
+
+      59차는 `leg_id`·`phase`·`execution_class`·`dir_fd` 를 이 객체의 field 로
+      두고, 등록부에는 **같은 객체**를 저장해 `is` 로 대조했다. 같은 객체를
+      대조하는 것은 봉인이 아니다 — 리뷰어가 진짜로 발행된 smoke 권한의
+      필드를 제자리에서 고치자 `issued_as smoke → committed_as canonical`
+      이었다. 증인이 caller 와 같은 메모리를 봤기 때문이다.
+
+      그래서 정본은 프로세스 안의 **발행 기록**(`_IssuedExecCap`)이고, 이
+      객체는 그 기록을 가리키는 불투명한 손잡이다. 아래 속성들은 전부 기록을
+      읽는다 — caller 가 고칠 수 있는 값은 하나도 없다.
+    """
+
+    nonce: str
+
+    def _record(self) -> "_IssuedExecCap":
+        rec = _ISSUED_EXEC_CAPS.get(self.nonce)
+        if rec is None:
+            raise PreserveError(
+                "promote",
+                ("이미 소비된 권한이다 — 소비는 한 번뿐이다 (60차 P0-3)"
+                 if self.nonce in _SPENT_EXEC_CAPS else
+                 "이 권한은 이 프로세스의 gate 가 발행한 것이 아니다 — "
+                 "위조했거나 다른 실행의 것이다 (59차 M1)"))
+        return rec
+
+    @property
+    def leg_id(self) -> str:
+        return self._record().leg_id
+
+    @property
+    def phase(self) -> str:
+        return self._record().phase
+
+    @property
+    def execution_class(self) -> str:
+        return self._record().execution_class
+
+    @property
+    def ledger(self):
+        return self._record().ledger
+
+    @property
+    def dir_fd(self):
+        return self._record().dir_fd
+
+    @property
+    def dir_ident(self):
+        return self._record().dir_ident
+
+
+def _decide_execution_class(run_dir) -> str:
+    """이 **자리**가 정하는 실행 class (60차 P0-2).
+
+    계획 gate 의 면제를 정하는 것과 **같은 함수**(`is_inside_namespace()`)로
+    판정한다 — 두 규칙이 갈리면 어느 쪽이 경계인지 정할 수 없다. 그리고 그
+    판정은 이름이 아니라 커널 좌표로 한다 (58차 L4).
+    """
+    return (EXEC_CLASS_SMOKE if is_inside_namespace(run_dir, SMOKE_NAMESPACE)
+            else EXEC_CLASS_CANONICAL)
+
+
+def issue_execution_class(run_dir, leg_id: str, phase: str,
+                          ledger=None) -> ExecutionClassCapability:
+    """gate 가 이 실행의 class 를 정하고 **권한을 발행한다** (59차 M1).
+
+    실행 **직전**에는 manifest 가 없어 내용 identity 를 만들 수 없다. 그래서
+    이 자리에서 등록부에 굳힐 수는 없다 — 굳히는 것은 산출이 생긴 뒤
+    `commit_run_outputs()` 다. 그 사이를 잇는 것이 이 권한이다.
+
+    이미 등록된 내용이면 그 class 와 어긋나는 발행을 여기서 막는다 (identity 를
+    만들 수 있는 경우에 한해 — 못 만들면 그것은 정상이고 commit 때 본다).
+
+    ★ 59차 M5 — 판정한 **대상**의 handle 을 같이 발행한다. 자리가 아직 없으면
+      handle 은 `None` 이고, 그때는 굳히는 자리가 이름으로 연다 (들고 갈 것이
+      없으므로 있다고 말하지 않는다 — 없음을 없음으로 나른다).
+    """
+    # ★ 60차 P0-2 — **class 는 caller 가 안 고른다.** 59차의 mint 는 `cls` 를
+    #   받았고, 그래서 gate 를 지나지 않고도 canonical 권한을 찍을 수 있었다.
+    #   고르는 자리와 찍는 자리를 한 함수로 합친다.
+    cls = _decide_execution_class(run_dir)
+    check_id(leg_id)
+    try:
+        cid = run_content_id(run_dir)
+    except PreserveError as exc:
+        if not _is_missing_manifest(exc):
+            raise
+    else:
+        prev = read_execution_class(cid, ledger=ledger)
+        if prev is not None and prev.get("execution_class") != cls:
+            raise PreserveError(
+                "promote",
+                f"이 산출은 이미 {prev.get('execution_class')!r} 로 등록돼 "
+                f"있다 — {cls!r} 권한을 발행할 수 없다 (내용 {cid[:16]}…)")
+    _fd, _ident = _open_judged_dir(run_dir)
+    nonce = uuid.uuid4().hex
+    _ISSUED_EXEC_CAPS[nonce] = _IssuedExecCap(
+        leg_id=leg_id, phase=phase, execution_class=cls,
+        ledger=None if ledger is None else str(ledger),
+        dir_fd=_fd, dir_ident=_ident)
+    return ExecutionClassCapability(nonce=nonce)
+
+
+def _open_judged_dir(run_dir) -> tuple:
+    """gate 가 판정한 디렉터리를 열어 `(fd, (dev, ino))` 를 돌려준다 (59차 M5).
+
+    `O_NOFOLLOW` 는 **마지막 성분**이 symlink 면 거부한다 — 판정 대상이
+    alias 면 그 alias 가 나중에 다른 곳을 가리킬 수 있고, 그러면 우리가 든
+    handle 은 "판정한 대상" 이 아니다.
+
+    ★ 60차 P0-4 — **자리가 없으면 만든다.** 59차는 "자리가 아직 없으면 handle 이
+      없다" 를 신고된 한계로 뒀는데, 리뷰어가 보인 대로 그것은 드문 모서리가
+      아니라 **production 의 정상 경우**였다: grid 는 `mkdir` 보다 먼저 gate 를
+      지난다 (47차 조건 11-c). 즉 그 한계 아래에서는 handle 이 **언제나** 없었고,
+      59차가 "권한이 대상을 나른다" 고 말한 것은 실제로는 아무것도 안 날랐다.
+
+      만드는 것은 발행의 **성공 경로**에서만 일어난다. 거부는 그 전에 끝나므로
+      "gate 는 거부하기 전에 부작용을 만들지 않는다" 와 충돌하지 않는다.
+    """
+    Path(run_dir).mkdir(parents=True, exist_ok=True)
+    try:
+        fd = os.open(run_dir, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    except OSError as exc:
+        raise PreserveError(
+            "promote",
+            f"판정한 자리를 handle 로 열 수 없다: {run_dir} ({exc}) — 이름이 "
+            "symlink 이거나 디렉터리가 아니다 (59차 M5)") from exc
+    st = os.fstat(fd)
+    return fd, (st.st_dev, st.st_ino)
+
+
+def staged_root(capability) -> Path:
+    """권한이 든 handle 이 가리키는 **실물로 가는 길** (60차 P0-4).
+
+    `/proc/self/fd/<fd>` 는 커널이 그 fd 의 대상으로 이어 주는 자리다. 그래서
+    이 경로 아래로 쓰면 원래 이름이 그 뒤에 무엇을 가리키게 되든 — bind swap
+    이든 rename 이든 — 쓰는 곳은 **gate 가 판정한 그 커널 객체**다.
+
+    왜 이 모양인가: production 의 writer 는 pandas·yaml 처럼 경로를 받는
+    라이브러리다. 그것들을 전부 `openat` 기반으로 다시 쓰는 것은 이 라운드의
+    범위를 넘고, 다시 쓰는 동안 한 자리라도 빠지면 그 자리가 그대로 구멍이다.
+    handle 을 **경로로 노출**하면 writer 를 안 고치고도 전부가 handle 아래로
+    간다. 이 저장소는 이미 `/proc` 에 의존한다 (`fdinfo`·`mountinfo` 로 mount
+    좌표를 읽는다) — 새 전제가 아니다.
+
+    **한계**: 이것은 Linux 의 성질이다. 다른 커널에서는 writer 를 `openat` 으로
+    옮겨야 한다. 그리고 이 경로는 이 프로세스 안에서만 뜻이 있다.
+    """
+    rec = capability._record()
+    if rec.dir_fd is None:
+        raise PreserveError(
+            "promote",
+            "권한이 판정한 대상의 handle 을 안 들고 있다 — 이름으로 쓰면 판정과 "
+            "쓰기 사이의 창이 그대로 남는다 (60차 P0-4)")
+    return Path(f"/proc/self/fd/{rec.dir_fd}")
+
+
+def commit_run_outputs(capability, paths) -> list:
+    """산출이 **굳은 뒤** 그 실행 class 를 등록부에 적는다 (59차 M1).
+
+    권한 없이는 굳힐 수 없다. class 는 권한이 나르므로 이 함수는 `cls` 인자를
+    받지 않는다 — 받으면 최소 조건이 지목한 우회로가 그대로 남는다.
+
+    멱등이다: 같은 class 로 다시 부르면 조용히 성공한다. 다른 class 면 거부.
+
+    ★ 59차 M5 — 굳히기 전에 **판정한 대상과 지금 이름이 가리키는 대상이 같은지**
+      묻는다. gate 가 handle 을 들고 왔으면(`dir_fd`) 그것이 정본이고, 지금
+      이름이 다른 커널 객체를 가리키면 거부한다. 이름은 시점의 성질이므로
+      판정 뒤에 바뀔 수 있다 — bind swap 이든 rename 이든, 그 사실이 여기서
+      보여야 한다.
+
+      **한계**: gate 시점에 자리가 아직 없었으면 들고 온 handle 이 없고, 그때는
+      이름으로 연다. 그 창은 이 라운드에서 닫지 못했고 요청문에 적는다.
+    """
+    if not isinstance(capability, ExecutionClassCapability):
+        raise PreserveError(
+            "promote",
+            "산출을 굳히려면 gate 가 발행한 실행 class 권한이 필요하다 "
+            f"(받은 것: {type(capability).__name__}) — 권한 없이 굳히는 경로는 "
+            "없다 (59차 M1)")
+    # ★ 60차 P0-3 — **소비는 원자적 상태 전이로 시작한다.** 59차는 굳힌 뒤에도
+    #   일련번호를 남기고 `dir_fd` 만 `None` 으로 바꿨다. 그래서 두 번째 호출이
+    #   대조를 다시 통과하고, `_assert_still_the_judged_dir()` 는 handle 이
+    #   없으면 곧바로 반환하므로 **판정하지 않은 자리**가 canonical 로 굳었다.
+    rec = capability._record()
+    if rec.state != "issued":
+        raise PreserveError(
+            "promote",
+            f"이 권한은 지금 소비 중이다 (state={rec.state!r}) — 재진입해서 "
+            "굳히는 경로는 없다 (60차 P0-3)")
+    rec.state = "consuming"
+    led = rec.ledger
+    done = []
+    ok = False
+    try:
+        for x in [Path(p) for p in paths if p]:
+            _assert_still_the_judged_dir(capability, x)
+            # ★ 60차 P0-1 — **여기가 유일한 시간 봉인 지점이다.** 등록보다 먼저
+            #   봉인해야 등록의 키와 이후 독자의 키가 같다.
+            seal_run_identity(x, dir_fd=rec.dir_fd)
+            _record_execution_class(
+                x, rec.execution_class,
+                evidence=(f"산출 완료 시점 등록 · leg={rec.leg_id} "
+                          f"phase={rec.phase} class={rec.execution_class}"),
+                ledger=led, dir_fd=rec.dir_fd)
+            done.append(x)
+        ok = True
+    finally:
+        if ok:
+            # 성공했다 — 권한을 **영구히 폐기**한다. handle 도 여기서 놓는다.
+            _retire_capability(capability.nonce)
+        else:
+            # 실패했다 — 결속을 **그대로 둔 채** 재시도를 허용한다. fd 를 닫으면
+            # 다음 호출이 결속 없는 권한을 들게 되고, 그것이 P0-3 의 둘째 반례다.
+            rec.state = "issued"
+    return done
+
+
+def _retire_capability(nonce: str) -> None:
+    """소비된 권한을 등록부에서 지우고 handle 을 놓는다 (60차 P0-3)."""
+    rec = _ISSUED_EXEC_CAPS.pop(nonce, None)
+    _SPENT_EXEC_CAPS.add(nonce)
+    if rec is None or rec.dir_fd is None:
+        return
+    try:
+        os.close(rec.dir_fd)
+    except OSError:                                          # pragma: no cover
+        pass
+    rec.dir_fd = None
+
+
+def discard_execution_capability(capability) -> None:
+    """굳히지 않고 권한을 버린다 — 폐기 경로도 한 자리여야 한다 (60차 P0-3)."""
+    if not isinstance(capability, ExecutionClassCapability):
+        raise PreserveError(
+            "promote",
+            f"권한이 아니다: {type(capability).__name__}")
+    _retire_capability(capability.nonce)
+
+
+def discard_capability_on_abort(capability, log=None) -> None:
+    """commit 에 **도달하지 못한** 종료(dry-run · 예외)에서 권한을 버린다 (62차 P1-2).
+
+    리뷰어 실측: production 에 `discard_execution_capability()` 호출자가 0 이라
+    grid dry-run 과 실패한 fit 이 capability 와 그 디렉터리 fd 를 프로세스가
+    죽을 때까지 들고 있었다 (`new_live_capability_count 1 ·
+    new_open_directory_fd_count 1`).
+
+    호출자의 원래 예외를 가리지 않는다 — 폐기 자체가 실패하면 로그에 남기고
+    돌아간다. `None`(권한이 없는 경로)은 할 일이 없다. commit 뒤에 불려도
+    `_retire_capability()` 가 멱등이라 안전하다.
+    """
+    if capability is None:
+        return
+    try:
+        discard_execution_capability(capability)
+    except Exception as e:                                   # noqa: BLE001
+        (log or logging.getLogger(__name__)).error(
+            "실행 class 권한 폐기 실패 (원래 예외가 우선한다): %r", e)
+
+
+def _assert_still_the_judged_dir(capability, path: Path) -> None:
+    """지금 이 이름이 gate 가 판정한 **그 대상**인가 (59차 M5)."""
+    # ★ 60차 P0-4 — `None` 은 더 이상 정상 상태가 아니다 (발행이 언제나 자리를
+    #   만들고 handle 을 잡는다). 그러므로 조용히 통과하지 않는다 — 그 조용한
+    #   통과가 P0-3 둘째 반례의 마지막 한 걸음이었다.
+    if capability.dir_fd is None:
+        raise PreserveError(
+            "promote",
+            "권한이 판정한 대상의 handle 을 안 들고 있다 — 무엇을 굳히는지 "
+            "확인할 수 없으므로 거부한다 (60차 P0-4)")
+    # ★ 60차 P0-4 — 호출자가 **handle 자체**를 넘겼으면 물을 이름이 없다.
+    #   이 검사는 "이 **이름**이 아직 판정한 대상을 가리키는가" 이고, 대상을
+    #   직접 가리키는 길에는 그 물음이 성립하지 않는다 (그리고 그것이 이
+    #   라운드가 writer 를 옮긴 자리다).
+    if os.fspath(path) == os.fspath(staged_root(capability)):
+        return
+    try:
+        here = os.stat(path, follow_symlinks=False)
+    except OSError as exc:
+        raise PreserveError(
+            "promote",
+            f"굳히려는 자리를 볼 수 없다: {path} ({exc}) — gate 가 판정한 "
+            "대상이 그대로 있는지 확인할 수 없으므로 거부한다 (59차 M5)") from exc
+    now = (here.st_dev, here.st_ino)
+    if now != capability.dir_ident:
+        raise PreserveError(
+            "promote",
+            f"gate 가 판정한 실물과 지금 이 이름이 가리키는 실물이 다르다 "
+            f"({path}: 판정 {capability.dir_ident} ≠ 지금 {now}) — 판정과 쓰기 "
+            "사이에 이름 아래가 바뀌었다 (bind·rename). 판정은 그 대상에 대한 "
+            "것이므로 이 산출에 적용할 수 없다 (59차 M5)")
+
+
+#: legacy 분류를 허용하는 **명시적 roster** (59차 M1).
+#:
+#:   최소 조건: "legacy migration 은 배선 전 산출의 명시적 roster 에만 허용해야
+#:   한다." 그렇지 않으면 새 산출을 등록 없이 만든 뒤 migration 으로 세탁하는
+#:   길이 계속 열려 있다 — 리뷰어가 정확히 그 순서를 재현했다.
+#:
+#:   목록은 저장소 상대 run 디렉터리 이름이고, **배선(59차 α) 이전에 만들어진
+#:   네 산출**이다. 여기 없는 것을 분류하려 하면 거부한다.
+#:
+#:   항목이 상대 경로라는 것 자체가 불변식이다 (`REPO_ROOT` 에 붙여 해석하므로
+#:   절대 경로를 넣으면 저장소 밖을 roster 에 올릴 수 있다). 그 불변식은
+#:   `tests/test_exec_class_capability_59.py` 가 구조로 못 박는다.
+LEGACY_EXEC_CLASS_ROSTER = ("results/grid_curves_v4", "results/grid_fit_v4",
+                            "results/halfcell_fit_v4",
+                            "results/paired_fixed5_v4")
+
+
+def classify_legacy_run(run_dir, ledger=None, namespace=None) -> dict:
+    """등록 이전에 만들어진 산출을 **한 번** 분류한다 (58차 P0-8 migration).
+
+    지금 이 순간의 경로를 증거로 쓴다. 그것을 숨기지 않고 `evidence` 에 적는다.
+    이미 등록돼 있으면 그대로 돌려준다 (재분류하지 않는다 — 두 번째 분류는
+    첫 번째와 다를 수 있고, 그러면 등록부가 authority 가 아니게 된다).
+    """
+    d = Path(run_dir)
+    cid = run_content_id(d)
+    prev = read_execution_class(cid, ledger=ledger)
+    if prev is not None:
+        return prev
+    # ★ 59차 M1 — **명시적 roster 밖은 분류하지 않는다.** 58차판은 아무 산출이나
+    #   지금 경로를 보고 분류했고, 리뷰어는 그것으로 미등록 산출을 canonical 로
+    #   세탁했다 (등록 없이 만들고 → 밖으로 옮기고 → 분류). 분류는 **배선 전에
+    #   만들어진 산출**을 한 번 정리하는 행위이지 새 산출의 입구가 아니다.
+    #
+    #   roster 항목은 **저장소 상대 경로**이고, 여기서 저장소 뿌리에 붙여
+    #   해석한 뒤 실제 대상과 비교한다 (문자열 비교가 아니다 — symlink·`..` 로
+    #   같은 자리를 다른 이름으로 부를 수 있다).
+    try:
+        here = d.resolve()
+        roster = {(REPO_ROOT / r).resolve() for r in LEGACY_EXEC_CLASS_ROSTER}
+    except OSError as exc:
+        raise PreserveError(
+            "promote", f"{d} 의 좌표를 해석할 수 없다: {exc}") from exc
+    if here not in roster:
+        raise PreserveError(
+            "promote",
+            f"{d} 는 legacy roster 에 없다 (roster: "
+            f"{list(LEGACY_EXEC_CLASS_ROSTER)}) — legacy 분류는 배선(59차 α) "
+            "이전에 만들어진 산출에만 허용된다. 새 산출은 gate 가 발행한 권한을 "
+            "`commit_run_outputs()` 로 소비해 등록해야 한다 (59차 M1)")
+    ns = SMOKE_NAMESPACE if namespace is None else Path(namespace)
+    inside = is_inside_namespace(d, ns)
+    cls = EXEC_CLASS_SMOKE if inside else EXEC_CLASS_CANONICAL
+    _record_execution_class(
+        d, cls,
+        evidence=(f"legacy 분류 (58차 P0-8): 분류 시점 경로 {d} 가 "
+                  f"{ns} {'안' if inside else '밖'}이었다"),
+        ledger=ledger)
+    return read_execution_class(cid, ledger=ledger)
+
+
+def assert_not_smoke_provenance(paths, sink: str, dest=None) -> None:
+    """smoke 산출을 **정본으로 승격하지 못하게** 한다 (48차 P0-8).
+
+    47차는 smoke 를 계획 gate 에서 **면제**했다 (계약 §13.3.3). 그 면제의 전제는
+    "그 산출이 정본이 되지 않는다" 인데, 그것을 지키는 것이 아무 것도 없었다:
+
+        REPORT_OUT=docs/RESULTS.md ./run.sh --mode report --in results/_smoke/x
+        ./scripts/archive_results.sh results/_smoke/x
+
+    둘 다 gate 를 한 번도 안 지난 실행을 인용 대상 자리에 올렸다. 면제와 승격
+    금지는 **같은 경계**여야 한다 — 한쪽만 있으면 그것은 경계가 아니라 우회로다.
+
+    판정은 `is_inside_namespace()` 로 한다. 계획 gate 의 면제를 정하는 바로 그
+    함수다 — 두 규칙이 갈리면 어느 쪽이 경계인지 정할 수 없다.
+
+    ★ 49차 — **목적지도 본다.** 48차는 입력만 봤고, 그래서 smoke 가 자기 산출을
+      자기 namespace 안(`results/_smoke/arch/…`)으로 묶는 것까지 거부됐다.
+      `scripts/smoke_e2e.sh` 의 9단계 이후(보관 → 격리 복원 → 검증 → 재채점)가
+      통째로 죽었다 — 실측 실패 11건. 승격은 "인용되는 자리로 **나가는** 것"
+      이고, namespace 안에 머무는 이동은 승격이 아니다. 그 구분이 없으면
+      경계가 아니라 마비이고, 검사를 잃은 손실이 막은 위험보다 크다.
+
+      `dest=None` 은 "목적지가 namespace 밖" 으로 본다 (보수적 기본값 —
+      caller 가 밝히지 않으면 승격으로 취급한다).
+    """
+    if dest is not None and is_inside_namespace(dest, SMOKE_NAMESPACE):
+        return                      # namespace 안에 머문다 — 승격이 아니다
+
+    # ── ① 경로 판정 (48~57차). **먼저** 본다 — 값싸고, 제자리 smoke 를 잡는다.
+    bad = [str(p) for p in paths
+           if p is not None and is_inside_namespace(p, SMOKE_NAMESPACE)]
+    if bad:
+        raise PreserveError(
+            "promote",
+            f"{SMOKE_REFUSAL} — {sink} 로 올리려는 입력이 {SMOKE_NAMESPACE} "
+            f"아래에 있다: {bad}. smoke 는 계획 gate 를 면제받는 자리이므로 "
+            "(계약 §13.3.3) 그 산출은 인용 대상이 될 수 없다. 정본을 만들려면 "
+            "계획된 다리로 namespace 밖에서 다시 돌려라")
+
+    # ── ② ★ 58차 P0-8 — **내용 판정.** 여기서부터가 새 경계다.
+    #
+    #   ① 만 있던 동안은 **바이트를 옮기면 그만**이었다 (`[재현]` 같은 run dir 를
+    #   namespace 밖으로 copytree 하면 ① 이 통과한다). 경로는 산출의 성질이 아니라
+    #   **지금 어디 놓여 있는가** 이므로, 그것으로 정본 여부를 정하는 한 경계가
+    #   아니라 관례다.
+    #
+    #   등록부는 원장 옆에 있고 키가 **내용**이라 옮겨도 따라온다. 등록이 없으면
+    #   **거부**다 — "모르면 통과" 는 이 검사를 다시 관례로 만든다.
+    for q in paths:
+        if q is None:
+            continue
+        # ★ 62차 P0-1 — 승격은 봉인이 온전할 때만 identity 를 만든다.
+        rec = resolve_execution_class(q, for_promotion=True)   # 없으면 PreserveError
+        if rec["execution_class"] == EXEC_CLASS_SMOKE:
+            raise PreserveError(
+                "promote",
+                f"{SMOKE_REFUSAL} — {sink} 로 올리려는 입력 {q} 의 **내용**이 "
+                f"smoke 로 등록돼 있다 (내용 {rec['content_id'][:16]}…, 근거: "
+                f"{rec.get('evidence')}). 지금 경로가 namespace 밖이어도 "
+                "승격 대상이 아니다")
+
+
+#: 파생 산출의 존재 표지 — 이것이 없는 run(곡선 producer 등)은 freshness
+#: 게이트 대상이 아니다 (`tools/check_derived_fresh.py` 와 같은 규칙).
+DERIVED_FRESHNESS_MARKER = "objective_comparison.yaml"
+
+
+def assert_derived_fresh(run_dir, tol: float = 0.02) -> None:
+    """파생 산출이 봉인 fits 에서 재계산한 **최신 의미**인가 (18차 발견 6).
+
+    `payload_sha256.yaml` 은 stale bytes 도 충실히 해시한다 — 바이트 보존은
+    의미 동치를 증명하지 못한다. 파생이 없는 run 은 대상이 아니다.
+    """
+    d = Path(run_dir)
+    if not (d / DERIVED_FRESHNESS_MARKER).is_file():
+        return
+    from tools.compare_objectives import verify_derived_freshness
+    res = verify_derived_freshness(d, tol=tol)
+    if not res.get("ok"):
+        raise PreserveError(
+            "promote",
+            f"{d} 의 파생 산출이 stale 이다 (semantic freshness 실패): "
+            f"{res.get('fail')} — 봉인 fits 에서 score → compare 를 다시 돌린 "
+            "뒤 승격하라 (18차 발견 6 · 62차 P0-8)")
+
+
+def assert_promotable(paths, sink: str, dest=None, tol: float = 0.02) -> None:
+    """**승격 primitive** — 인용 자리로 나가는 모든 길이 지나는 한 문장 (62차 P0-8).
+
+    리뷰어: `python -m tools.archive_bundle bundle` 을 직접 부르면
+    `scripts/archive_results.sh` 의 `check_derived_fresh` 를 지나지 않았다.
+    검사가 wrapper 에만 있으면 wrapper 를 안 쓰는 호출이 우회로다 — 48차 P0-8
+    이 smoke 승격 금지에서 낸 결론과 같다 ("면제와 승격 금지는 같은 경계").
+
+    순서: smoke·등록·봉인 판정(`assert_not_smoke_provenance`) → 파생 freshness.
+    namespace 안에 머무는 이동은 승격이 아니므로 둘 다 건너뛴다 (49차).
+    """
+    if dest is not None and is_inside_namespace(dest, SMOKE_NAMESPACE):
+        return
+    assert_not_smoke_provenance(paths, sink, dest=dest)
+    for q in paths:
+        if q is not None:
+            assert_derived_fresh(q, tol=tol)
+
+
+def planned_index(ledger=None) -> dict:
+    """`planned:` 를 **검증해서** leg_id → 항목으로 돌려준다 (순수 함수).
+
+    조회 **전에** 전체를 본다 — 40차 #9 에서 배운 것이다. 항목별로 lazy 하게
+    검사하면 어느 소비자를 부르냐에 따라 판정이 달라진다.
+    """
+    doc = _load_ledger(ledger)
+    path = canonical_ledger(ledger)
+    raw = doc.get("planned")
+    if raw is None:
+        raise PreserveError(
+            "plan", "보존 원장에 `planned:` 계획 index 가 없다 — 실행 전 gate 의 "
+                    "근거가 없으므로 새 다리를 돌리지 않는다 (계약 §13.4)")
+    if not isinstance(raw, list) or not raw:
+        raise PreserveError("plan", f"`planned:` 이 비어 있지 않은 목록이 아니다: {raw!r}")
+
+    # ★ 47차 — cohort record 를 **publisher 와 같은 규칙**으로 본다. 46차의
+    #   계획 parser 는 cohort 목록을 따로 약하게 읽어서 저장소 **밖** `dir` 을
+    #   가진 cohort 와 enum 밖 `status` 를 승인했다. 같은 원장을 두 parser 가
+    #   다르게 읽으면 어느 쪽이 authority 인지 정할 수 없다.
+    cohorts = {}
+    dirs = {}
+    for c in (doc.get("cohorts") or []):
+        cid = c.get("cohort_id")
+        if not _nonempty_str(cid if isinstance(cid, str) else ""):
+            raise PreserveError("plan", f"cohort_id 가 문자열이 아니다: {cid!r}")
+        if cid in cohorts:
+            raise PreserveError("plan", f"cohort_id 가 중복이다: {cid!r}")
+        st = c.get("status")
+        if st not in COHORT_STATUS:
+            raise PreserveError(
+                "plan", f"cohort {cid!r} 의 status 가 계약 enum 이 아니다: "
+                        f"{st!r} — {list(COHORT_STATUS)} 중 하나여야 한다")
+        resolved = _cohort_dir_of(c, path)
+        if resolved in dirs:
+            raise PreserveError(
+                "plan", f"cohort {cid!r} 과 {dirs[resolved]!r} 이 같은 "
+                        f"디렉터리를 선언한다: {resolved}")
+        dirs[resolved] = cid
+        cohorts[cid] = c
+
+    out: dict = {}
+    for e in raw:
+        # ★ 48차 P0-5 — 승인 종류마다 닫힌 schema 가 다르다. prospective 는
+        #   `run_spec:` 을 담아야 하고 retrospective 는 담을 수 없다.
+        kinds = {"retrospective": PLANNED_KEYS,
+                 "prospective": PLANNED_KEYS_PROSPECTIVE}
+        want_keys = kinds.get(
+            e.get("authorization_kind") if isinstance(e, dict) else None)
+        if want_keys is None:
+            raise PreserveError(
+                "plan", f"계획 항목의 `authorization_kind` 가 계약 enum 이 "
+                        f"아니다: {(e.get('authorization_kind') if isinstance(e, dict) else e)!r}"
+                        f" — {list(AUTHORIZATION_KIND)} 중 하나여야 한다")
+        if set(e) != set(want_keys):
+            raise PreserveError(
+                "plan",
+                f"계획 항목이 닫힌 schema 가 아니다: "
+                f"{sorted(e) if isinstance(e, dict) else e!r} — "
+                f"{e.get('authorization_kind')} 항목은 {sorted(want_keys)} 를 "
+                "정확히 담아야 한다")
+        for k in PLANNED_KEYS:
+            if not _nonempty_str(e[k] if isinstance(e[k], str) else ""):
+                raise PreserveError(
+                    "plan", f"계획 항목의 `{k}` 가 비어 있지 않은 문자열이 "
+                            f"아니다: {e[k]!r}")
+        if e["status"] not in PLANNED_STATUS:
+            raise PreserveError(
+                "plan", f"계획 항목의 `status` 가 계약 enum 이 아니다: "
+                        f"{e['status']!r} — {list(PLANNED_STATUS)} 중 하나여야 한다")
+        if e["leg_id"] in out:
+            raise PreserveError(
+                "plan", f"계획 index 에 같은 다리가 두 번 있다: {e['leg_id']!r} — "
+                        "어느 항목이 승인인지 정할 수 없다")
+        if e["cohort_id"] not in cohorts:
+            raise PreserveError(
+                "plan", f"계획 항목 {e['leg_id']!r} 이 원장에 없는 cohort 를 "
+                        f"가리킨다: {e['cohort_id']!r}")
+        if e["authorization_kind"] not in AUTHORIZATION_KIND:
+            raise PreserveError(
+                "plan", f"계획 항목 {e['leg_id']!r} 의 `authorization_kind` 가 "
+                        f"계약 enum 이 아니다: {e['authorization_kind']!r} — "
+                        f"{list(AUTHORIZATION_KIND)} 중 하나여야 한다")
+        if e["authorization_kind"] == "retrospective":
+            if e["status"] != "executed":
+                raise PreserveError(
+                    "plan", f"소급 항목 {e['leg_id']!r} 의 status 가 executed 가 "
+                            f"아니다: {e['status']!r} — 소급은 이미 돌아간 것의 "
+                            "기록이다")
+            if e["run_spec_digest"] != RETROSPECTIVE_SPEC:
+                raise PreserveError(
+                    "plan", f"소급 항목 {e['leg_id']!r} 의 `run_spec_digest` 는 "
+                            f"{RETROSPECTIVE_SPEC!r} 여야 한다 — 그때는 봉인된 "
+                            "계획이 없었고, 없는 것을 있는 척하지 않는다")
+        else:
+            if len(e["run_spec_digest"]) != 64 or \
+                    any(c not in "0123456789abcdef" for c in e["run_spec_digest"]):
+                raise PreserveError(
+                    "plan", f"계획 항목 {e['leg_id']!r} 의 `run_spec_digest` 가 "
+                            f"64자리 hex 가 아니다: {e['run_spec_digest']!r}")
+            # ★ 48차 P0-5 — 선언한 spec 과 그 주소가 **서로 맞아야** 한다.
+            #   안 맞으면 원장에 적힌 계획과 gate 가 대조하는 것이 다른 것이다.
+            spec = e["run_spec"]
+            if not isinstance(spec, dict):
+                raise PreserveError(
+                    "plan", f"계획 항목 {e['leg_id']!r} 의 `run_spec` 이 mapping 이 "
+                            f"아니다: {type(spec).__name__}")
+            got = run_spec_digest(spec)
+            if got != e["run_spec_digest"]:
+                raise PreserveError(
+                    "plan",
+                    f"계획 항목 {e['leg_id']!r} 의 `run_spec_digest` 가 선언한 "
+                    f"`run_spec` 의 주소가 아니다 ({e['run_spec_digest'][:16]} ≠ "
+                    f"{got[:16]}) — 승인 문서와 승인 주소가 다르다")
+            if spec.get("leg_id") != e["leg_id"]:
+                raise PreserveError(
+                    "plan", f"계획 항목 {e['leg_id']!r} 의 `run_spec.leg_id` 가 "
+                            f"다르다: {spec.get('leg_id')!r}")
+        # ★ 47차 P0-1 — **계획 roster 와 실행 roster 를 분리한다.** 46차는
+        #   실행 roster 하나뿐이라, 계획된 leg 를 어디에 두든 gate·lint·
+        #   publisher 중 하나가 반드시 깨졌다 (리뷰어의 4행 표). 계획 중인
+        #   leg 는 `prospective_legs` 에, 끝난 leg 는 `legs` 에 있는다.
+        coh = cohorts[e["cohort_id"]]
+        want = "prospective_legs" if e["status"] in ("planned", "running") \
+            else "legs"
+        roster = coh.get(want) or []
+        if not isinstance(roster, list) or e["leg_id"] not in roster:
+            raise PreserveError(
+                "plan",
+                f"계획 항목 {e['leg_id']!r}(status={e['status']}) 이 cohort "
+                f"{e['cohort_id']!r} 의 `{want}` 에 없다: {roster!r} — 계획 "
+                "roster 와 실행 roster 는 분리돼 있고 둘 다 원장이 정본이다")
+        out[e["leg_id"]] = dict(e, _cohort=coh)
+    return out
+
+
+def assert_planned_leg(leg_id: str, source_digest: str, ledger=None,
+                       allow: tuple = ("planned",)) -> dict:
+    """이 다리를 **지금 이 코드로** 돌려도 되는가 — 비싼 실행 앞의 gate.
+
+    ★ 48차 P0-6 — `allow` 는 **어느 계획 상태를 승인으로 볼 것인가** 다.
+      새 claim 은 `planned` 만 (`running` 이면 이미 누가 돌고 있다), 재개는
+      `running` 도 (자기가 그 상태로 옮겨 놓았으니까). 기본값은 좁은 쪽이다.
+    """
+    idx = planned_index(ledger)
+    e = idx.get(leg_id)
+    if e is None:
+        raise PreserveError(
+            "plan",
+            f"계획 index 에 없는 다리다: {leg_id!r} — 실행 전에 "
+            "`LEG_PRESERVATION.yaml` 의 `planned:` 에 사람이 적어야 한다 "
+            f"(현재 계획: {sorted(idx)})")
+    if e["status"] not in allow:
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 계획 상태가 {e['status']!r} 이라 승인이 아니다 "
+            f"(허용 {list(allow)}) — 실행 기록은 다음 실행의 승인이 아니고, "
+            "이미 running 인 다리를 새로 시작할 수도 없다. 다시 돌리려면 새 "
+            "계획 항목을 적어라")
+    coh = e["_cohort"]
+    if coh.get("status") != "active":
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 cohort {e['cohort_id']!r} 가 active 가 아니다 "
+            f"({coh.get('status')!r}) — frozen cohort 에 새 다리를 더할 수 없다")
+    if e["authorized_source_digest"] != source_digest:
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 승인 code identity 가 지금과 다르다 "
+            f"(승인 source_digest {e['authorized_source_digest']} ≠ 현재 "
+            f"{source_digest}) — 승인 이후 RUN_SCOPE 가 바뀌었다. 사람이 다시 "
+            "승인해야 한다")
+    return e
+
+
+#: 한 다리의 승인 spec — **결과를 바꾸는 축만** 담는다 (48차 P0-5).
+#:
+#:   47차 grid gate 의 spec 은 `{leg_id, mode, dry_run, config_digest}` 넷뿐이라
+#:   `--lli`·`--lam-pe`·`--noise`(=조건 집합)와 `--out`(=결과가 놓일 자리)을
+#:   승인 뒤에 통째로 갈아도 같은 digest 가 나왔다. 그러면 승인한 것은 실행이
+#:   아니라 다리 **이름**이다.
+#:
+#:   반대로 `nproc`·`chunk_size`·`resume` 은 **넣지 않는다.** 결과를 바꾸지
+#:   않고(서명 검사가 resume 혼합을 따로 막는다), 넣으면 grid 와 fit 이 서로
+#:   다른 spec 을 만들어 **하나의 claim 아래 두 phase 를 묶을 수 없게** 된다.
+#:
+#: ★ 49차 P0-5 — fit 축을 **실제 F67 run_spec 의 의도 축**으로 넓힌다. 48차
+#:   fit 축은 `{config_digest, objectives, out}` 셋뿐이었는데,
+#:   `src/fitting.py` 가 실제로 쓰는 것은 목적함수 **순서**(warm 연쇄가 그
+#:   순서를 따른다) · bounds 실값 · reference · half-cell recipe(왜곡 인자) ·
+#:   optimizer 정책 · noise 사용 여부 · 행 선택 · 입력 위치다. 승인이 그것을
+#:   안 담으면 `--reference halfcell --halfcell-arg pe_offset_mv=10 --clean
+#:   --no-adaptive --n-restarts 1` 로 통째로 갈아도 같은 digest 가 나온다 —
+#:   그러면 승인한 것은 실행이 아니라 다리 **이름**이다.
+#:
+#:   런타임에서만 정해지는 값(`git_commit`·env fingerprint·`p_ini`)은 넣지
+#:   않는다. 승인은 **사람이 고른 것**을 담고, 런타임 값은 실행 서명이 담는다.
+#: ★ 51차 P0-A4 — `discharged_cache_sha256` 가 추가됐다. 완방상태는 격자 전체
+#: truth 의 기준점인데, 그것을 담은 캐시 파일은 승인 밖이었다. 리뷰어가 production
+#: reader 의 baseline/solver/effective-solver/source/runtime 검사를 **전부**
+#: 통과하는 두 캐시를 만들어 같은 승인 digest 로 다른 곡선을 계산했다
+#: (q_mah 5621.148 ≠ 5540.777). 자기기술 metadata 와 finite 검사는 content
+#: identity 가 아니다. `null` 은 "캐시를 안 읽고 이 실행이 계산한다" 는 뜻이고,
+#: 그 경우 본체는 캐시 읽기가 금지된다 (`force=True`).
+LEG_SPEC_GRID_KEYS = ("config_digest", "condition_ids_sha256",
+                      "n_conditions", "discharged_cache_sha256", "out")
+#: ★ 50차 P0 — 49차 축이 셋을 빠뜨렸다 (리뷰어 반례):
+#:   `base_config_digest`      재고 분배 상수. 축 자체가 없었다.
+#:   `halfcell_cache_sha256`   기준 캐시의 **바이트**. recipe(method+kw)만
+#:                             담겨 있어서, 같은 recipe 로 만든 다른 캐시를
+#:                             놓으면 승인 digest 가 그대로였다 — 승인한 A 대신
+#:                             유효한 B 가 계산·게시됐다.
+#:   `row_selection.subset_sha256`  **어느 조건을 골랐는가** (개수·모드가 아니라).
+#: ★ 51차 P0-A1 — `objectives_digest` 가 추가됐다. 50차 축은 목적함수의
+#: **이름과 순서**만 담았는데 `_fit_one()` 이 소비하는 것은 `{이름: 가중치}`
+#: payload 다. 같은 이름 아래 다른 가중치를 주면 J 와 행이 달라지는데 승인
+#: digest 는 같았다 (리뷰어 실측).
+#: ★ 51차 P0-A2 — `base_config_digest` 의 **의미가** 바뀌었다. leaf 파일 하나가
+#: 아니라 `extends` dependency closure 전체의 내용 주소다. 부모의 `pe_vf` 만
+#: 바꿔도 `reference_inventory()` 가 다른 재고를 주고 lli_hat 이 움직인다.
+LEG_SPEC_FIT_KEYS = ("config_digest", "objective_order", "objectives_digest",
+                     "reference",
+                     "halfcell_recipe", "halfcell_cache_sha256",
+                     "base_config_digest", "bounds_preset", "bounds_digest",
+                     "optimizer", "use_noisy", "smoothing_backend",
+                     "row_selection",
+                     "in", "in_digest", "out")
+
+#: fit 축 안의 **중첩** 닫힌 집합. 열려 있으면 optimizer 정책 하나가 조용히
+#: 승인 밖으로 나간다 (`n_restarts` 를 지우면 그 축이 사라지는 것과 같다).
+LEG_SPEC_OPTIMIZER_KEYS = ("method", "n_restarts", "adaptive", "warm_start")
+LEG_SPEC_HALFCELL_KEYS = ("method", "kw")
+LEG_SPEC_SELECTION_KEYS = ("mode", "limit", "subset_sha256")
+LEG_SPEC_SELECTION_MODES = ("full", "limit", "subset")
+
+
+def leg_run_spec(leg_id: str, grid: dict, fit: dict) -> dict:
+    """한 다리 **전체**의 승인 spec — 두 phase 가 같은 값을 만든다 (48차 P0-5).
+
+    `_claim_planned_leg()` 은 `run_spec_digest` 로 승인을 내용 주소화한다. 그
+    주소가 phase 마다 다르면 grid 와 fit 은 서로 다른 claim 을 갖게 되고, 그러면
+    "이 다리 하나가 승인 아래 돌았다" 를 말할 수 없다. 그래서 spec 은 **다리
+    단위**이고 각 phase 는 자기 몫을 채운 뒤 나머지는 계획에서 읽어 온다.
+
+    key 집합은 **닫혀 있다** — 새 CLI 축이 생기면 여기 적히거나 거부되거나
+    둘 중 하나다. 열려 있으면 축이 조용히 승인 밖으로 나간다.
+    """
+    check_id(leg_id)
+    for name, got, want in (("grid", grid, LEG_SPEC_GRID_KEYS),
+                            ("fit", fit, LEG_SPEC_FIT_KEYS)):
+        if not isinstance(got, dict) or set(got) != set(want):
+            raise PreserveError(
+                "plan",
+                f"leg run spec 의 {name} 축이 계약과 다르다 — 있어야 {sorted(want)}, "
+                f"받은 것 {sorted(got) if isinstance(got, dict) else type(got).__name__}")
+    # ★ 49차 P0-5 — 중첩 dict 도 **닫힌** 집합이다. 안쪽이 열려 있으면 축
+    #   하나(예: `n_restarts`)가 조용히 사라져도 아무도 모른다.
+    for key, want in (("optimizer", LEG_SPEC_OPTIMIZER_KEYS),
+                      ("halfcell_recipe", LEG_SPEC_HALFCELL_KEYS),
+                      ("row_selection", LEG_SPEC_SELECTION_KEYS)):
+        got = fit[key]
+        if not isinstance(got, dict) or set(got) != set(want):
+            raise PreserveError(
+                "plan",
+                f"leg run spec 의 fit.{key} 가 계약과 다르다 — 있어야 "
+                f"{sorted(want)}, 받은 것 "
+                f"{sorted(got) if isinstance(got, dict) else type(got).__name__}")
+    # ★ 49차 P0-5 — 입력의 **내용 identity**. 경로만 봉인하면 같은 이름 아래
+    #   다른 바이트가 들어와도 승인이 그대로다. 두 경우를 타입으로 가른다:
+    #     · hex64 — 이 다리 **밖**에서 온 입력 (F70 의 분리 producer 구조).
+    #               계획 시점에 실재하므로 사람이 그 digest 를 적는다.
+    #     · None  — 이 다리의 grid 가 만든다. 계획 시점에는 알 수 없으므로
+    #               런타임에 grid phase receipt 가 봉인한 값과 맞춘다
+    #               (`assert_phase_input_binding()`).
+    ind = fit["in_digest"]
+    if ind is not None and not _is_hex64(ind):
+        raise PreserveError(
+            "plan",
+            f"fit.in_digest 가 hex64 도 null 도 아니다: {ind!r} — 밖에서 온 "
+            "입력이면 그 내용 digest 를, 이 다리의 grid 가 만들면 null 을 적는다")
+    if fit["row_selection"]["mode"] not in LEG_SPEC_SELECTION_MODES:
+        raise PreserveError(
+            "plan",
+            f"fit.row_selection.mode 가 계약 enum 이 아니다: "
+            f"{fit['row_selection']['mode']!r} — {list(LEG_SPEC_SELECTION_MODES)} "
+            "중 하나여야 한다")
+    spec = {"leg_spec_version": 2, "leg_id": leg_id,
+            "grid": {k: grid[k] for k in LEG_SPEC_GRID_KEYS},
+            "fit": {k: fit[k] for k in LEG_SPEC_FIT_KEYS}}
+    _assert_json_domain(spec, "leg_run_spec")
+    return spec
+
+
+#: grid 가 만들어 fit 이 읽는 **모든** 입력. 49차는 `curves_sha256` 하나만
+#: 결속했으므로 producer 기록(`curves_manifest*.yaml`)을 갈아 끼울 수 있었다 —
+#: fit 은 그것도 봉인해 읽고 서명에 넣는다.
+PHASE_INPUT_KEYS = ("curves_sha256", "curves_manifest_sha256",
+                    "curves_manifest_start_sha256")
+
+
+def assert_phase_input_binding(claim, inputs: dict) -> None:
+    """fit 이 읽는 곡선이 **이 claim 의 grid 가 만든 것**인가 (49차 P0-5).
+
+    계획이 `fit.in_digest: null` 이라고 적었다는 것은 "이 다리의 grid 가 그
+    입력을 만든다" 는 뜻이다. 그러면 내용의 정본은 grid phase receipt 이고,
+    fit 은 자기가 읽은 바이트를 그것과 맞춰야 한다.
+
+    48차에는 두 phase 를 잇는 내용 결속이 **전혀** 없었다 — grid 가 무엇을
+    만들었든 fit 은 `--in` 이 가리키는 아무 것이나 읽었고, 그 결과가 계획이
+    승인한 실행의 산물인지 말할 근거가 없었다.
+    """
+    if claim is None:
+        return
+    rec = claim.phase_receipt("grid")
+    if rec is None:
+        raise PreserveError(
+            "plan",
+            "계획이 `fit.in_digest: null` 이라 이 다리의 grid 가 입력을 만든다고 "
+            "선언했는데, 그 claim 에 grid phase receipt 가 없다 — 대조할 정본이 "
+            "없으므로 fit 을 시작할 수 없다 (grid 를 먼저 돌리라)")
+    bad = []
+    for key in PHASE_INPUT_KEYS:
+        sealed, got = rec.get(key), inputs.get(key)
+        if not _is_hex64(sealed):
+            raise PreserveError(
+                "plan",
+                f"grid phase receipt 의 `{key}` 가 hex64 가 아니다: {sealed!r} "
+                "— 입력을 결속할 수 없다")
+        if not _is_hex64(got):
+            raise PreserveError(
+                "plan", f"지금 읽는 입력의 `{key}` 가 hex64 가 아니다: {got!r}")
+        if not secrets.compare_digest(str(sealed), str(got)):
+            bad.append(f"{key}: grid {str(sealed)[:16]} ≠ 지금 {str(got)[:16]}")
+    if bad:
+        raise PreserveError(
+            "plan",
+            "fit 이 읽는 입력이 이 claim 의 grid 가 만든 것이 아니다 — 그러면 이 "
+            "fit 의 결과는 계획이 승인한 실행의 산물이 아니다:\n  "
+            + "\n  ".join(bad))
+
+
+def declared_leg_run_spec(leg_id: str, ledger=None) -> dict:
+    """계획이 **선언한** spec 을 읽는다 (48차 P0-5).
+
+    한 phase 는 자기 축만 안다 — grid 는 fit config 를, fit 은 조건 집합을
+    모른다. 그래서 각자 자기 몫을 살아 있는 입력에서 만들고 나머지는 여기서
+    읽는다. 살아 있는 몫이 선언과 다르면 digest 가 달라져 claim 이 거부한다.
+    """
+    idx = planned_index(ledger)
+    e = idx.get(leg_id)
+    if e is None:
+        raise PreserveError(
+            "plan", f"계획 index 에 없는 다리다: {leg_id!r} (현재 계획: {sorted(idx)})")
+    spec = e.get("run_spec")
+    if not isinstance(spec, dict):
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 계획에 `run_spec:` 이 없다 — 승인은 이름이 아니라 "
+            "**무엇을 실행할지**를 담아야 한다 (48차 P0-5)")
+    return spec
+
+
+def run_spec_digest(run_spec: dict) -> str:
+    """실행 계획의 **내용 주소** (47차 P0-2).
+
+    46차 planned row 는 leg·cohort·source digest 만 담았다. 그래서 같은 이름이
+    `--objective A --n-restarts 1` 과 `--objective B --n-restarts 999` 를
+    똑같이 승인했다 — allowlist 였지 계획이 아니었다.
+    """
+    _assert_json_domain(run_spec, "run_spec")
+    body = json.dumps(run_spec, sort_keys=True, ensure_ascii=False,
+                      allow_nan=False, separators=(",", ":"))
+    return hashlib.sha256(body.encode("utf-8")).hexdigest()
+
+
+def _assert_json_domain(node, where: str) -> None:
+    """canonicalizer 가 접을 수 있는 값을 거부한다 (publisher seal 과 같은 규칙)."""
+    t = type(node)
+    if t is float:
+        if node != node or node in (float("inf"), float("-inf")):
+            raise PreserveError("plan", f"{where} 에 유한하지 않은 수가 있다")
+        return
+    if t in (str, int, bool, type(None)):
+        return
+    if t is dict:
+        for k, v in node.items():
+            if type(k) is not str:
+                raise PreserveError(
+                    "plan", f"{where} 의 key 가 문자열이 아니다: {type(k).__name__}")
+            _assert_json_domain(v, f"{where}.{k}")
+        return
+    if t is list:
+        for i, v in enumerate(node):
+            _assert_json_domain(v, f"{where}[{i}]")
+        return
+    raise PreserveError(
+        "plan", f"{where} 의 값 타입이 봉인 가능하지 않다: {type(node).__name__}")
+
+
+class LegClaim:
+    """살아 있는 실행 권한 하나 — **원자적으로** 하나만 존재한다 (47차 P0-2)."""
+
+    __slots__ = ("leg_id", "cohort_id", "attempt_id", "run_spec_digest",
+                 "source_digest", "path", "_token")
+
+    def __init__(self, leg_id, cohort_id, attempt_id, run_spec_digest,
+                 source_digest, path, token: str | None = None):
+        self.leg_id = leg_id
+        self.cohort_id = cohort_id
+        #: **공개** 실행 식별자. 원장·로그·진단에 그대로 적어도 된다.
+        self.attempt_id = attempt_id
+        self.run_spec_digest = run_spec_digest
+        self.source_digest = source_digest
+        self.path = Path(path)
+        #: 비밀 소유 증명. 메모리에만 있고 claim 파일에는 verifier 만 남는다.
+        self._token = token
+
+    @property
+    def readonly(self) -> bool:
+        """소유 증명 없이 열린 claim — 진단용 읽기만 가능하다 (48차 P0-3)."""
+        return self._token is None
+
+    @property
+    def token(self) -> str:
+        """★ 49차 P0-3 — 소유 증명을 **가진 실행만** 꺼낼 수 있다.
+
+        진단용으로 연 claim 에서 이 속성을 읽으면 거부한다. 48차는 readonly
+        claim 의 `.attempt` 에 평문 credential 이 그대로 실려 있었다 — 쓰기를
+        막아도 credential 을 내주면 그 다음 호출에서 쓰기가 열린다.
+        """
+        if self._token is None:
+            raise PreserveError(
+                "plan", f"{self.leg_id!r} 의 claim 을 소유 증명 없이 열었다 — "
+                        "진단용 읽기에는 재개 credential 이 없다")
+        return self._token
+
+    def _read(self) -> dict:
+        return json.loads(self.path.read_text(encoding="utf-8"))
+
+    def phases_done(self) -> tuple:
+        rec = self._read()
+        return tuple(p for p in CLAIM_PHASES if p in (rec.get("phases") or {}))
+
+    def phase_receipt(self, phase: str) -> dict | None:
+        """닫힌 phase 가 남긴 receipt — 다음 phase 가 **입력을 결속**할 근거다."""
+        ent = (self._read().get("phases") or {}).get(phase)
+        return None if ent is None else (ent.get("receipt") or {})
+
+    def phase_done(self, phase: str, receipt: dict) -> None:
+        """한 phase 를 **durable 하게** 닫는다. 중단 뒤 재개가 여기서 이어진다."""
+        if self._token is None:
+            raise PreserveError(
+                "plan", f"{self.leg_id!r} 의 claim 을 소유 증명 없이 열었다 — "
+                        "phase 를 기록할 수 없다 (진단용 읽기다)")
+        if phase not in CLAIM_PHASES:
+            raise PreserveError(
+                "plan", f"모르는 phase: {phase!r} — {list(CLAIM_PHASES)} 중 하나")
+        _assert_json_domain(receipt, f"phase[{phase}]")
+        # ★ 60차 P1-2 — **검사한 것과 봉인한 것이 같아야 한다.** 59차 M9 는
+        #   finalize 의 evidence 에 대해 이것을 고쳤는데, phase receipt 는 그대로
+        #   caller 의 **같은 reference** 를 들고 lock 안으로 들어가 나중에
+        #   직렬화했다. 검사와 봉인 사이에 caller 가 고치면 다른 값이 굳는다.
+        #   그래서 여기서 정규 바이트로 굳히고, 아래에서는 그 바이트를 다시
+        #   해독한 값만 쓴다.
+        receipt = json.loads(_canon_json(receipt))
+        # ★ 48차 P0-6 — read-modify-write 를 **임계 구역** 안에서 한다. 47차는
+        #   `grid` 와 `fit` 을 동시에 닫으면 둘 다 `phases` 가 빈 record 를 읽고
+        #   각자 자기 것만 담아 덮어써서 하나가 사라졌다 (실측). 그러면
+        #   `finalize_leg()` 이 "phase 가 남았다" 며 거부하고, 이미 끝난 10시간
+        #   계산을 다시 돌리게 된다.
+        with _ledger_lock(self.path):
+            # ★ 50차 P0 — **쓰는 지점**이 소유 증명을 확인한다. 49차는 자격
+            #   검사가 `resume_claim()` 에만 있었고, 생성자는 언제든 부를 수
+            #   있으므로 공개 `attempt_id` 만 읽어 만든 claim 객체가 그대로
+            #   phase 를 기록했다 (리뷰어 실측). 읽기 함수에 둔 검사는 검사가
+            #   아니다 — 검사는 쓰기 옆에 있어야 한다.
+            if not self.path.is_file():
+                raise PreserveError(
+                    "plan",
+                    f"{self.leg_id!r} 의 claim 이 이미 닫혔다 ({self.path}) — "
+                    "닫힌 실행에는 phase 를 쓸 수 없다 (부활 금지)")
+            rec = self._read()
+            if not secrets.compare_digest(_token_verifier(self._token),
+                                          str(rec["attempt_verifier"])):
+                raise PreserveError(
+                    "plan",
+                    f"{self.leg_id!r} 의 claim 소유 증명이 맞지 않는다 — 이 "
+                    "실행은 phase 를 기록할 권한이 없다")
+            if rec["attempt_id"] != self.attempt_id:
+                raise PreserveError(
+                    "plan", f"claim 이 다른 attempt 로 바뀌었다 "
+                            f"({rec['attempt_id']} ≠ {self.attempt_id}) — 이 "
+                            "실행은 더 이상 권한이 없다")
+            # ★ 58차 L6 — **닫힌 phase 는 불변이다.** 이 자리는 claim lock 안이라
+            #   lost update 는 없었다. 그런데 lock 이 막는 것은 **동시 쓰기**이지
+            #   **덮어쓰기**가 아니다 — 술어가 없으면 lock 은 무조건 대입을
+            #   순서대로 해 줄 뿐이다.
+            #
+            #   왜 막아야 하나: 이 receipt 를 읽고 계산한 소비자가 이미 있을 수
+            #   있다. 늦은 writer 가 덮으면 **그 소비자의 근거가 소리 없이
+            #   바뀐다.** 리뷰어 반례는 공개 API 만 쓰는 정상 일정이었다 —
+            #   grid(A) → fit 이 A 를 검증하고 기록 → 늦은 grid(B) → finalize 성공.
+            #   원장에는 B 가 봉인되는데 fit 은 A 를 보고 계산했다.
+            #
+            #   **같은 값의 재시도는 통과한다** (멱등). 재시도는 정상 운용이고,
+            #   막으면 crash 복구가 불가능해진다. 다른 값이면 거부다.
+            prev = (rec.get("phases") or {}).get(phase)
+            if prev is not None:
+                if _canon_json(prev.get("receipt")) != _canon_json(receipt):
+                    raise PreserveError(
+                        "plan",
+                        f"{self.leg_id!r} 의 phase {phase!r} 는 이미 "
+                        f"{prev.get('at')} 에 닫혔고, 지금 주는 receipt 가 그때와 "
+                        "다르다 — 닫힌 phase 는 덮어쓸 수 없다 (이 값을 읽고 "
+                        "계산한 소비자가 이미 있을 수 있다). 같은 값의 재시도는 "
+                        "허용된다")
+                return                       # 멱등 재시도 — timestamp 도 안 바꾼다
+            entry = {
+                "at": dt.datetime.now(dt.timezone.utc).strftime(
+                    "%Y-%m-%dT%H:%M:%SZ"),
+                "receipt": receipt}
+            # ★ 58차 L6 (둘째 절반) — **소비자는 자기가 본 생산자를 적는다.**
+            #   불변성만으로는 부족하다. 불변성이 없던 시절에 이미 어긋난
+            #   durable state 가 남아 있을 수 있고, finalize 는 원장에 봉인하는
+            #   마지막 문이다. 그 문이 phase 키의 **존재만** 보면 어긋난 짝을
+            #   그대로 `executed` 로 닫는다.
+            #
+            #   그래서 fit 이 닫힐 때 그 순간의 grid receipt 정규형 해시를
+            #   같이 남긴다. finalize 가 그것을 다시 계산해 대조한다.
+            #
+            # ★ 59차 M7 — 58차는 `if first is not None:` 이었다. 선행 phase 가
+            #   아직 없으면 결속을 **조용히 생략**했으므로, 순서를 뒤집는 것만으로
+            #   결속을 없앨 수 있었다 (`fit → grid` 역순이면 fit 은 아무것도
+            #   소비하지 않았다고 적힌다). 그것은 "생산자-소비자 결속" 이 아니라
+            #   생산자가 마침 먼저 왔을 때만 붙는 장식이다.
+            #
+            #   그래서 **순서 자체를 강제**한다: 뒤 phase 는 앞 phase 가 전부
+            #   닫힌 뒤에만 닫을 수 있고, 그때 `consumed` 는 **모든** 선행
+            #   phase 를 담는다 (하나라도 빠지면 그 짝은 결속되지 않았다).
+            _order = list(CLAIM_PHASES)
+            _before = _order[:_order.index(phase)]
+            if _before:
+                _have = rec.get("phases") or {}
+                _open = [p for p in _before if p not in _have]
+                if _open:
+                    raise PreserveError(
+                        "plan",
+                        f"{self.leg_id!r}: phase {phase!r} 를 닫으려는데 선행 "
+                        f"phase {_open} 가 아직 안 닫혔다 — 순서를 뒤집으면 "
+                        "소비자가 생산자를 결속할 대상이 없어 결속이 통째로 "
+                        "사라진다 (59차 M7). 선행 phase 를 먼저 닫으라")
+                entry["consumed"] = {
+                    p: hashlib.sha256(
+                        _canon_json(_have[p].get("receipt")).encode("utf-8")
+                    ).hexdigest() for p in _before}
+            rec.setdefault("phases", {})[phase] = entry
+            _atomic_write_json(self.path, rec)
+
+
+#: ★ 49차 P0-6 — **정본 잠금 순서.** 두 lock 을 함께 쥐는 경로는 반드시 이
+#: 순서로 잡는다. 반대로 잡는 경로가 하나라도 있으면 deadlock 이고, 순서가
+#: 어디에도 적혀 있지 않으면 다음 사람이 반대로 잡는다.
+#:
+#:   claim  — `<claims_root>/<leg>.claim.lock` (phase receipt 의 임계 구역)
+#:   ledger — `LEG_PRESERVATION.yaml.lock` (계획·roster·실행 기록)
+#:
+#: 이유: claim 은 실행 하나에 국한되고 원장은 전역이다. 좁은 것을 먼저 잡아야
+#: 전역 lock 을 쥔 채 좁은 것을 기다리는 시간이 생기지 않는다.
+#: 임계 구역을 겹쳐 쥐는 **유일한 순서** (53차 P0-3 에서 한 층 늘었다).
+#:   attempt_path — 소유 증명 **경로**의 배타 (`open_leg_run()` 만 잡는다)
+#:   claim        — 그 다리의 발급/폐기
+#:   ledger       — 원장 전이
+LOCK_ORDER = ("attempt_path", "claim", "ledger")
+
+
+#: ★ 57차 B — **lifecycle 경로의 신뢰 경계** (계약 §13.3.4).
+#:
+#: 44차는 게시 경로에서 "검사 횟수로 닫히지 않는 창" 을 만나 보장을 철회하고
+#: 전제를 적었다 (`row_projection._TRUST_BOUNDARY`). 그 처리가 발급·동결·원장
+#: 경로에는 **없었다** — §13.3.1 을 각주로 두 번 인용할 뿐이었고, 그래서 이
+#: 경로는 위협 모델이 무한한 채로 55·56차 리뷰를 받았다.
+#:
+#: 전제는 배포 형태에서 참일 때만 적을 수 있다. 실측(계약 §13.3.4):
+#: 저장소는 단일 principal 소유이고, 원장이 놓이는 것은 로컬 블록 장치의
+#: ext4 이며(네트워크 파일시스템이 아니다 → `flock` 이 실효), 상정하는 위협은
+#: 같은 파이프라인의 동시 leg 가 서로를 덮는 **사고**다.
+#:
+#: **이 전제가 면제하지 않는 것**: 공개 API 를 지나는 호출은 전부 전제 **안**
+#: 이다. 공개 API 자신이 caller 가 준 pathname 으로 authority 파일을 덮을 수
+#: 있다면 그것은 "비협조적 writer" 가 아니라 **이 모듈의 결함**이고, 전제로
+#: 빼지 않는다 (57차 P0-1 이 정확히 그 자리였다).
+_TRUST_BOUNDARY = """보존 원장(`LEG_PRESERVATION.yaml`)·실행권 디렉터리
+(`<ledger>/_claims/`)·소유 증명 파일·lifecycle journal 과 그 anchor 는
+**하나의 OS principal 이 소유**하고, 그것들을 바꾸는 모든 writer 는
+공개 lifecycle API(`open_leg_run`·`attach_leg_run`·
+`finalize_leg`·`release_leg_run`·`resume_claim`)를 지나 `LOCK_ORDER =
+("attempt_path", "claim", "ledger")` 를 따른다. 비협조적 writer — 같은
+principal 로 lock 없이 원장·claim·journal 을 직접 고치는 코드 — 는 지원 범위
+**밖**이다. 배타는 같은 기계의 `flock` 이므로 네트워크 파일시스템과 컨테이너
+경계 밖의 동시 발급자도 범위 밖이다. 반대로 **공개 API 를 지나는 호출은 전부
+범위 안**이다 — 그 API 가 caller 가 준 pathname 으로 authority 를 덮을 수
+있으면 전제가 아니라 결함이다."""
+
+
+@contextlib.contextmanager
+def _ledger_lock(path: Path):
+    """원장 전이의 **임계 구역** (48차 P0-6).
+
+    47차 `finalize_leg()` 는 원장을 read-modify-write 했다: `yaml.safe_load` →
+    dict 수정 → `write_text` 로 통째 덮어쓰기. 두 다리를 동시에 닫으면 둘 다
+    같은 `doc` 을 읽고 각자 자기 항목만 더해 덮으므로 **나중 쓰기가 먼저 쓰기를
+    지운다** — 그리고 두 호출 모두 성공을 돌려준다. 실측했다 (M 이 사라졌다).
+
+    원장은 "이 실행이 있었다" 의 유일한 증거이므로 lost update 는 증거 소실이다.
+    `flock` 은 같은 기계의 process·thread 사이에서 상호배제를 준다 (네트워크
+    파일시스템은 계약 §13.3.1 의 전제 밖이다).
+    """
+    import fcntl
+
+    lp = Path(path).with_name(Path(path).name + ".lock")
+    lp.parent.mkdir(parents=True, exist_ok=True)
+    fd = os.open(lp, os.O_CREAT | os.O_RDWR, 0o644)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(fd, fcntl.LOCK_UN)
+    finally:
+        os.close(fd)
+
+
+def _atomic_write_text(path: Path, text: str) -> None:
+    """원장을 **원자적으로** 굳힌다 — 부분 쓰기가 보이지 않게 (48차 P0-6).
+
+    ★ 54차 P0-3 — 같은 규칙을 **동결의 원장 쓰기**도 쓴다. 53차까지 그쪽은
+      `led.write_text()` 로 제자리를 잘랐고, 평범한 ENOSPC 하나면 원장이
+      반쪽으로 남아 이후 모든 재시도가 ParserError 로 막혔다 (리뷰어 실측).
+      한 규칙을 두 곳에서 다르게 정하면 **약한 쪽이 실효 규칙**이다.
+
+      그리고 temp 도 `_write_all()` + read-back 으로 굳힌다 (53차 P0-2 와 같은
+      이유다 — 반환값은 자기 보고다). 실패하면 temp 만 남고 원본은 그대로다.
+    """
+    path = Path(path)
+    body = text.encode("utf-8")
+    tmp = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
+    try:
+        fd = os.open(tmp, os.O_CREAT | os.O_EXCL | os.O_WRONLY | _O_BIN, 0o644)
+        try:
+            _write_all(fd, body, tmp)
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+        _assert_bytes_on_disk(tmp, body, "원장")
+    except BaseException:
+        tmp.unlink(missing_ok=True)
+        raise
+    os.replace(tmp, path)
+    dfd = os.open(path.parent, os.O_RDONLY)
+    try:
+        os.fsync(dfd)
+    finally:
+        os.close(dfd)
+
+
+def _canon_json(v) -> str:
+    """(내부) 값의 정규형 — 같은 값인지 묻는 데만 쓴다 (58차 L6)."""
+    return json.dumps(v, sort_keys=True, ensure_ascii=False,
+                      separators=(",", ":"))
+
+
+def _atomic_write_json(path: Path, rec: dict) -> None:
+    tmp = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
+    tmp.write_text(json.dumps(rec, sort_keys=True, ensure_ascii=False,
+                              separators=(",", ":")) + "\n", encoding="utf-8")
+    fd = os.open(tmp, os.O_RDONLY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+    os.replace(tmp, path)
+    dfd = os.open(path.parent, os.O_RDONLY)
+    try:
+        os.fsync(dfd)
+    finally:
+        os.close(dfd)
+
+
+def canonical_ledger(ledger=None) -> Path:
+    """원장 인자를 **한 번만** 해석한 정본 경로 (55차 P0-2).
+
+    54차는 "실행권의 자리는 원장이 정한다" 로 authority 를 하나로 모았다.
+    그런데 **그 원장을 무엇으로 해석하는가** 가 자리마다 달랐다:
+    `claims_root_for_ledger()` 는 `.resolve()` 한 경로를 봤고, 원장 쓰기는
+    해석하지 않은 경로에 `os.replace()` 했다. symlink 원장이면 그 한 번의
+    쓰기가 **symlink 자체를 일반 파일로 교체**하므로, 같은 인자가 발급
+    전후로 다른 claims root 를 가리킨다 (리뷰어 실측: `authority/_claims`
+    → `_claims`, `attach with same ledger: FAILED`).
+
+    해석은 여기 한 번뿐이고, 읽기·쓰기·lock·claims root 가 전부 이것을
+    부른다. 두 쪽이 같은 함수를 부르면 그 사이가 벌어질 수 없다.
+    """
+    path = Path(ledger or DEFAULT_LEDGER).resolve()
+    # ★ 56차 P0-2 — `resolve()` 는 **hardlink 를 합치지 못한다.** 서로 다른
+    #   디렉터리의 두 이름이 같은 inode 여도 claims root 와 lock namespace 가
+    #   갈리고, 첫 `os.replace()` 가 이름 A 만 새 inode 로 바꾸면 이름 B 에는
+    #   아직 `planned` 인 옛 원장이 남는다 — 같은 leg 를 두 번 발급할 수 있다
+    #   (리뷰어 실측: `ledger_a_plan running · ledger_b_plan running`).
+    #   제3자가 경로를 바꾸지 않아도 **정상 writer 자신의** atomic replace 가
+    #   authority 를 분기한다. 이름이 여럿이면 정본을 정할 수 없으므로 멈춘다.
+    try:
+        st = path.lstat()
+    except OSError:
+        return path                              # 아직 없다 — bootstrap
+    if stat.S_ISREG(st.st_mode) and st.st_nlink != 1:
+        raise PreserveError(
+            "plan",
+            f"원장에 다른 이름(hardlink)이 있다: {path} (nlink={st.st_nlink}) — "
+            "하나의 승인 원장이 두 authority 로 갈린다. 이름을 하나로 두어라")
+    return path
+
+
+def _lifecycle_root(name: str, ledger=None) -> Path:
+    """원장 옆의 파생 root 를 **대상으로** 연다 (60차 P0-5).
+
+    57차는 token 의 **마지막 성분**이 symlink 인 경우를 막았다. 그런데 root
+    자체는 `canonical_ledger(...).parent / name` 이라는 **이름**으로만 유도됐고,
+    `mkdir`·temp·`os.replace` 는 그 부모를 따라갔다. 리뷰어는 `_claims` 와
+    `_attempts` 를 얼린 tree 로 향한 디렉터리 symlink 로 만들고 공개
+    `open_leg_run()` 하나로 그 안에 token 과 claim 을 만들었다.
+
+    경로는 성분의 열이고, **검사한 성분만 검사된 것**이다. 그러므로 여기서는
+    root 자신을 본다:
+
+      ① `lstat` 로 alias 를 거부한다 (symlink 이거나 디렉터리가 아니면 멈춘다).
+      ② 없으면 `mkdir` 로 만든다 — 그 자리에 symlink 가 있으면 `EEXIST` 가 나고
+        ①이 그것을 잡는다. 즉 "따라가서 만든다" 가 구조적으로 불가능하다.
+      ③ 그리고 **얼린 좌표를 덮고 있으면** 거부한다. symlink 가 아닌 길
+        (bind mount·이동)로도 같은 해악이 서기 때문이다 — 이름을 하나 더
+        막는 대신 **대상의 좌표**를 묻는다 (58차 L5 가 세운 층을 여기서도 쓴다).
+    """
+    root = canonical_ledger(ledger).parent / name
+    try:
+        st = os.lstat(root)
+    except FileNotFoundError:
+        root.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            os.mkdir(root, 0o755)
+        except FileExistsError:                          # 경합 — 아래에서 다시 본다
+            pass
+        st = os.lstat(root)
+    if stat.S_ISLNK(st.st_mode) or not stat.S_ISDIR(st.st_mode):
+        raise PreserveError(
+            "plan",
+            f"lifecycle root {root} 가 디렉터리가 아니라 **alias** 다 — 이 자리를 "
+            "따라가면 원장 밖(예: 얼린 cohort tree)에 token·claim 이 생긴다. "
+            "마지막 성분만 보는 검사로는 부모 alias 가 안 막힌다 (60차 P0-5)")
+    covering = frozen_coordinate_covering(root)
+    if covering:
+        raise PreserveError(
+            "plan",
+            f"lifecycle root {root} 가 얼린 cohort {covering!r} 의 좌표 안에 있다 "
+            "— 얼린 tree 에는 아무것도 쓰지 않는다 (60차 P0-5)")
+    return root
+
+
+def claims_root_for_ledger(ledger=None) -> Path:
+    """실행권이 사는 곳 — **원장이 정한다** (54차 P0-1).
+
+    53차는 동결에서만 인자를 없앴고 발급 API 는 여전히 임의 `claims_root` 를
+    받았다. 리뷰어는 alternate root 에 살아 있는 claim 을 두고 canonical root 는
+    비어 있다고 보게 만들어 freeze 를 완주시켰다 (`alternate_claim=true ·
+    canonical_claim_count=0 · ledger_plan_status=running`).
+
+    두 쪽이 **같은 authority** 에서 자리를 유도하면 그 schedule 이 표현
+    불가능해진다. 그 authority 는 원장이다 — 계획·cohort·동결이 전부 거기 있다.
+    """
+    return _lifecycle_root("_claims", ledger)
+
+
+def attempts_root_for_ledger(ledger=None) -> Path:
+    """소유 증명이 사는 곳 — claims 와 **같은 authority(원장)** 가 정한다 (57차 P0-1).
+
+    54차는 claim 의 자리를 원장에서 유도했다(`claims_root_for_ledger`). 전달
+    통로만 caller 손에 남았고, 그것이 write-anywhere sink 였다.
+
+    51~56차는 그 sink 를 **blacklist 로** 좁혀 왔다: 원장과 그 lock(51차) ·
+    claim namespace(51차) · 다른 다리의 살아 있는 token(52차) · symlink 와
+    hardlink(56차). 56차 판정이 그 방식 자체를 겨눴다 —
+
+        "authority 경로 blacklist 를 더 늘리는 수정은 새로운 sink 하나를
+         남기므로 종결이 아니다."
+
+    남아 있던 것이 실제로 있었다: lifecycle journal 과 그 `.head`, cohort 의
+    `CURRENT`·`.PENDING`, 그리고 bind-mount 별칭을 지난 그 전부.
+
+    종결은 caller 의 pathname 이 **sink 에 닿지 않게** 만드는 것이다. 자리를
+    원장에서 유도하고 이름을 서버가 정하면, caller 가 고를 수 있는 것이 남지
+    않는다 — 넘기는 것은 `leg_id` 뿐이고 그 도메인은 `check_id()` 다.
+
+    claims 와 **다른** 디렉터리인 이유는 51차 P1-P 의 뿌리다: 전달 통로와
+    authority 가 같은 namespace 에 있으면 통로가 authority 경로를 점유한다.
+    """
+    return _lifecycle_root("_attempts", ledger)
+
+
+def attempt_path_for(leg_id: str, ledger=None, attempts_root=None) -> Path:
+    """이 다리의 소유 증명 경로. **서버가 정하고 caller 는 못 고른다** (57차 P0-1)."""
+    check_id(leg_id)
+    root = Path(attempts_root) if attempts_root is not None else \
+        attempts_root_for_ledger(ledger)
+    return root / f"{leg_id}.token"
+
+
+def claims_root_for(repo_root) -> Path:
+    """이 저장소에서 실행권이 **사는 곳**. 발급자가 정하는 유일한 규칙이다.
+
+    ★ 53차 P0-4 — 동결(`row_projection.freeze_cohort()`)이 "살아 있는 실행이
+      있는가" 를 물을 때 어디를 볼지는 **묻는 쪽이 고를 수 없어야** 한다.
+      52차는 그것을 인자로 받았고, 리뷰어는 빈 디렉터리를 넘겨 동결을
+      완주시켰다 (`stale_handle_phase_done=SUCCEEDED`). 규칙을 한 함수로 두면
+      묻는 쪽은 "어디냐" 만 물을 수 있고 "여기라고 치자" 는 못 한다.
+    """
+    return Path(repo_root) / "results" / "_claims"
+
+
+DEFAULT_CLAIMS_ROOT = claims_root_for(Path(__file__).resolve().parents[1])
+
+
+def _claim_path(leg_id: str, claims_root=None) -> Path:
+    """★ 48차 P0-6 — ID 도메인은 **한 곳**이다.
+
+    47차는 `"/" in leg_id` 만 봤다. Windows separator(`..\\..\\outside`)·device
+    이름(`nul`)·길이는 다 통과했다. 이 저장소는 27차 P1-4 에 정확히 그 반례로
+    `check_id()` 를 만들었는데 claim 경로만 따로 약하게 검사하고 있었다 — 같은
+    도메인을 두 곳에서 다르게 정하면 **약한 쪽이 실효 규칙**이다.
+    """
+    check_id(leg_id)
+    return Path(claims_root or DEFAULT_CLAIMS_ROOT) / f"{leg_id}.claim"
+
+
+def _assert_cohort_admits(doc: dict, row: dict, leg_id: str) -> None:
+    """이 다리의 cohort 가 **지금** 새 실행을 받는가 (54차 P0-1).
+
+    `active` 하나만 받는다. `freezing` 은 동결이 시작됐다는 durable 신호이고,
+    `frozen` 은 끝났다는 신호다. 둘 다 "더 자라지 않는다" 의 표현이다.
+    """
+    cid = row.get("cohort_id")
+    coh = next((c for c in doc.get("cohorts") or []
+                if c.get("cohort_id") == cid), None)
+    if coh is None:
+        raise PreserveError(
+            "plan", f"{leg_id!r} 의 cohort {cid!r} 가 원장에 없다")
+    st = coh.get("status")
+    if st != "active" or coh.get("frozen_reason"):
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 cohort {cid!r} 가 지금 active 가 아니다 ({st!r}) — "
+            "동결이 시작된(또는 끝난) cohort 에서는 실행권을 발급하지 않는다. "
+            "승인은 사전검사 시점이 아니라 **commit 시점**의 상태로 판정한다")
+
+
+def _mark_plan_running(leg_id: str, ledger=None) -> None:
+    """계획을 `planned → running` 으로 옮긴다 (48차 P0-6).
+
+    47차는 `PLANNED_STATUS` 에 `running` 을 선언만 해 두고 **어떤 코드도 그
+    값을 쓰지 않았다.** 그래서 원장만 보고 "지금 도는 다리가 있는가" 를 답할 수
+    없었고, claim 파일이 사라진 crash 뒤에 계획은 여전히 `planned` 이라 다른
+    실행이 태연히 새 claim 을 땄다. 선언만 있고 전이가 없으면 상태 기계가 아니다.
+
+    ★ 53차 P0-1 — 불확실 구역이 **임계 구역 전체**다. 52차는 그것을
+      `_atomic_write_text()` 호출 하나로 잡았는데, 리뷰어는 그 밖을 쳤다:
+      값이 보이게 된 뒤 `flock(LOCK_UN)`·`close` 가 실패하면 평범한 `OSError`
+      가 새어 나갔고 caller 는 그것을 "확정 미커밋" 으로 오판했다 (실측:
+      ledger_status=running · claim_exists=False · token_exists=False).
+
+      그래서 `with` 문 **전체**를 감싸고, 어느 지점을 지났는지를 flag 하나로
+      기억한다. 두 결과 중 하나만 나온다 — `PlanNotCommitted`(원장을 건드리기
+      전에 멈췄다) 또는 `PlanWriteUncertain`(모른다). 이름 없는 세 번째는 없다.
+    """
+    import yaml
+
+    path = canonical_ledger(ledger)
+    attempted = False
+    try:
+        with _ledger_lock(path):
+            doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+            row = next((e for e in doc.get("planned") or []
+                        if e.get("leg_id") == leg_id), None)
+            if row is None:
+                raise PreserveError("plan", f"계획 index 에 {leg_id!r} 이 없다")
+            if row.get("status") != "planned":
+                raise PreserveError(
+                    "plan", f"{leg_id!r} 의 계획 상태가 {row.get('status')!r} 이라 "
+                            "running 으로 옮길 수 없다")
+            # ★ 54차 P0-1 — **승인 commit 은 plan 한 줄이 아니라 그때의
+            #   authority 를 본다.** 53차는 사전검사에서만 cohort 를 봤고,
+            #   그 뒤 freeze 가 완주해도 여기서는 plan status 만 다시 읽었다
+            #   (리뷰어 실측: `cohort=frozen · plan=running · release 불가`).
+            #   같은 lock 안에서 다시 묻는다 — `freezing` 도 거부한다.
+            _assert_cohort_admits(doc, row, leg_id)
+            row["status"] = "running"
+            # ↓ 이 줄부터 **커밋 여부가 불확실**하다. `_atomic_write_text()` 도,
+            #   그 뒤 lock 을 놓는 것도, 어디서 실패했는지 caller 는 모른다.
+            attempted = True
+            _atomic_write_text(path, yaml.safe_dump(doc, allow_unicode=True,
+                                                    sort_keys=False))
+    except BaseException as exc:
+        if attempted:
+            raise PlanWriteUncertain(
+                f"{leg_id!r} 의 계획 전이(planned → running)가 커밋됐는지 알 수 "
+                f"없다: {exc}") from exc
+        raise PlanNotCommitted(
+            f"{leg_id!r} 의 계획 전이가 시작되기 전에 멈췄다: {exc}") from exc
+
+
+class PlanNotCommitted(PreserveError):
+    """계획 전이가 **확정적으로 미커밋**이다 (53차 P0-1).
+
+    원장 파일을 아직 건드리지 않은 채 멈췄다는 뜻이다 — 이때만 발급을 되돌릴
+    수 있다. 이 타입이 **아닌** 모든 실패는 보존한다: 기본값이 "모르면
+    되돌린다" 이면 한 번의 오판이 회수 불가능한 orphan 을 만들고, "모르면
+    보존한다" 이면 최악이 사람이 `release_leg_run()` 을 한 번 더 부르는 것이다.
+    """
+
+    def __init__(self, msg: str):
+        super().__init__("plan", msg)
+
+
+class PlanWriteUncertain(PreserveError):
+    """계획 전이의 **커밋 여부를 알 수 없다** (52차 P0-2).
+
+    51차는 이 상황을 `_plan_status()` 재독으로 **추정**했다. 리뷰어가 재독까지
+    실패시키자 `None` 이 돌아왔고, `None != "running"` 을 근거로 claim 과 token 을
+    지웠다 — 원장은 이미 `running` 으로 굳은 뒤였고 그 다리는 공개 API 어느
+    것으로도 회수할 수 없게 됐다.
+
+    추정이 틀린 방법이었다. `_mark_plan_running()` 은 자기가 **쓰기 전에**
+    실패했는지(확정 미커밋 — 원장을 건드리지 않았다) 아니면 쓰는 도중·이후에
+    실패했는지(불확정)를 **알고 있다.** 그것을 예외 타입으로 내보내면 caller 는
+    추정할 필요가 없다.
+
+    규칙: 확정 미커밋에서만 되돌린다. 불확실하면 **보존한다** — 소유 증명이
+    남아 있는 `running` 은 `release_leg_run()` 으로 회수 가능한 상태이고,
+    소유자 없는 `running` 은 아니다.
+    """
+
+    def __init__(self, msg: str):
+        super().__init__("plan", msg)
+
+
+def _claim_planned_leg(leg_id: str, run_spec: dict, source_digest: str,
+                       ledger=None, token: str | None = None) -> LegClaim:
+    """(내부) 실행 권한을 **원자적으로 하나만** 발급한다 (47차 P0-1 · P0-2).
+
+    ★ 59차 M10 — **공개 표면에서 내렸다.** 54차 P0-6 은 `token=None` 을 막았지만
+      *아무 문자열이나* 주는 길은 열려 있었고, 그러면 계획은 `running` 인데
+      소유 증명은 디스크 어디에도 없다 — 재개도 되돌림도 닫기도 불가능한 상태다
+      (53차가 없앤 바로 그 형태). 이름을 숨기는 것으로 끝내지 않고 아래에서
+      **token 이 이 다리의 자리에 이미 굳어 있는지** 확인한다. 그 불변식을
+      세우는 자리는 `open_leg_run()` 하나뿐이다.
+
+    46차 `assert_planned_leg()` 는 read-only predicate 였다. 같은 row 로 몇
+    번이고 통과했고 동시 실행 둘도 모두 계산에 들어갔다. 승인은 상태 전이여야
+    한다.
+
+    검사 순서 — **전체 원장 일관성이 먼저다.** 46차는 target predicate 만
+    봤으므로 다른 leg 때문에 원장이 깨져 있어도 이 leg 의 계산이 시작됐다.
+    """
+    assert_planned_index_consistent(ledger)          # 전체가 먼저
+    e = assert_planned_leg(leg_id, source_digest, ledger=ledger)
+    # ★ 47차 — "소급은 승인이 아니다" 를 여기서 **다시 검사하지 않는다.**
+    #   `planned_index()` 가 이미 `retrospective ⇒ status == executed` 를
+    #   강제하고 `assert_planned_leg()` 는 `status == planned` 만 통과시키므로,
+    #   claim 에 도달하는 retrospective 항목은 **표현할 수 없다.** 변이로
+    #   확인했다: 여기 검사를 지워도 아무 시험이 빨개지지 않았다 — 중복이라는
+    #   뜻이다 (도달 불가능한 검사는 방어가 아니라 소음이다).
+
+    want = run_spec_digest(run_spec)
+    if e["run_spec_digest"] != want:
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 run_spec 이 승인된 계획과 다르다 "
+            f"(계획 {e['run_spec_digest'][:16]} ≠ 지금 {want[:16]}) — 계획은 "
+            "이름이 아니라 **무엇을 실행할지**를 승인한다")
+
+    # ★ 54차 P0-6 — 소유 증명은 **caller 가 준다.** 53차는 `token=None` 이면
+    #   지역변수로 하나 만들었고, 그래서 원장 commit 뒤 오류가 나면 claim 은
+    #   남고 소유 증명은 **어디에도 없는** 상태가 됐다 (리뷰어 실측:
+    #   `plan=running · claim=true · token_files=[]`). 그 다리는 재개도
+    #   되돌림도 불가능하다 — 53차가 주장한 "최악은 release 한 번" 이 거짓이었다.
+    #
+    #   durable 발급의 유일한 정상 경로는 `open_leg_run()` 이다 (token 을 먼저
+    #   디스크에 굳히고 그 값으로 claim 을 만든다). 여기서 암묵적으로 만들지
+    #   않으면 그 불변식이 타입 수준에서 강제된다.
+    if not _nonempty_str(token or ""):
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 실행권을 소유 증명 없이 발급할 수 없다 — durable "
+            "발급은 `open_leg_run()`(token 을 먼저 파일로 굳힌다)만 한다. "
+            "메모리에만 있는 소유 증명은 실패 한 번에 사라지고, 그러면 그 "
+            "다리는 재개도 되돌림도 할 수 없다")
+    # ★ 59차 M10 — **비어 있지 않은 것으로는 부족하다.** 아무 문자열이나 주면
+    #   claim 은 생기고 계획은 `running` 인데 소유 증명은 디스크에 없다.
+    #   그러므로 "그 token 이 이 다리의 자리에 이미 굳어 있는가" 를 묻는다.
+    #   `open_leg_run()` 은 token 을 **먼저** 굳히고 그 값으로 여기 오므로
+    #   정상 경로는 그대로 통과한다.
+    _tokf = attempt_path_for(leg_id, ledger=ledger)
+    _ondisk = read_token_file(_tokf, leg_id) if _tokf.is_file() else None
+    if _ondisk is None or not secrets.compare_digest(str(_ondisk), str(token)):
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 소유 증명이 **디스크에 굳어 있지 않다** ({_tokf}) — "
+            "이 상태로 발급하면 계획은 `running` 인데 아무도 그 실행을 이어받을 "
+            "수 없다 (재개·되돌림·닫기 전부 소유 증명을 요구한다). 발급은 "
+            "`open_leg_run()` 으로 하라 — token 을 먼저 굳히고 그 값으로 "
+            "claim 을 만든다 (59차 M10)")
+    claims_root = claims_root_for_ledger(ledger)
+    path = _claim_path(leg_id, claims_root)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    attempt_id = uuid.uuid4().hex
+    rec = {"leg_id": leg_id, "cohort_id": e["cohort_id"],
+           "attempt_id": attempt_id, "attempt_verifier": _token_verifier(token),
+           "run_spec_digest": want, "source_digest": source_digest,
+           "opened_at": dt.datetime.now(dt.timezone.utc).strftime(
+               "%Y-%m-%dT%H:%M:%SZ"),
+           "phases": {}}
+    body = (json.dumps(rec, sort_keys=True, ensure_ascii=False,
+                       separators=(",", ":")) + "\n").encode("utf-8")
+    try:
+        fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY | _O_BIN, 0o644)
+    except FileExistsError as exc:
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 claim 이 이미 열려 있다: {path} — 같은 다리를 두 번 "
+            "시작할 수 없다. 중단된 실행이면 `resume_claim()` 으로 이어라") from exc
+    # ★ 53차 P0-2 — 전부 쓰고, 디스크에서 **다시 읽어** 대조한다. 52차는
+    #   `os.write()` 의 반환 길이를 버렸다: 부분 쓰기가 성공으로 통과하고 그 뒤
+    #   모든 reader 가 malformed JSON 을 만났다 (리뷰어 실측:
+    #   `public_attach=JSONDecodeError`). 반환값을 보는 것만으로도 부족하다 —
+    #   그것도 자기 보고다. 권한 파일은 **실물**로 확인한다.
+    try:
+        try:
+            _write_all(fd, body, path)
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+        # ★ 58차 L8 — **strict 로 굳힌다.** 57차는 비-strict 판본을 부르고
+        #   반환값을 버렸다. `_fsync_dir()` 의 docstring 은 "실패를 삼키지
+        #   않는다" 인데 바로 이 자리에서 거짓이었다 — 세 번의 directory flush
+        #   가 전부 실패해도 `open_leg_run()` 이 claim 을 돌려주고 계획을
+        #   `running` 으로 옮겼다 (리뷰어가 fault injection 으로 재현).
+        #
+        #   파일 데이터가 fsync 돼도 **이름이 안 굳으면** power loss 뒤 그
+        #   directory entry 가 없다. 그런데 이 entry 가 하필
+        #   token-before-claim 순서를 증명하는 바로 그것이다 — 못 굳혔으면
+        #   복구 불변식이 성립하지 않으므로 성공을 보고할 수 없다.
+        _fsync_dir_strict(path.parent, "claim-publish")
+        _assert_bytes_on_disk(path, body, "claim")
+    except BaseException:
+        # 원장은 아직 안 건드렸다 — 확정 미커밋이다. 깨진 claim 을 남기면
+        # 그것이 곧 다음 발급을 막는 잠금이 된다.
+        path.unlink(missing_ok=True)
+        raise
+    # ★ 48차 P0-6 — claim 파일을 굳힌 **뒤** 계획을 running 으로 옮긴다.
+    #   순서가 중요하다: 파일이 먼저여야 `O_EXCL` 이 상호배제의 authority 로
+    #   남는다. 원장 전이가 실패하면 claim 을 되돌린다 — 잡아만 놓고 원장에는
+    #   안 보이는 다리를 남기지 않는다.
+    try:
+        _mark_plan_running(leg_id, ledger=ledger)
+    except PlanNotCommitted:
+        # ★ 53차 P0-1 — **확정 미커밋일 때만** 되돌린다. 52차는 반대였다:
+        #   `except BaseException` 이 기본 되돌림이었고 불확실만 예외로 뺐다.
+        #   그래서 예상 못 한 실패 하나(lock exit)가 곧바로 회수 불가능한
+        #   orphan 이 됐다. 기본값은 **보존**이어야 한다 — 살아 있는 claim 과
+        #   소유 증명은 `release_leg_run()` 으로 언제든 회수되지만, 지워진
+        #   소유 증명은 어떤 공개 API 로도 되살아나지 않는다.
+        path.unlink(missing_ok=True)
+        raise
+    return LegClaim(leg_id, e["cohort_id"], attempt_id, want, source_digest,
+                    path, token=token)
+
+
+def _read_claim_record(leg_id: str, claims_root=None) -> tuple[Path, dict]:
+    path = _claim_path(leg_id, claims_root)
+    if not path.is_file():
+        raise PreserveError("plan", f"이어받을 claim 이 없다: {path}")
+    rec = json.loads(path.read_text(encoding="utf-8"))
+    if set(rec) != set(CLAIM_KEYS):
+        raise PreserveError(
+            "plan", f"claim schema 가 계약과 다르다: {sorted(rec)}")
+    return path, rec
+
+
+def resume_claim(leg_id: str, token: str | None = None,
+                 ledger=None) -> LegClaim:
+    """중단된 실행을 **같은 attempt 로** 이어받는다 (재계산 없이 finalize).
+
+    ★ 48차 P0-3 — `token` 은 **소유 증명**이다. 47차는 claim 파일이 보이면
+      누구든 이어받을 수 있었고, public gate 가 그것을 자동으로 했다. 그래서
+      같은 public 호출 둘이 모두 같은 attempt 로 compute 에 들어갔다 —
+      `O_EXCL` 은 파일 최초 생성만 배타적이었지 **실행권**은 배타적이지
+      않았다. 이름과 spec 만으로 이어받을 수 있으면 그것은 재개가 아니라
+      두 번째 발급이다.
+
+    ★ 49차 P0-3 — 대조는 claim 파일에 적힌 평문이 아니라 `sha256` verifier 와
+      한다. 48차는 credential 을 그 파일 안에 그대로 뒀으므로, 파일을 읽을 수
+      있는 주체에게는 "소유 증명" 이 아무 것도 요구하지 않는 것과 같았다.
+
+      `token=None` 은 **진단용 읽기**이며 phase 를 쓸 수 없고 credential 도
+      들고 있지 않은 claim 을 돌려준다.
+    """
+    path, rec = _read_claim_record(leg_id, claims_root_for_ledger(ledger))
+    if token is not None:
+        if not secrets.compare_digest(_token_verifier(token),
+                                      str(rec["attempt_verifier"])):
+            raise PreserveError(
+                "plan",
+                f"{leg_id!r} 의 claim 소유 증명이 맞지 않는다 — 이 실행은 그 "
+                "attempt 를 갖고 있지 않다. 다른 실행이 이미 이 다리를 잡고 있다")
+        # ★ 48차 — 재개할 때마다 **살아 있는 원장 authority** 를 다시 본다.
+        #   47차 existing-claim 분기는 원장을 읽지 않아, claim 뒤 계획에서 L 을
+        #   지우거나 cohort 를 frozen 으로 바꿔도 계속 승인됐다.
+        e = assert_planned_leg(rec["leg_id"], rec["source_digest"],
+                               ledger=ledger, allow=("planned", "running"))
+        if e["cohort_id"] != rec["cohort_id"]:
+            raise PreserveError(
+                "plan", f"{leg_id!r} 의 cohort 가 claim 이후 바뀌었다 "
+                        f"({rec['cohort_id']} → {e['cohort_id']})")
+        if e["run_spec_digest"] != rec["run_spec_digest"]:
+            raise PreserveError(
+                "plan", f"{leg_id!r} 의 승인된 run_spec 이 claim 이후 바뀌었다")
+    return LegClaim(rec["leg_id"], rec["cohort_id"], rec["attempt_id"],
+                    rec["run_spec_digest"], rec["source_digest"], path,
+                    token=token)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 49차 P0-3 — 실행권을 **process 경계 너머로** 넘기는 coordinator
+#
+# 48차의 두 규칙은 각각 옳았지만 함께 두면 production 을 막았다: claim 을 따면
+# 계획이 `running` 으로 가고(P0-6), claim 이 있으면 소유 증명 없이는 못 이어받는다
+# (P0-3). 그런데 grid 가 딴 실행권을 fit 에 **넘길 경로가 없었다.** 그래서
+# `run.sh --mode all --leg L` 은 grid 직후 반드시 거부됐다 (리뷰어 실측).
+#
+# 규칙 둘 사이에 있어야 하는 것은 예외가 아니라 **전달**이다. 한 coordinator 가
+# 한 번 발급하고, 소유 증명을 0600 파일로 넘기고, 각 phase process 가 그 파일로
+# 같은 실행에 붙고, 마지막에 같은 증명으로 닫는다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+#: 소유 증명의 길이 (hex 문자 수). 128bit.
+TOKEN_HEX = 32
+
+_TOKEN_RE = re.compile(r"^[0-9a-f]{%d}$" % TOKEN_HEX)
+
+
+def _new_token() -> str:
+    """추측 불가능한 소유 증명. `uuid4().hex` 가 아니라 CSPRNG 를 쓴다."""
+    return secrets.token_hex(TOKEN_HEX // 2)
+
+
+def _token_verifier(token: str) -> str:
+    return hashlib.sha256(str(token).encode("utf-8")).hexdigest()
+
+
+def _assert_not_a_link(path: Path, what: str) -> None:
+    """이 이름이 **실물 일반 파일**임을 커널에게 묻는다 (57차 P0-1).
+
+    `O_NOFOLLOW` 로 열어 본다. symlink 면 커널이 `ELOOP` 로 거부하므로 검사와
+    사용 사이의 창이 없다 — pathname 을 `lstat` 으로 본 뒤 다시 여는 방식과
+    다른 점이 그것이다. 파일이 없으면(첫 발급) 통과다.
+
+    hardlink 는 `O_NOFOLLOW` 로 안 잡힌다 (하드링크는 같은 inode 의 다른
+    이름이지 링크 객체가 아니다). 그래서 열린 fd 에서 `st_nlink` 를 본다 —
+    55·56차가 원장에 건 것과 같은 규칙이고, 여기서는 **연 그 fd** 를 보므로
+    이름을 다시 해석하지 않는다.
+    """
+    try:
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | _O_BIN)
+    except FileNotFoundError:
+        return                                   # 아직 없다 — 첫 발급
+    except OSError as exc:
+        if exc.errno in (errno.ELOOP, errno.EMLINK):
+            raise PreserveError(
+                "plan",
+                f"{what} 경로가 symlink 다: {path} — 첫 쓰기가 링크를 따라가면 "
+                "그 대상이 덮인다. lifecycle 이 정한 실물 경로여야 한다") from exc
+        raise
+    try:
+        st = os.fstat(fd)
+        if stat.S_ISDIR(st.st_mode):
+            raise PreserveError(
+                "plan", f"{what} 경로가 디렉터리다: {path}")
+        if stat.S_ISREG(st.st_mode) and st.st_nlink != 1:
+            raise PreserveError(
+                "plan",
+                f"{what} 경로에 다른 이름(hardlink)이 있다: {path} "
+                f"(nlink={st.st_nlink}) — 같은 파일을 두 이름으로 부르면 "
+                "배타가 갈린다")
+    finally:
+        os.close(fd)
+
+
+#: 소유 증명 파일의 **닫힌** key 집합 (52차 P0-1).
+TOKEN_FILE_KEYS = ("leg_id", "attempt_id", "token")
+
+
+def write_token_file(path, token: str, leg_id: str | None = None,
+                     attempt_id: str | None = None) -> Path:
+    """소유 증명을 **소유자만 읽을 수 있게** 굳힌다 (0600).
+
+    argv 로 넘기지 않는다 — `ps` 와 `/proc/<pid>/cmdline` 은 같은 기계의 다른
+    주체에게 열려 있다. 넘기는 것은 **경로**이고 내용은 파일 권한이 지킨다.
+    한계: 같은 uid 의 다른 process 는 읽을 수 있다 (계약 §13.3.1 의 전제와
+    같은 경계다 — flock 도 같은 기계·같은 주체를 가정한다).
+
+    ★ 52차 P0-1 — 파일이 **어느 다리의 어느 attempt** 인지 담는다. 51차까지는
+      raw hex 하나였고, 그래서 서로 다른 정상 leg 가 같은 `--attempt-file`
+      경로를 쓰면 두 번째 발급이 첫 번째 credential 을 그냥 덮었다 (리뷰어 실측:
+      `attach L: verifier 불일치 · attach M: SUCCEEDED`). 51차가 막은 것은
+      claim namespace 와의 alias 였지 **다른 다리의 전달 통로**가 아니었다.
+
+      전달 통로도 결속 대상이다. 담기는 것이 이름을 알면, 남의 것을 덮으려는
+      쓰기와 남의 것으로 붙으려는 읽기를 둘 다 거부할 수 있다.
+    """
+    if not _TOKEN_RE.match(str(token)):
+        raise PreserveError("plan", "소유 증명의 형식이 계약과 다르다")
+    rec = {"leg_id": str(leg_id or ""), "attempt_id": str(attempt_id or ""),
+           "token": str(token)}
+    body = (json.dumps(rec, sort_keys=True, ensure_ascii=False)
+            + "\n").encode("utf-8")
+    p = Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    # ★ 57차 P0-1 — **열기 자체가 링크를 따라가지 않아야 한다.** 56차는
+    #   caller 경로에 `is_symlink()` 를 걸었는데 그것은 (a) 검사와 열기 사이에
+    #   창이 있고 (b) 자리를 서버가 정해도 **그 자리에 심어 둔** 링크는 여전히
+    #   통한다. 최종 이름을 O_NOFOLLOW 로 확인하면 커널이 판정한다.
+    _assert_not_a_link(p, "소유 증명")
+    tmp = p.with_name(f".{p.name}.{uuid.uuid4().hex}.tmp")
+    # ★ 53차 P0-2 — claim 과 같은 규칙: 전부 쓰고, 보이게 만들기 **전에** 실물을
+    #   대조하고, 보이게 만든 뒤 한 번 더 대조한다. 소유 증명은 권한이므로
+    #   반쪽짜리가 보이면 그 다리는 아무도 붙을 수 없다.
+    try:
+        fd = os.open(tmp, os.O_CREAT | os.O_EXCL | os.O_WRONLY | _O_BIN, 0o600)
+        try:
+            _write_all(fd, body, tmp)
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+        _assert_bytes_on_disk(tmp, body, "소유 증명")
+    except BaseException:
+        tmp.unlink(missing_ok=True)
+        raise
+    os.replace(tmp, p)
+    # ★ 58차 L8 — claim 과 **같은 이유**로 strict. 소유 증명의 이름이 안 굳으면
+    #   "token 이 claim 보다 먼저 durable 하다" 는 주장 자체가 성립하지 않는다.
+    _fsync_dir_strict(p.parent, "attempt-token-publish")
+    _assert_bytes_on_disk(p, body, "소유 증명")
+    return p
+
+
+def _read_token_record(path) -> dict:
+    p = Path(path)
+    if not p.is_file():
+        raise PreserveError("plan", f"소유 증명 파일이 없다: {p}")
+    raw = p.read_text(encoding="utf-8").strip()
+    try:
+        rec = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise PreserveError(
+            "plan", f"소유 증명 파일의 형식이 계약과 다르다: {p} ({exc})") from exc
+    if type(rec) is not dict or set(rec) != set(TOKEN_FILE_KEYS):
+        raise PreserveError(
+            "plan",
+            f"소유 증명 파일의 key 집합이 계약과 다르다: {p} — 있어야 "
+            f"{list(TOKEN_FILE_KEYS)}")
+    if not _TOKEN_RE.match(str(rec["token"])):
+        raise PreserveError(
+            "plan", f"소유 증명 파일의 형식이 계약과 다르다: {p}")
+    return rec
+
+
+def read_token_file(path, leg_id: str | None = None) -> str:
+    """소유 증명을 읽는다. `leg_id` 를 주면 **그 다리의 것인지** 확인한다."""
+    rec = _read_token_record(path)
+    if leg_id is not None and rec["leg_id"] and rec["leg_id"] != str(leg_id):
+        raise PreserveError(
+            "plan",
+            f"소유 증명 파일이 다른 다리의 것이다: {path} (파일 "
+            f"{rec['leg_id']!r} ≠ 지금 {leg_id!r}) — 남의 실행권으로 이 다리에 "
+            "붙을 수 없다")
+    return rec["token"]
+
+
+def _unlink_token_generation(path, token: str) -> bool:
+    """소유 증명 파일을 **자기가 쓴 generation 일 때만** 지운다 (51차 P0-L2).
+
+    50차는 `Path(token_file).unlink(missing_ok=True)` 였다. 경로만 보고 지우면
+    "지금 그 경로에 있는 것이 내 것인가" 를 아무도 묻지 않는다.
+
+    ★ 52차 P0-1 — 이 함수만으로는 부족하다. 비교와 `unlink` 는 두 syscall 이고
+      그 사이에 새 발급이 끼어들 수 있다 (리뷰어 실측: A 가 비교 뒤 멈추고 B 가
+      정상 발급되면 A 가 B 의 token 을 지운다). 술어와 행위가 같은 임계 구역에
+      없으면 그 술어는 낡는다. 그래서 **호출자가 claim lock 을 쥔 채** 부른다 —
+      발급도 같은 lock 을 잡으므로 그 사이에 들어올 수 없다.
+    """
+    p = Path(path)
+    try:
+        cur = _read_token_record(p)["token"]
+    except (PreserveError, OSError):
+        return False
+    if not secrets.compare_digest(cur, str(token)):
+        return False
+    p.unlink(missing_ok=True)
+    return True
+
+
+#: ★ 57차 P0-1 — **여기 있던 검사 둘을 지웠다** (`_assert_token_file_free_for`,
+#: `_assert_token_path_disjoint`). 지운 이유는 "필요 없어 보여서" 가 아니라
+#: **구조가 그 술어를 표현 불가능하게 만들었기 때문**이고, 그것을 실측했다:
+#:
+#:   · `_assert_token_file_free_for` — "이 경로에 다른 다리의 살아 있는 소유
+#:     증명이 있는가" 를 물었다. 경로가 `<attempts>/<leg_id>.token` 으로
+#:     고정된 지금, 그 파일을 쓰는 것은 `open_leg_run(<leg_id>)` 하나뿐이므로
+#:     record 의 `leg_id` 는 **항상** 묻는 다리와 같다. 분기가 도달 불가다.
+#:   · `_assert_token_path_disjoint` — "전달 통로가 authority namespace 를
+#:     침범하는가" 를 물었다. 통로의 자리를 `attempts_root_for_ledger()` 가
+#:     정하고 그것이 claims·원장과 다른 디렉터리이므로 침범이 표현 불가다.
+#:     (제거 직전 실측: 실제 호출 0곳 — docstring 언급만 남아 있었다.)
+#:
+#: 살아 있는 보장은 `test_the_attempt_namespace_is_derived_from_the_ledger`
+#: 와 `test_a_cross_leg_attempt_collision_is_unrepresentable` 이 못 박는다.
+#: **도달 불가능한 검사를 남겨 두면 그것이 곧 거짓 보증이다** — 변이 전수가
+#: "안 무는 변이" 로 잡아내는 자리이기도 하다 (55차 교훈).
+
+
+def _attempt_path_lock(token_file) -> Path:
+    """소유 증명 **경로 자체**의 배타 지점을 정한다 (53차 P0-3).
+
+    52차는 "이 경로에 남의 살아 있는 소유 증명이 있는가" 를 claim lock 안에서
+    물었다. 그런데 서로 다른 다리는 **서로 다른 claim lock** 을 잡는다 — 두
+    발급이 빈 공유 파일 위에서 나란히 통과했고, 뒤에 쓴 쪽이 앞의 credential 을
+    덮었다 (리뷰어 실측: `stranded_running_legs=['L']`).
+
+    술어가 지키는 대상은 claim 이 아니라 **경로**다. 배타도 경로 위에 있어야
+    한다. 심볼릭 링크와 `..` 로 같은 파일을 다른 이름으로 부를 수 있으므로
+    정규화한 뒤 이름을 만든다 (자리를 `attempts_root_for_ledger()` 가 정하므로
+    authority namespace 밖인 것은 구조가 보장한다 — 57차 P0-1).
+    """
+    p = Path(token_file)
+    try:
+        p = p.resolve(strict=False)
+    except OSError:                                       # pragma: no cover
+        p = p.absolute()
+    return p.with_name(p.name + ".attempt")
+
+
+@contextlib.contextmanager
+def _lifecycle_locks(leg_id: str, token_file=None, claims_root=None):
+    """claim·token 을 바꾸는 **모든** 경로가 공유하는 임계 구역 (54차 P0-2).
+
+    53차는 `LOCK_ORDER` 를 선언하고 **발급에만** 적용했다. release·finalize·
+    복구의 정리 경로는 claim lock 만 잡거나 아무 것도 안 잡았고, 리뷰어는 둘 다
+    쳤다:
+
+      · L 의 release 가 자기 token 을 확인한 뒤 멈춘 사이 M 이 같은 경로에
+        정상 발급하고, L 이 `unlink` 를 재개해 **M 의** token 을 지웠다.
+      · finalize 복구가 lock 없이 claim 을 지운 뒤, 이미 claim lock 안에 있던
+        늦은 `phase_done()` 이 그 claim 을 **다시 만들었다**.
+
+    술어와 행위가 같은 임계 구역에 있어야 한다는 규칙은 발급에만 적용되는 것이
+    아니다. 순서는 `LOCK_ORDER` 하나뿐이다: attempt_path → claim → ledger.
+    """
+    cp = _claim_path(leg_id, claims_root)
+    cp.parent.mkdir(parents=True, exist_ok=True)
+    if token_file is None:
+        with _ledger_lock(cp):                              # LOCK_ORDER: claim
+            yield cp
+    else:
+        with _ledger_lock(_attempt_path_lock(token_file)), _ledger_lock(cp):
+            yield cp                       # LOCK_ORDER: attempt_path → claim
+
+
+def open_leg_run(leg_id: str, run_spec: dict, source_digest: str,
+                 ledger=None) -> LegClaim:
+    """coordinator 가 실행권을 **한 번** 발급하고 소유 증명을 파일로 내놓는다.
+
+    발급 자체는 `_claim_planned_leg()` 이다 — 계획 대조·원자적 `O_EXCL`·원장
+    `running` 전이가 전부 거기 있다. 여기서 더하는 것은 **전달 경로** 하나다.
+
+    ★ 57차 P0-1 — 그 경로를 **caller 가 더 이상 고르지 않는다.** 56차까지는
+      `token_file` 인자였고, 그것이 authority 파일을 겨눌 수 있는 sink 였다.
+      막는 방법이 blacklist 증설뿐이라 매 라운드 새 sink 가 하나씩 남았다
+      (56차 판정). 이제 자리는 `attempts_root_for_ledger()` 가, 이름은
+      `attempt_path_for()` 가 정하고, caller 가 넘기는 것은 `leg_id` 뿐이다.
+    """
+    # ★ 50차 P0 — **순서가 뒤집혀 있었다.** 49차는 claim 을 먼저 굳히고 token 을
+    #   나중에 썼다. 그 사이에 죽으면 아무도 갖고 있지 않은 verifier 만 남고
+    #   계획은 `running` 이다 — 이어받을 수도 되돌릴 수도 닫을 수도 없다
+    #   (리뷰어 실측). crash 창이 "정상 경로" 안에 있으므로 운영 사고 하나에
+    #   다리 하나를 잃는 설계였다.
+    #
+    #   token 을 먼저 굳히면 그 상태가 **표현 불가능**해진다: claim 이 있는
+    #   모든 시점에 그 claim 의 소유 증명도 디스크에 있다. 반대로 token 만
+    #   남는 것은 무해하다 — 가리키는 claim 이 없으므로 아무 권한도 아니고,
+    #   다음 발급이 덮어쓴다.
+    #
+    # ★ 51차 P0-L1 — **순서는 CAS 가 아니었다.** 50차는 살아 있는 claim 을 보기
+    #   **전에** token 을 무조건 덮었다. 그래서 두 번째 정상 호출이 계획 대조로
+    #   거부되기 전에 이미 owner 의 소유 증명을 날려 버렸고, rollback 은
+    #   "claim 이 있다" 는 이유로 **침입자의** token 을 남겼다 (리뷰어 실측).
+    #   claim 의 verifier 는 A, 파일은 B → 정상 A 도 붙을 수 없다.
+    #
+    #   발급 전체를 claim 임계 구역 안으로 넣는다. 안에서 살아 있는 claim 을
+    #   먼저 판정하고, 그 다음에야 token 을 쓴다. rollback 도 **자기가 쓴
+    #   generation** 일 때만 지운다 (`_unlink_token_generation`).
+    #
+    # ★ 53차 P0-3 — **claim lock 은 경로를 지키지 않는다.** 다리마다 다른 lock
+    #   이므로 공유된 `--attempt-file` 위에서 두 발급이 나란히 통과했다. 경로의
+    #   배타는 경로 위에 둔다 (`_attempt_path_lock`), 그리고 free-check 부터
+    #   발급 확정까지 **그 안**에서 끝낸다.
+    claims_root = claims_root_for_ledger(ledger)
+    token_file = attempt_path_for(leg_id, ledger=ledger)
+    with _lifecycle_locks(leg_id, token_file, claims_root) as cp:
+        if cp.is_file():
+            raise PreserveError(
+                "plan",
+                f"{leg_id!r} 은 이미 실행 중이다 (claim: {cp}) — 두 번째 실행을 "
+                "시작할 수 없다. 중단된 실행을 이으려면 그 실행의 소유 증명 "
+                "파일로 `attach_leg_run()` 을 쓰라")
+        token = _new_token()
+        attempt_hint = uuid.uuid4().hex
+        write_token_file(token_file, token, leg_id, attempt_hint)
+        try:
+            claim = _claim_planned_leg(leg_id, run_spec, source_digest,
+                                      ledger=ledger, token=token)
+            # 발급된 실제 attempt_id 로 결속을 굳힌다
+            write_token_file(token_file, token, leg_id, claim.attempt_id)
+            return claim
+        except BaseException:
+            # 되돌릴 때도 같은 불변식을 지킨다: **claim 이 남았으면 token 도
+            # 남긴다.** 실패했다고 소유 증명부터 지우면 그것이 곧 갇힌 다리다.
+            if not cp.is_file():
+                _unlink_token_generation(token_file, token)
+            raise
+
+
+def attach_leg_run(leg_id: str, ledger=None) -> LegClaim:
+    """넘겨받은 소유 증명으로 **같은 실행**에 붙는다 (phase process 가 쓴다).
+
+    ★ 57차 P0-1 — 넘기는 것이 pathname 에서 `leg_id` 로 바뀌었다. 49차 P0-3 이
+      만든 성질(coordinator 가 한 번 발급 → 여러 phase process 가 같은 실행에
+      붙는다)은 그대로다 — 자리를 양쪽이 **같은 규칙**으로 유도하기 때문이다.
+    """
+    tok = attempt_path_for(leg_id, ledger=ledger)
+    return resume_claim(leg_id, token=read_token_file(tok, leg_id),
+                        ledger=ledger)
+
+
+def inspect_leg_run(leg_id: str, ledger=None) -> dict:
+    """살아 있는 실행을 **공개 필드만으로** 들여다본다 (진단용).
+
+    ★ 49차 P0-3 — verifier 도 credential 도 내보내지 않는다. 48차 진단 경로는
+      readonly claim 객체를 그대로 돌려줬고 그 객체의 `.attempt` 가 평문
+      credential 이었다.
+    """
+    _, rec = _read_claim_record(leg_id, claims_root_for_ledger(ledger))
+    return {"leg_id": rec["leg_id"], "cohort_id": rec["cohort_id"],
+            "attempt_id": rec["attempt_id"],
+            "run_spec_digest": rec["run_spec_digest"],
+            "source_digest": rec["source_digest"],
+            "opened_at": rec["opened_at"],
+            "phases_done": sorted(p for p in CLAIM_PHASES
+                                  if p in (rec.get("phases") or {}))}
+
+
+def release_leg_run(leg_id: str, token=None, ledger=None) -> dict:
+    """실행권을 **되돌린다** — 계획을 `planned` 로 돌리고 claim 을 지운다.
+
+    ★ 49차 P0-3 — 48차에는 이 방향이 없었다. `--dry-run` 은 claim 을 따고
+      계획을 `running` 으로 옮긴 뒤 아무 phase 도 닫지 않고 끝난다. finalize 는
+      "phase 가 남았다" 며 거부하므로 그 다리는 **다시 시작할 수도 닫을 수도
+      없는** terminal 상태로 굳었다. 47차가 dry-run 면제를 없앤 것은 옳았고
+      (dry-run 도 solver 를 부른다), 그 대가는 면제가 아니라 되돌림이다.
+
+      crash 로 남은 claim 을 사람이 정리하는 통로이기도 하다. 소유 증명을
+      요구하므로 남의 실행을 취소할 수는 없다.
+    """
+    # ★ 57차 P0-1 — `token_file` 인자를 없앴다. 소유 증명은 여전히 **필수**다
+    #   (남의 실행권을 취소할 수 없다). finalize 와 같다 — credential 의 의미는
+    #   그대로이고, 그것이 담긴 파일의 자리만 lifecycle 이 정한다.
+    token_file = attempt_path_for(leg_id, ledger=ledger)
+    if token is None:
+        token = read_token_file(token_file, leg_id)
+    # ★ 49차 P0-6 — 이미 닫힌 다리는 되돌릴 수 없다. crash 로 남은 claim 이면
+    #   그 정리는 `finalize_leg()` 이 한다 (원장이 이미 executed 이므로).
+    if _already_finalized(leg_id, token, ledger=ledger,
+                          ) is not None:
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 은 이미 executed 로 닫혔다 — 되돌릴 수 없다. 남은 "
+            "claim 정리는 `--mode finalize` 가 한다")
+    claim = resume_claim(leg_id, token=token, ledger=ledger)
+    # ★ 52차 P0-1 — claim 폐기와 token 삭제가 **한 임계 구역** 안이다. 51차는
+    #   `_abandon_claim()` 이 lock 을 놓은 뒤 token 을 지웠고, 그 사이에 정상
+    #   발급이 들어오면 새 attempt 의 credential 이 지워졌다 (리뷰어 실측).
+    _abandon_claim(claim, ledger=ledger, token_file=token_file, token=token)
+    return {"leg_id": leg_id, "attempt_id": claim.attempt_id,
+            "status": "planned"}
+
+
+def _assert_live_attempt(rec: dict, claim: LegClaim, what: str) -> None:
+    """쓰기 직전에 **디스크의 record 가 아직 이 attempt 인지** 확인한다 (51차 P0-L2).
+
+    50차는 이 검사를 `phase_done()` 하나에만 넣었다. 그래서 `_abandon_claim()`
+    은 그대로 열려 있었다 — 리뷰어가 반례 셋을 만들었다:
+
+      · stale `LegClaim(A)` 로 부르면 **B 의** claim 이 지워진다 (A 는 그 사이
+        정상 release 됐고 B 가 정상 발급됐다)
+      · `LegClaim(..., token=None)` 을 공개 진단 필드로 조립해 부르면 소유 증명
+        없이 남의 실행이 취소된다
+      · 검사한 record 와 지운 pathname 이 같다는 보장이 없다
+
+    검사는 **mutator 옆에, lock 안에** 있어야 한다. 타입 이름이 authority 가
+    아니다 — 살아 있는 verifier 대조가 authority 다.
+    """
+    if claim._token is None:
+        raise PreserveError(
+            "plan",
+            f"{claim.leg_id!r} 의 claim 을 소유 증명 없이 열었다 — {what} 는 "
+            "진단용 읽기로 할 수 없다")
+    if not secrets.compare_digest(_token_verifier(claim._token),
+                                  str(rec.get("attempt_verifier"))):
+        raise PreserveError(
+            "plan",
+            f"{claim.leg_id!r} 의 claim 소유 증명이 맞지 않는다 — 이 실행은 "
+            f"{what} 를 할 권한이 없다")
+    if rec.get("attempt_id") != claim.attempt_id:
+        raise PreserveError(
+            "plan",
+            f"claim 이 다른 attempt 로 바뀌었다 ({rec.get('attempt_id')} ≠ "
+            f"{claim.attempt_id}) — 이 실행은 더 이상 권한이 없다")
+    for k, mine in (("run_spec_digest", claim.run_spec_digest),
+                    ("source_digest", claim.source_digest),
+                    ("cohort_id", claim.cohort_id)):
+        if rec.get(k) != mine:
+            raise PreserveError(
+                "plan",
+                f"claim 의 {k} 가 발급 이후 바뀌었다 ({rec.get(k)} ≠ {mine})")
+
+
+def _abandon_claim(claim: LegClaim, ledger=None, token_file=None,
+                   token: str | None = None) -> None:
+    """발급을 되돌린다 — 계획을 `planned` 로 돌리고 claim 파일을 지운다.
+
+    ★ 50차 P0 — 삭제를 claim 임계 구역 **안**에서 한다 (정본 순서 claim →
+      원장). 49차는 lock 밖에서 지웠으므로 늦은 `phase_done()` 이 파일을
+      되살릴 수 있었다.
+
+    ★ 51차 P0-L2 — 쓰기 전에 살아 있는 attempt 를 다시 본다 (위).
+
+    ★ 51차 P0-L3 — **두 쓰기의 순서를 뒤집었다.** 50차는 claim 을 먼저 지우고
+      원장 전이를 나중에 했다. 그 사이에 죽으면 claim 은 없고 계획은 `running`
+      이다: 새 발급은 `planned` 가 아니라서, 재개는 claim 이 없어서, 되돌림은
+      claim 이 없어서 전부 거부된다 — 공개 API 어느 것으로도 회수할 수 없다
+      (리뷰어 실측 `child_rc=50`).
+
+      원장을 먼저 옮기면 중간 상태는 "claim 이 남았는데 계획은 `planned`" 이고,
+      그것은 같은 소유 증명으로 **그냥 다시 되돌리면 되는** 상태다. 두 lock 을
+      `LOCK_ORDER` 대로 중첩해 쥐므로 그 사이에 다른 주체가 끼어들지도 않는다.
+    """
+    import yaml
+
+    path = canonical_ledger(ledger)
+    # ★ 54차 P0-2 — token 을 지우는 경로이므로 **attempt_path 부터** 잡는다.
+    #   53차는 claim lock 만 잡았고, 비교와 `unlink` 사이에 다른 다리의 정상
+    #   발급이 끼어들어 그 credential 이 지워졌다 (리뷰어 실측).
+    with _lifecycle_locks(claim.leg_id, token_file, claim.path.parent):
+        if not claim.path.is_file():
+            raise PreserveError(
+                "plan",
+                f"{claim.leg_id!r} 의 claim 이 이미 닫혔다 ({claim.path}) — "
+                "되돌릴 발급이 없다")
+        _assert_live_attempt(json.loads(claim.path.read_text(encoding="utf-8")),
+                             claim, "발급 되돌림")
+        with _ledger_lock(path):                            # LOCK_ORDER: ledger
+            doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+            row = next((e for e in doc.get("planned") or []
+                        if e.get("leg_id") == claim.leg_id), None)
+            if row is not None and row.get("status") == "running":
+                row["status"] = "planned"
+                _atomic_write_text(path, yaml.safe_dump(
+                    doc, allow_unicode=True, sort_keys=False))
+        # 원장이 `planned` 로 굳은 **뒤에만** claim 을 놓는다.
+        claim.path.unlink(missing_ok=True)
+        # ★ 52차 P0-1 — 소유 증명 삭제도 **이 lock 안**이다. 발급도 같은 lock 을
+        #   잡으므로, 비교와 삭제 사이에 새 발급이 들어올 수 없다.
+        if token_file is not None and token is not None:
+            _unlink_token_generation(token_file, token)
+
+
+def precheck_leg_run(leg_id: str, source_digest: str, ledger=None) -> dict:
+    """실행 **전** 사전 점검 — 새 발급인가, 내가 가진 재개인가 (49차 P0-3).
+
+    48차 `run.sh` 사전검사는 `assert_planned_leg()` 만 불렀고 그것은 `planned`
+    만 통과시켰다. 그래서 grid 가 계획을 `running` 으로 옮긴 뒤 **같은
+    pipeline 의** fit 사전검사가 자기 자신 때문에 거부됐다. 사전검사가 두
+    경우를 구분하지 못하면 사전검사가 곧 pipeline 을 막는 장치가 된다.
+
+    아무 것도 바꾸지 않는다 — 발급은 실제 계산 직전
+    (`assert_run_is_authorized()`)에서만 일어난다.
+    """
+    path = _claim_path(leg_id, claims_root_for_ledger(ledger))
+    if path.is_file():
+        # ★ 57차 P0-1 — 소유 증명의 자리를 lifecycle 이 정한다. 그것이 없으면
+        #   이 claim 은 이 pipeline 의 것이 아니다 (또는 발급이 반쯤 죽었다).
+        token_file = attempt_path_for(leg_id, ledger=ledger)
+        if not token_file.is_file():
+            raise PreserveError(
+                "plan",
+                f"{leg_id!r} 은 이미 실행 중이다 (claim: {path}) — 두 번째 "
+                f"실행을 시작할 수 없다. 이 실행의 소유 증명이 {token_file} 에 "
+                "없다: 다른 pipeline 의 실행이거나 발급이 중단된 것이다")
+        claim = resume_claim(leg_id, token=read_token_file(token_file, leg_id),
+                             ledger=ledger)
+        if claim.source_digest != source_digest:
+            raise PreserveError(
+                "plan",
+                f"{leg_id!r} 의 claim 이 다른 code identity 로 열렸다 "
+                f"({claim.source_digest} ≠ {source_digest}) — 실행 도중 "
+                "RUN_SCOPE 가 바뀌었다")
+        return {"kind": "resume", "leg_id": leg_id,
+                "cohort_id": claim.cohort_id, "attempt_id": claim.attempt_id,
+                "phases_done": list(claim.phases_done())}
+    e = assert_planned_leg(leg_id, source_digest, ledger=ledger)
+    return {"kind": "new", "leg_id": leg_id, "cohort_id": e["cohort_id"],
+            "recorded_on": e["recorded_on"], "phases_done": []}
+
+
+#: 실행 기록의 보존 상태. **검증한 만큼만** 적는다 (48차 P0-4).
+#:
+#:   full_bundle          — clone 한 사람이 검증할 수 있는 묶음이 **실재한다**.
+#:                          `_verify_declared_bundle()` 이 디스크에서 확인한
+#:                          경우에만 붙는다.
+#:   recorded_projection  — 투영·요약은 남았고 원자료 묶음은 없다.
+#:   preservation_pending — 계산은 끝났고 보존 묶음을 **아직 만들지 않았다.**
+#:   missing              — 원자료가 있었는데 잃었다.
+#:
+#: ★ 49차 P0-4 — 48차의 `no_bundle` 은 계약 §8 축 enum 에 **없는 값**이었다.
+#:   즉 production `finalize_leg()` 이 원장에 쓰는 값을 이 저장소 자신의
+#:   lint(`test_registry_rejects_impossible_status_tuples`)가 거부한다. 어휘의
+#:   정본은 계약 하나이고, runtime 은 그 부분집합이어야 한다
+#:   (`test_the_runtime_preservation_enum_is_inside_the_contract`).
+PRESERVATION_STATUS = ("full_bundle", "recorded_projection",
+                       "preservation_pending", "missing")
+
+#: 아직 묶지 않은 다리의 나머지 두 축. **바닥값**이며 올리는 것은 사람이
+#: 증거를 보고 한다 (계약 §8 제약이 `canonical` 에 `full_bundle +
+#: current_validated` 를 요구하므로 여기서 올릴 방법도 없다).
+PENDING_VALIDATION_STATUS = "unvalidated"
+PENDING_INFERENCE_ROLE = "diagnostic"
+
+#: 묶음 주장이 담아야 할 필드. 하나라도 있으면 **전부** 있어야 하고, 전부
+#: 디스크에서 다시 계산해 맞아야 한다.
+BUNDLE_EVIDENCE_KEYS = ("bundle_uri", "bundle_files", "payload_bytes",
+                        "payload_index", "payload_index_sha256")
+
+
+LIFECYCLE_OWNED_EVIDENCE_KEYS = ("phases", "attempt_id", "run_spec_digest",
+                                  "attempt_verifier", "verifier_origin")
+
+
+def _assert_evidence_domain(evidence: dict) -> None:
+    """caller evidence 의 **도메인을 닫는다** (58차 L10).
+
+    이 다섯은 lifecycle 이 정하는 값이다. 그 중 셋은 지금 나중에 덮어쓰므로
+    caller 가 줘도 무해해 **보인다** — 그러나 그것은 "덮어쓰는 순서" 에 기댄
+    안전이고, 순서가 바뀌면 조용히 뚫린다. 특히 `verifier_origin` 은 일부러
+    약한 migration 경로를 표시하는 값이라(57차 P0-5), caller 가 쓸 수 있으면
+    정상 기록과 migration 기록이 **유일한 provenance 표시로 구분되지 않는다.**
+
+    한 개만 막지 않고 **전부** 막는다. 하나만 막으면 나머지가 열려 있고,
+    "지금은 무해하다" 는 다음 라운드의 결함이다.
+    """
+    bad = [k for k in LIFECYCLE_OWNED_EVIDENCE_KEYS if k in (evidence or {})]
+    if bad:
+        raise PreserveError(
+            "plan",
+            f"evidence 에 lifecycle 소유 키가 들어 있다: {bad} — 이 값들은 "
+            "호출자가 정할 수 없다 (원장에 봉인되는 provenance 다)")
+
+
+def _repo_relative_or_refuse(root: Path, raw, what: str) -> Path:
+    """저장소 **안**에 담긴 정규 상대경로만 통과시킨다 (58차 L7).
+
+    `root / raw` 는 `raw` 가 absolute 면 `root` 를 **버린다** — pathlib 의
+    정의다. 그래서 clone 밖 디렉터리가 개수·바이트·해시만 맞으면
+    `full_bundle` 로 기록됐다. clean clone 에서 회수할 수 없는 증거를
+    "clone 으로 검증 가능한 묶음" 이라고 부르는 것이므로 거짓 양성이다.
+
+    absolute 하나만 막지 않는다 — `..` 로 같은 자리에 도달하기 때문이다.
+    **담김(containment)을 결과로 확인한다.**
+    """
+    txt = str(raw or "")
+    if not txt:
+        raise PreserveError("plan", f"{what} 가 비어 있다")
+    q = Path(txt)
+    if q.is_absolute():
+        raise PreserveError(
+            "plan",
+            f"{what} 가 absolute 경로다: {txt!r} — 저장소 안 상대경로여야 한다 "
+            "(clone 에서 회수할 수 없는 자리를 가리킨다)")
+    got = (root / q).resolve()
+    base = root.resolve()
+    if got != base and base not in got.parents:
+        raise PreserveError(
+            "plan",
+            f"{what} 가 저장소 밖을 가리킨다: {txt!r} → {got}")
+    return got
+
+
+def _bundle_root(evidence: dict, repo_root=None) -> Path:
+    """묶음 뿌리를 **한 자리에서** 해석한다 (60차 P0-9 의 부수 정리).
+
+    `bundle_content_id()` 를 만들면서 같은 해석을 두 번 적었더니 그 규칙을
+    겨누던 변이 축(`bundle-uri-must-be-repo-relative-g58`)의 원상이 **두 자리**
+    가 됐고, 등록부가 "합집합을 셀 수 없다" 로 멈췄다. 규칙이 한 자리에 있지
+    않으면 남은 중복이 곧 다음 반례다 (55차 P0-1 이 같은 말을 했다).
+    """
+    root = Path(repo_root or Path(__file__).resolve().parents[1])
+    return _repo_relative_or_refuse(root, evidence["bundle_uri"], "bundle_uri")
+
+
+def _verify_declared_bundle(evidence: dict, repo_root=None) -> list:
+    """선언한 묶음을 **디스크에서** 확인한다 (48차 P0-4).
+
+    47차 `finalize_leg()` 은 caller 의 dict 를 그대로 옮겨 적고
+    `preservation_status: full_bundle` 을 붙였다. 그 상태의 뜻은 "clone 한
+    사람이 이 결과를 검증할 수 있는 묶음이 실재한다"(계약 §8)인데 디스크를
+    보지 않았다 — 아무 dict 나 주면 원장에 완전 묶음이 생겼다.
+
+    원장은 이 저장소에서 **증거의 정본**이다. 거기에 검증되지 않은 주장을 쓰는
+    함수는 증거를 만드는 것이 아니라 증거를 오염시킨다.
+
+    회귀(`test_full_bundle_claims_are_backed_by_a_real_bundle`)가 원장 전체에
+    대고 같은 검사를 한다 — 여기서 막지 않으면 그 회귀가 **나중에** 빨개진다.
+    """
+    root = Path(repo_root or Path(__file__).resolve().parents[1])
+    bad: list = []
+    present = [k for k in BUNDLE_EVIDENCE_KEYS if k in evidence]
+    if not present:
+        return bad                       # 묶음을 주장하지 않았다 — 그것도 사실이다
+    missing = [k for k in BUNDLE_EVIDENCE_KEYS if k not in evidence]
+    if missing:
+        return [f"묶음 주장이 불완전하다 — 없는 필드 {missing}"]
+
+    d = _repo_relative_or_refuse(root, evidence["bundle_uri"], "bundle_uri")
+    if not d.is_dir():
+        return [f"묶음 경로가 없다: {evidence['bundle_uri']}"]
+    # ★ 59차 M8 — **구성원을 걸을 때 이름을 따라가지 않는다.**
+    #
+    #   58차는 `x.is_file()` 이었고 그것은 symlink 를 따라간다. 그래서 저장소
+    #   밖 파일을 가리키는 link 하나가 개수에도 바이트 합계에도 들어갔다 —
+    #   `full_bundle` 의 뜻은 "clone 한 사람이 이 결과를 검증할 수 있는 묶음이
+    #   실재한다"(계약 §8)인데, clone 에는 그 바이트가 없다.
+    #
+    #   58차 L7 이 `bundle_uri` **자신**에 대해 고친 것과 같은 흡수다. 그때
+    #   뿌리만 고치고 구성원은 안 고쳤다. 여기서는 `lstat` 으로 보고, 일반
+    #   파일이 아닌 구성원(symlink·socket·device…)은 **거부**한다 — 묶음은
+    #   바이트의 집합이지 이름의 집합이 아니다.
+    # ★ 60차 P0-7 — **좌표로 담김을 묻는다.** `lstat` 는 symlink 만 구별하고
+    #   bind mount 는 평범한 inode 로 본다 (리뷰어 실측: 밖의 파일이 개수·바이트
+    #   에 그대로 들어가고 `verifier_errors:[]`). `Path.resolve()` 도 못 잡는다 —
+    #   그것은 이 namespace 안의 **철자**만 증명한다.
+    #
+    #   묻는 것: 이 구성원이 묶음 뿌리와 **같은 mount** 에 있는가. 다른 mount 면
+    #   그 바이트는 이 tree 의 것이 아니고, clone 에는 없다.
+    try:
+        root_mnt = _kernel_mount_id(d)
+    except SystemExit as exc:                               # pragma: no cover
+        return [f"묶음 뿌리의 mount 를 확정할 수 없다: {exc}"]
+    files, member_bad = [], []
+    for x in sorted(d.rglob("*")):
+        try:
+            st = os.stat(x, follow_symlinks=False)
+        except OSError as exc:                              # pragma: no cover
+            member_bad.append(f"묶음 구성원을 볼 수 없다: {x} ({exc})")
+            continue
+        if not stat.S_ISLNK(st.st_mode):
+            try:
+                here_mnt = _kernel_mount_id(x)
+            except SystemExit as exc:                       # pragma: no cover
+                member_bad.append(f"구성원의 mount 를 확정할 수 없다: {x} ({exc})")
+                continue
+            if here_mnt != root_mnt:
+                member_bad.append(
+                    f"묶음 구성원이 **다른 mount** 에 있다: "
+                    f"{x.relative_to(d).as_posix()} (mount {here_mnt} ≠ 뿌리 "
+                    f"{root_mnt}) — bind 로 보이게 한 바이트는 이 tree 의 것이 "
+                    "아니고 clone 에는 없다 (60차 P0-7)")
+                continue
+        if stat.S_ISDIR(st.st_mode):
+            continue
+        if stat.S_ISLNK(st.st_mode):
+            member_bad.append(
+                f"묶음 구성원이 symlink 다: {x.relative_to(d).as_posix()} → "
+                f"{os.readlink(x)!r} — 이름을 따라가면 clone 에 없는 바이트를 "
+                "묶음에 셀 수 있다 (59차 M8)")
+            continue
+        if not stat.S_ISREG(st.st_mode):
+            member_bad.append(
+                f"묶음 구성원이 일반 파일이 아니다: "
+                f"{x.relative_to(d).as_posix()} (mode {st.st_mode:o})")
+            continue
+        files.append((x, st))
+    if member_bad:
+        return member_bad                # 개수·바이트를 세기 전에 멈춘다
+    if len(files) != evidence["bundle_files"]:
+        bad.append(f"묶음 파일 수 {len(files)} ≠ 선언 {evidence['bundle_files']}")
+    nbytes = sum(st.st_size for _x, st in files)
+    if nbytes != evidence["payload_bytes"]:
+        bad.append(f"묶음 바이트 {nbytes} ≠ 선언 {evidence['payload_bytes']}")
+    idx = _repo_relative_or_refuse(root, evidence["payload_index"],
+                                   "payload_index")
+    if not idx.is_file():
+        bad.append(f"payload index 가 없다: {evidence['payload_index']}")
+        return bad
+    got = hashlib.sha256(idx.read_bytes()).hexdigest()
+    if got != evidence["payload_index_sha256"]:
+        bad.append(f"payload index sha {got[:16]} ≠ 선언 "
+                   f"{str(evidence['payload_index_sha256'])[:16]}")
+    # ★ 60차 P0-8 — **index 는 묶음의 구성원이어야 한다.** 59차까지는 저장소
+    #   안이기만 하면 됐고, 그래서 gitignore 된 `results/` 밑을 가리켜도
+    #   `full_bundle` 이 됐다. 그러면 묶음만 받은 사람에게는 그것을 인증한다는
+    #   목록이 **아예 없다** — `full_bundle` 의 뜻(계약 §8)이 성립하지 않는다.
+    member_paths = {x for x, _st in files}
+    if idx not in member_paths:
+        bad.append(
+            f"payload index 가 묶음 안에 없다: {evidence['payload_index']} — "
+            "묶음만 받은 사람에게는 그것을 인증한다는 목록이 없다 (60차 P0-8)")
+        return bad
+    # ★ 60차 P0-8 — 그리고 index 가 이름한 것과 **실제로 걸은 것**이 양방향으로
+    #   같아야 한다. 한쪽만 보면 "index 에 있는데 없는 파일" 이나 "묶음에 있는데
+    #   index 가 모르는 파일" 이 통과한다 — 그 둘이 "완전 묶음" 이라는 말이
+    #   무너지는 두 방향이다.
+    # ★ 70차 E3 — index 를 **해석할 수 없으면 거부**한다. 60차는 `None`("이
+    #   형식은 구성원을 열거하지 않는다")으로 양방향 대조를 건너뛰었고, 실물
+    #   `payload_sha256.yaml`(YAML `경로: sha256`)이 정확히 그 경로로 빠졌다 —
+    #   production 묶음에서 index↔묶음 대조는 한 번도 돈 적이 없었다 (리뷰어
+    #   E3: "알 수 없는 index 형식을 완전 coverage 로 간주하지 말아야 한다").
+    declared, why = _declared_index(idx)
+    if declared is None:
+        bad.append(
+            f"payload index 를 해석할 수 없다 ({evidence['payload_index']}): {why} "
+            "— 구성원을 열거하지 않는 index 는 `full_bundle` 의 근거가 아니다 "
+            "(70차 E3, fail-closed)")
+        return bad
+    walked = {x.relative_to(d).as_posix() for x in member_paths if x != idx}
+    only_walk = sorted(walked - set(declared))
+    only_index = sorted(set(declared) - walked)
+    if only_walk or only_index:
+        bad.append(
+            f"index 와 실제 묶음이 다르다 — index 가 모르는 구성원 "
+            f"{only_walk}, 없는데 이름한 것 {only_index} (60차 P0-8)")
+        return bad
+    # ★ 70차 E3 — index 가 sha 를 적었으면 **바이트도** 대조한다. 개수·합계
+    #   바이트·index 자신의 sha 만으로는 같은 길이의 다른 바이트를 못 잡는다
+    #   (60차 P0-9 리뷰어 실측). `make_receipt.py` 가 `archive_bundle.check` 로
+    #   같은 대조를 하지만 그것은 영수증 경로이고, 원장에 `full_bundle` 을 쓰는
+    #   이 자리가 스스로 봐야 한다.
+    mismatched = []
+    for rel, want in sorted(declared.items()):
+        if want is None:
+            continue                       # 목록형 index — 이름만 열거한다
+        got = hashlib.sha256((d / rel).read_bytes()).hexdigest()
+        if not secrets.compare_digest(got, want):
+            mismatched.append(f"{rel}: {got[:16]} ≠ index {want[:16]}")
+    if mismatched:
+        bad.append("묶음 구성원의 바이트가 index 와 다르다 (70차 E3): "
+                   + "; ".join(mismatched[:6]))
+    return bad
+
+
+def _declared_index(idx: Path) -> tuple[dict | None, str | None]:
+    """payload index 가 이름한 구성원 → 선언 sha (없으면 `None`) (70차 E3).
+
+    받는 형식 셋 — 그 밖은 `(None, 이유)` 이고 호출자는 **거부**한다:
+      · mapping `{상대경로: hex64}` — `tools/archive_bundle.py` 의
+        `payload_sha256.yaml` (YAML; JSON 도 YAML 이므로 함께 읽힌다).
+      · `{"members"|"files"|"payload": [상대경로, …]}` · `[상대경로, …]` — 이름만
+        열거하는 목록형 (60차 시험 fixture 형식). sha 는 `None`.
+    60차 `_declared_index_members()` 는 JSON 만 읽고 나머지를 `None` 으로
+    돌려줬다 — 그 `None` 이 "대조 생략" 이었다. 이제 `None` 은 거부 사유다.
+    """
+    import yaml
+    try:
+        raw = idx.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as exc:
+        return None, f"읽을 수 없다: {exc}"
+    try:
+        body = yaml.safe_load(raw)
+    except yaml.YAMLError as exc:
+        return None, f"YAML/JSON 이 아니다: {str(exc).splitlines()[0]}"
+    if isinstance(body, dict) and body:
+        if all(isinstance(k, str) and k and _is_hex64(v) for k, v in body.items()):
+            return dict(body), None
+        for key in ("members", "files", "payload"):
+            v = body.get(key)
+            if isinstance(v, list) and v and all(isinstance(x, str) and x for x in v):
+                return {x: None for x in v}, None
+        return None, f"mapping 인데 `경로: hex64` 도 목록형 키({'members'!r}·{'files'!r}·{'payload'!r})도 아니다"
+    if isinstance(body, list) and body and all(isinstance(x, str) and x for x in body):
+        return {x: None for x in body}, None
+    return None, (f"구성원을 열거하지 않는다 ({type(body).__name__}"
+                  f"{' 비어 있음' if not body else ''})")
+
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# ★ 70차 E3 — 검증 영수증(`docs/22p_gap/make_receipt.py`)의 **typed 소비**
+# ═══════════════════════════════════════════════════════════════════════════
+#: 영수증의 닫힌 key 집합 — `make_receipt.py` 가 쓰는 그대로. 남거나 모자라면 거부.
+VERIFICATION_RECEIPT_KEYS = frozenset({"schema_version", "_주의", "core_sha256", "core", "stamp"})
+VERIFICATION_RECEIPT_CORE_KEYS = frozenset(
+    {"leg_id", "bundle", "restore", "validation", "identity", "outputs", "outputs_agree"})
+VERIFICATION_RECEIPT_BUNDLE_KEYS = frozenset(
+    {"uri", "files", "bytes", "payload_index", "payload_index_sha256",
+     "member_rehash", "member_mismatches", "fits_sha256"})
+VERIFICATION_RECEIPT_RESTORE_KEYS = frozenset(
+    {"mode", "command", "files_written", "run_dir_relative", "conflicts"})
+VERIFICATION_RECEIPT_VALIDATION_KEYS = frozenset(
+    {"validator", "ok", "fail", "n_checks", "checks"})
+VERIFICATION_RECEIPT_IDENTITY_KEYS = frozenset(
+    {"validator_source_digest", "src_io_sha256", "src_scoring_sha256",
+     "archive_bundle_sha256", "make_receipt_sha256", "row_projection_sha256",
+     "row_projection_compute_sha256"})
+VERIFICATION_RECEIPT_SCHEMA_VERSION = 2
+#: ★ 71차 E3-R — 산출 항목도 **역할별 닫힌 키 집합**이다 (`make_receipt._score_manifest` 가 쓰는 그대로).
+#:   70차 초판은 "비어 있지 않은 semantic 문자열·canonicalizer·rescored 역할 존재·outputs_agree=True" 만 봤고,
+#:   그래서 생산자(`_outputs_agree`)가 거부하는 영수증 — 짝 없음 · 두 digest 불일치 · source fits 다름/없음 ·
+#:   다른 복원 자리 · 비hex — 를 소비자가 받았다 (리뷰어 R04~R10 실측).
+VERIFICATION_RECEIPT_OUTPUT_KEYS = {
+    "rescored_summary": frozenset(
+        {"role", "produced_from", "source_file_sha256", "relative_path", "byte_size", "file_sha256",
+         "n_rows", "semantic_schema", "canonicalizer", "semantic_view_drops", "semantic_sha256"}),
+    "sealed_summary": frozenset(
+        {"role", "relative_path", "byte_size", "file_sha256", "semantic_schema", "canonicalizer",
+         "semantic_view_drops", "semantic_sha256"}),
+}
+_HEX16 = re.compile(r"\A[0-9a-f]{16}\Z")
+VERIFICATION_RECEIPT_GENERATOR = "docs/22p_gap/make_receipt.py"
+
+
+def _receipt_core_sha256(core: dict) -> str:
+    """`make_receipt.py::_dump` 와 **같은 바이트**로 core 를 굳혀 해시한다."""
+    import yaml
+    return hashlib.sha256(
+        yaml.safe_dump(core, allow_unicode=True, sort_keys=False, width=100)
+        .encode("utf-8")).hexdigest()
+
+
+def read_verification_receipt(path, leg_id: str, *, repo_root=None) -> dict:
+    """검증 영수증을 **닫힌 schema 로** 읽어 이 다리의 것인지 확인한다 (70차 E3).
+
+    돌려주는 것은 `core` (검증된 dict). 어긋나면 `PreserveError` — 부분 성공은
+    없다. 보는 것:
+      · 파일이 저장소 안의 정규 상대경로인가 (`_repo_relative_or_refuse`)
+      · 최상위·core·bundle·restore·validation·identity 의 key 집합이 정확히 닫혔는가
+      · `core_sha256` 이 core 바이트에서 다시 계산한 값과 같은가 (자기 일관성)
+      · `core.leg_id == leg_id`
+      · `validation.ok is True` · `fail == []` · `n_checks == len(checks)` · 검사 이름 정렬 unique
+      · `restore.mode == "empty_root"` · `conflicts == 0` · `bundle.member_mismatches == 0`
+      · `outputs` 에 `rescored_summary` 역할이 있고 모두 semantic digest 를 가졌으며 `outputs_agree is True`
+      · `identity.validator_source_digest` 가 **지금** `source_digest()` 와 같은가
+        (다른 검증기의 영수증은 "현행 검증" 이 아니다 — 낡은 영수증으로 원장을 올리지 않는다)
+    """
+    import yaml
+    from src.io import source_digest as _sd
+
+    root = Path(repo_root or REPO_ROOT)
+    rp = _repo_relative_or_refuse(root, path, "verification_receipt")
+    if not rp.is_file():
+        raise PreserveError("plan", f"검증 영수증이 없다: {path}")
+
+    def _bad(why: str) -> PreserveError:
+        return PreserveError(
+            "plan", f"{leg_id!r} 의 검증 영수증({path})이 typed schema 밖이다: {why} "
+                    "— 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)")
+
+    try:
+        rec = yaml.safe_load(rp.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, yaml.YAMLError) as exc:
+        raise _bad(f"읽을 수 없다: {exc}") from exc
+    if not isinstance(rec, dict) or frozenset(rec) != VERIFICATION_RECEIPT_KEYS:
+        raise _bad(f"최상위 key 집합 {sorted(rec) if isinstance(rec, dict) else type(rec).__name__}")
+    if rec["schema_version"] != VERIFICATION_RECEIPT_SCHEMA_VERSION:
+        raise _bad(f"schema_version={rec['schema_version']!r}")
+    core = rec["core"]
+    if not isinstance(core, dict) or frozenset(core) != VERIFICATION_RECEIPT_CORE_KEYS:
+        raise _bad(f"core key 집합 {sorted(core) if isinstance(core, dict) else type(core).__name__}")
+    for name, want in (("bundle", VERIFICATION_RECEIPT_BUNDLE_KEYS),
+                       ("restore", VERIFICATION_RECEIPT_RESTORE_KEYS),
+                       ("validation", VERIFICATION_RECEIPT_VALIDATION_KEYS),
+                       ("identity", VERIFICATION_RECEIPT_IDENTITY_KEYS)):
+        got = core[name]
+        if not isinstance(got, dict) or frozenset(got) != want:
+            raise _bad(f"core.{name} key 집합 {sorted(got) if isinstance(got, dict) else type(got).__name__}")
+    if not (isinstance(rec["core_sha256"], str) and _is_hex64(rec["core_sha256"])):
+        raise _bad("core_sha256 이 hex64 가 아니다")
+    if not secrets.compare_digest(_receipt_core_sha256(core), rec["core_sha256"]):
+        raise _bad("core_sha256 이 core 바이트와 다르다")
+    if core["leg_id"] != leg_id:
+        raise _bad(f"다른 다리의 영수증이다 ({core['leg_id']!r})")
+    v = core["validation"]
+    if v["ok"] is not True or v["fail"] != []:
+        raise _bad(f"검증이 통과를 말하지 않는다 (ok={v['ok']!r}, fail={v['fail']!r}) — "
+                   "실패·부분 상태는 `full_bundle` 이 아니다")
+    if not isinstance(v["checks"], dict) or not v["checks"] \
+            or type(v["n_checks"]) is not int or v["n_checks"] != len(v["checks"]):
+        raise _bad(f"n_checks={v['n_checks']!r} 가 checks({type(v['checks']).__name__}) 와 안 맞는다")
+    r = core["restore"]
+    if r["mode"] != "empty_root" or r["conflicts"] != 0:
+        raise _bad(f"empty-root 복원 기록이 아니다 (mode={r['mode']!r}, conflicts={r['conflicts']!r})")
+    b = core["bundle"]
+    if b["member_mismatches"] != 0:
+        raise _bad(f"member 불일치 {b['member_mismatches']!r} 를 기록했다")
+    for k in ("files", "bytes"):
+        if type(b[k]) is not int or b[k] <= 0:
+            raise _bad(f"bundle.{k}={b[k]!r}")
+    for k in ("payload_index_sha256", "fits_sha256"):
+        if not _is_hex64(b[k]):
+            raise _bad(f"bundle.{k} 가 hex64 가 아니다")
+    # ★ 71차 E3-R — `outputs_agree` 는 **주장**이다. 주장을 읽지 않고 짝·일치·결속을 다시 계산한다.
+    try:
+        pair = _receipt_output_pair(core)
+    except PreserveError as exc:
+        raise _bad(str(exc)) from exc
+    if not secrets.compare_digest(pair["rescored_summary"]["source_file_sha256"], b["fits_sha256"]):
+        raise _bad("rescored_summary.source_file_sha256 ≠ bundle.fits_sha256 — 재채점이 읽은 fits 가 이 묶음의 "
+                   "fits 가 아니므로 그 재채점은 이 묶음의 검증이 아니다 (R06)")
+    if core["outputs_agree"] is not True:
+        raise _bad(f"outputs_agree={core['outputs_agree']!r}")
+    ident = core["identity"]
+    for k, v in ident.items():
+        if not (isinstance(v, str) and _HEX16.match(v)):
+            raise _bad(f"identity.{k}={v!r} 는 hex16 이 아니다 (R10)")
+    now = _sd()
+    if ident["validator_source_digest"] != now:
+        raise _bad(f"영수증이 낡았다 — validator {ident['validator_source_digest']!r} ≠ 현행 "
+                   f"{now!r}. `python3 {VERIFICATION_RECEIPT_GENERATOR} {leg_id}` 로 다시 만들라")
+    return core
+
+
+def _receipt_output_pair(core: dict) -> dict:
+    """영수증 `outputs` 를 생산 계약대로 읽는다 — 역할마다 정확히 하나, 닫힌 키, hex64, **실제 일치** (71차 E3-R).
+
+    `make_receipt._outputs_agree` 와 같은 판단을 소비 쪽에서 다시 한다: 같은 `semantic_schema`·`canonicalizer`
+    의 산출은 둘 이상이어야 하고(짝이 없으면 "일치" 가 아니라 **비교 불가**, 27차 P1-6) 그 semantic digest 는
+    전부 같아야 한다. 돌려주는 것은 `{role: 산출}`.
+    """
+    outs = core.get("outputs")
+    if not isinstance(outs, list) or not outs:
+        raise PreserveError("plan", "outputs 가 비었다")
+    by_role: dict = {}
+    for o in outs:
+        if not isinstance(o, dict):
+            raise PreserveError("plan", f"산출이 dict 가 아니다: {o!r}")
+        role = o.get("role")
+        want = VERIFICATION_RECEIPT_OUTPUT_KEYS.get(role)
+        if want is None:
+            raise PreserveError("plan", f"알 수 없는 산출 역할 {role!r} — {sorted(VERIFICATION_RECEIPT_OUTPUT_KEYS)} 만 받는다")
+        if frozenset(o) != want:
+            raise PreserveError("plan", f"산출 {role!r} 의 키 집합이 닫혀 있지 않다: 남음 {sorted(set(o) - want)} · "
+                                        f"모자람 {sorted(want - set(o))}")
+        if role in by_role:
+            raise PreserveError("plan", f"산출 역할 {role!r} 이 둘이다 — 역할마다 하나 (짝은 sealed_summary 다)")
+        for k in ("semantic_sha256", "file_sha256") + (("source_file_sha256",) if role == "rescored_summary" else ()):
+            if not _is_hex64(o[k]):
+                raise PreserveError("plan", f"산출 {role!r}.{k} 가 hex64 가 아니다 (R08)")
+        for k in ("semantic_schema", "canonicalizer", "relative_path"):
+            if not _nonempty_str(o[k]):
+                raise PreserveError("plan", f"산출 {role!r}.{k} 가 비었다")
+        if type(o["byte_size"]) is not int or o["byte_size"] <= 0:
+            raise PreserveError("plan", f"산출 {role!r}.byte_size={o['byte_size']!r}")
+        by_role[role] = o
+    missing = sorted(set(VERIFICATION_RECEIPT_OUTPUT_KEYS) - set(by_role))
+    if missing:
+        raise PreserveError("plan", f"비교 상대가 없다 — 산출 {missing} 이 없으면 '일치' 가 아니라 비교 불가다 (R04)")
+    groups: dict = {}
+    for o in by_role.values():
+        groups.setdefault((o["semantic_schema"], o["canonicalizer"]), []).append(o["semantic_sha256"])
+    lonely = [k for k, v in groups.items() if len(v) < 2]
+    if lonely:
+        raise PreserveError("plan", f"같은 schema·canonicalizer 의 짝이 없다: {lonely} — 비교 불가 (R04)")
+    split = [k for k, v in groups.items() if len(set(v)) > 1]
+    if split:
+        raise PreserveError("plan", f"같은 schema·canonicalizer 인데 semantic digest 가 갈렸다: {split} — "
+                                    "`outputs_agree` 주장과 무관하게 불일치다 (R05)")
+    return by_role
+
+
+def _assert_receipt_bound_to_bundle(core: dict, bundle_dir: Path, leg_id: str) -> str:
+    """영수증이 **이 묶음·이 실행**의 것인가 — 묶음에 있는 값으로 대조한다 (71차 E3-R R07).
+
+    · 묶음의 복원 지도(`restore_map.yaml`, `tools/archive_bundle.py` 가 쓴다)의 `run_dir` 와 영수증
+      `restore.run_dir_relative` 가 같아야 한다. 지도가 없으면 결속할 근거가 없다 — 거부.
+    · 영수증의 `sealed_summary` 가 말하는 파일 sha 가 묶음 구성원 `degeneracy_summary.yaml` 의 바이트와
+      같아야 한다 — 영수증이 이 묶음의 봉인 summary 를 대조했다는 뜻이 그것이다.
+    돌려주는 것: 결속된 run_dir (저장소 상대, posix).
+    """
+    import yaml
+    rm = bundle_dir / "restore_map.yaml"
+    if not rm.is_file():
+        raise PreserveError("plan", f"{leg_id!r} 묶음에 restore_map.yaml 이 없다 — 영수증의 복원 자리를 묶음과 결속할 수 없다 (R07)")
+    try:
+        meta = yaml.safe_load(rm.read_text(encoding="utf-8")) or {}
+    except (OSError, UnicodeDecodeError, yaml.YAMLError) as exc:
+        raise PreserveError("plan", f"{leg_id!r} 묶음의 restore_map.yaml 을 읽을 수 없다: {exc}") from exc
+    run_dir = meta.get("run_dir") if isinstance(meta, dict) else None
+    if not _nonempty_str(run_dir or ""):
+        raise PreserveError("plan", f"{leg_id!r} 묶음의 restore_map.yaml 에 run_dir 가 없다 (R07)")
+    want = Path(str(run_dir)).as_posix().strip("/")
+    got = Path(str(core["restore"]["run_dir_relative"])).as_posix().strip("/")
+    if got != want:
+        raise PreserveError("plan", f"{leg_id!r} 영수증의 복원 자리 restore.run_dir_relative={got!r} 가 묶음의 "
+                                    f"restore_map.run_dir={want!r} 와 다르다 — 다른 실행의 영수증이다 (R07)")
+    pair = _receipt_output_pair(core)
+    sealed = bundle_dir / "degeneracy_summary.yaml"
+    if not sealed.is_file():
+        raise PreserveError("plan", f"{leg_id!r} 묶음에 degeneracy_summary.yaml 이 없다 — 봉인 summary 대조를 결속할 수 없다")
+    got_sha = hashlib.sha256(sealed.read_bytes()).hexdigest()
+    if not secrets.compare_digest(got_sha, pair["sealed_summary"]["file_sha256"]):
+        raise PreserveError("plan", f"{leg_id!r} 영수증의 sealed_summary.file_sha256 {pair['sealed_summary']['file_sha256'][:16]} ≠ "
+                                    f"묶음 degeneracy_summary.yaml {got_sha[:16]} — 이 묶음의 봉인 summary 를 대조한 영수증이 아니다")
+    return want
+
+
+def _assert_ledger_run_bound(ev: dict, bound_run: str, leg_id: str, status) -> str:
+    """원장 실행 기록의 자리(`evidence.out`)가 영수증·묶음이 결속한 복원 자리와 같은가 (72차 E3-R 잔여).
+
+    **필수**다 — 없으면 결속할 수 없으므로 거부한다 ("미결속"). 71차판은 `if "out" in ev:` 로 필드가 없으면
+    대조를 건너뛰었고(리뷰어 A02), full_bundle 의 멱등 반환이 이 대조보다 앞에 있어 out 이 다르거나 없어도
+    성공을 돌려줬다(A04·A05). `LIFECYCLE_OWNED_EVIDENCE_KEYS` 에 `out` 이 없어 앞의 검사도 막지 않았다.
+    역사적 기록(소급 `retrospective` 다리 — 실물 `paired_fixed5_v4`)에는 `out` 이 없다: 그것은 읽을 수 있는
+    과거 자료이지 **현재 결속 성공**이 아니다. 소급해서 채우지 않고 여기서 미결속으로 거부한다.
+    """
+    led_out = ev.get("out")
+    if not (isinstance(led_out, str) and led_out.strip()):
+        raise PreserveError(
+            "plan", f"{leg_id!r} 원장 실행 기록(preservation_status={status!r})에 실행 자리 evidence.out 이 없다 — "
+                    f"영수증·묶음의 복원 자리 {bound_run!r} 와 결속할 근거가 없으므로 **미결속**으로 거부한다 "
+                    "(72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)")
+    led_out = Path(led_out).as_posix().strip("/")
+    if led_out != bound_run:
+        raise PreserveError(
+            "plan", f"{leg_id!r} 원장 evidence.out={led_out!r} 가 영수증·묶음의 복원 자리 {bound_run!r} 와 "
+                    "다르다 — 다른 실행 기록에 묶음을 붙이지 않는다 (R07)")
+    return led_out
+
+
+def attach_bundle_evidence(leg_id: str, receipt_path, ledger=None, *,
+                           repo_root=None) -> dict:
+    """finalize 된 다리(`preservation_pending`)를 **영수증을 소비해** `full_bundle` 로 올린다 (70차 E3).
+
+    순서 — 무엇 하나 어긋나면 원장에 아무것도 쓰지 않는다:
+      1. 영수증을 typed 로 읽는다 (`read_verification_receipt`).
+      2. 영수증이 말하는 묶음을 **디스크에서** 확인한다 (`_verify_declared_bundle`
+         — 개수·바이트·index sha·index↔묶음 양방향·구성원 sha).
+      3. 원장 lock 안에서: 이 다리의 실행 기록(`legs`)이 있어야 하고(finalize 먼저 —
+         `unperformed` 는 올릴 수 없다), 상태가 `preservation_pending` 이거나 같은
+         영수증으로 이미 `full_bundle` 이면 멱등, 다른 영수증이면 거부.
+      4. lifecycle 이 남긴 evidence(phases·attempt·…)는 **그대로** 두고 묶음·영수증·
+         검증기 identity 키만 더한다. `preservation_status=full_bundle`,
+         `validation_status=current_validated` (현행 검증기로 통과한 것만 여기 온다 —
+         계약 §8: current_validated ⇒ full_bundle). `inference_role` 은 건드리지
+         않는다 (사람이 증거를 보고 올린다).
+
+    `claim_roles`·`근거` 같은 사람의 문장은 쓰지 않는다 — docs-lint 가 그것을
+    따로 요구하므로, 이 함수 뒤에 사람이 적어야 lint 가 초록이 된다. 그 순서를
+    숨기지 않는다.
+    """
+    import yaml
+    check_id(leg_id)
+    root = Path(repo_root or REPO_ROOT)
+    core = read_verification_receipt(receipt_path, leg_id, repo_root=root)
+    b = core["bundle"]
+    bundle_ev = {
+        "bundle_uri": b["uri"],
+        "bundle_files": b["files"],
+        "payload_bytes": b["bytes"],
+        "payload_index": b["payload_index"],
+        "payload_index_sha256": b["payload_index_sha256"],
+    }
+    bad = _verify_declared_bundle(bundle_ev, repo_root=root)
+    if bad:
+        raise PreserveError(
+            "plan", f"{leg_id!r} 의 영수증이 말하는 묶음이 실물과 다르다 — 원장에 쓰지 않는다:\n  "
+                    + "\n  ".join(bad))
+    fits = _repo_relative_or_refuse(root, b["uri"], "bundle_uri") / "fits.parquet"
+    if not fits.is_file():
+        raise PreserveError("plan", f"{leg_id!r} 묶음에 fits.parquet 이 없다")
+    got_fits = hashlib.sha256(fits.read_bytes()).hexdigest()
+    if not secrets.compare_digest(got_fits, b["fits_sha256"]):
+        raise PreserveError(
+            "plan", f"{leg_id!r} 묶음의 fits.parquet sha {got_fits[:16]} ≠ 영수증 {b['fits_sha256'][:16]}")
+    # ★ 71차 E3-R — 영수증이 **이 묶음·이 실행**의 것인가 (복원 지도 · 봉인 summary 바이트)
+    bound_run = _assert_receipt_bound_to_bundle(core, _repo_relative_or_refuse(root, b["uri"], "bundle_uri"), leg_id)
+    rel_receipt = _repo_relative_or_refuse(root, receipt_path, "verification_receipt") \
+        .relative_to(root).as_posix()
+    core_sha = _receipt_core_sha256(core)
+
+    path = canonical_ledger(ledger)
+    with _ledger_lock(path):
+        doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        legs = [e for e in (doc.get("legs") or []) if e.get("leg_id") == leg_id]
+        if len(legs) != 1:
+            raise PreserveError(
+                "plan", f"{leg_id!r} 의 실행 기록이 원장에 {len(legs)}개다 — finalize 로 닫힌 다리 "
+                        "하나에만 묶음을 붙인다 (0 이면 `unperformed`: 먼저 실행·finalize 하라)")
+        leg = legs[0]
+        ev = dict(leg.get("evidence") or {})
+        status = leg.get("preservation_status")
+        # ★ 72차 E3-R 잔여 — 실행 자리 결속을 **멱등 반환보다 먼저, 필수로** 확인한다 (A02·A04·A05).
+        _assert_ledger_run_bound(ev, bound_run, leg_id, status)
+        if status == "full_bundle":
+            if ev.get("verification_receipt_core_sha256") == core_sha \
+                    and ev.get("verification_receipt") == rel_receipt:
+                return {"leg_id": leg_id, "preservation_status": "full_bundle",
+                        "idempotent": True, "receipt_core_sha256": core_sha}
+            raise PreserveError(
+                "plan", f"{leg_id!r} 은 이미 다른 영수증({str(ev.get('verification_receipt_core_sha256'))[:16]}…)"
+                        f"으로 `full_bundle` 이다 — 영수증을 갈아 끼우지 않는다 (사람이 원장을 본다)")
+        if status != "preservation_pending":
+            raise PreserveError(
+                "plan", f"{leg_id!r} 의 preservation_status={status!r} 에는 묶음을 붙이지 않는다 "
+                        "(`preservation_pending` 만 올린다; `recorded_projection`·`missing` 은 원자료가 없다)")
+        for k in LIFECYCLE_OWNED_EVIDENCE_KEYS:
+            if k not in ev:
+                raise PreserveError(
+                    "plan", f"{leg_id!r} 의 실행 기록에 lifecycle 소유 키 {k!r} 가 없다 — "
+                            "finalize 가 남긴 기록이 아니므로 그 위에 묶음을 붙이지 않는다")
+        # (실행 자리 결속은 위 `_assert_ledger_run_bound` — 71차의 `if "out" in ev:` 선택적 분기는 72차에 지웠다)
+        ev.update(bundle_ev)
+        ev.update({
+            "member_rehash_by": b["member_rehash"],
+            "fits_sha256": b["fits_sha256"],
+            "verification_receipt": rel_receipt,
+            "verification_receipt_core_sha256": core_sha,
+            "verification_receipt_generator": VERIFICATION_RECEIPT_GENERATOR,
+            "empty_root_restore": True,
+            "rescored_from_restored_fits": True,
+            "validator_identity": {
+                "source_digest": core["identity"]["validator_source_digest"],
+                "n_checks": core["validation"]["n_checks"],
+                "ok": True,
+            },
+        })
+        ev["bundle_content_id"] = bundle_content_id(ev, repo_root=root)
+        leg["evidence"] = ev
+        leg["preservation_status"] = "full_bundle"
+        leg["validation_status"] = "current_validated"
+        _atomic_write_text(path, yaml.safe_dump(doc, allow_unicode=True, sort_keys=False))
+    return {"leg_id": leg_id, "preservation_status": "full_bundle",
+            "validation_status": "current_validated", "idempotent": False,
+            "receipt_core_sha256": core_sha}
+
+
+def bundle_content_id(evidence: dict, repo_root=None) -> str:
+    """검증한 묶음의 **내용 주소** (60차 P0-9).
+
+    59차 M9 는 caller 의 dict 를 진입 시점에 정규 바이트로 굳혔다. 그런데 그
+    dict 가 **가리키는 묶음**은 안 굳혔다 — 리뷰어는 검증 직후·ledger commit
+    전에 member 하나를 같은 길이의 다른 바이트로 갈아 끼우고 그대로
+    `full_bundle` 을 받았다.
+
+    그래서 검증이 **무엇을 봤는지**를 값으로 만들어 봉인에 넣는다. 이름과
+    바이트를 함께 담으므로, 나중에 바뀐 사실이 기록 자체에서 드러난다.
+
+    **남는 한계**: 묶음이 mutable directory 인 한 "검증 → 봉인" 사이의 창 자체는
+    없어지지 않는다. 없애려면 묶음을 immutable content-addressed object 로 먼저
+    게시해야 하고, 그것은 이 라운드의 범위 밖이다 — 요청문에 적는다.
+    """
+    d = _bundle_root(evidence, repo_root)
+    parts = []
+    for x in sorted(d.rglob("*")):
+        st = os.stat(x, follow_symlinks=False)
+        if not stat.S_ISREG(st.st_mode):
+            continue
+        parts.append([x.relative_to(d).as_posix(),
+                      hashlib.sha256(x.read_bytes()).hexdigest()])
+    body = json.dumps({"kind": "bundle-content-id/v1", "members": parts},
+                      sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256(body.encode("utf-8")).hexdigest()
+
+
+#: ★ 57차 P0-5 — legacy migration 의 **버전 태그**. 원장의
+#: `evidence.verifier_origin` 에 남아 "이 기록은 어떻게 인증됐나" 를 나중에
+#: 물을 수 있게 한다. 정상 경로가 봉인한 것에는 이 필드가 없다 —
+#: 없음 = finalize 가 직접 봉인, 있음 = 사람이 넘긴 것.
+LEGACY_VERIFIER_ORIGIN = "legacy_migration_57"
+
+
+def migrate_legacy_finalized_leg(leg_id: str, token: str,
+                                 ledger=None) -> dict:
+    """56차 이전 durable state 를 **한 번 명시적으로** 넘긴다 (57차 P0-5).
+
+    대상은 정확히 이 모양이다: 원장 `executed` · claim 파일 없음 ·
+    `evidence.attempt_verifier` 없음. 56차가 post-commit crash 를 복구
+    가능하게 만들 때 쓴 인증 근거가 그 필드인데, 그 필드는 56차부터 생겼다.
+    그 이전에 같은 자리에서 죽은 다리는 인증할 근거가 원장에 없다.
+
+    **왜 자동으로 넘기지 않는가.** 근거가 없는 상태를 코드가 스스로 통과시키면
+    다리 이름만 아는 호출이 남의 실행을 닫는다 (48차 P0-3 이 막은 것과 같은
+    형태다). 그래서 별도 API 로 두고, 사람이 한 번 부른다.
+
+    **무엇으로 인증하는가.** 원장에 없으면 남는 근거는 **디스크의 소유 증명
+    파일**이다. 그 파일의 token 이 제시된 것과 같고, 그 파일이 가리키는
+    attempt 가 원장이 기록한 attempt 와 같아야 한다. 이 근거는 원장 봉인보다
+    약하다 — 같은 principal 이 그 파일을 만들 수 있기 때문이다 (계약
+    §13.3.4 의 전제 안이다). 약해진 만큼을 숨기지 않고
+    `evidence.verifier_origin` 에 적는다.
+    """
+    import yaml
+
+    check_id(leg_id)
+    if not _TOKEN_RE.match(str(token)):
+        raise PreserveError("plan", "소유 증명의 형식이 계약과 다르다")
+
+    claims_root = claims_root_for_ledger(ledger)
+    token_file = attempt_path_for(leg_id, ledger=ledger)
+    path = canonical_ledger(ledger)
+
+    with _lifecycle_locks(leg_id, token_file, claims_root) as cp:
+        with _ledger_lock(path):
+            doc = _load_ledger(ledger)
+            row = next((e for e in doc.get("planned") or []
+                        if e.get("leg_id") == leg_id), None)
+            leg = next((e for e in doc.get("legs") or []
+                        if e.get("leg_id") == leg_id), None)
+            if row is None or leg is None or row.get("status") != "executed":
+                raise PreserveError(
+                    "plan",
+                    f"{leg_id!r} 은 legacy finalized state 가 아니다 (계획 "
+                    f"{row and row.get('status')!r} · 실행 기록 "
+                    f"{'있음' if leg else '없음'}) — 이 API 는 원장 executed 인 "
+                    "기록만 넘긴다")
+            ev = leg.setdefault("evidence", {})
+            if ev.get("attempt_verifier"):
+                raise PreserveError(
+                    "plan",
+                    f"{leg_id!r} 은 이미 인증 근거를 갖고 있다 — 넘길 것이 "
+                    "없다. 정상 경로(`finalize_leg`)를 쓰라")
+            if cp.is_file():
+                raise PreserveError(
+                    "plan",
+                    f"{leg_id!r} 의 claim 이 아직 있다 ({cp}) — 이것은 legacy "
+                    "post-commit state 가 아니다. 정상 경로를 쓰라")
+
+            # ── 남은 유일한 근거: 디스크의 소유 증명 ──────────────────────
+            try:
+                rec = _read_token_record(token_file)
+            except (PreserveError, OSError) as exc:
+                raise PreserveError(
+                    "plan",
+                    f"{leg_id!r} 을 넘길 근거가 없다 — 원장에 "
+                    f"`attempt_verifier` 가 없고 소유 증명 파일도 읽을 수 없다 "
+                    f"({token_file}). 이 다리는 사람이 원장·산출물을 직접 보고 "
+                    "판단해야 한다") from exc
+            if not secrets.compare_digest(str(rec["token"]), str(token)):
+                raise PreserveError(
+                    "plan",
+                    f"{leg_id!r} 의 소유 증명이 아니다 — 남의 실행을 대신 넘길 "
+                    "수 없다")
+            want_attempt = str(ev.get("attempt_id") or "")
+            if want_attempt and str(rec["attempt_id"]) != want_attempt:
+                raise PreserveError(
+                    "plan",
+                    f"{leg_id!r} 의 소유 증명이 다른 attempt 를 가리킨다 "
+                    f"({rec['attempt_id']} ≠ 원장 {want_attempt})")
+
+            ev["attempt_verifier"] = _token_verifier(token)
+            ev["verifier_origin"] = LEGACY_VERIFIER_ORIGIN
+            _atomic_write_text(path, yaml.safe_dump(doc, allow_unicode=True,
+                                                    sort_keys=False))
+    return {"leg_id": leg_id, "attempt_id": ev.get("attempt_id"),
+            "status": "executed", "verifier_origin": LEGACY_VERIFIER_ORIGIN}
+
+
+def _already_finalized(leg_id: str, token: str, ledger=None) -> dict | None:
+    """이미 닫힌 다리인가 — **소유 증명을 확인한 뒤에만** 그렇다고 답한다 (49차 P0-6).
+
+    48차는 원장 write 와 claim 삭제 사이에 죽으면 그 다리가 갇혔다: 계획은
+    `executed` 라 `resume_claim()` 이 거부하고, claim 파일이 남아 있으니 새
+    실행도 거부된다 — 지울 수도 닫을 수도 없었다.
+
+    복구의 근거는 **원장 자신**이다. 계획이 `executed` 이고 실행 기록의
+    `attempt_id` 가 살아남은 claim 의 것과 같으면 그 다리는 닫혔다. 별도 journal
+    파일을 두지 않는다 — 그러면 "닫혔다" 의 정본이 둘이 되고, 이 저장소가
+    반복해서 고쳐 온 실패 형태가 바로 그것이다 (정본이 둘이면 약한 쪽이 실효
+    규칙이 된다). 원장 write 는 `os.replace` 로 원자적이므로 옛 상태 아니면 새
+    상태이고, 옛 상태면 그냥 다시 닫으면 된다.
+
+    token 은 살아남은 claim 의 verifier 와 맞아야 한다 — 남의 claim 을 아무나
+    치울 수 없다.
+    """
+    want = _token_verifier(token)
+    cp = _claim_path(leg_id, claims_root_for_ledger(ledger))
+    if not cp.is_file():
+        # ★ 56차 P0-3 — claim 이 **이미 지워진** post-commit crash. 원장에
+        #   봉인한 검증자로 소유자를 확인하고, 남은 정리를 완주한 뒤 같은
+        #   답을 돌려준다. 근거는 여전히 원장 하나다 (정본을 늘리지 않는다).
+        doc = _load_ledger(ledger)
+        row = next((e for e in doc.get("planned") or []
+                    if e.get("leg_id") == leg_id), None)
+        leg = next((e for e in doc.get("legs") or []
+                    if e.get("leg_id") == leg_id), None)
+        if row is None or leg is None or row.get("status") != "executed":
+            return None
+        ev = leg.get("evidence") or {}
+        sealed = str(ev.get("attempt_verifier") or "")
+        if not sealed:
+            # ★ 57차 P0-5 — 55차 이전 기록이다. 인증할 근거가 없다는 판단은
+            #   맞지만, 56차는 **거기서 끝냈다** (`return None`). 그러면 caller 가
+            #   `resume_claim()` 으로 내려가 "계획이 executed 라 재개할 수 없다"
+            #   로 죽고, 운영자에게는 정상 재시도가 알 수 없는 이유로 막힌 것으로
+            #   보인다 — 그 다리는 닫을 수도 되돌릴 수도 없다.
+            #
+            #   버전이 다른 durable state 를 만나면 **그렇다고 말한다.** 조용히
+            #   통과시키지도 않는다 (근거가 없으므로 아무나 남의 다리를 닫게
+            #   된다). 넘기는 것은 사람이 한 번 명시적으로 한다.
+            raise PreserveError(
+                "plan",
+                f"{leg_id!r} 은 이미 executed 로 닫혔지만 원장에 "
+                "`attempt_verifier` 가 없다 — 56차 이전 코드가 남긴 durable "
+                "state 다. 소유자를 인증할 근거가 원장에 없으므로 자동으로 "
+                "넘기지 않는다. 디스크의 소유 증명으로 확인한 뒤 넘기려면 "
+                "`migrate_legacy_finalized_leg()` 을 쓰라 (넘긴 사실이 "
+                "`evidence.verifier_origin` 에 남는다)")
+        if not secrets.compare_digest(want, sealed):
+            raise PreserveError(
+                "plan",
+                f"{leg_id!r} 은 이미 닫혔고, 그 실행의 소유 증명이 아니다 — "
+                "남의 실행을 대신 닫을 수 없다")
+        return {"attempt_id": ev.get("attempt_id")}
+    rec = json.loads(cp.read_text(encoding="utf-8"))
+    if set(rec) != set(CLAIM_KEYS):
+        return None
+    doc = _load_ledger(ledger)
+    row = next((e for e in doc.get("planned") or []
+                if e.get("leg_id") == leg_id), None)
+    leg = next((e for e in doc.get("legs") or []
+                if e.get("leg_id") == leg_id), None)
+    if row is None or leg is None or row.get("status") != "executed":
+        return None
+    if ((leg.get("evidence") or {}).get("attempt_id") != rec["attempt_id"]):
+        return None
+    if not secrets.compare_digest(want, str(rec["attempt_verifier"])):
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 은 이미 닫혔고, 그 실행의 소유 증명이 아니다 — "
+            "남의 claim 을 치울 수 없다")
+    return {"attempt_id": rec["attempt_id"]}
+
+
+def finalize_leg(leg_id: str, evidence: dict, ledger=None, *,
+                 token: str | None = None) -> dict:
+    """모든 phase 가 끝난 claim 을 **executed 로 닫는다** (47차 P0-1).
+
+    계획 roster 에서 빼고 실행 roster 와 실행 기록에 넣는다. 이 전이가 없으면
+    "실행 전 승인" 은 사람이 나중에 원장 여러 필드를 한꺼번에 고치는 일이 되고,
+    그것은 실행 **뒤** authority 선택이지 gate 가 아니다.
+
+    ★ 49차 P0-3 — 소유 증명은 **필수**다. 48차 `attempt` 는 기본값 `None`
+      이었고, `resume_claim(None)` 은 readonly claim 을 돌려주는데 finalize 는
+      그것으로도 원장을 닫았다 — 즉 다리 **이름만** 알면 남의 실행을 executed
+      로 닫을 수 있었다. 원장을 닫는 것은 진단이 아니다.
+
+    ★ 58차 L10 — caller evidence 의 **도메인을 먼저 닫는다.** lifecycle 이
+      정하는 값(`verifier_origin` 등)을 호출자가 주면 원장의 provenance 가
+      호출자 의견이 된다.
+    """
+    _assert_evidence_domain(evidence)
+    # ★ 59차 M9 — **검증하기 전에 값을 바이트로 굳힌다.**
+    #
+    #   58차까지 `evidence` 는 호출자의 살아 있는 객체였다. 진입에서 도메인·
+    #   묶음·JSON 을 검사하고, lock 을 잡고 원장을 읽은 **한참 뒤에**
+    #   `dict(evidence)` 로 봉인했다. 그 복사는 얕아서 중첩 값은 여전히
+    #   공유되고, 애초에 그 사이에 dict 자체가 바뀔 수 있다 (coordinator 가
+    #   여러 phase process 를 돌리는 이 저장소에서는 흔한 배치다).
+    #   그러면 **검증한 것과 봉인한 것이 다르고**, 검증은 아무것도 보장하지
+    #   않는다.
+    #
+    #   그래서 여기서 한 번 정규 바이트로 만들고 그것을 다시 읽어 쓴다 —
+    #   그 뒤로 호출자가 무엇을 하든 이 함수가 보는 값은 안 바뀐다. 깊이에
+    #   상관없이 끊어지므로 "어느 층까지 복사할까" 를 묻지 않아도 된다.
+    _assert_json_domain(evidence, "evidence")
+    evidence = json.loads(_canon_json(evidence))
+    import yaml
+
+    # ★ 57차 P0-1 — `token_file` 인자를 없앴다. 소유 증명의 **필수성**은 그대로
+    #   다 (49차 P0-3). **credential 의 의미는 바뀌지 않는다** — 56차도 caller 가
+    #   준 경로의 파일에서 token 을 읽었고, 지금은 같은 읽기를 lifecycle 이
+    #   정한 경로에서 한다. 바뀐 것은 그 경로를 **누가 고르는가** 하나다.
+    token_file = attempt_path_for(leg_id, ledger=ledger)
+    if token is None:
+        token = read_token_file(token_file, leg_id)
+
+    # ★ 49차 P0-6 — **복구가 먼저다.** 원장을 쓴 뒤 claim 을 지우기 전에 죽으면
+    #   그 다리는 갇힌다 (계획은 executed 라 재개가 거부되고, claim 파일이
+    #   남아 새 실행도 거부된다). 이미 닫힌 것을 다시 닫으라고 하면 남은
+    #   정리만 하고 같은 답을 돌려준다 — idempotent.
+    claims_root = claims_root_for_ledger(ledger)
+    _assert_json_domain(evidence, "evidence")
+    # ★ 48차 P0-4 — 묶음 주장을 **디스크에서** 확인한다. 확인 전에는 아무 것도
+    #   쓰지 않는다 (거부하면서 기록을 남기면 그것이 곧 오염이다).
+    bundle_bad = _verify_declared_bundle(evidence)
+    if bundle_bad:
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 묶음 주장이 실물과 다르다 — 검증되지 않은 보존 "
+            "상태를 원장에 쓸 수 없다:\n  " + "\n  ".join(bundle_bad))
+    claimed_bundle = all(k in evidence for k in BUNDLE_EVIDENCE_KEYS)
+    if claimed_bundle:
+        # ★ 60차 P0-9 — **검증이 무엇을 봤는지를 값으로 남긴다.** dict 만
+        #   굳히면 그 dict 가 **가리키는 묶음**은 안 굳는다 (리뷰어 실측: 검증
+        #   직후 member 를 같은 길이의 다른 바이트로 갈아 끼워도 `full_bundle`).
+        #   내용 주소를 봉인에 넣으면 나중에 바뀐 사실이 기록 자체에서 드러난다.
+        #   창 자체는 mutable directory 인 한 남고, 그 한계는 신고한다.
+        evidence = dict(evidence)
+        evidence["bundle_content_id"] = bundle_content_id(evidence)
+    if not _nonempty_str(evidence.get("leg_source_digest") or ""):
+        raise PreserveError(
+            "plan", "evidence.leg_source_digest 가 없다 — 실행 기록을 실물에 "
+                    "결속할 수 없다")
+    path = canonical_ledger(ledger)
+    # ★ 49차 P0-6 — 잠금은 **정본 순서**(`LOCK_ORDER`)로 claim → 원장이다.
+    #   48차는 claim 을 잠그지 않고 두 번 읽었다: 한 번은 `phases_done()` 으로
+    #   검사하고 한 번은 원장 lock 안에서 receipt 를 옮겨 적었다. 그 사이에
+    #   phase 가 바뀌면 **검사한 것과 기록한 것이 다르다.**
+    # ★ 55차 P0-1 — 그 순서의 **첫 칸이 빠져 있었다.** 54차는 복구 분기만
+    #   `_lifecycle_locks()` 로 옮겼고 정상 경로는 claim → ledger 만 잡은 채
+    #   token 을 지우는 중복 구현으로 남았다. 리뷰어는 L 이 generation 을
+    #   비교한 뒤 `unlink` 하기 전에 M 을 같은 경로로 정상 발급시켜 **L 이
+    #   M 의 token 을 지우게** 만들었다 (`attach_M: token missing`).
+    #   규칙이 한 자리에 있지 않으면 남은 중복 구현이 곧 반례다.
+    with _lifecycle_locks(leg_id, token_file, claims_root) as cp:
+        # ★ 57차 P1-3 — "이미 닫혔는가" 를 **이 안에서** 묻는다.
+        #
+        #   56차까지 그 물음은 lock **앞**에 있었다. 그래서 같은 다리를 같은
+        #   credential 로 동시에 두 번 닫으면 둘 다 "아직" 을 보고 통과했고,
+        #   줄을 선 뒤에는 먼저 들어간 쪽이 이미 claim 을 지운 상태라 나중 쪽이
+        #   `claim._read()` 에서 날 `FileNotFoundError` 로 떨어졌다 (실측).
+        #   재시도·중복 호출·감독 프로세스가 겹치기만 해도 나는 형태다.
+        #
+        #   "두 번 닫아도 같은 답" 이라는 계약(49차 P0-6)은 **직렬화된 뒤에
+        #   다시 물어야** 성립한다. 술어와 행위가 같은 임계 구역에 있어야 한다는
+        #   `_lifecycle_locks()` 의 규칙을 멱등성 물음에도 적용한 것이다.
+        #
+        # ★ 54차 P0-2 — 복구 정리도 같은 임계 구역이다. 53차는 아무 lock 도
+        #   잡지 않았고, 이미 claim lock 안에서 검사를 통과한 늦은
+        #   `phase_done()` 이 지워진 claim 을 다시 만들었다 (리뷰어 실측).
+        done = _already_finalized(leg_id, token, ledger=ledger)
+        if done is not None:
+            cp.unlink(missing_ok=True)
+            if token_file is not None:
+                _unlink_token_generation(token_file, token)
+            return {"leg_id": leg_id, "attempt_id": done["attempt_id"],
+                    "status": "executed"}
+
+        # claim 을 읽는 것도 이 안이다 — 밖에서 읽으면 읽은 뒤 지워질 수 있다.
+        claim = resume_claim(leg_id, token=token, ledger=ledger)
+        if evidence["leg_source_digest"] != claim.source_digest:
+            raise PreserveError(
+                "plan",
+                f"실행 기록의 code identity 가 claim 과 다르다 "
+                f"({evidence['leg_source_digest']} ≠ {claim.source_digest})")
+        # receipt 를 **한 번만** 읽는다 — 이 snapshot 이 검사와 기록 모두의 근거다
+        snap = claim._read()
+        if snap["attempt_id"] != claim.attempt_id:
+            raise PreserveError(
+                "plan", f"claim 이 다른 attempt 로 바뀌었다 "
+                        f"({snap['attempt_id']} ≠ {claim.attempt_id})")
+        missing = [p for p in CLAIM_PHASES
+                   if p not in (snap.get("phases") or {})]
+        if missing:
+            raise PreserveError(
+                "plan", f"{leg_id!r} 의 phase 가 남았다: {missing} — 모든 phase 가 "
+                        "끝나야 executed 로 닫는다")
+        # ★ 58차 L6 — **존재만 보지 않는다.** 소비자가 적어 둔 생산자 해시를
+        #   지금 봉인하려는 생산자 receipt 와 대조한다. 어긋나면 그 짝은
+        #   "이 fit 이 이 grid 를 보고 계산했다" 를 뜻하지 않으므로 닫을 수 없다.
+        #
+        # ★ 59차 M7 — 58차는 `if not _want: continue` 였다. 결속이 있으면
+        #   검사하고 **없으면 넘어간다** — 그러면 그것은 검사가 아니라 선택
+        #   사항이고, 결속 없는 durable state 는 아무 저항 없이 `executed` 가
+        #   된다. 리뷰어가 `fit → grid` 역순으로 정확히 그 상태를 만들었다.
+        #
+        #   그러므로 **없으면 오류**다. 뒤 phase 는 자기보다 앞선 **모든**
+        #   phase 를 결속해야 하고, 하나라도 빠지거나 어긋나면 닫지 않는다.
+        _phases = snap.get("phases") or {}
+        _order = list(CLAIM_PHASES)
+        for _ph, _ent in _phases.items():
+            if _ph not in _order:                          # pragma: no cover
+                continue                    # 도메인 검사는 `phase_done` 이 한다
+            _before = _order[:_order.index(_ph)]
+            if not _before:
+                continue                                   # 첫 phase 는 소비자가 아니다
+            _consumed = _ent.get("consumed") or {}
+            _missing = [p for p in _before if not _consumed.get(p)]
+            if _missing:
+                raise PreserveError(
+                    "plan",
+                    f"{leg_id!r}: phase {_ph!r} 가 선행 phase {_missing} 를 "
+                    "결속한 기록(`consumed`)이 없다 — 이 산출이 그 생산자를 보고 "
+                    "계산했다고 말할 근거가 없으므로 닫을 수 없다. 역순 실행이나 "
+                    "59차 이전 코드가 남긴 durable state 다 (59차 M7)")
+            for _p in _before:
+                _want = _consumed[_p]
+                _got = hashlib.sha256(
+                    _canon_json((_phases.get(_p) or {}).get("receipt"))
+                    .encode("utf-8")).hexdigest()
+                if not secrets.compare_digest(str(_want), _got):
+                    raise PreserveError(
+                        "plan",
+                        f"{leg_id!r}: phase {_ph!r} 는 {_p!r} receipt "
+                        f"{str(_want)[:16]}… 를 보고 계산했는데 지금 봉인하려는 "
+                        f"것은 {_got[:16]}… 다 — 생산자-소비자 결속이 끊긴 채로 "
+                        "닫을 수 없다 (늦은 writer 가 덮었거나 durable state 가 "
+                        "어긋났다)")
+        # ★ 48차 P0-6 — 읽기·수정·쓰기 **전체**가 임계 구역 안이다. 밖에서 읽고
+        #   안에서 쓰면 읽은 값이 이미 낡았을 수 있으므로 의미가 없다.
+        with _ledger_lock(path):
+            # ★ 49차 P0-6 — authority 를 **lock 안에서 다시** 본다. 48차는
+            #   `resume_claim()` 이 lock 밖에서 한 번 보고 말았으므로, 그 뒤
+            #   사람이 cohort 를 얼려도 이미 통과한 finalize 가 그대로 썼다.
+            assert_planned_index_consistent(ledger)
+            live = assert_planned_leg(leg_id, claim.source_digest,
+                                      ledger=ledger,
+                                      allow=("planned", "running"))
+            if live["cohort_id"] != claim.cohort_id:
+                raise PreserveError(
+                    "plan", f"{leg_id!r} 의 cohort 가 claim 이후 바뀌었다 "
+                            f"({claim.cohort_id} → {live['cohort_id']})")
+            if live["run_spec_digest"] != claim.run_spec_digest:
+                raise PreserveError(
+                    "plan", f"{leg_id!r} 의 승인된 run_spec 이 claim 이후 바뀌었다")
+            doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+            plan = next((e for e in doc.get("planned") or []
+                         if e.get("leg_id") == leg_id), None)
+            if plan is None:
+                raise PreserveError("plan", f"계획 index 에 {leg_id!r} 이 없다")
+            if plan.get("status") not in ("planned", "running"):
+                raise PreserveError(
+                    "plan", f"{leg_id!r} 의 계획 상태가 {plan.get('status')!r} 이라 "
+                            "executed 로 닫을 수 없다")
+            coh = next((c for c in doc.get("cohorts") or []
+                        if c.get("cohort_id") == claim.cohort_id), None)
+            if coh is None:
+                raise PreserveError("plan",
+                                    f"원장에 cohort {claim.cohort_id!r} 이 없다")
+            if any(e.get("leg_id") == leg_id for e in doc.get("legs") or []):
+                raise PreserveError(
+                    "plan", f"{leg_id!r} 의 실행 기록이 이미 있다 — 같은 다리를 두 번 "
+                            "닫을 수 없다")
+
+            plan["status"] = "executed"
+            coh["prospective_legs"] = sorted(
+                x for x in (coh.get("prospective_legs") or []) if x != leg_id)
+            coh["legs"] = sorted(set(coh.get("legs") or []) | {leg_id})
+            # ★ 48차 P0-4 — **검증한 만큼만** 적고, lifecycle 이 실제로 남긴
+            #   증거(phase receipt)를 기록에 넣는다. 47차는 phase receipt 를 다
+            #   버리고 caller 의 주장만 옮겼다 — 그러면 원장에 남는 것은 "누가
+            #   그렇다고 했다" 뿐이고 "무엇이 실제로 돌았다" 가 아니다.
+            # ★ 49차 P0-6 — 옮기는 것은 위에서 **한 번 읽은** snapshot 이다.
+            #   48차는 여기서 claim 을 다시 읽었으므로, 검사한 receipt 와
+            #   기록한 receipt 가 다를 수 있었다.
+            rec_evidence = dict(evidence)
+            rec_evidence["verifier_origin"] = "normal_finalize"
+            rec_evidence["phases"] = {ph: snap["phases"][ph]
+                                      for ph in CLAIM_PHASES}
+            rec_evidence["attempt_id"] = claim.attempt_id
+            rec_evidence["run_spec_digest"] = claim.run_spec_digest
+            # ★ 56차 P0-3 — 소유 증명의 **검증자를 원장에** 봉인한다. 55차까지
+            #   그것은 claim 파일에만 있었고, 원장 commit 뒤 claim 삭제에서
+            #   죽으면 인증할 근거가 사라져 재시도가 영영 막혔다 (리뷰어 실측:
+            #   `finalize_retry FAILED: no claim to resume`). 원장이 스스로
+            #   소유자를 확인할 수 있어야 claim 이 없어도 완주할 수 있다.
+            rec_evidence["attempt_verifier"] = _token_verifier(token)
+            # ★ 49차 P0-4 — 계약 §8 은 **세 축의 튜플**을 요구한다. 48차는
+            #   `preservation_status` 하나만 적고 나머지를 비웠으므로 그 기록은
+            #   `test_registry_rejects_impossible_status_tuples` 를 통과할 수
+            #   없었다 — production 이 쓴 원장을 자기 lint 가 거부하는 상태였다.
+            #   묶음을 확인하지 못한 다리는 `preservation_pending` 이고, 나머지
+            #   두 축은 계약 제약이 강제하는 바닥값이다.
+            doc.setdefault("legs", []).append(
+                {"leg_id": leg_id,
+                 "preservation_status": "full_bundle" if claimed_bundle
+                 else "preservation_pending",
+                 # 묶음을 확인했어도 **검증**은 별개 단계다 (validator 가 복원해
+                 # 재채점한다). finalize 는 그것을 하지 않았으므로 unvalidated 다.
+                 "validation_status": PENDING_VALIDATION_STATUS,
+                 "inference_role": PENDING_INFERENCE_ROLE,
+                 "evidence": rec_evidence})
+            # 원장 write 는 원자적이고, 여기부터 claim 삭제 사이에 죽어도
+            # `_already_finalized()` 가 **원장에서** 그 사실을 알아낸다.
+            _atomic_write_text(path, yaml.safe_dump(doc, allow_unicode=True,
+                                                    sort_keys=False))
+        # ★ 50차 P0 — claim 삭제도 **임계 구역 안**이다. 49차는 lock 을 놓은
+        #   뒤에 지웠고, 그래서 그 사이에 들어온 늦은 `phase_done()` 이 파일을
+        #   되살렸다 — 계획은 executed 인데 실행 중인 claim 이 있는, 어느
+        #   검사도 예상하지 않는 상태가 만들어진다 (리뷰어 실측).
+        claim.path.unlink(missing_ok=True)
+        # 실행권이 닫혔으므로 소유 증명도 남길 이유가 없다 — 쓸모를 잃은
+        # credential 을 디스크에 두는 것은 그 자체가 노출면이다.
+        # ★ 52차 P0-1 — claim 삭제와 **같은 임계 구역**이다.
+        if token_file is not None:
+            _unlink_token_generation(token_file, token)
+    return {"leg_id": leg_id, "attempt_id": claim.attempt_id,
+            "status": "executed"}
+
+
+def planned_coverage(ledger=None) -> dict:
+    """계획 index 를 **종류별로** 센다 (47차 — 소급을 gate 증거로 세지 않게).
+
+    요청문·계약이 "실행 전 gate 가 몇 번 실제로 작동했는가" 를 인용할 때 이
+    함수의 값을 쓴다. 자유문자 근거를 읽고 사람이 세는 대신.
+    """
+    idx = planned_index(ledger)
+    out = {"prospective": 0, "retrospective": 0}
+    for e in idx.values():
+        out[e["authorization_kind"]] += 1
+    out["gate_backed_executions"] = sum(
+        1 for e in idx.values()
+        if e["authorization_kind"] == "prospective" and e["status"] == "executed")
+    return out
+
+
+def assert_planned_index_consistent(ledger=None) -> bool:
+    """실행 기록이 계획 index 를 **덮는가** (반대 방향).
+
+    이것이 없으면 index 는 장식이다: 계획에 없이 돌린 다리가 나중에 `legs:`
+    에만 나타나도 아무 검사도 깨지지 않는다 — §13.4 가 신고하던 그 구멍이다.
+    """
+    idx = planned_index(ledger)
+    doc = _load_ledger(ledger)
+    executed = []
+    for leg in (doc.get("legs") or []):
+        lid = (leg or {}).get("leg_id")
+        if not _nonempty_str(lid if isinstance(lid, str) else ""):
+            raise PreserveError("plan", f"`legs:` 항목의 leg_id 가 없다: {leg!r}")
+        executed.append(lid)
+    missing = sorted(set(executed) - set(idx))
+    if missing:
+        raise PreserveError(
+            "plan",
+            f"실행 기록에만 있고 계획 index 에 없는 다리: {missing} — 계획 없이 "
+            "돌렸거나 index 를 안 적었다. 둘 다 실행 전 gate 가 없었다는 뜻이다")
+    wrong = sorted(l for l in executed if idx[l]["status"] != "executed")
+    if wrong:
+        raise PreserveError(
+            "plan",
+            f"실행 기록이 있는데 계획 상태가 executed 가 아닌 다리: {wrong}")
+    # ★ 47차 — **exact equality** 다. 46차는 "실행 기록 ⊆ 계획" 만 봤으므로
+    #   실행 기록이 없는 executed 계획 항목(phantom)이 조용히 통과했다.
+    phantom = sorted(l for l, e in idx.items()
+                     if e["status"] == "executed" and l not in set(executed))
+    if phantom:
+        raise PreserveError(
+            "plan",
+            f"executed 로 기록됐는데 실행 기록이 없는 다리: {phantom} — 계획과 "
+            "실행 기록은 executed 에 대해 **정확히 같은 집합**이어야 한다")
+    # ★ 46차 P0-11 — 계획 항목을 **실물 원장 기록**에 결속한다. 이것이 없으면
+    #   `planned:` 는 자기 자신만 참조하는 목록이고, 아무 digest 나 적어도
+    #   일관되다. 실행 기록이 있는 다리는 그 다리가 **실제로 돌았던** code
+    #   identity 를 계획이 그대로 담아야 한다.
+    for leg in (doc.get("legs") or []):
+        lid = leg["leg_id"]
+        e = idx[lid]
+        ev = leg.get("evidence") or {}
+        real = ev.get("leg_source_digest")
+        if not _nonempty_str(real if isinstance(real, str) else ""):
+            raise PreserveError(
+                "plan", f"{lid!r} 의 실행 기록에 `evidence.leg_source_digest` 가 "
+                        "없다 — 계획을 실물에 결속할 수 없다")
+        if e["authorized_source_digest"] != real:
+            raise PreserveError(
+                "plan",
+                f"{lid!r} 의 계획 digest 가 실행 기록과 다르다 "
+                f"(계획 {e['authorized_source_digest']} ≠ 기록 {real}) — "
+                "계획 index 가 실물을 가리키지 않으면 장식이다")
+        coh = ev.get("cohorts") or []
+        if isinstance(coh, list) and coh and e["cohort_id"] not in coh:
+            raise PreserveError(
+                "plan",
+                f"{lid!r} 의 계획 cohort {e['cohort_id']!r} 가 실행 기록의 "
+                f"cohort {coh} 에 없다")
+    return True

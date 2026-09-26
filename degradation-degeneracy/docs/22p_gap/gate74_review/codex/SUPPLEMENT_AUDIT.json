@@ -1,0 +1,29 @@
+{
+  "sealed_summary_semantic_sha": "789bf0b91626f8e6bc794cd6904836ece671f9fcee65431c7bec9dd191e40438",
+  "independent_sealed_summary_rehash": true,
+  "rescored_output_rerun": false,
+  "receipt_source_file_identities": {
+    "src_io_sha256": "25f79f0a740ea486",
+    "src_scoring_sha256": "69e69cb046f4b4ae",
+    "archive_bundle_sha256": "5f7fc3c89dfe5dba",
+    "make_receipt_sha256": "9c8cf71af310de03",
+    "row_projection_sha256": "b8eae978b9525c3e"
+  },
+  "source_docs08_sha": "56b954e92c761a3a38d4ddeaa71dc4ea36736574f61376dcb1f31c597aec7a22",
+  "source_docs08_first_line": 8131,
+  "prior_gate73_review_sha": "6e99b2a638f56e05f43bbab6961aea688f02590e4393085b4617cce22a732cc5",
+  "projection_roster": {
+    "ledger_legs": [
+      "grid_fit_v5",
+      "paired_fixed5_v4"
+    ],
+    "policy": "not_applicable_single_leg",
+    "CURRENT_projection_yaml_members": [
+      "paired_fixed5_v4.projection.yaml"
+    ],
+    "CURRENT_sha": "9e6802aa79a66e9f69c2cb4f19d381b3d702e2745155f23d47f1545081a0df67"
+  },
+  "authorization_gap": "Same attempt 591c0939: explicit resume refused at 18:18, cache moved then resume started at 18:20. Prior user authorization for the second call not in supplied evidence.",
+  "wsl_cause_limit": "VM reboot time reported, not independently measured. OOM/idle/tmux attribution remains report or inference; zero completed feasible conditions is not zero started computations.",
+  "suite_results": "20 failed/1859 passed/2 xfailed and smoke rc0 are sender reports, no receiver rerun."
+}

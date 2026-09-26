@@ -1,0 +1,218 @@
+{
+  "head": "a49a021833282e0bd04c4565591668dc323e9630",
+  "code": "7a7945564e6a94803b4d3bc72e8202534189ccdb",
+  "execution_head": "e34eea8455d87f8e33c6ae7113fe3d16ddb600e3",
+  "source_digest": "c2ef1a811e70bb4c",
+  "scope_files": 57,
+  "tracked_files": 2681,
+  "diffs": {
+    "CODE_TO_HEAD_SCOPE": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "CODE_TO_EXEC_SCOPE": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "EXEC_TO_DATA_INDEX": {
+      "bytes": 2670,
+      "sha256": "608f4fb305ac5bf9f79f8ebaa24dfd338aa3822b37276bd48f9a48f9fc6a8a40"
+    },
+    "DATA_TO_CORRECTED_INDEX": {
+      "bytes": 2394,
+      "sha256": "5056982761576d2fc906e34a5e1411cd8149fa4582b763574a9bcdf37c1b662a"
+    },
+    "G73_TO_G74_LEDGER": {
+      "bytes": 7518,
+      "sha256": "dfd5c1b8beb9a17e03a6c78c3d8341c906559f942019c680e8b17b3a9c33f8b9"
+    },
+    "DATA_COMMIT_STATS": {
+      "bytes": 3117,
+      "sha256": "33e0e8e63c450270df7ebe013f97dff9a87e11c8ea4b6af3e3a3be6ec7174d23"
+    }
+  },
+  "plan_history_count": 3,
+  "index": {
+    "prior_runs": [
+      "grid_curves_v4",
+      "grid_fit_v4",
+      "halfcell_fit_v4",
+      "paired_fixed5_v4"
+    ],
+    "data_runs": [
+      "grid_fit_v5"
+    ],
+    "corrected_runs": [
+      "grid_curves_v4",
+      "grid_fit_v4",
+      "halfcell_fit_v4",
+      "paired_fixed5_v4",
+      "grid_fit_v5"
+    ],
+    "prior_blocks_byte_identical": true,
+    "new_block_byte_identical": true,
+    "old_bundle_changes": []
+  },
+  "registry": {
+    "before": 367,
+    "after": 369,
+    "prior_bytes_unchanged": true,
+    "snapshots_match": true,
+    "added": {
+      "719afd1a39af03f60759d0d82c8a1f87286435f382f7861bd0567d89ed6e60bb.json": {
+        "content_id": "719afd1a39af03f60759d0d82c8a1f87286435f382f7861bd0567d89ed6e60bb",
+        "evidence": "산출 완료 시점 등록 · leg=grid_fit_v5 phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-26T10:58:50Z",
+        "sealed": true
+      },
+      "140d500a4039765acd51db089cccc04e6d3fb892db6e553e22f468473768d772.json": {
+        "content_id": "140d500a4039765acd51db089cccc04e6d3fb892db6e553e22f468473768d772",
+        "evidence": "산출 완료 시점 등록 · leg=grid_fit_v5 phase=fit class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-26T12:32:52Z",
+        "sealed": true
+      }
+    }
+  },
+  "bundle": {
+    "files": 29,
+    "bytes": 27313017,
+    "exact_set_sha": true,
+    "payload_index": {
+      "bytes": 2595,
+      "sha256": "4cd2c0f89a07da834680e4a69d75391241a0930819174fc98cf52045f7519c42"
+    }
+  },
+  "receipt": {
+    "core_sha": "2aadd24b1de88b070e48bdda428050e6475fa7a245c4571df4771ca04ffde83a",
+    "core_rehashed": true,
+    "reported_validation_checks": 33,
+    "output_anchors_match": true,
+    "rescored_output_content_supplied": false,
+    "validation_rerun": false,
+    "stamp": {
+      "_주의": "기록용. core 재생성 대조에서 제외된다.",
+      "validator_commit": "e34eea8455d87f8e33c6ae7113fe3d16ddb600e3",
+      "validator_tree_dirty": true,
+      "generated_at_utc": "2026-09-26T13:03:29Z",
+      "runtime": {
+        "python": "3.12.14",
+        "platform": "Linux-6.8.0-110-generic-x86_64-with-glibc2.39"
+      }
+    }
+  },
+  "failed_csv": {
+    "rows": 924,
+    "reason_counts": {
+      "reason": {
+        "infeasible: PE 초기농도 63522 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 64933 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 66409 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 67953 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 69571 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 71268 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 73050 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 63635 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 65081 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 66594 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 68180 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 69843 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 71589 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 63753 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 65235 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 66788 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 68417 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 70128 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 63876 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 65397 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 66992 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 68667 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 64006 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 65567 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 67206 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 64141 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 65745 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33,
+        "infeasible: PE 초기농도 64284 > c_max 63104 (줄어든 PE가 완방 재고를 수용 불가 — PE-limited 영역)": 33
+      }
+    }
+  },
+  "wsl_partials": {
+    "attempt12_partial_results": {
+      "records": 924,
+      "keyset": [
+        "cond_id"
+      ],
+      "status": {
+        "null": 924
+      },
+      "failed_csv_rows": 924
+    },
+    "attempt3_partial_results": {
+      "records": 924,
+      "keyset": [
+        "cond_id"
+      ],
+      "status": {
+        "null": 924
+      },
+      "failed_csv_rows": 924
+    },
+    "attempt4_partial_results": {
+      "records": 924,
+      "keyset": [
+        "cond_id"
+      ],
+      "status": {
+        "null": 924
+      },
+      "failed_csv_rows": 924
+    }
+  },
+  "wsl_cache_files": {
+    "discharged_cache_from_attempt1.json": {
+      "bytes": 1035,
+      "sha256": "5ab61b3799d4e18e0233038d6c9dccfb53882a027d36a8721af3796f4c33a064"
+    },
+    "discharged_cache_from_attempt2.json": {
+      "bytes": 1035,
+      "sha256": "5ab61b3799d4e18e0233038d6c9dccfb53882a027d36a8721af3796f4c33a064"
+    },
+    "discharged_cache_from_attempt3.json": {
+      "bytes": 1035,
+      "sha256": "5ab61b3799d4e18e0233038d6c9dccfb53882a027d36a8721af3796f4c33a064"
+    }
+  },
+  "cohort": {
+    "cohort_id": "g18_2026_09_15",
+    "dir": "docs/22p_gap/proj_g18",
+    "status": "active",
+    "legs": [
+      "grid_fit_v5",
+      "paired_fixed5_v4"
+    ],
+    "prospective_legs": [],
+    "cross_leg_comparison": "not_applicable_single_leg",
+    "무엇이_달라졌나": "63차 게이트 리뷰(방어적 코드·회귀 검토)가 새 P1 3건 · P2 1건과 증거 공백 둘을 냈고 전부 코드에서 닫혔다 (원장 §77·§78). 이 cohort 의 pin 을 움직인 것은 E1 이다 — producer analyzer 의 definition head 가 3.12 `type_params` 의 bound(3.12)·default(3.13) 를 열거한다. bound 는 별도 annotation scope 에서 지연 평가되고 함수 매개변수를 못 보므로 매개변수 shadow 를 안 적용하는 head 자리가 맞다. type parameter 이름 자체는 shadow 로 세지 않는다 (fail-closed 쪽). 첫 수정판이 `getattr(tp, attr)` 로 이름을 계산해서 건네다 분석기 자신의 규칙에 걸렸고 리터럴 이름 둘로 풀었다 — 규칙이 자기 자신에게도 걸린다는 것을 실측했다. **계산식은 안 바뀌었다** — `src_scoring_py_sha256` 가 그대로이고, 아래 행 바이트가 그 사실을 말한다.",
+    "pin": {
+      "schema_version": 3,
+      "compute_sha256": "150416386d3c0b93",
+      "row_projection_py_sha256": "b8eae978b9525c3e",
+      "src_scoring_py_sha256": "69e69cb046f4b4ae",
+      "analysis_spec_sha256": "43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271",
+      "producer_semantic_sha256": "1d6c0e76f18d63ed"
+    },
+    "runtime": {
+      "python": "3.11.15",
+      "pandas": "3.0.5",
+      "pyarrow": "25.0.1",
+      "numpy": "2.4.6",
+      "yaml": "6.0.1"
+    }
+  },
+  "grid_fit_v5_claim_roles": null,
+  "regeneration_capability": null,
+  "project_imports": 0,
+  "main_compute_restore_class_changes": 0,
+  "reviewer_parsing_only": true
+}

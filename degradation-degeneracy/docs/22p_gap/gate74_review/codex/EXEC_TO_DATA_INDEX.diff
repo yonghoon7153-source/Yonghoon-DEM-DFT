@@ -1,0 +1,44 @@
+diff --git a/degradation-degeneracy/artifacts/artifact_index.yaml b/degradation-degeneracy/artifacts/artifact_index.yaml
+index 0564b8d..9b5cfd7 100644
+--- a/degradation-degeneracy/artifacts/artifact_index.yaml
++++ b/degradation-degeneracy/artifacts/artifact_index.yaml
+@@ -1,32 +1,12 @@
+ _주의: RESULTS.md 의 앵커(fits/curves digest)와 여기 값이 같아야 그 보고서의 근거 묶음이다. source_commit
+   은 **계산을 시작한 코드**의 commit 이다. 이 index 와 묶음 bytes 는 `git add artifacts` 로 함께 커밋되며,
+   그 artifact commit 의 이름은 자기참조라 여기 쓸 수 없다 (12차 5-b·14차 8).
+-source_commit: c0f1daa0d92a7625c3602799c81db04b5e2e5783
++source_commit: e34eea8455d87f8e33c6ae7113fe3d16ddb600e3
+ runs:
+-  grid_curves_v4:
+-    artifact_kind: grid_producer
+-    payload_index_sha256: aca42a51cbe3237d365c024b6fc9ba48e73d6df2070b085babf54637d743c6da
+-    source_commit: c0f1daa0d92a7625c3602799c81db04b5e2e5783
+-    run_dir: results/grid_curves_v4
+-    curves_sha256: b69dc7bee0bb2e32aba73b6ace91255d964bceb41f9361886de7275bf48aa8b8
+-  grid_fit_v4:
++  grid_fit_v5:
+     artifact_kind: fit
+-    payload_index_sha256: 9729032d22e900256999211da680479a54098c9ec75a8683bb650ad7ffbe3d54
+-    source_commit: c0f1daa0d92a7625c3602799c81db04b5e2e5783
+-    run_dir: results/grid_fit_v4
+-    fits_sha256: 18ebb8e7b32ef879ea0badfd2d72d64446aa0b01b4aba6c9db692cf224926b46
+-    curves_sha256: b69dc7bee0bb2e32aba73b6ace91255d964bceb41f9361886de7275bf48aa8b8
+-  halfcell_fit_v4:
+-    artifact_kind: fit
+-    payload_index_sha256: f7da756fee4490bd7580b877b90e7f3187f23869959af9529d5f22128c137090
+-    source_commit: c0f1daa0d92a7625c3602799c81db04b5e2e5783
+-    run_dir: results/halfcell_fit_v4
+-    fits_sha256: 6c5301cd4f24fa81244fad24f8e3bca52b5130528b6d96866312742861eabd1d
+-    curves_sha256: b69dc7bee0bb2e32aba73b6ace91255d964bceb41f9361886de7275bf48aa8b8
+-  paired_fixed5_v4:
+-    artifact_kind: fit
+-    payload_index_sha256: eeb8ae8911083c992710ace2c8f255682b64930a03929f12ae72796ade174716
+-    source_commit: c0f1daa0d92a7625c3602799c81db04b5e2e5783
+-    run_dir: results/paired_fixed5_v4
+-    fits_sha256: e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064
+-    curves_sha256: b69dc7bee0bb2e32aba73b6ace91255d964bceb41f9361886de7275bf48aa8b8
++    payload_index_sha256: 4cd2c0f89a07da834680e4a69d75391241a0930819174fc98cf52045f7519c42
++    source_commit: e34eea8455d87f8e33c6ae7113fe3d16ddb600e3
++    run_dir: results/grid_fit_v5
++    fits_sha256: 378ffde80b2a44d99efa3bff3e712b7cd44b41e0073d712fdf63d4efca864042
++    curves_sha256: 29da452a04ca17d778f448ad9504f21d1b8a22db8dd64bf1e0ba7c95804a6adc

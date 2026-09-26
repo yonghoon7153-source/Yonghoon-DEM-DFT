@@ -1,0 +1,70 @@
+# ── LEG_PRESERVATION.yaml 의 `planned:` 에 **사람이** 붙여 넣는 항목 (이 도구는 쓰지 않는다) ──
+- leg_id: grid_fit_v5
+  cohort_id: g18_2026_09_15
+  status: planned
+  authorization_kind: prospective
+  authorized_source_digest: c2ef1a811e70bb4c
+  run_spec_digest: 0838df841ae7e4e694a3938d281e92284c27fb04393e0008b15f7a3fd4e10337
+  run_spec:
+    leg_spec_version: 2
+    leg_id: grid_fit_v5
+    grid:
+      config_digest: 696bf7d2cf9697d3
+      condition_ids_sha256: 7b08e97e129d0bf4
+      n_conditions: 3993
+      discharged_cache_sha256: 66d84e76ef88e0b65fdf9f432db89818348814e28e7345731216de149cb5fee1
+      out: results/grid_fit_v5
+    fit:
+      config_digest: 87482fa38d72802d
+      objective_order:
+      - pocv
+      - pocv_dvdq
+      - pocv_dvdq_dqdv
+      - dqdv_only
+      objectives_digest: b96732b98b40aabd
+      reference: grid
+      halfcell_recipe:
+        method: ocp
+        kw: {}
+      halfcell_cache_sha256: null
+      base_config_digest: 2885945318d396a5
+      bounds_preset: expanded
+      bounds_digest: 7cd061b430b75572
+      optimizer:
+        method: Nelder-Mead
+        n_restarts: 5
+        adaptive: true
+        warm_start: true
+      use_noisy: true
+      smoothing_backend: banded_cache
+      row_selection:
+        mode: full
+        limit: null
+        subset_sha256: null
+      in: results/grid_fit_v5
+      in_digest: null
+      out: results/grid_fit_v5
+  recorded_on: '2026-09-26'
+  근거: '73차 조건부 한정 GO (원장 §98) — 재승인 2 (원장 §100): WSL 4차 시도가 워커 기동 시 VM 종료로 반복 실패, 실행 기계를 Gabia 서버(kserver116-27,
+    20 proc, 62 GB)로 이전. 이 기계에서 만든 완방상태 캐시 바이트를 묶음'
+# ── cohort 항목의 `prospective_legs:` 에도 이 leg_id 를 더한다 ──
+# ── 요약 (사람이 확인) ──
+{
+ "n_conditions": 3993,
+ "grid_axis": {
+  "config_digest": "696bf7d2cf9697d3",
+  "condition_ids_sha256": "7b08e97e129d0bf4",
+  "n_conditions": 3993,
+  "discharged_cache_sha256": "66d84e76ef88e0b65fdf9f432db89818348814e28e7345731216de149cb5fee1",
+  "out": "results/grid_fit_v5"
+ },
+ "objectives": [
+  "pocv",
+  "pocv_dvdq",
+  "pocv_dvdq_dqdv",
+  "dqdv_only"
+ ],
+ "source_digest": "c2ef1a811e70bb4c",
+ "run_spec_digest": "0838df841ae7e4e694a3938d281e92284c27fb04393e0008b15f7a3fd4e10337",
+ "command": "./run.sh --mode all --leg grid_fit_v5 --config configs/grid_fine.yaml --nproc $(nproc) --out results/grid_fit_v5"
+}

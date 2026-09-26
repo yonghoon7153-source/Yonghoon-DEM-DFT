@@ -1,0 +1,47 @@
+ .../artifacts/artifact_index.yaml                  |   34 +-
+ .../artifacts/grid_fit_v5/analysis_manifest.yaml   |   43 +
+ .../manifest_start_20260926T195857_273064_000.yaml |   46 +
+ .../artifacts/grid_fit_v5/curves.parquet           |  Bin 0 -> 19573895 bytes
+ .../artifacts/grid_fit_v5/curves_manifest.yaml     |  180 +++
+ .../grid_fit_v5/curves_manifest_start.yaml         |   87 +
+ .../artifacts/grid_fit_v5/degeneracy_summary.yaml  |  459 ++++++
+ .../artifacts/grid_fit_v5/failed.csv               |  925 +++++++++++
+ .../grid_fit_v5/figures/gap_recovery_dqdv_only.png |  Bin 0 -> 83234 bytes
+ .../grid_fit_v5/figures/gap_recovery_pocv.png      |  Bin 0 -> 97886 bytes
+ .../grid_fit_v5/figures/gap_recovery_pocv_dvdq.png |  Bin 0 -> 94394 bytes
+ .../figures/gap_recovery_pocv_dvdq_dqdv.png        |  Bin 0 -> 80628 bytes
+ .../figures/objective_panel_noise0.001.png         |  Bin 0 -> 86935 bytes
+ .../figures/objective_panel_noise0.005.png         |  Bin 0 -> 87585 bytes
+ .../grid_fit_v5/figures/objective_panel_noise0.png |  Bin 0 -> 86575 bytes
+ .../artifacts/grid_fit_v5/fits.parquet             |  Bin 0 -> 6106463 bytes
+ .../artifacts/grid_fit_v5/inputs/base.yaml         |  122 ++
+ .../artifacts/grid_fit_v5/manifest.yaml            |  262 +++
+ .../artifacts/grid_fit_v5/manifest_grid.yaml       |   42 +
+ .../artifacts/grid_fit_v5/manifest_start.yaml      |   46 +
+ .../artifacts/grid_fit_v5/multistart.parquet       |  Bin 0 -> 223818 bytes
+ .../grid_fit_v5/multistart_paired.parquet          |  Bin 0 -> 201310 bytes
+ .../grid_fit_v5/multistart_random_only.parquet     |  Bin 0 -> 217075 bytes
+ .../artifacts/grid_fit_v5/objective_comparison.csv |    5 +
+ .../grid_fit_v5/objective_comparison.yaml          | 1702 ++++++++++++++++++++
+ .../objective_comparison_all_conditions.csv        |    5 +
+ .../grid_fit_v5/objective_comparison_by_noise.csv  |   13 +
+ .../artifacts/grid_fit_v5/payload_sha256.yaml      |   28 +
+ .../artifacts/grid_fit_v5/provenance.json          |   40 +
+ .../artifacts/grid_fit_v5/restore_map.yaml         |    4 +
+ .../docs/22p_gap/LEG_PRESERVATION.yaml             |   76 +-
+ ...089cccc04e6d3fb892db6e553e22f468473768d772.json |    1 +
+ ...d82c8a1f87286435f382f7861bd0567d89ed6e60bb.json |    1 +
+ .../22p_gap/receipts/grid_fit_v5.validate.yaml     |   99 ++
+ .../grid_fit_v5/gabia/approval_head.txt            |    1 +
+ .../run_windows/grid_fit_v5/gabia/archive.log      |   24 +
+ .../run_windows/grid_fit_v5/gabia/attach.log       |    1 +
+ .../22p_gap/run_windows/grid_fit_v5/gabia/host.txt |    1 +
+ .../grid_fit_v5/gabia/other_procs_before.txt       |    4 +
+ .../run_windows/grid_fit_v5/gabia/plan_gabia.txt   |   70 +
+ .../run_windows/grid_fit_v5/gabia/receipt.log      |    1 +
+ .../grid_fit_v5/gabia/registry_after.txt           |  369 +++++
+ .../grid_fit_v5/gabia/registry_before.txt          |  367 +++++
+ .../grid_fit_v5/gabia/run_20260926T104547Z.log     | 1659 +++++++++++++++++++
+ .../grid_fit_v5/gabia/status_before.txt            |    0
+ degradation-degeneracy/docs/RESULTS_grid_fit_v5.md |  223 +++
+ 46 files changed, 6903 insertions(+), 37 deletions(-)

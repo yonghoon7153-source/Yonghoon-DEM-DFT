@@ -1,0 +1,24 @@
+
+── grid_fit_v5 ──
+  원본 provenance: 통과
+  파생 semantic freshness: 통과 (results/grid_fit_v5)
+복사 27개
+  저장소 밖 입력 동봉: configs/base.yaml
+  검증 가능: 필요한 파일이 모두 있고 digest가 일치한다
+  격리 복원 검증[본체]: 통과
+  bundle payload_index_sha256: 4cd2c0f89a07da834680e4a69d75391241a0930819174fc98cf52045f7519c42
+  용량 27M
+
+인덱스: artifacts/artifact_index.yaml (1개 승격 묶음, full 64자리 digest)
+
+요청 1개 · 검증 가능 1개 · 불완전 0개 · 없음 0개 · 합계 143M
+
+다음:
+  git add artifacts && git commit -m "chore(artifacts): 계산 결과 보관" && git push
+
+clone 한 쪽에서 복원 + 검증:
+  python -m tools.archive_bundle restore artifacts/halfcell_fit_v4
+  python -c "from src.io import validate_provenance; import json; \
+             print(json.dumps(validate_provenance('results/halfcell_fit_v4'), \
+             ensure_ascii=False, indent=2))"
+  ./run.sh --mode score --in results/halfcell_fit_v4   # 채점 이후는 몇 초다

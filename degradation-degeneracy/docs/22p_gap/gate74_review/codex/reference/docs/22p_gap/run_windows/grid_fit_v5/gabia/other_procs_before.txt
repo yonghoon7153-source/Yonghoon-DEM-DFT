@@ -1,0 +1,4 @@
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root      248767 99.6 14.4 66504872 9456116 pts/2 Rl  18:11  92:10 /data/apps/qe-7.4.1-gpu/bin/pw.x -npool 1 -in strain_23_p.in
+root         559  0.0  0.1 136568 86100 ?        S<s  Apr22  50:26 /usr/lib/systemd/systemd-journald
+root     3054269  0.0  0.0 668072 31456 ?        Ssl  Jun12   8:43 /usr/libexec/fwupd/fwupd

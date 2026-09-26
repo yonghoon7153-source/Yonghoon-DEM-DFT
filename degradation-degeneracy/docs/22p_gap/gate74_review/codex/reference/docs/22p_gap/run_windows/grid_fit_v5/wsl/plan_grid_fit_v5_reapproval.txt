@@ -1,0 +1,70 @@
+# ── LEG_PRESERVATION.yaml 의 `planned:` 에 **사람이** 붙여 넣는 항목 (이 도구는 쓰지 않는다) ──
+- leg_id: grid_fit_v5
+  cohort_id: g18_2026_09_15
+  status: planned
+  authorization_kind: prospective
+  authorized_source_digest: c2ef1a811e70bb4c
+  run_spec_digest: e7cc8713bb88d941e2d5532f0308e1c7f257b9b06ebaf57a2cc0ad8667fe04ef
+  run_spec:
+    leg_spec_version: 2
+    leg_id: grid_fit_v5
+    grid:
+      config_digest: 696bf7d2cf9697d3
+      condition_ids_sha256: 7b08e97e129d0bf4
+      n_conditions: 3993
+      discharged_cache_sha256: 5ab61b3799d4e18e0233038d6c9dccfb53882a027d36a8721af3796f4c33a064
+      out: results/grid_fit_v5
+    fit:
+      config_digest: 87482fa38d72802d
+      objective_order:
+      - pocv
+      - pocv_dvdq
+      - pocv_dvdq_dqdv
+      - dqdv_only
+      objectives_digest: b96732b98b40aabd
+      reference: grid
+      halfcell_recipe:
+        method: ocp
+        kw: {}
+      halfcell_cache_sha256: null
+      base_config_digest: 2885945318d396a5
+      bounds_preset: expanded
+      bounds_digest: 7cd061b430b75572
+      optimizer:
+        method: Nelder-Mead
+        n_restarts: 5
+        adaptive: true
+        warm_start: true
+      use_noisy: true
+      smoothing_backend: banded_cache
+      row_selection:
+        mode: full
+        limit: null
+        subset_sha256: null
+      in: results/grid_fit_v5
+      in_digest: null
+      out: results/grid_fit_v5
+  recorded_on: '2026-09-26'
+  근거: '73차 조건부 한정 GO (원장 §98) — 재승인: 1~3차 시도 외부 종료·null 캐시 계획의 재개 불능(74차 신고), 완방상태 캐시 바이트를 묶은 계획으로 재발급,
+    WSL 로컬'
+# ── cohort 항목의 `prospective_legs:` 에도 이 leg_id 를 더한다 ──
+# ── 요약 (사람이 확인) ──
+{
+ "n_conditions": 3993,
+ "grid_axis": {
+  "config_digest": "696bf7d2cf9697d3",
+  "condition_ids_sha256": "7b08e97e129d0bf4",
+  "n_conditions": 3993,
+  "discharged_cache_sha256": "5ab61b3799d4e18e0233038d6c9dccfb53882a027d36a8721af3796f4c33a064",
+  "out": "results/grid_fit_v5"
+ },
+ "objectives": [
+  "pocv",
+  "pocv_dvdq",
+  "pocv_dvdq_dqdv",
+  "dqdv_only"
+ ],
+ "source_digest": "c2ef1a811e70bb4c",
+ "run_spec_digest": "e7cc8713bb88d941e2d5532f0308e1c7f257b9b06ebaf57a2cc0ad8667fe04ef",
+ "command": "./run.sh --mode all --leg grid_fit_v5 --config configs/grid_fine.yaml --nproc $(nproc) --out results/grid_fit_v5"
+}

@@ -1,0 +1,57 @@
+8131: ## §99 한정 실행 1~3차 시도 — 전부 외부 종료 · 재개 불능 발견(G74-1) · **재승인** (캐시 바이트를 묶은 계획으로 교체)
+8132: 
+8133: 2026-09-26 WSL 로컬 (`~/dd`, HEAD `951b6136` = 1차 승인 HEAD, RUN_SCOPE diff 0 → `7a794556`, `source_digest c2ef1a811e70bb4c`, 28 proc · RTX 3060 · 15.5 GB). 시각은 WSL 로컬(로그 파일명은 UTC). 로그 전문은 `~/grid_fit_v5_window/` 에 있고 실행 뒤 `docs/22p_gap/run_windows/grid_fit_v5/` 로 옮겨 커밋한다.
+8134: 
+8135: | # | 시각 | 무엇 | 끝 |
+8136: |---|---|---|---|
+8137: | 1 | 18:07 | `nohup ./run.sh --mode all …` (attempt `591c0939…`, 새 발급). 완방상태 계산 → 캐시 `.cache/discharged_state/a8e262f7d6aa4beb.json` 저장 → `grid 0/3069` | 프로세스 소멸, 메시지 없음. 터미널을 닫아 WSL 이 idle 종료. **조건 0개 계산** (`completed.jsonl` 924건은 guards 사전검사의 infeasible 기록) |
+8138: | 1-r | 18:18 | D6 의 명시적 `--resume` **1회** | grid gate 거부: `살아 있는 claim 은 다른 run_spec 을 봉인했다 (97585418 ≠ e7cc8713)` |
+8139: | 2 | 18:20 | 캐시 파일을 창 디렉터리로 옮긴 뒤 `setsid nohup … --resume` | gate 통과(소유한 재개, "924개 완료 확인, 3069개 남음") → 캐시 재계산·재저장 → `grid 0%` → **Terminated** (loky "leaked semlock at shutdown"). `dmesg` 첫 줄 = **18:27:01 VM 부팅** → WSL VM 재시작으로 SIGTERM. OOM 아님(13 GB free), GPU 유휴, 다른 publisher 없음 |
+8140: | — | 18:3x | `release_leg_run('grid_fit_v5')` → `planned` (attempt `591c0939…`). 부분 산출 → `$W/attempt12_partial_results`, 캐시 → `$W/discharged_cache_from_attempt2.json`. `precheck_leg_run` → `kind: new` | 사용자 재승인(같은 계획 항목, 처음부터) |
+8141: | 3 | 18:31 | tmux 안 `./run.sh --mode all …` (attempt `abd0c650…`, 새 발급) → 캐시 저장 → `grid 0%` | tmux 세션이 닫히며(`[exited]`) 소멸. 원인은 **내 명령 블록**: `tmux new` 와 그 뒤 실행 줄을 한 블록으로 붙여 넣게 해서 줄이 pane 셸과 바깥 셸로 갈라졌다 |
+8142: | 3-d | 18:32 | 바깥 셸이 같은 줄을 중복 실행 | grid gate 거부 `97585418 ≠ e7cc8713` (소유한 재개 + 캐시 존재). 아무것도 쓰기 전 거부 |
+8143: | — | 18:3x | `release_leg_run` → `planned` (attempt `abd0c650…`). 부분 산출 → `$W/attempt3_partial_results`, 캐시 → `$W/discharged_cache_from_attempt3.json`. `precheck` → `new` | — |
+8144: 
+8145: **G74-1 (코드, RUN_SCOPE — 지금 고치지 않는다, 74차 신고):** `discharged_cache_sha256: null` 계획은 **첫 시작 뒤 어떤 소유한 재개도 불가능**하다. `src/grid.py::_discharged_kw` 는 계획이 null 이면 `force=True` 로 재계산하는데 `src/baseline.py::get_discharged_state` 는 재계산 결과를 `use_cache`(config 기본 true)면 **캐시 파일로 저장**한다. 그 다음 프로세스의 `live_grid_axis` 는 그 파일의 sha 를 spec 에 넣으므로 claim 이 봉인한 null spec 과 항상 어긋난다. 세 번의 거부는 gate 가 옳게 동작한 것이고(다른 spec 을 이어붙이지 않았다), 틀린 것은 실행 자신의 부작용이 live 축을 바꾼다는 점이다. 결과: E9-4 D6 의 "`--resume` 정확히 1회" 는 null 계획에서는 문장으로만 존재했다. 반례는 위 1-r·3-d 그대로 (재현: null 계획 → 시작 → 캐시 저장 확인 → 같은 token 으로 두 번째 시작). 수정 후보(74차에서 판정 받는다): (a) 승인이 null 이면 강제 재계산 결과를 저장하지 않는다 (b) 소유한 재개는 완방상태 축을 claim 의 봉인 spec 에서 가져와 대조한다 (c) `plan_leg.py` 가 null 을 거부하고 캐시를 먼저 만들게 한다. 어느 것도 지금 넣지 않는다 — RUN_SCOPE 가 움직이면 GO 가 묶인 `c2ef1a811e70bb4c` 가 깨진다.
+8146: 
+8147: **G74-2 (등록부):** `docs/22p_gap/_exec_class/f3f509012c8d1a39beff96c951f649e40da50567d1aac388628d79c44e270acf.json` 이 미추적으로 생겼다. 소유한 재개 경로의 `_record_canonical_if_identifiable` 이 부분 산출 디렉터리(manifest 있음)의 content id 를 정본 class 로 등록한 것이다 — 중단·폐기된 자리의 레코드. **지우지 않고 커밋하지 않는다** (등록부 삭제 금지 · 고아 커밋 금지). 디스크 등록부는 368, tracked 367. 재실행의 E6 전후 snapshot 은 368 에서 시작하며 이 이름을 표에 적는다.
+8148: 
+8149: **재승인 (사용자 결정, 이 커밋):** 같은 다리 이름 `grid_fit_v5`, 계획 항목을 **교체**. 바뀐 것은 `discharged_cache_sha256` (null → `5ab61b3799d4e18e0233038d6c9dccfb53882a027d36a8721af3796f4c33a064`, WSL 에서 `python -m src.baseline --config configs/grid_fine.yaml` 로 만든 캐시의 `sha256sum`) · `run_spec_digest` (`97585418…` → **`e7cc8713bb88d941e2d5532f0308e1c7f257b9b06ebaf57a2cc0ad8667fe04ef`**) · `근거` 뿐이다. 이 digest 는 이 컨테이너에서 커밋된 spec 에 그 sha 만 넣어 `run_spec_digest` 로 독립 계산한 값과 같고, 세 거부가 live 로 계산한 값과도 같다 — 캐시 바이트가 시도마다 같았다는 뜻이다. `plan_leg.py` 는 같은 이름이 index 에 있으면 거부하므로 WSL 작업 사본에서 옛 항목을 잠시 빼고 출력(`$W/plan_grid_fit_v5_reapproval.txt`)을 뽑은 뒤 `git checkout` 으로 되돌렸다(WSL tracked 변경 0). 리뷰어 §6-1 준수: 값은 실행 기계에서 현행 코드로 만든 것이고 과거 문서·다른 기계 캐시를 복사하지 않았다. 이제 첫 실행과 재개가 같은 spec(`cache_bytes` 경로 — 재저장 없음)이므로 D6 가 실제로 작동한다.
+8150: 
+8151: **신고하는 편차:** ① 리뷰어 §6-2 "clean 시작" — 재실행 시작 시 WSL 트리에 tracked 변경은 0 이지만 미추적 4개가 있다: `docs/22p_gap/_attempts/`(lifecycle journal·lock) · `_claims/`(lock) · G74-2 고아 레코드 · `bms-balancing/out_u18b/`(dd 밖). ② D6 는 1-r 에서 1회 썼고 2·3 은 외부 종료라 재승인 경계에서 사용자 결정으로 새 항목을 냈다. ③ 실행 환경 조치(사용자): Windows `.wslconfig` `vmIdleTimeout=-1`, 절전 해제, tmux 안 실행·창 유지 — 적용 여부는 창을 열 때 `status_before` 옆에 적는다.
+8152: 
+8153: ## §100 WSL 4차 시도 — VM 재시작(메모리) · 캐시 결속 계획의 재개 성립 실측 · **실행 기계 이전 (Gabia) · 재승인 2**
+8154: 
+8155: **4차 (WSL, 재승인 1 HEAD `69c3c826`, 19:21):** tmux 안, 창 유지, `.wslconfig` 는 `networkingMode=mirrored` 만(사용자가 `vmIdleTimeout` 은 넣지 않음). 로그: `gate 통과(사전 점검·새 발급)` → **`완방상태 캐시 적중`** (재계산·저장 없음 — 재승인 1 의 목적대로) → `grid 0/3069` → 소멸. `uptime -s` = **19:24:29** (시작 3분 뒤 VM 부팅), 프로세스 0, OOM 로그 없음(VM 자체가 넘어가면 남지 않는다). 시작 시점 병행 프로세스: 다른 clone 의 `run_daily.sh --catchup` (로그인 시 백그라운드, 종료 확인, `~/dd` 와 무관). 판정: 워커 28개(각각 PyBaMM+JAX+IDAKLU)가 RAM 15.5 GB 를 넘겨 **WSL VM 이 재시작**. 1~3차의 "외부 종료" 도 같은 원인일 가능성이 높다(2차의 18:27 부팅 포함) — 조건 계산은 네 번 모두 0.
+8156: **재개 성립 실측:** 4차 뒤 `precheck_leg_run` → **`kind: resume`** (attempt `1939d70c…`). null 계획에서는 세 번 모두 거부됐던 자리다 — 캐시 바이트를 묶으면 D6 의 `--resume` 이 성립한다는 G74-1 의 반대편 증거. 사용자 결정으로 재개하지 않고 기계를 옮겼다: `release_leg_run` → `planned` (attempt `1939d70c…`), 부분 산출 → `$W/attempt4_partial_results`, WSL tracked 변경 0, `precheck` → `new`. WSL 창 디렉터리(`~/grid_fit_v5_window/`, 4회분 로그·부분 산출·캐시 사본·등록부 snapshot)는 증거로 보존.
+8157: 
+8158: **Gabia (`kserver116-27`, 20 proc · 62 GB(가용 46) · 291 GB · conda base Python 3.13 → `conda create -n py312 python=3.12` 로 3.12.14 · tmux 있음):** clone HEAD `69c3c826` · `7a794556` 대비 RUN_SCOPE diff 0 · `setup_env.sh --python <py312>` · `run.sh --mode verify` OK(idaklu 권장) · `git status` 비어 있음 · `source_digest c2ef1a811e70bb4c`. 이 기계에 이미 다른 작업이 16 GB 를 쓰고 있다(창 열 때 `ps` 로 적는다). 워커 수는 명세대로 `$(nproc)` = 20 (워커당 2.3 GB).
+8159: **재승인 2 (사용자 결정, 이 커밋):** `python -m src.baseline --config configs/grid_fine.yaml` 로 캐시 생성 → `plan_leg.py` 출력(`~/grid_fit_v5_window/plan_gabia.txt`, 작업 사본 임시 제거 뒤 되돌림). 바뀐 것은 `discharged_cache_sha256` (`5ab61b37…` → **`66d84e76ef88e0b65fdf9f432db89818348814e28e7345731216de149cb5fee1`**) · `run_spec_digest` (`e7cc8713…` → **`0838df841ae7e4e694a3938d281e92284c27fb04393e0008b15f7a3fd4e10337`**) · `근거`. 컨테이너에서 커밋된 spec 에 그 sha 만 넣어 독립 계산한 digest 와 같다. `config_digest 696bf7d2cf9697d3` · `condition_ids 7b08e97e129d0bf4` · 3993 · fit 축 전부 동일. 캐시 바이트가 기계마다 다른 것은 payload 의 런타임 identity(11차 발견 1) 때문이며 리뷰어 §6-1 ("실행할 기계에서 생성") 그대로다.
+8160: **신고:** ① 실행 기계가 73차 요청문의 WSL 에서 Gabia 로 바뀌었다 — 코드·config·OUT·argv 는 그대로, 승인 HEAD 만 이 커밋으로 갱신. ② 계획 항목이 같은 leg 이름으로 세 번째 교체됐다(이력은 `근거` 와 git). ③ root 계정 실행. ④ WSL 고아 등록 레코드 `f3f509…`(G74-2) 는 WSL 에만 있고 Gabia 등록부는 tracked 367 에서 시작한다.
+8161: 
+8162: ## §101 `grid_fit_v5` 한정 실행 — 완주 · full_bundle · current_validated (Gabia) · 실행 뒤 발견 G74-3·G74-4
+8163: 
+8164: **실행 (승인 HEAD `e34eea84`, `kserver116-27`, 20 proc, root, Python 3.12.14 venv, `setsid nohup`).** 창 열기: HEAD `e34eea84` · RUN_SCOPE diff 0 (→ `7a794556`) · `source_digest c2ef1a811e70bb4c` · 캐시 `66d84e76…` · precheck `new` · 계획 `0838df84…` · env clean · `git status` 빈 출력 · 등록부 367 · 다른 publisher 없음 (병행: Quantum ESPRESSO `pw.x` 1개, 9.4 GB — 무관). 로그·snapshot 전문은 `docs/22p_gap/run_windows/grid_fit_v5/gabia/`.
+8165: 
+8166: | 단계 | 시각 (KST) | 결과 |
+8167: |---|---|---|
+8168: | gate (새 발급) | 19:45 | attempt `2d91320cc5ad42198889fc2dba819829` · `완방상태 캐시 적중` (재계산·저장 없음) |
+8169: | grid | 19:46–19:58 | 3069 조건 12:51 · completed 3993 = 계산 3069 + 사전 infeasible 924 · **solver 실패 0** (failed.csv 924 행 = infeasible 수와 같다) · 청크 16 |
+8170: | gate (소유한 재개) → fit | 19:59–21:32 | 3069 × 4 목적함수 × restart 5 · 5587.4 s · 12276 행 · 조건당 1.8 s |
+8171: | finalize → score → report | 21:32–21:35 | `preservation_pending` · `docs/RESULTS_grid_fit_v5.md` (126줄) |
+8172: | 창 닫기 | — | 등록부 367 → **369**: grid `719afd1a…` · fit `140d500a…` 추가, 삭제·변경 0 · 계획 `executed` |
+8173: | archive | — | `artifacts/grid_fit_v5` 27 MB · 29 파일 · payload index `4cd2c0f8…` |
+8174: | 영수증 | — | `make_receipt.py grid_fit_v5` 검사 33 · 산출 2 · core `2aadd24b1de88b07…` |
+8175: | attach | — | `full_bundle · current_validated` · `idempotent: False` · `inference_role: diagnostic` 불변 |
+8176: 
+8177: 데이터 커밋 `d9f8791c` 는 Gabia 에서 사람이 push 했다 (artifacts · 영수증 · 원장 · 보고서 · 등록 레코드 2 · 창 기록). `_attempts/`·`_claims/` 는 lifecycle 잠금이라 커밋하지 않았다.
+8178: 
+8179: **무해한 로그 (판정 근거 포함):** JAX `Unable to load cuSPARSE` Traceback — GPU 백엔드 초기화 실패 뒤 CPU 로 넘어간다 (계산은 IDAKLU/CPU). loky `A worker stopped while some jobs were given to the executor` — 메모리가 늘어난 워커를 loky 가 교체한 알림; 작업 유실이면 `TerminatedWorkerError` 로 중단된다. solver 실패 0 과 completed 3993 이 유실 없음을 확인한다.
+8180: 
+8181: **G74-3 (절차 공백 — 실행 뒤 docs-lint 적색):** E9 는 새 다리를 활성 cohort `g18_2026_09_15` 에 prospective 로 넣었고, attach 가 그것을 cohort `legs` 로 옮겼다. 그런데 cohort·투영·주장 lint 는 **cohort 의 모든 다리가 봉인된 투영(row projection)을 가진 warm-probe 다리**라고 가정한다. 결과 (d9f8791c, `tests/test_docs_lint.py` maxfail 20 에서 멈춤): ① `cross_leg_comparison: not_applicable_single_leg` 가 두 다리 명부와 충돌 (투영 계열 시험 16개가 이 SystemExit 으로 실패) ② `evidence.regeneration_capability` 없음 → "활성 cohort 에 있다" ③ `claim_roles` 없음 ④ 주장을 붙이려 해도 `source_digest_generations` 에 `c2ef1a811e70bb4c` 가 없고, 그 표는 봉인된 투영에 anchor 된 digest 만 받는다. E1 한계 라벨("이 실행은 `row_projection.py` 의 강한 producer 주장을 쓰지 않는다")과 정면으로 만난다 — **우리도 리뷰어도 E9 단계 5 가 이 lint 계약을 요구한다는 것을 보지 못했다.** 사람의 결정 사항으로 둔다 (다음 절).
+8182: 
+8183: **G74-4 (RUN_SCOPE, 지금 안 고침):** `scripts/archive_results.sh <run>` 은 `artifact_index.yaml` 을 **그 호출에서 승격한 묶음만으로** 다시 쓴다 (`runs = {}` 에서 시작, 238–332). E9 단계 2 의 명령이 정확히 그 형태였고, Gabia 에는 v4 의 `results/` 가 없어 **v4 네 항목(`grid_curves_v4`·`grid_fit_v4`·`halfcell_fit_v4`·`paired_fixed5_v4`)이 인덱스에서 지워졌다** (묶음 바이트는 불변). 이 커밋에서 네 항목을 `e34eea84` 의 바이트 그대로 되살리고 `grid_fit_v5` 항목은 생성된 그대로 두었다. 최상위 `source_commit` 은 스크립트 규칙(묶음마다 다르면 null)대로 `null`.
+8184: 
+8185: **신고:** 영수증 `validator_tree_dirty: true` — 영수증을 만들 때 Gabia 트리에 실행이 남긴 원장 변경과 미추적 lifecycle·등록 파일이 있었다. 이 값은 attach 판정에 쓰이지 않는다.
+8186: 
+8187: **이 커밋 (기계적 정정만):** 인덱스 복원 · `artifacts/README.md` 행 · `registry_impact.md` census 369 (그 밖 = grid_fit_v5 2) · `test_the_committed_ledger_reports_no_gate_backed_execution_yet` 실측 갱신 (`gate_backed_executions` 1, status `executed`). **하지 않은 것:** cohort 명부·`regeneration_capability`·`claim_roles`·`근거`·세대표 — 사람의 결정 (G74-3).

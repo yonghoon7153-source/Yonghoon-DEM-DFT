@@ -1,0 +1,145 @@
+diff --git a/degradation-degeneracy/docs/22p_gap/LEG_PRESERVATION.yaml b/degradation-degeneracy/docs/22p_gap/LEG_PRESERVATION.yaml
+index 7bff14b..6385325 100644
+--- a/degradation-degeneracy/docs/22p_gap/LEG_PRESERVATION.yaml
++++ b/degradation-degeneracy/docs/22p_gap/LEG_PRESERVATION.yaml
+@@ -636,16 +636,17 @@ cohorts:
+   dir: docs/22p_gap/proj_g18
+   status: active
+   legs:
++  - grid_fit_v5
+   - paired_fixed5_v4
+   prospective_legs: []
+   cross_leg_comparison: not_applicable_single_leg
+-  무엇이_달라졌나: 63차 게이트 리뷰(방어적 코드·회귀 검토)가 새 P1 3건 · P2 1건과 증거 공백 둘을 냈고 전부 코드에서 닫혔다
+-    (원장 §77·§78). 이 cohort 의 pin 을 움직인 것은 E1 이다 — producer analyzer 의 definition head 가 3.12 `type_params`
+-    의 bound(3.12)·default(3.13) 를 열거한다. bound 는 별도 annotation scope 에서 지연 평가되고 함수 매개변수를 못 보므로
+-    매개변수 shadow 를 안 적용하는 head 자리가 맞다. type parameter 이름 자체는 shadow 로 세지 않는다 (fail-closed 쪽).
+-    첫 수정판이 `getattr(tp, attr)` 로 이름을 계산해서 건네다 분석기 자신의 규칙에 걸렸고 리터럴 이름 둘로 풀었다 —
+-    규칙이 자기 자신에게도 걸린다는 것을 실측했다. **계산식은 안 바뀌었다** — `src_scoring_py_sha256` 가 그대로이고,
+-    아래 행 바이트가 그 사실을 말한다.
++  무엇이_달라졌나: 63차 게이트 리뷰(방어적 코드·회귀 검토)가 새 P1 3건 · P2 1건과 증거 공백 둘을 냈고 전부 코드에서 닫혔다 (원장
++    §77·§78). 이 cohort 의 pin 을 움직인 것은 E1 이다 — producer analyzer 의 definition head
++    가 3.12 `type_params` 의 bound(3.12)·default(3.13) 를 열거한다. bound 는 별도 annotation
++    scope 에서 지연 평가되고 함수 매개변수를 못 보므로 매개변수 shadow 를 안 적용하는 head 자리가 맞다. type parameter
++    이름 자체는 shadow 로 세지 않는다 (fail-closed 쪽). 첫 수정판이 `getattr(tp, attr)` 로 이름을 계산해서
++    건네다 분석기 자신의 규칙에 걸렸고 리터럴 이름 둘로 풀었다 — 규칙이 자기 자신에게도 걸린다는 것을 실측했다. **계산식은 안 바뀌었다**
++    — `src_scoring_py_sha256` 가 그대로이고, 아래 행 바이트가 그 사실을 말한다.
+   pin:
+     schema_version: 3
+     compute_sha256: 150416386d3c0b93
+@@ -732,6 +733,59 @@ planned:
+   recorded_on: '2026-08-28'
+   근거: 46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는 실행 전 gate 가 없던 시절에 돌았고, digest 는
+     원장의 `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든 값이 아니다).
++- leg_id: grid_fit_v5
++  cohort_id: g18_2026_09_15
++  status: executed
++  authorization_kind: prospective
++  authorized_source_digest: c2ef1a811e70bb4c
++  run_spec_digest: 0838df841ae7e4e694a3938d281e92284c27fb04393e0008b15f7a3fd4e10337
++  run_spec:
++    leg_spec_version: 2
++    leg_id: grid_fit_v5
++    grid:
++      config_digest: 696bf7d2cf9697d3
++      condition_ids_sha256: 7b08e97e129d0bf4
++      n_conditions: 3993
++      discharged_cache_sha256: 66d84e76ef88e0b65fdf9f432db89818348814e28e7345731216de149cb5fee1
++      out: results/grid_fit_v5
++    fit:
++      config_digest: 87482fa38d72802d
++      objective_order:
++      - pocv
++      - pocv_dvdq
++      - pocv_dvdq_dqdv
++      - dqdv_only
++      objectives_digest: b96732b98b40aabd
++      reference: grid
++      halfcell_recipe:
++        method: ocp
++        kw: {}
++      halfcell_cache_sha256: null
++      base_config_digest: 2885945318d396a5
++      bounds_preset: expanded
++      bounds_digest: 7cd061b430b75572
++      optimizer:
++        method: Nelder-Mead
++        n_restarts: 5
++        adaptive: true
++        warm_start: true
++      use_noisy: true
++      smoothing_backend: banded_cache
++      row_selection:
++        mode: full
++        limit: null
++        subset_sha256: null
++      in: results/grid_fit_v5
++      in_digest: null
++      out: results/grid_fit_v5
++  recorded_on: '2026-09-26'
++  근거: '73차 조건부 한정 GO (원장 §98) — 재승인 2 (2026-09-26, 원장 §100): WSL 4차 시도가 워커 기동 시 VM
++    종료로 반복 실패(메모리 15.5 GB · 28 proc), 실행 기계를 Gabia 서버(kserver116-27, 20 proc, 62 GB,
++    Python 3.12.14)로 이전. 이 기계에서 `python -m src.baseline --config configs/grid_fine.yaml`
++    로 만든 완방상태 캐시 바이트(sha256 66d84e76…)를 묶고, plan_leg.py 출력 그대로다(작업 사본에서 옛 항목을 잠시 뺀
++    뒤 뽑고 되돌림). 이력: 1차 승인 951b6136 (null 캐시, 재개 불능 G74-1) → 재승인 1 69c3c826 (WSL 캐시
++    5ab61b37…, precheck resume 성립 실측) → 이 항목. 그 밖의 축·authorized_source_digest 는 세
++    항목 모두 같다.'
+ legs:
+ - leg_id: paired_fixed5_v4
+   preservation_status: full_bundle
+@@ -902,6 +956,55 @@ legs:
+   - claim_id: XDIGEST_NUMERICALLY_HARMLESS
+     inference_role: diagnostic
+     reason: regime 병기 필수
++- leg_id: grid_fit_v5
++  preservation_status: full_bundle
++  validation_status: current_validated
++  inference_role: diagnostic
++  evidence:
++    cohorts:
++    - g18_2026_09_15
++    leg_source_digest: c2ef1a811e70bb4c
++    out: results/grid_fit_v5
++    verifier_origin: normal_finalize
++    phases:
++      grid:
++        at: '2026-09-26T10:58:50Z'
++        receipt:
++          curves_manifest_sha256: ba21378676a0f5353374043084055bc95508874cb0c195b5955c2b4d155e001a
++          curves_manifest_start_sha256: c0bc64a45e6dafd7e3f5acbdeac4ca5fbfe16c12f171e440bca7fc2c0b4cb561
++          curves_sha256: 29da452a04ca17d778f448ad9504f21d1b8a22db8dd64bf1e0ba7c95804a6adc
++          finished_at: '2026-09-26T10:58:50Z'
++          grid_run_sig: e5d08ed14cb2
++          n_curves_total: 3069
++          out: results/grid_fit_v5
++      fit:
++        at: '2026-09-26T12:32:52Z'
++        consumed:
++          grid: fb40ea8e10563ebff227ec187a515642c9c23095c71025ab234661ed7c78b48c
++        receipt:
++          finished_at: '2026-09-26T12:32:52Z'
++          n_rows: 12276
++          out: results/grid_fit_v5
++    attempt_id: 2d91320cc5ad42198889fc2dba819829
++    run_spec_digest: 0838df841ae7e4e694a3938d281e92284c27fb04393e0008b15f7a3fd4e10337
++    attempt_verifier: 01739f6382ef807a36262362d0c39b397ca1267945d5ff2d74762b4a09f3ad63
++    bundle_uri: artifacts/grid_fit_v5
++    bundle_files: 29
++    payload_bytes: 27313017
++    payload_index: artifacts/grid_fit_v5/payload_sha256.yaml
++    payload_index_sha256: 4cd2c0f89a07da834680e4a69d75391241a0930819174fc98cf52045f7519c42
++    member_rehash_by: tools.archive_bundle.check
++    fits_sha256: 378ffde80b2a44d99efa3bff3e712b7cd44b41e0073d712fdf63d4efca864042
++    verification_receipt: docs/22p_gap/receipts/grid_fit_v5.validate.yaml
++    verification_receipt_core_sha256: 2aadd24b1de88b070e48bdda428050e6475fa7a245c4571df4771ca04ffde83a
++    verification_receipt_generator: docs/22p_gap/make_receipt.py
++    empty_root_restore: true
++    rescored_from_restored_fits: true
++    validator_identity:
++      source_digest: c2ef1a811e70bb4c
++      n_checks: 33
++      ok: true
++    bundle_content_id: d59744657f3a2086a8069c720bea4468a89c3e36e2221475d0db441c62baf8ae
+ 영향:
+   안_바뀌는_것:
+   - 전이표(131/436/55/854 · 381/186/167/742)는 커밋된 투영에서 재계산된다

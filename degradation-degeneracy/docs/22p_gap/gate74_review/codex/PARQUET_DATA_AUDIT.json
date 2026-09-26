@@ -1,0 +1,207 @@
+{
+  "fits.parquet": {
+    "rows": 12276,
+    "columns": [
+      "reference",
+      "lli",
+      "lam_pe",
+      "lam_ne",
+      "lam_pe_type",
+      "lam_ne_type",
+      "noise",
+      "cond_id",
+      "objective",
+      "q_mah",
+      "r",
+      "a_pe",
+      "b_pe",
+      "a_ne",
+      "b_ne",
+      "a_pe_ini",
+      "b_pe_ini",
+      "a_ne_ini",
+      "b_ne_ini",
+      "J",
+      "converged",
+      "n_eval",
+      "bound_active_a_pe",
+      "bound_active_b_pe",
+      "bound_active_a_ne",
+      "bound_active_b_ne",
+      "any_bound_active",
+      "alpha_wall_pe",
+      "alpha_wall_ne",
+      "n_restarts",
+      "n_restarts_agree",
+      "p_spread",
+      "J_spread",
+      "restarts_json",
+      "lam_pe_hat",
+      "lam_ne_hat",
+      "lli_hat",
+      "lli_hat_21p",
+      "lli_hat_code",
+      "bounds_preset",
+      "warm_started",
+      "run_sig"
+    ],
+    "selected_column_counts": {
+      "objective": {
+        "pocv": 3069,
+        "pocv_dvdq": 3069,
+        "pocv_dvdq_dqdv": 3069,
+        "dqdv_only": 3069
+      },
+      "run_sig": {
+        "da1bc3f2169d": 12276
+      }
+    },
+    "unique_cond_id": 3069
+  },
+  "curves.parquet": {
+    "rows": 920700,
+    "columns": [
+      "cond_id",
+      "lli",
+      "lam_pe",
+      "lam_ne",
+      "lam_pe_type",
+      "lam_ne_type",
+      "noise",
+      "seed",
+      "protocol",
+      "q_mah",
+      "x_norm",
+      "v_pe",
+      "v_ne",
+      "v_full",
+      "v_full_noisy",
+      "grid_run_sig"
+    ],
+    "selected_column_counts": {},
+    "unique_cond_id": 3069
+  },
+  "multistart.parquet": {
+    "rows": 5904,
+    "columns": [
+      "cond_id",
+      "objective",
+      "lli",
+      "lam_pe",
+      "lam_ne",
+      "noise",
+      "n_restarts_total",
+      "n_near_J",
+      "p_spread_all",
+      "p_spread_near",
+      "J_best",
+      "J_worst",
+      "multistart_kind",
+      "n_nonrandom_dropped",
+      "random_only",
+      "restart_indices"
+    ],
+    "selected_column_counts": {
+      "objective": {
+        "pocv": 1476,
+        "pocv_dvdq": 1476,
+        "pocv_dvdq_dqdv": 1476,
+        "dqdv_only": 1476
+      }
+    },
+    "unique_cond_id": 1476
+  },
+  "multistart_paired.parquet": {
+    "rows": 5336,
+    "columns": [
+      "cond_id",
+      "objective",
+      "lli",
+      "lam_pe",
+      "lam_ne",
+      "noise",
+      "n_restarts_total",
+      "n_near_J",
+      "p_spread_all",
+      "p_spread_near",
+      "J_best",
+      "J_worst",
+      "multistart_kind",
+      "n_nonrandom_dropped",
+      "random_only",
+      "restart_indices"
+    ],
+    "selected_column_counts": {
+      "objective": {
+        "pocv": 1334,
+        "pocv_dvdq": 1334,
+        "pocv_dvdq_dqdv": 1334,
+        "dqdv_only": 1334
+      }
+    },
+    "unique_cond_id": 1334
+  },
+  "multistart_random_only.parquet": {
+    "rows": 5750,
+    "columns": [
+      "cond_id",
+      "objective",
+      "lli",
+      "lam_pe",
+      "lam_ne",
+      "noise",
+      "n_restarts_total",
+      "n_near_J",
+      "p_spread_all",
+      "p_spread_near",
+      "J_best",
+      "J_worst",
+      "multistart_kind",
+      "n_nonrandom_dropped",
+      "random_only",
+      "restart_indices"
+    ],
+    "selected_column_counts": {
+      "objective": {
+        "pocv": 1425,
+        "pocv_dvdq_dqdv": 1462,
+        "dqdv_only": 1467,
+        "pocv_dvdq": 1396
+      }
+    },
+    "unique_cond_id": 1476
+  },
+  "completeness": {
+    "fits_unique_condition_objective_pairs": 12276,
+    "condition_sets_equal": true,
+    "objectives_per_condition": 4,
+    "feasible_ids": 3069,
+    "infeasible_ids": 924,
+    "ids_disjoint": true,
+    "total_ids": 3993,
+    "total_condition_digest": "7b08e97e129d0bf4",
+    "fit_condition_digest": "f4e633ebe62924a6",
+    "row_failures_in_failed_csv": 0
+  },
+  "wsl_partials": {
+    "attempt12_partial_results": {
+      "unique_completed": 924,
+      "all_equal_infeasible_ids": true,
+      "completed_feasible_conditions": 0,
+      "does_not_prove_no_solver_work_started": true
+    },
+    "attempt3_partial_results": {
+      "unique_completed": 924,
+      "all_equal_infeasible_ids": true,
+      "completed_feasible_conditions": 0,
+      "does_not_prove_no_solver_work_started": true
+    },
+    "attempt4_partial_results": {
+      "unique_completed": 924,
+      "all_equal_infeasible_ids": true,
+      "completed_feasible_conditions": 0,
+      "does_not_prove_no_solver_work_started": true
+    }
+  },
+  "scope": "Read-only stored data; no scientific recomputation; numerical validity/worker-cause/zero attempted computations not inferred."
+}

@@ -1,0 +1,42 @@
+timestamp: '2026-09-26T19:45:51'
+config_hash: 60d9205dda522e6c
+pybamm_version: 26.8.0.0
+platform: Linux-6.8.0-110-generic-x86_64-with-glibc2.39
+python: 3.12.14
+git_commit: e34eea8455d87f8e33c6ae7113fe3d16ddb600e3
+git_commit_short: e34eea84
+git_dirty: false
+git_dirty_tracked: false
+git_dirty_files_in_scope: []
+git_dirty_out_of_scope:
+- degradation-degeneracy/docs/22p_gap/LEG_PRESERVATION.yaml
+git_dirty_repo_wide: true
+git_dirty_scope:
+- src/
+- tools/
+- configs/
+- scripts/
+- run.sh
+- requirements*.txt
+git_untracked_count: 4
+git_untracked_critical: []
+run_type: grid
+protocol_unified: charge_first
+solver: IDAKLUSolver
+nproc: 20
+chunk_size: 200
+n_conditions: 3993
+n_resume_skipped: 0
+discharged_state:
+  ne_primary: 36.64970365755636
+  ne_secondary: 3446.0841935664557
+  pe: 58439.873864492365
+reproducible: true
+n_ok: 3069
+n_failed: 924
+n_completed_total: 3993
+n_failed_total: 924
+n_curves_total: 3069
+elapsed_s: 777.5
+curves_parquet: results/grid_fit_v5/curves.parquet
+finished: '2026-09-26T19:58:49'
