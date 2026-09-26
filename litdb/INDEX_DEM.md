@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 147편 · 생성 2026-09-26
+> digest 148편 · 생성 2026-09-26
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -88,7 +88,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `yoo2026_porosity_gradient_dry_electrode` | Yoo 2026 (Energy Storage Materials, ENSM 105331) — Porosity-구배 건식 흑연 전극 + 변형성 Primer Layer | MPM | 2026-07-28 | 🖼 7 |
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (35편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (36편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -127,6 +127,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `wang2026_dryprocess_thick_cathode_failure_ncm94` | 건식 후막 양극(NCM94 80 wt%, 6.5 mAh cm⁻²)의 실패 기전 — in-situ 압력 + 3전극 EIS/DRT — Wang & Wang (J. Mater. Chem. A 2026) | exp (실험 전용 — 시뮬레이션 0) | 2026-08-19 | 🖼 26 |
 | `wet_processing_resolved_am_ssb_cathode_manufacturing` | ASSB 양극을 습식공정(슬러리→건조→압연)으로 — 실제 형상(resolved, multisphere) AM 입자를 nano-CT에서 추출해 DEM 제조 시뮬 + GeoDict로 σ_ionic·σ_e 산출 — Weitze / Franco (Energy Storage Materials 2024) | DEM (LAMMPS, multisphere resolved-AM; wet-process slurry→dry | 2026-06-26 | 🖼 8 |
 | `xu2023_realistic_am_shape_cgmd_calendering` | XCT 로 뜬 실제 3D 형상의 NMC 2차입자로 LIB 전극 제조(슬러리→건조→압연)를 다시 돌리다 — Franco 그룹 ARTISTIC 의 "구(球) 근사 탈출" 1호 — Xu (J. Power Sources 2023) | CGMD/DEM (LAMMPS, Lennard-Jones + JKR; 슬러리·건조·압연) + µ-XCT 실험 | 2026-09-11 | 🖼 7 |
+| `zhang2026_xct_dem_cathode_calendering_peel_calibration` | X-CT 실구조(Ebner 2013)를 초기형상으로 쓴 DEM 으로 NMC111 양극 캘린더링 — 박리(실은 수직 인장) 시험으로 입자–집전체 bond 강도 보정 · 30/60/200 MPa 가압–제하 · 힘사슬·응력텐서·집전체 매립·체적에너지밀도 — Zhang·Gao·Xiao·Ding (JOM 2026) | DEM (Hertz–Mindlin + linear parallel bond · 코드 미명시 · X-CT 초기 | 2026-09-26 | 🖼 13 |
 
 ## 화학-기계 열화 · 계면 (15편)
 

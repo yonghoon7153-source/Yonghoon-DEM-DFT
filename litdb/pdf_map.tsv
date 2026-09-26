@@ -270,3 +270,11 @@ endo2001_vgcf_basic_properties_battery_applications	s0008622300002955
 #       ('--inbox --run --skip-done' 은 안전.)
 #   ⭐ Fig 7 (0.8 g/cm³ 압분체 ≈0.012 Ω cm) · Fig 8 (밀도 스윕) · Fig 6 (탄성률 영역) 이 이 카드의 근거다.
 oginni2026_computational_design_review	0926-1. nextmater_2026_oginni_computational_design   # 2026-09-26 논문 에이전트 · digest 제목=원제라 자동매칭도 되지만 명시
+zhang2026_xct_dem_cathode_calendering_peel_calibration	tomography-based
+#   ↑ 2026-09-26. 패턴 'tomography-based' = 업로드명(밑줄)·inbox명(공백) **양쪽에 다 들어가는 유일한 조각** (원제 "…via X-ray Tomography-Based Discrete Element Method").
+#   **13장(Fig 1–12 + Table I) 전부 손으로 다시 잘랐다** (figures.json 의 recrop / manual_crop, 전부 viewed).
+#   이 PDF 의 그림은 전부 **임베디드 래스터 1장씩**이다. 자동 크롭은 쪽 너비 띠라 fig_1 에 **본문 식 (7)·(8)**, fig_5·fig_6 에 **쪽 구분선**이 섞였고
+#   fig_3/5/7/8/10/12 는 좌우 여백 ≈ 65 pt. → 클립 = 래스터 bbox ± 1.5 pt @300 dpi + 백색 여백 제거(흰색 = 세 채널 > 244, 여백 8 px).
+#   Table I 은 **로마숫자 라벨이라 추출 0건** → 5쪽(1-based) clip (314.9, 543.5, 558.0, 659.0) pt = 윗 굵은 괘선 + 캡션 … 아래 괘선, 수동.
+#   [!] '--slug zhang2026_xct_dem_cathode_calendering_peel_calibration --clean' 을 돌리면 쪽 너비 크롭이 돌아오고 tab_1.png 가 사라진다.
+#       ('--inbox --run --skip-done' 은 안전.)

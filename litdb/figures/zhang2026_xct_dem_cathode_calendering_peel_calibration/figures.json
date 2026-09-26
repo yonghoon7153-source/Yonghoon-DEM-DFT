@@ -1,0 +1,298 @@
+{
+ "slug": "zhang2026_xct_dem_cathode_calendering_peel_calibration",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-26",
+ "sources": [
+  "2fa0a4ea-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic of parallel bond force and moment.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    579.6,
+    554.7,
+    721.7
+   ],
+   "w": 984,
+   "h": 592,
+   "dpi": 300,
+   "src": "2fa0a4ea-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf",
+   "blank": 0.878,
+   "recrop": "re-cropped 2026-09-26 to the embedded raster (xref 29, bbox [320.0, 581.1, 553.0, 720.2] pt) +/-1.5 pt @300 dpi + white-border trim (8 px). Reason: auto crop took Eqs (7)-(8) and the column rule above the figure (body text)",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Structure generation process in a DEM simulation: (a) data from Ebner et al. 22, (b) spherical particle approximation, (c) structure generated using DEM, and (d) size distribution of active particles. 0.01 m s\u00031, consistent with previous studies.18 Dur- ing calendering, the platen moved downward along the z direction to apply compressive loading to the electrode, and the mechanical stress acting on the platen was calculated at each simulation time step. Once the target compressive stress was reached, the platen stopped further compression and subse- quently moved upward in the opposite direction at the same velocity to simulate elastic recovery. The input parameters for the NMC particles are sum- marized in Table I, and these parameters were primarily determined based on relevant literature reported in this research field. Table I. Material and mechanical parameters used in the ch",
+   "rotated_deg": 0,
+   "bbox": [
+    59.4,
+    65.4,
+    550.9,
+    503.2
+   ],
+   "w": 2048,
+   "h": 1824,
+   "dpi": 300,
+   "src": "2fa0a4ea-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf",
+   "blank": 0.693,
+   "recrop": "re-cropped 2026-09-26 to the embedded raster (xref 52, bbox [60.4, 66.9, 549.5, 501.8] pt) +/-1.5 pt @300 dpi + white-border trim (8 px). Reason: auto crop = page-width band; tightened to the raster bounds (content was complete)",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) Sketch of the peeling experiment, (b) comparison of experimental (black line) and simulated (red line) peeling stress curve.",
+   "rotated_deg": 0,
+   "bbox": [
+    111.8,
+    65.4,
+    498.7,
+    487.8
+   ],
+   "w": 1612,
+   "h": 1760,
+   "dpi": 300,
+   "src": "2fa0a4ea-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf",
+   "blank": 0.802,
+   "recrop": "re-cropped 2026-09-26 to the embedded raster (xref 65, bbox [113.3, 66.9, 496.8, 486.0] pt) +/-1.5 pt @300 dpi + white-border trim (8 px). Reason: auto crop = page-width band with ~65 pt white side margins; tightened to the raster",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. DEM simulations of electrode calendering, showing (a) electrode microstructures at different calendering pressures, (b) evolution of electrode porosity during calendering, and (c) final electrode porosity from simulation versus experiment.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.5,
+    65.4,
+    535.5,
+    363.0
+   ],
+   "w": 2050,
+   "h": 1240,
+   "dpi": 300,
+   "src": "2fa0a4ea-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf",
+   "blank": 0.769,
+   "recrop": "re-cropped 2026-09-26 to the embedded raster (xref 73, bbox [44.8, 66.9, 533.8, 361.2] pt) +/-1.5 pt @300 dpi + white-border trim (8 px). Reason: auto crop = page-width band; tightened to the raster bounds (content was complete)",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Specific free surface area and coordination number of electrodes in the calendering stress condition.",
+   "rotated_deg": 0,
+   "bbox": [
+    111.8,
+    439.7,
+    498.7,
+    717.6
+   ],
+   "w": 1612,
+   "h": 1158,
+   "dpi": 300,
+   "src": "2fa0a4ea-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf",
+   "blank": 0.783,
+   "recrop": "re-cropped 2026-09-26 to the embedded raster (xref 80, bbox [113.3, 441.2, 496.8, 716.0] pt) +/-1.5 pt @300 dpi + white-border trim (8 px). Reason: auto crop took the page separator rule above the figure + wide side margins",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Depth distribution of NMC particles embedded in the current collector under different compression pressures: (a) 30 MPa, (b) 60 MPa, and (c) 200 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.9,
+    562.5,
+    535.1,
+    708.9
+   ],
+   "w": 2047,
+   "h": 610,
+   "dpi": 300,
+   "src": "2fa0a4ea-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf",
+   "blank": 0.209,
+   "recrop": "re-cropped 2026-09-26 to the embedded raster (xref 89, bbox [45.4, 564.0, 533.5, 707.1] pt) +/-1.5 pt @300 dpi + white-border trim (8 px). Reason: auto crop took the page separator rule above the figure",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 11,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Contact area between the current collector and the NMC particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    111.8,
+    65.4,
+    498.7,
+    351.2
+   ],
+   "w": 1612,
+   "h": 1191,
+   "dpi": 300,
+   "src": "2fa0a4ea-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf",
+   "blank": 0.833,
+   "recrop": "re-cropped 2026-09-26 to the embedded raster (xref 98, bbox [113.3, 66.9, 496.8, 349.6] pt) +/-1.5 pt @300 dpi + white-border trim (8 px). Reason: auto crop = page-width band with ~65 pt white side margins; tightened to the raster",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 12,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Force chain structures formed at different compression pressure levels.",
+   "rotated_deg": 0,
+   "bbox": [
+    97.9,
+    65.4,
+    483.1,
+    176.5
+   ],
+   "w": 1605,
+   "h": 463,
+   "dpi": 300,
+   "src": "2fa0a4ea-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf",
+   "blank": 0.599,
+   "recrop": "re-cropped 2026-09-26 to the embedded raster (xref 107, bbox [97.7, 66.9, 481.2, 175.8] pt) +/-1.5 pt @300 dpi + white-border trim (8 px). Reason: auto crop = page-width band with ~65 pt white side margins; tightened to the raster",
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 12,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Contact force of the NMC particles within electrode under different compression pressures: (a) 30 MPa, (b) 60 MPa, and (c) 200 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.3,
+    207.9,
+    535.5,
+    364.6
+   ],
+   "w": 2051,
+   "h": 653,
+   "dpi": 300,
+   "src": "2fa0a4ea-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf",
+   "blank": 0.876,
+   "recrop": "re-cropped 2026-09-26 to the embedded raster (xref 106, bbox [44.8, 209.4, 533.8, 362.9] pt) +/-1.5 pt @300 dpi + white-border trim (8 px). Reason: auto crop = page-width band; tightened to the raster bounds (content was complete)",
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 13,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Diagonal stress tensor components of calendered electrodes at different compression pressures.",
+   "rotated_deg": 0,
+   "bbox": [
+    111.8,
+    65.4,
+    498.7,
+    361.8
+   ],
+   "w": 1612,
+   "h": 1235,
+   "dpi": 300,
+   "src": "2fa0a4ea-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf",
+   "blank": 0.778,
+   "recrop": "re-cropped 2026-09-26 to the embedded raster (xref 112, bbox [113.3, 66.9, 496.8, 359.9] pt) +/-1.5 pt @300 dpi + white-border trim (8 px). Reason: auto crop = page-width band with ~65 pt white side margins; tightened to the raster",
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 14,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. SEM morphologies of the current collector under different calendering degrees: (a) as-prepared (uncalendered), (b) calendered at 150 MPa, (c) magnified view of (b), and (d) SEM image of the electrode calendered at 200 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.7,
+    65.4,
+    535.3,
+    338.8
+   ],
+   "w": 2048,
+   "h": 1139,
+   "dpi": 300,
+   "src": "2fa0a4ea-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf",
+   "blank": 0.03,
+   "recrop": "re-cropped 2026-09-26 to the embedded raster (xref 119, bbox [45.2, 66.9, 533.6, 337.1] pt) +/-1.5 pt @300 dpi + white-border trim (8 px). Reason: auto crop = page-width band; tightened to the raster bounds (content was complete)",
+   "viewed": true
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 15,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. Changes in volumetric energy density during calendering with respect to stress.",
+   "rotated_deg": 0,
+   "bbox": [
+    111.8,
+    65.4,
+    498.7,
+    380.3
+   ],
+   "w": 1612,
+   "h": 1312,
+   "dpi": 300,
+   "src": "2fa0a4ea-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf",
+   "blank": 0.959,
+   "recrop": "re-cropped 2026-09-26 to the embedded raster (xref 123, bbox [113.3, 66.9, 496.8, 378.4] pt) +/-1.5 pt @300 dpi + white-border trim (8 px). Reason: auto crop = page-width band with ~65 pt white side margins; tightened to the raster",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table I. Material and mechanical parameters used in the characterization of NMC particles27,29–31",
+   "rotated_deg": 0,
+   "manual_crop": "Roman-numeral label 'Table I' -> extract_figures.py handles Arabic labels only (0 tables found). Vector text table rendered from page 5 (1-based) clip [314.9, 543.5, 558.0, 659.0] pt = top rule + caption .. bottom rule, @300 dpi + white-border trim. Values re-read from the text layer: E 142 GPa, nu 0.25, friction 0.12, density 4750 kg m^-3, damping 0.95 (2026-09-26)",
+   "bbox": [
+    314.9,
+    543.5,
+    558.0,
+    659.2
+   ],
+   "w": 1013,
+   "h": 482,
+   "dpi": 300,
+   "src": "2fa0a4ea-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf",
+   "blank": 0.873,
+   "viewed": true
+  }
+ ],
+ "note": "All 13 items (Fig 1-12 + Table I) opened and checked by eye 2026-09-26. Every figure in this PDF is ONE embedded raster; the automatic caption-anchored crops were page-width bands (fig_1 carried Eqs (7)-(8) + column rule; fig_5/fig_6 carried the page separator rule; fig_3/5/7/8/10/12 had ~65 pt white side margins) -> all 12 re-cropped to the raster bbox +/-1.5 pt @300 dpi + white trim (see 'recrop'). Table I (Roman-numeral label, not handled by the extractor) = manual crop of the vector text table incl. caption. Original-raster defects (NOT fixable by cropping): Fig 4b has no legend for its three coloured load-unload curves; Fig 7 y-axis typo 'paticles'; Fig 8 has no colour legend or force scale (red/cyan meaning only in text); Fig 3a has faint grey smudges under both sketches; Fig 11d yellow dashed circle is not explained in the caption. Captions: ligatures fi/fl normalised to ASCII. No SI exists for this paper (no SI reference in the PDF). [!] Re-running extract_figures.py --slug ... --clean would restore the page-width crops and drop tab_1.png."
+}
