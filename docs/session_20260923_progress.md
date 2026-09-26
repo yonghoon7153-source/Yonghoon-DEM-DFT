@@ -348,3 +348,11 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
 - ✅ **기본값 VGCF 100 GPa 로 고정** (사용자: *"앞으로 잘못 안 넣게 100 GPa 로 고정"*) — `mpm3d_compaction.py` ADD_E_NU · 새 세대 `ADD_E_SET_20260926`
   (태그 `ADD_E_SET_20260926_VGCF100GPa`) · selftest 153/153 · 정본 서술 `docs/sdcp_manuscript_anchors.md` ★ADD_E_SET · 원장 `CL-93`.
   이미 돌린 결과는 그대로 (재실행 없음).  이 세대는 CFL dt 가 약 0.67 배 — 두꺼운 침대는 목표 도달 확인.
+
+## ⑰ DFT 5차 회신 최종판 수신 — Ag|그래핀 W (09-26 밤)
+- 📨 받은 것: (a)(b) 수용 · **SE 계면 (i) 기준선 없음 확정** (LPSCl|Ag 소모델 프로브 89–109 GB > 48 GB; 예비판 ≈ 246 GB 추정의 하향) ·
+  Ag(111)|그래핀 **W_sep 0.435 J/m² (8 Å · 끝점 검사 미통과 라벨) / 0.449 (10 Å)** · PBE+D3(BJ) 조건부 · k 축 수치 미검증 · (iv) PBE 단독 −0.055.
+- ✅ 정본 결과 파일 (db/properties/wad_aprime_pilot_result_v2_2026_09_26.json) 로 직접 대조 — registry 4 값 0.4351–0.4355 · ΔD3 0.4905 ·
+  G3 FAIL (직접 8→10 Å +0.0136) · G4 k INCOMPLETE 전부 일치.  우리 환산 73 meV/C → 0.4347 J/m² ✓.
+- ✅ **사용자 결정 (09-26 밤): SE 쌍 = H (보류)** — DEM 회신 5 비준 · 1저자 발송.  읽기 · 발송문 = `docs/dft_reply5_adhesion_20260926.md` §3.
+  결정 뒤 3 단 (DEM 박리) 은 질문 ② 기하 (Ag–C ↔ VGCF 호스트) 부터 · 탄소–탄소 쌍 w 는 문헌 카드 몫.
