@@ -4936,6 +4936,50 @@
     "decision_digest": "sha256:bd0bbfae9d282933b5a65d08094c7bafd39f1990a570e4952203dd4ce386e998",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
+  },
+  {
+   "id": "D-2026-09-26-lpscl-smallcell-glass-amend-cc",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": null,
+   "slot": "lpscl_smallcell_glass_md_amend_cc",
+   "applies_to": null,
+   "title": "li2s 소셀 유리 MD 카드 개정 CC — 회신 CC 판정 9 항 이행 + 400 K prod 800 ps (카드 저자 채택 · 외부 1저자 확인 대기)",
+   "statement": "`db/properties/lpscl_smallcell_glass_md_amendment_cc_2026_09_26.json` (proposed). 게이트 A relax 판 · P–S 결합 제외 · 다리 S 보고량 · 밀도 경보 · 초기구조 relax · 파일럿 겸용 조건 · seed5 포함/제외 둘 다(n=4 χ²₃ 5.42) · 총상한 점유 환산 · β 오차막대(σ > 0.005 경계) · C2 원인별 기록 · **400 K prod 800 ps**(파일럿 재실행 → 재판독 → 본 런). ⛔ 트랙 = li2s: 외부 1저자 확인 전에는 proposed · 계산 0.",
+   "rationale": "회신 CC(외부 1저자) 판정의 이행 + 회신이 권한 넷째 갈래를 카드 저자(사용자)가 채택 (2026-09-26 '채택 ㄱㄱ'). 결과 뒤 변경이지만 문턱·창·온도·시드는 불변이고 표본만 늘린다.",
+   "decision_state": "proposed",
+   "record_kind": "prospective",
+   "results_seen": true,
+   "results_seen_note": "파일럿 2 런 · 게이트 A 5 시드 · B 실측(β σ · seed5 궤적) 열람 — 본 15런 미착수",
+   "card": "db/properties/lpscl_smallcell_glass_md_estimand_2026_09_21.json",
+   "record": "db/properties/lpscl_smallcell_glass_md_amendment_cc_2026_09_26.json",
+   "depends_on": [
+    "D-2026-09-21-lpscl-smallcell-glass-md"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "kb/reviews/li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md",
+    "db/properties/lpscl_smallcell_glass_md_cc_followup_2026_09_26.json",
+    "db/raw/lpscl_smallcell_glass_cc_2026_09_26/seed5_ss_event_cc.json"
+   ],
+   "method_ref": "tools/ionic/msd_diffusive_check.py --beta_boot · tools/ionic/quench_ss_event.py · tools/ionic/melt_quench_uma.py --seed_gate",
+   "reopen_criteria": [
+    "외부 1저자가 항목을 바꾸면 그 판정을 따른다 (회신 CD 이후)",
+    "파일럿 400 K 800 ps 재판독 미통과 → '400 K 는 이 프로토콜로 측정되지 않는다' 로 닫고 본 런은 465/550 만 (그것도 외부 1저자)"
+   ],
+   "enforcement": "본 15런 발사 블록은 이 결정이 active 일 때만 · 러너 run_meta 에 prod 길이 400/800 기록 · 집계기는 seed5 포함/제외 두 표",
+   "proposed_by": "claude-session-2026-09-26 (사용자 '채택 ㄱㄱ' · 외부 1저자 확인 대기)",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-09-26",
+     "state": "proposed",
+     "note": "회신 CC 이행 + C 채택 · 외부 1저자 확인 대기"
+    }
+   ],
+   "ratification": {
+    "state": "proposed"
+   }
   }
  ]
 }

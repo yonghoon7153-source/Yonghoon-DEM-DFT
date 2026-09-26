@@ -1,15 +1,16 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-26 · managed-files: 460
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-26 · managed-files: 461
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 259건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 260건)
 - 2026-09-26 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-26 · `kb/reviews/li2s1a_CC_prompt_li2s_pilot_gateA_ledger_2026_09_26.md` — CC 프롬프트 — li2s 소셀 유리 MD 파일럿 보고 · 게이트 A 두 판 · Q6 장부 · Q1–Q9 (외부 1저자에게 발송) · 발송됨 (사용자 · 2026-09-26) · 회신 CC 수령 → `l…
 - 2026-09-26 · `kb/reviews/li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` — 회신 CC — 외부 1저자 (li2s 소셀 유리 MD): 파일럿 결과 · 게이트 A 두 판 · Q1–Q9 판정 (relax 판 · P–S 결합 제외 · seed5 유지 · MTO 맞음 · 400 K 연장 검토) · 수령 (2026-09-26 저녁 · 사용자 붙여넣기) — 회신 원문 …
+- 2026-09-26 · `kb/projects/li2s_glass_external_first_author_report_2026_09_26.md` — li2s 소셀 유리 MD — 회신 CC 이행 보고 (외부 1저자에게) · B 실측 3 건 · 카드 개정 초안 확인 요청 · 400 K prod 800 ps 채택 제안 · 초안 — 사용자(실행자 · 카드 저자) 검토 뒤 외부 1저자에게 발송…
 - 2026-09-25 · `kb/reviews/codex_BX_prompt_wad_sese_4L_alarm_2026_09_25.md` — 리뷰 BX 프롬프트 — SE|SE 4층 대조: 이완 W_cleave 가 경보 구간 아래 — 원인 가르기(이완 점검 A · 벌크 이완 B)가 맞나 · 발송됨 · 회신 수령 (조건부 GO — 진단 · 검증 완료·DEM 승…
 - 2026-09-25 · `kb/reviews/codex_BX_reply_wad_sese_4L_alarm_2026_09_25.md` — 리뷰 BX 회신 — SE|SE 4층 경보: 원인 진단 조건부 GO · 방법 검증 완료/DEM 승격 NO-GO · P0 완료 판정기 결함 · 수신됨 (2026-09-25 · 1저자 붙여넣기) — 원문 그대로 ·…
 - 2026-09-25 · `kb/reviews/codex_BY_prompt_wad_aprime_pilot_prereg_2026_09_25.md` — 리뷰 BY 프롬프트 — A′ 파일럿 사전등록 카드 (LPSCl | Ag · 흑연 점착일): 봉인 전 설계 검토 · 발송 완료 · 회신 수령 2026-09-25 **NO-GO** (`c…
@@ -26,7 +27,6 @@
 - 2026-09-25 · `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` — LPSCl | Ag–C | VGCF 점착일(W_ad) — 계획 v4 (Codex BX 뒤 파이프라인 재편 · v3 = Fable · Codex BV 반영) · 보고량 카드 초안 · 계획 v4 — SE|SE 4층 대조 끝(경보 v2 유지 · Codex…
 - 2026-09-24 · `kb/platforms/v100_uma_setup_2026_09_14.md` — 임대 V100 에 UMA 를 올리는 레시피 — 함정 일곱과 순서 · 완료
 - 2026-09-23 · `kb/concepts/cv_vs_dqdv_and_two_windows.md` — CV · dQ/dV · 그리고 두 개의 "안정창" — 처음 보는 사람을 위한 정리 · 진행 — 개념 정리. 우리 수치 주장은 담지 않는다(경로만 가리킨다)
-- 2026-09-23 · `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md` — SDCP vs PTFE 흡착에너지 (C-12 v41) — 숫자의 지위 · PTFE 크기 검증 · 세미나 대응 · 진단 정리 — 값은 citable:false (사전등록 게이트 미통과…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -386,7 +386,7 @@
 - `kb/reports/weekly_2026_09_14.md` — 주간 정리 2026-09-07 ~ 09-13 (주간보고 초안)  (2026-09-14 · 완료 (2026-09-14 · 다음 주 문서는 새 파일))
 - `kb/reports/weekly_2026_09_20.md` — 주간 정리 2026-09-14 ~ 09-20 (주간보고 초안)  (2026-09-20 · 완료 (2026-09-20 · 다음 주 문서는 새 파일))
 
-## projects/ (30)
+## projects/ (31)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
 - `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
@@ -402,6 +402,7 @@
 - `kb/projects/handoff_2026_09_03_zn_nd.md` — 인수인계 — 2026-09-03 세션 (Zn ALZIB 협업 · Nd 교수님 지침 · 도구 2개)  (2026-09-03 · 활성)
 - `kb/projects/handoff_2026_09_16_cathode_cei.md` — 인수인계 — 2026-09-16 세션 (양극 CEI §A–§E · 도펀트 스크리닝 · dual compatibility)  (2026-09-16 · 진행)
 - `kb/projects/li2s_glass_external_first_author_letter_2026_09_25.md` — li2s 소셀 유리 MD — 외부 1저자에게 보내는 보고 · 질문 (파일럿 결과 · 갈래0 멈춤 · 게이트 A 두 판 · Q1–Q8)  (2026-09-25 · 초안 — 사용자(실행자) 검토 뒤 외부 1저자에게 발송 · 판정은 외…)
+- `kb/projects/li2s_glass_external_first_author_report_2026_09_26.md` — li2s 소셀 유리 MD — 회신 CC 이행 보고 (외부 1저자에게) · B 실측 3 건 · 카드 개정 초안 확인 요청 · 400 K prod 800 ps 채택 제안  (2026-09-26 · 초안 — 사용자(실행자 · 카드 저자) 검토 뒤 외부 1저자에게 발송…)
 - `kb/projects/li_neb_anode_free.md` — Li Adatom Diffusion on Anode-Free SSB Interphases  (2026-06-01 · setup)
 - `kb/projects/ml_opportunities_from_lab_ppt_2026_07.md` — 랩 ML 파이프라인(TabPFN)과 우리 캠페인의 접점 — 2026-07-28
 - `kb/projects/mlip_next_campaigns_2026_07.md` — MLIP(UMA) 차기 캠페인 후보 제안서 — cascade 확장 7건  (2026-07-27 · proposal)

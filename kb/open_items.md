@@ -32,7 +32,7 @@
   `23_p` 옛 .out → `strain_23_p.out.exhausted_0926_1811` 보관 · **`restart_mode='restart'`(BFGS 이력 승계) · nstep 200 · trust 0.05** · 18:19 실측 SCF 11 반복 · pw.x **30,018 MiB**(PID 248767).
   남은 순서 23_p → 23_m(찌꺼기 덮어씀) → 13_p/m → 12_p/m → 12/12 면 fit → `elastic_fit.txt` 붙여받기. watch: `ALL=1 bash tools/elastic/watch_elastic.sh`.
 - 🟢 **li2s 회신 CC 후속 (09-26 저녁 · 추석 끝 · 사용자 '바로 하면 됨')** — B 실측 3 건 ✅: T550 β STO 0.805 · MTO 0.856 · **σ(β) 0.010** (b=12 · 사다리 성김) → STO 는 '경계·구분 불가' · T400 β 0.641 = 9.9 σ 아래 · seed5 궤적: P30 이 49 ps(용융)에 S32 잃고 PS₃ · S–S 는 388 ps 냉각 중(설정 912 K) S54–S59 **P30–S59–S54 말단 과황화** · 300 K 까지 97.9 % 유지 (raw `db/raw/lpscl_smallcell_glass_cc_2026_09_26/seed5_ss_event_cc.json`).
-  기록 `db/properties/lpscl_smallcell_glass_md_cc_followup_2026_09_26.json` (B1–B3 · A1 C2 원인별 · A2 점유환산 장부 67.4 h vs 벽시계 156.9 · A3 카드 개정 초안 9 항 · C 400 K 연장 미결). ⏭ 최종 보고판(회신 CC 의 4 수정 + Q-CC-1 β 추정자 질문) 작성 → 사용자 검토 → 발송 · C 는 사용자(카드 저자) 판단.
+  기록 `db/properties/lpscl_smallcell_glass_md_cc_followup_2026_09_26.json` (B1–B3 · A1 C2 원인별 · A2 점유환산 장부 67.4 h vs 벽시계 156.9 · A3 카드 개정 초안 9 항 · C 400 K 연장 미결). ✅ **C 채택 (사용자 '채택 ㄱㄱ' · 400 K prod **800 ps** · 파일럿 재실행 → 재판독 → 본 런)** · 개정 초안 `lpscl_smallcell_glass_md_amendment_cc_2026_09_26.json` + 결정 `D-2026-09-26-lpscl-smallcell-glass-amend-cc` (proposed · 외부 1저자 확인 대기) · **최종 보고판 `kb/projects/li2s_glass_external_first_author_report_2026_09_26.md`** (4 수정 반영 · Q-CC-1~3) → ⏳ 사용자 검토 → 발송 → 회신 CD.
 - 📚 **논문 에이전트** — Oginni et al., *Next Materials* 13 (2026) 103432 (리뷰 · 계산 설계 방법론) → litdb-curator 진행 중 (inbox `0926-1.`) → 끝나면 litdb 파일만 커밋.
 
 ### ⏭-NOW-w. 2026-09-23 새벽 — **SDCP/PTFE 세미나 정리 · [Li26MCI] 병합 · 🔴 웹앱 cascade 화면이 어제부터 닫혀 있다**
