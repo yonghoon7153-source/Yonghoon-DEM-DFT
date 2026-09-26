@@ -233,7 +233,6 @@ sharma2023_nmc_single_crystal_anisotropic_nanoindentation	s2352431622001961
 #       ('--inbox --run --skip-done' 은 안전.) 재생성이 필요하면 figures.json 의 bbox 를 그대로 다시 쓴다.
 #   ⭐ Fig 5 (C_ij · 방위별 M) · Fig 6 (M · H · K_c) · SI Table S2 (K 식) · SI Fig S1 (h_min 감도) 가 이 카드의 근거다.
 #   판독 재현 = tools/litdb/sharma2023_verify.py → litdb/figures/<slug>/digitized.csv
-#
 # ── SE 고유 전달물성 (σ_ion 단상 펠릿 · 적층압/제작압) ──────────────
 # 가드: ACS SI 파일명(nz1c01299_si_001.pdf)은 원고번호뿐이라 제목 토큰이 안 겹친다 → 원고번호 조각으로 SI 만 잡는다.
 #   본문 PDF("02. How to Measure a Reliable Ionic Conductivity…")는 자동 매칭으로 이미 붙어 있다 (이 줄은 SI 전용).
@@ -246,7 +245,6 @@ cronau2021_stack_pressure_ionic_conductivity	nz1c01299
 #   [!] 이 슬러그에 '--clean' 금지 — 본문·SI 를 둘 다 주지 않으면 한쪽 그림이 색인에서 빠지고, 둘 다 줘도 세 재크롭이 되돌아간다.
 #   ⭐ fS2 패널 c (µC-Li₆PS₅Cl, 고적층압 평탄 ≈2.9–3.5 mS/cm, digitized) 가 우리 σ_grain = 3.0 의 출처 판정 근거다.
 #   디지타이즈 = tools/litdb/cronau2021_si_digitize.py → litdb/figures/<slug>/si_digitized.csv
-
 # ── Ketter 2025 Nat. Commun. 16:1411 — voxel 저항망(RN) + σ_ion/σ_e/κ 실측 (Zeier 그룹) ──
 ketter2025_resistor_network_models_predict_transport_properties	56514
 #   ↑ 2026-09-25. 출판사 이름 `s41467-025-56514-5.pdf`(본문) · `41467_2025_56514_MOESM1_ESM.pdf`(SI) 를 DOI 조각 56514 로 같이 잡는다.
@@ -271,3 +269,4 @@ endo2001_vgcf_basic_properties_battery_applications	s0008622300002955
 #   [!] '--slug endo2001_vgcf_basic_properties_battery_applications --clean' 을 돌리면 16장이 사라지고 합쳐진 9장이 돌아온다.
 #       ('--inbox --run --skip-done' 은 안전.)
 #   ⭐ Fig 7 (0.8 g/cm³ 압분체 ≈0.012 Ω cm) · Fig 8 (밀도 스윕) · Fig 6 (탄성률 영역) 이 이 카드의 근거다.
+oginni2026_computational_design_review	0926-1. nextmater_2026_oginni_computational_design   # 2026-09-26 논문 에이전트 · digest 제목=원제라 자동매칭도 되지만 명시

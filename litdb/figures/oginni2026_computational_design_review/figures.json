@@ -1,0 +1,261 @@
+{
+ "slug": "oginni2026_computational_design_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-26",
+ "sources": [
+  "0926-1. NextMater_2026_Oginni_Computational_design_quantum_functional_materials_review_MAIN.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Computational design of quantum and functional materials through the integration of DFT, beyond-DFT methods, atomistic simulations, machine learning and AI, and emerging quantum-computing approaches, enabling materials discovery, screening, and optimization for next-generation electronic and energy technologies.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    430.7,
+    565.8,
+    711.7
+   ],
+   "w": 2227,
+   "h": 1172,
+   "dpi": 300,
+   "src": "0926-1. NextMater_2026_Oginni_Computational_design_quantum_functional_materials_review_MAIN.pdf",
+   "blank": 0.754,
+   "caption_raw": "Fig. 1. Computational design of quantum and functional materials through the integration of DFT, beyond-DFT methods, atomistic simulations, machine learning and AI, and emerging quantum-computing approaches, enabling materials discovery, screening, and optimization for next-generation electronic and energy technologies. 2",
+   "note": "caption trimmed 2026-09-26: trailing body text / page number removed (raw kept in caption_raw)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Major classes of functional materials and their technological applications.",
+   "rotated_deg": 0,
+   "bbox": [
+    100.1,
+    49.4,
+    495.3,
+    445.8
+   ],
+   "w": 1648,
+   "h": 1653,
+   "dpi": 300,
+   "src": "0926-1. NextMater_2026_Oginni_Computational_design_quantum_functional_materials_review_MAIN.pdf",
+   "blank": 0.301
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Applications of molecular dynamics and Monte Carlo simulations in advanced materials modelling (a) MD simulation showing finite-size effects on diffusion and superionic transition behavior in fluorite-structure conductors, Ref [91] (b) MC configurational sampling showing its effect on the predicted AuCu order-disorder transition Ref [85].",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    338.7
+   ],
+   "w": 2228,
+   "h": 1207,
+   "dpi": 300,
+   "src": "0926-1. NextMater_2026_Oginni_Computational_design_quantum_functional_materials_review_MAIN.pdf",
+   "blank": 0.913,
+   "caption_raw": "Fig. 3. Applications of molecular dynamics and Monte Carlo simulations in advanced materials modelling (a) MD simulation showing finite-size effects on diffusion and superionic transition behavior in fluorite-structure conductors, Ref [91] (b) MC configurational sampling showing its effect on the predicted AuCu order-disorder transition Ref [85]. work demonstrates its value for complex materials: explicit configura­ tional sampling improved the predicted order-disorder transition of Au-Cu alloys from approximately 810–710 K, approaching the experi­ mental value of 683 K [85]Fig. 3(b) illustrates this improvement by comparing the free-energy curves obtained with conventional MD treatment and with explicit Monte Carlo configurational sampling. Also, ML-potential-assisted MC has been used to identify low-energy config­ urations and defect arrangements in high-entropy alloys [96]. However, c",
+   "note": "caption trimmed 2026-09-26: trailing body text / page number removed (raw kept in caption_raw)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. GNoME enables efficient materials discovery. (a–e) Overview of the GNoME-based discovery workflow, predicted stable materials, experimental verification, exploration of combinatorial chemical spaces, and out-of-domain generalization. Ref. [103].",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    557.7
+   ],
+   "w": 2228,
+   "h": 2119,
+   "dpi": 300,
+   "src": "0926-1. NextMater_2026_Oginni_Computational_design_quantum_functional_materials_review_MAIN.pdf",
+   "blank": 0.858,
+   "caption_raw": "Fig. 4. GNoME enables efficient materials discovery. (a–e) Overview of the GNoME-based discovery workflow, predicted stable materials, experimental verification, exploration of combinatorial chemical spaces, and out-of-domain generalization. Ref. [103]. from forward prediction toward iterative candidate generation and validation [14]. Nevertheless, generated candidates still require physics-based validation because thermodynamic stability, synthetic feasibility, and behavior outside the training distribution cannot be guaranteed by the ML model alone. More recently, foundation models trained on broad datasets have extended ML toward transferable rep­ resentations for tasks including property prediction, synthesis planning, and molecular generation [113]. However, their application to materials discovery remains constrained by the availability, quality, and diversity of training data, par",
+   "note": "caption trimmed 2026-09-26: trailing body text / page number removed (raw kept in caption_raw)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 11,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Physics-guided machine-learning prediction of near-infrared refractive indices in two-dimensional materials. (a) Two-stage workflow combining graph neural network representations with Cauchy-model prediction of wavelength-dependent refractive indices. (b,c) Comparison of DFT-calculated and machine-learning-predicted refractive indices for representative TMD monolayers. Ref. [158].",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    251.8,
+    565.7,
+    711.7
+   ],
+   "w": 2227,
+   "h": 1917,
+   "dpi": 300,
+   "src": "0926-1. NextMater_2026_Oginni_Computational_design_quantum_functional_materials_review_MAIN.pdf",
+   "blank": 0.841,
+   "caption_raw": "Fig. 5. Physics-guided machine-learning prediction of near-infrared refractive indices in two-dimensional materials. (a) Two-stage workflow combining graph neural network representations with Cauchy-model prediction of wavelength-dependent refractive indices. (b,c) Comparison of DFT-calculated and machine-learning- predicted refractive indices for representative TMD monolayers. Ref. [158]. 11",
+   "note": "caption trimmed 2026-09-26: trailing body text / page number removed (raw kept in caption_raw)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 13,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Validation of a deep-learning potential for Li₂ZrCl₆. Comparison of atomic forces predicted by the deep-learning model and ab initio molecular dynamics for ordered α-Li₂ZrCl₆, disordered α-Li₂ZrCl₆, and β-Li₂ZrCl₆. Reproduced from Ref. [178].",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    565.8,
+    442.1
+   ],
+   "w": 2227,
+   "h": 1637,
+   "dpi": 300,
+   "src": "0926-1. NextMater_2026_Oginni_Computational_design_quantum_functional_materials_review_MAIN.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 13,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Molecular-dynamics analysis of Na-ion transport in crystalline and amorphous NaMOCl₄. Arrhenius plots of MD-simulated Na-ion diffusivities for (a) crystalline NNOC, (b) crystalline NTOC, and (c) amorphous NNOC and NTOC, illustrating the influence of structural state and temperature on Na-ion transport. Reproduced from Ref [179].",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    479.8,
+    566.0,
+    659.4
+   ],
+   "w": 2228,
+   "h": 749,
+   "dpi": 300,
+   "src": "0926-1. NextMater_2026_Oginni_Computational_design_quantum_functional_materials_review_MAIN.pdf",
+   "blank": 0.865,
+   "caption_raw": "Fig. 7. Molecular-dynamics analysis of Na-ion transport in crystalline and amorphous NaMOCl₄. Arrhenius plots of MD-simulated Na-ion diffusivities for (a) crystalline NNOC, (b) crystalline NTOC, and (c) amorphous NNOC and NTOC, illustrating the influence of structural state and temperature on Na-ion transport. Reproduced from Ref [179]. unfavorable structural evolution under operating conditions. 5. Challenges and future perspectives The future of computational materials design will depend not simply",
+   "note": "caption trimmed 2026-09-26: trailing body text / page number removed (raw kept in caption_raw)"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Key properties of quantum materials. Property Core Concept Key Physical Origin Main Effects / Phenomena Applications Ref Quantum Restriction of electrons in nanoscale dimensions comparable to de Broglie wavelength Spatial confinement of charge carriers in quantum dots, nanowires, quantum wells Discrete energy levels, size-dependent band gap, tunable optical/electronic behavior QLEDs, photovoltaics, photodetectors, biomedical imaging, lasers",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    743.5
+   ],
+   "w": 2213,
+   "h": 2968,
+   "dpi": 300,
+   "src": "0926-1. NextMater_2026_Oginni_Computational_design_quantum_functional_materials_review_MAIN.pdf",
+   "blank": 0.857
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 5,
+   "file": "tab_2.png",
+   "caption": "Table 2 DFT approaches for advanced materials design. Approach Strength Main limitation Suitable applications PBE/GGA Low cost, scalable Band-gap and correlation errors Screening, structures, stability DFT + (U) Better localized (d/f) states",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.6
+   ],
+   "w": 2213,
+   "h": 2989,
+   "dpi": 300,
+   "src": "0926-1. NextMater_2026_Oginni_Computational_design_quantum_functional_materials_review_MAIN.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 6,
+   "file": "tab_3.png",
+   "caption": "Table 3 Comparison of TDDFT, GW and BSE. Method Primary target Main strength Main limitation Cost/ scalability",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    727.5
+   ],
+   "w": 2213,
+   "h": 2901,
+   "dpi": 300,
+   "src": "0926-1. NextMater_2026_Oginni_Computational_design_quantum_functional_materials_review_MAIN.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 9,
+   "file": "tab_4.png",
+   "caption": "Table 4 Critical comparison of quantum-computing approaches for electronic-structure and materials modelling.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.6
+   ],
+   "w": 2213,
+   "h": 2989,
+   "dpi": 300,
+   "src": "0926-1. NextMater_2026_Oginni_Computational_design_quantum_functional_materials_review_MAIN.pdf",
+   "blank": 0.852
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 10,
+   "file": "tab_5.png",
+   "caption": "Table 5 Comparative assessment of major computational approaches for advanced materials, highlighting their primary purposes, accuracy, computational cost, strengths and limitation. Method Primary purpose Accuracy Computational cost Main strengths Key limitations Typical materials applications References DFT Ground-state structures, energetics, and electronic properties Moderate–high; strongly functional- dependent Low–moderate Versatile, mature, and suitable for high- throughput screening Exchange-correlation errors; limitations for strong correlation and some dispersion- sensitive systems Electronic structure, defect energetics, reactions, semiconductors, catalysts, photovoltaic and energy materials [56,127, 128] TDDFT Excited states, optical spectra, and time- dependent properties Moderate–high; functional- dependent Moderate Efficient treatment of excited states and optical response;",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    564.8,
+    747.8
+   ],
+   "w": 2219,
+   "h": 2985,
+   "dpi": 300,
+   "src": "0926-1. NextMater_2026_Oginni_Computational_design_quantum_functional_materials_review_MAIN.pdf",
+   "blank": 0.907
+  }
+ ]
+}
