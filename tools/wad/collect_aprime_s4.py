@@ -5,9 +5,12 @@
   · W_sep = [E(far) − E(bound)] / (n_if · A)   · E = QE `!` 자유에너지 F · E_int = F − (−TS) 병기 · n_if = 1 · A = 변형된 실제 셀 면적
   · 보고: J/m² + eV/C (그래핀 C 원자당)
   · E(d): d₀−0.3 · d₀ · d₀+0.3 · d₀+0.6 · far 의 상대 에너지 (meV · meV/C) — d₀ 가 격자 안 국소 최소인지 (기록 · 문턱 없음)
-  · G3 (대표점): c+2 셀에서 bound 1 · far (i) 그대로 · far (ii) +2 → ΔE_bound · ΔE_far · ΔW 각각 기록 · |ΔW| ≤ 0.01 J/m² **그리고** 조각 |ΔE| ≤ 5 meV
-  · G4 (대표점): e70/700 · k+1 · smearing ½ 각각 두 끝점 → |ΔW| ≤ 0.02 J/m² (조각 ≤ 10 meV — ⚠ e70 조각은 절대 에너지가 ecut 에 비변분이라
-    기록만 하고 문턱은 k·smearing 조각에만 건다: 이 해석은 1저자 확인 대상으로 결과 기록에 적는다)
+  · G3 (대표점): c+2 셀에서 bound 1 · far (i) 그대로 · far (ii) +2 → ΔE_bound · ΔE_far · ΔW 각각 **기록** · 판정 = 두 검사 모두 |ΔW| ≤ 0.01 J/m²
+  · G4 (대표점): e70/700 · k+1 · smearing ½ 각각 두 끝점 → 판정 = |ΔW| ≤ 0.02 J/m² · 끝점 ΔE 는 기록
+  · ⛔ 2026-09-26 정정 — 카드 괄호 '(조각 |ΔE| ≤ 5 meV)' · '(조각 ≤ 10 meV)' 는 **조각 모델(V3·V4 · ΔE_frag eV/조각) 의 문턱**이다
+    (카드 V3_V4 식 'ΔE_frag … eV/조각 — J/m² 로 바꾸지 않는다' · G3/G4 가 같은 짝 구조 · 0.01 J/m² × SE 셀 ~100 Å² ≈ 6 meV 로 눈금 일치).
+    W 모델(V2)에 끝점별 문턱을 건 첫 판은 내 오독이다 — 끝점 ΔE 는 CA Q2 대로 **기록만** 한다 (차이량 ΔW 가 작아도 끝점이 안 변했다는 뜻이 아니다).
+    투명성을 위해 옛 읽기(끝점 조각 문턱)의 결과도 `endpoint_piece_reading_info` 로 같이 낸다 (판정에 안 쓴다).
   · UMA (개정 1): W_UMA+D3 := W_UMA + [E_D3,QE(far) − E_D3,QE(bound)]/A · Δ = W_PBE+D3 − W_UMA+D3 (= W_PBE − W_UMA) — V2 는 대상군 P1′ 이 아니라
     G5 판정이 아니다. 참고로 0.10/0.05 와 나란히 찍기만 한다.
 
@@ -143,10 +146,14 @@ def collect_registry(stage2_dir, raw_dir, name, uma=None, supp_dir=None):
               "W_i_J_m2": Wi, "W_ii_J_m2": Wii, "dW_i_J_m2": (Wi - base) if (Wi is not None and base is not None) else None,
               "dW_ii_J_m2": (Wii - base) if (Wii is not None and base is not None) else None, "threshold": {"|dW|<=": G3_DW_MAX, "|dE|<=meV": G3_DE_MEV}}
         pieces = [g3["dE_bound_meV"], g3["dE_far_i_meV"], g3["dE_far_ii_meV"]]; dws = [g3["dW_i_J_m2"], g3["dW_ii_J_m2"]]
-        if any(v is None for v in pieces + dws):
+        g3["threshold"] = {"|dW|<= (both checks)": G3_DW_MAX, "endpoint_dE": "기록만 (W 모델 · CA Q2)"}
+        if any(v is None for v in dws):
             g3["status"] = "INCOMPLETE"
         else:
-            g3["status"] = "PASS" if all(abs(v) <= G3_DW_MAX for v in dws) and all(abs(v) <= G3_DE_MEV for v in pieces) else "FAIL"
+            g3["status"] = "PASS" if all(abs(v) <= G3_DW_MAX for v in dws) else "FAIL"
+            g3["failed_checks"] = [n for n, v in (("i_image", dws[0]), ("ii_direct", dws[1])) if abs(v) > G3_DW_MAX]
+        g3["endpoint_piece_reading_info"] = {"reading": "옛 도구 해석(끝점 |ΔE| ≤ 5 meV) — 카드 근거 약함 · 판정에 안 씀",
+                                             "status": (None if any(v is None for v in pieces + dws) else ("PASS" if all(abs(v) <= G3_DW_MAX for v in dws) and all(abs(v) <= G3_DE_MEV for v in pieces) else "FAIL"))}
         rec["G3"] = g3
     # G4
     g4 = {}
@@ -157,12 +164,14 @@ def collect_registry(stage2_dir, raw_dir, name, uma=None, supp_dir=None):
         base = rec["W_PBE_D3_J_m2"]; Wx = _w(jb, jf, A)
         de = lambda x, y: (x["F_Ry"] - y["F_Ry"]) * RY_EV * 1000 if (x and y and x.get("status") == "OK" and y.get("status") == "OK") else None
         r4 = {"W_J_m2": Wx, "dW_J_m2": (Wx - base) if (Wx is not None and base is not None) else None, "dE_bound_meV": de(jb, b), "dE_far_meV": de(jf, f),
-              "piece_gate_applied": piece_gate, "threshold": {"|dW|<=": G4_DW_MAX, "|dE|<=meV": G4_DE_MEV if piece_gate else "기록만 (ecut 비변분)"}}
-        if r4["dW_J_m2"] is None or (piece_gate and (r4["dE_bound_meV"] is None or r4["dE_far_meV"] is None)):
+              "threshold": {"|dW|<=": G4_DW_MAX, "endpoint_dE": "기록만 (W 모델)"}}
+        if r4["dW_J_m2"] is None:
             r4["status"] = "INCOMPLETE"
         else:
-            ok = abs(r4["dW_J_m2"]) <= G4_DW_MAX and (not piece_gate or (abs(r4["dE_bound_meV"]) <= G4_DE_MEV and abs(r4["dE_far_meV"]) <= G4_DE_MEV))
-            r4["status"] = "PASS" if ok else "FAIL"
+            r4["status"] = "PASS" if abs(r4["dW_J_m2"]) <= G4_DW_MAX else "FAIL"
+        pz = (piece_gate and r4["dE_bound_meV"] is not None and r4["dE_far_meV"] is not None)
+        r4["endpoint_piece_reading_info"] = {"reading": "옛 도구 해석(k·smearing 끝점 |ΔE| ≤ 10 meV) — 판정에 안 씀",
+                                             "status": (("PASS" if (abs(r4["dE_bound_meV"]) <= G4_DE_MEV and abs(r4["dE_far_meV"]) <= G4_DE_MEV and r4["status"] == "PASS") else "FAIL") if pz else ("n/a" if not piece_gate else None))}
         g4[tag] = r4
     if g4:
         st = {v["status"] for v in g4.values()}
@@ -261,12 +270,21 @@ def _selftest():
         ck(abs(r["dD3_QE_J_m2"] - w_j_m2(0.10, A)) < 1e-6 and abs(r["W_PBE_J_m2"] - (W_true - w_j_m2(0.10, A))) < 1e-6, "ΔD3 · W_PBE = W − ΔD3 (개정 1 항 분리)")
         ck(r["E_d_local_min_in_grid"] is True and abs(r["E_d"]["d0-0.3"]["dE_meV"] - 0.002 * RY_EV * 1000) < 1e-6, "E(d): d₀ 가 격자 안 국소 최소 · 상대 에너지 meV")
         ck(r["G3"]["status"] == "PASS" and abs(r["G3"]["dE_bound_meV"] - 1e-5 * RY_EV * 1000) < 1e-9, f"G3 PASS (조각 0.136 meV · ΔW ~0) — {r['G3']['status']}")
-        ck(r["G4"]["status"] == "PASS" and r["G4"]["e70"]["piece_gate_applied"] is False and r["G4"]["k1"]["piece_gate_applied"] is True, "G4 PASS · e70 조각 문턱 미적용 표기")
+        ck(r["G4"]["status"] == "PASS" and r["G4"]["e70"]["endpoint_piece_reading_info"]["status"] == "n/a" and r["G4"]["k1"]["endpoint_piece_reading_info"]["status"] == "PASS"
+           and r["G4"]["k1"]["threshold"]["endpoint_dE"].startswith("기록만"), "G4 PASS · W 모델은 ΔW 만 판정 · 끝점 ΔE 는 기록 (옛 해석은 정보로만 · e70 은 n/a)")
         ck(all(v["input_match"] is True for v in r["jobs"].values()), "입력 무결성: pseudo_dir 만 다른 pw.in 은 일치로 본다")
         uma_json = os.path.join(T, "uma.json")
         json.dump({"energies": {f"{name}_dft_bound": {"E_UMA_eV": -100.0}, f"{name}_dft_far": {"E_UMA_eV": -100.0 + (W_true - w_j_m2(0.10, A) + 0.05) * A * A2_M2 / EV_J}}}, open(uma_json, "w"))
         o2 = collect(st, raw, uma_json); u = o2["registries"][name]["UMA"]
         ck(abs(u["Delta_J_m2"] + 0.05) < 1e-6 and abs(u["identity_check_W_PBE_minus_W_UMA"] - u["Delta_J_m2"]) < 1e-6, f"UMA: W_UMA+QE-D3 · Δ = W_PBE − W_UMA (개정 1 항등식) — {u['Delta_J_m2']}")
+        # 정정 확인: 두 끝점이 같이 +20 meV (ΔW ≈ 0) → W 모델 판정 PASS · 옛 끝점 해석은 FAIL 로 정보만
+        for j in ("G3_c2_bound", "G3_c2_far_i", "G3_c2_far_ii"):
+            F_, D_ = E[j]; _fake_out(os.path.join(raw, name, f"{name}_{j}", "pw.out"), F_ + 0.0015, D_)
+        og = collect(st, raw); gg = og["registries"][name]["G3"]
+        ck(gg["status"] == "PASS" and gg["endpoint_piece_reading_info"]["status"] == "FAIL" and abs(gg["dE_bound_meV"] - (1e-5 + 0.0015) * RY_EV * 1000) < 1e-6,
+           f"W 모델: 끝점 ΔE +20 meV 여도 ΔW ≈ 0 이면 G3 PASS · 옛 해석 FAIL 은 정보로만 — {gg['status']} / {gg['endpoint_piece_reading_info']}")
+        for j in ("G3_c2_bound", "G3_c2_far_i", "G3_c2_far_ii"):
+            _fake_out(os.path.join(raw, name, f"{name}_{j}", "pw.out"), *E[j])
         # ⛔ 음성 1: far 를 0.02 Ry 올리면 G3 FAIL (ΔW · 조각 둘 다)
         _fake_out(os.path.join(raw, name, f"{name}_G3_c2_far_i", "pw.out"), F0 + dF + 0.02, -0.40)
         o3 = collect(st, raw); ck(o3["registries"][name]["G3"]["status"] == "FAIL", "⛔음성 G3: far(i) +0.02 Ry → FAIL")

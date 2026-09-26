@@ -796,6 +796,11 @@
    "date": "2026-09-26",
    "stage": "dft",
    "text": "**부록 정오 2 — 빌더 결함**: V2 2단계 G4 smearing ½ 두 잡(s05_bound · s05_far)의 pw.in 이 **빈 파일**이었다 (`open(p,'w').write(open(p).read()…)` — 쓰기용으로 먼저 열어 비운 뒤 읽음 · V100 에서 3 s rc 1 'could not find namelist &control'). S3 본 패키지(V4·V5 s05)는 읽고-쓰기 순서라 정상. 고침: 빌더 순서 + degauss 가드 + selftest(s05 내용 · base 동일 · 두 패키지 빈 pw.in 0 → 19/19). 보조 잡 `V2_top_fcc_G4_s05_{bound,far}_r1` (규칙대로 재생성 · sha 4005920d… · ccc0cf34…) 을 supp 패키지에 추가 (정오 1 의 k1_far_b01 과 함께 3 잡) · 원 잡 상태 보존 · 집계기 --supp 대체. 부록 봉인은 빈 파일 sha 를 봉인한 셈 — 정오로 기록(봉인 파일 불변)."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**S4 V2 결과 (V100 · Ag(111)|그래핀 · PBE+D3(BJ) 고정기하)**: registry 4 모두 비슷 — 폭 0.0004 J/m² · E(d) 는 d₀ 가 격자 안 국소 최소 · 결합은 전부 분산항(PBE 단독 음수). **G3 FAIL** (직접 8→10 Å 에서 ΔW 가 0.01 초과 · D3 꼬리 · 영상 검사는 통과) · **G4 = 수치 미검증(k 축 · 7×7 far SCF 미수렴)** · e70 · smearing ½ 통과. UMA 대조(개정 1)는 참고(V2 는 G5 대상군 아님). ⚠ 내 첫 집계가 W 모델에 끝점 조각 문턱을 걸었다 → 카드 괄호는 조각 모델(V3·V4) 문턱이라 정정 (G3 판정 불변 · G4 smearing 만 PASS 로). 결과 기록 `db/properties/wad_aprime_pilot_result_v2_2026_09_26.json` (citable false · 1저자 결정 3: 보고 방식 · 읽기 정정 확인 · DEM 회신 5)."
   }
  ],
  "related_decisions": [
