@@ -7,7 +7,7 @@
   python3 scripts/make_mixer_resume.py --selftest
 
 ★ 왜 (2026-09-26): WSL 이 죽었다 다시 뜨면서 층상 캠페인 L 10 런이 53–61 % 에서 한꺼번에 끊겼다.
-  `run_all.sh` 의 `FORCE=1` 은 **처음부터** 다시 돌려 로그·덤프를 덮는다 (런당 ~3 일 손실).  덱이
+  `run_all.sh` 의 `FORCE=1` 은 **처음부터** 다시 돌려 로그·덤프를 덮는다 (런당 4 일 넘게 손실).  덱이
   `restart N restart/a.bin restart/b.bin` 로 체크포인트를 번갈아 남기므로 거기서 잇는다.
 
 규칙

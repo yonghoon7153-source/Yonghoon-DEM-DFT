@@ -293,10 +293,11 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
 
 ## ⑬ 믹서 L 10 런 재개 도구 (09-26 저녁)
 - 18:02–18:07 WSL 이 죽었다 18:27 재부팅 → L 10 런 53–61 % 에서 끊김 (체크포인트 a/b 27–29 MB 온전, 최신 = a 9 · b 1).
-- `FORCE=1` 은 처음부터 (런당 ~3 일 손실) → 체크포인트 재개 도구: `scripts/make_mixer_resume.py` (selftest) · `resume_all.sh` (SMOKE/DRY/발사) ·
+- `FORCE=1` 은 처음부터 (런당 4 일 넘게 손실 — 옛 표기 "~3 일" 은 과소) → 체크포인트 재개 도구: `scripts/make_mixer_resume.py` (selftest) · `resume_all.sh` (SMOKE/DRY/발사) ·
   `test_launcher.sh` R①–R③c.  사용자 순서: git pull → SMOKE=L0_s32452843 → DRY=1 → 발사.  prereg §3 2b 에 실행 기록.
 - **발사 (09-26 밤)** — 스모크 통과 뒤 `MAXJ=10` 으로 10 런 재개.  `RESUME_STEP` **10/10 = 영수증** `checkpoint_step`: L0 5.8 M · LC_s67867967 5.6 M
-  (b 가 더 새 것) · LB3 5.0 M · 나머지 7 런 5.4 M (prereg §3 2b).  ⬜ watch 로 각 런 step > 체크포인트 (첫 thermo 줄 ≈ 6 분 뒤) 확인.
+  (b 가 더 새 것) · LB3 5.0 M · 나머지 7 런 5.4 M (prereg §3 2b).  ✅ **19:19 watch: 10/10 `실행` · step = 체크포인트 + 5,000** (첫 thermo 줄).
+  잃은 계산 (로그 mtime − 체크포인트 mtime) 은 런당 6 분 (L0) ~ 3.5 h (LC_s32452843).  메모리 used 2.4 GiB / 15 GiB — 10 런 합 ≲ 1.7 GB.
 
 ## ⑭ dem-web / 500 — WSL 크래시로 잘린 meta.json (09-26 저녁)
 - uploads/260925_000001_0bee25 (0 B) · 260925_000448_bd85f9 (반쪽) — mtime 18:09·18:10, 권한 0600 = 전날 원자적 쓰기로 만든 파일을
@@ -308,4 +309,8 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
   **standard · 2:AM_S,3:SE** (repo 덱 `in.ps_0_10_r45.liggghts` 로 확인 — 덱이 선언한 AM_P 는 원자 0 개라 뺀다).  기존 결과는 무영향 (type 1 원자가 없어 상 라벨이 같다) ·
   재분석 경로와 그룹비교 `mode` 열엔 영향.  고침 명령 첫 시도는 system `python3` 에 numpy 가 없어 판독 단계에서 멈췄다 (meta 무변경) → venv python 으로 재시도.
   교훈: 틀에서 복사할 때 **케이스마다 다른 키** (mode · type_map · status) 는 그 케이스 자신의 파일에서 다시 읽는다.
+- ✅ **0bee25 고침 완료** (venv python): 덤프 AM_S 4,588 · SE 158,760 (덱 표 4,584 · 158,765 — `volumefraction_region` 삽입이라 개수는 표본 요동, 부분 삽입 흔적 없음)
+  → **standard · 2:AM_S,3:SE**.  결과 폴더 둘 다 **✓ 온전** (0 B · 깨진 JSON · 끝줄 잘린 CSV 없음) · 마지막 수정 09-25 00:16 / 01:01 ⇒ 크래시 때 이 두 케이스의
+  **분석은 돌고 있지 않았다** (18:09 · 18:10 에 쓰인 것은 meta.json 뿐).  ⇒ 채팅에서 낸 가설 *"웹앱 분석 + 믹서 10 런이 메모리를 바닥냈다"* 는 근거를 잃었다
+  (믹서 10 런 ≲ 1.7 GB) — WSL 이 죽은 원인은 **미상**.
 

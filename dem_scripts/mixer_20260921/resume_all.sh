@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # 죽은 믹서 런을 체크포인트에서 **잇는다** — 2026-09-26 (WSL 이 죽었다 다시 뜨면서 L 10 런이 53–61 % 에서 끊김).
-#   ⛔ run_all.sh 의 FORCE=1 은 **처음부터** 다시 돌린다 (로그·덤프 덮음, 런당 ~3 일 손실).  이 스크립트는 체크포인트
+#   ⛔ run_all.sh 의 FORCE=1 은 **처음부터** 다시 돌린다 (로그·덤프 덮음, 런당 4 일 넘게 손실).  이 스크립트는 체크포인트
 #      (`restart/a.bin` · `b.bin`) 에서 잇는다 — 덱은 scripts/make_mixer_resume.py 가 원 in.mixer 에서 만든다.
 #   사용 (어디서나):
 #     SMOKE=L0_s32452843 bash dem_scripts/mixer_20260921/resume_all.sh   # ① 임시 복사본에서 5000 스텝 시험 (원 폴더 안 건드림)
