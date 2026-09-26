@@ -582,19 +582,30 @@
   "W_읽기": "W_PBE+D3(registry) = [E_far − E_bound]/A (QE `!` F · E_int 병기) · E(d) 3 점은 d₀ 가 DFT 국소 최소인지(카드 G-rule) 보는 진단 · G3·G4 는 카드 문턱(|ΔW| ≤ 0.01/0.02 J/m²) · UMA 쪽 W 는 개정 1 (D3 = QE 출력)"
  },
  "⛔": "이 부록의 좌표·입력을 바꾸지 않는다 · 결과를 보고 잡을 더하거나 빼지 않는다 · 실패 잡은 세고 기록",
- "status": "proposed — 1저자 '비준' 대기 (좌표는 사전 봉인 규칙의 기계적 산출 · 새 선택 없음)",
+ "status": "sealed — 1저자 '비준' 2026-09-26",
  "status_history": [
   {
    "at": "2026-09-26",
    "state": "proposed",
    "by": "claude-session-2026-09-26",
    "note": "S4-1 원출력(43cf9c6fe)에서 --v2_ed 로 생성"
+  },
+  {
+   "at": "2026-09-26",
+   "state": "sealed",
+   "by": "1저자",
+   "note": "'비준' — 29 잡 V100 실행 승인"
   }
  ],
  "ratification": {
-  "state": "proposed",
+  "state": "ratified",
+  "stage": "S4-1 부록",
   "role": "scientific_owner",
   "by": "1저자 (사용자 · 트랙 W_ad)",
-  "⚠_digest_의_뜻": "비준 시 ratification 을 뺀 봉인 기록의 sha256 을 기입"
+  "actor_id": "yonghoon7153@gmail.com",
+  "timestamp": "2026-09-26T10:41:15Z",
+  "commit_before_seal": "c7669f5d64d8c660eb185fb02780b4625ce45640",
+  "content_digest": "9085cb4aec2bf184de800e4b434cadae6f4615c916f00a0d2b4c3513529a97f1",
+  "⚠_digest_의_뜻": "ratification 을 뺀 봉인 기록의 sha256"
  }
 }
