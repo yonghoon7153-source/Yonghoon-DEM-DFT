@@ -250,5 +250,18 @@
   "다른_갈래_비용": "400 K 제외 → σ(Ea) 2.05 배 (권하지 않음) · 창 변경 → 결과 보고 창 고침 · 재설계 → 근거 없음",
   "상태": "✅ **채택** (사용자 = 카드 저자 · 2026-09-26 '채택 ㄱㄱ' · 실행자 권고 동의): **400 K prod 800 ps** (600 아님 — 한 번에 정함 · 부트스트랩 블록 16) · 순서 = 파일럿 400 K 를 같은 초기구조(relax 판)·같은 설정·800 ps 로 **새로** 1 런 → C2 재판독 → 통과 시 본 15런(400 K 런 5 개도 800 ps) · 미통과면 '이 프로토콜로 400 K 는 측정되지 않는다' 가 결과. ⏳ 외부 1저자 확인(카드 개정) 뒤 실행 — 그 전 계산 0.",
   "실행_승인": "사용자 'li2s ㄱㄱ 하자' (2026-09-26 저녁) — 근거: 회신 CC 가 넷째 갈래 채택을 **카드 저자 몫**으로 명시 · Q6 장부 재산정 완료(점유 환산) · 파일럿 400 K 800 ps 1 런은 설정·창·문턱·시드 불변(길이 + 초기구조 relax 판만) → 착수. 본 15런은 외부 1저자 확인(Q-CC-1 추정자 · 개정 확인) 뒤."
+ },
+ "파일럿_400K_800ps_발사_2026_09_26": {
+  "기계": "kgy RTX 3090 (공유 · cascade v6 + b2o3 s5 동시 · 발사 뒤 16,094 / 24,576 MiB · 100 %)",
+  "tmux": "gp400x",
+  "PID": 2826487,
+  "worktree": "~/li2s_glass_src @3b0338081 (드라이버 disorder_ensemble_diffusion.py sha c3e2d358ee53cefa = 현 repo 와 동일)",
+  "초기구조": "~/work/runs/lpscl_smallcell_2026_09_16/A/seed1/final.xyz (relax 판 · 회신 CC Q4) · sha256 앞 16 f7d95f98b6f28575",
+  "out_root": "~/work/runs/lpscl_glass_md_2026_09_26/pilot800/T400 (→ d0.00_cfg0/T400/)",
+  "명령": "--v0_xyz <final.xyz> --supercell 1 1 1 --label lpscl_glass_s1 --out_root <OUT> --disorder_levels 0 --n_configs 1 --temperatures 400 --equilib_ps 5 --prod_ps 800 --fit_window_ps 2 50 --save_traj --seed 1 --turbo --device cuda",
+  "run_meta_무효조건": "✅ 전건 — 120 · [1,1,1] · [400] · prod **800** · equil 5 · seed 1 · 창 [2,50] · save_traj · turbo · v0_xyz = final.xyz · 로그 'free-S=0 Cl=12 · max_swaps=0'",
+  "실측_시작": "20:11 컴파일 → 20:13 md.log 1.1 ps · 373 K",
+  "바뀐_것": "prod 400 → 800 ps · 초기구조 원시 → relax 판 (둘 다 회신 CC/개정 CC 항목) · 그 외 파일럿과 동일",
+  "재판독_규칙(결과_전)": "창 2–50 · C1 ≥ 3 Å² · C2 β 0.8–1.2 (추정자는 Q-CC-1 답에 따라 · 둘 다 보고 · 시간원점 블록 σ 병기 · σ > 0.005 경계) · 노화 조건은 전·후반 재적합(STO) 기록 + MTO 진단 병기 · 감김 MSD(50 ps) < 48.88 · **문턱 불변**"
  }
 }
