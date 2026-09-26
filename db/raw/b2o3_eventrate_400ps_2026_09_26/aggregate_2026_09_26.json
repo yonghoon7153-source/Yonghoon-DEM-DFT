@@ -1,0 +1,1152 @@
+{
+ "schema": "framework_event_rate_aggregate/v1",
+ "group_definition": {
+  "P_center": "census kind=free · elem=P",
+  "S_free": "census kind=free · elem=S",
+  "Cl": "census kind=free · elem=Cl",
+  "P-bonded_S": "census kind=P-bonded · elem=S",
+  "P-bonded_O": "census kind=P-bonded · elem=O",
+  "free_O": "census kind=free · elem=O"
+ },
+ "group_n_card": {
+  "P_center": 32,
+  "S_free": 48,
+  "Cl": 64
+ },
+ "runs": [
+  {
+   "seed": 2,
+   "T_K": 600.0,
+   "path": "db/raw/b2o3_eventrate_400ps_2026_09_26/s2/T600/site_census.json",
+   "n_frames": 4000,
+   "dt_ps": 0.1,
+   "total_ps": 400.0,
+   "n_free": 144,
+   "n_P_bonded_anions": 128,
+   "verdict": "framework_mobile",
+   "groups": {
+    "P_center": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "S_free": {
+     "N_ev": 34,
+     "N_at": 12,
+     "t1_ps": 35.2
+    },
+    "Cl": {
+     "N_ev": 1,
+     "N_at": 1,
+     "t1_ps": 20.6
+    },
+    "P-bonded_S": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "P-bonded_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "free_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    }
+   }
+  },
+  {
+   "seed": 2,
+   "T_K": 650.0,
+   "path": "db/raw/b2o3_eventrate_400ps_2026_09_26/s2/T650/site_census.json",
+   "n_frames": 4000,
+   "dt_ps": 0.1,
+   "total_ps": 400.0,
+   "n_free": 144,
+   "n_P_bonded_anions": 128,
+   "verdict": "framework_mobile",
+   "groups": {
+    "P_center": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "S_free": {
+     "N_ev": 32,
+     "N_at": 12,
+     "t1_ps": 55.7
+    },
+    "Cl": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "P-bonded_S": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "P-bonded_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "free_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    }
+   }
+  },
+  {
+   "seed": 2,
+   "T_K": 700.0,
+   "path": "db/raw/b2o3_eventrate_400ps_2026_09_26/s2/T700/site_census.json",
+   "n_frames": 4000,
+   "dt_ps": 0.1,
+   "total_ps": 400.0,
+   "n_free": 144,
+   "n_P_bonded_anions": 128,
+   "verdict": "framework_mobile",
+   "groups": {
+    "P_center": {
+     "N_ev": 7,
+     "N_at": 4,
+     "t1_ps": 77.2
+    },
+    "S_free": {
+     "N_ev": 12,
+     "N_at": 6,
+     "t1_ps": 38.5
+    },
+    "Cl": {
+     "N_ev": 21,
+     "N_at": 11,
+     "t1_ps": 56.5
+    },
+    "P-bonded_S": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "P-bonded_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "free_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    }
+   }
+  },
+  {
+   "seed": 3,
+   "T_K": 600.0,
+   "path": "db/raw/b2o3_eventrate_400ps_2026_09_26/s3/T600/site_census.json",
+   "n_frames": 4000,
+   "dt_ps": 0.1,
+   "total_ps": 400.0,
+   "n_free": 144,
+   "n_P_bonded_anions": 128,
+   "verdict": "framework_mobile",
+   "groups": {
+    "P_center": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "S_free": {
+     "N_ev": 26,
+     "N_at": 12,
+     "t1_ps": 64.5
+    },
+    "Cl": {
+     "N_ev": 4,
+     "N_at": 1,
+     "t1_ps": 264.1
+    },
+    "P-bonded_S": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "P-bonded_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "free_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    }
+   }
+  },
+  {
+   "seed": 3,
+   "T_K": 650.0,
+   "path": "db/raw/b2o3_eventrate_400ps_2026_09_26/s3/T650/site_census.json",
+   "n_frames": 4000,
+   "dt_ps": 0.1,
+   "total_ps": 400.0,
+   "n_free": 144,
+   "n_P_bonded_anions": 128,
+   "verdict": "framework_mobile",
+   "groups": {
+    "P_center": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "S_free": {
+     "N_ev": 37,
+     "N_at": 11,
+     "t1_ps": 18.900000000000002
+    },
+    "Cl": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "P-bonded_S": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "P-bonded_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "free_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    }
+   }
+  },
+  {
+   "seed": 3,
+   "T_K": 700.0,
+   "path": "db/raw/b2o3_eventrate_400ps_2026_09_26/s3/T700/site_census.json",
+   "n_frames": 4000,
+   "dt_ps": 0.1,
+   "total_ps": 400.0,
+   "n_free": 144,
+   "n_P_bonded_anions": 128,
+   "verdict": "framework_mobile",
+   "groups": {
+    "P_center": {
+     "N_ev": 20,
+     "N_at": 3,
+     "t1_ps": 15.600000000000001
+    },
+    "S_free": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "Cl": {
+     "N_ev": 13,
+     "N_at": 5,
+     "t1_ps": 3.6
+    },
+    "P-bonded_S": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "P-bonded_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "free_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    }
+   }
+  },
+  {
+   "seed": 4,
+   "T_K": 600.0,
+   "path": "db/raw/b2o3_eventrate_400ps_2026_09_26/s4/T600/site_census.json",
+   "n_frames": 4000,
+   "dt_ps": 0.1,
+   "total_ps": 400.0,
+   "n_free": 144,
+   "n_P_bonded_anions": 128,
+   "verdict": "framework_mobile",
+   "groups": {
+    "P_center": {
+     "N_ev": 7,
+     "N_at": 2,
+     "t1_ps": 155.9
+    },
+    "S_free": {
+     "N_ev": 8,
+     "N_at": 1,
+     "t1_ps": 86.30000000000001
+    },
+    "Cl": {
+     "N_ev": 15,
+     "N_at": 5,
+     "t1_ps": 21.1
+    },
+    "P-bonded_S": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "P-bonded_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "free_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    }
+   }
+  },
+  {
+   "seed": 4,
+   "T_K": 650.0,
+   "path": "db/raw/b2o3_eventrate_400ps_2026_09_26/s4/T650/site_census.json",
+   "n_frames": 4000,
+   "dt_ps": 0.1,
+   "total_ps": 400.0,
+   "n_free": 144,
+   "n_P_bonded_anions": 128,
+   "verdict": "framework_mobile",
+   "groups": {
+    "P_center": {
+     "N_ev": 4,
+     "N_at": 4,
+     "t1_ps": 109.0
+    },
+    "S_free": {
+     "N_ev": 11,
+     "N_at": 3,
+     "t1_ps": 48.900000000000006
+    },
+    "Cl": {
+     "N_ev": 8,
+     "N_at": 5,
+     "t1_ps": 46.0
+    },
+    "P-bonded_S": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "P-bonded_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "free_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    }
+   }
+  },
+  {
+   "seed": 4,
+   "T_K": 700.0,
+   "path": "db/raw/b2o3_eventrate_400ps_2026_09_26/s4/T700/site_census.json",
+   "n_frames": 4000,
+   "dt_ps": 0.1,
+   "total_ps": 400.0,
+   "n_free": 144,
+   "n_P_bonded_anions": 128,
+   "verdict": "framework_mobile",
+   "groups": {
+    "P_center": {
+     "N_ev": 3,
+     "N_at": 2,
+     "t1_ps": 296.5
+    },
+    "S_free": {
+     "N_ev": 50,
+     "N_at": 14,
+     "t1_ps": 3.4000000000000004
+    },
+    "Cl": {
+     "N_ev": 16,
+     "N_at": 9,
+     "t1_ps": 165.60000000000002
+    },
+    "P-bonded_S": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "P-bonded_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "free_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    }
+   }
+  },
+  {
+   "seed": 5,
+   "T_K": 600.0,
+   "path": "db/raw/b2o3_eventrate_400ps_2026_09_26/s5/T600/site_census.json",
+   "n_frames": 4000,
+   "dt_ps": 0.1,
+   "total_ps": 400.0,
+   "n_free": 144,
+   "n_P_bonded_anions": 128,
+   "verdict": "framework_mobile",
+   "groups": {
+    "P_center": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "S_free": {
+     "N_ev": 15,
+     "N_at": 7,
+     "t1_ps": 69.0
+    },
+    "Cl": {
+     "N_ev": 17,
+     "N_at": 6,
+     "t1_ps": 80.2
+    },
+    "P-bonded_S": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "P-bonded_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "free_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    }
+   }
+  },
+  {
+   "seed": 5,
+   "T_K": 650.0,
+   "path": "db/raw/b2o3_eventrate_400ps_2026_09_26/s5/T650/site_census.json",
+   "n_frames": 4000,
+   "dt_ps": 0.1,
+   "total_ps": 400.0,
+   "n_free": 144,
+   "n_P_bonded_anions": 128,
+   "verdict": "framework_mobile",
+   "groups": {
+    "P_center": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "S_free": {
+     "N_ev": 37,
+     "N_at": 14,
+     "t1_ps": 19.200000000000003
+    },
+    "Cl": {
+     "N_ev": 9,
+     "N_at": 5,
+     "t1_ps": 281.6
+    },
+    "P-bonded_S": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "P-bonded_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "free_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    }
+   }
+  },
+  {
+   "seed": 5,
+   "T_K": 700.0,
+   "path": "db/raw/b2o3_eventrate_400ps_2026_09_26/s5/T700/site_census.json",
+   "n_frames": 4000,
+   "dt_ps": 0.1,
+   "total_ps": 400.0,
+   "n_free": 144,
+   "n_P_bonded_anions": 128,
+   "verdict": "framework_mobile",
+   "groups": {
+    "P_center": {
+     "N_ev": 7,
+     "N_at": 1,
+     "t1_ps": 110.0
+    },
+    "S_free": {
+     "N_ev": 15,
+     "N_at": 13,
+     "t1_ps": 29.0
+    },
+    "Cl": {
+     "N_ev": 31,
+     "N_at": 10,
+     "t1_ps": 32.5
+    },
+    "P-bonded_S": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "P-bonded_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "free_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    }
+   }
+  },
+  {
+   "seed": 6,
+   "T_K": 600.0,
+   "path": "db/raw/b2o3_eventrate_400ps_2026_09_26/s6/T600/site_census.json",
+   "n_frames": 4000,
+   "dt_ps": 0.1,
+   "total_ps": 400.0,
+   "n_free": 144,
+   "n_P_bonded_anions": 128,
+   "verdict": "framework_mobile",
+   "groups": {
+    "P_center": {
+     "N_ev": 9,
+     "N_at": 4,
+     "t1_ps": 45.2
+    },
+    "S_free": {
+     "N_ev": 2,
+     "N_at": 1,
+     "t1_ps": 261.7
+    },
+    "Cl": {
+     "N_ev": 14,
+     "N_at": 4,
+     "t1_ps": 45.0
+    },
+    "P-bonded_S": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "P-bonded_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "free_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    }
+   }
+  },
+  {
+   "seed": 6,
+   "T_K": 650.0,
+   "path": "db/raw/b2o3_eventrate_400ps_2026_09_26/s6/T650/site_census.json",
+   "n_frames": 4000,
+   "dt_ps": 0.1,
+   "total_ps": 400.0,
+   "n_free": 144,
+   "n_P_bonded_anions": 128,
+   "verdict": "framework_mobile",
+   "groups": {
+    "P_center": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "S_free": {
+     "N_ev": 25,
+     "N_at": 8,
+     "t1_ps": 70.3
+    },
+    "Cl": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "P-bonded_S": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "P-bonded_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "free_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    }
+   }
+  },
+  {
+   "seed": 6,
+   "T_K": 700.0,
+   "path": "db/raw/b2o3_eventrate_400ps_2026_09_26/s6/T700/site_census.json",
+   "n_frames": 4000,
+   "dt_ps": 0.1,
+   "total_ps": 400.0,
+   "n_free": 144,
+   "n_P_bonded_anions": 128,
+   "verdict": "framework_mobile",
+   "groups": {
+    "P_center": {
+     "N_ev": 1,
+     "N_at": 1,
+     "t1_ps": 309.40000000000003
+    },
+    "S_free": {
+     "N_ev": 23,
+     "N_at": 9,
+     "t1_ps": 19.900000000000002
+    },
+    "Cl": {
+     "N_ev": 23,
+     "N_at": 9,
+     "t1_ps": 38.300000000000004
+    },
+    "P-bonded_S": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "P-bonded_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    },
+    "free_O": {
+     "N_ev": 0,
+     "N_at": 0,
+     "t1_ps": null
+    }
+   }
+  }
+ ],
+ "by_T": {
+  "600": {
+   "n_runs": 5,
+   "seeds": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "exposure_ns": 2.0,
+   "groups": {
+    "P_center": {
+     "sum_N_ev": 16,
+     "rate_per_ns_cell": 8.0,
+     "ci95": {
+      "lo": 4.572691226820762,
+      "hi": 12.99149879878047,
+      "kind": "Garwood two-sided 95 %"
+     },
+     "k_runs": 2,
+     "k_of": 5,
+     "t1_median_ps": "> 400",
+     "sum_N_at": 6,
+     "per_run_N_ev": [
+      0,
+      0,
+      7,
+      0,
+      9
+     ],
+     "dispersion_index_var_over_mean": 6.156250000000001,
+     "moved_atom_fraction": 0.0375
+    },
+    "S_free": {
+     "sum_N_ev": 85,
+     "rate_per_ns_cell": 42.5,
+     "ci95": {
+      "lo": 33.947490502397244,
+      "hi": 52.55190815944948,
+      "kind": "Garwood two-sided 95 %"
+     },
+     "k_runs": 5,
+     "k_of": 5,
+     "t1_median_ps": 69.0,
+     "sum_N_at": 33,
+     "per_run_N_ev": [
+      34,
+      26,
+      8,
+      15,
+      2
+     ],
+     "dispersion_index_var_over_mean": 10.0,
+     "moved_atom_fraction": 0.1375
+    },
+    "Cl": {
+     "sum_N_ev": 51,
+     "rate_per_ns_cell": 25.5,
+     "ci95": {
+      "lo": 18.98642491914538,
+      "hi": 33.52779068830189,
+      "kind": "Garwood two-sided 95 %"
+     },
+     "k_runs": 5,
+     "k_of": 5,
+     "t1_median_ps": 45.0,
+     "sum_N_at": 17,
+     "per_run_N_ev": [
+      1,
+      4,
+      15,
+      17,
+      14
+     ],
+     "dispersion_index_var_over_mean": 5.068627450980393,
+     "moved_atom_fraction": 0.053125
+    },
+    "P-bonded_S": {
+     "sum_N_ev": 0,
+     "rate_per_ns_cell": 0.0,
+     "ci95": {
+      "lo": 0.0,
+      "hi": 1.4978661367769948,
+      "kind": "one-sided 95 % upper (n = 0)"
+     },
+     "k_runs": 0,
+     "k_of": 5,
+     "t1_median_ps": "> 400",
+     "sum_N_at": 0,
+     "per_run_N_ev": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "dispersion_index_var_over_mean": null
+    },
+    "P-bonded_O": {
+     "sum_N_ev": 0,
+     "rate_per_ns_cell": 0.0,
+     "ci95": {
+      "lo": 0.0,
+      "hi": 1.4978661367769948,
+      "kind": "one-sided 95 % upper (n = 0)"
+     },
+     "k_runs": 0,
+     "k_of": 5,
+     "t1_median_ps": "> 400",
+     "sum_N_at": 0,
+     "per_run_N_ev": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "dispersion_index_var_over_mean": null
+    },
+    "free_O": {
+     "sum_N_ev": 0,
+     "rate_per_ns_cell": 0.0,
+     "ci95": {
+      "lo": 0.0,
+      "hi": 1.4978661367769948,
+      "kind": "one-sided 95 % upper (n = 0)"
+     },
+     "k_runs": 0,
+     "k_of": 5,
+     "t1_median_ps": "> 400",
+     "sum_N_at": 0,
+     "per_run_N_ev": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "dispersion_index_var_over_mean": null
+    }
+   }
+  },
+  "650": {
+   "n_runs": 5,
+   "seeds": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "exposure_ns": 2.0,
+   "groups": {
+    "P_center": {
+     "sum_N_ev": 4,
+     "rate_per_ns_cell": 2.0,
+     "ci95": {
+      "lo": 0.5449326868131624,
+      "hi": 5.120794337701847,
+      "kind": "Garwood two-sided 95 %"
+     },
+     "k_runs": 1,
+     "k_of": 5,
+     "t1_median_ps": "> 400",
+     "sum_N_at": 4,
+     "per_run_N_ev": [
+      0,
+      0,
+      4,
+      0,
+      0
+     ],
+     "dispersion_index_var_over_mean": 4.000000000000001,
+     "moved_atom_fraction": 0.025
+    },
+    "S_free": {
+     "sum_N_ev": 142,
+     "rate_per_ns_cell": 71.0,
+     "ci95": {
+      "lo": 59.802708033404,
+      "hi": 83.68503796450182,
+      "kind": "Garwood two-sided 95 %"
+     },
+     "k_runs": 5,
+     "k_of": 5,
+     "t1_median_ps": 48.900000000000006,
+     "sum_N_at": 48,
+     "per_run_N_ev": [
+      32,
+      37,
+      11,
+      37,
+      25
+     ],
+     "dispersion_index_var_over_mean": 4.183098591549296,
+     "moved_atom_fraction": 0.2
+    },
+    "Cl": {
+     "sum_N_ev": 17,
+     "rate_per_ns_cell": 8.5,
+     "ci95": {
+      "lo": 4.951563234803647,
+      "hi": 13.609323407953307,
+      "kind": "Garwood two-sided 95 %"
+     },
+     "k_runs": 2,
+     "k_of": 5,
+     "t1_median_ps": "> 400",
+     "sum_N_at": 10,
+     "per_run_N_ev": [
+      0,
+      0,
+      8,
+      9,
+      0
+     ],
+     "dispersion_index_var_over_mean": 6.411764705882352,
+     "moved_atom_fraction": 0.03125
+    },
+    "P-bonded_S": {
+     "sum_N_ev": 0,
+     "rate_per_ns_cell": 0.0,
+     "ci95": {
+      "lo": 0.0,
+      "hi": 1.4978661367769948,
+      "kind": "one-sided 95 % upper (n = 0)"
+     },
+     "k_runs": 0,
+     "k_of": 5,
+     "t1_median_ps": "> 400",
+     "sum_N_at": 0,
+     "per_run_N_ev": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "dispersion_index_var_over_mean": null
+    },
+    "P-bonded_O": {
+     "sum_N_ev": 0,
+     "rate_per_ns_cell": 0.0,
+     "ci95": {
+      "lo": 0.0,
+      "hi": 1.4978661367769948,
+      "kind": "one-sided 95 % upper (n = 0)"
+     },
+     "k_runs": 0,
+     "k_of": 5,
+     "t1_median_ps": "> 400",
+     "sum_N_at": 0,
+     "per_run_N_ev": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "dispersion_index_var_over_mean": null
+    },
+    "free_O": {
+     "sum_N_ev": 0,
+     "rate_per_ns_cell": 0.0,
+     "ci95": {
+      "lo": 0.0,
+      "hi": 1.4978661367769948,
+      "kind": "one-sided 95 % upper (n = 0)"
+     },
+     "k_runs": 0,
+     "k_of": 5,
+     "t1_median_ps": "> 400",
+     "sum_N_at": 0,
+     "per_run_N_ev": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "dispersion_index_var_over_mean": null
+    }
+   }
+  },
+  "700": {
+   "n_runs": 5,
+   "seeds": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "exposure_ns": 2.0,
+   "groups": {
+    "P_center": {
+     "sum_N_ev": 38,
+     "rate_per_ns_cell": 19.0,
+     "ci95": {
+      "lo": 13.445530822598075,
+      "hi": 26.078984459629805,
+      "kind": "Garwood two-sided 95 %"
+     },
+     "k_runs": 5,
+     "k_of": 5,
+     "t1_median_ps": 110.0,
+     "sum_N_at": 11,
+     "per_run_N_ev": [
+      7,
+      20,
+      3,
+      7,
+      1
+     ],
+     "dispersion_index_var_over_mean": 7.210526315789475,
+     "moved_atom_fraction": 0.06875
+    },
+    "S_free": {
+     "sum_N_ev": 100,
+     "rate_per_ns_cell": 50.0,
+     "ci95": {
+      "lo": 40.68199562546157,
+      "hi": 60.81339689621319,
+      "kind": "Garwood two-sided 95 %"
+     },
+     "k_runs": 4,
+     "k_of": 5,
+     "t1_median_ps": 29.0,
+     "sum_N_at": 42,
+     "per_run_N_ev": [
+      12,
+      0,
+      50,
+      15,
+      23
+     ],
+     "dispersion_index_var_over_mean": 17.475,
+     "moved_atom_fraction": 0.175
+    },
+    "Cl": {
+     "sum_N_ev": 104,
+     "rate_per_ns_cell": 52.0,
+     "ci95": {
+      "lo": 42.48776815506523,
+      "hi": 63.00670349750268,
+      "kind": "Garwood two-sided 95 %"
+     },
+     "k_runs": 5,
+     "k_of": 5,
+     "t1_median_ps": 38.300000000000004,
+     "sum_N_at": 44,
+     "per_run_N_ev": [
+      21,
+      13,
+      16,
+      31,
+      23
+     ],
+     "dispersion_index_var_over_mean": 2.3173076923076925,
+     "moved_atom_fraction": 0.1375
+    },
+    "P-bonded_S": {
+     "sum_N_ev": 0,
+     "rate_per_ns_cell": 0.0,
+     "ci95": {
+      "lo": 0.0,
+      "hi": 1.4978661367769948,
+      "kind": "one-sided 95 % upper (n = 0)"
+     },
+     "k_runs": 0,
+     "k_of": 5,
+     "t1_median_ps": "> 400",
+     "sum_N_at": 0,
+     "per_run_N_ev": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "dispersion_index_var_over_mean": null
+    },
+    "P-bonded_O": {
+     "sum_N_ev": 0,
+     "rate_per_ns_cell": 0.0,
+     "ci95": {
+      "lo": 0.0,
+      "hi": 1.4978661367769948,
+      "kind": "one-sided 95 % upper (n = 0)"
+     },
+     "k_runs": 0,
+     "k_of": 5,
+     "t1_median_ps": "> 400",
+     "sum_N_at": 0,
+     "per_run_N_ev": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "dispersion_index_var_over_mean": null
+    },
+    "free_O": {
+     "sum_N_ev": 0,
+     "rate_per_ns_cell": 0.0,
+     "ci95": {
+      "lo": 0.0,
+      "hi": 1.4978661367769948,
+      "kind": "one-sided 95 % upper (n = 0)"
+     },
+     "k_runs": 0,
+     "k_of": 5,
+     "t1_median_ps": "> 400",
+     "sum_N_at": 0,
+     "per_run_N_ev": [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "dispersion_index_var_over_mean": null
+    }
+   }
+  }
+ },
+ "apparent_activation": {
+  "P_center": {
+   "fitted": true,
+   "temps_K": [
+    600.0,
+    700.0
+   ],
+   "Ea_apparent_eV": 0.31306678996311993,
+   "sigma_eV": 0.10786170216589624,
+   "chi2": 3.1554436208840472e-30,
+   "dof": 0,
+   "reduced_chi2": null,
+   "fit_note": "점 2 개 — 적합도 판단 불가 (dof 0)",
+   "⛔": "사건 빈도의 겉보기 활성화 에너지 — 이온 이동 장벽이 아니다 (카드) · χ² 는 서술용 (카드 문턱 아님)"
+  },
+  "S_free": {
+   "fitted": true,
+   "temps_K": [
+    600.0,
+    650.0,
+    700.0
+   ],
+   "Ea_apparent_eV": 0.0582601255101954,
+   "sigma_eV": 0.05339455109444886,
+   "chi2": 14.556137971841087,
+   "dof": 1,
+   "reduced_chi2": 14.556137971841087,
+   "fit_note": "χ²/dof ≫ 1 — 온도 의존이 단일 아레니우스와 안 맞는다 · σ 는 포아송만 반영",
+   "⛔": "사건 빈도의 겉보기 활성화 에너지 — 이온 이동 장벽이 아니다 (카드) · χ² 는 서술용 (카드 문턱 아님)"
+  },
+  "Cl": {
+   "fitted": true,
+   "temps_K": [
+    600.0,
+    650.0,
+    700.0
+   ],
+   "Ea_apparent_eV": 0.28947460438393985,
+   "sigma_eV": 0.061629131595726805,
+   "chi2": 33.39832556558019,
+   "dof": 1,
+   "reduced_chi2": 33.39832556558019,
+   "fit_note": "χ²/dof ≫ 1 — 온도 의존이 단일 아레니우스와 안 맞는다 · σ 는 포아송만 반영",
+   "⛔": "사건 빈도의 겉보기 활성화 에너지 — 이온 이동 장벽이 아니다 (카드) · χ² 는 서술용 (카드 문턱 아님)"
+  }
+ },
+ "sealed_sentences": [
+  "600 K 에서 P_center 사건 빈도는 8.00 /ns/셀 [4.57, 12.99] 이고 5런 중 2 런에서 났다.",
+  "600 K 에서 S_free 사건 빈도는 42.50 /ns/셀 [33.95, 52.55] 이고 5런 중 5 런에서 났다.",
+  "600 K 에서 Cl 사건 빈도는 25.50 /ns/셀 [18.99, 33.53] 이고 5런 중 5 런에서 났다.",
+  "650 K 에서 P_center 사건 빈도는 2.00 /ns/셀 [0.54, 5.12] 이고 5런 중 1 런에서 났다.",
+  "650 K 에서 S_free 사건 빈도는 71.00 /ns/셀 [59.80, 83.69] 이고 5런 중 5 런에서 났다.",
+  "650 K 에서 Cl 사건 빈도는 8.50 /ns/셀 [4.95, 13.61] 이고 5런 중 2 런에서 났다.",
+  "700 K 에서 P_center 사건 빈도는 19.00 /ns/셀 [13.45, 26.08] 이고 5런 중 5 런에서 났다.",
+  "700 K 에서 S_free 사건 빈도는 50.00 /ns/셀 [40.68, 60.81] 이고 5런 중 4 런에서 났다.",
+  "700 K 에서 Cl 사건 빈도는 52.00 /ns/셀 [42.49, 63.01] 이고 5런 중 5 런에서 났다.",
+  "P_center: 사건 빈도의 겉보기 활성화 에너지 0.31 ± 0.11 eV (600/700 K · 포아송 가중) — 이온 이동 장벽이 아니다.",
+  "S_free: 사건 빈도의 겉보기 활성화 에너지 0.06 ± 0.05 eV (600/650/700 K · 포아송 가중) — 이온 이동 장벽이 아니다.",
+  "Cl: 사건 빈도의 겉보기 활성화 에너지 0.29 ± 0.06 eV (600/650/700 K · 포아송 가중) — 이온 이동 장벽이 아니다."
+ ],
+ "⚠": "census 는 P 중심 규칙 — B 를 안 세고 BS₃ 의 S 는 '자유 S' 로 분류된다 (카드 결과와 같이 적는다)"
+}

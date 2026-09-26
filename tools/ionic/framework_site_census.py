@@ -292,8 +292,12 @@ def aggregate(files, group_n):
             N = sum(r["groups"][g]["N_ev"] for r in rs); A = sum(r["groups"][g]["N_at"] for r in rs)
             k = sum(1 for r in rs if r["groups"][g]["N_ev"] > 0)
             ci = _poisson_ci(N, expo)
+            per = [r["groups"][g]["N_ev"] for r in sorted(rs, key=lambda q: q["seed"])]
+            mu = N / len(rs)
+            disp = (float(np.var(per, ddof=1)) / mu) if (mu > 0 and len(rs) > 1) else None   # 분산/평균 — 포아송이면 ≈ 1 (서술용 · 판정 아님)
             ent = {"sum_N_ev": N, "rate_per_ns_cell": N / expo, "ci95": ci, "k_runs": k, "k_of": len(rs),
-                   "t1_median_ps": _median_censored([r["groups"][g]["t1_ps"] for r in rs], cap), "sum_N_at": A}
+                   "t1_median_ps": _median_censored([r["groups"][g]["t1_ps"] for r in rs], cap), "sum_N_at": A,
+                   "per_run_N_ev": per, "dispersion_index_var_over_mean": disp}
             if g in group_n:
                 ent["moved_atom_fraction"] = A / (len(rs) * group_n[g])
             tab["groups"][g] = ent
@@ -308,8 +312,11 @@ def aggregate(files, group_n):
         x = np.array([1.0 / (KB_EV * T) for T, _, _ in pts]); y = np.log([rt for _, _, rt in pts]); w = np.array([float(n) for _, n, _ in pts])   # σ_ln = 1/√n → w = n
         W = w.sum(); xb = (w * x).sum() / W; yb = (w * y).sum() / W
         Sxx = (w * (x - xb) ** 2).sum(); slope = (w * (x - xb) * (y - yb)).sum() / Sxx
+        icpt = yb - slope * xb; resid = y - (icpt + slope * x); chi2v = float((w * resid ** 2).sum()); dof = len(pts) - 2
         act[g] = {"fitted": True, "temps_K": [T for T, _, _ in pts], "Ea_apparent_eV": float(-slope), "sigma_eV": float(1.0 / math.sqrt(Sxx)),
-                  "⛔": "사건 빈도의 겉보기 활성화 에너지 — 이온 이동 장벽이 아니다 (카드)"}
+                  "chi2": chi2v, "dof": dof, "reduced_chi2": (chi2v / dof if dof > 0 else None),
+                  "fit_note": ("점 2 개 — 적합도 판단 불가 (dof 0)" if dof == 0 else ("χ²/dof ≫ 1 — 온도 의존이 단일 아레니우스와 안 맞는다 · σ 는 포아송만 반영" if chi2v / dof > 4 else "χ²/dof 정상 범위")),
+                  "⛔": "사건 빈도의 겉보기 활성화 에너지 — 이온 이동 장벽이 아니다 (카드) · χ² 는 서술용 (카드 문턱 아님)"}
     # 봉인 문장 (카드 §판정_문구_봉인 틀 그대로)
     sent = []
     for T in temps:
@@ -382,6 +389,9 @@ def _selftest_aggregate():
         a = r["apparent_activation"]
         ck(a["P_center"]["fitted"] and a["P_center"]["temps_K"] == [650.0, 700.0] and a["S_free"]["fitted"] is False, f"겉보기 활성화: P 중심만 (650·700 K ≥ 10 사건) · 자유 S 는 조건 미충족 — {a['S_free']}")
         x = 1 / (KB_EV * 650) - 1 / (KB_EV * 700); ck(abs(a["P_center"]["Ea_apparent_eV"] - math.log(15.0 / 6.0) / x) < 1e-9, "두 점이면 Ea = ln(r2/r1)/Δ(1/kT) 로 정확히")
+        ck(m["per_run_N_ev"] == [3, 4, 0, 2, 3] and abs(m["dispersion_index_var_over_mean"] - (float(np.var([3, 4, 0, 2, 3], ddof=1)) / 2.4)) < 1e-12 and z["dispersion_index_var_over_mean"] is None,
+           "런별 사건 수 · 분산/평균(서술용) · 사건 0 이면 None (0 으로 안 적는다)")
+        ck(a["P_center"]["dof"] == 0 and a["P_center"]["reduced_chi2"] is None and "dof 0" in a["P_center"]["fit_note"], "점 2 개 적합은 χ²/dof 를 None 으로 (판단 불가 표기)")
         try:
             aggregate(files, {"P_center": 32}); badg = False
         except SystemExit:
