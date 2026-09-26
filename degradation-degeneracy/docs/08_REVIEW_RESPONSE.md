@@ -8239,3 +8239,43 @@ MANIFEST 49 files · 커밋 뒤 blob 대조 49/49, `-text !eol` 규칙 먼저 �
 | 6 | 기존 결과/등록부/영수증 보존과 새 validator 식별 구분 — RUN_SCOPE 가 움직이면 새 validator identity 는 **별도 기록**, producer source 를 새 digest 로 덮지 않음, 두 실물 receipt 원본 보존 | 절차 | 3~5 와 함께 |
 
 RUN_SCOPE 를 건드리는 3~5 는 `source_digest` 를 움직인다 — 그 뒤 receipt 재검증은 "기존 묶음의 별도 복사본/승인된 검증 작업" 으로만 (리뷰어). 현재 적색 20 은 xfail/skip 으로 덮지 않는다.
+
+## §103 74차 대응 — 사용자 범위 승인(항목 3~6 전부) 아래 G74-1·G74-3·G74-4 를 RED 먼저 닫음 (`ebfb853d1b3dff0678f5f67985003498a3476982` · `source_digest 27390883eb132941`)
+
+**범위 결정 (사용자, 2026-09-26):** 74차 회신 항목 3~6 전부. RUN_SCOPE 가 한 번 움직인다 (`tools/preserve.py` · `scripts/archive_results.sh`). 영수증 재검증은 리뷰어 ⑥ 대로 — 기존 원본 보존 + 새 validator 식별은 별도 기록, producer 식별(`leg_source_digest`)은 덮지 않는다.
+
+**RED 먼저.** `tests/test_gate74_defensive.py` 40 node — 패치 전 **36 failed / 4 passed** (67.66 s). 처음부터 통과한 4개는 fixture 감사: `g74_1_05`·`g74_3_06c[diagnostic]` 는 계획 항목의 닫힌 schema 가 `claim_scope` 를 거부해서(같은 변경의 부산물) 통과한 것이고 캐시 규칙 때문이 아니다 — 변이 ``cache-sha-must-be-fixed-hex64-g74`` 가 규칙을 지우면 빨개지는지로 확인했다 (§103 변이). `g74_4_02` 는 옛 index 가 매번 같은 한 항목만 담아 trivially 같았다 → "첫 호출부터 병합" 을 assert 하도록 강화한 뒤 RED. `g74_4_04` 는 기존 동작(승격 0 → 쓰기 없음)이 맞아서 통과 — 회귀 보호로 둔다.
+
+### G74-3 — 진단 전용 분류 계약 (리뷰어 (c)+(b), 여섯 회귀)
+
+| 계약 | 어디 | 회귀 |
+|---|---|---|
+| 실행 명부 ≠ 투영 membership: cohort `executed_legs`(새, 선택) 와 `legs` 는 겹치지 않는다 | `tools/preserve.py::planned_index` (문자열 집합 · 중복 · `legs`/`prospective_legs` 와 교집합 거부 · 반대 방향: `executed_legs` 의 이름은 끝난 prospective · no_active_claim 다리만) | 04b · 04c · 06a |
+| 다리마다 `claim_scope ∈ {active_claims, no_active_claim}` **명시** — 누락·모름 거부 | 생산: `assert_planned_leg → _assert_prospective_plan_is_startable` (시작 시 계획에 있어야) · `finalize_leg` 가 계획 값을 실행 기록에 옮기고 roster 를 고른다 (`CLAIM_SCOPE_ROSTER`) · `planned_index::_executed_scope` (계획·기록 둘 다 없으면 거부, 둘 다 있으면 같아야) · 소비: docs-lint `_scope_problems` | 04a ×4 · 04d · 06c ×2 |
+| `no_active_claim` 은 `claim_roles` 를 가질 수 없고(활성 주장 참조 거부) 투영 명부에 있을 수 없다 | `_claim_role_problems` (분류 문제를 먼저 싣고 그 다리의 role 은 세지 않는다) · `_scope_problems` | 02 · 04b |
+| full_bundle 증거 계약 그대로: 묶음·영수증(typed 재읽기 + core sha 대조)·실행 자리 `out`·소스·상태(full_bundle · current_validated)·validator 식별(영수증과 일치) | docs-lint `_no_active_claim_evidence_problems` · production 은 72차 `_assert_ledger_run_bound` 그대로 | 03 ×6 |
+| 기존 투영 cohort/claim 보호 유지 — `row_projection.py` **불변**. 봉인 필드에 `executed_legs` 가 없으므로 g18 `CURRENT` ledger_seal 불변, 활성 cohort 재생성(투영 게시) 없음 | `test_g74_3_06d` (`_ledger_seal(g18)` ∈ CURRENT) · 8 다리 `claim_scope: active_claims` · claim_roles 그대로 | 05 · 06d |
+| 생산(finalize)과 소비(planned_index · lint)의 fixture 통합 · 거부 시 원장 불변 | 06a (no_active_claim → executed_legs, 기록에 scope) · 06b (active_claims → legs) · 06c (scope 없는 계획은 발급 자체 거부, 원장 바이트 불변, claim 없음) | 06a·b·c |
+
+**publisher 를 안 고친 이유:** `row_projection._ledger_authority` 는 `_LEDGER_AUTHORITY` 의 키만 읽으므로 `executed_legs` 를 무시하고 봉인도 안 움직인다. 그것을 고쳐 `executed_legs` 를 검사하게 하면 `row_projection_py_sha256` 이 바뀌어 활성 cohort g18 의 **투영 재생성**(= projection 게시, `paired_fixed5_v4` 원자료 복원 필요)이 강제된다 — 리뷰어가 이 회신으로 허가하지 않은 일이고 E1 영역이다. 실측: 처음 그렇게 고쳤을 때 `test_exactly_one_cohort_is_active_and_it_tracks_the_current_tree` 가 `['compute_sha256', 'row_projection_py_sha256']` 이탈로 빨개졌다 → 되돌렸다. 진단 다리가 투영 명부에 끼는 것은 production `planned_index` 와 lint 가 막으므로 publisher 는 그것을 볼 일이 없다. 리뷰어가 publisher 검사까지 요구하면 그때 재생성과 함께 한다 (75차 §5 질문).
+
+**원장 편집 (사람):** g18 `legs: [paired_fixed5_v4]` · `executed_legs: [grid_fit_v5]` (finalize 가 옛 규칙으로 `legs` 에 넣었던 것을 분류대로 옮김 — 고친 finalize 는 이제 같은 자리를 쓴다) · `grid_fit_v5` 실행 기록에 `claim_scope: no_active_claim` · `근거` · `evidence.regeneration_capability: available_raw_present`(사실 기록 — 묶음에 fits·curves 원자료; 투영 생성/검증을 뜻하지 않음) · 8 투영 다리에 `claim_scope: active_claims`. 계획 항목은 다시 쓰지 않았다 (`grid_fit_v5` 계획에 `claim_scope` 없음 → 실행 기록이 답한다, `_executed_scope`). `plan_leg.py` 는 `--claim-scope` 필수.
+
+### G74-1 — 고정 캐시 SHA 계획만 진입 (리뷰어 (ii))
+
+`assert_planned_leg` 가 prospective 항목에 대해 `run_spec.grid.discharged_cache_sha256` 이 소문자 hex64 인지 본다 (`_assert_prospective_plan_is_startable`, 축 부재도 거부). precheck(run.sh) · 발급(`_claim_planned_leg`) · finalize 가 전부 이 함수를 지나므로 손으로 쓴 계획도 같은 검사다. `plan_leg.py` 는 같은 규칙을 먼저 말한다 (null 이면 "캐시를 먼저 만들라" 로 거부). live 축은 그대로 `assert_run_is_authorized` 가 claim 과 **비교**한다 — 덮지 않는다 (`g74_1_06`). `discharged_state.cache: false` 로 축이 null 이 되는 모드는 **계획할 수 없다** (명시). `_discharged_kw` 의 null 분기(`force=True`)는 승인된 계획에서는 도달 불가가 됐고 방어로 남긴다. 회귀 `g74_1_01~07`. fixture 가 먼저 깨졌다(맞다): `tests/test_preserve.py` `_LIFECYCLE_LEDGER`/`_RUN_SPEC_L`/`_with_run_spec` · `test_lifecycle_e2e._MAKE_PLAN`(캐시를 계획 앞에 만든다 — runbook §0 정정과 같은 절차) · `test_grid` dry-run(캐시 placeholder — reader 는 monkeypatch) · `test_gate63`(이미 캐시를 먼저 만들고 있었다).
+
+### G74-4 — archive index 병합 보존
+
+`scripts/archive_results.sh`: ① 진입에서 기존 `artifact_index.yaml` 을 읽어 `runs:` mapping 을 담은 mapping 이 아니면 **아무것도 승격하지 않고 중지** ② 승격(mv) 전에 같은 이름의 기존 entry 와 candidate 의 `payload_index_sha256` 을 대조 — 다르면 `ARCHIVE_REPLACE=1` 없이는 거부(n_bad, 묶음·index 불변) ③ index 갱신은 기존 `runs` 위에 이번 승격분만 **병합** (다른 entry 바이트·stamp 불변) ④ 임시 파일 뒤 `os.replace`. heredoc 은 flush 뒤 `os._exit` (docs-lint 규칙). 회귀 `g74_4_01~05` (기존4+신규1 · 재호출 멱등 · 동명 다른 identity 거부/명시 교체 · 검증 실패 불변 · malformed index 4종 중지).
+
+### ⑥ validator 식별 · 영수증
+
+RUN_SCOPE `c2ef1a811e70bb4c → 27390883eb132941`. 두 실물 영수증은 원본을 `docs/22p_gap/receipts/history/<leg>.validate.c2ef1a811e70bb4c.yaml` 로 보존한 뒤 clean 커밋 `ebfb853d1b3dff0678f5f67985003498a3476982` 에서 재생성 (`make_receipt.py paired_fixed5_v4 grid_fit_v5`, empty-root 복원 · 재채점). 원장은 각 다리의 `verification_receipt_core_sha256`·`validator_identity.source_digest` 두 값만 갱신 — `leg_source_digest`(producer) 는 그대로 (`paired_fixed5_v4` d50295f980ccaa81 · `grid_fit_v5` c2ef1a811e70bb4c). 재채점 산출의 semantic sha 가 재생성 전후 같은지: **같다** — 재생성 전후 receipt 의 차이는 `identity.validator_source_digest` · `core_sha256` · `stamp`(generated_at · validator_commit · platform · python) 뿐이고 `validation`(34/33 검사)·`outputs`(rescored_summary · sealed_summary 의 file/semantic sha) 는 바이트 단위로 같다 (필드 단위 diff 실측).
+
+**실측:** 전체 회귀 1 (`8765068a`, clean, 시작 HEAD = 끝 HEAD, 미추적 0): **3 failed · 1919 passed · 2 xfailed (44:14, rc 1)** · smoke rc 0. 실패 3 = 전부 이 라운드가 만든 것 — ① `test_grid` dry-run fixture 의 placeholder 캐시가 conftest 의 **세션 공용** discharged 캐시 dir 에 놓여 뒤 시험 `test_regression::test_reference_equals_lli_zero`·`test_runner::test_no_global_pollution` 이 baseline identity 오류로 죽었다 → 시험 전용 경로로 격리 ② `test_g67_14` — 04_02 증인이 잘린 repr 꼬리(`{'a_v4', 'b_v...`)를 담았다 → 값 직전에서 끊음 (`7ec4e234`, 시험·변이 표만, RUN_SCOPE 불변). **전체 회귀 2 (`7ec4e234`, clean, 시작 HEAD = 끝 HEAD, 미추적 0): 0 failed · 1922 passed · 2 xfailed (43:57, rc 0) · strict smoke rc 0.** docs-lint 적색: 74차 요청 시점 20 → **0**. 등록부 tracked 369 = 디스크 369, 미추적 0. 처음 실패를 숨기지 않는다.
+
+**변이:** `mutation_replay.py --check-preimages` 전 지점 1회 · `-k g74` **6/6 물었다** (`cache-sha-must-be-fixed-hex64-g74` 8 node · `plan-scope-required-at-entry-g74` 1 · `finalize-routes-by-scope-g74` 1 · `executed-legs-only-hold-no-active-claim-legs-g74` 1(04e) · `index-merge-keeps-other-entries-g74` 2 · `same-name-different-identity-is-refused-g74` 1). EXPECT 는 `--emit-expect` 관측값 그대로 (`8765068a`)
+
+**하지 않은 것:** 새 본 실행 없음 · 투영 게시 없음 · class 변경 없음 · 옛 계획 재작성 없음 · WSL 고아 레코드 그대로.
+

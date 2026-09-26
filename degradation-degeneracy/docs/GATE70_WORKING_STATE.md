@@ -76,8 +76,12 @@ grid 3069 (solver 실패 0) → fit 12276 행 → finalize → report → archiv
 
 수신 독립 확인: fits 12,276 = 3,069 × 4 · 곡선/failed 집합 일치 · 묶음 29/27,313,017 · receipt core 일치 · 등록부 +2/367 불변 · v4 index 복원 확인. R1: 판 1 의 18:20 호출은 같은 attempt 의 `--resume` 2회째 — 한도 밖, 사전 재승인 없음 (대화 기록으로 확인, 편차 인정). R2: 문구 5건 취소선 정정. G74-3 권고 = (c)+(b) 진단 전용 명시 계약 (여섯 회귀). G74-1·4 는 다음 사용 전 수정 필수, 재계산 불필요. 항목 3~6 은 **사용자 범위 승인 대기** — 그 전에는 코드·시험·receipt 재생성 없음.
 
+## 74차 대응 (2026-09-26) — 항목 3~6 전부 (사용자 범위 승인) · 원장 §103
+
+G74-3 (c)+(b): `claim_scope` 다리마다 명시 · cohort `executed_legs` ≠ `legs` · finalize 라우팅 · planned_index/lint 동일 분류 · `row_projection.py` 불변(봉인 불변). G74-1: 고정 캐시 SHA 계획만 진입 (`_assert_prospective_plan_is_startable`). G74-4: index 병합·동명 충돌 거부·원자 교체. 코드 `ebfb853d` · `source_digest 27390883eb132941`. 영수증 원본 history/ 보존 후 재생성(`8765068a`; 차이 = validator 식별·core·stamp 뿐). `tests/test_gate74_defensive.py` 41 node (RED 36) · 변이 6/6. 전체 회귀 `7ec4e234`: 0 failed · 1922 passed · 2 xfailed · smoke rc 0 · docs-lint 적색 20 → 0.
+
 ## 다음
 
-~~`docs/22p_gap/GATE74_REQUEST.md` — 결과 보고 + G74-1~4 신고 + G74-3 분류 질문 (새 실행 GO 요청 아님).~~ 74차 회신 항목 3~6 의 범위를 사용자가 정하면 `/finding` (RED 먼저) 로 시작. 현지 검증 `e84d670d`: 20 failed (전부 G74-3) · 1859 passed · 2 xfailed · smoke rc 0. 회신 전까지 `grid_fit_v5` 의 claim_roles·세대·cohort 명부는 쓰지 않는다.
+`docs/22p_gap/GATE75_REQUEST.md` — 74차 항목 1~6 종결 판정 요청 (새 실행 GO 아님). ~~`docs/22p_gap/GATE74_REQUEST.md` — 결과 보고 + G74-1~4 신고 + G74-3 분류 질문 (새 실행 GO 요청 아님).~~ 74차 회신 항목 3~6 의 범위를 사용자가 정하면 `/finding` (RED 먼저) 로 시작. 현지 검증 `e84d670d`: 20 failed (전부 G74-3) · 1859 passed · 2 xfailed · smoke rc 0. 회신 전까지 `grid_fit_v5` 의 claim_roles·세대·cohort 명부는 쓰지 않는다.
 
 ~~**사람의 단계** — 실행 기계에서 `plan_leg.py` 출력 확인 → 원장 `planned:` + cohort `prospective_legs` 커밋(승인 행위) → 승인 HEAD 에서 E9-3 순서로 한정 실행. 요청문 이력: ~~`GATE73_REQUEST.md`~~ (한정 실행 GO 재요청) · ~~`docs/22p_gap/GATE72_REQUEST.md`~~ (한정 실행 GO 재요청) · ~~`docs/22p_gap/GATE71_REQUEST.md`~~ — 판정 대상 `876429562f6a69b59793c70700cb5b375391ab67` · `source_digest b705a21a1237ec73` 로 **한정 실행 GO** 를 묻는다 (원장 §92·§93). 발송문은 요청문 SHA + 브랜치 head SHA, 커밋 뒤 실측.~~
