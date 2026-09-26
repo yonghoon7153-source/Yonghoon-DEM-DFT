@@ -74,4 +74,6 @@ grid 3069 (solver 실패 0) → fit 12276 행 → finalize → report → archiv
 
 ## 다음
 
-**사람의 단계** — 실행 기계에서 `plan_leg.py` 출력 확인 → 원장 `planned:` + cohort `prospective_legs` 커밋(승인 행위) → 승인 HEAD 에서 E9-3 순서로 한정 실행. 요청문 이력: ~~`GATE73_REQUEST.md`~~ (한정 실행 GO 재요청) · ~~`docs/22p_gap/GATE72_REQUEST.md`~~ (한정 실행 GO 재요청) · ~~`docs/22p_gap/GATE71_REQUEST.md`~~ — 판정 대상 `876429562f6a69b59793c70700cb5b375391ab67` · `source_digest b705a21a1237ec73` 로 **한정 실행 GO** 를 묻는다 (원장 §92·§93). 발송문은 요청문 SHA + 브랜치 head SHA, 커밋 뒤 실측.
+`docs/22p_gap/GATE74_REQUEST.md` — 결과 보고 + G74-1~4 신고 + G74-3 분류 질문 (새 실행 GO 요청 아님). 현지 검증 `e84d670d`: 20 failed (전부 G74-3) · 1859 passed · 2 xfailed · smoke rc 0. 회신 전까지 `grid_fit_v5` 의 claim_roles·세대·cohort 명부는 쓰지 않는다.
+
+~~**사람의 단계** — 실행 기계에서 `plan_leg.py` 출력 확인 → 원장 `planned:` + cohort `prospective_legs` 커밋(승인 행위) → 승인 HEAD 에서 E9-3 순서로 한정 실행. 요청문 이력: ~~`GATE73_REQUEST.md`~~ (한정 실행 GO 재요청) · ~~`docs/22p_gap/GATE72_REQUEST.md`~~ (한정 실행 GO 재요청) · ~~`docs/22p_gap/GATE71_REQUEST.md`~~ — 판정 대상 `876429562f6a69b59793c70700cb5b375391ab67` · `source_digest b705a21a1237ec73` 로 **한정 실행 GO** 를 묻는다 (원장 §92·§93). 발송문은 요청문 SHA + 브랜치 head SHA, 커밋 뒤 실측.~~
