@@ -1,0 +1,183 @@
+# Shi et al. Adv. Energy Mater. 2020, 10, 1902881 (DOI 10.1002/aenm.201902881) — main + SI figure readout. ALL y_value = DIGITIZED (not stated) except rows flagged 'check' (digitized vs stated). tools/litdb/shi2019_fig_digitize.py
+figure,panel,series,x_name,x_value,x_unit,y_name,y_value,y_unit,flag,note,provenance
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,60.0,wt%,theta_CAM,0.9967,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,61.0,wt%,theta_CAM,0.9988,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,62.0,wt%,theta_CAM,0.9966,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,63.0,wt%,theta_CAM,0.9953,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,64.0,wt%,theta_CAM,0.9943,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,65.0,wt%,theta_CAM,0.9919,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,66.0,wt%,theta_CAM,0.9932,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,67.0,wt%,theta_CAM,0.9941,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,68.0,wt%,theta_CAM,0.9895,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,69.0,wt%,theta_CAM,0.9892,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,70.0,wt%,theta_CAM,0.9848,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,71.0,wt%,theta_CAM,0.9811,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,72.0,wt%,theta_CAM,0.9723,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,73.0,wt%,theta_CAM,n/a,fraction,not_found,연결선과 겹쳐 마커 분리 실패,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,74.0,wt%,theta_CAM,0.9436,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,75.0,wt%,theta_CAM,0.9188,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,76.0,wt%,theta_CAM,0.8293,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,77.0,wt%,theta_CAM,0.7326,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,78.0,wt%,theta_CAM,0.6436,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,79.0,wt%,theta_CAM,0.6024,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,80.0,wt%,theta_CAM,0.4989,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,81.0,wt%,theta_CAM,0.3942,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,82.0,wt%,theta_CAM,0.3316,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,83.0,wt%,theta_CAM,0.2494,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,84.0,wt%,theta_CAM,0.2168,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,85.0,wt%,theta_CAM,0.1895,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,86.0,wt%,theta_CAM,0.1718,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,87.0,wt%,theta_CAM,0.158,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,88.0,wt%,theta_CAM,0.1474,fraction,ok,,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,89.0,wt%,theta_CAM,n/a,fraction,not_found,연결선과 겹쳐 마커 분리 실패,digitized
+3,3a,lambda=1.67 (D_CAM 5 um),f_CAM,90.0,wt%,theta_CAM,0.13,fraction,ok,,digitized
+3,3b,f_CAM=70 wt% (D_CAM 5 um),lambda,0.3374,-,theta_CAM,0.2168,fraction,ok,λ 점 7개(0.33/0.42/0.625/1/1.67/3.33/4) — 본문 SE 목록은 6개(1.5–15 µm); λ=4 점은 목록 밖,digitized
+3,3b,f_CAM=70 wt% (D_CAM 5 um),lambda,0.4193,-,theta_CAM,0.3486,fraction,ok,λ 점 7개(0.33/0.42/0.625/1/1.67/3.33/4) — 본문 SE 목록은 6개(1.5–15 µm); λ=4 점은 목록 밖,digitized
+3,3b,f_CAM=70 wt% (D_CAM 5 um),lambda,0.6267,-,theta_CAM,0.4408,fraction,ok,λ 점 7개(0.33/0.42/0.625/1/1.67/3.33/4) — 본문 SE 목록은 6개(1.5–15 µm); λ=4 점은 목록 밖,digitized
+3,3b,f_CAM=70 wt% (D_CAM 5 um),lambda,0.9981,-,theta_CAM,0.6657,fraction,ok,λ 점 7개(0.33/0.42/0.625/1/1.67/3.33/4) — 본문 SE 목록은 6개(1.5–15 µm); λ=4 점은 목록 밖,digitized
+3,3b,f_CAM=70 wt% (D_CAM 5 um),lambda,1.6667,-,theta_CAM,0.9893,fraction,ok,λ 점 7개(0.33/0.42/0.625/1/1.67/3.33/4) — 본문 SE 목록은 6개(1.5–15 µm); λ=4 점은 목록 밖,digitized
+3,3b,f_CAM=70 wt% (D_CAM 5 um),lambda,3.3349,-,theta_CAM,1.0011,fraction,ok,λ 점 7개(0.33/0.42/0.625/1/1.67/3.33/4) — 본문 SE 목록은 6개(1.5–15 µm); λ=4 점은 목록 밖,digitized
+3,3b,f_CAM=70 wt% (D_CAM 5 um),lambda,3.9976,-,theta_CAM,1.002,fraction,ok,λ 점 7개(0.33/0.42/0.625/1/1.67/3.33/4) — 본문 SE 목록은 6개(1.5–15 µm); λ=4 점은 목록 밖,digitized
+3,3d,theta=80%,f_CAM,65.0,wt%,lambda_min,1.2302,-,ok,,digitized
+3,3d,theta=80%,f_CAM,70.0,wt%,lambda_min,1.26,-,ok,,digitized
+3,3d,theta=80%,f_CAM,72.5,wt%,lambda_min,1.3644,-,ok,,digitized
+3,3d,theta=80%,f_CAM,75.0,wt%,lambda_min,1.4986,-,ok,,digitized
+3,3d,theta=80%,f_CAM,76.0,wt%,lambda_min,1.6104,-,ok,,digitized
+3,3d,theta=80%,f_CAM,77.0,wt%,lambda_min,1.8714,-,ok,,digitized
+3,3d,theta=80%,f_CAM,78.0,wt%,lambda_min,2.3336,-,ok,,digitized
+3,3d,theta=80%,f_CAM,79.0,wt%,lambda_min,3.0419,-,steep,수직 구간 — λ 대신 f_CAM ±0.3 wt% 로 읽을 것,digitized
+3,3d,theta=80%,f_CAM,79.5,wt%,lambda_min,3.4222,-,steep,수직 구간 — λ 대신 f_CAM ±0.3 wt% 로 읽을 것,digitized
+3,3d,theta=80%,f_CAM,80.0,wt%,lambda_min,3.8621,-,steep,수직 구간 — λ 대신 f_CAM ±0.3 wt% 로 읽을 것,digitized
+3,3d,theta=80%,lambda,8.0,-,f_CAM_at_axis_top,80.9403,wt%,ok,이 f_CAM 이상에서는 해당 θ 를 λ≤8 로 못 얻는다 (그림 범위 안),digitized
+3,3d,theta=90%,f_CAM,65.0,wt%,lambda_min,1.3793,-,ok,,digitized
+3,3d,theta=90%,f_CAM,70.0,wt%,lambda_min,1.4315,-,ok,,digitized
+3,3d,theta=90%,f_CAM,72.5,wt%,lambda_min,1.5135,-,ok,,digitized
+3,3d,theta=90%,f_CAM,75.0,wt%,lambda_min,1.7223,-,ok,,digitized
+3,3d,theta=90%,f_CAM,76.0,wt%,lambda_min,1.9236,-,ok,,digitized
+3,3d,theta=90%,f_CAM,77.0,wt%,lambda_min,2.3486,-,ok,,digitized
+3,3d,theta=90%,f_CAM,78.0,wt%,lambda_min,2.9748,-,ok,,digitized
+3,3d,theta=90%,f_CAM,79.0,wt%,lambda_min,3.6906,-,steep,수직 구간 — λ 대신 f_CAM ±0.3 wt% 로 읽을 것,digitized
+3,3d,theta=90%,f_CAM,79.5,wt%,lambda_min,4.1901,-,steep,수직 구간 — λ 대신 f_CAM ±0.3 wt% 로 읽을 것,digitized
+3,3d,theta=90%,f_CAM,80.0,wt%,lambda_min,5.8527,-,steep,수직 구간 — λ 대신 f_CAM ±0.3 wt% 로 읽을 것,digitized
+3,3d,theta=90%,lambda,8.0,-,f_CAM_at_axis_top,80.194,wt%,ok,이 f_CAM 이상에서는 해당 θ 를 λ≤8 로 못 얻는다 (그림 범위 안),digitized
+3,3d,theta=98%,f_CAM,65.0,wt%,lambda_min,1.5582,-,ok,,digitized
+3,3d,theta=98%,f_CAM,70.0,wt%,lambda_min,1.6179,-,ok,,digitized
+3,3d,theta=98%,f_CAM,72.5,wt%,lambda_min,1.7446,-,ok,,digitized
+3,3d,theta=98%,f_CAM,75.0,wt%,lambda_min,2.0503,-,ok,,digitized
+3,3d,theta=98%,f_CAM,76.0,wt%,lambda_min,2.3113,-,ok,,digitized
+3,3d,theta=98%,f_CAM,77.0,wt%,lambda_min,2.7512,-,ok,,digitized
+3,3d,theta=98%,f_CAM,78.0,wt%,lambda_min,3.6086,-,ok,,digitized
+3,3d,theta=98%,f_CAM,79.0,wt%,lambda_min,5.219,-,steep,수직 구간 — λ 대신 f_CAM ±0.3 wt% 로 읽을 것,digitized
+3,3d,theta=98%,f_CAM,79.5,wt%,lambda_min,7.1426,-,steep,수직 구간 — λ 대신 f_CAM ±0.3 wt% 로 읽을 것,digitized
+3,3d,theta=98%,f_CAM,80.0,wt%,lambda_min,>8,-,off_scale,곡선이 λ=8 (축 상한) 위로 나감,digitized
+3,3d,theta=98%,lambda,8.0,-,f_CAM_at_axis_top,79.5672,wt%,ok,이 f_CAM 이상에서는 해당 θ 를 λ≤8 로 못 얻는다 (그림 범위 안),digitized
+5,5b,"Exp (5 um NMC, 60 wt%)",D_SE,1.4914,um,capacity,152.2929,mAh/g,ok,,digitized
+5,5b,"Exp (5 um NMC, 60 wt%)",D_SE,2.9914,um,capacity,151.4276,mAh/g,ok,,digitized
+5,5b,"Exp (5 um NMC, 60 wt%)",D_SE,4.9985,um,capacity,122.7542,mAh/g,ok,,digitized
+5,5b,"Exp (5 um NMC, 60 wt%)",D_SE,7.9937,um,capacity,76.1373,mAh/g,ok,,digitized
+5,5b,"Model (5 um NMC, 60 wt%)",D_SE,4.9988,um,capacity,127.8777,mAh/g,ok,,digitized
+5,5b,"Model (5 um NMC, 60 wt%)",D_SE,8.0,um,capacity,87.2682,mAh/g,ok,,digitized
+5,5b,"Model (5 um NMC, 60 wt%)",D_SE,1.5,um,capacity,~155,mAh/g,occluded,실험 원 뒤에 가려짐 — 육안 ≈155 (θ≈1 × 155),digitized
+5,5b,"Model (5 um NMC, 60 wt%)",D_SE,3.0,um,capacity,~155,mAh/g,occluded,실험 원 뒤에 가려짐 — 육안 ≈155 (θ≈1 × 155),digitized
+5,5e,"Exp (3 um SE), 80 wt%",D_CAM,4.9384,um,capacity,78.2979,mAh/g,ok,,digitized
+5,5e,"Exp (3 um SE), 80 wt%",D_CAM,12.0303,um,capacity,127.9262,mAh/g,ok,,digitized
+5,5e,"Exp (1.5 um SE), 80 wt%",D_CAM,4.9541,um,capacity,96.3265,mAh/g,ok,,digitized
+5,5e,"Exp (1.5 um SE), 80 wt%",D_CAM,12.0284,um,capacity,141.1064,mAh/g,ok,,digitized
+5,5e,"Model (1.5 um SE), 80 wt%",D_CAM,4.9384,um,capacity,111.1174,mAh/g,ok,,digitized
+5,5e,"Model (3 um SE), 80 wt%",D_CAM,4.9393,um,capacity,74.5377,mAh/g,ok,,digitized
+5,5e,"Model (3 um SE), 80 wt%",D_CAM,12.0284,um,capacity,134.2979,mAh/g,ok,,digitized
+5,5e,"Model (1.5 um SE), 80 wt%",D_CAM,12.0,um,capacity,~140,mAh/g,occluded,실험 원 뒤 — 파란 픽셀 139–140,digitized
+6,6b,Exp 3 um LPS / 5 um NMC (lambda 1.67),f_CAM,60.0155,wt%,capacity,151.6618,mAh/g,ok,,digitized
+6,6b,Exp 3 um LPS / 5 um NMC (lambda 1.67),f_CAM,69.9924,wt%,capacity,137.6184,mAh/g,ok,,digitized
+6,6b,Exp 3 um LPS / 5 um NMC (lambda 1.67),f_CAM,79.9702,wt%,capacity,78.4625,mAh/g,ok,,digitized
+6,6b,Model 3 um LPS / 5 um NMC (lambda 1.67),f_CAM,69.9978,wt%,capacity,153.54,mAh/g,ok,,digitized
+6,6d,Exp 1.5 um LPS / 5 um NMC (lambda 3.33),f_CAM,60.0222,wt%,capacity,152.4901,mAh/g,ok,,digitized
+6,6d,Exp 1.5 um LPS / 5 um NMC (lambda 3.33),f_CAM,70.0069,wt%,capacity,154.0154,mAh/g,ok,,digitized
+6,6d,Exp 1.5 um LPS / 5 um NMC (lambda 3.33),f_CAM,79.9801,wt%,capacity,96.5629,mAh/g,ok,,digitized
+6,6d,Model 1.5 um LPS / 5 um NMC (lambda 3.33),f_CAM,79.9654,wt%,capacity,111.257,mAh/g,ok,,digitized
+6,6b,Model 3 um LPS / 5 um NMC (lambda 1.67),f_CAM,60.0,wt%,capacity,~155,mAh/g,occluded,실험 원과 겹침 — 육안,digitized
+6,6b,Model 3 um LPS / 5 um NMC (lambda 1.67),f_CAM,80.0,wt%,capacity,~75,mAh/g,occluded,실험 원과 겹침 — 육안,digitized
+6,6d,Model 1.5 um LPS / 5 um NMC (lambda 3.33),f_CAM,60.0,wt%,capacity,~155,mAh/g,occluded,실험 원과 겹침 — 육안,digitized
+6,6d,Model 1.5 um LPS / 5 um NMC (lambda 3.33),f_CAM,70.0,wt%,capacity,~155,mAh/g,occluded,실험 원과 겹침 — 육안,digitized
+7,7a,Phi=0,f_CAM,50.0,wt%,CAM_loading,27.6667,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0.1,f_CAM,50.0,wt%,CAM_loading,25.0667,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0.2,f_CAM,50.0,wt%,CAM_loading,22.2667,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0,f_CAM,60.0,wt%,CAM_loading,35.8,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0.1,f_CAM,60.0,wt%,CAM_loading,32.4,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0.2,f_CAM,60.0,wt%,CAM_loading,28.9333,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0,f_CAM,70.0,wt%,CAM_loading,46.2667,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0.1,f_CAM,70.0,wt%,CAM_loading,41.7333,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0.2,f_CAM,70.0,wt%,CAM_loading,37.1333,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0,f_CAM,75.0,wt%,CAM_loading,52.2,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0.1,f_CAM,75.0,wt%,CAM_loading,47.4667,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0.2,f_CAM,75.0,wt%,CAM_loading,41.8667,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0,f_CAM,80.0,wt%,CAM_loading,59.1333,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0.1,f_CAM,80.0,wt%,CAM_loading,53.3333,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0.2,f_CAM,80.0,wt%,CAM_loading,47.4,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0,f_CAM,85.0,wt%,CAM_loading,66.6,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0.1,f_CAM,85.0,wt%,CAM_loading,60.0667,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0.2,f_CAM,85.0,wt%,CAM_loading,53.5333,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0,f_CAM,90.0,wt%,CAM_loading,75.1333,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0.1,f_CAM,90.0,wt%,CAM_loading,68.1333,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+7,7a,Phi=0.2,f_CAM,90.0,wt%,CAM_loading,60.2667,vol%,ok,Shi 의 f_CAM 은 5 wt% CNF 포함 분모 (f = 0.95·M_CAM/(M_CAM+M_SE)); 밀도 = SI Table 1 (LPS 1.87 · NMC 4.85),digitized
+S1,S1b,"CAM-5/SE-1.5 (lambda 3.33), CAM:SE=80:15",box_point_index,1,-,active_ratio_theta,43.978,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-1.5 (lambda 3.33), CAM:SE=80:15",box_point_index,2,-,active_ratio_theta,51.6261,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-1.5 (lambda 3.33), CAM:SE=80:15",box_point_index,3,-,active_ratio_theta,55.5009,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-1.5 (lambda 3.33), CAM:SE=80:15",box_point_index,4,-,active_ratio_theta,59.3959,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-1.5 (lambda 3.33), CAM:SE=80:15",box_point_index,5,-,active_ratio_theta,67.7398,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-1.5 (lambda 3.33), CAM:SE=80:15",box_point_index,6,-,active_ratio_theta,69.0118,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-1.5 (lambda 3.33), CAM:SE=80:15",box_point_index,7,-,active_ratio_theta,69.0127,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-1.5 (lambda 3.33), CAM:SE=80:15",box_point_index,8,-,active_ratio_theta,69.4596,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-1.5 (lambda 3.33), CAM:SE=80:15",box_point_index,9,-,active_ratio_theta,68.6325,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-1.5 (lambda 3.33), CAM:SE=80:15",box_point_index,10,-,active_ratio_theta,68.1847,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-1.5 (lambda 3.33), CAM:SE=80:15",box_point_index,11,-,active_ratio_theta,69.0793,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-1.5 (lambda 3.33), CAM:SE=80:15",plateau(box ≥ 문턱),range,-,active_ratio_theta,67.7–69.5,%,summary,,digitized
+S1,S1b,"CAM-5/SE-3 (lambda 1.67), CAM:SE=80:15",box_point_index,1,-,active_ratio_theta,39.8378,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-3 (lambda 1.67), CAM:SE=80:15",box_point_index,2,-,active_ratio_theta,43.6187,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-3 (lambda 1.67), CAM:SE=80:15",box_point_index,3,-,active_ratio_theta,48.5123,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-3 (lambda 1.67), CAM:SE=80:15",box_point_index,4,-,active_ratio_theta,48.9664,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-3 (lambda 1.67), CAM:SE=80:15",box_point_index,5,-,active_ratio_theta,49.1685,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-3 (lambda 1.67), CAM:SE=80:15",box_point_index,6,-,active_ratio_theta,47.086,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-3 (lambda 1.67), CAM:SE=80:15",box_point_index,7,-,active_ratio_theta,48.7021,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-3 (lambda 1.67), CAM:SE=80:15",box_point_index,8,-,active_ratio_theta,49.3316,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-3 (lambda 1.67), CAM:SE=80:15",box_point_index,9,-,active_ratio_theta,48.8015,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-3 (lambda 1.67), CAM:SE=80:15",box_point_index,10,-,active_ratio_theta,49.524,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-5/SE-3 (lambda 1.67), CAM:SE=80:15",plateau(box ≥ 문턱),range,-,active_ratio_theta,47.1–49.5,%,summary,,digitized
+S1,S1b,"CAM-12/SE-5 (lambda 2.4), CAM:SE=80:15",box_point_index,1,-,active_ratio_theta,48.3086,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-5 (lambda 2.4), CAM:SE=80:15",box_point_index,2,-,active_ratio_theta,45.7363,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-5 (lambda 2.4), CAM:SE=80:15",box_point_index,3,-,active_ratio_theta,53.5072,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-5 (lambda 2.4), CAM:SE=80:15",box_point_index,4,-,active_ratio_theta,54.7077,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-5 (lambda 2.4), CAM:SE=80:15",box_point_index,5,-,active_ratio_theta,58.1847,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-5 (lambda 2.4), CAM:SE=80:15",box_point_index,6,-,active_ratio_theta,58.9191,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-5 (lambda 2.4), CAM:SE=80:15",box_point_index,7,-,active_ratio_theta,59.5541,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-5 (lambda 2.4), CAM:SE=80:15",box_point_index,8,-,active_ratio_theta,58.9191,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-5 (lambda 2.4), CAM:SE=80:15",box_point_index,9,-,active_ratio_theta,58.8495,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-5 (lambda 2.4), CAM:SE=80:15",box_point_index,10,-,active_ratio_theta,60.828,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-5 (lambda 2.4), CAM:SE=80:15",box_point_index,11,-,active_ratio_theta,60.5999,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-5 (lambda 2.4), CAM:SE=80:15",plateau(box ≥ 문턱),range,-,active_ratio_theta,58.2–60.8,%,summary,,digitized
+S1,S1b,"CAM-12/SE-8 (lambda 1.5), CAM:SE=80:15",box_point_index,1,-,active_ratio_theta,54.1083,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-8 (lambda 1.5), CAM:SE=80:15",box_point_index,2,-,active_ratio_theta,41.655,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-8 (lambda 1.5), CAM:SE=80:15",box_point_index,3,-,active_ratio_theta,46.0179,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-8 (lambda 1.5), CAM:SE=80:15",box_point_index,4,-,active_ratio_theta,49.3163,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-8 (lambda 1.5), CAM:SE=80:15",box_point_index,5,-,active_ratio_theta,44.9147,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-8 (lambda 1.5), CAM:SE=80:15",box_point_index,6,-,active_ratio_theta,44.9161,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-8 (lambda 1.5), CAM:SE=80:15",box_point_index,7,-,active_ratio_theta,45.0029,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-8 (lambda 1.5), CAM:SE=80:15",box_point_index,8,-,active_ratio_theta,46.2151,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-8 (lambda 1.5), CAM:SE=80:15",box_point_index,9,-,active_ratio_theta,47.1404,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-8 (lambda 1.5), CAM:SE=80:15",box_point_index,10,-,active_ratio_theta,46.8203,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-8 (lambda 1.5), CAM:SE=80:15",box_point_index,11,-,active_ratio_theta,45.5774,%,ok,세로축 라벨은 인쇄본 'f_CAM (%)' — 캡션상 active cathode ratio,digitized
+S1,S1b,"CAM-12/SE-8 (lambda 1.5), CAM:SE=80:15",plateau(box ≥ 문턱),range,-,active_ratio_theta,44.9–47.1,%,summary,,digitized
+S2,S2,"5 um CAM, f_CAM=60 wt%",lambda,0.4027,-,theta_CAM,0.3897,fraction,ok,,digitized
+S2,S2,"5 um CAM, f_CAM=60 wt%",lambda,0.6238,-,theta_CAM,0.5964,fraction,ok,,digitized
+S2,S2,"5 um CAM, f_CAM=60 wt%",lambda,0.9937,-,theta_CAM,0.8049,fraction,ok,,digitized
+S2,S2,"5 um CAM, f_CAM=60 wt%",lambda,1.6659,-,theta_CAM,1.0004,fraction,ok,,digitized
+S2,S2,"12 um CAM, f_CAM=60 wt%",lambda,0.4155,-,theta_CAM,0.3611,fraction,ok,,digitized
+S2,S2,"12 um CAM, f_CAM=60 wt%",lambda,0.6265,-,theta_CAM,0.5625,fraction,ok,,digitized
+S2,S2,"12 um CAM, f_CAM=60 wt%",lambda,0.9989,-,theta_CAM,0.7848,fraction,ok,,digitized
+S2,S2,"12 um CAM, f_CAM=60 wt%",lambda,1.6673,-,theta_CAM,0.9783,fraction,ok,,digitized
+S2,S2,"12 um CAM, f_CAM=60 wt%",lambda,3.3325,-,theta_CAM,0.9946,fraction,ok,,digitized
+S2,S2,"5 um CAM, f_CAM=60 wt%",lambda,3.333,-,theta_CAM,~1.00,fraction,occluded,12 µm 삼각 뒤 — 육안 1.00,digitized
+check,3d,theta=98%,x,75.0,,digitized_vs_stated,2.05 vs 2.1,,check,"본문 p.5 'λmin = 2.1' (75 wt%, 98 %)",check
+check,3a,lambda=1.67,x,80.0,,digitized_vs_stated,0.499 vs 0.52,,check,"본문 p.5 Fig 4b θ=52 % (80 wt%, λ 1.67) — 다른 시뮬 세트",check
+check,5b,Exp,x,8.0,,digitized_vs_stated,76.1 vs 75.0,,check,본문 p.5 '≈75 mAh/g' (8 µm LPS),check
+check,5b,Exp,x,5.0,,digitized_vs_stated,123 vs 125.0,,check,본문 p.5 '≈125 mAh/g' (5 µm LPS),check

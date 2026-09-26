@@ -40,6 +40,19 @@ lim2025_virtual_calendering_framework	validating the virtual calendering process
 # ── 소재 · 바인더 · 복합양극 ───────────────────────────────────────
 sakuda2013_sulfide_mechanical_property	sulfide solid electrolyte with favorable mechanical property
 shi2019_high_am_loading_particle_size_assb	high active material loading in all
+# 가드 (2026-09-26 SI 보강): 새 업로드 본문 파일명은 밑줄 표기(…_High_Active_Material_Loading_in_All_Solid_State_…)라 위 공백 패턴에 안 걸리고,
+#   SI 파일명은 DOI 조각(aenm201902881-sup-0001-suppmat)뿐이다 → 본문·SI 를 각각 한 줄씩 잡는다 (SI 는 'sup' 로 자동 판정).
+shi2019_high_am_loading_particle_size_assb	high_active_material_loading_in_all_solid_state
+shi2019_high_am_loading_particle_size_assb	aenm201902881
+#   ↑ 2026-09-26. **12장 전부 손이 들어가 있다** (figures.json 의 recrop / manual_crop / caption_fix):
+#   · f1–f7 = 임베디드 래스터 경계 (+2 pt) 재크롭 — 옛 PNG 는 2026-08-25 이전 _shrink 결함으로 **256색 양자화**(Fig 3c·7b 열지도 색띠 계단화),
+#     캡션 5개(f1 f2 f4 f5 f6)에 본문 문단·깨진 수식이 섞여 있었다 → 인쇄 캡션으로 교정.
+#   · fS1 · fS2 = 래스터 경계 (+2 pt). fS1 은 RGBA+SMask 라 원판을 떼면 글자가 검은 바탕에 묻힌다 (쪽 렌더로 자름).
+#   · tS1 (SI 인쇄 라벨 "Table 1") · tS3 = 자동 크로퍼가 "거의 백지(1.000)" 로 버렸고, tS2 = 캡션 줄이 숫자 블록과 한 텍스트 블록이라 미검출
+#     → 셋 다 **수동 크롭** (벡터 괘선 범위 +≈2 pt, 아래 끝은 캡션 줄 위).
+#   [!] '--slug shi2019_high_am_loading_particle_size_assb --clean' 을 돌리면 표 3장이 사라지고 재크롭·캡션 교정이 자동값으로 되돌아간다.
+#       ('--inbox --run --skip-done' 은 안전.)  그림 판독값 = figures/…/digitized.csv (tools/litdb/shi2019_fig_digitize.py).
+#   ⭐ SI Table S3 (습식 밀링 ↔ σ, 40 h → 0.14 vs bulk 0.39) 가 아래 cronau2022 의 "[20,25] ≈1/3" 의 1차 근거다 (SELF-51).
 #   ↓ SE 공정 이력 ↔ σ (습식 볼밀링) — SELF-51 원문 대조 (2026-09-25). [20] 이 위 shi2019 다.
 # 가드: 본문 파일명은 제목 토큰이 있지만 digest 제목이 의역(습식 저에너지 볼밀링 …)이라 토큰 겹침이 약하고,
 #   SI 파일명은 DOI 조각(batt202200041)뿐이다 → 본문·SI 를 각각 한 줄씩 잡는다 (SI 는 'sup' 로 자동 판정).

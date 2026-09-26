@@ -901,6 +901,20 @@
 > - **"입경 자체" 가 아니다 (자체 데이터, digitized)**: 4 h 고정 볼 크기 스윕 — 입경 1.0 / 1.6 / (Ø≈20 µm 덩어리) µm ↔ σ 1.38 / 1.41 / 1.51; 4 h → 50 h — 입경 ≈1.0 → 0.9 µm (λ 역산) ↔ σ 1.52 → 0.39. + **`schlautmann2023_se_particle_size_composite_transport`** 순수 LPSCl D50vol 4–40 µm σ **평평** ⇒ 변수는 **밀링 손상** (저자: 부분 비정질화).
 > - **frame[5]**: 이 입력은 DEM σ_ionic 폼 (`σ_grain · Cronau(r_SE)`) 과 STEP3 복셀 (`σ_grain` 만, `step3_sigma.py:76`) 이 **공유**한다 — 라벨 정정은 두 솔버의 출처 표기에 다 걸리지만 **값은 불변** (검증도 반증도 아님).
 > - ⚠ 적당한 밀링의 펠릿 σ 손실이 정본 세 편에서 **×0.69–0.75** 로 모인다 (Cronau22 2 h · `minnmann2021_jes_charge_transport_bottlenecks` 10 h wet-mill · `lee2025_corolling_dryprocess_lpscl_ptfe` 볼밀) — 우리 r = 0.5 µm 계수 **1.00** 과는 **다른 축** (펠릿 공정 이력 vs grain-interior 규약) 이라 직접 교정 근거가 아니다. 쓰려면 r 의 함수가 아닌 **별도 "공정 이력" 인자**로 (σ_ionic 폼 동결 규약과 충돌 → **1저자 판단**).
+> - ✅ 2026-09-26 — 위 "(추정)" 의 `[20]` 쪽 원문은 바로 아래 **[Shi20] SI** 블록에서 열었다: "1/3" 은 **있고 (×0.36)**, 그 점은 **d̄ 1.5 µm** 다.
+
+> ⭐⭐ **2026-09-26 추가 — [Shi20] SI: Cronau22 가 옮긴 "LWM > 40 h → ≈1/3" 의 1차 근거 — 값은 재현되지만 입경 축의 값이 아니다 (원장 SELF-51).**
+> (`papers/shi2019_high_am_loading_particle_size_assb.md` §S.4 · SI Table S3; ⚠ **LPS 유리 75Li₂S–25P₂S₅ (argyrodite 아님) · 펠릿 EIS (In 차단) · 성형압·온도·반복 미기재 · 4 점**)
+> - **SI Table S3 (SI-stated)**: 습식 밀링 8 µm (SPEX · 5 mm · heptane · 0.5 h) **0.32** · 5 µm (SPEX · 3 mm · heptane · 1.5 h) **0.24** · 3 µm (PM200 · 3+1 mm · heptane+dibutyl ether · 15 h) **0.22** ·
+>   1.5 µm (PM200 · 1 mm · heptane+DBE · **40 h**) **0.14 mS/cm**; 밀링 전 bulk (SPEX 건식 200 min 합성) **0.39** (본문 p.3) ⇒ 40 h = **×0.36 ≈ 1/3** (derived). `[25]` Minnmann21 은 10 h ×0.75 라 "1/3" 의 몫은 Shi 다.
+> - **그러나** ① 그 점의 입경은 **d̄ ≈ 1.5 µm (r 0.75 µm)** — `Cronau(r_SE)` 가 0.33 을 둔 r ≤ 30 nm 와 25× 다르고, 우리 계수는 r 0.75 µm 에서 **1.00** ② 입경 · 시간 · 밀 · 볼 · 용매가 **함께** 바뀐 4 점이라 입경 효과를 떼어낼 수 없다
+>   ③ 저자 귀속 = *"likely … increased grain boundary (or particle boundary) resistance, … worsened by any residual solvent"* — 재료가 처음부터 **비정질 유리**라 비정질화 기전은 설 자리가 없다.
+> - ⇒ `Cronau(r_SE)` 의 **"1/3 → r ≤ 30 nm"** 배치는 **Shi 에도 Cronau22 에도 근거가 없다** (위 블록 "(추정)" 에 대한 답 — 계보는 확인, 배치는 무근거). 작업 브랜치 docstring 의
+>   *"Cronau 2022's 1/3 reduction … primarily affecting D50 < 0.3 μm"* · *"r_SE ≤ 30 nm → 0.33 (Cronau extreme-milling limit)"* 는 두 원문 어디에도 없다 → **인용 금지 후보**.
+> - **공정 이력 벌점의 세 동료값** (재료 · 밀 · 기준점이 달라 **한 곡선 금지**): Shi LPS 유리 ×0.36–0.82 (vs 밀링 전) · Cronau22 gc-Li₅.₅PS₄.₅Cl₁.₅ LWM 50 h ×0.14 (vs untreated) · Minnmann21 LPSCl 10 h ×0.75.
+>   공통 결론 = **입경 함수가 아니라 공정 변수 함수** (위 블록 마지막 줄과 같은 결론을 두 번째 원문으로 굳힌다).
+> - **부수 소득 — 같은 LIGGGHTS 의 real-E 입력 (SI "Table 1")**: E_SE **18.5** · E_AM **177.5 GPa (무연화)** · ν 0.3 · ρ 1.87 / 4.85 · σ_y 2 / 12.6 GPa — "σ_y" 는 실제로는 **나노압입 경도** (AM 값 = `xu2017_nmc532_nanoindentation_modulus_hardness_toughness` 의
+>   소결 NMC532 **펠릿** E · H 와 동일; Shi 의 `[2]` EML 2016 귀속은 오귀속 공산). μ · COR 미공개 · **DEM porosity 미보고** · 압밀은 **정압 유지** (우리 변위정지와 다름) ⇒ 우리 18× 연화 (frame[2]) 의 **대척점 선례**.
 
 > ⭐⭐ **2026-09-25 추가 — [Ketter25RN]: 같은 계열 복합양극(NCM83–LPSCl)의 σ_ion·σ_e·κ 를 *실험과 voxel 저항망으로 모두* 낸 편 — 그리고 우리 `κ_SE = 0.7` 의 출처 오귀속을 드러낸 원문.**
 > (`papers/ketter2025_resistor_network_models_predict_transport_properties.md` §0·§3·§7; ⚠ **무탄소 · LPSCl ~20 µm ≫ NCM83 ~2 µm (우리와 크기 계층 반대) · 펠릿 공극 12–29 % · 전기 셀 밀도 n/a**)
@@ -2463,6 +2477,16 @@
   - ⚠ **그들의 "SE 함량 최적 ≈ 20 wt%"(Fig 7a)는 *패킹* dip 이 아니라 *전자 퍼콜레이션* dome** 이다.
     우리 Furnas dip(기하 패킹, porosity 축)과 **다른 물리** — 같은 그림·같은 표에 섞지 말 것.
     (우연히 둘 다 "중간 조성이 최적"이라 혼동하기 쉽다.)
+
+- **★ 2026-09-26 추가 — [Shi20] λ-연결성 앵커 (정정판)** (`papers/shi2019_high_am_loading_particle_size_assb.md` §3 · §A.2 ⛔; ⚠ **LPS 유리 · NMC532-LZO · E_SE 18.5 무연화
+  강체구 · DEM porosity 미보고 · 실험은 0.05 mA cm⁻² 첫 사이클 · 조건당 셀 1 개**)
+  - θ_CAM (활성 CAM 부피분율, 최단경로 연결성) 은 원문대로 **로딩과 λ = D̄_CAM/D̄_SE 에 "as much"** 의존하고, 고-로딩에서 λ 가 가장 결정적이다
+    (카드의 옛 "로딩보다 λ 에 훨씬 민감" 은 철회).
+  - Fig 3d 판독 (digitized): θ 98 % 의 λ_min 은 65–75 wt% 에서 **1.6–2.1 로 평평**하다가 **≈78 wt% 에서 수직** (≈79.6 wt% 에서 λ 8 초과) — 사실상 **문턱 하나**.
+    80 wt%: θ 80 % ≈ 3.9 · 90 % ≈ 5.9 · 98 % > 8. 실험 확인점: 80 wt% 에서 λ 3.33 → ≈62 % · λ 4 → ≈83 % · λ 8 → ≈91 % (155 mAh/g 대비, digitized).
+  - 우리 이원 AM wt% 를 Shi 규약 (분모에 CNF 5 wt%) 으로 옮기면 **×0.95** (82 → 77.9 · 85 → 80.8) — 우리 core **하단**은 Shi 모델의 고-util 영역과 정합,
+    **85 wt% 모서리는 λ 8 로도 90 % 불가** (밀도 재환산 전 잠정; 우리 AM 은 이봉이라 단일 λ 로 접히지 않는다).
+  - dip(porosity 최저) ↔ λ_min(연결성) **직접 등치 금지** — 다른 양. SI Fig S2 (60 wt%) · S1b (80 wt%, CAM 5·12 µm 혼합) 가 "절대 크기가 아니라 λ" 를 두 번 보인다.
 
 ## E. 우리 계산이 문헌을 "검증/교차검증"하는 지점 (강점으로 쓸 것)
 - ★★ **Giannis 2021 의 β 가 정말 자유변수인지 — 우리가 저자보다 잘 판정할 수 있다** (2026-08-25 신설,

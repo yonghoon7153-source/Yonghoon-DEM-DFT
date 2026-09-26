@@ -2,11 +2,12 @@
  "slug": "shi2019_high_am_loading_particle_size_assb",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-05",
+ "generated": "2026-09-26",
  "sources": [
-  "DEM 논문/43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf",
-  "DEM 논문/45. High Active Material Loading in All‐Solid‐State Battery Electrode via Particle size optimization.pdf"
+  "b99bda01-Advanced_Energy_Materials_-_2019_-_Shi_-_High_Active_Material_Loading_in_All_Solid_State_Battery_Electrode_via_Particle.pdf",
+  "c5690139-aenm201902881-sup-0001-suppmat.pdf"
  ],
+ "note": "2026-09-26 SI 보강 병합 — 본문 f1–f7 은 새 업로드 본문에서 래스터 경계(+2 pt)로 재크롭하고 캡션을 인쇄본으로 교정; SI 5장(fS1·fS2·tS1–tS3)을 추가. extract_figures.extract() 를 임시 슬러그로 돌려 본 결과 fS1·fS2 는 잡혔으나 tS1·tS3 는 \"거의 백지(1.000)\" 로 버려졌고 tS2 는 캡션 검출 실패 → 표 3장은 수동 크롭. 12장 전부 육안 확인(viewed). 판독값 = digitized.csv (tools/litdb/shi2019_fig_digitize.py). 2026-08-05 최초 추출 원본: \"DEM 논문/43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf\", \"DEM 논문/45. High Active Material Loading in All‐Solid‐State Battery Electrode via Particle size optimization.pdf\". ⚠ --clean 재실행 금지: 표 3장이 사라지고(자동 경로가 못 잡는다) 캡션 교정·재크롭이 자동값으로 되돌아간다.",
  "figures": [
   {
    "key": "f1",
@@ -14,18 +15,22 @@
    "label": "1",
    "page": 2,
    "file": "fig_1.png",
-   "caption": "Figure 1. a) Example microstructures showing the composite cathode from its initial cubic shape (top-left, with box size Lbox) to its final compact shape (bottom-left, with height L) under a pressing pressure of 200 MPa. The model was built using the following parameters: fCAM = 80 wt%, = µ 5 m SE D , = µ 5 m CAM D . b) Particle size distributions used in the simulation. The average particle diameters and standard deviations measured from the SEM images were used as inputs in the log-normal distributions. c) Ionic percolating paths for two typical CAM particles (black dash lines). The paths con- nect CAM particles to the composite cathode/bulk SE interface (bottom of the simulation box).",
+   "caption": "Figure 1. a) Example microstructures showing the composite cathode from its initial cubic shape (top-left, with box size L_box) to its final compact shape (bottom-left, with height L) under a pressing pressure of 200 MPa. The model was built using the following parameters: f_CAM = 80 wt%, D̄_SE = 5 µm, D̄_CAM = 5 µm. b) Particle size distributions used in the simulation. The average particle diameters and standard deviations measured from the SEM images were used as inputs in the log-normal distributions. c) Ionic percolating paths for two typical CAM particles (black dash lines). The paths connect CAM particles to the composite cathode/bulk SE interface (bottom of the simulation box).",
+   "rotated_deg": 0,
    "bbox": [
-    42.0,
-    64.9,
-    552.3,
-    346.5
+    114.2,
+    68.9,
+    478.2,
+    343.0
    ],
-   "w": 2128,
-   "h": 1174,
+   "w": 1518,
+   "h": 1144,
    "dpi": 300,
-   "src": "43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf",
-   "blank": 0.768
+   "src": "b99bda01-Advanced_Energy_Materials_-_2019_-_Shi_-_High_Active_Material_Loading_in_All_Solid_State_Battery_Electrode_via_Particle.pdf",
+   "blank": 0.663,
+   "recrop": "2026-09-26 재크롭 — 임베디드 래스터 경계(+2 pt)로. 옛 자동 크롭 bbox [42.0, 64.9, 552.3, 346.5] 는 쪽 폭 가득(좌우 흰 여백)이었다; 같은 판형의 새 업로드 본문(Wiley 다운로드 2026-09-26)에서 잘랐다 — 옛 원본 \"43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf\". 옛 PNG 는 2026-08-25 이전 _shrink 결함(색 많은 그림을 256색 팔레트로 양자화)으로 뭉개져 있었다 — Fig 3c·7b 열지도 색띠가 계단화. 새 PNG 는 현행 _shrink 규칙(>3500색 = 무손실 optimize).",
+   "caption_fix": "2026-09-26 원문 대조 교정 — 수식 조각이 깨져 있었다 (\"= µ 5 m SE D\") → D̄_SE = 5 µm, D̄_CAM = 5 µm",
+   "viewed": true
   },
   {
    "key": "f2",
@@ -33,18 +38,22 @@
    "label": "2",
    "page": 3,
    "file": "fig_2.png",
-   "caption": "Figure 2. a–d) SEM images of LPS with average particle diameters of a) 8, b) 5, c) 3, and d) 1.5 µm prepared using different wet-ball-milling conditions. e,f) SEM images of LZO-coated NMC cathode particles with average diameters of e) 5 and f) 12 µm. ( V V θ = / CAM CAM active is likely because of the increased grain boundary (or particle boundary) resistance, which can be worsened by any residual solvent from the wet ball milling process. LPS with four dif- ferent average particle sizes (8, 5, 3, and 1.5 µm) was tested with LZO-coated NMC particles with average particle sizes of 5 and 12 µm. Representative SEM images of all the particles are presented in Figure 2. CAM). The result for each condition was averaged using at least three different random initial configurations. The convergence of the percolation results with the simula- tion box size is discussed in Section S2 in the Support",
+   "caption": "Figure 2. a–d) SEM images of LPS with average particle diameters of a) 8, b) 5, c) 3, and d) 1.5 µm prepared using different wet-ball-milling conditions. e,f) SEM images of LZO-coated NMC cathode particles with average diameters of e) 5 and f) 12 µm.",
+   "rotated_deg": 0,
    "bbox": [
-    45.0,
-    60.9,
-    555.4,
-    267.6
+    87.1,
+    64.9,
+    511.1,
+    264.5
    ],
-   "w": 2128,
-   "h": 862,
+   "w": 1768,
+   "h": 832,
    "dpi": 300,
-   "src": "43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf",
-   "blank": 0.253
+   "src": "b99bda01-Advanced_Energy_Materials_-_2019_-_Shi_-_High_Active_Material_Loading_in_All_Solid_State_Battery_Electrode_via_Particle.pdf",
+   "blank": 0.069,
+   "recrop": "2026-09-26 재크롭 — 임베디드 래스터 경계(+2 pt)로. 옛 자동 크롭 bbox [45.0, 60.9, 555.4, 267.6] 는 쪽 폭 가득(좌우 흰 여백)이었다; 같은 판형의 새 업로드 본문(Wiley 다운로드 2026-09-26)에서 잘랐다 — 옛 원본 \"43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf\". 옛 PNG 는 2026-08-25 이전 _shrink 결함(색 많은 그림을 256색 팔레트로 양자화)으로 뭉개져 있었다 — Fig 3c·7b 열지도 색띠가 계단화. 새 PNG 는 현행 _shrink 규칙(>3500색 = 무손실 optimize).",
+   "caption_fix": "2026-09-26 원문 대조 교정 — 본문 2.2.1 문단과 2.1 끝 문장이 캡션 뒤에 섞여 있었다 (쪽 2단 조판) → 인쇄 캡션만 남김",
+   "viewed": true
   },
   {
    "key": "f3",
@@ -52,18 +61,22 @@
    "label": "3",
    "page": 4,
    "file": "fig_3.png",
-   "caption": "Figure 3. Modeling results showing the effect of a) fCAM and b) λ on θCAM. c) θCAM as a function of both λ and fCAM. d) Critical λ needed to achieve θCAM = 80%, 90%, and 98% as a function of fCAM.",
+   "caption": "Figure 3. Modeling results showing the effect of a) f_CAM and b) λ on θ_CAM. c) θ_CAM as a function of both λ and f_CAM. d) Critical λ needed to achieve θ_CAM = 80%, 90%, and 98% as a function of f_CAM.",
+   "rotated_deg": 0,
    "bbox": [
-    41.8,
-    64.9,
-    552.3,
-    417.7
+    114.2,
+    68.9,
+    478.2,
+    415.1
    ],
-   "w": 2128,
-   "h": 1471,
+   "w": 1518,
+   "h": 1444,
    "dpi": 300,
-   "src": "43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf",
-   "blank": 0.819
+   "src": "b99bda01-Advanced_Energy_Materials_-_2019_-_Shi_-_High_Active_Material_Loading_in_All_Solid_State_Battery_Electrode_via_Particle.pdf",
+   "blank": 0.742,
+   "recrop": "2026-09-26 재크롭 — 임베디드 래스터 경계(+2 pt)로. 옛 자동 크롭 bbox [41.8, 64.9, 552.3, 417.7] 는 쪽 폭 가득(좌우 흰 여백)이었다; 같은 판형의 새 업로드 본문(Wiley 다운로드 2026-09-26)에서 잘랐다 — 옛 원본 \"43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf\". 옛 PNG 는 2026-08-25 이전 _shrink 결함(색 많은 그림을 256색 팔레트로 양자화)으로 뭉개져 있었다 — Fig 3c·7b 열지도 색띠가 계단화. 새 PNG 는 현행 _shrink 규칙(>3500색 = 무손실 optimize).",
+   "note": "판독값(3a 31점 · 3b 7점 · 3d 세 곡선) = digitized.csv. 3b 의 점은 7개(λ 0.33/0.42/0.625/1/1.67/3.33/4)로 본문 SE 목록(1.5–15 µm, 6개)보다 하나 많다 (λ=4 ↔ SE 1.25 µm, 목록 밖).",
+   "viewed": true
   },
   {
    "key": "f4",
@@ -71,18 +84,22 @@
    "label": "4",
    "page": 5,
    "file": "fig_4.png",
-   "caption": "Figure 4. Visualization of models for a) fCAM = 70 wt%, = µ 3 m SE D , b) fCAM = 80 wt%, = µ 3 m SE D , and c) fCAM = 80 wt%, = µ 5 m SE D , with CAM shown in gray and SE showed in yellow ( = µ 5 m CAM D for all three models). The composite microstructures, isolated SE percolating networks, and isolated CAM particles are shown in the left-hand, middle, and right-hand columns, respectively. The yellow surfaces in the middle column were generated using the QuickSurf method by Gaussian interpolating the SE positions weighted by their diameters.[28] The solid-gray and transparent-gray colors in the right-hand column represent the active and inactive CAM, respectively. λ from 1 to 3 doubles θCAM from ≈30% to ≈60%, but at fCAM = 85 wt% increasing λ from 1 to 8 only slightly increases θCAM from ≈16% to ≈20%. Therefore, most of the active CAM in model c is limited to the volume near the separato",
+   "caption": "Figure 4. Visualization of models for a) f_CAM = 70 wt%, D̄_SE = 3 µm, b) f_CAM = 80 wt%, D̄_SE = 3 µm, and c) f_CAM = 80 wt%, D̄_SE = 5 µm, with CAM shown in gray and SE showed in yellow (D̄_CAM = 5 µm for all three models). The composite microstructures, isolated SE percolating networks, and isolated CAM particles are shown in the left-hand, middle, and right-hand columns, respectively. The yellow surfaces in the middle column were generated using the QuickSurf method by Gaussian interpolating the SE positions weighted by their diameters.[28] The solid-gray and transparent-gray colors in the right-hand column represent the active and inactive CAM, respectively.",
+   "rotated_deg": 0,
    "bbox": [
-    44.6,
-    63.9,
-    555.4,
-    326.3
+    87.1,
+    67.9,
+    511.1,
+    322.3
    ],
-   "w": 2129,
-   "h": 1094,
+   "w": 1768,
+   "h": 1061,
    "dpi": 300,
-   "src": "43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf",
-   "blank": 0.416
+   "src": "b99bda01-Advanced_Energy_Materials_-_2019_-_Shi_-_High_Active_Material_Loading_in_All_Solid_State_Battery_Electrode_via_Particle.pdf",
+   "blank": 0.277,
+   "recrop": "2026-09-26 재크롭 — 임베디드 래스터 경계(+2 pt)로. 옛 자동 크롭 bbox [44.6, 63.9, 555.4, 326.3] 는 쪽 폭 가득(좌우 흰 여백)이었다; 같은 판형의 새 업로드 본문(Wiley 다운로드 2026-09-26)에서 잘랐다 — 옛 원본 \"43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf\". 옛 PNG 는 2026-08-25 이전 _shrink 결함(색 많은 그림을 256색 팔레트로 양자화)으로 뭉개져 있었다 — Fig 3c·7b 열지도 색띠가 계단화. 새 PNG 는 현행 _shrink 규칙(>3500색 = 무손실 optimize).",
+   "caption_fix": "2026-09-26 원문 대조 교정 — 수식 조각 깨짐 + 본문 3.1·3.2 문장 혼입 → 인쇄 캡션만 남김",
+   "viewed": true
   },
   {
    "key": "f5",
@@ -90,18 +107,23 @@
    "label": "5",
    "page": 6,
    "file": "fig_5.png",
-   "caption": "Figure 5. a) First-cycle voltage curves of SSBs using different-sized LPS particles in the cathode composite with fixed NMC size (5 µm) and fCAM (60 wt%). b) Comparison of experimental capacities in with model-predicted capacities. c,d) First-cycle voltage curves of SSBs using different-sized NMC particles (5 and 12 µm) in the cathode composite with fixed LPS size (3 µm for (c) and 1.5 µm for (d)) and fCAM (80 wt%). e) Comparison of experimental capacities in (c) and (d) with model-predicted capacities. delivered larger discharge capacities than those with 5-µm CAM particles (red curves), further demonstrating that a larger λ benefits θCAM. The initial discharge capacities of the four cells are compared with the model-predicted specific capacities in Figure 5e and show good agreement. energy density and safety. However, high energy density can only be achieved if cathode composites can b",
+   "caption": "Figure 5. a) First-cycle voltage curves of SSBs using different-sized LPS particles in the cathode composite with fixed NMC size (5 µm) and f_CAM (60 wt%). b) Comparison of experimental capacities in with model-predicted capacities. c,d) First-cycle voltage curves of SSBs using different-sized NMC particles (5 and 12 µm) in the cathode composite with fixed LPS size (3 µm for (c) and 1.5 µm for (d)) and f_CAM (80 wt%). e) Comparison of experimental capacities in (c) and (d) with model-predicted capacities.",
+   "rotated_deg": 0,
    "bbox": [
-    41.7,
-    64.9,
-    552.5,
-    338.4
+    84.2,
+    68.9,
+    508.2,
+    335.8
    ],
-   "w": 2130,
-   "h": 1141,
+   "w": 1768,
+   "h": 1114,
    "dpi": 300,
-   "src": "43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf",
-   "blank": 0.886
+   "src": "b99bda01-Advanced_Energy_Materials_-_2019_-_Shi_-_High_Active_Material_Loading_in_All_Solid_State_Battery_Electrode_via_Particle.pdf",
+   "blank": 0.859,
+   "recrop": "2026-09-26 재크롭 — 임베디드 래스터 경계(+2 pt)로. 옛 자동 크롭 bbox [41.7, 64.9, 552.5, 338.4] 는 쪽 폭 가득(좌우 흰 여백)이었다; 같은 판형의 새 업로드 본문(Wiley 다운로드 2026-09-26)에서 잘랐다 — 옛 원본 \"43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf\". 옛 PNG 는 2026-08-25 이전 _shrink 결함(색 많은 그림을 256색 팔레트로 양자화)으로 뭉개져 있었다 — Fig 3c·7b 열지도 색띠가 계단화. 새 PNG 는 현행 _shrink 규칙(>3500색 = 무손실 optimize).",
+   "caption_fix": "2026-09-26 원문 대조 교정 — 본문 3.3·4 문장이 캡션 뒤에 섞여 있었다 → 인쇄 캡션만 남김 (\"capacities in with\" 는 원문 그대로 [sic])",
+   "note": "⚠ 패널 b 위쪽 λ 축 눈금(2.5·1.3·0.8·0.6)은 아래 축 눈금 2·4·6·8 µm 에 대응한다 — 데이터 점은 SE 1.5/3/5/8 µm (λ 3.33/1.67/1.00/0.625). 패널 e 는 CAM 5·12 µm 두 점뿐 (가로축 4–12 는 그림 범위). 판독값 = digitized.csv",
+   "viewed": true
   },
   {
    "key": "f6",
@@ -109,18 +131,23 @@
    "label": "6",
    "page": 7,
    "file": "fig_6.png",
-   "caption": "Figure 6. First-cycle voltage profiles of SSBs using a) 3-µm and c) 1.5-µm LPS in the cathode composite. The blue curves represent the cells with 60 wt% NMC, 35 wt% LPS, and 5 wt% CNF (fCAM = 60 wt%), the orange curves represent the cells with 70 wt% NMC, 25 wt% LPS, and 5 wt% CNF (fCAM = 70 wt%), and the black curves represent the cells with 80 wt% NMC, 15 wt% LPS, and 5 wt% CNF (fCAM = 80 wt%). b,d) Comparison of experimental first-cycle discharge capacities with model-predicted capacities. In all the cells, 5-µm NMC particles were used. λ is increased to ≈8. To put this finding into perspective, we calculate the CAM volume ratio in the cathode composite as a function of cathode loading using previously reported densities and composite cathode porosities (Figure 7a).[29] For fCAM = 80 wt%, the volume loading is ≈50 vol%, comparable to that of a common liquid cell cathode (usually >45 v",
+   "caption": "Figure 6. First-cycle voltage profiles of SSBs using a) 3-µm and c) 1.5-µm LPS in the cathode composite. The blue curves represent the cells with 60 wt% NMC, 35 wt% LPS, and 5 wt% CNF (f_CAM = 60 wt%), the orange curves represent the cells with 70 wt% NMC, 25 wt% LPS, and 5 wt% CNF (f_CAM = 70 wt%), and the black curves represent the cells with 80 wt% NMC, 15 wt% LPS, and 5 wt% CNF (f_CAM = 80 wt%). b,d) Comparison of experimental first-cycle discharge capacities with model-predicted capacities. In all the cells, 5-µm NMC particles were used.",
+   "rotated_deg": 0,
    "bbox": [
-    44.7,
-    64.9,
-    555.5,
-    401.1
+    117.2,
+    68.9,
+    481.2,
+    398.4
    ],
-   "w": 2129,
-   "h": 1402,
+   "w": 1518,
+   "h": 1375,
    "dpi": 300,
-   "src": "43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf",
-   "blank": 0.904
+   "src": "b99bda01-Advanced_Energy_Materials_-_2019_-_Shi_-_High_Active_Material_Loading_in_All_Solid_State_Battery_Electrode_via_Particle.pdf",
+   "blank": 0.864,
+   "recrop": "2026-09-26 재크롭 — 임베디드 래스터 경계(+2 pt)로. 옛 자동 크롭 bbox [44.7, 64.9, 555.5, 401.1] 는 쪽 폭 가득(좌우 흰 여백)이었다; 같은 판형의 새 업로드 본문(Wiley 다운로드 2026-09-26)에서 잘랐다 — 옛 원본 \"43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf\". 옛 PNG 는 2026-08-25 이전 _shrink 결함(색 많은 그림을 256색 팔레트로 양자화)으로 뭉개져 있었다 — Fig 3c·7b 열지도 색띠가 계단화. 새 PNG 는 현행 _shrink 규칙(>3500색 = 무손실 optimize).",
+   "caption_fix": "2026-09-26 원문 대조 교정 — 본문 4 절 문장이 캡션 뒤에 섞여 있었다 → 인쇄 캡션만 남김",
+   "note": "판독값 = digitized.csv (b: 60/70/80 wt% 실험 151.7/137.6/78.5 · d: 152.5/154.0/96.6 mAh/g)",
+   "viewed": true
   },
   {
    "key": "f7",
@@ -128,18 +155,142 @@
    "label": "7",
    "page": 8,
    "file": "fig_7.png",
-   "caption": "Figure 7. a) CAM volume loading in cathode composite as a function of fCAM. The shaded area represents the experimentally reported porosities for SSB cathode composites (between 0.1 and 0.2).[29] b) θCAM as a function of both λ and CAM volume loading.",
+   "caption": "Figure 7. a) CAM volume loading in cathode composite as a function of f_CAM. The shaded area represents the experimentally reported porosities for SSB cathode composites (between 0.1 and 0.2).[29] b) θ_CAM as a function of both λ and CAM volume loading.",
+   "rotated_deg": 0,
    "bbox": [
-    42.2,
-    64.9,
-    552.3,
-    251.9
+    114.2,
+    68.9,
+    478.2,
+    248.4
    ],
-   "w": 2127,
-   "h": 780,
+   "w": 1518,
+   "h": 750,
    "dpi": 300,
-   "src": "43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf",
-   "blank": 0.739
+   "src": "b99bda01-Advanced_Energy_Materials_-_2019_-_Shi_-_High_Active_Material_Loading_in_All_Solid_State_Battery_Electrode_via_Particle.pdf",
+   "blank": 0.62,
+   "recrop": "2026-09-26 재크롭 — 임베디드 래스터 경계(+2 pt)로. 옛 자동 크롭 bbox [42.2, 64.9, 552.3, 251.9] 는 쪽 폭 가득(좌우 흰 여백)이었다; 같은 판형의 새 업로드 본문(Wiley 다운로드 2026-09-26)에서 잘랐다 — 옛 원본 \"43. Advanced Energy Materials - 2019 - Shi - High Active Material Loading in All‐Solid‐State Battery Electrode via Particle.pdf\". 옛 PNG 는 2026-08-25 이전 _shrink 결함(색 많은 그림을 256색 팔레트로 양자화)으로 뭉개져 있었다 — Fig 3c·7b 열지도 색띠가 계단화. 새 PNG 는 현행 _shrink 규칙(>3500색 = 무손실 optimize).",
+   "note": "⚠ 패널 b 세로축 눈금이 60·70·80·80 (맨 위 중복) 에 제목은 vol% — Fig 3c 의 wt% 눈금과 같은 자리이고 패널 a 로는 80 wt% ≈ 47.6–59.3 vol% 이므로 앞뒤가 안 맞는다 ⇒ 패널 b 세로축은 정량 판독 금지. 패널 a 판독 = digitized.csv",
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. a) Size distributions of three types of particles. The dashed red lines represent the theoretically designed distributions, and the solid blue lines represent the real distribution after filling these particles into a cubic box of 30-µm length. b) Active cathode ratios of four composite models with mass ratio of AM:SE=80:15 as a function of cubic length. Models CAM-5µm/SE-1.5µm and CAM-5µm/SE-3µm share the cubic length of the first horizontal axis, and models CAM-12µm/SE-5µm and CAM-12µm/SE-8µm share the cubic length of the second horizontal axis.",
+   "rotated_deg": 0,
+   "bbox": [
+    92.5,
+    70.0,
+    519.3,
+    278.4
+   ],
+   "w": 1779,
+   "h": 869,
+   "dpi": 300,
+   "src": "c5690139-aenm201902881-sup-0001-suppmat.pdf",
+   "blank": 0.868,
+   "si": true,
+   "recrop": "2026-09-26 — 임베디드 래스터 경계(+2 pt). 자동 크롭은 쪽 폭 가득이었다",
+   "note": "⚠ 패널 b 세로축 제목은 인쇄본 \"f_CAM (%)\" 이지만 캡션·SI 본문은 active cathode ratio(θ_CAM) — 조성은 80:15 고정이므로 라벨 오기로 읽는다. 평탄값 판독 = digitized.csv",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 6,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Active CAM ratio (θ_CAM) as a function of average particle size ratio of CAM to SE (λ). Two sets of data with different CAM sizes (5 and 12 µm) were calculated. The same results were obtained for the same λ, indicating that the utilization is controlled by λ rather than by the absolute particle sizes. The CAM loading was fixed at 60 wt%.",
+   "rotated_deg": 0,
+   "bbox": [
+    163.5,
+    70.0,
+    448.5,
+    318.2
+   ],
+   "w": 1188,
+   "h": 1035,
+   "dpi": 300,
+   "src": "c5690139-aenm201902881-sup-0001-suppmat.pdf",
+   "blank": 0.949,
+   "si": true,
+   "recrop": "2026-09-26 — 임베디드 래스터 경계(+2 pt). 자동 크롭은 쪽 폭 가득이었다",
+   "note": "판독값 = digitized.csv. ⚠ f_CAM 60 wt% — 본문 p.4 는 Fig 3b(70 wt%) 의 12 µm 확인이 \"Figure S2\" 라고 적지만 S2 는 60 wt% 다.",
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "caption": "Table 1. Simulation parameters used in the Hertzian contact model",
+   "rotated_deg": 0,
+   "bbox": [
+    157.1,
+    506.8,
+    454.2,
+    652.4
+   ],
+   "w": 1239,
+   "h": 608,
+   "dpi": 300,
+   "src": "c5690139-aenm201902881-sup-0001-suppmat.pdf",
+   "blank": 0.672,
+   "si": true,
+   "manual_crop": "2026-09-26 수동 크롭 — 벡터 괘선 범위 +≈2 pt, 아래 끝은 캡션 줄 위(캡션 글자 0 px 확인)",
+   "note": "SI 쪽 3 에 \"Table 1\" 로 인쇄 (SI 첫 표라 S1 로 색인). 벡터 표 — 자동 크로퍼가 빈 영역(백지 1.000)을 잡아 버렸다 → 수동 크롭.",
+   "viewed": true
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 4,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Detailed parameters for the statistic distribution of each particle sizes.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.4,
+    320.5,
+    527.7,
+    454.3
+   ],
+   "w": 1848,
+   "h": 558,
+   "dpi": 300,
+   "src": "c5690139-aenm201902881-sup-0001-suppmat.pdf",
+   "blank": 0.908,
+   "si": true,
+   "manual_crop": "2026-09-26 수동 크롭 — 벡터 괘선 범위 +≈2 pt, 아래 끝은 캡션 줄 위(캡션 글자 0 px 확인)",
+   "note": "벡터 표 — 캡션 줄이 숫자 블록과 한 텍스트 블록으로 붙어 자동 캡션 검출이 못 잡았다 → 수동 크롭.",
+   "viewed": true
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 7,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Detailed wet-ball-milling conditions used to obtain various sized LPS particles and their ionic conductivities. In all cases, 50-mL ZrO2 ball-mill jars and Y-stabilized ZrO2 milling balls were used. Ionic conductivities were determined by conducting impedance measurements using In metal as blocking electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.4,
+    103.3,
+    547.7,
+    324.9
+   ],
+   "w": 2015,
+   "h": 924,
+   "dpi": 300,
+   "src": "c5690139-aenm201902881-sup-0001-suppmat.pdf",
+   "blank": 0.927,
+   "si": true,
+   "manual_crop": "2026-09-26 수동 크롭 — 벡터 괘선 범위 +≈2 pt, 아래 끝은 캡션 줄 위(캡션 글자 0 px 확인)",
+   "note": "벡터 표 — 자동 크로퍼가 빈 영역(백지 1.000)을 잡았다 → 수동 크롭. ★ SELF-51 판정 근거 (40 h → 0.14 vs bulk 0.39 mS/cm).",
+   "viewed": true
   }
  ]
 }
