@@ -25,7 +25,8 @@
     V100 에서 실패 폴더 `V2_top_fcc_relax_fail1_dipreg` 보관 확인 → 러너 `IN=db/inputs/wad_aprime_s3v2_2026_09_26/qe` 로 4 잡 재발사 → **재개 규칙**(첫 10 BFGS 스텝 Total force 감소 · energy_new < energy_old 다수) 확인.
   · ⚠ V4 GPU 시험(gabia) 은 **탄성(modelc_2x · 41 GB) 이 끝난 뒤** — GPU pw.x 둘을 겹치지 않는다.
   · ✅ **S4-1 완료 (09-26 19:16 · V100 · S3v2)** — 4 잡 모두 1 BFGS 스텝에 수렴 · 톱니 진폭 0.0035 Ry · 재개 규칙 통과. ✅ 원출력 회수 (43cf9c6fe) · ✅ `--v2_ed` ×4 → `db/inputs/wad_aprime_s4_v2_stage2_2026_09_26` (29 잡 · d₀ 3.3017/3.3045) · **부록 봉인 ✅ 비준** (`wad_aprime_s4_v2_stage2_seal_2026_09_26.json` · 9085cb4aec2bf184…) → kgy serve → V100 29 잡 실행 (tmux `s4v2c` · 4 세트 순차) → S4 집계기(미작성) → G3·G4 판정 · 결과 기록.
-- 🟢 **b2o3 사건빈도 — gabia 몫 종료 (09-26 17:48 KST 실측)**: s2·s3·s4·s6 × 3 온도 = **12/15 완료**(msd.json) · s5 ×3 은 kgy 몫(개정 2) · 드라이버 0 · GPU 유휴. ⏭ kgy s5 끝나면 `.incoming` 옮김 → 자격(`--mto`) → census 15런.
+- ✅ **b2o3 사건빈도 — 15 런 통합 완료 (09-26 22:3x)**: kgy s5 3/3 끝 → gabia `s5.incoming` rsync → `rsync -c --dry-run` 빈 출력(바이트 동일) → 막는 파일(107 B) `s5.blocker_removed_0926` 로 치우고 mv → **s2–s6 전부 3/3 msd.json + ensemble** (s2·3·4 gabia · s5·6 kgy · 개정 1·2).
+  ⚠ 카드대로 다음은 **전도도 자격(--mto)이 아니라** ① 무효조건(512 · [2,2,1] · 조성 · 400 ps · save_fs 100 · turbo 전 15 런) ② 런마다 `framework_site_census.py --card lpsocl_box331_closure_amendment_2026_09_11.json` ③ 온도별 사건 빈도(Garwood 95 % · 0 이면 단측 상한) · k/5 · t₁ 중앙값(절단) · 움직인 원자 비율(P 32 · 자유 S 48 · Cl 64) · 겉보기 활성화는 10 사건 이상 온도 2 개 이상일 때만. ⛔ D·Ea·σ 재개 금지 (카드 금지 서술).
 - ⏭ **탄성 modelc_2x (사용자 1저자) 재개 — 1저자 09-26 "b2o3 끝나서 modelC 영률 다시 이어가자"** (09-23 순서 b2o3 → 탄성 → Li₂S 그대로). 러너 `run_elastic_relaxedion_gabia.sh`
   **`SYS=modelc_2x` 명시**(09-23 함정: SYS 없이 comp2 기본값으로 대기했었다) · 수렴점 skip · 소진점(23_p 등) nstep 200 · trust 0.05 재실행 · VRAM 가드 32000 · host 30 GB.
   ✅ **발사 09-26 18:11:49** (tmux `el_mc2x` · repo `/data/work/repo` @30e1e90eb · 로그 `/root/logs/el_modelc2x_0926.log`): 점검 = GPU 1 MiB · host 55 GB · 러너 최신판 ✓ · V0 ✓ · 6/12 수렴 ·
