@@ -1,0 +1,30 @@
+[2026-09-26 20:53:58] ════ run_sese_gpu · IN=/home/ubuntu/wad4l/db/inputs/wad_aprime_s4_v2_stage2_2026_09_26/V2_bridge/qe · RUN=/home/ubuntu/runs/wad_aprime_s4_v2s2_2026_09_26/V2_bridge · JOBS=[V2_bridge_dft_bound V2_bridge_dft_far V2_bridge_Ed_m03 V2_bridge_Ed_p03 V2_bridge_Ed_p06]
+[2026-09-26 20:53:58] 공존 근거: D-2026-09-23-gabia-gpu-exception-sese · START<2048 MiB · KILL>31000 MiB · 표본 2s · UMA 공존 허용=0 · 허용 PID=[제한 없음]
+[2026-09-26 20:54:01] 랭크 NP=1 · GPU 1 장 · pseudo=/home/ubuntu/wad4l/pseudo_kgy (PSEUDO_DIR 로 교체)
+[2026-09-26 20:54:01] PP Ag_ONCV_PBE-1.0.oncvpsp.upf sha256 0494aa5927b754b4 · 기준과 같음 ✓
+[2026-09-26 20:54:02] PP C.pbe-n-kjpaw_psl.1.0.0.UPF sha256 9900d1efd50b9848 · 기준과 같음 ✓
+[2026-09-26 20:54:02] 디스크 871G 남음 (7% 사용)
+[2026-09-26 20:54:02] GPU 합계 사용량 지금 0 MiB · 호스트 MemAvailable 119394 MiB (시작 문턱 16384 · 중단 4096)
+[qe_gpu] MPI 를 바이너리에서 읽었다: /home/ubuntu/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so.40
+[qe_gpu]   prefix=/home/ubuntu/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi · mpirun=/home/ubuntu/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
+[2026-09-26 20:54:04] ▶ V2_bridge_dft_bound (scf) 시작 · GPU 합계 0 MiB · 호스트 여유 119385 MiB
+[2026-09-26 20:54:05]    래퍼(mpirun) PID 1611189 · pw.x PID 1611207
+[2026-09-26 20:54:35]    ⚠ nvidia-smi 목록에 우리 pw.x(1611207) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-26 20:58:05] ■ V2_bridge_dft_bound rc=0 완료=1 벽시계 240s · 피크 합계 2750 MiB · 자기 — MiB · 호스트 최저 118517 MiB · 중단=0
+[2026-09-26 20:58:15] ▶ V2_bridge_dft_far (scf) 시작 · GPU 합계 0 MiB · 호스트 여유 119411 MiB
+[2026-09-26 20:58:16]    래퍼(mpirun) PID 1613220 · pw.x PID 1613242
+[2026-09-26 20:58:46]    ⚠ nvidia-smi 목록에 우리 pw.x(1613242) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-26 21:00:37] ■ V2_bridge_dft_far rc=0 완료=1 벽시계 141s · 피크 합계 2750 MiB · 자기 — MiB · 호스트 최저 118540 MiB · 중단=0
+[2026-09-26 21:00:42] ▶ V2_bridge_Ed_m03 (scf) 시작 · GPU 합계 0 MiB · 호스트 여유 119429 MiB
+[2026-09-26 21:00:43]    래퍼(mpirun) PID 1614471 · pw.x PID 1614489
+[2026-09-26 21:01:13]    ⚠ nvidia-smi 목록에 우리 pw.x(1614489) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-26 21:03:19] ■ V2_bridge_Ed_m03 rc=0 완료=1 벽시계 156s · 피크 합계 2752 MiB · 자기 — MiB · 호스트 최저 118520 MiB · 중단=0
+[2026-09-26 21:03:23] ▶ V2_bridge_Ed_p03 (scf) 시작 · GPU 합계 0 MiB · 호스트 여유 119416 MiB
+[2026-09-26 21:03:24]    래퍼(mpirun) PID 1615814 · pw.x PID 1615832
+[2026-09-26 21:03:54]    ⚠ nvidia-smi 목록에 우리 pw.x(1615832) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-26 21:06:34] ■ V2_bridge_Ed_p03 rc=0 완료=1 벽시계 191s · 피크 합계 2750 MiB · 자기 — MiB · 호스트 최저 118502 MiB · 중단=0
+[2026-09-26 21:06:40] ▶ V2_bridge_Ed_p06 (scf) 시작 · GPU 합계 0 MiB · 호스트 여유 119396 MiB
+[2026-09-26 21:06:41]    래퍼(mpirun) PID 1617450 · pw.x PID 1617470
+[2026-09-26 21:07:11]    ⚠ nvidia-smi 목록에 우리 pw.x(1617470) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-26 21:09:06] ■ V2_bridge_Ed_p06 rc=0 완료=1 벽시계 145s · 피크 합계 2750 MiB · 자기 — MiB · 호스트 최저 118508 MiB · 중단=0
+[2026-09-26 21:09:06] ✅ 전부 완료 — 집계: python3 tools/wad/se_sym_slab.py --collect /home/ubuntu/runs/wad_aprime_s4_v2s2_2026_09_26/V2_bridge --qe_in /home/ubuntu/wad4l/db/inputs/wad_aprime_s4_v2_stage2_2026_09_26/V2_bridge/qe

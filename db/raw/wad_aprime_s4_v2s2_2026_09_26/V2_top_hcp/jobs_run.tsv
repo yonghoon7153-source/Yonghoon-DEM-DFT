@@ -1,0 +1,6 @@
+job	rc	done	wall_s	peak_total_MiB	peak_self_MiB	killed	start	host_avail_min_MiB
+V2_top_hcp_dft_bound	0	1	230	2752	—	0	2026-09-26 20:38:49	118528
+V2_top_hcp_dft_far	0	1	131	2750	—	0	2026-09-26 20:42:43	118516
+V2_top_hcp_Ed_m03	0	1	220	2754	—	0	2026-09-26 20:44:59	118522
+V2_top_hcp_Ed_p03	0	1	151	2750	—	0	2026-09-26 20:48:43	118529
+V2_top_hcp_Ed_p06	0	1	148	2750	—	0	2026-09-26 20:51:23	118515

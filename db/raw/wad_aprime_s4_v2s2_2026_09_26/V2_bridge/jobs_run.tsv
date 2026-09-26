@@ -1,0 +1,6 @@
+job	rc	done	wall_s	peak_total_MiB	peak_self_MiB	killed	start	host_avail_min_MiB
+V2_bridge_dft_bound	0	1	240	2750	—	0	2026-09-26 20:54:04	118517
+V2_bridge_dft_far	0	1	141	2750	—	0	2026-09-26 20:58:15	118540
+V2_bridge_Ed_m03	0	1	156	2752	—	0	2026-09-26 21:00:42	118520
+V2_bridge_Ed_p03	0	1	191	2750	—	0	2026-09-26 21:03:23	118502
+V2_bridge_Ed_p06	0	1	145	2750	—	0	2026-09-26 21:06:40	118508
