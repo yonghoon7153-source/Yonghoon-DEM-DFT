@@ -8,7 +8,8 @@
 
 계획 항목의 `run_spec.grid.discharged_cache_sha256` 은 **그 기계의 완방상태 캐시 바이트**를 묶는다 (51차 P0-A4). 컨테이너에서 뽑은 값(`00ebb05f…`)은
 컨테이너 캐시의 것이라 WSL 에서는 gate 가 거부한다. 리뷰어 §6-1: "과거 문서의 dry 출력·구 source_digest·다른 기계 캐시 식별을 그대로 복사하지 않는다."
-fresh clone 에는 캐시가 없으므로 값은 `null` 이 되고 그 뜻은 "이 실행이 계산한다 · 캐시 읽기 금지" 다 — 그것이 가장 단순한 결속이다.
+~~fresh clone 에는 캐시가 없으므로 값은 `null` 이 되고 그 뜻은 "이 실행이 계산한다 · 캐시 읽기 금지" 다 — 그것이 가장 단순한 결속이다.~~
+**정정 (2026-09-26, 원장 §99 G74-1):** null 계획은 첫 시작이 완방상태를 재계산해 **캐시를 저장**하는 순간 재개가 불가능해진다 (다음 프로세스의 `live_grid_axis` 가 그 sha 를 넣어 봉인 spec 과 어긋난다 — 세 번 실측). 그러므로 계획을 뽑기 **전에** `python -m src.baseline --config configs/grid_fine.yaml` 로 캐시를 만들고, 계획이 그 바이트를 묶게 한다 (`discharged_cache_sha256` = 그 파일의 `sha256sum`). 재승인 항목(`e7cc8713…`)이 그 형태다.
 **계획을 뽑은 뒤 실행 시작 전까지 pytest/smoke 를 돌리지 않는다** (캐시를 다시 쓴다 — 컨테이너에서 하루 사이 값이 바뀐 것을 실측).
 
 ## 1. checkout (WSL)
@@ -81,12 +82,19 @@ ps aux | grep -E "run.sh|pytest|smoke_e2e|src\.(grid|fitting)" | grep -v grep ||
 
 ## 6. 실행 (E9-1)
 
+**tmux 안에서 실행하고 WSL 창을 닫지 않는다** (시도 1·2·3 은 전부 터미널/VM 종료로 죽었다 — 원장 §99). Windows `.wslconfig` `[wsl2] vmIdleTimeout=-1` + 절전 해제. `tmux new -s gfv5` 를 **먼저 따로** 치고 프롬프트가 뜬 뒤 아래를 붙여 넣는다 (한 블록에 섞으면 줄이 pane 셸과 바깥 셸로 갈라져 중복 실행된다 — 시도 3 실측). 나올 때 `Ctrl-b d`.
+
 ```bash
+cd ~/dd/degradation-degeneracy && source .venv/bin/activate && unset CANONICAL_RUN LEG DD_SMOOTH_CACHE
+./run.sh --mode all --leg grid_fit_v5 --config configs/grid_fine.yaml --nproc "$(nproc)" --out results/grid_fit_v5 2>&1 | tee ~/grid_fit_v5_window/run_$(date -u +%Y%m%dT%H%M%SZ).log
+```
+
+~~```bash
 cd ~/dd/degradation-degeneracy && source .venv/bin/activate && unset CANONICAL_RUN LEG DD_SMOOTH_CACHE
 nohup ./run.sh --mode all --leg grid_fit_v5 --config configs/grid_fine.yaml --nproc "$(nproc)" --out results/grid_fit_v5 \
       > ~/grid_fit_v5_window/run_$(date -u +%Y%m%dT%H%M%SZ).log 2>&1 &
 echo $! > ~/grid_fit_v5_window/run.pid; tail -f ~/grid_fit_v5_window/run_*.log
-```
+```~~
 
 기대 순서: 실행 전 gate 통과(사전 점검·새 발급) → grid (~3993 조건) → gate 통과(소유한 재개) → fit (4 목적함수 × 3069 조건 × restart 5) → `✅ 실행 기록을 닫았다 — grid_fit_v5 … preservation_status=preservation_pending` → score → report `docs/RESULTS_grid_fit_v5.md`.
 
@@ -103,6 +111,7 @@ nohup ./run.sh --mode all --leg grid_fit_v5 --config configs/grid_fine.yaml --np
       > ~/grid_fit_v5_window/resume_$(date -u +%Y%m%dT%H%M%SZ).log 2>&1 &
 ```
 2회째 실패 → 재승인(새 계획 항목). finalize/archive/영수증/attach 의 실패는 `--resume` 대상이 아니다 — 사유를 보존하고 게이트로.
+**주의 (G74-1):** `discharged_cache_sha256: null` 계획에서는 이 `--resume` 이 **항상** `살아 있는 claim 은 다른 run_spec 을 봉인했다` 로 거부된다. 캐시를 묶은 계획에서만 재개가 성립한다. crash 뒤 재승인으로 갈 때는 `release_leg_run('grid_fit_v5')`(소유 token 필요) → 부분 산출·캐시를 창 디렉터리로 **옮기고**(지우지 않는다) → `precheck_leg_run` 이 `new` 인지 확인.
 
 ## 8. 실행 뒤 — 보존·영수증·원장 (E9-3 2~5)
 

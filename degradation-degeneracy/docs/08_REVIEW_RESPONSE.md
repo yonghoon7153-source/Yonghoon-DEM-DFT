@@ -8127,3 +8127,25 @@ MANIFEST 49 files · 커밋 뒤 blob 대조 49/49, `-text !eol` 규칙 먼저 �
 **다음 (사람의 단계):** 실행 기계에서 `python3 docs/22p_gap/plan_leg.py --leg grid_fit_v5 --cohort g18_2026_09_15 --config configs/grid_fine.yaml --out results/grid_fit_v5 --recorded-on <날짜> --근거 "…"` 의 출력을 사용자가 확인하고
 `LEG_PRESERVATION.yaml` `planned:` + cohort `prospective_legs` 에 넣어 커밋한다 (승인 행위). 이 컨테이너(HEAD `02dd7342`, `source_digest c2ef1a811e70bb4c`, nproc 4)에서 뽑은 dry 출력은 스크래치패드에만 두었다 —
 `discharged_cache_sha256` 은 **그 기계의 캐시 바이트**를 묶으므로(이 컨테이너에서 smoke 가 캐시를 다시 쓰면 값이 바뀐다 — 2026-09-24 `872b80e1…` → 2026-09-25 `00ebb05f…` 실측), 계획 커밋과 실행 시작 사이에 smoke/pytest 를 돌리지 않는다.
+
+## §99 한정 실행 1~3차 시도 — 전부 외부 종료 · 재개 불능 발견(G74-1) · **재승인** (캐시 바이트를 묶은 계획으로 교체)
+
+2026-09-26 WSL 로컬 (`~/dd`, HEAD `951b6136` = 1차 승인 HEAD, RUN_SCOPE diff 0 → `7a794556`, `source_digest c2ef1a811e70bb4c`, 28 proc · RTX 3060 · 15.5 GB). 시각은 WSL 로컬(로그 파일명은 UTC). 로그 전문은 `~/grid_fit_v5_window/` 에 있고 실행 뒤 `docs/22p_gap/run_windows/grid_fit_v5/` 로 옮겨 커밋한다.
+
+| # | 시각 | 무엇 | 끝 |
+|---|---|---|---|
+| 1 | 18:07 | `nohup ./run.sh --mode all …` (attempt `591c0939…`, 새 발급). 완방상태 계산 → 캐시 `.cache/discharged_state/a8e262f7d6aa4beb.json` 저장 → `grid 0/3069` | 프로세스 소멸, 메시지 없음. 터미널을 닫아 WSL 이 idle 종료. **조건 0개 계산** (`completed.jsonl` 924건은 guards 사전검사의 infeasible 기록) |
+| 1-r | 18:18 | D6 의 명시적 `--resume` **1회** | grid gate 거부: `살아 있는 claim 은 다른 run_spec 을 봉인했다 (97585418 ≠ e7cc8713)` |
+| 2 | 18:20 | 캐시 파일을 창 디렉터리로 옮긴 뒤 `setsid nohup … --resume` | gate 통과(소유한 재개, "924개 완료 확인, 3069개 남음") → 캐시 재계산·재저장 → `grid 0%` → **Terminated** (loky "leaked semlock at shutdown"). `dmesg` 첫 줄 = **18:27:01 VM 부팅** → WSL VM 재시작으로 SIGTERM. OOM 아님(13 GB free), GPU 유휴, 다른 publisher 없음 |
+| — | 18:3x | `release_leg_run('grid_fit_v5')` → `planned` (attempt `591c0939…`). 부분 산출 → `$W/attempt12_partial_results`, 캐시 → `$W/discharged_cache_from_attempt2.json`. `precheck_leg_run` → `kind: new` | 사용자 재승인(같은 계획 항목, 처음부터) |
+| 3 | 18:31 | tmux 안 `./run.sh --mode all …` (attempt `abd0c650…`, 새 발급) → 캐시 저장 → `grid 0%` | tmux 세션이 닫히며(`[exited]`) 소멸. 원인은 **내 명령 블록**: `tmux new` 와 그 뒤 실행 줄을 한 블록으로 붙여 넣게 해서 줄이 pane 셸과 바깥 셸로 갈라졌다 |
+| 3-d | 18:32 | 바깥 셸이 같은 줄을 중복 실행 | grid gate 거부 `97585418 ≠ e7cc8713` (소유한 재개 + 캐시 존재). 아무것도 쓰기 전 거부 |
+| — | 18:3x | `release_leg_run` → `planned` (attempt `abd0c650…`). 부분 산출 → `$W/attempt3_partial_results`, 캐시 → `$W/discharged_cache_from_attempt3.json`. `precheck` → `new` | — |
+
+**G74-1 (코드, RUN_SCOPE — 지금 고치지 않는다, 74차 신고):** `discharged_cache_sha256: null` 계획은 **첫 시작 뒤 어떤 소유한 재개도 불가능**하다. `src/grid.py::_discharged_kw` 는 계획이 null 이면 `force=True` 로 재계산하는데 `src/baseline.py::get_discharged_state` 는 재계산 결과를 `use_cache`(config 기본 true)면 **캐시 파일로 저장**한다. 그 다음 프로세스의 `live_grid_axis` 는 그 파일의 sha 를 spec 에 넣으므로 claim 이 봉인한 null spec 과 항상 어긋난다. 세 번의 거부는 gate 가 옳게 동작한 것이고(다른 spec 을 이어붙이지 않았다), 틀린 것은 실행 자신의 부작용이 live 축을 바꾼다는 점이다. 결과: E9-4 D6 의 "`--resume` 정확히 1회" 는 null 계획에서는 문장으로만 존재했다. 반례는 위 1-r·3-d 그대로 (재현: null 계획 → 시작 → 캐시 저장 확인 → 같은 token 으로 두 번째 시작). 수정 후보(74차에서 판정 받는다): (a) 승인이 null 이면 강제 재계산 결과를 저장하지 않는다 (b) 소유한 재개는 완방상태 축을 claim 의 봉인 spec 에서 가져와 대조한다 (c) `plan_leg.py` 가 null 을 거부하고 캐시를 먼저 만들게 한다. 어느 것도 지금 넣지 않는다 — RUN_SCOPE 가 움직이면 GO 가 묶인 `c2ef1a811e70bb4c` 가 깨진다.
+
+**G74-2 (등록부):** `docs/22p_gap/_exec_class/f3f509012c8d1a39beff96c951f649e40da50567d1aac388628d79c44e270acf.json` 이 미추적으로 생겼다. 소유한 재개 경로의 `_record_canonical_if_identifiable` 이 부분 산출 디렉터리(manifest 있음)의 content id 를 정본 class 로 등록한 것이다 — 중단·폐기된 자리의 레코드. **지우지 않고 커밋하지 않는다** (등록부 삭제 금지 · 고아 커밋 금지). 디스크 등록부는 368, tracked 367. 재실행의 E6 전후 snapshot 은 368 에서 시작하며 이 이름을 표에 적는다.
+
+**재승인 (사용자 결정, 이 커밋):** 같은 다리 이름 `grid_fit_v5`, 계획 항목을 **교체**. 바뀐 것은 `discharged_cache_sha256` (null → `5ab61b3799d4e18e0233038d6c9dccfb53882a027d36a8721af3796f4c33a064`, WSL 에서 `python -m src.baseline --config configs/grid_fine.yaml` 로 만든 캐시의 `sha256sum`) · `run_spec_digest` (`97585418…` → **`e7cc8713bb88d941e2d5532f0308e1c7f257b9b06ebaf57a2cc0ad8667fe04ef`**) · `근거` 뿐이다. 이 digest 는 이 컨테이너에서 커밋된 spec 에 그 sha 만 넣어 `run_spec_digest` 로 독립 계산한 값과 같고, 세 거부가 live 로 계산한 값과도 같다 — 캐시 바이트가 시도마다 같았다는 뜻이다. `plan_leg.py` 는 같은 이름이 index 에 있으면 거부하므로 WSL 작업 사본에서 옛 항목을 잠시 빼고 출력(`$W/plan_grid_fit_v5_reapproval.txt`)을 뽑은 뒤 `git checkout` 으로 되돌렸다(WSL tracked 변경 0). 리뷰어 §6-1 준수: 값은 실행 기계에서 현행 코드로 만든 것이고 과거 문서·다른 기계 캐시를 복사하지 않았다. 이제 첫 실행과 재개가 같은 spec(`cache_bytes` 경로 — 재저장 없음)이므로 D6 가 실제로 작동한다.
+
+**신고하는 편차:** ① 리뷰어 §6-2 "clean 시작" — 재실행 시작 시 WSL 트리에 tracked 변경은 0 이지만 미추적 4개가 있다: `docs/22p_gap/_attempts/`(lifecycle journal·lock) · `_claims/`(lock) · G74-2 고아 레코드 · `bms-balancing/out_u18b/`(dd 밖). ② D6 는 1-r 에서 1회 썼고 2·3 은 외부 종료라 재승인 경계에서 사용자 결정으로 새 항목을 냈다. ③ 실행 환경 조치(사용자): Windows `.wslconfig` `vmIdleTimeout=-1`, 절전 해제, tmux 안 실행·창 유지 — 적용 여부는 창을 열 때 `status_before` 옆에 적는다.
