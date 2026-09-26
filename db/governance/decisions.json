@@ -4980,6 +4980,69 @@
    "ratification": {
     "state": "proposed"
    }
+  },
+  {
+   "id": "D-2026-09-26-wad-aprime-v2-report",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "adhesion.wad_lpscl_agc.aprime_pilot",
+   "slot": "wad_aprime_v2_reporting",
+   "applies_to": {
+    "systems": [
+     "ag111_graphene"
+    ],
+    "tasks": [
+     "wad_aprime_pilot"
+    ],
+    "methods": [
+     "qe_pbe_d3bj"
+    ],
+    "use_cases": [
+     "internal",
+     "dem_handoff"
+    ]
+   },
+   "title": "A′ V2(Ag|그래핀) 보고 방식 · G3/G4 게이트 읽기(W 모델은 ΔW 만) · DEM 회신 5 전달",
+   "statement": "`db/properties/wad_aprime_pilot_result_v2_2026_09_26.json` §1저자_결정. ① V2 W_sep 는 분리 끝점 8 Å 값(0.435 J/m²)에 'G3 FAIL(직접 8→10 Å ΔW +0.014)' 라벨을 붙이고 10 Å 값(0.449)을 병기한다 · G4 는 'k 축 수치 미검증' · E_int 병기 · 새 계산 없음. ② 카드 G3/G4 의 괄호 '(조각 |ΔE| ≤ 5 meV)' · '(조각 ≤ 10 meV)' 는 조각 모델(V3·V4 · ΔE_frag eV/조각) 문턱이다 — W 모델(V2·V5)은 |ΔW| 만 판정하고 끝점 ΔE 는 기록한다 (CA Q2). ③ DEM 회신 5 에 V2 값을 카드 V2_항상 문장과 위 라벨로 전달한다 (시나리오 (i) 는 V2 만 · (iv) = D3 항 뺀 W_PBE −0.055 · UMA 수치 미전달).",
+   "rationale": "② 는 결과를 본 뒤 도구의 오독을 고친 것이라 1저자 확인이 필요했다 — 근거: 카드 V3_V4 식 'eV/조각 · J/m² 로 바꾸지 않는다' · G3/G4 의 같은 짝 구조 · 0.01 J/m² × SE 셀 ~100 Å² ≈ 6 meV 눈금 일치. G3 판정은 어느 읽기로나 FAIL(ΔW(ii)) 로 같고, G4 는 k 축 때문에 어느 읽기로나 수치 미검증이다. 1저자 '권장하는걸로 해'.",
+   "decision_state": "active",
+   "record_kind": "retrospective",
+   "results_seen": true,
+   "results_seen_note": "S4 V2 29+3 잡 결과 열람 뒤 결정 (보고 방식 · 읽기 정정)",
+   "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json",
+   "record": "db/properties/wad_aprime_pilot_result_v2_2026_09_26.json",
+   "depends_on": [
+    "D-2026-09-26-wad-aprime-s3v2-seal"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "db/raw/wad_aprime_s4_v2s2_2026_09_26/collect_aprime_s4_2026_09_26.json",
+    "tools/wad/collect_aprime_s4.py"
+   ],
+   "method_ref": "tools/wad/collect_aprime_s4.py (W 모델 ΔW 판정 · 끝점 ΔE 기록 · endpoint_piece_reading_info)",
+   "reopen_criteria": [
+    "V4(조각 모델) 판정에는 괄호 문턱(ΔE_frag 변화 5 · 10 meV)을 쓴다 — 이 결정이 그 읽기를 고정한다",
+    "DEM 이 무한 분리 값을 요구하면 긴 분리 진단 잡을 새 결정으로 (판정 불변)"
+   ],
+   "enforcement": "결과 기록 · DEM 회신 5 발송판이 라벨 문장을 그대로 싣는다",
+   "proposed_by": "claude-session-2026-09-26",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-26",
+     "state": "active",
+     "note": "1저자 '권장하는걸로 해'"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-26T13:43:49Z",
+    "commit": "323efb605b267e06fb82a09f822c00661d836648",
+    "decision_digest": "sha256:e79f78737ea4846fa8f67c3c4a66ee2be21aa9154acf6a10051638b3a553b284",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
   }
  ]
 }

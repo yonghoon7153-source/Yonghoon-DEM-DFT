@@ -3,8 +3,8 @@
  "record_kind": "result",
  "date": "2026-09-26",
  "track": "W_ad (사용자 1저자)",
- "citable": false,
- "status": "S4 V2 결과 — G3 FAIL · G4 수치 미검증(k 축) · 1저자 검토 대기 (보고 방식 · DEM 회신 5 반영)",
+ "citable": "라벨 문장만 (DEM 회신 5 · 카드 V2_항상 + G3/G4 라벨) — 원장·화면 게재는 1저자 별도",
+ "status": "S4 V2 결과 — 1저자 결정 반영 (보고 방식 · 게이트 읽기 확정 · DEM 회신 5 전달)",
  "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json (개정 1·2 · S3v2 봉인 · 부록 봉인 9085cb4a… · 정오 1·2)",
  "raw": "db/raw/wad_aprime_s4_v2s2_2026_09_26 (V100 · 28 + 보조 3 pw.out) · 집계 collect_aprime_s4_2026_09_26.json · 도구 tools/wad/collect_aprime_s4.py",
  "보고량_정의": "W_sep = [E(far) − E(bound)]/A · E = QE `!` 자유에너지 F (E_int 병기) · n_if 1 · A = Ag(111)√3 셀 21.526 Å² · far = 흡착층 강체 +Δ (직접 8 · 영상 9 Å) · 고정기하(DFT 제약 이완 d₀)",
@@ -162,5 +162,11 @@
   "게이트 읽기 정정(조각 괄호) 확인",
   "DEM 회신 5 에 V2 값을 넣을지 (시나리오 (i) 는 V2 만 직접 DFT)"
  ],
- "다음": "V4_s_outer_A 9 잡 (gabia · 탄성 끝난 뒤 GPU 시험) · V5 RESOURCE_BLOCKED → G5 NOT_TESTED (갈래0)"
+ "다음": "V4_s_outer_A 9 잡 (gabia · 탄성 끝난 뒤 GPU 시험) · V5 RESOURCE_BLOCKED → G5 NOT_TESTED (갈래0)",
+ "1저자_결정_2026_09_26": {
+  "원문": "'권장하는걸로 해' (세 항목 모두 실행자 권고대로)",
+  "①_보고_방식": "W(분리 끝점 8 Å) 0.435 J/m² + 'G3 FAIL — 직접 8→10 Å 에서 +0.014' 라벨 + W(10 Å) 0.449 병기 · G4 'k 축 수치 미검증' 라벨 · E_int 병기 · **새 계산 없음** (12·16 Å 진단 잡은 안 돈다)",
+  "②_게이트_읽기": "카드 G3/G4 괄호 '(조각 …)' = 조각 모델(V3·V4) 문턱 · W 모델(V2·V5)은 |ΔW| 만 판정 · 끝점 ΔE 는 기록 — **확정** (결과 뒤 정정 · 1저자 확인)",
+  "③_DEM_회신_5": "V2 값을 카드 V2_항상 문장 + 라벨로 전달 · 시나리오 (i) 는 V2 만 · (iv) = W_PBE −0.055 (분산 없이는 안 붙음) · UMA 수치는 안 넘김"
+ }
 }

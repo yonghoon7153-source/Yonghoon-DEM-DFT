@@ -15,8 +15,8 @@ verifiedBy: self
 explored: false
 authoredBy: agent
 effort: medium
-claimType: descriptive
-evidenceScope: single-source-primary
+claimType: mixed
+evidenceScope: single-source
 ---
 
 # CC 프롬프트 — 발송본은 별도 문서다

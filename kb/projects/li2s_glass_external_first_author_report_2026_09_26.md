@@ -11,7 +11,7 @@ verifiedBy: self
 explored: false
 authoredBy: agent
 effort: high
-claimType: descriptive
+claimType: mixed
 evidenceScope: multi-source-primary
 ---
 

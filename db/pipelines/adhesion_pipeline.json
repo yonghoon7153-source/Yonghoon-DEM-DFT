@@ -801,6 +801,11 @@
    "date": "2026-09-26",
    "stage": "dft",
    "text": "**S4 V2 결과 (V100 · Ag(111)|그래핀 · PBE+D3(BJ) 고정기하)**: registry 4 모두 비슷 — 폭 0.0004 J/m² · E(d) 는 d₀ 가 격자 안 국소 최소 · 결합은 전부 분산항(PBE 단독 음수). **G3 FAIL** (직접 8→10 Å 에서 ΔW 가 0.01 초과 · D3 꼬리 · 영상 검사는 통과) · **G4 = 수치 미검증(k 축 · 7×7 far SCF 미수렴)** · e70 · smearing ½ 통과. UMA 대조(개정 1)는 참고(V2 는 G5 대상군 아님). ⚠ 내 첫 집계가 W 모델에 끝점 조각 문턱을 걸었다 → 카드 괄호는 조각 모델(V3·V4) 문턱이라 정정 (G3 판정 불변 · G4 smearing 만 PASS 로). 결과 기록 `db/properties/wad_aprime_pilot_result_v2_2026_09_26.json` (citable false · 1저자 결정 3: 보고 방식 · 읽기 정정 확인 · DEM 회신 5)."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**1저자 '권장하는걸로 해' — V2 보고 확정**: ① 분리 끝점 8 Å 값 + G3 FAIL 라벨 + 10 Å 값 병기 · G4 k 축 미검증 라벨 · 새 계산 없음 ② 게이트 읽기 확정 (카드 '조각' 괄호 = V3·V4 조각 모델 문턱 · W 모델은 ΔW 만) ③ DEM 회신 5 발송판에 V2 값(카드 V2_항상 문장 + 라벨 · (iv) D3 항 뺀 값) — 결정 `D-2026-09-26-wad-aprime-v2-report` (ratified) · 발송 파일 `kb/projects/wad_dem_reply_5_send_2026_09_26.md`."
   }
  ],
  "related_decisions": [
