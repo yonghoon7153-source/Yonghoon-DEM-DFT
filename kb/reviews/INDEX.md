@@ -1,13 +1,13 @@
 ---
 title: "리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)"
-date: 2026-09-25
-updated: 2026-09-25
+date: 2026-09-26
+updated: 2026-09-26
 tags: [index, review, codex]
 status: 자동생성
 kind: index
 confidence: high
 verificationStatus: verified
-verifiedAt: 2026-09-25
+verifiedAt: 2026-09-26
 verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)
 explored: false
 authoredBy: agent
@@ -102,6 +102,7 @@ evidenceScope: multi-source-primary
 | BZ | 2026-09-25 | `codex_BZ_prompt_wad_aprime_pilot_prereg_v2_2026_09_25.md` | `codex_BZ_reply_wad_aprime_pilot_prereg_v2_2026_09_25.md` | 발송 완료 · 회신 수령 2026-09-25 밤 **NO-GO** (`codex_BZ_reply_…`) → 카드 v3 + G2 재작성 → CA 재심 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'pilot', 'prereg', 'v2', 'wad'] |
 | CA | 2026-09-25 | `codex_CA_prompt_wad_aprime_pilot_prereg_v3_2026_09_25.md` | `codex_CA_reply_wad_aprime_pilot_prereg_v3_2026_09_25.md` | 발송 완료 · 회신 수령 2026-09-25 밤 **NO-GO** (`codex_CA_reply_…` · V2 측방 마스크 P0 등 5) → 카드 v4 → CB 재심 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'pilot', 'prereg', 'v3', 'wad'] |
 | CB | 2026-09-25 | `codex_CB_prompt_wad_aprime_pilot_prereg_v4_2026_09_25.md` | `codex_CB_reply_wad_aprime_pilot_prereg_v4_2026_09_25.md` | 발송 완료 · 회신 수령 2026-09-25 밤 **조건부 GO** (`codex_CB_reply_…`) → 조건 4 이행 → 카드 v5 봉인 후보 (1저자 비준 대기) | 같은 라벨 · 주제 토큰 일치 ['aprime', 'pilot', 'prereg', 'v4', 'wad'] |
+| CC | 2026-09-26 | `li2s1a_CC_prompt_li2s_pilot_gateA_ledger_2026_09_26.md` | `li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` | 발송됨 (사용자 · 2026-09-26) · 회신 CC 수령 → `li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` | 같은 라벨 · 주제 토큰 일치 ['gateA', 'ledger', 'li2s', 'pilot'] |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 

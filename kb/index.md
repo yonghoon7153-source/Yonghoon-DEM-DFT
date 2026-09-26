@@ -1,13 +1,15 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-25 · managed-files: 458
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-26 · managed-files: 460
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 257건)
-- 2026-09-25 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 259건)
+- 2026-09-26 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
+- 2026-09-26 · `kb/reviews/li2s1a_CC_prompt_li2s_pilot_gateA_ledger_2026_09_26.md` — CC 프롬프트 — li2s 소셀 유리 MD 파일럿 보고 · 게이트 A 두 판 · Q6 장부 · Q1–Q9 (외부 1저자에게 발송) · 발송됨 (사용자 · 2026-09-26) · 회신 CC 수령 → `l…
+- 2026-09-26 · `kb/reviews/li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` — 회신 CC — 외부 1저자 (li2s 소셀 유리 MD): 파일럿 결과 · 게이트 A 두 판 · Q1–Q9 판정 (relax 판 · P–S 결합 제외 · seed5 유지 · MTO 맞음 · 400 K 연장 검토) · 수령 (2026-09-26 저녁 · 사용자 붙여넣기) — 회신 원문 …
 - 2026-09-25 · `kb/reviews/codex_BX_prompt_wad_sese_4L_alarm_2026_09_25.md` — 리뷰 BX 프롬프트 — SE|SE 4층 대조: 이완 W_cleave 가 경보 구간 아래 — 원인 가르기(이완 점검 A · 벌크 이완 B)가 맞나 · 발송됨 · 회신 수령 (조건부 GO — 진단 · 검증 완료·DEM 승…
 - 2026-09-25 · `kb/reviews/codex_BX_reply_wad_sese_4L_alarm_2026_09_25.md` — 리뷰 BX 회신 — SE|SE 4층 경보: 원인 진단 조건부 GO · 방법 검증 완료/DEM 승격 NO-GO · P0 완료 판정기 결함 · 수신됨 (2026-09-25 · 1저자 붙여넣기) — 원문 그대로 ·…
 - 2026-09-25 · `kb/reviews/codex_BY_prompt_wad_aprime_pilot_prereg_2026_09_25.md` — 리뷰 BY 프롬프트 — A′ 파일럿 사전등록 카드 (LPSCl | Ag · 흑연 점착일): 봉인 전 설계 검토 · 발송 완료 · 회신 수령 2026-09-25 **NO-GO** (`c…
@@ -20,13 +22,11 @@
 - 2026-09-25 · `kb/reviews/codex_CB_reply_wad_aprime_pilot_prereg_v4_2026_09_25.md` — 리뷰 CB 회신 — A′ 카드 v4 재심: 조건부 GO (CA 코드 결함 해제 · registry 명세 2 보완 + 선언한 미완료 채우면 S1 봉인 가능 · 본 계산 승인 아님) · 수령 (2026-09-25 밤 · 1저자 붙여넣기) — 회신 원문 ·…
 - 2026-09-25 · `kb/projects/li2s_glass_external_first_author_letter_2026_09_25.md` — li2s 소셀 유리 MD — 외부 1저자에게 보내는 보고 · 질문 (파일럿 결과 · 갈래0 멈춤 · 게이트 A 두 판 · Q1–Q8) · 초안 — 사용자(실행자) 검토 뒤 외부 1저자에게 발송 · 판정은 외…
 - 2026-09-25 · `kb/projects/wad_dem_reply_4_send_2026_09_25.md` — DEM 회신 4 — 발송본 (부탁 1 잔류 응력 PBE/PBE+D3 · 부탁 2 수용 · 한 기하 뜻 확인 요청 · Ag 격자상수·변형률) · 발송본 — 1저자 발송 (2026-09-25) · 아래 구분선 이후를…
-- 2026-09-25 · `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청 · 1차 · 2‴+부록 발송 완료 · **DEM 3차 회신 수령 (09-…
+- 2026-09-25 · `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청 · 회신 4 발송 완료 (09-25) · **DEM 4차 회신 수령 (0…
 - 2026-09-25 · `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` — LPSCl | Ag–C | VGCF 점착일(W_ad) — 계획 v4 (Codex BX 뒤 파이프라인 재편 · v3 = Fable · Codex BV 반영) · 보고량 카드 초안 · 계획 v4 — SE|SE 4층 대조 끝(경보 v2 유지 · Codex…
 - 2026-09-24 · `kb/platforms/v100_uma_setup_2026_09_14.md` — 임대 V100 에 UMA 를 올리는 레시피 — 함정 일곱과 순서 · 완료
 - 2026-09-23 · `kb/concepts/cv_vs_dqdv_and_two_windows.md` — CV · dQ/dV · 그리고 두 개의 "안정창" — 처음 보는 사람을 위한 정리 · 진행 — 개념 정리. 우리 수치 주장은 담지 않는다(경로만 가리킨다)
 - 2026-09-23 · `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md` — SDCP vs PTFE 흡착에너지 (C-12 v41) — 숫자의 지위 · PTFE 크기 검증 · 세미나 대응 · 진단 정리 — 값은 citable:false (사전등록 게이트 미통과…
-- 2026-09-23 · `kb/reviews/codex_BV_prompt_wad_lpscl_ag_c_vgcf_2026_09_23.md` — 리뷰 BV 프롬프트 — LPSCl | Ag–C | VGCF 점착일: 기존 LPSCl|NCM 워크플로를 재사용해도 같은 양을 재는가 (v2) · 발송됨 · 회신 수령 (NO-GO) → codex_BV_reply_w…
-- 2026-09-23 · `kb/reviews/codex_BV_reply_wad_lpscl_ag_c_vgcf_2026_09_23.md` — 리뷰 BV 회신 (Codex) — LPSCl | Ag–C | VGCF 점착일 계획 v2: NO-GO · 구조 검증부터 · 수신됨 — NO-GO (v2 대상 · 5687c4fa7). 새 P0 …
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -212,9 +212,9 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (163)
+## reviews/ (165)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
-- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-25 · 자동생성)
+- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-26 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
 - `kb/reviews/cascade_preflight_audit_2026_09_09.md` — cascade_preflight_audit_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트  (2026-08-29 · 발송 완료 — 회신 AA 접수, 후속은 codex_AB_prompt_…)
@@ -364,6 +364,8 @@
 - `kb/reviews/li2s1a_BU_addendum_block_rule_guards_2026_09_22.md` — BU 부록 — 합의한 블록 규칙을 코드로 내리다가 **규칙이 잡음에 걸리는 것**을 찾았다  (2026-09-22 · 보낼것)
 - `kb/reviews/li2s1a_BU_prompt_variance_ratio_rule_2026_09_22.md` — BU 수신 원문 — 정확값 대조 다음 수 · 분산비 판정 규칙 · 블록 규칙 선박기  (2026-09-22 · 수신됨-회신함)
 - `kb/reviews/li2s1a_BU_reply_variance_ratio_rule_2026_09_22.md` — BU 회신 — 판정 규칙을 분산비로 교체 · 내 IQR 초안은 두 번 틀렸다 · 블록 규칙 선박기  (2026-09-22 · 회신문-작성됨)
+- `kb/reviews/li2s1a_CC_prompt_li2s_pilot_gateA_ledger_2026_09_26.md` — CC 프롬프트 — li2s 소셀 유리 MD 파일럿 보고 · 게이트 A 두 판 · Q6 장부 · Q1–Q9 (외부 1저자에게 발송)  (2026-09-26 · 발송됨 (사용자 · 2026-09-26) · 회신 CC 수령 → `l…)
+- `kb/reviews/li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` — 회신 CC — 외부 1저자 (li2s 소셀 유리 MD): 파일럿 결과 · 게이트 A 두 판 · Q1–Q9 판정 (relax 판 · P–S 결합 제외 · seed5 유지 · MTO 맞음 · 400 K 연장 검토)  (2026-09-26 · 수령 (2026-09-26 저녁 · 사용자 붙여넣기) — 회신 원문 …)
 - `kb/reviews/litdb_dopant_sota_2026_09_09.md` — litdb_dopant_sota_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/section3_review_candidates.md` — 📋 §3 리뷰 코멘트 후보 — 소거법 작업용 (ECER-D-26-00097)
 - `kb/reviews/section3_review_comments_compressed.md` — Comments on Section 3 (Intrinsic Stability of Sulfide SEs) — 압축판 v2
@@ -412,7 +414,7 @@
 - `kb/projects/sei_products_2026_08_06.md` — SEI 분해상 6종 캠페인 — 확산장벽 · 형성전위 · 밴드갭
 - `kb/projects/symposium_2026_competitive_analysis.md` — 전지기술 심포지엄 2026 — 경쟁 좌표 분석 (이상욱 / 문장혁)
 - `kb/projects/wad_dem_reply_4_send_2026_09_25.md` — DEM 회신 4 — 발송본 (부탁 1 잔류 응력 PBE/PBE+D3 · 부탁 2 수용 · 한 기하 뜻 확인 요청 · Ag 격자상수·변형률)  (2026-09-25 · 발송본 — 1저자 발송 (2026-09-25) · 아래 구분선 이후를…)
-- `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청  (2026-09-25 · 1차 · 2‴+부록 발송 완료 · **DEM 3차 회신 수령 (09-…)
+- `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청  (2026-09-25 · 회신 4 발송 완료 (09-25) · **DEM 4차 회신 수령 (0…)
 - `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` — LPSCl | Ag–C | VGCF 점착일(W_ad) — 계획 v4 (Codex BX 뒤 파이프라인 재편 · v3 = Fable · Codex BV 반영) · 보고량 카드 초안  (2026-09-25 · 계획 v4 — SE|SE 4층 대조 끝(경보 v2 유지 · Codex…)
 - `kb/projects/zn_alzib_dft_md_contribution_2026_09_03.md` — Zn ALZIB 세미나(2026-09-02) — 우리가 DFT/MD 로 기여할 수 있는 지점  (2026-09-03 · 진행)
 
@@ -521,4 +523,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 329개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 342개 (정본 목록: litdb/INDEX.md)
