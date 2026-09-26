@@ -2527,7 +2527,7 @@ def _no_active_claim_evidence_problems(reg: dict) -> list[str]:
             import yaml as _y
             try:
                 from tools.preserve import _receipt_core_sha256, read_verification_receipt
-                got = _receipt_core_sha256(read_verification_receipt(rp, leg, repo_root=_REPO)["core"])
+                got = _receipt_core_sha256(read_verification_receipt(rp, leg, repo_root=_REPO))   # reader 는 core 를 돌려준다
                 if got != core:
                     bad.append(f"{leg}: 영수증 core sha 가 원장과 다르다 "
                                f"({str(core)[:16]} ≠ {got[:16]})")
@@ -2545,7 +2545,7 @@ def _no_active_claim_evidence_problems(reg: dict) -> list[str]:
         if isinstance(rp, str) and (_REPO / rp).is_file() and isinstance(vid, dict):
             try:
                 from tools.preserve import read_verification_receipt as _rvr
-                _vd = _rvr(rp, leg, repo_root=_REPO)["core"]["identity"]["validator_source_digest"]
+                _vd = _rvr(rp, leg, repo_root=_REPO)["identity"]["validator_source_digest"]
                 if _vd != vid.get("source_digest"):
                     bad.append(f"{leg}: validator_identity.source_digest {vid.get('source_digest')!r} 가 "
                                f"영수증의 validator {_vd!r} 와 다르다")

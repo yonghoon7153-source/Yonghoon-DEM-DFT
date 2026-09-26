@@ -272,6 +272,19 @@ def test_g74_3_04c_an_active_claims_leg_inside_executed_legs_is_a_contradiction(
         P.planned_index(ledger=_write(tmp_path, reg))
 
 
+def test_g74_3_04e_an_executed_legs_name_that_is_not_a_finished_no_active_claim_leg_is_refused(tmp_path):
+    """반대 방향 — `executed_legs` 의 이름은 끝난 prospective · no_active_claim 다리여야 한다.
+    (계획에 없는 이름은 `legs`/`prospective_legs` 와 겹치지 않으므로 교집합 검사로는 안 잡힌다.)"""
+    reg, *_ = _live()
+    g18 = _cohort(reg, "g18_2026_09_15")
+    g18["executed_legs"] = sorted(g18["executed_legs"] + ["ghost_leg"])
+    bad = DL._scope_problems(reg)
+    assert any("ghost_leg" in b for b in bad), bad
+    with pytest.raises(P.PreserveError) as ei:
+        P.planned_index(ledger=_write(tmp_path, reg))
+    assert "ghost_leg" in str(ei.value) and "executed_legs" in str(ei.value), str(ei.value)
+
+
 def test_g74_3_04d_a_plan_and_its_record_disagreeing_on_scope_is_refused(tmp_path):
     reg, *_ = _live()
     plan = next(e for e in reg["planned"] if e["leg_id"] == "grid_fit_v5")

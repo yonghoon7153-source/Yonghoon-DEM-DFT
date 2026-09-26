@@ -1830,7 +1830,8 @@ MUTANTS = [
      '                    or ent["authorization_kind"] != "prospective" \\\n'
      '                    or _executed_scope(ent, record_scopes) != "no_active_claim":',
      '            if False:',
-     "g74_3_04c"),
+     # 04c 는 교집합 검사가 먼저 잡는다 (관측: fail []) — 반대 방향만이 잡는 경계는 04e (계획에 없는 이름)
+     "g74_3_04e"),
     ("index-merge-keeps-other-entries-g74", ARCHSH,                        # G74-4 병합
      '    runs = dict(_prev.get("runs") or {})\n',
      '    runs = {}\n',
@@ -5343,6 +5344,71 @@ EXPECT: dict = {
         "witness": {
             "tests/test_gate71_defensive.py::test_g71_e3r_07b_the_ledger_run_location_must_match_the_receipt": "Failed: DID NOT RAISE PreserveError",
             "tests/test_gate72_defensive.py::test_g72_a04_idempotent_return_is_refused_when_out_disagrees": "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    # ── 74차 (G74-1 · G74-3 · G74-4) — `--emit-expect` 관측값 그대로 ──
+    "cache-sha-must-be-fixed-hex64-g74": {
+        "fail": [
+            "tests/test_gate74_defensive.py::test_g74_1_01_a_null_cache_plan_is_refused_at_entry",
+            "tests/test_gate74_defensive.py::test_g74_1_02_a_cache_sha_that_is_not_lowercase_hex64_is_refused[17]",
+            "tests/test_gate74_defensive.py::test_g74_1_02_a_cache_sha_that_is_not_lowercase_hex64_is_refused[ABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABAB]",
+            "tests/test_gate74_defensive.py::test_g74_1_02_a_cache_sha_that_is_not_lowercase_hex64_is_refused[]",
+            "tests/test_gate74_defensive.py::test_g74_1_02_a_cache_sha_that_is_not_lowercase_hex64_is_refused[abababababababab]",
+            "tests/test_gate74_defensive.py::test_g74_1_02_a_cache_sha_that_is_not_lowercase_hex64_is_refused[zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz]",
+            "tests/test_gate74_defensive.py::test_g74_1_03_a_plan_without_a_grid_axis_is_refused",
+            "tests/test_gate74_defensive.py::test_g74_1_05_precheck_refuses_the_null_plan_before_any_issuance",
+        ],
+        "witness": {
+            "tests/test_gate74_defensive.py::test_g74_1_01_a_null_cache_plan_is_refused_at_entry": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate74_defensive.py::test_g74_1_02_a_cache_sha_that_is_not_lowercase_hex64_is_refused[17]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate74_defensive.py::test_g74_1_02_a_cache_sha_that_is_not_lowercase_hex64_is_refused[ABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABAB]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate74_defensive.py::test_g74_1_02_a_cache_sha_that_is_not_lowercase_hex64_is_refused[]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate74_defensive.py::test_g74_1_02_a_cache_sha_that_is_not_lowercase_hex64_is_refused[abababababababab]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate74_defensive.py::test_g74_1_02_a_cache_sha_that_is_not_lowercase_hex64_is_refused[zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate74_defensive.py::test_g74_1_03_a_plan_without_a_grid_axis_is_refused": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate74_defensive.py::test_g74_1_05_precheck_refuses_the_null_plan_before_any_issuance": "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "plan-scope-required-at-entry-g74": {
+        "fail": [
+            "tests/test_gate74_defensive.py::test_g74_3_06c_a_plan_without_a_valid_scope_is_refused_at_entry_and_the_ledger_is_unchanged[None]",
+        ],
+        "witness": {
+            "tests/test_gate74_defensive.py::test_g74_3_06c_a_plan_without_a_valid_scope_is_refused_at_entry_and_the_ledger_is_unchanged[None]": "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "finalize-routes-by-scope-g74": {
+        "fail": [
+            "tests/test_gate74_defensive.py::test_g74_3_06a_finalize_routes_a_no_active_claim_plan_into_executed_legs_and_stamps_the_scope",
+        ],
+        "witness": {
+            "tests/test_gate74_defensive.py::test_g74_3_06a_finalize_routes_a_no_active_claim_plan_into_executed_legs_and_stamps_the_scope": "KeyError: 'executed_legs'",
+        }
+    },
+    "executed-legs-only-hold-no-active-claim-legs-g74": {
+        "fail": [
+            "tests/test_gate74_defensive.py::test_g74_3_04e_an_executed_legs_name_that_is_not_a_finished_no_active_claim_leg_is_refused",
+        ],
+        "witness": {
+            "tests/test_gate74_defensive.py::test_g74_3_04e_an_executed_legs_name_that_is_not_a_finished_no_active_claim_leg_is_refused": "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "index-merge-keeps-other-entries-g74": {
+        "fail": [
+            "tests/test_gate74_defensive.py::test_g74_4_01_a_single_run_archive_keeps_every_other_index_entry_byte_for_byte",
+            "tests/test_gate74_defensive.py::test_g74_4_02_re_archiving_the_same_run_is_idempotent_for_the_index",
+        ],
+        "witness": {
+            "tests/test_gate74_defensive.py::test_g74_4_01_a_single_run_archive_keeps_every_other_index_entry_byte_for_byte": "AssertionError: ['res']",
+            "tests/test_gate74_defensive.py::test_g74_4_02_re_archiving_the_same_run_is_idempotent_for_the_index": "AssertionError: assert {'res'} == {'a_v4', 'b_v...'d_v4', 'res'}",
+        }
+    },
+    "same-name-different-identity-is-refused-g74": {
+        "fail": [
+            "tests/test_gate74_defensive.py::test_g74_4_03_the_same_name_with_a_different_identity_is_refused_unless_replacement_is_explicit",
+        ],
+        "witness": {
+            "tests/test_gate74_defensive.py::test_g74_4_03_the_same_name_with_a_different_identity_is_refused_unless_replacement_is_explicit": "AssertionError: 같은 이름·다른 identity 를 조용히 덮었다",
         }
     },
     "ledger-run-location-is-mandatory-g72": {
