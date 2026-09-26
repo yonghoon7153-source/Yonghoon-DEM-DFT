@@ -12,7 +12,7 @@
   },
   {
    "file": "db/properties/wad_aprime_pilot_prereg_v5_amendment_2_2026_09_26.json",
-   "content_digest": "(비준 시 기입)",
+   "content_digest": "e2bec8f0a7f9eac01b15fda2c243f36ed9e45285ac15cc75a353bea3ff92e078",
    "뜻": "쌍극자 불연속 구간 = 집합(bound·far·G3 변형)의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å (dip_region)"
   }
  ],
@@ -278,14 +278,24 @@
    "state": "proposed",
    "by": "claude-session-2026-09-26",
    "note": "개정 2 와 함께 1저자 비준 대기 — S4-1 v1 실행분 실패 기록 뒤"
+  },
+  {
+   "at": "2026-09-26",
+   "state": "sealed",
+   "by": "1저자",
+   "note": "'비준' — S3v2 봉인 + 개정 2 동시 비준 (S4-1 v1 실행분 실패 · 원인 확정 뒤)"
   }
  ],
  "ratification": {
-  "state": "proposed",
+  "state": "ratified",
   "stage": "S3v2",
   "role": "scientific_owner",
   "by": "1저자 (사용자 · 트랙 W_ad)",
-  "⚠_digest_의_뜻": "비준 시 ratification 을 뺀 봉인 기록의 sha256 을 기입"
+  "actor_id": "yonghoon7153@gmail.com",
+  "timestamp": "2026-09-26T09:40:38Z",
+  "commit_before_seal": "3b83a999b09cbc1c5b4fabdd4ef06ef4e51d3857",
+  "content_digest": "6df8c01382a17b61f5f49248c09f55d459cb7856d8edf5de911110dc26618d58",
+  "⚠_digest_의_뜻": "ratification 을 뺀 봉인 기록의 sha256"
  },
  "supersedes": {
   "file": "db/properties/wad_aprime_s3_seal_2026_09_26.json",

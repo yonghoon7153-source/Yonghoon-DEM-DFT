@@ -20,7 +20,7 @@
   · ✅ 고침 `build_aprime_interfaces.dip_region` (집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 미달 SlabError · selftest **26/26** · s3 **16/16** · 음성 3) → **S3v2 패키지** `db/inputs/wad_aprime_s3v2_2026_09_26`
     (구조 sha 38 = v1 동일 · pw.in 38/38 emaxpos/eopreg 만 · 후보 9 여유 4.0/4.0 Å · manifest `069894c6…`). v1 패키지는 보존 · 실행 금지.
   · 📄 **개정 2** `wad_aprime_pilot_prereg_v5_amendment_2_2026_09_26.json` · **S3v2 봉인** `wad_aprime_s3v2_seal_2026_09_26.json` · 결정 `D-2026-09-26-wad-aprime-amend-2-dipole-region` ·
-    `D-2026-09-26-wad-aprime-s3v2-seal` (supersedes s3-seal) — **전부 proposed · ⏳ 1저자 '비준' 대기**. 진단 기록 `db/raw/wad_aprime_s4_v2_2026_09_26/…_fail1_dipreg_diag_2026_09_26.json` (실패 실행 값 사용 금지).
+    `D-2026-09-26-wad-aprime-s3v2-seal` — ✅ **1저자 '비준' (09-26 저녁)** → 전부 active · 개정 2 digest e2bec8f0a7f9eac0… · 봉인 v2 6df8c01382a17b61… · v1 봉인 결정 superseded. 진단 기록 `db/raw/wad_aprime_s4_v2_2026_09_26/…_fail1_dipreg_diag_2026_09_26.json` (실패 실행 값 사용 금지).
   · ⏭ 비준되면: 개정 2 · 봉인 v2 · 결정 2 를 active/ratified 로 (digest 기입 · v1 seal 결정 superseded) → 커밋·푸시 → **V100 코드 갱신은 kgy `v100-serve` 경로** (kgy fetch → update-ref → V100 `git archive | tar`) →
     V100 에서 실패 폴더 `V2_top_fcc_relax_fail1_dipreg` 보관 확인 → 러너 `IN=db/inputs/wad_aprime_s3v2_2026_09_26/qe` 로 4 잡 재발사 → **재개 규칙**(첫 10 BFGS 스텝 Total force 감소 · energy_new < energy_old 다수) 확인.
   · ⚠ V4 GPU 시험(gabia) 은 **탄성(modelc_2x · 41 GB) 이 끝난 뒤** — GPU pw.x 둘을 겹치지 않는다.
