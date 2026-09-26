@@ -24,12 +24,15 @@
   · ⏭ 비준되면: 개정 2 · 봉인 v2 · 결정 2 를 active/ratified 로 (digest 기입 · v1 seal 결정 superseded) → 커밋·푸시 → **V100 코드 갱신은 kgy `v100-serve` 경로** (kgy fetch → update-ref → V100 `git archive | tar`) →
     V100 에서 실패 폴더 `V2_top_fcc_relax_fail1_dipreg` 보관 확인 → 러너 `IN=db/inputs/wad_aprime_s3v2_2026_09_26/qe` 로 4 잡 재발사 → **재개 규칙**(첫 10 BFGS 스텝 Total force 감소 · energy_new < energy_old 다수) 확인.
   · ⚠ V4 GPU 시험(gabia) 은 **탄성(modelc_2x · 41 GB) 이 끝난 뒤** — GPU pw.x 둘을 겹치지 않는다.
+  · ✅ **S4-1 완료 (09-26 19:16 · V100 · S3v2)** — 4 잡 모두 1 BFGS 스텝에 수렴 · 톱니 진폭 0.0035 Ry · 재개 규칙 통과. ⏭ 원출력 회수(V100→kgy→db/raw) → `build_aprime_s3.py --v2_ed` ×4 → 부록 봉인(proposed→비준) → V100 E(d)·far·G3·G4.
 - 🟢 **b2o3 사건빈도 — gabia 몫 종료 (09-26 17:48 KST 실측)**: s2·s3·s4·s6 × 3 온도 = **12/15 완료**(msd.json) · s5 ×3 은 kgy 몫(개정 2) · 드라이버 0 · GPU 유휴. ⏭ kgy s5 끝나면 `.incoming` 옮김 → 자격(`--mto`) → census 15런.
 - ⏭ **탄성 modelc_2x (사용자 1저자) 재개 — 1저자 09-26 "b2o3 끝나서 modelC 영률 다시 이어가자"** (09-23 순서 b2o3 → 탄성 → Li₂S 그대로). 러너 `run_elastic_relaxedion_gabia.sh`
   **`SYS=modelc_2x` 명시**(09-23 함정: SYS 없이 comp2 기본값으로 대기했었다) · 수렴점 skip · 소진점(23_p 등) nstep 200 · trust 0.05 재실행 · VRAM 가드 32000 · host 30 GB.
   ✅ **발사 09-26 18:11:49** (tmux `el_mc2x` · repo `/data/work/repo` @30e1e90eb · 로그 `/root/logs/el_modelc2x_0926.log`): 점검 = GPU 1 MiB · host 55 GB · 러너 최신판 ✓ · V0 ✓ · 6/12 수렴 ·
   `23_p` 옛 .out → `strain_23_p.out.exhausted_0926_1811` 보관 · **`restart_mode='restart'`(BFGS 이력 승계) · nstep 200 · trust 0.05** · 18:19 실측 SCF 11 반복 · pw.x **30,018 MiB**(PID 248767).
   남은 순서 23_p → 23_m(찌꺼기 덮어씀) → 13_p/m → 12_p/m → 12/12 면 fit → `elastic_fit.txt` 붙여받기. watch: `ALL=1 bash tools/elastic/watch_elastic.sh`.
+- 🟢 **li2s 회신 CC 후속 (09-26 저녁 · 추석 끝 · 사용자 '바로 하면 됨')** — B 실측 3 건 ✅: T550 β STO 0.805 · MTO 0.856 · **σ(β) 0.010** (b=12 · 사다리 성김) → STO 는 '경계·구분 불가' · T400 β 0.641 = 9.9 σ 아래 · seed5 궤적: P30 이 49 ps(용융)에 S32 잃고 PS₃ · S–S 는 388 ps 냉각 중(설정 912 K) S54–S59 **P30–S59–S54 말단 과황화** · 300 K 까지 97.9 % 유지 (raw `db/raw/lpscl_smallcell_glass_cc_2026_09_26/seed5_ss_event_cc.json`).
+  기록 `db/properties/lpscl_smallcell_glass_md_cc_followup_2026_09_26.json` (B1–B3 · A1 C2 원인별 · A2 점유환산 장부 67.4 h vs 벽시계 156.9 · A3 카드 개정 초안 9 항 · C 400 K 연장 미결). ⏭ 최종 보고판(회신 CC 의 4 수정 + Q-CC-1 β 추정자 질문) 작성 → 사용자 검토 → 발송 · C 는 사용자(카드 저자) 판단.
 - 📚 **논문 에이전트** — Oginni et al., *Next Materials* 13 (2026) 103432 (리뷰 · 계산 설계 방법론) → litdb-curator 진행 중 (inbox `0926-1.`) → 끝나면 litdb 파일만 커밋.
 
 ### ⏭-NOW-w. 2026-09-23 새벽 — **SDCP/PTFE 세미나 정리 · [Li26MCI] 병합 · 🔴 웹앱 cascade 화면이 어제부터 닫혀 있다**

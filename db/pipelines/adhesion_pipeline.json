@@ -766,6 +766,11 @@
    "date": "2026-09-26",
    "stage": "dft",
    "text": "**개정 2 + S3v2 봉인 비준** (1저자 '비준' · 원인 확정 뒤): 개정 2 content_digest e2bec8f0a7f9eac0… · S3v2 봉인 6df8c01382a17b61… · `D-2026-09-26-wad-aprime-amend-2-dipole-region` · `D-2026-09-26-wad-aprime-s3v2-seal` active · v1 봉인 결정 superseded. 다음: V100 코드 갱신(kgy v100-serve → archive) → S3v2 입력으로 V2 relax 4 재발사 → 재개 규칙(첫 10 스텝 · Potential amp. ≤ 0.05 Ry)."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**S4-1 완료 (V100 · S3v2 입력 · 18:58–19:16)** — V2 relax 4 잡 전부 `bfgs converged in 2 scf cycles and 1 bfgs steps` (잡당 ≈4 분 · 2.75 GB) · 첫 SCF 톱니 진폭 **0.0035 Ry** (실패본 7.26 Ry 의 1/2000) · 초기 Total force 0.0028–0.0032 → 0.0025–0.0027 Ry/Bohr · uphill 0 ⇒ **재개 규칙 통과**. 읽기: UMA+D3 이완 기하에서 PBE+D3 힘의 최대 성분이 이미 forc_conv_thr(1e-3 Ry/Bohr ≈ 0.026 eV/Å) 아래 — d₀ 는 UMA 값과 사실상 같다(2단계에서 수치로 확인). 다음: 원출력 회수(V100 → kgy → repo db/raw) → `--v2_ed` 2단계 입력 4 세트 → 부록 봉인 → V100 실행."
   }
  ],
  "related_decisions": [
