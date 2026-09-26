@@ -497,6 +497,7 @@
 
 ## 14. 관련 카드 (litdb 내부 교차참조)
 
+- `lawrence2008_single_vgcnf_elastic_modulus_morphology` — (2026-09-26 추가) **E_VGCF 짝 카드**: 개별 VGCNF (Pyrograf III) 17 가닥의 **굽힘** 탄성률 **6–207 GPa** (AFM 3점 굽힘 · 형태와 1:1).  이 카드의 Fig. 6 영역(인장, 개략)과 합쳐 E_VGCF 각주의 문헌 위치가 두 줄로 선다.  판정: *"10 GPa · Ref. [Lawrence]"* 출처 칸 **불가**, `Assumed` + 범위 참조 각주 **조건부** (그 카드 §0).
 - `kim2025_conductive_agent_se_coating_cathode` — **우리 그룹** 실험 VGCF (Showa Denko, ~150 nm · ~10 µm) vs Super P · SE 코팅 복합양극 σ_e.
 - `lee2025_corolling_dryprocess_lpscl_ptfe` — LPSCl + NCM811 + **VGCF 3 wt%** + PTFE: 복합체 σ_e ≈ 34 mS/cm · PTFE 0.5 → 5 wt% 에서 ≈ 3,000 배 붕괴 (우리 Lee 대조 A 의 상대).
 - `lee2025_dual_fibrous_ptfe_dry_electrode` · `matthews2024_ptfe_nanofibril_network` · `zhang2026_dryprocess_electrode_architecture_cell_level` — 건식 전극의 VGCF–PTFE 섬유망 형태.

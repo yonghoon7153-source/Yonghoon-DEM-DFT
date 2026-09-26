@@ -2461,6 +2461,15 @@
     (Δε 0.18 %p · Δσ_e ≤ 0.25 %; 1→10 GPa +0.14 %p · 10→100 GPa +0.04 %p 로 체감) — **문헌 영역(110 GPa 부터)은 시험 범위 밖** ⇒ 각주에 넣으면 *"above the tested range"* 필수, >100 GPa 는 미시험 외삽.
   - **복원율(Fig. 9b)**: 섬유 매트의 스프링백 서열 흑연화 s-VGCF > 탄화 ≫ 기존 탄소섬유 — ⚠ 정의식이 본문과 캡션에서 **서로 역수**라 **서열만** 쓴다.  우리 압밀 모델에 대응 양 없음 (훅만, 값 금지).
 
+- ★ **2026-09-26 추가 — [Lawrence08] 개별 VGCNF 굽힘 탄성률 6–207 GPa (17 가닥, 형태와 짝) — 우리 E_VGCF 10 GPa 의 "출처" 가 아니라 민감도 창(1–100 GPa)이 실측 산포의 14/17 을 덮는다는 근거**
+  (`papers/lawrence2008_single_vgcnf_elastic_modulus_morphology.md` §0 · §3 · §7)
+  - **stated**: Pyrograf III (등급 · 열처리 미기재, 형태는 비열처리 원추형과 일치 = 추론) 17 가닥, AFM 3점 굽힘 · FIB Pt 양단고정 · 중공 단면 · Eq. 1 F = 192EIδ/L³ → **6–207 GPa**, 중앙값 55 (DERIVED).
+    10 GPa 근처(5–20)는 **3 가닥** (6 · 13 · 20 GPa) — 전부 D ≥ 260 nm, 형태를 잰 둘은 외벽 10 nm · 속 넓음.  **D ≤ 200 nm 9 가닥 = 23–207 GPa** (10 GPa 는 전부보다 낮다).
+  - 저자 해석: 낮은 값 = 얇은 외벽에 벽 전체 단면을 가정한 결과 (*"the correct value of E for the load bearing parts … will be much larger"*) + t > 80 nm 의 ~25 GPa 평탄역.
+    외벽 단독 재계산 **E′ ≈ 23–234 GPa** (Fig. 6b figure-read; 식 E′ = E·(D⁴−d⁴)/[D⁴−(d+2t_in)⁴] 로 14 점 재현 = 우리 재구성) ⇒ 그 해석에서는 **10 GPa 근처 섬유 0**.
+  - **판정**: 표 출처 칸 *"10 GPa · Ref. [Lawrence]"* **불가** · `Assumed` + 각주 범위 참조 **조건부 가능** (문안 = 카드 §0-3).  *"> 100 GPa 미시험 외삽"* 한정어는 그대로 (창 밖: 105 · 160 · 207 + 흑연화 ≈ 10² GPa [Endo01VGCF]).
+  - ⚠ 겉보기 **굽힘** 탄성률 (양단고정 · 벽 균질 가정 · k 공칭값 · 표의 ± 는 반복성뿐) — 인장탄성률(Endo Fig. 6) 과 같은 양이 아니다.  낮은 값일수록 과소평가 쪽 오차(지지 유연성 · 국부 변형)가 의심된다.
+
 ## D. 패킹 / Furnas dip — DEM·기하 소유, 소성 MPM 불가
 > ★ **할라이드 cross-check (Varkey ↔ Kim 2025):** Varkey 2026 (할라이드 Li₃YBrCl₆) = 할라이드 *압밀/σ* (E=10.58 →
 > stiffer → floor 21/37 %); **Kim 2025 (할라이드 Li₂ZrCl₆ LZC) = 할라이드 *계면 kinetics*** (bulk σ 0.51 < LPSCl

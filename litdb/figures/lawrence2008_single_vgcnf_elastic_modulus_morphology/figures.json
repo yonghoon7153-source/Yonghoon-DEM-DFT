@@ -1,0 +1,190 @@
+{
+ "slug": "lawrence2008_single_vgcnf_elastic_modulus_morphology",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-26",
+ "sources": [
+  "628309c4-nn7004427.pdf"
+ ],
+ "note": "All 8 items (Figs. 1-7 + Table 1) re-cropped by hand-specified regions (each figure is one embedded raster → its placement rectangle; Table 1 = text band). The automatic extractor found 7 of 8 (missed Fig. 2), cut Fig. 4 and took the whole page for Table 1. Page numbers = PDF pages 1-7 = journal pp. 1230-1236 (journal page = PDF page + 1229). No Supporting Information exists for this article.",
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Suspended nanofiber fixed at both ends by platinum pads diagonally across the middle gap: (a) optical micrograph, and (b) corresponding AFM height image of the fixed nanofiber shown in panel a.",
+   "rotated_deg": 0,
+   "manual_crop": "tight crop to the embedded raster's placement rectangle (+1.5 pt) — the auto-cropper missed Fig. 2, cut the top off Fig. 4 and merged it with body text, and left journal side-bar/margins in Figs. 1/3/5",
+   "bbox": [
+    169.6,
+    51.1,
+    495.6,
+    214.1
+   ],
+   "w": 1359,
+   "h": 681,
+   "dpi": 300,
+   "src": "628309c4-nn7004427.pdf",
+   "blank": 0.128,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. TEM micrograph showing the measured inner diameter (d), outer diameter (D), and the cone angle (θ) for a conical nanofiber.",
+   "rotated_deg": 0,
+   "manual_crop": "tight crop to the embedded raster's placement rectangle (+1.5 pt) — the auto-cropper missed Fig. 2, cut the top off Fig. 4 and merged it with body text, and left journal side-bar/margins in Figs. 1/3/5",
+   "bbox": [
+    121.9,
+    541.0,
+    324.9,
+    704.0
+   ],
+   "w": 847,
+   "h": 680,
+   "dpi": 300,
+   "src": "628309c4-nn7004427.pdf",
+   "blank": 0.026,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. TEM micrograph showing the morphology of the same nanofiber shown in Figure 1. The disordered outer wall and ordered inner wall with conical graphene layers are clearly visible. The inset shows the low resolution TEM micrograph of the same nanofiber. The solid lines represent 5 nm in the figure and 500 nm in the inset.",
+   "rotated_deg": 0,
+   "manual_crop": "tight crop to the embedded raster's placement rectangle (+1.5 pt) — the auto-cropper missed Fig. 2, cut the top off Fig. 4 and merged it with body text, and left journal side-bar/margins in Figs. 1/3/5",
+   "bbox": [
+    91.0,
+    51.3,
+    424.0,
+    317.3
+   ],
+   "w": 1388,
+   "h": 1110,
+   "dpi": 300,
+   "src": "628309c4-nn7004427.pdf",
+   "blank": 0.021,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. AFM cantilever deflection (ΔZc) plotted against the vertical coordinate of the piezo (Z) during the pushing−retracting cycle for the suspended nanofiber. The inset shows the force F plotted against the nanofiber deflection δ curve for the loading cycle.",
+   "rotated_deg": 0,
+   "manual_crop": "tight crop to the embedded raster's placement rectangle (+1.5 pt) — the auto-cropper missed Fig. 2, cut the top off Fig. 4 and merged it with body text, and left journal side-bar/margins in Figs. 1/3/5",
+   "bbox": [
+    46.9,
+    508.0,
+    249.9,
+    686.0
+   ],
+   "w": 847,
+   "h": 743,
+   "dpi": 300,
+   "src": "628309c4-nn7004427.pdf",
+   "blank": 0.933,
+   "viewed": true,
+   "read_note": "figure-read (this card §5): main-panel ΔZc falls with slope ≈ 1.0 (≈44.1 nm at Z = 1 → ≈19.8 nm at Z = 25; flat ≈13.9 nm beyond Z ≈ 33; unloading dips to ≈12.7 nm near Z ≈ 35); inset F ≈ 90 → 0 nN over δ ≈ 0 → 15 nm. Under the paper's F = kΔZc (k = 5 N/m) and δ = ΔZ − ΔZc the two panels are not mutually consistent — not explained in the paper."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. TEM micrographs of nanofibers tested using large forces: (a) nanofiber with thick outer layer showing a crack in the middle, and (b) nanofiber with thin outer layer following fracture. The triangle in panel a represents the point of contact of the AFM tip.",
+   "rotated_deg": 0,
+   "manual_crop": "tight crop to the embedded raster's placement rectangle (+1.5 pt) — the auto-cropper missed Fig. 2, cut the top off Fig. 4 and merged it with body text, and left journal side-bar/margins in Figs. 1/3/5",
+   "bbox": [
+    131.0,
+    541.0,
+    534.1,
+    704.0
+   ],
+   "w": 1681,
+   "h": 680,
+   "dpi": 300,
+   "src": "628309c4-nn7004427.pdf",
+   "blank": 0.025,
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Plots of the elastic moduli of nanofibers for different wall thicknesses: (a) when the load is assumed to be borne by both inner and outer walls, and (b) the recalculated elastic modulus E′ assuming that the load is borne only by the outer wall. In both cases data corresponding to t_out/t < 0.5 and t_out/t ≥ 0.5 are shown. The fibers with t > 80 nm are not shown in panel b as their t_out could not be measured.",
+   "rotated_deg": 0,
+   "manual_crop": "tight crop to the embedded raster's placement rectangle (+1.5 pt) — the auto-cropper missed Fig. 2, cut the top off Fig. 4 and merged it with body text, and left journal side-bar/margins in Figs. 1/3/5",
+   "bbox": [
+    46.9,
+    51.3,
+    250.0,
+    301.3
+   ],
+   "w": 847,
+   "h": 1043,
+   "dpi": 300,
+   "src": "628309c4-nn7004427.pdf",
+   "blank": 0.949,
+   "viewed": true,
+   "read_note": "digitized from the native raster (834×1030 px, stored inverted in the PDF): t = 20 + (x − 95.5)/6.4 nm; panel a E = (472.5 − y)/2.14 GPa; panel b E′ = (955.5 − y)/2.015 GPa. Panel a reproduces Table 1 E within 0.3 GPa for all 17 fibres (x-position = (D − d)/2, e.g. fibre 4 at 41.6 not the tabulated 45). Fibres 15–17 (t_out not measured) are drawn as filled 't_out/t ≥ 0.5' symbols. Panel b: 14 points, E′ ≈ 22.8–233.7 GPa."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Schematic of the three-point bend test of the single nanofiber fixed on the grid by platinum pads using the AFM tip. L is the suspended length.",
+   "rotated_deg": 0,
+   "manual_crop": "tight crop to the embedded raster's placement rectangle (+1.5 pt) — the auto-cropper missed Fig. 2, cut the top off Fig. 4 and merged it with body text, and left journal side-bar/margins in Figs. 1/3/5",
+   "bbox": [
+    278.0,
+    51.0,
+    456.0,
+    193.0
+   ],
+   "w": 742,
+   "h": 593,
+   "dpi": 300,
+   "src": "628309c4-nn7004427.pdf",
+   "blank": 0.711,
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "TABLE 1. Measured Distance between Supports (L), Outer Diameter (D), Inner Diameter (d), Wall Thickness (t), Elastic Modulus (E), Cone Angles (θ), Inner Layer Thickness (t_in), Outer Layer Thickness (t_out) and Ratio of Outer Layer Thickness to Wall Thickness for Different Nanofibers. (a) Here θ, t_in and t_out were not measured for the last three nanofibers due to large values of t which limited the resolution.",
+   "rotated_deg": 0,
+   "manual_crop": "text table (no raster) → rendered the 'TABLE 1' caption..footnote-a band; the auto-cropper had taken the whole page (bbox y 55.6–755.5)",
+   "bbox": [
+    118.0,
+    57.0,
+    548.0,
+    303.0
+   ],
+   "w": 1793,
+   "h": 1026,
+   "dpi": 300,
+   "src": "628309c4-nn7004427.pdf",
+   "blank": 0.915,
+   "viewed": true
+  }
+ ]
+}
