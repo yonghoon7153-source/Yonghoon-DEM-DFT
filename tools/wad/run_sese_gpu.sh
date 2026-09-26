@@ -173,6 +173,18 @@ _pp_ok() {    # $1 = PP 파일 경로 · $2 = 기준 sha256 → 0 = 같음
   [ -f "$1" ] && [ -n "$2" ] && [ "$(sha256sum "$1" | cut -d' ' -f1)" = "$2" ]
 }
 
+# ── ⑪ kind ↔ calc 일치 (2026-09-27) — 완료 판정(_done)은 jobs.json 의 **calc** 로 간다 (kind 가 아니다) ──
+#   A′ V4 GPU 시험 패키지를 kind=probe · calc=scf 로 만들었다가 발사 전에 발견: electron_maxstep 2 로 자른 SCF 가
+#   scf 규칙(수렴 요구)으로 판정돼 '미완료' → 첫 시험 뒤 러너가 끝나 두 번째 시험이 안 돈다 (조용히 틀린 경로).
+#   반대(calc=probe · kind≠probe)는 더 나쁘다 — 진짜 SCF 가 잘려도 완료로 받는다. 그래서 양쪽 다 거부한다.
+_kind_calc_ok() {  # $1 = jobs.json · $2 = 잡 dir → 0 = 일치 · 1 = 불일치 또는 잡 없음
+  python3 - "$1" "$2" 2>/dev/null <<'PY'
+import json, sys
+j = next((x for x in json.load(open(sys.argv[1]))["jobs"] if x.get("dir") == sys.argv[2]), None)
+sys.exit(1 if j is None else (0 if (j.get("kind") == "probe") == (j.get("calc") == "probe") else 1))
+PY
+}
+
 # ── ⑧ 공존 예외의 근거 결정 상태 ───────────────────────────────────────
 _exception_state() {  # $1 = 결정 ID · $2 = decisions.json → 상태 한 단어 (없는 ID = missing · 못 읽음 = unreadable)
   python3 - "$1" "$2" 2>/dev/null <<'PY' || echo unreadable
@@ -258,6 +270,13 @@ if [ "$IN" = "--selftest" ]; then
   ck "⛔이름만 같고 내용이 다른 PP → 거부"     "! _pp_ok $T/pp2.UPF $H"
   ck "⛔PP 파일 없음 → 거부"                  "! _pp_ok $T/없음.UPF $H"
   ck "⛔기준 해시가 비면 → 통과시키지 않는다" "! _pp_ok $T/pp.UPF \"\""
+  printf '{"jobs":[{"dir":"a","kind":"probe","calc":"probe"},{"dir":"b","kind":"probe","calc":"scf"},{"dir":"c","kind":"scf","calc":"scf"},{"dir":"d","kind":"g3","calc":"probe"},{"dir":"e","calc":"relax"},{"dir":"f","calc":"probe"}]}' > "$T/kc.json"
+  ck "kind probe · calc probe → 통과"                      "_kind_calc_ok $T/kc.json a"
+  ck "⛔kind probe · calc scf → 거부 (V4 시험 패키지 실수)"   "! _kind_calc_ok $T/kc.json b"
+  ck "kind scf · calc scf → 통과"                          "_kind_calc_ok $T/kc.json c"
+  ck "⛔calc probe 인데 kind 가 probe 아님 → 거부"           "! _kind_calc_ok $T/kc.json d && ! _kind_calc_ok $T/kc.json f"
+  ck "kind 없는 옛 패키지 · calc relax → 통과"              "_kind_calc_ok $T/kc.json e"
+  ck "⛔jobs.json 에 없는 잡 → 거부"                        "! _kind_calc_ok $T/kc.json 없음"
   ck "기준 없는 파일명 → 빈 값(경고 갈래)"    "[ -z \"\$(_pp_want $T/jobs.json 다른.UPF)\" ]"
   printf '{"decisions":[{"id":"D-a","decision_state":"active"},{"id":"D-r","decision_state":"retracted"},{"id":"D-s","decision_state":"superseded"}]}' > "$T/dec.json"
   ck "공존 근거 결정이 active → 통과"          "_coexist_gate D-a $T/dec.json"
@@ -348,6 +367,7 @@ for J in $JOBS; do
   got=$(sha256sum "$P" | cut -d' ' -f1)
   [ "$want" = "$got" ] || { say "⛔ $J/pw.in 해시가 jobs.json 과 다르다 (입력이 고쳐졌다) — $got"; bad=1; }
   _d3_ok "$P" || { say "⛔ $J: grimme-d3 인데 dftd3_threebody 가 명시되지 않았다 (결정 enforcement)"; bad=1; }
+  _kind_calc_ok "$IN/jobs.json" "$J" || { say "⛔ $J: jobs.json 의 kind 와 calc 가 probe 여부에서 갈린다 — 완료 판정은 calc 로 간다 (⑪)"; bad=1; }
   PD=${PSEUDO_DIR:-$(grep -aE "pseudo_dir" "$P" | head -1 | sed -E "s/.*'([^']+)'.*/\1/")}
   for U in $(awk '/ATOMIC_SPECIES/{f=1;next} f&&NF==0{exit} f{print $3}' "$P"); do
     [ -f "$PD/$U" ] || { say "⛔ $J: PP 없음 $PD/$U"; bad=1; }

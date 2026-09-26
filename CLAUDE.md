@@ -211,6 +211,9 @@
   · ⚠ **MP 가 id 를 옮기는 중이다** — `mp-1211324` 로 물으면 `mp-aaacqxxk` 가 돌아온다. 기록엔 둘 다 남긴다.
 - **desktop WSL**: ORCA r2SCAN-3c (SDCP 분자 계열).
 - 공통: 실행 스크립트에 pgrep 중복실행 가드, 출력 grep은 `grep -a`(NUL 오염 대비), watch 스크립트 관례 유지.
+- ⛔ **tmux 창의 셸(pane pid)을 `kill -STOP` 하면 tmux 가 곧바로 그 프로세스 그룹을 CONT 한다** (2026-09-26 gabia 에서 두 번 헛발질 ·
+  tmux 3.4 로 재현). 러너를 얼려 다음 점을 못 띄우게 하려면 **러너 스크립트 bash(창 셸의 자식)만** STOP 하고 `ps -o stat=` 가 `T` 인지 본다 —
+  창 셸까지 같이 STOP 하면 둘 다 `S` 로 돌아온다. 러너를 **죽이면** 창이 닫히며 SIGHUP 이 같은 그룹의 mpirun·pw.x 로 갈 수 있다 (돌던 점을 잃는다).
 - ⛔⛔ **`pgrep -f <패턴>` 은 자기 자신을 센다 — 개수로 쓰면 틀린다** (2026-09-20 에 **하루 두 번** 밟았다).
   패턴이 명령줄에 들어간 것은 **전부** 걸린다: `watch` 프로세스 · 그 `sh -c` · pgrep 을 감싼 서브셸 ·
   그 패턴을 쓰는 다른 watch. 실측: MD 파이썬이 **2 개**인데 `pgrep -c -f disorder_ensemble_diffusion`

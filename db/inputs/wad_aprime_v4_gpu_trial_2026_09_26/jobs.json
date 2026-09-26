@@ -42,7 +42,7 @@
  },
  "rule_결과_전": {
   "판정량": "러너 jobs_run.tsv 의 peak_total_MiB (nvidia-smi 합계 · 2 s 표본 · GPU 에 다른 프로세스 없음이 전제 — 러너 ④ 가 막는다)",
-  "PASS": "rc 0 · killed 0 · peak_total_MiB ≤ 44,000 → 그 셀 종류의 본 잡 실행 허가",
+  "PASS": "러너 완료=1 (probe 규칙: 마지막 실행에 JOB DONE + 'convergence NOT achieved|has been achieved' + 'total energy') · killed 0 · peak_total_MiB ≤ 44,000 → 그 셀 종류의 본 잡 실행 허가. rc 는 기록만 하고 판정에 쓰지 않는다 — electron_maxstep 2 로 자른 SCF 는 QE 가 exit 2 (convergence NOT achieved) 로 끝나는 게 정상이다",
   "FAIL": "killed 1 (가드) 또는 peak > 44,000 → 그 셀 종류 RESOURCE_BLOCKED (실측). far/bound 셀이 FAIL 이면 V4 군 전체 없음 (DEM 벤젠 조각 = '없음' 통지) · G3 셀만 FAIL 이면 본 잡 6 실행 + G3 '끝점 미검증(RESOURCE_BLOCKED)'",
   "예측": "CPU 추정 × 1.2–1.45 (SE|SE 4층 선례) = far 40.3–48.7 GB · G3c2 42.5–51.3 GB → 한도(44,000 MiB ≈ 46.1 GB)에 걸릴 수 있다 — 시험이 정한다",
   "금지": "시험 에너지 사용 금지 · 원출력 보존 · FAIL 이어도 본 입력(52 Ry · k · diagonalization · mixing)을 조용히 바꾸지 않는다 — 바꾸려면 개정 3 (1저자 비준) 을 먼저 기록한다",
@@ -52,7 +52,7 @@
   {
    "dir": "trial_V4_far_e52_m2",
    "kind": "probe",
-   "calc": "scf",
+   "calc": "probe",
    "model": "V4",
    "nat": 122,
    "kpts": [
@@ -85,7 +85,7 @@
   {
    "dir": "trial_V4_G3c2_far_i_e52_m2",
    "kind": "probe",
-   "calc": "scf",
+   "calc": "probe",
    "model": "V4",
    "nat": 122,
    "kpts": [
@@ -115,5 +115,16 @@
    },
    "cell_class": "G3 c+2 Å 셀 (G3_c2 bound · far_i · far_ii 3 잡)"
   }
- ]
+ ],
+ "정정_결과_전": {
+  "date": "2026-09-27",
+  "무엇": [
+   "jobs[].calc 'scf' → 'probe' (러너 완료 판정 _done 은 calc 로 간다 — scf 규칙이면 잘린 SCF 가 '미완료' 로 판정돼 첫 시험 뒤 러너가 exit 6 · 두 번째 시험이 안 돈다)",
+   "rule PASS 의 'rc 0' 삭제 (잘린 SCF 는 exit 2 가 정상 — 그대로 두면 모든 시험이 FAIL)"
+  ],
+  "옛_PASS": "rc 0 · killed 0 · peak_total_MiB ≤ 44,000 → 그 셀 종류의 본 잡 실행 허가",
+  "발견": "gabia 발사(09-26 23:50 · 248767 대기 중) 뒤 러너 코드 대조에서 — 시험 pw.x 는 한 번도 돌지 않았다 (결과 0)",
+  "재발_방지": "run_sese_gpu.sh ⑪ _kind_calc_ok — kind 와 calc 가 probe 여부에서 갈리면 시작하지 않는다 (selftest 6 · 돌연변이 2 빨간불)",
+  "pw_in": "변경 없음 (sha 그대로)"
+ }
 }
