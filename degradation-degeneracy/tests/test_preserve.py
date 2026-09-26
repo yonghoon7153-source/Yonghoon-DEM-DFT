@@ -6097,16 +6097,25 @@ def test_a_phantom_executed_plan_without_an_execution_record_is_refused(tmp_path
 def test_the_committed_ledger_reports_no_gate_backed_execution_yet():
     """★ 47차 — 소급 기록을 **실행 gate 증거로 세지 않는다**.
 
-    지금 원장의 8건은 전부 소급이다. 그 사실을 기계가 답할 수 있어야 한다
+    원장의 소급 8건은 실행 gate 증거가 아니다. 그 사실을 기계가 답할 수 있어야 한다
     (자유문자 근거를 사람이 읽고 세는 것이 아니라).
+
+    ★ 2026-09-26 — 첫 **prospective** 항목이 들어왔다: `grid_fit_v5` (73차 조건부 한정 GO,
+      원장 §98; WSL 실행 기계에서 `plan_leg.py` 로 생성해 사람이 커밋). 상태는 `planned` 이고
+      아직 돌지 않았으므로 gate 를 **실제로 지난 실행**은 여전히 0 이다 — 이 시험은 그 둘을
+      구분한다. 실행이 finalize 로 `executed` 가 되면 `gate_backed_executions` 가 1 이 되고
+      그때 이 시험을 (실측을 보고) 다시 고친다. 미리 고치지 않는다.
     """
-    from tools.preserve import planned_coverage
+    from tools.preserve import planned_coverage, planned_index
 
     cov = planned_coverage()
     assert cov["retrospective"] == 8, cov
-    assert cov["prospective"] == 0, cov
+    assert cov["prospective"] == 1, cov
     assert cov["gate_backed_executions"] == 0, (
-        "실행 전 gate 를 실제로 지난 실행이 있다고 셌다 — 지금은 하나도 없다")
+        "실행 전 gate 를 실제로 지난 실행이 있다고 셌다 — grid_fit_v5 는 아직 planned 다")
+    e = planned_index()["grid_fit_v5"]
+    assert (e["status"], e["authorization_kind"]) == ("planned", "prospective"), e
+    assert e["authorized_source_digest"] == "c2ef1a811e70bb4c", e["authorized_source_digest"]
 
 
 # ─────────────────────────────────────────────────────────────────────────────

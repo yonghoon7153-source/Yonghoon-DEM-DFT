@@ -637,7 +637,7 @@ cohorts:
   status: active
   legs:
   - paired_fixed5_v4
-  prospective_legs: []
+  prospective_legs: [grid_fit_v5]
   cross_leg_comparison: not_applicable_single_leg
   무엇이_달라졌나: 63차 게이트 리뷰(방어적 코드·회귀 검토)가 새 P1 3건 · P2 1건과 증거 공백 둘을 냈고 전부 코드에서 닫혔다
     (원장 §77·§78). 이 cohort 의 pin 을 움직인 것은 E1 이다 — producer analyzer 의 definition head 가 3.12 `type_params`
@@ -732,6 +732,53 @@ planned:
   recorded_on: '2026-08-28'
   근거: 46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는 실행 전 gate 가 없던 시절에 돌았고, digest 는
     원장의 `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든 값이 아니다).
+- leg_id: grid_fit_v5
+  cohort_id: g18_2026_09_15
+  status: planned
+  authorization_kind: prospective
+  authorized_source_digest: c2ef1a811e70bb4c
+  run_spec_digest: 97585418a30e032b5b42bc8e09100661cbc89f1825bf671ecf7a601f30dbdb6a
+  run_spec:
+    leg_spec_version: 2
+    leg_id: grid_fit_v5
+    grid:
+      config_digest: 696bf7d2cf9697d3
+      condition_ids_sha256: 7b08e97e129d0bf4
+      n_conditions: 3993
+      discharged_cache_sha256: null
+      out: results/grid_fit_v5
+    fit:
+      config_digest: 87482fa38d72802d
+      objective_order:
+      - pocv
+      - pocv_dvdq
+      - pocv_dvdq_dqdv
+      - dqdv_only
+      objectives_digest: b96732b98b40aabd
+      reference: grid
+      halfcell_recipe:
+        method: ocp
+        kw: {}
+      halfcell_cache_sha256: null
+      base_config_digest: 2885945318d396a5
+      bounds_preset: expanded
+      bounds_digest: 7cd061b430b75572
+      optimizer:
+        method: Nelder-Mead
+        n_restarts: 5
+        adaptive: true
+        warm_start: true
+      use_noisy: true
+      smoothing_backend: banded_cache
+      row_selection:
+        mode: full
+        limit: null
+        subset_sha256: null
+      in: results/grid_fit_v5
+      in_digest: null
+      out: results/grid_fit_v5
+  recorded_on: '2026-09-26'
+  근거: 73차 조건부 한정 GO (원장 §98) — 현행 code identity 로 grid_fine 격자 grid/fit 재실행 (GATE71 §2 E9-0), WSL 로컬. 실행 기계(WSL, 28 proc)에서 plan_leg.py 로 생성한 출력 그대로; discharged_cache_sha256 null = 이 실행이 완방상태를 계산한다(캐시 읽기 금지).
 legs:
 - leg_id: paired_fixed5_v4
   preservation_status: full_bundle
