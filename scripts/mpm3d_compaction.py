@@ -1664,6 +1664,13 @@ def _selftest():
         0 <= _i_guard < _i_ti)
     chk('FAMV2-01 A 도장: 산출물이 f 의 **실제 적용처**(am_load_applied_to)를 찍고, f=0 이면 키가 없다',
         bool(_re2.search(r"'am_load_applied_to':[\s\S]{0,600}?if args\.am_load_frac > 0 else \{\}", _msrc)))
+    #  ★ SELF-50 (2026-09-26) — metrics 가 **요청 dt** (args.dt) 만 적어, CFL 가드가 줄인 실제 dt 를 metrics 만으로
+    #    재구성할 수 없었다 (VGCF 100 GPa 팔: 실제 1.347e-4 · 기록 2.0e-4).  'dt' 는 하위호환으로 요청값 그대로 두고
+    #    실제값 · 상한 · 요청값을 **이름을 붙여** 함께 남긴다.
+    chk('SELF-50: 산출물이 실제 dt (dt_effective) · CFL 상한 (dt_cfl_cap) · 요청값 (dt_requested) 을 함께 적는다',
+        '_dt_cfl_cap = 0.4 * dx / (_M ** 0.5)' in _msrc and "'dt_effective': float(dt)" in _msrc
+        and "'dt_cfl_cap': float(_dt_cfl_cap)" in _msrc and "'dt_requested': float(args.dt)" in _msrc
+        and "'dt_cfl_limited': bool(float(dt) < float(args.dt))" in _msrc)
 
     print(f"selftest: {ok}/{ok + len(fail)} PASS" + (f"   FAILED: {fail}" if fail else ""))
     return 1 if fail else 0
@@ -1787,7 +1794,8 @@ def main(argv):
             if _anm in _rc_up:
                 _mu_a, _la_a = lame(_aE, _anu)
                 _M = max(_M, _la_a + 2.0 * _mu_a)
-    dt = min(args.dt, 0.4 * dx / (_M ** 0.5))
+    _dt_cfl_cap = 0.4 * dx / (_M ** 0.5)                    # SELF-50: 상한을 이름 붙여 남긴다 (metrics 에 기록)
+    dt = min(args.dt, _dt_cfl_cap)
 
     FLOOR = 0.10; SW = (0.18, 0.82)                         # confined box in x,y
     WIDTH = SW[1] - SW[0]
@@ -3711,7 +3719,11 @@ def main(argv):
             'sub': int(args.sub),
             'frames_budget': int(args.frames),
             'compact_to_pct': (float(args.compact_to) if args.compact_to > 0 else None),
-            'dt': float(args.dt),
+            'dt': float(args.dt),                                  # 요청값 (하위호환) — 실제는 dt_effective (SELF-50)
+            'dt_requested': float(args.dt),
+            'dt_effective': float(dt),                             # CFL 가드 · load-state 조임 뒤 실제로 쓴 dt
+            'dt_cfl_cap': float(_dt_cfl_cap),                      # args 물성으로 잰 CFL 상한 0.4·dx/√M_max
+            'dt_cfl_limited': bool(float(dt) < float(args.dt)),
             'arch': str(args.arch),
             'lateral_box': float(args.lateral_box),
             'e_se_gpa': float(args.e_se), 'nu_se': float(args.nu_se),
