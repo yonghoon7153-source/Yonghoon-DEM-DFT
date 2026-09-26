@@ -1,0 +1,18 @@
+✅ 실행 전 gate 통과(사전 점검·소유한 재개) — grid_fit_v5 · cohort g18_2026_09_15 · attempt abd0c650e243 · 끝난 phase ['없음']
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/yonghoon71/dd/degradation-degeneracy/src/grid.py", line 963, in <module>
+    main()
+  File "/home/yonghoon71/dd/degradation-degeneracy/src/grid.py", line 954, in main
+    summary = run_grid(cfg, conds, nproc=args.nproc, chunk_size=chunk,
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yonghoon71/dd/degradation-degeneracy/src/grid.py", line 579, in run_grid
+    _claim, _exec_cap = _assert_grid_authorized(cfg, out_dir,
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yonghoon71/dd/degradation-degeneracy/src/grid.py", line 445, in _assert_grid_authorized
+    claim = assert_run_is_authorized(leg, "grid", [out_dir], spec,
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yonghoon71/dd/degradation-degeneracy/tools/preserve.py", line 3802, in assert_run_is_authorized
+    raise PreserveError(
+tools.preserve.PreserveError: [plan] 'grid_fit_v5' 의 살아 있는 claim 은 다른 run_spec 을 봉인했다 (97585418a30e032b ≠ e7cc8713bb88d941) — 같은 claim 으로 다른 실행을 이어붙일 수 없다

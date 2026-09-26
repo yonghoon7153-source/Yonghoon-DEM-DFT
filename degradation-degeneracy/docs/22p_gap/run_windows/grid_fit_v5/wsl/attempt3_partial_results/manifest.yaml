@@ -1,0 +1,34 @@
+timestamp: '2026-09-26T18:31:26'
+config_hash: 60d9205dda522e6c
+pybamm_version: 26.8.0.0
+platform: Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39
+python: 3.12.3
+git_commit: 951b6136164ca63c92f9eda8ddb55551329fa78c
+git_commit_short: 951b6136
+git_dirty: false
+git_dirty_tracked: false
+git_dirty_files_in_scope: []
+git_dirty_out_of_scope:
+- degradation-degeneracy/docs/22p_gap/LEG_PRESERVATION.yaml
+git_dirty_repo_wide: true
+git_dirty_scope:
+- src/
+- tools/
+- configs/
+- scripts/
+- run.sh
+- requirements*.txt
+git_untracked_count: 5
+git_untracked_critical: []
+run_type: grid
+protocol_unified: charge_first
+solver: IDAKLUSolver
+nproc: 28
+chunk_size: 200
+n_conditions: 3993
+n_resume_skipped: 0
+discharged_state:
+  ne_primary: 36.64970365853831
+  ne_secondary: 3446.0841932982785
+  pe: 58439.87386449173
+reproducible: true

@@ -1,0 +1,87 @@
+grid_run_sig: 15492b53115c
+grid_run_spec:
+  grid_sig_version: 5
+  config_hash: 60d9205dda522e6c
+  noise:
+  - 0.0
+  - 0.001
+  - 0.005
+  config_files:
+  - configs/base.yaml
+  - configs/grid_fine.yaml
+  protocol_unified: charge_first
+  parameter_set: Chen2020_composite
+  noise_seed: 42
+  condition_ids_sha256: 7b08e97e129d0bf4
+  n_conditions_intended: 3993
+  postprocess:
+    n_trim: 3
+    n_interp: 300
+  discharged_state:
+    ne_primary: 36.64970365853831
+    ne_secondary: 3446.0841932982785
+    pe: 58439.87386449173
+  discharged_state_sha: 5ab61b3799d4e18e0233038d6c9dccfb53882a027d36a8721af3796f4c33a064
+  replay_recipe:
+    baseline:
+      ne_primary_init_conc: 27700.0
+      ne_primary_max_conc: 28700.0
+      ne_secondary_init_conc: 276610.0
+      ne_secondary_max_conc: 278000.0
+      pe_init_conc: 17038.0
+      pe_max_conc: 63104.0
+      ne_porosity: 0.25
+      ne_primary_vf: 0.735
+      ne_secondary_vf: 0.015
+      pe_porosity: 0.335
+      pe_vf: 0.665
+    guards:
+      max_mode_value: 0.9
+      max_porosity: 0.95
+      min_vf: 0.0001
+  effective_solver:
+    requested:
+      type: idaklu
+      fallback: casadi
+      rtol: 1.0e-06
+      atol: 1.0e-06
+      casadi_mode: safe
+    effective_class: IDAKLUSolver
+    pybamm: 26.8.0.0
+    pybammsolvers: 0.9.1
+    casadi: 3.7.2
+  source_digest: c2ef1a811e70bb4c
+  env:
+    python: 3.12.3
+    platform: Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39
+    machine: x86_64
+    smoothing_backend: banded_cache
+    numpy: 2.5.3
+    scipy: 1.18.1
+    pandas: 3.0.6
+    joblib: 1.6.0
+    pyarrow: 25.0.1
+    pybamm: 26.8.0.0
+    matplotlib: 3.11.2
+    yaml: 6.0.3
+    pybammsolvers: 0.9.1
+    casadi: 3.7.2
+started_at: '2026-09-26T18:31:26'
+resume: false
+git_commit: 951b6136164ca63c92f9eda8ddb55551329fa78c
+git_commit_short: 951b6136
+git_dirty: false
+git_dirty_tracked: false
+git_dirty_files_in_scope: []
+git_dirty_out_of_scope:
+- degradation-degeneracy/docs/22p_gap/LEG_PRESERVATION.yaml
+git_dirty_repo_wide: true
+git_dirty_scope:
+- src/
+- tools/
+- configs/
+- scripts/
+- run.sh
+- requirements*.txt
+git_untracked_count: 5
+git_untracked_critical: []

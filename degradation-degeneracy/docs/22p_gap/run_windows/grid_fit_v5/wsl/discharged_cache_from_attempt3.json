@@ -1,0 +1,43 @@
+{
+  "ne_primary": 36.64970365853831,
+  "ne_secondary": 3446.0841932982785,
+  "pe": 58439.87386449173,
+  "baseline_hash": "a8e262f7d6aa4beb",
+  "solver": {
+    "type": "idaklu",
+    "fallback": "casadi",
+    "rtol": 1e-06,
+    "atol": 1e-06,
+    "casadi_mode": "safe"
+  },
+  "effective_solver": {
+    "requested": {
+      "type": "idaklu",
+      "fallback": "casadi",
+      "rtol": 1e-06,
+      "atol": 1e-06,
+      "casadi_mode": "safe"
+    },
+    "effective_class": "IDAKLUSolver",
+    "pybamm": "26.8.0.0",
+    "pybammsolvers": "0.9.1",
+    "casadi": "3.7.2"
+  },
+  "source_digest": "c2ef1a811e70bb4c",
+  "env": {
+    "python": "3.12.3",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "smoothing_backend": "banded_cache",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "pandas": "3.0.6",
+    "joblib": "1.6.0",
+    "pyarrow": "25.0.1",
+    "pybamm": "26.8.0.0",
+    "matplotlib": "3.11.2",
+    "yaml": "6.0.3",
+    "pybammsolvers": "0.9.1",
+    "casadi": "3.7.2"
+  }
+}

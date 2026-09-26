@@ -1,0 +1,9 @@
+✅ 실행 전 gate 통과(사전 점검·새 발급) — grid_fit_v5 · cohort g18_2026_09_15 · 승인 2026-09-26
+INFO:2026-09-26 18:31:24,810:jax._src.xla_bridge:822: Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2026-09-26 18:31:24,810 INFO jax._src.xla_bridge: Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2026-09-26 18:31:26,183 INFO src.baseline: 완방상태 산출: Gr=36.6 mol/m3 (x=0.0013), Si=3446.1 (x=0.0124), PE=58439.9 (y=0.9261)
+2026-09-26 18:31:26,183 WARNING src.baseline:   vs 원본 하드코딩 ne_primary: 36.7 -> 36.6 (차이 0.1%) — 하드코딩은 사용하지 않음
+2026-09-26 18:31:26,183 WARNING src.baseline:   vs 원본 하드코딩 ne_secondary: 3446.3 -> 3446.1 (차이 0.0%) — 하드코딩은 사용하지 않음
+2026-09-26 18:31:26,183 WARNING src.baseline:   vs 원본 하드코딩 pe: 58439.9 -> 58439.9 (차이 0.0%) — 하드코딩은 사용하지 않음
+2026-09-26 18:31:26,268 INFO src.baseline: 완방상태 캐시 저장: /home/yonghoon71/dd/degradation-degeneracy/.cache/discharged_state/a8e262f7d6aa4beb.json
+grid:   0%|          | 0/3069 [00:00<?, ?cond/s]
