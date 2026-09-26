@@ -1,0 +1,119 @@
+{
+ "schema": "qe_input_set/v1",
+ "date": "2026-09-26",
+ "what": "A′ V4_s_outer_A GPU 시험 2 (52 Ry · electron_maxstep 2 · scf) — 카드 ③ 자원 프로브의 GPU 단계. CPU 추정(33.58 / 35.40 GB · db/raw/wad_aprime_s3_probe_2026_09_25)이 허가한 GPU 시험 · 본 실행 허가는 여기 피크가 정한다",
+ "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json (자원.프로브 · ③_CPU/GPU_자원_프로브 · 장치별_한도.gabia)",
+ "decisions": [
+  "D-2026-09-23-wad-a-prime-scope",
+  "D-2026-09-23-wad-p2-lpscl-graphite-scope",
+  "D-2026-09-23-wad-se-termination-symmetric",
+  "D-2026-09-23-wad-d3-twobody-atm-separate",
+  "D-2026-09-23-wad-sese-alarm-band-v2",
+  "D-2026-09-25-wad-reference-state-policy",
+  "D-2026-09-25-wad-lattice-matching-rule-a",
+  "D-2026-09-25-wad-lattice-matching-rule-a-amend-1",
+  "D-2026-09-25-wad-aprime-card-v2-choices"
+ ],
+ "source_package": {
+  "path": "db/inputs/wad_aprime_s3v2_2026_09_26/qe",
+  "s3_manifest_sha256": "069894c62daa1bf863cebba3533fb0c79e70fd16a9b4d77cf7ea5ac41512246d",
+  "seal": "db/properties/wad_aprime_s3v2_seal_2026_09_26.json"
+ },
+ "settings": {
+  "pp": {
+   "Li": "li_pbe_v1.4.uspp.F.UPF",
+   "P": "P.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "S": "s_pbe_v1.4.uspp.F.UPF",
+   "Cl": "cl_pbe_v1.4.uspp.F.UPF",
+   "Ag": "Ag_ONCV_PBE-1.0.oncvpsp.upf",
+   "C": "C.pbe-n-kjpaw_psl.1.0.0.UPF",
+   "H": "H.pbe-rrkjus_psl.1.0.0.UPF"
+  },
+  "pp_sha256": {
+   "li_pbe_v1.4.uspp.F.UPF": "02cc4b3810e28a43b570277840d9631ca24f634d922928200c047b72c0a86bf5",
+   "P.pbe-n-rrkjus_psl.1.0.0.UPF": "2d112dfec2e2d9b75a971574d9116aa92249988177791659bbcd2ba15f23c20c",
+   "s_pbe_v1.4.uspp.F.UPF": "84ad731864187f416f714e961c3ad2f04dcbf811618e724d277885c18cb470df",
+   "cl_pbe_v1.4.uspp.F.UPF": "5b1ebdea1e5ba743fba0100806206287e1f7f00460c7e6f19791446beaee0655",
+   "Ag_ONCV_PBE-1.0.oncvpsp.upf": "0494aa5927b754b42d3e72535636f215b4658e9b437e639dbc09674c36c8059a",
+   "C.pbe-n-kjpaw_psl.1.0.0.UPF": "9900d1efd50b9848e31849f39094b33348486b400ee51e0f3922f716137cf3d7",
+   "H.pbe-rrkjus_psl.1.0.0.UPF": "27f8a7e87851d59a2698237d6ab4578d62950640f4f175781b015a0ce731f962"
+  },
+  "pseudo_dir_note": "러너가 PSEUDO_DIR 로 바꾼다"
+ },
+ "rule_결과_전": {
+  "판정량": "러너 jobs_run.tsv 의 peak_total_MiB (nvidia-smi 합계 · 2 s 표본 · GPU 에 다른 프로세스 없음이 전제 — 러너 ④ 가 막는다)",
+  "PASS": "rc 0 · killed 0 · peak_total_MiB ≤ 44,000 → 그 셀 종류의 본 잡 실행 허가",
+  "FAIL": "killed 1 (가드) 또는 peak > 44,000 → 그 셀 종류 RESOURCE_BLOCKED (실측). far/bound 셀이 FAIL 이면 V4 군 전체 없음 (DEM 벤젠 조각 = '없음' 통지) · G3 셀만 FAIL 이면 본 잡 6 실행 + G3 '끝점 미검증(RESOURCE_BLOCKED)'",
+  "예측": "CPU 추정 × 1.2–1.45 (SE|SE 4층 선례) = far 40.3–48.7 GB · G3c2 42.5–51.3 GB → 한도(44,000 MiB ≈ 46.1 GB)에 걸릴 수 있다 — 시험이 정한다",
+  "금지": "시험 에너지 사용 금지 · 원출력 보존 · FAIL 이어도 본 입력(52 Ry · k · diagonalization · mixing)을 조용히 바꾸지 않는다 — 바꾸려면 개정 3 (1저자 비준) 을 먼저 기록한다",
+  "실행": "gabia · 탄성 정지 뒤(GPU pw.x 둘 금지) · UMA 없음 · KILL_MIB=44000 · START_MAX_MIB 기본 40960 · NP 1 · pseudo_dir 입력값 /data/work/pseudo (⑨ 해시 대조)"
+ },
+ "jobs": [
+  {
+   "dir": "trial_V4_far_e52_m2",
+   "kind": "probe",
+   "calc": "scf",
+   "model": "V4",
+   "nat": 122,
+   "kpts": [
+    3,
+    3,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 2,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.87798,
+    "eopreg": 0.02712
+   },
+   "pw_in_sha256": "50a9fa68491f4cda3837fce8ffd4dc222996102575b85e0ff070ef494fe16eab",
+   "structure": "V4_s_outer_A_far",
+   "tags": {
+    "structure": "V4_s_outer_A_far",
+    "⛔": "GPU 시험 (카드 자원 프로브 · electron_maxstep 2) — 원출력 보존 · 에너지 사용 금지 · 피크 VRAM 만 읽는다"
+   },
+   "machine": "gabia A6000 (KILL 44,000 MiB)",
+   "source": {
+    "dir": "V4_s_outer_A_far",
+    "pw_in_sha256": "75a37357e0f66ba4e82ff44a684347167377049239c57ce65f8b6b721cde4110",
+    "diff": "prefix · electron_maxstep 200 → 2 (그 외 동일 · 52/520 Ry · k 3×3×1 · 쌍극자 구간 개정 2)"
+   },
+   "cell_class": "far/bound 셀 (bound · far · G4 k1 · s05 6 잡이 같은 셀)"
+  },
+  {
+   "dir": "trial_V4_G3c2_far_i_e52_m2",
+   "kind": "probe",
+   "calc": "scf",
+   "model": "V4",
+   "nat": 122,
+   "kpts": [
+    3,
+    3,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 2,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.88425,
+    "eopreg": 0.02572
+   },
+   "pw_in_sha256": "3bff88526d9f5133068aee6228fe1a26c78d359fcb2613f60511d79afe58cf01",
+   "structure": "V4_s_outer_A_G3_c2_far_i",
+   "tags": {
+    "structure": "V4_s_outer_A_G3_c2_far_i",
+    "⛔": "GPU 시험 (카드 자원 프로브 · electron_maxstep 2) — 원출력 보존 · 에너지 사용 금지 · 피크 VRAM 만 읽는다"
+   },
+   "machine": "gabia A6000 (KILL 44,000 MiB)",
+   "source": {
+    "dir": "V4_s_outer_A_G3_c2_far_i",
+    "pw_in_sha256": "47bb3637b83c9fe1296e38d1c4a482d6280227a7104ee61d932267054734a3c9",
+    "diff": "prefix · electron_maxstep 200 → 2 (그 외 동일 · 52/520 Ry · k 3×3×1 · 쌍극자 구간 개정 2)"
+   },
+   "cell_class": "G3 c+2 Å 셀 (G3_c2 bound · far_i · far_ii 3 잡)"
+  }
+ ]
+}
