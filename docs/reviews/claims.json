@@ -2335,6 +2335,22 @@
    "reviews_work_dated": "2026-04-24 ~ 2026-09-26",
    "shared_input": null,
    "verdict": "⇒ **값은 그대로 둔다 (재계산 없음 — 사용자 비준 A, 2026-09-26).**  접촉망 σ_e 는 σ_AM 에 정비례한다 (선형 저항망 — 입자 벌크 저항과 Holm 협착 1/(2σa) 가 둘 다 1/σ_AM) ⇒ 비 · 추세 · 스케일링 법칙의 모양은 무영향이고 절대값만 이 기준에 걸린다.  ⚠ 예외: 등급 엔진의 ASR_electronic · ASR_total 은 **절대 문턱**이라 이 기준 위에서만 뜻이 있다 (측정 NCM811 기준이면 ASR_e 약 12 배).  ⚠ SDCP 원고의 STEP3 σ_NCM 1.0 × 10⁻² S/cm 는 **다른 솔버의 다른 값**이다 (표 S2 각주 ᵇ · CL-70) — 이 항목과 섞지 않는다.  ⚠ scripts/network_conductivity.py 의 옛 주석은 이번에 고치지 않았다 — S3 봉인 수치 모듈 (seal_s3_prerun.NUMERIC_MODULES) 이라 주석 한 줄도 바이트 지문을 바꿔 봉인된 S3 실런을 거부시킨다 (run_s3_psi.verify_code_bundle).  정정은 S3 실런 (L2-01) 뒤 — 그동안 이 CL 이 정본이다."
+  },
+  {
+   "id": "CL-93",
+   "date": "2026-09-26",
+   "status": "live",
+   "kind": "convention",
+   "claim": "**MPM VGCF 재료점 탄성계수 E_VGCF = 10 GPa 는 모델 선택값이다 — 문헌 측정 출처가 없다.**  2026-06-24 커밋 `862a61833` (자동 작성) 이 MPM 첨가제 재료점을 처음 넣을 때 *\"medium-stiff E10/sigma_y2 (keeps fibre shape, elastic bend)\"* 로 들어왔고 `ADD_E_SET_20260818` 에서도 그대로다 (원장 `CL-42` — 근거 문헌/측정 미기재).  원고 결과를 낸 침대 (Phase A 생산 킷 · SDCP SBE/DBE) 는 전부 이 값으로 압밀했다.",
+   "measured": {
+    "metric": "정본 litdb 카드 대조 (원문 PDF 확인된 카드만) + 09-26 추가 탐색 두 갈래",
+    "value": "흑연화 VGCF 인장 ≈110–310 GPa (Endo 2001 Fig. 6 영역, 그림 판독 — 카드 endo2001_vgcf_basic_properties_battery_applications) · 단일 VGCNF (Pyrograf III) AFM 3점 굽힘 6–207 GPa · 17 가닥 중앙값 55 · 10 GPa 근처 가닥 없음 (가장 가까운 6 · 13) · D ≤ 200 nm 9 가닥 23–207 (Lawrence 2008 — 카드 lawrence2008_single_vgcnf_elastic_modulus_morphology, canon 0d0c54109, PDF 직접 대조) · 09-26 탐색 (CNF · CVD 다중벽 나노튜브 · 반경/횡방향 탄성률 · 전극 모델 입력값) 에서 흑연화 VGCF 에 ~10 GPa 를 주는 측정 · 모델 입력 없음 (출판사 접근 차단 — 검색 요약 수준).  민감도 (원장 SELF-50 · vgcf_e_sensitivity_prereg_20260925 §7-3): Phase A 킷 VGCF_PTFE_3_1 (SBE 조성) origin 1 팔, E 1 / 10 / 100 GPa → porosity 14.749 / 14.889 / 14.929 % · σ_e 59.274 / 59.154 / 59.303 mS/cm (E=10 대비 ≤ 0.25 %) = h0"
+   },
+   "asserted": "SI Table S2 (사용자 docx) 행 *\"VGCF Young's modulus 10 GPa · Assumed\"* — 공저자 질문 (09-25) *\"young's modulus 도 그냥 assumed?\"* → 출처 탐색 (09-26).",
+   "provenance": "원장 SELF-50 · SELF-51 · CL-42 · docs/reviews/si_table_response_20260925.md §4 · §9-1 #12 · §9-5 ⑨ · docs/reviews/vgcf_e_sensitivity_prereg_20260925.md §7-3 · 정본 카드 lawrence2008_… (0d0c54109) · endo2001_…",
+   "reviews_work_dated": "2026-06-24 ~ 2026-09-26",
+   "shared_input": null,
+   "verdict": "⇒ **표 · Methods 에 적는 E_VGCF 입력값은 계산에 실제로 넣은 값 (10 GPa) 이다.**  다른 값 (예: 문헌 수준 ≈10² GPa) 을 입력값으로 적으려면 원고에 쓴 침대를 그 값으로 **다시 압밀하고 STEP3 를 다시 계산**한 뒤에만 — 민감도 팔 (한 침대 · origin 1 팔) 은 원고 결과의 입력이 아니다.  ⛔ 10 GPa 의 출처로 Lawrence 2008 · Endo 2001 을 걸지 않는다 (둘 다 10 GPa 를 주지 않는다).  민감도 (1–100 GPa: porosity 0.18 %p · σ_e ≤ 0.25 %) 는 한정어 (한 침대 · origin 1 팔 · 순서 해석 금지) 와 함께만.  σ_e 가 E 에 반응하는 경로는 압밀 기하뿐이다 (STEP3 σ_VGCF 는 세 팔 동일 78.5398) — E=100 은 CFL 로 dt 가 1.347e-4 로 줄어 플래튼 정지 양자화가 달랐고, 팔 간 σ_e 차이는 origin 위상 산포 (0.68 %) 보다 작다."
   }
  ],
  "quotation_ban": [
