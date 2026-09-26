@@ -68,6 +68,10 @@ E3-R: 소비자가 짝·실제 일치·source fits·복원 자리·봉인 summar
 
 4차도 `grid 0/3069` 에서 VM 재시작(19:21 시작 → 19:24 부팅, 메모리). 캐시 결속 계획에서는 `precheck` 가 `resume` — G74-1 의 반대편 증거. 사용자 결정으로 Gabia(`kserver116-27`, 20 proc, 62 GB)로 이전, 캐시 `66d84e76…`, `run_spec_digest 0838df84…`. 승인 HEAD = 이 커밋.
 
+## 한정 실행 완주 (2026-09-26, Gabia) — full_bundle · current_validated (원장 §101)
+
+grid 3069 (solver 실패 0) → fit 12276 행 → finalize → report → archive → 영수증(core `2aadd24b…`) → attach. 등록부 367 → 369. 데이터 커밋 `d9f8791c`. 실행 뒤 발견: **G74-3** cohort/투영/주장 lint 가 투영 없는 다리를 받지 못함 (docs-lint 적색, 사람 결정 대기) · **G74-4** `archive_results.sh <run>` 이 인덱스를 그 묶음만으로 덮어씀 (v4 네 항목 복원). 그 전 발견: G74-1 null 캐시 재개 불능 · G74-2 WSL 고아 레코드.
+
 ## 다음
 
 **사람의 단계** — 실행 기계에서 `plan_leg.py` 출력 확인 → 원장 `planned:` + cohort `prospective_legs` 커밋(승인 행위) → 승인 HEAD 에서 E9-3 순서로 한정 실행. 요청문 이력: ~~`GATE73_REQUEST.md`~~ (한정 실행 GO 재요청) · ~~`docs/22p_gap/GATE72_REQUEST.md`~~ (한정 실행 GO 재요청) · ~~`docs/22p_gap/GATE71_REQUEST.md`~~ — 판정 대상 `876429562f6a69b59793c70700cb5b375391ab67` · `source_digest b705a21a1237ec73` 로 **한정 실행 GO** 를 묻는다 (원장 §92·§93). 발송문은 요청문 SHA + 브랜치 head SHA, 커밋 뒤 실측.

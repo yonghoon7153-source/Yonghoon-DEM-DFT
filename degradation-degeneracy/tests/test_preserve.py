@@ -6105,17 +6105,25 @@ def test_the_committed_ledger_reports_no_gate_backed_execution_yet():
       아직 돌지 않았으므로 gate 를 **실제로 지난 실행**은 여전히 0 이다 — 이 시험은 그 둘을
       구분한다. 실행이 finalize 로 `executed` 가 되면 `gate_backed_executions` 가 1 이 되고
       그때 이 시험을 (실측을 보고) 다시 고친다. 미리 고치지 않는다.
+
+    ★ 2026-09-26 (원장 §101) — `grid_fit_v5` 가 Gabia 에서 실행 전 gate → grid → fit → finalize
+      까지 돌았다 (attempt `2d91320c…`, 승인 HEAD `e34eea84`). 실측 `planned_coverage()` =
+      `{'prospective': 1, 'retrospective': 8, 'gate_backed_executions': 1}`. 이름은 그대로 둔다
+      (47차 요청문 `GATE47_REQUEST.md` 가 이 이름으로 인용한다) — 뜻은 "소급 기록은 gate 증거로 세지 않는다"이고,
+      gate 를 실제로 지난 것은 prospective 1 건뿐이라는 것을 같이 못 박는다.
     """
     from tools.preserve import planned_coverage, planned_index
 
     cov = planned_coverage()
     assert cov["retrospective"] == 8, cov
     assert cov["prospective"] == 1, cov
-    assert cov["gate_backed_executions"] == 0, (
-        "실행 전 gate 를 실제로 지난 실행이 있다고 셌다 — grid_fit_v5 는 아직 planned 다")
+    assert cov["gate_backed_executions"] == 1, (
+        "실행 전 gate 를 실제로 지난 실행 수가 prospective 수와 다르다 — 소급 기록을 세었거나 "
+        "grid_fit_v5 가 executed 가 아니다")
     e = planned_index()["grid_fit_v5"]
-    assert (e["status"], e["authorization_kind"]) == ("planned", "prospective"), e
+    assert (e["status"], e["authorization_kind"]) == ("executed", "prospective"), e
     assert e["authorized_source_digest"] == "c2ef1a811e70bb4c", e["authorized_source_digest"]
+    assert e["run_spec_digest"].startswith("0838df841ae7e4e6"), e["run_spec_digest"]
 
 
 # ─────────────────────────────────────────────────────────────────────────────

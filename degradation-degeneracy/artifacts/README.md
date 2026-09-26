@@ -40,9 +40,12 @@ python -c "import sys; from src.io import validate_provenance; from pathlib impo
 | `grid_fit_v4` | fit | `c0f1daa0` | ✅ 검증 통과 |
 | `halfcell_fit_v4` | fit | `c0f1daa0` | ✅ 검증 통과 |
 | `paired_fixed5_v4` | fit | `c0f1daa0` | ✅ 검증 통과 |
+| `grid_fit_v5` | fit | `e34eea84` | ✅ 검증 통과 — 73차 조건부 한정 실행 (2026-09-26, Gabia). 영수증 `docs/22p_gap/receipts/grid_fit_v5.validate.yaml` · 원장 `full_bundle · current_validated` · `inference_role: diagnostic` |
 
 `source_commit` 은 **계산을 시작한 코드**의 commit 이다 (보관 시점 HEAD 가
 아니다).
+묶음마다 계산 commit 이 달라 인덱스 최상위 `source_commit` 은 `null` 이다 (스크립트 규칙: 전부 같을 때만 축약).
+**주의 (2026-09-26, 원장 §101):** `archive_results.sh <run>` 처럼 묶음 하나만 지정해 부르면 인덱스를 **그 묶음만으로** 다시 쓴다. `grid_fit_v5` 보관 때 v4 네 항목이 그렇게 지워졌고, 직전 커밋의 바이트 그대로 되살렸다. 스크립트는 RUN_SCOPE 라 74차 신고 뒤에 고친다.
 
 #### v4 → v4.1: 파생만 다시 만들었다
 

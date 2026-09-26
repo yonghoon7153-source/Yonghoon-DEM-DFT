@@ -8158,3 +8158,30 @@ MANIFEST 49 files · 커밋 뒤 blob 대조 49/49, `-text !eol` 규칙 먼저 �
 **Gabia (`kserver116-27`, 20 proc · 62 GB(가용 46) · 291 GB · conda base Python 3.13 → `conda create -n py312 python=3.12` 로 3.12.14 · tmux 있음):** clone HEAD `69c3c826` · `7a794556` 대비 RUN_SCOPE diff 0 · `setup_env.sh --python <py312>` · `run.sh --mode verify` OK(idaklu 권장) · `git status` 비어 있음 · `source_digest c2ef1a811e70bb4c`. 이 기계에 이미 다른 작업이 16 GB 를 쓰고 있다(창 열 때 `ps` 로 적는다). 워커 수는 명세대로 `$(nproc)` = 20 (워커당 2.3 GB).
 **재승인 2 (사용자 결정, 이 커밋):** `python -m src.baseline --config configs/grid_fine.yaml` 로 캐시 생성 → `plan_leg.py` 출력(`~/grid_fit_v5_window/plan_gabia.txt`, 작업 사본 임시 제거 뒤 되돌림). 바뀐 것은 `discharged_cache_sha256` (`5ab61b37…` → **`66d84e76ef88e0b65fdf9f432db89818348814e28e7345731216de149cb5fee1`**) · `run_spec_digest` (`e7cc8713…` → **`0838df841ae7e4e694a3938d281e92284c27fb04393e0008b15f7a3fd4e10337`**) · `근거`. 컨테이너에서 커밋된 spec 에 그 sha 만 넣어 독립 계산한 digest 와 같다. `config_digest 696bf7d2cf9697d3` · `condition_ids 7b08e97e129d0bf4` · 3993 · fit 축 전부 동일. 캐시 바이트가 기계마다 다른 것은 payload 의 런타임 identity(11차 발견 1) 때문이며 리뷰어 §6-1 ("실행할 기계에서 생성") 그대로다.
 **신고:** ① 실행 기계가 73차 요청문의 WSL 에서 Gabia 로 바뀌었다 — 코드·config·OUT·argv 는 그대로, 승인 HEAD 만 이 커밋으로 갱신. ② 계획 항목이 같은 leg 이름으로 세 번째 교체됐다(이력은 `근거` 와 git). ③ root 계정 실행. ④ WSL 고아 등록 레코드 `f3f509…`(G74-2) 는 WSL 에만 있고 Gabia 등록부는 tracked 367 에서 시작한다.
+
+## §101 `grid_fit_v5` 한정 실행 — 완주 · full_bundle · current_validated (Gabia) · 실행 뒤 발견 G74-3·G74-4
+
+**실행 (승인 HEAD `e34eea84`, `kserver116-27`, 20 proc, root, Python 3.12.14 venv, `setsid nohup`).** 창 열기: HEAD `e34eea84` · RUN_SCOPE diff 0 (→ `7a794556`) · `source_digest c2ef1a811e70bb4c` · 캐시 `66d84e76…` · precheck `new` · 계획 `0838df84…` · env clean · `git status` 빈 출력 · 등록부 367 · 다른 publisher 없음 (병행: Quantum ESPRESSO `pw.x` 1개, 9.4 GB — 무관). 로그·snapshot 전문은 `docs/22p_gap/run_windows/grid_fit_v5/gabia/`.
+
+| 단계 | 시각 (KST) | 결과 |
+|---|---|---|
+| gate (새 발급) | 19:45 | attempt `2d91320cc5ad42198889fc2dba819829` · `완방상태 캐시 적중` (재계산·저장 없음) |
+| grid | 19:46–19:58 | 3069 조건 12:51 · completed 3993 = 계산 3069 + 사전 infeasible 924 · **solver 실패 0** (failed.csv 924 행 = infeasible 수와 같다) · 청크 16 |
+| gate (소유한 재개) → fit | 19:59–21:32 | 3069 × 4 목적함수 × restart 5 · 5587.4 s · 12276 행 · 조건당 1.8 s |
+| finalize → score → report | 21:32–21:35 | `preservation_pending` · `docs/RESULTS_grid_fit_v5.md` (126줄) |
+| 창 닫기 | — | 등록부 367 → **369**: grid `719afd1a…` · fit `140d500a…` 추가, 삭제·변경 0 · 계획 `executed` |
+| archive | — | `artifacts/grid_fit_v5` 27 MB · 29 파일 · payload index `4cd2c0f8…` |
+| 영수증 | — | `make_receipt.py grid_fit_v5` 검사 33 · 산출 2 · core `2aadd24b1de88b07…` |
+| attach | — | `full_bundle · current_validated` · `idempotent: False` · `inference_role: diagnostic` 불변 |
+
+데이터 커밋 `d9f8791c` 는 Gabia 에서 사람이 push 했다 (artifacts · 영수증 · 원장 · 보고서 · 등록 레코드 2 · 창 기록). `_attempts/`·`_claims/` 는 lifecycle 잠금이라 커밋하지 않았다.
+
+**무해한 로그 (판정 근거 포함):** JAX `Unable to load cuSPARSE` Traceback — GPU 백엔드 초기화 실패 뒤 CPU 로 넘어간다 (계산은 IDAKLU/CPU). loky `A worker stopped while some jobs were given to the executor` — 메모리가 늘어난 워커를 loky 가 교체한 알림; 작업 유실이면 `TerminatedWorkerError` 로 중단된다. solver 실패 0 과 completed 3993 이 유실 없음을 확인한다.
+
+**G74-3 (절차 공백 — 실행 뒤 docs-lint 적색):** E9 는 새 다리를 활성 cohort `g18_2026_09_15` 에 prospective 로 넣었고, attach 가 그것을 cohort `legs` 로 옮겼다. 그런데 cohort·투영·주장 lint 는 **cohort 의 모든 다리가 봉인된 투영(row projection)을 가진 warm-probe 다리**라고 가정한다. 결과 (d9f8791c, `tests/test_docs_lint.py` maxfail 20 에서 멈춤): ① `cross_leg_comparison: not_applicable_single_leg` 가 두 다리 명부와 충돌 (투영 계열 시험 16개가 이 SystemExit 으로 실패) ② `evidence.regeneration_capability` 없음 → "활성 cohort 에 있다" ③ `claim_roles` 없음 ④ 주장을 붙이려 해도 `source_digest_generations` 에 `c2ef1a811e70bb4c` 가 없고, 그 표는 봉인된 투영에 anchor 된 digest 만 받는다. E1 한계 라벨("이 실행은 `row_projection.py` 의 강한 producer 주장을 쓰지 않는다")과 정면으로 만난다 — **우리도 리뷰어도 E9 단계 5 가 이 lint 계약을 요구한다는 것을 보지 못했다.** 사람의 결정 사항으로 둔다 (다음 절).
+
+**G74-4 (RUN_SCOPE, 지금 안 고침):** `scripts/archive_results.sh <run>` 은 `artifact_index.yaml` 을 **그 호출에서 승격한 묶음만으로** 다시 쓴다 (`runs = {}` 에서 시작, 238–332). E9 단계 2 의 명령이 정확히 그 형태였고, Gabia 에는 v4 의 `results/` 가 없어 **v4 네 항목(`grid_curves_v4`·`grid_fit_v4`·`halfcell_fit_v4`·`paired_fixed5_v4`)이 인덱스에서 지워졌다** (묶음 바이트는 불변). 이 커밋에서 네 항목을 `e34eea84` 의 바이트 그대로 되살리고 `grid_fit_v5` 항목은 생성된 그대로 두었다. 최상위 `source_commit` 은 스크립트 규칙(묶음마다 다르면 null)대로 `null`.
+
+**신고:** 영수증 `validator_tree_dirty: true` — 영수증을 만들 때 Gabia 트리에 실행이 남긴 원장 변경과 미추적 lifecycle·등록 파일이 있었다. 이 값은 attach 판정에 쓰이지 않는다.
+
+**이 커밋 (기계적 정정만):** 인덱스 복원 · `artifacts/README.md` 행 · `registry_impact.md` census 369 (그 밖 = grid_fit_v5 2) · `test_the_committed_ledger_reports_no_gate_backed_execution_yet` 실측 갱신 (`gate_backed_executions` 1, status `executed`). **하지 않은 것:** cohort 명부·`regeneration_capability`·`claim_roles`·`근거`·세대표 — 사람의 결정 (G74-3).

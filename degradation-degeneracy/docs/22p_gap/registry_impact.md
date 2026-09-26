@@ -9,12 +9,12 @@
 
 ## 1. 무엇이 들어 있나 — tracked 최상위 `docs/22p_gap/_exec_class/*.json`
 
-<!-- census:tracked_total=367 -->
+<!-- census:tracked_total=369 -->
 <!-- census:legacy=4 -->
 <!-- census:rekey=12 -->
 <!-- census:fixture=174 -->
 <!-- census:leg_L=177 -->
-<!-- census:other=0 -->
+<!-- census:other=2 -->
 
 | 부류 | 건수 | `evidence` 문장 (시작) | 무엇인가 | class |
 |---|---:|---|---|---|
@@ -22,9 +22,10 @@
 | re-key | 12 | `58차 L2 re-key …` · `59차 M2 re-key …` · `61차 P0-1 re-key …` | 위 4개의 content id 형식이 v1→v2→v3→v4 로 바뀔 때마다 키만 옮긴 것 (4×3). "판단은 새로 하지 않았고 v1 레코드 … 를 옮겼다" 가 본문에 있다 | canonical |
 | 시험 fixture | 174 | `` 시험 fixture `_complete_artifact` 가 정본 산출로 합성했다 `` | `tests/test_compare.py::_complete_artifact` 가 `ledger=None` 으로 등록한 것. 58차가 등록부를 만든 직후 전체 회귀 한 번에 93건이 쌓여 커밋됐고(58차 conftest 주석 실측), 그 뒤에도 더 커밋됐다 | canonical |
 | 시험 leg `L` | 177 | `산출 완료 시점 등록 · leg=L phase=grid class=canonical` | production `commit_run_outputs()` 가 시험이 발급한 leg `L` 의 권한으로 등록한 것 — 시험(`test_exec_class_*`·`test_issuance_*`·`test_temporal_seal_*` 등)이 기본 원장으로 돈 흔적 | canonical |
-| 그 밖 | 0 | — | — | — |
+| 그 밖 — 한정 실행 `grid_fit_v5` | 2 | `산출 완료 시점 등록 · leg=grid_fit_v5 phase={grid,fit} class=canonical` | 73차 조건부 한정 실행(2026-09-26, Gabia)이 production `commit_run_outputs()` 로 남긴 grid `719afd1a…` · fit `140d500a…`. E6 창 전후 snapshot: 367 → 369, 삭제·변경 0 (`docs/22p_gap/run_windows/grid_fit_v5/gabia/registry_{before,after}.txt`) | canonical · sealed |
 
-**요지:** tracked 367 건 중 실제 과학 실행을 가리키는 것은 legacy 4 + 그 re-key 12 = **16** 이고, **351 건은 시험이
+~~**요지:** tracked 367 건 중 실제 과학 실행을 가리키는 것은 legacy 4 + 그 re-key 12 = **16** 이고, **351 건은 시험이 남긴 synthetic canonical** 이다.~~
+**요지 (2026-09-26 갱신):** tracked 369 건 중 실제 과학 실행을 가리키는 것은 legacy 4 + 그 re-key 12 + 한정 실행 `grid_fit_v5` 2 = **18** 이고, **351 건은 시험이
 남긴 synthetic canonical** 이다. 리뷰어 문장 그대로 — "현재 367개 기록의 문구를 읽는 것만으로 '실제 과학 실행의
 canonical 367개' 라고 확인할 수는 없다." 이 문서는 그것을 **확인해 주는** 것이지 지우는 것이 아니다.
 
