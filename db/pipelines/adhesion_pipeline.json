@@ -786,6 +786,11 @@
    "date": "2026-09-26",
    "stage": "dft",
    "text": "**UMA 쪽 S4 에너지 (kgy · fairchem 2.21.0 · 체크포인트 결박값 07068e9c… · default)**: S1 결박(gabia 2.19.0)과 버전이 달라 S2 relaxed 4 구조로 교차대조 → |Δ| ≤ 0.005 meV ⇒ 등가로 기록 (`wad_aprime_s4_uma_env_xcheck_2026_09_26.json`). 미리 본 것(판정 아님): UMA 단독 W −0.088 · 외부 D3 항 +0.488 → UMA+D3 ≈ 0.40 J/m² (정본은 QE D3 항 · 개정 1). V100 29 잡 진행 중 → 원출력 회수 → `collect_aprime_s4.py`."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**V2 2단계 V100 진행 — 27/29 + 1 실패**: top_hcp·bridge 5/5 · hollow_fcc 진행 · top_fcc 12/14 — `V2_top_fcc_G4_k1_far` (k 7×7 far) SCF **200 회 미수렴**(정확도 1.1e-6 ↔ 5.3e-6 진동 · sloshing · 1212 s) → 러너 정지로 G4_s05 2 잡 미실행. **1저자 (가)**: 보조 잡 `V2_top_fcc_G4_k1_far_b01` (mixing_beta 0.3 → 0.1 만 · `db/inputs/wad_aprime_s4_v2_stage2_supp_2026_09_26`) 재실행 + s05 2 잡 실행 · 원 잡 입력·실패 출력 보존 · 부록 정오 1 `wad_aprime_s4_v2_stage2_erratum_1_2026_09_26.json`. 집계기 `--supp` 대체 규칙(원 FAILED 보존 · 보조 OK 만 대체 · selftest 14/14)."
   }
  ],
  "related_decisions": [

@@ -1,0 +1,59 @@
+{
+ "schema": "qe_input_set/v1",
+ "date": "2026-09-26",
+ "what": "A′ V2 2단계 보조 잡 (부록 정오 1) — V2_top_fcc_G4_k1_far 재실행 · mixing_beta 0.1 · run_sese_gpu.sh 호환",
+ "decisions": null,
+ "settings": {
+  "pp": {
+   "Li": "li_pbe_v1.4.uspp.F.UPF",
+   "P": "P.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "S": "s_pbe_v1.4.uspp.F.UPF",
+   "Cl": "cl_pbe_v1.4.uspp.F.UPF",
+   "Ag": "Ag_ONCV_PBE-1.0.oncvpsp.upf",
+   "C": "C.pbe-n-kjpaw_psl.1.0.0.UPF",
+   "H": "H.pbe-rrkjus_psl.1.0.0.UPF"
+  },
+  "pp_sha256": {
+   "li_pbe_v1.4.uspp.F.UPF": "02cc4b3810e28a43b570277840d9631ca24f634d922928200c047b72c0a86bf5",
+   "P.pbe-n-rrkjus_psl.1.0.0.UPF": "2d112dfec2e2d9b75a971574d9116aa92249988177791659bbcd2ba15f23c20c",
+   "s_pbe_v1.4.uspp.F.UPF": "84ad731864187f416f714e961c3ad2f04dcbf811618e724d277885c18cb470df",
+   "cl_pbe_v1.4.uspp.F.UPF": "5b1ebdea1e5ba743fba0100806206287e1f7f00460c7e6f19791446beaee0655",
+   "Ag_ONCV_PBE-1.0.oncvpsp.upf": "0494aa5927b754b42d3e72535636f215b4658e9b437e639dbc09674c36c8059a",
+   "C.pbe-n-kjpaw_psl.1.0.0.UPF": "9900d1efd50b9848e31849f39094b33348486b400ee51e0f3922f716137cf3d7",
+   "H.pbe-rrkjus_psl.1.0.0.UPF": "27f8a7e87851d59a2698237d6ab4578d62950640f4f175781b015a0ce731f962"
+  }
+ },
+ "supplements": "db/inputs/wad_aprime_s4_v2_stage2_2026_09_26/V2_top_fcc (원 잡 입력 불변 · 실패 출력 보관)",
+ "jobs": [
+  {
+   "dir": "V2_top_fcc_G4_k1_far_b01",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "V2",
+   "nat": 20,
+   "kpts": [
+    7,
+    7,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "electron_maxstep": 200,
+   "d3": true,
+   "dip": {
+    "emaxpos": 0.81291,
+    "eopreg": 0.04158
+   },
+   "pw_in_sha256": "efa41bc71a1c88765e348cffcd4a29c4f9632cbc6ce92bb132f7c2e6cfc57850",
+   "structure": "V2_top_fcc_dft_far",
+   "tags": {
+    "structure": "V2_top_fcc_dft_far",
+    "G4": "G4_k1_far",
+    "substitutes": "V2_top_fcc_G4_k1_far",
+    "changed": "mixing_beta 0.3 → 0.1 (local-TF · 그 외 동일)",
+    "why": "원 잡 SCF 200 회 미수렴 (정확도 1e-6 진동 · sloshing) — 1저자 (가) 2026-09-26"
+   },
+   "machine": "V100 (≈3 GB)"
+  }
+ ]
+}

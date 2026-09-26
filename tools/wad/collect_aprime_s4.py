@@ -87,7 +87,7 @@ def _w(jb, jf, A, key="F_Ry"):
     return w_j_m2(jf[key] - jb[key], A)
 
 
-def collect_registry(stage2_dir, raw_dir, name, uma=None):
+def collect_registry(stage2_dir, raw_dir, name, uma=None, supp_dir=None):
     pkg = os.path.join(stage2_dir, name)
     man = json.load(open(os.path.join(pkg, "s3_v2_stage2_manifest.json"), encoding="utf-8"))
     jobs = {j["dir"]: j for j in man["jobs"]}
@@ -96,6 +96,18 @@ def collect_registry(stage2_dir, raw_dir, name, uma=None):
     from ase.io import read
     n_C = sum(1 for s in read(os.path.join(pkg, "structures", f"{name}_dft_bound.extxyz")).get_chemical_symbols() if s == "C")
     J = {j: read_job(os.path.join(raw_dir, name), pkg, j) for j in jobs}
+    # 보조 잡 (부록 정오): supp/<name>/jobs.json 의 잡이 tags.substitutes = X 를 달고 있고 X 가 OK 가 아니면, 보조 잡이 OK 일 때만 대체한다.
+    #   원 잡의 상태는 지우지 않고 `original` 에 남긴다 (조용한 교체 금지). 보조 잡도 실패면 원 잡 상태 그대로.
+    if supp_dir and os.path.isfile(os.path.join(supp_dir, name, "jobs.json")):
+        spkg = os.path.join(supp_dir, name)
+        for sj in json.load(open(os.path.join(spkg, "jobs.json"), encoding="utf-8")).get("jobs", []):
+            X = (sj.get("tags") or {}).get("substitutes")
+            if not X or X not in J:
+                continue
+            sub = read_job(os.path.join(raw_dir, name), spkg, sj["dir"])
+            J[X]["supplement"] = {"job": sj["dir"], "status": sub["status"], "changed": (sj.get("tags") or {}).get("changed")}
+            if J[X]["status"] != "OK" and sub["status"] == "OK":
+                J[X] = {**sub, "job": X, "substituted_by": sj["dir"], "changed": (sj.get("tags") or {}).get("changed"), "original": {k: v for k, v in J[X].items() if k != "supplement"}}
     b, f = J.get(f"{name}_dft_bound"), J.get(f"{name}_dft_far")
     rec = {"registry": name, "d0_A": man["d0_A"], "area_A2": round(A, 4), "n_C": n_C, "n_if": 1, "jobs": J,
            "W_PBE_D3_J_m2": _w(b, f, A, "F_Ry"), "W_PBE_D3_Eint_J_m2": _w(b, f, A, "E_int_Ry"), "W_PBE_J_m2": _w(b, f, A, "E_pbe_Ry"),
@@ -170,21 +182,22 @@ def collect_registry(stage2_dir, raw_dir, name, uma=None):
     return rec
 
 
-def collect(stage2_dir, raw_dir, uma_json=None):
+def collect(stage2_dir, raw_dir, uma_json=None, supp_dir=None):
     uma = None
     if uma_json:
         u = json.load(open(uma_json, encoding="utf-8"))
         uma = {k: v["E_UMA_eV"] for k, v in u.get("energies", {}).items()}
     regs = sorted(d for d in os.listdir(stage2_dir) if d.startswith("V2_") and os.path.isdir(os.path.join(stage2_dir, d)))
-    out = {"schema": "aprime_s4_v2_collect/v1", "stage2": stage2_dir, "raw": raw_dir, "uma_json": uma_json, "registries": {}}
+    out = {"schema": "aprime_s4_v2_collect/v1", "stage2": stage2_dir, "raw": raw_dir, "uma_json": uma_json, "supp": supp_dir, "registries": {}}
     for n in regs:
-        out["registries"][n] = collect_registry(stage2_dir, raw_dir, n, uma)
+        out["registries"][n] = collect_registry(stage2_dir, raw_dir, n, uma, supp_dir)
     Ws = [r["W_PBE_D3_J_m2"] for r in out["registries"].values() if r["W_PBE_D3_J_m2"] is not None]
     out["summary"] = {"n_registry": len(regs), "n_W": len(Ws), "W_PBE_D3_J_m2": {n: r["W_PBE_D3_J_m2"] for n, r in out["registries"].items()},
                       "W_range_J_m2": [min(Ws), max(Ws)] if Ws else None, "W_mean_J_m2": (sum(Ws) / len(Ws)) if Ws else None,
                       "G3": {n: r["G3"]["status"] for n, r in out["registries"].items() if "G3" in r}, "G4": {n: r["G4"]["status"] for n, r in out["registries"].items() if "G4" in r},
                       "Delta_UMA_J_m2": {n: r["UMA"].get("Delta_J_m2") for n, r in out["registries"].items() if isinstance(r.get("UMA"), dict) and "Delta_J_m2" in r["UMA"]},
-                      "G5_ref_scale": G5_REF, "jobs_not_ok": {n: [j for j, v in r["jobs"].items() if v["status"] != "OK"] for n, r in out["registries"].items()}}
+                      "G5_ref_scale": G5_REF, "jobs_not_ok": {n: [j for j, v in r["jobs"].items() if v["status"] != "OK"] for n, r in out["registries"].items()},
+                      "substituted": {n: {j: v["substituted_by"] for j, v in r["jobs"].items() if v.get("substituted_by")} for n, r in out["registries"].items()}}
     return out
 
 
@@ -265,6 +278,22 @@ def _selftest():
         _fake_out(os.path.join(raw, name, f"{name}_dft_far", "pw.out"), F0 + dF, -0.40)
         open(os.path.join(raw, name, f"{name}_dft_far", "pw.in"), "w").write("&CONTROL\n  pseudo_dir = '/x'\n  prefix='y'\n/\n")
         o5 = collect(st, raw); ck(o5["registries"][name]["jobs"][f"{name}_dft_far"]["status"] == "INVALID_INPUT_MISMATCH" and o5["registries"][name]["W_PBE_D3_J_m2"] is None, "⛔음성 입력 불일치: prefix 가 다르면 INVALID · W None")
+        # 보조 잡 대체 (부록 정오 1): k1_far 를 미수렴으로 만들고 supp 의 k1_far_b01 이 OK 면 대체 · 원 상태 보존
+        _fake_out(os.path.join(raw, name, f"{name}_dft_far", "pw.out"), F0 + dF, -0.40)
+        open(os.path.join(raw, name, f"{name}_dft_far", "pw.in"), "w").write("&CONTROL\n  pseudo_dir = '/x'\n  prefix='x'\n/\n")
+        open(os.path.join(raw, name, f"{name}_G4_k1_far", "pw.out"), "w").write("     Program PWSCF\n     convergence NOT achieved\n!    total energy = -1.0 Ry\n     DFT-D3 Dispersion = -0.1 Ry\n     JOB DONE.\n")
+        supp = os.path.join(T, "supp", name); os.makedirs(os.path.join(supp, "qe", f"{name}_G4_k1_far_b01")); 
+        open(os.path.join(supp, "qe", f"{name}_G4_k1_far_b01", "pw.in"), "w").write("&CONTROL\n  pseudo_dir = '/p'\n  prefix='b01'\n  mixing_beta = 0.1\n/\n")
+        json.dump({"jobs": [{"dir": f"{name}_G4_k1_far_b01", "tags": {"substitutes": f"{name}_G4_k1_far", "changed": "mixing_beta 0.3 → 0.1"}}]}, open(os.path.join(supp, "jobs.json"), "w"))
+        rb = os.path.join(raw, name, f"{name}_G4_k1_far_b01"); os.makedirs(rb); open(os.path.join(rb, "pw.in"), "w").write("&CONTROL\n  pseudo_dir = '/q'\n  prefix='b01'\n  mixing_beta = 0.1\n/\n")
+        _fake_out(os.path.join(rb, "pw.out"), F0 + dF + 1e-4, -0.40)
+        o7 = collect(st, raw, None, os.path.join(T, "supp")); r7 = o7["registries"][name]
+        ck(r7["jobs"][f"{name}_G4_k1_far"].get("substituted_by") == f"{name}_G4_k1_far_b01" and r7["jobs"][f"{name}_G4_k1_far"]["original"]["status"] == "FAILED" and r7["G4"]["k1"]["status"] == "PASS"
+           and o7["summary"]["substituted"][name] == {f"{name}_G4_k1_far": f"{name}_G4_k1_far_b01"}, "보조 잡 대체: 원 FAILED 보존 · b01 로 G4 k1 PASS · summary 에 대체 기록")
+        o7n = collect(st, raw, None); ck(o7n["registries"][name]["G4"]["k1"]["status"] == "INCOMPLETE", "⛔음성 supp 없이는 대체 안 함 → k1 INCOMPLETE")
+        open(os.path.join(rb, "pw.out"), "w").write("     Program PWSCF\n     convergence NOT achieved\n!    total energy = -1.0 Ry\n     DFT-D3 Dispersion = -0.1 Ry\n     JOB DONE.\n")
+        o7f = collect(st, raw, None, os.path.join(T, "supp")); ck(o7f["registries"][name]["jobs"][f"{name}_G4_k1_far"]["status"] == "FAILED" and not o7f["registries"][name]["jobs"][f"{name}_G4_k1_far"].get("substituted_by"), "⛔음성 보조 잡도 실패면 대체 안 함 (원 FAILED 그대로)")
+        _fake_out(os.path.join(raw, name, f"{name}_G4_k1_far", "pw.out"), *E["G4_k1_far"])
         # ⛔ 음성 4: 미수렴 출력 → FAILED
         open(os.path.join(raw, name, f"{name}_dft_far", "pw.in"), "w").write("&CONTROL\n  pseudo_dir = '/x'\n  prefix='x'\n/\n")
         open(os.path.join(raw, name, f"{name}_dft_far", "pw.out"), "w").write("     Program PWSCF\n     convergence NOT achieved\n!    total energy = -1.0 Ry\n     DFT-D3 Dispersion = -0.1 Ry\n     JOB DONE.\n")
@@ -275,13 +304,13 @@ def _selftest():
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("--stage2"); ap.add_argument("--raw"); ap.add_argument("--uma"); ap.add_argument("--out"); ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--stage2"); ap.add_argument("--raw"); ap.add_argument("--uma"); ap.add_argument("--supp", help="보조 잡 패키지 (부록 정오 · tags.substitutes)"); ap.add_argument("--out"); ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
     if not (a.stage2 and a.raw):
         ap.error("--stage2 와 --raw 가 필요하다")
-    out = collect(a.stage2, a.raw, a.uma)
+    out = collect(a.stage2, a.raw, a.uma, a.supp)
     _print(out)
     if a.out:
         json.dump(out, open(a.out, "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=float); open(a.out, "a").write("\n"); print(f"-> {a.out}")
