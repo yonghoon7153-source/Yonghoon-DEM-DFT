@@ -1,0 +1,40 @@
+[2026-09-26 19:42:55] ════ run_sese_gpu · IN=/home/ubuntu/wad4l/db/inputs/wad_aprime_s4_v2_stage2_2026_09_26/V2_top_fcc/qe · RUN=/home/ubuntu/runs/wad_aprime_s4_v2s2_2026_09_26/V2_top_fcc · JOBS=[V2_top_fcc_dft_bound V2_top_fcc_dft_far V2_top_fcc_Ed_m03 V2_top_fcc_Ed_p03 V2_top_fcc_Ed_p06 V2_top_fcc_G3_c2_bound V2_top_fcc_G3_c2_far_i V2_top_fcc_G3_c2_far_ii V2_top_fcc_G4_e70_bound V2_top_fcc_G4_e70_far V2_top_fcc_G4_k1_bound V2_top_fcc_G4_k1_far V2_top_fcc_G4_s05_bound V2_top_fcc_G4_s05_far]
+[2026-09-26 19:42:55] 공존 근거: D-2026-09-23-gabia-gpu-exception-sese · START<2048 MiB · KILL>31000 MiB · 표본 2s · UMA 공존 허용=0 · 허용 PID=[제한 없음]
+[2026-09-26 19:43:01] 랭크 NP=1 · GPU 1 장 · pseudo=/home/ubuntu/wad4l/pseudo_kgy (PSEUDO_DIR 로 교체)
+[2026-09-26 19:43:01] PP Ag_ONCV_PBE-1.0.oncvpsp.upf sha256 0494aa5927b754b4 · 기준과 같음 ✓
+[2026-09-26 19:43:02] PP C.pbe-n-kjpaw_psl.1.0.0.UPF sha256 9900d1efd50b9848 · 기준과 같음 ✓
+[2026-09-26 19:43:02] 디스크 872G 남음 (7% 사용)
+[2026-09-26 19:43:02] GPU 합계 사용량 지금 0 MiB · 호스트 MemAvailable 119407 MiB (시작 문턱 16384 · 중단 4096)
+[2026-09-26 19:43:02] DRY_RUN — 점검만 하고 끝낸다
+[2026-09-26 19:43:03] ════ run_sese_gpu · IN=/home/ubuntu/wad4l/db/inputs/wad_aprime_s4_v2_stage2_2026_09_26/V2_top_fcc/qe · RUN=/home/ubuntu/runs/wad_aprime_s4_v2s2_2026_09_26/V2_top_fcc · JOBS=[V2_top_fcc_dft_bound V2_top_fcc_dft_far V2_top_fcc_Ed_m03 V2_top_fcc_Ed_p03 V2_top_fcc_Ed_p06 V2_top_fcc_G3_c2_bound V2_top_fcc_G3_c2_far_i V2_top_fcc_G3_c2_far_ii V2_top_fcc_G4_e70_bound V2_top_fcc_G4_e70_far V2_top_fcc_G4_k1_bound V2_top_fcc_G4_k1_far V2_top_fcc_G4_s05_bound V2_top_fcc_G4_s05_far]
+[2026-09-26 19:43:03] 공존 근거: D-2026-09-23-gabia-gpu-exception-sese · START<2048 MiB · KILL>31000 MiB · 표본 2s · UMA 공존 허용=0 · 허용 PID=[제한 없음]
+[2026-09-26 19:43:10] 랭크 NP=1 · GPU 1 장 · pseudo=/home/ubuntu/wad4l/pseudo_kgy (PSEUDO_DIR 로 교체)
+[2026-09-26 19:43:10] PP Ag_ONCV_PBE-1.0.oncvpsp.upf sha256 0494aa5927b754b4 · 기준과 같음 ✓
+[2026-09-26 19:43:11] PP C.pbe-n-kjpaw_psl.1.0.0.UPF sha256 9900d1efd50b9848 · 기준과 같음 ✓
+[2026-09-26 19:43:11] 디스크 872G 남음 (7% 사용)
+[2026-09-26 19:43:11] GPU 합계 사용량 지금 0 MiB · 호스트 MemAvailable 119417 MiB (시작 문턱 16384 · 중단 4096)
+[qe_gpu] MPI 를 바이너리에서 읽었다: /home/ubuntu/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so.40
+[qe_gpu]   prefix=/home/ubuntu/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi · mpirun=/home/ubuntu/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
+[2026-09-26 19:43:12] ▶ V2_top_fcc_dft_bound (scf) 시작 · GPU 합계 0 MiB · 호스트 여유 119409 MiB
+[2026-09-26 19:43:13]    래퍼(mpirun) PID 1576170 · pw.x PID 1576192
+[2026-09-26 19:43:44]    ⚠ nvidia-smi 목록에 우리 pw.x(1576192) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-26 19:46:11] ■ V2_top_fcc_dft_bound rc=0 완료=1 벽시계 179s · 피크 합계 2750 MiB · 자기 — MiB · 호스트 최저 118528 MiB · 중단=0
+[2026-09-26 19:46:13] ▶ V2_top_fcc_dft_far (scf) 시작 · GPU 합계 0 MiB · 호스트 여유 119410 MiB
+[2026-09-26 19:46:14]    래퍼(mpirun) PID 1577695 · pw.x PID 1577717
+[2026-09-26 19:46:45]    ⚠ nvidia-smi 목록에 우리 pw.x(1577717) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-26 19:48:33] ■ V2_top_fcc_dft_far rc=0 완료=1 벽시계 140s · 피크 합계 2750 MiB · 자기 — MiB · 호스트 최저 118521 MiB · 중단=0
+[2026-09-26 19:48:37] ▶ V2_top_fcc_Ed_m03 (scf) 시작 · GPU 합계 0 MiB · 호스트 여유 119414 MiB
+[2026-09-26 19:48:38]    래퍼(mpirun) PID 1578906 · pw.x PID 1578928
+[2026-09-26 19:49:08]    ⚠ nvidia-smi 목록에 우리 pw.x(1578928) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-26 19:51:29] ■ V2_top_fcc_Ed_m03 rc=0 완료=1 벽시계 172s · 피크 합계 2750 MiB · 자기 — MiB · 호스트 최저 118520 MiB · 중단=0
+[2026-09-26 19:51:33] ▶ V2_top_fcc_Ed_p03 (scf) 시작 · GPU 합계 0 MiB · 호스트 여유 119405 MiB
+[2026-09-26 19:51:34]    래퍼(mpirun) PID 1580360 · pw.x PID 1580378
+[2026-09-26 19:52:04]    ⚠ nvidia-smi 목록에 우리 pw.x(1580378) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-26 19:54:24] ■ V2_top_fcc_Ed_p03 rc=0 완료=1 벽시계 171s · 피크 합계 2750 MiB · 자기 — MiB · 호스트 최저 118518 MiB · 중단=0
+[2026-09-26 19:54:29] ▶ V2_top_fcc_Ed_p06 (scf) 시작 · GPU 합계 0 MiB · 호스트 여유 119409 MiB
+[2026-09-26 19:54:30]    래퍼(mpirun) PID 1581819 · pw.x PID 1581837
+[2026-09-26 19:55:00]    ⚠ nvidia-smi 목록에 우리 pw.x(1581837) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-26 19:56:56] ■ V2_top_fcc_Ed_p06 rc=0 완료=1 벽시계 147s · 피크 합계 2750 MiB · 자기 — MiB · 호스트 최저 118529 MiB · 중단=0
+[2026-09-26 19:57:04] ▶ V2_top_fcc_G3_c2_bound (scf) 시작 · GPU 합계 0 MiB · 호스트 여유 119426 MiB
+[2026-09-26 19:57:05]    래퍼(mpirun) PID 1583078 · pw.x PID 1583096
+[2026-09-26 19:57:36]    ⚠ nvidia-smi 목록에 우리 pw.x(1583096) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)

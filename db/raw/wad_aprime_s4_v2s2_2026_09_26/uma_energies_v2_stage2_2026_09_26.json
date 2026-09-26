@@ -1,0 +1,119 @@
+{
+ "schema": "uma_energies/v1",
+ "what": "UMA 단일점 에너지 (D3 없음) — W_UMA 용 · D3 항은 QE 출력에서 (개정 1)",
+ "calculator": {
+  "calc": "uma",
+  "device": "cuda",
+  "fairchem.core": "2.21.0",
+  "torch": "2.8.0+cu128",
+  "cuda": "12.8",
+  "model": "uma-s-1p1",
+  "task": "omat",
+  "inference_settings": "default",
+  "checkpoint": [
+   {
+    "path": "/home/kgy/.cache/fairchem/models--facebook--UMA/snapshots/be2896459a03fcde05e20d2fcefd11f450601fce/checkpoints/uma-s-1p1.pt",
+    "sha256": "07068e9c76702ca173d13155095f2117c1b327ec228557e64cd2709c777b824a",
+    "MB": 1119
+   }
+  ]
+ },
+ "energies": {
+  "V2_top_fcc_dft_bound": {
+   "struct": "/tmp/wt_uma/db/inputs/wad_aprime_s4_v2_stage2_2026_09_26/V2_top_fcc/structures/V2_top_fcc_dft_bound.extxyz",
+   "sha256": "085195d675a30e1257e0814c6cc0eff0d5ef57595c8d63bf8c6784e94df20f2b",
+   "n_atoms": 20,
+   "formula": "C8Ag12",
+   "E_UMA_eV": -103.88800575822731,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V2_top_fcc_dft_far": {
+   "struct": "/tmp/wt_uma/db/inputs/wad_aprime_s4_v2_stage2_2026_09_26/V2_top_fcc/structures/V2_top_fcc_dft_far.extxyz",
+   "sha256": "ccf34b2a3d68faff520220c38e829296342cfca87745b2b67cab137795a831fc",
+   "n_atoms": 20,
+   "formula": "C8Ag12",
+   "E_UMA_eV": -104.00626382910852,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V2_top_hcp_dft_bound": {
+   "struct": "/tmp/wt_uma/db/inputs/wad_aprime_s4_v2_stage2_2026_09_26/V2_top_hcp/structures/V2_top_hcp_dft_bound.extxyz",
+   "sha256": "b98e9ac067b75500be6df39e2ae9c2254497304d050bb2153ffc89c058f84d4d",
+   "n_atoms": 20,
+   "formula": "C8Ag12",
+   "E_UMA_eV": -103.88909820644503,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V2_top_hcp_dft_far": {
+   "struct": "/tmp/wt_uma/db/inputs/wad_aprime_s4_v2_stage2_2026_09_26/V2_top_hcp/structures/V2_top_hcp_dft_far.extxyz",
+   "sha256": "239b418df63a64921eaeaafa16060645b8ca3a7c39d678cc25aa53b09b002c19",
+   "n_atoms": 20,
+   "formula": "C8Ag12",
+   "E_UMA_eV": -104.0066650366537,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V2_bridge_dft_bound": {
+   "struct": "/tmp/wt_uma/db/inputs/wad_aprime_s4_v2_stage2_2026_09_26/V2_bridge/structures/V2_bridge_dft_bound.extxyz",
+   "sha256": "2ff655dde17e9ff5414279099ce7aa661e0adc54b0252c27fe9c86f9ec9c9269",
+   "n_atoms": 20,
+   "formula": "C8Ag12",
+   "E_UMA_eV": -103.8880066912188,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V2_bridge_dft_far": {
+   "struct": "/tmp/wt_uma/db/inputs/wad_aprime_s4_v2_stage2_2026_09_26/V2_bridge/structures/V2_bridge_dft_far.extxyz",
+   "sha256": "2fc5b53713965461b2063ba85d509649c1d95a9ed2411929823c8794552f26a4",
+   "n_atoms": 20,
+   "formula": "C8Ag12",
+   "E_UMA_eV": -104.0062661827916,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V2_hollow_fcc_dft_bound": {
+   "struct": "/tmp/wt_uma/db/inputs/wad_aprime_s4_v2_stage2_2026_09_26/V2_hollow_fcc/structures/V2_hollow_fcc_dft_bound.extxyz",
+   "sha256": "de233665846871474dda6e762929e438ebd6a97f3dc333c2159db75b885e008a",
+   "n_atoms": 20,
+   "formula": "C8Ag12",
+   "E_UMA_eV": -103.88907280363128,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "V2_hollow_fcc_dft_far": {
+   "struct": "/tmp/wt_uma/db/inputs/wad_aprime_s4_v2_stage2_2026_09_26/V2_hollow_fcc/structures/V2_hollow_fcc_dft_far.extxyz",
+   "sha256": "e624e5ce05a7828adff24b360afc197d571c5898b2df936d233ac48b8667f44a",
+   "n_atoms": 20,
+   "formula": "C8Ag12",
+   "E_UMA_eV": -104.00664873050698,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  }
+ }
+}
