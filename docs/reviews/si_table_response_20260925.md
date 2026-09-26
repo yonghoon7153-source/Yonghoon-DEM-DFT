@@ -24,6 +24,9 @@
 - SI 참고문헌은 SI 첫 인용 순서로 번호를 매긴다.  ⚠ `[S6]` · `[S7]` (PTFE 기하) 는 `CL-66/67` 로 표에서 빠져 번호가 재배열될 수 있다 —
   새 문헌은 아래에서 `S(new)` 로 두고 최종 조립 때 번호를 확정한다.
 
+> ✅ **최종 (09-26 사용자 결정)**: 표 칸 `1.0 × 10⁻² S cm⁻¹ · Ref. [S(Amin)]` — 근거 = Amin & Chiang 2016 초록 *"∼10⁻⁷ S cm⁻¹ to ∼10⁻² S cm⁻¹ over x = 0.00 to 0.75"*
+> (충전 상태 값).  아래 §1 ①–⑥ 의 각주 ᵇ · Methods 문장 안은 **쓰지 않는다** (이력).  ⚠ 리뷰어가 "충전 상태 값" 을 물으면 SI 3×3 그림 (÷30~×30 에서도 DBE > SBE) 으로 답한다.
+
 ## 1. NCM811 electronic conductivity — 1.0 × 10⁻² S cm⁻¹ · 현 표기 `Assumed` · ✅ 재검토 완료 (09-25 오후) · ✅ Wang 2018 원문 확인 (09-25 밤) — 사용자 결정 1 건 대기
 
 **코멘트**: *"ncm 의 electronic conductivity 는 assumed 여야 하나? reference 가 있지 않나?"*
@@ -378,7 +381,7 @@ DBE/SBE 비 R̄ (8 origin 쌍대응 평균, vox 0.15 · centerline):
 | 1 | NCM811 particle radius | 2.5 µm | Experimental value | ⬜ 저자 — 측정이면 `Measured` (#4 와 통일), 공급사 D50 이면 `Supplier data` |
 | 2 | NCM811 Young's modulus | 140 GPa | Ref. S4ᵃ (S4 = Sedlatschek 2026 으로 교체) | ✅ (ᵃ 는 선택) |
 | ⊕ | NCM811 Poisson's ratio (DEM contact) | 0.25 | Assumed | 권고 — DEM 입력 (`dem_scripts/case09_*.liggghts`).  출처를 Xu 2017 로 달지 말 것 (그 논문은 0.3 **가정**).  원출처 1순위 후보 = Sharma 2023 **NMC622** 단결정 C_ij 의 VRH ν 0.253 (09-26 원문 확인 — 조성이 달라 `Ref.` 가 아니라 `Assumed` + ᵃ 의 선택 문장) |
-| 3 | NCM811 electronic conductivity | 1.0 × 10⁻² S cm⁻¹ | Assumedᵇ | ✅ |
+| 3 | NCM811 electronic conductivity | 1.0 × 10⁻² S cm⁻¹ | Ref. [S(Amin)] | ✅ **09-26 사용자 결정** — 초록 *"∼10⁻² S cm⁻¹"* (충전 상태) · 각주 없음 |
 | 4 | LPSCl particle radius | 0.5 µm | Measured | ⬜ 저자 (#1 과 같이) |
 | 5 | LPSCl Young's modulus (DEM contact) | 1.35 GPa | Calibratedᶜ | ⏳ 보정 표적 문구 저자 확인 (9-5 ③) |
 | 6 | LPSCl Poisson's ratio (DEM contact) | 0.3 | Assumedᵈ | ✅ |
@@ -397,6 +400,7 @@ DBE/SBE 비 R̄ (8 origin 쌍대응 평균, vox 0.15 · centerline):
 > (optional addition) The Voigt–Reuss–Hill average of elastic constants measured on single-crystal NMC622 grains is 140.16 GPa with
 > ν = 0.253 [S(Sharma)], the pair used for both NMC classes in the DEM.
 >
+> ⛔ **ᵇ 는 쓰지 않는다 (09-26 사용자 결정 — 3 행을 `Ref. [S(Amin)]` 한 칸으로).  아래 문단은 이력으로만 둔다; docx 각주 글자는 한 칸씩 당긴다.**
 > ᵇ Effective model input, not an intrinsic property of NCM811. Reported electronic conductivities of layered LiNiₓMnᵧCo_zO₂ range from
 > 5 × 10⁻⁸ to 1.4 × 10⁻² S cm⁻¹ with composition and state of charge [S(Amin)] and differ by up to three orders of magnitude between studies of the
 > same composition [S(Amin), S(Wang)]; for pristine NCM811, DC polarization gives 4.1 × 10⁻³ S cm⁻¹ at 20 °C [S(Wang)], and 5.22 × 10⁻³ S cm⁻¹ was
@@ -522,7 +526,7 @@ were adjusted so that the compacted packing reproduces the porosity and contact 
    1.1 GPa).  Methods 는 ~10 % 표적으로 읽힌다 → 어느 쪽이 맞는지 + 9-2 (3) *experimental porosity anchor*.
 4. **#1 · #4 · #11 증빙** (D50 · SEM).
 5. **선택**: ᵃ (S4 측정값 병기) · NCM811 ν 0.25 행 추가.
-6. NCM σ_e (§1 ⑥) — **A 로 진행 중** (§8 최종안).  B 를 원하면 말씀.
+6. NCM σ_e — ✅ **09-26 사용자 결정: 표 칸 `Ref. [S(Amin)]`** (Amin & Chiang 2016 초록 *"∼10⁻⁷ → ∼10⁻² S cm⁻¹, x = 0 → 0.75"* — 충전 상태 값) · 긴 각주 ᵇ · Methods 문장은 쓰지 않는다 · SI 3×3 그림은 리뷰어 대응용 (선택).
 7. **리포의 08-25 생성 docx** — 생성기 (`build.js`, 08-29 이후 정정분 반영) 로 다시 만들지 / 지울지 / 그대로 두고 *"보내지 말 것"* 배너만 둘지.
 8. **SDCP σ_e 250 S cm⁻¹ 라벨** — 09-03 통독 기록은 `Measured` (*저자 4-probe*), 생성기 · 코저자 v7 docx · 원장 `CL-61` 은 `Assumed` 다.  저자가
    직접 4-probe 로 쟀으면 `Measured (4-probe, this work)` + 측정 조건을 SI 에, 아니면 `Assumed` — 한쪽으로 통일 (원장 `CL-61` 서술도 함께).
@@ -532,9 +536,7 @@ were adjusted so that the compacted packing reproduces the porosity and contact 
 > 준희야, 표 S2 를 행마다 원문 PDF 로 다시 대조했어. 정리하면:
 > 0) **S4 (NCM811 E 140 GPa)** — 우리 쪽 코드 주석에서 원문 확인 없이 생긴 인용이 표까지 퍼진 거였어, 미안. Sedlatschek 2026 (JPS 681,
 >    240276 — 다결정 NCM811 나노압입 138 ± 24 GPa) 로 바꿀게. 140 은 그 측정 범위 안이라 값은 그대로 둬.
-> 1) **NCM σ_e 1e-2** — Assumed 유지. 문헌값을 가져온 게 아니라 모델 유효값이야. NCM811 pristine 실측은 4.1e-3 (Wang 2018, DC 분극), NCM83 은
->    5.22e-3 (Ketter 2025) 이고, NMC 전자전도도는 조성·충전상태·연구실에 따라 5e-8~1.4e-2 로 흔들려서 단일 Ref 로 달 값이 없어. 각주에 문헌
->    범위 + Wang 값 + 민감도 (σ_NCM 을 ÷30~×30 해도 DBE > SBE, 비 1.34~1.20) 를 달게.
+> 1) **NCM σ_e 1e-2** — reference 있어. Amin & Chiang 2016 (JES 163, A1512) 이 층상 NMC 전자전도도가 충전 상태에서 ~10⁻² S/cm 까지 오른다고 쟀어 — 표에 Ref. 로 달게.
 > 2) **LPSCl ν 0.3** — Assumed 가 맞아. DEM 접촉모델 관례값이고 E* = E/(1−ν²) 로만 들어가서 LPSCl 제일원리 값 0.37 (Deng 2016) 과 5 %
 >    차이인데, DEM 탄성률 (1.35 GPa) 을 이 ν 로 보정했기 때문에 그 차이는 보정값에 흡수돼.
 > 3) **VGCF E 10 GPa** — Assumed 유지. 1 / 10 / 100 GPa 로 바꿔 전극을 다시 압밀하고 전자전도도까지 계산했더니 porosity 0.18 %p, σ_e 0.25 %
