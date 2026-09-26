@@ -27,7 +27,7 @@
   python3 tools/ionic/framework_site_census.py --selftest
 """
 from __future__ import annotations
-import argparse, json, os, pathlib, sys, tempfile
+import argparse, json, math, os, pathlib, sys, tempfile
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -234,6 +234,163 @@ def _selftest():
     return 0 if bad == 0 else 1
 
 
+# ── 온도별 사건 빈도 집계 (b2o3 사건빈도 카드 §보고량 · 2026-09-26) ─────────────────────────
+#: 카드 `db/properties/b2o3_framework_event_rate_prereg_2026_09_23.json` §보고량·§판정_문구_봉인 을 그대로 옮긴다.
+#:   원소군 = {P 중심 · 자유 S · Cl} = census 의 kind "free" 중 elem P · S · Cl. P 결합 음이온(kind "P-bonded")·자유 O 는
+#:   카드 원소군 밖이라 **따로 기록**만 한다 (섞지 않는다 — PS₄ 깨짐과 P 중심 이동은 다른 사건이다).
+#: ⛔ 못 하는 것: 원소군 원자수를 스스로 정하지 않는다 (--group_n 필수 · 카드 값) · 판정어를 만들지 않는다 (봉인 문장 틀에 수만 넣는다) ·
+#:   겉보기 활성화는 카드 조건(10 사건 이상 온도 2 개 이상)이 아니면 **맞추지 않는다** · 이온 이동 장벽이라 부르지 않는다.
+CARD_GROUPS = (("P_center", "free", "P"), ("S_free", "free", "S"), ("Cl", "free", "Cl"))
+EXTRA_GROUPS = (("P-bonded_S", "P-bonded", "S"), ("P-bonded_O", "P-bonded", "O"), ("free_O", "free", "O"))
+KB_EV = 8.617333262e-5
+
+
+def _poisson_ci(n, exposure_ns):
+    """정확 포아송(Garwood) 95 % — n > 0 이면 양측, n = 0 이면 단측 95 % 상한 (카드: '≈ 1.5 /ns/셀' @ 2 ns)."""
+    from scipy.stats import chi2
+    if n == 0:
+        return {"lo": 0.0, "hi": float(chi2.ppf(0.95, 2) / 2.0 / exposure_ns), "kind": "one-sided 95 % upper (n = 0)"}
+    return {"lo": float(chi2.ppf(0.025, 2 * n) / 2.0 / exposure_ns), "hi": float(chi2.ppf(0.975, 2 * n + 2) / 2.0 / exposure_ns), "kind": "Garwood two-sided 95 %"}
+
+
+def _median_censored(vals, cap):
+    """None = 절단(> cap). 중앙값이 절단 구간에 떨어지면 '> cap' 문자열 (0 이나 cap 으로 적지 않는다)."""
+    xs = sorted(vals, key=lambda v: (v is None, v if v is not None else 0.0))
+    n = len(xs)
+    if n == 0:
+        return None
+    mid = [xs[(n - 1) // 2], xs[n // 2]]
+    if any(m is None for m in mid):
+        return f"> {cap:g}"
+    return float(sum(mid) / 2.0)
+
+
+def aggregate(files, group_n):
+    """files = [(seed, T, path)] · group_n = {"P_center": 32, "S_free": 48, "Cl": 64} → 런별 · 온도별 표 + 봉인 문장."""
+    import re
+    missing = [g for g, _, _ in CARD_GROUPS if g not in group_n]
+    if missing:
+        raise SystemExit(f"⛔ --group_n 에 카드 원소군 원자수가 없다: {missing} (카드 §보고량 값을 준다 — 도구가 정하지 않는다)")
+    runs = []
+    for seed, T, p in files:
+        r = json.loads(pathlib.Path(p).read_text())
+        row = {"seed": seed, "T_K": T, "path": str(p), "n_frames": r["n_frames"], "dt_ps": r["dt_ps"], "total_ps": r["total_ps"],
+               "n_free": r.get("n_free"), "n_P_bonded_anions": r.get("n_P_bonded_anions"), "verdict": r.get("verdict"), "groups": {}}
+        for g, kind, el in CARD_GROUPS + EXTRA_GROUPS:
+            ev = [e for e in r["events"] if e["kind"] == kind and e["elem"] == el]
+            row["groups"][g] = {"N_ev": len(ev), "N_at": len({e["atom"] for e in ev}),
+                                "t1_ps": (min(e["start_ps"] for e in ev) if ev else None)}
+        runs.append(row)
+    temps = sorted({r["T_K"] for r in runs})
+    by_T = {}
+    for T in temps:
+        rs = [r for r in runs if r["T_K"] == T]
+        expo = sum(r["total_ps"] for r in rs) / 1000.0
+        cap = max(r["total_ps"] for r in rs)
+        tab = {"n_runs": len(rs), "seeds": sorted(r["seed"] for r in rs), "exposure_ns": expo, "groups": {}}
+        for g, _, _ in CARD_GROUPS + EXTRA_GROUPS:
+            N = sum(r["groups"][g]["N_ev"] for r in rs); A = sum(r["groups"][g]["N_at"] for r in rs)
+            k = sum(1 for r in rs if r["groups"][g]["N_ev"] > 0)
+            ci = _poisson_ci(N, expo)
+            ent = {"sum_N_ev": N, "rate_per_ns_cell": N / expo, "ci95": ci, "k_runs": k, "k_of": len(rs),
+                   "t1_median_ps": _median_censored([r["groups"][g]["t1_ps"] for r in rs], cap), "sum_N_at": A}
+            if g in group_n:
+                ent["moved_atom_fraction"] = A / (len(rs) * group_n[g])
+            tab["groups"][g] = ent
+        by_T[T] = tab
+    # 겉보기 활성화 — 카드 조건: 사건 ≥ 10 인 온도가 2 개 이상 (그 온도들만 · 포아송 가중)
+    act = {}
+    for g, _, _ in CARD_GROUPS:
+        pts = [(T, by_T[T]["groups"][g]["sum_N_ev"], by_T[T]["groups"][g]["rate_per_ns_cell"]) for T in temps if by_T[T]["groups"][g]["sum_N_ev"] >= 10]
+        if len(pts) < 2:
+            act[g] = {"fitted": False, "why": f"사건 ≥ 10 인 온도 {len(pts)} 개 < 2 — 카드 조건 미충족 · 맞추지 않는다"}
+            continue
+        x = np.array([1.0 / (KB_EV * T) for T, _, _ in pts]); y = np.log([rt for _, _, rt in pts]); w = np.array([float(n) for _, n, _ in pts])   # σ_ln = 1/√n → w = n
+        W = w.sum(); xb = (w * x).sum() / W; yb = (w * y).sum() / W
+        Sxx = (w * (x - xb) ** 2).sum(); slope = (w * (x - xb) * (y - yb)).sum() / Sxx
+        act[g] = {"fitted": True, "temps_K": [T for T, _, _ in pts], "Ea_apparent_eV": float(-slope), "sigma_eV": float(1.0 / math.sqrt(Sxx)),
+                  "⛔": "사건 빈도의 겉보기 활성화 에너지 — 이온 이동 장벽이 아니다 (카드)"}
+    # 봉인 문장 (카드 §판정_문구_봉인 틀 그대로)
+    sent = []
+    for T in temps:
+        tab = by_T[T]
+        if all(tab["groups"][g]["sum_N_ev"] == 0 for g, _, _ in CARD_GROUPS + EXTRA_GROUPS):
+            sent.append(f"이 셀·이 프로토콜에서 {T:g} K 의 골격은 {tab['n_runs']} × {cap:g} ps 동안 자리를 떠나지 않았다 "
+                        f"(사건 빈도 단측 95 % 상한 ≈ {tab['groups']['P_center']['ci95']['hi']:.1f} /ns/셀).")
+            continue
+        for g, _, _ in CARD_GROUPS:
+            e = tab["groups"][g]
+            if e["sum_N_ev"] == 0:
+                sent.append(f"{T:g} K · {g}: 사건 0 ({tab['n_runs']} × {cap:g} ps · 단측 95 % 상한 ≈ {e['ci95']['hi']:.2f} /ns/셀).")
+            else:
+                sent.append(f"{T:g} K 에서 {g} 사건 빈도는 {e['rate_per_ns_cell']:.2f} /ns/셀 [{e['ci95']['lo']:.2f}, {e['ci95']['hi']:.2f}] 이고 "
+                            f"{tab['n_runs']}런 중 {e['k_runs']} 런에서 났다.")
+    for g, a in act.items():
+        if a["fitted"]:
+            sent.append(f"{g}: 사건 빈도의 겉보기 활성화 에너지 {a['Ea_apparent_eV']:.2f} ± {a['sigma_eV']:.2f} eV ({'/'.join(f'{t:g}' for t in a['temps_K'])} K · 포아송 가중) — 이온 이동 장벽이 아니다.")
+    return {"schema": "framework_event_rate_aggregate/v1", "group_definition": {g: f"census kind={k} · elem={e}" for g, k, e in CARD_GROUPS + EXTRA_GROUPS},
+            "group_n_card": group_n, "runs": runs, "by_T": {f"{T:g}": v for T, v in by_T.items()}, "apparent_activation": act, "sealed_sentences": sent,
+            "⚠": "census 는 P 중심 규칙 — B 를 안 세고 BS₃ 의 S 는 '자유 S' 로 분류된다 (카드 결과와 같이 적는다)"}
+
+
+def _files_from_root(root):
+    import re
+    out = []
+    for p in sorted(pathlib.Path(root).rglob("site_census.json")):
+        m = re.search(r"/s(\d+)/(?:d[\d.]+_cfg\d+/)?T(\d+)/site_census\.json$", str(p))
+        if m:
+            out.append((int(m.group(1)), float(m.group(2)), p))
+    return out
+
+
+def _selftest_aggregate():
+    import tempfile
+    ok = bad = 0
+    def ck(c, m):
+        nonlocal ok, bad
+        if c:
+            ok += 1
+        else:
+            bad += 1; print("  ✗", m)
+    from scipy.stats import chi2
+    with tempfile.TemporaryDirectory() as td:
+        def put(seed, T, events):
+            d = pathlib.Path(td, f"s{seed}", f"T{T}"); d.mkdir(parents=True, exist_ok=True)
+            (d / "site_census.json").write_text(json.dumps({"n_frames": 4000, "dt_ps": 0.1, "total_ps": 400.0, "n_free": 144, "n_P_bonded_anions": 128,
+                                                             "verdict": "framework_mobile" if events else "framework_rigid", "events": events}))
+        ev = lambda kind, el, atom, t: {"kind": kind, "elem": el, "atom": atom, "start_ps": t}
+        for s in range(2, 7):
+            put(s, 600, [])                                                               # 600 K: 사건 0
+        cnt = {2: 3, 3: 4, 4: 0, 5: 2, 6: 3}                                              # 650 K: P 중심 12 사건 (4 런)
+        for s, n in cnt.items():
+            put(s, 650, [ev("free", "P", 100 + i, 50.0 * (i + 1)) for i in range(n)] + ([ev("P-bonded", "S", 7, 10.0)] if s == 2 else []))
+        for s in range(2, 7):                                                             # 700 K: P 중심 30 사건 · 자유 S 1
+            put(s, 700, [ev("free", "P", 200 + i, 20.0 * (i + 1)) for i in range(6)] + ([ev("free", "S", 300, 5.0)] if s == 3 else []))
+        files = _files_from_root(td)
+        ck(len(files) == 15, f"경로에서 시드·온도 15 개를 읽는다 — {len(files)}")
+        r = aggregate(files, {"P_center": 32, "S_free": 48, "Cl": 64})
+        z = r["by_T"]["600"]["groups"]["P_center"]
+        ck(z["sum_N_ev"] == 0 and abs(z["ci95"]["hi"] - 1.4979) < 1e-3 and z["t1_median_ps"] == "> 400", f"사건 0: 단측 95 % 상한 ≈ 1.5 /ns (카드) · t₁ '> 400' — {z}")
+        ck(any("600 K 의 골격은 5 × 400 ps 동안 자리를 떠나지 않았다" in s for s in r["sealed_sentences"]), "봉인 문장: 사건 0 인 온도")
+        m = r["by_T"]["650"]["groups"]["P_center"]
+        ck(m["sum_N_ev"] == 12 and abs(m["rate_per_ns_cell"] - 6.0) < 1e-12 and m["k_runs"] == 4 and abs(m["ci95"]["lo"] - chi2.ppf(0.025, 24) / 4) < 1e-9 and abs(m["ci95"]["hi"] - chi2.ppf(0.975, 26) / 4) < 1e-9,
+           f"650 K: 12 사건 / 2 ns = 6.0 · Garwood · k 4/5 — {m['rate_per_ns_cell']} {m['k_runs']}")
+        ck(m["t1_median_ps"] == 50.0 and abs(m["moved_atom_fraction"] - 12 / 160) < 1e-12, f"t₁ 중앙값 50 (절단 1 개 포함) · 움직인 원자 12/(5×32) — {m['t1_median_ps']}")
+        ck(r["by_T"]["650"]["groups"]["P-bonded_S"]["sum_N_ev"] == 1 and r["by_T"]["650"]["groups"]["S_free"]["sum_N_ev"] == 0, "⛔음성: P 결합 S 이탈은 자유 S 로 안 섞인다 (따로 기록)")
+        s7 = r["by_T"]["700"]["groups"]["S_free"]
+        ck(s7["sum_N_ev"] == 1 and s7["t1_median_ps"] == "> 400", f"⛔음성: 절단 4/5 → t₁ 중앙값 '> 400' — {s7['t1_median_ps']}")
+        a = r["apparent_activation"]
+        ck(a["P_center"]["fitted"] and a["P_center"]["temps_K"] == [650.0, 700.0] and a["S_free"]["fitted"] is False, f"겉보기 활성화: P 중심만 (650·700 K ≥ 10 사건) · 자유 S 는 조건 미충족 — {a['S_free']}")
+        x = 1 / (KB_EV * 650) - 1 / (KB_EV * 700); ck(abs(a["P_center"]["Ea_apparent_eV"] - math.log(15.0 / 6.0) / x) < 1e-9, "두 점이면 Ea = ln(r2/r1)/Δ(1/kT) 로 정확히")
+        try:
+            aggregate(files, {"P_center": 32}); badg = False
+        except SystemExit:
+            badg = True
+        ck(badg, "⛔음성: --group_n 에 카드 원소군이 빠지면 멈춘다 (도구가 원자수를 정하지 않는다)")
+    print(f"{'✅' if not bad else '⛔'} aggregate selftest {ok}/{ok + bad}")
+    return bad
+
+
 def main():
     ap = argparse.ArgumentParser(description="C6 원자별 자리 이탈 census (개정안 §2)")
     ap.add_argument("--selftest", action="store_true")
@@ -241,9 +398,34 @@ def main():
     ap.add_argument("--dt_ps", type=float, help="프레임 간격 ps (없으면 옆의 aimd_results.json 의 save_fs)")
     ap.add_argument("--card", help="문턱을 읽을 개정안 카드 (없으면 기본값 + 경고)")
     ap.add_argument("--out", help="결과 JSON")
+    ap.add_argument("--aggregate", metavar="ROOT", help="ROOT 아래 s<seed>/[d…_cfg…/]T<K>/site_census.json 을 모아 온도별 사건 빈도 (b2o3 사건빈도 카드 §보고량)")
+    ap.add_argument("--group_n", help="카드 원소군 원자수 (필수 · 예: P_center=32,S_free=48,Cl=64)")
     a = ap.parse_args()
     if a.selftest:
-        raise SystemExit(_selftest())
+        rc = _selftest()
+        rc2 = _selftest_aggregate()
+        raise SystemExit(rc or (1 if rc2 else 0))
+    if a.aggregate:
+        if not a.group_n:
+            ap.error("--aggregate 에는 --group_n 이 필요하다 (카드 원소군 원자수)")
+        gn = {k.strip(): int(v) for k, v in (x.split("=") for x in a.group_n.split(","))}
+        files = _files_from_root(a.aggregate)
+        if not files:
+            raise SystemExit(f"⛔ {a.aggregate} 아래 site_census.json 이 없다")
+        r = aggregate(files, gn)
+        print(f"런 {len(files)} · 온도 {list(r['by_T'].keys())}")
+        print(f"{'T':>5s} {'group':>11s} {'ΣN_ev':>6s} {'rate/ns':>8s} {'95% CI':>17s} {'k/n':>5s} {'t1 med':>8s} {'moved':>7s}")
+        for T, tab in r["by_T"].items():
+            for g, e in tab["groups"].items():
+                ci = e["ci95"]; t1 = e["t1_median_ps"]
+                t1s = t1 if isinstance(t1, str) else f"{t1:.1f}"
+                mv = f"{e['moved_atom_fraction']:.3f}" if "moved_atom_fraction" in e else "—"
+                print(f"{T:>5s} {g:>11s} {e['sum_N_ev']:6d} {e['rate_per_ns_cell']:8.2f} [{ci['lo']:6.2f}, {ci['hi']:6.2f}] {e['k_runs']}/{e['k_of']:<3d} {t1s:>8s} {mv:>7s}")
+        for s in r["sealed_sentences"]:
+            print("  ·", s)
+        if a.out:
+            pathlib.Path(a.out).write_text(json.dumps(r, ensure_ascii=False, indent=1, default=str) + "\n"); print(f"-> {a.out}")
+        return
     if not a.traj:
         ap.error("--traj 가 필요하다 (--selftest 제외)")
     if a.card:
