@@ -255,6 +255,7 @@ def main():
     ap.add_argument("--optimizer", choices=["fire", "bfgs"], default="fire")
     ap.add_argument("--preflight_only", action="store_true")
     ap.add_argument("--d3_energy", metavar="STRUCT", help="S3 전 예외 ② D3 결박 검사용: 이 구조의 외부 D3 에너지만 찍는다 (eV · Ry · 구현·버전)")
+    ap.add_argument("--energies", metavar="STRUCT", nargs="+", help="S4 집계용: 구조들의 **UMA 단일점 에너지(D3 없음 · default 모드 · 3축 pbc)** 를 JSON 으로 (개정 1: D3 항은 QE 출력에서). --out 에 쓴다")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
@@ -267,6 +268,22 @@ def main():
         e = float(at.get_potential_energy())
         print(json.dumps({"struct": os.path.abspath(a.d3_energy), "sha256": _sha(a.d3_energy), "n_atoms": len(at), "pbc": [True, True, True], "E_D3_eV": e, "E_D3_Ry": e / 13.605693122994, "d3": info["d3"],
                           "⛔": "QE 의 'DFT-D3 Dispersion' 줄과 대조하는 용도 — 총 에너지·W 에 쓰지 않는다"}, ensure_ascii=False, indent=1, default=float))
+        return 0
+    if a.energies:
+        from ase.io import read
+        calc, info = make_calc(a.calc, a.device, "none")
+        base = calc.mixer.calcs[0] if hasattr(calc, "mixer") else (calc.calcs[0] if hasattr(calc, "calcs") else calc)
+        rows = {}
+        for p in a.energies:
+            at = read(p); at.set_pbc((True, True, True)); at.calc = base
+            rows[os.path.splitext(os.path.basename(p))[0]] = {"struct": os.path.abspath(p), "sha256": _sha(p), "n_atoms": len(at), "formula": at.get_chemical_formula(),
+                                                              "E_UMA_eV": float(at.get_potential_energy()), "pbc": [True, True, True]}
+        rec = {"schema": "uma_energies/v1", "what": "UMA 단일점 에너지 (D3 없음) — W_UMA 용 · D3 항은 QE 출력에서 (개정 1)", "calculator": {k: v for k, v in info.items() if k != "d3"},
+               "energies": rows}
+        txt = json.dumps(rec, ensure_ascii=False, indent=1, default=float)
+        if a.out:
+            open(a.out, "w", encoding="utf-8").write(txt + "\n"); print(f"-> {a.out}")
+        print(txt if not a.out else json.dumps({k: v["E_UMA_eV"] for k, v in rows.items()}, ensure_ascii=False))
         return 0
     if not a.model_dir:
         ap.error("--model_dir 이 필요하다")
