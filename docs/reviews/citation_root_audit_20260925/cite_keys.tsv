@@ -1,0 +1,466 @@
+status	author	year	n_occ	n_files	areas	canon_cards	numbers_on_same_lines
+CARD	Lee	2025	78	37	docs:65,scripts:9,CLAUDE.md:4	lee2025_corolling_dryprocess_lpscl_ptfe|lee2025_dual_fibrous_ptfe_dry_electrode	34 mS/cm×5; 75 MPa×4; 2 MPa×3; 0.069 mS/cm×2; 59.28 mS/cm×1
+CARD	Trevisanello	2021	77	35	scripts:31,docs:30,webapp:8,STAGE_E_ASR_GUIDE.md:4	trevisanello2021_sc_pc_ncm_cracking_diffusion	5 mS/cm×5; 1 μm×2; 12 μm×1; 3.5 µm×1; 10 mS/cm×1
+CARD	Minnmann	2021	68	28	docs:45,webapp:12,scripts:10,STAGE_E_ASR_GUIDE.md:1	minnmann2021_jes_charge_transport_bottlenecks	380 MPa×13; 0.17 mS/cm×5; 40 MPa×2; 1.6 mS/cm×2; 300 MPa×1
+CARD	Kim	2025	66	25	docs:45,scripts:18,webapp:3	kim2025_conductive_agent_se_coating_cathode|kim2025_csp_metastable_edge_sharing_sse|kim2025_csp_metastable_edge_sharing_sse__seminar_5min_qa	0.2 µm×2; 400 MPa×1; 47.5 µm×1; 39 µm×1; 8 µm×1
+CARD	Sakuda	2013	65	23	docs:43,scripts:17,webapp:4,CLAUDE.md:1	sakuda2013_sulfide_mechanical_property	24 GPa×14; 300 MPa×11; 0.6 GPa×6; 0.85 GPa×5; 1.35 GPa×4
+CARD	Kim	2024	61	26	docs:60,CLAUDE.md:1	kim2024_carbon_volumetric_occupation_se_domain|kim2024_digital_twin_acsenergyletters|kim2024_mtp_argyrodite_disorder_gb	34 mS/cm×2; 65.2 mS/cm×2; 517 MPa×2; 0.014 mS/cm×1; 0.4 µm×1
+CARD	Park	2020	48	9	docs:48	park2020_digitaltwin_assb_foundational	8 µm×2; 0.014 mS/cm×1; 47.5 µm×1; 39 µm×1; 20 µm×1
+CARD	Bazzoun	2026	44	26	docs:40,scripts:2,CLAUDE.md:1,webapp:1	bazzoun2026_dem_fem_rnm_ionic	400 MPa×2; 0.137 mScm×2; 100 MPa×2; 0.4 µm×1; 22.1 GPa×1
+CARD	Bielefeld	2019	41	17	docs:36,webapp:3,scripts:2	bielefeld2019_microstructural_modeling_composite_cathode	1.35 GPa×1; 5 µm×1; 5 μm×1
+CARD	Hong	2026	41	20	docs:31,scripts:10	hong2026_cbd_viscoelasticity_springback|hong2026_sulfide_cathode_binder_digitaltwin	0.069 mS/cm×1; 4 µm×1; 1 µm×1; 0.064 mS/cm×1
+CARD	Bielefeld	2020	38	13	docs:35,scripts:2,GB_correction_fitting_report.md:1	bielefeld2020_effective_ionic_conductivity_binder	0.30 GPa×1; 0.56 GPa×1
+CARD	Wang	2022	35	14	docs:12,webapp:11,STAGE_E_ASR_GUIDE.md:7,scripts:4	wang2022_resistive_decomposing_interfaces_se_alkali_metal|wang2022_sulfide_thermal_stability_th_descriptor	
+CARD	So	2022	33	15	docs:31,CLAUDE.md:1,scripts:1	so2022_dem_compaction_coated_particles_assb|so2022_dem_contact_model_assb_compaction_sintering	0.5 µm×2; 300 MPa×1; 0.25 µm×1; 0.10 µm×1; 1 µm×1
+CARD	Kraft	2017	29	12	webapp:13,scripts:9,docs:7	kraft2017_lattice_polarizability_argyrodite_Li6PS5X	0.41 eV×5; 0.46 eV×3; 375 MPa×2; 3.0 mS/cm×1; 300 MPa×1
+CARD	Liu	2025	27	13	scripts:18,docs:8,README.md:1	liu2025_dry_processing_high_energy_li_batteries_review	
+CARD	Yun	2023	27	12	docs:15,scripts:11,webapp:1	yun2023_deciphering_degradation_halide_vs_sulfide	
+CARD	Wang	2018	27	4	docs:27	wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni	5 mS/cm×1; 5 S/cm×1; 0.25 eV×1; 3 S/cm×1
+CARD	So	2021	26	11	docs:24,DEM_BRANCH_CONSOLIDATION.md:1,scripts:1	so2021_dem_fabrication_degradation_ductile_particles|so2021_dem_mold_pressure_assb_coldpress	300 MPa×2
+CARD	Doux	2020	26	11	docs:18,scripts:5,webapp:3	doux2020_stack_pressure_assb	370 MPa×6; 300 MPa×4; 75 MPa×4; 400 MPa×2; 1.35 GPa×1
+CARD	Choi	2024	26	9	docs:26	choi2024_digital_twin_review_echem	
+CARD	Reisacher	2023	24	11	docs:9,webapp:8,scripts:7	reisacher2023_percolation_sulfide_carbon_matrix	0.41 eV×7; 375 MPa×7; 300 MPa×2; 0.46 eV×1; 102 mS/cm×1
+CARD	Cronau	2021	23	17	docs:20,scripts:2,CLAUDE.md:1	cronau2021_stack_pressure_ionic_conductivity	3.0 mS/cm×3; 50 MPa×1; 3.0 mScm×1; 3 mS/cm×1; 3 S/cm×1
+CARD	Bouvard	2000	19	7	docs:15,scripts:3,DEM_BRANCH_CONSOLIDATION.md:1	bouvard2000_hard_soft_powder_densification	50 MPa×1
+CARD	McGeary	1961	18	12	docs:12,scripts:5,DEM_BRANCH_CONSOLIDATION.md:1	mcgeary1961_bimodal_sphere_packing	
+CARD	Cho	2024	17	11	docs:11,scripts:6	cho2024_conflicting_roles_conductive_additive	
+CARD	Luan	2025	16	11	docs:12,scripts:3,CLAUDE.md:1	luan2025_graded_cathode_400whkg_pouch	
+CARD	Bazzoun	2025	16	11	docs:15,scripts:1	bazzoun2025_dem_parameter_sensitivity_assb_cathode	350 MPa×1
+CARD	Lim	2025	16	4	docs:16	lim2025_virtual_calendering_framework	4.0 g/cm×1
+CARD	Nam	2026	15	6	docs:10,scripts:5	nam2026_dpe_microstructure_review|nam2026_primer_layer_dry_electrode_collector	
+CARD	Song	2025	15	6	docs:15	song2025_electrochemo_mechanical_microelectrode_ees|song2025_porous_argyrodite_modulus_fracture_toughness	0.4 µm×1; 600 nm×1
+CARD	Bucci	2017	14	6	docs:10,scripts:4	bucci2017_chemomech_failure_assb_cycling_czm	5 nm×2; 0.04 MPa×1; 18.5 GPa×1; 150 GPa×1; 100 nm×1
+CARD	Oh	2026	12	8	docs:12	oh2026_bimodal_composite_cathode|oh2026_carbon_coating_siox_ion_electron_balance	
+CARD	Kraft-	2017	12	11	docs:5,scripts:4,webapp:3	kraft2017_lattice_polarizability_argyrodite_Li6PS5X	
+CARD	Kang	2025	12	4	docs:12	kang2025_bollard_anchored_binder_dry_electrode|kang2025_highvoltage_parasitic_reaction_benefit_sulfide_assb|kang2025_toughened_bimodal_nca_lzo	10 µm×1; 0.58 S/cm×1
+CARD	Varkey	2026	11	9	docs:10,CLAUDE.md:1	varkey2026_multicontact_elastoplastic_dem	10.58 GPa×1; 90 MPa×1; 350 MPa×1
+CARD	Fan	2026	10	7	docs:8,CLAUDE.md:1,scripts:1	fan2026_sulfide_assb_stability_review_ECERD2600097	30 GPa×2; 3 µm×1
+CARD	Koo	2025	10	5	docs:10	koo2025_cnt_wrapped_sc_nca_dry_cathode	4.0 g/cm×1; 5 µm×1
+CARD	Koo	2026	10	7	docs:9,scripts:1	koo2026_swcnt_sheath_thick_electrode	
+CARD	Lee	2023	10	3	docs:10	lee2023_sicspe_digitaltwin_assb	0.0428 mS/cm×1; 0.065 mS/cm×1
+CARD	Jung	2023	9	4	docs:9	jung2023_single_crystal_ncm_morphology	10 µm×1
+CARD	Kim	2026	9	5	docs:9	kim2026_a3d_air_electrode_microstructure_transport|kim2026_charge_engineered_cnf_binder|kim2026_hts_li3sc2po43_coating_midni_ncm	
+CARD	Lee	2024	9	4	docs:8,webapp:1	lee2024_multicomponent_argyrodite_mixed_oxidation_mtp|lee2024_multiphysics_dem_fem_initial_pressure_assb	90 MPa×2; 0.0002 S/cm×1
+CARD	Storakers	1997	8	2	docs:8	storakers1997_similarity_inelastic_contact	24 GPa×1
+CARD	Bucci	2018	8	5	docs:7,scripts:1	bucci2018_mechanical_instability_interface_delamination	
+CARD	Schneider	2023	8	4	docs:8	schneider2023_particle_size_pressure_transport	90 MPa×7; 0.1 GPa×3; 0.09 GPa×2; 100 MPa×2
+CARD	Coetzee	2017	7	4	docs:6,scripts:1	coetzee2017_dem_calibration_review	1.35 GPa×1; 300 MPa×1; 500 µm×1
+CARD	Huang	2025	7	3	docs:7	huang2025_dem_lbm_heat_conduction_composite_cathode	
+CARD	Han	2025	7	5	docs:6,scripts:1	han2025_icep_binder_ultrahigh_loading_ncm811|han2025_icep_conductive_elastic_binder	7 nm×1; 0.1 mS/cm×1; 0.135 mS/cm×1
+CARD	Cho-	2024	7	4	scripts:6,docs:1	cho2024_conflicting_roles_conductive_additive	
+CARD	Park	2026	6	3	docs:6	park2026_ceramic_pp_separator|park2026_ml_framework_stable_interfaces_assb|park2026_thiolene_sbr_binder_assb	
+CARD	Zhang	2023	6	3	docs:6	zhang2023_pfib_multiscale_imaging_4d_thick_cathode	3 S/cm×1
+CARD	Schlautmann	2023	6	2	docs:6	schlautmann2023_se_particle_size_composite_transport	
+CARD	Ma	2024	6	4	webapp:3,scripts:2,docs:1	ma2024_sb_doping_lpsc_conductivity	0.29 eV×3; 375 MPa×1
+CARD	Patil	1987	5	5	docs:4,CLAUDE.md:1	patil1987_self_doped_conducting_polymers	250 S/cm×2
+CARD	Minnmann	2024	5	5	docs:5	minnmann2024_microstructure_porosity_visualization	90 MPa×3; 100 MPa×2; 0.1 GPa×1
+CARD	Bak	2024	5	3	docs:5	bak2024_binder_distribution_multilayer	2.8 g/cm×1
+CARD	Minnmann	2022	5	4	docs:5	minnmann2022_designing_cathodes_solidstate	
+CARD	Yoo	2026	5	4	docs:5	yoo2026_porosity_gradient_dry_electrode	
+CARD	Mun	2025	5	4	docs:4,webapp:1	mun2025_dry_electrode_technology_assb_review	
+CARD	Stomakhin	2013	5	2	docs:5	stomakhin2013_mpm_snow_elastoplastic	
+CARD	Shi	2019	5	2	docs:5	shi2019_high_am_loading_particle_size_assb	10 µm×1
+CARD	Lyu	2025	4	2	docs:4	lyu2025_3d_dem_drying_calendering_lib	
+CARD	Duquesnoy	2023	4	4	docs:3,scripts:1	duquesnoy2023_ml_multiobjective_manufacturing_optimization	
+CARD	Nisar	2024	4	1	docs:4	nisar2024_dem_effective_electrical_conductivity_sps	
+CARD	Frankenberg	2024	4	1	docs:4	frankenberg2024_dem_high_intensity_mixer_assb	
+CARD	Giovannetti	2008	3	1	docs:3	giovannetti2008_doping_graphene_metal_contacts	
+CARD	Liao	2025	3	2	docs:3	liao2025_interfacial_adhesion_li_plating_carbon_interlayer	400 MPa×1
+CARD	Deysher	2022	3	3	docs:3	deysher2022_transport_mechanical_aspects_assb_review	
+CARD	Cho	2026	3	2	docs:3	cho2026_eipc_zn_anode_azib	
+CARD	Choi	2026	3	2	docs:3	choi2026_bzox_dry_zro2x_nmc_shell_coating|choi2026_elastomeric_li_metal_anode	
+CARD	Luding	2008	3	1	docs:3	luding2008_cohesive_frictional_contact_models	1.35 GPa×1
+CARD	Chen	2011	3	1	docs:3	chen2011_percolation_micromodel_composite_electrode	
+CARD	Alabdali	2023	3	3	docs:3	alabdali2023_cgmd_wet_manufacturing_ssb_cathode	5 mS/cm×1; 5 S/cm×1
+CARD	Martin-Bouvard	2003	2	2	DEM_BRANCH_CONSOLIDATION.md:1,docs:1	martinbouvard2003_dem_composite_cold_compaction	
+CARD	Park	2024	2	1	docs:2	park2024_sevennet_parallel_gnn_md	
+CARD	Pasha	2014	2	2	docs:2	pasha2014_linear_elastoplastic_adhesive_contact	
+CARD	Ngandjong	2021	2	1	docs:2	ngandjong2021_dem_calendering_digital_twin	
+CARD	Schreiner	2020	2	1	docs:2	schreiner2020_dem_calendering_lib	
+CARD	Shenouda	2020	2	1	docs:2	shenouda2020_dem_metal_powder_am_liggghts_tutorial	
+CARD	Lee	2026	2	2	docs:2	lee2026_eecfp_dnn_electrolyte_ce_lmb|lee2026_lpscl_coating_thickness_ncm811|lee2026_mechanical_halogen_argyrodite_drycoating	
+CARD	Paulick	2015	2	2	docs:2	paulick2015_elastic_particle_properties_dem_review	
+CARD	Famprikis	2019	2	1	scripts:2	famprikis2019_fundamentals_inorganic_sse	
+CARD	Thakur	2014	1	1	docs:1	thakur2014_eepa_adhesive_elastoplastic_dem	
+CARD	Maurer	2015	1	1	docs:1	maurer2015_mbd_adsorbates_metal_surfaces	
+CARD	Choi	2025	1	1	docs:1	choi2025_mlip_cu_taxn_interfacial_adhesion	
+CARD	Pustorino	2025	1	1	docs:1	pustorino2025_lpscl_bulk_surface_mechanical_electronic_li_filament	
+CARD	Spencer-Jolly	2023	1	1	docs:1	spencerjolly2023_ag_graphite_interlayer_operando_xrd	
+CARD	Li	2026	1	1	docs:1	li2026_functionally_differentiated_interphase|li2026_mci_vs_sei_na3ps4_na_mlip_md|li2026_na_sulfide_halide_interface_review	
+CARD	ThorntonNing	1998	1	1	docs:1	thorntonning1998_adhesive_elastoplastic_contact	
+CARD	KogutEtsion	2002	1	1	docs:1	kogutetsion2002_ep_sphere_rigid_flat	
+CARD	JacksonGreen	2005	1	1	docs:1	jacksongreen2005_fem_elastoplastic_hemispherical_contact	
+CARD	MesarovicFleck	2000	1	1	docs:1	mesarovicfleck2000_dissimilar_elastoplastic_indentation	
+CARD	Hollmann	2025	1	1	docs:1	hollmann2025_tabpfn_tabular_foundation_model	
+CARD	Matthews	2024	1	1	docs:1	matthews2024_ptfe_nanofibril_network	
+CARD	Otani	2025	1	1	docs:1	otani2025_dem_se_dispersion_aggregation_compression	
+CARD	Zunker	2025	1	1	docs:1	zunker2025_dem_large_deformation_compaction	
+CARD	Giannis	2021	1	1	docs:1	giannis2021_stress_based_multicontact_dem	
+CARD	PyCompact	2025	1	1	docs:1	pycompact2025_dem_mpfem_workflow	
+CARD	Demirtas	2021	1	1	docs:1	demirtas2021_mpfem_hollow_sphere_die_compaction	
+CARD	Gonzalez	2012	1	1	docs:1	gonzalez2012_nonlocal_contact_confined_granular	
+CARD	Cronk	2026	1	1	docs:1	cronk2026_lis_cathode_interphase_chemistry|cronk2026_lis_positive_electrode_geometry_fem	
+NO_CARD	Lawn	1998	64	25	docs:23,scripts:23,webapp:14,STAGE_E_ASR_GUIDE.md:4		0.548 MPa×2; 100 MPa×1; 150 MPa×1
+NO_CARD	Holm	1967	62	29	scripts:35,docs:16,CLAUDE.md:7,webapp:4		
+NO_CARD	Cronau	2022	59	23	docs:23,scripts:15,webapp:11,CLAUDE.md:5		3.0 mS/cm×10; 0.5 μm×4; 0.3 μm×4; 10 μm×2
+NO_CARD	Chen	2020	47	23	docs:27,scripts:13,webapp:5,CLAUDE.md:2		5.22 µm×2; 3.5 µm×1; 10 mS/cm×1; 5 mS/cm×1; 4 µm×1
+NO_CARD	Quinn	2020	33	6	docs:18,webapp:8,scripts:7		0.3 MPa×4
+NO_CARD	Park	2023	33	9	scripts:19,webapp:8,docs:6		
+NO_CARD	Liu	2020	22	6	docs:12,scripts:6,webapp:4		1.0 MPa×3
+NO_CARD	Sridhar	2000	22	7	scripts:22		
+NO_CARD	Wang	2023	21	7	scripts:12,docs:9		1.35 GPa×1
+NO_CARD	Bouvard	2004	21	12	scripts:17,docs:4		
+NO_CARD	Wang	2020	19	10	docs:14,scripts:4,CLAUDE.md:1		24 GPa×5; 140 GPa×2; 22 GPa×1
+NO_CARD	Brake	2012	16	4	docs:14,scripts:2		0.30 GPa×3; 0.85 GPa×1
+NO_CARD	Shin	2025	16	7	docs:10,scripts:6		10 µm×4; 3 µm×2; 100 MPa×1; 0.010 S/cm×1; 0.5 MPa×1
+NO_CARD	CLOSED	2026	15	7	docs:13,CLAUDE.md:1,webapp:1		5 mS/cm×1; 0.30 GPa×1; 0.56 GPa×1; 0.2 µm×1; 2 µm×1
+NO_CARD	Bielefeld	2022	15	8	webapp:7,docs:5,STAGE_E_ASR_GUIDE.md:2,scripts:1		380 MPa×1
+NO_CARD	Xu	2017	14	7	docs:11,scripts:3		140 GPa×2; 0.010 S/cm×1; 0.5 MPa×1; 0.85 GPa×1
+NO_CARD	GeoDict	2023	13	6	docs:13		2 nm×1
+NO_CARD	Lee	2020	12	6	webapp:6,docs:3,STAGE_E_ASR_GUIDE.md:2,scripts:1		380 MPa×5
+NO_CARD	Tabor	1951	12	4	docs:11,scripts:1		
+NO_CARD	Koerver	2017	12	4	docs:12		70 MPa×1; 64 MPa×1
+NO_CARD	GeoDict	2022	12	3	docs:12		2 nm×1
+NO_CARD	Lim	2018	12	3	docs:8,scripts:3,webapp:1		
+NO_CARD	McGrogan	2017	10	5	docs:9,scripts:1		0.85 GPa×2; 0.6 GPa×2; 0.7 GPa×2; 1.9 GPa×1; 0.30 GPa×1
+NO_CARD	Cheng	2017	10	4	docs:10		0.85 GPa×3; 0.9 GPa×1; 0.6 GPa×1; 0.30 GPa×1
+NO_CARD	Bielefeld	2023	10	6	webapp:6,docs:3,scripts:1		
+NO_CARD	Jiang	2015	9	1	docs:9		
+NO_CARD	Oh	2025	9	4	webapp:4,scripts:3,docs:2		
+NO_CARD	Radjai	1996	8	2	scripts:7,docs:1		
+NO_CARD	Koerver	2018	8	6	docs:6,scripts:1,webapp:1		0.010 S/cm×1; 0.5 MPa×1; 22.1 GPa×1; 24 GPa×1; 0.85 GPa×1
+NO_CARD	Ozkan	2010	8	3	docs:8		245 GPa×6; 10 GPa×1; 100 GPa×1; 83 S/cm×1
+NO_CARD	Ketter	2025	7	5	scripts:6,GB_correction_fitting_report.md:1		4 W/m·K×1; 0.7 W/(m·K)×1; 0.7 W/m·K×1
+NO_CARD	Mücke	2025	7	3	scripts:4,docs:2,webapp:1		
+NO_CARD	Yin	2025	7	6	scripts:4,docs:3		
+NO_CARD	Sangrós	2019	7	2	docs:7		300 MPa×1
+NO_CARD	Greenwood	1966	7	3	docs:7		
+NO_CARD	Vasconcelos	2019	7	4	scripts:3,docs:2,webapp:2		
+NO_CARD	Conforto	2021	7	2	docs:7		
+NO_CARD	Janek	2023	6	2	docs:3,scripts:3		0.5 mS/cm×2
+NO_CARD	BUILT	2026	6	2	docs:6		
+NO_CARD	Kirkpatrick	1973	6	4	scripts:4,docs:2		
+NO_CARD	O'Regan	2022	6	4	docs:6		
+NO_CARD	GeoDict	2025	6	3	docs:6		0.01 µm×2
+NO_CARD	Jacobs	2009	6	2	scripts:4,docs:2		
+NO_CARD	Moulinec-Suquet	1998	5	4	docs:4,scripts:1		
+NO_CARD	Greenwood	1992	5	2	docs:3,scripts:2		
+NO_CARD	Kondrakov	2017	5	3	scripts:3,docs:2		
+NO_CARD	Yu	2023	5	3	docs:4,scripts:1		0.010 S/cm×1; 0.5 MPa×1
+NO_CARD	Mast	2013	5	1	docs:5		
+NO_CARD	Sangrós	2020	5	2	docs:5		
+NO_CARD	Weitze	2024	5	2	docs:5		
+NO_CARD	Heckel	1961	5	5	scripts:3,docs:2		
+NO_CARD	Power	2023	5	1	docs:5		
+NO_CARD	Yovanovich	1982	5	4	docs:4,scripts:1		
+NO_CARD	CLOSE-OUT	2026	4	3	CLAUDE.md:2,docs:2		
+NO_CARD	Bistri	2024	4	2	docs:4		
+NO_CARD	Yu	2018	4	1	docs:4		6 mS/cm×1; 1.64 g/cm×1
+NO_CARD	Joule	2026	4	2	docs:4		4.0 g/cm×1
+NO_CARD	Song	2023	4	3	docs:4		2.61 GPa×2; 2.611 GPa×1; 0.1534 GPa×1; 140 GPa×1; 200 GPa×1
+NO_CARD	Strauss	2018	4	2	docs:4		5 µm×1; 5 μm×1
+NO_CARD	GeoDict	2020	4	2	docs:4		
+NO_CARD	Sulsky	1994	4	3	docs:3,scripts:1		
+NO_CARD	Narain	2010	4	1	docs:4		
+NO_CARD	Zhou	2025	4	3	docs:4		2 MPa×1
+NO_CARD	Zhang	2024	4	1	docs:4		
+NO_CARD	Amin	2016	4	4	docs:4		
+NO_CARD	Peaceman	1978	4	3	docs:2,scripts:2		
+NO_CARD	Mikić	1974	4	3	docs:3,scripts:1		
+NO_CARD	UPDATE	2026	3	3	CLAUDE.md:1,docs:1,scripts:1		0.2 µm×1
+NO_CARD	Direct	2023	3	2	docs:2,scripts:1		
+NO_CARD	Asia	2024	3	2	docs:2,scripts:1		
+NO_CARD	Torquato	2002	3	1	docs:3		
+NO_CARD	Thornton	1998	3	3	docs:2,scripts:1		
+NO_CARD	Alabdali	2024	3	2	docs:3		
+NO_CARD	Schmidt	2024	3	2	docs:2,scripts:1		
+NO_CARD	Boulineau	2012	3	1	docs:3		3 mS/cm×1
+NO_CARD	Frontiers	2021	3	1	docs:3		3 mS/cm×1
+NO_CARD	Seminar	2026	3	3	docs:2,scripts:1		
+NO_CARD	Kato	2016	3	2	docs:2,webapp:1		2.7 mS/cm×2
+NO_CARD	Nam	2018	3	2	docs:3		
+NO_CARD	Wiegmann	2006	3	1	docs:3		
+NO_CARD	Kato	2018	3	2	docs:3		
+NO_CARD	Magazine	2024	3	2	docs:3		
+NO_CARD	Bonet	2008	3	1	docs:3		
+NO_CARD	Kang	2023	3	1	docs:3		10 µm×1
+NO_CARD	Storåkers	1997	3	2	docs:3		
+NO_CARD	Klár	2016	3	2	docs:2,scripts:1		
+NO_CARD	Cooper	2016	3	1	docs:3		
+NO_CARD	Green	2005	3	2	docs:3		
+NO_CARD	Vaucorbeil	2020	3	1	docs:3		
+NO_CARD	McMeeking	2000	3	2	scripts:2,docs:1		
+NO_CARD	ScienceDirect	2023	3	2	docs:2,scripts:1		80 nm×1; 0.1 μm×1; 100 nm×1
+NO_CARD	Min	2024	3	2	docs:2,scripts:1		
+NO_CARD	Jiang	2021	3	2	docs:2,scripts:1		
+NO_CARD	Eyre-Milton	1999	3	2	docs:2,scripts:1		
+NO_CARD	Storåkers	2000	3	2	scripts:2,docs:1		
+NO_CARD	Henkes	2005	3	2	scripts:2,docs:1		
+NO_CARD	Energy	2024	3	1	docs:3		
+NO_CARD	Feng	2025	3	1	docs:3		
+NO_CARD	Inorganics	2025	3	2	docs:3		
+NO_CARD	Wang	2021	3	3	scripts:2,docs:1		5 μm×1
+NO_CARD	Mikic	1974	3	2	scripts:2,docs:1		
+NO_CARD	Dewald	2021	3	3	scripts:3		
+NO_CARD	FINALIZED	2026	2	2	CLAUDE.md:1,docs:1		
+NO_CARD	RESOLVED	2026	2	1	CLAUDE.md:2		
+NO_CARD	COMPLETE	2026	2	2	CLAUDE.md:1,scripts:1		
+NO_CARD	FINAL	2026	2	1	CLAUDE.md:2		
+NO_CARD	ADOPTED	2026	2	2	CLAUDE.md:1,scripts:1		
+NO_CARD	Comm	2025	2	1	GB_correction_fitting_report.md:2		
+NO_CARD	Makse	2004	2	2	GB_correction_fitting_report.md:1,docs:1		
+NO_CARD	Mater	2025	2	2	docs:1,scripts:1		
+NO_CARD	Zheng	1990	2	1	docs:2		0.93 µm×1; 1.0 µm×1; 1.35 GPa×1; 300 MPa×1
+NO_CARD	Tanaka	2017	2	1	docs:2		
+NO_CARD	Yang	2022	2	2	docs:2		
+NO_CARD	Bergman	1978	2	1	docs:2		
+NO_CARD	Moulinec	1998	2	2	docs:2		
+NO_CARD	Ning	1998	2	2	docs:2		
+NO_CARD	Shozib	2024	2	1	docs:2		530 MPa×1
+NO_CARD	IMPORTANT	2026	2	2	docs:1,scripts:1		
+NO_CARD	Zhou	2020	2	1	docs:2		6 mS/cm×1
+NO_CARD	Deiseroth	2008	2	1	docs:2		
+NO_CARD	HISTORICAL	2026	2	2	docs:2		
+NO_CARD	Franco	2026	2	2	docs:2		
+NO_CARD	Philipse	1996	2	2	docs:1,scripts:1		
+NO_CARD	Balberg	1984	2	2	docs:1,scripts:1		
+NO_CARD	Ebner	2013	2	1	docs:2		
+NO_CARD	Nature	2025	2	2	docs:1,webapp:1		
+NO_CARD	Received	2019	2	2	docs:2		
+NO_CARD	Braun	2018	2	1	docs:2		
+NO_CARD	Received	2021	2	1	docs:2		
+NO_CARD	GeoDict	2024	2	1	docs:2		
+NO_CARD	Received	2022	2	2	docs:2		
+NO_CARD	Revised	2022	2	2	docs:2		
+NO_CARD	Thinky	2000	2	2	docs:2		50 MPa×1
+NO_CARD	Received	2024	2	2	docs:2		
+NO_CARD	Received	2020	2	2	docs:2		
+NO_CARD	Lim	2023	2	2	docs:2		
+NO_CARD	Ruess	2020	2	2	docs:2		
+NO_CARD	Hlushkou	2018	2	1	docs:2		
+NO_CARD	Zhou	2019	2	1	docs:2		1 mS/cm×1
+NO_CARD	Mohayman	2025	2	2	docs:1,scripts:1		
+NO_CARD	Bardenhagen	2000	2	1	docs:2		
+NO_CARD	Drucker	1952	2	1	docs:2		
+NO_CARD	Zhu	2005	2	1	docs:2		
+NO_CARD	Otaduy	2011	2	1	docs:2		
+NO_CARD	Macklin	2014	2	1	docs:2		
+NO_CARD	Mast	2014	2	1	docs:2		
+NO_CARD	Bosch	2014	2	1	docs:2		
+NO_CARD	Bouvard	2003	2	1	docs:2		
+NO_CARD	Fleck	2000	2	2	docs:2		
+NO_CARD	Materials	2026	2	1	docs:2		
+NO_CARD	Chem	2024	2	2	docs:2		
+NO_CARD	Kang	2024	2	2	docs:1,webapp:1		
+NO_CARD	Amin	2015	2	2	docs:1,scripts:1		2 S/cm×1
+NO_CARD	Knauth	2009	2	1	docs:2		
+NO_CARD	Wenzel	2016	2	1	docs:2		
+NO_CARD	Communications	2024	2	1	docs:2		
+NO_CARD	Payandeh	2023	2	2	docs:2		
+NO_CARD	Yu-Standish	1996	2	1	docs:2		
+NO_CARD	Batteries	2023	2	2	docs:1,scripts:1		
+NO_CARD	SUPERSEDED	2026	2	2	docs:2		
+NO_CARD	Lischka	2023	2	2	docs:2		0.25 GPa×1
+NO_CARD	Pritzl	2019	2	2	docs:2		
+NO_CARD	Auvergniot	2017	2	1	docs:2		
+NO_CARD	Shi	2023	2	1	docs:2		4 nm×1
+NO_CARD	Energy	2025	2	1	docs:2		
+NO_CARD	Small	2025	2	1	docs:2		
+NO_CARD	Glover	2010	2	2	docs:1,scripts:1		
+NO_CARD	AlexNet	2012	2	1	machine-learning:2		
+NO_CARD	ZFNet	2013	2	1	machine-learning:2		
+NO_CARD	GoogLeNet	2014	2	1	machine-learning:2		
+NO_CARD	ResNet	2015	2	1	machine-learning:2		
+NO_CARD	SENet	2017	2	1	machine-learning:2		
+NO_CARD	Energy	2023	2	2	pipeline:1,scripts:1		
+NO_CARD	Thornton	1997	2	1	scripts:2		
+NO_CARD	Lim	2017	2	2	scripts:1,webapp:1		
+NO_CARD	Bernal	1965	2	1	scripts:2		
+NO_CARD	Adopted	2026	2	2	scripts:2		
+NO_CARD	Ohno	2020	2	1	scripts:2		
+NO_CARD	Tippens	2019	2	1	scripts:2		
+NO_CARD	Verma	2020	2	1	scripts:2		
+NO_CARD	Bernal	1960	2	2	scripts:2		
+NO_CARD	Storakers-Fleck-McMeeking	1999	2	2	scripts:2		
+NO_CARD	Yu-Standish	1987	2	1	scripts:2		
+NO_CARD	Tran	2025	2	1	scripts:2		
+NO_CARD	Yu-Standish	1991	2	1	scripts:2		
+NO_CARD	PENDING	2026	1	1	CLAUDE.md:1		
+NO_CARD	GPa	2026	1	1	CLAUDE.md:1		1.35 GPa×1
+NO_CARD	TIMELOG	2026	1	1	CLAUDE.md:1		
+NO_CARD	CONVERGENCE	2026	1	1	CLAUDE.md:1		
+NO_CARD	CROSS-CHECK	2026	1	1	CLAUDE.md:1		
+NO_CARD	GRID-CONVERGENCE	2026	1	1	CLAUDE.md:1		
+NO_CARD	USABLE	2026	1	1	CLAUDE.md:1		
+NO_CARD	CROSS-VALIDATION	2026	1	1	CLAUDE.md:1		
+NO_CARD	MOMENT	2026	1	1	CLAUDE.md:1		
+NO_CARD	REFINEMENT	2026	1	1	CLAUDE.md:1		
+NO_CARD	EXHAUSTED	2026	1	1	CLAUDE.md:1		
+NO_CARD	VALIDATION	2026	1	1	CLAUDE.md:1		
+NO_CARD	Haile	2003	1	1	GB_correction_fitting_report.md:1		
+NO_CARD	Letters	2025	1	1	docs:1		
+NO_CARD	Materials	2024	1	1	docs:1		
+NO_CARD	Direct	2021	1	1	docs:1		
+NO_CARD	German	2014	1	1	docs:1		
+NO_CARD	Brouwers	2006	1	1	docs:1		
+NO_CARD	Thornton	2015	1	1	docs:1		
+NO_CARD	Alabdali	2022	1	1	docs:1		1.35 GPa×1; 300 MPa×1
+NO_CARD	Birkholz	2022	1	1	docs:1		
+NO_CARD	Grießer	2021	1	1	docs:1		
+NO_CARD	Ryu	2018	1	1	docs:1		
+NO_CARD	Parks	2023	1	1	docs:1		
+NO_CARD	Doerrer	2021	1	1	docs:1		
+NO_CARD	Mayer	2022	1	1	docs:1		
+NO_CARD	Frontiers	2023	1	1	docs:1		
+NO_CARD	Tech	2024	1	1	docs:1		
+NO_CARD	Sources	2025	1	1	docs:1		
+NO_CARD	UNCHANGED	2026	1	1	docs:1		
+NO_CARD	Schwartz	2004	1	1	docs:1		
+NO_CARD	SOLUTION	2026	1	1	docs:1		
+NO_CARD	Received	2018	1	1	docs:1		
+NO_CARD	Revised	2018	1	1	docs:1		
+NO_CARD	Published	2018	1	1	docs:1		
+NO_CARD	GeoDict	2018	1	1	docs:1		
+NO_CARD	Accepted	2020	1	1	docs:1		
+NO_CARD	Published	2020	1	1	docs:1		
+NO_CARD	Froboese	2019	1	1	docs:1		
+NO_CARD	GeoDict	2019	1	1	docs:1		
+NO_CARD	Shi	2020	1	1	docs:1		
+NO_CARD	Letters	2024	1	1	docs:1		
+NO_CARD	Energy	2018	1	1	docs:1		
+NO_CARD	Accepted	2021	1	1	docs:1		
+NO_CARD	Zeier	2020	1	1	docs:1		
+NO_CARD	Revised	2019	1	1	docs:1		
+NO_CARD	Amira	2019	1	1	docs:1		
+NO_CARD	Copyright	2020	1	1	docs:1		
+NO_CARD	CNT-wrapping	2025	1	1	docs:1		
+NO_CARD	Rabbani	2014	1	1	docs:1		
+NO_CARD	Published	2023	1	1	docs:1		
+NO_CARD	Accepted	2025	1	1	docs:1		
+NO_CARD	Published	2022	1	1	docs:1		
+NO_CARD	Han	2021	1	1	docs:1		
+NO_CARD	MPa	2021	1	1	docs:1		300 MPa×1
+NO_CARD	Revised	2020	1	1	docs:1		
+NO_CARD	Published	2021	1	1	docs:1		
+NO_CARD	Zhang	2017	1	1	docs:1		
+NO_CARD	Jackson	2017	1	1	docs:1		
+NO_CARD	Stuart	2008	1	1	docs:1		
+NO_CARD	Nkulikiyimfura	2012	1	1	docs:1		
+NO_CARD	Laenerts	2009	1	1	docs:1		
+NO_CARD	Imhsen	2013	1	1	docs:1		
+NO_CARD	Chang	2012	1	1	docs:1		
+NO_CARD	Miller	1989	1	1	docs:1		
+NO_CARD	Bell	2005	1	1	docs:1		
+NO_CARD	Milenkovic	1996	1	1	docs:1		
+NO_CARD	Mazhar	2015	1	1	docs:1		
+NO_CARD	Yasuda	2008	1	1	docs:1		
+NO_CARD	Yue	2015	1	1	docs:1		
+NO_CARD	Ram	2015	1	1	docs:1		
+NO_CARD	Cummins	2002	1	1	docs:1		
+NO_CARD	Sumner	1999	1	1	docs:1		
+NO_CARD	Li	1993	1	1	docs:1		
+NO_CARD	Chen	2013	1	1	docs:1		
+NO_CARD	Pla-Castells	2006	1	1	docs:1		
+NO_CARD	Steffen	2008	1	1	docs:1		
+NO_CARD	Wood	2008	1	1	docs:1		
+NO_CARD	Gast	2015	1	1	docs:1		
+NO_CARD	Singer	2023	1	1	docs:1		
+NO_CARD	Dec	2025	1	1	docs:1		
+NO_CARD	Created	2026	1	1	docs:1		
+NO_CARD	Samsung	2024	1	1	docs:1		
+NO_CARD	Franco	2024	1	1	docs:1		
+NO_CARD	Etsion	2002	1	1	docs:1		
+NO_CARD	Accepted	2024	1	1	docs:1		
+NO_CARD	STATUS	2026	1	1	docs:1		
+NO_CARD	Jain	2011	1	1	docs:1		
+NO_CARD	CORRECTIONS	2026	1	1	docs:1		
+NO_CARD	PROGRESS	2026	1	1	docs:1		
+NO_CARD	CONFIRMED	2026	1	1	docs:1		
+NO_CARD	GPU-CONFIRMED	2026	1	1	docs:1		
+NO_CARD	Joule	2022	1	1	docs:1		
+NO_CARD	Boyce	2022	1	1	docs:1		0.5 MPa×1
+NO_CARD	Ge	2021	1	1	docs:1		
+NO_CARD	McClelland	2023	1	1	docs:1		
+NO_CARD	Kloss	2012	1	1	docs:1		
+NO_CARD	Thorpe	2009	1	1	docs:1		
+NO_CARD	Chakraborty	2005	1	1	docs:1		
+NO_CARD	Eyre	1999	1	1	docs:1		
+NO_CARD	Brisard	2010	1	1	docs:1		
+NO_CARD	Storåkers-Fleck-McMeeking	2000	1	1	docs:1		
+NO_CARD	Worlds	1991	1	1	docs:1		
+NO_CARD	Grieves	2000	1	1	docs:1		
+NO_CARD	Energy	2026	1	1	docs:1		
+NO_CARD	Yovanovich	1998	1	1	docs:1		
+NO_CARD	Kogut	2002	1	1	docs:1		
+NO_CARD	Pantaleev	2017	1	1	docs:1		
+NO_CARD	Sources	2022	1	1	docs:1		
+NO_CARD	Sources	2020	1	1	docs:1		
+NO_CARD	Sedlatschek	2026	1	1	docs:1		
+NO_CARD	CORRECTED	2026	1	1	docs:1		
+NO_CARD	Sources	2024	1	1	docs:1		
+NO_CARD	Naik	2025	1	1	docs:1		
+NO_CARD	Chem	2025	1	1	docs:1		
+NO_CARD	O'Kane	2022	1	1	docs:1		
+NO_CARD	Springer	1967	1	1	docs:1		
+NO_CARD	Wiley	2001	1	1	docs:1		
+NO_CARD	Tech	2025	1	1	docs:1		
+NO_CARD	Vu-Quoc	2001	1	1	docs:1		
+NO_CARD	Brodu	2015	1	1	docs:1		
+NO_CARD	Harthong	2009	1	1	docs:1		
+NO_CARD	Lew	2015	1	1	docs:1		
+NO_CARD	Jung	2022	1	1	docs:1		
+NO_CARD	Tron	2023	1	1	docs:1		
+NO_CARD	Chiang	2016	1	1	docs:1		
+NO_CARD	Endo	2001	1	1	docs:1		
+NO_CARD	Doyle-Fuller-Newman	1993	1	1	docs:1		
+NO_CARD	Marquis	2019	1	1	docs:1		
+NO_CARD	Sulzer	2021	1	1	docs:1		
+NO_CARD	Grey	2019	1	1	docs:1		
+NO_CARD	Anseán	2022	1	1	docs:1		
+NO_CARD	Seok	2026	1	1	docs:1		
+NO_CARD	Dauphin	2014	1	1	machine-learning:1		
+NO_CARD	Polyak	1964	1	1	machine-learning:1		
+NO_CARD	ILSVRC	2012	1	1	machine-learning:1		
+NO_CARD	Aligned	2026	1	1	scripts:1		
+NO_CARD	RETIRED	2026	1	1	scripts:1		10 µm×1
+NO_CARD	Severson-MIT-Toyota	2019	1	1	scripts:1		
+NO_CARD	Attia	2020	1	1	scripts:1		
+NO_CARD	PREFERRED	2026	1	1	scripts:1		
+NO_CARD	CHECK	2026	1	1	scripts:1		
+NO_CARD	Bi	2020	1	1	scripts:1		
+NO_CARD	Powell	1979	1	1	scripts:1		
+NO_CARD	Apr-	2026	1	1	scripts:1		
+NO_CARD	CORRECTION	2026	1	1	scripts:1		
+NO_CARD	Yoon	2025	1	1	scripts:1		
+NO_CARD	Zeier	2023	1	1	scripts:1		0.1 mS/cm×1
+NO_CARD	Mukhopadhyay	2014	1	1	scripts:1		
+NO_CARD	ScienceDirect	2021	1	1	scripts:1		
+NO_CARD	LOGIC	2026	1	1	scripts:1		
+NO_CARD	ADAPTIVE	2026	1	1	scripts:1		
+NO_CARD	Excluded	2026	1	1	scripts:1		
+NO_CARD	ATTRIBUTION	2026	1	1	scripts:1		
+NO_CARD	McMeeking	1999	1	1	scripts:1		
+NO_CARD	Yu	1987	1	1	scripts:1		
+NO_CARD	Sridhar-Fleck-McMeeking	2000	1	1	scripts:1		
+NO_CARD	Scher	1970	1	1	scripts:1		
+NO_CARD	Yu-Zou-Standish	1996	1	1	scripts:1		
+NO_CARD	Yu	1991	1	1	scripts:1		
+NO_CARD	Yu	1996	1	1	scripts:1		
+NO_CARD	Heenan	2020	1	1	scripts:1		
+NO_CARD	Grain	2024	1	1	scripts:1		
+NO_CARD	Trevisanello	2026	1	1	scripts:1		
+NO_CARD	CODATA	2018	1	1	scripts:1		
+NO_CARD	Contacts	1967	1	1	scripts:1		
+NO_CARD	Methods	2001	1	1	scripts:1		
+NO_CARD	Aug	2026	1	1	scripts:1		
+NO_CARD	Cundall	1979	1	1	scripts:1		
+NO_CARD	Mo	2018	1	1	tools:1		
+NO_CARD	SUPPRESSION	2026	1	1	webapp:1		
+NO_CARD	STRIP	2026	1	1	webapp:1		
+NO_CARD	MERGE	2026	1	1	webapp:1		
+NO_CARD	Clausnitzer	2023	1	1	webapp:1		
+NO_CARD	Rosner	2026	1	1	webapp:1		
+NO_CARD	Newman	1962	1	1	webapp:1		
+NO_CARD	Newman	1994	1	1	webapp:1		
+NO_CARD	Sakuda	2017	1	1	webapp:1		
+NO_CARD	CHANGED	2026	1	1	webapp:1		0.50 eV×1

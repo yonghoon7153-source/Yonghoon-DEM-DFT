@@ -800,10 +800,12 @@ already makes the classifier output model-agnostic.
 
 \subsection{Treatment of SE--SE grain-boundary resistance}
 \label{sec:se-gb}
+% SELF-51 (2026-09-26, audit G): this sentence still called 3.0 mS/cm a "single-crystal grain
+% conductivity" cited to Sakuda2013 (a Li2S-P2S5 glass paper) after the 09-25 fix below -- relabelled.
 Each SE--SE contact in our Kirchhoff network is treated as
-bulk-conducting through the single-crystal grain conductivity
+bulk-conducting through the input conductivity
 $\sigma_{\mathrm{grain}}^{\mathrm{LPSCl}} = 3.0$~mS/cm
-\citep{Sakuda2013}, with a Holm--Maxwell constriction resistance
+(a pellet value; see the last paragraph of this subsection), with a Holm--Maxwell constriction resistance
 $R = 1/(2\,\sigma_{\mathrm{grain}}\,a)$ \citep{Holm1967} at the
 contact radius $a$ and \emph{no explicit grain-boundary term} added
 in series.  This treatment follows the foundational assumption

@@ -1,0 +1,248 @@
+key	verdict	n_occ	sites	evidence_short	first_commit
+Asia 2024	M	3	docs/GRADING_STORY.md:17,109 · scripts/grade_engine.py:293 (3)	실재: "Infiltration-driven performance enhancement of poly-crystalline cathodes in all-solid-state batteries", NPG Asia Mater. 16 (2024) (검색). 검색 요약: LIB 다공 전극에 **SE 용액을 침투**시키는 공정 논문 — 건식 300 MPa 압밀 중 생긴 균열이 치유된다는 근거가 아님 (조건 불일치). 리포 자신도 "ASSB 에선 SE 가 균열에 침투 불가" 라고 적는다 (ncm_sc_poly_electrochem_anchors.md:18 · Trevisa…	83e3101c2 (05-22, grade_engine) · 06aece281 (05-22, GRADING_STORY)
+Dewald 2021	M(서지)	3	scripts/build_tau_regime_db.py:228 · scripts/compare_hertzian_vs_physics.py:118 · scripts/plot_tau_regime_si.py:108 (3)	리포가 이미 "Minnmann 과 같은 논문 (DOI 10.1149/1945-7111/abf8d7) ⇒ 이중계상" 으로 뺐다 (GAP3-37). 정본 minnmann2021 카드 저자 = Minnmann · Quillman · Burkhardt · Richter · Janek — **Dewald 없음** ⇒ 저자 표기 자체가 틀림. 값 2.4 는 카드의 τ_ion² @25 vol% (~2.4) 와 일치	660600a44 (04-24 import)
+Kato 2016	M	3	docs/lit_bielefeld2020_effective_ionic_conductivity_binder.md:19,148 · webapp/predictor_engine.py:948 (3)	웹앱 줄: Kato 2016 = Nat. Energy 1, 16030 — 검색 요약상 이 논문의 전해질은 Li9.54Si1.74P1.44S11.7Cl0.3 (25 mS/cm) 계 (미확인) ⇒ NCM811/LPSCl 계면 j₀ 의 출처로 볼 근거가 없음 (소재 불일치). 같은 줄의 "Sakuda (2017)" 은 커버리지 측정의 거짓 커버 (§0) — 서지 미특정, 판정 U. 문서 2곳(lit_bielefeld2020 :19 · :148)은 정본 bielefeld2020 카드 "σ_bulk,SE = 2.7 mS/cm (Kato 2016)" 과 일치 = V	660600a44 (04-24 import) · 문서 2곳 a6bcce934 (06-26)
+Nature 2025	M(서지)	2	docs/lab_weekly_20260727_digest.md:11 · webapp/templates/step5.html:35 (2)	웹앱이 가리키는 DOI(docs/step5_cycle_degradation.md:68) 10.1038/s41560-025-01726-8 = *Nature Energy* 10, 479–489 (2025) "High-energy, long-life Ni-rich cathode materials with columnar structures for ASSBs" (검색) ⇒ 학술지명 오기. 검색 요약: Li[NixCoyAl]O₂ Ni 80–95 %, "detachment increases with Ni content" — "Ni≥85" 문턱은 미확인. TabPFN 줄은 …	6c9296fe0 (07-23, step5.html)
+Sridhar-Fleck-McMeeking 2000	M(서지)	1	scripts/predict_porosity_strict_physics.py:16 (1)	저자명 혼합: Sridhar & Fleck 2000 (Acta Mater. 48, 3341) 과 Storåkers · Fleck · McMeeking 1999 (JMPS 47) 를 섞은 이름. α = 2 "published/typical" 은 감사 C D1 에서 원문 미확인 (다른 스크립트는 같은 인용으로 α = 3)	288d7b27c (05-13)
+Inorganics 2025	M(서지)	3	docs/rint_anchor_db_research.md:69,169 · docs/rint_reference_growthlaw_design.md:138 (3)	DOI 10.3390/inorganics14070180 = *Inorganics* **2026**, 14(7), 180 (2026-07-03 게재, 검색). 내용(5 성분·로딩 의존)은 검색 요약과 일치, 연도만 틀림 (권 14 = 2026)	84bc3b354 (07-20)
+Wenzel 2016	M	2	docs/paper_brittle_caveat.md:928,1126 (2)	리포가 서지를 특정하지 않음. 정본에 기록된 Wenzel 2016 판본들(chaney2024 · lai2025 · li2026 카드: ACS AMI Na₃PS₄|Na EIS · SSI Li₇P₃S₁₁|Li 전하이동 · LPSC XPS)은 전부 **계면 반응** 논문 — 입경–전도도 설명이 아님. 같은 문장의 "Cronau 2022 … D50 5–10 µm → <0.3 µm ≈1/3" 은 정본 cronau2022 카드상 σ 가 입경이 아니라 밀링 손상을 따름 (다른 감사 소관)	d62ba398b (04-30)
+Yu-Standish 1996	M	2	docs/porosity_wave_shape_physics.md:63,71 (2)	1996 판은 Yu · Zou · Standish, Ind. Eng. Chem. Res. 35, 3730 "Modifying the linear packing model for predicting the porosity of **nonspherical** particle mixtures" (검색 — 제목) — 주제가 비구형 입자. 다성분 선형충전 모델은 1991 판 (Ind. Eng. Chem. Res. 30, 1372 "Estimation of the porosity of particle mixtures by a linear-mixture packing mod…	1e3070493 (05-13, 문서) · 144e18b60 (05-13, main.tex)
+Zhou 2019	M	2	docs/literature_coverage/README.md:140,275 (2)	실재: Zhou · Park · Sun · Lalère · Adermann · Hartmann · Nazar, ACS Energy Lett. 4, 265 (2019) "Solvent-engineered design of argyrodite Li6PS5X" (검색) — ① 은 B (값 미확인). ② 이 논문은 **황화물 argyrodite** 라 "Halide SE σ" 의 출처가 될 수 없음 (소재 불일치)	660600a44 (04-24 import)
+Frontiers 2023	M(서지)	1	docs/cbd_morphology_roadmap.md:14 (1)	정본 matthews2024 카드: "Front. Energy Res. 11, 1336344 (**2024**) — DOI 의 2023 은 채택연도, 인용에는 2024". 피브릴 수치는 5 편을 합친 요약이고 이 카드는 "구간 서술만"	1381fbc0d (06-24)
+Letters 2025	M(서지)	1	docs/GRADING_STORY.md:182 (1)	DOI 10.1021/acsenergylett.5c03923 = ACS Energy Lett. **11**(2), 2103–2114, 2026-02-13 게재 (Oh · S.-Y. Lee · H.-G. Jung 외, 검색) — 연도 오기. 감사 B 의 "grade_engine 'Lee 2025 ACS EL' = 실제 Oh 2026" 과 같은 뿌리 (같은 날 같은 세션)	06aece281 (05-22)
+Materials 2024	M	1	docs/GRADING_STORY.md:185 (1)	Asia 2024 행과 같음 (같은 논문의 링크 줄)	06aece281 (05-22)
+Storåkers-Fleck-McMeeking 2000	M(서지)	1	docs/porosity_wave_shape_physics.md:30 (1)	SFM 논문은 J. Mech. Phys. Solids **47** (1999) 785–815 (감사 C D2). 연도 오기 — 감사 C 가 같은 계열의 "Acta Mater. 48 (2000) 4203" 을 M(서지)로 판정	1e3070493 (05-13)
+Mukhopadhyay 2014	F	1	scripts/grade_engine.py:152 (1)	좌표수 기준으로 그런 논문을 찾지 못함 (검색 2 회). 알려진 Mukhopadhyay & Sheldon 2014 (Prog. Mater. Sci.)는 전극 응력 총설 (일반 지식 — 미확인). 이 문자열은 웹앱 등급 가이드 "자세히 (기술적 근거)" 로 사용자에게 노출 (app.py:892 · :9341–9344)	41f3a9d9a (05-20)
+Power 2023	F	5	docs/paper_brittle_caveat.md:961,1083,1108,1156,1271 (5)	공개 공시·논문을 찾지 못함 (검색). "internal cell-aging data" 는 공개 출처가 될 수 없음. 같은 문장은 QuantumScape 를 fine/coarse 황화물 SE 사례로 드는데 그 회사 분리막은 산화물 세라믹으로 알려져 있음 (일반 지식 — 미확인)	afd760adf (04-30)
+Grießer 2021	F	1	docs/Reviewer_Defence_Notes.md:308 (1)	저자-연도만 있음; ASSB/DEM 로 검색해도 찾지 못함 (2 회). 원고(docs/paper/main.tex · refs.bib)에 **없음** ⇒ "paper Sec 5-1" 인용이라는 서술부터 사실이 아님	148d0f5fb (05-04)
+Schmidt 2024	U	3	docs/a10_cycle_chemomech_design.md:58,107 · scripts/cycle_contact_ledger.py:16 (3)	리포에 서지 없음. 후보: Schmidt · Sinzig · Wall, JES 171 (2024) "An Electro-Chemo-Mechanic Model Resolving Delamination between Components…" (검색) — 결정론적 접촉 모델로 보여 "확률적" 과 맞지 않음. 확정 불가	0822e6adf (07-21)
+Kang 2024	U	2	docs/mpm_wallP_conditional_troubleshooting.md:410 · webapp/predictor_engine.py:865 (2)	식별 불가: 랩 2024 논문 둘(Cho·Yun·Kang·Kim·Lee, Electrochim. Acta 481 · Cha·Yun·Kim·Kang·Cho·Lee, JPS 617)은 Kang 이 제1저자가 아니고, Kang 제1저자 판은 2025 (정본 kang2025 카드들)	660600a44 (04-24 import)
+Birkholz 2022	U	1	docs/Reviewer_Defence_Notes.md:308 (1)	Birkholz(·Gan·Kamlah)의 저항망 논문은 2019·2021 (Powder Technol.) 이 실재하고 정본 bazzoun2026 · electromechanical_contact_model 카드도 Birkholz 2019 를 인용 — "2022" 판과 "DEM-ASSB" 성격은 확인 불가. 원고에 없음	148d0f5fb (05-04)
+Haile 2003	U	1	GB_correction_fitting_report.md:153 (1)	brick-layer 모델 자체는 고전이나 "Haile et al. 2003" 서지를 검색으로 특정하지 못함	660600a44 (04-24 import)
+Jung 2022	U	1	docs/session_20260923_progress.md:121 (1)	동료(카톡) 표의 2차 인용 — 서지 미특정	0489233c8 (09-23)
+Weitze 2024	P	5	docs/literature_review_dem_mpm_assb.md:36,119,233,315 · docs/positioning_vs_geodict.md:41 (5)	정본 wet_processing_resolved_am_ssb_cathode_manufacturing 카드: Weitze · Zanotto · Zapata Dominguez · Franco, ESM 73 (2024) 103747 — 형상·강체·Fig 7(AM-SE ~1, 저자 한계 자인) 모두 일치. 다만 ① "NMC622+LPSCl" → 카드 정정(08-19): NMC622 는 형상 공여체, 슬러리 AM 은 Ni-rich ② literature_review:36 이 "LIGGGHTS" 행에 분류 → 카드: LAMMPS	4f8d33b6f (06-26)
+Strauss 2018	P	4	docs/lit_minnmann2022_designing_cathodes_solidstate.md:77 · docs/literature_coverage/README.md:154,268,272 (4)	서지: 정본 cronau2022 카드 ref [21] Strauss · Bartsch · de Biasi · Kim · Janek · Hartmann · Brezesinski, ACS Energy Lett. 3, 992 (2018). 내용: bielefeld2019 카드 "carbon-free NCM-622 + LPS, AM 입경↑ → 전자전도 급락·비활성 NCM↑"; minnmann2022 카드 "3–5 µm (refs 36, 37)", ">60 vol% (refs 11, 36)" (2차). README 표의 숫자는 카드에 없음	
+Alabdali 2024	P	3	docs/a10_cycle_chemomech_design.md:54 · docs/literature_review_dem_mpm_assb.md:39,286 (3)	정본 dem_mechanical_stresses_ssb_electrode_cycling 카드: Alabdali … Franco, ESM 70 (2024) 103527 — LIGGGHTS Hertz · LPSCl+NMC532 · 11,002 입자 · 375 MPa → 1/3/5 MPa · 5 사이클 일치. 단 리포는 "반경(반지름) ±6 %", 카드는 "±6 % 부피" (원문 "size … by 6 %") — 반경으로 구현하면 부피변형이 약 3 배	0822e6adf (07-21, a10) · 4f8d33b6f (06-26, review)
+Auvergniot 2017	P	2	docs/rint_anchor_db_research.md:70,169 (2)	정본 nolan2018 카드(ref 111): Auvergniot, Cassel, Ledeuil, Viallet, Seznec, Dedryvère, Chem. Mater. 29, 3883–3890 (2017) — 계면 산물 S · 폴리설파이드 · P₂Sₓ · LiCl 확인 (2차). "phosphates" 와 "uncycled/2nd/50th" 는 미확인	
+Hlushkou 2018	P	2	docs/literature_coverage/README.md:95,130 (2)	정본에는 bielefeld2020 카드의 "void 15 % 가정 (Kato 미보고 → Hlushkou 13.2 %류)" 뿐 — 13.2 % 만 확인. 나머지 표 값은 카드 밖 (사용자 제공 PDF 요약)	
+Ruess 2020	P	2	docs/lit_trevisanello2021_sc_pc_ncm_cracking_diffusion.md:82 · docs/ncm_sc_poly_electrochem_anchors.md:18 (2)	정본 trevisanello2021 카드가 "ref [21] Ruess 2020 … 이 효과는 기계적으로 단단한 고체전해질로는 일어나지 않는다" 를 Trevisanello 의 서술로 기록 (2차). Ruess 원문 카드는 없음	
+Franco 2024	P	1	docs/literature_review_dem_mpm_assb.md:169 (1)	Alabdali 2024 행과 같음	4f8d33b6f (06-26)
+Kondrakov 2017	B	5	docs/a10_cycle_chemomech_design.md:21 · docs/stage4_electrochem_research.md:87 · scripts/cycle_contact_ledger.py:10,340,605 (5)	실재: Kondrakov 외, JPCC 121, 3286 (2017) — 검색 요약 "NCM811 ≈5.1 % @3.0–4.3 V" (미확인). 정본 stallard2022 카드(09-26 도착): NMC811 V/V₀ −4.8 % @x 0.20 · −7.0 % @x 0.11 (derived) ⇒ −5.1 % ≈ x 0.19, "인용 시 x 병기" 권고. "~8 %" 줄은 de Biasi 2017 (JPCC, 10.1021/acs.jpcc.7b06363) 쪽 — stallard 카드 ref [37] 로 실재	
+Balberg 1984	B	2	docs/dem_perturbation_layer.md:131 · scripts/dem_perturbation.py:233 (2)	실재: Balberg 외, PRB 30, 3933 (1984) (검색). 0.7 은 미확인	
+Mohayman 2025	B	2	docs/literature_coverage/README.md:330 · scripts/compare_hertzian_vs_physics.py:14 (2)	실재: Mohayman · Diaz · Kushima, ACS Appl. Eng. Mater. 3, 2299 (2025) (검색). 수치 미확인. ⚠ 정본 deng2016 카드 Li₆PS₅Cl B 28.7 · G 8.1 GPa ⇒ B/G ≈ 3.5 ("23 종 중 가장 연성") 와 정반대 — 스크립트의 "Hertzian 이 이긴다" 예상이 이 한 값에 기대고 있음	
+Philipse 1996	B	2	docs/dem_perturbation_layer.md:59 · scripts/dem_perturbation.py:279 (2)	실재: Philipse, Langmuir 12, 1127 (1996) — 검색 요약 φ·(L/D) = ⟨c⟩ = 5.4 ± 0.2 로 일치 (미확인). 5.4/67 = 0.081 산술 맞음	
+Attia 2020	B	1	scripts/cycling_data_ingest.py:243 (1)	실재: Attia 외, Nature 578, 397 (2020). 검색 요약: 224 는 **후보 충전 프로토콜** 수이고 데이터셋 셀은 ~169–180 — n_cells 224 는 정의가 다를 가능성 (미확인)	79f78e093 (07-23)
+Clausnitzer 2023	B	1	webapp/predictor_engine.py:827 (1)	실재: Clausnitzer 외, Batteries & Supercaps 6, e202300167 (2023) (검색). 문턱 값은 리포 스스로 AUD-02 로 Bielefeld 2019 와 불일치 표기	
+ScienceDirect 2021	B	1	scripts/grade_engine.py:435 (1)	Direct 2021 과 같은 논문 — 검색 요약 "1·2차 입자 주변 충전을 기하 모델로 모사" 는 서술과 부합. "7:3 최적" 은 이 논문으로 미확인	
+Severson-MIT-Toyota 2019	B	1	scripts/cycling_data_ingest.py:237 (1)	실재: Severson 외, Nature Energy 4, 383 (2019) — 검색 요약 124 셀 일치 (미확인)	
+Zhou 2025	B	4	docs/literature_review_dem_mpm_assb.md:38 · docs/rint_anchor_db_research.md:76,169 · docs/rint_reference_growthlaw_design.md:86 (4)	실재: Zhou · Lu · Mish 외, ACS Energy Lett. 10, 966 (2025), DOI …4c03256 "Tailored Cathode Composite Microstructure Enables Long Cycle Life at Low Pressure" (검색). 검색 요약은 "2 MPa 에서 사이클 안정성 우위" — R_ct 비교는 미확인	
+Feng 2025	B	3	docs/rint_anchor_db_research.md:49,84,165 (3)	실재: Feng 외, ChemSusChem 18, e202501033 (2025) "NCM811–Sulfide Electrolyte Interfacial Degradation…" (검색). 수치 미확인	
+Frontiers 2021	B	3	docs/data/lpscl_electrolyte_params.md:12,24,29 (3)	실재: Frontiers in Chemistry 2021 (10.3389/fchem.2021.778057) "Ionic and Electronic Conductivities of Li6PS5Cl … Wet Milling" — 검색 요약 습식 1.0–1.9 mS/cm 일치; 나머지 미확인. 문서 스스로 "검색 스니펫 값" 이라 명시	
+Ebner 2013	B	2	docs/electronic_conductivity_derivation.md:46,319 (2)	실재: Ebner · Geldmacher · Marone · Stampanoni · Wood, AEM 3, 845 (2013) (검색). 대상은 액체 LIB 다공 전극 — 수치·"복합 양극" 적용 미확인. 같은 표의 "σ_AM 0.05 S/cm — ACS Mater. Lett. (2024)" 는 감사 E 소관	
+Makse 2004	B	2	GB_correction_fitting_report.md:908 · docs/electronic_conductivity_derivation.md:98 (2)	서지 실재 (PRE 70, 061302). 검색 요약은 "모듈러스가 EMT 의 p^{1/3} 보다 빨리 증가" 를 다룸 — "K, G ∝ Z²" 는 확인 안 됨 (표준 EMT 는 Z 의 1 차 또는 2/3 승 — 일반 지식, 미확인)	
+Payandeh 2023	B	2	docs/pipeline_step1_to_step5_guide.md:449 · docs/step5_cycle_degradation.md:67 (2)	실재: Payandeh 외, Adv. Mater. Interfaces 2023 "The Effect of Single versus Polycrystalline Cathode Particles on ASSB Performance" — 검색 요약 93 % vs 79 % @200 cyc 로 리포 값과 일치 (미확인)	
+Pritzl 2019	B	2	docs/rint_anchor_db_research.md:52 · docs/rint_reference_growthlaw_design.md:79 (2)	실재: Pritzl … Gasteiger, JES 166, A582 (2019), LNMO/Al 집전체 접촉저항 (검색). 수치 미확인	
+Shozib 2024	B	2	docs/adhesion_agc_interlayer_20260923.md:152,196 (2)	후보: JES 2024 (10.1149/1945-7111/ad7c82) Ag–C 중간층 — 검색 요약 "조립압 350→530 MPa 에서 점착↑, 530 초과 시 분리막 균열". 리포 스스로 원문 미확인이라 적음	
+Brouwers 2006	B	1	docs/Packing_Regime_Analysis.md:152 (1)	실재: Brouwers, PRE 74, 031309 (2006) (검색). 4~5 는 미확인	
+Chem 2025	B	1	docs/rint_reference_growthlaw_design.md:82 (1)	실재: *Communications Chemistry* 8 (2025) "Probing the chemical stability between current collectors and argyrodite Li6PS5Cl" — 검색 요약 SS/Ni/Al/Al-C 안정, Cu/Li 부식으로 일치. 저널명 "Nat Commun Chem" 은 틀린 표기	
+Dec 2025	B	1	docs/literature_dry_assb.md:379 (1)	DOI 실재 (Communications Materials, PTFE 피브릴화 다중스케일, 검색). 검색 요약상 권·연도 vol 7, art. 34 (2026) · 저자 첫머리 Jun Hyuk Kang — 리포의 "6 (Dec 2025)" · 저자 순서와 다를 수 있음 (미확인)	
+Direct 2021	B	1	docs/GRADING_STORY.md:186 (1)	실재: ESM 2021 (ORNL) "Understanding implications of cathode architecture on energy density of SSBs" (10.1016/j.ensm.2021.05.001, 검색). "Sci Direct" 는 플랫폼명	
+Doerrer 2021	B	1	docs/a10_cycle_chemomech_design.md:25 (1)	실재: Doerrer … Grant, ACS AMI 13, 37809 (2021) SC-NMC/Li6PS5Cl — 검색 요약 "5.5 % volume change" 로 일치 (미확인)	
+Mayer 2022	B	1	docs/additive_test_campaign.md:304 (1)	실재: Mayer · Bockholt · Kwade, JPS 529, 231259 (2022) "Inner carbon black porosity as characteristic parameter…" (검색)	
+McClelland 2023	B	1	docs/ncm_sc_poly_electrochem_anchors.md:33 (1)	실재: McClelland 외, Chem. Mater. 35, 4149 (2023) operando µSR NMC811 (검색). 수치 미확인	
+Naik 2025	B	1	docs/rint_reference_growthlaw_design.md:74 (1)	실재: Naik 외, AEM 2025 "Interrogating the Role of Stack Pressure in Transport-Reaction Interaction…" — SC-NMC532/LPSCl 소재 일치 (검색). 수치 미확인	
+Schwartz 2004	B	1	docs/electronic_conductivity_derivation.md:100 (1)	Makse 2004 행과 같음	
+Singer 2023	B	1	docs/literature_dry_assb.md:369 (1)	실재: Singer · Kopp · Aruqaj · Daub, Energy Technol. 11 (2023) (검색) — 건조 공정·점착 논문. "1/100" 수치는 이 논문으로 미확인	
+Sources 2024	B	1	docs/rint_anchor_db_research.md:86 (1)	실재: JPS 2024 "Regulating and understanding the compatibility of sulfide composite solid-state electrolyte in nickel-rich lithium metal batteries" (검색). 수치 미확인	
+Tech 2024	B	1	docs/cbd_morphology_roadmap.md:14 (1)	실재: Powder Technol. 2024 "Effect of active material morphology on PTFE-fibrillation, powder characteristics and electrode properties in dry electrode coating processes" (검색)	
+Tron 2023	B	1	docs/session_20260923_progress.md:121 (1)	후보: Nanomaterials 13, 327 (2023) "Rational Optimization of Cathode Composites for Sulfide-Based ASSBs" — C65 vs VGCF 비교 (검색). 동료 표의 수치 미확인 (2차 인용)	
+Zhang 2017	B	1	docs/literature_coverage/README.md:179 (1)	실재: Zhang … Janek, ACS AMI 2017 (검색). 표 수치 미확인	
+Moulinec-Suquet 1998	C	5	docs/Reviewer_Defence_Notes.md:255 · docs/Tabor_framework_reference.md:243 · docs/paper_brittle_caveat.md:2371,2430 · scripts/fft_homogenize.py:171 (5)	CMAME 157, 69 (1998) 정합. 주석의 수렴조건은 표준(σ_max/2)과 다르나 구현 σ_0 = (σ_min+σ_max)/2 는 표준 선택 — 무해	
+Yovanovich 1982	C	5	docs/reviews/codex_verdict_area_contract_20260913.md:219 · docs/reviews/codex_verdict_area_round2_20260913.md:87,287 · docs/session_20260911_progress.md:582 · scripts/network_conductivity.py:431 (5)	Yovanovich, AIAA Prog. Astronaut. Aeronaut. 83 (1982) 로 추정. 리포 Codex 판정문이 원문 p.86 대조를 기록. 원장 L2-01 (open, ψ 위치) 이 이 인용을 이미 추적	
+Mikić 1974	C	4	docs/reviews/codex_verdict_dem_stack_L2_20260913.md:65 · docs/reviews/review_before_after.html:246 · scripts/build_review_before_after.py:51 (4)	Int. J. Heat Mass Transfer 17 (1974) 로 추정. 적용 범위 문제는 원장 L2-01 (open) · Codex L2 판정문이 추적	
+Peaceman 1978	C	4	docs/reviews/codex_review_response_20260816.md:142 · docs/reviews/review_request_20260816.md:111 · scripts/fibre_1d_network.py:210,230 (4)	SPE J. 18(3), 183 (1978) 정합. 0.2Δx 는 고전 결과 (원문 대조 안 함); 코드가 스스로 "얇은 선원 전제 위반" 을 경고	
+Sulsky 1994	C	4	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:98 · docs/literature_review_dem_mpm_assb.md:218,221 · scripts/seminar_deck/build.js:647 (4)	정본 klar2016 · devaucorbeil2020 · stomakhin2013 카드가 원전으로 인용	
+Eyre-Milton 1999	C	3	docs/paper_brittle_caveat.md:2392,2449 · scripts/fft_homogenize.py:85 (3)	Eur. Phys. J. Appl. Phys. 6, 41 (1999) 정합	
+Mikic 1974	C	3	docs/voxel_contact_free_gap.md:40 · scripts/network_conductivity.py:410,501 (3)	같은 인용. "rigorous" 는 과장 — ψ 근사는 0<a/b≤0.3 한정 (Codex 가 Yovanovich 1982 원문으로 지적, L2-01)	
+Bernal 1960	C	2	scripts/predict_porosity_final.py:29 · scripts/predict_porosity_strict_physics.py:9 (2)	Bernal & Mason 1960 (Nature) 로 추정 — 고전값	
+Bernal 1965	C	2	scripts/fit_porosity_physics_decomposition.py:68,171 (2)	RCP 공극 ≈ 0.36 은 고전값. 다른 스크립트는 같은 값을 "Bernal 1960" 으로 적음	
+Glover 2010	C	2	docs/thermal_conductivity_derivation.md:40 · scripts/thermal_regression.py:1394 (2)	Geophysics 75(6) 일반화 Archie 법칙으로 추정 — 방법 인용	
+Storakers-Fleck-McMeeking 1999	C	2	scripts/predict_porosity_final.py:33 · scripts/predict_porosity_physics.py:9 (2)	JMPS 47 (1999) 785 — 연도 정합 (감사 C D2 의 올바른 서지)	
+Yu-Standish 1987	C	2	scripts/predict_porosity_physics.py:6,70 (2)	Powder Technol. (1987) 로 추정 — 방법 인용	
+Yu-Standish 1991	C	2	scripts/predict_porosity_yu_standish.py:5,49 (2)	Ind. Eng. Chem. Res. 30, 1372 (1991) 정합	
+Contacts 1967	C	1	scripts/seminar_deck/build.js:323 (1)	Holm 4판 Springer 1967 정합 (refs.bib Holm1967 은 @article·journal=Springer-Verlag — 형식 오류만)	
+Cundall 1979	C	1	scripts/seminar_deck/build.js:646 (1)	Géotechnique 29, 47 (1979) 정합 (refs.bib CundallStrack1979 도 같음)	
+Methods 2001	C	1	scripts/seminar_deck/build.js:418 (1)	2판 Wiley 2001 정합	
+Newman 1962	C	1	webapp/predictor_engine.py:924 (1)	JES 109, 1183 (1962) — 방법 인용	
+Newman 1994	C	1	webapp/predictor_engine.py:924 (1)	JES 141, 1 (1994) — 방법 인용	
+Powell 1979	C	1	scripts/fit_constrained.py:16 (1)	PRB 20, 4194 (랜덤 충전 구의 site percolation) — 주석의 "overlap-sphere" 는 부정확, 경계는 리포 적합값	
+Yu 1987	C	1	scripts/predict_porosity_physics.py:72 (1)	방법 인용	
+Yu 1991	C	1	scripts/predict_porosity_yu_standish.py:21 (1)	서지 정합	
+Yu 1996	C	1	scripts/predict_porosity_yu_standish.py:22 (1)	서지 정합	
+Yu-Zou-Standish 1996	C	1	scripts/predict_porosity_yu_standish.py:12 (1)	Ind. Eng. Chem. Res. 35, 3730 (1996) 정합	
+Cooper 2016	C	3	docs/literature_review_dem_mpm_assb.md:43,106,303 (3)	SoftwareX 5 (2016), PDF 가 리포 docs/literature_coverage/pdfs 에 있음. 정의 정합	
+Torquato 2002	C	3	docs/Reviewer_Defence_Notes.md:478,496,692 (3)	Springer IAM 16 (2002) 정합 (main.tex · refs.bib 도 같음). refs.bib note 의 "proof" 는 [0,1] 가중평균이라는 사소한 사실	
+AlexNet 2012	C	2	machine-learning/lectures/lecture17-cnn-architectures.md:5,15 (2)	ML 강의노트 — ILSVRC 연도 정합	
+Bergman 1978	C	2	docs/Reviewer_Defence_Notes.md:496,689 (2)	Phys. Rep. 43, 377 (1978) 정합 (main.tex · refs.bib 도 같음)	
+Deiseroth 2008	C	2	docs/data/lpscl_electrolyte_params.md:23,32 (2)	Li-argyrodite 원전 DOI 정합; t₊≈1 은 일반 서술	
+GoogLeNet 2014	C	2	machine-learning/lectures/lecture17-cnn-architectures.md:6,54 (2)	ML 강의노트 — ILSVRC 연도 정합	
+Knauth 2009	C	2	docs/paper_brittle_caveat.md:928,1125 (2)	Solid State Ionics 180, 911 (2009) 총설로 추정 — 주장 대조 안 함 (같은 문장의 Wenzel 2016 은 M)	
+Moulinec 1998	C	2	docs/Tabor_framework_reference.md:278 · docs/paper_brittle_caveat.md:2494 (2)	서지 정합	
+ResNet 2015	C	2	machine-learning/lectures/lecture17-cnn-architectures.md:6,80 (2)	ML 강의노트 — ILSVRC 연도 정합	
+SENet 2017	C	2	machine-learning/lectures/lecture17-cnn-architectures.md:6,139 (2)	ML 강의노트 — ILSVRC 연도 정합	
+ZFNet 2013	C	2	machine-learning/lectures/lecture17-cnn-architectures.md:5,32 (2)	ML 강의노트 — ILSVRC 연도 정합	
+Zheng 1990	C	2	docs/Packing_Regime_Analysis.md:151,158 (2)	충전 이론 정성 인용	
+Anseán 2022	C	1	docs/stage4_electrochem_research.md:93 (1)	Dubarry & Anseán, Front. Energy Res. 2022 DOI 정합	
+Brisard 2010	C	1	docs/paper_brittle_caveat.md:2496 (1)	서지 정합	
+Dauphin 2014	C	1	machine-learning/lectures/lecture10-optimization-ii.md:25 (1)	ML 강의노트 — NeurIPS 2014 방법 인용	
+Doyle-Fuller-Newman 1993	C	1	docs/stage4_electrochem_research.md:36 (1)	JES 140, 1526 (1993) DOI 정합	
+Eyre 1999	C	1	docs/paper_brittle_caveat.md:2495 (1)	서지 정합	
+German 2014	C	1	docs/Packing_Regime_Analysis.md:151 (1)	충전 이론 정성 인용	
+Grey 2019	C	1	docs/stage4_electrochem_research.md:88 (1)	DOI 정합 (NMC811 사이클 구조·Li 동역학)	
+ILSVRC 2012	C	1	machine-learning/lectures/lecture17-cnn-architectures.md:16 (1)	ML 강의노트 — 연도 정합	
+Jackson 2017	C	1	docs/literature_coverage/README.md:480 (1)	= Ghaednia … Jackson, Appl. Mech. Rev. 69, 060804 (2017) 로 추정 (제1저자 Ghaednia) — 읽을거리 목록	
+Jain 2011	C	1	docs/manuscript_draft/build.js:404 (1)	서지 전문은 DFT 파트(다른 브랜치 `sdcp_dft_methods_build.js`)에 있어 이 브랜치에서 대조 불가 — 원고 인용이므로 그쪽에서 확인 필요	
+Marquis 2019	C	1	docs/stage4_electrochem_research.md:36 (1)	JES 166, A3693 (2019) — 방법 인용	
+O'Kane 2022	C	1	docs/rint_reference_growthlaw_design.md:139 (1)	PCCP 2022 열화 모델로 추정 — 수치 인용 없음	
+Polyak 1964	C	1	machine-learning/lectures/lecture10-optimization-ii.md:59 (1)	ML 강의노트 — 방법 인용	
+Seok 2026	C	1	docs/step5_cycle_degradation.md:70 (1)	실재 확인: AEM 2026 "Decoupling Chemical and Mechanical Contributions to Capacity Fading in Ni-Rich Cathodes…" (검색) — 추적 메모만, 주장 없음	
+Springer 1967	C	1	docs/seminar_20260806_glossary.md:183 (1)	서지 정합	
+Sulzer 2021	C	1	docs/stage4_electrochem_research.md:61 (1)	JORS 2021 DOI 정합	
+Wiley 2001	C	1	docs/seminar_20260806_glossary.md:201 (1)	서지 정합	
+Yovanovich 1998	C	1	docs/reviews/codex_verdict_area_round2_20260913.md:287 (1)	Codex 판정문의 원문 대조 기록 (2005 리뷰와 함께)	
+Klár 2016	V	3	docs/literature_review_dem_mpm_assb.md:41,216 · scripts/mpm_dem_match.py:226 (3)	정본 klar2016 카드: ACM TOG 35(4) 103, DP 원뿔·Coulomb 마찰 — 일치. 단 Klár 는 cap 없는 DP 라 "DPC 원전" 은 느슨한 표현	
+Batteries 2023	V	2	docs/reviews/fable_selfreview_request_20260909.md:207 · scripts/grade_engine.py:1699 (2)	정본 reisacher2023 카드: DOI 10.3390/batteries9120595 · 저자 일치	
+GeoDict 2023	V	13	docs/lit_bak2024_binder_distribution_multilayer.md:138,390 · docs/lit_koo2025_cnt_wrapped_sc_nca_dry_cathode.md:49,187,403 · docs/lit_koo2026_swcnt_sheath_thick_electrode.md:229,497,498 · docs/lit_lim2025_virtual_calendering_framework.md:126 · docs/lit_yoo2026_porosity_gradient_dry_electrode.md:196 · docs/literature_yonsei_dtbl_2026.md:462,514,634 (13)	정본 koo2026 · lim2025 · yoo2026 · bak2024 카드가 같은 판본 "GeoDict 2023" 을 기록 (소프트웨어 인용)	
+GeoDict 2022	V	12	docs/lit_koo2025_cnt_wrapped_sc_nca_dry_cathode.md:49,184,187,194,310,403,470 · docs/lit_lee2023_sicspe_digitaltwin_assb.md:87,260 · docs/literature_yonsei_dtbl_2026.md:514,516,538 (12)	정본 koo2025 · lee2023 카드 "GeoDict 2022" 일치	
+GeoDict 2025	V	6	docs/lit_hong2026_cbd_viscoelasticity_springback.md:119 · docs/lit_kim2026_a3d_air_electrode_microstructure_transport.md:71,119,131,132 · docs/literature_yonsei_dtbl_2026.md:329 (6)	정본 hong2026_cbd · kim2026_a3d 카드 일치 (voxel 0.01 µm 포함)	
+GeoDict 2020	V	4	docs/lit_park2020_digitaltwin_assb_foundational.md:101,259,455 · docs/positioning_vs_geodict.md:128 (4)	정본 park2020 카드 일치	
+Joule 2026	V	4	docs/lit_koo2025_cnt_wrapped_sc_nca_dry_cathode.md:1,15,465 · docs/literature_yonsei_dtbl_2026.md:500 (4)	정본 koo2026 카드: Joule 10, 102392 (10.1016/j.joule.2026.102392)	
+Song 2023	V	4	docs/lit_lim2025_virtual_calendering_framework.md:132 · docs/literature_yonsei_dtbl_2026.md:185 · docs/positioning_in_dt_lineage.md:388,467 (4)	정본 lim2025 카드 SI Table S4 "E_NCM622 = 2.61 GPa (ref 4 = Song 2023, AEM)". positioning:388 의 2.611 · σ_y 0.1534 · ν 0.25 는 정본 song2025 카드(NMC711 나노압입) 값	
+Zhang 2024	V	4	docs/literature_review_dem_mpm_assb.md:40,88,194,281 (4)	정본 electromechanical_contact_model_particulate_systems 카드 (Chao Zhang, Powder Technol. 2024): eq 12 Holm, 단상이면 1/(2σr_c) 와 정확히 일치	
+Kato 2018	V	3	docs/lit_bielefeld2020_effective_ionic_conductivity_binder.md:196,463 · docs/literature_coverage/README.md:482 (3)	정본 bielefeld2020 카드 일치	
+Magazine 2024	V	3	docs/lit_choi2024_digital_twin_review_echem.md:11,553 · docs/literature_yonsei_dtbl_2026.md:824 (3)	정본 choi2024_digital_twin_review_echem 카드: E.Chem 매거진 Vol.16 No.1	
+Nam 2018	V	3	docs/lit_bielefeld2020_effective_ionic_conductivity_binder.md:26,263 · docs/literature_coverage/README.md:479 (3)	정본 bielefeld2020 카드: 실험 비교점 Nam 2018, GITT, 접촉면적 overlay	
+Vaucorbeil 2020	V	3	docs/literature_review_dem_mpm_assb.md:217,221,294 (3)	정본 devaucorbeil2020 카드: Adv. Appl. Mech. 53, 185–398, 339 ref	
+Wiegmann 2006	V	3	docs/lit_bielefeld2020_effective_ionic_conductivity_binder.md:29,108,490 (3)	정본 bielefeld2020 카드 일치	
+Bosch 2014	V	2	docs/literature_review_dem_mpm_assb.md:36,232 (2)	정본 boschpadros2014 카드: Swansea MSc 2014, LIGGGHTS 방법론	
+Braun 2018	V	2	docs/lit_bielefeld2020_effective_ionic_conductivity_binder.md:23,118 (2)	정본 bielefeld2020 카드 일치	
+Franco 2026	V	2	docs/data_inventory_20260825.md:298 · docs/plan_vgcf_ptfe_coupling_20260811.md:1 (2)	정본 zhang2026_dryprocess_electrode_architecture 카드: Nature Energy 2026, 10.1038/s41560-026-01981-3, 저자에 Chouchane · Franco · Shpyrko · Meng	
+GeoDict 2024	V	2	docs/lit_hong2026_sulfide_cathode_binder_digitaltwin.md:104,446 (2)	정본 hong2026_sulfide_cathode_binder_digitaltwin 카드 일치	
+Lim 2023	V	2	docs/lit_park2020_digitaltwin_assb_foundational.md:433 · docs/literature_yonsei_dtbl_2026.md:28 (2)	정본 lee2023 카드 저자에 Hyobin Lee · Jaejin Lim (kim2024 카드도)	
+Lischka 2023	V	2	docs/reviews/mixing_model_design_20260919.md:968 · docs/reviews/self_review_mixer_20260921.md:121 (2)	정본 hare2026 카드: DEM 파라미터 출처 [85] Lischka & Nirschl, Energy Technol. 2023 — 세트 값 일치	
+Amira 2019	V	1	docs/lit_doux2020_stack_pressure_assb.md:95 (1)	정본 doux2020 카드 일치 (소프트웨어 판본)	
+Boyce 2022	V	1	docs/nca_material_preset.md:34 (1)	정본 kang2025_toughened_bimodal 카드: "G_c 1 J/m² — ref [S4] Boyce 2022"	
+Brodu 2015	V	1	docs/session_20260825_dem_litdb_progress.md:408 (1)	정본 giannis2021 카드: Brodu · Dijksman · Behringer, PRE 91, 032201 (2015) MC-strain. "광탄성 실측" 은 카드에 없음	
+CNT-wrapping 2025	V	1	docs/lit_koo2025_cnt_wrapped_sc_nca_dry_cathode.md:381 (1)	정본 koo2025 카드: ESM 78, 104270 (99.6 wt%, 4.0 g/cm³ 포함)	
+Energy 2018	V	1	docs/lit_choi2026_elastomeric_li_metal_anode.md:67 (1)	정본 choi2026_elastomeric_li_metal_anode 카드 같은 문장	
+Froboese 2019	V	1	docs/lit_bielefeld2020_effective_ionic_conductivity_binder.md:192 (1)	정본 bielefeld2020 카드 일치	
+GeoDict 2018	V	1	docs/lit_bielefeld2019_microstructural_modeling_composite_cathodes.md:280 (1)	정본 bielefeld2019 카드 "Version 2018 SP 5, ref 30" 일치	
+GeoDict 2019	V	1	docs/lit_bielefeld2020_effective_ionic_conductivity_binder.md:324 (1)	정본 bielefeld2020 카드 일치	
+Grieves 2000	V	1	docs/positioning_in_dt_lineage.md:50 (1)	정본 park2020 카드: "2000년대 Michael Grieves"	
+Han 2021	V	1	docs/lit_minnmann2022_designing_cathodes_solidstate.md:196 (1)	정본 minnmann2022 카드 같은 서술	
+Harthong 2009	V	1	docs/session_20260825_dem_litdb_progress.md:408 (1)	정본 demirtas2021 카드 [30] IJSS 46 (2009) 3357 고밀도 압밀 DEM · gonzalez2012 카드 (FEM 격자에서 소성 접촉법칙 적합)	
+Letters 2024	V	1	docs/lit_choi2024_digital_twin_review_echem.md:16 (1)	정본 kim2024_digital_twin_acsenergyletters 카드: 10.1021/acsenergylett.4c01931	
+Pantaleev 2017	V	1	docs/reviews/mixing_model_design_20260919.md:247 (1)	정본 jadidi2023 카드 Table 12 (Pantaleev 2017) 일치	
+Rabbani 2014	V	1	docs/lit_koo2026_swcnt_sheath_thick_electrode.md:233 (1)	정본 koo2026 카드: "PNM = MATLAB + Rabbani 2014 오픈소스"	
+Samsung 2024	V	1	docs/literature_review_dem_mpm_assb.md:80 (1)	정본 interfacial_impedance_formulation_assb_cathode 카드: Choi 외 (SAIT), ACS AMI 16, 26066 (2024), TLM	
+Shi 2020	V	1	docs/lit_bielefeld2020_effective_ionic_conductivity_binder.md:361 (1)	정본 shi2019_high_am_loading 카드 (AEM 2019/2020, 1902881): "SE 를 CAM 보다 작게 (λ↑)"	
+Sources 2022	V	1	docs/reviews/mixing_model_design_20260919.md:818 (1)	정본 so2022_dem_compaction_coated_particles 카드: JPS 530, 231279 — 수치 일치	
+Vu-Quoc 2001	V	1	docs/session_20260825_dem_litdb_progress.md:338 (1)	정본 demirtas2021 카드: "[24] = Vu-Quoc 2001"	
+Worlds 1991	V	1	docs/positioning_in_dt_lineage.md:50 (1)	정본 park2020 카드: 디지털트윈 계보 Gelernter Mirror Worlds (1991) → Grieves	
+Zeier 2020	V	1	docs/lit_cronau2021_stack_pressure_ionic_conductivity.md:96 (1)	정본 ohno2020 카드: ACS Energy Lett. 2020 round robin, "같은 배치 argyrodite 5종 × 8 데이터셋"	
+Apr- 2026	NOISE	1	scripts/generate_comparison_plots.py:1930 (1)	날짜 'Apr-2026' (재적합 시점 주석) — 인용 아님	
+Aug 2026	NOISE	1	scripts/seminar_deck/build.js:519 (1)	날짜 'Aug 2026' (세미나 덱 프레임 부제) — 인용 아님	
+ADAPTIVE 2026	NOISE	1	scripts/mpm3d_compaction.py:3174 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+ADOPTED 2026	NOISE	2	CLAUDE.md:1682 · scripts/nested_cv_sat.py:92 (2)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+ATTRIBUTION 2026	NOISE	1	scripts/network_conductivity.py:79 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+Adopted 2026	NOISE	2	scripts/generate_comparison_plots.py:4366 · scripts/nested_cv_sat.py:223 (2)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+Aligned 2026	NOISE	1	scripts/additives.py:31 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+BUILT 2026	NOISE	6	docs/eis_drt_ica_cv.md:61,74,81,95,113 · docs/ml_v3_surrogate_cycling.md:42 (6)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+CHANGED 2026	NOISE	1	webapp/predictor_engine.py:1040 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+CHECK 2026	NOISE	1	scripts/electronic_nested_cv.py:106 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+CLOSE-OUT 2026	NOISE	4	CLAUDE.md:1834,1978 · docs/a1_sigma_e_direction_closeout.md:1 · docs/data_inventory_20260825.md:199 (4)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+CLOSED 2026	NOISE	15	CLAUDE.md:2260 · docs/a3_binder_sweep_result.md:67 · docs/digest_model_application_backlog.md:15,17,19,20,22,24,28,29,124 · docs/sdcp_manuscript_anchors.md:132 · docs/session_20260909_progress.md:237 · docs/stage2_model_audit_vs_literature.md:105 · webapp/predictor_engine.py:51 (15)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+COMPLETE 2026	NOISE	2	CLAUDE.md:1593 · scripts/generate_fitting_report.py:743 (2)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+CONFIRMED 2026	NOISE	1	docs/mpm_wallP_conditional_troubleshooting.md:287 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+CONVERGENCE 2026	NOISE	1	CLAUDE.md:1113 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+CORRECTED 2026	NOISE	1	docs/rint_anchor_db_research.md:49 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+CORRECTION 2026	NOISE	1	scripts/generate_comparison_plots.py:5812 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+CORRECTIONS 2026	NOISE	1	docs/mpm_dem_wallP_crossvalidation.md:11 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+CROSS-CHECK 2026	NOISE	1	CLAUDE.md:1122 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+CROSS-VALIDATION 2026	NOISE	1	CLAUDE.md:1534 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+Created 2026	NOISE	1	docs/literature_dry_assb.md:515 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+EXHAUSTED 2026	NOISE	1	CLAUDE.md:2227 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+Excluded 2026	NOISE	1	scripts/nested_cv_sat.py:52 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+FINALIZED 2026	NOISE	2	CLAUDE.md:435 · docs/contradiction_audit_20260720.md:74 (2)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+GPU-CONFIRMED 2026	NOISE	1	docs/mpm_wallP_conditional_troubleshooting.md:457 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+GRID-CONVERGENCE 2026	NOISE	1	CLAUDE.md:1356 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+HISTORICAL 2026	NOISE	2	docs/data_inventory_20260825.md:279 · docs/manuscript_sdcp_sigma_e_mechanism.md:1 (2)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+IMPORTANT 2026	NOISE	2	docs/data/audit_20260909/audit1_ground_truth.md:83 · scripts/generate_comparison_plots.py:2627 (2)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+LOGIC 2026	NOISE	1	scripts/mpm3d_compaction.py:1195 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+MERGE 2026	NOISE	1	webapp/app.py:6218 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+MOMENT 2026	NOISE	1	CLAUDE.md:1759 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+PENDING 2026	NOISE	1	CLAUDE.md:944 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+PREFERRED 2026	NOISE	1	scripts/electronic_nested_cv.py:76 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+REFINEMENT 2026	NOISE	1	CLAUDE.md:2200 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+RESOLVED 2026	NOISE	2	CLAUDE.md:972,1723 (2)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+RETIRED 2026	NOISE	1	scripts/additives.py:871 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+SOLUTION 2026	NOISE	1	docs/fibre_rod_mpm_design.md:130 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+STATUS 2026	NOISE	1	docs/manuscript_draft/build.js:116 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+STRIP 2026	NOISE	1	webapp/app.py:6164 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+SUPERSEDED 2026	NOISE	2	docs/reviews/lhs_ext_r14_closure_20260830.md:65 · docs/reviews/ms_si_v6_edit_sheet_20260831.md:3 (2)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+SUPPRESSION 2026	NOISE	1	webapp/app.py:1177 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+TIMELOG 2026	NOISE	1	CLAUDE.md:1039 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+UNCHANGED 2026	NOISE	1	docs/cbd_morphology_roadmap.md:90 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+UPDATE 2026	NOISE	3	CLAUDE.md:944 · docs/additive_process_matrix.md:32 · scripts/step3_sigma.py:90 (3)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+USABLE 2026	NOISE	1	CLAUDE.md:1471 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+VALIDATION 2026	NOISE	1	CLAUDE.md:2350 (1)	상태 표기 + 날짜 (문서 이력 헤더) — 인용 아님	
+Accepted 2020	NOISE	1	docs/lit_bielefeld2020_effective_ionic_conductivity_binder.md:6 (1)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Accepted 2021	NOISE	1	docs/lit_cronau2021_stack_pressure_ionic_conductivity.md:8 (1)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Accepted 2024	NOISE	1	docs/literature_yonsei_dtbl_2026.md:787 (1)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Accepted 2025	NOISE	1	docs/lit_lee2025_corolling_dryprocess_assb.md:11 (1)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Copyright 2020	NOISE	1	docs/lit_kim2024_digital_twin_acsenergyletters.md:230 (1)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Published 2018	NOISE	1	docs/lit_bielefeld2019_microstructural_modeling_composite_cathodes.md:5 (1)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Published 2020	NOISE	1	docs/lit_bielefeld2020_effective_ionic_conductivity_binder.md:6 (1)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Published 2021	NOISE	1	docs/lit_trevisanello2021_sc_pc_ncm_cracking_diffusion.md:8 (1)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Published 2022	NOISE	1	docs/lit_minnmann2022_designing_cathodes_solidstate.md:8 (1)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Published 2023	NOISE	1	docs/lit_lee2023_sicspe_digitaltwin_assb.md:7 (1)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Received 2018	NOISE	1	docs/lit_bielefeld2019_microstructural_modeling_composite_cathodes.md:5 (1)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Received 2019	NOISE	2	docs/lit_bielefeld2020_effective_ionic_conductivity_binder.md:6 · docs/lit_doux2020_stack_pressure_assb.md:7 (2)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Received 2020	NOISE	2	docs/lit_park2020_digitaltwin_assb_foundational.md:5 · docs/lit_trevisanello2021_sc_pc_ncm_cracking_diffusion.md:8 (2)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Received 2021	NOISE	2	docs/lit_cronau2021_stack_pressure_ionic_conductivity.md:8,35 (2)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Received 2022	NOISE	2	docs/lit_lee2023_sicspe_digitaltwin_assb.md:6 · docs/lit_minnmann2022_designing_cathodes_solidstate.md:8 (2)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Received 2024	NOISE	2	docs/lit_lee2025_corolling_dryprocess_assb.md:11 · docs/literature_yonsei_dtbl_2026.md:787 (2)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Revised 2018	NOISE	1	docs/lit_bielefeld2019_microstructural_modeling_composite_cathodes.md:5 (1)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Revised 2019	NOISE	1	docs/lit_doux2020_stack_pressure_assb.md:7 (1)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Revised 2020	NOISE	1	docs/lit_park2020_digitaltwin_assb_foundational.md:6 (1)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Revised 2022	NOISE	2	docs/lit_lee2023_sicspe_digitaltwin_assb.md:6 · docs/lit_minnmann2022_designing_cathodes_solidstate.md:8 (2)	원고 이력 날짜(Received/Revised/Accepted/Published/Copyright) — 인용 아님	
+Bardenhagen 2000	NOISE	2	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:72,175 (2)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Bell 2005	NOISE	1	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:156 (1)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Bonet 2008	NOISE	3	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:209,1031,1136 (3)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Chang 2012	NOISE	1	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:149 (1)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Chen 2013	NOISE	1	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:225 (1)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Cummins 2002	NOISE	1	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:175 (1)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Drucker 1952	NOISE	2	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:93,212 (2)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Gast 2015	NOISE	1	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:1364 (1)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Imhsen 2013	NOISE	1	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:146 (1)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Jiang 2015	NOISE	9	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:104,171,173,519,598,1633 (9)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Laenerts 2009	NOISE	1	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:143 (1)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Macklin 2014	NOISE	2	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:164,1708 (2)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Mast 2013	NOISE	5	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:89,174,1148,1635,1719 (5)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Mast 2014	NOISE	2	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:174,1357 (2)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Mazhar 2015	NOISE	1	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:160 (1)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Milenkovic 1996	NOISE	1	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:158 (1)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Miller 1989	NOISE	1	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:154 (1)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Narain 2010	NOISE	4	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:129,1622,1709,1917 (4)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Nkulikiyimfura 2012	NOISE	1	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:142 (1)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Otaduy 2011	NOISE	2	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:145,148 (2)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Pla-Castells 2006	NOISE	1	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:226 (1)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Ram 2015	NOISE	1	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:173 (1)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Steffen 2008	NOISE	1	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:530 (1)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Stuart 2008	NOISE	1	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:132 (1)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Sumner 1999	NOISE	1	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:179 (1)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Wood 2008	NOISE	1	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:1334 (1)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Yasuda 2008	NOISE	1	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:161 (1)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Yue 2015	NOISE	1	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:172 (1)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Zhu 2005	NOISE	2	docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:127,1621 (2)	제3자 논문 원문 추출 텍스트(docs/literature_coverage/pdfs/Klar_2016_…txt) 속 Klár 2016 자신의 참고문헌 — 리포 주장 아님	
+Thinky 2000	NOISE	2	docs/lit_lee2023_sicspe_digitaltwin_assb.md:82 · docs/reviews/ms_readthrough_20260903.md:408 (2)	혼합기 상표 + 회전수 ('Thinky 2000 rpm') — 인용 아님	

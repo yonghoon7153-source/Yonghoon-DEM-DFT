@@ -48,3 +48,6 @@ docs/codex_phase_ab_crosscheck_20260807.md	absent	-	Codex 산출 원문 — 받�
 docs/codex_phase_ab_reverification_20260807.md	absent	-	Codex 산출 원문 — 받았으나 커밋하지 않았다
 docs/codex_round3_crosscheck_20260807.md	absent	-	Codex 산출 원문 — 받았으나 커밋하지 않았다
 docs/codex_round4_crosscheck_20260807.md	absent	-	Codex 산출 원문 — 받았으나 커밋하지 않았다
+scratchpad/cronau2021_SI.txt	generated	(세션 작업공간)	감사 A 가 읽은 Cronau 2021 SI 텍스트 추출본 — 일회성, 커밋 대상 아님.  1차 기록 = 정본 카드 cronau2021 (SI 보강 729818f95)
+scratchpad/pb/pb/pybamm/input/parameters/lithium_ion/Chen2020.py	generated	(세션 작업공간)	감사 B 가 본 PyBaMM 소스 사본 — 일회성, 커밋 대상 아님 (감사 B 는 이것을 정본 카드로 치지 않고 B 등급까지만 썼다)
+docs/figures/physics_regime/literature_brittle_reference.csv	generated	python3 scripts/build_literature_reference.py	웹앱 문헌표 CSV — 생성물 (감사 C 가 그 source 열을 판정).  ⚠ 생성 시 gitignore 확인

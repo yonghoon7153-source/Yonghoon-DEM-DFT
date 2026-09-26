@@ -1,0 +1,461 @@
+## inv:journal (175)
+CLAUDE.md:250: σ_VGCF=0 이면 σ 대비 25,000배로 조건수가 무너진다 (Joule 집중 1,912 → 39,281×) →
+CLAUDE.md:756: (+카드 §138 보너스: 성형압↑ → 계면 dense amorphous P₂Sₓ → **총발열 40–50%↓**, Joule #29 미배선).
+CLAUDE.md:1544: pdf docs/literature_coverage/pdfs/Bazzoun_2026_*.pdf.  Bazzoun et al., J. Power Sources 661
+GB_correction_fitting_report.md:352: 4. Effective conductivity in ASSB: Minnmann, P. et al. (2021). *J. Electrochem. Soc.* (DOI: 10.1149/1945-7111/abf8d7)
+GB_correction_fitting_report.md:353: 5. Argyrodite GB (AIMD): Sadowski, M. et al. (2024). *Adv. Mater. Interfaces* (DOI: 10.1002/admi.202400423)
+GB_correction_fitting_report.md:876: 4. Effective conductivity in ASSB: Minnmann, P. et al. (2021). *J. Electrochem. Soc.* (DOI: 10.1149/1945-7111/abf8d7)
+GB_correction_fitting_report.md:877: 5. Argyrodite GB (AIMD): Sadowski, M. et al. (2024). *Adv. Mater. Interfaces* (DOI: 10.1002/admi.202400423)
+GB_correction_fitting_report.md:881: 9. Composite cathode microstructure: Minnmann, P. et al. (2024). *J. Electrochem. Soc.* (DOI: 10.1149/1945-7111/ad510e)
+GB_correction_fitting_report.md:1067: 10. Ebner, M., Chung, D.-W., Garcia, R. E., Wood, V. (2013). *Adv. Energy Mater.* **4**, 1301278.
+GB_correction_fitting_report.md:1068: 11. Makse, H. A., Gland, N., Johnson, D. L., Schwartz, L. M. (2004). *Phys. Rev. E* **70**, 061302.
+dem_scripts/oat_sweep/README.md:9: **bulk calibration approach** (Coetzee, *Powder Technol.* **310** (2017) 104–142) 에 있고,
+docs/References_and_Methodology.md:121: **Janek, J. & Zeier, W.G.** (2016). "A solid future for battery development." *Nature Energy*, 1, 16141.
+docs/a10_cycle_chemomech_design.md:60: - Nat.Commun. 2024 (grain-level): 결정이방성까지 — 범위 밖 (참고만).
+docs/additive_sheath_a14.md:3: 앵커: **#275 koo2026** (Joule 10, 102392; litdb `docs/lit_koo2026_swcnt_sheath_thick_electrode.md`).
+docs/adhesion_agc_interlayer_20260923.md:157: | ★ 실험 앵커 ✅ | Liao … Thouless, Dasgupta, *Adv. Mater.* 37, 2502114 (2025) — 10.1002/adma.202502114 | **180° 박리 시험**: 탄소 인터레이어/LPSCl 계면 인성 Γ 가 **lamination(제조 압착
+docs/adhesion_agc_interlayer_20260923.md:160: | LPSCl 벽개 ✅ (정본 카드 `pustorino2025_lpscl_bulk_surface_mechanical_electronic_li_filament`, DFT 세션 작성) | Pustorino … Qi, *Chem. Mater.* 37, 313 (2025) — 10.1021/a
+docs/adhesion_agc_interlayer_20260923.md:163: | Ag–C 기전 | Lee … *Nat. Energy* 5, 299 (2020) — 10.1038/s41560-020-0575-z | Ag–C 무과잉 Li 음극 원조 (점착 수치 없음) |
+docs/adhesion_agc_interlayer_20260923.md:164: | Ag–C 기전 ✅ | Spencer-Jolly … *Joule* 7, 503 (2023) — 10.1016/j.joule.2023.02.001 | Ag 5.7 vol% · 5 ± 1 µm 층을 LPSCl 에 400 MPa 로 압착, 2 MPa 에서 사이클.  operando XRD:
+docs/data/kit_ps_scaffolds/kit_ps_0_10__run_mpm.sh:66: #   Joule 발열맵(#29) = 기본 ON (순수 진단 q∝|J|²/σ, σ/porosity 불변 → hot-spot '어디서 발열')
+docs/data/kit_ps_scaffolds/kit_ps_10_0__run_mpm.sh:66: #   Joule 발열맵(#29) = 기본 ON (순수 진단 q∝|J|²/σ, σ/porosity 불변 → hot-spot '어디서 발열')
+docs/data/kit_ps_scaffolds/kit_ps_3_7__run_mpm.sh:66: #   Joule 발열맵(#29) = 기본 ON (순수 진단 q∝|J|²/σ, σ/porosity 불변 → hot-spot '어디서 발열')
+docs/data/kit_ps_scaffolds/kit_ps_5_5__run_mpm.sh:66: #   Joule 발열맵(#29) = 기본 ON (순수 진단 q∝|J|²/σ, σ/porosity 불변 → hot-spot '어디서 발열')
+docs/data/kit_ps_scaffolds/kit_ps_7_3__run_mpm.sh:66: #   Joule 발열맵(#29) = 기본 ON (순수 진단 q∝|J|²/σ, σ/porosity 불변 → hot-spot '어디서 발열')
+docs/data/phase_a_6mah/kits/VGCF_PTFE_1_1/run_mpm.sh:59: #   Joule 발열맵(#29) = 기본 ON (순수 진단 q∝|J|²/σ, σ/porosity 불변 → hot-spot '어디서 발열')
+docs/data/phase_a_6mah/kits/VGCF_PTFE_2_1/run_mpm.sh:59: #   Joule 발열맵(#29) = 기본 ON (순수 진단 q∝|J|²/σ, σ/porosity 불변 → hot-spot '어디서 발열')
+docs/data/phase_a_6mah/kits/VGCF_PTFE_3_0.5/run_mpm.sh:59: #   Joule 발열맵(#29) = 기본 ON (순수 진단 q∝|J|²/σ, σ/porosity 불변 → hot-spot '어디서 발열')
+docs/data/phase_a_6mah/kits/VGCF_PTFE_3_1/run_mpm.sh:59: #   Joule 발열맵(#29) = 기본 ON (순수 진단 q∝|J|²/σ, σ/porosity 불변 → hot-spot '어디서 발열')
+docs/data/phase_a_6mah/kits/VGCF_PTFE_4_1/run_mpm.sh:59: #   Joule 발열맵(#29) = 기본 ON (순수 진단 q∝|J|²/σ, σ/porosity 불변 → hot-spot '어디서 발열')
+docs/electronic_conductivity_derivation.md:350: 3. Makse, H. A., Gland, N., Johnson, D. L., Schwartz, L. M. (2004). *Phys. Rev. E* **70**, 061302.
+docs/electronic_conductivity_derivation.md:351: 4. Ebner, M., Chung, D.-W., Garcia, R. E., Wood, V. (2013). *Adv. Energy Mater.* **4**, 1301278.
+docs/lit_choi2024_digital_twin_review_echem.md:19: Simulations: A New Analysis and Design Tool for Rechargeable Batteries," _ACS Energy Lett._ 2024, 9,
+docs/lit_choi2024_digital_twin_review_echem.md:559: H. Lee, J. Lim, J. Park, Y. M. Lee, _ACS Energy Lett._ 2024, 9, 5225-5239)을 받으면 동일 taxonomy의 정식
+docs/lit_kim2024_digital_twin_acsenergyletters.md:231: Wiley ... ref 51 ... 2023 John Wiley" — ref 34 = Park et al. *Adv. Energy Mater.* 2020 Digital-Twin-Driven
+docs/lit_kim2024_digital_twin_acsenergyletters.md:232: All-Solid-State Battery, ref 51 = Song et al. *Adv. Energy Mater.* 2023.)
+docs/lit_kim2024_digital_twin_acsenergyletters.md:451: *Adv. Energy Mater.* 2023(NCM811 crack propagation, electrochemo-mech), ref 33/36 = Clausnitzer et al.
+docs/lit_kim2024_digital_twin_acsenergyletters.md:513: 격상, 그리고 인용이 peer-reviewed(ACS Energy Lett. 2024, 9, 5225-5239).**  논문 significance 인용 문안(예):
+docs/lit_kim2024_digital_twin_acsenergyletters.md:518: > *ACS Energy Lett.* 2024, 9, 5225-5239).  Prior solid-state-cathode digital-twin studies (#266/#271/#281/
+docs/lit_kim2024_digital_twin_acsenergyletters.md:561: *ACS Energy Lett.* 2024, 9, 5225-5239(DOI 10.1021/acsenergylett.4c01931)** 인용으로 명시(매거진 대신).
+docs/lit_koo2026_swcnt_sheath_thick_electrode.md:5: energy density and fast charging in dry-processed thick electrodes", *Joule* **10** (2026)
+docs/lit_lee2025_corolling_dryprocess_assb.md:12: (저널 코드 41467 = Nat. Commun., 2025, article 59363 → vol. **16**, article no. **4200**, DOI tail
+docs/lit_lee2025_corolling_dryprocess_assb.md:81: | 저널/년 | Nat. Commun. **16**, 4200 (2025) |
+docs/lit_lim2025_virtual_calendering_framework.md:5: 3D-Reconstructed Composite Electrode: An Optimization Framework for Electrode Design", *Small* **21** (2025)
+docs/lit_minnmann2021_jes_charge_transport_bottlenecks.md:4: > · type `experiment (EIS-TLM + cell cycling)` · 저널 `J. Electrochem. Soc. 168 (2021) 040537`
+docs/lit_minnmann2021_jes_charge_transport_bottlenecks.md:58: | 저널 | *J. Electrochem. Soc.* **168** (2021) 040537 — **Editors' Choice**, Open Access (CC BY 4.0) |
+docs/lit_minnmann2021_jes_charge_transport_bottlenecks.md:329: σ_ionic calibration are the EIS-TLM measurements of **Minnmann et al., J. Electrochem. Soc. 168 (2021)
+docs/lit_minnmann2022_designing_cathodes_solidstate.md:341: - "Minnmann et al. (Adv. Energy Mater. 2022) **호명한** SSB 양극의 결합 (chemo-)mechanical–
+docs/literature_coverage/README.md:622: DOI: 10.1016/j.jpowsour.2021.230344   (J. Power Sources 508 [2021] 230344)
+docs/literature_dry_assb.md:39: | P3 | Dual-fibrous PTFE thick dry electrode (DDE) | 2025 | Energy Environ. Sci. 18, 8446–8461 — 10.1039/D5EE03240G | NMC (Li-ion), thick | Exp. multi-step grin
+docs/literature_dry_assb.md:40: | P4 | Impact of binder content on fracture & microstructure | 2025 | J. Mater. Chem. A — 10.1039/D5TA01950H | NMC + PTFE 0.5–4 wt% (Li-ion) | Exp. FIB-SEM + lo
+docs/literature_dry_assb.md:41: | P5 | Active-material morphology effect on PTFE fibrillation | 2025 | Powder Technol. 451, 120451 — 10.1016/j.powtec.2024.120451 | graphite / LFP / NCM + PTFE 
+docs/literature_dry_assb.md:42: | P6 | Optimization of PTFE fibrillation in dry ASSB cathodes | 2025 | J. Power Sources 17616 — 10.1016/j.jpowsour.2025.17616 | Sulfide ASSB cathode + PTFE | Ex
+docs/literature_dry_assb.md:44: | P8 | Overcoming binder limitations — solvent-free dry-film sheet cathode | 2019 | Energy Storage Mater. 24, 247 — 10.1016/j.ensm.2019.05.033 | Sulfide SE + NC
+docs/literature_dry_assb.md:49: | P13 | Correlation: porosity / mechanics / σ_e / kinetics of dry electrodes (ORNL) | 2023 | J. Power Sources 580, 233422 — 10.1016/j.jpowsour.2023.233422 | NMC
+docs/literature_dry_assb.md:53: | P17 | Paving the way: dry electrode technology for next-gen ASSBs — review | 2025 | Adv. Mater. — 10.1002/adma.202506123 | Review (ASSB) | Review | Recent ASS
+docs/literature_dry_assb.md:235: et al. type studies — *J. Power Sources* (2023) S0378775323012922,
+docs/literature_dry_assb.md:423: al.). *Adv. Mater.* (2025). DOI 10.1002/adma.202506123.
+docs/literature_dry_assb.md:506: 3. **P4** J. Mater. Chem. A 2025 (10.1039/D5TA01950H) / ChemRxiv — single-fibril
+docs/literature_yonsei_dtbl_2026.md:163: *Small* **21** (2025) 2410485 (Open Access **CC BY-NC**, IF 11.8), DOI 10.1002/smll.202410485.  **Jaejin Lim†**,
+docs/literature_yonsei_dtbl_2026.md:305: Small 22(3) (2026) e07883 (IF 11.8).  Jaejin Lim†, Junhyeok Choi† … Hyobin Lee, Yong Min Lee.  DOI 10.1002/smll.202507883.
+docs/literature_yonsei_dtbl_2026.md:447: Joule **10** (2026) 102392 (IF 37.1), DOI 10.1016/j.joule.2026.102392.  Jin Kyo Koo†, Jaejin Lim† …
+docs/literature_yonsei_dtbl_2026.md:786: Simulations: A New Analysis and Design Tool for Rechargeable Batteries," ***ACS Energy Lett.* 2024, _9_,
+docs/literature_yonsei_dtbl_2026.md:818: - **ACTION:** intro/significance에서 top-down/bottom-up을 **Kim et al. *ACS Energy Lett.* 2024, 9, 5225-5239**
+docs/literature_yonsei_dtbl_2026.md:833: J. Park, Y. M. Lee, _ACS Energy Lett._ 2024, 9, 5225-5239**(DOI 10.1021/acsenergylett.4c01931).  ⇒ **이 한국어
+docs/literature_yonsei_dtbl_2026.md:870: | 280 | 탄성 Li metal anode — 나노-크럼플+마이크로-오목 PDMS 집전체 + 친리튬 TREN SAM (LEAD=Cho/Ko/Back, **Y.M.Lee 공저**). E_host 31.4 MPa·핵생성 124.5→11.0 mV·대칭 ~2,600 h@1/1·~2,100 
+docs/literature_yonsei_dtbl_2026.md:871: | 279 | 전자-이온 폴리머 복합막(EIPC=GO+PAA 8:2·~1.5µm) + PCET로 Zn 음극 안정화 (LEAD=Song/Seo/Kwak, **Y.M.Lee 공저**). DOD ≈51%·calendar 300 h·CE 99.70%@3000·MnO₂ 파우치 N/P 0.74·D
+docs/literature_yonsei_dtbl_2026.md:874: | 274 | High-Ni cathode, 수분응답 dehumidifying separator | ACS Nano (17.3) | separator/High-Ni |
+docs/literature_yonsei_dtbl_2026.md:877: | 269 | Stepwise activation Zn 증착, flowless Zn-Br | Small (11.8) | Zn-Br |
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:160: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.011 (작을수록 집중) · conc 1124.4× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:228: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.010 (작을수록 집중) · conc 1136.2× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:278: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.004 (작을수록 집중) · conc 1911.6× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:319: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.004 (작을수록 집중) · conc 1917.3× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:558: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.003 (작을수록 집중) · conc 2018.5× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:590: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.003 (작을수록 집중) · conc 2538.4× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:632: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 5035.6× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:664: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 4225.8× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:697: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 3066.4× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:730: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 3180.6× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:770: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 5035.6× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:801: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 4225.8× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:833: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 3066.4× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:863: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 3180.6× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:893: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 2476.7× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:923: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 2232.4× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:953: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 3198.9× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:983: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 2767.4× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1019: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 5035.6× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1048: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 4225.8× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1086: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 5035.6× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1115: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 4225.8× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1145: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 3066.4× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1175: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 3180.6× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1205: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 2476.7× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1235: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 2232.4× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1265: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 3198.9× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1293: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 2767.4× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1321: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 3867.0× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1349: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 3291.0× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1402: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 5035.6× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1431: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 4225.8× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1461: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 3066.4× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1491: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 3180.6× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1521: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 2476.7× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1551: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 2232.4× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1581: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 3198.9× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1609: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 2767.4× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1637: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 3867.0× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1665: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 3291.0× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1693: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 3554.5× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1721: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 3650.2× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1749: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 3507.7× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1777: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 2659.2× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1805: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 3054.4× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1833: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.002 (작을수록 집중) · conc 2668.2× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1900: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.034 (작을수록 집중) · conc 233.1× — 어디서 발열 몰리나
+docs/manuscript/_transcript_recovered_paragraphs_20260903.txt:1930: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.032 (작을수록 집중) · conc 365.0× — 어디서 발열 몰리나
+docs/manuscript_draft/build.js:270: '[9]\t(already cited) T. Minnmann et al., *Adv. Energy Mater.* **2022**, *12*, 2201425.',
+docs/manuscript_draft/build.js:275: '[S6]\tT. Sedlatschek, et al., Characterization of the grain boundary strength of polycrystalline NMC811 using in situ micro tensile tests, *J. Power Sources* *
+docs/manuscript_draft/build.js:277: '[S8]\tM. Cronau, M. Szabo, C. König, T. B. Wassermann, B. Roling, How to measure a reliable ionic conductivity? The stack pressure dilemma of microcrystalline 
+docs/manuscript_draft/build.js:413: + '⇒ S6 을 Sedlatschek *et al.*, *J. Power Sources* **681** (2026) 240276 으로 교체 — 원문 확인: 다결정 NCM811 나노압입 **138 ± 24 GPa** '
+docs/manuscript_draft/build.js:416: + '*J. Electrochem. Soc.* **164** (2017) A3333).  '
+docs/manuscript_sdcp_sigma_e_mechanism.md:162: 전체 줄(Joule) 저항 손실의 7.3%만 부담하면서도 그 목을 지나는 경로 전체의 전류를 풀어내
+docs/mpm_platen_kinematic_stop_defect.md:953: 출처 = litdb 정본 `kang2025_bollard_anchored_binder_dry_electrode` (Adv. Mater. 2025, 37, 2416872 —
+docs/nca_material_preset.md:24: 수준의 숫자다 (Joule 리뷰 envelope 80–200 GPa; 탈리튬 시 −50~60% 연화 별도).
+docs/plan_vgcf_ptfe_coupling_20260811.md:6: > **Nature Energy** (2026), DOI 10.1038/s41560-026-01981-3.  본문 21 p + SI 40 p +
+docs/positioning_in_dt_lineage.md:523: **ACS Energy Lett. 2024, 9, 5225-5239** 로 교체(같은 파일 77-85 줄은 이미 그렇게 적혀 있어
+docs/positioning_vs_geodict.md:109: Design Tool for Rechargeable Batteries," ACS Energy Lett. 2024, 9, 5225-5239, DOI 10.1021/acsenergylett.4c01931**
+docs/positioning_vs_geodict.md:126: "Digital Twin-Driven All-Solid-State Battery," Adv. Energy Mater. 2020, 10, 2001563** — 이 디지털트윈-ASSB
+docs/reviews/codex_review_request_ptfe_8arm_20260824.md:116: σ 대비 25,000배에서 **CG 가 안 붙었다** (cg_info=30000, resid 2.2e-08, Joule 집중 1,912 → 39,281×).
+docs/reviews/ms_readthrough_20260903.md:615: PTFE_D = 0.25 µm  →  [S6]  Energy Environ. Sci. 2025, 18, 8446 (DOI 10.1039/D5EE03240G)
+docs/reviews/ms_readthrough_20260903.md:625: M. De Volder, T.-H. Kim, G. Song, *Energy Environ. Sci.* **2025**, *18*, 8446.
+docs/reviews/si_table_response_20260925.md:68: | Amin & Chiang, *J. Electrochem. Soc.* **163**, A1512 (2016), DOI 10.1149/2.0131608jes | NMC333 · NMC532 단상 소결 펠릿 (첨가제 없음), 전자/이온 분리 DC, 30 °C | x = 0 (방전): **
+docs/reviews/si_table_response_20260925.md:69: | Wang, Yan, Li, Vinado, Yang, *J. Power Sources* **393**, 75–82 (2018), DOI 10.1016/j.jpowsour.2018.05.005 | LiCoO₂ · NMC333/532/622/811 **SPS 펠릿** (800 °C · 4
+docs/reviews/si_table_response_20260925.md:120: 4. **SI 참고문헌**: S(new1) Amin & Chiang, *J. Electrochem. Soc.* **163**, A1512 (2016) · S(new2) Wang *et al.*, *J. Power Sources* **393**,
+docs/reviews/si_table_response_20260925.md:296: > and the same fibres compressed to 0.8 g cm⁻³ about 0.012 Ω cm (≈80 S cm⁻¹) (M. Endo et al., Carbon 39 (2001) 1287; the powder
+docs/reviews/si_table_response_20260925.md:335: > J. Power Sources 681 (2026) 240276]; pristine NMC532 secondary particles gave 142.5 ± 11.3 GPa [R. Xu et al., J. Electrochem. Soc.
+docs/reviews/si_table_response_20260925.md:340: > Li₆PS₅Cl batch reported 0.44–2.98 mS cm⁻¹ at room temperature (Ohno et al., ACS Energy Lett. 2020).
+docs/rint_anchor_db_research.md:50: | **Bare NCM811/LPSCl R_ct (our lab, magnitude anchor)** | 62/72/82 wt% = **453 / 290 / 382 Ω·cm²** (uncoated); **22.4/18.2/17.2** (LNO-coated, ~20× lower); T-s
+docs/rint_anchor_db_research.md:58: | LPSCl σ_ion | **1.6 mS/cm (25 °C)** | Bielefeld/Dewald/Janek "Charge Transport Bottlenecks", J. Electrochem. Soc. — https://doi.org/10.1149/1945-7111/abf8d7 |
+docs/rint_anchor_db_research.md:159: Seed **only the confirmed numbers**: 40 Ω·cm² (acsami.1c07952), **kim2025 (pdf_verified) bare NCM811/LPSCl R_ct 453/290/382 · LNO-coated 22.4/18.2/17.2 Ω·cm² + 
+docs/rint_anchor_db_research.md:166: 5. **Nature Energy Zenodo** (10.5281/zenodo.15827509) — V-Q CSVs for the STEP4 window.
+docs/rint_anchor_db_research.md:173: **Step 5 — NMC811 baseline + STEP4 window re-anchor (the PENDING task).** On WSL/V100 (NOT the cloud container — no sklearn/pybamm here): install **PyBaMM + Lii
+docs/rint_anchor_db_research.md:181: **Deliverable of Phase 1:** a versioned, DOI-provenanced anchor DB whose R_int/EIS/σ_ion/retention rows (a) feed `--r-int-ohm-cm2`/`--asr-film` in STEP4 with so
+docs/seminar_20260806_glossary.md:160: | **Cohesive zone model (CZM)** | 응집영역모델 | 계면이 떨어질 때 필요한 에너지로 파단을 다룸 | Bucci, Swamy, Chiang & Carter, *J. Mater. Chem. A* (2017) [✓] |
+docs/seminar_20260806_glossary.md:171: | **Stack pressure** | 스택 압력 | 셀 운전 중 유지하는 외부 압력 | Cronau et al., *ACS Energy Lett.* **6** (2021) 3072–3077 [✓] |
+docs/seminar_20260806_glossary.md:204: | **Open-circuit potential (OCP/OCV)** | 개회로 전압 | 전류 0에서의 열역학 전압 (SOC 의 함수) | Chen et al., *J. Electrochem. Soc.* **167** (2020) 080534 [⚠ 쪽 확인] |
+docs/seminar_20260806_glossary.md:210: | **CEI (cathode–electrolyte interphase)** | 양극-전해질 계면상 | 사이클마다 자라는 저항성 피막 | Yun et al., *Energy Storage Mater.* (2023) [✓ 우리 랩] |
+docs/seminar_20260806_glossary.md:219: | **Polycrystalline (PC) vs single-crystal (SC)** | 다결정 vs 단결정 | PC 는 입계가 있어 균열·저항, SC 는 없음 | Trevisanello et al., *Adv. Energy Mater.* **11** (2021) 2003400 [✓
+docs/seminar_20260806_script.md:46: *(우상단: Nat. Energy 5 (2020) 259 / J. Electrochem. Soc. 168 (2021) 040537)*
+docs/seminar_20260806_script.md:141: *(우상단: Minnmann et al., J. Electrochem. Soc. 168 (2021) 040537)*
+docs/seminar_20260806_script.md:185: *(우상단: Bazzoun et al., J. Power Sources 661 (2026) 238682 · R. Holm, Electric Contacts, 1967)*
+docs/step4_acceleration_literature_20260803.md:223: **J. Electrochem. Soc.** (2002).  ★block-GS + MG 선례.
+docs/sulfide_se_mechanical_anchors.md:116: 이라는 역설 — 우리 Joule 발열맵(#29)과 붙일 수 있는 지점이나 지금은 배선 없음.
+docs/symposium_2026_kbs_digest.md:48: 셀(J. Energy Chem. 2025) → 모듈/팩(eTransportation 2024). 리뷰는 ACS Energy Lett. 9 (2024)
+docs/symposium_2026_kbs_digest.md:70: | 출처 | J. Park, Y. M. Lee et al., **Adv. Energy Mater. 10 (2020) 2001563** |
+docs/symposium_2026_kbs_digest.md:91: > J. Lim, J. Song, J. Park, Y. M. Lee et al., **Small 21 (2025) 2410485** — *가상 캘린더링 vs 실제
+docs/symposium_2026_kbs_digest.md:97: 용매**(bulk 용매와 비혼화)가 입자 사이 모세관 구조를 만들어 이동을 억제(ACS Energy Lett. 10
+docs/temp_pressure_capability.md:707: kim2025 (Electrochim. Acta 542 (2025) 147413, Table S6) 이 **우리와 같은 소재계**
+docs/thermal_conductivity_derivation.md:299: 4. Makse, H. A., et al. (2004). *Phys. Rev. E* **70**, 061302.
+scripts/additives.py:58: # ── A14 SWCNT surface-conformal sheath (#275 koo2026, Joule 10:102392) ─────────────────
+scripts/additives.py:299: """A14 SURFACE-CONFORMAL SHEATH seeding (#275 koo2026, Joule 10:102392): continuous
+scripts/additives.py:914: 'SWCNT': {   # ★ A14 surface-conformal sheath (#275 koo2026, Joule 10:102392) — THIRD carbon morphology.
+scripts/cam_kinetics.py:16: Kim, Kang, Park, Lee — Electrochim. Acta 542 (2025) 147413, Table S6.
+scripts/cam_kinetics.py:76: RCT_ANCHOR_SOURCE = ('kim2025 Electrochim.Acta 542 (2025) 147413 Table S6 — '
+scripts/fracture_model.py:46: the old 'Phys. Rev. X 7, 041038' was wrong — SELF-51)
+scripts/fracture_model.py:48: 인용 금지, SELF-51.  NCM811 E: Sedlatschek et al., J. Power Sources 681 (2026)
+scripts/grade_engine.py:1622: Carbon black bulk σ ≈ 100–1000 S/cm = 10⁵–10⁶ mS/cm.  Use a conservative
+scripts/mpm_input_from_case.py:1027: #   Joule 발열맵(#29) = 기본 ON (순수 진단 q∝|J|²/σ, σ/porosity 불변 → hot-spot '어디서 발열')
+scripts/mpm_webapp_payload.py:1995: #  ★ SELF-45 — Joule 필드도 **장 전수** p99.8 로 정규화한다.
+scripts/predict_porosity_strict_physics.py:25: [2] Bouvard, Powder Technol. 111 (2000) 231 / Mech. Mater.
+scripts/predict_porosity_strict_physics.py:31: [4] Henkes, O'Hern & Behringer, Phys. Rev. Lett. 95
+scripts/predict_porosity_yu_standish.py:23: [Stovall] Stovall, de Larrard, Buil. Powder Technol. 48 (1986) 1
+scripts/seminar_deck/build.js:129: const s = frame('Introduction', 'J. Electrochem. Soc. 168 (2021) 040537 · Sci. Rep. 3 (2013) 2261');
+scripts/seminar_deck/build.js:150: const s = frame('Introduction', 'Minnmann et al., J. Electrochem. Soc. 168 (2021) 040537');
+scripts/seminar_deck/build.js:492: const s = frame('Results and discussion', 'Bucci et al., J. Mater. Chem. A (2017) · Yun et al., Energy Storage Mater. (2023)');
+scripts/seminar_deck/build.js:625: 'Sakuda et al., Sci. Rep. 3 (2013) 2261 · Cronau et al., ACS Energy Lett. 6 (2021) 3072');
+## inv:doi (132)
+GB_correction_fitting_report.md:880: 8. Resistor Network for SSB: Ketter, L. et al. (2025). *Nature Communications* (DOI: 10.1038/s41467-025-56514-5)
+docs/adhesion_agc_interlayer_20260923.md:158: | ★ 실험 앵커 (원문 미확인) | Shozib … (Tu), *JES* 171, 090524 (2024) — 10.1149/1945-7111/ad7c82 | **Ag–C/SE 점착**이 조립압 350 → 530 MPa 에서 증가 · 초기용량 +50 % 이상 · 530 MPa 초과에서
+docs/adhesion_agc_interlayer_20260923.md:159: | LPSCl 인성 ✅ | Song … Guduru, *ACS AEM* 8, 5636 (2025) — 10.1021/acsaem.4c03143 | 다공(13 ± 2 %) Li6PS5Cl 펠릿 **E = 4.7 ± 1.1 GPa · K_IC = 0.17 ± 0.03 MPa·m^½** (m
+docs/adhesion_agc_interlayer_20260923.md:161: | Ag–흑연 ✅ (정본 카드 `giovannetti2008_doping_graphene_metal_contacts`) | Giovannetti … *PRL* 101, 026803 (2008) — 10.1103/PhysRevLett.101.026803 | Ag 는 **weak bondi
+docs/adhesion_agc_interlayer_20260923.md:162: | Ag–흑연 ✅ (정본 카드 `maurer2015_mbd_adsorbates_metal_surfaces`) | Maurer, Ruiz, Tkatchenko, *JCP* 143, 102808 (2015) — 10.1063/1.4922688 | Ag(111) 위 그래핀 **45 meV/C
+docs/adhesion_agc_interlayer_20260923.md:166: | W_ad 방법 | Siegel, Hector, Adams, *PRB* 65, 085415 (2002) — 10.1103/PhysRevB.65.085415 | DFT W_ad 표준 예: **종단에 따라 약 10배** (O 종단 9.73–10.70 · Al 종단 ≈1 J/m², 실험 1
+docs/adhesion_agc_interlayer_20260923.md:167: | W_ad 방법 | Lepley, Holzwarth, *PRB* 92, 214201 (2015) — 10.1103/PhysRevB.92.214201 | 격자 변형까지 넣은 계면 에너지 체계 (Li/Li3PS4 등) |
+docs/adhesion_agc_interlayer_20260923.md:172: | (확인 필요) | McGrogan … Van Vliet, *AEM* 7, 1602011 (2017) — 10.1002/aenm.201602011 | Li2S–P2S5 K_IC — 초록에 숫자 없음.  정본 bucci2017 카드가 인용한 0.23±0.04 는 **원문 확인 전 인용 
+docs/joule_hotspot.md:42: (10.1002/aenm.70978): SSB 자기발열·미세구조 열구배 설계-유의, 작은 SE→큰 구배, 2C서 +40 Wh/kg
+docs/lit_bak2024_binder_distribution_multilayer.md:7: batteries", *Chemical Engineering Journal* **483** (2024) 148913, DOI 10.1016/j.cej.2024.148913.
+docs/lit_bielefeld2020_effective_ionic_conductivity_binder.md:5: **2020**, *12*, 12821−12833.  DOI **10.1021/acsami.9b22788**.
+docs/lit_cho2026_eipc_zn_anode_azib.md:7: *Energy Storage Materials* 89 (2026) 105186, DOI 10.1016/j.ensm.2026.105186.
+docs/lit_choi2024_digital_twin_review_echem.md:20: 5225-5239** (DOI 10.1021/acsenergylett.4c01931).  ⇒ **이 E.Chem 총설 = 그 ACS EL 도구논문(이효빈·임재진
+docs/lit_choi2026_elastomeric_li_metal_anode.md:7: Architecture", *Advanced Energy Materials* (2026), DOI 10.1002/aenm.71104, **2026, 6, e71104 (1 of 17)**.
+docs/lit_cronau2021_stack_pressure_ionic_conductivity.md:11: **2021**, *6*, 3072−3077. DOI 10.1021/acsenergylett.1c01299.
+docs/lit_doux2020_stack_pressure_assb.md:6: **2020**, *10*, 1903253. DOI 10.1002/aenm.201903253. UCSD (Y. S. Meng / SPEC).
+docs/lit_hong2026_cbd_viscoelasticity_springback.md:6: DOI 10.1016/j.ensm.2026.105321 (PII S2405-8297(26)00453-8, ENSM 105321).
+docs/lit_hong2026_sulfide_cathode_binder_digitaltwin.md:6: DOI 10.1016/j.ensm.2026.104930. © 2026 Elsevier. 접수 2025-12-01, 수정 2026-01-15, 게재확정 2026-01-26,
+docs/lit_kim2024_digital_twin_acsenergyletters.md:5: ***ACS Energy Letters* 2024, _9_, 5225–5239.**  **DOI: 10.1021/acsenergylett.4c01931.**
+docs/lit_kim2025_conductive_agent_se_coating_assb.md:6: **4** (2025) e70044, DOI **10.1002/bte2.20250027** (Research Article, **Open Access CC BY**,
+docs/lit_kim2026_a3d_air_electrode_microstructure_transport.md:6: *Journal of Power Sources* **686** (2026) 240471, DOI 10.1016/j.jpowsour.2026.240471
+docs/lit_kim2026_charge_engineered_cnf_binder.md:7: DOI 10.1038/s41467-026-73909-0 (Article in Press / unedited). **Open Access (CC BY-NC-ND 4.0).**
+docs/lit_koo2025_cnt_wrapped_sc_nca_dry_cathode.md:6: **78** (2025) 104270, DOI 10.1016/j.ensm.2025.104270. 접수 2025-01-21 / 게재확정 2025-04-18 /
+docs/lit_koo2026_swcnt_sheath_thick_electrode.md:6: 102392, DOI 10.1016/j.joule.2026.102392 (2026-07-15 게재, © 2026 Elsevier). †Jin Kyo Koo,
+docs/lit_lee2025_corolling_dryprocess_assb.md:7: Communications* **2025**, *16*, 4200. DOI **10.1038/s41467-025-59363-4**.
+docs/lit_lee2025_corolling_dryprocess_assb.md:82: | DOI | 10.1038/s41467-025-59363-4 (Open Access CC-BY) |
+docs/lit_lim2025_virtual_calendering_framework.md:6: 2410485, DOI 10.1002/smll.202410485.  © 2025 The Authors (Wiley-VCH, **Open Access CC BY-NC**).  접수
+docs/lit_minnmann2021_jes_charge_transport_bottlenecks.md:3: > slug `minnmann2021_jes_charge_transport_bottlenecks` · DOI `10.1149/1945-7111/abf8d7`
+docs/lit_minnmann2021_jes_charge_transport_bottlenecks.md:59: | DOI | **10.1149/1945-7111/abf8d7** |
+docs/lit_minnmann2022_designing_cathodes_solidstate.md:6: Materials* **2022**, *12*, 2201425. DOI 10.1002/aenm.202201425. Justus-Liebig-University Giessen
+docs/lit_minnmann2022_designing_cathodes_solidstate.md:63: performance", pages **040502**, DOI **10.1149/1945-7111/abf3a3**.
+docs/lit_minnmann2022_designing_cathodes_solidstate.md:65: Composite Cathodes", pages **040537**, DOI **10.1149/1945-7111/abf8d7**.
+docs/lit_nam2026_dpe_microstructure_review.md:6: DOI 10.1039/d5mh02484f. **Open Access (CC-BY 3.0).** 접수 2025-12-31, 게재확정 2026-02-20.
+docs/lit_oh2026_bimodal_composite_cathode.md:7: Batteries", *ACS Energy Letters* **11** (2026) 2103-2114, DOI 10.1021/acsenergylett.5c03923.
+docs/lit_park2026_ceramic_pp_separator.md:7: 10.1016/j.cej.2026.174523. 접수 2025-12-07 / 수정 2026-01-27 / 게재확정 2026-02-22 / online 2026-02-23.
+docs/lit_park2026_thiolene_sbr_binder_assb.md:7: e16017, DOI 10.1002/adfm.202516017. © 2026 The Authors (Open Access, CC-BY, Wiley-VCH).
+docs/lit_sakuda2013_sulfide_mechanical_property.md:3: > slug `sakuda2013_sulfide_mechanical_property` · DOI `10.1038/srep02261` · type `exp` (압축시험 + 초음파 E + EIS + 셀) ·
+docs/lit_sakuda2013_sulfide_mechanical_property.md:30: | **A. Sakuda, A. Hayashi, M. Tatsumisago** (Osaka Prefecture University, Dept. Applied Chemistry; 제1저자 현 AIST) | **Sci. Rep. 3, 2261 (2013)**, OPEN (CC BY-NC-N
+docs/lit_song2025_electrochemo_mechanical_microelectrode_ees.md:7: 3129-3147, DOI **10.1039/d4ee04856c**.  © 2025 The Authors (RSC, **Open Access CC BY-NC 3.0**).
+docs/lit_song2025_electrochemo_mechanical_microelectrode_ees.md:371: - ⚠ **ESI(SI) 제공 안 됨**(DOI 10.1039/d4ee04856c) — Fig S1–S32(excessive 도식 S1A/D, Li-strain coeff β_L
+docs/lit_trevisanello2021_sc_pc_ncm_cracking_diffusion.md:6: **2021**, *11*, 2003400. DOI 10.1002/aenm.202003400. Justus-Liebig-University
+docs/lit_yoo2026_porosity_gradient_dry_electrode.md:6: DOI 10.1016/j.ensm.2026.105331 (PII S2405-8297(26)00463-0, ENSM 105331).
+docs/literature_coverage/README.md:294: DOI: 10.1149/1945-7111/abf8d7 (Editors' Choice, Open Access)
+docs/literature_coverage/README.md:333: DOI: 10.1021/acsaenm.5c00184
+docs/literature_coverage/README.md:356: DOI: 10.1038/srep02261
+docs/literature_coverage/README.md:397: DOI: 10.1039/c8ee00907d
+docs/literature_coverage/README.md:490: DOI: 10.1111/j.1151-2916.1961.tb13716.x   (J. Am. Ceram. Soc. 44 [10] 513–522)
+docs/literature_coverage/README.md:549: DOI: 10.1016/S0032-5910(99)00293-4   (Powder Technology 111 [2000] 231–239)
+docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:55: DOI: http://dx.doi.org/10.1145/2897824.2925906
+docs/literature_coverage/pdfs/Klar_2016_ACMTOG_DruckerPrager_SandAnimation.txt:65: DOI = 10.1145/2897824.2925906 http://doi.acm.org/10.1145/2897824.2925906.
+docs/literature_dry_assb.md:37: | P1 | Solvent-free NMC: unravelling PTFE nano-fibril network (Oxford/Faraday) | 2023 | Front. Energy Res. 11, 1336344 — 10.3389/fenrg.2023.1336344 | NMC622 + P
+docs/literature_dry_assb.md:38: | P2 | Multiscale rational design of PTFE fibrillation (FEM+GPR+Bayes) | 2025 | Commun. Mater. 6 — 10.1038/s43246-025-01046-0 | NMC (Li-ion), 10–5 µm bimodal | 
+docs/literature_dry_assb.md:43: | P7 | Cryo-pulverized PTFE dry-film ASSB | 2024 | Chem. Eng. J. 487, 150221 — 10.1016/j.cej.2024.150221 | Sulfide SE + NMC + PTFE (few-µm) | Exp. | ★ PTFE part
+docs/literature_dry_assb.md:45: | P9 | Long-cycle ASSB by solvent-free SE + cathode films | 2023 | Chem. Eng. J. 451, 138588 — 10.1016/j.cej.2022.138588 | Sulfide SE film + cathode film + PTFE
+docs/literature_dry_assb.md:46: | P10 | Percolation of sulfide-electrolyte / carbon-additive matrix | 2023 | Batteries 9, 595 — 10.3390/batteries9120595 | Li6PS5Cl + C65 | Exp. (σ_eff vs wt%) 
+docs/literature_dry_assb.md:48: | P12 | Super-P vs VGCF conductive additives (Li-ion cathodes) | 2015 | RSC Adv. 5, 95073 — 10.1039/C5RA19056H | LiCoO₂/LFP/NMC622 + Super-P / VGCF | Exp. | ★★ 
+docs/literature_dry_assb.md:50: | P14 | Dry electrode technology — review (industrialization) | 2022 | Matter 5, 876 — 10.1016/j.matt.2022.01.011 | Review (incl. sulfide ASSB) | Review | Found
+docs/literature_dry_assb.md:51: | P15 | High-loading dry-electrode for ASSB — review | 2025 | Electrochem. Energy Rev. 8 — 10.1007/s41918-025-00240-5 | Review (ASSB) | Review | Nanoarchitecton
+docs/literature_dry_assb.md:52: | P16 | Advances & challenges in dry electrode process for SSBs — review | 2025 | J. Solid State Electrochem. — 10.1007/s10008-025-06518-4 | Review (SSB) | Revi
+docs/literature_dry_assb.md:54: | P18 | Dry-film cryo-PTFE / electrochemical stability of SE dry films | 2026 | Adv. Funct. Mater. — 10.1002/adfm.202518517 | Sulfide SE dry film + PTFE | Exp. 
+docs/literature_dry_assb.md:64: Research* **11**, 1336344 (2023). DOI **10.3389/fenrg.2023.1336344**.
+docs/literature_dry_assb.md:65: Preprint: ChemRxiv 10.26434/chemrxiv-2023-1tb6m.
+docs/literature_dry_assb.md:95: DOI **10.1016/j.jpowsour.2025.17616** (verify exact article number).
+docs/literature_dry_assb.md:114: **487**, 150221 (2024). DOI **10.1016/j.cej.2024.150221**.
+docs/literature_dry_assb.md:134: **10.1016/j.cej.2022.138588**.
+docs/literature_dry_assb.md:147: (2019). DOI **10.1016/j.ensm.2019.05.033**.
+docs/literature_dry_assb.md:165: **10.1039/D5EE03240G**. (Cambridge/repository copy exists.)
+docs/literature_dry_assb.md:181: **10.1016/j.powtec.2024.120451**.
+docs/literature_dry_assb.md:203: Chemistry A* (2025). DOI **10.1039/D5TA01950H**. ChemRxiv
+docs/literature_dry_assb.md:204: 10.26434/chemrxiv (article 66c0ba3e...).
+docs/literature_dry_assb.md:237: of next-generation Li-ion batteries" (DOI 10.1016/j.jpowsour.2023.232922 —
+docs/literature_dry_assb.md:246: **10.3390/batteries9120595** (open access).
+docs/literature_dry_assb.md:283: Lee. *RSC Advances* **5**, 95073–95078 (2015). DOI **10.1039/C5RA19056H**
+docs/literature_dry_assb.md:322: 10.1002/adfm.75195; "Uni-axial densification of slurry-cast Li6PS5Cl tapes"
+docs/literature_dry_assb.md:330: Sources* (2022) S0378775322002968 (DOI 10.1016/j.jpowsour.2022.231464 —
+docs/literature_dry_assb.md:370: Technol.* 10.1002/ente.202300098; "Influence of slurry composition on thin-film
+docs/literature_dry_assb.md:414: *Matter* **5**, 876–904 (2022). DOI 10.1016/j.matt.2022.01.011 (Cell, full text
+docs/literature_dry_assb.md:418: Energy Rev.* **8** (2025). DOI 10.1007/s41918-025-00240-5. ASSB-specific high-
+docs/literature_dry_assb.md:421: State Electrochem.* (2025). DOI 10.1007/s10008-025-06518-4.
+docs/literature_dry_assb.md:425: et al.). *Adv. Funct. Mater.* (2026). DOI 10.1002/adfm.202518517.
+docs/literature_dry_assb.md:430: 10.1002/adfm.202518619 — review of bonding/fibrillation mechanisms.
+docs/literature_dry_assb.md:436: 10.1039/D5MH02484F.
+docs/literature_dry_assb.md:438: 10.1039/D5SC00059A.
+docs/literature_dry_assb.md:441: 10.1007/s40684-026-00885-7.
+docs/literature_dry_assb.md:447: to Mechanical Properties," *Int. Polym. Process.* (2011), DOI 10.3139/217.2744;
+docs/literature_dry_assb.md:449: *J. Non-Newtonian Fluid Mech.* (2006/2007), DOI 10.1016/j.jnnfm.2006.11.005 /
+docs/literature_dry_assb.md:450: 10.1016/j.jnnfm.2007.05.010. **A first-order kinetic structural parameter**
+docs/literature_dry_assb.md:454: 10.21203/rs.3.rs-9203898/v1): incremental **extension testing** shows
+docs/literature_dry_assb.md:461: in-situ-fibrillation studies, 10.1016/j.matdes.2021.110201 — verify.)
+docs/literature_dry_assb.md:501: 1. **P2** Commun. Mater. 2025 (10.1038/s43246-025-01046-0) + SSRN 5293697 —
+docs/literature_dry_assb.md:503: 2. **P1** Front. Energy Res. 2023 / ChemRxiv 10.26434/chemrxiv-2023-1tb6m —
+docs/literature_yonsei_dtbl_2026.md:19: Advanced Energy Materials **10** (2020) 2001563, DOI **10.1002/aenm.202001563** (© 2020 WILEY-VCH).  접수 2020-05-08 /
+docs/literature_yonsei_dtbl_2026.md:74: Hongyi Xu, **Yong Min Lee\***, **Juner Zhu\***.  DOI **10.1039/d4ee04856c**.  **Northeastern Univ.
+docs/literature_yonsei_dtbl_2026.md:122: DOI 10.1021/acsenergylett.5c03923.  ★ **풀 디제스트:** `docs/lit_oh2026_bimodal_composite_cathode.md`.
+docs/literature_yonsei_dtbl_2026.md:209: Advanced Energy Materials 16(10) (2026) e70730 (Back Cover, IF 25.5).  Youyeong Shin†, Suhwan Kim† … Yong Min Lee.  DOI 10.1002/aenm.70730.
+docs/literature_yonsei_dtbl_2026.md:223: *Battery Energy* **2** (2023) 20220061, DOI **10.1002/bte2.20220061** (Open Access **CC BY**, © 2023, Rapid
+docs/literature_yonsei_dtbl_2026.md:263: Energy Storage Materials **86** (2026) 104930 (IF 19.3), DOI 10.1016/j.ensm.2026.104930.  Seung-Bo Hong†,
+docs/literature_yonsei_dtbl_2026.md:316: Journal of Power Sources **686** (2026) 240471 (IF 8.4), DOI 10.1016/j.jpowsour.2026.240471.  Suhwan Kim†,
+docs/literature_yonsei_dtbl_2026.md:413: Materials Horizons **13** (2026) 3149-3177 (Back Cover, IF 11.4, Open Access).  DOI 10.1039/d5mh02484f.
+docs/literature_yonsei_dtbl_2026.md:497: Energy Storage Materials **78** (2025) 104270 (IF 19.3), DOI 10.1016/j.ensm.2025.104270.  Jin Kyo Koo†,
+docs/literature_yonsei_dtbl_2026.md:548: Battery Energy **4** (2025) e70044, DOI **10.1002/bte2.20250027** (Open Access **CC BY**, © 2025).  Dongyoung
+docs/literature_yonsei_dtbl_2026.md:620: Chemical Engineering Journal **483** (2024) 148913 (Open Access, IF 13.3), DOI 10.1016/j.cej.2024.148913.
+docs/literature_yonsei_dtbl_2026.md:667: Journal of Power Sources **689** (2026) 240698 (IF 8.4), DOI 10.1016/j.jpowsour.2026.240698.  Jihwan Oh†,
+docs/literature_yonsei_dtbl_2026.md:708: DOI 10.1002/adfm.202516017.  접수 2025-06-23 / online 2026-01-28.  ★ **풀 디제스트:**
+docs/literature_yonsei_dtbl_2026.md:758: DOI 10.1038/s41467-026-73909-0 (Open Access).  Sang-Woo Kim†, Nag-Young Kim† … **Yong Min Lee(공저)** …
+docs/literature_yonsei_dtbl_2026.md:913: [#263 AEM](https://advanced.onlinelibrary.wiley.com/doi/10.1002/aenm.70730) ·
+docs/literature_yonsei_dtbl_2026.md:914: [#266 ACS EL](https://pubs.acs.org/doi/10.1021/acsenergylett.5c03923) ·
+docs/literature_yonsei_dtbl_2026.md:915: [#262 Small](https://onlinelibrary.wiley.com/doi/10.1002/smll.202507883) ·
+docs/literature_yonsei_dtbl_2026.md:917: [#264 AFM](https://advanced.onlinelibrary.wiley.com/doi/10.1002/adfm.202516017)
+docs/reviews/gap_audit_r3_repair_20260917.md:226: Bottlenecks" 로 적고 DOI 가 `10.1149/1945-7111/abf8d7` 인데 `docs/lit_minnmann2021_…:3` 과
+docs/reviews/ms_readthrough_20260903.md:616: PTFE_L = 40   µm  →  [S7]  Front. Energy Res. 2024, 11, 1336344 (DOI 10.3389/fenrg.2023.1336344)
+docs/reviews/si_table_response_20260925.md:205: - 검증 (인용 금지 — `CL-90`): 그 제목·저자의 논문은 웹 검색에 나오지 않는다.  DOI `10.1016/j.jpowsour.2020.⟦CL-90 기사번호⟧` 은 이 컨테이너에서 해석할 수 없다 (doi.org ·
+docs/reviews/sigma_vgcf_anchoring_program_20260829.md:67: **Reisacher, Kaya, Knoblauch, *Batteries* 9 (2023) 595** · `10.3390/batteries9120595` · open access
+docs/rint_anchor_db_research.md:21: | 2 | **OBELiX** (599 SSE, RT σ_ion) | https://github.com/NRC-Mila/OBELiX · `pip install obelix-data` · arXiv:2502.14234 · RSC DD 10.1039/D5DD00441A | 599 synth
+docs/rint_anchor_db_research.md:25: | 6 | **LiionDB** (DFN parameter DB) | https://github.com/ndrewwang/liiondb · review doi:10.1088/2516-1083/ac692c | Literature OCP functions, D_s, i0 / reaction
+docs/rint_anchor_db_research.md:43: | **LiPON model interface (benchmark floor)** | **7.6 Ω·cm²** | Low-R reference floor cited in reviews | Reviews incl. Energy Mater. Adv. 2024 https://doi.org/1
+docs/rint_anchor_db_research.md:83: | Halide-coated NCM / sulfide | **92 % @100 cyc @0.1C; 72 % @270 cyc** vs matched **LPSCl + untreated NCM 53 % @100 cyc** (worst-case baseline) | ACS AEM — http
+docs/rint_anchor_db_research.md:85: | LNO-coated NMC811 (imaging) | **116 mAh/g @200 cyc** vs continuous degradation uncoated | Sci. Adv. 2025 (ORNL) — https://doi.org/10.1126/sciadv.ady7189 (PMC1
+docs/rint_anchor_db_research.md:94: - **De Biasi operando-XRD** — NMC lattice a,c and cell volume vs SOC; **NMC811 ≈ 12.5 % volume swing** (lithiated↔delithiated), nonmonotonic c-collapse >4 V. So
+docs/rint_anchor_db_research.md:162: 1. **MDPI Inorganics 14(7):180** (10.3390/inorganics14070180) — OPEN; extract the **5-component R_ion/R_int/R_w/... ohms** → the decomposition template. Also ca
+docs/session_20260819_litdb_pending.md:147: DOI 10.1016/j.jpowsour.2022.231279).  `so2022_dem_contact_model_assb_compaction_sintering`
+docs/sigma_ionic_physics_derivation.md:58: Cronau, Szczuka, Janek (J. Phys. Chem. Lett., 2022, doi 10.1021/acs.jpclett
+docs/stage4_electrochem_research.md:37: (10.1149/2.0341915jes = PyBaMM's exact notation).
+docs/stage4_electrochem_research.md:57: `solve(np.logspace(-4,4,30))` → Nyquist.  Hallemans/Planden EIS paper 10.1149/1945-7111/ad4399.
+docs/stage4_electrochem_research.md:72: binning/LEAN; noise ~ε/ΔV → smoothing mandatory).  DiffCapAnalyzer (JOSS 10.21105/joss.02624) for peak fit.
+docs/step4_acceleration_literature_20260803.md:182: Springer(`10.1007/s10915-021-01410-5`) · OSTI · arXiv PDF 가 **전부 403** 이었다.  위 인용은
+docs/step4_acceleration_literature_20260803.md:208: Block Preconditioners*, **J. Sci. Comput.** (2021).  DOI `10.1007/s10915-021-01410-5`
+scripts/build_tau_regime_db.py:229: #       **Minnmann 과 같은 논문**이다 (DOI `10.1149/1945-7111/abf8d7` 동일) ⇒ 이중계상.
+scripts/compare_hertzian_vs_physics.py:119: #       **Minnmann 과 같은 논문**이다 (DOI `10.1149/1945-7111/abf8d7` 동일) ⇒ 이중계상.
+scripts/cycle_degradation_law.py:120: '10.1002/aenm.202203861 (coated/additive interphase = linear-√t).  '
+scripts/litdb_promote.py:347: '> slug `zz_selftest_good` · DOI `10.0000/selftest` · type `DEM` · digested `2026-07-28` · status ✅\n\n'
+scripts/plot_tau_regime_si.py:110: #        Charge Transport Bottlenecks" 로 적고 DOI 가 `10.1149/1945-7111/abf8d7` 인데
+## out:journal (65)
+docs/data/audit_20260909/audit1_followups.json:89: "evidence": "scripts/grade_engine.py:1594-1596 docstring: 'This is a back-of-the-envelope: full simulation requires placing a secondary phase in the DEM and re-
+docs/data/audit_20260909/audit1_scopes.json:3872: "evidence": "scripts/grade_engine.py:1594-1596 docstring: 'This is a back-of-the-envelope: full simulation requires placing a secondary phase in the DEM and re-
+docs/data/audit_20260909/audit1_scopes.json:4166: "evidence": "scripts/grade_engine.py:1594-1596 docstring: 'This is a back-of-the-envelope: full simulation requires placing a secondary phase in the DEM and re-
+docs/data/audit_20260909/gap_partial_buckets.json:833: "purpose": "Duquesnoy, Energy Storage Mater. 56 (2023) 50 — CGMD+DEM synthetic dataset -> Sobol DOE -> SISSO -> Bayesian multi-objective optimization -> experim
+docs/data/audit_20260909/gap_partial_buckets.json:845: "purpose": "Frankenberg, Powder Technol. 2024 (DOI 10.1016/j.powtec.2024.119403) — coarse-grained DEM of high-intensity dry mixing of an ASSB cathode; its force
+docs/data/audit_20260909/gap_partial_buckets.json:851: "purpose": "Han, Adv. Mater. 37 (2025) 2506266 — ICEP triblock ionically-conductive elastic binder (sigma_ion 0.135 mS/cm, 283% elongation); consumed as a binde
+docs/data/audit_20260909/gap_partial_buckets.json:863: "purpose": "Choi, Ku, Kim, Gwon, Yoon, Yu, Kim (SAIT), ACS Appl. Mater. Interfaces 16 (2024) 26066 — analytic TLM/de Levie formulation splitting r_i,bulk + r_i,
+docs/data/audit_20260909/gap_partial_buckets.json:869: "purpose": "Parks et al., J. Mater. Chem. A 11 (2023) 21322 (open access) — same-particle pristine->4.5V X-ray nano-CT of intergranular cracking in polycrystall
+docs/data/audit_20260909/gap_partial_buckets.json:899: "purpose": "Kang & Shin (Jong-Won Lee group — own-lab paper), ACS Appl. Mater. Interfaces 17 (2025) 60558 — bimodal NCA + LPSCl, size-dependent cracking, LZO co
+docs/data/audit_20260909/gap_partial_buckets.json:905: "purpose": "Jihyeon Kang (Chung-Ang, distinct from the lab's Junhee Kang), Adv. Mater. 37 (2025) 2416872 — \"bollard hitch\" PAA-g-CMC + PTFE dual binder for dr
+docs/data/audit_20260909/gap_partial_buckets.json:917: "purpose": "Junhee Kang et al. (slug kim2023; Jong-Won Lee group), Energy Storage Mater. 63 (2023) 103049 — high-strain Li-In anode drives dynamic contact loss 
+docs/data/audit_20260909/gap_partial_buckets.json:941: "purpose": "Siwon Kim, Junhee Kang, Jae Hyun Park, Jong-Won Lee (own-lab paper), Electrochim. Acta 542 (2025) 147413 — modified TLM decoupling of R_ion / R_ct /
+docs/data/audit_20260909/gap_partial_buckets.json:1089: "purpose": "Source PDF — Bazzoun et al., J. Power Sources 661 (2026) 238682: LIGGGHTS DEM + FEM + resistor-network sigma_ionic on Li6PS5Cl + NMC811, the frame[4
+docs/data/audit_20260909/gap_partial_buckets.json:1226: "evidence": "THIS FILE, entry id 'jackson_green_2005_wear' whose own citation field reads 'Jackson, R. L. & Green, I. A finite element study of elasto-plastic h
+docs/data/audit_20260909/residual_buckets.json:524: "one_line": "Per-bed carbon-network descriptors: DBE 8,546 vs SBE 3,069 carbon clusters (both 100 % connected), Joule concentration 13,321 vs 2,298."
+docs/data/audit_20260909/residual_followups.json:175: "one_line": "Per-bed carbon-network descriptors: DBE 8,546 vs SBE 3,069 carbon clusters (both 100 % connected), Joule concentration 13,321 vs 2,298."
+docs/data/bucci2017_fracture_czm.csv:1: # Bucci, Swamy, Chiang, Carter, J. Mater. Chem. A 2017, 5, 19422-19430 (DOI 10.1039/c7ta03199h)
+docs/data/bucci2018_delamination.csv:1: # Bucci et al., Phys. Rev. Materials 2, 105407 (2018), DOI 10.1103/PhysRevMaterials.2.105407
+docs/data/chen2011_percolation_micromodel.csv:1: # Chen, Lu, Li, Yu, Kong, Zhu -- J. Power Sources 196 (2011) 3178-3185 (DOI 10.1016/j.jpowsour.2010.11.107)
+docs/data/interfacial_impedance_formulation.csv:1: # Choi, Ku, Kim, Gwon, Yoon, Yu, Kim — ACS Appl. Mater. Interfaces 16 (2024) 26066-26078
+docs/data/kim2025_tlm_kinetics_anchors.csv:1: # Kim, Kang, Park, Lee — Electrochim. Acta 542 (2025) 147413 — modified TLM impedance decoupling
+docs/data/minnmann2021_sigma_tau_porosity.csv:2: # Minnmann et al., J. Electrochem. Soc. 168 (2021) 040537, DOI 10.1149/1945-7111/abf8d7. NCM-622 + Li6PS5Cl (= our NCM/LPSCl system). EIS + T-type TLM (Siroma) 
+docs/data/mun2025_dry_electrode_cell_table.csv:2: # Mun et al. Adv. Mater. 2025 37 2506123 doi 10.1002/adma.202506123. REVIEW (no DEM/MPM/FEM no new experiment). All numbers are STATED values from CITED PRIMARY
+docs/data/rint_eis_anchors.csv:2: kim2025_bare_rct_62,,R_ct,453.4,Ohm_cm2,NCM811_uncoated,LPSCl,3electrode_full,,post-formation,,30,meas_stated,pdf_verified,kim2025 Electrochim.Acta 542 147413 T
+docs/data/schneider2023_sigma_size_pressure.csv:1: # Schneider et al., Adv. Energy Mater. 13, 2203873 (2023). DOI 10.1002/aenm.202203873
+docs/data/shi2019_am_loading.csv:1: # Shi, Tu, Tian, Xiao, Miara, Kononova, Ceder -- Adv. Energy Mater. 2020, 10, 1902881 (DOI 10.1002/aenm.201902881)
+docs/data/shi2019_am_loading.csv:21: meta,DOI,10.1002/aenm.201902881,,stated,Adv. Energy Mater. 2020 10 1902881 (online 2019-12-03)
+docs/data/symposium_2026_kbs_db.json:44: "particle_nm_um": "Adv. Energy Mater. 13 (2023) 2204328",
+docs/data/symposium_2026_kbs_db.json:45: "electrode_separator_um_mm": "Small 21 (2025) 2410485 · Nat. Commun. 15 (2024) 10134",
+docs/data/symposium_2026_kbs_db.json:48: "manufacturing_chain": "Adv. Energy Mater. 12 (2022) 2102696"
+docs/data/symposium_2026_kbs_db.json:55: "review": "Suhwan Kim†, Hyobin Lee†, Jaejin Lim†, Joonam Park, Yong Min Lee*, 'Digital Twin Battery Modeling and Simulations: A New Analysis and Design Tool for
+docs/data/symposium_2026_kbs_db.json:59: "fib_sem": {"pros": "고해상도", "cons": "작은 도메인, 열손상 구조왜곡", "practice": "100회 반복 적층, voxel 100 nm", "ref": "J. Song, Y. M. Lee et al., Adv. Energy Mater. 2204328 (2
+docs/data/symposium_2026_kbs_db.json:67: "segmentation_cnn": "S. J. Cooper et al., ACS Energy Lett. 7 (2022) 4368-4378",
+docs/data/symposium_2026_kbs_db.json:93: "ref": "J. Park, Y. M. Lee et al., Adv. Energy Mater. 10 (2020) 2001563",
+docs/data/symposium_2026_kbs_db.json:109: "thermal_sensitive": "고분자 분리막 — 열손상 (Y. Shin, S. Kim, W-K. Kim, Y. M. Lee et al., Adv. Energy Mater. 10 (2026) e05319; porosity 35% vs 48% 시료 대조)",
+docs/data/symposium_2026_kbs_db.json:114: "single_particle_microelectrode": "Au filament ⌀10 µm, 펨토초 레이저 가공 (Y. M. Lee, J. Zhu et al., Energy Environ. Sci. 18 (2025) 3129-3147; Adv. Energy Mater. 13 (20
+docs/data/symposium_2026_kbs_db.json:122: "coating": "Chemical Eng. Sci. 222 (2020) 115716 · M. Ouyang et al., J. Power Sources 610 (2024) 234717",
+docs/data/symposium_2026_kbs_db.json:123: "drying": "A. A. Franco et al., Energy Storage Mater. 43 (2021) 337",
+docs/data/symposium_2026_kbs_db.json:124: "pressing": "A. A. Franco et al., J. Power Sources 580 (2023) 233427 — ε_dry 35% → ε_cal 15%, 46 µm → 23 µm",
+docs/data/symposium_2026_kbs_db.json:125: "infiltration": "A. A. Franco et al., J. Power Sources 511 (2021) 230384",
+docs/data/symposium_2026_kbs_db.json:128: "ref_mechanism": "Adv. Energy Mater. 12 (2022) 2102233",
+docs/data/symposium_2026_kbs_db.json:129: "solution": "2차 용매(bulk 용매와 비혼화)가 입자 사이 모세관 구조 형성 → CBD 이동 억제 (Y. M. Lee, S-Y. Lee et al., ACS Energy Lett. 10 (2025) 6223-6235)",
+docs/data/symposium_2026_kbs_db.json:135: "ref": "J. Lim, J. Song, J. Park, Y. M. Lee et al., Small 21 (2025) 2410485",
+docs/data/symposium_2026_kbs_db.json:274: "reference_work": "Ying Shirley Meng @ U Chicago — stochastic electrode generation + ML surrogate (ACS Energy Lett. 2024, 9; Random Forest 로 입자별 SOD 예측)",
+docs/data/tailored_cathode_low_pressure.csv:1: # Zhou et al. (ACS Energy Lett. 2025, 10, 966-974) DOI 10.1021/acsenergylett.4c03256 — "Tailored Cathode Composite Microstructure Enables Long Cycle Life at Low
+docs/data/vgcf_e_sensitivity_20260925/step3_runner.log:26: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.003 (작을수록 집중) · conc 3692.9× — 어디서 발열 몰리나
+docs/data/vgcf_e_sensitivity_20260925/step3_runner.log:56: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.003 (작을수록 집중) · conc 3669.9× — 어디서 발열 몰리나
+docs/data/vgcf_e_sensitivity_20260925/step3_runner.log:86: STEP3 Joule hot-spot: 90,000 pts · 집중 hot_frac_50 0.003 (작을수록 집중) · conc 3651.3× — 어디서 발열 몰리나
+docs/literature_coverage/contact_mechanics_db.json:196: "citation": "Johnson, K. L. The correlation of indentation experiments. J. Mech. Phys. Solids 18, 115-126 (1970).",
+docs/literature_coverage/contact_mechanics_db.json:215: "citation": "Mesarovic, S. D. & Fleck, N. A. Frictionless indentation of dissimilar elastic-plastic spheres. Int. J. Solids Struct. 37, 7071-7091 (2000).",
+docs/literature_coverage/contact_mechanics_db.json:279: "citation": "Storåkers, B., Biwa, S. & Larsson, P.-L. Similarity analysis of inelastic contact. Int. J. Solids Struct. 34, 3061-3083 (1997).",
+docs/literature_coverage/contact_mechanics_db.json:321: "citation": "Brake, M. R. An analytical elastic-plastic contact model with strain hardening and frictional effects for normal and oblique impacts. Int. J. Solid
+docs/literature_coverage/coverage_db.json:502: "citation": "Zhou, Park, Sun, Lalère, Adermann, Hartmann, Nazar. ACS Energy Lett. 2019, 4, 265-270 — Solvent-Engineered Design of Argyrodite Li6PS5X (X = Cl, Br
+docs/literature_coverage/coverage_db.json:561: "citation": "Strauss, Bartsch, de Biasi, Kim, Janek, Hartmann, Brezesinski. ACS Energy Lett. 2018, 3, 992-996 — Impact of Cathode Material Particle Size on the 
+docs/literature_coverage/coverage_db.json:704: "citation": "Minnmann, Strauss, Bielefeld, Ruess, Adelhelm, Burkhardt, Dreyer, Trevisanello, Ehrenberg, Brezesinski, Richter, Janek. Adv. Energy Mater. 2022, 12
+docs/literature_coverage/coverage_db.json:857: "citation": "Koerver, Aygün, Leichtweiss, Dietrich, Zhang, Binder, Hartmann, Zeier, Janek. Chem. Mater. 2017, 29, 5574-5582 — Capacity Fade in Solid-State Batte
+docs/literature_coverage/coverage_db.json:1240: "citation": "Minnmann, Quillman, Burkhardt, Richter, Janek. Editors' Choice—Quantifying the Impact of Charge Transport Bottlenecks in Composite Cathodes of All-
+docs/literature_coverage/coverage_db.json:1648: "citation": "Koerver, Zhang, de Biasi, Schweidler, Kondrakov, Kolling, Brezesinski, Hartmann, Zeier, Janek. Chemo-mechanical expansion of lithium electrode mate
+docs/paper/refs.bib:46: % Real paper = 2021, ACS Energy Lett 6, 3072--3077, DOI 1c01299.  ⚠ When citing
+docs/reviews/claims.json:1839: "provenance": "litdb 정본 카드 `litdb/papers/jung2026_pamps_cnt_crosstalk_high_loading_lmb.md` (origin/claude/friendly-meitner-lldvar, HEAD 9e7d5889).  원문 = Jung et
+docs/reviews/claims.json:1848: "metric": "koo2026 (Joule 10, 102392) SI Fig S30 BET 디지타이즈 + 우리 산술 (원 논문의 문장이 아님)",
+docs/reviews/claims.json:1869: "provenance": "litdb 정본 `litdb/papers/cronk2026_lis_positive_electrode_geometry_fem.md` (신규 2026-09-03, origin/claude/friendly-meitner-lldvar e8bd94ef, 그림 51장).
+docs/reviews/claims.json:1884: "provenance": "litdb 정본 `litdb/papers/duquesnoy2020_calendering_ml_mesostructure_generator.md` (신규 2026-09-03, 그림 12장, 상호참조 4건: duquesnoy2023 · taufactor · ngan
+docs/reviews/claims.json:1899: "provenance": "litdb 정본 카드 2건 (origin/claude/friendly-meitner-lldvar, 커밋 3ac6d498 · 33c260c7): `litdb/papers/lee2025_dual_fibrous_ptfe_dry_electrode.md` (527줄, 
+docs/seminar/seminar_deck.json:59: "Lee et al., Nat. Commun. (2025)"
+## out:doi (85)
+docs/data/audit_20260909/gap_partial_buckets.json:875: "purpose": "Jackson & Green, J. Tribol. 2005 (DOI 10.1115/1.1866166) — axisymmetric J2 FEM showing mean contact pressure (hardness) is not Tabor's constant 3*si
+docs/data/bielefeld2019_percolation.csv:1: # Bielefeld, Weber, Janek — J. Phys. Chem. C 2019, 123, 1626-1634 (DOI 10.1021/acs.jpcc.8b11043)
+docs/data/dem_cycling_stresses.csv:4: # DOI 10.1016/j.ensm.2024.103527.  Franco group (LRCS Amiens, ARTISTIC) + UCSD Meng + U.Chicago.
+docs/data/deysher2022_review_anchors.csv:2: # Deysher, Ridley, ... Meng, "Transport and mechanical aspects of all-solid-state lithium batteries", Mater. Today Phys. 24 (2022) 100679, DOI 10.1016/j.mtphys.
+docs/data/duquesnoy2023_manufacturing_optimization.csv:1: # Duquesnoy et al., Energy Storage Materials 56 (2023) 50-61, DOI 10.1016/j.ensm.2022.12.040
+docs/data/interfacial_impedance_formulation.csv:2: # DOI 10.1021/acsami.4c01322. "Formulating Interfacial Impedances for Designing High-Energy and High-Power All-Solid-State Battery Cathodes"
+docs/data/jacksongreen2005_evolving_hardness_contact.csv:3: # DOI 10.1115/1.1866166  (Auburn / Georgia Tech). FEM (ANSYS, confirmed by ABAQUS), axisymmetric 2D, elastic-perfectly-plastic, von Mises.
+docs/data/kim2023_chemomech_failure_highstrain_anode.csv:1: # Kang, Shin et al., Energy Storage Materials 63 (2023) 103049 (DOI 10.1016/j.ensm.2023.103049)
+docs/data/kim2024_carbon_volumetric_occupation_se_domain.csv:1: # Kim et al., Adv. Funct. Mater. 2024, 34, 2409318 (DOI 10.1002/adfm.202409318).
+docs/data/mesarovicfleck2000_dissimilar_elastoplastic_indentation.csv:3: # DOI 10.1016/S0020-7683(99)00328-5
+docs/data/nisar2024_sigma_porosity.csv:2: # Nisar et al., Comp. Part. Mech. 11 (2024) 2191-2201, DOI 10.1007/s40571-024-00773-4. OPEN ACCESS.
+docs/data/rint_eis_anchors.csv:13: pritzl_collector_growth,,R_contact,10to30,Ohm_cm2,LNMO,liquid,full,carbon_coated_Al,0to50,,,,confirmed_snippet,10.1149/2.0451904jes,액체 아날로그; 첫사이클 step+~선형 shape
+docs/data/sangros2020_electrical_paths.csv:1: # Sangros Gimenez et al., Chem. Eng. Technol. 43 (2020) No.5, 819-829, DOI 10.1002/ceat.201900501
+docs/data/storakers1997_similarity_inelastic_contact.csv:3: # DOI 10.1016/S0020-7683(96)00176-X
+docs/data/thakur2014_eepa_adhesive_elastoplastic_dem.csv:4: metadata,,doi,10.1007/s10035-014-0506-4,,,stated,Springer
+docs/literature_coverage/contact_mechanics_db.json:108: "doi_or_url": "https://doi.org/10.1680/geot.1979.29.1.47",
+docs/literature_coverage/contact_mechanics_db.json:124: "doi_or_url": "https://doi.org/10.1016/j.powtec.2012.08.012",
+docs/literature_coverage/contact_mechanics_db.json:139: "doi_or_url": "https://doi.org/10.1016/j.ijrmms.2004.09.011",
+docs/literature_coverage/contact_mechanics_db.json:173: "doi_or_url": "https://doi.org/10.1017/CBO9781139171731",
+docs/literature_coverage/contact_mechanics_db.json:197: "doi_or_url": "https://doi.org/10.1016/0022-5096(70)90029-3",
+docs/literature_coverage/contact_mechanics_db.json:216: "doi_or_url": "https://doi.org/10.1016/S0020-7683(99)00328-5",
+docs/literature_coverage/contact_mechanics_db.json:232: "doi_or_url": "https://doi.org/10.1115/1.1866166",
+docs/literature_coverage/contact_mechanics_db.json:251: "doi_or_url": "https://doi.org/10.1115/1.1490373",
+docs/literature_coverage/contact_mechanics_db.json:265: "doi_or_url": "https://doi.org/10.1115/1.2787319",
+docs/literature_coverage/contact_mechanics_db.json:280: "doi_or_url": "https://doi.org/10.1016/S0020-7683(96)00176-X",
+docs/literature_coverage/contact_mechanics_db.json:294: "doi_or_url": "https://doi.org/10.1016/0021-9797(92)90285-T",
+docs/literature_coverage/contact_mechanics_db.json:308: "doi_or_url": "https://doi.org/10.1098/rspa.1966.0242",
+docs/literature_coverage/contact_mechanics_db.json:322: "doi_or_url": "https://doi.org/10.1016/j.ijsolstr.2012.06.013",
+docs/literature_coverage/contact_mechanics_db.json:336: "doi_or_url": "https://doi.org/10.1515/crll.1882.92.156",
+docs/literature_coverage/coverage_db.json:122: "doi_or_url": "10.1021/acs.jpcc.8b11043",
+docs/literature_coverage/coverage_db.json:361: "doi_or_url": "10.1016/j.jpowsour.2018.06.041",
+docs/literature_coverage/coverage_db.json:503: "doi_or_url": "10.1021/acsenergylett.8b01997",
+docs/literature_coverage/coverage_db.json:562: "doi_or_url": "10.1021/acsenergylett.8b00275",
+docs/literature_coverage/coverage_db.json:705: "doi_or_url": "10.1002/aenm.202201425",
+docs/literature_coverage/coverage_db.json:858: "doi_or_url": "10.1021/acs.chemmater.7b00931",
+docs/literature_coverage/coverage_db.json:1062: "doi_or_url": "10.1021/acsami.7b01137",
+docs/literature_coverage/coverage_db.json:1241: "doi_or_url": "10.1149/1945-7111/abf8d7",
+docs/literature_coverage/coverage_db.json:1396: "doi_or_url": "10.1021/acsaenm.5c00184",
+docs/literature_coverage/coverage_db.json:1509: "doi_or_url": "10.1038/srep02261",
+docs/literature_coverage/coverage_db.json:1649: "doi_or_url": "10.1039/c8ee00907d",
+docs/paper/refs.bib:21: doi     = {10.1111/j.1151-2916.1998.tb02580.x}
+docs/paper/refs.bib:41: doi     = {10.1002/andp.19354160705}
+docs/paper/refs.bib:60: doi     = {10.1021/acsenergylett.1c01299}
+docs/paper/refs.bib:73: doi     = {10.1002/aenm.202003400}
+docs/paper/refs.bib:102: doi     = {10.1021/acs.jpcc.8b11043}
+docs/paper/refs.bib:115: doi     = {10.1149/1945-7111/abf3a3}
+docs/paper/refs.bib:132: doi     = {10.1149/1945-7111/abf8d7}
+docs/paper/refs.bib:143: doi     = {10.1038/s41560-020-0575-z}
+docs/paper/refs.bib:154: doi     = {10.1038/srep02261}
+docs/paper/refs.bib:166: doi     = {10.1504/PCFD.2012.047457}
+docs/paper/refs.bib:189: doi     = {10.1016/j.jpowsour.2021.230344},
+docs/paper/refs.bib:322: doi     = {10.1103/PhysRevLett.77.274},
+docs/paper/refs.bib:335: doi     = {10.1680/geot.1979.29.1.47},
+docs/paper/refs.bib:358: doi     = {10.1021/ie50261a017},
+docs/paper/refs.bib:371: doi     = {10.1103/PhysRevE.57.3164},
+docs/paper/refs.bib:384: doi     = {10.1038/nature03805},
+docs/paper/refs.bib:404: doi     = {10.1021/acs.chemmater.7b00931},
+docs/paper/refs.bib:418: doi     = {10.1039/C7TA07641J},
+docs/paper/refs.bib:434: doi     = {10.1002/aenm.201903253},
+docs/paper/refs.bib:452: doi     = {10.1038/s41563-022-01334-x},
+docs/paper/refs.bib:468: doi     = {10.1021/acsenergylett.9b01956},
+docs/paper/refs.bib:481: doi     = {10.1038/s41560-023-01208-9},
+docs/paper/refs.bib:494: doi     = {10.1007/s11012-020-01209-y},
+docs/paper/refs.bib:512: doi     = {10.1021/acs.chemmater.7b03268},
+docs/paper/refs.bib:526: doi     = {10.1021/acs.chemmater.7b05269},
+docs/paper/refs.bib:541: doi     = {10.1021/nl502090z},
+docs/paper/refs.bib:559: doi     = {10.1038/nmat3066},
+docs/paper/refs.bib:572: doi     = {10.1002/adma.200401286},
+docs/paper/refs.bib:587: doi     = {10.1016/j.ssi.2012.06.008},
+docs/paper/refs.bib:604: doi     = {10.1021/acs.chemmater.9b00770},
+docs/paper/refs.bib:621: doi     = {10.1098/rspa.2004.1279},
+docs/paper/refs.bib:634: doi     = {10.1111/j.1151-2916.1961.tb13716.x},
+docs/paper/refs.bib:654: doi     = {10.1002/cjce.5450460305},
+docs/paper/refs.bib:667: doi     = {10.1103/PhysRevE.88.022205},
+docs/paper/refs.bib:696: doi     = {10.1063/1.1702301},
+docs/paper/refs.bib:708: doi     = {10.1103/RevModPhys.45.574},
+docs/paper/refs.bib:748: doi     = {10.1016/0032-5910(71)80001-3},
+docs/paper/refs.bib:760: doi     = {10.1016/S0378-5173(99)00319-1},
+docs/paper/refs.bib:773: doi     = {10.1115/1.2787319},
+docs/paper/refs.bib:786: doi     = {10.1016/j.ces.2003.09.037},
+docs/reviews/claims.json:2298: "value": "그 제목·저자의 논문 검색 결과 0 · DOI 10.1016/j.jpowsour.2020.⟦CL-90 기사번호⟧ 은 이 컨테이너에서 해석 불가 (doi.org · Crossref · ScienceDirect 차단) · 최초 등장 b1c8262fe / 0a040f2b0 (04-29
+docs/seminar/seminar_deck.json:85: "https://doi.org/10.1038/s41467-025-59363-4",
+docs/seminar/seminar_deck.json:86: "https://doi.org/10.1021/acs.jpcc.8b11043",
+docs/seminar/seminar_deck.json:87: "https://doi.org/10.1002/adfm.202409318",
+docs/seminar/seminar_deck.json:88: "https://doi.org/10.1149/1945-7111/abf8d7"

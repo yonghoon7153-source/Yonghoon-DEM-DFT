@@ -346,3 +346,202 @@ DBE/SBE 비 R̄ (8 origin 쌍대응 평균, vox 0.15 · centerline):
 - 준희에게 (초안): *"S4 는 우리 쪽 코드 주석에서 원문 확인 없이 생긴 인용이 표까지 퍼진 거였어 — 미안. Sedlatschek 2026 (다결정 NCM811
   나노압입 138 ± 24 GPa) 으로 바꿀게 — 140 은 그 측정 범위 안이라 값은 그대로 둬. S5 (Cronau 2021) 는 3.0 이 본문이 아니라 SI 그림 S2c 에 있어서 검색에 안 걸린
   거였고, 단결정이 아니라 고압 펠릿값이라 조건을 각주로 달게."*
+
+## 9. 종합 회신 (09-26, *"준희 얘기 대응하자 다 종합해서"*) — 표 S2 전 행 · Methods 두 문장 · 참고문헌 · 뿌리 감사 중 원고에 걸린 것
+
+> **이 절이 붙여 넣을 최종판이다.**  근거는 §1–§8-2 (행별) 와 원장 `SELF-51` (뿌리 감사).  §8 · §8-2 의 각주 글자 (ᵃ–ᵍ) 는 작업용이었고, 9-1 은
+> **표 행 순서로 다시 붙인** 최종 글자다 (대응: §8-2 ᶠ → ᵃ · §8 ᵃ(+ᵃ⁺) → ᵇ · §8 ᶜ → ᵈ · §8-2 ᵍ → ᶠ · §4 ③ ᵇ → ᵍ · §8 ᵈ → ʰ · §8 ᵉ → ⁱ · 새것 ᶜ · ᵉ).
+> 09-26 에 더한 것: ① 보정 행 (#5 · #7 · #9) 각주 — 보정 표적 *"순수 LPSCl ≈10 % @300 MPa"* 는 **어느 문헌의 값도 아니다** (감사 A ④ · C ①) →
+> 모델 표적이라고 적고 문헌 실측 폭을 붙인다.  ② Methods 두 문장 — `[9]` 는 그 수치를 담지 않고, `(24 GPa)[34]` 는 Li₂S–P₂S₅ **유리** 값인데 docx
+> 표에는 그 행이 없다.  ③ 새 SI 참고문헌 서지는 전부 정본 카드 (원문 PDF) 에서 가져왔다 — 기억 · 검색 요약으로 채운 칸 없음 (규율 ⑥).
+> 09-26 원문 재확인 (직접, pymupdf): Ohno 2020 SI Table S2 성형압 (A 380 · B 375 · C 370 · D 720 · E 325 등방 · F 275 · G 441 MPa) · Tables S3–S9
+> 시료 (2) 상대밀도 (81 · 86 · 95 · 88/89 · 83 · 84 · 91 %) · Song 2025 본문 (*"the porosity was estimated to be 13% ± 2%"* · 360 MPa 단축 압착 뒤 60 °C
+> 2 h · *"4.7 ± 1.1 GPa"* · 서지 쪽) · Böger 2023 SI 그림 S10 · S11 (κ — 표에는 안 들어감).  권호는 정본 카드 (Sedlatschek · Xu · Deng · Endo · Wang ·
+> Amin & Chiang · Ketter · Cronau 2021).
+> ✅ 원고 참고문헌 **전수** 대조 (감사 G — build.js 7/7 · 코저자 docx · 세미나 덱 · main.tex 50/50) 끝 → 9-4.  사용자 docx 원본은 리포에 없어
+> 09-03 통독 기록으로 보이는 부분만 판정했다 (9-2 (4) 의 각주 ※ 가 그렇게 잡혔다).
+
+### 9-1. 표 S2 — 최종 (docx 14 행 + 권고 1 행)
+
+| # | Parameter | Value | Source | 상태 |
+|---|---|---|---|---|
+| 1 | NCM811 particle radius | 2.5 µm | Experimental value | ⬜ 저자 — 측정이면 `Measured` (#4 와 통일), 공급사 D50 이면 `Supplier data` |
+| 2 | NCM811 Young's modulus | 140 GPa | Ref. S4ᵃ (S4 = Sedlatschek 2026 으로 교체) | ✅ (ᵃ 는 선택) |
+| ⊕ | NCM811 Poisson's ratio (DEM contact) | 0.25 | Assumed | 권고 — DEM 입력 (`dem_scripts/case09_*.liggghts`).  출처를 Xu 2017 로 달지 말 것 (그 논문은 0.3 **가정**).  원출처 1순위 후보 = Sharma 2023 **NMC622** 단결정 C_ij 의 VRH ν 0.253 (09-26 원문 확인 — 조성이 달라 `Ref.` 가 아니라 `Assumed` + ᵃ 의 선택 문장) |
+| 3 | NCM811 electronic conductivity | 1.0 × 10⁻² S cm⁻¹ | Assumedᵇ | ✅ |
+| 4 | LPSCl particle radius | 0.5 µm | Measured | ⬜ 저자 (#1 과 같이) |
+| 5 | LPSCl Young's modulus (DEM contact) | 1.35 GPa | Calibratedᶜ | ⏳ 보정 표적 문구 저자 확인 (9-5 ③) |
+| 6 | LPSCl Poisson's ratio (DEM contact) | 0.3 | Assumedᵈ | ✅ |
+| 7 | LPSCl Young's modulus (MPM continuum) | 1.53 GPa | Calibratedᶜ | ✅ |
+| 8 | LPSCl Poisson's ratio (MPM continuum) | 0.49 | Calibratedᵉ | ✅ (근거값 선택 — 9-5 ②) |
+| 9 | Yield strength | 0.30 GPa | Calibratedᶜ | ✅ |
+| 10 | LPSCl ionic conductivity | 3.0 × 10⁻³ S cm⁻¹ | Ref. S5ᶠ | ✅ 행 이름에 *(grain interior)* 쓰지 않는다 |
+| 11 | VGCF fiber diameter | 0.15 µm | Measured | ⬜ SEM 원자료 (n · 평균 ± SD) 가 있으면 `Measured (SEM)`, 없으면 `Supplier data` |
+| 12 | VGCF Young's modulus | 10 GPa | Assumedᵍ | ✅ |
+| 13 | VGCF electronic conductivity (effective, fibre network) | 1.0 × 10² S cm⁻¹ | Assumedʰ | ✅ 행 이름 변경 (*compressed powder* → *effective, fibre network*) |
+| 14 | VGCF electronic conductivity (voxel, diameter-preserving) | 78.5 S cm⁻¹ | Calculatedⁱ | ✅ (또는 행을 빼고 Methods 식으로 — 09-01 권고) |
+
+**각주 (붙여 넣을 문안)** — `S(…)` 는 SI 참고문헌 번호 자리 (9-3):
+
+> ᵃ (optional) DEM input; nanoindentation of polycrystalline NCM811 gave 138 ± 24 GPa (n = 29; ν = 0.32 assumed) [S4].
+> (optional addition) The Voigt–Reuss–Hill average of elastic constants measured on single-crystal NMC622 grains is 140.16 GPa with
+> ν = 0.253 [S(Sharma)], the pair used for both NMC classes in the DEM.
+>
+> ᵇ Effective model input, not an intrinsic property of NCM811. Reported electronic conductivities of layered LiNiₓMnᵧCo_zO₂ range from
+> 5 × 10⁻⁸ to 1.4 × 10⁻² S cm⁻¹ with composition and state of charge [S(Amin)] and differ by up to three orders of magnitude between studies of the
+> same composition [S(Amin), S(Wang)]; for pristine NCM811, DC polarization gives 4.1 × 10⁻³ S cm⁻¹ at 20 °C [S(Wang)], and 5.22 × 10⁻³ S cm⁻¹ was
+> reported for NCM83 [S(Ketter)]. The DBE > SBE ordering holds for σ_NCM from 3.3 × 10⁻⁴ to 0.30 S cm⁻¹ (thirty-fold either way); across this range
+> the DBE/SBE ratio moves from 1.34 to 1.20 (1.31 at the value used), consistent with the electron network being carried mainly by the carbon
+> additives (Supplementary Fig. S(new)).
+>
+> ᶜ Effective parameters of the particle models rather than intrinsic properties of LPSCl, chosen so that the compacted beds densify like
+> cold-pressed sulfide powder at 300 MPa (model target ≈10 % porosity for pure LPSCl; see Methods). Reported porosities of cold-pressed Li₆PS₅Cl
+> pellets are 5–19 % after pressing at 275–441 MPa across laboratories [S(Ohno)] and 13 ± 2 % after 360 MPa [S(Song)]. For comparison, the
+> first-principles Young's modulus of Li₆PS₅Cl is 22.1 GPa [S(Deng)], and a cold-pressed pellet with 13 % porosity gives 4.7 ± 1.1 GPa in
+> bending [S(Song)].
+>
+> ᵈ Conventional value for the DEM contact model. The Poisson's ratio enters the Hertzian contact stiffness only through E* = E/(1 − ν²)
+> (a 5 % change between 0.30 and the first-principles value 0.37 for Li₆PS₅Cl [S(Deng)]), and the DEM contact modulus was calibrated with ν = 0.3,
+> so a different choice is absorbed by the calibrated modulus.
+>
+> ᵉ Chosen together with the modulus so that the bulk modulus K = E/[3(1 − 2ν)] = 25.5 GPa stays close to the first-principles bulk modulus of
+> Li₆PS₅Cl (28.7 GPa [S(Deng)]) while the shear modulus remains soft (0.51 GPa), confining the softening to shear.
+>
+> ᶠ Lower end of the plateau measured for microcrystalline Li₆PS₅Cl pellets under ≥146 MPa stack pressure (2.9–3.5 mS cm⁻¹, read from SI
+> Fig. S2c of Ref. S5) — a grain-boundary-inclusive pellet value, not a single-crystal value. An inter-laboratory study of one Li₆PS₅Cl batch
+> reported 0.44–2.98 mS cm⁻¹ at room temperature [S(Ohno)].
+>
+> ᵍ Effective modulus assigned to the sub-grid fibre material points in the MPM compaction. Varying it from 1 to 100 GPa changed the compacted
+> porosity by 0.18 percentage points and the electronic conductivity by ≤ 0.25 % (Supplementary Table S(new)); reported tensile moduli of
+> vapour-grown carbon fibres are of order 10² GPa [S(Endo)], above the tested range.
+>
+> ʰ Effective conductivity assigned to the VGCF phase in the voxel model; not calibrated. Because the voxel model merges touching fibres, this
+> value represents the fibre network including fibre–fibre contact losses rather than a single fibre; for reference, a single graphitized
+> (2800 °C) submicron vapour-grown carbon fibre has a longitudinal resistivity of 1 × 10⁻⁴ Ω cm (≈10⁴ S cm⁻¹), and the same fibres compressed
+> to 0.8 g cm⁻³ about 0.012 Ω cm (≈80 S cm⁻¹) [S(Endo); the powder value is read from its Fig. 7].
+>
+> ⁱ σ_voxel = σ·πd²/(4h²) with the fibre diameter d = 0.15 µm and the voxel edge h = 0.15 µm, so that a fibre rendered one voxel wide carries
+> the axial conductance of a 0.15 µm fibre.
+
+- ᵉ 선택지: *"…close to first-principles values for Li₆PS₅Cl (26.2 GPa, this work; 28.7 GPa [S(Deng)])"* — 실제 보정 표적은 **우리 DFT B₀ 26.2**
+  였다 (CLAUDE.md §3D MPM (2)).  *this work* 로 쓰려면 SI DFT 절에 B₀ 를 실어야 한다 (지금 DFT 절은 흡착에너지뿐).
+- ᶜ 의 *"≈10 % … model target"* 은 MPM (σ_y 스윕) 에 대해서는 기록 그대로다.  DEM 1.35 의 실제 보정 표적은 9-5 ③ 에서 저자 확인.
+- ⛔ 쓰지 않는 것: ᶜ 에 *"derived from (literature)"* · ᶠ 에 *single-crystal* 라벨 · ʰ 에 *"83"* · *VGCF-H* 이름으로 Endo 인용 (그 논문에 그
+  이름이 없다) · ⊕ 행에 Xu 2017 의 ν.
+
+### 9-2. Methods — 고칠 두 문장 (생성기 `build.js:141–148` 기준 — docx 에서 같은 문장을 찾아 바꿀 것)
+
+**(1) 현재** — *"The 1.35 GPa value is an empirical contact-law input, not an intrinsic LPSCl modulus and not an independent validation of the
+present beds; the dense-material value (24 GPa)^[34]^ is listed beside it in Table S2."*
+- 문제: ① [34] (Sakuda 2013) 의 24 GPa 는 **75Li₂S·25P₂S₅ 유리**의 값이다 — LPSCl 이 아니다 (정본 카드 `sakuda2013_sulfide_mechanical_property`).
+  ② docx 표 S2 에는 그 행이 **없다** (§7-2 #5) → 문장이 없는 행을 가리킨다.
+- **권고 (A)**: *"The 1.35 GPa value is an empirical contact-law input, not an intrinsic LPSCl modulus (the first-principles value is
+  22.1 GPa^[new: Deng]^) and not an independent validation of the present beds."* — [34] 는 다른 자리에 인용이 없으면 목록에서 뺀다 (9-4).
+- (B) 24 GPa 를 남기면: *"… (24 GPa for a Li₂S–P₂S₅ glass^[34]^) …"* 로 소재를 밝히고 *"is listed beside it in Table S2"* 는 지운다.
+
+**(2) 현재** — *"The ~10 % target is derived from composite and glass literature rather than measured directly on pure LPSCl, and the 11–12 %
+contact overlap is a pure-SE simulation consistency result rather than a measured target.^[9]^"*
+- 문제: ① [9] Minnmann 2022 (*Adv. Energy Mater.* Perspective) 에는 공극 수치가 **하나도 없다** (정본 카드 · 감사 C A2 — 저자 이니셜도 T. 가
+  아니라 **P.** Minnmann).  ② *"pure LPSCl 에서 직접 잰 값이 없다"* 도 이제 사실이 아니다 — 순수 Li₆PS₅Cl 펠릿 공극 실측이 있다.
+- **권고**: *"The ~10 % target is a model target within the range reported for cold-pressed Li₆PS₅Cl pellets (5–19 % after pressing at
+  275–441 MPa across laboratories^[new: Ohno]^; 13 ± 2 % at 360 MPa^[new: Song]^), and the 11–12 % contact overlap is a pure-SE simulation
+  consistency result rather than a measured target."* — [9] 는 **이 문장에서** 뺀다 (다른 자리의 [9] 는 9-4).
+- ⚠ 정직 한정: 10 % 는 그 범위 **안**이지만 단일 연구값 13 ± 2 % (Song) · ≈18 % @370 MPa (Doux 2020 — 정본 카드 기준, 원문 PDF 는 이 세션에
+  없음) 보다 **치밀한 쪽**이다.  바로 다음 문장 *"The resulting beds are more compacted than the experimental porosity anchor"* 와 같은 방향이므로
+  숨기지 않는다.
+
+- ⚠ **docx 에는 더 강한 옛 문장이 있을 수 있다** — 리포의 08-25 생성본 (`docs/manuscript_draft/DEM_methodology_and_tables_v1.docx`) 은
+  *"… reduced from the dense-material value of 24 GPa [34] to 1.35 GPa, which reproduces the ~10 % porosity and 11–12 % contact overlap reported
+  for cold-pressed LPSCl at 300 MPa. [9]"* 이다 (감사 G, 09-26 원문 확인).  *"reported for cold-pressed LPSCl"* 은 두 값 모두 문헌에 없으므로
+  (10 % 는 모델 표적, 11–12 % 는 우리 시뮬 결과) 사용자 docx 에 이 판이 남아 있으면 위 권고 문장으로 **통째로** 바꾼다.
+
+**(3) 저자 확인** — 같은 문단 *"more compacted than the experimental porosity anchor"* 의 *experimental porosity anchor* 가 무엇인가.  ⚠ 리포에서
+이 앵커로 쓰인 **15.6 %** 는 플래튼 사전등록 표 (`docs/reviews/fam_platen_prereg_20260812.md:30`) 가 행 이름은 *"실험"* 인데 출처 칸을
+**"DEM 정본"** 으로 적는다 (감사 G, 09-26 원문 확인) — 실험값이 아니라 DEM 침대의 ε_sphere 일 수 있다.  실측 SBE/DBE 전극 공극이면 값과
+측정법을 Table S3 에 적고, DEM 값이면 *experimental* 을 빼고 *"the DEM packing porosity (15.6 %)"* 로 적는다.
+
+**(4) 표 S2 각주 ※ (사용자 docx — 09-03 통독 기록 `docs/reviews/ms_readthrough_20260903.md:656–657`)** — *"Parameters marked 'Calibrated'
+were adjusted so that the compacted packing reproduces the porosity and contact overlap measured for cold-pressed LPSCl.[S5]"*
+- 문제: [S5] Cronau 2021 은 공극도 접촉 겹침도 재지 않았다 (적층압–σ_ion 논문) — **M**.  겹침 11–12 % 는 우리 시뮬 결과이고, 10 % 는 모델 표적이다.
+- 조치: 이 각주를 9-1 의 **ᶜ** 로 바꾼다.  (Calibrated 세 행 #5 · #7 · #9 에 ᶜ 를 단다.)
+
+### 9-3. SI 참고문헌 — 바뀌는 것 (서지는 전부 정본 카드 · 원문 PDF)
+
+| 쓰임 | 서지 (ACS 형, 제목 생략 — 넣을 때는 PDF 첫 쪽에서) | 근거 |
+|---|---|---|
+| S4 **교체** (#2 · ᵃ) | T. Sedlatschek et al., *J. Power Sources* **681** (2026) 240276 | 카드 `sedlatschek2026_…` (생성기 S6 와 같음) |
+| S5 유지 (#10 · ᶠ) | M. Cronau, M. Szabo, C. König, T. B. Wassermann, B. Roling, *ACS Energy Lett.* **6** (2021) 3072 | 카드 `cronau2021_…` (SI 보강) |
+| 새 (ᵇ) | S. Wang, M. Yan, Y. Li, C. Vinado, J. Yang, *J. Power Sources* **393** (2018) 75 | 카드 `wang2018_…` |
+| 새 (ᵇ) | R. Amin, Y.-M. Chiang, *J. Electrochem. Soc.* **163** (2016) A1512; erratum **163** (2016) X7 | 카드 `aminchiang2016_…` — NMC532 표기는 정오표에서 |
+| 새 (ᵇ) | L. Ketter, N. Greb, T. Bernges, W. G. Zeier, *Nat. Commun.* **16** (2025) 1411 | 카드 `ketter2025_…` |
+| 새 (ᶜ ᵈ ᵉ · Methods) | Z. Deng, Z. Wang, I.-H. Chu, J. Luo, S. P. Ong, *J. Electrochem. Soc.* **163** (2016) A67 | 카드 `deng2016_…` (Table III) |
+| 새 (ᶜ ᶠ · Methods) | S. Ohno et al., *ACS Energy Lett.* **5** (2020) 910 | 카드 `ohno2020_…` — **SI 만** 확인, 권·쪽은 사용자 제공 서지 |
+| 새 (ᶜ · Methods) | S. Song, C. Shi, A. Pakhare, B. W. Sheldon, P. R. Guduru, *ACS Appl. Energy Mater.* **8** (2025) 5636 | 카드 `song2025_…` + PDF 첫 쪽 (09-26) |
+| 새 (ᵍ ʰ) | M. Endo, Y. A. Kim, T. Hayashi, K. Nishimura, T. Matusita, K. Miyashita, M. S. Dresselhaus, *Carbon* **39** (2001) 1287 | 카드 `endo2001_…` |
+| 새 (ᵃ 선택 문장) | N. Sharma, D. Meng, X. Wu, L. S. de Vasconcelos, L. Li, K. Zhao, *Extreme Mech. Lett.* **58** (2023) 101920 | 카드 `sharma2023_…` + PDF p. 5 (09-26) — ⛔ *"230 GPa single-crystal NCM811"* 로 인용하지 말 것 (그 값은 NMC811 소결 펠릿의 **압입탄성률**) |
+| Methods [9] | 10 % 문장에서 제거 | 다른 인용 자리 = 9-4 |
+| Methods [34] | A 안이면 제거 | 다른 인용 자리 = 9-4 |
+
+### 9-4. 원고 참고문헌 전수 대조 — ✅ 감사 G (09-26) · 원문 `docs/reviews/citation_root_audit_20260925/audit_G_blindspots.md`
+- **SDCP 원고 생성기 `build.js` 참고문헌 7/7 판정**:
+  - `[9]` Minnmann 2022 — **M** (공극 수치 없음 · 1저자 이니셜 **P.** — 9-2 (2)).
+  - `[34]` · `[S7]` Sakuda 2013 — **M** (24 GPa 는 Li₂S–P₂S₅ 유리 — 9-2 (1)).  docx 는 이미 그 표 행을 뺐고 생성기에는 남아 있다.
+  - `[S8]` Cronau 2021 — **P** (3.0 = SI 그림 S2c 평탄의 하단 판독 — `CL-91`, 각주 ᶠ).
+  - `[33]` Kloss (LIGGGHTS) · `[35]` Hu (MLS-MPM) — **C** (방법 인용, 서지 확인).
+  - `[S6]` Sedlatschek 2026 — V (카드 · PDF).
+- **표 S2 각주 ※** (docx) — **M** → 9-2 (4).
+- **"experimental porosity anchor"** — **U⚠** → 9-2 (3).
+- **리포의 08-25 생성 docx** (`DEM_methodology_and_tables_v1.docx`) 는 **낡았다** — 지어진 S6 (`CL-90`) · *(grain interior)* 라벨 · 9-2 (2) 의 옛
+  문장 · *"Wang 2018 = 5 × 10⁻⁵"* 오귀속이 그대로다 (머리 배너가 파일 전체를 스윕에서 면제하고 있어 스윕에 안 잡힌다).  ⚠ **이 파일을
+  공저자에게 보내지 말 것** — 생성기로 다시 만들거나 (9-5 ⑦) 사용자 docx 만 쓴다.
+- **코저자 Methods v7 docx** (`docs/manuscript/Methods_simulation_v7_for_coauthors.docx`, 08-30): *"~10 % target derived from composite and glass
+  literature"* — **M** (9-2 (2) 와 같이 고침) · Endo 값에 붙은 *VGCF-H* 이름 — **P** (그 논문에 그 이름이 없다) · Hong 2026 PTFE 1 wt% 가 SBE/DBE 와
+  *"exactly"* 같다 — **P** (Hong 은 0 · 1 wt% 비교, DBE 는 0.5 wt%) · `E(dense) = 24 GPa` (유리 값).
+- **세미나 덱** (`docs/seminar/*.pptx`): 5 번 장 *"measured"* 순수 SE 10 % + Minnmann 꼬리말 — **M** · 부록 A 의 11–12 % 겹침 *"(Cronau)"* ·
+  LPSCl 24 GPa — **M** · 9 번 장 Bazzoun *"same resistor-network method"* · *"≈ experiment"* — **P** (그쪽은 접촉망, 우리는 복셀 — `CL-81`).
+  발표에 다시 쓸 때만 고친다.
+- **다른 원고 `docs/paper/main.tex` (Stage E 파괴 인지 솔버)** — 인용 키 50/50 판정: F (`Wang2022` · `Minnmann2021` 040502) · 서지 오류 새로 2
+  (`Lewis2022` · `Tippens2019` — DOI · 권 · 쪽이 다른 논문) · 기존 서지 오류 9 · 주장 M 다수 (`LiuYin2025` 포함).  σ_grain 잔재 한 문장
+  (803–806 행, *"single-crystal … \citep{Sakuda2013}"*) 은 **이 커밋에서 고쳤다**.  나머지는 준희 회신과 무관 — 정정 묶음 (원고 참고문헌) 으로.
+
+### 9-5. 결정할 것 (사용자)
+1. **Methods (24 GPa)[34]** — A (Deng 22.1, 표 언급 삭제 · 권고) / B (24 GPa 에 유리 명시).
+2. **ᵉ (ν 0.49) 근거** — Deng 28.7 만 / 우리 DFT B₀ 26.2 도 SI 에 싣기 (실제 보정 표적).
+3. **DEM 1.35 의 보정 표적** — 보정 기록 (`docs/esse_calibration_2mAh_real_9.md:53–58`) 은 *복합 전극 "실험/생산 공극 ~13.5 %"* 에 맞췄다고 적는데
+   그 실험의 출처가 리포에 없고, 같은 자리의 *"냉간압착 LPSCl 유효 탄성률 문헌 범위 ~1–2 GPa"* 는 정본 카드 근거가 없다 (Song 2025 실측 4.7 ±
+   1.1 GPa).  Methods 는 ~10 % 표적으로 읽힌다 → 어느 쪽이 맞는지 + 9-2 (3) *experimental porosity anchor*.
+4. **#1 · #4 · #11 증빙** (D50 · SEM).
+5. **선택**: ᵃ (S4 측정값 병기) · NCM811 ν 0.25 행 추가.
+6. NCM σ_e (§1 ⑥) — **A 로 진행 중** (§8 최종안).  B 를 원하면 말씀.
+7. **리포의 08-25 생성 docx** — 생성기 (`build.js`, 08-29 이후 정정분 반영) 로 다시 만들지 / 지울지 / 그대로 두고 *"보내지 말 것"* 배너만 둘지.
+8. **SDCP σ_e 250 S cm⁻¹ 라벨** — 09-03 통독 기록은 `Measured` (*저자 4-probe*), 생성기 · 코저자 v7 docx · 원장 `CL-61` 은 `Assumed` 다.  저자가
+   직접 4-probe 로 쟀으면 `Measured (4-probe, this work)` + 측정 조건을 SI 에, 아니면 `Assumed` — 한쪽으로 통일 (원장 `CL-61` 서술도 함께).
+
+### 9-6. 준희에게 보낼 답 (최종 — §8 · §8-2 초안을 합침)
+
+> 준희야, 표 S2 를 행마다 원문 PDF 로 다시 대조했어. 정리하면:
+> 0) **S4 (NCM811 E 140 GPa)** — 우리 쪽 코드 주석에서 원문 확인 없이 생긴 인용이 표까지 퍼진 거였어, 미안. Sedlatschek 2026 (JPS 681,
+>    240276 — 다결정 NCM811 나노압입 138 ± 24 GPa) 로 바꿀게. 140 은 그 측정 범위 안이라 값은 그대로 둬.
+> 1) **NCM σ_e 1e-2** — Assumed 유지. 문헌값을 가져온 게 아니라 모델 유효값이야. NCM811 pristine 실측은 4.1e-3 (Wang 2018, DC 분극), NCM83 은
+>    5.22e-3 (Ketter 2025) 이고, NMC 전자전도도는 조성·충전상태·연구실에 따라 5e-8~1.4e-2 로 흔들려서 단일 Ref 로 달 값이 없어. 각주에 문헌
+>    범위 + Wang 값 + 민감도 (σ_NCM 을 ÷30~×30 해도 DBE > SBE, 비 1.34~1.20) 를 달게.
+> 2) **LPSCl ν 0.3** — Assumed 가 맞아. DEM 접촉모델 관례값이고 E* = E/(1−ν²) 로만 들어가서 LPSCl 제일원리 값 0.37 (Deng 2016) 과 5 %
+>    차이인데, DEM 탄성률 (1.35 GPa) 을 이 ν 로 보정했기 때문에 그 차이는 보정값에 흡수돼.
+> 3) **VGCF E 10 GPa** — Assumed 유지. 1 / 10 / 100 GPa 로 바꿔 전극을 다시 압밀하고 전자전도도까지 계산했더니 porosity 0.18 %p, σ_e 0.25 %
+>    안에서만 움직였어 (런 전에 정한 기준 안). 각주 + SI 표로 붙일게.
+> 4) **VGCF σ_e 100 S/cm** — Assumed. 섬유 하나의 값이 아니라 접촉 손실을 포함한 섬유망 유효값이야 (문헌: 흑연화 단섬유 ~1e4, 0.8 g/cm³ 로 누른
+>    분말 ~80 S/cm — Endo 2001). 행 이름 "compressed powder" 는 "effective, fibre network" 로 바꾸고, 78.5 는 그 100 을 복셀 한 칸 굵기로 그린 섬유에
+>    맞게 환산한 계산값이라 Calculated + Methods 식으로.
+> 5) **S5 (LPSCl σ_ion 3.0e-3, Cronau 2021)** — 3.0 은 본문이 아니라 SI 그림 S2c 에 있어서 검색에 안 걸렸던 거야 (미세결정 Li6PS5Cl 펠릿, 적층압
+>    ≥146 MPa 평탄 2.9~3.5 mS/cm 의 하단). 단결정 값이 아니라 고압 펠릿값이라 조건을 각주로 달게.
+> 6) 그 김에 표 전체랑 Methods 를 원문으로 다시 봤더니 **추가로 고칠 게 셋** 있어:
+>    - 보정 행 (DEM 1.35 · MPM 1.53 · σ_y 0.30) 의 표적 "순수 LPSCl 300 MPa 에서 공극 ~10 %" 는 어느 논문의 값이 아니라 우리 모델 표적이야.
+>      순수 Li6PS5Cl 펠릿 실측은 여러 연구실 5~19 % (275~441 MPa, Ohno 2020) · 13 ± 2 % (360 MPa, Song 2025) 라서, 각주에 "모델 표적 + 이 범위" 로
+>      적을게. 지금 표 S2 각주 ※ 가 "냉간압착 LPSCl 에서 측정된 공극·접촉 겹침을 재현" 이라며 [S5] 를 다는데, Cronau 2021 은 공극도 겹침도 안
+>      잰 논문이라 이 각주를 통째로 바꿀게 (겹침 11~12 % 는 우리 시뮬 결과야).
+>    - 그래서 Methods 그 문장 끝의 [9] (Minnmann 2022 Perspective) 는 그 수치가 없어서 빼고 위 두 문헌으로 바꿀게.
+>    - Methods 의 "(24 GPa)[34] is listed beside it in Table S2" — 24 GPa 는 Sakuda 2013 의 Li2S–P2S5 유리 값이라 LPSCl 이 아니고, 지금 표엔 그
+>      행도 없어. LPSCl 제일원리 값 22.1 GPa (Deng 2016) 로 바꾸고 표 언급은 뺄게.
+> 7) 입자 반지름 (NCM 2.5 · LPSCl 0.5 µm) 과 VGCF 직경 0.15 µm 는 측정 근거 (D50 / SEM) 를 우리 쪽에서 확인해서 라벨을 맞출게.
+> 8) Methods 참고문헌도 전부 원문과 대조했는데, 표 S2 · Methods 에 걸리는 건 위가 전부야 ([33] LIGGGHTS · [35] MPM 은 방법 인용이라 문제없음).
+>    Methods 의 "more compacted than the experimental porosity anchor" 는 그 앵커 (15.6 %) 가 실험값인지 DEM 값인지 우리 쪽에서 확인해서 표현 맞출게.
