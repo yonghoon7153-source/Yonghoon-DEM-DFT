@@ -331,6 +331,51 @@ def block_bootstrap_D(msd_per_origin, t_ps, lo, hi, block, n_boot=400, seed=0):
             "n_boot": int(n_boot), "block": block, "n_origin": n_o}
 
 
+def _resample_beta(A, t, lo, hi, starts, block, n_o, rng):
+    """블록 재표본 한 번 → β (창 [lo,hi] 의 log-log 기울기). `_resample_D` 와 같은 재표본 규약."""
+    import numpy as _np
+    n_blk = int(math.ceil(n_o / block))
+    pick = rng.integers(0, len(starts), size=n_blk)
+    idx = _np.concatenate([_np.arange(starts[k], min(starts[k] + block, n_o))
+                           for k in pick])[:n_o]
+    return loglog_slope(t, A[idx].mean(axis=0), lo, hi)
+
+
+def block_bootstrap_beta(msd_per_origin, t_ps, lo, hi, block, n_boot=400, seed=0):
+    """시간원점 **블록** 부트스트랩으로 **β** 의 런 내부 σ 를 실측한다 (회신 CC Q8-① · 2026-09-26).
+
+    회신 CC: *"β 0.805 는 문턱에서 0.6 % 떨어져 있을 뿐 — 불확도가 없으면 통과가 아니라 반올림이다.
+    시간원점 블록으로 β 의 오차를 내서 0.805 ± x 로 적고, 그 폭이 0.005 를 넘으면 '경계, 구분 불가' 로."*
+    재표본 규약은 `block_bootstrap_D` 와 같고(덩이 복원추출 → 덩이 평균 곡선), 적합만 log-log 기울기다.
+
+    ⛔ 이 함수가 **못 하는 것**
+      · `block` 을 스스로 못 정한다 — plateau 규칙(`choose_block_plateau`)으로 호출자가 고른다.
+      · 카드의 β* 가 **단일 원점(STO) 곡선**이면 이 σ 는 그 추정자의 σ 가 아니다 — 공통원점 행렬(MTO 추정자)의
+        σ 다. 단일 원점의 산포는 원점 평균의 산포보다 **작지 않으므로**, 이 σ 는 STO β 불확도의 **하한**으로 읽는다.
+      · 게이트를 판정하지 않는다 — 숫자(β̂ · σ · 68 % 구간)만 낸다.
+    """
+    import numpy as _np
+    A = _np.asarray(msd_per_origin, float)
+    if A.ndim != 2 or A.shape[0] < 2:
+        return None
+    t = _np.asarray(t_ps, float)
+    if ((t >= lo) & (t <= hi)).sum() < 3:
+        return None
+    n_o = A.shape[0]
+    block = max(1, min(int(block), n_o))
+    starts = _np.arange(0, n_o, block)
+    rng = _np.random.default_rng(seed)
+    b_point = loglog_slope(t, A.mean(axis=0), lo, hi)
+    bs = [_resample_beta(A, t, lo, hi, starts, block, n_o, rng) for _ in range(int(n_boot))]
+    bs = _np.asarray([b for b in bs if b is not None], float)
+    if len(bs) < 2 or b_point is None:
+        return None
+    return {"beta_matrix_mean": float(b_point), "sigma_beta": float(bs.std(ddof=1)),
+            "lo68": float(_np.percentile(bs, 15.865)), "hi68": float(_np.percentile(bs, 84.135)),
+            "median": float(_np.median(bs)), "n_boot_used": int(len(bs)), "n_boot": int(n_boot),
+            "block": block, "n_origin": n_o, "window_ps": [float(lo), float(hi)]}
+
+
 # ── 블록 길이 선택 · 3 온도 **동시** 부트스트랩 (회신 BU · 2026-09-22 합의) ───────
 #: 회신 BU 에서 1저자와 합의해 **결과를 보기 전에** 박은 것 셋을 코드로 내린다.
 #:   ① 블록 길이 `b` 를 고르는 **규칙** — σ(b) 가 plateau 에 드는 최소 b
@@ -2709,6 +2754,24 @@ def selftest():
     chk(_jo and _jo["Ea_eV"] < _jb["Ea_eV"] - 1e-6,
         "[음성] `mean_curve` 가 **실제로 읽힌다** — 600 K D 를 2 배 하면 Ea 가 내려간다")
 
+    # ── β 블록 부트스트랩 (회신 CC Q8-①) ───────────────────────────────
+    _rb = _np.random.default_rng(21)
+    _tb = _np.linspace(0.1, 60.0, 120)
+    _Ab = _np.array([3.0 * _tb ** 0.9 * (1 + 0.05 * _rb.standard_normal()) for _ in range(30)])
+    _bb = block_bootstrap_beta(_Ab, _tb, 2.0, 50.0, block=3, n_boot=200, seed=5)
+    chk(_bb and abs(_bb["beta_matrix_mean"] - 0.9) < 0.02 and 0 < _bb["sigma_beta"] < 0.05
+        and _bb["lo68"] < _bb["hi68"] and _bb["block"] == 3 and _bb["window_ps"] == [2.0, 50.0],
+        "β 블록 부트스트랩: 진값 0.9 를 되찾고 σ > 0 · block·창을 기록한다")
+    _Adet = _np.array([3.0 * _tb ** 0.9 for _ in range(10)])
+    _bd = block_bootstrap_beta(_Adet, _tb, 2.0, 50.0, block=2, n_boot=40, seed=1)
+    chk(_bd and _bd["sigma_beta"] == 0.0, "[음성] 원점이 전부 같으면 σ(β) = 0")
+    chk(block_bootstrap_beta(_Ab, _tb, 200.0, 300.0, block=3) is None
+        and block_bootstrap_beta(_Ab[:1], _tb, 2.0, 50.0, block=3) is None,
+        "[음성] 창에 점이 3 개 미만이거나 원점이 1 개면 None (숫자를 지어내지 않는다)")
+    _big = block_bootstrap_beta(_Ab, _tb, 2.0, 50.0, block=1, n_boot=200, seed=5)
+    chk(_big and _big["sigma_beta"] <= _bb["sigma_beta"] * 1.5 + 1e-9,
+        "낱개 재표본(b=1)이 덩이(b=3)보다 σ 를 크게 과대평가하지 않는다 (무상관 합성자료의 일관성 확인)")
+
     # ── 부트스트랩 입력 생산자 (배선 확인) ─────────────────────────────
     import tempfile as _tf
     with _tf.TemporaryDirectory() as _td:
@@ -2781,6 +2844,10 @@ def main():
                     help="**3 온도 동시 부트스트랩 → Ea 직접 적합** (회신 BU 2026-09-22). "
                          "`600=…/msd.json,800=…,1000=…`. 같은 시드의 세 온도를 준다. "
                          "블록은 --block_scan 으로 고르거나 --rsd_block 으로 박는다.")
+    ap.add_argument("--beta_boot", metavar="JSON",
+                    help="한 런의 **β 시간원점 블록 부트스트랩** (회신 CC Q8-①). traj.xyz 에서 공통원점 행렬을 만들어 "
+                         "창 [--window] 의 log-log 기울기 β 의 σ 를 잰다. --block_scan 으로 b 를 plateau 규칙으로 고르고, "
+                         "STO(카드 곡선)·MTO(정본) β 점추정을 같이 찍는다. 판정은 하지 않는다.")
     ap.add_argument("--block_scan", metavar="1,2,4,8",
                     help="--ea_boot 와 함께: 블록 사다리에서 σ(Ea) plateau 를 찾아 b 를 고른다. "
                          "⛔ plateau 가 없으면 **b 를 고르지 않고 판정을 보류한다**(종료코드 2).")
@@ -2826,6 +2893,68 @@ def main():
         return selftest()
     if a.directional:
         return cmd_directional(a)
+    # ── β 시간원점 블록 부트스트랩 (회신 CC Q8-① · 2026-09-26) ───────────
+    if a.beta_boot:
+        jp = pathlib.Path(a.beta_boot)
+        sf_v, sf_assumed, sf_src = resolve_save_fs(jp, a.save_fs)
+        po = msd_per_origin_from_traj(jp, save_fs=sf_v)
+        if po is None:
+            raise SystemExit(f"⛔ {jp.parent}/traj.xyz 를 못 읽었다 — β 부트스트랩은 궤적 없이 못 한다.")
+        d = json.load(open(jp)) if jp.exists() else {}
+        lo, hi = a.window
+        t_s, y_s = _curve(d, mto=False)
+        b_sto = loglog_slope(t_s, y_s, lo, hi) if (t_s and y_s) else None
+        t_m, y_m = _curve(d, mto=True, path=jp, rebuild=False)
+        b_mto = loglog_slope(t_m, y_m, lo, hi) if (t_m and y_m) else None
+        print(f"β 부트스트랩 · {jp.parent.name} · 창 [{lo:g}, {hi:g}] ps · 원점 {po['n_origin']} · lag {len(po['t_ps'])} · "
+              f"save_fs {sf_v:g} fs ({sf_src or '캠페인 기본 가정'}){'  ⚠ **가정값**' if sf_assumed else ''}")
+        print(f"   β 점추정 — STO(카드 곡선 msd_Li_A2): {b_sto if b_sto is None else f'{b_sto:.4f}'} · "
+              f"MTO(정본 msd_Li_A2_mto): {b_mto if b_mto is None else f'{b_mto:.4f}'} · "
+              f"공통원점 행렬 평균: {loglog_slope(po['t_ps'], po['msd_per_origin'].mean(axis=0), lo, hi):.4f}")
+        blk = a.rsd_block
+        scan = None
+        if a.block_scan:
+            ladder = [int(x) for x in a.block_scan.split(",") if x.strip()]
+            print(f"\n블록 사다리 {ladder} 로 σ(β) 를 재고 plateau 를 고른다 "
+                  f"(연속 {BLOCK_PLATEAU_RUN} 점 · b 당 상대변화 ≤ {BLOCK_PLATEAU_TOL:.0%})")
+            cur = block_sigma_curve(
+                lambda b: (block_bootstrap_beta(po["msd_per_origin"], po["t_ps"], lo, hi, b, a.n_boot, seed=0) or {})
+                .get("sigma_beta"), ladder)
+            for b, s in cur:
+                print(f"   b={b:3d}   σ(β) = {s:.5f}")
+            scan = choose_block_plateau(cur, n_boot=a.n_boot)
+            print(f"\n   → {scan['why']}")
+            blk = scan["block"]
+        res = {"json": str(jp), "window_ps": [lo, hi], "beta_STO_card_curve": b_sto, "beta_MTO_canonical": b_mto,
+               "save_fs": sf_v, "save_fs_src": sf_src, "save_fs_assumed": bool(sf_assumed), "n_origin": po["n_origin"],
+               "block_scan": scan,
+               "reading": "σ 는 공통원점 행렬(MTO 추정자)의 런 내부 표준편차. 카드의 β* 가 STO(단일 원점)면 그 산포는 이보다 "
+                          "작지 않으므로 σ 는 **하한**이다. 회신 CC 규칙: 폭(σ) > 0.005 면 '경계 · 구분 불가'. 판정은 도구가 하지 않는다."}
+        if blk is None:
+            print("\n⛔ **블록 길이를 고르지 않는다** ⇒ σ(β) 는 '못 구했다' 로 적는다 (회신 BU 규칙). 아무 b 나 골라 숫자를 만들지 않는다.")
+            res["status"] = "판정보류_블록_plateau_없음"
+            if a.out:
+                pathlib.Path(a.out).write_text(json.dumps(res, ensure_ascii=False, indent=1) + "\n"); print(f"-> {a.out}")
+            return 2
+        bb = block_bootstrap_beta(po["msd_per_origin"], po["t_ps"], lo, hi, blk, a.n_boot, seed=0)
+        if bb is None:
+            raise SystemExit("⛔ 부트스트랩 실패 — 창에 점이 모자라거나 곡선이 0 이하다.")
+        res["beta_boot"] = bb
+        ref = b_sto if b_sto is not None else b_mto
+        if ref is not None:
+            res["boundary_vs_0.8"] = {"beta_ref": ref, "ref_curve": "STO" if b_sto is not None else "MTO",
+                                     "distance": ref - 0.8, "sigma": bb["sigma_beta"],
+                                     "cc_width_rule_0.005": "경계·구분 불가" if bb["sigma_beta"] > 0.005 else "폭 ≤ 0.005",
+                                     "distance_over_sigma": (ref - 0.8) / bb["sigma_beta"] if bb["sigma_beta"] > 0 else None}
+        print(f"\n  β̂(행렬) = {bb['beta_matrix_mean']:.4f}   σ(β) = {bb['sigma_beta']:.5f}   [68 % {bb['lo68']:.4f}, {bb['hi68']:.4f}]"
+              f"   block {bb['block']} · 재표본 {bb['n_boot_used']}/{bb['n_boot']} · 원점 {bb['n_origin']}")
+        if ref is not None:
+            bv = res["boundary_vs_0.8"]
+            print(f"  카드 β*({bv['ref_curve']}) {ref:.4f} 는 0.8 에서 {bv['distance']:+.4f} · σ 의 {bv['distance_over_sigma']:.2f} 배 · "
+                  f"회신 CC 폭 규칙(0.005): **{bv['cc_width_rule_0.005']}**")
+        if a.out:
+            pathlib.Path(a.out).write_text(json.dumps(res, ensure_ascii=False, indent=1) + "\n"); print(f"-> {a.out}")
+        return 0
     # ── 3 온도 동시 부트스트랩 → Ea (회신 BU · 2026-09-22) ───────────────
     if a.ea_boot:
         import numpy as _np
