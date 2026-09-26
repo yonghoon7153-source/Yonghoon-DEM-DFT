@@ -274,10 +274,16 @@ def main():
         calc, info = make_calc(a.calc, a.device, "none")
         base = calc.mixer.calcs[0] if hasattr(calc, "mixer") else (calc.calcs[0] if hasattr(calc, "calcs") else calc)
         rows = {}
-        for p in a.energies:
+        # ⛔ 키는 고유해야 한다 — 2026-09-26 실측: S2 의 relaxed.extxyz 4 개(폴더만 다름)를 파일명으로 키를 잡아 셋을 덮어썼다.
+        #   파일명이 겹치면 "<상위폴더>/<파일명>" 으로, 그래도 겹치면 실행을 거부한다 (조용히 덮어쓰지 않는다).
+        bases = [os.path.splitext(os.path.basename(p))[0] for p in a.energies]
+        keys = [b if bases.count(b) == 1 else f"{os.path.basename(os.path.dirname(os.path.abspath(p)))}/{b}" for p, b in zip(a.energies, bases)]
+        if len(set(keys)) != len(keys):
+            raise SystemExit(f"⛔ --energies 구조 이름이 겹친다 (상위폴더까지 같음): {keys}")
+        for p, key in zip(a.energies, keys):
             at = read(p); at.set_pbc((True, True, True)); at.calc = base
-            rows[os.path.splitext(os.path.basename(p))[0]] = {"struct": os.path.abspath(p), "sha256": _sha(p), "n_atoms": len(at), "formula": at.get_chemical_formula(),
-                                                              "E_UMA_eV": float(at.get_potential_energy()), "pbc": [True, True, True]}
+            rows[key] = {"struct": os.path.abspath(p), "sha256": _sha(p), "n_atoms": len(at), "formula": at.get_chemical_formula(),
+                         "E_UMA_eV": float(at.get_potential_energy()), "pbc": [True, True, True]}
         rec = {"schema": "uma_energies/v1", "what": "UMA 단일점 에너지 (D3 없음) — W_UMA 용 · D3 항은 QE 출력에서 (개정 1)", "calculator": {k: v for k, v in info.items() if k != "d3"},
                "energies": rows}
         txt = json.dumps(rec, ensure_ascii=False, indent=1, default=float)
