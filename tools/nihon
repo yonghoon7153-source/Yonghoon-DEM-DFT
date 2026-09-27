@@ -52,8 +52,8 @@ log_has_entry() {
   local subject="$1" log="${2:-$ROOT/docs/log.md}"
   [ -f "$log" ] || return 1
   local title="${subject#*: }"
-  [ "$title" = "$subject" ] && title="$subject"
-  grep -F -- "| $title" "$log" >/dev/null 2>&1
+  grep -F -- "| $title" "$log" >/dev/null 2>&1 && return 0
+  grep -F -- "| $subject" "$log" >/dev/null 2>&1
 }
 [ "${NIHON_SOURCE_ONLY:-}" = "1" ] && return 0 2>/dev/null
 
