@@ -181,6 +181,10 @@
           ],
           "description": "원본에서 이 칸에 사진이 붙어 있었다 — 📷 을 누르면 이미지 검색 (문자열이면 그 검색어, true 면 t). 사진 자체는 저작권 때문에 넣지 않는다"
         },
+        "gloss": {
+          "type": "string",
+          "description": "일본어로만 적은 칸의 한국어 풀이 — Claude 가 붙인 것 (내 말 아님). 칸 밑에 회색 한 줄로 보인다"
+        },
         "children": {
           "$ref": "#/$defs/items"
         }

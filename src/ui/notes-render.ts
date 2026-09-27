@@ -38,7 +38,14 @@ export function renderChip(it: NoteItem): HTMLElement {
   if (it.ko) chip.append(el('span', { class: 'nchip__ko' }, it.ko));
   if (isLink) chip.append(el('span', { class: 'nchip__ext', 'aria-hidden': 'true' }, '↗'));
   if (it.sub) chip.append(el('span', { class: 'nchip__sub', lang: hasJapanese(it.sub) ? 'ja' : undefined }, it.sub));
+  if (it.gloss) chip.append(el('span', { class: 'nchip__gloss', lang: 'ko', title: '한국어 풀이 — Claude 가 붙임 (마인드맵 원문 아님)' }, it.gloss));
   return chip;
+}
+
+/** One line saying the gray Korean lines are Claude's, when any of these trees has one. */
+export function glossNote(...lists: NoteItem[][]): HTMLElement | null {
+  const has = (items: NoteItem[]): boolean => items.some((it) => !!it.gloss || has(it.children ?? []));
+  return lists.some(has) ? el('p', { class: 'gloss-note' }, '회색 한국어 줄 = Claude 가 붙인 풀이 (원문 아님)') : null;
 }
 
 /** 📷 next to a box that had a photo in the Canva: the photo itself is not ours to copy, so it opens an image search. */

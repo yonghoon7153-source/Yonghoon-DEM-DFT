@@ -4,7 +4,7 @@ import type { Mascot } from '../types';
 import type { NoteExtra, Prefecture, Region } from '../types';
 import { mascotVisualHtml } from '../mascots/visual';
 import { clear, el, ruby } from './dom';
-import { photoSearch, renderTree } from './notes-render';
+import { glossNote, photoSearch, renderTree } from './notes-render';
 
 export interface PanelCallbacks {
   onClose(): void;
@@ -164,7 +164,11 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
 
     // my mind map
     const notesSec = el('section', { class: 'sec sec--notes' }, el('h3', {}, el('span', { class: 'emoji' }, '✎'), '내 마인드맵', el('span', { class: 'n' }, nBoxes ? `${nBoxes} boxes` : '')));
-    if (my.items.length) notesSec.append(renderTree(my.items, { color: r.color, ink: r.ink }));
+    if (my.items.length) {
+      const note = glossNote(my.items, ...extrasFor(p).map((e) => e.items));
+      if (note) notesSec.append(note);
+      notesSec.append(renderTree(my.items, { color: r.color, ink: r.ink }));
+    }
     else notesSec.append(el('p', { class: 'empty' }, `아직 ${p.short.ja} 메모가 없어요. Canva 마인드맵에 적고 data/notes.json 에 옮기면 여기 나타나요 ✿`));
     out.push(notesSec);
 
@@ -285,7 +289,7 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
     if (rn?.memo) out.push(el('p', { class: 'ph__cap' }, el('span', { class: 'k' }, 'memo'), el('span', { lang: 'ja' }, rn.memo)));
 
     if (rn?.items?.length) {
-      out.push(el('section', { class: 'sec' }, el('h3', {}, el('span', { class: 'emoji' }, '✎'), '지방 메모'), renderTree(rn.items, { color: r.color, ink: r.ink })));
+      out.push(el('section', { class: 'sec' }, el('h3', {}, el('span', { class: 'emoji' }, '✎'), '지방 메모'), glossNote(rn.items), renderTree(rn.items, { color: r.color, ink: r.ink })));
     }
     const extras = extrasForRegion(r.id);
     if (extras.length) {

@@ -57,6 +57,8 @@ export interface NoteItem {
   kind?: 'photo';
   /** The Canva box had a photo next to it — shown as 📷 that opens an image search (string = the search words). */
   photo?: boolean | string;
+  /** Korean for a box I wrote only in Japanese — added by Claude, not my words (shown as a gray line). */
+  gloss?: string;
   children?: NoteItem[];
 }
 

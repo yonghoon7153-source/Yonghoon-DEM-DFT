@@ -91,6 +91,7 @@ function walk(items, where, depth = 0) {
     if (it.url && !/^https?:\/\//.test(it.url)) err(`${where}: "${it.t}" has non-http url`);
     if (it.kind && it.kind !== 'photo') err(`${where}: "${it.t}" unknown kind "${it.kind}"`);
     if (it.photo !== undefined && typeof it.photo !== 'boolean' && !(typeof it.photo === 'string' && it.photo.trim())) err(`${where}: "${it.t}" photo must be true or search words`);
+    if (it.gloss !== undefined && !(typeof it.gloss === 'string' && /[가-힯]/.test(it.gloss))) err(`${where}: "${it.t}" gloss must be Korean text`);
     if (depth > 8) err(`${where}: nesting too deep at "${it.t}"`);
     if (it.children) walk(it.children, `${where} > ${it.t}`, depth + 1);
   }
