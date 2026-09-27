@@ -5430,6 +5430,59 @@ EXPECT: dict = {
             "tests/test_gate74_defensive.py::test_g74_4_03_the_same_name_with_a_different_identity_is_refused_unless_replacement_is_explicit": "AssertionError: 같은 이름·다른 identity 를 조용히 덮었다",
         }
     },
+    # ── 75차 — `--emit-expect -k g75` 관측값 (baf109b5 sandbox) 그대로
+    "index-finalisation-failure-fails-the-archive-g75": {
+        "fail": [
+            "tests/test_gate75_defensive.py::test_g75_n1_an_index_finalisation_failure_makes_the_archive_fail_and_leaves_the_index_unchanged[rc17]",
+            "tests/test_gate75_defensive.py::test_g75_n1_an_index_finalisation_failure_makes_the_archive_fail_and_leaves_the_index_unchanged[replace]",
+            "tests/test_gate75_defensive.py::test_g75_n1_an_index_finalisation_failure_makes_the_archive_fail_and_leaves_the_index_unchanged[write]",
+        ],
+        "witness": {
+            "tests/test_gate75_defensive.py::test_g75_n1_an_index_finalisation_failure_makes_the_archive_fail_and_leaves_the_index_unchanged[rc17]": "AssertionError: index 최종화가 실패했는데 archive 가 성공으로 끝났다 (G75-N1)",
+            "tests/test_gate75_defensive.py::test_g75_n1_an_index_finalisation_failure_makes_the_archive_fail_and_leaves_the_index_unchanged[replace]": "AssertionError: index 최종화가 실패했는데 archive 가 성공으로 끝났다 (G75-N1)",
+            "tests/test_gate75_defensive.py::test_g75_n1_an_index_finalisation_failure_makes_the_archive_fail_and_leaves_the_index_unchanged[write]": "AssertionError: index 최종화가 실패했는데 archive 가 성공으로 끝났다 (G75-N1)",
+        }
+    },
+    "duplicate-index-keys-are-refused-g75": {
+        "fail": [
+            "tests/test_gate75_defensive.py::test_g75_n2_a_duplicate_mapping_key_in_the_index_stops_before_any_promotion[identity key twice in one entry (I04)]",
+            "tests/test_gate75_defensive.py::test_g75_n2_a_duplicate_mapping_key_in_the_index_stops_before_any_promotion[same run name twice (I03)]",
+            "tests/test_gate75_defensive.py::test_g75_n2_a_duplicate_mapping_key_in_the_index_stops_before_any_promotion[top-level runs twice (I02)]",
+            "tests/test_gate75_defensive.py::test_g75_n2_the_strict_loader_is_one_function_shared_by_every_index_reader",
+        ],
+        "witness": {
+            "tests/test_gate75_defensive.py::test_g75_n2_a_duplicate_mapping_key_in_the_index_stops_before_any_promotion[identity key twice in one entry (I04)]": "AssertionError: 중복 키(identity key twice in one entry (I04))를 가진 index 로 승격했다",
+            "tests/test_gate75_defensive.py::test_g75_n2_a_duplicate_mapping_key_in_the_index_stops_before_any_promotion[same run name twice (I03)]": "AssertionError: 중복 키(same run name twice (I03))를 가진 index 로 승격했다",
+            "tests/test_gate75_defensive.py::test_g75_n2_a_duplicate_mapping_key_in_the_index_stops_before_any_promotion[top-level runs twice (I02)]": "AssertionError: 중복 키(top-level runs twice (I02))를 가진 index 로 승격했다",
+            "tests/test_gate75_defensive.py::test_g75_n2_the_strict_loader_is_one_function_shared_by_every_index_reader": "Failed: DID NOT RAISE DuplicateKeyError",
+        }
+    },
+    "merge-keys-are-refused-in-the-index-g75": {
+        # 명시 검사를 지우면 `<<` 키가 construct_object 단계에서 ConstructorError 로 죽는다 — 거부는 되지만 사유가
+        # "merge key" 가 아니다(정책 문구 없음). 관측 메시지 뒤쪽은 tmp 경로·잘린 tag 라 앞부분만 witness 로 둔다 (G67-T1-b).
+        "fail": [
+            "tests/test_gate75_defensive.py::test_g75_n2_a_duplicate_mapping_key_in_the_index_stops_before_any_promotion[merge key overriding an identity value]",
+        ],
+        "witness": {
+            "tests/test_gate75_defensive.py::test_g75_n2_a_duplicate_mapping_key_in_the_index_stops_before_any_promotion[merge key overriding an identity value]": "AssertionError:   ✗ 기존 index 를 받을 수 없다:",
+        }
+    },
+    "diagnostic-consumer-binds-out-to-the-receipt-run-g75": {
+        "fail": [
+            "tests/test_gate75_defensive.py::test_g75_n3_01_a_different_nonempty_out_is_refused_by_the_consumer[artifacts/grid_fit_v5]",
+            "tests/test_gate75_defensive.py::test_g75_n3_01_a_different_nonempty_out_is_refused_by_the_consumer[results/OTHER_RUN]",
+            "tests/test_gate75_defensive.py::test_g75_n3_01_a_different_nonempty_out_is_refused_by_the_consumer[results/grid_fit_v4]",
+            "tests/test_gate75_defensive.py::test_g75_n3_01_a_different_nonempty_out_is_refused_by_the_consumer[results/grid_fit_v5/sub]",
+            "tests/test_gate75_defensive.py::test_g75_n3_01_a_different_nonempty_out_is_refused_by_the_consumer[results/grid_fit_v5x]",
+        ],
+        "witness": {
+            "tests/test_gate75_defensive.py::test_g75_n3_01_a_different_nonempty_out_is_refused_by_the_consumer[artifacts/grid_fit_v5]": "AssertionError: []",
+            "tests/test_gate75_defensive.py::test_g75_n3_01_a_different_nonempty_out_is_refused_by_the_consumer[results/OTHER_RUN]": "AssertionError: []",
+            "tests/test_gate75_defensive.py::test_g75_n3_01_a_different_nonempty_out_is_refused_by_the_consumer[results/grid_fit_v4]": "AssertionError: []",
+            "tests/test_gate75_defensive.py::test_g75_n3_01_a_different_nonempty_out_is_refused_by_the_consumer[results/grid_fit_v5/sub]": "AssertionError: []",
+            "tests/test_gate75_defensive.py::test_g75_n3_01_a_different_nonempty_out_is_refused_by_the_consumer[results/grid_fit_v5x]": "AssertionError: []",
+        }
+    },
     "ledger-run-location-is-mandatory-g72": {
         "fail": [
             "tests/test_gate72_defensive.py::test_g72_a02_a_pending_record_without_out_cannot_be_lifted",
