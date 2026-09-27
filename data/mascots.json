@@ -945,6 +945,10 @@
         "ja": "みかん、だいすき！",
         "ko": "귤 너무 좋아!"
       },
+      "poke": {
+        "ja": "そんなに押しちゃダメ！！",
+        "ko": "날 너무 누르면 안돼!!"
+      },
       "art": "official",
       "url": "https://www.pref.ehime.jp/site/mican/16895.html",
       "image": "mascots/mican.webp",

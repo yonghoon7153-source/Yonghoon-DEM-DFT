@@ -46,6 +46,7 @@ for (const m of mascots) {
   if (!m.org) err(`${where}: org missing`);
   if (!m.about?.ja || !m.about?.ko) err(`${where}: about.ja/ko missing`);
   if (!m.line?.ja || !m.line?.ko) err(`${where}: line.ja/ko missing`);
+  if (m.poke !== undefined && (!m.poke?.ja || !m.poke?.ko)) err(`${where}: poke needs ja and ko`);
   if (!['likeness', 'official', 'standin'].includes(m.art)) err(`${where}: art must be likeness|official|standin`);
   if ((m.art === 'official' || m.art === 'standin') && !m.credit) err(`${where}: ${m.art} art needs a credit`);
   if (m.art === 'standin' && !m.image) err(`${where}: standin art needs an image`);

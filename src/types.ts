@@ -36,6 +36,8 @@ export interface Mascot {
   org: string;
   about: { ja: string; ko: string };
   line: { ja: string; ko: string };
+  /** What it says while being tapped — the hint before its hidden friend appears (みきゃん: 「날 너무 누르면 안돼!!」). */
+  poke?: { ja: string; ko: string };
   /** likeness = our drawing · official = official art · standin = a picture the user chose instead (credit = its source) */
   art: 'likeness' | 'official' | 'standin';
   url?: string;

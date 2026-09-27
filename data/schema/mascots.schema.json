@@ -17,6 +17,7 @@
           "org": { "type": "string", "description": "권리자·소속 (예: 熊本県)" },
           "about": { "type": "object", "required": ["ja", "ko"], "description": "한 줄 소개" },
           "line": { "type": "object", "required": ["ja", "ko"], "description": "말풍선 대사 (이 프로젝트가 쓴 것)" },
+          "poke": { "type": "object", "required": ["ja", "ko"], "description": "톡톡 누를 때 대사 — 숨은 친구가 나오기 전 힌트 (사용자가 정한 말)" },
           "art": { "type": "string", "enum": ["likeness", "official", "standin"], "description": "likeness = 닮은꼴(공식 아님 표시), official = 공식 일러스트(credit 필수), standin = 사용자가 고른 대체 그림(credit = 출처, 공식 아님 표시)" },
           "url": { "type": "string", "format": "uri", "description": "확인된 공식 페이지" },
           "credit": { "type": "string", "description": "표기 의무가 있는 크레딧 (예: ©2010熊本県くまモン)" },

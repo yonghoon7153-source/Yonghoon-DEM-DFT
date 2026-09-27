@@ -305,6 +305,14 @@
 .mascot.is-darkening .mascot__art > * { animation: darken .48s ease-in forwards; }
 .mascot--secret .sparkle { background: #6b4a8a; }
 .mascot--secret .mascot__bubble .b-name { color: #6b4a8a; }
+/* several friends of one prefecture stand together; only the one talking shows its bubble, the others a name tag */
+.mascot.is-quiet .mascot__bubble { display: none; }
+.mascot__tag {
+  display: none; position: absolute; left: 50%; bottom: -14px; transform: translateX(-50%); white-space: nowrap;
+  padding: 1px 8px; border-radius: 999px; background: color-mix(in oklab, var(--white) 90%, transparent);
+  box-shadow: var(--shadow-sm); font-family: var(--font-display); font-size: 11px; color: var(--ink-2); pointer-events: none;
+}
+.mascot.is-quiet .mascot__tag { display: block; }
 @keyframes poke { 0% { transform: scale(1, 1); } 35% { transform: scale(1.12, .86); } 70% { transform: scale(.95, 1.06); } 100% { transform: scale(1, 1); } }
 @keyframes darken {
   0% { filter: none; transform: rotate(0); }

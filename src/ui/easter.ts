@@ -15,7 +15,8 @@ export interface EasterOptions {
 
 export function createEaster(opts: EasterOptions) {
   const found = new Set<string>(load());
-  let node: HTMLElement | null = null;
+  // the mascots standing on the map right now — all from one prefecture, side by side; one of them talks
+  let shown: { id: string; node: HTMLElement }[] = [];
   let slugShown: string | null = null;
   let hideTimer = 0;
 
@@ -42,26 +43,63 @@ export function createEaster(opts: EasterOptions) {
     }
   }
 
-  function position(n: HTMLElement, slug: string) {
-    const pos = opts.map.anchorScreen(slug);
+  /** Stand the group next to each other on the prefecture's anchor. */
+  function layout() {
+    if (!slugShown || !shown.length) return;
+    const pos = opts.map.anchorScreen(slugShown);
     if (!pos) return;
-    n.style.left = `${pos.x}px`;
-    n.style.top = `${pos.y}px`;
-    n.classList.toggle('mascot--flip', pos.x > opts.stage.clientWidth / 2);
+    const size = parseFloat(getComputedStyle(shown[0]!.node).getPropertyValue('--size')) || 112;
+    const gap = size * 0.92;
+    const flip = pos.x > opts.stage.clientWidth / 2;
+    shown.forEach(({ node }, i) => {
+      node.style.left = `${(pos.x + (i - (shown.length - 1) / 2) * gap).toFixed(1)}px`;
+      node.style.top = `${pos.y}px`;
+      node.classList.toggle('mascot--flip', flip);
+    });
   }
 
-  /** Show the official mascot of a prefecture. Returns true when something appeared. */
-  function reveal(slug: string): boolean {
+  /** Only one speech bubble at a time: the mascot that was met or tapped last. */
+  function speak(id: string) {
+    for (const s of shown) s.node.classList.toggle('is-quiet', s.id !== id);
+  }
+
+  function restartTimer() {
+    window.clearTimeout(hideTimer);
+    hideTimer = window.setTimeout(() => dismiss(), 9000);
+  }
+
+  /** Show a prefecture's official mascot together with its unofficial friends (hidden friends stay hidden). */
+  function reveal(slug: string, speaker?: string): boolean {
     const p = prefBySlug.get(slug);
-    if (!p?.mascot) return false;
-    return revealMascot(p.mascot);
+    if (!p) return false;
+    const group = mascots.filter((m) => m.prefecture === slug && !m.secret).sort((a, b) => (a.kind === b.kind ? 0 : a.kind === 'official' ? -1 : 1));
+    if (!group.length) return false;
+    dismiss(true);
+    const first = speaker && group.some((m) => m.id === speaker) ? speaker : group[0]!.id;
+    for (const m of group) add(m.id);
+    speak(first);
+    return true;
   }
 
-  /** Show one specific mascot (official or extra) popping out of its prefecture. */
+  /** Show one mascot popping out of its prefecture; the others of the same prefecture stay beside it. */
   function revealMascot(id: string): boolean {
-    dismiss(true);
     const m = mascotById.get(id);
     if (!m) return false;
+    if (m.prefecture !== slugShown) dismiss(true);
+    const ok = add(id);
+    if (ok) speak(id);
+    return ok;
+  }
+
+  function add(id: string): boolean {
+    const m = mascotById.get(id);
+    if (!m) return false;
+    const already = shown.find((s) => s.id === id);
+    if (already) {
+      sparkle(already.node);
+      restartTimer();
+      return true;
+    }
     const art = mascotVisualHtml(m);
     if (!art) return false;
     const slug = m.prefecture;
@@ -70,15 +108,17 @@ export function createEaster(opts: EasterOptions) {
     const n = el('div', { class: `mascot${m.secret ? ' mascot--secret' : ''}`, role: 'img', 'aria-label': `${m.name.ja} — ${m.line.ja}` });
     const artEl = el('div', { class: 'mascot__art' });
     artEl.innerHTML = art; // our own SVG likeness, or <img> of the official picture
+    const lineJa = el('span', { class: 'b-line', lang: 'ja' }, m.line.ja);
+    const lineKo = el('span', { class: 'b-ko' }, m.line.ko);
     const bubble = el(
       'div',
       { class: 'mascot__bubble' },
       el('span', { class: 'b-name' }, `${m.name.ja}`, el('span', { class: 'b-org' }, ` · ${m.org}`)),
-      el('span', { class: 'b-line', lang: 'ja' }, m.line.ja),
-      el('span', { class: 'b-ko' }, m.line.ko),
+      lineJa,
+      lineKo,
       el('span', { class: 'b-tip' }, isNew ? (m.secret ? '✦ 숨은 친구를 찾았어요!' : '✦ 図鑑에 추가됐어요') : '또 만났다 ✿'),
     );
-    n.append(artEl, bubble);
+    n.append(artEl, bubble, el('span', { class: 'mascot__tag', lang: 'ja' }, m.name.ja));
     // Easter egg: a mascot with a hidden friend turns into it after three taps on the picture.
     const alter = m.secret ? undefined : secretFor(m);
     if (alter) {
@@ -86,24 +126,34 @@ export function createEaster(opts: EasterOptions) {
       artEl.addEventListener('click', (e) => {
         e.stopPropagation();
         taps++;
-        window.clearTimeout(hideTimer);
-        hideTimer = window.setTimeout(() => dismiss(), 9000);
+        speak(m.id);
+        restartTimer();
         artEl.classList.remove('is-poked');
         void artEl.offsetWidth; // restart the animation
         artEl.classList.add('is-poked');
+        if (m.poke && taps < 3) {
+          lineJa.textContent = m.poke.ja;
+          lineKo.textContent = m.poke.ko;
+        }
         if (taps >= 3) {
           n.classList.add('is-darkening');
           window.setTimeout(() => {
-            if (node === n) revealMascot(alter.id);
+            if (!shown.some((s) => s.node === n)) return;
+            removeOne(m.id, true);
+            if (add(alter.id)) speak(alter.id);
           }, 480);
         }
       });
     }
-    n.addEventListener('click', () => dismiss());
+    // a quiet mascot starts talking when tapped; tapping the one that talks sends it off
+    n.addEventListener('click', () => {
+      if (n.classList.contains('is-quiet')) { speak(m.id); restartTimer(); }
+      else removeOne(m.id);
+    });
     opts.layer.append(n);
-    node = n;
+    shown.push({ id: m.id, node: n });
     slugShown = slug;
-    position(n, slug);
+    layout();
     sparkle(n);
 
     if (isNew) {
@@ -112,7 +162,7 @@ export function createEaster(opts: EasterOptions) {
       if (m.kind === 'official') opts.map.addSticker(slug, mascotSticker(m));
     }
     opts.onCount(found.size, mascots.length, isNew);
-    hideTimer = window.setTimeout(() => dismiss(), 9000);
+    restartTimer();
     return true;
   }
 
@@ -126,12 +176,7 @@ export function createEaster(opts: EasterOptions) {
     }
   }
 
-  function dismiss(immediate = false) {
-    window.clearTimeout(hideTimer);
-    const n = node;
-    node = null;
-    slugShown = null;
-    if (!n) return;
+  function leave(n: HTMLElement, immediate: boolean) {
     if (immediate) n.remove();
     else {
       n.classList.add('is-leaving');
@@ -139,9 +184,27 @@ export function createEaster(opts: EasterOptions) {
     }
   }
 
-  /** Keep the mascot glued to its prefecture while the map moves. */
+  function removeOne(id: string, immediate = false) {
+    const s = shown.find((x) => x.id === id);
+    if (!s) return;
+    shown = shown.filter((x) => x !== s);
+    leave(s.node, immediate);
+    if (!shown.length) { slugShown = null; window.clearTimeout(hideTimer); return; }
+    if (!shown.some((x) => !x.node.classList.contains('is-quiet'))) speak(shown[shown.length - 1]!.id);
+    layout();
+  }
+
+  function dismiss(immediate = false) {
+    window.clearTimeout(hideTimer);
+    const all = shown;
+    shown = [];
+    slugShown = null;
+    for (const s of all) leave(s.node, immediate);
+  }
+
+  /** Keep the mascots glued to their prefecture while the map moves. */
   function reposition() {
-    if (node && slugShown) position(node, slugShown);
+    layout();
   }
 
   function collectionView(): HTMLElement {
@@ -152,7 +215,7 @@ export function createEaster(opts: EasterOptions) {
         'p',
         { class: 'lead' },
         found.size
-          ? '県을 누르면 그 県의 공식 캐릭터가, 패널의 「친구들」에서 누르면 나머지 친구가 튀어나와요. 아직 못 만난 친구는 실루엣이에요.'
+          ? '県을 누르면 그 県의 친구들(공식 + 비공식)이 같이 튀어나와요. 누른 친구가 말을 해요. 아직 못 만난 친구는 실루엣이에요.'
           : '아직 아무도 못 만났어요. 지도에서 県을 눌러보세요 — 진짜 ご当地キャラ가 살고 있어요!',
       ),
     );

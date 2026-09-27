@@ -154,8 +154,7 @@ async function init() {
     setHash(slug);
     window.setTimeout(() => {
       if (state.selected === slug && easter) {
-        if (opts.mascot) easter.revealMascot(opts.mascot);
-        else easter.reveal(slug);
+        easter.reveal(slug, opts.mascot);
         panel.refresh();
       }
     }, opts.animate === false ? 50 : 760);
