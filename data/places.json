@@ -24,6 +24,8 @@
     { "id": "yokohama", "pref": "kanagawa", "name": { "ja": "横浜市", "kana": "よこはまし", "ko": "요코하마시" }, "at": [139.63, 35.45], "capital": true, "fromUser": true },
     { "id": "kawasaki", "pref": "kanagawa", "name": { "ja": "川崎市", "kana": "かわさきし", "ko": "가와사키시" }, "at": [139.7, 35.53], "capital": false, "fromUser": true },
     { "id": "sagamihara", "pref": "kanagawa", "name": { "ja": "相模原市", "kana": "さがみはらし", "ko": "사가미하라시" }, "at": [139.37, 35.57], "capital": false, "fromUser": true },
+    { "id": "hakone", "pref": "kanagawa", "name": { "ja": "箱根町", "kana": "はこねまち", "ko": "하코네정" }, "at": [139.11, 35.23], "capital": false, "fromUser": true },
+    { "id": "enoshima", "pref": "kanagawa", "name": { "ja": "江の島", "kana": "えのしま", "ko": "에노시마" }, "at": [139.48, 35.3], "capital": false, "fromUser": true },
     { "id": "niigata", "pref": "niigata", "name": { "ja": "新潟市", "kana": "にいがたし", "ko": "니가타시" }, "at": [139.04, 37.92], "capital": true, "fromUser": false },
     { "id": "toyama", "pref": "toyama", "name": { "ja": "富山市", "kana": "とやまし", "ko": "도야마시" }, "at": [137.21, 36.7], "capital": true, "fromUser": false },
     { "id": "kanazawa", "pref": "ishikawa", "name": { "ja": "金沢市", "kana": "かなざわし", "ko": "가나자와시" }, "at": [136.66, 36.56], "capital": true, "fromUser": true },

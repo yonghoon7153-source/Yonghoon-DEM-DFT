@@ -67,7 +67,7 @@ export function extrasForRegion(regionId: string): NoteExtra[] {
   return notes.extras.filter((e) => e.targets?.regions?.includes(regionId));
 }
 
-/** Extras that are not tied to any place (table manners, directions, …). */
+/** Extras that are not tied to any place (47都道府県, table manners, …) — what the map already draws is not repeated here. */
 export function generalExtras(): NoteExtra[] {
   return notes.extras.filter((e) => !e.targets?.prefectures?.length && !e.targets?.regions?.length);
 }
