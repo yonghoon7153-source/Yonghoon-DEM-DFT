@@ -62,20 +62,20 @@ mkdir -p "$DEST"
 #   아래 index 갱신은 이 파일에 검증된 entry 를 **병합**한다 — 73차까지는 `runs = {}` 에서 시작해
 #   이번 호출의 묶음만으로 다시 썼고, `results/grid_fit_v5` 하나를 보관하는 호출이 v4 네 항목을
 #   지웠다 (원장 §101 G74-4).
+# ★ 75차 G75-N2 — 읽기는 `tools/index_yaml.py::load_index_strict` **한 함수**다 (중복 mapping 키 = 불명확
+#   → 거부; 형식 검사도 거기). `yaml.safe_load` 는 중복 키를 뒤 값으로 접어서 preflight 가 통과시키고
+#   병합 writer 가 접힌 내용을 써 무관한 항목을 잃었다 (리뷰어 I02·I03·I04). 아래 동명 비교·병합도
+#   같은 함수로 읽는다.
 if [[ -f "$DEST/artifact_index.yaml" ]]; then
   if ! "$PY" - "$DEST/artifact_index.yaml" <<'PYIDX'
-import os, sys, yaml
+import os, sys
+from tools.index_yaml import load_index_strict
 p = sys.argv[1]
 try:
-    doc = yaml.safe_load(open(p, encoding="utf-8"))
+    load_index_strict(open(p, encoding="utf-8").read())
 except Exception as exc:
-    print(f"  ✗ 기존 index 를 읽을 수 없다 ({exc}) — 승격하지 않는다", file=sys.stderr)
-    sys.stderr.flush(); os._exit(1)
-runs = doc.get("runs") if isinstance(doc, dict) else None
-if not isinstance(doc, dict) or not isinstance(runs, dict) \
-        or any(not isinstance(k, str) or not isinstance(v, dict) for k, v in runs.items()):
-    print(f"  ✗ 기존 index 가 `runs:` mapping 을 담은 mapping 이 아니다: {p} — 비우고 다시 쓰지 않는다 "
-          "(사람이 본다)", file=sys.stderr)
+    print(f"  ✗ 기존 index 를 받을 수 없다: {p} — {exc} — 비우고 다시 쓰지 않는다 (사람이 본다)",
+          file=sys.stderr)
     sys.stderr.flush(); os._exit(1)
 sys.stdout.flush(); os._exit(0)
 PYIDX
@@ -214,7 +214,8 @@ PYEOF
     #   재보관(파생 재생성 등)은 `ARCHIVE_REPLACE=1` 로 **명시**해야 한다. 승격(mv) 전에 보므로
     #   거부하면 묶음도 index 도 그대로다 — 둘이 어긋나는 상태를 만들지 않는다.
     if ! ARCHIVE_REPLACE="${ARCHIVE_REPLACE:-}" "$PY" - "$DEST/artifact_index.yaml" "$name" "$cand/payload_sha256.yaml" <<'PYSAME'
-import hashlib, os, sys, yaml
+import hashlib, os, sys
+from tools.index_yaml import load_index_strict
 idx, name, pi = sys.argv[1:4]
 
 def _leave(rc):                                   # heredoc 은 flush 뒤 os._exit (docs-lint 규칙)
@@ -222,7 +223,11 @@ def _leave(rc):                                   # heredoc 은 flush 뒤 os._ex
 
 if not os.path.isfile(idx):
     _leave(0)
-runs = (yaml.safe_load(open(idx, encoding="utf-8")) or {}).get("runs") or {}
+try:
+    runs = load_index_strict(open(idx, encoding="utf-8").read())["runs"]    # 75차 G75-N2 — 진입과 같은 loader
+except Exception as exc:
+    print(f"  ✗ index 를 받을 수 없다 (진입 뒤 바뀌었다): {exc} — 승격하지 않는다", file=sys.stderr)
+    _leave(1)
 ent = runs.get(name)
 if not isinstance(ent, dict):
     _leave(0)
@@ -290,13 +295,19 @@ done
 #   목록으로 남긴다. RESULTS.md 의 앵커와 이 파일을 대조하면 된다.
 #   승격된 묶음이 하나도 없으면 쓰지 않는다 — 실패한 실행이 인덱스를 건드려
 #   "무엇이 근거인가"를 흐리면 안 된다.
+# ★ 75차 G75-N1 — 이 호출의 실패는 archive 의 실패다. 74차까지는 rc 를 보지 않아 승격·n_ok 뒤에 index 쓰기가
+#   죽어도 rc 0 · "git add artifacts" 안내로 끝났다 (리뷰어 S17: 옛 index 와 새 묶음이 어긋난 채 성공으로
+#   읽힌다). 실패하면 index_ok=0 → 명시적 미완 · nonzero · 성공 안내 차단. 이미 승격된 묶음은 그대로 두고
+#   그 사실을 말한다 (되돌리거나 숨기지 않는다 — 사람이 본다).
+index_ok=1
 if [[ "${#promoted[@]}" -gt 0 ]]; then
-"$PY" - "$DEST" "${promoted[@]}" <<'PYEOF'
+if ! "$PY" - "$DEST" "${promoted[@]}" <<'PYEOF'
 import os, hashlib, subprocess, sys
 from pathlib import Path
 import yaml
 from src.io import file_digest
 from tools.archive_bundle import artifact_kind
+from tools.index_yaml import load_index_strict
 dest, names = Path(sys.argv[1]), sys.argv[2:]
 
 def _sha(p):
@@ -304,14 +315,14 @@ def _sha(p):
     h.update(Path(p).read_bytes())
     return h.hexdigest()
 
-# ★ 74차 G74-4 — **병합**이다. 기존 index 의 다른 entry 는 바이트 그대로 보존하고(재검증한 것처럼
-#   stamp 를 갱신하지 않는다), 이번에 승격한 이름만 새 값으로 넣는다. 기존 index 는 스크립트
-#   진입에서 이미 형식을 검사했다 (불명확하면 여기까지 오지 않는다).
+# ★ 74차 G74-4 — **병합**이다. 기존 index 의 다른 entry 는 **파싱된 값**을 그대로 보존하고(재검증한 것처럼
+#   stamp 를 갱신하지 않는다; safe_dump 재직렬화라 raw 바이트·주석·인용 형식은 보존하지 않는다 — 75차 정정),
+#   이번에 승격한 이름만 새 값으로 넣는다. 기존 index 는 스크립트 진입에서 같은 loader 로 이미 검사했다
+#   (불명확하면 여기까지 오지 않는다). 여기서 다시 읽는 것은 진입 뒤 바뀐 파일을 접어 쓰지 않기 위해서다.
 out = dest / "artifact_index.yaml"
 runs = {}
 if out.is_file():
-    _prev = yaml.safe_load(out.read_text(encoding="utf-8")) or {}
-    runs = dict(_prev.get("runs") or {})
+    runs = dict(load_index_strict(out.read_text(encoding="utf-8"))["runs"])    # 75차 G75-N2 — 예외면 rc≠0 → N1 경로
 # ★ 12차 발견 5-c — 이번에 check→격리 복원→validator 를 통과해 **승격한** 것만
 #   싣는다 (예전엔 DEST 아래 모든 디렉터리를 무검증으로 순회했다).
 for name in names:
@@ -399,14 +410,27 @@ _body = yaml.safe_dump(
      "source_commit": commit, "runs": runs},
     allow_unicode=True, sort_keys=False)
 _tmp = out.with_name(f".artifact_index.{os.getpid()}.tmp")
-_tmp.write_text(_body, encoding="utf-8")
-os.replace(_tmp, out)
+try:
+    _tmp.write_text(_body, encoding="utf-8")
+    os.replace(_tmp, out)
+finally:
+    if _tmp.exists():                     # 75차 G75-N1 — 교체가 실패하면 임시 파일을 남기지 않는다 (기존 index 는 그대로)
+        _tmp.unlink()
 print(f"\n인덱스: {out} ({len(names)}개 승격 · 전체 {len(runs)}개 묶음, full 64자리 digest)")
+sys.stdout.flush(); os._exit(0)
 PYEOF
+then
+  index_ok=0
+  printf '\n  ✗ index 최종화 실패 — %s 는 갱신되지 않았다 (기존 바이트 그대로). archive 는 미완이다 (75차 G75-N1).\n' \
+    "$DEST/artifact_index.yaml" >&2
+  printf '    이미 승격된 묶음: %s — 승격은 되돌리지 않는다; 옛 index 와 어긋난 상태이므로 사람이 본다 (재실행하면 같은 identity 는 멱등).\n' \
+    "${promoted[*]}" >&2
+fi
 fi
 
 printf '\n요청 %d개 · 검증 가능 %d개 · 불완전 %d개 · 없음 %d개 · 합계 %s\n' \
   "$n_want" "$n_ok" "$n_bad" "$n_missing" "$(du -sh "$DEST" | cut -f1)"
+if [[ "$index_ok" -eq 1 ]]; then
 cat <<'EOF'
 
 다음:
@@ -419,7 +443,10 @@ clone 한 쪽에서 복원 + 검증:
              ensure_ascii=False, indent=2))"
   ./run.sh --mode score --in results/halfcell_fit_v4   # 채점 이후는 몇 초다
 EOF
+else
+  echo "index 가 미완이므로 commit 안내를 하지 않는다 — 위 ✗ 를 먼저 해결하라 (75차 G75-N1)" >&2
+fi
 
 # ★ F71/8-4 — 하나라도 불완전하면 nonzero. 조용히 성공하면 CI·스크립트가
-#   "보관됐다"고 믿는다.
-[[ "$n_bad" -eq 0 && "$n_missing" -eq 0 ]] || exit 1
+#   "보관됐다"고 믿는다. ★ 75차 G75-N1 — index 최종화 실패도 같은 축이다.
+[[ "$n_bad" -eq 0 && "$n_missing" -eq 0 && "$index_ok" -eq 1 ]] || exit 1

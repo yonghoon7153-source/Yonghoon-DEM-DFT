@@ -2523,11 +2523,12 @@ def _no_active_claim_evidence_problems(reg: dict) -> list[str]:
             bad.append(f"{leg}: evidence.out 이 비어 있지 않은 문자열이 아니다: {out!r}")
         core = ev.get("verification_receipt_core_sha256")
         rp = ev.get("verification_receipt")
+        core_doc = None
         if isinstance(rp, str) and (_REPO / rp).is_file():
-            import yaml as _y
             try:
                 from tools.preserve import _receipt_core_sha256, read_verification_receipt
-                got = _receipt_core_sha256(read_verification_receipt(rp, leg, repo_root=_REPO))   # reader 는 core 를 돌려준다
+                core_doc = read_verification_receipt(rp, leg, repo_root=_REPO)   # reader 는 core 를 돌려준다
+                got = _receipt_core_sha256(core_doc)
                 if got != core:
                     bad.append(f"{leg}: 영수증 core sha 가 원장과 다르다 "
                                f"({str(core)[:16]} ≠ {got[:16]})")
@@ -2535,6 +2536,19 @@ def _no_active_claim_evidence_problems(reg: dict) -> list[str]:
                 bad.append(f"{leg}: 영수증을 typed 로 읽지 못한다: {exc}")
         elif rp:
             bad.append(f"{leg}: evidence.verification_receipt 가 가리키는 파일이 없다: {rp!r}")
+        # ★ 75차 G75-N3 — `out` 은 존재가 아니라 **결속**이다. 생산자(`attach_bundle_evidence`)와 **같은 함수**로
+        #   영수증 → 묶음(restore_map.run_dir · sealed summary sha) → 원장 실행 자리를 대조한다. 74차판은 비어 있지
+        #   않은 문자열이면 받아서 `results/OTHER_RUN` 이 통과했다 (리뷰어 D01). 재구현이 아니라 재사용이다 —
+        #   producer 가 받는 것(예: 끝 `/` 정규화)은 여기서도 받고, producer 가 거부하는 것은 여기서도 거부한다.
+        if core_doc is not None:
+            try:
+                from tools.preserve import (_assert_ledger_run_bound, _assert_receipt_bound_to_bundle,
+                                            _repo_relative_or_refuse)
+                bundle_dir = _repo_relative_or_refuse(_REPO, ev.get("bundle_uri"), "bundle_uri")
+                bound_run = _assert_receipt_bound_to_bundle(core_doc, bundle_dir, leg)
+                _assert_ledger_run_bound(ev, bound_run, leg, e.get("preservation_status"))
+            except Exception as exc:                       # noqa: BLE001
+                bad.append(f"{leg}: evidence.out 이 영수증·묶음이 결속한 실행 자리와 결속되지 않는다: {exc}")
         vid = ev.get("validator_identity") or {}
         if not isinstance(vid, dict) or vid.get("ok") is not True \
                 or not isinstance(vid.get("n_checks"), int) or vid.get("n_checks") <= 0 \
@@ -2542,15 +2556,11 @@ def _no_active_claim_evidence_problems(reg: dict) -> list[str]:
             bad.append(f"{leg}: evidence.validator_identity 가 닫힌 typed 값이 아니다: {vid!r}")
         # validator 식별은 **영수증이 말한 것**과 같아야 한다 (producer source 와는 다를 수 있다 —
         # 리뷰어 ⑥: 새 validator 식별은 별도 기록이고 producer 식별을 덮지 않는다).
-        if isinstance(rp, str) and (_REPO / rp).is_file() and isinstance(vid, dict):
-            try:
-                from tools.preserve import read_verification_receipt as _rvr
-                _vd = _rvr(rp, leg, repo_root=_REPO)["identity"]["validator_source_digest"]
-                if _vd != vid.get("source_digest"):
-                    bad.append(f"{leg}: validator_identity.source_digest {vid.get('source_digest')!r} 가 "
-                               f"영수증의 validator {_vd!r} 와 다르다")
-            except Exception as exc:                   # noqa: BLE001
-                bad.append(f"{leg}: 영수증 validator 식별을 읽지 못한다: {exc}")
+        if core_doc is not None and isinstance(vid, dict):
+            _vd = core_doc["identity"]["validator_source_digest"]
+            if _vd != vid.get("source_digest"):
+                bad.append(f"{leg}: validator_identity.source_digest {vid.get('source_digest')!r} 가 "
+                           f"영수증의 validator {_vd!r} 와 다르다")
     return bad
 
 
