@@ -732,7 +732,9 @@
         "ja": "奈良へようこそ",
         "ko": "나라에 어서 와"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/sentokun.webp",
+      "credit": "©奈良県"
     },
     {
       "id": "kiichan",
@@ -745,14 +747,17 @@
       },
       "org": "和歌山県",
       "about": {
-        "ja": "紀州犬がモチーフ。和歌山県PRキャラクター",
-        "ko": "기슈견이 모티브. 와카야마현 PR 캐릭터"
+        "ja": "紀州犬がモチーフ。名前は「紀の国」と「紀州犬」の「き」から、体の緑のマークは和歌山の W と豊かな緑。紀の国わかやま国体のあと和歌山県公式マスコットに",
+        "ko": "기슈견이 모티브. 이름은 '기노쿠니'와 '기슈견'의 '키'에서, 몸의 초록 무늬는 와카야마의 W와 풍부한 자연. 2015 와카야마 국체 뒤 현 공식 마스코트로"
       },
       "line": {
         "ja": "みかん、たべる？",
         "ko": "귤 먹을래?"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/kiichan.webp",
+      "credit": "©和歌山県",
+      "url": "https://www.pref.wakayama.lg.jp/prefg/000200/wakayamaprcharacter/kiichan_profile.html"
     },
     {
       "id": "toripy",

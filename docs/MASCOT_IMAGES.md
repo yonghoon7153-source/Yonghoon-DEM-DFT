@@ -1,6 +1,6 @@
 # 마스코트 그림 목록
 
-받은 그림 **29 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
+받은 그림 **31 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
 
 주는 법: 캐릭터당 한 장, 배경 투명 PNG 가 제일 좋다 (흰 배경 JPG 도 자동으로 배경을 지운다). 파일명에 **캐릭터 이름·県 이름·id 중 하나**만 들어 있으면 된다.
 받은 뒤: `npm run mascots:import <폴더>` → 512px WebP 로 줄여 `public/mascots/<id>.webp` 에 넣고 데이터와 이 목록을 갱신한다.
@@ -61,8 +61,8 @@
 | 30 | 京都 | まゆまろ | 마유마로 | `mayumaro.png` | 京都府 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%BE%E3%82%86%E3%81%BE%E3%82%8D%20%E4%BA%AC%E9%83%BD%E5%BA%9C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 31 | 大阪 | もずやん | 모즈얀 | `mozuyan.png` | 大阪府 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%82%E3%81%9A%E3%82%84%E3%82%93%20%E5%A4%A7%E9%98%AA%E5%BA%9C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 32 | 兵庫 | はばタン | 하바탄 | `habatan.png` | 兵庫県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%AF%E3%81%B0%E3%82%BF%E3%83%B3%20%E5%85%B5%E5%BA%AB%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
-| 33 | 奈良 | せんとくん | 센토군 | `sentokun.png` | 奈良県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%9B%E3%82%93%E3%81%A8%E3%81%8F%E3%82%93%20%E5%A5%88%E8%89%AF%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
-| 34 | 和歌山 | きいちゃん | 키짱 | `kiichan.png` | 和歌山県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%8D%E3%81%84%E3%81%A1%E3%82%83%E3%82%93%20%E5%92%8C%E6%AD%8C%E5%B1%B1%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 33 | 奈良 | せんとくん | 센토군 | `sentokun.png` | 奈良県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%9B%E3%82%93%E3%81%A8%E3%81%8F%E3%82%93%20%E5%A5%88%E8%89%AF%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
+| 34 | 和歌山 | きいちゃん | 키짱 | `kiichan.png` | 和歌山県 | [공식](https://www.pref.wakayama.lg.jp/prefg/000200/wakayamaprcharacter/kiichan_profile.html) | ✅ |
 
 ## 中国 주고쿠
 
