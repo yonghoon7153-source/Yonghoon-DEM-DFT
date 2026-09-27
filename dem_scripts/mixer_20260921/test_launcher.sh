@@ -76,6 +76,22 @@ chk '⑪b 새 덱 옆에 n_expected · r_container 가 생긴다' "[ -s '$G/$vic
 chk '⑪c 임시 디렉터리 .new 가 남지 않는다' "! [ -d '$G/$victim.new' ]"
 kill "$SL" 2>/dev/null
 
+echo "── gen_all.sh SET=highbo → 실행 덱 비교 (2026-09-27 고-Bo 확장 · Codex HB-03) ──"
+H="$T/hb"; mkdir -p "$H"
+#  짝 LC 덱 (본 캠페인과 같은 인자) 을 먼저 두고, SET=highbo 로 LH 만 만든 뒤 덱 비교 도구로 허용목록을 확인한다
+for sd in 32452843 49979687 67867967; do
+  python3 "$ROOT/scripts/make_mixer_deck.py" --out "$H/LC_s$sd" --n-total 100000 --cgf 151.4 --arm LC --seed "$sd" --revolutions 8 > /dev/null 2>&1
+done
+h1=$(OUT="$H" STL="$ROOT/dem_scripts/mixer_20260919" SET=highbo bash "$HERE/gen_all.sh" 2>&1)
+chk 'H① SET=highbo 는 LH × 캠페인 시드 3 만 만든다 (L0 · E0 없음)' "[ \$(ls -d '$H'/LH_s*/ | wc -l) -eq 3 ] && ! ls -d '$H'/L0_s* '$H'/E0_s* >/dev/null 2>&1"
+chk 'H①b LH 덱 옆에 n_expected · r_container (판독 계약)' "[ \"\$(cat '$H/LH_s32452843/n_expected')\" = 100000 ] && [ -s '$H/LH_s32452843/r_container' ]"
+dd=$(python3 "$ROOT/scripts/mixer_deck_diff.py" --runs "$H" --allow B 2>&1); rc_dd=$?
+chk 'H② ★ 실행 덱 LC_s* → LH_s* 세 시드: 허용 다섯 쌍 (AM–AM 셋 · AM–벽 둘) 만 다르다' "[ $rc_dd -eq 0 ] && grep -q '3/3 PASS' <<<\"\$dd\""
+dd2=$(python3 "$ROOT/scripts/mixer_deck_diff.py" --runs "$H" --allow A 2>&1); rc_dd2=$?
+chk 'H②b 같은 덱을 A (AM–AM 단독) 로 보면 거부 (AM–벽 이 허용목록 밖)' "[ $rc_dd2 -ne 0 ] && grep -q '0/3 PASS' <<<\"\$dd2\""
+hx=$(OUT="$H" SET=bogus bash "$HERE/gen_all.sh" 2>&1); rc_hx=$?
+chk 'H③ 모르는 SET 은 거부한다' "[ $rc_hx -ne 0 ] && grep -q 'main | highbo' <<<\"\$hx\""
+
 echo "── resume_all.sh: 체크포인트 재개 (2026-09-26 — WSL 재시작으로 L 10 런이 53–61 % 에서 끊김) ──"
 R="$T/rs"; mkdir -p "$R"
 #  실물 생성기 덱 (LA) 으로 '회전 중 죽은' 런을 꾸민다: thermo 가 ckpt+5000 까지 있고 a (최신) · b 체크포인트

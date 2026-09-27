@@ -12,22 +12,32 @@
 #   ⇒ ⓐ `pid` 가 살아 있으면 건너뛴다 · 로그가 있으면 FORCE=1 없이 건너뛴다
 #      ⓑ 덱은 `<dir>.new/` 에 만든 뒤 **`mv` 로 바꿔 넣는다** (rename = 새 inode ⇒ 실행 중인 프로세스는
 #         옛 inode 를 끝까지 읽는다).  회귀: test_launcher.sh
+#
+# ★ 2026-09-27 — `SET=highbo` = 고-Bo 확장 `LH` × 캠페인 시드 3 만 만든다 (사전등록
+#   docs/reviews/mixer_highbo_prereg_20260927.md).  같은 OUT(runs/) 에 두어 기준 런 E0 · 짝 LC 옆에 선다.
+#   본 캠페인 목록(SET=main, 기본)은 그대로다.  만든 뒤 발사 전에:  python3 scripts/mixer_deck_diff.py --runs <OUT> --allow B
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 OUT="${OUT:-$ROOT/dem_scripts/mixer_20260921/runs}"
 STL="${STL:-$ROOT/dem_scripts/mixer_20260919}"          # Drum/Front/Back.stl 출처
-N_TOTAL="${N_TOTAL:-100000}"; CGF="${CGF:-151.4}"; REV="${REV:-8}"
+N_TOTAL="${N_TOTAL:-100000}"; CGF="${CGF:-151.4}"; REV="${REV:-8}"; SET="${SET:-main}"
 mkdir -p "$OUT"
 skipped=0; made=0
-python3 - "$ROOT" <<'PY' | while read -r arm seed rev; do
+python3 - "$ROOT" "$SET" <<'PY' | while read -r arm seed rev; do
 import sys; sys.path.insert(0, sys.argv[1] + '/scripts')
 import importlib.util
 spec = importlib.util.spec_from_file_location('m', sys.argv[1] + '/scripts/make_mixer_deck.py')
 m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
-for arm, seed in m.CAMPAIGN:            # 측정 런 10 개 (REV 바퀴)
-    print(arm, seed, 'REV')
-for arm, seed, rev in m.REFERENCE:      # 기준 런 3 개 (회전 0 — measure_mixing_index --ref 상대)
-    print(arm, seed, rev)
+if sys.argv[2] == 'highbo':             # 고-Bo 확장 LH 3 개 (REV 바퀴) — 기준 런은 본 캠페인 것을 그대로 쓴다
+    for arm, seed in m.CAMPAIGN_HIGHBO:
+        print(arm, seed, 'REV')
+elif sys.argv[2] == 'main':
+    for arm, seed in m.CAMPAIGN:        # 측정 런 10 개 (REV 바퀴)
+        print(arm, seed, 'REV')
+    for arm, seed, rev in m.REFERENCE:  # 기준 런 3 개 (회전 0 — measure_mixing_index --ref 상대)
+        print(arm, seed, rev)
+else:
+    sys.exit(f'⛔ SET={sys.argv[2]} — main | highbo')
 PY
   [ "$rev" = REV ] && rev="$REV"
   d="$OUT/${arm}_s${seed}"

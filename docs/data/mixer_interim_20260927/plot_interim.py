@@ -64,7 +64,7 @@ for ax, (cell, title) in zip(axes, CELLS):
         rev0 = stack[0][0][:n]
         mean = np.mean([smooth(m)[:n] for _, m in stack], axis=0)
         ax.plot(rev0, mean, color=col, lw=2.2, solid_capstyle="round", solid_joinstyle="round",
-                label=f"{arm}  ({'uncoated AM, Bo_AM-AM 3.0' if arm == 'LA' else 'coated AM, Bo_AM-AM ~0.001'})  - 3 seeds, thick = mean")
+                label=f"{arm}  ({'uncoated proxy: AM-AM & AM-wall cohesion, Bo_code 3.0' if arm == 'LA' else 'coated proxy: AM surface CED from SE, Bo_code 0.001'})  - 3 seeds, thick = mean")
     rev, m, d = load("L0", SEEDS[0], cell)
     ratios.append(d["S0"] / d["SR"])
     last_rev = max(last_rev, rev[-1])
@@ -85,10 +85,10 @@ for ax, (cell, title) in zip(axes, CELLS):
     ax.set_xlabel("drum revolutions")
 axes[0].set_ylabel("Lacey mixing index M  (5-frame moving mean)")
 h, l = axes[0].get_legend_handles_labels()
-fig.legend(h, l, loc="lower center", ncol=3, frameon=False, fontsize=9, bbox_to_anchor=(0.5, -0.01))
+fig.legend(h, l, loc="lower center", ncol=2, frameon=False, fontsize=9, bbox_to_anchor=(0.5, -0.01))
 fig.suptitle("Layered mixer campaign - INTERIM M(t) at ~5 of 8 revolutions  (descriptive only; the registered verdict uses 8-rev values)",
              x=0.01, ha="left", fontsize=11.5, color=INK)
-fig.tight_layout(rect=(0, 0.07, 1, 0.95))
+fig.tight_layout(rect=(0, 0.11, 1, 0.95))
 fig.savefig(OUT, dpi=150, facecolor=SURFACE)
 print("wrote", OUT)
 

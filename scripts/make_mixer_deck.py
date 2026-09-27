@@ -275,16 +275,29 @@ ARMS = {
                 abs_base=BO_BASE, abs_mult=_am_pairs(0.5)),
     'LB3': dict(desc='층상 사다리 · AM Bo 1.5 — 볼텍스(14 G) E4 기준', bond=1.0, layered=True,
                 abs_base=BO_BASE, abs_mult=_am_pairs(1.5)),
-    'LA': dict(desc='§24 층상 · 무코팅 AM Bo 3.0 = 문헌 앵커 (hare2026) — 헤드라인 무코팅',
+    #  ⚠ 2026-09-27 — LA·LC 설명 문자열 정정 (R-4 · R-3 · Codex HB-01).  덱에는 **주석 한 줄**로만 들어간다
+    #    (물리 명령 불변 — 셀프테스트 ㉟b 가 옛 문자열로 옛 골든 해시를 재현해 보인다).  돌고 있는 런의 덱은 옛 문자열.
+    #    옛 LA: '… 무코팅 AM Bo 3.0 = 문헌 앵커 (hare2026) — 헤드라인 무코팅' (R-4 로 철회된 라벨)
+    #    옛 LC: '… 코팅 (AM 표면 = SE, C1 규약) — 헤드라인 코팅' (R-3: "코팅" 은 대리일 뿐)
+    'LA': dict(desc='§24 층상 · AM–AM Bo_code 3.0 (벽 CED 동반) = 내부 기준점 — 문헌 앵커 아님 (R-4)',
                bond=1.0, layered=True, abs_base=BO_BASE, abs_mult=_am_pairs(3.0)),
-    'LC': dict(desc='§24 층상 · 코팅 (AM 표면 = SE, C1 규약) — 헤드라인 코팅',
+    'LC': dict(desc='§24 층상 · AM 표면 CED 를 SE 표면에서 JKR 환산 (C1 규약, AM_P Bo_code 0.00109) — "코팅" 의 대리 (R-3)',
                bond=1.0, layered=True, abs_base=BO_BASE, coat={'AM_P': 'SE', 'AM_S': 'SE'}),
+    #  ★ 고-Bo 확장 (2026-09-27, 사전등록 `docs/reviews/mixer_highbo_prereg_20260927.md`) — **LA 와 같은 규약**
+    #    (abs_base 0.212 + AM 쌍 abs_mult) 에 Bo 만 38.4.  ⇒ AM–AM **과 AM–벽** 이 함께 오른다 (벽 CED = 대각 ÷
+    #    WALL_CED_DIV) = 저자 결정 **B (공동 개입)**.  38.4 = **내부 고-Bo 탐색값** — Hare 분말의 재현·문헌 앵커 아님
+    #    (Codex HB-02: JKR pull-off 규약 2 배 모호 · 입경·밀도 다름).  LC 대비 달라지는 CED 는 다섯 쌍뿐이다
+    #    (AM_P–AM_P · AM_P–AM_S · AM_S–AM_S · AM_P–벽 · AM_S–벽 — 셀프테스트 ㊼b · `mixer_deck_diff.py` 가 실행 덱으로 강제).
+    'LH': dict(desc='고-Bo 확장 · AM–AM Bo_code 38.4 (벽 CED 동반 = 공동 개입 B) — 내부 탐색값, 문헌 재현 아님',
+               bond=1.0, layered=True, abs_base=BO_BASE, abs_mult=_am_pairs(38.4)),
 }
 #: 캠페인 런 목록 — (팔, 시드).  시드는 **소수** (덱이 합성수를 거부한다).
 CAMPAIGN_SEEDS = (32452843, 49979687, 67867967)
 CAMPAIGN = ([('L0', CAMPAIGN_SEEDS[0]), ('LB1', CAMPAIGN_SEEDS[0]),
              ('LB2', CAMPAIGN_SEEDS[0]), ('LB3', CAMPAIGN_SEEDS[0])]
             + [('LC', sd) for sd in CAMPAIGN_SEEDS] + [('LA', sd) for sd in CAMPAIGN_SEEDS])
+#: ★ 고-Bo 확장 (09-27) — **본 캠페인 목록과 분리**한다 (본 캠페인의 10 런 · 판정선은 그대로).  LC 와 같은 시드로 짝짓는다.
+CAMPAIGN_HIGHBO = [('LH', sd) for sd in CAMPAIGN_SEEDS]
 #: ★ 기준 런 — `measure_mixing_index.py --ref` 의 상대 (S_R² = 완전 무작위 기준).  **균일 삽입 · 점착 0
 #  (`E0`) · 회전 0** = 삽입+정착만.  캠페인과 **같은 시드**로 짝짓는다 (자가 리뷰 R-2: 이것 없이는
 #  캠페인에 판독기가 없다).  회전 0 이라 비용 ≈ 정착분(~3.6 h)뿐.
@@ -1081,7 +1094,7 @@ def _selftest():
     def _bo_amp(arm, dd_):
         _nu, _mat = PHASE_MECH['AM_P']
         return bond_for_ced(ced_matrix(arm, dd_)[0][0], dd_['AM_P'] / 2.0, _nu, DENS[_mat], E=E_PHASE['AM_P'])
-    chk('㊺ ★ LA 의 AM_P Bo 3.0 (hare2026 앵커) 이 **지름·CGF 를 흔들어도** 안 밀린다',
+    chk('㊺ ★ LA 의 AM_P Bo_code 3.0 (내부 기준점 — R-4 로 앵커 라벨 철회) 이 **지름·CGF 를 흔들어도** 안 밀린다',
         all(abs(_bo_amp('LA', plan(8000, cgf=_c)['d']) - 3.0) < 1e-9
             for _c in (100.0, 200.0, 400.0)))
     chk('㊺b ★ B5·B10 경계탐침 Bo 0.5·1.0 도 CGF 에 불변',
@@ -1095,11 +1108,30 @@ def _selftest():
             for _a in ('B5', 'B10', 'LA') for _i, _t in enumerate(TYPES)))
     #  ⚠ 2026-09-21 3차 갱신 — 3 상 · SE 1 µm · 벽 타입 · 영률 ÷135 · 마찰 hare2026 ·
     #    전 팔 절대 Bo · 코팅 JKR 규약 · **dump `mol` 조건부(R-1)**.  T1·B5 대신 LA·LC 를 골든에 넣는다.
-    _gold = {'E0': '8e95e2253498ce9b', 'E1': 'd5a34634afc8c88c', 'E4': '8a55492ec2404e65', 'C1': 'df1c9f0501d65711', 'LA': 'd2ab3fc53e034cdf', 'LC': 'c9d084b40c16c880'}
+    #  ⚠ 2026-09-27 — LA·LC 는 **설명 문자열 (주석 한 줄) 만** 바꿨다 (R-4 · R-3 · Codex HB-01) → 새 골든.  ㉟b 가
+    #    옛 문자열로 옛 골든 (LA d2ab3fc53e034cdf · LC c9d084b40c16c880) 을 재현해 '물리 명령 불변' 을 보인다.  LH 신설.
+    _gold = {'E0': '8e95e2253498ce9b', 'E1': 'd5a34634afc8c88c', 'E4': '8a55492ec2404e65', 'C1': 'df1c9f0501d65711',
+             'LA': '92d1e13b6844e820', 'LC': '96d67c6adea0b7c1', 'LH': '8d299fc7aaa0f858'}
     _got = {a: _hl.sha256(deck(_p8, rpm=60, revolutions=2, seed=32452843, arm=a)
                           .encode()).hexdigest()[:16] for a in _gold}
-    chk('㉟ 기존 6 팔 덱이 편집 전과 **바이트 동일** (골든 해시, plan(8000)·2바퀴·시드 32452843)',
+    chk('㉟ 기존 팔 덱이 편집 전과 **바이트 동일** (골든 해시, plan(8000)·2바퀴·시드 32452843; LA·LC 는 09-27 주석 정정판)',
         _got == _gold)
+    _old_desc = {'LA': ('§24 층상 · 무코팅 AM Bo 3.0 = 문헌 앵커 (hare2026) — 헤드라인 무코팅', 'd2ab3fc53e034cdf'),
+                 'LC': ('§24 층상 · 코팅 (AM 표면 = SE, C1 규약) — 헤드라인 코팅', 'c9d084b40c16c880')}
+    _rep = {}
+    for _a, (_ds, _h) in _old_desc.items():
+        _new = ARMS[_a]['desc']
+        try:
+            ARMS[_a]['desc'] = _ds
+            _old_deck = deck(_p8, rpm=60, revolutions=2, seed=32452843, arm=_a)
+        finally:
+            ARMS[_a]['desc'] = _new
+        _nd = [(x, y) for x, y in zip(_old_deck.split('\n'), deck(_p8, rpm=60, revolutions=2, seed=32452843,
+                                                                  arm=_a).split('\n')) if x != y]
+        _rep[_a] = (_hl.sha256(_old_deck.encode()).hexdigest()[:16] == _h and len(_nd) == 1
+                    and _nd[0][0].startswith('# ★ 스윕 축'))
+    chk('㉟b ★ LA·LC 정정은 주석 한 줄뿐 — 옛 설명 문자열이면 옛 골든 해시 그대로 (돌고 있는 런의 덱 = 물리 동일)',
+        all(_rep.values()) and len(_rep) == 2)
     _la = deck(_p8, rpm=60, revolutions=2, seed=32452843, arm='LA')
     chk('㊱ LA 는 insert/pack 둘(insA→원통 전체, insB→AM 침대 위 블록), pdd 둘, unfix 둘',
         _la.count('insert/pack') == 2 and 'pddA' in _la and 'pddB' in _la
@@ -1142,7 +1174,7 @@ def _selftest():
     chk('㊵ 층별 mass% 가 각각 1 로 재정규화된다',
         abs(sum(_fa) - 1) < 2e-6 and abs(sum(_fb) - 1) < 2e-6)
     _M = ced_matrix('LA', _p8['d'])
-    chk('㊶ LA 의 AM_P–AM_P Bo 가 3.0 (앵커) 이다',
+    chk('㊶ LA 의 AM_P–AM_P Bo_code 가 3.0 (내부 기준점) 이다',
         abs(bond_for_ced(_M[0][0], _p8['d']['AM_P'] / 2, .25, DENS['AM'], E=E_PHASE['AM_P']) - 3.0) < 1e-3)
     _Mc = ced_matrix('LC', _p8['d']); _M1 = ced_matrix('C1', _p8['d'])
     chk('㊷ LC 의 CED 행렬은 C1 과 같다 (코팅 규약을 두 벌 두지 않는다)', _Mc == _M1)
@@ -1166,6 +1198,27 @@ def _selftest():
         D_REAL_UM['AM_S'] = _orig
     chk('㊹b 변이: 표의 AM_S 를 ×1.5 하면 지름도 ×1.5 (표가 실제로 쓰인다)',
         abs(_moved / _base_s - 1.5) < 1e-9)
+    #  ── 고-Bo 확장 LH (2026-09-27) ────────────────────────────────────────────
+    chk('㊼ LH 의 AM_P Bo_code 38.4 가 지름·CGF 를 흔들어도 안 밀리고 겹침 천장 안이다',
+        all(abs(_bo_amp('LH', plan(8000, cgf=_c)['d']) - 38.4) < 1e-9 for _c in (100.0, 151.4, 200.0))
+        and all(overlap_for_ced(ced_matrix('LH', _p8['d'])[_i][_i], _p8['d'][_t] / 2.0, PHASE_MECH[_t][0],
+                                E=E_PHASE[_t]) <= OVL_CEILING for _i, _t in enumerate(TYPES)))
+    _MH, _MC = ced_matrix('LH', _p8['d']), ced_matrix('LC', _p8['d'])
+    _nm = list(TYPES) + ['WALL']
+    _chg = {tuple(sorted((_nm[i], _nm[j]))) for i in range(len(_nm)) for j in range(len(_nm))
+            if abs(_MH[i][j] - _MC[i][j]) > 1e-9 * max(abs(_MC[i][j]), 1.0)}
+    _allowB = {('AM_P', 'AM_P'), ('AM_P', 'AM_S'), ('AM_S', 'AM_S'), ('AM_P', 'WALL'), ('AM_S', 'WALL')}
+    chk(f'㊼b ★ LH 와 LC 의 CED 행렬은 허용 다섯 쌍 (AM–AM 셋 · AM–벽 둘) 에서만 다르고 다섯 다 다르다 ({sorted(_chg)})',
+        _chg == _allowB)
+    _lc = deck(_p8, rpm=60, revolutions=2, seed=32452843, arm='LC').split('\n')
+    _lh = deck(_p8, rpm=60, revolutions=2, seed=32452843, arm='LH').split('\n')
+    _mc0 = next(i for i, l in enumerate(_lc) if l.startswith('fix mC '))
+    _diff = [i for i, (x, y) in enumerate(zip(_lc, _lh)) if x != y]
+    chk(f'㊼c LH 덱 = LC 덱 (줄 수 같음) · 다른 줄은 팔 설명 주석과 CED 행렬 줄뿐 ({len(_diff)} 줄)',
+        len(_lc) == len(_lh) and all(_lc[i].startswith('# ★ 스윕 축') or _mc0 < i <= _mc0 + len(_nm) for i in _diff))
+    chk('㊼d 확장 목록 = LH × 캠페인 시드 3 (본 캠페인 10 런과 분리)',
+        CAMPAIGN_HIGHBO == [('LH', _s) for _s in CAMPAIGN_SEEDS] and ARMS['LH'].get('layered')
+        and not any(_a == 'LH' for _a, _ in CAMPAIGN))
     print(f'\nmake_mixer_deck selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
