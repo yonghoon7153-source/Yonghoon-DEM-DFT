@@ -49,6 +49,18 @@
         "ko": {
           "type": "string"
         },
+        "photo": {
+          "description": "📷 이미지 검색 (사진 자체는 넣지 않음, CLAUDE.md 규칙 6). true = 칸 글자로 찾기, 문자열 = 찾을 말",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        },
         "children": {
           "$ref": "#/$defs/items"
         }

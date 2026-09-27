@@ -117,7 +117,8 @@ function walkSup(items, where, depth = 0) {
   for (const it of items) {
     supBoxes++;
     if (!it || typeof it.t !== 'string' || !it.t.trim()) err(`${where}: item without "t"`);
-    for (const k of Object.keys(it ?? {})) if (!['t', 'sub', 'cap', 'ko', 'children'].includes(k)) err(`${where}: "${it.t}" unexpected key "${k}"`);
+    for (const k of Object.keys(it ?? {})) if (!['t', 'sub', 'cap', 'ko', 'photo', 'children'].includes(k)) err(`${where}: "${it.t}" unexpected key "${k}"`);
+    if (it.photo !== undefined && typeof it.photo !== 'boolean' && !(typeof it.photo === 'string' && it.photo.trim())) err(`${where}: "${it.t}" photo must be true or search words`);
     if (depth > 4) err(`${where}: nesting too deep at "${it.t}"`);
     if (it.children) walkSup(it.children, `${where} > ${it.t}`, depth + 1);
   }
