@@ -111,8 +111,10 @@ scripts/                geo 빌드, 데이터 검증
 ### GitHub Pages (기본, 무료)
 
 1. 저장소 **Settings → Pages → Build and deployment → Source** 를 **GitHub Actions** 로 한 번만 바꾼다.
-2. `main` 또는 `claude/japan-map-webpage-l0bm3e` 브랜치에 push 하면 `.github/workflows/deploy.yml` 이 빌드해서 올린다.
-3. 주소: `https://<계정>.github.io/<저장소 이름>/` (BASE_PATH 는 워크플로가 자동으로 넣는다).
+2. 이 브랜치(`claude/japan-map-webpage-l0bm3e`)에서 바로 배포하려면 **Settings → Environments → github-pages → Deployment branches** 에
+   이 브랜치(또는 `claude/*`)를 추가한다. 기본값은 `main` 만 허용이라, 그 전까지는 deploy 잡이 "not allowed to deploy" 로 실패한다.
+3. 그 뒤 push 하면 `.github/workflows/deploy.yml` 이 빌드해서 올린다 (Actions 탭에서 확인).
+4. 주소: `https://<계정>.github.io/<저장소 이름>/` (BASE_PATH 는 워크플로가 자동으로 넣는다).
 
 ### Cloudflare Pages (원하면)
 
