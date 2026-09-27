@@ -593,6 +593,10 @@ folder first**, then launch explorer from there.
 **Path:** `/mnt/c/Users/안용훈/Downloads/`
 (Windows: `C:\Users\안용훈\Downloads\`)
 
+⚠ **PC 가 둘이다** (2026-09-27 — 이 경로로 scp 가 *"No such file or directory"* 로 실패했다):
+`yonghoon71@DESKTOP-IK8J81H` 의 WSL 에서는 **`/mnt/c/Users/Administrator/Downloads/`** 다.  프롬프트의 사용자@기계를 보고 고른다.
+ibb 는 WSL 에 `ibb` 접속 별칭이 **없다** — `scp -P <포트> 사용자@<주소>:…` 로 쓴다 (주소는 사용자가 준다 · 리포에 적지 않는다).
+
 ### Single file
 
 ```bash
