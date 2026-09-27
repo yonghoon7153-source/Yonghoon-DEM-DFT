@@ -642,7 +642,7 @@
   {
    "id": "CJ",
    "date": "2026-09-27",
-   "verdict": "NO-GO (V5 VASP 준비본 v5) — CI 재현 3 경로 해제 확인 · 새 P0 없음 · 같은 P1 의 남은 경로 1 (관리 파일 목록 쓰기 `{ echo …; cat …; } || …` 가 앞 echo 실패를 못 잡음 → 23·24 구성원 묶음이 종료 0·✅·sha -c 통과·옛 묶음 교체) · S1–S6 찬성 (허용 목록 · grep 0/1/≥2 · 이름 대조 유지 + Linux/GNU 명시 (bsdtar CRLF 거짓 실패 실측) · TITEL_TRUNCATED · 무엔트로피 None 그대로) · 권고 3 (sha 파이프 종료값 · 마지막 rm = pack 반환값 거짓 종료 4 · README 발송 문구 충돌)",
+   "verdict": "NO-GO (V5 VASP 준비본 v5) — CI 재현 3 경로 해제 확인 · 새 P0 없음 · 같은 P1 의 남은 경로 1 (관리 파일 목록 쓰기(echo 와 cat 을 한 묶음으로 실패 검사)가 앞 echo 의 실패를 못 잡음 → 23·24 구성원 묶음이 종료 0·✅·sha -c 통과·옛 묶음 교체) · S1–S6 찬성 (허용 목록 · grep 0/1/≥2 · 이름 대조 유지 + Linux/GNU 명시 (bsdtar CRLF 거짓 실패 실측) · TITEL_TRUNCATED · 무엔트로피 None 그대로) · 권고 3 (sha 파이프 종료값 · 마지막 rm = pack 반환값 거짓 종료 4 · README 발송 문구 충돌)",
    "prompt": "kb/reviews/codex_CJ_prompt_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md",
    "reply": "kb/reviews/codex_CJ_reply_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md",
    "repro": "db/raw/codex_CJ_repro_2026_09_27",
