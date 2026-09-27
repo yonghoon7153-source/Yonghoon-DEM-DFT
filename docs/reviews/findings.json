@@ -5369,7 +5369,7 @@
   {
    "id": "SELF-56",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "사용자 WSL 영수증 v1 첫 실행 (09-28) — A · B exit 0 인데 analyze 가 \"정상 완료가 아니다\" 로 실패",
    "opened_in": "docs/reviews/codex_mixer_highbo_rereview3_request_20260928.md",
@@ -5377,7 +5377,8 @@
    "note": "측정 자체는 통과 수준 (예정각 오차 1.92e-5° · 각 경계 0.00115° · A↔B 0 m · 기대 step A 208 · B 81 완전) — 실패는 완주 표지 하나.  규율 ① \"이 리포에 이미 있나\" 위반: 완주 판정은 `run_all.sh` done_run (09-22) 에 있었다.  규율 ② 의 함정: 가짜 픽스처가 가정을 그대로 담으면 셀프테스트는 가정을 검증하지 못한다 (가짜 로그에 배너를 넣었다).  처방: run.sh 는 사실만 기록 (배너 · 마지막 thermo step · 로그 sha) · analyze 가 로그로 판정 (exit 0 ∧ (배너 ∨ 마지막 step = 끝)) · 기록 스냅샷이 있으면 로그와 대조 · 셀프테스트가 run.sh 의 실제 기록 코드를 실행 (옛 코드에서 ⑤ · ⑨ 실패 확인 뒤 수정).  09-28 WSL 실행은 재실행 없이 analyze 만 다시.",
    "evidence_tests": [
     "scripts/mixer_restart_phase_test.py"
-   ]
+   ],
+   "claimed_fixed_sha": "ba33a4939"
   }
  ]
 }
