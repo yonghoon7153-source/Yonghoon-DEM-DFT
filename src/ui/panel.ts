@@ -155,6 +155,9 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
 
     out.push(el('h2', { class: 'ph__name', lang: 'ja' }, p.name.ja, el('span', { class: 'ph__kana' }, p.name.kana)));
     out.push(el('p', { class: 'ph__alt' }, `${p.name.ko} · `, el('span', { class: 'romaji' }, p.name.romaji)));
+    // how I wrote this prefecture on my mind map, when it is not the standard spelling
+    const mine = [notes.prefectures[p.slug]?.root?.ja, notes.prefectures[p.slug]?.root?.ko].filter(Boolean).join(' · ');
+    if (mine) out.push(el('p', { class: 'ph__mine', title: '마인드맵 박스에 적은 그대로' }, el('span', { class: 'k' }, '✎ 내 표기'), mine));
     out.push(
       el('p', { class: 'ph__cap' }, el('span', { class: 'k' }, '県庁所在地'), el('span', { lang: 'ja' }, p.capital.ja), el('span', { class: 'kana', lang: 'ja' }, p.capital.kana ?? ''), el('span', { class: 'kana' }, p.capital.ko ?? '')),
     );

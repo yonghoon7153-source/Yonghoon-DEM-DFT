@@ -390,6 +390,8 @@
 .ph__kana { font-size: 15px; color: var(--ink-2); font-weight: 400; }
 .ph__alt { color: var(--ink-2); font-size: 14px; margin-top: 4px; }
 .ph__alt .romaji { color: var(--ink-3); }
+.ph__mine { margin-top: 4px; display: flex; align-items: baseline; gap: 7px; font-family: var(--font-note); font-size: 15px; color: var(--ink-2); }
+.ph__mine .k { font-family: var(--font-body); font-size: 10.5px; color: var(--ink-3); padding: 1px 7px; border-radius: var(--radius-pill); background: var(--paper-2); }
 .ph__cap { margin-top: 10px; display: flex; align-items: baseline; gap: 8px; font-size: 13.5px; }
 .ph__cap .k { font-size: 11px; color: var(--ink-3); padding: 2px 7px; border: 1px dashed var(--line-2); border-radius: var(--radius-pill); }
 .ph__cap .kana { color: var(--ink-2); font-size: 12px; }

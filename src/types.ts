@@ -65,7 +65,8 @@ export interface SupplementDb { prefectures: Record<string, { items: NoteItem[] 
 export interface NotesDb {
   meta: { source: string; canva?: string; updated: string; status: string; note?: string };
   regions: Record<string, { memo?: string; items?: NoteItem[] }>;
-  prefectures: Record<string, { star?: boolean; items: NoteItem[] }>;
+  /** `root` — how I wrote the prefecture's own boxes, only where it differs from the standard name (니이가타, かがわ県). */
+  prefectures: Record<string, { star?: boolean; root?: { ja?: string; ko?: string }; items: NoteItem[] }>;
   extras: NoteExtra[];
 }
 

@@ -76,6 +76,11 @@ for (const m of mascots) { if (mascotIdSet.has(m.id)) err(`mascot ${m.id}: dupli
 const prefNotes = notesDb.prefectures ?? {};
 for (const slug of slugs) if (!prefNotes[slug]) err(`notes: prefectures.${slug} missing (use "items": [])`);
 for (const [slug, v] of Object.entries(prefNotes)) if (!slugs.has(slug)) err(`notes: unknown prefecture "${slug}"`);
+for (const [slug, v] of Object.entries(prefNotes)) {
+  if (v.root === undefined) continue;
+  if (typeof v.root !== 'object' || !Object.keys(v.root).length) err(`notes.${slug}: root must be { ja?, ko? }`);
+  for (const [k, x] of Object.entries(v.root ?? {})) if (!['ja', 'ko'].includes(k) || typeof x !== 'string' || !x.trim()) err(`notes.${slug}: root.${k} must be text (ja/ko)`);
+}
 for (const [rid] of Object.entries(notesDb.regions ?? {})) if (!regionIds.has(rid)) err(`notes: unknown region "${rid}"`);
 let boxes = 0;
 function walk(items, where, depth = 0) {
