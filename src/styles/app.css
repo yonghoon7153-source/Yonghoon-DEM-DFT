@@ -303,6 +303,11 @@
 .mascot.is-leaving .mascot__art { animation: poof .35s ease-in both; }
 .mascot.is-leaving .mascot__bubble { animation: poof .3s ease-in both; }
 .mascot--flip .mascot__bubble { left: auto; right: calc(var(--size) / 2 - 4px); border-radius: 16px 16px 4px 16px; transform-origin: 100% 100%; }
+/* no room on the outer side: the bubble floats over everyone's heads, pointing down at the one talking */
+@media (min-width: 761px) {
+  .mascot--above .mascot__bubble { left: -16px; bottom: calc(var(--size) + 16px); }
+  .mascot--above.mascot--flip .mascot__bubble { left: auto; right: -16px; }
+}
 
 .mascot__art.is-poked > * { animation: poke .34s var(--ease-pop); }
 .mascot.is-darkening .mascot__art > * { animation: darken .48s ease-in forwards; }

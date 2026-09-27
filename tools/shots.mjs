@@ -76,14 +76,18 @@ if (steps.includes('mobile')) {
 }
 if (steps.includes('zukan')) {
   const { ctx, p } = await page({ width: 1440, height: 900 });
-  await p.goto(base, { waitUntil: 'domcontentloaded' });
-  await p.evaluate(() => localStorage.setItem('nihonchizu.found.v1', JSON.stringify(['azarashi','ringo','namahage','zunda','hachi','onigiri','budou','saru','fujisan','kitsune','takoyaki','shika','rakuda','momiji','udon','mikan','ramen','castella','kuma','shirokuma','shisa'])));
   await ready(p);
+  // nothing is kept across reloads, so meet friends in this visit — the prefectures with two or three of them too
+  for (const slug of ['ehime', 'tochigi', 'ibaraki', 'chiba', 'shiga', 'kochi', 'hokkaido', 'kumamoto', 'osaka']) {
+    await p.evaluate((s) => { location.hash = s; }, slug);
+    await p.waitForTimeout(1300);
+  }
   await p.click('#collection-btn');
   await p.waitForTimeout(700);
   await p.screenshot({ path: `${out}/10-zukan-all.png` });
   await p.keyboard.press('Escape');
-  await p.waitForTimeout(300);
+  await p.click('#zoom-reset');
+  await p.waitForTimeout(1200);
   await p.screenshot({ path: `${out}/11-stickers-on-map.png` });
   await ctx.close();
 }

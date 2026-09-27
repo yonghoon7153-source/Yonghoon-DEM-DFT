@@ -27,13 +27,19 @@ export interface MapApi {
   reset(animate?: boolean): void;
   setInset(inset: Partial<Inset>): void;
   anchorScreen(slug: string): { x: number; y: number } | null;
-  addSticker(slug: string, visual: { image?: string; svg?: string }): void;
+  /** The part of the map that no panel covers, in screen pixels. */
+  visibleArea(): { x0: number; y0: number; x1: number; y1: number };
+  /** The stickers of the friends I have met in a prefecture, side by side next to its name, in this order. */
+  setStickers(slug: string, stickers: Sticker[]): void;
   currentScale(): number;
   setLayer(id: LayerId, on: boolean): void;
   setActiveRange(no: number | null): void;
   setHideRangeNames(hide: boolean): void;
   focusRange(no: number): void;
 }
+
+/** One mascot's sticker: an image URL or SVG markup. */
+export interface Sticker { id: string; image?: string; svg?: string }
 
 interface Inset { top: number; right: number; bottom: number; left: number }
 type PrefFeature = Feature<MultiPolygon, { id: number; ja: string }>;
@@ -428,20 +434,31 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
     return { x, y };
   }
 
-  function addSticker(slug: string, visual: { image?: string; svg?: string }) {
-    if (!gStickers.select(`g.sticker[data-slug="${slug}"]`).empty()) return;
-    if (!visual.image && !visual.svg) return;
-    const g = gStickers.append('g').attr('class', 'sticker').attr('data-slug', slug);
-    const inner = g.append('g').attr('transform', `scale(0.3) rotate(${(slug.length % 3) * 6 - 6}) translate(-50,-50)`);
-    if (visual.image) {
-      inner.append('image').attr('href', visual.image).attr('width', 100).attr('height', 100).attr('preserveAspectRatio', 'xMidYMid meet');
-    } else if (visual.svg) {
+  // A prefecture's stickers stand in a row, each a little over the one before, like stickers stuck side by side.
+  const STICKER_GAP = 21;
+  function setStickers(slug: string, stickers: Sticker[]) {
+    const list = stickers.filter((s) => s.image || s.svg);
+    let g = gStickers.select<SVGGElement>(`g.sticker[data-slug="${slug}"]`);
+    if (!list.length) {
+      g.remove();
+      return;
+    }
+    if (g.empty()) g = gStickers.append('g').attr('class', 'sticker').attr('data-slug', slug);
+    g.selectAll<SVGGElement, Sticker>('g.sticker__one')
+      .data(list, (d) => d.id)
+      .join((enter) => enter.append('g').attr('class', 'sticker__one').attr('data-id', (d) => d.id).each(function (d) { drawSticker(this, d); }))
+      .order()
+      .attr('transform', (_, i) => `translate(${i * STICKER_GAP},0) scale(0.3) rotate(${((slug.length + i) % 3) * 6 - 6}) translate(-50,-50)`);
+    updateScreenSpace();
+  }
+  function drawSticker(target: SVGGElement, s: Sticker) {
+    if (s.image) {
+      select(target).append('image').attr('href', s.image).attr('width', 100).attr('height', 100).attr('preserveAspectRatio', 'xMidYMid meet');
+    } else if (s.svg) {
       // Copy the art's children (not the outer <svg>): a nested <svg> sizes itself unpredictably.
-      const doc = new DOMParser().parseFromString(visual.svg, 'image/svg+xml');
-      const target = inner.node()!;
+      const doc = new DOMParser().parseFromString(s.svg, 'image/svg+xml');
       for (const child of Array.from(doc.documentElement.childNodes)) target.appendChild(document.importNode(child, true));
     }
-    updateScreenSpace();
   }
 
   // ---- resize
@@ -474,7 +491,11 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
     reset,
     setInset,
     anchorScreen,
-    addSticker,
+    visibleArea() {
+      const [[x0, y0], [x1, y1]] = visibleExtent();
+      return { x0, y0, x1, y1 };
+    },
+    setStickers,
     currentScale: () => transform.k,
     setLayer(id: LayerId, value: boolean) {
       layers.set(id, value);

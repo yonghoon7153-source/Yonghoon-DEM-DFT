@@ -2,6 +2,7 @@
 import { mascotById, mascots, prefBySlug, regionOf, regions, secretFor } from '../data';
 import type { MapApi } from '../map/map';
 import { mascotSticker, mascotVisualHtml } from '../mascots/visual';
+import type { Mascot } from '../types';
 import { clear, el } from './dom';
 
 export interface EasterOptions {
@@ -28,17 +29,41 @@ export function createEaster(opts: EasterOptions) {
     if (!pos) return;
     const size = parseFloat(getComputedStyle(shown[0]!.node).getPropertyValue('--size')) || 112;
     const gap = size * 0.92;
-    const flip = pos.x > opts.stage.clientWidth / 2;
+    const n = shown.length;
+    const view = opts.map.visibleArea();
     shown.forEach(({ node }, i) => {
-      node.style.left = `${(pos.x + (i - (shown.length - 1) / 2) * gap).toFixed(1)}px`;
+      const x = pos.x + (i - (n - 1) / 2) * gap;
+      node.style.left = `${x.toFixed(1)}px`;
       node.style.top = `${pos.y}px`;
-      node.classList.toggle('mascot--flip', flip);
+      // The bubble opens outwards so it never covers a friend: the one at the left end talks to the left, the one
+      // at the right end to the right, a lone one towards the roomier side. When that side has no room (or friends
+      // stand on both sides) it floats above everyone's heads instead.
+      const reach = (node.querySelector<HTMLElement>('.mascot__bubble')?.offsetWidth || 260) + size / 2;
+      const fits = (s: 'l' | 'r') => (s === 'l' ? x - reach >= view.x0 + 4 : x + reach <= view.x1 - 4);
+      const roomier = x - view.x0 > view.x1 - x ? 'l' : 'r';
+      let side: 'l' | 'r' = n === 1 ? roomier : i === 0 ? 'l' : i === n - 1 ? 'r' : roomier;
+      let above = n > 2 && i > 0 && i < n - 1;
+      if (!fits(side)) {
+        side = side === 'l' ? 'r' : 'l';
+        above ||= n > 1;
+      }
+      node.classList.toggle('mascot--flip', side === 'l');
+      node.classList.toggle('mascot--above', above);
     });
   }
 
   /** Only one speech bubble at a time: the mascot that was met or tapped last. */
   function speak(id: string) {
     for (const s of shown) s.node.classList.toggle('is-quiet', s.id !== id);
+  }
+
+  /** A prefecture's stickers: every friend I have met there, side by side — official first, a hidden friend last. */
+  function stickersOf(slug: string) {
+    const rank = (m: Mascot) => (m.secret ? 2 : m.kind === 'official' ? 0 : 1);
+    return mascots
+      .filter((m) => m.prefecture === slug && found.has(m.id))
+      .sort((a, b) => rank(a) - rank(b))
+      .map((m) => ({ id: m.id, ...mascotSticker(m) }));
   }
 
   function restartTimer() {
@@ -140,7 +165,7 @@ export function createEaster(opts: EasterOptions) {
 
     if (isNew) {
       found.add(m.id);
-      if (m.kind === 'official') opts.map.addSticker(slug, mascotSticker(m));
+      opts.map.setStickers(slug, stickersOf(slug));
     }
     opts.onCount(found.size, mascots.length, isNew);
     restartTimer();
