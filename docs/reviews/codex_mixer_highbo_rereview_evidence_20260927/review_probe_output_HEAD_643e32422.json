@@ -1,0 +1,710 @@
+{
+  "matrix_baseline": "PASS",
+  "matrix_mutants": {
+    "asymmetric_new": {
+      "allow": "B",
+      "non_ced_diffs": [],
+      "changed": [
+        [
+          "AM_P",
+          "AM_P"
+        ],
+        [
+          "AM_P",
+          "AM_S"
+        ],
+        [
+          "AM_P",
+          "WALL"
+        ],
+        [
+          "AM_S",
+          "AM_S"
+        ],
+        [
+          "AM_S",
+          "WALL"
+        ]
+      ],
+      "outside": [],
+      "missing": [],
+      "table": [
+        {
+          "pair": "AM_P–AM_P",
+          "ref": 108795.0,
+          "new": 3563480.0,
+          "ratio": 32.75407877200239
+        },
+        {
+          "pair": "AM_P–AM_S",
+          "ref": 108795.0,
+          "new": 5438880.0,
+          "ratio": 49.9920033089756
+        },
+        {
+          "pair": "AM_P–SE",
+          "ref": 10458.2,
+          "new": 10458.2,
+          "ratio": 1.0
+        },
+        {
+          "pair": "AM_P–WALL",
+          "ref": 59063.2,
+          "new": 1934550.0,
+          "ratio": 32.753897519944736
+        },
+        {
+          "pair": "AM_S–AM_S",
+          "ref": 142562.0,
+          "new": 2719440.0,
+          "ratio": 19.075489962262033
+        },
+        {
+          "pair": "AM_S–SE",
+          "ref": 10458.2,
+          "new": 10458.2,
+          "ratio": 1.0
+        },
+        {
+          "pair": "AM_S–WALL",
+          "ref": 77394.6,
+          "new": 1476340.0,
+          "ratio": 19.07549105493148
+        },
+        {
+          "pair": "SE–SE",
+          "ref": 10458.2,
+          "new": 10458.2,
+          "ratio": 1.0
+        },
+        {
+          "pair": "SE–WALL",
+          "ref": 5677.6,
+          "new": 5677.6,
+          "ratio": 1.0
+        },
+        {
+          "pair": "WALL–WALL",
+          "ref": 0.0,
+          "new": 0.0,
+          "ratio": 1.0
+        }
+      ],
+      "verdict": "PASS"
+    },
+    "SE_SE_NaN": {
+      "allow": "B",
+      "non_ced_diffs": [],
+      "changed": [
+        [
+          "AM_P",
+          "AM_P"
+        ],
+        [
+          "AM_P",
+          "AM_S"
+        ],
+        [
+          "AM_P",
+          "WALL"
+        ],
+        [
+          "AM_S",
+          "AM_S"
+        ],
+        [
+          "AM_S",
+          "WALL"
+        ]
+      ],
+      "outside": [],
+      "missing": [],
+      "table": [
+        {
+          "pair": "AM_P–AM_P",
+          "ref": 108795.0,
+          "new": 3563480.0,
+          "ratio": 32.75407877200239
+        },
+        {
+          "pair": "AM_P–AM_S",
+          "ref": 108795.0,
+          "new": 2719440.0,
+          "ratio": 24.9960016544878
+        },
+        {
+          "pair": "AM_P–SE",
+          "ref": 10458.2,
+          "new": 10458.2,
+          "ratio": 1.0
+        },
+        {
+          "pair": "AM_P–WALL",
+          "ref": 59063.2,
+          "new": 1934550.0,
+          "ratio": 32.753897519944736
+        },
+        {
+          "pair": "AM_S–AM_S",
+          "ref": 142562.0,
+          "new": 2719440.0,
+          "ratio": 19.075489962262033
+        },
+        {
+          "pair": "AM_S–SE",
+          "ref": 10458.2,
+          "new": 10458.2,
+          "ratio": 1.0
+        },
+        {
+          "pair": "AM_S–WALL",
+          "ref": 77394.6,
+          "new": 1476340.0,
+          "ratio": 19.07549105493148
+        },
+        {
+          "pair": "SE–SE",
+          "ref": 10458.2,
+          "new": "nan",
+          "ratio": "nan"
+        },
+        {
+          "pair": "SE–WALL",
+          "ref": 5677.6,
+          "new": 5677.6,
+          "ratio": 1.0
+        },
+        {
+          "pair": "WALL–WALL",
+          "ref": 0.0,
+          "new": 0.0,
+          "ratio": 1.0
+        }
+      ],
+      "verdict": "PASS"
+    },
+    "negative_AM": {
+      "allow": "B",
+      "non_ced_diffs": [],
+      "changed": [
+        [
+          "AM_P",
+          "AM_P"
+        ],
+        [
+          "AM_P",
+          "AM_S"
+        ],
+        [
+          "AM_P",
+          "WALL"
+        ],
+        [
+          "AM_S",
+          "AM_S"
+        ],
+        [
+          "AM_S",
+          "WALL"
+        ]
+      ],
+      "outside": [],
+      "missing": [],
+      "table": [
+        {
+          "pair": "AM_P–AM_P",
+          "ref": 108795.0,
+          "new": -3563480.0,
+          "ratio": -32.75407877200239
+        },
+        {
+          "pair": "AM_P–AM_S",
+          "ref": 108795.0,
+          "new": 2719440.0,
+          "ratio": 24.9960016544878
+        },
+        {
+          "pair": "AM_P–SE",
+          "ref": 10458.2,
+          "new": 10458.2,
+          "ratio": 1.0
+        },
+        {
+          "pair": "AM_P–WALL",
+          "ref": 59063.2,
+          "new": 1934550.0,
+          "ratio": 32.753897519944736
+        },
+        {
+          "pair": "AM_S–AM_S",
+          "ref": 142562.0,
+          "new": 2719440.0,
+          "ratio": 19.075489962262033
+        },
+        {
+          "pair": "AM_S–SE",
+          "ref": 10458.2,
+          "new": 10458.2,
+          "ratio": 1.0
+        },
+        {
+          "pair": "AM_S–WALL",
+          "ref": 77394.6,
+          "new": 1476340.0,
+          "ratio": 19.07549105493148
+        },
+        {
+          "pair": "SE–SE",
+          "ref": 10458.2,
+          "new": 10458.2,
+          "ratio": 1.0
+        },
+        {
+          "pair": "SE–WALL",
+          "ref": 5677.6,
+          "new": 5677.6,
+          "ratio": 1.0
+        },
+        {
+          "pair": "WALL–WALL",
+          "ref": 0.0,
+          "new": 0.0,
+          "ratio": 1.0
+        }
+      ],
+      "verdict": "PASS"
+    }
+  },
+  "matrix_header_mutant": {
+    "allow": "B",
+    "non_ced_diffs": [],
+    "changed": [
+      [
+        "AM_P",
+        "AM_P"
+      ],
+      [
+        "AM_P",
+        "AM_S"
+      ],
+      [
+        "AM_P",
+        "WALL"
+      ],
+      [
+        "AM_S",
+        "AM_S"
+      ],
+      [
+        "AM_S",
+        "WALL"
+      ]
+    ],
+    "outside": [],
+    "missing": [],
+    "table": [
+      {
+        "pair": "AM_P–AM_P",
+        "ref": 108795.0,
+        "new": 3563480.0,
+        "ratio": 32.75407877200239
+      },
+      {
+        "pair": "AM_P–AM_S",
+        "ref": 108795.0,
+        "new": 2719440.0,
+        "ratio": 24.9960016544878
+      },
+      {
+        "pair": "AM_P–SE",
+        "ref": 10458.2,
+        "new": 10458.2,
+        "ratio": 1.0
+      },
+      {
+        "pair": "AM_P–WALL",
+        "ref": 59063.2,
+        "new": 1934550.0,
+        "ratio": 32.753897519944736
+      },
+      {
+        "pair": "AM_S–AM_S",
+        "ref": 142562.0,
+        "new": 2719440.0,
+        "ratio": 19.075489962262033
+      },
+      {
+        "pair": "AM_S–SE",
+        "ref": 10458.2,
+        "new": 10458.2,
+        "ratio": 1.0
+      },
+      {
+        "pair": "AM_S–WALL",
+        "ref": 77394.6,
+        "new": 1476340.0,
+        "ratio": 19.07549105493148
+      },
+      {
+        "pair": "SE–SE",
+        "ref": 10458.2,
+        "new": 10458.2,
+        "ratio": 1.0
+      },
+      {
+        "pair": "SE–WALL",
+        "ref": 5677.6,
+        "new": 5677.6,
+        "ratio": 1.0
+      },
+      {
+        "pair": "WALL–WALL",
+        "ref": 0.0,
+        "new": 0.0,
+        "ratio": 1.0
+      }
+    ],
+    "verdict": "PASS"
+  },
+  "geometry": {
+    "n_facets": 39,
+    "n_triangles": 78,
+    "apo": 0.013095095030054096,
+    "facet_deg": 9.23076923076923,
+    "sagitta_m": 4.260150167866711e-05,
+    "r_SE": 7.57e-05,
+    "dt": 7.055e-07,
+    "rotation_start": 385337
+  },
+  "wrong_phase_false_pass": {
+    "actual_max_overlap": 0.020000000000086463,
+    "phase_truth_minus_sched_deg": 4.615384615384615,
+    "result": {
+      "verdict": "PASS",
+      "pp_max": 0.0,
+      "wall_max": -0.5375633215080831,
+      "phase_status": "ok",
+      "phase": [
+        {
+          "step": 407997,
+          "n_cand": 39,
+          "facet": 0.16110731556870733,
+          "theta_sched": 0.12562747945414662,
+          "theta_data": 0.1256357361235277,
+          "dtheta": 8.256669381090376e-06,
+          "ovl_min": -0.537650152957593,
+          "status": "ok"
+        },
+        {
+          "step": 453330,
+          "n_cand": 39,
+          "facet": 0.16110731556870733,
+          "theta_sched": 0.054739879477139264,
+          "theta_data": 0.05473732926527087,
+          "dtheta": -2.550211868401764e-06,
+          "ovl_min": -0.5374636330277985,
+          "status": "ok"
+        },
+        {
+          "step": 498663,
+          "n_cand": 39,
+          "facet": 0.16110731556870733,
+          "theta_sched": 0.1449595950688392,
+          "theta_data": 0.1449630199877598,
+          "dtheta": 3.4249189205803887e-06,
+          "ovl_min": -0.53746270999773,
+          "status": "ok"
+        },
+        {
+          "step": 589329,
+          "n_cand": 39,
+          "facet": 0.16110731556870733,
+          "theta_sched": 0.0031843951148243232,
+          "theta_data": 0.0031829882832845303,
+          "dtheta": -1.4068315397908204e-06,
+          "ovl_min": -0.5375204845620944,
+          "status": "ok"
+        },
+        {
+          "step": 634662,
+          "n_cand": 39,
+          "facet": 0.16110731556870733,
+          "theta_sched": 0.09340411070652421,
+          "theta_data": 0.09340867900577343,
+          "dtheta": 4.568299249219088e-06,
+          "ovl_min": -0.5374797916739162,
+          "status": "ok"
+        }
+      ],
+      "reject": [],
+      "tech": [],
+      "n_frames": 7
+    }
+  },
+  "right_phase_false_tech": {
+    "actual_max_overlap": 0.005000000000075862,
+    "phase_truth_minus_sched_deg": 0.0,
+    "result": {
+      "verdict": "TECH",
+      "pp_max": 0.0,
+      "wall_max": 0.005000000000098778,
+      "phase_status": "mismatch",
+      "phase": [
+        {
+          "step": 407997,
+          "n_cand": 39,
+          "facet": 0.16110731556870733,
+          "theta_sched": 0.12562747945414662,
+          "theta_data": 0.04508207833917404,
+          "dtheta": -0.08054540111497258,
+          "ovl_min": -0.5526015225448977,
+          "status": "mismatch"
+        },
+        {
+          "step": 453330,
+          "n_cand": 39,
+          "facet": 0.16110731556870733,
+          "theta_sched": 0.054739879477139264,
+          "theta_data": 0.13529658105363737,
+          "dtheta": -0.08055061399220922,
+          "ovl_min": -0.5524866306213825,
+          "status": "mismatch"
+        },
+        {
+          "step": 498663,
+          "n_cand": 39,
+          "facet": 0.16110731556870733,
+          "theta_sched": 0.1449595950688392,
+          "theta_data": 0.06440936220340612,
+          "dtheta": -0.08055023286543309,
+          "ovl_min": -0.5524140835088556,
+          "status": "mismatch"
+        },
+        {
+          "step": 589329,
+          "n_cand": 39,
+          "facet": 0.16110731556870733,
+          "theta_sched": 0.0031843951148243232,
+          "theta_data": 0.08373664606763818,
+          "dtheta": 0.08055225095281385,
+          "ovl_min": -0.5524542343629303,
+          "status": "mismatch"
+        },
+        {
+          "step": 634662,
+          "n_cand": 39,
+          "facet": 0.16110731556870733,
+          "theta_sched": 0.09340411070652421,
+          "theta_data": 0.012855021221419773,
+          "dtheta": -0.08054908948510445,
+          "ovl_min": -0.5524311687485579,
+          "status": "mismatch"
+        }
+      ],
+      "reject": [],
+      "tech": [
+        "드럼 회전각이 덱 예정과 다르다: step 407997 Δ -4.615°, step 453330 Δ -4.615°, step 498663 Δ -4.615°, step 589329 Δ +4.615°, step 634662 Δ -4.615° — 예정 각으로 잰 벽 겹침 값은 무효"
+      ],
+      "n_frames": 7
+    }
+  },
+  "identity_type_radius_mutant": {
+    "verdict": "PASS",
+    "pp_max": 0.0,
+    "wall_max": -15.275400000000001,
+    "phase_status": "bounded",
+    "phase": [
+      {
+        "step": 407997,
+        "n_cand": 0,
+        "facet": 0.16110731556870733,
+        "theta_sched": 0.12562747945414662,
+        "theta_data": "nan",
+        "dtheta": "nan",
+        "ovl_min": "nan",
+        "status": "few"
+      },
+      {
+        "step": 453330,
+        "n_cand": 0,
+        "facet": 0.16110731556870733,
+        "theta_sched": 0.054739879477139264,
+        "theta_data": "nan",
+        "dtheta": "nan",
+        "ovl_min": "nan",
+        "status": "few"
+      },
+      {
+        "step": 498663,
+        "n_cand": 0,
+        "facet": 0.16110731556870733,
+        "theta_sched": 0.1449595950688392,
+        "theta_data": "nan",
+        "dtheta": "nan",
+        "ovl_min": "nan",
+        "status": "few"
+      },
+      {
+        "step": 589329,
+        "n_cand": 0,
+        "facet": 0.16110731556870733,
+        "theta_sched": 0.0031843951148243232,
+        "theta_data": "nan",
+        "dtheta": "nan",
+        "ovl_min": "nan",
+        "status": "few"
+      },
+      {
+        "step": 634662,
+        "n_cand": 0,
+        "facet": 0.16110731556870733,
+        "theta_sched": 0.09340411070652421,
+        "theta_data": "nan",
+        "dtheta": "nan",
+        "ovl_min": "nan",
+        "status": "few"
+      }
+    ],
+    "reject": [],
+    "tech": [],
+    "n_frames": 7
+  },
+  "contact_missing_frame": {
+    "verdict": "PASS",
+    "pp_max": 0.0,
+    "wall_max": -15.275400000000001,
+    "phase_status": "bounded",
+    "phase": [
+      {
+        "step": 453330,
+        "n_cand": 0,
+        "facet": 0.16110731556870733,
+        "theta_sched": 0.054739879477139264,
+        "theta_data": "nan",
+        "dtheta": "nan",
+        "ovl_min": "nan",
+        "status": "few"
+      }
+    ],
+    "reject": [],
+    "tech": [],
+    "n_frames": 2,
+    "unsaved_instant_overlap": 0.020000000000000216
+  },
+  "bin0_smoke": {
+    "planned": {
+      "n_revs": 8,
+      "final_bin": 7,
+      "frames_per_rev": 25.00025,
+      "complete": false,
+      "n": 0,
+      "M_final": null,
+      "M_final_sd": null,
+      "prev_bin": 6,
+      "flat": null
+    },
+    "tech": [
+      "미완주 — 계획 8 바퀴의 마지막 bin 7 이 완전하지 않다 (마지막 프레임 rev 1.000)"
+    ],
+    "bins": {
+      "0": {
+        "M_mean": 0.560897435897436,
+        "M_sd": 0.11440107883060736,
+        "n": 26,
+        "n_nonfinite": 0,
+        "M_all_mean": 0.560897435897436,
+        "s2_mean": 0.14483173076923078,
+        "am_vol_kept_mean": 1.0,
+        "se_vol_kept_mean": 1.0,
+        "vol_kept_min": 1.0,
+        "cells_dropped_frac": 0.0
+      }
+    }
+  },
+  "missing_previous_bin": {
+    "planned": {
+      "n_revs": 8,
+      "final_bin": 7,
+      "frames_per_rev": 25.00025,
+      "complete": true,
+      "n": 25,
+      "M_final": 0.5833333333333334,
+      "M_final_sd": 0.0,
+      "prev_bin": 6,
+      "flat": true
+    },
+    "tech": [],
+    "gaps": [
+      [
+        200,
+        7160
+      ]
+    ],
+    "bins": {
+      "0": 1,
+      "6": 2,
+      "7": 25
+    }
+  },
+  "missing_last_sample": {
+    "planned": {
+      "n_revs": 8,
+      "final_bin": 7,
+      "frames_per_rev": 25.00025,
+      "complete": false,
+      "n": 24,
+      "M_final": null,
+      "M_final_sd": null,
+      "prev_bin": 6,
+      "flat": null
+    },
+    "tech": [
+      "미완주 — 계획 8 바퀴의 마지막 bin 7 이 완전하지 않다 (마지막 프레임 rev 7.960)"
+    ],
+    "last_step": 8160
+  },
+  "retention_not_variance_bound": {
+    "s2": 0.0,
+    "used": 2,
+    "dropped": 8,
+    "nonempty": 10,
+    "s2_all": 0.2,
+    "am_vol_kept": 0.9803921568627451,
+    "se_vol_kept": 0.9803921568627451,
+    "am_n_kept": 0.9803921568627451,
+    "se_n_kept": 0.9803921568627451,
+    "cell_n_median": 200.0
+  },
+  "phase_mean_can_hide_bad_frames": {
+    "25_frame_retention": 0.92
+  },
+  "K1_collision_scale": {
+    "tip_speed_m_s": 0.10323969616394009,
+    "dump_interval_s": 0.0319824315,
+    "pairs": {
+      "SE-SE": {
+        "elastic_no_damping_delta_over_rmin": 0.010302340102929382,
+        "hertz_time_us": 22.24735734886811
+      },
+      "AM_P-SE": {
+        "elastic_no_damping_delta_over_rmin": 0.00919389254471087,
+        "hertz_time_us": 19.85372360315672
+      },
+      "SE-WALL": {
+        "elastic_no_damping_delta_over_rmin": 0.00899289877282723,
+        "hertz_time_us": 19.419688206992628
+      }
+    },
+    "note": "Two-body elastic Hertz estimate, not measured maxima or a rigorous velocity bound."
+  },
+  "small_difference_label": {
+    "paired_d": [
+      -0.3,
+      0.9,
+      0.3
+    ],
+    "mean": 0.30000000000000004,
+    "SE": 0.3464101615137755,
+    "passes_abs_mean_le_SE": true
+  }
+}

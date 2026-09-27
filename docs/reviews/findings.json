@@ -5013,12 +5013,12 @@
   {
    "id": "HB-01",
    "severity": "P2",
-   "status": "claimed_fixed",
+   "status": "open",
    "owner": "claude",
    "found_by": "Codex 적대 리뷰 (사용자 경유, 2026-09-27) — 고정 스냅샷 4cdcbf7bf · 판정 HOLD (고-Bo 믹서 LH 발사 전)",
    "opened_in": "docs/reviews/codex_mixer_highbo_verdict_20260927.md",
    "title": "J0 정정이 소스에서 완결되지 않았다 — 그림 생성기의 8×8×2 \"decision cell\" 제목 · v09 쉬운 판과 범례의 \"무코팅/코팅\" 에 대리 한정어 없음 · 생성기 LA desc 의 철회된 \"문헌 앵커\" 문자열 · v06/v08 에 세대 표지 없음",
-   "note": "그림 제목은 5fb05294f (리뷰 스냅샷 뒤) 에서 고쳤다.  이번 커밋: 범례 = \"uncoated/coated proxy\" + 개입 내용 (두 줄 범례, 그림 재생성) · v09 표 · 헤드라인 · 그림 설명에 \"대리\" 한정어 · LA/LC desc 정정 (덱의 **주석 한 줄**만 — 생성기 셀프테스트 ㉟b 가 옛 문자열로 옛 골든 해시 d2ab3fc5… · c9d084b4… 재현) · v01–v08 세대 표지 (웹앱은 머리의 첫 인용줄만 보이므로 쉬운 판 · 자세한 판 첫 줄에 넣음 · 철회된 앵커 라벨이 있는 v03 · v04 · v06 · v08 에는 R-4 정정까지).  ✅ 6963632a0 (게이트 s25 통과).",
+   "note": "그림 제목은 5fb05294f (리뷰 스냅샷 뒤) 에서 고쳤다.  이번 커밋: 범례 = \"uncoated/coated proxy\" + 개입 내용 (두 줄 범례, 그림 재생성) · v09 표 · 헤드라인 · 그림 설명에 \"대리\" 한정어 · LA/LC desc 정정 (덱의 **주석 한 줄**만 — 생성기 셀프테스트 ㉟b 가 옛 문자열로 옛 골든 해시 d2ab3fc5… · c9d084b4… 재현) · v01–v08 세대 표지 (웹앱은 머리의 첫 인용줄만 보이므로 쉬운 판 · 자세한 판 첫 줄에 넣음 · 철회된 앵커 라벨이 있는 v03 · v04 · v06 · v08 에는 R-4 정정까지).  ✅ 6963632a0 (게이트 s25 통과).  ⛔ Codex 재리뷰 (docs/reviews/codex_mixer_highbo_rereview_verdict_20260927.md): **부분** — 잔여: v09 표 \"SE 관련 쌍 (CED 고정)\" 칸에 차원 없는 0.212 를 적는 혼동 · 생성기 :152–157 \"Bo 3.0 앵커는 Hare γ 에서 온다\" 현재형 설명 · PNG 실물 렌더 미검증.  주판정/바닥-QC 구분 · LA/LC 대리 표기는 닫힘.",
    "claimed_fixed_sha": "6963632a0",
    "evidence_tests": [
     "scripts/make_mixer_deck.py",
@@ -5028,27 +5028,29 @@
   {
    "id": "HB-02",
    "severity": "P1",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "found_by": "Codex 적대 리뷰 (사용자 경유, 2026-09-27) — 고정 스냅샷 4cdcbf7bf · 판정 HOLD (고-Bo 믹서 LH 발사 전)",
    "opened_in": "docs/reviews/codex_mixer_highbo_verdict_20260927.md",
    "title": "Bo 규약 환산 오류 — LA 의 \"문헌 규약 ≈ 0.23\" (같은 접촉 환산에 밀도 1.9 를 넣음; 옳은 값 Bo_po = 3.0/6.75 = 0.444) · AM 밀도 4750 (코드 4800) · \"20.25 = 현재 입경에서 hare γ 유지\" (틀림) · hare Bo 5.7 은 카드 파생값 · JKR pull-off 규약 2 배 모호 (38.7 vs 77.4) ⇒ LH 38.4 를 \"hare 재현\" 으로 부를 근거 없음",
-   "note": "6.75 (작은-겹침 선형화, 실제 sjkr 교차원과 0.015 %) 는 맞다.  이번 커밋: 본 캠페인 사전등록 §0 R-4 · 결정 원장 R-4 두 곳을 취소선 + 정정 (0.444 · 12.8 은 두 선택값의 비일 뿐) · 요청서 머리에 철회 표지 · 고-Bo 사전등록 §1-2 = 38.4 를 **내부 탐색값** 으로 등록 (고른 동기를 있는 그대로 · Hare 재현/문헌 앵커/유동성 상사 라벨 없음) · 생성기 ARMS[\"LH\"].desc 도 같은 문구.  ✅ 6963632a0 (게이트 s25 통과).",
+   "note": "6.75 (작은-겹침 선형화, 실제 sjkr 교차원과 0.015 %) 는 맞다.  이번 커밋: 본 캠페인 사전등록 §0 R-4 · 결정 원장 R-4 두 곳을 취소선 + 정정 (0.444 · 12.8 은 두 선택값의 비일 뿐) · 요청서 머리에 철회 표지 · 고-Bo 사전등록 §1-2 = 38.4 를 **내부 탐색값** 으로 등록 (고른 동기를 있는 그대로 · Hare 재현/문헌 앵커/유동성 상사 라벨 없음) · 생성기 ARMS[\"LH\"].desc 도 같은 문구.  ✅ 6963632a0 (게이트 s25 통과).  ✅ Codex 재리뷰 (docs/reviews/codex_mixer_highbo_rereview_verdict_20260927.md): **닫힘** — 문헌 정박 주장을 하지 않는 경로로 닫힘 (타당성 인정 아님).  실제 코팅 · 실분말 유동성 검증으로 다시 올리면 재개방.",
    "claimed_fixed_sha": "6963632a0",
    "evidence_tests": [
     "docs/reviews/mixer_highbo_prereg_20260927.md",
     "docs/reviews/mixer_layered_prereg_20260921.md"
-   ]
+   ],
+   "verified_sha": "6963632a0",
+   "verified_by": "codex"
   },
   {
    "id": "HB-03",
    "severity": "P1",
-   "status": "claimed_fixed",
+   "status": "open",
    "owner": "claude",
    "found_by": "Codex 적대 리뷰 (사용자 경유, 2026-09-27) — 고정 스냅샷 4cdcbf7bf · 판정 HOLD (고-Bo 믹서 LH 발사 전)",
    "opened_in": "docs/reviews/codex_mixer_highbo_verdict_20260927.md",
    "title": "\"AM–AM 만 바뀐다\" 가 실제 CED 행렬과 다르다 — 벽 CED = 대각 ÷ 6.25^(1/3) 라 AM–AM 을 올리면 AM–벽도 오른다 (다섯 쌍) · 골든 해시는 두 실행 덱의 물리 동등성 증명이 아니다 · \"나머지 쌍 전부 Bo 0.212\" 도 부정확",
-   "note": "저자 결정 (09-27) = B (현 규약 = AM–AM + AM–벽 공동 개입) 먼저, 차이가 크면 조건부 A (AM–AM 단독, 생성기 변경).  이번 커밋: scripts/mixer_deck_diff.py (실행 덱 두 벌의 비-CED 명령 토큰 동일 + CED 변화 ⊆ 허용목록 B 다섯 쌍 + 다섯 다 실제 변화 · 셀프테스트 7/7 · 런처 시험 H② 가 gen_all SET=highbo → LC_s* vs LH_s* 3/3 PASS 를 강제) · 생성기 ㊼b (행렬 차 = 허용 다섯 쌍) · ㊼c (덱 줄 차 = 설명 주석 + CED 줄뿐) · 본 캠페인 사전등록 §1 팔 행 정정 (LC 의 AM CED 는 SE–SE 값이 아니다 · 벽 동반 · \"SE 관련 CED 요소 고정\").  WSL 실행 덱 비교는 발사 전 (고-Bo 사전등록 §2-2).",
+   "note": "저자 결정 (09-27) = B (현 규약 = AM–AM + AM–벽 공동 개입) 먼저, 차이가 크면 조건부 A (AM–AM 단독, 생성기 변경).  이번 커밋: scripts/mixer_deck_diff.py (실행 덱 두 벌의 비-CED 명령 토큰 동일 + CED 변화 ⊆ 허용목록 B 다섯 쌍 + 다섯 다 실제 변화 · 셀프테스트 7/7 · 런처 시험 H② 가 gen_all SET=highbo → LC_s* vs LH_s* 3/3 PASS 를 강제) · 생성기 ㊼b (행렬 차 = 허용 다섯 쌍) · ㊼c (덱 줄 차 = 설명 주석 + CED 줄뿐) · 본 캠페인 사전등록 §1 팔 행 정정 (LC 의 AM CED 는 SE–SE 값이 아니다 · 벽 동반 · \"SE 관련 CED 요소 고정\").  WSL 실행 덱 비교는 발사 전 (고-Bo 사전등록 §2-2).  ⛔ Codex 재리뷰 (docs/reviews/codex_mixer_highbo_rereview_verdict_20260927.md): **부분** — 목표 선택 (B 공동 개입) 은 닫힘.  잔여: 실행 덱 보증 도구 (HBR2-05 — 비대칭 · NaN · 음수 · CED 헤더 변경 PASS) · 실제 발사 덱 · 메시 · 바이너리 봉인 (발사 직전).",
    "claimed_fixed_sha": "6963632a0",
    "evidence_tests": [
     "scripts/mixer_deck_diff.py",
@@ -5059,12 +5061,12 @@
   {
    "id": "HB-04",
    "severity": "P2",
-   "status": "claimed_fixed",
+   "status": "open",
    "owner": "claude",
    "found_by": "Codex 적대 리뷰 (사용자 경유, 2026-09-27) — 고정 스냅샷 4cdcbf7bf · 판정 HOLD (고-Bo 믹서 LH 발사 전)",
    "opened_in": "docs/reviews/codex_mixer_highbo_verdict_20260927.md",
    "title": "n = 3 · 판정 해석 — Δ ≥ 2·SE 는 공학적 판정선 (짝 t 양측 95 % 임계값 4.30) · h0 (|Δ| ≤ SE) 를 \"효과 없음/동등\" 으로 읽으면 안 됨 · \"혼합 전이 문턱의 아래쪽 괄호\" 불성립 · LC 는 수치적 0 이 아님 (정적 접촉 점착/무게 0.110 · 0.200) · 사다리도 벽 CED 동반",
-   "note": "이번 커밋: 본 캠페인 사전등록 §5 (결론 문안 정정 — §2 판정선 · 칸 · 시드는 그대로; Codex §9 권고 문안 채택 · h0 은 \"차이가 작다\" 로만 · 아래쪽 괄호 금지 · 등록 최종값 = planned.M_final) · §0 R-3 행에 \"수치적 0\" 정정 · 고-Bo 사전등록 §3-3 · §5.  ✅ 6963632a0 (게이트 s25 통과).",
+   "note": "이번 커밋: 본 캠페인 사전등록 §5 (결론 문안 정정 — §2 판정선 · 칸 · 시드는 그대로; Codex §9 권고 문안 채택 · h0 은 \"차이가 작다\" 로만 · 아래쪽 괄호 금지 · 등록 최종값 = planned.M_final) · §0 R-3 행에 \"수치적 0\" 정정 · 고-Bo 사전등록 §3-3 · §5.  ✅ 6963632a0 (게이트 s25 통과).  ⛔ Codex 재리뷰 (docs/reviews/codex_mixer_highbo_rereview_verdict_20260927.md): **부분** — 유의성 · 검정력 과장 철회는 닫힘.  잔여: |Δ| ≤ SE 를 자동으로 \"차이가 작다\" 라 부르는 라벨 (HBR2-07 — d = (−0.3, 0.9, 0.3) 이면 Δ 0.30 인데 통과) · \"AM–AM 몫\" 해석 철회.",
    "claimed_fixed_sha": "6963632a0",
    "evidence_tests": [
     "docs/reviews/mixer_layered_prereg_20260921.md",
@@ -5079,7 +5081,7 @@
    "found_by": "Codex 적대 리뷰 (사용자 경유, 2026-09-27) — 고정 스냅샷 4cdcbf7bf · 판정 HOLD (고-Bo 믹서 LH 발사 전)",
    "opened_in": "docs/reviews/codex_mixer_highbo_verdict_20260927.md",
    "title": "실행·판독 계약 — check_contact_validity 는 등록 문구 \"최대 겹침 실측 ≤ 1 %\" 를 강제하지 못한다 (마지막 프레임만 · 기각선 50 % · 벽 없음 · δ/r 2 % 통과 반례) · measure_mixing_index 의 n_min 칸 제외가 분리를 숨길 수 있다 (S² 0 반례) · 옛 M_final 키는 부분 bin · 스모크가 \"예상 결과 선별기\" 가 되면 안 된다",
-   "note": "이번 커밋 (재현 시험 먼저 — 둘 다 옛 코드에서 반례가 통과함을 확인한 뒤 고침): check_contact_validity --contract (정착 끝 t₀ → 마지막 덤프 전 프레임 · 입자–입자 + 벽 (39 각형 드럼 · 덱 회전 스케줄 · 5 프레임에서 데이터로 회전각 되읽기, 불일치/미확인 = TECH) · 끝판 · 상별 수와 id 보존 · 셀프테스트 19/19 · 10 만 입자 프레임 ≈ 1 s) · measure_mixing_index 보조 진단 (상별 유지 부피 · 전 칸 M · 버린 칸 · 등록 최종값 planned = 계획 바퀴의 마지막 완전 bin + 평탄 · 미완주/비유한/덤프 결손 tech · 16/16) · 고-Bo 사전등록 §8 스모크 (기술 실패만 중단 · 플러그/작은 효과는 중단 사유 아님).  ⚠ 남은 것: 1 % 의 **해석** (창 전체 최대를 문자 그대로 vs 두 층) 은 저자 결정 D-1 — 09-21 자가 리뷰의 충돌 겹침 추정 SE–SE 1.03 % 가 이미 문턱 위라 문자 그대로면 본 캠페인 · 확장 모두 기각될 공산이 크다.  **실데이터에 --contract 를 돌리기 전에** 정한다.  ◐ 도구 수정은 6963632a0 (게이트 s25 통과) — **D-1 저자 결정이 나기 전까지 open 으로 둔다** (해제조건 ④ 가 아직 닫히지 않았다).",
+   "note": "이번 커밋 (재현 시험 먼저 — 둘 다 옛 코드에서 반례가 통과함을 확인한 뒤 고침): check_contact_validity --contract (정착 끝 t₀ → 마지막 덤프 전 프레임 · 입자–입자 + 벽 (39 각형 드럼 · 덱 회전 스케줄 · 5 프레임에서 데이터로 회전각 되읽기, 불일치/미확인 = TECH) · 끝판 · 상별 수와 id 보존 · 셀프테스트 19/19 · 10 만 입자 프레임 ≈ 1 s) · measure_mixing_index 보조 진단 (상별 유지 부피 · 전 칸 M · 버린 칸 · 등록 최종값 planned = 계획 바퀴의 마지막 완전 bin + 평탄 · 미완주/비유한/덤프 결손 tech · 16/16) · 고-Bo 사전등록 §8 스모크 (기술 실패만 중단 · 플러그/작은 효과는 중단 사유 아님).  ⚠ 남은 것: 1 % 의 **해석** (창 전체 최대를 문자 그대로 vs 두 층) 은 저자 결정 D-1 — 09-21 자가 리뷰의 충돌 겹침 추정 SE–SE 1.03 % 가 이미 문턱 위라 문자 그대로면 본 캠페인 · 확장 모두 기각될 공산이 크다.  **실데이터에 --contract 를 돌리기 전에** 정한다.  ◐ 도구 수정은 6963632a0 (게이트 s25 통과) — **D-1 저자 결정이 나기 전까지 open 으로 둔다** (해제조건 ④ 가 아직 닫히지 않았다).  ⛔ Codex 재리뷰 (docs/reviews/codex_mixer_highbo_rereview_verdict_20260927.md): **열림** — 후속 반례 HBR2-01 ~ 04 (아래) 때문에 닫을 수 없다.",
    "evidence_tests": [
     "scripts/check_contact_validity.py",
     "scripts/measure_mixing_index.py"
@@ -5097,6 +5099,110 @@
    "evidence_tests": [
     "CLAUDE.md",
     "docs/reviews/pure_se_union_prereg_20260927.md"
+   ]
+  },
+  {
+   "id": "HBR2-01",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 적대 재리뷰 (사용자 경유, 2026-09-27 저녁) — 고정 스냅샷 6963632a0 · 판정 HOLD (① 부분 · ② 닫힘 · ③ 부분 · ④ 열림) · 합성 반례 HEAD 643e32422 에서 재현",
+   "opened_in": "docs/reviews/codex_mixer_highbo_rereview_verdict_20260927.md",
+   "title": "check_contact_validity 벽 위상 \"되읽기\" 는 독립 검증이 아니다 — 입자 위치에서 최대 겹침을 최소화하는 각도를 찾아 스케줄과 비교 (양방향 반례: 참 벽 겹침 2.000 % + 반 면각 4.615° 어긋남 → PASS · 위상 5/5 ok · 예정각 계산 −53.756 % / 참 벽 = 예정각 · 0.500 % → TECH · 5/5 mismatch)",
+   "note": "무너지는 것: K2 fail-closed 보증 · \"데이터로 LC 재개 기하 확인\" · 해제조건 ④.  보존: 스케줄 forward 회전 · 벽 각도를 알 때의 겹침 계산 · 회전각-무관 상·하한 (볼록 39 각형 · 정확한 축/원점 조건의 보수적 fallback).  해결 증거 = 실제 mesh 좌표/벽 marker 또는 검증된 바이너리 · fix ID · 재개 상태 · 스케줄에서 위상 확보 (입자 fitting 은 보조 진단) · 위상을 모르면 가능한 위상 전체의 상·하한으로 PASS/REJECT/TECH · 반례 둘 상주 회귀 · 0.18° 는 면각의 2 % 가 아니라 δ/r 판정 오차로 전파해 정함.  HEAD 643e32422 재현 (evidence README).",
+   "evidence_tests": [
+    "docs/reviews/codex_mixer_highbo_rereview_evidence_20260927/review_probe.py"
+   ]
+  },
+  {
+   "id": "HBR2-02",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 적대 재리뷰 (사용자 경유, 2026-09-27 저녁) — 고정 스냅샷 6963632a0 · 판정 HOLD (① 부분 · ② 닫힘 · ③ 부분 · ④ 열림) · 합성 반례 HEAD 643e32422 에서 재현",
+   "opened_in": "docs/reviews/codex_mixer_highbo_rereview_verdict_20260927.md",
+   "title": "bin 0 스모크가 정상 런을 반드시 \"미완주\" TECH 로 중단시킨다 — 사전등록 §8 은 첫 완전 bin 0 에서 tech 없음을 요구하는데 판독기는 덱 8 회전 전체의 미완주를 tech 에 넣는다 (정상 26 프레임 스모크: planned.complete false · tech = 미완주)",
+   "note": "§8 \"①–④ 중 하나라도 실패 → HOLD\" 를 그대로 적용하면 정상 스모크도 통과 못 한다.  해결 증거 = SMOKE/bin0 와 FINAL/bin7 요구 창 분리 (전체 미완주는 스모크의 예상 상태 · bin 0 내부 결손 · 비유한 · 계측 오류는 여전히 실패) · tech 전체 무시나 미완주 삭제 처방 불가 · 통합 회귀 셋 (정상 bin 0 PASS / bin 0 결손 FAIL / 최종 미완주 FAIL).  §8 \"위상 확인 ok\" 와 §2-4 bounded 의 충돌도 명시할 것.",
+   "evidence_tests": [
+    "docs/reviews/codex_mixer_highbo_rereview_evidence_20260927/review_probe.py"
+   ]
+  },
+  {
+   "id": "HBR2-03",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 적대 재리뷰 (사용자 경유, 2026-09-27 저녁) — 고정 스냅샷 6963632a0 · 판정 HOLD (① 부분 · ② 닫힘 · ③ 부분 · ④ 열림) · 합성 반례 HEAD 643e32422 에서 재현",
+   "opened_in": "docs/reviews/codex_mixer_highbo_rereview_verdict_20260927.md",
+   "title": "\"창 전 프레임\" 은 전 시간의 충돌 최대가 아니다 — 덤프 간격 31.98 ms 대 SE–SE Hertz 충돌 시간 22.25 µs (≈ 1,438 배) · 이체 탄성 Hertz 산술로 SE–SE 1.030 % · AM_P–SE 0.919 % · SE–벽 0.899 % (09-21 자가 리뷰 값 재현) · 덤프 결손 프레임도 PASS (n_frames 2 · 빠진 순간 합성 겹침 2 %)",
+   "note": "P1 은 궤적 최대 보증에 한함.  뜻: 1 % 와 충돌의 충돌 가능성은 실재하나 \"실 캠페인이 반드시 기각\" 예측은 아직 불가 (실측 최대 · 감쇠 · 점착 · 다체 하중 아님 · 끝 속도는 상대속도 상한 아님).  저장 좌표 최대만 내므로 덤프 사이 peak · 접촉 지속시간을 복원 못 하고 \"지속 접촉 1 % / 충돌 따로\" 분류도 불가.  해결 증거 = D-1 이 \"저장 snapshot 최대\" 인지 \"전 적분 step 최대\" 인지 먼저 확정 (후자면 step 별 최대/초과 시간 · 접촉 이력 별도 계측 또는 검증된 상계) · 저장 프레임의 예상 step 집합 · 헤더 step · 원자 수 검사 · 기존 L 의 없는 시간 정보를 사후 JSON 으로 채우지 않음.",
+   "evidence_tests": [
+    "docs/reviews/codex_mixer_highbo_rereview_evidence_20260927/review_probe.py"
+   ]
+  },
+  {
+   "id": "HBR2-04",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 적대 재리뷰 (사용자 경유, 2026-09-27 저녁) — 고정 스냅샷 6963632a0 · 판정 HOLD (① 부분 · ② 닫힘 · ③ 부분 · ④ 열림) · 합성 반례 HEAD 643e32422 에서 재현",
+   "opened_in": "docs/reviews/codex_mixer_highbo_rereview_verdict_20260927.md",
+   "title": "measure_mixing_index 의 bin 완전성 = \"나중 bin 이 존재하는가\" 이고 결손 검사는 gap 시작점만 본다 — bin 0 → 1 · bin 6 → 2 · bin 7 → 25 프레임이어도 planned.complete true · flat true · tech [] (dump_gaps [(200, 7160)] 는 기록됨)",
+   "note": "등록된 직전 1 회전 평균과의 평탄 비교를 하지 않았는데 했다고 표지 — 선행 조건 · 조건부 A 발동에 직접 걸린다 (최종 숫자 산술 자체가 틀렸다는 뜻은 아님).  대조: 마지막 한 덤프 결손은 complete false 로 잡힘.  해결 증거 = 계획 덤프 lattice 에서 bin 6 · 7 의 요구 step 집합을 만들어 실제 집합과 대조 · gap 은 구간과 요구 창의 교집합으로 · 헤더/파일명 step · 중복 확인 · 음성 대조 셋 (\"직전 2/25 만\" · \"최종 초반 결손\" · \"중복 파일로 수 채움\") · 결손 정책 0 이면 최종/평탄 증서 미발행 · 정상 완주에서 옛 의도와 같은 창 · 값임을 회귀로.",
+   "evidence_tests": [
+    "docs/reviews/codex_mixer_highbo_rereview_evidence_20260927/review_probe.py"
+   ]
+  },
+  {
+   "id": "HBR2-05",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 적대 재리뷰 (사용자 경유, 2026-09-27 저녁) — 고정 스냅샷 6963632a0 · 판정 HOLD (① 부분 · ② 닫힘 · ③ 부분 · ④ 열림) · 합성 반례 HEAD 643e32422 에서 재현",
+   "opened_in": "docs/reviews/codex_mixer_highbo_rereview_verdict_20260927.md",
+   "title": "mixer_deck_diff PASS 의 뜻이 등록 계약보다 좁다 — 새 LH 의 P–S 한 방향만 ×2 (비대칭) · SE–SE NaN · P–P 음수 · CED fix ID/group 변경이 전부 PASS (:98 은 기준 행렬만 대칭 검사 · 유한성 · 물리 범위 · 고정 목표값 · 명령 헤더 검사 없음) · --runs 는 찾은 LH 디렉터리만 세어 1/1 도 rc 0",
+   "note": "LIGGGHTS 가 시작 시 거부할 변이도 있으나 \"덱 동등성 PASS\" 를 강하게 인용할 수 없다.  해결 증거 = 양쪽 행렬 유한 · 비음수 · 대칭 · CED 헤더 불변 · 허용 변화 방향 · 고정 목표값 · 예정 세 시드 집합 검사 · 실 덱 소수 출력 (6 유효숫자) 과 원 실수 행렬 1e−10 일치를 혼동하지 않음 · STL 파일명 동일 ≠내용 동일이라 실제 메시 · 바이너리 hash 를 발사 기록에 묶음.",
+   "evidence_tests": [
+    "docs/reviews/codex_mixer_highbo_rereview_evidence_20260927/review_probe.py"
+   ]
+  },
+  {
+   "id": "HBR2-06",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 적대 재리뷰 (사용자 경유, 2026-09-27 저녁) — 고정 스냅샷 6963632a0 · 판정 HOLD (① 부분 · ② 닫힘 · ③ 부분 · ④ 열림) · 합성 반례 HEAD 643e32422 에서 재현",
+   "opened_in": "docs/reviews/codex_mixer_highbo_rereview_verdict_20260927.md",
+   "title": "상별 부피 유지 0.90 은 셀 분산 대표성을 보증하지 않는다 — S² 는 선택 셀의 동일 가중 분산, 문턱은 상 부피 가중 유지율 (다른 측도): 조밀 혼합 2 칸 + 성긴 순상 8 칸 (n_min 20) 이면 유지 부피 0.9804 인데 S²_keep 0 · S²_all 0.2 · 25 프레임 중 2 프레임 유지율 0 이어도 평균 0.92 통과",
+   "note": "전체 혼합도 대표성을 주장하면 P1.  해결 증거 = D-2 를 \"대표성 증명\" 이 아니라 미리 정한 부피 누락 QC 로 제한 · 프레임별 · AM_P/AM_S/SE 별 유지율과 셀 수 · 조성별 제외를 t₀/E0/bin 6·7 에 보존 · 심한 개별 프레임 누락을 평균으로 상쇄하지 않는 규칙 선고정 · 미달이면 숫자 삭제가 아니라 \"등록된 선택-셀 M · 대표성 QC 미달 — 전체-bed 결론 제한\" 으로 보존 · 결과 보고 M 정의 변경 금지 (K3 · K6).",
+   "evidence_tests": [
+    "docs/reviews/codex_mixer_highbo_rereview_evidence_20260927/review_probe.py"
+   ]
+  },
+  {
+   "id": "HBR2-07",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 적대 재리뷰 (사용자 경유, 2026-09-27 저녁) — 고정 스냅샷 6963632a0 · 판정 HOLD (① 부분 · ② 닫힘 · ③ 부분 · ④ 열림) · 합성 반례 HEAD 643e32422 에서 재현",
+   "opened_in": "docs/reviews/codex_mixer_highbo_rereview_verdict_20260927.md",
+   "title": "\"작은 차이\" 문구와 \"AM–AM 몫\" 해석 — d = (−0.3, 0.9, 0.3) 이면 Δ 0.300 · SE 0.346 이라 |Δ| ≤ SE 통과인데 Δ 는 0.10 의 세 배 · LC/LHA/LH 세 셀만으로 Δ_A/Δ_B 를 기여율로 읽을 수 없다 (미측정 \"AM 낮음 · 벽 높음\" 셀에 따라 벽 단독 효과 0 ~ 0.2)",
+   "note": "Codex 가 1차 권고의 \"작은 차이\" 표현을 스스로 정정.  판정 부등식은 그대로 두고 라벨만: |Δ| ≤ SE = \"등록된 무분리 범주 — 방향 · 크기를 정밀하게 구분하지 못함\".  비는 \"LC 기준 경로상 두 contrast 의 비\" 로만 보고 · \"AM–AM 기여율/몫\" 철회 · 완전 요인 분해가 필요할 때만 벽-only 네 번째 셀 별도 등록 (요구 · 승인 아님) · A 미발동 = 미검사 (효과 없음 아님) · 고정 8 회전 수치는 보고하되 A 발동은 평탄 true 에서만 (K4).",
+   "evidence_tests": [
+    "docs/reviews/codex_mixer_highbo_rereview_evidence_20260927/review_probe.py"
+   ]
+  },
+  {
+   "id": "HBR2-08",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 적대 재리뷰 (사용자 경유, 2026-09-27 저녁) — 고정 스냅샷 6963632a0 · 판정 HOLD (① 부분 · ② 닫힘 · ③ 부분 · ④ 열림) · 합성 반례 HEAD 643e32422 에서 재현",
+   "opened_in": "docs/reviews/codex_mixer_highbo_rereview_verdict_20260927.md",
+   "title": "check_contact_validity 의 상별 수 · 전체 ID 집합 보존 ≠ 입자 속성 보존 — 같은 ID 둘의 type 교환 + SE 반경 절반이어도 check_window PASS",
+   "note": "표방한 검사 자체를 어긴 반례는 아니나 이것으로 상 부피 · 물질 동일성을 보증하지 말 것.  해결 증거 = 초기 설계의 상별 기대 수 · ID 별 type/radius 불변 · ID 유일성 · 정수성 · 유한성 · dump 헤더의 원자 수/step 을 묶어 검사.  입력 · 기록 무결성 문제 (LH 효과 유무와 무관).",
+   "evidence_tests": [
+    "docs/reviews/codex_mixer_highbo_rereview_evidence_20260927/review_probe.py"
    ]
   }
  ]

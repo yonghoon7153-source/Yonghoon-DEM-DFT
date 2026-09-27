@@ -411,3 +411,12 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
 - 첫 열람 14:16 KST · tgz sha256 `e71b93b0…` · 원자료 `docs/data/pure_se_r100_20260927/`.  **내부 정확 union 5.815 · 5.768 %** · 잡음 행 0.047 %p · δ/d 0.112 · 배위수 11.67.
   ⛔ Q1 (네 침대 중앙) 은 아직 없다 — 산술: 중앙 ≥ 6.0 % 이려면 r050 · r075 가 둘 다 ≥ 6.19 %.
 - ⚠ 러너 `--output=logs/…` 는 제출 폴더 기준 — 케이스 폴더에서 sbatch 했으므로 그 안에 `logs/` 필요 (PENDING 중 mkdir 안내).  CLAUDE.md 에 두 PC 다운로드 경로.
+- ⛔ **사고 (원장 `SELF-54`)**: 232358/59 는 `logs/` 부재로 0 초 FAILED (내 지시) · 232384/85 는 **체크포인트 확인 없이 INSERTING 부터** 재발사 → 사용자 취소.  지시문의 두 전제 ("체크포인트는 PHASE 3 에서만" · "재개 첫 thermo 줄 압력 대조") 둘 다 틀림 (선배 세션 지적).
+  ✅ 선배 세션이 체크포인트에서 이었다 — r050_a after_settling 200001 → job 233797 · r075_a compress 1500000 → job 233799 (30 MPI · G1/G2/G3).  표준 절차 `docs/resume_ckpt_procedure_20260927.md` + `scripts/resume_ckpt.sh` · `ckpt_watch.sh` · CLAUDE.md 체크리스트 (`2354ff8d7` · `643e32422` · `1b8ef7f67`).
+
+## ㉓ 고-Bo 믹서 LH — Codex 재리뷰 = HOLD (09-27 저녁)
+
+- 판정 (`docs/reviews/codex_mixer_highbo_rereview_verdict_20260927.md`, 스냅샷 `6963632a0`): ① 부분 · ② 닫힘 · ③ 부분 · ④ 열림 · HB-01 부분.  B 공동 개입 · 38.4 내부 탐색값은 수용; 막힌 곳은 **검사 · 판독 경로**.
+- 합성 반례 8 건 (HBR2-01 ~ 08) 을 **HEAD `643e32422` 에서 전부 재현** (프로브 assert 7/7 · `docs/reviews/codex_mixer_highbo_rereview_evidence_20260927/`): 벽 위상 되읽기 = 겹침 최소화 각도 (참 겹침 2 % → PASS · 5/5 ok / 참 위상 0.5 % → TECH) · 정상 bin 0 스모크 → 미완주 TECH · bin 6 이 2/25 프레임이어도 `flat=true` · 덱 비교기 비대칭/NaN/음수/헤더 PASS · 유지 0.98 인데 S²_keep 0 vs S²_all 0.2 · type 교환 + 반경 절반 PASS · 덤프 32 ms ≫ Hertz 22 µs.
+- 원장: HBR2-01~08 등재 (P1 4 · P2 4) · HB-01 · 03 · 04 → open (잔여 명시) · HB-02 → verified (codex, `6963632a0`) · HB-05 open.  CLAUDE.md 믹서 행 · prereg §9 (K1–K5 조건) · §10 (재리뷰 결과).
+- ⬜ 다음 = **보고 → 비준** 뒤: (i) 프로브 경우들을 셀프테스트로 옮겨 **먼저 실패**시키고 (ii) 검사기 · 판독기 · 비교기 수정 (HBR2-01 · 02 · 04 · 05 · 08 + 06 진단) (iii) 저자 결정 D-1 (관측량 정의부터) · D-2 · D-3 · D-4 · K7 규칙표 (iv) 재리뷰.  L 10 런은 계속 (Codex: 중단 · LC 폐기 · 재실행 · 1 % 완화 · 새 Bo/시드 **아님**).

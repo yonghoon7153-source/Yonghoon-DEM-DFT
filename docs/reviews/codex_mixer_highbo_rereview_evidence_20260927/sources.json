@@ -1,0 +1,136 @@
+{
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "review_pin": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+  "latest_read": "ec5ca50a8fe162bfbb87532dde11142d4ea062d7",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "2829b46196a08ffae439ddbdc20dc093cde511c4"
+    },
+    {
+      "path": "dem_scripts/mixer_20260919/Back.stl",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "726a7f1e0771e3755eac937b82dad7293fe9ddcf"
+    },
+    {
+      "path": "dem_scripts/mixer_20260919/Drum.stl",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "7e3b6b153d86e103752ddf93e2ed583f945414c6"
+    },
+    {
+      "path": "dem_scripts/mixer_20260919/Front.stl",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "e77c287028084d2a229762f8f9cbe4ba0a8aeca0"
+    },
+    {
+      "path": "dem_scripts/mixer_20260921/gen_all.sh",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "14a9b59e1124316e23f5a78f7e8e2117044f8ca4"
+    },
+    {
+      "path": "dem_scripts/mixer_20260921/run_all.sh",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "485198afb857893d382ff740f1e5c884b1ca2a4e"
+    },
+    {
+      "path": "dem_scripts/mixer_20260921/test_launcher.sh",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "b7a1cd5c58a19ab716268e6a3114db515bad8f18"
+    },
+    {
+      "path": "docs/data/mixer_interim_20260927/plot_interim.py",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "e9d3373ae4753037b48c7fe2a70b14af526032e3"
+    },
+    {
+      "path": "docs/mixer_devlog/v09_20260927.md",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "d1d36f2236b132509b852e5089cad91c5a7278a2"
+    },
+    {
+      "path": "docs/reviews/codex_mixer_highbo_verdict_20260927.md",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "819bd68c07cc7311a74b1dfc6ac1fea78a9a4d3a"
+    },
+    {
+      "path": "docs/reviews/mixer_highbo_prereg_20260927.md",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "00b337985a4b4cc3afcc86e5b10546bb22771594"
+    },
+    {
+      "path": "docs/reviews/mixer_layered_prereg_20260921.md",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "98d8c145a2a32151acc8b3bc216268e88a511f5c"
+    },
+    {
+      "path": "docs/session_20260921_mixer_decisions.md",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "2512120d380f0591da93d63b3e7e16ab8114179d"
+    },
+    {
+      "path": "scripts/check_contact_validity.py",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "ec336dafdbaa395a23de1d06230af0febed911ef"
+    },
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "6e95f6da56de3fbcb6b6eb6c6948bddbb3cccebd"
+    },
+    {
+      "path": "scripts/make_mixer_resume.py",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "7909d7fb4afee8e9e2b7c31b012854eadeb1db8d"
+    },
+    {
+      "path": "scripts/measure_bed_aspect.py",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "cf9d6e390e4fe24d89311dc9c278d298f49e619c"
+    },
+    {
+      "path": "scripts/measure_mixing_index.py",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "5043c9a7f4de7e0f7f54e5dc31fd6ee55852bf3c"
+    },
+    {
+      "path": "scripts/mixer_deck_diff.py",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "55f99c5b823f5d7d547423824321cff16d592b1d"
+    },
+    {
+      "path": "docs/reviews/codex_mixer_highbo_rereview_request_20260927.md",
+      "ref": "ec5ca50a8fe162bfbb87532dde11142d4ea062d7",
+      "blob_sha": "edad5ac7c265f581ff1427618d557c2bb9572af8"
+    },
+    {
+      "repository": "CFDEMproject/LIGGGHTS-PUBLIC",
+      "path": "src/fix_mesh.cpp",
+      "ref": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+      "blob_sha": "cf7049af0312feeccf93e93a708df98ded56c99c"
+    },
+    {
+      "repository": "CFDEMproject/LIGGGHTS-PUBLIC",
+      "path": "src/fix_move_mesh.cpp",
+      "ref": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+      "blob_sha": "208acd548e09cb2e81f631b49683dedb98bd5dd8"
+    },
+    {
+      "repository": "CFDEMproject/LIGGGHTS-PUBLIC",
+      "path": "src/mesh_mover_rotation.h",
+      "ref": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+      "blob_sha": "bc17771ebde9df7ec47a2bc5ba648b522f3dffc0"
+    },
+    {
+      "repository": "CFDEMproject/LIGGGHTS-PUBLIC",
+      "path": "src/mesh_mover_rotation.cpp",
+      "ref": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+      "blob_sha": "a476306e9cd364a7796aee91a1604b9113103093"
+    }
+  ],
+  "notes": [
+    "No Git state change; GitHub read-only API access.",
+    "Source copies and reviewer artifacts only; no production deck or DEM run.",
+    "Synthetic function probes do not establish real-campaign overlaps or retention."
+  ]
+}
