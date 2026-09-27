@@ -1,0 +1,277 @@
+{
+  "head": "ef6689bbe296e545df57dc481e45ec98c2b9ea3b",
+  "code": "ebfb853d1b3dff0678f5f67985003498a3476982",
+  "prior_head": "a49a021833282e0bd04c4565591668dc323e9630",
+  "source_digest": "27390883eb132941",
+  "RUN_SCOPE_files": 57,
+  "tracked_files": 2789,
+  "diffs": {
+    "CODE_TO_HEAD_SCOPE": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "G74_TO_G75_SCOPE": {
+      "bytes": 23145,
+      "sha256": "656e94e334125a0d29c609dc84ec7a5b821925d823096f3a52362bbf6105659e"
+    },
+    "G74_TO_G75_LEDGER": {
+      "bytes": 6003,
+      "sha256": "53c165e962a1f508f4930b12a44cbd7e0c0702fbd64ef65377c600162fdde5b2"
+    },
+    "G74_TO_G75_LINT": {
+      "bytes": 12837,
+      "sha256": "809fa8c0dc472faf651bfccc5b253ac085ca78562749a5f36fa25ee883d6566e"
+    },
+    "G74_TO_G75_PLAN": {
+      "bytes": 4997,
+      "sha256": "f4fe883583949b8de78f561c4268fd304a1d6114c311e012e6a9693f493e4a26"
+    },
+    "TEST_ONLY_FIX": {
+      "bytes": 1343,
+      "sha256": "4d76dba9fa7ae9974e8b29f6207494e48eb45fc46e4d3f9cf34881b0adb067d9"
+    }
+  },
+  "unchanged": {
+    "bundles_and_index": {
+      "changed": []
+    },
+    "class_registry": {
+      "changed": []
+    },
+    "publisher_and_active_projection": {
+      "changed": []
+    },
+    "claim_status": {
+      "changed": []
+    },
+    "test_fix_run_scope": {
+      "changed": []
+    }
+  },
+  "receipts": {
+    "grid_fit_v5": {
+      "old": {
+        "bytes": 3706,
+        "sha256": "a91c32a97c34bd37880b1ee032b687302d41e67e71c98619c029202879f70f3b"
+      },
+      "new": {
+        "bytes": 3703,
+        "sha256": "e74f3c6ceda04ed2626a2b0d70dded14b290a84ad11ae52f5f46e35d671f4357"
+      },
+      "history_byte_identical": true,
+      "changes": [
+        {
+          "path": "/core/identity/validator_source_digest",
+          "before": "c2ef1a811e70bb4c",
+          "after": "27390883eb132941"
+        },
+        {
+          "path": "/core_sha256",
+          "before": "2aadd24b1de88b070e48bdda428050e6475fa7a245c4571df4771ca04ffde83a",
+          "after": "9e44a15c99d52a63dd793a39ccbd3c57912e695dac368543cb70bbd96e69780c"
+        },
+        {
+          "path": "/stamp/generated_at_utc",
+          "before": "2026-09-26T13:03:29Z",
+          "after": "2026-09-26T16:14:14Z"
+        },
+        {
+          "path": "/stamp/runtime/platform",
+          "before": "Linux-6.8.0-110-generic-x86_64-with-glibc2.39",
+          "after": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39"
+        },
+        {
+          "path": "/stamp/runtime/python",
+          "before": "3.12.14",
+          "after": "3.11.15"
+        },
+        {
+          "path": "/stamp/validator_commit",
+          "before": "e34eea8455d87f8e33c6ae7113fe3d16ddb600e3",
+          "after": "ebfb853d1b3dff0678f5f67985003498a3476982"
+        }
+      ],
+      "core_rehash_matches": true,
+      "validation_and_outputs_unchanged": true,
+      "producer_and_validator": {
+        "validator_source_digest": "27390883eb132941",
+        "src_io_sha256": "25f79f0a740ea486",
+        "src_scoring_sha256": "69e69cb046f4b4ae",
+        "archive_bundle_sha256": "5f7fc3c89dfe5dba",
+        "make_receipt_sha256": "9c8cf71af310de03",
+        "row_projection_sha256": "b8eae978b9525c3e",
+        "row_projection_compute_sha256": "150416386d3c0b93"
+      },
+      "ledger_validation_status": "current_validated",
+      "ledger_out_present": true,
+      "bundle": {
+        "members": 29,
+        "exact_set_SHA": true,
+        "bytes": 27313017
+      }
+    },
+    "paired_fixed5_v4": {
+      "old": {
+        "bytes": 3768,
+        "sha256": "41254d20c8157dd3ec6818e823b7931ba38bf15f98a885fd8f2af280889e93dd"
+      },
+      "new": {
+        "bytes": 3768,
+        "sha256": "dc610d1590bd40b5fb99fd1abebb7bfcf269801f14212b4678cc65e146bcef92"
+      },
+      "history_byte_identical": true,
+      "changes": [
+        {
+          "path": "/core/identity/validator_source_digest",
+          "before": "c2ef1a811e70bb4c",
+          "after": "27390883eb132941"
+        },
+        {
+          "path": "/core_sha256",
+          "before": "5e26232e741b5e6888672dbb9a336057c0bd22bb8bbc71c309a9794baea36492",
+          "after": "febe01571b9f8432b8cbebe7d6c87d2bc59b9ce8f9a8c2f7a1a816718bba5fb3"
+        },
+        {
+          "path": "/stamp/generated_at_utc",
+          "before": "2026-09-25T10:07:52Z",
+          "after": "2026-09-26T16:13:31Z"
+        },
+        {
+          "path": "/stamp/validator_commit",
+          "before": "7a7945564e6a94803b4d3bc72e8202534189ccdb",
+          "after": "ebfb853d1b3dff0678f5f67985003498a3476982"
+        }
+      ],
+      "core_rehash_matches": true,
+      "validation_and_outputs_unchanged": true,
+      "producer_and_validator": {
+        "validator_source_digest": "27390883eb132941",
+        "src_io_sha256": "25f79f0a740ea486",
+        "src_scoring_sha256": "69e69cb046f4b4ae",
+        "archive_bundle_sha256": "5f7fc3c89dfe5dba",
+        "make_receipt_sha256": "9c8cf71af310de03",
+        "row_projection_sha256": "b8eae978b9525c3e",
+        "row_projection_compute_sha256": "150416386d3c0b93"
+      },
+      "ledger_validation_status": "historical_validated",
+      "ledger_out_present": false,
+      "bundle": {
+        "members": 26,
+        "exact_set_SHA": true,
+        "bytes": 23863555
+      }
+    }
+  },
+  "prior_review_packages": {
+    "GATE74_REVIEW_20260926.zip": {
+      "zip": {
+        "bytes": 959344,
+        "sha256": "eb03012cf4fbbf45f8e3bc354b14878f21c459a5913f6ba00a728d91d3a2adac"
+      },
+      "payload": 102,
+      "manifest": {
+        "bytes": 17891,
+        "sha256": "cdd26b187072eb9aa9449c865c6699ebaf524598564dc682fd88044e4f87bf14"
+      },
+      "CRC_exact_set_SHA": true
+    }
+  },
+  "grid_fit_v5_record": {
+    "leg_id": "grid_fit_v5",
+    "preservation_status": "full_bundle",
+    "validation_status": "current_validated",
+    "inference_role": "diagnostic",
+    "claim_scope": "no_active_claim",
+    "근거": "74차 조건부 한정 실행 (원장 §98~§102). 사람의 분류 (E9 단계 5, 74차 리뷰어 권고 (c)+(b)): **진단 전용** — 어떤 활성 주장도 참조하지 않는다 (claim_roles 없음). cohort g18 의 승인 아래 돌았지만 투영(row projection)을 게시하지 않았으므로 투영 명부 `legs` 가 아니라 실행 명부 `executed_legs` 에 있다. 묶음·영수증·실행 자리·소스 결속은 full_bundle 계약 그대로 (evidence). regeneration_capability 는 사실 기록이다 — 묶음 payload index 에 fits.parquet·curves.parquet 원자료가 있다 (투영 생성/검증 완료를 뜻하지 않는다). 수치는 인용하지 않는다.",
+    "evidence": {
+      "cohorts": [
+        "g18_2026_09_15"
+      ],
+      "leg_source_digest": "c2ef1a811e70bb4c",
+      "out": "results/grid_fit_v5",
+      "verifier_origin": "normal_finalize",
+      "phases": {
+        "grid": {
+          "at": "2026-09-26T10:58:50Z",
+          "receipt": {
+            "curves_manifest_sha256": "ba21378676a0f5353374043084055bc95508874cb0c195b5955c2b4d155e001a",
+            "curves_manifest_start_sha256": "c0bc64a45e6dafd7e3f5acbdeac4ca5fbfe16c12f171e440bca7fc2c0b4cb561",
+            "curves_sha256": "29da452a04ca17d778f448ad9504f21d1b8a22db8dd64bf1e0ba7c95804a6adc",
+            "finished_at": "2026-09-26T10:58:50Z",
+            "grid_run_sig": "e5d08ed14cb2",
+            "n_curves_total": 3069,
+            "out": "results/grid_fit_v5"
+          }
+        },
+        "fit": {
+          "at": "2026-09-26T12:32:52Z",
+          "consumed": {
+            "grid": "fb40ea8e10563ebff227ec187a515642c9c23095c71025ab234661ed7c78b48c"
+          },
+          "receipt": {
+            "finished_at": "2026-09-26T12:32:52Z",
+            "n_rows": 12276,
+            "out": "results/grid_fit_v5"
+          }
+        }
+      },
+      "attempt_id": "2d91320cc5ad42198889fc2dba819829",
+      "run_spec_digest": "0838df841ae7e4e694a3938d281e92284c27fb04393e0008b15f7a3fd4e10337",
+      "attempt_verifier": "01739f6382ef807a36262362d0c39b397ca1267945d5ff2d74762b4a09f3ad63",
+      "bundle_uri": "artifacts/grid_fit_v5",
+      "bundle_files": 29,
+      "payload_bytes": 27313017,
+      "payload_index": "artifacts/grid_fit_v5/payload_sha256.yaml",
+      "payload_index_sha256": "4cd2c0f89a07da834680e4a69d75391241a0930819174fc98cf52045f7519c42",
+      "member_rehash_by": "tools.archive_bundle.check",
+      "fits_sha256": "378ffde80b2a44d99efa3bff3e712b7cd44b41e0073d712fdf63d4efca864042",
+      "verification_receipt": "docs/22p_gap/receipts/grid_fit_v5.validate.yaml",
+      "verification_receipt_core_sha256": "9e44a15c99d52a63dd793a39ccbd3c57912e695dac368543cb70bbd96e69780c",
+      "verification_receipt_generator": "docs/22p_gap/make_receipt.py",
+      "empty_root_restore": true,
+      "regeneration_capability": "available_raw_present",
+      "rescored_from_restored_fits": true,
+      "validator_identity": {
+        "source_digest": "27390883eb132941",
+        "n_checks": 33,
+        "ok": true
+      },
+      "bundle_content_id": "d59744657f3a2086a8069c720bea4468a89c3e36e2221475d0db441c62baf8ae"
+    }
+  },
+  "g18": {
+    "cohort_id": "g18_2026_09_15",
+    "dir": "docs/22p_gap/proj_g18",
+    "status": "active",
+    "legs": [
+      "paired_fixed5_v4"
+    ],
+    "executed_legs": [
+      "grid_fit_v5"
+    ],
+    "prospective_legs": [],
+    "cross_leg_comparison": "not_applicable_single_leg",
+    "무엇이_달라졌나": "63차 게이트 리뷰(방어적 코드·회귀 검토)가 새 P1 3건 · P2 1건과 증거 공백 둘을 냈고 전부 코드에서 닫혔다 (원장 §77·§78). 이 cohort 의 pin 을 움직인 것은 E1 이다 — producer analyzer 의 definition head 가 3.12 `type_params` 의 bound(3.12)·default(3.13) 를 열거한다. bound 는 별도 annotation scope 에서 지연 평가되고 함수 매개변수를 못 보므로 매개변수 shadow 를 안 적용하는 head 자리가 맞다. type parameter 이름 자체는 shadow 로 세지 않는다 (fail-closed 쪽). 첫 수정판이 `getattr(tp, attr)` 로 이름을 계산해서 건네다 분석기 자신의 규칙에 걸렸고 리터럴 이름 둘로 풀었다 — 규칙이 자기 자신에게도 걸린다는 것을 실측했다. **계산식은 안 바뀌었다** — `src_scoring_py_sha256` 가 그대로이고, 아래 행 바이트가 그 사실을 말한다.",
+    "pin": {
+      "schema_version": 3,
+      "compute_sha256": "150416386d3c0b93",
+      "row_projection_py_sha256": "b8eae978b9525c3e",
+      "src_scoring_py_sha256": "69e69cb046f4b4ae",
+      "analysis_spec_sha256": "43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271",
+      "producer_semantic_sha256": "1d6c0e76f18d63ed"
+    },
+    "runtime": {
+      "python": "3.11.15",
+      "pandas": "3.0.5",
+      "pyarrow": "25.0.1",
+      "numpy": "2.4.6",
+      "yaml": "6.0.1"
+    }
+  },
+  "limits": {
+    "subject_module_imports": 0,
+    "full_suite_reruns": 0,
+    "scientific_runs_restore_class_changes": 0,
+    "sender_native_execution_independently_observed": false
+  }
+}

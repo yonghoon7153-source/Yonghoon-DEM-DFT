@@ -1,0 +1,14 @@
+import os, sys, yaml
+p = sys.argv[1]
+try:
+    doc = yaml.safe_load(open(p, encoding="utf-8"))
+except Exception as exc:
+    print(f"  ✗ 기존 index 를 읽을 수 없다 ({exc}) — 승격하지 않는다", file=sys.stderr)
+    sys.stderr.flush(); os._exit(1)
+runs = doc.get("runs") if isinstance(doc, dict) else None
+if not isinstance(doc, dict) or not isinstance(runs, dict) \
+        or any(not isinstance(k, str) or not isinstance(v, dict) for k, v in runs.items()):
+    print(f"  ✗ 기존 index 가 `runs:` mapping 을 담은 mapping 이 아니다: {p} — 비우고 다시 쓰지 않는다 "
+          "(사람이 본다)", file=sys.stderr)
+    sys.stderr.flush(); os._exit(1)
+sys.stdout.flush(); os._exit(0)

@@ -1,0 +1,41 @@
+{
+  "review": "Gate75",
+  "head": "ef6689bbe296e545df57dc481e45ec98c2b9ea3b",
+  "code": "ebfb853d1b3dff0678f5f67985003498a3476982",
+  "source_digest": "27390883eb132941",
+  "status": "PARTIAL_ACCEPTANCE_CLOSURE_WITHHELD",
+  "new_execution_go_requested": false,
+  "new_execution_go_granted": false,
+  "existing_Gabia_data_acceptance_retained": true,
+  "items": {
+    "R1": "ACCEPT_RECORDED_DEVIATION_NOT_RETROACTIVE_APPROVAL",
+    "R2": "ACCEPT",
+    "G74-3": "PARTIAL_PENDING_G75_N3",
+    "G74-1": "ACCEPT",
+    "G74-4": "PENDING_G75_N1_N2",
+    "preservation_validator_identity": "ACCEPT"
+  },
+  "findings": [
+    {"id":"G75-N1","priority":1,"title":"Index finalizer failure is masked by successful shell exit","file":"scripts/archive_results.sh","line":294,"cases":["W01_replace_failure","S17"]},
+    {"id":"G75-N2","priority":2,"title":"Duplicate YAML mapping keys bypass index ambiguity rejection","file":"scripts/archive_results.sh","line":70,"cases":["I02_duplicate_runs","I03_duplicate_run_name","I04_duplicate_identity","W02_duplicate_input_rewrite"]},
+    {"id":"G75-N3","priority":2,"title":"Diagnostic evidence consumer accepts a wrong nonempty ledger out","file":"tests/test_docs_lint.py","line":2521,"cases":["D00_valid","D01_wrong_out","D02_missing_out"]}
+  ],
+  "answers": {
+    "publisher_unchanged": "ACCEPT_WITHIN_CURRENT_DIAGNOSTIC_ONLY_SCOPE_NOT_A_GLOBAL_SCOPE_GUARANTEE",
+    "grid_fit_v5_current_validated": "RETAIN_WITH_SEPARATE_PRODUCER_VALIDATOR_AND_NO_ACTIVE_CLAIM",
+    "new_scientific_run_required_for_closure": false
+  },
+  "reviewer_limits": {
+    "unique_isolated_cases":23,
+    "shell_boundary_cases_rechecked_with_utilities_available":2,
+    "subject_whole_module_imports":0,
+    "subject_full_suite_runs":0,
+    "scientific_runs":0,
+    "archive_restore_receipt_regeneration_attach_publisher":0,
+    "production_edits":0,
+    "executed_extracted_predicates":true,
+    "executed_reviewer_owned_scripts":true,
+    "sender_test_execution_independently_observed":false
+  },
+  "next_scope_requires_user_approval":true
+}

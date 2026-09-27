@@ -1,0 +1,19 @@
+{
+  "scope": "Same reviewer boundary fixtures; only process-local PATH corrected, no subject script executed",
+  "results": [
+    {
+      "injected_index_command_rc": 0,
+      "actual_shell_exit_code": 0,
+      "stdout": "\n요청 1개 · 검증 가능 1개 · 불완전 0개 · 없음 0개 · 합계 373K\n\n다음:\n  git add artifacts && git commit -m \"chore(artifacts): 계산 결과 보관\" && git push\n\nclone 한 쪽에서 복원 + 검증:\n  python -m tools.archive_bundle restore artifacts/halfcell_fit_v4\n  python -c \"from src.io import validate_provenance; import json; \\\n             print(json.dumps(validate_provenance('results/halfcell_fit_v4'), \\\n             ensure_ascii=False, indent=2))\"\n  ./run.sh --mode score --in results/halfcell_fit_v4   # 채점 이후는 몇 초다\n",
+      "stderr": ""
+    },
+    {
+      "injected_index_command_rc": 17,
+      "actual_shell_exit_code": 0,
+      "stdout": "\n요청 1개 · 검증 가능 1개 · 불완전 0개 · 없음 0개 · 합계 373K\n\n다음:\n  git add artifacts && git commit -m \"chore(artifacts): 계산 결과 보관\" && git push\n\nclone 한 쪽에서 복원 + 검증:\n  python -m tools.archive_bundle restore artifacts/halfcell_fit_v4\n  python -c \"from src.io import validate_provenance; import json; \\\n             print(json.dumps(validate_provenance('results/halfcell_fit_v4'), \\\n             ensure_ascii=False, indent=2))\"\n  ./run.sh --mode score --in results/halfcell_fit_v4   # 채점 이후는 몇 초다\n",
+      "stderr": ""
+    }
+  ],
+  "whole_archive_executions": 0,
+  "subject_files_changed": 0
+}

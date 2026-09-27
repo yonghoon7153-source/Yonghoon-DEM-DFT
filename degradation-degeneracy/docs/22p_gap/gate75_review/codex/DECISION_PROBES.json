@@ -1,0 +1,638 @@
+{
+  "scope": "Isolated data/predicate/return-code review; not subject suite or archive execution",
+  "head": "ef6689bbe296e545df57dc481e45ec98c2b9ea3b",
+  "source_identities": {
+    "tools\\preserve.py": {
+      "bytes": 487801,
+      "sha256": "20e5fdd549360af93787059fc32479c209fce67ad9d5bc037412946d93a148ec"
+    },
+    "tests\\test_docs_lint.py": {
+      "bytes": 616227,
+      "sha256": "9e29820c99f720e9394d5a4241fb7efe3d52840b2ecdfa962996ac225e11568a"
+    },
+    "scripts\\archive_results.sh": {
+      "bytes": 22356,
+      "sha256": "43ea1aee22ca4f7b752b813c99ba49f8d4eb3966fd3e191543777d92ccf8c9b8"
+    }
+  },
+  "extracted_functions_constants": [
+    {
+      "file": "tools/preserve.py",
+      "line": 105,
+      "end": 105,
+      "name": [
+        "_HEX64"
+      ],
+      "source_segment": {
+        "bytes": 11,
+        "sha256": "d010e1cc3a4c20f3ba8d722f4ce7dd0bc81fc2542e436e6be00c129c2b23036d"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 125,
+      "end": 131,
+      "name": "PreserveError",
+      "source_segment": {
+        "bytes": 267,
+        "sha256": "533ddc19da973b3e5ea7bb9ff75a0ba6b4bcc01356bc8f52822855d0dc256d7a"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 153,
+      "end": 155,
+      "name": "_is_hex64",
+      "source_segment": {
+        "bytes": 130,
+        "sha256": "6d2e605d0c924a519784c3180874e94bc99c55015558ebf7566dea7c606da032"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 3042,
+      "end": 3043,
+      "name": "_nonempty_str",
+      "source_segment": {
+        "bytes": 120,
+        "sha256": "160863b951a461db581e0527f3e1cdbe169a9a0dfebbe130dd391cbce9be3171"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 3642,
+      "end": 3642,
+      "name": [
+        "CLAIM_SCOPE"
+      ],
+      "source_segment": {
+        "bytes": 50,
+        "sha256": "3966f74d2ecfb923464c495cc8b1b79d91524aefed3b9027f1906c3f45d0c42a"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 6010,
+      "end": 6011,
+      "name": "_is_hex64",
+      "source_segment": {
+        "bytes": 112,
+        "sha256": "0c42eae86dcdb9f29fa39fea4f29d48927fcaab1e928be0fb25ba8c28c97c860"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 6014,
+      "end": 6042,
+      "name": "_assert_prospective_plan_is_startable",
+      "source_segment": {
+        "bytes": 2365,
+        "sha256": "9038a32266729b1b1828f180f4e1f962d674a24cd304f055f3cae00f285703f0"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7562,
+      "end": 7588,
+      "name": "_repo_relative_or_refuse",
+      "source_segment": {
+        "bytes": 1286,
+        "sha256": "8af8c4d2fde9fb900cf83f02a1a9e6404e006e62ed755f23a62056970593718d"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7792,
+      "end": 7792,
+      "name": [
+        "VERIFICATION_RECEIPT_KEYS"
+      ],
+      "source_segment": {
+        "bytes": 100,
+        "sha256": "5a9f25db2c71cafc9c63348915ccb7d5e34b8da1c341262211143bad977e5e18"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7793,
+      "end": 7794,
+      "name": [
+        "VERIFICATION_RECEIPT_CORE_KEYS"
+      ],
+      "source_segment": {
+        "bytes": 134,
+        "sha256": "fa1465b7b70a18c83971ba6b7955b5e83251d005e235e870b01a5aa68d17368f"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7795,
+      "end": 7797,
+      "name": [
+        "VERIFICATION_RECEIPT_BUNDLE_KEYS"
+      ],
+      "source_segment": {
+        "bytes": 175,
+        "sha256": "358b66574fec9630b1cd34018eff030cf8bcc72b4a7d72f65dd155b362602364"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7798,
+      "end": 7799,
+      "name": [
+        "VERIFICATION_RECEIPT_RESTORE_KEYS"
+      ],
+      "source_segment": {
+        "bytes": 121,
+        "sha256": "94eb3db266b3274138a0ce037b3d92c3957aaf679b6485cd66404df18249eee0"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7800,
+      "end": 7801,
+      "name": [
+        "VERIFICATION_RECEIPT_VALIDATION_KEYS"
+      ],
+      "source_segment": {
+        "bytes": 104,
+        "sha256": "7e8b5d2fd1697ee2c5be4313239c5c219a846b48f400509552adbe25350d0b00"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7802,
+      "end": 7805,
+      "name": [
+        "VERIFICATION_RECEIPT_IDENTITY_KEYS"
+      ],
+      "source_segment": {
+        "bytes": 235,
+        "sha256": "0d0845b7b69520a49b2e1f7dc2ac43f87c7f44f1c69005885d6413261ccfd75e"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7806,
+      "end": 7806,
+      "name": [
+        "VERIFICATION_RECEIPT_SCHEMA_VERSION"
+      ],
+      "source_segment": {
+        "bytes": 39,
+        "sha256": "4b7f09c435f33b3720d8318a1d88373ebbcaf203d7f5f9be5bb36f319ee6c417"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7811,
+      "end": 7818,
+      "name": [
+        "VERIFICATION_RECEIPT_OUTPUT_KEYS"
+      ],
+      "source_segment": {
+        "bytes": 457,
+        "sha256": "d1409a2352b40d64b02dfb69702471a2ffa2a67e86397ec90e0affb39b44c6f8"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7819,
+      "end": 7819,
+      "name": [
+        "_HEX16"
+      ],
+      "source_segment": {
+        "bytes": 40,
+        "sha256": "bd000b3506c4ae3a807ff7883ed93f53cba7cad36f832885a08d253b6665cd7f"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7820,
+      "end": 7820,
+      "name": [
+        "VERIFICATION_RECEIPT_GENERATOR"
+      ],
+      "source_segment": {
+        "bytes": 63,
+        "sha256": "fe0fd34d19aab6fef0d077ecf974e8cee0964fd7161f8123dd511a7da30181dd"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7823,
+      "end": 7828,
+      "name": "_receipt_core_sha256",
+      "source_segment": {
+        "bytes": 295,
+        "sha256": "8d256aae52a461b207990299f53c896b8bb822cfd49c5c3a8d48ac45d4297bc3"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7831,
+      "end": 7920,
+      "name": "read_verification_receipt",
+      "source_segment": {
+        "bytes": 5664,
+        "sha256": "1eba9842688da668dfea6fc799cdb036b067e2d8f0bee423644ad287d66be997"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7923,
+      "end": 7968,
+      "name": "_receipt_output_pair",
+      "source_segment": {
+        "bytes": 3021,
+        "sha256": "bcb9cb4a05962077f109171c05e339ce207639b2f97be71f23f049a0f171c243"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7971,
+      "end": 8004,
+      "name": "_assert_receipt_bound_to_bundle",
+      "source_segment": {
+        "bytes": 2592,
+        "sha256": "c4e54ec9ff03dafcd6df6f1a70900dbc0e894ea408cfe5e36e7e1a25637592f3"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 8007,
+      "end": 8027,
+      "name": "_assert_ledger_run_bound",
+      "source_segment": {
+        "bytes": 1770,
+        "sha256": "a4d50bffe78c0f0949790f67b887c4140d6812981bceb17015e92ab14aea1986"
+      }
+    },
+    {
+      "file": "tests/test_docs_lint.py",
+      "line": 2448,
+      "end": 2448,
+      "name": [
+        "_CLAIM_SCOPES"
+      ],
+      "source_segment": {
+        "bytes": 52,
+        "sha256": "97ad14a7b9986921e77bdc7e1786143272a6faa93f03b67c2926e01b8e837afc"
+      }
+    },
+    {
+      "file": "tests/test_docs_lint.py",
+      "line": 2451,
+      "end": 2491,
+      "name": "_scope_problems",
+      "source_segment": {
+        "bytes": 2373,
+        "sha256": "7843bcf799d4211b7d6e82664b7d2e38dac115404a48be0e01d8dbefb2c23576"
+      }
+    },
+    {
+      "file": "tests/test_docs_lint.py",
+      "line": 2495,
+      "end": 2499,
+      "name": [
+        "_NO_ACTIVE_CLAIM_EVIDENCE_KEYS"
+      ],
+      "source_segment": {
+        "bytes": 440,
+        "sha256": "55752110dc65b33b7cfd5bce6c84bea84c706fb6fd6ee6fa6f2448fbf4aaf43e"
+      }
+    },
+    {
+      "file": "tests/test_docs_lint.py",
+      "line": 2502,
+      "end": 2554,
+      "name": "_no_active_claim_evidence_problems",
+      "source_segment": {
+        "bytes": 3431,
+        "sha256": "6c4d61cd6cbd64af03a294dd7f35b69fce4c63fec91306d4655c90bdc73d5991"
+      }
+    },
+    {
+      "file": "tests/test_docs_lint.py",
+      "line": 2653,
+      "end": 2741,
+      "name": "test_full_bundle_claims_are_backed_by_a_real_bundle",
+      "source_segment": {
+        "bytes": 5590,
+        "sha256": "63304d6817c5ffc6f47a4a8061f1d321c87de8b8711e689ae59efe9e9e3d920a"
+      }
+    }
+  ],
+  "cases": [
+    {
+      "id": "D00_valid",
+      "scope": "exact AST predicates + typed receipt reader, no attach/write",
+      "lint_problems": [],
+      "generic_full_bundle_lint": {
+        "accepted": true,
+        "result": null
+      },
+      "existing_runtime_out_predicate": {
+        "accepted": true,
+        "result": "results/grid_fit_v5"
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "D01_wrong_out",
+      "scope": "exact AST predicates + typed receipt reader, no attach/write",
+      "lint_problems": [],
+      "generic_full_bundle_lint": {
+        "accepted": true,
+        "result": null
+      },
+      "existing_runtime_out_predicate": {
+        "accepted": false,
+        "type": "PreserveError",
+        "message": "[plan] 'grid_fit_v5' 원장 evidence.out='results/OTHER_RUN' 가 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 다르다 — 다른 실행 기록에 묶음을 붙이지 않는다 (R07)"
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "D02_missing_out",
+      "scope": "exact AST predicates + typed receipt reader, no attach/write",
+      "lint_problems": [
+        "grid_fit_v5: evidence.out 없음",
+        "grid_fit_v5: evidence.out 이 비어 있지 않은 문자열이 아니다: None"
+      ],
+      "generic_full_bundle_lint": {
+        "accepted": true,
+        "result": null
+      },
+      "existing_runtime_out_predicate": {
+        "accepted": false,
+        "type": "PreserveError",
+        "message": "[plan] 'grid_fit_v5' 원장 실행 기록(preservation_status='full_bundle')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)"
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "D03_wrong_receipt_core",
+      "scope": "exact AST predicates + typed receipt reader, no attach/write",
+      "lint_problems": [
+        "grid_fit_v5: 영수증 core sha 가 원장과 다르다 (0000000000000000 ≠ 9e44a15c99d52a63)"
+      ],
+      "generic_full_bundle_lint": {
+        "accepted": false,
+        "type": "AssertionError",
+        "message": "`full_bundle` 주장이 실물과 어긋난다:\n  grid_fit_v5: 영수증 core sha 가 원장 선언과 다르다"
+      },
+      "existing_runtime_out_predicate": {
+        "accepted": true,
+        "result": "results/grid_fit_v5"
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "D04_unknown_scope",
+      "scope": "exact AST predicates + typed receipt reader, no attach/write",
+      "lint_problems": [
+        "grid_fit_v5: claim_scope 가 없거나 계약 enum 이 아니다: 'diagnostic' — ['active_claims', 'no_active_claim'] 중 하나를 명시한다 (누락·모름은 거부)",
+        "g18_2026_09_15: grid_fit_v5 은 claim_scope=None 인데 실행 명부 `executed_legs` 에 있다 — no_active_claim 만 거기 있는다"
+      ],
+      "generic_full_bundle_lint": {
+        "accepted": true,
+        "result": null
+      },
+      "existing_runtime_out_predicate": {
+        "accepted": true,
+        "result": "results/grid_fit_v5"
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "C00_fixed",
+      "scope": "exact AST startability predicate",
+      "accepted": true,
+      "result": null
+    },
+    {
+      "id": "C01_null",
+      "scope": "exact AST startability predicate",
+      "accepted": false,
+      "type": "PreserveError",
+      "message": "[plan] 'review_fixture' 의 계획 `run_spec.grid.discharged_cache_sha256` 이 고정된 hex64 가 아니다: None — 완방상태 캐시를 먼저 만들고(`python -m src.baseline --config <config>`) 계획이 그 바이트를 묶게 하라. null 계획은 첫 시작이 캐시를 저장하는 순간 소유한 재개가 성립하지 않는다 (74차 G74-1)"
+    },
+    {
+      "id": "C02_short",
+      "scope": "exact AST startability predicate",
+      "accepted": false,
+      "type": "PreserveError",
+      "message": "[plan] 'review_fixture' 의 계획 `run_spec.grid.discharged_cache_sha256` 이 고정된 hex64 가 아니다: 'abababababababab' — 완방상태 캐시를 먼저 만들고(`python -m src.baseline --config <config>`) 계획이 그 바이트를 묶게 하라. null 계획은 첫 시작이 캐시를 저장하는 순간 소유한 재개가 성립하지 않는다 (74차 G74-1)"
+    },
+    {
+      "id": "C03_nonhex",
+      "scope": "exact AST startability predicate",
+      "accepted": false,
+      "type": "PreserveError",
+      "message": "[plan] 'review_fixture' 의 계획 `run_spec.grid.discharged_cache_sha256` 이 고정된 hex64 가 아니다: 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz' — 완방상태 캐시를 먼저 만들고(`python -m src.baseline --config <config>`) 계획이 그 바이트를 묶게 하라. null 계획은 첫 시작이 캐시를 저장하는 순간 소유한 재개가 성립하지 않는다 (74차 G74-1)"
+    },
+    {
+      "id": "C04_upper",
+      "scope": "exact AST startability predicate",
+      "accepted": false,
+      "type": "PreserveError",
+      "message": "[plan] 'review_fixture' 의 계획 `run_spec.grid.discharged_cache_sha256` 이 고정된 hex64 가 아니다: 'ABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABABAB' — 완방상태 캐시를 먼저 만들고(`python -m src.baseline --config <config>`) 계획이 그 바이트를 묶게 하라. null 계획은 첫 시작이 캐시를 저장하는 순간 소유한 재개가 성립하지 않는다 (74차 G74-1)"
+    },
+    {
+      "id": "C05_number",
+      "scope": "exact AST startability predicate",
+      "accepted": false,
+      "type": "PreserveError",
+      "message": "[plan] 'review_fixture' 의 계획 `run_spec.grid.discharged_cache_sha256` 이 고정된 hex64 가 아니다: 17 — 완방상태 캐시를 먼저 만들고(`python -m src.baseline --config <config>`) 계획이 그 바이트를 묶게 하라. null 계획은 첫 시작이 캐시를 저장하는 순간 소유한 재개가 성립하지 않는다 (74차 G74-1)"
+    },
+    {
+      "id": "C06_missing_grid",
+      "scope": "exact AST startability predicate",
+      "accepted": false,
+      "type": "PreserveError",
+      "message": "[plan] 'L' 의 계획 `run_spec.grid.discharged_cache_sha256` 이 고정된 hex64 가 아니다: None — 완방상태 캐시를 먼저 만들고(`python -m src.baseline --config <config>`) 계획이 그 바이트를 묶게 하라. null 계획은 첫 시작이 캐시를 저장하는 순간 소유한 재개가 성립하지 않는다 (74차 G74-1)"
+    },
+    {
+      "id": "C07_missing_scope",
+      "scope": "exact AST startability predicate",
+      "accepted": false,
+      "type": "PreserveError",
+      "message": "[plan] 'L' 의 계획에 `claim_scope` 가 없거나 계약 enum 이 아니다: None — ['active_claims', 'no_active_claim'] 중 하나를 적어야 시작한다 (74차 G74-3: finalize 가 이것으로 실행 명부/투영 명부를 고른다)"
+    },
+    {
+      "id": "I00_valid",
+      "scope": "exact PYIDX heredoc with only os._exit and sys streams adapted",
+      "rc": 0,
+      "stdout": "",
+      "stderr": "",
+      "parsed": {
+        "runs": {
+          "preserved": {
+            "payload_index_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "I01_bad_shape",
+      "scope": "exact PYIDX heredoc with only os._exit and sys streams adapted",
+      "rc": 1,
+      "stdout": "",
+      "stderr": "  ✗ 기존 index 가 `runs:` mapping 을 담은 mapping 이 아니다: C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate75_review_20260927\\fixtures02\\I01_bad_shape.yaml — 비우고 다시 쓰지 않는다 (사람이 본다)\n",
+      "parsed": {
+        "runs": 5
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "I02_duplicate_runs",
+      "scope": "exact PYIDX heredoc with only os._exit and sys streams adapted",
+      "rc": 0,
+      "stdout": "",
+      "stderr": "",
+      "parsed": {
+        "runs": {}
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "I03_duplicate_run_name",
+      "scope": "exact PYIDX heredoc with only os._exit and sys streams adapted",
+      "rc": 0,
+      "stdout": "",
+      "stderr": "",
+      "parsed": {
+        "runs": {
+          "same": {
+            "payload_index_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        }
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "I04_duplicate_identity",
+      "scope": "exact PYIDX heredoc with only os._exit and sys streams adapted",
+      "rc": 0,
+      "stdout": "",
+      "stderr": "",
+      "parsed": {
+        "runs": {
+          "same": {
+            "payload_index_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        }
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "W00_atomic_control",
+      "scope": "exact index heredoc; no promoted bundle, fixture files only",
+      "accepted": true,
+      "result": null,
+      "before": {
+        "bytes": 112,
+        "sha256": "e83e5fe19a015df983ffa39aecfc5ccec1add021af6524b22cbb0977b6732960"
+      },
+      "after": {
+        "bytes": 494,
+        "sha256": "74167ac612eeaecadc764c15e7566ac29f0c508cd929a17a52a2857c718ebfff"
+      },
+      "index_unchanged": false,
+      "parsed_after": {
+        "_주의": "RESULTS.md 의 앵커(fits/curves digest)와 여기 값이 같아야 그 보고서의 근거 묶음이다. source_commit 은 **계산을 시작한 코드**의 commit 이다. 이 index 와 묶음 bytes 는 `git add artifacts` 로 함께 커밋되며, 그 artifact commit 의 이름은 자기참조라 여기 쓸 수 없다 (12차 5-b·14차 8).",
+        "source_commit": null,
+        "runs": {
+          "preserved": {
+            "payload_index_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      },
+      "output": "\n인덱스: C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate75_review_20260927\\fixtures02\\W00_atomic_control\\artifact_index.yaml (0개 승격 · 전체 1개 묶음, full 64자리 digest)\n"
+    },
+    {
+      "id": "W01_replace_failure",
+      "scope": "exact index heredoc; no promoted bundle, fixture files only",
+      "accepted": false,
+      "type": "OSError",
+      "message": "[Errno 5] reviewer injected index replace failure",
+      "before": {
+        "bytes": 112,
+        "sha256": "e83e5fe19a015df983ffa39aecfc5ccec1add021af6524b22cbb0977b6732960"
+      },
+      "after": {
+        "bytes": 112,
+        "sha256": "e83e5fe19a015df983ffa39aecfc5ccec1add021af6524b22cbb0977b6732960"
+      },
+      "index_unchanged": true,
+      "parsed_after": {
+        "runs": {
+          "preserved": {
+            "payload_index_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      },
+      "output": ""
+    },
+    {
+      "id": "W02_duplicate_input_rewrite",
+      "scope": "exact index heredoc; no promoted bundle, fixture files only",
+      "accepted": true,
+      "result": null,
+      "before": {
+        "bytes": 122,
+        "sha256": "0667faabba5d158b279928f55ef53d3accbc234dfec5476fe6b73b98cb2ba132"
+      },
+      "after": {
+        "bytes": 391,
+        "sha256": "1fd9b61864c8389813c6e082d0f9e46b3534e7a250814f3c2ec4bf54c6982817"
+      },
+      "index_unchanged": false,
+      "parsed_after": {
+        "_주의": "RESULTS.md 의 앵커(fits/curves digest)와 여기 값이 같아야 그 보고서의 근거 묶음이다. source_commit 은 **계산을 시작한 코드**의 commit 이다. 이 index 와 묶음 bytes 는 `git add artifacts` 로 함께 커밋되며, 그 artifact commit 의 이름은 자기참조라 여기 쓸 수 없다 (12차 5-b·14차 8).",
+        "source_commit": null,
+        "runs": {}
+      },
+      "output": "\n인덱스: C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate75_review_20260927\\fixtures02\\W02_duplicate_input_rewrite\\artifact_index.yaml (0개 승격 · 전체 0개 묶음, full 64자리 digest)\n"
+    },
+    {
+      "id": "S0",
+      "scope": "exact shell finalizer wrapper/footer with injected index-command status",
+      "injected_index_rc": 0,
+      "shell_returncode": 0,
+      "stdout": "\n요청 1개 · 검증 가능 1개 · 불완전 0개 · 없음 0개 · 합계 \n",
+      "stderr": "C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/gate75_review_20260927/fixtures02/boundary_rc0.sh: line 13: du: command not found\nC:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/gate75_review_20260927/fixtures02/boundary_rc0.sh: line 13: cut: command not found\nC:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/gate75_review_20260927/fixtures02/boundary_rc0.sh: line 15: cat: command not found\n",
+      "script": "fixtures02/boundary_rc0.sh"
+    },
+    {
+      "id": "S17",
+      "scope": "exact shell finalizer wrapper/footer with injected index-command status",
+      "injected_index_rc": 17,
+      "shell_returncode": 0,
+      "stdout": "\n요청 1개 · 검증 가능 1개 · 불완전 0개 · 없음 0개 · 합계 \n",
+      "stderr": "C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/gate75_review_20260927/fixtures02/boundary_rc17.sh: line 13: du: command not found\nC:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/gate75_review_20260927/fixtures02/boundary_rc17.sh: line 13: cut: command not found\nC:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/gate75_review_20260927/fixtures02/boundary_rc17.sh: line 15: cat: command not found\n",
+      "script": "fixtures02/boundary_rc17.sh"
+    }
+  ],
+  "case_count": 23,
+  "adapters": [
+    "src.io.source_digest uses independently computed fixed source digest",
+    "tools.preserve is allowlisted AST-only namespace",
+    "PYIDX os._exit -> BaseException; streams captured",
+    "index writer uses names=[]; two unused scientific imports replaced by raising adapters",
+    "index replace failure injected only in reviewer fixture",
+    "shell archive/index command replaced with exit 0 or 17; exact footer retained"
+  ],
+  "limits": {
+    "whole_subject_module_imports": 0,
+    "whole_subject_program_executions": 0,
+    "full_suite_runs": 0,
+    "grid_fit_solve_archive_restore_class_changes": 0,
+    "production_file_writes": 0,
+    "source_test_fixture_writes_only": true
+  }
+}
