@@ -1,0 +1,28 @@
+# 모든 브랜치에서 돈다 (ADR 0001: 기본 브랜치가 아니라는 이유로 검사가 빠지면 안 된다).
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    # 다른 프로젝트가 사는 브랜치(bml, dft…)에는 이 파일이 없으므로 여기서만 돈다.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run data:check
+      - run: npm run typecheck
+      - run: npm run build
+      - name: 커밋 ↔ docs/log.md
+        run: ./tools/nihon feed

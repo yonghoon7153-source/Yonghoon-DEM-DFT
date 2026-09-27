@@ -1,0 +1,201 @@
+#!/usr/bin/env bash
+#
+# nihon — にほんちず 한 줄 실행기 (bml 과 같은 방식)
+#
+#   nihon            최신으로 맞추고 개발 서버를 띄운다 (http://localhost:5004)
+#   nihon dev        같은 것 (명시적으로)
+#   nihon build      빌드 → dist/
+#   nihon preview    빌드 결과를 같은 주소로 미리보기
+#   nihon check      커밋 전 검사 (데이터 검증 · 타입 · 빌드)
+#   nihon pull       실행 없이 최신으로만 맞춘다 (= nihon sync)
+#   nihon geo        지도 데이터를 다시 만든다 (data/raw → public/geo)
+#   nihon shots      스크린샷 QA (Playwright 가 있을 때)
+#   nihon feed       이 브랜치에서 무슨 일이 있었나 (커밋 ↔ docs/log.md 짝)
+#   nihon share      배포 주소와 Cloudflare Pages 절차
+#   nihon doctor     환경 점검 — 안 되면 여기부터
+#   nihon install    이 명령을 PATH 에 등록한다 (1회)
+#
+# 이 프로젝트의 집은 브랜치 `nihonchizu` 다 (ADR 0001). 실행 전에 항상
+# pull --rebase --autostash 를 먼저 한다. 작업 중이던 변경은 자동으로 넣었다 뺀다.
+
+set -uo pipefail
+
+HOME_BRANCH="nihonchizu"
+PORT="${NIHON_PORT:-5004}"
+
+resolve() {
+  local target="$1"
+  while [ -L "$target" ]; do
+    local link
+    link="$(readlink "$target")"
+    case "$link" in
+      /*) target="$link" ;;
+      *)  target="$(cd -P "$(dirname "$target")" && pwd)/$link" ;;
+    esac
+  done
+  printf '%s/%s' "$(cd -P "$(dirname "$target")" && pwd)" "$(basename "$target")"
+}
+SELF="$(resolve "${BASH_SOURCE[0]}")"
+ROOT="$(cd "$(dirname "$SELF")/.." && pwd)"
+
+if [ -t 1 ]; then BLUE=$'\033[34m'; GREEN=$'\033[32m'; YELLOW=$'\033[33m'; RED=$'\033[31m'; DIM=$'\033[2m'; OFF=$'\033[0m'
+else BLUE=; GREEN=; YELLOW=; RED=; DIM=; OFF=; fi
+say()  { printf '%s\n' "$*"; }
+step() { printf '%s▸%s %s\n' "$BLUE" "$OFF" "$*"; }
+ok()   { printf '%s✓%s %s\n' "$GREEN" "$OFF" "$*"; }
+warn() { printf '%s!%s %s\n' "$YELLOW" "$OFF" "$*"; }
+die()  { printf '%s✕%s %s\n' "$RED" "$OFF" "$*" >&2; exit 1; }
+
+# --- docs/log.md 판정 (훅과 feed 가 같은 함수를 쓴다) --------------------------
+# 커밋 제목 `type: 제목` 에 대해 `## [날짜] type | 제목` 이 있으면 참.
+log_has_entry() {
+  local subject="$1" log="${2:-$ROOT/docs/log.md}"
+  [ -f "$log" ] || return 1
+  local title="${subject#*: }"
+  [ "$title" = "$subject" ] && title="$subject"
+  grep -F -- "| $title" "$log" >/dev/null 2>&1
+}
+[ "${NIHON_SOURCE_ONLY:-}" = "1" ] && return 0 2>/dev/null
+
+cd "$ROOT" || die "저장소 폴더를 찾을 수 없습니다: $ROOT"
+
+# --- 집 브랜치 확인 -------------------------------------------------------------
+guard_branch() {
+  local cur
+  cur="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo '?')"
+  if [ "$cur" != "$HOME_BRANCH" ]; then
+    warn "지금 브랜치는 '$cur' 입니다. にほんちず 의 집은 '$HOME_BRANCH' 입니다."
+    say  "  이 폴더가 다른 프로젝트(bml, dft)라면 checkout 하지 말고 worktree 로 나누세요:"
+    say  "    git worktree add ../nihonchizu $HOME_BRANCH"
+    [ -f "$ROOT/data/prefectures.json" ] || die "이 폴더에 にほんちず 파일이 없습니다."
+  fi
+}
+
+ensure_hooks_path() {
+  local hp
+  hp="$(git config core.hooksPath 2>/dev/null || true)"
+  [ "$hp" = ".githooks" ] || git config core.hooksPath .githooks
+}
+
+sync_repo() {
+  step "최신으로 맞추는 중 (git pull --rebase --autostash)"
+  if git pull --rebase --autostash --quiet; then ok "저장소 최신"; else
+    warn "pull 에 실패했습니다. 충돌이면 'git status' 로 확인하세요."; fi
+}
+
+need_node() {
+  command -v node >/dev/null 2>&1 || die "node 가 없습니다. Node 22 이상을 설치하세요 (README 참고)."
+  local major
+  major="$(node -p 'process.versions.node.split(".")[0]')"
+  [ "$major" -ge 20 ] || die "Node $major 은 너무 낮습니다 (20 이상)."
+}
+
+deps_fingerprint() { sha256sum package-lock.json 2>/dev/null | cut -c1-16; }
+ensure_deps() {
+  need_node
+  local stamp="node_modules/.nihon-stamp" want
+  want="$(deps_fingerprint)"
+  if [ -d node_modules ] && [ -f "$stamp" ] && [ "$(cat "$stamp")" = "$want" ]; then return 0; fi
+  step "의존성 설치 (npm ci)"
+  npm ci --no-audit --no-fund --silent || die "npm ci 실패"
+  printf '%s' "$want" > "$stamp"
+  ok "의존성 준비"
+}
+
+open_browser() {
+  local url="$1"
+  if grep -qi microsoft /proc/version 2>/dev/null; then
+    (command -v wslview >/dev/null && wslview "$url" >/dev/null 2>&1) || (command -v explorer.exe >/dev/null && explorer.exe "$url" >/dev/null 2>&1) || true
+  elif command -v xdg-open >/dev/null 2>&1; then xdg-open "$url" >/dev/null 2>&1 || true
+  elif command -v open >/dev/null 2>&1; then open "$url" >/dev/null 2>&1 || true
+  fi
+}
+
+cmd_dev() {
+  guard_branch; ensure_hooks_path; sync_repo; ensure_deps
+  step "개발 서버 → http://localhost:$PORT"
+  (sleep 2; open_browser "http://localhost:$PORT") &
+  exec npx vite --port "$PORT" --strictPort --host
+}
+cmd_build()   { guard_branch; ensure_deps; step "빌드"; npm run build && ok "dist/ 준비"; }
+cmd_preview() { guard_branch; ensure_deps; [ -d dist ] || cmd_build; step "미리보기 → http://localhost:$PORT"; exec npx vite preview --port "$PORT" --strictPort --host; }
+cmd_check()   { guard_branch; ensure_deps; step "데이터 검증"; npm run data:check || exit 1; step "타입 검사"; npm run typecheck || exit 1; step "빌드"; npm run build >/dev/null || exit 1; ok "check 통과"; }
+cmd_geo()     { ensure_deps; node scripts/build-geo.mjs && ok "지도 데이터 갱신"; }
+cmd_shots() {
+  ensure_deps
+  [ -f tools/shots.mjs ] || die "tools/shots.mjs 가 없습니다."
+  node tools/shots.mjs "$@"
+}
+
+cmd_feed() {
+  local n=0 missing=0
+  say "커밋 ↔ docs/log.md (최근 30개)"
+  while IFS= read -r subject; do
+    n=$((n+1))
+    if log_has_entry "$subject"; then printf '  %s✓%s %s\n' "$GREEN" "$OFF" "$subject"
+    else printf '  %s✕%s %s\n' "$RED" "$OFF" "$subject"; missing=$((missing+1)); fi
+  done < <(git log --format=%s -n 30 | grep -vE '^(Merge|Revert|fixup!|squash!) ')
+  [ "$missing" -eq 0 ] && ok "기록 빠진 커밋 없음" || warn "기록 없는 커밋 $missing 개 — docs/log.md 에 같은 제목으로 한 줄씩"
+}
+
+cmd_share() {
+  cat <<TXT
+にほんちず 는 정적 사이트라 서버도 터널도 필요 없다 (ADR 0004).
+
+  운영 주소 (Cloudflare Pages)   https://nihon.ayh.kr   ← 대시보드에서 연결한 뒤
+  임시 대안 (GitHub Pages)       Actions 탭 → "Deploy to GitHub Pages" 수동 실행
+
+Cloudflare Pages 처음 연결하기 (한 번만, 대시보드에서):
+  1. Workers & Pages → Create → Pages → Connect to Git → 이 저장소
+  2. Production branch: $HOME_BRANCH · Build command: npm run build · Output: dist
+  3. Custom domains → nihon.ayh.kr (ayh.kr 이 Cloudflare DNS 면 CNAME 자동, 아니면 등록기관에서 nihon → <프로젝트>.pages.dev CNAME)
+그 뒤로는 이 브랜치에 push 할 때마다 자동 배포된다.
+TXT
+}
+
+cmd_doctor() {
+  say "환경 점검"
+  command -v git >/dev/null && ok "git $(git --version | awk '{print $3}')" || warn "git 없음"
+  if command -v node >/dev/null; then ok "node $(node --version)"; else warn "node 없음 — Node 22 를 설치하세요"; fi
+  command -v npm >/dev/null && ok "npm $(npm --version)" || warn "npm 없음"
+  local cur; cur="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo '?')"
+  [ "$cur" = "$HOME_BRANCH" ] && ok "브랜치 $cur" || warn "브랜치 $cur (집은 $HOME_BRANCH)"
+  if head -c 200 "$SELF" | grep -q $'\r'; then warn "tools/nihon 이 CRLF 입니다 — git config --global core.autocrlf input 후 다시 받으세요"; else ok "줄바꿈 LF"; fi
+  [ -d node_modules ] && ok "node_modules 있음" || warn "node_modules 없음 (nihon 이 알아서 설치합니다)"
+  [ "$(git config core.hooksPath)" = ".githooks" ] && ok "git hooks 연결됨" || warn "git hooks 미연결 — 'make setup-git' 또는 그냥 'nihon' 한 번"
+  grep -qi microsoft /proc/version 2>/dev/null && ok "WSL 감지 — 브라우저는 Windows 쪽으로 엽니다"
+  return 0
+}
+
+cmd_install() {
+  local bin="$HOME/.local/bin"
+  mkdir -p "$bin"
+  ln -sf "$SELF" "$bin/nihon"
+  ok "$bin/nihon → $SELF"
+  case ":$PATH:" in
+    *":$bin:"*) say "이제 어디서나 'nihon' 을 칠 수 있습니다." ;;
+    *) warn "PATH 에 $bin 이 없습니다. 아래 한 줄을 ~/.bashrc 에 넣고 새 터미널을 여세요:"; say "    export PATH=\"\$HOME/.local/bin:\$PATH\"" ;;
+  esac
+}
+
+usage() { sed -n '2,20p' "$SELF" | sed 's/^# \{0,1\}//'; }
+
+main() {
+  local cmd="${1:-dev}"; shift || true
+  case "$cmd" in
+    dev|"")     cmd_dev ;;
+    build)      cmd_build ;;
+    preview)    cmd_preview ;;
+    check)      cmd_check ;;
+    pull|sync)  guard_branch; sync_repo ;;
+    geo)        cmd_geo ;;
+    shots)      cmd_shots "$@" ;;
+    feed)       cmd_feed ;;
+    share)      cmd_share ;;
+    doctor)     cmd_doctor ;;
+    install)    cmd_install ;;
+    -h|--help|help) usage ;;
+    *) die "모르는 명령: $cmd (nihon help)" ;;
+  esac
+}
+main "$@"

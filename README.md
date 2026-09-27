@@ -2,9 +2,42 @@
 
 일본 47도도부현(都道府県)을 눌러보며 익히는 인터랙티브 지도.
 내가 Canva 마인드맵에 정리해 둔 메모가 각 県 패널에 **마인드맵 트리 그대로** 붙어 있고,
-県을 누르면 거기 사는 친구(오리지널 마스코트)가 튀어나오는 이스터에그가 있다.
+県을 누르면 그 지역의 실제 마스코트가 튀어나오는 이스터에그가 있다.
 
 > 다음 단계: 노션에 모아둔 일본어 단어와 연결 (같은 데이터 구조 위에 페이지를 추가하면 됨).
+
+## 빠른 시작
+
+> **브랜치 주의 — 이 저장소에는 프로젝트가 여럿 있습니다.** 브랜치마다 내용이 완전히 다릅니다.
+>
+> | 브랜치 | 내용 | 실행 | 포트 |
+> | --- | --- | --- | --- |
+> | `nihonchizu` | **にほんちず (이 프로젝트)** | `nihon` | 5004 |
+> | `claude/battery-charge-discharge-webapp-dq4ja3` | 충방전 워크벤치 (bml) | `bml` | 5003 |
+> | `claude/friendly-meitner-lldvar` | DFT 판 | `dft` | 5001 |
+>
+> **이 프로젝트의 집은 `nihonchizu` 브랜치입니다.** `main` 은 이 프로젝트가 아니고 머지하지 않습니다
+> ([ADR 0001](docs/adr/0001-branch-is-the-home.md)). `-b` 로 브랜치를 지정해 클론하는 것이 정상 절차입니다.
+> 한 폴더에서 다른 프로젝트 브랜치와 오가지 마세요 — 둘 다 쓴다면 `git worktree` 로 폴더를 나눕니다.
+
+```bash
+git clone -b nihonchizu https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git nihonchizu
+cd nihonchizu
+./tools/nihon install     # nihon 을 PATH 에 등록 (1회)
+nihon                     # 최신화 → 의존성 → 개발 서버 → http://localhost:5004
+```
+
+이미 bml 이나 dft 를 받아 둔 폴더가 있다면, 그 저장소에 워크트리로 붙입니다:
+
+```bash
+git -C ~/Yonghoon-DEM-DFT fetch origin nihonchizu
+git -C ~/Yonghoon-DEM-DFT worktree add ~/nihonchizu nihonchizu
+cd ~/nihonchizu && ./tools/nihon install && nihon
+```
+
+Windows 는 WSL 안에서 위 그대로 합니다 (`git config --global core.autocrlf input` 을 먼저 —
+CRLF 로 받으면 스크립트가 "bad interpreter" 로 죽습니다). `tools/nihon.cmd` 를 Windows PATH 에
+두면 PowerShell 에서도 `nihon` 을 칠 수 있습니다. 문제가 나면 `nihon doctor`.
 
 ## 어떻게 생겼나
 
@@ -15,11 +48,6 @@
 | 図鑑 (스티커 도감) | 폰 |
 |---|---|
 | ![zukan](docs/screenshots/zukan.png) | ![mobile](docs/screenshots/mobile.png) |
-
-## 바로 보기
-
-- 로컬: `npm install` → `npm run dev` → http://localhost:5173
-- 배포: `main` 또는 이 브랜치에 push 하면 GitHub Actions 가 GitHub Pages 로 배포한다 (아래 "배포" 참고).
 
 ## 무엇이 들어있나
 
@@ -81,6 +109,8 @@ npm run geo:build     # data/raw/japan.topojson → public/geo/japan.topo.json +
 ## 코드 구조
 
 ```
+tools/nihon             한 줄 실행기 (sync → deps → dev) · tools/shots.mjs 스크린샷 QA
+docs/                   adr/ 설계 결정 · CHECKLIST.md 요청사항 · log.md 작업 로그 · index.md
 index.html              마크업 (헤더·지도·패널·모달)
 src/main.ts             상태·이벤트 연결, 해시 라우팅
 src/map/map.ts          d3-geo + d3-zoom 지도, 라벨 배치, 스티커
@@ -99,39 +129,35 @@ scripts/                geo 빌드, 데이터 검증
 
 | 명령 | 설명 |
 |------|------|
-| `npm run dev` | 개발 서버 |
-| `npm run build` | 데이터 검사 + 타입체크 없이 빌드 (`dist/`) |
-| `npm run typecheck` | `tsc --noEmit` |
-| `npm run data:check` | JSON 데이터 교차 검증 |
-| `npm run geo:build` | 지도 데이터 재생성 |
-| `npm run preview` | 빌드 결과 미리보기 |
+| `nihon` | 최신화 + 의존성 + 개발 서버 (http://localhost:5004) |
+| `nihon check` | 커밋 전 검사: 데이터 검증 · 타입 · 빌드 |
+| `nihon build` / `nihon preview` | 빌드(`dist/`) / 미리보기 |
+| `nihon geo` | 지도 데이터 재생성 |
+| `nihon feed` | 커밋 ↔ `docs/log.md` 짝 맞추기 |
+| `nihon share` | 배포 주소와 Cloudflare Pages 절차 |
+| `nihon doctor` | 환경 점검 |
+| `make help` | 같은 것들의 Makefile 판 (`make sync`, `make check` …) |
 
-## 배포
+커밋 제목은 `type: 제목` 으로 쓰고, 같은 제목을 `docs/log.md` 에 한 줄 남긴다 (훅이 알려 준다).
 
-### GitHub Pages (기본, 무료)
+## 배포 — `https://nihon.ayh.kr`
 
-1. 저장소 **Settings → Pages → Build and deployment → Source** 를 **GitHub Actions** 로 한 번만 바꾼다.
-2. 이 브랜치(`claude/japan-map-webpage-l0bm3e`)에서 바로 배포하려면 **Settings → Environments → github-pages → Deployment branches** 에
-   이 브랜치(또는 `claude/*`)를 추가한다. 기본값은 `main` 만 허용이라, 그 전까지는 deploy 잡이 "not allowed to deploy" 로 실패한다.
-3. 그 뒤 push 하면 `.github/workflows/deploy.yml` 이 빌드해서 올린다 (Actions 탭에서 확인).
-4. 주소: `https://<계정>.github.io/<저장소 이름>/` (BASE_PATH 는 워크플로가 자동으로 넣는다).
+정적 사이트라 서버도 터널도 없다 ([ADR 0004](docs/adr/0004-share-through-cloudflare-pages.md)).
+운영은 **Cloudflare Pages**, 대시보드에서 한 번만 연결한다:
 
-### Cloudflare Pages + 우리 도메인 (추천)
+1. Cloudflare → **Workers & Pages → Create → Pages → Connect to Git** → 이 저장소.
+2. Production branch **`nihonchizu`** · Build command `npm run build` · Build output directory `dist` · 환경변수 없음.
+3. 프로젝트 → **Custom domains → Set up a custom domain → `nihon.ayh.kr`**.
+   `ayh.kr` 이 Cloudflare DNS 에 있으면 CNAME 이 자동으로 들어가고, 아니면 등록기관 DNS 에
+   `nihon` CNAME → `<프로젝트 이름>.pages.dev` 를 넣는다.
+4. 이후 이 브랜치에 push 할 때마다 자동 배포. `public/_headers` 의 캐시·보안 헤더도 적용된다.
 
-`bml` 워크벤치(ADR 0031)에서 도메인 `bmlwork.kr` 의 DNS 를 이미 Cloudflare 에 올려 두었으므로,
-이 사이트는 **터널 없이** Cloudflare Pages 에 올리고 서브도메인만 붙이면 된다. 정적 사이트라
-`cloudflared` 의 7844 포트 문제도 없다.
-
-1. Cloudflare 대시보드 → **Workers & Pages → Create → Pages → Connect to Git** → 이 저장소.
-2. Production branch: `main` (이 브랜치를 미리 보려면 Preview branch 에 `claude/japan-map-webpage-l0bm3e` 추가).
-   Build command `npm run build`, Build output directory `dist`, 환경변수 없음 (루트 경로 배포).
-3. 프로젝트 → **Custom domains → Set up a custom domain** → 예: `nihon.bmlwork.kr`
-   (같은 계정의 zone 이라 CNAME 이 자동으로 들어간다).
-4. 끝. 이후 push 할 때마다 자동 배포. `public/_headers` 의 캐시/보안 헤더도 같이 적용된다.
+GitHub Pages 는 수동 실행용 대안으로 남겨 두었다 (`.github/workflows/deploy.yml`, 저장소 설정에서
+Pages Source = GitHub Actions 와 `github-pages` 환경의 Deployment branches 에 `nihonchizu` 허용 필요).
 
 ## 출처 · 라이선스
 
 - 지도 경계: [地球地図日本（国土地理院）](https://www.gsi.go.jp/kankyochiri/gm_jpn.html) — [dataofjapan/land](https://github.com/dataofjapan/land) 변환본. 비영리 이용 시 출처 표기 (사이트 하단에 표기).
 - 폰트: Google Fonts (OFL).
-- 마스코트: 이 프로젝트를 위해 그린 오리지널 캐릭터 (실존 캐릭터를 흉내내지 않음).
+- 마스코트: 실제 ご当地キャラクター. 각 캐릭터의 권리는 각 자치체·단체에 있다. 공식 일러스트는 규정이 허용하는 범위에서 크레딧과 함께 쓰고(예: ©2010熊本県くまモン), 그 밖에는 이 프로젝트가 그린 닮은꼴에 「공식 그림 아님」 을 표시한다 ([ADR 0003](docs/adr/0003-real-mascots-with-credits.md)).
 - 県 기본 정보(名物·観光·ひとこと)는 일반 상식 수준으로 정리한 것 — 틀린 게 있으면 `data/prefectures.json` 에서 고치면 된다.

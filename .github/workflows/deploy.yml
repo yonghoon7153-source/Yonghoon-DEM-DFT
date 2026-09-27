@@ -1,10 +1,9 @@
-# Builds the site and publishes it to GitHub Pages.
-# One-time setup in the repo: Settings → Pages → "Build and deployment" → Source: GitHub Actions.
+# GitHub Pages 배포 — 수동 실행 전용 (운영은 Cloudflare Pages, ADR 0004).
+# 쓰려면: Settings → Pages → Source: GitHub Actions, 그리고 Settings → Environments → github-pages →
+# Deployment branches 에 nihonchizu 를 허용한 뒤 Actions 탭에서 Run workflow.
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches: [main, claude/japan-map-webpage-l0bm3e]
   workflow_dispatch:
 
 permissions:
@@ -26,15 +25,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run typecheck
-      # Project site → served from /<repo-name>/ ; BASE_PATH is read by vite.config.ts
       - run: npm run build
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
-
   deploy:
     needs: build
     runs-on: ubuntu-latest

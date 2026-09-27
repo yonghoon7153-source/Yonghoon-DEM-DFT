@@ -1,0 +1,12 @@
+# 작업 로그
+
+append-only. 형식: `## [YYYY-MM-DD] action | subject` — 커밋 제목 `action: subject` 와 같은 제목.
+충돌이 나면 양쪽 항목을 모두 남긴다. 현황은 `nihon feed`.
+
+## [2026-09-27] create | Add にほんちず: interactive Japan prefecture map with mind-map notes
+## [2026-09-27] fix | Keep the mascot clear of the mobile speech strip; reserve room for the legend on phones
+## [2026-09-27] docs | Add screenshots to the README
+## [2026-09-27] docs | README: note the github-pages environment branch policy
+## [2026-09-27] docs | README: Cloudflare Pages + bmlwork.kr subdomain recipe
+## [2026-09-27] create | Research real prefecture mascots (staging data) and start the request checklist
+## [2026-09-27] create | 집 브랜치 nihonchizu — bml 관례(nihon 실행기·Makefile·ADR 4건·로그·훅·전 브랜치 CI)

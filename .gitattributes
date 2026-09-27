@@ -1,0 +1,18 @@
+# Scripts and configs keep LF endings. A CRLF checkout on Windows makes WSL's bash
+# fail with "bad interpreter: No such file or directory", which says nothing about line endings.
+* text=auto eol=lf
+tools/nihon         text eol=lf
+.githooks/*         text eol=lf
+*.sh                text eol=lf
+*.mjs               text eol=lf
+*.ts                text eol=lf
+*.css               text eol=lf
+*.json              text eol=lf
+*.md                text eol=lf
+*.yml               text eol=lf
+Makefile            text eol=lf
+# Windows batch files are the one thing that wants CRLF.
+*.cmd               text eol=crlf
+*.bat               text eol=crlf
+*.png               binary
+*.pdf               binary

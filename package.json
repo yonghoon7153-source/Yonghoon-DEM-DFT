@@ -1,16 +1,17 @@
 {
-  "name": "nihon-map",
+  "name": "nihonchizu",
   "private": true,
   "version": "0.1.0",
   "description": "일본 47도도부현을 눌러보며 익히는 인터랙티브 지도 (日本地図で学ぶ)",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 5004 --strictPort",
     "build": "npm run data:check && vite build",
-    "preview": "vite preview",
+    "preview": "vite preview --port 5004 --strictPort",
     "typecheck": "tsc --noEmit",
     "geo:build": "node scripts/build-geo.mjs",
-    "data:check": "node scripts/validate-data.mjs"
+    "data:check": "node scripts/validate-data.mjs",
+    "check": "npm run data:check && npm run typecheck && vite build"
   },
   "license": "MIT",
   "dependencies": {

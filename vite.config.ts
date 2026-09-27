@@ -9,5 +9,6 @@ export default defineConfig({
     sourcemap: false,
     assetsInlineLimit: 0,
   },
-  server: { port: 5173, host: true },
+  server: { port: 5004, host: true },
+  preview: { port: 5004, host: true },
 });
