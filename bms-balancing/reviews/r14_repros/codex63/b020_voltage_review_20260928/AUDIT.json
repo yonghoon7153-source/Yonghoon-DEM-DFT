@@ -1,0 +1,157 @@
+{
+  "decision": "ACCEPT_BOUNDED_ALGEBRAIC_DECOMPOSITION",
+  "inputs": {
+    "COMSOL63_B020_VOLTAGE_DECOMPOSITION_20260928.zip": {
+      "bytes": 798522,
+      "sha256": "670ffc01cc9c76c5efa15da322c744cb370f731108a538bc0b31de3075da3909"
+    },
+    "B020_voltage_decomposition.pdf": {
+      "bytes": 103075,
+      "sha256": "7feef0d55b3b2882179e4e69705220bebd34ebc7d3f6f99da45a8fe6e0967352"
+    },
+    "COMSOL63_B020_EVIDENCE_RECONCILIATION_REVIEW_20260927.zip": {
+      "bytes": 43524058,
+      "sha256": "ecab51759d01ff6f82ffd9f5a9e39c3b1caf0202a40be18040c9d477d19b4c5d"
+    },
+    "b020_results_visual_summary_20260928.zip": {
+      "bytes": 685536,
+      "sha256": "16ebd1858a7d3235e44207715600861eaa63017a3c665f4fca2d663273a8ca77"
+    }
+  },
+  "package_payloads": 16,
+  "manifest_sha256": "b31a28d37a5c9f09eb3f28b1abebb3590063f98952211317179a214bb53cb3f5",
+  "CRC_exact_set_safe_names": true,
+  "standalone_pdf_identical": true,
+  "source_records_in_package_verified": 5,
+  "previously_received_sources_byte_matched": [
+    "source/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/preflight_boundary1.csv",
+    "source/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/preflight_boundary4.csv",
+    "source/outputs/b020_results_visual_summary_20260928/time_series_0_5s.csv",
+    "source/outputs/b020_offline_review_20260927/PRESERVATION_BEFORE.json"
+  ],
+  "sender_before_after_records_equal": true,
+  "remote_preservation_independently_observed": false,
+  "time_rows": 987,
+  "numeric_columns": 26,
+  "all_exported_numeric_cells_exactly_recomputed": true,
+  "N_P_contributions_exact_sum": true,
+  "summary_verified": true,
+  "rounded_time_table_cells": 16,
+  "endpoint_components": {
+    "Eeq": {
+      "initial_P_minus_N_V": "2.1653333621388813",
+      "final_P_minus_N_V": "2.288896319176002",
+      "change_mV": "123.5629570371207000",
+      "signed_share_of_net_change_percent": "101.64375514825941665876318974007089252529863667189"
+    },
+    "etaMid": {
+      "initial_P_minus_N_V": "0.062714519252576429",
+      "final_P_minus_N_V": "0.059942442102009608",
+      "change_mV": "-2.772077150566821000",
+      "signed_share_of_net_change_percent": "-2.2803301078303844435775277256823291876578094027007"
+    },
+    "phiL": {
+      "initial_P_minus_N_V": "0.0025637076217098",
+      "final_P_minus_N_V": "0.0033375582558747",
+      "change_mV": "0.7738506341649000",
+      "signed_share_of_net_change_percent": "0.63657495957103277076845609699500455572670890025347"
+    }
+  },
+  "electrode_components": [
+    {
+      "term": "Eeq",
+      "electrode": "N",
+      "boundary_id": 1,
+      "initial_V": "1.4130534126086267",
+      "final_V": "1.289900852421837",
+      "temporal_change_mV": "-123.1525601867897000",
+      "voltage_sign": -1,
+      "signed_voltage_contribution_mV": "123.1525601867897000"
+    },
+    {
+      "term": "Eeq",
+      "electrode": "P",
+      "boundary_id": 4,
+      "initial_V": "3.578386774747508",
+      "final_V": "3.578797171597839",
+      "temporal_change_mV": "0.410396850331000",
+      "voltage_sign": 1,
+      "signed_voltage_contribution_mV": "0.410396850331000"
+    },
+    {
+      "term": "etaMid",
+      "electrode": "N",
+      "boundary_id": 1,
+      "initial_V": "-0.054511483232832836",
+      "final_V": "-0.051954927540709406",
+      "temporal_change_mV": "2.556555692123430000",
+      "voltage_sign": -1,
+      "signed_voltage_contribution_mV": "-2.556555692123430000"
+    },
+    {
+      "term": "etaMid",
+      "electrode": "P",
+      "boundary_id": 4,
+      "initial_V": "0.008203036019743593",
+      "final_V": "0.007987514561300202",
+      "temporal_change_mV": "-0.215521458443391000",
+      "voltage_sign": 1,
+      "signed_voltage_contribution_mV": "-0.215521458443391000"
+    },
+    {
+      "term": "phiL",
+      "electrode": "N",
+      "boundary_id": 1,
+      "initial_V": "-1.3585419293757939",
+      "final_V": "-1.2379459248811275",
+      "temporal_change_mV": "120.5960044946664000",
+      "voltage_sign": -1,
+      "signed_voltage_contribution_mV": "-120.5960044946664000"
+    },
+    {
+      "term": "phiL",
+      "electrode": "P",
+      "boundary_id": 4,
+      "initial_V": "-1.3559782217540841",
+      "final_V": "-1.2346083666252528",
+      "temporal_change_mV": "121.3698551288313000",
+      "voltage_sign": 1,
+      "signed_voltage_contribution_mV": "121.3698551288313000"
+    }
+  ],
+  "ranked_signed_contributions_mV": [
+    [
+      "Eeq_N",
+      "123.1525601867897000"
+    ],
+    [
+      "phiL_P",
+      "121.3698551288313000"
+    ],
+    [
+      "Eeq_P",
+      "0.410396850331000"
+    ],
+    [
+      "etaMid_P",
+      "-0.215521458443391000"
+    ],
+    [
+      "etaMid_N",
+      "-2.556555692123430000"
+    ],
+    [
+      "phiL_N",
+      "-120.5960044946664000"
+    ]
+  ],
+  "voltage_change_mV": "121.5647305207187000",
+  "max_identity_residual_V": "6.82E-16",
+  "max_change_residual_V": "9.11E-16",
+  "max_direct_surface_difference_V": "0E-16",
+  "PDF_pages": 1,
+  "source_inputs_unchanged": true,
+  "COMSOL_JVM_received_code_calls": 0,
+  "original_overall": "INCOMPLETE",
+  "new_execution_approved": false
+}

@@ -1,0 +1,37 @@
+{
+  "scope": "Reviewer report and two sendable documents; no new execution approval",
+  "files": {
+    "REVIEW_KO.md": {
+      "bytes": 6451,
+      "sha256": "6a00f9ac82c08f92dd1eca3c07bbf66f1f3b119b0affa83607b861d412b3e766"
+    },
+    "CLAUDE_UPDATE_KO.md": {
+      "bytes": 4254,
+      "sha256": "145e60ce9f84087c672a2ae2d59af27260f75ff0d2e757179ea29833d5f812af"
+    },
+    "CODEX_NEXT_TASK_KO.md": {
+      "bytes": 6610,
+      "sha256": "84a22caba97698b3fb681ebfbf10090aa274199d3ea9497a0d75de44d78e4790"
+    },
+    "AUDIT.json": {
+      "bytes": 5259,
+      "sha256": "dec5ef468e4b8cf24e42f8ee47189d2b23997b895aba984a26043fbe4fb1bb71"
+    },
+    "PDF_TEXT.txt": {
+      "bytes": 1863,
+      "sha256": "c87f18e4b96442a9a44bf8043f8e5a3db47dc886f421578c59d0accf0b190ff4"
+    },
+    "pdf-page-1.png": {
+      "bytes": 241638,
+      "sha256": "e53b3f1e5074ee8853bc26b4571f27227e25ffbbcff354b1cb103d01dc08ff9a"
+    },
+    "audit.py": {
+      "bytes": 8741,
+      "sha256": "5a72cae7d4a7dc5b5c5299258e88469ecae66e25c8278d823770a7d0e27d70b5"
+    },
+    "package_review.py": {
+      "bytes": 1871,
+      "sha256": "48e5cc68e39ac5945b47cd83a81088ca8fff12b670b505bbcbd2a4f26205715d"
+    }
+  }
+}

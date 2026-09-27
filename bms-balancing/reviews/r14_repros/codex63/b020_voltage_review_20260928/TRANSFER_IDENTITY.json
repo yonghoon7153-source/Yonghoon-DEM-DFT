@@ -1,0 +1,19 @@
+{
+  "received_zip": {
+    "name": "B020_VOLTAGE_REVIEW_AND_HANDOFF_20260928.zip",
+    "bytes": 246908,
+    "sha256": "99017cc7aa442031f33c9f9c65e59adac9f73907f34211c948da4fad64120988"
+  },
+  "manifest": {
+    "name": "MANIFEST.json",
+    "sha256": "73ac7b240a4a361a5772a1b9965d5fdf28eace3898716fc5213027c926b12ec5",
+    "scope": "Reviewer report and two sendable documents; no new execution approval"
+  },
+  "payload": {
+    "declared": 8,
+    "matched": 8,
+    "mismatched": 0
+  },
+  "note": "bytes 그대로 보존 (unzip). 스크립트(audit.py · package_review.py)는 실행하지 않았다. 전압 분해 ZIP(670ffc01…)·PDF·원 CSV 는 이 묶음에 없다.",
+  "preserved_on": "2026-09-28"
+}
