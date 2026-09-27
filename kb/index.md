@@ -1,12 +1,13 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-27 · managed-files: 463
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-27 · managed-files: 464
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 260건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 261건)
+- 2026-09-27 · `kb/reviews/codex_CE_prompt_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` — 리뷰 CE 프롬프트 — A′ V5 (LPSCl|Ag(111) 작은 주기 계면) VASP 외주 패키지 준비본: QE→VASP 대응 · INCAR · 쌍극자 · D3 · 반송 검사 · G3 경계선 예측 · 발송 대기 (1저자) — 패키지·개정 3 은 커밋 1962d0e9d …
 - 2026-09-26 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-26 · `kb/reviews/li2s1a_CC_prompt_li2s_pilot_gateA_ledger_2026_09_26.md` — CC 프롬프트 — li2s 소셀 유리 MD 파일럿 보고 · 게이트 A 두 판 · Q6 장부 · Q1–Q9 (외부 1저자에게 발송) · 발송됨 (사용자 · 2026-09-26) · 회신 CC 수령 → `l…
 - 2026-09-26 · `kb/reviews/li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` — 회신 CC — 외부 1저자 (li2s 소셀 유리 MD): 파일럿 결과 · 게이트 A 두 판 · Q1–Q9 판정 (relax 판 · P–S 결합 제외 · seed5 유지 · MTO 맞음 · 400 K 연장 검토) · 수령 (2026-09-26 저녁 · 사용자 붙여넣기) — 회신 원문 …
@@ -26,7 +27,6 @@
 - 2026-09-25 · `kb/projects/wad_dem_reply_4_send_2026_09_25.md` — DEM 회신 4 — 발송본 (부탁 1 잔류 응력 PBE/PBE+D3 · 부탁 2 수용 · 한 기하 뜻 확인 요청 · Ag 격자상수·변형률) · 발송본 — 1저자 발송 (2026-09-25) · 아래 구분선 이후를…
 - 2026-09-25 · `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` — LPSCl | Ag–C | VGCF 점착일(W_ad) — 계획 v4 (Codex BX 뒤 파이프라인 재편 · v3 = Fable · Codex BV 반영) · 보고량 카드 초안 · 계획 v4 — SE|SE 4층 대조 끝(경보 v2 유지 · Codex…
 - 2026-09-24 · `kb/platforms/v100_uma_setup_2026_09_14.md` — 임대 V100 에 UMA 를 올리는 레시피 — 함정 일곱과 순서 · 완료
-- 2026-09-23 · `kb/concepts/cv_vs_dqdv_and_two_windows.md` — CV · dQ/dV · 그리고 두 개의 "안정창" — 처음 보는 사람을 위한 정리 · 진행 — 개념 정리. 우리 수치 주장은 담지 않는다(경로만 가리킨다)
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -212,7 +212,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (165)
+## reviews/ (166)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-26 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -304,6 +304,7 @@
 - `kb/reviews/codex_CA_reply_wad_aprime_pilot_prereg_v3_2026_09_25.md` — 리뷰 CA 회신 — A′ 카드 v3 재심: NO-GO (V2 측방 마스크 선택 입력 P0 · 인덱스 자동 변환 P1 · G3 문구 · 프로브 예외 · registry 주기영상) — BZ 주요 수정은 이행  (2026-09-25 · 수령 (2026-09-25 밤 · 1저자 붙여넣기) — 회신 원문 ·…)
 - `kb/reviews/codex_CB_prompt_wad_aprime_pilot_prereg_v4_2026_09_25.md` — 리뷰 CB 프롬프트 — A′ 파일럿 사전등록 카드 v4: CA 최소 해제조건 5 이행 재심 (V2 측방 마스크 · 인덱스 타입 · G3 문구 · 프로브 예외 · registry 주기영상)  (2026-09-25 · 발송 완료 · 회신 수령 2026-09-25 밤 **조건부 GO** …)
 - `kb/reviews/codex_CB_reply_wad_aprime_pilot_prereg_v4_2026_09_25.md` — 리뷰 CB 회신 — A′ 카드 v4 재심: 조건부 GO (CA 코드 결함 해제 · registry 명세 2 보완 + 선언한 미완료 채우면 S1 봉인 가능 · 본 계산 승인 아님)  (2026-09-25 · 수령 (2026-09-25 밤 · 1저자 붙여넣기) — 회신 원문 ·…)
+- `kb/reviews/codex_CE_prompt_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` — 리뷰 CE 프롬프트 — A′ V5 (LPSCl|Ag(111) 작은 주기 계면) VASP 외주 패키지 준비본: QE→VASP 대응 · INCAR · 쌍극자 · D3 · 반송 검사 · G3 경계선 예측  (2026-09-27 · 발송 대기 (1저자) — 패키지·개정 3 은 커밋 1962d0e9d …)
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료)  (2026-08-20 · v2.1 — codex 2라운드 종료 (manifest 지적 철회 ·…)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))
@@ -526,4 +527,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 343개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 345개 (정본 목록: litdb/INDEX.md)
