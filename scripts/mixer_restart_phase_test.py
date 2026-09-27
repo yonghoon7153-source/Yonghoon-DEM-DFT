@@ -17,10 +17,11 @@
            `Atom types must start from 1` 로 죽기 때문 · 09-27 WSL 실측) · B 덱 (transform + 템플릿 재선언) · run.sh · gen.json
            N1 = 회전의 ~60 % (L 런이 재개된 자리) 근처 dump 격자 step 중, 재개 때 위상이 0 으로 돌아간다는 대안과의 차가 드럼 면
            대칭 (360°/면 수) 을 빼고도 ≥ 2 · RESET_GAP_DEG 인 것 (Codex Q2).
-  run.sh   실행 **직전** 봉인 (바이너리 · 두 덱 · STL sha256 → seal.json) → A → B → 실행 결과 (exit · 완료 표지 · 덤프 sha256 →
-           run_status.json).  덤프 폴더는 매번 지우고 새로 만든다 (옛 시험 파일 혼입 방지 · HBR3-01).
+  run.sh   실행 **직전** 봉인 (바이너리 · 두 덱 · STL sha256 → seal.json) → A → B → 실행 결과 (exit · 배너 · 마지막 thermo step ·
+           로그 sha · 덤프 sha256 → run_status.json — 판정하지 않고 사실만).  덤프 폴더는 매번 지우고 새로 만든다 (옛 시험 파일 혼입 방지 · HBR3-01).
   analyze  기대 step 집합 (A: 첫 덤프 ~ 끝 · B: N1 ~ 끝, dump 격자) 과 **정확히** 같아야 하고 (누락 · 추가 = 실패), 봉인 뒤 덱 · STL ·
-           덤프가 안 바뀌었고, A/B 가 정상 완료했고, 배너가 같고, 매 step 의 전체 메시 (드럼 + 두 끝판) 가 원 STL 을 예정각으로 돌린
+           덤프가 안 바뀌었고, A/B 가 정상 완료했고 (exit 0 ∧ (배너 ∨ 로그의 마지막 thermo step = 끝) — 이 빌드는 배너를 안 찍는다 ·
+           SELF-56), 배너가 같고, 매 step 의 전체 메시 (드럼 + 두 끝판) 가 원 STL 을 예정각으로 돌린
            것과 **꼭짓점 순서대로** 맞고 (남는 어긋남 ≤ 허용), B = A (꼭짓점까지) 일 때만 통과.  → 영수증 JSON (schema restart_phase_v1).
 
 ⚠ 영수증은 **바이너리 + 메시 운동 계약**의 성질이다.  소비자가 런 로그 배너 · 운동 서명 · 판정 step 이 실측 step 안인지를 대조한다.
@@ -59,6 +60,27 @@ CKPT = 'restart_pt/ckpt.bin'
 
 def _sha(path):
     return hashlib.sha256(open(path, 'rb').read()).hexdigest()
+
+
+THERMO_RE = re.compile(r'^\s*(\d+)\s+(\d+)(?:\s|$)')     # thermo 줄 (덱 `thermo_style custom step atoms …`) — run.sh 기록 코드와 같은 식
+
+
+def log_completion(path, run_total):
+    """완주 = 배너 `Total wall time` **또는** 로그의 마지막 thermo step = 계획 끝 step — `run_all.sh` `done_run` 과 같은 기준 (09-22).
+    ⚠ 배너만 보면 안 된다: 이 빌드 (LIGGGHTS-PUBLIC 3.8.0) 는 09-21 덱에서 마지막 run 을 끝내고 **배너 없이** 끝난다 (09-22 E0 3/3 ·
+    09-28 WSL 영수증 A/B 실측 — 둘 다 exit 0).  배너-전용 판정이 그 영수증을 '미완' 으로 떨어뜨렸다 (원장 SELF-56).
+    → dict(complete, basis ∈ {banner, last_step, None}, last_thermo_step, banner, log_sha256)."""
+    if not os.path.isfile(path):
+        return dict(complete=False, basis=None, last_thermo_step=None, banner=False, log_sha256=None)
+    last, banner = None, False
+    with open(path, encoding='utf-8', errors='replace') as fh:
+        for line in fh:
+            banner = banner or 'Total wall time' in line
+            m = THERMO_RE.match(line)
+            if m:
+                last = int(m.group(1))
+    basis = 'banner' if banner else ('last_step' if last is not None and last == run_total else None)
+    return dict(complete=basis is not None, basis=basis, last_thermo_step=last, banner=banner, log_sha256=_sha(path))
 
 
 def deck_structure(deck_text):
@@ -171,16 +193,23 @@ PY
 rb=-1
 if [ "$ra" -eq 0 ]; then cp -r A/restart_pt B/; ( cd B && "$BIN" -in in.phase_b > log.lmp 2>&1 ); rb=$?; fi
 python3 - "$ra" "$rb" <<'PY'
-import hashlib, json, os, sys
+import hashlib, json, os, re, sys
 h = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
+TH = re.compile(r'^\s*(\d+)\s+(\d+)(?:\s|$)')          # thermo 줄 — analyze 의 THERMO_RE 와 같은 식 (완주 판정은 analyze 가 한다)
 def st(d, rc):
-    lg = os.path.join(d, 'log.lmp'); txt = open(lg, errors='replace').read() if os.path.isfile(lg) else ''
+    lg = os.path.join(d, 'log.lmp'); last, banner = None, False
+    if os.path.isfile(lg):
+        for line in open(lg, errors='replace'):
+            banner = banner or 'Total wall time' in line
+            m = TH.match(line)
+            if m:
+                last = int(m.group(1))
     pm = os.path.join(d, 'post_mesh')
-    return dict(exit=rc, complete=bool(rc == 0 and 'Total wall time' in txt),
+    return dict(exit=rc, banner=banner, last_thermo_step=last, log_sha256=h(lg) if os.path.isfile(lg) else None,
                 dumps={f: h(os.path.join(pm, f)) for f in sorted(os.listdir(pm))} if os.path.isdir(pm) else {})
 json.dump(dict(A=st('A', int(sys.argv[1])), B=st('B', int(sys.argv[2]))), open('run_status.json', 'w'), indent=1)
 PY
-echo "끝 — A exit $ra · B exit $rb.  분석: python3 scripts/mixer_restart_phase_test.py analyze $(pwd) --out <영수증.json>"
+echo "끝 — A exit $ra · B exit $rb (완주 판정은 analyze 가 로그로 한다).  분석: python3 scripts/mixer_restart_phase_test.py analyze $(pwd) --out <영수증.json>"
 """
 
 
@@ -262,7 +291,7 @@ def analyze(d, out=None, binary=None):
     sp = deck_walls(a_deck)
     mv = sp['moves']['Drum']
     dt, period, axis, origin = sp['dt'], mv['period'], mv['axis'], mv['origin']
-    rows, A_st, B_st = [], [], []
+    rows, A_st, B_st, comp = [], [], [], {}
     err_max, resid_max, ab_max, ang_res = 0.0, 0.0, 0.0, None
     if g is not None and seal is not None and rs is not None:
         for p, h in seal.get('files', {}).items():
@@ -271,7 +300,13 @@ def analyze(d, out=None, binary=None):
             need(os.path.isfile(binary) and _sha(binary) == seal.get('binary_sha256'), '지목한 바이너리 sha256 ≠ 봉인 값')
         for part in ('A', 'B'):
             s_ = rs.get(part, {})
-            need(s_.get('exit') == 0 and s_.get('complete') is True, f'{part} 실행이 정상 완료가 아니다 (exit {s_.get("exit")} · 완료 {s_.get("complete")})')
+            lc = comp[part] = log_completion(os.path.join(d, part, 'log.lmp'), g['run_total'])
+            need(s_.get('exit') == 0 and lc['complete'],
+                 f'{part} 실행이 정상 완료가 아니다 (exit {s_.get("exit")} · 배너 {lc["banner"]} · 마지막 thermo step '
+                 f'{lc["last_thermo_step"]} / 끝 {g["run_total"]})')
+            if s_.get('log_sha256') is not None or 'last_thermo_step' in s_:      # 옛 run.sh 기록 (09-28 WSL) 에는 없다 → 로그 판정만
+                need(s_.get('log_sha256') == lc['log_sha256'] and s_.get('last_thermo_step') == lc['last_thermo_step'],
+                     f'{part} 로그가 실행 결과 기록 뒤 바뀌었다 (sha · 마지막 thermo step 이 기록과 다르다)')
             for f, h in s_.get('dumps', {}).items():
                 pth = os.path.join(d, part, 'post_mesh', f)
                 need(os.path.isfile(pth) and _sha(pth) == h, f'{part} 덤프 {f} 가 실행 뒤 바뀌었거나 없다')
@@ -360,7 +395,9 @@ def analyze(d, out=None, binary=None):
               ab_max_vertex_diff_m=float(ab_max), residual_max_m=float(resid_max),
               rows=rows, liggghts_version=ver,
               binary_sha256=(seal or {}).get('binary_sha256'), seal=seal,
-              run_status={p: {k_: v_ for k_, v_ in (rs or {}).get(p, {}).items() if k_ != 'dumps'} for p in ('A', 'B')} if rs else None,
+              run_status={p: dict(exit=(rs or {}).get(p, {}).get('exit'), complete=comp[p]['complete'], completion_basis=comp[p]['basis'],
+                                  last_thermo_step=comp[p]['last_thermo_step'], banner=comp[p]['banner'], log_sha256=comp[p]['log_sha256'])
+                          for p in ('A', 'B')} if comp else None,
               motion_signature=(g or {}).get('motion_signature'), deck_source=(g or {}).get('deck'),
               deck_source_sha256=(g or {}).get('deck_sha256'), tool_sha256=_sha(os.path.abspath(__file__)),
               date=datetime.date.today().isoformat(),
@@ -371,7 +408,8 @@ def analyze(d, out=None, binary=None):
         json.dump(rc, open(out, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         print(f'→ {out}')
     print(f'재개-위상 영수증 v1: {"통과" if rc["passed"] else "실패"} — A {len(A_st)} step · B {len(B_st)} step · 예정각 오차 최대 {err_max:.3g}° · '
-          f'각 경계 {bound:.3g}° (등록 ε {PHASE_EPS_DEG}°) · A↔B {ab_max:.3g} m · 리셋 간격 (면 대칭 제외) {sym}°'
+          f'각 경계 {bound:.3g}° (등록 ε {PHASE_EPS_DEG}°) · A↔B {ab_max:.3g} m · 리셋 간격 (면 대칭 제외) '
+          f'{"—" if sym is None else f"{sym:.3f}"}°'
           + ('' if rc['passed'] else '\n   ✗ ' + '\n   ✗ '.join(reasons[:8])))
     return rc
 
@@ -454,8 +492,27 @@ def _selftest():                                                      # noqa: C9
                          + '  endloop\n endfacet\n')
             fh.write('endsolid m\n')
 
-    def _fake_run(td, mode='cont', fix=None):
-        """run.sh 흉내 — 봉인 · A/B 덤프 (예정각) · 실행 결과.  mode: cont (재개가 위상을 잇는다) · reset (재개 때 0 으로)."""
+    def _status_code():
+        """run.sh 의 실행 결과 기록 코드 (두 번째 python heredoc) 그대로 — 셀프테스트가 **실제 run.sh 코드**를 돌린다.
+        (09-28 SELF-56: 손으로 만든 가짜 run_status 가 run.sh 의 배너-전용 완주 판정을 한 번도 거치지 않아 결함을 통과시켰다.)"""
+        return re.findall(r"<<'PY'[^\n]*\n(.*?)\nPY\n", RUN_SH, re.S)[1]
+
+    def _run_status(o, ra=0, rb=0):
+        import subprocess
+        subprocess.run([sys.executable, '-c', _status_code(), str(ra), str(rb)], cwd=o, check=True)
+
+    def _write_log(path, lo, end, banner=False):
+        """이 빌드 (LIGGGHTS-PUBLIC 3.8.0 · 09-21 덱) 의 로그 꼴: 배너 첫 줄 · thermo (step atoms …) · Loop time — `Total wall time` 은
+        **없다** (09-22 E0 3/3 · 09-28 WSL 영수증 A/B 실측, 둘 다 exit 0).  banner=True = 배너를 찍는 빌드."""
+        steps = sorted(set(range(lo, end, 500)) | {end})
+        with open(path, 'w') as fh:
+            fh.write('LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled test)\n…\nStep Atoms KinEng c_rke Volume\n')
+            fh.write(''.join(f'{s:10d}        0            0            0 6.4e-05\n' for s in steps))
+            fh.write('Loop time of 1.0 on 1 procs for 1000 steps with 0 atoms\n' + ('Total wall time: 0:00:01\n' if banner else ''))
+
+    def _fake_run(td, mode='cont', fix=None, log='real'):
+        """run.sh 흉내 — 봉인 · A/B 덤프 (예정각) · 로그 · 실행 결과 (run.sh 의 기록 코드 그대로).
+        mode: cont (재개가 위상을 잇는다) · reset (재개 때 0 으로).  log: real (배너 없음 = 이 빌드) · banner (배너 있음)."""
         run_ = os.path.join(td, 'camp')
         os.makedirs(run_, exist_ok=True)
         for nm in ('Drum.stl', 'Front.stl', 'Back.stl'):
@@ -476,16 +533,14 @@ def _selftest():                                                      # noqa: C9
                 if sub == 'B' and mode == 'reset':
                     th = 2 * np.pi * (s - n1_) * spA['dt'] / spA['moves']['Drum']['period']
                 _write_stl(os.path.join(pm, f'mesh_{s}.stl'), U @ _rot(np.array([1.0, 0, 0]), th).T)
-        for sub in ('A', 'B'):
-            open(os.path.join(out_, sub, 'log.lmp'), 'w').write('LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled test)\n…\nTotal wall time: 0:00:01\n')
+        for sub, lo in (('A', 0), ('B', n1_)):
+            _write_log(os.path.join(out_, sub, 'log.lmp'), lo, rt, banner=(log == 'banner'))
         binp = os.path.join(td, 'lmp_fake')
         open(binp, 'wb').write(b'fake-binary')
         files = {p: _sha(os.path.join(out_, p)) for p in ['A/in.phase_a', 'B/in.phase_b']
                  + [f'{s_}/{n}' for s_ in ('A', 'B') for n in ('Drum.stl', 'Front.stl', 'Back.stl')]}
         json.dump(dict(binary_path=binp, binary_sha256=_sha(binp), files=files), open(os.path.join(out_, 'seal.json'), 'w'))
-        rsd = {sub: dict(exit=0, complete=True, dumps={f: _sha(os.path.join(out_, sub, 'post_mesh', f))
-                                                        for f in sorted(os.listdir(os.path.join(out_, sub, 'post_mesh')))}) for sub in ('A', 'B')}
-        json.dump(rsd, open(os.path.join(out_, 'run_status.json'), 'w'))
+        _run_status(out_)
         if fix:
             fix(out_, run_)
         return out_, run_, binp
@@ -499,7 +554,10 @@ def _selftest():                                                      # noqa: C9
         spc = deck_walls(small)
         open(os.path.join(run_, 'log.lmp'), 'w').write('LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled test)\n')
         need = list(range(2000, 14001, 500))
-        r_ok = load_phase_receipt(os.path.join(td, 'r.json'), spc, run_dir=run_, deck_text=small, need_steps=need)
+        try:
+            r_ok = load_phase_receipt(os.path.join(td, 'r.json'), spc, run_dir=run_, deck_text=small, need_steps=need)
+        except ValueError as e:
+            r_ok = dict(passed=None, err=str(e))
         bad = small.replace('period 0.012', 'period 0.024')
         try:
             load_phase_receipt(os.path.join(td, 'r.json'), deck_walls(bad), run_dir=run_, deck_text=bad, need_steps=need)
@@ -510,13 +568,10 @@ def _selftest():                                                      # noqa: C9
             r_ok['passed'] is True and rej)
     #  ⑦ HBR3-01 반례 — 필수 대조 · 재개 뒤 표본이 없거나 · 봉인 · 실행 기록이 어긋나면 **실패**
     def _restatus(o):
-        """변이를 '실행이 실제로 그렇게 끝난' 경우로 — run_status 의 덤프 목록 · sha 를 지금 파일로 다시 적는다 (위조 검사가 아니라
-        누락 · 형상 검사가 걸리게)."""
+        """변이를 '실행이 실제로 그렇게 끝난' 경우로 — run.sh 의 기록 코드를 지금 파일로 다시 돌린다 (exit 는 그대로 · 위조 검사가
+        아니라 누락 · 형상 · 완주 검사가 걸리게)."""
         rs = json.load(open(os.path.join(o, 'run_status.json')))
-        for sub in ('A', 'B'):
-            pm = os.path.join(o, sub, 'post_mesh')
-            rs[sub]['dumps'] = {f: _sha(os.path.join(pm, f)) for f in sorted(os.listdir(pm))}
-        json.dump(rs, open(os.path.join(o, 'run_status.json'), 'w'))
+        _run_status(o, rs['A']['exit'], rs['B']['exit'])
 
     def _rm_all_A(o, r):
         for f in os.listdir(os.path.join(o, 'A', 'post_mesh')):
@@ -550,10 +605,15 @@ def _selftest():                                                      # noqa: C9
         rs['B']['exit'] = 1
         json.dump(rs, open(os.path.join(o, 'run_status.json'), 'w'))
 
-    def _incomplete(o, r):
-        rs = json.load(open(os.path.join(o, 'run_status.json')))
-        rs['A']['complete'] = False
-        json.dump(rs, open(os.path.join(o, 'run_status.json'), 'w'))
+    def _short_A(o, r):
+        """A 가 끝 step 전에 끊긴 실행 (배너 없음 · 마지막 thermo step < 끝) — exit 0 이어도 미완."""
+        g_ = json.load(open(os.path.join(o, 'gen.json')))
+        _write_log(os.path.join(o, 'A', 'log.lmp'), 0, g_['run_total'] - 2500)
+        _restatus(o)
+
+    def _log_edit(o, r):
+        """실행 결과 기록 뒤 로그만 바뀜 (완주 판정은 그대로 서는 편집) — 기록의 로그 sha 가 잡아야 한다."""
+        open(os.path.join(o, 'B', 'log.lmp'), 'a').write('# 실행 뒤 수정\n')
 
     def _deck_edit(o, r):
         open(os.path.join(o, 'B', 'in.phase_b'), 'a').write('# 봉인 뒤 수정\n')
@@ -572,13 +632,32 @@ def _selftest():                                                      # noqa: C9
     cases = [('A 대조 덤프 0 개 (Codex receipt_missing_all_A)', 'cont', _rm_all_A), ('B 한 장 · A 0 개', 'cont', _one_B),
              ('A · B 모두 회전 전 첫 덤프 한 장 (재개 전 정적 형상뿐 · Codex receipt_only_step0)', 'cont', _only0), ('기대 밖 덤프 (step 7301)', 'cont', _extra),
              ('재개 때 위상이 0 으로 (리셋)', 'reset', None), ('봉인 없음', 'cont', _no_seal), ('B exit 1', 'cont', _exit1),
-             ('A 완료 표지 없음', 'cont', _incomplete), ('봉인 뒤 덱 수정', 'cont', _deck_edit), ('실행 뒤 덤프 수정', 'cont', _dump_edit),
+             ('A 가 끝 step 전에 끊김 (exit 0 · 배너 없음)', 'cont', _short_A), ('실행 결과 기록 뒤 로그 수정', 'cont', _log_edit),
+             ('봉인 뒤 덱 수정', 'cont', _deck_edit), ('실행 뒤 덤프 수정', 'cont', _dump_edit),
              ('끝판 빠진 메시 (드럼 78 삼각형만)', 'cont', _drop_cap)]
     for name, mode, f in cases:
         with tempfile.TemporaryDirectory() as td:
             out_, run_, binp = _fake_run(td, mode=mode, fix=f)
             rc = analyze(out_)
             chk(f'⑦ 변이 — {name} → 실패 ({rc["reasons"][:1]})', rc['passed'] is False and rc['reasons'])
+    #  ⑧ ⑨ SELF-56 — 완주 = exit 0 ∧ (배너 ∨ 마지막 thermo step = 끝).  배너를 찍는 빌드도 통과 · 옛 run.sh 기록 (완료 표지 False,
+    #  로그 sha 없음) 으로 끝난 09-28 WSL 실행은 LIGGGHTS 재실행 없이 analyze 만 다시 돌려 판정할 수 있어야 한다.
+    with tempfile.TemporaryDirectory() as td:
+        out_, run_, binp = _fake_run(td, log='banner')
+        rc = analyze(out_)
+        chk(f'⑧ 배너를 찍는 빌드의 로그도 통과 ({rc["run_status"] and rc["run_status"]["A"].get("completion_basis")})', rc['passed'] is True)
+
+    def _old_status(o, r):
+        rs = {}
+        for sub in ('A', 'B'):
+            pm = os.path.join(o, sub, 'post_mesh')
+            rs[sub] = dict(exit=0, complete=False, dumps={f: _sha(os.path.join(pm, f)) for f in sorted(os.listdir(pm))})
+        json.dump(rs, open(os.path.join(o, 'run_status.json'), 'w'))
+    with tempfile.TemporaryDirectory() as td:
+        out_, run_, binp = _fake_run(td, fix=_old_status)
+        rc = analyze(out_)
+        chk(f'⑨ 옛 run.sh 기록 (완료 표지 False · 로그 sha 없음) + 배너 없는 완주 로그 → 통과 (09-28 WSL 실행을 재실행 없이 판정 · '
+            f'{rc["reasons"][:1]})', rc['passed'] is True and (rc['run_status'] or {}).get('B', {}).get('last_thermo_step') == rc['run_total'])
     print(f'\nmixer_restart_phase_test selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
 

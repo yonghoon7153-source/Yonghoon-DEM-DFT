@@ -96,7 +96,7 @@ AM–AM 단독 효과 · 응집체만의 인과 · 실제 코팅 효과 · Hare 
      (`mesh-dump`).  구성요소 누락 · 다른 기하 · 예정각과 모순 (다른 시각/런의 파일일 수 있다) = 쓰지 않고 TECH 사유에 적는다.
   ② **재개-위상 영수증 v1** (`scripts/mixer_restart_phase_test.py`, schema `restart_phase_v1`): 캠페인 덱에서 **입자만 뺀** 덱을 **같은 step 구조**로 돌려
      캠페인 원자 dump 간격으로 `dump mesh/stl` — 처방 회전은 입자와 무관하므로 캠페인 판정 프레임과 **같은 step 의 벽**을 잰다.  B 는 A 의 체크포인트를
-     `make_mixer_resume.transform` (캠페인 재개와 같은 변환) 으로 이어 끝까지 간다.  실행 직전 봉인 (바이너리 · 덱 · STL sha256) · A/B exit 0 · 완료 표지 ·
+     `make_mixer_resume.transform` (캠페인 재개와 같은 변환) 으로 이어 끝까지 간다.  실행 직전 봉인 (바이너리 · 덱 · STL sha256) · A/B exit 0 · 완주 (배너 **또는** 로그의 마지막 thermo step = 끝 — 이 빌드는 배너를 안 찍는다 · SELF-56) ·
      기대 step 집합과 정확히 같은 덤프 (누락 · 추가 = 실패) · 전 step 전체 메시 = 원 STL 의 예정각 회전 (꼭짓점 순서대로) · B = A (꼭짓점까지) 일 때만 통과.
      소비자 (`--phase-receipt`) 는 v1 만 받고 값 · 봉인 · 호환 (주기 · dt · 축 · 운동 서명 · **런 로그 배너 = 영수증 배너** · 창의 모든 step ⊂ 실측 step) 을 엄격히 본다.
      벽 각의 불확실성 ε = 영수증이 그 step 들에서 잰 **각 경계** (실측 오차 · 출력 해상도 중 큰 것, 등록 상한 `PHASE_EPS_DEG` 0.05° 이하).

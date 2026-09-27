@@ -9,6 +9,12 @@
 
 수정 커밋 = **`10c964175`** (게이트 71/71).  원장 등재 (HBR3-01~08 · HBR2-01/04/05/08 · HB-01 → claimed_fixed `10c964175`) 는 바로 다음 커밋이다.
 
+**§0-b 추가 수정 (09-28, 요청서 작성 뒤)** — WSL 영수증 v1 첫 실행이 **완주 표지** 하나로 실패했다 (예정각 오차 1.92 × 10⁻⁵° · 각 경계 0.00115° ·
+A↔B 0 m · 기대 step 집합 완전 — 나머지는 전부 통과).  원인 = 내 생산자가 완주를 `Total wall time` 배너로만 판정했는데 이 빌드는 09-21 덱에서
+배너를 안 찍는다 (09-22 E0 3/3 에 이미 실측 · `run_all.sh` 18행 기준 = 배너 **또는** 마지막 thermo step ≥ run 합).  수정: `run.sh` 는 사실만 기록
+(배너 · 마지막 thermo step · 로그 sha) · `analyze` 가 로그로 판정 (exit 0 ∧ (배너 ∨ 마지막 step = 끝)) · 기록 스냅샷이 있으면 로그와 대조.
+셀프테스트는 이제 `run.sh` 의 실제 기록 코드를 돌린다 (옛 가짜 run_status 는 그 코드를 거치지 않아 결함을 통과시켰다) — 17 → 20 (원장 `SELF-56`).
+
 ## 1. 항목별 — 무엇을 바꿨고 어느 셀프테스트가 지키나
 
 | 항목 | 수정 | 셀프테스트 (먼저 실패 확인) |
@@ -43,7 +49,7 @@ python3 scripts/measure_bed_aspect.py --selftest        # 25/25
 python3 scripts/check_contact_validity.py --selftest    # 55/55
 python3 scripts/measure_mixing_index.py --selftest      # 32/32
 python3 scripts/mixer_deck_diff.py --selftest           # 24/24
-python3 scripts/mixer_restart_phase_test.py --selftest  # 17/17
+python3 scripts/mixer_restart_phase_test.py --selftest  # 20/20 (§0-b)
 bash dem_scripts/mixer_20260921/test_launcher.sh        # 런처 (가짜 실행파일)
 ```
 3차 프로브 (`docs/reviews/codex_mixer_highbo_rereview2_evidence_20260927/review_round3_probe.py`) 는 옛 동작을 **기대**하는 assert 가 있어, 새 코드에서는 그 assert 들이 실패하는 것이 정상이다 (수정의 증거로는 위 셀프테스트를 본다).

@@ -127,9 +127,13 @@ def main():
     #    같은 날 클레임과 결함이 함께 등재되면 (CL-90 · SELF-51, 둘 다 09-25) 구현이 옳아도
     #    빨간불이 난다 = 판별력을 데이터의 우연에 맡긴 것.  ⇒ 클레임보다 하루 늦은 결함 **픽스처**를
     #    캐시에 잠깐 넣어 기준선이 그 날짜로 움직이는지 본다 (원장 파일은 건드리지 않는다).
+    #  ⛔ 정정 2026-09-28 — 픽스처를 **클레임** 최신 + 1 일에 두면, 실제 결함이 그보다 이틀 이상 새로울 때 (SELF-56 09-28 ·
+    #    최신 클레임 09-26) 픽스처가 기준선을 못 움직여 구현이 옳아도 빨간불이 난다 = 09-25 정정과 같은 데이터 우연.
+    #    ⇒ 기준선 (클레임 ∪ 결함) 의 최신 + 1 일에 둔다.
     import datetime as _dt
     _d0 = LV._load()
-    _base = _dt.date.fromisoformat(newest) if newest else _dt.date(2000, 1, 1)
+    _base_s = LV.newest_ledger_date() or newest
+    _base = _dt.date.fromisoformat(_base_s) if _base_s else _dt.date(2000, 1, 1)
     _next = _base + _dt.timedelta(days=1)
     _fake = {'id': 'TEST-9A', 'status': 'open',
              'opened_in': f"docs/reviews/_fixture_{_next.strftime('%Y%m%d')}.md"}
