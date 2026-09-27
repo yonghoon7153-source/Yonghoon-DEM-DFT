@@ -1,0 +1,182 @@
+{
+ "slug": "qin2026_bilayer_cathode_cgmd_dem_graded_thick_electrode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-27",
+ "sources": [
+  "08c51434-1._Manufacturing_process_modeling_of_bilayer_cathode_for_graded_thick_electrode_design.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 6,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic representation of the process-resolved CGMD-DEM workflow for bilayer cathode manufacturing. Two slurry layers with different formulations are generated independently and stacked to construct the initial bilayer electrode, which subsequently undergoes drying, calendering, and relaxation after compression. Representative virtual microstructures show the corresponding microstructural evolution throughout the manufacturing process.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.2,
+    289.7,
+    537.8,
+    550.5
+   ],
+   "w": 1932,
+   "h": 1087,
+   "dpi": 300,
+   "src": "08c51434-1._Manufacturing_process_modeling_of_bilayer_cathode_for_graded_thick_electrode_design.pdf",
+   "blank": 0.66,
+   "recrop": "2026-09-27 raster-bound clip (xref 64) minus frame insets px t3/r0/b0/l0 — raster top frame 2 px removed"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 9,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Constrained real-shape AM particle selection workflow used to generate the AM population of each layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    100.4,
+    402.9,
+    506.5,
+    623.9
+   ],
+   "w": 1693,
+   "h": 922,
+   "dpi": 300,
+   "src": "08c51434-1._Manufacturing_process_modeling_of_bilayer_cathode_for_graded_thick_electrode_design.pdf",
+   "blank": 0.813,
+   "recrop": "2026-09-27 raster-bound clip (xref 77) minus frame insets px t12.5/r15.5/b0/l0 — raster top bar 12 px + right bar 15 px removed"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 13,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Generation and assembly of the bilayer slurry microstructures. (a,d) Initial configurations for the 96:4 and 94:6 AM:CBD compositions, respectively. (b,e) Corresponding single-layer slurry microstructures obtained by CGMD equilibration at 298 K and 0.101 MPa. (c) Design-intended 94:6-on-96:4 bilayer slurry architecture. (f) Reversed 96:4-on-94:6 bilayer slurry architecture. The AM particle diameter range, CBSA particle sizes, and simulation-domain dimensions are indicated in the figure.",
+   "rotated_deg": 0,
+   "bbox": [
+    123.7,
+    275.5,
+    482.1,
+    607.8
+   ],
+   "w": 1494,
+   "h": 1385,
+   "dpi": 300,
+   "src": "08c51434-1._Manufacturing_process_modeling_of_bilayer_cathode_for_graded_thick_electrode_design.pdf",
+   "blank": 0.689,
+   "recrop": "2026-09-27 raster-bound clip (xref 94) minus frame insets px t4/r23/b4/l4 — dotted raster frame + 21 px right band removed"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 16,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Global compaction, spring-back, and interfacial evolution derived from the DEM microstructures. (a) Overall porosity as a function of retained compression degree for the 94:6 and 96:4 single thick-layer electrodes and the two bilayer configurations. Experimental porosity data reported by Xu et al. [39] are included for comparison with the corresponding single thick-layer simulations. (b) Normalized recovered electrode thickness as a function of nominal calendering degree. The dashed line represents the no-spring-back limit. (c) Spring-back ratio as a function of nominal calendering degree, defined as the fraction of the imposed thickness reduction recovered after unloading. (d) Evolution of the interfacial mixing region relative to the recovered electrode thickness for the design-intended 94:6-on-96:4 and reversed 96:4-on-94:6 bilayers. The dashed line indicates the expected in",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    73.1,
+    542.5,
+    423.8
+   ],
+   "w": 1961,
+   "h": 1462,
+   "dpi": 300,
+   "src": "08c51434-1._Manufacturing_process_modeling_of_bilayer_cathode_for_graded_thick_electrode_design.pdf",
+   "blank": 0.871,
+   "recrop": "2026-09-27 raster-bound clip (xref 99) minus frame insets px t3/r0/b0/l0 — raster top frame 2 px removed"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 18,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Through-thickness heterogeneity and interfacial mixing in the voxelized bilayer microstructures. (a,b) Design-intended 94:6-on-96:4 bilayer at c0 and c40, respectively, and (c,d) reversed 96:4-on-94:6 bilayer at c0 and c40, respectively. The voxelized microstructures reconstructed from the corresponding DEM microstructures in Figure 5 are shown alongside the AM, CBD, and porosity profiles. Vertical dashed lines delimit the interfacial mixing region, and horizontal dotted lines indicate the regional average porosity.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    72.5,
+    549.3,
+    299.3
+   ],
+   "w": 1989,
+   "h": 946,
+   "dpi": 300,
+   "src": "08c51434-1._Manufacturing_process_modeling_of_bilayer_cathode_for_graded_thick_electrode_design.pdf",
+   "blank": 0.755,
+   "recrop": "2026-09-27 raster-bound clip (xref 103) minus frame insets px t1.5/r5.5/b0/l0 — raster top frame + partial right edge line removed"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 19,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Calendering-induced evolution of layer-wise porosity contrast and through-thickness transport resistance. (a) Layer porosity contrast for the design-intended 94:6-on-96:4 and reversed 96:4-on-94:6 bilayers as a function of nominal calendering degree. Actual DEM-derived values are compared with uniform-compression references calculated by conserving the layer-specific solid volumes under equal relative thickness reduction. (b) Through- thickness tortuosity factor as a function of overall porosity, for the 94:6 single thick layer and the two bilayer configurations. The c0 and c40 states are indicated.",
+   "rotated_deg": 0,
+   "bbox": [
+    101.8,
+    219.8,
+    514.8,
+    397.6
+   ],
+   "w": 1721,
+   "h": 742,
+   "dpi": 300,
+   "src": "08c51434-1._Manufacturing_process_modeling_of_bilayer_cathode_for_graded_thick_electrode_design.pdf",
+   "blank": 0.91,
+   "recrop": "2026-09-27 raster-bound clip (xref 106) minus frame insets px t1.5/r0/b0/l15.5 — 14x34 px grey corner block (top-left) removed"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 22,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Particle-wise evolution of AM secondary-particle Krumbein sphericity during calendering. (a) 94:6-on-96:4 bilayer and (b) 96:4-on-94:6 bilayer. Each point represents one type-indexed secondary AM particle, with color indicating formulation and marker shape indicating layer position. The change in Krumbein sphericity is defined as ∆𝑘𝐶= 𝑘𝐶,𝑐40 −𝑘𝐶,𝑐0. Dashed lines show linear fits for the corresponding particle populations, and the horizontal dotted line marks ∆𝑘𝐶= 0. Pearson correlation coefficients are indicated in each panel.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    164.7,
+    539.9,
+    362.7
+   ],
+   "w": 1950,
+   "h": 826,
+   "dpi": 300,
+   "src": "08c51434-1._Manufacturing_process_modeling_of_bilayer_cathode_for_graded_thick_electrode_design.pdf",
+   "blank": 0.915,
+   "recrop": "2026-09-27 raster-bound clip (xref 122) minus frame insets px t0/r0/b0/l0 — clean raster, tightened to raster bounds"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "caption": "Figure 8. Pore-throat network evolution of the bilayer electrodes during calendering. (a1–a3) 94:6-on-96:4 bilayer at c0, (b1–b3) 94:6-on-96:4 bilayer at c40, (c1–c3) 96:4-on-94:6 bilayer at c0, and (d1–d3) 96:4-on-94:6 bilayer at c40. (a1, b1, c1, d1) Three-dimensional pore-throat networks extracted from the voxelized pore phase, with throats colored according to throat diameter. (a2, b2, c2, d2) Throat diameter distributions in the bottom, mixing, and top regions, with the color scale indicating throat diameter. (a3, b3, c3, d3) Global throat diameter histograms, with insets showing the through-plane throat count distributions and the boundaries of the three regions. The corresponding pore-throat network analyses at c10, c20, and c30 are provided in Figure S5 and Figure S6 of the Supporting Information.",
+   "rotated_deg": 0,
+   "src": "08c51434-1._Manufacturing_process_modeling_of_bilayer_cathode_for_graded_thick_electrode_design.pdf",
+   "page": 24,
+   "file": "fig_8.png",
+   "bbox": [
+    81.7,
+    79.8,
+    507.6,
+    716.9
+   ],
+   "w": 1775,
+   "h": 2656,
+   "dpi": 300,
+   "blank": 0.825,
+   "recrop": "2026-09-27 raster-bound clip (xref 125) minus frame insets px t5.5/r9.5/b1.5/l8.5 — full-page raster on p24 (caption on p25) - manual; black frame lines removed",
+   "manual_crop": true,
+   "note": "extract_figures.py dropped f8 (caption on p25 has no graphic); full-page raster on p24 cropped manually"
+  }
+ ],
+ "qa": "2026-09-27 litdb-curator: all 8 crops re-rendered at 300 dpi from raster bounds; frame lines inside the authors' rasters removed; f8 added manually (p24). SI (Tables S1-S4, Figs S1-S9, Videos S1-S3) not included in the PDF."
+}
