@@ -1,4 +1,4 @@
-// 💬 comment — visitors write 「뭐뭐 넣어줘!」 and everyone sees the list. The server side is one Cloudflare Pages
+// 💬 コメント — visitors write 「뭐뭐 넣어줘!」 and everyone sees the list. The server side is one Cloudflare Pages
 // Function (functions/api/comments.ts, ADR 0007). Everything is plain text (el/textContent), never HTML.
 import { prefBySlug, prefectures } from '../data';
 import type { Prefecture } from '../types';
@@ -52,7 +52,7 @@ async function call(url: string, init: RequestInit = {}): Promise<{ ok: boolean;
 export function renderComments(current?: string | null): HTMLElement {
   const wrap = el('div', { class: 'cmt' });
   wrap.append(
-    el('h2', {}, el('span', { class: 'cmt__title' }, '💬 comment'), el('small', {}, '「뭐뭐 넣어줘!」 — 누구나 쓰고, 모두가 봐요')),
+    el('h2', {}, el('span', { class: 'cmt__title' }, '💬 ', el('span', { lang: 'ja' }, 'コメント')), el('small', {}, '「뭐뭐 넣어줘!」 — 누구나 쓰고, 모두가 봐요')),
     el('p', { class: 'lead' }, '넣었으면 하는 県 · 명소 · 음식 · 단어, 틀린 곳도 좋아요. 로그인 없이, 이름은 안 써도 돼요.'),
   );
 

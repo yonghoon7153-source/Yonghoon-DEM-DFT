@@ -34,3 +34,7 @@
   (`nihon share` 가 순서를 보여 준다).
 - 검증: `tsc -p functions` (`nihon check` 안), `wrangler pages functions build` 로 Pages 와 같은 컴파일,
   함수 단위 시험은 node:sqlite 로 만든 D1 모양 가짜 DB 에서 실제 SQL 로.
+
+## 덧붙임 (2026-09-27, 11차 요청)
+
+버튼 이름을 사용자 말대로 **💬 コメント** (가타카나) 로 바꿨다 — 게시판 제목도 같이. 코드의 id 와 주소(`#comment-btn`, `/api/comments`)는 그대로.

@@ -68,7 +68,8 @@ CRLF 로 받으면 스크립트가 "bad interpreter" 로 죽습니다). `tools/n
 | 지방 보기 | 범례 칩을 누르면 지방으로 줌 + 지방 메모 + 소속 県 + 그 지방의 친구들. |
 | 이스터에그 | 県을 누르면 그 県의 **실제 공식 캐릭터**(くまモン, ぐんまちゃん, チーバくん…)가 튀어나오고, 패널의 「친구들」에서 ひこにゃん·ふなっしー 같은 비공식 친구도 만난다. 숨은 친구도 있다 — 튀어나온 みきゃん 을 세 번 톡톡 누르면? 모두 54종. 발견하면 図鑑에 모이고 지도에 스티커로 붙는다 — 한 県에서 여럿 만나면 이름 옆에 나란히(공식 → 비공식 → 숨은 친구), 이번 방문 동안만, 새로고침하면 처음부터. 여럿이 같이 나오면 말풍선은 바깥쪽으로(자리가 없으면 머리 위로) — 친구를 가리지 않는다. 로고를 누르면 벚꽃. |
 | 메모장 | 어느 県에도 안 붙는 메모(47都道府県, 테이블 매너). 지도에 그려진 것(도시 읽기 · 방향 단어)은 지도에만 둔다. |
-| 💬 comment | 상단 「💬 comment」 — 누구나 「뭐뭐 넣어줘!」 를 쓰고 모두가 본다 (로그인 없음, 이름 · 県 은 안 써도 됨, 열어 둔 県이 미리 골라짐). 서버는 Pages Function 하나 + D1 (ADR 0007), 켜는 법은 `nihon share`. 지우기는 맨 아래 「관리」 + `ADMIN_KEY`. |
+| 💬 コメント | 상단 「💬 コメント」 — 누구나 「뭐뭐 넣어줘!」 를 쓰고 모두가 본다 (로그인 없음, 이름 · 県 은 안 써도 됨, 열어 둔 県이 미리 골라짐). 서버는 Pages Function 하나 + D1 (ADR 0007), 켜는 법은 `nihon share`. 지우기는 맨 아래 「관리」 + `ADMIN_KEY`. |
+| 링크 미리보기 | 카톡 등에 링크를 보내면 「にほんちず — 눌러 보는 일본 지도 🗾」 + 소개글 + 다꾸 카드 그림(`public/og.png`, `node tools/og-card.mjs` 로 다시 그림 — 캐릭터 그림은 안 씀). |
 | 딥링크 | `#kyoto`, `#region/kinki` 처럼 URL 로 바로 열기. |
 
 ## 데이터 (DB)
@@ -129,8 +130,8 @@ src/map/map.ts          d3-geo + d3-zoom 지도, 라벨 배치(ふりがな), �
 src/map/layers.ts       지도 레이어 — 도시 · 다리 · 산맥 (선은 지도 공간, 이름은 겹치지 않게 화면 공간)
 src/ui/compass.ts       지도 둘레의 방위 (北 · 南 · 西 左 · 東 右)
 src/ui/panel.ts         県/지방/메모장 패널 렌더
-src/ui/comments.ts      💬 comment 게시판 화면
-functions/api/comments.ts  💬 comment 서버 — Pages Function + D1 (유일한 서버 조각, ADR 0007)
+src/ui/comments.ts      💬 コメント 게시판 화면
+functions/api/comments.ts  💬 コメント 서버 — Pages Function + D1 (유일한 서버 조각, ADR 0007)
 src/ui/notes-render.ts  마인드맵 트리 → 칩
 src/ui/easter.ts        마스코트 팝업, 図鑑, 벚꽃
 src/mascots/visual.ts   마스코트 그림 (공식 WebP · 그림이 없을 때만 art.ts 의 닮은꼴 SVG)

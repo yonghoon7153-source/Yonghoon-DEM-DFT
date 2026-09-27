@@ -40,14 +40,14 @@ src/ui/compass.ts       지도 둘레의 방위 北 · 南 · 西 左 · 東 右
 src/ui/tokyo23.ts       東京23区 팝업 — 구 지도(public/geo/tokyo23.topo.json) + 구마다 내 칸
 src/ui/panel.ts         県/지방/메모장 패널 (다이어리 페이지)
 src/ui/notes-render.ts  마인드맵 트리 → 칩
-src/ui/comments.ts      💬 comment 게시판 화면 (ADR 0007)
+src/ui/comments.ts      💬 コメント 게시판 화면 (ADR 0007)
 src/ui/easter.ts        마스코트 팝업, 図鑑, 벚꽃
 src/mascots/art.ts      마스코트 SVG
 src/styles/             tokens / base / app
 data/                   JSON DB + schema + raw 지리 데이터
 functions/api/comments.ts  게시판 서버 — Pages Function + D1, 유일한 서버 조각 (켜는 법: nihon share)
 scripts/                build-geo.mjs (지도 단순화·인셋), validate-data.mjs, audit-canva.mjs (Canva PDF 전수조사)
-tools/nihon             한 줄 실행기 (sync → deps → dev), shots.mjs (스크린샷 QA)
+tools/nihon             한 줄 실행기 (sync → deps → dev), shots.mjs (스크린샷 QA), og-card.mjs (링크 미리보기 카드 → public/og.png)
 docs/                   adr/, CHECKLIST.md, log.md, index.md, screenshots/
 ```
 

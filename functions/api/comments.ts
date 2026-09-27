@@ -1,4 +1,4 @@
-// 💬 comment — the one small server piece of にほんちず (ADR 0007): visitors leave 「뭐뭐 넣어줘!」 and everyone
+// 💬 コメント — the one small server piece of にほんちず (ADR 0007): visitors leave 「뭐뭐 넣어줘!」 and everyone
 // sees the list. A Cloudflare Pages Function at /api/comments, kept in D1 (binding `DB`); deleting needs the
 // `ADMIN_KEY` secret. No login. The IP is never stored — only a salted hash, to slow down flooding.
 //   GET    /api/comments[?before=<id>]   newest first, 30 at a time (+ `admin: true` when X-Admin-Key is right)
