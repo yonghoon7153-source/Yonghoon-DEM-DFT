@@ -413,6 +413,8 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
 - ⚠ 러너 `--output=logs/…` 는 제출 폴더 기준 — 케이스 폴더에서 sbatch 했으므로 그 안에 `logs/` 필요 (PENDING 중 mkdir 안내).  CLAUDE.md 에 두 PC 다운로드 경로.
 - ⛔ **사고 (원장 `SELF-54`)**: 232358/59 는 `logs/` 부재로 0 초 FAILED (내 지시) · 232384/85 는 **체크포인트 확인 없이 INSERTING 부터** 재발사 → 사용자 취소.  지시문의 두 전제 ("체크포인트는 PHASE 3 에서만" · "재개 첫 thermo 줄 압력 대조") 둘 다 틀림 (선배 세션 지적).
   ✅ 선배 세션이 체크포인트에서 이었다 — r050_a after_settling 200001 → job 233797 · r075_a compress 1500000 → job 233799 (30 MPI · G1/G2/G3).  표준 절차 `docs/resume_ckpt_procedure_20260927.md` + `scripts/resume_ckpt.sh` · `ckpt_watch.sh` · CLAUDE.md 체크리스트 (`2354ff8d7` · `643e32422` · `1b8ef7f67`).
+- **22:07 r075_a 완주** (30 MPI · 3,285,000) → 22:2x 결정: 추출 + r050_a 는 60 MPI 로 다시 잇기 (212 k step/h 라) — 명령 = resume_ckpt.sh (사용자 실행).  **22:4x 3/4 열람** (`docs/data/pure_se_r075_20260927/` · prereg §6-0c):
+  내부 정확 union **6.549 %** (r100 5.815 · 5.768) · Q1 산술 ⇒ r050 ≥ 6.185 % 이면 중앙 ≥ 6.0.  판정 없음.
 
 ## ㉓ 고-Bo 믹서 LH — Codex 재리뷰 = HOLD (09-27 저녁)
 
