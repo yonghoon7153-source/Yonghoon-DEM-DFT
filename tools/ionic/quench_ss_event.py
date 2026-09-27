@@ -93,6 +93,47 @@ def _segment(tset, tmax, tmin, tol=1.0):
     return "quench"
 
 
+def p_coord_stats(rows):
+    """4 배위를 벗어난 P 의 통계 (회신 CD 새 항목 1 · 2026-09-27 — *"다른 네 시드의 궤적에서도 같은 통계를"*).
+    구간별 '이탈 P 가 하나라도 있는 프레임' 분율 · P 별 이탈 프레임 수(구간별)·배위값·이탈 횟수·처음 이탈·끝까지 이탈했나·회복 시점.
+    ⛔ 못 하는 것: 배위는 거리 컷(R_PS) 기준이다 — 결합 차수·전자구조가 아니다 · 저장 간격 사이의 끊김/회복은 못 본다 ·
+       '회복' 은 마지막 이탈 다음 **저장 프레임**이다 (실제 회복 시각은 그 사이 어딘가)."""
+    seg, perP, maxsim, prev = {}, {}, 0, set()
+    for i, r in enumerate(rows):
+        s = r.get("segment") or "unknown"
+        g = seg.setdefault(s, {"frames": 0, "frames_any_not4": 0})
+        g["frames"] += 1
+        bad = [(int(p), int(n)) for p, n in (r.get("P_not_4coord") or [])]
+        if bad:
+            g["frames_any_not4"] += 1
+        maxsim = max(maxsim, len(bad))
+        cur = set()
+        for p, n in bad:
+            cur.add(p)
+            q = perP.setdefault(p, {"frames_not4": 0, "by_segment": {}, "coord_values": {}, "episodes": 0, "first": None, "last": None, "_i": None})
+            q["frames_not4"] += 1
+            q["by_segment"][s] = q["by_segment"].get(s, 0) + 1
+            q["coord_values"][str(n)] = q["coord_values"].get(str(n), 0) + 1
+            if p not in prev:
+                q["episodes"] += 1
+            pt = {"frame": r.get("frame"), "t_ps": r.get("t_ps"), "T_set_K": r.get("T_set_K"), "segment": s}
+            if q["first"] is None:
+                q["first"] = pt
+            q["last"] = pt; q["_i"] = i
+        prev = cur
+    last_bad = {int(p) for p, _ in (rows[-1].get("P_not_4coord") or [])} if rows else set()
+    for p, q in perP.items():
+        q["in_last_frame"] = p in last_bad
+        i = q.pop("_i")
+        nx = rows[i + 1] if (not q["in_last_frame"] and i is not None and i + 1 < len(rows)) else None
+        q["recovered_at"] = {"frame": nx.get("frame"), "t_ps": nx.get("t_ps"), "T_set_K": nx.get("T_set_K"), "segment": nx.get("segment") or "unknown"} if nx else None
+    for g in seg.values():
+        g["fraction_any_not4"] = round(g["frames_any_not4"] / g["frames"], 4) if g["frames"] else None
+    return {"by_segment": seg, "per_P": {str(k): v for k, v in sorted(perP.items())}, "n_P_ever_not4": len(perP),
+            "n_P_not4_last_frame": len(last_bad), "max_simultaneous_not4": maxsim,
+            "note": "거리 컷 R_PS 기준 배위 · 저장 간격 사이 사건은 못 봄 · '회복' = 마지막 이탈 다음 저장 프레임"}
+
+
 def analyze(run_dir, mq, ss_cut=SS_CUT, stride=1, log=print):
     from ase.io import iread
     run = pathlib.Path(run_dir)
@@ -165,6 +206,7 @@ def analyze(run_dir, mq, ss_cut=SS_CUT, stride=1, log=print):
         for r in after:
             kinds[r["ss_kind"]] = kinds.get(r["ss_kind"], 0) + 1
         res["kind_histogram_after_onset"] = kinds
+    res["P_coord_stats"] = p_coord_stats(rows)
     res["summary"] = _summary(res)
     for ln in res["summary"]:
         log(ln)
@@ -185,6 +227,15 @@ def _summary(res):
     L = [f"프레임 {res['n_frames']} · 컷 S–S < {res['ss_cut_A']} Å · P–S 배위 컷 {res['R_PS_A']} Å · 시간축: {res['time_axis']}"]
     p = res.get("PS4_first_below_1")
     L.append("PS₄ 보존율 < 1 첫 프레임: " + (f"#{p['frame']} t={p['t_ps']} ps · T_set={p['T_set_K']} · {p['segment']} · 값 {p['PS4_fraction']:.4f}" if p else "없음 (전 구간 1.0)"))
+    ps = res.get("P_coord_stats")
+    if ps:
+        L.append("P 4배위 이탈 (이탈 P 가 하나라도 있는 프레임): " + " · ".join(f"{k} {v['frames_any_not4']}/{v['frames']}" for k, v in ps["by_segment"].items())
+                 + f" · 이탈한 P {ps['n_P_ever_not4']} 개 · 마지막 프레임에도 이탈 {ps['n_P_not4_last_frame']} 개 · 동시 최대 {ps['max_simultaneous_not4']}")
+        for pk, q in ps["per_P"].items():
+            rec = q["recovered_at"]
+            L.append(f"   P{pk}: {q['frames_not4']} 프레임 {q['by_segment']} · 배위 {q['coord_values']} · 이탈 {q['episodes']} 회 · 처음 #{q['first']['frame']} "
+                     f"({q['first']['segment']} · T_set {q['first']['T_set_K']}) · "
+                     + ("**끝까지 이탈**" if q["in_last_frame"] else f"회복 #{rec['frame']} ({rec['segment']} · T_set {rec['T_set_K']})"))
     o = res.get("onset")
     if not o:
         L.append("S–S 근접 사건: **없음** (전 프레임 최단 S–S ≥ 컷)")
@@ -264,6 +315,27 @@ def _selftest():
         except ValueError:
             bad_ = True
         ck(bad_, "⛔음성: thermo 도 plan.json 도 없으면 시간축을 지어내지 않고 죽는다")
+    rows_t = [{"frame": 0, "t_ps": 0.0, "T_set_K": 1200.0, "segment": "melt_hold", "P_not_4coord": []},
+              {"frame": 1, "t_ps": 1.0, "T_set_K": 1200.0, "segment": "melt_hold", "P_not_4coord": [[7, 3]]},
+              {"frame": 2, "t_ps": 2.0, "T_set_K": 1200.0, "segment": "melt_hold", "P_not_4coord": [[7, 3], [9, 5]]},
+              {"frame": 3, "t_ps": 3.0, "T_set_K": 900.0, "segment": "quench", "P_not_4coord": []},
+              {"frame": 4, "t_ps": 4.0, "T_set_K": 700.0, "segment": "quench", "P_not_4coord": [[7, 3]]},
+              {"frame": 5, "t_ps": 5.0, "T_set_K": 300.0, "segment": "final_hold", "P_not_4coord": [[7, 3]]}]
+    st = p_coord_stats(rows_t)
+    q7, q9 = st["per_P"].get("7", {}), st["per_P"].get("9", {})
+    ck(st["n_P_ever_not4"] == 2 and st["n_P_not4_last_frame"] == 1 and st["max_simultaneous_not4"] == 2 and q7.get("frames_not4") == 4
+       and q7.get("episodes") == 2 and q7.get("in_last_frame") is True and q7.get("by_segment") == {"melt_hold": 2, "quench": 1, "final_hold": 1}
+       and q9.get("in_last_frame") is False and (q9.get("recovered_at") or {}).get("frame") == 3 and (q9.get("recovered_at") or {}).get("T_set_K") == 900.0
+       and q9.get("coord_values") == {"5": 1} and st["by_segment"]["melt_hold"]["frames_any_not4"] == 2 and st["by_segment"]["quench"]["fraction_any_not4"] == 0.5,
+       f"P 4배위 이탈 통계: 구간별 분율 · P 별 프레임·이탈 횟수·끝까지 이탈·회복 시점 — {st}")
+    s0 = p_coord_stats([{**x, "P_not_4coord": []} for x in rows_t])
+    ck(s0["n_P_ever_not4"] == 0 and s0["per_P"] == {} and s0["max_simultaneous_not4"] == 0 and all(v["frames_any_not4"] == 0 for v in s0["by_segment"].values()),
+       "⛔음성: 이탈 없는 행 → 이탈 P 0 · 분율 0")
+    with tempfile.TemporaryDirectory() as td:
+        rp = analyze(_synthetic(td, event="detach"), mq, log=lambda *a: None)["P_coord_stats"]
+        p0 = rp["per_P"].get("0", {})
+        ck(p0.get("first", {}).get("frame") == 5 and p0.get("in_last_frame") is True and p0.get("episodes") == 1 and rp["n_P_ever_not4"] == 1,
+           f"합성 궤적(떨어짐): P0 이 5 프레임부터 끝까지 3 배위 — {rp}")
     print(f"{'✅' if not bad else '⛔'} quench_ss_event selftest {ok}/{ok + bad}")
     return 0 if not bad else 1
 
