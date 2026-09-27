@@ -3,7 +3,7 @@ title: "리뷰 CF 프롬프트 — A′ V5 VASP 외주 준비본 v2 재리뷰 (C
 date: 2026-09-27
 updated: 2026-09-27
 tags: [review, codex, adhesion, wad, prereg, vasp, outsourcing, lpscl, silver, uma, d3, dipole, g5, re-review]
-status: 발송 대기 (1저자) — 도구·패키지·개정 3 v2 는 커밋 e025c0db7 에 고정 (원격)
+status: 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`codex_CF_reply_…` · P0 3 · P1 3) → v3 (커밋 c8d77dfd5) → 재리뷰 CG 발송 대기
 confidence: medium
 verificationStatus: unverified
 explored: false

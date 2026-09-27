@@ -3,7 +3,7 @@ title: "리뷰 CF 회신 — A′ V5 VASP 외주 준비본 v2: NO-GO (P0 3 · P1
 date: 2026-09-27
 updated: 2026-09-27
 tags: [review, codex, reply, adhesion, wad, prereg, vasp, outsourcing, uma, d3, dipole, g4, g5, pp-registry]
-status: 수령 (1저자 붙여넣기 · 원문 그대로) → 대응 v3 준비
+status: 수령 (1저자 붙여넣기 · 원문 그대로) → 대응 v3 커밋 c8d77dfd5 → 재리뷰 CG
 confidence: medium
 verificationStatus: unverified
 explored: false

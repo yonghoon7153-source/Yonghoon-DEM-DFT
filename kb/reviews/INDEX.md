@@ -104,7 +104,8 @@ evidenceScope: multi-source-primary
 | CB | 2026-09-25 | `codex_CB_prompt_wad_aprime_pilot_prereg_v4_2026_09_25.md` | `codex_CB_reply_wad_aprime_pilot_prereg_v4_2026_09_25.md` | 발송 완료 · 회신 수령 2026-09-25 밤 **조건부 GO** (`codex_CB_reply_…`) → 조건 4 이행 → 카드 v5 봉인 후보 (1저자 비준 대기) | 같은 라벨 · 주제 토큰 일치 ['aprime', 'pilot', 'prereg', 'v4', 'wad'] |
 | CC | 2026-09-26 | `li2s1a_CC_prompt_li2s_pilot_gateA_ledger_2026_09_26.md` | `li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` | 발송됨 (사용자 · 2026-09-26) · 회신 CC 수령 → `li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` | 같은 라벨 · 주제 토큰 일치 ['gateA', 'ledger', 'li2s', 'pilot']; 판정 인용 3회 |
 | CE | 2026-09-27 | `codex_CE_prompt_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` | `codex_CE_reply_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` | 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`codex_CE_reply_…` · P0 4 · P1 5 · 3b 원안 반대 · 3c 찬성) → v2 (커밋 e025c0db7) → 재리뷰 CF 발송 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'outsourcing', 'v5', 'vasp', 'wad'] |
-| CF | 2026-09-27 | `codex_CF_prompt_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` | `codex_CF_reply_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` | 발송 대기 (1저자) — 도구·패키지·개정 3 v2 는 커밋 e025c0db7 에 고정 (원격) | 같은 라벨 · 주제 토큰 일치 ['aprime', 'outsourcing', 'v2', 'v5', 'vasp', 'wad'] |
+| CF | 2026-09-27 | `codex_CF_prompt_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` | `codex_CF_reply_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` | 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`codex_CF_reply_…` · P0 3 · P1 3) → v3 (커밋 c8d77dfd5) → 재리뷰 CG 발송 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'outsourcing', 'v2', 'v5', 'vasp', 'wad'] |
+| CG | 2026-09-27 | `codex_CG_prompt_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md` | — | 발송 대기 (1저자) — 도구·패키지·개정 3 v3 는 커밋 c8d77dfd5 에 고정 (원격) | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
@@ -117,6 +118,6 @@ evidenceScope: multi-source-primary
 - `codex_BP_prompt_static_pair_result_2026_09_13.md` [발송대기] — 회신 파일이 있다: codex_BP_reply_static_pair_result_2026_09_13.md
 - `codex_BQ3_prompt_sweep_complete_2026_09_13.md` [발송 대기] — 회신 파일이 있다: codex_BQ3_reply_sweep_complete_2026_09_13.md
 - `codex_CE_prompt_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` [발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`codex_CE_reply_…` · P0 4 · P1 5 · 3b 원안 반대 · 3c 찬성) → v2 (커밋 e025c0db7) → 재리뷰 CF 발송 대기] — 회신 파일이 있다: codex_CE_reply_wad_aprime_v5_vasp_outsourcing_2026_09_27.md
-- `codex_CF_prompt_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` [발송 대기 (1저자) — 도구·패키지·개정 3 v2 는 커밋 e025c0db7 에 고정 (원격)] — 회신 파일이 있다: codex_CF_reply_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md
+- `codex_CF_prompt_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` [발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`codex_CF_reply_…` · P0 3 · P1 3) → v3 (커밋 c8d77dfd5) → 재리뷰 CG 발송 대기] — 회신 파일이 있다: codex_CF_reply_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md
 - `codex_W_prompt_polaron_S0_2026_09_02.md` [발송 대기] — 회신 파일이 있다: internal_Z2_reply_polaron_S0_2026_09_03.md
 - `codex_X_prompt_polaron_S0_2026_09_02.md` [발송 대기] — 회신 파일이 있다: internal_Z3_reply_polaron_S0_2026_09_03.md
