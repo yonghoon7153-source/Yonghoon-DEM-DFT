@@ -39,3 +39,4 @@ append-only. 형식: `## [YYYY-MM-DD] action | subject` — 커밋 제목 `actio
 ## [2026-09-27] ingest | 공식 그림 54/54 — ふなっしー · バリィさん · カツオ人間, 반입 여백 3% 가 원본 가장자리에서 잘리던 것 고침
 ## [2026-09-27] update | 닮은꼴 SVG 는 그림이 없을 때만 불러오기, README 스크린샷을 실제 그림으로
 ## [2026-09-27] docs | Cloudflare 연결 순서 — Preview branch None 추가, CNAME 이름을 nihoncheese 로 바로잡음
+## [2026-09-27] docs | Cloudflare Pages 연결됨 — nihoncheese.pages.dev, 실제 대시보드 순서(Continue to Pages)로

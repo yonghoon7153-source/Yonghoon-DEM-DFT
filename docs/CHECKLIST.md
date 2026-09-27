@@ -50,5 +50,5 @@
 
 | # | 요청 | 상태 | 메모 |
 |---|------|------|------|
-| 25 | Cloudflare 로 연결 (nihoncheese.ayh.kr) — 사용자가 대시보드에서 직접 등록, 순서만 | 🔧 사용자 차례 | 순서: README 「배포」 · `nihon share`. 다른 브랜치가 다른 프로젝트라 Preview branch 는 None. 이 컨테이너는 `*.pages.dev` · `nihoncheese.ayh.kr` 접속이 막혀 있어 배포 확인은 사용자 화면으로 |
+| 25 | Cloudflare 로 연결 (nihoncheese.ayh.kr) — 사용자가 대시보드에서 직접 등록, 순서만 | 🔧 도메인 남음 | Pages 프로젝트 `nihoncheese` 로 배포됨 — **https://nihoncheese.pages.dev** 열림 (사용자 확인). 남은 것: Preview branch None · `nihoncheese.ayh.kr` CNAME (ayh.kr 은 이 Cloudflare 계정에 없음 → 관리처 DNS 에). 순서: README 「배포」 · `nihon share` |
 | 26 | 노션 일본어 단어장은 나중에 — 하자고 할 때 | ⏳ 대기 | `data/words.json` 에 얹고 県·지방과 연결 (CLAUDE.md 다음 단계) |
