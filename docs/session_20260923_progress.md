@@ -415,6 +415,8 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
   ✅ 선배 세션이 체크포인트에서 이었다 — r050_a after_settling 200001 → job 233797 · r075_a compress 1500000 → job 233799 (30 MPI · G1/G2/G3).  표준 절차 `docs/resume_ckpt_procedure_20260927.md` + `scripts/resume_ckpt.sh` · `ckpt_watch.sh` · CLAUDE.md 체크리스트 (`2354ff8d7` · `643e32422` · `1b8ef7f67`).
 - **22:07 r075_a 완주** (30 MPI · 3,285,000) → 22:2x 결정: 추출 + r050_a 는 60 MPI 로 다시 잇기 (212 k step/h 라) — 명령 = resume_ckpt.sh (사용자 실행).  **22:4x 3/4 열람** (`docs/data/pure_se_r075_20260927/` · prereg §6-0c):
   내부 정확 union **6.549 %** (r100 5.815 · 5.768) · Q1 산술 ⇒ r050 ≥ 6.185 % 이면 중앙 ≥ 6.0.  판정 없음.
+- **22:41 r050_a 60 MPI 재개 (`resume_ckpt.sh` 첫 실전, 사용자 실행)**: compress 650000 · 시험 job 233923 · G1 · G2 통과 · **G3 실패** (압력 0 → KE 대체: 원 6.22e-10 vs 재개 7.65e-11 —
+  원 로그의 `run 5000` 경계 KE 톱니 ×6.5–6.7 위의 비교 · 왜 튀는지는 모름) → 도구는 본 제출 안 함 → 사용자 결정 (내 권고) **본 job 233951** (60 MPI · PD).  문턱은 안 바꿈.  사유 · 본 런에서 볼 것 ①–③ = prereg §6-0.
 
 ## ㉓ 고-Bo 믹서 LH — Codex 재리뷰 = HOLD (09-27 저녁)
 
