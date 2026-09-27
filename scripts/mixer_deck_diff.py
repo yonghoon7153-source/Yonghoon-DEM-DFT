@@ -23,6 +23,7 @@ usage
 import argparse
 import glob
 import json
+import math
 import os
 import re
 import sys
@@ -41,7 +42,7 @@ REL_TOL = 1e-6          # 덱은 CED 를 유효숫자 몇 자리로 찍는다 �
 
 def parse_deck(text):
     """덱 텍스트 → dict(cmds=[비-CED 토큰 목록…], ced=(n, 값 목록), names={타입: 상 이름})."""
-    cmds, ced, names, ntypes = [], None, {}, None
+    cmds, ced, names, ntypes, head = [], None, {}, None, None
     inv = {v: k for k, v in TPL_SEED.items()}
     for _, blk in logical_commands(text):
         t = _tokens(blk)
@@ -55,6 +56,7 @@ def parse_deck(text):
             if len(vals) != n * n:
                 raise ValueError(f'CED 행렬 값 {len(vals)} 개 ≠ {n}×{n}')
             ced = (n, vals)
+            head = t[:7]                            # fix <id> <group> property/global cohesionEnergyDensity peratomtypepair <n>
             continue
         if t[0] == 'create_box':
             ntypes = int(t[1])
@@ -66,13 +68,18 @@ def parse_deck(text):
         raise ValueError('덱에 cohesionEnergyDensity 가 없다')
     if ntypes is not None:
         names.setdefault(ntypes, 'WALL')
-    return dict(cmds=cmds, ced=ced, names=names)
+    return dict(cmds=cmds, ced=ced, names=names, ced_head=head)
 
 
-def diff_decks(text_ref, text_new, allow='B'):
-    """두 덱 → 판정 dict(verdict, non_ced_diffs, changed, outside, missing, table)."""
+def diff_decks(text_ref, text_new, allow='B', expect=None):
+    """두 덱 → 판정 dict(verdict, non_ced_diffs, changed, outside, missing, wrong_direction, target_mismatch, table).
+
+    2026-09-27 저녁 (Codex HBR2-05) 넓힌 것: CED 명령 머리 (fix id · group · style · n) 동일 · **양쪽** 행렬 유한 · 비음수 ·
+    대칭 · 허용 쌍은 **증가** 방향 (고-Bo 확장) · `expect` = (n, 값) 을 주면 새 행렬이 그 목표와 1e-5 안에서 같아야 한다.
+    ⚠ PASS 는 **덱 텍스트의 계약**이다 — 실제 STL 내용 · 바이너리 · 실행 환경은 발사 기록 (§2-5) 이 따로 묶는다.
+    """
     a, b = parse_deck(text_ref), parse_deck(text_new)
-    out = dict(allow=allow, non_ced_diffs=[], changed=[], outside=[], missing=[], table=[])
+    out = dict(allow=allow, non_ced_diffs=[], changed=[], outside=[], missing=[], wrong_direction=[], target_mismatch=[], table=[])
     if len(a['cmds']) != len(b['cmds']):
         out['non_ced_diffs'].append(f'명령 수 {len(a["cmds"])} ≠ {len(b["cmds"])}')
     for i, (x, y) in enumerate(zip(a['cmds'], b['cmds'])):
@@ -80,29 +87,68 @@ def diff_decks(text_ref, text_new, allow='B'):
             out['non_ced_diffs'].append(f'#{i}: {" ".join(x)[:120]}  ⇄  {" ".join(y)[:120]}')
     if a['names'] != b['names']:
         out['non_ced_diffs'].append(f'타입 이름 {a["names"]} ≠ {b["names"]}')
+    if a['ced_head'] != b['ced_head']:
+        out['non_ced_diffs'].append(f'CED 명령 머리가 다르다: {" ".join(a["ced_head"])}  ⇄  {" ".join(b["ced_head"])}')
     (na, va), (nb, vb) = a['ced'], b['ced']
     if na != nb:
         out['non_ced_diffs'].append(f'CED 행렬 크기 {na} ≠ {nb}')
         out['verdict'] = 'FAIL'
         return out
     nm = [a['names'].get(k + 1, f't{k + 1}') for k in range(na)]
-    changed = set()
+    for lab, v_ in (('기준', va), ('새', vb)):
+        nbad = sum(not math.isfinite(x) for x in v_)
+        if nbad:
+            out['non_ced_diffs'].append(f'{lab} 덱 CED 에 비유한 값 {nbad} 개')
+        if any(math.isfinite(x) and x < 0 for x in v_):
+            out['non_ced_diffs'].append(f'{lab} 덱 CED 에 음수')
+        for i in range(na):
+            for j in range(i + 1, na):
+                p_, q_ = v_[i * na + j], v_[j * na + i]
+                if math.isfinite(p_) and math.isfinite(q_) and abs(p_ - q_) > REL_TOL * max(abs(p_), 1e-30):
+                    out['non_ced_diffs'].append(f'{lab} 덱 CED 비대칭 ({nm[i]},{nm[j]}): {p_:.6g} vs {q_:.6g}')
+    changed, vals = set(), {}
     for i in range(na):
         for j in range(na):
             x, y = va[i * na + j], vb[i * na + j]
-            if abs(y - x) > REL_TOL * max(abs(x), abs(y), 1e-30):
-                changed.add(tuple(sorted((nm[i], nm[j]))))
+            pair = tuple(sorted((nm[i], nm[j])))
+            if (math.isfinite(x) and math.isfinite(y) and abs(y - x) > REL_TOL * max(abs(x), abs(y), 1e-30)) or (math.isfinite(x) != math.isfinite(y)):
+                changed.add(pair)
             if j >= i:
+                vals[pair] = (x, y)
                 out['table'].append(dict(pair=f'{nm[i]}–{nm[j]}', ref=x, new=y,
                                          ratio=(y / x) if x else (float('inf') if y else 1.0)))
-            if abs(va[i * na + j] - va[j * na + i]) > REL_TOL * max(abs(va[i * na + j]), 1e-30):
-                out['non_ced_diffs'].append(f'기준 덱 CED 비대칭 ({nm[i]},{nm[j]})')
     allowed = ALLOW[allow]
     out['changed'] = sorted(changed)
     out['outside'] = sorted(changed - allowed)
     out['missing'] = sorted(allowed - changed)
-    out['verdict'] = 'PASS' if not (out['non_ced_diffs'] or out['outside'] or out['missing']) else 'FAIL'
+    out['wrong_direction'] = sorted(p_ for p_ in (changed & allowed)
+                                    if p_ in vals and math.isfinite(vals[p_][1]) and vals[p_][1] < vals[p_][0])
+    if expect is not None:
+        ne, ve = expect
+        if ne != nb:
+            out['target_mismatch'].append(f'목표 행렬 크기 {ne} ≠ {nb}')
+        else:
+            for i in range(na):
+                for j in range(i, na):
+                    x, y = ve[i * na + j], vb[i * na + j]
+                    if not (math.isfinite(x) and math.isfinite(y)) or abs(y - x) > 1e-5 * max(abs(x), abs(y), 1e-30):
+                        out['target_mismatch'].append(f'{nm[i]}–{nm[j]}: 목표 {x:.6g} vs 새 {y:.6g}')
+    out['verdict'] = 'PASS' if not (out['non_ced_diffs'] or out['outside'] or out['missing']
+                                    or out['wrong_direction'] or out['target_mismatch']) else 'FAIL'
     return out
+
+
+def collect_pairs(runs, arm, ref_arm, expect_seeds=None):
+    """runs 디렉터리 → ([(기준 덱, 새 덱)…], 찾은 시드 집합, 빠진 시드 집합).  <arm>_s<시드>/in.mixer 만 (gen.log 등은 건너뛴다)."""
+    pairs, found = [], set()
+    for d in sorted(glob.glob(os.path.join(runs, f'{arm}_s*'))):
+        sd = os.path.basename(d).split('_s', 1)[1]
+        if not (os.path.isdir(d) and sd.isdigit()):
+            continue
+        pairs.append((os.path.join(runs, f'{ref_arm}_s{sd}', 'in.mixer'), os.path.join(d, 'in.mixer')))
+        found.add(int(sd))
+    missing = set(int(s) for s in (expect_seeds or ())) - found
+    return pairs, found, missing
 
 
 def report(label, r):
@@ -110,7 +156,8 @@ def report(label, r):
     for row in r['table']:
         mark = '≠' if abs(row['ratio'] - 1.0) > REL_TOL else ' '
         print(f'   {mark} {row["pair"]:12s} {row["ref"]:14.6g} → {row["new"]:14.6g}   ×{row["ratio"]:.4g}')
-    for k, msg in (('non_ced_diffs', 'CED 밖 차이'), ('outside', '허용목록 밖 CED 변화'), ('missing', '개입 누락 (허용 쌍인데 안 바뀜)')):
+    for k, msg in (('non_ced_diffs', 'CED 밖 차이'), ('outside', '허용목록 밖 CED 변화'), ('missing', '개입 누락 (허용 쌍인데 안 바뀜)'),
+                   ('wrong_direction', '개입 방향 반대 (증가여야 한다)'), ('target_mismatch', '목표 행렬과 불일치')):
         if r[k]:
             print(f'   ⛔ {msg}: {r[k][:8]}')
 
@@ -170,6 +217,41 @@ def _selftest():
     #  ⑦ 시드가 다르면 삽입 명령이 달라 FAIL — 같은 시드끼리만 짝짓는다
     r = diff_decks(m.deck(pc, rpm, 8, seed=32452843, arm='LC'), m.deck(pc, rpm, 8, seed=49979687, arm='LH'), 'B')
     chk('⑦ 시드가 다르면 CED 밖 차이 = FAIL (짝은 같은 시드끼리)', r['verdict'] == 'FAIL' and r['non_ced_diffs'])
+
+    # ══ ⑧~⑬ 2026-09-27 저녁 Codex 재리뷰 HBR2-05 — 비교기 PASS 의 뜻을 등록 계약까지 넓힌다 (반례를 먼저 재현하고 고쳤다) ══
+    def _mutrow(text, i, j, fn, sym=False):
+        """새 덱의 CED 행렬 (i, j) 칸을 fn(값) 문자열로 (sym 이면 (j, i) 도)."""
+        lines_ = text.split('\n')
+        k0_ = next(k for k, l in enumerate(lines_) if l.startswith('fix mC '))
+        for a_, b_ in dict.fromkeys(((i, j), (j, i)) if sym else ((i, j),)):       # 대각 칸은 한 번만 (두 번 적용 = 원상복구)
+            row_ = lines_[k0_ + 1 + a_].split(); row_[b_] = fn(float(row_[b_])); lines_[k0_ + 1 + a_] = '    ' + ' '.join(row_)
+        return '\n'.join(lines_)
+    r = diff_decks(lc, _mutrow(lh, 0, 1, lambda v: f'{2 * v:.6g}'), 'B')
+    chk('⑧ 변이: 새 덱 P–S 한 방향만 ×2 (비대칭) → FAIL (기준 덱만 대칭 검사하던 구멍)',
+        r['verdict'] == 'FAIL' and any('비대칭' in d_ for d_ in r['non_ced_diffs']))
+    r = diff_decks(lc, _mutrow(lh, 2, 2, lambda v: 'nan', sym=True), 'B')
+    chk('⑨ 변이: 고정이어야 할 SE–SE 를 NaN 으로 → FAIL (비유한)', r['verdict'] == 'FAIL' and any('비유한' in d_ for d_ in r['non_ced_diffs']))
+    r = diff_decks(lc, _mutrow(lh, 0, 0, lambda v: f'{-v:.6g}', sym=True), 'B')
+    chk('⑩ 변이: 새 P–P 를 음수로 → FAIL (물리 범위)', r['verdict'] == 'FAIL' and any('음수' in d_ for d_ in r['non_ced_diffs']))
+    r = diff_decks(lc, lh.replace('fix mC all property/global', 'fix bogus nonexisting property/global'), 'B')
+    chk('⑪ 변이: CED fix 의 ID/group 을 바꾸면 → FAIL (명령 머리도 비교)',
+        r['verdict'] == 'FAIL' and any('머리' in d_ for d_ in r['non_ced_diffs']))
+    r = diff_decks(lc, _mutrow(lh, 0, 0, lambda v: f'{v / 1e3:.6g}', sym=True), 'B')
+    chk(f'⑫ 변이: 허용 쌍이 바뀌었어도 **방향이 반대** (P–P 가 LC 보다 작아짐) 면 FAIL ({r.get("wrong_direction")})',
+        r['verdict'] == 'FAIL' and r.get('wrong_direction'))
+    exp_ = parse_deck(lh)['ced']
+    r_ok = diff_decks(lc, lh, 'B', expect=exp_)
+    r_no = diff_decks(lc, _mutrow(lh, 0, 0, lambda v: f'{v * 1.01:.6g}', sym=True), 'B', expect=exp_)
+    chk('⑬ 목표 행렬 (생성기가 낸 LH) 을 주면 일치할 때만 PASS (1 % 어긋나면 FAIL)',
+        r_ok['verdict'] == 'PASS' and r_no['verdict'] == 'FAIL' and r_no.get('target_mismatch'))
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as td_:
+        for a_ in ('LC', 'LH'):
+            os.makedirs(os.path.join(td_, f'{a_}_s32452843'))
+            open(os.path.join(td_, f'{a_}_s32452843', 'in.mixer'), 'w').write(lc if a_ == 'LC' else lh)
+        pairs_, found_, missing_ = collect_pairs(td_, 'LH', 'LC', m.CAMPAIGN_SEEDS)
+        chk(f'⑭ --runs: 예정 세 시드 중 하나만 있으면 1/3 로 세고 빠진 시드를 보고한다 ({sorted(missing_)})',
+            len(pairs_) == 1 and found_ == {32452843} and len(missing_) == 2)
     print(f'\nmixer_deck_diff selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
 
@@ -181,18 +263,22 @@ def main():
     ap.add_argument('--runs', help='runs 디렉터리 — <ref-arm>_s<시드>/in.mixer 와 <arm>_s<시드>/in.mixer 를 같은 시드끼리')
     ap.add_argument('--ref-arm', default='LC')
     ap.add_argument('--arm', default='LH')
+    ap.add_argument('--expect-seeds', default=None,
+                    help='(--runs) 있어야 할 시드 목록 "a,b,c" — 기본 = 생성기 CAMPAIGN_SEEDS.  하나라도 빠지면 FAIL (n/N 을 기계가 센다)')
+    ap.add_argument('--expect-deck', default=None,
+                    help='지금 생성기로 새로 만든 같은 팔 덱 — 그 CED 행렬을 목표값으로 대조 (발사 덱이 손대지지 않았나)')
     ap.add_argument('--json')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
-    pairs = []
+    expect = parse_deck(open(a.expect_deck, encoding='utf-8').read())['ced'] if a.expect_deck else None
+    pairs, missing_seeds = [], set()
     if a.runs:
-        for d in sorted(glob.glob(os.path.join(a.runs, f'{a.arm}_s*'))):
-            sd = os.path.basename(d).split('_s', 1)[1]
-            if not (os.path.isdir(d) and sd.isdigit()):          # gen_all 이 옆에 남기는 <런>.gen.log 등은 건너뛴다
-                continue
-            pairs.append((os.path.join(a.runs, f'{a.ref_arm}_s{sd}', 'in.mixer'), os.path.join(d, 'in.mixer')))
+        from make_mixer_deck import CAMPAIGN_SEEDS
+        want = [int(x) for x in a.expect_seeds.split(',')] if a.expect_seeds else list(CAMPAIGN_SEEDS)
+        pairs, found, missing_seeds = collect_pairs(a.runs, a.arm, a.ref_arm, want)
+        print(f'── {a.runs}: {a.arm}_s* {len(pairs)}/{len(want)} 짝 (찾음 {sorted(found)} · 빠짐 {sorted(missing_seeds)})')
         if not pairs:
             ap.error(f'{a.runs} 에 {a.arm}_s* 가 없다')
     elif len(a.decks) == 2:
@@ -201,7 +287,7 @@ def main():
         ap.error('덱 두 개 또는 --runs 를 주세요')
     out = []
     for ref, new in pairs:
-        r = diff_decks(open(ref, encoding='utf-8').read(), open(new, encoding='utf-8').read(), a.allow)
+        r = diff_decks(open(ref, encoding='utf-8').read(), open(new, encoding='utf-8').read(), a.allow, expect=expect)
         r.update(ref=ref, new=new)
         report(f'{ref}  →  {new}', r)
         out.append(r)
@@ -209,8 +295,9 @@ def main():
         json.dump(out, open(a.json, 'w'), ensure_ascii=False, indent=1)
         print(f'→ {a.json}')
     bad = sum(r['verdict'] != 'PASS' for r in out)
-    print(f'\n{len(out) - bad}/{len(out)} PASS' + ('' if not bad else '  ⛔ 짝짓기 근거 없음 — 발사 금지'))
-    raise SystemExit(1 if bad else 0)
+    print(f'\n{len(out) - bad}/{len(out)} PASS' + ('' if not bad else '  ⛔ 짝짓기 근거 없음 — 발사 금지')
+          + (f'  ⛔ 예정 시드 {sorted(missing_seeds)} 가 없다 — {len(out)} 짝으로는 3/3 이 아니다' if missing_seeds else ''))
+    raise SystemExit(1 if (bad or missing_seeds) else 0)
 
 
 if __name__ == '__main__':

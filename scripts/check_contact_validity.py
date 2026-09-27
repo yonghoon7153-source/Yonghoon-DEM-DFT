@@ -30,6 +30,7 @@ usage
   python3 scripts/check_contact_validity.py --selftest
 """
 import argparse
+import json
 import os
 import sys
 
@@ -230,8 +231,9 @@ def _planes(tris, ref):
     return np.array(N), np.array(C)
 
 
-def container_at(run_dir, spec, step):
-    """스텝 `step` 의 용기 평면 → (N, c, 평면별 메시 id, 드럼 면 수).  볼록이 아니면 ValueError."""
+def container_at(run_dir, spec, step, dtheta=0.0):
+    """스텝 `step` 의 용기 평면 → (N, c, 평면별 메시 id, 드럼 면 수).  볼록이 아니면 ValueError.
+    dtheta = 회전각에 더할 오프셋 (rad) — 영수증의 각 오차 전파용."""
     if not spec['used']:
         raise ValueError('덱에 wall/gran meshes 가 없다')
     unsupported = [m for m in spec['used'] if m not in ('Drum', 'Front', 'Back')]
@@ -243,7 +245,7 @@ def container_at(run_dir, spec, step):
         T = read_stl(os.path.join(run_dir, f)) * sc
         mv = spec['moves'].get(m)
         if mv:
-            R = _rot(mv['axis'], mesh_angle(spec, m, step))
+            R = _rot(mv['axis'], mesh_angle(spec, m, step) + dtheta)
             T = (T - mv['origin']) @ R.T + mv['origin']
         tri[m] = T
     ref = np.vstack([T.reshape(-1, 3) for T in tri.values()]).mean(0)
@@ -317,27 +319,77 @@ def infer_drum_phase(P, r, run_dir, spec, step, max_ovl=CONTRACT_MAX_OVL, tol_fr
     return out
 
 
+def load_phase_receipt(path, spec):
+    """재개-위상 영수증 (`scripts/mixer_restart_phase_test.py` 가 쓴다 — **이 바이너리**가 재개 뒤에도 덱 스케줄대로 메시를
+    돌린다는 실측: 체크포인트 앞뒤의 `dump mesh/stl` 각 = 2π·(s − start)·dt/period) → dict.
+    덱의 드럼 회전 (주기 · 축) 과 맞지 않거나 실패한 영수증이면 ValueError — 그 런은 영수증 없이 (상·하한) 판정한다.
+    ⚠ 영수증은 코드 근거 (FixMoveMesh::restart 가 time_ 을 복원) 를 **실행 바이너리에서 실측**한 것이지 그 런의 벽 좌표가 아니다.
+    """
+    rc = json.load(open(path, encoding='utf-8'))
+    miss = [k for k in ('test', 'passed', 'period', 'axis', 'angle_error_deg', 'binary_sha256') if k not in rc]
+    if miss:
+        raise ValueError(f'영수증에 {miss} 가 없다')
+    if rc['test'] != 'restart_phase' or not rc['passed']:
+        raise ValueError('영수증이 restart_phase 통과 기록이 아니다')
+    mv = spec['moves'].get('Drum')
+    if not mv:
+        raise ValueError('덱에 드럼 회전이 없다')
+    if abs(float(rc['period']) - mv['period']) > 1e-9 * mv['period']:
+        raise ValueError(f'영수증 주기 {rc["period"]} ≠ 덱 {mv["period"]:g}')
+    ax = np.asarray(rc['axis'], float)
+    ax = ax / np.linalg.norm(ax)
+    if float(ax @ mv['axis']) < 1 - 1e-9:
+        raise ValueError('영수증 축 ≠ 덱 축')
+    if not (0 <= float(rc['angle_error_deg']) <= 0.5):
+        raise ValueError(f'영수증 각 오차 {rc["angle_error_deg"]}° — 0.5° 안이어야 쓴다')
+    return rc
+
+
+def container_from_stl(path, spec):
+    """LIGGGHTS `dump mesh/stl` 파일 (시뮬레이션 단위 · **그 step 의 실제 벽**) → (N, c, 평면별 표지, 드럼 면 수).
+    독립 기하 — 회전각을 계산하지 않고 덤프된 삼각형을 그대로 쓴다.  끝판 = 법선이 드럼 축과 나란한 평면 ('Cap')."""
+    T = read_stl(path)
+    N, C = _planes(T, T.reshape(-1, 3).mean(0))
+    mv = spec['moves'].get('Drum') or dict(axis=np.array([1.0, 0, 0]))
+    par = np.abs(N @ mv['axis']) > 0.99
+    V = T.reshape(-1, 3)
+    if float((V @ N.T + C).min()) < -1e-5 * float(np.abs(V).max()):
+        raise ValueError('mesh 덤프의 용기가 볼록이 아니다')
+    return N, C, ['Cap' if p_ else 'Drum' for p_ in par], int((~par).sum())
+
+
 def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None, walls=True,
-                 phase_frames=PHASE_FRAMES, phase_tol_frac=PHASE_TOL_FRAC, progress=False):
+                 phase_receipt=None, expect_counts=None, diag_fit=False, progress=False):
     """★ 등록 계약 판정 — 분석 창 **전 프레임** (정착 끝 t₀ = `measure_mixing_index` 와 같은 정의 → 마지막 덤프).
 
       ① 입자–입자 최대 δ/r_min ≤ max_ovl (강체 내부 쌍 제외)
-      ② 벽 — 드럼 다각 원통 + 두 끝판, **회전각 반영** — 최대 δ/r ≤ max_ovl
-      ③ 상별 입자 수 · id 집합 = t₀ (그리고 총수 = n_expected)
-      ④ 기술 조건 — 볼록 용기 · 드럼 회전각을 데이터로 확인 · 창 프레임 ≥ 1.  못 서면 **TECH** (통과로 치지 않는다)
+      ② 벽 — 드럼 다각 원통 + 두 끝판 — 최대 δ/r ≤ max_ovl.  **드럼 회전각의 근거** (2026-09-27 Codex HBR2-01: 입자 배치로
+         회전각을 되읽는 fitting 은 증거가 아니다 — 참 벽 겹침 2 % 인데 위상이 반 면각 어긋나면 PASS · 5/5 ok 를 냈고, 참
+         위상 · 0.5 % 는 TECH 로 막았다.  셀프테스트 ⑮ · ⑯):
+           mesh-dump     post_mesh/mesh_<step>.stl (LIGGGHTS `dump mesh/stl`) 이 창 **전 프레임**에 있으면 그 삼각형 = 독립 기하
+           receipt       `phase_receipt` (재개-위상 영수증) 가 덱과 맞으면 예정각 ± 영수증 각 오차 (최댓값)
+           bounded       둘 다 없으면 회전각과 무관한 상·하한 — 상한 ≤ max_ovl 이면 PASS · 하한 > max_ovl 이면 REJECT
+           unidentified  그 사이 = TECH (판정 불가.  예정각으로 잰 값은 **미검증**으로 보고만 한다)
+      ③ 상별 입자 수 · id 집합 · **id 별 type · radius** = t₀ (총수 = n_expected · 상별 = expect_counts)  (HBR2-08)
+      ④ 기술 조건 — 볼록 용기 · 창 프레임 ≥ 1 · **창 안 덤프 결손 없음** (HBR2-03: 미관측 구간에 통과 증서를 주지 않는다) ·
+         덤프 헤더 TIMESTEP/원자 수 = 파일명/행 수 · 같은 step 중복 없음.  못 서면 **TECH** (통과로 치지 않는다)
 
+    관측량 = **저장 프레임 최대** (snapshot-max).  덤프 사이 (이 덱 32 ms ≫ Hertz 충돌 ≈ 22 µs) 의 peak 는 관측하지 않는다 — D-1.
     verdict = PASS · REJECT (①②③ 위반) · TECH (④ 만).  둘 다면 REJECT.
     """
-    from measure_mixing_index import deck_plan, _t0_frame
+    from measure_mixing_index import deck_plan, _t0_frame, dump_header
     deck_path = os.path.join(run_dir, 'in.mixer')
     deck_text = open(deck_path, encoding='utf-8', errors='replace').read()
     plan = deck_plan(deck_path)
     fr = frames(os.path.join(run_dir, 'post'))
     reject, tech = [], []
     out = dict(label=label or run_dir, max_ovl=max_ovl, reject=reject, tech=tech, per_frame=[],
+               observable='snapshot-max: 창의 저장 프레임에서 잰 최대 — 덤프 사이 peak 는 관측하지 않는다 (D-1)',
+               dump_every=plan['dump_every'], dump_interval_s=plan['dump_every'] * plan['dt'],
                pp_max=float('-inf'), pp_max_step=None, pp_max_types=None, pp_max_by_pair={},
                wall_max=float('-inf'), wall_max_step=None, wall_max_type=None, wall_max_mesh=None,
-               wall_max_by_type={}, phase=[], phase_status='not_run', n_frames=0, window=None)
+               wall_max_by_type={}, wall_basis=None, phase=[], phase_status='not_run', phase_note='',
+               n_frames=0, window=None)
     if not fr:
         tech.append('덤프가 없다')
         out['verdict'] = 'TECH'
@@ -346,6 +398,19 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
     win = [(st, p) for st, p in fr if st >= st0]
     out['window'] = (win[0][0], win[-1][0])
     out['n_frames'] = len(win)
+    #  ④ 창 격자 (HBR2-03) — t₀ 부터 마지막 프레임까지 dump_every 간격의 덤프가 **다** 있어야 한다
+    de = plan['dump_every']
+    present = [st for st, _ in win]
+    pset = set(present)
+    missing = [s for s in range(st0, win[-1][0] + 1, de) if s not in pset]
+    if missing:
+        tech.append(f'창 안 덤프 결손 {len(missing)} 개 (step {missing[:6]}{"…" if len(missing) > 6 else ""}) — '
+                    '미관측 구간에 통과 증서를 줄 수 없다')
+    off = [s for s in present if (s - st0) % de]
+    if off:
+        tech.append(f'덤프 격자 밖 step {off[:6]} — 덱의 dump_every {de} 와 맞지 않는다')
+    if len(pset) != len(present):
+        tech.append('같은 step 의 덤프가 둘 이상이다')
     spec = None
     if walls:
         try:
@@ -363,24 +428,55 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
         except (ValueError, OSError, KeyError, SystemExit) as e:
             tech.append(f'벽 기하 불가: {e}')
             spec = None
+    #  ② 회전각의 근거 — mesh 덤프 (전 프레임) > 영수증 > 상·하한
+    mesh_dir = os.path.join(run_dir, 'post_mesh')
+    mesh_src, receipt, eps = None, None, 0.0
+    if spec is not None:
+        have = [st for st, _ in win if os.path.isfile(os.path.join(mesh_dir, f'mesh_{st}.stl'))]
+        if have and len(have) == len(win):
+            mesh_src = mesh_dir
+        elif have:
+            tech.append(f'mesh 덤프가 창의 일부 프레임에만 있다 ({len(have)}/{len(win)}) — 전부 있거나 없어야 한다 (안 쓴다)')
+        if phase_receipt:
+            try:
+                receipt = load_phase_receipt(phase_receipt, spec)
+                eps = float(np.radians(float(receipt['angle_error_deg'])))
+            except (ValueError, OSError, KeyError, TypeError) as e:
+                tech.append(f'재개-위상 영수증 불가 ({e}) — 영수증 없이 상·하한으로 판정')
     pick = set()
-    if spec is not None and phase_frames:
+    if spec is not None and diag_fit:
         rot = [st for st, _ in win if mesh_angle(spec, 'Drum', st) > 0]
         base = rot if rot else [win[0][0]]
-        pick = {base[int(round(i * (len(base) - 1) / max(phase_frames - 1, 1)))] for i in range(min(phase_frames, len(base)))}
-    ids0 = cnt0 = None
+        pick = {base[int(round(i * (len(base) - 1) / max(PHASE_FRAMES - 1, 1)))] for i in range(min(PHASE_FRAMES, len(base)))}
+    ids0 = cnt0 = attr0 = None
     for k, (st, path) in enumerate(win):
+        hs, hn = dump_header(path)
         D = read_dump(path)
         P = np.c_[D['x'], D['y'], D['z']]
         r = D['radius']
         ty = D['type'].astype(int)
+        if hs is not None and hs != st:
+            tech.append(f'step {st}: 덤프 헤더 TIMESTEP {hs} ≠ 파일명 (복제 · 오명명 의심)')
+        if hn is not None and hn != len(r):
+            tech.append(f'step {st}: 헤더 원자 수 {hn} ≠ 행 수 {len(r)}')
         cnt = {int(t): int(c) for t, c in zip(*np.unique(ty, return_counts=True))}
-        ids = np.sort(D['id'].astype(np.int64)) if 'id' in D else None
+        ids = attr = None
+        if 'id' in D:
+            raw = D['id']
+            if not np.all(np.isfinite(raw)) or np.any(raw != np.round(raw)):
+                tech.append(f'step {st}: id 가 정수가 아니다')
+            order = np.argsort(raw, kind='stable')
+            ids = raw[order].astype(np.int64)
+            if len(np.unique(ids)) != len(ids):
+                reject.append(f'step {st}: id 중복 {len(ids) - len(np.unique(ids))} 개')
+            attr = (ty[order], r[order])
         if k == 0:
-            ids0, cnt0 = ids, cnt
+            ids0, cnt0, attr0 = ids, cnt, attr
             out['counts_t0'] = cnt0
             if n_expected is not None and len(r) != n_expected:
                 reject.append(f't₀ 입자 {len(r)} ≠ 계획 {n_expected}')
+            if expect_counts is not None and {int(a): int(b) for a, b in expect_counts.items()} != cnt0:
+                reject.append(f't₀ 상별 입자 수 {cnt0} ≠ 계획 {expect_counts}')
             if ids is None:
                 tech.append('덤프에 id 열이 없다 — id 보존을 확인할 수 없다')
         else:
@@ -388,6 +484,11 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
                 reject.append(f'step {st}: 상별 입자 수 {cnt} ≠ t₀ {cnt0}')
             elif ids is not None and ids0 is not None and not np.array_equal(ids, ids0):
                 reject.append(f'step {st}: id 집합이 t₀ 와 다르다 (수 {len(ids)} vs {len(ids0)})')
+            elif attr is not None and attr0 is not None:
+                nt, nr = int((attr[0] != attr0[0]).sum()), int((attr[1] != attr0[1]).sum())
+                if nt or nr:
+                    reject.append(f'step {st}: id 별 type/radius 가 t₀ 와 다르다 (type {nt} 개 · radius {nr} 개) — '
+                                  '상별 수와 id 집합이 같아도 입자 속성은 보존되지 않았다')
         pr, rel, n_intra = contacts(P, r, D.get('mol'), types=ty)
         #  판정은 등록 문구대로 **최대**다.  분위수 · 넘은 비율은 기술 보고 (한도 해석은 런 결과를 보기 전에만 정한다)
         row = dict(step=int(st), n=int(len(r)), n_contact=int(len(pr)), n_intra=n_intra,
@@ -408,8 +509,17 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
         elif out['pp_max'] < 0:
             out['pp_max'] = 0.0
         if spec is not None:
-            N, C, owner, _ = container_at(run_dir, spec, st)
+            if mesh_src:
+                N, C, owner, _ = container_from_stl(os.path.join(mesh_src, f'mesh_{st}.stl'), spec)
+            else:
+                N, C, owner, _ = container_at(run_dir, spec, st)
             wr, wk = wall_overlaps(P, r, N, C)
+            if receipt is not None and eps > 0 and not mesh_src:      # 영수증의 각 오차를 전파 — ±ε 에서도 재서 최댓값
+                for sg in (-1.0, 1.0):
+                    N2, C2, _, _ = container_at(run_dir, spec, st, dtheta=sg * eps)
+                    wr2, wk2 = wall_overlaps(P, r, N2, C2)
+                    m_ = wr2 > wr
+                    wr, wk = np.where(m_, wr2, wr), np.where(m_, wk2, wk)
             is_cap = np.array([o_ != 'Drum' for o_ in owner])
             cap_rel = (r - (P @ N[is_cap].T + C[is_cap]).min(1)) / r if is_cap.any() else np.full(len(r), -np.inf)
             q_ = P - dgeo['o']
@@ -430,7 +540,7 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
                 out.update(wall_max=float(wr[j]), wall_max_step=int(st), wall_max_type=int(ty[j]),
                            wall_max_mesh=owner[int(wk[j])])
             if st in pick:
-                out['phase'].append(infer_drum_phase(P, r, run_dir, spec, st, max_ovl, phase_tol_frac))
+                out['phase'].append(infer_drum_phase(P, r, run_dir, spec, st, max_ovl))
         out['per_frame'].append(row)
         if progress:
             print(f'   … {os.path.basename(run_dir.rstrip("/"))} step {st}  pp {row["pp_max"]*100:6.3f} %'
@@ -440,33 +550,38 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
         reject.append(f'입자–입자 최대 δ/r_min {out["pp_max"]*100:.3f} % > {max_ovl*100:g} % '
                       f'(step {out["pp_max_step"]} · 타입 {out["pp_max_types"]} · 넘은 접촉 {n_over} 건/창)')
     if spec is not None:
-        st_ = [p_['status'] for p_ in out['phase']]
-        off = [p_ for p_ in out['phase'] if p_['status'] == 'mismatch']
         pf = out['per_frame']
         cap = max(r_['cap_max'] for r_ in pf)
         worst = max(max(r_['drum_worst'] for r_ in pf), cap)
         best = max(max(r_['drum_best'] for r_ in pf), cap)
         out.update(wall_bound_worst=worst, wall_bound_best=best)
-        if off:
-            out['phase_status'] = 'mismatch'
-            tech.append('드럼 회전각이 덱 예정과 다르다: '
-                        + ', '.join(f'step {p_["step"]} Δ {np.degrees(p_["dtheta"]):+.3f}°' for p_ in off)
-                        + ' — 예정 각으로 잰 벽 겹침 값은 무효')
-        elif 'ok' in st_:
-            out['phase_status'] = 'ok'          # 예정 식이 데이터로 확인됐다 ⇒ 예정 각의 벽 값이 창 전체에서 유효
-            if out['wall_max'] > max_ovl:
-                n_over = sum(r_.get('wall_n_over', 0) for r_ in pf)
-                reject.append(f'벽 최대 δ/r {out["wall_max"]*100:.3f} % > {max_ovl*100:g} % (step {out["wall_max_step"]} · '
-                              f'타입 {out["wall_max_type"]} · {out["wall_max_mesh"]} · 넘은 접촉 {n_over} 건/창)')
+        if out['phase']:
+            out['phase_note'] = '진단 — 입자 배치로 되읽은 회전각 (증거 아님 · 판정에 안 씀 · HBR2-01)'
+        over = None
+        if mesh_src is not None:
+            out['phase_status'], out['wall_basis'] = 'mesh-dump', 'post_mesh/ 덤프 = 독립 기하 (창 전 프레임)'
+            over = out['wall_max'] > max_ovl
+        elif receipt is not None:
+            out['phase_status'] = 'receipt'
+            out['wall_basis'] = (f'예정각 ± {receipt["angle_error_deg"]}° (재개-위상 영수증 {os.path.basename(phase_receipt)} · '
+                                 f'바이너리 {str(receipt["binary_sha256"])[:12]}…)')
+            over = out['wall_max'] > max_ovl
         elif worst <= max_ovl:
-            out['phase_status'] = 'bounded'     # 확인 못 했지만 어느 회전각이어도 한도 안
+            out['phase_status'] = 'bounded'      # 근거 없어도 어느 회전각이어도 한도 안
+            out['wall_basis'] = f'회전각-무관 상한 {worst*100:.3f} % ≤ {max_ovl*100:g} %'
         elif best > max_ovl:
-            out['phase_status'] = 'bounded'     # 확인 못 했지만 어느 회전각이어도 한도 밖
+            out['phase_status'] = 'bounded'      # 근거 없어도 어느 회전각이어도 한도 밖
+            out['wall_basis'] = f'회전각-무관 하한 {best*100:.3f} % > {max_ovl*100:g} %'
             reject.append(f'벽 δ/r 가 **어느 회전각이어도** {best*100:.3f} % 이상 > {max_ovl*100:g} %')
         else:
-            out['phase_status'] = 'unidentified'
-            tech.append(f'드럼 회전각을 데이터로 확인 못 했고 (벽 근처 입자 < 20) 벽 δ/r 가 각에 따라 '
-                        f'{best*100:.2f}–{worst*100:.2f} % — 한도 {max_ovl*100:g} % 판정 불가')
+            out['phase_status'], out['wall_basis'] = 'unidentified', '없음'
+            tech.append(f'드럼 회전각의 독립 근거가 없고 (post_mesh/ 덤프 · 재개-위상 영수증 없음) 벽 δ/r 가 각에 따라 '
+                        f'{best*100:.2f}–{worst*100:.2f} % — 한도 {max_ovl*100:g} % 판정 불가.  '
+                        f'예정각으로 잰 {out["wall_max"]*100:.3f} % 는 미검증 (판정에 안 씀)')
+        if over:
+            n_over = sum(r_.get('wall_n_over', 0) for r_ in pf)
+            reject.append(f'벽 최대 δ/r {out["wall_max"]*100:.3f} % > {max_ovl*100:g} % (step {out["wall_max_step"]} · '
+                          f'타입 {out["wall_max_type"]} · {out["wall_max_mesh"]} · 넘은 접촉 {n_over} 건/창 · 근거 {out["phase_status"]})')
     elif walls:
         out['phase_status'] = 'no_walls'
     out['verdict'] = 'REJECT' if reject else ('TECH' if tech else 'PASS')
@@ -640,6 +755,16 @@ def _selftest():
         open(os.path.join(run_, 'in.mixer'), 'w').write(_deck(period))
         return run_
 
+    def _mesh_dump(run_, step, theta):
+        """LIGGGHTS `dump mesh/stl` 흉내 — 참 회전각 theta 로 돌린 드럼·끝판 삼각형 (시뮬레이션 단위) 을 post_mesh/mesh_<step>.stl 에."""
+        os.makedirs(os.path.join(run_, 'post_mesh'), exist_ok=True)
+        Rm = _rot(np.array([1.0, 0, 0]), theta)
+        tris = []
+        for nm in ('Drum.stl', 'Front.stl', 'Back.stl'):
+            for t_ in read_stl(os.path.join(run_, nm)) * SC_:
+                tris.append(tuple(map(tuple, t_ @ Rm.T)))
+        _stl(os.path.join(run_, 'post_mesh', f'mesh_{step}.stl'), tris)
+
     #  바탕 입자 넷 (서로 · 벽과 안 닿는다) + 짝 둘 (id 5·6) — 프레임마다 짝 간격만 바꾼다
     BASE = [(1, 1, 0.0, 0.0, 0.0, 1e-3), (2, 2, 0.0, 0.004, 0.0, 5e-4),
             (3, 3, 0.0, -0.004, 0.002, 2e-4), (4, 3, 0.001, -0.004, -0.002, 2e-4)]
@@ -695,10 +820,16 @@ def _selftest():
             ov7 = 0.02 if st == 2500 else -0.5
             _dump(run, st, BASE + _pair(0.0025) + _bed(_th(st)) + [(7, 3, *_on_facet(_th(st), 3, 2e-4, ov7), 2e-4)])
         w = check_window(run)
-        chk(f'⑩ ★ 회전된 드럼 면에 2 % 박힌 입자를 기각한다 (벽 최대 {w["wall_max"]*100:.2f} % @ {w["wall_max_step"]} · '
-            f'{w["wall_max_mesh"]} · 회전각 {w["phase_status"]})',
+        chk(f'⑩ ★ 독립 기하 없이는 회전된 면의 2 % 도 기각 못 한다 — 상·하한 [{w["wall_bound_best"]*100:.0f}, {w["wall_bound_worst"]*100:.0f}] % '
+            f'가 1 % 를 양쪽에서 걸친다 ⇒ TECH (예정각 값 {w["wall_max"]*100:.2f} % 는 미검증 · 판정에 안 씀)',
+            w['verdict'] == 'TECH' and w['phase_status'] == 'unidentified' and abs(w['wall_max'] - 0.02) < 1e-6)
+        for st in (2000, 2500, 3000):
+            _mesh_dump(run, st, _th(st))
+        w = check_window(run)
+        chk(f'⑩c ★ mesh 덤프 (독립 기하) 가 있으면 회전된 드럼 면에 2 % 박힌 입자를 기각한다 (벽 최대 {w["wall_max"]*100:.2f} % @ {w["wall_max_step"]} · '
+            f'{w["wall_max_mesh"]} · 근거 {w["phase_status"]})',
             w['verdict'] == 'REJECT' and abs(w['wall_max'] - 0.02) < 1e-6 and w['wall_max_step'] == 2500
-            and w['wall_max_mesh'] == 'Drum' and w['phase_status'] == 'ok')
+            and w['wall_max_mesh'] == 'Drum' and w['phase_status'] == 'mesh-dump')
         #  ⚠ 위상을 틀리게(0) 두면 **같은 입자가 안 닿은 것으로** 보인다 — 위상이 판정을 좌우한다
         spec = deck_walls(open(os.path.join(run, 'in.mixer')).read())
         P7 = np.array([_on_facet(TH2500, 3, 2e-4, 0.02)])
@@ -723,22 +854,37 @@ def _selftest():
         chk(f'⑫ ★ 창 안에서 입자를 잃거나 상이 바뀌면 기각한다 ({"; ".join(w["reject"])[:90]})',
             w['verdict'] == 'REJECT' and any('2500' in b for b in w['reject'])
             and any('3000' in b for b in w['reject']))
-    #  ⑬ 위상을 **데이터로** 확인한다 — 면마다 입자를 얹고 그 면 배치에서 회전각을 되읽는다
+    #  ⑬ 되읽기 (입자 배치에서 회전각 fitting) 는 **진단일 뿐 증거가 아니다** (Codex HBR2-01 — ⑮ 가 그 반례) — 판정에 안 쓴다.
+    #     면을 따라 넓게 깔린 침대 (실제 런) 는 꼭짓점 쪽 알의 최악 겹침이 크므로 근거 없이는 늘 unidentified 다 — 그래서
+    #     실제 런의 벽 판정은 영수증 (또는 mesh 덤프) 이 있어야 나온다.
+    import json as _json
+
+    def _receipt(td, period=0.012, ok=True, err=0.01):
+        p_ = os.path.join(td, 'receipt.json')
+        _json.dump(dict(test='restart_phase', passed=ok, period=period, axis=[1.0, 0.0, 0.0], angle_error_deg=err,
+                        binary_sha256='0' * 64, liggghts_version='test', date='2026-09-27'), open(p_, 'w'))
+        return p_
     with tempfile.TemporaryDirectory() as td:
         run = _run(td)
         for st in (2000, 2500, 3000):
             _dump(run, st, BASE + _pair(0.0025) + _bed(_th(st)))
-        w = check_window(run)
+        w = check_window(run, diag_fit=True)
         ph = [p_ for p_ in w['phase'] if p_['step'] == 2500][0]
-        chk(f'⑬ ★ 면에 얹힌 입자로 회전각을 되읽는다 (예정 {_m.degrees(ph["theta_sched"]) % 30:.3f}° · '
-            f'데이터 {_m.degrees(ph["theta_data"]):.3f}° · 차 {_m.degrees(ph["dtheta"]):.4f}°)',
-            w['verdict'] == 'PASS' and w['phase_status'] == 'ok' and abs(ph['dtheta']) < _m.radians(0.05))
-        #  ⚠ 변이 — 덱의 주기를 바꿔 예정 위상이 데이터와 어긋나게 하면 **기술 실패** (통과로 새지 않는다)
+        chk(f'⑬ 면을 따라 깔린 침대 (0.1 %) 는 근거 없이는 unidentified (상·하한 {w["wall_bound_best"]*100:.0f}–{w["wall_bound_worst"]*100:.0f} %) '
+            f'— 되읽기 진단은 각을 맞히지만 (차 {_m.degrees(ph["dtheta"]):.4f}°) 판정에 쓰지 않는다',
+            w['verdict'] == 'TECH' and w['phase_status'] == 'unidentified' and abs(ph['dtheta']) < _m.radians(0.05)
+            and w['phase_note'].startswith('진단'))
+        w2 = check_window(run, diag_fit=True, phase_receipt=_receipt(td))
+        chk(f'⑬b 영수증이 있으면 같은 침대가 예정각으로 판정된다 (receipt · 벽 최대 {w2["wall_max"]*100:.3f} % → PASS)',
+            w2['verdict'] == 'PASS' and w2['phase_status'] == 'receipt' and 0 < w2['wall_max'] < 0.003)
+        #  ⚠ 변이 — 덱의 주기를 바꾸면 영수증이 안 맞아 (주기 ≠) 영수증을 버린다 · 진단은 mismatch — 어느 쪽도 통과로 새지 않는다
         open(os.path.join(run, 'in.mixer'), 'w').write(_deck(period=0.024))
-        w2 = check_window(run)
-        chk(f'⑬b 변이: 예정 위상이 데이터와 어긋나면 벽 값 무효 = TECH (기각으로도 통과로도 안 씀; '
-            f'그 위상으로 잰 벽 최대 {w2["wall_max"]*100:.0f} %)',
-            w2['verdict'] == 'TECH' and w2['phase_status'] == 'mismatch' and w2['wall_max'] > 0.01)
+        w3 = check_window(run, diag_fit=True, phase_receipt=_receipt(td))
+        chk('⑬c 변이: 덱 주기 ≠ 영수증 주기 → 영수증 기각 (TECH) · 진단은 mismatch 를 적는다 — fitting 으로 구제하지 않는다',
+            w3['verdict'] == 'TECH' and w3['phase_status'] == 'unidentified' and any('영수증' in t for t in w3['tech'])
+            and any(p_['status'] == 'mismatch' for p_ in w3['phase']))
+        w4 = check_window(run)
+        chk('⑬d 기본 (--diag-fit 없음) 은 되읽기를 아예 안 돌린다 (phase = [])', w4['phase'] == [] and w4['verdict'] == 'TECH')
     with tempfile.TemporaryDirectory() as td:                   # ⑬c 벽 근처 입자가 한 알 (꼭짓점 옆) → 되읽기 불가
         run = _run(td)
         half_ = APO * _m.tan(_m.pi / NP_)
@@ -756,6 +902,71 @@ def _selftest():
     s1 = sorted(zip(map(tuple, np.sort(a1, axis=1)), np.round(r1, 12)))
     s2 = sorted(zip(map(tuple, np.sort(a2, axis=1)), np.round(r2, 12)))
     chk(f'⑭ 타입쌍별 격자 검색이 전수 검색과 같은 접촉 집합을 낸다 ({len(s1)} 쌍)', s1 == s2 and len(s1) > 10)
+
+    # ══ ⑮~⑲ 2026-09-27 저녁 Codex 재리뷰 HBR2-01 · 03 · 08 — 합성 반례를 **먼저 재현**하고 고쳤다 ══════════════════
+    #   (docs/reviews/codex_mixer_highbo_rereview_evidence_20260927/review_probe.py 의 경우들을 이 12 각형 시험 기하로 옮김)
+    HALF = _m.pi / NP_                                   # 반 면각 — 참 벽이 예정보다 이만큼 어긋난 반례
+
+    def _ring(theta, ovl, r_=2e-4):
+        """면마다 한 알 — 참 회전각 theta 인 드럼의 면 한가운데에 δ/r = ovl 로 (알끼리는 안 닿는다)."""
+        return [(200 + k, 3, *_on_facet(theta, k, r_, ovl), r_) for k in range(NP_)]
+    with tempfile.TemporaryDirectory() as td:            # ⑮ HBR2-01 반례 1 — 참 벽 겹침 2 % · 위상이 예정보다 반 면각 어긋남 · 증거 없음
+        run = _run(td)
+        for st in (2000, 2500, 3000):
+            _dump(run, st, BASE + _pair(0.0025) + _ring(_th(st) + HALF, 0.02))
+        w = check_window(run)
+        chk(f'⑮ ★ HBR2-01 재현→수정: 참 벽 겹침 2 % 가 예정각에서는 {w["wall_max"]*100:.0f} % (안 닿음) 로 보인다 — 증거 없이는 PASS 를 주지 않는다 '
+            f'({w["verdict"]} · {w["phase_status"]} · 상한 {w["wall_bound_worst"]*100:.1f} %)',
+            w['verdict'] == 'TECH' and w['phase_status'] == 'unidentified' and w['wall_max'] < 0
+            and abs(w['wall_bound_worst'] - 0.02) < 1e-6 and not w['phase'])
+        for st in (2000, 2500, 3000):
+            _mesh_dump(run, st, _th(st) + HALF)
+        w2 = check_window(run)
+        chk(f'⑮b 독립 기하 (post_mesh/ 덤프) 를 주면 그 벽으로 재서 2 % 를 기각한다 ({w2["phase_status"]} · {w2["wall_max"]*100:.2f} %)',
+            w2['verdict'] == 'REJECT' and w2['phase_status'] == 'mesh-dump' and abs(w2['wall_max'] - 0.02) < 1e-6)
+        os.remove(os.path.join(run, 'post_mesh', 'mesh_2500.stl'))
+        w3 = check_window(run)
+        chk('⑮c mesh 덤프가 창의 일부 프레임에만 있으면 쓰지 않는다 (TECH)',
+            w3['verdict'] == 'TECH' and w3['phase_status'] == 'unidentified' and any('mesh' in t for t in w3['tech']))
+    with tempfile.TemporaryDirectory() as td:            # ⑯ 반례 2 — 참 = 예정 · 0.5 % : 옛 되읽기는 이것을 TECH (5/5 mismatch) 로 막았다
+        run = _run(td)
+        for st in (2000, 2500, 3000):
+            _dump(run, st, BASE + _pair(0.0025) + _ring(_th(st), 0.005))
+        w = check_window(run)
+        chk(f'⑯ 참 위상 = 예정 · 0.5 %: 어느 회전각이어도 ≤ 1 % 라 PASS (bounded · 상한 {w["wall_bound_worst"]*100:.2f} %)',
+            w['verdict'] == 'PASS' and w['phase_status'] == 'bounded')
+        w2 = check_window(run, phase_receipt=_receipt(td))
+        chk(f'⑯b 재개-위상 영수증이 있으면 예정각 (±오차) 으로 잰다 (receipt · 벽 최대 {w2["wall_max"]*100:.3f} %)',
+            w2['verdict'] == 'PASS' and w2['phase_status'] == 'receipt' and abs(w2['wall_max'] - 0.005) < 2e-4)
+        w3 = check_window(run, phase_receipt=_receipt(td, period=0.024))
+        chk('⑯c 영수증의 주기가 덱과 다르면 영수증을 쓰지 않는다 (TECH — 상·하한 값은 남긴다)',
+            w3['verdict'] == 'TECH' and w3['phase_status'] == 'bounded' and any('영수증' in t for t in w3['tech']))
+    with tempfile.TemporaryDirectory() as td:            # ⑰ HBR2-08 — 같은 id 둘의 type 교환 + 한 알 반경 절반 (상별 수 · id 집합은 그대로)
+        run = _run(td)
+        _dump(run, 2000, BASE + _pair(0.0025))
+        mut = [(1, 2) + BASE[0][2:], (2, 1) + BASE[1][2:], BASE[2][:5] + (BASE[2][5] * 0.5,), BASE[3]] + _pair(0.0025)
+        _dump(run, 2500, mut)
+        _dump(run, 3000, mut)
+        w = check_window(run)
+        chk(f'⑰ ★ HBR2-08: id 별 type/radius 가 t₀ 와 다르면 기각한다 ({"; ".join(w["reject"])[:80]})',
+            w['verdict'] == 'REJECT' and any('type' in b and 'radius' in b for b in w['reject']))
+    with tempfile.TemporaryDirectory() as td:            # ⑱ HBR2-03 — 창 안 덤프 결손 (2500 없음): 미관측 구간에 통과 증서를 주지 않는다
+        run = _run(td)
+        for st in (2000, 3000):
+            _dump(run, st, BASE + _pair(0.0025))
+        w = check_window(run)
+        chk(f'⑱ ★ HBR2-03: 창 안 덤프가 빠지면 TECH ({"; ".join(w["tech"])[:70]})',
+            w['verdict'] == 'TECH' and any('결손' in t for t in w['tech']))
+        chk('⑱b 관측량 표지 = 저장 프레임 최대 (덤프 사이 peak 미관측, D-1)',
+            str(w.get('observable', '')).startswith('snapshot-max'))
+    with tempfile.TemporaryDirectory() as td:            # ⑲ 덤프 헤더 step ≠ 파일명 (복제 파일로 수를 채운 경우) → TECH
+        run = _run(td)
+        for st in (2000, 2500, 3000):
+            _dump(run, st, BASE + _pair(0.0025))
+        import shutil as _sh
+        _sh.copyfile(os.path.join(run, 'post', 'mix_2000.liggghts'), os.path.join(run, 'post', 'mix_2500.liggghts'))
+        w = check_window(run)
+        chk('⑲ 헤더 step 이 파일명과 다른 덤프 (복제) 는 TECH', w['verdict'] == 'TECH' and any('헤더' in t for t in w['tech']))
     print(f'\ncheck_contact_validity selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -768,8 +979,14 @@ if __name__ == '__main__':
     ap.add_argument('--n-expected', type=int, default=None,
                     help='삽입 계획 원자 수 — 손실 판정에 쓴다')
     ap.add_argument('--contract', action='store_true',
-                    help='★ 등록 계약 판정 (런 디렉터리 = in.mixer · post/ · STL): 분석 창 전 프레임 · 입자–입자와 벽 '
-                         f'최대 겹침 ≤ {CONTRACT_MAX_OVL*100:g} %% · 상별 보존 · 드럼 회전각 데이터 확인')
+                    help='★ 등록 계약 판정 (런 디렉터리 = in.mixer · post/ · STL): 분석 창 전 프레임 (저장 프레임 최대) · '
+                         f'입자–입자와 벽 최대 겹침 ≤ {CONTRACT_MAX_OVL*100:g} %% · 상별 · id 별 속성 보존 · 창 결손 없음 · '
+                         '벽 회전각 근거 = post_mesh/ 덤프 > 영수증 > 상·하한')
+    ap.add_argument('--phase-receipt', default=None,
+                    help='(--contract) 재개-위상 영수증 JSON (scripts/mixer_restart_phase_test.py) — 있으면 벽을 예정각 ± 오차로 잰다')
+    ap.add_argument('--expect-types', default=None, help='(--contract) t₀ 상별 입자 수, 예 "1:36,2:421,3:32832"')
+    ap.add_argument('--diag-fit', action='store_true',
+                    help='(--contract) 입자 배치로 회전각을 되읽는 진단을 같이 낸다 (증거 아님 · 판정에 안 씀)')
     ap.add_argument('--json', default=None, help='(--contract) 결과 JSON 경로')
     ap.add_argument('--progress', action='store_true', help='(--contract) 프레임마다 한 줄')
     ap.add_argument('--selftest', action='store_true')
@@ -780,7 +997,11 @@ if __name__ == '__main__':
         ap.error('디렉터리를 하나 이상 주세요')
     labs = a.label or [None] * len(a.dirs)
     if a.contract:
-        rs = [check_window(d, a.n_expected, label=labs[i] if i < len(labs) else None, progress=a.progress)
+        ec = None
+        if a.expect_types:
+            ec = {int(k): int(v) for k, v in (x.split(':') for x in a.expect_types.split(','))}
+        rs = [check_window(d, a.n_expected, label=labs[i] if i < len(labs) else None, phase_receipt=a.phase_receipt,
+                           expect_counts=ec, diag_fit=a.diag_fit, progress=a.progress)
               for i, d in enumerate(a.dirs)]
         if a.json:
             import json
