@@ -651,6 +651,50 @@
 .layers button[aria-pressed="false"] .layers__ico { filter: grayscale(1); opacity: .55; }
 .layers__ico { font-size: 14px; line-height: 1; }
 
+/* ---------- 東京23区 popup (my Canva Tokyo page) ---------- */
+.ward-map-btn {
+  display: inline-flex; align-items: center; gap: 7px; margin: 0 0 12px; padding: 7px 14px 7px 11px;
+  border-radius: var(--radius-pill); background: var(--white); box-shadow: inset 0 0 0 1.5px var(--line-2), var(--shadow-sm);
+  font-family: var(--font-display); font-size: 14px; color: var(--ink);
+  transition: transform .18s var(--ease-pop), box-shadow .18s ease;
+}
+.ward-map-btn:hover { transform: translateY(-1px) rotate(-.6deg); box-shadow: inset 0 0 0 1.5px var(--accent-2), var(--shadow-sm); }
+.ward-map-btn small { font-family: var(--font-body); font-size: 11px; color: var(--ink-3); }
+.t23__stage { position: relative; margin-top: 4px; }
+.t23__loading { padding: 40px 0; text-align: center; color: var(--ink-3); font-size: 13px; }
+.t23__map { display: block; width: 100%; height: auto; }
+.t23__ward { outline: none; cursor: pointer; }
+.t23__ward path { fill: color-mix(in oklab, var(--c) 30%, var(--white)); stroke: var(--white); stroke-width: 1.4px; stroke-linejoin: round; transition: fill .15s ease; }
+.t23__ward.has-notes path { fill: var(--c); }
+.t23__ward:hover path, .t23__ward:focus-visible path { fill: color-mix(in oklab, var(--c) 78%, var(--ink-r)); }
+.t23__ward.is-selected path { stroke: var(--accent); stroke-width: 2.6px; }
+.t23__labels { pointer-events: none; }
+.t23__label { font-family: var(--font-head); text-anchor: middle; fill: var(--ink); paint-order: stroke; stroke: var(--white); stroke-width: 3px; stroke-linejoin: round; }
+.t23__furi { font-size: .68em; fill: var(--ink-2); }
+.t23__label.is-red .t23__furi { fill: var(--city); }
+.t23__rank { font-size: .7em; fill: var(--ink-2); font-family: var(--font-body); }
+.t23__card {
+  position: absolute; z-index: 2; width: min(340px, calc(100% - 16px)); max-height: 72%; overflow: auto;
+  padding: 14px 16px 16px; border-radius: 18px; background: var(--white); box-shadow: var(--shadow-lg);
+  animation: pop .3s var(--ease-pop) both;
+}
+.t23__card[hidden] { display: none; }
+.t23__close { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: 50%; background: var(--paper-2); color: var(--ink-2); font-size: 18px; display: grid; place-items: center; }
+.t23__head { display: flex; align-items: flex-end; gap: 8px; padding-right: 30px; margin-bottom: 8px; }
+.t23__name { display: flex; flex-direction: column; font-family: var(--font-display); font-size: 22px; line-height: 1.1; }
+.t23__name small { font-size: 11px; color: var(--ink-3); font-family: var(--font-body); }
+.t23__ko { font-size: 13px; color: var(--ink-2); padding-bottom: 2px; }
+.t23__note { margin: 0 0 8px; font-size: 12.5px; color: var(--ink-2); }
+.t23__others { margin-top: 16px; }
+.t23 h2 { flex-wrap: wrap; row-gap: 2px; }
+.nfold {
+  display: inline-block; margin: 6px 0 2px 8px; padding: 2px 10px; vertical-align: middle;
+  border-radius: var(--radius-pill); background: var(--white); box-shadow: inset 0 0 0 1px var(--line-2);
+  font-size: 11.5px; color: var(--ink-2); transition: transform .15s var(--ease-pop), box-shadow .15s ease;
+}
+.nfold:hover { transform: translateX(2px); box-shadow: inset 0 0 0 1px var(--accent-2); color: var(--ink); }
+.t23__others h3 { font-family: var(--font-display); font-size: 15px; margin-bottom: 8px; }
+
 /* ---------- 北 · 南 · 西 左 · 東 右 around the map (as on my Canva map) ---------- */
 .compass { position: absolute; inset: 0; pointer-events: none; }
 .compass__dir {
@@ -754,6 +798,7 @@
   .compass__dir--right { right: 8px; }
   .compass__main { font-size: 16px; }
   .app.has-panel .compass { display: none; }
+  .t23__card { position: relative; width: auto; max-height: none; margin-top: 10px; animation: none; }
   :root { --topbar-h: 106px; }
   .topbar { flex-wrap: wrap; gap: 8px; padding: 10px 12px; height: auto; }
   .brand { transform: none; padding-right: 10px; }

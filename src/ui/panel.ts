@@ -1,7 +1,7 @@
 // The diary-page panel: prefecture view, region view, and the general memo view.
-import { countBoxes, extrasFor, extrasForRegion, generalExtras, mascotSearchUrl, mascotsOf, mountains, notes, notesFor, prefById, prefBySlug, prefecturesIn, regionById, regionOf, supplementFor } from '../data';
+import { countBoxes, extrasFor, extrasForRegion, generalExtras, mascotSearchUrl, mascotsOf, mountains, notes, notesFor, places, prefById, prefBySlug, prefecturesIn, regionById, regionOf, supplementFor } from '../data';
 import type { Mascot } from '../types';
-import type { NoteExtra, Prefecture, Region } from '../types';
+import type { NoteExtra, NoteItem, Prefecture, Region } from '../types';
 import { mascotVisualHtml } from '../mascots/visual';
 import { clear, el, ruby } from './dom';
 import { glossNote, photoSearch, renderTree } from './notes-render';
@@ -17,6 +17,9 @@ export interface PanelCallbacks {
   onRange?(no: number): void;
   onHideRangeNames?(hide: boolean): void;
   onMountainsOff?(): void;
+  /** Tokyo: a 23-ward map whose wards pop up my boxes */
+  hasWardMap?(slug: string): boolean;
+  onWardMap?(focus?: string): void;
 }
 
 export type PanelView = { type: 'prefecture'; id: string } | { type: 'region'; id: string } | { type: 'mountains'; id: 'mountains' } | null;
@@ -164,10 +167,19 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
 
     // my mind map
     const notesSec = el('section', { class: 'sec sec--notes' }, el('h3', {}, el('span', { class: 'emoji' }, '✎'), '내 마인드맵', el('span', { class: 'n' }, nBoxes ? `${nBoxes} boxes` : '')));
+    const wardMap = !!cb.hasWardMap?.(p.slug);
+    if (wardMap) {
+      const b = el('button', { type: 'button', class: 'ward-map-btn' }, el('span', { 'aria-hidden': 'true' }, '🗺'), '23区 지도로 보기', el('small', {}, '구를 누르면 칸이 떠요'));
+      b.addEventListener('click', () => cb.onWardMap?.());
+      notesSec.append(b);
+    }
     if (my.items.length) {
       const note = glossNote(my.items, ...extrasFor(p).map((e) => e.items));
       if (note) notesSec.append(note);
-      notesSec.append(renderTree(my.items, { color: r.color, ink: r.ink }));
+      // Tokyo: the ward branches live in the 23区 popup, so here each ward shows 「+N칸」 (tap → popup on that ward)
+      const wards = new Set(places.wards.map((w) => w.name.ja));
+      const opts = wardMap ? { fold: 1, onFold: (it: NoteItem) => (wards.has(it.t) ? (cb.onWardMap?.(it.t), true) : false) } : {};
+      notesSec.append(renderTree(my.items, { color: r.color, ink: r.ink }, 0, opts));
     }
     else notesSec.append(el('p', { class: 'empty' }, `아직 ${p.short.ja} 메모가 없어요. Canva 마인드맵에 적고 data/notes.json 에 옮기면 여기 나타나요 ✿`));
     out.push(notesSec);

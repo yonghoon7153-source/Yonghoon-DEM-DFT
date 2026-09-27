@@ -3,6 +3,7 @@
 // Output:
 //   public/geo/japan.topo.json         simplified TopoJSON (fetched by the app)
 //   src/generated/prefecture-geo.json  per-prefecture label anchor + bbox (lon/lat)
+//   public/geo/tokyo23.topo.json       Tokyo's 23 wards for the 23区 popup (from data/raw/tokyo23.geojson)
 //
 // Cartographic decisions (documented so they are easy to revisit):
 //   - Visvalingam simplification keeps borders shared between prefectures consistent.
@@ -83,4 +84,15 @@ writeFileSync(OUT_META, JSON.stringify(meta, null, 2) + '\n');
 
 const size = Buffer.byteLength(JSON.stringify(out));
 console.log(`arcs: ${topo.arcs.length} -> ${out.arcs.length}, output ${(size / 1024).toFixed(0)} KB, prefectures: ${features.length}`);
+
+// 4. Tokyo's 23 wards (都区部) — same source (地球地図日本 via dataofjapan/land, full-precision GeoJSON subset),
+//    lightly simplified: the 23区 popup is a few hundred pixels wide, 26k points would only weigh it down.
+const wardsFc = JSON.parse(readFileSync(new URL('../data/raw/tokyo23.geojson', import.meta.url), 'utf8'));
+if (wardsFc.features.length !== 23) throw new Error(`expected 23 wards, got ${wardsFc.features.length}`);
+let t23s = presimplify(topology({ wards: wardsFc }));
+t23s = simplify(t23s, quantile(t23s, 0.2)); // keep the 20% most significant points
+const t23 = topology({ wards: feature(t23s, t23s.objects.wards) }, 1e4);
+t23.meta = { source: '地球地図日本（国土地理院） via dataofjapan/land' };
+writeFileSync(new URL('../public/geo/tokyo23.topo.json', import.meta.url), JSON.stringify(t23));
+console.log(`tokyo23: ${wardsFc.features.length} wards, ${(Buffer.byteLength(JSON.stringify(t23)) / 1024).toFixed(0)} KB`);
 function round(x) { return Math.round(x * 1e4) / 1e4; }

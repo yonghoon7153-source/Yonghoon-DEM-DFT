@@ -1,14 +1,17 @@
 // Renders mind-map boxes (NoteItem trees) as connected chips.
+import { countBoxes } from '../data';
 import type { NoteItem } from '../types';
 import { el } from './dom';
 
 export interface TreeStyle { color: string; ink: string }
+/** `fold`: boxes at this depth show 「+N칸」 instead of their branches; `onFold` may take the tap (true) instead of opening in place. */
+export interface TreeOptions { fold?: number; onFold?(it: NoteItem): boolean }
 
-export function renderTree(items: NoteItem[], style: TreeStyle, depth = 0): HTMLUListElement {
+export function renderTree(items: NoteItem[], style: TreeStyle, depth = 0, opts: TreeOptions = {}): HTMLUListElement {
   const leafOnly = depth === 0 && items.length > 5 && items.every((it) => !it.children?.length);
   const cls = depth === 0 ? `tree tree--root${leafOnly ? ' tree--wrap' : ''}` : 'tree';
   const ul = el('ul', { class: cls, style: depth === 0 ? `--c:${style.color};--branch:${mix(style.ink)}` : undefined });
-  for (const it of items) ul.append(renderNode(it, style, depth));
+  for (const it of items) ul.append(renderNode(it, style, depth, opts));
   return ul;
 }
 
@@ -16,12 +19,20 @@ function mix(ink: string) {
   return `color-mix(in oklab, ${ink} 35%, white)`;
 }
 
-function renderNode(it: NoteItem, style: TreeStyle, depth: number): HTMLLIElement {
+function renderNode(it: NoteItem, style: TreeStyle, depth: number, opts: TreeOptions): HTMLLIElement {
   const li = el('li', { class: 'node' });
   li.append(renderChip(it));
   const photo = photoLink(it);
   if (photo) li.append(photo);
-  if (it.children?.length) li.append(renderTree(it.children, style, depth + 1));
+  const kids = it.children ?? [];
+  if (kids.length && opts.fold !== undefined && depth >= opts.fold) {
+    const more = el('button', { type: 'button', class: 'nfold', title: '펼치기' }, `+${countBoxes(kids)}칸 ▸`);
+    more.addEventListener('click', () => {
+      if (opts.onFold?.(it)) return;
+      more.replaceWith(renderTree(kids, style, depth + 1));
+    });
+    li.append(more);
+  } else if (kids.length) li.append(renderTree(kids, style, depth + 1, opts));
   return li;
 }
 

@@ -13,6 +13,7 @@ import { createModal } from './ui/modal';
 import { createPanel, renderGeneralMemo } from './ui/panel';
 import { createSearch } from './ui/search';
 import { createTooltip } from './ui/tooltip';
+import { renderTokyo23, WARD_PREFECTURE } from './ui/tokyo23';
 import type { LabelMode } from './types';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -68,6 +69,8 @@ async function init() {
       panel.refresh();
     },
     isMascotFound: (id) => easter?.isFound(id) ?? false,
+    hasWardMap: (slug) => slug === WARD_PREFECTURE,
+    onWardMap: (focus) => openWards(focus),
     rangeState: () => state.range,
     onRange: (no) => pickRange(no),
     onHideRangeNames: (hide) => {
@@ -158,6 +161,15 @@ async function init() {
         panel.refresh();
       }
     }, opts.animate === false ? 50 : 760);
+    // Tokyo: the 23区 popup of my Canva page follows the zoom and the mascot (not on a page load from a link)
+    if (slug === WARD_PREFECTURE && opts.animate !== false) {
+      window.setTimeout(() => {
+        if (state.selected === slug && !modal.isOpen()) openWards();
+      }, 1400);
+    }
+  }
+  function openWards(focus?: string) {
+    modal.open(renderTokyo23(state.labelMode, focus));
   }
 
   function deselect() {
