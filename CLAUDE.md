@@ -65,13 +65,16 @@
 ★ **사용자 운영 규칙**: **보고 → 설명 → 비준 → 실행.**
 
 ⛔ **멈춘 런 재개 체크리스트** (2026-09-27 사고 — 원장 `SELF-54`.  순수 SE 두 런을 체크포인트 확인 없이 INSERTING 부터 다시 돌렸다.  계산 시간은 되돌릴 수 없다):
-  ① 멈춘 폴더부터 본다 — `log.liggghts` 의 마지막 `======` 단계 · 마지막 step · `restart_<case>/` 의 최신 파일 (compress > after_settling > settling).  **덱 전체**를 읽는다 (일부 행만 보고 판단 금지).
+  ★ **LIGGGHTS 재개는 `scripts/resume_ckpt.sh` 로만 한다** — 재개 요청을 받으면 정본 `docs/resume_ckpt_procedure_20260927.md` 부터 읽는다 (감시 `scripts/ckpt_watch.sh` · 믹서는 `scripts/make_mixer_resume.py`).  아래 ①–⑥ 은 그 스크립트가 하는 일이다.
+  ① 멈춘 폴더부터 본다 — `log.liggghts` 의 마지막 `======` 단계 · 마지막 step · `restart_<case>/` 의 최신 파일 (compress > after_settling > settling).  ⚠ 로그의 마지막 step 은 늦다 — thermo 줄은 버퍼에 있다가 늦게 써지고 scancel 되면 사라진다 (r050 원 로그는 200002 에서 끝났는데 restart_settling_250000 이 있었다) ⇒ 진행은 restart 파일 · mesh 덤프로 본다.  **덱 전체**를 읽는다 (일부 행만 보고 판단 금지).
   ② 원본은 절대 건드리지 않는다 — 복사본에서 작업한다.
-  ③ 재개 덱은 새로 짜지 말고 검증된 도구로 만든다 (ibb `~/dem_test/dem_restart.py` · 믹서는 `scripts/make_mixer_resume.py`) — `read_restart` · fix/dump ID 는 원 덱과 같게.
-     순수 SE 는 판 메시 (`mesh/surface/stress … type 1`) 가 생기기 **전** 체크포인트에서 재개하면 type 1 이 없어 죽는다 — 원 덱의 템플릿 · 분포 정의 (`particletemplate/sphere` · `particledistribution/discrete`) 를 재개 덱에 다시 둔다 (선배 지적).
+  ③ 재개 덱은 새로 짜지 말고 검증된 도구로 만든다 (ibb `~/dem_test/dem_restart.py` — `resume_ckpt.sh` 가 부른다) — `read_restart` · fix/dump ID 는 원 덱과 같게.
+     순수 SE 는 판 메시 (`mesh/surface/stress … type 1`) 가 생기기 **전** 체크포인트에서 재개하면 type 1 이 없어 죽는다 — 원 덱의 템플릿 · 분포 정의 (`particletemplate/sphere` · `particledistribution/discrete`) 를 재개 덱에 다시 둔다 (빼면 `ERROR: Atom types must start from 1` · 목업 실측 — `resume_ckpt.sh` 가 after_settling · settling 재개 때 `fix pts*` · `fix pdd_mix` 줄을 `read_restart` 바로 뒤에 넣는다).
   ④ 러너는 `#SBATCH -n N` 과 `mpirun --oversubscribe --bind-to none -np N` 을 짝으로 · 제출 폴더에 `logs/` 가 있는지 (출력 경로는 제출 폴더 기준).
-  ⑤ 본 제출 전 짧은 시험 (2000 step) — 재개 **첫 줄** (run setup 줄) 은 step · 원자 수 · KE 를 원 로그와 대조하고, 압력은 **그다음 정규 줄**에서 대조한다.  맞을 때만 본 제출.
-     ⚠ setup 줄의 메시 압력은 기준이 못 된다 — 원 런에서도 같은 step 의 앞 줄과 다르게 찍힌다 (r100 원 로그 실측: 판 접촉 뒤 압축 run 경계 1,020 곳 중 992 곳에서 달랐고 최대 1.08 배, KE 는 전부 같았다 · 선배가 본 원 로그 1.5 배 · 재개하면 0).  그 줄로 판정하면 영원히 제출하지 못한다.
+  ⑤ 본 제출 전 짧은 시험 (2000 step) — 셋 다 통과할 때만 본 제출 (하나라도 실패하면 제출하지 않고 기록 → 사람이 판단).
+     **G1** 재개 첫 줄 (run setup 줄) — step · 원자 수 정확, CPU · 압력을 뺀 열 (KE 또는 zmax) 1e-6.  **G2** 체크포인트 step 상태를 덤프로 직접 대조 — 시험이 다시 쓴 `atom_<step>` (id 정렬 · 위치 · 속도) md5 · `mesh_<step>.stl` md5 · after_settling 은 `PLATE HEIGHT` 줄.
+     **G3** 첫 정규 줄 — 원자 수 + 압력 (0 이면 KE) 5 % (느슨한 이유: MPI 분할이 바뀌면 합산 순서가 달라 조밀 충전층 궤적이 갈라진다 — r075 1000 step 뒤 압력 0.6 % · KE 8 %).  **G1–G3 는 바꾸지 않는다** (바꾸려면 근거와 함께 먼저 보고).
+     ⚠ setup 줄의 메시 압력은 기준이 못 된다 — 원 런에서도 같은 step 의 앞 줄과 다르게 찍힌다 (r100 원 로그 실측: 판 접촉 뒤 압축 run 경계 1,020 곳 중 992 곳에서 달랐고 최대 1.08 배, KE 는 전부 같았다 · 선배 기록: 약 1.5 배 — step 14002 정규 0.13241 → setup 0.19935 · read_restart 직후 setup 줄은 0).  그 줄로 판정하면 영원히 제출하지 못한다.
   ⑥ 처음부터 다시 돌리는 것은 체크포인트가 정말 없을 때만 — 그때도 먼저 보고하고 승인을 받는다.  "일단 돌리고 보자" 금지.
   ⚠ **확인하지 않은 추정을 지시문에 쓰지 않는다** — 09-27 에 둘을 틀리게 썼다 (*"체크포인트는 PHASE 3 에서만"* · *"재개 첫 thermo 줄의 압력이 원 로그와 맞아야 한다"* — 이 체크리스트 ⑤ 초판에도 같은 결함이 있었다).  지시문의 문장마다 덱 · 로그의 실제 행을 댈 수 있어야 한다.
 
