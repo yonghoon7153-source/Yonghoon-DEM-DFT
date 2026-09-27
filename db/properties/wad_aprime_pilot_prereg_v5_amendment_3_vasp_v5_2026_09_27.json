@@ -1,14 +1,14 @@
 {
  "schema": "prereg_amendment/v1",
  "date": "2026-09-27",
- "version": "v5",
- "title": "A′ 카드 v5 개정 3 (초안 v5) — V5 를 VASP 외주로 돌리는 경로 · 준비만 (실행 미정) · Codex CE·CF·CG·CI NO-GO 반영",
+ "version": "v6",
+ "title": "A′ 카드 v5 개정 3 (초안 v6) — V5 를 VASP 외주로 돌리는 경로 · 준비만 (실행 미정) · Codex CE·CF·CG·CI·CJ NO-GO 반영",
  "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json",
  "amends_after": [
   "amendment_1 (W_UMA+D3 := W_UMA + ΔE_D3,QE)",
   "amendment_2 (쌍극자 구간)"
  ],
- "status": "proposed v5 — Codex CI NO-GO (포장 P1 1) 반영 · 재리뷰(CJ) 전 · 1저자 비준 전 · 업체 미정 (1저자 '될지는 모르지만 준비는 해둬볼게')",
+ "status": "proposed v6 — Codex CJ NO-GO (관리 파일 목록 쓰기 P1 1) 반영 · 재리뷰(CK) 전 · 1저자 비준 전 · 업체 미정 (1저자 '될지는 모르지만 준비는 해둬볼게')",
  "개정_이력": [
   {
    "v": "v1",
@@ -43,7 +43,15 @@
   },
   {
    "v": "v5",
-   "무엇": "CI P1 (pack() 단계별 성공 확인 — find · 허용 필터(grep 무매치 1 ≠ 오류 ≥ 2) · sort · 목록 쓰기 · tar · tar tzf 열람 · 금지 검사 · 구성원↔목록 대조 · sha · mv — 실패 = 종료 4 · 임시 묶음 삭제 · 기존 쌍 보존) · S3 TITEL_TRUNCATED 상태(자동 확인 불가 설명) · 권고 3 (cut 게이트 문구 · 결정 원장 표기 · '옛 쌍' 표현 좁힘) · 도구 v5 · 패키지 재생성 (입력 불변)"
+   "commit": "a2374014b625fcc827d297529a6aba8104db32c2",
+   "content_digest": "sha256:2b3a0ad4f2eeb5768d270a7aa63ec48888e7e07a34b4b940dd93b3ac0cc860b8",
+   "MANIFEST_sha256_of_file": "85bfebdb1c6c4c6a42649f5ae8ae0dfe1ba8e2405ba572c875e4c38bc7ecf623",
+   "무엇": "CI P1 (pack() 단계별 성공 확인 — find · 허용 필터(grep 무매치 1 ≠ 오류 ≥ 2) · sort · 목록 쓰기 · tar · tar tzf 열람 · 금지 검사 · 구성원↔목록 대조 · sha · mv — 실패 = 종료 4 · 임시 묶음 삭제 · 기존 쌍 보존) · S3 TITEL_TRUNCATED 상태(자동 확인 불가 설명) · 권고 3 (cut 게이트 문구 · 결정 원장 표기 · '옛 쌍' 표현 좁힘) · 도구 v5 · 패키지 재생성 (입력 불변)",
+   "리뷰": "Codex CJ NO-GO (kb/reviews/codex_CJ_reply_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md · 재현 묶음 db/raw/codex_CJ_repro_2026_09_27) — CI 재현 3 경로 해제 확인 · 새 P0 없음 · 같은 P1 의 남은 경로 1 (관리 파일 목록 쓰기 `{ echo …; cat …; } || …` 가 앞 echo 실패를 못 잡아 23·24 구성원 묶음을 종료 0 으로 승격) · S1–S6 찬성 · 권고 3 (sha 파이프 종료값 · 마지막 rm 이 pack 반환값 = 거짓 종료 4 · README 발송 문구 충돌 · 지원 환경 명시)"
+  },
+  {
+   "v": "v6",
+   "무엇": "CJ P1 (관리 목록 초기화·이름 쓰기·MANIFEST 쓰기·cat 을 쓰기마다 검사 + 목록 내용 검증: 줄 수 = 1 + 디스크의 관리 파일 수 + 허용 파일 수 · MANIFEST.sha256 · 디스크에 있는 관리 파일이 목록에 있어야) · 권고 (sha256sum 명령 성공과 hex64 형식 분리 · 정리 rm 실패 = ⚠ 경고·종료 0 · 발송 조건 = 종료 0 또는 1 + sha256sum -c · 지원 환경 Linux/GNU 명시) · 도구 v6 · 패키지 재생성 (입력 불변)"
   }
  ],
  "results_seen": false,
@@ -106,13 +114,13 @@
  },
  "패키지": {
   "path": "db/inputs/wad_aprime_v5_vasp_2026_09_27",
-  "version": "v5",
-  "MANIFEST_sha256_of_file": "85bfebdb1c6c4c6a42649f5ae8ae0dfe1ba8e2405ba572c875e4c38bc7ecf623",
+  "version": "v6",
+  "MANIFEST_sha256_of_file": "8118bbc023d6699cd7cd1b6e6afd32872e0699af70b412e15b89365e556ee2f1",
   "jobs": 18,
   "max_runs": 36,
   "tool": "tools/wad/build_v5_vasp_package.py",
-  "tool_sha256": "f0a83c76fb3e99c9e6b99fd547b779e841dffb54ff08935d71b4a7f2e2ffaf84",
-  "검증": "selftest 175/175 (CE·CF·CG·CI 재현 전부 음성 · 정상 18 잡 대조군 · 정당한 r1 네 경로 + r1 봉인 결속 · 실물 5.4.4 OUTCAR 픽스처 · 배포 러너 bash+가짜 VASP 실제 실행 — 허용 목록 · 준비 실패 · PACK_ONLY 누출 · tar 실패 · BASH_ENV 주입 10 종(find · sort · sort(allowed) · grep 2 · grep(found) 2 · grep(members) 2 · tar tzf 73 · tar tzf 목록 뒤 73 · cmp · sha256sum 빈 출력 · 두 번째 mv) · 잡 파일 없는 run/ 양성 · 리뷰어 repro_pack_ci.sh 그대로 종료 0) · 돌연변이 CI 11/11 빨간불 (첫 판 8/11 — find·sort·tar tzf 의 첫 검사가 빠져도 뒤 검사(cmp·뒤 sort)가 잡아 살아남았고, 그 검사만 골라 깨는 주입 3 종을 더해 11/11 · 앞 판 CG 13 · CF 38 은 v4·v3 기록) · 실제 재생성 패키지 v5 끝-끝 (묶음 25 구성원 · 금지 0 · sha -c 0 · tmp 정리 · find/sort/tar tzf/grep 주입 4 종 전부 종료 4 · ✅ 없음 · 쌍 보존 · .part 없음 · 주입 없는 PACK_ONLY 0 · 리뷰어 repro_pack_ci.sh 종료 0)",
+  "tool_sha256": "1d0f4566ab93694c39a3031d041a4751383c5df23db8eacc84e079fc176424be",
+  "검증": "selftest 194/194 (CE·CF·CG·CI·CJ 재현 전부 음성 · BASH_ENV 주입 26 종 — 리뷰어 mgmt_echo_error·manifest_echo_error 그대로 + '일은 다 하고 실패 보고' 변형(echo·cat·wc·cut 이 쓰고/찍고 73) + 조용히 버리기·두 번 쓰기·다른 이름 쓰기(목록 내용 검증) + sha 정상 출력 뒤 73·64 자리 비-hex + 정리 rm 실패 = 종료 0 ⚠ · 리뷰어 스크립트 둘(repro_pack_ci.sh · probe_pack_cj.py --assert-fixed)이 있으면 selftest 가 그대로 돌림) · 돌연변이 CJ 12/12 빨간불 (첫 판 6/11 — 관리 목록 검사 5 개가 뒤 검사(줄 수·존재·cmp)에 가려 살아남아 표적 주입을 더함 · 그 과정에서 제품 결함 하나를 더 잡았다: 줄 수 검증이 '쓴 mgmt 파일' 기준이라 이름이 두 번 쓰여도 통과했다 → 기준을 디스크의 관리 파일 수로) · 실제 재생성 패키지 v6 에 리뷰어 probe_pack_cj.py --assert-fixed 종료 0 (주입 17 건 전부 종료 4·쌍 보존 · 양성 3 · 정리 실패 종료 0) · repro_ci.py --assert-fixed 종료 0",
   "v1_대비": "POSCAR·KPOINTS·POTCAR.spec 불변 (구조 sha 동일) · INCAR/INCAR.r1 에 VDW_RADIUS·VDW_CNRADIUS 두 줄 추가 · D3 기대값을 VASP 절단으로 재계산 (최대 차 0.031 eV · 0.05 %) · run_all.sh · jobs.json · README 갱신",
   "estimate": {
    "nel_min": 1356.0,
@@ -124,7 +132,8 @@
   },
   "v2_대비": "POSCAR·KPOINTS·POTCAR.spec·INCAR·INCAR.r1 불변 (입력 동일 · D3 기대값 동일) · run_all.sh (원자적 mkdir · 포장 실패 4 · PACK_ONLY) · README (재실행 문구 · 종료코드 · 포장 재시도) · jobs.json (schema v3 · 도구 sha · 설정 필드)",
   "v3_대비": "POSCAR·KPOINTS·POTCAR.spec·INCAR·INCAR.r1 불변 (입력 동일 · D3 기대값 동일 · 93 파일 중 jobs.json·run_all.sh 만 변경) · run_all.sh (허용 목록 포장 · 구성원 검사 · 부분 POTCAR 삭제 · tar/sha 쌍 승격) · README (허용 목록 · 파일럿 결속 문구) · jobs.json (schema v4 · 도구 sha · return_allowed/forbidden · 등록부 schema v3)",
-  "v4_대비": "POSCAR·KPOINTS·POTCAR.spec·INCAR·INCAR.r1 불변 (93 파일 중 jobs.json·run_all.sh 만 변경) · run_all.sh (pack() 단계별 확인 · pack_fail 임시 삭제 · 머리말 v5) · README (포장 실패 문구 · 발송 조건 = 종료 0 + sha256sum -c) · jobs.json (schema v5 · 도구 sha)"
+  "v4_대비": "POSCAR·KPOINTS·POTCAR.spec·INCAR·INCAR.r1 불변 (93 파일 중 jobs.json·run_all.sh 만 변경) · run_all.sh (pack() 단계별 확인 · pack_fail 임시 삭제 · 머리말 v5) · README (포장 실패 문구 · 발송 조건 = 종료 0 + sha256sum -c) · jobs.json (schema v5 · 도구 sha)",
+  "v5_대비": "POSCAR·KPOINTS·POTCAR.spec·INCAR·INCAR.r1 불변 (93 파일 중 jobs.json·run_all.sh 만 변경) · run_all.sh (관리 목록 쓰기 검사 · 목록 내용 검증 · sha 명령/형식 분리 · 정리 실패 ⚠ · 머리말 v6 · 발송 조건 · 지원 환경) · README (6 · 7 항) · jobs.json (schema v6 · 도구 sha)"
  },
  "허용_서술": {
   "기본(Q10)": "'지정한 P1′ 2층 모델의 고정 기하·끝점에서, VASP PAW/PBE·MP1 σ=0.136 eV·2체 D3(BJ) 기준의 등록된 비교를 수행했다'",
@@ -144,16 +153,16 @@
   "3b′ 진단으로 G5 자격·DEM 전달을 여는 것"
  ],
  "재개_조건": [
-  "Codex CJ 재리뷰 GO (CI 해제조건: 포장 P1 의 오류 반환 · 기존 쌍 보존 · 양성 경로 회귀 — 정상 · 준비 실패 · PACK_ONLY · 잡 파일 없는 run/)",
-  "1저자 비준: 이 개정 v5 (3c · 3b′ 진단 · PP PBE_54 · VASP 버전 일치 · D3 운영 예산 + G4 동일성 · 최종 판정 등록부 필수 + 파일럿 결속 · DIPOL 증거 두 길(게이트) · 파서 적응 정책 · 반송 허용 목록 · 포장 단계별 확인)",
-  "업체·예산 확정 → 파일럿 2 잡 → --seal_pp 봉인 (schema v3) → 나머지 16 잡 → --collect (등록부) · 파일럿에서 실제 버전·NGZF·min pos·기대 cut·격자 편차를 기록 (CG S4 · CI S6)",
-  "CJ 가 NO-GO 면 고친 뒤 재리뷰 (새 대형 계산이나 V2 bridge 는 해제조건에 넣지 않는다)"
+  "Codex CK 재리뷰 GO (CJ 해제조건: 관리 목록·MANIFEST 쓰기 실패 → 종료 4 · 구본 보존 · 양성 경로 유지)",
+  "1저자 비준: 이 개정 v6 (3c · 3b′ 진단 · PP PBE_54 · VASP 버전 일치 · D3 운영 예산 + G4 동일성 · 최종 판정 등록부 필수 + 파일럿 결속 · DIPOL 증거 두 길(게이트) · 파서 적응 정책 · 반송 허용 목록 · 포장 단계별 확인 + 목록 내용 검증 · 발송 조건 · 지원 환경)",
+  "업체·예산 확정 → 파일럿 2 잡 → --seal_pp 봉인 (schema v3) → 나머지 16 잡 → --collect (등록부) · 파일럿에서 실제 버전·NGZF·min pos·기대 cut·격자 편차를 기록 (CG S4 · CI S6) · 업체 도구가 GNU 가 아니면 계산 전 PACK_ONLY smoke (CJ S3)",
+  "CK 가 NO-GO 면 고친 뒤 재리뷰 (새 대형 계산이나 V2 bridge 는 해제조건에 넣지 않는다)"
  ],
  "비용_규모": "18 잡 · 실행 최대 36 회 (파일럿 재사용 · 잡마다 r1 1 회) · NIONS 176–200 · NELECT 1356–1452 · 기본 NBANDS ~826 · 평면파 최대 ~185,434/k (ENCUT 520) · ~243,934/k (ENCUT 650 · G4 2 잡) · 파동함수 몫 ~16 GB (**peak RSS 아님** — FFT·투영자·작업 배열·MPI 복제 별도) · 환원 k 추정 Γ3×2×1 ≈ 4 · Γ4×3×1 ≈ 7 (IBZKPT 확인) · 업체에 버전/PP · 잡별 NIONS·NELECT·k·ENCUT·셀 · 실패/재시도 상한을 주고, 견적은 파일럿 peak RSS·벽시계로 (CE Q9).",
- "content_digest": "sha256:2b3a0ad4f2eeb5768d270a7aa63ec48888e7e07a34b4b940dd93b3ac0cc860b8",
+ "content_digest": "sha256:eb5e36fa09b25ba1f3c394e404963d0bdb256a959fa03b4111e5354eb5e14153",
  "파서_적응_정책(결과_전)": "실물로 확인한 OUTCAR 형식은 VASP 5.4.4 한 건이다 (REAL_OUTCAR_544 픽스처 · 저장소 원본과 줄 대조). 업체 버전의 형식이 다르면 파일럿 원문으로 **파서만** 적응한다 — 판정 규칙·문턱·기대값·상태 순서 불변 · 적응 내용·전후 selftest·새 도구 sha 를 기록 · 적응 전에는 못 읽은 항목이 미검증으로 막힌다 (자동 통과 없음).",
  "결속_금지_서술(v4)": "등록부 검증은 'PP·버전 신원 대조' 와 '봉인 파일럿 재사용 검증' 두 가지를 다 한다 (CG S2) — v3 까지는 앞것만이었다. 두 문장을 섞어 쓰지 않는다.",
- "반송_검사(v5)": "`tools/wad/build_v5_vasp_package.py --check/--collect --manifest_sha256 <고정값>` fail-closed. 입구: 외부 고정 MANIFEST sha + 목록 전 파일 대조. 잡 판정 순서 (CF P0-1): 실행 기록(attempt.json: run_id 형식 · t_start ≤ t_end · rc 정수 · 입출력 sha) → 입력 무결성(INCAR 를 VASP 의미로) → 복수 실행 → **있는 증거의 모순** (POTCAR 기록 결측·형식 · TITEL/ZVAL · OUTCAR TITEL · 등록부 종별·조립본 sha · 등록부 버전 · 설정 해석값 · Edisp 1 %) = 재시도 자격 없음 · `conflicts` 목록에 전부 → 실행 상태 (rc ≠ 0 · 미종료 · 미수렴 = r1 자격 · 증거가 **없는** 조기 종료는 모순이 아니다) → 완결성 (성공한 실행만: TITEL·NIONS·NELECT·설정·에너지·Edisp 결측 = 미검증). 잡 사이 POTCAR·버전 일관성은 첫 시도·r1 모든 시도에서 모은다. 설정은 OUTCAR 의 **INCAR 에코 구획을 뺀** 해석값에서만 읽는다 (CF R2). 에너지는 **마지막 레코드**의 토큰을 유한수로 해석 — TOTEN·E(σ→0)·E(무엔트로피)는 마지막 'FREE ENERGIE OF THE ION-ELECTRON SYSTEM' 구획 뒤의 것만 (VASP 는 SCF 단계 TOTEN 에 D3 를 넣지 않는다 — 실물) · Edisp 는 `Edisp (eV)  x` (5.4.4 실물 · 콜론 없음)·콜론·등호 형식. 최종 집계(`--collect`)는 봉인 PP 등록부 + 고정 sha 필수 (없으면 종료 2) · 등록부 내용 검증 (schema · PBE_54 · 전 종 TITEL · 종별·조립본 sha · 버전 줄 · 패키지 MANIFEST · 파일럿 run_id) · 파일럿 단계 집계는 `--collect --pilot` 만 (G5 = BLOCKED · total W 인용 불가). 종료코드: --check 0/3/2 · --collect 0 PASS/10 FAIL/11 INCOMPLETE·BLOCKED/12 UMA 없음/3 잡 미완/2 승인본·등록부 · 진단 JSON 은 실패해도 · allow_nan=False. (v4 · CG) OUTCAR TITEL 은 기대 목록의 **정상 접두**(같은 순서·문자열로 앞부분만)면 잘린 출력의 결측이지 모순이 아니다 — 미완료 시도(rc ≠ 0 · 미종료)는 r1 자격 유지 · 성공 시도인데 접두만이면 POTCAR_UNVERIFIED (통과·r1 자격 아님) · 접두가 아닌 것(다른 종·날짜·순서 · 기대 뒤 추가)은 계속 POTCAR_MISMATCH (r1 자격 없음). 등록부가 있으면 **파일럿 두 잡의 채택 시도**(0 또는 정당한 r1)의 run_id 가 등록부 from_pilot 과 같아야 하고, 같은 run_id 라도 attempt.json·OUTCAR sha 가 봉인(from_pilot_sha256 · 등록부 schema v3)과 다르면 PILOT_NOT_SEALED (자동 교체 없음 · 재실행은 새 승인 · 잡 미완 → 종료 3 · G5 분모 INCOMPLETE · ① total W 인용 불가). 에너지·Edisp 레코드는 '존재' 와 '값' 을 분리 — 값이 빈 마지막 레코드도 마지막 레코드(None → 미검증) · 값 패턴이 줄을 넘지 않는다. 반송 폴더에 금지 파일(POTCAR 본문·WAVECAR·CHGCAR·CHG·vasprun.xml)이 있으면 return_bundle.forbidden_files 로 보고한다 (판정 아님 · 저장하지 말고 지운다). (v5 · CI S3) 앞 항목은 다 맞고 **마지막 TITEL 이 기대의 앞부분 문자열**(줄 중간에서 잘림)이면 새 상태 TITEL_TRUNCATED — 모순 확정이 아니라 자동 확인 불가 · 통과·r1 자격 없음 · 원문 확인·새 승인으로만 해제 (POTCAR_MISMATCH 와 구분).",
- "러너(v5)": "run_all.sh — 시도 폴더는 **원자적 mkdir** 로 새로만 · 성공 = rc 0 ∧ 종료 ∧ 수렴 ∧ OUTCAR 실행 1 개 · 성능 파일 제한 문법 · 잡마다 attempt.json (run_id·시각·rc·sha) · POTCAR 는 반송하지 않고 TITEL/ZVAL 줄 · 종별·조립본 sha 만 · 반송 묶음은 임시 파일에 쓰고 성공해야 승격 · **포장 실패 = 종료 4** ('✅ 끝' 금지) · `PACK_ONLY=1` 로 계산 없이 포장만 재시도 · 종료 0/1/2/4 · 수동 재실행은 새 승인 (README). (v4 · CG P1-1) 반송 묶음은 **허용 목록**으로만 담는다 — run/<잡>/{OUTCAR OSZICAR INCAR KPOINTS POSCAR IBZKPT POTCAR.titel POTCAR.sha256 POTCAR.species.sha256 attempt.json stdout.log} + run/status.tsv · run/env.txt · MANIFEST.sha256. 정상 실행 뒤 삭제에 기대지 않는다 · 준비 실패·중단·PACK_ONLY 도 같은 pack() · 묶음 구성원에 금지 이름이 있으면 만들지 않는다(종료 4) · 준비 실패 때 조립 중이던 POTCAR 도 지운다 · tar 와 sha 둘 다 임시 파일로 완성한 뒤 승격 · sha 파일은 최종 이름으로 (`sha256sum -c` 통과). (v5 · CI P1) pack() 은 **단계마다 성공을 확인**한다 — find 열거 · 허용 필터(grep 정상 무매치 1 은 정상 = 잡 파일 없는 run/ 은 관리 파일만 포장 · ≥ 2 는 오류) · sort · 목록 쓰기 · tar · tar tzf 열람(실패는 '금지 없음' 이 아니라 실패) · 금지 검사 · 묶음 구성원 집합 = 목록 집합 대조 · sha(64 자리) · mv. 어느 하나라도 실패하면 임시 묶음(.part)을 지우고 1 → 러너 종료 4 · '✅' 없음 · 기존 tgz/sha 쌍 불변. ⚠ 두 번째 mv 실패는 종료 4 로 드러나지만 **새 tgz + 옛 sha** 가 남을 수 있다 (선언된 틈 · CI S5 수용) → 발송은 종료 0 뒤 `sha256sum -c` 까지 통과한 쌍만.",
- "파일럿(v5)": "**2 잡 — 표본 ① bound + far**. 파일럿 전에 VASP 버전 일치 규칙 · PP 세트 · 수치 설정 · 파서 · 실패 규칙을 이 개정 v3 + 패키지 MANIFEST 로 고정한다. W 의 부호·게이트를 보고 설정을 고르지 않는다. 파일럿 반송 → `--check` (등록부 없이 · 등록 전 단계) → `--seal_pp` (종별·조립본 sha · 버전 줄 · 파일럿 run_id + **봉인 당시 attempt.json·OUTCAR sha** — 스스로 검증 · 등록부 schema v3) → 등록부 커밋·sha 기록 → 나머지 16 잡 → `--collect --pp_registry R --pp_registry_sha256 H` (최종). 재사용: 패키지 sha 가 같으면 파일럿 두 잡을 본 배치에 그대로 쓴다 (실행 최대 36 회). 방법 변경이 불가피하면 파일럿은 구판 진단으로 보존하고 새 패키지 버전. (v4 · CG P1-2) 재사용의 뜻 = 최종 반송에 파일럿 두 잡의 폴더가 **봉인한 그 실행 그대로** 들어 있는 것 — 다른 폴더에서 다시 돌린 파일럿(다른 run_id)이나 같은 run_id 아래 바뀐 파일은 PILOT_NOT_SEALED 로 막힌다 · 파일럿 재실행은 새 승인 대상."
+ "러너(v6)": "run_all.sh — 시도 폴더는 **원자적 mkdir** 로 새로만 · 성공 = rc 0 ∧ 종료 ∧ 수렴 ∧ OUTCAR 실행 1 개 · 성능 파일 제한 문법 · 잡마다 attempt.json (run_id·시각·rc·sha) · POTCAR 는 반송하지 않고 TITEL/ZVAL 줄 · 종별·조립본 sha 만 · 반송 묶음은 임시 파일에 쓰고 성공해야 승격 · **포장 실패 = 종료 4** ('✅ 끝' 금지) · `PACK_ONLY=1` 로 계산 없이 포장만 재시도 · 종료 0/1/2/4 · 수동 재실행은 새 승인 (README). (v4 · CG P1-1) 반송 묶음은 **허용 목록**으로만 담는다 — run/<잡>/{OUTCAR OSZICAR INCAR KPOINTS POSCAR IBZKPT POTCAR.titel POTCAR.sha256 POTCAR.species.sha256 attempt.json stdout.log} + run/status.tsv · run/env.txt · MANIFEST.sha256. 정상 실행 뒤 삭제에 기대지 않는다 · 준비 실패·중단·PACK_ONLY 도 같은 pack() · 묶음 구성원에 금지 이름이 있으면 만들지 않는다(종료 4) · 준비 실패 때 조립 중이던 POTCAR 도 지운다 · tar 와 sha 둘 다 임시 파일로 완성한 뒤 승격 · sha 파일은 최종 이름으로 (`sha256sum -c` 통과). (v5 · CI P1) pack() 은 **단계마다 성공을 확인**한다 — find 열거 · 허용 필터(grep 정상 무매치 1 은 정상 = 잡 파일 없는 run/ 은 관리 파일만 포장 · ≥ 2 는 오류) · sort · 목록 쓰기 · tar · tar tzf 열람(실패는 '금지 없음' 이 아니라 실패) · 금지 검사 · 묶음 구성원 집합 = 목록 집합 대조 · sha(64 자리) · mv. 어느 하나라도 실패하면 임시 묶음(.part)을 지우고 1 → 러너 종료 4 · '✅' 없음 · 기존 tgz/sha 쌍 불변. ⚠ 두 번째 mv 실패는 종료 4 로 드러나지만 **새 tgz + 옛 sha** 가 남을 수 있다 (선언된 틈 · CI S5 수용) → 발송은 종료 0 뒤 `sha256sum -c` 까지 통과한 쌍만. (v6 · CJ P1) 관리 파일 목록은 **쓰기마다 검사**한다 (`: > mgmt` · `echo run/env.txt` · `echo run/status.tsv` · `echo MANIFEST.sha256` · `cat`) — 어느 쓰기가 실패해도 종료 4. 그 위에 **목록 내용 검증**: 줄 수 = 1 + **디스크에 있는** 관리 파일 수 + 허용 파일 수 · MANIFEST.sha256 과 디스크의 관리 파일이 목록에 있어야 한다 (쓰기 실패가 어떤 식으로 가려졌더라도 · 중복·바뀐 이름도 잡는다). sha256sum 은 파일로 받아 **명령 성공**과 **`^[0-9a-fA-F]{64}$`** 를 따로 본다. 마지막 진단 폴더 정리(rm) 실패는 포장 실패가 아니다 (⚠ 경고 · 종료 0 — 묶음·sha 는 이미 정상). **보내는 것** = 일반 실행 종료 0 **또는 1**(실패 잡 있음 · 실패도 기록) 뒤 `sha256sum -c` 통과 쌍 · 종료 4 → PACK_ONLY 종료 0 + sha 확인. **지원 환경 = Linux · bash ≥ 4 · GNU coreutils/tar** (bsdtar 는 tar tzf 출력 CRLF 로 구성원 대조가 거짓 실패 → 계산 전 PACK_ONLY smoke).",
+ "반송_검사(v6)": "`tools/wad/build_v5_vasp_package.py --check/--collect --manifest_sha256 <고정값>` fail-closed. 입구: 외부 고정 MANIFEST sha + 목록 전 파일 대조. 잡 판정 순서 (CF P0-1): 실행 기록(attempt.json: run_id 형식 · t_start ≤ t_end · rc 정수 · 입출력 sha) → 입력 무결성(INCAR 를 VASP 의미로) → 복수 실행 → **있는 증거의 모순** (POTCAR 기록 결측·형식 · TITEL/ZVAL · OUTCAR TITEL · 등록부 종별·조립본 sha · 등록부 버전 · 설정 해석값 · Edisp 1 %) = 재시도 자격 없음 · `conflicts` 목록에 전부 → 실행 상태 (rc ≠ 0 · 미종료 · 미수렴 = r1 자격 · 증거가 **없는** 조기 종료는 모순이 아니다) → 완결성 (성공한 실행만: TITEL·NIONS·NELECT·설정·에너지·Edisp 결측 = 미검증). 잡 사이 POTCAR·버전 일관성은 첫 시도·r1 모든 시도에서 모은다. 설정은 OUTCAR 의 **INCAR 에코 구획을 뺀** 해석값에서만 읽는다 (CF R2). 에너지는 **마지막 레코드**의 토큰을 유한수로 해석 — TOTEN·E(σ→0)·E(무엔트로피)는 마지막 'FREE ENERGIE OF THE ION-ELECTRON SYSTEM' 구획 뒤의 것만 (VASP 는 SCF 단계 TOTEN 에 D3 를 넣지 않는다 — 실물) · Edisp 는 `Edisp (eV)  x` (5.4.4 실물 · 콜론 없음)·콜론·등호 형식. 최종 집계(`--collect`)는 봉인 PP 등록부 + 고정 sha 필수 (없으면 종료 2) · 등록부 내용 검증 (schema · PBE_54 · 전 종 TITEL · 종별·조립본 sha · 버전 줄 · 패키지 MANIFEST · 파일럿 run_id) · 파일럿 단계 집계는 `--collect --pilot` 만 (G5 = BLOCKED · total W 인용 불가). 종료코드: --check 0/3/2 · --collect 0 PASS/10 FAIL/11 INCOMPLETE·BLOCKED/12 UMA 없음/3 잡 미완/2 승인본·등록부 · 진단 JSON 은 실패해도 · allow_nan=False. (v4 · CG) OUTCAR TITEL 은 기대 목록의 **정상 접두**(같은 순서·문자열로 앞부분만)면 잘린 출력의 결측이지 모순이 아니다 — 미완료 시도(rc ≠ 0 · 미종료)는 r1 자격 유지 · 성공 시도인데 접두만이면 POTCAR_UNVERIFIED (통과·r1 자격 아님) · 접두가 아닌 것(다른 종·날짜·순서 · 기대 뒤 추가)은 계속 POTCAR_MISMATCH (r1 자격 없음). 등록부가 있으면 **파일럿 두 잡의 채택 시도**(0 또는 정당한 r1)의 run_id 가 등록부 from_pilot 과 같아야 하고, 같은 run_id 라도 attempt.json·OUTCAR sha 가 봉인(from_pilot_sha256 · 등록부 schema v3)과 다르면 PILOT_NOT_SEALED (자동 교체 없음 · 재실행은 새 승인 · 잡 미완 → 종료 3 · G5 분모 INCOMPLETE · ① total W 인용 불가). 에너지·Edisp 레코드는 '존재' 와 '값' 을 분리 — 값이 빈 마지막 레코드도 마지막 레코드(None → 미검증) · 값 패턴이 줄을 넘지 않는다. 반송 폴더에 금지 파일(POTCAR 본문·WAVECAR·CHGCAR·CHG·vasprun.xml)이 있으면 return_bundle.forbidden_files 로 보고한다 (판정 아님 · 저장하지 말고 지운다). (v5 · CI S3) 앞 항목은 다 맞고 **마지막 TITEL 이 기대의 앞부분 문자열**(줄 중간에서 잘림)이면 새 상태 TITEL_TRUNCATED — 모순 확정이 아니라 자동 확인 불가 · 통과·r1 자격 없음 · 원문 확인·새 승인으로만 해제 (POTCAR_MISMATCH 와 구분).",
+ "파일럿(v6)": "**2 잡 — 표본 ① bound + far**. 파일럿 전에 VASP 버전 일치 규칙 · PP 세트 · 수치 설정 · 파서 · 실패 규칙을 이 개정 v3 + 패키지 MANIFEST 로 고정한다. W 의 부호·게이트를 보고 설정을 고르지 않는다. 파일럿 반송 → `--check` (등록부 없이 · 등록 전 단계) → `--seal_pp` (종별·조립본 sha · 버전 줄 · 파일럿 run_id + **봉인 당시 attempt.json·OUTCAR sha** — 스스로 검증 · 등록부 schema v3) → 등록부 커밋·sha 기록 → 나머지 16 잡 → `--collect --pp_registry R --pp_registry_sha256 H` (최종). 재사용: 패키지 sha 가 같으면 파일럿 두 잡을 본 배치에 그대로 쓴다 (실행 최대 36 회). 방법 변경이 불가피하면 파일럿은 구판 진단으로 보존하고 새 패키지 버전. (v4 · CG P1-2) 재사용의 뜻 = 최종 반송에 파일럿 두 잡의 폴더가 **봉인한 그 실행 그대로** 들어 있는 것 — 다른 폴더에서 다시 돌린 파일럿(다른 run_id)이나 같은 run_id 아래 바뀐 파일은 PILOT_NOT_SEALED 로 막힌다 · 파일럿 재실행은 새 승인 대상."
 }

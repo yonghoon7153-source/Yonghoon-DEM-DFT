@@ -1,13 +1,13 @@
 {
- "schema": "aprime_v5_vasp_package/v5",
+ "schema": "aprime_v5_vasp_package/v6",
  "date": "2026-09-27",
- "status": "준비본 v5 (Codex CE·CF·CG·CI NO-GO 반영 · 재리뷰 전 · 결정 proposed · 실행 미정)",
+ "status": "준비본 v6 (Codex CE·CF·CG·CI·CJ NO-GO 반영 · 재리뷰 전 · 결정 proposed · 실행 미정)",
  "source_package": "db/inputs/wad_aprime_s3v2_2026_09_26",
  "source_s3_manifest_sha256": "069894c62daa1bf863cebba3533fb0c79e70fd16a9b4d77cf7ea5ac41512246d",
  "source_seal": "db/properties/wad_aprime_s3v2_seal_2026_09_26.json",
  "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json",
  "amendment": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json",
- "tool_sha256": "f0a83c76fb3e99c9e6b99fd547b779e841dffb54ff08935d71b4a7f2e2ffaf84",
+ "tool_sha256": "1d0f4566ab93694c39a3031d041a4751383c5df23db8eacc84e079fc176424be",
  "settings": {
   "potcar": {
    "Li": "Li_sv",

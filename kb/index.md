@@ -1,12 +1,12 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-27 · managed-files: 476
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-27 · managed-files: 477
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 273건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 274건)
 - 2026-09-27 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-27 · `kb/reviews/codex_CE_prompt_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` — 리뷰 CE 프롬프트 — A′ V5 (LPSCl|Ag(111) 작은 주기 계면) VASP 외주 패키지 준비본: QE→VASP 대응 · INCAR · 쌍극자 · D3 · 반송 검사 · G3 경계선 예측 · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…
 - 2026-09-27 · `kb/reviews/codex_CE_reply_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` — 리뷰 CE 회신 — A′ V5 VASP 외주 준비본: NO-GO (P0 4 · P1 5 · 3b 원안 반대 · 3c 찬성) · 수령 (1저자 붙여넣기 · 원문 그대로) → 대응 v2 커밋 e025…
@@ -16,7 +16,8 @@
 - 2026-09-27 · `kb/reviews/codex_CG_reply_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md` — 리뷰 CG 회신 — A′ V5 VASP 외주 준비본 v3: NO-GO (P1 3 · 새 P0 없음 · S3 찬성 · S4 조건부 찬성 · S5 찬성 · 선택 권고 3) · 수령 (1저자 붙여넣기 · 원문 그대로) → 대응 v4 → 재리뷰 CI
 - 2026-09-27 · `kb/reviews/codex_CI_prompt_wad_aprime_v5_vasp_outsourcing_v4_2026_09_27.md` — 리뷰 CI 프롬프트 — A′ V5 VASP 외주 준비본 v4 재리뷰 (CG NO-GO 대응: 반송 허용 목록 · 봉인 파일럿 결속 · TITEL 접두 규칙 · 권고 3) · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…
 - 2026-09-27 · `kb/reviews/codex_CI_reply_wad_aprime_v5_vasp_outsourcing_v4_2026_09_27.md` — 리뷰 CI 회신 — A′ V5 VASP 외주 준비본 v4: NO-GO (CG P1 3 해제 · 새 P1 1 = 포장 단계 오류를 성공으로 승격 · S1–S6 찬성 · 정리 권고 3) · 수령 (1저자 붙여넣기 + zip 첨부 · 원문 그대로) → 대응 v…
-- 2026-09-27 · `kb/reviews/codex_CJ_prompt_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md` — 리뷰 CJ 프롬프트 — A′ V5 VASP 외주 준비본 v5 재리뷰 (CI NO-GO 대응: 포장 단계별 성공 확인 · TITEL_TRUNCATED · 정리 권고 3) · 발송 대기 (1저자) — 도구·패키지·개정 3 v5 는 커밋 a237…
+- 2026-09-27 · `kb/reviews/codex_CJ_prompt_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md` — 리뷰 CJ 프롬프트 — A′ V5 VASP 외주 준비본 v5 재리뷰 (CI NO-GO 대응: 포장 단계별 성공 확인 · TITEL_TRUNCATED · 정리 권고 3) · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…
+- 2026-09-27 · `kb/reviews/codex_CJ_reply_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md` — 리뷰 CJ 회신 — A′ V5 VASP 외주 준비본 v5: NO-GO (CI 재현 3 경로 해제 · 같은 P1 의 관리 파일 목록 쓰기 경로 1 · S1–S6 · 권고 3: sha 파이프 · 정리 실패 · 반송 문구) · 수령 (1저자 붙여넣기 + zip 첨부 · 원문 그대로) → 대응 v…
 - 2026-09-27 · `kb/reviews/li2s1a_CD_prompt_li2s_cc_report_2026_09_26.md` — CD 프롬프트 — li2s 소셀 유리 MD 회신 CC 이행 보고 (외부 1저자에게 발송 · 발송판은 kb/projects 에) · 발송됨 (사용자) · 회신 CD 수령 2026-09-27 → `li2…
 - 2026-09-27 · `kb/reviews/li2s1a_CD_reply_li2s_cc_report_2026_09_27.md` — 회신 CD — 외부 1저자 (li2s 소셀 유리 MD): 회신 CC 이행 보고 판정 (Q-CC-1 MTO · σ 하한·보수값 · b_min 50 ps · 7 χ²₃ 쓰지 않음 · 8 상한 비교 보류 · 550 K 겸용 예외 · 새 항목 둘 · 게이트 A 메모) · 수령 (2026-09-27 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-09-27 · `kb/reviews/li2s1a_CH_prompt_li2s_cd_reply_pilot800_2026_09_27.md` — CH 프롬프트 — li2s 소셀 유리 MD: 회신 CD 반영 · 파일럿 400 K 800 ps 결과 (C2·C1 미통과 → 400 K 측정 안 됨) · 카드 개정 v2 · 다섯 시드 P 배위 통계 (새 항목 1) · 결정·확인 요청 셋 (외부 1저자에게) · 발송됨 (사용자 · 2026-09-27 · 발송판 = 다섯 시드 결과…
@@ -26,7 +27,6 @@
 - 2026-09-26 · `kb/projects/li2s_glass_external_first_author_report_2026_09_26.md` — li2s 소셀 유리 MD — 회신 CC 이행 보고 (외부 1저자에게) · B 실측 3 건 · 카드 개정 초안 확인 요청 · 400 K prod 800 ps 채택 제안 · 초안 — 사용자(실행자 · 카드 저자) 검토 뒤 외부 1저자에게 발송…
 - 2026-09-26 · `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청 · 회신 4 발송 완료 (09-25) · DEM 4차 회신 수령 (09-…
 - 2026-09-25 · `kb/reviews/codex_BX_prompt_wad_sese_4L_alarm_2026_09_25.md` — 리뷰 BX 프롬프트 — SE|SE 4층 대조: 이완 W_cleave 가 경보 구간 아래 — 원인 가르기(이완 점검 A · 벌크 이완 B)가 맞나 · 발송됨 · 회신 수령 (조건부 GO — 진단 · 검증 완료·DEM 승…
-- 2026-09-25 · `kb/reviews/codex_BX_reply_wad_sese_4L_alarm_2026_09_25.md` — 리뷰 BX 회신 — SE|SE 4층 경보: 원인 진단 조건부 GO · 방법 검증 완료/DEM 승격 NO-GO · P0 완료 판정기 결함 · 수신됨 (2026-09-25 · 1저자 붙여넣기) — 원문 그대로 ·…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -212,7 +212,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (177)
+## reviews/ (178)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-27 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -312,7 +312,8 @@
 - `kb/reviews/codex_CG_reply_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md` — 리뷰 CG 회신 — A′ V5 VASP 외주 준비본 v3: NO-GO (P1 3 · 새 P0 없음 · S3 찬성 · S4 조건부 찬성 · S5 찬성 · 선택 권고 3)  (2026-09-27 · 수령 (1저자 붙여넣기 · 원문 그대로) → 대응 v4 → 재리뷰 CI)
 - `kb/reviews/codex_CI_prompt_wad_aprime_v5_vasp_outsourcing_v4_2026_09_27.md` — 리뷰 CI 프롬프트 — A′ V5 VASP 외주 준비본 v4 재리뷰 (CG NO-GO 대응: 반송 허용 목록 · 봉인 파일럿 결속 · TITEL 접두 규칙 · 권고 3)  (2026-09-27 · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…)
 - `kb/reviews/codex_CI_reply_wad_aprime_v5_vasp_outsourcing_v4_2026_09_27.md` — 리뷰 CI 회신 — A′ V5 VASP 외주 준비본 v4: NO-GO (CG P1 3 해제 · 새 P1 1 = 포장 단계 오류를 성공으로 승격 · S1–S6 찬성 · 정리 권고 3)  (2026-09-27 · 수령 (1저자 붙여넣기 + zip 첨부 · 원문 그대로) → 대응 v…)
-- `kb/reviews/codex_CJ_prompt_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md` — 리뷰 CJ 프롬프트 — A′ V5 VASP 외주 준비본 v5 재리뷰 (CI NO-GO 대응: 포장 단계별 성공 확인 · TITEL_TRUNCATED · 정리 권고 3)  (2026-09-27 · 발송 대기 (1저자) — 도구·패키지·개정 3 v5 는 커밋 a237…)
+- `kb/reviews/codex_CJ_prompt_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md` — 리뷰 CJ 프롬프트 — A′ V5 VASP 외주 준비본 v5 재리뷰 (CI NO-GO 대응: 포장 단계별 성공 확인 · TITEL_TRUNCATED · 정리 권고 3)  (2026-09-27 · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…)
+- `kb/reviews/codex_CJ_reply_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md` — 리뷰 CJ 회신 — A′ V5 VASP 외주 준비본 v5: NO-GO (CI 재현 3 경로 해제 · 같은 P1 의 관리 파일 목록 쓰기 경로 1 · S1–S6 · 권고 3: sha 파이프 · 정리 실패 · 반송 문구)  (2026-09-27 · 수령 (1저자 붙여넣기 + zip 첨부 · 원문 그대로) → 대응 v…)
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료)  (2026-08-20 · v2.1 — codex 2라운드 종료 (manifest 지적 철회 ·…)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))

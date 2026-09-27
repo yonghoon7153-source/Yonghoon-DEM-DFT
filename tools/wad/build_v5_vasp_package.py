@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""build_v5_vasp_package.py — A′ V5 (LPSCl|Ag(111) 작은 주기 계면) **VASP 외주 패키지** · 반송 검사 · W/G3/G4/G5 집계. (v5 · Codex CE·CF·CG·CI 반영)
+"""build_v5_vasp_package.py — A′ V5 (LPSCl|Ag(111) 작은 주기 계면) **VASP 외주 패키지** · 반송 검사 · W/G3/G4/G5 집계. (v6 · Codex CE·CF·CG·CI·CJ 반영)
 
 왜 있나 (2026-09-27 · 1저자 "v5 관련해서 vasp 용으로 외주건으로 한번 만들어보고 codex 리뷰 받자 · 될지는 모르지만 준비는 해둬볼게")
   V5 는 우리 GPU 한 장(48 GB)에 안 들어가 RESOURCE_BLOCKED 였다 (QE CPU 추정 89–109 GB @70 Ry · 축소 변형도 61–80 GB).
@@ -51,6 +51,15 @@ v5 (Codex CI NO-GO 반영 · 2026-09-27)
        원문 확인·새 승인으로만 해제 (POTCAR_MISMATCH 와 구분해 적는다).
   권고  개정 3 의 '도구는 기록만·게이트 아님' → 'cut 위치의 설정 일치 검사는 게이트 · 전자밀도 검증은 안 한다' 로 정리 · 결정 원장 제목·method_ref 의 v3/129 표기 정리 ·
        '어느 단계가 실패해도 옛 쌍 그대로' 는 '두 번째 mv 실패면 새 tgz + 옛 sha (종료 4 로 드러남)' 로 좁힘 · 발송은 종료 0 뒤 `sha256sum -c` 까지 통과한 쌍만.
+
+v6 (Codex CJ NO-GO 반영 · 2026-09-27)
+  P1   관리 파일 목록 쓰기(`: > mgmt` · `echo run/env.txt` · `echo run/status.tsv` · `echo MANIFEST.sha256` · `cat`)를 **쓰기마다 검사** —
+       v5 의 `{ echo …; cat …; } || …` 는 앞 echo 의 실패를 못 잡아 관리 파일이 빠진 묶음(23·24 구성원)이 종료 0 · '✅' 로 승격됐다 (리뷰어 재현 · BASH_ENV echo 주입).
+       + 목록 **내용 검증**: 줄 수 = 1 + 관리 + 허용 · MANIFEST.sha256 과 디스크에 있는 관리 파일이 목록에 있어야 한다 (쓰기 실패가 어떤 식으로 가려졌더라도).
+  권고  sha256sum 은 파이프 대신 파일로 받아 **명령 성공**과 **`^[0-9a-fA-F]{64}$` 형식**을 따로 본다 (맞는 해시 뒤 종료 73 · 64 자리 비-hex 둘 다 종료 4) ·
+       마지막 `rm -rf tmp` 는 pack 의 반환값이 아니다 (정리 실패 = ⚠ 경고 · 종료 0 — 묶음은 승격됐고 sha 도 맞다) ·
+       README/러너: 보내는 것 = 일반 실행 종료 **0 또는 1** + `sha256sum -c` 통과 쌍 · 종료 4 → PACK_ONLY 0 + sha 확인 · **지원 환경 = Linux · bash ≥ 4 · GNU coreutils/tar**
+       (bsdtar 는 CRLF 로 구성원 대조가 거짓 실패 → 계산 전 PACK_ONLY smoke).
 
 종료코드 (CLI)
   --check   : 0 전 잡 OK · 3 OK 아닌 잡 있음 · 2 승인본(MANIFEST)·등록부·사용법 오류
@@ -319,7 +328,7 @@ def d3_ref_eV(atoms):
 
 RUN_ALL = r'''#!/usr/bin/env bash
 # =============================================================================
-# run_all.sh (v5) — A′ V5 VASP 단일점 18 잡 · 잡마다 사전등록 재시도 INCAR.r1 최대 1 회 (최대 36 실행)
+# run_all.sh (v6) — A′ V5 VASP 단일점 18 잡 · 잡마다 사전등록 재시도 INCAR.r1 최대 1 회 (최대 36 실행)
 #   필수: VASP_CMD (예: "mpirun -np 128 vasp_std") · POTCAR_DIR (PAW_PBE 폴더: <POTCAR_DIR>/Li_sv/POTCAR · P · S · Cl · Ag)
 #   선택: PERF_TAGS_FILE — 한 줄에 대입 하나만 · 허용 NCORE/NPAR/KPAR/NSIM (양의 정수) · LPLANE/LSCALU/LSCALAPACK (.TRUE./.FALSE.)
 #         세미콜론·역슬래시·중복 태그·줄 끝 주석 금지 (VASP 는 ';' 뒤를 다른 설정으로 읽는다)
@@ -331,8 +340,11 @@ RUN_ALL = r'''#!/usr/bin/env bash
 #   ⛔ 시도 폴더(run/<잡>, run/<잡>_r1)가 이미 있으면 그 잡은 돌지 않습니다 (원자적 mkdir). 재시도 상한은 잡마다 사전등록 1 회 —
 #      그 밖의 수동 재실행은 새 승인 없이는 하지 않습니다. 파일럿 두 잡은 봉인한 그 실행 그대로 최종 반송에 포함합니다 (다시 돌리지 않습니다).
 #   종료코드: 0 전 잡 성공·포장 · 1 일부 잡 실패 (반송 묶음은 만든다 — 실패도 기록) · 2 패키지·성능 파일 오류 (아무것도 안 돈다)
-#             4 반송 포장 실패 — 목록 생성·tar·구성원 열람·검사·sha 어느 단계든 (계산 결과는 run/ 에 그대로 · 기존 묶음 쌍도 그대로 — PACK_ONLY=1 로 포장만 다시)
-#   ⛔ 보낼 것은 종료 0 뒤 `sha256sum -c V5_vasp_return.tgz.sha256` 까지 통과한 쌍만입니다.
+#             4 반송 포장 실패 — 목록 생성·목록 검증·tar·구성원 열람·검사·sha·승격 어느 단계든 (계산 결과는 run/ 에 그대로 · 기존 묶음 쌍도 그대로 — PACK_ONLY=1 로 포장만 다시)
+#   ⛔ 보내는 것: 종료 0 **또는 1**(실패 잡 있음 — 실패도 기록) 뒤 `sha256sum -c V5_vasp_return.tgz.sha256` 까지 통과한 쌍. 종료 4 면 계산을 다시 하지 말고
+#      `PACK_ONLY=1 bash run_all.sh` → 종료 0 + sha256sum -c 뒤 보냅니다. 종료 2 는 아무것도 안 돈 것입니다.
+#   지원 환경: Linux · bash ≥ 4 · GNU coreutils(find sort grep cmp sha256sum) · GNU tar. 다른 tar(bsdtar 등)는 구성원 이름 대조가 거짓 실패(종료 4)할 수 있습니다 —
+#      계산 없이 `PACK_ONLY=1` 로 먼저 확인해 주세요 (실패해도 계산 결과는 그대로입니다).
 # =============================================================================
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd); cd "$HERE"
@@ -347,8 +359,24 @@ pack(){  # 허용 목록으로 구성원을 모아 임시 파일에 쓰고, **�
   grep -E "^run/[^/]+/($RET_ALLOW)$" "$T/found" > "$T/allowed"; g=$?
   [ "$g" -le 1 ] || { pack_fail "허용 목록 필터 오류 ($g)"; return 1; }     # 1 = 잡 파일이 하나도 없음 (정상 · 관리 파일만 포장) · 2 이상 = 오류
   LC_ALL=C sort "$T/allowed" > "$T/sorted" || { pack_fail "정렬 실패"; return 1; }
-  : > "$T/mgmt"; for f in run/env.txt run/status.tsv; do [ -f "$f" ] && echo "$f" >> "$T/mgmt"; done
-  { echo MANIFEST.sha256; cat "$T/mgmt" "$T/sorted"; } > V5_vasp_return.list || { pack_fail "목록 쓰기 실패"; return 1; }
+  # 관리 파일 목록 — 쓰기마다 검사 (CJ P1: `{ echo …; cat …; } || …` 는 앞 echo 의 실패를 못 잡았다)
+  : > "$T/mgmt" || { pack_fail "관리 목록 초기화 실패"; return 1; }
+  n_mg=0                                  # 디스크에 있는 관리 파일 수 — 목록 검증의 기준 (쓴 파일이 아니라 디스크 상태에서 센다)
+  for f in run/env.txt run/status.tsv; do
+    [ -f "$f" ] || continue
+    n_mg=$((n_mg + 1))
+    echo "$f" >> "$T/mgmt" || { pack_fail "관리 목록 쓰기 실패 ($f)"; return 1; }
+  done
+  echo MANIFEST.sha256 > V5_vasp_return.list || { pack_fail "목록 쓰기 실패 (MANIFEST.sha256)"; return 1; }
+  cat "$T/mgmt" "$T/sorted" >> V5_vasp_return.list || { pack_fail "목록 쓰기 실패"; return 1; }
+  # 목록 내용 검증 — 쓰기 실패가 어떤 식으로 가려졌더라도, 줄 수(1 + 디스크의 관리 파일 수 + 허용 파일 수)와 필수 이름이 맞아야 한다
+  n_so=$(wc -l < "$T/sorted") && n_li=$(wc -l < V5_vasp_return.list) || { pack_fail "목록 검증 준비 실패"; return 1; }
+  [ "$n_li" -eq $((1 + n_mg + n_so)) ] || { pack_fail "목록 줄 수가 맞지 않는다 ($n_li ≠ 1+$n_mg+$n_so)"; return 1; }
+  grep -qxF MANIFEST.sha256 V5_vasp_return.list || { pack_fail "목록에 MANIFEST.sha256 이 없다"; return 1; }
+  for f in run/env.txt run/status.tsv; do
+    [ -f "$f" ] || continue
+    grep -qxF "$f" V5_vasp_return.list || { pack_fail "목록에 $f 가 없다"; return 1; }
+  done
   tar czf V5_vasp_return.tgz.part -T V5_vasp_return.list || { pack_fail "tar 실패"; return 1; }
   tar tzf V5_vasp_return.tgz.part > "$T/members" || { pack_fail "묶음 구성원 열람 실패 — 검사할 수 없으면 보내지 않는다"; return 1; }
   grep -E "(^|/)($RET_FORBID)$" "$T/members" > "$T/forbidden"; g=$?
@@ -356,10 +384,13 @@ pack(){  # 허용 목록으로 구성원을 모아 임시 파일에 쓰고, **�
   elif [ "$g" -ne 1 ]; then pack_fail "구성원 검사 오류 ($g)"; return 1; fi
   LC_ALL=C sort "$T/members" > "$T/members.sorted" && LC_ALL=C sort V5_vasp_return.list > "$T/list.sorted" || { pack_fail "구성원 대조 준비 실패"; return 1; }
   cmp -s "$T/members.sorted" "$T/list.sorted" || { pack_fail "묶음 구성원이 목록과 다르다 — 보내지 않는다"; return 1; }
-  h=$(sha256sum V5_vasp_return.tgz.part | cut -d' ' -f1); [ "${#h}" -eq 64 ] || { pack_fail "sha256 실패"; return 1; }
+  sha256sum V5_vasp_return.tgz.part > "$T/sha" || { pack_fail "sha256 계산 실패"; return 1; }          # 명령 성공과 형식을 따로 본다 (CJ 권고 — 파이프는 종료값을 잃는다)
+  h=$(cut -d' ' -f1 < "$T/sha") || { pack_fail "sha256 읽기 실패"; return 1; }
+  [[ "$h" =~ ^[0-9a-fA-F]{64}$ ]] || { pack_fail "sha256 형식 이상 ($h)"; return 1; }
   printf '%s  V5_vasp_return.tgz\n' "$h" > V5_vasp_return.tgz.sha256.part || { pack_fail "sha 쓰기 실패"; return 1; }
   mv -f V5_vasp_return.tgz.part V5_vasp_return.tgz && mv -f V5_vasp_return.tgz.sha256.part V5_vasp_return.tgz.sha256 || { pack_fail "승격(mv) 실패 — 새 tgz + 옛 sha 가 남을 수 있다 · sha256sum -c 로 확인"; return 1; }
-  rm -rf "$T"
+  rm -rf "$T" || echo "⚠ 진단 폴더 V5_vasp_return.tmp/ 정리 실패 — 묶음은 이미 승격됐고 sha 도 맞다 (종료코드에 영향 없음)"   # 정리 실패는 포장 실패가 아니다 (CJ 권고)
+  return 0
 }
 if [ "${PACK_ONLY:-0}" = 1 ]; then
   [ -d run ] || { echo "⛔ run/ 이 없다 — 포장할 것이 없다"; exit 2; }
@@ -445,9 +476,9 @@ def _readme(jobs, est, pkg_sha):
     rows = "\n".join(f"| `{j['dir']}` | {j['role']} | {j['nions']} | {j['nelect_expected']:.0f} | {'×'.join(f'{x:.3f}' for x in j['cell_A'])} | "
                      f"{j['encut']:.0f} | {'×'.join(map(str, j['kpts']))} | {j['sigma']:.3f} |" for j in jobs)
     pp = " · ".join(f"{POTCAR_MAP[s]} (`{PP_EXPECTED_TITEL[s]}`)" for s in SPECIES_ORDER)
-    return f"""# A′ V5 — VASP 단일점 외주 패키지 v5 (LPSCl | Ag(111) 작은 주기 계면)
+    return f"""# A′ V5 — VASP 단일점 외주 패키지 v6 (LPSCl | Ag(111) 작은 주기 계면)
 
-> 상태: **준비본 (실행 미정)** · Codex CE·CF·CG·CI NO-GO 반영판 · 재리뷰 전 · 결정 `D-2026-09-27-wad-aprime-v5-vasp-route` **proposed**
+> 상태: **준비본 (실행 미정)** · Codex CE·CF·CG·CI·CJ NO-GO 반영판 · 재리뷰 전 · 결정 `D-2026-09-27-wad-aprime-v5-vasp-route` **proposed**
 > 원본: 봉인 S3v2 패키지 (구조 파일 sha 결박) · 이 패키지 MANIFEST.sha256 의 sha256 = `{pkg_sha}` (보낼 때 메일 본문에 적는다 — 반송 검사가 이 값으로 승인본을 확인한다)
 
 ## 무엇을 하나
@@ -470,10 +501,14 @@ PBE+D3(BJ) **단일점(SCF) 18 개** — 이완 없음. 좌표는 이미 정해�
 5. 한 잡이 실행 실패·미종료·미수렴이면 러너가 미리 정한 재시도(INCAR.r1 · AMIX 0.1 · BMIX 0.01 · NELM 300)를 **한 번만** 합니다.
    그래도 안 되면 그 잡은 비워 둡니다 — 다른 설정으로 더 돌리지 마세요. 실행 상한 = 18 × 2 = **36 회** (파일럿 재사용 시).
 6. 반송 묶음은 러너가 **허용 목록**(아래 '돌려받을 것')의 파일만 담습니다 — POTCAR 본문 · WAVECAR · CHGCAR 는 준비 실패·중단·`PACK_ONLY` 에서도
-   들어가지 않고, 혹시 들어가면 묶음을 만들지 않습니다 (종료코드 4). 포장의 어느 단계(목록 생성 · tar · 구성원 열람·검사 · sha256)가 실패해도 **종료코드 4** 이고,
-   계산 결과는 `run/` 에, 이미 있던 묶음 쌍은 그대로 남습니다. 계산을 다시 돌리지 말고 `PACK_ONLY=1 bash run_all.sh` 로 **포장만** 다시 해 주세요.
-   보내는 것은 종료코드 0 뒤 `sha256sum -c V5_vasp_return.tgz.sha256` 까지 통과한 쌍만입니다.
+   들어가지 않고, 혹시 들어가면 묶음을 만들지 않습니다 (종료코드 4). 포장의 어느 단계(목록 생성·검증 · tar · 구성원 열람·검사 · sha256 · 승격)가 실패해도 **종료코드 4** 이고,
+   계산 결과는 `run/` 에, 이미 있던 묶음 쌍은 그대로 남습니다 (예외: 마지막 승격의 둘째 `mv` 가 실패하면 새 tgz + 옛 sha 가 남을 수 있고 — 그래서 아래 sha 확인이 있습니다).
+   계산을 다시 돌리지 말고 `PACK_ONLY=1 bash run_all.sh` 로 **포장만** 다시 해 주세요.
+   **보내는 것**: 계산 성공과 포장 성공은 별개입니다 — 일반 실행 종료코드 **0 또는 1**(실패 잡 있음 · 실패도 기록이라 보냅니다) 뒤
+   `sha256sum -c V5_vasp_return.tgz.sha256` 까지 통과한 쌍을 보내 주세요. 종료코드 4 면 `PACK_ONLY=1` → 종료 0 + 같은 sha 확인 뒤 보냅니다.
    러너 종료코드: 0 전 잡 성공 · 1 일부 잡 실패 (묶음은 만듦 — 실패도 반송) · 2 패키지·성능 파일 오류 (아무것도 안 돎) · 4 포장 실패.
+7. **지원 환경**: Linux · bash ≥ 4 · GNU coreutils(find sort grep cmp sha256sum) · GNU tar. 다른 tar(bsdtar 등)는 구성원 이름 대조가 거짓 실패(종료 4 · 누출 아님)할 수
+   있습니다 — 계산 전에 `PACK_ONLY=1 bash run_all.sh` 로 (빈 `run/` 에서도 됩니다) 포장이 되는지 먼저 확인해 주세요.
 
 ## VASP 버전 · POTCAR — 이 조합으로 고정
 - **VASP**: 파일럿과 본 배치가 **같은 빌드**여야 합니다 (OUTCAR 첫 줄로 확인 · 다르면 그 배치는 쓰지 않습니다). 버전·빌드를 `run/env.txt` 에 적어 주세요.
@@ -559,7 +594,7 @@ def build(pkg, out):
            "wfc_max": max(e["wfc_only_GB_all_k"] for e in E), "max_runs": 2 * len(jobs)}
     _write(os.path.join(out, "run_all.sh"), run_all_text()); os.chmod(os.path.join(out, "run_all.sh"), 0o755)
     _write(os.path.join(out, "JOBS.txt"), "\n".join(x["dir"] for x in jobs) + "\n")
-    meta = {"schema": "aprime_v5_vasp_package/v5", "date": "2026-09-27", "status": "준비본 v5 (Codex CE·CF·CG·CI NO-GO 반영 · 재리뷰 전 · 결정 proposed · 실행 미정)",
+    meta = {"schema": "aprime_v5_vasp_package/v6", "date": "2026-09-27", "status": "준비본 v6 (Codex CE·CF·CG·CI·CJ NO-GO 반영 · 재리뷰 전 · 결정 proposed · 실행 미정)",
             "source_package": pkg, "source_s3_manifest_sha256": qe["s3_manifest_sha256"], "source_seal": "db/properties/wad_aprime_s3v2_seal_2026_09_26.json",
             "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json", "amendment": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json",
             "tool_sha256": _sha(os.path.abspath(__file__)),
@@ -1781,9 +1816,36 @@ def _selftest():
                              ("tar tzf 만 실패", 'tar(){ if [ "$1" = tzf ]; then echo INJ_TAR_T >&2; return 73; fi; command tar "$@"; }\n'),
                              ("tar tzf 가 목록은 다 찍고 73 으로 끝남", 'tar(){ if [ "$1" = tzf ]; then command tar "$@"; return 73; fi; command tar "$@"; }\n'),
                              ("cmp 불일치(구성원↔목록)", 'cmp(){ return 1; }\n'), ("sha256sum 빈 출력", 'sha256sum(){ :; }\n'),
-                             ("두 번째 mv 실패", 'mv(){ case "$1$2" in *sha256.part*) return 1;; esac; command mv "$@"; }\n')):
+                             # CJ P1 — 관리 파일 목록 쓰기 (리뷰어 mgmt_echo_error · manifest_echo_error 그대로 + 변형)
+                             ("CJ echo 가 관리 파일 이름만 실패", 'echo(){ case "$*" in run/env.txt|run/status.tsv) printf "INJ_MGMT\\n" >&2; return 73;; esac; builtin echo "$@"; }\n'),
+                             ("CJ echo 가 MANIFEST 이름만 실패", 'echo(){ if [ "$*" = MANIFEST.sha256 ]; then printf "INJ_MANIFEST\\n" >&2; return 73; fi; builtin echo "$@"; }\n'),
+                             ("CJ echo 가 관리 파일 이름을 쓰고도 73", 'echo(){ builtin echo "$@"; case "$*" in run/env.txt|run/status.tsv) return 73;; esac; }\n'),
+                             ("CJ echo 가 MANIFEST 이름을 쓰고도 73", 'echo(){ builtin echo "$@"; [ "$*" = MANIFEST.sha256 ] && return 73; return 0; }\n'),
+                             ("CJ echo 가 관리 파일 이름을 조용히 버리고 0 (목록 내용 검증)", 'echo(){ case "$*" in run/env.txt|run/status.tsv) return 0;; esac; builtin echo "$@"; }\n'),
+                             ("CJ echo 가 MANIFEST 이름을 조용히 버리고 0 (목록 내용 검증)", 'echo(){ [ "$*" = MANIFEST.sha256 ] && return 0; builtin echo "$@"; }\n'),
+                             ("CJ cat 이 mgmt 만 실패", 'cat(){ case "$*" in *mgmt*) return 73;; esac; command cat "$@"; }\n'),
+                             ("CJ wc 실패 (목록 검증 준비)", 'wc(){ return 73; }\n'),
+                             # 뒤 검사가 앞 검사를 가리지 않게 — '일은 다 하고 실패를 보고' 하는 주입 (앞 검사 하나만 없어도 성공으로 승격되는지)
+                             ("CJ echo 가 관리 파일 이름을 두 번 쓰고 0 (줄 수 검증)", 'echo(){ case "$*" in run/env.txt|run/status.tsv) builtin echo "$@"; builtin echo "$@"; return 0;; esac; builtin echo "$@"; }\n'),
+                             ("CJ echo 가 MANIFEST 자리에 다른 이름을 쓰고 0 (MANIFEST 존재 검증)", 'echo(){ if [ "$*" = MANIFEST.sha256 ]; then builtin echo run/env.txt; return 0; fi; builtin echo "$@"; }\n'),
+                             ("CJ echo 가 env.txt 자리에 status.tsv 를 쓰고 0 (관리 파일 존재 검증 · 줄 수는 맞음)", 'echo(){ if [ "$*" = run/env.txt ]; then builtin echo run/status.tsv; return 0; fi; builtin echo "$@"; }\n'),
+                             ("CJ cat 이 mgmt 를 다 쓰고 73", 'cat(){ command cat "$@"; r=$?; case "$*" in *mgmt*) return 73;; esac; return "$r"; }\n'),
+                             ("CJ wc 가 맞는 수를 찍고 73", 'wc(){ command wc "$@"; return 73; }\n'),
+                             ("CJ cut 이 맞는 해시를 찍고 73", 'cut(){ command cut "$@"; return 73; }\n'),
+                             # CJ 권고 — sha256sum 명령 성공·형식 분리
+                             ("CJ sha256sum 이 맞는 해시를 찍고 73", 'sha256sum(){ command sha256sum "$@"; r=$?; case "$*" in *tgz.part*) return 73;; esac; return "$r"; }\n'),
+                             ("CJ sha256sum 이 64 자리 비-hex", 'sha256sum(){ case "$*" in *tgz.part*) printf "%064d  %s\\n" 0 "$1" | tr 0 z; return 0;; esac; command sha256sum "$@"; }\n'),
+                             ("CJ cut 실패 (sha 읽기)", 'cut(){ return 73; }\n'),
+                             ("두 번째 mv 실패", 'mv(){ case "$1$2" in *sha256.part*) return 1;; esac; command mv "$@"; }\n'),
+                             ("CJ 정리 rm 실패 (승격 뒤)", 'rm(){ if [ "$#" = 2 ] && [ "$2" = V5_vasp_return.tmp ]; then echo INJ_FINAL_CLEANUP >&2; return 73; fi; command rm "$@"; }\n')):
                 inj_f = os.path.join(T, "inject.sh"); _write(inj_f, inj)
                 _, rc_i, log_i = run_pkg("ok", "false", fresh=False, perf_file=None, extra_env={"PACK_ONLY": "1", "BASH_ENV": inj_f})
+                if why.startswith("CJ 정리 rm"):
+                    ck(rc_i == 0 and "✅" in log_i and "⚠" in log_i and os.path.isdir(os.path.join(w, "V5_vasp_return.tmp"))
+                       and subprocess.run(["sha256sum", "-c", "--quiet", "V5_vasp_return.tgz.sha256"], cwd=w, capture_output=True).returncode == 0 and len(members(w)) == len(m0),
+                       f"CJ 권고: 승격 뒤 진단 폴더 정리 실패 → 종료 0 · ⚠ 경고 · 묶음·sha 정상 (정리 실패는 포장 실패가 아니다 · v5 는 거짓 종료 4) — rc {rc_i}")
+                    shutil.rmtree(os.path.join(w, "V5_vasp_return.tmp"), ignore_errors=True); before = pair(w)
+                    continue
                 if why.startswith("두 번째 mv"):
                     ck(rc_i == 4 and "✅" not in log_i and pair(w)[1] == before[1] and not os.path.exists(os.path.join(w, "V5_vasp_return.tgz.part")),
                        f"CI S5 PACK_ONLY 에서 {why} 주입 → 종료 4 · '✅' 없음 · 옛 sha 그대로 (새 tgz + 옛 sha 가 남는 선언된 틈 — sha256sum -c 가 잡는다) — rc {rc_i}")
@@ -1793,8 +1855,9 @@ def _selftest():
                     ck(rc_fix == 0 and subprocess.run(["sha256sum", "-c", "--quiet", "V5_vasp_return.tgz.sha256"], cwd=w, capture_output=True).returncode == 0, "PACK_ONLY 재시도로 쌍 복구")
                     before = pair(w)
                     continue
-                ck(rc_i == 4 and "✅" not in log_i and pair(w) == before and not any(os.path.exists(os.path.join(w, f"V5_vasp_return.tgz{x}")) for x in (".part", ".sha256.part")),
-                   f"⛔음성 CI P1 PACK_ONLY 에서 {why} 주입 → 종료 4 · '✅' 없음 · 기존 tgz/sha 쌍 보존 · .part 없음 (리뷰어 재현: 종료 0 · 관리 파일 3 개 묶음) — rc {rc_i} {log_i[-100:]}")
+                ck(rc_i == 4 and "✅" not in log_i and pair(w) == before and not any(os.path.exists(os.path.join(w, f"V5_vasp_return.tgz{x}")) for x in (".part", ".sha256.part"))
+                   and len(members(w)) == len(m0),
+                   f"⛔음성 CI/CJ P1 PACK_ONLY 에서 {why} 주입 → 종료 4 · '✅' 없음 · 기존 tgz/sha 쌍 보존(구성원 수 불변) · .part 없음 (리뷰어 재현: 종료 0 · 불완전 묶음으로 교체) — rc {rc_i} {log_i[-100:]}")
             _, rc_ok, _ = run_pkg("ok", "false", fresh=False, perf_file=None, extra_env={"PACK_ONLY": "1"})
             ck(rc_ok == 0 and len(members(w)) == len(m0) and not forb(members(w)), "주입 없는 PACK_ONLY 는 그대로 종료 0 · 구성원 수 불변 (양성 경로)")
             w12 = os.path.join(T, "w_empty_run"); shutil.copytree(out, w12); os.makedirs(os.path.join(w12, "run")); _write(os.path.join(w12, "run", "env.txt"), "x\n")
@@ -1808,6 +1871,21 @@ def _selftest():
                 ck(p13.returncode == 0 and "runner exit = 4" in p13.stdout, f"리뷰어 CI 최소 재현 스크립트(repro_pack_ci.sh · find 주입) 그대로 → 종료 0 (= 고쳐짐) — rc {p13.returncode} {p13.stdout[-120:]}")
             else:
                 print("  ⚠ SKIP 리뷰어 repro_pack_ci.sh 없음 — 통과로 세지 않는다")
+            rq = os.path.join(HERE, "..", "..", "db", "raw", "codex_CJ_repro_2026_09_27", "probe_pack_cj.py")
+            if os.path.isfile(rq):
+                # 리뷰어 스크립트는 자기 폴더에 결과 JSON 을 쓴다 → 보존본을 덮지 않게 복사본을 돌린다 · --source 는 db/inputs/… 경로를 기대하므로 합성 패키지를 그 자리에 연결
+                qd = os.path.join(T, "cj_probe"); os.makedirs(os.path.join(qd, "src", "db", "inputs")); shutil.copy(rq, qd)
+                os.symlink(out, os.path.join(qd, "src", "db", "inputs", "wad_aprime_v5_vasp_2026_09_27"))
+                p14 = subprocess.run([sys.executable, os.path.join(qd, "probe_pack_cj.py"), "--source", os.path.join(qd, "src"), "--bash", shutil.which("bash"), "--assert-fixed"],
+                                     capture_output=True, text=True, timeout=600, cwd=qd)
+                res14 = json.load(open(os.path.join(qd, "pack_cj_results.json"))) if os.path.isfile(os.path.join(qd, "pack_cj_results.json")) else {}
+                fail_labels = [k for k, v in res14.items() if isinstance(v, dict) and "rc" in v and k not in ("positive", "recovery", "empty_run", "post_promotion_cleanup_error")]
+                ck(p14.returncode == 0 and all(res14[k]["rc"] == 4 and not res14[k]["success_message"] and (res14[k].get("old_pair_preserved", True) or k == "second_mv_error") for k in fail_labels)
+                   and res14.get("positive", {}).get("rc") == 0 and res14.get("recovery", {}).get("rc") == 0 and res14.get("empty_run", {}).get("rc") == 0
+                   and res14.get("post_promotion_cleanup_error", {}).get("rc") == 0,
+                   f"리뷰어 CJ 재현 스크립트(probe_pack_cj.py --assert-fixed) 그대로 → 종료 0 · 주입 {len(fail_labels)} 건 전부 종료 4·쌍 보존 · 양성 3 + 정리 실패 = 종료 0 — rc {p14.returncode} {p14.stderr[-200:]}")
+            else:
+                print("  ⚠ SKIP 리뷰어 probe_pack_cj.py 없음 — 통과로 세지 않는다")
             _, rcode2, log2 = run_pkg("ok", py, fresh=False)
             rs2 = check(out, w, msha)[1]
             ck(rcode2 == 1 and "이미 있거나" in log2 and all(rs2[p]["status"] == "OK" for p in PILOT_JOBS), f"⛔음성 러너 재실행: 기존 시도 폴더 거부(원자적 mkdir) · 종료 1 · 앞 결과 보존 — rc {rcode2}")

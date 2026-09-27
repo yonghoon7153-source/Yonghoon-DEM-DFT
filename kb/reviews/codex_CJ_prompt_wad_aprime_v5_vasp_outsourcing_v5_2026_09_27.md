@@ -3,7 +3,7 @@ title: "리뷰 CJ 프롬프트 — A′ V5 VASP 외주 준비본 v5 재리뷰 (C
 date: 2026-09-27
 updated: 2026-09-27
 tags: [review, codex, adhesion, wad, prereg, vasp, outsourcing, lpscl, silver, uma, d3, dipole, g4, g5, pp-registry, packaging, re-review]
-status: 발송 대기 (1저자) — 도구·패키지·개정 3 v5 는 커밋 a2374014b 에 고정 (원격)
+status: 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`codex_CJ_reply_…` · CI 경로 3 해제 · 같은 P1 의 관리 파일 목록 쓰기 경로 1) → v6 → 재리뷰 CK 발송 대기
 confidence: medium
 verificationStatus: unverified
 explored: false

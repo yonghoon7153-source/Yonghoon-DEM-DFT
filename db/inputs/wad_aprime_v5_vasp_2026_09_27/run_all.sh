@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# run_all.sh (v5) — A′ V5 VASP 단일점 18 잡 · 잡마다 사전등록 재시도 INCAR.r1 최대 1 회 (최대 36 실행)
+# run_all.sh (v6) — A′ V5 VASP 단일점 18 잡 · 잡마다 사전등록 재시도 INCAR.r1 최대 1 회 (최대 36 실행)
 #   필수: VASP_CMD (예: "mpirun -np 128 vasp_std") · POTCAR_DIR (PAW_PBE 폴더: <POTCAR_DIR>/Li_sv/POTCAR · P · S · Cl · Ag)
 #   선택: PERF_TAGS_FILE — 한 줄에 대입 하나만 · 허용 NCORE/NPAR/KPAR/NSIM (양의 정수) · LPLANE/LSCALU/LSCALAPACK (.TRUE./.FALSE.)
 #         세미콜론·역슬래시·중복 태그·줄 끝 주석 금지 (VASP 는 ';' 뒤를 다른 설정으로 읽는다)
@@ -12,8 +12,11 @@
 #   ⛔ 시도 폴더(run/<잡>, run/<잡>_r1)가 이미 있으면 그 잡은 돌지 않습니다 (원자적 mkdir). 재시도 상한은 잡마다 사전등록 1 회 —
 #      그 밖의 수동 재실행은 새 승인 없이는 하지 않습니다. 파일럿 두 잡은 봉인한 그 실행 그대로 최종 반송에 포함합니다 (다시 돌리지 않습니다).
 #   종료코드: 0 전 잡 성공·포장 · 1 일부 잡 실패 (반송 묶음은 만든다 — 실패도 기록) · 2 패키지·성능 파일 오류 (아무것도 안 돈다)
-#             4 반송 포장 실패 — 목록 생성·tar·구성원 열람·검사·sha 어느 단계든 (계산 결과는 run/ 에 그대로 · 기존 묶음 쌍도 그대로 — PACK_ONLY=1 로 포장만 다시)
-#   ⛔ 보낼 것은 종료 0 뒤 `sha256sum -c V5_vasp_return.tgz.sha256` 까지 통과한 쌍만입니다.
+#             4 반송 포장 실패 — 목록 생성·목록 검증·tar·구성원 열람·검사·sha·승격 어느 단계든 (계산 결과는 run/ 에 그대로 · 기존 묶음 쌍도 그대로 — PACK_ONLY=1 로 포장만 다시)
+#   ⛔ 보내는 것: 종료 0 **또는 1**(실패 잡 있음 — 실패도 기록) 뒤 `sha256sum -c V5_vasp_return.tgz.sha256` 까지 통과한 쌍. 종료 4 면 계산을 다시 하지 말고
+#      `PACK_ONLY=1 bash run_all.sh` → 종료 0 + sha256sum -c 뒤 보냅니다. 종료 2 는 아무것도 안 돈 것입니다.
+#   지원 환경: Linux · bash ≥ 4 · GNU coreutils(find sort grep cmp sha256sum) · GNU tar. 다른 tar(bsdtar 등)는 구성원 이름 대조가 거짓 실패(종료 4)할 수 있습니다 —
+#      계산 없이 `PACK_ONLY=1` 로 먼저 확인해 주세요 (실패해도 계산 결과는 그대로입니다).
 # =============================================================================
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd); cd "$HERE"
@@ -28,8 +31,24 @@ pack(){  # 허용 목록으로 구성원을 모아 임시 파일에 쓰고, **�
   grep -E "^run/[^/]+/($RET_ALLOW)$" "$T/found" > "$T/allowed"; g=$?
   [ "$g" -le 1 ] || { pack_fail "허용 목록 필터 오류 ($g)"; return 1; }     # 1 = 잡 파일이 하나도 없음 (정상 · 관리 파일만 포장) · 2 이상 = 오류
   LC_ALL=C sort "$T/allowed" > "$T/sorted" || { pack_fail "정렬 실패"; return 1; }
-  : > "$T/mgmt"; for f in run/env.txt run/status.tsv; do [ -f "$f" ] && echo "$f" >> "$T/mgmt"; done
-  { echo MANIFEST.sha256; cat "$T/mgmt" "$T/sorted"; } > V5_vasp_return.list || { pack_fail "목록 쓰기 실패"; return 1; }
+  # 관리 파일 목록 — 쓰기마다 검사 (CJ P1: `{ echo …; cat …; } || …` 는 앞 echo 의 실패를 못 잡았다)
+  : > "$T/mgmt" || { pack_fail "관리 목록 초기화 실패"; return 1; }
+  n_mg=0                                  # 디스크에 있는 관리 파일 수 — 목록 검증의 기준 (쓴 파일이 아니라 디스크 상태에서 센다)
+  for f in run/env.txt run/status.tsv; do
+    [ -f "$f" ] || continue
+    n_mg=$((n_mg + 1))
+    echo "$f" >> "$T/mgmt" || { pack_fail "관리 목록 쓰기 실패 ($f)"; return 1; }
+  done
+  echo MANIFEST.sha256 > V5_vasp_return.list || { pack_fail "목록 쓰기 실패 (MANIFEST.sha256)"; return 1; }
+  cat "$T/mgmt" "$T/sorted" >> V5_vasp_return.list || { pack_fail "목록 쓰기 실패"; return 1; }
+  # 목록 내용 검증 — 쓰기 실패가 어떤 식으로 가려졌더라도, 줄 수(1 + 디스크의 관리 파일 수 + 허용 파일 수)와 필수 이름이 맞아야 한다
+  n_so=$(wc -l < "$T/sorted") && n_li=$(wc -l < V5_vasp_return.list) || { pack_fail "목록 검증 준비 실패"; return 1; }
+  [ "$n_li" -eq $((1 + n_mg + n_so)) ] || { pack_fail "목록 줄 수가 맞지 않는다 ($n_li ≠ 1+$n_mg+$n_so)"; return 1; }
+  grep -qxF MANIFEST.sha256 V5_vasp_return.list || { pack_fail "목록에 MANIFEST.sha256 이 없다"; return 1; }
+  for f in run/env.txt run/status.tsv; do
+    [ -f "$f" ] || continue
+    grep -qxF "$f" V5_vasp_return.list || { pack_fail "목록에 $f 가 없다"; return 1; }
+  done
   tar czf V5_vasp_return.tgz.part -T V5_vasp_return.list || { pack_fail "tar 실패"; return 1; }
   tar tzf V5_vasp_return.tgz.part > "$T/members" || { pack_fail "묶음 구성원 열람 실패 — 검사할 수 없으면 보내지 않는다"; return 1; }
   grep -E "(^|/)($RET_FORBID)$" "$T/members" > "$T/forbidden"; g=$?
@@ -37,10 +56,13 @@ pack(){  # 허용 목록으로 구성원을 모아 임시 파일에 쓰고, **�
   elif [ "$g" -ne 1 ]; then pack_fail "구성원 검사 오류 ($g)"; return 1; fi
   LC_ALL=C sort "$T/members" > "$T/members.sorted" && LC_ALL=C sort V5_vasp_return.list > "$T/list.sorted" || { pack_fail "구성원 대조 준비 실패"; return 1; }
   cmp -s "$T/members.sorted" "$T/list.sorted" || { pack_fail "묶음 구성원이 목록과 다르다 — 보내지 않는다"; return 1; }
-  h=$(sha256sum V5_vasp_return.tgz.part | cut -d' ' -f1); [ "${#h}" -eq 64 ] || { pack_fail "sha256 실패"; return 1; }
+  sha256sum V5_vasp_return.tgz.part > "$T/sha" || { pack_fail "sha256 계산 실패"; return 1; }          # 명령 성공과 형식을 따로 본다 (CJ 권고 — 파이프는 종료값을 잃는다)
+  h=$(cut -d' ' -f1 < "$T/sha") || { pack_fail "sha256 읽기 실패"; return 1; }
+  [[ "$h" =~ ^[0-9a-fA-F]{64}$ ]] || { pack_fail "sha256 형식 이상 ($h)"; return 1; }
   printf '%s  V5_vasp_return.tgz\n' "$h" > V5_vasp_return.tgz.sha256.part || { pack_fail "sha 쓰기 실패"; return 1; }
   mv -f V5_vasp_return.tgz.part V5_vasp_return.tgz && mv -f V5_vasp_return.tgz.sha256.part V5_vasp_return.tgz.sha256 || { pack_fail "승격(mv) 실패 — 새 tgz + 옛 sha 가 남을 수 있다 · sha256sum -c 로 확인"; return 1; }
-  rm -rf "$T"
+  rm -rf "$T" || echo "⚠ 진단 폴더 V5_vasp_return.tmp/ 정리 실패 — 묶음은 이미 승격됐고 sha 도 맞다 (종료코드에 영향 없음)"   # 정리 실패는 포장 실패가 아니다 (CJ 권고)
+  return 0
 }
 if [ "${PACK_ONLY:-0}" = 1 ]; then
   [ -d run ] || { echo "⛔ run/ 이 없다 — 포장할 것이 없다"; exit 2; }

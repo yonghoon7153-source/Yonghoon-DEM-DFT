@@ -1,0 +1,159 @@
+{
+  "declared_hashes": {
+    "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json": true,
+    "db/inputs/wad_aprime_v5_vasp_2026_09_27/jobs.json": true,
+    "db/inputs/wad_aprime_v5_vasp_2026_09_27/MANIFEST.sha256": true,
+    "db/inputs/wad_aprime_v5_vasp_2026_09_27/run_all.sh": true,
+    "db/inputs/wad_aprime_v5_vasp_2026_09_27/README.md": true,
+    "tools/wad/build_v5_vasp_package.py": true,
+    "db/governance/decisions.json": true,
+    "kb/reviews/codex_CI_reply_wad_aprime_v5_vasp_outsourcing_v4_2026_09_27.md": true,
+    "db/raw/codex_CI_repro_2026_09_27/REVIEW_CI.md": true,
+    "db/raw/codex_CI_repro_2026_09_27/repro_pack_ci.sh": true,
+    "db/raw/codex_CI_repro_2026_09_27/results_ci.json": true,
+    "db/pipelines/adhesion_pipeline.json": true,
+    "db/properties/sdcp_c12_v41_partial_raw/prospective/sdcp_neutral__b00__afm2424_pm1/static/OUTCAR.gz": true,
+    "db/properties/sdcp_c12_v41_partial_raw/prospective/sdcp_neutral__b00__afm2424_pm1/static/INCAR": true,
+    "db/properties/wad_aprime_s3v2_seal_2026_09_26.json": true,
+    "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json": true
+  },
+  "generated_runner_matches": true,
+  "tool_hash_matches": true,
+  "geometry": [
+    {
+      "job": "V5_li_outer_A_bound",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_li_outer_A_far",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_li_outer_B_bound",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_li_outer_B_far",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_bound",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_far",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_G3_c2_bound",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_G3_c2_far_i",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_G3_c2_far_ii",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_G4_e70_bound",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_G4_e70_far",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_G4_k1_bound",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_G4_k1_far",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_G4_s05_bound",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_G4_s05_far",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_p05_bound",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_B_bound",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_B_far",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    }
+  ],
+  "cg_comparison": {
+    "inputs": 90,
+    "changed_inputs": [],
+    "d3_changed": []
+  },
+  "native_selftest": {
+    "not_completed": "PkgError(\"simple-dftd3 가 없다 — D3 기대값 없이 패키지를 만들지 않는다 (No module named 'dftd3')\")",
+    "log": ""
+  }
+}
