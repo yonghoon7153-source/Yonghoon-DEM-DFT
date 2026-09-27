@@ -83,6 +83,73 @@ def read_dump(path):
     raise SystemExit(f'⛔ 읽을 수 없는 형식: {path}')
 
 
+REQUIRED_COLS = ('id', 'type', 'x', 'y', 'z', 'radius')
+
+
+def validate_frame(path, D=None, required=REQUIRED_COLS):
+    """LIGGGHTS 평문 덤프 한 장의 **필수 스키마** → 문제 문자열 목록 (빈 목록 = 통과).
+
+    2026-09-28, Codex 3차 HBR3-06 — 검사기는 t₀ 에서만 id 를 요구해, 그 뒤 프레임의 id 열 부재 · 헤더 부재 · 소수 type
+    (1.5 → 정수 절삭) 을 "변화 없음" 으로 넘겼다.  판독기 · 검사기가 **매 프레임** 이 함수를 먼저 부르고, 문제가 있으면
+    그 프레임을 계산에 쓰지 않고 TECH 로 둔다 (캐스팅 · 접촉 계산 **전에**).
+    검사: 머리 (TIMESTEP 정수 = 파일명 step · NUMBER OF ATOMS 정수 = 행 수) · ATOMS 열에 필수 열 · 행 길이 일정 ·
+    id / type 유한 정수 · id 유일 · type ≥ 1 · 좌표 유한 · 반경 유한 양수.
+    """
+    probs = []
+    try:
+        with open(path, encoding='utf-8', errors='replace') as fh:
+            L = fh.read().split('\n')
+    except OSError as e:
+        return [f'읽기 실패: {e}']
+    idx = {k: next((j for j, l in enumerate(L) if l.startswith(k)), None)
+           for k in ('ITEM: TIMESTEP', 'ITEM: NUMBER OF ATOMS', 'ITEM: ATOMS')}
+    if idx['ITEM: ATOMS'] is None:
+        return ['ITEM: ATOMS 줄 없음']
+    body = [l for l in L[idx['ITEM: ATOMS'] + 1:] if l.strip()]
+    cols = L[idx['ITEM: ATOMS']].split()[2:]
+    miss = [c for c in required if c not in cols]
+    if miss:
+        probs.append(f'필수 열 없음 {miss}')
+    toks = ' '.join(body).split()                      # 벡터화 — 10 만 입자 프레임에서 행마다 파이썬 루프를 돌지 않는다
+    nc = len(cols)
+    ragged = bool(body) and (len(toks) != len(body) * nc or any(len(l.split()) != nc for l in body))
+    if ragged:
+        lens = sorted({len(l.split()) for l in body})
+        probs.append(f'행 길이 {lens} ≠ 열 수 {nc}')
+    m = STEP_RE.search(os.path.basename(path))
+    for key, what in (('ITEM: TIMESTEP', 'TIMESTEP'), ('ITEM: NUMBER OF ATOMS', 'NUMBER OF ATOMS')):
+        j = idx[key]
+        v = L[j + 1].strip() if j is not None and j + 1 < len(L) else ''
+        if j is None or not re.fullmatch(r'-?\d+', v):
+            probs.append(f'머리 {what} 없음 또는 정수 아님')
+        elif what == 'TIMESTEP' and m and int(v) != int(m.group(1)):
+            probs.append(f'머리 TIMESTEP {v} ≠ 파일명 step {m.group(1)}')
+        elif what == 'NUMBER OF ATOMS' and int(v) != len(body):
+            probs.append(f'머리 원자 수 {v} ≠ 행 수 {len(body)}')
+    if miss or ragged:
+        return probs
+    try:
+        A = np.array(toks, dtype=float).reshape(len(body), len(cols))
+    except ValueError as e:
+        return probs + [f'수 아닌 값: {e}']
+    C = {c: A[:, k] for k, c in enumerate(cols)}
+    for c in ('id', 'type'):
+        v = C[c]
+        if not np.all(np.isfinite(v)) or np.any(v != np.round(v)):
+            probs.append(f'{c} 가 유한 정수가 아니다 (예: {v[~(np.isfinite(v) & (v == np.round(v)))][:3].tolist()})')
+    if len(np.unique(C['id'])) != len(C['id']):
+        probs.append(f'id 중복 {len(C["id"]) - len(np.unique(C["id"]))} 개')
+    if np.any(C['type'] < 1):
+        probs.append('type < 1')
+    for c in ('x', 'y', 'z'):
+        if not np.all(np.isfinite(C[c])):
+            probs.append(f'{c} 비유한 {int(np.sum(~np.isfinite(C[c])))} 개')
+    r = C['radius']
+    if not np.all(np.isfinite(r) & (r > 0)):
+        probs.append(f'반경 비유한 또는 ≤ 0 {int(np.sum(~(np.isfinite(r) & (r > 0))))} 개')
+    return probs
+
+
 def measure_many(d, r_container=0.05, label=None, axis='z', last=1, core_r=0.25):
     """마지막 `last` 프레임의 평균 ± 표준편차.
 
@@ -305,6 +372,29 @@ def _selftest():
             mw = measure(tc, r_container=0.02, axis='x', core_r=0.9)
             chk(f'⑨c 변이: 문턱 0.9 면 전부 포함 (100 %, 실제 {mw["core_frac"]:.0f} %)',
                 abs(mw['core_frac'] - 100.0) < 1e-9)
+        #  ⑩ 프레임 필수 스키마 (2026-09-28, Codex 3차 HBR3-06) — 판독기 · 검사기가 **매 프레임** 부른다.
+        #    옛 검사기는 t₀ 뒤 프레임의 id 열 부재 · 헤더 부재 · 소수 type 을 PASS 로 넘겼다.
+        def raw(name, text):
+            p = os.path.join(td, name)
+            open(p, 'w').write(text)
+            return p
+        H = 'ITEM: TIMESTEP\n{st}\nITEM: NUMBER OF ATOMS\n{n}\nITEM: BOX BOUNDS ff ff ff\n-1 1\n-1 1\n-1 1\n'
+        good = raw('v_100.liggghts', H.format(st=100, n=2) + 'ITEM: ATOMS id type x y z radius\n1 1 0 0 0 0.001\n2 3 0.1 0 0 0.0005\n')
+        chk('⑩ 정상 프레임은 문제 0', validate_frame(good) == [])
+        cases = {
+            'id 열 없음': ('v_101.liggghts', H.format(st=101, n=2) + 'ITEM: ATOMS type x y z radius\n1 0 0 0 0.001\n3 0.1 0 0 0.0005\n'),
+            '헤더 없음 (ATOMS 본문만)': ('v_102.liggghts', 'ITEM: ATOMS id type x y z radius\n1 1 0 0 0 0.001\n2 3 0.1 0 0 0.0005\n'),
+            '소수 type': ('v_103.liggghts', H.format(st=103, n=2) + 'ITEM: ATOMS id type x y z radius\n1 1.5 0 0 0 0.001\n2 3.5 0.1 0 0 0.0005\n'),
+            '중복 id': ('v_104.liggghts', H.format(st=104, n=2) + 'ITEM: ATOMS id type x y z radius\n1 1 0 0 0 0.001\n1 3 0.1 0 0 0.0005\n'),
+            '비유한 좌표': ('v_105.liggghts', H.format(st=105, n=2) + 'ITEM: ATOMS id type x y z radius\n1 1 nan 0 0 0.001\n2 3 0.1 0 0 0.0005\n'),
+            '반경 0': ('v_106.liggghts', H.format(st=106, n=2) + 'ITEM: ATOMS id type x y z radius\n1 1 0 0 0 0\n2 3 0.1 0 0 0.0005\n'),
+            '헤더 원자 수 ≠ 행 수': ('v_107.liggghts', H.format(st=107, n=3) + 'ITEM: ATOMS id type x y z radius\n1 1 0 0 0 0.001\n2 3 0.1 0 0 0.0005\n'),
+            '헤더 step ≠ 파일명 step': ('v_108.liggghts', H.format(st=999, n=2) + 'ITEM: ATOMS id type x y z radius\n1 1 0 0 0 0.001\n2 3 0.1 0 0 0.0005\n'),
+            '행 길이 불일치': ('v_109.liggghts', H.format(st=109, n=2) + 'ITEM: ATOMS id type x y z radius\n1 1 0 0 0\n2 3 0.1 0 0 0.0005\n'),
+        }
+        for k, (nm, txt) in cases.items():
+            pr = validate_frame(raw(nm, txt))
+            chk(f'⑩ 변이 — {k} → 문제 보고 ({pr[:1]})', len(pr) >= 1)
     print(f'\nmeasure_bed_aspect selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0

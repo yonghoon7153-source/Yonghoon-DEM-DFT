@@ -12,6 +12,7 @@
   S²(t)   p_i 의 칸 간 분산
   S₀²     같은 런의 t=0 (정착 끝) 프레임         ← 층상 = 완전 분리 기준
   S_R²    균일 삽입 런(--ref, 같은 시드·같은 칸)의 정착 끝 프레임   ← 무작위 기준 (실측)
+          (둘 다 **그 덱의 계획 t₀ step 정확히** — 없으면 거부, 앞 프레임으로 대신하지 않는다 · 2026-09-28 HBR3-05)
   M(t)  = (S₀² − S²(t)) / (S₀² − S_R²)
 
   ⚠ S_R² 를 이항식으로 두지 않는 이유: 다분산·부피가중 분율에 이항 공식이 안 맞는다.
@@ -23,10 +24,18 @@
   ② 칸 선택 진단 — `n_min` 미만 칸을 버리면 한 상이 버린 칸에 몰렸을 때 분리가 숨는다 (셀프테스트 ⑫).
      프레임마다 상별 유지 부피·입자 비 (`am_vol_kept` · `se_vol_kept` …) · 버린 칸 · 칸당 입자 중앙값 ·
      빈 칸만 뺀 **전 칸 M (`M_all`, 민감도)**.
-  ③ `tech` — 미완주 · 최종 bin 비유한값 · 최종·직전 bin 덤프 결손.  있으면 등록 최종값을 쓰지 않는다.
+  ③ `tech` — 미완주 · 최종 bin 비유한값 · 최종·직전 bin 덤프 결손 · 계산에서 뺀 프레임 (아래 ④).  있으면 등록 최종값을 쓰지 않는다.
+
+━━ 2026-09-28 (Codex 3차 HBR3-05 · 06) — t₀ 는 계획 step 정확히 · 계산에 들어가는 프레임의 자격 ━━━━━━━━━━━━━━━━━━━
+  ④ t₀ = `planned_t0(덱)` = ⌊2·steps_fill / dump_every⌋·dump_every — 평가 런 · E0 기준 **둘 다** 그 step 의 덤프가 정확히 한 장
+     있고 스키마 검사 (measure_bed_aspect.validate_frame) 를 넘어야 한다.  아니면 거부 (옛 판은 앞 정착 프레임으로 조용히 대신했다).
+  ⑤ 행 (M · SD · 평탄 · QC 에 들어가는 프레임) = 계획 덤프 격자 (t₀ + k·dump_every ≤ 덱 끝) 위 · step 당 한 장 · 검사 통과.
+     격자 밖 · 같은 step 둘 이상 · 머리 없음 · 머리 step ≠ 파일명 · 소수 type · id 없음 … 은 빼고 tech (bin 0 이면 tech_smoke 도) 에 적는다.
+     `dump_gaps` 는 옛 판 그대로 있는 파일 전부의 간격이다.
 
 ━━ t=0 · 바퀴 경계는 덱(`in.mixer`)에서 읽는다 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   `run N` 두 번 = 정착 (`2·steps_fill`) · `timestep` · `fix mvD … period P` ⇒ 바퀴 = P/dt 스텝.
+  t₀ = 정착 끝 직전의 덤프 격자점 (④ · planned_t0).
   덱이 실행 기록이므로 별도 메타파일을 두지 않는다 (두 벌이면 갈린다).
   ⚠ 프레임은 **숫자순** (`ls | tail` 함정 — measure_bed_aspect.frames 를 재사용).
 """
@@ -42,7 +51,7 @@ import numpy as np
 
 _SCR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _SCR)
-from measure_bed_aspect import frames, read_dump                  # noqa: E402
+from measure_bed_aspect import frames, read_dump, validate_frame  # noqa: E402
 
 AM_TYPES = (1, 2)
 #  D-2 (2026-09-27 저녁 등록 — 겹침 미열람 · M 열람 뒤 = 진단-맹검 개정): 등록 bin 의 부피 누락 QC.  ⚠ 대표성 보증이 아니다 —
@@ -53,7 +62,11 @@ QC_MEAN_MIN, QC_FRAME_MIN = 0.90, 0.80
 
 
 def dump_header(path):
-    """덤프 머리 → (TIMESTEP, NUMBER OF ATOMS).  없으면 (None, None).  파일명 step · 행 수와 대조하는 데 쓴다 (HBR2-04 · 08)."""
+    """덤프 머리 → (TIMESTEP, NUMBER OF ATOMS).  없으면 (None, None).  파일명 step · 행 수와 대조하는 데 쓴다 (HBR2-04 · 08).
+
+    ⚠ 2026-09-28 (Codex 3차 HBR3-06) — None 은 "머리 없음" 이다, 통과가 아니다.  판독기 (analyse) 는 이 함수 대신
+      measure_bed_aspect.validate_frame 으로 매 프레임을 검사한다 (check_contact_validity 가 import 해서 남겨 둔다).
+    """
     with open(path, encoding='utf-8', errors='replace') as fh:
         L = [next(fh, '') for _ in range(4)]
     st = int(L[1]) if L[0].startswith('ITEM: TIMESTEP') and L[1].strip().lstrip('-').isdigit() else None
@@ -146,12 +159,54 @@ def cell_stats(D, r_container, cells=8, x_cells=2, n_min=20, axis='x'):
                 cell_n_median=float(np.median(cnt[use])) if use.any() else float('nan'))
 
 
+#  ⚠ 2026-09-28 (Codex 3차 HBR3-05) — 판독기 (analyse) 는 이 함수를 더 쓰지 않는다: 계획 t₀ 가 없으면 앞 정착 프레임으로 조용히
+#    대신했다.  scripts/check_contact_validity.py 가 아직 import 하므로 그대로 둔다.  판독기는 planned_t0 · _t0_exact 를 쓴다.
 def _t0_frame(fr, steps_fill):
     """정착 끝 = 스텝 ≤ 2·steps_fill 인 마지막 프레임."""
     cand = [(st, p) for st, p in fr if st <= 2 * steps_fill]
     if not cand:
         raise SystemExit('⛔ 정착 구간 프레임이 없다 — 덤프 간격이 정착보다 길다')
     return cand[-1]
+
+
+def planned_t0(plan):
+    """계획 t₀ = 정착 끝 (회전 직전) 의 **계획 덤프 step** = ⌊2·steps_fill / dump_every⌋·dump_every.
+
+    2026-09-28, Codex 3차 HBR3-05 — 판독기는 이 step 의 프레임을 **정확히** 요구한다 (옛 `_t0_frame` 처럼 "≤ 2F 인 마지막
+    프레임" 을 고르면 계획 t₀ 가 없을 때 앞의 정착 프레임이 조용히 들어온다).
+    덱 = `run 1` (삽입) · `run F` · `run F` (정착 두 번) · `run N` (회전) 이고 `dump … every` 가 `run 1` **뒤**에 정의되므로
+    덤프는 every 의 배수 step 에만 떨어진다 ⇒ 정착 끝 (step 1 + 2F) 직전의 마지막 격자점.
+    실측 (make_mixer_deck · 100,000 알 · cgf 151.4 · 시드 32452843): LC 8 바퀴 = F 192,668 · 간격 45,333 ⇒ t₀ 362,664
+    (회전 시작 385,337 = 1 + 2F) · E0 (`--revolutions 0` → `run 0`) = 간격 1,000 ⇒ t₀ 385,000.  정상 입력에서 옛 규칙과 같은 프레임.
+    ⚠ 1 + 2F 가 간격의 배수이면 그 step 의 덤프도 정착 끝이지만 옛 규칙 (≤ 2F) 과 같게 쓰지 않는다 (두 실제 덱은 해당 없음).
+    """
+    return (2 * plan['steps_fill'] // plan['dump_every']) * plan['dump_every']
+
+
+def _t0_exact(fr, plan, run_dir, who):
+    """계획 t₀ 프레임 → (step, path).  그 step 의 덤프가 **정확히 한 장** 있고 스키마 검사를 넘어야 한다 — 아니면 거부.
+
+    2026-09-28, Codex 3차 HBR3-05 (t₀ 대체 — 평가 런 · E0 기준 둘 다) · HBR3-06 (머리 · 스키마 불량이 조용히 통과).
+    ⛔ 앞의 정착 프레임으로 대신하지 않는다 — E0 기준 t₀ 가 빠진 프로브에서 옛 판은 S_R² 0.0069 → 0.0434 · M_final 0.45 → 0.529 를
+      내고도 complete · flat · tech [] 였다.
+    """
+    t0 = planned_t0(plan)
+    pre = plan['steps_total'] - plan['steps_run'] - 2 * plan['steps_fill']        # 정착 앞 step 수 (삽입 `run 1`)
+    if t0 <= pre:
+        raise SystemExit(f'⛔ {who} {run_dir}: 계획 t₀ step {t0} 가 정착 앞 (≤ {pre}) 이다 — 덤프 간격 {plan["dump_every"]} 이 '
+                         f'정착 2·{plan["steps_fill"]} 보다 길다')
+    hit = [p_ for st, p_ in fr if st == t0]
+    if not hit:
+        near = [st for st, _ in fr if st < t0][-3:]
+        raise SystemExit(f'⛔ {who} {run_dir}: 계획 t₀ (정착 끝) step {t0} 의 덤프가 없다 — 앞 프레임 {near} 으로 대신하지 않는다 '
+                         f'(Codex 3차 HBR3-05)')
+    if len(hit) > 1:
+        raise SystemExit(f'⛔ {who} {run_dir}: 계획 t₀ step {t0} 의 덤프가 {len(hit)} 장 — 어느 것이 참인지 모른다')
+    probs = validate_frame(hit[0])
+    if probs:
+        raise SystemExit(f'⛔ {who} {run_dir}: 계획 t₀ step {t0} 프레임이 검사 (헤더 · 스키마) 를 못 넘는다 {probs[:3]} '
+                         f'— 없는 것과 같게 거부한다 (Codex 3차 HBR3-06)')
+    return t0, hit[0]
 
 
 def analyse(run_dir, ref_dir, r_container, cells=8, x_cells=2, n_min=20, axis='x'):
@@ -161,13 +216,15 @@ def analyse(run_dir, ref_dir, r_container, cells=8, x_cells=2, n_min=20, axis='x
     if not fr:
         raise SystemExit(f'⛔ {run_dir}: 덤프가 없다')
     kw = dict(cells=cells, x_cells=x_cells, n_min=n_min, axis=axis)
-    st0, p0 = _t0_frame(fr, plan['steps_fill'])
+    #  ★ t₀ = **계획** 정착 끝 덤프 step 그 자체 (2026-09-28, Codex 3차 HBR3-05) — 없거나 · 둘이거나 · 검사 실패면 거부.
+    #    옛 `_t0_frame` ("≤ 2F 인 마지막 프레임") 은 계획 t₀ 가 빠지면 앞의 정착 프레임으로 조용히 대신했다.
+    st0, p0 = _t0_exact(fr, plan, run_dir, '평가 런')
     c0 = cell_stats(read_dump(p0), r_container, **kw)
     s0, n0 = c0['s2'], c0['used']
-    #  무작위 기준 — 균일 삽입 런의 **같은 위치**(정착 끝) 프레임
+    #  무작위 기준 — 균일 삽입 런의 **같은 위치**(그 덱의 계획 정착 끝) 프레임 · 같은 규칙
     rplan = deck_plan(os.path.join(ref_dir, 'in.mixer'))
     rfr = frames(os.path.join(ref_dir, 'post'))
-    _, rp = _t0_frame(rfr, rplan['steps_fill'])
+    _, rp = _t0_exact(rfr, rplan, ref_dir, 'E0 기준')
     cR = cell_stats(read_dump(rp), r_container, **kw)
     sR, nR = cR['s2'], cR['used']
     if not (s0 > sR):
@@ -176,16 +233,38 @@ def analyse(run_dir, ref_dir, r_container, cells=8, x_cells=2, n_min=20, axis='x
     #  민감도 (판정에 안 씀): 빈 칸만 뺀 모든 칸의 M — 버린 칸이 분리를 숨기는지 보이게
     s0a, sRa = c0['s2_all'], cR['s2_all']
     DIAG = ('am_vol_kept', 'se_vol_kept', 'am_n_kept', 'se_n_kept', 'nonempty', 'cell_n_median', 's2_all', 'vol_kept_by_type')
-    rows, hdr_bad = [], []
+    #  ★ 행 (= M · SD · 평탄 · QC 에 들어가는 프레임) = **계획 덤프 격자** (t₀ + k·dump_every ≤ 덱 끝) 위 · step 당 한 장 ·
+    #    스키마 검사 (measure_bed_aspect.validate_frame) 통과 (2026-09-28, Codex 3차 HBR3-05 · 06).  나머지 — 격자 밖 · 같은 step
+    #    둘 이상 · 머리 없음 · 머리 step ≠ 파일명 · 소수 type · id 없음 … — 는 계산에 **넣지 않고** tech (bin 0 이면 tech_smoke 도) 에
+    #    남긴다.  옛 판은 격자 밖 7301 을 bin 7 에 넣어 26/25 프레임 · complete · tech [] · M_final 0.45 → 0.4327 을 냈고,
+    #    머리가 없는 프레임은 dump_header 가 (None, None) 을 돌려 검사 없이 지나갔다 (소수 type 은 정수로 깎였다).
+    de, spr = plan['dump_every'], plan['steps_per_rev']
+    lat = set(range(st0, plan['steps_total'] + 1, de))
+
+    def _bin(s_):
+        return int(np.floor((s_ - st0) / spr + 1e-9))
+    by_step = {}
     for st, pth in fr:
-        if st < st0:
+        if st >= st0:
+            by_step.setdefault(st, []).append(pth)
+    dups = sorted(s_ for s_, ps_ in by_step.items() if len(ps_) > 1)
+    rows, excl = [], {}                                  # excl: step → 계산에서 뺀 사유 (같은 step 중복은 dups 로 따로)
+    for st, ps_ in sorted(by_step.items()):
+        if st not in lat:
+            excl[st] = f'계획 덤프 격자 밖 (t₀ {st0} + k·{de} ≤ 덱 끝 {plan["steps_total"]})'
             continue
-        hs, hn = dump_header(pth)
-        cs = c0 if st == st0 else cell_stats(read_dump(pth), r_container, **kw)
-        if (hs is not None and hs != st) or (hn is not None and hn != cs['n']):
-            hdr_bad.append(f'step {st}: 헤더 TIMESTEP {hs} · 원자 수 {hn} ≠ 파일명 · 행 수 {cs["n"]}')
+        if len(ps_) > 1:
+            continue                                     # 어느 쪽이 참인지 모른다 — 아래 dups 표지
+        if st == st0:
+            cs = c0                                      # t₀ 는 _t0_exact 가 이미 검사했다
+        else:
+            probs = validate_frame(ps_[0])
+            if probs:
+                excl[st] = f'프레임 검사 (헤더 · 스키마) 실패 {probs[:3]}'
+                continue
+            cs = cell_stats(read_dump(ps_[0]), r_container, **kw)
         s2 = cs['s2']
-        rev = (st - st0) / plan['steps_per_rev']
+        rev = (st - st0) / spr
         row = dict(step=st, rev=rev, s2=s2, M=(s0 - s2) / (s0 - sR), cells_used=cs['used'], cells_dropped=cs['dropped'], n=cs['n'])
         row.update({k: cs[k] for k in DIAG})
         row['M_all'] = (s0a - cs['s2_all']) / (s0a - sRa) if s0a > sRa else float('nan')
@@ -213,7 +292,7 @@ def analyse(run_dir, ref_dir, r_container, cells=8, x_cells=2, n_min=20, axis='x
                        cells_dropped_frac=float(np.mean([r_['cells_dropped'] / max(r_['nonempty'], 1) for r_ in rr])))
     last_k = max(revs)
     #  ★ 등록 최종값 (2026-09-27, Codex HB-05) — 덱의 계획 바퀴 수의 **마지막 완전 바퀴**.  옛 `M_final` 은 마지막 bin 이라
-    #    **부분 bin** (2–12 프레임, 중간 판독) 일 수 있어 최종값으로 쓰면 안 된다 (셀프테스트 ⑬b).
+    #    **부분 bin** (2–12 프레임, 중간 판독) 일 수 있어 최종값으로 쓰면 안 된다 (셀프테스트 ⑭ · 계획 끝을 넘은 덤프는 ⑬b).
     #  ★ 완전 = **계획 덤프 격자** (t₀ 부터 덱 끝까지 dump_every 간격) 의 그 bin step 이 **다** 있다 (2026-09-27 저녁,
     #    Codex HBR2-04 — 옛 "뒤 bin 이 있으면 완전" 은 직전 bin 이 2/25 프레임이어도 flat=true 를 냈다 · 셀프테스트 ⑰).
     fpr = plan['steps_per_rev'] / plan['dump_every']
@@ -229,9 +308,9 @@ def analyse(run_dir, ref_dir, r_container, cells=8, x_cells=2, n_min=20, axis='x
 
     def _complete(k):
         return k in exp_bin and not _missing(k)
-    steps = [r_['step'] for r_ in rows]
+    #  dump_gaps 는 옛 판 그대로 t₀ 이후 **있는 파일 전부** (계산에서 뺀 프레임 포함) 의 간격이다 — 계산에 쓴 행이 아니다
+    steps = [st for st, _ in fr if st >= st0]
     gaps = [(a_, b_) for a_, b_ in zip(steps, steps[1:]) if b_ - a_ != plan['dump_every']]
-    dups = sorted({s_ for s_ in [st for st, _ in fr if st >= st0] if [st for st, _ in fr].count(s_) > 1})
     tech = []
     planned = None
     if n_revs >= 1:
@@ -252,11 +331,13 @@ def analyse(run_dir, ref_dir, r_container, cells=8, x_cells=2, n_min=20, axis='x
                         f'(step {_missing(fb - 1)[:4]}…) — 최종값은 보고하되 평탄 증서 (flat) 는 발행하지 않는다')
         if ok_ and revs[fb]['n_nonfinite']:
             tech.append(f'최종 bin {fb} 에 비유한 M {revs[fb]["n_nonfinite"]} 프레임')
-    tech += hdr_bad
+    ex_msg = {s_: f'step {s_}: {w_} — 계산 (M · SD · 평탄 · QC) 에서 뺐다' for s_, w_ in sorted(excl.items())}
+    tech += list(ex_msg.values())
     if dups:
-        tech.append(f'같은 step 의 덤프가 둘 이상 ({dups[:4]})')
+        tech.append(f'같은 step 의 덤프가 둘 이상 ({dups[:4]}) — 그 step 은 계산에서 뺐다')
     #  ★ 스모크 창 (2026-09-27 저녁, Codex HBR2-02) — 고-Bo 사전등록 §8 은 **첫 완전 bin 0** 만 본다.  전체 미완주는
-    #    스모크에서 예상되는 상태라 `tech` (최종 창) 에만 두고, bin 0 안의 결손 · 비유한 · 헤더 오류만 `tech_smoke` 에 넣는다.
+    #    스모크에서 예상되는 상태라 `tech` (최종 창) 에만 두고, bin 0 안의 결손 · 비유한 · 뺀 프레임 (격자 밖 · 헤더 · 스키마 —
+    #    2026-09-28 HBR3-05 · 06) 만 `tech_smoke` 에 넣는다.
     b0 = exp_bin.get(0, set())
     smoke = dict(bin=0, expected=len(b0), present=len(b0 & present), complete=_complete(0) if b0 else False,
                  n=revs[0]['n'] if 0 in revs else 0, M_mean=revs[0]['M_mean'] if 0 in revs else None,
@@ -265,7 +346,7 @@ def analyse(run_dir, ref_dir, r_container, cells=8, x_cells=2, n_min=20, axis='x
         smoke['tech_smoke'].append(f'bin 0 결손 {len(_missing(0))}/{len(b0)} 프레임 (step {_missing(0)[:4]}{"…" if len(_missing(0)) > 4 else ""})')
     if 0 in revs and revs[0]['n_nonfinite']:
         smoke['tech_smoke'].append(f'bin 0 에 비유한 M {revs[0]["n_nonfinite"]} 프레임')
-    smoke['tech_smoke'] += [h for h in hdr_bad if int(h.split()[1].rstrip(':')) in b0]
+    smoke['tech_smoke'] += [m_ for s_, m_ in ex_msg.items() if _bin(s_) == 0]
     if any(d_ in b0 for d_ in dups):
         smoke['tech_smoke'].append('bin 0 에 같은 step 의 덤프가 둘 이상')
     return dict(run=run_dir, ref=ref_dir, plan=plan, t0_step=st0, S0=s0, SR=sR,
@@ -274,7 +355,8 @@ def analyse(run_dir, ref_dir, r_container, cells=8, x_cells=2, n_min=20, axis='x
                 M_t0=rows[0]['M'], planned=planned, smoke=smoke, tech=tech, dump_gaps=gaps,
                 lattice=dict(dump_every=plan['dump_every'], t0=st0, end=plan['steps_total'],
                              expected_by_bin={k: len(v) for k, v in sorted(exp_bin.items())},
-                             present_by_bin={k: len(v & present) for k, v in sorted(exp_bin.items())}),
+                             present_by_bin={k: len(v & present) for k, v in sorted(exp_bin.items())},
+                             excluded=dict(sorted(excl.items())), duplicates=dups),
                 S0_all=s0a, SR_all=sRa,
                 diag_t0={k: c0[k] for k in DIAG + ('used', 'dropped')},
                 diag_ref={k: cR[k] for k in DIAG + ('used', 'dropped')})
@@ -352,10 +434,12 @@ def _selftest():                                              # noqa: C901
                 f.write(f"{int(D['id'][i])} {int(D['type'][i])} {int(D['mol'][i])} "
                         f"{D['x'][i]:.6g} {D['y'][i]:.6g} {D['z'][i]:.6g} {D['radius'][i]:.6g}\n")
 
+    #  ⚠ 2026-09-28 (Codex 3차 HBR3-05) — 판독기는 **계획 덤프 격자** (t₀ + k·간격 ≤ 덱 끝) 위의 프레임만 쓴다.  옛 고정구
+    #    (간격 500 · 덱 끝 6001) 에서는 9600 · 249600 이 격자 밖이었다 ⇒ 간격 100 · 회전 248000 으로 격자 위에 둔다 (프레임 · 값 · 목적 그대로).
     DECK = ('timestep 1e-6\nrun 1\nrun 1000\nrun 1000\n'
-            'dump dmp all custom 500 post/mix_*.liggghts id type mol x y z radius\n'
+            'dump dmp all custom 100 post/mix_*.liggghts id type mol x y z radius\n'
             'fix mvD all move/mesh mesh Drum rotate origin 0 0 0 axis 1. 0. 0. period 1.0\n'
-            'run 4000\n')
+            'run 248000\n')
 
     seg = cloud(6000, True); mix = cloud(6000, False)
     s_seg, nu_seg, _, _ = cell_variance(seg, R)
@@ -431,7 +515,9 @@ def _selftest():                                              # noqa: C901
         f'전 칸 S² {cs["s2_all"]:.3f}',
         cs['se_vol_kept'] == 0.0 and cs['am_vol_kept'] == 1.0 and cs['s2_all'] > 0.2 and cs['nonempty'] == 3)
     #  ⑬ 등록 최종값 = 덱의 계획 바퀴 수의 **마지막 완전 바퀴**.  옛 `M_final` 은 마지막 bin (부분일 수 있다).
-    DECK2 = ('timestep 1e-3\nrun 1\nrun 10\nrun 10\n'
+    #  ⚠ 2026-09-28 (HBR3-05) — 정착을 10 ×2 → 125 ×2 로: 옛 고정구의 t₀ 20 은 간격 250 격자 밖 (계획 t₀ = 0) 이라 판독기가
+    #    거부한다.  t₀ 250 · 프레임 250 + 250k 로 **간격 · bin 구조 · 값은 옛 고정구 그대로** (모든 step 이 +230 평행이동).
+    DECK2 = ('timestep 1e-3\nrun 1\nrun 125\nrun 125\n'
              'dump dmp all custom 250 post/mix_*.liggghts id type mol x y z radius\n'
              'fix mvD all move/mesh mesh Drum rotate origin 0 0 0 axis 1. 0. 0. period 1.001\n'
              'run 2000\n')
@@ -440,30 +526,33 @@ def _selftest():                                              # noqa: C901
         for d in (run, ref):
             os.makedirs(os.path.join(d, 'post'))
             open(os.path.join(d, 'in.mixer'), 'w').write(DECK2)
-        write_dump(os.path.join(ref, 'post', 'mix_20.liggghts'), cloud(6000, False))
-        write_dump(os.path.join(run, 'post', 'mix_20.liggghts'), cloud(6000, True))
-        #  t0 = 20 · 바퀴 = 1001 스텝 · 덤프 250 ⇒ 실제 캠페인 (바퀴 = 덤프 25.0004 개) 처럼 마지막 덤프가 계획 끝
+        write_dump(os.path.join(ref, 'post', 'mix_250.liggghts'), cloud(6000, False))
+        write_dump(os.path.join(run, 'post', 'mix_250.liggghts'), cloud(6000, True))
+        #  t0 = 250 · 바퀴 = 1001 스텝 · 덤프 250 ⇒ 실제 캠페인 (바퀴 = 덤프 25.0004 개) 처럼 마지막 덤프가 계획 끝
         #  **바로 앞** (rev 1.998) 이고 덤프 간격에 결손이 없다
         for k_ in range(1, 9):
-            write_dump(os.path.join(run, 'post', f'mix_{20 + 250 * k_}.liggghts'), cloud(6000, True, seg_frac=0.3))
+            write_dump(os.path.join(run, 'post', f'mix_{250 + 250 * k_}.liggghts'), cloud(6000, True, seg_frac=0.3))
         res = analyse(run, ref, R)
         pl_ = res['planned']
         chk(f'⑬ 계획 바퀴 수 {pl_["n_revs"]} · 최종 bin {pl_["final_bin"]} 완전 ({pl_["n"]} 프레임) · 값 = 그 bin 평균',
             pl_['n_revs'] == 2 and pl_['final_bin'] == 1 and pl_['complete'] and pl_['n'] == 4
             and abs(pl_['M_final'] - res['by_rev'][1]['M_mean']) < 1e-12 and not res['tech'])
-        #  덤프가 계획 끝을 한 프레임 넘으면 옛 `M_final` 은 **1 프레임짜리 부분 bin** 을 낸다 — 등록 값은 안 움직인다
-        write_dump(os.path.join(run, 'post', f'mix_{20 + 250 * 9}.liggghts'), cloud(6000, False))
+        #  덤프가 계획 끝을 한 프레임 넘으면 (계획 격자 밖) — 옛 판은 그 한 장을 '1 프레임짜리 bin 2' 로 옛 `M_final` 에 넣었다.
+        #  2026-09-28 (HBR3-05) 부터 **행에서 빠지고** tech 로 남는다.  등록 값은 그때도 지금도 안 움직인다.
+        write_dump(os.path.join(run, 'post', f'mix_{250 + 250 * 9}.liggghts'), cloud(6000, False))
         res2 = analyse(run, ref, R)
-        chk(f'⑬b 옛 M_final (bin {res2["final_rev"]}, 프레임 {res2["by_rev"][res2["final_rev"]]["n"]}) ≠ 등록 최종값 '
-            f'(bin {res2["planned"]["final_bin"]}) — 부분 bin 을 최종값으로 쓰지 않는다',
-            res2['final_rev'] == 2 and res2['by_rev'][2]['n'] == 1
-            and abs(res2['planned']['M_final'] - res['planned']['M_final']) < 1e-12)
-        #  미완주 — 마지막 두 프레임을 치우면 최종 bin 이 불완전 ⇒ 값 없음 + 기술 표지
+        chk(f'⑬b 계획 끝을 넘은 덤프 (step 2500) 는 행 · 옛 M_final 에서 빠지고 tech 로 남는다 — 등록 값은 안 움직인다 '
+            f'(옛 M_final bin {res2["final_rev"]})',
+            res2['final_rev'] == 1 and 2 not in res2['by_rev'] and all(r_['step'] != 2500 for r_ in res2['rows'])
+            and abs(res2['planned']['M_final'] - res['planned']['M_final']) < 1e-12
+            and any('step 2500' in t and '격자 밖' in t for t in res2['tech']))
+        #  미완주 — 마지막 두 프레임을 치우면 최종 bin 이 불완전 ⇒ 값 없음 + 기술 표지.  옛 `M_final` 은 이때 부분 bin (2 프레임) 이다
         for k_ in (7, 8, 9):
-            os.remove(os.path.join(run, 'post', f'mix_{20 + 250 * k_}.liggghts'))
+            os.remove(os.path.join(run, 'post', f'mix_{250 + 250 * k_}.liggghts'))
         res3 = analyse(run, ref, R)
-        chk(f'⑭ 미완주면 등록 최종값 = 없음 · 기술 표지 ({"; ".join(res3["tech"])[:60]})',
-            res3['planned']['M_final'] is None and not res3['planned']['complete'] and res3['tech'])
+        chk(f'⑭ 미완주면 등록 최종값 = 없음 · 기술 표지 · 옛 M_final 은 부분 bin ({"; ".join(res3["tech"])[:60]})',
+            res3['planned']['M_final'] is None and not res3['planned']['complete'] and res3['tech']
+            and res3['final_rev'] == 1 and res3['by_rev'][1]['n'] == 2)
         #  ⑮ 평탄 조건 (prereg §2: |M̄₈ − M̄₇| ≤ M_sd(8)) 을 등록 bin 으로 계산해 둔다
         pf_ = res['planned']
         chk('⑮ 평탄 조건 = |M̄(최종) − M̄(직전)| ≤ sd(최종) 를 등록 bin 으로 계산한다',
@@ -475,17 +564,17 @@ def _selftest():                                              # noqa: C901
              'fix mvD all move/mesh mesh Drum rotate origin 0 0 0 axis 1 0 0 period 1.00001\nrun 8000\n')
 
     def _cloud(kind):
-        """작은 결정론적 구름 (기계 상태 아님) — 4 무리 × 24 알.  seg = 층상 · ref = 무작위 기준 · mid = 중간."""
+        """작은 결정론적 구름 (기계 상태 아님) — 4 무리 × 24 알.  seg = 층상 · ref = 무작위 기준 · mid = 중간.
+        ref_p · ref_alt = Codex 3차 프로브 (review_round3_probe.py) 의 기준 · 대체 기준 (앞 · 뒤 두 무리의 AM 알 10·14 / 7·17)."""
+        n_am = {'ref': (6, 18), 'mid': (3, 21), 'ref_p': (10, 14), 'ref_alt': (7, 17)}
         xs, ys, zs, ts = [], [], [], []
         for j, (y, z) in enumerate([(-.01, -.01), (-.01, .01), (.01, -.01), (.01, .01)]):
             for k in range(24):
                 ys.append(y); zs.append(z); xs.append((k - 12) * 1e-5)
                 if kind == 'seg':
                     ts.append(1 if j < 2 else 3)
-                elif kind == 'ref':
-                    ts.append(1 if k < (6 if j < 2 else 18) else 3)
                 else:
-                    ts.append(1 if k < (3 if j < 2 else 21) else 3)
+                    ts.append(1 if k < n_am[kind][0 if j < 2 else 1] else 3)
         return dict(id=np.arange(1, 97, dtype=float), type=np.array(ts, float), mol=-np.ones(96),
                     x=np.array(xs), y=np.array(ys), z=np.array(zs), radius=np.full(96, 1e-5))
 
@@ -542,6 +631,120 @@ def _selftest():                                              # noqa: C901
     chk(f'⑱b D-2 QC: 25 프레임 중 2 프레임 유지 0 → 평균 {q["se_mean"]:.2f} ≥ 0.90 인데 프레임별 최솟값 '
         f'{q["min_by_type"][3]:.0f} < 0.80 ⇒ 미달 (평균으로 상쇄하지 않는다)',
         q['se_mean'] >= .9 and not q['pass'])
+
+    # ══ ⑲~㉔ 2026-09-28 Codex 3차 HBR3-05 · 06 — 합성 반례 (evidence/review_round3_probe.py `reader_*`) 를 **먼저 재현**하고 고쳤다 ══
+    #  덱 = DECK3 (정착 100 ×2 · 간격 40 ⇒ 계획 t₀ 200) · 기준 = 프로브의 ref (AM 10·14) ⇒ 정상 등록 최종값 0.45.
+    def _refuses(fn, *need):
+        """fn() 이 SystemExit 로 거부하고 메시지에 need 가 다 있으면 True (통과하거나 다른 사유로 거부하면 False)."""
+        try:
+            fn()
+        except SystemExit as e:
+            return all(w in str(e) for w in need)
+        return False
+
+    def _dump_raw(path, D, header=True):
+        """열 순서 · 값 그대로 쓰는 덤프 (write_dump 는 id · type 을 정수로 깎는다) — 머리 · 스키마 결함 고정구용."""
+        keys = list(D)
+        n = len(D[keys[0]])
+        st_ = int(re.search(r'_(\d+)\.', os.path.basename(path)).group(1))
+        with open(path, 'w') as f:
+            if header:
+                f.write(f'ITEM: TIMESTEP\n{st_}\nITEM: NUMBER OF ATOMS\n{n}\nITEM: BOX BOUNDS ff ff ff\n-1 1\n-1 1\n-1 1\n')
+            f.write('ITEM: ATOMS ' + ' '.join(keys) + '\n')
+            for i in range(n):
+                f.write(' '.join(format(float(D[k][i]), '.17g') for k in keys) + '\n')
+    _an = dict(r_container=.02, cells=2, x_cells=1)
+    with tempfile.TemporaryDirectory() as td:
+        ref = _case(td, 'ref_p', []); write_dump(os.path.join(ref, 'post', 'mix_200.liggghts'), _cloud('ref_p'))
+        run_nom = _case(td, 'nom', range(201))                      # t₀ 200 ~ 8200 · 201 프레임 (계획 격자 전부)
+        nom = analyse(run_nom, ref, **_an)
+        M_nom = nom['planned']['M_final']
+        #  (a) 평가 런의 계획 t₀ (200) 가 없고 앞의 정착 프레임 (160) 만 있다 — 옛 판: t0_step 160 으로 조용히 대신했다
+        run = _case(td, 'miss_t0', range(1, 201)); write_dump(os.path.join(run, 'post', 'mix_160.liggghts'), _cloud('seg'))
+        chk('⑲ ★ HBR3-05: 평가 런의 계획 t₀ (step 200) 가 없으면 앞 정착 프레임 (160) 으로 대신하지 않고 거부한다',
+            _refuses(lambda: analyse(run, ref, **_an), 't₀', 'step 200'))
+        #  (b) E0 기준의 계획 t₀ (200) 가 없고 앞의 정착 프레임 (160, 다른 구름) 만 있다 — 옛 판: S_R² 0.0434 · M_final 0.529 로 통과
+        ref_m = _case(td, 'ref_miss', []); write_dump(os.path.join(ref_m, 'post', 'mix_160.liggghts'), _cloud('ref_alt'))
+        chk('⑳ ★ HBR3-05: E0 기준의 계획 t₀ (step 200) 가 없으면 앞 정착 프레임 (160) 으로 대신하지 않고 거부한다',
+            _refuses(lambda: analyse(run_nom, ref_m, **_an), 't₀', 'step 200', 'E0'))
+        #  (c) 계획 격자 25 프레임 + 격자 밖 1 장 (7301) — 옛 판: n 26/25 · complete · tech [] · M_final 0.45 → 0.4327
+        run = _case(td, 'offgrid', range(201)); write_dump(os.path.join(run, 'post', 'mix_7301.liggghts'), _cloud('seg'))
+        r_ = analyse(run, ref, **_an)
+        pl = r_['planned']
+        chk(f'㉑ ★ HBR3-05: 격자 밖 덤프 (7301) 는 행 · M · SD · 평탄에서 빠지고 tech 로 남는다 — M_final {pl["M_final"]} '
+            f'(정상 {M_nom}) · n {pl["n"]}/{pl["expected"]}',
+            M_nom is not None and abs(M_nom - 0.45) < 1e-12 and pl['M_final'] is not None and abs(pl['M_final'] - M_nom) < 1e-12
+            and pl['M_final_sd'] == nom['planned']['M_final_sd'] and pl['flat'] == nom['planned']['flat']
+            and pl['n'] == pl['expected'] == 25 and all(x_['step'] != 7301 for x_ in r_['rows'])
+            and any('step 7301' in t and '격자 밖' in t for t in r_['tech']) and not r_['smoke']['tech_smoke'])
+        #  bin 0 안의 격자 밖 덤프 (230) — 스모크 창에서도 빠지고 tech_smoke 에 남는다
+        run = _case(td, 'offgrid0', range(201)); write_dump(os.path.join(run, 'post', 'mix_230.liggghts'), _cloud('seg'))
+        r_ = analyse(run, ref, **_an)
+        chk('㉑b bin 0 안의 격자 밖 덤프 (230) 는 스모크 창에서도 빠지고 (M · n 정상과 같다) tech_smoke · tech 에 남는다',
+            r_['smoke']['n'] == nom['smoke']['n'] == 26 and abs(r_['smoke']['M_mean'] - nom['smoke']['M_mean']) < 1e-12
+            and any('step 230' in t for t in r_['smoke']['tech_smoke']) and any('step 230' in t for t in r_['tech']))
+        #  같은 step (7600, 최종 bin) 의 덤프가 둘 — 어느 쪽이 참인지 모르므로 둘 다 쓰지 않는다 (옛 판: 둘 다 평균에 넣었다)
+        run = _case(td, 'dup2', range(201)); write_dump(os.path.join(run, 'post', 'dup_7600.liggghts'), _cloud('seg'))
+        r_ = analyse(run, ref, **_an)
+        chk('㉑c 같은 step 의 덤프가 둘이면 어느 것도 계산에 쓰지 않는다 — 최종 bin 결손 · 등록 최종값 없음 · tech',
+            7600 not in {x_['step'] for x_ in r_['rows']} and r_['planned']['M_final'] is None
+            and any('같은 step' in t for t in r_['tech']))
+        #  (d) 머리 (TIMESTEP · NUMBER OF ATOMS) 없는 행 프레임 — bin 0 의 1000 · 최종 bin 의 8000
+        run = _case(td, 'nohdr', [i for i in range(201) if i not in (20, 195)])
+        for i in (20, 195):
+            _dump_raw(os.path.join(run, 'post', f'mix_{200 + 40 * i}.liggghts'), _cloud('mid'), header=False)
+        r_ = analyse(run, ref, **_an)
+        chk('㉒ ★ HBR3-06: 머리 없는 프레임 (1000 · 8000) 은 계산에서 빠지고 tech · (bin 0 이면) tech_smoke 에 남는다 '
+            '— 최종 bin 결손이라 등록 최종값 없음',
+            not ({1000, 8000} & {x_['step'] for x_ in r_['rows']})
+            and any('step 1000' in t for t in r_['tech']) and any('step 8000' in t for t in r_['tech'])
+            and any('step 1000' in t for t in r_['smoke']['tech_smoke'])
+            and not any('step 8000' in t for t in r_['smoke']['tech_smoke'])
+            and r_['planned']['M_final'] is None and not r_['smoke']['complete'])
+        #  (e) 뒤 프레임의 소수 type (1.5 · 3.5 — 정수로 깎으면 1 · 3 이라 '변화 없음' 으로 보인다) · id 열 없음
+        run = _case(td, 'schema', [i for i in range(201) if i not in (190, 191)])
+        Df = _cloud('mid'); Df['type'] = Df['type'] + 0.5
+        _dump_raw(os.path.join(run, 'post', 'mix_7800.liggghts'), Df)
+        Dn = _cloud('mid'); Dn.pop('id')
+        _dump_raw(os.path.join(run, 'post', 'mix_7840.liggghts'), Dn)
+        r_ = analyse(run, ref, **_an)
+        chk('㉓ ★ HBR3-06: 소수 type · id 열 없는 뒤 프레임 (7800 · 7840) 은 계산에서 빠지고 tech 에 남는다 (옛 판: 깎아서 그대로 썼다)',
+            not ({7800, 7840} & {x_['step'] for x_ in r_['rows']}) and r_['planned']['M_final'] is None
+            and any('step 7800' in t and 'type' in t for t in r_['tech'])
+            and any('step 7840' in t and 'id' in t for t in r_['tech']))
+        #  (f) t₀ 프레임 자체가 검사를 못 넘는다 — 평가 런 t₀ 머리 없음 · E0 t₀ 소수 type ⇒ 없는 것처럼 거부
+        run = _case(td, 't0_bad', range(1, 201))
+        _dump_raw(os.path.join(run, 'post', 'mix_200.liggghts'), _cloud('seg'), header=False)
+        ref_b = _case(td, 'ref_bad', []); Dr = _cloud('ref_p'); Dr['type'] = Dr['type'] + 0.5
+        _dump_raw(os.path.join(ref_b, 'post', 'mix_200.liggghts'), Dr)
+        chk('㉔ ★ HBR3-05 · 06: t₀ 프레임이 검사를 못 넘으면 (평가 런 머리 없음 · E0 소수 type) 없는 것처럼 거부한다',
+            _refuses(lambda: analyse(run, ref, **_an), 't₀', 'step 200')
+            and _refuses(lambda: analyse(run_nom, ref_b, **_an), 't₀', 'step 200', 'E0'))
+
+    #  ㉕ planned_t0 — 실제 캠페인 덱 생성기 (make_mixer_deck) 로 만든 LC 8 바퀴 · E0 (`--revolutions 0`) 덱 (2026-09-28 실측값 고정).
+    #     생성기를 못 불러오면 이름으로 보고하고 건너뛴다 (⑪ 과 같은 규약).
+    try:
+        import contextlib
+        import io
+        import make_mixer_deck as _gen
+        with contextlib.redirect_stdout(io.StringIO()):
+            _p = _gen.plan(100000, cgf=151.4)
+            _rpm = _gen.resolve_rpm(_p['R'])
+            _dk = {a_: _gen.deck(_p, _rpm, rv_, seed=32452843, arm=a_) for a_, rv_ in (('LC', 8), ('E0', 0))}
+    except Exception as e:                                        # noqa: BLE001 — 생성기 부재 · 변경 중이면 SKIP
+        print(f'  SKIP  ㉕ 덱 생성기를 못 불러 건너뜀 ({type(e).__name__}: {e})')
+    else:
+        with tempfile.TemporaryDirectory() as td:
+            _pl = {}
+            for a_, t_ in _dk.items():
+                open(os.path.join(td, a_), 'w').write(t_)
+                _pl[a_] = deck_plan(os.path.join(td, a_))
+        lc_, e0_ = _pl['LC'], _pl['E0']
+        chk(f'㉕ 계획 t₀ — 실제 덱 LC {planned_t0(lc_)} (정착 {lc_["steps_fill"]} ×2 · 간격 {lc_["dump_every"]} · 회전 시작 '
+            f'{lc_["steps_total"] - lc_["steps_run"]}) · E0 {planned_t0(e0_)} (간격 {e0_["dump_every"]} · 회전 run {e0_["steps_run"]})',
+            planned_t0(lc_) == 362664 and lc_['steps_total'] - lc_['steps_run'] == 385337 == 1 + 2 * lc_['steps_fill']
+            and planned_t0(e0_) == 385000 and e0_['steps_run'] == 0 and e0_['n_run_lines'] == 4
+            and e0_['steps_fill'] == lc_['steps_fill'])
 
     #  실제 덱으로 파서 검증 (스크래치패드에 있을 때만 — 없으면 이름으로 보고)
     _real = os.environ.get('MIX_REAL_DECK', '/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/'

@@ -1,29 +1,34 @@
 #!/usr/bin/env python3
-"""mixer_restart_phase_test.py — 재개-위상 영수증 (2026-09-27 저녁, Codex 재리뷰 HBR2-01 · K2).
+"""mixer_restart_phase_test.py — 재개-위상 영수증 v1 (2026-09-28, Codex 3차 HBR3-01 · 02 · 03 · Q1 · Q2 · Q5).
 
-왜 — 믹서 드럼은 39 각형이라 벽 겹침은 회전각에 걸린다 (면 한가운데와 꼭짓점의 차 = SE 반경의 56 %).  덱은 mesh 를 덤프하지
-않으므로 벽 판정의 근거는 **예정각** (2π·(s − start)·dt/period) 뿐인데, 그 식이 **재개 (read_restart) 뒤에도 이어지는지**는
-소스 근거 (FixMoveMesh::restart 가 time_ 을 복원 · MeshMoverRotate 가 ω·dt 누적) 이지 이 바이너리의 실측이 아니었다.
-입자 배치로 각을 되읽는 fitting 은 증거가 아니다 (참 겹침 2 % + 반 면각 어긋남을 PASS 로 승격 — `check_contact_validity` ⑮).
+왜 — 믹서 드럼은 39 각형이라 벽 겹침은 회전각에 걸린다 (면 한가운데와 꼭짓점의 차 = SE 반경의 56 %).  캠페인 덱은 mesh 를 덤프하지
+않으므로 벽 판정의 근거는 **예정각** 2π·(s − start)·dt/period 뿐이다.  그 식이 (i) 긴 회전 내내 (ii) 재개 (read_restart) 뒤에도
+맞는지를 **같은 바이너리로 실측**한 기록이 이 영수증이다.
 
-무엇 — 실제 캠페인 덱에서 **입자만 뺀** 두 덱을 만든다 (같은 바이너리 · 같은 fix ID · 같은 메시 · 같은 주기):
-  A (기준)  회전 N1 step → `write_restart` → N2 step 더 · `dump mesh/stl` 로 드럼을 매 E step 덤프
-  B (재개)  `read_restart` 로 N1 에서 이어 N2 step · 같은 덤프
-그리고 B 의 mesh 덤프를 (i) 같은 step 의 A 덤프와 (꼭짓점 좌표 일치) (ii) 예정각 2π·s·dt/period 와 (iii) "재개 때 위상이 0 으로
-돌아간" 대안 2π·(s − N1)·dt/period 와 대조한다.  (i)(ii) 가 맞고 (iii) 과 구분되면 **통과** → 영수증 JSON.
-`check_contact_validity.py --contract --phase-receipt <영수증>` 은 그 영수증의 주기 · 축이 덱과 맞을 때만 예정각 (± 각 오차) 으로 벽을 잰다.
+★ 핵심 논리 (v1) — 드럼 회전은 **처방 운동** (fix move/mesh rotate) 이라 입자와 무관하다.  그래서 캠페인 덱에서 **입자만 뺀** 덱을
+  **같은 step 구조** (삽입 run 1 · 정착 두 run · 회전 run 을 그대로) 로 돌리면, 메시는 캠페인 런과 같은 궤적을 밟는다.  캠페인의
+  원자 덤프 간격으로 `dump mesh/stl` 을 걸면 **캠페인 판정 프레임과 같은 step** 에서 벽을 직접 잰다 — 가정한 ε 가 아니라
+  그 step 의 실측 오차 (+ 출력 반올림) 가 벽 각의 불확실성이 된다 (`check_contact_validity.load_phase_receipt` · `wall_interval`).
+  재개는 B 가 잰다: A 가 N1 에서 `write_restart` 한 체크포인트를 **캠페인 재개 도구와 같은 변환** (`make_mixer_resume.transform`)
+  으로 만든 덱이 읽어 끝까지 간다 — A 와 B 의 메시가 같은 step 에서 **꼭짓점까지 같아야** 한다.
 
-⚠ 영수증은 **바이너리의 성질** (재개가 위상을 잇는다) 이지 어느 런의 벽 좌표가 아니다.  바이너리가 바뀌면 다시 만든다.
-⚠ 입자 0 개로 돈다 — 09-27 WSL 실측: 템플릿 · 분포까지 빼면 `run` 은 돌지만 `write_restart` 의 System init 에서
-  `ERROR: Atom types must start from 1 for granular simulations (../properties.cpp:120)` 로 죽는다 (LIGGGHTS 는 최소 원자 타입을
-  **원자 ∪ particletemplate** 에서 잰다 — CLAUDE.md 재개 체크리스트 ③ 의 순수 SE 사고와 같은 뿌리).  그래서 `particletemplate/*` ·
-  `particledistribution/*` 은 A · B 둘 다에 **남기고** `insert/*` 만 뺀다 (템플릿은 선언일 뿐 입자를 넣지 않는다).
-  그 밖에 빈 계에서 거부하는 명령이 또 있으면 로그를 보고 여기를 고친다 (WSL 에서만 실행 가능).
+무엇 (gen → run.sh → analyze)
+  gen      캠페인 덱 → A 덱 (입자 삽입 · 원자 dump · 주기 restart 만 뺌 · 템플릿 · 분포는 남김 — 0 입자 덱의 write_restart 가
+           `Atom types must start from 1` 로 죽기 때문 · 09-27 WSL 실측) · B 덱 (transform + 템플릿 재선언) · run.sh · gen.json
+           N1 = 회전의 ~60 % (L 런이 재개된 자리) 근처 dump 격자 step 중, 재개 때 위상이 0 으로 돌아간다는 대안과의 차가 드럼 면
+           대칭 (360°/면 수) 을 빼고도 ≥ 2 · RESET_GAP_DEG 인 것 (Codex Q2).
+  run.sh   실행 **직전** 봉인 (바이너리 · 두 덱 · STL sha256 → seal.json) → A → B → 실행 결과 (exit · 완료 표지 · 덤프 sha256 →
+           run_status.json).  덤프 폴더는 매번 지우고 새로 만든다 (옛 시험 파일 혼입 방지 · HBR3-01).
+  analyze  기대 step 집합 (A: 첫 덤프 ~ 끝 · B: N1 ~ 끝, dump 격자) 과 **정확히** 같아야 하고 (누락 · 추가 = 실패), 봉인 뒤 덱 · STL ·
+           덤프가 안 바뀌었고, A/B 가 정상 완료했고, 배너가 같고, 매 step 의 전체 메시 (드럼 + 두 끝판) 가 원 STL 을 예정각으로 돌린
+           것과 **꼭짓점 순서대로** 맞고 (남는 어긋남 ≤ 허용), B = A (꼭짓점까지) 일 때만 통과.  → 영수증 JSON (schema restart_phase_v1).
 
-    python3 scripts/mixer_restart_phase_test.py gen --deck dem_scripts/mixer_20260921/runs/LC_s32452843/in.mixer --out phase_test
-    bash phase_test/run.sh                      # WSL · lmp_serial (LMP=… 로 바꿈) · 초 단위  (런 폴더 = 런처 OUT 기본값 · 리포 루트에 runs/ 는 없다)
-    python3 scripts/mixer_restart_phase_test.py analyze phase_test --binary "$(command -v lmp_serial)" \
-        --out docs/data/mixer_phase_receipt_<날짜>.json
+⚠ 영수증은 **바이너리 + 메시 운동 계약**의 성질이다.  소비자가 런 로그 배너 · 운동 서명 · 판정 step 이 실측 step 안인지를 대조한다.
+⚠ 개별 런의 체크포인트 상태 (그 런이 실제로 그 위상에서 이어졌는가) 는 이 시험이 아니다 — Codex Q1 의 런별 상태 확인은 따로 한다.
+
+    python3 scripts/mixer_restart_phase_test.py gen --deck dem_scripts/mixer_20260921/runs/LC_s32452843/in.mixer --out ~/phase_v1
+    bash ~/phase_v1/run.sh                      # WSL · lmp_serial (LMP=… 로 바꿈) · 0 입자라 분 단위
+    python3 scripts/mixer_restart_phase_test.py analyze ~/phase_v1 --out docs/data/mixer_phase_receipt_<날짜>/receipt_v1.json
     python3 scripts/mixer_restart_phase_test.py --selftest
 """
 from __future__ import annotations
@@ -31,8 +36,10 @@ from __future__ import annotations
 import argparse
 import datetime
 import hashlib
+import itertools
 import json
 import os
+import re
 import shutil
 import sys
 
@@ -40,164 +47,336 @@ import numpy as np
 
 _SCR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _SCR)
-from make_mixer_resume import logical_commands, _tokens                  # noqa: E402  덱 논리 명령 파서 — 한 벌만 둔다
+from make_mixer_resume import logical_commands, _tokens, transform      # noqa: E402  캠페인 재개와 **같은 변환**
+from check_contact_validity import (PHASE_EPS_DEG, RECEIPT_SCHEMA, motion_signature, read_stl, deck_walls,   # noqa: E402
+                                    _rot, _planes, mesh_angle)
 
-N1, N2, EVERY = 20000, 10000, 5000        # 회전 N1 → 체크포인트 → N2 · mesh 덤프 간격 (캠페인 dt 0.7 µs · 주기 ≈ 0.8 s ⇒ N1 ≈ 6.3°)
-DROP_FIX = ('insert/',)                    # 삽입만 뺀다.  템플릿 · 분포는 **남긴다** — 아래 09-27 실측 (0 입자 덱의 write_restart)
-TOL_DEG, RESET_GAP_DEG = 0.05, 1.0        # 예정각 허용 오차 · 재개-리셋 대안과의 최소 간격
+RESET_GAP_DEG = 1.0          # 재개-리셋 대안과의 최소 간격 (면 대칭을 뺀 뒤) — 등록값
+N1_FRAC = 0.6                # 체크포인트 자리 = 회전 run 의 이 비율 근처 (L 런 재개 53–61 %)
+DROP_FIX = ('insert/',)      # 삽입만 뺀다.  템플릿 · 분포는 남긴다 (0 입자 덱의 write_restart — 09-27 WSL 실측)
+CKPT = 'restart_pt/ckpt.bin'
 
 
-def gen_decks(deck_text, n1=N1, n2=N2, every=EVERY):
-    """캠페인 덱 → (덱 A, 덱 B).  삽입 (`insert/*` · 그 region · unfix) · 원자 dump · run · restart · write_restart · shell 을 빼고
-    나머지 (재료 · **템플릿 · 분포** · 메시 · 벽 · 회전 · 적분기) 는 **순서 · ID 그대로** — 템플릿을 남기는 이유는 모듈 docstring."""
-    kept = []
-    box_region = None
-    for _, blk in logical_commands(deck_text):
-        t = _tokens(blk)
-        if not t:
+def _sha(path):
+    return hashlib.sha256(open(path, 'rb').read()).hexdigest()
+
+
+def deck_structure(deck_text):
+    """캠페인 덱 → dict(run_lens, run_total, rot_start, dump_every, dump_ids)."""
+    toks = [_tokens(b) for _, b in logical_commands(deck_text)]
+    runs = [int(t[1]) for t in toks if t[:1] == ['run']]
+    if len(runs) < 2:
+        raise ValueError(f'run 줄이 {len(runs)} 개')
+    dumps = [t for t in toks if t[:1] == ['dump'] and len(t) > 4 and t[3] == 'custom']
+    if len(dumps) != 1:
+        raise ValueError(f'원자 dump (custom) 가 {len(dumps)} 개 — 하나여야 한다')
+    return dict(run_lens=runs, run_total=sum(runs), rot_start=sum(runs) - runs[-1], dump_every=int(dumps[0][4]),
+                dump_ids={t[1] for t in toks if t[:1] == ['dump']})
+
+
+def drum_facets(stl_dir, deck_text):
+    """드럼 면 수 (축에 수직이 아닌 평면 수)."""
+    sp = deck_walls(deck_text)
+    f, sc = sp['meshes']['Drum']
+    T = read_stl(os.path.join(stl_dir, f)) * sc
+    N, _ = _planes(T, T.reshape(-1, 3).mean(0))
+    ax = sp['moves']['Drum']['axis']
+    return int((np.abs(N @ ax) < 0.99).sum())
+
+
+def symmetric_gap_deg(n1, rot_start, dt, period, nfacet):
+    """연속 가설과 리셋 가설의 각 차 — 드럼 면 대칭 (360°/nfacet) 을 뺀 최소 거리 (Codex Q2)."""
+    g = (360.0 * (n1 - rot_start) * dt / period) % 360.0
+    fa = 360.0 / nfacet
+    m = g % fa
+    return float(min(m, fa - m)), float(min(g, 360.0 - g))
+
+
+def choose_n1(st, dt, period, nfacet, frac=N1_FRAC, span=400):
+    """dump 격자 위 · 회전 run 의 frac 근처 · 면 대칭을 뺀 리셋 간격 ≥ 2·RESET_GAP_DEG 인 가장 가까운 step."""
+    de, r0, rt = st['dump_every'], st['rot_start'], st['run_total']
+    target = r0 + frac * (rt - r0)
+    k0 = int(round(target / de))
+    for dk in sorted(range(-span, span + 1), key=abs):
+        n1 = (k0 + dk) * de
+        if not (r0 + de < n1 < rt - de):
             continue
-        if t[0] == 'create_box':
-            box_region = t[2] if len(t) > 2 else None
-    for _, blk in logical_commands(deck_text):
-        t = _tokens(blk)
+        if symmetric_gap_deg(n1, r0, dt, period, nfacet)[0] >= 2 * RESET_GAP_DEG:
+            return n1
+    raise ValueError('리셋 대안과 구별되는 N1 을 dump 격자에서 못 찾았다')
+
+
+def gen_decks(deck_text, n1):
+    """캠페인 덱 → (A 덱, B 덱).  A = 입자 삽입 · 원자 dump (+ dump_modify · undump) · 주기 restart · write_restart · shell 을 빼고
+    원자 dump 자리에 같은 간격의 `dump mesh/stl`, 마지막 (회전) run 을 N1 에서 쪼개 `write_restart` .  B = transform(A0) + 템플릿 재선언."""
+    st = deck_structure(deck_text)
+    if not (st['rot_start'] < n1 < st['run_total']):
+        raise ValueError(f'N1 {n1} 이 회전 구간 ({st["rot_start"]}, {st["run_total"]}) 밖이다')
+    cmds = logical_commands(deck_text)
+    toks = [_tokens(b) for _, b in cmds]
+    drop_fix, drop_reg = set(), set()
+    for t in toks:
+        if t[:1] == ['fix'] and len(t) > 3 and any(t[3].startswith(s) for s in DROP_FIX):
+            drop_fix.add(t[1])
+            if 'region' in t:
+                drop_reg.add(t[t.index('region') + 1])
+    atom_dumps = {t[1] for t in toks if t[:1] == ['dump'] and len(t) > 4 and t[3] == 'custom'}
+    de = st['dump_every']
+    a0, tmpl = [], []
+    for (_, blk), t in zip(cmds, toks):
         if not t:
             continue
         k = t[0]
-        if k in ('run', 'write_restart', 'restart', 'unfix', 'dump', 'shell'):
+        if (k == 'fix' and t[1] in drop_fix) or (k == 'unfix' and t[1] in drop_fix) or (k == 'region' and t[1] in drop_reg):
             continue
-        if k == 'fix' and len(t) > 3 and any(s in t[3] for s in DROP_FIX):
+        if k in ('dump_modify', 'undump') and len(t) > 1 and t[1] in atom_dumps:
             continue
-        if k == 'region' and t[1] != box_region:
+        if k == 'dump' and t[1] in atom_dumps:
+            a0.append(f'dump dmesh all mesh/stl {de} post_mesh/mesh_*.stl')
             continue
-        kept.append(' '.join(t))
-    if not any(c.startswith('create_box') for c in kept):
-        raise ValueError('덱에 create_box 가 없다')
-    if not any('move/mesh' in c for c in kept):
-        raise ValueError('덱에 move/mesh 가 없다 — 회전 덱이 아니다')
-    dump = f'dump dmesh all mesh/stl {every} post_mesh/mesh_*.stl'
-    a = kept + ['shell mkdir post_mesh restart_pt', dump, f'run {n1}', 'write_restart restart_pt/ckpt.bin', f'run {n2}']
-    b = []
-    for c in kept:
-        if c.startswith('region ') and box_region and c.split()[1] == box_region:
+        if k in ('restart', 'write_restart', 'shell'):
             continue
-        if c.startswith('create_box'):
-            b.append('read_restart restart_pt/ckpt.bin')
-            continue
-        b.append(c)
-    b += ['shell mkdir post_mesh', dump, f'run {n2}']
-    hdr = '# 재개-위상 영수증 덱 {} — scripts/mixer_restart_phase_test.py 가 캠페인 덱에서 입자만 빼고 만듦 (fix ID · 메시 · 주기 그대로)\n'
-    return hdr.format('A (기준)') + '\n'.join(a) + '\n', hdr.format('B (read_restart 재개)') + '\n'.join(b) + '\n'
+        if k == 'fix' and len(t) > 3 and (t[3].startswith('particletemplate/') or t[3].startswith('particledistribution/')):
+            tmpl.append(' '.join(t))
+        a0.append(' '.join(t))
+    runs_at = [i for i, c in enumerate(a0) if c.startswith('run ')]
+    last = runs_at[-1]
+    a = a0[:last] + [f'run {n1 - st["rot_start"]}', f'write_restart {CKPT}', f'run {st["run_total"] - n1}'] + a0[last + 1:]
+    hdr = '# 재개-위상 영수증 v1 덱 {} — scripts/mixer_restart_phase_test.py (캠페인 덱에서 입자 삽입 · 원자 dump 만 뺌 · step 구조 그대로)\n'
+    a_text = hdr.format('A (기준 · N1 체크포인트)') + '\n'.join(a) + '\n'
+    b_text, info = transform('\n'.join(a0) + '\n', CKPT, n1)
+    lines = b_text.split('\n')
+    j = next(i for i, l in enumerate(lines) if l.startswith('print') and 'RESUME_STEP' in l)
+    b_text = '\n'.join(lines[:j + 1] + ['# 템플릿 · 분포 재선언 — 0 입자 계의 원자 타입 (transform 은 입자 런용이라 뺀다)'] + tmpl + lines[j + 1:])
+    return a_text, hdr.format('B (make_mixer_resume.transform 재개)') + b_text, st
 
 
-RUN_SH = """#!/bin/bash
-# 재개-위상 시험 — A (기준 · 체크포인트) → B (read_restart 재개).  WSL 에서: bash run.sh   (LMP=경로 로 바이너리 지정)
-set -e
+RUN_SH = r"""#!/bin/bash
+# 재개-위상 영수증 v1 — 실행 직전 봉인 → A (기준 · 체크포인트) → B (read_restart 재개) → 실행 결과.  WSL: bash run.sh  (LMP=경로)
+set -u
 cd "$(dirname "$0")"
 LMP=${LMP:-lmp_serial}
-( cd A && mkdir -p post_mesh restart_pt && "$LMP" -in in.phase_a > log.lmp 2>&1 )
-( cd B && mkdir -p post_mesh && rm -rf restart_pt && cp -r ../A/restart_pt . && "$LMP" -in in.phase_b > log.lmp 2>&1 )
-echo "끝 — 분석: python3 scripts/mixer_restart_phase_test.py analyze $(pwd) --binary \\"$(command -v "$LMP")\\" --out docs/data/mixer_phase_receipt_$(date +%Y%m%d).json"
+BIN=$(command -v "$LMP") || { echo "⛔ $LMP 없음 — LMP=<실행파일> 로"; exit 1; }
+rm -rf A/post_mesh A/restart_pt B/post_mesh B/restart_pt A/log.lmp B/log.lmp seal.json run_status.json
+mkdir -p A/post_mesh A/restart_pt B/post_mesh
+python3 - "$BIN" <<'PY' || { echo "⛔ 봉인 실패"; exit 1; }
+import datetime, hashlib, json, os, platform, sys
+h = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
+b = sys.argv[1]
+files = {p: h(p) for p in ['A/in.phase_a', 'B/in.phase_b'] + [f'{d}/{n}' for d in ('A', 'B') for n in sorted(os.listdir(d)) if n.lower().endswith('.stl')]}
+json.dump(dict(binary_path=os.path.realpath(b), binary_sha256=h(b), files=files, host=platform.node(),
+               sealed_at=datetime.datetime.now().astimezone().isoformat()), open('seal.json', 'w'), indent=1)
+PY
+( cd A && "$BIN" -in in.phase_a > log.lmp 2>&1 ); ra=$?
+rb=-1
+if [ "$ra" -eq 0 ]; then cp -r A/restart_pt B/; ( cd B && "$BIN" -in in.phase_b > log.lmp 2>&1 ); rb=$?; fi
+python3 - "$ra" "$rb" <<'PY'
+import hashlib, json, os, sys
+h = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
+def st(d, rc):
+    lg = os.path.join(d, 'log.lmp'); txt = open(lg, errors='replace').read() if os.path.isfile(lg) else ''
+    pm = os.path.join(d, 'post_mesh')
+    return dict(exit=rc, complete=bool(rc == 0 and 'Total wall time' in txt),
+                dumps={f: h(os.path.join(pm, f)) for f in sorted(os.listdir(pm))} if os.path.isdir(pm) else {})
+json.dump(dict(A=st('A', int(sys.argv[1])), B=st('B', int(sys.argv[2]))), open('run_status.json', 'w'), indent=1)
+PY
+echo "끝 — A exit $ra · B exit $rb.  분석: python3 scripts/mixer_restart_phase_test.py analyze $(pwd) --out <영수증.json>"
 """
 
 
-def gen(deck_path, out):
+def gen(deck_path, out, n1=None):
     text = open(deck_path, encoding='utf-8', errors='replace').read()
-    a, b = gen_decks(text)
     src = os.path.dirname(os.path.abspath(deck_path))
+    sp = deck_walls(text)
+    st = deck_structure(text)
+    nf = drum_facets(src, text)
+    mv = sp['moves']['Drum']
+    if n1 is None:
+        n1 = choose_n1(st, sp['dt'], mv['period'], nf)
+    a, b, _ = gen_decks(text, n1)
     for sub, dk, nm in (('A', a, 'in.phase_a'), ('B', b, 'in.phase_b')):
         d = os.path.join(out, sub)
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, nm), 'w', encoding='utf-8').write(dk)
-        for stl in ('Drum.stl', 'Front.stl', 'Back.stl'):
-            p = os.path.join(src, stl)
-            if os.path.isfile(p):
-                shutil.copyfile(p, os.path.join(d, stl))
+        for m in sp['used']:
+            shutil.copyfile(os.path.join(src, sp['meshes'][m][0]), os.path.join(d, sp['meshes'][m][0]))
     open(os.path.join(out, 'run.sh'), 'w', encoding='utf-8').write(RUN_SH)
+    sym, raw = symmetric_gap_deg(n1, st['rot_start'], sp['dt'], mv['period'], nf)
     json.dump(dict(deck=os.path.abspath(deck_path), deck_sha256=hashlib.sha256(text.encode()).hexdigest(),
-                   n1=N1, n2=N2, every=EVERY), open(os.path.join(out, 'gen.json'), 'w'), indent=1)
-    print(f'→ {out}/A/in.phase_a · B/in.phase_b · run.sh   (다음: WSL 에서 bash {out}/run.sh)')
+                   motion_signature=motion_signature(text, src), n1=n1, run_total=st['run_total'], rot_start=st['rot_start'],
+                   dump_every=st['dump_every'], nfacet=nf, reset_gap_deg=raw, symmetric_gap_deg=sym,
+                   tool_sha256=_sha(os.path.abspath(__file__))), open(os.path.join(out, 'gen.json'), 'w'), indent=1)
+    print(f'→ {out}/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 {n1:,} · 회전 {st["run_total"] - st["rot_start"]:,} step · '
+          f'리셋 대안과 {raw:.3f}° (면 대칭 제외 {sym:.3f}°) · 다음: bash {out}/run.sh)')
 
 
-def _drum_angle(tris, axis, ref_vertex=None):
-    """mesh 덤프 삼각형 → (드럼 표지 꼭짓점의 축 둘레 각, 그 꼭짓점).  드럼 = 법선이 축과 나란하지 않은 첫 삼각형."""
-    a, b, c = tris[:, 0], tris[:, 1], tris[:, 2]
-    nv = np.cross(b - a, c - a)
-    nv = nv / np.maximum(np.linalg.norm(nv, axis=1), 1e-300)[:, None]
-    drum = np.where(np.abs(nv @ axis) < 0.99)[0]
-    if not len(drum):
-        raise ValueError('드럼 삼각형이 없다')
-    v = tris[drum[0], 0]
-    e1 = np.cross(axis, [0.0, 0.0, 1.0])
-    if np.linalg.norm(e1) < 1e-6:
-        e1 = np.cross(axis, [0.0, 1.0, 0.0])
-    e1 = e1 / np.linalg.norm(e1)
-    e2 = np.cross(axis, e1)
-    return float(np.arctan2(v @ e2, v @ e1)), v
+def _dump_steps(d):
+    pm = os.path.join(d, 'post_mesh')
+    out = {}
+    for f in (os.listdir(pm) if os.path.isdir(pm) else []):
+        m = re.fullmatch(r'mesh_(\d+)\.stl', f)
+        if m:
+            out[int(m.group(1))] = os.path.join(pm, f)
+    return out
 
 
-def _wrap(x):
-    return (x + np.pi) % (2 * np.pi) - np.pi
+def _banner(path):
+    if not os.path.isfile(path):
+        return ''
+    with open(path, encoding='utf-8', errors='replace') as fh:
+        for k, line in enumerate(fh):
+            if line.startswith('LIGGGHTS (Version'):
+                return line.strip()
+            if k > 200:
+                break
+    return ''
 
 
-def analyze(d, binary=None, out=None, tol_deg=TOL_DEG):
-    from check_contact_validity import read_stl, deck_walls
-    deck_a = open(os.path.join(d, 'A', 'in.phase_a'), encoding='utf-8').read()
-    spec = deck_walls(deck_a)
-    mv = spec['moves']['Drum']
-    dt, period, axis = spec['dt'], mv['period'], mv['axis']
-    g = json.load(open(os.path.join(d, 'gen.json'))) if os.path.isfile(os.path.join(d, 'gen.json')) else dict(n1=N1, n2=N2)
-    n1 = int(g['n1'])
-    f, sc = spec['meshes']['Drum']
-    T0 = read_stl(os.path.join(d, 'A', f)) * sc
-    th0, _ = _drum_angle(T0, axis)
-    stepsB = sorted(int(x[5:-4]) for x in os.listdir(os.path.join(d, 'B', 'post_mesh')) if x.startswith('mesh_') and x.endswith('.stl'))
-    rows, err, gap, ab = [], 0.0, float('inf'), 0.0
-    for s in stepsB:
-        TB = read_stl(os.path.join(d, 'B', 'post_mesh', f'mesh_{s}.stl'))
-        thB, _ = _drum_angle(TB, axis)
-        obs = _wrap(thB - th0)
-        cont = _wrap(2 * np.pi * s * dt / period)
-        reset = _wrap(2 * np.pi * (s - n1) * dt / period)
-        e = abs(np.degrees(_wrap(obs - cont)))
-        gp = abs(np.degrees(_wrap(cont - reset)))
-        pa = os.path.join(d, 'A', 'post_mesh', f'mesh_{s}.stl')
-        dab = float(np.abs(read_stl(pa) - TB).max()) if os.path.isfile(pa) else float('nan')
-        rows.append(dict(step=s, observed_deg=float(np.degrees(obs)), expected_continuity_deg=float(np.degrees(cont)),
-                         expected_reset_deg=float(np.degrees(reset)), error_deg=float(e), reset_gap_deg=float(gp), ab_max_vertex_diff_m=dab))
-        err, gap = max(err, e), min(gap, gp)
-        if np.isfinite(dab):
-            ab = max(ab, dab)
-    scale = float(np.abs(T0).max())
-    ok = bool(rows) and err <= tol_deg and gap >= RESET_GAP_DEG and ab <= 1e-9 * scale
-    ver = ''
-    for sub in ('A', 'B'):
-        lp = os.path.join(d, sub, 'log.lmp')
-        if os.path.isfile(lp):
-            for line in open(lp, encoding='utf-8', errors='replace'):
-                if 'LIGGGHTS' in line and 'Version' in line:
-                    ver = line.strip()
+def _sig_digits(path):
+    """덤프의 첫 꼭짓점 좌표 문자열의 유효숫자 수 (출력 반올림 → 각 해상도)."""
+    with open(path, encoding='utf-8', errors='replace') as fh:
+        for line in fh:
+            t = line.split()
+            if t[:1] == ['vertex']:
+                mant = re.sub(r'[eE].*$', '', t[1].lstrip('+-')).replace('.', '').lstrip('0')
+                return max(len(mant), 1)
+    return 1
+
+
+def analyze(d, out=None, binary=None):
+    """run.sh 뒤 → 영수증 dict (passed 는 모든 조건이 설 때만 True).  reasons = 실패 사유 목록."""
+    reasons = []
+
+    def need(cond, msg):
+        if not cond:
+            reasons.append(msg)
+        return cond
+    gp = os.path.join(d, 'gen.json')
+    g = json.load(open(gp)) if os.path.isfile(gp) else None
+    seal = json.load(open(os.path.join(d, 'seal.json'))) if os.path.isfile(os.path.join(d, 'seal.json')) else None
+    rs = json.load(open(os.path.join(d, 'run_status.json'))) if os.path.isfile(os.path.join(d, 'run_status.json')) else None
+    need(g is not None, 'gen.json 없음')
+    need(seal is not None, 'seal.json 없음 — 실행 직전 봉인이 없다 (run.sh 로 돌리지 않았다)')
+    need(rs is not None, 'run_status.json 없음 — 실행 결과 기록이 없다')
+    a_deck = open(os.path.join(d, 'A', 'in.phase_a'), encoding='utf-8').read()
+    sp = deck_walls(a_deck)
+    mv = sp['moves']['Drum']
+    dt, period, axis, origin = sp['dt'], mv['period'], mv['axis'], mv['origin']
+    rows, A_st, B_st = [], [], []
+    err_max, resid_max, ab_max, ang_res = 0.0, 0.0, 0.0, None
+    if g is not None and seal is not None and rs is not None:
+        for p, h in seal.get('files', {}).items():
+            need(os.path.isfile(os.path.join(d, p)) and _sha(os.path.join(d, p)) == h, f'봉인 뒤 바뀐 파일: {p}')
+        if binary:
+            need(os.path.isfile(binary) and _sha(binary) == seal.get('binary_sha256'), '지목한 바이너리 sha256 ≠ 봉인 값')
+        for part in ('A', 'B'):
+            s_ = rs.get(part, {})
+            need(s_.get('exit') == 0 and s_.get('complete') is True, f'{part} 실행이 정상 완료가 아니다 (exit {s_.get("exit")} · 완료 {s_.get("complete")})')
+            for f, h in s_.get('dumps', {}).items():
+                pth = os.path.join(d, part, 'post_mesh', f)
+                need(os.path.isfile(pth) and _sha(pth) == h, f'{part} 덤프 {f} 가 실행 뒤 바뀌었거나 없다')
+        ver = _banner(os.path.join(d, 'A', 'log.lmp'))
+        need(ver.startswith('LIGGGHTS') and ver == _banner(os.path.join(d, 'B', 'log.lmp')), 'A/B 로그 배너가 없거나 다르다')
+        de, n1, rt, r0 = g['dump_every'], g['n1'], g['run_total'], g['rot_start']
+        #  기대 step — A: dump 명령이 선 step 이후의 dump 격자 · B: N1 ~ 끝
+        pre = 0
+        for c in a_deck.split('\n'):
+            if c.startswith('dump dmesh'):
+                break
+            if c.startswith('run '):
+                pre += int(c.split()[1])
+        first = -(-pre // de) * de
+        expA = list(range(first, rt + 1, de))
+        expB = list(range(n1, rt + 1, de))
+        hA, hB = _dump_steps(os.path.join(d, 'A')), _dump_steps(os.path.join(d, 'B'))
+        for nm, exp, have in (('A', expA, hA), ('B', expB, hB)):
+            miss, extra = sorted(set(exp) - set(have)), sorted(set(have) - set(exp))
+            need(not miss, f'{nm} 덤프 누락 {len(miss)} 개 (step {miss[:4]}{"…" if len(miss) > 4 else ""})')
+            need(not extra, f'{nm} 덤프 기대 밖 {len(extra)} 개 (step {extra[:4]})')
+        comps = {m: read_stl(os.path.join(d, 'A', sp['meshes'][m][0])) * sp['meshes'][m][1] for m in sp['used']}
+        n_tri = sum(len(v) for v in comps.values())
+        scale = float(max(np.abs(v).max() for v in comps.values()))
+        tol = max(1e-7, 1e-5 * scale)
+        order = None
+        if need(bool(hA) and first in hA and first <= r0, 'A 의 회전 전 첫 덤프가 없다 — 원 기하 대조 불가'):
+            T0 = read_stl(hA[first])
+            for perm in itertools.permutations(sp['used']):
+                E0 = np.vstack([comps[m] for m in perm])
+                if E0.shape == T0.shape and float(np.abs(E0 - T0).max()) <= tol:
+                    order = perm
                     break
-        if ver:
-            break
-    rc = dict(test='restart_phase', passed=ok, period=float(period), axis=[float(x) for x in axis], dt=float(dt), n1=n1,
-              n2=int(g.get('n2', N2)), steps_checked=stepsB, angle_error_deg=float(err), reset_alternative_gap_deg=float(gap) if rows else None,
-              ab_max_vertex_diff_m=float(ab), rows=rows, liggghts_version=ver,
-              binary_path=os.path.abspath(binary) if binary else None,
-              binary_sha256=hashlib.sha256(open(binary, 'rb').read()).hexdigest() if binary and os.path.isfile(binary) else None,
-              deck_source=g.get('deck'), deck_source_sha256=g.get('deck_sha256'),
+            need(order is not None, 'A 첫 덤프가 원 STL (드럼 · 끝판) 과 꼭짓점 순서대로 맞지 않는다 (구성요소 · 순서)')
+            ang_res = float(np.degrees(2 * 10.0 ** (1 - _sig_digits(hA[first]))))
+        if order is not None:
+            k = axis
+            Uall = np.vstack([comps[m] for m in order])
+            nd = len(comps['Drum'])
+            i0 = sum(len(comps[m]) for m in order[:order.index('Drum')])
+            for s in expA:
+                if s not in hA:
+                    continue
+                T = read_stl(hA[s])
+                if not need(T.shape == Uall.shape and np.all(np.isfinite(T)), f'A step {s}: 삼각형 {len(T)} ≠ {n_tri} 또는 비유한'):
+                    continue
+                th = mesh_angle(sp, 'Drum', s)
+                E = (Uall - origin) @ _rot(k, th).T + origin
+                u = E[i0:i0 + nd].reshape(-1, 3) - origin
+                v = T[i0:i0 + nd].reshape(-1, 3) - origin
+                up, vp = u - np.outer(u @ k, k), v - np.outer(v @ k, k)
+                w = np.linalg.norm(up, axis=1) > 0.5 * np.linalg.norm(up, axis=1).max()
+                de_ang = float(np.arctan2((np.cross(up[w], vp[w]) @ k).sum(), (up[w] * vp[w]).sum()))
+                Ef = (Uall - origin) @ _rot(k, th + de_ang).T + origin
+                resid = float(np.abs(Ef - T).max())
+                err = abs(np.degrees(de_ang))
+                A_st.append(s)
+                row = dict(step=s, error_deg=err, resid_m=resid)
+                if s in hB:
+                    TB = read_stl(hB[s])
+                    ab = float(np.abs(TB - T).max()) if TB.shape == T.shape else float('inf')
+                    row['ab_m'] = ab
+                    ab_max = max(ab_max, ab)
+                    B_st.append(s)
+                rows.append(row)
+                if s > r0:
+                    err_max = max(err_max, err)
+                resid_max = max(resid_max, resid)
+            need(resid_max <= tol, f'메시가 원 STL 의 강체 회전이 아니다 (남는 어긋남 최대 {resid_max:.3g} m > {tol:.3g})')
+            need(ab_max <= 1e-12 * scale, f'B (재개) 메시 ≠ A — 꼭짓점 최대 차 {ab_max:.3g} m')
+        need(err_max <= PHASE_EPS_DEG, f'예정각 오차 최대 {err_max:.4g}° > 등록 ε {PHASE_EPS_DEG}°')
+        sym, raw = symmetric_gap_deg(n1, r0, dt, period, g['nfacet'])
+        need(sym >= RESET_GAP_DEG, f'리셋 대안과의 간격 (면 대칭 제외) {sym:.3f}° < {RESET_GAP_DEG}° — 이 N1 으로는 재개 리셋을 못 가린다')
+    else:
+        ver, sym, raw, n1 = '', None, None, None
+    bound = max(err_max, ang_res or 0.0)
+    need(bound <= PHASE_EPS_DEG, f'각 경계 {bound:.4g}° (실측 {err_max:.4g} · 출력 해상도 {ang_res}) > 등록 ε {PHASE_EPS_DEG}°')
+    rc = dict(schema=RECEIPT_SCHEMA, test='restart_phase', passed=not reasons, reasons=reasons,
+              period=float(period), dt=float(dt), axis=[float(x) for x in axis], origin=[float(x) for x in origin],
+              rotation_start_step=g['rot_start'] if g else None, run_total=g['run_total'] if g else None,
+              n1=n1, dump_every=g['dump_every'] if g else None,
+              span_rotation_steps=(g['run_total'] - g['rot_start']) if g else None,
+              steps_checked_A=sorted(A_st), steps_checked_B=sorted(B_st),
+              angle_error_deg=float(err_max), angle_resolution_deg=ang_res, angle_bound_deg=float(bound),
+              reset_alternative_gap_deg=raw, symmetric_gap_deg=sym, nfacet=g['nfacet'] if g else None,
+              ab_max_vertex_diff_m=float(ab_max), residual_max_m=float(resid_max),
+              rows=rows, liggghts_version=ver,
+              binary_sha256=(seal or {}).get('binary_sha256'), seal=seal,
+              run_status={p: {k_: v_ for k_, v_ in (rs or {}).get(p, {}).items() if k_ != 'dumps'} for p in ('A', 'B')} if rs else None,
+              motion_signature=(g or {}).get('motion_signature'), deck_source=(g or {}).get('deck'),
+              deck_source_sha256=(g or {}).get('deck_sha256'), tool_sha256=_sha(os.path.abspath(__file__)),
               date=datetime.date.today().isoformat(),
-              note='바이너리의 성질 (read_restart 뒤에도 메시 회전 위상이 이어진다) 의 실측 — 어느 런의 벽 좌표가 아니다.  바이너리가 바뀌면 다시 만든다.')
-    if not rows:
-        rc['note'] = 'B/post_mesh 에 mesh 덤프가 없다 — run.sh 가 돌지 않았거나 dump mesh/stl 이 거부됐다 (log.lmp 확인)'
+              note='바이너리 + 메시 운동 계약의 성질 (처방 회전은 입자와 무관 → 같은 step 구조면 캠페인 메시와 같은 궤적).  '
+                   '개별 런의 체크포인트 상태 확인이 아니다.  바이너리 · STL · 주기 · dt 가 바뀌면 다시 만든다.')
     if out:
+        os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
         json.dump(rc, open(out, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         print(f'→ {out}')
-    print(f'재개-위상 시험: {"통과" if ok else "실패"} — step {stepsB} · 예정각 오차 최대 {err:.4f}° (허용 {tol_deg}°) · '
-          f'리셋 대안과 간격 최소 {gap if rows else float("nan"):.3f}° (요구 ≥ {RESET_GAP_DEG}°) · A↔B 꼭짓점 차 최대 {ab:.3g} m')
+    print(f'재개-위상 영수증 v1: {"통과" if rc["passed"] else "실패"} — A {len(A_st)} step · B {len(B_st)} step · 예정각 오차 최대 {err_max:.3g}° · '
+          f'각 경계 {bound:.3g}° (등록 ε {PHASE_EPS_DEG}°) · A↔B {ab_max:.3g} m · 리셋 간격 (면 대칭 제외) {sym}°'
+          + ('' if rc['passed'] else '\n   ✗ ' + '\n   ✗ '.join(reasons[:8])))
     return rc
 
 
-def _selftest():
+def _selftest():                                                      # noqa: C901
     import tempfile
     import importlib.util
     ok, fail = 0, []
@@ -209,109 +388,220 @@ def _selftest():
         else:
             fail.append(name)
         print(('  PASS  ' if cond else '  FAIL  ') + name)
-    spec = importlib.util.spec_from_file_location('mmd', os.path.join(_SCR, 'make_mixer_deck.py'))
-    m = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(m)
+    spec_ = importlib.util.spec_from_file_location('mmd', os.path.join(_SCR, 'make_mixer_deck.py'))
+    m = importlib.util.module_from_spec(spec_)
+    spec_.loader.exec_module(m)
+    stl_src = os.path.join(_SCR, '..', 'dem_scripts', 'mixer_20260919')
+    # ── ①–④ 덱 변환 (생성기의 실제 LC 덱) ─────────────────────────────────────────────────────────
     lc = m.deck(m.plan(8000), rpm=60, revolutions=2, seed=32452843, arm='LC')
-    a, b = gen_decks(lc)
+    st = deck_structure(lc)
+    sp = deck_walls(lc)
+    nf = drum_facets(stl_src, lc)
+    n1 = choose_n1(st, sp['dt'], sp['moves']['Drum']['period'], nf)
+    a, b, _ = gen_decks(lc, n1)
     ta = [_tokens(x) for _, x in logical_commands(a)]
     tb = [_tokens(x) for _, x in logical_commands(b)]
-    heads_a = [' '.join(t[:2]) for t in ta if t]
-    heads_b = [' '.join(t[:2]) for t in tb if t]
-    def _has(tt, key):
-        return any(t and t[0] == 'fix' and len(t) > 3 and t[3].startswith(key) for t in tt)
-    chk('① A · B: 삽입 · unfix · 원자 dump · 원 run/restart/write_restart 는 없고 **템플릿 · 분포는 남는다** '
-        '(0 입자 덱은 particletemplate 이 타입을 등록해야 write_restart 의 System init 이 산다 — 09-27 실측 `Atom types must start from 1`)',
-        not any(t and t[0] == 'fix' and any(s in t[3] for s in DROP_FIX) for t in ta + tb)
-        and _has(ta, 'particletemplate/') and _has(ta, 'particledistribution/')
-        and _has(tb, 'particletemplate/') and _has(tb, 'particledistribution/')
-        and not any(h.startswith(('unfix', 'dump dmp', 'restart ')) for h in heads_a)
-        and sum(h.startswith('write_restart') for h in heads_a) == 1 and sum(h.startswith('run ') for h in heads_a) == 2)
-    fa = [t[1] for t in ta if t and t[0] == 'fix']
-    fb = [t[1] for t in tb if t and t[0] == 'fix']
-    chk(f'② A · B 의 fix ID 열이 같다 (재료 · 메시 · 벽 · 회전 · 적분기 그대로) — {fa}',
-        fa == fb and {'Drum', 'Front', 'Back', 'walls', 'mvD', 'mvF', 'mvB', 'mC'} <= set(fa))
-    ib = next(i for i, t in enumerate(tb) if t and t[0] == 'read_restart')
-    chk('③ B: create_box (와 그 region) 자리에 read_restart · write_restart 없음 · run 하나 · dump mesh/stl',
-        'create_box' not in heads_b and not any(h.startswith('region') for h in heads_b)
-        and not any(h.startswith('write_restart') for h in heads_b) and sum(h.startswith('run ') for h in heads_b) == 1
-        and any(t and t[0] == 'dump' and t[3] == 'mesh/stl' for t in tb) and ib < next(i for i, t in enumerate(tb) if t and t[0] == 'fix'))
-    from check_contact_validity import deck_walls, read_stl, _rot
-    sa, s0 = deck_walls(a), deck_walls(lc)
-    chk('④ 덱 A 의 드럼 회전 (주기 · 축) 이 캠페인 덱과 같고 회전 시작 step = 0',
-        abs(sa['moves']['Drum']['period'] - s0['moves']['Drum']['period']) < 1e-12 and sa['moves']['Drum']['start_step'] == 0)
-    #  ⑤ 합성 덤프로 분석기: 연속 (통과) · 리셋 (실패)
-    stl = os.path.join(_SCR, '..', 'dem_scripts', 'mixer_20260919')
+    runs_a = [int(t[1]) for t in ta if t[:1] == ['run']]
+    chk(f'① A: step 구조 그대로 (run 합 {sum(runs_a):,} = 캠페인 {st["run_total"]:,}) · 회전 run 을 N1 {n1:,} 에서 쪼개 write_restart 하나 · '
+        '삽입 · 원자 dump · 주기 restart 없음 · 템플릿 · 분포 남음 · mesh dump 간격 = 캠페인 원자 dump 간격',
+        sum(runs_a) == st['run_total'] and sum(t[:1] == ['write_restart'] for t in ta) == 1
+        and not any(t[:1] == ['fix'] and len(t) > 3 and t[3].startswith('insert/') for t in ta)
+        and not any(t[:1] == ['dump'] and len(t) > 3 and t[3] == 'custom' for t in ta)
+        and not any(t[:1] == ['restart'] for t in ta)
+        and any(t[:1] == ['fix'] and len(t) > 3 and t[3].startswith('particletemplate/') for t in ta)
+        and any(t[:1] == ['dump'] and t[3] == 'mesh/stl' and int(t[4]) == st['dump_every'] for t in ta))
+    fa = [t[1] for t in ta if t[:1] == ['fix'] and not t[3].startswith(('particletemplate', 'particledistribution'))]
+    fb = [t[1] for t in tb if t[:1] == ['fix'] and not t[3].startswith(('particletemplate', 'particledistribution'))]
+    chk('② B = make_mixer_resume.transform (read_restart · RESUME_STEP · `run <끝> upto`) + 템플릿 재선언 · 운동 fix ID 가 A 와 같다',
+        any(t[:1] == ['read_restart'] for t in tb) and any(t[:2] == ['run', str(st['run_total'])] and 'upto' in t for t in tb)
+        and any(t[:1] == ['fix'] and len(t) > 3 and t[3].startswith('particletemplate/') for t in tb)
+        and fa == fb and {'Drum', 'Front', 'Back', 'mvD', 'mvF', 'mvB'} <= set(fa))
+    sym, raw = symmetric_gap_deg(n1, st['rot_start'], sp['dt'], sp['moves']['Drum']['period'], nf)
+    chk(f'③ N1 은 dump 격자 위 · 회전의 ~{N1_FRAC:.0%} · 리셋 대안과 {raw:.2f}° (면 {nf} 개 대칭 제외 {sym:.2f}° ≥ {2 * RESET_GAP_DEG}°)',
+        n1 % st['dump_every'] == 0 and sym >= 2 * RESET_GAP_DEG and nf == 39)
+    with tempfile.TemporaryDirectory() as td:
+        for nm in ('Drum.stl', 'Front.stl', 'Back.stl'):
+            shutil.copyfile(os.path.join(stl_src, nm), os.path.join(td, nm))
+        chk('④ A 덱 · B 덱의 메시 운동 서명 = 캠페인 덱 (STL 내용 · scale · 축 · 주기 · 순서)',
+            motion_signature(a, td) == motion_signature(lc, td) == motion_signature(b, td))
+    # ── ⑤–⑦ 분석기 (작은 캠페인꼴 덱 · 실제 STL · 합성 덤프) ─────────────────────────────────────────
+    small = '\n'.join([
+        'atom_style granular', 'region reg block -0.02 0.02 -0.02 0.02 -0.02 0.02 units box', 'create_box 4 reg', 'timestep 1e-6',
+        'fix m1 all property/global youngsModulus peratomtype 1e7 1e7 1e7 1e7',
+        'fix Drum all mesh/surface file Drum.stl type 4 scale 0.0149277',
+        'fix Front all mesh/surface file Front.stl type 4 scale 0.0149277',
+        'fix Back all mesh/surface file Back.stl type 4 scale 0.0149277',
+        'fix walls all wall/gran model hertz tangential history mesh n_meshes 3 meshes Drum Front Back',
+        'fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4800 radius constant 0.0009',
+        'fix pdd all particledistribution/discrete 32452867 1 pt1 1.0',
+        'region ins cylinder x 0.0 0.0 0.005 -0.001 0.001 units box',
+        'fix ins all insert/pack seed 32452843 distributiontemplate pdd maxattempt 200 insert_every once region ins particles_in_region 10',
+        'shell mkdir post', 'shell mkdir restart',
+        'run 1', 'unfix ins',
+        'dump dmp all custom 500 post/mix_*.liggghts id type x y z radius',
+        'restart 1000 restart/a.bin restart/b.bin',
+        'run 1000', 'run 1000',
+        'fix mvD all move/mesh mesh Drum rotate origin 0 0 0 axis 1. 0. 0. period 0.012',
+        'fix mvF all move/mesh mesh Front rotate origin 0 0 0 axis 1. 0. 0. period 0.012',
+        'fix mvB all move/mesh mesh Back rotate origin 0 0 0 axis 1. 0. 0. period 0.012',
+        'run 12000', ''])
 
-    def _write(path, T):
+    def _write_stl(path, T):
         with open(path, 'w') as fh:
             fh.write('solid m\n')
             for tri in T:
                 fh.write(' facet normal 0 0 0\n  outer loop\n' + ''.join(f'   vertex {v[0]:.12e} {v[1]:.12e} {v[2]:.12e}\n' for v in tri)
                          + '  endloop\n endfacet\n')
             fh.write('endsolid m\n')
-    with tempfile.TemporaryDirectory() as td:
-        for sub in ('A', 'B'):
-            os.makedirs(os.path.join(td, sub, 'post_mesh'))
-            for nm in ('Drum.stl', 'Front.stl', 'Back.stl'):
-                shutil.copyfile(os.path.join(stl, nm), os.path.join(td, sub, nm))
-        open(os.path.join(td, 'A', 'in.phase_a'), 'w').write(a)
-        open(os.path.join(td, 'A', 'log.lmp'), 'w').write('LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled test)\n')
-        json.dump(dict(n1=N1, n2=N2, every=EVERY, deck='x', deck_sha256='0' * 64), open(os.path.join(td, 'gen.json'), 'w'))
-        f, sc = sa['meshes']['Drum']
-        dt, per, ax = sa['dt'], sa['moves']['Drum']['period'], sa['moves']['Drum']['axis']
-        T = np.vstack([read_stl(os.path.join(td, 'A', nm)) * sa['meshes'][k][1] for k, nm in (('Drum', 'Drum.stl'), ('Front', 'Front.stl'), ('Back', 'Back.stl'))])
 
-        def dumps(shift):
-            for s in (N1 + EVERY, N1 + 2 * EVERY):
-                for sub, off in (('A', 0), ('B', shift)):
-                    R = _rot(ax, 2 * np.pi * (s - off) * dt / per)
-                    _write(os.path.join(td, sub, 'post_mesh', f'mesh_{s}.stl'), T @ R.T)
-        bin_ = os.path.join(td, 'lmp_fake')
-        open(bin_, 'wb').write(b'fake')
-        dumps(0)
-        rc = analyze(td, binary=bin_, out=os.path.join(td, 'r.json'))
-        chk(f'⑤ 연속 (재개가 위상을 잇는다) → 통과 · 각 오차 {rc["angle_error_deg"]:.2e}° · 리셋 대안과 {rc["reset_alternative_gap_deg"]:.2f}° 차 · 버전 · sha 기록',
-            rc['passed'] and rc['angle_error_deg'] < 1e-6 and rc['reset_alternative_gap_deg'] > RESET_GAP_DEG
-            and rc['liggghts_version'].startswith('LIGGGHTS') and len(rc['binary_sha256']) == 64)
-        dumps(N1)
-        rc2 = analyze(td, binary=bin_)
-        chk(f'⑤b 리셋 (재개 때 위상이 0 으로) → 실패 · 각 오차 {rc2["angle_error_deg"]:.3f}° ≈ N1 만큼',
-            not rc2['passed'] and abs(rc2['angle_error_deg'] - 360 * N1 * dt / per) < 1e-6 and rc2['ab_max_vertex_diff_m'] > 0)
-        #  ⑥ check_contact_validity 가 이 영수증을 받는다 (주기 · 축 일치) · 주기가 다른 덱은 거부
+    def _fake_run(td, mode='cont', fix=None):
+        """run.sh 흉내 — 봉인 · A/B 덤프 (예정각) · 실행 결과.  mode: cont (재개가 위상을 잇는다) · reset (재개 때 0 으로)."""
+        run_ = os.path.join(td, 'camp')
+        os.makedirs(run_, exist_ok=True)
+        for nm in ('Drum.stl', 'Front.stl', 'Back.stl'):
+            shutil.copyfile(os.path.join(stl_src, nm), os.path.join(run_, nm))
+        open(os.path.join(run_, 'in.mixer'), 'w').write(small)
+        out_ = os.path.join(td, 'phase')
+        gen(os.path.join(run_, 'in.mixer'), out_)
+        g = json.load(open(os.path.join(out_, 'gen.json')))
+        spA = deck_walls(open(os.path.join(out_, 'A', 'in.phase_a')).read())
+        U = np.vstack([read_stl(os.path.join(out_, 'A', f'{nm}.stl')) * 0.0149277 for nm in ('Drum', 'Front', 'Back')])
+        de, n1_, rt = g['dump_every'], g['n1'], g['run_total']
+        first_ = de                                   # dump 명령이 `run 1` 뒤에 서므로 첫 덤프는 다음 격자 step (실제 LIGGGHTS 와 같게)
+        for sub, steps in (('A', range(first_, rt + 1, de)), ('B', range(n1_, rt + 1, de))):
+            pm = os.path.join(out_, sub, 'post_mesh')
+            os.makedirs(pm, exist_ok=True)
+            for s in steps:
+                th = mesh_angle(spA, 'Drum', s)
+                if sub == 'B' and mode == 'reset':
+                    th = 2 * np.pi * (s - n1_) * spA['dt'] / spA['moves']['Drum']['period']
+                _write_stl(os.path.join(pm, f'mesh_{s}.stl'), U @ _rot(np.array([1.0, 0, 0]), th).T)
+        for sub in ('A', 'B'):
+            open(os.path.join(out_, sub, 'log.lmp'), 'w').write('LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled test)\n…\nTotal wall time: 0:00:01\n')
+        binp = os.path.join(td, 'lmp_fake')
+        open(binp, 'wb').write(b'fake-binary')
+        files = {p: _sha(os.path.join(out_, p)) for p in ['A/in.phase_a', 'B/in.phase_b']
+                 + [f'{s_}/{n}' for s_ in ('A', 'B') for n in ('Drum.stl', 'Front.stl', 'Back.stl')]}
+        json.dump(dict(binary_path=binp, binary_sha256=_sha(binp), files=files), open(os.path.join(out_, 'seal.json'), 'w'))
+        rsd = {sub: dict(exit=0, complete=True, dumps={f: _sha(os.path.join(out_, sub, 'post_mesh', f))
+                                                        for f in sorted(os.listdir(os.path.join(out_, sub, 'post_mesh')))}) for sub in ('A', 'B')}
+        json.dump(rsd, open(os.path.join(out_, 'run_status.json'), 'w'))
+        if fix:
+            fix(out_, run_)
+        return out_, run_, binp
+    with tempfile.TemporaryDirectory() as td:
+        out_, run_, binp = _fake_run(td)
+        rc = analyze(out_, out=os.path.join(td, 'r.json'), binary=binp)
+        chk(f'⑤ 연속 · 완결 · 봉인 일치 → 통과 (A {len(rc["steps_checked_A"])} step · B {len(rc["steps_checked_B"])} step · 오차 {rc["angle_error_deg"]:.1e}° · '
+            f'해상도 {rc["angle_resolution_deg"]:.1e}° · 리셋 간격 {rc["symmetric_gap_deg"]:.2f}°)',
+            rc['passed'] and rc['schema'] == RECEIPT_SCHEMA and rc['angle_bound_deg'] <= 1e-6 and len(rc['steps_checked_B']) >= 5)
         from check_contact_validity import load_phase_receipt
-        r_ok = load_phase_receipt(os.path.join(td, 'r.json'), s0)
-        s_bad = dict(s0)
-        s_bad['moves'] = dict(s0['moves'])
-        s_bad['moves']['Drum'] = dict(s0['moves']['Drum'], period=s0['moves']['Drum']['period'] * 2)
+        spc = deck_walls(small)
+        open(os.path.join(run_, 'log.lmp'), 'w').write('LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled test)\n')
+        need = list(range(2000, 14001, 500))
+        r_ok = load_phase_receipt(os.path.join(td, 'r.json'), spc, run_dir=run_, deck_text=small, need_steps=need)
+        bad = small.replace('period 0.012', 'period 0.024')
         try:
-            load_phase_receipt(os.path.join(td, 'r.json'), s_bad)
+            load_phase_receipt(os.path.join(td, 'r.json'), deck_walls(bad), run_dir=run_, deck_text=bad, need_steps=need)
             rej = False
         except ValueError:
             rej = True
-        chk('⑥ 영수증을 검사기가 받고 (같은 주기 · 축), 주기가 다른 덱에는 거부한다', r_ok['passed'] and rej)
+        chk('⑥ 검사기가 이 영수증을 받는다 (주기 · dt · 축 · 운동 서명 · 배너 · 판정 step ⊂ 실측 step) · 주기가 다른 덱에는 거부',
+            r_ok['passed'] is True and rej)
+    #  ⑦ HBR3-01 반례 — 필수 대조 · 재개 뒤 표본이 없거나 · 봉인 · 실행 기록이 어긋나면 **실패**
+    def _restatus(o):
+        """변이를 '실행이 실제로 그렇게 끝난' 경우로 — run_status 의 덤프 목록 · sha 를 지금 파일로 다시 적는다 (위조 검사가 아니라
+        누락 · 형상 검사가 걸리게)."""
+        rs = json.load(open(os.path.join(o, 'run_status.json')))
+        for sub in ('A', 'B'):
+            pm = os.path.join(o, sub, 'post_mesh')
+            rs[sub]['dumps'] = {f: _sha(os.path.join(pm, f)) for f in sorted(os.listdir(pm))}
+        json.dump(rs, open(os.path.join(o, 'run_status.json'), 'w'))
+
+    def _rm_all_A(o, r):
+        for f in os.listdir(os.path.join(o, 'A', 'post_mesh')):
+            os.remove(os.path.join(o, 'A', 'post_mesh', f))
+        _restatus(o)
+
+    def _one_B(o, r):
+        fs = sorted(os.listdir(os.path.join(o, 'B', 'post_mesh')))
+        for f in fs[1:]:
+            os.remove(os.path.join(o, 'B', 'post_mesh', f))
+        _rm_all_A(o, r)
+
+    def _only0(o, r):
+        f0 = min(os.listdir(os.path.join(o, 'A', 'post_mesh')), key=lambda f: int(re.sub(r'\D', '', f)))
+        for sub in ('A', 'B'):
+            for f in os.listdir(os.path.join(o, sub, 'post_mesh')):
+                if f != f0:
+                    os.remove(os.path.join(o, sub, 'post_mesh', f))
+        shutil.copyfile(os.path.join(o, 'A', 'post_mesh', f0), os.path.join(o, 'B', 'post_mesh', f0))
+        _restatus(o)
+
+    def _extra(o, r):
+        f0 = sorted(os.listdir(os.path.join(o, 'A', 'post_mesh')))[0]
+        shutil.copyfile(os.path.join(o, 'A', 'post_mesh', f0), os.path.join(o, 'A', 'post_mesh', 'mesh_7301.stl'))
+
+    def _no_seal(o, r):
+        os.remove(os.path.join(o, 'seal.json'))
+
+    def _exit1(o, r):
+        rs = json.load(open(os.path.join(o, 'run_status.json')))
+        rs['B']['exit'] = 1
+        json.dump(rs, open(os.path.join(o, 'run_status.json'), 'w'))
+
+    def _incomplete(o, r):
+        rs = json.load(open(os.path.join(o, 'run_status.json')))
+        rs['A']['complete'] = False
+        json.dump(rs, open(os.path.join(o, 'run_status.json'), 'w'))
+
+    def _deck_edit(o, r):
+        open(os.path.join(o, 'B', 'in.phase_b'), 'a').write('# 봉인 뒤 수정\n')
+
+    def _dump_edit(o, r):
+        f = sorted(os.listdir(os.path.join(o, 'B', 'post_mesh')))[-1]
+        open(os.path.join(o, 'B', 'post_mesh', f), 'a').write('\n')
+
+    def _drop_cap(o, r):
+        for sub in ('A', 'B'):
+            pm = os.path.join(o, sub, 'post_mesh')
+            for f in os.listdir(pm):
+                T = read_stl(os.path.join(pm, f))[:78]
+                _write_stl(os.path.join(pm, f), T)
+        _restatus(o)
+    cases = [('A 대조 덤프 0 개 (Codex receipt_missing_all_A)', 'cont', _rm_all_A), ('B 한 장 · A 0 개', 'cont', _one_B),
+             ('A · B 모두 회전 전 첫 덤프 한 장 (재개 전 정적 형상뿐 · Codex receipt_only_step0)', 'cont', _only0), ('기대 밖 덤프 (step 7301)', 'cont', _extra),
+             ('재개 때 위상이 0 으로 (리셋)', 'reset', None), ('봉인 없음', 'cont', _no_seal), ('B exit 1', 'cont', _exit1),
+             ('A 완료 표지 없음', 'cont', _incomplete), ('봉인 뒤 덱 수정', 'cont', _deck_edit), ('실행 뒤 덤프 수정', 'cont', _dump_edit),
+             ('끝판 빠진 메시 (드럼 78 삼각형만)', 'cont', _drop_cap)]
+    for name, mode, f in cases:
+        with tempfile.TemporaryDirectory() as td:
+            out_, run_, binp = _fake_run(td, mode=mode, fix=f)
+            rc = analyze(out_)
+            chk(f'⑦ 변이 — {name} → 실패 ({rc["reasons"][:1]})', rc['passed'] is False and rc['reasons'])
     print(f'\nmixer_restart_phase_test selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
 
 
 def main():
-    ap = argparse.ArgumentParser(description='재개-위상 영수증 (Codex HBR2-01 · K2) — 덱 생성 · 분석')
+    ap = argparse.ArgumentParser(description='재개-위상 영수증 v1 (Codex 3차 HBR3-01 · 02) — 덱 생성 · 분석')
     sub = ap.add_subparsers(dest='cmd')
-    g = sub.add_parser('gen', help='캠페인 덱 → 입자 없는 A/B 덱 + run.sh')
+    g = sub.add_parser('gen', help='캠페인 덱 → 입자 없는 A/B 덱 (step 구조 그대로) + run.sh (봉인) + gen.json')
     g.add_argument('--deck', required=True, help='실행 덱 (dem_scripts/mixer_20260921/runs/<팔>_s<시드>/in.mixer) — STL 은 옆에서 복사')
     g.add_argument('--out', required=True)
-    an = sub.add_parser('analyze', help='run.sh 뒤: mesh 덤프 대조 → 영수증 JSON')
+    g.add_argument('--n1', type=int, default=None, help='체크포인트 step (기본: 회전 60 %% 근처 dump 격자 · 리셋 구별 가능)')
+    an = sub.add_parser('analyze', help='run.sh 뒤: 봉인 · 실행 결과 · 전 step 메시 대조 → 영수증 JSON')
     an.add_argument('dir')
-    an.add_argument('--binary', default=None, help='돌린 lmp 바이너리 경로 (sha256 을 영수증에)')
+    an.add_argument('--binary', default=None, help='(선택) 지목한 바이너리의 sha256 이 봉인 값과 같은지도 본다')
     an.add_argument('--out', default=None)
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
     if a.cmd == 'gen':
-        gen(a.deck, a.out)
+        gen(a.deck, a.out, a.n1)
     elif a.cmd == 'analyze':
-        rc = analyze(a.dir, a.binary, a.out)
+        rc = analyze(a.dir, a.out, a.binary)
         raise SystemExit(0 if rc['passed'] else 1)
     else:
         ap.error('gen | analyze | --selftest')
