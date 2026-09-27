@@ -3,14 +3,14 @@
   G74-1  null 캐시 계획은 첫 시작이 캐시를 저장하는 순간 재개가 성립하지 않는다.
          → **고정 캐시 SHA(hex64) 계획만** 진입을 허용한다. 계획 도구(`plan_leg.py`)와
            실제 진입(`assert_planned_leg` — precheck·발급·finalize 가 전부 지난다)이
-           **같은 검사**를 한다. live 축을 claim 값으로 덮어 비교를 없애지 않는다.
+           **같은 정책**을 편다 (75차 정정: planner 가 같은 함수를 부르는 구현은 아니다). live 축을 claim 값으로 덮어 비교를 없애지 않는다.
   G74-3  E9 의 실행 명부와 투영 계약이 충돌한다 (완료된 prospective 다리가 cohort `legs`
          에 들어가면 투영·주장 lint 가 그 다리의 투영을 요구한다).
          → 실행 이력(`executed_legs`)과 투영 membership(`legs`)을 **분리**하고, 다리마다
            `claim_scope ∈ {active_claims, no_active_claim}` 을 **명시**한다 (누락·모름·모순 =
            거부). `no_active_claim` 은 claim_roles 를 가질 수 없고 투영 명부에 있을 수 없으며
            full_bundle 증거 계약은 그대로 진다. 생산(plan → finalize)과 소비(planned_index ·
-           row_projection · docs-lint)가 **같은 분류**를 읽는다. 리뷰어의 여섯 회귀 경계.
+           docs-lint)가 **같은 분류**를 읽는다 (75차 정정: `row_projection.py` 는 새 필드를 읽지 않는다 — 06d). 리뷰어의 여섯 회귀 경계.
   G74-4  `archive_results.sh <run>` 이 `artifact_index.yaml` 을 그 묶음만으로 덮어써 v4
          네 항목을 지웠다. → 기존 index 를 **먼저** 읽어(불명확하면 중지) 검증된 entry 만
          병합하고, 같은 이름·다른 identity 는 명시적 거부, 실패 시 index 불변, 원자 교체.
@@ -408,6 +408,8 @@ def _index(dest: Path) -> dict:
 
 
 def test_g74_4_01_a_single_run_archive_keeps_every_other_index_entry_byte_for_byte(tmp_path):
+    """이름은 유지한다(변이 EXPECT node id). 보장하는 것은 **파싱된 entry 값** 보존이다 — `safe_load/dump`
+    재직렬화라 raw 바이트·주석·인용 형식은 보존하지 않는다 (75차 문구 정정)."""
     d, dest, run = _archive_harness(tmp_path)
     _seed(dest, _FAKE)
     r = run()
