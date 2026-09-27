@@ -1006,8 +1006,10 @@
         "ja": "黒潮にのって、高知へ",
         "ko": "구로시오 타고 고치로"
       },
-      "art": "likeness",
-      "url": "https://www.pref.kochi.lg.jp/kuroshiokun/"
+      "art": "official",
+      "url": "https://www.pref.kochi.lg.jp/kuroshiokun/",
+      "image": "mascots/kuroshiokun.webp",
+      "credit": "©高知県"
     },
     {
       "id": "katsuoningen",
@@ -1040,14 +1042,16 @@
       },
       "org": "福岡県",
       "about": {
-        "ja": "とんこつラーメンのどんぶりが目印の豚。福岡県広報部長",
-        "ko": "돈코츠 라멘 그릇이 표식인 돼지. 후쿠오카현 홍보부장"
+        "ja": "福岡名物とんこつラーメンのどんぶりに、ナルトのしっぽ。環境の日（6月5日）生まれ、2013年から福岡県広報部長。好物はあまおうと明太子",
+        "ko": "후쿠오카 명물 돈코츠 라멘 그릇에 나루토(어묵) 꼬리. 환경의 날(6월 5일) 생일, 2013년부터 후쿠오카현 홍보부장. 좋아하는 건 아마오우 딸기와 명란"
       },
       "line": {
         "ja": "とんこつラーメン、食べていかんね",
         "ko": "돈코츠 라멘 먹고 가"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/ecoton.webp",
+      "credit": "©福岡県"
     },
     {
       "id": "tsubozamurai",
@@ -1067,27 +1071,31 @@
         "ja": "拙者、壺侍でござる",
         "ko": "소생, 쓰보자무라이라 하오"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/tsubozamurai.webp",
+      "credit": "©佐賀県"
     },
     {
       "id": "ganbakun",
       "prefecture": "nagasaki",
       "kind": "official",
       "name": {
-        "ja": "がんばくん",
-        "kana": "がんばくん",
-        "ko": "간바군"
+        "ja": "がんばくん＆らんばちゃん",
+        "kana": "がんばくんとらんばちゃん",
+        "ko": "간바군&란바짱"
       },
       "org": "長崎県",
       "about": {
-        "ja": "長崎がんばらんば国体のマスコットから県のキャラクターに（相棒はらんばちゃん）",
-        "ko": "나가사키 간바란바 국체 마스코트에서 현 캐릭터로(짝꿍은 란바짱)"
+        "ja": "県の鳥オシドリがモチーフの幼なじみ。長崎がんばらんば国体（2014）のマスコットから「長崎がんばらんば隊」の隊長と副隊長に。「がんばらんば」は長崎弁で「がんばらなければ」",
+        "ko": "현의 새 원앙이 모티브인 소꿉친구 둘. 2014 나가사키 국체 마스코트에서 '나가사키 간바란바대' 대장·부대장으로. '간바란바'는 나가사키 사투리로 '힘내야지'"
       },
       "line": {
         "ja": "がんばらんば！",
         "ko": "간바란바!"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/ganbakun.webp",
+      "credit": "©長崎県"
     },
     {
       "id": "kumamon",
@@ -1107,9 +1115,10 @@
         "ja": "くまモンだモン！",
         "ko": "쿠마몬이다몬!"
       },
-      "art": "likeness",
+      "art": "official",
       "url": "https://kumamon-land.jp/",
-      "credit": "©2010熊本県くまモン"
+      "credit": "©2010熊本県くまモン",
+      "image": "mascots/kumamon.webp"
     },
     {
       "id": "mejiron",
