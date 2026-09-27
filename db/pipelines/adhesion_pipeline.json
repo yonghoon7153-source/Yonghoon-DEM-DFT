@@ -1,7 +1,7 @@
 {
  "schema": "adhesion_pipeline/1",
  "title": "점착 파이프라인 — DFT → DEM (→ COMSOL)",
- "updated": "2026-09-26",
+ "updated": "2026-09-27",
  "purpose": "Ag–C 인터레이어·SE 계면의 점착일(W)을 DFT 에서 재서 DEM(JKR 접촉)으로 넘기는 흐름을 **한 곳에 누적**한다. 새 사실은 `log` 에 한 줄씩 덧붙이고, 상태가 바뀌면 해당 항목만 고친다.",
  "⛔_이_원장이_하지_않는_것": [
   "판정 전 물리값(W·γ)은 싣지 않는다 — 결과는 판정이 끝난 뒤 기록 파일에 따로 남기고 여기서는 경로만 건다 (인용 방지).",
@@ -458,6 +458,34 @@
     "db/properties/wad_aprime_s3v2_seal_2026_09_26.json",
     "db/inputs/wad_aprime_s3v2_2026_09_26/s3_manifest.json"
    ]
+  },
+  {
+   "id": "aprime_v4_gpu_trial_gabia_2026_09_27",
+   "system": "aprime_s4",
+   "machine": "gabia A6000 pw.x GPU · tmux v4trial · run_sese_gpu.sh @ac99c7c45 · KILL 44000 MiB",
+   "check": "입력 해시(jobs.json d6415d75…) · ⑨ PP 6종 · ⑪ kind↔calc · DRY_RUN ⛔ 0 · 탄성 러너 동결 뒤 GPU 1 MiB 에서 시작",
+   "started": "2026-09-27 10:31",
+   "vram_total_mib": 49140,
+   "jobs": [
+    {
+     "dir": "trial_V4_far_e52_m2",
+     "state": "done",
+     "wall_s": 519,
+     "peak_vram_mib": 39230
+    },
+    {
+     "dir": "trial_V4_G3c2_far_i_e52_m2",
+     "state": "done",
+     "wall_s": 503,
+     "peak_vram_mib": 41518
+    }
+   ],
+   "verdict": "✅ 두 셀 합격 (피크 ≤ 44,000 MiB · 결과 전 규칙) → V4_s_outer_A 본 잡 9 개 실행 허가",
+   "values_policy": "자원 판정용 시험 — 에너지는 어디에도 쓰지 않는다 (electron_maxstep 2 로 자른 SCF)",
+   "records": [
+    "db/raw/wad_aprime_v4_gpu_trial_2026_09_26/trial_result_2026_09_27.json",
+    "db/inputs/wad_aprime_v4_gpu_trial_2026_09_26/jobs.json"
+   ]
   }
  ],
  "reviews": [
@@ -821,6 +849,11 @@
    "date": "2026-09-26",
    "stage": "dem",
    "text": "**DEM 6차 확인 수령** (회신 6 '소모델 없음' 발송 뒤): SE 쌍(질문 ①) 보류 유지 · DEM 박리는 Ag–C 두 값(라벨 그대로 · `wad_aprime_pilot_result_v2_2026_09_26.json`)으로 질문 ② 기하(Ag–C ↔ VGCF 호스트)부터 설계 · C–C 쌍은 DEM 쪽 문헌 카드(우리 값 아님) · 벤젠 조각(V4) 결과는 참고로 수령. **열린 질문 0** — 이 캠페인에서 DEM 에 남은 인계 = V4_s_outer_A 9 잡(gabia · 탄성 뒤 GPU 시험 · CPU 추정 33.6/35.4 GB @52 Ry) 의 ΔE_frag(eV/조각 · 참고 · J/m² 환산 금지) 하나. SE 쌍 재개는 자원이 바뀔 때 새 사전등록으로만 (조용히 다시 열지 않는다)."
+  },
+  {
+   "date": "2026-09-27",
+   "stage": "dft",
+   "text": "**V4 GPU 시험 2/2 합격** (gabia · 탄성 23_p 를 BFGS 67 에서 EXIT 로 세운 뒤): far 셀 피크 39,230 MiB · G3 c+2 셀 41,518 MiB (≤ 44,000 · CPU 추정의 1.14–1.15 배) → V4_s_outer_A 본 잡 9 개 허가. 첫 반복 오차가 컸던 원인은 Li PP 원자밀도 부족(Li 당 0.4508 e · modelc_2x 와 일치)의 균일 재규격화 — 설정 오류 아님. 기록 `db/raw/wad_aprime_v4_gpu_trial_2026_09_26/trial_result_2026_09_27.json`."
   }
  ],
  "related_decisions": [

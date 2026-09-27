@@ -1,0 +1,107 @@
+{
+ "schema": "resource_probe_gpu/v1",
+ "date": "2026-09-27",
+ "stage": "A′ S4 V4_s_outer_A — 카드 ③ 자원 프로브의 GPU 단계 (scf · electron_maxstep 2 · 에너지 사용 금지)",
+ "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json (자원.프로브 · ③_CPU/GPU_자원_프로브 · 장치별_한도.gabia)",
+ "inputs": {
+  "package": "db/inputs/wad_aprime_v4_gpu_trial_2026_09_26",
+  "jobs_json_sha256": "d6415d75dabbb37befb335559c067f6b684ebe2dfca87fdecb66460ec36fe9e6",
+  "source": "db/inputs/wad_aprime_s3v2_2026_09_26/qe (V4_s_outer_A_far · V4_s_outer_A_G3_c2_far_i — prefix·electron_maxstep 만 다름)"
+ },
+ "machine": "gabia A6000 49,140 MiB · QE 7.4.1 GPU (/data/apps/qe-7.4.1-gpu/bin/pw.x · hpcx mpirun · OMP 1) · run_sese_gpu.sh @ac99c7c45 · KILL 44,000 · START 2,048 · NP 1 · UMA 없음 · 탄성 러너 동결(STOP)",
+ "rule_결과_전": {
+  "판정량": "러너 jobs_run.tsv 의 peak_total_MiB (nvidia-smi 합계 · 2 s 표본 · GPU 에 다른 프로세스 없음이 전제 — 러너 ④ 가 막는다)",
+  "PASS": "러너 완료=1 (probe 규칙: 마지막 실행에 JOB DONE + 'convergence NOT achieved|has been achieved' + 'total energy') · killed 0 · peak_total_MiB ≤ 44,000 → 그 셀 종류의 본 잡 실행 허가. rc 는 기록만 하고 판정에 쓰지 않는다 — electron_maxstep 2 로 자른 SCF 는 QE 가 exit 2 (convergence NOT achieved) 로 끝나는 게 정상이다",
+  "FAIL": "killed 1 (가드) 또는 peak > 44,000 → 그 셀 종류 RESOURCE_BLOCKED (실측). far/bound 셀이 FAIL 이면 V4 군 전체 없음 (DEM 벤젠 조각 = '없음' 통지) · G3 셀만 FAIL 이면 본 잡 6 실행 + G3 '끝점 미검증(RESOURCE_BLOCKED)'",
+  "예측": "CPU 추정 × 1.2–1.45 (SE|SE 4층 선례) = far 40.3–48.7 GB · G3c2 42.5–51.3 GB → 한도(44,000 MiB ≈ 46.1 GB)에 걸릴 수 있다 — 시험이 정한다",
+  "금지": "시험 에너지 사용 금지 · 원출력 보존 · FAIL 이어도 본 입력(52 Ry · k · diagonalization · mixing)을 조용히 바꾸지 않는다 — 바꾸려면 개정 3 (1저자 비준) 을 먼저 기록한다",
+  "실행": "gabia · 탄성 정지 뒤(GPU pw.x 둘 금지) · UMA 없음 · KILL_MIB=44000 · START_MAX_MIB 기본 40960 · NP 1 · pseudo_dir 입력값 /data/work/pseudo (⑨ 해시 대조)"
+ },
+ "results": {
+  "trial_V4_far_e52_m2": {
+   "cell_class": "far/bound 셀 (bound · far · G4 k1 · s05 6 잡이 같은 셀)",
+   "start": "2026-09-27 10:31:39",
+   "wall_s": 519,
+   "rc": 0,
+   "done": 1,
+   "killed": 0,
+   "peak_total_MiB": 39230,
+   "peak_self_MiB": 39212,
+   "host_avail_min_MiB": 49490,
+   "cpu_estimate_GB_pwout": 33.55,
+   "peak_over_cpu_estimate": 1.142,
+   "margin_to_kill_MiB": 4770,
+   "verdict": "PASS"
+  },
+  "trial_V4_G3c2_far_i_e52_m2": {
+   "cell_class": "G3 c+2 Å 셀 (G3_c2 bound · far_i · far_ii 3 잡)",
+   "start": "2026-09-27 10:40:19",
+   "wall_s": 503,
+   "rc": 0,
+   "done": 1,
+   "killed": 0,
+   "peak_total_MiB": 41518,
+   "peak_self_MiB": 41498,
+   "host_avail_min_MiB": null,
+   "host_avail_min_note": "붙여받은 watch 출력에서 잘림 — gabia jobs_run.tsv 원본에 있다 (판정 무관)",
+   "cpu_estimate_GB_pwout": 35.36,
+   "peak_over_cpu_estimate": 1.147,
+   "margin_to_kill_MiB": 2482,
+   "verdict": "PASS"
+  }
+ },
+ "verdict": "두 셀 모두 PASS → V4_s_outer_A 본 잡 9 개 실행 허가 (카드: 'GPU 피크가 한도 안 = 본 실행 허가') · e70 2 잡은 이미 RESOURCE_BLOCKED (CPU 52.4 GB)",
+ "⚠_rc": "잘린 SCF 의 rc 가 gabia 에서는 0 이었다 (내가 '2 가 정상' 이라 예고했던 것은 틀렸다) — 규칙에서 rc 를 뺀 결과 전 정정(jobs.json 정정_결과_전)이 맞았다",
+ "⚠_힘_단계_미측정": "시험은 SCF 2 반복에서 끊어 힘 계산 단계의 메모리를 재지 않았다. SE|SE 4층 V100 선례: scf 32,038 → relax 32,378 MiB (+1.1 %). G3 셀에 같은 비율이면 ~41,970 MiB < 44,000. 본 잡도 같은 가드 아래서 돈다 (넘으면 그 잡만 멈추고 RESOURCE_BLOCKED 실측)",
+ "GPU_피크_대_CPU_추정": "이 계·A6000 에서 1.14–1.15 (SE|SE 선례 1.2–1.45 보다 낮다) — 다른 계에 옮겨 쓰지 않는다",
+ "Li_PP_출발전하_진단": {
+  "관측": "trial far 첫 반복 estimated scf accuracy 16,527 Ry (V2 Ag|그래핀 같은 경로 ~1.5 Ry) · 출발 쌍극자 −118.37 D · Potential amp 3.1539 Ry",
+  "V4_far": {
+   "starting_charge": 510.5582,
+   "n_electrons": 534,
+   "deficit": 23.4418,
+   "composition": {
+    "Li": 52,
+    "P": 8,
+    "S": 42,
+    "Cl": 8,
+    "C": 6,
+    "H": 6
+   },
+   "deficit_per_Li": 0.4508
+  },
+  "modelc_2x_V0_relax": {
+   "starting_charge": 563.6566,
+   "n_electrons": 588,
+   "deficit": 24.3434,
+   "composition": {
+    "Li": 54,
+    "P": 10,
+    "S": 44,
+    "Cl": 16
+   },
+   "deficit_per_Li": 0.4508,
+   "source": "gabia /data/work/runs/elastic_modelc_2x/V0_relax.out (수렴한 탄성 V0)"
+  },
+  "읽기": "Li 하나당 부족분이 두 계에서 0.4508 로 같다 (P·S·Cl 비율이 서로 달라 다른 원소 몫이면 같아질 수 없다) ⇒ 부족분은 전부 li_pbe_v1.4.uspp 의 원자밀도(PP_RHOATOM ≈ 2.55 e · 부분 이온화 기준 추정) 몫이다. QE 가 출발 밀도를 균일하게 키우면서(×1.046) Li 없는 벤젠에 ~1.4 e 가 더 얹혀 인공 쌍극자가 생긴다 (어림 1.4 e × ~15 Å ≈ 100 D).",
+  "감쇠": {
+   "dipole_D": [
+    -118.373,
+    26.3935,
+    7.5222
+   ],
+   "potential_amp_Ry": [
+    3.1539,
+    -0.7032,
+    -0.2004
+   ],
+   "accuracy_Ry": [
+    16527.09621976,
+    1032.40603087
+   ]
+  },
+  "결론": "설정 오류 아님 (쌍극자 구간이 원자에 걸렸던 V2 실패와 달리 반복마다 감쇠) · 본 잡은 SCF 반복이 조금 더 들 뿐 · 우리 LPSCl 계산(탄성·SE|SE)이 모두 같은 출발을 겪고 수렴했다",
+  "한계": "PP 파일의 PP_RHOATOM 을 직접 적분하지 못했다 (이 환경 사본은 더미) — 두 계의 산술 일치로만 확정"
+ },
+ "⛔": "시험 에너지 사용 금지 (결과표 · W · 게이트 조정 금지) · 원출력은 gabia /data/work/runs/wad_aprime_v4_trial_2026_09_26 에 보존"
+}
