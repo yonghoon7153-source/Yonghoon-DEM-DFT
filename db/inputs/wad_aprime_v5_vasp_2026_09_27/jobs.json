@@ -1,13 +1,13 @@
 {
- "schema": "aprime_v5_vasp_package/v1",
+ "schema": "aprime_v5_vasp_package/v2",
  "date": "2026-09-27",
- "status": "준비본 (실행 미정 · Codex CE 리뷰 전 · 결정 proposed)",
+ "status": "준비본 v2 (Codex CE NO-GO 반영 · 재리뷰 전 · 결정 proposed · 실행 미정)",
  "source_package": "db/inputs/wad_aprime_s3v2_2026_09_26",
  "source_s3_manifest_sha256": "069894c62daa1bf863cebba3533fb0c79e70fd16a9b4d77cf7ea5ac41512246d",
  "source_seal": "db/properties/wad_aprime_s3v2_seal_2026_09_26.json",
  "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json",
  "amendment": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json",
- "tool_sha256": "7ed62ccd527f75af2949b9f3bd098f06b3c1580a2b30f8e7b54a2a4dd72fb818",
+ "tool_sha256": "3bc7cde52c5529cff65d80ac5678a48d484925a036aa6dce224199e59e925dd0",
  "settings": {
   "potcar": {
    "Li": "Li_sv",
@@ -15,6 +15,14 @@
    "S": "S",
    "Cl": "Cl",
    "Ag": "Ag"
+  },
+  "pp_set": "PBE_54",
+  "pp_expected_titel": {
+   "Li": "PAW_PBE Li_sv 10Sep2004",
+   "P": "PAW_PBE P 06Sep2000",
+   "S": "PAW_PBE S 06Sep2000",
+   "Cl": "PAW_PBE Cl 06Sep2000",
+   "Ag": "PAW_PBE Ag 02Apr2005"
   },
   "zval": {
    "Li": 3.0,
@@ -32,11 +40,18 @@
    "a1": 0.4289,
    "a2": 4.4407
   },
-  "perf_tags_allowed": [
+  "d3_cutoffs_A": {
+   "VDW_RADIUS": 50.2,
+   "VDW_CNRADIUS": 21.17
+  },
+  "d3_ref": "simple-dftd3 2체 · VASP 절단에 맞춤",
+  "perf_tags_int": [
    "NCORE",
    "NPAR",
    "KPAR",
-   "NSIM",
+   "NSIM"
+  ],
+  "perf_tags_bool": [
    "LPLANE",
    "LSCALU",
    "LSCALAPACK"
@@ -46,7 +61,28 @@
    "BMIX": "0.01",
    "NELM": "300"
   },
-  "d3_rel_tol": 0.01
+  "r1_eligible": [
+   "EXECUTION_FAILED",
+   "NOT_TERMINATED",
+   "SCF_NOT_CONVERGED"
+  ],
+  "d3_gross_rel_tol": 0.01,
+  "d3_pair_budget_J_m2": 0.005,
+  "d3_g3_budget_J_m2": 0.001,
+  "uma_required": {
+   "model": "uma-s-1p1",
+   "task": "omat",
+   "inference_settings": "default",
+   "checkpoint_sha256": "07068e9c76702ca173d13155095f2117c1b327ec228557e64cd2709c777b824a",
+   "fairchem_allowed": [
+    "2.19.0",
+    "2.21.0"
+   ]
+  },
+  "pilot_jobs": [
+   "V5_s_outer_A_bound",
+   "V5_s_outer_A_far"
+  ]
  },
  "G5_samples": {
   "①": [
@@ -85,8 +121,10 @@
   "nel_min": 1356.0,
   "nel_max": 1452.0,
   "nb_max": 826,
-  "npw_max": 243934,
-  "wfc_max": 16.1
+  "npw_520": 185434,
+  "npw_650": 243934,
+  "wfc_max": 16.1,
+  "max_runs": 36
  },
  "jobs": [
   {
@@ -104,12 +142,26 @@
     "Ag": 84
    },
    "nelect_expected": 1356.0,
-   "potcar_titel_expected": [
-    "PAW_PBE Li_sv",
-    "PAW_PBE P",
-    "PAW_PBE S",
-    "PAW_PBE Cl",
-    "PAW_PBE Ag"
+   "potcar_spec": [
+    "Li_sv",
+    "P",
+    "S",
+    "Cl",
+    "Ag"
+   ],
+   "pp_expected_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "zval_expected": [
+    3.0,
+    5.0,
+    6.0,
+    7.0,
+    11.0
    ],
    "encut": 520.0,
    "sigma": 0.136,
@@ -117,6 +169,11 @@
     3,
     2,
     1
+   ],
+   "cell_A": [
+    10.0551,
+    20.1102,
+    29.5659
    ],
    "dipol_z": 0.36471,
    "qe_dip": {
@@ -305,20 +362,22 @@
    "area_A2": 202.209896,
    "files_sha256": {
     "POSCAR": "902ad80cce63d6b16ee1226d2b635b262057c911fa52484c4cdd494e1f3413d5",
-    "INCAR": "58ae39edb2beb92231451a0920b65f61e7c2ce291c12b6b73248f6d71de20998",
-    "INCAR.r1": "7034194042b3024788053969a867c61ef9693e3054a558dcf3de13643452f7ed",
+    "INCAR": "3e059c848aa35cb7acd73c98d9dc6cef623c1071a86c743cd24b4c1e82bb7366",
+    "INCAR.r1": "eec93a75e0fdf367bb1842684758084d4006bb7ed5b8375ad060df2c64f78ef6",
     "KPOINTS": "ccc36dd26bce4f8eaa611d5b4fdc0dbdaa84d11f92df669a315ac3aa3e81e0db",
     "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f"
    },
-   "d3_2body_eV_sdftd3": -58.39722803630401,
+   "d3_2body_eV_ref": -58.42502535182459,
    "estimate": {
     "NIONS": 176,
     "NELECT": 1356.0,
     "NBANDS_default": 766,
     "NPW_per_k": 160976,
+    "ENCUT_eV": 520.0,
     "nk_full": 6,
     "nk_irr_est": 4,
-    "wfc_GB_all_k": 7.9
+    "wfc_only_GB_all_k": 7.9,
+    "⚠": "파동함수 몫 대략치 — peak RSS 아님 · 환원 k 는 IBZKPT 로 확인"
    },
    "qe_job_pw_in_sha256": "9a3196c37823a35882116c7c19994f7eb4e4bb425bf31f18c3d14b62cb8ece91"
   },
@@ -337,12 +396,26 @@
     "Ag": 84
    },
    "nelect_expected": 1356.0,
-   "potcar_titel_expected": [
-    "PAW_PBE Li_sv",
-    "PAW_PBE P",
-    "PAW_PBE S",
-    "PAW_PBE Cl",
-    "PAW_PBE Ag"
+   "potcar_spec": [
+    "Li_sv",
+    "P",
+    "S",
+    "Cl",
+    "Ag"
+   ],
+   "pp_expected_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "zval_expected": [
+    3.0,
+    5.0,
+    6.0,
+    7.0,
+    11.0
    ],
    "encut": 520.0,
    "sigma": 0.136,
@@ -350,6 +423,11 @@
     3,
     2,
     1
+   ],
+   "cell_A": [
+    10.0551,
+    20.1102,
+    29.5659
    ],
    "dipol_z": 0.36471,
    "qe_dip": {
@@ -538,20 +616,22 @@
    "area_A2": 202.209896,
    "files_sha256": {
     "POSCAR": "49e983c897ae14f7f2acd5598c323f3b18b74d97b778649ded51ee7fa4a6cf0f",
-    "INCAR": "f0d6eb93bad7bd3ceed1bb8c8563b82142944e246f29b534936bb8878a55ccb9",
-    "INCAR.r1": "f5ec98f8755c51ecdcb971f7da06422ed8f0e552f60457e4acc20b6096f1d461",
+    "INCAR": "c33aa0888ea22c8d2ddd30e1aaec17c946482b4835a37c09b0e9b992fc64bc96",
+    "INCAR.r1": "b8c3a19009acfe755c2900453218795adafeac4b8dd8aa64e6d0b48cdb3684cf",
     "KPOINTS": "ccc36dd26bce4f8eaa611d5b4fdc0dbdaa84d11f92df669a315ac3aa3e81e0db",
     "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f"
    },
-   "d3_2body_eV_sdftd3": -50.94203600963435,
+   "d3_2body_eV_ref": -50.96890477858754,
    "estimate": {
     "NIONS": 176,
     "NELECT": 1356.0,
     "NBANDS_default": 766,
     "NPW_per_k": 160976,
+    "ENCUT_eV": 520.0,
     "nk_full": 6,
     "nk_irr_est": 4,
-    "wfc_GB_all_k": 7.9
+    "wfc_only_GB_all_k": 7.9,
+    "⚠": "파동함수 몫 대략치 — peak RSS 아님 · 환원 k 는 IBZKPT 로 확인"
    },
    "qe_job_pw_in_sha256": "c2018ed77acb6092836f891f7412e8f636246242cdfc8e81eef8bb2e8e78c150"
   },
@@ -570,12 +650,26 @@
     "Ag": 84
    },
    "nelect_expected": 1356.0,
-   "potcar_titel_expected": [
-    "PAW_PBE Li_sv",
-    "PAW_PBE P",
-    "PAW_PBE S",
-    "PAW_PBE Cl",
-    "PAW_PBE Ag"
+   "potcar_spec": [
+    "Li_sv",
+    "P",
+    "S",
+    "Cl",
+    "Ag"
+   ],
+   "pp_expected_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "zval_expected": [
+    3.0,
+    5.0,
+    6.0,
+    7.0,
+    11.0
    ],
    "encut": 520.0,
    "sigma": 0.136,
@@ -583,6 +677,11 @@
     3,
     2,
     1
+   ],
+   "cell_A": [
+    10.0551,
+    20.1102,
+    29.52
    ],
    "dipol_z": 0.3645,
    "qe_dip": {
@@ -771,20 +870,22 @@
    "area_A2": 202.209896,
    "files_sha256": {
     "POSCAR": "899888211ecba150a37b88b785d5f0c81b414f6464b7aba706c86c1efb79d0b1",
-    "INCAR": "f5b9415741f424d18e6f2363f02c9e949ca68b3b39359e552607b371b1790128",
-    "INCAR.r1": "ba73490d7a68445a350c05ed063368ea274ae5a796417dc1095ca0559ca35b8a",
+    "INCAR": "e9b63f1402cf61771e586033a312478bd64369cc319ea6479f6269520ae1e7c1",
+    "INCAR.r1": "11155168533d8a8dec50834e5cf603d0bdedc15492229f4d76affe6ef663a518",
     "KPOINTS": "ccc36dd26bce4f8eaa611d5b4fdc0dbdaa84d11f92df669a315ac3aa3e81e0db",
     "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f"
    },
-   "d3_2body_eV_sdftd3": -58.41846598807835,
+   "d3_2body_eV_ref": -58.446301253318154,
    "estimate": {
     "NIONS": 176,
     "NELECT": 1356.0,
     "NBANDS_default": 766,
     "NPW_per_k": 160726,
+    "ENCUT_eV": 520.0,
     "nk_full": 6,
     "nk_irr_est": 4,
-    "wfc_GB_all_k": 7.9
+    "wfc_only_GB_all_k": 7.9,
+    "⚠": "파동함수 몫 대략치 — peak RSS 아님 · 환원 k 는 IBZKPT 로 확인"
    },
    "qe_job_pw_in_sha256": "b61d2b7d49e30e78d8cd6fac284033f535ecb977965d65aec26e312cd87052dc"
   },
@@ -803,12 +904,26 @@
     "Ag": 84
    },
    "nelect_expected": 1356.0,
-   "potcar_titel_expected": [
-    "PAW_PBE Li_sv",
-    "PAW_PBE P",
-    "PAW_PBE S",
-    "PAW_PBE Cl",
-    "PAW_PBE Ag"
+   "potcar_spec": [
+    "Li_sv",
+    "P",
+    "S",
+    "Cl",
+    "Ag"
+   ],
+   "pp_expected_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "zval_expected": [
+    3.0,
+    5.0,
+    6.0,
+    7.0,
+    11.0
    ],
    "encut": 520.0,
    "sigma": 0.136,
@@ -816,6 +931,11 @@
     3,
     2,
     1
+   ],
+   "cell_A": [
+    10.0551,
+    20.1102,
+    29.52
    ],
    "dipol_z": 0.3645,
    "qe_dip": {
@@ -1004,20 +1124,22 @@
    "area_A2": 202.209896,
    "files_sha256": {
     "POSCAR": "21331970c979e3ca1056b50c2e5899cfeef052dcf4f9e3512ed4f38097ea160b",
-    "INCAR": "a09fbf7ea0aab571231dfd2edbf5f52eb058ae3eb10e708c28b59a54d7749114",
-    "INCAR.r1": "86d2d71160c4d73d5473e8c40dde51d36633a4b33d33807c9c82529bcf27193a",
+    "INCAR": "1ea5f78384d0da177670a908ed106bd00b345aed70f5a40cb4d07c31338f3ecb",
+    "INCAR.r1": "6e61be92a536aa6bb9b9bd9f01f24512907e75f9ac8fc7ce9a70a6348caea1e1",
     "KPOINTS": "ccc36dd26bce4f8eaa611d5b4fdc0dbdaa84d11f92df669a315ac3aa3e81e0db",
     "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f"
    },
-   "d3_2body_eV_sdftd3": -50.95616451155229,
+   "d3_2body_eV_ref": -50.98307548315288,
    "estimate": {
     "NIONS": 176,
     "NELECT": 1356.0,
     "NBANDS_default": 766,
     "NPW_per_k": 160726,
+    "ENCUT_eV": 520.0,
     "nk_full": 6,
     "nk_irr_est": 4,
-    "wfc_GB_all_k": 7.9
+    "wfc_only_GB_all_k": 7.9,
+    "⚠": "파동함수 몫 대략치 — peak RSS 아님 · 환원 k 는 IBZKPT 로 확인"
    },
    "qe_job_pw_in_sha256": "98a1272ee9755794ab08e2216b1220dbafa08054793caf4103cf3d09fa6d47bb"
   },
@@ -1036,12 +1158,26 @@
     "Ag": 84
    },
    "nelect_expected": 1452.0,
-   "potcar_titel_expected": [
-    "PAW_PBE Li_sv",
-    "PAW_PBE P",
-    "PAW_PBE S",
-    "PAW_PBE Cl",
-    "PAW_PBE Ag"
+   "potcar_spec": [
+    "Li_sv",
+    "P",
+    "S",
+    "Cl",
+    "Ag"
+   ],
+   "pp_expected_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "zval_expected": [
+    3.0,
+    5.0,
+    6.0,
+    7.0,
+    11.0
    ],
    "encut": 520.0,
    "sigma": 0.136,
@@ -1049,6 +1185,11 @@
     3,
     2,
     1
+   ],
+   "cell_A": [
+    10.0551,
+    20.1102,
+    32.058
    ],
    "dipol_z": 0.375225,
    "qe_dip": {
@@ -1261,20 +1402,22 @@
    "area_A2": 202.209896,
    "files_sha256": {
     "POSCAR": "1a83138eb26261d61a697ac174fd63802403218626933262d89f1304ba30013a",
-    "INCAR": "ce229fc9d90c96325d5b694b21431ce93d6ce3ad794de34400a112a4e0ddeaaf",
-    "INCAR.r1": "37d944e642916d0131966a525436344b0c6e72dd2b79288d5d139fc889602648",
+    "INCAR": "eb09a6d3e882f116599816312ea78d21e47dc4a4a3239963c549efe6a86d94c7",
+    "INCAR.r1": "830b82415232ac161a7bd9a92184fd48df50e432c93ace1fce5229cad0c085f9",
     "KPOINTS": "ccc36dd26bce4f8eaa611d5b4fdc0dbdaa84d11f92df669a315ac3aa3e81e0db",
     "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f"
    },
-   "d3_2body_eV_sdftd3": -63.29172602060567,
+   "d3_2body_eV_ref": -63.3224928864945,
    "estimate": {
     "NIONS": 200,
     "NELECT": 1452.0,
     "NBANDS_default": 826,
     "NPW_per_k": 174545,
+    "ENCUT_eV": 520.0,
     "nk_full": 6,
     "nk_irr_est": 4,
-    "wfc_GB_all_k": 9.2
+    "wfc_only_GB_all_k": 9.2,
+    "⚠": "파동함수 몫 대략치 — peak RSS 아님 · 환원 k 는 IBZKPT 로 확인"
    },
    "qe_job_pw_in_sha256": "329520695e85d98add7dfd097633517ee684a4998034f7e6c878695552ae1996"
   },
@@ -1293,12 +1436,26 @@
     "Ag": 84
    },
    "nelect_expected": 1452.0,
-   "potcar_titel_expected": [
-    "PAW_PBE Li_sv",
-    "PAW_PBE P",
-    "PAW_PBE S",
-    "PAW_PBE Cl",
-    "PAW_PBE Ag"
+   "potcar_spec": [
+    "Li_sv",
+    "P",
+    "S",
+    "Cl",
+    "Ag"
+   ],
+   "pp_expected_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "zval_expected": [
+    3.0,
+    5.0,
+    6.0,
+    7.0,
+    11.0
    ],
    "encut": 520.0,
    "sigma": 0.136,
@@ -1306,6 +1463,11 @@
     3,
     2,
     1
+   ],
+   "cell_A": [
+    10.0551,
+    20.1102,
+    32.058
    ],
    "dipol_z": 0.375225,
    "qe_dip": {
@@ -1518,20 +1680,22 @@
    "area_A2": 202.209896,
    "files_sha256": {
     "POSCAR": "2efba4eed7cfbee2f759e2c004876aca5f7c843c2e422862aac026c5e0b9f29f",
-    "INCAR": "49ae1766152c8c12ab44b7da55c9566ed04a7c8e1708db4fe9e710fb9747902e",
-    "INCAR.r1": "6c4c6c73737c96dd7c636a911a0a43d08cdae1a18c03a80923f02866dd9549c1",
+    "INCAR": "5e93c563eab68327870fc6de774e301ab8b9050e3fa33b6fa2acd80d1ee9b933",
+    "INCAR.r1": "e9d3d452af81943cb3d1333558e4380e0f8c469709903109cb55e7b4cbe4c06f",
     "KPOINTS": "ccc36dd26bce4f8eaa611d5b4fdc0dbdaa84d11f92df669a315ac3aa3e81e0db",
     "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f"
    },
-   "d3_2body_eV_sdftd3": -56.46381910617978,
+   "d3_2body_eV_ref": -56.493713871180205,
    "estimate": {
     "NIONS": 200,
     "NELECT": 1452.0,
     "NBANDS_default": 826,
     "NPW_per_k": 174545,
+    "ENCUT_eV": 520.0,
     "nk_full": 6,
     "nk_irr_est": 4,
-    "wfc_GB_all_k": 9.2
+    "wfc_only_GB_all_k": 9.2,
+    "⚠": "파동함수 몫 대략치 — peak RSS 아님 · 환원 k 는 IBZKPT 로 확인"
    },
    "qe_job_pw_in_sha256": "b38f37cb1ad0181fd70a4611fd31bdad397d3c9247bfcb36d11b42227414de53"
   },
@@ -1550,12 +1714,26 @@
     "Ag": 84
    },
    "nelect_expected": 1452.0,
-   "potcar_titel_expected": [
-    "PAW_PBE Li_sv",
-    "PAW_PBE P",
-    "PAW_PBE S",
-    "PAW_PBE Cl",
-    "PAW_PBE Ag"
+   "potcar_spec": [
+    "Li_sv",
+    "P",
+    "S",
+    "Cl",
+    "Ag"
+   ],
+   "pp_expected_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "zval_expected": [
+    3.0,
+    5.0,
+    6.0,
+    7.0,
+    11.0
    ],
    "encut": 520.0,
    "sigma": 0.136,
@@ -1563,6 +1741,11 @@
     3,
     2,
     1
+   ],
+   "cell_A": [
+    10.0551,
+    20.1102,
+    34.058
    ],
    "dipol_z": 0.38255,
    "qe_dip": {
@@ -1775,20 +1958,22 @@
    "area_A2": 202.209896,
    "files_sha256": {
     "POSCAR": "37cfae49c494f37a767dc4b676e03094a9a7b7246020354acbffe77a16ffe21d",
-    "INCAR": "f3e1646888ad88e8ab2068cc790a5c9020d2aed2ba5a19a65284ca41c7115297",
-    "INCAR.r1": "13303119598a0a1dc6fcf6724ca53ac20888e3c85d8e8696f3f57349ab71dbba",
+    "INCAR": "3775bade558f8a55b1e1b8a61102ba83c0bda8232485b35f4d2bd0d1feb88ffd",
+    "INCAR.r1": "5e3ede6aa48001bd1f881e75739dcf15cb5a5fbc4b76cc4a6430adbc5a6af1df",
     "KPOINTS": "ccc36dd26bce4f8eaa611d5b4fdc0dbdaa84d11f92df669a315ac3aa3e81e0db",
     "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f"
    },
-   "d3_2body_eV_sdftd3": -63.27752496725864,
+   "d3_2body_eV_ref": -63.30617405827497,
    "estimate": {
     "NIONS": 200,
     "NELECT": 1452.0,
     "NBANDS_default": 826,
     "NPW_per_k": 185434,
+    "ENCUT_eV": 520.0,
     "nk_full": 6,
     "nk_irr_est": 4,
-    "wfc_GB_all_k": 9.8
+    "wfc_only_GB_all_k": 9.8,
+    "⚠": "파동함수 몫 대략치 — peak RSS 아님 · 환원 k 는 IBZKPT 로 확인"
    },
    "qe_job_pw_in_sha256": "99498a30856e23b323358b2b6c63775c86f8a6d4bacc82965dfbe67703fe4ba5"
   },
@@ -1807,12 +1992,26 @@
     "Ag": 84
    },
    "nelect_expected": 1452.0,
-   "potcar_titel_expected": [
-    "PAW_PBE Li_sv",
-    "PAW_PBE P",
-    "PAW_PBE S",
-    "PAW_PBE Cl",
-    "PAW_PBE Ag"
+   "potcar_spec": [
+    "Li_sv",
+    "P",
+    "S",
+    "Cl",
+    "Ag"
+   ],
+   "pp_expected_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "zval_expected": [
+    3.0,
+    5.0,
+    6.0,
+    7.0,
+    11.0
    ],
    "encut": 520.0,
    "sigma": 0.136,
@@ -1820,6 +2019,11 @@
     3,
     2,
     1
+   ],
+   "cell_A": [
+    10.0551,
+    20.1102,
+    34.058
    ],
    "dipol_z": 0.38255,
    "qe_dip": {
@@ -2032,20 +2236,22 @@
    "area_A2": 202.209896,
    "files_sha256": {
     "POSCAR": "c370bf71dc015ed46d4e47f087a6abb0762bdabd9f9d2ccefebf485dee2f0045",
-    "INCAR": "5ef1c2f70abc6b5f79c2682e199ee0f1156b8087c5dbdef457af924817ad9a28",
-    "INCAR.r1": "cbbdf8fdce4f42b4d05917df48885d5b7e7e658f15e935b43a5b401d9050c24a",
+    "INCAR": "55b14bbd4be853b9123fea7b5363a94c6ffa8e0572ca5459e08a1bc740f032c2",
+    "INCAR.r1": "edf139852635f814dc197c328ae3ebd8c8437e9a3a2e4eeb5bfbb7d73c72ae01",
     "KPOINTS": "ccc36dd26bce4f8eaa611d5b4fdc0dbdaa84d11f92df669a315ac3aa3e81e0db",
     "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f"
    },
-   "d3_2body_eV_sdftd3": -56.379378360870476,
+   "d3_2body_eV_ref": -56.40724472586263,
    "estimate": {
     "NIONS": 200,
     "NELECT": 1452.0,
     "NBANDS_default": 826,
     "NPW_per_k": 185434,
+    "ENCUT_eV": 520.0,
     "nk_full": 6,
     "nk_irr_est": 4,
-    "wfc_GB_all_k": 9.8
+    "wfc_only_GB_all_k": 9.8,
+    "⚠": "파동함수 몫 대략치 — peak RSS 아님 · 환원 k 는 IBZKPT 로 확인"
    },
    "qe_job_pw_in_sha256": "b09411a09b4291d3f40889dc08fd270164c255dd047fb322087e463173186bd5"
   },
@@ -2064,12 +2270,26 @@
     "Ag": 84
    },
    "nelect_expected": 1452.0,
-   "potcar_titel_expected": [
-    "PAW_PBE Li_sv",
-    "PAW_PBE P",
-    "PAW_PBE S",
-    "PAW_PBE Cl",
-    "PAW_PBE Ag"
+   "potcar_spec": [
+    "Li_sv",
+    "P",
+    "S",
+    "Cl",
+    "Ag"
+   ],
+   "pp_expected_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "zval_expected": [
+    3.0,
+    5.0,
+    6.0,
+    7.0,
+    11.0
    ],
    "encut": 520.0,
    "sigma": 0.136,
@@ -2077,6 +2297,11 @@
     3,
     2,
     1
+   ],
+   "cell_A": [
+    10.0551,
+    20.1102,
+    34.058
    ],
    "dipol_z": 0.38255,
    "qe_dip": {
@@ -2289,20 +2514,22 @@
    "area_A2": 202.209896,
    "files_sha256": {
     "POSCAR": "915012652ec5f40f14bc444200b05ba05e6ae62f2e41b502edba2532ea5ee203",
-    "INCAR": "1768918e70c59daa4c63e7e1900290cb8e09b831f1ce9a8e20c9e0ff69ba8b3c",
-    "INCAR.r1": "2b497819dda924fce7e7cd78c28226d6a018191be0300af6a8baac67868d0392",
+    "INCAR": "69fb3e2938a390a10f47ae371483e0110fca7847bc3b88f083cf503700d3a93d",
+    "INCAR.r1": "702c4b76f3535b8a9a4433a1755a14038b0c8941cc6aa80e7b2feb8695fc5da4",
     "KPOINTS": "ccc36dd26bce4f8eaa611d5b4fdc0dbdaa84d11f92df669a315ac3aa3e81e0db",
     "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f"
    },
-   "d3_2body_eV_sdftd3": -56.329218904438896,
+   "d3_2body_eV_ref": -56.35704705014475,
    "estimate": {
     "NIONS": 200,
     "NELECT": 1452.0,
     "NBANDS_default": 826,
     "NPW_per_k": 185434,
+    "ENCUT_eV": 520.0,
     "nk_full": 6,
     "nk_irr_est": 4,
-    "wfc_GB_all_k": 9.8
+    "wfc_only_GB_all_k": 9.8,
+    "⚠": "파동함수 몫 대략치 — peak RSS 아님 · 환원 k 는 IBZKPT 로 확인"
    },
    "qe_job_pw_in_sha256": "c18939a463b79398a167a5c5570e0b3764e3b568a67e2d91e727437e815aa552"
   },
@@ -2321,12 +2548,26 @@
     "Ag": 84
    },
    "nelect_expected": 1452.0,
-   "potcar_titel_expected": [
-    "PAW_PBE Li_sv",
-    "PAW_PBE P",
-    "PAW_PBE S",
-    "PAW_PBE Cl",
-    "PAW_PBE Ag"
+   "potcar_spec": [
+    "Li_sv",
+    "P",
+    "S",
+    "Cl",
+    "Ag"
+   ],
+   "pp_expected_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "zval_expected": [
+    3.0,
+    5.0,
+    6.0,
+    7.0,
+    11.0
    ],
    "encut": 650.0,
    "sigma": 0.136,
@@ -2334,6 +2575,11 @@
     3,
     2,
     1
+   ],
+   "cell_A": [
+    10.0551,
+    20.1102,
+    32.058
    ],
    "dipol_z": 0.375225,
    "qe_dip": {
@@ -2546,20 +2792,22 @@
    "area_A2": 202.209896,
    "files_sha256": {
     "POSCAR": "0e2ed4a450b7ab135635e8f6f915c43733be003f5094ae9152c2ad7153c8dd90",
-    "INCAR": "fa57c508ef317f0f9602e52d23c4da77e7f5d96870666ee3a37a3537900cb867",
-    "INCAR.r1": "3a88300f9d23f6620840f1c8b4aea630688d0d3858b6f25cd6864b4cf1697cf7",
+    "INCAR": "e8da22113624dd53db2f067ddebee7950104cdf94c8909a451bcbb4f66d7335a",
+    "INCAR.r1": "84b1fc6e5a0e292b6f0587c69bb2778acb4899e05c01fd007fdbccc42fa1c3ba",
     "KPOINTS": "ccc36dd26bce4f8eaa611d5b4fdc0dbdaa84d11f92df669a315ac3aa3e81e0db",
     "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f"
    },
-   "d3_2body_eV_sdftd3": -63.29172602060567,
+   "d3_2body_eV_ref": -63.3224928864945,
    "estimate": {
     "NIONS": 200,
     "NELECT": 1452.0,
     "NBANDS_default": 826,
     "NPW_per_k": 243934,
+    "ENCUT_eV": 650.0,
     "nk_full": 6,
     "nk_irr_est": 4,
-    "wfc_GB_all_k": 12.9
+    "wfc_only_GB_all_k": 12.9,
+    "⚠": "파동함수 몫 대략치 — peak RSS 아님 · 환원 k 는 IBZKPT 로 확인"
    },
    "qe_job_pw_in_sha256": "d346039f4cabede16723ba78a967b773e8791d1a3728c737e408dc41b0079306"
   },
@@ -2578,12 +2826,26 @@
     "Ag": 84
    },
    "nelect_expected": 1452.0,
-   "potcar_titel_expected": [
-    "PAW_PBE Li_sv",
-    "PAW_PBE P",
-    "PAW_PBE S",
-    "PAW_PBE Cl",
-    "PAW_PBE Ag"
+   "potcar_spec": [
+    "Li_sv",
+    "P",
+    "S",
+    "Cl",
+    "Ag"
+   ],
+   "pp_expected_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "zval_expected": [
+    3.0,
+    5.0,
+    6.0,
+    7.0,
+    11.0
    ],
    "encut": 650.0,
    "sigma": 0.136,
@@ -2591,6 +2853,11 @@
     3,
     2,
     1
+   ],
+   "cell_A": [
+    10.0551,
+    20.1102,
+    32.058
    ],
    "dipol_z": 0.375225,
    "qe_dip": {
@@ -2803,20 +3070,22 @@
    "area_A2": 202.209896,
    "files_sha256": {
     "POSCAR": "cd7741e32287488c13a9fa99478348f3308471b5b9d3ccfa76c06b15d97e5852",
-    "INCAR": "3b26408dd4c7f37f168006bbd2559bdb5b6f7c46ead2725a544df18a58f39a1b",
-    "INCAR.r1": "69e475824478cd0063ec1df26c17d9c74eabf3400d9d8f49170049dc8fcf1bf6",
+    "INCAR": "204db1ea1add1a8c0aeef0638cbb004b17b44dfff6b0ccea6ac81bb996a67173",
+    "INCAR.r1": "fdf3747a42a56f58dc171687801fe862a527c5a41606c19706f6a91c3bfc8eb1",
     "KPOINTS": "ccc36dd26bce4f8eaa611d5b4fdc0dbdaa84d11f92df669a315ac3aa3e81e0db",
     "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f"
    },
-   "d3_2body_eV_sdftd3": -56.46381910617978,
+   "d3_2body_eV_ref": -56.493713871180205,
    "estimate": {
     "NIONS": 200,
     "NELECT": 1452.0,
     "NBANDS_default": 826,
     "NPW_per_k": 243934,
+    "ENCUT_eV": 650.0,
     "nk_full": 6,
     "nk_irr_est": 4,
-    "wfc_GB_all_k": 12.9
+    "wfc_only_GB_all_k": 12.9,
+    "⚠": "파동함수 몫 대략치 — peak RSS 아님 · 환원 k 는 IBZKPT 로 확인"
    },
    "qe_job_pw_in_sha256": "b898038f80ccafbca051c7e679c89bce62c087400a4c36ae169f57c491d8e1de"
   },
@@ -2835,12 +3104,26 @@
     "Ag": 84
    },
    "nelect_expected": 1452.0,
-   "potcar_titel_expected": [
-    "PAW_PBE Li_sv",
-    "PAW_PBE P",
-    "PAW_PBE S",
-    "PAW_PBE Cl",
-    "PAW_PBE Ag"
+   "potcar_spec": [
+    "Li_sv",
+    "P",
+    "S",
+    "Cl",
+    "Ag"
+   ],
+   "pp_expected_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "zval_expected": [
+    3.0,
+    5.0,
+    6.0,
+    7.0,
+    11.0
    ],
    "encut": 520.0,
    "sigma": 0.136,
@@ -2848,6 +3131,11 @@
     4,
     3,
     1
+   ],
+   "cell_A": [
+    10.0551,
+    20.1102,
+    32.058
    ],
    "dipol_z": 0.375225,
    "qe_dip": {
@@ -3060,20 +3348,22 @@
    "area_A2": 202.209896,
    "files_sha256": {
     "POSCAR": "d55f7bfdd5d18ff326a365723f8507c28091553e34ec8111015d5751884aba57",
-    "INCAR": "ddb164253beb635f580134953867ff745fee10bc0be161e902b5e3cd5b3b34d5",
-    "INCAR.r1": "84942e32ee2ef458a1dd16c2ab38c93acac59e0cb81f9036045b7b1259e83cbb",
+    "INCAR": "71c5ad51c85bf22cec12cd8feea0a871dc75e5c080edd14bb1124be89425057f",
+    "INCAR.r1": "c876e1bd20b2b14aa2b8a216292b3794d2291138449c78ae56256482d88d8518",
     "KPOINTS": "648c662434786ed19bf9be4a98199ddff3ca244d488fcd7b501dce6786c4622e",
     "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f"
    },
-   "d3_2body_eV_sdftd3": -63.29172602060567,
+   "d3_2body_eV_ref": -63.3224928864945,
    "estimate": {
     "NIONS": 200,
     "NELECT": 1452.0,
     "NBANDS_default": 826,
     "NPW_per_k": 174545,
+    "ENCUT_eV": 520.0,
     "nk_full": 12,
     "nk_irr_est": 7,
-    "wfc_GB_all_k": 16.1
+    "wfc_only_GB_all_k": 16.1,
+    "⚠": "파동함수 몫 대략치 — peak RSS 아님 · 환원 k 는 IBZKPT 로 확인"
    },
    "qe_job_pw_in_sha256": "4fc456744b4ea6fa106531b2ba28242b131656bf7fcaebbc78f7c7a1533a62d4"
   },
@@ -3092,12 +3382,26 @@
     "Ag": 84
    },
    "nelect_expected": 1452.0,
-   "potcar_titel_expected": [
-    "PAW_PBE Li_sv",
-    "PAW_PBE P",
-    "PAW_PBE S",
-    "PAW_PBE Cl",
-    "PAW_PBE Ag"
+   "potcar_spec": [
+    "Li_sv",
+    "P",
+    "S",
+    "Cl",
+    "Ag"
+   ],
+   "pp_expected_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "zval_expected": [
+    3.0,
+    5.0,
+    6.0,
+    7.0,
+    11.0
    ],
    "encut": 520.0,
    "sigma": 0.136,
@@ -3105,6 +3409,11 @@
     4,
     3,
     1
+   ],
+   "cell_A": [
+    10.0551,
+    20.1102,
+    32.058
    ],
    "dipol_z": 0.375225,
    "qe_dip": {
@@ -3317,20 +3626,22 @@
    "area_A2": 202.209896,
    "files_sha256": {
     "POSCAR": "eef0fc006c4eb285181bc9ee8b04a6646f3f676985f702095f5757ac8f46568f",
-    "INCAR": "56d02523b725fb2f570fd5619735458f6f7a0b63e186567142b67081f284408a",
-    "INCAR.r1": "2bbe7adda4cbae6a81bf05141ad6adb15fc2cff915843555d602ce607346922d",
+    "INCAR": "0372155df696c6c6e239283538ec0c28b388f7028dd935bdb13357e6c9c93833",
+    "INCAR.r1": "8d09b8002f2ef9572d8258c22058150553bebe01916be24ff5ad6b2a40f7c501",
     "KPOINTS": "648c662434786ed19bf9be4a98199ddff3ca244d488fcd7b501dce6786c4622e",
     "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f"
    },
-   "d3_2body_eV_sdftd3": -56.46381910617978,
+   "d3_2body_eV_ref": -56.493713871180205,
    "estimate": {
     "NIONS": 200,
     "NELECT": 1452.0,
     "NBANDS_default": 826,
     "NPW_per_k": 174545,
+    "ENCUT_eV": 520.0,
     "nk_full": 12,
     "nk_irr_est": 7,
-    "wfc_GB_all_k": 16.1
+    "wfc_only_GB_all_k": 16.1,
+    "⚠": "파동함수 몫 대략치 — peak RSS 아님 · 환원 k 는 IBZKPT 로 확인"
    },
    "qe_job_pw_in_sha256": "eddf8b78b1103bc89940e129558fec0f7bc7a5fc112bd26cbf1ef8203ffce77f"
   },
@@ -3349,12 +3660,26 @@
     "Ag": 84
    },
    "nelect_expected": 1452.0,
-   "potcar_titel_expected": [
-    "PAW_PBE Li_sv",
-    "PAW_PBE P",
-    "PAW_PBE S",
-    "PAW_PBE Cl",
-    "PAW_PBE Ag"
+   "potcar_spec": [
+    "Li_sv",
+    "P",
+    "S",
+    "Cl",
+    "Ag"
+   ],
+   "pp_expected_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "zval_expected": [
+    3.0,
+    5.0,
+    6.0,
+    7.0,
+    11.0
    ],
    "encut": 520.0,
    "sigma": 0.068,
@@ -3362,6 +3687,11 @@
     3,
     2,
     1
+   ],
+   "cell_A": [
+    10.0551,
+    20.1102,
+    32.058
    ],
    "dipol_z": 0.375225,
    "qe_dip": {
@@ -3574,20 +3904,22 @@
    "area_A2": 202.209896,
    "files_sha256": {
     "POSCAR": "c62c2dfc9e247de94f3a2bc23659b79f4c3cefaa91b5f91fd84f397a58104ff3",
-    "INCAR": "ee6e6217ff2f231a5814b7e4da779c74666f647121d2d334d966afbbe513751c",
-    "INCAR.r1": "aa9a4b6924b213503458f3a32eb075a6bc7f5aa329480ea1cb439ed369582d36",
+    "INCAR": "fbf78a52ad1a7b9fc929aaa1afd33fd7c9062a139cc190d67dd9b8fe43cf5429",
+    "INCAR.r1": "9e86c91f63452ee3c9dffc089854b28062ed9b337e5e31a1fa2c6312845bdc87",
     "KPOINTS": "ccc36dd26bce4f8eaa611d5b4fdc0dbdaa84d11f92df669a315ac3aa3e81e0db",
     "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f"
    },
-   "d3_2body_eV_sdftd3": -63.29172602060567,
+   "d3_2body_eV_ref": -63.3224928864945,
    "estimate": {
     "NIONS": 200,
     "NELECT": 1452.0,
     "NBANDS_default": 826,
     "NPW_per_k": 174545,
+    "ENCUT_eV": 520.0,
     "nk_full": 6,
     "nk_irr_est": 4,
-    "wfc_GB_all_k": 9.2
+    "wfc_only_GB_all_k": 9.2,
+    "⚠": "파동함수 몫 대략치 — peak RSS 아님 · 환원 k 는 IBZKPT 로 확인"
    },
    "qe_job_pw_in_sha256": "5dcfc6df6171e68802b3225aadddd181e2977b163b689045ff90a939e9d116f6"
   },
@@ -3606,12 +3938,26 @@
     "Ag": 84
    },
    "nelect_expected": 1452.0,
-   "potcar_titel_expected": [
-    "PAW_PBE Li_sv",
-    "PAW_PBE P",
-    "PAW_PBE S",
-    "PAW_PBE Cl",
-    "PAW_PBE Ag"
+   "potcar_spec": [
+    "Li_sv",
+    "P",
+    "S",
+    "Cl",
+    "Ag"
+   ],
+   "pp_expected_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "zval_expected": [
+    3.0,
+    5.0,
+    6.0,
+    7.0,
+    11.0
    ],
    "encut": 520.0,
    "sigma": 0.068,
@@ -3619,6 +3965,11 @@
     3,
     2,
     1
+   ],
+   "cell_A": [
+    10.0551,
+    20.1102,
+    32.058
    ],
    "dipol_z": 0.375225,
    "qe_dip": {
@@ -3831,20 +4182,22 @@
    "area_A2": 202.209896,
    "files_sha256": {
     "POSCAR": "a0a0023bef69ad315100d1a6abafbfd5857753fdcb97abaffa3afd5389b0f2c0",
-    "INCAR": "3e24ed89ee769a08011220a180c5f2459e375ff7a1790dd26807a736a4f2c029",
-    "INCAR.r1": "8b816510ab21f2273e340cee7028585baa7f89eee43f8977291ed3455ca5900b",
+    "INCAR": "efe1cec513bf8df8b5d8e9afa8290c9c0cd8cedacbc5fd2c2144c9c7e82aa30e",
+    "INCAR.r1": "dfc6a595fc38d69f5dd2d791d741ad814e84f2603a38b102c1abd3afb4398202",
     "KPOINTS": "ccc36dd26bce4f8eaa611d5b4fdc0dbdaa84d11f92df669a315ac3aa3e81e0db",
     "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f"
    },
-   "d3_2body_eV_sdftd3": -56.46381910617978,
+   "d3_2body_eV_ref": -56.493713871180205,
    "estimate": {
     "NIONS": 200,
     "NELECT": 1452.0,
     "NBANDS_default": 826,
     "NPW_per_k": 174545,
+    "ENCUT_eV": 520.0,
     "nk_full": 6,
     "nk_irr_est": 4,
-    "wfc_GB_all_k": 9.2
+    "wfc_only_GB_all_k": 9.2,
+    "⚠": "파동함수 몫 대략치 — peak RSS 아님 · 환원 k 는 IBZKPT 로 확인"
    },
    "qe_job_pw_in_sha256": "2354772b8c2fb65ab3ba48601dfe616df05f5bc91fd3949422281268d2ca5410"
   },
@@ -3863,12 +4216,26 @@
     "Ag": 84
    },
    "nelect_expected": 1452.0,
-   "potcar_titel_expected": [
-    "PAW_PBE Li_sv",
-    "PAW_PBE P",
-    "PAW_PBE S",
-    "PAW_PBE Cl",
-    "PAW_PBE Ag"
+   "potcar_spec": [
+    "Li_sv",
+    "P",
+    "S",
+    "Cl",
+    "Ag"
+   ],
+   "pp_expected_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "zval_expected": [
+    3.0,
+    5.0,
+    6.0,
+    7.0,
+    11.0
    ],
    "encut": 520.0,
    "sigma": 0.136,
@@ -3876,6 +4243,11 @@
     3,
     2,
     1
+   ],
+   "cell_A": [
+    10.0551,
+    20.1102,
+    32.058
    ],
    "dipol_z": 0.375225,
    "qe_dip": {
@@ -4088,20 +4460,22 @@
    "area_A2": 202.209896,
    "files_sha256": {
     "POSCAR": "1f46993086f9def5e29747bd93be085d8b18c30fce3242ea9a181b60ef3bbcbf",
-    "INCAR": "a1afc81e8ccb4785c318d5ab843547b346a7e5a3ba06ded0bef59bc2ac821821",
-    "INCAR.r1": "d891aad2f3e102a1071b300ac9a5e105b01d145a6a81f8962a6656960d2b2a6d",
+    "INCAR": "bb4205e8123c75b6838e0d4f57f83245a45b9cc5bce735ba03b15c8d15fa3942",
+    "INCAR.r1": "8b6c0bf8abbcdc6102c927d8b2754fd3990f0fd5113cd9acab9e9d70453f81f1",
     "KPOINTS": "ccc36dd26bce4f8eaa611d5b4fdc0dbdaa84d11f92df669a315ac3aa3e81e0db",
     "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f"
    },
-   "d3_2body_eV_sdftd3": -61.59864715868169,
+   "d3_2body_eV_ref": -61.62928812818183,
    "estimate": {
     "NIONS": 200,
     "NELECT": 1452.0,
     "NBANDS_default": 826,
     "NPW_per_k": 174545,
+    "ENCUT_eV": 520.0,
     "nk_full": 6,
     "nk_irr_est": 4,
-    "wfc_GB_all_k": 9.2
+    "wfc_only_GB_all_k": 9.2,
+    "⚠": "파동함수 몫 대략치 — peak RSS 아님 · 환원 k 는 IBZKPT 로 확인"
    },
    "qe_job_pw_in_sha256": "6921005c6de57fe546fa9aadb74e362267b23b436cc36594d2152a68040c92eb"
   },
@@ -4120,12 +4494,26 @@
     "Ag": 84
    },
    "nelect_expected": 1452.0,
-   "potcar_titel_expected": [
-    "PAW_PBE Li_sv",
-    "PAW_PBE P",
-    "PAW_PBE S",
-    "PAW_PBE Cl",
-    "PAW_PBE Ag"
+   "potcar_spec": [
+    "Li_sv",
+    "P",
+    "S",
+    "Cl",
+    "Ag"
+   ],
+   "pp_expected_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "zval_expected": [
+    3.0,
+    5.0,
+    6.0,
+    7.0,
+    11.0
    ],
    "encut": 520.0,
    "sigma": 0.136,
@@ -4133,6 +4521,11 @@
     3,
     2,
     1
+   ],
+   "cell_A": [
+    10.0551,
+    20.1102,
+    32.0114
    ],
    "dipol_z": 0.37504,
    "qe_dip": {
@@ -4345,20 +4738,22 @@
    "area_A2": 202.209896,
    "files_sha256": {
     "POSCAR": "102519f6f6c89bee004ef80a994856ddcc0423edb6759996095dbdd8cf29b80e",
-    "INCAR": "8a4db6af340d80ff13b46832739749bb06ef777b0eed3b50c27964ae4d652e5c",
-    "INCAR.r1": "a9b633566dedf652119332e3ebc0f2a17ecd6f67069232bdc1d9104dba537608",
+    "INCAR": "0477d01952925edb96070deecc2f0358a515b2f568962bbd59eb8f77c9d7f336",
+    "INCAR.r1": "a058a5c1b6bdfb9271a573d775f229a1430a0243ac6e8250a6a4dc5550c3afa6",
     "KPOINTS": "ccc36dd26bce4f8eaa611d5b4fdc0dbdaa84d11f92df669a315ac3aa3e81e0db",
     "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f"
    },
-   "d3_2body_eV_sdftd3": -63.33082496654397,
+   "d3_2body_eV_ref": -63.36165950356087,
    "estimate": {
     "NIONS": 200,
     "NELECT": 1452.0,
     "NBANDS_default": 826,
     "NPW_per_k": 174291,
+    "ENCUT_eV": 520.0,
     "nk_full": 6,
     "nk_irr_est": 4,
-    "wfc_GB_all_k": 9.2
+    "wfc_only_GB_all_k": 9.2,
+    "⚠": "파동함수 몫 대략치 — peak RSS 아님 · 환원 k 는 IBZKPT 로 확인"
    },
    "qe_job_pw_in_sha256": "77674d0686d6d26c01d1d4c69d37a83c58bd618275a96a5ec6a9935c7a67d6b1"
   },
@@ -4377,12 +4772,26 @@
     "Ag": 84
    },
    "nelect_expected": 1452.0,
-   "potcar_titel_expected": [
-    "PAW_PBE Li_sv",
-    "PAW_PBE P",
-    "PAW_PBE S",
-    "PAW_PBE Cl",
-    "PAW_PBE Ag"
+   "potcar_spec": [
+    "Li_sv",
+    "P",
+    "S",
+    "Cl",
+    "Ag"
+   ],
+   "pp_expected_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "zval_expected": [
+    3.0,
+    5.0,
+    6.0,
+    7.0,
+    11.0
    ],
    "encut": 520.0,
    "sigma": 0.136,
@@ -4390,6 +4799,11 @@
     3,
     2,
     1
+   ],
+   "cell_A": [
+    10.0551,
+    20.1102,
+    32.0114
    ],
    "dipol_z": 0.37504,
    "qe_dip": {
@@ -4602,20 +5016,22 @@
    "area_A2": 202.209896,
    "files_sha256": {
     "POSCAR": "a745aed26effe6554e4b19ebeb0b0a4a923c7e96a6585b348497f84e41d746f3",
-    "INCAR": "61c113eca11fc936958837425232c5da8f6bede2e50d8135ad885f1a526c592c",
-    "INCAR.r1": "f42fbe879fd70ebceb9cdce16f472670f6f1f1debd9714bfa7a343ebd3946b90",
+    "INCAR": "b58c769be0edf89f9839713df56abd8af0316fc5ecc2460edbdd370eb073875f",
+    "INCAR.r1": "ea9e35bd92d2b5ba0367becb8a5b7cdd5ae293c5ac4e86aafac539185643d8b9",
     "KPOINTS": "ccc36dd26bce4f8eaa611d5b4fdc0dbdaa84d11f92df669a315ac3aa3e81e0db",
     "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f"
    },
-   "d3_2body_eV_sdftd3": -56.43079775551457,
+   "d3_2body_eV_ref": -56.46074531869292,
    "estimate": {
     "NIONS": 200,
     "NELECT": 1452.0,
     "NBANDS_default": 826,
     "NPW_per_k": 174291,
+    "ENCUT_eV": 520.0,
     "nk_full": 6,
     "nk_irr_est": 4,
-    "wfc_GB_all_k": 9.2
+    "wfc_only_GB_all_k": 9.2,
+    "⚠": "파동함수 몫 대략치 — peak RSS 아님 · 환원 k 는 IBZKPT 로 확인"
    },
    "qe_job_pw_in_sha256": "8b6d48d363976d69800ba5f280ea4d249c02c7b07d28826a6eff38df39217545"
   }

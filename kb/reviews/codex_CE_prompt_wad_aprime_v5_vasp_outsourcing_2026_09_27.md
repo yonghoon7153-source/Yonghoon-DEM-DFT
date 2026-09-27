@@ -3,7 +3,7 @@ title: "리뷰 CE 프롬프트 — A′ V5 (LPSCl|Ag(111) 작은 주기 계면) 
 date: 2026-09-27
 updated: 2026-09-27
 tags: [review, codex, adhesion, wad, prereg, vasp, outsourcing, lpscl, silver, uma, d3, dipole, g5]
-status: 발송 대기 (1저자) — 패키지·개정 3 은 커밋 8f76b912d 에 고정
+status: 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`codex_CE_reply_…` · P0 4 · P1 5 · 3b 원안 반대 · 3c 찬성) → 수정판 준비 중
 confidence: medium
 verificationStatus: unverified
 explored: false

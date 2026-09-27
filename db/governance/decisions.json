@@ -5065,9 +5065,9 @@
      "internal"
     ]
    },
-   "title": "A′ 카드 v5 개정 3 (초안) — V5 를 VASP 외주로 돌리는 경로 (준비만 · 실행 미정)",
-   "statement": "`db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json` (sha256:04b1a71ad01a303b48463b0ed807bccd948b032cd4ffe137246d790813a574d5). 봉인 S3v2 기하 · 표본 ①–⑤ · 끝점 · G3/G4/G5 식·문턱 · 개정 1 의 D3 장부 구조는 그대로 두고, V5 18 단일점만 VASP (PAW_PBE Li_sv·P·S·Cl·Ag · ENCUT 520 · MP1 σ 0.136 · IVDW 12 명시 계수 · LDIPOL IDIPOL 3 · Γ 3×2×1) 로 옮긴다. VASP V5 는 별도 비교군 (QE 값과 섞지 않음). 반송은 build_v5_vasp_package.py --check 로 fail-closed. 패키지 db/inputs/wad_aprime_v5_vasp_2026_09_27 (MANIFEST.sha256 파일 sha256 ae434e671ba74ef5…). 업체·예산 미정 — 준비본.",
-   "rationale": "V5 는 우리 GPU 로 RESOURCE_BLOCKED 라 G5 가 NOT_TESTED 다. 외주 CPU 노드면 메모리 벽이 없다. UMA(OMat24) 학습 기준이 VASP PBE 라 G5 가 코드 차이에 덜 흔들린다. 결과 전 D3 만 예측이 V5 G3(ii) +0.0095 (문턱 0.01) 로 경계선이라, G5 자격용 G3 를 W_PBE 로 읽는 안(3b)을 Codex 에 같이 묻는다.",
+   "title": "A′ 카드 v5 개정 3 (초안 v2) — V5 를 VASP 외주로 돌리는 경로 (준비만 · 실행 미정 · Codex CE NO-GO 반영)",
+   "statement": "`db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json` v2 (sha256:243ccf8c7536800e624a1df90501b77319b0e266ca97298c77c3ed94b26ecf8d). 봉인 S3v2 기하 · 표본 ①–⑤ · 끝점 · G3/G4/G5 식·문턱 · 개정 1 의 D3 장부 구조는 그대로 두고, V5 18 단일점만 VASP (PAW_PBE PBE_54 Li_sv·P·S·Cl·Ag 전체 TITEL 고정 · ENCUT 520 · MP1 σ 0.136 · IVDW 12 명시 계수 + VDW_RADIUS 50.2 / VDW_CNRADIUS 21.17 Å · LDIPOL IDIPOL 3 · Γ 3×2×1) 로 옮긴다. W = MP1 σ 0.136 eV 에서의 TOTEN 차. VASP V5 는 별도 비교군 (QE 값과 섞지 않음). 파일럿과 본 배치 같은 VASP 빌드. G3 FAIL 이면 G5 = 'INCOMPLETE (G3 FAIL · 오차표만)' (3c) · 3b 원안 폐기 → 3b′ 는 문턱 없는 잔차 진단. D3 검사 두 층 (Edisp 1 % 오설정 탐지 · 오차 예산 쌍 0.005 / G3 차이의 차이 0.001 J/m²). 반송은 build_v5_vasp_package.py --check/--collect --manifest_sha256 로 fail-closed. 파일럿 2 잡 (표본 ① bound·far) 재사용 · 실행 최대 36 회. 패키지 db/inputs/wad_aprime_v5_vasp_2026_09_27 v2 (MANIFEST.sha256 파일 sha256 ab945a7b07928a27d0a66f442c10ec9ebfd68b3e9fda912e7f7ee1fae5ae0561). 업체·예산 미정 — 준비본.",
+   "rationale": "V5 는 우리 GPU 로 RESOURCE_BLOCKED 라 G5 가 NOT_TESTED 다. 외주 CPU 노드면 메모리 벽이 없다. UMA(OMat24) 학습 기준이 VASP PBE 라 코드 계열 차이를 줄인 설계다 (오차 감소 보증은 아님). v1 은 Codex CE 가 NO-GO — 성능 태그 ';' 우회 · 지난 OUTCAR 재사용 · POTCAR sha 미검사 · UMA NaN 통과 · 승인본 미대조 · 결측 통과 · r1 과잉 승격 · D3 1 % 를 예산으로 오독 · G3 예측 산술 오류. v2 가 전부 반영했다. 결과 전 D3 만 예측이 V5 G3(ii) +0.00954 (문턱 0.01) 로 경계선 — v1 의 '+0.0004 만 보태도 FAIL' 은 틀렸다 (0.00994 < 0.01).",
    "decision_state": "proposed",
    "record_kind": "prospective",
    "results_seen": false,
@@ -5082,14 +5082,15 @@
    "supersedes": [],
    "evidence": [
     "db/inputs/wad_aprime_v5_vasp_2026_09_27/jobs.json",
-    "tools/wad/build_v5_vasp_package.py"
+    "tools/wad/build_v5_vasp_package.py",
+    "kb/reviews/codex_CE_reply_wad_aprime_v5_vasp_outsourcing_2026_09_27.md"
    ],
-   "method_ref": "tools/wad/build_v5_vasp_package.py (--build · --check · --collect · selftest 37 · 돌연변이 5 빨간불 · 가짜 VASP 로 러너 끝-끝 시험)",
+   "method_ref": "tools/wad/build_v5_vasp_package.py v2 (--build · --check · --seal_pp · --collect · selftest 82 — CE 재현 전부 음성 · 정상 18 잡 대조군 · 배포 러너 bash+가짜 VASP 실제 실행 · 돌연변이 20/20 빨간불)",
    "reopen_criteria": [
-    "Codex CE 가 설정 하나라도 NO-GO → 고친 뒤 재리뷰",
-    "업체·예산 확정 → 1저자 비준 → 파일럿 1 잡 먼저"
+    "Codex CF 재리뷰 NO-GO → 고친 뒤 재리뷰 (새 대형 계산·V2 bridge 는 해제조건 아님)",
+    "CF GO → 1저자 비준 (개정 v2 · 3c · 3b′ · PP PBE_54 · 버전 일치 · D3 예산) → 업체·예산 → 파일럿 2 잡 → --seal_pp → 16 잡"
    ],
-   "enforcement": "빌더: 구조 sha 불일치 · 쌍극자 여유 < 4 Å · V5 잡 ≠ 18 이면 패키지 안 만듦 · 러너: MANIFEST sha256sum -c 실패 · 허용 밖 성능 태그면 실행 안 함 · 검사기: OK 아닌 잡은 판정 제외",
+   "enforcement": "빌더: 구조 sha 불일치 · 쌍극자 여유 < 4 Å · V5 잡 ≠ 18 · D3 기대값 계산 불가면 패키지 안 만듦 · 러너: MANIFEST sha256sum -c 실패 · 성능 파일 문법 위반·읽기 불가면 실행 안 함 · 기존 시도 폴더 거부 · 검사기: 외부 고정 MANIFEST sha 불일치면 시작 안 함 · OK 아닌 잡(실행 기록·입력·rc·복수 실행·POTCAR·버전·설정 되울림·D3)은 판정 제외 · UMA 출처·유한성 실패면 G5 BLOCKED",
    "proposed_by": "claude-session-2026-09-27",
    "status": "proposed",
    "status_history": [
@@ -5097,6 +5098,11 @@
      "at": "2026-09-27",
      "state": "proposed",
      "note": "1저자 'v5 관련해서 vasp 용으로 외주건으로 한번 만들어보고 codex 리뷰 받자 · 될지는 모르지만 준비는 해둬볼게'"
+    },
+    {
+     "at": "2026-09-27",
+     "state": "proposed",
+     "note": "v2 — Codex CE NO-GO 반영 (P0 4 · P1 5 · 3b 원안 폐기 → 3b′ 진단 · 3c 채택안) · 패키지 재생성 · 재리뷰 CF 전 · 여전히 proposed"
     }
    ],
    "ratification": {

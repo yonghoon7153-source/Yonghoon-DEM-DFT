@@ -548,6 +548,14 @@
    "prompt": "kb/reviews/codex_CB_prompt_wad_aprime_pilot_prereg_v4_2026_09_25.md",
    "reply": "kb/reviews/codex_CB_reply_wad_aprime_pilot_prereg_v4_2026_09_25.md",
    "response": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json"
+  },
+  {
+   "id": "CE",
+   "date": "2026-09-27",
+   "verdict": "NO-GO (V5 VASP 외주 준비본) — P0 4 (성능 태그 ';' 우회 · 지난 OUTCAR 재사용 · POTCAR sha 미검사 · UMA NaN/출처) · P1 5 (승인본 미대조 · 결측 통과·종료코드 · r1 과잉 승격 · D3 1 % ≠ 예산 · G3 예측 산술) · 3b 원안 반대 · 3c 찬성 · 설계(별도 비교군 · DIPOL 식)는 조건부 찬성",
+   "prompt": "kb/reviews/codex_CE_prompt_wad_aprime_v5_vasp_outsourcing_2026_09_27.md",
+   "reply": "kb/reviews/codex_CE_reply_wad_aprime_v5_vasp_outsourcing_2026_09_27.md",
+   "response": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json"
   }
  ],
  "hazards": [
@@ -602,6 +610,10 @@
   {
    "text": "DEM 5차 회신 (V2 두 값·라벨 수령 · SE 쌍 보류 · 소모델 질문) → 회신 6 (프로브 3 변형 불합격 · 없음) 발송 ✅ → **DEM 6차 확인 수령 (09-26 밤 · 열린 질문 0)**: SE 쌍 보류 유지 · Ag–C 값으로 질문 ② 기하 · C–C 는 DEM 문헌 카드 · 벤젠 조각 참고 대기. ⏭ 남은 인계 = V4_s_outer_A 9 잡 (gabia · 탄성 뒤 GPU 시험) 결과(eV/조각 · 참고)",
    "state": "인계 1 남음"
+  },
+  {
+   "state": "준비본 v2 · CF 재리뷰 대기",
+   "text": "**V5 VASP 외주** (1저자 '준비는 해둬볼게' · 업체·예산 미정): CE NO-GO → 도구·패키지·개정 3 **v2** (MANIFEST ab945a7b… · 개정 digest 243ccf8c…) → ⏭ Codex CF 재리뷰 → 1저자 비준 (3c · 3b′ 진단 · PP PBE_54 · 버전 일치 · D3 예산) → 업체 → 파일럿 2 잡 (① bound·far) → --seal_pp → 16 잡. 결과 전 D3 만 예측 G3(ii) +0.00954 (문턱 0.01 · 경계선)."
   }
  ],
  "log": [
@@ -864,6 +876,11 @@
    "date": "2026-09-27",
    "stage": "dft",
    "text": "**V5 VASP 외주 준비본** (1저자 '준비는 해둬볼게' · 업체·예산 미정): 18 단일점 패키지 `db/inputs/wad_aprime_v5_vasp_2026_09_27` · 빌더/반송검사/집계 `tools/wad/build_v5_vasp_package.py` · 카드 개정 3 초안 + 결정 proposed · Codex CE 프롬프트 (발송 대기). 결과 전 D3 만 예측으로 V5 G3(ii) 가 문턱 경계선(+0.0095 vs 0.01) — G5 자격용 G3 를 W_PBE 로 읽는 안을 CE 에 물음."
+  },
+  {
+   "date": "2026-09-27",
+   "stage": "dft",
+   "text": "**Codex CE NO-GO → V5 VASP 준비본 v2**: 도구 `build_v5_vasp_package.py` v2 (성능 태그 제한 문법 · 시도 폴더 새로만 + attempt.json 결박 · 복수 실행·설정 되울림·EFIELD · 전체 TITEL + 종별·조립본 sha 잡 사이 일치 + 파일럿 등록부 · VASP 버전 일치 · UMA 출처·유한성 · 외부 고정 MANIFEST 대조 · 결측=미검증 · 종료코드 · r1 자격 제한 · D3 두 층 (1 % 오설정 · 쌍 0.005 / G3 차이의 차이 0.001 J/m²) · 3c 필드 · 3b′ 진단) · selftest 82 (CE 재현 전부 음성 · 배포 러너 실제 실행) · 돌연변이 20/20 · 패키지 재생성 (구조 불변 · INCAR 에 VDW_RADIUS/CNRADIUS) · 개정 3 v2 (G3 산술 정정: +0.0095396 + 0.0004 = 0.0099396 < 0.01 · v1 의 'FAIL' 서술 틀림). 결정은 여전히 proposed."
   }
  ],
  "related_decisions": [
