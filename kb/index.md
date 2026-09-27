@@ -1,18 +1,19 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-27 · managed-files: 468
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-27 · managed-files: 469
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 265건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 266건)
 - 2026-09-27 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-27 · `kb/reviews/codex_CE_prompt_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` — 리뷰 CE 프롬프트 — A′ V5 (LPSCl|Ag(111) 작은 주기 계면) VASP 외주 패키지 준비본: QE→VASP 대응 · INCAR · 쌍극자 · D3 · 반송 검사 · G3 경계선 예측 · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…
 - 2026-09-27 · `kb/reviews/codex_CE_reply_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` — 리뷰 CE 회신 — A′ V5 VASP 외주 준비본: NO-GO (P0 4 · P1 5 · 3b 원안 반대 · 3c 찬성) · 수령 (1저자 붙여넣기 · 원문 그대로) → 대응 v2 커밋 e025…
 - 2026-09-27 · `kb/reviews/codex_CF_prompt_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` — 리뷰 CF 프롬프트 — A′ V5 VASP 외주 준비본 v2 재리뷰 (CE NO-GO 대응: P0 4 · P1 5 · 3b′ · 3c · PP/버전 · D3 예산) · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…
 - 2026-09-27 · `kb/reviews/codex_CF_reply_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` — 리뷰 CF 회신 — A′ V5 VASP 외주 준비본 v2: NO-GO (P0 3 · P1 3 · D3 예산 조건부 찬성 · 3b′/3c 찬성) · 수령 (1저자 붙여넣기 · 원문 그대로) → 대응 v3 커밋 c8d7…
 - 2026-09-27 · `kb/reviews/codex_CG_prompt_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md` — 리뷰 CG 프롬프트 — A′ V5 VASP 외주 준비본 v3 재리뷰 (CF NO-GO 대응: 증거 먼저 · 등록부 필수 · G4 D3 동일성 · 마지막 레코드 · 실물 Edisp · 포장 실패) · 발송 대기 (1저자) — 도구·패키지·개정 3 v3 는 커밋 c8d7…
+- 2026-09-27 · `kb/projects/li2s_glass_external_first_author_followup_pilot800_2026_09_27.md` — li2s 소셀 유리 MD — 파일럿 400 K · 800 ps 결과 후속 보고 (외부 1저자에게) · C2·C1 미통과 → '이 프로토콜로 400 K 는 측정되지 않는다' · 본 15런 400 K 처리 결정 요청 · 초안 — 사용자(실행자 · 카드 저자) 검토 뒤 외부 1저자에게 발송…
 - 2026-09-26 · `kb/reviews/li2s1a_CC_prompt_li2s_pilot_gateA_ledger_2026_09_26.md` — CC 프롬프트 — li2s 소셀 유리 MD 파일럿 보고 · 게이트 A 두 판 · Q6 장부 · Q1–Q9 (외부 1저자에게 발송) · 발송됨 (사용자 · 2026-09-26) · 회신 CC 수령 → `l…
 - 2026-09-26 · `kb/reviews/li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` — 회신 CC — 외부 1저자 (li2s 소셀 유리 MD): 파일럿 결과 · 게이트 A 두 판 · Q1–Q9 판정 (relax 판 · P–S 결합 제외 · seed5 유지 · MTO 맞음 · 400 K 연장 검토) · 수령 (2026-09-26 저녁 · 사용자 붙여넣기) — 회신 원문 …
 - 2026-09-26 · `kb/projects/li2s_glass_external_first_author_report_2026_09_26.md` — li2s 소셀 유리 MD — 회신 CC 이행 보고 (외부 1저자에게) · B 실측 3 건 · 카드 개정 초안 확인 요청 · 400 K prod 800 ps 채택 제안 · 초안 — 사용자(실행자 · 카드 저자) 검토 뒤 외부 1저자에게 발송…
@@ -26,7 +27,6 @@
 - 2026-09-25 · `kb/reviews/codex_CA_prompt_wad_aprime_pilot_prereg_v3_2026_09_25.md` — 리뷰 CA 프롬프트 — A′ 파일럿 사전등록 카드 v3: BZ NO-GO 항목(G2 우회 4경로 · G5 집계 · S1/S3 경계) 이행 재심 · 발송 완료 · 회신 수령 2026-09-25 밤 **NO-GO** (…
 - 2026-09-25 · `kb/reviews/codex_CA_reply_wad_aprime_pilot_prereg_v3_2026_09_25.md` — 리뷰 CA 회신 — A′ 카드 v3 재심: NO-GO (V2 측방 마스크 선택 입력 P0 · 인덱스 자동 변환 P1 · G3 문구 · 프로브 예외 · registry 주기영상) — BZ 주요 수정은 이행 · 수령 (2026-09-25 밤 · 1저자 붙여넣기) — 회신 원문 ·…
 - 2026-09-25 · `kb/reviews/codex_CB_prompt_wad_aprime_pilot_prereg_v4_2026_09_25.md` — 리뷰 CB 프롬프트 — A′ 파일럿 사전등록 카드 v4: CA 최소 해제조건 5 이행 재심 (V2 측방 마스크 · 인덱스 타입 · G3 문구 · 프로브 예외 · registry 주기영상) · 발송 완료 · 회신 수령 2026-09-25 밤 **조건부 GO** …
-- 2026-09-25 · `kb/reviews/codex_CB_reply_wad_aprime_pilot_prereg_v4_2026_09_25.md` — 리뷰 CB 회신 — A′ 카드 v4 재심: 조건부 GO (CA 코드 결함 해제 · registry 명세 2 보완 + 선언한 미완료 채우면 S1 봉인 가능 · 본 계산 승인 아님) · 수령 (2026-09-25 밤 · 1저자 붙여넣기) — 회신 원문 ·…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -391,7 +391,7 @@
 - `kb/reports/weekly_2026_09_14.md` — 주간 정리 2026-09-07 ~ 09-13 (주간보고 초안)  (2026-09-14 · 완료 (2026-09-14 · 다음 주 문서는 새 파일))
 - `kb/reports/weekly_2026_09_20.md` — 주간 정리 2026-09-14 ~ 09-20 (주간보고 초안)  (2026-09-20 · 완료 (2026-09-20 · 다음 주 문서는 새 파일))
 
-## projects/ (33)
+## projects/ (34)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
 - `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
@@ -406,6 +406,7 @@
 - `kb/projects/external_review_prompt_digital_twin_2026_05_18.md` — External Review Prompt — Digital Twin Platform Readiness (2026-05-18)
 - `kb/projects/handoff_2026_09_03_zn_nd.md` — 인수인계 — 2026-09-03 세션 (Zn ALZIB 협업 · Nd 교수님 지침 · 도구 2개)  (2026-09-03 · 활성)
 - `kb/projects/handoff_2026_09_16_cathode_cei.md` — 인수인계 — 2026-09-16 세션 (양극 CEI §A–§E · 도펀트 스크리닝 · dual compatibility)  (2026-09-16 · 진행)
+- `kb/projects/li2s_glass_external_first_author_followup_pilot800_2026_09_27.md` — li2s 소셀 유리 MD — 파일럿 400 K · 800 ps 결과 후속 보고 (외부 1저자에게) · C2·C1 미통과 → '이 프로토콜로 400 K 는 측정되지 않는다' · 본 15런 400 K 처리 결정 요청  (2026-09-27 · 초안 — 사용자(실행자 · 카드 저자) 검토 뒤 외부 1저자에게 발송…)
 - `kb/projects/li2s_glass_external_first_author_letter_2026_09_25.md` — li2s 소셀 유리 MD — 외부 1저자에게 보내는 보고 · 질문 (파일럿 결과 · 갈래0 멈춤 · 게이트 A 두 판 · Q1–Q8)  (2026-09-25 · 초안 — 사용자(실행자) 검토 뒤 외부 1저자에게 발송 · 판정은 외…)
 - `kb/projects/li2s_glass_external_first_author_report_2026_09_26.md` — li2s 소셀 유리 MD — 회신 CC 이행 보고 (외부 1저자에게) · B 실측 3 건 · 카드 개정 초안 확인 요청 · 400 K prod 800 ps 채택 제안  (2026-09-26 · 초안 — 사용자(실행자 · 카드 저자) 검토 뒤 외부 1저자에게 발송…)
 - `kb/projects/li2s_glass_external_first_author_report_send_2026_09_26.md` — li2s_glass_external_first_author_report_send_2026_09_26
