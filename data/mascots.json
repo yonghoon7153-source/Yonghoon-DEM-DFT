@@ -302,7 +302,9 @@
         "ja": "ぼくの横顔、千葉県のかたちだよ",
         "ko": "내 옆얼굴이 지바현 모양이야"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/chibakun.webp",
+      "credit": "©千葉県"
     },
     {
       "id": "funassyi",

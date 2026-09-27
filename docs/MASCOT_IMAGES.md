@@ -1,6 +1,6 @@
 # 마스코트 그림 목록
 
-받은 그림 **7 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
+받은 그림 **8 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
 
 주는 법: 캐릭터당 한 장, 배경 투명 PNG 가 제일 좋다 (흰 배경 JPG 도 자동으로 배경을 지운다). 파일명에 **캐릭터 이름·県 이름·id 중 하나**만 들어 있으면 된다.
 받은 뒤: `npm run mascots:import <폴더>` → 512px WebP 로 줄여 `public/mascots/<id>.webp` 에 넣고 데이터와 이 목록을 갱신한다.
@@ -32,7 +32,7 @@
 | 11 | 栃木 | さのまる <sub>비공식·선택</sub> | 사노마루 | `sanomaru.png` | 佐野市 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%95%E3%81%AE%E3%81%BE%E3%82%8B%20%E4%BD%90%E9%87%8E%E5%B8%82%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
 | 12 | 群馬 | ぐんまちゃん | 군마짱 | `gunmachan.png` | 群馬県 | [공식](https://gunmachan-navi.pref.gunma.jp/) | □ |
 | 13 | 埼玉 | コバトン | 코바톤 | `kobaton.png` | 埼玉県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%B3%E3%83%90%E3%83%88%E3%83%B3%20%E5%9F%BC%E7%8E%89%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
-| 14 | 千葉 | チーバくん | 치바군 | `chibakun.png` | 千葉県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%83%81%E3%83%BC%E3%83%90%E3%81%8F%E3%82%93%20%E5%8D%83%E8%91%89%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 14 | 千葉 | チーバくん | 치바군 | `chibakun.png` | 千葉県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%83%81%E3%83%BC%E3%83%90%E3%81%8F%E3%82%93%20%E5%8D%83%E8%91%89%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 15 | 千葉 | ふなっしー <sub>비공식·선택</sub> | 후낫시 | `funassyi.png` | 民間（船橋市非公認） | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%B5%E3%81%AA%E3%81%A3%E3%81%97%E3%83%BC%20%E6%B0%91%E9%96%93%EF%BC%88%E8%88%B9%E6%A9%8B%E5%B8%82%E9%9D%9E%E5%85%AC%E8%AA%8D%EF%BC%89%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
 | 16 | 東京 | ゆりーと | 유리토 | `yurito.png` | 東京都 | [공식](https://www.sports-tokyo-info.metro.tokyo.lg.jp/seisaku/yurito/index.html) | □ |
 | 17 | 神奈川 | かながわキンタロウ | 가나가와 킨타로 | `kanagawakintaro.png` | 神奈川県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%8B%E3%81%AA%E3%81%8C%E3%82%8F%E3%82%AD%E3%83%B3%E3%82%BF%E3%83%AD%E3%82%A6%20%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |

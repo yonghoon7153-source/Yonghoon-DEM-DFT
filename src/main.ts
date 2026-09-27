@@ -48,6 +48,9 @@ async function init() {
   });
 
   let hoverSlug: string | null = null;
+  // While the map moves (zoom transitions, drags) the browser fires hover events for whatever slides
+  // under a still cursor. Keep the tooltip hidden until the map has settled and the pointer moves.
+  let lastZoomAt = 0;
   map = await createMap(
     $('map'),
     {
@@ -58,12 +61,20 @@ async function init() {
           tooltip.hide();
           return;
         }
+        if (performance.now() - lastZoomAt < 250) return;
         if (slug !== hoverSlug) {
           hoverSlug = slug;
           tooltip.show(prefBySlug.get(slug)!, ev);
         } else tooltip.move(ev);
       },
-      onZoom: () => easter?.reposition(),
+      onZoom: () => {
+        lastZoomAt = performance.now();
+        if (hoverSlug) {
+          hoverSlug = null;
+          tooltip.hide();
+        }
+        easter?.reposition();
+      },
     },
     state.labelMode,
   );
