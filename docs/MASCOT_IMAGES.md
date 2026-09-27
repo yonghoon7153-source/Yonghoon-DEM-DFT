@@ -1,6 +1,6 @@
 # 마스코트 그림 목록
 
-받은 그림 **51 / 54** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
+받은 그림 **54 / 54** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
 
 주는 법: 캐릭터당 한 장, 배경 투명 PNG 가 제일 좋다 (흰 배경 JPG 도 자동으로 배경을 지운다). 파일명에 **캐릭터 이름·県 이름·id 중 하나**만 들어 있으면 된다.
 받은 뒤: `npm run mascots:import <폴더>` → 512px WebP 로 줄여 `public/mascots/<id>.webp` 에 넣고 데이터와 이 목록을 갱신한다.
@@ -33,7 +33,7 @@
 | 12 | 群馬 | ぐんまちゃん | 군마짱 | `gunmachan.png` | 群馬県 | [공식](https://gunmachan-navi.pref.gunma.jp/) | ✅ |
 | 13 | 埼玉 | コバトン | 코바톤 | `kobaton.png` | 埼玉県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%B3%E3%83%90%E3%83%88%E3%83%B3%20%E5%9F%BC%E7%8E%89%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 14 | 千葉 | チーバくん | 치바군 | `chibakun.png` | 千葉県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%83%81%E3%83%BC%E3%83%90%E3%81%8F%E3%82%93%20%E5%8D%83%E8%91%89%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
-| 15 | 千葉 | ふなっしー <sub>비공식·선택</sub> | 후낫시 | `funassyi.png` | 民間（船橋市非公認） | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%B5%E3%81%AA%E3%81%A3%E3%81%97%E3%83%BC%20%E6%B0%91%E9%96%93%EF%BC%88%E8%88%B9%E6%A9%8B%E5%B8%82%E9%9D%9E%E5%85%AC%E8%AA%8D%EF%BC%89%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 15 | 千葉 | ふなっしー <sub>비공식·선택</sub> | 후낫시 | `funassyi.png` | 274LAND（船橋市非公認） | [공식](https://274ch.com/feature/bio) | ✅ |
 | 16 | 東京 | ゆりーと | 유리토 | `yurito.png` | 東京都 | [공식](https://www.sports-tokyo-info.metro.tokyo.lg.jp/seisaku/yurito/index.html) | ✅ |
 | 17 | 神奈川 | かながわキンタロウ | 가나가와 킨타로 | `kanagawakintaro.png` | 神奈川県 | [공식](https://www.pref.kanagawa.jp/osirase/1197/kintaro/index.html) | ✅ 대체 (いらすとや) |
 
@@ -82,9 +82,9 @@
 | 41 | 香川 | 親切な青鬼くん | 친절한 파란 도깨비군 | `aoonikun.png` | 香川県観光協会 | [공식](https://www.my-kagawa.jp/aooni/feature/top/aooni) | ✅ |
 | 42 | 愛媛 | みきゃん | 미캉 | `mican.png` | 愛媛県 | [공식](https://www.pref.ehime.jp/site/mican/16895.html) | ✅ |
 | 43 | 愛媛 | ダークみきゃん <sub>비공식·선택</sub> | 다크 미캉 | `darkmican.png` | 愛媛県 | [공식](https://www.pref.ehime.jp/site/mican/16880.html) | ✅ |
-| 44 | 愛媛 | バリィさん <sub>비공식·선택</sub> | 바리상 | `barysan.png` | 今治市（民間） | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%83%90%E3%83%AA%E3%82%A3%E3%81%95%E3%82%93%20%E4%BB%8A%E6%B2%BB%E5%B8%82%EF%BC%88%E6%B0%91%E9%96%93%EF%BC%89%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 44 | 愛媛 | バリィさん <sub>비공식·선택</sub> | 바리상 | `barysan.png` | 第一印刷（今治市） | [공식](https://www.barysan.net/aboutus/profile.html) | ✅ |
 | 45 | 高知 | くろしおくん | 쿠로시오군 | `kuroshiokun.png` | 高知県 | [공식](https://www.pref.kochi.lg.jp/kuroshiokun/) | ✅ |
-| 46 | 高知 | カツオ人間 <sub>비공식·선택</sub> | 가쓰오 인간 | `katsuoningen.png` | 民間（山西金陵堂） | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%AB%E3%83%84%E3%82%AA%E4%BA%BA%E9%96%93%20%E6%B0%91%E9%96%93%EF%BC%88%E5%B1%B1%E8%A5%BF%E9%87%91%E9%99%B5%E5%A0%82%EF%BC%89%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 46 | 高知 | カツオ人間 <sub>비공식·선택</sub> | 가쓰오 인간 | `katsuoningen.png` | 山西金陵堂 | [공식](https://katsuoningen.blog.jp/) | ✅ |
 
 ## 九州 규슈
 

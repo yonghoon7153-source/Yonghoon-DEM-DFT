@@ -229,6 +229,21 @@ function alphaBox(data, w, h) {
   return x1 < 0 ? null : { left: x0, top: y0, width: x1 - x0 + 1, height: y1 - y0 + 1 };
 }
 
+// Crop to the character plus a 3% margin. A picture that touches its own edge still gets the margin —
+// transparent pixels are added instead of the margin being clamped away — so every sticker sits the same way.
+async function padded(img, box, info) {
+  const pad = Math.round(Math.max(box.width, box.height) * 0.03);
+  const want = { left: box.left - pad, top: box.top - pad, right: box.left + box.width + pad, bottom: box.top + box.height + pad };
+  const left = Math.max(0, want.left), top = Math.max(0, want.top);
+  const right = Math.min(info.width, want.right), bottom = Math.min(info.height, want.bottom);
+  // extend() runs after resize in sharp, so materialise the padded crop before the caller resizes it
+  const { data, info: out } = await img
+    .extract({ left, top, width: right - left, height: bottom - top })
+    .extend({ left: left - want.left, top: top - want.top, right: want.right - right, bottom: want.bottom - bottom, background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .raw().toBuffer({ resolveWithObject: true });
+  return sharp(data, { raw: { width: out.width, height: out.height, channels: 4 } });
+}
+
 for (const f of files) {
   const hit = matchFile(basename(f, extname(f)), ctx);
   if (hit.ambiguous) { report.ambiguous.push(`${basename(f)} → ${hit.ambiguous.join(' / ')}`); continue; }
@@ -241,11 +256,7 @@ for (const f of files) {
   const main = mainOnly ? keepLargestComponent(data, info.width, info.height) : null;
   const box = alphaBox(data, info.width, info.height);
   let img = sharp(data, { raw: { width: info.width, height: info.height, channels: 4 } });
-  if (box) {
-    const pad = Math.round(Math.max(box.width, box.height) * 0.03);
-    const left = Math.max(0, box.left - pad), top = Math.max(0, box.top - pad);
-    img = img.extract({ left, top, width: Math.min(info.width - left, box.width + pad * 2), height: Math.min(info.height - top, box.height + pad * 2) });
-  }
+  if (box) img = await padded(img, box, info);
   const target = `mascots/${m.id}.webp`;
   await img.resize(512, 512, { fit: 'inside', withoutEnlargement: true }).webp({ quality: 88, alphaQuality: 100, effort: 5 }).toFile(new URL(`public/${target}`, ROOT).pathname);
   m.image = target;
