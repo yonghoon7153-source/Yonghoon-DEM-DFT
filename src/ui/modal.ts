@@ -8,14 +8,14 @@ export function createModal(root: HTMLElement) {
     if (root.hidden) return;
     root.hidden = true;
     clear(body);
-    (lastFocus as HTMLElement | null)?.focus?.();
+    (lastFocus as HTMLElement | null)?.focus?.({ preventScroll: true });
   }
   function open(content: HTMLElement) {
     lastFocus = document.activeElement;
     clear(body);
     body.append(content);
     root.hidden = false;
-    root.querySelector<HTMLButtonElement>('.modal__close')?.focus();
+    root.querySelector<HTMLButtonElement>('.modal__close')?.focus({ preventScroll: true });
     body.scrollTop = 0;
   }
   root.querySelectorAll('[data-close]').forEach((n) => n.addEventListener('click', close));

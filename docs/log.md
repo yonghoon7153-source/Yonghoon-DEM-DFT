@@ -16,3 +16,5 @@ append-only. 형식: `## [YYYY-MM-DD] action | subject` — 커밋 제목 `actio
 ## [2026-09-27] docs | 체크리스트 갱신 — 옛 브랜치 삭제, 테스트 30건
 ## [2026-09-27] create | 공식 마스코트 그림 반입 경로 — image 필드, 스티커·말풍선·図鑑·패널이 PNG 를 쓰고, scripts/import-mascot-images.mjs 가 폴더째 맞춰 넣는다
 ## [2026-09-27] update | 마스코트 그림 반입을 다듬는다 — 캐릭터 이름 우선 매칭, 흰 배경 제거, 512px WebP, 필요 목록 docs/MASCOT_IMAGES.md 자동 생성
+## [2026-09-27] fix | 닫힌 패널 때문에 앱이 옆으로 밀리던 문제 — .app 을 overflow: clip 으로, 포커스 스크롤 되돌림
+## [2026-09-27] ingest | 공식 그림 1/53 — キュンちゃん

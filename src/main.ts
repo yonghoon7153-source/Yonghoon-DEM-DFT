@@ -24,6 +24,11 @@ const state = {
 
 async function init() {
   const stage = $('stage');
+  // Safari < 16 has no `overflow: clip`; undo any scroll the browser does on focus.
+  const app = $('app');
+  app.addEventListener('scroll', () => {
+    if (app.scrollLeft || app.scrollTop) app.scrollTo(0, 0);
+  });
   const tooltip = createTooltip($('tooltip'), stage);
   const modal = createModal($('modal'));
   const petals = createPetals($('petals'));

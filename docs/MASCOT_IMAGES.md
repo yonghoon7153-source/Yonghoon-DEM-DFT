@@ -1,6 +1,6 @@
 # 마스코트 그림 목록
 
-받은 그림 **0 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
+받은 그림 **1 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
 
 주는 법: 캐릭터당 한 장, 배경 투명 PNG 가 제일 좋다 (흰 배경 JPG 도 자동으로 배경을 지운다). 파일명에 **캐릭터 이름·県 이름·id 중 하나**만 들어 있으면 된다.
 받은 뒤: `npm run mascots:import <폴더>` → 512px WebP 로 줄여 `public/mascots/<id>.webp` 에 넣고 데이터와 이 목록을 갱신한다.
@@ -9,7 +9,7 @@
 
 | # | 県 | 캐릭터 | 한글 | 파일명 | 권리자 | 찾을 곳 | 상태 |
 |---|---|---|---|---|---|---|---|
-| 1 | 北海道 | キュンちゃん | 큥짱 | `kyunchan.png` | 北海道観光振興機構 | [공식](https://www.visit-hokkaido.jp/kyundance/) | □ |
+| 1 | 北海道 | キュンちゃん | 큥짱 | `kyunchan.png` | 北海道観光振興機構 | [공식](https://www.visit-hokkaido.jp/kyundance/) | ✅ |
 
 ## 東北 도호쿠
 

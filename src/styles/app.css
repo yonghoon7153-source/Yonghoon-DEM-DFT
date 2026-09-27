@@ -3,7 +3,10 @@
   position: relative;
   width: 100%;
   height: 100dvh;
+  /* The closed panel sits off-screen (transform), which gives .app scrollable overflow.
+     `hidden` still lets the browser scroll it when something gains focus; `clip` does not. */
   overflow: hidden;
+  overflow: clip;
   background: var(--paper);
 }
 
