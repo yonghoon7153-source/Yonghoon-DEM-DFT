@@ -197,8 +197,12 @@ def _minimize_until_stable(objective, x0, bounds, method: str,
     개선이 멈출 때까지 반복한다 (최적화 실패와 목적함수의 평평함을 구분하기 위함).
 
     돌려주는 것: `(best_x, best_f, ok, nfev, termination)`.
-      · `ok` 는 **마지막 round** 의 `res.success` 다 — 79차 이전과 같은 뜻이며 바꾸지 않는다 (best round 의
-        success 가 아니다; 둘이 다를 수 있다). `FitResult.converged` 가 이 값을 그대로 받는다.
+      · `ok` (legacy) 는 **마지막 유한 `fun` round 에서 갱신한 `res.success`** 다 — 그런 round 가 없으면 초기값 False.
+        비유한 `fun` 으로 끝나는 round 는 `ok` 를 갱신하지 **않고** break 하므로(아래 순서), 유한 round 뒤 비유한 round 가
+        오면 `ok` 는 앞 round 의 값이 남는다 (79차 리뷰 G79-N1 정정 — 79차 이전과 같은 계산 경로이며 바꾸지 않는다).
+        best round 의 success 와도 일반적으로 다르다. `FitResult.converged` 가 이 값을 그대로 받는다.
+        `native_last.success` · `native_best.success` · `outer` 는 각각 **다른 관측**이다 — `converged=True` 하나로
+        nonfinite 종료를 정상 완료로 읽지 않는다 (성공/실패 집계 정책은 단계 5 의 일).
       · `termination` (79차, 단계 3 §9.4 한정 구현) 은 두 층을 **구별**해 남긴다:
           `native_last`  마지막 round 의 solver native 종료 (status·success·message·nfev·nit)
           `native_best`  `best_f` 를 낸 round 의 native 종료 (개선이 한 번도 없었으면 None)
@@ -318,7 +322,7 @@ def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
         # F25/F31: (p, J)만 적으면 출처가 사라진다. dict로 바꿔 restart 인덱스와
         # 출처(warm / base_init / random)를 같이 남긴다.
         # 옛 형식 [(p, J), ...]도 읽는 쪽에서 받는다.
-        # ★ 79차 (단계 3 §9.4 한정 구현) — restart 마다 `converged`(그 restart 의 마지막 round success) ·
+        # ★ 79차 (단계 3 §9.4 한정 구현) — restart 마다 `converged`(legacy ok: 그 restart 의 마지막 **유한** round 에서 갱신한 success, 없으면 False) ·
         #   `n_eval`(그 restart 의 평가 수; 합이 위 `n_eval`) · `termination_status`(native 마지막/best · outer)
         #   를 **더한다**. 옛 기록에는 이 키가 없다 — 읽는 쪽은 `normalize_restart_record` 로 부재를 미기록(None)
         #   으로 받는다 (false/0 으로 소급 채우지 않는다).

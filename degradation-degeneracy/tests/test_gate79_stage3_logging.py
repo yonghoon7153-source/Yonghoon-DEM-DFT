@@ -4,8 +4,9 @@
   (a) restart 행에 `converged` · `termination_status` · restart 별 `n_eval` 을 **추가** 한다 — 기존 optimizer
       초기값·후보 선택·횟수·tolerance·J/p·scoring 정의는 바꾸지 않는다 (수치 불변 골든이 그것을 고정한다).
   (b) `termination_status` 는 solver 의 **native** 종료(마지막 round · best round 를 따로) 와
-      `_minimize_until_stable` **바깥 반복** 의 종료 사유를 구별한다. 기존 `converged` 의 뜻(그 restart 의 마지막
-      round `res.success`)은 조용히 바꾸지 않는다 — 시험이 그 의미를 못 박는다.
+      `_minimize_until_stable` **바깥 반복** 의 종료 사유를 구별한다. 기존 `converged` 의 뜻(legacy ok: 그 restart 의
+      마지막 **유한** `fun` round 에서 갱신한 `res.success`, 그런 round 가 없으면 False — 79차 리뷰 G79-N1 정정; 비유한
+      round 는 ok 를 갱신하지 않고 break 한다)은 조용히 바꾸지 않는다 — 시험이 그 의미를 못 박는다 (g79_03 · g79_03c · g79_03d).
   (c) 예외로 실패한 restart 는 `restarts` 에서 여전히 빠지지만(기존 동작·`n_restarts` 불변) `restart_errors` 에
       index·source·오류를 남기고 fits 행에 `restart_errors_json` 으로 실린다.
   (d) `validate_provenance` 가 깨진 parquet 을 예외로 올리지 않고 `fail` 항목으로 보고한다 (계약 §9.4).
@@ -117,7 +118,7 @@ def test_g79_03_native_best_and_native_last_are_distinguished_and_converged_keep
     x, f, ok, nfev, term = F._minimize_until_stable(lambda p: 0.0, [1.0, 0.0, 1.0, 0.0],
                                                     list(zip(_LB, _UB)), "Nelder-Mead")
     assert f == 1.0 and nfev == 17
-    assert ok is False, "기존 의미: converged 는 마지막 round 의 success 다 — 바뀌었다"
+    assert ok is False, "기존 의미: converged 는 마지막 유한 round 에서 갱신한 success 다 (여기서는 round 2) — 바뀌었다"
     assert term["outer"] == "no_improvement" and term["n_rounds"] == 2
     assert term["native_best"]["status"] == 0 and term["native_best"]["success"] is True and term["native_best"]["nfev"] == 10
     assert term["native_last"]["status"] == 1 and term["native_last"]["success"] is False and term["native_last"]["nfev"] == 7
@@ -140,6 +141,44 @@ def test_g79_03b_outer_stop_reasons_are_named(monkeypatch):
     monkeypatch.setattr(F, "minimize", always_improving)
     *_, term = F._minimize_until_stable(lambda p: 0.0, _INIT, list(zip(_LB, _UB)), "Nelder-Mead", max_rounds=3)
     assert term["outer"] == "max_rounds" and term["n_rounds"] == 3
+
+
+def test_g79_03c_a_nonfinite_round_after_a_finite_success_leaves_legacy_ok_true_while_native_last_says_failure(monkeypatch):
+    """★ 79차 리뷰 G79-N1 — legacy `ok` 는 "마지막 round 의 success" 가 **아니다**: 비유한 round 는 ok 를 갱신하지 않고
+    break 하므로 round 1(유한·success) 뒤 round 2(NaN·실패)가 오면 ok=True 가 남고, native_last.success=False ·
+    outer=nonfinite 가 따로 기록된다. 계산 경로(반환 p/J/ok)는 79차 이전 그대로 — 이 시험은 그 동작을 **고정**한다
+    (처음부터 통과가 목적; ok 대입을 break 앞으로 옮기는 "수정" 이 오히려 이 시험을 깨뜨린다)."""
+    from scipy.optimize import OptimizeResult
+    calls = []
+
+    def fake_minimize(objective, x0, method=None, bounds=None, options=None):
+        calls.append(1)
+        if len(calls) == 1:
+            return OptimizeResult(x=np.asarray(x0, float) + 0.01, fun=1.0, success=True, status=0, message="ok", nfev=10, nit=3)
+        return OptimizeResult(x=np.asarray(x0, float) + 0.02, fun=float("nan"), success=False, status=3, message="nan", nfev=4, nit=1)
+
+    monkeypatch.setattr(F, "minimize", fake_minimize)
+    x, f, ok, nfev, term = F._minimize_until_stable(lambda p: 0.0, _INIT, list(zip(_LB, _UB)), "Nelder-Mead")
+    assert f == 1.0 and nfev == 14 and np.allclose(x, np.asarray(_INIT) + 0.01)   # p/J 는 유한 round 1 의 것
+    assert ok is True, "legacy ok 는 마지막 유한 round(1) 의 success 다 — 비유한 round 2 가 덮지 않는다"
+    assert term["outer"] == "nonfinite" and term["n_rounds"] == 2
+    assert term["native_last"]["success"] is False and term["native_last"]["status"] == 3
+    assert term["native_best"]["success"] is True and term["native_best"]["status"] == 0
+    # 세 관측은 서로 다르다 — converged=True 하나로 nonfinite 종료를 정상 완료로 읽을 수 없다
+    assert (ok, term["native_last"]["success"], term["outer"]) == (True, False, "nonfinite")
+
+
+def test_g79_03d_a_first_round_nonfinite_leaves_legacy_ok_at_its_initial_false(monkeypatch):
+    from scipy.optimize import OptimizeResult
+
+    def nonfinite(objective, x0, method=None, bounds=None, options=None):
+        return OptimizeResult(x=np.asarray(x0, float), fun=float("inf"), success=True, status=0, message="ok?", nfev=2, nit=1)
+    monkeypatch.setattr(F, "minimize", nonfinite)
+    x, f, ok, nfev, term = F._minimize_until_stable(lambda p: 0.0, _INIT, list(zip(_LB, _UB)), "Nelder-Mead")
+    assert ok is False, "유한 round 가 하나도 없으면 legacy ok 는 초기값 False 다 (native success=True 여도)"
+    assert f == np.inf and nfev == 2 and np.allclose(x, _INIT)
+    assert term["outer"] == "nonfinite" and term["n_rounds"] == 1 and term["native_best"] is None
+    assert term["native_last"]["success"] is True                     # native 는 성공이라 말했다 — 다른 관측
 
 
 # ─────────────────────────────────────────────────────────────────────────────

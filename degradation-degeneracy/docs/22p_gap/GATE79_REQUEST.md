@@ -1,6 +1,6 @@
 # 79차 게이트 리뷰 요청 — G78-N1·N2 정정 문장 (단계 1) + 단계 2 한정 구현 (restart 행 로깅 · 깨진 parquet 발견) + 허용된 검증·영수증 결과 (실행 GO 아님)
 
-> **상태: 확정 (2026-09-27).** 78차는 G77-N1·N3 를 종결하고 G77-N2 의 잔여 둘(G78-N1 관측 쌍 key · G78-N2 누락/분모)을 남기며 "단계 1+2 는 수정 조건부 적합" 이라 했다. 지시대로 **G78-N1/N2 수정 문장 + 단계 1+2 의 제한 diff·수치 불변/역사 reader 회귀 + 허용된 검증·receipt 결과**를 함께 낸다. 사용자 승인(2026-09-27): 단계 1+2 는 78차 회신 뒤 착수 · 보존 profile 선택 1 유지 — 그대로 따랐다.
+> **상태: 79차 회신 접수 (2026-09-28) — G78-N1·N2 종결 · 단계 1 종결 · 단계 2 는 G79-N1(P2, `converged` 설명) 정정 뒤 종결 → `GATE80_REQUEST.md`. 아래 취소선은 79차 정정.** ~~확정 (2026-09-27).~~ 78차는 G77-N1·N3 를 종결하고 G77-N2 의 잔여 둘(G78-N1 관측 쌍 key · G78-N2 누락/분모)을 남기며 "단계 1+2 는 수정 조건부 적합" 이라 했다. 지시대로 **G78-N1/N2 수정 문장 + 단계 1+2 의 제한 diff·수치 불변/역사 reader 회귀 + 허용된 검증·receipt 결과**를 함께 낸다. 사용자 승인(2026-09-27): 단계 1+2 는 78차 회신 뒤 착수 · 보존 profile 선택 1 유지 — 그대로 따랐다.
 > 76차 종결 유지. **새 실행 GO 를 묻지 않는다.** 단계 3~6 · provider canary · floor/pilot · 새 연구 계산 · class/투영 승격은 이번 범위 밖이다. `grid_fit_v5` 는 진단/no_active_claim 그대로.
 
 ## 판정 대상
@@ -29,8 +29,8 @@
 | 경계 (78차 §5) | 구현 | 회귀 |
 |---|---|---|
 | 2 수치 동작 불변 | `_minimize_until_stable` 은 minimize 호출·갱신 규칙·반환 p/J 그대로, `termination` 을 다섯째 반환값으로 **추가**. `fit()` 루프·정렬·agree/spread 불변 | `g79_02[False/True]` — 변경 전 코드(`16d97ce6`)에서 잡은 골든과 부동소수 동일 · **실물**: 영수증 재생성의 격리 복원·validate·재채점이 봉인 summary 와 semantic 동일 (paired 34 · grid 33 검사) |
-| 3 native vs 바깥 반복 · 어느 round | `termination = {native_last, native_best, outer ∈ {no_improvement, nonfinite, max_rounds}, n_rounds}` — native 는 scipy status/success/message/nfev/nit 그대로; `native_best` 는 `best_f` 를 낸 round(개선 없으면 None). 기존 `ok` = **마지막 round success** = `FitResult.converged` 그대로 (best round 와 다를 수 있음 — 시험이 그 경우를 만든다) | `g79_03` · `g79_03b` · 변이 `native-best…` · `outer-stop…` |
-| restart 행 필드 | `restarts_json` 원소에 `converged`(그 restart 의 마지막 round success) · `n_eval`(Σ = FitResult.n_eval) · `termination_status` 추가 | `g79_01` · `g79_04c` (production `run_fit`) |
+| 3 native vs 바깥 반복 · 어느 round | `termination = {native_last, native_best, outer ∈ {no_improvement, nonfinite, max_rounds}, n_rounds}` — native 는 scipy status/success/message/nfev/nit 그대로; `native_best` 는 `best_f` 를 낸 round(개선 없으면 None). ~~기존 `ok` = **마지막 round success** = `FitResult.converged` 그대로 (best round 와 다를 수 있음 — 시험이 그 경우를 만든다)~~ **G79-N1 정정: 기존 `ok` = 마지막 **유한** `fun` round 에서 갱신한 success (그런 round 없으면 초기 False); 비유한 round 는 ok 를 갱신하지 않고 break — 유한 뒤 비유한이면 ok 가 남는다. 계산 경로 불변, 설명만 틀렸었다 (`g79_03c`·`g79_03d`)** | `g79_03` · `g79_03b` · 변이 `native-best…` · `outer-stop…` |
+| restart 행 필드 | `restarts_json` 원소에 `converged`(~~그 restart 의 마지막 round success~~ **G79-N1 정정: legacy ok — 마지막 유한 round 에서 갱신한 success, 없으면 False**) · `n_eval`(Σ = FitResult.n_eval) · `termination_status` 추가 | `g79_01` · `g79_04c` (production `run_fit`) |
 | 실패 restart | `FitResult.restart_errors` → fits 열 `restart_errors_json` (index·source·오류). `restarts`/`n_restarts` 는 성공한 것만(불변); adaptive=False 즉시 실패(F86) 그대로 | `g79_04` · `g79_04b` · 변이 `failed-restarts…` |
 | parquet 읽기 실패 | `_parquet_read_failure` (pyarrow 한 번 읽음) → `validate_provenance` `fits_읽기` · `validate_curves_provenance` `curves_읽기` 실패 항목; 예외를 올리지 않음 | `g79_05` · `g79_05b` · 변이 `broken-parquet…` |
 | 4 역사 reader | `normalize_restart_record`: legacy_pair / legacy_dict / v6_prep_logging — 새 키 부재는 **None**, False/0 소급 금지 | `g79_06` · 변이 `absent-restart-fields…` |
@@ -56,7 +56,7 @@ docs-lint                                     전체 회귀 안에 포함 · 요
 ## §4 우리가 스스로 신고하는 것
 
 - 영수증 필드 diff 에 `identity.src_io_sha256` 이 있다 — `src/io.py` 를 바꿨으니 identity 의 일부로 당연하며, 78차 §109 초판 커밋 메시지(`194b1a55`)는 "validator 식별·core·stamp 뿐" 이라고 적어 이 필드를 빠뜨렸다 (§109 본문은 포함). 정직 기록.
-- `converged` 의 뜻은 79차 이전과 같이 **마지막 round 의 success** 다. best round 의 success 가 아니며 둘이 다를 수 있다 — `termination_status.native_best` 가 그것을 따로 말한다. 이 의미를 바꾸는 것은 수치 동작 변경이 아니라도 이번 범위 밖이라 하지 않았다.
+- ~~`converged` 의 뜻은 79차 이전과 같이 **마지막 round 의 success** 다.~~ **G79-N1 정정 (80차):** `converged` 는 79차 이전과 같이 **마지막 유한 `fun` round 에서 갱신한 success** 이고 그런 round 가 없으면 False 다 — 비유한 종료 round 는 `ok` 를 갱신하지 않으므로 "마지막 round 의 success" 라는 우리 설명이 틀렸었다 (동작은 그대로). best round 의 success 와도 다를 수 있다 — `termination_status.native_best`·`native_last`·`outer` 가 각각 따로 말한다. 이 의미를 바꾸는 것은 수치 동작 변경이 아니라도 이번 범위 밖이라 하지 않았다.
 - 실패 restart 기록은 `restarts`/`n_restarts` 의 뜻을 바꾸지 않기 위해 별도 열 `restart_errors_json` 로 두었다 — fits 열이 하나 늘어난다 (새 실행부터; 기존 묶음 불변).
 - 처음부터 통과한 새 시험 4개의 사유는 §109 (골든 2 · F86 유지 · pin 파서 수용).
 - 첫 전체 회귀(`f90a9c89`)는 **1 failed** — `test_stage3_contract_cites_live_code_facts`: 계약 §1 이 인용한 `src/fitting.py` 줄번호(1421·1376·392-406)가 단계 2 추가로 밀렸다 (1487·1442·457-471). 교란 사실은 그대로(시험이 확인). 계약 본문은 손대지 않고 줄번호 세 곳 + 갱신 주석 한 줄만 고쳐(`c77674f6`, RUN_SCOPE 밖) 다시 돌린 결과가 §3 다.

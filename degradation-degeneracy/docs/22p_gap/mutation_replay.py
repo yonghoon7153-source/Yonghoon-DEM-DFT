@@ -1879,6 +1879,10 @@ MUTANTS = [
      '                "converged": r.get("converged") if gen == "v6_prep_logging" else None,\n',
      '                "converged": r.get("converged", False),\n',
      "g79_06"),
+    ("legacy-ok-is-the-last-finite-round-g79", FITTING,                    # G79-N1: ok 를 break 앞에서 갱신하면 의미가 바뀐다
+     '        if not np.isfinite(res.fun):\n            outer = "nonfinite"\n            break\n',
+     '        ok = bool(res.success)\n        if not np.isfinite(res.fun):\n            outer = "nonfinite"\n            break\n',
+     "g79_03c"),
     ("the-replay-context-is-measured-once-g66", MR,                          # 정적 관측
      '    ctx = ctx if ctx is not None else _\u0072eplay_context()\n'
      '    want = _parent_customization_view(ctx)',
@@ -5533,6 +5537,15 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_gate79_stage3_logging.py::test_g79_06_historical_restart_records_report_absent_fields_as_unrecorded_not_false_or_zero": "assert (False is None)",
+        }
+    },
+    # ── 80차 (G79-N1) — `--emit-expect -k legacy-ok` 관측값
+    "legacy-ok-is-the-last-finite-round-g79": {
+        "fail": [
+            "tests/test_gate79_stage3_logging.py::test_g79_03c_a_nonfinite_round_after_a_finite_success_leaves_legacy_ok_true_while_native_last_says_failure",
+        ],
+        "witness": {
+            "tests/test_gate79_stage3_logging.py::test_g79_03c_a_nonfinite_round_after_a_finite_success_leaves_legacy_ok_true_while_native_last_says_failure": "AssertionError: legacy ok 는 마지막 유한 round(1) 의 success 다 — 비유한 round 2 가 덮지 않는다",
         }
     },
     "diagnostic-consumer-binds-out-to-the-receipt-run-g75": {
