@@ -1,0 +1,48 @@
+{
+  "head": "720f0a0e466afb595fbd73a50f89416898cc927c",
+  "decision_report_data_consistent": true,
+  "residual_ids": [
+    "G78-N1",
+    "G78-N2"
+  ],
+  "anchors_checked": [
+    {
+      "path": "docs/22p_gap/GATE78_REQUEST.md",
+      "line": 58,
+      "text": "pairing key"
+    },
+    {
+      "path": "docs/22p_gap/GATE78_REQUEST.md",
+      "line": 60,
+      "text": "pair_group_id"
+    },
+    {
+      "path": "docs/22p_gap/GATE78_REQUEST.md",
+      "line": 62,
+      "text": "complete-pair"
+    },
+    {
+      "path": "docs/22p_gap/GATE78_REQUEST.md",
+      "line": 63,
+      "text": "Δ_worst"
+    },
+    {
+      "path": "docs/22p_gap/GATE78_REQUEST.md",
+      "line": 111,
+      "text": "사용자 승인"
+    },
+    {
+      "path": "docs/22p_gap/GATE78_REQUEST.md",
+      "line": 115,
+      "text": "복원"
+    },
+    {
+      "path": "docs/22p_gap/GATE78_REQUEST.md",
+      "line": 116,
+      "text": "명시 포함"
+    }
+  ],
+  "algebra_state_rows": 9,
+  "provided_program_execution": false,
+  "encoding_replacement_chars": 0
+}

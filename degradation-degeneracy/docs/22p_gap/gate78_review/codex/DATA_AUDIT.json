@@ -1,0 +1,81 @@
+{
+  "head": "720f0a0e466afb595fbd73a50f89416898cc927c",
+  "code": "23c361edbfc92fefcfbf0639b5ac40f61f7ebec7",
+  "prior_head": "ebbcf04ed6cd4f5c2f71b4ebd28031c5fd441002",
+  "source_digest": "1c67a748598baadb",
+  "scope_files": 58,
+  "tracked_files": 2995,
+  "diffs": {
+    "CODE_TO_HEAD_SCOPE": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "G77_TO_G78_SCOPE": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "G77_CORRECTIONS": {
+      "bytes": 13976,
+      "sha256": "207662274732579729b4c014154916b8685eb0f2aba7641ebd51368e986c0c97"
+    },
+    "G77_TO_G78_RESPONSE": {
+      "bytes": 8068,
+      "sha256": "71de96e6d8beb74efb96124a6fcf6e5d90f77c35f66433e40e2646680f8a53ea"
+    },
+    "G77_TO_G78_NAMES": {
+      "bytes": 3381,
+      "sha256": "c35a59390c1eb608b16d5bd7d1992094773e8519db3cb35fa1d73d6ec6b0e4ba"
+    }
+  },
+  "unchanged": {
+    "contract_claims_ledger_receipts": [],
+    "artifacts": [],
+    "registry_projection_publisher": [],
+    "tests": []
+  },
+  "prior_review_package": {
+    "zip": {
+      "bytes": 675103,
+      "sha256": "5753ddfc89f1b9ee2f2bd5abd9279cb48ba38e7ebd46c3d05a390093de91ef1d"
+    },
+    "payload": 34,
+    "manifest": {
+      "bytes": 5163,
+      "sha256": "085dda2d5fac06bb9709ebd80912fff455cdea68744a226d2fcab498956da808"
+    },
+    "exact_set_SHA_CRC_path_case_link": true,
+    "unpacked_identical": 34
+  },
+  "grid_fit_v5": {
+    "members": 29,
+    "bytes": 27313017,
+    "exact_set_SHA": true,
+    "core_sha256": "ae614af28efc8f9e8315198d348b935cf0f32c6f1ab83885ba58e38cc4e83a5b",
+    "claim_scope": "no_active_claim",
+    "inference_role": "diagnostic",
+    "producer_digest": "c2ef1a811e70bb4c",
+    "validator_digest": "1c67a748598baadb",
+    "restoration_and_validation": "existing records; not rerun by reviewer"
+  },
+  "primary_claim": {
+    "id": "P22_STAGE3_PRIMARY",
+    "protocol_generation": "v6",
+    "requires_leg": false,
+    "무엇": "단계 3 의 사전 등록 primary estimand. v5 산출물을 여기로 승격하는 것은 계약 §2.1 이 금지한다."
+  },
+  "not_present": {
+    "docs/22p_gap/preserve_backend.yaml": true,
+    "docs/22p_gap/preserve_index": true,
+    "docs/22p_gap/sentinel_panel.yaml": true
+  },
+  "authorization_scope": "User reports/section108 authorize future local stage1+2 after this review; not execution authority for reviewer",
+  "limits": {
+    "subject_imports": 0,
+    "subject_test_runs": 0,
+    "scientific_COMSOL_Java_runs": 0,
+    "restore_rescore": 0,
+    "source_edits": 0,
+    "class_or_projection_changes": 0,
+    "external_provider_queries": 0
+  }
+}

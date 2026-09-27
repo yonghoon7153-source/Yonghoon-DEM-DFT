@@ -1,0 +1,34 @@
+{
+  "review": "Gate78 design correction and bounded offline implementation scope",
+  "date": "2026-09-27",
+  "head": "720f0a0e466afb595fbd73a50f89416898cc927c",
+  "code": "23c361edbfc92fefcfbf0639b5ac40f61f7ebec7",
+  "source_digest": "1c67a748598baadb",
+  "decision": "CONDITIONAL_STAGE1_2_SCOPE_ACCEPTANCE_PRIMARY_DESIGN_RESIDUALS",
+  "prior_gate76_finite_closure_maintained": true,
+  "prior_findings": {
+    "G77-N1": "CLOSED_DESIGN_CORRECTION_ACCEPTED_NOT_PROVIDER_COMPLETION",
+    "G77-N2": "PARTIAL_ARM_ENDPOINT_ACCEPTED_PAIRING_MISSINGNESS_RESIDUALS",
+    "G77-N3": "CLOSED_DESIGN_CORRECTION_ACCEPTED_NOT_PILOT_APPROVAL"
+  },
+  "findings": [
+    {"id": "G78-N1", "priority": 1, "parent": "G77-N2", "scope": "Latent group ID versus unique observation pairing key"},
+    {"id": "G78-N2", "priority": 1, "parent": "G77-N2", "scope": "Complete-pair denominator, missing-outcome bounds, and separate zero-failure gate"}
+  ],
+  "future_scope": {
+    "stage1_documents": "Correct residuals or retain unresolved status, no false primary registration",
+    "stage2": "Restart-level logging and structured parquet read failures only",
+    "conditions": ["No optimizer/scientific numerical behavior changes", "No stage3-6 implementation", "Historical read-only semantics retained", "Only explicitly authorized test/smoke and existing-leg receipt validation"],
+    "user_authorization": "Reported by user and fixed section108/section4; after reviewer reply",
+    "reviewer_granted_new_authority": false,
+    "extra_plan_only_prereview_required": false,
+    "next_delivery": "GATE79: corrected design text plus already-authorized bounded implementation evidence"
+  },
+  "primary_design_fully_accepted": false,
+  "execution_GO": false,
+  "grid_fit_v5": {"inference_role": "diagnostic", "claim_scope": "no_active_claim"},
+  "performed": {"data_static_audit": true, "reviewer_fabricated_arithmetic": true,
+    "subject_imports": 0, "provided_tests": 0, "scientific_runs": 0, "COMSOL_Java_runs": 0,
+    "restore_rescore": 0, "production_edits": 0, "class_or_projection_changes": 0},
+  "sender_reported_not_rerun": {"pytest_passed": 1944, "pytest_xfailed": 2, "docs_lint_passed": 358}
+}

@@ -1,0 +1,8 @@
+{
+  "head": "720f0a0e466afb595fbd73a50f89416898cc927c",
+  "checked_tracked_files": 2995,
+  "changed": [],
+  "bytes_size_sha_unchanged": true,
+  "git_status": "",
+  "scope": "Fixed reviewer checkout only, not the source host or remote process/storage inventory"
+}

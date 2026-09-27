@@ -1,0 +1,37 @@
+diff --git a/degradation-degeneracy/docs/08_REVIEW_RESPONSE.md b/degradation-degeneracy/docs/08_REVIEW_RESPONSE.md
+index 9c25c11..ddd47a2 100644
+--- a/degradation-degeneracy/docs/08_REVIEW_RESPONSE.md
++++ b/degradation-degeneracy/docs/08_REVIEW_RESPONSE.md
+@@ -8372,7 +8372,7 @@ RUN_SCOPE `c2ef1a811e70bb4c → 27390883eb132941`. 두 실물 영수증은 원
+ 
+ | 선택지 | 판단 | 왜 |
+ |---|---|---|
+-| grid_fine 격자를 현행 코드로 `active_claims` 재실행 (10 h) | ✗ | E9-0 의 목적("현행 code identity 로 다시 계산해 gate·lifecycle·보존 계약이 완주하는지")은 `grid_fit_v5` 가 이미 이뤘다. 같은 코드·config·protocol 이라 산출이 같고, 지지할 v6 주장이 없으며 현행 digest 는 세대표에 없다. 76차는 `no_active_claim` 승격을 부여하지 않았다 |
++| grid_fine 격자를 현행 코드로 `active_claims` 재실행 (10 h) | ✗ | E9-0 의 목적("현행 code identity 로 다시 계산해 gate·lifecycle·보존 계약이 완주하는지")은 `grid_fit_v5` 가 이미 이뤘다. ~~같은 코드·config·protocol 이라 산출이 같고,~~ (77차 비차단 정정: 바이트 동일 보증 아님 — producer `c2ef1a…` ≠ 현행 `1c67a748…`; 충분한 이유는 "같은 설계를 반복해도 v6 의 새 대조·주장을 얻지 못한다") 지지할 v6 주장이 없으며 현행 digest 는 세대표에 없다. 76차는 `no_active_claim` 승격을 부여하지 않았다 |
+ | 결과 정리·위키 | △ | 새 사실이 없다 — 병행 가능하나 과학 진전은 아니다 |
+ | **단계 3 계약 재심사 → §11 13 착수** | **✓** | 원래 질문(09 문서 §1 — 22p 동작점에서 두 전극을 가를 수 있는가)에 답하려면 §7 primary estimand 를 v6 protocol 로 재야 한다. 계약 §11 은 "12 보존 → 13 RUN_SCOPE·pilot" 이고 "여기까지 문서·회귀 재심사 ← 지금 여기" 에서 25차 이후 열리지 않았다. 12 는 46~76차에 걸쳐 실물 다리로 완주했다. 13 은 코드 라운드라 그 전에 심사가 필요하다 |
+ 
+@@ -8381,3 +8381,23 @@ RUN_SCOPE `c2ef1a811e70bb4c → 27390883eb132941`. 두 실물 영수증은 원
+ **요청문:** `docs/22p_gap/GATE77_REQUEST.md` — §13.1 묶음 상태표에 25차 이후 근거를 붙인 갱신 초안(닫힘 판정은 리뷰), §11 위치, 13 을 열기 전 사람이 정할 여섯 결정(candidate mode · 예산 · sentinel panel · estimand · 고유 leg 목록/비용 · 원자료 잃은 7다리 처리)에 대한 우리 제안, 질문 5. **실행 GO 를 묻지 않는다.** RUN_SCOPE 변경 없음 — 판정 대상 코드는 76차와 같은 `23c361ed` · `1c67a748598baadb`.
+ 
+ **하지 않은 것:** 새 계산 없음 · `STAGE3_CONTRACT.md` §13.1 표 본문은 고치지 않았다 (리뷰 판정 뒤) — 포인터 한 줄만 · class/투영/원장 변경 없음.
++
++## §108 77차 접수 — **방향 수용 · "12 전체 완료 → 13 일괄 착수" 불수용 · 설계 정정 3건 (N1 P1 · N2 P1 · N3 P2)** · 76차 종결 유지 · 실행 GO 없음
++
++2026-09-27 접수. 리뷰어 고정: 요청 HEAD `ebbcf04ed6cd4f5c2f71b4ebd28031c5fd441002` · 코드 `23c361ed` · 독립 `source_digest 1c67a748598baadb` (58 파일) · 코드→HEAD / 76→77 RUN_SCOPE diff 0 · 76차 이후 원장·CLAIM_STATUS·영수증·artifacts·시험·투영 diff 0 · 검토 checkout 2,958 파일 보존. 패키지 원본 `docs/22p_gap/gate77_review/` (zip sha256 `5753ddfc89f1b9ee2f2bd5abd9279cb48ba38e7ebd46c3d05a390093de91ef1d`, MANIFEST 34 files · 커밋 뒤 blob 대조 **34/34** · `-text !eol` 규칙 먼저 `12163316`). 정적·데이터 검토만 (suite·복원·재채점·COMSOL 미실행).
++
++**결론 (그대로):** "단계 3 재심사를 다음 과제로 고른 방향은 수용한다. 그러나 현 문구의 '단계 12 전체 완료 → 단계 13 일괄 착수' 는 그대로 수용하지 않는다. 설계 정정 3건(N1·N2·N3)을 반영한 제한 오프라인 구현 라운드를 권고한다. 실제 착수는 사용자의 별도 범위 승인에 따른다. pilot/본 계산 GO 는 없다."
++
++| id | 등급 | 무엇을 틀렸나 | 최소 정정 | 우리 대응 |
++|---|---|---|---|---|
++| **G77-N1** | P1 | grid_fit_v5 로컬 완주(lifecycle → `artifacts/` → 복원/검증 영수증 → 원장)를 §13.2 retention provider/CAS 등록 경로의 증거로 취급 (receipt URI `artifacts/grid_fit_v5` · `CasBackend.ENFORCEMENT` advisory · `preserve_backend.yaml`/`preserve_index` 부재 · `registered == {}`) | 단계 12 를 "로컬/협조적 경로 실물 확인" 과 "운영 보존 profile 부분" 으로 분리 · 묶음 8·9 의 로컬 하위 범위와 provider 잔여를 각각 · profile 선택(계약 유지 + pilot 전 별도 canary gate / 로컬 한정은 사용자 명시 승인) | `GATE78_REQUEST.md` §1 (12-L/12-P · 묶음 8·9 분리 · 선택 1 채택) |
++| **G77-N2** | P1 | primary arm 을 `equal_start_count_base_retained`(warm) 로, "transition table 확정" 을 사전 등록으로 제안 — §7 은 grid · no-warm · 같은 base·bank·총 B 의 paired contrast, scalar Δ 하나, 네 칸은 분해; base-retained 는 §7.2 secondary; claim ID 존재 ≠ 사전 등록 | primary 한 행에 reference · 두 warm flag · p_ini · 두 objective 후보 배열/총수 · pairing key · scalar·분모·실패/누락 처리 · 전이 분해를 적고 secondary 와 분리 | `GATE78_REQUEST.md` §2 (한 행 · 분모 complete-pair · Δ_worst 병기 · 5% 상한 · union 제외) |
++| **G77-N3** | P2 | "pilot 전 숫자 없음" 을 예산 전체에 걸었고 §9.4 다섯 필드를 "독립 첫 단계" 로 — `candidate_id`/`bank_index` 는 design→bank→provider 결속에 의존 (serializer 는 `p/J/i/source/warm` 만) | 미정은 최종 채택 B 뿐; ladder·max B·중단·floor 측정 단계·provider 동결·tolerance 사전 등록·stratum/holdout·자원 상한을 사전 고정; 의존 순서 6단계 | `GATE78_REQUEST.md` §3 (사전 고정/측정 뒤 표 · 의존 순서 6단계 · 제한 구현 범위 = 단계 1+2) |
++
++**§4 답 (그대로):** ① 로컬 실물 증거 수용, retention provider 증거 미수용 ② 12 전체 종료 아니오, 정정 후 제한 오프라인 구현 설계는 조건부 수용 가능 ③ 순서는 의존 관계대로; 영수증은 최종 코드 고정 뒤 대상 leg 별 라운드 끝 1회 원칙 조건부 수용 (재생성은 restore/validate/rescore 이므로 명시 승인 범위에 포함; 중간 digest 의 옛 영수증을 새 PASS 로 쓰지 않음) ④ 여섯 결정은 리뷰 §4 표 (primary·탐색/실패 규칙 먼저, 최종 B·새 수치는 측정 뒤) ⑤ 새 실행 GO 없음, grid_fit_v5 진단/no_active_claim 유지.
++
++**비차단 정정:** "같은 코드라 산출이 같다" → 바이트 동일 보증 아님 (producer `c2ef1a…` ≠ 현행 `1c67a748…`); 충분한 이유는 "같은 설계를 반복해도 v6 의 새 대조·주장을 얻지 못한다" — §107 · `GATE77_REQUEST.md` §0 취소선. 76차 접수문의 첫 RED 18·history 3+현행 1 정정 수용. 등록부 367/369 혼선은 차단 사유 아님.
++
++**사용자 결정 (2026-09-27, 78차 요청문 커밋 `284d2153` 뒤):** ① 제한 오프라인 구현(§3.2 단계 1+2, 라운드 끝 leg 별 영수증 1회 포함) **승인 — 78차 회신 뒤 착수** ② 보존 profile **선택 1 유지** (§13.2 retention 계약 유지 · 운영 backend·canary 는 첫 pilot 전 별도 gate; 선택 2 로컬 한정은 채택하지 않음). 회신 전까지 코드를 건드리지 않는다.
++
++**이 접수에서 한 것:** 패키지 보존 · `GATE77_REQUEST.md` §1·§2·§3·§4 취소선 정정 · `GATE78_REQUEST.md` (N1 상태표 · N2 primary 한 행 · N3 의존/사전 고정 표 · 제한 오프라인 구현 범위 = §3.2 단계 1+2). **하지 않은 것:** 코드 변경 없음 (RUN_SCOPE diff 0) · 새 계산·복원·class/투영·영수증 재생성 없음 · `STAGE3_CONTRACT.md` 본문 불변 (리뷰 판정 뒤) · 구현 착수 없음 (사용자 승인 대기).

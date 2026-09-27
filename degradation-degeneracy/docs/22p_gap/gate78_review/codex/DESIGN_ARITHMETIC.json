@@ -1,0 +1,170 @@
+{
+  "scope": "Reviewer-owned finite algebra and fabricated rows; not subject code regression or actual scientific results",
+  "head": "720f0a0e466afb595fbd73a50f89416898cc927c",
+  "labels": {
+    "pass": 0,
+    "raw_degeneracy_fail": 1,
+    "unobserved": null
+  },
+  "contribution": "d = label_34 - label_33; positive means 34 has more failures",
+  "single_pair_state_table": [
+    {
+      "label_33": 0,
+      "label_34": 0,
+      "admissible_d": [
+        0
+      ],
+      "lower": 0,
+      "upper": 0,
+      "missing_as_fail_d": 0,
+      "is_upper_bound": true
+    },
+    {
+      "label_33": 0,
+      "label_34": 1,
+      "admissible_d": [
+        1
+      ],
+      "lower": 1,
+      "upper": 1,
+      "missing_as_fail_d": 1,
+      "is_upper_bound": true
+    },
+    {
+      "label_33": 0,
+      "label_34": null,
+      "admissible_d": [
+        0,
+        1
+      ],
+      "lower": 0,
+      "upper": 1,
+      "missing_as_fail_d": 1,
+      "is_upper_bound": true
+    },
+    {
+      "label_33": 1,
+      "label_34": 0,
+      "admissible_d": [
+        -1
+      ],
+      "lower": -1,
+      "upper": -1,
+      "missing_as_fail_d": -1,
+      "is_upper_bound": true
+    },
+    {
+      "label_33": 1,
+      "label_34": 1,
+      "admissible_d": [
+        0
+      ],
+      "lower": 0,
+      "upper": 0,
+      "missing_as_fail_d": 0,
+      "is_upper_bound": true
+    },
+    {
+      "label_33": 1,
+      "label_34": null,
+      "admissible_d": [
+        -1,
+        0
+      ],
+      "lower": -1,
+      "upper": 0,
+      "missing_as_fail_d": 0,
+      "is_upper_bound": true
+    },
+    {
+      "label_33": null,
+      "label_34": 0,
+      "admissible_d": [
+        -1,
+        0
+      ],
+      "lower": -1,
+      "upper": 0,
+      "missing_as_fail_d": -1,
+      "is_upper_bound": false
+    },
+    {
+      "label_33": null,
+      "label_34": 1,
+      "admissible_d": [
+        0,
+        1
+      ],
+      "lower": 0,
+      "upper": 1,
+      "missing_as_fail_d": 0,
+      "is_upper_bound": false
+    },
+    {
+      "label_33": null,
+      "label_34": null,
+      "admissible_d": [
+        -1,
+        0,
+        1
+      ],
+      "lower": -1,
+      "upper": 1,
+      "missing_as_fail_d": 0,
+      "is_upper_bound": false
+    }
+  ],
+  "state_table_count": 9,
+  "pairing_counterexample": {
+    "planned_observation_pairs": 2,
+    "same_pair_group_id": true,
+    "correct_table": {
+      "0->0": 0,
+      "0->1": 1,
+      "1->0": 1,
+      "1->1": 0
+    },
+    "group_only_many_to_many_table": {
+      "0->0": 1,
+      "0->1": 1,
+      "1->0": 1,
+      "1->1": 1
+    },
+    "correct_n": 2,
+    "incorrect_n": 4,
+    "correct_delta": "0",
+    "incorrect_delta": "0",
+    "note": "Delta happens to agree at zero; transition counts and denominator are still wrong."
+  },
+  "missing_sensitivity_counterexample": {
+    "N": 40,
+    "n_complete": 38,
+    "m_missing_pairs": 2,
+    "complete_sum_d": 1,
+    "missing_pattern": "2 x (33 unknown, 34 pass)",
+    "missing_fraction": "1/20",
+    "request_over_5pct_gate_fires": false,
+    "complete_pair_delta": "1/38",
+    "missing_as_fail_delta_full_planned_denominator": "-1/40",
+    "sharp_full_planned_lower": "-1/40",
+    "sharp_full_planned_upper": "1/40",
+    "sign_flip_in_imputed_point_estimate": true
+  },
+  "zero_gate_distinction": {
+    "N": 100,
+    "missing_due_to_solver_failure": 1,
+    "over_5pct": false,
+    "violates_zero_solver_failure": true,
+    "note": "If 5% is a separate reporting policy it must not replace section6.2 solver-health acceptance."
+  },
+  "recommended_formula": {
+    "complete_pair": "D/n, n>0; label as complete-pair conditional descriptive statistic",
+    "full_planned_bound": "[(D + sum(lower_i))/N, (D + sum(upper_i))/N], N>0",
+    "looser_conservative_bound": "[(D-m)/N, (D+m)/N]; may ignore known one-sided outcomes",
+    "not_a_confidence_interval": true,
+    "no_claim_of_missing_at_random": true
+  },
+  "subject_imports": 0,
+  "solver_calls": 0,
+  "provided_tests_executed": 0
+}
