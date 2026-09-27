@@ -1,0 +1,652 @@
+{
+ "slug": "li2026_li_kinetic_promoter_aqueous_mn_sulfur",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-27",
+ "sources": [
+  "0927-1. JACS_2026_Li_Li_kinetic_promoter_aqueous_multivalent_Mn-S_MAIN.pdf",
+  "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Electrochemical performance evaluation. (a) Galvanostatic charge and discharge curves at a specific current of 0.5 A g−1. (b) Cyclic voltammograms of Li+-S, Mn2+-S and Li+/Mn2+-S half cells. Insets are the corresponding schematic illustration of the reaction pathways. (c) Rate performance for Li+, Mn2+ and Li+/Mn2+-S systems and (d) the cycling performance. (e) Long-term cycling performance of the S||LiMn2O4 full cell in Li+/Mn2+-S system at a high specific current. (f) Comparison of rate performance with other reported metal−sulfur systems.27−32 the practical evaluation of transition-metal ion SABs is typically restricted to low current densities (<2 A g−1) and reversible capacities that are commonly below 500 mAh g−1 under high- rate conditions.27 shows small voltage polarization and sharp redox peaks, indicating fast electrochemical kinetics, but suffers from rapid capacity ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    410.8
+   ],
+   "w": 2151,
+   "h": 1486,
+   "dpi": 300,
+   "src": "0927-1. JACS_2026_Li_Li_kinetic_promoter_aqueous_multivalent_Mn-S_MAIN.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Analysis of reaction mechanism in Li+/Mn2+-S system. (a) In situ Raman during the first cycle. (b) Raman spectra of the discharge products in the Li+/Mn2+-S system compared with the standard MnS powder. (c) XPS spectra and (d) synchrotron XRD patterns in Li+/Mn2+-S systems collected at different discharge/charge depths. DX and CX denote discharge and charge at different states (X%), respectively. (e) UV−vis spectra of 0.1 m Li2S solution with various amounts of Mn2+ addition. The inset presents photographs of the pristine Li2S solution, MnCl2 powder, and the resulting mixture after blending. (f) ICP-derived Li and Mn contents in electrodes collected at different states during a cycle. (g) ICP analysis of Li+ and Mn2+ contents in discharged electrodes of the first 4 cycles. mAh g−1 at a current density of 5 A g−1 for 200 cycles with a nearly 100% CE (Figure 1d). In contrast, bot",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    448.3
+   ],
+   "w": 2151,
+   "h": 1642,
+   "dpi": 300,
+   "src": "0927-1. JACS_2026_Li_Li_kinetic_promoter_aqueous_multivalent_Mn-S_MAIN.pdf",
+   "blank": 0.847
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Evidence for solid-state-dominated sulfur conversion. (a−c) In situ UV−vis spectra during the discharge process of Li+, Mn2+ and Li+/ Mn2+-S systems. (d) The schematics of in situ EQCM measurement. (e) and (f) In situ EQCM and corresponding integrated Q-t curves under CV test in Mn2+ and Li+/Mn2+-S systems. (g) and (h) TOF-SIMS contents and mapping of the discharged electrode in Mn2+ and Li+/Mn2+-S systems. To further elucidate the role of Li+ activity in regulating the discharge products, electrolytes with different LiCl concen- trations are investigated. With increasing LiCl concentration, the cells exhibit markedly improved reversibility and more stable voltage profiles, as shown in the charge/discharge profiles of the first three cycles (Figure S16a). XPS analysis of the discharged electrodes after three cycles, shown in Figure S16b, reveals that the binding energy of S2−sh",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    475.3
+   ],
+   "w": 2151,
+   "h": 1755,
+   "dpi": 300,
+   "src": "0927-1. JACS_2026_Li_Li_kinetic_promoter_aqueous_multivalent_Mn-S_MAIN.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Kinetic analysis of desolvation, bond breaking and ionic transport. (a) Diffusion resistance (Rd) variation along with the state of discharge (SoD). (b) Steady state CA profiles for Li+-S, Mn2+-S and Li+/Mn2+-S systems. (c) DFT calculated binding energies of various solvation structures. (d) S1−S2 bond lengths of MnS4 interacted with Mn(H2O)6, Mn(H2O)3Cl3 and LiCl4. (e) Integrated crystal orbital Hamilton population (ICOHP) analysis of S1−S2 bonds interacted with Mn(H2O)6, Mn(H2O)3Cl3 and LiCl4. (f) Schematic illustration of Li+ and Mn2+ migration path in MnS structure, and (g) the calculated migration energy of Li+ and Mn2+ along the migration path. polysulfides upon Li+ introduction. The sulfur species formed under these conditions are further converted and retained in the solid phase in the Mn2+-containing electrolyte, thereby minimizing liquid intermediates. In situ differe",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    442.7
+   ],
+   "w": 2151,
+   "h": 1619,
+   "dpi": 300,
+   "src": "0927-1. JACS_2026_Li_Li_kinetic_promoter_aqueous_multivalent_Mn-S_MAIN.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Universality verification and conceptual illustration of Li+ kinetic promoter. Galvanostatic charge−discharge profiles of (a) Ni2+-S, Li+/ Ni2+-S, and (b) Zn2+-S and Li+/Zn2+-S systems of the third cycle. The corresponding S 2p XPS spectra of the discharge products from those systems are shown on the right side. (c) Schematic illustration of sulfur conversion pathways in M2+-S and Li+-promoted M2+-S systems. The interfacial stability with Li+ introduction is further reflected in the self-discharge behavior (Figure S21). During open-circuit rest for 24 h, both Li+-S and Mn2+-S cells exhibit obvious potential decay and capacity loss, with CE < 10%. In contrast, the Li+/Mn2+-S cell maintains a CE above 90% with less voltage drift. Hence, the introduction of Li+ enables a more stable solid-phase conversion and effectively suppresses shuttle-driven self-discharge in the Mn2+-contain",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    337.7
+   ],
+   "w": 2151,
+   "h": 1182,
+   "dpi": 300,
+   "src": "0927-1. JACS_2026_Li_Li_kinetic_promoter_aqueous_multivalent_Mn-S_MAIN.pdf",
+   "blank": 0.843
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 6,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Galvanostatic charge-discharge profiles of the first cycle recorded at a 0.5 A g–1, b 0.2 A g–1, and c 0.1 A g–1. Note: At 0.5 A g–1, the first charging curve shows a long plateau at around −0.6 V vs Ag/AgCl, which is assigned to the oxidation of Li2S formed during the preceding discharge process (Figure S1a). This behavior arises because the relatively low Mn2+ concentration in the electrolyte, combined with the high current, causes strong Mn2+ concentration polarization near the electrode; the local depletion of Mn2+ favors a Li+-S conversion route and leads to additional Li2S which is oxidized in the first charge. When the current density is decreased to 0.2 and 0.1 A g–1, electrolyte ions have more time to migrate from the bulk to the electrode surface, the Mn2+ concentration gradient is strongly alleviated, and the associated Li2S oxidation plateau becomes progressively s",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    74.2,
+    516.7,
+    200.2
+   ],
+   "w": 1803,
+   "h": 526,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 7,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Rate performance of high-loading sulfur electrodes in half cell. a and b S@AC electrodes with sulfur loadings of 3.13 and 4.83 mg cm –2 in the Li+/Mn2+-S system, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.8,
+    65.8,
+    514.0,
+    223.9
+   ],
+   "w": 1793,
+   "h": 660,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Supplementary electrochemical performance of the half-cell and full cell. a Galvanostatic charge/discharge curves at various current densities of the half cell. b Galvanostatic charge/discharge curve of the S||LiMn2O4 full cell at 0.5 A g–1 during the third cycle in Li+/Mn2+-S system. c Rate performance for full cell in Li+/Mn2+-S system.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    316.5,
+    514.0,
+    636.2
+   ],
+   "w": 1792,
+   "h": 1333,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Decoupled alkaline Zn||S full cell. a Schematic illustration of the decoupled Zn||S cell with Zn anode, LiOH + Zn(OAc)2 anolyte, Nafion membrane, and 1M20L catholyte. b and c Charge/discharge profiles of the cathode, anode and full cell. d Rate performance and Coulombic efficiency of the full cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    65.8,
+    514.0,
+    351.1
+   ],
+   "w": 1792,
+   "h": 1190,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.813
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 8,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Photographs of electrolytes with different Li+/Mn2+ ratios.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    474.9,
+    511.2,
+    612.5
+   ],
+   "w": 1780,
+   "h": 575,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.063
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 9,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Physical properties and spectral analysis of different electrolytes. a Ionic conductivity and viscosity of different electrolytes. b-c Raman spectra of different electrolytes. d UV-vis spectra of different electrolytes. Note: The Raman spectra of O-H stretching vibration modes (2700-4000 cm–1) are deconvoluted into three Gaussian components: strong H-bond (~3230 cm–1), weak H-bond (~3450 cm–1), and non- H-bond (~3600 cm–1).",
+   "rotated_deg": 0,
+   "bbox": [
+    83.8,
+    65.8,
+    514.0,
+    396.1
+   ],
+   "w": 1793,
+   "h": 1377,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 10,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. EPR spectra of different electrolytes. a and b EPR spectra of 1M, 1M10L and 1M20L.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    65.8,
+    516.6,
+    240.8
+   ],
+   "w": 1803,
+   "h": 730,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 11,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Snapshots from the MD simulations of the electrolyte containing a 1M. b 1M20L. c Radial distribution function g(r) and corresponding coordination numbers of Mn-Cl in different electrolytes. d The radial distribution function g(r) and corresponding coordination numbers of Mn- O in different electrolytes. Note: MD simulations reveal that increasing LiCl content modifies the local environment of Mn2+ from a water-rich shell to a mixed H2O/Cl– shell. In the 1M electrolyte, Mn2+ is mainly surrounded by water molecules, whereas in the 1M20L electrolyte, more contact ion pairs and Cl– bridged structures appear, and the Mn-O coordination number decreases while the Mn-Cl coordination number increases. These trends confirm that LiCl addition drives a partial replacement of Mn-H2O by Mn-Cl interactions and strengthens the Cl– network around Mn2+, in line with the speciation discussed in ",
+   "rotated_deg": 0,
+   "bbox": [
+    83.8,
+    65.8,
+    514.0,
+    419.2
+   ],
+   "w": 1793,
+   "h": 1473,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.852
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 12,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. XANES and synchrotron XRD characterization. a XANES spectra of the discharged electrodes in Li+-S, Mn2+-S and Li+/Mn2+-S electrolytes. b Synchrotron XRD patterns in Li+/Mn2+- S systems collected at different states.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    65.8,
+    514.0,
+    255.2
+   ],
+   "w": 1792,
+   "h": 790,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 12,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. XPS spectra of standard Li2S and MnS powders.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    363.2,
+    403.0,
+    525.4
+   ],
+   "w": 1329,
+   "h": 677,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 13,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. XRD patterns of the precipitate after adding MnCl2 to a 0.1 m Li2S solution. Note. To minimize the influence of air oxidation and uncontrolled hydrolysis during the precipitation experiment, the Li2S solution was prepared using N2-purged deionized water, and the whole precipitation process was carried out in an Ar-filled glove box. MnCl2 powder was directly added into the 0.1 m Li2S solution, and the precipitate was collected and dried under protected conditions before XRD characterization. The obtained XRD pattern can be mainly indexed to MnS, with almost no obvious diffraction peaks from other crystalline phases. These results indicate that MnS is the dominant crystalline precipitate under the strictly controlled experimental conditions, supporting the Mn2+-induced trapping of soluble sulfide species.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    65.8,
+    514.0,
+    241.6
+   ],
+   "w": 1792,
+   "h": 733,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.968
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 14,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. UV-vis spectra of 0.1 m Li2S2, 0.1 m Li2S4, 0.1 m Li2S6, 0.1 m Li2S8 solutions with various amounts of Mn2+ addition.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    65.8,
+    514.0,
+    409.6
+   ],
+   "w": 1792,
+   "h": 1433,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.963
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 14,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Ex situ UV–vis spectra of the washing solutions collected from electrodes at different states of charge and discharge in Li+/Mn2+-S system.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    502.1,
+    514.0,
+    695.7
+   ],
+   "w": 1792,
+   "h": 807,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.968
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 15,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. SEM and EDS mapping of the discharged S electrode in Mn2+-S and Li+/Mn2+-S systems.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    65.8,
+    514.0,
+    478.6
+   ],
+   "w": 1792,
+   "h": 1721,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.564
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 16,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. TEM and high-resolution TEM images of the discharge electrode in Li+/Mn2+-S system. a. TEM image. b. High resolution TEM. The interplanar spacing of 0.299, 0.341 and 0.322 nm corresponds to the (101), (100) and (002) crystal faces of γ-MnS, respectively. Note. TEM images further reveal well-defined lattice fringes corresponding to the (100), (002), and (101) planes of MnS, with a slight lattice expansion that may be associated with partial Li+ incorporation.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    65.8,
+    514.0,
+    246.1
+   ],
+   "w": 1792,
+   "h": 752,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.342
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 17,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Effects of the Li+/Mn2+ ratio on electrochemical behaviors and product composition. a Galvanostatic charge/discharge curves of the first three cycles in various electrolytes. b XPS results of S 2p of discharged electrodes after three cycles in various electrolytes. Note: Figure S16 compares cells with different Li+/Mn2+ ratios under identical conditions. With higher LiCl content, the plateaus in charge and discharge curves become more overlapping, and the S 2p spectra show a larger fraction of sulfide species, while high-valent sulfur signals are strongly suppressed. With increasing LiCl concentration, the charge/discharge curves become more reversible and the high-valent sulfur signals are suppressed. This trend indicates that Li+ participation increases with LiCl concentration and that the reaction evolves from a Mn-S- dominated process toward a dual-cation Li-Mn-S conversi",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    65.8,
+    516.6,
+    265.9
+   ],
+   "w": 1803,
+   "h": 835,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 18,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Electrochemical behavior of S@AC electrodes in ChCl-containing electrolytes. a and b Charge/discharge profiles and cycling performance in 1 m MnCl2+10 m LiCl+10 m ChCl electrolyte. c and d Charge/discharge profiles and cycling performance in 1 m MnCl2 + 20 m ChCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    65.8,
+    514.0,
+    378.1
+   ],
+   "w": 1792,
+   "h": 1302,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 19,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. Schematic of in situ UV-vis detection configuration.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    118.6,
+    403.0,
+    300.5
+   ],
+   "w": 1329,
+   "h": 759,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 19,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. In situ DEMS result of Li+/Mn2+-S system during a cycle.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    377.5,
+    406.4,
+    532.0
+   ],
+   "w": 1344,
+   "h": 645,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 20,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. Reversibility characterization. a Mass response of blank carbon electrode during 4 cycles. b Calculated mass loss of the electrodes derived from in situ EQCM test during 4 cycles. Note. EQCM analysis of mass-charge ratio. We first estimated the theoretical mass-charge ratios for ideal Li-only and Mn-only limiting cases, in which the mass change is simplified as mainly arising from cation participation. For the Li-only process: S + 2Li+ + 2e− → Li2S Two Li⁺ ions are inserted for every two electrons, and sulfur does not change mass. The mass increase per mole of electrons is equal to the molar mass of Li (MLi = 6.94 g mol−1), giving a theoretical mass-charge ratio:(Δm/ΔQ) Li = MLi / F ≈ 72 ng mC−1 (F = 96485 C mol−1). For the Mn-only process: S + Mn2+ + 2e− → MnS. One Mn2+ ion is inserted per two electrons. The mass increase per mole of electrons is MMn/2 (MMn = 54.94 g mol −1)",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    65.8,
+    514.0,
+    241.6
+   ],
+   "w": 1792,
+   "h": 733,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 21,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. Self-discharge behaviors. a Self-discharge behavior after 24 h in Li+-S, Mn2+-S and Li+/Mn2+-S systems. b and c Self-discharge behavior after 48 h in Li+/Mn2+-S system.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    65.8,
+    514.0,
+    192.1
+   ],
+   "w": 1792,
+   "h": 527,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 21,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. Galvanostatic intermittent titration (GITT) tests in Li+-S, Mn2+-S, and Li+/Mn2+- S systems. a-c GITT curves and corresponding polarization in various electrolytes. d The comparison of polarization of different systems during the discharge process.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.8,
+    284.6,
+    514.0,
+    591.6
+   ],
+   "w": 1793,
+   "h": 1281,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 22,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. EIS analysis in Li+-S, Mn2+-S, and Li+/Mn2+-S systems. a In situ galvanostatic charge/discharge curve in Li+-S system. b-c In situ EIS curves and corresponding DRT analysis during the discharge process in Li+-S system. d In situ galvanostatic charge/discharge curve in Mn2+- S system. e-f In situ EIS curves and corresponding DRT analysis during the discharge process in Mn2+-S system. g In situ galvanostatic charge/discharge curve in Li+/Mn2+-S system. h-i In situ EIS curves and corresponding DRT analysis during the discharge process in Li+/Mn2+-S system.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    65.8,
+    514.0,
+    374.1
+   ],
+   "w": 1792,
+   "h": 1285,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 23,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. EIS analysis in Li+/Mn2+-S systems during the charging process. a In situ EIS curves and corresponding b DRT analysis during the charging process in Li+/Mn2+-S system.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.8,
+    81.4,
+    514.0,
+    242.3
+   ],
+   "w": 1793,
+   "h": 671,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 23,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. Projected density of states (PDOS) of S atoms interacting with Mn(H2O)6, Mn(H2O)3Cl3 and LiCl4.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    339.8,
+    514.0,
+    539.7
+   ],
+   "w": 1792,
+   "h": 833,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 24,
+   "file": "fig_S26.png",
+   "caption": "Figure S26. Li+-promoted strategy applied in Ni2+-S system. a. Long-term cycling performance of Ni2+-S and Li+/Ni2+-S systems. b. XANES spectra of the discharged electrode in Li+-S, Ni2+-S and Li+/Ni2+-S systems.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    65.8,
+    514.0,
+    232.6
+   ],
+   "w": 1792,
+   "h": 696,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 24,
+   "file": "fig_S27.png",
+   "caption": "Figure S27. Li+-promoted strategy applied in Zn2+-S system. a. Long-term cycling performance of Zn2+-S and Li+/Zn2+-S systems. b. XANES spectra of the discharged electrode in Li+-S, Zn2+-S and Li+/Zn2+-S systems.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.8,
+    347.3,
+    514.0,
+    513.1
+   ],
+   "w": 1793,
+   "h": 692,
+   "dpi": 300,
+   "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
+   "blank": 0.924
+  }
+ ]
+}
