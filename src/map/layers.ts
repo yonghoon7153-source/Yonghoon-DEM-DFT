@@ -46,7 +46,8 @@ const MAP_NOTES_UNTIL = 5;
 function parts(n: PlaceName, mode: LabelMode): { main: string; furi: string } {
   if (mode === 'kana') return { main: n.kana, furi: '' };
   if (mode === 'ko') return { main: n.ko, furi: '' };
-  return { main: n.ja, furi: mode === 'furi' ? n.kana : '' };
+  // a note like 「山↑」 has no reading of its own: never write the same thing twice
+  return { main: n.ja, furi: mode === 'furi' && n.kana !== n.ja ? n.kana : '' };
 }
 
 /** Rough text width: CJK / kana / hangul are square, the rest narrower. */
