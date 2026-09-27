@@ -475,14 +475,17 @@
       },
       "org": "やまなし観光推進機構",
       "about": {
-        "ja": "武田信玄の兜をかぶった犬。山梨県観光PRキャラクター",
-        "ko": "다케다 신겐의 투구를 쓴 개. 야마나시현 관광 PR 캐릭터"
+        "ja": "山梨県が大好きな甲斐犬の男の子。武田菱の兜と富士山の腹掛け、風林火山の軍配。富士の国やまなし観光キャラバン隊長",
+        "ko": "야마나시를 좋아하는 가이견(甲斐犬) 남자아이. 다케다 문장 투구와 후지산 배두렁이, 풍림화산 군배. 야마나시 관광 캐러밴 대장"
       },
       "line": {
         "ja": "風林火山！山梨へおいで",
         "ko": "풍림화산! 야마나시로 와"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/takedahishimaru.webp",
+      "credit": "©やまなし観光推進機構",
+      "url": "https://www.yamanashi-kankou.jp/kankou/event/takeda-hishimaru.html"
     },
     {
       "id": "arukuma",

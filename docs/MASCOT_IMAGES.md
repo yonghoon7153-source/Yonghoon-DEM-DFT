@@ -1,6 +1,6 @@
 # 마스코트 그림 목록
 
-받은 그림 **16 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
+받은 그림 **17 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
 
 주는 법: 캐릭터당 한 장, 배경 투명 PNG 가 제일 좋다 (흰 배경 JPG 도 자동으로 배경을 지운다). 파일명에 **캐릭터 이름·県 이름·id 중 하나**만 들어 있으면 된다.
 받은 뒤: `npm run mascots:import <폴더>` → 512px WebP 로 줄여 `public/mascots/<id>.webp` 에 넣고 데이터와 이 목록을 갱신한다.
@@ -45,7 +45,7 @@
 | 19 | 富山 | きときと君 | 키토키토군 | `kitokitokun.png` | 富山県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%8D%E3%81%A8%E3%81%8D%E3%81%A8%E5%90%9B%20%E5%AF%8C%E5%B1%B1%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
 | 20 | 石川 | ひゃくまんさん | 햐쿠만상 | `hyakumansan.png` | 石川県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%B2%E3%82%83%E3%81%8F%E3%81%BE%E3%82%93%E3%81%95%E3%82%93%20%E7%9F%B3%E5%B7%9D%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 21 | 福井 | はぴりゅう | 하피류 | `hapiryu.png` | 福井県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%AF%E3%81%B4%E3%82%8A%E3%82%85%E3%81%86%20%E7%A6%8F%E4%BA%95%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
-| 22 | 山梨 | 武田菱丸 | 다케다 히시마루 | `takedahishimaru.png` | やまなし観光推進機構 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E6%AD%A6%E7%94%B0%E8%8F%B1%E4%B8%B8%20%E3%82%84%E3%81%BE%E3%81%AA%E3%81%97%E8%A6%B3%E5%85%89%E6%8E%A8%E9%80%B2%E6%A9%9F%E6%A7%8B%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 22 | 山梨 | 武田菱丸 | 다케다 히시마루 | `takedahishimaru.png` | やまなし観光推進機構 | [공식](https://www.yamanashi-kankou.jp/kankou/event/takeda-hishimaru.html) | ✅ |
 | 23 | 長野 | アルクマ | 아루쿠마 | `arukuma.png` | 長野県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%A2%E3%83%AB%E3%82%AF%E3%83%9E%20%E9%95%B7%E9%87%8E%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
 | 24 | 岐阜 | ミナモ | 미나모 | `minamo.png` | 岐阜県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%83%9F%E3%83%8A%E3%83%A2%20%E5%B2%90%E9%98%9C%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
 | 25 | 静岡 | ふじっぴー | 후짓피 | `fujippi.png` | 静岡県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%B5%E3%81%98%E3%81%A3%E3%81%B4%E3%83%BC%20%E9%9D%99%E5%B2%A1%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
