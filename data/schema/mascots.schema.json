@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "mascots.json",
+  "type": "object",
+  "required": ["mascots"],
+  "properties": {
+    "mascots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "prefecture", "name", "line"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z]+$" },
+          "prefecture": { "type": "string" },
+          "name": { "type": "object", "required": ["ja", "ko"] },
+          "line": { "type": "object", "required": ["ja", "ko"] }
+        }
+      }
+    }
+  }
+}

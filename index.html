@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>にほんちず — 일본 지도 노트</title>
+  <meta name="description" content="일본 47도도부현을 눌러보며 익히는 인터랙티브 지도. 내가 정리한 마인드맵 메모, 읽는 법, 명물, 그리고 숨어 있는 친구들." />
+  <meta name="theme-color" content="#FBF7EE" />
+  <meta property="og:title" content="にほんちず — 일본 지도 노트" />
+  <meta property="og:description" content="일본 47도도부현을 눌러보며 익히는 인터랙티브 지도 노트" />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Gowun+Dodum&family=Kiwi+Maru:wght@400;500&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div id="app" class="app">
+    <header class="topbar">
+      <button class="brand" id="brand" type="button" title="벚꽃 🌸">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__text">
+          <span class="brand__title" lang="ja">にほんちず</span>
+          <span class="brand__sub">일본 지도 노트</span>
+        </span>
+      </button>
+
+      <div class="search" id="search">
+        <label class="search__box">
+          <span class="search__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+          </span>
+          <input id="search-input" type="search" autocomplete="off" spellcheck="false" placeholder="県をさがす · 교토, きょうと, Kyoto…" aria-label="도도부현 검색" aria-controls="search-results" aria-expanded="false" />
+        </label>
+        <ul class="search__results" id="search-results" role="listbox" hidden></ul>
+      </div>
+
+      <div class="topbar__right">
+        <div class="seg" role="radiogroup" aria-label="지도 라벨 표기" id="label-mode">
+          <button type="button" role="radio" aria-checked="true" data-mode="ja" lang="ja">漢字</button>
+          <button type="button" role="radio" aria-checked="false" data-mode="kana" lang="ja">かな</button>
+          <button type="button" role="radio" aria-checked="false" data-mode="ko">한글</button>
+        </div>
+        <button class="pill pill--book" id="collection-btn" type="button" aria-haspopup="dialog">
+          <span class="pill__icon" aria-hidden="true">✦</span>
+          <span lang="ja">図鑑</span>
+          <span class="pill__count" id="collection-count">0/21</span>
+        </button>
+        <button class="pill pill--memo" id="memo-btn" type="button" aria-haspopup="dialog">
+          <span class="pill__icon" aria-hidden="true">✎</span>
+          <span>메모장</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="stage" id="stage">
+      <div class="map" id="map" aria-label="일본 지도" role="application"></div>
+      <div class="map-loading" id="map-loading" aria-live="polite">지도를 펼치는 중…</div>
+
+      <div class="legend" id="legend" aria-label="지방"></div>
+
+      <div class="zoomctl" aria-label="지도 확대/축소">
+        <button type="button" id="zoom-in" aria-label="확대">+</button>
+        <button type="button" id="zoom-out" aria-label="축소">−</button>
+        <button type="button" id="zoom-reset" aria-label="전체 보기" title="전체 보기">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/></svg>
+        </button>
+      </div>
+
+      <div class="tooltip" id="tooltip" role="status" aria-live="polite" hidden></div>
+      <div class="mascot-layer" id="mascot-layer" aria-live="polite"></div>
+      <div class="petals" id="petals" aria-hidden="true" hidden></div>
+      <p class="credit">地図: 地球地図日本（国土地理院）· <span lang="ja">にほんちず</span> ✿</p>
+    </main>
+
+    <aside class="panel" id="panel" aria-label="상세 정보" aria-hidden="true">
+      <div class="panel__tape" aria-hidden="true"></div>
+      <button class="panel__close" id="panel-close" type="button" aria-label="닫기">×</button>
+      <div class="panel__scroll" id="panel-body"></div>
+    </aside>
+
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+      <div class="modal__backdrop" data-close></div>
+      <div class="modal__card">
+        <button class="modal__close" type="button" aria-label="닫기" data-close>×</button>
+        <div class="modal__body" id="modal-body"></div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

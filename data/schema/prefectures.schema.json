@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "prefectures.json",
+  "type": "object",
+  "required": ["prefectures"],
+  "properties": {
+    "prefectures": {
+      "type": "array", "minItems": 47, "maxItems": 47,
+      "items": {
+        "type": "object",
+        "required": ["id", "slug", "region", "name", "short", "capital", "meibutsu", "spots", "hitokoto"],
+        "properties": {
+          "id": { "type": "integer", "minimum": 1, "maximum": 47, "description": "JIS X 0401 都道府県コード" },
+          "slug": { "type": "string", "pattern": "^[a-z]+$" },
+          "region": { "type": "string", "description": "regions.json 의 id" },
+          "name": { "$ref": "#/$defs/names" },
+          "short": { "type": "object", "required": ["ja", "kana"], "properties": { "ja": { "type": "string" }, "kana": { "type": "string" } } },
+          "capital": { "$ref": "#/$defs/term" },
+          "meibutsu": { "type": "array", "items": { "$ref": "#/$defs/term" } },
+          "spots": { "type": "array", "items": { "$ref": "#/$defs/term" } },
+          "hitokoto": { "type": "object", "required": ["ja", "ko"], "properties": { "ja": { "type": "string" }, "ko": { "type": "string" } } },
+          "mascot": { "type": "string", "description": "mascots.json 의 id (선택)" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "names": {
+      "type": "object", "required": ["ja", "kana", "romaji", "ko", "en"],
+      "properties": { "ja": { "type": "string" }, "kana": { "type": "string" }, "romaji": { "type": "string" }, "ko": { "type": "string" }, "en": { "type": "string" } }
+    },
+    "term": {
+      "type": "object", "required": ["ja"],
+      "properties": { "ja": { "type": "string" }, "kana": { "type": "string", "description": "읽기 (ja가 전부 가나면 생략)" }, "ko": { "type": "string" } }
+    }
+  }
+}

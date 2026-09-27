@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "regions.json",
+  "type": "object",
+  "required": ["regions"],
+  "properties": {
+    "regions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "order", "name", "color", "ink"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z]+$" },
+          "order": { "type": "integer" },
+          "name": { "type": "object", "required": ["ja", "kana", "ko", "en"] },
+          "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "description": "지도 채우기 색" },
+          "ink": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "description": "같은 계열의 진한 글자색" }
+        }
+      }
+    }
+  }
+}

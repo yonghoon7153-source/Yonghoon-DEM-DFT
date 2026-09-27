@@ -1,0 +1,14 @@
+{
+  "$schema": "./schema/regions.schema.json",
+  "regions": [
+    { "id": "hokkaido", "order": 1, "name": { "ja": "北海道", "kana": "ほっかいどう", "ko": "홋카이도", "en": "Hokkaido" }, "color": "#C5DCF4", "ink": "#4E6E9E" },
+    { "id": "tohoku",   "order": 2, "name": { "ja": "東北",   "kana": "とうほく",   "ko": "도호쿠",   "en": "Tohoku" },   "color": "#BFE5CF", "ink": "#3E7A5A" },
+    { "id": "kanto",    "order": 3, "name": { "ja": "関東",   "kana": "かんとう",   "ko": "간토",     "en": "Kanto" },    "color": "#FBE7A3", "ink": "#8A6A16" },
+    { "id": "chubu",    "order": 4, "name": { "ja": "中部",   "kana": "ちゅうぶ",   "ko": "주부",     "en": "Chubu" },    "color": "#FBD3AC", "ink": "#9A5A27" },
+    { "id": "kinki",    "order": 5, "name": { "ja": "近畿",   "kana": "きんき",     "ko": "긴키",     "en": "Kinki" },    "color": "#F8C7D3", "ink": "#A0455F" },
+    { "id": "chugoku",  "order": 6, "name": { "ja": "中国",   "kana": "ちゅうごく", "ko": "주고쿠",   "en": "Chugoku" },  "color": "#DDCCF1", "ink": "#6A4E96" },
+    { "id": "shikoku",  "order": 7, "name": { "ja": "四国",   "kana": "しこく",     "ko": "시코쿠",   "en": "Shikoku" },  "color": "#DCE7A6", "ink": "#6A7A1E" },
+    { "id": "kyushu",   "order": 8, "name": { "ja": "九州",   "kana": "きゅうしゅう", "ko": "규슈",   "en": "Kyushu" },   "color": "#F9C4B2", "ink": "#A44E35" },
+    { "id": "okinawa",  "order": 9, "name": { "ja": "沖縄",   "kana": "おきなわ",   "ko": "오키나와", "en": "Okinawa" },  "color": "#B9E6E0", "ink": "#2F7A72" }
+  ]
+}

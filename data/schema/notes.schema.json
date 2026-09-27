@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "notes.json — 내가 쓴 마인드맵 레이어 (Canva → 트리 구조)",
+  "description": "박스 하나 = item. 선으로 연결된 박스는 children 으로 표현. Canva 의 색 박스 위 작은 캡션은 cap.",
+  "type": "object",
+  "required": ["meta", "regions", "prefectures", "extras"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "properties": {
+        "source": { "type": "string" },
+        "canva": { "type": "string", "format": "uri" },
+        "updated": { "type": "string", "format": "date" },
+        "status": { "type": "string", "enum": ["placeholder", "partial", "complete"] },
+        "note": { "type": "string" }
+      }
+    },
+    "regions": {
+      "type": "object",
+      "description": "key = regions.json 의 id",
+      "additionalProperties": {
+        "type": "object",
+        "properties": { "memo": { "type": "string" }, "items": { "$ref": "#/$defs/items" } }
+      }
+    },
+    "prefectures": {
+      "type": "object",
+      "description": "key = prefectures.json 의 slug (47개 전부 있어야 함, items 는 비어도 됨)",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["items"],
+        "properties": { "star": { "type": "boolean", "description": "마인드맵의 ★" }, "items": { "$ref": "#/$defs/items" } }
+      }
+    },
+    "extras": {
+      "type": "array",
+      "description": "특정 県에 속하지 않는 메모 (瀬戸内, 다리, 정령지정도시, 매너 …). targets 로 어느 県/지방 패널에 같이 보여줄지 지정",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "items"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "sub": { "type": "string" },
+          "targets": {
+            "type": "object",
+            "properties": {
+              "regions": { "type": "array", "items": { "type": "string" } },
+              "prefectures": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "items": { "$ref": "#/$defs/items" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "items": { "type": "array", "items": { "$ref": "#/$defs/item" } },
+    "item": {
+      "type": "object",
+      "required": ["t"],
+      "properties": {
+        "t": { "type": "string", "description": "박스의 큰 글씨" },
+        "sub": { "type": "string", "description": "괄호 안 작은 글씨 (읽기·설명)" },
+        "cap": { "type": "string", "description": "박스 위에 붙은 아주 작은 캡션" },
+        "ko": { "type": "string", "description": "한국어 이름 박스" },
+        "url": { "type": "string", "format": "uri", "description": "박스에 걸린 링크" },
+        "star": { "type": "boolean" },
+        "kind": { "type": "string", "enum": ["photo"], "description": "photo = 원본엔 사진만 있던 자리" },
+        "children": { "$ref": "#/$defs/items" }
+      }
+    }
+  }
+}

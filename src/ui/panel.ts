@@ -1,0 +1,206 @@
+// The diary-page panel: prefecture view, region view, and the general memo view.
+import { countBoxes, extrasFor, extrasForRegion, generalExtras, mascotById, notes, notesFor, prefById, prefBySlug, prefecturesIn, regionById, regionOf } from '../data';
+import type { NoteExtra, Prefecture, Region } from '../types';
+import { mascotArt } from '../mascots/art';
+import { clear, el, ruby } from './dom';
+import { renderTree } from './notes-render';
+
+export interface PanelCallbacks {
+  onClose(): void;
+  onSelectPrefecture(slug: string): void;
+  onSelectRegion(id: string): void;
+  isMascotFound(id: string): boolean;
+}
+
+export type PanelView = { type: 'prefecture'; id: string } | { type: 'region'; id: string } | null;
+
+export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
+  const body = root.querySelector<HTMLElement>('#panel-body')!;
+  const closeBtn = root.querySelector<HTMLButtonElement>('#panel-close')!;
+  root.insertBefore(el('div', { class: 'panel__grab', 'aria-hidden': 'true' }), body);
+  let current: PanelView = null;
+
+  closeBtn.addEventListener('click', () => {
+    close();
+    cb.onClose();
+  });
+
+  function open() {
+    root.classList.add('is-open');
+    root.setAttribute('aria-hidden', 'false');
+    body.scrollTop = 0;
+  }
+  function close() {
+    root.classList.remove('is-open');
+    root.setAttribute('aria-hidden', 'true');
+    current = null;
+  }
+
+  function showPrefecture(slug: string) {
+    const p = prefBySlug.get(slug);
+    if (!p) return;
+    current = { type: 'prefecture', id: slug };
+    clear(body);
+    body.append(...renderPrefecture(p));
+    open();
+  }
+
+  function showRegion(id: string) {
+    const r = regionById.get(id);
+    if (!r) return;
+    current = { type: 'region', id };
+    clear(body);
+    body.append(...renderRegion(r));
+    open();
+  }
+
+  /** Re-render the current view (e.g. after a mascot was found). */
+  function refresh() {
+    if (!current) return;
+    const top = body.scrollTop;
+    if (current.type === 'prefecture') {
+      clear(body);
+      body.append(...renderPrefecture(prefBySlug.get(current.id)!));
+    } else {
+      clear(body);
+      body.append(...renderRegion(regionById.get(current.id)!));
+    }
+    body.scrollTop = top;
+  }
+
+  // ---------------------------------------------------------------- prefecture
+  function renderPrefecture(p: Prefecture): HTMLElement[] {
+    const r = regionOf(p);
+    const my = notesFor(p);
+    const nBoxes = countBoxes(my.items);
+    const out: HTMLElement[] = [];
+
+    const regionBtn = el('button', { class: 'chip--region', type: 'button', style: `--c:${r.color}` }, el('span', { lang: 'ja' }, r.name.ja), el('small', {}, r.name.ko));
+    regionBtn.addEventListener('click', () => cb.onSelectRegion(r.id));
+    out.push(el('div', { class: 'ph' }, regionBtn, my.star ? el('span', { class: 'star', title: '마인드맵에 ★ 표시' }, '★') : null, el('span', { class: 'ph__id' }, `No.${String(p.id).padStart(2, '0')}`)));
+
+    out.push(el('h2', { class: 'ph__name', lang: 'ja' }, p.name.ja, el('span', { class: 'ph__kana' }, p.name.kana)));
+    out.push(el('p', { class: 'ph__alt' }, `${p.name.ko} · `, el('span', { class: 'romaji' }, p.name.romaji)));
+    out.push(
+      el('p', { class: 'ph__cap' }, el('span', { class: 'k' }, '県庁所在地'), el('span', { lang: 'ja' }, p.capital.ja), el('span', { class: 'kana', lang: 'ja' }, p.capital.kana ?? ''), el('span', { class: 'kana' }, p.capital.ko ?? '')),
+    );
+
+    // my mind map
+    const notesSec = el('section', { class: 'sec sec--notes' }, el('h3', {}, el('span', { class: 'emoji' }, '✎'), '내 마인드맵', el('span', { class: 'n' }, nBoxes ? `${nBoxes} boxes` : '')));
+    if (my.items.length) notesSec.append(renderTree(my.items, { color: r.color, ink: r.ink }));
+    else notesSec.append(el('p', { class: 'empty' }, `아직 ${p.short.ja} 메모가 없어요. Canva 마인드맵에 적고 data/notes.json 에 옮기면 여기 나타나요 ✿`));
+    out.push(notesSec);
+
+    // extras that mention this prefecture
+    const extras = extrasFor(p);
+    if (extras.length) {
+      const sec = el('section', { class: 'sec sec--extras' }, el('h3', {}, el('span', { class: 'emoji' }, '🧷'), '함께 보기'));
+      for (const ex of extras) sec.append(renderExtra(ex, r, false));
+      out.push(sec);
+    }
+
+    // mascot
+    if (p.mascot && cb.isMascotFound(p.mascot)) {
+      const m = mascotById.get(p.mascot)!;
+      const art = el('div', { class: 'mascot-card__art', 'aria-hidden': 'true' });
+      art.innerHTML = mascotArt[m.id] ?? '';
+      out.push(el('section', { class: 'sec' }, el('div', { class: 'mascot-card' }, art, el('div', {}, el('b', { lang: 'ja' }, m.name.ja), el('small', {}, `${m.name.ko} · 「${m.line.ja}」`)))));
+    }
+
+    // facts (図鑑)
+    const facts = el('div', { class: 'facts' });
+    const dl = el('dl', {});
+    dl.append(
+      el('dt', {}, '名物', el('small', {}, '명물')),
+      el('dd', {}, el('div', { class: 'terms' }, ...p.meibutsu.map(termChip))),
+      el('dt', {}, '観光', el('small', {}, '관광')),
+      el('dd', {}, el('div', { class: 'terms' }, ...p.spots.map(termChip))),
+      el('dt', {}, 'ひとこと', el('small', {}, '한마디')),
+      el('dd', {}, el('div', { class: 'hitokoto' }, el('span', { class: 'ja', lang: 'ja' }, p.hitokoto.ja), el('span', { class: 'ko' }, p.hitokoto.ko))),
+    );
+    facts.append(dl);
+    const details = el('details', my.items.length ? {} : { open: '' }, el('summary', {}, el('h3', {}, el('span', { class: 'emoji' }, '📘'), '図鑑', el('span', { class: 'n' }, '기본 정보'))), facts);
+    out.push(el('section', { class: 'sec sec--facts' }, details));
+
+    // prev / next
+    const prev = prefById.get(p.id === 1 ? 47 : p.id - 1)!;
+    const next = prefById.get(p.id === 47 ? 1 : p.id + 1)!;
+    const prevBtn = el('button', { type: 'button', class: 'prev' }, el('small', {}, '← 前'), el('span', { lang: 'ja' }, prev.name.ja));
+    const nextBtn = el('button', { type: 'button', class: 'next' }, el('small', {}, '次 →'), el('span', { lang: 'ja' }, next.name.ja));
+    prevBtn.addEventListener('click', () => cb.onSelectPrefecture(prev.slug));
+    nextBtn.addEventListener('click', () => cb.onSelectPrefecture(next.slug));
+    out.push(el('nav', { class: 'ph__nav', 'aria-label': '이전/다음 현' }, prevBtn, nextBtn));
+    return out;
+  }
+
+  function termChip(t: { ja: string; kana?: string; ko?: string }): HTMLElement {
+    return el('span', { class: 'term' }, el('span', { class: 'term__ja', lang: 'ja' }, ruby(t.ja, t.kana)), t.ko ? el('span', { class: 'term__ko' }, t.ko) : null);
+  }
+
+  function renderExtra(ex: NoteExtra, r: Region, open: boolean): HTMLElement {
+    const d = el('details', { class: 'extra', ...(open ? { open: '' } : {}) }, el('summary', {}, el('span', { lang: 'ja' }, ex.title), ex.sub ? el('small', {}, ex.sub) : null));
+    d.append(renderTree(ex.items, { color: r.color, ink: r.ink }));
+    return d;
+  }
+
+  // ---------------------------------------------------------------- region
+  function renderRegion(r: Region): HTMLElement[] {
+    const out: HTMLElement[] = [];
+    const rn = notes.regions[r.id];
+    out.push(el('div', { class: 'ph' }, el('span', { class: 'chip--region', style: `--c:${r.color}` }, el('span', { lang: 'ja' }, '地方'), el('small', {}, '지방'))));
+    out.push(el('h2', { class: 'ph__name', lang: 'ja' }, r.name.ja, el('span', { class: 'ph__kana' }, r.name.kana)));
+    out.push(el('p', { class: 'ph__alt' }, `${r.name.ko} · `, el('span', { class: 'romaji' }, r.name.en)));
+    if (rn?.memo) out.push(el('p', { class: 'ph__cap' }, el('span', { class: 'k' }, 'memo'), el('span', { lang: 'ja' }, rn.memo)));
+
+    if (rn?.items?.length) {
+      out.push(el('section', { class: 'sec' }, el('h3', {}, el('span', { class: 'emoji' }, '✎'), '지방 메모'), renderTree(rn.items, { color: r.color, ink: r.ink })));
+    }
+    const extras = extrasForRegion(r.id);
+    if (extras.length) {
+      const sec = el('section', { class: 'sec sec--extras' }, el('h3', {}, el('span', { class: 'emoji' }, '🧷'), '함께 보기'));
+      for (const ex of extras) sec.append(renderExtra(ex, r, true));
+      out.push(sec);
+    }
+
+    const members = prefecturesIn(r.id);
+    const chips = el('div', { class: 'member-chips' });
+    for (const p of members) {
+      const n = countBoxes(notesFor(p).items);
+      const b = el('button', { type: 'button', style: `--c:${r.color}` }, el('span', { lang: 'ja' }, p.short.ja), n ? el('span', { class: 'dot', title: `메모 ${n}개` }) : null, el('small', {}, p.name.ko));
+      b.addEventListener('click', () => cb.onSelectPrefecture(p.slug));
+      chips.append(b);
+    }
+    out.push(el('section', { class: 'sec' }, el('h3', {}, el('span', { class: 'emoji' }, '🗾'), `${members.length}개 도도부현`, el('span', { class: 'n' }, '● = 메모 있음')), chips));
+
+    const friends = members.filter((p) => p.mascot);
+    if (friends.length) {
+      const row = el('div', { class: 'friends' });
+      for (const p of friends) {
+        const m = mascotById.get(p.mascot!)!;
+        const has = cb.isMascotFound(m.id);
+        const art = el('div', { class: 'friends__art', 'aria-hidden': 'true' });
+        art.innerHTML = mascotArt[m.id] ?? '';
+        const b = el('button', { type: 'button', class: `friends__card${has ? ' is-found' : ''}`, title: has ? m.name.ja : `${p.short.ja}에 누가 살까?` }, art, el('span', { class: 'friends__name', lang: 'ja' }, has ? m.name.ja : '？？？'), el('small', {}, p.short.ja));
+        b.addEventListener('click', () => cb.onSelectPrefecture(p.slug));
+        row.append(b);
+      }
+      out.push(el('section', { class: 'sec' }, el('h3', {}, el('span', { class: 'emoji' }, '✦'), '이 지방의 친구들', el('span', { class: 'n' }, `${friends.filter((p) => cb.isMascotFound(p.mascot!)).length}/${friends.length}`)), row));
+    }
+    return out;
+  }
+
+  return { showPrefecture, showRegion, refresh, close, isOpen: () => root.classList.contains('is-open'), current: () => current };
+}
+
+/** Content for the 메모장 modal: notes that belong to no particular place. */
+export function renderGeneralMemo(): HTMLElement {
+  const wrap = el('div', { class: 'memo-list' });
+  wrap.append(el('h2', {}, '메모장', el('small', {}, '어디에도 안 붙는 메모들')));
+  wrap.append(el('p', { class: 'lead' }, `출처: ${notes.meta.source} · ${notes.meta.updated}`));
+  for (const ex of generalExtras()) {
+    const d = el('details', { class: 'extra', open: '' }, el('summary', {}, el('span', { lang: 'ja' }, ex.title), ex.sub ? el('small', {}, ex.sub) : null));
+    d.append(renderTree(ex.items, { color: '#F5EFE3', ink: '#a8998f' }));
+    wrap.append(d);
+  }
+  return wrap;
+}

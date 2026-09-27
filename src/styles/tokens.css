@@ -1,0 +1,46 @@
+/* Design tokens — cream paper, pastel stickers, warm brown ink. */
+:root {
+  color-scheme: light;
+
+  --paper: #fbf7ee;
+  --paper-2: #f5efe3;
+  --paper-3: #eee6d6;
+  --sea: #d6e9f1;
+  --sea-2: #bfdceb;
+  --white: #fffdf9;
+
+  --ink: #4a3f3a;
+  --ink-2: #7a6c66;
+  --ink-3: #a8998f;
+  --line: #e7ddcf;
+  --line-2: #d9cdbc;
+
+  --accent: #e5708d;      /* strawberry */
+  --accent-soft: #fbe1e8;
+  --accent-2: #6fb0a6;    /* matcha-mint */
+  --accent-2-soft: #dff0ec;
+  --accent-3: #f2b84b;    /* honey */
+  --accent-3-soft: #fdf0d2;
+
+  --shadow-sm: 0 1px 2px rgba(74, 63, 58, .08), 0 2px 8px -2px rgba(74, 63, 58, .10);
+  --shadow: 0 10px 30px -12px rgba(74, 63, 58, .28), 0 2px 6px -2px rgba(74, 63, 58, .12);
+  --shadow-lg: 0 24px 60px -24px rgba(74, 63, 58, .35), 0 6px 16px -8px rgba(74, 63, 58, .16);
+
+  --radius: 18px;
+  --radius-sm: 12px;
+  --radius-xs: 8px;
+  --radius-pill: 999px;
+
+  --font-ja: "Zen Maru Gothic";
+  --font-ko: "Gowun Dodum";
+  --font-display: "Kiwi Maru";
+  --font-hand: "Gaegu";
+  --font-body: var(--font-ja), var(--font-ko), "Hiragino Maru Gothic ProN", "Apple SD Gothic Neo", "Noto Sans JP", "Noto Sans KR", system-ui, sans-serif;
+  --font-head: var(--font-display), var(--font-hand), var(--font-body);
+  --font-note: var(--font-hand), var(--font-display), var(--font-body);
+
+  --topbar-h: 64px;
+  --panel-w: 420px;
+  --ease-pop: cubic-bezier(.2, 1.4, .4, 1);
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+}

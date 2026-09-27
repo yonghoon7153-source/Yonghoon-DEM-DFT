@@ -1,0 +1,27 @@
+{
+  "$schema": "./schema/mascots.schema.json",
+  "_comment": "이스터에그 캐릭터 목록. 그림(SVG)은 src/mascots/*.ts 에 있고, 여기엔 이름·대사만 둔다. 모두 이 프로젝트용 오리지널 캐릭터.",
+  "mascots": [
+    { "id": "azarashi",  "prefecture": "hokkaido",  "name": { "ja": "あざらしのゆき", "ko": "물범 유키" },        "line": { "ja": "北海道は雪がいっぱい！ゆきだるま作ろ〜", "ko": "홋카이도는 눈이 한가득! 눈사람 만들자~" } },
+    { "id": "ringo",     "prefecture": "aomori",    "name": { "ja": "りんごちゃん", "ko": "사과 링고짱" },          "line": { "ja": "青森のりんご、日本一なんだよ！", "ko": "아오모리 사과, 일본 1등이야!" } },
+    { "id": "namahage",  "prefecture": "akita",     "name": { "ja": "ちびなまはげ", "ko": "꼬마 나마하게" },        "line": { "ja": "泣く子はいねがー！…なんてね", "ko": "우는 아이 없냐~! …농담이야" } },
+    { "id": "zunda",     "prefecture": "miyagi",    "name": { "ja": "ずんだもち", "ko": "즌다모찌" },              "line": { "ja": "ずんだシェイク、飲んでみて〜", "ko": "즌다 셰이크 마셔봐~" } },
+    { "id": "hachi",     "prefecture": "tokyo",     "name": { "ja": "ハチ", "ko": "하치" },                       "line": { "ja": "渋谷で待ってるよ〜", "ko": "시부야에서 기다릴게~" } },
+    { "id": "onigiri",   "prefecture": "niigata",   "name": { "ja": "おにぎりさん", "ko": "오니기리상" },          "line": { "ja": "コシヒカリでにぎったよ", "ko": "고시히카리로 꼭꼭 뭉쳤어" } },
+    { "id": "budou",     "prefecture": "yamanashi", "name": { "ja": "ぶどうちゃん", "ko": "포도짱" },              "line": { "ja": "ほうとうも食べていってね〜", "ko": "호토도 먹고 가~" } },
+    { "id": "saru",      "prefecture": "nagano",    "name": { "ja": "おんせんざる", "ko": "온천 원숭이" },          "line": { "ja": "あ〜、いい湯だな♨", "ko": "아~ 물 좋다♨" } },
+    { "id": "fujisan",   "prefecture": "shizuoka",  "name": { "ja": "ふじさん", "ko": "후지산" },                  "line": { "ja": "3776mから見てるよ〜", "ko": "3776m에서 보고 있어~" } },
+    { "id": "kitsune",   "prefecture": "kyoto",     "name": { "ja": "いなりのこんちゃん", "ko": "이나리 여우 콘짱" }, "line": { "ja": "千本鳥居、くぐってみて", "ko": "천 개의 도리이, 지나가 봐" } },
+    { "id": "takoyaki",  "prefecture": "osaka",     "name": { "ja": "たこやきくん", "ko": "다코야키군" },            "line": { "ja": "熱いうちに食べてや〜！", "ko": "뜨거울 때 먹어라~!" } },
+    { "id": "shika",     "prefecture": "nara",      "name": { "ja": "ならのしかちゃん", "ko": "나라 사슴짱" },        "line": { "ja": "しかせんべい、ちょうだい？（ぺこり）", "ko": "사슴 센베이 줄래? (꾸벅)" } },
+    { "id": "rakuda",    "prefecture": "tottori",   "name": { "ja": "さきゅうのラクダ", "ko": "사구 낙타" },          "line": { "ja": "砂丘、けっこう広いよ〜", "ko": "사구, 꽤 넓다~" } },
+    { "id": "momiji",    "prefecture": "hiroshima", "name": { "ja": "もみじまんじゅう", "ko": "모미지 만주" },        "line": { "ja": "宮島でお待ちしてます", "ko": "미야지마에서 기다릴게요" } },
+    { "id": "udon",      "prefecture": "kagawa",    "name": { "ja": "うどんちゃん", "ko": "우동짱" },                "line": { "ja": "コシが命！ちゅるん", "ko": "탱글함이 생명! 후루룩" } },
+    { "id": "mikan",     "prefecture": "ehime",     "name": { "ja": "みかんちゃん", "ko": "미캉짱" },                "line": { "ja": "蛇口からみかんジュース、ほんとだよ", "ko": "수도꼭지에서 귤주스, 진짜야" } },
+    { "id": "ramen",     "prefecture": "fukuoka",   "name": { "ja": "とんこつくん", "ko": "돈코츠군" },              "line": { "ja": "替え玉、バリカタで！", "ko": "면 추가는 바리카타(꼬들)로!" } },
+    { "id": "castella",  "prefecture": "nagasaki",  "name": { "ja": "カステラさん", "ko": "카스텔라상" },            "line": { "ja": "底のザラメが命なのよ", "ko": "바닥의 굵은 설탕이 생명이지" } },
+    { "id": "kuma",      "prefecture": "kumamoto",  "name": { "ja": "くまくん", "ko": "쿠마군" },                    "line": { "ja": "くまもとに来てくれてありがとう！", "ko": "구마모토에 와줘서 고마워!" } },
+    { "id": "shirokuma", "prefecture": "kagoshima", "name": { "ja": "しろくまちゃん", "ko": "시로쿠마짱" },          "line": { "ja": "夏はかき氷の「白くま」だよ", "ko": "여름엔 빙수 '시로쿠마'야" } },
+    { "id": "shisa",     "prefecture": "okinawa",   "name": { "ja": "シーサー", "ko": "시사" },                      "line": { "ja": "めんそーれ！なんくるないさ〜", "ko": "멘소레! 난쿠루나이사~" } }
+  ]
+}
