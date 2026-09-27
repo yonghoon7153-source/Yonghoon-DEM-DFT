@@ -570,15 +570,17 @@
       },
       "org": "三重県",
       "about": {
-        "ja": "県内スポーツを応援する三重県のマスコット（県全体の代表キャラは未定）",
-        "ko": "현내 스포츠를 응원하는 미에현 마스코트(현 대표 캐릭터는 따로 없음)"
+        "ja": "三重ブランドの伊勢えびがモチーフの元気な男の子。三重とこわか国体のマスコットとして生まれ、今は「みえスポーツ応援マスコット」",
+        "ko": "미에 브랜드 이세새우(伊勢えび)가 모티브인 활발한 남자아이. 미에 도코와카 국체 마스코트로 태어나 지금은 '미에 스포츠 응원 마스코트'"
       },
       "line": {
         "ja": "三重をスポーツで応援！",
         "ko": "미에를 스포츠로 응원!"
       },
-      "art": "likeness",
-      "url": "https://www.pref.mie.lg.jp/SPORTS/HP/m0011300154.htm"
+      "art": "official",
+      "url": "https://www.pref.mie.lg.jp/SPORTS/HP/m0011300154.htm",
+      "image": "mascots/tokomaru.webp",
+      "credit": "©三重県"
     },
     {
       "id": "morizokiccoro",
@@ -598,8 +600,10 @@
         "ja": "森からこんにちは",
         "ko": "숲에서 안녕"
       },
-      "art": "likeness",
-      "url": "https://aichinow.pref.aichi.jp/events/detail/3513/"
+      "art": "official",
+      "url": "https://aichinow.pref.aichi.jp/events/detail/3513/",
+      "image": "mascots/morizokiccoro.webp",
+      "credit": "©愛・地球博"
     },
     {
       "id": "caffy",
@@ -662,7 +666,9 @@
         "ja": "まゆまろでおじゃる",
         "ko": "마유마로이옵니다"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/mayumaro.webp",
+      "credit": "©京都府"
     },
     {
       "id": "mozuyan",
