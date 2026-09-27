@@ -64,10 +64,15 @@ export function renderTokyo23(mode: LabelMode, focus?: string): HTMLElement {
     el('h2', {}, el('span', { lang: 'ja' }, '東京23区'), el('small', { lang: 'ja' }, 'とうきょうにじゅうさんく · 도쿄 23구')),
     el('p', { class: 'lead' }, `구를 누르면 그 구에 적어 둔 칸이 떠요 — 칸이 있는 구 ${byWard.size}곳은 진하게`),
   );
+  // the map, and beside it (below it on a narrow screen) the column where a ward's card pops out — never over the
+  // map, as on my Canva page where the boxes hang outside the 23-ward map
   const stage = el('div', { class: 't23__stage' });
+  const mapBox = el('div', { class: 't23__mapbox' }, el('p', { class: 't23__loading' }, '23区 지도를 펼치는 중…'));
+  const hint = el('p', { class: 't23__hint' }, '← 구를 누르면 여기에 그 구의 칸이 떠요');
   const card = el('div', { class: 't23__card', role: 'dialog', 'aria-live': 'polite' });
   card.hidden = true;
-  stage.append(el('p', { class: 't23__loading' }, '23区 지도를 펼치는 중…'), card);
+  const side = el('div', { class: 't23__side' }, hint, card);
+  stage.append(mapBox, side);
   wrap.append(stage);
   if (others.length) {
     wrap.append(el('section', { class: 't23__others' }, el('h3', {}, '그 밖에 적어 둔 것'), glossNote(others), renderTree(others, style)));
@@ -77,6 +82,7 @@ export function renderTokyo23(mode: LabelMode, focus?: string): HTMLElement {
   let selected: SVGGElement | null = null;
   function closeCard() {
     card.hidden = true;
+    hint.hidden = false;
     selected?.classList.remove('is-selected');
     selected = null;
   }
@@ -107,21 +113,26 @@ export function renderTokyo23(mode: LabelMode, focus?: string): HTMLElement {
     if (kids.length) card.append(renderTree(kids, style));
     else card.append(el('p', { class: 'empty' }, box ? '구 이름만 적어 둔 칸이에요' : '아직 적어 둔 칸이 없어요 ✿'));
     card.hidden = false;
-    // beside the tapped ward on wide screens; CSS turns it into a bottom card on phones
-    if (window.matchMedia('(max-width: 760px)').matches) {
-      card.style.left = card.style.top = '';
-      card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    hint.hidden = true;
+    card.style.animation = 'none';
+    void card.offsetWidth; // pop again for every ward
+    card.style.animation = '';
+    // in the column beside the map, level with the tapped ward; below the map when there is no room beside it
+    card.style.top = '';
+    card.scrollTop = 0;
+    if (getComputedStyle(card).position === 'absolute') {
+      const svgEl = mapBox.querySelector('svg');
+      const k = svgEl ? svgEl.getBoundingClientRect().width / (Number(svgEl.getAttribute('width')) || 1) : 1;
+      card.style.top = `${Math.max(0, Math.min(at[1] * k - 30, side.clientHeight - card.offsetHeight))}px`;
     } else {
-      const sw = stage.clientWidth;
-      card.style.left = `${Math.max(8, Math.min(at[0] + 14, sw - Math.min(340, sw - 16) - 8))}px`;
-      card.style.top = `${Math.max(8, at[1] - 30)}px`;
+      card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }
   }
 
   loadShapes()
     .then((features) => {
-      stage.querySelector('.t23__loading')?.remove();
-      const W = Math.max(280, stage.clientWidth || 700);
+      mapBox.querySelector('.t23__loading')?.remove();
+      const W = Math.max(280, mapBox.clientWidth || 700);
       const H = Math.round(W * 0.8);
       const projection = geoMercator().fitExtent([[8, 8], [W - 8, H - 8]], { type: 'FeatureCollection', features });
       const path = geoPath(projection);
@@ -169,12 +180,12 @@ export function renderTokyo23(mode: LabelMode, focus?: string): HTMLElement {
       }
       map.append(shapesG, labelsG);
       map.addEventListener('click', closeCard);
-      stage.prepend(map);
+      mapBox.append(map);
       const f = focusAt as { g: SVGGElement; at: [number, number] } | null;
       if (f && focus) showCard(focus, f.g, f.at);
     })
     .catch(() => {
-      const l = stage.querySelector('.t23__loading');
+      const l = mapBox.querySelector('.t23__loading');
       if (l) l.textContent = '23区 지도를 불러오지 못했어요 — 새로고침해 보세요';
     });
   return wrap;

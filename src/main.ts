@@ -158,7 +158,7 @@ async function init() {
     }
   }
   function openWards(focus?: string) {
-    modal.open(renderTokyo23(state.labelMode, focus));
+    modal.open(renderTokyo23(state.labelMode, focus), { wide: true });
   }
 
   function deselect() {
