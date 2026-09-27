@@ -712,8 +712,8 @@
    "state": "인계 1 남음"
   },
   {
-   "state": "Codex CK GO · 1저자 비준 대기",
-   "text": "**V5 VASP 외주** (1저자 '준비는 해둬볼게' · 업체·예산 미정): CE → v2 → CF → v3 → CG → v4 → CI → v5 → CJ → **v6 → Codex CK GO** (09-27 · 기술 검토 · MANIFEST 8118bbc0… · 개정 v6.1 digest 8a1554e9… · 문구 정리만) → ⏭ **1저자 비준** (개정 v6.1 → 결정 active) → 업체·예산 → 파일럿 2 잡 → --seal_pp (schema v3 · 파일럿 결속) → 16 잡 → --collect (등록부 필수 · PILOT_NOT_SEALED 게이트). 결과 전 D3 만 예측 G3(ii) +0.00954 (경계선). GO ≠ 실행·인용 승인."
+   "state": "Codex CK GO · 배포 zip 사용자 보관 · 1저자 비준·발송 시점 대기",
+   "text": "**V5 VASP 외주** (1저자 '준비는 해둬볼게' · 업체·예산 미정): CE → v2 → CF → v3 → CG → v4 → CI → v5 → CJ → **v6 → Codex CK GO** (09-27 · 기술 검토 · MANIFEST 8118bbc0… · 개정 v6.1 digest 8a1554e9… · 문구 정리만) → ⏭ **1저자 비준** (개정 v6.1 → 결정 active) → 업체·예산 → 파일럿 2 잡 → --seal_pp (schema v3 · 파일럿 결속) → 16 잡 → --collect (등록부 필수 · PILOT_NOT_SEALED 게이트). 결과 전 D3 만 예측 G3(ii) +0.00954 (경계선). GO ≠ 실행·인용 승인. · 배포 zip `wad_aprime_v5_vasp_2026_09_27_v6_f4441c426.zip` (sha256 5b7cad0b897cb54c… · 기록 db/properties/wad_aprime_v5_vasp_handoff_v6_2026_09_27.json) 을 1저자가 보관 — 외주 보낼 때 알려 주기로 (09-27)."
   }
  ],
  "log": [
@@ -1006,6 +1006,11 @@
    "date": "2026-09-27",
    "stage": "dft",
    "text": "**Codex CK GO — V5 VASP 준비본 v6**: CJ 해제조건 충족 · 주입 17 + 16 전부 종료 4 · 새 P0/P1 없음 · 리뷰 사슬 CE→CF→CG→CI→CJ→CK 종료. 개정 3 v6.1 (P2 문구 정리 · S1 잔여 위험 문장 · 패키지·도구 불변) · 결정은 proposed 그대로 → **1저자 비준 대기** (비준 = active · 업체·예산 · 실행 승인은 별개). CK 회신·재현 묶음 18 파일 보존 (db/raw/codex_CK_repro_2026_09_27)."
+  },
+  {
+   "date": "2026-09-27",
+   "stage": "dft",
+   "text": "V5 VASP 패키지 v6 배포 zip 생성 (git archive · 커밋 f4441c426 · MANIFEST 대조 ✓ · 작업 트리와 동일) → 1저자 보관 · sha256 5b7cad0b897cb54c… · 기록 db/properties/wad_aprime_v5_vasp_handoff_v6_2026_09_27.json. 발송 시점은 1저자가 알린다 — 비준 전 발송 없음."
   }
  ],
  "related_decisions": [

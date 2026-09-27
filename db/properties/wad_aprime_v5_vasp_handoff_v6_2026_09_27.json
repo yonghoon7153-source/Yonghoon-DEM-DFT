@@ -1,0 +1,33 @@
+{
+ "schema": "aprime_v5_vasp_handoff/v1",
+ "date": "2026-09-27",
+ "track": "W_ad (1저자 = 사용자)",
+ "record_kind": "handoff",
+ "citable": false,
+ "what": "Codex CK GO 를 받은 V5 VASP 외주 패키지 v6 의 배포 zip — 사용자가 보관 · 외주 발송 시점은 1저자가 알린다 (2026-09-27 '저장해두게 원본으로 줘용 나중에 외주 보내면 알려줄게')",
+ "zip": {
+  "name": "wad_aprime_v5_vasp_2026_09_27_v6_f4441c426.zip",
+  "sha256": "5b7cad0b897cb54ce072881b78bc79c8744416da8592e9fda5fb8b92a2aa603c",
+  "made_by": "git archive --format=zip --prefix=wad_aprime_v5_vasp_2026_09_27_v6/ f4441c426:db/inputs/wad_aprime_v5_vasp_2026_09_27",
+  "from_commit": "f4441c426701bc35690541737d4664a37da4db36",
+  "root_folder": "wad_aprime_v5_vasp_2026_09_27_v6/",
+  "files": 95,
+  "contents": "MANIFEST 93 파일 (jobs/<18 잡>/{INCAR,INCAR.r1,POSCAR,KPOINTS,POTCAR.spec} · jobs.json · JOBS.txt · run_all.sh) + MANIFEST.sha256 + README.md — 저장소 폴더와 바이트 동일 (diff -rq 확인)"
+ },
+ "package": {
+  "MANIFEST_sha256_of_file": "8118bbc023d6699cd7cd1b6e6afd32872e0699af70b412e15b89365e556ee2f1",
+  "tool_sha256": "1d0f4566ab93694c39a3031d041a4751383c5df23db8eacc84e079fc176424be",
+  "schema": "aprime_v5_vasp_package/v6",
+  "review": "Codex CK GO (kb/reviews/codex_CK_reply_wad_aprime_v5_vasp_outsourcing_v6_2026_09_27.md) — 기술 검토 · 실행·인용 승인 아님",
+  "amendment": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json v6.1 (proposed · 1저자 비준 대기)",
+  "decision": "D-2026-09-27-wad-aprime-v5-vasp-route (proposed)"
+ },
+ "보낼_때(1저자가_알리면)": [
+  "① 개정 3 v6.1 비준 → 결정 active (비준 전에는 보내지 않는다)",
+  "② zip sha256 이 위 값과 같은지 확인 (`sha256sum <zip>` · Windows: `certutil -hashfile <zip> SHA256`)",
+  "③ 메일 본문에 패키지 MANIFEST.sha256 의 sha256 `8118bbc023d6699cd7cd1b6e6afd32872e0699af70b412e15b89365e556ee2f1` 를 적는다 (반송 검사가 이 값으로 승인본을 확인) · POTCAR 는 업체 보유분 · 파일럿 2 잡 먼저",
+  "④ 반송 오면 `python3 tools/wad/build_v5_vasp_package.py --check --out db/inputs/wad_aprime_v5_vasp_2026_09_27 --manifest_sha256 <위 값> --ret <풀어 놓은 반송 폴더>` → 파일럿 OK 면 `--seal_pp` → 등록부 커밋·sha 기록 → 16 잡 → `--collect --pp_registry R --pp_registry_sha256 H --uma uma.json`",
+  "⑤ 업체 도구가 Linux/GNU 가 아니면 계산 전 `PACK_ONLY=1 bash run_all.sh` smoke (README 7)"
+ ],
+ "⛔": "이 zip 을 다시 만들면(다른 커밋·다른 압축기) sha 가 달라진다 — 보낸 zip 의 sha 를 여기 값과 대조해 어느 판을 보냈는지 확정한다. 패키지 내용이 바뀌어야 하면 새 개정 + Codex 재리뷰 (파일럿은 구판 진단으로)."
+}
