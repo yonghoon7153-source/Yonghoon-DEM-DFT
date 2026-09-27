@@ -116,15 +116,18 @@ scripts/                geo 빌드, 데이터 검증
 3. 그 뒤 push 하면 `.github/workflows/deploy.yml` 이 빌드해서 올린다 (Actions 탭에서 확인).
 4. 주소: `https://<계정>.github.io/<저장소 이름>/` (BASE_PATH 는 워크플로가 자동으로 넣는다).
 
-### Cloudflare Pages (원하면)
+### Cloudflare Pages + 우리 도메인 (추천)
 
-Cloudflare 대시보드 → Workers & Pages → Create → Pages → Connect to Git 에서 이 저장소 선택:
+`bml` 워크벤치(ADR 0031)에서 도메인 `bmlwork.kr` 의 DNS 를 이미 Cloudflare 에 올려 두었으므로,
+이 사이트는 **터널 없이** Cloudflare Pages 에 올리고 서브도메인만 붙이면 된다. 정적 사이트라
+`cloudflared` 의 7844 포트 문제도 없다.
 
-- Build command: `npm run build`
-- Build output directory: `dist`
-- (환경변수 불필요 — 루트 경로 배포)
-
-`public/_headers` 에 캐시/보안 헤더가 들어있다.
+1. Cloudflare 대시보드 → **Workers & Pages → Create → Pages → Connect to Git** → 이 저장소.
+2. Production branch: `main` (이 브랜치를 미리 보려면 Preview branch 에 `claude/japan-map-webpage-l0bm3e` 추가).
+   Build command `npm run build`, Build output directory `dist`, 환경변수 없음 (루트 경로 배포).
+3. 프로젝트 → **Custom domains → Set up a custom domain** → 예: `nihon.bmlwork.kr`
+   (같은 계정의 zone 이라 CNAME 이 자동으로 들어간다).
+4. 끝. 이후 push 할 때마다 자동 배포. `public/_headers` 의 캐시/보안 헤더도 같이 적용된다.
 
 ## 출처 · 라이선스
 
