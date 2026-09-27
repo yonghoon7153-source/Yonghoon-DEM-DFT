@@ -486,6 +486,63 @@
     "db/raw/wad_aprime_v4_gpu_trial_2026_09_26/trial_result_2026_09_27.json",
     "db/inputs/wad_aprime_v4_gpu_trial_2026_09_26/jobs.json"
    ]
+  },
+  {
+   "id": "aprime_v4_main_gabia_2026_09_27",
+   "system": "aprime_s4",
+   "machine": "gabia A6000 pw.x GPU · tmux v4main · run_sese_gpu.sh · KILL 44000 MiB · 런 /data/work/runs/wad_aprime_s4_v4_2026_09_27",
+   "check": "GPU 시험 두 셀 합격(aprime_v4_gpu_trial_gabia_2026_09_27) 뒤 발사 · 잡마다 시작 전 GPU 합계 1 MiB",
+   "started": "2026-09-27 10:52",
+   "vram_total_mib": 49140,
+   "jobs": [
+    {
+     "dir": "V4_s_outer_A_bound",
+     "state": "done",
+     "rc": 0,
+     "wall_s": 9276,
+     "peak_vram_mib": 39238,
+     "host_free_min_mib": 49389
+    },
+    {
+     "dir": "V4_s_outer_A_far",
+     "state": "run",
+     "started": "2026-09-27 13:27",
+     "note": "14:02 실측 SCF 21 회 · accuracy 4.53 Ry · GPU 39,212 MiB"
+    },
+    {
+     "dir": "V4_s_outer_A_G3_c2_bound",
+     "state": "wait"
+    },
+    {
+     "dir": "V4_s_outer_A_G3_c2_far_i",
+     "state": "wait"
+    },
+    {
+     "dir": "V4_s_outer_A_G3_c2_far_ii",
+     "state": "wait"
+    },
+    {
+     "dir": "V4_s_outer_A_G4_k1_bound",
+     "state": "wait"
+    },
+    {
+     "dir": "V4_s_outer_A_G4_k1_far",
+     "state": "wait"
+    },
+    {
+     "dir": "V4_s_outer_A_G4_s05_bound",
+     "state": "wait"
+    },
+    {
+     "dir": "V4_s_outer_A_G4_s05_far",
+     "state": "wait"
+    }
+   ],
+   "verdict": "진행 중 — 마지막 실측 09-27 14:02 (bound 끝 · far 진행) · 판정은 9 잡 끝난 뒤",
+   "values_policy": "9 잡이 끝나면 collect_aprime_s4.py --v4 로 한 번에 집계 (ΔE_frag eV/조각 · G3 5 · G4 10 meV = 변화 · J/m² 환산 금지) — 그 전엔 에너지를 어디에도 쓰지 않는다",
+   "records": [
+    "db/inputs/wad_aprime_s3v2_2026_09_26/qe/jobs.json"
+   ]
   }
  ],
  "reviews": [
