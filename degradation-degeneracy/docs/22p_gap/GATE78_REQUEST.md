@@ -1,6 +1,6 @@
 # 78차 게이트 리뷰 요청 — 77차 설계 정정 3건 (G77-N1 보존 범위 · G77-N2 primary 한 행 · G77-N3 구현 의존/사전 고정) + 제한 오프라인 구현 범위 (실행 GO 아님 · 코드 변경 없음)
 
-> **상태: 확정 (2026-09-27).** 77차는 "단계 3 재심사" 방향을 수용했고, "단계 12 전체 완료 → 13 일괄 착수" 는 수용하지 않았다. 잔여는 설계 정정 세 건 (N1 P1 · N2 P1 · N3 P2). 리뷰어 지시대로 **이 회신은 N1 상태표 + N2 primary 한 행 + N3 의존/사전 고정 표 + 제한 오프라인 구현 범위만** 묶는다. 76차 종결(74차 1–6 + 75차 잔여)은 유지되며 다시 열지 않는다.
+> **상태: 78차 회신 접수 (2026-09-27) — G77-N1·N3 종결 · G77-N2 잔여 G78-N1(관측 쌍 key)·G78-N2(누락/분모) 를 §2.1 취소선으로 정정 · 단계 1+2 수정 조건부 적합 (원장 §109).** ~~확정 (2026-09-27).~~ 77차는 "단계 3 재심사" 방향을 수용했고, "단계 12 전체 완료 → 13 일괄 착수" 는 수용하지 않았다. 잔여는 설계 정정 세 건 (N1 P1 · N2 P1 · N3 P2). 리뷰어 지시대로 **이 회신은 N1 상태표 + N2 primary 한 행 + N3 의존/사전 고정 표 + 제한 오프라인 구현 범위만** 묶는다. 76차 종결(74차 1–6 + 75차 잔여)은 유지되며 다시 열지 않는다.
 > 코드 변경 없음 (RUN_SCOPE diff 0). 새 계산·복원·class/투영·영수증 재생성 없음. **구현 자체는 사용자의 별도 범위 승인 뒤** — §4 가 그 승인 요청문이다.
 
 ## 판정 대상
@@ -57,13 +57,14 @@ E1(projection producer 결속)·E2(launcher attestation)·E4(독립 replay) 라�
 | bank | 행 단위 unit-cube bank, `bank_version`, `condition_bank_sha256` — 두 objective 가 **같은 bank prefix** 를 쓴다 (§4.4 의 중첩은 random bank 에만) |
 | pairing key | `pair_group_id = H(pairing_design_sha256, canonical(lli, lam_pe, lam_ne, lam_pe_type, lam_ne_type), parameter_order_sha256)` (§4.2) · `pairing_design_label: p22_grid_primary` · treatment·noise·noise_seed·objective 는 제외 · leg manifest 에 `cond_id → pair_group_id` mapping digest |
 | exact bounds | `exact_bounds_sha256` (실제 ordered `lb/ub` 의 digest, preset 이름 아님) — 두 objective 동일 |
-| 단위 | condition = 한 `pair_group_id` 의 (33p fit, 34p fit) 쌍 |
+| 단위 | ~~condition = 한 `pair_group_id` 의 (33p fit, 34p fit) 쌍~~ **G78-N1 정정:** 비교 단위는 **관측 쌍 key** `obs_key = (comparison_family_id, pair_group_id, treatment_id, noise_level, noise_realization_id, replicate_id)` 로 구분한 관측 하나에 대한 (33p 행, 34p 행) 이다. `pair_group_id` 는 **bank 공유용 그룹**(noise·seed·objective 제외, §4.2 그대로)이고 그것만으로는 같은 물리좌표의 여러 잡음 실현을 짝지을 수 없다 (같은 그룹의 seed s1·s2 를 group 으로 join 하면 2쌍이 아니라 4행이 된다). 이번 primary 에서 고정인 축은 고정값으로 적는다: `comparison_family_id = p22_grid_primary_v6`, `treatment_id = none`(무왜곡), `replicate_id = 0`. 봉인된 `cond_id`(noise·seed 포함, `src/grid.py::Condition`)를 obs_key 와 **일대일**로 결속해 써도 된다 — 다만 그 일대일 관계·충돌·중복은 명세에서 거부한다. 같은 obs_key 에 objective 별 행이 **정확히 하나씩** 있어야 하고(objective 는 비교의 두 열이지 key 의 값이 아니다), reference/bounds/조건 입력 identity 는 동일성 제약으로 대조한다. 서로 다른 leg 를 무조건 같은 cond_id 로 합치지 않는다. **planned roster** 는 이 obs_key 의 사전 집합이며, 한쪽 행 부재는 그 집합에서 발견한다. 중복·교차 seed pairing 은 누락 민감도 대상이 아니라 **구조 오류(거부)** 다. 실제 ID 코드는 단계 3 의 일이다 |
 | pass / fail | 기존 정의 그대로: raw degeneracy flag `|추정 − truth| > tol` (`src/scoring.py` 의 현행 tol·mode; primary 에서 값을 바꾸지 않는다) |
-| 분모 n | 두 objective 모두 **유한 J · converged** 인 condition 수 (complete-pair set). `n_conditions_planned` · `n_missing` (어느 한쪽이라도 solver 실패·비유한·미수렴) 을 **같이** 보고한다 |
-| 실패/누락 처리 | (a) primary Δ 는 complete-pair set 에서 (b) 누락을 유리하게 버리지 않도록 **사전 등록 민감도**: 누락된 쪽을 fail 로 세는 Δ_worst 를 반드시 병기 (c) `n_missing / n_conditions_planned > 5%` 이면 primary 를 보고하지 않고 solver 건전성 gate (§6.2) 실패로 돌린다 — 이 5% 는 사전 고정값이며 결과를 보고 바꾸지 않는다 |
+| 분모 | ~~두 objective 모두 **유한 J · converged** 인 condition 수 (complete-pair set). `n_conditions_planned` · `n_missing` 을 **같이** 보고한다~~ **G78-N2 정정:** 세 수를 사전에 고정한다 — **N** = primary 의 분석 대상 관측 쌍 수 (사전 **inclusion mask** 로 정한다: 기존 §7.1·현행 scoring 의 주 지표와 같이 **grid-reference recoverable 군**, `classify_recoverability` 의 geometry 규칙 `alpha_true ≥ 1 − atol` 로 결과를 보기 전에 결속; 구조적 제외(recoverable=False)는 N 밖이고 solver 누락과 섞지 않는다. 전체 생성 격자를 대상으로 바꾸려면 그것은 명시적 estimand 변경이다) · **n** = N 중 complete-pair(두 objective 의 행이 있고 유한 J·converged 이며 pass/fail label 을 만들 truth·복원값·채점 필드가 유한·유효) · **m = N − n** 누락 쌍 (쌍 단위; 양쪽 누락도 1쌍). `Δ_cc = D/n` 은 **양쪽이 관측·수렴한 부분집합의 조건부 기술통계**라고 적는다 (전체 planned set 의 결과가 아니다). NaN parameter·정의되지 않은 label 을 pass 로 채우지 않는다 |
+| 실패/누락 처리 | ~~(a) primary Δ 는 complete-pair set 에서 (b) 누락된 쪽을 fail 로 세는 Δ_worst 를 반드시 병기 (c) `n_missing / n_conditions_planned > 5%` 이면 primary 를 보고하지 않고 solver 건전성 gate (§6.2) 실패로 돌린다~~ **G78-N2 정정 — missing-as-fail 은 worst-case 가 아니다** (리뷰어 반례: 계획 40 · complete 38 · D=+1 · 누락 2쌍이 모두 "33 누락·34 pass" 면 Δ_cc=+1/38 인데 fail 대입은 −1/40 으로 34p 에 유리한 방향으로 뒤집히고, 전체 집합의 가능한 상한 +1/40 은 놓친다). 정정: 각 쌍의 기여 `d = y34 − y33` (fail=1, pass=0), complete 쌍의 합 D. 누락 쌍은 **관측된 쪽을 유지**하고 미관측 label 만 0/1 로 놓아 `l_i = min d_i`, `u_i = max d_i` 를 구한다 (33 누락/34 pass → [−1, 0] · 33 pass/34 누락 → [0, +1] · 33 누락/34 fail → [0, +1] · 33 fail/34 누락 → [−1, 0] · 양쪽 누락 → [−1, +1]). **전체 planned set 민감도 범위** `Δ_lower = (D + Σl_i)/N`, `Δ_upper = (D + Σu_i)/N` 을 Δ_cc 와 **구별해** 병기한다 — 상·하한은 새 co-primary 가 아니라 같은 Δ 의 누락 민감도 범위이고 신뢰구간·p-value·누락 무작위성 가정이 아니다. n=0 이면 Δ_cc 미정, N=0 이면 전체 지표 미정. **5% 는 §6.2 solver 건전성 gate(실패·비유한 0건)의 완화가 아니다** — 그 gate 는 그대로다(100쌍 중 solver failure 1건은 5% 미만이어도 gate 실패). 누락이 생긴 결과의 Δ_cc/bounds 는 **진단·미완 보고**로 분리하고, 5% 는 별도의 사전 reporting 정책(누락 m/N ≤ 5% 일 때만 Δ_cc 를 primary 후보로 보고, 초과면 미완)으로만 둔다 — §6.2 통과나 planned set 관측 완료를 뜻하지 않는다. 미수렴을 어느 phase/단위에서 실패로 셀지는 §9.4 필드(restart 별 converged·termination_status)가 생긴 뒤 단계 5 에서 고정한다 |
 | primary scalar | `Δ = (pass→fail − fail→pass) / n` (33p → 34p 방향, paired raw-degeneracy risk difference) |
 | 필수 분해 | 전이표 네 칸 `(pass,pass) (pass,fail) (fail,pass) (fail,fail)` — 같은 estimand 의 분해, 두 번째 endpoint 아님. 다중성 처리 없음 |
 | 통계 | 결정론적 격자의 기술통계. p-value·모집단 확률로 옮기지 않는다 |
+| 채택 N 의 정의 (78차 비차단, 단계 5 전) | "연속 두 doubling 통과 → 그 N" 의 **그 N** 은 두 doubling 의 **시작 N** 이다: 5→10·10→20 이 통과하면 채택 5 — 더 큰 예산이 material 개선을 주지 않았다는 것이 plateau 의 뜻. ladder 끝(40)까지 이미 계산한 prefix minima 진단은 채택과 무관하게 **전부** 보고한다 |
 | 설계 prior | §7.1 의 recorded 값 (`436/55/1476`, Δ=0.2581) 은 prior 이지 새 primary 결과가 아니다 — threshold·endpoint 선택에 쓰지 않는다 |
 | claim | `P22_STAGE3_PRIMARY` (v6). 이 행이 그 claim 의 arm·분모·scalar 정의다 — 리뷰 수용 뒤 `CLAIM_STATUS.yaml` 항목의 `무엇` 에 이 행을 참조로 적는다 (v5 승격 금지 그대로) |
 
@@ -106,13 +107,13 @@ secondary 는 primary 와 **섞지 않는다**. 어느 arm 이 유리한지 보�
 | 5 | 묶음 4·5: sentinel 선택 규칙 · stratum · ladder/max B · 미채택 규칙 · `mono_tol`/material tolerance 역할 고정 뒤 연결. empirical hard 는 선택 자료 ≠ 확인 자료 | 4 (+ floor 측정 승인) | `src/scoring.py` · `sentinel_panel.yaml` |
 | 6 | 고유 leg/provider/floor/smoke/holdout 목록 + wall/core-time 비용표 → 오프라인 구현 독립 검토 → 필요한 보존 profile 확인 (12-P) → **별도 pilot 승인** | 5 | 문서 |
 
-## §4 제한 오프라인 구현 범위 — 사용자 승인 요청문 (리뷰가 이 회신을 받은 뒤)
+## §4 제한 오프라인 구현 범위 — ~~사용자 승인 요청문 (리뷰가 이 회신을 받은 뒤)~~ 사용자 승인됨 (2026-09-27) · 78차 회신 뒤 착수
 
 > **사용자 승인 (2026-09-27, `284d2153` 뒤):** 아래 범위(단계 1+2, 라운드 끝 leg 별 영수증 1회 포함)를 승인 — **착수는 78차 회신 뒤.** pilot·본 계산·provider canary·floor 측정은 승인에 포함되지 않는다.
 
 | 항목 | 이번 라운드에 **한다** | 이번 라운드에 **안 한다** |
 |---|---|---|
-| 범위 | §3.2 단계 1 (문서·계약 정정 반영, 버전 경계) + 단계 2 (restart 행 `converged`·`termination_status`·`n_eval` · parquet 읽기 실패 구조화) | 단계 3~6 · provider canary · floor 측정 · pilot · 본 계산 · 복원 · class/투영 변경 |
+| 범위 | §3.2 단계 1 (문서·계약 정정 반영, 버전 경계) + 단계 2 (restart 행 `converged`·`termination_status`·`n_eval` · parquet 읽기 실패 구조화) | 단계 3~6 · provider canary · floor 측정 · pilot · 본 계산 · ~~복원~~ **복원은 명시 승인된 기존 대상 leg(`grid_fit_v5` · `paired_fixed5_v4`)의 영수증 검증용 격리 복원만 예외, 다른 복원 금지 (78차 경계 5)** · class/투영 변경 |
 | RUN_SCOPE | 움직인다 (`src/fitting.py` · `src/io.py`) → 영수증은 **최종 코드가 고정된 라운드 끝에 대상 leg 별 1회** 재생성 (restore·validate·재채점 실행이므로 **이 승인 범위에 명시 포함**; 실패하면 새 검증 완료로 붙이지 않는다; 원본 history 보존; 그 뒤 RUN_SCOPE 가 다시 움직이면 그 영수증은 새 identity 의 근거가 아니다) | 중간 digest 의 옛 영수증을 새 검증 PASS 로 쓰는 것 |
 | 증거 | RED 먼저 · 변이 · 전체 회귀 + strict smoke (clean 커밋) · v5 historical reader 가 옛 기록을 그대로 읽는 회귀 | 새 과학 수치 |
 | 산출 | GATE79 요청문 (코드 라운드 판정) | — |
