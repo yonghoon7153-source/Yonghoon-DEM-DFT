@@ -1,6 +1,6 @@
 # 마스코트 그림 목록
 
-받은 그림 **23 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
+받은 그림 **24 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
 
 주는 법: 캐릭터당 한 장, 배경 투명 PNG 가 제일 좋다 (흰 배경 JPG 도 자동으로 배경을 지운다). 파일명에 **캐릭터 이름·県 이름·id 중 하나**만 들어 있으면 된다.
 받은 뒤: `npm run mascots:import <폴더>` → 512px WebP 로 줄여 `public/mascots/<id>.webp` 에 넣고 데이터와 이 목록을 갱신한다.
@@ -56,7 +56,7 @@
 | # | 県 | 캐릭터 | 한글 | 파일명 | 권리자 | 찾을 곳 | 상태 |
 |---|---|---|---|---|---|---|---|
 | 27 | 三重 | とこまる | 토코마루 | `tokomaru.png` | 三重県 | [공식](https://www.pref.mie.lg.jp/SPORTS/HP/m0011300154.htm) | □ |
-| 28 | 滋賀 | キャッフィー | 캬피 | `caffy.png` | 滋賀県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%AD%E3%83%A3%E3%83%83%E3%83%95%E3%82%A3%E3%83%BC%20%E6%BB%8B%E8%B3%80%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 28 | 滋賀 | キャッフィー | 캬피 | `caffy.png` | 滋賀県 | [공식](https://www.pref.shiga.lg.jp/kensei/koho/koho/300451.html) | ✅ |
 | 29 | 滋賀 | ひこにゃん <sub>비공식·선택</sub> | 히코냥 | `hikonyan.png` | 彦根市 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%B2%E3%81%93%E3%81%AB%E3%82%83%E3%82%93%20%E5%BD%A6%E6%A0%B9%E5%B8%82%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
 | 30 | 京都 | まゆまろ | 마유마로 | `mayumaro.png` | 京都府 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%BE%E3%82%86%E3%81%BE%E3%82%8D%20%E4%BA%AC%E9%83%BD%E5%BA%9C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
 | 31 | 大阪 | もずやん | 모즈얀 | `mozuyan.png` | 大阪府 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%82%E3%81%9A%E3%82%84%E3%82%93%20%E5%A4%A7%E9%98%AA%E5%BA%9C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
