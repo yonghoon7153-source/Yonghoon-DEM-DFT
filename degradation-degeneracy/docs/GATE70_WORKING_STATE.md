@@ -92,9 +92,13 @@ G75-N1: index 최종화 실패 → 즉시 nonzero · 명시적 미완(승격된 
 
 독립 격리 검사 44건 · 2,868 파일 보존 · 패키지 87/87. 비차단 정정 3건(등록부 369 · history 3+현행 1 · 첫 RED 18 node) 취소선 반영. 남는 한계는 리뷰어 문장대로: replace 뒤 출력 오류는 rc 만으로 확정 불가, E1/E2/E4·WSL 고아·과학적 수렴 미검증은 해소되지 않음.
 
+## 다음 단계 결정 (2026-09-27) — 사용자 위임 → **단계 3 계약 v4 구현 전 재심사 (77차)** · 원장 §107
+
+grid_fine 재실행은 권고하지 않았다 (grid_fit_v5 와 산출이 같고 지지할 v6 주장이 없다). `docs/22p_gap/GATE77_REQUEST.md`: §13.1 묶음 상태 갱신 초안 · §11 위치(12 완주 → 13 미착수) · 13 앞 여섯 결정 제안 · 질문 5. 실행 GO 아님 · RUN_SCOPE 불변.
+
 ## 다음
 
-**게이트 루프 종결.** 다음 일(본 실행 계획 `plan_leg.py --claim-scope active_claims` · 투영 게시 · class 변경)은 전부 사용자 승인 뒤 새 요청문으로. ~~`docs/22p_gap/GATE76_REQUEST.md` — 75차 잔여 N1·N2·N3 종결 판정 요청 (새 실행 GO 아님).~~ 회신 전까지 `grid_fit_v5` 의 claim_roles·세대·cohort 명부는 쓰지 않는다. 종결되면 본 실행 계획(`plan_leg.py --claim-scope active_claims`)은 사용자 승인 뒤.
+`docs/22p_gap/GATE77_REQUEST.md` 발송 → 회신 대기. 회신이 13 착수를 승인하면 코드 라운드는 (a) §9.4 restart 행 필드 → (b) 묶음 6 → (c) 묶음 4 → (d) 묶음 3 → (e) 묶음 5 → (f) 고유 leg 목록·비용 → pilot 요청 순 (리뷰가 고치면 그대로). ~~**게이트 루프 종결.** 다음 일(본 실행 계획 `plan_leg.py --claim-scope active_claims` · 투영 게시 · class 변경)은 전부 사용자 승인 뒤 새 요청문으로.~~ (§107 정정: '본 실행' 은 grid 재실행이 아니라 단계 3 pilot 이다) ~~`docs/22p_gap/GATE76_REQUEST.md` — 75차 잔여 N1·N2·N3 종결 판정 요청 (새 실행 GO 아님).~~ 회신 전까지 `grid_fit_v5` 의 claim_roles·세대·cohort 명부는 쓰지 않는다. 종결되면 본 실행 계획(`plan_leg.py --claim-scope active_claims`)은 사용자 승인 뒤.
 
 ~~`docs/22p_gap/GATE75_REQUEST.md` — 74차 항목 1~6 종결 판정 요청 (새 실행 GO 아님). ~~`docs/22p_gap/GATE74_REQUEST.md` — 결과 보고 + G74-1~4 신고 + G74-3 분류 질문 (새 실행 GO 요청 아님).~~ 74차 회신 항목 3~6 의 범위를 사용자가 정하면 `/finding` (RED 먼저) 로 시작. 현지 검증 `e84d670d`: 20 failed (전부 G74-3) · 1859 passed · 2 xfailed · smoke rc 0. 회신 전까지 `grid_fit_v5` 의 claim_roles·세대·cohort 명부는 쓰지 않는다.
 
