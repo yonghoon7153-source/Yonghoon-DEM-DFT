@@ -149,12 +149,15 @@ scripts/                geo 빌드, 데이터 검증
 정적 사이트라 서버도 터널도 없다 ([ADR 0004](docs/adr/0004-share-through-cloudflare-pages.md)).
 운영은 **Cloudflare Pages**, 대시보드에서 한 번만 연결한다:
 
-1. Cloudflare → **Workers & Pages → Create → Pages → Connect to Git** → 이 저장소.
-2. Production branch **`nihonchizu`** · Build command `npm run build` · Build output directory `dist` · 환경변수 없음.
-3. 프로젝트 → **Custom domains → Set up a custom domain → `nihoncheese.ayh.kr`**.
+1. Cloudflare → **Workers & Pages → Create application → Pages → Connect to Git** → 이 저장소.
+2. Production branch **`nihonchizu`** · Framework preset None · Build command `npm run build` ·
+   Build output directory `dist` · 환경변수 없음 (Node 는 빌드 이미지 기본 22).
+3. 만든 뒤 **Settings → Build → Branch control → Preview branch: None**. 이 저장소의 다른 브랜치(bml·dft 등)는
+   다른 프로젝트라, 켜 두면 거기 push 할 때마다 미리보기 빌드가 돌고 실패 표시가 붙는다.
+4. 프로젝트 → **Custom domains → Set up a custom domain → `nihoncheese.ayh.kr`**.
    `ayh.kr` 이 Cloudflare DNS 에 있으면 CNAME 이 자동으로 들어가고, 아니면 등록기관 DNS 에
-   `nihon` CNAME → `<프로젝트 이름>.pages.dev` 를 넣는다.
-4. 이후 이 브랜치에 push 할 때마다 자동 배포. `public/_headers` 의 캐시·보안 헤더도 적용된다.
+   `nihoncheese` CNAME → `<프로젝트 이름>.pages.dev` 를 넣는다.
+5. 이후 이 브랜치에 push 할 때마다 자동 배포. `public/_headers` 의 캐시·보안 헤더도 적용된다.
 
 GitHub Pages 는 수동 실행용 대안으로 남겨 두었다 (`.github/workflows/deploy.yml`, 저장소 설정에서
 Pages Source = GitHub Actions 와 `github-pages` 환경의 Deployment branches 에 `nihonchizu` 허용 필요).

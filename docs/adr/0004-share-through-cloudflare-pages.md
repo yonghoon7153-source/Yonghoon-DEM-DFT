@@ -14,8 +14,9 @@ bml 은 로컬 서버를 바깥에 보여 줘야 해서 터널·중계기·VPS �
 
 1. 운영 주소는 **`https://nihoncheese.ayh.kr`**, 호스팅은 **Cloudflare Pages** (무료, git 연결).
    - Production branch `nihonchizu`, Build command `npm run build`, Output `dist`.
+   - Preview branch **None** — 같은 저장소의 다른 브랜치는 다른 프로젝트(bml·dft)라 미리보기 빌드를 돌리지 않는다.
    - Custom domain `nihoncheese.ayh.kr` — `ayh.kr` 이 Cloudflare DNS 면 자동, 아니면 등록기관에
-     `nihon` CNAME → `<프로젝트>.pages.dev`.
+     `nihoncheese` CNAME → `<프로젝트>.pages.dev`.
 2. GitHub Pages 워크플로는 **수동 실행용 대안**으로만 남긴다 (저장소 설정 2번이 필요하고,
    `/<repo>/` 하위 경로라 주소가 못생겼다).
 3. 캐시·보안 헤더는 `public/_headers` (Cloudflare Pages 가 읽는다).
