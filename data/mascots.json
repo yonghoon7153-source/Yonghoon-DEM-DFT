@@ -217,7 +217,9 @@
         "ja": "いちご、食べにきてね！",
         "ko": "딸기 먹으러 와!"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/tochimarukun.webp",
+      "credit": "©栃木県"
     },
     {
       "id": "sanomaru",

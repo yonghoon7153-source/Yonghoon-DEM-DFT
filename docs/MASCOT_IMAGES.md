@@ -1,6 +1,6 @@
 # 마스코트 그림 목록
 
-받은 그림 **5 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
+받은 그림 **6 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
 
 주는 법: 캐릭터당 한 장, 배경 투명 PNG 가 제일 좋다 (흰 배경 JPG 도 자동으로 배경을 지운다). 파일명에 **캐릭터 이름·県 이름·id 중 하나**만 들어 있으면 된다.
 받은 뒤: `npm run mascots:import <폴더>` → 512px WebP 로 줄여 `public/mascots/<id>.webp` 에 넣고 데이터와 이 목록을 갱신한다.
@@ -28,7 +28,7 @@
 |---|---|---|---|---|---|---|---|
 | 8 | 茨城 | ハッスル黄門 | 핫슬 코몬 | `hassurukomon.png` | 茨城県 | [공식](https://gotouchi-chara.jp/chara/hassurukoumon/) | □ |
 | 9 | 茨城 | ねば～る君 <sub>비공식·선택</sub> | 네바루군 | `nebarukun.png` | 民間（納豆キャラ） | [공식](https://nebaarukun.info/) | □ |
-| 10 | 栃木 | とちまるくん | 토치마루군 | `tochimarukun.png` | 栃木県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%A8%E3%81%A1%E3%81%BE%E3%82%8B%E3%81%8F%E3%82%93%20%E6%A0%83%E6%9C%A8%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 10 | 栃木 | とちまるくん | 토치마루군 | `tochimarukun.png` | 栃木県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%A8%E3%81%A1%E3%81%BE%E3%82%8B%E3%81%8F%E3%82%93%20%E6%A0%83%E6%9C%A8%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 11 | 栃木 | さのまる <sub>비공식·선택</sub> | 사노마루 | `sanomaru.png` | 佐野市 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%95%E3%81%AE%E3%81%BE%E3%82%8B%20%E4%BD%90%E9%87%8E%E5%B8%82%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
 | 12 | 群馬 | ぐんまちゃん | 군마짱 | `gunmachan.png` | 群馬県 | [공식](https://gunmachan-navi.pref.gunma.jp/) | □ |
 | 13 | 埼玉 | コバトン | 코바톤 | `kobaton.png` | 埼玉県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%B3%E3%83%90%E3%83%88%E3%83%B3%20%E5%9F%BC%E7%8E%89%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
