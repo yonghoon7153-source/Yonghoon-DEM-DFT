@@ -108,7 +108,7 @@ evidenceScope: multi-source-primary
 | CF | 2026-09-27 | `codex_CF_prompt_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` | `codex_CF_reply_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` | 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`codex_CF_reply_…` · P0 3 · P1 3) → v3 (커밋 c8d77dfd5) → 재리뷰 CG 발송 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'outsourcing', 'v2', 'v5', 'vasp', 'wad'] |
 | CG | 2026-09-27 | `codex_CG_prompt_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md` | `codex_CG_reply_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md` | 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`codex_CG_reply_…` · 새 P0 없음 · P1 3) → v4 → 재리뷰 CI 발송 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'outsourcing', 'v3', 'v5', 'vasp', 'wad'] |
 | CI | 2026-09-27 | `codex_CI_prompt_wad_aprime_v5_vasp_outsourcing_v4_2026_09_27.md` | — | 발송 대기 (1저자) — 도구·패키지·개정 3 v4 는 커밋 c25e0ce20 에 고정 (원격) | — |
-| CH | 2026-09-27 | `li2s1a_CH_prompt_li2s_cd_reply_pilot800_2026_09_27.md` | — | 초안 — 사용자(실행자 · 카드 저자) 검토 뒤 발송 · 판정은 외부 1저자 몫 · ⚠ §1 의 550 K 겸용 선택은 카드 저자(사용자) 확인 필요 | — |
+| CH | 2026-09-27 | `li2s1a_CH_prompt_li2s_cd_reply_pilot800_2026_09_27.md` | — | 발송됨 (사용자 · 2026-09-27 · 발송판 = 다섯 시드 결과 반영판 a67b39634 의 '보내는 글' 로 본다) · 외부 1저자 회신 대기 (Q-CH-1 폭 규칙 · Q-CH-2 본 런 400 K · Q-CH-3 P–S–S 문구) · 550 K 겸용 선택은 발송으로 카드 저자 확정 | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 

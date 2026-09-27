@@ -7,7 +7,7 @@ updated: 2026-09-27
 track: li2s / lpscl_smallcell_glass
 channel: li2s1a
 kind: prompt
-status: 초안 — 사용자(실행자 · 카드 저자) 검토 뒤 발송 · 판정은 외부 1저자 몫 · ⚠ §1 의 550 K 겸용 선택은 카드 저자(사용자) 확인 필요
+status: 발송됨 (사용자 · 2026-09-27 · 발송판 = 다섯 시드 결과 반영판 a67b39634 의 '보내는 글' 로 본다) · 외부 1저자 회신 대기 (Q-CH-1 폭 규칙 · Q-CH-2 본 런 400 K · Q-CH-3 P–S–S 문구) · 550 K 겸용 선택은 발송으로 카드 저자 확정
 confidence: medium
 verificationStatus: verified
 verifiedAt: 2026-09-27
@@ -21,11 +21,11 @@ evidenceScope: multi-source-primary
 
 > 앞 편지 CD (`li2s1a_CD_prompt_…` → 발송판 `kb/projects/li2s_glass_external_first_author_report_send_2026_09_26.md`) 에 대한 **회신 CD** (`li2s1a_CD_reply_li2s_cc_report_2026_09_27.md`) 의 반영 + 그 사이 끝난 **파일럿 400 K · 800 ps** 결과를 한 편지로 묶었다. 앞서 만든 파일럿 단독 초안 `kb/projects/li2s_glass_external_first_author_followup_pilot800_2026_09_27.md` 는 여기로 흡수됐다 (미발송).
 > 트랙 = li2s (외부 1저자) → 사용자는 1저자가 아니다. 판정(추정자 · 규칙 문구 · 본 런 설계)은 외부 1저자 몫이고, 우리 해석은 **잠정**으로 적었다.
-> ⚠ **§1 Q-CC-3 의 "550 K 겸용 유지 + 예외 명시"** 는 카드 저자(사용자)의 선택이다 — 1저자가 "비용을 보면 전자가 합리적" 이라 한 쪽으로 적어 두었다. 다르게 정하면 그 한 줄만 바꾼다.
+> ✅ **§1 Q-CC-3 의 "550 K 겸용 유지 + 예외 명시"** 는 카드 저자(사용자)의 선택이다 — 1저자가 "비용을 보면 전자가 합리적" 이라 한 쪽으로 적었고, **사용자가 이대로 발송해 확정됐다** (2026-09-27 · 개정 6 의 '확인 대기' 해제).
 > ✅ **새 항목 1 (다른 네 시드 통계)** 결과를 반영했다 (09-27 · kgy seed1·2 · gabia seed3·4·5 · 도구 sha 두 기계 대조 ✓). 그 과정에서 **앞 보고의 seed5 셈 오류**(748/141 = P 별 셈이 아니라 '이탈 P 조합' 분포의 상위 넷)를 찾아 §1 에서 정정한다.
 > ⚠ **새 항목 2 는 1저자 문구를 그대로 쓰지 않고 수정안을 냈다 (Q-CH-3)** — 문구 앞부분 "1200 K 용융에서 P–S 가 끊어진 뒤 남은 자유 S" 가 자료와 맞지 않아서다 (P30 의 끝까지 간 이탈은 냉각 중 설정 931 K 시작 · 자유 S 의 기원은 저장 요약에 없음). 수정안은 **잠정**이고 문구는 외부 1저자가 정한다.
 > 기록: `db/properties/lpscl_smallcell_glass_md_cc_followup_2026_09_26.json` (§회신_CD_판정 · §파일럿_400K_800ps_결과) · 개정 초안 `db/properties/lpscl_smallcell_glass_md_amendment_cc_2026_09_26.json` (v2.1 — 12 문구만 Q-CH-3 대기) · 다섯 시드 요약 `db/raw/lpscl_smallcell_glass_cc_2026_09_26/p_coord_5seeds_cd_2026_09_27.json`.
-> ⬇ 아래 **보내는 글**만 발송한다.
+> ⬇ 아래 **보내는 글**만 발송했다 (사용자 · 2026-09-27). 회신이 오면 `li2s1a_<letter>_reply_…` 로 원문 보존.
 
 ---
 
