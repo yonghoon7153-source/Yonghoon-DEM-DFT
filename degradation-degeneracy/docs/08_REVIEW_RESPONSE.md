@@ -8257,7 +8257,7 @@ RUN_SCOPE 를 건드리는 3~5 는 `source_digest` 를 움직인다 — 그 뒤 
 | 기존 투영 cohort/claim 보호 유지 — `row_projection.py` **불변**. 봉인 필드에 `executed_legs` 가 없으므로 g18 `CURRENT` ledger_seal 불변, 활성 cohort 재생성(투영 게시) 없음 | `test_g74_3_06d` (`_ledger_seal(g18)` ∈ CURRENT) · 8 다리 `claim_scope: active_claims` · claim_roles 그대로 | 05 · 06d |
 | 생산(finalize)과 소비(planned_index · lint)의 fixture 통합 · 거부 시 원장 불변 | 06a (no_active_claim → executed_legs, 기록에 scope) · 06b (active_claims → legs) · 06c (scope 없는 계획은 발급 자체 거부, 원장 바이트 불변, claim 없음) | 06a·b·c |
 
-**publisher 를 안 고친 이유:** `row_projection._ledger_authority` 는 `_LEDGER_AUTHORITY` 의 키만 읽으므로 `executed_legs` 를 무시하고 봉인도 안 움직인다. 그것을 고쳐 `executed_legs` 를 검사하게 하면 `row_projection_py_sha256` 이 바뀌어 활성 cohort g18 의 **투영 재생성**(= projection 게시, `paired_fixed5_v4` 원자료 복원 필요)이 강제된다 — 리뷰어가 이 회신으로 허가하지 않은 일이고 E1 영역이다. 실측: 처음 그렇게 고쳤을 때 `test_exactly_one_cohort_is_active_and_it_tracks_the_current_tree` 가 `['compute_sha256', 'row_projection_py_sha256']` 이탈로 빨개졌다 → 되돌렸다. 진단 다리가 투영 명부에 끼는 것은 production `planned_index` 와 lint 가 막으므로 publisher 는 그것을 볼 일이 없다. 리뷰어가 publisher 검사까지 요구하면 그때 재생성과 함께 한다 (75차 §5 질문).
+**publisher 를 안 고친 이유:** `row_projection._ledger_authority` 는 `_LEDGER_AUTHORITY` 의 키만 읽으므로 `executed_legs` 를 무시하고 봉인도 안 움직인다. 그것을 고쳐 `executed_legs` 를 검사하게 하면 `row_projection_py_sha256` 이 바뀌어 활성 cohort g18 의 **투영 재생성**(= projection 게시, `paired_fixed5_v4` 원자료 복원 필요)이 강제된다 — 리뷰어가 이 회신으로 허가하지 않은 일이고 E1 영역이다. 실측: 처음 그렇게 고쳤을 때 `test_exactly_one_cohort_is_active_and_it_tracks_the_current_tree` 가 `['compute_sha256', 'row_projection_py_sha256']` 이탈로 빨개졌다 → 되돌렸다. ~~진단 다리가 투영 명부에 끼는 것은 production `planned_index` 와 lint 가 막으므로 publisher 는 그것을 볼 일이 없다.~~ **정정 (75차 ②):** publisher 는 새 필드(`claim_scope`·`executed_legs`)를 읽지 않고 원장의 투영 명부를 직접 읽는다. `planned_index`·lint 가 **원장 상태**를 거부하는 것이지 publisher 의 직접 호출을 검사하는 것이 아니다 — "publisher 도 같은 분류를 거부한다" 고 말하지 않는다. 리뷰어가 publisher 검사까지 요구하면 그때 재생성과 함께 한다 (75차 §5 질문).
 
 **원장 편집 (사람):** g18 `legs: [paired_fixed5_v4]` · `executed_legs: [grid_fit_v5]` (finalize 가 옛 규칙으로 `legs` 에 넣었던 것을 분류대로 옮김 — 고친 finalize 는 이제 같은 자리를 쓴다) · `grid_fit_v5` 실행 기록에 `claim_scope: no_active_claim` · `근거` · `evidence.regeneration_capability: available_raw_present`(사실 기록 — 묶음에 fits·curves 원자료; 투영 생성/검증을 뜻하지 않음) · 8 투영 다리에 `claim_scope: active_claims`. 계획 항목은 다시 쓰지 않았다 (`grid_fit_v5` 계획에 `claim_scope` 없음 → 실행 기록이 답한다, `_executed_scope`). `plan_leg.py` 는 `--claim-scope` 필수.
 
@@ -8267,7 +8267,7 @@ RUN_SCOPE 를 건드리는 3~5 는 `source_digest` 를 움직인다 — 그 뒤 
 
 ### G74-4 — archive index 병합 보존
 
-`scripts/archive_results.sh`: ① 진입에서 기존 `artifact_index.yaml` 을 읽어 `runs:` mapping 을 담은 mapping 이 아니면 **아무것도 승격하지 않고 중지** ② 승격(mv) 전에 같은 이름의 기존 entry 와 candidate 의 `payload_index_sha256` 을 대조 — 다르면 `ARCHIVE_REPLACE=1` 없이는 거부(n_bad, 묶음·index 불변) ③ index 갱신은 기존 `runs` 위에 이번 승격분만 **병합** (다른 entry 바이트·stamp 불변) ④ 임시 파일 뒤 `os.replace`. heredoc 은 flush 뒤 `os._exit` (docs-lint 규칙). 회귀 `g74_4_01~05` (기존4+신규1 · 재호출 멱등 · 동명 다른 identity 거부/명시 교체 · 검증 실패 불변 · malformed index 4종 중지).
+`scripts/archive_results.sh`: ① 진입에서 기존 `artifact_index.yaml` 을 읽어 `runs:` mapping 을 담은 mapping 이 아니면 **아무것도 승격하지 않고 중지** ② 승격(mv) 전에 같은 이름의 기존 entry 와 candidate 의 `payload_index_sha256` 을 대조 — 다르면 `ARCHIVE_REPLACE=1` 없이는 거부(n_bad, 묶음·index 불변) ③ index 갱신은 기존 `runs` 위에 이번 승격분만 **병합** (다른 entry ~~바이트~~·stamp 불변 — **정정 (75차):** `safe_load/dump` 재직렬화이므로 보존되는 것은 **파싱된 필드 값**이지 raw 바이트가 아니다; 이번 실제 index 바이트가 불변인 것은 별개 사실) ④ 임시 파일 뒤 `os.replace`. heredoc 은 flush 뒤 `os._exit` (docs-lint 규칙). 회귀 `g74_4_01~05` (기존4+신규1 · 재호출 멱등 · 동명 다른 identity 거부/명시 교체 · 검증 실패 불변 · malformed index 4종 중지).
 
 ### ⑥ validator 식별 · 영수증
 
@@ -8279,3 +8279,32 @@ RUN_SCOPE `c2ef1a811e70bb4c → 27390883eb132941`. 두 실물 영수증은 원�
 
 **하지 않은 것:** 새 본 실행 없음 · 투영 게시 없음 · class 변경 없음 · 옛 계획 재작성 없음 · WSL 고아 레코드 그대로.
 
+
+## §104 75차 접수 — **부분 수용 · 전체 종결 보류** (P1 1 · P2 2) · 문구 정정 · 다음 범위 = N1/N2/N3 + 문구 (사용자 승인 대기)
+
+2026-09-27 접수. 리뷰어 고정: 요청 HEAD `ef6689bbe296e545df57dc481e45ec98c2b9ea3b` · 코드 `ebfb853d` · 독립 `source_digest 27390883eb132941` (57 파일) · 코드→HEAD RUN_SCOPE diff 0 · 검토 checkout 2,789 파일 보존. 패키지 원본 `docs/22p_gap/gate75_review/` (zip sha256 `4a1ad8a2a7374cbc24467ca5cc24e39f9d31d9fb1845a7cc131414bbdf44cf7c`, MANIFEST 70 files · 커밋 뒤 blob 대조 **70/70** · `-text !eol` 규칙 먼저). 독립 사례 23개 (AST 판정 함수 · index heredoc · shell 반환 경계를 자기 fixture 에서; 전체 suite·restore·재채점 미실행 — 송신 수치와 합산하지 않음).
+
+**결론 (그대로):** "R1/R2·고정 캐시 gate·producer/validator 분리를 수용한다. 잔여 P1 1건·P2 2건만 다음 유한 보완 대상이다. 기존 Gabia 결과와 보존 묶음을 무효화하지 않으며 새 본 계산은 필요하지 않다."
+
+| 항목 | 판정 |
+|---|---|
+| 1 R1 | 수용 (대화 출처는 송신자 기록 — 수신자가 세션 원본을 감사한 것은 아님; 소급 승인 아님) |
+| 2 R2 | 수용 |
+| 3 진단 전용 계약 | 부분 수용 — **G75-N3** 남음 |
+| 4 고정 캐시 | 수용 (null·짧은 값·비hex·대문자·숫자·축/분류 부재 거부 별도 확인, live 비교 유지) |
+| 5 index 보존 | 종결 보류 — **G75-N1 · N2** |
+| 6 validator 식별 | 수용 (history 바이트 동일 · 새 receipt 차이 = validator/core/stamp 뿐) |
+
+**잔여 (유한):**
+
+| id | 등급 | 무엇 | 좌표 | 리뷰어 반례 | 최소 수정 |
+|---|---|---|---|---|---|
+| **G75-N1** | P1 | index 최종화 Python 호출의 실패가 검사되지 않아 archive 가 **rc 0** 으로 끝난다 (`set -uo pipefail`, `-e` 없음; 마지막 반환은 `n_bad`/`n_missing` 만). 승격·`n_ok` 뒤라 옛 index 와 새 묶음이 어긋난 채 성공 안내 | `scripts/archive_results.sh:294` · `:401–405` · `:425` | `W01` replace 실패 주입 → OSError·index 불변 (원자 교체 보호) · `S17` index 명령 rc 17 → 부모 **rc 0**·불완전 0·commit 안내 | 최종 index 호출 실패를 즉시 nonzero·명시적 미완으로 전파, 성공 안내 차단, 이미 승격된 상태를 숨기지 않음 (index/묶음 불일치 상태 보존); tmp write·replace 실패 회귀에서 부모 rc·index SHA·승격 상태 표기 확인; 자동 rollback 은 범위 별도 |
+| **G75-N2** | P2 | `yaml.safe_load` 가 **중복 mapping 키**를 뒤 값으로 접는다 → preflight rc 0 · writer 가 접힌 내용을 써 무관 항목 소실 | `:70` · `:225` · `:313` | `runs: {preserved: …}` 뒤 `runs: {}` → `I02` 통과, `W02` 재직렬화로 `preserved` 소실; 같은 run 이름 중복 `I03` · identity 키 중복 `I04` 도 rc 0 | 진입·동명 비교·병합에서 **같은 해석 규칙**으로 중복 키 거부 (top-level `runs` · run 이름 · identity 키 각각 회귀), 모호한 원문은 첫 승격 전 거부·index 바이트 불변; merge key 정책 명시 |
+| **G75-N3** | P2 | 진단 전용 소비자(`_no_active_claim_evidence_problems`)가 `out` 의 **존재**만 본다 — receipt/묶음이 결속한 실행 자리와 대조하지 않는다 | `tests/test_docs_lint.py:2502` · `:2521–2554` (생산자 대조 `tools/preserve.py:8007` · `:8093`) | 원장 사본에서 `grid_fit_v5.evidence.out` 만 `results/OTHER_RUN` → 새 helper 0 오류 · generic full_bundle lint 통과 · 기존 `_assert_ledger_run_bound` 는 거부 | 소비자가 typed core·실물 묶음의 bound run 을 읽어 `_assert_ledger_run_bound` 와 같은 규칙으로 원장 out 대조; 양성·부재·공백·다른 out 회귀; 실패 시 소급 수정 없음 (attach 재설계 아님) |
+
+**§5 답 (그대로):** ① 1/2/4/6 수용, 3/5 잔여 ② `row_projection.py` 불변 **수용** (진단 전용·명부 분리 범위; g18 재게시/복원 요구 없음) — 단 "publisher 가 새 분류를 직접 강제" 라는 주석/설명은 정정 ③ `grid_fit_v5` `current_validated` **유지 가능** — producer `c2ef1a811e70bb4c` / validator `27390883eb132941` / `diagnostic` / `no_active_claim` 을 함께 명시, "현행 코드로 재계산됨/현행 과학 주장 지지/수렴 증명" 으로 읽지 않음, v4 의 `historical_validated` 자동 변경 없음 ④ 새 본 실행 **불필요** — 세 경계는 격리 회귀로.
+
+**문구 정정 (이 커밋, 취소선):** "무관 entry 바이트 그대로" → 파싱된 필드 값 보존 (§103 G74-4 · 시험 04_01 docstring — 이름은 변이 EXPECT node id 라 유지) · "planned_index·lint 가 막으므로 publisher 는 볼 일이 없다" → publisher 는 새 필드를 읽지 않으며 lint 는 원장 상태를 거부하는 것 (§103) · 시험 파일 머리 "같은 검사" → "같은 정책", 소비자 목록에서 `row_projection` 제외 · 발송문의 "실측 (8765068a…)" 는 첫 회귀 checkout 이고 최종 PASS 는 `7ec4e234` — 요청문 §2 는 이미 `7ec4e234` 로 적혀 있다.
+
+**다음 (사용자 범위 승인 뒤):** N1·N2 (`scripts/archive_results.sh`, RUN_SCOPE → `source_digest` 이동 → 영수증 재검증은 원본 보존 별도 승인 검증) · N3 (`tests/test_docs_lint.py`, RUN_SCOPE 밖). RED 먼저. 새 실행·복원·게시·class 변경 없음.
