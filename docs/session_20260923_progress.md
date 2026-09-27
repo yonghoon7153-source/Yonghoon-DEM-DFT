@@ -368,3 +368,14 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
 - 레시피 근거 (에이전트 2 · 파일:행 전수, 스크래치 보존): 원판 STEP2 = 킷 run_mpm.sh K:77,88-94 · STEP3 러너 LEAN=2 centerline 0.24 · physics_protocol_id
   p2-79ade1a5c2b0c9fb · 재압밀 잡음 실측 +0.064 % (kgy E=10 vs v100 원판 3_1 v015 o0) ⇒ 대조군 필요 · d_h 288 ≈ 15 GB (kgy 캡 = min(85 % 총, 90 % 여유)).
 - ⚠ 자기매칭 함정 재발 (게이트 런처 명령줄의 "bash scripts/check_all.sh" 를 같은 명령의 kill 루프가 잡아 자살, exit 144) → 런처는 변수 (`G=scripts/check_all; bash "$G.sh"`).
+
+## ⑲ LHS porosity — sphere vs union 전수 · 순수 SE 판정 시험 등록 · Phase A STEP2 통과 (09-27)
+- lhsx 64 의 음수 porosity (중앙 −4.26 %) = **SE–SE 겹침 이중계상** (확정 · 판단 J19).  수확 · 덱 결함 아님.  에이전트 진단 + 내 독립 검산 일치.
+- 194 건 union 실측 (WSL · `scripts/lhs_union_webapp.py` — 웹앱 함수 + 정확한 MC union): 전부 양수 · 정확 union 중앙 130 **13.60 %** · lhsx **6.55 %** ·
+  쌍 렌즈 + 벽 밖 제거 ≈ 정확 (0.004 %p) → `docs/data/lhs_union_20260927/`.  스냅샷 `docs/data/lhs_descriptors_20260925/` · `lhsx_descriptors_20260925/` 커밋.
+- 사용자 지적: 복합체 < 순수 SE 는 이원 충전 물리 → 내 "과압축" 표현 철회.  순수 SE 판정 시험 사전등록 `docs/reviews/pure_se_union_prereg_20260927.md`
+  (4 침대 · `lhs_ext_materialize.py --pure-se` 신설 · selftest 42/42 · 판정선 Q1–Q3).
+- ⚠ 실험 앵커 정정 `SELF-52`: *"Minnmann 순수 SE 10 %"* 는 보정 표적 — 실측 띠 8–19 % (Ohno 2020 등, 정본 카드).  내가 대화에서 되풀이했다.
+- Phase A 재현: kgy STEP2 8 침대 통과 (P4 · P5 ✓ · G010 = v100 원판 porosity 소수 셋째 자리까지) · STEP3 는 심링크 경로로 규율 검사 정지 → 실경로로 재발사 (10:10) —
+  사전등록 §6 덧붙임에 기록.  v100 d_h 288 3/8 (런당 ≈ 3 h).
+- litdb: Franco 랩 프리프린트 2 편 (탄소펠트 섬유 DEM · 이중층 후막 공정) 에이전트 진행 중.

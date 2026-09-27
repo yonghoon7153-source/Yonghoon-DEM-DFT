@@ -4980,6 +4980,21 @@
     "docs/paper/main.tex",
     "scripts/plot_sigma_closure_3x3.py"
    ]
+  },
+  {
+   "id": "SELF-52",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (09-27 순수 SE 판정 시험 설계 중 정본 카드 대조 — minnmann2021 · minnmann2022 카드가 이미 적어 둔 것)",
+   "opened_in": "docs/reviews/pure_se_union_prereg_20260927.md",
+   "title": "CLAUDE.md frame[1] 의 'pure-SE porosity ≈ 10 % @ 300 MPa (Minnmann et al.)' — 어떤 Minnmann 논문에도 없는 값 (우리 MPM/DEM 보정 표적) 을 실험 앵커로 귀속",
+   "note": "정본 카드 minnmann2021_jes_charge_transport_bottlenecks = 복합 양극 14 % (13–17 %) @380 MPa, pure-SE 아님 · minnmann2022_designing_cathodes_solidstate = porosity 숫자 없음.  순수 LPSCl 냉간 펠릿 실측은 ohno2020_interlab (6 연구실, 상대밀도 81–95 % @275–441 MPa → 공극 13.3 ± 5.3 %, 카드 DERIVED) · doux2020 (82.1 % → 18 %) · adeli2019 (87 % → 13 %) · ketter2025 (≈ 88 %).  09-27 대화에서 claude 가 같은 오귀속을 되풀이했다 ('Minnmann 실험값 10 %').  처방 (task #46 과 함께): CLAUDE.md frame[1] · E_SE 교정 절 · docs/data/densification_porosity_db.csv 의 표기를 '보정 표적 (실험 띠 ≈ 8–19 %, Ohno 2020 등)' 으로 정정 · quotation_ban 등록 검토.",
+   "evidence_tests": [
+    "docs/reviews/pure_se_union_prereg_20260927.md",
+    "CLAUDE.md",
+    "docs/data/densification_porosity_db.csv"
+   ]
   }
  ]
 }

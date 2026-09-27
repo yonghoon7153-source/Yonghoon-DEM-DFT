@@ -155,6 +155,21 @@ python3 ~/dem-vgcfE/scripts/phase_a_pair_e_arms.py --a ~/pa010/phaseA_v015_*_arm
 ```
 산출물 (팔 JSON · 영수증 · verdict · pair JSON · 침대 `mpm_metrics.json` 8 개) 을 `docs/data/phase_a_rep100_2026MMDD/` 로 커밋한다 (원판 README 형식).
 
+### §6 덧붙임 (런 중 · 어떤 STEP3 결과도 보기 전, 09-27) — 판정선은 그대로
+
+- **명령 정정 ①**: 위 §1 의 `ln -sfn … kits/scripts` 로 만든 심링크로 러너를 `bash scripts/sdcp_gain_vox015_8arm.sh` 처럼 부르면 **규율 검사가 멈춘다**
+  (09-27 10:01, rc=2, 0 팔) — `check_method_discipline.py` 의 `ROOT` 는 `abspath` 두 단계라 심링크를 풀지 않고 `~/pa100/kits` 를 리포 루트로 보고
+  `.github/workflows/discipline.yml` 을 못 찾는다 (`K_MISSING_FILE`).  ⇒ 러너는 **실경로** `bash $HOME/dem-vgcfE/scripts/sdcp_gain_vox015_8arm.sh` 로 부른다
+  (10:10 재발사).  빈 OUTDIR (영수증만) 은 지우고 다시 만들었다.
+- **명령 정정 ②**: 위 STEP2 확인 코드의 `porosity_sphere` 키는 `mpm_metrics.json` 에 없다 (항상 None) — 실제 키는 `porosity_settled_pct` · `porosity_at_target_pct`.
+- **실행 순서** (판정선 · 인자 불변): G100 v015 → **G010 v015** → QC → G100 v020 → v025 — 질문 2 · 3 이 먼저 나오게.
+- **STEP2 게이트 결과 (09-27 05:44 완료 · 10:0x 확인)**: 8 침대 전부 통과 — P4 ✓ (G100 dt_eff 1.3467e-4 · CFL · G010 2.0e-4) · P5 ✓ (G100 − G010 porosity
+  +0.175 · +0.137 · +0.040 · +0.009 %p ≤ 0.3).  G010 (kgy) porosity 는 v100 원판 (`docs/data/phase_a_6mah/regen_20260914_metrics.tsv`) 과 소수 셋째 자리까지 같다
+  (13.848 · 14.44 · 14.889 · 15.373).
+- **질문 2 해석의 한정 (결과 전 등록)**: G100 은 CFL 로 dt 가 1.347e-4 로 줄고 G010 은 2.0e-4 다 — **E 와 dt 가 함께 바뀐다**.  생산에서 100 GPa 를 쓰면 dt 가
+  자동으로 줄므로 *"100 으로 바꾸면 결과가 얼마나 바뀌나"* 에는 이 합이 맞는 답이다.  그러나 질문 2 가 **h1** (> 1 %) 이면 E 물리와 dt 몫을 가르는 팔
+  (E 10 · dt 1.347e-4 강제) 없이 *"E 효과"* 라 쓰지 않는다.
+
 ## 7. 시간 (실측 근거 · kgy 3090)
 
 STEP2 ≈ 1 h/침대 × 8 = 8 h · STEP3 vox 0.15 ≈ 42 min/팔 × 64 (G100 32 + G010 32) ≈ 45 h · vox 0.20 (kgy 미실측; v100 전체 파이프라인 42 min) ≈ 20 h ·

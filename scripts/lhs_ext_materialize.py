@@ -229,6 +229,82 @@ def render(template: str, row: dict, tmpl_case: str) -> str:
     return t
 
 
+def _is_prime(n: int) -> bool:
+    if n < 2 or n % 2 == 0:
+        return n == 2
+    i = 3
+    while i * i <= n:
+        if n % i == 0:
+            return False
+        i += 2
+    return True
+
+
+def render_pure_se(template: str, case: str, r_se_um: float, volfrac: float, seed: int,
+                   tmpl_case: str) -> str:
+    """2-type 실물 덱 → **AM 없는 순수 SE 덱** (판정 시험 `docs/reviews/pure_se_union_prereg_20260927.md`).
+
+    바꾸는 것: AM 입자 템플릿 줄 제거 · 분포를 SE 하나 (가중 1) 로 · r_SE · volfrac · insert seed ·
+    케이스명.  **나머지 (벽 재질 · 플래튼 메시 · 목표 압력 · 재질 행렬 · 덤프) 는 한 글자도 안 바꾼다** —
+    LHS 코호트와 같은 프로토콜이어야 비교가 선다.  0 가중을 남기지 않는 이유: LIGGGHTS 가 0 가중
+    템플릿을 어떻게 받는지 확인된 바 없다 (deck_weights 주석과 같은 조심).
+    """
+    d = parse_deck(template)
+    if d['ntype'] != 2:
+        raise SystemExit(f'⛔ 순수 SE 덱은 2-type (mono) 실물 템플릿에서만 만든다 — 받은 템플릿은 {d["ntype"]}-type')
+    if not (seed > 10000 and _is_prime(seed)):
+        raise SystemExit(f'⛔ insert seed {seed} — 10000 보다 큰 소수여야 한다 (08-18 비소수 seed 25 건 abort 사고)')
+    if not (0.0 < volfrac < 0.6) or not (0.0 < r_se_um < 10.0):
+        raise SystemExit(f'⛔ 범위 밖 — volfrac {volfrac} · r_SE {r_se_um} µm')
+    am = [p for p in d['pts'] if p['density'] > 3000]
+    se = [p for p in d['pts'] if p['density'] <= 3000]
+    if len(am) != 1 or len(se) != 1:                       # pragma: no cover (parse_deck 가 먼저 막는다)
+        raise SystemExit(f'⛔ AM {len(am)} · SE {len(se)} 템플릿 — 각각 1 개여야 한다')
+    rSE = r_se_um / UM_PER_DECK_UNIT
+    t = template
+    t = _sub1(t, rf'^[ \t]*fix\s+{re.escape(am[0]["fix"])}\s+all\s+particletemplate/sphere[^\n]*\n', '',
+              'AM 입자 템플릿 줄 제거')
+    t = _sub1(t, r'(particledistribution/discrete\s+\d+\s+)2(\s+)\S+\s+[\d.]+\s+\S+\s+[\d.]+',
+              rf'\g<1>1\g<2>{se[0]["fix"]} 1.000000', '분포 → SE 단독')
+    t = _sub_all(t, r'pdd AM=[\d.]+(\s+)SE=[\d.]+', r'pdd AM=0.0000\g<1>SE=1.0000', '헤더 pdd(2)')
+    t = _sub1(t, r'^(variable\s+r_SE\s+equal\s+)\S+', rf'\g<1>{rSE:.6g}', 'r_SE')
+    t = _sub_all(t, r'rSE=[\d.eE+-]+', f'rSE={rSE:.6g}', '헤더 rSE')
+    t = _sub_all(t, r'volfrac=[\d.eE+-]+', f'volfrac={volfrac:.6f}', '헤더 volfrac')
+    t = _sub1(t, r'volumefraction_region\s+[\d.eE+-]+', f'volumefraction_region {volfrac:.6f}',
+              'volumefraction_region')
+    t = _sub1(t, r'insert/pack\s+seed\s+\d+', f'insert/pack seed {seed}', 'insert/pack seed')
+    t = _sub_all(t, r'seed=\d+', f'seed={seed}', '헤더 seed')
+    t = _sub1(t, rf'^(#\s*){re.escape(tmpl_case)}(:\s*)\S+', r'\g<1>' + case + r'\g<2>pure_SE',
+              '헤더 케이스·kind')
+    t = re.sub(r'(INSERTING\s*\(\s*' + re.escape(tmpl_case) + r',\s*)mono_AM_[PS]', r'\g<1>pure_SE', t)   # 표시용 (없어도 됨)
+    t = t.replace(tmpl_case, case)
+    if tmpl_case in t:                                     # pragma: no cover
+        raise SystemExit('⛔ 템플릿 케이스명이 남았다')
+    return t
+
+
+def roundtrip_pure_se(case: str, r_se_um: float, volfrac: float, seed: int, text: str) -> list[str]:
+    """생성한 순수 SE 덱을 **본문에서** 되읽어 대조한다 (헤더는 따로).  → 불일치 목록."""
+    bad = []
+    try:
+        d = parse_deck(text)
+    except ValueError as e:
+        return [f'{case}: 되읽기 실패 — {e}']
+    if d['ntype'] != 1 or d['n_declared'] != 1:
+        bad.append(f'{case}: 입자 템플릿 {d["ntype"]} · 분포 {d["n_declared"]} (1 · 1 이어야)')
+    if d['w_AM'] or abs((d['pdd_SE'] or 0.0) - 1.0) > 1e-9:
+        bad.append(f'{case}: AM 가중 {d["w_AM"]} · SE 가중 {d["pdd_SE"]} (없음 · 1 이어야)')
+    if abs(d['r_SE_um'] - r_se_um) > 1e-6:
+        bad.append(f'{case}: r_SE {d["r_SE_um"]} µm vs 요청 {r_se_um}')
+    if abs(d['volfrac'] - volfrac) > 1e-6:
+        bad.append(f'{case}: volfrac {d["volfrac"]} vs 요청 {volfrac}')
+    if d['seed'] != seed:
+        bad.append(f'{case}: seed {d["seed"]} vs 요청 {seed}')
+    if d['header_case'] != case or d['header_kind'] != 'pure_SE':
+        bad.append(f'{case}: 헤더 {d["header_case"]}:{d["header_kind"]}')
+    return bad
+
+
 def roundtrip(row: dict, deck_text: str) -> list[str]:
     """생성한 덱을 **다시 읽어** CSV 와 1:1 대조한다.  → 불일치 목록."""
     bad = []
@@ -363,10 +439,15 @@ def main(argv=None):
     ap.add_argument('--template-2t', help='mono 템플릿 덱 (실물)')
     ap.add_argument('--template-run', help='러너 템플릿 (실물 run_*.sh) — **필수**')
     ap.add_argument('--outdir', help='덱을 쓸 디렉터리 (없으면 dry-run: 검사만)')
+    ap.add_argument('--pure-se', action='append', default=[], metavar='CASE:R_SE_UM:VOLFRAC:SEED',
+                    help='순수 SE 판정 시험 덱 (docs/reviews/pure_se_union_prereg_20260927.md) — '
+                         '--template-2t 필수 · --template-run 은 있으면 러너도 만든다 · 설계 CSV 흐름과 따로 돈다')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
         return _selftest()
+    if a.pure_se:
+        return _main_pure_se(a)
     #  ★★ 전부 **필수**다 (R15 §4).  옛 판은 `--expect-sha256` 이 없으면 64 ID·소수
     #     seed·절대 칸을 아예 검사하지 않았고, 첫 seed 를 합성수 `4` 로 바꿔도
     #     "불일치 0건 · rc=0" 을 냈다 — 08-18 의 25건 abort 를 그대로 재현할 수 있었다.
@@ -468,6 +549,87 @@ def main(argv=None):
         fh.write('\n')
     print(f'wrote {len(man)} decks → {a.outdir}')
     print(f'wrote {mp}  (ID census + 파일별 sha256)')
+    return 0
+
+
+def _main_pure_se(a) -> int:
+    """`--pure-se` 흐름 — 2-type 실물 템플릿에서 순수 SE 덱 (과 러너) 을 만들고 되읽어 대조한 뒤에만 쓴다."""
+    import json as _json
+    if not a.template_2t:
+        raise SystemExit('⛔ --pure-se 는 --template-2t (2-type 실물 덱) 가 필요하다')
+    t2 = open(a.template_2t, encoding='utf-8').read()
+    c2 = _tmpl_case(t2)
+    #  ★ 템플릿은 **봉인 상자에 기록된 그 실물 덱**이어야 한다 — lhsx mono 덱과 같은 프로토콜이어야 비교가 선다
+    _t2sha = hashlib.sha256(open(a.template_2t, 'rb').read()).hexdigest()
+    _boxp = a.box or os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'docs', 'data',
+                                  'lhs_ext_box_v2_20260829.json')
+    _want = {f.get('file'): f.get('sha256')
+             for f in ((_json.load(open(_boxp, encoding='utf-8')).get('source') or {}).get('files') or [])}
+    _key = f'{c2}/input_{c2}.liggghts'
+    if _want.get(_key) != _t2sha:
+        raise SystemExit(f'⛔ 템플릿 {os.path.basename(a.template_2t)} sha256 {_t2sha[:12]}… 가 봉인 상자 ({os.path.basename(_boxp)}) '
+                         f'의 {_key} = {str(_want.get(_key))[:12]}… 와 다르다 — 봉인된 실물 템플릿만 쓴다')
+    print(f'템플릿 sha256 ✓ {_t2sha[:12]}… = 봉인 상자 {_key}')
+    specs, made, runs, bad = [], {}, {}, []
+    for s in a.pure_se:
+        p = s.split(':')
+        if len(p) != 4:
+            raise SystemExit(f'⛔ --pure-se 형식은 CASE:R_SE_UM:VOLFRAC:SEED — 받은 값 {s}')
+        case, r_se, vf, seed = p[0], float(p[1]), float(p[2]), int(p[3])
+        if not re.fullmatch(r'[A-Za-z0-9_]+', case) or case in made:
+            raise SystemExit(f'⛔ 케이스명 {case} — 영숫자·밑줄만, 중복 금지')
+        text = render_pure_se(t2, case, r_se, vf, seed, c2)
+        bad += roundtrip_pure_se(case, r_se, vf, seed, text)
+        made[case] = text
+        specs.append(dict(id=case, r_SE_um=r_se, volfrac=vf, seed=seed))
+    trun = crun = None
+    if a.template_run:
+        trun = open(a.template_run, encoding='utf-8').read()
+        crun = _runner_case(trun)
+        for case in made:
+            runs[case] = render_runner(trun, case, crun)
+            bad += roundtrip_runner(case, runs[case])
+    print(f'템플릿 2-type {c2} · 순수 SE {len(made)} 건 · 러너 {"있음 (" + crun + ")" if trun else "없음"}')
+    for sp in specs:
+        print(f"  {sp['id']}: r_SE {sp['r_SE_um']} µm · volfrac {sp['volfrac']} · seed {sp['seed']}")
+    print(f'왕복검사 — 불일치 {len(bad)} 건')
+    for b in bad:
+        print('  ⛔', b)
+    if bad:
+        print('⛔ 불일치가 있어 **한 건도 쓰지 않는다**')
+        return 1
+    if not a.outdir:
+        print('(dry-run — --outdir 를 주면 덱을 쓴다)')
+        return 0
+    if os.path.exists(a.outdir) and os.listdir(a.outdir):
+        raise SystemExit(f'⛔ {a.outdir} 이 비어 있지 않다 — 새 디렉터리를 줄 것')
+    os.makedirs(a.outdir, exist_ok=True)
+    man = []
+    for case, text in made.items():
+        d = os.path.join(a.outdir, case)
+        os.makedirs(d, exist_ok=True)
+        fp = os.path.join(d, f'input_{case}.liggghts')
+        with open(fp, 'w', encoding='utf-8', newline='\n') as fh:
+            fh.write(text)
+        ent = dict(id=case, file=os.path.relpath(fp, a.outdir),
+                   sha256=hashlib.sha256(text.encode('utf-8')).hexdigest())
+        if case in runs:
+            rp = os.path.join(d, f'run_{case}.sh')
+            with open(rp, 'w', encoding='utf-8', newline='\n') as fh:
+                fh.write(runs[case])
+            os.chmod(rp, 0o755)
+            ent.update(runner=os.path.relpath(rp, a.outdir),
+                       runner_sha256=hashlib.sha256(runs[case].encode('utf-8')).hexdigest())
+        man.append(ent)
+    mp = os.path.join(a.outdir, 'deck_manifest.json')
+    with open(mp, 'w', encoding='utf-8') as fh:
+        _json.dump(dict(purpose='pure_se_union_prereg_20260927', n=len(man), specs=specs,
+                        template_2t=dict(file=os.path.basename(a.template_2t), case=c2,
+                                         sha256=hashlib.sha256(t2.encode('utf-8')).hexdigest()),
+                        template_run=(dict(file=os.path.basename(a.template_run), case=crun) if trun else None),
+                        decks=man), fh, ensure_ascii=False, indent=2, sort_keys=True)
+        fh.write('\n')
+    print(f'wrote {len(man)} decks → {a.outdir}  ·  {mp}')
     return 0
 
 
@@ -638,6 +800,37 @@ mpirun -np 1 lmp_mpi -in input_lhs00_000.liggghts
         chk('★⑤ sha 불일치 거부', False, '거부하지 않았다')
     except SystemExit:
         chk('★⑤ sha 불일치 거부', True)
+
+    #  ⑥ 순수 SE 판정 시험 (docs/reviews/pure_se_union_prereg_20260927.md) — 2-type 실물 덱에서
+    #    AM 입자 템플릿 줄을 빼고 분포를 SE 하나로.  나머지 규약 (벽 · 플래튼 · 압력 · 재질) 은 한 글자도 안 바꾼다.
+    try:
+        ps = render_pure_se(T2, 'pse_r050_a', 0.5, 0.22, 20011, 'lhs00_110')
+        dps = parse_deck(ps)
+        chk('⑥ 순수 SE: 입자 템플릿 1 · 분포 1', dps['ntype'] == 1 and dps['n_declared'] == 1,
+            str((dps['ntype'], dps['n_declared'])))
+        chk('⑥ 순수 SE: SE 가중 1 · AM 없음', abs(dps['pdd_SE'] - 1.0) < 1e-12 and dps['w_AM'] == [],
+            str((dps['pdd_SE'], dps['w_AM'])))
+        chk('⑥ 순수 SE: r_SE 0.5 µm · volfrac 0.22 · seed 20011',
+            abs(dps['r_SE_um'] - 0.5) < 1e-9 and abs(dps['volfrac'] - 0.22) < 1e-9 and dps['seed'] == 20011,
+            str((dps['r_SE_um'], dps['volfrac'], dps['seed'])))
+        chk('⑥ 순수 SE: 케이스명 · kind 헤더 · 템플릿명 잔존 0',
+            dps['header_case'] == 'pse_r050_a' and dps['header_kind'] == 'pure_SE' and 'lhs00_110' not in ps,
+            str((dps['header_case'], dps['header_kind'])))
+        chk('⑥ 순수 SE: 왕복검사 불일치 0', roundtrip_pure_se('pse_r050_a', 0.5, 0.22, 20011, ps) == [],
+            str(roundtrip_pure_se('pse_r050_a', 0.5, 0.22, 20011, ps)))
+        chk('⑥ 순수 SE: 왕복검사가 틀린 seed 를 잡는다', roundtrip_pure_se('pse_r050_a', 0.5, 0.22, 20021, ps) != [])
+    except (NameError, SystemExit, ValueError) as e:
+        chk('⑥ 순수 SE 덱 생성', False, f'{type(e).__name__}: {e}'[:80])
+    for _args, _why in (((T3, 'x', 0.5, 0.22, 20011, 'lhs00_000'), '3-type 템플릿'),
+                        ((T2, 'x', 0.5, 0.22, 20013, 'lhs00_110'), '비소수 seed'),
+                        ((T2, 'x', 0.5, 0.22, 9973, 'lhs00_110'), 'seed ≤ 10000')):
+        try:
+            render_pure_se(*_args)
+            chk(f'★⑥ {_why} 거부', False, '거부하지 않았다')
+        except SystemExit:
+            chk(f'★⑥ {_why} 거부', True)
+        except NameError as e:
+            chk(f'★⑥ {_why} 거부', False, str(e)[:60])
 
     print(f'lhs_ext_materialize selftest: {ok}/{ok + len(fail)} PASS')
     for f in fail:
