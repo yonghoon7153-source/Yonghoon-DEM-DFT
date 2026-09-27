@@ -142,7 +142,7 @@ cmd_share() {
   cat <<TXT
 にほんちず 는 정적 사이트라 서버도 터널도 필요 없다 (ADR 0004).
 
-  운영 주소 (Cloudflare Pages)   https://nihoncheese.ayh.kr   ← 도메인 연결한 뒤
+  운영 주소 (Cloudflare Pages)   https://nihoncheese.bmlwork.kr
   Pages 주소                     https://nihoncheese.pages.dev
   임시 대안 (GitHub Pages)       Actions 탭 → "Deploy to GitHub Pages" 수동 실행
 
@@ -150,7 +150,7 @@ Cloudflare Pages 처음 연결하기 (한 번만, 대시보드에서):
   1. Compute → Workers & Pages → Create application → Continue to Pages → Import an existing Git repository → 이 저장소
   2. Production branch: $HOME_BRANCH · Build command: npm run build · Output: dist
   3. Settings → Build → Branch control → Preview branch: None (다른 브랜치는 다른 프로젝트)
-  4. Custom domains → nihoncheese.ayh.kr (ayh.kr 이 Cloudflare DNS 면 CNAME 자동, 아니면 등록기관에서 nihoncheese → nihoncheese.pages.dev CNAME)
+  4. Custom domains → nihoncheese.bmlwork.kr → Activate domain (bmlwork.kr 은 같은 Cloudflare 계정 DNS 라 CNAME 자동)
 그 뒤로는 이 브랜치에 push 할 때마다 자동 배포된다.
 TXT
 }

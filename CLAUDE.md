@@ -54,7 +54,7 @@ docs/                   adr/, CHECKLIST.md, log.md, index.md, screenshots/
 | `nihon check` | 데이터 검증 · 타입 · 빌드 |
 | `nihon geo` | 지도 데이터 재생성 |
 | `nihon feed` | 커밋 ↔ 로그 짝 |
-| `nihon share` | 배포 주소·절차 (Cloudflare Pages, nihoncheese.ayh.kr) |
+| `nihon share` | 배포 주소·절차 (Cloudflare Pages, nihoncheese.bmlwork.kr) |
 | `node tools/shots.mjs` | 스크린샷 QA (미리보기 서버 필요) |
 
 ## 3. 다음 단계

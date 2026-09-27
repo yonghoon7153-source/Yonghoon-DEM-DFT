@@ -13,7 +13,7 @@
 | 5 | 캐주얼, AI틱하지 않게, 여대생 감성(다꾸) | ✅ 1차 | 크림 종이·마스킹테이프·줄노트·스티커 지도 · 취향 확인은 ⏳ (아래 결정 1) |
 | 6 | 폰트·색감 리서치 | ✅ | Kiwi Maru / Zen Maru Gothic / Gowun Dodum / Gaegu, 파스텔 9색 (`src/styles/tokens.css`) |
 | 7 | 이스터에그 캐릭터 (예: 구마모토 쿠마쿤) | ✅ | 県을 누르면 공식 캐릭터가, 패널 「친구들」에서 비공식 캐릭터가 튀어나옴. 図鑑은 지방별로 53종 |
-| 8 | 외부 공유 (bml 브랜치 참고, Cloudflare 등) | ✅ 절차 | Cloudflare Pages + **`nihoncheese.ayh.kr`** (ADR 0004, README, `nihon share`). 대시보드 연결은 사용자가 1회 |
+| 8 | 외부 공유 (bml 브랜치 참고, Cloudflare 등) | ✅ 절차 | Cloudflare Pages + **`nihoncheese.bmlwork.kr`** (ADR 0004, README, `nihon share`). 대시보드 연결은 사용자가 1회 |
 | 9 | 깐깐한 검토 (스크린샷 QA) | ✅ | 데스크톱/모바일 스크린샷 + 30개 상호작용 자동 테스트 통과 (마스코트 교체 후 재실행) |
 
 ## 2차 요청 (2026-09-27, 두 번째 메시지)
@@ -33,7 +33,7 @@
 | # | 요청 | 상태 | 메모 |
 |---|------|------|------|
 | 17 | 비준: 1-A, 2-A, 3 유지, 4 Cloudflare Pages | ✅ | 위 10·14·16·8 참고 |
-| 18 | 사이트 이름은 **nihoncheese.ayh.kr** | ✅ | README · ADR 0004 · `nihon share` 에 반영 (bmlwork.kr → ayh.kr) |
+| 18 | 사이트 이름은 **nihoncheese.ayh.kr** → **nihoncheese.bmlwork.kr** | ✅ | ayh.kr 은 사지 않았고 이름을 바꿀 수도 없어서, bml 의 도메인 bmlwork.kr 의 서브도메인으로 (추가 비용 없음, #30) |
 
 ## 4차 요청 (2026-09-27)
 
@@ -50,7 +50,7 @@
 
 | # | 요청 | 상태 | 메모 |
 |---|------|------|------|
-| 25 | Cloudflare 로 연결 (nihoncheese.ayh.kr) — 사용자가 대시보드에서 직접 등록, 순서만 | 🔧 도메인 남음 | Pages 프로젝트 `nihoncheese` 로 배포됨 — **https://nihoncheese.pages.dev** 열림 (사용자 확인). `nihoncheese.ayh.kr` 은 아직 ERR_NAME_NOT_RESOLVED — ayh.kr 이 이 Cloudflare 계정에 없어 관리처 DNS 에 CNAME `nihoncheese` → `nihoncheese.pages.dev` 필요. Preview branch None. 순서: README 「배포」 · `nihon share` |
+| 25 | Cloudflare 로 연결 — 사용자가 대시보드에서 직접 등록, 순서만 | 🔧 도메인 남음 | Pages 프로젝트 `nihoncheese` 로 배포됨 — **https://nihoncheese.pages.dev** 열림 (사용자 확인), push 마다 자동 배포. 남은 것: Custom domains → `nihoncheese.bmlwork.kr` → Activate. Preview branch None. 순서: README 「배포」 · `nihon share` |
 | 26 | 노션 일본어 단어장은 나중에 — 하자고 할 때 | ⏳ 대기 | `data/words.json` 에 얹고 県·지방과 연결 (CLAUDE.md 다음 단계) |
 
 ## 6차 요청 (2026-09-27)
@@ -60,3 +60,4 @@
 | 27 | 마인드맵 끝맺음(선)을 전체적으로 수정 | ✅ | 선이 윗칸에서 내려와 마지막 칸에서 └ 로 끝남 — 아래로 늘어지지 않음 (県 · 지방 · 함께 보기 · 메모장 공통) |
 | 28 | PDF 에 있던 사진 · URL 이 잘 들어갔나 | 🔧 링크 ✅ · 사진 ⏳ | 링크 14개 모두 PDF 와 같은 칸 (PDF 의 19개 = 여러 줄로 나뉜 링크 영역). 사진 84장(지도 그림 약 6 포함)은 규칙 6 으로 넣지 않았고 자리 표시도 2곳뿐 → 방식 비준 대기 |
 | 29 | Canva 링크에 접근 안 되나 | ✅ 답함 | 이 환경의 네트워크 정책이 `canva.link` · `www.canva.com` 을 막음. PDF 에 글자 · 링크 · 사진이 다 있어 대조는 PDF 로 함 |
+| 30 | 도메인: ayh.kr 은 안 샀음 → nihoncheese.bmlwork.kr 로 ("이름만 바꾸는 것도 안 돼?" → 안 됨) | 🔧 사용자 차례 | 도메인은 개당·연 단위, 서브도메인은 무료로 여러 개. Custom domains 에 넣고 Activate 한 번 (ADR 0004 보완) |

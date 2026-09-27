@@ -144,7 +144,7 @@ scripts/                geo 빌드, 데이터 검증
 
 커밋 제목은 `type: 제목` 으로 쓰고, 같은 제목을 `docs/log.md` 에 한 줄 남긴다 (훅이 알려 준다).
 
-## 배포 — `https://nihoncheese.ayh.kr`
+## 배포 — `https://nihoncheese.bmlwork.kr`
 
 정적 사이트라 서버도 터널도 없다 ([ADR 0004](docs/adr/0004-share-through-cloudflare-pages.md)).
 운영은 **Cloudflare Pages** (프로젝트 `nihoncheese`, 지금 주소 **https://nihoncheese.pages.dev**).
@@ -156,9 +156,9 @@ scripts/                geo 빌드, 데이터 검증
    Build output directory `dist` · 환경변수 없음 (Node 는 빌드 이미지 기본 22).
 3. 만든 뒤 **Settings → Build → Branch control → Preview branch: None**. 이 저장소의 다른 브랜치(bml·dft 등)는
    다른 프로젝트라, 켜 두면 거기 push 할 때마다 미리보기 빌드가 돌고 실패 표시가 붙는다.
-4. 프로젝트 → **Custom domains → Set up a custom domain → `nihoncheese.ayh.kr`**.
-   `ayh.kr` 이 Cloudflare DNS 에 있으면 CNAME 이 자동으로 들어가고, 아니면 등록기관 DNS 에
-   `nihoncheese` CNAME → `nihoncheese.pages.dev` 를 넣는다.
+4. 프로젝트 → **Custom domains → Set up a custom domain → `nihoncheese.bmlwork.kr` → Activate domain**.
+   `bmlwork.kr` 은 bml 이 쓰는 도메인(`bml.bmlwork.kr` · `test.bmlwork.kr`)이고 같은 Cloudflare 계정 DNS 에 있어서
+   CNAME 이 자동으로 들어간다. 서브도메인이라 추가 비용이 없다.
    새 프로젝트는 https 인증서가 붙기까지 몇 분 걸린다 (그동안 `ERR_SSL_VERSION_OR_CIPHER_MISMATCH`).
 5. 이후 이 브랜치에 push 할 때마다 자동 배포. `public/_headers` 의 캐시·보안 헤더도 적용된다.
 
