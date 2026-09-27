@@ -46,10 +46,11 @@ for (const m of mascots) {
   if (!m.org) err(`${where}: org missing`);
   if (!m.about?.ja || !m.about?.ko) err(`${where}: about.ja/ko missing`);
   if (!m.line?.ja || !m.line?.ko) err(`${where}: line.ja/ko missing`);
-  if (!['likeness', 'official'].includes(m.art)) err(`${where}: art must be likeness|official`);
-  if (m.art === 'official' && !m.credit) err(`${where}: official art needs a credit`);
+  if (!['likeness', 'official', 'standin'].includes(m.art)) err(`${where}: art must be likeness|official|standin`);
+  if ((m.art === 'official' || m.art === 'standin') && !m.credit) err(`${where}: ${m.art} art needs a credit`);
+  if (m.art === 'standin' && !m.image) err(`${where}: standin art needs an image`);
   if (m.image) {
-    if (m.art !== 'official') err(`${where}: has an image but art is "${m.art}" (set "official")`);
+    if (m.art === 'likeness') err(`${where}: has an image but art is "likeness" (set "official" or "standin")`);
     if (!/^mascots\/[a-z]+\.(png|jpg|jpeg|webp|svg|gif)$/.test(m.image)) err(`${where}: image must look like mascots/<id>.png`);
     else if (!existsSync(new URL(`../public/${m.image}`, import.meta.url))) err(`${where}: image file public/${m.image} not found`);
   }

@@ -375,8 +375,10 @@
         "ja": "まさかりかついで、神奈川へ！",
         "ko": "도끼 메고 가나가와로!"
       },
-      "art": "likeness",
-      "url": "https://www.pref.kanagawa.jp/osirase/1197/kintaro/index.html"
+      "art": "standin",
+      "url": "https://www.pref.kanagawa.jp/osirase/1197/kintaro/index.html",
+      "image": "mascots/kanagawakintaro.webp",
+      "credit": "いらすとや"
     },
     {
       "id": "lerchsan",
@@ -396,7 +398,9 @@
         "ja": "スキーは一本杖で！",
         "ko": "스키는 스틱 하나로!"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/lerchsan.webp",
+      "credit": "©新潟県"
     },
     {
       "id": "kitokitokun",

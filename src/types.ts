@@ -34,7 +34,8 @@ export interface Mascot {
   org: string;
   about: { ja: string; ko: string };
   line: { ja: string; ko: string };
-  art: 'likeness' | 'official';
+  /** likeness = our drawing · official = official art · standin = a picture the user chose instead (credit = its source) */
+  art: 'likeness' | 'official' | 'standin';
   url?: string;
   credit?: string;
   /** Official image under public/ (e.g. "mascots/kumamon.png"). Replaces the drawn likeness when present. */

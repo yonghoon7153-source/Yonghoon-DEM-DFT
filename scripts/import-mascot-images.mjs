@@ -11,9 +11,16 @@ import { basename, extname, join } from 'node:path';
 import sharp from 'sharp';
 import { DATA, loadDb, matchFile, ROOT, writeChecklist } from './mascot-images-lib.mjs';
 
-const args = process.argv.slice(2);
-if (!args.length) {
-  console.error('사용법: npm run mascots:import <그림 폴더 또는 파일...>');
+// --standin "<출처>": 공식 그림 대신 사용자가 고른 그림(예: いらすとや). 크레딧은 출처, 화면에는 「공식 그림 아님」.
+const argv = process.argv.slice(2);
+let standin = null;
+const args = [];
+for (let i = 0; i < argv.length; i++) {
+  if (argv[i] === '--standin') standin = argv[++i] ?? '';
+  else args.push(argv[i]);
+}
+if (!args.length || standin === '') {
+  console.error('사용법: npm run mascots:import <그림 폴더 또는 파일...> [--standin "<출처>"]');
   process.exit(1);
 }
 const IMG = /\.(png|jpe?g|webp|gif|avif|tiff?)$/i;
@@ -111,6 +118,14 @@ for (const f of files) {
   const target = `mascots/${m.id}.webp`;
   await img.resize(512, 512, { fit: 'inside', withoutEnlargement: true }).webp({ quality: 88, alphaQuality: 100, effort: 5 }).toFile(new URL(`public/${target}`, ROOT).pathname);
   m.image = target;
+  if (standin) {
+    m.art = 'standin';
+    m.credit = standin;
+    report.credit.push(`${m.name.ja}: 대체 그림 — 크레딧 "${standin}", 화면에 「공식 그림 아님」`);
+    report.ok.push(`${basename(f)} → ${target}  ${m.name.ja} (대체 그림)`);
+    continue;
+  }
+  if (m.art === 'standin') delete m.credit; // the old credit belonged to the stand-in picture
   m.art = 'official';
   if (!m.credit) {
     const org = m.org.replace(/（.*?）|\(.*?\)/g, '').trim();

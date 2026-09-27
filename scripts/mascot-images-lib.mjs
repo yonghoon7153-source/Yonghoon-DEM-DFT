@@ -79,7 +79,7 @@ export function writeChecklist({ db, prefBySlug, regions }) {
       const p = prefBySlug[m.prefecture];
       const where = m.url ? `[공식](${m.url})` : `[이미지 검색](${search(m)})`;
       const tag = m.kind === 'extra' ? ' <sub>비공식·선택</sub>' : '';
-      lines.push(`| ${no} | ${p.short.ja} | ${m.name.ja}${tag} | ${m.name.ko} | \`${m.id}.png\` | ${m.org} | ${where} | ${has(m) ? '✅' : '□'} |`);
+      lines.push(`| ${no} | ${p.short.ja} | ${m.name.ja}${tag} | ${m.name.ko} | \`${m.id}.png\` | ${m.org} | ${where} | ${has(m) ? (m.art === 'standin' ? `✅ 대체 (${m.credit})` : '✅') : '□'} |`);
     }
     lines.push('');
   }

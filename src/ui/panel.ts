@@ -169,7 +169,12 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
         el('small', {}, `${m.name.ko} · ${m.org}${m.kind === 'extra' ? ' · 비공식' : ''}`),
         el('small', { class: 'mascot-card__about', lang: 'ja' }, m.about.ja),
         el('small', { class: 'mascot-card__about' }, m.about.ko),
-        el('small', { class: 'mascot-card__meta' }, m.art === 'likeness' ? '그림은 이 프로젝트가 그린 닮은꼴 (공식 아님) · ' : `${m.credit ?? ''} · `, link),
+        el(
+          'small',
+          { class: 'mascot-card__meta' },
+          m.art === 'likeness' ? '그림은 이 프로젝트가 그린 닮은꼴 (공식 아님) · ' : m.art === 'standin' ? `그림: ${m.credit ?? ''} (공식 그림 아님) · ` : `${m.credit ?? ''} · `,
+          link,
+        ),
       ),
     );
   }

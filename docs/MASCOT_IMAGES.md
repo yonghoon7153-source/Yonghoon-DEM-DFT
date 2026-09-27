@@ -1,6 +1,6 @@
 # 마스코트 그림 목록
 
-받은 그림 **13 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
+받은 그림 **15 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
 
 주는 법: 캐릭터당 한 장, 배경 투명 PNG 가 제일 좋다 (흰 배경 JPG 도 자동으로 배경을 지운다). 파일명에 **캐릭터 이름·県 이름·id 중 하나**만 들어 있으면 된다.
 받은 뒤: `npm run mascots:import <폴더>` → 512px WebP 로 줄여 `public/mascots/<id>.webp` 에 넣고 데이터와 이 목록을 갱신한다.
@@ -35,13 +35,13 @@
 | 14 | 千葉 | チーバくん | 치바군 | `chibakun.png` | 千葉県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%83%81%E3%83%BC%E3%83%90%E3%81%8F%E3%82%93%20%E5%8D%83%E8%91%89%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 15 | 千葉 | ふなっしー <sub>비공식·선택</sub> | 후낫시 | `funassyi.png` | 民間（船橋市非公認） | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%B5%E3%81%AA%E3%81%A3%E3%81%97%E3%83%BC%20%E6%B0%91%E9%96%93%EF%BC%88%E8%88%B9%E6%A9%8B%E5%B8%82%E9%9D%9E%E5%85%AC%E8%AA%8D%EF%BC%89%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
 | 16 | 東京 | ゆりーと | 유리토 | `yurito.png` | 東京都 | [공식](https://www.sports-tokyo-info.metro.tokyo.lg.jp/seisaku/yurito/index.html) | ✅ |
-| 17 | 神奈川 | かながわキンタロウ | 가나가와 킨타로 | `kanagawakintaro.png` | 神奈川県 | [공식](https://www.pref.kanagawa.jp/osirase/1197/kintaro/index.html) | □ |
+| 17 | 神奈川 | かながわキンタロウ | 가나가와 킨타로 | `kanagawakintaro.png` | 神奈川県 | [공식](https://www.pref.kanagawa.jp/osirase/1197/kintaro/index.html) | ✅ 대체 (いらすとや) |
 
 ## 中部 주부
 
 | # | 県 | 캐릭터 | 한글 | 파일명 | 권리자 | 찾을 곳 | 상태 |
 |---|---|---|---|---|---|---|---|
-| 18 | 新潟 | レルヒさん | 레르히상 | `lerchsan.png` | 新潟県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%83%AC%E3%83%AB%E3%83%92%E3%81%95%E3%82%93%20%E6%96%B0%E6%BD%9F%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 18 | 新潟 | レルヒさん | 레르히상 | `lerchsan.png` | 新潟県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%83%AC%E3%83%AB%E3%83%92%E3%81%95%E3%82%93%20%E6%96%B0%E6%BD%9F%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 19 | 富山 | きときと君 | 키토키토군 | `kitokitokun.png` | 富山県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%8D%E3%81%A8%E3%81%8D%E3%81%A8%E5%90%9B%20%E5%AF%8C%E5%B1%B1%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
 | 20 | 石川 | ひゃくまんさん | 햐쿠만상 | `hyakumansan.png` | 石川県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%B2%E3%82%83%E3%81%8F%E3%81%BE%E3%82%93%E3%81%95%E3%82%93%20%E7%9F%B3%E5%B7%9D%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
 | 21 | 福井 | はぴりゅう | 하피류 | `hapiryu.png` | 福井県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%AF%E3%81%B4%E3%82%8A%E3%82%85%E3%81%86%20%E7%A6%8F%E4%BA%95%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
