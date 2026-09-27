@@ -1,0 +1,825 @@
+{
+  "$schema": "./schema/mascots.schema.json",
+  "_comment": "실제 ご当地キャラ 리서치본 (2026-09-27). 이미지 방식 결정 후 mascots.json 에 반영.",
+  "mascots": [
+    {
+      "id": "kyunchan",
+      "prefecture": "hokkaido",
+      "name": {
+        "ja": "キュンちゃん",
+        "kana": "きゅんちゃん",
+        "ko": "큥짱"
+      },
+      "org": "北海道観光振興機構",
+      "kind": "official",
+      "about": {
+        "ja": "エゾナキウサギ。エゾシカの被り物をかぶった北海道観光PRキャラクター",
+        "ko": "에조나키우사기(우는토끼). 에조사슴 모자를 쓴 홋카이도 관광 PR 캐릭터"
+      },
+      "url": "https://www.visit-hokkaido.jp/kyundance/"
+    },
+    {
+      "id": "ikubee",
+      "prefecture": "aomori",
+      "name": {
+        "ja": "いくべぇ",
+        "kana": "いくべえ",
+        "ko": "이쿠베"
+      },
+      "org": "青森県",
+      "kind": "official",
+      "about": {
+        "ja": "「行こう！」の津軽弁。青森県観光キャラクター",
+        "ko": "'가자!'의 쓰가루 사투리. 아오모리현 관광 캐릭터"
+      }
+    },
+    {
+      "id": "wankokyodai",
+      "prefecture": "iwate",
+      "name": {
+        "ja": "わんこきょうだい",
+        "kana": "わんこきょうだい",
+        "ko": "완코 형제"
+      },
+      "org": "岩手県観光協会",
+      "kind": "official",
+      "about": {
+        "ja": "わんこそばの器がモチーフの5人きょうだい（そばっち・こくっち・おもっち・とふっち・うにっち）",
+        "ko": "완코소바 그릇이 모티브인 5형제(소밧치·코쿳치·오못치·토훗치·우닛치)"
+      },
+      "url": "https://iwatetabi.jp/wanko/"
+    },
+    {
+      "id": "musubimaru",
+      "prefecture": "miyagi",
+      "name": {
+        "ja": "むすび丸",
+        "kana": "むすびまる",
+        "ko": "무스비마루"
+      },
+      "org": "宮城県・仙台市",
+      "kind": "official",
+      "about": {
+        "ja": "おにぎりの頭に伊達政宗の三日月兜。仙台・宮城観光PRキャラクター",
+        "ko": "주먹밥 머리에 다테 마사무네의 초승달 투구. 센다이·미야기 관광 PR 캐릭터"
+      },
+      "url": "https://www.pref.miyagi.jp/site/sendaimiyagicp/musubimaru.html"
+    },
+    {
+      "id": "ndacchi",
+      "prefecture": "akita",
+      "name": {
+        "ja": "んだッチ",
+        "kana": "んだっち",
+        "ko": "은닷치"
+      },
+      "org": "秋田県",
+      "kind": "official",
+      "about": {
+        "ja": "近未来から来たなまはげ型こどもロボット。秋田県PRキャラクター（スギッチの後任）",
+        "ko": "가까운 미래에서 온 나마하게형 어린이 로봇. 아키타현 PR 캐릭터(스깃치 후임)"
+      },
+      "url": "https://www.pref.akita.lg.jp/pages/archive/33524"
+    },
+    {
+      "id": "kitekerokun",
+      "prefecture": "yamagata",
+      "name": {
+        "ja": "きてけろくん",
+        "kana": "きてけろくん",
+        "ko": "키테케로군"
+      },
+      "org": "山形県",
+      "kind": "official",
+      "about": {
+        "ja": "横顔が山形県の形。「来てけろ（来てね）」から。山形県おもてなし部長",
+        "ko": "옆얼굴이 야마가타현 모양. '키테케로(와줘)'에서. 야마가타현 환대 부장"
+      },
+      "url": "https://www.pref.yamagata.jp/020026/kensei/shoukai/yamagataken/gotochi-character.html"
+    },
+    {
+      "id": "kibitan",
+      "prefecture": "fukushima",
+      "name": {
+        "ja": "キビタン",
+        "kana": "きびたん",
+        "ko": "키비탄"
+      },
+      "org": "福島県",
+      "kind": "official",
+      "about": {
+        "ja": "県の鳥キビタキがモチーフ。1995年の国体から活動する福島県のマスコット",
+        "ko": "현의 새 노랑딱새(키비타키)가 모티브. 1995년 국체부터 활동하는 후쿠시마현 마스코트"
+      }
+    },
+    {
+      "id": "hassurukomon",
+      "prefecture": "ibaraki",
+      "name": {
+        "ja": "ハッスル黄門",
+        "kana": "はっするこうもん",
+        "ko": "핫슬 코몬"
+      },
+      "org": "茨城県",
+      "kind": "official",
+      "about": {
+        "ja": "水戸黄門がモデル。茨城県のマスコットキャラクター",
+        "ko": "미토 코몬이 모델. 이바라키현 마스코트"
+      },
+      "url": "https://gotouchi-chara.jp/chara/hassurukoumon/"
+    },
+    {
+      "id": "nebarukun",
+      "prefecture": "ibaraki",
+      "name": {
+        "ja": "ねば～る君",
+        "kana": "ねばーるくん",
+        "ko": "네바루군"
+      },
+      "org": "民間（納豆キャラ）",
+      "kind": "extra",
+      "about": {
+        "ja": "納豆の妖精。ねばねば伸びる。茨城非公認だが全国区の人気",
+        "ko": "낫토 요정. 끈적하게 늘어난다. 이바라키 비공인이지만 전국구 인기"
+      },
+      "url": "https://nebaarukun.info/",
+      "extra": true
+    },
+    {
+      "id": "tochimarukun",
+      "prefecture": "tochigi",
+      "name": {
+        "ja": "とちまるくん",
+        "kana": "とちまるくん",
+        "ko": "토치마루군"
+      },
+      "org": "栃木県",
+      "kind": "official",
+      "about": {
+        "ja": "県の木トチノキがモチーフ。栃木県のマスコット",
+        "ko": "현의 나무 칠엽수(토치노키)가 모티브. 도치기현 마스코트"
+      }
+    },
+    {
+      "id": "sanomaru",
+      "prefecture": "tochigi",
+      "name": {
+        "ja": "さのまる",
+        "kana": "さのまる",
+        "ko": "사노마루"
+      },
+      "org": "佐野市",
+      "kind": "extra",
+      "about": {
+        "ja": "佐野ラーメンのお椀の笠と、いもフライの刀。ゆるキャラGP 2013 王者",
+        "ko": "사노 라멘 그릇 삿갓과 이모 후라이 칼. 유루캬라 GP 2013 우승"
+      },
+      "extra": true
+    },
+    {
+      "id": "gunmachan",
+      "prefecture": "gunma",
+      "name": {
+        "ja": "ぐんまちゃん",
+        "kana": "ぐんまちゃん",
+        "ko": "군마짱"
+      },
+      "org": "群馬県",
+      "kind": "official",
+      "about": {
+        "ja": "ポニーの子ども。群馬県宣伝部長。ゆるキャラGP 2014 王者",
+        "ko": "조랑말 아이. 군마현 선전부장. 유루캬라 GP 2014 우승"
+      },
+      "url": "https://gunmachan-navi.pref.gunma.jp/"
+    },
+    {
+      "id": "kobaton",
+      "prefecture": "saitama",
+      "name": {
+        "ja": "コバトン",
+        "kana": "こばとん",
+        "ko": "코바톤"
+      },
+      "org": "埼玉県",
+      "kind": "official",
+      "about": {
+        "ja": "県の鳥シラコバトがモチーフ。埼玉県のマスコット（相棒はさいたまっち）",
+        "ko": "현의 새 흰비둘기(시라코바토)가 모티브. 사이타마현 마스코트(짝꿍은 사이타맛치)"
+      }
+    },
+    {
+      "id": "chibakun",
+      "prefecture": "chiba",
+      "name": {
+        "ja": "チーバくん",
+        "kana": "ちーばくん",
+        "ko": "치바군"
+      },
+      "org": "千葉県",
+      "kind": "official",
+      "about": {
+        "ja": "横から見ると千葉県の形をした赤い犬。千葉県マスコットキャラクター",
+        "ko": "옆에서 보면 지바현 모양인 빨간 개. 지바현 마스코트"
+      }
+    },
+    {
+      "id": "funassyi",
+      "prefecture": "chiba",
+      "name": {
+        "ja": "ふなっしー",
+        "kana": "ふなっしー",
+        "ko": "후낫시"
+      },
+      "org": "民間（船橋市非公認）",
+      "kind": "extra",
+      "about": {
+        "ja": "梨の妖精。しゃべって跳ねる非公認キャラの代表格",
+        "ko": "배(梨) 요정. 말하고 뛰는 비공인 캐릭터의 대표격"
+      },
+      "extra": true
+    },
+    {
+      "id": "yurito",
+      "prefecture": "tokyo",
+      "name": {
+        "ja": "ゆりーと",
+        "kana": "ゆりーと",
+        "ko": "유리토"
+      },
+      "org": "東京都",
+      "kind": "official",
+      "about": {
+        "ja": "都民の鳥ユリカモメがモチーフ。東京都スポーツ推進大使（都全体の公式代表キャラは未定）",
+        "ko": "도민의 새 붉은부리갈매기가 모티브. 도쿄도 스포츠 추진대사(도 전체 대표 캐릭터는 따로 없음)"
+      },
+      "url": "https://www.sports-tokyo-info.metro.tokyo.lg.jp/seisaku/yurito/index.html"
+    },
+    {
+      "id": "kanagawakintaro",
+      "prefecture": "kanagawa",
+      "name": {
+        "ja": "かながわキンタロウ",
+        "kana": "かながわきんたろう",
+        "ko": "가나가와 킨타로"
+      },
+      "org": "神奈川県",
+      "kind": "official",
+      "about": {
+        "ja": "足柄山の金太郎がモデル。神奈川県のマスコット",
+        "ko": "아시가라산의 킨타로가 모델. 가나가와현 마스코트"
+      }
+    },
+    {
+      "id": "lerchsan",
+      "prefecture": "niigata",
+      "name": {
+        "ja": "レルヒさん",
+        "kana": "れるひさん",
+        "ko": "레르히상"
+      },
+      "org": "新潟県",
+      "kind": "official",
+      "about": {
+        "ja": "日本にスキーを伝えたレルヒ少佐。新潟県観光PRキャラクター",
+        "ko": "일본에 스키를 전한 레르히 소령. 니가타현 관광 PR 캐릭터"
+      }
+    },
+    {
+      "id": "kitokitokun",
+      "prefecture": "toyama",
+      "name": {
+        "ja": "きときと君",
+        "kana": "きときとくん",
+        "ko": "키토키토군"
+      },
+      "org": "富山県",
+      "kind": "official",
+      "about": {
+        "ja": "「きときと（新鮮）」から。富山県PRマスコット",
+        "ko": "'키토키토(신선하다)'에서. 도야마현 PR 마스코트"
+      }
+    },
+    {
+      "id": "hyakumansan",
+      "prefecture": "ishikawa",
+      "name": {
+        "ja": "ひゃくまんさん",
+        "kana": "ひゃくまんさん",
+        "ko": "햐쿠만상"
+      },
+      "org": "石川県",
+      "kind": "official",
+      "about": {
+        "ja": "加賀百万石と加賀八幡起上りがモチーフ。石川県観光PRマスコット",
+        "ko": "가가 백만석과 가가 오뚝이가 모티브. 이시카와현 관광 PR 마스코트"
+      }
+    },
+    {
+      "id": "hapiryu",
+      "prefecture": "fukui",
+      "name": {
+        "ja": "はぴりゅう",
+        "kana": "はぴりゅう",
+        "ko": "하피류"
+      },
+      "org": "福井県",
+      "kind": "official",
+      "about": {
+        "ja": "恐竜がモチーフ。福井国体から県マスコットに",
+        "ko": "공룡이 모티브. 후쿠이 국체에서 현 마스코트로"
+      }
+    },
+    {
+      "id": "takedahishimaru",
+      "prefecture": "yamanashi",
+      "name": {
+        "ja": "武田菱丸",
+        "kana": "たけだひしまる",
+        "ko": "다케다 히시마루"
+      },
+      "org": "やまなし観光推進機構",
+      "kind": "official",
+      "about": {
+        "ja": "武田信玄の兜をかぶった犬。山梨県観光PRキャラクター",
+        "ko": "다케다 신겐의 투구를 쓴 개. 야마나시현 관광 PR 캐릭터"
+      }
+    },
+    {
+      "id": "arukuma",
+      "prefecture": "nagano",
+      "name": {
+        "ja": "アルクマ",
+        "kana": "あるくま",
+        "ko": "아루쿠마"
+      },
+      "org": "長野県",
+      "kind": "official",
+      "about": {
+        "ja": "りんごの被り物をしたクマ。長野県PRキャラクター。ゆるキャラGP 2019 王者",
+        "ko": "사과 모자를 쓴 곰. 나가노현 PR 캐릭터. 유루캬라 GP 2019 우승"
+      }
+    },
+    {
+      "id": "minamo",
+      "prefecture": "gifu",
+      "name": {
+        "ja": "ミナモ",
+        "kana": "みなも",
+        "ko": "미나모"
+      },
+      "org": "岐阜県",
+      "kind": "official",
+      "about": {
+        "ja": "清流の水の妖精。岐阜県マスコットキャラクター",
+        "ko": "맑은 강물의 요정. 기후현 마스코트"
+      }
+    },
+    {
+      "id": "fujippi",
+      "prefecture": "shizuoka",
+      "name": {
+        "ja": "ふじっぴー",
+        "kana": "ふじっぴー",
+        "ko": "후짓피"
+      },
+      "org": "静岡県",
+      "kind": "official",
+      "about": {
+        "ja": "富士山がモチーフ。静岡県マスコットキャラクター",
+        "ko": "후지산이 모티브. 시즈오카현 마스코트"
+      }
+    },
+    {
+      "id": "tokomaru",
+      "prefecture": "mie",
+      "name": {
+        "ja": "とこまる",
+        "kana": "とこまる",
+        "ko": "토코마루"
+      },
+      "org": "三重県",
+      "kind": "official",
+      "about": {
+        "ja": "県内スポーツを応援する三重県のマスコット（県全体の代表キャラは未定）",
+        "ko": "현내 스포츠를 응원하는 미에현 마스코트(현 대표 캐릭터는 따로 없음)"
+      },
+      "url": "https://www.pref.mie.lg.jp/SPORTS/HP/m0011300154.htm"
+    },
+    {
+      "id": "morizokiccoro",
+      "prefecture": "aichi",
+      "name": {
+        "ja": "モリゾー＆キッコロ",
+        "kana": "もりぞーときっころ",
+        "ko": "모리조&킷코로"
+      },
+      "org": "愛・地球博（愛知県）",
+      "kind": "official",
+      "about": {
+        "ja": "海上の森に住む森の精。2005年愛・地球博のマスコットで、愛知県が今も使う（県全体の公式キャラは未定）",
+        "ko": "가이쇼의 숲에 사는 숲의 정령. 2005 아이치 엑스포 마스코트로 아이치현이 지금도 사용(현 전체 공식 캐릭터는 따로 없음)"
+      },
+      "url": "https://aichinow.pref.aichi.jp/events/detail/3513/"
+    },
+    {
+      "id": "caffy",
+      "prefecture": "shiga",
+      "name": {
+        "ja": "キャッフィー",
+        "kana": "きゃっふぃー",
+        "ko": "캬피"
+      },
+      "org": "滋賀県",
+      "kind": "official",
+      "about": {
+        "ja": "琵琶湖のビワコオオナマズがモチーフ。滋賀県マスコット",
+        "ko": "비와호의 큰메기가 모티브. 시가현 마스코트"
+      }
+    },
+    {
+      "id": "hikonyan",
+      "prefecture": "shiga",
+      "name": {
+        "ja": "ひこにゃん",
+        "kana": "ひこにゃん",
+        "ko": "히코냥"
+      },
+      "org": "彦根市",
+      "kind": "extra",
+      "about": {
+        "ja": "井伊の赤備え兜をかぶった白猫。ゆるキャラブームの火付け役",
+        "ko": "이이 가문의 빨간 투구를 쓴 흰 고양이. 유루캬라 붐의 시초"
+      },
+      "extra": true
+    },
+    {
+      "id": "mayumaro",
+      "prefecture": "kyoto",
+      "name": {
+        "ja": "まゆまろ",
+        "kana": "まゆまろ",
+        "ko": "마유마로"
+      },
+      "org": "京都府",
+      "kind": "official",
+      "about": {
+        "ja": "繭がモチーフ。京都府広報監",
+        "ko": "누에고치가 모티브. 교토부 홍보감"
+      }
+    },
+    {
+      "id": "mozuyan",
+      "prefecture": "osaka",
+      "name": {
+        "ja": "もずやん",
+        "kana": "もずやん",
+        "ko": "모즈얀"
+      },
+      "org": "大阪府",
+      "kind": "official",
+      "about": {
+        "ja": "府の鳥モズがモチーフ。大阪府広報担当副知事",
+        "ko": "부의 새 때까치(모즈)가 모티브. 오사카부 홍보담당 부지사"
+      }
+    },
+    {
+      "id": "habatan",
+      "prefecture": "hyogo",
+      "name": {
+        "ja": "はばタン",
+        "kana": "はばたん",
+        "ko": "하바탄"
+      },
+      "org": "兵庫県",
+      "kind": "official",
+      "about": {
+        "ja": "不死鳥がモチーフ。兵庫県マスコット",
+        "ko": "불사조가 모티브. 효고현 마스코트"
+      }
+    },
+    {
+      "id": "sentokun",
+      "prefecture": "nara",
+      "name": {
+        "ja": "せんとくん",
+        "kana": "せんとくん",
+        "ko": "센토군"
+      },
+      "org": "奈良県",
+      "kind": "official",
+      "about": {
+        "ja": "鹿の角が生えた童子。平城遷都1300年祭から奈良県マスコットに",
+        "ko": "사슴뿔이 난 동자. 헤이조 천도 1300년제에서 나라현 마스코트로"
+      }
+    },
+    {
+      "id": "kiichan",
+      "prefecture": "wakayama",
+      "name": {
+        "ja": "きいちゃん",
+        "kana": "きいちゃん",
+        "ko": "키짱"
+      },
+      "org": "和歌山県",
+      "kind": "official",
+      "about": {
+        "ja": "紀州犬がモチーフ。和歌山県PRキャラクター",
+        "ko": "기슈견이 모티브. 와카야마현 PR 캐릭터"
+      }
+    },
+    {
+      "id": "toripy",
+      "prefecture": "tottori",
+      "name": {
+        "ja": "トリピー",
+        "kana": "とりぴー",
+        "ko": "토리피"
+      },
+      "org": "鳥取県",
+      "kind": "official",
+      "about": {
+        "ja": "二十世紀梨と鳥を合わせた鳥取県マスコット",
+        "ko": "20세기 배와 새를 합친 돗토리현 마스코트"
+      }
+    },
+    {
+      "id": "shimanekko",
+      "prefecture": "shimane",
+      "name": {
+        "ja": "しまねっこ",
+        "kana": "しまねっこ",
+        "ko": "시마넷코"
+      },
+      "org": "島根県観光連盟",
+      "kind": "official",
+      "about": {
+        "ja": "出雲大社風の屋根をかぶった猫。しまね観光キャラクター",
+        "ko": "이즈모 대사풍 지붕을 쓴 고양이. 시마네 관광 캐릭터"
+      }
+    },
+    {
+      "id": "momocchi",
+      "prefecture": "okayama",
+      "name": {
+        "ja": "ももっち",
+        "kana": "ももっち",
+        "ko": "모못치"
+      },
+      "org": "岡山県",
+      "kind": "official",
+      "about": {
+        "ja": "桃太郎がモチーフ。岡山県マスコット（相棒はうらっち）",
+        "ko": "모모타로가 모티브. 오카야마현 마스코트(짝꿍은 우랏치)"
+      }
+    },
+    {
+      "id": "bunkakky",
+      "prefecture": "hiroshima",
+      "name": {
+        "ja": "ブンカッキー",
+        "kana": "ぶんかっきー",
+        "ko": "분캇키"
+      },
+      "org": "広島県",
+      "kind": "official",
+      "about": {
+        "ja": "「文化」+「カキ」。頭にもみじ。県キャラ総選挙1位",
+        "ko": "'문화'+'굴(카키)'. 머리에 단풍. 현 캐릭터 총선거 1위"
+      },
+      "url": "https://www.hiroshima-bunka.jp/yuruchara/detail/1.html"
+    },
+    {
+      "id": "choruru",
+      "prefecture": "yamaguchi",
+      "name": {
+        "ja": "ちょるる",
+        "kana": "ちょるる",
+        "ko": "초루루"
+      },
+      "org": "山口県",
+      "kind": "official",
+      "about": {
+        "ja": "「山」の形の頭に「口」の顔。山口県PR本部長",
+        "ko": "'山' 모양 머리에 '口' 얼굴. 야마구치현 PR 본부장"
+      }
+    },
+    {
+      "id": "sudachikun",
+      "prefecture": "tokushima",
+      "name": {
+        "ja": "すだちくん",
+        "kana": "すだちくん",
+        "ko": "스다치군"
+      },
+      "org": "徳島県",
+      "kind": "official",
+      "about": {
+        "ja": "特産のすだちがモチーフ。徳島県マスコット",
+        "ko": "특산 스다치(영귤)가 모티브. 도쿠시마현 마스코트"
+      }
+    },
+    {
+      "id": "aoonikun",
+      "prefecture": "kagawa",
+      "name": {
+        "ja": "親切な青鬼くん",
+        "kana": "しんせつなあおおにくん",
+        "ko": "친절한 파란 도깨비군"
+      },
+      "org": "香川県観光協会",
+      "kind": "official",
+      "about": {
+        "ja": "童話『泣いた赤鬼』の青鬼がモデル。うどん県の観光キャラクター",
+        "ko": "동화 『울어버린 빨간 도깨비』의 파란 도깨비가 모델. 우동현 관광 캐릭터"
+      },
+      "url": "https://www.my-kagawa.jp/aooni/feature/top/aooni"
+    },
+    {
+      "id": "mican",
+      "prefecture": "ehime",
+      "name": {
+        "ja": "みきゃん",
+        "kana": "みきゃん",
+        "ko": "미캉"
+      },
+      "org": "愛媛県",
+      "kind": "official",
+      "about": {
+        "ja": "みかんの犬。愛媛県イメージアップキャラクター",
+        "ko": "귤 강아지. 에히메현 이미지업 캐릭터"
+      }
+    },
+    {
+      "id": "barysan",
+      "prefecture": "ehime",
+      "name": {
+        "ja": "バリィさん",
+        "kana": "ばりぃさん",
+        "ko": "바리상"
+      },
+      "org": "今治市（民間）",
+      "kind": "extra",
+      "about": {
+        "ja": "今治タオルの腹巻をした鳥。ゆるキャラGP 2012 王者",
+        "ko": "이마바리 타월 복대를 한 새. 유루캬라 GP 2012 우승"
+      },
+      "extra": true
+    },
+    {
+      "id": "kuroshiokun",
+      "prefecture": "kochi",
+      "name": {
+        "ja": "くろしおくん",
+        "kana": "くろしおくん",
+        "ko": "쿠로시오군"
+      },
+      "org": "高知県",
+      "kind": "official",
+      "about": {
+        "ja": "黒潮がモチーフ。1997年から活動する高知県イメージキャラクター",
+        "ko": "구로시오(해류)가 모티브. 1997년부터 활동하는 고치현 이미지 캐릭터"
+      },
+      "url": "https://www.pref.kochi.lg.jp/kuroshiokun/"
+    },
+    {
+      "id": "katsuoningen",
+      "prefecture": "kochi",
+      "name": {
+        "ja": "カツオ人間",
+        "kana": "かつおにんげん",
+        "ko": "가쓰오 인간"
+      },
+      "org": "民間（山西金陵堂）",
+      "kind": "extra",
+      "about": {
+        "ja": "頭がカツオの切り身。「ゆるくない」高知の人気キャラ",
+        "ko": "머리가 가다랑어 토막. '유루하지 않은' 고치의 인기 캐릭터"
+      },
+      "extra": true
+    },
+    {
+      "id": "ecoton",
+      "prefecture": "fukuoka",
+      "name": {
+        "ja": "エコトン",
+        "kana": "えことん",
+        "ko": "에코톤"
+      },
+      "org": "福岡県",
+      "kind": "official",
+      "about": {
+        "ja": "とんこつラーメンのどんぶりが目印の豚。福岡県広報部長",
+        "ko": "돈코츠 라멘 그릇이 표식인 돼지. 후쿠오카현 홍보부장"
+      }
+    },
+    {
+      "id": "tsubozamurai",
+      "prefecture": "saga",
+      "name": {
+        "ja": "壺侍",
+        "kana": "つぼざむらい",
+        "ko": "쓰보자무라이"
+      },
+      "org": "佐賀県",
+      "kind": "official",
+      "about": {
+        "ja": "有田焼の壺に入った侍。佐賀県観光PRキャラクター",
+        "ko": "아리타 도자기 항아리에 들어간 사무라이. 사가현 관광 PR 캐릭터"
+      }
+    },
+    {
+      "id": "ganbakun",
+      "prefecture": "nagasaki",
+      "name": {
+        "ja": "がんばくん",
+        "kana": "がんばくん",
+        "ko": "간바군"
+      },
+      "org": "長崎県",
+      "kind": "official",
+      "about": {
+        "ja": "長崎がんばらんば国体のマスコットから県のキャラクターに（相棒はらんばちゃん）",
+        "ko": "나가사키 간바란바 국체 마스코트에서 현 캐릭터로(짝꿍은 란바짱)"
+      }
+    },
+    {
+      "id": "kumamon",
+      "prefecture": "kumamoto",
+      "name": {
+        "ja": "くまモン",
+        "kana": "くまもん",
+        "ko": "쿠마몬"
+      },
+      "org": "熊本県",
+      "kind": "official",
+      "about": {
+        "ja": "黒いクマに赤いほっぺ。熊本県営業部長兼しあわせ部長。ゆるキャラGP 2011 王者",
+        "ko": "검은 곰에 빨간 볼. 구마모토현 영업부장 겸 행복부장. 유루캬라 GP 2011 우승"
+      },
+      "url": "https://kumamon-land.jp/",
+      "credit": "©2010熊本県くまモン"
+    },
+    {
+      "id": "mejiron",
+      "prefecture": "oita",
+      "name": {
+        "ja": "めじろん",
+        "kana": "めじろん",
+        "ko": "메지론"
+      },
+      "org": "大分県",
+      "kind": "official",
+      "about": {
+        "ja": "県の鳥メジロがモチーフ。大分県応援団“鳥”",
+        "ko": "현의 새 동박새(메지로)가 모티브. 오이타현 응원단'조'"
+      }
+    },
+    {
+      "id": "miyazakiken",
+      "prefecture": "miyazaki",
+      "name": {
+        "ja": "みやざき犬",
+        "kana": "みやざきけん",
+        "ko": "미야자키견"
+      },
+      "org": "宮崎県",
+      "kind": "official",
+      "about": {
+        "ja": "日向夏・フェニックス・地鶏をかぶった3匹の犬（ひぃ・むぅ・かぁ）",
+        "ko": "휴가나쓰·피닉스·토종닭을 쓴 세 마리 개(히·무·카)"
+      },
+      "url": "https://ouendan.kanko-miyazaki.jp/"
+    },
+    {
+      "id": "greboo",
+      "prefecture": "kagoshima",
+      "name": {
+        "ja": "ぐりぶー",
+        "kana": "ぐりぶー",
+        "ko": "구리부"
+      },
+      "org": "鹿児島県",
+      "kind": "official",
+      "about": {
+        "ja": "黒豚がモチーフ。鹿児島県PRキャラクター（家族はさくら等）",
+        "ko": "흑돼지가 모티브. 가고시마현 PR 캐릭터(가족은 사쿠라 등)"
+      },
+      "url": "https://greboo.com/"
+    },
+    {
+      "id": "hanagasamahae",
+      "prefecture": "okinawa",
+      "name": {
+        "ja": "花笠マハエ",
+        "kana": "はながさまはえ",
+        "ko": "하나가사 마하에"
+      },
+      "org": "沖縄観光コンベンションビューロー",
+      "kind": "official",
+      "about": {
+        "ja": "花笠をかぶった琉球衣装の女の子。沖縄観光キャラクター",
+        "ko": "하나가사를 쓴 류큐 의상의 소녀. 오키나와 관광 캐릭터"
+      }
+    }
+  ]
+}
