@@ -48,3 +48,4 @@ append-only. 형식: `## [YYYY-MM-DD] action | subject` — 커밋 제목 `actio
 ## [2026-09-27] fix | Canva 전수조사 답 반영 — 「내 표기」 4곳, 治安が悪い 순위, 캡션 자리, 내가 붙인 말 삭제
 ## [2026-09-27] fix | 스크린샷 QA 결과(docs/screenshots/qa)는 git 밖에 — README 그림만 올린다
 ## [2026-09-27] docs | nihoncheese.bmlwork.kr 연결됨 — Active · SSL, Preview branch None 확인만 남음
+## [2026-09-27] create | 青函トンネル 을 다리 레이어에 — 津軽海峡大橋 는 구상만이라 옅은 점선으로

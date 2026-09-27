@@ -240,7 +240,7 @@
     },
     "bridges": {
       "type": "array",
-      "description": "本州↔四国 3노선 — 本州 쪽 끝에서 四国 쪽 끝으로",
+      "description": "本州↔四国 3노선 + 本州↔北海道 (青函トンネル, 구상만 있는 津軽海峡大橋) — 本州 쪽 끝에서 건너편 끝으로",
       "items": {
         "type": "object",
         "required": [
@@ -254,6 +254,13 @@
         "properties": {
           "id": {
             "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "tunnel",
+              "plan"
+            ],
+            "description": "없으면 다리. tunnel = 해저 터널(점선), plan = 구상만 있고 지어지지 않음(옅은 점선 + 「구상만」)"
           },
           "name": {
             "$ref": "#/$defs/name"

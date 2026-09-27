@@ -112,7 +112,7 @@ export function createLayers(ctx: LayerContext) {
   const bridgeSel = gBridges.selectAll<SVGGElement, (typeof places.bridges)[number]>('g.bridge')
     .data(places.bridges, (d) => d.id)
     .join((enter) => {
-      const g = enter.append('g').attr('class', 'bridge').style('--bridge', (d) => d.color);
+      const g = enter.append('g').attr('class', (d) => `bridge${d.kind ? ` bridge--${d.kind}` : ''}`).style('--bridge', (d) => d.color);
       g.append('path').attr('class', 'bridge__casing');
       g.append('path').attr('class', 'bridge__line');
       g.append('title').text((d) => `${d.name.ja} (${d.name.kana}) · ${d.route.ja}${d.ko ? ` — ${d.ko}` : ''}`);
@@ -190,7 +190,8 @@ export function createLayers(ctx: LayerContext) {
   const extraNames = textOf(ctx.text, extras, 'extra-name');
   const mapNoteNames = textOf(ctx.text, mapNotes, 'map-note');
   wardNames.classed('is-red', (d) => !!d.red);
-  const bridgeItems: LabelItem[] = places.bridges.map((b) => ({ id: b.id, name: b.name, px: [0, 0], fs: 10.5, cls: 'bridge-name', prio: 0 }));
+  const KIND_NOTE = { tunnel: '바다 밑 터널', plan: '구상만 · 안 지어짐' } as const;
+  const bridgeItems: LabelItem[] = places.bridges.map((b) => ({ id: b.id, name: b.name, note: b.kind ? KIND_NOTE[b.kind] : undefined, px: [0, 0], fs: 10.5, cls: 'bridge-name', prio: 0 }));
   const bridgeNames = textOf(ctx.text, bridgeItems, 'bridge-name');
   const rangeTag = ctx.text.append('text').attr('class', 'label label--place range-tag').attr('lang', 'ja');
   rangeTag.append('tspan').attr('class', 'label__furi');

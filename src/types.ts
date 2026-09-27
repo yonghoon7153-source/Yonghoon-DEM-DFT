@@ -101,7 +101,8 @@ export interface Island { id: string; name: PlaceName; at: LonLat; label: LonLat
 export interface ExtraPlace { id: string; name: PlaceName; note?: string; mark?: string; pref?: string; at: LonLat; radiusKm?: number }
 /** A few words written straight on the map (「山↑」 on the 中央高地). */
 export interface MapNote { id: string; t: string; pref?: string; at: LonLat }
-export interface Bridge { id: string; name: PlaceName; route: { ja: string; kana: string }; line: LonLat[]; color: string; ko?: string }
+/** `kind` — tunnel (青函トンネル, drawn dashed) or plan (津軽海峡大橋: studied, never built — faint dotted); a bridge otherwise. */
+export interface Bridge { id: string; kind?: 'tunnel' | 'plan'; name: PlaceName; route: { ja: string; kana: string }; line: LonLat[]; color: string; ko?: string }
 export interface CompassWord { ja: string; kana: string; ko: string }
 /** A direction word pinned to an edge of the map (north-up, so it never moves). */
 export interface Compass { id: string; side: 'top' | 'right' | 'bottom' | 'left'; words: CompassWord[] }

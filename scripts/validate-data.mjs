@@ -169,6 +169,7 @@ for (const b of placesDb.bridges ?? []) {
   names(b.name, where);
   if (!Array.isArray(b.line) || b.line.length < 2 || !b.line.every(inJapan)) err(`${where}: line must be ≥2 [lon, lat] points`);
   if (!/^#[0-9a-f]{6}$/i.test(b.color ?? '')) err(`${where}: color must be #rrggbb`);
+  if (b.kind !== undefined && !['tunnel', 'plan'].includes(b.kind)) err(`${where}: kind must be tunnel or plan (or left out for a bridge)`);
 }
 const capitals = (placesDb.cities ?? []).filter((c) => c.capital).length;
 if ((placesDb.cities ?? []).length && capitals !== 47) err(`places.cities: expected 47 capitals, got ${capitals}`);

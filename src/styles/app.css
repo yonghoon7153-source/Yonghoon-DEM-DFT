@@ -598,6 +598,9 @@
 .bridge__casing, .bridge__line, .range, .note-arrow { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
 .bridge__casing { stroke: var(--white); stroke-width: 7px; }
 .bridge__line { stroke: var(--bridge); stroke-width: 4px; }
+.bridge--tunnel .bridge__line { stroke-dasharray: 7 5; stroke-linecap: butt; }
+.bridge--plan .bridge__casing { stroke-width: 4px; opacity: .7; }
+.bridge--plan .bridge__line { stroke-width: 2.6px; stroke-dasharray: .1 6; opacity: .85; }
 .map-svg.is-terrain .pref { fill-opacity: .45; }
 .range { stroke: var(--range); stroke-width: 6px; opacity: .88; transition: stroke-width .2s ease; }
 .range.is-active { stroke-width: 10px; opacity: 1; }
