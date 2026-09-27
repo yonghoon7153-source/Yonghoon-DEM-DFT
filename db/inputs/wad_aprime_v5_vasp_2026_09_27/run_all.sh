@@ -1,26 +1,34 @@
 #!/usr/bin/env bash
 # =============================================================================
-# run_all.sh (v3) — A′ V5 VASP 단일점 18 잡 · 잡마다 사전등록 재시도 INCAR.r1 최대 1 회 (최대 36 실행)
+# run_all.sh (v4) — A′ V5 VASP 단일점 18 잡 · 잡마다 사전등록 재시도 INCAR.r1 최대 1 회 (최대 36 실행)
 #   필수: VASP_CMD (예: "mpirun -np 128 vasp_std") · POTCAR_DIR (PAW_PBE 폴더: <POTCAR_DIR>/Li_sv/POTCAR · P · S · Cl · Ag)
 #   선택: PERF_TAGS_FILE — 한 줄에 대입 하나만 · 허용 NCORE/NPAR/KPAR/NSIM (양의 정수) · LPLANE/LSCALU/LSCALAPACK (.TRUE./.FALSE.)
 #         세미콜론·역슬래시·중복 태그·줄 끝 주석 금지 (VASP 는 ';' 뒤를 다른 설정으로 읽는다)
 #         JOBS="잡1 잡2" (일부만 — 파일럿: JOBS="V5_s_outer_A_bound V5_s_outer_A_far")
 #         PACK_ONLY=1 — 계산은 하지 않고 반송 묶음만 다시 만든다 (포장이 실패했을 때 · VASP_CMD·POTCAR_DIR 불필요)
-#   ⛔ INCAR·POSCAR·KPOINTS 를 고치지 마세요 · ⛔ POTCAR 는 반송하지 않습니다 (TITEL/ZVAL 줄 · sha256 만)
+#   ⛔ INCAR·POSCAR·KPOINTS 를 고치지 마세요 · ⛔ POTCAR 는 반송하지 않습니다 (TITEL/ZVAL 줄 · sha256 만) —
+#      반송 묶음은 **허용 목록**(RET_ALLOW)의 파일만 담습니다. 준비 실패·중단·PACK_ONLY 에서도 POTCAR 본문·WAVECAR·CHGCAR 는 들어가지 않고,
+#      혹시 들어가면 묶음을 만들지 않습니다 (종료 4).
 #   ⛔ 시도 폴더(run/<잡>, run/<잡>_r1)가 이미 있으면 그 잡은 돌지 않습니다 (원자적 mkdir). 재시도 상한은 잡마다 사전등록 1 회 —
-#      그 밖의 수동 재실행은 새 승인 없이는 하지 않습니다.
+#      그 밖의 수동 재실행은 새 승인 없이는 하지 않습니다. 파일럿 두 잡은 봉인한 그 실행 그대로 최종 반송에 포함합니다 (다시 돌리지 않습니다).
 #   종료코드: 0 전 잡 성공·포장 · 1 일부 잡 실패 (반송 묶음은 만든다 — 실패도 기록) · 2 패키지·성능 파일 오류 (아무것도 안 돈다)
 #             4 반송 포장 실패 (계산 결과는 run/ 에 그대로 — PACK_ONLY=1 로 포장만 다시)
 # =============================================================================
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd); cd "$HERE"
 sha256sum -c --quiet MANIFEST.sha256 || { echo "⛔ 패키지 파일이 MANIFEST 와 다르다 — 실행하지 않는다"; exit 2; }
-pack(){  # 임시 파일에 쓰고 성공해야 승격 — 옛 묶음과 섞이지 않게
-  rm -f V5_vasp_return.tgz.part V5_vasp_return.tgz.sha256.part
-  tar czf V5_vasp_return.tgz.part run MANIFEST.sha256 || return 1
-  mv -f V5_vasp_return.tgz.part V5_vasp_return.tgz || return 1
-  sha256sum V5_vasp_return.tgz > V5_vasp_return.tgz.sha256.part || return 1
-  mv -f V5_vasp_return.tgz.sha256.part V5_vasp_return.tgz.sha256 || return 1
+RET_ALLOW='OUTCAR|OSZICAR|INCAR|KPOINTS|POSCAR|IBZKPT|POTCAR\.titel|POTCAR\.sha256|POTCAR\.species\.sha256|attempt\.json|stdout\.log'    # run/<잡>/ 아래에서 반송하는 파일 이름 (이 밖은 담지 않는다)
+RET_FORBID='POTCAR|WAVECAR|CHGCAR|CHG|vasprun\.xml'  # 묶음 구성원에 있으면 안 되는 이름 (POTCAR 본문 등) — 있으면 보내지 않는다
+pack(){  # 허용 목록으로 구성원을 모아 임시 파일에 쓰고, 구성원 검사·sha 까지 끝나야 둘 다 승격 (옛 묶음·옛 sha 가 섞이지 않게)
+  rm -f V5_vasp_return.tgz.part V5_vasp_return.tgz.sha256.part V5_vasp_return.list
+  { echo MANIFEST.sha256; for f in run/env.txt run/status.tsv; do [ -f "$f" ] && echo "$f"; done
+    find run -mindepth 2 -maxdepth 2 -type f | grep -E "^run/[^/]+/($RET_ALLOW)$" | LC_ALL=C sort; } > V5_vasp_return.list
+  [ -s V5_vasp_return.list ] || return 1
+  tar czf V5_vasp_return.tgz.part -T V5_vasp_return.list || return 1
+  if tar tzf V5_vasp_return.tgz.part | grep -Eq "(^|/)($RET_FORBID)$"; then echo "⛔ 반송 묶음에 금지 파일(POTCAR 본문 등)이 들어갔다 — 보내지 않는다"; return 1; fi
+  h=$(sha256sum V5_vasp_return.tgz.part | cut -d' ' -f1); [ -n "$h" ] || return 1
+  printf '%s  V5_vasp_return.tgz\n' "$h" > V5_vasp_return.tgz.sha256.part || return 1
+  mv -f V5_vasp_return.tgz.part V5_vasp_return.tgz && mv -f V5_vasp_return.tgz.sha256.part V5_vasp_return.tgz.sha256
 }
 if [ "${PACK_ONLY:-0}" = 1 ]; then
   [ -d run ] || { echo "⛔ run/ 이 없다 — 포장할 것이 없다"; exit 2; }
@@ -62,7 +70,7 @@ run_one(){  # $1 잡 · $2 시도(0|r1) · $3 INCAR 파일 → 0 성공 · 1 실
   : > "$d/POTCAR"; : > "$d/POTCAR.species.sha256"
   while read -r p; do
     [ -n "$p" ] || continue
-    [ -f "$POTCAR_DIR/$p/POTCAR" ] || { echo "⛔ POTCAR $p 없음"; return 3; }
+    [ -f "$POTCAR_DIR/$p/POTCAR" ] || { echo "⛔ POTCAR $p 없음"; rm -f "$d/POTCAR"; return 3; }   # 조립 중이던 부분 본문도 지운다
     cat "$POTCAR_DIR/$p/POTCAR" >> "$d/POTCAR"; printf "%s %s\n" "$p" "$(h "$POTCAR_DIR/$p/POTCAR")" >> "$d/POTCAR.species.sha256"
   done < "jobs/$job/POTCAR.spec"
   grep -E "TITEL|ZVAL|VRHFIN|LEXCH" "$d/POTCAR" > "$d/POTCAR.titel"; h "$d/POTCAR" > "$d/POTCAR.sha256"

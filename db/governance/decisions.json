@@ -5072,7 +5072,7 @@
     ]
    },
    "title": "A′ 카드 v5 개정 3 (초안 v3) — V5 를 VASP 외주로 돌리는 경로 (준비만 · 실행 미정 · Codex CE·CF NO-GO 반영)",
-   "statement": "`db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json` v3 (sha256:a4ac661db7a5dc0215e0b93f8cc964219985195a08ca933562cf0a662458640c). 봉인 S3v2 기하 · 표본 ①–⑤ · 끝점 · G3/G4/G5 식·문턱 · 개정 1 의 D3 장부 구조는 그대로 두고, V5 18 단일점만 VASP (PAW_PBE PBE_54 전체 TITEL 고정 · ENCUT 520 · MP1 σ 0.136 · IVDW 12 명시 계수 + VDW_RADIUS 50.2 / VDW_CNRADIUS 21.17 Å · LDIPOL IDIPOL 3 · Γ 3×2×1) 로 옮긴다. W = MP1 σ 0.136 eV 에서의 TOTEN 차. VASP V5 는 별도 비교군. 파일럿과 본 배치 같은 VASP 빌드. 반송 판정은 증거 모순을 실행 상태보다 먼저 (모순 = r1 자격 없음) · 최종 집계는 봉인 PP 등록부 필수 (파일럿 단계는 --pilot 만) · G4 변형은 같은 기하 Edisp 동일성(≤ 1e-4 eV) · 에너지는 마지막 레코드의 유한수 · 설정은 INCAR 에코를 뺀 해석값 · DIPOL 은 해석값 줄 또는 min pos cut. G3 FAIL 이면 G5 = INCOMPLETE (오차표만) (3c) · 3b′ 는 문턱 없는 잔차 진단 · D3 운영 예산 (쌍 0.005 / G3 차이의 차이 0.001 J/m²). 패키지 db/inputs/wad_aprime_v5_vasp_2026_09_27 v3 (MANIFEST.sha256 파일 sha256 da260794745bdbda2d827f116162115af90e82e229f897aad00166aff16dcdd4). 업체·예산 미정 — 준비본.",
+   "statement": "`db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json` v4 (sha256:dbcbc486f54e5a05fc1b72430f7f7f0b8c7ef0f7f4866d79ce048676b5cb5e2f). 봉인 S3v2 기하 · 표본 ①–⑤ · 끝점 · G3/G4/G5 식·문턱 · 개정 1 의 D3 장부 구조는 그대로 두고, V5 18 단일점만 VASP (PAW_PBE PBE_54 전체 TITEL 고정 · ENCUT 520 · MP1 σ 0.136 · IVDW 12 명시 계수 + VDW_RADIUS 50.2 / VDW_CNRADIUS 21.17 Å · LDIPOL IDIPOL 3 · Γ 3×2×1) 로 옮긴다. W = MP1 σ 0.136 eV 에서의 TOTEN 차. VASP V5 는 별도 비교군. 파일럿과 본 배치 같은 VASP 빌드. 반송 판정은 증거 모순을 실행 상태보다 먼저 (모순 = r1 자격 없음) · 최종 집계는 봉인 PP 등록부 필수 (파일럿 단계는 --pilot 만) + 파일럿 두 잡의 채택 시도가 봉인한 그 실행(run_id · attempt.json·OUTCAR sha)이어야 한다 (PILOT_NOT_SEALED) · G4 변형은 같은 기하 Edisp 동일성(≤ 1e-4 eV) · 에너지는 마지막 레코드의 유한수 · 설정은 INCAR 에코를 뺀 해석값 · DIPOL 은 해석값 줄 또는 min pos cut · 미완료 출력의 정상 TITEL 접두는 결측(모순 아님) · 반송 묶음은 허용 목록으로만 (POTCAR 본문·WAVECAR·CHGCAR 제외 · 구성원 검사). G3 FAIL 이면 G5 = INCOMPLETE (오차표만) (3c) · 3b′ 는 문턱 없는 잔차 진단 · D3 운영 예산 (쌍 0.005 / G3 차이의 차이 0.001 J/m²). 패키지 db/inputs/wad_aprime_v5_vasp_2026_09_27 v4 (MANIFEST.sha256 파일 sha256 ccbc0988f6debfa716e1c2e2d7f7327939cc41cd378a3d0a35f5523ed11bcfb5). 업체·예산 미정 — 준비본.",
    "rationale": "V5 는 우리 GPU 로 RESOURCE_BLOCKED 라 G5 가 NOT_TESTED 다. 외주 CPU 노드면 메모리 벽이 없다. UMA(OMat24) 학습 기준이 VASP PBE 라 코드 계열 차이를 줄인 설계다 (오차 감소 보증은 아님). v1 → Codex CE NO-GO (P0 4 · P1 5) → v2 → Codex CF NO-GO (모순+실패 조합을 r1 이 덮음 · 등록부 없이 최종 승인 · G4 D3 불일치가 수렴 실패를 가림 · 마지막 NaN 에너지 · 실물 Edisp 무콜론 · 포장 실패 exit 0) → v3 가 전부 반영. 결과 전 D3 만 예측 V5 G3(ii) +0.00954 (문턱 0.01) 경계선 — 'FAIL 예측' 아님.",
    "decision_state": "proposed",
    "record_kind": "prospective",
@@ -5090,7 +5090,8 @@
     "db/inputs/wad_aprime_v5_vasp_2026_09_27/jobs.json",
     "tools/wad/build_v5_vasp_package.py",
     "kb/reviews/codex_CE_reply_wad_aprime_v5_vasp_outsourcing_2026_09_27.md",
-    "kb/reviews/codex_CF_reply_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md"
+    "kb/reviews/codex_CF_reply_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md",
+    "kb/reviews/codex_CG_reply_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md"
    ],
    "method_ref": "tools/wad/build_v5_vasp_package.py v3 (selftest 129 — CE·CF 재현 전부 음성 · 정상 대조군 · 정당한 r1 · 실물 VASP 5.4.4 OUTCAR 픽스처 · 배포 러너 실제 실행 · 돌연변이 38/38)",
    "reopen_criteria": [
@@ -5115,6 +5116,11 @@
      "at": "2026-09-27",
      "state": "proposed",
      "note": "v3 — Codex CF NO-GO 반영 (P0 3 · P1 3 · R2 · R4 · 권고) · 패키지 재생성 · 재리뷰 CG 전 · 여전히 proposed"
+    },
+    {
+     "at": "2026-09-27",
+     "state": "proposed",
+     "note": "v4 — Codex CG NO-GO 반영 (새 P0 없음 · P1 3: 반송 허용 목록 · 파일럿 결속 · TITEL 접두 · 권고 3) · 패키지 재생성 (입력 불변) · 재리뷰 CI 전 · 여전히 proposed"
     }
    ],
    "ratification": {

@@ -621,6 +621,14 @@
    "prompt": "kb/reviews/codex_CF_prompt_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md",
    "reply": "kb/reviews/codex_CF_reply_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md",
    "response": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json"
+  },
+  {
+   "id": "CG",
+   "date": "2026-09-27",
+   "verdict": "NO-GO (V5 VASP 준비본 v3) — 새 P0 없음 · P1 3 (실패·PACK_ONLY 경로에서 POTCAR 본문이 반송 묶음에 들어감 · 봉인 파일럿 run_id 미대조 → 교체된 파일럿도 G5 PASS · 정상 TITEL 접두만 찍힌 조기 종료를 모순으로 오판) · S3 찬성 · S4 조건부 찬성 (±2 격자 = 운영 여유 · 파일럿에서 실제 격자·cut 기록) · S5 찬성 · 선택 권고 3 (빈 에너지 레코드 · tar/sha 쌍 승격 · 등록부 attempt/OUTCAR sha)",
+   "prompt": "kb/reviews/codex_CG_prompt_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md",
+   "reply": "kb/reviews/codex_CG_reply_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md",
+   "response": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json"
   }
  ],
  "hazards": [
@@ -677,8 +685,8 @@
    "state": "인계 1 남음"
   },
   {
-   "state": "준비본 v3 · CG 재리뷰 대기",
-   "text": "**V5 VASP 외주** (1저자 '준비는 해둬볼게' · 업체·예산 미정): CE NO-GO → v2 → CF NO-GO → **v3** (MANIFEST da260794… · 개정 digest a4ac661d…) → ⏭ Codex CG 재리뷰 → 1저자 비준 → 업체 → 파일럿 2 잡 → --seal_pp → 16 잡 → --collect (등록부 필수). 결과 전 D3 만 예측 G3(ii) +0.00954 (경계선)."
+   "state": "준비본 v4 · CI 재리뷰 대기",
+   "text": "**V5 VASP 외주** (1저자 '준비는 해둬볼게' · 업체·예산 미정): CE NO-GO → v2 → CF NO-GO → v3 → CG NO-GO (P1 3) → **v4** (MANIFEST ccbc0988… · 개정 digest dbcbc486…) → ⏭ Codex CI 재리뷰 → 1저자 비준 → 업체 → 파일럿 2 잡 → --seal_pp (schema v3 · 파일럿 결속) → 16 잡 → --collect (등록부 필수 · PILOT_NOT_SEALED 게이트). 결과 전 D3 만 예측 G3(ii) +0.00954 (경계선)."
   }
  ],
  "log": [
@@ -951,6 +959,11 @@
    "date": "2026-09-27",
    "stage": "dft",
    "text": "**Codex CF NO-GO → V5 VASP 준비본 v3**: 도구 v3 (증거 모순을 실행 상태보다 먼저 — 모순+rc/미수렴 조합을 r1 이 못 덮음 · 시도 사이 일관성은 모든 시도 · 최종 --collect 는 봉인 PP 등록부 필수(없으면 2 · --pilot 만 예외) + 등록부 내용 검증 · G4 같은 기하 Edisp 동일성 ≤ 1e-4 eV · 에너지 마지막 레코드 유한수 + 최종 FREE ENERGIE 구획 · 실물 VASP 5.4.4 OUTCAR 픽스처 (Edisp 무콜론 · SCF 단계 TOTEN 은 D3 빠짐 · DIPOL 줄 없음 · min pos 520/560 = DIPOL_z 0.4278+½ 실측) · INCAR 에코 제외 · D3 계수 해석값 대조 · 러너 포장 실패 4 + PACK_ONLY · total_w_citable · run_id 형식 · 원자적 mkdir) · selftest 129 · 돌연변이 38/38 · 패키지 재생성 (입력 불변 · 러너·README 갱신) · 개정 3 v3."
+  },
+  {
+   "date": "2026-09-27",
+   "stage": "dft",
+   "text": "**Codex CG NO-GO → V5 VASP 준비본 v4**: 도구 v4 (반송 묶음 허용 목록 포장 + 구성원 검사 + 준비 실패 시 부분 POTCAR 삭제 · 검사기 forbidden_files 보고 · 파일럿 채택 시도 run_id·attempt.json/OUTCAR sha = 등록부 봉인(schema v3) 아니면 PILOT_NOT_SEALED · 미완료 출력의 정상 TITEL 접두 = 결측(r1 자격) / 접두 아님 = 모순 / 성공 시도 접두 = 미검증 · 빈 에너지 레코드도 마지막 레코드 · tar/sha 쌍 승격) · selftest 155/155 · 돌연변이 13/13 · 패키지 재생성 (입력 93 파일 중 jobs.json·run_all.sh 만 변경 · MANIFEST ccbc0988…) · 실제 패키지 끝-끝 (리뷰어 세 재현 전부 차단: run_id 교체 --collect 3 · PACK_ONLY 누출 0 · 준비 실패 누출 0) · 개정 3 v4 (digest dbcbc486…). 결정은 여전히 proposed · 재리뷰 CI 대기."
   }
  ],
  "related_decisions": [

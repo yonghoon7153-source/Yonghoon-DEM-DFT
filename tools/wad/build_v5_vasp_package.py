@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""build_v5_vasp_package.py — A′ V5 (LPSCl|Ag(111) 작은 주기 계면) **VASP 외주 패키지** · 반송 검사 · W/G3/G4/G5 집계. (v3 · Codex CE·CF 반영)
+"""build_v5_vasp_package.py — A′ V5 (LPSCl|Ag(111) 작은 주기 계면) **VASP 외주 패키지** · 반송 검사 · W/G3/G4/G5 집계. (v4 · Codex CE·CF·CG 반영)
 
 왜 있나 (2026-09-27 · 1저자 "v5 관련해서 vasp 용으로 외주건으로 한번 만들어보고 codex 리뷰 받자 · 될지는 모르지만 준비는 해둬볼게")
   V5 는 우리 GPU 한 장(48 GB)에 안 들어가 RESOURCE_BLOCKED 였다 (QE CPU 추정 89–109 GB @70 Ry · 축소 변형도 61–80 GB).
@@ -29,6 +29,19 @@ v3 (Codex CF NO-GO 반영 · 2026-09-27)
   R4 G5 상태 순서: UMA 입력 BLOCKED → 등록부 BLOCKED → 분모 INCOMPLETE → G3/G4 비통과면 INCOMPLETE (원시 기준 결과를 문자열에 병기) → 원시 FAIL → PASS
   권고 반영: `total_w_citable`·`total_w_labels` 기계 필드 · 원자적 시도 폴더 생성(mkdir) · README 재실행 문구 (수동 재실행 = 새 승인 · 포장 재시도는 계산 없음)
 
+v4 (Codex CG NO-GO 반영 · 2026-09-27)
+  P1-1 러너 포장은 **허용 목록**으로만 — run/<잡>/{OUTCAR OSZICAR INCAR KPOINTS POSCAR IBZKPT POTCAR.titel POTCAR.sha256 POTCAR.species.sha256 attempt.json stdout.log}
+       + run/status.tsv · run/env.txt · MANIFEST.sha256. 정상 실행 뒤의 삭제에 기대지 않는다 · 준비 실패·PACK_ONLY 도 같은 pack() · 묶음 구성원에
+       POTCAR/WAVECAR/CHGCAR/CHG/vasprun.xml 이 있으면 보내지 않는다(종료 4) · 준비 실패 때 조립 중이던 POTCAR 도 지운다 ·
+       검사기는 반송 폴더의 금지 파일을 `return_bundle.forbidden_files` 로 보고한다 (저장하지 말고 지우라고).
+  P1-2 최종 검사·집계에서 **파일럿 두 잡의 채택 시도**(0 또는 정당한 r1)의 run_id 가 등록부 `from_pilot` 과 같아야 한다 · 같은 run_id 라도 attempt.json·OUTCAR sha 가
+       봉인(`from_pilot_sha256` · 등록부 schema v3)과 다르면 막는다 → 상태 PILOT_NOT_SEALED (자동 교체 없음 · 재실행은 새 승인 대상).
+  P1-3 미완료 시도(rc ≠ 0 · 미종료)의 OUTCAR TITEL 이 기대 목록의 **정상 접두**(같은 순서·같은 문자열로 앞부분만)이면 결측이지 모순이 아니다 (r1 자격 유지) ·
+       다른 종·날짜·순서·추가 는 계속 모순(POTCAR_MISMATCH · r1 자격 없음) · 성공 시도의 접두만 은 미검증(POTCAR_UNVERIFIED · r1 자격 아님).
+  권고 1 에너지·Edisp 는 '레코드 존재' 와 '값' 을 분리 — 값이 빈 마지막 레코드도 마지막 레코드다 (None → 미검증 · 앞 값 안 씀) · 값 패턴이 줄을 넘지 않는다.
+  권고 2 반송 묶음·sha 둘 다 임시 파일로 완성한 뒤 승격 · sha 파일은 최종 이름으로 쓴다 (`sha256sum -c` 그대로 통과).
+  권고 3 등록부에 봉인 당시 파일럿 attempt.json·OUTCAR sha 를 기록(`from_pilot_sha256`)하고 최종 검사에서 대조.
+
 종료코드 (CLI)
   --check   : 0 전 잡 OK · 3 OK 아닌 잡 있음 · 2 승인본(MANIFEST)·등록부·사용법 오류
   --collect : 2 승인본·등록부 없음/오류·사용법 · 3 OK 아닌 잡 있음(무결성) · 0 G5 PASS · 10 G5 FAIL · 11 G5 INCOMPLETE/BLOCKED · 12 UMA 없음(G5 미평가)
@@ -47,6 +60,8 @@ v3 (Codex CF NO-GO 반영 · 2026-09-27)
   · D3 예산(0.005 · 0.001 J/m²)은 **운영 예산**이지 통계적 신뢰구간이 아니다 · 예산 통과가 "기준 D3 대비 오차 0" 을 뜻하지 않는다.
   · UMA 에너지를 계산하지 않는다 (`relax_uma_d3.py --energies` JSON 을 받는다) · 결과를 보고 표본·문턱·분모를 바꾸지 않는다.
   · 업체 기계의 시간·peak 메모리를 보장하지 않는다 — README 추정은 평면파·밴드 수에서 낸 대략값이다.
+  · 반송 묶음 허용 목록은 **파일 이름** 기준이다 — 허용 이름으로 바꿔 넣은 파일(예: POTCAR 본문을 stdout.log 로)은 못 거른다.
+  · 봉인 파일럿 결속(run_id · attempt.json·OUTCAR sha)은 실수(다른 폴더 재실행 · 파일 교체)를 잡는 것이지 위조 방어가 아니다.
 
 사용
   python3 tools/wad/build_v5_vasp_package.py --build --pkg db/inputs/wad_aprime_s3v2_2026_09_26 --out <패키지>
@@ -102,7 +117,10 @@ UMA_REQ = {"model": "uma-s-1p1", "task": "omat", "inference_settings": "default"
            "checkpoint_sha256": "07068e9c76702ca173d13155095f2117c1b327ec228557e64cd2709c777b824a",
            "fairchem_allowed": ("2.19.0", "2.21.0")}                # 2.21.0 = wad_aprime_s4_uma_env_xcheck_2026_09_26 (|Δ| ≤ 0.005 meV 등가)
 PILOT_JOBS = ("V5_s_outer_A_bound", "V5_s_outer_A_far")
-REG_SCHEMA = "aprime_v5_pp_registry/v2"
+REG_SCHEMA = "aprime_v5_pp_registry/v3"                              # v3 (CG): from_pilot_sha256 (봉인 당시 파일럿 attempt.json·OUTCAR sha) 필수
+RETURN_ALLOWED = ("OUTCAR", "OSZICAR", "INCAR", "KPOINTS", "POSCAR", "IBZKPT", "POTCAR.titel", "POTCAR.sha256", "POTCAR.species.sha256",
+                  "attempt.json", "stdout.log")                     # run/<잡>/ 에서 반송 묶음에 담는 파일 (허용 목록 · CG P1-1) — 이 밖은 담지 않는다
+RETURN_FORBIDDEN = ("POTCAR", "WAVECAR", "CHGCAR", "CHG", "vasprun.xml")   # 묶음에 있으면 안 되는 이름 — 러너는 보내지 않고(종료 4) 검사기는 보고한다
 RUN_ID_RE = re.compile(r"^\d{8}T\d{6}-\d+-\d+$")                    # 러너 형식: UTC 시각 - PID - RANDOM
 EV_J, A2_M2 = 1.602176634e-19, 1e-20
 HB2M = 3.80998212                                                   # ħ²/2mₑ [eV·Å²]
@@ -291,27 +309,35 @@ def d3_ref_eV(atoms):
 
 RUN_ALL = r'''#!/usr/bin/env bash
 # =============================================================================
-# run_all.sh (v3) — A′ V5 VASP 단일점 18 잡 · 잡마다 사전등록 재시도 INCAR.r1 최대 1 회 (최대 36 실행)
+# run_all.sh (v4) — A′ V5 VASP 단일점 18 잡 · 잡마다 사전등록 재시도 INCAR.r1 최대 1 회 (최대 36 실행)
 #   필수: VASP_CMD (예: "mpirun -np 128 vasp_std") · POTCAR_DIR (PAW_PBE 폴더: <POTCAR_DIR>/Li_sv/POTCAR · P · S · Cl · Ag)
 #   선택: PERF_TAGS_FILE — 한 줄에 대입 하나만 · 허용 NCORE/NPAR/KPAR/NSIM (양의 정수) · LPLANE/LSCALU/LSCALAPACK (.TRUE./.FALSE.)
 #         세미콜론·역슬래시·중복 태그·줄 끝 주석 금지 (VASP 는 ';' 뒤를 다른 설정으로 읽는다)
 #         JOBS="잡1 잡2" (일부만 — 파일럿: JOBS="V5_s_outer_A_bound V5_s_outer_A_far")
 #         PACK_ONLY=1 — 계산은 하지 않고 반송 묶음만 다시 만든다 (포장이 실패했을 때 · VASP_CMD·POTCAR_DIR 불필요)
-#   ⛔ INCAR·POSCAR·KPOINTS 를 고치지 마세요 · ⛔ POTCAR 는 반송하지 않습니다 (TITEL/ZVAL 줄 · sha256 만)
+#   ⛔ INCAR·POSCAR·KPOINTS 를 고치지 마세요 · ⛔ POTCAR 는 반송하지 않습니다 (TITEL/ZVAL 줄 · sha256 만) —
+#      반송 묶음은 **허용 목록**(RET_ALLOW)의 파일만 담습니다. 준비 실패·중단·PACK_ONLY 에서도 POTCAR 본문·WAVECAR·CHGCAR 는 들어가지 않고,
+#      혹시 들어가면 묶음을 만들지 않습니다 (종료 4).
 #   ⛔ 시도 폴더(run/<잡>, run/<잡>_r1)가 이미 있으면 그 잡은 돌지 않습니다 (원자적 mkdir). 재시도 상한은 잡마다 사전등록 1 회 —
-#      그 밖의 수동 재실행은 새 승인 없이는 하지 않습니다.
+#      그 밖의 수동 재실행은 새 승인 없이는 하지 않습니다. 파일럿 두 잡은 봉인한 그 실행 그대로 최종 반송에 포함합니다 (다시 돌리지 않습니다).
 #   종료코드: 0 전 잡 성공·포장 · 1 일부 잡 실패 (반송 묶음은 만든다 — 실패도 기록) · 2 패키지·성능 파일 오류 (아무것도 안 돈다)
 #             4 반송 포장 실패 (계산 결과는 run/ 에 그대로 — PACK_ONLY=1 로 포장만 다시)
 # =============================================================================
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd); cd "$HERE"
 sha256sum -c --quiet MANIFEST.sha256 || { echo "⛔ 패키지 파일이 MANIFEST 와 다르다 — 실행하지 않는다"; exit 2; }
-pack(){  # 임시 파일에 쓰고 성공해야 승격 — 옛 묶음과 섞이지 않게
-  rm -f V5_vasp_return.tgz.part V5_vasp_return.tgz.sha256.part
-  tar czf V5_vasp_return.tgz.part run MANIFEST.sha256 || return 1
-  mv -f V5_vasp_return.tgz.part V5_vasp_return.tgz || return 1
-  sha256sum V5_vasp_return.tgz > V5_vasp_return.tgz.sha256.part || return 1
-  mv -f V5_vasp_return.tgz.sha256.part V5_vasp_return.tgz.sha256 || return 1
+RET_ALLOW='@RET_ALLOW@'    # run/<잡>/ 아래에서 반송하는 파일 이름 (이 밖은 담지 않는다)
+RET_FORBID='@RET_FORBID@'  # 묶음 구성원에 있으면 안 되는 이름 (POTCAR 본문 등) — 있으면 보내지 않는다
+pack(){  # 허용 목록으로 구성원을 모아 임시 파일에 쓰고, 구성원 검사·sha 까지 끝나야 둘 다 승격 (옛 묶음·옛 sha 가 섞이지 않게)
+  rm -f V5_vasp_return.tgz.part V5_vasp_return.tgz.sha256.part V5_vasp_return.list
+  { echo MANIFEST.sha256; for f in run/env.txt run/status.tsv; do [ -f "$f" ] && echo "$f"; done
+    find run -mindepth 2 -maxdepth 2 -type f | grep -E "^run/[^/]+/($RET_ALLOW)$" | LC_ALL=C sort; } > V5_vasp_return.list
+  [ -s V5_vasp_return.list ] || return 1
+  tar czf V5_vasp_return.tgz.part -T V5_vasp_return.list || return 1
+  if tar tzf V5_vasp_return.tgz.part | grep -Eq "(^|/)($RET_FORBID)$"; then echo "⛔ 반송 묶음에 금지 파일(POTCAR 본문 등)이 들어갔다 — 보내지 않는다"; return 1; fi
+  h=$(sha256sum V5_vasp_return.tgz.part | cut -d' ' -f1); [ -n "$h" ] || return 1
+  printf '%s  V5_vasp_return.tgz\n' "$h" > V5_vasp_return.tgz.sha256.part || return 1
+  mv -f V5_vasp_return.tgz.part V5_vasp_return.tgz && mv -f V5_vasp_return.tgz.sha256.part V5_vasp_return.tgz.sha256
 }
 if [ "${PACK_ONLY:-0}" = 1 ]; then
   [ -d run ] || { echo "⛔ run/ 이 없다 — 포장할 것이 없다"; exit 2; }
@@ -353,7 +379,7 @@ run_one(){  # $1 잡 · $2 시도(0|r1) · $3 INCAR 파일 → 0 성공 · 1 실
   : > "$d/POTCAR"; : > "$d/POTCAR.species.sha256"
   while read -r p; do
     [ -n "$p" ] || continue
-    [ -f "$POTCAR_DIR/$p/POTCAR" ] || { echo "⛔ POTCAR $p 없음"; return 3; }
+    [ -f "$POTCAR_DIR/$p/POTCAR" ] || { echo "⛔ POTCAR $p 없음"; rm -f "$d/POTCAR"; return 3; }   # 조립 중이던 부분 본문도 지운다
     cat "$POTCAR_DIR/$p/POTCAR" >> "$d/POTCAR"; printf "%s %s\n" "$p" "$(h "$POTCAR_DIR/$p/POTCAR")" >> "$d/POTCAR.species.sha256"
   done < "jobs/$job/POTCAR.spec"
   grep -E "TITEL|ZVAL|VRHFIN|LEXCH" "$d/POTCAR" > "$d/POTCAR.titel"; h "$d/POTCAR" > "$d/POTCAR.sha256"
@@ -388,13 +414,18 @@ exit "$fail"
 '''
 
 
+def run_all_text():
+    """배포 run_all.sh 본문 — 허용/금지 파일 목록을 파이썬 상수에서 채운다 (검사기와 같은 목록)."""
+    return RUN_ALL.replace("@RET_ALLOW@", "|".join(re.escape(x) for x in RETURN_ALLOWED)).replace("@RET_FORBID@", "|".join(re.escape(x) for x in RETURN_FORBIDDEN))
+
+
 def _readme(jobs, est, pkg_sha):
     rows = "\n".join(f"| `{j['dir']}` | {j['role']} | {j['nions']} | {j['nelect_expected']:.0f} | {'×'.join(f'{x:.3f}' for x in j['cell_A'])} | "
                      f"{j['encut']:.0f} | {'×'.join(map(str, j['kpts']))} | {j['sigma']:.3f} |" for j in jobs)
     pp = " · ".join(f"{POTCAR_MAP[s]} (`{PP_EXPECTED_TITEL[s]}`)" for s in SPECIES_ORDER)
-    return f"""# A′ V5 — VASP 단일점 외주 패키지 v3 (LPSCl | Ag(111) 작은 주기 계면)
+    return f"""# A′ V5 — VASP 단일점 외주 패키지 v4 (LPSCl | Ag(111) 작은 주기 계면)
 
-> 상태: **준비본 (실행 미정)** · Codex CE·CF NO-GO 반영판 · 재리뷰 전 · 결정 `D-2026-09-27-wad-aprime-v5-vasp-route` **proposed**
+> 상태: **준비본 (실행 미정)** · Codex CE·CF·CG NO-GO 반영판 · 재리뷰 전 · 결정 `D-2026-09-27-wad-aprime-v5-vasp-route` **proposed**
 > 원본: 봉인 S3v2 패키지 (구조 파일 sha 결박) · 이 패키지 MANIFEST.sha256 의 sha256 = `{pkg_sha}` (보낼 때 메일 본문에 적는다 — 반송 검사가 이 값으로 승인본을 확인한다)
 
 ## 무엇을 하나
@@ -408,14 +439,16 @@ PBE+D3(BJ) **단일점(SCF) 18 개** — 이완 없음. 좌표는 이미 정해�
 1. **파일럿 2 잡 먼저** (표본 ① 두 끝점 · 반송해 주세요): `JOBS="V5_s_outer_A_bound V5_s_outer_A_far" VASP_CMD="mpirun -np <N> vasp_std" POTCAR_DIR=<PAW_PBE> bash run_all.sh`
    — 파일럿 전에 VASP 버전·PP 세트·설정·파서·실패 규칙은 고정돼 있습니다. 파일럿의 W 값을 보고 설정을 바꾸지 않습니다.
 2. 확인 연락을 받으면 **나머지 16 잡**: `JOBS="<16 잡>" ... bash run_all.sh` (파일럿 두 잡은 이 패키지 sha 그대로라면 **재사용** — 다시 돌리지 않습니다).
-   파일럿 뒤에 VASP 입력이 바뀌어야 하면 새 패키지 버전이 나가고, 파일럿은 구판 진단으로만 남습니다.
+   최종 반송에는 파일럿 두 잡의 폴더가 **봉인한 그 실행 그대로**(run_id · attempt.json · OUTCAR) 들어 있어야 합니다 — 다른 폴더에서 다시 돌린 파일럿이 오면
+   최종 집계가 그 잡을 막습니다 (재실행은 새 승인). 파일럿 뒤에 VASP 입력이 바뀌어야 하면 새 패키지 버전이 나가고, 파일럿은 구판 진단으로만 남습니다.
 3. 성능 태그는 `PERF_TAGS_FILE=perf.txt` 로만 — **한 줄에 대입 하나**, 허용: NCORE NPAR KPAR NSIM (양의 정수) · LPLANE LSCALU LSCALAPACK (.TRUE./.FALSE.).
    세미콜론(;) · 역슬래시(\\) · 같은 태그 두 번 · 줄 끝 주석은 거부됩니다. **INCAR·POSCAR·KPOINTS 는 고치지 마세요.**
 4. 시도 폴더 `run/<잡>` 이 이미 있으면 러너가 그 잡을 **돌리지 않습니다** (지난 출력 재사용 방지). 재시도 상한은 잡마다 사전등록 1 회이고,
    **그 밖의 수동 재실행은 새 승인 없이는 하지 않습니다** — 필요해 보이면 먼저 연락 주세요.
 5. 한 잡이 실행 실패·미종료·미수렴이면 러너가 미리 정한 재시도(INCAR.r1 · AMIX 0.1 · BMIX 0.01 · NELM 300)를 **한 번만** 합니다.
    그래도 안 되면 그 잡은 비워 둡니다 — 다른 설정으로 더 돌리지 마세요. 실행 상한 = 18 × 2 = **36 회** (파일럿 재사용 시).
-6. 반송 묶음 포장(tar · sha256)이 실패하면 러너가 **종료코드 4** 로 끝나고 계산 결과는 `run/` 에 그대로 남습니다.
+6. 반송 묶음은 러너가 **허용 목록**(아래 '돌려받을 것')의 파일만 담습니다 — POTCAR 본문 · WAVECAR · CHGCAR 는 준비 실패·중단·`PACK_ONLY` 에서도
+   들어가지 않고, 혹시 들어가면 묶음을 만들지 않습니다 (종료코드 4). 포장(tar · sha256)이 실패해도 **종료코드 4** 이고 계산 결과는 `run/` 에 그대로 남습니다.
    계산을 다시 돌리지 말고 `PACK_ONLY=1 bash run_all.sh` 로 **포장만** 다시 해 주세요.
    러너 종료코드: 0 전 잡 성공 · 1 일부 잡 실패 (묶음은 만듦 — 실패도 반송) · 2 패키지·성능 파일 오류 (아무것도 안 돎) · 4 포장 실패.
 
@@ -427,9 +460,10 @@ PBE+D3(BJ) **단일점(SCF) 18 개** — 이완 없음. 좌표는 이미 정해�
   POTCAR 파일은 **보내지 마세요** — 러너가 TITEL/ZVAL/LEXCH 줄 · 종별 sha256 · 조립본 sha256 만 남깁니다.
 
 ## 돌려받을 것
-`V5_vasp_return.tgz` + `.sha256` (러너가 만듭니다): 시도마다 OUTCAR · OSZICAR · INCAR(실행본) · KPOINTS · POSCAR · POTCAR.titel · POTCAR.sha256 · POTCAR.species.sha256 · attempt.json · stdout.log
-· `run/status.tsv` · `run/env.txt`. VASP 버전·빌드·컴파일러·노드/코어 수·**잡별 peak RSS·벽시계** 를 `run/env.txt` 에 한 줄씩 덧붙여 주세요.
-실패한 잡도 폴더째 보내 주세요 (실패도 기록입니다).
+`V5_vasp_return.tgz` + `.sha256` (러너가 만듭니다 — 허용 목록만): 시도마다 {' · '.join(RETURN_ALLOWED)} (있는 것만)
+· `run/status.tsv` · `run/env.txt` · `MANIFEST.sha256`. 이 밖의 파일({' · '.join(RETURN_FORBIDDEN)} · EIGENVAL · DOSCAR 등)은 묶음에 넣지 않습니다.
+VASP 버전·빌드·컴파일러·노드/코어 수·**잡별 peak RSS·벽시계** 를 `run/env.txt` 에 한 줄씩 덧붙여 주세요.
+실패한 잡도 폴더째 보내 주세요 (실패도 기록입니다). 묶음은 러너로만 만들어 주세요 (손으로 tar 하면 POTCAR 본문이 섞일 수 있습니다).
 
 ## 규모 (대략 · 우리 추정 — 견적은 파일럿 벽시계·peak RSS 로)
 NIONS 176–200 · NELECT {est['nel_min']:.0f}–{est['nel_max']:.0f} · 기본 NBANDS ~{est['nb_max']} · 평면파 최대 ~{est['npw_520']:,}/k (ENCUT 520) · ~{est['npw_650']:,}/k (ENCUT 650 · G4 변형 2 잡)
@@ -442,7 +476,10 @@ the pilot and the main batch must use the same VASP build. ENCUT 520 eV (650 eV 
 PBE-BJ parameters and explicit VDW_RADIUS/VDW_CNRADIUS; dipole correction along z (LDIPOL, IDIPOL 3, DIPOL given). Run the two pilot jobs first and
 return them. Do not edit INCAR/POSCAR/KPOINTS (performance tags only via PERF_TAGS_FILE, one assignment per line, no ';'); existing attempt folders
 are never overwritten; one pre-registered retry per job (max 36 runs) and no other manual reruns without approval; if packaging fails (exit 4)
-rerun with PACK_ONLY=1 to repackage only. Do not send POTCAR files. Please report VASP version/build and per-job peak RSS and wall time.
+rerun with PACK_ONLY=1 to repackage only. The runner packs only an allow-list of files ({', '.join(RETURN_ALLOWED)}, status.tsv, env.txt,
+MANIFEST.sha256) — POTCAR bodies, WAVECAR and CHGCAR are never included (exit 4 if they would be); please do not tar by hand. The two pilot job folders
+must be returned unchanged in the final bundle (same run_id / attempt.json / OUTCAR as sealed); a re-run pilot is rejected at collection. Do not send
+POTCAR files. Please report VASP version/build and per-job peak RSS and wall time.
 """
 
 
@@ -497,9 +534,9 @@ def build(pkg, out):
     est = {"nel_min": min(e["NELECT"] for e in E), "nel_max": max(e["NELECT"] for e in E), "nb_max": max(e["NBANDS_default"] for e in E),
            "npw_520": max(e["NPW_per_k"] for e in E if e["ENCUT_eV"] == ENCUT_BASE), "npw_650": max((e["NPW_per_k"] for e in E if e["ENCUT_eV"] == ENCUT_G4E), default=0),
            "wfc_max": max(e["wfc_only_GB_all_k"] for e in E), "max_runs": 2 * len(jobs)}
-    _write(os.path.join(out, "run_all.sh"), RUN_ALL); os.chmod(os.path.join(out, "run_all.sh"), 0o755)
+    _write(os.path.join(out, "run_all.sh"), run_all_text()); os.chmod(os.path.join(out, "run_all.sh"), 0o755)
     _write(os.path.join(out, "JOBS.txt"), "\n".join(x["dir"] for x in jobs) + "\n")
-    meta = {"schema": "aprime_v5_vasp_package/v3", "date": "2026-09-27", "status": "준비본 v3 (Codex CE·CF NO-GO 반영 · 재리뷰 전 · 결정 proposed · 실행 미정)",
+    meta = {"schema": "aprime_v5_vasp_package/v4", "date": "2026-09-27", "status": "준비본 v4 (Codex CE·CF·CG NO-GO 반영 · 재리뷰 전 · 결정 proposed · 실행 미정)",
             "source_package": pkg, "source_s3_manifest_sha256": qe["s3_manifest_sha256"], "source_seal": "db/properties/wad_aprime_s3v2_seal_2026_09_26.json",
             "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json", "amendment": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json",
             "tool_sha256": _sha(os.path.abspath(__file__)),
@@ -508,7 +545,7 @@ def build(pkg, out):
                          "d3_ref": "simple-dftd3 2체 · VASP 절단에 맞춤", "perf_tags_int": PERF_INT, "perf_tags_bool": PERF_BOOL, "rescue": RESCUE,
                          "r1_eligible": R1_ELIGIBLE, "d3_gross_rel_tol": D3_REL_TOL, "d3_pair_budget_J_m2": D3_PAIR_BUDGET, "d3_g3_budget_J_m2": D3_G3_BUDGET,
                          "d3_same_geom_tol_eV": D3_SAME_GEOM_TOL_EV, "dipol_cut_grid_tol": DIPOL_CUT_GRID_TOL, "uma_required": UMA_REQ, "pilot_jobs": PILOT_JOBS,
-                         "pp_registry_schema": REG_SCHEMA},
+                         "pp_registry_schema": REG_SCHEMA, "return_allowed": RETURN_ALLOWED, "return_forbidden": RETURN_FORBIDDEN},
             "G5_samples": {k: list(v) for k, v in G5_SAMPLES.items()}, "G5_groups": {k: list(v) for k, v in G5_GROUPS.items()}, "estimate": est, "jobs": jobs}
     _write(os.path.join(out, "jobs.json"), json.dumps(meta, ensure_ascii=False, indent=1, allow_nan=False))
     lines = []
@@ -547,9 +584,12 @@ def verify_manifest(out, expected_sha256):
 
 
 def return_manifest_info(ret, pinned):
-    """반송 묶음에 들어 있는 MANIFEST.sha256 (러너가 실행 때 쓴 것) 이 고정값과 같은가 — 정보 (입력 대조가 이미 결박한다)."""
+    """반송 묶음에 들어 있는 MANIFEST.sha256 (러너가 실행 때 쓴 것) 이 고정값과 같은가 — 정보 (입력 대조가 이미 결박한다).
+    + 반송 폴더에 금지 파일(POTCAR 본문 · WAVECAR · CHGCAR · CHG · vasprun.xml)이 있으면 목록으로 보고한다 (CG P1-1 · 판정 아님 — 저장하지 말고 지우라는 신호)."""
     p = os.path.join(ret, "MANIFEST.sha256")
-    return {"present": os.path.isfile(p), "matches_pinned": (_sha(p) == str(pinned).lower()) if os.path.isfile(p) else None}
+    run = os.path.join(ret, "run") if os.path.isdir(os.path.join(ret, "run")) else ret
+    forb = sorted(os.path.relpath(os.path.join(r_, f), ret).replace(os.sep, "/") for r_, _, fs in os.walk(run) for f in fs if f in RETURN_FORBIDDEN) if os.path.isdir(run) else []
+    return {"present": os.path.isfile(p), "matches_pinned": (_sha(p) == str(pinned).lower()) if os.path.isfile(p) else None, "forbidden_files": forb}
 
 
 # ───────────────────────── OUTCAR 판독 ─────────────────────────
@@ -600,10 +640,11 @@ def parse_outcar(text):
         if fpos is None or tok is None or pos < fpos:        # 마지막 레코드가 최종 구획 뒤가 아니면 (SCF 단계 값 · D3 빠짐) 쓰지 않는다
             return None
         return _tok_float(tok)
-    r["TOTEN_eV"] = final_energy(r"free\s+energy\s+TOTEN\s*=\s*(\S+)")
-    r["E_sigma0_eV"] = final_energy(r"energy\(sigma->0\)\s*=\s*(\S+)")
-    r["E_noentropy_eV"] = final_energy(r"energy\s+without\s+entropy\s*=\s*(\S+)")
-    tok, _ = _last_rec(r"Edisp\s*(?:\(eV\))?\s*[:=]?\s*(\S+)", body)
+    # 레코드 = 머리말('TOTEN =' 등) · 값 = 같은 줄의 다음 토큰 (없으면 빈 값 → None). 값 패턴이 줄을 넘지 않는다 — 값이 빈 마지막 레코드도 마지막 레코드다 (CG 권고 1).
+    r["TOTEN_eV"] = final_energy(r"free[ \t]+energy[ \t]+TOTEN[ \t]*=[ \t]*(\S*)")
+    r["E_sigma0_eV"] = final_energy(r"energy\(sigma->0\)[ \t]*=[ \t]*(\S*)")
+    r["E_noentropy_eV"] = final_energy(r"energy[ \t]+without[ \t]+entropy[ \t]*=[ \t]*(\S*)")
+    tok, _ = _last_rec(r"Edisp[ \t]*(?:\(eV\))?[ \t]*[:=]?[ \t]*(\S*)", body)
     r["Edisp_eV"] = _tok_float(tok)
     num = lambda pat: _tok_float(_last(pat, body))
     s = {}
@@ -717,6 +758,7 @@ def check_job(job, pkgdir, attdir, attempt="0", pp_registry=None):
         if (a["sha256"].get(f) or "") != (_sha(p) if os.path.isfile(p) else ""):
             return done("ATTEMPT_MISMATCH", f"{f} 가 실행 기록(attempt.json)과 다르다 — 실행 뒤 바뀌었거나 생겼거나 없어진 파일")
     r["run_id"], r["rc"] = rid, rc
+    r["attempt_json_sha256"], r["outcar_sha256"] = _sha(os.path.join(attdir, "attempt.json")), str(a["sha256"].get("OUTCAR") or "")   # 파일럿 봉인 결속용 (CG P1-2 · 권고 3)
     for f in ("POSCAR", "KPOINTS"):
         if _sha(os.path.join(attdir, f)) != job["files_sha256"][f]:
             return done("INPUT_MODIFIED", f)
@@ -748,8 +790,12 @@ def check_job(job, pkgdir, attdir, attempt="0", pp_registry=None):
     exp_t = [pp_registry["titel"][p] for p in job["potcar_spec"]] if pp_registry else job["pp_expected_titel"]
     if titel != exp_t or [round(x, 3) for x in zv] != [round(x, 3) for x in job["zval_expected"]]:
         conflicts.append(("POTCAR_MISMATCH", f"POTCAR.titel TITEL {titel} · ZVAL {zv} (기대 {exp_t})"))
-    if o and o["outcar_titel"] and o["outcar_titel"] != titel:
-        conflicts.append(("POTCAR_MISMATCH", f"OUTCAR TITEL {o['outcar_titel']} ≠ POTCAR.titel {titel}"))
+    # OUTCAR TITEL (CG P1-3): 기대 목록의 **정상 접두**(같은 순서·같은 문자열로 앞부분만)는 잘린 출력의 결측이지 모순이 아니다 — 성공 시도면 아래 ③ 에서 미검증으로 막힌다.
+    # 접두가 아닌 것(다른 종·날짜·순서 · 기대 뒤에 추가)은 모순이다.
+    ot = o["outcar_titel"] if o else []
+    titel_prefix_only = bool(ot) and ot != titel and len(ot) < len(titel) and titel[:len(ot)] == ot
+    if ot and ot != titel and not titel_prefix_only:
+        conflicts.append(("POTCAR_MISMATCH", f"OUTCAR TITEL {ot} ≠ POTCAR.titel {titel} (접두 아님 — 다른 종·날짜·순서·추가)"))
     if pp_registry:
         if any(pp_registry["species_sha256"].get(k) != v for k, v in r["potcar_species_sha256"].items()):
             conflicts.append(("POTCAR_MISMATCH", "봉인 등록부의 종별 sha 와 다르다"))
@@ -780,6 +826,8 @@ def check_job(job, pkgdir, attdir, attempt="0", pp_registry=None):
     r["settings_sources"] = src
     if not o["outcar_titel"]:
         return done("POTCAR_UNVERIFIED", "OUTCAR 에 TITEL 이 없다")
+    if titel_prefix_only:
+        return done("POTCAR_UNVERIFIED", f"성공한 실행인데 OUTCAR TITEL 이 기대 목록의 앞부분만 있다 {ot} (불완전 출력 — 통과 아님 · 재시도 자격 아님)")
     if any(k in missing for k in ("NIONS", "NELECT")):
         return done("SYSTEM_UNVERIFIED", f"OUTCAR 에 {missing} 없음")
     if missing:
@@ -817,6 +865,10 @@ def validate_pp_registry(reg, manifest_sha256, meta=None):
     fp = reg.get("from_pilot")
     if not (isinstance(fp, dict) and set(fp) == set(PILOT_JOBS) and all(isinstance(v, str) and RUN_ID_RE.match(v) for v in fp.values())):
         e.append("from_pilot (파일럿 두 잡의 run_id)")
+    fps = reg.get("from_pilot_sha256")
+    if not (isinstance(fps, dict) and set(fps) == set(PILOT_JOBS)
+            and all(isinstance(v, dict) and set(v) == {"attempt.json", "OUTCAR"} and all(isinstance(h, str) and HEX64.match(h) for h in v.values()) for v in fps.values())):
+        e.append("from_pilot_sha256 (파일럿 두 잡의 봉인 당시 attempt.json · OUTCAR sha)")
     return e
 
 
@@ -860,6 +912,18 @@ def check(out, ret, manifest_sha256, pp_registry=None):
             r["status"] = "POTCAR_INCONSISTENT"; r["why"] = f"시도 사이 POTCAR sha 가 갈린다: {incons}"
         elif len(vers) > 1:
             r["status"] = "VERSION_INCONSISTENT"; r["why"] = f"시도 사이 VASP 버전 줄이 갈린다: {sorted(vers)}"
+    # 파일럿 결속 (CG P1-2 · 권고 3): 등록부가 있으면 파일럿 두 잡의 **채택 시도**(0 또는 정당한 r1)가 봉인한 그 실행이어야 한다 — run_id · attempt.json·OUTCAR sha.
+    # 다르면 자동 교체 없이 막는다 (다른 폴더에서 다시 돌린 파일럿 · 같은 ID 아래 파일 교체) — 재실행은 새 승인 대상.
+    if pp_registry is not None:
+        for p in PILOT_JOBS:
+            r = res.get(p)
+            if not r or r["status"] != "OK":
+                continue
+            want, ws = pp_registry["from_pilot"][p], pp_registry["from_pilot_sha256"][p]
+            if r.get("run_id") != want:
+                r["status"] = "PILOT_NOT_SEALED"; r["why"] = f"채택 시도 run_id {r.get('run_id')} ≠ 봉인 {want} — 봉인한 파일럿 실행이 아니다 (자동 교체 없음 · 재실행은 새 승인)"
+            elif r.get("attempt_json_sha256") != ws["attempt.json"] or r.get("outcar_sha256") != ws["OUTCAR"]:
+                r["status"] = "PILOT_NOT_SEALED"; r["why"] = "같은 run_id 인데 attempt.json·OUTCAR sha 가 봉인과 다르다 — 봉인 뒤 파일이 바뀌었다"
     return meta, res
 
 
@@ -889,7 +953,9 @@ def seal_pp(out, ret, manifest_sha256):
     if len(vers) != 1:
         raise PkgError(f"파일럿 두 잡의 VASP 버전 줄이 다르다: {sorted(vers)}")
     reg = {"schema": REG_SCHEMA, "pp_set": PP_SET, "titel": titel, "species_sha256": sp_sha, "assembled_sha256": asm, "vasp_version": vers.pop(),
-           "from_pilot": {n: ok[n].get("run_id") for n in PILOT_JOBS}, "package_manifest_sha256": str(manifest_sha256).lower(),
+           "from_pilot": {n: ok[n].get("run_id") for n in PILOT_JOBS},
+           "from_pilot_sha256": {n: {"attempt.json": ok[n].get("attempt_json_sha256"), "OUTCAR": ok[n].get("outcar_sha256")} for n in PILOT_JOBS},
+           "package_manifest_sha256": str(manifest_sha256).lower(),
            "pilot_settings_sources": {n: ok[n].get("settings_sources") for n in PILOT_JOBS},
            "⛔": "이 등록부를 봉인(커밋·해시 기록)한 뒤 나머지 16 잡을 받는다 — 이후 모든 잡이 같아야 한다 · 최종 집계는 이 파일과 그 sha 가 필수"}
     errs = validate_pp_registry(reg, manifest_sha256, meta)
@@ -1153,6 +1219,8 @@ fj = {"nions": sum(nn), "nelect_expected": sum(z * n for z, n in zip(zv, nn)), "
 conv = not (mode == "noconv_unless_amix" and "AMIX" not in inc)
 B._write("OUTCAR", B._fake_outcar(fj, -1000.0 - 0.01 * len(job), ref, conv=conv, term=(mode != "noterm")))
 B._write("OSZICAR", "DAV:   1\n" * 10)
+for f in ("WAVECAR", "CHGCAR", "CHG", "vasprun.xml", "IBZKPT", "EIGENVAL"):   # 실물처럼 큰 산출물도 쓴다 — 묶음 허용 목록 시험용
+    B._write(f, f"FAKE {f} DO_NOT_SHIP\n")
 sys.exit(1 if mode == "rc1" else 0)
 '''
 
@@ -1223,6 +1291,14 @@ def _selftest():
                                                "  energy  without entropy=  -12.10000000  energy(sigma->0) =  -12.05000000\n")
     ck(p1["TOTEN_eV"] is None and p1["E_sigma0_eV"] is None and p1["E_noentropy_eV"] is None and p2["TOTEN_eV"] == -12.0 and p2["E_sigma0_eV"] == -12.05,
        "SCF 단계 레코드만 있으면 에너지 None (D3 빠진 값을 안 씀) · 최종 FREE ENERGIE 구획 뒤 값만 쓴다")
+    fb = ("  FREE ENERGIE OF THE ION-ELECTRON SYSTEM (eV)\n  free  energy   TOTEN  =  -12.00000000 eV\n"
+          "  energy  without entropy=  -12.10000000  energy(sigma->0) =  -12.05000000\n Edisp (eV)  -1.5\n")
+    pe = parse_outcar(fb + "  free  energy   TOTEN  =\n")
+    ck(pe["TOTEN_eV"] is None and pe["E_sigma0_eV"] == -12.05 and pe["E_noentropy_eV"] == -12.1,
+       "⛔음성 CG 권고 1: 정상 뒤 EOF 의 빈 'TOTEN =' 도 마지막 레코드 → None (앞 값 안 씀 · 다른 항목은 그대로)")
+    ck(parse_outcar(fb + "  energy(sigma->0) =\n")["E_sigma0_eV"] is None and parse_outcar(fb + "  energy  without entropy=\n")["E_noentropy_eV"] is None
+       and parse_outcar(fb + " Edisp (eV)\n")["Edisp_eV"] is None and parse_outcar(fb + " Edisp (eV)\n  FREE ENERGIE\n")["Edisp_eV"] is None,
+       "⛔음성 CG 권고 1: 빈 σ→0 · 무엔트로피 · Edisp 레코드 → None · 값 패턴이 다음 줄의 토큰을 집지 않는다")
     eo = parse_outcar(" INCAR:\n   ENCUT = 400\n   DIPOL = 0.5 0.5 0.1\n POTCAR:    PAW_PBE X\n Startparameter for this run:\n   ENCUT  =  520.0 eV  x\n")
     ck(eo["settings"]["ENCUT"] == 520.0 and eo["settings"]["DIPOL_z"] is None and eo["incar_echo_lines_excluded"] == 2
        and parse_outcar(" INCAR:\n   ENCUT = 520 eV\n POTCAR:    PAW_PBE X\n")["settings"]["ENCUT"] is None, "INCAR 에코 구획은 설정 판독에서 뺀다 (에코에만 있으면 None)")
@@ -1272,9 +1348,11 @@ def _selftest():
             E[f"V5_s_outer_A_G4_{t4}_far"] = E[f"V5_s_outer_A_G4_{t4}_bound"] + dE(w)
         ED = {n: REF[n] for n in J}
         SPSHA = {p: hashlib.sha256(p.encode()).hexdigest() for p in POTCAR_MAP.values()}
-        rid_n = [0]
-        def mk(n, att="0", *, outcar=None, incar_extra="", incar=None, rc=0, titel=None, spsha=None, psha_override=None, drop=(), no_out=False,
+        PERF_OK = "NCORE = 16\nKPAR = 2\nLPLANE = .TRUE.\n"                     # 기본 시도 = 허용 성능 태그 3 개 붙은 정상 실행
+        JI = {n: i + 1 for i, n in enumerate(sorted(J))}
+        def mk(n, att="0", *, outcar=None, incar_extra=PERF_OK, incar=None, rc=0, titel=None, spsha=None, psha_override=None, drop=(), no_out=False,
                tamper_after=None, **kw):
+            # run_id 는 잡·시도마다 고정 — 같은 내용으로 다시 만들면 같은 실행 기록이 된다 (파일럿 봉인 결속 시험이 이 성질을 쓴다)
             j = J[n]; d = os.path.join(run, n if att == "0" else n + "_r1"); shutil.rmtree(d, ignore_errors=True); os.makedirs(d)
             src = os.path.join(out, "jobs", n)
             for f in ("POSCAR", "KPOINTS"):
@@ -1290,8 +1368,7 @@ def _selftest():
             psha = psha_override or hashlib.sha256("".join(sp_[p] for p in j["potcar_spec"]).encode()).hexdigest()
             _write(os.path.join(d, "POTCAR.sha256"), psha + "\n")
             shas = {f: (_sha(os.path.join(d, f)) if os.path.isfile(os.path.join(d, f)) else "") for f in ("INCAR", "POSCAR", "KPOINTS", "OUTCAR", "OSZICAR")}
-            rid_n[0] += 1
-            _write(os.path.join(d, "attempt.json"), json.dumps({"job": n, "attempt": att, "run_id": f"20260927T120000-4242-{rid_n[0]}", "rc": rc,
+            _write(os.path.join(d, "attempt.json"), json.dumps({"job": n, "attempt": att, "run_id": f"20260927T120000-4242-{JI[n]}{1 if att == 'r1' else 0}", "rc": rc,
                                                               "t_start": 1000, "t_end": 1100, "sha256": {**shas, "POTCAR": psha}}))
             for f in drop:
                 os.remove(os.path.join(d, f))
@@ -1309,12 +1386,14 @@ def _selftest():
         def st(n, reg=None):
             return check(out, ret, msha, reg)[1][n]["status"]
         for n in J:
-            mk(n, incar_extra="NCORE = 16\nKPAR = 2\nLPLANE = .TRUE.\n")
+            mk(n)
         _, res = check(out, ret, msha)
         ck(all(v["status"] == "OK" for v in res.values()) and check_exit(res) == 0,
            f"정상 대조군: 18 잡 OK (성능 태그 3 개 허용 · DIPOL 은 min pos cut 으로) — {[(n, v['status'], v.get('why')) for n, v in res.items() if v['status'] != 'OK'][:3]}")
         reg_ok = seal_pp(out, ret, msha)
-        ck(not validate_pp_registry(reg_ok, msha, meta) and reg_ok["from_pilot"][PILOT_JOBS[0]].startswith("20260927T"), "seal_pp: 등록부 생성 · 스스로 검증 통과")
+        ck(not validate_pp_registry(reg_ok, msha, meta) and reg_ok["from_pilot"][PILOT_JOBS[0]].startswith("20260927T")
+           and reg_ok["schema"] == "aprime_v5_pp_registry/v3" and all(HEX64.match(reg_ok["from_pilot_sha256"][p][k]) for p in PILOT_JOBS for k in ("attempt.json", "OUTCAR")),
+           "seal_pp: 등록부 생성 (schema v3 · 파일럿 run_id + attempt.json·OUTCAR sha) · 스스로 검증 통과")
         uma = {"schema": "uma_energies/v1", "calculator": {"model": "uma-s-1p1", "task": "omat", "inference_settings": "default", "fairchem.core": "2.21.0",
                "checkpoint": [{"sha256": UMA_REQ["checkpoint_sha256"]}]}, "energies": {}}
         dD3 = {k: (REF[f] - REF[b]) * EV_J / (A * A2_M2) for k, (b, f) in G5_SAMPLES.items()}
@@ -1432,7 +1511,9 @@ def _selftest():
         bads = {"빈 객체": {}, "schema": {**reg_ok, "schema": "nonsense"}, "MANIFEST": {**reg_ok, "package_manifest_sha256": "0" * 64},
                 "버전 없음": {k: v for k, v in reg_ok.items() if k != "vasp_version"}, "조립본 없음": {k: v for k, v in reg_ok.items() if k != "assembled_sha256"},
                 "run_id": {**reg_ok, "from_pilot": {PILOT_JOBS[0]: "x", PILOT_JOBS[1]: reg_ok["from_pilot"][PILOT_JOBS[1]]}},
-                "TITEL": {**reg_ok, "titel": {**reg_ok["titel"], "Ag": "PAW_PBE Ag 06Sep2000"}}, "pp_set": {**reg_ok, "pp_set": "PBE_64"}}
+                "TITEL": {**reg_ok, "titel": {**reg_ok["titel"], "Ag": "PAW_PBE Ag 06Sep2000"}}, "pp_set": {**reg_ok, "pp_set": "PBE_64"},
+                "파일럿 sha 없음 (v2 등록부)": {k: v for k, v in reg_ok.items() if k != "from_pilot_sha256"},
+                "파일럿 sha 형식": {**reg_ok, "from_pilot_sha256": {**reg_ok["from_pilot_sha256"], PILOT_JOBS[1]: {"attempt.json": "x", "OUTCAR": "y"}}}}
         for why, rg in bads.items():
             ck(raises(lambda rg=rg: check(out, ret, msha, rg)) and raises(lambda rg=rg: collect(out, ret, msha, uma, rg, "f" * 64)),
                f"⛔음성 CF P0-2 틀린 등록부({why}) → 검사·집계 시작 안 함 (PkgError)")
@@ -1543,6 +1624,53 @@ def _selftest():
         mk(F_, tamper_after=lambda d: edit_attempt(d, run_id=None))
         ck(raises(lambda: seal_pp(out, ret, msha)), "⛔음성 파일럿 run_id 없으면 등록부를 안 만든다 (연결 정보 필수)")
         mk(F_)
+        # ⑲ CG P1-2 · 권고 3 — 봉인 파일럿 결속: 최종 검사·집계에서 파일럿 채택 시도의 run_id · attempt.json/OUTCAR sha 가 등록부와 같아야 한다
+        sealed_id = reg_ok["from_pilot"][F_]
+        mk(F_, tamper_after=lambda d: edit_attempt(d, run_id="20260928T120000-99-456"))
+        r19 = check(out, ret, msha, reg_ok)[1][F_]
+        ck(r19["status"] == "PILOT_NOT_SEALED" and "run_id" in r19["why"] and st(F_) == "OK",
+           f"⛔음성 CG P1-2 반송 파일럿의 run_id 를 다음 날 실행 ID 로 교체 → PILOT_NOT_SEALED (등록부 없이는 OK 인 정상 출력 · 리뷰어 재현: PASS 였다) — {r19['status']}")
+        rr19 = C()
+        ck(collect_exit(rr19) == 3 and F_ in rr19["jobs_not_ok"] and rr19["G5"]["usage_eligible"] is False and rr19["G5"]["status"].startswith("INCOMPLETE (분모")
+           and rr19["samples"]["①"]["total_w_citable"] is False,
+           f"⛔음성 CG P1-2 교체된 파일럿으로 집계 → 종료 3 · 사용 자격 없음 · ① 인용 불가 — {rr19['G5']['status']}")
+        ck(cli(["--pp_registry", rgp, "--pp_registry_sha256", _sha(rgp)]) == 3, "⛔음성 CG P1-2 실제 CLI --collect + 봉인 등록부 + 교체된 파일럿 run_id → 종료 3 (리뷰어 재현: 0 이었다)")
+        mk(F_, outcar=_fake_outcar(J[F_], E[F_] - 0.001, ED[F_]), tamper_after=lambda d: edit_attempt(d, run_id=sealed_id))
+        r19b = check(out, ret, msha, reg_ok)[1][F_]
+        ck(r19b["status"] == "PILOT_NOT_SEALED" and "sha" in r19b["why"], f"⛔음성 CG 권고 3 같은 run_id 인데 OUTCAR·attempt.json 이 봉인 뒤 바뀜 → PILOT_NOT_SEALED — {r19b['status']}")
+        mk(F_)
+        rs19 = check(out, ret, msha, reg_ok)[1]
+        ck(rs19[F_]["status"] == "OK" and rs19[PILOT_JOBS[0]]["status"] == "OK" and collect_exit(C()) == 0, "봉인 그대로의 파일럿 두 잡 → OK · 집계 종료 0 (결속 양성 경로)")
+        mk(F_, conv=False); mk(F_, "r1")
+        reg_r1 = seal_pp(out, ret, msha)
+        r19c = check(out, ret, msha, reg_r1)[1][F_]
+        ck(reg_r1["from_pilot"][F_].endswith("1") and r19c["status"] == "OK" and r19c["attempt"] == "r1" and r19c.get("first_attempt") == "SCF_NOT_CONVERGED",
+           f"정당한 r1 로 봉인한 파일럿 → 최종 검사에서 r1 채택 · 결속 OK (r1 재사용 양성 경로 유지) — {r19c['status']}")
+        ck(check(out, ret, msha, reg_ok)[1][F_]["status"] == "PILOT_NOT_SEALED", "⛔음성 첫 시도로 봉인한 등록부인데 r1 이 채택된 파일럿 → PILOT_NOT_SEALED")
+        shutil.rmtree(os.path.join(run, F_ + "_r1")); mk(F_)
+        # ⑳ CG P1-3 — 미완료 출력의 정상 TITEL 접두 = 결측 (r1 자격) · 성공 시도의 접두만 = 미검증 · 다른 종·날짜·순서·추가 = 모순
+        tl = J[F_]["pp_expected_titel"]
+        mk(F_, rc=1, outcar=_fake_outcar(J[F_], E[F_], ED[F_], titel_override=tl[:1], term=False)); mk(F_, "r1")
+        r20 = check(out, ret, msha)[1][F_]
+        ck(r20["status"] == "OK" and r20["attempt"] == "r1" and r20.get("first_attempt") == "EXECUTION_FAILED" and "r1_ignored" not in r20,
+           f"CG P1-3 올바른 첫 TITEL 만 찍히고 rc 1 (미종료) + 정상 r1 → r1 채택 (리뷰어 재현: POTCAR_MISMATCH 였다) — {r20['status']} {r20.get('why')}")
+        mk(F_, rc=1, outcar=_fake_outcar(J[F_], E[F_], ED[F_], titel_override=tl[:3], term=False))
+        r20a = check(out, ret, msha)[1][F_]
+        ck(r20a["status"] == "OK" and r20a["attempt"] == "r1", "CG P1-3 TITEL 셋까지 찍힌 미완료 + 정상 r1 → r1 채택")
+        for why, tov in (("순서 바뀜", [tl[1], tl[0]]), ("첫 TITEL 날짜 다름", [tl[0].replace("10Sep2004", "06Sep2000")]),
+                         ("둘째 TITEL 종 다름", [tl[0], tl[1].replace("P 06Sep2000", "P_h 06Sep2000")]),
+                         ("기대 전부 뒤에 다른 종 추가", tl + ["PAW_PBE Fe 06Sep2000"]), ("다른 종 하나", ["PAW_PBE Fe 06Sep2000"])):
+            mk(F_, rc=1, outcar=_fake_outcar(J[F_], E[F_], ED[F_], titel_override=tov, term=False))
+            r20b = check(out, ret, msha)[1][F_]
+            ck(r20b["status"] == "POTCAR_MISMATCH" and "r1_ignored" in r20b and r20b.get("conflicts"),
+               f"⛔음성 CG P1-3 미완료 출력의 TITEL {why} + 정상 r1 → POTCAR_MISMATCH (접두 아님 = 모순 · r1 승격 안 함) — {r20b['status']}")
+        mk(F_, outcar=_fake_outcar(J[F_], E[F_], ED[F_], titel_override=tl[:2]))
+        r20c = check(out, ret, msha)[1][F_]
+        ck(r20c["status"] == "POTCAR_UNVERIFIED" and "r1_ignored" in r20c,
+           f"⛔음성 CG P1-3 성공 시도(rc 0 · 종료 · 수렴)인데 TITEL 접두만 + 정상 r1 → POTCAR_UNVERIFIED · 승격 안 함 (미검증은 재시도 자격이 아니다) — {r20c['status']}")
+        shutil.rmtree(os.path.join(run, F_ + "_r1"))
+        ck(st(F_) == "POTCAR_UNVERIFIED", "⛔음성 CG P1-3 성공 시도의 TITEL 접두만 (r1 없이) → POTCAR_UNVERIFIED (통과 아님)")
+        mk(F_)
         # ⑱ 배포 러너 실제 실행 (가짜 VASP · bash) — 러너와 검사기가 같은 규칙을 쓰는지
         if not all(shutil.which(x) for x in ("bash", "sha256sum", "tar")):
             print("  ⚠ SKIP 러너 실행 시험 (bash · sha256sum · tar 중 없음) — 통과로 세지 않는다")
@@ -1572,9 +1700,38 @@ def _selftest():
             rs = check(out, w, msha)[1]
             ck(rcode == 0 and all(rs[p]["status"] == "OK" for p in PILOT_JOBS) and check_exit(rs) == 3 and os.path.isfile(os.path.join(w, "V5_vasp_return.tgz")),
                f"러너 실행: 파일럿 2 잡 성공 · 검사 OK (나머지 16 잡 MISSING → 종료 3) — rc {rcode} {[(p, rs[p]['status'], rs[p].get('why')) for p in PILOT_JOBS]} {log[-300:]}")
-            ck(return_manifest_info(w, msha) == {"present": True, "matches_pinned": True}, "반송 묶음의 MANIFEST = 고정값")
+            rmi = return_manifest_info(w, msha)
+            ck(rmi["present"] and rmi["matches_pinned"] and rmi["forbidden_files"] == [], f"반송 묶음의 MANIFEST = 고정값 · 반송 폴더에 금지 파일 없음 (러너가 지움) — {rmi}")
+            import tarfile
+            members = lambda wd: tarfile.open(os.path.join(wd, "V5_vasp_return.tgz")).getnames()
+            forb = lambda ms: [m for m in ms if m.rsplit("/", 1)[-1] in RETURN_FORBIDDEN]
+            m0 = members(w)
+            ck(not forb(m0) and all(f"run/{PILOT_JOBS[0]}/{x}" in m0 for x in ("attempt.json", "OUTCAR", "OSZICAR", "INCAR", "POTCAR.titel", "POTCAR.species.sha256", "stdout.log", "IBZKPT"))
+               and "run/status.tsv" in m0 and "run/env.txt" in m0 and "MANIFEST.sha256" in m0 and not any(m.endswith("/EIGENVAL") for m in m0),
+               f"CG P1-1 러너 정상 실행: 묶음은 허용 목록만 (가짜 VASP 가 쓴 WAVECAR·CHGCAR·CHG·vasprun.xml·EIGENVAL 없음 · IBZKPT 는 있음) — {sorted(m0)[:6]}")
+            ck(subprocess.run(["sha256sum", "-c", "--quiet", "V5_vasp_return.tgz.sha256"], cwd=w, capture_output=True).returncode == 0,
+               "CG 권고 2: .sha256 은 최종 파일명으로 쓰여 sha256sum -c 가 그대로 통과")
             wreg = seal_pp(out, w, msha)
             ck(not validate_pp_registry(wreg, msha, meta) and all(RUN_ID_RE.match(v) for v in wreg["from_pilot"].values()), "러너 산출물로 등록부 봉인 (실제 run_id 형식)")
+            rsw = check(out, w, msha, wreg)[1]
+            ck(all(rsw[p]["status"] == "OK" for p in PILOT_JOBS), f"러너 산출물 + 그 등록부 → 파일럿 두 잡 결속 OK — {[(p, rsw[p]['status']) for p in PILOT_JOBS]}")
+            potpart = os.path.join(T, "potcars_partial"); os.makedirs(os.path.join(potpart, "Li_sv"))
+            shutil.copy(os.path.join(potdir, "Li_sv", "POTCAR"), os.path.join(potpart, "Li_sv", "POTCAR"))
+            w10, rcode10, log10 = run_pkg("pp_partial", py, extra_env={"POTCAR_DIR": potpart})
+            m10 = members(w10)
+            ck(rcode10 == 1 and "준비 실패" in log10 and not forb(m10) and f"run/{PILOT_JOBS[0]}/INCAR" in m10 and f"run/{PILOT_JOBS[0]}/POTCAR.species.sha256" in m10
+               and "run/status.tsv" in m10 and not os.path.isfile(os.path.join(w10, "run", PILOT_JOBS[0], "POTCAR")) and "✅" not in log10,
+               f"⛔음성 CG P1-1 PP 트리에 Li_sv 만 → 준비 실패(종료 1)인데 묶음에 부분 POTCAR 본문 없음 · 폴더의 부분 POTCAR 도 지움 (리뷰어 재현: 들어갔다) — rc {rcode10} {forb(m10)}")
+            leak = ("POTCAR", "WAVECAR", "CHGCAR", "vasprun.xml")
+            for x in leak:
+                _write(os.path.join(w, "run", PILOT_JOBS[1], x), "LEAK_DO_NOT_SHIP\n")
+            _, rcode11, log11 = run_pkg("ok", "false", fresh=False, perf_file=None, extra_env={"PACK_ONLY": "1"})
+            m11 = members(w)
+            ck(rcode11 == 0 and not forb(m11) and f"run/{PILOT_JOBS[1]}/attempt.json" in m11 and f"run/{PILOT_JOBS[1]}/OUTCAR" in m11
+               and return_manifest_info(w, msha)["forbidden_files"] == sorted(f"run/{PILOT_JOBS[1]}/{x}" for x in leak),
+               f"⛔음성 CG P1-1 중단 뒤 POTCAR·WAVECAR·CHGCAR·vasprun.xml 이 남은 폴더에 PACK_ONLY=1 → 묶음에 없음 (검사기는 폴더의 금지 파일을 보고) (리뷰어 재현: 들어갔다) — rc {rcode11} {forb(m11)}")
+            for x in leak:
+                os.remove(os.path.join(w, "run", PILOT_JOBS[1], x))
             _, rcode2, log2 = run_pkg("ok", py, fresh=False)
             rs2 = check(out, w, msha)[1]
             ck(rcode2 == 1 and "이미 있거나" in log2 and all(rs2[p]["status"] == "OK" for p in PILOT_JOBS), f"⛔음성 러너 재실행: 기존 시도 폴더 거부(원자적 mkdir) · 종료 1 · 앞 결과 보존 — rc {rcode2}")
@@ -1637,6 +1794,8 @@ def main():
                 print(f"  {k} W {s['W_J_m2']} · W_PBE {s['W_PBE_J_m2']} · ΔD3 {s['dD3_J_m2']} · D3 쌍 오차 {s['d3_pair_err_J_m2']} · 총 W 인용 {s['total_w_citable']}"
                       f"{' · ' + ' / '.join(s['total_w_labels']) if s['total_w_labels'] else ''}")
             print(f"  G3 {rec['G3']['status']} · G4 {rec['G4']['status']}{' · G5 ' + rec['G5']['status'] if 'G5' in rec else ''} · 미완 {rec['jobs_not_ok']} · 등록부 {rec['pp_registry']['state']}")
+            if rec["return_bundle"]["forbidden_files"]:
+                print(f"  ⚠ 반송 폴더에 금지 파일이 있다 (POTCAR 본문 등 — 저장하지 말고 지운다): {rec['return_bundle']['forbidden_files']}")
             if a.json:
                 _write(a.json, json.dumps(rec, ensure_ascii=False, indent=1, allow_nan=False) + "\n")
             return collect_exit(rec)
@@ -1644,7 +1803,10 @@ def main():
             _, res = check(a.out, a.ret, a.manifest_sha256, reg)
             for n, r in res.items():
                 print(f"  {n:34s} {r['status']}{(' · ' + str(r.get('why'))) if r.get('why') else ''}")
-            print(f"  반송 묶음 MANIFEST: {return_manifest_info(a.ret, a.manifest_sha256)} · 등록부 {'검증됨' if reg is not None else '없음 (파일럿 단계 검사)'}")
+            rb = return_manifest_info(a.ret, a.manifest_sha256)
+            print(f"  반송 묶음 MANIFEST: {rb} · 등록부 {'검증됨' if reg is not None else '없음 (파일럿 단계 검사)'}")
+            if rb["forbidden_files"]:
+                print(f"  ⚠ 반송 폴더에 금지 파일이 있다 (POTCAR 본문 등 — 저장하지 말고 지운다): {rb['forbidden_files']}")
             if a.json:
                 _write(a.json, json.dumps(res, ensure_ascii=False, indent=1, allow_nan=False) + "\n")
             return check_exit(res)

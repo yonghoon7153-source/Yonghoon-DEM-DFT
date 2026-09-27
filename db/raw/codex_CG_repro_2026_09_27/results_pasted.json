@@ -1,0 +1,245 @@
+{
+  "declared_hashes": {
+    "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json": true,
+    "db/inputs/wad_aprime_v5_vasp_2026_09_27/jobs.json": true,
+    "db/inputs/wad_aprime_v5_vasp_2026_09_27/MANIFEST.sha256": true,
+    "db/inputs/wad_aprime_v5_vasp_2026_09_27/run_all.sh": true,
+    "db/inputs/wad_aprime_v5_vasp_2026_09_27/README.md": true,
+    "tools/wad/build_v5_vasp_package.py": true,
+    "db/governance/decisions.json": true,
+    "kb/reviews/codex_CF_reply_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md": true,
+    "db/properties/sdcp_c12_v41_partial_raw/prospective/sdcp_neutral__b00__afm2424_pm1/static/OUTCAR.gz": true,
+    "db/properties/sdcp_c12_v41_partial_raw/prospective/sdcp_neutral__b00__afm2424_pm1/static/INCAR": true,
+    "db/properties/wad_aprime_s3v2_seal_2026_09_26.json": true,
+    "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json": true
+  },
+  "manifest_files_verified": 93,
+  "geometry": [
+    {
+      "job": "V5_li_outer_A_bound",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_li_outer_A_far",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_li_outer_B_bound",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_li_outer_B_far",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_bound",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_far",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_G3_c2_bound",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_G3_c2_far_i",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_G3_c2_far_ii",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_G4_e70_bound",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_G4_e70_far",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_G4_k1_bound",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_G4_k1_far",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_G4_s05_bound",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_G4_s05_far",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_A_p05_bound",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_B_bound",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    },
+    {
+      "job": "V5_s_outer_B_far",
+      "source_sha_ok": true,
+      "max_pos_diff_A": 0.0,
+      "max_cell_diff_A": 3.362288225616794e-11,
+      "order_ok": true
+    }
+  ],
+  "native_selftest": {
+    "not_completed": "PkgError(\"simple-dftd3 가 없다 — D3 기대값 없이 패키지를 만들지 않는다 (No module named 'dftd3')\")",
+    "log": ""
+  },
+  "header_only": {
+    "status": "OK",
+    "why": null,
+    "first_attempt": "EXECUTION_FAILED",
+    "r1_ignored": null,
+    "r1_status": null
+  },
+  "partial_expected_setting": {
+    "status": "OK",
+    "why": null,
+    "first_attempt": "EXECUTION_FAILED",
+    "r1_ignored": null,
+    "r1_status": null
+  },
+  "partial_bad_setting": {
+    "status": "SETTINGS_MISMATCH",
+    "why": "ENCUT 400.0 ≠ 520.0",
+    "first_attempt": null,
+    "r1_ignored": "첫 시도 상태 SETTINGS_MISMATCH 는 재시도 자격이 아니다 (사전등록: 실행 실패·미종료·미수렴만)",
+    "r1_status": "OK"
+  },
+  "partial_correct_titel": {
+    "status": "POTCAR_MISMATCH",
+    "why": "OUTCAR TITEL ['PAW_PBE Li_sv 10Sep2004'] ≠ POTCAR.titel ['PAW_PBE Li_sv 10Sep2004', 'PAW_PBE P 06Sep2000', 'PAW_PBE S 06Sep2000', 'PAW_PBE Cl 06Sep2000', 'PAW_PBE Ag 02Apr2005']",
+    "first_attempt": null,
+    "r1_ignored": "첫 시도 상태 POTCAR_MISMATCH 는 재시도 자격이 아니다 (사전등록: 실행 실패·미종료·미수렴만)",
+    "r1_status": "OK"
+  },
+  "partial_wrong_titel": {
+    "status": "POTCAR_MISMATCH",
+    "why": "OUTCAR TITEL ['PAW_PBE Fe 06Sep2000'] ≠ POTCAR.titel ['PAW_PBE Li_sv 10Sep2004', 'PAW_PBE P 06Sep2000', 'PAW_PBE S 06Sep2000', 'PAW_PBE Cl 06Sep2000', 'PAW_PBE Ag 02Apr2005']",
+    "first_attempt": null,
+    "r1_ignored": "첫 시도 상태 POTCAR_MISMATCH 는 재시도 자격이 아니다 (사전등록: 실행 실패·미종료·미수렴만)",
+    "r1_status": "OK"
+  },
+  "pilot_replaced_after_seal": {
+    "sealed_id": "20260927T120000-42-123",
+    "returned_id": "20260928T120000-99-456",
+    "rc": 0,
+    "G5_status": "PASS",
+    "eligible": true
+  },
+  "pilot_replaced_cli": {
+    "rc": 0,
+    "status": "PASS",
+    "eligible": true,
+    "registry_hash_recorded": true,
+    "last_line": "  G3 PASS · G4 PASS · G5 PASS · 미완 [] · 등록부 검증됨"
+  },
+  "empty_eof_TOTEN": {
+    "status": "OK",
+    "TOTEN_eV": -993.6895255,
+    "E_sigma0_eV": -993.6845255,
+    "E_noentropy_eV": -993.6795255
+  },
+  "empty_eof_sigma0": {
+    "status": "OK",
+    "TOTEN_eV": -993.6895255,
+    "E_sigma0_eV": -993.6845255,
+    "E_noentropy_eV": -993.6795255
+  },
+  "empty_eof_noentropy": {
+    "status": "OK",
+    "TOTEN_eV": -993.6895255,
+    "E_sigma0_eV": -993.6845255,
+    "E_noentropy_eV": -993.6795255
+  },
+  "runner_partial_pp_archive": {
+    "rc": 1,
+    "log": "⛔ POTCAR P 없음\n⛔ V5_s_outer_A_bound 준비 실패 (기존 폴더 · 입력 · POTCAR) — 재시도 대상 아님\n⚠ 일부 잡 실패 — 그대로 반송해 주세요 (실패도 기록입니다)\n",
+    "POTCAR_members": {
+      "run/V5_s_outer_A_bound/POTCAR": " PAW_PBE Li_sv 10Sep2004\n TITEL = PAW_PBE Li_sv 10Sep2004\n POMASS=1; ZVAL=3.000\n FAKE_POTCAR_BODY_DO_NOT_SHIP\n"
+    }
+  },
+  "pack_only_interrupted_leak": {
+    "rc": 0,
+    "members": [
+      "run",
+      "run/env.txt",
+      "run/V5_s_outer_A_far",
+      "run/V5_s_outer_A_far/POTCAR",
+      "run/V5_s_outer_A_far/WAVECAR",
+      "MANIFEST.sha256"
+    ],
+    "log": "✅ 포장만 다시 했다 — V5_vasp_return.tgz 와 .sha256 을 보내 주세요 (계산은 다시 돌리지 않았다)\n"
+  },
+  "CF_physical_input_comparison": {
+    "files": 90,
+    "all_equal": true,
+    "D3_equal": true
+  },
+  "D3_tolerance_units": {
+    "area_A2": 202.209896,
+    "per_endpoint_J_m2": 7.923334444521944e-06,
+    "worst_pair_J_m2": 1.584666888904389e-05
+  }
+}

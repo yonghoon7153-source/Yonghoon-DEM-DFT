@@ -1,13 +1,13 @@
 {
- "schema": "aprime_v5_vasp_package/v3",
+ "schema": "aprime_v5_vasp_package/v4",
  "date": "2026-09-27",
- "status": "준비본 v3 (Codex CE·CF NO-GO 반영 · 재리뷰 전 · 결정 proposed · 실행 미정)",
+ "status": "준비본 v4 (Codex CE·CF·CG NO-GO 반영 · 재리뷰 전 · 결정 proposed · 실행 미정)",
  "source_package": "db/inputs/wad_aprime_s3v2_2026_09_26",
  "source_s3_manifest_sha256": "069894c62daa1bf863cebba3533fb0c79e70fd16a9b4d77cf7ea5ac41512246d",
  "source_seal": "db/properties/wad_aprime_s3v2_seal_2026_09_26.json",
  "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json",
  "amendment": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json",
- "tool_sha256": "2c9f9ab97e54a6bff884ff231b5aa2f9c39b881238354f7c0ecc0da38ca200f3",
+ "tool_sha256": "f35606c6eeda9bbcc893d3ef77c7d39e18b46edf8b9267bee1d6652bf48f8494",
  "settings": {
   "potcar": {
    "Li": "Li_sv",
@@ -85,7 +85,27 @@
    "V5_s_outer_A_bound",
    "V5_s_outer_A_far"
   ],
-  "pp_registry_schema": "aprime_v5_pp_registry/v2"
+  "pp_registry_schema": "aprime_v5_pp_registry/v3",
+  "return_allowed": [
+   "OUTCAR",
+   "OSZICAR",
+   "INCAR",
+   "KPOINTS",
+   "POSCAR",
+   "IBZKPT",
+   "POTCAR.titel",
+   "POTCAR.sha256",
+   "POTCAR.species.sha256",
+   "attempt.json",
+   "stdout.log"
+  ],
+  "return_forbidden": [
+   "POTCAR",
+   "WAVECAR",
+   "CHGCAR",
+   "CHG",
+   "vasprun.xml"
+  ]
  },
  "G5_samples": {
   "①": [

@@ -3,7 +3,7 @@ title: "리뷰 CG 프롬프트 — A′ V5 VASP 외주 준비본 v3 재리뷰 (C
 date: 2026-09-27
 updated: 2026-09-27
 tags: [review, codex, adhesion, wad, prereg, vasp, outsourcing, lpscl, silver, uma, d3, dipole, g4, g5, pp-registry, re-review]
-status: 발송 대기 (1저자) — 도구·패키지·개정 3 v3 는 커밋 c8d77dfd5 에 고정 (원격)
+status: 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`codex_CG_reply_…` · 새 P0 없음 · P1 3) → v4 → 재리뷰 CI 발송 대기
 confidence: medium
 verificationStatus: unverified
 explored: false
