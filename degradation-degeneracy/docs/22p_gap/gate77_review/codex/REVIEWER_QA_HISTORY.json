@@ -1,0 +1,14 @@
+{
+  "scope": "Reviewer-owned delivery QA, not subject test execution",
+  "first_package_attempt": {
+    "chunk_id": "ae8114",
+    "exit_code": 1,
+    "wall_time_seconds": 1.1711984,
+    "error": "AssertionError: ('src/fitting.py', 287)",
+    "cause": "QA expected the warm serializer key on line287; actual key is line288. The report's 284-288 source range already included it.",
+    "archive_created": false,
+    "preservation_record_written": true
+  },
+  "correction": "QA anchor changed to line288. Existing preservation record is retained and accepted only if a fresh identical recomputation matches it. No subject code or reported design finding changed.",
+  "raw_tool_return_scope": "This JSON is a reviewer-authored transcription of visible tool metadata and exception, not an OS audit log."
+}

@@ -1,0 +1,27 @@
+{
+  "review": "Gate77 Stage3 v4 preimplementation design/status",
+  "date": "2026-09-27",
+  "head": "ebbcf04ed6cd4f5c2f71b4ebd28031c5fd441002",
+  "code": "23c361edbfc92fefcfbf0639b5ac40f61f7ebec7",
+  "source_digest": "1c67a748598baadb",
+  "decision": "DESIGN_CORRECTIONS_REQUIRED_FOR_BROAD_STEP13_ACCEPTANCE",
+  "prior_gate76_finite_scope_closed": true,
+  "step12_unqualified_complete": false,
+  "local_lifecycle_archive_evidence_accepted": true,
+  "real_retention_provider_evidence_accepted": false,
+  "offline_implementation_recommendation": "conditional on N1-N3 and separate user scope authorization",
+  "findings": [
+    {"id": "G77-N1", "priority": 1, "scope": "Local archive versus retention provider; step12 status"},
+    {"id": "G77-N2", "priority": 1, "scope": "Primary arm, candidate counts and scalar endpoint binding"},
+    {"id": "G77-N3", "priority": 2, "scope": "Pilot preregistration versus final budget adoption; implementation dependencies"}
+  ],
+  "execution_go": false,
+  "user_implementation_authorization_granted_by_this_review": false,
+  "grid_fit_v5": {"inference_role": "diagnostic", "claim_scope": "no_active_claim", "promotion": false},
+  "performed": {"fixed_checkout_data_static_audit": true, "source_imports": 0, "provided_test_runs": 0,
+    "scientific_runs": 0, "COMSOL_Java_runs": 0, "restore_rescore": 0, "source_edits": 0,
+    "class_or_projection_changes": 0, "external_backend_queries": 0},
+  "sender_reported_not_rerun": {"pytest_passed": 1944, "pytest_xfailed": 2, "docs_lint_passed": 358},
+  "next_review_scope": ["N1 status split and deployment profile gate", "N2 explicit primary protocol row", "N3 dependencies and preregistration map"],
+  "full_suite_or_grid_rerun_required_for_design_corrections": false
+}

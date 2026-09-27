@@ -1,0 +1,168 @@
+{
+  "head": "ebbcf04ed6cd4f5c2f71b4ebd28031c5fd441002",
+  "code": "23c361edbfc92fefcfbf0639b5ac40f61f7ebec7",
+  "prior_review_head": "b5e4eadea7794d157d961170247e49d2761bba26",
+  "source_digest": "1c67a748598baadb",
+  "scope_files": 58,
+  "tracked_files": 2958,
+  "diffs": {
+    "CODE_TO_HEAD_SCOPE": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "G76_TO_G77_SCOPE": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "G76_TO_G77_CONTRACT": {
+      "bytes": 914,
+      "sha256": "c4b4f15af8b1284d4d9ad5557838820bc41ef4048acc6f9ab4b5bb2b02d15310"
+    },
+    "G76_TO_G77_NAMES": {
+      "bytes": 9191,
+      "sha256": "128ff9101531dfa6accffb5a54293fb45cc40e9d7e0e8a8998bf4cdc6fd877d4"
+    }
+  },
+  "unchanged": {
+    "ledger_claims_receipts": [],
+    "artifacts": [],
+    "registry_projection_publisher": [],
+    "tests": []
+  },
+  "prior_package": {
+    "zip": {
+      "bytes": 850187,
+      "sha256": "b532543bfc9a2e2ef435d7cc6536ae23ec4c388c574c225ec70db93e0db4aa61"
+    },
+    "payload": 87,
+    "manifest": {
+      "bytes": 14162,
+      "sha256": "aa8cc1340677bd99d849ec6a996df35cee305d7f6bf1aadfe6925e9fa01848a0"
+    },
+    "unpacked_byte_matches": 87,
+    "exact_set_SHA_CRC_path_case_link": true
+  },
+  "grid_fit_v5": {
+    "ledger": {
+      "leg_id": "grid_fit_v5",
+      "preservation_status": "full_bundle",
+      "validation_status": "current_validated",
+      "inference_role": "diagnostic",
+      "claim_scope": "no_active_claim",
+      "근거": "74차 조건부 한정 실행 (원장 §98~§102). 사람의 분류 (E9 단계 5, 74차 리뷰어 권고 (c)+(b)): **진단 전용** — 어떤 활성 주장도 참조하지 않는다 (claim_roles 없음). cohort g18 의 승인 아래 돌았지만 투영(row projection)을 게시하지 않았으므로 투영 명부 `legs` 가 아니라 실행 명부 `executed_legs` 에 있다. 묶음·영수증·실행 자리·소스 결속은 full_bundle 계약 그대로 (evidence). regeneration_capability 는 사실 기록이다 — 묶음 payload index 에 fits.parquet·curves.parquet 원자료가 있다 (투영 생성/검증 완료를 뜻하지 않는다). 수치는 인용하지 않는다.",
+      "evidence": {
+        "cohorts": [
+          "g18_2026_09_15"
+        ],
+        "leg_source_digest": "c2ef1a811e70bb4c",
+        "out": "results/grid_fit_v5",
+        "verifier_origin": "normal_finalize",
+        "phases": {
+          "grid": {
+            "at": "2026-09-26T10:58:50Z",
+            "receipt": {
+              "curves_manifest_sha256": "ba21378676a0f5353374043084055bc95508874cb0c195b5955c2b4d155e001a",
+              "curves_manifest_start_sha256": "c0bc64a45e6dafd7e3f5acbdeac4ca5fbfe16c12f171e440bca7fc2c0b4cb561",
+              "curves_sha256": "29da452a04ca17d778f448ad9504f21d1b8a22db8dd64bf1e0ba7c95804a6adc",
+              "finished_at": "2026-09-26T10:58:50Z",
+              "grid_run_sig": "e5d08ed14cb2",
+              "n_curves_total": 3069,
+              "out": "results/grid_fit_v5"
+            }
+          },
+          "fit": {
+            "at": "2026-09-26T12:32:52Z",
+            "consumed": {
+              "grid": "fb40ea8e10563ebff227ec187a515642c9c23095c71025ab234661ed7c78b48c"
+            },
+            "receipt": {
+              "finished_at": "2026-09-26T12:32:52Z",
+              "n_rows": 12276,
+              "out": "results/grid_fit_v5"
+            }
+          }
+        },
+        "attempt_id": "2d91320cc5ad42198889fc2dba819829",
+        "run_spec_digest": "0838df841ae7e4e694a3938d281e92284c27fb04393e0008b15f7a3fd4e10337",
+        "attempt_verifier": "01739f6382ef807a36262362d0c39b397ca1267945d5ff2d74762b4a09f3ad63",
+        "bundle_uri": "artifacts/grid_fit_v5",
+        "bundle_files": 29,
+        "payload_bytes": 27313017,
+        "payload_index": "artifacts/grid_fit_v5/payload_sha256.yaml",
+        "payload_index_sha256": "4cd2c0f89a07da834680e4a69d75391241a0930819174fc98cf52045f7519c42",
+        "member_rehash_by": "tools.archive_bundle.check",
+        "fits_sha256": "378ffde80b2a44d99efa3bff3e712b7cd44b41e0073d712fdf63d4efca864042",
+        "verification_receipt": "docs/22p_gap/receipts/grid_fit_v5.validate.yaml",
+        "verification_receipt_core_sha256": "ae614af28efc8f9e8315198d348b935cf0f32c6f1ab83885ba58e38cc4e83a5b",
+        "verification_receipt_generator": "docs/22p_gap/make_receipt.py",
+        "empty_root_restore": true,
+        "regeneration_capability": "available_raw_present",
+        "rescored_from_restored_fits": true,
+        "validator_identity": {
+          "source_digest": "1c67a748598baadb",
+          "n_checks": 33,
+          "ok": true
+        },
+        "bundle_content_id": "d59744657f3a2086a8069c720bea4468a89c3e36e2221475d0db441c62baf8ae"
+      }
+    },
+    "receipt_identity": {
+      "bytes": 3703,
+      "sha256": "c863d8c3808b22537679264e0dc45f82c67f879c2f0549949e8a93496c51684a"
+    },
+    "bundle_members": 29,
+    "bundle_bytes": 27313017,
+    "member_SHA_matches": true,
+    "core_SHA_and_out_binding": true,
+    "receipt_reports_validation_checks": 33,
+    "receipt_reports_restore_and_rescore": true,
+    "reviewer_restore_or_rescore": false
+  },
+  "primary_claim": {
+    "id": "P22_STAGE3_PRIMARY",
+    "protocol_generation": "v6",
+    "requires_leg": false,
+    "무엇": "단계 3 의 사전 등록 primary estimand. v5 산출물을 여기로 승격하는 것은 계약 §2.1 이 금지한다."
+  },
+  "not_present": {
+    "docs/22p_gap/preserve_backend.yaml": true,
+    "docs/22p_gap/preserve_index": true,
+    "docs/22p_gap/sentinel_panel.yaml": true
+  },
+  "static_backend_inventory": {
+    "definitions": [
+      {
+        "path": "degradation-degeneracy/tools/preserve.py",
+        "line": 482,
+        "name": "CasBackend"
+      },
+      {
+        "path": "degradation-degeneracy/tools/preserve.py",
+        "line": 1428,
+        "name": "ObjectLockBackend"
+      },
+      {
+        "path": "degradation-degeneracy/tools/preserve.py",
+        "line": 2184,
+        "name": "LockedCasBackend"
+      },
+      {
+        "path": "degradation-degeneracy/tools/preserve.py",
+        "line": 3357,
+        "name": "run_transaction"
+      }
+    ],
+    "calls": [],
+    "calls_outside_preserve_in_RUN_SCOPE": [],
+    "limit": "AST named-call inventory; not a dynamic call graph or proof about external deployments"
+  },
+  "registered_receipt_claims": [],
+  "limits": {
+    "subject_imports": 0,
+    "subject_tests": 0,
+    "scientific_COMSOL_Java_runs": 0,
+    "restore_rescore": 0,
+    "source_edits": 0,
+    "external_provider_queries": 0
+  }
+}

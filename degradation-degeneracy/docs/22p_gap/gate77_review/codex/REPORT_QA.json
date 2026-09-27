@@ -1,0 +1,53 @@
+{
+  "head": "ebbcf04ed6cd4f5c2f71b4ebd28031c5fd441002",
+  "decision_report_scope_consistent": true,
+  "finding_ids": [
+    "G77-N1",
+    "G77-N2",
+    "G77-N3"
+  ],
+  "anchors_checked": [
+    {
+      "path": "docs/22p_gap/GATE77_REQUEST.md",
+      "line": 37,
+      "text": "실물 provider"
+    },
+    {
+      "path": "docs/22p_gap/GATE77_REQUEST.md",
+      "line": 47,
+      "text": "완주"
+    },
+    {
+      "path": "docs/22p_gap/GATE77_REQUEST.md",
+      "line": 54,
+      "text": "primary arm"
+    },
+    {
+      "path": "docs/22p_gap/GATE77_REQUEST.md",
+      "line": 55,
+      "text": "pilot 전에 숫자"
+    },
+    {
+      "path": "docs/22p_gap/GATE77_REQUEST.md",
+      "line": 57,
+      "text": "transition table"
+    },
+    {
+      "path": "docs/22p_gap/GATE77_REQUEST.md",
+      "line": 65,
+      "text": "작고 독립"
+    },
+    {
+      "path": "src/fitting.py",
+      "line": 288,
+      "text": "warm"
+    },
+    {
+      "path": "src/fitting.py",
+      "line": 430,
+      "text": "n_eval"
+    }
+  ],
+  "scientific_or_subject_test_execution": false,
+  "encoding_replacement_chars": 0
+}
