@@ -1,0 +1,292 @@
+{
+  "head": "b0203d1090b2659c31f8eb6f55e5a144657e9052",
+  "code": "3dc269d80a7441b294d475b625b096baf3d1a459",
+  "prior_head": "720f0a0e466afb595fbd73a50f89416898cc927c",
+  "prior_code": "23c361edbfc92fefcfbf0639b5ac40f61f7ebec7",
+  "source_digest": "c78d7969ef49fd07",
+  "scope_files": 58,
+  "changed_scope_files": [
+    "degradation-degeneracy/src/fitting.py",
+    "degradation-degeneracy/src/io.py"
+  ],
+  "tracked_files": 3038,
+  "diffs": {
+    "CODE_TO_HEAD_SCOPE": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "G78_TO_G79_SCOPE": {
+      "bytes": 12527,
+      "sha256": "eae8ca7a923598de3dee8c87e9a6db17f82fe6bb880a2c3164ef1387f8527890"
+    },
+    "G78_TO_G79_NAMES": {
+      "bytes": 4329,
+      "sha256": "0dd5d2a37c03c04a35d8c4ff828cafcbe840a87e8b07f355ee69951cddc7a09a"
+    },
+    "DOCS_TESTS_LEDGER": {
+      "bytes": 35951,
+      "sha256": "5270a126f24eb47d430751755166bb69d0d6c376d012d12ce3092eacea5febf9"
+    }
+  },
+  "unchanged": {
+    "artifacts": true,
+    "claims": true,
+    "registry_projection": true,
+    "prior_broken_parquet_test": true
+  },
+  "prior_review_package": {
+    "zip": {
+      "bytes": 418575,
+      "sha256": "f41ee778decd9d35bef374896efb08e850141a89b099d0e090770d4c597b0edf"
+    },
+    "manifest": {
+      "bytes": 5549,
+      "sha256": "ee1d916887244fce8c86322a28bbfb89c1ee69350c11320596c153d8182998c6"
+    },
+    "payload": 37,
+    "exact_set_SHA_CRC_path_case_link": true,
+    "local_prior_and_unpacked_match": true
+  },
+  "receipts": {
+    "paired_fixed5_v4": {
+      "history_raw_equal_prior": true,
+      "history": {
+        "bytes": 3768,
+        "sha256": "9e9cc2f9c8189648c3e669921d88e556d2b26359f61e0053d870a45d5b8e6c81"
+      },
+      "current": {
+        "bytes": 3768,
+        "sha256": "8135ead2e3970eaed0d1da4d66ebcdf132b39a767e18467213620d51a4e30c26"
+      },
+      "diffs": [
+        {
+          "path": "/core/identity/src_io_sha256",
+          "before": "25f79f0a740ea486",
+          "after": "d96e78b236696cff"
+        },
+        {
+          "path": "/core/identity/validator_source_digest",
+          "before": "1c67a748598baadb",
+          "after": "c78d7969ef49fd07"
+        },
+        {
+          "path": "/core_sha256",
+          "before": "48c4c04a9f3ac7aea056e2961cb583745505bf653939a8cd58757a854b3a99aa",
+          "after": "e5893f855bf64b9f2ab8cb78dde01f8b442a77a42946a1b65bff091bf82fd9c1"
+        },
+        {
+          "path": "/stamp/generated_at_utc",
+          "before": "2026-09-27T01:48:47Z",
+          "after": "2026-09-27T12:44:50Z"
+        },
+        {
+          "path": "/stamp/validator_commit",
+          "before": "a3eb4cbef92b98a4760cde82de1851dadc848195",
+          "after": "3dc269d80a7441b294d475b625b096baf3d1a459"
+        }
+      ],
+      "core_sha256": "e5893f855bf64b9f2ab8cb78dde01f8b442a77a42946a1b65bff091bf82fd9c1",
+      "validation": {
+        "validator": "src.io.validate_provenance",
+        "ok": true,
+        "fail": [],
+        "n_checks": 34,
+        "checks": {
+          "_참고_코드재계산불가": "통과",
+          "attempt_파일_일치": "통과",
+          "attempt_파일_존재": "통과",
+          "clean_worktree": "통과",
+          "config_hash": "통과",
+          "manifest_존재": "통과",
+          "manifest와_일치": "통과",
+          "optimizer_정책": "통과",
+          "producer_곡선일치": "통과",
+          "restart_예산_완주": "통과",
+          "restart_출처": "통과",
+          "run_signature_기록": "통과",
+          "run_signature_재계산": "통과",
+          "run_spec_schema": "통과",
+          "sig_version": "통과",
+          "start_파일_일치": "통과",
+          "start_파일_존재": "통과",
+          "곡선_producer_재검": "통과",
+          "단일_서명": "통과",
+          "목적함수_순서": "통과",
+          "시작_provenance": "통과",
+          "시작종료_서명일치": "통과",
+          "실행중_코드불변": "통과",
+          "입력_digest_재해시": "통과",
+          "입력_스냅샷": "통과",
+          "입력봉인_교차일치": "통과",
+          "조건집합_서명일치": "통과",
+          "채점파일_정본": "통과",
+          "출력_격자완전성": "통과",
+          "출력_완전성": "통과",
+          "출력봉인_재계산": "통과",
+          "코드_identity": "통과",
+          "필수_입력_존재": "통과",
+          "행별_서명": "통과"
+        }
+      },
+      "outputs_identical_prior": true,
+      "bundle_members": 26,
+      "bundle_bytes": 23863555,
+      "bundle_rehash": true,
+      "producer_digest": "d50295f980ccaa81",
+      "stamp": {
+        "_주의": "기록용. core 재생성 대조에서 제외된다.",
+        "validator_commit": "3dc269d80a7441b294d475b625b096baf3d1a459",
+        "validator_tree_dirty": false,
+        "generated_at_utc": "2026-09-27T12:44:50Z",
+        "runtime": {
+          "python": "3.11.15",
+          "platform": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39"
+        }
+      },
+      "ledger_out": null,
+      "ledger_run_binding": "HISTORICAL_OUT_ABSENT_NOT_BACKFILLED",
+      "reviewer_restore_validate_rescore_runs": 0
+    },
+    "grid_fit_v5": {
+      "history_raw_equal_prior": true,
+      "history": {
+        "bytes": 3703,
+        "sha256": "c863d8c3808b22537679264e0dc45f82c67f879c2f0549949e8a93496c51684a"
+      },
+      "current": {
+        "bytes": 3703,
+        "sha256": "b244b7800a8a2887e3b7e7bfba2421ee517ba7297a50f4ff423c6695b798a667"
+      },
+      "diffs": [
+        {
+          "path": "/core/identity/src_io_sha256",
+          "before": "25f79f0a740ea486",
+          "after": "d96e78b236696cff"
+        },
+        {
+          "path": "/core/identity/validator_source_digest",
+          "before": "1c67a748598baadb",
+          "after": "c78d7969ef49fd07"
+        },
+        {
+          "path": "/core_sha256",
+          "before": "ae614af28efc8f9e8315198d348b935cf0f32c6f1ab83885ba58e38cc4e83a5b",
+          "after": "352f55e50af3038fdf321bcd716a1fb780e6c90f6e30288ba8e07be5749d533a"
+        },
+        {
+          "path": "/stamp/generated_at_utc",
+          "before": "2026-09-27T01:49:30Z",
+          "after": "2026-09-27T12:45:47Z"
+        },
+        {
+          "path": "/stamp/validator_commit",
+          "before": "a3eb4cbef92b98a4760cde82de1851dadc848195",
+          "after": "3dc269d80a7441b294d475b625b096baf3d1a459"
+        }
+      ],
+      "core_sha256": "352f55e50af3038fdf321bcd716a1fb780e6c90f6e30288ba8e07be5749d533a",
+      "validation": {
+        "validator": "src.io.validate_provenance",
+        "ok": true,
+        "fail": [],
+        "n_checks": 33,
+        "checks": {
+          "_참고_코드재계산불가": "통과",
+          "attempt_파일_일치": "통과",
+          "attempt_파일_존재": "통과",
+          "clean_worktree": "통과",
+          "config_hash": "통과",
+          "manifest_존재": "통과",
+          "manifest와_일치": "통과",
+          "optimizer_정책": "통과",
+          "producer_곡선일치": "통과",
+          "restart_출처": "통과",
+          "run_signature_기록": "통과",
+          "run_signature_재계산": "통과",
+          "run_spec_schema": "통과",
+          "sig_version": "통과",
+          "start_파일_일치": "통과",
+          "start_파일_존재": "통과",
+          "곡선_producer_재검": "통과",
+          "단일_서명": "통과",
+          "목적함수_순서": "통과",
+          "시작_provenance": "통과",
+          "시작종료_서명일치": "통과",
+          "실행중_코드불변": "통과",
+          "입력_digest_재해시": "통과",
+          "입력_스냅샷": "통과",
+          "입력봉인_교차일치": "통과",
+          "조건집합_서명일치": "통과",
+          "채점파일_정본": "통과",
+          "출력_격자완전성": "통과",
+          "출력_완전성": "통과",
+          "출력봉인_재계산": "통과",
+          "코드_identity": "통과",
+          "필수_입력_존재": "통과",
+          "행별_서명": "통과"
+        }
+      },
+      "outputs_identical_prior": true,
+      "bundle_members": 29,
+      "bundle_bytes": 27313017,
+      "bundle_rehash": true,
+      "producer_digest": "c2ef1a811e70bb4c",
+      "stamp": {
+        "_주의": "기록용. core 재생성 대조에서 제외된다.",
+        "validator_commit": "3dc269d80a7441b294d475b625b096baf3d1a459",
+        "validator_tree_dirty": true,
+        "generated_at_utc": "2026-09-27T12:45:47Z",
+        "runtime": {
+          "python": "3.11.15",
+          "platform": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39"
+        }
+      },
+      "ledger_out": "results/grid_fit_v5",
+      "ledger_run_binding": "MATCH",
+      "reviewer_restore_validate_rescore_runs": 0
+    }
+  },
+  "ledger_changes": {
+    "paired_fixed5_v4": [
+      {
+        "path": "/evidence/validator_identity/source_digest",
+        "before": "1c67a748598baadb",
+        "after": "c78d7969ef49fd07"
+      },
+      {
+        "path": "/evidence/verification_receipt_core_sha256",
+        "before": "48c4c04a9f3ac7aea056e2961cb583745505bf653939a8cd58757a854b3a99aa",
+        "after": "e5893f855bf64b9f2ab8cb78dde01f8b442a77a42946a1b65bff091bf82fd9c1"
+      }
+    ],
+    "grid_fit_v5": [
+      {
+        "path": "/evidence/validator_identity/source_digest",
+        "before": "1c67a748598baadb",
+        "after": "c78d7969ef49fd07"
+      },
+      {
+        "path": "/evidence/verification_receipt_core_sha256",
+        "before": "ae614af28efc8f9e8315198d348b935cf0f32c6f1ab83885ba58e38cc4e83a5b",
+        "after": "352f55e50af3038fdf321bcd716a1fb780e6c90f6e30288ba8e07be5749d533a"
+      }
+    ]
+  },
+  "primary_claim": {
+    "id": "P22_STAGE3_PRIMARY",
+    "protocol_generation": "v6",
+    "requires_leg": false,
+    "무엇": "단계 3 의 사전 등록 primary estimand. v5 산출물을 여기로 승격하는 것은 계약 §2.1 이 금지한다."
+  },
+  "static": {
+    "numeric_control_AST_identical_after_removing_added_logging": true,
+    "limit": "No runtime execution; added metadata conversions/exceptions are not proved inert by this projection.",
+    "nonfinite_break_before_ok_assignment": true,
+    "nonfinite_line": 219,
+    "ok_assignment_line": 223,
+    "normalizer_partial_field_policy": "all three keys required, otherwise legacy_dict and all three values None",
+    "subject_module_imports": 0,
+    "subject_function_calls": 0
+  },
+  "scope": "Read-only repository data and AST audit; sender test/run claims not independently rerun."
+}

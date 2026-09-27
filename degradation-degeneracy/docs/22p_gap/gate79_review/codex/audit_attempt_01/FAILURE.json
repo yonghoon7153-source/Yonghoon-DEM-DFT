@@ -1,0 +1,10 @@
+{
+  "scope": "Reviewer-owned read-only data audit, not subject pytest/COMSOL",
+  "chunk_id": "a62a0c",
+  "exit_code": 1,
+  "error": "KeyError: out",
+  "cause": "Reviewer applied grid_fit_v5 ledger-out assertion to the historical paired_fixed5_v4 leg, which intentionally lacks out. Gate73 already preserved that historical boundary.",
+  "correction": "Require out binding for grid, preserve and report absent out for historical paired; do not retroactively fill or claim attach acceptance.",
+  "subject_source_edits": 0,
+  "subject_program_runs": 0
+}

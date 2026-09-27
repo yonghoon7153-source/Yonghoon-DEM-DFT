@@ -1,0 +1,203 @@
+{
+  "scope": "Reviewer arithmetic and independent symbolic model; source is parsed as AST elsewhere but never imported/called.",
+  "nine_state_bounds": [
+    {
+      "y33": 0,
+      "y34": 0,
+      "lower": 0,
+      "upper": 0
+    },
+    {
+      "y33": 0,
+      "y34": 1,
+      "lower": 1,
+      "upper": 1
+    },
+    {
+      "y33": 0,
+      "y34": null,
+      "lower": 0,
+      "upper": 1
+    },
+    {
+      "y33": 1,
+      "y34": 0,
+      "lower": -1,
+      "upper": -1
+    },
+    {
+      "y33": 1,
+      "y34": 1,
+      "lower": 0,
+      "upper": 0
+    },
+    {
+      "y33": 1,
+      "y34": null,
+      "lower": -1,
+      "upper": 0
+    },
+    {
+      "y33": null,
+      "y34": 0,
+      "lower": -1,
+      "upper": 0
+    },
+    {
+      "y33": null,
+      "y34": 1,
+      "lower": 0,
+      "upper": 1
+    },
+    {
+      "y33": null,
+      "y34": null,
+      "lower": -1,
+      "upper": 1
+    }
+  ],
+  "forty_pair_counterexample": {
+    "N": 40,
+    "n": 38,
+    "m": 2,
+    "D": 1,
+    "delta_cc": "1/38",
+    "missing_as_fail": "-1/40",
+    "bound": [
+      "-1/40",
+      "1/40"
+    ]
+  },
+  "pairing_example": {
+    "same_bank_group_join_rows": 4,
+    "exact_obs_key_pairs": 2
+  },
+  "empty_denominators": {
+    "n_zero": "delta_cc undefined",
+    "N_zero": "all contrasts undefined"
+  },
+  "logging_traces": [
+    {
+      "case": "finite_success_then_nonfinite_failure",
+      "input": [
+        {
+          "finite": true,
+          "fun": 1.0,
+          "success": true
+        },
+        {
+          "finite": false,
+          "success": false
+        }
+      ],
+      "result": {
+        "legacy_ok": true,
+        "last_finite_round": 1,
+        "native_last_success": false,
+        "native_best_success": true,
+        "outer": "nonfinite",
+        "n_rounds": 2,
+        "retained_best_f": 1.0
+      }
+    },
+    {
+      "case": "finite_failure_then_nonfinite_success",
+      "input": [
+        {
+          "finite": true,
+          "fun": 1.0,
+          "success": false
+        },
+        {
+          "finite": false,
+          "success": true
+        }
+      ],
+      "result": {
+        "legacy_ok": false,
+        "last_finite_round": 1,
+        "native_last_success": true,
+        "native_best_success": false,
+        "outer": "nonfinite",
+        "n_rounds": 2,
+        "retained_best_f": 1.0
+      }
+    },
+    {
+      "case": "first_nonfinite_failure",
+      "input": [
+        {
+          "finite": false,
+          "success": false
+        }
+      ],
+      "result": {
+        "legacy_ok": false,
+        "last_finite_round": null,
+        "native_last_success": false,
+        "native_best_success": null,
+        "outer": "nonfinite",
+        "n_rounds": 1,
+        "retained_best_f": null
+      }
+    },
+    {
+      "case": "first_nonfinite_success",
+      "input": [
+        {
+          "finite": false,
+          "success": true
+        }
+      ],
+      "result": {
+        "legacy_ok": false,
+        "last_finite_round": null,
+        "native_last_success": true,
+        "native_best_success": null,
+        "outer": "nonfinite",
+        "n_rounds": 1,
+        "retained_best_f": null
+      }
+    },
+    {
+      "case": "finite_success_then_worse_finite_failure",
+      "input": [
+        {
+          "finite": true,
+          "fun": 1.0,
+          "success": true
+        },
+        {
+          "finite": true,
+          "fun": 1.5,
+          "success": false
+        }
+      ],
+      "result": {
+        "legacy_ok": false,
+        "last_finite_round": 2,
+        "native_last_success": false,
+        "native_best_success": true,
+        "outer": "no_improvement",
+        "n_rounds": 2,
+        "retained_best_f": 1.0
+      }
+    },
+    {
+      "case": "no_rounds",
+      "input": [],
+      "result": {
+        "legacy_ok": false,
+        "last_finite_round": null,
+        "native_last_success": null,
+        "native_best_success": null,
+        "outer": "max_rounds",
+        "n_rounds": 0,
+        "retained_best_f": null
+      }
+    }
+  ],
+  "finding": "The statically preserved nonfinite break precedes updating ok; legacy_ok is not unconditionally the last native success.",
+  "not_native_runtime_reproduction": true,
+  "subject_program_runs": 0
+}

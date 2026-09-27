@@ -1,0 +1,144 @@
+"""Reviewer-owned Gate79 data/static audit; never imports subject code."""
+from pathlib import Path, PurePosixPath
+import ast, copy, hashlib, json, stat, subprocess, sys, zipfile
+O=Path(__file__).resolve().parent
+W=Path('C:/Users/Administrator/Documents/Codex/g79_20260928')
+D=W/'degradation-degeneracy'
+sys.path.insert(0,str(O.parents[1]/'work/gate26-pydeps'))
+import yaml
+H='b0203d1090b2659c31f8eb6f55e5a144657e9052'
+C='3dc269d80a7441b294d475b625b096baf3d1a459'
+P='720f0a0e466afb595fbd73a50f89416898cc927c'
+PC='23c361edbfc92fefcfbf0639b5ac40f61f7ebec7'
+def git(*a):
+    return subprocess.check_output(['git','-c','http.sslBackend=openssl','-c','credential.interactive=never','-C',str(W),*a])
+def identity(b):return {'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest()}
+def save(n,v):
+    p=O/n;p.parent.mkdir(parents=True,exist_ok=True)
+    with p.open('x',encoding='utf-8',newline='\n') as f:json.dump(v,f,ensure_ascii=False,indent=2);f.write('\n')
+def original(ref,p):return git('show',ref+':degradation-degeneracy/'+p)
+def obj(p):return yaml.safe_load((D/p).read_bytes())
+def differences(a,b,p=''):
+    if isinstance(a,dict) and isinstance(b,dict):
+        return [r for k in sorted(a.keys()|b.keys()) for r in differences(a.get(k),b.get(k),p+'/'+str(k))]
+    if a!=b:return [{'path':p,'before':a,'after':b}]
+    return []
+assert git('rev-parse','HEAD').decode().strip()==H
+assert not git('status','--porcelain=v1','-uall').strip()
+tracked=[x for x in git('ls-files','-z','--','degradation-degeneracy').decode().split('\0') if x]
+before={x:identity((W/x).read_bytes()) for x in tracked}
+save('SOURCE_BEFORE.json',before)
+scope=['degradation-degeneracy/'+x for x in ('src','tools','configs','scripts','run.sh','requirements*.txt')]
+sp=[x for x in git('ls-files','-z','--',*scope).decode().split('\0') if x]
+hd=hashlib.sha256()
+for p in sorted(sp):hd.update(p.removeprefix('degradation-degeneracy/').encode());hd.update((W/p).read_bytes())
+assert len(sp)==58 and hd.hexdigest()[:16]=='c78d7969ef49fd07'
+diffs={}
+for name,a,b,paths,opts in [
+ ('CODE_TO_HEAD_SCOPE',C,H,scope,[]),('G78_TO_G79_SCOPE',PC,H,scope,[]),
+ ('G78_TO_G79_NAMES',P,H,['degradation-degeneracy'],['--name-status']),
+ ('DOCS_TESTS_LEDGER',P,H,['degradation-degeneracy/'+x for x in ('tests','docs/22p_gap/GATE78_REQUEST.md','docs/22p_gap/STAGE3_CONTRACT.md','docs/22p_gap/LEG_PRESERVATION.yaml')],[])]:
+    bts=git('diff','--no-ext-diff',*opts,a,b,'--',*paths)
+    (O/(name+'.diff')).write_bytes(bts);diffs[name]=identity(bts)
+assert diffs['CODE_TO_HEAD_SCOPE']['bytes']==0
+changed=git('diff','--name-only',PC,H,'--',*scope).decode().splitlines()
+assert changed==['degradation-degeneracy/src/fitting.py','degradation-degeneracy/src/io.py']
+unchanged={}
+for k,paths in {'artifacts':['artifacts'],'claims':['docs/22p_gap/CLAIM_STATUS.yaml'],
+ 'registry_projection':['docs/22p_gap/_exec_class','docs/22p_gap/proj_g18','docs/22p_gap/row_projection.py'],
+ 'prior_broken_parquet_test':['tests/test_compare.py']}.items():
+    names=git('diff','--name-only',P,H,'--',*['degradation-degeneracy/'+x for x in paths]).decode().splitlines()
+    assert not names,k;unchanged[k]=True
+zp=D/'docs/22p_gap/gate78_review/GATE78_REVIEW_20260927.zip'
+assert zp.read_bytes()==(O.parent/'gate78_review_20260927'/zp.name).read_bytes()
+with zipfile.ZipFile(zp) as z:
+    assert z.testzip() is None
+    names=z.namelist();assert len(names)==len(set(n.casefold() for n in names))
+    m=json.loads(z.read('MANIFEST.json'));files=m['files']
+    assert set(names)==set(files)|{'MANIFEST.json'}
+    for n,v in files.items():
+        p=PurePosixPath(n)
+        assert not p.is_absolute() and '..' not in p.parts and '\\' not in n and ':' not in n
+        assert not stat.S_ISLNK(z.getinfo(n).external_attr>>16)
+        assert identity(z.read(n))==v and z.read(n)==(zp.parent/'codex'/n).read_bytes()
+    prior={'zip':identity(zp.read_bytes()),'manifest':identity(z.read('MANIFEST.json')),'payload':len(files),'exact_set_SHA_CRC_path_case_link':True,'local_prior_and_unpacked_match':True}
+ledger=obj('docs/22p_gap/LEG_PRESERVATION.yaml')
+ld=differences(yaml.safe_load(original(P,'docs/22p_gap/LEG_PRESERVATION.yaml')),ledger)
+assert len(ld)==1 and ld[0]['path']=='/legs'
+old_legs=yaml.safe_load(original(P,'docs/22p_gap/LEG_PRESERVATION.yaml'))['legs']
+legdiff={n['leg_id']:differences(o,n) for o,n in zip(old_legs,ledger['legs']) if o!=n}
+assert set(legdiff)=={'paired_fixed5_v4','grid_fit_v5'}
+assert all({d['path'] for d in ds}=={'/evidence/verification_receipt_core_sha256','/evidence/validator_identity/source_digest'} for ds in legdiff.values())
+receipts={}
+for leg in ['paired_fixed5_v4','grid_fit_v5']:
+    path='docs/22p_gap/receipts/'+leg+'.validate.yaml'
+    old=original(P,path);hist=D/('docs/22p_gap/receipts/history/'+leg+'.validate.1c67a748598baadb.yaml')
+    assert old==hist.read_bytes()
+    r=obj(path);core=r['core'];e=next(x for x in ledger['legs'] if x['leg_id']==leg)
+    ch=hashlib.sha256(yaml.safe_dump(core,allow_unicode=True,sort_keys=False,width=100).encode()).hexdigest()
+    assert ch==r['core_sha256']==e['evidence']['verification_receipt_core_sha256']
+    assert core['identity']['validator_source_digest']=='c78d7969ef49fd07'
+    assert core['identity']['src_io_sha256']==identity((D/'src/io.py').read_bytes())['sha256'][:16]
+    ds=differences(yaml.safe_load(old),r)
+    assert all(x['path'] in ['/core/identity/validator_source_digest','/core/identity/src_io_sha256','/core_sha256'] or x['path'].startswith('/stamp/') for x in ds)
+    pi=obj(core['bundle']['payload_index']);bundle=D/core['bundle']['uri']
+    members={p.relative_to(bundle).as_posix():identity(p.read_bytes()) for p in bundle.rglob('*') if p.is_file()}
+    assert set(members)==set(pi)|{'payload_sha256.yaml'}
+    assert all(members[k]['sha256']==v for k,v in pi.items())
+    assert members['payload_sha256.yaml']['sha256']==core['bundle']['payload_index_sha256']
+    assert len(members)==core['bundle']['files'] and sum(x['bytes'] for x in members.values())==core['bundle']['bytes']
+    assert e['evidence']['out']==core['restore']['run_dir_relative']
+    outputs=core['outputs'];assert len(outputs)==2
+    assert outputs[0]['semantic_sha256']==outputs[1]['semantic_sha256']
+    assert outputs[0]['source_file_sha256']==core['bundle']['fits_sha256']
+    assert members[outputs[1]['relative_path']]['sha256']==outputs[1]['file_sha256']
+    receipts[leg]={'history_raw_equal_prior':True,'history':identity(old),'current':identity((D/path).read_bytes()),'diffs':ds,'core_sha256':ch,
+      'validation':core['validation'],'outputs_identical_prior':core['outputs']==yaml.safe_load(old)['core']['outputs'],
+      'bundle_members':len(members),'bundle_bytes':sum(x['bytes'] for x in members.values()),'bundle_rehash':True,
+      'producer_digest':e['evidence']['leg_source_digest'],'stamp':r['stamp'],'reviewer_restore_validate_rescore_runs':0}
+    for nm,bts in [('prior/'+leg+'.validate.yaml',old),('reference/'+path,(D/path).read_bytes())]:
+        dest=O/nm;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(bts)
+e=next(x for x in ledger['legs'] if x['leg_id']=='grid_fit_v5')
+assert e['inference_role']=='diagnostic' and e['claim_scope']=='no_active_claim'
+primary=next(x for x in obj('docs/22p_gap/CLAIM_STATUS.yaml')['active_claims'] if x['id']=='P22_STAGE3_PRIMARY')
+assert primary['requires_leg'] is False
+oldsrc=original(PC,'src/fitting.py');newsrc=(D/'src/fitting.py').read_bytes()
+(O/'prior/fitting.py.txt').write_bytes(oldsrc)
+oldfn=next(n for n in ast.parse(oldsrc).body if isinstance(n,ast.FunctionDef) and n.name=='_minimize_until_stable')
+newfn=next(n for n in ast.parse(newsrc).body if isinstance(n,ast.FunctionDef) and n.name=='_minimize_until_stable')
+logging_names={'native_last','native_best','outer','n_rounds','termination'}
+class RemoveLogging(ast.NodeTransformer):
+    def visit_Expr(self,n):return None if isinstance(n.value,ast.Constant) and isinstance(n.value.value,str) else self.generic_visit(n)
+    def visit_Assign(self,n):
+        names={x.id for t in n.targets for x in ast.walk(t) if isinstance(x,ast.Name)}
+        return None if names and names<=logging_names else self.generic_visit(n)
+    def visit_AugAssign(self,n):return None if isinstance(n.target,ast.Name) and n.target.id in logging_names else self.generic_visit(n)
+    def visit_Return(self,n):
+        n=self.generic_visit(n)
+        if isinstance(n.value,ast.Tuple) and len(n.value.elts)==5:n.value.elts=n.value.elts[:4]
+        return n
+projected=RemoveLogging().visit(copy.deepcopy(newfn));oldplain=RemoveLogging().visit(copy.deepcopy(oldfn))
+assert ast.dump(projected)==ast.dump(oldplain)
+loop=next(n for n in newfn.body if isinstance(n,ast.For))
+nonfinite=next(n for n in loop.body if isinstance(n,ast.If) and ast.unparse(n.test)=='not np.isfinite(res.fun)')
+okassign=next(n for n in loop.body if isinstance(n,ast.Assign) and any(isinstance(x,ast.Name) and x.id=='ok' for t in n.targets for x in ast.walk(t)))
+assert loop.body.index(nonfinite)<loop.body.index(okassign) and any(isinstance(x,ast.Break) for x in nonfinite.body)
+static={'numeric_control_AST_identical_after_removing_added_logging':True,'limit':'No runtime execution; added metadata conversions/exceptions are not proved inert by this projection.',
+ 'nonfinite_break_before_ok_assignment':True,'nonfinite_line':nonfinite.lineno,'ok_assignment_line':okassign.lineno,
+ 'normalizer_partial_field_policy':'all three keys required, otherwise legacy_dict and all three values None',
+ 'subject_module_imports':0,'subject_function_calls':0}
+save('STATIC_CONTROL_FLOW.json',static)
+refs=['src/fitting.py','src/io.py','src/scoring.py','tests/test_gate79_stage3_logging.py','tests/test_compare.py','tests/conftest.py',
+ 'docs/22p_gap/GATE79_REQUEST.md','docs/22p_gap/GATE78_REQUEST.md','docs/22p_gap/STAGE3_CONTRACT.md',
+ 'docs/22p_gap/CLAIM_STATUS.yaml','docs/22p_gap/LEG_PRESERVATION.yaml','docs/22p_gap/mutation_replay.py','docs/22p_gap/make_receipt.py']
+for p in refs:
+    dest=O/'reference'/p;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes((D/p).read_bytes())
+for n in ['REVIEW_KO.md','CLAUDE_REPLY.md','DECISION.json']:
+    dest=O/'prior_gate78'/n;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes((zp.parent/'codex'/n).read_bytes())
+response=(D/'docs/08_REVIEW_RESPONSE.md').read_text(encoding='utf-8')
+(O/'reference/RESPONSE_109_110.txt').write_text(response[response.index('## §109 '):],encoding='utf-8',newline='\n')
+save('DATA_AUDIT.json',{'head':H,'code':C,'prior_head':P,'prior_code':PC,'source_digest':hd.hexdigest()[:16],
+ 'scope_files':len(sp),'changed_scope_files':changed,'tracked_files':len(tracked),'diffs':diffs,'unchanged':unchanged,
+ 'prior_review_package':prior,'receipts':receipts,'ledger_changes':legdiff,'primary_claim':primary,'static':static,
+ 'scope':'Read-only repository data and AST audit; sender test/run claims not independently rerun.'})
+print(json.dumps({'status':'DATA_STATIC_AUDIT_COMPLETE','head':H,'source_digest':hd.hexdigest()[:16],'tracked_files':len(tracked),'prior_payload':len(files),'bundle_members':sum(r['bundle_members'] for r in receipts.values()),'numeric_control_AST_projection_identical':True}))

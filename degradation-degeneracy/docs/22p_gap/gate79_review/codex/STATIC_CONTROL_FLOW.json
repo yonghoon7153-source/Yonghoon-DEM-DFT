@@ -1,0 +1,10 @@
+{
+  "numeric_control_AST_identical_after_removing_added_logging": true,
+  "limit": "No runtime execution; added metadata conversions/exceptions are not proved inert by this projection.",
+  "nonfinite_break_before_ok_assignment": true,
+  "nonfinite_line": 219,
+  "ok_assignment_line": 223,
+  "normalizer_partial_field_policy": "all three keys required, otherwise legacy_dict and all three values None",
+  "subject_module_imports": 0,
+  "subject_function_calls": 0
+}

@@ -1,0 +1,166 @@
+{
+  "schema": "review-payload-manifest/v1",
+  "scope": "Reviewer data/static evidence only; no execution authorization",
+  "files": {
+    "ACTIVITY_AND_LIMITS.json": {
+      "bytes": 1464,
+      "sha256": "9cd3ddd629573390c97da09bcd499641173e06a4b90ad73f790965870664ff5e"
+    },
+    "audit_attempt_01/data_audit.py.txt": {
+      "bytes": 11184,
+      "sha256": "33b21941aa7d0983afbeed62ce9d6db1ee2d79f8c87bbc086d3f67a3d73cb430"
+    },
+    "audit_attempt_01/FAILURE.json": {
+      "bytes": 551,
+      "sha256": "428d46b9cac4d7817385dc01353eaa1ce7a6a664848a9d33c824be2154ce4c12"
+    },
+    "CLAUDE_REPLY.md": {
+      "bytes": 3188,
+      "sha256": "005ce0c2f800c5454c0d1565a0bc1a98e2af97799e29e3cf937aaf876c2a1f25"
+    },
+    "CODE_TO_HEAD_SCOPE.diff": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "DATA_AUDIT.json": {
+      "bytes": 10594,
+      "sha256": "f2003a51a9755a5f31cefb5b34c87aaf354ad9385ed3dce6b222339a25143ecf"
+    },
+    "data_audit.py": {
+      "bytes": 11547,
+      "sha256": "8aed14bf0959452caafd0323553d333b87d9150cc5273bedc8038e52a1c61dd4"
+    },
+    "DECISION.json": {
+      "bytes": 1926,
+      "sha256": "7b10ff6b57a405ccc4851eb6f004d9a5d7ac47676ae33bf8c15aa8df6676129b"
+    },
+    "DESIGN_AND_SYMBOLIC_CHECKS.json": {
+      "bytes": 4194,
+      "sha256": "d85472caafb0d8937caa92b5aed4b216c071e24c24f118a8d5880b77b866e875"
+    },
+    "design_and_trace_checks.py": {
+      "bytes": 3676,
+      "sha256": "7053be25fb31740e85fbadedad5054bd00f714e53377181c32bc12afbf24604d"
+    },
+    "DOCS_TESTS_LEDGER.diff": {
+      "bytes": 35951,
+      "sha256": "5270a126f24eb47d430751755166bb69d0d6c376d012d12ce3092eacea5febf9"
+    },
+    "G78_TO_G79_NAMES.diff": {
+      "bytes": 4329,
+      "sha256": "0dd5d2a37c03c04a35d8c4ff828cafcbe840a87e8b07f355ee69951cddc7a09a"
+    },
+    "G78_TO_G79_SCOPE.diff": {
+      "bytes": 12527,
+      "sha256": "eae8ca7a923598de3dee8c87e9a6db17f82fe6bb880a2c3164ef1387f8527890"
+    },
+    "prior/fitting.py.txt": {
+      "bytes": 99176,
+      "sha256": "7b852ce9fa67fe4eec0e7f382420ae5d449698104395211f3c71bb92d82c01e4"
+    },
+    "prior/grid_fit_v5.validate.yaml": {
+      "bytes": 3703,
+      "sha256": "c863d8c3808b22537679264e0dc45f82c67f879c2f0549949e8a93496c51684a"
+    },
+    "prior/paired_fixed5_v4.validate.yaml": {
+      "bytes": 3768,
+      "sha256": "9e9cc2f9c8189648c3e669921d88e556d2b26359f61e0053d870a45d5b8e6c81"
+    },
+    "prior_gate78/CLAUDE_REPLY.md": {
+      "bytes": 3907,
+      "sha256": "80aa19628bc8b2841c94ae23249342742c9cbf2f2d0bec8a9cec45c74ce96c2d"
+    },
+    "prior_gate78/DECISION.json": {
+      "bytes": 2175,
+      "sha256": "371d7feaf864b4f37c0c9ec31e7d02470721badd91fee3bb05741aeff112eee9"
+    },
+    "prior_gate78/REVIEW_KO.md": {
+      "bytes": 16959,
+      "sha256": "8bf26d26c520ae322d348eecfca83dc68efffe608bf1e7df2e0b9916e908d63b"
+    },
+    "reference/docs/22p_gap/CLAIM_STATUS.yaml": {
+      "bytes": 27279,
+      "sha256": "dde972427f0833d59b72148f1a71ea093441b23dbf07a4006f129921090f9b68"
+    },
+    "reference/docs/22p_gap/GATE78_REQUEST.md": {
+      "bytes": 21453,
+      "sha256": "eead1ee2ea63d9283464f2a14b4c3aa302d9d6e9fbd6209dd2256e33f71005ba"
+    },
+    "reference/docs/22p_gap/GATE79_REQUEST.md": {
+      "bytes": 11457,
+      "sha256": "acefc435adc75b20684066de9c0b987af1af514bd094c3a68e56f4678247f4c8"
+    },
+    "reference/docs/22p_gap/LEG_PRESERVATION.yaml": {
+      "bytes": 65166,
+      "sha256": "a85e90870168c072624269ff49a39e94b10fc1a01785a2524d0be5216013129e"
+    },
+    "reference/docs/22p_gap/make_receipt.py": {
+      "bytes": 19016,
+      "sha256": "9c8cf71af310de03d2ee9a72d31fcc9172d8920af65fdf097277513c8106c07c"
+    },
+    "reference/docs/22p_gap/mutation_replay.py": {
+      "bytes": 456636,
+      "sha256": "6bc6e37533fec24b63487acd7538e119ac20a494b8728a3fd6abd1e75c96eae4"
+    },
+    "reference/docs/22p_gap/receipts/grid_fit_v5.validate.yaml": {
+      "bytes": 3703,
+      "sha256": "b244b7800a8a2887e3b7e7bfba2421ee517ba7297a50f4ff423c6695b798a667"
+    },
+    "reference/docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml": {
+      "bytes": 3768,
+      "sha256": "8135ead2e3970eaed0d1da4d66ebcdf132b39a767e18467213620d51a4e30c26"
+    },
+    "reference/docs/22p_gap/STAGE3_CONTRACT.md": {
+      "bytes": 97882,
+      "sha256": "7768bb7d954714887a499c290688af3e1c4c61e512f0a85bdc174226eb7d9e23"
+    },
+    "reference/RESPONSE_109_110.txt": {
+      "bytes": 8847,
+      "sha256": "c467c66a58072dd164a40cb4aaf16d694f0fb4dd2fec5c4d2353bb0e6a8df2a7"
+    },
+    "reference/src/fitting.py": {
+      "bytes": 103783,
+      "sha256": "2a55fc67c5264064b5822d3515ac65a44694d6346cac8650101ed826951a646d"
+    },
+    "reference/src/io.py": {
+      "bytes": 104683,
+      "sha256": "d96e78b236696cff09da5934c3f0bcae98d0c98eae3a72a7c3e11279057463d5"
+    },
+    "reference/src/scoring.py": {
+      "bytes": 32192,
+      "sha256": "69e69cb046f4b4aee2acf039faa9d69fc9ed032eab96093e54b0ca68b860a43d"
+    },
+    "reference/tests/conftest.py": {
+      "bytes": 17048,
+      "sha256": "8c38ecc00427a47503d6b5926d53acf3bc0ac2e4b454fb3c3b5e70fc4f1312b5"
+    },
+    "reference/tests/test_compare.py": {
+      "bytes": 225931,
+      "sha256": "df6e0427638d1afa32270b94c005a2b504efb14e56238e2357908028cc91ff4f"
+    },
+    "reference/tests/test_gate79_stage3_logging.py": {
+      "bytes": 16847,
+      "sha256": "b25b5ccf444722ecf94718edc3c8c83b808a30d18f72c9f8efcf80465cd16980"
+    },
+    "REVIEW_KO.md": {
+      "bytes": 11780,
+      "sha256": "260b76f1c4759a264601971b947544d40dab935b9c718d1347eb5f199ca2beb2"
+    },
+    "seal_review.py": {
+      "bytes": 3272,
+      "sha256": "c70aa2bd707c2e0aa252c1192aaf70d35d334d65665aeaa74c291d9f78d23419"
+    },
+    "SOURCE_AFTER_CHECK.json": {
+      "bytes": 234,
+      "sha256": "a55eb579e79d0e0437cd4ea632b602358d550c06736ec990c78ca8e5a741a113"
+    },
+    "SOURCE_BEFORE.json": {
+      "bytes": 641796,
+      "sha256": "eacd7f1ecebd2e06d8e396581c1c39b5c423a8cfee06e7d0f6fd78a92d1f39f6"
+    },
+    "STATIC_CONTROL_FLOW.json": {
+      "bytes": 465,
+      "sha256": "e3ef1477bd7642b20848bd0d9c0638c682b83d97e42fd6f6002d8381fe8dae70"
+    }
+  }
+}

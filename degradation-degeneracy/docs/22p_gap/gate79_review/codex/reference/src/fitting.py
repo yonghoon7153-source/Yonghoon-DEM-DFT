@@ -1,0 +1,1834 @@
+"""fitting.py — α·β 최적화 (33p 이식) + 열화모드 환산 (21p).
+
+정방향(모드→곡선)은 Phase 2의 modes.py, 역방향(곡선→모드)이 여기다.
+`windowed_curve`는 원본 코드 그대로 재사용한다 (src/curves.py).
+
+────────────────────────────────────────────────────────────────────────
+정규화 규약 ★ (33p bound를 이해하는 열쇠)
+
+곡선의 x축은 **각 셀 자기 용량**으로 정규화돼 있다 (extract_curves).
+이때 half-cell 곡선 재구성은
+
+    U_PE(x) = f_PE_ref( (x − β_PE)/α_PE )
+
+이고, 전하 보존으로부터 (유도: docs/05_HANDOFF.md)
+
+    α_PE = (1 − LAM_PE) / r,     r = Q_degraded / Q_reference
+
+가 된다. 즉 **α는 열화율이 아니라 "전극 용량 / 셀 용량" 비**이며,
+용량이 줄면(r<1) α는 1보다 커진다. 역환산은 21p 식 그대로:
+
+    LAM_PE = 1 − α_PE·r
+    LAM_NE = 1 − α_NE·r
+    LLI    = 1 − r·[w_PE·α_PE + w_NE·α_NE + κ·(β_NE − β_PE)]   ← src/inventory.py 유도
+
+⚠ α = 1.00 은 곧 LAM = 1 − r = **용량손실과 같음**을 뜻한다.
+   33p의 lb = [1.00, …]는 이 지점을 하한으로 못 박으므로,
+   최적화가 하한에 붙으면 자동으로 "LAM_PE ≈ LAM_NE ≈ 용량손실"이 나온다.
+   22p의 결과 패턴과 정확히 일치 → bound active 여부를 반드시 검사한다.
+────────────────────────────────────────────────────────────────────────
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import logging
+from dataclasses import dataclass, field
+
+import numpy as np
+from scipy.interpolate import interp1d
+from scipy.optimize import minimize
+
+from src.curves import windowed_curve
+
+log = logging.getLogger(__name__)
+
+PARAM_NAMES = ("a_pe", "b_pe", "a_ne", "b_ne")
+
+
+# ---------------------------------------------------------------- 정방향
+
+def make_ref_interp(x: np.ndarray, y: np.ndarray):
+    """reference half-cell 곡선 보간자. 원본과 동일하게 범위 밖은 끝값 유지."""
+    m = np.isfinite(x) & np.isfinite(y)
+    return interp1d(x[m], y[m], bounds_error=False,
+                    fill_value=(y[m][0], y[m][-1]))
+
+
+def reconstruct(p, f_pe_ref, f_ne_ref, x: np.ndarray):
+    """p = [α_PE, β_PE, α_NE, β_NE] → (PE, NE, full cell). 창 밖은 NaN."""
+    a_pe, b_pe, a_ne, b_ne = p
+    pe = windowed_curve(f_pe_ref, x, a_pe, b_pe)
+    ne = windowed_curve(f_ne_ref, x, a_ne, b_ne)
+    return pe, ne, pe - ne
+
+
+def window_shortfall(p, x_min: float = 0.0, x_max: float = 1.0) -> float:
+    """재구성 창이 관측 구간 [x_min, x_max]를 못 덮는 양 (연속량).
+
+    전극의 창은 x ∈ [β, β+α]. 관측 구간을 벗어난 만큼을 더해서 돌려준다.
+    목적함수 벌점이 이 값에 비례하면 landscape가 매끄러워져
+    "창을 넓혀라"는 방향이 항상 살아 있다 (점 개수 세기는 계단형이라 갇힌다).
+    """
+    a_pe, b_pe, a_ne, b_ne = p
+    total = 0.0
+    for a, b in ((a_pe, b_pe), (a_ne, b_ne)):
+        total += max(0.0, b - x_min) + max(0.0, x_max - (b + a))
+    return total
+
+
+# ---------------------------------------------------------------- 역환산
+
+def to_degradation_modes(p, r: float = 1.0, convention: str = "derived",
+                         w_pe: float | None = None, w_ne: float | None = None,
+                         kappa: float | None = None) -> dict:
+    """α·β → LAM_PE / LAM_NE / LLI.
+
+    convention:
+      "derived" — ★ 기본값. 전하 보존으로 유도한 식 (src/inventory.py 참조)
+                    LLI = 1 − r·[w_PE·α_PE + w_NE·α_NE + κ·(β_NE − β_PE)]
+                  w_pe·w_ne·kappa 가 필요하며, reference_inventory()로 구한다.
+      "paper"   — 21p 식. 가중치(w_PE=1,w_NE=0,κ=1)도 다르고 β 항 부호도 반대다.
+      "code"    — 원본 슬라이더 식 (r 미반영).
+
+    합성 격자 95조건 평균 |오차|: derived 0.012 / paper 0.128 / code 0.200
+    """
+    a_pe, b_pe, a_ne, b_ne = p
+    lam_pe = 1.0 - a_pe * r
+    lam_ne = 1.0 - a_ne * r
+
+    if convention == "derived":
+        if w_pe is None or w_ne is None or kappa is None:
+            raise ValueError("derived 규약에는 w_pe·w_ne·kappa가 필요합니다 "
+                             "(src.inventory.reference_inventory 사용)")
+        lli = 1.0 - r * (w_pe * a_pe + w_ne * a_ne + kappa * (b_ne - b_pe))
+    elif convention == "paper":
+        lli = 1.0 - (a_pe + b_pe - b_ne) * r
+    elif convention == "code":
+        lli = (1.0 - a_pe) + (b_pe - b_ne)
+    else:
+        raise ValueError(f"알 수 없는 convention: {convention}")
+    return {"lam_pe": float(lam_pe), "lam_ne": float(lam_ne), "lli": float(lli)}
+
+
+def to_modes_halfcell(p, p_ini, r: float) -> dict:
+    """★ Case 1 — full-range half-cell OCV 기준에서의 역환산 (21p 식 원형).
+
+    이 기준에서는 α·β가 논문과 같은 의미를 갖는다.
+        α_PE = C_PE/C_full,  β_PE = −y0·α_PE
+        α_NE = C_NE/C_full,  β_NE = (z0−1)·α_NE      (s = 1−z 로 방전방향 정렬)
+    따라서 셀별 상수 없이 21p 식이 그대로 성립한다.
+
+        LAM_PE = 1 − α_PE·r/α_PE,ini
+        LAM_NE = 1 − α_NE·r/α_NE,ini
+        LLI    = 1 − (α_NE + β_NE − β_PE)·r / (α_NE,ini + β_NE,ini − β_PE,ini)
+
+    LLI의 전극 기준(NE)은 전하 보존에서 나온다: 완충 상태에서
+    PE 보유 Li = −β_PE·C_full, NE 보유 Li = (α_NE+β_NE)·C_full 이므로
+    총재고 = (α_NE + β_NE − β_PE)·C_full.
+    비교용으로 21p 표기 그대로인 PE 기준도 함께 반환한다.
+    """
+    a_pe, b_pe, a_ne, b_ne = p
+    a_pe0, b_pe0, a_ne0, b_ne0 = p_ini
+    inv_ne = a_ne0 + b_ne0 - b_pe0
+    inv_pe = a_pe0 + b_pe0 - b_ne0
+    return {
+        "lam_pe": float(1.0 - a_pe * r / a_pe0),
+        "lam_ne": float(1.0 - a_ne * r / a_ne0),
+        "lli": float(1.0 - (a_ne + b_ne - b_pe) * r / inv_ne) if inv_ne else float("nan"),
+        "lli_pe_basis": float(1.0 - (a_pe + b_pe - b_ne) * r / inv_pe) if inv_pe else float("nan"),
+    }
+
+
+def modes_to_params(lam_pe: float, lam_ne: float, lli: float, r: float) -> np.ndarray:
+    """역함수 — 참값에서 기대되는 α·β (테스트·진단용, "paper" 규약)."""
+    a_pe = (1.0 - lam_pe) / r
+    a_ne = (1.0 - lam_ne) / r
+    # LLI = 1 − (a_pe + b_pe − b_ne)·r  →  b_pe − b_ne = (1−LLI)/r − a_pe
+    d_beta = (1.0 - lli) / r - a_pe
+    return np.array([a_pe, d_beta, a_ne, 0.0])
+
+
+# ---------------------------------------------------------------- 최적화
+
+@dataclass
+class FitResult:
+    p: np.ndarray
+    J: float
+    converged: bool
+    n_eval: int
+    bound_active: tuple                      # 파라미터별 bound 접촉 여부
+    n_restarts: int = 1
+    n_restarts_agree: int = 1                # 최적해와 사실상 같은 해에 도달한 수
+    p_spread: float = 0.0                    # restart 간 해의 최대 퍼짐
+    J_spread: float = 0.0
+    restarts: list = field(default_factory=list)
+    #: ★ 79차 (단계 3 §9.4 한정 구현) — 예외로 실패한 restart 의 기록. `restarts`·`n_restarts` 의 뜻(성공한 것만)은
+    #:   바꾸지 않는다; 실패는 여기 index·source·오류로 남아 fits 행의 `restart_errors_json` 이 된다.
+    restart_errors: list = field(default_factory=list)
+
+    @property
+    def any_bound_active(self) -> bool:
+        return any(self.bound_active)
+
+
+def _bound_active(p, lb, ub, tol: float = 1e-4) -> tuple:
+    return tuple(bool(abs(v - l) < tol or abs(v - u) < tol)
+                 for v, l, u in zip(p, lb, ub))
+
+
+# dQ/dV 항이 들어가면 최소점이 바늘처럼 뾰족해진다 (실측: α를 0.001 흔들면
+# J가 0 → 0.12). 기본 허용오차(xatol=1e-4)로는 그 바닥을 못 찍어서, 목적함수의
+# 성질이 아니라 optimizer의 게으름이 결과로 보고돼 버린다. 그래서 조인다.
+_NM_OPTIONS = {"xatol": 1e-7, "fatol": 1e-12, "maxiter": 4000, "maxfev": 4000}
+
+
+def _native_termination(res) -> dict:
+    """scipy `OptimizeResult` 의 **native** 종료 기록 — 값을 해석하지 않고 그대로 옮긴다 (79차)."""
+    return {"status": int(getattr(res, "status", -1)), "success": bool(getattr(res, "success", False)),
+            "message": str(getattr(res, "message", "")), "nfev": int(getattr(res, "nfev", 0)),
+            "nit": int(getattr(res, "nit", -1))}
+
+
+def _minimize_until_stable(objective, x0, bounds, method: str,
+                           max_rounds: int = 4, tol: float = 1e-12):
+    """Nelder-Mead는 단순체가 찌그러지면 조기 종료한다. 해를 시작점으로 재시작해
+    개선이 멈출 때까지 반복한다 (최적화 실패와 목적함수의 평평함을 구분하기 위함).
+
+    돌려주는 것: `(best_x, best_f, ok, nfev, termination)`.
+      · `ok` 는 **마지막 round** 의 `res.success` 다 — 79차 이전과 같은 뜻이며 바꾸지 않는다 (best round 의
+        success 가 아니다; 둘이 다를 수 있다). `FitResult.converged` 가 이 값을 그대로 받는다.
+      · `termination` (79차, 단계 3 §9.4 한정 구현) 은 두 층을 **구별**해 남긴다:
+          `native_last`  마지막 round 의 solver native 종료 (status·success·message·nfev·nit)
+          `native_best`  `best_f` 를 낸 round 의 native 종료 (개선이 한 번도 없었으면 None)
+          `outer`        이 바깥 반복이 멈춘 이유 — `no_improvement`(개선 < tol) · `nonfinite`(J 비유한) ·
+                         `max_rounds`
+          `n_rounds`     실제로 돈 round 수
+        수치 경로(minimize 호출·갱신 규칙·반환 p/J)는 79차 이전과 **동일**하다 — 기록만 더한다.
+    """
+    opts = _NM_OPTIONS if method == "Nelder-Mead" else None
+    best_x, best_f, ok, nfev = np.asarray(x0, float), np.inf, False, 0
+    cur_x = best_x
+    native_last, native_best, outer, n_rounds = None, None, "max_rounds", 0
+    for _ in range(max_rounds):
+        res = minimize(objective, cur_x, method=method, bounds=bounds, options=opts)
+        nfev += int(res.nfev)
+        n_rounds += 1
+        native_last = _native_termination(res)
+        if not np.isfinite(res.fun):
+            outer = "nonfinite"
+            break
+        improved = best_f - float(res.fun)
+        cur_x, ok = np.asarray(res.x, float), bool(res.success)
+        # 리뷰 F16: best_x는 개선됐을 때만 갱신 — 반환 (p, J) 불일치 방지
+        if float(res.fun) < best_f:
+            best_f = float(res.fun)
+            best_x = cur_x
+            native_best = native_last
+        if improved < tol:
+            outer = "no_improvement"
+            break
+    termination = {"outer": outer, "n_rounds": n_rounds,
+                   "native_last": native_last, "native_best": native_best}
+    return best_x, best_f, ok, nfev, termination
+
+
+def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
+        method: str = "Nelder-Mead", agree_tol: float = 1e-3,
+        adaptive: bool = True, warm_init: bool = False) -> FitResult:
+    """multi-start 최적화.
+
+    ★ restart마다 다른 해에 수렴하면 그 자체가 degeneracy의 직접 증거다.
+      (같은 데이터·같은 코드인데 답이 갈린다는 뜻)
+      n_restarts_agree / p_spread 로 정량화한다.
+
+    method 기본값이 Nelder-Mead인 이유: reference 곡선 보간이 조각선형이라
+    L-BFGS-B의 수치 gradient가 무의미하다 (실측 α 오차 0.07 vs NM 0.00003).
+
+    ★ warm_init — restart 0의 초기값이 앞 목적함수에서 물려받은 해인가 (F25).
+      `restarts`를 J 오름차순으로 저장하므로 **순서만으로는 어느 것이 warm
+      start였는지 알 수 없다.** 인덱스로 추정하던 사후 진단은 실제로는 warm이
+      아니라 best restart를 버리고 있었다. 그래서 restart마다 출처를 같이
+      적는다 — 나중에 지표를 바꿔도 원본에서 다시 셀 수 있어야 한다.
+    """
+    lb = np.asarray(lb, float)
+    ub = np.asarray(ub, float)
+    init = np.clip(np.asarray(init, float), lb, ub)
+    bounds = list(zip(lb, ub))
+    rng = np.random.default_rng(seed)
+
+    results = []
+    errors: list = []
+    n_max = max(1, n_restarts)
+    for k in range(n_max):
+        x0 = init if k == 0 else rng.uniform(lb, ub)
+        # ★ F31 — restart 0은 무작위가 아니다. warm start를 받았으면 "warm",
+        #   아니면 공통 결정론적 초기값이라 "base_init"이다. 둘을 뭉치면
+        #   "무작위 restart끼리만" 비교가 성립하지 않는다 — warm을 받은
+        #   목적함수만 restart 0이 빠지고, 나머지는 base_init이 남는다.
+        src = ("warm" if warm_init else "base_init") if k == 0 else "random"
+        try:
+            x, f, ok, nfev, term = _minimize_until_stable(objective, x0, bounds, method)
+            results.append((x, f, ok, nfev, k, src, term))
+        except Exception as e:  # noqa: BLE001
+            # ★ 79차 — 실패한 restart 는 여전히 `results` 에 들어가지 않지만(기존 동작·n_restarts 불변) 기록은 남긴다.
+            errors.append({"i": k, "source": src, "error": f"{type(e).__name__}: {e}"})
+            # ★ 10차 발견 6 — 공정 진단(paired, --no-adaptive)은 모든 조건이
+            #   **정확히 같은 restart index 집합**을 가져야 성립한다 (F86).
+            #   여기서 조용히 건너뛰면 그 조건만 집합이 줄어드는데, 사후
+            #   검증은 "누락"을 볼 뿐 원인을 모른다. adaptive 를 껐다는 것은
+            #   공정성이 목적이라는 뜻이므로 즉시 실패시킨다.
+            if not adaptive:
+                raise RuntimeError(
+                    f"restart {k} 실패 (adaptive=False 공정 모드): {e}\n"
+                    f"  공정 비교는 모든 조건이 같은 restart 집합을 요구합니다 — "
+                    f"조건을 조용히 빼면 비교불능 데이터가 됩니다 (F86)") from e
+            log.debug("restart %d 실패: %s", k, e)
+        # 적응적 multi-start: 앞의 두 번이 같은 해로 모이면 더 돌릴 이유가 없다.
+        # 갈리는 조건(= degeneracy 후보)에서만 끝까지 돌려서 비용을 아낀다.
+        if adaptive and k == 1 and len(results) == 2:
+            (p0, j0, *_), (p1, j1, *_) = results
+            if (abs(j0 - j1) <= agree_tol * max(1.0, abs(min(j0, j1)))
+                    and np.max(np.abs(p0 - p1)) <= agree_tol * 10):
+                break
+
+    if not results:
+        nan = np.full(4, np.nan)
+        return FitResult(nan, float("nan"), False, 0, (False,) * 4, n_restarts, 0,
+                         restart_errors=errors)
+
+    # ★ J 오름차순 정렬 — 그래서 인덱스는 더 이상 restart 순서가 아니다.
+    #   출처(restart index, warm 여부)는 튜플 안에 같이 실려 보존된다 (F25).
+    results.sort(key=lambda t: t[1])
+    p_best, J_best, ok, _, _, _, _ = results[0]   # (p, J, ok, nfev, i, source, termination)
+    nfev = sum(t[3] for t in results)     # 리뷰 F17: 전체 restart의 평가 수 합
+
+    # 최적해와 J가 사실상 같은데 p가 다른 해 = 평평한 골짜기
+    near = [p for p, J, *_ in results if abs(J - J_best) <= agree_tol * max(1.0, abs(J_best))]
+    agree = sum(1 for p in near if np.max(np.abs(p - p_best)) <= agree_tol * 10)
+    spread = float(np.max([np.max(np.abs(p - p_best)) for p in near])) if near else 0.0
+    j_spread = float(max(J for _, J, *_ in results) - J_best)
+
+    return FitResult(
+        p=p_best, J=J_best, converged=ok, n_eval=nfev,
+        bound_active=_bound_active(p_best, lb, ub),
+        n_restarts=len(results), n_restarts_agree=agree,
+        p_spread=spread, J_spread=j_spread,
+        # F25/F31: (p, J)만 적으면 출처가 사라진다. dict로 바꿔 restart 인덱스와
+        # 출처(warm / base_init / random)를 같이 남긴다.
+        # 옛 형식 [(p, J), ...]도 읽는 쪽에서 받는다.
+        # ★ 79차 (단계 3 §9.4 한정 구현) — restart 마다 `converged`(그 restart 의 마지막 round success) ·
+        #   `n_eval`(그 restart 의 평가 수; 합이 위 `n_eval`) · `termination_status`(native 마지막/best · outer)
+        #   를 **더한다**. 옛 기록에는 이 키가 없다 — 읽는 쪽은 `normalize_restart_record` 로 부재를 미기록(None)
+        #   으로 받는다 (false/0 으로 소급 채우지 않는다).
+        restarts=[{"p": p.tolist(), "J": J, "i": k, "source": s,
+                   "warm": s == "warm",
+                   "converged": bool(ok_k), "n_eval": int(nfev_k), "termination_status": term}
+                  for p, J, ok_k, nfev_k, k, s, term in results],
+        restart_errors=errors,
+    )
+
+
+_RESTART_NEW_KEYS = ("converged", "n_eval", "termination_status")
+
+
+def normalize_restart_record(r) -> dict:
+    """restart 기록 하나를 세대와 무관하게 같은 모양으로 읽는다 (79차 — 역사적 reader).
+
+    · 옛 튜플 `[p, J]`            → `record_generation = "legacy_pair"`, i·source·warm 은 None
+    · 옛 dict (`p·J·i·source·warm`) → `"legacy_dict"`
+    · 79차 이후 dict               → `"v6_prep_logging"`
+    새 키(`converged`·`n_eval`·`termination_status`)가 없으면 값은 **None(미기록)** 이다 — False/0 으로 채우지
+    않는다. 옛 세대의 실제 관측값처럼 읽으면 안 되기 때문이다 (78차 회신 구현 경계 4).
+    """
+    if isinstance(r, dict):
+        gen = "v6_prep_logging" if all(k in r for k in _RESTART_NEW_KEYS) else "legacy_dict"
+        return {"record_generation": gen,
+                "p": r.get("p"), "J": r.get("J"), "i": r.get("i"), "source": r.get("source"),
+                "warm": r.get("warm"),
+                "converged": r.get("converged") if gen == "v6_prep_logging" else None,
+                "n_eval": r.get("n_eval") if gen == "v6_prep_logging" else None,
+                "termination_status": r.get("termination_status") if gen == "v6_prep_logging" else None}
+    p, J = r
+    return {"record_generation": "legacy_pair", "p": list(p), "J": J, "i": None, "source": None, "warm": None,
+            "converged": None, "n_eval": None, "termination_status": None}
+
+
+# ---------------------------------------------------------------- grid 구동
+
+REF_KEY = ("lli", "lam_pe", "lam_ne")
+
+
+def extract_reference(df):
+    """grid 결과에서 reference 조건(모든 모드 0, 노이즈 0)의 곡선을 꺼낸다."""
+    m = (df["lli"] == 0) & (df["lam_pe"] == 0) & (df["lam_ne"] == 0)
+    if "noise" in df.columns:
+        m &= df["noise"] == 0
+    ref = df[m]
+    if ref.empty:
+        raise RuntimeError("reference 조건(lli=lam_pe=lam_ne=0, noise=0)이 결과에 없음")
+    ref = ref[ref["cond_id"] == ref["cond_id"].iloc[0]].sort_values("x_norm")
+    return ref
+
+
+def build_reference_interps(mode: str, grid_ref: dict, hc=None):
+    """fitting 기준 곡선. mode = "grid" (기준 셀 창) | "halfcell" (전 범위 반쪽셀)."""
+    if mode == "grid":
+        return (make_ref_interp(grid_ref["x"], grid_ref["pe"]),
+                make_ref_interp(grid_ref["x"], grid_ref["ne"]))
+    if mode == "halfcell":
+        # PE: s ∝ y (방전 중 리튬화 → 증가) / NE: s ∝ 1−z (방전방향으로 정렬)
+        # ★ windowed_curve가 s∈[0,1]을 가정하므로 **테이블 구간을 [0,1]로 정규화**한다.
+        #   (정규화 없이 넣으면 확보 범위 밖이 전부 끝값으로 평평해져 fitting이 망가진다
+        #    — 실측: LAM 오차 0.10 vs 정규화 후 개선)
+        #   이때 α는 "테이블 구간 대비" 비율이 되지만, LAM은 ini로 정규화되므로
+        #   구간 상수가 약분돼 식은 그대로 성립한다.
+        y, u_pe = np.asarray(hc["y_pe"]), np.asarray(hc["u_pe"])
+        z, u_ne = np.asarray(hc["z_ne"]), np.asarray(hc["u_ne"])
+        s_pe = (y - y.min()) / (y.max() - y.min())
+        s_ne = 1.0 - z
+        s_ne = (s_ne - s_ne.min()) / (s_ne.max() - s_ne.min())
+        order = np.argsort(s_ne)
+        return (make_ref_interp(s_pe, u_pe), make_ref_interp(s_ne[order], u_ne[order]))
+    raise ValueError(f"알 수 없는 reference 모드: {mode}")
+
+
+def _fit_one(task: dict) -> list[dict]:
+    """한 조건에 대해 목적함수 4종을 각각 fitting (워커에서 실행)."""
+    from src.objective import compute_features, default_scales, make_objective
+
+    x = np.asarray(task["x"])
+    grid_ref = {"x": np.asarray(task["ref_x"]), "pe": np.asarray(task["ref_pe"]),
+                "ne": np.asarray(task["ref_ne"])}
+    ref_pe, ref_ne = build_reference_interps(task["reference"], grid_ref,
+                                             task.get("halfcell"))
+    obj_cfg = task["obj_cfg"]
+
+    target = compute_features(x, np.asarray(task["v_target"]), obj_cfg, with_peaks=True)
+    # 리뷰 F9: scale은 조건 불변이어야 J를 격자 전체에서 비교할 수 있다.
+    # ref_feat를 타깃 격자(target.v_grid)로 계산하면 dqdv scale이 조건마다 미세하게
+    # 달라지므로, reference **자기 격자**로 계산한다 (scale은 상수라 격자 불일치 무해).
+    ref_feat = compute_features(np.asarray(task["ref_x"]), np.asarray(task["ref_full"]),
+                                obj_cfg)
+    scales = default_scales(ref_feat)
+
+    def model_fn(p):
+        _, _, full = reconstruct(p, ref_pe, ref_ne, x)
+        return x, full
+
+    obs = np.isfinite(target.v)
+    x_lo, x_hi = float(x[obs].min()), float(x[obs].max())
+
+    def shortfall(p):
+        return window_shortfall(p, x_lo, x_hi)
+
+    # ★ 계단식 초기값 (F20, 2026-08-06 실측).
+    #
+    #   dQ/dV 항이 들어간 목적함수는 **최소가 정답에 있는데도** 찾지 못한다.
+    #   무열화 조건 실측: J(정답)=0 인데 최적화는 J=0.402에서 멈추고
+    #   LAM_PE=-6.5%p 를 답했다. 300점 곡선의 dQ/dV는 뾰족한 이산 신호라
+    #   α가 조금만 움직여도 피크가 격자 칸을 넘으며 J가 불연속으로 튄다
+    #   → 전역최소의 유인역(basin)이 사실상 0폭.
+    #
+    #   그래서 **부드러운 항으로 먼저 풀고 그 해를 초기값으로 물려준다.**
+    #   임의 튜닝이 아니라 표준적인 다단계 적합이며, dQ/dV의 역할도 원래
+    #   "이미 가까운 해를 피크로 다듬는 것"이다.
+    #
+    #   순서는 objectives.yaml의 정의 순서(항이 하나씩 쌓이는 순서)를 따른다.
+    def _has_dqdv(w):
+        """이 목적함수가 warm start를 받아야 하는가.
+
+        기본 규칙은 "dQ/dV 항이 있으면"이다. 다만 목적함수 집합에 따라 그 규칙이
+        **불공정한 비교**를 만든다 — 가중치 sweep에서 w_dqdv=0 하나만 seed 제공자가
+        되어 자기는 초기값을 못 받고 나머지는 다 받았다 (실측: w=0만 86%, 나머지
+        22~33%. dQ/dV 효과가 아니라 초기값 차이였다).
+        그래서 목적함수 정의에 `_warm`을 넣어 명시적으로 지정할 수 있게 한다.
+        """
+        v = w.get("_warm")
+        if v is not None:
+            return bool(v)
+        return float(w.get("w_dqdv", 0.0)) != 0.0
+
+    warm = bool(task.get("warm_start", True))
+    seed_p = None                      # 부드러운 항으로 얻은 해
+
+    rows = []
+    for name, weights in task["objectives"].items():
+        J = make_objective(target, model_fn, weights, scales, obj_cfg, shortfall)
+        init = task["init"]
+        if warm and _has_dqdv(weights) and seed_p is not None:
+            init = seed_p
+        warmed = init is not task["init"]
+        # ★ F66 — adaptive·method 를 task 로 받아 넘긴다. 예전에는 `fit()` 의
+        #   기본값(adaptive=True, Nelder-Mead)이 그대로 굳어 끌 방법이 없었다.
+        res = fit(J, init, task["lb"], task["ub"],
+                  n_restarts=task["n_restarts"], seed=task["seed"],
+                  warm_init=warmed,
+                  adaptive=bool(task.get("adaptive", True)),
+                  method=str(task.get("method", "Nelder-Mead")))
+        if warm and not _has_dqdv(weights) and np.all(np.isfinite(res.p)):
+            seed_p = list(map(float, res.p))    # 가장 최근의 매끄러운 해
+        inv = task["inventory"]
+        # F26: p_ini는 목적함수별 dict. 옛 형식(공통 리스트)도 그대로 받는다.
+        _pi = task.get("p_ini")
+        p_ini_obj = _pi.get(name) if isinstance(_pi, dict) else _pi
+        if task["reference"] == "halfcell":
+            hc = to_modes_halfcell(res.p, p_ini_obj, task["r"])
+            main_modes = hc
+            extra = {"lli_hat_pe_basis": hc["lli_pe_basis"]}
+        else:
+            main_modes = to_degradation_modes(res.p, task["r"], "derived",
+                                              inv["w_pe"], inv["w_ne"], inv["kappa"])
+            extra = {}
+        paper = to_degradation_modes(res.p, task["r"], "paper")
+        code = to_degradation_modes(res.p, task["r"], "code")
+        p_ini = p_ini_obj or [float("nan")] * 4
+        rows.append({
+            **extra, "reference": task["reference"],
+            **task["truth"],
+            "cond_id": task["cond_id"], "objective": name,
+            "q_mah": task["q_mah"], "r": task["r"],
+            **dict(zip(PARAM_NAMES, res.p)),
+            # 리뷰 F12: halfcell 재계산에 필요한 p_ini를 행에도 저장
+            **{f"{k}_ini": float(v) for k, v in zip(PARAM_NAMES, p_ini)},
+            "J": res.J, "converged": res.converged, "n_eval": res.n_eval,
+            **{f"bound_active_{k}": v for k, v in zip(PARAM_NAMES, res.bound_active)},
+            "any_bound_active": res.any_bound_active,
+            # 리뷰 F1: grid 기준의 α=1 소프트 벽(창 부족 벌점이 만드는 파일업)은
+            # box bound가 아니라 bound_active에 안 잡힌다 → 별도 플래그
+            "alpha_wall_pe": bool(abs(res.p[0] - 1.0) < 1e-3),
+            "alpha_wall_ne": bool(abs(res.p[2] - 1.0) < 1e-3),
+            "n_restarts": res.n_restarts, "n_restarts_agree": res.n_restarts_agree,
+            "p_spread": res.p_spread, "J_spread": res.J_spread,
+            # 리뷰 F4: restart별 (p, J) 원본 — 사후에 노이즈 환산 임계로 재집계 가능
+            "restarts_json": json.dumps(res.restarts),
+            "restart_errors_json": json.dumps(res.restart_errors),   # 79차
+            "lam_pe_hat": main_modes["lam_pe"], "lam_ne_hat": main_modes["lam_ne"],
+            "lli_hat": main_modes["lli"],
+            "lli_hat_21p": paper["lli"], "lli_hat_code": code["lli"],
+            "bounds_preset": task["bounds_preset"],
+            # F20: 이 목적함수가 매끄러운 해를 초기값으로 받았는가 (사후 감사용)
+            "warm_started": bool(warm and _has_dqdv(weights) and init is not task["init"]),
+        })
+    return rows
+
+
+def halfcell_path_for(cfg: dict, method: str, kw: dict | None):
+    """half-cell 캐시 경로를 계산하는 **단 한 곳**.
+
+    ★ fitting 은 경로를 두 번 계산한다 — 시작 봉인 때(원본 base config 로)와
+      읽을 때(스냅샷 config 로). 그 이중 계산은 F72 가 일부러 넣은 교차 검사라
+      없애지 않는다. 다만 예전에는 두 곳이 각자 `halfcell_cache_path(...)` 를
+      불렀고, **한쪽에만 왜곡 인자를 넣으면** 경로가 갈렸다. 갈린 채로도
+      두 번째가 첫 번째와 다르다는 검사에 걸려 죽긴 하지만, 애초에 갈릴 수
+      없게 한 곳으로 모은다. 검사가 보는 것은 여전히 '어느 config 에서 왔는가'다.
+    """
+    from src.halfcell import halfcell_cache_path
+
+    return halfcell_cache_path(cfg, method=method, **(kw or {}))
+
+
+def parse_halfcell_kw(items) -> dict:
+    """`--halfcell-arg k=v` 목록 → recipe kwargs.
+
+    ★ 왜곡 값이 fit 까지 안 오면 fitting 은 왜곡 **0** 인 기본 ocpbias 캐시
+      경로를 읽는다 (recipe_hash 가 경로에 들어가므로). 그러면 민감도 스윕이
+      전부 "변화 없음" 을 보고하고, 파일·해시·서명은 전부 정합해 F74 도
+      안 울린다. 값은 여기서 받아 경로 계산까지 그대로 흘린다.
+    """
+    from src.halfcell import RECIPE_DEFAULTS
+
+    kw: dict = {}
+    for item in items or []:
+        if "=" not in item:
+            raise SystemExit(f"--halfcell-arg 는 key=value 형식입니다: {item!r}")
+        k, _, v = item.partition("=")
+        k, v = k.strip(), v.strip()
+        try:
+            kw[k] = float(v)
+        except ValueError:
+            raise SystemExit(f"--halfcell-arg 값이 숫자가 아닙니다: {item!r}") from None
+    # 오타를 조용히 무시하면 "왜곡을 줬다" 고 믿는 대조 실행이 된다
+    known = set().union(*(set(d) for d in RECIPE_DEFAULTS.values()))
+    unknown = sorted(set(kw) - known)
+    if unknown:
+        raise SystemExit(f"recipe 에 없는 --halfcell-arg 키: {unknown} "
+                         f"(가능: {sorted(known)})")
+    return kw
+
+
+def _record_phase(claim, phase: str, summary: dict, out_dir) -> None:
+    """끝난 phase 의 receipt 를 claim 에 남긴다 (48차 P0-4).
+
+    smoke namespace 는 claim 이 없다(`None`) — 그때는 남길 것도 없다.
+    receipt 는 **재계산 없이 finalize** 하기 위한 근거이므로, 그 phase 가
+    무엇을 만들었는지 가리키는 값만 담는다.
+    """
+    if claim is None:
+        return
+    claim.phase_done(phase, {
+        "out": str(out_dir),
+        "n_rows": int(summary.get("n_rows") or summary.get("n_fits") or 0),
+        "finished_at": __import__("time").strftime("%Y-%m-%dT%H:%M:%SZ",
+                                                  __import__("time").gmtime())})
+
+
+def _file_digest16(path) -> str:
+    """파일 내용의 16자리 digest. 없으면 fail-closed (승인 축은 비울 수 없다)."""
+    import hashlib as _h
+
+    from pathlib import Path as _P
+
+    p = _P(path)
+    if not p.is_file():
+        from tools.preserve import PreserveError
+        raise PreserveError("plan", f"승인 축이 가리키는 입력이 없다: {p}")
+    return _h.sha256(p.read_bytes()).hexdigest()[:16]
+
+
+def _effective_smoothing_backend() -> str:
+    """승인 축이 쓰는 backend 이름 — 정본은 `src.objective` 하나다 (52차 P0-6)."""
+    from src.objective import effective_smoothing_backend
+
+    return effective_smoothing_backend()
+
+
+def _config_closure_digest(path, repo_root=None) -> str:
+    """`extends` 연쇄 **전체**의 내용 주소 (51차 P0-A2).
+
+    `_file_digest16()` 은 leaf 하나만 본다. 이 저장소의 config 는 부모를 재귀
+    로드하고(`config_dependencies()`), 본체는 그 연쇄 전부를 snapshot·merge 해
+    `reference_inventory()` 에 넣는다. 승인이 leaf 만 담으면 부모를 바꿔 행을
+    옮기면서도 같은 승인으로 통과한다.
+
+    키는 저장소 기준 상대경로로 정규화한다 — 같은 파일을 두 표기로 넘겨도 같은
+    preimage 여야 한다.
+    """
+    import hashlib as _h
+
+    from src.config import config_dependencies
+    from src.io import canonical_input_key as _ck
+
+    deps = config_dependencies(path)
+    if not deps:
+        from tools.preserve import PreserveError
+        raise PreserveError("plan", f"승인 축이 가리키는 config 연쇄가 비었다: {path}")
+    body = "\n".join(
+        f"{_ck(d, repo_root)}={_h.sha256(_P_read_bytes(d)).hexdigest()}"
+        for d in sorted(deps, key=lambda x: _ck(x, repo_root)))
+    return _h.sha256(body.encode("utf-8")).hexdigest()[:16]
+
+
+def _P_read_bytes(path) -> bytes:
+    from pathlib import Path as _P
+
+    p = _P(path)
+    if not p.is_file():
+        from tools.preserve import PreserveError
+        raise PreserveError("plan", f"승인 축이 가리키는 입력이 없다: {p}")
+    return p.read_bytes()
+
+
+def _halfcell_cache_sha(base_config, reference: str, method: str, kw):
+    """기준 캐시의 **바이트** (grid 기준이면 `None` — 캐시를 안 읽는다)."""
+    import hashlib as _h
+
+    from src.config import load_config
+
+    if str(reference) != "halfcell":
+        return None
+    cache = halfcell_path_for(load_config(base_config or "configs/base.yaml"),
+                              method, kw)
+    if not cache.is_file():
+        from tools.preserve import PreserveError
+        raise PreserveError(
+            "plan",
+            f"half-cell 기준 캐시가 없다: {cache} — 승인은 그 캐시의 바이트를 "
+            "담아야 하므로 먼저 `python -m src.halfcell` 로 만들어라")
+    return _h.sha256(cache.read_bytes()).hexdigest()
+
+
+def live_fit_axis(objectives: dict, obj_cfg: dict, bounds: dict,
+                  bounds_preset: str, n_restarts: int, use_noisy: bool,
+                  limit, subset, reference: str, warm_start: bool,
+                  adaptive: bool, method: str, halfcell_method: str,
+                  halfcell_kw: dict | None, in_dir, out_dir,
+                  base_config=None, bytes_root=None) -> dict:
+    """이 실행이 **실제로 하려는 것** 을 승인 축으로 편다 (49차 P0-5).
+
+    48차 fit 축은 `{config_digest, objectives, out}` 셋뿐이었다. 그런데
+    아래 `_run_fit_locked()` 의 F67 run_spec 이 실제로 쓰는 것은 목적함수
+    **순서**(warm 연쇄가 그 순서를 따른다) · bounds 실값 · reference ·
+    half-cell recipe(왜곡 인자) · optimizer 정책 · noise 사용 여부 · 행 선택 ·
+    입력 위치다. 승인이 그것을 안 담으면 `--reference halfcell --halfcell-arg
+    pe_offset_mv=10 --clean --no-adaptive --n-restarts 1` 로 통째로 갈아도
+    같은 digest 가 나온다 — 그러면 승인한 것은 실행이 아니라 다리 **이름**이다.
+
+    런타임에서만 정해지는 값(`git_commit`·env fingerprint·`p_ini`)은 넣지
+    않는다. 승인은 사람이 **고른 것**을 담고, 그 밖은 실행 서명이 담는다.
+    """
+    import hashlib as _h
+    import json as _j
+
+    from src.grid import leg_out_key
+
+    def _dg(obj) -> str:
+        return _h.sha256(_j.dumps(obj, sort_keys=True, ensure_ascii=False,
+                                  default=str).encode("utf-8")).hexdigest()[:16]
+
+    return {
+        "config_digest": _dg(obj_cfg),
+        # ★ **순서**다. `dict` 는 삽입 순서를 지키고 warm 연쇄가 그 순서를
+        #   따른다 — 정렬해 버리면 서로 다른 실험이 같은 승인으로 접힌다.
+        "objective_order": list(objectives),
+        "reference": str(reference),
+        "halfcell_recipe": {"method": str(halfcell_method),
+                            "kw": dict(halfcell_kw or {})},
+        # ★ 50차 P0 — recipe 만으로는 부족하다. 같은 recipe 로 만든 **다른
+        #   캐시**를 놓으면 계산이 달라지는데 승인 digest 는 그대로였다
+        #   (49차 반례: 승인한 A 대신 유효한 B 가 계산·게시됐다).
+        "halfcell_cache_sha256": _halfcell_cache_sha(
+            base_config, reference, halfcell_method, halfcell_kw),
+        # ★ 51차 P0-A1 — **이름과 순서만으로는 부족하다.** 50차 축은
+        #   `objective_order` 하나였는데 `_fit_one()` 이 실제로 소비하는 것은
+        #   `{이름: 가중치}` payload 다. 같은 이름 아래 `{w_pocv:1}` 과
+        #   `{w_pocv:1, w_dvdq:20}` 을 주면 J 도 행도 달라지는데 승인 digest 는
+        #   같았다 (리뷰어 실측). CLI 가 지금 둘을 함께 만든다는 사실은 public
+        #   production API 의 불변식이 아니다 — 인자가 둘이면 축도 둘이다.
+        "objectives_digest": _dg({str(k): objectives[k]
+                                  for k in sorted(objectives)}),
+        # 재고 분배 상수 — 축 자체가 없었다
+        # ★ 51차 P0-A2 — leaf 가 아니라 **dependency closure 전체**다. 50차는
+        #   `extends:` 로 가리키는 부모를 안 봤다. 본체는 `config_dependencies()`
+        #   전부를 snapshot·merge 하고 `reference_inventory(base_cfg)` 가 행을
+        #   바꾼다 — 부모의 `pe_vf` 만 바꿔도 lli_hat 이 움직이는데 leaf 는
+        #   byte-identical 이라 승인이 같았다 (리뷰어 실측).
+        "base_config_digest": _config_closure_digest(
+            base_config or "configs/base.yaml", repo_root=bytes_root),
+        "bounds_preset": str(bounds_preset),
+        "bounds_digest": _dg(bounds),
+        "optimizer": {"method": str(method), "n_restarts": int(n_restarts),
+                      "adaptive": bool(adaptive),
+                      "warm_start": bool(warm_start)},
+        "use_noisy": bool(use_noisy),
+        # ★ 52차 P0-6 — 실제로 쓰는 smoothing backend. 환경변수
+        #   `DD_SMOOTH_CACHE` 하나가 목적함수 J 를 바꾸고 그 J 가 행에 기록된다.
+        #   "동등성 검증용" 이라는 의도는 축이 아니다 — 무엇이 실제로 돌았는가가
+        #   축이다.
+        "smoothing_backend": _effective_smoothing_backend(),
+        "row_selection": {
+            "mode": ("subset" if subset is not None
+                     else "limit" if limit else "full"),
+            "limit": (int(limit) if limit else None),
+            # **어느 조건을 골랐는가** — 개수·모드만으로는 다른 표본이 같은
+            # 승인으로 접힌다
+            "subset_sha256": (None if subset is None else _h.sha256(
+                "\n".join(sorted(str(x) for x in subset)).encode("utf-8")
+            ).hexdigest()[:16])},
+        # `in_digest` 는 여기서 만들지 않는다 — 계획이 정하는 축이고
+        # `_assert_fit_authorized()` 가 선언에서 읽어 채운다.
+        "in": leg_out_key(in_dir),
+        "out": leg_out_key(out_dir)}
+
+
+def _stage_fit_inputs(in_dir, base_config, reference: str,
+                      halfcell_method: str, halfcell_kw) -> dict:
+    """gate **앞에서** 입력 바이트의 immutable 사본을 뜬다 (51차 P0-A3).
+
+    50차까지의 순서는 이랬다:
+
+        ① 원본 pathname 세 개를 해시해 receipt·계획과 대조한다
+        ② `acquire_run_lock(out_dir)` 로 **출력**을 잠근다
+        ③ 나중에 같은 pathname 을 다시 열어 `seal_inputs`·`snapshot_inputs`
+
+    ①과 ③ 사이는 아무도 안 잡고 있다 — 출력 lock 은 입력 writer 를 붙잡지
+    않는다. 리뷰어가 그 틈에서 독립적으로 **유효한** package B 로 세 파일을
+    통째 갈아 끼웠고, snapshot·validator·optimizer·writer 가 전부 B 를
+    계산·게시했다 (`three_file_binding_rejected_swap=False`). 결속 key 를
+    하나에서 셋으로 늘려도 이 틈은 안 닫힌다 — **대조 대상이 원본 pathname
+    이기 때문이다.**
+
+    그래서 승인보다 먼저 사본을 뜨고, 승인·결속·계산이 **모두 그 사본만** 본다.
+    사본은 저장소 상대경로 구조를 그대로 재현하므로 (`stage/<repo-rel>`)
+    `extends:` 연쇄와 half-cell 캐시 경로 유도가 그 안에서 닫히고,
+    `canonical_input_key(..., repo_root=stage)` 가 원래 키를 그대로 돌려준다 —
+    manifest 의 `input_sha256` 키가 staging 경로로 오염되지 않는다.
+
+    사본을 뜨는 것 자체는 승인 대상 목적지(`out_dir`)에 아무 것도 쓰지 않는다.
+    쓰는 자리는 세션 전용 임시 디렉터리이고 끝나면 지운다.
+    """
+    import shutil as _sh
+    import tempfile
+
+    from pathlib import Path as _P
+
+    from src.config import config_dependencies
+    from src.io import canonical_input_key as _ck
+    from tools.preserve import PreserveError
+
+    root = _P(__file__).resolve().parents[1]
+    stage = _P(tempfile.mkdtemp(prefix="fit-stage-"))
+
+    def _take(src):
+        """원본 하나를 `stage/<repo-rel>` 로 복사하고 사본 경로를 준다."""
+        src = _P(src)
+        if not src.is_file():
+            _sh.rmtree(stage, ignore_errors=True)
+            raise PreserveError("plan", f"fit 이 읽을 입력이 없다: {src}")
+        dst = stage / _ck(src, root)
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        _sh.copy2(src, dst)
+        return dst
+
+    try:
+        src_in = _P(in_dir)
+        for name in FIT_INPUT_NAMES:
+            _take(src_in / name)
+        if (src_in / "failed.csv").is_file():
+            _take(src_in / "failed.csv")
+        staged_in = stage / _ck(src_in, root)
+
+        bc = base_config or "configs/base.yaml"
+        deps = config_dependencies(bc)
+        for d in deps:
+            _take(d)
+        staged_bc = stage / _ck(bc, root)
+
+        if str(reference) == "halfcell":
+            from src.config import load_config as _lc
+            from src.halfcell import halfcell_meta_path as _hmp
+            cache = halfcell_path_for(_lc(bc), halfcell_method, halfcell_kw)
+            meta = _hmp(cache)
+            # ★ F63 — 캐시가 없으면 **여기서** 멈추고 만드는 법을 알려준다.
+            #   생성은 봉인할 수 없는 작업이므로 fitting 안에서 하지 않는다.
+            #   (51차에 사본 뜨는 자리가 이 검사보다 앞으로 왔으므로 안내도
+            #   같이 옮긴다 — 앞선 검사가 덜 친절한 메시지로 가로채면 그 안내는
+            #   사실상 사라진다.)
+            if not cache.exists() or not meta.exists():
+                raise RuntimeError(
+                    f"half-cell 기준 캐시가 없습니다: {cache}\n"
+                    f"  먼저 준비 단계를 실행하세요:\n"
+                    f"    python -m src.halfcell --config {bc} "
+                    f"--method {halfcell_method}"
+                    + "".join(f" --{k.replace('_', '-')} {v}"
+                              for k, v in sorted((halfcell_kw or {}).items()))
+                    + "\n  (fitting 안에서 만들면 '무엇을 읽었는가'를 봉인할 수 "
+                      "없습니다 — F63)")
+            _take(cache)
+            _take(meta)
+    except BaseException:
+        _sh.rmtree(stage, ignore_errors=True)
+        raise
+    return {"root": stage, "in_dir": staged_in, "base_config": str(staged_bc),
+            "origin_in_dir": str(src_in), "origin_base_config": str(bc)}
+
+
+def _discard_staged_inputs(staged: dict) -> None:
+    """staging 사본을 지운다 — 실행이 끝나면 근거는 `out_dir/_inputs` 에 있다."""
+    import shutil as _sh
+
+    if staged:
+        _sh.rmtree(staged.get("root"), ignore_errors=True)
+
+
+#: fit 이 읽는 입력 묶음의 파일 이름 — `PHASE_INPUT_KEYS` 와 **자리로** 짝짓는다.
+FIT_INPUT_NAMES = ("curves.parquet", "curves_manifest.yaml",
+                   "curves_manifest_start.yaml")
+
+
+def _fit_input_digests(in_dir) -> dict:
+    """입력 묶음 세 파일의 full digest map (`PHASE_INPUT_KEYS` 를 키로)."""
+    import hashlib as _h
+
+    from pathlib import Path as _P
+
+    from tools.preserve import PHASE_INPUT_KEYS, PreserveError
+
+    out = {}
+    for key, name in zip(PHASE_INPUT_KEYS, FIT_INPUT_NAMES):
+        f = _P(in_dir) / name
+        if not f.is_file():
+            raise PreserveError("plan", f"fit 이 읽을 입력이 없다: {f}")
+        out[key] = _h.sha256(f.read_bytes()).hexdigest()
+    return out
+
+
+def fit_input_package_digest(digests: dict) -> str:
+    """입력 **묶음 하나**의 내용 주소 (51차 P1-E1).
+
+    계획이 적는 `fit.in_digest` 가 이 값이다. 파일 하나가 아니라 묶음이므로,
+    곡선을 그대로 두고 manifest 만 갈아 끼우는 교체가 표현 불가능해진다.
+    """
+    import hashlib as _h
+
+    from tools.preserve import PHASE_INPUT_KEYS, PreserveError
+
+    if set(digests) != set(PHASE_INPUT_KEYS):
+        raise PreserveError(
+            "plan",
+            f"입력 묶음 digest 의 key 집합이 계약과 다르다: {sorted(digests)} "
+            f"≠ {sorted(PHASE_INPUT_KEYS)}")
+    body = "\n".join(f"{k}={digests[k]}" for k in PHASE_INPUT_KEYS)
+    return _h.sha256(body.encode("utf-8")).hexdigest()
+
+
+def _assert_fit_input_is_authorized(claim, live_fit: dict, in_dir) -> None:
+    """fit 이 **어떤 바이트를** 읽는지까지 승인이 덮는가 (49차 P0-5).
+
+    계획의 `fit.in_digest` 가 두 경우를 가른다:
+      · hex64 — 이 다리 **밖**에서 온 입력. 계획이 적은 digest 와 맞춘다.
+      · null  — 이 다리의 grid 가 만든다. grid phase receipt 가 정본이다.
+
+    48차에는 이 결속이 전혀 없었다. 경로만 승인했으므로 같은 이름 아래 다른
+    곡선을 놓아도 fit 은 끝까지 성공했고, 그 결과가 계획이 승인한 실행의
+    산물인지 말할 근거가 없었다.
+    """
+    import hashlib as _h
+
+    from pathlib import Path as _P
+
+    from tools.preserve import (assert_phase_input_binding, PreserveError)
+
+    if claim is None:
+        return                                   # smoke namespace — 계획 밖이다
+    from tools.preserve import PHASE_INPUT_KEYS
+
+    got_map = _fit_input_digests(in_dir)
+    declared = live_fit["in_digest"]
+    if declared is None:
+        assert_phase_input_binding(claim, got_map)
+        return
+    # ★ 51차 P1-E1 — 외부 입력 분기도 **묶음 전체**를 본다. 50차는 세 digest 를
+    #   계산해 놓고 여기서 `curves_sha256` 하나만 비교했다 — 나머지 둘은
+    #   계산하고 버렸으므로, 승인한 provenance 와 다른 manifest 로도 fit 이
+    #   끝까지 성공했다 (리뷰어 실측). `in_digest` 의 의미를 "곡선 파일 하나" 가
+    #   아니라 "묶음의 package digest" 로 바꾼다 — 타입은 그대로 hex64 다.
+    got = fit_input_package_digest(got_map)
+    if declared != got:
+        raise PreserveError(
+            "plan",
+            f"계획이 승인한 입력 묶음과 지금 읽는 묶음이 다르다 "
+            f"(계획 {str(declared)[:16]} ≠ 지금 {got[:16]}) — 경로가 같아도 "
+            "바이트가 다르면 다른 실행이다. 지금 묶음: "
+            + ", ".join(f"{k}={v[:12]}" for k, v in sorted(got_map.items())))
+
+
+def _assert_fit_leg_is_planned(out_dir, leg: str | None) -> None:
+    """계획 **소속**만 먼저 묻는다 — 아무 것도 바꾸지 않는다 (51차).
+
+    실제 승인(claim 발급)은 `_assert_fit_authorized()` 가 살아 있는 축 전부를
+    갖춘 뒤에 한다. 여기서 보는 것은 "이 다리가 계획에 있고 code identity 가
+    같은가" 뿐이다.
+    """
+    from src.grid import leg_name
+    from src.io import source_digest
+    from tools.preserve import (assert_planned_leg, is_inside_namespace,
+                                SMOKE_NAMESPACE)
+
+    if is_inside_namespace(out_dir, SMOKE_NAMESPACE):
+        return
+    assert_planned_leg(leg_name(leg), source_digest(),
+                       allow=("planned", "running"))
+
+
+def _assert_fit_authorized(live_fit: dict, out_dir, leg: str | None = None,
+                           may_open: bool = False):
+    """fit 쪽 계획 gate (48차 P0-8 · P0-5 · 49차 P0-5).
+
+    grid 와 **같은 spec** 을 만든다: 자기 축은 살아 있는 입력에서
+    (`live_fit_axis()`), 조건 집합 절반은 계획이 선언한 값에서. 두 phase 가
+    같은 digest 를 내야 하나의 claim 아래 묶인다.
+    """
+    from src.grid import leg_name
+    from src.io import source_digest
+    from tools.preserve import (assert_run_is_authorized, declared_leg_run_spec,
+                                leg_run_spec, is_inside_namespace,
+                                issue_execution_class, SMOKE_NAMESPACE)
+
+    leg = leg_name(leg)
+    if is_inside_namespace(out_dir, SMOKE_NAMESPACE):
+        # ★ 58차 L1 — grid 와 **같은 문장**을 쓴다. 면제 판정이 두 진입점에
+        #   있으면 기록도 두 진입점에 있어야 하고, 그러면 하나가 또 빠진다.
+        # ★ 59차 M1 — grid 와 **같은 문장**을 쓴다: 목록이 아니라 권한.
+        # ★ 60차 P0-2 — class 는 **자리가 정한다** (grid 와 같은 문장).
+        return (None, live_fit,
+                issue_execution_class(out_dir, leg, "fit", ledger=None))
+    declared = declared_leg_run_spec(leg)
+    # ★ 49차 P0-5 — `in_digest` 는 **계획만** 아는 축이다 (grid 절반과 같다).
+    #   "이 다리의 grid 가 입력을 만든다(null)" 인지 "밖에서 온 입력이다(hex64)"
+    #   인지는 사람이 계획에 적는 결정이고, fit 은 그것을 읽어 자기가 읽은
+    #   바이트를 대조한다. 계획이 이 key 를 안 적었으면 digest 가 달라져
+    #   gate 가 거부한다 (fail-closed).
+    fit_axis = dict(live_fit,
+                    in_digest=(declared.get("fit") or {}).get("in_digest"))
+    spec = leg_run_spec(leg, declared.get("grid") or {}, fit_axis)
+    # ★ 57차 P0-1 — grid 와 같은 규칙: worker 가 자기 credential 을 명시적으로
+    #   읽어 넘긴다 (gate 는 스스로 읽지 않는다 — 48차 P0-3).
+    from tools.preserve import attempt_path_for, read_token_file
+
+    tok = attempt_path_for(leg, ledger=None) if leg else None
+    token = read_token_file(tok, leg) if tok is not None and tok.is_file() \
+        else None
+    claim = assert_run_is_authorized(leg, "fit", [out_dir], spec,
+                                     source_digest(), token=token,
+                                     may_open=may_open)
+    return claim, fit_axis, issue_execution_class(out_dir, leg, "fit",
+                                                 ledger=None)
+
+
+def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
+            bounds_preset: str, n_restarts: int, nproc: int,
+            use_noisy: bool = True, limit: int | None = None,
+            base_config: str | None = None, reference: str = "grid",
+            resume: bool = False, subset: set | None = None,
+            warm_start: bool = True, adaptive: bool = True,
+            method: str = "Nelder-Mead",
+            halfcell_method: str = "ocp",
+            halfcell_kw: dict | None = None,
+            leg: str | None = None, may_open: bool = False) -> dict:
+    """grid 결과 전체에 fitting 수행 → fits.parquet.
+
+    subset: 이 cond_id 집합만 fitting (Phase 6 가중치 sweep의 층화 표본용).
+            limit이 "앞 N개"인 것과 달리 격자 전체에 고르게 걸칠 수 있다.
+
+    adaptive: ★ F66 — 적응적 조기 종료. 앞 두 restart 가 같은 해로 모이면 멈춘다.
+            기본은 켜짐(본 pipeline). **끄면** 모든 조건이 정확히 `n_restarts` 번을
+            돈다 — "동일 restart budget" paired 비교에 반드시 필요하다.
+            예전에는 `fit()` 에만 인자가 있고 `_fit_one`·CLI 로 전달되지 않아
+            **끌 방법이 아예 없었다.** 그래서 목적함수의 내재적 성능을 비교하는
+            공정 실험을 여섯 라운드 동안 실행하지 못했다.
+
+    method: optimizer. `configs/objectives.yaml` 의 `fitting.method` 가 이 값으로
+            들어온다. 한때 config 에 `L-BFGS-B` 라 적혀 있었지만 아무도 읽지 않아
+            실제로는 `Nelder-Mead` 로 돌았고, 그 config 가 서명에 통째로 들어가
+            **서명이 거짓을 기록**했다 (F66b).
+
+    ★ 실행 잠금을 **함수 맨 앞에서** 잡는다 (리뷰 F19, 2026-08-06 실측 사고).
+
+    이전에는 curves.parquet 로드 → 태스크 구성 → (halfcell이면) p_ini
+    self-fitting 을 모두 마친 뒤에야 lock을 잡았다. 그 앞 구간이 무방비라
+    두 번째 프로세스가 검사를 그냥 통과한다.
+
+    실제 사고: PID 330053(04:17:13 시작)과 333299(04:38:48 시작)가 같은
+    --out=results/grid_fine_v1 에 동시에 붙어 32워커씩 총 64개가 16물리코어를
+    나눠 썼고(속도 반토막), 게다가 330053은 curves 재생성(04:37:56) **이전**의
+    옛 프레임(Q=5720) 곡선을 메모리에 들고 있어 fit_chunks 에 틀린 결과를
+    쌓고 있었다. 청크 병합은 mtime 최신 우선이므로 정상 결과를 덮어쓴다.
+    """
+    from pathlib import Path
+
+    from src.io import acquire_run_lock, release_run_lock
+
+    out_dir = Path(out_dir)
+    # ★ 51차 — 사본을 뜨기 **전에** 이 다리가 계획에 있는지부터 묻는다.
+    #   staging 은 목적지에 아무 것도 쓰지 않지만, 입력이 없어서 나는 오류가
+    #   "계획에 없는 다리다" 보다 먼저 나오면 **판정이 뒤로 밀린 것처럼 보인다**.
+    #   순서 결함은 부작용만의 문제가 아니라 어느 명제가 먼저 판정되는가의
+    #   문제다 (리뷰어가 `build()` 에서 짚은 것과 같은 축).
+    _assert_fit_leg_is_planned(out_dir, leg)
+    # ★ 51차 P0-A3 — **승인보다 먼저** 입력 바이트의 immutable 사본을 뜬다.
+    #   50차는 원본 pathname 을 해시해 대조하고, 한참 뒤 같은 pathname 을 다시
+    #   열어 계산했다. 그 사이는 아무도 안 잡고 있다 (출력 lock 은 입력 writer 를
+    #   붙잡지 않는다). 아래부터 승인·결속·계산이 **전부 이 사본만** 본다.
+    _staged = _stage_fit_inputs(in_dir, base_config, reference,
+                                halfcell_method, halfcell_kw)
+    try:
+        return _run_fit_staged(_staged, in_dir, out_dir, obj_cfg, objectives,
+                               bounds, bounds_preset, n_restarts, nproc,
+                               use_noisy, limit, base_config, reference, resume,
+                               subset, warm_start, adaptive, method,
+                               halfcell_method, halfcell_kw, leg, may_open)
+    finally:
+        _discard_staged_inputs(_staged)
+
+
+def _run_fit_staged(_staged, in_dir, out_dir, obj_cfg, objectives, bounds,
+                    bounds_preset, n_restarts, nproc, use_noisy, limit,
+                    base_config, reference, resume, subset, warm_start,
+                    adaptive, method, halfcell_method, halfcell_kw, leg,
+                    may_open) -> dict:
+    """`run_fit()` 본체 — 입력이 이미 staging 사본으로 고정된 뒤."""
+    from pathlib import Path
+
+    from src.io import acquire_run_lock, release_run_lock
+
+    # ★ 48차 P0-8 — **첫 부작용 전에** 계획 gate 를 지난다. 47차는 `src.grid`
+    #   만 배선하고 fit 은 다음 라운드로 미뤘는데, 실제 결과(`fits.parquet`)를
+    #   만드는 것은 fit 이다. gate 없는 쪽이 결과를 만들면 gate 는 장식이다.
+    #
+    #   축의 `in`·`out` key 는 **논리 경로**여야 한다 (staging 은 실행마다 다른
+    #   임시 경로다). 바이트는 사본에서, 이름은 원래 자리에서 온다.
+    _live = live_fit_axis(objectives, obj_cfg, bounds, bounds_preset,
+                          n_restarts, use_noisy, limit, subset, reference,
+                          warm_start, adaptive, method, halfcell_method,
+                          halfcell_kw, in_dir, out_dir,
+                          base_config=_staged["base_config"],
+                          bytes_root=_staged["root"])
+    claim, _fit_axis, _exec_cap = _assert_fit_authorized(_live, out_dir,
+                                                         leg=leg,
+                                                         may_open=may_open)
+    # ★ 62차 자체 리뷰 (순서-TOCTOU F1) — capability 는 lock **앞에서** 발행된다.
+    #   입력 승인·staging·lock 거부(살아 있는 보유자)에서 죽으면 P1-2 의
+    #   `discard` 를 못 지나 capability 와 dir fd 가 남았다 (실측: live_caps
+    #   0→1 · open_dir_fds 0→1 — 리뷰어의 P1-2 계측 그대로). 그래서 try 는
+    #   발행 직후에 열리고, release 는 lock 을 잡았을 때만 한다.
+    tok = None
+    try:
+        _assert_fit_input_is_authorized(claim, _fit_axis, _staged["in_dir"])
+        # ★ 60차 P0-4 — grid 와 **같은 문장**. gate 뒤의 모든 쓰기를 판정한 실물
+        #   아래로 옮긴다 (면제 판정이 두 진입점에 있으면 배선도 두 진입점에
+        #   있어야 하고, 그러면 하나가 또 빠진다 — 58차 L1 의 교훈).
+        #
+        # ★ 61차 P0-2 — 그런데 60차는 `out_dir` **자체를** 갈아 치웠다. 그러면 그
+        #   아래의 모든 코드가 — 쓰는 코드뿐 아니라 **적는** 코드까지 — handle
+        #   경로를 본다. 성공하면 fd 가 닫히므로 굳은 provenance 가 존재하지 않는
+        #   자리를 가리킨다 (리뷰어 실측: `manifest.fits_parquet:
+        #   /proc/self/fd/3/fits.parquet`, `..._exists_after_success: false`).
+        #
+        #   그래서 값을 **둘로 나눈다**: 실제 writer 만 `write_root` 를 받고,
+        #   기록·요약·phase receipt 는 `logical_out`·`logical_in` 을 적는다.
+        logical_out = out_dir
+        logical_in = Path(in_dir)
+        if _exec_cap is not None:
+            from tools.preserve import staged_root
+            write_root = staged_root(_exec_cap)
+        else:
+            out_dir.mkdir(parents=True, exist_ok=True)
+            write_root = out_dir
+        # ★ 62차 P0-3 — 임계구역은 **commit 과 receipt 까지** 덮는다. 61차 P1-1 은
+        #   commit 을 lock 해제 **뒤로** 옮겼다 — lock 이 `staged_root(cap)` 경로
+        #   아래 있어서 commit 이 fd 를 닫으면 release 가 죽었기 때문이다. 그러자
+        #   리뷰어가 그 틈을 그대로 쟀다: 첫 실행이 lock 을 놓은 뒤 둘째가 같은
+        #   자리를 잡아 `manifest.yaml` 을 바꾸고, 첫 capability 가 **둘째 bytes**
+        #   를 canonical 로 봉인했다 (`first_commit_sealed_second_writer: true`).
+        #
+        #   그래서 lock 이 경로가 아니라 **dirfd + inode token** 이 됐다
+        #   (`src/io.py` `RunLock`). commit 이 handle 을 닫아도 token 의 dirfd 는
+        #   따로 살아 있으므로 release 는 마지막에 온다:
+        #   compute → commit(seal·class) → receipt → release.
+        tok = acquire_run_lock(write_root, ".fit.lock")
+        summary = _run_fit_locked(_staged["in_dir"], write_root, obj_cfg,
+                                  objectives, bounds,
+                                  bounds_preset, n_restarts, nproc, use_noisy,
+                                  limit, _staged["base_config"], reference,
+                                  resume, subset,
+                                  warm_start, adaptive, method, halfcell_method,
+                                  halfcell_kw, stage_root=_staged["root"],
+                                  logical_in=logical_in,
+                                  logical_out=logical_out)
+        # ★ 59차 M1 — 굳히는 것은 **마지막 사용자 뒤**다. 대상은 **논리
+        #   경로**로 준다 — `staged_root` 를 주면 `_assert_still_the_judged_dir()`
+        #   이 자기 자신을 보고 일찍 돌아가서 "이름이 아직 그 실물인가" 를
+        #   아무도 안 묻게 된다.
+        from tools.preserve import commit_run_outputs
+        commit_run_outputs(_exec_cap, [logical_out])
+        # ★ 48차 P0-4 — 끝난 phase 를 **durable 하게 닫는다.** 47차는
+        #   `phase_done()`·`finalize_leg()` 을 만들어 놓고 production 에서 한
+        #   번도 부르지 않았다 — lifecycle 이 있는데 아무 것도 그 상태를
+        #   움직이지 않으면 그것은 lifecycle 이 아니라 죽은 코드다.
+        _record_phase(claim, "fit", summary, logical_out)
+    except BaseException:
+        # ★ 62차 P1-2 — commit 에 **도달하지 못한** 모든 종료는 권한을 버린다.
+        #   리뷰어 실측: production 에 `discard_execution_capability()` 호출자가
+        #   0 이라 실패한 fit 이 capability 와 그 디렉터리 fd 를 프로세스가 죽을
+        #   때까지 들고 있었다. commit 뒤의 예외(receipt 실패)에서는 권한이
+        #   이미 소비돼 있고 폐기는 멱등이므로 같은 줄로 덮는다.
+        from tools.preserve import discard_capability_on_abort
+        discard_capability_on_abort(_exec_cap, log=log)
+        raise
+    finally:
+        # ★ 61차 P1-1 — release 는 오류를 삼키지 않는다. 62차 P1-1 — 내 lock
+        #   이 사라졌거나 다른 inode 로 바뀌었으면 여기서 **올린다**.
+        if tok is not None:
+            release_run_lock(tok)
+    return summary
+
+
+def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
+                    bounds_preset: str, n_restarts: int, nproc: int,
+                    use_noisy: bool = True, limit: int | None = None,
+                    base_config: str | None = None, reference: str = "grid",
+                    resume: bool = False, subset: set | None = None,
+                    warm_start: bool = True, adaptive: bool = True,
+                    method: str = "Nelder-Mead",
+                    halfcell_method: str = "ocp",
+                    halfcell_kw: dict | None = None, stage_root=None,
+                    logical_in=None, logical_out=None) -> dict:
+    """run_fit 본체. 호출자가 이미 .fit.lock 을 보유한 상태여야 한다.
+
+    ★ 61차 P0-2 — 이 함수가 받는 `in_dir`·`out_dir` 은 **실제로 읽고 쓰는
+      자리**다 (staging 사본과 판정한 handle). 굳은 기록에 적을 값은 그것이
+      아니라 `logical_in`·`logical_out` 이다 — 성공하면 앞의 둘은 사라진다.
+      안 주면 실제 자리를 그대로 쓴다 (예전 동작이고, 시험이 그것을 막는다).
+
+    ★ 59차 M1 · 61차 P1-1 · 62차 P0-3 — `exec_capability` 인자는 **없어졌다.**
+      굳히는 것은 호출자(`_run_fit_staged()`)가 한다 — 62차부터는 lock 을
+      **든 채로** (compute → commit → receipt → release; lock 이 token 이라
+      commit 이 fd 를 닫아도 놓을 수 있다). 61차는 lock 정리 뒤에 굳혔고 그
+      틈이 62차 P0-3 이 됐다.
+
+    ★ 51차 P0-A3 — `in_dir`·`base_config` 는 **staging 사본**을 가리킨다.
+      `stage_root` 는 그 사본의 뿌리이고, 봉인 map 의 키를 원래 저장소 상대
+      경로로 되돌리는 데 쓴다 (`canonical_input_key(..., repo_root=stage)`).
+      그래서 manifest 의 `input_sha256` 키는 staging 경로로 오염되지 않는다.
+    """
+    import os
+    import time
+    from pathlib import Path
+
+    import pandas as pd
+    from joblib import Parallel, delayed
+    from tqdm import tqdm
+
+    import yaml
+
+    from src.io import canonical_input_key as _ck_raw
+    from src.io import snapshot_inputs
+
+    def _ck(path):                       # 51차 P0-A3 — 키는 staging 뿌리 기준
+        return _ck_raw(path, stage_root)
+    from src.io import (base_manifest, env_fingerprint, file_digest, git_info,
+                        seal_inputs, source_digest, write_manifest)
+
+    in_dir, out_dir = Path(in_dir), Path(out_dir)
+    # ★ 61차 P0-2 — 적는 값과 쓰는 값을 가른다. 안 주면 예전대로 쓰는 자리를
+    #   그대로 적는다 (그 경우를 막는 것은 호출자와 회귀다).
+    _log_in = Path(logical_in) if logical_in is not None else in_dir
+    _log_out = Path(logical_out) if logical_out is not None else out_dir
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    # ★ F51 — 시작 provenance를 **어떤 입력 로드·캐시 로드·self-fit 보다도 먼저**
+    #   기록한다. 예전에는 run_sig 계산 뒤에 썼는데, halfcell 실행에서는 그보다
+    #   앞에 curves 로드·inventory 계산·half-cell 캐시 로드·pristine p_ini fitting
+    #   (모든 후속 fit 의 기준점을 정하는 실제 최적화)이 이미 끝나 있었다.
+    # ★ 그리고 resume 마다 **덮어쓰지 않는다.** 덮어쓰면 최초 chunk 를 만든 시점의
+    #   provenance 가 사라지고 마지막 시도만 "시작"으로 남는다.
+    _attempts = out_dir / "attempts"
+    _attempts.mkdir(exist_ok=True)
+    _gi0 = git_info(Path(__file__).resolve().parent.parent)
+    _src0 = source_digest()
+    _env0 = env_fingerprint()
+    # ★ F58 — half-cell 캐시를 **읽기 전에** 경로를 계산해 함께 봉인한다.
+    #   예전에는 get_halfcell_reference() 로 읽은 **뒤에** 해시해서, 읽기와 해시
+    #   사이에 파일이 바뀌지 않았음을 증명하지 못했다. 캐시 경로 계산은 base
+    #   config 의 baseline 해시만 쓰므로 여기서 미리 할 수 있다.
+    # ★ F70 — 곡선 producer 기록을 **입력으로 봉인**한다.
+    #   이 연구의 전제는 "정답을 아는 PyBaMM 합성 곡선"인데, 지금까지 fit artifact
+    #   가 증명한 것은 "어떤 parquet 을 fit 했다"뿐이었다. 손으로 만든 비-PyBaMM
+    #   curves.parquet 도 실제 fit 후 validator 를 통과했다 (리뷰 실측).
+    from src.grid import CURVES_MANIFEST
+    _prod = in_dir / CURVES_MANIFEST
+    if not _prod.exists():
+        raise RuntimeError(
+            f"곡선 producer 기록이 없습니다: {_prod}\n"
+            f"  이 곡선을 누가·어떤 solver·어떤 noise seed 로 만들었는지 증명할 수 "
+            f"없으면, 'PyBaMM 합성 truth' 라는 이 연구의 전제 자체가 봉인되지 "
+            f"않습니다 (F70).\n"
+            f"  곡선을 다시 생성하거나(./run.sh --mode grid ...), 옛 산출물이면 "
+            f"인용 대상에서 제외하세요.")
+    # ★ F74 — producer 를 **독립 검증**한다 (8차 발견 1). 자기기술 YAML 만으로는
+    #   수제 parquet 과 A/B config resume 혼합이 그대로 통과했다.
+    #   ★ F85/9차 발견 2 — 검증은 **스냅샷을 뜬 뒤** 그 사본에 대해 한다.
+    #   live 입력을 먼저 검증하면, 검증 통과 후 seal 전에 입력이 갱신됐을 때
+    #   "검증한 것"과 "계산한 것"이 달라진다 (리뷰 실측: BEFORE_VALID=True,
+    #   AT_SEAL_VALID=False, FINAL_VALIDATOR_OK=True).
+    _prod_start = in_dir / "curves_manifest_start.yaml"
+    if not _prod_start.exists():
+        raise RuntimeError(
+            f"곡선 시작 기록이 없습니다: {_prod_start}\n"
+            f"  F74 이전 산출물입니다. 곡선을 다시 생성하세요 (./run.sh --mode grid ...)")
+    # ★ 10차 발견 1 — 실패 목록도 producer 기록의 일부다. F83b 분할 검증
+    #   (의도 = 관측 ⊎ 실패, **ID 집합**)이 failed.csv 재해시를 요구하므로,
+    #   실패가 있는 곡선을 이 파일 없이 fit 하면 "무엇이 모집단에서 빠졌는가"가
+    #   봉인되지 않는다. 있으면 curves 와 같은 방식으로 봉인·스냅샷한다.
+    _prod_failed = in_dir / "failed.csv"
+    if not _prod_failed.exists():
+        _prod_failed = None
+
+    # ★ F74 — config 는 `extends` 로 부모를 재귀 로드한다. 최종 파일 하나만
+    #   봉인하면 부모(base.yaml)를 바꿔도 통과한다 (8차 발견 3 반례:
+    #   PARENT_SEALED=False, AFTER_PARENT_CHANGE_OK=True). 연쇄 전체를 봉인한다.
+    from src.config import config_dependencies, merge_config_docs
+    _bc_orig = base_config or "configs/base.yaml"
+    _cfg_deps = config_dependencies(_bc_orig)
+
+    _hc_pre, _hc_meta, _hc_recipe = None, None, None
+    # ★ 13차 게이트 — Case 1 좌표 원점(p_ini)을 만든 pristine 조건의 id.
+    #   로그에만 있어서 산출물만 보고는 "어느 조건이 원점을 만들었나" 를 물을
+    #   수 없었다. 민감도 문턱이 격자마다 5배 달랐을 때 정확히 이 질문에
+    #   답해야 했다 — multistart 난수 seed 가 cond_id 에서 나오므로, 물리적
+    #   으로 같은 pristine 곡선도 격자마다 다른 국소해로 수렴할 수 있다.
+    p_ini_cond = None
+    if reference == "halfcell":
+        from src.config import load_config as _lc
+        from src.halfcell import halfcell_meta_path as _hmp
+        _hc_pre = halfcell_path_for(_lc(_bc_orig), halfcell_method, halfcell_kw)
+        _hc_meta = _hmp(_hc_pre)
+        # ★ F63 — 캐시가 없으면 **여기서** 멈춘다.
+        #   F58 이 "읽기 전에 봉인"으로 바꾸면서, 캐시가 없는 fresh clone 은
+        #   digest=None 으로 봉인한 뒤 get_halfcell_reference() 가 캐시를 만들고,
+        #   그 직후 `None != 새 digest` 로 죽었다. 즉 **첫 실행이 항상 실패**했다.
+        #   (테스트가 전부 reference="grid" 라 205개를 통과하고도 못 잡았다.)
+        #   생성은 봉인할 수 없는 작업이므로 fitting 안에서 하지 않는다 —
+        #   provenance 를 갖춘 별도 준비 단계로 분리한다.
+        if not _hc_pre.exists() or not _hc_meta.exists():
+            raise RuntimeError(
+                f"half-cell 기준 캐시가 없습니다: {_hc_pre}\n"
+                f"  먼저 준비 단계를 실행하세요:\n"
+                f"    python -m src.halfcell --config "
+                f"{base_config or 'configs/base.yaml'} --method {halfcell_method}"
+                + "".join(f" --{k.replace('_', '-')} {v}"
+                          for k, v in sorted((halfcell_kw or {}).items())) + "\n"
+                f"  (fitting 안에서 만들면 '무엇을 읽었는가'를 봉인할 수 없습니다 — F63)")
+        # recipe 내용은 **스냅샷에서** 읽는다 (F72 — 8차 발견 3: 선읽은 메모리
+        # 값이 run_spec 에 박혀, seal 직전 교체 시 SOLVER_A/B 불일치가 통과했다)
+    # 같은 초에 두 번 시작해도 겹치지 않게 기존 시도 수를 붙인다
+    _n_prev = len(list(_attempts.glob("manifest_start_*.yaml")))
+    attempt_id = f"{time.strftime('%Y%m%dT%H%M%S')}_{os.getpid()}_{_n_prev:03d}"
+    start_prov = {
+        "attempt_id": attempt_id,
+        "started_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+        "resume": bool(resume),
+        "source_digest": _src0,
+        **_gi0,
+        "env": _env0,
+        # ★ F56 — 여기서 **한 번만** 봉인하고 run_spec·종료 manifest가 이 map을
+        #   그대로 재사용한다. 세 곳에서 따로 해시하면 셋이 어긋나도 아무도 모른다.
+        "input_sha256": seal_inputs(
+            [in_dir / "curves.parquet", *_cfg_deps,   # F74: extends 연쇄 전체
+             _prod, _prod_start,           # F70/F74: producer 기록 + 시작 기록
+             _prod_failed,                 # 10차 발견 1: 실패 목록 (있을 때)
+             _hc_pre, _hc_meta],           # F64: recipe 기록도 함께 봉인
+            repo_root=stage_root),
+        "halfcell_cache": _ck(_hc_pre) if _hc_pre else None,
+        "halfcell_recipe": _hc_recipe,
+        "_주의": ("실행 **시작** 시점 상태다 (입력 로드·self-fit 이전). "
+                 "manifest.yaml 은 종료 시점이므로 둘이 다르면 실행 도중 코드나 "
+                 "입력이 바뀐 것이다 (F42/F51). half-cell 캐시 digest 는 기준 곡선을 "
+                 "고른 뒤 attempt 파일에 추가된다."),
+    }
+    (_attempts / f"manifest_start_{attempt_id}.yaml").write_text(
+        yaml.safe_dump(start_prov, allow_unicode=True, sort_keys=False),
+        encoding="utf-8")
+    _first = out_dir / "manifest_start.yaml"
+    if not _first.exists():          # 최초 시도만 대표로 남긴다 (덮어쓰지 않음)
+        _first.write_text(
+            yaml.safe_dump(start_prov, allow_unicode=True, sort_keys=False),
+            encoding="utf-8")
+    log.info("실행 시작 provenance: git %s dirty=%s src %s → %s",
+             _gi0.get("git_commit_short"), _gi0.get("git_dirty"), _src0,
+             _attempts / f"manifest_start_{attempt_id}.yaml")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    # ★ F72 — 봉인한 **바이트 자체**를 스냅샷으로 떠서, 이후 계산은 그것만 읽는다.
+    #   digest 를 몇 번 더 비교해도 "해시한 시점"과 "읽는 시점" 사이는 못 막는다.
+    _snap = snapshot_inputs(start_prov["input_sha256"], out_dir,
+                            repo_root=stage_root)
+    df = pd.read_parquet(_snap[_ck(in_dir / "curves.parquet")])
+    # ★ F72/8차 발견 3 — producer 문서는 **스냅샷에서** 읽는다. 선읽은 메모리
+    #   값을 run_spec 에 쓰면, seal 직전 교체 시 기록과 봉인이 어긋난 채 통과한다
+    #   (리뷰 실측: RUN_SPEC_SOLVER=A, SEALED_SNAPSHOT_SOLVER=B, ok=True).
+    _prod_doc = yaml.safe_load(
+        _snap[_ck(_prod)].read_text(encoding="utf-8")) or {}
+    _prod_curves_sha = _prod_doc.get("curves_sha256")
+
+    # ★ F85 — 스냅샷 **사본**으로 producer 를 검증한다. 검증 대상과 계산 대상이
+    #   같은 바이트임이 구조적으로 보장된다.
+    from src.io import validate_curves_provenance
+    _pv_dir = out_dir / "_inputs" / "_producer_view"
+    _pv_dir.mkdir(parents=True, exist_ok=True)
+    for _src, _name in ((_snap[_ck(in_dir / "curves.parquet")], "curves.parquet"),
+                        (_snap[_ck(_prod)], "curves_manifest.yaml"),
+                        (_snap[_ck(_prod_start)], "curves_manifest_start.yaml"),
+                        # 10차 발견 1 — 실패 목록도 검증 뷰에 포함해야
+                        # F83b 재해시가 fit 시점의 바이트로 증명된다
+                        *(((_snap[_ck(_prod_failed)], "failed.csv"),)
+                          if _prod_failed else ())):
+        _dst = _pv_dir / _name
+        if not _dst.exists() or file_digest(_dst) != file_digest(_src):
+            import shutil as _sh
+            _sh.copy2(_src, _dst)
+    # ★ F72/F74 — config 는 스냅샷 문서들로 `extends` 병합을 **재현**해 만든다.
+    #   `load_config(스냅샷 최종파일)` 은 부모를 디스크에서 다시 읽으므로 안 된다.
+    #   `_config_path` 만은 원래 위치를 유지한다 (경로 파생 전용 필드).
+    #   (10차 자체 확인 2 — producer 검증의 실패라벨 재검이 cfg 를 요구하므로
+    #   검증보다 먼저 만든다)
+    base_cfg = merge_config_docs([
+        yaml.safe_load(_snap[_ck(d)].read_text(encoding="utf-8")) or {}
+        for d in _cfg_deps])
+    base_cfg["_config_path"] = str(_bc_orig)
+    base_cfg["_loaded_files"] = [str(d) for d in _cfg_deps]
+
+    # ★ 10차 자체 확인 2 / 11차 발견 3 — 실패 라벨 재검은 검증자가 producer 의
+    #   **서명된 replay_recipe** 로 수행한다 (호출자 cfg 를 넘기지 않는다).
+    _cv = validate_curves_provenance(_pv_dir)
+    if not _cv["ok"]:
+        raise RuntimeError(
+            "곡선 producer 검증 실패 — 이 곡선으로 fitting 할 수 없습니다 (F74/F85):\n"
+            + "\n".join(f"  · {k}: {_cv['checks'][k]}" for k in _cv["fail"])
+            + "\n  곡선을 다시 생성하세요: ./run.sh --mode grid ...")
+
+    ref = extract_reference(df)
+    ref_x = ref["x_norm"].to_numpy()
+    ref_pe, ref_ne = ref["v_pe"].to_numpy(), ref["v_ne"].to_numpy()
+    ref_full = ref["v_full"].to_numpy()
+    q_ref = float(ref["q_mah"].iloc[0])
+    log.info("reference: Q=%.1f mAh, %d점", q_ref, len(ref_x))
+
+    # LLI 환산 상수 (전하 보존 유도식) — 메인에서 1회 계산해 워커에 값만 전달
+    from src.config import load_config as _load
+    from src.inventory import reference_inventory
+    inv = reference_inventory(base_cfg, q_ref / 1000.0).as_dict()
+
+    # ── Case 1: full-range half-cell OCV 기준 ──
+    hc_dict, p_ini = None, None
+    if reference == "halfcell":
+        # ★ F72 — 캐시도 **스냅샷에서** 읽는다. get_halfcell_reference() 는 경로를
+        #   다시 계산해 원본을 읽으므로, 봉인과 읽기 사이가 다시 벌어진다.
+        #   여기서는 이미 F63 이 존재를 보장했으므로 바이트를 그대로 로드한다.
+        from src.halfcell import HalfCellReference
+        hc_used = halfcell_path_for(base_cfg, halfcell_method, halfcell_kw)
+        if str(hc_used) != str(_hc_pre):
+            raise RuntimeError(
+                f"half-cell 캐시 경로가 시작 봉인과 다릅니다: {_hc_pre} vs {hc_used}")
+        _hc_meta_doc = yaml.safe_load(
+            _snap[_ck(_hc_meta)].read_text(encoding="utf-8")) or {}
+        _hc_recipe = _hc_meta_doc.get("recipe")
+        if not _hc_recipe:
+            raise RuntimeError(f"half-cell meta에 recipe가 없습니다: {_hc_meta} (F64)")
+        _hc_arrays = json.loads(_snap[_ck(hc_used)].read_text(encoding="utf-8"))
+        # ★ F74/8차 발견 2 — meta 의 선언을 전부 재계산해 대조한다. 예전에는
+        #   recipe 키 존재만 봐서, 임의 배열 + baseline_hash: FORGED 가 통과했다.
+        from src.halfcell import validate_halfcell_cache
+        _hv = validate_halfcell_cache(base_cfg, hc_used,
+                                      meta_doc=_hc_meta_doc, arrays_doc=_hc_arrays)
+        if not _hv["ok"]:
+            raise RuntimeError(
+                "half-cell 캐시 검증 실패 (F74):\n"
+                + "\n".join(f"  · {k}: {_hv['checks'][k]}" for k in _hv["fail"])
+                + "\n  캐시를 다시 만드세요: python -m src.halfcell --force"
+                + "\n  깊은 검증(배열 재생성 대조): python -m src.halfcell --verify")
+        hc = HalfCellReference.from_dict(_hc_arrays)
+        cov = hc.coverage()
+        # 리뷰 F11: to_modes_halfcell의 LLI 식은 테이블이 화학량론 전 범위일 때만
+        # 성립한다 (sim 테이블 y_min=0.251이면 오프셋 ≈2.2Ah로 LLI가 조용히 틀림).
+        if cov["pe_min"] > 0.01 or cov["pe_max"] < 0.99 \
+                or cov["ne_min"] > 0.01 or cov["ne_max"] < 0.99:
+            raise RuntimeError(
+                f"half-cell 테이블이 전 범위가 아님 ({cov}). "
+                f"method='ocp' 캐시를 사용하세요 (python -m src.halfcell --method ocp)")
+        hc_dict = hc.as_dict()
+        log.info("half-cell 기준 범위: %s", cov)
+
+    v_col = "v_full_noisy" if (use_noisy and "v_full_noisy" in df.columns) else "v_full"
+    tasks = []
+    for cond_id, g in df.groupby("cond_id", sort=False):
+        g = g.sort_values("x_norm")
+        q = float(g["q_mah"].iloc[0])
+        truth = {k: float(g[k].iloc[0]) for k in ("lli", "lam_pe", "lam_ne")}
+        truth.update({k: g[k].iloc[0] for k in ("lam_pe_type", "lam_ne_type", "noise")
+                      if k in g.columns})
+        tasks.append({
+            "cond_id": cond_id, "x": g["x_norm"].to_numpy(),
+            "v_target": g[v_col].to_numpy(), "q_mah": q, "r": q / q_ref,
+            "truth": truth, "ref_x": ref_x, "ref_pe": ref_pe, "ref_ne": ref_ne,
+            "ref_full": ref_full, "obj_cfg": obj_cfg, "objectives": objectives,
+            "init": bounds["init"], "lb": bounds["lb"], "ub": bounds["ub"],
+            "bounds_preset": bounds_preset, "n_restarts": n_restarts,
+            "inventory": inv, "reference": reference, "halfcell": hc_dict,
+            "p_ini": p_ini, "warm_start": warm_start,
+            "adaptive": adaptive, "method": method,          # F66
+            # hash()는 프로세스마다 소금이 달라 재현 불가 → sha1 기반 결정적 seed
+            "seed": int(hashlib.sha1(cond_id.encode()).hexdigest()[:8], 16),
+        })
+    if subset is not None:
+        sub = set(subset)
+        missing = sub - {t["cond_id"] for t in tasks}
+        if missing:
+            log.warning("subset의 %d조건이 curves에 없음 (예: %s)",
+                        len(missing), sorted(missing)[:3])
+        tasks = [t for t in tasks if t["cond_id"] in sub]
+        if not tasks:
+            raise RuntimeError("subset과 겹치는 조건이 없음")
+        log.info("subset 적용: %d조건", len(tasks))
+    if limit:
+        tasks = tasks[:limit]
+
+    if reference == "halfcell":
+        # ★ ini 정규화용: 기준 셀 자신을 먼저 fitting해 α_ini·β_ini를 얻는다.
+        # 리뷰 F2: max(r)로 고르면 reference의 noise 변형 3개가 r=1.0 동률이라
+        # 행 순서에 따라 노이즈 곡선에 self-fitting할 수 있고, --limit로 잘리면
+        # 열화 조건이 뽑힌다 → truth로 명시 선택하고 clean 곡선을 강제한다.
+        def _is_ref(t):
+            tr = t["truth"]
+            return (tr["lli"] == 0 and tr["lam_pe"] == 0 and tr["lam_ne"] == 0
+                    and float(tr.get("noise", 0.0)) == 0.0)
+
+        ref_candidates = [t for t in tasks if _is_ref(t)]
+        if not ref_candidates:
+            raise RuntimeError(
+                "p_ini 기준 조건(lli=lam_pe=lam_ne=0, noise=0)이 태스크에 없음 "
+                "(--limit로 잘렸을 수 있음)")
+        # ★ p_ini는 목적함수마다 따로 구한다 (F26).
+        #   한때 pocv_dvdq 하나로 fit해 모든 목적함수에 주입했는데, 목적함수마다
+        #   pristine optimum이 다르므로 나머지는 남의 원점에서 좌표를 읽는 셈이
+        #   된다. LAM_PE에 거의 일정한 offset이 생기고, 그게 degeneracy로 오독됐다.
+        #   실측(공통 1,476조건): 34p가 99.1% → 10.0%, 평균|err| 3.94 → 1.43%p.
+        #
+        # ★★ 목적함수 전체를 **한 task로** 넘긴다 (F26b). 하나씩 따로 fit하면
+        #   warm start 연쇄가 끊겨, 원점과 데이터 점이 서로 다른 optimizer
+        #   프로토콜에서 측정된다. 그러면 F26이 지우려던 계통 오프셋이 그대로
+        #   다시 생긴다. 실측: dqdv_only의 pristine이 단독 fit에서
+        #   [1.5708, -0.4442, 1.0204, -0.0184], 연쇄 fit에서
+        #   [1.4849, -0.4102, 1.0507, -0.0507]로 갈렸다 (본 fitting은 후자).
+        #   비용도 4번 → 1번으로 준다.
+        ref_id = ref_candidates[0]["cond_id"]
+        p_ini_cond = ref_id
+        ini_rows = _fit_one({**ref_candidates[0], "p_ini": [1.0, 0.0, 1.0, 0.0]})
+        p_ini = {r["objective"]: [float(r[k]) for k in PARAM_NAMES] for r in ini_rows}
+        for name, v in p_ini.items():
+            log.info("α_ini·β_ini[%s] = %s (기준 조건 %s 자체 fitting, warm=%s)",
+                     name, [round(x, 4) for x in v], ref_id,
+                     bool(next(r["warm_started"] for r in ini_rows
+                               if r["objective"] == name)))
+        missing_ini = set(objectives) - set(p_ini)
+        if missing_ini:
+            raise RuntimeError(f"p_ini를 못 구한 목적함수: {sorted(missing_ini)}")
+        for t in tasks:
+            t["p_ini"] = p_ini
+
+    from src.io import chunk_files, load_completed, mark_completed, merge_chunks, save_chunk
+
+    # ── resume: 완료 조건 건너뛰기 ──
+    # 리뷰 F18: 완료 파일명에 실행 서명을 넣는다. 안 그러면 다른 --objective로
+    # resume했을 때 새 목적함수가 조용히 누락된다.
+    #
+    # ★ F32 — 서명에 **결과를 바꾸는 모든 설정**이 들어가야 한다. 예전에는
+    #   목적함수 *이름*·reference·bounds preset·타깃 열·warm_start만 넣어서,
+    #   같은 이름으로 가중치나 restart 수만 바꾸고 --resume하면 옛 청크가
+    #   재사용됐다. 그러면 서로 다른 설정의 행이 섞인 결과가 새 manifest 아래
+    #   생성되어, manifest 하나만 봐서는 검출할 수 없다.
+    # ★ F36 — 경로 문자열이 아니라 **내용**을 넣는다. 같은 `configs/base.yaml`을
+    #   수정해 inventory constants나 half-cell reference가 바뀌어도 서명이 그대로면
+    #   resume이 옛 청크를 완료분으로 인정한다. obj_cfg도 두 섹션만 뽑지 말고
+    #   resolved 전체를 넣는다 — 어느 키가 결과를 바꾸는지 미리 알 수 없다.
+    # F45: glob 이 아니라 **실제로 쓴** 캐시 하나만
+    hc_paths = [hc_used] if reference == "halfcell" else []
+    _gi = git_info(Path(__file__).resolve().parent.parent)
+    # ★ F67 — 서명은 **설정**이 아니라 **계산**을 고정해야 한다.
+    #   지금까지 여섯 라운드 동안 붙인 것은 전부 "무엇을 설정했나"였고, 실제로
+    #   계산을 결정하는 축들 — 목적함수 **순서**, 실제 **조건 집합**, optimizer
+    #   **정책**, half-cell **좌표 원점** — 은 빠져 있었다. 그래서
+    #     · `--objective pocv,34p` 와 `34p,pocv` 가 같은 서명으로 병합되고
+    #       (warm 연쇄가 순서를 따르므로 결과가 다르다),
+    #     · `--limit`/`--subset` 으로 조건을 잘라도 같은 서명이 재사용되고,
+    #     · half-cell 의 `p_ini` 가 한 artifact 안에서 갈렸다.
+    _cond_ids = sorted(t["cond_id"] for t in tasks)
+    _cond_sha = hashlib.sha256(
+        "\n".join(_cond_ids).encode()).hexdigest()[:16]
+    _selection = ("subset" if subset is not None else
+                  "limit" if limit else "full")
+    run_spec = {
+        # ★ F49 — 코드 identity 를 서명에 넣는다. 없으면 코드만 바꾸고 resume 했을 때
+        #   서로 다른 코드의 행이 같은 서명으로 섞이고 병합 검사를 통과한다.
+        "sig_version": 5,
+        # ── 무엇을 계산했나 (F67) ──
+        "objective_order": list(objectives),      # warm 연쇄가 이 순서를 따른다
+        "condition_ids_sha256": _cond_sha,
+        "n_conditions": len(_cond_ids),
+        "selection": _selection,
+        "p_ini": p_ini,                           # half-cell 좌표 원점 (grid면 None)
+        "p_ini_cond": p_ini_cond,                 # 그 원점을 만든 pristine 조건
+
+        "optimizer": {                            # 실제로 쓴 정책 전부
+            "method": method, "adaptive": bool(adaptive),
+            "n_restarts": n_restarts, "agree_tol": 1e-3,
+            "seed_scheme": "sha1(cond_id)[:8]",
+        },
+        "git_commit": _gi.get("git_commit"),
+        "git_dirty": _gi.get("git_dirty"),
+        "source_digest": source_digest(),
+        "objectives": {k: objectives[k] for k in sorted(objectives)},   # 이름 + 가중치
+        "reference": reference, "bounds_preset": bounds_preset,
+        "bounds": bounds, "v_col": v_col, "warm_start": bool(warm_start),
+        "n_restarts": n_restarts,
+        "obj_cfg": obj_cfg,                      # resolved 전체
+        # ★ 62차 P0-5 — `base_config` 는 staging 사본(`/tmp/fit-stage-*/…`)을
+        #   가리킨다. 그 문자열을 그대로 넣으면 실행마다 run_sig 가 바뀌어
+        #   정상 resume 이 자기 completed journal 을 못 찾았다 (리뷰어 실측:
+        #   `same_logical_execution_has_same_signature false`). 서명에는
+        #   **논리 key**(staging 뿌리 기준 상대 경로 — `base_config_sha` 와
+        #   같은 key)와 그 내용 digest 만 들어간다.
+        "base_config": _ck(base_config or "configs/base.yaml"),
+        "inventory": inv,                        # base config에서 유도된 상수
+        "env": _env0,                            # F55: dependency fingerprint
+        # ★ F56 — 시작 봉인 map을 그대로 쓴다 (재해시하지 않는다)
+        "sealed_inputs": start_prov["input_sha256"],
+        "curves_sha": start_prov["input_sha256"].get(_ck(in_dir / "curves.parquet")),
+        "base_config_sha": start_prov["input_sha256"].get(
+            _ck(base_config or "configs/base.yaml")),
+        "halfcell_sha": (start_prov["input_sha256"].get(_ck(_hc_pre))
+                         if _hc_pre else None),
+        "halfcell_meta_sha": (start_prov["input_sha256"].get(_ck(_hc_meta))
+                              if _hc_meta else None),
+        "halfcell_cache": _ck(_hc_pre) if _hc_pre else None,
+        "halfcell_recipe": _hc_recipe,            # F64: 캐시를 만든 인자
+        # ★ F70 — upstream truth 를 서명에 잇는다. producer 기록의 digest 와,
+        #   그 기록이 주장하는 curves digest 가 우리가 읽은 것과 같은지.
+        "producer_sha": start_prov["input_sha256"].get(_ck(_prod)),
+        "producer": {
+            "config_hash": _prod_doc.get("config_hash"),
+            "solver": _prod_doc.get("solver"),
+            "protocol_unified": _prod_doc.get("protocol_unified"),
+            "noise_seed": _prod_doc.get("noise_seed"),
+            "source_digest": _prod_doc.get("source_digest"),
+            "curves_sha256": _prod_curves_sha,
+        },
+    }
+    run_sig = hashlib.sha1(
+        json.dumps(run_spec, sort_keys=True, default=str).encode()).hexdigest()[:12]
+    completed_name = f"fit_completed_{run_sig}.jsonl"
+
+    done = load_completed(out_dir, completed_name) if resume else set()
+    if resume and done:
+        # 리뷰 F19b: "완료 표시는 있는데 청크에 행이 없는" 조건은 완료로 믿지 않는다.
+        # 동시 실행 사고로 오염된 청크를 지우면 표시만 남아, resume이 그 조건을
+        # 영원히 건너뛴다 (결과가 조용히 비는 가장 위험한 실패 모드).
+        have: set[str] = set()
+        for f in chunk_files(out_dir, "fit_chunks"):
+            try:
+                have |= set(pd.read_parquet(f, columns=["cond_id"])["cond_id"])
+            except Exception:  # noqa: BLE001
+                continue
+        ghost = done - have
+        if ghost:
+            log.warning("완료 표시만 있고 결과 행이 없는 조건 %d개 → 완료 취소 후 재계산",
+                        len(ghost))
+            done &= have
+    todo = [t for t in tasks if t["cond_id"] not in done]
+    if resume and done:
+        log.info("fit resume(sig=%s): %d개 완료 확인, %d개 남음",
+                 run_sig, len(done), len(todo))
+
+    # ★ 입력/출력 디렉터리를 반드시 찍는다. run.sh가 --out을 조용히 --in으로
+    #   덮어써서 스모크 결과가 본 실행 디렉터리를 오염시킨 일이 있었다.
+    log.info("fitting: %d조건 × %d목적함수 × %d restart (nproc=%d, warm_start=%s)\n"
+             "         입력 %s\n         출력 %s",
+             len(todo), len(objectives), n_restarts, nproc, warm_start,
+             in_dir.resolve(), out_dir.resolve())
+    t0 = time.perf_counter()
+    n_done = 0
+    with Parallel(n_jobs=nproc, backend="loky") as parallel:
+        step = max(1, min(100, len(todo)))
+        chunk_idx = 0
+        for s in range(0, len(todo), step):
+            chunk = todo[s:s + step]
+            rows = []
+            for rr in parallel(delayed(_fit_one)(t) for t in chunk):
+                rows.extend(rr)
+            # ★ F32 — 행마다 실행 서명을 박는다. 병합 단계에서 서로 다른 설정의
+            #   청크가 섞였는지 검출할 수 있어야 한다 (manifest 하나만 보면 못 잡는다).
+            for r in rows:
+                r["run_sig"] = run_sig
+            # ★ 청크 즉시 저장 — 5시간 실행이 죽어도 여기까지는 남는다
+            save_chunk(pd.DataFrame(rows), out_dir, chunk_idx,
+                       subdir="fit_chunks")
+            chunk_idx += 1
+            for t in chunk:
+                mark_completed(out_dir, t["cond_id"], completed_name)
+            n_done += len(chunk)
+            el = time.perf_counter() - t0
+            # tqdm은 파일 리다이렉트 시 버퍼링으로 안 보인다 → 로그로 진행률
+            log.info("fit 진행: %d/%d (%.0f%%) — %.1f s/cond, 남은 예상 %.0f분",
+                     n_done, len(todo), 100 * n_done / len(todo),
+                     el / n_done, el / n_done * (len(todo) - n_done) / 60)
+    elapsed = time.perf_counter() - t0
+
+    # 이전 실행분(resume)까지 합쳐 병합. 같은 (cond_id, objective, ...)는 최신만.
+    path = merge_chunks(out_dir, "fits.parquet", subdir="fit_chunks",
+                        keys=("cond_id", "objective", "reference", "bounds_preset"))
+    if path is None:      # 리뷰 F19: 전부 resume-완료면 청크가 없어도 죽지 않게
+        path = out_dir / "fits.parquet"
+        if not path.exists():
+            raise RuntimeError("청크도 기존 fits.parquet도 없음 — 실행된 조건이 없습니다")
+    fits = pd.read_parquet(path)
+
+    # ★ F32 — 서로 다른 설정의 청크가 섞였으면 여기서 죽는다. 조용히 섞인 결과를
+    #   새 manifest 아래 내보내는 것이 가장 위험하다 (읽는 쪽이 검출할 수 없다).
+    # ★ F36 — 경고가 아니라 **실패**시킨다. 서명이 하나뿐이어도 현재 실행과
+    #   다르면 옛 결과가 새 manifest 아래 통과한다. null 행도 dropna에 숨는다.
+    if "run_sig" not in fits.columns:
+        raise RuntimeError(
+            f"{path}에 run_sig 열이 없습니다 — F32 이전 형식입니다. "
+            f"{out_dir}/fit_chunks 를 비우고 처음부터 다시 돌리세요.")
+    n_null = int(fits["run_sig"].isna().sum())
+    sigs = sorted(str(s) for s in fits["run_sig"].dropna().unique())
+    if n_null or len(sigs) != 1 or sigs[0] != run_sig:
+        raise RuntimeError(
+            f"실행 서명이 이번 실행과 일치하지 않습니다 "
+            f"(서명 {sigs or '없음'}, 미기록 행 {n_null}, 이번 실행 {run_sig}). "
+            f"다른 설정의 결과가 섞였거나 옛 형식입니다. "
+            f"{out_dir}/fit_chunks 를 비우고 처음부터 다시 돌리세요 (F36).")
+
+    # ★ F68 — **출력을 봉인한다.** 지금까지 여섯 라운드 동안 "인용 가능성"을
+    #   판정하는 장치를 만들면서, 정작 인용되는 **숫자 자체는 한 번도 검사하지
+    #   않았다.** validator 가 fits 에서 읽는 열은 `run_sig` 와 `restarts_json`
+    #   둘뿐이었다. 그래서 리뷰가 실제로 재현해 보인 것들이 전부 통과했다:
+    #     · `lam_pe_hat = 0.999`, `lli_hat = -0.777`, `J = 12345` 로 바꿔도 ok
+    #     · `lam_pe_hat` 전체에 `+0.5` 를 해도 ok
+    #     · `n_conditions = 3` 인데 fits 에서 두 조건을 지워도 ok
+    #   파일 전체를 해시하고, 행 수와 (조건 × 목적함수) 완전성까지 봉인한다.
+    from src.io import fits_seal
+    seal = fits_seal(path, cond_ids=_cond_ids, objective_order=list(objectives))
+    if seal["missing"] or seal["extra"] or seal["duplicated"]:
+        raise RuntimeError(
+            f"fits 가 (조건 × 목적함수) 격자를 채우지 못했습니다 — "
+            f"누락 {len(seal['missing'])}, 잉여 {len(seal['extra'])}, "
+            f"중복 {len(seal['duplicated'])} "
+            f"(예: {(seal['missing'] or seal['extra'] or seal['duplicated'])[:3]}). "
+            f"불완전한 결과를 봉인하면 분모가 조용히 달라집니다 (F68).")
+
+    # F30: config_hash를 비워 두면 어떤 목적함수 정의로 돌았는지 남지 않는다.
+    #   실제 obj_cfg 내용을 해시해 박고, 입력 curves와 config 파일의 SHA도 남긴다.
+    cfg_h = hashlib.sha1(json.dumps(obj_cfg, sort_keys=True, default=str)
+                         .encode()).hexdigest()[:12]
+    # halfcell 기준 캐시도 입력이다 — 이게 바뀌면 결과가 바뀐다 (F45: 실제 경로)
+    hc_cache = list(hc_paths)
+    write_manifest(out_dir, base_manifest(
+        cfg_h, out_dir=out_dir,
+        inputs=None, sealed=start_prov["input_sha256"], extra={
+        "run_type": "fit", "input": str(_log_in),
+        "run_signature": run_sig, "run_spec": run_spec,
+        # F42/F51: 시작 시점과 대조 (다르면 실행 도중 바뀐 것)
+        "start_provenance": start_prov,
+        "attempt_id": attempt_id,
+        "attempts_dir": "attempts",
+        "git_commit_changed_during_run": bool(
+            start_prov.get("git_commit")
+            != git_info(Path(__file__).resolve().parent.parent).get("git_commit")),
+        "source_digest_changed_during_run": bool(_src0 != source_digest()),
+        "objectives_resolved": obj_cfg.get("objectives"),
+        "n_conditions": len(tasks), "objectives": list(objectives),
+        "bounds_preset": bounds_preset, "bounds": bounds,
+        "n_restarts": n_restarts, "target_column": v_col, "reference": reference,
+        "p_ini": p_ini, "warm_start": warm_start,
+        "q_ref_mah": q_ref, "lli_inventory_constants": inv, "elapsed_s": round(elapsed, 1),
+        "fits_parquet": str(_log_out / path.relative_to(out_dir)),
+        "fits_seal": {k: v for k, v in seal.items()
+                      if k not in ("missing", "extra", "duplicated")},   # F68
+    }))
+    # ★ 59차 M1 — fit 산출도 **여기서 굳는다.** manifest 가 생긴 이 순간에야
+    #   내용 identity 가 있고, 권한 없이는 등록할 수 없다 (grid 와 같은 문장).
+    log.info("fitting 완료: %d행, %.1fs → %s", len(fits), elapsed, path)
+    return {"n_rows": len(fits), "n_conditions": len(tasks),
+            "elapsed_s": elapsed,
+            "out": str(_log_out / path.relative_to(out_dir))}
+
+
+def main() -> None:
+    import argparse
+    import json
+    import multiprocessing
+
+    from src.config import load_config
+
+    ap = argparse.ArgumentParser(description="alpha/beta fitting (33p·34p)")
+    ap.add_argument("--leg", default=None,
+                    help="`LEG_PRESERVATION.yaml` 의 `planned:` 에서 찾을 다리 "
+                         "이름 (48차 P0-5 — 없으면 LEG/CANONICAL_RUN 환경변수)")
+    ap.add_argument("--may-open", dest="may_open", action="store_true",
+                    help="★ 57차 P0-1 — 이 호출이 **발급자**임을 밝힌다 "
+                         "(coordinator: `./run.sh`). 없으면 이미 발급된 "
+                         "실행에만 붙는다. 소유 증명의 자리는 lifecycle 이 "
+                         "정하므로 경로 인자는 없다."
+                         "증명 파일 경로. grid 가 남긴 그 파일을 주면 같은 "
+                         "실행에 붙는다 (주지 않으면 grid 가 이미 잡은 다리를 "
+                         "두 번째로 시작하려는 것이라 거부된다)")
+    ap.add_argument("--in", dest="in_dir", required=True, help="grid 결과 디렉터리")
+    ap.add_argument("--out", default=None, help="기본: --in 과 동일")
+    ap.add_argument("--objectives-config", default="configs/objectives.yaml")
+    ap.add_argument("--base-config", default="configs/base.yaml",
+                    help="LLI 환산 상수(재고 분배) 계산용 물리 baseline")
+    ap.add_argument("--objective", default=None,
+                    help="콤마 목록. 기본: objectives.yaml 전체")
+    ap.add_argument("--bounds", default="expanded", help="expanded | original_33p")
+    ap.add_argument("--n-restarts", dest="n_restarts", type=int, default=None)
+    ap.add_argument("--nproc", type=int, default=multiprocessing.cpu_count())
+    ap.add_argument("--resume", action="store_true",
+                    help="fit_completed.jsonl 기반 재개 (청크 단위 저장)")
+    ap.add_argument("--reference", default="grid", choices=["grid", "halfcell"],
+                    help="grid=기준 셀 창(유도식 환산) | halfcell=전 범위 반쪽셀(21p 식)")
+    ap.add_argument("--clean", action="store_true", help="노이즈 없는 곡선으로 fitting")
+    ap.add_argument("--limit", type=int, default=None, help="앞 N조건만 (스모크용)")
+    # ★ F66 — 적응적 조기 종료를 끄는 경로. 이게 없어서 "동일 restart budget"
+    #   paired 비교를 여섯 라운드 동안 실행하지 못했다.
+    ap.add_argument("--no-adaptive", dest="adaptive", action="store_false",
+                    help="적응적 조기 종료를 끈다 — 모든 조건이 정확히 "
+                         "--n-restarts 번 돈다 (공정 비교용). 기본은 켜짐")
+    ap.add_argument("--halfcell-method", default="ocp", choices=["ocp", "ocpbias", "sim"],
+                    help="half-cell 기준 캐시의 생성 방식 (F64: 서명에 들어간다)")
+    ap.add_argument("--halfcell-arg", dest="halfcell_arg", action="append", default=[],
+                    metavar="KEY=VALUE",
+                    help="ocpbias 왜곡 값 (반복 가능). 예: --halfcell-arg "
+                         "pe_offset_mv=10 --halfcell-arg pe_stretch=0.97. "
+                         "**캐시를 만들 때 준 값과 같아야 한다** — 다르면 그 "
+                         "경로에 캐시가 없어 멈춘다")
+    ap.add_argument("--no-warm-start", dest="warm_start", action="store_false",
+                    help="dQ/dV 목적함수에 매끄러운 해를 초기값으로 물려주지 않는다 "
+                         "(F20 비교 실험용). 기본은 물려준다")
+    ap.add_argument("--log-level", default="INFO")
+    args = ap.parse_args()
+    halfcell_kw = parse_halfcell_kw(args.halfcell_arg)
+    # ★ 왜곡 없는 ocpbias 는 `ocp` 와 배열이 같다 (test_ocpbias_with_zero_
+    #   perturbation_equals_ocp). 즉 여기 오는 유일한 이유는 --halfcell-arg 를
+    #   **잊은** 것이고, 그대로 두면 왜곡 0 캐시를 읽어 민감도 0 을 보고한다.
+    #   입력을 보기도 전에 멈춘다. 대조 실행은 --halfcell-method ocp 로.
+    from src.halfcell import is_noop_bias as _noop
+    if args.halfcell_method == "ocpbias" and _noop("ocpbias", **halfcell_kw):
+        raise SystemExit(
+            "--halfcell-method ocpbias 인데 실효 왜곡이 0 입니다. 왜곡 0 인 "
+            "ocpbias 는 ocp 와 완전히 같은 곡선이라, 이대로 두면 왜곡 없는 기준으로 "
+            "민감도를 쟀다고 착각하게 됩니다.\n"
+            "  왜곡 실행: --halfcell-arg pe_offset_mv=10 (캐시 생성 때와 같은 값)\n"
+            "  대조 실행: --halfcell-method ocp")
+    if args.halfcell_method != "ocpbias" and halfcell_kw:
+        raise SystemExit(f"--halfcell-arg 는 --halfcell-method ocpbias 에서만 "
+                         f"쓸 수 있습니다 (지금 {args.halfcell_method}).")
+
+    logging.basicConfig(level=args.log_level,
+                        format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+    cfg = load_config(args.objectives_config)
+
+    objectives = dict(cfg["objectives"])
+    if args.objective:
+        want = [s.strip() for s in args.objective.split(",")]
+        missing = [w for w in want if w not in objectives]
+        if missing:
+            raise SystemExit(f"objectives.yaml에 없는 목적함수: {missing}")
+        objectives = {k: objectives[k] for k in want}
+
+    fcfg = cfg["fitting"]
+    presets = fcfg["bounds_presets"]
+    if args.bounds not in presets:
+        raise SystemExit(f"알 수 없는 bounds preset: {args.bounds} (가능: {list(presets)})")
+    bounds = presets[args.bounds]
+
+    summary = run_fit(
+        leg=args.leg, may_open=args.may_open,
+        in_dir=args.in_dir, out_dir=args.out or args.in_dir,
+        obj_cfg=cfg, objectives=objectives, bounds=bounds,
+        bounds_preset=args.bounds,
+        n_restarts=args.n_restarts or int(fcfg.get("n_restarts", 5)),
+        nproc=args.nproc, use_noisy=not args.clean, limit=args.limit,
+        base_config=args.base_config, reference=args.reference,
+        resume=args.resume, warm_start=args.warm_start,
+        adaptive=args.adaptive,
+        method=str(fcfg.get("method", "Nelder-Mead")),   # F66b: config를 실제로 읽는다
+        halfcell_method=args.halfcell_method,
+        halfcell_kw=halfcell_kw,
+    )
+    print(json.dumps(summary, ensure_ascii=False, indent=2))
+
+
+if __name__ == "__main__":
+    main()
