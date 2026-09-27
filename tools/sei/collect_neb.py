@@ -14,8 +14,16 @@
   · 셀 크기 수렴을 대신 봐 주지 않는다 — jellium/이미지 상호작용은 별도 런으로 확인할 것.
   · 홉이 **전도 경로인지**는 판정하지 않는다 (끝점 대칭·수렴만 본다). li3nd c→b 처럼
     수렴·대칭 검사를 다 통과하고도 "일어나지 않는 홉" 일 수 있다.
+  · 홉 수 검산(`hop_check`)은 **차수 검산**이다 — ν₀ 는 가정(10¹³ s⁻¹)이고 전인자·상관·공공 농도를 안 본다.
+    확산계수나 전도도가 아니다 (아래 hop_check 주석).
+
+장벽 보고 형식 — 홉 수 검산 한 줄 (1저자 2026-09-27 · 결정 D-2026-09-27-barrier-hop-count)
+  장벽을 인용할 때마다 Γ = ν₀·exp(−Ea/kT) · 평균 대기 1/Γ · (시간 창 t 가 있으면) N = Γ·t 를 같이 싣는다.
+  계기: li2026 (JACS · 수계 Mn–S) 의 CI-NEB 0.97 eV 는 15 A g⁻¹ 방전 ≈ 243 s 동안 N ≈ 0.1 회 — 같은 논문의
+  "빠른 고상 벌크 수송" 주장과 새 계산 없이 모순이 드러났다. 결과마다 `hop_check` 필드 · 콘솔 한 줄.
 
   python3 tools/sei/collect_neb.py                       # 기본 루트 전부 (아래 ROOTS)
+  python3 tools/sei/collect_neb.py --hop_T 300 --hop_time_s 243   # 홉 수 검산 온도·시간 창
   python3 tools/sei/collect_neb.py --work /data/work/runs/sei_neb
   python3 tools/sei/collect_neb.py --work a:b,c          # 콜론/쉼표로 여러 루트
   python3 tools/sei/collect_neb.py --selftest
@@ -23,9 +31,45 @@
 import argparse
 import glob
 import json
+import math
 import os
 import re
 import sys
+
+KB_EV = 8.617333262e-5          # eV/K
+NU0_ASSUMED = 1e13              # s⁻¹ — 시도 진동수 **가정** (차수만 · 전인자 계산 아님)
+
+
+def hop_check(ea_eV, T_K=300.0, nu0=NU0_ASSUMED, t_s=None):
+    """장벽 → **홉 수 검산 한 줄** (1저자 2026-09-27 · D-2026-09-27-barrier-hop-count).
+
+    Γ = ν₀·exp(−Ea/kT) [s⁻¹] · 평균 대기 1/Γ [s] · t_s 가 있으면 N = Γ·t_s.
+    용도: 장벽 수치와 "빠르다/느리다" 서술이 **차수에서 모순되는지** 본다 (예: 0.97 eV · 298 K · 243 s → N ≈ 0.1).
+    ⛔ 못 하는 것: ν₀ 는 가정이다(10¹³ s⁻¹) — phonon 전인자를 계산하지 않는다 · 상관·다중 경로·공공 농도·
+      유한 셀 보정을 안 본다 → **확산계수·전도도가 아니다**. 이 한 줄을 물성값으로 인용하지 않는다.
+    Ea 가 None·비유한·음수이거나 T·ν₀ 가 양수가 아니면 None (없는 값을 0 으로 그리지 않는다).
+    """
+    try:
+        ea, T, nu = float(ea_eV), float(T_K), float(nu0)
+    except (TypeError, ValueError):
+        return None
+    if not (math.isfinite(ea) and math.isfinite(T) and math.isfinite(nu)) or ea < 0 or T <= 0 or nu <= 0:
+        return None
+    rate = nu * math.exp(-ea / (KB_EV * T))
+    wait = (1.0 / rate) if rate > 0 else float("inf")
+    out = {"T_K": T, "nu0_s-1_assumed": nu, "rate_s-1": rate, "mean_wait_s": wait,
+           "rule": "D-2026-09-27-barrier-hop-count", "⚠": "차수 검산 — 확산계수·전도도 아님 (ν₀ 가정)"}
+    line = f"홉 수 검산 (ν₀ {nu:.0e} s⁻¹ 가정 · {T:.0f} K): Γ ≈ {rate:.2e} s⁻¹ · 평균 대기 ≈ {wait:.2e} s"
+    if t_s is not None:
+        try:
+            t = float(t_s)
+        except (TypeError, ValueError):
+            t = None
+        if t is not None and math.isfinite(t) and t > 0:
+            out["t_s"], out["N_hop"] = t, rate * t
+            line += f" · {t:g} s 동안 N ≈ {rate * t:.2g} 회"
+    out["line"] = line
+    return out
 
 
 def _bni():
@@ -399,6 +443,24 @@ def selftest():
     chk(_rc["c/z"]["citable"] is True,
         "[계약] 다른 기계에서 보존된 항목은 손대지 않는다 (이 기계가 검증 안 함)")
 
+    # ── 홉 수 검산 (1저자 2026-09-27 · D-2026-09-27-barrier-hop-count) ──────────────────
+    h = hop_check(0.97, T_K=298.15, t_s=243)
+    chk(h is not None and 0.05 < h["N_hop"] < 0.2 and 3e-4 < h["rate_s-1"] < 6e-4,
+        f"[홉] li2026 실례: 0.97 eV · 298 K · 243 s → N ≈ 0.1 (Γ ≈ 4e-4 s⁻¹) — {h and (h['N_hop'], h['rate_s-1'])}")
+    h2 = hop_check(0.2, T_K=300)
+    chk(h2 is not None and 3e9 < h2["rate_s-1"] < 6e9 and "t_s" not in h2 and "N 」" not in h2["line"],
+        f"[홉] 0.2 eV · 300 K → Γ ≈ 4e9 s⁻¹ · 시간 창 없으면 N 을 안 쓴다 — {h2 and h2['rate_s-1']}")
+    chk(hop_check(0.5)["rate_s-1"] < hop_check(0.3)["rate_s-1"] and hop_check(0.3, T_K=600)["rate_s-1"] > hop_check(0.3)["rate_s-1"],
+        "[홉] 장벽이 크면 느리고 온도가 높으면 빠르다 (부호 검사)")
+    chk(all(hop_check(x) is None for x in (None, float("nan"), float("inf"), -0.1, "abc")),
+        "[홉 음성] Ea 가 None·NaN·Inf·음수·문자열이면 None (없는 값을 0 으로 그리지 않는다)")
+    chk(hop_check(0.3, T_K=0) is None and hop_check(0.3, nu0=0) is None and hop_check(0.3, T_K=-5) is None,
+        "[홉 음성] T·ν₀ 가 양수가 아니면 None")
+    chk("t_s" not in hop_check(0.3, t_s=0) and "t_s" not in hop_check(0.3, t_s="x"),
+        "[홉 음성] 시간 창이 0·비수치면 N 을 쓰지 않는다")
+    chk(hop_check(0.3)["rule"] == "D-2026-09-27-barrier-hop-count" and "확산계수" in hop_check(0.3)["⚠"],
+        "[홉] 결정 ID 와 '확산계수 아님' 경고가 결과에 붙는다")
+
     shutil.rmtree(td, ignore_errors=True)
     print("selftest " + ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
@@ -419,6 +481,10 @@ def main():
                     help="이번에 회수한 루트만 갱신하고, **다른 루트의 결과는 기존 db 에서 그대로 "
                          "보존**한다 (합집합). 기계가 여럿이라 한 곳에서 전 루트를 못 볼 때 쓴다 "
                          "— kgy 의 sei_neb 와 gabia 의 v2/v3 처럼. 축소 검사는 합집합이라 해당 없음.")
+    ap.add_argument("--hop_T", type=float, default=300.0,
+                    help="홉 수 검산 온도 [K] (기본 300 · D-2026-09-27-barrier-hop-count)")
+    ap.add_argument("--hop_time_s", type=float, default=None,
+                    help="홉 수 검산 시간 창 [s] — 주면 N = Γ·t 를 같이 싣는다 (예: 방전 시간)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
@@ -454,6 +520,10 @@ def main():
                 print(f"{'':12s} └ Li 자리 두 종류 {r.get('li_orbits', {}).get('wyckoffs')} — "
                       f"정·역 차 {r['site_energy_diff_eV']:.3f} eV 는 **자리 에너지 차**다(정상). "
                       f"수송 장벽은 유효Ea 를 쓴다")
+            # 장벽을 인용할 때마다 붙이는 홉 수 검산 한 줄 (D-2026-09-27-barrier-hop-count)
+            r["hop_check"] = hop_check(r.get("Ea_effective_eV"), T_K=a.hop_T, t_s=a.hop_time_s)
+            if r["hop_check"]:
+                print(f"{'':12s} └ {r['hop_check']['line']}")
     # ⛔⛔ 2026-08-16 — 다중 루트로 고쳤는데 **호출부**가 단일 루트를 계속 넘겨서
     #   run_sei_neb.sh 의 마지막 collect 가 db 를 v2 하나로 되돌렸다.
     #   실측: n_citable 1/8 → 0/2, v2_ccpath/li3nd (0.229, 인용 가능) 가 소멸.
@@ -596,6 +666,8 @@ def main():
             "warning": ("⚠ jellium 보정은 유한 셀 근사다 — 절대값은 셀 수렴 확인 뒤 인용할 것. "
                         "**상 사이 비교**가 이 값의 용도다. "
                         "⛔ BVSE 프록시 값과 같은 표에 놓지 말 것(단위는 같아도 다른 양이다)."),
+            "hop_check_rule": ("D-2026-09-27-barrier-hop-count — 장벽을 인용할 때 results[*].hop_check.line 을 같이 싣는다 "
+                               "(Γ = ν₀·exp(−Ea/kT) · ν₀ 10¹³ s⁻¹ 가정 · 차수 검산 — 확산계수·전도도 아님)"),
             "roots": roots_written,
             "key_format": "<루트라벨>/<상> — 같은 상이 루트마다 다른 홉이라 tag 만으로는 충돌한다",
             "n_citable": len(ok), "n_total": len(res),

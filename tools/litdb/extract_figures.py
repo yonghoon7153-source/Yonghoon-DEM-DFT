@@ -86,6 +86,13 @@ VERBS = re.compile(
 #   RSC·Nature 계열에 `Fig. N The …` 는 흔한 형식이라 **다른 논문에서도 샜을 가능성이 크다.**
 #   소문자 `the` 는 바로 위 `rest[:1].islower()` 가 이미 잡으므로, VERBS 에서 빼도
 #   본문 오판이 늘지 않는다 (아래 --selftest 가 그 음성 경로를 지킨다).
+# ⛔⛔ 2026-09-27 실측 (gao2026 Electrochem. Energy Rev. · Springer) — `Fig. 12 a Schematic illustration …`
+#   처럼 **번호 뒤에 소문자 패널 기호**가 오고 곧바로 대문자 문장이 이어지는 캡션을 `rest[:1].islower()` 가
+#   본문으로 떨궜다. 게다가 is_caption 이 None 이면 extract 는 그 블록을 **제외 목록에도 안 올려**
+#   Fig. 12·17 이 흔적 없이 사라졌다 (큐레이터가 손으로 보충). 패널 기호 한 글자(+ `)`·`.`) 뒤에 공백과
+#   **대문자·숫자·여는 괄호**가 오면 캡션으로 받는다. `Figure 3 a shows …`(소문자 동사)·`Fig. 5 a–c show …`
+#   (범위)·`Fig. 2 a and b …` 는 여전히 본문이다 (--selftest 음성).
+PANEL_RE = re.compile(r"^[a-z][).]?\s+[A-Z0-9(]")
 
 
 def is_caption(text):
@@ -99,6 +106,8 @@ def is_caption(text):
            ("scheme" if kw.startswith("sch") else "figure")
     rest, sep = m.group("rest"), m.group("sep")
     if sep in ".|:,–—":              # "Figure 1." / "Figure 5 |" → 캡션 확정
+        pass
+    elif PANEL_RE.match(rest):                 # "Fig. 12 a Schematic …" → 캡션 (위 PANEL_RE 주석)
         pass
     elif rest[:1].islower() or VERBS.match(rest):
         return None                            # "Figure 3 shows ..." → 본문
@@ -332,6 +341,76 @@ def _side_rect(page, cap, blocks, up, margin=6.0):
     return (rect if rect.height >= 36 else None), ks.count("img"), ks.count("draw")
 
 
+def _beside_rect(page, cap, blocks, margin=6.0, max_cap_frac=0.35, min_tall=0.6):
+    """**옆캡션** 배치 (Springer side caption) → (rect, 이미지수, 벡터수) 또는 (None, 0, 0).
+
+    ⛔⛔ 2026-09-27 실측 (gao2026 p21·p24 · Fig. 13·15): 캡션이 왼쪽 **좁은 단**(x 51–162 · 폭 111 pt ·
+      높이 143 pt)에 있고 그림은 그 **오른쪽**(x 184–544 · y 58–519)에 있다. 위·아래만 보는 `_side_rect` 는
+      캡션 단 안에서만 그래픽을 찾으니 "그래픽 없음" 으로 버렸다 — 하필 그 리뷰의 ML 그림 두 장이었다.
+    언제 보나: `region_for` 가 위·아래 둘 다 그래픽을 못 찾았을 때만. 그리고 캡션 모양이 옆캡션일 때만 —
+      **폭 < 쪽 폭의 35 %** 이고 **높이 ≥ 폭 × 0.6** (좁고 긴 블록). 두 단 조판의 보통 캡션(폭 240 pt)이나
+      한 줄짜리 짧은 캡션은 여기 안 온다.
+    무엇을 잡나: 캡션 옆 띠(오른쪽 먼저, 그다음 왼쪽)에서 **캡션과 세로로 겹치는 그래픽**을 씨앗으로,
+      세로로 10 pt 안에 이어진 그래픽을 더한다. 캡션 단의 위·아래 **다른 캡션**이 세로 한계다
+      (한 쪽에 옆캡션 그림이 둘일 때).
+    ⛔ 막는 것: ① 잡은 영역이 **본문 문단과 겹치면** 그 옆은 버린다 ② 잡은 그래픽 바로 위·아래(40 pt 안)에
+      **다른 캡션**이 있으면 그 캡션의 그림이다 — 가져오지 않는다 (캡션과 그림이 다른 쪽인 논문에서
+      옆 단 그림을 엉뚱하게 붙이는 사고 방지).
+    ⛔ 못 하는 것: 캡션이 그림 **아래·위이면서** 옆으로 비껴 있는 배치, 캡션과 그림이 다른 쪽인 배치.
+    """
+    x0, y0, x1, y1 = cap[:4]
+    pr = page.rect
+    w, h = x1 - x0, y1 - y0
+    if w <= 0 or w >= max_cap_frac * pr.width or h < min_tall * w:
+        return None, 0, 0
+    lo, hi = pr.y0 + 0.05 * pr.height, pr.y1 - 0.05 * pr.height
+    caps_other = []
+    for b in blocks:
+        if tuple(b[:4]) == tuple(cap[:4]) or not is_caption(b[4]):
+            continue
+        caps_other.append(fitz.Rect(b[:4]))
+        if band_overlap((x0, x1), (b[0], b[2])) > 0.45:
+            if b[3] <= y0 + 1:
+                lo = max(lo, b[3])
+            elif b[1] >= y1 - 1:
+                hi = min(hi, b[1])
+    for side in ("right", "left"):
+        sx0, sx1 = (x1 + 4, pr.x1 - 12) if side == "right" else (pr.x0 + 12, x0 - 4)
+        if sx1 - sx0 < 72:
+            continue
+        strip = fitz.Rect(sx0, lo, sx1, hi)
+        hits = [(k, r) for k, r in graphics(page)
+                if r.intersects(strip) and (r & strip).get_area() > 0.5 * max(r.get_area(), 1e-6)]
+        taken = [i for i, (_k, r) in enumerate(hits) if r.y0 <= y1 + 10 and r.y1 >= y0 - 10]
+        if not taken:
+            continue
+        u = fitz.Rect(hits[taken[0]][1])
+        for i in taken[1:]:
+            u |= hits[i][1]
+        grown = True
+        while grown:                                    # 세로로 이어진 그래픽 (10 pt 안)
+            grown = False
+            for i, (_k, r) in enumerate(hits):
+                if i not in taken and r.y0 <= u.y1 + 10 and r.y1 >= u.y0 - 10:
+                    u |= r; taken.append(i); grown = True
+        if any(band_overlap((u.x0, u.x1), (b[0], b[2])) > 0.45 and fitz.Rect(b[:4]).intersects(u)
+               for b in blocks if is_prose(b, pr) and not is_caption(b[4])):
+            continue                                    # ① 본문 문단과 겹친다
+        if any(band_overlap((u.x0, u.x1), (c.x0, c.x1)) > 0.45
+               and (0 <= c.y0 - u.y1 <= 40 or 0 <= u.y0 - c.y1 <= 40) for c in caps_other):
+            continue                                    # ② 다른 캡션의 그림이다
+        for b in blocks:                                # 그림 안 라벨·범례
+            if is_prose(b, pr):
+                continue
+            br = fitz.Rect(b[:4])
+            if br.intersects(u):
+                u |= br
+        rect = fitz.Rect(u.x0 - margin, u.y0 - margin, u.x1 + margin, u.y1 + margin) & pr
+        ks = [hits[i][0] for i in taken]
+        return (rect if rect.height >= 36 else None), ks.count("img"), ks.count("draw")
+    return None, 0, 0
+
+
 def _fname_prefix(kind):
     """kind → 파일이름 접두사. **scheme 은 fig 와 갈라야 한다.**
 
@@ -368,6 +447,9 @@ def region_for(page, cap, kind, blocks, tables=(), min_draw=6, stop_y=1e9):
     r2, ni2, nd2 = _side_rect(page, cap, blocks, up=False)
     if r2 is not None and (ni2 or nd2 >= min_draw):
         return r2, ni2, nd2
+    r3, ni3, nd3 = _beside_rect(page, cap, blocks)      # 옆캡션 (위·아래가 다 비었을 때만 · 2026-09-27)
+    if r3 is not None and (ni3 or nd3 >= min_draw):
+        return r3, ni3, nd3
     return (r, ni, nd) if r is not None else (r2, ni2, nd2)
 
 
@@ -522,10 +604,64 @@ def _clean_refusal(lost, hand):
     return "\n".join(msg)
 
 
+def _near_key(text, si_file):
+    """캡션 **모양**(키워드+번호로 시작)인데 is_caption 이 떨군 블록 → 'f12' 같은 키, 아니면 None.
+    extract 의 키 규칙(SI 파일이면 S 를 붙인다 · ST→S)과 같게 만든다 — 갈리면 번호 공백 대조가 헛돈다."""
+    m = CAP_RE.match(" ".join((text or "").split()))
+    if not m:
+        return None
+    kw = m.group("kind").lower()
+    kind = "table" if kw.startswith("tab") else ("scheme" if kw.startswith("sch") else "figure")
+    label = m.group("label")
+    if label[:2].upper() == "ST":
+        label = "S" + label[2:]
+    if (si_file or m.group("si")) and not label.upper().startswith("S"):
+        label = "S" + label
+    return f"{kind[0]}{label.upper()}"
+
+
+def missing_labels(found_keys, near, skipped):
+    """추출 결과의 **번호 공백**과 **규칙에 떨어진 캡션 후보** → [{key, why, skipped, near_miss}, …].
+
+    ⛔⛔ 2026-09-27 (gao2026 실측): Fig. 12·13·15·17 이 빠졌는데 추출 출력만 봐서는 몰랐다 — 12·17 은
+      is_caption 이 떨궈 **제외 목록에도 없었고**, 13·15 는 '그래픽 없음' 한 줄로 18 행 제한 속에 묻혔다.
+      번호 구멍 검사는 `--audit` 에만 있어서 추출 직후엔 아무도 돌리지 않았다. 추출이 스스로 말한다:
+      ① 종류·본문/SI 별로 1..최대 번호 중 빠진 번호 ② 캡션 모양인데 떨어진 후보 중 끝내 추출 안 된 번호.
+    found_keys = {'f1','fS3',…} · near = [(key, page, text)] · skipped = [(key, page, why)].
+    ⛔ 못 하는 것: 마지막 번호를 통째로 놓치고 후보도 없으면 모른다 · ②는 본문 참조일 수도 있다 (그렇게 적는다).
+    """
+    have = {}
+    for k in found_keys:
+        kind, lab = k[0], k[1:]
+        num = re.sub(r"\D", "", lab)
+        if num:
+            have.setdefault((kind, lab.startswith("S")), set()).add(int(num))
+    near_by, skip_by = {}, {}
+    for k, p, t in near:
+        near_by.setdefault(k, []).append({"page": p, "text": t[:90]})
+    for k, p, why in skipped:
+        skip_by.setdefault(k, []).append(f"p{p} {why}")
+    out, seen = [], set()
+    for (kind, si_), nums in sorted(have.items()):
+        for n in range(1, max(nums) + 1):
+            if n in nums:
+                continue
+            key = f"{kind}{'S' if si_ else ''}{n}"
+            seen.add(key)
+            out.append({"key": key, "why": "번호 공백 — 이 번호가 추출되지 않았다",
+                        "skipped": skip_by.get(key, []), "near_miss": near_by.get(key, [])})
+    for key, lst in sorted(near_by.items()):
+        if key in found_keys or key in seen:
+            continue
+        out.append({"key": key, "why": "캡션 모양 후보가 규칙에 떨어졌고 추출 0 — 본문 참조일 수도 있다 (확인)",
+                    "skipped": skip_by.get(key, []), "near_miss": lst})
+    return out
+
+
 def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
             maxpx=1500, relto=None):
     out_dir = OUT_ROOT / slug
-    found, seen, skipped = [], {}, []
+    found, seen, skipped, near = [], {}, [], []
     for pdf_path in pdf_paths:
         _GCACHE.clear()                        # 문서마다 비운다 (위 주석 참고)
         doc = fitz.open(pdf_path)
@@ -538,6 +674,11 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
             page = doc[pno]
             blocks = text_blocks(page)
             caps = [(b, is_caption(b[4])) for b in blocks]
+            for b, h in caps:                  # 캡션 모양인데 떨어진 블록 — 번호 공백 보고에 쓴다 (조용히 버리지 않는다)
+                if h is None:
+                    nk = _near_key(b[4], si)
+                    if nk:
+                        near.append((nk, pno + 1, " ".join(b[4].split())))
             tabs = ()
             if any(h and h[0] == "table" for _b, h in caps):
                 # 표가 있는 쪽에서만 (검출이 느리다). 괘선 없는 표는 lines 전략이 못 잡아서
@@ -617,7 +758,9 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
             # ⚠ 원본 PDF 는 repo 에 없다(litdb/inbox 는 .gitignore). 그래서 **어느 하위 폴더의
             #   어느 파일**이었는지를 남긴다 — 다른 머신에서도 --inbox_dir 만 맞추면 다시 찾는다.
             "sources": [_relto(p, relto) for p in pdf_paths],
-            "figures": found}
+            "figures": found,
+            # 번호 공백·떨어진 캡션 후보 (2026-09-27) — 빈 목록이 정상. 있으면 손 크롭(manual_crop) 대상 후보다.
+            "missing_labels": missing_labels({r["key"] for r in found}, near, skipped)}
     if not dry:
         out_dir.mkdir(parents=True, exist_ok=True)
         (out_dir / "figures.json").write_text(
@@ -1064,6 +1207,15 @@ def _report(slug, meta, skipped, dry):
         print(f"--- 제외 {len(skipped)}건 (오탐 방지)")
         for k, p, why in skipped[:18]:
             print(f"  {k:<6} p{p:<3} {why}")
+    miss = meta.get("missing_labels") or []
+    if miss:                                   # 18 행 제한 없이 전부 — 놓친 그림은 묻히면 안 된다
+        print(f"--- ⚠ 번호 공백·놓친 캡션 후보 {len(miss)}건 — 조용히 넘기지 말고 확인할 것 "
+              f"(손으로 자르면 figures.json 에 manual_crop 사유)")
+        for m in miss:
+            sk = f" · 제외: {'; '.join(m['skipped'][:2])}" if m["skipped"] else ""
+            nm = m["near_miss"][0] if m["near_miss"] else None
+            print(f"  {m['key']:<6} {m['why']}{sk}"
+                  + (f" · 후보 p{nm['page']}: {nm['text'][:56]!r}" if nm else ""))
     if not dry:
         print(f"→ litdb/figures/{slug}/  (figures.json 포함)")
         _read_plan(slug, meta)
@@ -1632,6 +1784,94 @@ def selftest():
             im2.save(p2)
             _shrink(p2)
             chk("⛔음성: 색이 많은 그림(4096 초과)은 RGB 로 남는다 (양자화 금지)", _Im.open(p2).mode == "RGB")
+
+    # ── 2026-09-27 gao2026 실측 — 조용한 누락 두 경로 + 번호 공백 보고 ─────────────────────
+    # (a) 번호 뒤 소문자 패널 기호 캡션 (Springer) — 종전엔 is_caption 이 떨궜고 제외 목록에도 없었다
+    for txt, want, why in (
+        ("Fig. 12 a Schematic illustration of the fabrication of PRC framework", True, "★패널 기호 캡션 (gao2026 Fig. 12 실측 — 종전 탈락)"),
+        ("Fig. 17 a Increasing energy densities and reducing critical minerals", True, "★패널 기호 캡션 (gao2026 Fig. 17)"),
+        ("Figure 3 a) SEM image of the cathode composite after cycling", True, "패널 기호 + 괄호"),
+        ("Figure 3 a shows the trajectory of Li ions in the cell", False, "⛔음성: 패널 뒤 소문자 동사는 본문"),
+        ("Fig. 5 a–c show the impedance spectra of the three cells", False, "⛔음성: 패널 범위(a–c)는 본문"),
+        ("Fig. 2 a and b are compared in the text below here", False, "⛔음성: 'a and b' 는 본문"),
+    ):
+        chk(f"캡션판정 {why}", (is_caption(txt) is not None) == want)
+    # (b) 캡션 모양인데 떨어진 블록의 키 — extract 의 키 규칙과 같아야 번호 공백 대조가 맞는다
+    chk("near-key: 본문 파일 'Figure 3 shows' → f3", _near_key("Figure 3 shows the data here", False) == "f3")
+    chk("near-key: SI 파일이면 S 를 붙인다 → fS3", _near_key("Figure 3 shows the data here", True) == "fS3")
+    chk("near-key: ST 라벨 → tS2", _near_key("Table ST2 lists the parameters used", False) == "tS2")
+    chk("⛔음성: 키워드로 시작하지 않으면 후보 아님", _near_key("The Figure 3 shows the data", False) is None)
+    # (c) missing_labels — 번호 공백 · 떨어진 후보 · 이미 추출된 번호는 조용히
+    ml = missing_labels({"f1", "f3", "fS1", "fS2"}, [("f2", 4, "Figure 2 shows the phase diagram")],
+                        [("f2", 4, "그래픽 없음(img0/draw0)")])
+    chk("★번호 공백: f1·f3 사이의 f2 를 짚고, 제외 사유·후보 문장을 붙인다",
+        [m["key"] for m in ml] == ["f2"] and ml[0]["skipped"] and ml[0]["near_miss"][0]["page"] == 4)
+    chk("⛔음성: 후보 번호가 이미 추출됐으면 보고하지 않는다 (본문 참조일 뿐)",
+        missing_labels({"f1", "f2"}, [("f2", 3, "Figure 2 shows")], []) == [])
+    ml2 = missing_labels({"f1", "f2"}, [("f3", 9, "Fig. 3 a shows the later result")], [])
+    chk("마지막 번호 뒤의 떨어진 후보도 보고한다 (공백 검사가 못 보는 자리) — '본문 참조일 수도' 표시",
+        [m["key"] for m in ml2] == ["f3"] and "본문 참조" in ml2[0]["why"])
+    chk("⛔음성: 빠진 게 없으면 빈 목록", missing_labels({"f1", "f2", "t1"}, [], []) == [])
+    # (d) 옆캡션 — 합성 PDF 로 실제 영역 산정 경로를 시험한다 (gao2026 p21 좌표)
+    def _pix():
+        pm = fitz.Pixmap(fitz.csRGB, fitz.IRect(0, 0, 40, 40), False)
+        pm.clear_with(120)
+        return pm
+    SIDE = ("Fig. 13 Representative machine learning frameworks. a Scheme of ML-DFT calculations and "
+            "experimentally driven discovery of new materials. b Workflow of the composition screening "
+            "with gradient boosting and random forest models validated by molecular dynamics.")
+    PROSE = ("Composition-driven machine learning has emerged as an effective strategy for the discovery "
+             "of new solid electrolytes with high ionic conductivity and good stability in practice. ") * 2
+    with tempfile.TemporaryDirectory() as td:
+        def _doc(name, build):
+            d = fitz.open(); p = d.new_page(width=595, height=791); build(p)
+            path = str(Path(td) / name); d.save(path); d.close()
+            return path
+        side = _doc("side.pdf", lambda p: (p.insert_textbox(fitz.Rect(51, 55, 162, 260), SIDE, fontsize=8),
+                                           p.insert_image(fitz.Rect(184, 58, 544, 519), pixmap=_pix()),
+                                           p.insert_textbox(fitz.Rect(51, 560, 292, 720), PROSE, fontsize=9)))
+        m, _sk = extract([side], "side_test", dry=True)
+        f13 = [f for f in m["figures"] if f["key"] == "f13"]
+        chk("★옆캡션(왼쪽 좁은 단 · 그림 오른쪽) → 그림을 잡는다 (gao2026 Fig. 13 — 종전 '그래픽 없음')",
+            len(f13) == 1 and f13[0]["bbox"][0] > 170 and f13[0]["bbox"][2] > 540 and f13[0]["bbox"][3] > 515)
+        wide = _doc("wide.pdf", lambda p: (p.insert_textbox(fitz.Rect(51, 55, 300, 95), "Fig. 13 A wide caption "
+                                                            "that spans a whole column of this page.", fontsize=9),
+                                           p.insert_image(fitz.Rect(310, 58, 544, 519), pixmap=_pix())))
+        m, sk = extract([wide], "wide_test", dry=True)
+        chk("⛔음성: 넓은 캡션(쪽 폭 35 % 이상)은 옆을 보지 않는다 → 옆 단 그림을 안 붙인다",
+            not m["figures"] and any(k == "f13" for k, _p, _w in sk))
+        owned = _doc("owned.pdf", lambda p: (p.insert_textbox(fitz.Rect(51, 55, 162, 260), SIDE, fontsize=8),
+                                             p.insert_image(fitz.Rect(184, 58, 544, 300), pixmap=_pix()),
+                                             p.insert_textbox(fitz.Rect(184, 306, 544, 336), "Fig. 14. The right-hand "
+                                                              "figure has its own caption directly below it.", fontsize=9)))
+        m, sk = extract([owned], "owned_test", dry=True)
+        keys = {f["key"]: f for f in m["figures"]}
+        chk("⛔음성: 옆 그림 바로 아래에 **다른 캡션**이 있으면 그 캡션의 그림이다 — f13 에 안 붙인다 (f14 는 제자리)",
+            "f13" not in keys and "f14" in keys and keys["f14"]["bbox"][0] > 170)
+        chk("번호 공백 보고: 합성 PDF 의 f13 누락이 missing_labels 에 제외 사유와 함께 올라온다",
+            any(x["key"] == "f13" and x["skipped"] for x in m["missing_labels"]))
+        prose_over = _doc("prose.pdf", lambda p: (p.insert_textbox(fitz.Rect(51, 55, 162, 260), SIDE, fontsize=8),
+                                                  p.insert_image(fitz.Rect(184, 58, 544, 519), pixmap=_pix()),
+                                                  p.insert_textbox(fitz.Rect(190, 300, 540, 380), PROSE, fontsize=9)))
+        _GCACHE.clear()
+        dd = fitz.open(prose_over); pg = dd[0]; bl = text_blocks(pg)
+        capb = [b for b in bl if is_caption(b[4])][0]
+        chk("⛔음성: 옆 영역이 **본문 문단과 겹치면** 그 옆은 버린다",
+            _beside_rect(pg, tuple(merge_caption(bl, capb)[0]), bl)[0] is None)
+        dd.close()
+        gap = _doc("gap.pdf", lambda p: (p.insert_image(fitz.Rect(60, 60, 280, 240), pixmap=_pix()),
+                                         p.insert_textbox(fitz.Rect(60, 246, 290, 270), "Fig. 1. First figure of "
+                                                          "the synthetic paper.", fontsize=9),
+                                         p.insert_textbox(fitz.Rect(60, 300, 290, 380), "Figure 2 shows the results of "
+                                                          "the analysis in considerable detail for all samples.", fontsize=9),
+                                         p.insert_image(fitz.Rect(320, 60, 540, 240), pixmap=_pix()),
+                                         p.insert_textbox(fitz.Rect(320, 246, 550, 270), "Fig. 3. Third figure of "
+                                                          "the synthetic paper.", fontsize=9)))
+        m, _sk = extract([gap], "gap_test", dry=True)
+        mk = {x["key"]: x for x in m["missing_labels"]}
+        chk("★추출 직후 번호 공백 보고: f1·f3 사이 f2 · 규칙에 떨어진 후보 문장('Figure 2 shows…')을 같이 싣는다",
+            sorted(f["key"] for f in m["figures"]) == ["f1", "f3"] and "f2" in mk
+            and mk["f2"]["near_miss"] and mk["f2"]["near_miss"][0]["text"].startswith("Figure 2 shows"))
 
     print(f"\nselftest: {ok} 통과 / {fail} 실패")
     return 1 if fail else 0

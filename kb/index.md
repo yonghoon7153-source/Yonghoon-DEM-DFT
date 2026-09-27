@@ -24,9 +24,9 @@
 - 2026-09-27 · `kb/reviews/li2s1a_CD_reply_li2s_cc_report_2026_09_27.md` — 회신 CD — 외부 1저자 (li2s 소셀 유리 MD): 회신 CC 이행 보고 판정 (Q-CC-1 MTO · σ 하한·보수값 · b_min 50 ps · 7 χ²₃ 쓰지 않음 · 8 상한 비교 보류 · 550 K 겸용 예외 · 새 항목 둘 · 게이트 A 메모) · 수령 (2026-09-27 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-09-27 · `kb/reviews/li2s1a_CH_prompt_li2s_cd_reply_pilot800_2026_09_27.md` — CH 프롬프트 — li2s 소셀 유리 MD: 회신 CD 반영 · 파일럿 400 K 800 ps 결과 (C2·C1 미통과 → 400 K 측정 안 됨) · 카드 개정 v2 · 다섯 시드 P 배위 통계 (새 항목 1) · 결정·확인 요청 셋 (외부 1저자에게) · 발송됨 (사용자 · 2026-09-27 · 발송판 = 다섯 시드 결과…
 - 2026-09-27 · `kb/projects/li2s_glass_external_first_author_followup_pilot800_2026_09_27.md` — li2s 소셀 유리 MD — 파일럿 400 K · 800 ps 결과 후속 보고 (외부 1저자에게) · C2·C1 미통과 → '이 프로토콜로 400 K 는 측정되지 않는다' · 본 15런 400 K 처리 결정 요청 · 흡수됨 (미발송) — 회신 CD 가 먼저 와서 통합 편지 CH `kb…
+- 2026-09-27 · `kb/projects/zn_alzib_dft_md_contribution_2026_09_03.md` — Zn ALZIB 세미나(2026-09-02) — 우리가 DFT/MD 로 기여할 수 있는 지점 · 진행
 - 2026-09-26 · `kb/reviews/li2s1a_CC_prompt_li2s_pilot_gateA_ledger_2026_09_26.md` — CC 프롬프트 — li2s 소셀 유리 MD 파일럿 보고 · 게이트 A 두 판 · Q6 장부 · Q1–Q9 (외부 1저자에게 발송) · 발송됨 (사용자 · 2026-09-26) · 회신 CC 수령 → `l…
 - 2026-09-26 · `kb/reviews/li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` — 회신 CC — 외부 1저자 (li2s 소셀 유리 MD): 파일럿 결과 · 게이트 A 두 판 · Q1–Q9 판정 (relax 판 · P–S 결합 제외 · seed5 유지 · MTO 맞음 · 400 K 연장 검토) · 수령 (2026-09-26 저녁 · 사용자 붙여넣기) — 회신 원문 …
-- 2026-09-26 · `kb/projects/li2s_glass_external_first_author_report_2026_09_26.md` — li2s 소셀 유리 MD — 회신 CC 이행 보고 (외부 1저자에게) · B 실측 3 건 · 카드 개정 초안 확인 요청 · 400 K prod 800 ps 채택 제안 · 초안 — 사용자(실행자 · 카드 저자) 검토 뒤 외부 1저자에게 발송…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -435,7 +435,7 @@
 - `kb/projects/wad_dem_reply_5_send_2026_09_26.md` — wad_dem_reply_5_send_2026_09_26
 - `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청  (2026-09-26 · 회신 4 발송 완료 (09-25) · DEM 4차 회신 수령 (09-…)
 - `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` — LPSCl | Ag–C | VGCF 점착일(W_ad) — 계획 v4 (Codex BX 뒤 파이프라인 재편 · v3 = Fable · Codex BV 반영) · 보고량 카드 초안  (2026-09-25 · 계획 v4 — SE|SE 4층 대조 끝(경보 v2 유지 · Codex…)
-- `kb/projects/zn_alzib_dft_md_contribution_2026_09_03.md` — Zn ALZIB 세미나(2026-09-02) — 우리가 DFT/MD 로 기여할 수 있는 지점  (2026-09-03 · 진행)
+- `kb/projects/zn_alzib_dft_md_contribution_2026_09_03.md` — Zn ALZIB 세미나(2026-09-02) — 우리가 DFT/MD 로 기여할 수 있는 지점  (2026-09-27 · 진행)
 
 ## questions/ (12)
 - `kb/questions/coating_lineage_sibling_conflicts_2026_09_13.md` — 코팅 계보 #6·#7·#8 digest 가 서로 다른 말을 하는 세 자리 — 우리 값이 문헌의 어느 양인가 [open]  (2026-09-13 · open)
@@ -542,4 +542,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 345개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 347개 (정본 목록: litdb/INDEX.md)

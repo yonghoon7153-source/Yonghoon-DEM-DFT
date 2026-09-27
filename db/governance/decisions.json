@@ -5149,6 +5149,123 @@
    "ratification": {
     "state": "proposed"
    }
+  },
+  {
+   "id": "D-2026-09-27-barrier-hop-count",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "reporting.barrier.hop_count",
+   "slot": "barrier_hop_count_sanity_line",
+   "applies_to": {
+    "methods": [
+     "ci_neb",
+     "neb",
+     "barrier_citation"
+    ],
+    "use_cases": [
+     "internal",
+     "manuscript",
+     "review_prompt"
+    ]
+   },
+   "title": "장벽(Ea)을 인용·보고할 때 홉 수 검산 한 줄을 같이 싣는다 — Γ = ν₀·exp(−Ea/kT) · 평균 대기 1/Γ · (시간 창 t 가 있으면) N = Γ·t",
+   "statement": "우리 장벽(NEB·CI-NEB 등)이든 문헌 장벽이든 **인용할 때마다** 홉 수 검산 한 줄을 붙인다: Γ = ν₀·exp(−Ea/kT) [s⁻¹] (ν₀ = 10¹³ s⁻¹ **가정** · T 명시) · 평균 대기 1/Γ · 비교할 시간 창 t(예: 방전 시간)가 있으면 N = Γ·t. 장벽 수치로 '빠르다/느리다' 를 말하는 서술이 이 한 줄과 **차수에서 모순되면** 그 서술을 쓰지 않거나 모순을 적는다. 이 한 줄은 차수 검산이지 확산계수·전도도가 아니다 — 물성값으로 인용하지 않는다.",
+   "rationale": "li2026 (JACS · 수계 Li⁺/Mn²⁺–S) 의 CI-NEB 0.97 eV 는 298 K · 15 A g⁻¹ 방전 ≈ 243 s 동안 N ≈ 0.1 회 — 같은 논문의 '빠른 고상 벌크 수송' 주장과 **새 계산 없이** 모순이 드러났다 (litdb digest §6·§10). 우리 NEB(sei_neb.json)는 지금 retracted 라 당장 적용 대상은 없지만 살아나면 보고 형식에 이 한 줄이 들어가야 한다. 1저자 'ㅇㅇ ㄱㄱ' (2026-09-27 · litdb li2026 digest 의 (f)-1·(f)-2 제안에 대한 답). 트랙 = 우리 DFT 기준선 → 1저자 = 사용자 (통지할 제3자 없음).",
+   "decision_state": "active",
+   "record_kind": "policy",
+   "results_seen": false,
+   "results_seen_note": "보고 형식 규칙 — 특정 결과를 보고 고르지 않았다 (문헌 사례가 계기)",
+   "card": null,
+   "record": "litdb/papers/li2026_li_kinetic_promoter_aqueous_mn_sulfur.md",
+   "depends_on": [],
+   "supersedes": [],
+   "evidence": [
+    "litdb/papers/li2026_li_kinetic_promoter_aqueous_mn_sulfur.md",
+    "litdb/comparison_vs_ours.md"
+   ],
+   "method_ref": "tools/sei/collect_neb.py::hop_check (결과마다 hop_check 필드 · 콘솔 한 줄 · --hop_T · --hop_time_s · selftest 음성 포함)",
+   "reopen_criteria": [
+    "전인자(phonon · harmonic TST)를 실제로 계산하는 장벽 계산이 생기면 ν₀ 가정을 그 값으로 바꾼다 (규칙 자체는 유지)",
+    "⛔ 그 밖의 이유로 이 한 줄을 빼지 않는다"
+   ],
+   "enforcement": "① collect_neb.py 가 결과마다 hop_check 를 싣고 콘솔에 한 줄 찍는다 ② 원고·리뷰 프롬프트에서 장벽을 인용할 때 그 줄을 같이 쓴다 ③ hop_check 값 자체를 확산계수·전도도로 쓰지 않는다",
+   "proposed_by": "claude-session-2026-09-27",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-27",
+     "state": "active",
+     "note": "1저자 'ㅇㅇ ㄱㄱ' (2026-09-27 · litdb li2026 digest 의 (f)-1·(f)-2 제안에 대한 답). 트랙 = 우리 DFT 기준선 → 1저자 = 사용자 (통지할 제3자 없음)."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-27T17:01:24Z",
+    "commit": "36b3a8897da9605df8ae38c9c13223c70157d8df",
+    "decision_digest": "sha256:cc125bd11c2ce98502aacc72b4bebf76dd0ff28596ccd2cafff4d1171e91fb58",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
+  },
+  {
+   "id": "D-2026-09-27-c5-open-shell-state-declaration",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "zn_aqueous.c5_solvation.state_declaration",
+   "slot": "c5_open_shell_state_declaration",
+   "applies_to": {
+    "systems": [
+     "zn_aqueous",
+     "aqueous_multivalent_metal"
+    ],
+    "tasks": [
+     "c5_solvation_desolvation"
+    ],
+    "methods": [
+     "orca_r2scan3c_cpcm",
+     "cluster_continuum"
+    ]
+   },
+   "title": "수계 C5(용매화/탈용매화) — 열린 껍질 이온(Mn²⁺ d⁵ · Ni²⁺ d⁸ 등)이면 총전하·멀티플리시티·자기 배열을 결과 전에 선언하고 바닥상태 선택 규칙을 전 계 공통으로",
+   "statement": "C5 카드(`kb/projects/zn_alzib_dft_md_contribution_2026_09_03.md` §C5 · §4-2)의 '닫힌 껍질이라 스핀 지옥 없음' 면제는 **d¹⁰(Zn²⁺·Cu⁺)에만** 해당한다. 열린 껍질 금속 착물을 넣으면 결과를 보기 **전에** 착물마다 총전하 · 멀티플리시티(2S+1) · (다핵이면) 자기 배열을 적고, 가능한 스핀 상태를 전부 계산해 **바닥상태 선택 규칙**(최저 에너지 · 같은 정책을 전 계에)을 미리 정한다. 리간드 교환에너지·Marcus λ 는 같은 스핀 상태끼리 뺀다 (스핀 교차가 끼면 그 사실을 적는다).",
+   "rationale": "li2026 (JACS · 수계 Mn²⁺–S) 이 Mn²⁺(d⁵) 착물 결합에너지를 M06-2X/def2-TZVP/SMD 로 비교하면서 전하·멀티플리시티를 적지 않았다 — 고스핀/저스핀 차이는 그 논문이 결론에 쓴 결합에너지 차(0.05 eV)보다 클 수 있어 결론을 검증할 수 없다 (litdb digest §10 · comparison §J-48). 우리 규율(보고량 카드 — admissible state 가 여럿이면 선택 규칙 없이는 스칼라가 정의되지 않는다 · 회신 N·O 의 state-selection policy)을 C5 에 명시로 옮긴다. 1저자 'ㅇㅇ ㄱㄱ' (2026-09-27 · litdb li2026 digest 의 (f)-1·(f)-2 제안에 대한 답). 트랙 = 우리 DFT 기준선 → 1저자 = 사용자 (통지할 제3자 없음).",
+   "decision_state": "active",
+   "record_kind": "policy",
+   "results_seen": false,
+   "results_seen_note": "C5 는 계산된 값이 없다 (스코핑 제안) — 결과 전 규칙",
+   "card": "kb/projects/zn_alzib_dft_md_contribution_2026_09_03.md",
+   "record": "kb/projects/zn_alzib_dft_md_contribution_2026_09_03.md",
+   "depends_on": [],
+   "supersedes": [],
+   "evidence": [
+    "litdb/papers/li2026_li_kinetic_promoter_aqueous_mn_sulfur.md",
+    "kb/methodology/estimand_before_running_2026_08_28.md"
+   ],
+   "method_ref": "kb/projects/zn_alzib_dft_md_contribution_2026_09_03.md §C5 · §4-2 (카드 문구) · kb/templates/estimand_card.md",
+   "reopen_criteria": [
+    "C5 를 d¹⁰ 이온만으로 한정하기로 정하면 이 규칙은 적용 대상이 없다 (삭제가 아니라 비적용)",
+    "⛔ 그 밖의 이유로 열지 않는다"
+   ],
+   "enforcement": "C5 보고량 카드(착수 전)에 착물별 전하·멀티플리시티·자기 배열·바닥상태 선택 규칙 칸이 비어 있으면 착수하지 않는다",
+   "proposed_by": "claude-session-2026-09-27",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-27",
+     "state": "active",
+     "note": "1저자 'ㅇㅇ ㄱㄱ' (2026-09-27 · litdb li2026 digest 의 (f)-1·(f)-2 제안에 대한 답). 트랙 = 우리 DFT 기준선 → 1저자 = 사용자 (통지할 제3자 없음)."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-27T17:01:24Z",
+    "commit": "36b3a8897da9605df8ae38c9c13223c70157d8df",
+    "decision_digest": "sha256:00470a170f7d5e00b4c46db1163ebd7d44e450ae0d8c1a37c33e6e1f4385c693",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
   }
  ]
 }
