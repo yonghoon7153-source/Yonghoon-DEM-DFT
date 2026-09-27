@@ -1,6 +1,6 @@
 # 마스코트 그림 목록
 
-받은 그림 **8 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
+받은 그림 **13 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
 
 주는 법: 캐릭터당 한 장, 배경 투명 PNG 가 제일 좋다 (흰 배경 JPG 도 자동으로 배경을 지운다). 파일명에 **캐릭터 이름·県 이름·id 중 하나**만 들어 있으면 된다.
 받은 뒤: `npm run mascots:import <폴더>` → 512px WebP 로 줄여 `public/mascots/<id>.webp` 에 넣고 데이터와 이 목록을 갱신한다.
@@ -19,23 +19,23 @@
 | 3 | 岩手 | わんこきょうだい | 완코 형제 | `wankokyodai.png` | 岩手県観光協会 | [공식](https://iwatetabi.jp/wanko/) | ✅ |
 | 4 | 宮城 | むすび丸 | 무스비마루 | `musubimaru.png` | 宮城県・仙台市 | [공식](https://www.pref.miyagi.jp/site/sendaimiyagicp/musubimaru.html) | ✅ |
 | 5 | 秋田 | んだッチ | 은닷치 | `ndacchi.png` | 秋田県 | [공식](https://www.pref.akita.lg.jp/pages/archive/33524) | ✅ |
-| 6 | 山形 | きてけろくん | 키테케로군 | `kitekerokun.png` | 山形県 | [공식](https://www.pref.yamagata.jp/020026/kensei/shoukai/yamagataken/gotochi-character.html) | □ |
-| 7 | 福島 | キビタン | 키비탄 | `kibitan.png` | 福島県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%AD%E3%83%93%E3%82%BF%E3%83%B3%20%E7%A6%8F%E5%B3%B6%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 6 | 山形 | きてけろくん | 키테케로군 | `kitekerokun.png` | 山形県 | [공식](https://www.pref.yamagata.jp/020026/kensei/shoukai/yamagataken/gotochi-character.html) | ✅ |
+| 7 | 福島 | キビタン | 키비탄 | `kibitan.png` | 福島県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%AD%E3%83%93%E3%82%BF%E3%83%B3%20%E7%A6%8F%E5%B3%B6%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 
 ## 関東 간토
 
 | # | 県 | 캐릭터 | 한글 | 파일명 | 권리자 | 찾을 곳 | 상태 |
 |---|---|---|---|---|---|---|---|
-| 8 | 茨城 | ハッスル黄門 | 핫슬 코몬 | `hassurukomon.png` | 茨城県 | [공식](https://gotouchi-chara.jp/chara/hassurukoumon/) | □ |
+| 8 | 茨城 | ハッスル黄門 | 핫슬 코몬 | `hassurukomon.png` | 茨城県 | [공식](https://gotouchi-chara.jp/chara/hassurukoumon/) | ✅ |
 | 9 | 茨城 | ねば～る君 <sub>비공식·선택</sub> | 네바루군 | `nebarukun.png` | 民間（納豆キャラ） | [공식](https://nebaarukun.info/) | □ |
 | 10 | 栃木 | とちまるくん | 토치마루군 | `tochimarukun.png` | 栃木県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%A8%E3%81%A1%E3%81%BE%E3%82%8B%E3%81%8F%E3%82%93%20%E6%A0%83%E6%9C%A8%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 11 | 栃木 | さのまる <sub>비공식·선택</sub> | 사노마루 | `sanomaru.png` | 佐野市 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%95%E3%81%AE%E3%81%BE%E3%82%8B%20%E4%BD%90%E9%87%8E%E5%B8%82%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
-| 12 | 群馬 | ぐんまちゃん | 군마짱 | `gunmachan.png` | 群馬県 | [공식](https://gunmachan-navi.pref.gunma.jp/) | □ |
+| 12 | 群馬 | ぐんまちゃん | 군마짱 | `gunmachan.png` | 群馬県 | [공식](https://gunmachan-navi.pref.gunma.jp/) | ✅ |
 | 13 | 埼玉 | コバトン | 코바톤 | `kobaton.png` | 埼玉県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%B3%E3%83%90%E3%83%88%E3%83%B3%20%E5%9F%BC%E7%8E%89%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 14 | 千葉 | チーバくん | 치바군 | `chibakun.png` | 千葉県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%83%81%E3%83%BC%E3%83%90%E3%81%8F%E3%82%93%20%E5%8D%83%E8%91%89%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 15 | 千葉 | ふなっしー <sub>비공식·선택</sub> | 후낫시 | `funassyi.png` | 民間（船橋市非公認） | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%B5%E3%81%AA%E3%81%A3%E3%81%97%E3%83%BC%20%E6%B0%91%E9%96%93%EF%BC%88%E8%88%B9%E6%A9%8B%E5%B8%82%E9%9D%9E%E5%85%AC%E8%AA%8D%EF%BC%89%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
-| 16 | 東京 | ゆりーと | 유리토 | `yurito.png` | 東京都 | [공식](https://www.sports-tokyo-info.metro.tokyo.lg.jp/seisaku/yurito/index.html) | □ |
-| 17 | 神奈川 | かながわキンタロウ | 가나가와 킨타로 | `kanagawakintaro.png` | 神奈川県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%8B%E3%81%AA%E3%81%8C%E3%82%8F%E3%82%AD%E3%83%B3%E3%82%BF%E3%83%AD%E3%82%A6%20%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 16 | 東京 | ゆりーと | 유리토 | `yurito.png` | 東京都 | [공식](https://www.sports-tokyo-info.metro.tokyo.lg.jp/seisaku/yurito/index.html) | ✅ |
+| 17 | 神奈川 | かながわキンタロウ | 가나가와 킨타로 | `kanagawakintaro.png` | 神奈川県 | [공식](https://www.pref.kanagawa.jp/osirase/1197/kintaro/index.html) | □ |
 
 ## 中部 주부
 

@@ -134,8 +134,10 @@
         "ja": "山形さ、来てけろ〜！",
         "ko": "야마가타에 와줘~!"
       },
-      "art": "likeness",
-      "url": "https://www.pref.yamagata.jp/020026/kensei/shoukai/yamagataken/gotochi-character.html"
+      "art": "official",
+      "url": "https://www.pref.yamagata.jp/020026/kensei/shoukai/yamagataken/gotochi-character.html",
+      "image": "mascots/kitekerokun.webp",
+      "credit": "©山形県"
     },
     {
       "id": "kibitan",
@@ -155,7 +157,9 @@
         "ja": "福島の空を飛ぶよ〜",
         "ko": "후쿠시마 하늘을 날아~"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/kibitan.webp",
+      "credit": "©福島県"
     },
     {
       "id": "hassurukomon",
@@ -175,8 +179,10 @@
         "ja": "この紋所が目に入らぬか！",
         "ko": "이 문장이 눈에 안 보이느냐!"
       },
-      "art": "likeness",
-      "url": "https://gotouchi-chara.jp/chara/hassurukoumon/"
+      "art": "official",
+      "url": "https://gotouchi-chara.jp/chara/hassurukoumon/",
+      "image": "mascots/hassurukomon.webp",
+      "credit": "©茨城県"
     },
     {
       "id": "nebarukun",
@@ -259,8 +265,10 @@
         "ja": "ぐんまちゃんだよ〜、遊びにきてね",
         "ko": "군마짱이야~ 놀러 와"
       },
-      "art": "likeness",
-      "url": "https://gunmachan-navi.pref.gunma.jp/"
+      "art": "official",
+      "url": "https://gunmachan-navi.pref.gunma.jp/",
+      "image": "mascots/gunmachan.webp",
+      "credit": "©群馬県"
     },
     {
       "id": "kobaton",
@@ -344,8 +352,10 @@
         "ja": "東京でスポーツしよう！",
         "ko": "도쿄에서 운동하자!"
       },
-      "art": "likeness",
-      "url": "https://www.sports-tokyo-info.metro.tokyo.lg.jp/seisaku/yurito/index.html"
+      "art": "official",
+      "url": "https://www.sports-tokyo-info.metro.tokyo.lg.jp/seisaku/yurito/index.html",
+      "image": "mascots/yurito.webp",
+      "credit": "©東京都"
     },
     {
       "id": "kanagawakintaro",
@@ -358,14 +368,15 @@
       },
       "org": "神奈川県",
       "about": {
-        "ja": "足柄山の金太郎がモデル。神奈川県のマスコット",
-        "ko": "아시가라산의 킨타로가 모델. 가나가와현 마스코트"
+        "ja": "足柄山から下りてきたおかっぱ頭の男の子。「金」の赤い腹掛け。神奈川県PRキャラクターで、県のイベントやおいしいものを紹介する",
+        "ko": "아시가라산에서 내려온 단발머리 소년. '金' 글자의 빨간 배두렁이. 가나가와현 PR 캐릭터로 현의 행사와 맛있는 것을 소개한다"
       },
       "line": {
         "ja": "まさかりかついで、神奈川へ！",
         "ko": "도끼 메고 가나가와로!"
       },
-      "art": "likeness"
+      "art": "likeness",
+      "url": "https://www.pref.kanagawa.jp/osirase/1197/kintaro/index.html"
     },
     {
       "id": "lerchsan",
