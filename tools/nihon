@@ -6,7 +6,8 @@
 #   nihon dev        같은 것 (명시적으로)
 #   nihon build      빌드 → dist/
 #   nihon preview    빌드 결과를 같은 주소로 미리보기
-#   nihon check      커밋 전 검사 (데이터 검증 · 타입 · 빌드)
+#   nihon check      커밋 전 검사 (데이터 검증 · Canva 전수조사 · 타입 · 빌드)
+#   nihon audit      Canva PDF 글줄이 하나도 빠짐없이 데이터에 있나 (글줄마다 어디로 갔는지)
 #   nihon pull       실행 없이 최신으로만 맞춘다 (= nihon sync)
 #   nihon geo        지도 데이터를 다시 만든다 (data/raw → public/geo)
 #   nihon shots      스크린샷 QA (Playwright 가 있을 때)
@@ -119,7 +120,8 @@ cmd_dev() {
 }
 cmd_build()   { guard_branch; ensure_deps; step "빌드"; npm run build && ok "dist/ 준비"; }
 cmd_preview() { guard_branch; ensure_deps; [ -d dist ] || cmd_build; step "미리보기 → http://localhost:$PORT"; exec npx vite preview --port "$PORT" --strictPort --host; }
-cmd_check()   { guard_branch; ensure_deps; step "데이터 검증"; npm run data:check || exit 1; step "타입 검사"; npm run typecheck || exit 1; step "빌드"; npm run build >/dev/null || exit 1; ok "check 통과"; }
+cmd_check()   { guard_branch; ensure_deps; step "데이터 검증"; npm run data:check || exit 1; step "Canva 전수조사"; node scripts/audit-canva.mjs || exit 1; step "타입 검사"; npm run typecheck || exit 1; step "빌드"; npm run build >/dev/null || exit 1; ok "check 통과"; }
+cmd_audit()   { ensure_deps; node scripts/audit-canva.mjs --list "$@"; }
 cmd_geo()     { ensure_deps; node scripts/build-geo.mjs && ok "지도 데이터 갱신"; }
 cmd_shots() {
   ensure_deps
@@ -189,6 +191,7 @@ main() {
     build)      cmd_build ;;
     preview)    cmd_preview ;;
     check)      cmd_check ;;
+    audit)      cmd_audit "$@" ;;
     pull|sync)  guard_branch; sync_repo ;;
     geo)        cmd_geo ;;
     shots)      cmd_shots "$@" ;;

@@ -1,6 +1,8 @@
 // Shapes of the JSON database in /data (see data/schema/*.schema.json).
 
 export type Lang = 'ja' | 'kana' | 'ko';
+/** Map label style: furi = 漢字 with small かな above (like the Canva map), otherwise one script. */
+export type LabelMode = 'furi' | Lang;
 
 export interface Names { ja: string; kana: string; romaji: string; ko: string; en: string }
 export interface Term { ja: string; kana?: string; ko?: string }
@@ -58,6 +60,8 @@ export interface NoteItem {
   children?: NoteItem[];
 }
 
+export interface SupplementDb { prefectures: Record<string, { items: NoteItem[] }> }
+
 export interface NotesDb {
   meta: { source: string; canva?: string; updated: string; status: string; note?: string };
   regions: Record<string, { memo?: string; items?: NoteItem[] }>;
@@ -82,3 +86,25 @@ export interface PrefGeoMeta {
   areaSr: number;
   polygons: number;
 }
+
+// ---- map layers (data/places.json, data/mountains.json) — coordinates are [longitude, latitude]
+export type LonLat = [number, number];
+/** `official` — the official spelling when I wrote the name differently on my map (津軽市 → つがる市). */
+export interface PlaceName { ja: string; kana: string; ko: string; official?: string }
+export interface City { id: string; pref: string; name: PlaceName; at: LonLat; capital: boolean; fromUser: boolean }
+/** `note` — what I wrote next to the ward on my map (ranks); `mark` — I wrote its reading in red. */
+export interface Ward { id: string; name: PlaceName; at: LonLat; note?: string; mark?: boolean }
+/** `label` sits in the sea; a leader line runs from it to `at` on the island's coast. */
+export interface Island { id: string; name: PlaceName; at: LonLat; label: LonLat }
+/** `mark` — the part of `note` I wrote in red; `radiusKm` — I circled an area (根釧台地) rather than a point. */
+export interface ExtraPlace { id: string; name: PlaceName; note?: string; mark?: string; pref?: string; at: LonLat; radiusKm?: number }
+/** A few words written straight on the map (「山↑」 on the 中央高地). */
+export interface MapNote { id: string; t: string; pref?: string; at: LonLat }
+export interface Bridge { id: string; name: PlaceName; route: { ja: string; kana: string }; line: LonLat[]; color: string; ko?: string }
+export interface CompassWord { ja: string; kana: string; ko: string }
+/** A direction word pinned to an edge of the map (north-up, so it never moves). */
+export interface Compass { id: string; side: 'top' | 'right' | 'bottom' | 'left'; words: CompassWord[] }
+export interface PlacesDb { cities: City[]; wards: Ward[]; islands: Island[]; extraPlaces: ExtraPlace[]; mapNotes: MapNote[]; compass: Compass[]; bridges: Bridge[] }
+export interface MountainRange { no: number; id: string; kind: '山脈' | '山地' | '高地'; name: PlaceName; line: LonLat[]; ko?: string }
+export interface MountainNote { id: string; t: string; sub?: string; ko?: string; at: LonLat; arrow?: LonLat[] }
+export interface MountainsDb { ranges: MountainRange[]; notes: MountainNote[] }

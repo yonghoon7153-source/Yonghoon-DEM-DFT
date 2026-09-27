@@ -22,6 +22,14 @@
   --accent-3: #f2b84b;    /* honey */
   --accent-3-soft: #fdf0d2;
 
+  /* map layers */
+  --city: #e0474c;        /* the red city dots of my Canva map */
+  --range: #2f7d45;       /* worksheet green for mountain ranges */
+  --range-soft: #dcefe0;
+  --note-sky: #4a9fd8;    /* sea-wind arrows */
+  --note-lilac: #efdcf8;  /* the purple sticky notes on the worksheet */
+  --note-lilac-line: #c9a6e6;
+
   --shadow-sm: 0 1px 2px rgba(74, 63, 58, .08), 0 2px 8px -2px rgba(74, 63, 58, .10);
   --shadow: 0 10px 30px -12px rgba(74, 63, 58, .28), 0 2px 6px -2px rgba(74, 63, 58, .12);
   --shadow-lg: 0 24px 60px -24px rgba(74, 63, 58, .35), 0 6px 16px -8px rgba(74, 63, 58, .16);

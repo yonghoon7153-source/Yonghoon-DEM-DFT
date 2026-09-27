@@ -1,0 +1,198 @@
+{
+  "$schema": "./schema/places.schema.json",
+  "_comment": "지도 레이어 — 도시(県庁所在地 ◎ + 내가 지도에 적은 도시 ●), 東京23区, 네 개의 큰 섬 이름, 隠岐諸島, 本州↔四国 다리, 지도 둘레의 방위(北·南·東 右·西 左). 좌표는 [경도, 위도] (沖縄는 실제 좌표 — 인셋으로 옮기는 건 코드가 한다).",
+  "cities": [
+    { "id": "sapporo", "pref": "hokkaido", "name": { "ja": "札幌市", "kana": "さっぽろし", "ko": "삿포로시" }, "at": [141.35, 43.06], "capital": true, "fromUser": true },
+    { "id": "hakodate", "pref": "hokkaido", "name": { "ja": "函館市", "kana": "はこだてし", "ko": "하코다테시" }, "at": [140.73, 41.77], "capital": false, "fromUser": true },
+    { "id": "yubari", "pref": "hokkaido", "name": { "ja": "夕張市", "kana": "ゆうばりし", "ko": "유바리시" }, "at": [141.97, 43.06], "capital": false, "fromUser": true },
+    { "id": "aomori", "pref": "aomori", "name": { "ja": "青森市", "kana": "あおもりし", "ko": "아오모리시" }, "at": [140.75, 40.82], "capital": true, "fromUser": false },
+    { "id": "tsugaru", "pref": "aomori", "name": { "ja": "津軽市", "kana": "つがるし", "ko": "쓰가루시", "official": "つがる市" }, "at": [140.38, 40.81], "capital": false, "fromUser": true },
+    { "id": "morioka", "pref": "iwate", "name": { "ja": "盛岡市", "kana": "もりおかし", "ko": "모리오카시" }, "at": [141.15, 39.7], "capital": true, "fromUser": true },
+    { "id": "sendai", "pref": "miyagi", "name": { "ja": "仙台市", "kana": "せんだいし", "ko": "센다이시" }, "at": [140.87, 38.27], "capital": true, "fromUser": true },
+    { "id": "akita", "pref": "akita", "name": { "ja": "秋田市", "kana": "あきたし", "ko": "아키타시" }, "at": [140.1, 39.72], "capital": true, "fromUser": false },
+    { "id": "yamagata", "pref": "yamagata", "name": { "ja": "山形市", "kana": "やまがたし", "ko": "야마가타시" }, "at": [140.34, 38.26], "capital": true, "fromUser": false },
+    { "id": "fukushima", "pref": "fukushima", "name": { "ja": "福島市", "kana": "ふくしまし", "ko": "후쿠시마시" }, "at": [140.47, 37.76], "capital": true, "fromUser": false },
+    { "id": "aizuwakamatsu", "pref": "fukushima", "name": { "ja": "会津若松市", "kana": "あいづわかまつし", "ko": "아이즈와카마쓰시" }, "at": [139.93, 37.49], "capital": false, "fromUser": true },
+    { "id": "mito", "pref": "ibaraki", "name": { "ja": "水戸市", "kana": "みとし", "ko": "미토시" }, "at": [140.47, 36.37], "capital": true, "fromUser": true },
+    { "id": "utsunomiya", "pref": "tochigi", "name": { "ja": "宇都宮市", "kana": "うつのみやし", "ko": "우쓰노미야시" }, "at": [139.88, 36.56], "capital": true, "fromUser": true },
+    { "id": "maebashi", "pref": "gunma", "name": { "ja": "前橋市", "kana": "まえばしし", "ko": "마에바시시" }, "at": [139.06, 36.39], "capital": true, "fromUser": true },
+    { "id": "saitama", "pref": "saitama", "name": { "ja": "さいたま市", "kana": "さいたまし", "ko": "사이타마시" }, "at": [139.65, 35.86], "capital": true, "fromUser": false },
+    { "id": "chiba", "pref": "chiba", "name": { "ja": "千葉市", "kana": "ちばし", "ko": "지바시" }, "at": [140.11, 35.61], "capital": true, "fromUser": false },
+    { "id": "narita", "pref": "chiba", "name": { "ja": "成田市", "kana": "なりたし", "ko": "나리타시" }, "at": [140.32, 35.78], "capital": false, "fromUser": true },
+    { "id": "urayasu", "pref": "chiba", "name": { "ja": "浦安市", "kana": "うらやすし", "ko": "우라야스시" }, "at": [139.9, 35.65], "capital": false, "fromUser": true },
+    { "id": "shinjuku", "pref": "tokyo", "name": { "ja": "新宿区", "kana": "しんじゅくく", "ko": "신주쿠구" }, "at": [139.69, 35.69], "capital": true, "fromUser": false },
+    { "id": "yokohama", "pref": "kanagawa", "name": { "ja": "横浜市", "kana": "よこはまし", "ko": "요코하마시" }, "at": [139.63, 35.45], "capital": true, "fromUser": true },
+    { "id": "kawasaki", "pref": "kanagawa", "name": { "ja": "川崎市", "kana": "かわさきし", "ko": "가와사키시" }, "at": [139.7, 35.53], "capital": false, "fromUser": true },
+    { "id": "sagamihara", "pref": "kanagawa", "name": { "ja": "相模原市", "kana": "さがみはらし", "ko": "사가미하라시" }, "at": [139.37, 35.57], "capital": false, "fromUser": true },
+    { "id": "niigata", "pref": "niigata", "name": { "ja": "新潟市", "kana": "にいがたし", "ko": "니가타시" }, "at": [139.04, 37.92], "capital": true, "fromUser": false },
+    { "id": "toyama", "pref": "toyama", "name": { "ja": "富山市", "kana": "とやまし", "ko": "도야마시" }, "at": [137.21, 36.7], "capital": true, "fromUser": false },
+    { "id": "kanazawa", "pref": "ishikawa", "name": { "ja": "金沢市", "kana": "かなざわし", "ko": "가나자와시" }, "at": [136.66, 36.56], "capital": true, "fromUser": true },
+    { "id": "fukui", "pref": "fukui", "name": { "ja": "福井市", "kana": "ふくいし", "ko": "후쿠이시" }, "at": [136.22, 36.06], "capital": true, "fromUser": false },
+    { "id": "kofu", "pref": "yamanashi", "name": { "ja": "甲府市", "kana": "こうふし", "ko": "고후시" }, "at": [138.57, 35.66], "capital": true, "fromUser": true },
+    { "id": "nagano", "pref": "nagano", "name": { "ja": "長野市", "kana": "ながのし", "ko": "나가노시" }, "at": [138.19, 36.65], "capital": true, "fromUser": false },
+    { "id": "gifu", "pref": "gifu", "name": { "ja": "岐阜市", "kana": "ぎふし", "ko": "기후시" }, "at": [136.76, 35.43], "capital": true, "fromUser": false },
+    { "id": "shizuoka", "pref": "shizuoka", "name": { "ja": "静岡市", "kana": "しずおかし", "ko": "시즈오카시" }, "at": [138.38, 34.98], "capital": true, "fromUser": false },
+    { "id": "hamamatsu", "pref": "shizuoka", "name": { "ja": "浜松市", "kana": "はままつし", "ko": "하마마쓰시" }, "at": [137.73, 34.71], "capital": false, "fromUser": true },
+    { "id": "nagoya", "pref": "aichi", "name": { "ja": "名古屋市", "kana": "なごやし", "ko": "나고야시" }, "at": [136.91, 35.18], "capital": true, "fromUser": true },
+    { "id": "tsu", "pref": "mie", "name": { "ja": "津市", "kana": "つし", "ko": "쓰시" }, "at": [136.51, 34.72], "capital": true, "fromUser": true },
+    { "id": "ise", "pref": "mie", "name": { "ja": "伊勢市", "kana": "いせし", "ko": "이세시" }, "at": [136.71, 34.49], "capital": false, "fromUser": true },
+    { "id": "shima", "pref": "mie", "name": { "ja": "志摩市", "kana": "しまし", "ko": "시마시" }, "at": [136.83, 34.33], "capital": false, "fromUser": true },
+    { "id": "otsu", "pref": "shiga", "name": { "ja": "大津市", "kana": "おおつし", "ko": "오쓰시" }, "at": [135.85, 35.02], "capital": true, "fromUser": true },
+    { "id": "kyoto", "pref": "kyoto", "name": { "ja": "京都市", "kana": "きょうとし", "ko": "교토시" }, "at": [135.77, 35.01], "capital": true, "fromUser": false },
+    { "id": "osaka", "pref": "osaka", "name": { "ja": "大阪市", "kana": "おおさかし", "ko": "오사카시" }, "at": [135.5, 34.69], "capital": true, "fromUser": false },
+    { "id": "sakai", "pref": "osaka", "name": { "ja": "堺市", "kana": "さかいし", "ko": "사카이시" }, "at": [135.48, 34.57], "capital": false, "fromUser": true },
+    { "id": "kobe", "pref": "hyogo", "name": { "ja": "神戸市", "kana": "こうべし", "ko": "고베시" }, "at": [135.2, 34.69], "capital": true, "fromUser": true },
+    { "id": "nara", "pref": "nara", "name": { "ja": "奈良市", "kana": "ならし", "ko": "나라시" }, "at": [135.8, 34.69], "capital": true, "fromUser": false },
+    { "id": "wakayama", "pref": "wakayama", "name": { "ja": "和歌山市", "kana": "わかやまし", "ko": "와카야마시" }, "at": [135.17, 34.23], "capital": true, "fromUser": false },
+    { "id": "tottori", "pref": "tottori", "name": { "ja": "鳥取市", "kana": "とっとりし", "ko": "돗토리시" }, "at": [134.22, 35.49], "capital": true, "fromUser": false },
+    { "id": "matsue", "pref": "shimane", "name": { "ja": "松江市", "kana": "まつえし", "ko": "마쓰에시" }, "at": [133.05, 35.47], "capital": true, "fromUser": true },
+    { "id": "okayama", "pref": "okayama", "name": { "ja": "岡山市", "kana": "おかやまし", "ko": "오카야마시" }, "at": [133.92, 34.66], "capital": true, "fromUser": false },
+    { "id": "kurashiki", "pref": "okayama", "name": { "ja": "倉敷市", "kana": "くらしきし", "ko": "구라시키시" }, "at": [133.77, 34.59], "capital": false, "fromUser": true },
+    { "id": "hiroshima", "pref": "hiroshima", "name": { "ja": "広島市", "kana": "ひろしまし", "ko": "히로시마시" }, "at": [132.46, 34.39], "capital": true, "fromUser": false },
+    { "id": "onomichi", "pref": "hiroshima", "name": { "ja": "尾道市", "kana": "おのみちし", "ko": "오노미치시" }, "at": [133.21, 34.41], "capital": false, "fromUser": true },
+    { "id": "fukuyama", "pref": "hiroshima", "name": { "ja": "福山市", "kana": "ふくやまし", "ko": "후쿠야마시" }, "at": [133.36, 34.49], "capital": false, "fromUser": true },
+    { "id": "yamaguchi", "pref": "yamaguchi", "name": { "ja": "山口市", "kana": "やまぐちし", "ko": "야마구치시" }, "at": [131.47, 34.18], "capital": true, "fromUser": false },
+    { "id": "shimonoseki", "pref": "yamaguchi", "name": { "ja": "下関市", "kana": "しものせきし", "ko": "시모노세키시" }, "at": [130.94, 33.96], "capital": false, "fromUser": true },
+    { "id": "tokushima", "pref": "tokushima", "name": { "ja": "徳島市", "kana": "とくしまし", "ko": "도쿠시마시" }, "at": [134.55, 34.07], "capital": true, "fromUser": false },
+    { "id": "naruto", "pref": "tokushima", "name": { "ja": "鳴門市", "kana": "なるとし", "ko": "나루토시" }, "at": [134.61, 34.17], "capital": false, "fromUser": true },
+    { "id": "takamatsu", "pref": "kagawa", "name": { "ja": "高松市", "kana": "たかまつし", "ko": "다카마쓰시" }, "at": [134.05, 34.34], "capital": true, "fromUser": true },
+    { "id": "sakaide", "pref": "kagawa", "name": { "ja": "坂出市", "kana": "さかいでし", "ko": "사카이데시" }, "at": [133.86, 34.32], "capital": false, "fromUser": true },
+    { "id": "matsuyama", "pref": "ehime", "name": { "ja": "松山市", "kana": "まつやまし", "ko": "마쓰야마시" }, "at": [132.77, 33.84], "capital": true, "fromUser": true },
+    { "id": "imabari", "pref": "ehime", "name": { "ja": "今治市", "kana": "いまばりし", "ko": "이마바리시" }, "at": [133, 34.07], "capital": false, "fromUser": true },
+    { "id": "kochi", "pref": "kochi", "name": { "ja": "高知市", "kana": "こうちし", "ko": "고치시" }, "at": [133.53, 33.56], "capital": true, "fromUser": false },
+    { "id": "fukuoka", "pref": "fukuoka", "name": { "ja": "福岡市", "kana": "ふくおかし", "ko": "후쿠오카시" }, "at": [130.4, 33.59], "capital": true, "fromUser": false },
+    { "id": "saga", "pref": "saga", "name": { "ja": "佐賀市", "kana": "さがし", "ko": "사가시" }, "at": [130.3, 33.26], "capital": true, "fromUser": false },
+    { "id": "nagasaki", "pref": "nagasaki", "name": { "ja": "長崎市", "kana": "ながさきし", "ko": "나가사키시" }, "at": [129.88, 32.75], "capital": true, "fromUser": false },
+    { "id": "kumamoto", "pref": "kumamoto", "name": { "ja": "熊本市", "kana": "くまもとし", "ko": "구마모토시" }, "at": [130.71, 32.8], "capital": true, "fromUser": false },
+    { "id": "oita", "pref": "oita", "name": { "ja": "大分市", "kana": "おおいたし", "ko": "오이타시" }, "at": [131.61, 33.24], "capital": true, "fromUser": false },
+    { "id": "miyazaki", "pref": "miyazaki", "name": { "ja": "宮崎市", "kana": "みやざきし", "ko": "미야자키시" }, "at": [131.42, 31.91], "capital": true, "fromUser": false },
+    { "id": "kagoshima", "pref": "kagoshima", "name": { "ja": "鹿児島市", "kana": "かごしまし", "ko": "가고시마시" }, "at": [130.56, 31.6], "capital": true, "fromUser": false },
+    { "id": "naha", "pref": "okinawa", "name": { "ja": "那覇市", "kana": "なはし", "ko": "나하시" }, "at": [127.68, 26.21], "capital": true, "fromUser": false }
+  ],
+  "wards": [
+    { "id": "chiyoda", "name": { "ja": "千代田区", "kana": "ちよだく", "ko": "지요다구" }, "at": [139.754, 35.694], "note": "治安が悪い (1위)", "mark": true },
+    { "id": "chuo", "name": { "ja": "中央区", "kana": "ちゅうおうく", "ko": "주오구" }, "at": [139.772, 35.671], "note": "治安が悪い (2위)" },
+    { "id": "minato", "name": { "ja": "港区", "kana": "みなとく", "ko": "미나토구" }, "at": [139.752, 35.658], "mark": true },
+    { "id": "shinjuku", "name": { "ja": "新宿区", "kana": "しんじゅくく", "ko": "신주쿠구" }, "at": [139.704, 35.694], "mark": true },
+    { "id": "bunkyo", "name": { "ja": "文京区", "kana": "ぶんきょうく", "ko": "분쿄구" }, "at": [139.752, 35.708], "mark": true },
+    { "id": "taito", "name": { "ja": "台東区", "kana": "たいとうく", "ko": "다이토구" }, "at": [139.78, 35.713], "mark": true },
+    { "id": "sumida", "name": { "ja": "墨田区", "kana": "すみだく", "ko": "스미다구" }, "at": [139.802, 35.711] },
+    { "id": "koto", "name": { "ja": "江東区", "kana": "こうとうく", "ko": "고토구" }, "at": [139.817, 35.673] },
+    { "id": "shinagawa", "name": { "ja": "品川区", "kana": "しながわく", "ko": "시나가와구" }, "at": [139.73, 35.609] },
+    { "id": "meguro", "name": { "ja": "目黒区", "kana": "めぐろく", "ko": "메구로구" }, "at": [139.698, 35.641] },
+    { "id": "ota", "name": { "ja": "大田区", "kana": "おおたく", "ko": "오타구" }, "at": [139.716, 35.561] },
+    { "id": "setagaya", "name": { "ja": "世田谷区", "kana": "せたがやく", "ko": "세타가야구" }, "at": [139.653, 35.646] },
+    { "id": "shibuya", "name": { "ja": "渋谷区", "kana": "しぶやく", "ko": "시부야구" }, "at": [139.698, 35.664], "note": "治安が悪い (3위)", "mark": true },
+    { "id": "nakano", "name": { "ja": "中野区", "kana": "なかのく", "ko": "나카노구" }, "at": [139.663, 35.709] },
+    { "id": "suginami", "name": { "ja": "杉並区", "kana": "すぎなみく", "ko": "스기나미구" }, "at": [139.636, 35.699], "note": "犯罪率↓ (2위)" },
+    { "id": "toshima", "name": { "ja": "豊島区", "kana": "としまく", "ko": "도시마구" }, "at": [139.717, 35.726], "mark": true },
+    { "id": "kita", "name": { "ja": "北区", "kana": "きたく", "ko": "기타구" }, "at": [139.734, 35.753] },
+    { "id": "arakawa", "name": { "ja": "荒川区", "kana": "あらかわく", "ko": "아라카와구" }, "at": [139.783, 35.736] },
+    { "id": "itabashi", "name": { "ja": "板橋区", "kana": "いたばしく", "ko": "이타바시구" }, "at": [139.709, 35.751] },
+    { "id": "nerima", "name": { "ja": "練馬区", "kana": "ねりまく", "ko": "네리마구" }, "at": [139.652, 35.736], "note": "犯罪率↓ (3위)" },
+    { "id": "adachi", "name": { "ja": "足立区", "kana": "あだちく", "ko": "아다치구" }, "at": [139.805, 35.775] },
+    { "id": "katsushika", "name": { "ja": "葛飾区", "kana": "かつしかく", "ko": "가쓰시카구" }, "at": [139.847, 35.743] },
+    { "id": "edogawa", "name": { "ja": "江戸川区", "kana": "えどがわく", "ko": "에도가와구" }, "at": [139.868, 35.707] }
+  ],
+  "islands": [
+    { "id": "hokkaido-honto", "name": { "ja": "北海道本島", "kana": "ほっかいどうほんとう", "ko": "홋카이도 본섬" }, "at": [142.3, 42.55], "label": [144.4, 41.95] },
+    { "id": "honshu", "name": { "ja": "本州", "kana": "ほんしゅう", "ko": "혼슈" }, "at": [137.45, 34.8], "label": [137.6, 33.5] },
+    { "id": "shikoku-honto", "name": { "ja": "四国本島", "kana": "しこくほんとう", "ko": "시코쿠 본섬" }, "at": [133.53, 33.6], "label": [133.6, 32.25] },
+    { "id": "kyushu-honto", "name": { "ja": "九州本島", "kana": "きゅうしゅうほんとう", "ko": "규슈 본섬" }, "at": [131.3, 31.95], "label": [132.75, 31.0] }
+  ],
+  "extraPlaces": [
+    { "id": "oki", "name": { "ja": "隠岐諸島", "kana": "おきしょとう", "ko": "오키 제도" }, "note": "오키 제도, 오키노시마", "pref": "shimane", "at": [133.28, 36.25], "mark": "오키노시마" },
+    { "id": "konsen", "name": { "ja": "根釧台地", "kana": "こんせんだいち", "ko": "곤센 대지" }, "pref": "hokkaido", "at": [144.95, 43.42], "radiusKm": 38 }
+  ],
+  "mapNotes": [
+    { "id": "chubu-yama", "t": "山↑", "pref": "nagano", "at": [137.95, 35.78] }
+  ],
+  "compass": [
+    { "id": "north", "side": "top", "words": [{ "ja": "北", "kana": "きた", "ko": "북쪽" }] },
+    { "id": "east", "side": "right", "words": [{ "ja": "東", "kana": "ひがし", "ko": "동쪽" }, { "ja": "右", "kana": "みぎ", "ko": "오른쪽" }] },
+    { "id": "south", "side": "bottom", "words": [{ "ja": "南", "kana": "みなみ", "ko": "남쪽" }] },
+    { "id": "west", "side": "left", "words": [{ "ja": "西", "kana": "にし", "ko": "서쪽" }, { "ja": "左", "kana": "ひだり", "ko": "왼쪽" }] }
+  ],
+  "bridges": [
+    {
+      "id": "shimanami",
+      "name": {
+        "ja": "瀬戸内しまなみ海道",
+        "kana": "せとうちしまなみかいどう",
+        "ko": "세토우치 시마나미 가이도"
+      },
+      "route": {
+        "ja": "尾道・今治ルート",
+        "kana": "おのみち・いまばりルート"
+      },
+      "line": [
+        [133.219, 34.432],
+        [133.216, 34.409],
+        [133.193, 34.38],
+        [133.146, 34.301],
+        [133.093, 34.262],
+        [133.063, 34.259],
+        [133.049, 34.249],
+        [133.056, 34.216],
+        [133.079, 34.204],
+        [133.033, 34.129],
+        [132.979, 34.113],
+        [132.977, 34.055]
+      ],
+      "color": "#3a9d5d",
+      "ko": "자전거 여행 성지 · 니시세토 자동차도 (도로 + 자전거·보행자 길) · 1999년 개통"
+    },
+    {
+      "id": "setoohashi",
+      "name": {
+        "ja": "瀬戸大橋",
+        "kana": "せとおおはし",
+        "ko": "세토 대교"
+      },
+      "route": {
+        "ja": "児島(倉敷市)・坂出ルート",
+        "kana": "こじま・さかいでルート"
+      },
+      "line": [
+        [133.8, 34.452],
+        [133.807, 34.435],
+        [133.805, 34.42],
+        [133.808, 34.406],
+        [133.815, 34.39],
+        [133.829, 34.354],
+        [133.835, 34.319],
+        [133.845, 34.296]
+      ],
+      "color": "#f0a030",
+      "ko": "자동차 + 철도 병행 · 위: 세토추오 자동차도, 아래: JR 세토오하시선 · 1988년 개통"
+    },
+    {
+      "id": "akashi-naruto",
+      "name": {
+        "ja": "明石海峡大橋・大鳴門橋",
+        "kana": "あかしかいきょうおおはし・おおなるときょう",
+        "ko": "아카시 해협 대교·오나루토교"
+      },
+      "route": {
+        "ja": "神戸・鳴門ルート",
+        "kana": "こうべ・なるとルート"
+      },
+      "line": [
+        [135.068, 34.66],
+        [135.032, 34.631],
+        [135.009, 34.602],
+        [135.016, 34.583],
+        [134.982, 34.544],
+        [134.893, 34.521],
+        [134.861, 34.373],
+        [134.841, 34.342],
+        [134.752, 34.313],
+        [134.659, 34.241],
+        [134.64, 34.236],
+        [134.573, 34.173]
+      ],
+      "color": "#8a5cf0",
+      "ko": "혼슈 ↔ 시코쿠 연결 · 고베 ↔ 아와지섬 ↔ 나루토 · 도로 전용 · 오나루토교 1985년, 아카시 해협 대교 1998년 개통"
+    }
+  ]
+}

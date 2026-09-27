@@ -3,14 +3,20 @@ import prefecturesJson from '../data/prefectures.json';
 import regionsJson from '../data/regions.json';
 import mascotsJson from '../data/mascots.json';
 import notesJson from '../data/notes.json';
+import placesJson from '../data/places.json';
+import mountainsJson from '../data/mountains.json';
+import supplementJson from '../data/supplement.json';
 import geoMeta from './generated/prefecture-geo.json';
-import type { Mascot, NoteExtra, NoteItem, NotesDb, PrefGeoMeta, Prefecture, Region } from './types';
+import type { Mascot, MountainsDb, NoteExtra, NoteItem, NotesDb, PlacesDb, PrefGeoMeta, Prefecture, Region, SupplementDb } from './types';
 
 export const prefectures = prefecturesJson.prefectures as Prefecture[];
 export const regions = (regionsJson.regions as Region[]).slice().sort((a, b) => a.order - b.order);
 export const mascots = mascotsJson.mascots as Mascot[];
 export const notes = notesJson as unknown as NotesDb;
 export const prefGeo = geoMeta as unknown as Record<string, PrefGeoMeta>;
+export const places = placesJson as unknown as PlacesDb;
+export const mountains = mountainsJson as unknown as MountainsDb;
+export const supplement = supplementJson as unknown as SupplementDb;
 
 export const prefById = new Map<number, Prefecture>(prefectures.map((p) => [p.id, p]));
 export const prefBySlug = new Map<string, Prefecture>(prefectures.map((p) => [p.slug, p]));
@@ -42,6 +48,12 @@ export function prefecturesIn(regionId: string): Prefecture[] {
 }
 
 /** Boxes the user wrote for a prefecture (may be empty). */
+/** Claude's supplementary boxes — only while I have written nothing for that prefecture. */
+export function supplementFor(p: Prefecture): NoteItem[] {
+  if (notes.prefectures[p.slug]?.items?.length) return [];
+  return supplement.prefectures[p.slug]?.items ?? [];
+}
+
 export function notesFor(p: Prefecture): { star: boolean; items: NoteItem[] } {
   const n = notes.prefectures[p.slug];
   return { star: !!n?.star, items: n?.items ?? [] };

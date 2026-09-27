@@ -2,25 +2,47 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/app.css';
 
-import { prefBySlug, regionById, regions } from './data';
+import { mountains, places, prefBySlug, regionById, regions } from './data';
 import { createMap, type MapApi } from './map/map';
+import type { LayerId } from './map/layers';
 import { artReady } from './mascots/visual';
 import { el } from './ui/dom';
+import { createCompass } from './ui/compass';
 import { createEaster, createPetals } from './ui/easter';
 import { createModal } from './ui/modal';
 import { createPanel, renderGeneralMemo } from './ui/panel';
 import { createSearch } from './ui/search';
 import { createTooltip } from './ui/tooltip';
-import type { Lang } from './types';
+import type { LabelMode } from './types';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
-const LABEL_KEY = 'nihonchizu.labelMode';
+const LABEL_KEY = 'nihonchizu.labelMode.v2'; // v2: ふりがな became the default
 const isMobile = () => window.matchMedia('(max-width: 760px)').matches;
+function readLabelMode(): LabelMode | null {
+  try {
+    const v = localStorage.getItem(LABEL_KEY);
+    return v === 'furi' || v === 'ja' || v === 'kana' || v === 'ko' ? v : null;
+  } catch {
+    return null;
+  }
+}
+
+const LAYER_KEY = 'nihonchizu.layers.v1';
+function readLayers(): Partial<Record<LayerId, boolean>> {
+  try {
+    const v = JSON.parse(localStorage.getItem(LAYER_KEY) ?? '{}') as Record<string, unknown>;
+    return { ...(typeof v.cities === 'boolean' ? { cities: v.cities } : {}), ...(typeof v.bridges === 'boolean' ? { bridges: v.bridges } : {}) };
+  } catch {
+    return {};
+  }
+}
 
 const state = {
   selected: null as string | null,
   region: null as string | null,
-  labelMode: ((localStorage.getItem(LABEL_KEY) as Lang | null) ?? 'ja') as Lang,
+  layers: { cities: true, bridges: true, mountains: false, ...readLayers() } as Record<LayerId, boolean>,
+  range: { active: null as number | null, hide: false },
+  labelMode: (readLabelMode() ?? 'furi') as LabelMode,
 };
 
 async function init() {
@@ -46,6 +68,14 @@ async function init() {
       panel.refresh();
     },
     isMascotFound: (id) => easter?.isFound(id) ?? false,
+    rangeState: () => state.range,
+    onRange: (no) => pickRange(no),
+    onHideRangeNames: (hide) => {
+      state.range.hide = hide;
+      map?.setHideRangeNames(hide);
+      panel.refresh();
+    },
+    onMountainsOff: () => mountainsOff(),
   });
 
   let hoverSlug: string | null = null;
@@ -76,6 +106,7 @@ async function init() {
         }
         easter?.reposition();
       },
+      onRange: (no) => pickRange(no),
     },
     state.labelMode,
   );
@@ -170,15 +201,85 @@ async function init() {
     legend.querySelectorAll('button').forEach((b) => b.classList.toggle('is-active', b.dataset.region === id));
   }
 
+  // ---- map layers: cities / bridges / mountain mode
+  const layerBtns = $('layers').querySelectorAll<HTMLButtonElement>('button[data-layer]');
+  function setLayer(id: LayerId, on: boolean) {
+    state.layers[id] = on;
+    map?.setLayer(id, on);
+    layerBtns.forEach((b) => {
+      if (b.dataset.layer === id) b.setAttribute('aria-pressed', String(on));
+    });
+    try {
+      localStorage.setItem(LAYER_KEY, JSON.stringify({ cities: state.layers.cities, bridges: state.layers.bridges }));
+    } catch {
+      /* not remembered */
+    }
+  }
+  function showMountains() {
+    if (!map) return;
+    setLayer('mountains', true);
+    state.selected = null;
+    state.region = null;
+    easter?.dismiss(true);
+    map.selectPrefecture(null, { zoom: false });
+    map.highlightRegion(null);
+    setLegendActive(null);
+    applyInset(true);
+    panel.showMountains();
+    setHash('sanmyaku');
+  }
+  function mountainsOff() {
+    setLayer('mountains', false);
+    state.range.active = null;
+    map?.setActiveRange(null);
+    if (panel.current()?.type === 'mountains') {
+      panel.close();
+      applyInset(false);
+      setHash('');
+    }
+  }
+  function pickRange(no: number) {
+    if (!map) return;
+    if (!state.layers.mountains) setLayer('mountains', true);
+    state.range.active = no;
+    map.setActiveRange(no);
+    if (panel.current()?.type !== 'mountains') showMountains();
+    else panel.refresh();
+    map.focusRange(no);
+  }
+  // a layer without data yet keeps its button out of sight
+  const hasData: Record<LayerId, boolean> = { cities: places.cities.length > 0, bridges: places.bridges.length > 0, mountains: mountains.ranges.length > 0 };
+  layerBtns.forEach((b) => (b.hidden = !hasData[b.dataset.layer as LayerId]));
+  $('layers').hidden = !Object.values(hasData).some(Boolean);
+  layerBtns.forEach((b) =>
+    b.addEventListener('click', () => {
+      const id = b.dataset.layer as LayerId;
+      if (id === 'mountains') {
+        if (state.layers.mountains) mountainsOff();
+        else {
+          showMountains();
+          map?.reset();
+        }
+      } else setLayer(id, !state.layers[id]);
+    }),
+  );
+  for (const id of ['cities', 'bridges'] as const) setLayer(id, state.layers[id]);
+
   // ---- label mode
   const seg = $('label-mode');
-  function setLabelMode(mode: Lang) {
+  const compass = createCompass(stage, $('map-loading'));
+  function setLabelMode(mode: LabelMode) {
     state.labelMode = mode;
-    localStorage.setItem(LABEL_KEY, mode);
+    try {
+      localStorage.setItem(LABEL_KEY, mode);
+    } catch {
+      /* private mode: the choice just is not remembered */
+    }
     seg.querySelectorAll('button').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.mode === mode)));
     map?.setLabelMode(mode);
+    compass.setMode(mode);
   }
-  seg.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => setLabelMode(b.dataset.mode as Lang)));
+  seg.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => setLabelMode(b.dataset.mode as LabelMode)));
   setLabelMode(state.labelMode);
 
   // ---- controls
@@ -230,7 +331,8 @@ async function init() {
   function readHash() {
     const h = decodeURIComponent(location.hash.replace(/^#\/?/, ''));
     if (!h) return;
-    if (h.startsWith('region/')) showRegion(h.slice(7));
+    if (h === 'sanmyaku' && mountains.ranges.length) showMountains();
+    else if (h.startsWith('region/')) showRegion(h.slice(7));
     else if (prefBySlug.has(h)) select(h, { animate: false });
   }
   window.addEventListener('hashchange', readHash);

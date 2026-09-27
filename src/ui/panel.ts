@@ -1,5 +1,5 @@
 // The diary-page panel: prefecture view, region view, and the general memo view.
-import { countBoxes, extrasFor, extrasForRegion, generalExtras, mascotSearchUrl, mascotsOf, notes, notesFor, prefById, prefBySlug, prefecturesIn, regionById, regionOf } from '../data';
+import { countBoxes, extrasFor, extrasForRegion, generalExtras, mascotSearchUrl, mascotsOf, mountains, notes, notesFor, prefById, prefBySlug, prefecturesIn, regionById, regionOf, supplementFor } from '../data';
 import type { Mascot } from '../types';
 import type { NoteExtra, Prefecture, Region } from '../types';
 import { mascotVisualHtml } from '../mascots/visual';
@@ -12,9 +12,14 @@ export interface PanelCallbacks {
   onSelectRegion(id: string): void;
   onRevealMascot(id: string): void;
   isMascotFound(id: string): boolean;
+  /** mountain mode: current number and whether names are hidden for self-testing */
+  rangeState?(): { active: number | null; hide: boolean };
+  onRange?(no: number): void;
+  onHideRangeNames?(hide: boolean): void;
+  onMountainsOff?(): void;
 }
 
-export type PanelView = { type: 'prefecture'; id: string } | { type: 'region'; id: string } | null;
+export type PanelView = { type: 'prefecture'; id: string } | { type: 'region'; id: string } | { type: 'mountains'; id: 'mountains' } | null;
 
 export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
   const body = root.querySelector<HTMLElement>('#panel-body')!;
@@ -56,18 +61,85 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
     open();
   }
 
+  function showMountains() {
+    const again = current?.type === 'mountains';
+    current = { type: 'mountains', id: 'mountains' };
+    const top = body.scrollTop;
+    clear(body);
+    body.append(...renderMountains());
+    if (again) body.scrollTop = top;
+    else open();
+  }
+
   /** Re-render the current view (e.g. after a mascot was found). */
   function refresh() {
     if (!current) return;
     const top = body.scrollTop;
-    if (current.type === 'prefecture') {
-      clear(body);
-      body.append(...renderPrefecture(prefBySlug.get(current.id)!));
-    } else {
-      clear(body);
-      body.append(...renderRegion(regionById.get(current.id)!));
-    }
+    clear(body);
+    if (current.type === 'prefecture') body.append(...renderPrefecture(prefBySlug.get(current.id)!));
+    else if (current.type === 'region') body.append(...renderRegion(regionById.get(current.id)!));
+    else body.append(...renderMountains());
     body.scrollTop = top;
+  }
+
+  // ---------------------------------------------------------------- mountain mode (worksheet 高い山脈・山地・高地)
+  const revealed = new Set<number>();
+  function renderMountains(): HTMLElement[] {
+    const st = cb.rangeState?.() ?? { active: null, hide: false };
+    if (!st.hide) revealed.clear();
+    const isMasked = (no: number) => st.hide && !revealed.has(no);
+    const reveal = (no: number) => {
+      if (isMasked(no)) revealed.add(no);
+      cb.onRange?.(no);
+    };
+    const out: HTMLElement[] = [];
+    out.push(el('div', { class: 'ph' }, el('span', { class: 'chip--region chip--range' }, el('span', {}, '⛰'), el('small', {}, '산맥 모드'))));
+    out.push(el('h2', { class: 'ph__name ph__name--range', lang: 'ja' }, el('span', { class: 'ph__furi' }, 'たかいさんみゃく・さんち・こうち'), '高い山脈・山地・高地'));
+    out.push(el('p', { class: 'ph__alt' }, `산맥 · 산지 · 고지 ${mountains.ranges.length}개 — 번호를 누르면 지도에서 찾아요`));
+    const hideBtn = el('button', { type: 'button', class: 'range-tool', 'aria-pressed': String(st.hide) }, st.hide ? '🙈 이름 가리는 중' : '👀 이름 가리기');
+    hideBtn.addEventListener('click', () => cb.onHideRangeNames?.(!st.hide));
+    const offBtn = el('button', { type: 'button', class: 'range-tool range-tool--off' }, '산맥 끄기');
+    offBtn.addEventListener('click', () => cb.onMountainsOff?.());
+    out.push(el('div', { class: 'range-tools' }, hideBtn, offBtn));
+
+    // the chosen range, in full (its one-line fact lives here so the list stays even)
+    const act = mountains.ranges.find((r) => r.no === st.active);
+    if (!act) out.push(el('p', { class: 'range-focus range-focus--hint' }, '지도의 번호나 아래 이름을 누르면 여기에 자세히 나와요'));
+    else if (isMasked(act.no)) {
+      const b = el('button', { type: 'button', class: 'range-focus range-focus--masked' },
+        el('span', { class: 'range-focus__no' }, String(act.no)),
+        el('span', { class: 'range-focus__body' }, el('b', { class: 'range-focus__name' }, '이름이 뭘까요?'), el('span', { class: 'range-focus__fact' }, '떠올려 보고 눌러서 확인 👀')));
+      b.addEventListener('click', () => reveal(act.no));
+      out.push(b);
+    } else {
+      out.push(el('div', { class: 'range-focus', 'aria-live': 'polite' },
+        el('span', { class: 'range-focus__no' }, String(act.no)),
+        el('span', { class: 'range-focus__body' },
+          el('span', { class: 'range-focus__kana', lang: 'ja' }, act.name.kana),
+          el('span', { class: 'range-focus__line' }, el('b', { class: 'range-focus__name', lang: 'ja' }, act.name.ja), el('span', { class: 'range-focus__ko' }, act.name.ko)),
+          act.ko ? el('span', { class: 'range-focus__fact' }, act.ko) : null)));
+    }
+
+    const list = el('ol', { class: 'range-list' });
+    for (const r of mountains.ranges) {
+      const b = el('button', { type: 'button', class: `range-item${r.no === st.active ? ' is-active' : ''}${isMasked(r.no) ? ' is-masked' : ''}`, 'aria-pressed': String(r.no === st.active), title: r.ko ?? '' },
+        el('span', { class: 'range-item__no' }, String(r.no)),
+        el('span', { class: 'range-item__text' },
+          el('span', { class: 'range-item__kana', lang: 'ja' }, r.name.kana),
+          el('span', { class: 'range-item__name', lang: 'ja' }, r.name.ja),
+          el('span', { class: 'range-item__ko' }, r.name.ko)));
+      b.addEventListener('click', () => reveal(r.no));
+      list.append(el('li', {}, b));
+    }
+    out.push(el('section', { class: 'sec sec--ranges' }, list));
+
+    if (mountains.notes.length) {
+      const memo = el('div', { class: 'range-notes' });
+      for (const n of mountains.notes) memo.append(el('div', { class: 'range-notes__item' }, el('b', { lang: 'ja' }, n.t), n.sub ? el('span', { lang: 'ja' }, ` ${n.sub}`) : null, n.ko ? el('p', {}, n.ko) : null));
+      out.push(el('section', { class: 'sec' }, el('h3', {}, el('span', { class: 'emoji' }, '✎'), '내 메모', el('span', { class: 'n' }, '학습지에 적어 둔 것')), memo));
+    }
+    out.push(el('p', { class: 'meta-line' }, '선은 능선을 따라 대략 그린 것이에요. 번호는 학습지 「高い山脈・山地・高地」 그대로.'));
+    return out;
   }
 
   // ---------------------------------------------------------------- prefecture
@@ -92,6 +164,14 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
     if (my.items.length) notesSec.append(renderTree(my.items, { color: r.color, ink: r.ink }));
     else notesSec.append(el('p', { class: 'empty' }, `아직 ${p.short.ja} 메모가 없어요. Canva 마인드맵에 적고 data/notes.json 에 옮기면 여기 나타나요 ✿`));
     out.push(notesSec);
+
+    // Claude's supplement for prefectures I have not written about yet — kept apart from my own voice
+    const sup = supplementFor(p);
+    if (sup.length) {
+      out.push(el('section', { class: 'sec sec--supplement' },
+        el('h3', {}, el('span', { class: 'emoji' }, '✦'), '보충', el('span', { class: 'n' }, 'Claude 가 채운 메모 · 내 마인드맵 아님')),
+        renderTree(sup, { color: r.color, ink: r.ink })));
+    }
 
     // extras that mention this prefecture
     const extras = extrasFor(p);
@@ -232,7 +312,7 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
     return out;
   }
 
-  return { showPrefecture, showRegion, refresh, close, isOpen: () => root.classList.contains('is-open'), current: () => current };
+  return { showPrefecture, showRegion, showMountains, refresh, close, isOpen: () => root.classList.contains('is-open'), current: () => current };
 }
 
 /** Content for the 메모장 modal: notes that belong to no particular place. */

@@ -7,12 +7,14 @@ import { feature, merge, mesh } from 'topojson-client';
 import type { GeometryCollection, MultiPolygon as TopoMultiPolygon, Polygon as TopoPolygon, Topology } from 'topojson-specification';
 import type { Feature, FeatureCollection, MultiPolygon } from 'geojson';
 import { prefById, prefGeo, prefectures, prefecturesIn, regionOf, regions } from '../data';
-import type { Lang, Prefecture } from '../types';
+import type { LabelMode, LonLat, Prefecture } from '../types';
+import { createLayers, type LayerId } from './layers';
 
 export interface MapCallbacks {
   onSelect(slug: string): void;
   onHover(slug: string | null, event?: MouseEvent): void;
   onZoom?(k: number): void;
+  onRange?(no: number): void;
 }
 
 export interface MapApi {
@@ -20,13 +22,17 @@ export interface MapApi {
   selectPrefecture(slug: string | null, opts?: { animate?: boolean; zoom?: boolean }): void;
   focusRegion(regionId: string): void;
   highlightRegion(regionId: string | null): void;
-  setLabelMode(mode: Lang): void;
+  setLabelMode(mode: LabelMode): void;
   zoomBy(factor: number): void;
   reset(animate?: boolean): void;
   setInset(inset: Partial<Inset>): void;
   anchorScreen(slug: string): { x: number; y: number } | null;
   addSticker(slug: string, visual: { image?: string; svg?: string }): void;
   currentScale(): number;
+  setLayer(id: LayerId, on: boolean): void;
+  setActiveRange(no: number | null): void;
+  setHideRangeNames(hide: boolean): void;
+  focusRange(no: number): void;
 }
 
 interface Inset { top: number; right: number; bottom: number; left: number }
@@ -43,14 +49,14 @@ const LABEL_NUDGE: Record<string, [number, number]> = {
   okinawa: [0.15, -0.05],
 };
 
-export function shortLabel(p: Prefecture, mode: Lang): string {
-  if (mode === 'ja') return p.short.ja;
+export function shortLabel(p: Prefecture, mode: LabelMode): string {
+  if (mode === 'ja' || mode === 'furi') return p.short.ja;
   if (mode === 'kana') return p.short.kana;
   if (p.slug === 'hokkaido') return p.name.ko;
   return p.name.ko.replace(/(현|도|부)$/, '');
 }
 
-export async function createMap(container: HTMLElement, cb: MapCallbacks, initialMode: Lang): Promise<MapApi> {
+export async function createMap(container: HTMLElement, cb: MapCallbacks, initialMode: LabelMode): Promise<MapApi> {
   const url = `${import.meta.env.BASE_URL}geo/japan.topo.json`;
   const topo = (await fetch(url).then((r) => {
     if (!r.ok) throw new Error(`geo ${r.status}`);
@@ -72,7 +78,7 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
   let H = Math.max(320, container.clientHeight);
   let inset: Inset = { top: 70, right: 0, bottom: 70, left: 0 };
   let transform: ZoomTransform = zoomIdentity;
-  let labelMode: Lang = initialMode;
+  let labelMode: LabelMode = initialMode;
   let selected: string | null = null;
   let hovered: string | null = null;
   let highlightedRegion: string | null = null;
@@ -85,10 +91,15 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
   const gWash = viewport.append('g').attr('class', 'wash');
   const gLand = viewport.append('g').attr('class', 'land');
   const gLines = viewport.append('g').attr('class', 'lines');
+  const gGeoLayers = viewport.append('g').attr('class', 'geo-layers');
   const gInset = viewport.append('g').attr('class', 'inset');
   const gScreen = svg.append('g').attr('class', 'screen');
+  const gMarks = gScreen.append('g').attr('class', 'marks');
   const gStickers = gScreen.append('g').attr('class', 'stickers');
   const gLabels = gScreen.append('g').attr('class', 'labels');
+  const gLayerText = gScreen.append('g').attr('class', 'layer-text');
+  const okinawaShift = ((topo as unknown as { meta?: { okinawaShift?: LonLat } }).meta?.okinawaShift ?? [-0.6, 5.4]) as LonLat;
+  const layers = createLayers({ geo: gGeoLayers, marks: gMarks, text: gLayerText, projection, okinawaShift, onRange: (no) => cb.onRange?.(no) });
 
   gWash.append('path').attr('class', 'sea-halo sea-halo--wide');
   gWash.append('path').attr('class', 'sea-halo');
@@ -162,8 +173,9 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
     .join('text')
     .attr('class', 'label label--region')
     .attr('lang', 'ja')
-    .style('--label-ink', (d) => d.ink)
-    .text((d) => d.ja);
+    .style('--label-ink', (d) => d.ink);
+  regionLabels.append('tspan').attr('class', 'label__furi').attr('x', 0).attr('y', '-1.55em');
+  regionLabels.append('tspan').attr('class', 'label__main').attr('x', 0).attr('y', 0);
 
   const prefLabels = gLabels
     .selectAll<SVGTextElement, LabelDatum>('text.label--pref')
@@ -171,8 +183,18 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
     .join('text')
     .attr('class', 'label label--pref')
     .attr('data-slug', (d) => d.p.slug)
-    .style('--label-ink', (d) => regionOf(d.p).ink)
-    .text((d) => shortLabel(d.p, labelMode));
+    .style('--label-ink', (d) => regionOf(d.p).ink);
+  // ふりがな: the reading sits above the name in a smaller size (em = its own size, so it follows is-active)
+  prefLabels.append('tspan').attr('class', 'label__furi').attr('x', 0).attr('y', '-1.45em');
+  prefLabels.append('tspan').attr('class', 'label__main').attr('x', 0).attr('y', 0);
+  function writeLabels() {
+    const furi = labelMode === 'furi';
+    prefLabels.select('.label__main').text((d) => shortLabel(d.p, labelMode));
+    prefLabels.select('.label__furi').text((d) => (furi ? d.p.short.kana : ''));
+    regionLabels.select('.label__main').text((d) => (labelMode === 'ko' ? `${d.ko} 지방` : labelMode === 'kana' ? `${d.kana}ちほう` : `${d.ja}地方`));
+    regionLabels.select('.label__furi').text((d) => (furi ? `${d.kana}ちほう` : ''));
+  }
+  writeLabels();
 
   const insetNote = gLabels.append('text').attr('class', 'label label--note').text('↙ 沖縄はほんとはもっと南西 (인셋)');
 
@@ -194,6 +216,7 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
       .attr('y', okinawaBox[0][1] - 14)
       .attr('width', okinawaBox[1][0] - okinawaBox[0][0] + 28)
       .attr('height', okinawaBox[1][1] - okinawaBox[0][1] + 28);
+    layers.refit();
   }
 
   // projected anchors (cached per fit)
@@ -250,11 +273,13 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
       const [x, y] = transform.apply(a);
       const text = shortLabel(p, labelMode);
       const fs = p.slug === selected || p.slug === hovered ? 14 : 12;
-      const w = text.length * fs * 1.02 + 6;
-      const h = fs + 6;
+      const furi = labelMode === 'furi';
+      const w = Math.max(text.length * fs * 1.02, furi ? p.short.kana.length * fs * 0.68 * 1.02 : 0) + 6;
+      const top = furi ? fs * 1.33 : fs / 2; // the reading line adds height above the name
+      const h = top + fs / 2 + 6;
       const force = p.slug === selected || p.slug === hovered;
-      const fits = box[1] * k >= 16 && box[0] * k >= w * 0.45;
-      const rect = { x: x - w / 2, y: y - h / 2, w, h };
+      const fits = box[1] * k >= (furi ? 22 : 16) && box[0] * k >= w * 0.45;
+      const rect = { x: x - w / 2, y: y - top - 3, w, h };
       const collides = placed.some((r) => r.x < rect.x + rect.w && r.x + r.w > rect.x && r.y < rect.y + rect.h && r.y + r.h > rect.y);
       const onScreen = x > -40 && x < W + 40 && y > -20 && y < H + 20;
       if (onScreen && (force || (fits && !collides))) {
@@ -270,6 +295,8 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
         const [x, y] = transform.apply(a);
         return `translate(${x.toFixed(1)},${y.toFixed(1)})`;
       });
+
+    layers.update({ t: transform, placed, W, H, mode: labelMode, selected, region: highlightedRegion });
 
     const [ix, iy] = transform.apply([okinawaBox[0][0] - 14, okinawaBox[1][1] + 14]);
     insetNote.attr('transform', `translate(${ix.toFixed(1)},${(iy + 11).toFixed(1)})`).classed('is-hidden', k > 2.2);
@@ -376,9 +403,9 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
     updateScreenSpace();
   }
 
-  function setLabelMode(mode: Lang) {
+  function setLabelMode(mode: LabelMode) {
     labelMode = mode;
-    prefLabels.text((d) => shortLabel(d.p, mode));
+    writeLabels();
     updateScreenSpace();
   }
 
@@ -449,5 +476,26 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
     anchorScreen,
     addSticker,
     currentScale: () => transform.k,
+    setLayer(id: LayerId, value: boolean) {
+      layers.set(id, value);
+      svg.classed('is-terrain', layers.isOn('mountains'));
+      updateScreenSpace();
+    },
+    setActiveRange(no: number | null) {
+      layers.setActiveRange(no);
+      updateScreenSpace();
+    },
+    setHideRangeNames(hide: boolean) {
+      layers.setHideRangeNames(hide);
+      updateScreenSpace();
+    },
+    focusRange(no: number) {
+      const b = layers.rangeBounds(no);
+      if (!b) return;
+      // phones have a short strip of map above the sheet: keep the margin in proportion to it
+      const [[vx0, vy0], [vx1, vy1]] = visibleExtent();
+      const pad = Math.max(16, Math.min(90, Math.round(Math.min(vx1 - vx0, vy1 - vy0) * 0.12)));
+      applyTransform(transformFor(b, pad, 5), true);
+    },
   };
 }

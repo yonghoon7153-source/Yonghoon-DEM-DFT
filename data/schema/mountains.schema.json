@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "mountains.json — 산맥 모드",
+  "description": "학습지 「高い山脈・山地・高地」의 번호 그대로. 선은 능선을 따라 대략 그린 것이다 (ADR 0005).",
+  "type": "object",
+  "required": [
+    "ranges",
+    "notes"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "_comment": {
+      "type": "string"
+    },
+    "ranges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "no",
+          "id",
+          "kind",
+          "name",
+          "line"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "no": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "학습지 번호 (①…)"
+          },
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "山脈",
+              "山地",
+              "高地"
+            ]
+          },
+          "name": {
+            "$ref": "#/$defs/name"
+          },
+          "line": {
+            "$ref": "#/$defs/line"
+          },
+          "ko": {
+            "type": "string",
+            "description": "한 줄 사실 (최고봉 등)"
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "array",
+      "description": "학습지 위에 적은 메모 (うみかぜ(雪↑), 香川県 水不足)",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "t",
+          "at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "t": {
+            "type": "string"
+          },
+          "sub": {
+            "type": "string"
+          },
+          "ko": {
+            "type": "string",
+            "description": "풀이 (Claude)"
+          },
+          "at": {
+            "$ref": "#/$defs/lonlat"
+          },
+          "arrow": {
+            "$ref": "#/$defs/line"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "lonlat": {
+      "type": "array",
+      "description": "[경도, 위도]",
+      "prefixItems": [
+        {
+          "type": "number",
+          "minimum": 122,
+          "maximum": 154
+        },
+        {
+          "type": "number",
+          "minimum": 20,
+          "maximum": 46
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "line": {
+      "type": "array",
+      "description": "[경도, 위도] 점들 — 선을 이루는 순서대로",
+      "items": {
+        "$ref": "#/$defs/lonlat"
+      },
+      "minItems": 2
+    },
+    "name": {
+      "type": "object",
+      "required": [
+        "ja",
+        "kana",
+        "ko"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ja": {
+          "type": "string",
+          "description": "漢字 (내가 지도에 적은 표기 그대로)"
+        },
+        "kana": {
+          "type": "string",
+          "description": "읽기 (ふりがな)"
+        },
+        "ko": {
+          "type": "string",
+          "description": "한글"
+        },
+        "official": {
+          "type": "string",
+          "description": "공식 표기가 다를 때만 (津軽市 → つがる市)"
+        }
+      }
+    }
+  }
+}

@@ -20,7 +20,7 @@
    표기와 함께만, 아니면 닮은꼴에 "공식 그림 아님" 표시. 사용자가 고른 대체 그림(`standin`)은
    출처 크레딧 + "공식 그림 아님". 받은 그림이 공식이 아닌 것 같으면 넣기 전에 말한다. 상업 이용 없음.
 6. **사진은 저작권을 확인한 것만.** Canva 의 웹 사진은 넣지 않는다 (`kind: "photo"` 자리만).
-7. **push 전에 본다.** `nihon check` (데이터·타입·빌드) 를 통과하고, 화면을 바꿨으면
+7. **push 전에 본다.** `nihon check` (데이터·Canva 전수조사·타입·빌드) 를 통과하고, 화면을 바꿨으면
    `tools/shots.mjs` 로 데스크톱·모바일 스크린샷을 찍어 직접 확인한다. 안 본 화면을 "됐다" 고 하지 않는다.
 8. **커밋 제목은 `type: 제목`, 같은 제목을 `docs/log.md` 에 한 줄.** 다른 세션은 대화를 못 보므로
    "왜" 는 로그에 남긴다. 훅이 빠진 것을 알려 주고 `nihon feed` 가 센다.
@@ -34,14 +34,16 @@
 ```
 index.html              마크업 (헤더·지도·패널·모달)
 src/main.ts             상태·이벤트 연결, 해시 라우팅 (#kyoto, #region/kinki)
-src/map/map.ts          d3-geo + d3-zoom 지도, 라벨 배치(충돌 회피), 오키나와 인셋, 스티커
+src/map/map.ts          d3-geo + d3-zoom 지도, 라벨 배치(충돌 회피, ふりがな), 오키나와 인셋, 스티커
+src/map/layers.ts       지도 레이어 — 도시 · 다리 · 산맥 (data/places.json, mountains.json)
+src/ui/compass.ts       지도 둘레의 방위 北 · 南 · 西 左 · 東 右
 src/ui/panel.ts         県/지방/메모장 패널 (다이어리 페이지)
 src/ui/notes-render.ts  마인드맵 트리 → 칩
 src/ui/easter.ts        마스코트 팝업, 図鑑, 벚꽃
 src/mascots/art.ts      마스코트 SVG
 src/styles/             tokens / base / app
 data/                   JSON DB + schema + raw 지리 데이터
-scripts/                build-geo.mjs (지도 단순화·인셋), validate-data.mjs
+scripts/                build-geo.mjs (지도 단순화·인셋), validate-data.mjs, audit-canva.mjs (Canva PDF 전수조사)
 tools/nihon             한 줄 실행기 (sync → deps → dev), shots.mjs (스크린샷 QA)
 docs/                   adr/, CHECKLIST.md, log.md, index.md, screenshots/
 ```
@@ -51,7 +53,8 @@ docs/                   adr/, CHECKLIST.md, log.md, index.md, screenshots/
 | | |
 |---|---|
 | `nihon` | 최신화 + 개발 서버 (http://localhost:5004) |
-| `nihon check` | 데이터 검증 · 타입 · 빌드 |
+| `nihon check` | 데이터 검증 · Canva 전수조사 · 타입 · 빌드 |
+| `nihon audit` | Canva PDF 글줄 837개가 데이터 어디에 있나 (빠지면 check 가 멈춤, 이유는 data/raw/canva-audit.json) |
 | `nihon geo` | 지도 데이터 재생성 |
 | `nihon feed` | 커밋 ↔ 로그 짝 |
 | `nihon share` | 배포 주소·절차 (Cloudflare Pages, nihoncheese.bmlwork.kr) |

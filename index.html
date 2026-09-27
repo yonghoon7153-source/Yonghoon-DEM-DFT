@@ -37,7 +37,8 @@
 
       <div class="topbar__right">
         <div class="seg" role="radiogroup" aria-label="지도 라벨 표기" id="label-mode">
-          <button type="button" role="radio" aria-checked="true" data-mode="ja" lang="ja">漢字</button>
+          <button type="button" role="radio" aria-checked="true" data-mode="furi" lang="ja" title="漢字 + よみ">ふりがな</button>
+          <button type="button" role="radio" aria-checked="false" data-mode="ja" lang="ja">漢字</button>
           <button type="button" role="radio" aria-checked="false" data-mode="kana" lang="ja">かな</button>
           <button type="button" role="radio" aria-checked="false" data-mode="ko">한글</button>
         </div>
@@ -58,6 +59,12 @@
       <div class="map-loading" id="map-loading" aria-live="polite">지도를 펼치는 중…</div>
 
       <div class="legend" id="legend" aria-label="지방"></div>
+
+      <div class="layers" id="layers" role="group" aria-label="지도 레이어">
+        <button type="button" data-layer="cities" aria-pressed="true" title="일본 지도(시 포함) — ◎ 県庁所在地 · ● 지도에 적어 둔 도시 (확대하면 이름)"><span class="layers__ico" aria-hidden="true">📍</span>도시</button>
+        <button type="button" data-layer="bridges" aria-pressed="true" title="四国につなぐ大きな橋 — 本州 ↔ 四国 다리 3개"><span class="layers__ico" aria-hidden="true">🌉</span>다리</button>
+        <button type="button" data-layer="mountains" aria-pressed="false" title="일본 지도(산맥) — 高い山脈・山地・高地 (학습지 22개)"><span class="layers__ico" aria-hidden="true">⛰</span>산맥</button>
+      </div>
 
       <div class="zoomctl" aria-label="지도 확대/축소">
         <button type="button" id="zoom-in" aria-label="확대">+</button>

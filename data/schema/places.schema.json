@@ -1,0 +1,347 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "places.json — 지도 레이어 (도시 · 23区 · 섬 이름 · 隠岐 · 다리)",
+  "description": "내 Canva 지도에 적혀 있던 것을 사이트 지도 위에 다시 그린다. 沖縄의 점은 실제 좌표로 적고, 인셋으로 옮기는 건 코드가 한다 (ADR 0005).",
+  "type": "object",
+  "required": [
+    "cities",
+    "wards",
+    "islands",
+    "extraPlaces",
+    "mapNotes",
+    "compass",
+    "bridges"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "_comment": {
+      "type": "string"
+    },
+    "cities": {
+      "type": "array",
+      "description": "◎ 県庁所在地 47 + ● 내가 적은 도시",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "pref",
+          "name",
+          "at",
+          "capital",
+          "fromUser"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "pref": {
+            "type": "string",
+            "description": "prefectures.json 의 slug"
+          },
+          "name": {
+            "$ref": "#/$defs/name"
+          },
+          "at": {
+            "$ref": "#/$defs/lonlat"
+          },
+          "capital": {
+            "type": "boolean",
+            "description": "県庁所在地 (◎)"
+          },
+          "fromUser": {
+            "type": "boolean",
+            "description": "내가 Canva 지도에 적은 도시"
+          }
+        }
+      }
+    },
+    "wards": {
+      "type": "array",
+      "description": "東京23区 (区役所 자리) — 크게 확대했을 때만",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "$ref": "#/$defs/name"
+          },
+          "at": {
+            "$ref": "#/$defs/lonlat"
+          },
+          "note": {
+            "type": "string",
+            "description": "지도에서 그 구 옆에 적은 것 (순위 등)"
+          },
+          "mark": {
+            "type": "boolean",
+            "description": "지도에서 읽기를 빨간 글씨로 적은 구"
+          }
+        }
+      }
+    },
+    "islands": {
+      "type": "array",
+      "description": "北海道本島 · 本州 · 四国本島 · 九州本島 — 이름은 바다에, 선은 섬 해안으로",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "at",
+          "label"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "$ref": "#/$defs/name"
+          },
+          "at": {
+            "$ref": "#/$defs/lonlat",
+            "description": "안내선이 닿는 섬 위의 점"
+          },
+          "label": {
+            "$ref": "#/$defs/lonlat",
+            "description": "이름이 놓이는 바다 위의 점"
+          }
+        }
+      }
+    },
+    "extraPlaces": {
+      "type": "array",
+      "description": "그 밖에 지도에 적은 곳 (隠岐諸島)",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "$ref": "#/$defs/name"
+          },
+          "note": {
+            "type": "string",
+            "description": "이름 밑에 적은 메모 (내 말투 그대로)"
+          },
+          "mark": {
+            "type": "string",
+            "description": "note 중 빨간 글씨였던 부분"
+          },
+          "pref": {
+            "type": "string"
+          },
+          "at": {
+            "$ref": "#/$defs/lonlat"
+          },
+          "radiusKm": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 200,
+            "description": "점이 아니라 동그라미로 표시한 곳 (根釧台地) — 반지름 km"
+          }
+        }
+      }
+    },
+    "mapNotes": {
+      "type": "array",
+      "description": "지도 위에 바로 적은 짧은 메모 (中央高地의 「山↑」)",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "t",
+          "at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "t": {
+            "type": "string"
+          },
+          "pref": {
+            "type": "string"
+          },
+          "at": {
+            "$ref": "#/$defs/lonlat"
+          }
+        }
+      }
+    },
+    "compass": {
+      "type": "array",
+      "description": "지도 둘레의 방위 — Canva 지도처럼 北(きた) 위, 南(みなみ) 아래, 西(にし)·左(ひだり) 왼쪽, 東(ひがし)·右(みぎ) 오른쪽",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "side",
+          "words"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "side": {
+            "enum": [
+              "top",
+              "right",
+              "bottom",
+              "left"
+            ]
+          },
+          "words": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "ja",
+                "kana",
+                "ko"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "ja": {
+                  "type": "string"
+                },
+                "kana": {
+                  "type": "string"
+                },
+                "ko": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "bridges": {
+      "type": "array",
+      "description": "本州↔四国 3노선 — 本州 쪽 끝에서 四国 쪽 끝으로",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "route",
+          "line",
+          "color"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "$ref": "#/$defs/name"
+          },
+          "route": {
+            "type": "object",
+            "required": [
+              "ja",
+              "kana"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "ja": {
+                "type": "string"
+              },
+              "kana": {
+                "type": "string"
+              }
+            }
+          },
+          "line": {
+            "$ref": "#/$defs/line"
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "ko": {
+            "type": "string",
+            "description": "한 줄 설명"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "lonlat": {
+      "type": "array",
+      "description": "[경도, 위도]",
+      "prefixItems": [
+        {
+          "type": "number",
+          "minimum": 122,
+          "maximum": 154
+        },
+        {
+          "type": "number",
+          "minimum": 20,
+          "maximum": 46
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "line": {
+      "type": "array",
+      "description": "[경도, 위도] 점들 — 선을 이루는 순서대로",
+      "items": {
+        "$ref": "#/$defs/lonlat"
+      },
+      "minItems": 2
+    },
+    "name": {
+      "type": "object",
+      "required": [
+        "ja",
+        "kana",
+        "ko"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ja": {
+          "type": "string",
+          "description": "漢字 (내가 지도에 적은 표기 그대로)"
+        },
+        "kana": {
+          "type": "string",
+          "description": "읽기 (ふりがな)"
+        },
+        "ko": {
+          "type": "string",
+          "description": "한글"
+        },
+        "official": {
+          "type": "string",
+          "description": "공식 표기가 다를 때만 (津軽市 → つがる市)"
+        }
+      }
+    }
+  }
+}

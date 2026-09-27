@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "supplement.json — 메모 없는 県의 보충 메모 (Claude 작성)",
+  "description": "notes.json 에 메모가 없는 県만. 박스 모양은 notes.json 과 같다 (t, sub, cap, ko, children).",
+  "type": "object",
+  "required": [
+    "prefectures"
+  ],
+  "properties": {
+    "prefectures": {
+      "type": "object",
+      "description": "key = prefectures.json 의 slug",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "$ref": "#/$defs/items"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/item"
+      }
+    },
+    "item": {
+      "type": "object",
+      "required": [
+        "t"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "t": {
+          "type": "string"
+        },
+        "sub": {
+          "type": "string"
+        },
+        "cap": {
+          "type": "string"
+        },
+        "ko": {
+          "type": "string"
+        },
+        "children": {
+          "$ref": "#/$defs/items"
+        }
+      }
+    }
+  }
+}

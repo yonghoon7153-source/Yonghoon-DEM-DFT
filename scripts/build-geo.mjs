@@ -8,8 +8,9 @@
 //   - Visvalingam simplification keeps borders shared between prefectures consistent.
 //   - Islets under MIN_RING_AREA are dropped unless they touch another ring.
 //   - Ogasawara (Tokyo, south of 30°N) is dropped: it would push the map 7° south for a few dots.
-//   - Okinawa's far south-west islands (Miyako/Yaeyama, west of 126.5°E) are dropped and the main
-//     island group is moved into an inset box off the west coast of Kyushu (OKINAWA_SHIFT).
+//   - Okinawa's far-flung islands are dropped — Miyako/Yaeyama (west of 126.5°E) and the Daito islands
+//     (east of 129°E; shifted with the rest they would land on the tip of Kagoshima) — and the main
+//     island group is moved into a small inset box off the west coast of Kyushu (OKINAWA_SHIFT).
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { presimplify, simplify, quantile, filter, filterAttachedWeight, sphericalRingArea } from 'topojson-simplify';
 import { feature } from 'topojson-client';
@@ -42,7 +43,7 @@ for (const f of fc.features) {
   if (id === TOKYO_ID) polys = polys.filter((p) => geoCentroid({ type: 'Polygon', coordinates: p })[1] > 30);
   if (id === OKINAWA_ID) {
     polys = polys
-      .filter((p) => geoCentroid({ type: 'Polygon', coordinates: p })[0] > 126.5)
+      .filter((p) => { const lon = geoCentroid({ type: 'Polygon', coordinates: p })[0]; return lon > 126.5 && lon < 129; })
       .map((p) => p.map((ring) => ring.map(([x, y]) => [x + OKINAWA_SHIFT[0], y + OKINAWA_SHIFT[1]])));
   }
   let best = null, bestArea = -1;

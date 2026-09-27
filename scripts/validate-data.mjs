@@ -102,8 +102,87 @@ for (const ex of notesDb.extras ?? []) {
   walk(ex.items, where);
 }
 
+// supplement.json (Claude's boxes for prefectures without notes — never mixed into notes.json)
+const supDb = read('supplement.json');
+let supBoxes = 0;
+function walkSup(items, where, depth = 0) {
+  if (!Array.isArray(items)) { err(`${where}: items must be an array`); return; }
+  for (const it of items) {
+    supBoxes++;
+    if (!it || typeof it.t !== 'string' || !it.t.trim()) err(`${where}: item without "t"`);
+    for (const k of Object.keys(it ?? {})) if (!['t', 'sub', 'cap', 'ko', 'children'].includes(k)) err(`${where}: "${it.t}" unexpected key "${k}"`);
+    if (depth > 4) err(`${where}: nesting too deep at "${it.t}"`);
+    if (it.children) walkSup(it.children, `${where} > ${it.t}`, depth + 1);
+  }
+}
+for (const [slug, v] of Object.entries(supDb.prefectures ?? {})) {
+  if (!slugs.has(slug)) err(`supplement: unknown prefecture "${slug}"`);
+  walkSup(v.items, `supplement.${slug}`);
+}
+
+// places.json / mountains.json (map layers). Coordinates are [lon, lat] inside Japan's box.
+const inJapan = (at) => Array.isArray(at) && at.length === 2 && at[0] >= 122 && at[0] <= 154 && at[1] >= 20 && at[1] <= 46;
+const names = (n, where) => {
+  for (const k of ['ja', 'kana', 'ko']) if (!n?.[k]) err(`${where}: name.${k} missing`);
+  if (n?.official !== undefined && !(typeof n.official === 'string' && n.official.trim())) err(`${where}: name.official must be text`);
+};
+const placesDb = read('places.json');
+const placeIds = new Set();
+const place = (x, kind) => {
+  const where = `places.${kind} "${x.id ?? '?'}"`;
+  if (!x.id || placeIds.has(`${kind}:${x.id}`)) err(`${where}: missing/duplicate id`); placeIds.add(`${kind}:${x.id}`);
+  names(x.name, where);
+  if (!inJapan(x.at)) err(`${where}: "at" must be [lon, lat] in Japan`);
+  if (x.pref !== undefined && !slugs.has(x.pref)) err(`${where}: unknown prefecture "${x.pref}"`);
+};
+for (const c of placesDb.cities ?? []) { place(c, 'cities'); if (typeof c.capital !== 'boolean' || typeof c.fromUser !== 'boolean') err(`places.cities "${c.id}": capital/fromUser must be booleans`); if (!c.pref) err(`places.cities "${c.id}": pref missing`); }
+for (const kind of ['wards', 'islands', 'extraPlaces']) for (const x of placesDb[kind] ?? []) place(x, kind);
+for (const i of placesDb.islands ?? []) if (!inJapan(i.label)) err(`places.islands "${i.id}": "label" must be [lon, lat] (the name's spot in the sea)`);
+for (const e of placesDb.extraPlaces ?? []) if (e.mark && !(e.note ?? '').includes(e.mark)) err(`places.extraPlaces "${e.id}": mark "${e.mark}" is not part of the note`);
+for (const e of placesDb.extraPlaces ?? []) if (e.radiusKm !== undefined && !(typeof e.radiusKm === 'number' && e.radiusKm > 0 && e.radiusKm <= 200)) err(`places.extraPlaces "${e.id}": radiusKm must be 0–200`);
+for (const w of placesDb.wards ?? []) {
+  if (w.note !== undefined && !(typeof w.note === 'string' && w.note.trim())) err(`places.wards "${w.id}": note must be text`);
+  if (w.mark !== undefined && typeof w.mark !== 'boolean') err(`places.wards "${w.id}": mark must be true/false`);
+}
+const noteIds = new Set();
+for (const m of placesDb.mapNotes ?? []) {
+  const where = `places.mapNotes "${m.id ?? '?'}"`;
+  if (!m.id || noteIds.has(m.id)) err(`${where}: missing/duplicate id`); noteIds.add(m.id);
+  if (!m.t || !inJapan(m.at)) err(`${where}: t and [lon, lat] "at" required`);
+  if (m.pref !== undefined && !slugs.has(m.pref)) err(`${where}: unknown prefecture "${m.pref}"`);
+}
+const sides = new Set();
+for (const c of placesDb.compass ?? []) {
+  const where = `places.compass "${c.id ?? '?'}"`;
+  if (!['top', 'right', 'bottom', 'left'].includes(c.side)) err(`${where}: side must be top/right/bottom/left`);
+  if (sides.has(c.side)) err(`${where}: side "${c.side}" used twice`); sides.add(c.side);
+  if (!Array.isArray(c.words) || !c.words.length) err(`${where}: words missing`);
+  for (const w of c.words ?? []) for (const k of ['ja', 'kana', 'ko']) if (!w?.[k]) err(`${where}: word.${k} missing`);
+}
+for (const b of placesDb.bridges ?? []) {
+  const where = `places.bridges "${b.id ?? '?'}"`;
+  names(b.name, where);
+  if (!Array.isArray(b.line) || b.line.length < 2 || !b.line.every(inJapan)) err(`${where}: line must be ≥2 [lon, lat] points`);
+  if (!/^#[0-9a-f]{6}$/i.test(b.color ?? '')) err(`${where}: color must be #rrggbb`);
+}
+const capitals = (placesDb.cities ?? []).filter((c) => c.capital).length;
+if ((placesDb.cities ?? []).length && capitals !== 47) err(`places.cities: expected 47 capitals, got ${capitals}`);
+const mountainsDb = read('mountains.json');
+const nos = new Set();
+for (const r of mountainsDb.ranges ?? []) {
+  const where = `mountains.ranges ${r.no ?? '?'} (${r.id ?? '?'})`;
+  if (!Number.isInteger(r.no) || nos.has(r.no)) err(`${where}: missing/duplicate no`); nos.add(r.no);
+  names(r.name, where);
+  if (!['山脈', '山地', '高地'].includes(r.kind)) err(`${where}: kind must be 山脈/山地/高地`);
+  if (!Array.isArray(r.line) || r.line.length < 2 || !r.line.every(inJapan)) err(`${where}: line must be ≥2 [lon, lat] points`);
+}
+for (const n of mountainsDb.notes ?? []) {
+  if (!n.t || !inJapan(n.at)) err(`mountains.notes "${n.id ?? '?'}": t and [lon, lat] "at" required`);
+  if (n.arrow && !(n.arrow.length >= 2 && n.arrow.every(inJapan))) err(`mountains.notes "${n.id}": arrow must be ≥2 points`);
+}
+
 if (errors.length) {
   console.error(`✗ data check failed (${errors.length}):\n  - ` + errors.join('\n  - '));
   process.exit(1);
 }
-console.log(`✓ data ok: ${prefectures.length} prefectures, ${regions.length} regions, ${mascots.length} mascots, ${boxes} note boxes, ${(notesDb.extras ?? []).length} extras`);
+console.log(`✓ data ok: ${prefectures.length} prefectures, ${regions.length} regions, ${mascots.length} mascots, ${boxes} note boxes, ${(notesDb.extras ?? []).length} extras, ${supBoxes} supplement boxes, ${(placesDb.cities ?? []).length} cities, ${(mountainsDb.ranges ?? []).length} ranges`);
