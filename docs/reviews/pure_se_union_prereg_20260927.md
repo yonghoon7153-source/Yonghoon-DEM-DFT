@@ -38,9 +38,16 @@ CLAUDE.md frame[1] 의 *"pure-SE porosity ≈ 10 % @ 300 MPa (Minnmann et al.)"*
 | `pse_r100_a` | 1.00 | 0.22 | 20023 | ≈ 18 k |
 | `pse_r100_b` | 1.00 | 0.22 | 20029 | ≈ 18 k (seed 반복 — 잡음 추정) |
 
-- 생성: `scripts/lhs_ext_materialize.py --pure-se CASE:R_SE_UM:VOLFRAC:SEED … --template-2t <lhs00_110 덱>` — AM 입자 템플릿 줄을 빼고 분포를 SE 하나 (가중 1) 로.
+- 생성: `scripts/lhs_ext_materialize.py --pure-se CASE:R_SE_UM:VOLFRAC:SEED … --template-2t <lhs00_110 덱>` —
+  ~~AM 입자 템플릿 줄을 빼고 분포를 SE 하나 (가중 1) 로~~ ⛔ **정정 09-27 (런 전 · SELF-53)**: **AM 템플릿은 정의 · 분포에 그대로 두고 가중만 0 (SE 1)** —
+  `2 pts1 0.000000 pts2 1.000000`.  줄을 빼거나 정의만 남기면 LIGGGHTS 가 `Atom types must start from 1 (properties.cpp:120)` 로 멈춘다
+  (`docs/reviews/pure_se_ibb_failures_20260927.md`).
   **바꾸는 것은 그것과 r_SE · volfrac · seed · 케이스명뿐** (벽 재질 SE · 플래튼 메시 · 목표 300 MPa · E_SE 1.35 GPa · 재질 행렬 · 덤프 그대로).
-  템플릿 sha256 은 봉인 상자 (`docs/data/lhs_ext_box_v2_20260829.json`) 의 `lhs00_110` 값 `aca27397…` 와 같아야 한다 (도구가 강제).  selftest 42/42.
+  템플릿 sha256 은 봉인 상자 (`docs/data/lhs_ext_box_v2_20260829.json`) 의 `lhs00_110` 값 `aca27397…` 와 같아야 한다 (도구가 강제).
+  selftest ~~42/42~~ → **61/61** (검토자 판 생성기, sha256 `43bd16216e334653…`).
+- ⚠ **런 전 사후 수정 (09-27, 제출 전 — §4 판정선 불변)**: 실행 조건 두 가지를 더했다 — **15 MPI** (`--ntasks 15`: 러너 `#SBATCH -n 15` 와
+  `mpirun --oversubscribe --bind-to none -np 15` 를 짝으로 · 원래 LHS 는 1 MPI) · **`processors * * 1`** (`region reg_box` 앞 — z 로만 자르던 분할을 x · y 로).
+  **영역 분할만 다르고 물리는 같다** (코어 수를 바꿀 때처럼 비트 동일은 아니다).
 - 두께 추정 ≈ 27 µm (volfrac 0.22 × 삽입 높이 ≈ 134 µm ÷ (1 − ε_sphere ≈ −0.08)) — r_SE 0.5 에서 ≈ 54 지름, 1.0 에서 ≈ 27 지름 (얇은 옛 순수 SE 침대
   `docs/data/esse_calibration_2mAh_real_9.csv` 7 · 8 행은 8.2 · 12.3 µm).
 - 측정: `scripts/lhs_union_webapp.py --scan-root <런 폴더> --out pse_union.tsv` — sphere · 쌍 렌즈 union (웹앱 함수) · **정확한 union (MC 4×10⁶)** ·
@@ -63,17 +70,28 @@ CLAUDE.md frame[1] 의 *"pure-SE porosity ≈ 10 % @ 300 MPa (Minnmann et al.)"*
 ## 5. 실행 (사용자 — WSL 에서 덱 → ibb 제출 → WSL 에서 측정)
 
 ```bash
-# WSL: 코드 갱신 · 덱 생성 (봉인 템플릿 sha 를 도구가 확인)
-git -C ~/dem-web pull --ff-only && ~/Yonghoon-DEM-DFT/venv/bin/python3 ~/dem-web/scripts/lhs_ext_materialize.py --selftest | tail -1   # 42/42
-~/Yonghoon-DEM-DFT/venv/bin/python3 ~/dem-web/scripts/lhs_ext_materialize.py \
+# ⛔ 09-27 정정 — 아래가 실제로 쓴 명령이다 (옛 판: 리포 생성기 42/42 · --ntasks 없음 → 제출 ①②③ 실패, SELF-53).
+# WSL: 검토자 판 생성기 (이 커밋에서 scripts/ 로 교체된 것과 같은 파일) 로 덱 생성 — 봉인 템플릿 sha 를 도구가 확인
+PY=~/Yonghoon-DEM-DFT/venv/bin/python3
+$PY ~/lhs_ext_materialize.py --selftest | tail -1                                                   # 61/61
+$PY ~/lhs_ext_materialize.py \
   --pure-se pse_r050_a:0.5:0.22:20011 --pure-se pse_r075_a:0.75:0.22:20021 \
   --pure-se pse_r100_a:1.0:0.22:20023 --pure-se pse_r100_b:1.0:0.22:20029 \
-  --template-2t ~/lhs_local/lhs00_110/input_lhs00_110.liggghts [--template-run <run_lhs00_110.sh>] --outdir ~/pse_decks_20260927
-# ibb: lhs 폴더 옆에 올리고 제출 (러너는 lhs00_110 의 것을 케이스명만 바꿔 쓴다 — --template-run 을 주면 도구가 만든다)
+  --template-2t ~/lhs_local/lhs00_110/input_lhs00_110.liggghts --template-run ~/lhs_local/lhs00_110/run_lhs00_110.sh \
+  --box ~/dem-web/docs/data/lhs_ext_box_v2_20260829.json --ntasks 15 --outdir ~/pse_decks_20260927b
+# ibb: 옛 실패 폴더는 pse_*.fail_0927 로 옮기고 (지우지 않음) 새 덱을 lhs 폴더 옆에 올려 sbatch — 러너는 도구가 만든 것 (-n 15 · mpirun 짝)
 # 끝나면 원본을 WSL 로 (post_* 전체) → 측정
 ~/Yonghoon-DEM-DFT/venv/bin/python3 ~/dem-web/scripts/lhs_union_webapp.py --scan-root ~/pse_local --out ~/pse_union.tsv
 ```
 
 ## 6. 결과 (런 뒤 채운다)
 
-— 비어 있음 —
+### 6-0. 제출 기록 (결과 아님)
+
+- 실패 3 회 (231852–55 · 231865–68 · 231896–99) — 원인 · 정정된 처방 = `docs/reviews/pure_se_ibb_failures_20260927.md` · 원장 SELF-53.
+  세 번 모두 적분 전에 멈춰 데이터가 없다.
+- **네 번째 제출 (09-27 ≈ 11:40 KST)**: job **231946 – 231949** (`pse_r050_a` · `pse_r075_a` · `pse_r100_a` · `pse_r100_b`) RUNNING · node01 · 15 MPI ·
+  `3 by 5 by 1 MPI processor grid` (검토자 시험 덱은 5 by 3 by 1 — 상자 모양에 따라 LIGGGHTS 가 고른다, 둘 다 x · y 분할) · ERROR 0 ·
+  삽입 **139,706 · 41,394 · 17,463 · 17,463** (§3 추정 ≈ 141 k · 42 k · 18 k · 18 k) · PHASE 1 (침강).
+
+### 6-1. 판정 — 비어 있음 (런 뒤)

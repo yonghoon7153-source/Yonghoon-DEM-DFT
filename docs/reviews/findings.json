@@ -4995,6 +4995,21 @@
     "CLAUDE.md",
     "docs/data/densification_porosity_db.csv"
    ]
+  },
+  {
+   "id": "SELF-53",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "외부 검토 (사용자 경유, 2026-09-27) — LIGGGHTS-PUBLIC 3.8 소스 대조 + MPI 빌드 실행 재현",
+   "opened_in": "docs/reviews/pure_se_ibb_failures_20260927.md",
+   "title": "순수 SE 덱 생성기 (`lhs_ext_materialize.py --pure-se`) 가 AM 템플릿 (atom_type 1) 줄을 지워 ibb 제출 ③ 이 `Atom types must start from 1 (properties.cpp:120)` 로 멈췄고, 내 ③ 처방 ('정의만 남기고 분포에서 빼기') 도 같은 오류를 낸다 · ①② 는 러너의 `-n` / `mpirun -np` 짝 불일치",
+   "note": "원인 (소스): Properties::max_type() 은 존재하는 원자 · 분포에 든 템플릿 · 벽 · 메시만 모은다 — particletemplate 자체는 min_type 을 보고하지 않고, 삽입·침강 동안 플래튼 메시 (type 1) 는 아직 없고 바닥 벽은 type 2 다 ⇒ 줄을 지운 옛 생성기도 정의만 남긴 ③ 처방도 최소 타입 2 로 멈춘다 (둘 다 실행으로 재현).  올바른 처방 = 분포에 AM 가중 0 (`2 pts1 0.000000 pts2 1.000000`) — fix_particledistribution_discrete 는 0 가중을 받고 삽입 개수 int(N·w + U) 가 0 이며, 분포의 최소 타입은 분포에 든 모든 템플릿으로 정해진다 (검토자 축소 덱: pts1 number% 0 · 삽입 전부 type 2 · 압축 루프까지 오류 없음).  ①② (231852–55 · 231865–68): 사람이 sed 로 `#SBATCH -n 15` 만 바꿨다 — 내가 사용자의 oversubscribe 지적을 물리치고 `-N 1` 을 더했다 (틀림).  리포 ibb 관례 `mpirun --oversubscribe -np N` 을 먼저 찾았어야 했다.  수정 = 검토자 판 생성기로 교체 (sha256 43bd16216e334653…, selftest 42 → 61): AM 가중 0 · SE 1 · `--procs` (기본 `* * 1`, region reg_box 앞 — ③ 로그의 `1 by 1 by 15` z 분할 대신 x·y) · `--ntasks N` (러너 `-n` 과 `mpirun --oversubscribe --bind-to none -np` 를 짝으로 쓰고 되읽어 대조) · roundtrip_pure_se 가 옛 형태 · 정의만 형태를 둘 다 거부 · 설계 흐름 roundtrip 에도 최소 타입 1 검사 · am_references() · manifest.  네 번째 제출 (231946–49, 11:40 KST) 정상: 3 by 5 by 1 · 삽입 139,706 · 41,394 · 17,463 · 17,463 · ERROR 0.  잘못된 결과는 없다 — 세 번 모두 적분 전에 멈췄다.  교훈: 합성 픽스처 시험은 LIGGGHTS 자체 규칙을 못 잡는다 ⇒ 덱 생성기를 바꿀 때 LIGGGHTS 스모크 시험 (삽입 + 수백 스텝, 축소 덱) 을 통과 조건으로 둔다.  이 커밋이 수정을 싣고, 다음 커밋에서 claimed_fixed + SHA 로 올린다.",
+   "evidence_tests": [
+    "scripts/lhs_ext_materialize.py --selftest (61/61 — roundtrip_pure_se 음성: 옛 생성기 형태 · 정의만 형태 거부)",
+    "docs/reviews/pure_se_ibb_failures_20260927.md",
+    "docs/reviews/pure_se_union_prereg_20260927.md"
+   ]
   }
  ]
 }

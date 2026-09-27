@@ -10,6 +10,15 @@
         --outdir /tmp/lhsx_decks
     python3 scripts/lhs_ext_materialize.py --selftest
 
+    # 순수 SE 판정 시험 (docs/reviews/pure_se_union_prereg_20260927.md) — 15 코어 러너까지
+    python3 scripts/lhs_ext_materialize.py \\
+        --pure-se pse_r050_a:0.5:0.22:20011 --pure-se pse_r075_a:0.75:0.22:20021 \\
+        --pure-se pse_r100_a:1.0:0.22:20023 --pure-se pse_r100_b:1.0:0.22:20029 \\
+        --template-2t ~/lhs_local/lhs00_110/input_lhs00_110.liggghts \\
+        --template-run ~/lhs_local/lhs00_110/run_lhs00_110.sh --ntasks 15 --outdir <빈 폴더>
+    ★ 순수 SE 덱은 AM 템플릿을 **분포에 가중 0 으로 남긴다** (지우거나 분포에서 빼면 LIGGGHTS 가
+      "Atom types must start from 1" 로 죽는다 — render_pure_se 주석 ①, 2026-09-27 ibb 실패 ③).
+
 계기: R14 P1-06 — *"대상 묶음에는 CSV 를 실제 ibb 입력 덱으로 변환하는 소비자나 왕복검사가
 없다.  열 이름대로 읽으면 상이 뒤집힌다."*  실제로 ibb 에도 생성기가 남아 있지 않아
 (`~/dem_test` 에 `.py` 가 0개), 130 덱은 **산출물만** 있는 상태였다.
@@ -60,6 +69,8 @@ _RE_PDD = re.compile(
 _RE_INS = re.compile(r'insert/pack\s+seed\s+(\d+)')
 _RE_VF = re.compile(r'volumefraction_region\s+([\d.eE+-]+)')
 _RE_CASE = re.compile(r'^#\s*(\S+):\s*(\S+)', re.M)
+_RE_PROC = re.compile(r'^[ \t]*processors[ \t]+([^\n]*?)[ \t]*$', re.M)
+_RE_CBOX = re.compile(r'^[ \t]*create_box\s', re.M)
 
 
 def _strip_comments(text: str) -> str:
@@ -123,6 +134,15 @@ def parse_deck(text: str) -> dict:
     am.sort(key=lambda p: -p['r_um'])            # 큰 쪽이 AM_P
     out['r_AM_um'] = [p['r_um'] for p in am]
     out['w_AM'] = [p['weight'] for p in am]
+    #  ★ 분포에 든 템플릿의 최소 atom_type.  LIGGGHTS 는 입자 타입이 1 부터가 아니면 첫 run 에서
+    #    `ERROR: Atom types must start from 1 for granular simulations (properties.cpp:120)` 로 죽는다.
+    #    (여기서 pts 는 전부 분포에 든 템플릿이다 — 분포에 없는 템플릿은 위에서 이미 거부된다)
+    out['min_type'] = min(p['atom_type'] for p in pts) if pts else None
+    #  processors 줄 (영역 분할) — 있으면 create_box 앞이어야 한다
+    procs = [(m.start(), ' '.join(m.group(1).split())) for m in _RE_PROC.finditer(body)]
+    cbox = _RE_CBOX.search(body)
+    out['processors'] = (procs[0][1] if len(procs) == 1 else ('MULTIPLE' if procs else None))
+    out['processors_before_box'] = bool(procs) and bool(cbox) and procs[-1][0] < cbox.start()
     return out
 
 
@@ -240,14 +260,38 @@ def _is_prime(n: int) -> bool:
     return True
 
 
+PURE_SE_PROCS = '* * 1'      # 순수 SE 덱의 기본 영역 분할 — 아래 render_pure_se ② 참조
+
+
 def render_pure_se(template: str, case: str, r_se_um: float, volfrac: float, seed: int,
-                   tmpl_case: str) -> str:
+                   tmpl_case: str, procs: str | None = PURE_SE_PROCS) -> str:
     """2-type 실물 덱 → **AM 없는 순수 SE 덱** (판정 시험 `docs/reviews/pure_se_union_prereg_20260927.md`).
 
-    바꾸는 것: AM 입자 템플릿 줄 제거 · 분포를 SE 하나 (가중 1) 로 · r_SE · volfrac · insert seed ·
-    케이스명.  **나머지 (벽 재질 · 플래튼 메시 · 목표 압력 · 재질 행렬 · 덤프) 는 한 글자도 안 바꾼다** —
-    LHS 코호트와 같은 프로토콜이어야 비교가 선다.  0 가중을 남기지 않는 이유: LIGGGHTS 가 0 가중
-    템플릿을 어떻게 받는지 확인된 바 없다 (deck_weights 주석과 같은 조심).
+    바꾸는 것: 분포 가중 (AM 0 · SE 1) · r_SE · volfrac · insert seed · 케이스명 · (선택) processors 줄.
+    **나머지 (벽 재질 · 플래튼 메시 · 목표 압력 · 재질 행렬 · 덤프 · 입자 템플릿 정의) 는 한 글자도 안
+    바꾼다** — LHS 코호트와 같은 프로토콜이어야 비교가 선다.
+
+    ① ★★ AM 템플릿은 **지우지도, 분포에서 빼지도 않는다.  분포에 가중 0 으로 남긴다.**
+       (2026-09-27 ibb 실패 ③ · LIGGGHTS-PUBLIC 3.8 소스와 실제 실행으로 확인)
+       - LIGGGHTS 는 run 초기화 때 `Properties::max_type()` 로 입자 타입 범위를 모으고, 최소가 1 이
+         아니면 `ERROR: Atom types must start from 1 for granular simulations (properties.cpp:120)`.
+       - 그 범위에 들어가는 것은 **존재하는 원자 · 분포 (distribution) 에 든 템플릿 · 벽 (primitive
+         type) · 메시** 뿐이다.  `fix particletemplate/sphere` 자체는 min_type() 을 보고하지 않는다.
+       - 삽입 · 침강 동안은 플래튼 메시 (type 1) 가 아직 없고 바닥 벽은 type 2 (SE) 다.
+         ⇒ AM 템플릿 줄을 지우면 (옛 판) **최소 타입 = 2 → 즉시 abort** (실패 ③ 그대로 재현됨).
+         ⇒ AM 템플릿을 정의만 남기고 분포에서 빼도 (실패 요약의 처방) **똑같이 abort** — 재현됨.
+       - `particledistribution/discrete` 는 음수 가중만 거부하고 0 은 받는다.  개수는
+         `int(N·w + U(0,1))` 이라 w = 0 이면 항상 0 개 (U < 1).  분포의 최소 타입은 **분포에 든 모든
+         템플릿**으로 정하므로 type 1 이 남는다 → 검사 통과.
+       - 실제 실행 (LIGGGHTS-PUBLIC 3.8, 축소 LHS 2-type 덱): `pts1 number% 0` · 삽입된 입자 **전부 type 2** ·
+         침강 → 플래튼 → 안정화 → 압축 루프까지 오류 없음.
+       - 부수 효과: 분포의 최대 반지름에 r_AM 이 남아 이웃 목록 bin 이 AM 기준 크기다 — 원래 LHS mono
+         덱과 **같은** 조건이다 (물리는 불변, 속도만 영향).
+    ② processors (기본 `* * 1`): 원래 LHS 러너는 1 코어라 분할이 없었다.  여러 코어로 돌리면 LIGGGHTS 는
+       키 큰 상자를 z 로만 자른다 (ibb 실패 ③ 로그: `1 by 1 by 15`) → 침강 후 침대 (~27 µm) 가 한두 조각에
+       몰려 나머지 코어는 논다.  `* * 1` 은 x·y 로 자른다 (15 → 5×3).  **물리는 그대로**, 코어 수를 바꿀 때와
+       마찬가지로 비트 동일하지는 않다.  `create_box` 앞 (`region reg_box` 앞) 에 넣어 재시작 덱 (head 블록)
+       에도 따라간다.  `procs=None` 이면 넣지 않는다.
     """
     d = parse_deck(template)
     if d['ntype'] != 2:
@@ -260,13 +304,23 @@ def render_pure_se(template: str, case: str, r_se_um: float, volfrac: float, see
     se = [p for p in d['pts'] if p['density'] <= 3000]
     if len(am) != 1 or len(se) != 1:                       # pragma: no cover (parse_deck 가 먼저 막는다)
         raise SystemExit(f'⛔ AM {len(am)} · SE {len(se)} 템플릿 — 각각 1 개여야 한다')
+    if am[0]['atom_type'] != 1 or d['min_type'] != 1:
+        raise SystemExit(f'⛔ 템플릿의 AM atom_type {am[0]["atom_type"]} · 최소 타입 {d["min_type"]} — '
+                         'AM 이 type 1 인 실물 2-type 덱이어야 한다 (LIGGGHTS 타입 1 규칙)')
     rSE = r_se_um / UM_PER_DECK_UNIT
+    af, sf = re.escape(am[0]['fix']), re.escape(se[0]['fix'])
     t = template
-    t = _sub1(t, rf'^[ \t]*fix\s+{re.escape(am[0]["fix"])}\s+all\s+particletemplate/sphere[^\n]*\n', '',
-              'AM 입자 템플릿 줄 제거')
-    t = _sub1(t, r'(particledistribution/discrete\s+\d+\s+)2(\s+)\S+\s+[\d.]+\s+\S+\s+[\d.]+',
-              rf'\g<1>1\g<2>{se[0]["fix"]} 1.000000', '분포 → SE 단독')
+    #  ① 분포: 템플릿 둘 다 남기고 가중만 AM 0 · SE 1 (순서는 실물대로 AM 먼저 — 다르면 거부)
+    t = _sub1(t, rf'(particledistribution/discrete\s+\d+\s+2\s+){af}\s+[\d.]+(\s+){sf}\s+[\d.]+',
+              rf'\g<1>{am[0]["fix"]} 0.000000\g<2>{se[0]["fix"]} 1.000000', '분포 → AM 0 · SE 1')
     t = _sub_all(t, r'pdd AM=[\d.]+(\s+)SE=[\d.]+', r'pdd AM=0.0000\g<1>SE=1.0000', '헤더 pdd(2)')
+    #  ② 영역 분할
+    if procs:
+        if _RE_PROC.search(_strip_comments(t)):
+            t = _sub1(t, r'^[ \t]*processors[ \t]+[^\n]*$', f'processors      {procs}', 'processors 줄 교체')
+        else:
+            t = _sub1(t, r'^(region\s+reg_box\s)', rf'processors      {procs}\n\g<1>',
+                      'processors 줄 삽입 (region reg_box 앞)')
     t = _sub1(t, r'^(variable\s+r_SE\s+equal\s+)\S+', rf'\g<1>{rSE:.6g}', 'r_SE')
     t = _sub_all(t, r'rSE=[\d.eE+-]+', f'rSE={rSE:.6g}', '헤더 rSE')
     t = _sub_all(t, r'volfrac=[\d.eE+-]+', f'volfrac={volfrac:.6f}', '헤더 volfrac')
@@ -283,17 +337,33 @@ def render_pure_se(template: str, case: str, r_se_um: float, volfrac: float, see
     return t
 
 
-def roundtrip_pure_se(case: str, r_se_um: float, volfrac: float, seed: int, text: str) -> list[str]:
-    """생성한 순수 SE 덱을 **본문에서** 되읽어 대조한다 (헤더는 따로).  → 불일치 목록."""
+def roundtrip_pure_se(case: str, r_se_um: float, volfrac: float, seed: int, text: str,
+                      procs: str | None = PURE_SE_PROCS) -> list[str]:
+    """생성한 순수 SE 덱을 **본문에서** 되읽어 대조한다 (헤더는 따로).  → 불일치 목록.
+
+    ★ 순수 SE 의 정답 형태 (render_pure_se ① 참조): 템플릿 2 개 **둘 다 분포에** · AM (type 1) 가중 0 ·
+      SE 가중 1 · 분포 최소 타입 1.  옛 판 (AM 줄 삭제) 과 실패 요약의 처방 (정의만 유지) 은 둘 다 여기서 걸린다.
+    """
     bad = []
     try:
         d = parse_deck(text)
     except ValueError as e:
         return [f'{case}: 되읽기 실패 — {e}']
-    if d['ntype'] != 1 or d['n_declared'] != 1:
-        bad.append(f'{case}: 입자 템플릿 {d["ntype"]} · 분포 {d["n_declared"]} (1 · 1 이어야)')
-    if d['w_AM'] or abs((d['pdd_SE'] or 0.0) - 1.0) > 1e-9:
-        bad.append(f'{case}: AM 가중 {d["w_AM"]} · SE 가중 {d["pdd_SE"]} (없음 · 1 이어야)')
+    if d['ntype'] != 2 or d['n_declared'] != 2:
+        bad.append(f'{case}: 분포 템플릿 {d["ntype"]} · 선언 {d["n_declared"]} (2 · 2 이어야 — '
+                   'AM 은 가중 0 으로 분포에 남아야 LIGGGHTS 타입 검사를 통과한다)')
+    am = [p for p in d['pts'] if p['density'] > 3000]
+    if len(am) != 1 or am[0]['weight'] != 0.0 or am[0]['atom_type'] != 1:
+        bad.append(f'{case}: AM 템플릿 {[(p["fix"], p["atom_type"], p["weight"]) for p in am]} '
+                   '(type 1 · 가중 0 하나여야)')
+    if abs((d['pdd_SE'] or 0.0) - 1.0) > 1e-9:
+        bad.append(f'{case}: SE 가중 {d["pdd_SE"]} (1 이어야)')
+    if d['min_type'] != 1:
+        bad.append(f'{case}: 분포 최소 atom_type {d["min_type"]} — LIGGGHTS 가 첫 run 에서 '
+                   '"Atom types must start from 1" 로 죽는다')
+    if procs and (d['processors'] != ' '.join(procs.split()) or not d['processors_before_box']):
+        bad.append(f'{case}: processors {d["processors"]} (create_box 앞 {d["processors_before_box"]}) '
+                   f'vs 요청 "{procs}"')
     if abs(d['r_SE_um'] - r_se_um) > 1e-6:
         bad.append(f'{case}: r_SE {d["r_SE_um"]} µm vs 요청 {r_se_um}')
     if abs(d['volfrac'] - volfrac) > 1e-6:
@@ -323,6 +393,8 @@ def roundtrip(row: dict, deck_text: str) -> list[str]:
     if d['ntype'] != nt:
         bad.append(f'{row["id"]} ntype: 덱 {d["ntype"]} vs CSV {nt}')
         return bad
+    if d['min_type'] != 1:
+        bad.append(f'{row["id"]} 분포 최소 atom_type {d["min_type"]} — LIGGGHTS 는 1 부터여야 한다')
     if d['header_case'] != row['id']:
         bad.append(f'{row["id"]} 헤더 케이스: {d["header_case"]}')
     if d['header_kind'] != row['kind']:
@@ -359,6 +431,9 @@ _RE_RUN_OUT = re.compile(r'^#SBATCH\s+--output=(\S+)', re.M)
 _RE_RUN_TIME = re.compile(r'^#SBATCH\s+--time=(\S+)', re.M)
 _RE_RUN_IN = re.compile(r'-in\s+(\S+\.liggghts)')
 _RE_RUN_CD = re.compile(r'^\s*cd\s+(\S+)', re.M)
+_RE_RUN_NT = re.compile(r'^#SBATCH\s+(?:-n\s+|--ntasks[= ])(\d+)', re.M)
+_RE_RUN_NP = re.compile(r'\bmpirun\b[^\n]*?-np\s+(\d+)')
+MPIRUN_FLAGS = '--oversubscribe --bind-to none'   # ibb: 이 둘이 없으면 여러 코어에서 바인딩 오류 (실패 ①②)
 
 
 def _runner_case(text: str) -> str:
@@ -368,24 +443,41 @@ def _runner_case(text: str) -> str:
     return m.group(1)
 
 
-def render_runner(template: str, case: str, tmpl_case: str) -> str:
-    """러너의 케이스명만 갈아끼운다.  구조·자원 요청은 건드리지 않는다.
+def render_runner(template: str, case: str, tmpl_case: str, ntasks: int | None = None) -> str:
+    """러너의 케이스명을 갈아끼운다.  `ntasks` 를 주면 코어 수 두 자리도 바꾼다 — 그 밖의 구조는 그대로.
 
     ★ 러너에서 케이스명이 나오는 자리는 넷이다 — job-name · output 로그 · `cd` 경로 ·
       `-in` 덱 파일.  하나라도 옛 이름이 남으면 **다른 케이스의 덱을 돌리거나 로그를
       덮어쓴다**.  그래서 치환 후 옛 이름이 남았는지 확인하고, 넷을 각각 되읽어 대조한다.
+    ★ `ntasks` (2026-09-27 실패 ①②): 사람이 sed 로 `-n 15` 만 바꿨다가 OpenMPI 바인딩 오류로 두 번 죽었다.
+      ibb 에서 여러 코어는 `#SBATCH -n N` 과 `mpirun --oversubscribe --bind-to none -np N` 이 **짝**이어야
+      한다.  두 자리를 정확히 한 번씩 바꾸고, 못 맞히면 거부한다 (반쯤 바뀐 러너를 내지 않는다).
     """
     if tmpl_case not in template:
         raise SystemExit(f'⛔ 러너 템플릿에서 케이스명 {tmpl_case} 을 못 찾았다')
     t = template.replace(tmpl_case, case)
     if tmpl_case in t:                                    # pragma: no cover
         raise SystemExit('⛔ 러너에 템플릿 케이스명이 남았다')
+    if ntasks is not None:
+        if not (1 <= int(ntasks) <= 60):
+            raise SystemExit(f'⛔ ntasks {ntasks} — 1..60 (qos cpu-60)')
+        t = _sub1(t, r'^(#SBATCH\s+(?:-n\s+|--ntasks[= ]))\d+', rf'\g<1>{int(ntasks)}', '#SBATCH -n')
+        t = _sub1(t, r'\bmpirun\b(?:\s+--oversubscribe|\s+--bind-to\s+\S+)*\s+-np\s+\d+',
+                  f'mpirun {MPIRUN_FLAGS} -np {int(ntasks)}', 'mpirun -np')
     return t
 
 
-def roundtrip_runner(case: str, text: str) -> list[str]:
-    """생성한 러너를 되읽어 케이스명 네 자리를 확인한다.  → 불일치 목록."""
+def roundtrip_runner(case: str, text: str, ntasks: int | None = None) -> list[str]:
+    """생성한 러너를 되읽어 케이스명 네 자리 (와 `ntasks` 면 코어 두 자리) 를 확인한다.  → 불일치 목록."""
     bad = []
+    if ntasks is not None:
+        body0 = _strip_comments_keep_sbatch(text)
+        nt = [int(x) for x in _RE_RUN_NT.findall(body0)]
+        npv = [int(x) for x in _RE_RUN_NP.findall(body0)]
+        if nt != [int(ntasks)]:
+            bad.append(f'{case} 러너: #SBATCH -n {nt} vs 요청 {ntasks}')
+        if npv != [int(ntasks)] or f'mpirun {MPIRUN_FLAGS} -np {int(ntasks)}' not in body0:
+            bad.append(f'{case} 러너: mpirun -np {npv} / "{MPIRUN_FLAGS}" 필요 (요청 {ntasks})')
     body = _strip_comments_keep_sbatch(text)
     for what, rx, want in (('job-name', _RE_RUN_JOB, case),
                            ('output', _RE_RUN_OUT, case),
@@ -442,6 +534,11 @@ def main(argv=None):
     ap.add_argument('--pure-se', action='append', default=[], metavar='CASE:R_SE_UM:VOLFRAC:SEED',
                     help='순수 SE 판정 시험 덱 (docs/reviews/pure_se_union_prereg_20260927.md) — '
                          '--template-2t 필수 · --template-run 은 있으면 러너도 만든다 · 설계 CSV 흐름과 따로 돈다')
+    ap.add_argument('--ntasks', type=int, default=None,
+                    help='러너 코어 수 — `#SBATCH -n N` 과 `mpirun --oversubscribe --bind-to none -np N` 를 짝으로 '
+                         '바꾼다 (안 주면 러너 자원은 템플릿 그대로)')
+    ap.add_argument('--procs', default=PURE_SE_PROCS,
+                    help=f'순수 SE 덱의 processors 줄 (기본 "{PURE_SE_PROCS}" — x·y 분할).  "none" 이면 넣지 않는다')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
@@ -505,8 +602,8 @@ def main(argv=None):
         text = render(t3 if nt == 3 else t2, r, c3 if nt == 3 else c2)
         bad += roundtrip(r, text)
         made[r['id']] = text
-        rtext = render_runner(trun, r['id'], crun)
-        bad += roundtrip_runner(r['id'], rtext)
+        rtext = render_runner(trun, r['id'], crun, a.ntasks)
+        bad += roundtrip_runner(r['id'], rtext, a.ntasks)
         runs[r['id']] = rtext
     print(f'\n왕복검사 {len(rows)}건 — 불일치 {len(bad)}건')
     for b in bad[:12]:
@@ -552,11 +649,35 @@ def main(argv=None):
     return 0
 
 
+def am_references(text: str) -> list[str]:
+    """순수 SE 덱 **본문**에서 AM 에 기대는 줄 — AM 템플릿 정의 · 분포 줄 · r_AM 변수 정의는 뺀다.
+
+    순수 SE 덱에 AM 이 0 개여도 LHS 프로토콜의 일부 (플래튼 높이 = zmax + r_AM + 여유 · 플래튼 메시 재질
+    type 1) 는 **일부러 그대로 둔다** — lhsx mono 덱과 같은 조건이어야 비교가 서기 때문이다.  여기서 그
+    줄들을 보여줘서, 사람이 "의도대로 남긴 것" 인지 확인하게 한다 (막지는 않는다).
+    """
+    d = parse_deck(text)
+    am = [p for p in d['pts'] if p['density'] > 3000]
+    if not am:
+        return []
+    rv, fx = re.escape(am[0]['rvar']), re.escape(am[0]['fix'])
+    out = []
+    for i, ln in enumerate(_strip_comments(text).split('\n'), 1):
+        s = ' '.join(ln.split())
+        if (not s or re.match(rf'variable {rv} equal', s) or re.match(rf'fix {fx} all particletemplate', s)
+                or 'particledistribution/discrete' in s):
+            continue
+        if re.search(rf'\$\{{{rv}\}}|\bv_{rv}\b|\b{fx}\b|\btype 1\b', s):
+            out.append(f'{i}: {s}')
+    return out
+
+
 def _main_pure_se(a) -> int:
     """`--pure-se` 흐름 — 2-type 실물 템플릿에서 순수 SE 덱 (과 러너) 을 만들고 되읽어 대조한 뒤에만 쓴다."""
     import json as _json
     if not a.template_2t:
         raise SystemExit('⛔ --pure-se 는 --template-2t (2-type 실물 덱) 가 필요하다')
+    procs = None if str(a.procs).strip().lower() in ('none', '') else ' '.join(str(a.procs).split())
     t2 = open(a.template_2t, encoding='utf-8').read()
     c2 = _tmpl_case(t2)
     #  ★ 템플릿은 **봉인 상자에 기록된 그 실물 덱**이어야 한다 — lhsx mono 덱과 같은 프로토콜이어야 비교가 선다
@@ -578,8 +699,8 @@ def _main_pure_se(a) -> int:
         case, r_se, vf, seed = p[0], float(p[1]), float(p[2]), int(p[3])
         if not re.fullmatch(r'[A-Za-z0-9_]+', case) or case in made:
             raise SystemExit(f'⛔ 케이스명 {case} — 영숫자·밑줄만, 중복 금지')
-        text = render_pure_se(t2, case, r_se, vf, seed, c2)
-        bad += roundtrip_pure_se(case, r_se, vf, seed, text)
+        text = render_pure_se(t2, case, r_se, vf, seed, c2, procs)
+        bad += roundtrip_pure_se(case, r_se, vf, seed, text, procs)
         made[case] = text
         specs.append(dict(id=case, r_SE_um=r_se, volfrac=vf, seed=seed))
     trun = crun = None
@@ -587,11 +708,23 @@ def _main_pure_se(a) -> int:
         trun = open(a.template_run, encoding='utf-8').read()
         crun = _runner_case(trun)
         for case in made:
-            runs[case] = render_runner(trun, case, crun)
-            bad += roundtrip_runner(case, runs[case])
-    print(f'템플릿 2-type {c2} · 순수 SE {len(made)} 건 · 러너 {"있음 (" + crun + ")" if trun else "없음"}')
+            runs[case] = render_runner(trun, case, crun, a.ntasks)
+            bad += roundtrip_runner(case, runs[case], a.ntasks)
+    elif a.ntasks is not None:
+        raise SystemExit('⛔ --ntasks 는 --template-run 이 있어야 쓴다 (러너를 만들 때만 의미가 있다)')
+    print(f'템플릿 2-type {c2} · 순수 SE {len(made)} 건 · 러너 {"있음 (" + crun + ")" if trun else "없음"}'
+          f' · 코어 {a.ntasks if a.ntasks is not None else "템플릿 그대로"} · processors {procs or "없음"}')
     for sp in specs:
         print(f"  {sp['id']}: r_SE {sp['r_SE_um']} µm · volfrac {sp['volfrac']} · seed {sp['seed']}")
+    _first = next(iter(made.values()))
+    _dd = parse_deck(_first)
+    print('  분포: ' + ' · '.join(f"{p['fix']}(type {p['atom_type']}) {p['weight']:g}" for p in _dd['pts'])
+          + f"  → 최소 atom_type {_dd['min_type']} (LIGGGHTS 는 1 이어야 돈다)")
+    _refs = am_references(_first)
+    if _refs:
+        print('  ℹ AM 에 기대는 줄 (LHS 프로토콜 그대로 — 의도대로 남김, 확인만):')
+        for _r in _refs:
+            print('     ' + _r)
     print(f'왕복검사 — 불일치 {len(bad)} 건')
     for b in bad:
         print('  ⛔', b)
@@ -624,6 +757,9 @@ def _main_pure_se(a) -> int:
     mp = os.path.join(a.outdir, 'deck_manifest.json')
     with open(mp, 'w', encoding='utf-8') as fh:
         _json.dump(dict(purpose='pure_se_union_prereg_20260927', n=len(man), specs=specs,
+                        am_template='분포에 가중 0 으로 유지 (LIGGGHTS 타입 1 규칙 · 실패 ③)',
+                        processors=procs, ntasks=a.ntasks,
+                        mpirun=(f'mpirun {MPIRUN_FLAGS} -np {a.ntasks}' if a.ntasks is not None else None),
                         template_2t=dict(file=os.path.basename(a.template_2t), case=c2,
                                          sha256=hashlib.sha256(t2.encode('utf-8')).hexdigest()),
                         template_run=(dict(file=os.path.basename(a.template_run), case=crun) if trun else None),
@@ -651,6 +787,9 @@ def _selftest():
 # ============================================================
 variable r_AM   equal 0.001
 variable r_SE    equal 0.001
+region reg_box block 0.0 0.05 0.0 0.05 -0.01 1.0 units box
+create_box      2 reg_box
+fix zwall_bot all wall/gran model hooke/hysteresis tangential history rolling_friction cdt primitive type 2 zplane 0.0
 fix pts1 all particletemplate/sphere 15485863 atom_type 1 density constant 4800 radius constant ${r_AM}
 fix pts2 all particletemplate/sphere 32452843 atom_type 2 density constant 2000 radius constant ${r_SE}
 fix pdd_mix all particledistribution/discrete 49979687 2 pts1 0.800000 pts2 0.200000
@@ -658,6 +797,8 @@ print "====== INSERTING (lhs00_110, mono_AM_S, seed=11059) ======"
 fix ins_mix all insert/pack seed 11059 distributiontemplate pdd_mix &
     volumefraction_region 0.250627
 shell mkdir post_lhs00_110
+variable plate_z equal ${z_max}+${r_AM}+${plate_margin}
+fix top_mesh all mesh/surface/stress file plate_lhs00_110.stl type 1 scale 1.0 reference_point 0 0 0
 """
     T3 = """# ============================================================
 # lhs00_000: bimodal (3-type) | LHS design
@@ -667,6 +808,8 @@ shell mkdir post_lhs00_110
 variable r_AM_P  equal 0.0055
 variable r_AM_S  equal 0.0005
 variable r_SE    equal 0.001
+region reg_box block 0.0 0.05 0.0 0.05 -0.01 1.0 units box
+create_box      3 reg_box
 fix pts1 all particletemplate/sphere 15485863 atom_type 1 density constant 4800 radius constant ${r_AM_P}
 fix pts2 all particletemplate/sphere 15485867 atom_type 2 density constant 4800 radius constant ${r_AM_S}
 fix pts3 all particletemplate/sphere 32452843 atom_type 3 density constant 2000 radius constant ${r_SE}
@@ -770,6 +913,29 @@ mpirun -np 1 lmp_mpi -in input_lhs00_000.liggghts
     no_time = '\n'.join(l for l in rr.split('\n') if '--time' not in l)
     chk('★②-d 벽시간이 없으면 잡는다', roundtrip_runner('lhsx_007', no_time) != [])
 
+    #  ②-e 러너 코어 수 (2026-09-27 실패 ①② — 사람이 sed 로 -n 만 바꿔 OpenMPI 바인딩 오류) ──
+    r15 = render_runner(TRUN, 'pse_r050_a', 'lhs00_000', 15)
+    chk('★②-e ntasks 15: `#SBATCH -n 15` · `mpirun --oversubscribe --bind-to none -np 15` 짝',
+        '#SBATCH -n 15' in r15 and 'mpirun --oversubscribe --bind-to none -np 15 lmp_mpi' in r15
+        and '-np 1 ' not in r15, [l for l in r15.split('\n') if 'mpirun' in l or '-n ' in l])
+    chk('②-e ntasks 러너 왕복 일치', roundtrip_runner('pse_r050_a', r15, 15) == [],
+        str(roundtrip_runner('pse_r050_a', r15, 15)))
+    _r2x = render_runner(r15, 'pse_r075_a', 'pse_r050_a', 15)
+    chk('②-e 이미 --oversubscribe 가 있는 러너도 한 번만 바뀐다 (플래그 중복 없음)',
+        _r2x.count('--oversubscribe') == 1 and _r2x.count('--bind-to') == 1
+        and roundtrip_runner('pse_r075_a', _r2x, 15) == [], [l for l in _r2x.split('\n') if 'mpirun' in l])
+    half = r15.replace('-np 15 lmp_mpi', '-np 1 lmp_mpi')
+    chk('★②-e -n 과 -np 가 갈리면 잡는다 (반쯤 고친 러너)', roundtrip_runner('pse_r050_a', half, 15) != [])
+    noflag = r15.replace(f'mpirun {MPIRUN_FLAGS} -np 15', 'mpirun -np 15')
+    chk('★②-e --oversubscribe --bind-to none 이 빠지면 잡는다', roundtrip_runner('pse_r050_a', noflag, 15) != [])
+    for _bad_t, _why in ((TRUN.replace('#SBATCH -n 1', '#SBATCH --cpus-per-task=1'), '-n 줄 없는 러너'),
+                         (TRUN, 'ntasks 61')):
+        try:
+            render_runner(_bad_t, 'pse_x', 'lhs00_000', 61 if 'ntasks' in _why else 15)
+            chk(f'★②-e {_why} 거부', False, '거부하지 않았다')
+        except SystemExit:
+            chk(f'★②-e {_why} 거부', True)
+
     #  ③ 음성 대조 — 왕복검사가 **정말** 잡는가
     swapped = out3.replace('pts1 0.400000', 'pts1 0.200000').replace(
         'pts2 0.200000', 'pts2 0.400000')
@@ -801,29 +967,67 @@ mpirun -np 1 lmp_mpi -in input_lhs00_000.liggghts
     except SystemExit:
         chk('★⑤ sha 불일치 거부', True)
 
+    #  ③-b 분포 최소 atom_type 이 1 이 아니면 (LIGGGHTS properties.cpp:120) 설계 흐름도 잡는다
+    shifted = out2.replace('atom_type 2 density', 'atom_type 3 density').replace(
+        'atom_type 1 density', 'atom_type 2 density')
+    chk('★③-b 분포 타입이 2 부터면 잡는다', roundtrip(r2, shifted) != [], str(roundtrip(r2, shifted)[:1]))
+
     #  ⑥ 순수 SE 판정 시험 (docs/reviews/pure_se_union_prereg_20260927.md) — 2-type 실물 덱에서
-    #    AM 입자 템플릿 줄을 빼고 분포를 SE 하나로.  나머지 규약 (벽 · 플래튼 · 압력 · 재질) 은 한 글자도 안 바꾼다.
+    #    **AM 템플릿은 정의·분포에 그대로 두고 가중만 0**, SE 가중 1.  (실패 ③ · render_pure_se ① 참조)
+    #    나머지 규약 (벽 · 플래튼 · 압력 · 재질 · 템플릿 정의) 은 한 글자도 안 바꾼다.
     try:
         ps = render_pure_se(T2, 'pse_r050_a', 0.5, 0.22, 20011, 'lhs00_110')
         dps = parse_deck(ps)
-        chk('⑥ 순수 SE: 입자 템플릿 1 · 분포 1', dps['ntype'] == 1 and dps['n_declared'] == 1,
+        chk('⑥ 순수 SE: 템플릿 2 개가 **둘 다 분포에** (선언 2)', dps['ntype'] == 2 and dps['n_declared'] == 2,
             str((dps['ntype'], dps['n_declared'])))
-        chk('⑥ 순수 SE: SE 가중 1 · AM 없음', abs(dps['pdd_SE'] - 1.0) < 1e-12 and dps['w_AM'] == [],
-            str((dps['pdd_SE'], dps['w_AM'])))
+        _am = [p for p in dps['pts'] if p['density'] > 3000]
+        chk('★⑥ 순수 SE: AM(type 1) 가중 정확히 0 · SE 가중 정확히 1',
+            len(_am) == 1 and _am[0]['atom_type'] == 1 and _am[0]['weight'] == 0.0 and dps['pdd_SE'] == 1.0,
+            str([(p['fix'], p['atom_type'], p['weight']) for p in dps['pts']]))
+        chk('★⑥ 순수 SE: 분포 최소 atom_type 1 (LIGGGHTS 타입 규칙)', dps['min_type'] == 1, str(dps['min_type']))
+        chk('⑥ 순수 SE: AM 템플릿 정의 줄은 템플릿과 한 글자도 같다',
+            [l for l in T2.split('\n') if l.startswith('fix pts1 ')][0] in ps.split('\n'))
         chk('⑥ 순수 SE: r_SE 0.5 µm · volfrac 0.22 · seed 20011',
             abs(dps['r_SE_um'] - 0.5) < 1e-9 and abs(dps['volfrac'] - 0.22) < 1e-9 and dps['seed'] == 20011,
             str((dps['r_SE_um'], dps['volfrac'], dps['seed'])))
         chk('⑥ 순수 SE: 케이스명 · kind 헤더 · 템플릿명 잔존 0',
             dps['header_case'] == 'pse_r050_a' and dps['header_kind'] == 'pure_SE' and 'lhs00_110' not in ps,
             str((dps['header_case'], dps['header_kind'])))
+        chk('★⑥ 순수 SE: processors "* * 1" 이 create_box 앞에 한 번',
+            dps['processors'] == '* * 1' and dps['processors_before_box']
+            and ps.count('\nprocessors ') == 1, str((dps['processors'], dps['processors_before_box'])))
         chk('⑥ 순수 SE: 왕복검사 불일치 0', roundtrip_pure_se('pse_r050_a', 0.5, 0.22, 20011, ps) == [],
             str(roundtrip_pure_se('pse_r050_a', 0.5, 0.22, 20011, ps)))
         chk('⑥ 순수 SE: 왕복검사가 틀린 seed 를 잡는다', roundtrip_pure_se('pse_r050_a', 0.5, 0.22, 20021, ps) != [])
-    except (NameError, SystemExit, ValueError) as e:
+        #  ★ 실패 ③ 의 두 형태 — 둘 다 LIGGGHTS 에서 "Atom types must start from 1" 로 죽는 덱이다
+        _pts1 = [l for l in ps.split('\n') if l.startswith('fix pts1 ')][0] + '\n'
+        old_gen = ps.replace(_pts1, '').replace('2 pts1 0.000000 pts2 1.000000', '1 pts2 1.000000')
+        chk('★⑥ 옛 판 (AM 템플릿 줄 삭제 · 분포 SE 단독) 을 잡는다',
+            roundtrip_pure_se('pse_r050_a', 0.5, 0.22, 20011, old_gen) != [])
+        def_only = ps.replace('2 pts1 0.000000 pts2 1.000000', '1 pts2 1.000000')
+        chk('★⑥ 실패 요약의 처방 (AM 정의만 유지 · 분포에서 뺌) 을 잡는다',
+            roundtrip_pure_se('pse_r050_a', 0.5, 0.22, 20011, def_only) != [])
+        some_am = ps.replace('pts1 0.000000', 'pts1 0.000001').replace('pts2 1.000000', 'pts2 0.999999')
+        chk('★⑥ AM 가중이 0 이 아니면 잡는다', roundtrip_pure_se('pse_r050_a', 0.5, 0.22, 20011, some_am) != [])
+        no_proc = ps.replace('processors      * * 1\n', '')
+        chk('★⑥ processors 줄이 빠지면 잡는다', roundtrip_pure_se('pse_r050_a', 0.5, 0.22, 20011, no_proc) != [])
+        ps0 = render_pure_se(T2, 'pse_r050_a', 0.5, 0.22, 20011, 'lhs00_110', None)
+        chk('⑥ procs=None 이면 processors 줄을 넣지 않고 왕복도 통과',
+            'processors' not in ps0 and roundtrip_pure_se('pse_r050_a', 0.5, 0.22, 20011, ps0, None) == [])
+        tp = T2.replace('region reg_box', 'processors      * * *\nregion reg_box')
+        psr = render_pure_se(tp, 'pse_r050_a', 0.5, 0.22, 20011, 'lhs00_110')
+        chk('⑥ 템플릿에 processors 가 있으면 그 줄을 바꾼다 (중복 없음)',
+            psr.count('\nprocessors ') == 1 and 'processors      * * 1' in psr)
+        _refs = am_references(ps)
+        chk('⑥ AM 참조 보고: 플래튼 높이 (r_AM) · 플래튼 메시 재질 (type 1) 을 보여준다',
+            any('plate_z' in r for r in _refs) and any('top_mesh' in r for r in _refs), str(_refs))
+    except (NameError, SystemExit, ValueError, IndexError) as e:
         chk('⑥ 순수 SE 덱 생성', False, f'{type(e).__name__}: {e}'[:80])
     for _args, _why in (((T3, 'x', 0.5, 0.22, 20011, 'lhs00_000'), '3-type 템플릿'),
                         ((T2, 'x', 0.5, 0.22, 20013, 'lhs00_110'), '비소수 seed'),
-                        ((T2, 'x', 0.5, 0.22, 9973, 'lhs00_110'), 'seed ≤ 10000')):
+                        ((T2, 'x', 0.5, 0.22, 9973, 'lhs00_110'), 'seed ≤ 10000'),
+                        ((T2.replace('2 pts1 0.800000 pts2 0.200000', '2 pts2 0.200000 pts1 0.800000'),
+                          'x', 0.5, 0.22, 20011, 'lhs00_110'), '분포 순서가 실물과 다른 템플릿')):
         try:
             render_pure_se(*_args)
             chk(f'★⑥ {_why} 거부', False, '거부하지 않았다')
