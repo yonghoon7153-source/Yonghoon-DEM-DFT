@@ -5084,6 +5084,20 @@
     "scripts/check_contact_validity.py",
     "scripts/measure_mixing_index.py"
    ]
+  },
+  {
+   "id": "SELF-54",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "선배 세션 지적 (사용자 경유, 2026-09-27) + 사용자 (INSERTING 을 보고 취소)",
+   "opened_in": "docs/reviews/pure_se_union_prereg_20260927.md",
+   "title": "순수 SE r050_a · r075_a 를 체크포인트에서 잇지 않고 INSERTING 부터 재발사 (232384 · 232385) — 체크포인트 미확인 · \"LHS 덱 재개 도구 없음\" · \"체크포인트는 PHASE 3 에서만\" 둘 다 틀림 (덱을 95–140 행만 읽음)",
+   "note": "15 MPI 로 2 h 29 m 돈 런 (231946 · 231947) 을 사용자가 \"잠깐 stop 하고 30 30\" 으로 바꾸자고 했는데, 체크포인트를 보지 않고 처음부터 다시 돌리게 했다 — 사용자가 INSERTING 을 보고 곧바로 취소.  실제 덱: 84 행 `restart 50000 restart_<case>/restart_settling_*.bin` · 87 행 `write_restart restart_after_settling.bin` · 130 행 `restart_compress_*` — PHASE 1 부터 체크포인트가 있다.  ibb 에 검증된 재개 도구 `~/dem_test/dem_restart.py` 가 있다.  같은 날 확인 없이 준 명령 셋도 같은 뿌리: `ibb:` 접속 별칭 가정 (없음) · 다른 PC 의 다운로드 경로 · 러너 `--output=logs/` 상대경로를 안 보고 케이스 폴더에서 sbatch → 232358 · 232359 0 초 FAILED.  처방 = CLAUDE.md \"멈춘 런 재개 체크리스트\" (선배 지시 6 단계: 멈춘 폴더 확인 · 원본 보존 · 검증 도구 · 러너 짝과 logs/ · 2000 step 대조 시험 · 처음부터는 보고·승인 뒤) · 명령을 주기 전에 실제 파일을 먼저 본다.  남은 일: 멈춘 폴더의 최신 체크포인트에서 dem_restart.py 로 30 MPI 재개 (2000 step 대조 뒤 본 제출).",
+   "evidence_tests": [
+    "CLAUDE.md",
+    "docs/reviews/pure_se_union_prereg_20260927.md"
+   ]
   }
  ]
 }
