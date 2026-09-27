@@ -1,0 +1,65 @@
+{
+  "identity": {
+    "manifest": "8118bbc023d6699cd7cd1b6e6afd32872e0699af70b412e15b89365e556ee2f1",
+    "tool": "1d0f4566ab93694c39a3031d041a4751383c5df23db8eacc84e079fc176424be",
+    "verified_files": 93
+  },
+  "titel_boundary": {
+    "partial_last_failed": {
+      "status": "TITEL_TRUNCATED",
+      "attempt": "0",
+      "why": "OUTCAR 마지막 TITEL 'PAW_PBE S 06' 이 기대 'PAW_PBE S 06Sep2000' 의 앞부분 문자열 — 잘린 줄일 수 있어 **자동 확인 불가** (모순 확정 아님 · 통과·재시도 자격 없음 · 원문 확인·새 승인으로만 해제)",
+      "r1_ignored": "첫 시도 상태 TITEL_TRUNCATED 는 재시도 자격이 아니다 (사전등록: 실행 실패·미종료·미수렴만)"
+    },
+    "partial_last_success": {
+      "status": "TITEL_TRUNCATED",
+      "attempt": "0",
+      "why": "OUTCAR 마지막 TITEL 'PAW_PBE S 06' 이 기대 'PAW_PBE S 06Sep2000' 의 앞부분 문자열 — 잘린 줄일 수 있어 **자동 확인 불가** (모순 확정 아님 · 통과·재시도 자격 없음 · 원문 확인·새 승인으로만 해제)",
+      "r1_ignored": "첫 시도 상태 TITEL_TRUNCATED 는 재시도 자격이 아니다 (사전등록: 실행 실패·미종료·미수렴만)"
+    },
+    "last_of_full_list_truncated": {
+      "status": "TITEL_TRUNCATED",
+      "attempt": "0",
+      "why": "OUTCAR 마지막 TITEL 'PAW_PBE Ag 02Apr' 이 기대 'PAW_PBE Ag 02Apr2005' 의 앞부분 문자열 — 잘린 줄일 수 있어 **자동 확인 불가** (모순 확정 아님 · 통과·재시도 자격 없음 · 원문 확인·새 승인으로만 해제)",
+      "r1_ignored": null
+    },
+    "wrong_species_partial": {
+      "status": "POTCAR_MISMATCH",
+      "attempt": "0",
+      "why": "OUTCAR TITEL ['PAW_PBE Li_sv 10Sep2004', 'PAW_PBE S'] ≠ POTCAR.titel ['PAW_PBE Li_sv 10Sep2004', 'PAW_PBE P 06Sep2000', 'PAW_PBE S 06Sep2000', 'PAW_PBE Cl 06Sep2000', 'PAW_PBE Ag 02Apr2005'] (접두 아님 — 다른 종·날짜·순서·추가)",
+      "r1_ignored": "첫 시도 상태 POTCAR_MISMATCH 는 재시도 자격이 아니다 (사전등록: 실행 실패·미종료·미수렴만)"
+    },
+    "complete_prefix_failed": {
+      "status": "OK",
+      "attempt": "r1",
+      "why": null,
+      "r1_ignored": null
+    },
+    "complete_prefix_success": {
+      "status": "POTCAR_UNVERIFIED",
+      "attempt": "0",
+      "why": "성공한 실행인데 OUTCAR TITEL 이 기대 목록의 앞부분만 있다 ['PAW_PBE Li_sv 10Sep2004', 'PAW_PBE P 06Sep2000'] (불완전 출력 — 통과 아님 · 재시도 자격 아님)",
+      "r1_ignored": "첫 시도 상태 POTCAR_UNVERIFIED 는 재시도 자격이 아니다 (사전등록: 실행 실패·미종료·미수렴만)"
+    }
+  },
+  "noentropy_missing_nonpilot": {
+    "job_status": "OK",
+    "E_noentropy_eV": null,
+    "G5_status": "PASS",
+    "samples": {
+      "③": {
+        "W_J_m2": 0.49999999967127834,
+        "W_sigma0_J_m2": 0.49999999967127834,
+        "mTS_term_J_m2": null
+      }
+    }
+  },
+  "noentropy_zero_nonpilot": {
+    "job_status": "OK",
+    "E_noentropy_eV": 0.0,
+    "samples": {
+      "③": -78.73255211210372
+    }
+  },
+  "finished": "No actual scientific calculation."
+}

@@ -3,7 +3,7 @@ title: "리뷰 CK 프롬프트 — A′ V5 VASP 외주 준비본 v6 재리뷰 (C
 date: 2026-09-27
 updated: 2026-09-27
 tags: [review, codex, adhesion, wad, prereg, vasp, outsourcing, lpscl, silver, uma, d3, dipole, g4, g5, pp-registry, packaging, re-review]
-status: 발송 대기 (1저자) — 도구·패키지·개정 3 v6 는 커밋 f4441c426 에 고정 (원격)
+status: 발송 완료 · 회신 수령 2026-09-27 **GO** (`codex_CK_reply_…` · 준비본 v6 기술 검토 · 새 P0/P1 없음 · P2 정리 2 → 개정 v6.1) → 1저자 비준 대기
 confidence: medium
 verificationStatus: unverified
 explored: false
