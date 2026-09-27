@@ -60,6 +60,10 @@
 
 ## 5. 실행 (v100) — 순서
 
+⚠ **정정 2026-09-28 — 이 절의 `~/dem-sk` 는 v100 에 없다** (사용자 실측: `python3: can't open file '/home/ubuntu/dem-sk/scripts/fit_dh_collapse.py'`).  09-26 에 확인 없이 적은 경로다 (원장 `SELF-55`).
+`scripts/run_se_curve_batch.sh` 의 기본 코드 경로는 `/home/ubuntu/dem-stoic` 이고, `~/*/` 아래에는 `fit_dh_collapse.py` 의 마지막 변경 커밋 `e49847e53` 을 담은 worktree 가 없었다.
+**A 의 8 런은 이미 끝났다** (09-27 22:57:40 · 8/8 EXIT 0 · 288 json 16 개) — 사용자가 실제로 띄운 코드 경로는 확인 뒤 여기에 적는다.  그때까지 아래 명령의 `~/dem-sk` 는 **그 경로로 바꿔 읽는다**.
+
 **A. d_h 288 대등화 8 런 (verdict §⑩ 에 08-11 등록 — 그대로)**
 ```
 cd ~/dem-sk && git fetch origin claude/stoic-knuth-NObVQ && git checkout claude/stoic-knuth-NObVQ && git pull --ff-only && git status --short   # 깨끗해야

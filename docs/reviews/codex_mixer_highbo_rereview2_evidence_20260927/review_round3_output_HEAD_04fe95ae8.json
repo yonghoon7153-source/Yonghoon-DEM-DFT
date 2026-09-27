@@ -1,0 +1,1248 @@
+{
+  "receipt_nominal_no_binary_no_logs": {
+    "test": "restart_phase",
+    "passed": true,
+    "period": 0.799562,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "dt": 7.055e-07,
+    "n1": 20000,
+    "n2": 10000,
+    "steps_checked": [
+      25000,
+      30000
+    ],
+    "angle_error_deg": 0.0,
+    "reset_alternative_gap_deg": 6.352978255594928,
+    "ab_max_vertex_diff_m": 0.0,
+    "rows": [
+      {
+        "step": 25000,
+        "observed_deg": 7.941222819493666,
+        "expected_continuity_deg": 7.941222819493666,
+        "expected_reset_deg": 1.5882445638987381,
+        "error_deg": 0.0,
+        "reset_gap_deg": 6.352978255594928,
+        "ab_max_vertex_diff_m": 0.0
+      },
+      {
+        "step": 30000,
+        "observed_deg": 9.529467383392404,
+        "expected_continuity_deg": 9.529467383392404,
+        "expected_reset_deg": 3.1764891277974763,
+        "error_deg": 0.0,
+        "reset_gap_deg": 6.352978255594928,
+        "ab_max_vertex_diff_m": 0.0
+      }
+    ],
+    "liggghts_version": "",
+    "binary_path": null,
+    "binary_sha256": null,
+    "deck_source": "synthetic",
+    "deck_source_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "date": "2026-09-27",
+    "note": "바이너리의 성질 (read_restart 뒤에도 메시 회전 위상이 이어진다) 의 실측 — 어느 런의 벽 좌표가 아니다.  바이너리가 바뀌면 다시 만든다."
+  },
+  "receipt_missing_all_A": {
+    "test": "restart_phase",
+    "passed": true,
+    "period": 0.799562,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "dt": 7.055e-07,
+    "n1": 20000,
+    "n2": 10000,
+    "steps_checked": [
+      25000,
+      30000
+    ],
+    "angle_error_deg": 0.0,
+    "reset_alternative_gap_deg": 6.352978255594928,
+    "ab_max_vertex_diff_m": 0.0,
+    "rows": [
+      {
+        "step": 25000,
+        "observed_deg": 7.941222819493666,
+        "expected_continuity_deg": 7.941222819493666,
+        "expected_reset_deg": 1.5882445638987381,
+        "error_deg": 0.0,
+        "reset_gap_deg": 6.352978255594928,
+        "ab_max_vertex_diff_m": "nan"
+      },
+      {
+        "step": 30000,
+        "observed_deg": 9.529467383392404,
+        "expected_continuity_deg": 9.529467383392404,
+        "expected_reset_deg": 3.1764891277974763,
+        "error_deg": 0.0,
+        "reset_gap_deg": 6.352978255594928,
+        "ab_max_vertex_diff_m": "nan"
+      }
+    ],
+    "liggghts_version": "",
+    "binary_path": null,
+    "binary_sha256": null,
+    "deck_source": "synthetic",
+    "deck_source_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "date": "2026-09-27",
+    "note": "바이너리의 성질 (read_restart 뒤에도 메시 회전 위상이 이어진다) 의 실측 — 어느 런의 벽 좌표가 아니다.  바이너리가 바뀌면 다시 만든다."
+  },
+  "receipt_one_B_missing_all_A": {
+    "test": "restart_phase",
+    "passed": true,
+    "period": 0.799562,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "dt": 7.055e-07,
+    "n1": 20000,
+    "n2": 10000,
+    "steps_checked": [
+      25000
+    ],
+    "angle_error_deg": 0.0,
+    "reset_alternative_gap_deg": 6.352978255594928,
+    "ab_max_vertex_diff_m": 0.0,
+    "rows": [
+      {
+        "step": 25000,
+        "observed_deg": 7.941222819493666,
+        "expected_continuity_deg": 7.941222819493666,
+        "expected_reset_deg": 1.5882445638987381,
+        "error_deg": 0.0,
+        "reset_gap_deg": 6.352978255594928,
+        "ab_max_vertex_diff_m": "nan"
+      }
+    ],
+    "liggghts_version": "",
+    "binary_path": null,
+    "binary_sha256": null,
+    "deck_source": "synthetic",
+    "deck_source_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "date": "2026-09-27",
+    "note": "바이너리의 성질 (read_restart 뒤에도 메시 회전 위상이 이어진다) 의 실측 — 어느 런의 벽 좌표가 아니다.  바이너리가 바뀌면 다시 만든다."
+  },
+  "receipt_only_step0": {
+    "test": "restart_phase",
+    "passed": true,
+    "period": 0.799562,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "dt": 7.055e-07,
+    "n1": 20000,
+    "n2": 10000,
+    "steps_checked": [
+      0
+    ],
+    "angle_error_deg": 0.0,
+    "reset_alternative_gap_deg": 6.352978255594928,
+    "ab_max_vertex_diff_m": 0.0,
+    "rows": [
+      {
+        "step": 0,
+        "observed_deg": 0.0,
+        "expected_continuity_deg": 0.0,
+        "expected_reset_deg": -6.352978255594928,
+        "error_deg": 0.0,
+        "reset_gap_deg": 6.352978255594928,
+        "ab_max_vertex_diff_m": 0.0
+      }
+    ],
+    "liggghts_version": "",
+    "binary_path": null,
+    "binary_sha256": null,
+    "deck_source": "synthetic",
+    "deck_source_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "date": "2026-09-27",
+    "note": "바이너리의 성질 (read_restart 뒤에도 메시 회전 위상이 이어진다) 의 실측 — 어느 런의 벽 좌표가 아니다.  바이너리가 바뀌면 다시 만든다."
+  },
+  "receipt_load_mutants": {
+    "null_binary": true,
+    "nonsense_binary": true,
+    "wrong_dt": true,
+    "wrong_deck": true,
+    "zero_axis": true,
+    "nan_period": true,
+    "string_false": true
+  },
+  "geometry": {
+    "r_SE_m": 7.57e-05,
+    "apo_m": 0.013095096724682077,
+    "facets": 39,
+    "eps_deg": 0.05,
+    "dt": 7.055e-07,
+    "period": 0.799562,
+    "t0": 362664,
+    "dump_every": 45333
+  },
+  "angle_interior_false_pass": {
+    "truth_max": 0.010008000000065763,
+    "result": {
+      "verdict": "PASS",
+      "phase_status": "receipt",
+      "wall_max": 0.009991627136200032,
+      "wall_bound_worst": 0.010290896717360927,
+      "wall_bound_best": -0.5527597215540283,
+      "pp_max": 0.0,
+      "tech": [],
+      "reject": [],
+      "window": [
+        362664,
+        453330
+      ],
+      "n_frames": 3
+    }
+  },
+  "angle_tolerance_side": {
+    "relative_overlap_at_0_minus_plus": [
+      0.005000000000030031,
+      -0.004814851428373457,
+      0.01468387223146585
+    ],
+    "increase_percentage_points": 0.9683872231435819
+  },
+  "contact_missing_prefix": {
+    "verdict": "TECH",
+    "phase_status": "bounded",
+    "wall_max": -20.499867899603704,
+    "wall_bound_worst": -20.499867899603704,
+    "wall_bound_best": -20.499867899603704,
+    "pp_max": 0.0,
+    "tech": [
+      "창 안 덤프 결손 8 개 (step [45333, 90666, 135999, 181332, 226665, 271998]…) — 미관측 구간에 통과 증서를 줄 수 없다"
+    ],
+    "reject": [],
+    "window": [
+      0,
+      453330
+    ],
+    "n_frames": 3
+  },
+  "missing_id_after_t0": {
+    "verdict": "PASS",
+    "phase_status": "bounded",
+    "wall_max": -20.499867899603704,
+    "wall_bound_worst": -20.499867899603704,
+    "wall_bound_best": -20.499867899603704,
+    "pp_max": 0.0,
+    "tech": [],
+    "reject": [],
+    "window": [
+      362664,
+      453330
+    ],
+    "n_frames": 3
+  },
+  "missing_headers": {
+    "verdict": "PASS",
+    "phase_status": "bounded",
+    "wall_max": -20.499867899603704,
+    "wall_bound_worst": -20.499867899603704,
+    "wall_bound_best": -20.499867899603704,
+    "pp_max": 0.0,
+    "tech": [],
+    "reject": [],
+    "window": [
+      362664,
+      453330
+    ],
+    "n_frames": 3
+  },
+  "fractional_type": {
+    "verdict": "PASS",
+    "phase_status": "bounded",
+    "wall_max": -20.499867899603704,
+    "wall_bound_worst": -20.499867899603704,
+    "wall_bound_best": -20.499867899603704,
+    "pp_max": 0.0,
+    "tech": [],
+    "reject": [],
+    "window": [
+      362664,
+      453330
+    ],
+    "n_frames": 3
+  },
+  "mesh_missing_caps": {
+    "verdict": "PASS",
+    "phase_status": "mesh-dump",
+    "wall_max": -171.98660715083878,
+    "wall_bound_worst": -171.9866071508388,
+    "wall_bound_best": -172.5496577691102,
+    "pp_max": 0.0,
+    "tech": [],
+    "reject": [],
+    "window": [
+      362664,
+      453330
+    ],
+    "n_frames": 3,
+    "true_complete_wall_overlap": 0.02000000000000053
+  },
+  "reader_nominal": {
+    "t0_step": 200,
+    "S0": 0.25,
+    "SR": 0.006944444444444446,
+    "planned": {
+      "n_revs": 8,
+      "final_bin": 7,
+      "frames_per_rev": 25.00025,
+      "complete": true,
+      "n": 25,
+      "expected": 25,
+      "missing": [],
+      "M_final": 0.45,
+      "M_final_sd": 0.0,
+      "prev_bin": 6,
+      "prev_complete": true,
+      "flat": true,
+      "qc_repr": {
+        "pass": true,
+        "am_mean": 1.0,
+        "se_mean": 1.0,
+        "min_by_type": {
+          "1": 1.0000000000000004,
+          "3": 1.0000000000000002
+        },
+        "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+      }
+    },
+    "smoke": {
+      "bin": 0,
+      "expected": 26,
+      "present": 26,
+      "complete": true,
+      "n": 26,
+      "M_mean": 0.4326923076923077,
+      "qc_repr": {
+        "pass": true,
+        "am_mean": 1.0,
+        "se_mean": 1.0,
+        "min_by_type": {
+          "1": 1.0000000000000004,
+          "3": 1.0000000000000002
+        },
+        "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+      },
+      "tech_smoke": []
+    },
+    "tech": [],
+    "dump_gaps": []
+  },
+  "reader_missing_t0": {
+    "t0_step": 160,
+    "S0": 0.25,
+    "SR": 0.006944444444444446,
+    "planned": {
+      "n_revs": 8,
+      "final_bin": 7,
+      "frames_per_rev": 25.00025,
+      "complete": true,
+      "n": 25,
+      "expected": 25,
+      "missing": [],
+      "M_final": 0.45,
+      "M_final_sd": 0.0,
+      "prev_bin": 6,
+      "prev_complete": true,
+      "flat": true,
+      "qc_repr": {
+        "pass": true,
+        "am_mean": 1.0,
+        "se_mean": 1.0,
+        "min_by_type": {
+          "1": 1.0000000000000004,
+          "3": 1.0000000000000002
+        },
+        "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+      }
+    },
+    "smoke": {
+      "bin": 0,
+      "expected": 26,
+      "present": 25,
+      "complete": false,
+      "n": 25,
+      "M_mean": 0.43200000000000005,
+      "qc_repr": {
+        "pass": true,
+        "am_mean": 1.0,
+        "se_mean": 1.0,
+        "min_by_type": {
+          "1": 1.0000000000000004,
+          "3": 1.0000000000000002
+        },
+        "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+      },
+      "tech_smoke": [
+        "bin 0 결손 1/26 프레임 (step [200])"
+      ]
+    },
+    "tech": [],
+    "dump_gaps": [
+      [
+        160,
+        240
+      ]
+    ]
+  },
+  "reader_offgrid_extra": {
+    "t0_step": 200,
+    "S0": 0.25,
+    "SR": 0.006944444444444446,
+    "planned": {
+      "n_revs": 8,
+      "final_bin": 7,
+      "frames_per_rev": 25.00025,
+      "complete": true,
+      "n": 26,
+      "expected": 25,
+      "missing": [],
+      "M_final": 0.4326923076923077,
+      "M_final_sd": 0.08825226081218282,
+      "prev_bin": 6,
+      "prev_complete": true,
+      "flat": true,
+      "qc_repr": {
+        "pass": true,
+        "am_mean": 1.0,
+        "se_mean": 1.0,
+        "min_by_type": {
+          "1": 1.0000000000000004,
+          "3": 1.0000000000000002
+        },
+        "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+      }
+    },
+    "smoke": {
+      "bin": 0,
+      "expected": 26,
+      "present": 26,
+      "complete": true,
+      "n": 26,
+      "M_mean": 0.4326923076923077,
+      "qc_repr": {
+        "pass": true,
+        "am_mean": 1.0,
+        "se_mean": 1.0,
+        "min_by_type": {
+          "1": 1.0000000000000004,
+          "3": 1.0000000000000002
+        },
+        "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+      },
+      "tech_smoke": []
+    },
+    "tech": [],
+    "dump_gaps": [
+      [
+        7280,
+        7301
+      ],
+      [
+        7301,
+        7320
+      ]
+    ]
+  },
+  "reader_prev_missing": {
+    "t0_step": 200,
+    "S0": 0.25,
+    "SR": 0.006944444444444446,
+    "planned": {
+      "n_revs": 8,
+      "final_bin": 7,
+      "frames_per_rev": 25.00025,
+      "complete": true,
+      "n": 25,
+      "expected": 25,
+      "missing": [],
+      "M_final": 0.45,
+      "M_final_sd": 0.0,
+      "prev_bin": 6,
+      "prev_complete": false,
+      "flat": null,
+      "qc_repr": {
+        "pass": true,
+        "am_mean": 1.0,
+        "se_mean": 1.0,
+        "min_by_type": {
+          "1": 1.0000000000000004,
+          "3": 1.0000000000000002
+        },
+        "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+      }
+    },
+    "smoke": {
+      "bin": 0,
+      "expected": 26,
+      "present": 26,
+      "complete": true,
+      "n": 26,
+      "M_mean": 0.4326923076923077,
+      "qc_repr": {
+        "pass": true,
+        "am_mean": 1.0,
+        "se_mean": 1.0,
+        "min_by_type": {
+          "1": 1.0000000000000004,
+          "3": 1.0000000000000002
+        },
+        "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+      },
+      "tech_smoke": []
+    },
+    "tech": [
+      "평탄 비교 불가 — 직전 bin 6 결손 23/25 프레임 (step [6240, 6280, 6320, 6360]…) — 최종값은 보고하되 평탄 증서 (flat) 는 발행하지 않는다"
+    ],
+    "dump_gaps": [
+      [
+        6200,
+        7160
+      ]
+    ]
+  },
+  "reference_endpoint_missing": {
+    "t0_step": 200,
+    "S0": 0.25,
+    "SR": 0.043402777777777776,
+    "planned": {
+      "n_revs": 8,
+      "final_bin": 7,
+      "frames_per_rev": 25.00025,
+      "complete": true,
+      "n": 25,
+      "expected": 25,
+      "missing": [],
+      "M_final": 0.5294117647058824,
+      "M_final_sd": 0.0,
+      "prev_bin": 6,
+      "prev_complete": true,
+      "flat": true,
+      "qc_repr": {
+        "pass": true,
+        "am_mean": 1.0,
+        "se_mean": 1.0,
+        "min_by_type": {
+          "1": 1.0000000000000004,
+          "3": 1.0000000000000002
+        },
+        "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+      }
+    },
+    "smoke": {
+      "bin": 0,
+      "expected": 26,
+      "present": 26,
+      "complete": true,
+      "n": 26,
+      "M_mean": 0.5090497737556562,
+      "qc_repr": {
+        "pass": true,
+        "am_mean": 1.0,
+        "se_mean": 1.0,
+        "min_by_type": {
+          "1": 1.0000000000000004,
+          "3": 1.0000000000000002
+        },
+        "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+      },
+      "tech_smoke": []
+    },
+    "tech": [],
+    "dump_gaps": []
+  },
+  "duplicated_physical_seed_three_dirs": {
+    "found": [
+      32452843,
+      49979687,
+      67867967
+    ],
+    "missing": [],
+    "verdicts": [
+      "PASS",
+      "PASS",
+      "PASS"
+    ],
+    "actual_unique_decks": 2,
+    "cli": {
+      "returncode": 0,
+      "stdout": "── /tmp/r3_review_cgvjnd91/pairs: LH_s* 3/3 짝 (찾음 [32452843, 49979687, 67867967] · 빠짐 [])\n── /tmp/r3_review_cgvjnd91/pairs/LC_s32452843/in.mixer  →  /tmp/r3_review_cgvjnd91/pairs/LH_s32452843/in.mixer  (허용목록 B) → PASS\n   ≠ AM_P–AM_P            108795 →    3.56348e+06   ×32.75\n   ≠ AM_P–AM_S            108795 →    2.71944e+06   ×25\n     AM_P–SE             10458.2 →        10458.2   ×1\n   ≠ AM_P–WALL           59063.2 →    1.93455e+06   ×32.75\n   ≠ AM_S–AM_S            142562 →    2.71944e+06   ×19.08\n     AM_S–SE             10458.2 →        10458.2   ×1\n   ≠ AM_S–WALL           77394.6 →    1.47634e+06   ×19.08\n     SE–SE               10458.2 →        10458.2   ×1\n     SE–WALL              5677.6 →         5677.6   ×1\n     WALL–WALL                 0 →              0   ×1\n── /tmp/r3_review_cgvjnd91/pairs/LC_s49979687/in.mixer  →  /tmp/r3_review_cgvjnd91/pairs/LH_s49979687/in.mixer  (허용목록 B) → PASS\n   ≠ AM_P–AM_P            108795 →    3.56348e+06   ×32.75\n   ≠ AM_P–AM_S            108795 →    2.71944e+06   ×25\n     AM_P–SE             10458.2 →        10458.2   ×1\n   ≠ AM_P–WALL           59063.2 →    1.93455e+06   ×32.75\n   ≠ AM_S–AM_S            142562 →    2.71944e+06   ×19.08\n     AM_S–SE             10458.2 →        10458.2   ×1\n   ≠ AM_S–WALL           77394.6 →    1.47634e+06   ×19.08\n     SE–SE               10458.2 →        10458.2   ×1\n     SE–WALL              5677.6 →         5677.6   ×1\n     WALL–WALL                 0 →              0   ×1\n── /tmp/r3_review_cgvjnd91/pairs/LC_s67867967/in.mixer  →  /tmp/r3_review_cgvjnd91/pairs/LH_s67867967/in.mixer  (허용목록 B) → PASS\n   ≠ AM_P–AM_P            108795 →    3.56348e+06   ×32.75\n   ≠ AM_P–AM_S            108795 →    2.71944e+06   ×25\n     AM_P–SE             10458.2 →        10458.2   ×1\n   ≠ AM_P–WALL           59063.2 →    1.93455e+06   ×32.75\n   ≠ AM_S–AM_S            142562 →    2.71944e+06   ×19.08\n     AM_S–SE             10458.2 →        10458.2   ×1\n   ≠ AM_S–WALL           77394.6 →    1.47634e+06   ×19.08\n     SE–SE               10458.2 →        10458.2   ×1\n     SE–WALL              5677.6 →         5677.6   ×1\n     WALL–WALL                 0 →              0   ×1\n\n3/3 PASS\n",
+      "stderr": ""
+    }
+  },
+  "old_probe_replay": {
+    "matrix_baseline": "PASS",
+    "matrix_mutants": {
+      "asymmetric_new": {
+        "allow": "B",
+        "non_ced_diffs": [
+          "새 덱 CED 비대칭 (AM_P,AM_S): 5.43888e+06 vs 2.71944e+06"
+        ],
+        "changed": [
+          [
+            "AM_P",
+            "AM_P"
+          ],
+          [
+            "AM_P",
+            "AM_S"
+          ],
+          [
+            "AM_P",
+            "WALL"
+          ],
+          [
+            "AM_S",
+            "AM_S"
+          ],
+          [
+            "AM_S",
+            "WALL"
+          ]
+        ],
+        "outside": [],
+        "missing": [],
+        "wrong_direction": [],
+        "target_mismatch": [],
+        "table": [
+          {
+            "pair": "AM_P–AM_P",
+            "ref": 108795.0,
+            "new": 3563480.0,
+            "ratio": 32.75407877200239
+          },
+          {
+            "pair": "AM_P–AM_S",
+            "ref": 108795.0,
+            "new": 5438880.0,
+            "ratio": 49.9920033089756
+          },
+          {
+            "pair": "AM_P–SE",
+            "ref": 10458.2,
+            "new": 10458.2,
+            "ratio": 1.0
+          },
+          {
+            "pair": "AM_P–WALL",
+            "ref": 59063.2,
+            "new": 1934550.0,
+            "ratio": 32.753897519944736
+          },
+          {
+            "pair": "AM_S–AM_S",
+            "ref": 142562.0,
+            "new": 2719440.0,
+            "ratio": 19.075489962262033
+          },
+          {
+            "pair": "AM_S–SE",
+            "ref": 10458.2,
+            "new": 10458.2,
+            "ratio": 1.0
+          },
+          {
+            "pair": "AM_S–WALL",
+            "ref": 77394.6,
+            "new": 1476340.0,
+            "ratio": 19.07549105493148
+          },
+          {
+            "pair": "SE–SE",
+            "ref": 10458.2,
+            "new": 10458.2,
+            "ratio": 1.0
+          },
+          {
+            "pair": "SE–WALL",
+            "ref": 5677.6,
+            "new": 5677.6,
+            "ratio": 1.0
+          },
+          {
+            "pair": "WALL–WALL",
+            "ref": 0.0,
+            "new": 0.0,
+            "ratio": 1.0
+          }
+        ],
+        "verdict": "FAIL"
+      },
+      "SE_SE_NaN": {
+        "allow": "B",
+        "non_ced_diffs": [
+          "새 덱 CED 에 비유한 값 1 개"
+        ],
+        "changed": [
+          [
+            "AM_P",
+            "AM_P"
+          ],
+          [
+            "AM_P",
+            "AM_S"
+          ],
+          [
+            "AM_P",
+            "WALL"
+          ],
+          [
+            "AM_S",
+            "AM_S"
+          ],
+          [
+            "AM_S",
+            "WALL"
+          ],
+          [
+            "SE",
+            "SE"
+          ]
+        ],
+        "outside": [
+          [
+            "SE",
+            "SE"
+          ]
+        ],
+        "missing": [],
+        "wrong_direction": [],
+        "target_mismatch": [],
+        "table": [
+          {
+            "pair": "AM_P–AM_P",
+            "ref": 108795.0,
+            "new": 3563480.0,
+            "ratio": 32.75407877200239
+          },
+          {
+            "pair": "AM_P–AM_S",
+            "ref": 108795.0,
+            "new": 2719440.0,
+            "ratio": 24.9960016544878
+          },
+          {
+            "pair": "AM_P–SE",
+            "ref": 10458.2,
+            "new": 10458.2,
+            "ratio": 1.0
+          },
+          {
+            "pair": "AM_P–WALL",
+            "ref": 59063.2,
+            "new": 1934550.0,
+            "ratio": 32.753897519944736
+          },
+          {
+            "pair": "AM_S–AM_S",
+            "ref": 142562.0,
+            "new": 2719440.0,
+            "ratio": 19.075489962262033
+          },
+          {
+            "pair": "AM_S–SE",
+            "ref": 10458.2,
+            "new": 10458.2,
+            "ratio": 1.0
+          },
+          {
+            "pair": "AM_S–WALL",
+            "ref": 77394.6,
+            "new": 1476340.0,
+            "ratio": 19.07549105493148
+          },
+          {
+            "pair": "SE–SE",
+            "ref": 10458.2,
+            "new": "nan",
+            "ratio": "nan"
+          },
+          {
+            "pair": "SE–WALL",
+            "ref": 5677.6,
+            "new": 5677.6,
+            "ratio": 1.0
+          },
+          {
+            "pair": "WALL–WALL",
+            "ref": 0.0,
+            "new": 0.0,
+            "ratio": 1.0
+          }
+        ],
+        "verdict": "FAIL"
+      },
+      "negative_AM": {
+        "allow": "B",
+        "non_ced_diffs": [
+          "새 덱 CED 에 음수"
+        ],
+        "changed": [
+          [
+            "AM_P",
+            "AM_P"
+          ],
+          [
+            "AM_P",
+            "AM_S"
+          ],
+          [
+            "AM_P",
+            "WALL"
+          ],
+          [
+            "AM_S",
+            "AM_S"
+          ],
+          [
+            "AM_S",
+            "WALL"
+          ]
+        ],
+        "outside": [],
+        "missing": [],
+        "wrong_direction": [
+          [
+            "AM_P",
+            "AM_P"
+          ]
+        ],
+        "target_mismatch": [],
+        "table": [
+          {
+            "pair": "AM_P–AM_P",
+            "ref": 108795.0,
+            "new": -3563480.0,
+            "ratio": -32.75407877200239
+          },
+          {
+            "pair": "AM_P–AM_S",
+            "ref": 108795.0,
+            "new": 2719440.0,
+            "ratio": 24.9960016544878
+          },
+          {
+            "pair": "AM_P–SE",
+            "ref": 10458.2,
+            "new": 10458.2,
+            "ratio": 1.0
+          },
+          {
+            "pair": "AM_P–WALL",
+            "ref": 59063.2,
+            "new": 1934550.0,
+            "ratio": 32.753897519944736
+          },
+          {
+            "pair": "AM_S–AM_S",
+            "ref": 142562.0,
+            "new": 2719440.0,
+            "ratio": 19.075489962262033
+          },
+          {
+            "pair": "AM_S–SE",
+            "ref": 10458.2,
+            "new": 10458.2,
+            "ratio": 1.0
+          },
+          {
+            "pair": "AM_S–WALL",
+            "ref": 77394.6,
+            "new": 1476340.0,
+            "ratio": 19.07549105493148
+          },
+          {
+            "pair": "SE–SE",
+            "ref": 10458.2,
+            "new": 10458.2,
+            "ratio": 1.0
+          },
+          {
+            "pair": "SE–WALL",
+            "ref": 5677.6,
+            "new": 5677.6,
+            "ratio": 1.0
+          },
+          {
+            "pair": "WALL–WALL",
+            "ref": 0.0,
+            "new": 0.0,
+            "ratio": 1.0
+          }
+        ],
+        "verdict": "FAIL"
+      }
+    },
+    "matrix_header_mutant": {
+      "allow": "B",
+      "non_ced_diffs": [
+        "CED 명령 머리가 다르다: fix mC all property/global cohesionEnergyDensity peratomtypepair 4  ⇄  fix bogus nonexisting property/global cohesionEnergyDensity peratomtypepair 4"
+      ],
+      "changed": [
+        [
+          "AM_P",
+          "AM_P"
+        ],
+        [
+          "AM_P",
+          "AM_S"
+        ],
+        [
+          "AM_P",
+          "WALL"
+        ],
+        [
+          "AM_S",
+          "AM_S"
+        ],
+        [
+          "AM_S",
+          "WALL"
+        ]
+      ],
+      "outside": [],
+      "missing": [],
+      "wrong_direction": [],
+      "target_mismatch": [],
+      "table": [
+        {
+          "pair": "AM_P–AM_P",
+          "ref": 108795.0,
+          "new": 3563480.0,
+          "ratio": 32.75407877200239
+        },
+        {
+          "pair": "AM_P–AM_S",
+          "ref": 108795.0,
+          "new": 2719440.0,
+          "ratio": 24.9960016544878
+        },
+        {
+          "pair": "AM_P–SE",
+          "ref": 10458.2,
+          "new": 10458.2,
+          "ratio": 1.0
+        },
+        {
+          "pair": "AM_P–WALL",
+          "ref": 59063.2,
+          "new": 1934550.0,
+          "ratio": 32.753897519944736
+        },
+        {
+          "pair": "AM_S–AM_S",
+          "ref": 142562.0,
+          "new": 2719440.0,
+          "ratio": 19.075489962262033
+        },
+        {
+          "pair": "AM_S–SE",
+          "ref": 10458.2,
+          "new": 10458.2,
+          "ratio": 1.0
+        },
+        {
+          "pair": "AM_S–WALL",
+          "ref": 77394.6,
+          "new": 1476340.0,
+          "ratio": 19.07549105493148
+        },
+        {
+          "pair": "SE–SE",
+          "ref": 10458.2,
+          "new": 10458.2,
+          "ratio": 1.0
+        },
+        {
+          "pair": "SE–WALL",
+          "ref": 5677.6,
+          "new": 5677.6,
+          "ratio": 1.0
+        },
+        {
+          "pair": "WALL–WALL",
+          "ref": 0.0,
+          "new": 0.0,
+          "ratio": 1.0
+        }
+      ],
+      "verdict": "FAIL"
+    },
+    "geometry": {
+      "n_facets": 39,
+      "n_triangles": 78,
+      "apo": 0.013095095030054096,
+      "facet_deg": 9.23076923076923,
+      "sagitta_m": 4.260150167866711e-05,
+      "r_SE": 7.57e-05,
+      "dt": 7.055e-07,
+      "rotation_start": 385337
+    },
+    "wrong_phase_false_pass": {
+      "actual_max_overlap": 0.020000000000086463,
+      "phase_truth_minus_sched_deg": 4.615384615384615,
+      "result": {
+        "verdict": "TECH",
+        "pp_max": 0.0,
+        "wall_max": -0.5375633215080831,
+        "phase_status": "unidentified",
+        "phase": [],
+        "reject": [],
+        "tech": [
+          "드럼 회전각의 독립 근거가 없고 (post_mesh/ 덤프 · 재개-위상 영수증 없음) 벽 δ/r 가 각에 따라 -54.28–2.03 % — 한도 1 % 판정 불가.  예정각으로 잰 -53.756 % 는 미검증 (판정에 안 씀)"
+        ],
+        "n_frames": 7
+      }
+    },
+    "right_phase_false_tech": {
+      "actual_max_overlap": 0.005000000000075862,
+      "phase_truth_minus_sched_deg": 0.0,
+      "result": {
+        "verdict": "PASS",
+        "pp_max": 0.0,
+        "wall_max": 0.005000000000098778,
+        "phase_status": "bounded",
+        "phase": [],
+        "reject": [],
+        "tech": [],
+        "n_frames": 7
+      }
+    },
+    "identity_type_radius_mutant": {
+      "verdict": "REJECT",
+      "pp_max": 0.0,
+      "wall_max": -15.275400000000001,
+      "phase_status": "bounded",
+      "phase": [],
+      "reject": [
+        "step 407997: id 별 type/radius 가 t₀ 와 다르다 (type 2 개 · radius 1 개) — 상별 수와 id 집합이 같아도 입자 속성은 보존되지 않았다",
+        "step 453330: id 별 type/radius 가 t₀ 와 다르다 (type 2 개 · radius 1 개) — 상별 수와 id 집합이 같아도 입자 속성은 보존되지 않았다",
+        "step 498663: id 별 type/radius 가 t₀ 와 다르다 (type 2 개 · radius 1 개) — 상별 수와 id 집합이 같아도 입자 속성은 보존되지 않았다",
+        "step 543996: id 별 type/radius 가 t₀ 와 다르다 (type 2 개 · radius 1 개) — 상별 수와 id 집합이 같아도 입자 속성은 보존되지 않았다",
+        "step 589329: id 별 type/radius 가 t₀ 와 다르다 (type 2 개 · radius 1 개) — 상별 수와 id 집합이 같아도 입자 속성은 보존되지 않았다",
+        "step 634662: id 별 type/radius 가 t₀ 와 다르다 (type 2 개 · radius 1 개) — 상별 수와 id 집합이 같아도 입자 속성은 보존되지 않았다"
+      ],
+      "tech": [],
+      "n_frames": 7
+    },
+    "contact_missing_frame": {
+      "verdict": "TECH",
+      "pp_max": 0.0,
+      "wall_max": -15.275400000000001,
+      "phase_status": "bounded",
+      "phase": [],
+      "reject": [],
+      "tech": [
+        "창 안 덤프 결손 1 개 (step [407997]) — 미관측 구간에 통과 증서를 줄 수 없다"
+      ],
+      "n_frames": 2,
+      "unsaved_instant_overlap": 0.020000000000000216
+    },
+    "bin0_smoke": {
+      "planned": {
+        "n_revs": 8,
+        "final_bin": 7,
+        "frames_per_rev": 25.00025,
+        "complete": false,
+        "n": 0,
+        "expected": 25,
+        "missing": [
+          7240,
+          7280,
+          7320,
+          7360,
+          7400,
+          7440,
+          7480,
+          7520
+        ],
+        "M_final": null,
+        "M_final_sd": null,
+        "prev_bin": 6,
+        "prev_complete": false,
+        "flat": null,
+        "qc_repr": null
+      },
+      "tech": [
+        "미완주 — 계획 8 바퀴의 마지막 bin 7 이 완전하지 않다 (있음 0/25 · 마지막 프레임 rev 1.000 · 결손 step [7240, 7280, 7320, 7360]…)"
+      ],
+      "bins": {
+        "0": {
+          "M_mean": 0.560897435897436,
+          "M_sd": 0.11440107883060736,
+          "n": 26,
+          "n_nonfinite": 0,
+          "M_all_mean": 0.560897435897436,
+          "s2_mean": 0.14483173076923078,
+          "am_vol_kept_mean": 1.0,
+          "se_vol_kept_mean": 1.0,
+          "vol_kept_min": 1.0,
+          "vol_kept_min_by_type": {
+            "1": 1.0000000000000004,
+            "3": 1.0000000000000002
+          },
+          "vol_kept_mean_by_type": {
+            "1": 1.0000000000000004,
+            "3": 1.0000000000000002
+          },
+          "qc": {
+            "pass": true,
+            "am_mean": 1.0,
+            "se_mean": 1.0,
+            "min_by_type": {
+              "1": 1.0000000000000004,
+              "3": 1.0000000000000002
+            },
+            "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+          },
+          "cells_dropped_frac": 0.0
+        }
+      }
+    },
+    "missing_previous_bin": {
+      "planned": {
+        "n_revs": 8,
+        "final_bin": 7,
+        "frames_per_rev": 25.00025,
+        "complete": true,
+        "n": 25,
+        "expected": 25,
+        "missing": [],
+        "M_final": 0.5833333333333334,
+        "M_final_sd": 0.0,
+        "prev_bin": 6,
+        "prev_complete": false,
+        "flat": null,
+        "qc_repr": {
+          "pass": true,
+          "am_mean": 1.0,
+          "se_mean": 1.0,
+          "min_by_type": {
+            "1": 1.0000000000000004,
+            "3": 1.0000000000000002
+          },
+          "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+        }
+      },
+      "tech": [
+        "평탄 비교 불가 — 직전 bin 6 결손 23/25 프레임 (step [6240, 6280, 6320, 6360]…) — 최종값은 보고하되 평탄 증서 (flat) 는 발행하지 않는다"
+      ],
+      "gaps": [
+        [
+          200,
+          7160
+        ]
+      ],
+      "bins": {
+        "0": 1,
+        "6": 2,
+        "7": 25
+      }
+    },
+    "missing_last_sample": {
+      "planned": {
+        "n_revs": 8,
+        "final_bin": 7,
+        "frames_per_rev": 25.00025,
+        "complete": false,
+        "n": 24,
+        "expected": 25,
+        "missing": [
+          8200
+        ],
+        "M_final": null,
+        "M_final_sd": null,
+        "prev_bin": 6,
+        "prev_complete": true,
+        "flat": null,
+        "qc_repr": {
+          "pass": true,
+          "am_mean": 1.0,
+          "se_mean": 1.0,
+          "min_by_type": {
+            "1": 1.0000000000000004,
+            "3": 1.0000000000000002
+          },
+          "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+        }
+      },
+      "tech": [
+        "미완주 — 계획 8 바퀴의 마지막 bin 7 이 완전하지 않다 (있음 24/25 · 마지막 프레임 rev 7.960 · 결손 step [8200])"
+      ],
+      "last_step": 8160
+    },
+    "retention_not_variance_bound": {
+      "s2": 0.0,
+      "used": 2,
+      "dropped": 8,
+      "n": 408,
+      "vol_kept_by_type": {
+        "1": 0.9803921568627477,
+        "3": 0.9803921568627477
+      },
+      "nonempty": 10,
+      "s2_all": 0.2,
+      "am_vol_kept": 0.9803921568627451,
+      "se_vol_kept": 0.9803921568627451,
+      "am_n_kept": 0.9803921568627451,
+      "se_n_kept": 0.9803921568627451,
+      "cell_n_median": 200.0
+    },
+    "phase_mean_can_hide_bad_frames": {
+      "25_frame_retention": 0.92
+    },
+    "K1_collision_scale": {
+      "tip_speed_m_s": 0.10323969616394009,
+      "dump_interval_s": 0.0319824315,
+      "pairs": {
+        "SE-SE": {
+          "elastic_no_damping_delta_over_rmin": 0.010302340102929382,
+          "hertz_time_us": 22.24735734886811
+        },
+        "AM_P-SE": {
+          "elastic_no_damping_delta_over_rmin": 0.00919389254471087,
+          "hertz_time_us": 19.85372360315672
+        },
+        "SE-WALL": {
+          "elastic_no_damping_delta_over_rmin": 0.00899289877282723,
+          "hertz_time_us": 19.419688206992628
+        }
+      },
+      "note": "Two-body elastic Hertz estimate, not measured maxima or a rigorous velocity bound."
+    },
+    "small_difference_label": {
+      "paired_d": [
+        -0.3,
+        0.9,
+        0.3
+      ],
+      "mean": 0.30000000000000004,
+      "SE": 0.3464101615137755,
+      "passes_abs_mean_le_SE": true
+    }
+  },
+  "probe_assertions": {
+    "analyzer_missing_A_false_green": true,
+    "pre_restart_only_false_green": true,
+    "interval_false_green": true,
+    "removed_caps_false_green": true,
+    "missing_id_false_green": true,
+    "missing_t0_reader_false_green": true,
+    "old_wrong_phase_closed": true,
+    "old_right_phase_closed": true,
+    "old_matrix_closed": true,
+    "old_previous_bin_closed": true
+  }
+}

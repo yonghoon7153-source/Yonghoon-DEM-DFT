@@ -1,0 +1,94 @@
+{
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "snapshot": "20568797bea1b9895bfa92c293200941d0442178",
+  "branch": "claude/stoic-knuth-NObVQ",
+  "date": "2026-09-27",
+  "source_files": [
+    {
+      "path": "dem_scripts/mixer_20260919/Back.stl",
+      "git_blob_sha": "726a7f1e0771e3755eac937b82dad7293fe9ddcf"
+    },
+    {
+      "path": "dem_scripts/mixer_20260919/Drum.stl",
+      "git_blob_sha": "7e3b6b153d86e103752ddf93e2ed583f945414c6"
+    },
+    {
+      "path": "dem_scripts/mixer_20260919/Front.stl",
+      "git_blob_sha": "e77c287028084d2a229762f8f9cbe4ba0a8aeca0"
+    },
+    {
+      "path": "dem_scripts/mixer_20260921/gen_all.sh",
+      "git_blob_sha": "14a9b59e1124316e23f5a78f7e8e2117044f8ca4"
+    },
+    {
+      "path": "dem_scripts/mixer_20260921/run_all.sh",
+      "git_blob_sha": "485198afb857893d382ff740f1e5c884b1ca2a4e"
+    },
+    {
+      "path": "dem_scripts/mixer_20260921/test_launcher.sh",
+      "git_blob_sha": "b7a1cd5c58a19ab716268e6a3114db515bad8f18"
+    },
+    {
+      "path": "dem_scripts/mixer_20260921/watch.sh",
+      "git_blob_sha": "793327aedb037bda1b1dad37ae5fee67ccfb8d0f"
+    },
+    {
+      "path": "docs/mixer_devlog/v09_20260927.md",
+      "git_blob_sha": "d1d36f2236b132509b852e5089cad91c5a7278a2"
+    },
+    {
+      "path": "docs/reviews/mixer_highbo_prereg_20260927.md",
+      "git_blob_sha": "ec1ca15fab08858c652043bb4cdd7fbafa6cb270"
+    },
+    {
+      "path": "docs/reviews/mixer_layered_prereg_20260921.md",
+      "git_blob_sha": "4f54079e5b1d7f5cafb842a38f5d709c859dc56f"
+    },
+    {
+      "path": "scripts/check_contact_validity.py",
+      "git_blob_sha": "7cd388fc61527f1e0902eda123ae107329d596dd"
+    },
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "git_blob_sha": "033fac54d73566ac1dad54f24cc28b9d0510ccbc"
+    },
+    {
+      "path": "scripts/make_mixer_resume.py",
+      "git_blob_sha": "7909d7fb4afee8e9e2b7c31b012854eadeb1db8d"
+    },
+    {
+      "path": "scripts/measure_bed_aspect.py",
+      "git_blob_sha": "cf9d6e390e4fe24d89311dc9c278d298f49e619c"
+    },
+    {
+      "path": "scripts/measure_mixing_index.py",
+      "git_blob_sha": "7879818efe72b7a02fa3c654e68ad4e69dc3393f"
+    },
+    {
+      "path": "scripts/mixer_deck_diff.py",
+      "git_blob_sha": "234dac91edbaea7a4a0c2c2b61b026e316bc21c0"
+    },
+    {
+      "path": "scripts/mixer_restart_phase_test.py",
+      "git_blob_sha": "991a2c365d005cf425a4d8176e09dd47085ce32f"
+    }
+  ],
+  "upstream": {
+    "repository": "CFDEMproject/LIGGGHTS-PUBLIC",
+    "snapshot": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+    "path": "doc/fix_move_mesh.html",
+    "git_blob_sha": "1f89818caeb2148885b392f4a88a5b21a20f66b6"
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1"
+  },
+  "not_run": [
+    "LIGGGHTS",
+    "run.sh",
+    "production data postprocessing",
+    "test_launcher.sh execution (bash syntax only)",
+    "check_all.sh (partial snapshot, Windows)"
+  ]
+}

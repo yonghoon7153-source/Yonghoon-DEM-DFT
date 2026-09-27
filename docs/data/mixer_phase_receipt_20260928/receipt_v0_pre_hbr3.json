@@ -1,0 +1,57 @@
+{
+ "test": "restart_phase",
+ "passed": true,
+ "period": 0.799562,
+ "axis": [
+  1.0,
+  0.0,
+  0.0
+ ],
+ "dt": 7.055e-07,
+ "n1": 20000,
+ "n2": 10000,
+ "steps_checked": [
+  20000,
+  25000,
+  30000
+ ],
+ "angle_error_deg": 2.0015307274539953e-05,
+ "reset_alternative_gap_deg": 6.352978255594928,
+ "ab_max_vertex_diff_m": 0.0,
+ "rows": [
+  {
+   "step": 20000,
+   "observed_deg": 6.352988170896923,
+   "expected_continuity_deg": 6.352978255594928,
+   "expected_reset_deg": 0.0,
+   "error_deg": 9.915301995594848e-06,
+   "reset_gap_deg": 6.352978255594928,
+   "ab_max_vertex_diff_m": 0.0
+  },
+  {
+   "step": 25000,
+   "observed_deg": 7.94124283480094,
+   "expected_continuity_deg": 7.941222819493666,
+   "expected_reset_deg": 1.5882445638987381,
+   "error_deg": 2.0015307274539953e-05,
+   "reset_gap_deg": 6.352978255594928,
+   "ab_max_vertex_diff_m": 0.0
+  },
+  {
+   "step": 30000,
+   "observed_deg": 9.529473894483724,
+   "expected_continuity_deg": 9.529467383392404,
+   "expected_reset_deg": 3.1764891277974763,
+   "error_deg": 6.5110913195973155e-06,
+   "reset_gap_deg": 6.352978255594928,
+   "ab_max_vertex_diff_m": 0.0
+  }
+ ],
+ "liggghts_version": "LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-08-25-18:16:51 by yonghoon71, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)",
+ "binary_path": "/home/yonghoon71/src/LIGGGHTS-PUBLIC/src/lmp_serial",
+ "binary_sha256": "4efca042a1bbdafb4c68f64815ce7965b42f43588757527e91c7d82be07e038d",
+ "deck_source": "/home/yonghoon71/dem-web/dem_scripts/mixer_20260921/runs/LC_s32452843/in.mixer",
+ "deck_source_sha256": "72b52c175af2d8e28a83d0dbf7a8cefe6294b15dfa25a45ff8a72243963db200",
+ "date": "2026-09-28",
+ "note": "바이너리의 성질 (read_restart 뒤에도 메시 회전 위상이 이어진다) 의 실측 — 어느 런의 벽 좌표가 아니다.  바이너리가 바뀌면 다시 만든다."
+}
