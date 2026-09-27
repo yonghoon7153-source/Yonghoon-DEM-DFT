@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""build_v5_vasp_package.py — A′ V5 (LPSCl|Ag(111) 작은 주기 계면) **VASP 외주 패키지** · 반송 검사 · W/G3/G4/G5 집계. (v4 · Codex CE·CF·CG 반영)
+"""build_v5_vasp_package.py — A′ V5 (LPSCl|Ag(111) 작은 주기 계면) **VASP 외주 패키지** · 반송 검사 · W/G3/G4/G5 집계. (v5 · Codex CE·CF·CG·CI 반영)
 
 왜 있나 (2026-09-27 · 1저자 "v5 관련해서 vasp 용으로 외주건으로 한번 만들어보고 codex 리뷰 받자 · 될지는 모르지만 준비는 해둬볼게")
   V5 는 우리 GPU 한 장(48 GB)에 안 들어가 RESOURCE_BLOCKED 였다 (QE CPU 추정 89–109 GB @70 Ry · 축소 변형도 61–80 GB).
@@ -41,6 +41,16 @@ v4 (Codex CG NO-GO 반영 · 2026-09-27)
   권고 1 에너지·Edisp 는 '레코드 존재' 와 '값' 을 분리 — 값이 빈 마지막 레코드도 마지막 레코드다 (None → 미검증 · 앞 값 안 씀) · 값 패턴이 줄을 넘지 않는다.
   권고 2 반송 묶음·sha 둘 다 임시 파일로 완성한 뒤 승격 · sha 파일은 최종 이름으로 쓴다 (`sha256sum -c` 그대로 통과).
   권고 3 등록부에 봉인 당시 파일럿 attempt.json·OUTCAR sha 를 기록(`from_pilot_sha256`)하고 최종 검사에서 대조.
+
+v5 (Codex CI NO-GO 반영 · 2026-09-27)
+  P1   러너 `pack()` 이 목록 생성(find · 허용 필터 · sort · 목록 쓰기)·tar·구성원 열람(tar tzf)·금지 검사·구성원↔목록 대조·sha 의 **성공을 단계마다 확인**한다 —
+       어느 하나라도 실패하면 1 을 돌려 러너는 **종료 4** · '✅' 없음 · 기존 tgz/sha 쌍 불변 (승격은 마지막 두 mv 뿐). 리뷰어 재현(BASH_ENV 로 find/sort 를 73 으로):
+       v4 는 관리 파일 3 개만 담고 종료 0 이었다. grep 의 **정상 무매치(1)** 와 **오류(≥ 2)** 를 가른다 — 잡 파일이 하나도 없는 run/ 은 관리 파일만 포장해도 정상.
+       tar tzf 열람 실패는 '금지 없음' 이 아니라 실패다. 묶음 구성원 집합 = 목록 집합이 아니면 실패 (tar 가 조용히 빠뜨리는 경우).
+  S3   잘린 마지막 TITEL(앞 항목은 다 맞고 마지막 관측 문자열이 기대의 앞부분)은 새 상태 **TITEL_TRUNCATED** — 모순 확정이 아니라 **자동 확인 불가** · 통과·r1 자격 없음 ·
+       원문 확인·새 승인으로만 해제 (POTCAR_MISMATCH 와 구분해 적는다).
+  권고  개정 3 의 '도구는 기록만·게이트 아님' → 'cut 위치의 설정 일치 검사는 게이트 · 전자밀도 검증은 안 한다' 로 정리 · 결정 원장 제목·method_ref 의 v3/129 표기 정리 ·
+       '어느 단계가 실패해도 옛 쌍 그대로' 는 '두 번째 mv 실패면 새 tgz + 옛 sha (종료 4 로 드러남)' 로 좁힘 · 발송은 종료 0 뒤 `sha256sum -c` 까지 통과한 쌍만.
 
 종료코드 (CLI)
   --check   : 0 전 잡 OK · 3 OK 아닌 잡 있음 · 2 승인본(MANIFEST)·등록부·사용법 오류
@@ -309,7 +319,7 @@ def d3_ref_eV(atoms):
 
 RUN_ALL = r'''#!/usr/bin/env bash
 # =============================================================================
-# run_all.sh (v4) — A′ V5 VASP 단일점 18 잡 · 잡마다 사전등록 재시도 INCAR.r1 최대 1 회 (최대 36 실행)
+# run_all.sh (v5) — A′ V5 VASP 단일점 18 잡 · 잡마다 사전등록 재시도 INCAR.r1 최대 1 회 (최대 36 실행)
 #   필수: VASP_CMD (예: "mpirun -np 128 vasp_std") · POTCAR_DIR (PAW_PBE 폴더: <POTCAR_DIR>/Li_sv/POTCAR · P · S · Cl · Ag)
 #   선택: PERF_TAGS_FILE — 한 줄에 대입 하나만 · 허용 NCORE/NPAR/KPAR/NSIM (양의 정수) · LPLANE/LSCALU/LSCALAPACK (.TRUE./.FALSE.)
 #         세미콜론·역슬래시·중복 태그·줄 끝 주석 금지 (VASP 는 ';' 뒤를 다른 설정으로 읽는다)
@@ -321,23 +331,35 @@ RUN_ALL = r'''#!/usr/bin/env bash
 #   ⛔ 시도 폴더(run/<잡>, run/<잡>_r1)가 이미 있으면 그 잡은 돌지 않습니다 (원자적 mkdir). 재시도 상한은 잡마다 사전등록 1 회 —
 #      그 밖의 수동 재실행은 새 승인 없이는 하지 않습니다. 파일럿 두 잡은 봉인한 그 실행 그대로 최종 반송에 포함합니다 (다시 돌리지 않습니다).
 #   종료코드: 0 전 잡 성공·포장 · 1 일부 잡 실패 (반송 묶음은 만든다 — 실패도 기록) · 2 패키지·성능 파일 오류 (아무것도 안 돈다)
-#             4 반송 포장 실패 (계산 결과는 run/ 에 그대로 — PACK_ONLY=1 로 포장만 다시)
+#             4 반송 포장 실패 — 목록 생성·tar·구성원 열람·검사·sha 어느 단계든 (계산 결과는 run/ 에 그대로 · 기존 묶음 쌍도 그대로 — PACK_ONLY=1 로 포장만 다시)
+#   ⛔ 보낼 것은 종료 0 뒤 `sha256sum -c V5_vasp_return.tgz.sha256` 까지 통과한 쌍만입니다.
 # =============================================================================
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd); cd "$HERE"
 sha256sum -c --quiet MANIFEST.sha256 || { echo "⛔ 패키지 파일이 MANIFEST 와 다르다 — 실행하지 않는다"; exit 2; }
 RET_ALLOW='@RET_ALLOW@'    # run/<잡>/ 아래에서 반송하는 파일 이름 (이 밖은 담지 않는다)
 RET_FORBID='@RET_FORBID@'  # 묶음 구성원에 있으면 안 되는 이름 (POTCAR 본문 등) — 있으면 보내지 않는다
-pack(){  # 허용 목록으로 구성원을 모아 임시 파일에 쓰고, 구성원 검사·sha 까지 끝나야 둘 다 승격 (옛 묶음·옛 sha 가 섞이지 않게)
-  rm -f V5_vasp_return.tgz.part V5_vasp_return.tgz.sha256.part V5_vasp_return.list
-  { echo MANIFEST.sha256; for f in run/env.txt run/status.tsv; do [ -f "$f" ] && echo "$f"; done
-    find run -mindepth 2 -maxdepth 2 -type f | grep -E "^run/[^/]+/($RET_ALLOW)$" | LC_ALL=C sort; } > V5_vasp_return.list
-  [ -s V5_vasp_return.list ] || return 1
-  tar czf V5_vasp_return.tgz.part -T V5_vasp_return.list || return 1
-  if tar tzf V5_vasp_return.tgz.part | grep -Eq "(^|/)($RET_FORBID)$"; then echo "⛔ 반송 묶음에 금지 파일(POTCAR 본문 등)이 들어갔다 — 보내지 않는다"; return 1; fi
-  h=$(sha256sum V5_vasp_return.tgz.part | cut -d' ' -f1); [ -n "$h" ] || return 1
-  printf '%s  V5_vasp_return.tgz\n' "$h" > V5_vasp_return.tgz.sha256.part || return 1
-  mv -f V5_vasp_return.tgz.part V5_vasp_return.tgz && mv -f V5_vasp_return.tgz.sha256.part V5_vasp_return.tgz.sha256
+pack_fail(){ echo "⛔ 포장: $1"; rm -f V5_vasp_return.tgz.part V5_vasp_return.tgz.sha256.part; return 1; }   # 임시 묶음은 지운다 · 기존 tgz/sha 쌍과 진단용 V5_vasp_return.tmp/ 는 남긴다
+pack(){  # 허용 목록으로 구성원을 모아 임시 파일에 쓰고, **단계마다 성공을 확인**한 뒤에야 둘 다 승격 (CI P1). 실패 = 1 · 기존 tgz/sha 쌍은 건드리지 않는다 (승격은 마지막 두 mv 뿐)
+  local T=V5_vasp_return.tmp g h
+  rm -rf "$T" V5_vasp_return.tgz.part V5_vasp_return.tgz.sha256.part V5_vasp_return.list; mkdir "$T" || return 1
+  find run -mindepth 2 -maxdepth 2 -type f > "$T/found" || { pack_fail "run/ 열거 실패"; return 1; }
+  grep -E "^run/[^/]+/($RET_ALLOW)$" "$T/found" > "$T/allowed"; g=$?
+  [ "$g" -le 1 ] || { pack_fail "허용 목록 필터 오류 ($g)"; return 1; }     # 1 = 잡 파일이 하나도 없음 (정상 · 관리 파일만 포장) · 2 이상 = 오류
+  LC_ALL=C sort "$T/allowed" > "$T/sorted" || { pack_fail "정렬 실패"; return 1; }
+  : > "$T/mgmt"; for f in run/env.txt run/status.tsv; do [ -f "$f" ] && echo "$f" >> "$T/mgmt"; done
+  { echo MANIFEST.sha256; cat "$T/mgmt" "$T/sorted"; } > V5_vasp_return.list || { pack_fail "목록 쓰기 실패"; return 1; }
+  tar czf V5_vasp_return.tgz.part -T V5_vasp_return.list || { pack_fail "tar 실패"; return 1; }
+  tar tzf V5_vasp_return.tgz.part > "$T/members" || { pack_fail "묶음 구성원 열람 실패 — 검사할 수 없으면 보내지 않는다"; return 1; }
+  grep -E "(^|/)($RET_FORBID)$" "$T/members" > "$T/forbidden"; g=$?
+  if [ "$g" -eq 0 ]; then pack_fail "반송 묶음에 금지 파일(POTCAR 본문 등)이 들어갔다 — 보내지 않는다: $(tr '\n' ' ' < "$T/forbidden")"; return 1
+  elif [ "$g" -ne 1 ]; then pack_fail "구성원 검사 오류 ($g)"; return 1; fi
+  LC_ALL=C sort "$T/members" > "$T/members.sorted" && LC_ALL=C sort V5_vasp_return.list > "$T/list.sorted" || { pack_fail "구성원 대조 준비 실패"; return 1; }
+  cmp -s "$T/members.sorted" "$T/list.sorted" || { pack_fail "묶음 구성원이 목록과 다르다 — 보내지 않는다"; return 1; }
+  h=$(sha256sum V5_vasp_return.tgz.part | cut -d' ' -f1); [ "${#h}" -eq 64 ] || { pack_fail "sha256 실패"; return 1; }
+  printf '%s  V5_vasp_return.tgz\n' "$h" > V5_vasp_return.tgz.sha256.part || { pack_fail "sha 쓰기 실패"; return 1; }
+  mv -f V5_vasp_return.tgz.part V5_vasp_return.tgz && mv -f V5_vasp_return.tgz.sha256.part V5_vasp_return.tgz.sha256 || { pack_fail "승격(mv) 실패 — 새 tgz + 옛 sha 가 남을 수 있다 · sha256sum -c 로 확인"; return 1; }
+  rm -rf "$T"
 }
 if [ "${PACK_ONLY:-0}" = 1 ]; then
   [ -d run ] || { echo "⛔ run/ 이 없다 — 포장할 것이 없다"; exit 2; }
@@ -423,9 +445,9 @@ def _readme(jobs, est, pkg_sha):
     rows = "\n".join(f"| `{j['dir']}` | {j['role']} | {j['nions']} | {j['nelect_expected']:.0f} | {'×'.join(f'{x:.3f}' for x in j['cell_A'])} | "
                      f"{j['encut']:.0f} | {'×'.join(map(str, j['kpts']))} | {j['sigma']:.3f} |" for j in jobs)
     pp = " · ".join(f"{POTCAR_MAP[s]} (`{PP_EXPECTED_TITEL[s]}`)" for s in SPECIES_ORDER)
-    return f"""# A′ V5 — VASP 단일점 외주 패키지 v4 (LPSCl | Ag(111) 작은 주기 계면)
+    return f"""# A′ V5 — VASP 단일점 외주 패키지 v5 (LPSCl | Ag(111) 작은 주기 계면)
 
-> 상태: **준비본 (실행 미정)** · Codex CE·CF·CG NO-GO 반영판 · 재리뷰 전 · 결정 `D-2026-09-27-wad-aprime-v5-vasp-route` **proposed**
+> 상태: **준비본 (실행 미정)** · Codex CE·CF·CG·CI NO-GO 반영판 · 재리뷰 전 · 결정 `D-2026-09-27-wad-aprime-v5-vasp-route` **proposed**
 > 원본: 봉인 S3v2 패키지 (구조 파일 sha 결박) · 이 패키지 MANIFEST.sha256 의 sha256 = `{pkg_sha}` (보낼 때 메일 본문에 적는다 — 반송 검사가 이 값으로 승인본을 확인한다)
 
 ## 무엇을 하나
@@ -448,8 +470,9 @@ PBE+D3(BJ) **단일점(SCF) 18 개** — 이완 없음. 좌표는 이미 정해�
 5. 한 잡이 실행 실패·미종료·미수렴이면 러너가 미리 정한 재시도(INCAR.r1 · AMIX 0.1 · BMIX 0.01 · NELM 300)를 **한 번만** 합니다.
    그래도 안 되면 그 잡은 비워 둡니다 — 다른 설정으로 더 돌리지 마세요. 실행 상한 = 18 × 2 = **36 회** (파일럿 재사용 시).
 6. 반송 묶음은 러너가 **허용 목록**(아래 '돌려받을 것')의 파일만 담습니다 — POTCAR 본문 · WAVECAR · CHGCAR 는 준비 실패·중단·`PACK_ONLY` 에서도
-   들어가지 않고, 혹시 들어가면 묶음을 만들지 않습니다 (종료코드 4). 포장(tar · sha256)이 실패해도 **종료코드 4** 이고 계산 결과는 `run/` 에 그대로 남습니다.
-   계산을 다시 돌리지 말고 `PACK_ONLY=1 bash run_all.sh` 로 **포장만** 다시 해 주세요.
+   들어가지 않고, 혹시 들어가면 묶음을 만들지 않습니다 (종료코드 4). 포장의 어느 단계(목록 생성 · tar · 구성원 열람·검사 · sha256)가 실패해도 **종료코드 4** 이고,
+   계산 결과는 `run/` 에, 이미 있던 묶음 쌍은 그대로 남습니다. 계산을 다시 돌리지 말고 `PACK_ONLY=1 bash run_all.sh` 로 **포장만** 다시 해 주세요.
+   보내는 것은 종료코드 0 뒤 `sha256sum -c V5_vasp_return.tgz.sha256` 까지 통과한 쌍만입니다.
    러너 종료코드: 0 전 잡 성공 · 1 일부 잡 실패 (묶음은 만듦 — 실패도 반송) · 2 패키지·성능 파일 오류 (아무것도 안 돎) · 4 포장 실패.
 
 ## VASP 버전 · POTCAR — 이 조합으로 고정
@@ -536,7 +559,7 @@ def build(pkg, out):
            "wfc_max": max(e["wfc_only_GB_all_k"] for e in E), "max_runs": 2 * len(jobs)}
     _write(os.path.join(out, "run_all.sh"), run_all_text()); os.chmod(os.path.join(out, "run_all.sh"), 0o755)
     _write(os.path.join(out, "JOBS.txt"), "\n".join(x["dir"] for x in jobs) + "\n")
-    meta = {"schema": "aprime_v5_vasp_package/v4", "date": "2026-09-27", "status": "준비본 v4 (Codex CE·CF·CG NO-GO 반영 · 재리뷰 전 · 결정 proposed · 실행 미정)",
+    meta = {"schema": "aprime_v5_vasp_package/v5", "date": "2026-09-27", "status": "준비본 v5 (Codex CE·CF·CG·CI NO-GO 반영 · 재리뷰 전 · 결정 proposed · 실행 미정)",
             "source_package": pkg, "source_s3_manifest_sha256": qe["s3_manifest_sha256"], "source_seal": "db/properties/wad_aprime_s3v2_seal_2026_09_26.json",
             "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json", "amendment": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json",
             "tool_sha256": _sha(os.path.abspath(__file__)),
@@ -794,7 +817,12 @@ def check_job(job, pkgdir, attdir, attempt="0", pp_registry=None):
     # 접두가 아닌 것(다른 종·날짜·순서 · 기대 뒤에 추가)은 모순이다.
     ot = o["outcar_titel"] if o else []
     titel_prefix_only = bool(ot) and ot != titel and len(ot) < len(titel) and titel[:len(ot)] == ot
-    if ot and ot != titel and not titel_prefix_only:
+    # 잘린 마지막 줄 (CI S3): 앞 항목은 다 맞고 마지막 관측 TITEL 이 기대의 앞부분 **문자열** — 모순 확정이 아니라 자동 확인 불가. 통과·r1 자격 없이 막고(fail-closed) 원문 확인·새 승인으로만 푼다.
+    titel_truncated = bool(ot) and ot != titel and not titel_prefix_only and len(ot) <= len(titel) and ot[:-1] == titel[:len(ot) - 1] and titel[len(ot) - 1].startswith(ot[-1])
+    if titel_truncated:
+        conflicts.append(("TITEL_TRUNCATED", f"OUTCAR 마지막 TITEL {ot[-1]!r} 이 기대 {titel[len(ot) - 1]!r} 의 앞부분 문자열 — 잘린 줄일 수 있어 **자동 확인 불가** "
+                                             "(모순 확정 아님 · 통과·재시도 자격 없음 · 원문 확인·새 승인으로만 해제)"))
+    elif ot and ot != titel and not titel_prefix_only:
         conflicts.append(("POTCAR_MISMATCH", f"OUTCAR TITEL {ot} ≠ POTCAR.titel {titel} (접두 아님 — 다른 종·날짜·순서·추가)"))
     if pp_registry:
         if any(pp_registry["species_sha256"].get(k) != v for k, v in r["potcar_species_sha256"].items()):
@@ -1668,7 +1696,18 @@ def _selftest():
         r20c = check(out, ret, msha)[1][F_]
         ck(r20c["status"] == "POTCAR_UNVERIFIED" and "r1_ignored" in r20c,
            f"⛔음성 CG P1-3 성공 시도(rc 0 · 종료 · 수렴)인데 TITEL 접두만 + 정상 r1 → POTCAR_UNVERIFIED · 승격 안 함 (미검증은 재시도 자격이 아니다) — {r20c['status']}")
+        # CI S3 — 잘린 마지막 TITEL 줄: 모순 확정이 아니라 자동 확인 불가 (TITEL_TRUNCATED · 통과·r1 자격 없음 · 설명 포함)
+        mk(F_, rc=1, outcar=_fake_outcar(J[F_], E[F_], ED[F_], titel_override=tl[:2] + [tl[2][:12]], term=False))
+        r20d = check(out, ret, msha)[1][F_]
+        ck(r20d["status"] == "TITEL_TRUNCATED" and "r1_ignored" in r20d and "자동 확인 불가" in r20d["why"] and r20d.get("conflicts"),
+           f"⛔음성 CI S3 마지막 TITEL 이 잘린 줄 ({tl[2][:12]!r}) + rc 1 + 정상 r1 → TITEL_TRUNCATED (모순 확정 아님 · 승격 안 함 · 설명) — {r20d['status']} {r20d.get('why', '')[:80]}")
+        mk(F_, rc=1, outcar=_fake_outcar(J[F_], E[F_], ED[F_], titel_override=[tl[0], "PAW_PBE S"], term=False))
+        ck(st(F_) == "POTCAR_MISMATCH", "⛔음성 CI S3 잘린 문자열이라도 그 자리의 기대 종(P)이 아니면(S) → POTCAR_MISMATCH (모순)")
         shutil.rmtree(os.path.join(run, F_ + "_r1"))
+        ck(st(F_) == "POTCAR_MISMATCH", "⛔음성 CI S3 r1 없이도 POTCAR_MISMATCH")
+        mk(F_, outcar=_fake_outcar(J[F_], E[F_], ED[F_], titel_override=tl[:2] + [tl[2][:12]]))
+        ck(st(F_) == "TITEL_TRUNCATED", "⛔음성 CI S3 성공 시도(rc 0 · 종료)인데 마지막 TITEL 잘림 → TITEL_TRUNCATED (통과 아님)")
+        mk(F_, outcar=_fake_outcar(J[F_], E[F_], ED[F_], titel_override=tl[:2]))
         ck(st(F_) == "POTCAR_UNVERIFIED", "⛔음성 CG P1-3 성공 시도의 TITEL 접두만 (r1 없이) → POTCAR_UNVERIFIED (통과 아님)")
         mk(F_)
         # ⑱ 배포 러너 실제 실행 (가짜 VASP · bash) — 러너와 검사기가 같은 규칙을 쓰는지
@@ -1732,6 +1771,43 @@ def _selftest():
                f"⛔음성 CG P1-1 중단 뒤 POTCAR·WAVECAR·CHGCAR·vasprun.xml 이 남은 폴더에 PACK_ONLY=1 → 묶음에 없음 (검사기는 폴더의 금지 파일을 보고) (리뷰어 재현: 들어갔다) — rc {rcode11} {forb(m11)}")
             for x in leak:
                 os.remove(os.path.join(w, "run", PILOT_JOBS[1], x))
+            # ㉑ CI P1 — 포장 단계의 외부 명령 실패는 종료 4 · '✅' 없음 · 기존 tgz/sha 쌍 보존 · .part 없음 (리뷰어 방식 그대로: BASH_ENV 함수 주입 · 제품 러너 무수정)
+            pair = lambda wd: (_sha(os.path.join(wd, "V5_vasp_return.tgz")), open(os.path.join(wd, "V5_vasp_return.tgz.sha256")).read())
+            before = pair(w)
+            for why, inj in (("find 실패(73)", 'find(){ echo INJ_FIND >&2; return 73; }\n'), ("sort 실패(73)", 'sort(){ echo INJ_SORT >&2; return 73; }\n'),
+                             ("grep 오류(2)", 'grep(){ return 2; }\n'), ("grep 오류(2) — 구성원 금지 검사만", 'grep(){ case "$*" in *members*) return 2;; esac; command grep "$@"; }\n'),
+                             ("grep 오류(2) — 허용 목록 필터만", 'grep(){ case "$*" in *found*) return 2;; esac; command grep "$@"; }\n'),
+                             ("sort 실패 — 허용 목록 정렬만 (뒤 정렬은 정상)", 'sort(){ case "$*" in *allowed*) echo INJ_SORT1 >&2; return 73;; esac; command sort "$@"; }\n'),
+                             ("tar tzf 만 실패", 'tar(){ if [ "$1" = tzf ]; then echo INJ_TAR_T >&2; return 73; fi; command tar "$@"; }\n'),
+                             ("tar tzf 가 목록은 다 찍고 73 으로 끝남", 'tar(){ if [ "$1" = tzf ]; then command tar "$@"; return 73; fi; command tar "$@"; }\n'),
+                             ("cmp 불일치(구성원↔목록)", 'cmp(){ return 1; }\n'), ("sha256sum 빈 출력", 'sha256sum(){ :; }\n'),
+                             ("두 번째 mv 실패", 'mv(){ case "$1$2" in *sha256.part*) return 1;; esac; command mv "$@"; }\n')):
+                inj_f = os.path.join(T, "inject.sh"); _write(inj_f, inj)
+                _, rc_i, log_i = run_pkg("ok", "false", fresh=False, perf_file=None, extra_env={"PACK_ONLY": "1", "BASH_ENV": inj_f})
+                if why.startswith("두 번째 mv"):
+                    ck(rc_i == 4 and "✅" not in log_i and pair(w)[1] == before[1] and not os.path.exists(os.path.join(w, "V5_vasp_return.tgz.part")),
+                       f"CI S5 PACK_ONLY 에서 {why} 주입 → 종료 4 · '✅' 없음 · 옛 sha 그대로 (새 tgz + 옛 sha 가 남는 선언된 틈 — sha256sum -c 가 잡는다) — rc {rc_i}")
+                    ck(subprocess.run(["sha256sum", "-c", "--quiet", "V5_vasp_return.tgz.sha256"], cwd=w, capture_output=True).returncode != 0,
+                       "CI S5 그 상태의 쌍은 sha256sum -c 가 실패한다 (발송 조건 = 종료 0 + sha256sum -c 통과)")
+                    _, rc_fix, _ = run_pkg("ok", "false", fresh=False, perf_file=None, extra_env={"PACK_ONLY": "1"})
+                    ck(rc_fix == 0 and subprocess.run(["sha256sum", "-c", "--quiet", "V5_vasp_return.tgz.sha256"], cwd=w, capture_output=True).returncode == 0, "PACK_ONLY 재시도로 쌍 복구")
+                    before = pair(w)
+                    continue
+                ck(rc_i == 4 and "✅" not in log_i and pair(w) == before and not any(os.path.exists(os.path.join(w, f"V5_vasp_return.tgz{x}")) for x in (".part", ".sha256.part")),
+                   f"⛔음성 CI P1 PACK_ONLY 에서 {why} 주입 → 종료 4 · '✅' 없음 · 기존 tgz/sha 쌍 보존 · .part 없음 (리뷰어 재현: 종료 0 · 관리 파일 3 개 묶음) — rc {rc_i} {log_i[-100:]}")
+            _, rc_ok, _ = run_pkg("ok", "false", fresh=False, perf_file=None, extra_env={"PACK_ONLY": "1"})
+            ck(rc_ok == 0 and len(members(w)) == len(m0) and not forb(members(w)), "주입 없는 PACK_ONLY 는 그대로 종료 0 · 구성원 수 불변 (양성 경로)")
+            w12 = os.path.join(T, "w_empty_run"); shutil.copytree(out, w12); os.makedirs(os.path.join(w12, "run")); _write(os.path.join(w12, "run", "env.txt"), "x\n")
+            p12 = subprocess.run(["bash", os.path.join(w12, "run_all.sh")], env={**os.environ, "PACK_ONLY": "1"}, capture_output=True, text=True, timeout=300)
+            m12 = members(w12) if os.path.isfile(os.path.join(w12, "V5_vasp_return.tgz")) else None
+            ck(p12.returncode == 0 and m12 is not None and sorted(m12) == ["MANIFEST.sha256", "run/env.txt"],
+               f"CI P1 잡 파일이 하나도 없는 run/ 의 PACK_ONLY → grep 정상 무매치(1)는 오류가 아니다 · 관리 파일만 포장 · 종료 0 — rc {p12.returncode} {m12} {p12.stdout[-80:]}")
+            rp = os.path.join(HERE, "..", "..", "db", "raw", "codex_CI_repro_2026_09_27", "repro_pack_ci.sh")
+            if os.path.isfile(rp):
+                p13 = subprocess.run(["bash", rp, out], capture_output=True, text=True, timeout=300)
+                ck(p13.returncode == 0 and "runner exit = 4" in p13.stdout, f"리뷰어 CI 최소 재현 스크립트(repro_pack_ci.sh · find 주입) 그대로 → 종료 0 (= 고쳐짐) — rc {p13.returncode} {p13.stdout[-120:]}")
+            else:
+                print("  ⚠ SKIP 리뷰어 repro_pack_ci.sh 없음 — 통과로 세지 않는다")
             _, rcode2, log2 = run_pkg("ok", py, fresh=False)
             rs2 = check(out, w, msha)[1]
             ck(rcode2 == 1 and "이미 있거나" in log2 and all(rs2[p]["status"] == "OK" for p in PILOT_JOBS), f"⛔음성 러너 재실행: 기존 시도 폴더 거부(원자적 mkdir) · 종료 1 · 앞 결과 보존 — rc {rcode2}")

@@ -629,6 +629,15 @@
    "prompt": "kb/reviews/codex_CG_prompt_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md",
    "reply": "kb/reviews/codex_CG_reply_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md",
    "response": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json"
+  },
+  {
+   "id": "CI",
+   "date": "2026-09-27",
+   "verdict": "NO-GO (V5 VASP 준비본 v4) — CG P1 3 해제 확인 · 새 P0 없음 · P1 1 (러너 pack() 이 find/sort/tar tzf 실패를 성공으로 승격 — 관리 파일 3 개 묶음 · 종료 0 · 기존 묶음 교체) · S1–S6 전부 찬성 (허용 목록 충분 · run_id+sha 결속 충분 · TITEL 좁은 규칙 유지 + 자동 확인 불가 설명 · 위생과 과학 판정 분리 · 두 mv 틈 수용 · 발송 = 종료 0 + sha 대조) · 정리 권고 3",
+   "prompt": "kb/reviews/codex_CI_prompt_wad_aprime_v5_vasp_outsourcing_v4_2026_09_27.md",
+   "reply": "kb/reviews/codex_CI_reply_wad_aprime_v5_vasp_outsourcing_v4_2026_09_27.md",
+   "repro": "db/raw/codex_CI_repro_2026_09_27",
+   "response": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json"
   }
  ],
  "hazards": [
@@ -685,8 +694,8 @@
    "state": "인계 1 남음"
   },
   {
-   "state": "준비본 v4 · CI 재리뷰 대기",
-   "text": "**V5 VASP 외주** (1저자 '준비는 해둬볼게' · 업체·예산 미정): CE NO-GO → v2 → CF NO-GO → v3 → CG NO-GO (P1 3) → **v4** (MANIFEST ccbc0988… · 개정 digest dbcbc486…) → ⏭ Codex CI 재리뷰 → 1저자 비준 → 업체 → 파일럿 2 잡 → --seal_pp (schema v3 · 파일럿 결속) → 16 잡 → --collect (등록부 필수 · PILOT_NOT_SEALED 게이트). 결과 전 D3 만 예측 G3(ii) +0.00954 (경계선)."
+   "state": "준비본 v5 · CJ 재리뷰 대기",
+   "text": "**V5 VASP 외주** (1저자 '준비는 해둬볼게' · 업체·예산 미정): CE → v2 → CF → v3 → CG → v4 → CI NO-GO (포장 P1 1) → **v5** (MANIFEST 85bfebdb… · 개정 digest 2b3a0ad4…) → ⏭ Codex CJ 재리뷰 → 1저자 비준 → 업체 → 파일럿 2 잡 → --seal_pp (schema v3 · 파일럿 결속) → 16 잡 → --collect (등록부 필수 · PILOT_NOT_SEALED 게이트). 결과 전 D3 만 예측 G3(ii) +0.00954 (경계선)."
   }
  ],
  "log": [
@@ -964,6 +973,11 @@
    "date": "2026-09-27",
    "stage": "dft",
    "text": "**Codex CG NO-GO → V5 VASP 준비본 v4**: 도구 v4 (반송 묶음 허용 목록 포장 + 구성원 검사 + 준비 실패 시 부분 POTCAR 삭제 · 검사기 forbidden_files 보고 · 파일럿 채택 시도 run_id·attempt.json/OUTCAR sha = 등록부 봉인(schema v3) 아니면 PILOT_NOT_SEALED · 미완료 출력의 정상 TITEL 접두 = 결측(r1 자격) / 접두 아님 = 모순 / 성공 시도 접두 = 미검증 · 빈 에너지 레코드도 마지막 레코드 · tar/sha 쌍 승격) · selftest 155/155 · 돌연변이 13/13 · 패키지 재생성 (입력 93 파일 중 jobs.json·run_all.sh 만 변경 · MANIFEST ccbc0988…) · 실제 패키지 끝-끝 (리뷰어 세 재현 전부 차단: run_id 교체 --collect 3 · PACK_ONLY 누출 0 · 준비 실패 누출 0) · 개정 3 v4 (digest dbcbc486…). 결정은 여전히 proposed · 재리뷰 CI 대기."
+  },
+  {
+   "date": "2026-09-27",
+   "stage": "dft",
+   "text": "**Codex CI NO-GO → V5 VASP 준비본 v5**: 러너 pack() 단계별 성공 확인 (find · 허용 필터 grep 1≠≥2 · sort · 목록 · tar · tar tzf 열람 · 금지 검사 · 구성원↔목록 cmp · sha 64 · mv → 실패 = 종료 4 · .part 삭제 · 기존 쌍 보존) · TITEL_TRUNCATED (잘린 마지막 TITEL = 자동 확인 불가) · 개정 3 v5 (cut 검사는 게이트 문구 정정 · digest 2b3a0ad4…) · 결정 원장 v3/129 표기 정리 · selftest 175/175 · 돌연변이 CI 11/11 (첫 판 8/11 → 표적 주입 3 종 추가) · 패키지 재생성 (입력 불변 · MANIFEST 85bfebdb…) · 실제 패키지 끝-끝 주입 4 종 전부 종료 4 · 리뷰어 repro_pack_ci.sh 종료 0 · CI 회신·재현 묶음 8 파일 보존. 결정은 여전히 proposed · 재리뷰 CJ 대기."
   }
  ],
  "related_decisions": [
