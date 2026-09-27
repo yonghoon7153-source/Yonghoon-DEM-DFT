@@ -78,8 +78,8 @@ async function init() {
   function applyInset(panelOpen: boolean) {
     document.getElementById('app')?.classList.toggle('has-panel', panelOpen);
     if (!map) return;
-    if (!panelOpen) map.setInset({ right: 0, bottom: 0, top: isMobile() ? 110 : 70 });
-    else if (isMobile()) map.setInset({ right: 0, bottom: Math.round(stage.clientHeight * 0.58), top: 130 });
+    if (!panelOpen) map.setInset({ right: 0, bottom: isMobile() ? 110 : 70, top: isMobile() ? 110 : 70 });
+    else if (isMobile()) map.setInset({ right: 0, bottom: Math.round(stage.clientHeight * 0.58), top: 110 });
     else {
       const w = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--panel-w'), 10) || 420;
       map.setInset({ right: w + 28, bottom: 0, top: 70 });

@@ -348,7 +348,8 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
         if (a) {
           const [, ay] = t.apply(a);
           const [[, vy0], [, vy1]] = visibleExtent();
-          const minY = vy0 + 150, maxY = vy1 - 40;
+          const phone = W <= 760; // on phones the bubble is a strip above the sheet, so keep the anchor above it
+          const minY = vy0 + (phone ? 100 : 150), maxY = vy1 - (phone ? 120 : 40);
           if (ay < minY) t = zoomIdentity.translate(t.x, t.y + (minY - ay)).scale(t.k);
           else if (ay > maxY) t = zoomIdentity.translate(t.x, t.y - (ay - maxY)).scale(t.k);
         }
