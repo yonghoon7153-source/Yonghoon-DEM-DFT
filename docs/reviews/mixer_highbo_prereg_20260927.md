@@ -44,6 +44,8 @@ AM–AM 단독 효과 · 응집체만의 인과 · 실제 코팅 효과 · Hare 
 ### 2-1. 덱
 - 생성: `SET=highbo bash dem_scripts/mixer_20260921/gen_all.sh` (기본 인자 = 본 캠페인과 같음: `N_TOTAL 100000 · CGF 151.4 · REV 8` · rpm = 기본 Fr 0.0827 에서 유도).
   → `runs/LH_s32452843` · `LH_s49979687` · `LH_s67867967` (본 캠페인 `runs/` 안, `E0` · `LC` 옆).
+  ⚠ 이 문서의 `runs/` 는 **`dem_scripts/mixer_20260921/runs/`** 의 축약이다 (런처 `run_all.sh` · `gen_all.sh` · `watch.sh` 의 `OUT` 기본값) — 리포 루트에 `runs/` 는 없다
+  (09-27 밤 영수증 명령을 `runs/LC_…/in.mixer` 로 줘서 `FileNotFoundError` 를 냈다).
 - CED 행렬 (J/m³, 캠페인 조건 · 생성기 실측 = Codex §5.1 표와 10⁻¹⁰ 안에서 일치):
 
 | 쌍 | `LC` | `LH` | 비 |

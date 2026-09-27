@@ -14,10 +14,14 @@
 `check_contact_validity.py --contract --phase-receipt <영수증>` 은 그 영수증의 주기 · 축이 덱과 맞을 때만 예정각 (± 각 오차) 으로 벽을 잰다.
 
 ⚠ 영수증은 **바이너리의 성질** (재개가 위상을 잇는다) 이지 어느 런의 벽 좌표가 아니다.  바이너리가 바뀌면 다시 만든다.
-⚠ 입자 0 개로 돈다 — LIGGGHTS 가 빈 계에서 거부하는 명령이 있으면 로그를 보고 여기를 고친다 (WSL 에서만 실행 가능).
+⚠ 입자 0 개로 돈다 — 09-27 WSL 실측: 템플릿 · 분포까지 빼면 `run` 은 돌지만 `write_restart` 의 System init 에서
+  `ERROR: Atom types must start from 1 for granular simulations (../properties.cpp:120)` 로 죽는다 (LIGGGHTS 는 최소 원자 타입을
+  **원자 ∪ particletemplate** 에서 잰다 — CLAUDE.md 재개 체크리스트 ③ 의 순수 SE 사고와 같은 뿌리).  그래서 `particletemplate/*` ·
+  `particledistribution/*` 은 A · B 둘 다에 **남기고** `insert/*` 만 뺀다 (템플릿은 선언일 뿐 입자를 넣지 않는다).
+  그 밖에 빈 계에서 거부하는 명령이 또 있으면 로그를 보고 여기를 고친다 (WSL 에서만 실행 가능).
 
-    python3 scripts/mixer_restart_phase_test.py gen --deck runs/LC_s32452843/in.mixer --out phase_test
-    bash phase_test/run.sh                      # WSL · lmp_serial (LMP=… 로 바꿈) · 초 단위
+    python3 scripts/mixer_restart_phase_test.py gen --deck dem_scripts/mixer_20260921/runs/LC_s32452843/in.mixer --out phase_test
+    bash phase_test/run.sh                      # WSL · lmp_serial (LMP=… 로 바꿈) · 초 단위  (런 폴더 = 런처 OUT 기본값 · 리포 루트에 runs/ 는 없다)
     python3 scripts/mixer_restart_phase_test.py analyze phase_test --binary "$(command -v lmp_serial)" \
         --out docs/data/mixer_phase_receipt_<날짜>.json
     python3 scripts/mixer_restart_phase_test.py --selftest
@@ -39,13 +43,13 @@ sys.path.insert(0, _SCR)
 from make_mixer_resume import logical_commands, _tokens                  # noqa: E402  덱 논리 명령 파서 — 한 벌만 둔다
 
 N1, N2, EVERY = 20000, 10000, 5000        # 회전 N1 → 체크포인트 → N2 · mesh 덤프 간격 (캠페인 dt 0.7 µs · 주기 ≈ 0.8 s ⇒ N1 ≈ 6.3°)
-DROP_FIX = ('particletemplate/', 'particledistribution/', 'insert/')
+DROP_FIX = ('insert/',)                    # 삽입만 뺀다.  템플릿 · 분포는 **남긴다** — 아래 09-27 실측 (0 입자 덱의 write_restart)
 TOL_DEG, RESET_GAP_DEG = 0.05, 1.0        # 예정각 허용 오차 · 재개-리셋 대안과의 최소 간격
 
 
 def gen_decks(deck_text, n1=N1, n2=N2, every=EVERY):
-    """캠페인 덱 → (덱 A, 덱 B).  입자 관련 명령 (템플릿 · 분포 · 삽입 · 그 region · unfix · 원자 dump · run · restart · write_restart ·
-    shell) 을 빼고 나머지 (재료 · 메시 · 벽 · 회전 · 적분기) 는 **순서 · ID 그대로**."""
+    """캠페인 덱 → (덱 A, 덱 B).  삽입 (`insert/*` · 그 region · unfix) · 원자 dump · run · restart · write_restart · shell 을 빼고
+    나머지 (재료 · **템플릿 · 분포** · 메시 · 벽 · 회전 · 적분기) 는 **순서 · ID 그대로** — 템플릿을 남기는 이유는 모듈 docstring."""
     kept = []
     box_region = None
     for _, blk in logical_commands(deck_text):
@@ -214,8 +218,13 @@ def _selftest():
     tb = [_tokens(x) for _, x in logical_commands(b)]
     heads_a = [' '.join(t[:2]) for t in ta if t]
     heads_b = [' '.join(t[:2]) for t in tb if t]
-    chk('① A: 입자 명령 (템플릿 · 분포 · 삽입 · unfix · 원자 dump · 원 run/restart/write_restart) 이 없다',
-        not any(t and t[0] == 'fix' and any(s in t[3] for s in DROP_FIX) for t in ta)
+    def _has(tt, key):
+        return any(t and t[0] == 'fix' and len(t) > 3 and t[3].startswith(key) for t in tt)
+    chk('① A · B: 삽입 · unfix · 원자 dump · 원 run/restart/write_restart 는 없고 **템플릿 · 분포는 남는다** '
+        '(0 입자 덱은 particletemplate 이 타입을 등록해야 write_restart 의 System init 이 산다 — 09-27 실측 `Atom types must start from 1`)',
+        not any(t and t[0] == 'fix' and any(s in t[3] for s in DROP_FIX) for t in ta + tb)
+        and _has(ta, 'particletemplate/') and _has(ta, 'particledistribution/')
+        and _has(tb, 'particletemplate/') and _has(tb, 'particledistribution/')
         and not any(h.startswith(('unfix', 'dump dmp', 'restart ')) for h in heads_a)
         and sum(h.startswith('write_restart') for h in heads_a) == 1 and sum(h.startswith('run ') for h in heads_a) == 2)
     fa = [t[1] for t in ta if t and t[0] == 'fix']
@@ -289,7 +298,7 @@ def main():
     ap = argparse.ArgumentParser(description='재개-위상 영수증 (Codex HBR2-01 · K2) — 덱 생성 · 분석')
     sub = ap.add_subparsers(dest='cmd')
     g = sub.add_parser('gen', help='캠페인 덱 → 입자 없는 A/B 덱 + run.sh')
-    g.add_argument('--deck', required=True, help='실행 덱 (runs/<팔>_s<시드>/in.mixer) — STL 은 옆에서 복사')
+    g.add_argument('--deck', required=True, help='실행 덱 (dem_scripts/mixer_20260921/runs/<팔>_s<시드>/in.mixer) — STL 은 옆에서 복사')
     g.add_argument('--out', required=True)
     an = sub.add_parser('analyze', help='run.sh 뒤: mesh 덤프 대조 → 영수증 JSON')
     an.add_argument('dir')
