@@ -96,9 +96,13 @@ G75-N1: index 최종화 실패 → 즉시 nonzero · 명시적 미완(승격된 
 
 grid_fine 재실행은 권고하지 않았다 (grid_fit_v5 와 산출이 같고 지지할 v6 주장이 없다). `docs/22p_gap/GATE77_REQUEST.md`: §13.1 묶음 상태 갱신 초안 · §11 위치(12 완주 → 13 미착수) · 13 앞 여섯 결정 제안 · 질문 5. 실행 GO 아님 · RUN_SCOPE 불변.
 
+## 77차 회신 (2026-09-27) — 방향 수용 · 12 전체 완료→13 일괄 착수 불수용 · 설계 정정 3건 (원장 §108)
+
+G77-N1(P1): 로컬 완주 ≠ retention provider 증거 → 단계 12 를 12-L(실물)/12-P(부분)로 분리. G77-N2(P1): primary 는 §7 그대로 grid·no-warm·같은 base·bank·B, Δ 하나 + 네 칸 분해; base-retained 는 secondary. G77-N3(P2): 미정은 최종 B 뿐, ladder/max/중단/floor/tolerance/stratum/자원 사전 고정, §9.4 필드는 의존 순서대로. → `GATE78_REQUEST.md`. 제한 오프라인 구현 = §3.2 단계 1+2 (사용자 승인 대기).
+
 ## 다음
 
-`docs/22p_gap/GATE77_REQUEST.md` 발송 → 회신 대기. 회신이 13 착수를 승인하면 코드 라운드는 (a) §9.4 restart 행 필드 → (b) 묶음 6 → (c) 묶음 4 → (d) 묶음 3 → (e) 묶음 5 → (f) 고유 leg 목록·비용 → pilot 요청 순 (리뷰가 고치면 그대로). ~~**게이트 루프 종결.** 다음 일(본 실행 계획 `plan_leg.py --claim-scope active_claims` · 투영 게시 · class 변경)은 전부 사용자 승인 뒤 새 요청문으로.~~ (§107 정정: '본 실행' 은 grid 재실행이 아니라 단계 3 pilot 이다) ~~`docs/22p_gap/GATE76_REQUEST.md` — 75차 잔여 N1·N2·N3 종결 판정 요청 (새 실행 GO 아님).~~ 회신 전까지 `grid_fit_v5` 의 claim_roles·세대·cohort 명부는 쓰지 않는다. 종결되면 본 실행 계획(`plan_leg.py --claim-scope active_claims`)은 사용자 승인 뒤.
+`docs/22p_gap/GATE78_REQUEST.md` 발송 → 회신 대기. 사용자 승인이 오면 코드 라운드(단계 2: restart 행 `converged`·`termination_status`·`n_eval` · parquet 읽기 실패 구조화, RED 먼저, RUN_SCOPE 이동 → 라운드 끝 영수증 1회). ~~`docs/22p_gap/GATE77_REQUEST.md` 발송 → 회신 대기.~~ 회신이 13 착수를 승인하면 코드 라운드는 (a) §9.4 restart 행 필드 → (b) 묶음 6 → (c) 묶음 4 → (d) 묶음 3 → (e) 묶음 5 → (f) 고유 leg 목록·비용 → pilot 요청 순 (리뷰가 고치면 그대로). ~~**게이트 루프 종결.** 다음 일(본 실행 계획 `plan_leg.py --claim-scope active_claims` · 투영 게시 · class 변경)은 전부 사용자 승인 뒤 새 요청문으로.~~ (§107 정정: '본 실행' 은 grid 재실행이 아니라 단계 3 pilot 이다) ~~`docs/22p_gap/GATE76_REQUEST.md` — 75차 잔여 N1·N2·N3 종결 판정 요청 (새 실행 GO 아님).~~ 회신 전까지 `grid_fit_v5` 의 claim_roles·세대·cohort 명부는 쓰지 않는다. 종결되면 본 실행 계획(`plan_leg.py --claim-scope active_claims`)은 사용자 승인 뒤.
 
 ~~`docs/22p_gap/GATE75_REQUEST.md` — 74차 항목 1~6 종결 판정 요청 (새 실행 GO 아님). ~~`docs/22p_gap/GATE74_REQUEST.md` — 결과 보고 + G74-1~4 신고 + G74-3 분류 질문 (새 실행 GO 요청 아님).~~ 74차 회신 항목 3~6 의 범위를 사용자가 정하면 `/finding` (RED 먼저) 로 시작. 현지 검증 `e84d670d`: 20 failed (전부 G74-3) · 1859 passed · 2 xfailed · smoke rc 0. 회신 전까지 `grid_fit_v5` 의 claim_roles·세대·cohort 명부는 쓰지 않는다.
 
