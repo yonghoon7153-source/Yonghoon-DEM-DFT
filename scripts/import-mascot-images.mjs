@@ -15,14 +15,16 @@ import { DATA, loadDb, matchFile, ROOT, writeChecklist } from './mascot-images-l
 const argv = process.argv.slice(2);
 let standin = null;
 let mainOnly = false; // --main-only: keep only the character (drop captions, © marks beside it)
+let backdrop = false; // --backdrop: remove a flat coloured backdrop (e.g. the circle behind an icon-style picture)
 const args = [];
 for (let i = 0; i < argv.length; i++) {
   if (argv[i] === '--standin') standin = argv[++i] ?? '';
   else if (argv[i] === '--main-only') mainOnly = true;
+  else if (argv[i] === '--backdrop') { backdrop = true; mainOnly = true; }
   else args.push(argv[i]);
 }
 if (!args.length || standin === '') {
-  console.error('사용법: npm run mascots:import <그림 폴더 또는 파일...> [--standin "<출처>"] [--main-only]');
+  console.error('사용법: npm run mascots:import <그림 폴더 또는 파일...> [--standin "<출처>"] [--main-only] [--backdrop]');
   process.exit(1);
 }
 const IMG = /\.(png|jpe?g|webp|gif|avif|tiff?)$/i;
@@ -97,6 +99,72 @@ function knockOutWhite(data, w, h) {
   return true;
 }
 
+/**
+ * Remove a flat coloured backdrop behind the character (e.g. a light-blue circle in an icon-style image).
+ * The backdrop colour is the dominant colour on the rim of the opaque area; it must be light (never an
+ * outline) and cover at least 40% of the rim. Pixels within DIST of it that are connected to the rim are
+ * cleared; the next band (DIST..2·DIST) is feathered so no coloured fringe remains.
+ */
+function knockOutBackdrop(data, w, h) {
+  const n = w * h;
+  const A = (p) => data[p * 4 + 3];
+  const rim = [];
+  for (let p = 0; p < n; p++) {
+    if (A(p) < 250) continue;
+    const x = p % w, y = (p / w) | 0;
+    let edge = x === 0 || y === 0 || x === w - 1 || y === h - 1;
+    for (let dy = -1; dy <= 1 && !edge; dy++) for (let dx = -1; dx <= 1 && !edge; dx++) {
+      const nx = x + dx, ny = y + dy;
+      if (nx >= 0 && ny >= 0 && nx < w && ny < h && A(ny * w + nx) < 250) edge = true;
+    }
+    if (edge) rim.push(p);
+  }
+  if (!rim.length) return null;
+  const bins = new Map();
+  for (const p of rim) {
+    const i = p * 4, k = ((data[i] >> 4) << 8) | ((data[i + 1] >> 4) << 4) | (data[i + 2] >> 4);
+    bins.set(k, (bins.get(k) ?? 0) + 1);
+  }
+  const [bestKey, bestCount] = [...bins.entries()].sort((a, b) => b[1] - a[1])[0];
+  if (bestCount < rim.length * 0.4) return null;
+  let r = 0, g = 0, b = 0, c = 0;
+  for (const p of rim) {
+    const i = p * 4, k = ((data[i] >> 4) << 8) | ((data[i + 1] >> 4) << 4) | (data[i + 2] >> 4);
+    if (k === bestKey) { r += data[i]; g += data[i + 1]; b += data[i + 2]; c++; }
+  }
+  r /= c; g /= c; b /= c;
+  if (0.299 * r + 0.587 * g + 0.114 * b < 110) return null; // dark = an outline, never a backdrop
+  const DIST = 40;
+  const dist = (p) => { const i = p * 4; return Math.hypot(data[i] - r, data[i + 1] - g, data[i + 2] - b); };
+  const cleared = new Uint8Array(n);
+  const stack = [];
+  for (let p = 0; p < n; p++) if (A(p) > 0 && dist(p) <= DIST) {
+    const x = p % w, y = (p / w) | 0;
+    if (x === 0 || y === 0 || x === w - 1 || y === h - 1 || A(p - 1) === 0 || A(p + 1) === 0 || A(p - w) === 0 || A(p + w) === 0) stack.push(p);
+  }
+  while (stack.length) {
+    const p = stack.pop();
+    if (cleared[p] || A(p) === 0 || dist(p) > DIST) continue;
+    cleared[p] = 1;
+    data[p * 4 + 3] = 0;
+    const x = p % w, y = (p / w) | 0;
+    if (x > 0) stack.push(p - 1);
+    if (x < w - 1) stack.push(p + 1);
+    if (y > 0) stack.push(p - w);
+    if (y < h - 1) stack.push(p + w);
+  }
+  let feathered = 0;
+  for (let p = 0; p < n; p++) {
+    if (cleared[p] || A(p) === 0) continue;
+    const x = p % w, y = (p / w) | 0;
+    const touches = (x > 0 && cleared[p - 1]) || (x < w - 1 && cleared[p + 1]) || (y > 0 && cleared[p - w]) || (y < h - 1 && cleared[p + w]);
+    if (!touches) continue;
+    const d = dist(p);
+    if (d < DIST * 2) { data[p * 4 + 3] = Math.round(A(p) * Math.max(0, (d - DIST) / DIST)); feathered++; }
+  }
+  return { color: [Math.round(r), Math.round(g), Math.round(b)], share: bestCount / rim.length };
+}
+
 /** Keep only the largest opaque blob (8-connected) — drops captions and © marks printed beside the character. */
 function keepLargestComponent(data, w, h) {
   const n = w * h;
@@ -141,6 +209,8 @@ for (const f of files) {
   const m = hit.mascot;
   const { data, info } = await sharp(f).rotate().ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   const knocked = knockOutWhite(data, info.width, info.height);
+  const drop = backdrop ? knockOutBackdrop(data, info.width, info.height) : null;
+  if (backdrop && !drop) report.unmatched.push(`${basename(f)} — 뚜렷한 단색 배경을 못 찾아서 --backdrop 을 적용하지 않음`);
   const main = mainOnly ? keepLargestComponent(data, info.width, info.height) : null;
   const box = alphaBox(data, info.width, info.height);
   let img = sharp(data, { raw: { width: info.width, height: info.height, channels: 4 } });
@@ -166,7 +236,7 @@ for (const f of files) {
     m.credit = !org || org === '民間' ? `©${m.name.ja}` : `©${org}`;
     report.credit.push(`${m.name.ja}: "${m.credit}" (규정의 표기와 다르면 data/mascots.json 에서 고치기)`);
   }
-  report.ok.push(`${basename(f)} → ${target}  ${m.name.ja}${hit.by === 'prefecture' ? ' (県 이름으로 맞춤)' : ''}${knocked ? ' · 흰 배경 제거' : ''}${main && main.removed ? ` · 캐릭터 밖 조각 ${main.count - 1}개 제거` : ''}`);
+  report.ok.push(`${basename(f)} → ${target}  ${m.name.ja}${hit.by === 'prefecture' ? ' (県 이름으로 맞춤)' : ''}${knocked ? ' · 흰 배경 제거' : ''}${drop ? ` · 단색 배경 rgb(${drop.color.join(',')}) 제거` : ''}${main && main.removed ? ` · 캐릭터 밖 조각 ${main.count - 1}개 제거` : ''}`);
 }
 
 writeFileSync(DATA, JSON.stringify(ctx.db, null, 2) + '\n');

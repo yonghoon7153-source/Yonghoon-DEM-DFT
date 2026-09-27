@@ -770,14 +770,17 @@
       },
       "org": "鳥取県",
       "about": {
-        "ja": "二十世紀梨と鳥を合わせた鳥取県マスコット",
-        "ko": "20세기 배와 새를 합친 돗토리현 마스코트"
+        "ja": "特産の二十世紀梨の体に、博覧会のテーマ「翔け」の鳥の羽、境港をイメージした水兵スタイル。ジャパンエキスポ鳥取'97 のマスコットから鳥取県マスコットに",
+        "ko": "특산 20세기 배 모양 몸에, 박람회 주제 '날다'의 새 날개, 사카이미나토를 떠올리는 수병 차림. 1997 돗토리 박람회 마스코트에서 현 마스코트로"
       },
       "line": {
         "ja": "梨も鳥取もおいしいよ",
         "ko": "배도 돗토리도 맛있어"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/toripy.webp",
+      "credit": "©鳥取県",
+      "url": "https://www.pref.tottori.lg.jp/toripictorial/"
     },
     {
       "id": "shimanekko",
@@ -797,7 +800,9 @@
         "ja": "しまねっこだにゃ",
         "ko": "시마넷코다냥"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/shimanekko.webp",
+      "credit": "©島根県観光連盟"
     },
     {
       "id": "momocchi",
@@ -810,14 +815,17 @@
       },
       "org": "岡山県",
       "about": {
-        "ja": "桃太郎がモチーフ。岡山県マスコット（相棒はうらっち）",
-        "ko": "모모타로가 모티브. 오카야마현 마스코트(짝꿍은 우랏치)"
+        "ja": "岡山が舞台の桃太郎伝説の桃太郎。晴れの国おかやま国体のマスコットから岡山県マスコットに。仲間は温羅伝説のオニの女の子「うらっち」",
+        "ko": "오카야마가 무대인 모모타로 전설의 모모타로. 오카야마 국체 마스코트에서 현 마스코트로. 짝꿍은 우라 전설의 도깨비 소녀 '우랏치'"
       },
       "line": {
         "ja": "きびだんご、あげる！",
         "ko": "기비당고 줄게!"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/momocchi.webp",
+      "credit": "©岡山県",
+      "url": "https://miryoku-harenokuni-okayama.jp/momo-ura/profile.html"
     },
     {
       "id": "bunkakky",
@@ -837,8 +845,10 @@
         "ja": "文化もカキも広島！",
         "ko": "문화도 굴도 히로시마!"
       },
-      "art": "likeness",
-      "url": "https://www.hiroshima-bunka.jp/yuruchara/detail/1.html"
+      "art": "official",
+      "url": "https://www.hiroshima-bunka.jp/yuruchara/detail/1.html",
+      "image": "mascots/bunkakky.webp",
+      "credit": "©広島県"
     },
     {
       "id": "choruru",
@@ -851,14 +861,17 @@
       },
       "org": "山口県",
       "about": {
-        "ja": "「山」の形の頭に「口」の顔。山口県PR本部長",
-        "ko": "'山' 모양 머리에 '口' 얼굴. 야마구치현 PR 본부장"
+        "ja": "頭は「山」、顔は「口」で山口。緑は自然、赤は歴史、オレンジはグルメ。名前は山口弁の「〜ちょる」から。山口国体のマスコットから山口県PR本部長に",
+        "ko": "머리는 '山', 얼굴은 '口'라서 야마구치. 초록은 자연, 빨강은 역사, 주황은 먹거리. 이름은 야마구치 사투리 '~쵸루'에서. 야마구치 국체 마스코트에서 현 PR 본부장으로"
       },
       "line": {
         "ja": "ちょるる〜！山口へ",
         "ko": "초루루~! 야마구치로"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/choruru.webp",
+      "credit": "©山口県",
+      "url": "https://choruru.jp/profile"
     },
     {
       "id": "sudachikun",

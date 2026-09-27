@@ -1,6 +1,6 @@
 # 마스코트 그림 목록
 
-받은 그림 **31 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
+받은 그림 **36 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
 
 주는 법: 캐릭터당 한 장, 배경 투명 PNG 가 제일 좋다 (흰 배경 JPG 도 자동으로 배경을 지운다). 파일명에 **캐릭터 이름·県 이름·id 중 하나**만 들어 있으면 된다.
 받은 뒤: `npm run mascots:import <폴더>` → 512px WebP 로 줄여 `public/mascots/<id>.webp` 에 넣고 데이터와 이 목록을 갱신한다.
@@ -68,11 +68,11 @@
 
 | # | 県 | 캐릭터 | 한글 | 파일명 | 권리자 | 찾을 곳 | 상태 |
 |---|---|---|---|---|---|---|---|
-| 35 | 鳥取 | トリピー | 토리피 | `toripy.png` | 鳥取県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%83%88%E3%83%AA%E3%83%94%E3%83%BC%20%E9%B3%A5%E5%8F%96%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
-| 36 | 島根 | しまねっこ | 시마넷코 | `shimanekko.png` | 島根県観光連盟 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%97%E3%81%BE%E3%81%AD%E3%81%A3%E3%81%93%20%E5%B3%B6%E6%A0%B9%E7%9C%8C%E8%A6%B3%E5%85%89%E9%80%A3%E7%9B%9F%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
-| 37 | 岡山 | ももっち | 모못치 | `momocchi.png` | 岡山県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%82%E3%82%82%E3%81%A3%E3%81%A1%20%E5%B2%A1%E5%B1%B1%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
-| 38 | 広島 | ブンカッキー | 분캇키 | `bunkakky.png` | 広島県 | [공식](https://www.hiroshima-bunka.jp/yuruchara/detail/1.html) | □ |
-| 39 | 山口 | ちょるる | 초루루 | `choruru.png` | 山口県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%A1%E3%82%87%E3%82%8B%E3%82%8B%20%E5%B1%B1%E5%8F%A3%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 35 | 鳥取 | トリピー | 토리피 | `toripy.png` | 鳥取県 | [공식](https://www.pref.tottori.lg.jp/toripictorial/) | ✅ |
+| 36 | 島根 | しまねっこ | 시마넷코 | `shimanekko.png` | 島根県観光連盟 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%97%E3%81%BE%E3%81%AD%E3%81%A3%E3%81%93%20%E5%B3%B6%E6%A0%B9%E7%9C%8C%E8%A6%B3%E5%85%89%E9%80%A3%E7%9B%9F%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
+| 37 | 岡山 | ももっち | 모못치 | `momocchi.png` | 岡山県 | [공식](https://miryoku-harenokuni-okayama.jp/momo-ura/profile.html) | ✅ |
+| 38 | 広島 | ブンカッキー | 분캇키 | `bunkakky.png` | 広島県 | [공식](https://www.hiroshima-bunka.jp/yuruchara/detail/1.html) | ✅ |
+| 39 | 山口 | ちょるる | 초루루 | `choruru.png` | 山口県 | [공식](https://choruru.jp/profile) | ✅ |
 
 ## 四国 시코쿠
 
