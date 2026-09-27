@@ -164,6 +164,9 @@ class FitResult:
     p_spread: float = 0.0                    # restart 간 해의 최대 퍼짐
     J_spread: float = 0.0
     restarts: list = field(default_factory=list)
+    #: ★ 79차 (단계 3 §9.4 한정 구현) — 예외로 실패한 restart 의 기록. `restarts`·`n_restarts` 의 뜻(성공한 것만)은
+    #:   바꾸지 않는다; 실패는 여기 index·source·오류로 남아 fits 행의 `restart_errors_json` 이 된다.
+    restart_errors: list = field(default_factory=list)
 
     @property
     def any_bound_active(self) -> bool:
@@ -181,17 +184,40 @@ def _bound_active(p, lb, ub, tol: float = 1e-4) -> tuple:
 _NM_OPTIONS = {"xatol": 1e-7, "fatol": 1e-12, "maxiter": 4000, "maxfev": 4000}
 
 
+def _native_termination(res) -> dict:
+    """scipy `OptimizeResult` 의 **native** 종료 기록 — 값을 해석하지 않고 그대로 옮긴다 (79차)."""
+    return {"status": int(getattr(res, "status", -1)), "success": bool(getattr(res, "success", False)),
+            "message": str(getattr(res, "message", "")), "nfev": int(getattr(res, "nfev", 0)),
+            "nit": int(getattr(res, "nit", -1))}
+
+
 def _minimize_until_stable(objective, x0, bounds, method: str,
                            max_rounds: int = 4, tol: float = 1e-12):
     """Nelder-Mead는 단순체가 찌그러지면 조기 종료한다. 해를 시작점으로 재시작해
-    개선이 멈출 때까지 반복한다 (최적화 실패와 목적함수의 평평함을 구분하기 위함)."""
+    개선이 멈출 때까지 반복한다 (최적화 실패와 목적함수의 평평함을 구분하기 위함).
+
+    돌려주는 것: `(best_x, best_f, ok, nfev, termination)`.
+      · `ok` 는 **마지막 round** 의 `res.success` 다 — 79차 이전과 같은 뜻이며 바꾸지 않는다 (best round 의
+        success 가 아니다; 둘이 다를 수 있다). `FitResult.converged` 가 이 값을 그대로 받는다.
+      · `termination` (79차, 단계 3 §9.4 한정 구현) 은 두 층을 **구별**해 남긴다:
+          `native_last`  마지막 round 의 solver native 종료 (status·success·message·nfev·nit)
+          `native_best`  `best_f` 를 낸 round 의 native 종료 (개선이 한 번도 없었으면 None)
+          `outer`        이 바깥 반복이 멈춘 이유 — `no_improvement`(개선 < tol) · `nonfinite`(J 비유한) ·
+                         `max_rounds`
+          `n_rounds`     실제로 돈 round 수
+        수치 경로(minimize 호출·갱신 규칙·반환 p/J)는 79차 이전과 **동일**하다 — 기록만 더한다.
+    """
     opts = _NM_OPTIONS if method == "Nelder-Mead" else None
     best_x, best_f, ok, nfev = np.asarray(x0, float), np.inf, False, 0
     cur_x = best_x
+    native_last, native_best, outer, n_rounds = None, None, "max_rounds", 0
     for _ in range(max_rounds):
         res = minimize(objective, cur_x, method=method, bounds=bounds, options=opts)
         nfev += int(res.nfev)
+        n_rounds += 1
+        native_last = _native_termination(res)
         if not np.isfinite(res.fun):
+            outer = "nonfinite"
             break
         improved = best_f - float(res.fun)
         cur_x, ok = np.asarray(res.x, float), bool(res.success)
@@ -199,9 +225,13 @@ def _minimize_until_stable(objective, x0, bounds, method: str,
         if float(res.fun) < best_f:
             best_f = float(res.fun)
             best_x = cur_x
+            native_best = native_last
         if improved < tol:
+            outer = "no_improvement"
             break
-    return best_x, best_f, ok, nfev
+    termination = {"outer": outer, "n_rounds": n_rounds,
+                   "native_last": native_last, "native_best": native_best}
+    return best_x, best_f, ok, nfev, termination
 
 
 def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
@@ -229,6 +259,7 @@ def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
     rng = np.random.default_rng(seed)
 
     results = []
+    errors: list = []
     n_max = max(1, n_restarts)
     for k in range(n_max):
         x0 = init if k == 0 else rng.uniform(lb, ub)
@@ -238,9 +269,11 @@ def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
         #   목적함수만 restart 0이 빠지고, 나머지는 base_init이 남는다.
         src = ("warm" if warm_init else "base_init") if k == 0 else "random"
         try:
-            x, f, ok, nfev = _minimize_until_stable(objective, x0, bounds, method)
-            results.append((x, f, ok, nfev, k, src))
+            x, f, ok, nfev, term = _minimize_until_stable(objective, x0, bounds, method)
+            results.append((x, f, ok, nfev, k, src, term))
         except Exception as e:  # noqa: BLE001
+            # ★ 79차 — 실패한 restart 는 여전히 `results` 에 들어가지 않지만(기존 동작·n_restarts 불변) 기록은 남긴다.
+            errors.append({"i": k, "source": src, "error": f"{type(e).__name__}: {e}"})
             # ★ 10차 발견 6 — 공정 진단(paired, --no-adaptive)은 모든 조건이
             #   **정확히 같은 restart index 집합**을 가져야 성립한다 (F86).
             #   여기서 조용히 건너뛰면 그 조건만 집합이 줄어드는데, 사후
@@ -262,12 +295,13 @@ def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
 
     if not results:
         nan = np.full(4, np.nan)
-        return FitResult(nan, float("nan"), False, 0, (False,) * 4, n_restarts, 0)
+        return FitResult(nan, float("nan"), False, 0, (False,) * 4, n_restarts, 0,
+                         restart_errors=errors)
 
     # ★ J 오름차순 정렬 — 그래서 인덱스는 더 이상 restart 순서가 아니다.
     #   출처(restart index, warm 여부)는 튜플 안에 같이 실려 보존된다 (F25).
     results.sort(key=lambda t: t[1])
-    p_best, J_best, ok, _, _, _ = results[0]      # (p, J, ok, nfev, i, source)
+    p_best, J_best, ok, _, _, _, _ = results[0]   # (p, J, ok, nfev, i, source, termination)
     nfev = sum(t[3] for t in results)     # 리뷰 F17: 전체 restart의 평가 수 합
 
     # 최적해와 J가 사실상 같은데 p가 다른 해 = 평평한 골짜기
@@ -284,10 +318,41 @@ def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
         # F25/F31: (p, J)만 적으면 출처가 사라진다. dict로 바꿔 restart 인덱스와
         # 출처(warm / base_init / random)를 같이 남긴다.
         # 옛 형식 [(p, J), ...]도 읽는 쪽에서 받는다.
+        # ★ 79차 (단계 3 §9.4 한정 구현) — restart 마다 `converged`(그 restart 의 마지막 round success) ·
+        #   `n_eval`(그 restart 의 평가 수; 합이 위 `n_eval`) · `termination_status`(native 마지막/best · outer)
+        #   를 **더한다**. 옛 기록에는 이 키가 없다 — 읽는 쪽은 `normalize_restart_record` 로 부재를 미기록(None)
+        #   으로 받는다 (false/0 으로 소급 채우지 않는다).
         restarts=[{"p": p.tolist(), "J": J, "i": k, "source": s,
-                   "warm": s == "warm"}
-                  for p, J, _, _, k, s in results],
+                   "warm": s == "warm",
+                   "converged": bool(ok_k), "n_eval": int(nfev_k), "termination_status": term}
+                  for p, J, ok_k, nfev_k, k, s, term in results],
+        restart_errors=errors,
     )
+
+
+_RESTART_NEW_KEYS = ("converged", "n_eval", "termination_status")
+
+
+def normalize_restart_record(r) -> dict:
+    """restart 기록 하나를 세대와 무관하게 같은 모양으로 읽는다 (79차 — 역사적 reader).
+
+    · 옛 튜플 `[p, J]`            → `record_generation = "legacy_pair"`, i·source·warm 은 None
+    · 옛 dict (`p·J·i·source·warm`) → `"legacy_dict"`
+    · 79차 이후 dict               → `"v6_prep_logging"`
+    새 키(`converged`·`n_eval`·`termination_status`)가 없으면 값은 **None(미기록)** 이다 — False/0 으로 채우지
+    않는다. 옛 세대의 실제 관측값처럼 읽으면 안 되기 때문이다 (78차 회신 구현 경계 4).
+    """
+    if isinstance(r, dict):
+        gen = "v6_prep_logging" if all(k in r for k in _RESTART_NEW_KEYS) else "legacy_dict"
+        return {"record_generation": gen,
+                "p": r.get("p"), "J": r.get("J"), "i": r.get("i"), "source": r.get("source"),
+                "warm": r.get("warm"),
+                "converged": r.get("converged") if gen == "v6_prep_logging" else None,
+                "n_eval": r.get("n_eval") if gen == "v6_prep_logging" else None,
+                "termination_status": r.get("termination_status") if gen == "v6_prep_logging" else None}
+    p, J = r
+    return {"record_generation": "legacy_pair", "p": list(p), "J": J, "i": None, "source": None, "warm": None,
+            "converged": None, "n_eval": None, "termination_status": None}
 
 
 # ---------------------------------------------------------------- grid 구동
@@ -438,6 +503,7 @@ def _fit_one(task: dict) -> list[dict]:
             "p_spread": res.p_spread, "J_spread": res.J_spread,
             # 리뷰 F4: restart별 (p, J) 원본 — 사후에 노이즈 환산 임계로 재집계 가능
             "restarts_json": json.dumps(res.restarts),
+            "restart_errors_json": json.dumps(res.restart_errors),   # 79차
             "lam_pe_hat": main_modes["lam_pe"], "lam_ne_hat": main_modes["lam_ne"],
             "lli_hat": main_modes["lli"],
             "lli_hat_21p": paper["lli"], "lli_hat_code": code["lli"],

@@ -264,8 +264,8 @@ def test_minimize_until_stable_returns_consistent_pair():
     def J(p):
         return float((p[0] - 0.3) ** 2 + (p[1] + 0.2) ** 2)
 
-    x, f, ok, nfev = _minimize_until_stable(J, [0.9, 0.9],
-                                            [(-1, 1), (-1, 1)], "Nelder-Mead")
+    x, f, ok, nfev, _term = _minimize_until_stable(J, [0.9, 0.9],
+                                                   [(-1, 1), (-1, 1)], "Nelder-Mead")   # 79차: termination 추가
     assert J(x) == pytest.approx(f, abs=1e-12)
 
 
@@ -1525,7 +1525,9 @@ def test_fit_failfast_when_adaptive_off(monkeypatch):
         calls["n"] += 1
         if calls["n"] == 2:
             raise ValueError("solver blew up")
-        return np.array([1.0, 0.0, 1.0, 0.0]), 0.1, True, 10
+        # 79차: _minimize_until_stable 은 termination 을 다섯째로 돌려준다
+        return (np.array([1.0, 0.0, 1.0, 0.0]), 0.1, True, 10,
+                {"outer": "no_improvement", "n_rounds": 1, "native_last": None, "native_best": None})
 
     monkeypatch.setattr(F, "_minimize_until_stable", boom)
 

@@ -210,6 +210,9 @@ _GATED_ENTRYPOINT_MODULES = frozenset({
     # ★ 62차 β′·γ′ — lock 수명·capability 폐기·run_sig 를 production `run_fit()`
     #   `run_grid()` 로 잰다. 같은 이유로 gated.
     "test_lock_lifetime_62", "tests.test_lock_lifetime_62",
+    # ★ 79차 — 단계 2 한정 구현(restart 행 필드 · restart_errors_json · 깨진 parquet 발견)을 production
+    #   `run_fit()` 으로 잰다. 같은 이유로 gated.
+    "test_gate79_stage3_logging", "tests.test_gate79_stage3_logging",
 })
 
 

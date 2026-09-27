@@ -772,6 +772,20 @@ def base_manifest(cfg_hash: str, extra: dict | None = None,
 _RESTART_SOURCES = {"warm", "base_init", "random"}
 
 
+def _parquet_read_failure(path) -> str | None:
+    """parquet 을 **읽어 보고** 실패 사유를 돌려준다 (읽히면 None) — 79차 (단계 3 계약 §9.4).
+
+    validator 의 계약은 `{"ok":…, "fail":[…]}` 인데 깨진 parquet 은 `ArrowInvalid` 를 그대로 올려 발견으로
+    보고되지 못했다 (2026-08-24 자체 발견). 읽기 실패를 검사 항목으로 만들기 위해 먼저 한 번 읽는다.
+    """
+    try:
+        import pyarrow.parquet as _pq
+        _pq.read_table(path)
+    except Exception as e:  # noqa: BLE001 — 사유를 그대로 싣는다
+        return f"{type(e).__name__}: {e}"
+    return None
+
+
 def _restart_ok(e) -> bool:
     """restart 원소 하나의 타입·유한성 검사 (F61).
 
@@ -1374,8 +1388,12 @@ def validate_curves_provenance(curves_dir, repo_root=None) -> dict:
         "곡선 생성 도중 src/tools/configs가 바뀌었다")
 
     cp = d / "curves.parquet"
+    _cerr = None if not cp.exists() else _parquet_read_failure(cp)
     if not cp.exists():
         checks["curves_존재"] = (False, "curves.parquet이 없다")
+    elif _cerr is not None:
+        # ★ 79차 — 깨진 parquet 은 예외가 아니라 **발견**이다 (아래 검사는 전부 이 파일을 읽으므로 대신한다)
+        checks["curves_읽기"] = (False, f"curves.parquet 을 읽지 못했다: {_cerr}")
     else:
         checks["curves_재해시"] = (
             bool(man.get("curves_sha256"))
@@ -1760,8 +1778,12 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
     checks["채점파일_정본"] = (
         fp.resolve() == (run_dir / "fits.parquet").resolve(),
         f"채점 대상이 정본이 아니다: {fp}")
+    _ferr = None if not fp.exists() else _parquet_read_failure(fp)
     if not fp.exists():
         checks["fits_존재"] = (False, "fits.parquet이 없다")
+    elif _ferr is not None:
+        # ★ 79차 — 깨진 parquet 은 예외가 아니라 **발견**이다 (봉인 재계산·서명·restart 검사는 전부 이 파일을 읽는다)
+        checks["fits_읽기"] = (False, f"fits.parquet 을 읽지 못했다: {_ferr}")
     else:
         # ── ★ F68 — 출력 봉인 재계산 ──
         #   지금까지 validator 가 fits 에서 읽은 열은 `run_sig` 와 `restarts_json`
