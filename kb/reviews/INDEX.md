@@ -103,7 +103,7 @@ evidenceScope: multi-source-primary
 | CA | 2026-09-25 | `codex_CA_prompt_wad_aprime_pilot_prereg_v3_2026_09_25.md` | `codex_CA_reply_wad_aprime_pilot_prereg_v3_2026_09_25.md` | 발송 완료 · 회신 수령 2026-09-25 밤 **NO-GO** (`codex_CA_reply_…` · V2 측방 마스크 P0 등 5) → 카드 v4 → CB 재심 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'pilot', 'prereg', 'v3', 'wad'] |
 | CB | 2026-09-25 | `codex_CB_prompt_wad_aprime_pilot_prereg_v4_2026_09_25.md` | `codex_CB_reply_wad_aprime_pilot_prereg_v4_2026_09_25.md` | 발송 완료 · 회신 수령 2026-09-25 밤 **조건부 GO** (`codex_CB_reply_…`) → 조건 4 이행 → 카드 v5 봉인 후보 (1저자 비준 대기) | 같은 라벨 · 주제 토큰 일치 ['aprime', 'pilot', 'prereg', 'v4', 'wad'] |
 | CC | 2026-09-26 | `li2s1a_CC_prompt_li2s_pilot_gateA_ledger_2026_09_26.md` | `li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` | 발송됨 (사용자 · 2026-09-26) · 회신 CC 수령 → `li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` | 같은 라벨 · 주제 토큰 일치 ['gateA', 'ledger', 'li2s', 'pilot']; 판정 인용 3회 |
-| CE | 2026-09-27 | `codex_CE_prompt_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` | — | 발송 대기 (1저자) — 패키지·개정 3 은 커밋 1962d0e9d 에 고정 | — |
+| CE | 2026-09-27 | `codex_CE_prompt_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` | — | 발송 대기 (1저자) — 패키지·개정 3 은 커밋 8f76b912d 에 고정 | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 

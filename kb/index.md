@@ -7,8 +7,8 @@
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
 ## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 261건)
-- 2026-09-27 · `kb/reviews/codex_CE_prompt_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` — 리뷰 CE 프롬프트 — A′ V5 (LPSCl|Ag(111) 작은 주기 계면) VASP 외주 패키지 준비본: QE→VASP 대응 · INCAR · 쌍극자 · D3 · 반송 검사 · G3 경계선 예측 · 발송 대기 (1저자) — 패키지·개정 3 은 커밋 1962d0e9d …
-- 2026-09-26 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
+- 2026-09-27 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
+- 2026-09-27 · `kb/reviews/codex_CE_prompt_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` — 리뷰 CE 프롬프트 — A′ V5 (LPSCl|Ag(111) 작은 주기 계면) VASP 외주 패키지 준비본: QE→VASP 대응 · INCAR · 쌍극자 · D3 · 반송 검사 · G3 경계선 예측 · 발송 대기 (1저자) — 패키지·개정 3 은 커밋 8f76b912d …
 - 2026-09-26 · `kb/reviews/li2s1a_CC_prompt_li2s_pilot_gateA_ledger_2026_09_26.md` — CC 프롬프트 — li2s 소셀 유리 MD 파일럿 보고 · 게이트 A 두 판 · Q6 장부 · Q1–Q9 (외부 1저자에게 발송) · 발송됨 (사용자 · 2026-09-26) · 회신 CC 수령 → `l…
 - 2026-09-26 · `kb/reviews/li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` — 회신 CC — 외부 1저자 (li2s 소셀 유리 MD): 파일럿 결과 · 게이트 A 두 판 · Q1–Q9 판정 (relax 판 · P–S 결합 제외 · seed5 유지 · MTO 맞음 · 400 K 연장 검토) · 수령 (2026-09-26 저녁 · 사용자 붙여넣기) — 회신 원문 …
 - 2026-09-26 · `kb/projects/li2s_glass_external_first_author_report_2026_09_26.md` — li2s 소셀 유리 MD — 회신 CC 이행 보고 (외부 1저자에게) · B 실측 3 건 · 카드 개정 초안 확인 요청 · 400 K prod 800 ps 채택 제안 · 초안 — 사용자(실행자 · 카드 저자) 검토 뒤 외부 1저자에게 발송…
@@ -214,7 +214,7 @@
 
 ## reviews/ (166)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
-- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-26 · 자동생성)
+- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-27 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
 - `kb/reviews/cascade_preflight_audit_2026_09_09.md` — cascade_preflight_audit_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트  (2026-08-29 · 발송 완료 — 회신 AA 접수, 후속은 codex_AB_prompt_…)
@@ -304,7 +304,7 @@
 - `kb/reviews/codex_CA_reply_wad_aprime_pilot_prereg_v3_2026_09_25.md` — 리뷰 CA 회신 — A′ 카드 v3 재심: NO-GO (V2 측방 마스크 선택 입력 P0 · 인덱스 자동 변환 P1 · G3 문구 · 프로브 예외 · registry 주기영상) — BZ 주요 수정은 이행  (2026-09-25 · 수령 (2026-09-25 밤 · 1저자 붙여넣기) — 회신 원문 ·…)
 - `kb/reviews/codex_CB_prompt_wad_aprime_pilot_prereg_v4_2026_09_25.md` — 리뷰 CB 프롬프트 — A′ 파일럿 사전등록 카드 v4: CA 최소 해제조건 5 이행 재심 (V2 측방 마스크 · 인덱스 타입 · G3 문구 · 프로브 예외 · registry 주기영상)  (2026-09-25 · 발송 완료 · 회신 수령 2026-09-25 밤 **조건부 GO** …)
 - `kb/reviews/codex_CB_reply_wad_aprime_pilot_prereg_v4_2026_09_25.md` — 리뷰 CB 회신 — A′ 카드 v4 재심: 조건부 GO (CA 코드 결함 해제 · registry 명세 2 보완 + 선언한 미완료 채우면 S1 봉인 가능 · 본 계산 승인 아님)  (2026-09-25 · 수령 (2026-09-25 밤 · 1저자 붙여넣기) — 회신 원문 ·…)
-- `kb/reviews/codex_CE_prompt_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` — 리뷰 CE 프롬프트 — A′ V5 (LPSCl|Ag(111) 작은 주기 계면) VASP 외주 패키지 준비본: QE→VASP 대응 · INCAR · 쌍극자 · D3 · 반송 검사 · G3 경계선 예측  (2026-09-27 · 발송 대기 (1저자) — 패키지·개정 3 은 커밋 1962d0e9d …)
+- `kb/reviews/codex_CE_prompt_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` — 리뷰 CE 프롬프트 — A′ V5 (LPSCl|Ag(111) 작은 주기 계면) VASP 외주 패키지 준비본: QE→VASP 대응 · INCAR · 쌍극자 · D3 · 반송 검사 · G3 경계선 예측  (2026-09-27 · 발송 대기 (1저자) — 패키지·개정 3 은 커밋 8f76b912d …)
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료)  (2026-08-20 · v2.1 — codex 2라운드 종료 (manifest 지적 철회 ·…)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))

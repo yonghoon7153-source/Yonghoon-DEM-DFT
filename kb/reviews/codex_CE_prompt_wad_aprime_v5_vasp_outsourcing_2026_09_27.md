@@ -3,7 +3,7 @@ title: "리뷰 CE 프롬프트 — A′ V5 (LPSCl|Ag(111) 작은 주기 계면) 
 date: 2026-09-27
 updated: 2026-09-27
 tags: [review, codex, adhesion, wad, prereg, vasp, outsourcing, lpscl, silver, uma, d3, dipole, g5]
-status: 발송 대기 (1저자) — 패키지·개정 3 은 커밋 1962d0e9d 에 고정
+status: 발송 대기 (1저자) — 패키지·개정 3 은 커밋 8f76b912d 에 고정
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -15,7 +15,7 @@ evidenceScope: multi-source-primary
 
 # 리뷰 CE — A′ V5 를 VASP 외주로 돌리는 **준비본** 설계 리뷰
 
-> 트랙 W_ad (점착) → 1저자 = 사용자. 정본 브랜치 `claude/friendly-meitner-lldvar` · **커밋 `1962d0e9d887d402d83b54dafe09c31e1af89713`** (아래 해시는 전부 이 커밋의 트리에서 `tools/review_manifest.py` 로 뽑았다).
+> 트랙 W_ad (점착) → 1저자 = 사용자. 정본 브랜치 `claude/friendly-meitner-lldvar` · **커밋 `8f76b912dd70f47b32a23cbcc1ad96525a97e69c`** (아래 해시는 전부 이 커밋의 트리에서 `tools/review_manifest.py --require_pushed` 로 뽑았다 · 원격에 있음).
 > 상황: A′ 카드 v5 의 **V5** (SE 2층 + Ag(111) 3층 · 176–200 원자) 는 QE CPU 추정 89–109 GB @70 Ry (축소 변형 61–80 GB) 라 우리 GPU 한 장(48 GB)에 안 들어가 **RESOURCE_BLOCKED → G5 NOT_TESTED** (갈래0 · 전체 계면 UMA 예측은 내부 전용). 1저자가 *"V5 를 VASP 외주건으로 만들어 보고 리뷰 받자 · 될지는 모르지만 준비는 해두자"* 고 했다 — **업체·예산 미정 · 준비본**.
 > 이 리뷰는 **보내기 전 필수 수정**을 찾는 것이다. 판정: GO / 조건부 GO / NO-GO.
 
@@ -69,7 +69,7 @@ evidenceScope: multi-source-primary
 - **Q9 규모·견적** — 업체 견적에 빠진 정보가 있는가 (환원 k 수 · KPAR 권고 · 코어·메모리 · 벽시계 · 재시도 최악).
 - **Q10 서술** — 개정 3 의 허용·금지 서술이 충분한가. G5 PASS 뒤 전체 계면 UMA 예측을 DEM 에 넘길 때 (갈래1) 붙여야 할 라벨이 더 있는가.
 
-## §5. 첨부 (커밋 1962d0e9d · sha256)
+## §5. 첨부 (커밋 8f76b912d · sha256)
 
 ```
 db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json  00202e38e5404f0667a0f70cf9b780444ec7103f77d47b221aca9525b82dc587
