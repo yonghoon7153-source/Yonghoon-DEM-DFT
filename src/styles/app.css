@@ -297,8 +297,9 @@
 .mascot__bubble .b-line[lang="ja"] { font-family: var(--font-display); font-size: 14.5px; }
 .mascot__bubble .b-ko { display: block; color: var(--ink-2); font-size: 13px; margin-top: 2px; }
 .mascot__bubble .b-tip { display: block; margin-top: 4px; font-size: 10.5px; color: var(--ink-3); }
-.mascot__bubble .b-poke { display: block; margin-top: 5px; padding: 3px 8px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); font-size: 12px; }
-.mascot__bubble .b-poke [lang="ja"] { font-family: var(--font-display); font-size: 12.5px; }
+.mascot__bubble .b-poke { display: block; margin-top: 2px; font-size: 9.5px; line-height: 1.3; color: color-mix(in oklab, var(--accent) 35%, var(--ink-3)); opacity: .85; }
+.mascot__bubble .b-poke > span { display: block; }
+.mascot__bubble .b-ko, .mascot__bubble .b-poke [lang="ko"] { word-break: keep-all; }
 .mascot.is-leaving .mascot__art { animation: poof .35s ease-in both; }
 .mascot.is-leaving .mascot__bubble { animation: poof .3s ease-in both; }
 .mascot--flip .mascot__bubble { left: auto; right: calc(var(--size) / 2 - 4px); border-radius: 16px 16px 4px 16px; transform-origin: 100% 100%; }

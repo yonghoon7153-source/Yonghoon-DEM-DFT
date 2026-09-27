@@ -89,15 +89,15 @@ export function createEaster(opts: EasterOptions) {
     const lineJa = el('span', { class: 'b-line', lang: 'ja' }, m.line.ja);
     const lineKo = el('span', { class: 'b-ko' }, m.line.ko);
     // a mascot with a poke line warns about it right away — the hint for its hidden friend
-    const warn = m.poke ? el('span', { class: 'b-poke' }, el('span', { lang: 'ja' }, m.poke.ja), ` ${m.poke.ko}`) : null;
+    const warn = m.poke ? el('span', { class: 'b-poke' }, el('span', { lang: 'ja' }, m.poke.ja), el('span', { lang: 'ko' }, m.poke.ko)) : null;
     const bubble = el(
       'div',
       { class: 'mascot__bubble' },
       el('span', { class: 'b-name' }, `${m.name.ja}`, el('span', { class: 'b-org' }, ` · ${m.org}`)),
       lineJa,
       lineKo,
-      warn,
       el('span', { class: 'b-tip' }, isNew ? (m.secret ? '✦ 숨은 친구를 찾았어요!' : '✦ 図鑑에 추가됐어요') : '또 만났다 ✿'),
+      warn, // a small aside at the very bottom — a hint, not a sign
     );
     n.append(artEl, bubble, el('span', { class: 'mascot__tag', lang: 'ja' }, m.name.ja));
     // Easter egg: a mascot with a hidden friend turns into it after three taps on the picture.
