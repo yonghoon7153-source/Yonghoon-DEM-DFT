@@ -22,14 +22,30 @@ class IndexShapeError(ValueError):
     """파싱은 됐지만 `runs:` mapping 을 담은 mapping 이 아니다."""
 
 
+class MergeKeyError(ValueError):
+    """merge key(`<<`)가 있다 — index 는 기계가 `safe_dump` 로 쓰는 파일이라 merge 를 쓰지 않는다."""
+
+
+_MERGE_TAG = "tag:yaml.org,2002:merge"
+
+
 class _StrictLoader(yaml.SafeLoader):
-    """SafeLoader + 중복 키 거부. merge key(`<<`)는 SafeLoader 와 같게 flatten 한 뒤 본다."""
+    """SafeLoader + 중복 키 거부 + merge key 거부.
+
+    merge key 정책 (75차 리뷰어 요구 — 명시): **허용하지 않는다.** `<<` 를 flatten 하면 merge 로 들어온 키와
+    명시 키가 겹칠 때 "어느 쪽이 정본인가" 가 다시 생기고, 그것은 이 loader 가 막으려는 바로 그 불명확함이다.
+    index 는 `archive_results.sh` 가 `safe_dump` 로 쓰므로 정상 경로에 merge key 는 없다 — 있으면 사람이
+    손으로 고친 것이고, 사람이 본다.
+    """
 
     def construct_mapping(self, node, deep=False):  # noqa: D401 — PyYAML hook
         if not isinstance(node, yaml.MappingNode):
             raise yaml.constructor.ConstructorError(
                 None, None, f"expected a mapping node, but found {node.id}", node.start_mark)
-        self.flatten_mapping(node)
+        for key_node, _value_node in node.value:
+            if key_node.tag == _MERGE_TAG:
+                raise MergeKeyError(
+                    f"merge key `<<` (line {key_node.start_mark.line + 1}) — index 에서 허용하지 않는다 (75차 G75-N2)")
         seen: dict = {}
         for key_node, _value_node in node.value:
             key = self.construct_object(key_node, deep=deep)
@@ -50,7 +66,7 @@ class _StrictLoader(yaml.SafeLoader):
 def load_index_strict(text: str) -> dict:
     """index 본문을 엄격하게 읽어 `{"runs": {name: entry}, ...}` 를 돌려준다.
 
-    거부 (예외): 중복 키(`DuplicateKeyError`) · YAML 오류(`yaml.YAMLError`) · 형식 밖(`IndexShapeError`:
+    거부 (예외): 중복 키(`DuplicateKeyError`) · merge key(`MergeKeyError`) · YAML 오류(`yaml.YAMLError`) · 형식 밖(`IndexShapeError`:
     최상위가 mapping 이 아니거나 `runs` 가 mapping 이 아니거나 이름이 str 이 아니거나 entry 가 mapping 이
     아님). 빈 파일도 형식 밖이다 — "index 가 있는데 비어 있다" 는 사람이 볼 일이다.
     """

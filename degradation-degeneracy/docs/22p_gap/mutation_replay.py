@@ -48,6 +48,7 @@ IF = ROOT / "tests" / "interpreter_fixture.py"                      # 65차 T1
 G66T = ROOT / "tests" / "test_gate66_defensive.py"                  # 67차 T1
 RUNSH = ROOT / "run.sh"                                              # 70차 G70-N1
 ARCHSH = ROOT / "scripts" / "archive_results.sh"                     # 74차 G74-4
+IDXY = ROOT / "tools" / "index_yaml.py"                              # 75차 G75-N2
 
 #: ★ 46차 #9 조건 9 — 변이는 **작업 트리에 손대지 않는다.** 45차 runner 는
 #:   실제 저장소 파일을 고쳤다가 `finally` 로 되돌렸다. 그러면 (a) 중단되면
@@ -1832,14 +1833,31 @@ MUTANTS = [
      '            if False:',
      # 04c 는 교집합 검사가 먼저 잡는다 (관측: fail []) — 반대 방향만이 잡는 경계는 04e (계획에 없는 이름)
      "g74_3_04e"),
-    ("index-merge-keeps-other-entries-g74", ARCHSH,                        # G74-4 병합
-     '    runs = dict(_prev.get("runs") or {})\n',
-     '    runs = {}\n',
+    ("index-merge-keeps-other-entries-g74", ARCHSH,                        # G74-4 병합 (75차: 원상은 엄격 loader 줄)
+     '    runs = dict(load_index_strict(out.read_text(encoding="utf-8"))["runs"])',
+     '    runs = {}',
      "g74_4_01 or g74_4_02"),
     ("same-name-different-identity-is-refused-g74", ARCHSH,               # G74-4 동명 충돌
      'if ent.get("payload_index_sha256") == got:\n    _leave(0)',
      'if True:\n    _leave(0)',
      "g74_4_03"),
+    # ── 75차 (G75-N1 · N2 · N3) ──
+    ("index-finalisation-failure-fails-the-archive-g75", ARCHSH,          # G75-N1 rc 전파 (리뷰어 S17)
+     '[[ "$n_bad" -eq 0 && "$n_missing" -eq 0 && "$index_ok" -eq 1 ]] || exit 1',
+     '[[ "$n_bad" -eq 0 && "$n_missing" -eq 0 ]] || exit 1',
+     "g75_n1_an_index"),
+    ("duplicate-index-keys-are-refused-g75", IDXY,                        # G75-N2 중복 키 (I02·I03·I04)
+     '            if key in seen:\n                raise DuplicateKeyError(',
+     '            if False:\n                raise DuplicateKeyError(',
+     "g75_n2"),
+    ("merge-keys-are-refused-in-the-index-g75", IDXY,                     # G75-N2 merge key 정책 (명시)
+     '            if key_node.tag == _MERGE_TAG:\n                raise MergeKeyError(',
+     '            if False:\n                raise MergeKeyError(',
+     "g75_n2_a_duplicate"),
+    ("diagnostic-consumer-binds-out-to-the-receipt-run-g75", TDL,         # G75-N3 (리뷰어 D01)
+     '                _assert_ledger_run_bound(ev, bound_run, leg, e.get("preservation_status"))\n',
+     '                bound_run  # 변이: 원장 실행 자리 대조를 지운다\n',
+     "g75_n3_01_a"),
     ("the-replay-context-is-measured-once-g66", MR,                          # 정적 관측
      '    ctx = ctx if ctx is not None else _\u0072eplay_context()\n'
      '    want = _parent_customization_view(ctx)',
