@@ -64,3 +64,4 @@ append-only. 형식: `## [YYYY-MM-DD] action | subject` — 커밋 제목 `actio
 ## [2026-09-27] create | 💬 comment 게시판 — 누구나 「뭐뭐 넣어줘!」 를 쓰고 모두가 봄 (Pages Function + D1)
 ## [2026-09-27] update | 📷 이미지 검색을 내 마인드맵 · 보충의 떠올릴 수 있는 칸 거의 전부에 (252칸 더)
 ## [2026-09-27] fix | 「山↑」 이 두 번 보이던 것 — 읽기가 이름과 같으면 ふりがな 줄을 안 씀
+## [2026-09-27] docs | 체크리스트 #55 — 💬 comment 의 Cloudflare 설정 · 다시 배포 끝 (사용자)
