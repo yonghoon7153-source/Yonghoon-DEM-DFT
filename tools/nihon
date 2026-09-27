@@ -142,7 +142,7 @@ cmd_feed() {
 
 cmd_share() {
   cat <<TXT
-にほんちず 는 정적 사이트라 서버도 터널도 필요 없다 (ADR 0004).
+にほんちず 는 정적 사이트라 서버도 터널도 필요 없다 (ADR 0004) — 💬 comment 의 함수 하나만 예외 (ADR 0007).
 
   운영 주소 (Cloudflare Pages)   https://nihoncheese.bmlwork.kr
   Pages 주소                     https://nihoncheese.pages.dev
@@ -154,6 +154,17 @@ Cloudflare Pages 처음 연결하기 (한 번만, 대시보드에서):
   3. Settings → Build → Branch control → Preview branch: None (다른 브랜치는 다른 프로젝트)
   4. Custom domains → nihoncheese.bmlwork.kr → Activate domain (bmlwork.kr 은 같은 Cloudflare 계정 DNS 라 CNAME 자동)
 그 뒤로는 이 브랜치에 push 할 때마다 자동 배포된다.
+
+💬 comment 게시판 켜기 (한 번만, 대시보드에서 — ADR 0007):
+  1. Storage & Databases → D1 SQL Database → Create database → 이름 nihoncheese-comments → Create
+     (표는 게시판을 처음 열 때 함수가 스스로 만든다 — SQL 을 칠 필요 없음)
+  2. Workers & Pages → nihoncheese → Settings → Bindings → Add → D1 database
+     → Variable name: DB · D1 database: nihoncheese-comments → Save
+  3. 같은 Settings → Variables and Secrets → Add → Type: Secret · Variable name: ADMIN_KEY
+     · Value: 나만 아는 비밀번호 (게시판 맨 아래 「관리」 에 넣으면 글마다 🗑) → Save
+  4. Deployments → 맨 위 배포의 ⋯ → Retry deployment (연결은 새 배포부터 적용)
+  확인: https://nihoncheese.bmlwork.kr/api/comments 가 {"comments":[],"more":false} 이면 켜진 것
+        ({"error":"not-configured"} 이면 2번 연결이나 4번 다시 배포가 아직)
 TXT
 }
 

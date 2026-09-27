@@ -11,6 +11,7 @@ import { createCompass } from './ui/compass';
 import { createEaster, createPetals } from './ui/easter';
 import { createModal } from './ui/modal';
 import { createPanel, renderGeneralMemo } from './ui/panel';
+import { renderComments } from './ui/comments';
 import { createSearch } from './ui/search';
 import { createTooltip } from './ui/tooltip';
 import { renderTokyo23, WARD_PREFECTURE } from './ui/tokyo23';
@@ -292,6 +293,7 @@ async function init() {
     modal.open(view);
   });
   $('memo-btn').addEventListener('click', () => modal.open(renderGeneralMemo()));
+  $('comment-btn').addEventListener('click', () => modal.open(renderComments(state.selected)));
   $('brand').addEventListener('click', () => {
     const on = petals.toggle();
     $('brand').title = on ? '벚꽃 그만 🌸' : '벚꽃 🌸';
@@ -301,7 +303,9 @@ async function init() {
 
   // ---- keyboard
   window.addEventListener('keydown', (e) => {
-    const typing = (e.target as HTMLElement | null)?.tagName === 'INPUT';
+    // writing somewhere (the search, a comment) — the one-key shortcuts must not steal the letters
+    const t = e.target as HTMLElement | null;
+    const typing = !!t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable);
     if (e.key === 'Escape') {
       if (modal.isOpen()) modal.close();
       else if (panel.isOpen()) deselect();

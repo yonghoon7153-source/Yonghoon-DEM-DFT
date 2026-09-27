@@ -34,3 +34,8 @@ ADR 0031 · 0034 · 0036) 의 서브도메인을 쓴다 — 서브도메인은 �
 프로젝트에 도메인을 하나 더 붙이면 된다. Pages 기본 주소 `https://nihoncheese.pages.dev` 도 계속 열린다.
 
 2026-09-27: Custom domains 에 `nihoncheese.bmlwork.kr` 을 넣고 Activate — Initializing 을 거쳐 **Active · SSL enabled**.
+
+## 덧붙임 (2026-09-27, 10차 요청)
+
+💬 comment 게시판 때문에 `functions/api/comments.ts` **함수 하나**가 생겼다 (ADR 0007). 같은 Pages 프로젝트가
+git push 때 함께 배포하고, `/api/comments` 만 함수를 부른다. 터널 · 따로 도는 서버는 여전히 없다.

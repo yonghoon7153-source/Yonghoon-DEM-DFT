@@ -809,12 +809,73 @@
 .range-notes__item b { font-family: var(--font-display); font-weight: 500; }
 .range-notes__item p { margin-top: 3px; font-size: 12.5px; color: var(--ink-2); line-height: 1.45; }
 
+/* ---------- 💬 comment: 「뭐뭐 넣어줘!」 board (ADR 0007) ---------- */
+.pill--comment .pill__icon { font-size: 14px; }
+.cmt h2 { flex-wrap: wrap; row-gap: 2px; }
+.cmt__title { white-space: nowrap; }
+.cmt__form {
+  position: relative; margin: 14px 0 18px; padding: 18px 16px 12px;
+  border-radius: var(--radius); background: var(--paper-2); box-shadow: inset 0 0 0 1px var(--line);
+}
+/* a strip of masking tape holding the note paper, like the panel's */
+.cmt__form::before {
+  content: ''; position: absolute; top: -9px; left: 50%; width: 96px; height: 20px;
+  transform: translateX(-50%) rotate(-2deg); border-radius: 3px; opacity: .8;
+  background: repeating-linear-gradient(90deg, rgba(111, 176, 166, .55) 0 8px, rgba(255, 255, 255, .45) 8px 16px);
+  box-shadow: 0 1px 2px rgba(74, 63, 58, .15);
+}
+.cmt__row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.cmt__field {
+  font: inherit; font-size: 14px; color: var(--ink); background: var(--white);
+  border: 1.5px solid var(--line-2); border-radius: var(--radius-sm); padding: 8px 12px;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.cmt__field:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.cmt__name { flex: 1 1 150px; min-width: 0; }
+.cmt__pref { flex: 1 1 170px; min-width: 0; }
+.cmt__body { display: block; width: 100%; min-height: 78px; resize: vertical; font-family: var(--font-note); font-size: 17px; line-height: 1.4; }
+.cmt__trap { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.cmt__foot { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.cmt__status { flex: 1; margin: 0; min-height: 1.2em; font-size: 12.5px; color: var(--ink-2); }
+.cmt__count { font-size: 11.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.cmt__send {
+  padding: 8px 20px; border-radius: var(--radius-pill); background: var(--accent); color: var(--white);
+  font-family: var(--font-head); font-size: 14px; box-shadow: var(--shadow-sm); transition: transform .15s var(--ease-pop);
+}
+.cmt__send:hover:not(:disabled) { transform: translateY(-1px) rotate(-1.2deg); }
+.cmt__send:disabled { opacity: .45; cursor: default; }
+.cmt__note {
+  margin: 0 0 12px; padding: 18px; border: 1.5px dashed var(--line-2); border-radius: var(--radius);
+  text-align: center; color: var(--ink-3); font-size: 13.5px; font-family: var(--font-note);
+}
+.cmt__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+/* each comment a little note stuck on the page, not quite straight */
+.cmt__item { padding: 10px 14px 12px; border-radius: var(--radius-sm); background: var(--white); box-shadow: var(--shadow-sm), inset 0 0 0 1px var(--line); }
+.cmt__item:nth-child(odd) { transform: rotate(-.35deg); }
+.cmt__item:nth-child(even) { transform: rotate(.3deg); }
+.cmt__meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; font-size: 12px; color: var(--ink-3); }
+.cmt__meta b { font-family: var(--font-head); font-weight: 500; font-size: 13.5px; color: var(--ink); }
+.cmt__tag { padding: 1px 8px; border-radius: var(--radius-pill); background: var(--accent-2-soft); color: var(--ink-2); font-size: 11.5px; }
+.cmt__meta time { margin-left: auto; }
+.cmt__text { margin: 4px 0 0; font-family: var(--font-note); font-size: 17px; line-height: 1.4; white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; }
+.cmt__more {
+  display: block; margin: 12px auto 0; padding: 4px 14px; border-radius: var(--radius-pill);
+  background: var(--white); box-shadow: inset 0 0 0 1px var(--line-2); font-size: 12.5px; color: var(--ink-2);
+}
+.cmt__end { display: flex; justify-content: flex-end; margin-top: 18px; }
+.cmt__admin { font-size: 11.5px; color: var(--ink-3); text-decoration: underline; text-underline-offset: 2px; }
+.cmt__adminbox { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.cmt__key { width: 170px; padding: 5px 10px; font-size: 13px; }
+.cmt__adminmsg { margin: 0; font-size: 12px; color: var(--ink-2); }
+.cmt__del { margin-left: 2px; padding: 0 4px; font-size: 14px; opacity: .7; }
+.cmt__del:hover { opacity: 1; }
+
 /* ---------- responsive ---------- */
 @media (min-width: 761px) and (max-width: 1100px) {
   .search { flex: 1 1 auto; width: auto; min-width: 150px; max-width: 380px; }
   .seg button { padding: 6px 10px; }
-  .pill--memo span:not(.pill__icon) { display: none; }
-  .pill--memo { width: 38px; padding: 0; justify-content: center; }
+  .pill--memo span:not(.pill__icon), .pill--comment span:not(.pill__icon) { display: none; }
+  .pill--memo, .pill--comment { width: 38px; padding: 0; justify-content: center; }
 }
 @media (max-width: 900px) {
   :root { --panel-w: 380px; }
@@ -834,8 +895,8 @@
   .brand__sub { font-size: 11.5px; }
   .topbar__right { margin-left: auto; gap: 6px; }
   .pill { height: 34px; padding: 0 10px; font-size: 13px; }
-  .pill--memo span:not(.pill__icon) { display: none; }
-  .pill--memo { width: 34px; padding: 0; justify-content: center; }
+  .pill--memo span:not(.pill__icon), .pill--comment span:not(.pill__icon) { display: none; }
+  .pill--memo, .pill--comment { width: 34px; padding: 0; justify-content: center; }
   .seg { position: fixed; left: 10px; bottom: 112px; z-index: 16; }
   .seg button { padding: 5px 9px; font-size: 12.5px; }
   .search { order: 3; width: 100%; }

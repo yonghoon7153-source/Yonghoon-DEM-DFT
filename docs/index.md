@@ -10,6 +10,7 @@
 | [0004](adr/0004-share-through-cloudflare-pages.md) | 공유는 Cloudflare Pages | `nihoncheese.bmlwork.kr`, 터널 없음 |
 | [0005](adr/0005-map-layers-and-supplement.md) | 지도 레이어 · 보충 · 사진 검색 | 県 ふりがな, 도시·다리·산맥 버튼, 빈 県은 「✦ 보충」, 사진은 📷 검색 |
 | [0006](adr/0006-canva-audit-is-a-check.md) | Canva 전수조사는 검사기가 | `nihon audit` 가 PDF 글줄 837개를 소모하며 대조, 빠지면 `nihon check` 가 멈춤 |
+| [0007](adr/0007-comment-board-on-pages-functions.md) | 💬 comment 게시판 | Pages Function 하나 + D1, 로그인 없음, IP 는 해시만, 지우기는 `ADMIN_KEY` |
 
 ## 그 밖에
 

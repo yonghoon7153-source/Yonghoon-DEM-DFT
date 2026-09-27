@@ -5,3 +5,6 @@ dist/
 .vite/
 /screenshots/
 docs/screenshots/qa/
+
+# local Cloudflare tooling (wrangler pages dev / functions build)
+.wrangler/
