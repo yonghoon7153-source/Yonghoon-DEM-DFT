@@ -8434,3 +8434,13 @@ RUN_SCOPE `c2ef1a811e70bb4c → 27390883eb132941`. 두 실물 영수증은 원�
 **하지 않은 것 (78차 범위 밖):** 단계 3~6 · candidate_id/bank_index · provider/canary · floor/pilot · 새 연구 계산 · class/투영 승격 · missing 처리 분석기 · 기존 fits 소급 수정 · `STAGE3_CONTRACT.md` 본문 (리뷰 판정 뒤).
 
 **실측:** §110 (전체 회귀 + strict smoke 는 이 문서 커밋 뒤 clean 커밋에서).
+
+## §110 79차 요청 전 실측 — 전체 회귀 · strict smoke · 25차 발견 9 닫힘
+
+**실측 1 (`f90a9c89`, clean, 시작 HEAD = 끝 HEAD, 미추적 0):** 전체 pytest **1 failed · 1957 passed · 1 xfailed** (48:11) · strict smoke **rc 0**. 유일한 적색 `test_stage3_contract_cites_live_code_facts` — 계약 §1 의 `src/fitting.py` 줄번호 인용(1421·1376·392-406)이 단계 2 로 코드가 밀려 낡았다(실제 1487·1442·457-471). 교란 사실은 그대로(시험이 그것을 확인). 계약 본문은 손대지 않고 줄번호 세 곳 + 갱신 주석 한 줄만 (`c77674f6`, RUN_SCOPE 밖).
+
+**실측 2 (`c77674f6`, clean, 시작 HEAD = 끝 HEAD, 미추적 0):** 전체 pytest **0 failed · 1958 passed · 1 xfailed** (48:57) · strict smoke **rc 0** (작은 grid/fit/score/restore 계산 포함 — 연구용 새 실행 0). `3dc269d8 → c77674f6` RUN_SCOPE diff 0 (실측). docs-lint 는 전체 회귀 안에 포함(적색 0).
+
+**25차 발견 9 닫힘 (부수 효과, 계획한 것):** xfailed 가 2 → 1. `tests/test_compare.py` 의 조건부 xfail — footer 를 깨뜨린 fits.parquet 에서 `validate_provenance` 가 `ArrowInvalid` 를 올리면 xfail, 아니면 `ok is False` 와 `"fits_읽기" in fail` 을 요구 — 이 단계 2 의 `_parquet_read_failure` 로 **진짜 PASS** 가 됐다. 그 시험 docstring 이 "계약 v4 §11 의 12·13 단계로 이월" 이라 적었고 이번이 그 단계다. 시험은 손대지 않았다.
+
+**요청문:** `docs/22p_gap/GATE79_REQUEST.md` — G78-N1·N2 정정 요약 · 단계 2 diff 와 78차 경계 1~7 대응 · 실측 · 자기 신고 · 질문 4. 실행 GO 아님.
