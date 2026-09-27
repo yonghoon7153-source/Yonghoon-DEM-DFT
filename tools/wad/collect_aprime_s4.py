@@ -8,7 +8,10 @@
   · G3 (대표점): c+2 셀에서 bound 1 · far (i) 그대로 · far (ii) +2 → ΔE_bound · ΔE_far · ΔW 각각 **기록** · 판정 = 두 검사 모두 |ΔW| ≤ 0.01 J/m²
   · G4 (대표점): e70/700 · k+1 · smearing ½ 각각 두 끝점 → 판정 = |ΔW| ≤ 0.02 J/m² · 끝점 ΔE 는 기록
   · ⛔ 2026-09-26 정정 — 카드 괄호 '(조각 |ΔE| ≤ 5 meV)' · '(조각 ≤ 10 meV)' 는 **조각 모델(V3·V4 · ΔE_frag eV/조각) 의 문턱**이다
-    (카드 V3_V4 식 'ΔE_frag … eV/조각 — J/m² 로 바꾸지 않는다' · G3/G4 가 같은 짝 구조 · 0.01 J/m² × SE 셀 ~100 Å² ≈ 6 meV 로 눈금 일치).
+    (카드 V3_V4 식 'ΔE_frag … eV/조각 — J/m² 로 바꾸지 않는다' · G3/G4 가 같은 짝 구조).
+    ⛔ 2026-09-27 산술 정오: 이 자리에 적었던 '0.01 J/m² × SE 셀 ~100 Å² ≈ 6 meV 로 눈금 일치' 는 **10 배 틀렸다** — 0.01 J/m² × 101 Å² = 1.0e-20 J
+    = **63 meV**. 조각 문턱 5 meV 는 면적 환산 W 문턱보다 ~12 배 엄하다 (눈금 일치 아님). 읽기 자체(괄호 = 조각 문턱)는 앞의 두 근거로 서고
+    결정 `D-2026-09-26-wad-aprime-v2-report` 가 고정했다 — `db/properties/wad_aprime_gate_reading_erratum_2026_09_27.json`.
     W 모델(V2)에 끝점별 문턱을 건 첫 판은 내 오독이다 — 끝점 ΔE 는 CA Q2 대로 **기록만** 한다 (차이량 ΔW 가 작아도 끝점이 안 변했다는 뜻이 아니다).
     투명성을 위해 옛 읽기(끝점 조각 문턱)의 결과도 `endpoint_piece_reading_info` 로 같이 낸다 (판정에 안 쓴다).
   · UMA (개정 1): W_UMA+D3 := W_UMA + [E_D3,QE(far) − E_D3,QE(bound)]/A · Δ = W_PBE+D3 − W_UMA+D3 (= W_PBE − W_UMA) — V2 는 대상군 P1′ 이 아니라
@@ -20,8 +23,17 @@
 ⛔ 이 도구가 못 하는 것: 판정 문구를 만들지 않는다(문턱과 값을 나란히 놓는다) · 실패·누락 잡을 0 으로 채우지 않는다 · UMA 에너지를 직접 계산하지
    않는다(`relax_uma_d3.py --energies` 의 JSON 을 받는다) · 결과를 보고 표본·문턱을 바꾸지 않는다.
 
+조각 모델 (V4 · `--v4`, 2026-09-27): 카드 V3_V4 식 그대로 —
+  · ΔE_frag = E(slab+조각, far) − E(slab+조각, bound) [eV/조각] · F · E_int · PBE(D3 뺀) · ΔD3 병기 · **J/m² 로 바꾸지 않는다** · 측방 영상 거리 병기
+    ('고립' 이라 부르지 않는다 — 주기 반복 조각)
+  · G3: c+2 셀에서 (i) 영상 검사 = far_i · (ii) 거리 검사 = far_ii 로 ΔE_frag 를 다시 → **|ΔE_frag 변화| ≤ 5 meV 둘 다** (결정 v2-report reopen ①) · 끝점 ΔE 는 기록
+  · G4: k1 · s05 각각 |ΔE_frag 변화| ≤ 10 meV · e70 은 S3v2 봉인에서 RESOURCE_BLOCKED → 'ecut 미검증' (INCOMPLETE 와 구분)
+  ⛔ 조각 모드가 못 하는 것: UMA 대조(G5 는 V5 대상군)를 하지 않는다 · 조각 값을 W 로 환산하지 않는다 · 벤젠이 흡착 구조를 유지했는지는 본다고 하지 않는다
+     (구조 점검은 S2 `--interface_check` 의 몫 · 여기선 SCF 에너지 차만).
+
 사용
   python3 tools/wad/collect_aprime_s4.py --stage2 db/inputs/wad_aprime_s4_v2_stage2_2026_09_26 --raw db/raw/wad_aprime_s4_v2s2_2026_09_26 [--uma uma.json] --out result.json
+  python3 tools/wad/collect_aprime_s4.py --v4 db/inputs/wad_aprime_s3v2_2026_09_26 --raw db/raw/wad_aprime_s4_v4_2026_09_27 --out v4.json
   python3 tools/wad/collect_aprime_s4.py --selftest
 """
 import argparse
@@ -210,6 +222,99 @@ def collect(stage2_dir, raw_dir, uma_json=None, supp_dir=None):
     return out
 
 
+FRAG_ELEMENTS = ("C", "H")
+V4_BLOCKED = {"e70": "RESOURCE_BLOCKED (CPU 추정 52.4 GB @70 Ry > 48 · S3v2 봉인 제외) → 'ecut 미검증'"}
+
+
+def lateral_image_info(extxyz, frag=FRAG_ELEMENTS):
+    """조각 원자와 그 측방(±a·±b) 주기 영상 사이의 최단 거리 [Å] — '고립' 이 아니라는 기록."""
+    from ase.io import read
+    import numpy as np
+    at = read(extxyz); c = at.cell.array
+    P = np.array([p for p, s in zip(at.get_positions(), at.get_chemical_symbols()) if s in frag])
+    if not len(P):
+        return {"status": "조각 원자 없음", "frag_elements": list(frag)}
+    dmin = min(float(np.min(np.linalg.norm(P[:, None, :] - (P[None, :, :] + i * c[0] + j * c[1]), axis=-1)))
+               for i in (-1, 0, 1) for j in (-1, 0, 1) if (i, j) != (0, 0))
+    return {"min_frag_image_distance_A": round(dmin, 4), "a_A": round(float(np.linalg.norm(c[0])), 4), "b_A": round(float(np.linalg.norm(c[1])), 4),
+            "n_frag_atoms": int(len(P)), "frag_elements": list(frag)}
+
+
+def collect_fragment(pkg_dir, raw_dir, name="V4_s_outer_A", blocked=None):
+    """조각 모델(V4) 집계 — ΔE_frag [eV/조각] · G3(5 meV) · G4(10 meV). 값이 없으면 None (0 아님)."""
+    blocked = V4_BLOCKED if blocked is None else blocked
+    qe = json.load(open(os.path.join(pkg_dir, "qe", "jobs.json"), encoding="utf-8"))
+    jobs = sorted(j["dir"] for j in qe["jobs"] if j["dir"].startswith(name + "_") and j.get("kind") != "probe")
+    J = {j: read_job(raw_dir, pkg_dir, j) for j in jobs}
+    okj = lambda x: bool(x) and x.get("status") == "OK"
+    def dE(jf, jb, key="F_Ry"):
+        if not (okj(jf) and okj(jb)) or jf.get(key) is None or jb.get(key) is None:
+            return None
+        return (jf[key] - jb[key]) * RY_EV
+    b, f = J.get(f"{name}_bound"), J.get(f"{name}_far")
+    base = dE(f, b)
+    rec = {"model": name, "quantity": "ΔE_frag = E(far) − E(bound) [eV/조각] · 양수 = 결합 쪽이 낮다 · J/m² 환산 금지 (카드 V3_V4)",
+           "dE_frag_eV": base, "dE_frag_Eint_eV": dE(f, b, "E_int_Ry"), "dE_frag_PBE_eV": dE(f, b, "E_pbe_Ry"), "dD3_QE_eV": dE(f, b, "D3_Ry"),
+           "jobs": J}
+    sb = os.path.join(pkg_dir, "structures", f"{name}_bound.extxyz")
+    rec["lateral_image"] = lateral_image_info(sb) if os.path.isfile(sb) else {"status": f"구조 없음: {sb}"}
+    mev = lambda x: None if x is None else x * 1000
+    # G3 — 두 검사 따로 · ΔE_frag 변화가 판정량 · 끝점 ΔE 는 기록
+    g3b, g3i, g3ii = J.get(f"{name}_G3_c2_bound"), J.get(f"{name}_G3_c2_far_i"), J.get(f"{name}_G3_c2_far_ii")
+    if g3b is not None:
+        Ei, Eii = dE(g3i, g3b), dE(g3ii, g3b)
+        di = mev(Ei - base) if (Ei is not None and base is not None) else None
+        dii = mev(Eii - base) if (Eii is not None and base is not None) else None
+        g3 = {"dE_frag_i_eV": Ei, "dE_frag_ii_eV": Eii, "d_dE_frag_i_meV": di, "d_dE_frag_ii_meV": dii,
+              "endpoint_dE_meV": {"bound": mev(dE(g3b, b)), "far_i": mev(dE(g3i, f)), "far_ii": mev(dE(g3ii, f))},
+              "threshold": {"|ΔE_frag 변화| ≤ meV (두 검사 모두)": G3_DE_MEV, "endpoint_dE": "기록만 (CA Q2)"}}
+        if di is None or dii is None:
+            g3["status"] = "INCOMPLETE"
+        else:
+            g3["status"] = "PASS" if (abs(di) <= G3_DE_MEV and abs(dii) <= G3_DE_MEV) else "FAIL"
+            g3["failed_checks"] = [n for n, v in (("i_image", di), ("ii_direct", dii)) if abs(v) > G3_DE_MEV]
+        rec["G3"] = g3
+    # G4 — 변형마다 · e70 은 봉인에서 RESOURCE_BLOCKED (출력이 없을 때만 그 라벨 — 돌았으면 값으로 판정)
+    g4 = {}
+    for tag in ("e70", "k1", "s05"):
+        jb, jf = J.get(f"{name}_G4_{tag}_bound"), J.get(f"{name}_G4_{tag}_far")
+        if jb is None and jf is None:
+            continue
+        Ex = dE(jf, jb); d = mev(Ex - base) if (Ex is not None and base is not None) else None
+        r4 = {"dE_frag_eV": Ex, "d_dE_frag_meV": d, "endpoint_dE_meV": {"bound": mev(dE(jb, b)), "far": mev(dE(jf, f))},
+              "threshold": {"|ΔE_frag 변화| ≤ meV": G4_DE_MEV}}
+        both_missing = all((x or {}).get("status") == "MISSING" for x in (jb, jf))
+        if d is not None:
+            r4["status"] = "PASS" if abs(d) <= G4_DE_MEV else "FAIL"
+        elif tag in blocked and both_missing:
+            r4["status"] = "RESOURCE_BLOCKED"; r4["note"] = blocked[tag]
+        else:
+            r4["status"] = "INCOMPLETE"
+        g4[tag] = r4
+    if g4:
+        tested = {k: v["status"] for k, v in g4.items() if v["status"] != "RESOURCE_BLOCKED"}
+        st = set(tested.values())
+        g4["status"] = "INCOMPLETE" if (not st or "INCOMPLETE" in st) else ("FAIL" if "FAIL" in st else "PASS")
+        g4["untested"] = {k: v["note"] for k, v in g4.items() if isinstance(v, dict) and v.get("status") == "RESOURCE_BLOCKED"}
+        rec["G4"] = g4
+    rec["jobs_not_ok"] = [j for j, v in J.items() if v["status"] != "OK"]
+    return {"schema": "aprime_s4_v4_collect/v1", "package": pkg_dir, "raw": raw_dir, "fragment": rec}
+
+
+def _print_fragment(out):
+    r = out["fragment"]; f = lambda x, p=4: (f"{x:.{p}f}" if isinstance(x, (int, float)) else "—")
+    print(f"{r['model']}: ΔE_frag F {f(r['dE_frag_eV'])} eV · E_int {f(r['dE_frag_Eint_eV'])} · PBE {f(r['dE_frag_PBE_eV'])} · ΔD3 {f(r['dD3_QE_eV'])} (eV/조각 · J/m² 환산 금지)")
+    li = r.get("lateral_image", {}); print(f"  측방 영상 최단 {li.get('min_frag_image_distance_A', '—')} Å (a {li.get('a_A', '—')} · b {li.get('b_A', '—')})")
+    if "G3" in r:
+        g = r["G3"]; print(f"  G3: 변화 (i) {f(g['d_dE_frag_i_meV'], 2)} · (ii) {f(g['d_dE_frag_ii_meV'], 2)} meV (≤ {G3_DE_MEV}) · 끝점 {g['endpoint_dE_meV']} → {g['status']}")
+    if "G4" in r:
+        for t in ("e70", "k1", "s05"):
+            if t in r["G4"]:
+                g = r["G4"][t]; print(f"  G4 {t}: 변화 {f(g['d_dE_frag_meV'], 2)} meV (≤ {G4_DE_MEV}) → {g['status']}{(' · ' + g['note']) if g.get('note') else ''}")
+        print(f"  G4 종합 {r['G4']['status']} · 미검증 {list(r['G4']['untested'])}")
+    print(f"  미완 잡 {r['jobs_not_ok']}")
+
+
 def _print(out):
     print(f"{'registry':14s} {'d0':>6s} {'W F':>8s} {'W Eint':>8s} {'W PBE':>8s} {'dD3':>7s} {'eV/C':>7s}  E(d-0.3) E(d+0.3) E(d+0.6) [meV]  G3    G4     Δ_UMA")
     for n, r in out["registries"].items():
@@ -316,6 +421,59 @@ def _selftest():
         open(os.path.join(raw, name, f"{name}_dft_far", "pw.in"), "w").write("&CONTROL\n  pseudo_dir = '/x'\n  prefix='x'\n/\n")
         open(os.path.join(raw, name, f"{name}_dft_far", "pw.out"), "w").write("     Program PWSCF\n     convergence NOT achieved\n!    total energy = -1.0 Ry\n     DFT-D3 Dispersion = -0.1 Ry\n     JOB DONE.\n")
         o6 = collect(st, raw); ck(o6["registries"][name]["jobs"][f"{name}_dft_far"]["status"] == "FAILED", "⛔음성 미수렴: convergence NOT achieved → FAILED")
+    # ── 조각 모델 (V4 · --v4) ─────────────────────────────────────────────
+    import math
+    with tempfile.TemporaryDirectory() as T:
+        pkg, raw, nm = os.path.join(T, "pkg"), os.path.join(T, "raw"), "V4_x"
+        os.makedirs(os.path.join(pkg, "structures")); os.makedirs(os.path.join(pkg, "qe"))
+        ring = [[5 + r * math.cos(math.radians(60 * k)), 5 + r * math.sin(math.radians(60 * k)), 20.0] for r in (1.40, 2.48) for k in range(6)]
+        at = Atoms("Li2S2C6H6", positions=[[1, 1, 10], [3, 3, 11], [6, 6, 12], [8, 8, 13]] + ring, cell=[[10, 0, 0], [0, 10, 0], [0, 0, 40]], pbc=True)
+        write(os.path.join(pkg, "structures", f"{nm}_bound.extxyz"), at, format="extxyz")
+        F0, dF = -2000.0, 0.02
+        E = {"bound": F0, "far": F0 + dF, "G3_c2_bound": F0 + 1e-3, "G3_c2_far_i": F0 + dF + 1e-3 + 1e-5, "G3_c2_far_ii": F0 + dF + 1e-3 + 2e-5,
+             "G4_k1_bound": F0 + 3e-3, "G4_k1_far": F0 + dF + 3e-3 + 2e-5, "G4_s05_bound": F0 + 4e-3, "G4_s05_far": F0 + dF + 4e-3 + 3e-5}
+        alljobs = list(E) + ["G4_e70_bound", "G4_e70_far"]
+        json.dump({"jobs": [{"dir": f"{nm}_{j}", "kind": "scf"} for j in alljobs] + [{"dir": f"{nm}_probe_far", "kind": "probe"}]}, open(os.path.join(pkg, "qe", "jobs.json"), "w"))
+        for j in alljobs + ["probe_far"]:
+            d = os.path.join(pkg, "qe", f"{nm}_{j}"); os.makedirs(d); open(os.path.join(d, "pw.in"), "w").write("&CONTROL\n  pseudo_dir = '/data/work/pseudo'\n  prefix='x'\n/\n")
+        for j, F in E.items():
+            r = os.path.join(raw, f"{nm}_{j}"); os.makedirs(r); open(os.path.join(r, "pw.in"), "w").write("&CONTROL\n  pseudo_dir = '/elsewhere'\n  prefix='x'\n/\n")
+            _fake_out(os.path.join(r, "pw.out"), F, -0.30 if "far" not in j else -0.29, nat=16)
+        o = collect_fragment(pkg, raw, nm); fr = o["fragment"]
+        ck(abs(fr["dE_frag_eV"] - dF * RY_EV) < 1e-9 and abs(fr["dD3_QE_eV"] - 0.01 * RY_EV) < 1e-9 and abs(fr["dE_frag_PBE_eV"] - (dF - 0.01) * RY_EV) < 1e-9,
+           f"조각: ΔE_frag = ΔF [eV/조각] · ΔD3 · PBE = ΔF − ΔD3 — {fr['dE_frag_eV']}")
+        ck(abs(fr["lateral_image"]["min_frag_image_distance_A"] - 5.04) < 1e-3 and fr["lateral_image"]["n_frag_atoms"] == 12, f"측방 영상 최단 = 10 − 2×2.48 = 5.04 Å (C·H 12) — {fr['lateral_image']}")
+        ck(not any("probe" in j for j in fr["jobs"]), "kind probe 잡은 집계에서 뺀다")
+        ck(fr["G3"]["status"] == "PASS" and abs(fr["G3"]["d_dE_frag_ii_meV"] - 2e-5 * RY_EV * 1000) < 1e-6 and abs(fr["G3"]["endpoint_dE_meV"]["bound"] - 1e-3 * RY_EV * 1000) < 1e-6,
+           f"G3 PASS (변화 0.14·0.27 meV) · 끝점 ΔE 13.6 meV 는 기록만 — {fr['G3']['status']}")
+        ck(fr["G4"]["k1"]["status"] == "PASS" and fr["G4"]["s05"]["status"] == "PASS" and fr["G4"]["e70"]["status"] == "RESOURCE_BLOCKED" and fr["G4"]["status"] == "PASS"
+           and list(fr["G4"]["untested"]) == ["e70"], f"G4: k1·s05 PASS · e70 = RESOURCE_BLOCKED (INCOMPLETE 아님) · 종합 PASS + 미검증 e70 — {fr['G4']['status']}")
+        # ⛔ 음성 1: 거리 검사 far_ii 에 +6.8 meV → G3 FAIL (ii 만)
+        _fake_out(os.path.join(raw, f"{nm}_G3_c2_far_ii", "pw.out"), E["G3_c2_far_ii"] + 5e-4, -0.29, nat=16)
+        g = collect_fragment(pkg, raw, nm)["fragment"]["G3"]
+        ck(g["status"] == "FAIL" and g["failed_checks"] == ["ii_direct"], f"⛔음성 G3: far_ii +6.8 meV → FAIL (ii_direct) — {g['status']} {g.get('failed_checks')}")
+        _fake_out(os.path.join(raw, f"{nm}_G3_c2_far_ii", "pw.out"), E["G3_c2_far_ii"], -0.29, nat=16)
+        # ⛔ 음성 2: k1_far 누락 → k1 INCOMPLETE (봉인 제외가 아니다) → 종합 INCOMPLETE
+        os.rename(os.path.join(raw, f"{nm}_G4_k1_far", "pw.out"), os.path.join(raw, f"{nm}_G4_k1_far", "pw.out.bak"))
+        g4 = collect_fragment(pkg, raw, nm)["fragment"]["G4"]
+        ck(g4["k1"]["status"] == "INCOMPLETE" and g4["status"] == "INCOMPLETE", f"⛔음성 k1 누락 → INCOMPLETE (RESOURCE_BLOCKED 로 둔갑 안 함) — {g4['k1']['status']}")
+        os.rename(os.path.join(raw, f"{nm}_G4_k1_far", "pw.out.bak"), os.path.join(raw, f"{nm}_G4_k1_far", "pw.out"))
+        # ⛔ 음성 3: e70 이 실제로 돌았으면 봉인 라벨이 아니라 값으로 판정 (+50 meV → FAIL)
+        for j, F in (("G4_e70_bound", F0 - 0.05), ("G4_e70_far", F0 - 0.05 + dF + 50e-3 / RY_EV)):
+            r = os.path.join(raw, f"{nm}_{j}"); os.makedirs(r); open(os.path.join(r, "pw.in"), "w").write("&CONTROL\n  pseudo_dir = '/elsewhere'\n  prefix='x'\n/\n")
+            _fake_out(os.path.join(r, "pw.out"), F, -0.3, nat=16)
+        g4 = collect_fragment(pkg, raw, nm)["fragment"]["G4"]
+        ck(g4["e70"]["status"] == "FAIL" and g4["status"] == "FAIL" and not g4["untested"], f"⛔음성 e70 이 돌았으면 값으로 FAIL (라벨로 덮지 않음) — {g4['e70']['status']}")
+        # ⛔ 음성 4: far 누락 → ΔE_frag None · G3·G4 INCOMPLETE (0 으로 안 그린다)
+        os.remove(os.path.join(raw, f"{nm}_far", "pw.out"))
+        fr4 = collect_fragment(pkg, raw, nm)["fragment"]
+        ck(fr4["dE_frag_eV"] is None and fr4["G3"]["status"] == "INCOMPLETE" and fr4["G4"]["status"] == "INCOMPLETE" and f"{nm}_far" in fr4["jobs_not_ok"],
+           "⛔음성 far 누락 → ΔE_frag None · G3/G4 INCOMPLETE · 미완 목록")
+        # ⛔ 음성 5: 실행 입력이 패키지와 다르면 INVALID → 값 없음
+        _fake_out(os.path.join(raw, f"{nm}_far", "pw.out"), E["far"], -0.29, nat=16)
+        open(os.path.join(raw, f"{nm}_bound", "pw.in"), "w").write("&CONTROL\n  pseudo_dir = '/elsewhere'\n  prefix='y'\n/\n")
+        fr5 = collect_fragment(pkg, raw, nm)["fragment"]
+        ck(fr5["jobs"][f"{nm}_bound"]["status"] == "INVALID_INPUT_MISMATCH" and fr5["dE_frag_eV"] is None, "⛔음성 bound 입력 불일치 → INVALID · ΔE_frag None")
     print(f"{'✅' if not bad else '⛔'} collect_aprime_s4 selftest {ok}/{ok + bad}")
     return 0 if not bad else 1
 
@@ -323,9 +481,18 @@ def _selftest():
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--stage2"); ap.add_argument("--raw"); ap.add_argument("--uma"); ap.add_argument("--supp", help="보조 잡 패키지 (부록 정오 · tags.substitutes)"); ap.add_argument("--out"); ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--v4", help="조각 모델 패키지 (S3v2 · qe/jobs.json + structures/) — ΔE_frag eV/조각"); ap.add_argument("--name", default="V4_s_outer_A")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
+    if a.v4:
+        if not a.raw:
+            ap.error("--v4 에는 --raw 가 필요하다")
+        out = collect_fragment(a.v4, a.raw, a.name)
+        _print_fragment(out)
+        if a.out:
+            json.dump(out, open(a.out, "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=float); open(a.out, "a").write("\n"); print(f"-> {a.out}")
+        return 0
     if not (a.stage2 and a.raw):
         ap.error("--stage2 와 --raw 가 필요하다")
     out = collect(a.stage2, a.raw, a.uma, a.supp)
