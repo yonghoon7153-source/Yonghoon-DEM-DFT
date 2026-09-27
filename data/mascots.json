@@ -280,7 +280,9 @@
         "ja": "埼玉、いいとこだよ！",
         "ko": "사이타마 좋은 곳이야!"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/kobaton.webp",
+      "credit": "©埼玉県"
     },
     {
       "id": "chibakun",

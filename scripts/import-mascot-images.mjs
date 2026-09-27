@@ -38,30 +38,50 @@ const outDir = new URL('public/mascots/', ROOT);
 mkdirSync(outDir, { recursive: true });
 const report = { ok: [], unmatched: [], ambiguous: [], credit: [] };
 
-/** Make near-white pixels connected to the border transparent (only for fully opaque images). */
+/**
+ * Remove a plain white/near-white photo background (only for fully opaque images).
+ * The background colour is estimated from the border; only pixels within a few levels of it and
+ * connected to the border are cleared, so white gloves, sashes and eyes that are merely *close* to
+ * white survive. The one-pixel ring next to the cleared area is feathered to avoid a white halo.
+ */
 function knockOutWhite(data, w, h) {
-  let opaque = true;
-  for (let i = 3; i < data.length; i += 4) if (data[i] < 250) { opaque = false; break; }
-  if (!opaque) return false;
-  const white = (i) => data[i] > 238 && data[i + 1] > 238 && data[i + 2] > 238;
-  const corners = [0, (w - 1) * 4, (h - 1) * w * 4, ((h - 1) * w + w - 1) * 4];
-  if (corners.filter(white).length < 3) return false;
-  const seen = new Uint8Array(w * h);
+  for (let i = 3; i < data.length; i += 4) if (data[i] < 250) return false; // already has transparency
+  const minc = (i) => Math.min(data[i], data[i + 1], data[i + 2]);
+  const border = [];
+  for (let x = 0; x < w; x += 3) border.push(minc(x * 4), minc(((h - 1) * w + x) * 4));
+  for (let y = 0; y < h; y += 3) border.push(minc(y * w * 4), minc((y * w + w - 1) * 4));
+  border.sort((a, b) => a - b);
+  const bg = border[Math.floor(border.length / 2)];
+  if (bg < 232) return false; // not a white-ish background — leave it alone
+  const hard = Math.min(bg - 6, 249); // e.g. pure white → 249
+  const soft = hard - 20;             // feather band for the edge ring
+  const isBg = (i) => minc(i) >= hard && Math.max(data[i], data[i + 1], data[i + 2]) - minc(i) <= 10; // near-grey, not tinted
+  const cleared = new Uint8Array(w * h);
   const stack = [];
-  for (let x = 0; x < w; x++) { stack.push(x, (h - 1) * w + x); }
-  for (let y = 0; y < h; y++) { stack.push(y * w, y * w + w - 1); }
+  for (let x = 0; x < w; x++) stack.push(x, (h - 1) * w + x);
+  for (let y = 0; y < h; y++) stack.push(y * w, y * w + w - 1);
+  const seen = new Uint8Array(w * h);
   while (stack.length) {
     const p = stack.pop();
     if (seen[p]) continue;
     seen[p] = 1;
-    const i = p * 4;
-    if (!white(i)) continue;
-    data[i + 3] = 0;
+    if (!isBg(p * 4)) continue;
+    cleared[p] = 1;
+    data[p * 4 + 3] = 0;
     const x = p % w, y = (p / w) | 0;
     if (x > 0) stack.push(p - 1);
     if (x < w - 1) stack.push(p + 1);
     if (y > 0) stack.push(p - w);
     if (y < h - 1) stack.push(p + w);
+  }
+  // feather: pixels touching the cleared area that are still very light become partly transparent
+  for (let p = 0; p < w * h; p++) {
+    if (cleared[p]) continue;
+    const x = p % w, y = (p / w) | 0;
+    const touches = (x > 0 && cleared[p - 1]) || (x < w - 1 && cleared[p + 1]) || (y > 0 && cleared[p - w]) || (y < h - 1 && cleared[p + w]);
+    if (!touches) continue;
+    const m = minc(p * 4);
+    if (m > soft) data[p * 4 + 3] = Math.round(255 * Math.min(1, Math.max(0, (hard - m) / (hard - soft))));
   }
   return true;
 }
