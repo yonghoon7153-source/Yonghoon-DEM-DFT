@@ -14,13 +14,15 @@ import { DATA, loadDb, matchFile, ROOT, writeChecklist } from './mascot-images-l
 // --standin "<출처>": 공식 그림 대신 사용자가 고른 그림(예: いらすとや). 크레딧은 출처, 화면에는 「공식 그림 아님」.
 const argv = process.argv.slice(2);
 let standin = null;
+let mainOnly = false; // --main-only: keep only the character (drop captions, © marks beside it)
 const args = [];
 for (let i = 0; i < argv.length; i++) {
   if (argv[i] === '--standin') standin = argv[++i] ?? '';
+  else if (argv[i] === '--main-only') mainOnly = true;
   else args.push(argv[i]);
 }
 if (!args.length || standin === '') {
-  console.error('사용법: npm run mascots:import <그림 폴더 또는 파일...> [--standin "<출처>"]');
+  console.error('사용법: npm run mascots:import <그림 폴더 또는 파일...> [--standin "<출처>"] [--main-only]');
   process.exit(1);
 }
 const IMG = /\.(png|jpe?g|webp|gif|avif|tiff?)$/i;
@@ -46,33 +48,36 @@ mkdirSync(outDir, { recursive: true });
 const report = { ok: [], unmatched: [], ambiguous: [], credit: [] };
 
 /**
- * Remove a plain white/near-white photo background (only for fully opaque images).
- * The background colour is estimated from the border; only pixels within a few levels of it and
- * connected to the border are cleared, so white gloves, sashes and eyes that are merely *close* to
- * white survive. The one-pixel ring next to the cleared area is feathered to avoid a white halo.
+ * Remove a plain white/near-white background.
+ * Runs when most of the border is opaque and light (images that are already cut out are left alone;
+ * images with a white background and a few transparent edge pixels are handled too).
+ * The background colour is estimated from the opaque border; only pixels within a few levels of it,
+ * nearly grey, and connected to the border are cleared, so white gloves, sashes and eyes that are merely
+ * *close* to white survive. The one-pixel ring next to the cleared area is feathered to avoid a white halo.
  */
 function knockOutWhite(data, w, h) {
-  for (let i = 3; i < data.length; i += 4) if (data[i] < 250) return false; // already has transparency
+  const alpha = (i) => data[i + 3];
   const minc = (i) => Math.min(data[i], data[i + 1], data[i + 2]);
+  const maxc = (i) => Math.max(data[i], data[i + 1], data[i + 2]);
   const border = [];
-  for (let x = 0; x < w; x += 3) border.push(minc(x * 4), minc(((h - 1) * w + x) * 4));
-  for (let y = 0; y < h; y += 3) border.push(minc(y * w * 4), minc((y * w + w - 1) * 4));
-  border.sort((a, b) => a - b);
-  const bg = border[Math.floor(border.length / 2)];
+  for (let x = 0; x < w; x++) border.push(x, (h - 1) * w + x);
+  for (let y = 0; y < h; y++) border.push(y * w, y * w + w - 1);
+  const opaque = border.filter((p) => alpha(p * 4) >= 250);
+  if (opaque.length < border.length * 0.3) return false; // already cut out
+  const lights = opaque.map((p) => minc(p * 4)).sort((a, b) => a - b);
+  const bg = lights[Math.floor(lights.length / 2)];
   if (bg < 232) return false; // not a white-ish background — leave it alone
   const hard = Math.min(bg - 6, 249); // e.g. pure white → 249
   const soft = hard - 20;             // feather band for the edge ring
-  const isBg = (i) => minc(i) >= hard && Math.max(data[i], data[i + 1], data[i + 2]) - minc(i) <= 10; // near-grey, not tinted
+  const isBg = (p) => { const i = p * 4; return alpha(i) < 20 || (minc(i) >= hard && maxc(i) - minc(i) <= 10); };
   const cleared = new Uint8Array(w * h);
-  const stack = [];
-  for (let x = 0; x < w; x++) stack.push(x, (h - 1) * w + x);
-  for (let y = 0; y < h; y++) stack.push(y * w, y * w + w - 1);
   const seen = new Uint8Array(w * h);
+  const stack = border.slice();
   while (stack.length) {
     const p = stack.pop();
     if (seen[p]) continue;
     seen[p] = 1;
-    if (!isBg(p * 4)) continue;
+    if (!isBg(p)) continue;
     cleared[p] = 1;
     data[p * 4 + 3] = 0;
     const x = p % w, y = (p / w) | 0;
@@ -81,9 +86,8 @@ function knockOutWhite(data, w, h) {
     if (y > 0) stack.push(p - w);
     if (y < h - 1) stack.push(p + w);
   }
-  // feather: pixels touching the cleared area that are still very light become partly transparent
   for (let p = 0; p < w * h; p++) {
-    if (cleared[p]) continue;
+    if (cleared[p] || alpha(p * 4) < 20) continue;
     const x = p % w, y = (p / w) | 0;
     const touches = (x > 0 && cleared[p - 1]) || (x < w - 1 && cleared[p + 1]) || (y > 0 && cleared[p - w]) || (y < h - 1 && cleared[p + w]);
     if (!touches) continue;
@@ -91,6 +95,35 @@ function knockOutWhite(data, w, h) {
     if (m > soft) data[p * 4 + 3] = Math.round(255 * Math.min(1, Math.max(0, (hard - m) / (hard - soft))));
   }
   return true;
+}
+
+/** Keep only the largest opaque blob (8-connected) — drops captions and © marks printed beside the character. */
+function keepLargestComponent(data, w, h) {
+  const n = w * h;
+  const label = new Int32Array(n).fill(-1);
+  const stack = new Int32Array(n);
+  let best = -1, bestSize = 0, count = 0;
+  for (let p = 0; p < n; p++) {
+    if (label[p] !== -1 || data[p * 4 + 3] <= 8) continue;
+    let sp = 0, size = 0;
+    stack[sp++] = p; label[p] = count;
+    while (sp) {
+      const q = stack[--sp]; size++;
+      const x = q % w, y = (q / w) | 0;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+        if (!dx && !dy) continue;
+        const nx = x + dx, ny = y + dy;
+        if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+        const r = ny * w + nx;
+        if (label[r] === -1 && data[r * 4 + 3] > 8) { label[r] = count; stack[sp++] = r; }
+      }
+    }
+    if (size > bestSize) { bestSize = size; best = count; }
+    count++;
+  }
+  let removed = 0;
+  for (let p = 0; p < n; p++) if (label[p] !== -1 && label[p] !== best) { data[p * 4 + 3] = 0; removed++; }
+  return { count, removed };
 }
 
 function alphaBox(data, w, h) {
@@ -108,6 +141,7 @@ for (const f of files) {
   const m = hit.mascot;
   const { data, info } = await sharp(f).rotate().ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   const knocked = knockOutWhite(data, info.width, info.height);
+  const main = mainOnly ? keepLargestComponent(data, info.width, info.height) : null;
   const box = alphaBox(data, info.width, info.height);
   let img = sharp(data, { raw: { width: info.width, height: info.height, channels: 4 } });
   if (box) {
@@ -132,7 +166,7 @@ for (const f of files) {
     m.credit = !org || org === '民間' ? `©${m.name.ja}` : `©${org}`;
     report.credit.push(`${m.name.ja}: "${m.credit}" (규정의 표기와 다르면 data/mascots.json 에서 고치기)`);
   }
-  report.ok.push(`${basename(f)} → ${target}  ${m.name.ja}${hit.by === 'prefecture' ? ' (県 이름으로 맞춤)' : ''}${knocked ? ' · 흰 배경 제거' : ''}`);
+  report.ok.push(`${basename(f)} → ${target}  ${m.name.ja}${hit.by === 'prefecture' ? ' (県 이름으로 맞춤)' : ''}${knocked ? ' · 흰 배경 제거' : ''}${main && main.removed ? ` · 캐릭터 밖 조각 ${main.count - 1}개 제거` : ''}`);
 }
 
 writeFileSync(DATA, JSON.stringify(ctx.db, null, 2) + '\n');

@@ -1,6 +1,6 @@
 # 마스코트 그림 목록
 
-받은 그림 **18 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
+받은 그림 **23 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
 
 주는 법: 캐릭터당 한 장, 배경 투명 PNG 가 제일 좋다 (흰 배경 JPG 도 자동으로 배경을 지운다). 파일명에 **캐릭터 이름·県 이름·id 중 하나**만 들어 있으면 된다.
 받은 뒤: `npm run mascots:import <폴더>` → 512px WebP 로 줄여 `public/mascots/<id>.webp` 에 넣고 데이터와 이 목록을 갱신한다.
@@ -27,7 +27,7 @@
 | # | 県 | 캐릭터 | 한글 | 파일명 | 권리자 | 찾을 곳 | 상태 |
 |---|---|---|---|---|---|---|---|
 | 8 | 茨城 | ハッスル黄門 | 핫슬 코몬 | `hassurukomon.png` | 茨城県 | [공식](https://gotouchi-chara.jp/chara/hassurukoumon/) | ✅ |
-| 9 | 茨城 | ねば～る君 <sub>비공식·선택</sub> | 네바루군 | `nebarukun.png` | 民間（納豆キャラ） | [공식](https://nebaarukun.info/) | □ |
+| 9 | 茨城 | ねば～る君 <sub>비공식·선택</sub> | 네바루군 | `nebarukun.png` | 民間（納豆キャラ） | [공식](https://nebaarukun.info/) | ✅ |
 | 10 | 栃木 | とちまるくん | 토치마루군 | `tochimarukun.png` | 栃木県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%A8%E3%81%A1%E3%81%BE%E3%82%8B%E3%81%8F%E3%82%93%20%E6%A0%83%E6%9C%A8%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 11 | 栃木 | さのまる <sub>비공식·선택</sub> | 사노마루 | `sanomaru.png` | 佐野市 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%95%E3%81%AE%E3%81%BE%E3%82%8B%20%E4%BD%90%E9%87%8E%E5%B8%82%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
 | 12 | 群馬 | ぐんまちゃん | 군마짱 | `gunmachan.png` | 群馬県 | [공식](https://gunmachan-navi.pref.gunma.jp/) | ✅ |
@@ -42,12 +42,12 @@
 | # | 県 | 캐릭터 | 한글 | 파일명 | 권리자 | 찾을 곳 | 상태 |
 |---|---|---|---|---|---|---|---|
 | 18 | 新潟 | レルヒさん | 레르히상 | `lerchsan.png` | 新潟県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%83%AC%E3%83%AB%E3%83%92%E3%81%95%E3%82%93%20%E6%96%B0%E6%BD%9F%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
-| 19 | 富山 | きときと君 | 키토키토군 | `kitokitokun.png` | 富山県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%8D%E3%81%A8%E3%81%8D%E3%81%A8%E5%90%9B%20%E5%AF%8C%E5%B1%B1%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 19 | 富山 | きときと君 | 키토키토군 | `kitokitokun.png` | 富山県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%8D%E3%81%A8%E3%81%8D%E3%81%A8%E5%90%9B%20%E5%AF%8C%E5%B1%B1%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 20 | 石川 | ひゃくまんさん | 햐쿠만상 | `hyakumansan.png` | 石川県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%B2%E3%82%83%E3%81%8F%E3%81%BE%E3%82%93%E3%81%95%E3%82%93%20%E7%9F%B3%E5%B7%9D%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
-| 21 | 福井 | はぴりゅう | 하피류 | `hapiryu.png` | 福井県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%AF%E3%81%B4%E3%82%8A%E3%82%85%E3%81%86%20%E7%A6%8F%E4%BA%95%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 21 | 福井 | はぴりゅう | 하피류 | `hapiryu.png` | 福井県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%AF%E3%81%B4%E3%82%8A%E3%82%85%E3%81%86%20%E7%A6%8F%E4%BA%95%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 22 | 山梨 | 武田菱丸 | 다케다 히시마루 | `takedahishimaru.png` | やまなし観光推進機構 | [공식](https://www.yamanashi-kankou.jp/kankou/event/takeda-hishimaru.html) | ✅ |
-| 23 | 長野 | アルクマ | 아루쿠마 | `arukuma.png` | 長野県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%A2%E3%83%AB%E3%82%AF%E3%83%9E%20%E9%95%B7%E9%87%8E%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
-| 24 | 岐阜 | ミナモ | 미나모 | `minamo.png` | 岐阜県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%83%9F%E3%83%8A%E3%83%A2%20%E5%B2%90%E9%98%9C%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 23 | 長野 | アルクマ | 아루쿠마 | `arukuma.png` | 長野県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%A2%E3%83%AB%E3%82%AF%E3%83%9E%20%E9%95%B7%E9%87%8E%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
+| 24 | 岐阜 | ミナモ | 미나모 | `minamo.png` | 岐阜県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%83%9F%E3%83%8A%E3%83%A2%20%E5%B2%90%E9%98%9C%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 25 | 静岡 | ふじっぴー | 후짓피 | `fujippi.png` | 静岡県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%B5%E3%81%98%E3%81%A3%E3%81%B4%E3%83%BC%20%E9%9D%99%E5%B2%A1%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 26 | 愛知 | モリゾー＆キッコロ | 모리조&킷코로 | `morizokiccoro.png` | 愛・地球博（愛知県） | [공식](https://aichinow.pref.aichi.jp/events/detail/3513/) | □ |
 

@@ -202,8 +202,10 @@
         "ja": "ねば〜〜〜っ！",
         "ko": "네바~~~!"
       },
-      "art": "likeness",
-      "url": "https://nebaarukun.info/"
+      "art": "official",
+      "url": "https://nebaarukun.info/",
+      "image": "mascots/nebarukun.webp",
+      "credit": "©ねば～る君"
     },
     {
       "id": "tochimarukun",
@@ -420,7 +422,9 @@
         "ja": "富山の魚は、きときと！",
         "ko": "도야마 생선은 키토키토(신선)!"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/kitokitokun.webp",
+      "credit": "©富山県"
     },
     {
       "id": "hyakumansan",
@@ -462,7 +466,9 @@
         "ja": "恐竜の国へようこそ！",
         "ko": "공룡의 나라에 어서 와!"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/hapiryu.webp",
+      "credit": "©福井県"
     },
     {
       "id": "takedahishimaru",
@@ -505,7 +511,9 @@
         "ja": "りんご、かぶってるよ〜",
         "ko": "사과 쓰고 있어~"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/arukuma.webp",
+      "credit": "©長野県"
     },
     {
       "id": "minamo",
@@ -525,7 +533,9 @@
         "ja": "清流の国ぎふ〜",
         "ko": "맑은 강의 나라 기후~"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/minamo.webp",
+      "credit": "©岐阜県"
     },
     {
       "id": "fujippi",
