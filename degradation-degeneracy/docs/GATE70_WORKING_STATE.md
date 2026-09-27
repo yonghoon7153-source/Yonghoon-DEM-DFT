@@ -108,9 +108,13 @@ G77-N1(P1): 로컬 완주 ≠ retention provider 증거 → 단계 12 를 12-L(�
 
 전체 회귀 `f90a9c89` 1 failed(계약 줄번호 인용) → `c77674f6` **0 failed · 1958 passed · 1 xfailed · smoke rc 0**. 25차 발견 9(깨진 parquet ArrowInvalid) xfail → PASS. `GATE79_REQUEST.md` 발송.
 
+## 79차 회신 (2026-09-28) — G78-N1·N2 종결 · 단계 1 종결 · 단계 2 는 G79-N1(P2) 정정 뒤 종결 (원장 §111)
+
+G79-N1: legacy `converged` = 마지막 **유한** round 에서 갱신한 success (없으면 False) — 설명만 틀렸고 계산 경로 불변. docstring·주석 정정 · `g79_03c`/`03d` 동작 고정 · 변이 1 (`6ffa98d4` · digest eda3feb8f4536511). 영수증 `184d34dd`. 전체 회귀 `184d34dd` 2 failed(계약 줄번호 · fixture timestamp 충돌) → `517f25ff` **0 failed · 1960 passed · 1 xfailed · smoke rc 0**.
+
 ## 다음
 
-`docs/22p_gap/GATE79_REQUEST.md` 발송 → 회신 대기. 종결이면 단계 3(묶음 1·2 schema · ID preimage · provider DAG)은 새 사용자 승인 뒤. ~~전체 회귀 + strict smoke (clean 커밋) → 원장 §110 · `GATE79_REQUEST.md` → docs-lint → 발송.~~ ~~`docs/22p_gap/GATE78_REQUEST.md` 발송 → 회신 대기.~~ 사용자 승인이 오면 코드 라운드(단계 2: restart 행 `converged`·`termination_status`·`n_eval` · parquet 읽기 실패 구조화, RED 먼저, RUN_SCOPE 이동 → 라운드 끝 영수증 1회). ~~`docs/22p_gap/GATE77_REQUEST.md` 발송 → 회신 대기.~~ 회신이 13 착수를 승인하면 코드 라운드는 (a) §9.4 restart 행 필드 → (b) 묶음 6 → (c) 묶음 4 → (d) 묶음 3 → (e) 묶음 5 → (f) 고유 leg 목록·비용 → pilot 요청 순 (리뷰가 고치면 그대로). ~~**게이트 루프 종결.** 다음 일(본 실행 계획 `plan_leg.py --claim-scope active_claims` · 투영 게시 · class 변경)은 전부 사용자 승인 뒤 새 요청문으로.~~ (§107 정정: '본 실행' 은 grid 재실행이 아니라 단계 3 pilot 이다) ~~`docs/22p_gap/GATE76_REQUEST.md` — 75차 잔여 N1·N2·N3 종결 판정 요청 (새 실행 GO 아님).~~ 회신 전까지 `grid_fit_v5` 의 claim_roles·세대·cohort 명부는 쓰지 않는다. 종결되면 본 실행 계획(`plan_leg.py --claim-scope active_claims`)은 사용자 승인 뒤.
+`docs/22p_gap/GATE80_REQUEST.md` 발송 → 회신 대기. 단계 2 종결이면 단계 3 은 새 사용자 승인 뒤. ~~`docs/22p_gap/GATE79_REQUEST.md` 발송 → 회신 대기.~~ 종결이면 단계 3(묶음 1·2 schema · ID preimage · provider DAG)은 새 사용자 승인 뒤. ~~전체 회귀 + strict smoke (clean 커밋) → 원장 §110 · `GATE79_REQUEST.md` → docs-lint → 발송.~~ ~~`docs/22p_gap/GATE78_REQUEST.md` 발송 → 회신 대기.~~ 사용자 승인이 오면 코드 라운드(단계 2: restart 행 `converged`·`termination_status`·`n_eval` · parquet 읽기 실패 구조화, RED 먼저, RUN_SCOPE 이동 → 라운드 끝 영수증 1회). ~~`docs/22p_gap/GATE77_REQUEST.md` 발송 → 회신 대기.~~ 회신이 13 착수를 승인하면 코드 라운드는 (a) §9.4 restart 행 필드 → (b) 묶음 6 → (c) 묶음 4 → (d) 묶음 3 → (e) 묶음 5 → (f) 고유 leg 목록·비용 → pilot 요청 순 (리뷰가 고치면 그대로). ~~**게이트 루프 종결.** 다음 일(본 실행 계획 `plan_leg.py --claim-scope active_claims` · 투영 게시 · class 변경)은 전부 사용자 승인 뒤 새 요청문으로.~~ (§107 정정: '본 실행' 은 grid 재실행이 아니라 단계 3 pilot 이다) ~~`docs/22p_gap/GATE76_REQUEST.md` — 75차 잔여 N1·N2·N3 종결 판정 요청 (새 실행 GO 아님).~~ 회신 전까지 `grid_fit_v5` 의 claim_roles·세대·cohort 명부는 쓰지 않는다. 종결되면 본 실행 계획(`plan_leg.py --claim-scope active_claims`)은 사용자 승인 뒤.
 
 ~~`docs/22p_gap/GATE75_REQUEST.md` — 74차 항목 1~6 종결 판정 요청 (새 실행 GO 아님). ~~`docs/22p_gap/GATE74_REQUEST.md` — 결과 보고 + G74-1~4 신고 + G74-3 분류 질문 (새 실행 GO 요청 아님).~~ 74차 회신 항목 3~6 의 범위를 사용자가 정하면 `/finding` (RED 먼저) 로 시작. 현지 검증 `e84d670d`: 20 failed (전부 G74-3) · 1859 passed · 2 xfailed · smoke rc 0. 회신 전까지 `grid_fit_v5` 의 claim_roles·세대·cohort 명부는 쓰지 않는다.
 

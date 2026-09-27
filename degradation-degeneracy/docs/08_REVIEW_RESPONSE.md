@@ -8444,3 +8444,25 @@ RUN_SCOPE `c2ef1a811e70bb4c → 27390883eb132941`. 두 실물 영수증은 원�
 **25차 발견 9 닫힘 (부수 효과, 계획한 것):** xfailed 가 2 → 1. `tests/test_compare.py` 의 조건부 xfail — footer 를 깨뜨린 fits.parquet 에서 `validate_provenance` 가 `ArrowInvalid` 를 올리면 xfail, 아니면 `ok is False` 와 `"fits_읽기" in fail` 을 요구 — 이 단계 2 의 `_parquet_read_failure` 로 **진짜 PASS** 가 됐다. 그 시험 docstring 이 "계약 v4 §11 의 12·13 단계로 이월" 이라 적었고 이번이 그 단계다. 시험은 손대지 않았다.
 
 **요청문:** `docs/22p_gap/GATE79_REQUEST.md` — G78-N1·N2 정정 요약 · 단계 2 diff 와 78차 경계 1~7 대응 · 실측 · 자기 신고 · 질문 4. 실행 GO 아님.
+
+## §111 79차 접수 — **G78-N1·N2 종결 · 단계 1 종결 · 단계 2 는 G79-N1(P2, `converged` 설명) 정정 뒤 종결** → 정정 (`6ffa98d4` · `source_digest eda3feb8f4536511`)
+
+2026-09-28 접수. 리뷰어 고정: 요청 HEAD `b0203d1090b2659c31f8eb6f55e5a144657e9052` · 코드 `3dc269d8` · 재계산 `source_digest c78d7969ef49fd07` (58 파일) · 코드→HEAD RUN_SCOPE diff 0 · 78차 패키지 원본 동일 확인 · 두 bundle 55 파일 51,176,572 bytes index·구성원 SHA 직접 대조. 패키지 원본 `docs/22p_gap/gate79_review/` (zip sha256 `f4d7e81338436bf703b35b454ee60cd315bd7678bfc0221298b6150fbd338695`, MANIFEST 40 files · 커밋 뒤 blob 대조 **40/40** · `-text !eol` 규칙 먼저). 정적·AST·검토자 소유 기호 모형 (`STATIC_CONTROL_FLOW.json` · `DESIGN_AND_SYMBOLIC_CHECKS.json`).
+
+**결론 (그대로):** "G78-N1·G78-N2는 설계 문장 범위에서 종결 수용한다. 단계 2 변경 범위는 적합하지만 G79-N1(P2) 한 건 때문에 단계 1+2의 무조건 최종 종결은 보류한다." P1 0 · P2 1. 76차 종결 유지 · 실행 GO 아님 · 단계 3 착수 승인 아님.
+
+| id | 등급 | 무엇을 틀렸나 | 최소 정정 | 우리 대응 |
+|---|---|---|---|---|
+| **G79-N1** | P2 | 새 설명이 legacy `ok`(= `FitResult.converged`)를 "마지막 round 의 `res.success`" 라고 단정했다. 코드 순서는 native_last 기록 → **비유한이면 break** → 유한일 때만 `ok` 갱신 이므로, 유한·success round 뒤 비유한·failure round 가 오면 `ok=True` 가 남고 `native_last.success=False`·`outer=nonfinite` 가 함께 기록된다. 동작은 79차 이전 그대로(AST 대조) — **설명이 틀렸다.** 기존 `g79_03` 은 유한 best/last 차이만, `g79_03b` 는 첫 round 비유한의 outer/native_best 만 봤다 | 계산/반환 의미 그대로 두고 표현을 "마지막 **유한** fun round 에서 갱신한 success; 없으면 초기 False" 로 · 세 관측(native_last/native_best/outer)과 legacy ok 구별 · fake-minimize 한정 회귀(유한-success → 비유한-failure; 첫 비유한의 초기 False) · **`ok` 대입을 break 앞으로 옮기지 않는다** | `src/fitting.py` docstring·직렬화 주석 정정 (`6ffa98d4`, 제어 흐름·반환 불변) · `g79_03c` (p/J 는 round 1 · ok True · native_last False · native_best True · outer nonfinite · n_rounds 2) · `g79_03d` (첫 비유한: ok False · native success True) — 둘 다 동작 고정, 처음부터 통과가 목적 · 변이 `legacy-ok-is-the-last-finite-round-g79` (ok 를 break 앞에서 갱신) → `g79_03c` 1/1 물었다 · `GATE79_REQUEST.md` §2·§4 취소선 |
+
+**수용된 것 (리뷰 §5):** minimize 인자·p/J 갱신·정렬/agree/spread 유지 · 골든은 두 경우의 실행 증거로만(모든 입력의 증명 아님) · restart 오류 별도 열·F86 유지 · `n_eval` 합은 반환된 restart 의 합 · 두 validator 의 사전 읽기 실패 항목(깨진 footer 사례 범위) · 25차 xfail 파일 불변 · 영수증 history 바이트 동일·core 재해시·원장 참조·validation/outputs 불변·producer 불변 · `paired_fixed5_v4` 의 역사적 `evidence.out` 부재 그대로(새 attach 수용 아님) · grid dirty=true 보존 ("clean 시작" ≠ "각 영수증 생성 시점 clean").
+
+**비차단 (이월, 손대지 않음):** `normalize_restart_record` 가 세 새 키 중 일부만 있는 행을 `legacy_dict` 로 내려 이미 있는 새 값까지 None 으로 만든다. 현행 producer 는 세 키를 함께 쓰고 옛 기록엔 전부 없으며 사용처는 정의·회귀뿐이라 이번 종결 조건이 아니다 → 단계 3/4 세대 dispatch 에서 혼합/손상 행 정책(명시 거부 또는 부분 기록 분리)을 고정할 때 다룬다.
+
+### 영수증
+
+docstring 변경도 RUN_SCOPE 규칙대로 digest 를 움직인다: `c78d7969ef49fd07 → eda3feb8f4536511`. 원본 `history/<leg>.validate.c78d7969ef49fd07.yaml` 보존 (`6ffa98d4`) → clean `6ffa98d4` 재생성 (`184d34dd`): paired core `00db82af4377c3e0…` (34 검사, dirty false) · grid core `ffc2e9354215e3b6…` (33 검사, dirty true — 앞 영수증 갱신). 필드 diff = `identity.validator_source_digest` · `core_sha256` · `stamp.generated_at_utc` · `stamp.validator_commit` 뿐 (`src_io_sha256` 은 이번엔 불변). 원장 두 값만 갱신, `leg_source_digest` 그대로.
+
+**실측:** 실측 1 (`184d34dd`, clean): 전체 pytest **2 failed · 1958 passed · 1 xfailed** (49:18) · smoke rc 0 — (1) 계약 §1 줄번호 인용 재낡음(1487→1491 · 1442→1446 · 457-471→461-475) (2) `test_hessian_provenance::test_a_hessian_resolves_curves_from_the_sealed_snapshot` "이미 'smoke' 로 등록돼 있다 — 'canonical' 로 바꿀 수 없다" — 등록 호출 spy·fixture 두 번 호출 대조로 원인 실측: `sign_producer` 의 curves_manifest 가 초 단위 timestamp 만으로 달라져 **같은 초 안의 두 fixture 가 같은 content id** (tmp/prod == tmp/in, 1 초 뒤는 다름). 새 gated 모듈의 마지막 producer(`g79_05b`, smoke namespace)와 바로 뒤 `test_hessian` 의 producer(일반 tmp → canonical)가 같은 초에 만들어지면 충돌 — 기존 fixture 의 잠재 flaky 가 모듈 인접 정렬로 드러남 (`c77674f6` 는 초 경계를 넘어 통과). 수정: fixture spec 에 호출별 nonce (`tests/test_fitting.py`, RUN_SCOPE 밖) + 계약 줄번호 갱신 (`517f25ff`). production 등록부 규칙(cross-namespace 배타)은 의도된 동작이라 손대지 않음. **실측 2 (`517f25ff`, clean, 시작 HEAD = 끝 HEAD, 미추적 0): 전체 pytest 0 failed · 1960 passed · 1 xfailed (50:40) · strict smoke rc 0** (작은 grid/fit/score/restore 계산 포함 — 연구용 새 실행 0). `6ffa98d4 → 517f25ff` RUN_SCOPE diff 0. docs-lint 는 전체 회귀 안에 포함(적색 0).
+
+**하지 않은 것:** 계산 경로 변경 없음 · 단계 3 착수 없음 · 새 연구 계산·복원(영수증용 격리 복원 제외)·class/투영 변경 없음 · `STAGE3_CONTRACT.md` 본문 불변.
