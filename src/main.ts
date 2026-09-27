@@ -17,33 +17,22 @@ import { renderTokyo23, WARD_PREFECTURE } from './ui/tokyo23';
 import type { LabelMode } from './types';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
-const LABEL_KEY = 'nihonchizu.labelMode.v2'; // v2: ふりがな became the default
 const isMobile = () => window.matchMedia('(max-width: 760px)').matches;
-function readLabelMode(): LabelMode | null {
-  try {
-    const v = localStorage.getItem(LABEL_KEY);
-    return v === 'furi' || v === 'ja' || v === 'kana' || v === 'ko' ? v : null;
-  } catch {
-    return null;
-  }
-}
 
-const LAYER_KEY = 'nihonchizu.layers.v1';
-function readLayers(): Partial<Record<LayerId, boolean>> {
-  try {
-    const v = JSON.parse(localStorage.getItem(LAYER_KEY) ?? '{}') as Record<string, unknown>;
-    return { ...(typeof v.cities === 'boolean' ? { cities: v.cities } : {}), ...(typeof v.bridges === 'boolean' ? { bridges: v.bridges } : {}) };
-  } catch {
-    return {};
-  }
+// A reload starts from scratch (9차 요청): no stickers, 図鑑 0, ふりがな, default layers. Nothing is kept in the
+// browser any more; what earlier versions stored is cleared once.
+try {
+  for (const k of ['nihonchizu.found.v1', 'nihonchizu.labelMode.v2', 'nihonchizu.labelMode.v1', 'nihonchizu.layers.v1']) localStorage.removeItem(k);
+} catch {
+  /* storage blocked: nothing to clear */
 }
 
 const state = {
   selected: null as string | null,
   region: null as string | null,
-  layers: { cities: true, bridges: true, mountains: false, ...readLayers() } as Record<LayerId, boolean>,
+  layers: { cities: true, bridges: true, mountains: false } as Record<LayerId, boolean>,
   range: { active: null as number | null, hide: false },
-  labelMode: (readLabelMode() ?? 'furi') as LabelMode,
+  labelMode: 'furi' as LabelMode,
 };
 
 async function init() {
@@ -220,11 +209,6 @@ async function init() {
     layerBtns.forEach((b) => {
       if (b.dataset.layer === id) b.setAttribute('aria-pressed', String(on));
     });
-    try {
-      localStorage.setItem(LAYER_KEY, JSON.stringify({ cities: state.layers.cities, bridges: state.layers.bridges }));
-    } catch {
-      /* not remembered */
-    }
   }
   function showMountains() {
     if (!map) return;
@@ -281,11 +265,6 @@ async function init() {
   const compass = createCompass(stage, $('map-loading'));
   function setLabelMode(mode: LabelMode) {
     state.labelMode = mode;
-    try {
-      localStorage.setItem(LABEL_KEY, mode);
-    } catch {
-      /* private mode: the choice just is not remembered */
-    }
     seg.querySelectorAll('button').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.mode === mode)));
     map?.setLabelMode(mode);
     compass.setMode(mode);

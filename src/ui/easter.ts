@@ -4,8 +4,6 @@ import type { MapApi } from '../map/map';
 import { mascotSticker, mascotVisualHtml } from '../mascots/visual';
 import { clear, el } from './dom';
 
-const STORAGE_KEY = 'nihonchizu.found.v1';
-
 export interface EasterOptions {
   layer: HTMLElement;
   stage: HTMLElement;
@@ -14,34 +12,14 @@ export interface EasterOptions {
 }
 
 export function createEaster(opts: EasterOptions) {
-  const found = new Set<string>(load());
+  // who I have met — only for this visit: a reload starts the 図鑑 and the stickers from zero
+  const found = new Set<string>();
   // the mascots standing on the map right now — all from one prefecture, side by side; one of them talks
   let shown: { id: string; node: HTMLElement }[] = [];
   let slugShown: string | null = null;
   let hideTimer = 0;
 
-  for (const id of found) {
-    const m = mascotById.get(id);
-    if (m && m.kind === 'official') opts.map.addSticker(m.prefecture, mascotSticker(m));
-  }
   opts.onCount(found.size, mascots.length, false);
-
-  function load(): string[] {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      const arr = raw ? (JSON.parse(raw) as unknown) : [];
-      return Array.isArray(arr) ? arr.filter((x): x is string => typeof x === 'string' && mascotById.has(x)) : [];
-    } catch {
-      return [];
-    }
-  }
-  function save() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify([...found]));
-    } catch {
-      /* private mode etc. */
-    }
-  }
 
   /** Stand the group next to each other on the prefecture's anchor. */
   function layout() {
@@ -158,7 +136,6 @@ export function createEaster(opts: EasterOptions) {
 
     if (isNew) {
       found.add(m.id);
-      save();
       if (m.kind === 'official') opts.map.addSticker(slug, mascotSticker(m));
     }
     opts.onCount(found.size, mascots.length, isNew);
