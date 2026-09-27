@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 149편 · 생성 2026-09-26
+> digest 151편 · 생성 2026-09-27
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -88,7 +88,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `yoo2026_porosity_gradient_dry_electrode` | Yoo 2026 (Energy Storage Materials, ENSM 105331) — Porosity-구배 건식 흑연 전극 + 변형성 Primer Layer | MPM | 2026-07-28 | 🖼 7 |
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (36편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (38편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -120,8 +120,10 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `nam2026_primer_layer_dry_electrode_collector` | Nam 2026 (ACS Energy Letters, acsenergylett.6c01260) — 건식전극(DPE)↔집전체 계면을 지배하는 Primer Layer 설계 (Super P/CNT 비율) ★ 우리 R_collector(N) 항과 PTFE 건식전극 계면의 직접 대응 논문 | exp + FEM·digital-twin (전자전도) | 2026-08-11 | 🖼 33 |
 | `ngandjong2021_dem_calendering_digital_twin` | LIB 전극 calendering(압연)을 DEM으로 — AM + carbon-binder domain 명시 + 슬러리→건조→압연→전기화학 "디지털 트윈" 파이프라인 — Ngandjong (J. Power Sources 2021) [2판] | DEM (+ CGMD 슬러리/건조 + FEM 전기화학; exp 검증) | 2026-06-26 | 🖼 10 |
 | `park2026_thiolene_sbr_binder_assb` | Park 2026 (Adv. Funct. Mater. 36, e16017) — Thiol-Ene Click으로 SBR 바인더 다면 개질(접착 grafting + 가교 cross-linking), 저압 작동 ASSB ★우리 소재계(LPSCl+NCM)·BINDER-화학 중심 | MPM | 2026-07-28 | 🖼 5 |
+| `qin2026_bilayer_cathode_cgmd_dem_graded_thick_electrode` | 이중층(bilayer) NMC111 후막 양극의 제조 이력 전체(슬러리 → 적층 → 건조 → 캘린더링 → 스프링백)를 CGMD-DEM 으로 — 설계한 공극 경사는 건조 뒤엔 살아 있지만 캘린더링에서 뒤집힌다 · 혼합 영역 확대 · τ_z 급증 — Qin · Fernandez · Scurtu · Wohlfahrt-Mehre | CGMD/DEM (LAMMPS; LJ + JKR; XCT 실형상 다구 응집체 AM + CBSA→CBD; 슬러 | 2026-09-27 | 🖼 8 |
 | `sangros2019_dem_calendering_lib_electrode` | LIB 전극 calendering(압연)을 DEM으로 — 단일 NMC 입자 탄소성 접촉모델(나노압입 보정) + 바인더 bond 모델 + ~17% 점탄성 회복 — Sangrós Giménez (Powder Technology 2019) | DEM (in-house, 나노압입 실험 보정 + calendering 실측 검증) | 2026-06-26 | 🖼 14 |
 | `sangros2020_lib_electrode_dem_mech_elec_ionic` | LIB 전극의 역학·전기·이온 거동을 DEM으로 — calendering + 바인더 bond 모델 + 삼중 전달 — Sangrós Giménez (Energy Technology 2020) | DEM (+ analytic homogenization, exp 검증) | 2026-06-26 | 🖼 12 |
+| `sankar2026_fiber_scale_dem_carbon_felt_manufacturing` | 섬유를 한 가닥씩 DEM 으로 — 산화 PAN 탄소펠트 전구체의 웹 형성 → 웹 적층 → 니들펀칭 → 캘린더링 을 결합구 사슬(LAMMPS bpm/rotational)로 잇고 기공목 분포 · 배향텐서 A_zz · 투과 경로 · 유효확산을 잰다 — Franco 그룹의 첫 섬유-해상 제조 DEM — Sankar · Valis | DEM (LAMMPS: bpm/rotational 결합구 사슬 섬유 + granular Hertz 법선 ·  | 2026-09-27 | 🖼 18 |
 | `so2021_dem_mold_pressure_assb_coldpress` | 몰드압력이 ASSB 압밀·이온전도도에 미치는 영향 — 소성변형 포함 3D DEM cold-press 모델 — So (J. Power Sources 2021) | DEM | 2026-06-23 | 🖼 9 |
 | `sun2026_dem_extrusion_recirculation_dry_electrode` | 트윈스크류 압출(extrusion) + 재순환(recirculation) 무용매 공정을 DEM 으로 — 3D 프린팅용 필라멘트 미세구조 — Sun / Vigneaux / Franco (Batteries & Supercaps 2026) | DEM (LIGGGHTS: Hertz + SJKR 점착 + CDT 구름마찰; 트윈스크류 압출기 STL + 재 | 2026-09-19 | 🖼 10 |
 | `wang2026_dryprocess_thick_cathode_failure_ncm94` | 건식 후막 양극(NCM94 80 wt%, 6.5 mAh cm⁻²)의 실패 기전 — in-situ 압력 + 3전극 EIS/DRT — Wang & Wang (J. Mater. Chem. A 2026) | exp (실험 전용 — 시뮬레이션 0) | 2026-08-19 | 🖼 26 |

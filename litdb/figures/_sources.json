@@ -1601,6 +1601,13 @@
    "DFT 먹인 논문/44. Sup) Enabling Moisture and Interfacial Stability in Sulfide Solid Electrolytes via a Processable Organic Coating Strategy for High-Voltage All-Solid-State Battereis.pdf"
   ]
  },
+ "qin2026_bilayer_cathode_cgmd_dem_graded_thick_electrode": {
+  "figures": 8,
+  "generated": "2026-09-27",
+  "pdfs": [
+   "08c51434-1._Manufacturing_process_modeling_of_bilayer_cathode_for_graded_thick_electrode_design.pdf"
+  ]
+ },
  "rao2011_argyrodite_se_studies_bvse": {
   "figures": 2,
   "generated": "2026-08-05",
@@ -1663,6 +1670,13 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DEM 논문/08. Mechanical, Electrical, and Ionic Behavior of Lithium-IonBattery Electrodes via Discrete Element Method Simulations.pdf"
+  ]
+ },
+ "sankar2026_fiber_scale_dem_carbon_felt_manufacturing": {
+  "figures": 18,
+  "generated": "2026-09-27",
+  "pdfs": [
+   "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf"
   ]
  },
  "schlautmann2023_se_particle_size_composite_transport": {

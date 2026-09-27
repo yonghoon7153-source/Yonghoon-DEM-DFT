@@ -60,7 +60,10 @@ GROUPS = [
       "taufactor", "conductive_path", "conductive_paths", "effective", "volumetric")),
     ("공정 — 캘린더링 · 압축 · 건식전극",
      ("calender", "compaction", "mold_pressure", "coldpress", "dry", "rolling",
-      "mixer", "sintering", "drying", "wet_process", "manufacturing", "binder", "ptfe")),
+      "mixer", "sintering", "drying", "wet_process", "manufacturing", "binder", "ptfe",
+      # Franco 그룹 CGMD = 슬러리 → 건조 → 캘린더링 제조 사슬.  2026-09-27 qin2026 이 제목이 한국어라
+      # 영어 낱말이 slug 에만 남아 '기타' 로 샜다 — 이 한 낱말로 옮겨지는 카드는 그 한 편뿐 (실측).
+      "cgmd")),
     ("화학-기계 열화 · 계면", ("chemomech", "failure", "cracking", "degradation",
                               "delamination", "stress", "interfac", "impedance")),
     ("Digital twin · ML 최적화", ("digital_twin", "digitaltwin", "ml_", "duquesnoy",

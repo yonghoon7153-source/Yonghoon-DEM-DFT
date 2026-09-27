@@ -456,6 +456,72 @@ def orphans_if_cleaned(slug, new_paths, out_root=None):
     return out
 
 
+def _marked(v):
+    """손작업 표지의 참/거짓 — 값이 설명 문자열이어도 표지다 (정본 manual_crop 24장 중 23장이 문자열)."""
+    if isinstance(v, str):
+        return v.strip().lower() not in ("", "false", "0", "no", "none")
+    return bool(v)
+
+
+def handwork_if_cleaned(slug, out_root=None):
+    """폴더를 지우면 **이 도구로는 다시 못 만드는 손작업** → [(파일명, 사유), …].
+
+    ⛔⛔ 2026-09-27 실측. `qin2026_bilayer…` 의 f8 은 캡션(p25)과 그림(p24)이 다른 쪽이라 도구가
+      건너뛰었고 큐레이터가 손으로 넣었다(`manual_crop`). 나머지 7장도 저자 래스터의 테두리를
+      빼고 다시 잘랐다(`recrop`). 같은 PDF 를 다시 주면 `orphans_if_cleaned` 는 src 가 같아
+      **[] 를 낸다** → `--clean` 이 fig_8.png 를 지우고, 재추출은 7장만 낸다.
+      `--inbox --run` · `--refresh --apply` 는 가드가 아예 없었다. 게다가 `--refresh` 는 장수가
+      달라진 논문을 고르므로, **손으로 한 장 보탠 논문을 골라서** 지운다.
+      정본 실측(09-27): recrop 128장(12편) · manual_crop 24장(11편).
+    사유는 'manual_crop'(도구가 못 만든 그림)을 'recrop'(도구 크롭을 손으로 고친 것)보다 먼저 적는다.
+    ⛔ 못 하는 것: 표지를 안 단 손작업은 모른다 — 손으로 자르면 figures.json 에 표지를 단다.
+    """
+    root = Path(out_root) if out_root else OUT_ROOT
+    idx = root / slug / "figures.json"
+    if not idx.exists():
+        return []
+    try:
+        meta = json.loads(idx.read_text(encoding="utf-8"))
+    except Exception:
+        return []                                   # 못 읽는 색인은 판단 근거가 아니다
+    out = []
+    for f in meta.get("figures", []):
+        if not isinstance(f, dict):
+            continue
+        if _marked(f.get("manual_crop")):
+            out.append((f.get("file", "?"), "manual_crop"))
+        elif _marked(f.get("recrop")):
+            out.append((f.get("file", "?"), "recrop"))
+    return out
+
+
+def clean_blockers(slug, new_paths, out_root=None):
+    """폴더를 지우기 전에 막을 목록 = (src 고아, 손작업). 지우는 경로 셋이 모두 이것을 본다 —
+    `--slug … --clean` · `--inbox --run` · `--refresh --apply`. 넘기려면 `--force_clean`."""
+    return orphans_if_cleaned(slug, new_paths, out_root), handwork_if_cleaned(slug, out_root)
+
+
+def _clean_refusal(lost, hand):
+    """clean_blockers 결과를 사람이 읽는 거부문으로."""
+    msg = ["⛔⛔ **폴더 지우기를 멈췄다 — 다시 뽑아도 되살릴 수 없는 그림이 있다.**"]
+    if lost:
+        msg.append(f"   ① 기존 색인의 그림 {len(lost)}장이 **지금 --pdf 로 준 원본에서 나온 것이 아니다**:")
+        msg += [f"     {f}  ← src: {s}" for f, s in lost[:12]]
+        if len(lost) > 12:
+            msg.append(f"     … 외 {len(lost) - 12}장")
+        msg.append("   2026-09-22 실측: SI 가 .docx 인 논문에서 이 경로로 **SI 그림 23장이 날아갔다**\n"
+                   "   (대체 경로로 만든 .jpg 였고, 확장자가 달라 `*.png` 점검에도 안 걸렸다).")
+    if hand:
+        msg.append(f"   ② **손작업 {len(hand)}장** — 이 도구는 다시 못 만든다 "
+                   "(manual_crop = 도구가 못 뽑은 그림 · recrop = 손으로 고친 크롭):")
+        msg += [f"     {f}  ← {why}" for f, why in hand[:12]]
+        if len(hand) > 12:
+            msg.append(f"     … 외 {len(hand) - 12}장")
+        msg.append("   2026-09-27 실측: qin2026 f8 (캡션 p25 · 그림 p24) 은 재추출에서 아예 빠진다.")
+    msg.append("   ⇒ 빠진 원본을 --pdf 로 같이 주든가, 정말 버릴 거면 --force_clean 을 쓴다.")
+    return "\n".join(msg)
+
+
 def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
             maxpx=1500, relto=None):
     out_dir = OUT_ROOT / slug
@@ -1041,7 +1107,7 @@ def suggest(inbox):
     return 0
 
 
-def refresh(box, apply_it=False, dpi=300, maxpx=3000):
+def refresh(box, apply_it=False, dpi=300, maxpx=3000, force=False):
     """추출기를 고친 뒤 **결과가 달라지는 논문만** 골라 다시 뽑는다.
 
     ⚠ 왜 (2026-08-06): 전체 재생성은 PNG 가 통째로 새 blob 이 되어 .git 이 한 번에
@@ -1074,8 +1140,13 @@ def refresh(box, apply_it=False, dpi=300, maxpx=3000):
             rows.append((slug, old, new, pdfs))
     print(f"\r{' ' * 68}\r", end="")
     print(f"=== 재추출 대상: {len(rows)}편 (PDF 가 있는 {len(todo)}편 중)")
+    # ⛔ 장수가 달라진 논문을 고르므로 **손으로 한 장 보탠 논문이 골라진다** (2026-09-27, qin2026 f8).
+    #   가드에 걸리는 논문은 표에 🔒 로 보이고, --apply 에서도 건너뛴다 (--force_clean 로만 넘김).
+    block = {slug: clean_blockers(slug, pdfs) for slug, _o, _n, pdfs in rows}
     for slug, old, new, _p in rows:
-        print(f"   {slug[:56]:<56} {old:>3} → {new:>3}  ({new-old:+d})")
+        lost, hand = block[slug]
+        lock = f"  🔒 손작업 {len(hand)} · 원본 빠짐 {len(lost)}" if (lost or hand) else ""
+        print(f"   {slug[:56]:<56} {old:>3} → {new:>3}  ({new-old:+d}){lock}")
     if not rows:
         print("   바뀌는 게 없다 — 다시 뽑을 필요 없음")
         return 0
@@ -1085,6 +1156,11 @@ def refresh(box, apply_it=False, dpi=300, maxpx=3000):
     print()
     for i, (slug, _o, _n, pdfs) in enumerate(rows, 1):
         print(f"[{i}/{len(rows)}] {slug}")
+        lost, hand = block[slug]
+        if (lost or hand) and not force:
+            print(f"   ⛔ 건너뜀 — 손작업 {len(hand)} · 원본 빠짐 {len(lost)} "
+                  "(`--slug <slug> --clean` 으로 목록 확인, 버릴 때만 --force_clean)\n")
+            continue
         shutil.rmtree(OUT_ROOT / slug, ignore_errors=True)
         meta, skipped = extract(pdfs, slug, dpi=dpi, maxpx=maxpx, relto=box)
         _report(slug, meta, skipped, dry=False)
@@ -1468,6 +1544,41 @@ def selftest():
         chk("⛔음성: 색인이 깨져도 죽지 않는다", orphans_if_cleaned("slg", [], root) == [])
         chk("⛔음성: 색인이 아예 없으면 빈 목록", orphans_if_cleaned("없는슬러그", [], root) == [])
 
+    # ── handwork_if_cleaned — 손 크롭은 **src 가 같아서** 위 가드를 통과한다 (2026-09-27) ──
+    #   qin2026 f8 실측 경로: 캡션 p25 · 그림 p24 라 도구가 건너뛰어 손으로 넣었다.  같은 PDF 를
+    #   다시 주면 src 가드는 [] 를 내고 fig_8.png 가 지워진다 — 재추출은 7장뿐이다.
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        (root / "slg").mkdir(parents=True)
+        idx = root / "slg" / "figures.json"
+        w = lambda figs: idx.write_text(json.dumps({"slug": "slg", "figures": figs},
+                                                   ensure_ascii=False), encoding="utf-8")
+        MAIN = "paper_MAIN.pdf"
+        HAND = [("fig_2.png", "recrop"), ("fig_8.png", "manual_crop")]
+        w([{"file": "fig_1.png", "src": MAIN},
+           {"file": "fig_2.png", "src": MAIN, "recrop": "raster-bound clip (xref 77)"},
+           {"file": "fig_8.png", "src": MAIN, "recrop": "full-page raster", "manual_crop": True}])
+        chk("재현: 같은 원본을 주면 src 가드는 **통과시킨다** (그래서 f8 이 지워졌다)",
+            orphans_if_cleaned("slg", [f"litdb/inbox/{MAIN}"], root) == [])
+        chk("★손작업 가드: manual_crop · recrop 을 이름과 사유로 집어낸다 (manual 이 우선)",
+            handwork_if_cleaned("slg", root) == HAND)
+        chk("★막는 목록 = (src 고아, 손작업) — 세 삭제 경로가 같은 것을 본다",
+            clean_blockers("slg", [f"litdb/inbox/{MAIN}"], root) == ([], HAND))
+        chk("막는 목록: 원본이 빠지면 둘 다 나온다",
+            clean_blockers("slg", [], root) == ([(f, MAIN) for f in ("fig_1.png", "fig_2.png", "fig_8.png")], HAND))
+        w([{"file": "fig_1.png", "src": MAIN, "manual_crop": "tight crop to the embedded raster"}])
+        chk("손작업 가드: 설명 문자열도 표지다 (정본 manual_crop 24장 중 23장이 문자열)",
+            handwork_if_cleaned("slg", root) == [("fig_1.png", "manual_crop")])
+        w([{"file": "fig_1.png", "src": MAIN, "manual_crop": False, "recrop": ""},
+           {"file": "fig_2.png", "src": MAIN, "manual_crop": "false"}])
+        chk("⛔음성: 거짓·빈 표지는 손작업이 아니다", handwork_if_cleaned("slg", root) == [])
+        w([{"file": "fig_1.png", "src": MAIN}])
+        chk("⛔음성: 표지 없는 자동 크롭만 있으면 막지 않는다",
+            clean_blockers("slg", [MAIN], root) == ([], []))
+        idx.write_text("{ 깨진 json", encoding="utf-8")
+        chk("⛔음성: 색인이 깨져도 죽지 않는다 (손작업)", handwork_if_cleaned("slg", root) == [])
+        chk("⛔음성: 색인이 없으면 빈 목록 (손작업)", handwork_if_cleaned("없는슬러그", root) == [])
+
     # ── 2026-09-24 schlautmann2023 SI 실측 — 결함 셋의 재현 ─────────────────────────
     # (a) `Table ST1:` 양식.  라벨 정규식이 `S?\d+` 라 ST 를 못 받아 SI 표 4장이 통째로 빠졌다.
     h = is_caption("Table ST1: Microstructure model parameters. Void space of the composite")
@@ -1680,7 +1791,8 @@ def main():
     ap.add_argument("--dry", action="store_true", help="파일 안 쓰고 표만 출력")
     ap.add_argument("--clean", action="store_true", help="기존 <slug> 폴더를 지우고 새로")
     ap.add_argument("--force_clean", action="store_true",
-                    help="--clean 의 '되살릴 수 없는 그림' 가드를 넘긴다 (정말 버릴 때만)")
+                    help="'되살릴 수 없는 그림' 가드(원본 빠짐 + 손작업 manual_crop·recrop)를 넘긴다 — "
+                         "--clean · --inbox --run · --refresh --apply 공통 (정말 버릴 때만)")
     ap.add_argument("--audit-src", dest="audit_src", action="store_true",
                     help="남의 논문 그림이 섞였는지 점검 (그림의 src ↔ 논문 제목 대조)")
     ap.add_argument("--audit", action="store_true",
@@ -1732,7 +1844,7 @@ def main():
         box = Path(a.inbox_dir).expanduser() if a.inbox_dir else INBOX
         if not box.is_dir():
             raise SystemExit(f"⛔ {box} 가 없다 — --inbox_dir 로 지정")
-        return refresh(box, apply_it=a.apply, dpi=a.dpi, maxpx=a.maxpx)
+        return refresh(box, apply_it=a.apply, dpi=a.dpi, maxpx=a.maxpx, force=a.force_clean)
 
     if a.suggest:
         box = Path(a.inbox_dir).expanduser() if a.inbox_dir else INBOX
@@ -1793,9 +1905,18 @@ def main():
             print("     python3 tools/litdb/extract_figures.py --inbox --run")
             return 0
         print()
+        guarded = []
         for i, (slug, v) in enumerate(sorted(assign.items()), 1):
             pdfs = [str(p) for p in v["main"] + v["si"]]
             print(f"[{i}/{len(assign)}] {slug}")
+            # ⛔ 이 경로엔 가드가 없었다 (2026-09-27) — 손작업·빠진 원본이 있으면 이 논문만 건너뛴다.
+            lost, hand = clean_blockers(slug, pdfs)
+            if (lost or hand) and not a.force_clean:
+                names = ", ".join(f for f, _w in (hand + lost)[:3])
+                print(f"   ⛔ 건너뜀 — 지우면 되살릴 수 없는 그림: 손작업 {len(hand)} · 원본 빠짐 "
+                      f"{len(lost)} ({names}{' …' if len(hand) + len(lost) > 3 else ''})\n")
+                guarded.append(slug)
+                continue
             shutil.rmtree(OUT_ROOT / slug, ignore_errors=True)
             try:
                 meta, skipped = extract(pdfs, slug, dpi=a.dpi, maxpx=a.maxpx, relto=box)
@@ -1804,6 +1925,9 @@ def main():
                 continue
             _report(slug, meta, skipped, dry=False)
             print()
+        if guarded:
+            print(f"⛔ 손작업·빠진 원본 때문에 건너뛴 논문 {len(guarded)}편 — 목록은 "
+                  "`--slug <slug> --clean` 으로, 정말 버릴 때만 `--force_clean`.")
         _write_sources_index()
         return 0
 
@@ -1842,16 +1966,9 @@ def main():
         if not Path(p).exists():
             raise SystemExit(f"⛔ PDF 없음: {p}")
     if a.clean and not a.dry:
-        lost = orphans_if_cleaned(a.slug, a.pdf)
-        if lost and not a.force_clean:
-            raise SystemExit(
-                "⛔⛔ **--clean 을 멈췄다 — 이 재추출로는 되살릴 수 없는 그림이 있다.**\n"
-                f"   기존 색인의 그림 {len(lost)}장이 **지금 --pdf 로 준 원본에서 나온 것이 아니다**:\n"
-                + "".join(f"     {f}  ← src: {s}\n" for f, s in lost[:12])
-                + (f"     … 외 {len(lost)-12}장\n" if len(lost) > 12 else "")
-                + "   2026-09-22 실측: SI 가 .docx 인 논문에서 이 경로로 **SI 그림 23장이 날아갔다**\n"
-                  "   (대체 경로로 만든 .jpg 였고, 확장자가 달라 `*.png` 점검에도 안 걸렸다).\n"
-                  "   ⇒ 빠진 원본을 --pdf 로 같이 주든가, 정말 버릴 거면 --force_clean 을 쓴다.")
+        lost, hand = clean_blockers(a.slug, a.pdf)
+        if (lost or hand) and not a.force_clean:
+            raise SystemExit(_clean_refusal(lost, hand))
         shutil.rmtree(OUT_ROOT / a.slug, ignore_errors=True)
 
     if a.why:
