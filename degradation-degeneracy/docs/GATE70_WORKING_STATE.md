@@ -98,7 +98,7 @@ grid_fine 재실행은 권고하지 않았다 (grid_fit_v5 와 산출이 같고 
 
 ## 77차 회신 (2026-09-27) — 방향 수용 · 12 전체 완료→13 일괄 착수 불수용 · 설계 정정 3건 (원장 §108)
 
-G77-N1(P1): 로컬 완주 ≠ retention provider 증거 → 단계 12 를 12-L(실물)/12-P(부분)로 분리. G77-N2(P1): primary 는 §7 그대로 grid·no-warm·같은 base·bank·B, Δ 하나 + 네 칸 분해; base-retained 는 secondary. G77-N3(P2): 미정은 최종 B 뿐, ladder/max/중단/floor/tolerance/stratum/자원 사전 고정, §9.4 필드는 의존 순서대로. → `GATE78_REQUEST.md`. 제한 오프라인 구현 = §3.2 단계 1+2 (사용자 승인 대기).
+G77-N1(P1): 로컬 완주 ≠ retention provider 증거 → 단계 12 를 12-L(실물)/12-P(부분)로 분리. G77-N2(P1): primary 는 §7 그대로 grid·no-warm·같은 base·bank·B, Δ 하나 + 네 칸 분해; base-retained 는 secondary. G77-N3(P2): 미정은 최종 B 뿐, ladder/max/중단/floor/tolerance/stratum/자원 사전 고정, §9.4 필드는 의존 순서대로. → `GATE78_REQUEST.md`. 제한 오프라인 구현 = §3.2 단계 1+2 — **사용자 승인 (2026-09-27): 78차 회신 뒤 착수 · 보존 profile 선택 1 유지.**
 
 ## 다음
 
