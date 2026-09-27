@@ -1,6 +1,6 @@
 # 마스코트 그림 목록
 
-받은 그림 **46 / 54** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
+받은 그림 **51 / 54** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
 
 주는 법: 캐릭터당 한 장, 배경 투명 PNG 가 제일 좋다 (흰 배경 JPG 도 자동으로 배경을 지운다). 파일명에 **캐릭터 이름·県 이름·id 중 하나**만 들어 있으면 된다.
 받은 뒤: `npm run mascots:import <폴더>` → 512px WebP 로 줄여 `public/mascots/<id>.webp` 에 넣고 데이터와 이 목록을 갱신한다.
@@ -29,7 +29,7 @@
 | 8 | 茨城 | ハッスル黄門 | 핫슬 코몬 | `hassurukomon.png` | 茨城県 | [공식](https://gotouchi-chara.jp/chara/hassurukoumon/) | ✅ |
 | 9 | 茨城 | ねば～る君 <sub>비공식·선택</sub> | 네바루군 | `nebarukun.png` | 民間（納豆キャラ） | [공식](https://nebaarukun.info/) | ✅ |
 | 10 | 栃木 | とちまるくん | 토치마루군 | `tochimarukun.png` | 栃木県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%A8%E3%81%A1%E3%81%BE%E3%82%8B%E3%81%8F%E3%82%93%20%E6%A0%83%E6%9C%A8%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
-| 11 | 栃木 | さのまる <sub>비공식·선택</sub> | 사노마루 | `sanomaru.png` | 佐野市 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%95%E3%81%AE%E3%81%BE%E3%82%8B%20%E4%BD%90%E9%87%8E%E5%B8%82%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 11 | 栃木 | さのまる <sub>비공식·선택</sub> | 사노마루 | `sanomaru.png` | 佐野市 | [공식](https://www.city.sano.lg.jp/sanomaru/index.html) | ✅ |
 | 12 | 群馬 | ぐんまちゃん | 군마짱 | `gunmachan.png` | 群馬県 | [공식](https://gunmachan-navi.pref.gunma.jp/) | ✅ |
 | 13 | 埼玉 | コバトン | 코바톤 | `kobaton.png` | 埼玉県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%B3%E3%83%90%E3%83%88%E3%83%B3%20%E5%9F%BC%E7%8E%89%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 14 | 千葉 | チーバくん | 치바군 | `chibakun.png` | 千葉県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%83%81%E3%83%BC%E3%83%90%E3%81%8F%E3%82%93%20%E5%8D%83%E8%91%89%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
@@ -94,12 +94,12 @@
 | 48 | 佐賀 | 壺侍 | 쓰보자무라이 | `tsubozamurai.png` | 佐賀県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E5%A3%BA%E4%BE%8D%20%E4%BD%90%E8%B3%80%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 49 | 長崎 | がんばくん＆らんばちゃん | 간바군&란바짱 | `ganbakun.png` | 長崎県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%8C%E3%82%93%E3%81%B0%E3%81%8F%E3%82%93%EF%BC%86%E3%82%89%E3%82%93%E3%81%B0%E3%81%A1%E3%82%83%E3%82%93%20%E9%95%B7%E5%B4%8E%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 50 | 熊本 | くまモン | 쿠마몬 | `kumamon.png` | 熊本県 | [공식](https://kumamon-land.jp/) | ✅ |
-| 51 | 大分 | めじろん | 메지론 | `mejiron.png` | 大分県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%81%E3%81%98%E3%82%8D%E3%82%93%20%E5%A4%A7%E5%88%86%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
-| 52 | 宮崎 | みやざき犬 | 미야자키견 | `miyazakiken.png` | 宮崎県 | [공식](https://ouendan.kanko-miyazaki.jp/) | □ |
-| 53 | 鹿児島 | ぐりぶー | 구리부 | `greboo.png` | 鹿児島県 | [공식](https://greboo.com/) | □ |
+| 51 | 大分 | めじろん | 메지론 | `mejiron.png` | 大分県 | [공식](https://www.pref.oita.jp/site/mejiron/) | ✅ |
+| 52 | 宮崎 | みやざき犬 | 미야자키견 | `miyazakiken.png` | 宮崎県 | [공식](https://ouendan.kanko-miyazaki.jp/) | ✅ |
+| 53 | 鹿児島 | ぐりぶー | 구리부 | `greboo.png` | 鹿児島県 | [공식](https://greboo.com/) | ✅ |
 
 ## 沖縄 오키나와
 
 | # | 県 | 캐릭터 | 한글 | 파일명 | 권리자 | 찾을 곳 | 상태 |
 |---|---|---|---|---|---|---|---|
-| 54 | 沖縄 | 花笠マハエ | 하나가사 마하에 | `hanagasamahae.png` | 沖縄観光コンベンションビューロー | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E8%8A%B1%E7%AC%A0%E3%83%9E%E3%83%8F%E3%82%A8%20%E6%B2%96%E7%B8%84%E8%A6%B3%E5%85%89%E3%82%B3%E3%83%B3%E3%83%99%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3%E3%83%93%E3%83%A5%E3%83%BC%E3%83%AD%E3%83%BC%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 54 | 沖縄 | 花笠マハエ | 하나가사 마하에 | `hanagasamahae.png` | 沖縄観光コンベンションビューロー | [공식](https://www.ocvb.or.jp/activities/mahae) | ✅ |

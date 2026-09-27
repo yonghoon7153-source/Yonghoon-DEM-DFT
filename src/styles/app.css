@@ -390,13 +390,13 @@
 .ph__cap .kana { color: var(--ink-2); font-size: 12px; }
 
 .sec { margin-top: 22px; }
-.sec > h3 {
+.sec h3 {
   display: flex; align-items: baseline; gap: 8px;
   font-family: var(--font-hand); font-size: 20px; color: var(--ink);
   margin-bottom: 8px;
 }
-.sec > h3 .n { font-family: var(--font-body); font-size: 11.5px; color: var(--ink-3); }
-.sec > h3 .emoji { font-size: 16px; }
+.sec h3 .n { font-family: var(--font-body); font-size: 11.5px; color: var(--ink-3); }
+.sec h3 .emoji { font-size: 16px; }
 .sec--facts details > summary { cursor: pointer; list-style: none; display: flex; }
 .sec--facts details > summary h3 { flex: 1; }
 .sec--facts details > summary::-webkit-details-marker { display: none; }
