@@ -86,11 +86,15 @@ G74-3 (c)+(b): `claim_scope` 다리마다 명시 · cohort `executed_legs` ≠ `
 
 ## 75차 대응 (2026-09-27) — N1·N2·N3 전부 (사용자 범위 승인) · 원장 §105
 
-G75-N1: index 최종화 실패 → 즉시 nonzero · 명시적 미완(승격된 묶음 표기) · 안내 차단 · tmp 삭제. G75-N2: `tools/index_yaml.py::load_index_strict` 한 함수(중복 키·merge key `<<` 거부·형식)를 archive 세 reader 가 전부 사용. G75-N3: 진단 소비자가 생산자와 같은 함수로 `out` 결속 대조. 코드 `23c361ed` · `source_digest 1c67a748598baadb` (두 번 이동: `10be3a69` cd2408… → `23c361ed`). 영수증 원본 매번 history/ 보존 후 재생성(현행 `baf109b5`). `tests/test_gate75_defensive.py` 22 node (첫 판 RED 11/19) · 변이 4/4. 전체 회귀 `4d8dfc52` 1 failed(패키지 사본 claim 관할 — `cd272a89` 부터) → `5b10a79f` 에서 제외 규칙 추가 후 **0 failed · 1944 passed · 2 xfailed · smoke rc 0**.
+G75-N1: index 최종화 실패 → 즉시 nonzero · 명시적 미완(승격된 묶음 표기) · 안내 차단 · tmp 삭제. G75-N2: `tools/index_yaml.py::load_index_strict` 한 함수(중복 키·merge key `<<` 거부·형식)를 archive 세 reader 가 전부 사용. G75-N3: 진단 소비자가 생산자와 같은 함수로 `out` 결속 대조. 코드 `23c361ed` · `source_digest 1c67a748598baadb` (두 번 이동: `10be3a69` cd2408… → `23c361ed`). 영수증 원본 매번 history/ 보존 후 재생성(현행 `baf109b5`). `tests/test_gate75_defensive.py` 22 node (첫 판 RED 11/~~19~~18 (76차 정정)) · 변이 4/4. 전체 회귀 `4d8dfc52` 1 failed(패키지 사본 claim 관할 — `cd272a89` 부터) → `5b10a79f` 에서 제외 규칙 추가 후 **0 failed · 1944 passed · 2 xfailed · smoke rc 0**.
+
+## 76차 회신 (2026-09-27) — **N1·N2·N3 종결 수용 · 74차 1–6 + 75차 잔여 전체 종결 · 새 실행 GO 없음** (원장 §106)
+
+독립 격리 검사 44건 · 2,868 파일 보존 · 패키지 87/87. 비차단 정정 3건(등록부 369 · history 3+현행 1 · 첫 RED 18 node) 취소선 반영. 남는 한계는 리뷰어 문장대로: replace 뒤 출력 오류는 rc 만으로 확정 불가, E1/E2/E4·WSL 고아·과학적 수렴 미검증은 해소되지 않음.
 
 ## 다음
 
-`docs/22p_gap/GATE76_REQUEST.md` — 75차 잔여 N1·N2·N3 종결 판정 요청 (새 실행 GO 아님). 회신 전까지 `grid_fit_v5` 의 claim_roles·세대·cohort 명부는 쓰지 않는다. 종결되면 본 실행 계획(`plan_leg.py --claim-scope active_claims`)은 사용자 승인 뒤.
+**게이트 루프 종결.** 다음 일(본 실행 계획 `plan_leg.py --claim-scope active_claims` · 투영 게시 · class 변경)은 전부 사용자 승인 뒤 새 요청문으로. ~~`docs/22p_gap/GATE76_REQUEST.md` — 75차 잔여 N1·N2·N3 종결 판정 요청 (새 실행 GO 아님).~~ 회신 전까지 `grid_fit_v5` 의 claim_roles·세대·cohort 명부는 쓰지 않는다. 종결되면 본 실행 계획(`plan_leg.py --claim-scope active_claims`)은 사용자 승인 뒤.
 
 ~~`docs/22p_gap/GATE75_REQUEST.md` — 74차 항목 1~6 종결 판정 요청 (새 실행 GO 아님). ~~`docs/22p_gap/GATE74_REQUEST.md` — 결과 보고 + G74-1~4 신고 + G74-3 분류 질문 (새 실행 GO 요청 아님).~~ 74차 회신 항목 3~6 의 범위를 사용자가 정하면 `/finding` (RED 먼저) 로 시작. 현지 검증 `e84d670d`: 20 failed (전부 G74-3) · 1859 passed · 2 xfailed · smoke rc 0. 회신 전까지 `grid_fit_v5` 의 claim_roles·세대·cohort 명부는 쓰지 않는다.
 

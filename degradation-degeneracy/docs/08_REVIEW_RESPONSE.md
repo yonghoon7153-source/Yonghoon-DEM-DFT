@@ -8313,7 +8313,7 @@ RUN_SCOPE `c2ef1a811e70bb4c → 27390883eb132941`. 두 실물 영수증은 원�
 
 **범위 결정 (사용자, 2026-09-27):** 75차 잔여 N1·N2·N3 전부 + 문구 정정. 새 실행·복원·게시·class 변경 없음. RUN_SCOPE 가 두 번 움직였다 (`10be3a69`: `scripts/archive_results.sh` + 신규 `tools/index_yaml.py` · `23c361ed`: merge key 정책) → 영수증은 리뷰어 ⑥ 규칙대로 **매번 원본을 `receipts/history/` 에 보존한 뒤** clean 커밋에서 재생성했다 (§105 ⑥).
 
-**RED 먼저.** `tests/test_gate75_defensive.py` (신규) — 첫 판 19 node, 패치 전 **11 failed / 7 passed** (53.95 s, `0866a77d` 트리). 처음부터 통과한 7개의 사유: `n1_control`(정상 경로 대조군 — 회귀 보호) · `n3_00`(양성 대조군) · `n3_02` ×5(부재·공백·비문자열 `out` 은 74차판이 이미 거부했다 — 유지 확인). N1 의 첫 RED 는 거짓이었다: PYTHON wrapper 가 heredoc 스크립트를 파일로 실행해 `sys.path[0]` 이 cwd 가 아니게 되자 검증 heredoc 이 `ModuleNotFoundError` 로 죽어 rc 1 이 났다 — wrapper 를 stdin 재전달로 고친 뒤(`python -` 유지) 진짜 RED(`rc 0` · commit 안내 출력)를 봤다. 최종 판 22 node (N1 3 mode · N2 4 case + loader 단위 + 공유 검사 · N3 5+1+5+1+1).
+**RED 먼저.** `tests/test_gate75_defensive.py` (신규) — 첫 판 ~~19 node~~ **18 node** (76차 비차단 정정 — 산술: 11+7=18; 당시 원본 출력 `11 failed, 7 passed in 53.95s` 그대로, 19 는 송신자의 셈 오류이고 누락 상태는 없다), 패치 전 **11 failed / 7 passed** (53.95 s, `0866a77d` 트리). 처음부터 통과한 7개의 사유: `n1_control`(정상 경로 대조군 — 회귀 보호) · `n3_00`(양성 대조군) · `n3_02` ×5(부재·공백·비문자열 `out` 은 74차판이 이미 거부했다 — 유지 확인). N1 의 첫 RED 는 거짓이었다: PYTHON wrapper 가 heredoc 스크립트를 파일로 실행해 `sys.path[0]` 이 cwd 가 아니게 되자 검증 heredoc 이 `ModuleNotFoundError` 로 죽어 rc 1 이 났다 — wrapper 를 stdin 재전달로 고친 뒤(`python -` 유지) 진짜 RED(`rc 0` · commit 안내 출력)를 봤다. 최종 판 22 node (N1 3 mode · N2 4 case + loader 단위 + 공유 검사 · N3 5+1+5+1+1).
 
 | 발견 | 무엇을 고쳤나 | 어디 | 회귀 |
 |---|---|---|---|
@@ -8339,3 +8339,29 @@ RUN_SCOPE `c2ef1a811e70bb4c → 27390883eb132941`. 두 실물 영수증은 원�
 **실측:** 전체 pytest `4d8dfc52` (clean, 시작 HEAD = 끝 HEAD, 미추적 0): **1 failed · 1943 passed · 2 xfailed** (41:55) · strict smoke rc 0. 유일한 적색 `test_claim_registry_is_complete_in_both_directions` 은 75차 패키지 보존 사본 `docs/22p_gap/gate75_review/codex/reference/docs/22p_gap/STAGE3_CONTRACT.md`(리뷰어가 당시 checkout 에서 복사한 우리 문서, `-text !eol` 바이트 고정)이 `WARM_UNION` 마커를 담아 claim 관할로 잡힌 것 — 패키지 커밋 `cd272a89` 부터 있던 적색이고 이번 코드와 무관하다 (74차 패키지에는 그 사본이 없었다). 증거 사본은 편집도 원장 `files` 등록도 할 수 없으므로 `_CLAIM_SCOPE_EXCLUDE` 에 `gateNN_review/` 를 더했다 (`5b10a79f`). 재실행 `5b10a79f` (clean, 시작 HEAD = 끝 HEAD, 미추적 0): **0 failed · 1944 passed · 2 xfailed** (41:49) · strict smoke **rc 0**. 새 시험 22 node 포함, docs-lint 는 전체 회귀 안에 있다 (적색 0). `23c361ed → 5b10a79f` RUN_SCOPE diff 0 (실측).
 
 **하지 않은 것:** 새 본 실행 없음 · 투영 게시 없음 · class 변경 없음 · `row_projection.py` 불변 · `attach_bundle_evidence` 재설계 없음 · 옛 index 자동 rollback 없음(범위 별도) · WSL 고아 레코드 그대로.
+
+## §106 76차 접수 — **N1·N2·N3 종결 수용 · 74차 항목 1–6 + 75차 잔여 전체 종결 · 새 실행 GO 없음** · 비차단 정정 3건
+
+2026-09-27 접수. 리뷰어 고정: 요청 HEAD `b5e4eadea7794d157d961170247e49d2761bba26` · 코드 `23c361edbfc92fefcfbf0639b5ac40f61f7ebec7` · 독립 `source_digest 1c67a748598baadb` (58 파일) · 코드→HEAD RUN_SCOPE diff 0 · 검토 checkout 2,868 파일 전후 보존. 패키지 원본 `docs/22p_gap/gate76_review/` (zip sha256 `b532543bfc9a2e2ef435d7cc6536ae23ec4c388c574c225ec70db93e0db4aa61`, MANIFEST 87 files · 커밋 뒤 blob 대조 **87/87** · `-text !eol` 규칙 먼저 `336c371f`). 독립 격리 검사 44건 (out 소비자/생산자 12 · 세 index reader 27 · writer 3 · shell 반환 2; 전체 suite·restore·attach·재채점·변이 replay 미실행 — 송신 1,944 PASS 에 합산하지 않음).
+
+**결론 (그대로):** "N1·N2·N3 모두 종결 수용. 74차 항목 1–6 + 75차 잔여의 유한 목록은 전체 종결. 기존 Gabia 결과의 진단 전용 제한 수용 유지. 새 실행 GO나 active claim/투영 승격은 부여하지 않는다."
+
+| §5 질문 | 답 |
+|---|---|
+| ① N1·N2·N3 종결 | **예, 셋 다** (merge 거부 정책 포함). N1: rc17 → 부모 rc1 · 안내 차단 · 승격 이름/미완 표기 · write/replace 실패에서 index 불변·tmp 제거. N2: 9 입력 × 3 reader = 27 · 거부 시 바이트 불변 · 병합 양성에서 파싱값 보존. N3: 실물 receipt·묶음으로 도출한 bound run 을 넘긴다 · 12 건이 생산자 판정과 일치 |
+| ② 전체 종결 | **이 리뷰 묶음은 종결.** 뜻하지 않는 것: 한도 밖 resume 소급 승인 · `no_active_claim` → active/투영 승격 · E1/E2/E4 한계·WSL 고아·과학적 수렴/물리 타당성 미검증 해소 · 새 계산/복원/class/publisher/COMSOL 승인 |
+| ③ 원장이 현행 한 쌍 | **맞다.** 다리별 history 3 (`c2ef1a…` · `27390883…` · `cd2408…`) + 현행 1 (`1c67a748…`), 두 다리 합 8. 현행을 history 에 중복 복사할 필요 없음. 원장 변화는 core sha·validator digest 두 값뿐, producer 불변 확인 |
+
+**N1 수용의 한계 (리뷰어 문장 그대로 남긴다):** 조사한 실패 경계(rc17 · replace 전/도중 · write 도중)의 성공 위장 방지다. `os.replace` **뒤** `print`/`flush` 오류까지 가정하면 rc 만으로 교체 전후를 확정할 수 없다 — 그 경우 파일 식별을 별도로 확인해야 한다. "즉시 nonzero" 는 오류 뒤 추가 승격 단계로 가지 않고 최종 반환을 실패로 만든다는 뜻이지, 그 줄에서 곧바로 `exit` 하는 구현이 아니다. N2 정책은 YAML merge 기능 불허이지 alias 전체·인용 문자열 `"<<"` 금지가 아니다. `5b10a79f` 의 claim 관할 제외는 정확한 디렉터리 정규식이 아니라 접두사 `gate` 다 — 미래에 임의 `gate…` 운영 문서를 같은 경로에 두면 검사 밖이 된다 (현행 누락 관측은 없음; 운영 문서를 그 접두사로 만들지 않는다).
+
+**비차단 정정 3건 (원문 보존, 취소선):**
+
+| # | 리뷰어 지적 | 우리 확인 | 조치 |
+|---|---|---|---|
+| 1 | 발송문 등록부 `367` → 현행 **369** | 송신 발송문(`SEND_GATE76_2026-09-27.md`)에는 등록부 수치가 없고 요청문 §2 는 `369` 다. 367 은 74차 이전(grid_fit_v5 편입 전) 수치로, 리뷰어가 참조한 어딘가의 옛 사본이다 | 현행 문서에 고칠 자리 없음 — 이 행으로 기록 |
+| 2 | "세 세대 전부 history" → history 3 + 현행 1 / 다리 | 맞다. §105 ⑥ 표는 이미 현행 행을 "— (현행)" 으로 구분했으나 요청문 §3·§5-3 문구가 "전부 history" 였다 | `GATE76_REQUEST.md` §3·§5-3 취소선 정정 |
+| 3 | 첫 RED "19 node · 11 failed/7 passed" 는 18 | 원본 출력 `11 failed, 7 passed in 53.95s` — 18 node 가 맞다. 19 는 송신자의 셈 오류(당시 파일 구성: n1 2 + 대조군 1 + n2 3+1 + n3 1+4+5+1 = 18). 누락 상태 없음 | §105 · 요청문 §판정 대상 취소선 정정 |
+
+**하지 않은 것:** 새 실행 없음 · 복원 없음 · class/투영 변경 없음 · 영수증·원장·실패 기록·패키지 원문 불변.
+
+**다음 (사용자 결정):** 이 게이트 루프(70차 이후 E1~E10 → 74차 → 75차 → 76차)는 종결이다. 본 실행(`plan_leg.py --claim-scope active_claims`)·투영 게시·class 변경은 전부 별도 사용자 승인 뒤 새 요청문으로 시작한다.

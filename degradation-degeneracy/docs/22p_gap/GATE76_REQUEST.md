@@ -1,6 +1,6 @@
 # 76차 게이트 리뷰 요청 — 75차 잔여 G75-N1(P1) · N2 · N3 에 대한 답 (index 최종화 실패 전파 · 중복/merge 키 엄격 loader · 진단 소비자 out 결속)
 
-> **상태: 확정 (2026-09-27).** 75차 회신(부분 수용 · 종결 보류: 잔여 P1 1 · P2 2)의 세 항목에 답한다. 사용자가 N1·N2·N3 전부를 범위로 승인했다 (원장 §104 → §105). **새 실행 GO 를 요청하지 않는다.** 투영 게시·class 변경·복원·새 계산은 없다.
+> **상태: 종결 (2026-09-27, 76차 회신 — N1·N2·N3 수용 · 전체 종결 · 새 실행 GO 없음; 원장 §106).** ~~확정 (2026-09-27).~~ 75차 회신(부분 수용 · 종결 보류: 잔여 P1 1 · P2 2)의 세 항목에 답한다. 사용자가 N1·N2·N3 전부를 범위로 승인했다 (원장 §104 → §105). **새 실행 GO 를 요청하지 않는다.** 투영 게시·class 변경·복원·새 계산은 없다.
 > RUN_SCOPE 가 두 번 움직였다 (`10be3a69` · `23c361ed`). 판정 대상 코드는 아래 표가 정본이다.
 
 ## 판정 대상
@@ -13,7 +13,7 @@
 | 영수증 재생성 커밋 | `baf109b5` (clean 트리 `a3eb4cbe` 에서 `make_receipt.py paired_fixed5_v4 grid_fit_v5`); 중간 세대 `0f6b8a76` (clean `2df96f06`, validator `cd2408354486c148`) 도 원본을 `history/` 에 남겼다 |
 | 리뷰 원자료 | 75차 패키지 `docs/22p_gap/gate75_review/` (zip `4a1ad8a2…`, MANIFEST 70/70, `-text !eol` 규칙 먼저) |
 | 발견 원장 | `docs/08_REVIEW_RESPONSE.md` §104(접수·문구 정정) · §105(대응) · 작업 상태 `docs/GATE70_WORKING_STATE.md` |
-| 새 시험 | `tests/test_gate75_defensive.py` **22 node** (첫 판 19 node 패치 전 11 failed / 7 passed — 사유 §105) · 변이 4 신규 (`mutation_replay.py -k g75`) |
+| 새 시험 | `tests/test_gate75_defensive.py` **22 node** (첫 판 ~~19 node~~ **18 node** (76차 정정, §106) 패치 전 11 failed / 7 passed — 사유 §105) · 변이 4 신규 (`mutation_replay.py -k g75`) |
 
 ## §0 75차 세 항목에 대한 답
 
@@ -50,7 +50,7 @@ mutation_replay --check-preimages · -k g75     전 지점 1회 · 4/4 물었다
 - N1 의 첫 RED 는 **거짓 RED** 였다: PYTHON wrapper 가 heredoc 스크립트를 파일로 실행해 `sys.path[0]` 이 cwd 가 아니게 되자 **검증 heredoc** 이 `ModuleNotFoundError` 로 죽어 rc 1 이 났다. wrapper 를 stdin 재전달(`python -` 유지)로 고친 뒤 진짜 RED(rc 0 · commit 안내)를 봤다. §105 에 적었다.
 - 첫 영수증 재생성 시도는 history 두 파일이 미추적인 트리에서 돌아 `validator_tree_dirty=true` 가 찍혔다 → 버리고(git checkout) 보존 커밋 뒤 clean 에서 다시 만들었다. 현행 `grid_fit_v5` 영수증의 `validator_tree_dirty: true` 는 같은 호출의 앞 영수증 갱신 때문이며 74차 영수증과 같은 값이다 (stamp, core 밖).
 - `merge-keys-are-refused-in-the-index-g75` 변이의 fail set 은 merge 사례 1 node 다 (다른 세 중복 사례는 `DuplicateKeyError` 가 잡는다).
-- RUN_SCOPE 가 한 라운드에 두 번 움직였다 (N1·N2 구현 뒤 merge key 정책을 별도 커밋으로) — 그래서 영수증 세대가 셋이다 (`27390883…` · `cd2408…` · 현행 `1c67a748…`); 전부 `history/` 에 있다.
+- RUN_SCOPE 가 한 라운드에 두 번 움직였다 (N1·N2 구현 뒤 merge key 정책을 별도 커밋으로) — 그래서 영수증 세대가 셋이다 (`27390883…` · `cd2408…` · 현행 `1c67a748…`); ~~전부 `history/` 에 있다~~ **이전 두 세대는 `history/`, 현행은 `receipts/<leg>.validate.yaml` (76차 정정, §106)**.
 - 처음부터 통과한 새 시험 7개(첫 판)의 사유는 §105 — 대조군 2 · 74차판이 이미 거부하던 축 5.
 - 첫 전체 회귀(`4d8dfc52`)는 **1 failed** — 75차 패키지 보존 사본(`gate75_review/codex/reference/docs/22p_gap/STAGE3_CONTRACT.md`)이 claim 관할로 잡힌 docs-lint 적색으로, 패키지 커밋 `cd272a89` 부터 있었고 이번 코드와 무관하다. `_CLAIM_SCOPE_EXCLUDE` 에 `gateNN_review/` 를 더해(`5b10a79f`, RUN_SCOPE 밖) 다시 돌린 결과가 §2 다.
 
@@ -62,7 +62,7 @@ mutation_replay --check-preimages · -k g75     전 지점 1회 · 4/4 물었다
 
 1. N1 · N2(merge 정책 포함) · N3 각각의 종결 수용 (예/아니오, 아니오면 남은 조건 한 줄).
 2. 74차 항목 1~6 + 75차 잔여가 전부 닫히면 **전체 종결** 인가 — 남은 조건이 있으면 한 줄.
-3. 영수증 세대가 셋인 상태(전부 history 보존)에서 원장이 현행 한 쌍만 가리키는 것이 맞는가.
+3. 영수증 세대가 셋인 상태(~~전부 history 보존~~ **history 3세대 + 현행 1세대 / 다리** — 76차 정정, §106)에서 원장이 현행 한 쌍만 가리키는 것이 맞는가.
 
 ## §6 발송 규칙
 
