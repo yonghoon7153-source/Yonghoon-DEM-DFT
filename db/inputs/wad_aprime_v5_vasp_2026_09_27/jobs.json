@@ -1,13 +1,13 @@
 {
- "schema": "aprime_v5_vasp_package/v2",
+ "schema": "aprime_v5_vasp_package/v3",
  "date": "2026-09-27",
- "status": "준비본 v2 (Codex CE NO-GO 반영 · 재리뷰 전 · 결정 proposed · 실행 미정)",
+ "status": "준비본 v3 (Codex CE·CF NO-GO 반영 · 재리뷰 전 · 결정 proposed · 실행 미정)",
  "source_package": "db/inputs/wad_aprime_s3v2_2026_09_26",
  "source_s3_manifest_sha256": "069894c62daa1bf863cebba3533fb0c79e70fd16a9b4d77cf7ea5ac41512246d",
  "source_seal": "db/properties/wad_aprime_s3v2_seal_2026_09_26.json",
  "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json",
  "amendment": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json",
- "tool_sha256": "3bc7cde52c5529cff65d80ac5678a48d484925a036aa6dce224199e59e925dd0",
+ "tool_sha256": "2c9f9ab97e54a6bff884ff231b5aa2f9c39b881238354f7c0ecc0da38ca200f3",
  "settings": {
   "potcar": {
    "Li": "Li_sv",
@@ -69,6 +69,8 @@
   "d3_gross_rel_tol": 0.01,
   "d3_pair_budget_J_m2": 0.005,
   "d3_g3_budget_J_m2": 0.001,
+  "d3_same_geom_tol_eV": 0.0001,
+  "dipol_cut_grid_tol": 2,
   "uma_required": {
    "model": "uma-s-1p1",
    "task": "omat",
@@ -82,7 +84,8 @@
   "pilot_jobs": [
    "V5_s_outer_A_bound",
    "V5_s_outer_A_far"
-  ]
+  ],
+  "pp_registry_schema": "aprime_v5_pp_registry/v2"
  },
  "G5_samples": {
   "①": [
