@@ -5043,6 +5043,65 @@
     "decision_digest": "sha256:e79f78737ea4846fa8f67c3c4a66ee2be21aa9154acf6a10051638b3a553b284",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
+  },
+  {
+   "id": "D-2026-09-27-wad-aprime-v5-vasp-route",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "adhesion.wad_lpscl_agc.aprime_pilot",
+   "slot": "wad_aprime_v5_vasp_route",
+   "applies_to": {
+    "systems": [
+     "comp1",
+     "ag111"
+    ],
+    "tasks": [
+     "wad_aprime_pilot"
+    ],
+    "methods": [
+     "vasp_pbe_d3bj"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "A′ 카드 v5 개정 3 (초안) — V5 를 VASP 외주로 돌리는 경로 (준비만 · 실행 미정)",
+   "statement": "`db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json` (sha256:04b1a71ad01a303b48463b0ed807bccd948b032cd4ffe137246d790813a574d5). 봉인 S3v2 기하 · 표본 ①–⑤ · 끝점 · G3/G4/G5 식·문턱 · 개정 1 의 D3 장부 구조는 그대로 두고, V5 18 단일점만 VASP (PAW_PBE Li_sv·P·S·Cl·Ag · ENCUT 520 · MP1 σ 0.136 · IVDW 12 명시 계수 · LDIPOL IDIPOL 3 · Γ 3×2×1) 로 옮긴다. VASP V5 는 별도 비교군 (QE 값과 섞지 않음). 반송은 build_v5_vasp_package.py --check 로 fail-closed. 패키지 db/inputs/wad_aprime_v5_vasp_2026_09_27 (MANIFEST.sha256 파일 sha256 ae434e671ba74ef5…). 업체·예산 미정 — 준비본.",
+   "rationale": "V5 는 우리 GPU 로 RESOURCE_BLOCKED 라 G5 가 NOT_TESTED 다. 외주 CPU 노드면 메모리 벽이 없다. UMA(OMat24) 학습 기준이 VASP PBE 라 G5 가 코드 차이에 덜 흔들린다. 결과 전 D3 만 예측이 V5 G3(ii) +0.0095 (문턱 0.01) 로 경계선이라, G5 자격용 G3 를 W_PBE 로 읽는 안(3b)을 Codex 에 같이 묻는다.",
+   "decision_state": "proposed",
+   "record_kind": "prospective",
+   "results_seen": false,
+   "results_seen_note": "V5 DFT 결과 0 — s-dftd3 2체 D3 (기하 고정) 만 계산",
+   "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json",
+   "record": "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json",
+   "depends_on": [
+    "D-2026-09-26-wad-aprime-s3v2-seal",
+    "D-2026-09-26-wad-aprime-amend-2-dipole-region",
+    "D-2026-09-23-wad-d3-twobody-atm-separate"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "db/inputs/wad_aprime_v5_vasp_2026_09_27/jobs.json",
+    "tools/wad/build_v5_vasp_package.py"
+   ],
+   "method_ref": "tools/wad/build_v5_vasp_package.py (--build · --check · --collect · selftest 37 · 돌연변이 5 빨간불 · 가짜 VASP 로 러너 끝-끝 시험)",
+   "reopen_criteria": [
+    "Codex CE 가 설정 하나라도 NO-GO → 고친 뒤 재리뷰",
+    "업체·예산 확정 → 1저자 비준 → 파일럿 1 잡 먼저"
+   ],
+   "enforcement": "빌더: 구조 sha 불일치 · 쌍극자 여유 < 4 Å · V5 잡 ≠ 18 이면 패키지 안 만듦 · 러너: MANIFEST sha256sum -c 실패 · 허용 밖 성능 태그면 실행 안 함 · 검사기: OK 아닌 잡은 판정 제외",
+   "proposed_by": "claude-session-2026-09-27",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-09-27",
+     "state": "proposed",
+     "note": "1저자 'v5 관련해서 vasp 용으로 외주건으로 한번 만들어보고 codex 리뷰 받자 · 될지는 모르지만 준비는 해둬볼게'"
+    }
+   ],
+   "ratification": {
+    "state": "proposed"
+   }
   }
  ]
 }
