@@ -1,0 +1,94 @@
+{
+ "schema": "d3_atm_column/v1",
+ "date": "2026-09-27",
+ "what": "A′ V2 (Ag(111)|그래핀) W 의 D3 3체(ATM) 몫 — 별도 열 ΔW_ATM (결정 D-2026-09-23-wad-d3-twobody-atm-separate 의무 · V2 보고 때 빠져 있었다)",
+ "decision": "D-2026-09-23-wad-d3-twobody-atm-separate — '헤드라인 W^{PBE+D3(BJ)} 는 2체 · ATM 3체 몫은 같은 기하에서 dftd3 패키지로 계산해 별도 열(ΔW_ATM)로 보고' · reopen: DEM 이 3체 포함 값을 요구하면 헤드라인 정의를 다시 연다",
+ "method": {
+  "impl": "simple-dftd3 1.6.0 (python · DispersionModel)",
+  "params": "PBE D3(BJ) s6 1.0 · s8 0.7875 · a1 0.4289 · a2 4.4407 (S1 결박값) · ATM = E(s9=1) − E(s9=0) · alp 14",
+  "pbc": "3D (QE 와 같은 주기 셀)",
+  "geometry": "V2 2단계 패키지 구조 (QE SCF 에 쓴 그 좌표) · db/inputs/wad_aprime_s4_v2_stage2_2026_09_26/<reg>/structures",
+  "W_2body": "db/raw/wad_aprime_s4_v2s2_2026_09_26/collect_aprime_s4_2026_09_26.json (QE)",
+  "재현": "ΔW_ATM = {[E_D3(far; s9=1) − E_D3(far; s9=0)] − [E_D3(bound; s9=1) − E_D3(bound; s9=0)]} × E_h / A"
+ },
+ "results": {
+  "V2_bridge_8A": {
+   "W_PBE_D3_2body_J_m2": 0.43549,
+   "dW_ATM_J_m2": -0.06894,
+   "W_PBE_D3_plus_ATM_J_m2": 0.36655,
+   "ATM_fraction_of_W": -0.1583,
+   "dD3_2body_sdftd3_J_m2": 0.488,
+   "dD3_2body_QE_J_m2": 0.49049,
+   "structures": [
+    "V2_bridge_dft_bound",
+    "V2_bridge_dft_far"
+   ]
+  },
+  "V2_hollow_fcc_8A": {
+   "W_PBE_D3_2body_J_m2": 0.43512,
+   "dW_ATM_J_m2": -0.06892,
+   "W_PBE_D3_plus_ATM_J_m2": 0.3662,
+   "ATM_fraction_of_W": -0.1584,
+   "dD3_2body_sdftd3_J_m2": 0.48798,
+   "dD3_2body_QE_J_m2": 0.49047,
+   "structures": [
+    "V2_hollow_fcc_dft_bound",
+    "V2_hollow_fcc_dft_far"
+   ]
+  },
+  "V2_top_fcc_8A": {
+   "W_PBE_D3_2body_J_m2": 0.43549,
+   "dW_ATM_J_m2": -0.06894,
+   "W_PBE_D3_plus_ATM_J_m2": 0.36655,
+   "ATM_fraction_of_W": -0.1583,
+   "dD3_2body_sdftd3_J_m2": 0.488,
+   "dD3_2body_QE_J_m2": 0.49049,
+   "structures": [
+    "V2_top_fcc_dft_bound",
+    "V2_top_fcc_dft_far"
+   ]
+  },
+  "V2_top_fcc_10A_ii": {
+   "W_PBE_D3_2body_J_m2": 0.44907,
+   "dW_ATM_J_m2": -0.07614,
+   "W_PBE_D3_plus_ATM_J_m2": 0.37292,
+   "ATM_fraction_of_W": -0.1696,
+   "dD3_2body_sdftd3_J_m2": 0.50123,
+   "dD3_2body_QE_J_m2": null,
+   "structures": [
+    "V2_top_fcc_G3_c2_bound",
+    "V2_top_fcc_G3_c2_far_ii"
+   ]
+  },
+  "V2_top_hcp_8A": {
+   "W_PBE_D3_2body_J_m2": 0.43512,
+   "dW_ATM_J_m2": -0.06892,
+   "W_PBE_D3_plus_ATM_J_m2": 0.3662,
+   "ATM_fraction_of_W": -0.1584,
+   "dD3_2body_sdftd3_J_m2": 0.48799,
+   "dD3_2body_QE_J_m2": 0.49048,
+   "structures": [
+    "V2_top_hcp_dft_bound",
+    "V2_top_hcp_dft_far"
+   ]
+  }
+ },
+ "cutoff_convergence_top_fcc_8A": {
+  "(disp2,disp3,cn) bohr": {
+   "기본(60,40,40)": -0.06894,
+   "(95,40,40)": -0.06894,
+   "(95,60,40)": -0.06897,
+   "(150,80,40)": -0.06896
+  },
+  "읽기": "ATM 몫은 실공간 cutoff 에 ±3e-5 J/m² 로 수렴"
+ },
+ "2체_교차확인": {
+  "QE_dD3_J_m2": 0.4905,
+  "sdftd3_dD3_J_m2": 0.488,
+  "차": "0.0025 J/m² (0.5 % · V2 셀당 ~3.4 meV) — cutoff 를 150 bohr 까지 늘려도 0.4880 그대로 → 절단이 아니라 구현 차이 (QE 내장 D3 vs s-dftd3) 로 기록. ATM 몫(−0.069)의 크기 판단에는 영향 없음",
+  "⚠": "헤드라인 2체 값은 QE 출력 그대로다 (개정 1) — s-dftd3 2체 값으로 바꾸지 않는다"
+ },
+ "읽기": "3체(ATM)는 Ag|그래핀 결합을 약하게 한다 — 8 Å 끝점 −0.069 J/m² (W 의 −15.8 %) · 10 Å 끝점 −0.076 (−17.0 %) · registry 4 개 모두 같다. 헤드라인은 결정대로 2체 (0.435 · 0.449) · 3체 포함 값 (0.366 · 0.373) 은 **별도 열**",
+ "DEM": "아직 전달 안 함 — 다음 DEM 회신(V4 참고값과 함께)에 별도 열로 싣는다 (1저자 발송). DEM 이 3체 포함 값을 쓰겠다고 하면 결정의 재개 조건대로 헤드라인 정의를 다시 연다",
+ "⛔": "J/m² 값은 V2 라벨(PBE+D3(BJ) 조건부 · G3 FAIL · k 축 미검증)을 그대로 단다 · ATM 은 D3 모형 안의 보정이지 실험 대조가 아니다"
+}
