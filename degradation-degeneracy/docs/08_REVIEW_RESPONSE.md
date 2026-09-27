@@ -8401,3 +8401,36 @@ RUN_SCOPE `c2ef1a811e70bb4c → 27390883eb132941`. 두 실물 영수증은 원�
 **사용자 결정 (2026-09-27, 78차 요청문 커밋 `284d2153` 뒤):** ① 제한 오프라인 구현(§3.2 단계 1+2, 라운드 끝 leg 별 영수증 1회 포함) **승인 — 78차 회신 뒤 착수** ② 보존 profile **선택 1 유지** (§13.2 retention 계약 유지 · 운영 backend·canary 는 첫 pilot 전 별도 gate; 선택 2 로컬 한정은 채택하지 않음). 회신 전까지 코드를 건드리지 않는다.
 
 **이 접수에서 한 것:** 패키지 보존 · `GATE77_REQUEST.md` §1·§2·§3·§4 취소선 정정 · `GATE78_REQUEST.md` (N1 상태표 · N2 primary 한 행 · N3 의존/사전 고정 표 · 제한 오프라인 구현 범위 = §3.2 단계 1+2). **하지 않은 것:** 코드 변경 없음 (RUN_SCOPE diff 0) · 새 계산·복원·class/투영·영수증 재생성 없음 · `STAGE3_CONTRACT.md` 본문 불변 (리뷰 판정 뒤) · 구현 착수 없음 (사용자 승인 대기).
+
+## §109 78차 접수 — **G77-N1·N3 종결 · G77-N2 잔여 둘 (G78-N1 관측 쌍 key · G78-N2 누락/분모, P1 각 1) · 단계 1+2 수정 조건부 적합** → 단계 1 정정 + 단계 2 한정 구현 (`3dc269d8` · `source_digest c78d7969ef49fd07`)
+
+2026-09-27 접수. 리뷰어 고정: 요청 HEAD `720f0a0e466afb595fbd73a50f89416898cc927c` · 코드 `23c361ed` · 독립 `source_digest 1c67a748598baadb` (58 파일) · 코드→HEAD / 77→78 RUN_SCOPE diff 0 · 검토 checkout 2,995 파일 보존. 패키지 원본 `docs/22p_gap/gate78_review/` (zip sha256 `f41ee778decd9d35bef374896efb08e850141a89b099d0e090770d4c597b0edf`, MANIFEST 37 files · 커밋 뒤 blob 대조 **37/37** · `-text !eol` 규칙 먼저 `a4166f5d`). 정적·데이터 검토 + 검토자 소유 산술 반례 (`DESIGN_ARITHMETIC.json`).
+
+**결론 (그대로):** "G77-N1과 G77-N3는 이번 설계 정정 범위에서 종결 수용한다. G77-N2는 arm·동일 B·단일 scalar 정정은 수용하지만, 관측 행의 pairing과 분모/누락 처리 두 항목이 남는다. 이미 사용자 승인된 단계 1+2는 수정 조건부로 적합하다. … 수정 문서와 한정 구현 결과를 기존 예정 GATE79에서 함께 볼 수 있다." 76차 종결 유지 · 새 실행 GO 없음 · grid_fit_v5 진단/no_active_claim 유지.
+
+| id | 등급 | 무엇을 틀렸나 | 최소 정정 | 우리 대응 (단계 1 · 문서) |
+|---|---|---|---|---|
+| **G78-N1** | P1 | `pair_group_id`(noise·seed·objective 제외 — bank 공유 그룹)를 유일한 관측 쌍 key 로 썼다. 같은 물리좌표의 seed s1·s2 를 group 으로 join 하면 2쌍이 아니라 4행 (PP/PF/FP/FF 각 1) — 분모와 전이 분해가 틀린다 | 그룹 ID 와 별도의 **관측 쌍 key** · objective 별 정확히 한 행 · planned roster 는 key 의 사전 집합 · 중복/교차 seed 는 구조 오류 | `GATE78_REQUEST.md` §2.1 "단위" 행 취소선 → `obs_key = (comparison_family_id, pair_group_id, treatment_id, noise_level, noise_realization_id, replicate_id)`; 고정 축은 고정값 명시; 봉인 `cond_id` 와 일대일 결속 허용(충돌·중복 거부) (`3e995c4f`) |
+| **G78-N2** | P1 | "누락을 fail 로 대입한 Δ_worst" 는 raw-degeneracy Δ 의 worst-case 가 아니다 (33 누락/34 pass 는 34p 에 가장 **유리한** 쪽; 리뷰어 40쌍 반례: Δ_cc=+1/38 vs fail 대입 −1/40, 실제 상한 +1/40). 분석 대상 N 의 inclusion mask 미명시. 5% 가 §6.2 실패·비유한 0건 gate 의 완화로 읽힌다 | N/n/m 고정 · Δ_cc 는 조건부 기술통계 · 전체 집합 bound `[(D+Σl)/N, (D+Σu)/N]` (관측된 쪽 유지) · inclusion mask 사전 결속 · 5% 는 별도 reporting 정책 | §2.1 "분모"·"실패/누락 처리" 행 취소선 → N(grid recoverable geometry mask, `classify_recoverability` 규칙) · n(complete-pair + label 유효성) · m · Δ_cc · bound 수식 · 9 label 상태의 [l,u] · zero denominator · §6.2 gate 그대로 · 5% 는 reporting 정책 (`3e995c4f`) |
+
+**비차단 (반영):** "연속 두 doubling → 그 N" 의 N 정의 (= 두 doubling 의 시작 N; ladder 끝까지의 prefix 진단은 전부 보고) · §4 "승인 요청/대기" → 승인됨 · §4 "복원 안 함" → 기존 대상 leg 영수증용 격리 복원만 예외.
+
+### 단계 2 한정 구현 (`3dc269d8`, RUN_SCOPE `1c67a748598baadb → c78d7969ef49fd07`)
+
+**RED 먼저.** `tests/test_gate79_stage3_logging.py` 13 node — 패치 전 **9 failed / 4 passed** (35.47 s). 처음부터 통과한 4개: `g79_02[False/True]` 수치 불변 골든 — 변경 **전** 코드(`16d97ce6`)에서 잡은 p·J·restart 순서·n_eval·agree·spread 를 부동소수 동일로 고정 (통과가 목적) · `g79_04b` F86 즉시 실패 유지 · `g79_07` 봉인 pin `row_projection.py` 파서와 `_restart_ok` 가 새 키를 받는다 (둘 다 기존 동작 보호).
+
+| 78차 구현 경계 | 어떻게 지켰나 | 회귀 |
+|---|---|---|
+| 2 기존 optimizer 초기값·후보·횟수·tolerance·J/p·scoring 불변 | `_minimize_until_stable` 의 minimize 호출·갱신 규칙·반환 p/J 는 그대로 — 기록(`termination`)만 다섯째 반환값으로 더함. `fit()` 의 restart 루프·정렬·agree/spread 불변 | `g79_02` 골든 (부동소수 동일) · **실물**: 영수증 재생성의 격리 복원·validate·재채점이 봉인 summary 와 semantic 동일 (두 leg 33/34 검사) |
+| 3 native 종료 vs 바깥 반복 종료 구별 · 어느 round 의 상태인지 | `termination = {native_last, native_best, outer ∈ {no_improvement, nonfinite, max_rounds}, n_rounds}`; 기존 `ok`(= FitResult.converged) 는 **마지막 round 의 success** 그대로 (best round 가 아님 — 다를 수 있음) | `g79_03` (best status 0·success / last status 1·실패 · converged False 유지 · outer no_improvement · n_rounds 2) · `g79_03b` (nonfinite → native_best None · max_rounds) |
+| 4 옛 필드 부재는 미기록, false/0 소급 금지 | `normalize_restart_record`: legacy_pair / legacy_dict / v6_prep_logging — 새 키 없으면 None | `g79_06` · 변이 `absent-restart-fields-are-unrecorded-g79` |
+| (c) 실패 restart 기록 | `FitResult.restart_errors` + fits 열 `restart_errors_json`; `restarts`/`n_restarts` 는 성공한 것만(불변); adaptive=False 즉시 실패 그대로 | `g79_04` · `g79_04b` · `g79_04c` (production `run_fit` → 열 존재 · 기존 validator `restart_출처`·`restart_예산_완주` 통과) |
+| (d) 깨진 parquet 은 발견 | `_parquet_read_failure` (pyarrow 로 한 번 읽음) → `fits_읽기`/`curves_읽기` 실패 항목; ArrowInvalid 를 올리지 않는다 | `g79_05`·`g79_05b` |
+| 5 복원은 영수증용 격리 복원만 | 대상 leg 고정: `grid_fit_v5` · `paired_fixed5_v4`; `make_receipt.py` 의 empty-root 복원은 임시 디렉터리 | 영수증 stamp |
+| 7 최종 코드 고정 뒤 leg 별 1회 · 원본 보존 · 새 validator 식별 | 원본 `history/<leg>.validate.1c67a748598baadb.yaml` (`3dc269d8`) → clean `3dc269d8` 에서 재생성 (`194b1a55`). 필드 diff: `identity.validator_source_digest` · **`identity.src_io_sha256`**(io.py 가 바뀌었으니 identity 의 일부) · `core_sha256` · stamp — validation·outputs 전부 동일. producer 식별 불변. `grid_fit_v5` dirty=true 는 같은 호출의 앞 영수증 갱신 (74~76차와 같음) | `g70_e3_*` · `g71_e3r_*` · `g72_*` · docs-lint 결속 시험 |
+
+**변이:** `--check-preimages` 전 지점 1회 · `-k g79` **5/5 물었다** (`native-best-round-is-recorded-g79` 3 node · `outer-stop-reason-is-named-g79` 1 · `failed-restarts-are-recorded-g79` 1 · `broken-parquet-is-a-finding-not-an-exception-g79` 2 · `absent-restart-fields-are-unrecorded-g79` 1). EXPECT 는 `--emit-expect` 관측값 (`3e995c4f` sandbox), 잘린 repr 꼬리 제외.
+
+**하지 않은 것 (78차 범위 밖):** 단계 3~6 · candidate_id/bank_index · provider/canary · floor/pilot · 새 연구 계산 · class/투영 승격 · missing 처리 분석기 · 기존 fits 소급 수정 · `STAGE3_CONTRACT.md` 본문 (리뷰 판정 뒤).
+
+**실측:** §110 (전체 회귀 + strict smoke 는 이 문서 커밋 뒤 clean 커밋에서).

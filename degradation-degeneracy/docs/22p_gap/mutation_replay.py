@@ -1858,6 +1858,27 @@ MUTANTS = [
      '                _assert_ledger_run_bound(ev, bound_run, leg, e.get("preservation_status"))\n',
      '                bound_run  # 변이: 원장 실행 자리 대조를 지운다\n',
      "g75_n3_01_a"),
+    # ── 79차 (단계 3 §9.4 한정 구현 — 로깅·오류 처리; 수치 경로는 건드리지 않는다) ──
+    ("native-best-round-is-recorded-g79", FITTING,                        # native best ≠ last 구별
+     '            native_best = native_last\n',
+     '            native_best = None\n',
+     "g79_01 or g79_03_native"),
+    ("outer-stop-reason-is-named-g79", FITTING,                           # 바깥 반복 종료 사유
+     '            outer = "no_improvement"\n            break\n',
+     '            outer = "max_rounds"\n            break\n',
+     "g79_03_native"),
+    ("failed-restarts-are-recorded-g79", FITTING,                         # 실패 restart 기록
+     '            errors.append({"i": k, "source": src, "error": f"{type(e).__name__}: {e}"})\n',
+     '            pass\n',
+     "g79_04_a"),
+    ("broken-parquet-is-a-finding-not-an-exception-g79", IO,              # 계약 §9.4
+     '        return f"{type(e).__name__}: {e}"\n    return None\n',
+     '        pass\n    return None\n',
+     "g79_05"),
+    ("absent-restart-fields-are-unrecorded-g79", FITTING,                 # 역사적 reader: None, False 아님
+     '                "converged": r.get("converged") if gen == "v6_prep_logging" else None,\n',
+     '                "converged": r.get("converged", False),\n',
+     "g79_06"),
     ("the-replay-context-is-measured-once-g66", MR,                          # 정적 관측
      '    ctx = ctx if ctx is not None else _\u0072eplay_context()\n'
      '    want = _parent_customization_view(ctx)',
@@ -5465,6 +5486,53 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_gate75_defensive.py::test_g75_n2_a_duplicate_mapping_key_in_the_index_stops_before_any_promotion[merge key overriding an identity value]": "AssertionError:   ✗ 기존 index 를 받을 수 없다:",
+        }
+    },
+    # ── 79차 — `--emit-expect -k g79` 관측값 (3e995c4f sandbox). 잘린 repr 꼬리는 담지 않는다 (G67-T1-b)
+    "native-best-round-is-recorded-g79": {
+        "fail": [
+            "tests/test_gate79_stage3_logging.py::test_g79_01_each_restart_carries_converged_n_eval_and_a_two_level_termination_status[False]",
+            "tests/test_gate79_stage3_logging.py::test_g79_01_each_restart_carries_converged_n_eval_and_a_two_level_termination_status[True]",
+            "tests/test_gate79_stage3_logging.py::test_g79_03_native_best_and_native_last_are_distinguished_and_converged_keeps_its_old_meaning",
+        ],
+        "witness": {
+            "tests/test_gate79_stage3_logging.py::test_g79_01_each_restart_carries_converged_n_eval_and_a_two_level_termination_status[False]": "AssertionError: ('native_best', {'outer': 'no_improvement'",
+            "tests/test_gate79_stage3_logging.py::test_g79_01_each_restart_carries_converged_n_eval_and_a_two_level_termination_status[True]": "AssertionError: ('native_best', {'outer': 'no_improvement'",
+            "tests/test_gate79_stage3_logging.py::test_g79_03_native_best_and_native_last_are_distinguished_and_converged_keeps_its_old_meaning": "TypeError: 'NoneType' object is not subscriptable",
+        }
+    },
+    "outer-stop-reason-is-named-g79": {
+        "fail": [
+            "tests/test_gate79_stage3_logging.py::test_g79_03_native_best_and_native_last_are_distinguished_and_converged_keeps_its_old_meaning",
+        ],
+        "witness": {
+            "tests/test_gate79_stage3_logging.py::test_g79_03_native_best_and_native_last_are_distinguished_and_converged_keeps_its_old_meaning": "AssertionError: assert ('max_rounds' == 'no_improvement'",
+        }
+    },
+    "failed-restarts-are-recorded-g79": {
+        "fail": [
+            "tests/test_gate79_stage3_logging.py::test_g79_04_a_failed_restart_is_recorded_without_changing_the_surviving_set",
+        ],
+        "witness": {
+            "tests/test_gate79_stage3_logging.py::test_g79_04_a_failed_restart_is_recorded_without_changing_the_surviving_set": "AssertionError: assert [] ==",
+        }
+    },
+    "broken-parquet-is-a-finding-not-an-exception-g79": {
+        "fail": [
+            "tests/test_gate79_stage3_logging.py::test_g79_05_a_corrupt_fits_parquet_is_reported_as_a_failed_check_not_raised",
+            "tests/test_gate79_stage3_logging.py::test_g79_05b_a_corrupt_curves_parquet_is_reported_as_a_failed_check_not_raised",
+        ],
+        "witness": {
+            "tests/test_gate79_stage3_logging.py::test_g79_05_a_corrupt_fits_parquet_is_reported_as_a_failed_check_not_raised": "pyarrow.lib.ArrowInvalid: Could not open Parquet input source '<Buffer>': Parquet magic bytes not found in footer.",
+            "tests/test_gate79_stage3_logging.py::test_g79_05b_a_corrupt_curves_parquet_is_reported_as_a_failed_check_not_raised": "pyarrow.lib.ArrowInvalid: Could not open Parquet input source '<Buffer>': Parquet magic bytes not found in footer.",
+        }
+    },
+    "absent-restart-fields-are-unrecorded-g79": {
+        "fail": [
+            "tests/test_gate79_stage3_logging.py::test_g79_06_historical_restart_records_report_absent_fields_as_unrecorded_not_false_or_zero",
+        ],
+        "witness": {
+            "tests/test_gate79_stage3_logging.py::test_g79_06_historical_restart_records_report_absent_fields_as_unrecorded_not_false_or_zero": "assert (False is None)",
         }
     },
     "diagnostic-consumer-binds-out-to-the-receipt-run-g75": {
