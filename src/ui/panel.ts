@@ -1,5 +1,6 @@
 // The diary-page panel: prefecture view, region view, and the general memo view.
-import { countBoxes, extrasFor, extrasForRegion, generalExtras, mascotById, notes, notesFor, prefById, prefBySlug, prefecturesIn, regionById, regionOf } from '../data';
+import { countBoxes, extrasFor, extrasForRegion, generalExtras, mascotSearchUrl, mascotsOf, notes, notesFor, prefById, prefBySlug, prefecturesIn, regionById, regionOf } from '../data';
+import type { Mascot } from '../types';
 import type { NoteExtra, Prefecture, Region } from '../types';
 import { mascotArt } from '../mascots/art';
 import { clear, el, ruby } from './dom';
@@ -9,6 +10,7 @@ export interface PanelCallbacks {
   onClose(): void;
   onSelectPrefecture(slug: string): void;
   onSelectRegion(id: string): void;
+  onRevealMascot(id: string): void;
   isMascotFound(id: string): boolean;
 }
 
@@ -99,12 +101,16 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
       out.push(sec);
     }
 
-    // mascot
-    if (p.mascot && cb.isMascotFound(p.mascot)) {
-      const m = mascotById.get(p.mascot)!;
-      const art = el('div', { class: 'mascot-card__art', 'aria-hidden': 'true' });
-      art.innerHTML = mascotArt[m.id] ?? '';
-      out.push(el('section', { class: 'sec' }, el('div', { class: 'mascot-card' }, art, el('div', {}, el('b', { lang: 'ja' }, m.name.ja), el('small', {}, `${m.name.ko} · 「${m.line.ja}」`)))));
+    // friends (real local mascots of this prefecture)
+    const friends = mascotsOf(p);
+    if (friends.length) {
+      const sec = el('section', { class: 'sec sec--friends' }, el('h3', {}, el('span', { class: 'emoji' }, '✦'), '이 県의 친구들', el('span', { class: 'n' }, `${friends.filter((m) => cb.isMascotFound(m.id)).length}/${friends.length} · 눌러서 만나기`)));
+      const row = el('div', { class: 'friends' });
+      for (const m of friends) row.append(friendCard(m, p.short.ja));
+      sec.append(row);
+      const met = friends.filter((m) => cb.isMascotFound(m.id));
+      for (const m of met) sec.append(mascotCard(m));
+      out.push(sec);
     }
 
     // facts (図鑑)
@@ -131,6 +137,41 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
     nextBtn.addEventListener('click', () => cb.onSelectPrefecture(next.slug));
     out.push(el('nav', { class: 'ph__nav', 'aria-label': '이전/다음 현' }, prevBtn, nextBtn));
     return out;
+  }
+
+  function friendCard(m: Mascot, prefShort: string): HTMLElement {
+    const has = cb.isMascotFound(m.id);
+    const art = el('div', { class: 'friends__art', 'aria-hidden': 'true' });
+    art.innerHTML = mascotArt[m.id] ?? '';
+    const b = el(
+      'button',
+      { type: 'button', class: `friends__card${has ? ' is-found' : ''}${m.kind === 'extra' ? ' is-extra' : ''}`, title: has ? m.name.ja : `${prefShort}에 누가 살까?` },
+      art,
+      el('span', { class: 'friends__name', lang: 'ja' }, has ? m.name.ja : '？？？'),
+      el('small', {}, has ? (m.kind === 'extra' ? '비공식' : '공식') : prefShort),
+    );
+    b.addEventListener('click', () => cb.onRevealMascot(m.id));
+    return b;
+  }
+
+  function mascotCard(m: Mascot): HTMLElement {
+    const art = el('div', { class: 'mascot-card__art', 'aria-hidden': 'true' });
+    art.innerHTML = mascotArt[m.id] ?? '';
+    const link = el('a', { class: 'mascot-card__link', href: m.url ?? mascotSearchUrl(m), target: '_blank', rel: 'noopener noreferrer' }, m.url ? '공식 페이지 ↗' : '검색해서 보기 ↗');
+    return el(
+      'div',
+      { class: 'mascot-card' },
+      art,
+      el(
+        'div',
+        { class: 'mascot-card__body' },
+        el('b', { lang: 'ja' }, m.name.ja, el('span', { class: 'mascot-card__kana' }, ` ${m.name.kana}`)),
+        el('small', {}, `${m.name.ko} · ${m.org}${m.kind === 'extra' ? ' · 비공식' : ''}`),
+        el('small', { class: 'mascot-card__about', lang: 'ja' }, m.about.ja),
+        el('small', { class: 'mascot-card__about' }, m.about.ko),
+        el('small', { class: 'mascot-card__meta' }, m.art === 'likeness' ? '그림은 이 프로젝트가 그린 닮은꼴 (공식 아님) · ' : `${m.credit ?? ''} · `, link),
+      ),
+    );
   }
 
   function termChip(t: { ja: string; kana?: string; ko?: string }): HTMLElement {
@@ -172,19 +213,16 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
     }
     out.push(el('section', { class: 'sec' }, el('h3', {}, el('span', { class: 'emoji' }, '🗾'), `${members.length}개 도도부현`, el('span', { class: 'n' }, '● = 메모 있음')), chips));
 
-    const friends = members.filter((p) => p.mascot);
+    const friends = members.flatMap((p) => mascotsOf(p).map((m) => ({ m, p })));
     if (friends.length) {
       const row = el('div', { class: 'friends' });
-      for (const p of friends) {
-        const m = mascotById.get(p.mascot!)!;
-        const has = cb.isMascotFound(m.id);
-        const art = el('div', { class: 'friends__art', 'aria-hidden': 'true' });
-        art.innerHTML = mascotArt[m.id] ?? '';
-        const b = el('button', { type: 'button', class: `friends__card${has ? ' is-found' : ''}`, title: has ? m.name.ja : `${p.short.ja}에 누가 살까?` }, art, el('span', { class: 'friends__name', lang: 'ja' }, has ? m.name.ja : '？？？'), el('small', {}, p.short.ja));
-        b.addEventListener('click', () => cb.onSelectPrefecture(p.slug));
-        row.append(b);
+      for (const { m, p } of friends) {
+        const card = friendCard(m, p.short.ja);
+        card.addEventListener('click', () => cb.onSelectPrefecture(p.slug), { capture: true });
+        row.append(card);
       }
-      out.push(el('section', { class: 'sec' }, el('h3', {}, el('span', { class: 'emoji' }, '✦'), '이 지방의 친구들', el('span', { class: 'n' }, `${friends.filter((p) => cb.isMascotFound(p.mascot!)).length}/${friends.length}`)), row));
+      const n = friends.filter(({ m }) => cb.isMascotFound(m.id)).length;
+      out.push(el('section', { class: 'sec' }, el('h3', {}, el('span', { class: 'emoji' }, '✦'), '이 지방의 친구들', el('span', { class: 'n' }, `${n}/${friends.length}`)), row));
     }
     return out;
   }

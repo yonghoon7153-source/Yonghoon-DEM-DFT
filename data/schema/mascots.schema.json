@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "mascots.json",
+  "title": "mascots.json — 실제 ご当地キャラクター (ADR 0003)",
   "type": "object",
   "required": ["mascots"],
   "properties": {
@@ -8,12 +8,18 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "prefecture", "name", "line"],
+        "required": ["id", "prefecture", "kind", "name", "org", "about", "line", "art"],
         "properties": {
           "id": { "type": "string", "pattern": "^[a-z]+$" },
-          "prefecture": { "type": "string" },
-          "name": { "type": "object", "required": ["ja", "ko"] },
-          "line": { "type": "object", "required": ["ja", "ko"] }
+          "prefecture": { "type": "string", "description": "prefectures.json 의 slug" },
+          "kind": { "type": "string", "enum": ["official", "extra"], "description": "official = 県/県관광기관 공식 (県당 1개), extra = 유명 비공식·시 캐릭터" },
+          "name": { "type": "object", "required": ["ja", "kana", "ko"] },
+          "org": { "type": "string", "description": "권리자·소속 (예: 熊本県)" },
+          "about": { "type": "object", "required": ["ja", "ko"], "description": "한 줄 소개" },
+          "line": { "type": "object", "required": ["ja", "ko"], "description": "말풍선 대사 (이 프로젝트가 쓴 것)" },
+          "art": { "type": "string", "enum": ["likeness", "official"], "description": "likeness = 닮은꼴(공식 아님 표시), official = 공식 일러스트(credit 필수)" },
+          "url": { "type": "string", "format": "uri", "description": "확인된 공식 페이지" },
+          "credit": { "type": "string", "description": "표기 의무가 있는 크레딧 (예: ©2010熊本県くまモン)" }
         }
       }
     }

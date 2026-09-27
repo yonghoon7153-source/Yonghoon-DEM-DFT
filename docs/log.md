@@ -10,3 +10,4 @@ append-only. 형식: `## [YYYY-MM-DD] action | subject` — 커밋 제목 `actio
 ## [2026-09-27] docs | README: Cloudflare Pages + bmlwork.kr subdomain recipe
 ## [2026-09-27] create | Research real prefecture mascots (staging data) and start the request checklist
 ## [2026-09-27] create | 집 브랜치 nihonchizu — bml 관례(nihon 실행기·Makefile·ADR 4건·로그·훅·전 브랜치 CI)
+## [2026-09-27] update | 마스코트를 실제 ご当地キャラ 53종으로 — 県 공식 47 + 비공식 6, 닮은꼴 그림, 친구들 행, 지방별 図鑑, 크레딧 (ADR 0003)

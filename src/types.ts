@@ -29,8 +29,14 @@ export interface Region {
 export interface Mascot {
   id: string;
   prefecture: string;
-  name: { ja: string; ko: string };
+  kind: 'official' | 'extra';
+  name: { ja: string; kana: string; ko: string };
+  org: string;
+  about: { ja: string; ko: string };
   line: { ja: string; ko: string };
+  art: 'likeness' | 'official';
+  url?: string;
+  credit?: string;
 }
 
 /** One box of the mind map. Boxes joined by a line are children. */

@@ -284,7 +284,8 @@
   animation: pop .45s var(--ease-pop) .25s both;
   transform-origin: 0 100%;
 }
-.mascot__bubble .b-name { display: block; font-size: 11.5px; color: var(--accent); font-family: var(--font-body); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mascot__bubble .b-name { display: block; font-size: 12px; color: var(--accent); font-family: var(--font-display); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mascot__bubble .b-org { color: var(--ink-3); font-family: var(--font-body); font-size: 10.5px; }
 .mascot__bubble .b-line[lang="ja"] { font-family: var(--font-display); font-size: 14.5px; }
 .mascot__bubble .b-ko { display: block; color: var(--ink-2); font-size: 13px; margin-top: 2px; }
 .mascot__bubble .b-tip { display: block; margin-top: 4px; font-size: 10.5px; color: var(--ink-3); }
@@ -459,7 +460,14 @@
   display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 16px;
   background: linear-gradient(135deg, var(--accent-soft), var(--accent-3-soft));
 }
+.mascot-card { align-items: flex-start; margin-top: 8px; }
 .mascot-card__art { width: 56px; height: 56px; flex: none; }
+.mascot-card__body { min-width: 0; }
+.mascot-card__kana { font-size: 11px; color: var(--ink-2); font-weight: 400; }
+.mascot-card__about { margin-top: 2px; line-height: 1.35; }
+.mascot-card__meta { margin-top: 4px; color: var(--ink-3); font-size: 10.5px; }
+.mascot-card__link { color: var(--accent); text-decoration: none; }
+.mascot-card__link:hover { text-decoration: underline; }
 .mascot-card__art svg { width: 100%; height: 100%; overflow: visible; }
 .mascot-card b { font-family: var(--font-display); font-weight: 500; }
 .mascot-card small { display: block; color: var(--ink-2); font-size: 12px; }
@@ -489,6 +497,7 @@
 .friends__card:not(.is-found) .friends__art { filter: grayscale(1) contrast(0) brightness(.65); opacity: .3; }
 .friends__name { display: block; font-family: var(--font-display); font-size: 11px; line-height: 1.2; }
 .friends__card small { display: block; font-size: 10px; color: var(--ink-3); }
+.friends__card.is-extra.is-found { background: linear-gradient(160deg, var(--white), var(--accent-2-soft)); }
 
 .meta-line { font-size: 11.5px; color: var(--ink-3); margin-top: 18px; font-family: var(--font-note); }
 
@@ -522,6 +531,11 @@
 .zukan__name { font-family: var(--font-display); font-size: 13px; line-height: 1.2; }
 .zukan__pref { display: block; font-size: 10.5px; color: var(--ink-3); margin-top: 3px; }
 .zukan__card:not(.is-found) .zukan__name { color: var(--ink-3); }
+.zukan__region { font-family: var(--font-display); font-size: 15px; margin: 18px 0 8px; display: flex; align-items: baseline; gap: 6px; }
+.zukan__region::before { content: ""; width: 10px; height: 10px; border-radius: 3px; background: var(--c); box-shadow: inset 0 0 0 1px rgba(74, 63, 58, .18); }
+.zukan__region small { font-size: 11px; color: var(--ink-3); font-family: var(--font-ko); }
+.zukan__tag { position: absolute; top: 8px; right: 8px; font-size: 9.5px; padding: 1px 6px; border-radius: 999px; background: var(--accent-2-soft); color: var(--accent-2); }
+.zukan__card.is-extra.is-found { background: linear-gradient(160deg, var(--white), var(--accent-2-soft)); }
 .zukan__done { margin-top: 14px; padding: 12px 14px; border-radius: 14px; background: var(--accent-soft); font-family: var(--font-note); font-size: 15px; text-align: center; }
 
 .memo-list .extra { background: var(--paper-2); }

@@ -34,6 +34,11 @@ async function init() {
     onClose: () => deselect(),
     onSelectPrefecture: (slug) => select(slug),
     onSelectRegion: (id) => showRegion(id),
+    onRevealMascot: (id) => {
+      if (!easter) return;
+      easter.revealMascot(id);
+      panel.refresh();
+    },
     isMascotFound: (id) => easter?.isFound(id) ?? false,
   });
 
@@ -86,7 +91,7 @@ async function init() {
     }
   }
 
-  function select(slug: string, opts: { animate?: boolean } = {}) {
+  function select(slug: string, opts: { animate?: boolean; mascot?: string } = {}) {
     if (!map || !easter || !prefBySlug.has(slug)) return;
     state.selected = slug;
     state.region = null;
@@ -99,7 +104,8 @@ async function init() {
     setHash(slug);
     window.setTimeout(() => {
       if (state.selected === slug && easter) {
-        easter.reveal(slug);
+        if (opts.mascot) easter.revealMascot(opts.mascot);
+        else easter.reveal(slug);
         panel.refresh();
       }
     }, opts.animate === false ? 50 : 760);
@@ -169,7 +175,8 @@ async function init() {
     view.querySelectorAll<HTMLButtonElement>('.zukan__card').forEach((card) =>
       card.addEventListener('click', () => {
         modal.close();
-        select(card.dataset.slug!);
+        const id = card.dataset.mascot!;
+        select(card.dataset.slug!, { mascot: id });
       }),
     );
     modal.open(view);

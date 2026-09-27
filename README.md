@@ -45,9 +45,13 @@ CRLF 로 받으면 스크립트가 "bad interpreter" 로 죽습니다). `tools/n
 |---|---|
 | ![desktop](docs/screenshots/desktop.png) | ![kyoto](docs/screenshots/kyoto.png) |
 
-| 図鑑 (스티커 도감) | 폰 |
+| 구마모토 + くまモン | 図鑑 (ご当地キャラ 도감) |
 |---|---|
-| ![zukan](docs/screenshots/zukan.png) | ![mobile](docs/screenshots/mobile.png) |
+| ![kumamoto](docs/screenshots/kumamoto.png) | ![zukan](docs/screenshots/zukan.png) |
+
+| 폰 | 마스코트 닮은꼴 시트 (`tools/mascot-sheet.html`) |
+|---|---|
+| ![mobile](docs/screenshots/mobile.png) | ![sheet](docs/screenshots/mascot-sheet.png) |
 
 ## 무엇이 들어있나
 
@@ -58,7 +62,7 @@ CRLF 로 받으면 스크립트가 "bad interpreter" 로 죽습니다). `tools/n
 | 검색 | 한자·가나·한글·로마자·영어·현청 소재지로 검색. `/` 키로 포커스. |
 | 패널 | 다이어리 페이지 느낌. **내 마인드맵**(Canva 메모 트리) → **함께 보기**(瀬戸内, 다리, 정령지정도시 등 여러 県에 걸친 메모) → **図鑑**(현청·명물·관광·한마디). |
 | 지방 보기 | 범례 칩을 누르면 지방으로 줌 + 지방 메모 + 소속 県 + 그 지방의 친구들. |
-| 이스터에그 | 21개 県에 오리지널 마스코트(구마모토 곰, 나라 사슴, 홋카이도 물범…). 발견하면 図鑑에 스티커로 모이고 지도에도 붙는다 (localStorage). 로고를 누르면 벚꽃. |
+| 이스터에그 | 県을 누르면 그 県의 **실제 공식 캐릭터**(くまモン, ぐんまちゃん, チーバくん…)가 튀어나오고, 패널의 「친구들」에서 ひこにゃん·ふなっしー 같은 비공식 친구도 만난다. 53종. 발견하면 図鑑에 모이고 지도에 스티커로 붙는다 (localStorage). 로고를 누르면 벚꽃. |
 | 메모장 | 어느 県에도 안 붙는 메모(테이블 매너, 방향 단어, 지도의 도시 읽기). |
 | 딥링크 | `#kyoto`, `#region/kinki` 처럼 URL 로 바로 열기. |
 
@@ -140,14 +144,14 @@ scripts/                geo 빌드, 데이터 검증
 
 커밋 제목은 `type: 제목` 으로 쓰고, 같은 제목을 `docs/log.md` 에 한 줄 남긴다 (훅이 알려 준다).
 
-## 배포 — `https://nihon.ayh.kr`
+## 배포 — `https://nihoncheese.ayh.kr`
 
 정적 사이트라 서버도 터널도 없다 ([ADR 0004](docs/adr/0004-share-through-cloudflare-pages.md)).
 운영은 **Cloudflare Pages**, 대시보드에서 한 번만 연결한다:
 
 1. Cloudflare → **Workers & Pages → Create → Pages → Connect to Git** → 이 저장소.
 2. Production branch **`nihonchizu`** · Build command `npm run build` · Build output directory `dist` · 환경변수 없음.
-3. 프로젝트 → **Custom domains → Set up a custom domain → `nihon.ayh.kr`**.
+3. 프로젝트 → **Custom domains → Set up a custom domain → `nihoncheese.ayh.kr`**.
    `ayh.kr` 이 Cloudflare DNS 에 있으면 CNAME 이 자동으로 들어가고, 아니면 등록기관 DNS 에
    `nihon` CNAME → `<프로젝트 이름>.pages.dev` 를 넣는다.
 4. 이후 이 브랜치에 push 할 때마다 자동 배포. `public/_headers` 의 캐시·보안 헤더도 적용된다.

@@ -35,17 +35,31 @@ for (const p of prefectures) {
       if (/[一-龯]/.test(t.ja) && !t.kana) err(`${where}: "${t.ja}" has kanji but no kana reading`);
     }
   }
-  if (p.mascot && !mascotIds.has(p.mascot)) err(`${where}: unknown mascot "${p.mascot}"`);
   if (!geo[p.id]) err(`${where}: no geometry in prefecture-geo.json (run npm run geo:build)`);
   else if (geo[p.id].nameJa !== p.name.ja) err(`${where}: name.ja "${p.name.ja}" != geometry "${geo[p.id].nameJa}"`);
 }
 for (const m of mascots) {
-  if (!slugs.has(m.prefecture)) err(`mascot ${m.id}: unknown prefecture "${m.prefecture}"`);
-  if (!m.name?.ja || !m.line?.ja) err(`mascot ${m.id}: name/line missing`);
-  const owner = prefectures.find((p) => p.mascot === m.id);
-  if (!owner) err(`mascot ${m.id}: no prefecture references it`);
-  else if (owner.slug !== m.prefecture) err(`mascot ${m.id}: prefecture mismatch (${owner.slug} vs ${m.prefecture})`);
+  const where = `mascot ${m.id}`;
+  if (!slugs.has(m.prefecture)) err(`${where}: unknown prefecture "${m.prefecture}"`);
+  if (!['official', 'extra'].includes(m.kind)) err(`${where}: kind must be official|extra`);
+  for (const k of ['ja', 'kana', 'ko']) if (!m.name?.[k]) err(`${where}: name.${k} missing`);
+  if (!m.org) err(`${where}: org missing`);
+  if (!m.about?.ja || !m.about?.ko) err(`${where}: about.ja/ko missing`);
+  if (!m.line?.ja || !m.line?.ko) err(`${where}: line.ja/ko missing`);
+  if (!['likeness', 'official'].includes(m.art)) err(`${where}: art must be likeness|official`);
+  if (m.art === 'official' && !m.credit) err(`${where}: official art needs a credit`);
+  if (m.url && !/^https?:\/\//.test(m.url)) err(`${where}: bad url`);
 }
+for (const p of prefectures) {
+  const m = mascots.find((x) => x.id === p.mascot);
+  if (!m) err(`prefecture ${p.slug}: mascot "${p.mascot}" not found`);
+  else if (m.prefecture !== p.slug || m.kind !== 'official') err(`prefecture ${p.slug}: mascot "${p.mascot}" is not its official mascot`);
+  const officials = mascots.filter((x) => x.prefecture === p.slug && x.kind === 'official');
+  if (officials.length !== 1) err(`prefecture ${p.slug}: expected exactly 1 official mascot, got ${officials.length}`);
+}
+const mascotIdSet = new Set();
+for (const m of mascots) { if (mascotIdSet.has(m.id)) err(`mascot ${m.id}: duplicate id`); mascotIdSet.add(m.id); }
+
 // notes.json (mind-map layer)
 const prefNotes = notesDb.prefectures ?? {};
 for (const slug of slugs) if (!prefNotes[slug]) err(`notes: prefectures.${slug} missing (use "items": [])`);

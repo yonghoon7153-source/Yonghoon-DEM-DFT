@@ -23,6 +23,15 @@ export function regionOf(p: Prefecture): Region {
   return r;
 }
 
+export function mascotsOf(p: Prefecture): Mascot[] {
+  return mascots.filter((m) => m.prefecture === p.slug).sort((a, b) => (a.kind === b.kind ? 0 : a.kind === 'official' ? -1 : 1));
+}
+
+/** Google search for the character's official page, for mascots without a verified url. */
+export function mascotSearchUrl(m: Mascot): string {
+  return `https://www.google.com/search?q=${encodeURIComponent(`${m.name.ja} ${m.org} 公式`)}`;
+}
+
 export function prefecturesIn(regionId: string): Prefecture[] {
   return prefectures.filter((p) => p.region === regionId).sort((a, b) => a.id - b.id);
 }

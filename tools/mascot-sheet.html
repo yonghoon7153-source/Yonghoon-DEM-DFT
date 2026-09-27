@@ -1,0 +1,35 @@
+<!doctype html>
+<!-- 마스코트 닮은꼴 검토용 시트. 개발 서버에서: http://localhost:5004/tools/mascot-sheet.html -->
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>mascot sheet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@500&family=Gowun+Dodum&display=swap" rel="stylesheet" />
+  <style>
+    body { margin: 0; padding: 20px; background: #fbf7ee; font-family: "Kiwi Maru", "Gowun Dodum", sans-serif; color: #4a3f3a; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+    .card { background: #fff; border-radius: 14px; padding: 10px 8px 8px; text-align: center; box-shadow: 0 2px 8px -2px rgba(74,63,58,.15); position: relative; }
+    .card svg { width: 110px; height: 110px; overflow: visible; }
+    .name { font-size: 14px; margin-top: 4px; }
+    .org { font-size: 10.5px; color: #8a7b74; }
+    .id { position: absolute; top: 6px; left: 8px; font-size: 9px; color: #b9aca4; font-family: monospace; }
+    .tag { position: absolute; top: 6px; right: 8px; font-size: 9px; padding: 1px 5px; border-radius: 99px; background: #dff0ec; color: #6fb0a6; }
+    h1 { font-size: 18px; margin: 0 0 14px; }
+  </style>
+</head>
+<body>
+  <h1>ご当地キャラ 닮은꼴 시트 (검토용)</h1>
+  <div class="grid" id="grid"></div>
+  <script type="module">
+    import { mascotArt } from '/src/mascots/art.ts';
+    import mascots from '/data/mascots.json';
+    const grid = document.getElementById('grid');
+    for (const m of mascots.mascots) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `<span class="id">${m.id}</span>${m.kind === 'extra' ? '<span class="tag">비공식</span>' : ''}${mascotArt[m.id] ?? '<em>no art</em>'}<div class="name">${m.name.ja}</div><div class="org">${m.org}</div>`;
+      grid.append(card);
+    }
+  </script>
+</body>
+</html>
