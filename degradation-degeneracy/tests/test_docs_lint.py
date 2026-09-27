@@ -1728,6 +1728,11 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 #:   않았다. 목록을 **제외 기준**으로 뒤집는다 (기본은 포함).
 _CLAIM_SCOPE_EXCLUDE = (
     "degradation-degeneracy/docs/22p_gap/GATE",   # 게이트 리뷰 요청문 — 왕복 기록
+    # ★ 76차 준비 — 리뷰어 패키지 원본 보존 디렉터리(`gateNN_review/`, `-text !eol` 로 바이트 고정). 안에는 리뷰어가
+    #   당시 checkout 에서 복사한 우리 문서 사본(예: 75차 `codex/reference/docs/22p_gap/STAGE3_CONTRACT.md`)이 있어
+    #   claim 마커를 담지만, 그것은 편집할 수 없는 증거 사본이지 우리가 유지하는 문서가 아니다 — 원장 `files` 에
+    #   넣을 수 없으므로 관할에서 뺀다. 74차 패키지에는 그 사본이 없어 드러나지 않았다 (cd272a89 부터 적색).
+    "degradation-degeneracy/docs/22p_gap/gate",   # gateNN_review/ — 리뷰 패키지 증거 사본
     "wiki/raw/",                                   # 불변 원본 (SCHEMA.md 3-layer)
     "wiki/inbox/",                                 # 미처리 대기 큐
     "degradation-degeneracy/artifacts/",           # 봉인 산출물
