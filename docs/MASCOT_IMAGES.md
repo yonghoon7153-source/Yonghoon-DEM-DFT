@@ -1,6 +1,6 @@
 # 마스코트 그림 목록
 
-받은 그림 **17 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
+받은 그림 **18 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
 
 주는 법: 캐릭터당 한 장, 배경 투명 PNG 가 제일 좋다 (흰 배경 JPG 도 자동으로 배경을 지운다). 파일명에 **캐릭터 이름·県 이름·id 중 하나**만 들어 있으면 된다.
 받은 뒤: `npm run mascots:import <폴더>` → 512px WebP 로 줄여 `public/mascots/<id>.webp` 에 넣고 데이터와 이 목록을 갱신한다.
@@ -48,7 +48,7 @@
 | 22 | 山梨 | 武田菱丸 | 다케다 히시마루 | `takedahishimaru.png` | やまなし観光推進機構 | [공식](https://www.yamanashi-kankou.jp/kankou/event/takeda-hishimaru.html) | ✅ |
 | 23 | 長野 | アルクマ | 아루쿠마 | `arukuma.png` | 長野県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%A2%E3%83%AB%E3%82%AF%E3%83%9E%20%E9%95%B7%E9%87%8E%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
 | 24 | 岐阜 | ミナモ | 미나모 | `minamo.png` | 岐阜県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%83%9F%E3%83%8A%E3%83%A2%20%E5%B2%90%E9%98%9C%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
-| 25 | 静岡 | ふじっぴー | 후짓피 | `fujippi.png` | 静岡県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%B5%E3%81%98%E3%81%A3%E3%81%B4%E3%83%BC%20%E9%9D%99%E5%B2%A1%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 25 | 静岡 | ふじっぴー | 후짓피 | `fujippi.png` | 静岡県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%B5%E3%81%98%E3%81%A3%E3%81%B4%E3%83%BC%20%E9%9D%99%E5%B2%A1%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 26 | 愛知 | モリゾー＆キッコロ | 모리조&킷코로 | `morizokiccoro.png` | 愛・地球博（愛知県） | [공식](https://aichinow.pref.aichi.jp/events/detail/3513/) | □ |
 
 ## 近畿 긴키

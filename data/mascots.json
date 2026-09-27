@@ -545,7 +545,9 @@
         "ja": "ふじさん、みえる？",
         "ko": "후지산 보여?"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/fujippi.webp",
+      "credit": "©静岡県"
     },
     {
       "id": "tokomaru",
