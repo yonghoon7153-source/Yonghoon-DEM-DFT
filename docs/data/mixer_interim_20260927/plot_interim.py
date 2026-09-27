@@ -21,9 +21,9 @@ OUT = sys.argv[2]
 SURFACE = "#fcfcfb"
 INK, INK2, GRID = "#0b0b0b", "#52514e", "#e4e3df"
 C_LA, C_LC, C_L0 = "#2a78d6", "#eb6834", "#6f6e69"      # slot 1 blue · slot 2 orange · neutral control
-CELLS = [("c8x2", "8x8x2 cells  (decision cell under HOLD fix (b))"),
+CELLS = [("c8x2", "8x8x2 cells  (floor check only, HOLD fix (b))"),
          ("c12x3", "12x12x3 cells"),
-         ("c16x4", "16x16x4 cells  (sec.2 primary grid; floor ratio < 5)")]
+         ("c16x4", "16x16x4 cells  (sec.2 primary decision cell)")]
 SEEDS = ["32452843", "49979687", "67867967"]
 
 
