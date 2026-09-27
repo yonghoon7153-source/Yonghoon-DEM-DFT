@@ -46,3 +46,4 @@ append-only. 형식: `## [YYYY-MM-DD] action | subject` — 커밋 제목 `actio
 ## [2026-09-27] ingest | PDF 전수조사 — 사진 69칸에 📷 이미지 검색, 빠진 칸(크리스마스 마켓·롯폰기·47都道府県·阪急 링크·YouTube 2개) 추가
 ## [2026-09-27] create | 지도 레이어 · 산맥 모드 · 방위 · 보충 메모, Canva 전수조사(nihon audit) — PDF 글줄 837개를 소모 방식으로 대조, 11줄은 답 기다림
 ## [2026-09-27] fix | Canva 전수조사 답 반영 — 「내 표기」 4곳, 治安が悪い 순위, 캡션 자리, 내가 붙인 말 삭제
+## [2026-09-27] fix | 스크린샷 QA 결과(docs/screenshots/qa)는 git 밖에 — README 그림만 올린다
