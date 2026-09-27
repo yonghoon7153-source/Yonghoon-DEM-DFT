@@ -440,7 +440,9 @@
         "ja": "加賀百万石、どっしり！",
         "ko": "가가 백만석, 든든하게!"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/hyakumansan.webp",
+      "credit": "©石川県"
     },
     {
       "id": "hapiryu",
