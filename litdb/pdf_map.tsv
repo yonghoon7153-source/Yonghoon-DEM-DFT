@@ -287,3 +287,4 @@ qin2026_bilayer_cathode_cgmd_dem_graded_thick_electrode	bilayer cathode for grad
 sankar2026_fiber_scale_dem_carbon_felt_manufacturing	fiber-scale
 #   ↑ 2026-09-27. 'fiber-scale' = 업로드명·inbox명 양쪽에 드는 고유 조각 (원제 "Fiber-Scale Discrete Element Modeling Approach …"). 자동 매칭은 실패했다 (위와 같은 시험).
 #   손작업 4장: fig_4 · fig_6 · fig_7 (본문 줄 섞임) · fig_12 (오른쪽 빈 띠) recrop — 같은 가드가 막는다.
+li2026_li_kinetic_promoter_aqueous_mn_sulfur	kinetic_promoter   # 2026-09-27 논문 에이전트 · 'kinetic_promoter' = 업로드명(본문·SI)·inbox명(0927-1 본문·SI) 넷 모두에 드는 고유 조각 (inbox 안 다른 파일 0건 확인) · 동시 작업 중이라 --inbox 자동매칭은 시험하지 않고 명시 등록 · 크롭은 --pdf 두 개 + --clean 으로 32장(손작업 없음)

@@ -46,7 +46,8 @@
    "h": 1642,
    "dpi": 300,
    "src": "0927-1. JACS_2026_Li_Li_kinetic_promoter_aqueous_multivalent_Mn-S_MAIN.pdf",
-   "blank": 0.847
+   "blank": 0.847,
+   "viewed": true
   },
   {
    "key": "f3",
@@ -66,7 +67,8 @@
    "h": 1755,
    "dpi": 300,
    "src": "0927-1. JACS_2026_Li_Li_kinetic_promoter_aqueous_multivalent_Mn-S_MAIN.pdf",
-   "blank": 0.871
+   "blank": 0.871,
+   "viewed": true
   },
   {
    "key": "f4",
@@ -86,7 +88,8 @@
    "h": 1619,
    "dpi": 300,
    "src": "0927-1. JACS_2026_Li_Li_kinetic_promoter_aqueous_multivalent_Mn-S_MAIN.pdf",
-   "blank": 0.91
+   "blank": 0.91,
+   "viewed": true
   },
   {
    "key": "f5",
@@ -106,7 +109,8 @@
    "h": 1182,
    "dpi": 300,
    "src": "0927-1. JACS_2026_Li_Li_kinetic_promoter_aqueous_multivalent_Mn-S_MAIN.pdf",
-   "blank": 0.843
+   "blank": 0.843,
+   "viewed": true
   },
   {
    "key": "fS1",
@@ -266,7 +270,8 @@
    "h": 1473,
    "dpi": 300,
    "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
-   "blank": 0.852
+   "blank": 0.852,
+   "viewed": true
   },
   {
    "key": "fS9",
@@ -286,7 +291,8 @@
    "h": 790,
    "dpi": 300,
    "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
-   "blank": 0.936
+   "blank": 0.936,
+   "viewed": true
   },
   {
    "key": "fS10",
@@ -306,7 +312,8 @@
    "h": 677,
    "dpi": 300,
    "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
-   "blank": 0.927
+   "blank": 0.927,
+   "viewed": true
   },
   {
    "key": "fS11",
@@ -606,7 +613,8 @@
    "h": 833,
    "dpi": 300,
    "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
-   "blank": 0.941
+   "blank": 0.941,
+   "viewed": true
   },
   {
    "key": "fS26",
@@ -648,5 +656,6 @@
    "src": "0927-1. Sup) JACS_2026_Li_Li_kinetic_promoter_aqueous_Mn-S_SI.pdf",
    "blank": 0.924
   }
- ]
+ ],
+ "viewed_note": "2026-09-27 litdb-curator: 8장 실독 (fig_4 + 4c/4d/4f/4g 원본 확대·픽셀 판독, fig_S25, fig_S8 + c/d 확대, fig_2 + 2c/2d 확대, fig_5, fig_3, fig_S10, fig_S9). 나머지 24장은 안 봄 — digest 머리말 참조."
 }
