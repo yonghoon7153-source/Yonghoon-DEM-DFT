@@ -42,3 +42,4 @@ append-only. 형식: `## [YYYY-MM-DD] action | subject` — 커밋 제목 `actio
 ## [2026-09-27] docs | Cloudflare Pages 연결됨 — nihoncheese.pages.dev, 실제 대시보드 순서(Continue to Pages)로
 ## [2026-09-27] fix | 마인드맵 선이 마지막 칸에서 └ 로 끝나게 — 윗칸에서 내려오고 아래로 늘어지지 않음
 ## [2026-09-27] docs | 도메인을 nihoncheese.bmlwork.kr 로 — ayh.kr 은 사지 않았고 이름을 바꿀 수 없음
+## [2026-09-27] fix | 七夕祭り 읽기를 たなばた 로 — 원본의 はなばた 는 오타
