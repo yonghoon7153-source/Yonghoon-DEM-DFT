@@ -47,3 +47,4 @@ docs/22p_gap/run_windows/** -text !eol
 docs/22p_gap/gate74_review/** -text !eol
 docs/22p_gap/gate75_review/** -text !eol
 docs/22p_gap/gate76_review/** -text !eol
+docs/22p_gap/gate77_review/** -text !eol
