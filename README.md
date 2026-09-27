@@ -156,8 +156,8 @@ scripts/                geo 빌드, 데이터 검증
 ## 배포 — `https://nihoncheese.bmlwork.kr`
 
 정적 사이트라 서버도 터널도 없다 ([ADR 0004](docs/adr/0004-share-through-cloudflare-pages.md)).
-운영은 **Cloudflare Pages** (프로젝트 `nihoncheese`, 지금 주소 **https://nihoncheese.pages.dev**).
-대시보드에서 한 번만 연결한다 — 2026-09-27 연결함:
+운영은 **Cloudflare Pages** (프로젝트 `nihoncheese`) — **https://nihoncheese.bmlwork.kr** (2026-09-27 Active · SSL),
+https://nihoncheese.pages.dev 로도 열린다. 대시보드에서 한 번만 연결한다 — 2026-09-27 연결함:
 
 1. Cloudflare → **Compute → Workers & Pages → Create application** → 맨 아래 **Continue to Pages**
    (위의 Connect GitHub 는 Workers 용) → **Import an existing Git repository** → 이 저장소.

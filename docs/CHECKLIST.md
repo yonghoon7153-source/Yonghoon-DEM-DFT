@@ -50,7 +50,7 @@
 
 | # | 요청 | 상태 | 메모 |
 |---|------|------|------|
-| 25 | Cloudflare 로 연결 — 사용자가 대시보드에서 직접 등록, 순서만 | 🔧 도메인 남음 | Pages 프로젝트 `nihoncheese` 로 배포됨 — **https://nihoncheese.pages.dev** 열림 (사용자 확인), push 마다 자동 배포. 남은 것: Custom domains → `nihoncheese.bmlwork.kr` → Activate. Preview branch None. 순서: README 「배포」 · `nihon share` |
+| 25 | Cloudflare 로 연결 — 사용자가 대시보드에서 직접 등록, 순서만 | 🔧 Preview 확인만 | Pages 프로젝트 `nihoncheese`, push 마다 자동 배포. **https://nihoncheese.bmlwork.kr — Active · SSL enabled** (2026-09-27, 사용자 대시보드 캡처). https://nihoncheese.pages.dev 도 열림. 남은 것: Settings → Build → Branch control → Preview branch **None** 저장했는지 확인. 순서: README 「배포」 · `nihon share` |
 | 26 | 노션 일본어 단어장은 나중에 — 하자고 할 때 | ⏳ 대기 | `data/words.json` 에 얹고 県·지방과 연결 (CLAUDE.md 다음 단계) |
 
 ## 6차 요청 (2026-09-27)
@@ -60,7 +60,7 @@
 | 27 | 마인드맵 끝맺음(선)을 전체적으로 수정 | ✅ | 선이 윗칸에서 내려와 마지막 칸에서 └ 로 끝남 — 아래로 늘어지지 않음 (県 · 지방 · 함께 보기 · 메모장 공통) |
 | 28 | PDF 에 있던 사진 · URL 이 잘 들어갔나 | ✅ | 링크 14개 모두 PDF 와 같은 칸. 사진은 규칙 6 으로 넣지 않고, 사진이 붙어 있던 **69칸에 📷** → 누르면 이미지 검색 (비준: 추천안). 지도·학습지 그림 5장은 새 레이어로 |
 | 29 | Canva 링크에 접근 안 되나 | ✅ 답함 | 이 환경의 네트워크 정책이 `canva.link` · `www.canva.com` 을 막음. PDF 에 글자 · 링크 · 사진이 다 있어 대조는 PDF 로 함 |
-| 30 | 도메인: ayh.kr 은 안 샀음 → nihoncheese.bmlwork.kr 로 ("이름만 바꾸는 것도 안 돼?" → 안 됨) | 🔧 사용자 차례 | 도메인은 개당·연 단위, 서브도메인은 무료로 여러 개. Custom domains 에 넣고 Activate 한 번 (ADR 0004 보완) |
+| 30 | 도메인: ayh.kr 은 안 샀음 → nihoncheese.bmlwork.kr 로 ("이름만 바꾸는 것도 안 돼?" → 안 됨) | ✅ | Custom domains 에 넣고 Activate → Initializing → **Active · SSL enabled** (2026-09-27). 도메인은 개당·연 단위, 서브도메인은 무료로 여러 개 (ADR 0004 보완) |
 
 ## 7차 요청 (2026-09-27)
 

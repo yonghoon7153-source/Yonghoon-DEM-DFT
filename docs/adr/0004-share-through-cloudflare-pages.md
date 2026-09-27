@@ -32,3 +32,5 @@ bml 은 로컬 서버를 바깥에 보여 줘야 해서 터널·중계기·VPS �
 ADR 0031 · 0034 · 0036) 의 서브도메인을 쓴다 — 서브도메인은 몇 개를 만들어도 추가 비용이 없고,
 `bml.bmlwork.kr` · `test.bmlwork.kr` 과 레코드가 따로라 서로 영향이 없다. 나중에 `ayh.kr` 을 사면 같은
 프로젝트에 도메인을 하나 더 붙이면 된다. Pages 기본 주소 `https://nihoncheese.pages.dev` 도 계속 열린다.
+
+2026-09-27: Custom domains 에 `nihoncheese.bmlwork.kr` 을 넣고 Activate — Initializing 을 거쳐 **Active · SSL enabled**.
