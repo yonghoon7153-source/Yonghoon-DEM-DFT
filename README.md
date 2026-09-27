@@ -41,7 +41,7 @@ CRLF 로 받으면 스크립트가 "bad interpreter" 로 죽습니다). `tools/n
 
 ## 어떻게 생겼나
 
-| 전체 지도 | 県을 눌렀을 때 (교토 + 이나리 여우) |
+| 전체 지도 | 県을 눌렀을 때 (교토 + まゆまろ) |
 |---|---|
 | ![desktop](docs/screenshots/desktop.png) | ![kyoto](docs/screenshots/kyoto.png) |
 
@@ -49,7 +49,7 @@ CRLF 로 받으면 스크립트가 "bad interpreter" 로 죽습니다). `tools/n
 |---|---|
 | ![kumamoto](docs/screenshots/kumamoto.png) | ![zukan](docs/screenshots/zukan.png) |
 
-| 폰 | 마스코트 닮은꼴 시트 (`tools/mascot-sheet.html`) |
+| 폰 | 마스코트 그림 시트 (`tools/mascot-sheet.html`) |
 |---|---|
 | ![mobile](docs/screenshots/mobile.png) | ![sheet](docs/screenshots/mascot-sheet.png) |
 
@@ -74,7 +74,7 @@ CRLF 로 받으면 스크립트가 "bad interpreter" 로 죽습니다). `tools/n
 data/
 ├─ prefectures.json   47개 県: 이름(ja/kana/romaji/ko/en), 지방, 현청, 명물, 관광, 한마디, 마스코트 id
 ├─ regions.json       9개 지방: 이름, 지도 색, 글자색
-├─ mascots.json       마스코트 이름·대사 (그림은 src/mascots/art.ts)
+├─ mascots.json       마스코트 이름·소개·대사·크레딧 (그림은 public/mascots/<id>.webp)
 ├─ notes.json         ★ 내 마인드맵 레이어 (Canva → 트리)  ← 가장 자주 고칠 파일
 ├─ schema/            각 파일의 JSON Schema (에디터 자동완성용)
 └─ raw/               원본 지리 데이터 + 출처
@@ -121,7 +121,7 @@ src/map/map.ts          d3-geo + d3-zoom 지도, 라벨 배치, 스티커
 src/ui/panel.ts         県/지방/메모장 패널 렌더
 src/ui/notes-render.ts  마인드맵 트리 → 칩
 src/ui/easter.ts        마스코트 팝업, 図鑑, 벚꽃
-src/mascots/art.ts      마스코트 SVG (오리지널)
+src/mascots/visual.ts   마스코트 그림 (공식 WebP · 그림이 없을 때만 art.ts 의 닮은꼴 SVG)
 src/styles/*.css        tokens(색·폰트) / base / app
 scripts/                geo 빌드, 데이터 검증
 ```
@@ -163,5 +163,5 @@ Pages Source = GitHub Actions 와 `github-pages` 환경의 Deployment branches �
 
 - 지도 경계: [地球地図日本（国土地理院）](https://www.gsi.go.jp/kankyochiri/gm_jpn.html) — [dataofjapan/land](https://github.com/dataofjapan/land) 변환본. 비영리 이용 시 출처 표기 (사이트 하단에 표기).
 - 폰트: Google Fonts (OFL).
-- 마스코트: 실제 ご当地キャラクター. 각 캐릭터의 권리는 각 자치체·단체에 있다. 공식 일러스트는 규정이 허용하는 범위에서 크레딧과 함께 쓰고(예: ©2010熊本県くまモン), 그 밖에는 이 프로젝트가 그린 닮은꼴에 「공식 그림 아님」 을 표시한다 ([ADR 0003](docs/adr/0003-real-mascots-with-credits.md)).
+- 마스코트: 실제 ご当地キャラクター. 각 캐릭터의 권리는 각 자치체·단체·기업에 있다. 공식 일러스트는 규정이 허용하는 범위에서 크레딧과 함께 쓰고(예: ©2010熊本県くまモン — 지금 54종 중 53종), 사용자가 고른 대체 그림은 출처와 「공식 그림 아님」 을 표시하며(かながわキンタロウ — いらすとや), 그림이 없는 캐릭터는 이 프로젝트가 그린 닮은꼴에 「공식 그림 아님」 을 표시한다 ([ADR 0003](docs/adr/0003-real-mascots-with-credits.md)).
 - 県 기본 정보(名物·観光·ひとこと)는 일반 상식 수준으로 정리한 것 — 틀린 게 있으면 `data/prefectures.json` 에서 고치면 된다.

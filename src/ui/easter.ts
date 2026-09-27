@@ -189,7 +189,8 @@ export function createEaster(opts: EasterOptions) {
       }
       wrap.append(grid);
     }
-    wrap.append(el('p', { class: 'meta-line' }, '各キャラクターの権利は各自治体・団体に帰属します。크레딧이 없는 그림은 이 프로젝트가 그린 닮은꼴이에요.'));
+    const drawn = mascots.some((m) => m.art === 'likeness');
+    wrap.append(el('p', { class: 'meta-line' }, `各キャラクターの権利は各自治体・団体・企業に帰属します。${drawn ? '크레딧이 없는 그림은 이 프로젝트가 그린 닮은꼴이에요.' : ''}`));
     if (found.size === mascots.length) wrap.append(el('p', { class: 'zukan__done' }, '🎉 전부 만났어요! 컴플리트 — おめでとう！'));
     return wrap;
   }

@@ -4,6 +4,7 @@ import './styles/app.css';
 
 import { prefBySlug, regionById, regions } from './data';
 import { createMap, type MapApi } from './map/map';
+import { artReady } from './mascots/visual';
 import { el } from './ui/dom';
 import { createEaster, createPetals } from './ui/easter';
 import { createModal } from './ui/modal';
@@ -78,6 +79,7 @@ async function init() {
     },
     state.labelMode,
   );
+  await artReady; // fetched alongside the map; already settled when every mascot has a picture
   $('map-loading').remove();
 
   easter = createEaster({

@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 마스코트 닮은꼴 검토용 시트. 개발 서버에서: http://localhost:5004/tools/mascot-sheet.html -->
+<!-- 마스코트 그림 검토용 시트 (공식·대체 그림, 없으면 닮은꼴). 개발 서버에서: http://localhost:5004/tools/mascot-sheet.html -->
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
@@ -9,7 +9,7 @@
     body { margin: 0; padding: 20px; background: #fbf7ee; font-family: "Kiwi Maru", "Gowun Dodum", sans-serif; color: #4a3f3a; }
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
     .card { background: #fff; border-radius: 14px; padding: 10px 8px 8px; text-align: center; box-shadow: 0 2px 8px -2px rgba(74,63,58,.15); position: relative; }
-    .card svg { width: 110px; height: 110px; overflow: visible; }
+    .card svg, .card img { width: 110px; height: 110px; overflow: visible; object-fit: contain; display: block; margin: 0 auto; }
     .name { font-size: 14px; margin-top: 4px; }
     .org { font-size: 10.5px; color: #8a7b74; }
     .id { position: absolute; top: 6px; left: 8px; font-size: 9px; color: #b9aca4; font-family: monospace; }
@@ -18,11 +18,12 @@
   </style>
 </head>
 <body>
-  <h1>ご当地キャラ 닮은꼴 시트 (검토용)</h1>
+  <h1>ご当地キャラ 그림 시트 (검토용)</h1>
   <div class="grid" id="grid"></div>
   <script type="module">
-    import { mascotVisualHtml } from '/src/mascots/visual.ts';
+    import { artReady, mascotVisualHtml } from '/src/mascots/visual.ts';
     import mascots from '/data/mascots.json';
+    await artReady;
     const grid = document.getElementById('grid');
     for (const m of mascots.mascots) {
       const card = document.createElement('div');
