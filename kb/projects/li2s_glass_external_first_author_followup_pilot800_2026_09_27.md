@@ -3,7 +3,7 @@ title: "li2s 소셀 유리 MD — 파일럿 400 K · 800 ps 결과 후속 보고
 date: 2026-09-27
 updated: 2026-09-27
 tags: [li2s, lpscl, glass, md, uma, pilot, gate, beta, letter, external-first-author, report]
-status: 초안 — 사용자(실행자 · 카드 저자) 검토 뒤 외부 1저자에게 발송 · 판정은 외부 1저자 몫
+status: 흡수됨 (미발송) — 회신 CD 가 먼저 와서 통합 편지 CH `kb/reviews/li2s1a_CH_prompt_li2s_cd_reply_pilot800_2026_09_27.md` 로 합쳤다 · 이 파일은 발송하지 않는다
 confidence: medium
 verificationStatus: verified
 verifiedAt: 2026-09-27

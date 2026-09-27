@@ -4945,7 +4945,7 @@
    "slot": "lpscl_smallcell_glass_md_amend_cc",
    "applies_to": null,
    "title": "li2s 소셀 유리 MD 카드 개정 CC — 회신 CC 판정 9 항 이행 + 400 K prod 800 ps (카드 저자 채택 · 외부 1저자 확인 대기)",
-   "statement": "`db/properties/lpscl_smallcell_glass_md_amendment_cc_2026_09_26.json` (proposed). 게이트 A relax 판 · P–S 결합 제외 · 다리 S 보고량 · 밀도 경보 · 초기구조 relax · 파일럿 겸용 조건 · seed5 포함/제외 둘 다(n=4 χ²₃ 5.42) · 총상한 점유 환산 · β 오차막대(σ > 0.005 경계) · C2 원인별 기록 · **400 K prod 800 ps**(파일럿 재실행 → 재판독 → 본 런). ⛔ 트랙 = li2s: 외부 1저자 확인 전에는 proposed · 계산 0.",
+   "statement": "`db/properties/lpscl_smallcell_glass_md_amendment_cc_2026_09_26.json` (proposed v2 · 회신 CD 반영). 게이트 A relax 판 · P–S 결합 제외 · 다리 S 보고량 · 밀도 경보 · 초기구조 relax (550 K 파일럿 예외) · 파일럿 겸용 조건 · seed5 포함 판 주 결과 (제외 판 판정 안 함 · χ²₃ 삭제) · 총상한 점유 환산 (등분 가정은 병기용 · 상한 비교 금지) · C2 추정자 **MTO** · β 오차막대는 블록 ≥ 50 ps · σ 하한·보수값 · C2 원인별 기록 · 게이트 A 메모 · 한계 서술 · 400 K prod 800 ps 파일럿 **미통과** → '400 K 는 이 프로토콜로 측정되지 않는다'. ⛔ 트랙 = li2s: 규칙은 외부 1저자 판정 · 카드 저자 비준 전 proposed · 본 런 계산 0.",
    "rationale": "회신 CC(외부 1저자) 판정의 이행 + 회신이 권한 넷째 갈래를 카드 저자(사용자)가 채택 (2026-09-26 '채택 ㄱㄱ'). 결과 뒤 변경이지만 문턱·창·온도·시드는 불변이고 표본만 늘린다.",
    "decision_state": "proposed",
    "record_kind": "prospective",
@@ -4960,7 +4960,8 @@
    "evidence": [
     "kb/reviews/li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md",
     "db/properties/lpscl_smallcell_glass_md_cc_followup_2026_09_26.json",
-    "db/raw/lpscl_smallcell_glass_cc_2026_09_26/seed5_ss_event_cc.json"
+    "db/raw/lpscl_smallcell_glass_cc_2026_09_26/seed5_ss_event_cc.json",
+    "kb/reviews/li2s1a_CD_reply_li2s_cc_report_2026_09_27.md"
    ],
    "method_ref": "tools/ionic/msd_diffusive_check.py --beta_boot · tools/ionic/quench_ss_event.py · tools/ionic/melt_quench_uma.py --seed_gate",
    "reopen_criteria": [
@@ -4975,6 +4976,11 @@
      "at": "2026-09-26",
      "state": "proposed",
      "note": "회신 CC 이행 + C 채택 · 외부 1저자 확인 대기"
+    },
+    {
+     "at": "2026-09-27",
+     "state": "proposed",
+     "note": "v2 — 회신 CD 판정 반영 (Q-CC-1 MTO · 7 · 8 · 9 · 550 K 예외 · 게이트 A 메모 · 한계 서술) + 파일럿 400 K 800 ps 미통과 · 편지 CH 초안 · 카드 저자 비준 대기"
     }
    ],
    "ratification": {
