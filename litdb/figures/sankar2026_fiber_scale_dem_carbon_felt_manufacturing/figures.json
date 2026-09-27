@@ -1,0 +1,393 @@
+{
+ "slug": "sankar2026_fiber_scale_dem_carbon_felt_manufacturing",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-27",
+ "sources": [
+  "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic showing the manufacturing workflow of carbon felt electrodes and corresponding DEM-based workflow developed in this work, with snapshots of the evolving microstructure.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    143.0,
+    548.6,
+    342.3
+   ],
+   "w": 2011,
+   "h": 832,
+   "dpi": 300,
+   "src": "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf",
+   "blank": 0.433,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 14,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Geometry and key dimensional parameters of the barbed needle used in the needle punching processing stage (a) CAD needle geometry with key parameters (b) CAD barb geometry with key parameters, (c) needle populated by DEM particles, and (d) needle cross-section. More details on the geometric variables and values used are provided in Table S5 of Supporting Information.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    83.2,
+    548.6,
+    358.5
+   ],
+   "w": 2011,
+   "h": 1148,
+   "dpi": 300,
+   "src": "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf",
+   "blank": 0.852,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 21,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Isometric views of generated web microstructures for fiber diameters of 18 (a and b) and 23 µm (b and c) with initial in-plane orientation distributions of 10° (a and c) and 30° (b and d), showing the corresponding web thickness and porosity values. (e) Schematic of the 10° and 30° orientations with respect to the machine direction",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    185.3,
+    548.6,
+    556.9
+   ],
+   "w": 2011,
+   "h": 1549,
+   "dpi": 300,
+   "src": "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf",
+   "blank": 0.76,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 22,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Probability densities of the pore-throat size distributions for the generated webs: (a) pore-throat diameter and (b) pore-throat diameter normalized by fiber diameter.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    275.7,
+    542.2,
+    444.6
+   ],
+   "w": 1969,
+   "h": 705,
+   "dpi": 300,
+   "src": "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf",
+   "blank": 0.903,
+   "recrop": "re-cropped 2026-09-27 to the embedded raster (xref 122, bbox [72.0, 277.7, 540.2, 442.6] pt) +/-2.0 pt @300 dpi. Reason: auto crop took the body-text line 'the precursor packing state.' above the figure",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 24,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Through-thickness variation in mean fiber orientation for (a) 18 µm and (b) 23 µm fiber webs with initial orientation distributions of 10° and 30°. Ø denotes the fiber diameter. The localization of this response is consistent with the prescribed penetration depth and the distribution of barbs along the needle. Near the upper surface, the needle tip initially displaces fibers before the barb-bearing region enters the batt, whereas fibers near the lower surface experience fewer barb interactions as the needle approaches its prescribed penetration depth. The barb-bearing region consequently interacts most extensively with fibers within the batt interior. Precursor architecture therefore changes the magnitude of reorientation substantially while having a smaller influence on the through-thickness location at which the maximum response occurs under the identical punching conditions ",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    160.2,
+    548.6,
+    376.6
+   ],
+   "w": 2011,
+   "h": 903,
+   "dpi": 300,
+   "src": "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf",
+   "blank": 0.942,
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 25,
+   "file": "fig_6.png",
+   "caption": "Figure 6. (a) Spatial variation in fiber reorientation for the webs with fiber diameters 18 and 23 µm, with initial orientation distributions of 10° and 30°, and (b) the corresponding difference between the two orientation cases after needle punching.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.2,
+    336.9,
+    541.9,
+    602.4
+   ],
+   "w": 1966,
+   "h": 1108,
+   "dpi": 300,
+   "src": "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf",
+   "blank": 0.303,
+   "recrop": "re-cropped 2026-09-27 to the embedded raster (xref 128, bbox [72.2, 338.9, 539.9, 600.4] pt) +/-2.0 pt @300 dpi. Reason: auto crop took the body-text word 'greatest.' above the figure plus ~53 pt side margins",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 26,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Radial variation in the orientation tensor component Azz and fiber length density around the needle axis for fibers with diameters of 18 and 23 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    95.3,
+    259.8,
+    516.7,
+    598.0
+   ],
+   "w": 1756,
+   "h": 1410,
+   "dpi": 300,
+   "src": "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf",
+   "blank": 0.916,
+   "recrop": "re-cropped 2026-09-27 to the embedded raster (xref 130, bbox [97.3, 261.8, 514.7, 596.0] pt) +/-2.0 pt @300 dpi. Reason: auto crop took the body-text line 'in Video S4 in the Supporting Information.' above the figure",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 27,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Fiber–barb engagement during needle penetration for (a) barb with no kick-up (b) barb with kick-up distance 0.3Øneedle. The simulation frames showing the influence of barb kick-up on fiber engagement is illustrated for qualitative analysis in Figure 8. For visualization, fibers engaged by the barb are shown while surrounding fibers are omitted. The trajectories can be seen in Video S5 available in the Supporting Information. In the absence of barb kick-up, only limited barb–fiber engagement occurs because the barb remains largely contained within the needle profile. Increasing the kick-up to 30% exposes a greater portion of the barb to the surrounding network, resulting in visibly greater fiber capture and downward transport along the penetration trajectory. The images therefore illustrate the mechanism by which increasing barb protrusion can amplify the restructuring imposed b",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    279.1,
+    548.6,
+    420.0
+   ],
+   "w": 2011,
+   "h": 588,
+   "dpi": 300,
+   "src": "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf",
+   "blank": 0.71,
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 28,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Effect of barb kick-up on the through-thickness mean fiber orientation for the felt microstructures with fiber diameters of (a) 18 µm and (b) 23 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.3,
+    288.8
+   ],
+   "w": 2010,
+   "h": 929,
+   "dpi": 300,
+   "src": "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf",
+   "blank": 0.923,
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 29,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Spatial change in the orientation tensor component Azz after needle punching with barbed needle having a kick-up distance of 0.1Øneedle, 0.2Øneedle, and 0.3Øneedle relative to a barbed needle with no kick-up state for the felt microstructures with fiber diameters of 18 and 23 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.5,
+    359.2
+   ],
+   "w": 2011,
+   "h": 1222,
+   "dpi": 300,
+   "src": "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf",
+   "blank": 0.399,
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 30,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Percolation paths through the felts of fiber diameter 18 and 23 µm before and after needle punching at different barb kick-up values (a) 18 µm felts (b) 23 µm felts",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    125.8,
+    548.3,
+    420.5
+   ],
+   "w": 2010,
+   "h": 1229,
+   "dpi": 300,
+   "src": "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf",
+   "blank": 0.532,
+   "viewed": true
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 32,
+   "file": "fig_12.png",
+   "caption": "Figure 12. Radial variation in the orientation tensor component Azz and fiber length density for different numbers of needle punches. The inset shows the needle penetration pattern and reference axis (P1).",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    70.0,
+    490.4,
+    390.1
+   ],
+   "w": 1753,
+   "h": 1335,
+   "dpi": 300,
+   "src": "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf",
+   "blank": 0.749,
+   "recrop": "re-cropped 2026-09-27 to the embedded raster (xref 154, bbox [72.0, 72.0, 488.4, 388.1] pt) +/-2.0 pt @300 dpi. Reason: auto crop = page-width band with a ~60 pt blank strip right of the raster; tightened (content was complete)",
+   "viewed": true
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 33,
+   "file": "fig_13.png",
+   "caption": "Figure 13. Spatial distribution of the orientation tensor component Azz after one and seven needle punches, and the corresponding change in Azz between the two punching conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    202.7,
+    548.1,
+    373.4
+   ],
+   "w": 2009,
+   "h": 712,
+   "dpi": 300,
+   "src": "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf",
+   "blank": 0.44,
+   "viewed": true
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 34,
+   "file": "fig_14.png",
+   "caption": "Figure 14. Pore-throat size distributions for fiber diameters of (a) 18 µm and (b) 23 µm in fiber felt microstructures at different levels of calendering.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    108.5,
+    548.6,
+    291.3
+   ],
+   "w": 2011,
+   "h": 762,
+   "dpi": 300,
+   "src": "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf",
+   "blank": 0.922,
+   "viewed": true
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 35,
+   "file": "fig_15.png",
+   "caption": "Figure 15. Effective diffusivity in the x-, y-, and z-directions as a function of calendering degree for fiber felt microstructures with fiber diameters of (a) 18 µm and (b) 23 µm respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    400.5,
+    548.6,
+    612.9
+   ],
+   "w": 2011,
+   "h": 886,
+   "dpi": 300,
+   "src": "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf",
+   "blank": 0.956,
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 8,
+   "file": "tab_1.png",
+   "caption": "Table 1. Deformation modes and their corresponding parameter relationships.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    110.0,
+    498.2,
+    286.3
+   ],
+   "w": 1797,
+   "h": 735,
+   "dpi": 300,
+   "src": "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf",
+   "blank": 0.935,
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 19,
+   "file": "tab_2.png",
+   "caption": "Table 2. Overview of key control parameters, along their limits and fixed values used in this work for each manufacturing stage of the workflow (*Needle Designs differ based on their barb kick-up distance and schematics are available in Supporting Information Figure S1 and Table S5).",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    372.3,
+    547.6,
+    616.9
+   ],
+   "w": 2003,
+   "h": 1020,
+   "dpi": 300,
+   "src": "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf",
+   "blank": 0.914,
+   "viewed": true
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 20,
+   "file": "tab_3.png",
+   "caption": "Table 3. Computational resources and wall-clock times for the most computationally demanding case of each manufacturing module.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    519.2,
+    547.3,
+    694.8
+   ],
+   "w": 2002,
+   "h": 732,
+   "dpi": 300,
+   "src": "10049d58-2._Fiber-Scale_Discrete_Element_Modeling_Approach_for_Microstructural_Evolution_in_Carbon_Felt_Electrode_Manufacturing.pdf",
+   "blank": 0.923,
+   "viewed": true
+  }
+ ]
+}
