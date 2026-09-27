@@ -3,14 +3,14 @@ title: "리뷰 CE 회신 — A′ V5 VASP 외주 준비본: NO-GO (P0 4 · P1 5 
 date: 2026-09-27
 updated: 2026-09-27
 tags: [review, codex, reply, adhesion, wad, prereg, vasp, outsourcing, uma, d3, dipole, g5]
-status: 수령 (1저자 붙여넣기 · 원문 그대로) → 수정판 준비
+status: 수령 (1저자 붙여넣기 · 원문 그대로) → 대응 v2 커밋 e025c0db7 → 재리뷰 CF
 confidence: medium
 verificationStatus: unverified
 explored: false
 authoredBy: agent
 effort: high
-claimType: descriptive
-evidenceScope: single-source-primary
+claimType: mixed
+evidenceScope: single-source
 ---
 
 > 원문 그대로 보존 (1저자가 대화에 붙여 넣은 전문 · 2026-09-27). 리뷰어가 본 대상 = 커밋 `8f76b912dd70f47b32a23cbcc1ad96525a97e69c`.
