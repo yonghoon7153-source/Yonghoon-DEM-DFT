@@ -1,2 +1,3 @@
-공식 마스코트 그림을 두는 곳. 파일명은 data/mascots.json 의 id (예: kumamon.png).
-`node scripts/import-mascot-images.mjs <폴더>` 가 아무 이름의 파일이라도 캐릭터에 맞춰 여기로 옮기고 데이터를 갱신한다.
+공식 마스코트 그림 (512px WebP). 파일명은 data/mascots.json 의 id.
+직접 넣지 말고 `npm run mascots:import <폴더>` 를 쓴다 — 배경 제거·여백 자르기·축소·데이터 갱신을 같이 한다.
+필요한 목록과 상태는 docs/MASCOT_IMAGES.md.

@@ -12,7 +12,8 @@
     "geo:build": "node scripts/build-geo.mjs",
     "data:check": "node scripts/validate-data.mjs",
     "check": "npm run data:check && npm run typecheck && vite build",
-    "mascots:import": "node scripts/import-mascot-images.mjs"
+    "mascots:import": "node scripts/import-mascot-images.mjs",
+    "mascots:list": "node scripts/mascot-image-list.mjs"
   },
   "license": "MIT",
   "dependencies": {
@@ -33,6 +34,7 @@
     "@types/topojson-server": "^3.0.4",
     "@types/topojson-simplify": "^3.0.3",
     "@types/topojson-specification": "^1.0.5",
+    "sharp": "^0.34.5",
     "topojson-server": "^3.0.1",
     "topojson-simplify": "^3.0.3",
     "typescript": "^5.9.3",
