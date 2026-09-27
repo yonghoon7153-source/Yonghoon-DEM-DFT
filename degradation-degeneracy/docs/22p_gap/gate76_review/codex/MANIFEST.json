@@ -1,0 +1,354 @@
+{
+  "format": "review-payload/v1",
+  "payload_count": 87,
+  "files": {
+    "CLAUDE_REPLY_GATE76.md": {
+      "bytes": 2846,
+      "sha256": "5c0ce45c221915daca029f281ccd085a68140465891537f609fab68368cc49f7"
+    },
+    "CODE_TO_HEAD_SCOPE.diff": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "DATA_AUDIT.json": {
+      "bytes": 11078,
+      "sha256": "1fd66ceaf8e2b4ebdbe0ebf7b07014cd774e3f1e0ccff54bcdf1bd7b07f78a92"
+    },
+    "data_audit.py": {
+      "bytes": 9939,
+      "sha256": "19a03086abc534cd284831ff393ab9681b825ab535fbd8724cf730f73f96d239"
+    },
+    "DECISION.json": {
+      "bytes": 2034,
+      "sha256": "cd5a594e5b20d06d49b6b4769dbdf66f3278fb9e0e9d997d1248d4422548d453"
+    },
+    "DECISION_PROBES.json": {
+      "bytes": 52041,
+      "sha256": "84a6cf4d59f8b4c803e393a01241c46c0dda00e74ac3d1105591aa708d9e328a"
+    },
+    "decision_probes.py": {
+      "bytes": 12524,
+      "sha256": "996f823d62009e88863d6ebec1635fd8413a5aa2b1aae431248ea9160d9c3da1"
+    },
+    "fixtures01/D00_valid.yaml": {
+      "bytes": 66208,
+      "sha256": "3e279d7b875232189a5c624197e9fc098f25154fe95f567af869b45253e775a6"
+    },
+    "fixtures01/D01_other.yaml": {
+      "bytes": 66206,
+      "sha256": "aabc55e50b4c642ae278acf735dad9e9c98c49948a26b730e8e3f52791c9840c"
+    },
+    "fixtures01/D02_old_leg.yaml": {
+      "bytes": 66208,
+      "sha256": "bd9e2232fa67c8dcf6415da72a66cf882933520cabc9839420161c8cb48ec6db"
+    },
+    "fixtures01/D03_artifact.yaml": {
+      "bytes": 66210,
+      "sha256": "852f102ed3553dea90fc9c7f99ac8227987d38a4876b08069c0ebf6966c09e52"
+    },
+    "fixtures01/D04_suffix.yaml": {
+      "bytes": 66209,
+      "sha256": "0fc2c1f05c71ffe1a7c1dff371ffeef76fb390e1fdf6b0a44442e111089fff23"
+    },
+    "fixtures01/D05_child.yaml": {
+      "bytes": 66212,
+      "sha256": "978bbf35e61bd86ac5ffab6fe20664b9a685cce7acc8f898ffa3667a68b319b7"
+    },
+    "fixtures01/D06_missing.yaml": {
+      "bytes": 66178,
+      "sha256": "98b8817011a200ffa9a1175c3db663e2ffa9691fd764ab250eb66825d05f7f03"
+    },
+    "fixtures01/D07_empty.yaml": {
+      "bytes": 66191,
+      "sha256": "686e4d511a062f22f06176fbc18c7095496e131c2e3113d4dc02d85c108032f7"
+    },
+    "fixtures01/D08_blank.yaml": {
+      "bytes": 66194,
+      "sha256": "77067c8452d30564df008afb077c45412e456789232626683381f32b26dee58d"
+    },
+    "fixtures01/D09_number.yaml": {
+      "bytes": 66191,
+      "sha256": "b248f4f0125d099c1bf26d0f8311b0cee0f3f6ce6784ba758248e0cb633dcf37"
+    },
+    "fixtures01/D10_list.yaml": {
+      "bytes": 66215,
+      "sha256": "befc03265d30b8a6118875bf30203c2c662633269c36cc46678205a0d9863ccb"
+    },
+    "fixtures01/D11_trailing_slash.yaml": {
+      "bytes": 66209,
+      "sha256": "202def45547c6187118bbc71f731e41f65bdcd04cf986e7aff84915e4d8d4757"
+    },
+    "fixtures01/FINAL_INDEX.py.txt": {
+      "bytes": 6920,
+      "sha256": "1c573aa47a0380cf1c6328438a03e245744fdbb15b0ea89aa8d3bedd809dfd5d"
+    },
+    "fixtures01/I00_valid_merge/artifact_index.yaml": {
+      "bytes": 494,
+      "sha256": "74167ac612eeaecadc764c15e7566ac29f0c508cd929a17a52a2857c718ebfff"
+    },
+    "fixtures01/I00_valid_preflight/artifact_index.yaml": {
+      "bytes": 112,
+      "sha256": "e83e5fe19a015df983ffa39aecfc5ccec1add021af6524b22cbb0977b6732960"
+    },
+    "fixtures01/I00_valid_same_name/artifact_index.yaml": {
+      "bytes": 112,
+      "sha256": "e83e5fe19a015df983ffa39aecfc5ccec1add021af6524b22cbb0977b6732960"
+    },
+    "fixtures01/I01_duplicate_runs_merge/artifact_index.yaml": {
+      "bytes": 34,
+      "sha256": "1915bbac8d36a6704c62cfe79dad62e17e691e8582737b0f30dd5771a146340d"
+    },
+    "fixtures01/I01_duplicate_runs_preflight/artifact_index.yaml": {
+      "bytes": 34,
+      "sha256": "1915bbac8d36a6704c62cfe79dad62e17e691e8582737b0f30dd5771a146340d"
+    },
+    "fixtures01/I01_duplicate_runs_same_name/artifact_index.yaml": {
+      "bytes": 34,
+      "sha256": "1915bbac8d36a6704c62cfe79dad62e17e691e8582737b0f30dd5771a146340d"
+    },
+    "fixtures01/I02_duplicate_run_merge/artifact_index.yaml": {
+      "bytes": 25,
+      "sha256": "411d82756e4020ba722313965f5dd1e8cb5c08a17abc7a42d11e83b3b96b493a"
+    },
+    "fixtures01/I02_duplicate_run_preflight/artifact_index.yaml": {
+      "bytes": 25,
+      "sha256": "411d82756e4020ba722313965f5dd1e8cb5c08a17abc7a42d11e83b3b96b493a"
+    },
+    "fixtures01/I02_duplicate_run_same_name/artifact_index.yaml": {
+      "bytes": 25,
+      "sha256": "411d82756e4020ba722313965f5dd1e8cb5c08a17abc7a42d11e83b3b96b493a"
+    },
+    "fixtures01/I03_duplicate_identity_merge/artifact_index.yaml": {
+      "bytes": 64,
+      "sha256": "6d99435d62bf75fd0158b3d6dee16fc57f42c8817c153c5e997c5fade1260b90"
+    },
+    "fixtures01/I03_duplicate_identity_preflight/artifact_index.yaml": {
+      "bytes": 64,
+      "sha256": "6d99435d62bf75fd0158b3d6dee16fc57f42c8817c153c5e997c5fade1260b90"
+    },
+    "fixtures01/I03_duplicate_identity_same_name/artifact_index.yaml": {
+      "bytes": 64,
+      "sha256": "6d99435d62bf75fd0158b3d6dee16fc57f42c8817c153c5e997c5fade1260b90"
+    },
+    "fixtures01/I04_merge_override_merge/artifact_index.yaml": {
+      "bytes": 83,
+      "sha256": "871461fe4323d28551acbd96966824befef5d352da84e0439cfa4c5bae1a073b"
+    },
+    "fixtures01/I04_merge_override_preflight/artifact_index.yaml": {
+      "bytes": 83,
+      "sha256": "871461fe4323d28551acbd96966824befef5d352da84e0439cfa4c5bae1a073b"
+    },
+    "fixtures01/I04_merge_override_same_name/artifact_index.yaml": {
+      "bytes": 83,
+      "sha256": "871461fe4323d28551acbd96966824befef5d352da84e0439cfa4c5bae1a073b"
+    },
+    "fixtures01/I05_merge_nonoverlap_merge/artifact_index.yaml": {
+      "bytes": 58,
+      "sha256": "cedb78899890067068d2a9ab5091cc068415e1c3a0e9196adb88ae60470996d4"
+    },
+    "fixtures01/I05_merge_nonoverlap_preflight/artifact_index.yaml": {
+      "bytes": 58,
+      "sha256": "cedb78899890067068d2a9ab5091cc068415e1c3a0e9196adb88ae60470996d4"
+    },
+    "fixtures01/I05_merge_nonoverlap_same_name/artifact_index.yaml": {
+      "bytes": 58,
+      "sha256": "cedb78899890067068d2a9ab5091cc068415e1c3a0e9196adb88ae60470996d4"
+    },
+    "fixtures01/I06_wrong_shape_merge/artifact_index.yaml": {
+      "bytes": 9,
+      "sha256": "4814e122b3a7d6b14f475682a70d1cae82d44454ca229eedca58ca66b3da8fa3"
+    },
+    "fixtures01/I06_wrong_shape_preflight/artifact_index.yaml": {
+      "bytes": 9,
+      "sha256": "4814e122b3a7d6b14f475682a70d1cae82d44454ca229eedca58ca66b3da8fa3"
+    },
+    "fixtures01/I06_wrong_shape_same_name/artifact_index.yaml": {
+      "bytes": 9,
+      "sha256": "4814e122b3a7d6b14f475682a70d1cae82d44454ca229eedca58ca66b3da8fa3"
+    },
+    "fixtures01/I07_empty_merge/artifact_index.yaml": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fixtures01/I07_empty_preflight/artifact_index.yaml": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fixtures01/I07_empty_same_name/artifact_index.yaml": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fixtures01/I08_valid_alias_merge/artifact_index.yaml": {
+      "bytes": 423,
+      "sha256": "41c5b824a87556528c01a07bd714291f9be8d2f9b54d136c927e2e2b7e4768d2"
+    },
+    "fixtures01/I08_valid_alias_preflight/artifact_index.yaml": {
+      "bytes": 52,
+      "sha256": "77a7d7a806120d9092ed7339ad1dbcc80766a57ce139bbea056b85f2aab54203"
+    },
+    "fixtures01/I08_valid_alias_same_name/artifact_index.yaml": {
+      "bytes": 52,
+      "sha256": "77a7d7a806120d9092ed7339ad1dbcc80766a57ce139bbea056b85f2aab54203"
+    },
+    "fixtures01/PYIDX.py.txt": {
+      "bytes": 385,
+      "sha256": "b43b3fc2b87a38ed0108277e03fae98a6f9205e8c5a2e9b1d832a9815394d4e7"
+    },
+    "fixtures01/PYSAME.py.txt": {
+      "bytes": 1344,
+      "sha256": "5e18c6dacef5daaf7d44e822219202ab7c6c85bb6fe6c5ad631cc6f75feeb065"
+    },
+    "fixtures01/shell_index_rc0.sh": {
+      "bytes": 1680,
+      "sha256": "2b86908c8cbb389678ca6bdc4da2a50a96c2f88a31f5179260444f5ba454caca"
+    },
+    "fixtures01/shell_index_rc17.sh": {
+      "bytes": 1681,
+      "sha256": "5ee9d0f555ca1c3d8c89255c24ab8377e9deb7cd619d562836890476b5165c0a"
+    },
+    "fixtures01/W_normal/artifact_index.yaml": {
+      "bytes": 494,
+      "sha256": "74167ac612eeaecadc764c15e7566ac29f0c508cd929a17a52a2857c718ebfff"
+    },
+    "fixtures01/W_partial_write_failure/artifact_index.yaml": {
+      "bytes": 112,
+      "sha256": "e83e5fe19a015df983ffa39aecfc5ccec1add021af6524b22cbb0977b6732960"
+    },
+    "fixtures01/W_replace_failure/artifact_index.yaml": {
+      "bytes": 112,
+      "sha256": "e83e5fe19a015df983ffa39aecfc5ccec1add021af6524b22cbb0977b6732960"
+    },
+    "G74_TEST_WORDING_FIX.diff": {
+      "bytes": 2646,
+      "sha256": "36479b33ac97a1770965a2a5528c02f6f6012e2adeab1c99d72d3324065d2d68"
+    },
+    "G75_MUTATION_CHANGES.diff": {
+      "bytes": 9148,
+      "sha256": "fb9919792222bd5af2b51b4307a4942d7ebfd81493c169fb044dfd2ad16c99bf"
+    },
+    "G75_TEST_EVOLUTION.diff": {
+      "bytes": 6273,
+      "sha256": "3d2c3f842b9ad7a9c8d6a35b5d4e0a42dca81dd73748bf2fe23f3ccd6bb42226"
+    },
+    "G75_TO_G76_LEDGER.diff": {
+      "bytes": 1923,
+      "sha256": "ac02e643f182e77c8871d8700645057c3238d0b76f0c54e66bfd5f10d90677e1"
+    },
+    "G75_TO_G76_LINT.diff": {
+      "bytes": 5757,
+      "sha256": "668848dd0a4b005cf355b66ae2759ea67a711a89808e7e25b97a4f4728a8cedf"
+    },
+    "G75_TO_G76_SCOPE.diff": {
+      "bytes": 13075,
+      "sha256": "401796355bea5a0e5631262a149cc92baf4ecbe65987b3f22c1373538c2b957c"
+    },
+    "GATE76_REVIEW_KO.md": {
+      "bytes": 13327,
+      "sha256": "da090c6e258590cc71fa02d483226b1240beef82a8553cc366f56940ebfadc82"
+    },
+    "package_review.py": {
+      "bytes": 4397,
+      "sha256": "ed7041f69a7196cddd373ca11611b8789b023436b65149229778b518b1e99f8a"
+    },
+    "PRESERVATION_AFTER.json": {
+      "bytes": 253,
+      "sha256": "3292b6070bad4d47e2d4a4c09dd093d81897916aab89e5f1448625980e90142f"
+    },
+    "reference/artifacts/artifact_index.yaml": {
+      "bytes": 2275,
+      "sha256": "36728b30b0911f036548973aa8860768130fe0056663d3ce4bad8d5821da5b4b"
+    },
+    "reference/docs/22p_gap/GATE75_REQUEST.md": {
+      "bytes": 10120,
+      "sha256": "3c4b949a80dbbd8d7025e3d0bae3fde6170c85940102bcbe8d0882184e8e74f1"
+    },
+    "reference/docs/22p_gap/GATE76_REQUEST.md": {
+      "bytes": 9017,
+      "sha256": "032d10bbeac3a1bee37849cfde3d7e2c286bb801339d1b85f7548676831694e1"
+    },
+    "reference/docs/22p_gap/LEG_PRESERVATION.yaml": {
+      "bytes": 65166,
+      "sha256": "39b2fa844008245a21ab0d0c3694b516f952679b7d72bbf6557e5fd7dd522555"
+    },
+    "reference/docs/22p_gap/receipts/grid_fit_v5.validate.yaml": {
+      "bytes": 3703,
+      "sha256": "c863d8c3808b22537679264e0dc45f82c67f879c2f0549949e8a93496c51684a"
+    },
+    "reference/docs/22p_gap/receipts/history/grid_fit_v5.validate.27390883eb132941.yaml": {
+      "bytes": 3703,
+      "sha256": "e74f3c6ceda04ed2626a2b0d70dded14b290a84ad11ae52f5f46e35d671f4357"
+    },
+    "reference/docs/22p_gap/receipts/history/grid_fit_v5.validate.c2ef1a811e70bb4c.yaml": {
+      "bytes": 3706,
+      "sha256": "a91c32a97c34bd37880b1ee032b687302d41e67e71c98619c029202879f70f3b"
+    },
+    "reference/docs/22p_gap/receipts/history/grid_fit_v5.validate.cd2408354486c148.yaml": {
+      "bytes": 3703,
+      "sha256": "4d09941a1d1c98e4be50101699f427ca43fd6fedd4ebc756d9eb0c94848a65df"
+    },
+    "reference/docs/22p_gap/receipts/history/paired_fixed5_v4.validate.27390883eb132941.yaml": {
+      "bytes": 3768,
+      "sha256": "dc610d1590bd40b5fb99fd1abebb7bfcf269801f14212b4678cc65e146bcef92"
+    },
+    "reference/docs/22p_gap/receipts/history/paired_fixed5_v4.validate.c2ef1a811e70bb4c.yaml": {
+      "bytes": 3768,
+      "sha256": "41254d20c8157dd3ec6818e823b7931ba38bf15f98a885fd8f2af280889e93dd"
+    },
+    "reference/docs/22p_gap/receipts/history/paired_fixed5_v4.validate.cd2408354486c148.yaml": {
+      "bytes": 3768,
+      "sha256": "31945518def9976b3745fcebf3374605c3b7d2bbba7ae7a93cc669a54906ed06"
+    },
+    "reference/docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml": {
+      "bytes": 3768,
+      "sha256": "9e9cc2f9c8189648c3e669921d88e556d2b26359f61e0053d870a45d5b8e6c81"
+    },
+    "reference/docs/22p_gap/STAGE3_CONTRACT.md": {
+      "bytes": 97239,
+      "sha256": "b7825789a7f2ae672283ca880f7e60b0f1015cb771a3f7b629009d55c8fa580e"
+    },
+    "reference/docs/GATE70_WORKING_STATE.md": {
+      "bytes": 17163,
+      "sha256": "143d175ac1b1e3d8391f0f13ffa9adc20d61d0b23d39d888de945fc9c93b01d3"
+    },
+    "reference/RESPONSE_SECTIONS104_105.txt": {
+      "bytes": 14369,
+      "sha256": "5b11855403d1d5a66a3de1836bdad0a1ebbedaee8341ea2008bc0950408b8f8d"
+    },
+    "reference/scripts/archive_results.sh": {
+      "bytes": 24405,
+      "sha256": "033369ab2c39578cc2d3750fa5c459a2b04e72d8f07c447025caf22cff605e03"
+    },
+    "reference/tests/test_docs_lint.py": {
+      "bytes": 617895,
+      "sha256": "dd8b7d819c73746c4db5e2a157794a9a23a43829e15756cb3b3dcbcb2ee90b06"
+    },
+    "reference/tests/test_gate74_defensive.py": {
+      "bytes": 24295,
+      "sha256": "ef1df6c1f8bc4008328218cefd719c71da81c73d66dde214978824b299d197e4"
+    },
+    "reference/tests/test_gate75_defensive.py": {
+      "bytes": 12885,
+      "sha256": "f8e21f6ce7568730119c6adcf66afb77e70bb9ab4825d03da77adea1809bde87"
+    },
+    "reference/tools/index_yaml.py": {
+      "bytes": 4642,
+      "sha256": "c199b7da2aa23dd4003143de2fcdc6cc65f06b81a3e06d4fd8cba1183c1cdb6e"
+    },
+    "reference/tools/preserve.py": {
+      "bytes": 487801,
+      "sha256": "20e5fdd549360af93787059fc32479c209fce67ad9d5bc037412946d93a148ec"
+    },
+    "REVIEW_COPY_SCOPE_FIX.diff": {
+      "bytes": 1458,
+      "sha256": "a5a045c55df1b5c04ce9d047b50f21a98145734ef55206ed60e5921f42c2b2b9"
+    },
+    "REVIEWER_CHECK_HISTORY.md": {
+      "bytes": 1644,
+      "sha256": "815cfadf9e6b3aa7af7588689e4b42947b0180a643f2c2fecccf323241db145f"
+    },
+    "SOURCE_BEFORE.json": {
+      "bytes": 607351,
+      "sha256": "14c97eaf21b43d42d592704a3521a18759992e3f2f94fc092eefbb5ca530ff6f"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+import os, sys
+from tools.index_yaml import load_index_strict
+p = sys.argv[1]
+try:
+    load_index_strict(open(p, encoding="utf-8").read())
+except Exception as exc:
+    print(f"  ✗ 기존 index 를 받을 수 없다: {p} — {exc} — 비우고 다시 쓰지 않는다 (사람이 본다)",
+          file=sys.stderr)
+    sys.stderr.flush(); os._exit(1)
+sys.stdout.flush(); os._exit(0)

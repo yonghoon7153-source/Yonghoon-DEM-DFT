@@ -1,0 +1,1273 @@
+{
+  "head": "b5e4eadea7794d157d961170247e49d2761bba26",
+  "source_identities": {
+    "tools\\preserve.py": {
+      "bytes": 487801,
+      "sha256": "20e5fdd549360af93787059fc32479c209fce67ad9d5bc037412946d93a148ec"
+    },
+    "tests\\test_docs_lint.py": {
+      "bytes": 617895,
+      "sha256": "dd8b7d819c73746c4db5e2a157794a9a23a43829e15756cb3b3dcbcb2ee90b06"
+    },
+    "scripts\\archive_results.sh": {
+      "bytes": 24405,
+      "sha256": "033369ab2c39578cc2d3750fa5c459a2b04e72d8f07c447025caf22cff605e03"
+    },
+    "tools\\index_yaml.py": {
+      "bytes": 4642,
+      "sha256": "c199b7da2aa23dd4003143de2fcdc6cc65f06b81a3e06d4fd8cba1183c1cdb6e"
+    }
+  },
+  "extracted_source_nodes": [
+    {
+      "file": "tools/preserve.py",
+      "line": 105,
+      "end": 105,
+      "name": [
+        "_HEX64"
+      ],
+      "source_segment": {
+        "bytes": 11,
+        "sha256": "d010e1cc3a4c20f3ba8d722f4ce7dd0bc81fc2542e436e6be00c129c2b23036d"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 125,
+      "end": 131,
+      "name": "PreserveError",
+      "source_segment": {
+        "bytes": 267,
+        "sha256": "533ddc19da973b3e5ea7bb9ff75a0ba6b4bcc01356bc8f52822855d0dc256d7a"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 153,
+      "end": 155,
+      "name": "_is_hex64",
+      "source_segment": {
+        "bytes": 130,
+        "sha256": "6d2e605d0c924a519784c3180874e94bc99c55015558ebf7566dea7c606da032"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 3042,
+      "end": 3043,
+      "name": "_nonempty_str",
+      "source_segment": {
+        "bytes": 120,
+        "sha256": "160863b951a461db581e0527f3e1cdbe169a9a0dfebbe130dd391cbce9be3171"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 3642,
+      "end": 3642,
+      "name": [
+        "CLAIM_SCOPE"
+      ],
+      "source_segment": {
+        "bytes": 50,
+        "sha256": "3966f74d2ecfb923464c495cc8b1b79d91524aefed3b9027f1906c3f45d0c42a"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 6010,
+      "end": 6011,
+      "name": "_is_hex64",
+      "source_segment": {
+        "bytes": 112,
+        "sha256": "0c42eae86dcdb9f29fa39fea4f29d48927fcaab1e928be0fb25ba8c28c97c860"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7562,
+      "end": 7588,
+      "name": "_repo_relative_or_refuse",
+      "source_segment": {
+        "bytes": 1286,
+        "sha256": "8af8c4d2fde9fb900cf83f02a1a9e6404e006e62ed755f23a62056970593718d"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7792,
+      "end": 7792,
+      "name": [
+        "VERIFICATION_RECEIPT_KEYS"
+      ],
+      "source_segment": {
+        "bytes": 100,
+        "sha256": "5a9f25db2c71cafc9c63348915ccb7d5e34b8da1c341262211143bad977e5e18"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7793,
+      "end": 7794,
+      "name": [
+        "VERIFICATION_RECEIPT_CORE_KEYS"
+      ],
+      "source_segment": {
+        "bytes": 134,
+        "sha256": "fa1465b7b70a18c83971ba6b7955b5e83251d005e235e870b01a5aa68d17368f"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7795,
+      "end": 7797,
+      "name": [
+        "VERIFICATION_RECEIPT_BUNDLE_KEYS"
+      ],
+      "source_segment": {
+        "bytes": 175,
+        "sha256": "358b66574fec9630b1cd34018eff030cf8bcc72b4a7d72f65dd155b362602364"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7798,
+      "end": 7799,
+      "name": [
+        "VERIFICATION_RECEIPT_RESTORE_KEYS"
+      ],
+      "source_segment": {
+        "bytes": 121,
+        "sha256": "94eb3db266b3274138a0ce037b3d92c3957aaf679b6485cd66404df18249eee0"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7800,
+      "end": 7801,
+      "name": [
+        "VERIFICATION_RECEIPT_VALIDATION_KEYS"
+      ],
+      "source_segment": {
+        "bytes": 104,
+        "sha256": "7e8b5d2fd1697ee2c5be4313239c5c219a846b48f400509552adbe25350d0b00"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7802,
+      "end": 7805,
+      "name": [
+        "VERIFICATION_RECEIPT_IDENTITY_KEYS"
+      ],
+      "source_segment": {
+        "bytes": 235,
+        "sha256": "0d0845b7b69520a49b2e1f7dc2ac43f87c7f44f1c69005885d6413261ccfd75e"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7806,
+      "end": 7806,
+      "name": [
+        "VERIFICATION_RECEIPT_SCHEMA_VERSION"
+      ],
+      "source_segment": {
+        "bytes": 39,
+        "sha256": "4b7f09c435f33b3720d8318a1d88373ebbcaf203d7f5f9be5bb36f319ee6c417"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7811,
+      "end": 7818,
+      "name": [
+        "VERIFICATION_RECEIPT_OUTPUT_KEYS"
+      ],
+      "source_segment": {
+        "bytes": 457,
+        "sha256": "d1409a2352b40d64b02dfb69702471a2ffa2a67e86397ec90e0affb39b44c6f8"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7819,
+      "end": 7819,
+      "name": [
+        "_HEX16"
+      ],
+      "source_segment": {
+        "bytes": 40,
+        "sha256": "bd000b3506c4ae3a807ff7883ed93f53cba7cad36f832885a08d253b6665cd7f"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7820,
+      "end": 7820,
+      "name": [
+        "VERIFICATION_RECEIPT_GENERATOR"
+      ],
+      "source_segment": {
+        "bytes": 63,
+        "sha256": "fe0fd34d19aab6fef0d077ecf974e8cee0964fd7161f8123dd511a7da30181dd"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7823,
+      "end": 7828,
+      "name": "_receipt_core_sha256",
+      "source_segment": {
+        "bytes": 295,
+        "sha256": "8d256aae52a461b207990299f53c896b8bb822cfd49c5c3a8d48ac45d4297bc3"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7831,
+      "end": 7920,
+      "name": "read_verification_receipt",
+      "source_segment": {
+        "bytes": 5664,
+        "sha256": "1eba9842688da668dfea6fc799cdb036b067e2d8f0bee423644ad287d66be997"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7923,
+      "end": 7968,
+      "name": "_receipt_output_pair",
+      "source_segment": {
+        "bytes": 3021,
+        "sha256": "bcb9cb4a05962077f109171c05e339ce207639b2f97be71f23f049a0f171c243"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 7971,
+      "end": 8004,
+      "name": "_assert_receipt_bound_to_bundle",
+      "source_segment": {
+        "bytes": 2592,
+        "sha256": "c4e54ec9ff03dafcd6df6f1a70900dbc0e894ea408cfe5e36e7e1a25637592f3"
+      }
+    },
+    {
+      "file": "tools/preserve.py",
+      "line": 8007,
+      "end": 8027,
+      "name": "_assert_ledger_run_bound",
+      "source_segment": {
+        "bytes": 1770,
+        "sha256": "a4d50bffe78c0f0949790f67b887c4140d6812981bceb17015e92ab14aea1986"
+      }
+    },
+    {
+      "file": "tests/test_docs_lint.py",
+      "line": 2500,
+      "end": 2504,
+      "name": [
+        "_NO_ACTIVE_CLAIM_EVIDENCE_KEYS"
+      ],
+      "source_segment": {
+        "bytes": 440,
+        "sha256": "55752110dc65b33b7cfd5bce6c84bea84c706fb6fd6ee6fa6f2448fbf4aaf43e"
+      }
+    },
+    {
+      "file": "tests/test_docs_lint.py",
+      "line": 2507,
+      "end": 2569,
+      "name": "_no_active_claim_evidence_problems",
+      "source_segment": {
+        "bytes": 4415,
+        "sha256": "1fc91e54d9e74133666558c16aa897491f305c0e43c26953a119131923e6d240"
+      }
+    },
+    {
+      "file": "tools/index_yaml.py",
+      "line": 17,
+      "end": 18,
+      "name": "DuplicateKeyError",
+      "source_segment": {
+        "bytes": 143,
+        "sha256": "df8b45478c06328cf5fc2134f33996035ed6e92881e0a5722484c5cb68f42652"
+      }
+    },
+    {
+      "file": "tools/index_yaml.py",
+      "line": 21,
+      "end": 22,
+      "name": "IndexShapeError",
+      "source_segment": {
+        "bytes": 114,
+        "sha256": "08c80a5e555f5cefa2f6a7bc186010fe20df205d4cc3a03f179930deadda1701"
+      }
+    },
+    {
+      "file": "tools/index_yaml.py",
+      "line": 25,
+      "end": 26,
+      "name": "MergeKeyError",
+      "source_segment": {
+        "bytes": 156,
+        "sha256": "cd62f116e27c14d885c1a6d18997687dee753bd29b3433fbc3fc33ff3b127e9a"
+      }
+    },
+    {
+      "file": "tools/index_yaml.py",
+      "line": 29,
+      "end": 29,
+      "name": [
+        "_MERGE_TAG"
+      ],
+      "source_segment": {
+        "bytes": 38,
+        "sha256": "0cb270af4214b2b4f8bf62c4817bb900e2ab15dfbcedcb5f479f3d217c65eb8c"
+      }
+    },
+    {
+      "file": "tools/index_yaml.py",
+      "line": 32,
+      "end": 63,
+      "name": "_StrictLoader",
+      "source_segment": {
+        "bytes": 1924,
+        "sha256": "ab802afb63a4be42bd171fbdde27e0b3966bd4a2790552860b51e447b2e4f564"
+      }
+    },
+    {
+      "file": "tools/index_yaml.py",
+      "line": 66,
+      "end": 84,
+      "name": "load_index_strict",
+      "source_segment": {
+        "bytes": 1200,
+        "sha256": "4f3859fb064c31d63f64548506d9d644e3b63c2c4626437877090065643cc7e4"
+      }
+    }
+  ],
+  "cases": [
+    {
+      "id": "D00_valid",
+      "scope": "exact diagnostic consumer + exact producer out predicate; typed real receipt and bundle read only",
+      "accepted": true,
+      "expected_acceptance": true,
+      "problems": [],
+      "producer": {
+        "accepted": true,
+        "result": "results/grid_fit_v5"
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "D01_other",
+      "scope": "exact diagnostic consumer + exact producer out predicate; typed real receipt and bundle read only",
+      "accepted": false,
+      "expected_acceptance": false,
+      "problems": [
+        "grid_fit_v5: evidence.out 이 영수증·묶음이 결속한 실행 자리와 결속되지 않는다: [plan] 'grid_fit_v5' 원장 evidence.out='results/OTHER_RUN' 가 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 다르다 — 다른 실행 기록에 묶음을 붙이지 않는다 (R07)"
+      ],
+      "producer": {
+        "accepted": false,
+        "type": "PreserveError",
+        "message": "[plan] 'grid_fit_v5' 원장 evidence.out='results/OTHER_RUN' 가 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 다르다 — 다른 실행 기록에 묶음을 붙이지 않는다 (R07)"
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "D02_old_leg",
+      "scope": "exact diagnostic consumer + exact producer out predicate; typed real receipt and bundle read only",
+      "accepted": false,
+      "expected_acceptance": false,
+      "problems": [
+        "grid_fit_v5: evidence.out 이 영수증·묶음이 결속한 실행 자리와 결속되지 않는다: [plan] 'grid_fit_v5' 원장 evidence.out='results/grid_fit_v4' 가 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 다르다 — 다른 실행 기록에 묶음을 붙이지 않는다 (R07)"
+      ],
+      "producer": {
+        "accepted": false,
+        "type": "PreserveError",
+        "message": "[plan] 'grid_fit_v5' 원장 evidence.out='results/grid_fit_v4' 가 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 다르다 — 다른 실행 기록에 묶음을 붙이지 않는다 (R07)"
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "D03_artifact",
+      "scope": "exact diagnostic consumer + exact producer out predicate; typed real receipt and bundle read only",
+      "accepted": false,
+      "expected_acceptance": false,
+      "problems": [
+        "grid_fit_v5: evidence.out 이 영수증·묶음이 결속한 실행 자리와 결속되지 않는다: [plan] 'grid_fit_v5' 원장 evidence.out='artifacts/grid_fit_v5' 가 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 다르다 — 다른 실행 기록에 묶음을 붙이지 않는다 (R07)"
+      ],
+      "producer": {
+        "accepted": false,
+        "type": "PreserveError",
+        "message": "[plan] 'grid_fit_v5' 원장 evidence.out='artifacts/grid_fit_v5' 가 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 다르다 — 다른 실행 기록에 묶음을 붙이지 않는다 (R07)"
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "D04_suffix",
+      "scope": "exact diagnostic consumer + exact producer out predicate; typed real receipt and bundle read only",
+      "accepted": false,
+      "expected_acceptance": false,
+      "problems": [
+        "grid_fit_v5: evidence.out 이 영수증·묶음이 결속한 실행 자리와 결속되지 않는다: [plan] 'grid_fit_v5' 원장 evidence.out='results/grid_fit_v5x' 가 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 다르다 — 다른 실행 기록에 묶음을 붙이지 않는다 (R07)"
+      ],
+      "producer": {
+        "accepted": false,
+        "type": "PreserveError",
+        "message": "[plan] 'grid_fit_v5' 원장 evidence.out='results/grid_fit_v5x' 가 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 다르다 — 다른 실행 기록에 묶음을 붙이지 않는다 (R07)"
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "D05_child",
+      "scope": "exact diagnostic consumer + exact producer out predicate; typed real receipt and bundle read only",
+      "accepted": false,
+      "expected_acceptance": false,
+      "problems": [
+        "grid_fit_v5: evidence.out 이 영수증·묶음이 결속한 실행 자리와 결속되지 않는다: [plan] 'grid_fit_v5' 원장 evidence.out='results/grid_fit_v5/sub' 가 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 다르다 — 다른 실행 기록에 묶음을 붙이지 않는다 (R07)"
+      ],
+      "producer": {
+        "accepted": false,
+        "type": "PreserveError",
+        "message": "[plan] 'grid_fit_v5' 원장 evidence.out='results/grid_fit_v5/sub' 가 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 다르다 — 다른 실행 기록에 묶음을 붙이지 않는다 (R07)"
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "D06_missing",
+      "scope": "exact diagnostic consumer + exact producer out predicate; typed real receipt and bundle read only",
+      "accepted": false,
+      "expected_acceptance": false,
+      "problems": [
+        "grid_fit_v5: evidence.out 없음",
+        "grid_fit_v5: evidence.out 이 비어 있지 않은 문자열이 아니다: None",
+        "grid_fit_v5: evidence.out 이 영수증·묶음이 결속한 실행 자리와 결속되지 않는다: [plan] 'grid_fit_v5' 원장 실행 기록(preservation_status='full_bundle')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)"
+      ],
+      "producer": {
+        "accepted": false,
+        "type": "PreserveError",
+        "message": "[plan] 'grid_fit_v5' 원장 실행 기록(preservation_status='full_bundle')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)"
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "D07_empty",
+      "scope": "exact diagnostic consumer + exact producer out predicate; typed real receipt and bundle read only",
+      "accepted": false,
+      "expected_acceptance": false,
+      "problems": [
+        "grid_fit_v5: evidence.out 없음",
+        "grid_fit_v5: evidence.out 이 비어 있지 않은 문자열이 아니다: ''",
+        "grid_fit_v5: evidence.out 이 영수증·묶음이 결속한 실행 자리와 결속되지 않는다: [plan] 'grid_fit_v5' 원장 실행 기록(preservation_status='full_bundle')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)"
+      ],
+      "producer": {
+        "accepted": false,
+        "type": "PreserveError",
+        "message": "[plan] 'grid_fit_v5' 원장 실행 기록(preservation_status='full_bundle')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)"
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "D08_blank",
+      "scope": "exact diagnostic consumer + exact producer out predicate; typed real receipt and bundle read only",
+      "accepted": false,
+      "expected_acceptance": false,
+      "problems": [
+        "grid_fit_v5: evidence.out 이 비어 있지 않은 문자열이 아니다: '   '",
+        "grid_fit_v5: evidence.out 이 영수증·묶음이 결속한 실행 자리와 결속되지 않는다: [plan] 'grid_fit_v5' 원장 실행 기록(preservation_status='full_bundle')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)"
+      ],
+      "producer": {
+        "accepted": false,
+        "type": "PreserveError",
+        "message": "[plan] 'grid_fit_v5' 원장 실행 기록(preservation_status='full_bundle')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)"
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "D09_number",
+      "scope": "exact diagnostic consumer + exact producer out predicate; typed real receipt and bundle read only",
+      "accepted": false,
+      "expected_acceptance": false,
+      "problems": [
+        "grid_fit_v5: evidence.out 이 비어 있지 않은 문자열이 아니다: 17",
+        "grid_fit_v5: evidence.out 이 영수증·묶음이 결속한 실행 자리와 결속되지 않는다: [plan] 'grid_fit_v5' 원장 실행 기록(preservation_status='full_bundle')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)"
+      ],
+      "producer": {
+        "accepted": false,
+        "type": "PreserveError",
+        "message": "[plan] 'grid_fit_v5' 원장 실행 기록(preservation_status='full_bundle')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)"
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "D10_list",
+      "scope": "exact diagnostic consumer + exact producer out predicate; typed real receipt and bundle read only",
+      "accepted": false,
+      "expected_acceptance": false,
+      "problems": [
+        "grid_fit_v5: evidence.out 이 비어 있지 않은 문자열이 아니다: ['results/grid_fit_v5']",
+        "grid_fit_v5: evidence.out 이 영수증·묶음이 결속한 실행 자리와 결속되지 않는다: [plan] 'grid_fit_v5' 원장 실행 기록(preservation_status='full_bundle')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)"
+      ],
+      "producer": {
+        "accepted": false,
+        "type": "PreserveError",
+        "message": "[plan] 'grid_fit_v5' 원장 실행 기록(preservation_status='full_bundle')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/grid_fit_v5' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)"
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "D11_trailing_slash",
+      "scope": "exact diagnostic consumer + exact producer out predicate; typed real receipt and bundle read only",
+      "accepted": true,
+      "expected_acceptance": true,
+      "problems": [],
+      "producer": {
+        "accepted": true,
+        "result": "results/grid_fit_v5"
+      },
+      "fixture_unchanged": true
+    },
+    {
+      "id": "I00_valid_preflight",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": true,
+      "direct_loader": {
+        "accepted": true,
+        "result": {
+          "runs": {
+            "preserved": {
+              "payload_index_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+          }
+        }
+      },
+      "rc": 0,
+      "stdout": "",
+      "stderr": "",
+      "before": {
+        "bytes": 112,
+        "sha256": "e83e5fe19a015df983ffa39aecfc5ccec1add021af6524b22cbb0977b6732960"
+      },
+      "after": {
+        "bytes": 112,
+        "sha256": "e83e5fe19a015df983ffa39aecfc5ccec1add021af6524b22cbb0977b6732960"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I00_valid_same_name",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": true,
+      "direct_loader": {
+        "accepted": true,
+        "result": {
+          "runs": {
+            "preserved": {
+              "payload_index_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+          }
+        }
+      },
+      "rc": 0,
+      "stdout": "",
+      "stderr": "",
+      "before": {
+        "bytes": 112,
+        "sha256": "e83e5fe19a015df983ffa39aecfc5ccec1add021af6524b22cbb0977b6732960"
+      },
+      "after": {
+        "bytes": 112,
+        "sha256": "e83e5fe19a015df983ffa39aecfc5ccec1add021af6524b22cbb0977b6732960"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I00_valid_merge",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": true,
+      "direct_loader": {
+        "accepted": true,
+        "result": {
+          "runs": {
+            "preserved": {
+              "payload_index_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+          }
+        }
+      },
+      "rc": 0,
+      "stdout": "\n인덱스: C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate76_review_20260927\\fixtures01\\I00_valid_merge\\artifact_index.yaml (0개 승격 · 전체 1개 묶음, full 64자리 digest)\n",
+      "stderr": "",
+      "before": {
+        "bytes": 112,
+        "sha256": "e83e5fe19a015df983ffa39aecfc5ccec1add021af6524b22cbb0977b6732960"
+      },
+      "after": {
+        "bytes": 494,
+        "sha256": "74167ac612eeaecadc764c15e7566ac29f0c508cd929a17a52a2857c718ebfff"
+      },
+      "index_unchanged": false
+    },
+    {
+      "id": "I01_duplicate_runs_preflight",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "DuplicateKeyError",
+        "message": "중복 mapping 키 'runs' (line 3, 먼저 line 1) — 어느 값이 정본인지 index 가 말하지 않는다 (75차 G75-N2)"
+      },
+      "rc": 1,
+      "stdout": "",
+      "stderr": "  ✗ 기존 index 를 받을 수 없다: C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate76_review_20260927\\fixtures01\\I01_duplicate_runs_preflight\\artifact_index.yaml — 중복 mapping 키 'runs' (line 3, 먼저 line 1) — 어느 값이 정본인지 index 가 말하지 않는다 (75차 G75-N2) — 비우고 다시 쓰지 않는다 (사람이 본다)\n",
+      "before": {
+        "bytes": 34,
+        "sha256": "1915bbac8d36a6704c62cfe79dad62e17e691e8582737b0f30dd5771a146340d"
+      },
+      "after": {
+        "bytes": 34,
+        "sha256": "1915bbac8d36a6704c62cfe79dad62e17e691e8582737b0f30dd5771a146340d"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I01_duplicate_runs_same_name",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "DuplicateKeyError",
+        "message": "중복 mapping 키 'runs' (line 3, 먼저 line 1) — 어느 값이 정본인지 index 가 말하지 않는다 (75차 G75-N2)"
+      },
+      "rc": 1,
+      "stdout": "",
+      "stderr": "  ✗ index 를 받을 수 없다 (진입 뒤 바뀌었다): 중복 mapping 키 'runs' (line 3, 먼저 line 1) — 어느 값이 정본인지 index 가 말하지 않는다 (75차 G75-N2) — 승격하지 않는다\n",
+      "before": {
+        "bytes": 34,
+        "sha256": "1915bbac8d36a6704c62cfe79dad62e17e691e8582737b0f30dd5771a146340d"
+      },
+      "after": {
+        "bytes": 34,
+        "sha256": "1915bbac8d36a6704c62cfe79dad62e17e691e8582737b0f30dd5771a146340d"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I01_duplicate_runs_merge",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "DuplicateKeyError",
+        "message": "중복 mapping 키 'runs' (line 3, 먼저 line 1) — 어느 값이 정본인지 index 가 말하지 않는다 (75차 G75-N2)"
+      },
+      "rc": 1,
+      "type": "DuplicateKeyError",
+      "message": "중복 mapping 키 'runs' (line 3, 먼저 line 1) — 어느 값이 정본인지 index 가 말하지 않는다 (75차 G75-N2)",
+      "stdout": "",
+      "stderr": "",
+      "before": {
+        "bytes": 34,
+        "sha256": "1915bbac8d36a6704c62cfe79dad62e17e691e8582737b0f30dd5771a146340d"
+      },
+      "after": {
+        "bytes": 34,
+        "sha256": "1915bbac8d36a6704c62cfe79dad62e17e691e8582737b0f30dd5771a146340d"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I02_duplicate_run_preflight",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "DuplicateKeyError",
+        "message": "중복 mapping 키 'x' (line 3, 먼저 line 2) — 어느 값이 정본인지 index 가 말하지 않는다 (75차 G75-N2)"
+      },
+      "rc": 1,
+      "stdout": "",
+      "stderr": "  ✗ 기존 index 를 받을 수 없다: C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate76_review_20260927\\fixtures01\\I02_duplicate_run_preflight\\artifact_index.yaml — 중복 mapping 키 'x' (line 3, 먼저 line 2) — 어느 값이 정본인지 index 가 말하지 않는다 (75차 G75-N2) — 비우고 다시 쓰지 않는다 (사람이 본다)\n",
+      "before": {
+        "bytes": 25,
+        "sha256": "411d82756e4020ba722313965f5dd1e8cb5c08a17abc7a42d11e83b3b96b493a"
+      },
+      "after": {
+        "bytes": 25,
+        "sha256": "411d82756e4020ba722313965f5dd1e8cb5c08a17abc7a42d11e83b3b96b493a"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I02_duplicate_run_same_name",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "DuplicateKeyError",
+        "message": "중복 mapping 키 'x' (line 3, 먼저 line 2) — 어느 값이 정본인지 index 가 말하지 않는다 (75차 G75-N2)"
+      },
+      "rc": 1,
+      "stdout": "",
+      "stderr": "  ✗ index 를 받을 수 없다 (진입 뒤 바뀌었다): 중복 mapping 키 'x' (line 3, 먼저 line 2) — 어느 값이 정본인지 index 가 말하지 않는다 (75차 G75-N2) — 승격하지 않는다\n",
+      "before": {
+        "bytes": 25,
+        "sha256": "411d82756e4020ba722313965f5dd1e8cb5c08a17abc7a42d11e83b3b96b493a"
+      },
+      "after": {
+        "bytes": 25,
+        "sha256": "411d82756e4020ba722313965f5dd1e8cb5c08a17abc7a42d11e83b3b96b493a"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I02_duplicate_run_merge",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "DuplicateKeyError",
+        "message": "중복 mapping 키 'x' (line 3, 먼저 line 2) — 어느 값이 정본인지 index 가 말하지 않는다 (75차 G75-N2)"
+      },
+      "rc": 1,
+      "type": "DuplicateKeyError",
+      "message": "중복 mapping 키 'x' (line 3, 먼저 line 2) — 어느 값이 정본인지 index 가 말하지 않는다 (75차 G75-N2)",
+      "stdout": "",
+      "stderr": "",
+      "before": {
+        "bytes": 25,
+        "sha256": "411d82756e4020ba722313965f5dd1e8cb5c08a17abc7a42d11e83b3b96b493a"
+      },
+      "after": {
+        "bytes": 25,
+        "sha256": "411d82756e4020ba722313965f5dd1e8cb5c08a17abc7a42d11e83b3b96b493a"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I03_duplicate_identity_preflight",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "DuplicateKeyError",
+        "message": "중복 mapping 키 'payload_index_sha256' (line 2, 먼저 line 2) — 어느 값이 정본인지 index 가 말하지 않는다 (75차 G75-N2)"
+      },
+      "rc": 1,
+      "stdout": "",
+      "stderr": "  ✗ 기존 index 를 받을 수 없다: C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate76_review_20260927\\fixtures01\\I03_duplicate_identity_preflight\\artifact_index.yaml — 중복 mapping 키 'payload_index_sha256' (line 2, 먼저 line 2) — 어느 값이 정본인지 index 가 말하지 않는다 (75차 G75-N2) — 비우고 다시 쓰지 않는다 (사람이 본다)\n",
+      "before": {
+        "bytes": 64,
+        "sha256": "6d99435d62bf75fd0158b3d6dee16fc57f42c8817c153c5e997c5fade1260b90"
+      },
+      "after": {
+        "bytes": 64,
+        "sha256": "6d99435d62bf75fd0158b3d6dee16fc57f42c8817c153c5e997c5fade1260b90"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I03_duplicate_identity_same_name",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "DuplicateKeyError",
+        "message": "중복 mapping 키 'payload_index_sha256' (line 2, 먼저 line 2) — 어느 값이 정본인지 index 가 말하지 않는다 (75차 G75-N2)"
+      },
+      "rc": 1,
+      "stdout": "",
+      "stderr": "  ✗ index 를 받을 수 없다 (진입 뒤 바뀌었다): 중복 mapping 키 'payload_index_sha256' (line 2, 먼저 line 2) — 어느 값이 정본인지 index 가 말하지 않는다 (75차 G75-N2) — 승격하지 않는다\n",
+      "before": {
+        "bytes": 64,
+        "sha256": "6d99435d62bf75fd0158b3d6dee16fc57f42c8817c153c5e997c5fade1260b90"
+      },
+      "after": {
+        "bytes": 64,
+        "sha256": "6d99435d62bf75fd0158b3d6dee16fc57f42c8817c153c5e997c5fade1260b90"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I03_duplicate_identity_merge",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "DuplicateKeyError",
+        "message": "중복 mapping 키 'payload_index_sha256' (line 2, 먼저 line 2) — 어느 값이 정본인지 index 가 말하지 않는다 (75차 G75-N2)"
+      },
+      "rc": 1,
+      "type": "DuplicateKeyError",
+      "message": "중복 mapping 키 'payload_index_sha256' (line 2, 먼저 line 2) — 어느 값이 정본인지 index 가 말하지 않는다 (75차 G75-N2)",
+      "stdout": "",
+      "stderr": "",
+      "before": {
+        "bytes": 64,
+        "sha256": "6d99435d62bf75fd0158b3d6dee16fc57f42c8817c153c5e997c5fade1260b90"
+      },
+      "after": {
+        "bytes": 64,
+        "sha256": "6d99435d62bf75fd0158b3d6dee16fc57f42c8817c153c5e997c5fade1260b90"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I04_merge_override_preflight",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "MergeKeyError",
+        "message": "merge key `<<` (line 3) — index 에서 허용하지 않는다 (75차 G75-N2)"
+      },
+      "rc": 1,
+      "stdout": "",
+      "stderr": "  ✗ 기존 index 를 받을 수 없다: C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate76_review_20260927\\fixtures01\\I04_merge_override_preflight\\artifact_index.yaml — merge key `<<` (line 3) — index 에서 허용하지 않는다 (75차 G75-N2) — 비우고 다시 쓰지 않는다 (사람이 본다)\n",
+      "before": {
+        "bytes": 83,
+        "sha256": "871461fe4323d28551acbd96966824befef5d352da84e0439cfa4c5bae1a073b"
+      },
+      "after": {
+        "bytes": 83,
+        "sha256": "871461fe4323d28551acbd96966824befef5d352da84e0439cfa4c5bae1a073b"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I04_merge_override_same_name",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "MergeKeyError",
+        "message": "merge key `<<` (line 3) — index 에서 허용하지 않는다 (75차 G75-N2)"
+      },
+      "rc": 1,
+      "stdout": "",
+      "stderr": "  ✗ index 를 받을 수 없다 (진입 뒤 바뀌었다): merge key `<<` (line 3) — index 에서 허용하지 않는다 (75차 G75-N2) — 승격하지 않는다\n",
+      "before": {
+        "bytes": 83,
+        "sha256": "871461fe4323d28551acbd96966824befef5d352da84e0439cfa4c5bae1a073b"
+      },
+      "after": {
+        "bytes": 83,
+        "sha256": "871461fe4323d28551acbd96966824befef5d352da84e0439cfa4c5bae1a073b"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I04_merge_override_merge",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "MergeKeyError",
+        "message": "merge key `<<` (line 3) — index 에서 허용하지 않는다 (75차 G75-N2)"
+      },
+      "rc": 1,
+      "type": "MergeKeyError",
+      "message": "merge key `<<` (line 3) — index 에서 허용하지 않는다 (75차 G75-N2)",
+      "stdout": "",
+      "stderr": "",
+      "before": {
+        "bytes": 83,
+        "sha256": "871461fe4323d28551acbd96966824befef5d352da84e0439cfa4c5bae1a073b"
+      },
+      "after": {
+        "bytes": 83,
+        "sha256": "871461fe4323d28551acbd96966824befef5d352da84e0439cfa4c5bae1a073b"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I05_merge_nonoverlap_preflight",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "MergeKeyError",
+        "message": "merge key `<<` (line 3) — index 에서 허용하지 않는다 (75차 G75-N2)"
+      },
+      "rc": 1,
+      "stdout": "",
+      "stderr": "  ✗ 기존 index 를 받을 수 없다: C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate76_review_20260927\\fixtures01\\I05_merge_nonoverlap_preflight\\artifact_index.yaml — merge key `<<` (line 3) — index 에서 허용하지 않는다 (75차 G75-N2) — 비우고 다시 쓰지 않는다 (사람이 본다)\n",
+      "before": {
+        "bytes": 58,
+        "sha256": "cedb78899890067068d2a9ab5091cc068415e1c3a0e9196adb88ae60470996d4"
+      },
+      "after": {
+        "bytes": 58,
+        "sha256": "cedb78899890067068d2a9ab5091cc068415e1c3a0e9196adb88ae60470996d4"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I05_merge_nonoverlap_same_name",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "MergeKeyError",
+        "message": "merge key `<<` (line 3) — index 에서 허용하지 않는다 (75차 G75-N2)"
+      },
+      "rc": 1,
+      "stdout": "",
+      "stderr": "  ✗ index 를 받을 수 없다 (진입 뒤 바뀌었다): merge key `<<` (line 3) — index 에서 허용하지 않는다 (75차 G75-N2) — 승격하지 않는다\n",
+      "before": {
+        "bytes": 58,
+        "sha256": "cedb78899890067068d2a9ab5091cc068415e1c3a0e9196adb88ae60470996d4"
+      },
+      "after": {
+        "bytes": 58,
+        "sha256": "cedb78899890067068d2a9ab5091cc068415e1c3a0e9196adb88ae60470996d4"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I05_merge_nonoverlap_merge",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "MergeKeyError",
+        "message": "merge key `<<` (line 3) — index 에서 허용하지 않는다 (75차 G75-N2)"
+      },
+      "rc": 1,
+      "type": "MergeKeyError",
+      "message": "merge key `<<` (line 3) — index 에서 허용하지 않는다 (75차 G75-N2)",
+      "stdout": "",
+      "stderr": "",
+      "before": {
+        "bytes": 58,
+        "sha256": "cedb78899890067068d2a9ab5091cc068415e1c3a0e9196adb88ae60470996d4"
+      },
+      "after": {
+        "bytes": 58,
+        "sha256": "cedb78899890067068d2a9ab5091cc068415e1c3a0e9196adb88ae60470996d4"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I06_wrong_shape_preflight",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "IndexShapeError",
+        "message": "index 에 `runs:` mapping 이 없다: int"
+      },
+      "rc": 1,
+      "stdout": "",
+      "stderr": "  ✗ 기존 index 를 받을 수 없다: C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate76_review_20260927\\fixtures01\\I06_wrong_shape_preflight\\artifact_index.yaml — index 에 `runs:` mapping 이 없다: int — 비우고 다시 쓰지 않는다 (사람이 본다)\n",
+      "before": {
+        "bytes": 9,
+        "sha256": "4814e122b3a7d6b14f475682a70d1cae82d44454ca229eedca58ca66b3da8fa3"
+      },
+      "after": {
+        "bytes": 9,
+        "sha256": "4814e122b3a7d6b14f475682a70d1cae82d44454ca229eedca58ca66b3da8fa3"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I06_wrong_shape_same_name",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "IndexShapeError",
+        "message": "index 에 `runs:` mapping 이 없다: int"
+      },
+      "rc": 1,
+      "stdout": "",
+      "stderr": "  ✗ index 를 받을 수 없다 (진입 뒤 바뀌었다): index 에 `runs:` mapping 이 없다: int — 승격하지 않는다\n",
+      "before": {
+        "bytes": 9,
+        "sha256": "4814e122b3a7d6b14f475682a70d1cae82d44454ca229eedca58ca66b3da8fa3"
+      },
+      "after": {
+        "bytes": 9,
+        "sha256": "4814e122b3a7d6b14f475682a70d1cae82d44454ca229eedca58ca66b3da8fa3"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I06_wrong_shape_merge",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "IndexShapeError",
+        "message": "index 에 `runs:` mapping 이 없다: int"
+      },
+      "rc": 1,
+      "type": "IndexShapeError",
+      "message": "index 에 `runs:` mapping 이 없다: int",
+      "stdout": "",
+      "stderr": "",
+      "before": {
+        "bytes": 9,
+        "sha256": "4814e122b3a7d6b14f475682a70d1cae82d44454ca229eedca58ca66b3da8fa3"
+      },
+      "after": {
+        "bytes": 9,
+        "sha256": "4814e122b3a7d6b14f475682a70d1cae82d44454ca229eedca58ca66b3da8fa3"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I07_empty_preflight",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "IndexShapeError",
+        "message": "index 최상위가 mapping 이 아니다: NoneType"
+      },
+      "rc": 1,
+      "stdout": "",
+      "stderr": "  ✗ 기존 index 를 받을 수 없다: C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate76_review_20260927\\fixtures01\\I07_empty_preflight\\artifact_index.yaml — index 최상위가 mapping 이 아니다: NoneType — 비우고 다시 쓰지 않는다 (사람이 본다)\n",
+      "before": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "after": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I07_empty_same_name",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "IndexShapeError",
+        "message": "index 최상위가 mapping 이 아니다: NoneType"
+      },
+      "rc": 1,
+      "stdout": "",
+      "stderr": "  ✗ index 를 받을 수 없다 (진입 뒤 바뀌었다): index 최상위가 mapping 이 아니다: NoneType — 승격하지 않는다\n",
+      "before": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "after": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I07_empty_merge",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": false,
+      "direct_loader": {
+        "accepted": false,
+        "type": "IndexShapeError",
+        "message": "index 최상위가 mapping 이 아니다: NoneType"
+      },
+      "rc": 1,
+      "type": "IndexShapeError",
+      "message": "index 최상위가 mapping 이 아니다: NoneType",
+      "stdout": "",
+      "stderr": "",
+      "before": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "after": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I08_valid_alias_preflight",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": true,
+      "direct_loader": {
+        "accepted": true,
+        "result": {
+          "base": {
+            "payload_index_sha256": "a"
+          },
+          "runs": {
+            "x": {
+              "payload_index_sha256": "a"
+            }
+          }
+        }
+      },
+      "rc": 0,
+      "stdout": "",
+      "stderr": "",
+      "before": {
+        "bytes": 52,
+        "sha256": "77a7d7a806120d9092ed7339ad1dbcc80766a57ce139bbea056b85f2aab54203"
+      },
+      "after": {
+        "bytes": 52,
+        "sha256": "77a7d7a806120d9092ed7339ad1dbcc80766a57ce139bbea056b85f2aab54203"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I08_valid_alias_same_name",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": true,
+      "direct_loader": {
+        "accepted": true,
+        "result": {
+          "base": {
+            "payload_index_sha256": "a"
+          },
+          "runs": {
+            "x": {
+              "payload_index_sha256": "a"
+            }
+          }
+        }
+      },
+      "rc": 0,
+      "stdout": "",
+      "stderr": "",
+      "before": {
+        "bytes": 52,
+        "sha256": "77a7d7a806120d9092ed7339ad1dbcc80766a57ce139bbea056b85f2aab54203"
+      },
+      "after": {
+        "bytes": 52,
+        "sha256": "77a7d7a806120d9092ed7339ad1dbcc80766a57ce139bbea056b85f2aab54203"
+      },
+      "index_unchanged": true
+    },
+    {
+      "id": "I08_valid_alias_merge",
+      "scope": "exact shared loader and reader heredoc; merge names=[]; fixture only",
+      "expected_acceptance": true,
+      "direct_loader": {
+        "accepted": true,
+        "result": {
+          "base": {
+            "payload_index_sha256": "a"
+          },
+          "runs": {
+            "x": {
+              "payload_index_sha256": "a"
+            }
+          }
+        }
+      },
+      "rc": 0,
+      "stdout": "\n인덱스: C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate76_review_20260927\\fixtures01\\I08_valid_alias_merge\\artifact_index.yaml (0개 승격 · 전체 1개 묶음, full 64자리 digest)\n",
+      "stderr": "",
+      "before": {
+        "bytes": 52,
+        "sha256": "77a7d7a806120d9092ed7339ad1dbcc80766a57ce139bbea056b85f2aab54203"
+      },
+      "after": {
+        "bytes": 423,
+        "sha256": "41c5b824a87556528c01a07bd714291f9be8d2f9b54d136c927e2e2b7e4768d2"
+      },
+      "index_unchanged": false
+    },
+    {
+      "id": "W_normal",
+      "scope": "exact index finalizer; injected own-fixture filesystem error",
+      "rc": 0,
+      "stdout": "\n인덱스: C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate76_review_20260927\\fixtures01\\W_normal\\artifact_index.yaml (0개 승격 · 전체 1개 묶음, full 64자리 digest)\n",
+      "stderr": "",
+      "before": {
+        "bytes": 112,
+        "sha256": "e83e5fe19a015df983ffa39aecfc5ccec1add021af6524b22cbb0977b6732960"
+      },
+      "after": {
+        "bytes": 494,
+        "sha256": "74167ac612eeaecadc764c15e7566ac29f0c508cd929a17a52a2857c718ebfff"
+      },
+      "index_unchanged": false,
+      "temporary_files": []
+    },
+    {
+      "id": "W_replace_failure",
+      "scope": "exact index finalizer; injected own-fixture filesystem error",
+      "rc": 1,
+      "type": "OSError",
+      "message": "[Errno 5] reviewer injected replace failure",
+      "stdout": "",
+      "stderr": "",
+      "before": {
+        "bytes": 112,
+        "sha256": "e83e5fe19a015df983ffa39aecfc5ccec1add021af6524b22cbb0977b6732960"
+      },
+      "after": {
+        "bytes": 112,
+        "sha256": "e83e5fe19a015df983ffa39aecfc5ccec1add021af6524b22cbb0977b6732960"
+      },
+      "index_unchanged": true,
+      "temporary_files": []
+    },
+    {
+      "id": "W_partial_write_failure",
+      "scope": "exact index finalizer; injected own-fixture filesystem error",
+      "rc": 1,
+      "type": "OSError",
+      "message": "[Errno 28] reviewer injected partial write failure",
+      "stdout": "",
+      "stderr": "",
+      "before": {
+        "bytes": 112,
+        "sha256": "e83e5fe19a015df983ffa39aecfc5ccec1add021af6524b22cbb0977b6732960"
+      },
+      "after": {
+        "bytes": 112,
+        "sha256": "e83e5fe19a015df983ffa39aecfc5ccec1add021af6524b22cbb0977b6732960"
+      },
+      "index_unchanged": true,
+      "temporary_files": []
+    },
+    {
+      "id": "S0",
+      "scope": "exact shell wrapper/footer with index command rc injected; no bundle operation",
+      "index_command_rc": 0,
+      "shell_rc": 0,
+      "stdout": "\n요청 1개 · 검증 가능 1개 · 불완전 0개 · 없음 0개 · 합계 884K\n\n다음:\n  git add artifacts && git commit -m \"chore(artifacts): 계산 결과 보관\" && git push\n\nclone 한 쪽에서 복원 + 검증:\n  python -m tools.archive_bundle restore artifacts/halfcell_fit_v4\n  python -c \"from src.io import validate_provenance; import json; \\\n             print(json.dumps(validate_provenance('results/halfcell_fit_v4'), \\\n             ensure_ascii=False, indent=2))\"\n  ./run.sh --mode score --in results/halfcell_fit_v4   # 채점 이후는 몇 초다\n",
+      "stderr": ""
+    },
+    {
+      "id": "S17",
+      "scope": "exact shell wrapper/footer with index command rc injected; no bundle operation",
+      "index_command_rc": 17,
+      "shell_rc": 1,
+      "stdout": "\n요청 1개 · 검증 가능 1개 · 불완전 0개 · 없음 0개 · 합계 888K\n",
+      "stderr": "\n  ✗ index 최종화 실패 — /c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/gate76_review_20260927/fixtures01/artifact_index.yaml 는 갱신되지 않았다 (기존 바이트 그대로). archive 는 미완이다 (75차 G75-N1).\n    이미 승격된 묶음: fixture — 승격은 되돌리지 않는다; 옛 index 와 어긋난 상태이므로 사람이 본다 (재실행하면 같은 identity 는 멱등).\nindex 가 미완이므로 commit 안내를 하지 않는다 — 위 ✗ 를 먼저 해결하라 (75차 G75-N1)\n"
+    }
+  ],
+  "case_count": 44,
+  "counts": {
+    "out_binding": 12,
+    "three_reader_cases": 27,
+    "writer": 3,
+    "shell_rc": 2
+  },
+  "adapters": [
+    "independently computed source_digest",
+    "AST-only tools.preserve/index_yaml namespaces",
+    "os._exit captured, sys streams captured",
+    "writer uses names=[] and raising unused scientific imports",
+    "partial write/replace errors only on reviewer-owned files",
+    "shell index command replaced, exact wrapper/footer retained"
+  ],
+  "limits": {
+    "whole_subject_module_imports": 0,
+    "whole_archive_restore_attach_or_science_runs": 0,
+    "full_suite": 0,
+    "production_writes": 0
+  }
+}

@@ -1,0 +1,3 @@
+base: &b {payload_index_sha256: a}
+runs:
+  x: {<<: *b}

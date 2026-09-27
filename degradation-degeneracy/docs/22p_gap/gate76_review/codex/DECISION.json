@@ -1,0 +1,30 @@
+{
+  "review": "Gate76",
+  "date": "2026-09-27",
+  "head": "b5e4eadea7794d157d961170247e49d2761bba26",
+  "code": "23c361edbfc92fefcfbf0639b5ac40f61f7ebec7",
+  "source_digest": "1c67a748598baadb",
+  "status": "FINITE_REVIEW_SCOPE_CLOSED_ACCEPTED",
+  "closure_scope": "Gate74 items 1-6 and Gate75 residuals N1/N2/N3 at the fixed Gate76 target; not global scientific or operational certification",
+  "items": {"G75-N1": "CLOSED_ACCEPTED", "G75-N2": "CLOSED_ACCEPTED_MERGE_REJECTED", "G75-N3": "CLOSED_ACCEPTED"},
+  "blocking_findings": [],
+  "new_execution_GO": false,
+  "active_claim_promotion": false,
+  "ledger_current_receipt_pair_accepted": true,
+  "per_leg_receipt_generations": {"history": ["c2ef1a811e70bb4c", "27390883eb132941", "cd2408354486c148"], "current": "1c67a748598baadb"},
+  "isolated_unique_cases": 44,
+  "nonblocking_record_corrections": [
+    "Sending-message registry count is 367; fixed target and request section 2 are 369.",
+    "Three historical generations plus one current generation per leg, not all current records in history.",
+    "Initial RED claim 19 nodes versus 11 failed plus 7 passed is unresolved arithmetic; do not invent the missing status or rerun to repair history."
+  ],
+  "acceptance_limits": [
+    "Index write/replace failure evidence is not proof of unchanged bytes after every possible nonzero exit, including errors after successful replace.",
+    "Finite closure does not approve new computation, archive/restore/class/projection mutations or COMSOL execution.",
+    "Earlier authorization deviations and declared E1/E2/E4 limitations remain.",
+    "Sender full-suite/smoke/mutation results are reported evidence, not receiver reruns.",
+    "No independent remote process or historical session audit."
+  ],
+  "reviewer_execution": {"whole_subject_module_imports": 0, "full_pytest": 0, "scientific_runs": 0, "whole_archive_restore_attach_or_receipt_regeneration": 0, "production_edits": 0, "COMSOL_Java_runs": 0, "allowlisted_AST_and_reader_boundary_checks": true},
+  "recipient": null
+}

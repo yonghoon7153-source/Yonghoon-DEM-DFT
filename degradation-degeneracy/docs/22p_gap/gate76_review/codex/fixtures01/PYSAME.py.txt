@@ -1,0 +1,28 @@
+import hashlib, os, sys
+from tools.index_yaml import load_index_strict
+idx, name, pi = sys.argv[1:4]
+
+def _leave(rc):                                   # heredoc 은 flush 뒤 os._exit (docs-lint 규칙)
+    sys.stdout.flush(); sys.stderr.flush(); os._exit(rc)
+
+if not os.path.isfile(idx):
+    _leave(0)
+try:
+    runs = load_index_strict(open(idx, encoding="utf-8").read())["runs"]    # 75차 G75-N2 — 진입과 같은 loader
+except Exception as exc:
+    print(f"  ✗ index 를 받을 수 없다 (진입 뒤 바뀌었다): {exc} — 승격하지 않는다", file=sys.stderr)
+    _leave(1)
+ent = runs.get(name)
+if not isinstance(ent, dict):
+    _leave(0)
+got = hashlib.sha256(open(pi, "rb").read()).hexdigest()
+if ent.get("payload_index_sha256") == got:
+    _leave(0)                                     # 같은 identity — 멱등
+if os.environ.get("ARCHIVE_REPLACE") == "1":
+    print(f"  index 의 {name} 을 명시적으로 교체한다 (ARCHIVE_REPLACE=1): "
+          f"{str(ent.get('payload_index_sha256'))[:16]} → {got[:16]}")
+    _leave(0)
+print(f"  ✗ index 에 같은 이름 {name!r} 이 다른 identity 로 있다 "
+      f"({str(ent.get('payload_index_sha256'))[:16]} ≠ {got[:16]}) — 조용히 덮지 않는다. "
+      "재보관이 맞으면 ARCHIVE_REPLACE=1 로 명시하라 (74차 G74-4)", file=sys.stderr)
+_leave(1)

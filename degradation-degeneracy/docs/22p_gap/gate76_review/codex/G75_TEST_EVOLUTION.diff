@@ -1,0 +1,90 @@
+diff --git a/degradation-degeneracy/tests/test_gate75_defensive.py b/degradation-degeneracy/tests/test_gate75_defensive.py
+index 12b81a0..8e123ad 100644
+--- a/degradation-degeneracy/tests/test_gate75_defensive.py
++++ b/degradation-degeneracy/tests/test_gate75_defensive.py
+@@ -45,11 +45,20 @@ def _python_wrapper(tmp_path: Path, mode: str) -> Path:
+ 
+     mode = "rc17"     index 스크립트를 실행하지 않고 rc 17 (리뷰어 S17 그대로)
+     mode = "replace"  index 스크립트의 `os.replace` 만 OSError 로 (리뷰어 W01 을 전체 프로그램 안에서)
++    mode = "write"    임시 파일 `.artifact_index.*.tmp` 의 write_text 만 OSError 로 (리뷰어 "tmp write 실패" 회귀)
+     그 밖의 heredoc(검증·동명 비교)은 진짜 python 이 그대로 돈다.
+     """
+     real = sys.executable
+     w = tmp_path / "bin" / "python-wrapper"
+     w.parent.mkdir(parents=True, exist_ok=True)
++    inject = {
++        "replace": 'import os as _os0\\n_os0.replace = lambda *a, **k: (_ for _ in ()).throw(OSError("injected replace failure"))\\n',
++        "write": ('import pathlib as _pl0\\n_orig_wt = _pl0.Path.write_text\\n'
++                  'def _wt(self, *a, **k):\\n'
++                  '    if self.name.startswith(".artifact_index."): raise OSError("injected tmp write failure")\\n'
++                  '    return _orig_wt(self, *a, **k)\\n'
++                  '_pl0.Path.write_text = _wt\\n'),
++    }.get(mode, "")
+     body = f'''#!/bin/bash
+ # stdin 의 스크립트를 잠시 파일로 받아 마커를 보고, 다시 stdin 으로 넘긴다 ("$PY" - args <<'PYEOF' 형태 유지 —
+ # `python -` 는 sys.path[0] 이 '' 라 cwd 의 src/·tools/ 를 찾는다; 파일로 실행하면 그것이 깨진다)
+@@ -58,7 +67,7 @@ if [[ "$1" == "-" ]]; then
+   cat > "$tmp"
+   if grep -q -F {_INDEX_MARKER!r} "$tmp"; then
+     if [[ "{mode}" == "rc17" ]]; then rm -f "$tmp"; exit 17; fi
+-    {{ printf 'import os as _os0\\n_os0.replace = lambda *a, **k: (_ for _ in ()).throw(OSError("injected replace failure"))\\n'; cat "$tmp"; }} > "$tmp.mod"
++    {{ printf '{inject}'; cat "$tmp"; }} > "$tmp.mod"
+     "{real}" "$@" < "$tmp.mod"; rc=$?; rm -f "$tmp" "$tmp.mod"; exit $rc
+   fi
+   "{real}" "$@" < "$tmp"; rc=$?; rm -f "$tmp"; exit $rc
+@@ -70,7 +79,7 @@ exec "{real}" "$@"
+     return w
+ 
+ 
+-@pytest.mark.parametrize("mode", ["rc17", "replace"])
++@pytest.mark.parametrize("mode", ["rc17", "replace", "write"])
+ def test_g75_n1_an_index_finalisation_failure_makes_the_archive_fail_and_leaves_the_index_unchanged(tmp_path, mode):
+     d, dest, run = _archive_harness(tmp_path)
+     before = _seed(dest, _FAKE)
+@@ -79,6 +88,8 @@ def test_g75_n1_an_index_finalisation_failure_makes_the_archive_fail_and_leaves_
+     assert (dest / "artifact_index.yaml").read_bytes() == before, "실패했는데 index 가 바뀌었다"
+     assert "git add artifacts" not in r.stdout, "index 가 미완인데 commit 안내를 찍었다"
+     assert (dest / "res").is_dir(), "묶음 승격은 이미 일어났다 — 그 사실을 지우거나 숨기지 않는다"
++    assert "이미 승격된 묶음: res" in r.stderr, "승격된 상태를 표기하지 않았다\n" + r.stderr
++    assert not list(dest.glob(".artifact_index.*.tmp")), "실패한 임시 파일이 남았다"
+     out = r.stdout + r.stderr
+     assert "index" in out and ("미완" in out or "실패" in out), out[-600:]
+ 
+@@ -109,6 +120,9 @@ _DUP_CASES = {
+         "_주의: seed\nsource_commit: null\nruns:\n  " + _PRESERVED + "\n  " + _PRESERVED.replace("a" * 64, "b" * 64) + "\n",
+     "identity key twice in one entry (I04)":
+         "_주의: seed\nsource_commit: null\nruns:\n  preserved:\n    artifact_kind: fit\n    payload_index_sha256: '" + "a" * 64 + "'\n    payload_index_sha256: '" + "b" * 64 + "'\n    source_commit: '" + "1" * 40 + "'\n    run_dir: results/preserved\n    fits_sha256: '" + "f" * 64 + "'\n    curves_sha256: '" + "c" * 64 + "'\n",
++    # merge key 정책 (리뷰어 "명시" 요구): 허용하지 않는다 — merge 로 들어온 키와 명시 키가 겹치면 같은 불명확함이다
++    "merge key overriding an identity value":
++        "_주의: seed\nsource_commit: null\n_base: &b {artifact_kind: fit, payload_index_sha256: '" + "a" * 64 + "', source_commit: '" + "1" * 40 + "', run_dir: results/preserved, fits_sha256: '" + "f" * 64 + "', curves_sha256: '" + "c" * 64 + "'}\nruns:\n  preserved:\n    <<: *b\n    payload_index_sha256: '" + "b" * 64 + "'\n",
+ }
+ 
+ 
+@@ -123,7 +137,7 @@ def test_g75_n2_a_duplicate_mapping_key_in_the_index_stops_before_any_promotion(
+     assert r.returncode != 0, f"중복 키({label})를 가진 index 로 승격했다\n" + r.stdout + r.stderr
+     assert p.read_bytes() == before
+     assert not (dest / "res").exists(), "index 가 불명확한데 묶음을 승격했다"
+-    assert "중복" in (r.stdout + r.stderr)
++    assert ("merge key" if "merge" in label else "중복") in (r.stdout + r.stderr), r.stdout + r.stderr
+ 
+ 
+ def test_g75_n2_the_strict_loader_is_one_function_shared_by_every_index_reader():
+@@ -132,10 +146,14 @@ def test_g75_n2_the_strict_loader_is_one_function_shared_by_every_index_reader()
+     assert src.count("load_index_strict(") >= 3, "index 를 읽는 세 자리가 같은 엄격 loader 를 쓰지 않는다"
+     assert "yaml.safe_load(open(idx" not in src and "yaml.safe_load(out.read_text" not in src \
+         and "yaml.safe_load(open(p" not in src, "느슨한 safe_load 로 index 를 읽는 자리가 남아 있다"
+-    from tools.index_yaml import load_index_strict, DuplicateKeyError
+-
+-    with pytest.raises(DuplicateKeyError):
+-        load_index_strict(_DUP_CASES["top-level runs twice (I02)"])
++    from tools.index_yaml import DuplicateKeyError, IndexShapeError, MergeKeyError, load_index_strict
++
++    for label, text in _DUP_CASES.items():
++        with pytest.raises(MergeKeyError if "merge" in label else DuplicateKeyError):
++            load_index_strict(text)
++    for shape in ("", "[]\n", "runs: 3\n", "runs:\n  3: {}\n", "runs:\n  a: 1\n"):
++        with pytest.raises(IndexShapeError):
++            load_index_strict(shape)
+     ok = load_index_strict("_주의: x\nsource_commit: null\nruns:\n  " + _PRESERVED + "\n")
+     assert list(ok["runs"]) == ["preserved"]
+ 
