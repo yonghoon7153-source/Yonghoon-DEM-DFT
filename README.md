@@ -6,6 +6,16 @@
 
 > 다음 단계: 노션에 모아둔 일본어 단어와 연결 (같은 데이터 구조 위에 페이지를 추가하면 됨).
 
+## 어떻게 생겼나
+
+| 전체 지도 | 県을 눌렀을 때 (교토 + 이나리 여우) |
+|---|---|
+| ![desktop](docs/screenshots/desktop.png) | ![kyoto](docs/screenshots/kyoto.png) |
+
+| 図鑑 (스티커 도감) | 폰 |
+|---|---|
+| ![zukan](docs/screenshots/zukan.png) | ![mobile](docs/screenshots/mobile.png) |
+
 ## 바로 보기
 
 - 로컬: `npm install` → `npm run dev` → http://localhost:5173
