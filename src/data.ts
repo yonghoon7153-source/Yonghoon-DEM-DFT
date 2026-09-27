@@ -27,6 +27,11 @@ export function mascotsOf(p: Prefecture): Mascot[] {
   return mascots.filter((m) => m.prefecture === p.slug).sort((a, b) => (a.kind === b.kind ? 0 : a.kind === 'official' ? -1 : 1));
 }
 
+/** The hidden friend revealed by tapping this mascot three times, if any. */
+export function secretFor(m: Mascot): Mascot | undefined {
+  return mascots.find((x) => x.secret === m.id);
+}
+
 /** Google search for the character's official page, for mascots without a verified url. */
 export function mascotSearchUrl(m: Mascot): string {
   return `https://www.google.com/search?q=${encodeURIComponent(`${m.name.ja} ${m.org} 公式`)}`;

@@ -40,6 +40,8 @@ export interface Mascot {
   credit?: string;
   /** Official image under public/ (e.g. "mascots/kumamon.png"). Replaces the drawn likeness when present. */
   image?: string;
+  /** Hidden friend: appears when the mascot with this id is tapped three times (easter egg). */
+  secret?: string;
 }
 
 /** One box of the mind map. Boxes joined by a line are children. */

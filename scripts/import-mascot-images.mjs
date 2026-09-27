@@ -165,33 +165,60 @@ function knockOutBackdrop(data, w, h) {
   return { color: [Math.round(r), Math.round(g), Math.round(b)], share: bestCount / rim.length };
 }
 
-/** Keep only the largest opaque blob (8-connected) — drops captions and © marks printed beside the character. */
+/**
+ * Keep only the character: the largest opaque blob (8-connected). Other blobs are dropped (captions,
+ * © marks printed beside the character), except tiny specks (≤ 40 px) lying within 4 px of the
+ * character — those are anti-aliasing crumbs of its own outline (fingertips, whiskers).
+ */
 function keepLargestComponent(data, w, h) {
   const n = w * h;
   const label = new Int32Array(n).fill(-1);
   const stack = new Int32Array(n);
-  let best = -1, bestSize = 0, count = 0;
+  const sizes = [];
+  const members = [];
+  let best = -1, bestSize = 0;
   for (let p = 0; p < n; p++) {
     if (label[p] !== -1 || data[p * 4 + 3] <= 8) continue;
-    let sp = 0, size = 0;
-    stack[sp++] = p; label[p] = count;
+    const id = sizes.length;
+    const px = [];
+    let sp = 0;
+    stack[sp++] = p; label[p] = id;
     while (sp) {
-      const q = stack[--sp]; size++;
+      const q = stack[--sp];
+      px.push(q);
       const x = q % w, y = (q / w) | 0;
       for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
         if (!dx && !dy) continue;
         const nx = x + dx, ny = y + dy;
         if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
         const r = ny * w + nx;
-        if (label[r] === -1 && data[r * 4 + 3] > 8) { label[r] = count; stack[sp++] = r; }
+        if (label[r] === -1 && data[r * 4 + 3] > 8) { label[r] = id; stack[sp++] = r; }
       }
     }
-    if (size > bestSize) { bestSize = size; best = count; }
-    count++;
+    sizes.push(px.length);
+    members.push(px.length <= 40 ? px : null); // only tiny blobs need their pixels later
+    if (px.length > bestSize) { bestSize = px.length; best = id; }
+  }
+  const nearBest = (px) => {
+    for (const q of px) {
+      const x = q % w, y = (q / w) | 0;
+      for (let dy = -4; dy <= 4; dy++) for (let dx = -4; dx <= 4; dx++) {
+        const nx = x + dx, ny = y + dy;
+        if (nx >= 0 && ny >= 0 && nx < w && ny < h && label[ny * w + nx] === best) return true;
+      }
+    }
+    return false;
+  };
+  const drop = new Uint8Array(sizes.length);
+  let dropped = 0;
+  for (let id = 0; id < sizes.length; id++) {
+    if (id === best) continue;
+    if (members[id] && nearBest(members[id])) continue; // a crumb of the character itself
+    drop[id] = 1; dropped++;
   }
   let removed = 0;
-  for (let p = 0; p < n; p++) if (label[p] !== -1 && label[p] !== best) { data[p * 4 + 3] = 0; removed++; }
-  return { count, removed };
+  for (let p = 0; p < n; p++) if (label[p] !== -1 && drop[label[p]]) { data[p * 4 + 3] = 0; removed++; }
+  return { count: dropped + 1, removed };
 }
 
 function alphaBox(data, w, h) {

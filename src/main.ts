@@ -87,6 +87,7 @@ async function init() {
     onCount: (n, total, isNew) => {
       $('collection-count').textContent = `${n}/${total}`;
       if (isNew) {
+        panel.refresh();
         const b = $('collection-btn');
         b.classList.remove('is-celebrate');
         void b.offsetWidth;

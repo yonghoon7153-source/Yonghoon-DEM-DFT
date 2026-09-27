@@ -646,7 +646,9 @@
         "ja": "にゃ〜ん",
         "ko": "냐~앙"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/hikonyan.webp",
+      "credit": "©彦根市"
     },
     {
       "id": "mayumaro",
@@ -884,14 +886,17 @@
       },
       "org": "徳島県",
       "about": {
-        "ja": "特産のすだちがモチーフ。徳島県マスコット",
-        "ko": "특산 스다치(영귤)가 모티브. 도쿠시마현 마스코트"
+        "ja": "徳島特産のすだちがモチーフ。1993年の東四国国体でデビュー、落選作から復活した小学生のデザイン。徳島の「お接待文化」の伝道師",
+        "ko": "도쿠시마 특산 스다치(영귤)가 모티브. 1993년 히가시시코쿠 국체로 데뷔, 낙선작에서 부활한 초등학생의 디자인. 도쿠시마 '오셋타이(대접) 문화' 전도사"
       },
       "line": {
         "ja": "すだち、しぼって〜",
         "ko": "스다치 짜서~"
       },
-      "art": "likeness"
+      "art": "official",
+      "url": "https://sudachikun.jp/introduction.html",
+      "image": "mascots/sudachikun.webp",
+      "credit": "©徳島県"
     },
     {
       "id": "aoonikun",
@@ -911,8 +916,10 @@
         "ja": "うどん県へ、親切にご案内",
         "ko": "우동현으로 친절히 안내"
       },
-      "art": "likeness",
-      "url": "https://www.my-kagawa.jp/aooni/feature/top/aooni"
+      "art": "official",
+      "url": "https://www.my-kagawa.jp/aooni/feature/top/aooni",
+      "image": "mascots/aoonikun.webp",
+      "credit": "©香川県観光協会"
     },
     {
       "id": "mican",
@@ -932,7 +939,34 @@
         "ja": "みかん、だいすき！",
         "ko": "귤 너무 좋아!"
       },
-      "art": "likeness"
+      "art": "official",
+      "url": "https://www.pref.ehime.jp/site/mican/16895.html",
+      "image": "mascots/mican.webp",
+      "credit": "©愛媛県"
+    },
+    {
+      "id": "darkmican",
+      "prefecture": "ehime",
+      "kind": "extra",
+      "secret": "mican",
+      "name": {
+        "ja": "ダークみきゃん",
+        "kana": "だーくみきゃん",
+        "ko": "다크 미캉"
+      },
+      "org": "愛媛県",
+      "about": {
+        "ja": "カビがはえてしまったみかんがモチーフの、みきゃんのライバル。誕生日も出身地も不明、根暗でいじわる。みきゃんの邪魔を四六時中たくらんでいる",
+        "ko": "곰팡이 핀 귤이 모티브인 미캉의 라이벌. 생일도 출신지도 수수께끼, 음침하고 심술궂다. 하루 종일 미캉을 방해할 궁리 중"
+      },
+      "line": {
+        "ja": "ククク…みきゃんのジャマしちゃうもんね",
+        "ko": "크크크… 미캉을 방해해 버릴 거야"
+      },
+      "art": "official",
+      "url": "https://www.pref.ehime.jp/site/mican/16880.html",
+      "credit": "©愛媛県",
+      "image": "mascots/darkmican.webp"
     },
     {
       "id": "barysan",

@@ -1,5 +1,5 @@
 // Easter eggs: mascots that pop out of a prefecture, the sticker book (図鑑) and sakura petals.
-import { mascotById, mascotSearchUrl, mascots, mascotsOf, prefBySlug, regionOf, regions } from '../data';
+import { mascotById, mascots, prefBySlug, regionOf, regions, secretFor } from '../data';
 import type { MapApi } from '../map/map';
 import { mascotSticker, mascotVisualHtml } from '../mascots/visual';
 import { clear, el } from './dom';
@@ -67,7 +67,7 @@ export function createEaster(opts: EasterOptions) {
     const slug = m.prefecture;
     const isNew = !found.has(m.id);
 
-    const n = el('div', { class: 'mascot', role: 'img', 'aria-label': `${m.name.ja} — ${m.line.ja}` });
+    const n = el('div', { class: `mascot${m.secret ? ' mascot--secret' : ''}`, role: 'img', 'aria-label': `${m.name.ja} — ${m.line.ja}` });
     const artEl = el('div', { class: 'mascot__art' });
     artEl.innerHTML = art; // our own SVG likeness, or <img> of the official picture
     const bubble = el(
@@ -76,9 +76,29 @@ export function createEaster(opts: EasterOptions) {
       el('span', { class: 'b-name' }, `${m.name.ja}`, el('span', { class: 'b-org' }, ` · ${m.org}`)),
       el('span', { class: 'b-line', lang: 'ja' }, m.line.ja),
       el('span', { class: 'b-ko' }, m.line.ko),
-      el('span', { class: 'b-tip' }, isNew ? '✦ 図鑑에 추가됐어요' : '또 만났다 ✿'),
+      el('span', { class: 'b-tip' }, isNew ? (m.secret ? '✦ 숨은 친구를 찾았어요!' : '✦ 図鑑에 추가됐어요') : '또 만났다 ✿'),
     );
     n.append(artEl, bubble);
+    // Easter egg: a mascot with a hidden friend turns into it after three taps on the picture.
+    const alter = m.secret ? undefined : secretFor(m);
+    if (alter) {
+      let taps = 0;
+      artEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        taps++;
+        window.clearTimeout(hideTimer);
+        hideTimer = window.setTimeout(() => dismiss(), 9000);
+        artEl.classList.remove('is-poked');
+        void artEl.offsetWidth; // restart the animation
+        artEl.classList.add('is-poked');
+        if (taps >= 3) {
+          n.classList.add('is-darkening');
+          window.setTimeout(() => {
+            if (node === n) revealMascot(alter.id);
+          }, 480);
+        }
+      });
+    }
     n.addEventListener('click', () => dismiss());
     opts.layer.append(n);
     node = n;
@@ -144,16 +164,25 @@ export function createEaster(opts: EasterOptions) {
       for (const m of list) {
         const p = prefBySlug.get(m.prefecture)!;
         const has = found.has(m.id);
+        const host = m.secret ? mascotById.get(m.secret) : undefined;
         const art = el('div', { class: 'zukan__art', 'aria-hidden': 'true' });
         art.innerHTML = mascotVisualHtml(m);
+        const hint = !has && host && found.has(host.id) ? `힌트: ${host.name.ja} 톡톡톡` : null;
         const card = el(
           'button',
-          { type: 'button', class: `zukan__card${has ? ' is-found' : ''}${m.kind === 'extra' ? ' is-extra' : ''}`, 'data-slug': p.slug, 'data-mascot': m.id, 'aria-label': has ? `${m.name.ja} (${p.name.ja})` : `??? (${p.name.ja})` },
+          {
+            type: 'button',
+            class: `zukan__card${has ? ' is-found' : ''}${m.kind === 'extra' ? ' is-extra' : ''}${m.secret ? ' is-secret' : ''}`,
+            'data-slug': p.slug,
+            // an undiscovered hidden friend must not be summoned from the book — show its host instead
+            'data-mascot': !has && host ? host.id : m.id,
+            'aria-label': has ? `${m.name.ja} (${p.name.ja})` : `??? (${p.name.ja})`,
+          },
           art,
           has ? null : el('span', { class: 'zukan__q' }, '?'),
           el('span', { class: 'zukan__name', lang: 'ja' }, has ? m.name.ja : '？？？'),
-          el('span', { class: 'zukan__pref' }, has ? m.org : `${p.short.ja} · ${p.name.ko}`),
-          has && m.kind === 'extra' ? el('span', { class: 'zukan__tag' }, '비공식') : null,
+          el('span', { class: 'zukan__pref' }, has ? m.org : hint ?? `${p.short.ja} · ${p.name.ko}`),
+          m.secret ? el('span', { class: 'zukan__tag zukan__tag--secret' }, '숨은 친구') : has && m.kind === 'extra' ? el('span', { class: 'zukan__tag' }, '비공식') : null,
         );
         card.style.setProperty('--c', regionOf(p).color);
         grid.append(card);

@@ -21,13 +21,13 @@
   <h1>ご当地キャラ 닮은꼴 시트 (검토용)</h1>
   <div class="grid" id="grid"></div>
   <script type="module">
-    import { mascotArt } from '/src/mascots/art.ts';
+    import { mascotVisualHtml } from '/src/mascots/visual.ts';
     import mascots from '/data/mascots.json';
     const grid = document.getElementById('grid');
     for (const m of mascots.mascots) {
       const card = document.createElement('div');
       card.className = 'card';
-      card.innerHTML = `<span class="id">${m.id}</span>${m.kind === 'extra' ? '<span class="tag">비공식</span>' : ''}${mascotArt[m.id] ?? '<em>no art</em>'}<div class="name">${m.name.ja}</div><div class="org">${m.org}</div>`;
+      card.innerHTML = `<span class="id">${m.id}</span>${m.secret ? '<span class="tag">숨은 친구</span>' : m.kind === 'extra' ? '<span class="tag">비공식</span>' : ''}${mascotVisualHtml(m) || '<em>no art</em>'}<div class="name">${m.name.ja}</div><div class="org">${m.org}</div>`;
       grid.append(card);
     }
   </script>

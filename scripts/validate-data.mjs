@@ -55,6 +55,12 @@ for (const m of mascots) {
     else if (!existsSync(new URL(`../public/${m.image}`, import.meta.url))) err(`${where}: image file public/${m.image} not found`);
   }
   if (m.url && !/^https?:\/\//.test(m.url)) err(`${where}: bad url`);
+  if (m.secret) {
+    const host = mascots.find((x) => x.id === m.secret);
+    if (!host) err(`${where}: secret host "${m.secret}" not found`);
+    else if (host.prefecture !== m.prefecture) err(`${where}: secret host must live in the same prefecture`);
+    if (m.kind !== 'extra') err(`${where}: a secret mascot must be kind "extra"`);
+  }
 }
 for (const p of prefectures) {
   const m = mascots.find((x) => x.id === p.mascot);

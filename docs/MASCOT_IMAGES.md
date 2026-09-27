@@ -1,6 +1,6 @@
 # 마스코트 그림 목록
 
-받은 그림 **36 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
+받은 그림 **41 / 54** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
 
 주는 법: 캐릭터당 한 장, 배경 투명 PNG 가 제일 좋다 (흰 배경 JPG 도 자동으로 배경을 지운다). 파일명에 **캐릭터 이름·県 이름·id 중 하나**만 들어 있으면 된다.
 받은 뒤: `npm run mascots:import <폴더>` → 512px WebP 로 줄여 `public/mascots/<id>.webp` 에 넣고 데이터와 이 목록을 갱신한다.
@@ -57,7 +57,7 @@
 |---|---|---|---|---|---|---|---|
 | 27 | 三重 | とこまる | 토코마루 | `tokomaru.png` | 三重県 | [공식](https://www.pref.mie.lg.jp/SPORTS/HP/m0011300154.htm) | ✅ |
 | 28 | 滋賀 | キャッフィー | 캬피 | `caffy.png` | 滋賀県 | [공식](https://www.pref.shiga.lg.jp/kensei/koho/koho/300451.html) | ✅ |
-| 29 | 滋賀 | ひこにゃん <sub>비공식·선택</sub> | 히코냥 | `hikonyan.png` | 彦根市 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%B2%E3%81%93%E3%81%AB%E3%82%83%E3%82%93%20%E5%BD%A6%E6%A0%B9%E5%B8%82%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 29 | 滋賀 | ひこにゃん <sub>비공식·선택</sub> | 히코냥 | `hikonyan.png` | 彦根市 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%B2%E3%81%93%E3%81%AB%E3%82%83%E3%82%93%20%E5%BD%A6%E6%A0%B9%E5%B8%82%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 30 | 京都 | まゆまろ | 마유마로 | `mayumaro.png` | 京都府 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%BE%E3%82%86%E3%81%BE%E3%82%8D%20%E4%BA%AC%E9%83%BD%E5%BA%9C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 31 | 大阪 | もずやん | 모즈얀 | `mozuyan.png` | 大阪府 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%82%E3%81%9A%E3%82%84%E3%82%93%20%E5%A4%A7%E9%98%AA%E5%BA%9C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
 | 32 | 兵庫 | はばタン | 하바탄 | `habatan.png` | 兵庫県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%AF%E3%81%B0%E3%82%BF%E3%83%B3%20%E5%85%B5%E5%BA%AB%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
@@ -78,27 +78,28 @@
 
 | # | 県 | 캐릭터 | 한글 | 파일명 | 권리자 | 찾을 곳 | 상태 |
 |---|---|---|---|---|---|---|---|
-| 40 | 徳島 | すだちくん | 스다치군 | `sudachikun.png` | 徳島県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%99%E3%81%A0%E3%81%A1%E3%81%8F%E3%82%93%20%E5%BE%B3%E5%B3%B6%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
-| 41 | 香川 | 親切な青鬼くん | 친절한 파란 도깨비군 | `aoonikun.png` | 香川県観光協会 | [공식](https://www.my-kagawa.jp/aooni/feature/top/aooni) | □ |
-| 42 | 愛媛 | みきゃん | 미캉 | `mican.png` | 愛媛県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%BF%E3%81%8D%E3%82%83%E3%82%93%20%E6%84%9B%E5%AA%9B%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
-| 43 | 愛媛 | バリィさん <sub>비공식·선택</sub> | 바리상 | `barysan.png` | 今治市（民間） | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%83%90%E3%83%AA%E3%82%A3%E3%81%95%E3%82%93%20%E4%BB%8A%E6%B2%BB%E5%B8%82%EF%BC%88%E6%B0%91%E9%96%93%EF%BC%89%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
-| 44 | 高知 | くろしおくん | 쿠로시오군 | `kuroshiokun.png` | 高知県 | [공식](https://www.pref.kochi.lg.jp/kuroshiokun/) | □ |
-| 45 | 高知 | カツオ人間 <sub>비공식·선택</sub> | 가쓰오 인간 | `katsuoningen.png` | 民間（山西金陵堂） | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%AB%E3%83%84%E3%82%AA%E4%BA%BA%E9%96%93%20%E6%B0%91%E9%96%93%EF%BC%88%E5%B1%B1%E8%A5%BF%E9%87%91%E9%99%B5%E5%A0%82%EF%BC%89%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 40 | 徳島 | すだちくん | 스다치군 | `sudachikun.png` | 徳島県 | [공식](https://sudachikun.jp/introduction.html) | ✅ |
+| 41 | 香川 | 親切な青鬼くん | 친절한 파란 도깨비군 | `aoonikun.png` | 香川県観光協会 | [공식](https://www.my-kagawa.jp/aooni/feature/top/aooni) | ✅ |
+| 42 | 愛媛 | みきゃん | 미캉 | `mican.png` | 愛媛県 | [공식](https://www.pref.ehime.jp/site/mican/16895.html) | ✅ |
+| 43 | 愛媛 | ダークみきゃん <sub>비공식·선택</sub> | 다크 미캉 | `darkmican.png` | 愛媛県 | [공식](https://www.pref.ehime.jp/site/mican/16880.html) | ✅ |
+| 44 | 愛媛 | バリィさん <sub>비공식·선택</sub> | 바리상 | `barysan.png` | 今治市（民間） | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%83%90%E3%83%AA%E3%82%A3%E3%81%95%E3%82%93%20%E4%BB%8A%E6%B2%BB%E5%B8%82%EF%BC%88%E6%B0%91%E9%96%93%EF%BC%89%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 45 | 高知 | くろしおくん | 쿠로시오군 | `kuroshiokun.png` | 高知県 | [공식](https://www.pref.kochi.lg.jp/kuroshiokun/) | □ |
+| 46 | 高知 | カツオ人間 <sub>비공식·선택</sub> | 가쓰오 인간 | `katsuoningen.png` | 民間（山西金陵堂） | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%AB%E3%83%84%E3%82%AA%E4%BA%BA%E9%96%93%20%E6%B0%91%E9%96%93%EF%BC%88%E5%B1%B1%E8%A5%BF%E9%87%91%E9%99%B5%E5%A0%82%EF%BC%89%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
 
 ## 九州 규슈
 
 | # | 県 | 캐릭터 | 한글 | 파일명 | 권리자 | 찾을 곳 | 상태 |
 |---|---|---|---|---|---|---|---|
-| 46 | 福岡 | エコトン | 에코톤 | `ecoton.png` | 福岡県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%A8%E3%82%B3%E3%83%88%E3%83%B3%20%E7%A6%8F%E5%B2%A1%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
-| 47 | 佐賀 | 壺侍 | 쓰보자무라이 | `tsubozamurai.png` | 佐賀県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E5%A3%BA%E4%BE%8D%20%E4%BD%90%E8%B3%80%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
-| 48 | 長崎 | がんばくん | 간바군 | `ganbakun.png` | 長崎県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%8C%E3%82%93%E3%81%B0%E3%81%8F%E3%82%93%20%E9%95%B7%E5%B4%8E%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
-| 49 | 熊本 | くまモン | 쿠마몬 | `kumamon.png` | 熊本県 | [공식](https://kumamon-land.jp/) | □ |
-| 50 | 大分 | めじろん | 메지론 | `mejiron.png` | 大分県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%81%E3%81%98%E3%82%8D%E3%82%93%20%E5%A4%A7%E5%88%86%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
-| 51 | 宮崎 | みやざき犬 | 미야자키견 | `miyazakiken.png` | 宮崎県 | [공식](https://ouendan.kanko-miyazaki.jp/) | □ |
-| 52 | 鹿児島 | ぐりぶー | 구리부 | `greboo.png` | 鹿児島県 | [공식](https://greboo.com/) | □ |
+| 47 | 福岡 | エコトン | 에코톤 | `ecoton.png` | 福岡県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%A8%E3%82%B3%E3%83%88%E3%83%B3%20%E7%A6%8F%E5%B2%A1%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 48 | 佐賀 | 壺侍 | 쓰보자무라이 | `tsubozamurai.png` | 佐賀県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E5%A3%BA%E4%BE%8D%20%E4%BD%90%E8%B3%80%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 49 | 長崎 | がんばくん | 간바군 | `ganbakun.png` | 長崎県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%8C%E3%82%93%E3%81%B0%E3%81%8F%E3%82%93%20%E9%95%B7%E5%B4%8E%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 50 | 熊本 | くまモン | 쿠마몬 | `kumamon.png` | 熊本県 | [공식](https://kumamon-land.jp/) | □ |
+| 51 | 大分 | めじろん | 메지론 | `mejiron.png` | 大分県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%81%E3%81%98%E3%82%8D%E3%82%93%20%E5%A4%A7%E5%88%86%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 52 | 宮崎 | みやざき犬 | 미야자키견 | `miyazakiken.png` | 宮崎県 | [공식](https://ouendan.kanko-miyazaki.jp/) | □ |
+| 53 | 鹿児島 | ぐりぶー | 구리부 | `greboo.png` | 鹿児島県 | [공식](https://greboo.com/) | □ |
 
 ## 沖縄 오키나와
 
 | # | 県 | 캐릭터 | 한글 | 파일명 | 권리자 | 찾을 곳 | 상태 |
 |---|---|---|---|---|---|---|---|
-| 53 | 沖縄 | 花笠マハエ | 하나가사 마하에 | `hanagasamahae.png` | 沖縄観光コンベンションビューロー | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E8%8A%B1%E7%AC%A0%E3%83%9E%E3%83%8F%E3%82%A8%20%E6%B2%96%E7%B8%84%E8%A6%B3%E5%85%89%E3%82%B3%E3%83%B3%E3%83%99%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3%E3%83%93%E3%83%A5%E3%83%BC%E3%83%AD%E3%83%BC%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
+| 54 | 沖縄 | 花笠マハエ | 하나가사 마하에 | `hanagasamahae.png` | 沖縄観光コンベンションビューロー | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E8%8A%B1%E7%AC%A0%E3%83%9E%E3%83%8F%E3%82%A8%20%E6%B2%96%E7%B8%84%E8%A6%B3%E5%85%89%E3%82%B3%E3%83%B3%E3%83%99%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3%E3%83%93%E3%83%A5%E3%83%BC%E3%83%AD%E3%83%BC%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |

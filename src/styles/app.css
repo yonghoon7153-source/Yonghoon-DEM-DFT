@@ -296,6 +296,17 @@
 .mascot.is-leaving .mascot__bubble { animation: poof .3s ease-in both; }
 .mascot--flip .mascot__bubble { left: auto; right: calc(var(--size) / 2 - 4px); border-radius: 16px 16px 4px 16px; transform-origin: 100% 100%; }
 
+.mascot__art.is-poked > * { animation: poke .34s var(--ease-pop); }
+.mascot.is-darkening .mascot__art > * { animation: darken .48s ease-in forwards; }
+.mascot--secret .sparkle { background: #6b4a8a; }
+.mascot--secret .mascot__bubble .b-name { color: #6b4a8a; }
+@keyframes poke { 0% { transform: scale(1, 1); } 35% { transform: scale(1.12, .86); } 70% { transform: scale(.95, 1.06); } 100% { transform: scale(1, 1); } }
+@keyframes darken {
+  0% { filter: none; transform: rotate(0); }
+  30% { filter: brightness(.7) saturate(.6); transform: rotate(-6deg); }
+  60% { filter: brightness(.45) saturate(.4) hue-rotate(40deg); transform: rotate(6deg); }
+  100% { filter: brightness(.2) saturate(.2) hue-rotate(70deg); transform: rotate(0) scale(.9); }
+}
 @keyframes pop { 0% { transform: scale(0) rotate(-12deg); opacity: 0; } 60% { transform: scale(1.12) rotate(3deg); opacity: 1; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
 @keyframes poof { to { transform: scale(.4) translateY(10px); opacity: 0; } }
 @keyframes hover-float { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-5px) rotate(-1.5deg); } }
@@ -501,6 +512,7 @@
 .friends__name { display: block; font-family: var(--font-display); font-size: 11px; line-height: 1.2; }
 .friends__card small { display: block; font-size: 10px; color: var(--ink-3); }
 .friends__card.is-extra.is-found { background: linear-gradient(160deg, var(--white), var(--accent-2-soft)); }
+.friends__card.is-secret.is-found { background: linear-gradient(160deg, var(--white), #efe6f6); }
 
 .meta-line { font-size: 11.5px; color: var(--ink-3); margin-top: 18px; font-family: var(--font-note); }
 
@@ -539,6 +551,9 @@
 .zukan__region small { font-size: 11px; color: var(--ink-3); font-family: var(--font-ko); }
 .zukan__tag { position: absolute; top: 8px; right: 8px; font-size: 9.5px; padding: 1px 6px; border-radius: 999px; background: var(--accent-2-soft); color: var(--accent-2); }
 .zukan__card.is-extra.is-found { background: linear-gradient(160deg, var(--white), var(--accent-2-soft)); }
+.zukan__tag--secret { background: #efe6f6; color: #6b4a8a; }
+.zukan__card.is-secret.is-found { background: linear-gradient(160deg, var(--white), #efe6f6); }
+.zukan__card.is-secret:not(.is-found) .zukan__q { color: #b9a3cf; }
 .zukan__done { margin-top: 14px; padding: 12px 14px; border-radius: 14px; background: var(--accent-soft); font-family: var(--font-note); font-size: 15px; text-align: center; }
 
 .memo-list .extra { background: var(--paper-2); }
