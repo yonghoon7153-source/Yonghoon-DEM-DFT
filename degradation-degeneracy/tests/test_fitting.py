@@ -536,7 +536,12 @@ def sign_producer(out_dir, df, n_infeasible=0, failed_conds=None,
             "replay_recipe": {
                 "baseline": {k: float(v) for k, v in cfg["baseline"].items()},
                 "guards": cfg.get("guards") or {}},
-            "source_digest": source_digest(), "env": env_fingerprint()}
+            "source_digest": source_digest(), "env": env_fingerprint(),
+            # ★ 79차 자체 발견 — fixture 의 내용 identity 는 manifest 바이트(초 단위 timestamp 포함)라 같은 초 안에
+            #   만든 두 fixture 가 같은 content id 를 가졌다. 한쪽이 smoke namespace(gated 모듈), 다른 쪽이 일반 tmp 에서
+            #   등록되면 "이미 smoke 로 등록돼 있다 — canonical 로 바꿀 수 없다" 로 뒤 시험이 죽는다 (test_gate79 05b →
+            #   test_hessian_provenance 인접에서 실측). 호출마다 nonce 를 넣어 fixture 산출의 identity 를 서로 다르게 한다.
+            "fixture_nonce": __import__("uuid").uuid4().hex}
     sig = _hl.sha1(_json.dumps(spec, sort_keys=True, default=str)
                    .encode()).hexdigest()[:12]
     df = df.copy()
