@@ -14,13 +14,13 @@
 | 6 | 폰트·색감 리서치 | ✅ | Kiwi Maru / Zen Maru Gothic / Gowun Dodum / Gaegu, 파스텔 9색 (`src/styles/tokens.css`) |
 | 7 | 이스터에그 캐릭터 (예: 구마모토 쿠마쿤) | ✅ | 県을 누르면 공식 캐릭터가, 패널 「친구들」에서 비공식 캐릭터가 튀어나옴. 図鑑은 지방별로 53종 |
 | 8 | 외부 공유 (bml 브랜치 참고, Cloudflare 등) | ✅ 절차 | Cloudflare Pages + **`nihoncheese.ayh.kr`** (ADR 0004, README, `nihon share`). 대시보드 연결은 사용자가 1회 |
-| 9 | 깐깐한 검토 (스크린샷 QA) | ✅ | 데스크톱/모바일 스크린샷 + 26개 상호작용 자동 테스트 통과 |
+| 9 | 깐깐한 검토 (스크린샷 QA) | ✅ | 데스크톱/모바일 스크린샷 + 30개 상호작용 자동 테스트 통과 (마스코트 교체 후 재실행) |
 
 ## 2차 요청 (2026-09-27, 두 번째 메시지)
 
 | # | 요청 | 상태 | 메모 |
 |---|------|------|------|
-| 10 | 이 브랜치 말고 **새 브랜치**에 리포 구성 | ✅ | 비준 1-A → `nihonchizu` 브랜치 (main 기반), 사이트는 루트, bml 관례 적용 |
+| 10 | 이 브랜치 말고 **새 브랜치**에 리포 구성 | ✅ | 비준 1-A → `nihonchizu` 브랜치 (main 기반), 사이트는 루트, bml 관례 적용. CI 통과 확인 후 옛 브랜치 `claude/japan-map-webpage-l0bm3e` 삭제 |
 | 11 | 참고 브랜치 = `claude/battery-charge-discharge-webapp-dq4ja3` (+ origin) | ✅ | 「브랜치가 집」(ADR 0001), `tools/nihon` 실행기, Makefile, docs/adr·log·index, commit-msg 훅, 전 브랜치 CI, LF gitattributes, WSL 래퍼 |
 | 12 | Canva 못 열면 PDF로 — 저화질이면 말하기 | ✅ | 받은 PDF는 8배 확대로 충분히 읽힘. 링크 19개도 추출됨. 더 최신본이면 다시 반입 |
 | 13 | 초록 박스·줄의 임베드 링크 | ✅ | 초록(링크) 박스 19개 반입 완료. 빠진 링크 있으면 알려주기 |
