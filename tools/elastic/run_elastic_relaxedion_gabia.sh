@@ -46,15 +46,24 @@ set -u; set +H
 #   소진 · max|f| 0.0011 > 0.001)도 완료로 읽어 건너뛴다. QE 는 소진해도 JOB DONE·End of BFGS 를
 #   찍는다. relax 잡은 **`bfgs converged` 선언**만 완료다 — watch_elastic.sh 의 el_state 와 같은 규칙
 #   (여기서 갈리면 watch 는 ⛔ 스텝소진인데 러너는 DONE skip 한다).
-_out_state(){   # $1=.in $2=.out → done | exhausted | unconverged | running | missing
+#   ⏸ 2026-09-27 — `stopped` 추가: EXIT 파일(`<prefix>.EXIT`)이나 max_seconds 로 **사람이 세운** relax.
+#   종전엔 unconverged 로 떨어져 restart_mode 가 지워졌다 → 재개가 **원래 입력 좌표에서 처음부터** 돈다
+#   (23_p 를 BFGS 66 에서 세우려다 발견 — 16 스텝·15 h 를 조용히 버릴 판이었다).
+_out_state(){   # $1=.in $2=.out → done | exhausted | stopped | unconverged | running | missing
   [ -s "$2" ] || { echo missing; return; }
   grep -aq "JOB DONE" "$2" || { echo running; return; }
   if grep -aqE "calculation *= *'relax'" "$1"; then
     grep -aq "bfgs converged" "$2" && { echo done; return; }
     grep -aqi "maximum number of steps has been reached" "$2" && { echo exhausted; return; }
+    grep -aqE "Program stopped by user request|Maximum CPU time exceeded" "$2" && { echo stopped; return; }
     echo unconverged; return
   fi
   echo done; }
+# 재개할 때 BFGS 이력을 이어받나 — 소진·사람이 세운 점만, 그리고 이력 파일이 있을 때만.
+#   unconverged(진짜 실패: bfgs failed 등)는 이력을 이어받으면 같은 실패를 되풀이할 수 있어 처음부터 돈다.
+_resume_restart(){  # $1=상태 $2=<outdir>/<prefix>.bfgs → 1 = restart_mode='restart' · 0 = from_scratch
+  case "$1" in exhausted|stopped) [ -f "$2" ] && { echo 1; return; } ;; esac
+  echo 0; }
 # 미수렴 점의 입력에 nstep · trust_radius_max 를 넣는다 (F: "남은 점 + 23_p 에 nstep 200 ·
 #   trust_radius_max 0.05"). 키가 있으면 값만 바꾼다(멱등). restart=1 이면 restart_mode='restart'
 #   (BFGS 이력 이어달리기), 0 이면 그 줄을 지운다. &IONS 가 없는 입력(scf)은 거부한다.
@@ -115,7 +124,20 @@ if [ "${1:-}" = "--selftest" ]; then
   #   있어도 초록이다 — 깨기 시험은 둘 다 꺼야 빨강이 난다 (2026-09-21 실측: 명시 검사만 끄면 초록).
   ck "⛔음성 &IONS 없는 입력은 거부 (rc 1)" "$(_patch_relax_in "$T/s.in" 200 0.05 0 >/dev/null 2>&1; echo $?)" 1
   ck "⛔음성 거부하면 파일 불변"        "$(grep -c nstep "$T/s.in")" 0
-  rm -rf "$T"; [ "$f" = 0 ] && echo "selftest ✅ (음성 5 포함)" || echo "selftest ⛔"; exit "$f"
+  # ⏸ 2026-09-27 — 사람이 세운 relax (EXIT · max_seconds) 는 이력을 이어받는다
+  printf '     number of bfgs steps    =  66\n\n     Program stopped by user request\nJOB DONE.\n' > "$T/stop.out"
+  printf '     Maximum CPU time exceeded\nJOB DONE.\n' > "$T/maxs.out"
+  printf '     bfgs failed after 120 scf cycles and 80 bfgs steps, convergence not achieved\nJOB DONE.\n' > "$T/fail.out"
+  : > "$T/x.bfgs"
+  ck "EXIT 로 세운 relax = stopped"                             "$(_out_state "$T/r.in" "$T/stop.out")" stopped
+  ck "max_seconds 로 선 relax = stopped"                        "$(_out_state "$T/r.in" "$T/maxs.out")" stopped
+  ck "⛔음성 bfgs failed 는 stopped 아님 (진짜 실패)"             "$(_out_state "$T/r.in" "$T/fail.out")" unconverged
+  ck "소진 + 이력 → restart"                                    "$(_resume_restart exhausted "$T/x.bfgs")" 1
+  ck "세운 점 + 이력 → restart (23_p 경우)"                      "$(_resume_restart stopped "$T/x.bfgs")" 1
+  ck "⛔음성 세운 점인데 이력 파일 없음 → 처음부터"                 "$(_resume_restart stopped "$T/없음.bfgs")" 0
+  ck "⛔음성 진짜 실패는 이력이 있어도 처음부터"                    "$(_resume_restart unconverged "$T/x.bfgs")" 0
+  ck "⛔음성 JOB DONE 없는 파일(running)은 restart 안 함"          "$(_resume_restart running "$T/x.bfgs")" 0
+  rm -rf "$T"; [ "$f" = 0 ] && echo "selftest ✅ (음성 10 포함)" || echo "selftest ⛔"; exit "$f"
 fi
 SYS=${SYS:-comp2}
 # ⛔⛔ 2026-09-10 실측 — 종전엔 `$HOME/Yonghoon-DEM-DFT` 를 먼저 봤다. gabia 에는
@@ -211,7 +233,7 @@ wait_gpu(){ local free h
 run_pw(){ local st bak; st=$(_out_state "$1" "$2")
   case "$st" in
     done) echo "[$(ts)] $2 DONE skip"; return 0 ;;
-    exhausted|unconverged)
+    exhausted|unconverged|stopped)
       bak="$2.${st}_$(date +%m%d_%H%M)"; mv "$2" "$bak"
       echo "[$(ts)] ⛔ $2 는 JOB DONE 인데 bfgs converged 가 없다 ($st) — $(basename "$bak") 로 보관하고 다시 돈다" ;;
   esac
@@ -260,7 +282,7 @@ fi
 
 cd "$WORK"
 case "$(_out_state V0_relax.in V0_relax.out)" in
-  exhausted|unconverged)
+  exhausted|unconverged|stopped)
     echo "⛔ V0_relax.out 이 JOB DONE 인데 bfgs converged 가 없다 — 재실행하면 그 위에 세운 strain 점들이 고아가 된다."
     echo "   사람이 판단할 것: V0 를 다시 풀고 12 점을 전부 다시 돌리든지, 이 V0 를 받아들이는 개정을 적든지. 시작하지 않는다."
     exit 1 ;;
@@ -284,7 +306,7 @@ done
 NSTEP=${NSTEP:-200}; TRUST_RADIUS_MAX=${TRUST_RADIUS_MAX:-0.05}
 for t in $TAGS; do
   st=$(_out_state "$t.in" "$t.out"); [ "$st" = done ] && continue
-  rs=0; [ "$st" = exhausted ] && [ -f "tmp_$t/$t.bfgs" ] && rs=1
+  rs=$(_resume_restart "$st" "tmp_$t/$t.bfgs")
   _patch_relax_in "$t.in" "$NSTEP" "$TRUST_RADIUS_MAX" "$rs" || { echo "⛔ $t.in 패치 실패"; exit 1; }
   echo "[$(ts)] $t.in ← nstep=$NSTEP trust_radius_max=$TRUST_RADIUS_MAX$([ "$rs" = 1 ] && echo ' · restart_mode=restart (BFGS 이력 승계)') (상태 $st)"
 done

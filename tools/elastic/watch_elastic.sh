@@ -52,6 +52,8 @@ el_state() {   # $1 = .out 경로 → "상태|비고"
             echo "✓ 완료|$(grep -a 'number of scf cycles' "$f" | tail -1 | tr -s ' ' | cut -c1-40)"
         elif grep -aqi "maximum number of steps has been reached" "$f"; then
             echo "⛔ 스텝소진|nstep 에 걸렸다 — 수렴 아님. 이 점의 응력을 Cij 에 쓰면 안 된다"
+        elif grep -aqE "Program stopped by user request|Maximum CPU time exceeded" "$f"; then
+            echo "⏸ 중단|EXIT·max_seconds 로 세움 — 러너가 BFGS 이력을 이어 재개 (수렴 아님)"
         else
             echo "⚠ 완료(BFGS 미완)|JOB DONE 은 있는데 수렴 선언이 없다 — 힘이 안 내려갔다"
         fi
@@ -109,6 +111,21 @@ if [ "${1:-}" = "--selftest" ]; then
         *"진행 strain_23_p"*) echo "  ⛔ [음성] 스텝소진을 '진행 중' 으로 읽는다 (case 구멍)"; bad=$((bad+1)) ;;
         *) echo "  ⭕ [음성] 끝난 점을 '진행 중' 으로 읽지 않는다"; ok=$((ok+1)) ;;
     esac
+    # ── 2026-09-27: '진행' 둘 — 목록 뒤쪽이 **낡은** 찌꺼기일 때 도는 점(최근 갱신)을 골라야 한다 ──
+    printf '     iteration #  1\n' > "$R/elastic_zz/strain_23_m.out"; touch -d '9 days ago' "$R/elastic_zz/strain_23_m.out"
+    printf '     iteration #  711\n' > "$R/elastic_zz/strain_23_p.out"
+    SUM=$(ROOT=$R bash "$0" 2>/dev/null | grep -a "strain .*완료")
+    case "$SUM" in
+        *"진행 strain_23_p"*) echo "  ⭕ [음성] 낡은 찌꺼기(23_m) 대신 최근 갱신된 23_p 를 진행으로 고른다"; ok=$((ok+1)) ;;
+        *) echo "  ⛔ [음성] 진행 점을 목록 순서로 골랐다 — 얻음 '$SUM'"; bad=$((bad+1)) ;;
+    esac
+    printf '     number of bfgs steps    =  66\n\n     Program stopped by user request\nJOB DONE.\n' > "$R/elastic_zz/strain_23_p.out"
+    chk "[음성] EXIT 로 세운 점은 완료도 문제도 아닌 중단" "$(el_state "$R/elastic_zz/strain_23_p.out" | cut -d'|' -f1)" "⏸ 중단"
+    SUM=$(ROOT=$R bash "$0" 2>/dev/null | grep -a "strain .*완료")
+    case "$SUM" in
+        *"6/12 완료"*"중단 1"*) echo "  ⭕ [음성] 집계: 세운 점을 '중단' 으로 센다 (완료·문제에 안 섞음)"; ok=$((ok+1)) ;;
+        *) echo "  ⛔ [음성] 집계가 세운 점을 잘못 센다 — 얻음 '$SUM'"; bad=$((bad+1)) ;;
+    esac
     rm -rf "$t"; echo "  selftest: ⭕ $ok · ⛔ $bad"; [ "$bad" = 0 ] || exit 1; exit 0
 fi
 
@@ -136,19 +153,23 @@ for D in $DIRS; do
         echo "   V0_relax: 대기 (아직 시작 안 함)"
     fi
 
-    NOK=0; NBAD=0; CUR=""; NPEND=0
+    # ⛔ 2026-09-27 — '진행' 이 여럿이면 **가장 최근에 갱신된 파일**이 도는 점이다. 앞판은 목록 순서상 마지막을 골라
+    #   9일 전 찌꺼기 strain_23_m.out(반복 1)을 '진행' 으로, 실제로 돌던 23_p 를 목록 속 한 줄로만 보였다.
+    NOK=0; NBAD=0; CUR=""; NPEND=0; NSTOP=0
     for t in $TAGS; do
         IFS='|' read -r st note <<< "$(el_state "$D/$t.out")"
         case "$st" in
             "✓ 완료")            NOK=$((NOK+1)) ;;
             "⚠ 완료(BFGS 미완)"|"⛔ 스텝소진"|"☠ 오류") NBAD=$((NBAD+1)) ;;
+            "⏸ 중단")            NSTOP=$((NSTOP+1)) ;;
             "대기")              NPEND=$((NPEND+1)) ;;
-            *)                   CUR=$t ;;
+            *)                   { [ -z "$CUR" ] || [ "$D/$t.out" -nt "$D/$CUR.out" ]; } && CUR=$t ;;
         esac
         [ -n "${ALL:-}" ] && printf "     %-14s %-18s %s\n" "$t" "$st" "${note:0:44}"
     done
     printf "   strain %s/12 완료" "$NOK"
     [ "$NBAD"  -gt 0 ] && printf " · ⛔ 문제 %s" "$NBAD"
+    [ "$NSTOP" -gt 0 ] && printf " · ⏸ 중단 %s" "$NSTOP"
     [ -n "$CUR" ]      && printf " · 진행 %s" "$CUR"
     [ "$NPEND" -gt 0 ] && printf " · 대기 %s" "$NPEND"
     echo
