@@ -274,7 +274,7 @@
   animation: pop .55s var(--ease-pop) both, hover-float 3.2s ease-in-out .55s infinite;
   filter: drop-shadow(0 6px 8px rgba(74, 63, 58, .22));
 }
-.mascot__art svg { width: 100%; height: 100%; overflow: visible; }
+.mascot__art svg, .mascot__art img { width: 100%; height: 100%; overflow: visible; object-fit: contain; display: block; }
 .mascot__bubble {
   position: absolute; left: calc(var(--size) / 2 - 4px); bottom: calc(var(--size) - 18px);
   min-width: 200px; max-width: 260px;
@@ -468,7 +468,7 @@
 .mascot-card__meta { margin-top: 4px; color: var(--ink-3); font-size: 10.5px; }
 .mascot-card__link { color: var(--accent); text-decoration: none; }
 .mascot-card__link:hover { text-decoration: underline; }
-.mascot-card__art svg { width: 100%; height: 100%; overflow: visible; }
+.mascot-card__art svg, .mascot-card__art img { width: 100%; height: 100%; overflow: visible; object-fit: contain; display: block; }
 .mascot-card b { font-family: var(--font-display); font-weight: 500; }
 .mascot-card small { display: block; color: var(--ink-2); font-size: 12px; }
 
@@ -493,7 +493,7 @@
 .friends__card.is-found { background: linear-gradient(160deg, var(--white), var(--accent-3-soft)); box-shadow: var(--shadow-sm); }
 .friends__card:hover { transform: translateY(-2px) rotate(-1deg); }
 .friends__art { width: 44px; height: 44px; margin: 0 auto 4px; }
-.friends__art svg { width: 100%; height: 100%; overflow: visible; }
+.friends__art svg, .friends__art img { width: 100%; height: 100%; overflow: visible; object-fit: contain; display: block; }
 .friends__card:not(.is-found) .friends__art { filter: grayscale(1) contrast(0) brightness(.65); opacity: .3; }
 .friends__name { display: block; font-family: var(--font-display); font-size: 11px; line-height: 1.2; }
 .friends__card small { display: block; font-size: 10px; color: var(--ink-3); }
@@ -525,7 +525,7 @@
 .zukan__card.is-found { background: linear-gradient(160deg, var(--white), var(--accent-3-soft)); box-shadow: var(--shadow-sm); }
 .zukan__card.is-found:hover { transform: translateY(-2px) rotate(-1deg); }
 .zukan__art { width: 68px; height: 68px; margin: 0 auto 6px; }
-.zukan__art svg { width: 100%; height: 100%; overflow: visible; }
+.zukan__art svg, .zukan__art img { width: 100%; height: 100%; overflow: visible; object-fit: contain; display: block; }
 .zukan__card:not(.is-found) .zukan__art { filter: grayscale(1) contrast(0) brightness(.65); opacity: .35; }
 .zukan__q { position: absolute; top: 34px; left: 0; right: 0; font-family: var(--font-display); font-size: 26px; color: var(--ink-3); }
 .zukan__name { font-family: var(--font-display); font-size: 13px; line-height: 1.2; }

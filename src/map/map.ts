@@ -25,7 +25,7 @@ export interface MapApi {
   reset(animate?: boolean): void;
   setInset(inset: Partial<Inset>): void;
   anchorScreen(slug: string): { x: number; y: number } | null;
-  addSticker(slug: string, svg: string): void;
+  addSticker(slug: string, visual: { image?: string; svg?: string }): void;
   currentScale(): number;
 }
 
@@ -401,14 +401,19 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
     return { x, y };
   }
 
-  function addSticker(slug: string, svgMarkup: string) {
+  function addSticker(slug: string, visual: { image?: string; svg?: string }) {
     if (!gStickers.select(`g.sticker[data-slug="${slug}"]`).empty()) return;
+    if (!visual.image && !visual.svg) return;
     const g = gStickers.append('g').attr('class', 'sticker').attr('data-slug', slug);
     const inner = g.append('g').attr('transform', `scale(0.3) rotate(${(slug.length % 3) * 6 - 6}) translate(-50,-50)`);
-    // Copy the art's children (not the outer <svg>): a nested <svg> sizes itself unpredictably.
-    const doc = new DOMParser().parseFromString(svgMarkup, 'image/svg+xml');
-    const target = inner.node()!;
-    for (const child of Array.from(doc.documentElement.childNodes)) target.appendChild(document.importNode(child, true));
+    if (visual.image) {
+      inner.append('image').attr('href', visual.image).attr('width', 100).attr('height', 100).attr('preserveAspectRatio', 'xMidYMid meet');
+    } else if (visual.svg) {
+      // Copy the art's children (not the outer <svg>): a nested <svg> sizes itself unpredictably.
+      const doc = new DOMParser().parseFromString(visual.svg, 'image/svg+xml');
+      const target = inner.node()!;
+      for (const child of Array.from(doc.documentElement.childNodes)) target.appendChild(document.importNode(child, true));
+    }
     updateScreenSpace();
   }
 

@@ -2,7 +2,7 @@
 import { countBoxes, extrasFor, extrasForRegion, generalExtras, mascotSearchUrl, mascotsOf, notes, notesFor, prefById, prefBySlug, prefecturesIn, regionById, regionOf } from '../data';
 import type { Mascot } from '../types';
 import type { NoteExtra, Prefecture, Region } from '../types';
-import { mascotArt } from '../mascots/art';
+import { mascotVisualHtml } from '../mascots/visual';
 import { clear, el, ruby } from './dom';
 import { renderTree } from './notes-render';
 
@@ -142,7 +142,7 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
   function friendCard(m: Mascot, prefShort: string): HTMLElement {
     const has = cb.isMascotFound(m.id);
     const art = el('div', { class: 'friends__art', 'aria-hidden': 'true' });
-    art.innerHTML = mascotArt[m.id] ?? '';
+    art.innerHTML = mascotVisualHtml(m);
     const b = el(
       'button',
       { type: 'button', class: `friends__card${has ? ' is-found' : ''}${m.kind === 'extra' ? ' is-extra' : ''}`, title: has ? m.name.ja : `${prefShort}에 누가 살까?` },
@@ -156,7 +156,7 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
 
   function mascotCard(m: Mascot): HTMLElement {
     const art = el('div', { class: 'mascot-card__art', 'aria-hidden': 'true' });
-    art.innerHTML = mascotArt[m.id] ?? '';
+    art.innerHTML = mascotVisualHtml(m);
     const link = el('a', { class: 'mascot-card__link', href: m.url ?? mascotSearchUrl(m), target: '_blank', rel: 'noopener noreferrer' }, m.url ? '공식 페이지 ↗' : '검색해서 보기 ↗');
     return el(
       'div',

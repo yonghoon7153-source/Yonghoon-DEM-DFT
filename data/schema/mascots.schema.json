@@ -19,7 +19,8 @@
           "line": { "type": "object", "required": ["ja", "ko"], "description": "말풍선 대사 (이 프로젝트가 쓴 것)" },
           "art": { "type": "string", "enum": ["likeness", "official"], "description": "likeness = 닮은꼴(공식 아님 표시), official = 공식 일러스트(credit 필수)" },
           "url": { "type": "string", "format": "uri", "description": "확인된 공식 페이지" },
-          "credit": { "type": "string", "description": "표기 의무가 있는 크레딧 (예: ©2010熊本県くまモン)" }
+          "credit": { "type": "string", "description": "표기 의무가 있는 크레딧 (예: ©2010熊本県くまモン)" },
+          "image": { "type": "string", "description": "공식 그림 파일. public/mascots/ 아래 경로 (예: mascots/kumamon.png). 있으면 닮은꼴 대신 이 그림을 쓴다" }
         }
       }
     }

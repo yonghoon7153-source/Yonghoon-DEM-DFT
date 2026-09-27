@@ -1,6 +1,6 @@
 // Cross-checks the JSON database in data/ (runs before every build: npm run data:check).
 // Deliberately dependency-free; the *.schema.json files document the shapes for editors.
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 
 const read = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8'));
 const { regions } = read('regions.json');
@@ -48,6 +48,11 @@ for (const m of mascots) {
   if (!m.line?.ja || !m.line?.ko) err(`${where}: line.ja/ko missing`);
   if (!['likeness', 'official'].includes(m.art)) err(`${where}: art must be likeness|official`);
   if (m.art === 'official' && !m.credit) err(`${where}: official art needs a credit`);
+  if (m.image) {
+    if (m.art !== 'official') err(`${where}: has an image but art is "${m.art}" (set "official")`);
+    if (!/^mascots\/[a-z]+\.(png|jpg|jpeg|webp|svg|gif)$/.test(m.image)) err(`${where}: image must look like mascots/<id>.png`);
+    else if (!existsSync(new URL(`../public/${m.image}`, import.meta.url))) err(`${where}: image file public/${m.image} not found`);
+  }
   if (m.url && !/^https?:\/\//.test(m.url)) err(`${where}: bad url`);
 }
 for (const p of prefectures) {

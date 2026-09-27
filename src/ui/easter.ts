@@ -1,7 +1,7 @@
 // Easter eggs: mascots that pop out of a prefecture, the sticker book (図鑑) and sakura petals.
 import { mascotById, mascotSearchUrl, mascots, mascotsOf, prefBySlug, regionOf, regions } from '../data';
 import type { MapApi } from '../map/map';
-import { mascotArt } from '../mascots/art';
+import { mascotSticker, mascotVisualHtml } from '../mascots/visual';
 import { clear, el } from './dom';
 
 const STORAGE_KEY = 'nihonchizu.found.v1';
@@ -21,8 +21,7 @@ export function createEaster(opts: EasterOptions) {
 
   for (const id of found) {
     const m = mascotById.get(id);
-    const art = mascotArt[id];
-    if (m && art && m.kind === 'official') opts.map.addSticker(m.prefecture, art);
+    if (m && m.kind === 'official') opts.map.addSticker(m.prefecture, mascotSticker(m));
   }
   opts.onCount(found.size, mascots.length, false);
 
@@ -62,14 +61,15 @@ export function createEaster(opts: EasterOptions) {
   function revealMascot(id: string): boolean {
     dismiss(true);
     const m = mascotById.get(id);
-    const art = m && mascotArt[m.id];
-    if (!m || !art) return false;
+    if (!m) return false;
+    const art = mascotVisualHtml(m);
+    if (!art) return false;
     const slug = m.prefecture;
     const isNew = !found.has(m.id);
 
     const n = el('div', { class: 'mascot', role: 'img', 'aria-label': `${m.name.ja} — ${m.line.ja}` });
     const artEl = el('div', { class: 'mascot__art' });
-    artEl.innerHTML = art; // static, hand-written SVG from src/mascots/art.ts
+    artEl.innerHTML = art; // our own SVG likeness, or <img> of the official picture
     const bubble = el(
       'div',
       { class: 'mascot__bubble' },
@@ -89,7 +89,7 @@ export function createEaster(opts: EasterOptions) {
     if (isNew) {
       found.add(m.id);
       save();
-      if (m.kind === 'official') opts.map.addSticker(slug, art);
+      if (m.kind === 'official') opts.map.addSticker(slug, mascotSticker(m));
     }
     opts.onCount(found.size, mascots.length, isNew);
     hideTimer = window.setTimeout(() => dismiss(), 9000);
@@ -145,7 +145,7 @@ export function createEaster(opts: EasterOptions) {
         const p = prefBySlug.get(m.prefecture)!;
         const has = found.has(m.id);
         const art = el('div', { class: 'zukan__art', 'aria-hidden': 'true' });
-        art.innerHTML = mascotArt[m.id] ?? '';
+        art.innerHTML = mascotVisualHtml(m);
         const card = el(
           'button',
           { type: 'button', class: `zukan__card${has ? ' is-found' : ''}${m.kind === 'extra' ? ' is-extra' : ''}`, 'data-slug': p.slug, 'data-mascot': m.id, 'aria-label': has ? `${m.name.ja} (${p.name.ja})` : `??? (${p.name.ja})` },
@@ -160,7 +160,7 @@ export function createEaster(opts: EasterOptions) {
       }
       wrap.append(grid);
     }
-    wrap.append(el('p', { class: 'meta-line' }, '各キャラクターの権利は各自治体・団体に帰属します。그림은 이 프로젝트가 그린 닮은꼴이에요 (공식 일러스트 아님).'));
+    wrap.append(el('p', { class: 'meta-line' }, '各キャラクターの権利は各自治体・団体に帰属します。크레딧이 없는 그림은 이 프로젝트가 그린 닮은꼴이에요.'));
     if (found.size === mascots.length) wrap.append(el('p', { class: 'zukan__done' }, '🎉 전부 만났어요! 컴플리트 — おめでとう！'));
     return wrap;
   }

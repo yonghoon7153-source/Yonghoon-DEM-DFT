@@ -37,6 +37,8 @@ export interface Mascot {
   art: 'likeness' | 'official';
   url?: string;
   credit?: string;
+  /** Official image under public/ (e.g. "mascots/kumamon.png"). Replaces the drawn likeness when present. */
+  image?: string;
 }
 
 /** One box of the mind map. Boxes joined by a line are children. */
