@@ -19,6 +19,8 @@ function mix(ink: string) {
 function renderNode(it: NoteItem, style: TreeStyle, depth: number): HTMLLIElement {
   const li = el('li', { class: 'node' });
   li.append(renderChip(it));
+  const photo = photoLink(it);
+  if (photo) li.append(photo);
   if (it.children?.length) li.append(renderTree(it.children, style, depth + 1));
   return li;
 }
@@ -37,6 +39,16 @@ export function renderChip(it: NoteItem): HTMLElement {
   if (isLink) chip.append(el('span', { class: 'nchip__ext', 'aria-hidden': 'true' }, '↗'));
   if (it.sub) chip.append(el('span', { class: 'nchip__sub', lang: hasJapanese(it.sub) ? 'ja' : undefined }, it.sub));
   return chip;
+}
+
+/** 📷 next to a box that had a photo in the Canva: the photo itself is not ours to copy, so it opens an image search. */
+function photoLink(it: NoteItem): HTMLElement | null {
+  if (!it.photo) return null;
+  const q = typeof it.photo === 'string' ? it.photo : it.t;
+  return el('a', {
+    class: 'nphoto', href: `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(q)}`,
+    target: '_blank', rel: 'noopener noreferrer', title: `사진 보기 — ${q}`, 'aria-label': `사진 보기: ${q}`,
+  }, '📷');
 }
 
 export function hasJapanese(s: string): boolean {

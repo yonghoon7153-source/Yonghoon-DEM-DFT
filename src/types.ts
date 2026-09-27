@@ -53,6 +53,8 @@ export interface NoteItem {
   url?: string;
   star?: boolean;
   kind?: 'photo';
+  /** The Canva box had a photo next to it — shown as 📷 that opens an image search (string = the search words). */
+  photo?: boolean | string;
   children?: NoteItem[];
 }
 

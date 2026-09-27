@@ -85,6 +85,7 @@ function walk(items, where, depth = 0) {
     if (!it || typeof it.t !== 'string' || !it.t.trim()) err(`${where}: item without "t"`);
     if (it.url && !/^https?:\/\//.test(it.url)) err(`${where}: "${it.t}" has non-http url`);
     if (it.kind && it.kind !== 'photo') err(`${where}: "${it.t}" unknown kind "${it.kind}"`);
+    if (it.photo !== undefined && typeof it.photo !== 'boolean' && !(typeof it.photo === 'string' && it.photo.trim())) err(`${where}: "${it.t}" photo must be true or search words`);
     if (depth > 8) err(`${where}: nesting too deep at "${it.t}"`);
     if (it.children) walk(it.children, `${where} > ${it.t}`, depth + 1);
   }

@@ -440,6 +440,13 @@
 .nchip__sub { display: block; font-size: 12px; color: var(--ink-2); margin-top: 1px; }
 .nchip__ko { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 6px; background: rgba(255, 255, 255, .7); font-size: 11px; color: var(--ink-2); font-family: var(--font-ko); vertical-align: 2px; }
 .nchip__star { color: var(--accent-3); margin-left: 4px; }
+.nphoto {
+  display: inline-grid; place-items: center; width: 26px; height: 26px; margin-left: 6px; vertical-align: middle;
+  border-radius: 50%; background: var(--white); text-decoration: none; font-size: 13px; line-height: 1;
+  box-shadow: inset 0 0 0 1px var(--line-2), 0 1px 0 rgba(255, 255, 255, .6);
+  transition: transform .18s var(--ease-pop), box-shadow .18s ease;
+}
+.nphoto:hover, .nphoto:focus-visible { transform: rotate(-8deg) scale(1.1); box-shadow: inset 0 0 0 1px var(--accent), 0 2px 6px -2px rgba(74, 63, 58, .3); }
 .nchip--link { cursor: pointer; }
 .nchip--link:hover { transform: translateY(-1px) rotate(-.6deg); box-shadow: inset 0 0 0 1px rgba(74, 63, 58, .16), var(--shadow); }
 .nchip--link .nchip__t { text-decoration: underline; text-decoration-color: color-mix(in oklab, var(--ink) 35%, transparent); text-underline-offset: 3px; }

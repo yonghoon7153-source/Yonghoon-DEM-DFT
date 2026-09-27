@@ -67,6 +67,7 @@
         "url": { "type": "string", "format": "uri", "description": "박스에 걸린 링크" },
         "star": { "type": "boolean" },
         "kind": { "type": "string", "enum": ["photo"], "description": "photo = 원본엔 사진만 있던 자리" },
+        "photo": { "type": ["boolean", "string"], "description": "원본에서 이 칸에 사진이 붙어 있었다 — 📷 을 누르면 이미지 검색 (문자열이면 그 검색어, true 면 t). 사진 자체는 저작권 때문에 넣지 않는다" },
         "children": { "$ref": "#/$defs/items" }
       }
     }
