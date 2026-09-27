@@ -62,7 +62,17 @@
 
 ⚠ **정정 2026-09-28 — 이 절의 `~/dem-sk` 는 v100 에 없다** (사용자 실측: `python3: can't open file '/home/ubuntu/dem-sk/scripts/fit_dh_collapse.py'`).  09-26 에 확인 없이 적은 경로다 (원장 `SELF-55`).
 `scripts/run_se_curve_batch.sh` 의 기본 코드 경로는 `/home/ubuntu/dem-stoic` 이고, `~/*/` 아래에는 `fit_dh_collapse.py` 의 마지막 변경 커밋 `e49847e53` 을 담은 worktree 가 없었다.
-**A 의 8 런은 이미 끝났다** (09-27 22:57:40 · 8/8 EXIT 0 · 288 json 16 개) — 사용자가 실제로 띄운 코드 경로는 확인 뒤 여기에 적는다.  그때까지 아래 명령의 `~/dem-sk` 는 **그 경로로 바꿔 읽는다**.
+**A 의 8 런은 이미 끝났다** (09-27 22:57:40 · 8/8 EXIT 0 · 288 json 16 개 · 결과 = verdict §⑩-b).
+✅ **v100 확인값 (09-28, 사용자 실행 출력)**: 코드 = **`~/Yonghoon-DEM-DFT`** (데이터 루트와 같은 체크아웃) @ **`93a8b2d27`** (09-23) — eq288 로그 `repo HEAD : 93a8b2d27` ·
+같은 HEAD 사본이 `/home/ubuntu/runyourai/1/Yonghoon-DEM-DFT` 에도 있다 (`~/runyourai/1/pa/kits` 의 `fit_dh_collapse.py` 는 git 밖이라 쓰지 않는다).
+파이썬 = uma conda 환경 — `(uma)` 에서 `python3`, 밖에서는 `/home/ubuntu/runyourai/1/opt/miniforge3/envs/uma/bin/python3` (배치의 `activate_dem.sh` 도 이것을 잡는다 · 09-28 재현 배치 출력).
+⇒ 아래 명령의 `~/dem-sk` 는 **A · C 에서 `~/Yonghoon-DEM-DFT`**, **D 에서 `~/dem-score`** (아래 worktree) 로 읽는다.  A 첫 줄의 `git pull` 은 **하지 않는다**:
+- ⛔ **C 는 A 와 같은 코드로** — C 가 끝날 때까지 `~/Yonghoon-DEM-DFT` 에서 pull 금지.  `93a8b2d27` 이후 `mpm3d_compaction.py` 가 +316 줄 바뀌었다 (FAMV2-01 서보 ·
+  `--add-e-override` · VGCF 기본 E · dt 기록 — 이 경로 (첨가제 없음 · f = 0) 에는 무영향이어야 하지만 **잰 적이 없다**).  배치는 런마다 파이썬을 새로 띄우므로 중간 pull 은 세대를 가른다.
+- D 의 `score_dh_transfer.py` · 동결 JSON 은 `93a8b2d27` 에 **없다** (09-26 커밋) → C 가 끝난 뒤 따로 worktree 에서 (작업 트리는 건드리지 않는다):
+  `git -C ~/Yonghoon-DEM-DFT fetch origin claude/stoic-knuth-NObVQ && git -C ~/Yonghoon-DEM-DFT worktree add ~/dem-score FETCH_HEAD`.
+- ⚠ 동결선은 **옛 세대 점** (08-06/07 · 08-11) 으로만 만들어졌고 C 는 `93a8b2d27` 로 돈다 — 세대 점검 (verdict §⑩-b 재현 2 런, 09-28 02:02 발사) 결과를 채점 JSON 옆에 병기한다.
+  **판정선 (§4) 은 그대로**.
 
 **A. d_h 288 대등화 8 런 (verdict §⑩ 에 08-11 등록 — 그대로)**
 ```
@@ -87,6 +97,12 @@ ls -1 "/mnt/f/DEM/examples/LIGGGHTS/Tutorials_public/1. ASSB/post_bimodal_real_P
 python3 scripts/mpm_input_from_case.py --results webapp/results/<case_id> --out /tmp/kit_ps_7_3_r45
 python3 -c "import json;print(json.load(open('/tmp/kit_ps_7_3_r45/mpm_input.json')).get('lateral_box'))"      # 0.050013 이어야
 ```
+⚠ **정정 2026-09-28 (B)** — ① WSL 파이썬은 `~/Yonghoon-DEM-DFT/venv/bin/python3` (system python3 에 numpy 없음 · `SELF-55`).  ② 다섯 덱 모두 표준 번호
+(`particletemplate/sphere` type 1 AM_P · 2 AM_S · 3 SE, 질량분율 0 인 상도 선언됨) 이라 `--type-map 1:AM_P,2:AM_S,3:SE` 를 명시한다 (비우면 SE = type 3 규약 — 같은 답).
+③ `lateral_box` 기대값: 다섯 덱의 box 는 **0.05** (`region reg_box block 0.0 0.05 0.0 0.05`) 이고 README 대로 원본 real_4 와 RVE 가 같은데, 옛 킷 (`input_6mAh_real_4`) 의
+0.050013 은 덱 값이 아니다 (`parse_liggghts.py` 는 `region … block` 에서 box_x = 0.05 를 읽는다) — `mpm_input_from_case.py:502-505` 가 `input_params.json` 에
+box_x 가 없을 때 쓰는 대체값 (입자 좌표 최대 · 주기 경계 밖으로 살짝 나간 입자) 으로 보인다 (확인 전).  ⇒ **|lateral − 0.05| ≤ 5 × 10⁻⁵ 면 통과**, 벗어나면 멈추고 보고.
+④ 케이스 폴더는 데이터 쪽 `~/Yonghoon-DEM-DFT/webapp/results/<case_id>` (코드 worktree `~/dem-web` 아래가 아니다) — 명령 전에 `ls` 로 확인.
 이미 웹앱에 있는 케이스: ps_10_0 `260922_092001_0853b1` · ps_0_10 `260925_000001_0bee25` · ps_3_7 `260925_000448_bd85f9` — 5_5 · 7_3 은 업로드.
 다섯 킷 (`am_scaffold.csv` · `se_scaffold.csv` · `mpm_input.json`) 을 v100 `~/Yonghoon-DEM-DFT/se_curve/kit_ps_<P>_<S>_r45/` 로 (scp).
 사전 계산 (GPU 불요): `python3 scripts/phase_a_precompute.py --am <am.csv> --se <se.csv> --thickness-um <h> --lateral-um 50.013 --out <json>`
