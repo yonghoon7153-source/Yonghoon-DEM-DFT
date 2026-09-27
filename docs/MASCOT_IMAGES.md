@@ -1,6 +1,6 @@
 # 마스코트 그림 목록
 
-받은 그림 **1 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
+받은 그림 **5 / 53** · 이 파일은 `npm run mascots:list` 가 데이터에서 만든다 (손으로 고치지 않는다).
 
 주는 법: 캐릭터당 한 장, 배경 투명 PNG 가 제일 좋다 (흰 배경 JPG 도 자동으로 배경을 지운다). 파일명에 **캐릭터 이름·県 이름·id 중 하나**만 들어 있으면 된다.
 받은 뒤: `npm run mascots:import <폴더>` → 512px WebP 로 줄여 `public/mascots/<id>.webp` 에 넣고 데이터와 이 목록을 갱신한다.
@@ -15,10 +15,10 @@
 
 | # | 県 | 캐릭터 | 한글 | 파일명 | 권리자 | 찾을 곳 | 상태 |
 |---|---|---|---|---|---|---|---|
-| 2 | 青森 | いくべぇ | 이쿠베 | `ikubee.png` | 青森県観光連盟 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%84%E3%81%8F%E3%81%B9%E3%81%87%20%E9%9D%92%E6%A3%AE%E7%9C%8C%E8%A6%B3%E5%85%89%E9%80%A3%E7%9B%9F%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
-| 3 | 岩手 | わんこきょうだい | 완코 형제 | `wankokyodai.png` | 岩手県観光協会 | [공식](https://iwatetabi.jp/wanko/) | □ |
-| 4 | 宮城 | むすび丸 | 무스비마루 | `musubimaru.png` | 宮城県・仙台市 | [공식](https://www.pref.miyagi.jp/site/sendaimiyagicp/musubimaru.html) | □ |
-| 5 | 秋田 | んだッチ | 은닷치 | `ndacchi.png` | 秋田県 | [공식](https://www.pref.akita.lg.jp/pages/archive/33524) | □ |
+| 2 | 青森 | いくべぇ | 이쿠베 | `ikubee.png` | 青森県観光連盟 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%81%84%E3%81%8F%E3%81%B9%E3%81%87%20%E9%9D%92%E6%A3%AE%E7%9C%8C%E8%A6%B3%E5%85%89%E9%80%A3%E7%9B%9F%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | ✅ |
+| 3 | 岩手 | わんこきょうだい | 완코 형제 | `wankokyodai.png` | 岩手県観光協会 | [공식](https://iwatetabi.jp/wanko/) | ✅ |
+| 4 | 宮城 | むすび丸 | 무스비마루 | `musubimaru.png` | 宮城県・仙台市 | [공식](https://www.pref.miyagi.jp/site/sendaimiyagicp/musubimaru.html) | ✅ |
+| 5 | 秋田 | んだッチ | 은닷치 | `ndacchi.png` | 秋田県 | [공식](https://www.pref.akita.lg.jp/pages/archive/33524) | ✅ |
 | 6 | 山形 | きてけろくん | 키테케로군 | `kitekerokun.png` | 山形県 | [공식](https://www.pref.yamagata.jp/020026/kensei/shoukai/yamagataken/gotochi-character.html) | □ |
 | 7 | 福島 | キビタン | 키비탄 | `kibitan.png` | 福島県 | [이미지 검색](https://www.google.com/search?tbm=isch&q=%E3%82%AD%E3%83%93%E3%82%BF%E3%83%B3%20%E7%A6%8F%E5%B3%B6%E7%9C%8C%20%E5%85%AC%E5%BC%8F%20%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88) | □ |
 

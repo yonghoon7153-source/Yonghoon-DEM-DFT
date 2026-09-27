@@ -43,7 +43,9 @@
         "ja": "青森さ、行くべぇ！",
         "ko": "아오모리로 가자!"
       },
-      "art": "likeness"
+      "art": "official",
+      "image": "mascots/ikubee.webp",
+      "credit": "©青森県観光連盟"
     },
     {
       "id": "wankokyodai",
@@ -63,8 +65,10 @@
         "ja": "わんこそば、もう一杯！",
         "ko": "완코소바 한 그릇 더!"
       },
-      "art": "likeness",
-      "url": "https://iwatetabi.jp/wanko/"
+      "art": "official",
+      "url": "https://iwatetabi.jp/wanko/",
+      "image": "mascots/wankokyodai.webp",
+      "credit": "©岩手県観光協会"
     },
     {
       "id": "musubimaru",
@@ -84,8 +88,10 @@
         "ja": "むすび〜！仙台・宮城へおいでよ",
         "ko": "무스비~! 센다이·미야기로 와"
       },
-      "art": "likeness",
-      "url": "https://www.pref.miyagi.jp/site/sendaimiyagicp/musubimaru.html"
+      "art": "official",
+      "url": "https://www.pref.miyagi.jp/site/sendaimiyagicp/musubimaru.html",
+      "image": "mascots/musubimaru.webp",
+      "credit": "©宮城県・仙台市"
     },
     {
       "id": "ndacchi",
@@ -105,8 +111,10 @@
         "ja": "んだんだ！秋田はいいどこだ〜",
         "ko": "은다은다! 아키타는 좋은 곳이야~"
       },
-      "art": "likeness",
-      "url": "https://www.pref.akita.lg.jp/pages/archive/33524"
+      "art": "official",
+      "url": "https://www.pref.akita.lg.jp/pages/archive/33524",
+      "image": "mascots/ndacchi.webp",
+      "credit": "©秋田県"
     },
     {
       "id": "kitekerokun",
