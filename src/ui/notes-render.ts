@@ -44,7 +44,11 @@ export function renderChip(it: NoteItem): HTMLElement {
 /** 📷 next to a box that had a photo in the Canva: the photo itself is not ours to copy, so it opens an image search. */
 function photoLink(it: NoteItem): HTMLElement | null {
   if (!it.photo) return null;
-  const q = typeof it.photo === 'string' ? it.photo : it.t;
+  return photoSearch(typeof it.photo === 'string' ? it.photo : it.t);
+}
+
+/** 📷 — opens an image search; the photos themselves stay out of the site (CLAUDE.md rule 6). */
+export function photoSearch(q: string): HTMLElement {
   return el('a', {
     class: 'nphoto', href: `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(q)}`,
     target: '_blank', rel: 'noopener noreferrer', title: `사진 보기 — ${q}`, 'aria-label': `사진 보기: ${q}`,

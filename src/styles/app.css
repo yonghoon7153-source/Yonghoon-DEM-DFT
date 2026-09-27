@@ -470,9 +470,11 @@
 .facts dd { margin: 0; font-size: 14px; }
 .facts .terms { display: flex; flex-wrap: wrap; gap: 6px; }
 .term {
-  display: inline-flex; flex-direction: column; padding: 5px 10px;
+  display: inline-flex; align-items: center; gap: 4px; padding: 5px 6px 5px 10px;
   background: var(--paper-2); border-radius: 10px; line-height: 1.2;
 }
+.term__text { display: flex; flex-direction: column; }
+.term .nphoto { width: 22px; height: 22px; margin-left: 2px; font-size: 11px; flex-shrink: 0; }
 .term__ja { font-size: 13.5px; }
 .term__ja rt { font-size: 9px; color: var(--ink-2); }
 .term__ko { font-size: 11px; color: var(--ink-2); margin-top: 2px; font-family: var(--font-ko); }

@@ -4,7 +4,7 @@ import type { Mascot } from '../types';
 import type { NoteExtra, Prefecture, Region } from '../types';
 import { mascotVisualHtml } from '../mascots/visual';
 import { clear, el, ruby } from './dom';
-import { renderTree } from './notes-render';
+import { photoSearch, renderTree } from './notes-render';
 
 export interface PanelCallbacks {
   onClose(): void;
@@ -201,9 +201,9 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
     const dl = el('dl', {});
     dl.append(
       el('dt', {}, '名物', el('small', {}, '명물')),
-      el('dd', {}, el('div', { class: 'terms' }, ...p.meibutsu.map(termChip))),
+      el('dd', {}, el('div', { class: 'terms' }, ...p.meibutsu.map((t) => termChip(t, p.short.ja)))),
       el('dt', {}, '観光', el('small', {}, '관광')),
-      el('dd', {}, el('div', { class: 'terms' }, ...p.spots.map(termChip))),
+      el('dd', {}, el('div', { class: 'terms' }, ...p.spots.map((t) => termChip(t, p.short.ja)))),
       el('dt', {}, 'ひとこと', el('small', {}, '한마디')),
       el('dd', {}, el('div', { class: 'hitokoto' }, el('span', { class: 'ja', lang: 'ja' }, p.hitokoto.ja), el('span', { class: 'ko' }, p.hitokoto.ko))),
     );
@@ -262,8 +262,11 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
     );
   }
 
-  function termChip(t: { ja: string; kana?: string; ko?: string }): HTMLElement {
-    return el('span', { class: 'term' }, el('span', { class: 'term__ja', lang: 'ja' }, ruby(t.ja, t.kana)), t.ko ? el('span', { class: 'term__ko' }, t.ko) : null);
+  /** A 名物 / 観光 word: reading above, Korean below, and 📷 to look it up (searched with the prefecture's name). */
+  function termChip(t: { ja: string; kana?: string; ko?: string }, where: string): HTMLElement {
+    return el('span', { class: 'term' },
+      el('span', { class: 'term__text' }, el('span', { class: 'term__ja', lang: 'ja' }, ruby(t.ja, t.kana)), t.ko ? el('span', { class: 'term__ko' }, t.ko) : null),
+      photoSearch(`${t.ja} ${where}`));
   }
 
   function renderExtra(ex: NoteExtra, r: Region, open: boolean): HTMLElement {
