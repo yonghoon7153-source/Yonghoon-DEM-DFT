@@ -40,3 +40,4 @@ append-only. 형식: `## [YYYY-MM-DD] action | subject` — 커밋 제목 `actio
 ## [2026-09-27] update | 닮은꼴 SVG 는 그림이 없을 때만 불러오기, README 스크린샷을 실제 그림으로
 ## [2026-09-27] docs | Cloudflare 연결 순서 — Preview branch None 추가, CNAME 이름을 nihoncheese 로 바로잡음
 ## [2026-09-27] docs | Cloudflare Pages 연결됨 — nihoncheese.pages.dev, 실제 대시보드 순서(Continue to Pages)로
+## [2026-09-27] fix | 마인드맵 선이 마지막 칸에서 └ 로 끝나게 — 윗칸에서 내려오고 아래로 늘어지지 않음

@@ -50,5 +50,13 @@
 
 | # | 요청 | 상태 | 메모 |
 |---|------|------|------|
-| 25 | Cloudflare 로 연결 (nihoncheese.ayh.kr) — 사용자가 대시보드에서 직접 등록, 순서만 | 🔧 도메인 남음 | Pages 프로젝트 `nihoncheese` 로 배포됨 — **https://nihoncheese.pages.dev** 열림 (사용자 확인). 남은 것: Preview branch None · `nihoncheese.ayh.kr` CNAME (ayh.kr 은 이 Cloudflare 계정에 없음 → 관리처 DNS 에). 순서: README 「배포」 · `nihon share` |
+| 25 | Cloudflare 로 연결 (nihoncheese.ayh.kr) — 사용자가 대시보드에서 직접 등록, 순서만 | 🔧 도메인 남음 | Pages 프로젝트 `nihoncheese` 로 배포됨 — **https://nihoncheese.pages.dev** 열림 (사용자 확인). `nihoncheese.ayh.kr` 은 아직 ERR_NAME_NOT_RESOLVED — ayh.kr 이 이 Cloudflare 계정에 없어 관리처 DNS 에 CNAME `nihoncheese` → `nihoncheese.pages.dev` 필요. Preview branch None. 순서: README 「배포」 · `nihon share` |
 | 26 | 노션 일본어 단어장은 나중에 — 하자고 할 때 | ⏳ 대기 | `data/words.json` 에 얹고 県·지방과 연결 (CLAUDE.md 다음 단계) |
+
+## 6차 요청 (2026-09-27)
+
+| # | 요청 | 상태 | 메모 |
+|---|------|------|------|
+| 27 | 마인드맵 끝맺음(선)을 전체적으로 수정 | ✅ | 선이 윗칸에서 내려와 마지막 칸에서 └ 로 끝남 — 아래로 늘어지지 않음 (県 · 지방 · 함께 보기 · 메모장 공통) |
+| 28 | PDF 에 있던 사진 · URL 이 잘 들어갔나 | 🔧 링크 ✅ · 사진 ⏳ | 링크 14개 모두 PDF 와 같은 칸 (PDF 의 19개 = 여러 줄로 나뉜 링크 영역). 사진 84장(지도 그림 약 6 포함)은 규칙 6 으로 넣지 않았고 자리 표시도 2곳뿐 → 방식 비준 대기 |
+| 29 | Canva 링크에 접근 안 되나 | ✅ 답함 | 이 환경의 네트워크 정책이 `canva.link` · `www.canva.com` 을 막음. PDF 에 글자 · 링크 · 사진이 다 있어 대조는 PDF 로 함 |

@@ -409,14 +409,16 @@
   background: color-mix(in oklab, var(--paper-2) 60%, transparent);
 }
 
-/* mind-map tree */
+/* mind-map tree — every child draws its own piece of the branch, so the line hangs from the box above
+   and stops at the last child's tick (└) instead of running down past it */
 .tree { position: relative; }
-.tree .tree { margin-left: 14px; padding-left: 14px; border-left: 2px solid var(--branch, var(--line-2)); }
+.tree .tree { margin-left: 14px; padding-left: 16px; }
 .tree .tree > .node { position: relative; }
-.tree .tree > .node::before {
-  content: ""; position: absolute; left: -14px; top: 17px; width: 12px; height: 2px;
-  background: var(--branch, var(--line-2));
-}
+.tree .tree > .node::before,
+.tree .tree > .node::after { content: ""; position: absolute; background: var(--branch, var(--line-2)); }
+.tree .tree > .node::before { left: -14px; top: 17px; width: 12px; height: 2px; } /* ─ */
+.tree .tree > .node::after { left: -16px; top: -6px; bottom: 0; width: 2px; } /* │ through the 6px gap above */
+.tree .tree > .node:last-child::after { bottom: auto; height: 25px; } /* └ gap 6 + tick 17 + 2 */
 .node { margin: 6px 0; }
 .tree--wrap { display: flex; flex-wrap: wrap; gap: 6px; }
 .tree--wrap > .node { margin: 0; }
@@ -468,7 +470,7 @@
 .extra > summary small { color: var(--ink-3); font-size: 11.5px; font-family: var(--font-body); }
 .extra > summary::after { content: "＋"; margin-left: auto; color: var(--ink-3); font-size: 13px; }
 .extra[open] > summary::after { content: "－"; }
-.extra .tree { margin-top: 8px; }
+.extra .tree--root { margin-top: 8px; }
 
 .mascot-card {
   display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 16px;
