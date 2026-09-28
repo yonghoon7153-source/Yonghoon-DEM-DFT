@@ -737,7 +737,10 @@ HANDOVER_HELD_BACK = {
                               '규약 실패와 물리 미관통을 **한 값으로 접는다**.  재수확 뒤 공급.',
 }
 #: 기본 수확 스냅샷 — ⛔ 옛 판 (20260919) 은 분모 바닥 · 이른 메시 (LHS-10 · 11) 로 폐기됐다.  조용히 옛 판을 가리키지 않는다 (HND-04).
-DEFAULT_HARVEST_DIR = 'docs/data/lhs_descriptors_20260924'
+#: 2026-09-28 (J19): 20260924 → **20260925** — 0924 JSON 에는 `handover_qc` (두께 · 벽 QC · 적격성) 가 없어 HND-04 열이 빈칸으로 나갔고
+#:   (J18 기록: *"09-24 스냅샷 JSON 에는 handover_qc 가 없다 ⇒ 재수확 v2 뒤 인계표 재생성"*), union 병기의 짝 검사 (두께) 도 설 수 없다.
+#:   0925 는 0924 를 대체한다 — 공통 값 Δ = 0 (그 README).
+DEFAULT_HARVEST_DIR = 'docs/data/lhs_descriptors_20260925'
 #: 수확 JSON 에서 **추가로** 실어 보내는 것 (새 계산 0 — 이미 측정돼 있다).
 #: ★ HND-04 (Codex 09-25, 비준): 벽 QC · 적격성 · 규약 ID · sha 를 CSV 로 **실어 나른다** — JSON 에만 두고 CSV 에서 버리면 계약 실패.
 HANDOVER_EXTRA = (
@@ -820,6 +823,73 @@ HANDOVER_EXTRA = (
 )
 
 
+#: J19 (1저자 비준 2026-09-28 — docs/reviews/pure_se_union_prereg_20260927.md §6-2 · lhs_handover_judgments_20260924.md J19) —
+#:   겹침 보정 porosity 를 **병기**한다.  구 부피 합 열 (`porosity_sphere_pct_RECORD_ONLY`) 은 J1 대로 **그대로** 남는다 — 교체가 아니다
+#:   (CLAUDE.md porosity 규약 · 생산 코퍼스가 그 규약을 공유한다).  ⛔ φ_SE · φ_AM 의 union 판은 **넣지 않는다** (AM–SE 겹침 배분 = 별도 저자
+#:   결정) · 물리 타깃 적격성 (`physical_target_status`) 도 **안 바꾼다** (§6-2 비준 범위 밖).
+DEFAULT_UNION_TSV = 'docs/data/lhs_union_20260927/lhs130_union.tsv'
+#: SE-rich 문턱 (SE / 고체, 구 부피) — ⚠ 등록된 정의가 없어 선례를 따른 **도구 선택**이다 (저자 확인 항목):
+#:   CLAUDE.md 신뢰성 regime map *"SE-rich (SE/sol ≳ 50 %) → DEM ε_sphere 과압축"* · union README *"음수 ε_sphere 는 SE/고체 0.5–0.6 칸부터"*.
+#:   연속값 `se_of_solid_vol` 을 함께 내므로 받는 쪽이 문턱을 바꿀 수 있다.
+SE_RICH_MIN = 0.50
+#: union 행 ↔ 수확 짝 검사 허용치 — union README 실측 최대 차: 구 부피 합 5.6e-14 %p · 두께 0 µm
+UNION_TOL = {'eps_sphere_pct': 1e-9, 'thickness_um': 1e-6}
+HANDOVER_UNION = (
+    ('porosity_union_exact_pct',        'mc_void_pct',
+     '★ 겹침 보정 porosity (정확 union — 상자 [0,Lx)×[0,Ly)×[0,plate_z) 무작위 점 · 세 입자 이상 겹침까지) — 물리 porosity 열 (J19)'),
+    ('porosity_union_exact_se_pct',     'mc_void_se_pct',         '위 값의 통계 오차 (1σ, %p)'),
+    ('porosity_union_pair_clipped_pct', 'eps_union_pair_clipped', '검산 — 웹앱 쌍 렌즈 union − 벽 밖 부피 (세 입자 겹침 무시 · 상한)'),
+    ('union_pair_upper_bound_ok',       'pair_upper_bound_ok',
+     '쌍 렌즈 ≥ 정확 — False 면 접촉 덤프에 겹친 쌍이 빠졌다 (정확 union 은 원자만 써서 그래도 유효)'),
+    ('se_of_solid_vol',                 'se_of_solid_vol',        'SE / 고체 (구 부피) — SE-rich 표지의 연속값'),
+)
+#: 유도 열 (union 행 + 수확에서 계산)
+HANDOVER_UNION_DERIVED = (
+    ('thickness_mass_conserving_um',
+     '질량 보존 두께 = 두께 × (1 − ε_sphere)/(1 − ε_union) — union 을 실제 공극률로 받을 때 **같은 고체**의 두께 (DEM 에서 겹친 부피는 사라지므로 '
+     'union 과 DEM 간격 두께를 둘 다 실제 값으로 받을 수 없다)'),
+    ('se_rich', f'SE / 고체 ≥ {SE_RICH_MIN} (구 부피 합이 겹침 이중계상으로 퇴화하는 영역 — 문턱은 도구 선택, 연속값 옆 열)'),
+)
+
+
+def load_union(path):
+    """union TSV (scripts/lhs_union_webapp.py 산출) → dict(case → 행).  같은 case 가 둘이면 거부."""
+    with open(path, encoding='utf-8') as fh:
+        rows = list(csv.DictReader(fh, delimiter='\t'))
+    out = {}
+    for r in rows:
+        c = r.get('case')
+        if not c or c in out:
+            raise FillRefusal(f'union TSV {path}: case {c!r} 가 비었거나 둘 이상이다')
+        out[c] = r
+    return out
+
+
+def _union_cols(case, h, u):
+    """J19 — 수확 한 건 + union 행 → 인계 열.  짝 (같은 수확 · 같은 프레임) 이 아니면 `FillRefusal`."""
+    if u.get('status') != 'OK':
+        raise FillRefusal(f'{case}: union status {u.get("status")!r} ≠ OK — 그 union 값을 붙이지 않는다')
+    eps_s = float(h['porosity_sphere_pct_RECORD_ONLY'])
+    if abs(float(u['eps_sphere_web']) - eps_s) > UNION_TOL['eps_sphere_pct']:
+        raise FillRefusal(f'{case}: union 의 구 부피 합 {u["eps_sphere_web"]} ≠ 수확 {eps_s!r} — 다른 수확 · 다른 프레임의 union 이다')
+    th = (h.get('handover_qc') or {}).get('thickness_wall_gap_um')
+    if th is None:
+        raise FillRefusal(f'{case}: 수확에 두께 (handover_qc.thickness_wall_gap_um) 가 없다 — 09-24 판 수확이다 (0925 판을 쓸 것 · DEFAULT_HARVEST_DIR)')
+    if abs(float(u['thickness_um']) - float(th)) > UNION_TOL['thickness_um']:
+        raise FillRefusal(f'{case}: union 두께 {u["thickness_um"]} ≠ 수확 {th!r} µm — 다른 프레임 (플래튼) 의 union 이다')
+    pc = h.get('phase_counts') or {}
+    n_am = sum(int(v) for k, v in pc.items() if k != 'SE')
+    if int(u['n_SE']) != int(pc.get('SE', -1)) or int(u['n_AM']) != n_am:
+        raise FillRefusal(f'{case}: union 입자 수 (SE {u["n_SE"]} · AM {u["n_AM"]}) ≠ 수확 (SE {pc.get("SE")} · AM {n_am}) — 다른 침대다')
+    eps_u = float(u['mc_void_pct'])
+    if not 0.0 < eps_u < 100.0:
+        raise FillRefusal(f'{case}: 정확 union {eps_u!r} % 가 (0, 100) 밖이다')
+    o = {name: (str(u[col]) if col == 'pair_upper_bound_ok' else repr(float(u[col]))) for name, col, _w in HANDOVER_UNION}
+    o['thickness_mass_conserving_um'] = repr(float(th) * (1.0 - eps_s / 100.0) / (1.0 - eps_u / 100.0))
+    o['se_rich'] = str(float(u['se_of_solid_vol']) >= SE_RICH_MIN)
+    return o
+
+
 def _dig(h, path):
     cur = h
     for k in path:
@@ -829,9 +899,12 @@ def _dig(h, path):
     return cur
 
 
-def build_handover(rows, harvest, key='case_id'):
-    """설계행 + 수확 → 인계용 행 리스트.  **순수 함수**(파일을 안 쓴다) 라 시험 가능하다.
+def build_handover(rows, harvest, key='case_id', union=None):
+    """설계행 + 수확 (+ union) → 인계용 행 리스트.  **순수 함수**(파일을 안 쓴다) 라 시험 가능하다.
 
+    union (J19, 선택): `load_union` 산출 dict 또는 행 목록.  주면 설계 케이스 **전부**에 짝이 있어야 하고 (부분 병기 금지),
+    짝마다 구 부피 합 porosity · 두께 · 상별 입자 수가 수확과 같아야 한다 (`_union_cols`).  설계에 없는 union 행 (코호트의 perc 등) 은
+    인계표에 넣지 않고 report['union_extra'] 에 남긴다.
     반환 (out_rows, cols, report).  계약 위반이면 `FillRefusal`.
     """
     #  ⚠ `load_harvest` 는 **dict(case → h)** 를 준다.  초판은 list 만 받아서
@@ -849,8 +922,17 @@ def build_handover(rows, harvest, key='case_id'):
     for c in HANDOVER_VALUE_COLS:
         cols += [c, c + '_status']
     cols += [n for n, _p, _w in HANDOVER_EXTRA]
+    uv = None
+    if union is not None:
+        uv = dict(union) if isinstance(union, dict) else {u['case']: u for u in union}
+        miss_u = [r[key] for r in rows if r[key] not in uv]
+        if miss_u:
+            raise FillRefusal(f'union 에 없는 설계행 {len(miss_u)} 건: {miss_u[:5]} — 부분 병기 금지 (J19)')
+        cols += [n for n, _c, _w in HANDOVER_UNION] + [n for n, _w in HANDOVER_UNION_DERIVED]
     out, rep = [], {'n': 0, 'blank_by_status': collections.Counter(),
                     'held_back': dict(HANDOVER_HELD_BACK)}
+    if uv is not None:
+        rep['union_extra'] = sorted(set(uv) - {r[key] for r in rows})
     for r in rows:
         h = hv[r[key]]
         o = {c: r.get(c, '') for c in design_cols}
@@ -870,6 +952,8 @@ def build_handover(rows, harvest, key='case_id'):
                  - 100.0 * (1.0 - float(h['phi_se']) - float(h['phi_am'])))
         if e1 > DESC07_TOL['porosity']:
             raise FillRefusal(f"{r[key]}: DESC-07 항등식 위반 {e1:.3e}")
+        if uv is not None:
+            o.update(_union_cols(r[key], h, uv[r[key]]))
         out.append(o)
         rep['n'] += 1
     return out, cols, rep
@@ -1110,8 +1194,11 @@ def _selftest():
         _row.get('thickness_wall_gap_um') == '45.9' and _row.get('n_floor_center_out') == '4'
         and bool(_row.get('boundary_model_id')) and bool(_row.get('measurement_protocol_id'))
         and len(_row.get('deck_sha256') or '') == 64 and _row.get('deck_floor_z_sim') == '0.0')
-    chk('⑰ HND-04: 기본 수확 디렉터리 = 20260924 판 (09-19 판을 조용히 가리키지 않는다)',
-        'lhs_descriptors_20260924' in str(globals().get('DEFAULT_HARVEST_DIR', '')))
+    _dh = pathlib.Path(__file__).resolve().parent.parent / str(globals().get('DEFAULT_HARVEST_DIR', ''))
+    _dj = sorted(_dh.glob('lhs*.json'))[:1] if _dh.is_dir() else []
+    chk('⑰ HND-04 · J19: 기본 수확 디렉터리 = 20260925 판 — 그 JSON 에 handover_qc 가 **실제로** 있다 (0924 판은 없어 HND-04 열이 빈칸이었다)',
+        'lhs_descriptors_20260925' in str(globals().get('DEFAULT_HARVEST_DIR', ''))
+        and bool(_dj) and 'handover_qc' in json.loads(_dj[0].read_text(encoding='utf-8')))
     #  ★ `DESC-09` — 반쪽 채움 금지 (양방향)
     _neg('⑮a DESC-09: 수확에 없는 설계가 있으면 거부',
          lambda: fill_descriptors([{'case_id': 'c1'}, {'case_id': 'zz'}], _hv))
@@ -1250,6 +1337,73 @@ def _selftest():
         'tortuosity_dijkstra_SE' in HANDOVER_HELD_BACK
         and 'LHS-08' in HANDOVER_HELD_BACK['tortuosity_dijkstra_SE'])
 
+    #  ═══ ⑱ J19 (1저자 비준 09-28) — 겹침 보정 porosity 를 **병기** (구 부피 합 열 유지 · 교체 아님) ═══════════════════
+    #   union TSV (scripts/lhs_union_webapp.py 산출) 를 수확과 **짝지어** 붙인다.  짝이 맞는지 (같은 수확 · 같은 프레임) 를
+    #   구 부피 합 porosity · 두께 · 상별 입자 수로 다시 재고, 어긋나면 거부한다 — 다른 수확 · 다른 프레임의 union 을 붙이지 않는다.
+    def _hq(case, eps_s=11.0, th=34.0, n_se=100, n_p=1, n_s=10):
+        h = _h(case, porosity_sphere_pct_RECORD_ONLY=eps_s, phi_se=0.5, phi_am=0.5 - eps_s / 100.0)
+        h['phase_counts'] = {'AM_P': n_p, 'AM_S': n_s, 'SE': n_se}
+        h['handover_qc'] = {'thickness_wall_gap_um': th}
+        return h
+
+    def _u(case, eps_s=11.0, th=34.0, eps_u=14.0, se=0.6, n_se=100, n_am=11, status='OK', ub='True'):
+        return {'case': case, 'eps_sphere_web': repr(eps_s), 'thickness_um': repr(th), 'mc_void_pct': repr(eps_u),
+                'mc_void_se_pct': '0.014', 'eps_union_pair_clipped': repr(eps_u + 0.004), 'pair_upper_bound_ok': ub,
+                'se_of_solid_vol': repr(se), 'n_SE': str(n_se), 'n_AM': str(n_am), 'status': status}
+    _dq = [{'case_id': 'q1'}, {'case_id': 'q2'}]
+    _hqs = {'q1': _hq('q1', eps_s=-2.0, th=30.0), 'q2': _hq('q2', eps_s=20.0, th=40.0)}
+    _uq = {'q1': _u('q1', eps_s=-2.0, th=30.0, eps_u=6.5, se=0.62), 'q2': _u('q2', eps_s=20.0, th=40.0, eps_u=21.0, se=0.25),
+           'perc': _u('perc', status='MISSING')}
+    try:
+        _oq, _cq, _rq = build_handover(_dq, _hqs, union=_uq)
+        _eq = ''
+    except Exception as e:                                                # noqa: BLE001
+        _oq, _cq, _rq, _eq = [], [], {}, f'{type(e).__name__}: {e}'
+    _q1 = next((r for r in _oq if r['case_id'] == 'q1'), {})
+    _q2 = next((r for r in _oq if r['case_id'] == 'q2'), {})
+    chk('⑱a J19 union 열 · 질량 보존 두께 · SE-rich 표지 (+ 통계 오차 · 쌍 렌즈 검산 · SE/고체 연속값) 가 인계표에 있다' + (f' — {_eq}' if _eq else ''),
+        not _eq and all(c in _cq for c in ('porosity_union_exact_pct', 'porosity_union_exact_se_pct', 'porosity_union_pair_clipped_pct',
+                                            'union_pair_upper_bound_ok', 'se_of_solid_vol', 'thickness_mass_conserving_um', 'se_rich')))
+    chk('⑱b 병기 — 구 부피 합 열 (porosity_sphere_pct_RECORD_ONLY) 은 **원값 그대로** 남는다 (음수 −2.0 도 · 교체 아님)',
+        _q1.get('porosity_sphere_pct_RECORD_ONLY') == repr(-2.0) and _q1.get('porosity_union_exact_pct') == repr(6.5))
+    chk('⑱c 질량 보존 두께 = 두께 × (1 − ε_sphere)/(1 − ε_union) (같은 고체를 union 공극률로 받을 때의 두께)',
+        _q1.get('thickness_mass_conserving_um') == repr(30.0 * (1 - (-2.0) / 100) / (1 - 6.5 / 100)))
+    chk(f'⑱d SE-rich 표지 = SE/고체 ≥ {globals().get("SE_RICH_MIN")} (0.62 → True · 0.25 → False) · 연속값도 함께',
+        _q1.get('se_rich') == 'True' and _q2.get('se_rich') == 'False' and _q1.get('se_of_solid_vol') == repr(0.62))
+    chk('⑱e 설계에 없는 union 행 (코호트의 perc) 은 인계표에 안 들어가고 보고에 남는다',
+        len(_oq) == 2 and 'perc' in (_rq.get('union_extra') or []))
+    chk('⑱e2 union 없이 부르면 옛 인계표 그대로 (union 열 없음 · 하위 호환)',
+        'porosity_union_exact_pct' not in build_handover(_dq, _hqs)[1])
+    _neg('⑱f union 에 설계 케이스가 없으면 거부 (부분 병기 금지)', lambda: build_handover(_dq, _hqs, union={'q1': _uq['q1']}))
+    _neg('⑱g union 의 구 부피 합 porosity ≠ 수확 (다른 프레임 · 다른 수확의 union) 이면 거부',
+         lambda: build_handover(_dq, _hqs, union=dict(_uq, q2=_u('q2', eps_s=20.5, th=40.0, eps_u=21.0))))
+    _neg('⑱h union 두께 ≠ 수확 두께면 거부',
+         lambda: build_handover(_dq, _hqs, union=dict(_uq, q2=_u('q2', eps_s=20.0, th=40.1, eps_u=21.0))))
+    _neg('⑱i union 상별 입자 수 ≠ 수확이면 거부',
+         lambda: build_handover(_dq, _hqs, union=dict(_uq, q2=_u('q2', eps_s=20.0, th=40.0, eps_u=21.0, n_se=99))))
+    _neg('⑱j union status ≠ OK 면 거부',
+         lambda: build_handover(_dq, _hqs, union=dict(_uq, q2=_u('q2', eps_s=20.0, th=40.0, eps_u=21.0, status='DELTA_MISMATCH'))))
+    _hno = _hq('q2', eps_s=20.0, th=40.0)
+    _hno.pop('handover_qc')
+    _neg('⑱k 수확에 두께 (handover_qc) 가 없으면 union 을 붙이지 않는다 (09-24 판 수확 — 0925 판을 쓸 것)',
+         lambda: build_handover(_dq, dict(_hqs, q2=_hno), union=_uq))
+    #  ⑱l 실물 — 동결 설계 CSV 130 · 기본 수확 (0925) · 기본 union TSV
+    _rt = pathlib.Path(__file__).resolve().parent.parent
+    _dp_, _up_, _hd_ = (_rt / DESCRIPTOR_FILL_EXPECTED['path'], _rt / str(globals().get('DEFAULT_UNION_TSV', '')),
+                        _rt / DEFAULT_HARVEST_DIR)
+    try:
+        with _dp_.open(encoding='utf-8-sig') as _fh:
+            _rows_ = list(csv.DictReader(_fh))
+        _ol, _cl, _rl = build_handover(_rows_, load_harvest(_hd_), union=load_union(_up_))
+        _eu = [float(r['porosity_union_exact_pct']) for r in _ol]
+        _ra = sorted(float(r['thickness_mass_conserving_um']) / float(r['thickness_wall_gap_um']) for r in _ol)
+        _ns = sum(r['se_rich'] == 'True' for r in _ol)
+        _neg_s = sum(float(r['porosity_sphere_pct_RECORD_ONLY']) < 0 for r in _ol)
+        chk(f'⑱l 실물 130 (설계 CSV · 0925 수확 · union TSV) — {len(_ol)} 행 전부 병기 · union 최소 {min(_eu):.2f} % > 0 · '
+            f'질량 보존 비 {_ra[0]:.3f}–{_ra[-1]:.3f} (중앙 {_ra[len(_ra) // 2]:.3f}) ≥ 1 · SE-rich {_ns} · 구 부피 합 음수 {_neg_s}',
+            len(_ol) == 130 and min(_eu) > 0 and _ra[0] >= 1.0)
+    except Exception as e:                                                # noqa: BLE001
+        chk(f'⑱l 실물 130 병기 ({type(e).__name__}: {e})', False)
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -1283,6 +1437,9 @@ if __name__ == '__main__':
     ap.add_argument('--harvest', default='', metavar='DIR',
                     help='--export-handover 가 읽을 수확 JSON 디렉터리 '
                          '(기본 = DESCRIPTOR_FILL_EXPECTED["source"] 의 경로)')
+    ap.add_argument('--union', default=None, metavar='TSV',
+                    help='(--export-handover) J19 union TSV (scripts/lhs_union_webapp.py 산출) — 겹침 보정 porosity · 질량 보존 두께 · '
+                         f'SE-rich 표지를 **병기**한다 (기본 {DEFAULT_UNION_TSV} · 빈 문자열이면 옛 인계표).  짝이 안 맞으면 거부')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
@@ -1326,7 +1483,12 @@ if __name__ == '__main__':
         with _dp.open(encoding='utf-8-sig') as _fh:
             _rows = list(csv.DictReader(_fh))
         _harv = load_harvest(_hd)
-        _out, _cols, _rep = build_handover(_rows, _harv)
+        _un = DEFAULT_UNION_TSV if a.union is None else a.union
+        _uv = None
+        if _un:
+            _upth = pathlib.Path(_un)
+            _uv = load_union(_upth if _upth.is_absolute() else _root / _upth)
+        _out, _cols, _rep = build_handover(_rows, _harv, union=_uv)
         _op = pathlib.Path(a.export_handover)
         if not _op.is_absolute():
             _op = _root / _op
@@ -1339,6 +1501,9 @@ if __name__ == '__main__':
         print(f'   빈칸 사유: {dict(_rep["blank_by_status"])}')
         for _k, _v in _rep['held_back'].items():
             print(f'   ⛔ 보류 열 `{_k}` — {_v}')
+        if _uv is not None:
+            print(f'   J19 union 병기: {_un} · 설계 밖 union 행 {_rep.get("union_extra")} (인계표에 안 넣음) · '
+                  f'SE-rich (≥ {SE_RICH_MIN}) {sum(r["se_rich"] == "True" for r in _out)} 행 · 구 부피 합 열은 그대로')
         raise SystemExit(0)
 
     if a.fill_descriptors:

@@ -228,7 +228,7 @@ $PY ~/lhs_ext_materialize.py \
 ⚠ 함께 드러난 것 — watch 의 `✅ 완료 COMPLETED` 는 **SLURM 잡 상태일 뿐** 물리적 완주를 증명하지 않는다
 (`SELF-56` 과 같은 부류의 false-green).
 
-### 6-2. ⬜ 하류 판단 J19 (저자 비준 대기) — LHS 인계표 porosity 열 규약
+### 6-2. ✅ 하류 판단 J19 (**1저자 비준 09-28** · 구현 09-28) — LHS 인계표 porosity 열 규약
 
 §4 가 *"결과가 무엇이든 **생산 기본값 · E_SE 보정은 바꾸지 않는다** — 이 시험은 LHS 인계표의 porosity 열
 규약을 정하는 근거"* 라고 등록했다.  그 근거가 이제 있다:
@@ -242,3 +242,16 @@ $PY ~/lhs_ext_materialize.py \
 ⛔ **구 부피 합 열을 **없애지 않는다** — CLAUDE.md 의 porosity 규약은 소성 압밀에서 ε_sphere 를 물리적으로
 옳은 공극(재료 보존)으로 두고, **생산 코퍼스 170 여 케이스가 그 규약을 공유**한다.  바꾸면 교차-케이스
 추세가 깨진다.  ⇒ **교체가 아니라 병기**다.
+
+**✅ 비준 · 구현 (2026-09-28)** — 1저자 *"비준이야"* (J19 · 구 부피 합 열 유지).  구현 = `scripts/lhs_design_dataset.py`
+(`--export-handover` 가 기본으로 `--union docs/data/lhs_union_20260927/lhs130_union.tsv` 를 붙인다 · 셀프테스트 ⑱):
+- 병기 열: `porosity_union_exact_pct` (정확 union · 물리 porosity 열) · `porosity_union_exact_se_pct` · `porosity_union_pair_clipped_pct` (검산) ·
+  `union_pair_upper_bound_ok` · `se_of_solid_vol` · **`thickness_mass_conserving_um`** = 두께 × (1 − ε_sphere)/(1 − ε_union) · **`se_rich`** (SE/고체 ≥ 0.50).
+- `porosity_sphere_pct_RECORD_ONLY` 는 **원값 그대로** (음수 포함) — 교체가 아니라 병기.
+- 짝 검사: union 행마다 구 부피 합 porosity (≤ 1e-9 %p) · 두께 (≤ 1e-6 µm) · 상별 입자 수가 수확과 같아야 붙는다 (다른 수확 · 다른 프레임의 union 거부) ·
+  설계 케이스 전부에 짝이 있어야 한다 (부분 병기 금지).  기본 수확 = `lhs_descriptors_20260925` (0924 판에는 두께 · `handover_qc` 가 없다).
+- ⛔ **안 한 것** (비준 범위 밖): ③ φ_SE · φ_AM 의 union 판 (AM–SE 겹침 배분 = 별도 저자 결정) · ④ 물리 타깃 적격성을 union 기준으로 바꾸기
+  (`physical_target_status` 그대로).
+- ⚠ **SE-rich 문턱 0.50 은 등록된 정의가 없어 선례를 따른 도구 선택**이다 — CLAUDE.md 신뢰성 regime map *"SE-rich (SE/sol ≳ 50 %)"* ·
+  union README *"음수 ε_sphere 는 SE/고체 0.5–0.6 칸부터"*.  연속값 `se_of_solid_vol` 을 옆 열에 두었다 (⬜ 저자 확인 항목).
+
