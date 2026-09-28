@@ -1,5 +1,5 @@
 // The diary-page panel: prefecture view, region view, and the general memo view.
-import { airportsOf, countBoxes, extrasFor, extrasForRegion, generalExtras, groupOf, mascotSearchUrl, mascotsOf, mountains, notes, notesFor, places, prefById, prefBySlug, prefecturesIn, regionById, regionNotes, regionOf, regionTitle, stationsOf, supplementFor } from '../data';
+import { airportsOf, countBoxes, extrasFor, extrasForRegion, generalExtras, groupOf, mascotSearchUrl, mascotsOf, mountains, notes, notesFor, places, prefById, prefBySlug, prefecturesIn, regionById, regionNotes, regionOf, regionTitle, regions, stationsOf, supplementFor, transit } from '../data';
 import type { Mascot } from '../types';
 import type { NoteExtra, NoteItem, Prefecture, Region } from '../types';
 import { mascotVisualHtml } from '../mascots/visual';
@@ -17,12 +17,17 @@ export interface PanelCallbacks {
   onRange?(no: number): void;
   onHideRangeNames?(hide: boolean): void;
   onMountainsOff?(): void;
+  /** 🚄 route mode: picked line, hidden names for self-testing */
+  transitState?(): { active: string | null; hide: boolean };
+  onLine?(id: string): void;
+  onHideLineNames?(hide: boolean): void;
+  onTransitOff?(): void;
   /** Tokyo: a 23-ward map whose wards pop up my boxes */
   hasWardMap?(slug: string): boolean;
   onWardMap?(focus?: string): void;
 }
 
-export type PanelView = { type: 'prefecture'; id: string } | { type: 'region'; id: string } | { type: 'mountains'; id: 'mountains' } | null;
+export type PanelView = { type: 'prefecture'; id: string } | { type: 'region'; id: string } | { type: 'mountains'; id: 'mountains' } | { type: 'transit'; id: 'transit' } | null;
 
 export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
   const body = root.querySelector<HTMLElement>('#panel-body')!;
@@ -74,6 +79,16 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
     else open();
   }
 
+  function showTransit() {
+    const again = current?.type === 'transit';
+    current = { type: 'transit', id: 'transit' };
+    const top = body.scrollTop;
+    clear(body);
+    body.append(...renderTransit());
+    if (again) body.scrollTop = top;
+    else open();
+  }
+
   /** Re-render the current view (e.g. after a mascot was found). */
   function refresh() {
     if (!current) return;
@@ -81,8 +96,84 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
     clear(body);
     if (current.type === 'prefecture') body.append(...renderPrefecture(prefBySlug.get(current.id)!));
     else if (current.type === 'region') body.append(...renderRegion(regionById.get(current.id)!));
+    else if (current.type === 'transit') body.append(...renderTransit());
     else body.append(...renderMountains());
     body.scrollTop = top;
+  }
+
+  // ---------------------------------------------------------------- 🚄 route mode (like the mountain mode: numbers on the map, a list here)
+  const revealedLines = new Set<string>();
+  function renderTransit(): HTMLElement[] {
+    const st = cb.transitState?.() ?? { active: null, hide: false };
+    if (!st.hide) revealedLines.clear();
+    const isMasked = (id: string) => st.hide && !revealedLines.has(id);
+    const pick = (id: string) => {
+      if (isMasked(id)) revealedLines.add(id);
+      cb.onLine?.(id);
+    };
+    const lines = transit.shinkansen;
+    const noOf = (id: string) => lines.findIndex((l) => l.id === id) + 1;
+    const KIND = { mini: '미니 신칸센 (재래선 규격)', plan: '공사 중' } as const;
+    const wrap = el('div', { class: 'transit-mode' });
+    wrap.append(el('div', { class: 'ph' }, el('span', { class: 'chip--region chip--range chip--transit' }, el('span', {}, '🚄'), el('small', {}, '가는 법 모드'))));
+    wrap.append(el('h2', { class: 'ph__name ph__name--range', lang: 'ja' }, el('span', { class: 'ph__furi' }, 'しんかんせん・くうこう'), '新幹線・空港'));
+    wrap.append(el('p', { class: 'ph__alt' }, `신칸센 ${lines.length}개 노선 · 공항 ${transit.airports.length}곳 — 번호를 누르면 지도에서 찾아요`));
+    const hideBtn = el('button', { type: 'button', class: 'range-tool', 'aria-pressed': String(st.hide) }, st.hide ? '🙈 이름 가리는 중' : '👀 이름 가리기');
+    hideBtn.addEventListener('click', () => cb.onHideLineNames?.(!st.hide));
+    const offBtn = el('button', { type: 'button', class: 'range-tool range-tool--off' }, '가는 법 끄기');
+    offBtn.addEventListener('click', () => cb.onTransitOff?.());
+    wrap.append(el('div', { class: 'range-tools' }, hideBtn, offBtn));
+
+    // the picked line, in full: its stops with names, and what kind of line it is
+    const act = lines.find((l) => l.id === st.active);
+    if (!act) wrap.append(el('p', { class: 'range-focus range-focus--hint' }, '지도의 번호나 아래 노선을 누르면 여기에 역이 나와요'));
+    else if (isMasked(act.id)) {
+      const b = el('button', { type: 'button', class: 'range-focus range-focus--masked', style: `--range:${act.color}` },
+        el('span', { class: 'range-focus__no' }, String(noOf(act.id))),
+        el('span', { class: 'range-focus__body' }, el('b', { class: 'range-focus__name' }, '어느 노선일까요?'), el('span', { class: 'range-focus__fact' }, '떠올려 보고 눌러서 확인 👀')));
+      b.addEventListener('click', () => pick(act.id));
+      wrap.append(b);
+    } else {
+      const stops = act.stations.filter((s) => s.major);
+      wrap.append(el('div', { class: 'range-focus', 'aria-live': 'polite', style: `--range:${act.color}` },
+        el('span', { class: 'range-focus__no' }, String(noOf(act.id))),
+        el('span', { class: 'range-focus__body' },
+          el('span', { class: 'range-focus__kana', lang: 'ja' }, act.name.kana),
+          el('span', { class: 'range-focus__line' }, el('b', { class: 'range-focus__name', lang: 'ja' }, act.name.ja), el('span', { class: 'range-focus__ko' }, act.name.ko)),
+          el('span', { class: 'range-focus__fact', lang: 'ja' }, `${act.stations[0]!.ja} → ${act.stations[act.stations.length - 1]!.ja} · 역 ${act.stations.length}곳${act.kind ? ` · ${KIND[act.kind]}` : ''}`),
+          stops.length > 1 ? el('span', { class: 'range-focus__fact', lang: 'ja' }, `주요 역: ${stops.map((s) => s.ja).join(' → ')}`) : null)));
+    }
+
+    const list = el('ol', { class: 'range-list' });
+    lines.forEach((l, i) => {
+      const no = i + 1;
+      const b = el('button', { type: 'button', class: `range-item${l.id === st.active ? ' is-active' : ''}${isMasked(l.id) ? ' is-masked' : ''}`, 'aria-pressed': String(l.id === st.active), style: `--range:${l.color}`, title: l.name.ko },
+        el('span', { class: 'range-item__no' }, String(no)),
+        el('span', { class: 'range-item__text' },
+          el('span', { class: 'range-item__kana', lang: 'ja' }, isMasked(l.id) ? '' : l.name.kana),
+          el('span', { class: 'range-item__name', lang: 'ja' }, isMasked(l.id) ? '？？？' : l.name.ja),
+          el('span', { class: 'range-item__ko' }, isMasked(l.id) ? '' : l.name.ko)));
+      b.addEventListener('click', () => pick(l.id));
+      list.append(el('li', {}, b));
+    });
+    wrap.append(el('section', { class: 'sec sec--ranges' }, list));
+
+    // airports by region: tap one to open its prefecture (the 가는 법 line is there too)
+    const air = el('section', { class: 'sec' }, el('h3', {}, el('span', { class: 'emoji' }, '✈'), '공항', el('span', { class: 'n' }, '진한 것 = 국제 관문')));
+    for (const r of regions) {
+      const list2 = transit.airports.filter((a) => regionOf(prefBySlug.get(a.pref)!).id === r.id);
+      if (!list2.length) continue;
+      const chips = el('div', { class: 'member-chips go-chips' });
+      for (const a of list2) {
+        const b = el('button', { type: 'button', class: a.hub ? 'is-hub' : '', style: `--c:${r.color}`, title: a.name.ko }, el('span', { lang: 'ja' }, a.name.ja.replace(/空港$/, '')), el('small', {}, a.iata));
+        b.addEventListener('click', () => cb.onSelectPrefecture(a.pref));
+        chips.append(b);
+      }
+      air.append(el('h4', { class: 'go-region', lang: 'ja' }, regionTitle(r)), chips);
+    }
+    wrap.append(air);
+    wrap.append(el('p', { class: 'meta-line' }, '노선은 역 사이를 직선으로 이은 대략선이에요 — 정확한 노선도가 아니에요. 공항 좌표는 OurAirports.'));
+    return [wrap];
   }
 
   // ---------------------------------------------------------------- mountain mode (worksheet 高い山脈・山地・高地)
@@ -344,7 +435,7 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
     return out;
   }
 
-  return { showPrefecture, showRegion, showMountains, refresh, close, isOpen: () => root.classList.contains('is-open'), current: () => current };
+  return { showPrefecture, showRegion, showMountains, showTransit, refresh, close, isOpen: () => root.classList.contains('is-open'), current: () => current };
 }
 
 /** Content for the 메모장 modal: notes that belong to no particular place. */

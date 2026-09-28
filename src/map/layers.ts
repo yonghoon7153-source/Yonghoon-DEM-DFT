@@ -24,6 +24,7 @@ export interface LayerContext {
   projection: GeoProjection;
   okinawaShift: LonLat;
   onRange(no: number): void;
+  onLine(id: string): void;
 }
 
 export interface LayerFrame {
@@ -84,6 +85,10 @@ export function createLayers(ctx: LayerContext) {
   const on: Record<LayerId, boolean> = { cities: true, bridges: true, transit: false, mountains: false };
   let hideRangeNames = false;
   let activeRange: number | null = null;
+  // 🚄 route mode: the line picked in the panel, and whether names are hidden for self-testing
+  let activeLine: string | null = null;
+  let hideLineNames = false;
+  const lineBox = new Map<string, [[number, number], [number, number]]>();
 
   const shift = (at: LonLat, pref?: string): LonLat => (pref === 'okinawa' ? [at[0] + ctx.okinawaShift[0], at[1] + ctx.okinawaShift[1]] : at);
   const project = (at: LonLat): [number, number] => {
@@ -203,6 +208,20 @@ export function createLayers(ctx: LayerContext) {
       return g;
     });
   const stationDots = dot(gTransitMarks, stationItems, 'station').style('--line-color', (d) => lineColor.get(stationLine.get(d.id) ?? '') ?? '#888');
+  // ① ② … on each line, like the mountain numbers: tap to pick the line
+  const lineNos = gTransitMarks.selectAll<SVGGElement, ShinkansenLine>('g.line-no')
+    .data(transit.shinkansen, (d) => d.id)
+    .join((enter) => {
+      const g = enter.append('g').attr('class', 'range-no line-no').attr('role', 'button').attr('tabindex', 0).style('--range', (d) => d.color);
+      g.append('circle').attr('r', 9);
+      g.append('text').text((_, i) => String(i + 1));
+      g.append('title').text((d, i) => `${i + 1}. ${d.name.ja} (${d.name.kana}) ${d.name.ko}`);
+      g.on('click', (event: MouseEvent, d) => { event.stopPropagation(); ctx.onLine(d.id); });
+      g.on('keydown', (event: KeyboardEvent, d) => {
+        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); ctx.onLine(d.id); }
+      });
+      return g;
+    });
   const wardDots = dot(gCityMarks, wards, 'ward');
   const extraDots = dot(gCityMarks, extras.filter((e) => !e.area), 'extra-place');
 
@@ -290,7 +309,12 @@ export function createLayers(ctx: LayerContext) {
     for (const b of places.bridges) bridgeMid.set(b.id, midpoint(b.line.map(project)));
     for (const b of bridgeItems) b.px = bridgeMid.get(b.id) ?? [0, 0];
     lineSel.selectAll<SVGPathElement, ShinkansenLine>('path').attr('d', (d) => path({ type: 'LineString', coordinates: d.stations.map((s) => s.at) }) ?? '');
-    for (const l of transit.shinkansen) lineMid.set(l.id, midpoint(l.stations.map((s) => project(s.at))));
+    for (const l of transit.shinkansen) {
+      const pts = l.stations.map((s) => project(s.at));
+      lineMid.set(l.id, midpoint(pts));
+      const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+      lineBox.set(l.id, [[Math.min(...xs), Math.min(...ys)], [Math.max(...xs), Math.max(...ys)]]);
+    }
     for (const l of lineItems) l.px = lineMid.get(l.id) ?? [0, 0];
     for (const a of airportItems) a.px = project(airportAt.get(a.id)!);
     for (const s of stationItems) s.px = project(stationAt.get(s.id)!);
@@ -359,6 +383,12 @@ export function createLayers(ctx: LayerContext) {
     // 🚄 가는 법: hubs always; other airports, named stations and line names when zoomed in (or their prefecture is open)
     gTransit.classed('is-off', !on.transit);
     gTransitMarks.classed('is-off', !on.transit);
+    lineSel.classed('is-active', (d) => d.id === activeLine).classed('is-muted', (d) => !!activeLine && d.id !== activeLine);
+    lineNos.classed('is-active', (d) => d.id === activeLine).attr('transform', (d) => {
+      const [x, y] = t.apply(lineMid.get(d.id) ?? [0, 0]);
+      if (on.transit) f.placed.push({ x: x - 10, y: y - 10, w: 20, h: 20 });
+      return `translate(${x.toFixed(1)},${y.toFixed(1)})`;
+    });
     const shownAirports = new Set<string>();
     for (const a of [...airportItems].sort((p, q) => q.prio - p.prio)) {
       const [x, y] = t.apply(a.px);
@@ -375,9 +405,10 @@ export function createLayers(ctx: LayerContext) {
     const shownStations = new Set<string>();
     for (const s of stationItems) {
       const [x, y] = t.apply(s.px);
-      const vis = on.transit && onScreen(x, y) && (k >= STATIONS_AT || s.pref === f.selected);
+      const onActive = stationLine.get(s.id) === activeLine;
+      const vis = on.transit && onScreen(x, y) && (k >= STATIONS_AT || s.pref === f.selected || onActive);
       if (vis) shownStations.add(s.id);
-      const named = vis && placeName(stationNames, s, x, y, f, 6, ['d', 'u', 'r', 'l']);
+      const named = vis && !hideLineNames && placeName(stationNames, s, x, y, f, 6, ['d', 'u', 'r', 'l']);
       if (!named) stationNames.filter((q) => q === s).classed('is-hidden', true);
     }
     stationDots.classed('is-hidden', (d) => !shownStations.has(d.id)).attr('transform', (d) => {
@@ -386,7 +417,7 @@ export function createLayers(ctx: LayerContext) {
     });
     for (const l of lineItems) {
       const [x, y] = t.apply(l.px);
-      const show = on.transit && k >= LINE_NAMES_AT && onScreen(x, y) && placeName(lineNames, l, x, y, f, 8, ['u', 'd', 'r', 'l']);
+      const show = on.transit && !hideLineNames && (k >= LINE_NAMES_AT || l.id === activeLine) && onScreen(x, y) && placeName(lineNames, l, x, y, f, 8, ['u', 'd', 'r', 'l']);
       if (!show) lineNames.filter((q) => q === l).classed('is-hidden', true);
     }
 
@@ -505,6 +536,9 @@ export function createLayers(ctx: LayerContext) {
     setActiveRange(no: number | null) { activeRange = no; },
     setHideRangeNames(v: boolean) { hideRangeNames = v; },
     rangeBounds: (no: number) => rangeBox.get(no) ?? null,
+    setActiveLine(id: string | null) { activeLine = id; },
+    setHideLineNames(v: boolean) { hideLineNames = v; },
+    lineBounds: (id: string) => lineBox.get(id) ?? null,
   };
 }
 

@@ -15,6 +15,7 @@ export interface MapCallbacks {
   onHover(slug: string | null, event?: MouseEvent): void;
   onZoom?(k: number): void;
   onRange?(no: number): void;
+  onLine?(id: string): void;
 }
 
 export interface MapApi {
@@ -36,6 +37,10 @@ export interface MapApi {
   setActiveRange(no: number | null): void;
   setHideRangeNames(hide: boolean): void;
   focusRange(no: number): void;
+  /** 🚄 route mode (like the mountain mode): the picked line, hidden names for self-testing, zoom to a line. */
+  setActiveLine(id: string | null): void;
+  setHideLineNames(hide: boolean): void;
+  focusLine(id: string): void;
 }
 
 /** One mascot's sticker: an image URL or SVG markup. */
@@ -116,7 +121,7 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
   const gLabels = gScreen.append('g').attr('class', 'labels');
   const gLayerText = gScreen.append('g').attr('class', 'layer-text');
   const okinawaShift = ((topo as unknown as { meta?: { okinawaShift?: LonLat } }).meta?.okinawaShift ?? [-0.6, 5.4]) as LonLat;
-  const layers = createLayers({ geo: gGeoLayers, marks: gMarks, text: gLayerText, projection, okinawaShift, onRange: (no) => cb.onRange?.(no) });
+  const layers = createLayers({ geo: gGeoLayers, marks: gMarks, text: gLayerText, projection, okinawaShift, onRange: (no) => cb.onRange?.(no), onLine: (id) => cb.onLine?.(id) });
 
   gWash.append('path').attr('class', 'sea-halo sea-halo--wide');
   gWash.append('path').attr('class', 'sea-halo');
@@ -533,6 +538,21 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
       const b = layers.rangeBounds(no);
       if (!b) return;
       // phones have a short strip of map above the sheet: keep the margin in proportion to it
+      const [[vx0, vy0], [vx1, vy1]] = visibleExtent();
+      const pad = Math.max(16, Math.min(90, Math.round(Math.min(vx1 - vx0, vy1 - vy0) * 0.12)));
+      applyTransform(transformFor(b, pad, 5), true);
+    },
+    setActiveLine(id: string | null) {
+      layers.setActiveLine(id);
+      updateScreenSpace();
+    },
+    setHideLineNames(hide: boolean) {
+      layers.setHideLineNames(hide);
+      updateScreenSpace();
+    },
+    focusLine(id: string) {
+      const b = layers.lineBounds(id);
+      if (!b) return;
       const [[vx0, vy0], [vx1, vy1]] = visibleExtent();
       const pad = Math.max(16, Math.min(90, Math.round(Math.min(vx1 - vx0, vy1 - vy0) * 0.12)));
       applyTransform(transformFor(b, pad, 5), true);

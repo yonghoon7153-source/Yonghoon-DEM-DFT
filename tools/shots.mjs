@@ -109,11 +109,11 @@ if (steps.includes('transit')) {
   const { ctx, p } = await page({ width: 1440, height: 900 });
   await ready(p);
   await p.click('button[data-layer="transit"]');
-  await p.waitForTimeout(400);
+  await p.waitForTimeout(900);
   await p.screenshot({ path: `${out}/16-transit.png` });
-  await p.click('#legend button[data-region="kinki"]');
+  await p.evaluate(() => document.querySelectorAll('#panel .range-item')[0].click());
   await p.waitForTimeout(1500);
-  await p.screenshot({ path: `${out}/17-transit-kinki.png` });
+  await p.screenshot({ path: `${out}/17-transit-tokaido.png` });
   await ctx.close();
 }
 if (steps.includes('search')) {

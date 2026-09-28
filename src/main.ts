@@ -33,6 +33,7 @@ const state = {
   region: null as string | null,
   layers: { cities: true, bridges: true, transit: false, mountains: false } as Record<LayerId, boolean>,
   range: { active: null as number | null, hide: false },
+  transit: { active: null as string | null, hide: false },
   labelMode: 'furi' as LabelMode,
 };
 
@@ -69,6 +70,14 @@ async function init() {
       panel.refresh();
     },
     onMountainsOff: () => mountainsOff(),
+    transitState: () => state.transit,
+    onLine: (id) => pickLine(id),
+    onHideLineNames: (hide) => {
+      state.transit.hide = hide;
+      map?.setHideLineNames(hide);
+      panel.refresh();
+    },
+    onTransitOff: () => transitOff(),
   });
 
   let hoverSlug: string | null = null;
@@ -100,6 +109,7 @@ async function init() {
         easter?.reposition();
       },
       onRange: (no) => pickRange(no),
+      onLine: (id) => pickLine(id),
     },
     state.labelMode,
   );
@@ -243,6 +253,39 @@ async function init() {
     else panel.refresh();
     map.focusRange(no);
   }
+  // 🚄 route mode — the same shape as the mountain mode: the button turns it on and off
+  function showTransit() {
+    if (!map) return;
+    setLayer('transit', true);
+    state.selected = null;
+    state.region = null;
+    easter?.dismiss(true);
+    map.selectPrefecture(null, { zoom: false });
+    map.highlightRegion(null);
+    setLegendActive(null);
+    applyInset(true);
+    panel.showTransit();
+    setHash('shinkansen');
+  }
+  function transitOff() {
+    setLayer('transit', false);
+    state.transit.active = null;
+    map?.setActiveLine(null);
+    if (panel.current()?.type === 'transit') {
+      panel.close();
+      applyInset(false);
+      setHash('');
+    }
+  }
+  function pickLine(id: string) {
+    if (!map) return;
+    if (!state.layers.transit) setLayer('transit', true);
+    state.transit.active = id;
+    map.setActiveLine(id);
+    if (panel.current()?.type !== 'transit') showTransit();
+    else panel.refresh();
+    map.focusLine(id);
+  }
   // a layer without data yet keeps its button out of sight
   const hasData: Record<LayerId, boolean> = { cities: places.cities.length > 0, bridges: places.bridges.length > 0, transit: transit.airports.length + transit.shinkansen.length > 0, mountains: mountains.ranges.length > 0 };
   layerBtns.forEach((b) => (b.hidden = !hasData[b.dataset.layer as LayerId]));
@@ -254,6 +297,12 @@ async function init() {
         if (state.layers.mountains) mountainsOff();
         else {
           showMountains();
+          map?.reset();
+        }
+      } else if (id === 'transit') {
+        if (state.layers.transit) transitOff();
+        else {
+          showTransit();
           map?.reset();
         }
       } else setLayer(id, !state.layers[id]);
@@ -326,6 +375,7 @@ async function init() {
     const h = decodeURIComponent(location.hash.replace(/^#\/?/, ''));
     if (!h) return;
     if (h === 'sanmyaku' && mountains.ranges.length) showMountains();
+    else if (h === 'shinkansen' && transit.shinkansen.length) showTransit();
     else if (h.startsWith('region/')) {
       // an old link to a big region (#region/chubu) opens its first travel region
       const id = h.slice(7);
