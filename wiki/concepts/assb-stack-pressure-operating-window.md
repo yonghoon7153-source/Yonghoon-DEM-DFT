@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -317,6 +317,9 @@ modelling**."
 
 > ⚠ **2026-09-28 정정 (59호 Li Q. 2025 = 13호 [23])**: 위 "독립 수렴" 은 서지 않는다 — "Q6 요구 창의 정본 후보" 였던 [23] 이
 > 요구치를 `<0.1 MPa`(인용 0)로 적고 1–5 MPa 는 요구치로 인쇄하지 않는다. 계보는 **일곱 편 · 0.1–5 MPa · 확인된 원전 0**(아래 §59호).
+>
+> ⚠ **2026-09-28 둘째 정정 (60호 Zhang 2025 = 13호 [45])**: [45] 도 "5" 를 주지 않는다 — 요구치 · 문턱 인쇄 0, 본문 `MPa` 값은 0.8 · 1.51 · 70 · 350 · 370 · 600 · 700 이고
+> "5 MPa" 는 Table S2 의 5호 Doux 2020 운전 조건 한 칸이다. 13호 `<5` 의 인용 다리 둘([23] · [45])이 모두 비었고 남은 확인처는 [35] Li Menglin *AFM* 2025(미수령 · 원장 §1 에 없음)뿐(아래 §60호).
 
 ★ 그리고 `[도표]` **Fig. 2 가 본문에 없는 클래스별 창 다섯을 준다** (레이더 축 라벨):
 **Oxides ≥30 MPa · Sulfides 5–20 · Halides 2–10 · Polymers "No or compliant" · Composites
@@ -770,6 +773,45 @@ Source Data xlsx(시트명 'Figure 5' · 머리 셀 "Figure. 1b" — **Fig. 5 �
 공간 분포 실측 0(식 (2)(3)만 — 범위 정규화라 척도 불변, `[재현]` 한 점 +10 MPa 핫스팟이 "균일" 판정; 59호 digest D8). **창의 값은 하나도 움직이지 않았다.**
 움직인 것은 **요구치 띠의 폭**(0.4–5 → 0.1–5 MPa)과 **"수렴" 판정**(반박)이다.
 
+## ★★ 2026-09-28 (`assb` 60호 Zhang 2025, **Article · Si 이중층 음극 · 운전 외압 0 · Source Data 14 시트**) — **13호 `<5 MPa` 의 마지막 인용 다리가 "5" 를 주지 않고, "외압 0" 은 프레임을 뺐다는 뜻이며, 정변위면 Si 팽창이 ≈1.5 MPa 를 스스로 만든다**
+
+`raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md` (*Nat. Commun.* 16, 1013, 샤먼대 — 13호 [45], **3차 묶음 파일 22**).
+
+### 1. 요구치 — 여덟 번째 인쇄값이 아니라 "인쇄값 0"
+
+- `[인쇄]` 본문 `MPa` 15 회 = 70(Li 금속 "suitable", [7–9]) · 370(Si "required", [10–13]) · 600 · 370 · 350(제조) · 0.8 · 1.51(정변위 지그). SI 8 회 = 100–700(S3 제조 스윕) + Table S2 열. **요구치 · 문턱 · 창 0.**
+- Table S2 "External pressure (Mpa)" 열 `[인쇄]`: 20 · 2 · 70 · 20 · 75 · 20 · 2 · **5**(ref 22 = 5호 Doux 2020, Li/NCA · 0.05 mA cm⁻² · 0.5 mAh cm⁻² · 100 사이클 · 25 °C) · **0**(Chen 2018, Si/garnet · 0.008 mA cm⁻²) · 50 · 50 · 50 · 15 · **0**(this work).
+- ⇒ 계보 표는 **일곱 편 · 여섯 값 · 0.1–5 MPa · 확인된 원전 0** 그대로. 13호 `<5` 의 세 인용 중 둘이 비었다:
+
+| 13호 인용 | 편 | "5" 를 주는가 |
+|---|---|---|
+| [23] | 59호 Li Q. 2025 | ❌ `<0.1 MPa`(인용 0) |
+| [45] | **60호 Zhang 2025** | ❌ 인쇄 0 · Table S2 의 5 = 5호 조건 |
+| [35] | Li Menglin *AFM* 2025 | 미수령 — 원장 §1 에 없음 |
+
+### 2. ★★ 제작 압력 ↔ 운전 압력 — 실험 편 두 번째 "운전 외압 0" 표본, 그러나 경계조건이 없다
+
+| | 제조 | 운전 | 조건 | 결과 |
+|---|---|---|---|---|
+| 6호 Lee 2020 | 490 MPa(WIP) | 2 · 3 · 4 · **0** | 0.1 C(0 은 0.1 C 만) | 300 사이클 |
+| **60호 Zhang 2025** | **600**(음극 냉간압착 소결) · **370**(이중 SE) · **350**(셀) | **외압 0**(S1b 프레임 없는 다이 셀) | **2.5 mA cm⁻² · 2.8 mAh cm⁻² · 45 °C · N/P 6.7** | `[데이터]` 1000 사이클 −45 %(1 사이클 기준; 인쇄 "54.9 %" 는 2 사이클 기준) · EIS ×3.2 |
+
+- ⚠ **G1 — 운전 중 구속 미명시**: 플런저가 자유(정하중 ≈ 자중)인지 캡으로 두께가 고정(정변위)인지 Methods 에 없다. 6호 G12 · 11호(볼트 · 너트 "constant")와 같은 구멍이 **세 번째**다.
+- **같은 편의 S14 가 그 구멍의 크기를 보인다**: 별도 정변위 지그(`[인쇄]` "minimum pressure load (0.8 MPa) … to limit the thickness")에서 첫 충전 **+1.51 MPa**(`[인쇄]`), 이후 0.56 mA cm⁻² 4 사이클 `[도표]` ≈1.2 → 1.05 MPa, 방전 말 기저 복귀(래칫 0, 5 사이클). ⇒ 본편 셀이 정변위였다면 자체 압력 ≈1–1.5 MPa 아래서 돈 것이고, 자유였다면 두께가 늘며 돈 것이다 — **지면이 갈라 주지 않는다**.
+- `[해석]` §"압력 진동"(33호 — 상대극이 만드는 ≈0.7–2.3 MPa/사이클)의 **Si 완전지 1 차 표본**. 진폭이 줄어드는 것은 가역 팽창 감소 · 지그 순응 · SEI 성장 어느 것인지 5 사이클로 못 가른다.
+
+### 3. 아래 벽의 정성 표본 — 무압 · 45 °C 에서 Li 금속 음극은 2 사이클에 soft short
+
+`[도표]` S13: Si–Li₂₁Si₅ 75 wt%(ICE 73.4 %) · Li₂₁Si₅(82.99 %) · **Li 금속(89.27 %)** 셋 다 2 사이클 충전이 4.0 V 평탄으로 달린다(2.8 mAh cm⁻² · 45 °C · 무외압). 5호 아래 벽(저압 → 접촉 손실 → 덴드라이트)과 같은 방향이지만 압력 값이 없어 창에 놓지 않는다. 이중층만 살아남는 것이 이 편의 명제 — 단 압력 대조군이 없어 "압력 대신 설계" 의 등가는 보이지 않았다(G2).
+
+### 4. 압력 함수 — 제조 축만
+
+S3: Li₂₁Si₅ 분말 100 → 700 MPa 냉간압착에서 면저항 **4.71 · 1.15 · 0.35 · 0.25 · 0.11 · 0.05 · 0.05 Ω/sq**(전자 전도, 소결). 운전 압력 → `θ` · `R` · 용량 · CE 함수 **0** · 이력 0 · 계측(본편 셀) 0. 이 페이지의 창 값은 **하나도 움직이지 않았다**.
+
+### 5. 이 편이 이 페이지에 **안 준 것**
+
+압력 대조군(같은 음극의 가압 판은 자기 인용 Zhang 2024 *EES* 50 MPa 뿐, 미열람) · 운전 중 압력 계측(본편 셀) · 경계조건 · 요구치 · 양극 쪽 어떤 관측.
+
 ## 경고 (전부 원문이 준 한계에서 나온다)
 
 1. **점당 셀 1 개, 오차 막대 0.** 압력–수명 6 점 전부 N=1 이다.
@@ -810,6 +852,7 @@ Source Data xlsx(시트명 'Figure 5' · 머리 셀 "Figure. 1b" — **Fig. 5 �
 - **Doux 의 저밀도 토모그래피 구조가 Li 금속이라고 단정하지 않는다** — 같은 논문이
   `[인쇄]` "Li 금속 덴드라이트는 XRD 로 직접 검출되지 않는다" 고 적고, 같은 대비를
   다른 그림에서 "severe cracking" 이라 부른다 (5호 digest D6).
+- **60호의 "외압 0" 을 "압력 0" 으로 옮기지 않는다** (2026-09-28) — 프레임을 뺐다는 것까지이고, 운전 중 구속(정하중/정변위)은 인쇄돼 있지 않다; 같은 편의 정변위 지그는 첫 충전에 +1.51 MPa 를 보였다. 그리고 **Table S2 의 문헌 압력 13 값을 창의 표본으로 쓰지 않는다** — 계측 방식 · 사이클 정의 규약이 없다.
 
 ## 관련
 - [[assb-pressure-reapplication-separation-test]] — `P↑` 분리 연산자. **이 페이지가 그 상한을 준다.**

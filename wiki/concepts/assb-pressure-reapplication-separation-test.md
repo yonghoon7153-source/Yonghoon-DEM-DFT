@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
+sources: [raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -310,6 +310,28 @@ yields the highest Coulombic efficiency can be identified as the CSP" — 같은
   **그림으로** 적는다. 그러나 해당 문장 `[인쇄]` "Stack pressure minimizes this effect, thereby preventing disengagement between the SSE and active materials"
   는 **인용 0** 이고 앞 문장 [17](= 23호 Koerver 2017)은 운전 압력 고정 편이다 — 33호 G4 와 같은 형태의 두 번째 종설 층 표본. 이 연산자의 실측 사례는
   여전히 4호(Shi 2020) 하나다.
+
+## ★ 60호(Zhang 2025)가 붙인 것 — **"무외압 운전" 실측은 이 연산자를 쓰기 가장 좋은 셀인데 쓰지 않았고, 설계 조건 D1–D5 중 D4 만 만족한다** (2026-09-28)
+
+`raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md` — *Nat. Commun.* 16, 1013 · Article · 13호 [45] · 3차 묶음 파일 22.
+
+Li₂₁Si₅/Si–Li₂₁Si₅ 이중층 음극 ‖ Li₆PS₅Cl ‖ Li₃InCl₆ ‖ LCO 를 **외부 프레임 없이** 1000 사이클(2.5 mA cm⁻² · 45 °C) 돌린 편이다. 운전 압력이 (명목상) 0 이므로 `P↑` 를 걸면 되돌아올 것이
+가장 많은 셀 — 그러나 재가압 시험은 없고, 압력 대조군도 없다.
+
+| ID | 60호 | 판정 |
+|---|---|---|
+| **D1** 사이클 해상 압력 계측 | 본편 셀 0 · 별도 정변위 지그(S14) 5 사이클만 — 첫 충전 +1.51 MPa · ≈1–1.2 MPa/사이클 | ❌(본편) / ⚠(별도 셀) |
+| **D2** 기준셀 이중차분 | 0 | ❌ |
+| **D3** 압력만 바꾸기 | 바뀐 것은 **음극 설계**(Si · Si–Li₂₁Si₅ · Li₂₁Si₅ · Li 금속 · 이중층) — 압력 축 0 | ❌ |
+| **D4** 제조 ↔ 운전 분리 | 제조 600/370/350 MPa · 운전 "free from external pressure" — 명시 | ✓ (단 운전 중 구속 미명시, G1) |
+| **D5** 채널별 신고 | 압력 조작이 없어 해당 없음; 있는 채널(용량 · CE · EIS 3 저항 · 두께 · 분극)은 서로 대질되지 않음 | — |
+
+- `[해석]` **이 연산자의 전제("`P↑` 가 접촉을 되돌린다")를 시험할 자리가 비어 있다** — 무압에서 1000 사이클 뒤 재가압으로 용량 · 임피던스가 얼마나 돌아오는지 재면 4호(Shi 2020, 300 MPa)와
+  11호(Yu 2024)에 이어 세 번째 실측이 됐을 것이다. 지면은 사후 SEM(정성)으로 대신한다.
+- `[해석]` **Li 과잉 상대극(재고 10.5×)에서 이 연산자의 출력을 CE 로 읽으면 안 된다** — 60호의 CE 는 145/1000 사이클에서 > 100 % 다. D5 의 채널 목록에 "상대극 Li 재고비(M2)" 를 앞에 둔다
+  (카드 새 제약 3).
+- S14 의 자체 압력(정변위 +1.51 MPa)은 **D1 계측이 요구하는 바로 그 신호**이고, "압력을 걸지 않아도 셀이 스스로 압력을 만든다" 는 것은 이 연산자의 영점(`P_low`)이 셀 구속에 따라 0 이
+  아닐 수 있음을 뜻한다 — 설계 조건 D4 에 "운전 중 구속 형식(정하중/정변위)" 을 명시하는 것이 필요하다(카드 새 제약 1).
 
 ## 이 페이지가 주장하지 않는 것
 
