@@ -1,0 +1,6 @@
+종 1개 x 상대 1개 = 1 쌍
+Retrieving ThermoDoc documents:   0%|          | 0/1078 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1078/1078 [00:00<00:00, 1112.62it/s]Retrieving ThermoDoc documents: 100%|██████████| 1078/1078 [00:00<00:00, 1112.42it/s]
+[mp_api] 1078 entries in Cl-Co-Gd-Li-O-P-S
+[1/1] Gd_x002    vs LiCoO2   -0.3319 (0 V)  (11s)
+
+→ db/properties/dopant_closed_Gd_x002_2026_09_28.jsonl

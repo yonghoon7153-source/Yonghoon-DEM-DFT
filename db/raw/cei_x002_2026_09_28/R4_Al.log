@@ -1,0 +1,6 @@
+종 1개 x 상대 1개 = 1 쌍
+Retrieving ThermoDoc documents:   0%|          | 0/1316 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1316/1316 [00:01<00:00, 958.26it/s]Retrieving ThermoDoc documents: 100%|██████████| 1316/1316 [00:01<00:00, 958.12it/s]
+[mp_api] 1316 entries in Al-Cl-Co-Li-O-P-S
+[1/1] Al_x002    vs LiCoO2   -0.3330 (0 V)  (12s)
+
+→ db/properties/dopant_closed_Al_x002_2026_09_28.jsonl
