@@ -5577,6 +5577,21 @@
     "scripts/fit_dh_collapse.py",
     "docs/se_curve_transfer_verdict_20260806.md"
    ]
+  },
+  {
+   "id": "SELF-62",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "1저자 WSL 실행 (09-28) — E0 세 시드에 정지 벽 계약 (`check_contact_validity.py --contract … --expect-deck`, 스냅샷 `091bb2114`) 을 처음 적용",
+   "opened_in": "docs/session_20260923_progress.md",
+   "title": "믹서 설계 검증 (09-21) 의 겹침 추정이 실측 최대의 약 1/20 이었다 — *\"중력 겹침 AM 0.011 % · SE 0.244 % … 최대 0.32 % = 천장 1 % 의 1/3 ✅\"* 인데, 점착 0 · 회전 0 인 E0 의 정착 끝 (t₀ = 385,000) 저장 프레임 최대가 입자–입자 δ/r_min 4.681 · 5.453 · 5.763 % (AM_P–SE · 1 % 초과 878–931 접촉) · 벽 δ/r 4.499 · 5.204 · 5.663 % (SE–드럼 · 98–127 접촉) — 세 시드 모두 계약 REJECT",
+   "note": "원인 (계산 — 원자료 미열람 부분은 추정): 설계 검증은 **SE–SE 접촉 · 침대 바닥 평균 응력 221 Pa** 로만 겹침을 셌다.  최대 접촉은 무거운 AM_P (지름 1.363 mm · 밀도 4800 · A안 E 1.037e9) 가 무른 SE (지름 0.151 mm · E 1e7) 를 입자나 벽에 누르는 자리다 — Hertz 로 δ/r_SE 4.7 % 는 F ≈ 8 × 10⁻⁴ N (E* 1.09e7 Pa · R* 6.8e-5 m) = AM_P 한 알 무게 6.2 × 10⁻⁵ N 의 약 13 배 · 221 Pa × AM_P 투영면적 (3.2 × 10⁻⁴ N) 의 약 2.5 배 = 힘 사슬 꼬리에서 나올 크기.  δ/r_min 은 작은 쪽 반지름으로 나누므로 반지름 비 9 인 AM_P–SE 에서 커진다.  덱은 설계 그대로다 (`youngsModulus peratomtype 1.037e+09 1.037e+09 1e+07 1.48e+09` = A안 · 기각안 ÷14,000 아님) · 벽 근거 = static (검사기 경로가 섰다).  ⇒ 결과: 고-Bo 확장 사전등록 §5 선행 2 (접촉 계약 LH 3 · LC 3 · E0 3) 가 E0 에서 서지 않는다 = 등록대로면 확장은 HOLD / 미식별.  본 캠페인 §1 '계약' 행 (최대 겹침 실측 ≤ 1 %) 과 §5 '보조 진단 (판정에 안 씀)' 의 관계는 저자 결정.  ⛔ 1 % 를 결과를 본 뒤 올리지 않는다 (Codex K1) — E0 겹침은 이제 열람됐다 (LH · LC 는 미열람).  닫기 = 설계 검증 두 문단의 철회 표지 (이 커밋) + 저자 결정 (D-1 개정 여부 · LH 발사 여부 · 본 캠페인 계약 행) + Codex 5 차에 사실 전달 (요청서 §7 · Q6).",
+   "evidence_tests": [
+    "scripts/check_contact_validity.py",
+    "docs/session_20260921_mixer_decisions.md",
+    "docs/reviews/mixer_highbo_prereg_20260927.md"
+   ]
   }
  ]
 }
