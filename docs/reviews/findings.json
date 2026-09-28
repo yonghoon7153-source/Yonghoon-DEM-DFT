@@ -5538,6 +5538,33 @@
     "docs/mixer_devlog/v09_20260927.md",
     "scripts/make_mixer_deck.py"
    ]
+  },
+  {
+   "id": "SELF-60",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "사용자 v100 출력 (09-28 11:53) — `pgrep -af run_se_curve_batch.sh` 가 rep288 배치 PID 1676897 을 보였다",
+   "opened_in": "docs/session_20260923_progress.md",
+   "title": "살아 있는 런을 **\"무성 종료\"** 로 진단하고 그 위에 ⛔ 발사 금지를 세웠다 — 셸 작업 제어의 `Done` (PID 1676896 = 래퍼) 과 로그의 `=== ` 블록 1 개만 보고, 배치 프로세스 (1676897) 생존 · 배치가 끝날 때 반드시 찍는 `BATCH DONE … rc=` 줄 · 런 로그 진행을 확인하지 않았다",
+   "note": "사실 (09-28 11:53 v100): `pgrep` = PID 1676897 `run_se_curve_batch.sh … --tag rep288` 생존 · rep288.log = `### kit_ps_10_0 ε 11.81 09:05:18` · `=== rep288_kit_ps_10_0_g288_e1181 09:05:18` 뿐 · `EXIT=` · `BATCH DONE` · dmesg OOM 없음 ⇒ **첫 런 (≈ 3 h) 진행 중**이었다.  ⛔ 무너진 결론: ㉗-1 의 *\"rep288 무성 종료 · 외부 SIGKILL 후보 · 원인 확인 전 15 런 금지\"*.  그 금지가 ps45 발사를 몇 시간 막았다 (실제 막힌 이유는 따로 — v100 에 r45 킷이 없었다).  ★ `SELF-56` (완주 표지 오독) · `SELF-58` (조각 로그 tail) 과 **같은 부류, 방향만 반대** — 이번엔 끝나지 않은 것을 끝났다고 읽었다.  처방: 런의 생사는 ① 프로세스 (`pgrep -af` · PID) ② 러너가 끝에 반드시 찍는 표지 (`BATCH DONE`) ③ 진행 중 산출 (런 로그 · 덤프 시각) **셋으로** 본다 — 작업 제어의 `Done` 은 래퍼의 사정일 수 있다.  닫기 = 처방대로 판정한 사례 1 건 (ps45 발사 대기 명령이 PID 생존으로 게이트한다 — 09-28).",
+   "evidence_tests": [
+    "scripts/run_se_curve_batch.sh"
+   ]
+  },
+  {
+   "id": "SELF-61",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "자가 발견 (09-28) — v100 대조 기준값을 다시 적으려고 판독기 (`fit_dh_collapse.load_kit_points`) 를 읽다가",
+   "opened_in": "docs/session_20260923_progress.md",
+   "title": "d_h 판정의 σ 를 **STEP3 전도도**로 오인했다 — ㉗-1 에 *\"이 JSON 에 σ 는 없다 — |Δ ln σ| 쪽 기준값은 STEP3 산출에서 따로 가져와야 한다\"* 고 적고 사용자에게도 그렇게 전했는데, 그 σ 는 MPM SE 응력 `final_stress_GPa` 이고 같은 JSON 에 있었다 (같은 문단에 0.4037 을 적어 놓고)",
+   "note": "정본: `scripts/fit_dh_collapse.py:141` — `h, s = d.get('thickness_um'), d.get('final_stress_GPa')` · verdict §⑩-b (`se_curve_transfer_verdict_20260806.md:699`) *\"비교량 = 적합기가 읽는 두 값 (`thickness_um` · `final_stress_GPa`)\"*.  ⇒ rep288 ps_10_0 대조 기준 = **두께 108.419 µm · σ 0.4037 GPa** (`xfer_res_kit_ps_10_0_g288_e1181.json`) — 이미 손에 있다.  STEP3 는 이 판정과 무관하다.  ★ 원인: 같은 기호 σ 가 이 리포에서 **전도도**와 **응력** 둘을 뜻한다 — 판정선의 σ 가 무엇인지 판독기 코드로 확인하지 않고 기호로 읽었다 (규율 ④ · ⑤ 와 같은 뿌리 — 정의는 도구 경계에서 새어나간다).  처방: 판정선에 쓰인 양은 **그 판정을 내는 코드의 필드 이름**으로 적는다 (`final_stress_GPa`, σ 아님).  닫기 = ㉗-1 정정 + 이 처방이 다음 대조 기록에서 지켜진 사례 1 건.",
+   "evidence_tests": [
+    "scripts/fit_dh_collapse.py",
+    "docs/se_curve_transfer_verdict_20260806.md"
+   ]
   }
  ]
 }
