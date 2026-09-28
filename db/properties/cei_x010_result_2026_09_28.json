@@ -1,0 +1,149 @@
+{
+  "schema": "estimand_result/v1",
+  "record_kind": "result",
+  "date": "2026-09-28",
+  "citable": true,
+  "system": "cathode_cei",
+  "제목": "x = 0.10 곡률 확인 — 두 자리 다 0.02↔0.20 직선 위 (GC 통과) · 항등식 무결성 통과 · x002 재현 차 0",
+  "사전등록": "db/properties/cathode_cei_x010_curvature_prereg_2026_09_28.json",
+  "결정": "D-2026-09-28-cei-x010-curvature",
+  "원자료": {
+    "계면": "db/properties/cei_interface_V_x010_2026_09_28.json (7 조성 × 양극 4 × 전압 6)",
+    "판정": "db/properties/cei_x010_verdicts_2026_09_28.json (gabia 가 낸 그대로)",
+    "로그": "db/raw/cei_x010_2026_09_28/ (run.log · R1.log · V.log · run.sh)"
+  },
+  "실행": {
+    "기계": "gabia (kserver116-27) · uma env · MP GGA_GGA+U · GPU 안 씀",
+    "시각": "2026-09-28 18:24:58 – 18:28:13 (3 분)",
+    "코드": "사전등록 정정 커밋 17640b9f2 에서 시작 (run.log 첫 줄). 게이트는 그 앞 767d10158 에서 결과 전에 커밋했다 — 17640b9f2 는 clone 경로 문구만 고쳤다.",
+    "원자료_커밋": "cf17c5542 (사용자 · gabia)",
+    "판정_재현": "판정 파일을 로컬에서 다시 냈다 — source 필드를 빼면 gabia 판정과 같다."
+  },
+  "1_게이트": {
+    "G0_재현": {
+      "판정": "REPRODUCED",
+      "겹친_칸": 120,
+      "최대_차": 0.0,
+      "허용폭_eV_per_atom": 0.002,
+      "⚠_판정파일_표기": "gabia 판정 파일의 G0.tol 은 None 이다 — 도구가 reproduce_check 의 키(tol_eV_per_atom)를 잘못 읽었다. 판정 무관(정보 칸). 도구는 고쳤고(selftest 로 묶음) 원 판정 파일은 그대로 둔다."
+    },
+    "GI_항등식_무결성": {
+      "pass": true,
+      "n_pairs": 140,
+      "n_same_reaction": 23,
+      "max_abs_same": 0.000122,
+      "prefactor_same_median": 1.0,
+      "n_changed_reaction": 117,
+      "n_violations": 0,
+      "n_rho_decreasing": 0,
+      "n_unreadable": 0
+    },
+    "GC_곡률": {
+      "Li": {
+        "labels": [
+          "nd_li_002",
+          "nd_li_010",
+          "nd_only"
+        ],
+        "n_cells": 23,
+        "delta_mean": [
+          0.004437,
+          0.02157,
+          0.042146
+        ],
+        "chord_at_x010": 0.021197,
+        "residual": 0.000373,
+        "tol": 0.005,
+        "pass": true,
+        "info_n_cells_over_tol": 1,
+        "info_max_abs_cell_residual": 0.005301,
+        "info_x010_minus_5x_x002": -0.000615
+      },
+      "P": {
+        "labels": [
+          "nd_p_002",
+          "nd_p_010",
+          "nd_p_020"
+        ],
+        "n_cells": 20,
+        "delta_mean": [
+          -0.006562,
+          -0.034394,
+          -0.070925
+        ],
+        "chord_at_x010": -0.035168,
+        "residual": 0.000774,
+        "tol": 0.005,
+        "pass": true,
+        "info_n_cells_over_tol": 1,
+        "info_max_abs_cell_residual": 0.005231,
+        "info_x010_minus_5x_x002": -0.001584
+      }
+    },
+    "GC_칸별_초과_정보": {
+      "⚠": "판정 밖 정보 — GC 는 칸 **평균**으로 판정한다(사전등록). 평균이 지우는 칸별 꺾임을 보이려고 싣는다. 목록은 x010_cell_residuals (interface_reactivity_v2.py).",
+      "칸": {
+        "Li": [
+          {
+            "cathode": "LiMnO2",
+            "V": "4.30",
+            "residual": 0.005301,
+            "delta": [
+              0.01329,
+              0.05772,
+              0.10133
+            ]
+          }
+        ],
+        "P": [
+          {
+            "cathode": "LiNiO2",
+            "V": "4.00",
+            "residual": 0.005231,
+            "delta": [
+              -0.00746,
+              -0.04126,
+              -0.09528
+            ]
+          }
+        ]
+      },
+      "그_칸_Δ(0.10)_대비_상대크기": {
+        "Li": [
+          0.092
+        ],
+        "P": [
+          0.127
+        ]
+      },
+      "읽기": "넘은 칸은 자리마다 하나이고 둘 다 고전압 칸(Li 자리 LiMnO₂ 4.3 V · P 자리 LiNiO₂ 4.0 V)이다. 그 칸들은 Δ 자체가 커서(x = 0.20 에서 |Δ| ≈ 0.10) 어긋남이 그 칸 값의 약 1 할이다. 저전압 칸의 어긋남은 1e-4 대다."
+    }
+  },
+  "허용_서술_이대로만": [
+    "x = 0.02 · 0.10 · 0.20 세 농도에서 Nd 단독(O 없음) 계열의 계면 Δ 는 두 자리(Li · P) 모두 0.02↔0.20 직선 위에 있다 — 가운데 점의 어긋남이 사전등록 문턱(0.005 eV/atom)의 1/6 이하다 (칸 평균 · Li 23 · P 20 칸).",
+    "매끈한 곡률(2 차 항)은 원점(x = 0 → Δ = 0)과 09-19 · 09-28 선형성 판정이 이미 묶고, 이번 x = 0.10 점은 두 점 사이 꺾임이 그 점에서 보이지 않는다는 것을 더한다.",
+    "그래서 0.02–0.20 구간 안에서 x = 0.20 결과를 x = 0.02 의 확대판으로 읽는 기존 허용 서술(x002 결과 기록)이 가운데 점에서도 성립한다."
+  ],
+  "금지_서술": [
+    "⛔ '0.02–0.20 전 구간에서 곡률이 없다 / 꺾임이 없다' — 점 하나다. 0.02–0.10 · 0.10–0.20 안쪽은 못 봤다.",
+    "⛔ Nd + O(1저자 조성) 계열의 곡률로 옮기기 — 이 실행은 Nd 단독 계열이다.",
+    "⛔ 0.20 밖으로 외삽.",
+    "⛔ 칸 하나하나가 직선 위라고 쓰기 — 고전압 칸 하나씩은 문턱을 살짝 넘는다(정보 칸).",
+    "⛔ 절대 반응에너지 인용 — modelc 기준 Δ 만 (1저자 인용정책)."
+  ],
+  "이_결과가_말하지_않는_것": [
+    "Nd 점유 자리 · 합성 가능성 · 이온전도도",
+    "속도·두께·연속성 (0 K hull 열역학)",
+    "전압 기울기의 기전 — 그 관계는 항등식이다 (cei_li_ledger_identity_2026_09_28.json · 결정 proposed)"
+  ],
+  "화면": "db/properties/cei_figs/index.html 머리 2×2 의 '두 점으로 잰 선형성이라 곡률은 못 본다' 를 사전등록 §3 GC '통과하면' 문안대로 바꾼다 (결속 시험 test_x010_curvature_line_matches_the_result).",
+  "status": "proposed",
+  "status_history": [
+    {
+      "at": "2026-09-28",
+      "state": "proposed",
+      "by": "agent",
+      "note": "G0 · GI · GC 사전등록대로 통과 — 판정 문구·문턱 그대로. 화면 반영은 결정 D-2026-09-28-cei-x010-curvature 의 enforcement ③ 에 따른다. 1저자 확인 시 ratified."
+    }
+  ]
+}

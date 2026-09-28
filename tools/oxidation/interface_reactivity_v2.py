@@ -1033,8 +1033,14 @@ def _selftest():
     _v10 = x010_verdicts(_mk10(off={("C1", "nd_li_010"): 0.02, ("C2", "nd_li_010"): -0.02},
                                cats=("C1", "C2")))
     chk(_v10["GC_curvature"]["Li"]["pass"] is True
-        and _v10["GC_curvature"]["Li"]["info_n_cells_over_tol"] == 6,
-        "[⛔음성] x010 GC — 칸끼리 상쇄된 꺾임은 평균으로 통과해도 **칸별 수로 드러난다** (6 칸)")
+        and _v10["GC_curvature"]["Li"]["info_n_cells_over_tol"] == 6
+        and {(r["cathode"], r["residual"]) for r in _v10["GC_curvature"]["Li"]["info_cells_over_tol"]}
+        == {("C1", 0.02), ("C2", -0.02)},
+        "[⛔음성] x010 GC — 칸끼리 상쇄된 꺾임은 평균으로 통과해도 **칸별 수·목록으로 드러난다** (6 칸 · C1 +0.02 · C2 −0.02)")
+    _v10 = x010_verdicts(_mk10(), repro={"verdict": "REPRODUCED", "max_abs_delta": 0.0, "n_compared": 3,
+                                         "tol_eV_per_atom": 0.002})
+    chk(_v10["G0_reproduce"]["tol"] == 0.002,
+        "[양성] x010 G0 — 재현 허용폭을 reproduce_check 의 실제 키(tol_eV_per_atom)에서 읽는다 (09-28 첫 실행은 None 으로 찍혔다)")
     _v10 = x010_verdicts(_mk10(break_id="nd_li_010"))
     chk(_v10["GI_identity"]["pass"] is False and _v10["GC_curvature"]["Li"]["pass"] is None
         and _v10["GC_curvature"]["Li"].get("delta_mean") is not None,
@@ -2275,6 +2281,23 @@ X010_SITES = {"Li": {"x": (0.02, 0.10, 0.20), "labels": ("nd_li_002", "nd_li_010
 X010_CURV_TOL = 0.005
 
 
+def x010_cell_residuals(results):
+    """자리별로 칸마다 d(0.10) − 직선(0.02↔0.20) — |잔차| 큰 순. GC 의 칸별 정보와 결과 기록이 같이 쓴다.
+
+    ⚠ 판정이 아니다 — GC 는 칸 **평균**으로 판정한다(사전등록). 이건 평균이 지우는 칸별 꺾임을 보이려는 것이다.
+    """
+    out = {}
+    for site, s in X010_SITES.items():
+        (x0, x1, x2), rows = s["x"], []
+        w = (x1 - x0) / (x2 - x0)
+        for c in _x002_cells(results, s["labels"]):
+            d = [_x002_d(results, c, l, X010_BASE) for l in s["labels"]]
+            rows.append({"cathode": c[0], "V": c[1], "residual": round(d[1] - (d[0] + w * (d[2] - d[0])), 6),
+                         "delta": [round(v, 6) for v in d]})
+        out[site] = sorted(rows, key=lambda r: (-abs(r["residual"]), r["cathode"], float(r["V"])))
+    return out
+
+
 def x010_verdicts(results, repro=None):
     """x = 0.10 곡률 판정 — **이미 나온 결과 JSON 만** 읽는다 (MP 불필요).
 
@@ -2299,13 +2322,15 @@ def x010_verdicts(results, repro=None):
     need = {X010_BASE, *(l for s in X010_SITES.values() for l in s["labels"])}
     miss = sorted(need - labels)
     out = {"schema": "x010_verdicts/v2", "prereg": X010_PREREG,
-           "G0_reproduce": ({k: repro.get(k) for k in ("verdict", "max_abs_delta", "n_compared", "tol")}
+           "G0_reproduce": ({**{k: repro.get(k) for k in ("verdict", "max_abs_delta", "n_compared")},
+                             "tol": repro.get("tol_eV_per_atom", repro.get("tol"))}
                             if isinstance(repro, dict) else None),
            "missing_labels": miss}
     if miss:
         out["⛔"] = f"조성이 빠졌다 {miss} — 판정하지 않는다 (0 으로 채우지 않는다)"
         return out
     gi = li_ledger_identity(results)
+    cells_all = x010_cell_residuals(results)
     out["GI_identity"] = {k: gi[k] for k in ("pass", "n_pairs", "n_same_reaction", "max_abs_same",
                                              "prefactor_same_median", "n_changed_reaction",
                                              "n_violations", "n_rho_decreasing", "n_unreadable",
@@ -2320,10 +2345,7 @@ def x010_verdicts(results, repro=None):
         w = (x1 - x0) / (x2 - x0)
         m = [_x002_mean(results, cells, l) for l in s["labels"]]
         chord = m[0] + w * (m[2] - m[0])
-        per = []
-        for c in cells:
-            d = [_x002_d(results, c, l, X010_BASE) for l in s["labels"]]
-            per.append(d[1] - (d[0] + w * (d[2] - d[0])))
+        per = [r["residual"] for r in cells_all[site]]
         ok = abs(m[1] - chord) <= X010_CURV_TOL
         gc[site] = {"labels": list(s["labels"]), "n_cells": len(cells),
                     "delta_mean": [round(v, 6) for v in m], "chord_at_x010": round(chord, 6),
@@ -2331,6 +2353,7 @@ def x010_verdicts(results, repro=None):
                     "pass": ok if gi["pass"] is True else None,
                     "info_n_cells_over_tol": sum(abs(r) > X010_CURV_TOL for r in per),
                     "info_max_abs_cell_residual": round(max(abs(r) for r in per), 6),
+                    "info_cells_over_tol": [r for r in cells_all[site] if abs(r["residual"]) > X010_CURV_TOL],
                     "info_x010_minus_5x_x002": round(m[1] - 5 * m[0], 6)}
         if gi["pass"] is not True:
             gc[site]["why"] = "GI(항등식 무결성)가 통과하지 않았다 — 판정하지 않는다 (값만 적는다)"

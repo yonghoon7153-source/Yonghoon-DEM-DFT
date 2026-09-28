@@ -1560,6 +1560,49 @@ def test_x002_g4_closure_matches_the_ledger(client):
     assert not re.search(r"G4\s*(?:는|은|가|이|:)?\s*[‘'\"]?통과", h), "화면이 G4 를 '통과' 로 격상했다"
 
 
+X010_VERD = REPORT.parents[3] / "db/properties/cei_x010_verdicts_2026_09_28.json"
+X010_RES = REPORT.parents[3] / "db/properties/cei_x010_result_2026_09_28.json"
+X010_RAW = REPORT.parents[3] / "db/properties/cei_interface_V_x010_2026_09_28.json"
+
+
+def test_x010_curvature_line_matches_the_result(client):
+    """⛔음성 — 머리 2×2 의 x = 0.10 곡률 문장이 판정 파일 · 결과 기록 · 원자료와 **값으로** 같다.
+
+    사슬 셋을 다 묶는다: ① 결과 기록의 GC 수 = gabia 판정 파일 ② 결과 기록의 칸별 초과 목록 =
+    원자료에서 도구(x010_cell_residuals)로 다시 센 것 ③ 화면 숫자 = 결과 기록.
+    잡는 것: 판정이 불통과인데 화면이 '직선 위' 라고 쓰는 것 · 옛 문장('곡률은 못 본다')이 남는 것.
+    """
+    V = json.loads(X010_VERD.read_text("utf-8"))["GC_curvature"]
+    res = json.loads(X010_RES.read_text("utf-8"))
+    gc = res["1_게이트"]["GC_곡률"]
+    assert set(gc) == {"Li", "P"} == set(V), "자리가 둘이 아니다 — 시험이 헛것을 재고 있다"
+    for s in ("Li", "P"):
+        for k in ("n_cells", "residual", "tol", "pass", "info_n_cells_over_tol", "info_max_abs_cell_residual"):
+            assert gc[s][k] == V[s][k], (s, k, gc[s][k], V[s][k])
+    cells = _x002_tool().x010_cell_residuals(json.loads(X010_RAW.read_text("utf-8"))["results"])
+    over = res["1_게이트"]["GC_칸별_초과_정보"]["칸"]
+    for s in ("Li", "P"):
+        want = [r for r in cells[s] if abs(r["residual"]) > gc[s]["tol"]]
+        assert over[s] == want, (s, over[s], want)
+        assert len(want) == gc[s]["info_n_cells_over_tol"], s
+    h = _report_html(client)
+    m = re.search(r'<span id="x010-curvature">(.*?)</span></li>', h, re.S)
+    assert m, "화면에 x = 0.10 곡률 문장이 없다"
+    t = m.group(1)
+    assert "곡률은 못 본다" not in h, "옛 문장('두 점으로 잰 선형성이라 곡률은 못 본다')이 남았다"
+    got = _nums(t)
+    for s in ("Li", "P"):
+        assert round(gc[s]["residual"], 4) in got, (s, "평균 어긋남", gc[s]["residual"], sorted(got))
+        assert round(gc[s]["info_max_abs_cell_residual"], 4) in got, (s, "칸별 최대", sorted(got))
+        assert f"{s} {gc[s]['n_cells']}" in t, (s, "칸 수", gc[s]["n_cells"])
+        top = over[s][0]
+        assert f"{top['cathode'].replace('O2', 'O₂')} {float(top['V']):.1f} V" in t, (s, "넘은 칸 이름", top)
+    assert gc["Li"]["tol"] in got, "문턱이 화면과 다르다"
+    passed = all(gc[s]["pass"] is True for s in ("Li", "P"))
+    assert ("직선 위다" in t) == passed, "판정과 화면 문장이 어긋난다"
+    assert "점 하나" in t and "안쪽" in t, "'점 하나 · 안쪽 꺾임은 못 봤다' 한정이 빠졌다"
+
+
 
 def test_prot_counts_dies_when_the_grid_is_broken():
     """⛔음성 — 시험 쪽 전농도통과 판정도 격자가 깨지면 **세지 않고 죽는다** (2차 리뷰 ①②).

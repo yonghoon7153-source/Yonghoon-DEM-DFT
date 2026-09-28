@@ -59,7 +59,9 @@ evidenceScope: multi-source-primary
 | `a8177e205` | **CEI G4 닫음** — 1저자 "ㅇㅇ 그렇게 해줘" · 결정 `D-2026-09-28-cei-x002-result` (active · 비준) · 결과 기록 ratified · 화면 두 곳 · 결속 시험 +1 |
 | `d2870ca0f` · `d68fb1047` | li2s 발표 덱용 그림 8 장 + 생성기(`--selftest`) + CSV — 덱 자체는 아티팩트(65foANsmpCVCaVG4zHEmuM · 비공개) |
 | `f1780002d` | 웹앱 `/li2s` 에 「처음 보는 분께」 절 — 요약 기록(자리표시) + `data.li2s_brief()` + 시험 9 |
-| (다음 커밋) | **CEI Li 장부 = 항등식** 유도·확인 (`--li_identity` · 계수 1) + **x = 0.10 곡률 사전등록 (실행 전 커밋)** · 결정 둘 (항등식 proposed · x010 active) · run.sh |
+| `767d10158` · `17640b9f2` | **CEI Li 장부 = 항등식** 유도·확인 (`--li_identity` · 계수 1) + **x = 0.10 곡률 사전등록 (실행 전 커밋)** · 결정 둘 (항등식 proposed · x010 active) · run.sh · 경로 정정 |
+| `cf17c5542` | (사용자 · gabia) x = 0.10 곡률 원자료 — 7 조성 · 판정 G0/GI/GC 통과 |
+| (다음 커밋) | x = 0.10 결과 기록(proposed) · 사전등록 ratified · 화면 머리 2×2 곡률 문장 교체 + 결속 시험 · 도구 G0 키·칸별 목록 |
 
 ## 3. 돌린 시험 · 검증 (09-28)
 
@@ -70,7 +72,7 @@ evidenceScope: multi-source-primary
 | `tools/kb_wiki.py lint` | 0 errors |
 | 웹앱 전체 `pytest webapp/tests` | **585 passed · 3 failed · 2 skipped** — 3 failed 는 §6 (이 브랜치 변경을 뺀 HEAD 에서도 같은 3 건 확인) · 09-28 오후 `ad3456f64` 에서 **591 passed · 같은 3 failed · 2 skipped** |
 | `test_interpretation_cards.py` | **77/77** (§0 시험 둘 뒤집기 + 신규 1 · x = 0.02 결속 +6 — 화면을 일부러 깨서 빨간불 6/6 · G4 마감 결속 +1 — 화면·결과 기록·원장을 깨서 빨간불 5/5) |
-| `interface_reactivity_v2.py --selftest` | **138 ✓** (x002 판정 16 건 · 항등식 13 · x010 7 — 일부러 깨서 빨간불: x002 6 건 · 항등식·x010 10/10) |
+| `interface_reactivity_v2.py --selftest` | **139 ✓** (x002 판정 16 건 · 항등식 13 · x010 7 — 일부러 깨서 빨간불: x002 6 건 · 항등식·x010 10/10) |
 | 판정 재현 | gabia 판정 파일 = 로컬 재생성 (source 필드 제외 동일) |
 | hazard 시험 (`-k hazard`) | 13/13 |
 | `quench_ss_event.py --selftest` | 35/35 (깨서 빨간불 6 건 확인) |

@@ -2,9 +2,9 @@
   "schema": "prospective_prereg/v1",
   "record_kind": "prospective",
   "sealed_on": "2026-09-28",
-  "results_seen": false,
+  "results_seen": true,
   "results_seen_note": "nd_li_010 · nd_p_010 은 한 번도 계산한 적이 없다. 나머지 다섯(modelc · nd_li_002 · nd_only · nd_p_002 · nd_p_020)은 x002 실행에서 값을 봤다 — 재현(G0)과 직선의 양 끝으로만 쓴다.",
-  "status": "proposed",
+  "status": "ratified",
   "system": "cathode_cei",
   "citable": false,
   "제목": "x = 0.10 곡률 확인 — 0.02–0.20 선형성 사이에 꺾임이 있나 (결과 보기 전에 박는다)",
@@ -83,6 +83,13 @@
       "state": "proposed",
       "by": "agent",
       "note": "실행 전 정정 — §5 코드_위치의 clone 경로가 /data/work/repo 로 잘못 적혀 있었다(x002 개정문 §5 는 /root/Yonghoon-DEM-DFT). 게이트(§3)·조성(§2)은 그대로다. 값을 본 적 없음."
+    },
+    {
+      "at": "2026-09-28",
+      "state": "ratified",
+      "by": "1저자",
+      "note": "실행으로 비준 (09-19 · x002 선례) — gabia 18:24:58 시작 @ 17640b9f2 (게이트 결과 전 커밋 767d10158). 원자료 cf17c5542. 결과 기록 cei_x010_result_2026_09_28.json — G0 · GI · GC 통과, 문턱·문구 그대로."
     }
-  ]
+  ],
+  "결과": "db/properties/cei_x010_result_2026_09_28.json (판정 cei_x010_verdicts_2026_09_28.json · 원자료 커밋 cf17c5542)"
 }
