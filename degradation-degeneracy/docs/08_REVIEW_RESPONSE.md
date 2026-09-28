@@ -8487,3 +8487,17 @@ docstring 변경도 RUN_SCOPE 규칙대로 digest 를 움직인다: `c78d7969ef4
 **리뷰 활동 한계 (리뷰어 §7 그대로):** 대상 모듈 import/함수 호출·pytest/smoke/mutation·COMSOL/JVM/Java·복원/재채점·class 변경/투영 게시·단계 3 구현 각 0회. Git 읽기·독립 checkout·파일/ZIP/YAML/JSON/해시·AST 정적 대조·검토 산출물 작성만. 첫 fetch 는 unresolved deltas 로 실패 → 새 검토 저장소에서 refetch (기존 저장소·대상 코드 수정 없음).
 
 **우리가 한 것 (이 절):** 패키지 보존·blob 대조·원장·상태 문서만. **하지 않은 것:** 계산 경로·RUN_SCOPE 변경 0 (digest `eda3feb8f4536511` 그대로) · 전체 회귀·smoke 재실행 없음(이 절에 새 실측 수치 없음) · 단계 3 착수 없음 · 새 연구 계산·복원·class/투영 변경 없음. **다음:** 단계 3 은 사용자가 제한 범위·사전 고정 사항을 승인한 뒤에만 — 그때 `GATE81_REQUEST.md` 로 범위 확인 요청부터.
+
+## §113 81차 요청 발송 — 단계 3 **제한 구현 범위·사전 고정 사항 확인** (구현 착수 아님 · 실행 GO 아님) · 발송 SHA `88ac144a`
+
+**사용자 결정 (2026-09-28, §112 뒤):** "승인" — §112 가 다음 단계로 걸어 둔 **범위 확인 요청문의 발송**을 승인. 구현 착수 승인이 아니다 (착수는 81차 회신 뒤 별도 승인). 80차 리뷰어 문장("단계 3의 제한 구현 범위·사전 고정 사항을 확인해 별도 승인")에 대한 응답이다.
+
+**요청문 `docs/22p_gap/GATE81_REQUEST.md` (`88ac144a`, 새 파일):** 제안 범위 = GATE78 §3.2 단계 3 을 세 조각 — **3-A 결속**(묶음 1·2: `src/` ↔ `tools/design_wire.py` 결속 · 계약 §2 planned 필드를 v6 writer 필수축으로 · `realized_candidate_map_sha256` · `PlannedLeg` count) · **3-B provider DAG**(묶음 3: no-warm 명시 null 분기 · warm provider artifact/solution map 봉인 · materialize→seal→consume) · **3-C 행·검증**(§9.4 `candidate_id`·`bank_index` → serializer · `_restart_ok` · `normalize_restart_record` · `validate_provenance`). 현행 코드 앵커는 HEAD `cc4b01ad` 실측 — `design_wire` 를 `src/` 가 import 하지 않음 (grep 0) · bank 는 `rng.uniform(lb, ub)` (unit cube 아님) · 골든 bank/bounds/payload sha 는 placeholder · no-warm 은 bool off · restart 행 8 키 (`candidate_id`·`bank_index` 없음) · 혼합 행 정책 없음 (79·80차 이월). 갈림 4곳 — Q1 unit-cube bank 를 단계 3 에 포함 (legacy 경로 바이트 불변) · Q2 혼합/손상 행 명시 거부 · Q3 provider 봉인 실물 세 sha · Q4 ID 도메인·골든 불변 — 에 우리 제안과 되돌림 가능성 명시. 사전 고정 표(GATE78 §3.1)는 78차 종결값 그대로 (provider 동결만 이 단계가 건드림). 실행 경계는 78차 §4 규칙 (RUN_SCOPE 4 파일 이동 → 라운드 끝 leg 별 영수증 1회 · 원본 `history/<leg>.validate.eda3feb8f4536511.yaml` 보존 · 봉인 3종 불변).
+
+**실측 (발송 SHA = 요청문 커밋 `88ac144a8bb9a0e805b06e8240d1d64a4ca6a16e` · clean · 시작 HEAD = 끝 HEAD · 시작/끝 미추적 0 · 실행 중 커밋 없음 · 01:55:13Z → 03:09:28Z):** docs-lint 단독 **358 passed** (1321.73 s) · 전체 pytest **0 failed · 1960 passed · 1 xfailed** (2951.96 s = 49:11) · strict smoke **rc 0** (176 s — 작은 grid/fit/score/restore 계산 포함, 연구용 새 실행 0) · `source_digest eda3feb8f4536511` · RUN_SCOPE diff 9a26dd5f→HEAD 0 · 6ffa98d4→HEAD 0.
+
+**스스로 신고 (발송문에도 적음):** 같은 SHA 의 **첫 실행은 환경 때문에 실패**했다 — 새 컨테이너가 얕은 클론(커밋 598)이고 `requirements.txt` 의존성(`pybamm` · `matplotlib` · `joblib` · `pytest-json-report` 등)이 없었다. docs-lint 4 failed / 354 passed (그중 `test_committed_gate_requests_are_self_contained` 는 얕은 클론의 "존재하지 않는 커밋" 확인, 나머지 3 건은 개별 원인 미확인) · pytest 수집 오류 3 (`matplotlib`) · smoke rc 1 (`pybamm`/`joblib`). 조치: `pip install -r requirements.txt` · `git fetch --unshallow` (커밋 1106) — 트리·HEAD 불변, 같은 SHA 에서 처음부터 재실행한 값이 위다.
+
+**하지 않은 것:** 코드 변경 0 · 단계 3 착수 0 · 새 시험 0 · 영수증·CLAIM_STATUS·artifacts 변경 0 · 새 연구 계산·복원·class/투영 변경 0. 발송 SHA 뒤의 커밋(`bms-balancing/` COMSOL 기록 · 이 절 · 상태 문서)은 RUN_SCOPE 밖이다.
+
+**다음:** 81차 회신 대기. 회신이 범위를 확정해도 **사용자 착수 승인** 뒤에만 RED 먼저 (`tests/test_gate81_stage3_wire.py`) → 3-A → 3-B → 3-C → 변이 → 전체 회귀·smoke → 라운드 끝 영수증 1회 → GATE82.
