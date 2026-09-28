@@ -5666,7 +5666,7 @@
    "found_by": "Codex 5 차 적대 재리뷰 + v2 보충 (사용자 경유, 2026-09-28) — 코드 핀 091bb2114 · 보충 핀 978158d33 · 판정 HOLD · 소스 23/23 · 보충 12/12 git blob 일치 · 독립 단언 16/16 + 7/7",
    "opened_in": "docs/reviews/codex_review_mixer_highbo_round5_v2_20260928.md",
    "title": "np 1 재개-위상 영수증을 MPI 20 런의 위상 · 위치 오차 경계로 승격 — 합성 np20 launch/job_start 에 np1 영수증을 이으면 소비자가 accepted=true (각 경계 0.001165° · 위치 3.165e-7 m) · 수용 경로에 rank 이식 검증이 없다",
-   "note": "MPI 20 이 틀렸다는 반례는 **없다** (관측된 MPI 오류가 아니라 적용 범위 문제 → P2).  처방된 강체 회전이 입자력과 무관하다는 것은 이식 가설의 합리적 근거이나 MPI 출력 · 소유 · 재개 경로의 수치 경계를 np1 측정값과 같게 둘 증명은 아니다.  권고: 같은 생산 바이너리 · MPI 20 · 실행 옵션의 **입자 없는 A/B 위상 시험** (삼각형 내부 vertex 순서 · 나열 순서 불변 · 면 연결 · 중복도 · Drum/Front/Back 구성 보존 비교 — HBR4-04 식 vertex cloud 최근접 비교로 돌아가지 않는다) 또는 MPI 경로의 독립 수치 상한.  새 시험 없이 가면 np1 경계를 MPI 20 실측으로 표시하지 않고 더 넓은 독립 경계 → TECH 면 미식별.  계획 (1저자 09-28 비준): ibb 가 빈 뒤 — 09-28 20:23 LH 정지로 비었다.  재현 키: np1_receipt_on_np20  ⊕ Codex 6 차 Q2: 순서 불변 비교기 (삼각형 multiset · 전단사 대응 · 성분 표지 · 연속 시계) → raw np1 대조 → **실제 선택한 rank** 의 새 빈 메시 A/B 계측 순서에 동의 · 현 비교기는 삼각형 순서만 바꿔도 rc 1 (permuted_triangles, 우리 HEAD 재현) — 열림 그대로."
+   "note": "MPI 20 이 틀렸다는 반례는 **없다** (관측된 MPI 오류가 아니라 적용 범위 문제 → P2).  처방된 강체 회전이 입자력과 무관하다는 것은 이식 가설의 합리적 근거이나 MPI 출력 · 소유 · 재개 경로의 수치 경계를 np1 측정값과 같게 둘 증명은 아니다.  권고: 같은 생산 바이너리 · MPI 20 · 실행 옵션의 **입자 없는 A/B 위상 시험** (삼각형 내부 vertex 순서 · 나열 순서 불변 · 면 연결 · 중복도 · Drum/Front/Back 구성 보존 비교 — HBR4-04 식 vertex cloud 최근접 비교로 돌아가지 않는다) 또는 MPI 경로의 독립 수치 상한.  새 시험 없이 가면 np1 경계를 MPI 20 실측으로 표시하지 않고 더 넓은 독립 경계 → TECH 면 미식별.  계획 (1저자 09-28 비준): ibb 가 빈 뒤 — 09-28 20:23 LH 정지로 비었다.  재현 키: np1_receipt_on_np20  ⊕ Codex 6 차 Q2: 순서 불변 비교기 (삼각형 multiset · 전단사 대응 · 성분 표지 · 연속 시계) → raw np1 대조 → **실제 선택한 rank** 의 새 빈 메시 A/B 계측 순서에 동의 · 현 비교기는 삼각형 순서만 바꿔도 rc 1 (permuted_triangles, 우리 HEAD 재현) — 열림 그대로.  ⊕ Codex 7 차 (09-29 §9-1): 선택 rank = 20 도 예외가 아니다 — 그 rank · 분할 · 바이너리 · 새 dt · 회전 시계에 맞는 유효 증거 요구 (np1 증서로 np20 대신 불가 · 자동 해제 아님)."
   },
   {
    "id": "HBR5-05",
@@ -5728,7 +5728,7 @@
    "found_by": "Codex 6 차 적대 재리뷰 (사용자 경유, 2026-09-28 밤) — 핀 18787ab98 · 소스 23/23 git blob 일치 · 판정 HOLD · 합성 프로브만 (DEM/MPI/실제 LH·LC 판독 없음)",
    "opened_in": "docs/reviews/codex_review_mixer_highbo_round6_20260928.md",
    "title": "측정한 A/B 와 **다른 메시의 위상 증서가 생산된다** — 생산자가 `gen.json.motion_signature` 를 봉인 A/B 에서 다시 계산하지 않고 복사하고 (`scripts/mixer_restart_phase_test.py:509`), 소비자는 그 복사본을 캠페인 서명과 비교한다 (`scripts/check_contact_validity.py:606`)",
-   "note": "재현 `changed_gen_motion_signature`: 측정 A/B · 봉인 그대로, 별도 캠페인의 Drum 만 y 로 149.277 µm 이동 · 측정 폴더의 봉인 밖 gen 서명만 그 캠페인 값으로 교체 → analyze rc 0 · passed=true · 소비자 accepted=true · 위치 경계 1.39e-14 m (측정 A 서명 78c93320ad41… ≠ 내보낸 b7588c4e36fb…).  ✅ 우리 HEAD 재현 (09-28 밤 — 믹서 스크립트 5 개가 핀 사본과 sha256 동일).  해제: 봉인 A 의 STL · scale · 운동으로 서명을 **다시 만들고** gen 은 대조만 · B 의 대응 계약 · 연속 시계 · nfacet 등 재계산 가능한 기하 메타데이터도 같은 원칙 → 반례 rc 1 (또는 진짜 서명을 내보내 소비자가 다른 캠페인 거부) · 정상 rc 0.  한정: 커밋된 두 영수증이 잘못된 형상을 썼다는 실측 증거는 아니다 — 그러나 이 결함을 둔 채 새 np20 영수증을 만들면 측정 대상 일치가 보증되지 않는다.  ⊕ 09-28 밤 수정 (1저자 비준 — 반례 먼저): 셀프테스트 ⑯ changed_gen_motion_signature · ⑯b 면 수 · ⑯c B 운동 계약 (주기) 을 먼저 옮겨 옛 코드에서 **통과 (= 결함 재현)** 확인 → 수정: 운동 서명 · 면 수를 봉인 A (와 B) 의 덱 · STL 에서 다시 만들고 gen.json 은 대조만 · B 서명 = A · B 운동 시계 (read_restart 뒤 같은 운동 fix · 같은 끝) · 내보내는 run_total · dump_every · span = 덱 값 · 영수증 `motion_signature_basis=sealed_A_recomputed` + gen 값은 `motion_signature_gen_json` 로 따로.  selftest 30/35 → 35/35 (⑥c: 재계산 서명 = 캠페인 덱 서명 — 합성 덱에서 78c93320ad41… = Codex 증거의 측정 A 서명 앞자리).  ⚠ 커밋된 옛 영수증 (v2 · v2_ibb) 은 옛 코드 산출이라 재생성 대상 (np20 새 영수증과 함께).",
+   "note": "재현 `changed_gen_motion_signature`: 측정 A/B · 봉인 그대로, 별도 캠페인의 Drum 만 y 로 149.277 µm 이동 · 측정 폴더의 봉인 밖 gen 서명만 그 캠페인 값으로 교체 → analyze rc 0 · passed=true · 소비자 accepted=true · 위치 경계 1.39e-14 m (측정 A 서명 78c93320ad41… ≠ 내보낸 b7588c4e36fb…).  ✅ 우리 HEAD 재현 (09-28 밤 — 믹서 스크립트 5 개가 핀 사본과 sha256 동일).  해제: 봉인 A 의 STL · scale · 운동으로 서명을 **다시 만들고** gen 은 대조만 · B 의 대응 계약 · 연속 시계 · nfacet 등 재계산 가능한 기하 메타데이터도 같은 원칙 → 반례 rc 1 (또는 진짜 서명을 내보내 소비자가 다른 캠페인 거부) · 정상 rc 0.  한정: 커밋된 두 영수증이 잘못된 형상을 썼다는 실측 증거는 아니다 — 그러나 이 결함을 둔 채 새 np20 영수증을 만들면 측정 대상 일치가 보증되지 않는다.  ⊕ 09-28 밤 수정 (1저자 비준 — 반례 먼저): 셀프테스트 ⑯ changed_gen_motion_signature · ⑯b 면 수 · ⑯c B 운동 계약 (주기) 을 먼저 옮겨 옛 코드에서 **통과 (= 결함 재현)** 확인 → 수정: 운동 서명 · 면 수를 봉인 A (와 B) 의 덱 · STL 에서 다시 만들고 gen.json 은 대조만 · B 서명 = A · B 운동 시계 (read_restart 뒤 같은 운동 fix · 같은 끝) · 내보내는 run_total · dump_every · span = 덱 값 · 영수증 `motion_signature_basis=sealed_A_recomputed` + gen 값은 `motion_signature_gen_json` 로 따로.  selftest 30/35 → 35/35 (⑥c: 재계산 서명 = 캠페인 덱 서명 — 합성 덱에서 78c93320ad41… = Codex 증거의 측정 A 서명 앞자리).  ⚠ 커밋된 옛 영수증 (v2 · v2_ibb) 은 옛 코드 산출이라 재생성 대상 (np20 새 영수증과 함께).  ⊕ Codex 7 차 (09-29 §9-1): 새 수정/음성대조 없이는 닫힘으로 바꾸지 않는다 — claimed_fixed 유지 · verified 는 Codex 8 차 이후.",
    "claimed_fixed_sha": "6e7bce4b1",
    "evidence_tests": [
     "scripts/mixer_restart_phase_test.py"
@@ -5742,7 +5742,7 @@
    "found_by": "Codex 6 차 적대 재리뷰 (사용자 경유, 2026-09-28 밤) — 핀 18787ab98 · 소스 23/23 git blob 일치 · 판정 HOLD · 합성 프로브만 (DEM/MPI/실제 LH·LC 판독 없음)",
    "opened_in": "docs/reviews/codex_review_mixer_highbo_round6_20260928.md",
    "title": "(제안된 검증 설계) **SE 영률 ×14 는 순수 강성 검증이 아니다** — 생성기의 동일상 CED 역산 (`scripts/make_mixer_deck.py:192-222`) 과 상별 후보 min · 대각선 기반 벽 CED (:378-384) 때문에 혼합쌍 (AM–SE 점착 힘 척도 ×1.272) · SE–벽 (×1.182) 의 Bo 도 바뀐다",
-   "note": "실제 plan(100000, cgf=151.4) · ced_matrix 호출 (LC · LH 같은 비): SE CED 10,458 → 60,750 J/m³ · SE–벽 5,678 → 32,980 · E* 배수 AM–SE 12.41 · SE–SE 14 · SE–벽 12.88 · CED 배수 5.81 · 동일상 분리 일 ×0.172 · AM/SE 영률비 103.7 → 7.41 · dt 0.7055 → 0.3132 µs (SE 가 제한 · step ≈ ×2.25).  근사 = 작은 겹침 · 점착 지배 · 고립 접촉 (F = Aδ^1.5 − Bδ) — 실제 덱 sjkr 과의 차이는 남는다.  해제 (판정문 §5-3): 불변으로 둘 양을 먼저 등록 · 개발/확인 분리 (별도 holdout seed) · seed 당 LC/LH × soft/reference 네 8 바퀴 궤적 + 각 강성의 E0 · 목표 = contrast q_s (개별 팔 오차 아님) · b_E = 0.02 는 저자 오차 예산 · 동등성 구간 · 판정 경계 여유 · 계약 통계량 명시 · 검증/생산 코호트 분리.  짧은 런은 후보 탈락용 개발 시험이지 8 바퀴 인증이 아니다.  1 % 를 유지하면 기존 E0 로 HOLD 그대로.  한정: 기존 LC↔LH 공동 개입이 틀렸다는 주장 · LH 가 27 % 바뀐다는 예측이 아니다."
+   "note": "실제 plan(100000, cgf=151.4) · ced_matrix 호출 (LC · LH 같은 비): SE CED 10,458 → 60,750 J/m³ · SE–벽 5,678 → 32,980 · E* 배수 AM–SE 12.41 · SE–SE 14 · SE–벽 12.88 · CED 배수 5.81 · 동일상 분리 일 ×0.172 · AM/SE 영률비 103.7 → 7.41 · dt 0.7055 → 0.3132 µs (SE 가 제한 · step ≈ ×2.25).  근사 = 작은 겹침 · 점착 지배 · 고립 접촉 (F = Aδ^1.5 − Bδ) — 실제 덱 sjkr 과의 차이는 남는다.  해제 (판정문 §5-3): 불변으로 둘 양을 먼저 등록 · 개발/확인 분리 (별도 holdout seed) · seed 당 LC/LH × soft/reference 네 8 바퀴 궤적 + 각 강성의 E0 · 목표 = contrast q_s (개별 팔 오차 아님) · b_E = 0.02 는 저자 오차 예산 · 동등성 구간 · 판정 경계 여유 · 계약 통계량 명시 · 검증/생산 코호트 분리.  짧은 런은 후보 탈락용 개발 시험이지 8 바퀴 인증이 아니다.  1 % 를 유지하면 기존 E0 로 HOLD 그대로.  한정: 기존 LC↔LH 공동 개입이 틀렸다는 주장 · LH 가 27 % 바뀐다는 예측이 아니다.  ⊕ Codex 7 차 (09-29 · Q1): 쌍별 F₀ = B³/A² 보존 **설계는 타당** (조건부 동의 — 명목 소겹침 점착 힘 척도 보존 · 전체 SJKR 동역학 불변 아님) · 독립 산술 ×14: E* 배수 AM–SE 12.41 · SE–SE 14 · SE–벽 12.88 → CED 배수 5.36 · 5.81 · 5.49 · F₀ 1 · U_sep 0.187 / 0.172 / 0.182 (×28: 22.12 · 28 · 23.70 → 7.88 · 9.22 · 8.25) · \"U = 0.172 배\" 는 SE–SE 한정 · 시험은 9 개 독립 비영 항목 + 대칭 · wall–wall 0 · 기존 soft 행렬 원소 기준 역산 · 벽은 R* = r_particle + 선언 벽 물성.  **구현 · 내보낸 덱 해제는 열림** (이번 산술은 새 CLI selftest 를 대신하지 않는다)."
   },
   {
    "id": "HBR6-03",
@@ -5752,7 +5752,7 @@
    "found_by": "Codex 6 차 적대 재리뷰 (사용자 경유, 2026-09-28 밤) — 핀 18787ab98 · 소스 23/23 git blob 일치 · 판정 HOLD · 합성 프로브만 (DEM/MPI/실제 LH·LC 판독 없음)",
    "opened_in": "docs/reviews/codex_review_mixer_highbo_round6_20260928.md",
    "title": "**완료 배너가 봉인 끝 step 과의 모순을 덮는다** — `Total wall time` 이 있으면 마지막 step 과 무관하게 완료로 판정 (`scripts/mixer_restart_phase_test.py:83-88` · :375-378)",
-   "note": "재현 `banner_short_tail`: 봉인 끝 14,001 · 정상 A 28 / B 11 덤프 격자 유지 · A/B 로그 마지막 step 만 14,000 + 배너 → producer rc 0 · consumer accepted · completion_basis=banner.  ✅ 우리 HEAD 재현 (09-28 밤).  해제: thermo 출력 규약에서 숫자로 확인되는 끝 step 이 봉인값과 모순이면 배너로 덮지 않는다 → 반례 rc 1 · 배너 없는 정상 대조 rc 0 유지.  한정: 4,501 step 축소의 재발이 아니다 — 마지막 1 step 의 미입증 · 합성 로그가 통과함을 보인 것이지 실제 LIGGGHTS 가 이런 로그를 냈다는 주장이 아니다.  ⊕ 09-28 밤 수정 (비준 — 반례 먼저): ⑰ banner_short_tail (끝 14,000 + 배너) 이 옛 코드에서 통과 확인 → 수정: 완주 = 숫자 끝 step = 봉인 덱 끝 **만** (배너는 기록만 · 배너만 있는 로그 형식은 받지 않는다 — 별도 계약 전).  ⑧ 배너 빌드의 정상 로그는 basis=last_step 로 통과.  ⚠ run_all.sh `done_run` (캠페인 런 완주 표지) 은 여전히 배너 ∨ 끝 step — 영수증 판정과 따로.",
+   "note": "재현 `banner_short_tail`: 봉인 끝 14,001 · 정상 A 28 / B 11 덤프 격자 유지 · A/B 로그 마지막 step 만 14,000 + 배너 → producer rc 0 · consumer accepted · completion_basis=banner.  ✅ 우리 HEAD 재현 (09-28 밤).  해제: thermo 출력 규약에서 숫자로 확인되는 끝 step 이 봉인값과 모순이면 배너로 덮지 않는다 → 반례 rc 1 · 배너 없는 정상 대조 rc 0 유지.  한정: 4,501 step 축소의 재발이 아니다 — 마지막 1 step 의 미입증 · 합성 로그가 통과함을 보인 것이지 실제 LIGGGHTS 가 이런 로그를 냈다는 주장이 아니다.  ⊕ 09-28 밤 수정 (비준 — 반례 먼저): ⑰ banner_short_tail (끝 14,000 + 배너) 이 옛 코드에서 통과 확인 → 수정: 완주 = 숫자 끝 step = 봉인 덱 끝 **만** (배너는 기록만 · 배너만 있는 로그 형식은 받지 않는다 — 별도 계약 전).  ⑧ 배너 빌드의 정상 로그는 basis=last_step 로 통과.  ⚠ run_all.sh `done_run` (캠페인 런 완주 표지) 은 여전히 배너 ∨ 끝 step — 영수증 판정과 따로.  ⊕ Codex 7 차 (09-29 §9-1): 새 수정/음성대조 없이는 닫힘으로 바꾸지 않는다 — claimed_fixed 유지 · verified 는 Codex 8 차 이후.",
    "claimed_fixed_sha": "6e7bce4b1",
    "evidence_tests": [
     "scripts/mixer_restart_phase_test.py"
@@ -5853,6 +5853,84 @@
    "note": "수치 영향 0 (상자는 어느 쪽이든 0.05 · ② 값 무관) 이지만 규율 ④ 부류 — \"확인하지 않은 추정을 지시문에 쓰지 않는다\" (09-27 체크리스트 ⚠) 를 문서에서 다시 어겼다.  둘 다 같은 세션의 자기리뷰가 반례로 잡았다 (webapp/app.py:3184 · parse_liggghts.py:335–340 · pipeline_service.NET_MERGE_KEYS).  복사본 대조는 `network_conductivity.active_fractions` 추출 (동작 중립) + 변이 selftest ⑱ 로 닫았다.  ⇒ 처방: 문서 F6 · F7 · 정의 표 정정 · LHS-18 제목 정정 (같은 커밋).  교훈 한 줄 — 파이프라인 서술은 **호출 경로를 끝까지 따라가 파일이 실제로 써지는 줄**을 댈 수 있을 때만 적는다.",
    "evidence_tests": [
     "scripts/lhs_perc_audit.py"
+   ]
+  },
+  {
+   "id": "HBR7-01",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 7 차 사전등록 구조 리뷰 (사용자 경유, 2026-09-29) — 초안만 검토 · baseline 핀 18787ab98 생성기 실제 호출 · 독립 산술/합성 반례 118 PASS · DEM/MPI/SLURM/실행물 없음",
+   "opened_in": "docs/reviews/codex_review_mixer_highbo_round7_prereg_20260929.md",
+   "title": "E0 정적 검사 (§4-b 경화 안정성 · §4-c dt/2) 만으로 bin 7 의 reference 를 \"자격 있는 reference\" 로 인증한다 — 점착 0 · 회전 0 의 E0 는 LC/LH 8 바퀴 contrast 의 강성 · dt 민감도를 제한하지 않는다 (합성 반례: §4 전부 통과인데 최종 d 가 ref2 로 0.06 · dt/2 로 0.07 이동 · S_R² 1 % 오차만으로 M 0.117 이동 — 분모 비는 M 오차를 상한화하지 않는다)",
+   "note": "해제 = 비용과 주장 중 하나: (1) 18 런 유지 · ref = \"사전 지정 SE×14 비교 수준\" · 수렴/≤0.02 인증 문장 삭제 (2) LC/LH bin 7 에서 r_s = d(E_ref)−d(E_ref2) · t_s = d(dt)−d(dt/2) 직접 비교 · 허용 폭 결과 전 배정 (+18 런) · 중간 = 개발 seed 한 쌍 선별 (자격화 아님).  단조성 실패 = 후보 자격화 실패이지 \"코드 경로 결함 입증\" 아님 (v1 §4-b 문장 삭제).  ⬜ 저자 결정 D-2 (등록 v2 §0-b · 권고 (1)).  v2 §4 반영.",
+   "evidence_tests": [
+    "docs/reviews/codex_mixer_highbo_round7_evidence_20260929/audit_prereg.py"
+   ]
+  },
+  {
+   "id": "HBR7-02",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 7 차 사전등록 구조 리뷰 (사용자 경유, 2026-09-29) — 초안만 검토 · baseline 핀 18787ab98 생성기 실제 호출 · 독립 산술/합성 반례 118 PASS · DEM/MPI/SLURM/실행물 없음",
+   "opened_in": "docs/reviews/codex_review_mixer_highbo_round7_prereg_20260929.md",
+   "title": "soft 를 관측하는 것과 soft 가 1 % 계약을 통과하는 것을 혼동한다 — v1 §6 은 모든 팔 ≤ 1 % · §8-2 는 첫 seed 의 soft 둘까지 스모크 통과를 요구하면서, 초안 자신이 soft E0 최대 4.7–5.8 % 를 전제로 둔다 ⇒ 의도적으로 계약 밖인 비교 팔 때문에 검증 경로가 막힌다",
+   "note": "처방 = 세 축 분리 (기술 관측 가능 / 원 1 % 물리 적격성 / 결과 권위): ref 는 통과 필수 · soft 는 평가 · 보고하되 NOT_MET 유지 (삭제 · \"TECH 아니니 허용\" · q 통과로 PASS 소급 모두 금지).  soft 허용 개발 범위 · 계산 불능 · 범위 이탈 처리 · 스모크가 구분해 내보낼 상태를 사전 지정.  해제 증거 = arm×E×검사 종류별 허용/거부표 + soft NOT_MET 보존 · 기술 실패 거부 합성 관문 시험.  v2 §6 반영 (상태 필드 ⬜ 코드).",
+   "evidence_tests": [
+    "docs/reviews/codex_mixer_highbo_round7_evidence_20260929/audit_prereg.py"
+   ]
+  },
+  {
+   "id": "HBR7-03",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 7 차 사전등록 구조 리뷰 (사용자 경유, 2026-09-29) — 초안만 검토 · baseline 핀 18787ab98 생성기 실제 호출 · 독립 산술/합성 반례 118 PASS · DEM/MPI/SLURM/실행물 없음",
+   "opened_in": "docs/reviews/codex_review_mixer_highbo_round7_prereg_20260929.md",
+   "title": "q 의 95 % CI ⊂ ±0.02 를 \"soft 에서도 같은 결론\" · \"soft 전체 유효\" 로 읽는다 — 반례 (REFUTED): d_ref .100/.101/.102 · q −.014/−.015/−.016 → q̄ −.015 · CI [−.0175, −.0125] ⊂ ±.02 통과 · ref 평균 .101 은 MID 통과인데 soft 평균 .086 은 MID .10 미달 = 범주 판정이 갈린다",
+   "note": "평균 contrast 의 동등성은 각 seed · 각 팔 · 다른 시간 · Bo · 실물 물성의 유효성 주장이 아니다.  처방 = Codex 대체 문안 (v2 §9) · \"같은 결론\" 은 두 수준 각각의 오차 전파된 판정이 같다는 별도 조건에서만 · d_ref · d_soft · q 무조건 보고.  해제 증거 = 이 반례에서 동등성 PASS 지만 \"동일 MID 결론\" 을 거부하는 판정 시험.  v2 §1 · §5 · §9 반영 (판정 시험 ⬜ 코드).",
+   "evidence_tests": [
+    "docs/reviews/codex_mixer_highbo_round7_evidence_20260929/audit_prereg.py"
+   ]
+  },
+  {
+   "id": "HBR7-04",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 7 차 사전등록 구조 리뷰 (사용자 경유, 2026-09-29) — 초안만 검토 · baseline 핀 18787ab98 생성기 실제 호출 · 독립 산술/합성 반례 118 PASS · DEM/MPI/SLURM/실행물 없음",
+   "opened_in": "docs/reviews/codex_review_mixer_highbo_round7_prereg_20260929.md",
+   "title": "주 판정 보호선 `Δ−u ≥ .10 ∧ Δ−u ≥ 2SE` 에서 u 가 정의되지 않았고 SE 를 고정한다 — 반례 (REFUTED): d = .04/.14/.24 (평균 .14 · 2SE .1155) 는 통과하지만 허용 오차 ±.02 안의 .02/.12/.26 은 평균 .1333 < 2SE .1392 로 원 판정부터 실패 · 오차 항 (위치 경계 = 길이 · 프레임 N/N = 완전성 · Δ = 무차원) 을 그대로 더할 수 없다",
+   "note": "처방 (v2 §5): 위치 경계 → 벽 겹침/위상 QC 전파만 · 누락 프레임 = TECH 유지 · 정규화 = 상관 오차 (S_R² 상대 오차는 M 오차 상한 아님) · seed 산포/E0/수치 오차 구분 (이중계상 금지) · b_E 를 개별 d_s 의 확정 상한으로 쓰지 않음 · 확정 ε_s 가 있으면 u_mean = mean(ε_s) · u_SE = √Σε_s²/√(n(n−1)) · Δ̂−u_mean ≥ .10 ∧ ≥ 2(SE_hat+u_SE).  \"2SE\" 는 공학적 판정선 (n=3 정규에서 ±2SE ≈ 81.65 % · 95 % CI 아님 — 모체 판정선은 바꾸지 않음).  ⬜ ε_s 항목 · 값 = 개발 블록 뒤 배정.  해제 증거 = Δ·SE 공동 전파 정의 + 반례 거부 시험.",
+   "evidence_tests": [
+    "docs/reviews/codex_mixer_highbo_round7_evidence_20260929/audit_prereg.py"
+   ]
+  },
+  {
+   "id": "HBR7-05",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 7 차 사전등록 구조 리뷰 (사용자 경유, 2026-09-29) — 초안만 검토 · baseline 핀 18787ab98 생성기 실제 호출 · 독립 산술/합성 반례 118 PASS · DEM/MPI/SLURM/실행물 없음",
+   "opened_in": "docs/reviews/codex_review_mixer_highbo_round7_prereg_20260929.md",
+   "title": "실패 seed 처리와 unblind 종료 상태가 모순된다 — 한 seed 의 팔이 두 번째 TECH 로 영구 실패하면 확인 q 는 최대 둘인데 t(2) 는 n=3 을 요구하고 \"18 런 완주 뒤 unblind\" 는 영원히 만족되지 않을 수 있다",
+   "note": "처방 (v2 §8-4): 모든 계획 실행이 성공 또는 사전 지정 영구 실패의 terminal 상태에 도달하면 종료 기록 봉인 · unblind · 완전한 paired block < 3 이면 등록 n=3 확인 판정 = INCOMPLETE/HOLD (남은 paired 결과는 기술 보고 · t(2)/성공 seed 일반화로 대체 금지) · 필드별 무효 범위 (soft 실패 → q 만 · ref 실패 → d_ref · q · E0 실패 → 그 E 의 두 팔) · n=2 별도 추론은 결과 전 다른 설계로만.  해제 증거 = 한 팔/한 seed 영구 실패 · 두 번 재시도 종료 fixture 에서 terminal 상태 · 비노출 · 최종 보고 일관 (⬜ 코드).",
+   "evidence_tests": [
+    "docs/reviews/codex_mixer_highbo_round7_evidence_20260929/audit_prereg.py"
+   ]
+  },
+  {
+   "id": "HBR7-06",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 7 차 사전등록 구조 리뷰 (사용자 경유, 2026-09-29) — 초안만 검토 · baseline 핀 18787ab98 생성기 실제 호출 · 독립 산술/합성 반례 118 PASS · DEM/MPI/SLURM/실행물 없음",
+   "opened_in": "docs/reviews/codex_review_mixer_highbo_round7_prereg_20260929.md",
+   "title": "\"60 CPU 상한이면 NP · hold 에 관계없이 처리량/벽시계가 같다\" (v1 §8-3) — REFUTED: 60 코어는 용량 상한이지 step/s 보증이 아니고 (처리량 ≈ ⌊60/NP⌋·v(NP)) · 2 슬롯 반례 (10 h/1 h + 후속 10 h · 스모크 해제 5 h) 에서 hold 없음 11 h · hold 15 h",
+   "note": "처방 (v2 §8-3): 불변 문구 철회 · held 12 런의 makespan 손실을 D-4 순서의 의도된 비용으로 명시 · NP 1 h 프로브를 개발 항목 · 비용에 포함 (비교 시간 구간 고정) · 측정 전 ETA = 추정 표기.  Q6 조건부 동의: `sbatch --hold` 는 처음부터 held (priority 0) — 제출 뒤 hold 는 race · 실행 중 job 은 멈추지 않음.  실행 관문 구현의 옛 P1 (HBR5-04 · HBR6-01 · 03) 은 별도로 열림 · rank 20 도 예외 아님 (v1 \"20 이 아니면\" 삭제).  해제 증거 = 측정된 처리량/자원 계획 · 스케줄러 적합성은 별도 구현 시험.",
+   "evidence_tests": [
+    "docs/reviews/codex_mixer_highbo_round7_evidence_20260929/audit_prereg.py"
    ]
   }
  ]

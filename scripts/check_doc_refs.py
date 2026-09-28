@@ -143,7 +143,9 @@ _RE_PATH = re.compile(
 _RE_SHA = re.compile(r'`([0-9a-f]{7,40})`')
 #: 그 줄이 **스스로** 이 토큰을 커밋 아닌 **내용 해시**라고 밝힌다 — 종류 판별이지
 #: 부재 면제가 아니다.  (부재 면제는 `SHA_EXCEPTIONS` 등재로만 한다.)
-_RE_CONTENT_HASH = re.compile(r'digest|sha\(|sha256|SHA-256|patch-id|scaffold')
+#: `blob` = git 파일 내용 해시 (Codex 증거 `SOURCES.md` 가 생성기 blob 을 그렇게 적는다 · 2026-09-29) ·
+#: `sha256` 은 대소문자·하이픈 무관 (`SHA256` 붙여 쓴 줄이 `SHA` 커밋 문맥으로만 읽혀 오탐이 났다).
+_RE_CONTENT_HASH = re.compile(r'digest|sha\(|[Ss][Hh][Aa]-?256|patch-id|scaffold|\bblob\s*`')
 #: 커밋을 뜻한다고 볼 문맥 (같은 줄에 있어야 한다).
 _RE_COMMIT_CTX = re.compile(r'커밋|commit|SHA|sha|@\s*[0-9a-f]{7}|리비전|revision')
 
@@ -229,6 +231,10 @@ def scan_text(text: str, root: str, shas: set, shorts: set,
             out['cross'].append(p)
             continue
         if os.path.exists(os.path.join(root, p)):
+            continue
+        #  문서 **자기 폴더 기준** 상대 경로 (마크다운 링크 관례) — 이웃 파일이 실재하면 참조는 깨진 것이 아니다
+        #  (실사고 2026-09-29: Codex 7 차 증거 `SOURCES.md` 의 `baseline/prior_r6_verdict.md`).
+        if rel and os.path.exists(os.path.join(root, os.path.dirname(rel), p)):
             continue
         if '/' not in p:
             #  맨 파일명 — 흔한 자리들을 찾아본다 (문서가 경로를 생략하는 습관)
@@ -542,6 +548,33 @@ def _selftest():
     g = scan_text('도구 `nowhere.py` 를 쓴다', root, shas, shorts)
     chk('⑤ 못 찾으면 보류 (오류 아님)',
         g['missing'] == [] and g['unsure'] == ['nowhere.py'], str(g))
+
+    #  ══ 2026-09-29 실사고 둘 (Codex 7 차 증거 `SOURCES.md`) ═══════════════════════
+    #  ⑥ "Git blob `<40hex>`" — 그 줄이 스스로 **파일 내용 해시(blob)** 라고 밝히는데 옛 판은
+    #     같은 줄의 `SHA256` (대문자 · 붙여 씀) 을 커밋 문맥으로만 읽어 "없는 커밋" 을 냈다.
+    g = scan_text('- `scripts/real.py`: Git blob `' + 'e' * 40 + '`, SHA256 `' + 'f' * 64 + '`. 매 실행에서 blob 을 대조한다.',
+                  root, shas, shorts)
+    chk('★⑥ 줄이 "blob" 이라 밝힌 40hex 는 내용 해시 = 보류 (없는 커밋 아님)',
+        g['bad_sha'] == [] and g['unsure'] == ['e' * 40], str(g))
+    g = scan_text('SHA256 `' + 'e' * 40 + '` 로 봉인', root, shas, shorts)
+    chk('★⑥ `SHA256` (대문자·붙여 씀) 도 `sha256` 과 같은 내용 해시 표지다',
+        g['bad_sha'] == [] and g['unsure'] == ['e' * 40], str(g))
+    g = scan_text('커밋 `deadbeef` 의 blob 목록', root, shas, shorts)
+    chk('⑥ "blob" 표지는 토큰 **바로 앞**에 있을 때만 — 줄 어딘가의 blob 낱말이 커밋 참조를 가리지 않는다',
+        g['bad_sha'] == ['deadbeef'], str(g))
+    #  ⑦ 문서가 **자기 폴더 기준** 상대 경로로 이웃 파일을 가리킨다 (`baseline/prior_r6_verdict.md`).
+    #     리포 루트에서만 찾으면 실재하는 참조가 "없는 경로" 가 된다.
+    os.makedirs(os.path.join(root, 'docs', 'ev', 'baseline'), exist_ok=True)
+    open(os.path.join(root, 'docs', 'ev', 'baseline', 'prior.md'), 'w').write('x\n')
+    open(os.path.join(root, 'docs', 'ev', 'sib.md'), 'w').write('x\n')
+    g = scan_text('- `baseline/prior.md`: 이전 판정문', root, shas, shorts, rel='docs/ev/SOURCES.md')
+    chk('★⑦ 문서 폴더 기준 상대 경로가 실재하면 통과', g['missing'] == [] and g['unsure'] == [], str(g))
+    g = scan_text('- `baseline/prior.md`: 이전 판정문', root, shas, shorts)
+    chk('⑦ rel 없이 (루트 기준) 는 그대로 없는 경로', g['missing'] == ['baseline/prior.md'], str(g))
+    g = scan_text('- `baseline/zzz.md`', root, shas, shorts, rel='docs/ev/SOURCES.md')
+    chk('★⑦ 문서 폴더에도 없으면 여전히 잡는다', g['missing'] == ['baseline/zzz.md'], str(g))
+    g = scan_text('- `sib.md` 참조', root, shas, shorts, rel='docs/ev/SOURCES.md')
+    chk('⑦ 맨 파일명도 문서 옆에 있으면 통과 (보류 아님)', g['missing'] == [] and g['unsure'] == [], str(g))
 
     print(f'check_doc_refs selftest: {ok}/{ok + len(bad)} PASS')
     for b in bad:

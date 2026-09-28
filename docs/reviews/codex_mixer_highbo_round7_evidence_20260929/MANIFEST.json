@@ -1,0 +1,62 @@
+{
+  "schema": "review_evidence/v1",
+  "review": "LH round7 prereg 2026-09-29",
+  "scope": "arithmetic and design review; no simulations or external mutations",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 1826,
+      "sha256": "9fa024ddcb81024307e94055d45192534697b7e5df5d7813802a3112974071f2"
+    },
+    {
+      "path": "SOURCES.md",
+      "bytes": 2141,
+      "sha256": "157e90c47187381d38429087c0e991d692f006da7fde6238f46135b9af94b279"
+    },
+    {
+      "path": "review.md",
+      "bytes": 32601,
+      "sha256": "c8df4a20ea1f9e7a8b2f3420aa322b7827d3985b22756eadb70691a804081cc3"
+    },
+    {
+      "path": "attachment_original.txt",
+      "bytes": 12046,
+      "sha256": "011f7ea89cd4686832e35f054db85daa42bad2e6b7420010dbe475925ad1030b"
+    },
+    {
+      "path": "prereg_submitted.txt",
+      "bytes": 11975,
+      "sha256": "79255022bef5a87092073a24c45519d15b7294502428d88e8f6dee345417e860"
+    },
+    {
+      "path": "audit_prereg.py",
+      "bytes": 9055,
+      "sha256": "75e619891535a203bdbe5767b7705681dda3ec0d3d45cbbdff675f8a5bfe4881"
+    },
+    {
+      "path": "audit_results.json",
+      "bytes": 28815,
+      "sha256": "3815b834c500f5c5a9c57d4c356511988aebb6237d28c03bd35ac13055a5a78b"
+    },
+    {
+      "path": "baseline/make_mixer_deck.py",
+      "bytes": 87520,
+      "sha256": "2c12184e9d803e1a9fc4d58b5e32d2de0800b11f637797f68e637d3f85507251"
+    },
+    {
+      "path": "baseline/measure_mixing_index.py",
+      "bytes": 60953,
+      "sha256": "9f17569cdca30d4fee43be2f4353a9edc56450fbfb4066bcbe32a4447389cf76"
+    },
+    {
+      "path": "baseline/prior_r6_verdict.md",
+      "bytes": 33262,
+      "sha256": "a00a0111e7ff9c390f1625e0e366624def343ffc2b10299dffab69901412ff1b"
+    },
+    {
+      "path": "package_evidence.py",
+      "bytes": 1676,
+      "sha256": "c1ee2872297f0da7f158953b1e5449aea399fea2707aaf2fb36429b18968b4e3"
+    }
+  ]
+}
