@@ -5,7 +5,7 @@ created: 2026-09-28
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md]
+sources: [raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -36,6 +36,11 @@ h(t) = h_base(t) +            Σ_e Δh_e(q)        # 높이 신호(딜라토미�
 | `P_base(t)` 기저 · 표류 | 운전 스택 압력 + 시간 표류(압밀 · 소성 흐름 · 장치 이완 · 온도) | `[도표]` S7 원시 **61.83 → 60.63 MPa / 110 h** — 시간당 ≈0.02 → 0.009 MPa h⁻¹, 율을 올린 구간에도 시간에 따라 준다 | **본문 0** — ESI 그림 축에만 |
 | `k_eff(N)` 강성 | 셀 밖(지그 · 유압 기둥 · 게이지)과 셀 안(공극 압밀 · 소성 흐름) 순응의 역수 | `[재현]` 관측 ΔP 를 셀 탄성만으로 내려면 유효 길이 ≈22–36 mm(인쇄 SE 탄성률 18–25 GPa · ESI ⅓ 규칙 두께 ≈1.5 µm) ↔ 셀 적층 ≲1.3 mm ⇒ 변위의 대부분은 셀 탄성 밖 | **0** |
 | `Σ Δh_e` 전극 합 | 양극 + 음극 팽창(부호 포함) | 충전에 **둘 다 팽창**(LCO c 축 · In → InLi) · 음극 몫 `[재현]` ≈90–95 %(LTO 교체) | 전극 몫은 음극 교체로만 |
+
+⚠ **2026-09-28 (66호) 주석 — 둘째 인자 "Δx 당 몰부피 변화" 는 상수가 아니다.** 66호(de Biasi 2017 *JPCC* — 액체 반쪽 · NCM 여섯 조성 operando 격자, 표 S1)에서 `[재현]` NCM811 dV/dδ 가 3.99–4.05 V ≈−4 → 4.24–4.32 V ≈−30 Å³ per δ(×7)로
+올라 4.5 V 까지 ≈−28 로 유지되고, NCM622 는 δ 0.93–0.45 에서 −2…−4 · δ 0.30–0.18 에서 −19…−21 Å³ per δ 다. NCM 은 **충전 수축**(`[인쇄]` "a large decrease in unit cell volume upon charging") — In · Si 음극의 충전 팽창과 부호가 반대라
+양극 몫은 합에서 음극 몫을 깎는다. ⇒ 같은 용량 진폭이라도 **SOC 창(컷오프)에 따라 양극 몫이 다르고**, 같은 용량에서 θ 가 작으면 활성 입자의 Δx 가 커져 몫이 비선형으로 바뀐다([[nmc-lattice-li-content-calibration]] 함정 6).
+62호 원형은 LCO(충전 팽창)라 이 비선형의 표본이 아니다.
 
 ## 왜 중요한가 — 카드 Q2 · Q1 에서 이 신호를 쓸 때의 함정 다섯
 
@@ -95,3 +100,4 @@ h(t) = h_base(t) +            Σ_e Δh_e(q)        # 높이 신호(딜라토미�
 - [[assb-lampe-contact-product-degeneracy]] — 곱 축퇴 처방 · 마흔다섯 번째 적용의 경고 행("압력 · 두께 진폭을 활성 분율 대리로 쓸 때").
 - [[assb-maxwell-ocv-derivative-channels]] — 압력을 관측 변수로 쓰는 다른 형식(14호 `E(P)`).
 - [[li-metal-yield-creep-vs-stack-pressure]] — Li 금속 음극이면 기저 압력이 어느 creep 영역인지(62호 기저 ≈61.8 MPa = σ/G ≈2.2×10⁻², breakdown 영역).
+- [[nmc-lattice-li-content-calibration]] — 양극 몫 `Δh_ca` 의 둘째 인자 `dV/dx`(66호 NCM 여섯 조성 원자료 · Δx 에 비선형).

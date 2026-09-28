@@ -1,0 +1,516 @@
+{
+ "slug": "debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-28",
+ "sources": [
+  "8fd527c0-28._Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+  "3fc9562f-28._Sup_Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Charge/discharge curves at C/5 in the voltage range between 3.0 and 4.6 V and (b) the corresponding diﬀerential capacity plots for the diﬀerent Ni content NCM-based cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    107.7,
+    306.4,
+    374.3
+   ],
+   "w": 1050,
+   "h": 1112,
+   "dpi": 300,
+   "src": "8fd527c0-28._Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "blank": 0.919,
+   "note": ""
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Speciﬁc discharge capacity as a function of Umax for the diﬀerent Ni content NCM-based cells. (b) Maximum gravimetric energy densities calculated from the speciﬁc capacity and average discharge voltage.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    331.7
+   ],
+   "w": 1052,
+   "h": 1120,
+   "dpi": 300,
+   "src": "8fd527c0-28._Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "blank": 0.924,
+   "note": ""
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Charge cutoﬀvoltage as a function of Ni content required to achieve the gravimetric energy density of NCM811 at Umax = 4.3 V.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    226.1
+   ],
+   "w": 1050,
+   "h": 680,
+   "dpi": 300,
+   "src": "8fd527c0-28._Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "blank": 0.958,
+   "note": ""
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Crystal structure and schematic of the unit cell of layered LiNixCoyMnzO2.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.4,
+    243.6
+   ],
+   "w": 1051,
+   "h": 752,
+   "dpi": 300,
+   "src": "8fd527c0-28._Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "blank": 0.54,
+   "note": ""
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Contour plots of operando XRD patterns obtained on a NCM622-based cell showing the evolution of the reﬂection positions and intensities in the fourth charge/discharge cycle at C/10. broadening of the Bragg reﬂections occurs above 3.9 V and becomes more pronounced with further charging. During discharge a decrease in full width at half-maximum (fwhm) is observed below 3.8 V. As an example, Δfwhm003 is found to be 0.002° after the charge/discharge cycle, thus emphasizing the high reversibility of the (de)lithiation process. Structural multiphase transitions from hexagonal to mono- clinic (H1 →M), monoclinic to hexagonal (M →H2) and hexagonal to hexagonal (H2 →H3) typically occur when Li1−xNiO2 is delithiated with charging to 4.3 V, as indicated by the splitting of the original H1 10l and 11l reﬂections.30,35 It should be noted that the monoclinic modiﬁcation diﬀers only marginall",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    316.8
+   ],
+   "w": 2150,
+   "h": 1057,
+   "dpi": 300,
+   "src": "8fd527c0-28._Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "blank": 0.651,
+   "note": ""
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Contour plots of operando XRD patterns in the 2θ range of the 003 reﬂection obtained on the diﬀerent Ni content NCM-based cells during the charge cycle.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    346.2,
+    570.5,
+    667.5
+   ],
+   "w": 1052,
+   "h": 1340,
+   "dpi": 300,
+   "src": "8fd527c0-28._Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "blank": 0.492,
+   "note": ""
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Relative changes in lattice parameters (a) a and (b) c as a function of cell voltage during delithiation for the diﬀerent Ni content NCM materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    96.7,
+    306.5,
+    372.4
+   ],
+   "w": 1050,
+   "h": 1150,
+   "dpi": 300,
+   "src": "8fd527c0-28._Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "blank": 0.908,
+   "note": ""
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Diﬀerential capacity (black) and unit cell volume plots (blue) in the voltage range between 3.8 and 4.6 V for (a) NCM811 and (b) NCM851005.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    184.7,
+    570.4,
+    459.9
+   ],
+   "w": 1051,
+   "h": 1148,
+   "dpi": 300,
+   "src": "8fd527c0-28._Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "blank": 0.929,
+   "note": ""
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Figure 9. (a) Relative changes in unit cell volume as a function of cell voltage for the diﬀerent Ni content NCM materials. (b) Relative changes in unit cell volume for Umax = 4.3 V (empty circles) and Umax required to achieve the gravimetric energy density of NCM811 at 4.3 V (solid circles).",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    328.4
+   ],
+   "w": 1050,
+   "h": 1106,
+   "dpi": 300,
+   "src": "8fd527c0-28._Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "blank": 0.924,
+   "note": ""
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 7,
+   "file": "fig_10.png",
+   "caption": "Figure 10. (a) Capacity retention based on the second cycle discharge capacity for the diﬀerent Ni content NCM-based cells cycled between 3.0 V and Umax required to achieve the gravimetric energy density of NCM811 at 4.3 V (i.e., 4.6 V, 4.55 V, 4.45 V, 4.4 and 4.25 V for NCM111, NCM523, NCM622, NCM721 and NCM851005, respectively). After the ﬁrst cycle at C/10 was completed, the C- rates were set to C/4 charge and C/2 discharge for the subsequent cycles. (b) Comparison of the capacity retention after 100 cycles achieved by tailoring Umax and the results of Noh et al. for Umax = 4.3 V.10",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    334.1
+   ],
+   "w": 1052,
+   "h": 1130,
+   "dpi": 300,
+   "src": "8fd527c0-28._Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "blank": 0.919,
+   "note": ""
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Comparison of voltage profiles of NCM622-based pouch cells used for operando XRD and coin cells. Charge/discharge curves at C/10 in the voltage range between (a) 3.0 V and 4.3 V vs Li (initial and 2nd cycle) and (b) 3.0 V and 4.6 V vs Li (4th cycle).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.9,
+    533.5,
+    247.8
+   ],
+   "w": 1953,
+   "h": 763,
+   "dpi": 300,
+   "src": "3fc9562f-28._Sup_Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "blank": 0.933,
+   "note": ""
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Simulated diffraction patterns of NCM assuming both trigonal and monoclinic crystal structures showing the strong similarity between them.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    319.4,
+    533.4,
+    583.3
+   ],
+   "w": 1953,
+   "h": 1101,
+   "dpi": 300,
+   "src": "3fc9562f-28._Sup_Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "blank": 0.928,
+   "note": ""
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Contour plots of operando XRD patterns for selected 2θ ranges obtained on the different Ni content NCM-based cells during delithiation.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    533.4,
+    733.4
+   ],
+   "w": 1953,
+   "h": 2786,
+   "dpi": 300,
+   "src": "3fc9562f-28._Sup_Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "blank": 0.542,
+   "note": ""
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Relative changes in lattice parameters (a) a and (b) c versus the Li content during delithiation for the different Ni content NCM materials. The Li content was calculated from the electrochemical data.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    86.7,
+    533.5,
+    277.1
+   ],
+   "w": 1953,
+   "h": 794,
+   "dpi": 300,
+   "src": "3fc9562f-28._Sup_Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "blank": 0.872,
+   "note": ""
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Rietveld plots for NCM622 at selected SOC. The observed (exp), calculated (calc) and difference profiles (diff) are shown. The Li content was calculated from the electrochemical data.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    533.5,
+    643.2
+   ],
+   "w": 1953,
+   "h": 2411,
+   "dpi": 300,
+   "src": "3fc9562f-28._Sup_Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "blank": 0.877,
+   "note": ""
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 6,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Relative changes in unit cell volume as a function of Li content during delithiation for the different Ni content NCM materials. The Li content was calculated from the electrochemical data.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.9,
+    533.4,
+    255.8
+   ],
+   "w": 1953,
+   "h": 796,
+   "dpi": 300,
+   "src": "3fc9562f-28._Sup_Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "blank": 0.94,
+   "note": ""
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 6,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Changes in c/a ratio versus the cell voltage during delithiation for the different Ni content NCM materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    327.3,
+    533.4,
+    531.5
+   ],
+   "w": 1953,
+   "h": 852,
+   "dpi": 300,
+   "src": "3fc9562f-28._Sup_Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "blank": 0.924,
+   "note": ""
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2. Lattice Parameters and Oxygen Coordinate for the Diﬀerent Ni Content NCM Cathode Materials sample a (Å) c (Å) z NCM111 2.8575(1) 14.2166(5) 0.2401(1) NCM523 2.8659(1) 14.2234(3) 0.2406(1) NCM622 2.8661(1) 14.2062(3) 0.2403(1) NCM721 2.8647(1) 14.1808(4) 0.2403(1) NCM811 2.8688(1) 14.1867(4) 0.2416(1) NCM851005 2.8700(1) 14.1795(3) 0.2409(1)",
+   "rotated_deg": 0,
+   "bbox": [
+    319.5,
+    273.0,
+    569.5,
+    388.0
+   ],
+   "w": 1042,
+   "h": 480,
+   "dpi": 300,
+   "src": "8fd527c0-28._Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "blank": 0.801,
+   "note": ""
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 6,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Summary of Rietveld refinement results (lattice parameters, unit cell volume, oxygen coordinate and bond distances) for each operando XRD measurement at selected SOC. The lithium content was calculated from the electrochemical data. δ U a (Å) c (Å) V (Å3) z TM-O (Å) Li-O (Å) NCM111 0.94 3.65 2.8542(1) 14.264(1) 100.635(1) 0.2391(4) 1.945(3) 2.127(3) 0.90 3.72 2.8507(1) 14.285(1) 100.531(1) 0.2378(4) 1.934(3) 2.138(3) 0.85 3.75 2.8462(1) 14.312(1) 100.411(1) 0.2368(4) 1.925(3) 2.147(3) 0.80 3.77 2.8417(2) 14.346(1) 100.323(1) 0.2358(4) 1.917(3) 2.156(4) 0.75 3.79 2.8367(2) 14.381(1) 100.219(1) 0.2353(5) 1.912(3) 2.161(4) 0.70 3.82 2.8328(2) 14.410(1) 100.148(1) 0.2351(4) 1.910(3) 2.163(4)",
+   "rotated_deg": 0,
+   "bbox": [
+    60.4,
+    592.5,
+    534.9,
+    774.2
+   ],
+   "w": 1978,
+   "h": 758,
+   "dpi": 300,
+   "src": "3fc9562f-28._Sup_Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "blank": 0.885,
+   "note": "⚠ 자동 크롭은 SI 6 쪽 조각(NCM111 δ 0.94–0.70, 101 행 중 6 행)뿐 — 표 S1 은 7–9 쪽으로 이어진다. 나머지는 tab_S1_manual_p7/p8/p9.png. 값은 PDF 텍스트 층이 정본(인쇄 오기 셋은 렌더에도 같다 — digest D10)"
+  },
+  {
+   "key": "t1m",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1_manual_p4.png",
+   "caption": "Table 1. Composition of the Different Ni Content NCM Cathode Materials before Cycling and at the Beginning and End of the Fourth Charge Cycle",
+   "rotated_deg": 0,
+   "bbox": [
+    58,
+    645,
+    567,
+    765
+   ],
+   "w": 2122,
+   "h": 501,
+   "dpi": 300,
+   "src": "8fd527c0-28._Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "manual": true,
+   "note": "수동 크롭 — 자동 추출이 Table 1 을 '영역 없음' 으로 제외. 4 쪽 캡션 블록(y 649–671 pt) + 표 본체(y 684–761 pt)를 300 dpi 렌더 클립. 값은 PDF 텍스트 층이 정본"
+  },
+  {
+   "key": "tS1m7",
+   "kind": "table",
+   "label": "S1",
+   "page": 7,
+   "file": "tab_S1_manual_p7.png",
+   "caption": "Table S1 (continued, SI p. 7) — NCM111 δ 0.65–0.21 · NCM523 · NCM622 δ 0.93–0.30",
+   "rotated_deg": 0,
+   "bbox": [
+    63,
+    68,
+    532,
+    779
+   ],
+   "w": 1955,
+   "h": 2963,
+   "dpi": 300,
+   "src": "3fc9562f-28._Sup_Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "manual": true,
+   "note": "수동 크롭 — 자동 tab_S1.png 가 6 쪽 조각만 잡아 7 쪽 표 영역(드로잉 합집합 y 70.8–776.4 pt)을 300 dpi 렌더 클립. 'NCM111 δ 0.55 TM-O 1.8768$9' · 'NCM111 δ 0.35 a 2.81780(2)' · 'NCM523 δ 0.50 TM-O 1.8714)' 가 렌더에도 그대로 있다"
+  },
+  {
+   "key": "tS1m8",
+   "kind": "table",
+   "label": "S1",
+   "page": 8,
+   "file": "tab_S1_manual_p8.png",
+   "caption": "Table S1 (continued, SI p. 8) — NCM622 δ 0.25–0.18 · NCM721 · NCM811 · NCM851005 δ 0.89",
+   "rotated_deg": 0,
+   "bbox": [
+    63,
+    68,
+    532,
+    778
+   ],
+   "w": 1955,
+   "h": 2959,
+   "dpi": 300,
+   "src": "3fc9562f-28._Sup_Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "manual": true,
+   "note": "수동 크롭 — 8 쪽 표 영역(y 70.8–775.1 pt) 300 dpi 렌더 클립"
+  },
+  {
+   "key": "tS1m9",
+   "kind": "table",
+   "label": "S1",
+   "page": 9,
+   "file": "tab_S1_manual_p9.png",
+   "caption": "Table S1 (continued, SI p. 9) — NCM851005 δ 0.85–0.09",
+   "rotated_deg": 0,
+   "bbox": [
+    63,
+    68,
+    532,
+    344
+   ],
+   "w": 1955,
+   "h": 1151,
+   "dpi": 300,
+   "src": "3fc9562f-28._Sup_Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "manual": true,
+   "note": "수동 크롭 — 9 쪽 표 영역(y 70.8–341.0 pt) 300 dpi 렌더 클립"
+  },
+  {
+   "key": "fTOC",
+   "kind": "figure",
+   "label": "TOC",
+   "page": 1,
+   "file": "fig_TOC_manual_p1.png",
+   "caption": "(초록 그래픽 — 캡션 없음) '@ 750 Wh/kg' charge cutoff · volume change vs Ni content + capacity retention vs cycle number",
+   "rotated_deg": 0,
+   "bbox": [
+    313,
+    311,
+    558,
+    422
+   ],
+   "w": 1021,
+   "h": 464,
+   "dpi": 300,
+   "src": "8fd527c0-28._Between_scylla_and_charybdis_balancing_among_structural_stability_and_energy_density_of_layered_NCM_cathode_materials_for_advanced_lithium-ion_batteries.pdf",
+   "manual": true,
+   "note": "수동 크롭 — 캡션이 없는 초록 그래픽(1 쪽 래스터 xref 56, 1000 × 447, rect 315.5–555.5 × 313.0–420.3 pt). 내용 = Fig. 3 + Fig. 9b 속찬 원 + Fig. 10a 재구성"
+  }
+ ]
+}
