@@ -512,6 +512,45 @@ mothership 특칙). **셋이 안 모이면 태그를 만들지 말고 닻 한 �
 | **24** | **Zhang W. · Schröder D. · Arlt T. · Manke I. · Koerver R. · Pinedo R. · Weber D.A. · Sann J. · Zeier W.G. · Janek J.** — (Electro)chemical expansion during cycling: monitoring the pressure changes in operating solid-state lithium batteries (*J. Mater. Chem. A* 2017, **5**, 9929–9936, `10.1039/c7ta02730c`) · JLU Giessen · HZB | **Paper** 8p **+ ESI** 12p (Fig. S1–S7) | 본문 `f449a273795f7bfbff0a70a9bcbd4853` / ESI `e882761a29dd787da3504c659c3dcc68` · ✅ **흡수 완료** (assb **62호**, 서브 커밋 `a3f653668`) — **≈20.0 → ≈20.0 (새 칸 0)**. 운전 중 압력 = 두 전극의 충전 팽창 합 (음극 In → InLi 몫 ≈90–95 % · 무변형 LTO 음극 ≈0.067 MPa) · 본문 압력 값은 기저선 보정 "1.25 MPa" 하나 · 운전 기저 ≈61.8 MPa 는 ESI S7 축에만 · 원시 첫 충전 상승 +1.07 MPa · 110 h 표류 −1.2 MPa · 보정 진폭 1.267 → 1.152 MPa (−9 %) ↔ 용량 116.7 → 93.2 mAh g⁻¹ (−20 %) · 지그 강성 · 셀 수 · 오차 막대 인쇄 0 · 22호 ref 18 ⚠ 부분 · "충전 수축 → 접촉 감소" ❌ · 그림 ↔ 본문 · SI 어긋남 6 건 (Fig. 2 · 3 · 5 · S3 · S6 · S7) · **63호 주석**: [27] = 63호 (확인) · ESI S3 셀 = Li 박 장기 셀 | 22호 ref 18 · 23호 ref 40 · 33호 [89] · 59호 ref 23 — Q1·Q6 (압력 신호 귀속) |
 | **25** | **Zhang W. · Weber D.A. · Weigand H. · Arlt T. · Manke I. · Schröder D. · Koerver R. · Leichtweiss T. · Hartmann P. · Zeier W.G. · Janek J.** — Interfacial Processes and Influence of Composite Cathode Microstructure Controlling the Performance of All-Solid-State Lithium Batteries (*ACS Appl. Mater. Interfaces* 2017, **9**, 17835–17845, `10.1021/acsami.7b01137`) · JLU Giessen · HZB · BASF · KIT | **Research Article** 11p **+ SI** 14p (Fig. S1–S15 · Table S1–S2) | 본문 `28d41401b527da2770a35a7bb9bf1ab7` / SI `d8af43a34eb883f55ebd12e0319f00c4` · ✅ **흡수 완료** (assb **63호**, 서브 커밋 `aa8e8a59f`) — **≈20.0 → ≈20.0 (새 칸 0)**. 62호 [27] 과 같은 편 (그림 두 장이 판독 오차 안에서 겹침 · [43] 이 62호 인용) · 조성별 0.1 C 이용률 40:60 ≈15–19 % · 50:50 68 % · 60:40 72 % · 70:30 83 % · 80:20 98 % · 100 사이클 유지율 70:30 78.5 % ≈ 60:40 ≈79 % · 공극률 인쇄 0 · 운전 구속 = 나사 토크 10 N·m (`MPa` 0 회) · EIS 표 S1: R_MF 28.15 Ω · R_LF 13.68 Ω, 방전 끝 R_LF ≈800 Ω · "kinetic hindrance" 는 기준극 없는 배정 · Fig. 8b 확산 길이 50–100 nm 는 h ↔ s 단위 오류 (맞추면 3–6 µm) · 그림 ↔ 본문 · SI 어긋남 7 건 | 22 · 23 · 24 · 39 · 41 · 42호 (+ 62호 [27]) — Q1·Q2·Q5 (방법 원전 · EIS 배정) |
 
+### 6-3-i. 3차 묶음 도착 목록 (2026-09-28) — **파일 26~50 · 원장 "업로드 필요" SI 둘 · 사용자 결정**
+
+> 도착 기록이다. 흡수(digest)가 끝나면 그 편은 §6-3-h 에 행을 옮긴다. 접두사 = 세션 업로드 파일 이름 앞 8 자, 해시 = sha256 앞 16 자. "대조" 는 받은 날 본문이 밝힌 보충자료 목록(ESI · SI · Source Data · 영상)과 맞춘 결과다 — 26~35 는 대조를 에이전트 단계에 맡겼다. 처리 순서는 번호순, 원장 SI 둘은 26 뒤 · 27 앞.
+
+| # | 논문 | 받은 것 (접두사 · 해시) | 대조 · 상태 |
+|---|---|---|---|
+| 26 | Koerver 2017 *J. Mater. Chem. A* 5, 22750 | 본문 3934ca2c · e43294fd1217f54b / SI 761e590b · 13882b887f9d30a1 | 64호 진행 중 |
+| 27 | Nam 2018 *J. Power Sources* 375, 93 | 본문 4bbca78e · b7661fe8dfda7409 / SI bf4378b5 · 1ce5238be962192a | 대기 |
+| 28 | de Biasi 2017 *J. Phys. Chem. C* 121, 26163 | 본문 8fd527c0 · fc98ec91b3f5839b / SI 3fc9562f · 9ef8a02665fd79d1 | 대기 |
+| 29 | Kondrakov 2017 *J. Phys. Chem. C* 121, 24381 | 본문 1b43a382 · fe186a38e9e9e123 / SI e36bc2a5 · 757dfe916f3deba2 | 대기 |
+| 30 | Chen 2013 *Energies* 6, 1632 | 본문 bcdc44d6 · b67d3b8c188ff091 | 대기 |
+| 31 | Kondrakov 2017 *J. Phys. Chem. C* 121, 3286 | 본문 54a5c77b · a2eb43eafe88eb7e / SI 2f115f39 · c13b2860d5feab4b | 대기 |
+| 32 | Zaghib 1999 *J. Power Sources* 81–82, 300 | 본문 efb4286e · f3e7bddae2e19cfb | 대기 |
+| 33 | Jung 2015 *Isr. J. Chem.* 55, 472 | 본문 2a1c9ff9 · 7afaa23a10b7ecd9 | 대기 |
+| 34 | Ishidzu · Oka · Nakamura 2016 *Solid State Ionics* 288, 176 | 본문 27610f9d · 6c33777716bc67f0 | 대기 |
+| 35 | Minnmann · Quillman · Burkhardt · Richter · Janek 2021 *J. Electrochem. Soc.* 168, 040537 | 본문 b9314c00 · b013912f3bc847dc | 대기 |
+| 36 | Park · Zhao · Kang · … · Chueh 2021 *Nat. Mater.* 20, 991 | 본문 31323b7c · ce58558d4f853682 / Sup1 zip 0bbb236b · 524cac02fa74ba1f (Source Data Fig. 1 CSV 6) / Sup2 zip b7f68488 · 7f65931918e0bef7 (STXM 스캔 4) / Sup3 zip 670ac08c · ca48daf7353a3c67 (Extended Data 1–4) / Sup4 SI 4f3881df · 1614a38869087b66 (그림 S1–S28) / Sup5 · Sup6 mp4 c870f330 · 2e072640a2d847da · 903e91fb · e18c25af54533569 (영상 1 · 2) + 코드 github.com/hbozhao/e-autocat (read-only clone, 커밋 안 함) | ⚠ Fig. 1f CSV 없음 · 스캔 NS_191114142 의 조성 · 두께 txt 없음 — **사용자 결정 2026-09-28 "42 36은 통과하자": 추가 요청 없이 진행** (digest 는 "받은 자료에 없음", 추정으로 채우지 않음). 전체 원자료 Dataverse EMJFMU · AVP2I5 는 이 환경에서 접근 불가 |
+| 37 | Naik · Vishnugopi · Mukherjee 2022 *ACS Appl. Mater. Interfaces* 14, 29754 | 본문 07684e78 · ddfdb456c92f7380 / SI 54b171a9 · c9ee0d9679a5bbaf | ✅ SI 1 (표 S1–S5 · 그림 S1–S7) |
+| 38 | Davis · Goel · Liao · Main · Kazyak · Lee · Thornton · Dasgupta 2021 *ACS Energy Lett.* | 본문 zip 15e74a6f · 66d4d20ae38a9dda (안의 PDF e3deb80930c23226) / Sup1 93f806f3 · eac624c4a7155492 / Sup2–5 mp4 aa5b9020 · c7321409 · fb10e9d9 · 83f83c97 | ✅ SI (그림 S1–S18 · 표 S1) · Video S1–S4 |
+| 39 | Shi · Tu · Tian · Xiao · Miara · Kononova · Ceder 2019 *Adv. Energy Mater.* 1902881 | 본문 60f0083f · 72252e90b90eab50 / SI 01aec276 · 568e9414b23024f9 | ✅ SI 1 |
+| 40 | Buchberger et al. 2015 *J. Electrochem. Soc.* 162, A2737 | 본문 da6ac009 · e8fa1df20b5b97eb | ✅ SI 없음 |
+| 41 | Li Z. · Yin · Mattei · … · Khalifah 2020 *Chem. Mater.* | 본문 08ae88a5 · e471e5ba90ca0b40 / SI c755d6e4 · fd9a34fd0dd53287 / TXT 9e9a1fbd · 0db9400301b8ab32 · 59a39dd5 · 9db98e926df1ffbd | ✅ PDF 1 + 정제 설정 TXT 2 |
+| 42 | Okasinski · Shkrob · Chuang · Rodrigues · Raj · Dees · Abraham 2020 *Phys. Chem. Chem. Phys.* 22, 21977 | 본문 d0a79f90 · c59128200b4eba39 / ESI zip 71424d55 · d72fb8dc57f50148 (pptx 1 — 그림 S1–S9) | ⚠ ESI 두 파일 중 표 PDF 없음 — **사용자 결정: 추가 요청 없이 진행**. 두 번째 zip 91b90af4 는 본문 사본 |
+| 43 | Xu · Yang · Li — Pressure effects and countermeasures in SSBs (*Adv. Energy Mater.* 리뷰) | 본문 ab0db106 · 42e87f7ba7adf400 | ✅ SI 없음 |
+| 44 | Schlautmann · Weiß · … · Zeier 2023 *Adv. Energy Mater.* 13, 2302309 | 본문 688dd9ec · 06fb3e2bda09a4cd / SI 7eb1bcba · 3de6b636a7fa1574 | ✅ SI 1 (본문 "Table S1" = SI "Table ST1") |
+| 45 | Jiao · Wang · Chen · Wang · Xiong · Song · Xu · Liu 2023 *Energy Storage Mater.* 61, 102864 | 본문 acb3c926 · a8bc11d94160c680 / SI d88235de · 177dab2e270babca | ✅ SI 1 (그림 S1–S23 · 표 S1) |
+| 46 | Orue Mendizabal · Cheddadi · Tron · Beutl · López-Aranguren 2023 *ACS Appl. Energy Mater.* | 본문 65b23467 · badf7cbd71edb559 / SI cc3e8f93 · 9be84536061bf5da | ✅ SI 1 |
+| 47 | Wang Y. · Li X. 2024 *Adv. Mater.* | 본문 97f838d5 · f9d7520e3f8239f3 / SI 1e2faad3 · 2bc92765af790479 | ✅ SI 1 |
+| 48 | Kim J.T. · Shin · Kim A.-Y. · … 2023 *J. Mater. Chem. A* 11, 20549 | 본문 e87beefc · c0f7667f56d1ec3f / ESI f000cc26 · 4d48d6715e47f2ae | ✅ ESI (그림 S1–S14) |
+| 49 | Minnmann · Strauss · … 2022 *Adv. Energy Mater.* 2201425 (Perspective) | 본문 a0cf8408 · f8924caba361c57b | ✅ SI 없음 |
+| 49-2 | Li Menglin · Xue · … 2025 *Adv. Funct. Mater.* 35, 2415696 (원장 §1 추후 요청 1순위) | 본문 ae0fe451 · f8d22ffad50d45de / SI 68a738fe · cb738fb9e55c1beb / mp4 e2428f07 · 76cebd5029de98f3 | ✅ SI (그림 S1–S26 · 표 S1–S3) · Movie S1. 사용자 표기 "49" 가 위 49 와 겹쳐 49-2 로 적는다 |
+| 50 | Zhang Z. · Sun · Han · … 2024 *Energy Environ. Sci.* 17, 1061 (원장 §1 추후 요청 2순위) | 본문 48e8e202 · 7c53d44666fb8497 / SI 3b8669ad · ddf7a70209ed1110 | ✅ SI (그림 1–12 = S1–S12 · 표 1 = S1) · Video S1–S3 는 **받지 않음 — 사용자 판단** |
+
+**원장 "업로드 필요" SI 둘** — 흡수한 편의 보강 (26 뒤 · 27 앞):
+29호 Yanev 2024 *JES* 171, 050530 SI — a63f7865 · 1c0a612abfea779e (6p · Tab. S2 · 그림 S1–S8 ✅ · DOI …/ad47d7 일치, 첫 쪽 제목은 투고 때 제목) ·
+38호 Conforto 2021 *JES* 168, 070546 SI — d33c40b3 · 29bb7bb7a3588d85 (10p · 그림 S1–S9 ✅ · DOI …/ac13d2 일치).
+
+**원장 "Li Q. 2025 Source Data Fig. 5" 확인** — Nature 기사 페이지의 "Source Data Fig. 5" 는 파일 하나(`41560_2025_1820_MOESM1_ESM.xlsx`)이고 59호 때 받은 파일과 **같은 바이트** (sha256 `1559e0f10ab083c1…`). 내용은 적층 압력 29 값(Fig. 1b)과 출처 표뿐, 쿨롱 효율 값 0 — Fig. 5 의 CE 통계는 공개 자료로 얻을 수 없다 (남은 길은 교신저자 요청).
+
 ### 6-3-c. ⚠ 30 번의 보충 데이터 ZIP — **30 번 에이전트에게 반드시 넘길 것**
 
 사용자 기계 `C:\Users\Administrator\Downloads\30. Sup) …zip` (82 MB, **이중 압축** —
