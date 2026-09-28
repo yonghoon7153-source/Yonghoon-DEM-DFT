@@ -294,6 +294,39 @@
           }
         }
       }
+    },
+    "lakes": {
+      "type": "array",
+      "description": "지도에 그리는 호수 (도형은 data/raw/lakes.geojson → nihon geo). 이름은 호수 가운데(at)에.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "pref",
+          "at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "$ref": "#/$defs/name"
+          },
+          "pref": {
+            "type": "string",
+            "description": "prefectures.json 의 slug"
+          },
+          "at": {
+            "$ref": "#/$defs/lonlat",
+            "description": "안내선이 닿는 섬 위의 점"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
     }
   },
   "$defs": {

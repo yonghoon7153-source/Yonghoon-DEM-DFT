@@ -1,5 +1,5 @@
 // The diary-page panel: prefecture view, region view, and the general memo view.
-import { countBoxes, extrasFor, extrasForRegion, generalExtras, mascotSearchUrl, mascotsOf, mountains, notes, notesFor, places, prefById, prefBySlug, prefecturesIn, regionById, regionOf, supplementFor } from '../data';
+import { countBoxes, extrasFor, extrasForRegion, generalExtras, groupOf, mascotSearchUrl, mascotsOf, mountains, notes, notesFor, places, prefById, prefBySlug, prefecturesIn, regionById, regionNotes, regionOf, regionTitle, supplementFor } from '../data';
 import type { Mascot } from '../types';
 import type { NoteExtra, NoteItem, Prefecture, Region } from '../types';
 import { mascotVisualHtml } from '../mascots/visual';
@@ -152,7 +152,7 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
     const nBoxes = countBoxes(my.items);
     const out: HTMLElement[] = [];
 
-    const regionBtn = el('button', { class: 'chip--region', type: 'button', style: `--c:${r.color}` }, el('span', { lang: 'ja' }, r.name.ja), el('small', {}, r.name.ko));
+    const regionBtn = el('button', { class: 'chip--region', type: 'button', style: `--c:${r.color}` }, el('span', { lang: 'ja' }, regionTitle(r)), el('small', {}, r.name.ko));
     regionBtn.addEventListener('click', () => cb.onSelectRegion(r.id));
     out.push(el('div', { class: 'ph' }, regionBtn, my.star ? el('span', { class: 'star', title: '마인드맵에 ★ 표시' }, '★') : null, el('span', { class: 'ph__id' }, `No.${String(p.id).padStart(2, '0')}`)));
 
@@ -294,14 +294,16 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
   // ---------------------------------------------------------------- region
   function renderRegion(r: Region): HTMLElement[] {
     const out: HTMLElement[] = [];
-    const rn = notes.regions[r.id];
-    out.push(el('div', { class: 'ph' }, el('span', { class: 'chip--region', style: `--c:${r.color}` }, el('span', { lang: 'ja' }, '地方'), el('small', {}, '지방'))));
+    // a region inside a big one (中部 › 北陸) says so in the chip; its page then also carries my 中部 memo
+    const g = groupOf(r);
+    out.push(el('div', { class: 'ph' }, el('span', { class: 'chip--region', style: `--c:${r.color}` }, el('span', { lang: 'ja' }, g ? `${g.name.ja}地方 ›` : '地方'), el('small', {}, g ? g.name.ko : '지방'))));
     out.push(el('h2', { class: 'ph__name', lang: 'ja' }, r.name.ja, el('span', { class: 'ph__kana' }, r.name.kana)));
     out.push(el('p', { class: 'ph__alt' }, `${r.name.ko} · `, el('span', { class: 'romaji' }, r.name.en)));
-    if (rn?.memo) out.push(el('p', { class: 'ph__cap' }, el('span', { class: 'k' }, 'memo'), el('span', { lang: 'ja' }, rn.memo)));
-
-    if (rn?.items?.length) {
-      out.push(el('section', { class: 'sec' }, el('h3', {}, el('span', { class: 'emoji' }, '✎'), '지방 메모'), glossNote(rn.items), renderTree(rn.items, { color: r.color, ink: r.ink })));
+    for (const rn of regionNotes(r)) {
+      if (rn.memo) out.push(el('p', { class: 'ph__cap' }, el('span', { class: 'k' }, 'memo'), el('span', { lang: 'ja' }, rn.memo)));
+      if (rn.items.length) {
+        out.push(el('section', { class: 'sec' }, el('h3', {}, el('span', { class: 'emoji' }, '✎'), rn.id === r.id ? '지방 메모' : el('span', { lang: 'ja' }, `${rn.title} 메모`), rn.id === r.id ? null : el('span', { class: 'n' }, '내 마인드맵의 큰 지방 상자')), glossNote(rn.items), renderTree(rn.items, { color: r.color, ink: r.ink })));
+      }
     }
     const extras = extrasForRegion(r.id);
     if (extras.length) {

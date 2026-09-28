@@ -218,7 +218,7 @@
 .legend {
   position: absolute; z-index: 15;
   left: 16px; bottom: 34px;
-  display: flex; flex-wrap: wrap; gap: 6px; max-width: min(640px, 70vw);
+  display: flex; flex-wrap: wrap; gap: 6px; max-width: min(780px, 70vw); /* 11 chips in two rows */
 }
 .legend button {
   display: inline-flex; align-items: center; gap: 7px;
@@ -604,6 +604,12 @@
 .marks .mark__ring { fill: var(--city); stroke: var(--white); stroke-width: 1.4px; }
 .marks .mark__dot { fill: var(--city); }
 .marks .city--capital .mark__ring { fill: var(--white); stroke: var(--city); stroke-width: 1.7px; }
+/* ○ a city I only wrote the name of: grey and small, so the red dots mean "something to see" */
+.marks .city--note .mark__ring { fill: var(--ink-3); stroke: var(--white); stroke-width: 1.2px; opacity: .8; }
+.label--place.city-name.is-note { fill: var(--ink-3); }
+/* 琵琶湖: water, drawn over the land — clicks fall through to 滋賀 underneath */
+.lake { fill: var(--sea); stroke: var(--sea-2); stroke-width: 1px; vector-effect: non-scaling-stroke; pointer-events: none; }
+.label--place.lake-name { fill: color-mix(in oklab, var(--note-sky) 65%, var(--ink)); letter-spacing: .12em; stroke-width: 3.5px; }
 .marks .ward .mark__ring { fill: var(--ink-2); stroke: var(--white); stroke-width: 1px; }
 .marks .extra-place .mark__ring { fill: var(--white); stroke: var(--ink-2); stroke-width: 1.2px; stroke-dasharray: 1.6 1.4; }
 .label--place { stroke-width: 3px; }

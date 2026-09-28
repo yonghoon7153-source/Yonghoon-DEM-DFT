@@ -875,7 +875,7 @@
     {
       "id": 15,
       "slug": "niigata",
-      "region": "chubu",
+      "region": "hokuriku",
       "name": {
         "ja": "新潟県",
         "kana": "にいがたけん",
@@ -938,7 +938,7 @@
     {
       "id": 16,
       "slug": "toyama",
-      "region": "chubu",
+      "region": "hokuriku",
       "name": {
         "ja": "富山県",
         "kana": "とやまけん",
@@ -1002,7 +1002,7 @@
     {
       "id": 17,
       "slug": "ishikawa",
-      "region": "chubu",
+      "region": "hokuriku",
       "name": {
         "ja": "石川県",
         "kana": "いしかわけん",
@@ -1071,7 +1071,7 @@
     {
       "id": 18,
       "slug": "fukui",
-      "region": "chubu",
+      "region": "hokuriku",
       "name": {
         "ja": "福井県",
         "kana": "ふくいけん",
@@ -1131,7 +1131,7 @@
     {
       "id": 19,
       "slug": "yamanashi",
-      "region": "chubu",
+      "region": "koshin",
       "name": {
         "ja": "山梨県",
         "kana": "やまなしけん",
@@ -1199,7 +1199,7 @@
     {
       "id": 20,
       "slug": "nagano",
-      "region": "chubu",
+      "region": "koshin",
       "name": {
         "ja": "長野県",
         "kana": "ながのけん",
@@ -1272,7 +1272,7 @@
     {
       "id": 21,
       "slug": "gifu",
-      "region": "chubu",
+      "region": "tokai",
       "name": {
         "ja": "岐阜県",
         "kana": "ぎふけん",
@@ -1342,7 +1342,7 @@
     {
       "id": 22,
       "slug": "shizuoka",
-      "region": "chubu",
+      "region": "tokai",
       "name": {
         "ja": "静岡県",
         "kana": "しずおかけん",
@@ -1412,7 +1412,7 @@
     {
       "id": 23,
       "slug": "aichi",
-      "region": "chubu",
+      "region": "tokai",
       "name": {
         "ja": "愛知県",
         "kana": "あいちけん",

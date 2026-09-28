@@ -1,5 +1,5 @@
 // Easter eggs: mascots that pop out of a prefecture, the sticker book (図鑑) and sakura petals.
-import { mascotById, mascots, prefBySlug, regionOf, regions, secretFor } from '../data';
+import { mascotById, mascots, prefBySlug, regionOf, regionTitle, regions, secretFor } from '../data';
 import type { MapApi } from '../map/map';
 import { mascotSticker, mascotVisualHtml } from '../mascots/visual';
 import type { Mascot } from '../types';
@@ -228,7 +228,7 @@ export function createEaster(opts: EasterOptions) {
     for (const r of regions) {
       const list = mascots.filter((m) => regionOf(prefBySlug.get(m.prefecture)!).id === r.id);
       if (!list.length) continue;
-      wrap.append(el('h3', { class: 'zukan__region', lang: 'ja', style: `--c:${r.color}` }, r.name.ja, el('small', {}, ` ${r.name.ko}`)));
+      wrap.append(el('h3', { class: 'zukan__region', lang: 'ja', style: `--c:${r.color}` }, regionTitle(r), el('small', {}, ` ${r.name.ko}`)));
       const grid = el('div', { class: 'zukan' });
       for (const m of list) {
         const p = prefBySlug.get(m.prefecture)!;

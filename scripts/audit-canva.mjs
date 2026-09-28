@@ -45,13 +45,14 @@ for (const p of J('data/prefectures.json').prefectures) {
   names(p.short, `pref ${p.slug} short`);
   names(p.capital, `pref ${p.slug} capital`);
 }
-for (const r of J('data/regions.json').regions) {
+const regionsDb = J('data/regions.json');
+for (const r of [...regionsDb.regions, ...(regionsDb.groups ?? [])]) {
   names(r.name, `region ${r.id}`);
   add(`${r.name.ja}地方`, `region ${r.id} label`, true);
   add(`${r.name.kana}ちほう`, `region ${r.id} label.kana`, true);
 }
 const places = J('data/places.json');
-for (const kind of ['cities', 'wards', 'islands', 'extraPlaces', 'bridges']) {
+for (const kind of ['cities', 'wards', 'islands', 'lakes', 'extraPlaces', 'bridges']) {
   for (const x of places[kind] ?? []) {
     const w = `places.${kind} ${x.id}`;
     names(x.name, `${w} name`);

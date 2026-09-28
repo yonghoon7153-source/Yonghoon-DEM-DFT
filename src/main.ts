@@ -2,7 +2,7 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/app.css';
 
-import { mountains, places, prefBySlug, regionById, regions } from './data';
+import { mountains, places, prefBySlug, regionById, regions, regionsInGroup } from './data';
 import { createMap, type MapApi } from './map/map';
 import type { LayerId } from './map/layers';
 import { artReady } from './mascots/visual';
@@ -326,7 +326,11 @@ async function init() {
     const h = decodeURIComponent(location.hash.replace(/^#\/?/, ''));
     if (!h) return;
     if (h === 'sanmyaku' && mountains.ranges.length) showMountains();
-    else if (h.startsWith('region/')) showRegion(h.slice(7));
+    else if (h.startsWith('region/')) {
+      // an old link to a big region (#region/chubu) opens its first travel region
+      const id = h.slice(7);
+      showRegion(regionById.has(id) ? id : regionsInGroup(id)[0]?.id ?? id);
+    }
     else if (prefBySlug.has(h)) select(h, { animate: false });
   }
   window.addEventListener('hashchange', readHash);

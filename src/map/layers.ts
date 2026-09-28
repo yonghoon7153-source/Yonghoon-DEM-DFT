@@ -1,5 +1,6 @@
 // Layers drawn over the prefectures, restoring the detail of the Canva map:
-//   cities   — ◎ prefectural capitals and ● the cities I wrote on my map, Tokyo's 23 wards, the four main-island
+//   cities   — ◎ prefectural capitals, ● places with a box in my notes or 보충 (something to see) and ○ cities I only
+//              wrote the name of (grey, named when zoomed in), Tokyo's 23 wards, 琵琶湖, the four main-island
 //              names (in the sea, with a leader line, as on my map) and other places I noted (隠岐諸島)
 //   bridges  — the three Honshu–Shikoku routes
 //   mountains — the worksheet 「高い山脈・山地・高地」: green ridges with their numbers, plus my two notes
@@ -8,7 +9,7 @@
 import { geoCircle, geoPath, type GeoProjection } from 'd3-geo';
 import type { Selection } from 'd3-selection';
 import type { ZoomTransform } from 'd3-zoom';
-import { mountains, places } from '../data';
+import { cityTier, mountains, places } from '../data';
 import type { LabelMode, LonLat, PlaceName } from '../types';
 
 export type LayerId = 'cities' | 'bridges' | 'mountains';
@@ -36,6 +37,9 @@ export interface LayerFrame {
 
 /** Zoom levels at which names appear. */
 const CITY_NAMES_AT = 2.1;
+/** Name-only (grey) cities keep their names until the map is closer, so they never crowd the real spots. */
+const NOTE_NAMES_AT = 3.2;
+const LAKE_NAMES_AT = 1.6;
 const WARDS_AT = 9;
 const ISLANDS_UNTIL = 1.7;
 const BRIDGE_NAMES_AT = 2.2;
@@ -83,11 +87,15 @@ export function createLayers(ctx: LayerContext) {
   };
 
   // ---------------------------------------------------------------- data in screen-space order
-  const cities: LabelItem[] = places.cities.map((c) => ({
-    id: c.id, name: c.name, pref: c.pref, px: [0, 0], fs: c.capital ? 10.5 : 10,
-    cls: `city${c.capital ? ' city--capital' : ''}${c.fromUser ? ' city--mine' : ''}`,
-    prio: (c.fromUser ? 2 : 0) + (c.capital ? 1 : 0),
-  }));
+  // three tiers, decided by the data (v2): ◎ capital · ● spot (a box in my notes or 보충) · ○ name only
+  const cities: LabelItem[] = places.cities.map((c) => {
+    const tier = cityTier(c);
+    return {
+      id: c.id, name: c.name, pref: c.pref, px: [0, 0], fs: tier === 'capital' ? 10.5 : tier === 'spot' ? 10 : 9.5,
+      cls: `city city--${tier}${c.fromUser ? ' city--mine' : ''}`,
+      prio: tier === 'spot' ? 2 : tier === 'capital' ? 1 : 0,
+    };
+  });
   const cityAt = new Map(places.cities.map((c) => [c.id, shift(c.at, c.pref)]));
   const wards: LabelItem[] = places.wards.map((w) => ({ id: w.id, name: w.name, note: w.note, red: w.mark, px: [0, 0], fs: 9, cls: 'ward', prio: 0 }));
   const wardAt = new Map(places.wards.map((w) => [w.id, w.at]));
@@ -95,6 +103,8 @@ export function createLayers(ctx: LayerContext) {
   const islandLabelAt = new Map(places.islands.map((i) => [i.id, i.label]));
   const islandCoastAt = new Map(places.islands.map((i) => [i.id, i.at]));
   const islandCoast = new Map<string, [number, number]>();
+  const lakeItems: LabelItem[] = (places.lakes ?? []).map((l) => ({ id: l.id, name: l.name, pref: l.pref, px: [0, 0], fs: 11, cls: 'lake', prio: 0 }));
+  const lakeAt = new Map((places.lakes ?? []).map((l) => [l.id, l.at]));
   const extras: LabelItem[] = places.extraPlaces.map((e) => ({ id: e.id, name: e.name, note: e.note, mark: e.mark, area: !!e.radiusKm, pref: e.pref, px: [0, 0], fs: 10, cls: `extra-place${e.radiusKm ? ' extra-place--area' : ''}`, prio: 0 }));
   // a map note is just text: its "name" carries the same words in every label mode
   const mapNotes: LabelItem[] = (places.mapNotes ?? []).map((m) => ({ id: m.id, name: { ja: m.t, kana: m.t, ko: m.t }, pref: m.pref, px: [0, 0], fs: 12, cls: 'map-note', prio: 0 }));
@@ -152,7 +162,7 @@ export function createLayers(ctx: LayerContext) {
       .join((enter) => {
         const g = enter.append('g').attr('class', (d) => d.cls);
         const capital = (d: LabelItem) => d.cls.includes('city--capital');
-        g.append('circle').attr('class', 'mark__ring').attr('r', (d) => (capital(d) ? 4.3 : kind === 'city' ? 3.2 : kind === 'ward' ? 2.2 : 3));
+        g.append('circle').attr('class', 'mark__ring').attr('r', (d) => (capital(d) ? 4.3 : d.cls.includes('city--note') ? 2.4 : kind === 'city' ? 3.2 : kind === 'ward' ? 2.2 : 3));
         g.append('circle').attr('class', 'mark__dot').attr('r', (d) => (capital(d) ? 1.7 : 0));
         g.append('title').text((d) => `${d.name.ja} (${d.name.kana}) ${d.name.ko}${d.name.official ? ` · 공식 표기 ${d.name.official}` : ''}${d.note ? ` — ${d.note}` : ''}`);
         return g;
@@ -188,6 +198,8 @@ export function createLayers(ctx: LayerContext) {
   const cityNames = textOf(ctx.text, cities, 'city-name');
   const wardNames = textOf(ctx.text, wards, 'ward-name');
   const islandNames = textOf(ctx.text, islands, 'island-name');
+  const lakeNames = textOf(ctx.text, lakeItems, 'lake-name');
+  cityNames.classed('is-note', (d) => d.cls.includes('city--note'));
   const extraNames = textOf(ctx.text, extras, 'extra-name');
   const mapNoteNames = textOf(ctx.text, mapNotes, 'map-note');
   wardNames.classed('is-red', (d) => !!d.red);
@@ -228,6 +240,7 @@ export function createLayers(ctx: LayerContext) {
   function refit() {
     for (const c of cities) c.px = project(cityAt.get(c.id)!);
     for (const w of wards) w.px = project(wardAt.get(w.id)!);
+    for (const l of lakeItems) l.px = project(lakeAt.get(l.id)!);
     for (const i of islands) {
       i.px = project(islandLabelAt.get(i.id)!);
       islandCoast.set(i.id, project(islandCoastAt.get(i.id)!));
@@ -341,7 +354,8 @@ export function createLayers(ctx: LayerContext) {
       const vis = on.cities && onScreen(x, y);
       if (vis) shownDot.add(c.id);
       const leaveToWard = wardsOn && c.pref === 'tokyo' && wardNamesJa.has(c.name.ja);
-      const named = vis && !leaveToWard && (k >= CITY_NAMES_AT || c.pref === f.selected) && placeName(cityNames, c, x, y, f, 7, ['r', 'l', 'u', 'd']);
+      const namesAt = c.cls.includes('city--note') ? NOTE_NAMES_AT : CITY_NAMES_AT;
+      const named = vis && !leaveToWard && (k >= namesAt || c.pref === f.selected) && placeName(cityNames, c, x, y, f, 7, ['r', 'l', 'u', 'd']);
       if (!named) cityNames.filter((q) => q === c).classed('is-hidden', true);
     }
     cityDots.classed('is-hidden', (d) => !shownDot.has(d.id)).attr('transform', (d) => {
@@ -362,6 +376,12 @@ export function createLayers(ctx: LayerContext) {
       return `translate(${x.toFixed(1)},${y.toFixed(1)})`;
     });
 
+    // the lake's name sits in the water, once the lake is big enough to hold it (or its prefecture is open)
+    for (const l of lakeItems) {
+      const [x, y] = t.apply(l.px);
+      const box = on.cities && onScreen(x, y) && (k >= LAKE_NAMES_AT || l.pref === f.selected) ? placeName(lakeNames, l, x, y, f, 0, ['c']) : null;
+      if (!box) lakeNames.filter((q) => q === l).classed('is-hidden', true);
+    }
     const islandsOn = on.cities && k <= ISLANDS_UNTIL && !f.selected && !f.region;
     const leaders = new Map<string, [number, number, number, number]>();
     for (const i of islands) {

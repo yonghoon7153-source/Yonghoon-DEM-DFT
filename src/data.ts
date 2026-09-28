@@ -7,10 +7,12 @@ import placesJson from '../data/places.json';
 import mountainsJson from '../data/mountains.json';
 import supplementJson from '../data/supplement.json';
 import geoMeta from './generated/prefecture-geo.json';
-import type { Mascot, MountainsDb, NoteExtra, NoteItem, NotesDb, PlacesDb, PrefGeoMeta, Prefecture, Region, SupplementDb } from './types';
+import type { City, Mascot, MountainsDb, NoteExtra, NoteItem, NotesDb, PlacesDb, PrefGeoMeta, Prefecture, Region, RegionGroup, SupplementDb } from './types';
 
 export const prefectures = prefecturesJson.prefectures as Prefecture[];
 export const regions = (regionsJson.regions as Region[]).slice().sort((a, b) => a.order - b.order);
+/** Big regions that only group others (中部 › 北陸 · 甲信 · 東海) — ADR 0008. */
+export const regionGroups = ((regionsJson as { groups?: RegionGroup[] }).groups ?? []) as RegionGroup[];
 export const mascots = mascotsJson.mascots as Mascot[];
 export const notes = notesJson as unknown as NotesDb;
 export const prefGeo = geoMeta as unknown as Record<string, PrefGeoMeta>;
@@ -21,12 +23,47 @@ export const supplement = supplementJson as unknown as SupplementDb;
 export const prefById = new Map<number, Prefecture>(prefectures.map((p) => [p.id, p]));
 export const prefBySlug = new Map<string, Prefecture>(prefectures.map((p) => [p.slug, p]));
 export const regionById = new Map<string, Region>(regions.map((r) => [r.id, r]));
+export const regionGroupById = new Map<string, RegionGroup>(regionGroups.map((g) => [g.id, g]));
 export const mascotById = new Map<string, Mascot>(mascots.map((m) => [m.id, m]));
 
 export function regionOf(p: Prefecture): Region {
   const r = regionById.get(p.region);
   if (!r) throw new Error(`unknown region ${p.region}`);
   return r;
+}
+
+export function groupOf(r: Region): RegionGroup | undefined {
+  return r.group ? regionGroupById.get(r.group) : undefined;
+}
+
+/** 「中部 › 北陸」 for a region inside a group, the plain name otherwise. */
+export function regionTitle(r: Region, key: 'ja' | 'kana' | 'ko' = 'ja'): string {
+  const g = groupOf(r);
+  return g ? `${g.name[key]} › ${r.name[key]}` : r.name[key];
+}
+
+export function regionsInGroup(groupId: string): Region[] {
+  return regions.filter((r) => r.group === groupId);
+}
+
+/** My memo pages for a region: its own, then the one I wrote for its big group (the 中部地方 box of my Canva). */
+export function regionNotes(r: Region): { id: string; title: string; memo?: string; items: NoteItem[] }[] {
+  const out: { id: string; title: string; memo?: string; items: NoteItem[] }[] = [];
+  const own = notes.regions[r.id];
+  if (own?.memo || own?.items?.length) out.push({ id: r.id, title: r.name.ja, memo: own.memo, items: own.items ?? [] });
+  const g = groupOf(r);
+  const gn = g && notes.regions[g.id];
+  if (g && gn && (gn.memo || gn.items?.length)) out.push({ id: g.id, title: g.name.ja, memo: gn.memo, items: gn.items ?? [] });
+  return out;
+}
+
+/** What the map knows about a city: the capital, a place with a box in my notes or 보충 (something to see), or a name only. */
+export function cityTier(c: City): 'capital' | 'spot' | 'note' {
+  if (c.capital) return 'capital';
+  const p = prefBySlug.get(c.pref);
+  if (!p) return 'note';
+  const named = (items: NoteItem[]): boolean => items.some((it) => it.t === c.name.ja || named(it.children ?? []));
+  return named(notesFor(p).items) || named(supplementFor(p)) ? 'spot' : 'note';
 }
 
 export function mascotsOf(p: Prefecture): Mascot[] {
@@ -64,7 +101,8 @@ export function extrasFor(p: Prefecture): NoteExtra[] {
 }
 
 export function extrasForRegion(regionId: string): NoteExtra[] {
-  return notes.extras.filter((e) => e.targets?.regions?.includes(regionId));
+  const group = regionById.get(regionId)?.group;
+  return notes.extras.filter((e) => e.targets?.regions?.includes(regionId) || (!!group && e.targets?.regions?.includes(group)));
 }
 
 /** Extras that are not tied to any place (47都道府県, table manners, …) — what the map already draws is not repeated here. */

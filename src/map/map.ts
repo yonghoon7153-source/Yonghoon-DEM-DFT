@@ -5,7 +5,7 @@ import { zoom, zoomIdentity, type ZoomBehavior, type ZoomTransform } from 'd3-zo
 import 'd3-transition';
 import { feature, merge, mesh } from 'topojson-client';
 import type { GeometryCollection, MultiPolygon as TopoMultiPolygon, Polygon as TopoPolygon, Topology } from 'topojson-specification';
-import type { Feature, FeatureCollection, MultiPolygon } from 'geojson';
+import type { Feature, FeatureCollection, MultiPolygon, Polygon } from 'geojson';
 import { prefById, prefGeo, prefectures, prefecturesIn, regionOf, regions } from '../data';
 import type { LabelMode, LonLat, Prefecture } from '../types';
 import { createLayers, type LayerId } from './layers';
@@ -43,7 +43,8 @@ export interface Sticker { id: string; image?: string; svg?: string }
 
 interface Inset { top: number; right: number; bottom: number; left: number }
 type PrefFeature = Feature<MultiPolygon, { id: number; ja: string }>;
-interface JapanTopology extends Topology { objects: { japan: GeometryCollection<{ id: number; ja: string }> } }
+interface JapanTopology extends Topology { objects: { japan: GeometryCollection<{ id: number; ja: string }>; lakes?: GeometryCollection<{ id: string; ja: string }> } }
+type LakeFeature = Feature<Polygon | MultiPolygon, { id: string; ja: string }>;
 
 /** Manual nudges (lon, lat degrees) for labels whose centroid sits awkwardly. */
 const LABEL_NUDGE: Record<string, [number, number]> = {
@@ -74,6 +75,8 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
   const union = merge(topo, topo.objects.japan.geometries as (TopoPolygon | TopoMultiPolygon)[]);
   const innerBorders = mesh(topo, topo.objects.japan, (a, b) => a !== b);
   const coast = mesh(topo, topo.objects.japan, (a, b) => a === b);
+  // lakes (琵琶湖) are their own object: the land data has no hole for them
+  const lakes = topo.objects.lakes ? (feature(topo, topo.objects.lakes) as unknown as FeatureCollection<Polygon | MultiPolygon, { id: string; ja: string }>).features : [];
   const bySlug = new Map<string, PrefFeature>();
   for (const f of features) {
     const p = prefById.get(f.properties.id);
@@ -96,6 +99,7 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
   const viewport = svg.append('g').attr('class', 'viewport');
   const gWash = viewport.append('g').attr('class', 'wash');
   const gLand = viewport.append('g').attr('class', 'land');
+  const gLakes = viewport.append('g').attr('class', 'lakes');
   const gLines = viewport.append('g').attr('class', 'lines');
   const gGeoLayers = viewport.append('g').attr('class', 'geo-layers');
   const gInset = viewport.append('g').attr('class', 'inset');
@@ -126,6 +130,7 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
     })
     .style('fill', (d) => regionOf(prefById.get(d.properties.id)!).color)
     .style('--hover-fill', (d) => `color-mix(in oklab, ${regionOf(prefById.get(d.properties.id)!).color} 80%, white)`);
+  const lakePaths = gLakes.selectAll<SVGPathElement, LakeFeature>('path').data(lakes, (d) => d.properties.id).join('path').attr('class', 'lake');
 
   gLines.append('path').attr('class', 'border-inner');
   gLines.append('path').attr('class', 'coast');
@@ -165,7 +170,7 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
   });
   // nudge a few region labels into open water so they do not cover prefecture names
   const REGION_NUDGE: Record<string, [number, number]> = {
-    hokkaido: [0.5, 2.3], tohoku: [2.4, 0.2], kanto: [2.0, -1.0], chubu: [-1.0, 1.4], kinki: [0.5, -1.8],
+    hokkaido: [0.5, 2.3], tohoku: [2.4, 0.2], kanto: [2.0, -1.0], hokuriku: [-0.9, 1.0], koshin: [0.7, -0.8], tokai: [0.2, -1.3], kinki: [0.5, -1.8],
     chugoku: [-0.2, 1.1], shikoku: [0.2, -1.2], kyushu: [1.8, -0.9], okinawa: [0, 1.9],
   };
   for (const r of regionLabelData) {
@@ -211,6 +216,7 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
   function fitProjection() {
     projection.fitExtent([[24, 24], [W - 24, H - 24]], fc);
     prefPaths.attr('d', (d) => path(d) ?? '');
+    lakePaths.attr('d', (d) => path(d) ?? '');
     const unionD = path(union) ?? '';
     gWash.selectAll('path').attr('d', unionD);
     gLines.select('.border-inner').attr('d', path(innerBorders) ?? '');

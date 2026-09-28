@@ -1,14 +1,20 @@
 {
   "$schema": "./schema/regions.schema.json",
+  "_comment": "여행 기준 지방 (v2, ADR 0008). 中部 는 묶음(groups)으로만 남고, 지도·범례는 北陸 · 甲信 · 東海 로 나뉜다. 세 지방의 색은 中部 살구색의 이웃 톤.",
+  "groups": [
+    { "id": "chubu", "name": { "ja": "中部", "kana": "ちゅうぶ", "ko": "주부", "en": "Chubu" }, "color": "#FBD3AC", "ink": "#9A5A27" }
+  ],
   "regions": [
-    { "id": "hokkaido", "order": 1, "name": { "ja": "北海道", "kana": "ほっかいどう", "ko": "홋카이도", "en": "Hokkaido" }, "color": "#C5DCF4", "ink": "#4E6E9E" },
-    { "id": "tohoku",   "order": 2, "name": { "ja": "東北",   "kana": "とうほく",   "ko": "도호쿠",   "en": "Tohoku" },   "color": "#BFE5CF", "ink": "#3E7A5A" },
-    { "id": "kanto",    "order": 3, "name": { "ja": "関東",   "kana": "かんとう",   "ko": "간토",     "en": "Kanto" },    "color": "#FBE7A3", "ink": "#8A6A16" },
-    { "id": "chubu",    "order": 4, "name": { "ja": "中部",   "kana": "ちゅうぶ",   "ko": "주부",     "en": "Chubu" },    "color": "#FBD3AC", "ink": "#9A5A27" },
-    { "id": "kinki",    "order": 5, "name": { "ja": "近畿",   "kana": "きんき",     "ko": "긴키",     "en": "Kinki" },    "color": "#F8C7D3", "ink": "#A0455F" },
-    { "id": "chugoku",  "order": 6, "name": { "ja": "中国",   "kana": "ちゅうごく", "ko": "주고쿠",   "en": "Chugoku" },  "color": "#DDCCF1", "ink": "#6A4E96" },
-    { "id": "shikoku",  "order": 7, "name": { "ja": "四国",   "kana": "しこく",     "ko": "시코쿠",   "en": "Shikoku" },  "color": "#DCE7A6", "ink": "#6A7A1E" },
-    { "id": "kyushu",   "order": 8, "name": { "ja": "九州",   "kana": "きゅうしゅう", "ko": "규슈",   "en": "Kyushu" },   "color": "#F9C4B2", "ink": "#A44E35" },
-    { "id": "okinawa",  "order": 9, "name": { "ja": "沖縄",   "kana": "おきなわ",   "ko": "오키나와", "en": "Okinawa" },  "color": "#B9E6E0", "ink": "#2F7A72" }
+    { "id": "hokkaido", "order": 1,  "name": { "ja": "北海道", "kana": "ほっかいどう", "ko": "홋카이도", "en": "Hokkaido" }, "color": "#C5DCF4", "ink": "#4E6E9E" },
+    { "id": "tohoku",   "order": 2,  "name": { "ja": "東北",   "kana": "とうほく",   "ko": "도호쿠",   "en": "Tohoku" },   "color": "#BFE5CF", "ink": "#3E7A5A" },
+    { "id": "kanto",    "order": 3,  "name": { "ja": "関東",   "kana": "かんとう",   "ko": "간토",     "en": "Kanto" },    "color": "#FBE7A3", "ink": "#8A6A16" },
+    { "id": "hokuriku", "order": 4,  "group": "chubu", "name": { "ja": "北陸", "kana": "ほくりく", "ko": "호쿠리쿠", "en": "Hokuriku" }, "color": "#FAE3C6", "ink": "#9A5A27" },
+    { "id": "koshin",   "order": 5,  "group": "chubu", "name": { "ja": "甲信", "kana": "こうしん", "ko": "고신",     "en": "Koshin" },   "color": "#FBD3AC", "ink": "#9A5A27" },
+    { "id": "tokai",    "order": 6,  "group": "chubu", "name": { "ja": "東海", "kana": "とうかい", "ko": "도카이",   "en": "Tokai" },    "color": "#F6BE9A", "ink": "#9A5A27" },
+    { "id": "kinki",    "order": 7,  "name": { "ja": "近畿",   "kana": "きんき",     "ko": "긴키",     "en": "Kinki" },    "color": "#F8C7D3", "ink": "#A0455F" },
+    { "id": "chugoku",  "order": 8,  "name": { "ja": "中国",   "kana": "ちゅうごく", "ko": "주고쿠",   "en": "Chugoku" },  "color": "#DDCCF1", "ink": "#6A4E96" },
+    { "id": "shikoku",  "order": 9,  "name": { "ja": "四国",   "kana": "しこく",     "ko": "시코쿠",   "en": "Shikoku" },  "color": "#DCE7A6", "ink": "#6A7A1E" },
+    { "id": "kyushu",   "order": 10, "name": { "ja": "九州",   "kana": "きゅうしゅう", "ko": "규슈",   "en": "Kyushu" },   "color": "#F9C4B2", "ink": "#A44E35" },
+    { "id": "okinawa",  "order": 11, "name": { "ja": "沖縄",   "kana": "おきなわ",   "ko": "오키나와", "en": "Okinawa" },  "color": "#B9E6E0", "ink": "#2F7A72" }
   ]
 }

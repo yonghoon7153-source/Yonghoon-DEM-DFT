@@ -3,7 +3,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 
 const read = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8'));
-const { regions } = read('regions.json');
+const { regions, groups = [] } = read('regions.json');
 const { prefectures } = read('prefectures.json');
 const { mascots } = read('mascots.json');
 const notesDb = read('notes.json');
@@ -12,6 +12,14 @@ const geo = JSON.parse(readFileSync(new URL('../src/generated/prefecture-geo.jso
 const errors = [];
 const err = (m) => errors.push(m);
 const regionIds = new Set(regions.map((r) => r.id));
+// groups (中部): a big region that only names its members — never a prefecture's region
+const groupIds = new Set(groups.map((g) => g.id));
+for (const g of groups) {
+  if (!/^[a-z]+$/.test(g.id ?? '')) err(`regions.groups: bad id "${g.id}"`);
+  if (regionIds.has(g.id)) err(`regions.groups "${g.id}": same id as a region`);
+  for (const k of ['ja', 'kana', 'ko', 'en']) if (!g.name?.[k]) err(`regions.groups "${g.id}": name.${k} missing`);
+}
+for (const r of regions) if (r.group !== undefined && !groupIds.has(r.group)) err(`regions "${r.id}": unknown group "${r.group}"`);
 const slugs = new Set();
 const ids = new Set();
 const mascotIds = new Set(mascots.map((m) => m.id));
@@ -82,7 +90,7 @@ for (const [slug, v] of Object.entries(prefNotes)) {
   if (typeof v.root !== 'object' || !Object.keys(v.root).length) err(`notes.${slug}: root must be { ja?, ko? }`);
   for (const [k, x] of Object.entries(v.root ?? {})) if (!['ja', 'ko'].includes(k) || typeof x !== 'string' || !x.trim()) err(`notes.${slug}: root.${k} must be text (ja/ko)`);
 }
-for (const [rid] of Object.entries(notesDb.regions ?? {})) if (!regionIds.has(rid)) err(`notes: unknown region "${rid}"`);
+for (const [rid] of Object.entries(notesDb.regions ?? {})) if (!regionIds.has(rid) && !groupIds.has(rid)) err(`notes: unknown region "${rid}"`);
 let boxes = 0;
 function walk(items, where, depth = 0) {
   if (!Array.isArray(items)) { err(`${where}: items must be an array`); return; }
@@ -104,7 +112,7 @@ for (const ex of notesDb.extras ?? []) {
   const where = `extra "${ex.id ?? '?'}"`;
   if (!ex.id || extraIds.has(ex.id)) err(`${where}: missing/duplicate id`); extraIds.add(ex.id);
   if (!ex.title) err(`${where}: title missing`);
-  for (const r of ex.targets?.regions ?? []) if (!regionIds.has(r)) err(`${where}: unknown region target "${r}"`);
+  for (const r of ex.targets?.regions ?? []) if (!regionIds.has(r) && !groupIds.has(r)) err(`${where}: unknown region target "${r}"`);
   for (const p of ex.targets?.prefectures ?? []) if (!slugs.has(p)) err(`${where}: unknown prefecture target "${p}"`);
   walk(ex.items, where);
 }
@@ -144,7 +152,8 @@ const place = (x, kind) => {
   if (x.pref !== undefined && !slugs.has(x.pref)) err(`${where}: unknown prefecture "${x.pref}"`);
 };
 for (const c of placesDb.cities ?? []) { place(c, 'cities'); if (typeof c.capital !== 'boolean' || typeof c.fromUser !== 'boolean') err(`places.cities "${c.id}": capital/fromUser must be booleans`); if (!c.pref) err(`places.cities "${c.id}": pref missing`); }
-for (const kind of ['wards', 'islands', 'extraPlaces']) for (const x of placesDb[kind] ?? []) place(x, kind);
+for (const kind of ['wards', 'islands', 'extraPlaces', 'lakes']) for (const x of placesDb[kind] ?? []) place(x, kind);
+for (const l of placesDb.lakes ?? []) if (!l.pref) err(`places.lakes "${l.id}": pref missing`);
 for (const i of placesDb.islands ?? []) if (!inJapan(i.label)) err(`places.islands "${i.id}": "label" must be [lon, lat] (the name's spot in the sea)`);
 for (const e of placesDb.extraPlaces ?? []) if (e.mark && !(e.note ?? '').includes(e.mark)) err(`places.extraPlaces "${e.id}": mark "${e.mark}" is not part of the note`);
 for (const e of placesDb.extraPlaces ?? []) if (e.radiusKm !== undefined && !(typeof e.radiusKm === 'number' && e.radiusKm > 0 && e.radiusKm <= 200)) err(`places.extraPlaces "${e.id}": radiusKm must be 0–200`);
@@ -194,4 +203,4 @@ if (errors.length) {
   console.error(`✗ data check failed (${errors.length}):\n  - ` + errors.join('\n  - '));
   process.exit(1);
 }
-console.log(`✓ data ok: ${prefectures.length} prefectures, ${regions.length} regions, ${mascots.length} mascots, ${boxes} note boxes, ${(notesDb.extras ?? []).length} extras, ${supBoxes} supplement boxes, ${(placesDb.cities ?? []).length} cities, ${(mountainsDb.ranges ?? []).length} ranges`);
+console.log(`✓ data ok: ${prefectures.length} prefectures, ${regions.length} regions (+${groups.length} group), ${mascots.length} mascots, ${boxes} note boxes, ${(notesDb.extras ?? []).length} extras, ${supBoxes} supplement boxes, ${(placesDb.cities ?? []).length} cities, ${(mountainsDb.ranges ?? []).length} ranges`);

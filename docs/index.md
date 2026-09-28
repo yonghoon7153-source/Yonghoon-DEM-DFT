@@ -11,6 +11,7 @@
 | [0005](adr/0005-map-layers-and-supplement.md) | 지도 레이어 · 보충 · 사진 검색 | 県 ふりがな, 도시·다리·산맥 버튼, 빈 県은 「✦ 보충」, 사진은 📷 검색 |
 | [0006](adr/0006-canva-audit-is-a-check.md) | Canva 전수조사는 검사기가 | `nihon audit` 가 PDF 글줄 837개를 소모하며 대조, 빠지면 `nihon check` 가 멈춤 |
 | [0007](adr/0007-comment-board-on-pages-functions.md) | 💬 コメント 게시판 | Pages Function 하나 + D1, 로그인 없음, IP 는 해시만, 지우기는 `ADMIN_KEY` |
+| [0008](adr/0008-travel-regions.md) | 지방은 여행 기준 (v2) | 中部 → 北陸 · 甲信 · 東海 (中部 는 묶음), 도시 점 3단계는 데이터가 정함, 琵琶湖, 내 메모의 정정은 회색 줄 |
 
 ## 그 밖에
 

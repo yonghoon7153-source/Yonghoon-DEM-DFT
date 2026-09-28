@@ -23,6 +23,15 @@ export interface Prefecture {
 export interface Region {
   id: string;
   order: number;
+  /** The big region this one belongs to (中部 › 北陸) — only for the page titles and my 中部 memo. */
+  group?: string;
+  name: { ja: string; kana: string; ko: string; en: string };
+  color: string;
+  ink: string;
+}
+/** A big region that only groups others (中部): not drawn, not in the legend. */
+export interface RegionGroup {
+  id: string;
   name: { ja: string; kana: string; ko: string; en: string };
   color: string;
   ink: string;
@@ -110,7 +119,9 @@ export interface Bridge { id: string; kind?: 'tunnel' | 'plan'; name: PlaceName;
 export interface CompassWord { ja: string; kana: string; ko: string }
 /** A direction word pinned to an edge of the map (north-up, so it never moves). */
 export interface Compass { id: string; side: 'top' | 'right' | 'bottom' | 'left'; words: CompassWord[] }
-export interface PlacesDb { cities: City[]; wards: Ward[]; islands: Island[]; extraPlaces: ExtraPlace[]; mapNotes: MapNote[]; compass: Compass[]; bridges: Bridge[] }
+/** A lake drawn on the map (its shape is objects.lakes of japan.topo.json); the name sits at `at`. */
+export interface Lake { id: string; name: PlaceName; pref: string; at: LonLat; note?: string }
+export interface PlacesDb { cities: City[]; wards: Ward[]; islands: Island[]; lakes?: Lake[]; extraPlaces: ExtraPlace[]; mapNotes: MapNote[]; compass: Compass[]; bridges: Bridge[] }
 export interface MountainRange { no: number; id: string; kind: '山脈' | '山地' | '高地'; name: PlaceName; line: LonLat[]; ko?: string }
 export interface MountainNote { id: string; t: string; sub?: string; ko?: string; at: LonLat; arrow?: LonLat[] }
 export interface MountainsDb { ranges: MountainRange[]; notes: MountainNote[] }
