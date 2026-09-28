@@ -609,6 +609,11 @@
 /* ○ a city I only wrote the name of: grey and small, so the red dots mean "something to see" */
 .marks .city--note .mark__ring { fill: var(--ink-3); stroke: var(--white); stroke-width: 1.2px; opacity: .8; }
 .label--place.city-name.is-note { fill: var(--ink-3); }
+/* 政令指定都市: a faint dotted outline over the land, never in the way of clicks */
+.city-areas { transition: opacity .25s ease; }
+.city-areas.is-hidden { opacity: 0; }
+.city-area { fill: none; stroke: var(--ink-2); stroke-width: 1.1px; stroke-dasharray: 1.5 3; stroke-linecap: round; opacity: .55; vector-effect: non-scaling-stroke; pointer-events: none; }
+.city-area.is-dim { opacity: .2; }
 /* 琵琶湖: water, drawn over the land — clicks fall through to 滋賀 underneath */
 .lake { fill: var(--sea); stroke: var(--sea-2); stroke-width: 1px; vector-effect: non-scaling-stroke; pointer-events: none; }
 .label--place.lake-name { fill: color-mix(in oklab, var(--note-sky) 65%, var(--ink)); letter-spacing: .12em; stroke-width: 3.5px; }

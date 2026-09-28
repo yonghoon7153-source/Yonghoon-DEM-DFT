@@ -2,6 +2,7 @@
 //   node scripts/build-geo.mjs
 // Output:
 //   public/geo/japan.topo.json         simplified TopoJSON (fetched by the app) — objects.japan (prefectures) + objects.lakes (琵琶湖)
+//                                      + objects.cities (政令指定都市 20 outlines, from data/raw/designated-cities.geojson)
 //   src/generated/prefecture-geo.json  per-prefecture label anchor + bbox (lon/lat)
 //   public/geo/tokyo23.topo.json       Tokyo's 23 wards for the 23区 popup (from data/raw/tokyo23.geojson)
 //
@@ -20,6 +21,7 @@ import { geoArea, geoBounds, geoCentroid } from 'd3-geo';
 
 const SRC = new URL('../data/raw/japan.topojson', import.meta.url);
 const LAKES = new URL('../data/raw/lakes.geojson', import.meta.url); // Natural Earth 10m lakes, public domain
+const CITIES = new URL('../data/raw/designated-cities.geojson', import.meta.url); // 国土数値情報 via smartnews-smri, credit in the footer
 const OUT_TOPO = new URL('../public/geo/japan.topo.json', import.meta.url);
 const OUT_META = new URL('../src/generated/prefecture-geo.json', import.meta.url);
 
@@ -76,7 +78,11 @@ for (const f of fc.features) {
 
 // 3. Re-encode as TopoJSON (shared arcs again) and quantize so the file is small.
 const lakes = JSON.parse(readFileSync(LAKES, 'utf8'));
-const out = topology({ japan: { type: 'FeatureCollection', features }, lakes }, 1e4);
+// designated-city outlines: simplify like the prefectures so the dotted lines stay light
+let citiesT = presimplify(topology({ cities: JSON.parse(readFileSync(CITIES, 'utf8')) }));
+citiesT = simplify(citiesT, quantile(citiesT, 0.25));
+const cities = feature(citiesT, citiesT.objects.cities);
+const out = topology({ japan: { type: 'FeatureCollection', features }, lakes, cities }, 1e4);
 out.meta = { okinawaShift: OKINAWA_SHIFT, source: '地球地図日本（国土地理院） via dataofjapan/land' };
 
 mkdirSync(new URL('../public/geo/', import.meta.url), { recursive: true });

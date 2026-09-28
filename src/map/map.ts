@@ -6,7 +6,7 @@ import 'd3-transition';
 import { feature, merge, mesh } from 'topojson-client';
 import type { GeometryCollection, MultiPolygon as TopoMultiPolygon, Polygon as TopoPolygon, Topology } from 'topojson-specification';
 import type { Feature, FeatureCollection, MultiPolygon, Polygon } from 'geojson';
-import { prefById, prefGeo, prefectures, prefecturesIn, regionOf, regions } from '../data';
+import { prefById, prefBySlug, prefGeo, prefectures, prefecturesIn, regionOf, regions } from '../data';
 import type { LabelMode, LonLat, Prefecture } from '../types';
 import { createLayers, type LayerId } from './layers';
 
@@ -43,8 +43,12 @@ export interface Sticker { id: string; image?: string; svg?: string }
 
 interface Inset { top: number; right: number; bottom: number; left: number }
 type PrefFeature = Feature<MultiPolygon, { id: number; ja: string }>;
-interface JapanTopology extends Topology { objects: { japan: GeometryCollection<{ id: number; ja: string }>; lakes?: GeometryCollection<{ id: string; ja: string }> } }
+interface JapanTopology extends Topology { objects: { japan: GeometryCollection<{ id: number; ja: string }>; lakes?: GeometryCollection<{ id: string; ja: string }>; cities?: GeometryCollection<{ code: string; ja: string; pref: string }> } }
+type CityFeature = Feature<Polygon | MultiPolygon, { code: string; ja: string; pref: string }>;
 type LakeFeature = Feature<Polygon | MultiPolygon, { id: string; ja: string }>;
+
+/** Zoom from which the 政令指定都市 outlines show. */
+const CITY_AREAS_AT = 1.5;
 
 /** Manual nudges (lon, lat degrees) for labels whose centroid sits awkwardly. */
 const LABEL_NUDGE: Record<string, [number, number]> = {
@@ -77,6 +81,8 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
   const coast = mesh(topo, topo.objects.japan, (a, b) => a === b);
   // lakes (琵琶湖) are their own object: the land data has no hole for them
   const lakes = topo.objects.lakes ? (feature(topo, topo.objects.lakes) as unknown as FeatureCollection<Polygon | MultiPolygon, { id: string; ja: string }>).features : [];
+  // 政令指定都市 outlines — a faint dotted hint of how big 仙台市 or 横浜市 really is (v2, 톡방 피드백)
+  const cityAreas = topo.objects.cities ? (feature(topo, topo.objects.cities) as unknown as FeatureCollection<Polygon | MultiPolygon, { code: string; ja: string; pref: string }>).features : [];
   const bySlug = new Map<string, PrefFeature>();
   for (const f of features) {
     const p = prefById.get(f.properties.id);
@@ -100,6 +106,7 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
   const gWash = viewport.append('g').attr('class', 'wash');
   const gLand = viewport.append('g').attr('class', 'land');
   const gLakes = viewport.append('g').attr('class', 'lakes');
+  const gCityAreas = viewport.append('g').attr('class', 'city-areas');
   const gLines = viewport.append('g').attr('class', 'lines');
   const gGeoLayers = viewport.append('g').attr('class', 'geo-layers');
   const gInset = viewport.append('g').attr('class', 'inset');
@@ -131,6 +138,8 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
     .style('fill', (d) => regionOf(prefById.get(d.properties.id)!).color)
     .style('--hover-fill', (d) => `color-mix(in oklab, ${regionOf(prefById.get(d.properties.id)!).color} 80%, white)`);
   const lakePaths = gLakes.selectAll<SVGPathElement, LakeFeature>('path').data(lakes, (d) => d.properties.id).join('path').attr('class', 'lake');
+  const cityAreaPaths = gCityAreas.selectAll<SVGPathElement, CityFeature>('path').data(cityAreas, (d) => d.properties.code).join('path').attr('class', 'city-area').attr('data-pref', (d) => d.properties.pref);
+  cityAreaPaths.append('title').text((d) => `${d.properties.ja} — 政令指定都市 (시 구역)`);
 
   gLines.append('path').attr('class', 'border-inner');
   gLines.append('path').attr('class', 'coast');
@@ -217,6 +226,7 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
     projection.fitExtent([[24, 24], [W - 24, H - 24]], fc);
     prefPaths.attr('d', (d) => path(d) ?? '');
     lakePaths.attr('d', (d) => path(d) ?? '');
+    cityAreaPaths.attr('d', (d) => path(d) ?? '');
     const unionD = path(union) ?? '';
     gWash.selectAll('path').attr('d', unionD);
     gLines.select('.border-inner').attr('d', path(innerBorders) ?? '');
@@ -309,6 +319,9 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
       });
 
     layers.update({ t: transform, placed, W, H, mode: labelMode, selected, region: highlightedRegion });
+    // city outlines only once the map is close enough for them to read as areas, not specks
+    gCityAreas.classed('is-hidden', k < CITY_AREAS_AT);
+    cityAreaPaths.classed('is-dim', (d) => !!highlightedRegion && prefBySlug.get(d.properties.pref)?.region !== highlightedRegion);
 
     const [ix, iy] = transform.apply([okinawaBox[0][0] - 14, okinawaBox[1][1] + 14]);
     insetNote.attr('transform', `translate(${ix.toFixed(1)},${(iy + 11).toFixed(1)})`).classed('is-hidden', k > 2.2);

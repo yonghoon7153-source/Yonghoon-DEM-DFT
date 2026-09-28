@@ -62,6 +62,7 @@
     { "id": "matsuyama", "pref": "ehime", "name": { "ja": "松山市", "kana": "まつやまし", "ko": "마쓰야마시" }, "at": [132.77, 33.84], "capital": true, "fromUser": true },
     { "id": "imabari", "pref": "ehime", "name": { "ja": "今治市", "kana": "いまばりし", "ko": "이마바리시" }, "at": [133, 34.07], "capital": false, "fromUser": true },
     { "id": "kochi", "pref": "kochi", "name": { "ja": "高知市", "kana": "こうちし", "ko": "고치시" }, "at": [133.53, 33.56], "capital": true, "fromUser": false },
+    { "id": "kitakyushu", "pref": "fukuoka", "name": { "ja": "北九州市", "kana": "きたきゅうしゅうし", "ko": "기타큐슈시" }, "at": [130.875, 33.883], "capital": false, "fromUser": false },
     { "id": "fukuoka", "pref": "fukuoka", "name": { "ja": "福岡市", "kana": "ふくおかし", "ko": "후쿠오카시" }, "at": [130.4, 33.59], "capital": true, "fromUser": false },
     { "id": "saga", "pref": "saga", "name": { "ja": "佐賀市", "kana": "さがし", "ko": "사가시" }, "at": [130.3, 33.26], "capital": true, "fromUser": false },
     { "id": "nagasaki", "pref": "nagasaki", "name": { "ja": "長崎市", "kana": "ながさきし", "ko": "나가사키시" }, "at": [129.88, 32.75], "capital": true, "fromUser": false },
