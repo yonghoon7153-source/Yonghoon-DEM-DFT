@@ -1,0 +1,226 @@
+chemsys = ['Cl', 'Co', 'Li', 'Mn', 'Nd', 'Ni', 'O', 'P', 'S']
+Retrieving ThermoDoc documents:   0%|          | 0/5061 [00:00<?, ?it/s]Retrieving ThermoDoc documents:  40%|███▉      | 2000/5061 [00:03<00:05, 531.50it/s]Retrieving ThermoDoc documents:  59%|█████▉    | 3000/5061 [00:07<00:05, 378.80it/s]Retrieving ThermoDoc documents:  79%|███████▉  | 4000/5061 [00:12<00:03, 295.59it/s]Retrieving ThermoDoc documents:  99%|█████████▉| 5000/5061 [00:15<00:00, 286.48it/s]Retrieving ThermoDoc documents: 100%|██████████| 5061/5061 [00:17<00:00, 251.09it/s]Retrieving ThermoDoc documents: 100%|██████████| 5061/5061 [00:17<00:00, 297.32it/s]
+[mp_api] 5061 entries in Cl-Co-Li-Mn-Nd-Ni-O-P-S
+mu_Li(metal) = -1.9089 eV/atom
+
+######## cathode LiCoO2 (LiCoO2) ########
+  V=2.50  modelc   : -0.6238 eV/atom   0.6835 LiCoO2 + 0.3165 Li5.4P1S4.4Cl1.6 -> 0.8861 Li + 0.3165 Li3PO4 + 0.6835 CoS2 + 0.02532 Li2SO4 + 0.5063 LiCl
+  V=2.50  nd_li_002: -0.6222 eV/atom   0.3165 Li5.34Nd0.02P1S4.4Cl1.6 + 0.6835 LiCoO2 -> 0.8861 Li + 0.3101 Li3PO4 + 0.6835 CoS2 + 0.006329 NdPO4 + 0.02532 Li2SO4 + 0.5063 LiCl
+  V=2.50  nd_li_010: -0.6158 eV/atom   0.3165 Li5.1Nd0.1P1S4.4Cl1.6 + 0.6835 LiCoO2 -> 0.8861 Li + 0.2848 Li3PO4 + 0.6835 CoS2 + 0.03165 NdPO4 + 0.02532 Li2SO4 + 0.5063 LiCl
+  V=2.50  nd_only  : -0.6079 eV/atom   0.3165 Li4.8Nd0.2P1S4.4Cl1.6 + 0.6835 LiCoO2 -> 0.8861 Li + 0.2532 Li3PO4 + 0.6835 CoS2 + 0.06329 NdPO4 + 0.02532 Li2SO4 + 0.5063 LiCl
+  V=2.50  nd_p_002 : -0.6232 eV/atom   0.3173 Li5.44Nd0.02P0.98S4.4Cl1.6 + 0.6827 LiCoO2 -> 0.9264 Li + 0.3046 Li3PO4 + 0.6827 CoS2 + 0.006345 NdPO4 + 0.03046 Li2SO4 + 0.5076 LiCl
+  V=2.50  nd_p_010 : -0.6207 eV/atom   0.3205 Li5.6Nd0.1P0.9S4.4Cl1.6 + 0.6795 LiCoO2 -> 1.09 Li + 0.2564 Li3PO4 + 0.6795 CoS2 + 0.03205 NdPO4 + 0.05128 Li2SO4 + 0.5128 LiCl
+  V=2.50  nd_p_020 : -0.6176 eV/atom   0.3247 Li5.8Nd0.2P0.8S4.4Cl1.6 + 0.6753 LiCoO2 -> 1.299 Li + 0.1948 Li3PO4 + 0.6753 CoS2 + 0.06494 NdPO4 + 0.07792 Li2SO4 + 0.5195 LiCl
+  V=3.00  modelc   : -0.7300 eV/atom   0.6785 LiCoO2 + 0.3215 Li5.4P1S4.4Cl1.6 -> 1.141 Li + 0.6785 CoS2 + 0.1608 Li4P2O7 + 0.05788 Li2SO4 + 0.5145 LiCl
+  V=3.00  nd_li_002: -0.7281 eV/atom   0.3214 Li5.34Nd0.02P1S4.4Cl1.6 + 0.6786 LiCoO2 -> 1.136 Li + 0.6786 CoS2 + 0.1575 Li4P2O7 + 0.006429 NdPO4 + 0.05722 Li2SO4 + 0.5143 LiCl
+  V=3.00  nd_li_010: -0.7209 eV/atom   0.321 Li5.1Nd0.1P1S4.4Cl1.6 + 0.679 LiCoO2 -> 1.116 Li + 0.679 CoS2 + 0.1445 Li4P2O7 + 0.0321 NdPO4 + 0.05457 Li2SO4 + 0.5136 LiCl
+  V=3.00  nd_only  : -0.7119 eV/atom   0.3205 Li4.8Nd0.2P1S4.4Cl1.6 + 0.6795 LiCoO2 -> 1.09 Li + 0.6795 CoS2 + 0.1282 Li4P2O7 + 0.0641 NdPO4 + 0.05128 Li2SO4 + 0.5128 LiCl
+  V=3.00  nd_p_002 : -0.7340 eV/atom   0.3222 Li5.44Nd0.02P0.98S4.4Cl1.6 + 0.6778 LiCoO2 -> 1.173 Li + 0.6778 CoS2 + 0.1546 Li4P2O7 + 0.006443 NdPO4 + 0.06186 Li2SO4 + 0.5155 LiCl
+  V=3.00  nd_p_010 : -0.7500 eV/atom   0.3247 Li5.6Nd0.1P0.9S4.4Cl1.6 + 0.6753 LiCoO2 -> 1.299 Li + 0.6753 CoS2 + 0.1299 Li4P2O7 + 0.03247 NdPO4 + 0.07792 Li2SO4 + 0.5195 LiCl
+  V=3.00  nd_p_020 : -0.7703 eV/atom   0.3279 Li5.8Nd0.2P0.8S4.4Cl1.6 + 0.6721 LiCoO2 -> 1.459 Li + 0.6721 CoS2 + 0.09836 Li4P2O7 + 0.06557 NdPO4 + 0.09836 Li2SO4 + 0.5246 LiCl
+  V=3.50  modelc   : -0.8859 eV/atom   0.6732 LiCoO2 + 0.3268 Li5.4P1S4.4Cl1.6 -> 1.405 Li + 0.6732 CoS2 + 0.0915 Li2SO4 + 0.3268 LiPO3 + 0.5229 LiCl
+  V=3.50  nd_li_002: -0.8837 eV/atom   0.3268 Li5.34Nd0.02P1S4.4Cl1.6 + 0.6732 LiCoO2 -> 1.405 Li + 0.006536 LiNd(PO3)4 + 0.6732 CoS2 + 0.0915 Li2SO4 + 0.3007 LiPO3 + 0.5229 LiCl
+  V=3.50  nd_li_010: -0.8752 eV/atom   0.3268 Li5.1Nd0.1P1S4.4Cl1.6 + 0.6732 LiCoO2 -> 1.405 Li + 0.03268 LiNd(PO3)4 + 0.6732 CoS2 + 0.0915 Li2SO4 + 0.1961 LiPO3 + 0.5229 LiCl
+  V=3.50  nd_only  : -0.8648 eV/atom   0.3268 Li4.8Nd0.2P1S4.4Cl1.6 + 0.6732 LiCoO2 -> 1.405 Li + 0.06536 LiNd(PO3)4 + 0.6732 CoS2 + 0.0915 Li2SO4 + 0.06536 LiPO3 + 0.5229 LiCl
+  V=3.50  nd_p_002 : -0.8936 eV/atom   0.3274 Li5.44Nd0.02P0.98S4.4Cl1.6 + 0.6726 LiCoO2 -> 1.437 Li + 0.006549 LiNd(PO3)4 + 0.6726 CoS2 + 0.09561 Li2SO4 + 0.2947 LiPO3 + 0.5239 LiCl
+  V=3.50  nd_p_010 : -0.9278 eV/atom   0.4184 Li5.6Nd0.1P0.9S4.4Cl1.6 + 0.5816 LiCoO2 -> 2.657 Li + 0.04184 LiNd(PO3)4 + 0.6695 SCl + 0.5816 CoS2 + 0.008368 Li2SO4 + 0.2092 LiPO3
+  V=3.50  nd_p_020 : -0.9742 eV/atom   0.4237 Li5.8Nd0.2P0.8S4.4Cl1.6 + 0.5763 LiCoO2 -> 2.881 Li + 0.08475 LiNd(PO3)4 + 0.678 SCl + 0.5763 CoS2 + 0.0339 Li2SO4
+  V=4.00  modelc   : -1.1655 eV/atom   0.6091 LiCoO2 + 0.3909 Li5.4P1S4.4Cl1.6 -> 2.72 Li + 0.07166 SO2 + 0.6254 SCl + 0.5114 CoS2 + 0.09772 CoP4O11
+  V=4.00  nd_li_002: -1.1612 eV/atom   0.3933 Li5.34Nd0.02P1S4.4Cl1.6 + 0.6067 LiCoO2 -> 2.707 Li + 0.0649 SO2 + 0.007866 NdP5O14 + 0.6293 SCl + 0.5182 CoS2 + 0.0885 CoP4O11
+  V=4.00  nd_li_010: -1.1436 eV/atom   0.4034 Li5.1Nd0.1P1S4.4Cl1.6 + 0.5966 LiCoO2 -> 2.654 Li + 0.03697 SO2 + 0.04034 NdP5O14 + 0.6454 SCl + 0.5462 CoS2 + 0.05042 CoP4O11
+  V=4.00  nd_only  : -1.1211 eV/atom   0.4167 Li4.8Nd0.2P1S4.4Cl1.6 + 0.5833 LiCoO2 -> 2.583 Li + 0.08333 NdP5O14 + 0.6667 SCl + 0.5833 CoS2
+  V=4.00  nd_p_002 : -1.1777 eV/atom   0.3953 Li5.44Nd0.02P0.98S4.4Cl1.6 + 0.6047 LiCoO2 -> 2.755 Li + 0.07115 SO2 + 0.007905 NdP5O14 + 0.6324 SCl + 0.5178 CoS2 + 0.08696 CoP4O11
+  V=4.00  nd_p_010 : -1.2288 eV/atom   0.4444 Li5.6Nd0.1P0.9S4.4Cl1.6 + 0.5556 LiCoO2 -> 3.044 Li + 0.04444 NdP5O14 + 0.7111 SCl + 0.5111 CoS2 + 0.04444 CoP4O11 + 0.2222 S
+  V=4.00  nd_p_020 : -1.2950 eV/atom   0.4651 Li5.8Nd0.2P0.8S4.4Cl1.6 + 0.5349 LiCoO2 -> 3.233 Li + 0.04651 NdP5O14 + 0.7442 SCl + 0.04651 Nd(PO3)3 + 0.5349 CoS2 + 0.2326 S
+  V=4.30  modelc   : -1.3459 eV/atom   0.5789 LiCoO2 + 0.4211 Li5.4P1S4.4Cl1.6 -> 2.853 Li + 0.6737 SCl + 0.1053 CoP4O11 + 0.4737 CoS2 + 0.2316 S
+  V=4.30  nd_li_002: -1.3396 eV/atom   0.4206 Li5.34Nd0.02P1S4.4Cl1.6 + 0.5794 LiCoO2 -> 2.825 Li + 0.673 SCl + 0.008412 NdP5O14 + 0.09464 CoP4O11 + 0.4848 CoS2 + 0.2082 S
+  V=4.30  nd_li_010: -1.3147 eV/atom   0.4188 Li5.1Nd0.1P1S4.4Cl1.6 + 0.5812 LiCoO2 -> 2.717 Li + 0.6702 SCl + 0.04188 NdP5O14 + 0.05236 CoP4O11 + 0.5288 CoS2 + 0.1152 S
+  V=4.30  nd_only  : -1.2842 eV/atom   0.4167 Li4.8Nd0.2P1S4.4Cl1.6 + 0.5833 LiCoO2 -> 2.583 Li + 0.6667 SCl + 0.08333 NdP5O14 + 0.5833 CoS2
+  V=4.30  nd_p_002 : -1.3603 eV/atom   0.4255 Li5.44Nd0.02P0.98S4.4Cl1.6 + 0.5745 LiCoO2 -> 2.889 Li + 0.6809 SCl + 0.008511 NdP5O14 + 0.09362 CoP4O11 + 0.4809 CoS2 + 0.2298 S
+  V=4.30  nd_p_010 : -1.4199 eV/atom   0.4444 Li5.6Nd0.1P0.9S4.4Cl1.6 + 0.5556 LiCoO2 -> 3.044 Li + 0.7111 SCl + 0.04444 NdP5O14 + 0.04444 CoP4O11 + 0.5111 CoS2 + 0.2222 S
+  V=4.30  nd_p_020 : -1.4945 eV/atom   0.4651 Li5.8Nd0.2P0.8S4.4Cl1.6 + 0.5349 LiCoO2 -> 3.233 Li + 0.7442 SCl + 0.04651 NdP5O14 + 0.04651 Nd(PO3)3 + 0.5349 CoS2 + 0.2326 S
+  V=4.50  modelc   : -1.4677 eV/atom   0.5789 LiCoO2 + 0.4211 Li5.4P1S4.4Cl1.6 -> 2.853 Li + 0.1053 CoP4O11 + 0.6737 SCl + 0.4737 CoS2 + 0.2316 S
+  V=4.50  nd_li_002: -1.4601 eV/atom   0.4206 Li5.34Nd0.02P1S4.4Cl1.6 + 0.5794 LiCoO2 -> 2.825 Li + 0.09464 CoP4O11 + 0.008412 NdP5O14 + 0.673 SCl + 0.4848 CoS2 + 0.2082 S
+  V=4.50  nd_li_010: -1.4299 eV/atom   0.4188 Li5.1Nd0.1P1S4.4Cl1.6 + 0.5812 LiCoO2 -> 2.717 Li + 0.05236 CoP4O11 + 0.04188 NdP5O14 + 0.6702 SCl + 0.5288 CoS2 + 0.1152 S
+  V=4.50  nd_only  : -1.3930 eV/atom   0.4167 Li4.8Nd0.2P1S4.4Cl1.6 + 0.5833 LiCoO2 -> 2.583 Li + 0.08333 NdP5O14 + 0.6667 SCl + 0.5833 CoS2
+  V=4.50  nd_p_002 : -1.4832 eV/atom   0.4255 Li5.44Nd0.02P0.98S4.4Cl1.6 + 0.5745 LiCoO2 -> 2.889 Li + 0.09362 CoP4O11 + 0.008511 NdP5O14 + 0.6809 SCl + 0.4809 CoS2 + 0.2298 S
+  V=4.50  nd_p_010 : -1.5506 eV/atom   0.5882 Li5.6Nd0.1P0.9S4.4Cl1.6 + 0.4118 LiCoO2 -> 3.706 Li + 0.05882 NdP5O14 + 0.9412 SCl + 0.4118 CoS2 + 0.1176 P2S7
+  V=4.50  nd_p_020 : -1.6347 eV/atom   Li5.8Nd0.2P0.8S4.4Cl1.6 -> 5.8 Li + SCl + 0.4 P2S7 + 0.2 NdCl3 + 0.6 S  ⛔끝점 (mixing_x=1.000000) — 계면량 아님(자체분해)
+
+######## cathode LiNiO2 (LiNiO2) ########
+  V=2.50  modelc   : -0.7762 eV/atom   0.7465 LiNiO2 + 0.2535 Li5.4P1S4.4Cl1.6 -> 0.7097 Li + 0.2535 Li3PO4 + 0.2488 Ni3S4 + 0.1198 Li2SO4 + 0.4055 LiCl
+  V=2.50  nd_li_002: -0.7747 eV/atom   0.2535 Li5.34Nd0.02P1S4.4Cl1.6 + 0.7465 LiNiO2 -> 0.7097 Li + 0.2484 Li3PO4 + 0.005069 NdPO4 + 0.2488 Ni3S4 + 0.1198 Li2SO4 + 0.4055 LiCl
+  V=2.50  nd_li_010: -0.7684 eV/atom   0.2535 Li5.1Nd0.1P1S4.4Cl1.6 + 0.7465 LiNiO2 -> 0.7097 Li + 0.2281 Li3PO4 + 0.02535 NdPO4 + 0.2488 Ni3S4 + 0.1198 Li2SO4 + 0.4055 LiCl
+  V=2.50  nd_only  : -0.7608 eV/atom   0.2535 Li4.8Nd0.2P1S4.4Cl1.6 + 0.7465 LiNiO2 -> 0.7097 Li + 0.2028 Li3PO4 + 0.05069 NdPO4 + 0.2488 Ni3S4 + 0.1198 Li2SO4 + 0.4055 LiCl
+  V=2.50  nd_p_002 : -0.7754 eV/atom   0.2542 Li5.44Nd0.02P0.98S4.4Cl1.6 + 0.7458 LiNiO2 -> 0.7421 Li + 0.244 Li3PO4 + 0.005083 NdPO4 + 0.2486 Ni3S4 + 0.1238 Li2SO4 + 0.4067 LiCl
+  V=2.50  nd_p_010 : -0.7723 eV/atom   0.257 Li5.6Nd0.1P0.9S4.4Cl1.6 + 0.743 LiNiO2 -> 0.8738 Li + 0.2056 Li3PO4 + 0.0257 NdPO4 + 0.2477 Ni3S4 + 0.1402 Li2SO4 + 0.4112 LiCl
+  V=2.50  nd_p_020 : -0.7684 eV/atom   0.2607 Li5.8Nd0.2P0.8S4.4Cl1.6 + 0.7393 LiNiO2 -> 1.043 Li + 0.1564 Li3PO4 + 0.05213 NdPO4 + 0.2464 Ni3S4 + 0.1611 Li2SO4 + 0.4171 LiCl
+  V=3.00  modelc   : -0.8652 eV/atom   0.7421 LiNiO2 + 0.2579 Li5.4P1S4.4Cl1.6 -> 0.9156 Li + 0.129 Li4P2O7 + 0.2474 Ni3S4 + 0.1454 Li2SO4 + 0.4127 LiCl
+  V=3.00  nd_li_002: -0.8635 eV/atom   0.2578 Li5.34Nd0.02P1S4.4Cl1.6 + 0.7422 LiNiO2 -> 0.9114 Li + 0.1263 Li4P2O7 + 0.005156 NdPO4 + 0.2474 Ni3S4 + 0.1448 Li2SO4 + 0.4125 LiCl
+  V=3.00  nd_li_010: -0.8567 eV/atom   0.2575 Li5.1Nd0.1P1S4.4Cl1.6 + 0.7425 LiNiO2 -> 0.8947 Li + 0.1159 Li4P2O7 + 0.02575 NdPO4 + 0.2475 Ni3S4 + 0.1428 Li2SO4 + 0.4119 LiCl
+  V=3.00  nd_only  : -0.8483 eV/atom   0.257 Li4.8Nd0.2P1S4.4Cl1.6 + 0.743 LiNiO2 -> 0.8738 Li + 0.1028 Li4P2O7 + 0.0514 NdPO4 + 0.2477 Ni3S4 + 0.1402 Li2SO4 + 0.4112 LiCl
+  V=3.00  nd_p_002 : -0.8684 eV/atom   0.2585 Li5.44Nd0.02P0.98S4.4Cl1.6 + 0.7415 LiNiO2 -> 0.9408 Li + 0.1241 Li4P2O7 + 0.005169 NdPO4 + 0.2472 Ni3S4 + 0.1485 Li2SO4 + 0.4135 LiCl
+  V=3.00  nd_p_010 : -0.8814 eV/atom   0.2607 Li5.6Nd0.1P0.9S4.4Cl1.6 + 0.7393 LiNiO2 -> 1.043 Li + 0.1043 Li4P2O7 + 0.02607 NdPO4 + 0.2464 Ni3S4 + 0.1611 Li2SO4 + 0.4171 LiCl
+  V=3.00  nd_p_020 : -0.8979 eV/atom   0.2635 Li5.8Nd0.2P0.8S4.4Cl1.6 + 0.7365 LiNiO2 -> 1.172 Li + 0.07904 Li4P2O7 + 0.05269 NdPO4 + 0.2455 Ni3S4 + 0.1772 Li2SO4 + 0.4216 LiCl
+  V=3.50  modelc   : -1.0316 eV/atom   0.7561 LiNiO2 + 0.2439 Li5.4P1S4.4Cl1.6 -> 1.683 Li + 0.122 Ni(PO3)2 + 0.439 NiS2 + 0.1951 NiCl2 + 0.1951 Li2SO4
+  V=3.50  nd_li_002: -1.0291 eV/atom   0.2458 Li5.34Nd0.02P1S4.4Cl1.6 + 0.7542 LiNiO2 -> 1.676 Li + 0.1131 Ni(PO3)2 + 0.4444 NiS2 + 0.004916 LiNd(PO3)4 + 0.1967 NiCl2 + 0.1927 Li2SO4
+  V=3.50  nd_li_010: -1.0188 eV/atom   0.2538 Li5.1Nd0.1P1S4.4Cl1.6 + 0.7462 LiNiO2 -> 1.65 Li + 0.07614 Ni(PO3)2 + 0.467 NiS2 + 0.02538 LiNd(PO3)4 + 0.203 NiCl2 + 0.1827 Li2SO4
+  V=3.50  nd_only  : -1.0054 eV/atom   0.2439 Li4.8Nd0.2P1S4.4Cl1.6 + 0.7561 LiNiO2 -> 1.683 Li + 0.122 Ni(PO3)2 + 0.02439 Nd2(SO4)3 + 0.439 NiS2 + 0.1951 NiCl2 + 0.122 Li2SO4
+  V=3.50  nd_p_002 : -1.0371 eV/atom   0.2467 Li5.44Nd0.02P0.98S4.4Cl1.6 + 0.7533 LiNiO2 -> 1.7 Li + 0.111 Ni(PO3)2 + 0.445 NiS2 + 0.004933 LiNd(PO3)4 + 0.1973 NiCl2 + 0.1954 Li2SO4
+  V=3.50  nd_p_010 : -1.0599 eV/atom   0.2584 Li5.6Nd0.1P0.9S4.4Cl1.6 + 0.7416 LiNiO2 -> 1.77 Li + 0.0646 Ni(PO3)2 + 0.4703 NiS2 + 0.02584 LiNd(PO3)4 + 0.2067 NiCl2 + 0.1964 Li2SO4
+  V=3.50  nd_p_020 : -1.0908 eV/atom   0.2747 Li5.8Nd0.2P0.8S4.4Cl1.6 + 0.7253 LiNiO2 -> 1.868 Li + 0.5055 NiS2 + 0.05495 LiNd(PO3)4 + 0.2198 NiCl2 + 0.1978 Li2SO4
+  V=4.00  modelc   : -1.2818 eV/atom   0.7391 LiNiO2 + 0.2609 Li5.4P1S4.4Cl1.6 -> 2.148 Li + 0.1304 Ni(PO3)2 + 0.3478 SO2 + 0.4 NiS2 + 0.2087 NiCl2
+  V=4.00  nd_li_002: -1.2772 eV/atom   0.2622 Li5.34Nd0.02P1S4.4Cl1.6 + 0.7378 LiNiO2 -> 2.138 Li + 0.1233 Ni(PO3)2 + 0.3444 SO2 + 0.005245 Nd(PO3)3 + 0.4047 NiS2 + 0.2098 NiCl2
+  V=4.00  nd_li_010: -1.2590 eV/atom   0.2575 Li5.1Nd0.1P1S4.4Cl1.6 + 0.7425 LiNiO2 -> 2.056 Li + 0.1288 Ni(PO3)2 + 0.279 SO2 + 0.01288 Nd2(SO4)3 + 0.4077 NiS2 + 0.206 NiCl2
+  V=4.00  nd_only  : -1.2369 eV/atom   0.2542 Li4.8Nd0.2P1S4.4Cl1.6 + 0.7458 LiNiO2 -> 1.966 Li + 0.1271 Ni(PO3)2 + 0.2119 SO2 + 0.02542 Nd2(SO4)3 + 0.4153 NiS2 + 0.2034 NiCl2
+  V=4.00  nd_p_002 : -1.2893 eV/atom   0.2634 Li5.44Nd0.02P0.98S4.4Cl1.6 + 0.7366 LiNiO2 -> 2.169 Li + 0.1212 Ni(PO3)2 + 0.3494 SO2 + 0.005268 Nd(PO3)3 + 0.4047 NiS2 + 0.2107 NiCl2
+  V=4.00  nd_p_010 : -1.3231 eV/atom   0.3871 Li5.6Nd0.1P0.9S4.4Cl1.6 + 0.6129 LiNiO2 -> 2.781 Li + 0.1161 Ni(PO3)2 + 0.09032 SO2 + 0.6194 SCl + 0.03871 Nd(PO3)3 + 0.4968 NiS2
+  V=4.00  nd_p_020 : -1.3771 eV/atom   0.4317 Li5.8Nd0.2P0.8S4.4Cl1.6 + 0.5683 LiNiO2 -> 3.072 Li + 0.07194 SO2 + 0.04317 NdP5O14 + 0.6906 SCl + 0.04317 Nd(PO3)3 + 0.5683 NiS2
+  V=4.30  modelc   : -1.4493 eV/atom   0.6386 LiNiO2 + 0.3614 Li5.4P1S4.4Cl1.6 -> 2.59 Li + 0.1807 Ni(PO3)2 + 0.5783 SCl + 0.4578 NiS2 + 0.09639 SO2
+  V=4.30  nd_li_002: -1.4421 eV/atom   0.3641 Li5.34Nd0.02P1S4.4Cl1.6 + 0.6359 LiNiO2 -> 2.58 Li + 0.1711 Ni(PO3)2 + 0.5825 SCl + 0.4648 NiS2 + 0.007282 Nd(PO3)3 + 0.08981 SO2
+  V=4.30  nd_li_010: -1.4128 eV/atom   0.375 Li5.1Nd0.1P1S4.4Cl1.6 + 0.625 LiNiO2 -> 2.538 Li + 0.1312 Ni(PO3)2 + 0.6 SCl + 0.4938 NiS2 + 0.0375 Nd(PO3)3 + 0.0625 SO2
+  V=4.30  nd_only  : -1.3824 eV/atom   0.2752 Li4.8Nd0.2P1S4.4Cl1.6 + 0.7248 LiNiO2 -> 2.046 Li + 0.05505 Ni(PO3)2 + 0.4495 NiS2 + 0.05505 Nd(PO3)3 + 0.3119 SO2 + 0.2202 NiCl2
+  V=4.30  nd_p_002 : -1.4604 eV/atom   0.3686 Li5.44Nd0.02P0.98S4.4Cl1.6 + 0.6314 LiNiO2 -> 2.636 Li + 0.1622 Ni(PO3)2 + 0.5897 SCl + 0.007371 NdP5O14 + 0.4693 NiS2 + 0.09337 SO2
+  V=4.30  nd_p_010 : -1.5078 eV/atom   0.4 Li5.6Nd0.1P0.9S4.4Cl1.6 + 0.6 LiNiO2 -> 2.84 Li + 0.08 Ni(PO3)2 + 0.64 SCl + 0.04 NdP5O14 + 0.52 NiS2 + 0.08 SO2
+  V=4.30  nd_p_020 : -1.5731 eV/atom   0.4651 Li5.8Nd0.2P0.8S4.4Cl1.6 + 0.5349 LiNiO2 -> 3.233 Li + 0.7442 SCl + 0.04651 NdP5O14 + 0.5349 NiS2 + 0.04651 Nd(PO3)3 + 0.2326 S
+  V=4.50  modelc   : -1.5659 eV/atom   0.6386 LiNiO2 + 0.3614 Li5.4P1S4.4Cl1.6 -> 2.59 Li + 0.5783 SCl + 0.4578 NiS2 + 0.09639 SO2 + 0.1807 Ni(PO3)2
+  V=4.50  nd_li_002: -1.5579 eV/atom   0.3663 Li5.34Nd0.02P1S4.4Cl1.6 + 0.6337 LiNiO2 -> 2.59 Li + 0.007326 NdP5O14 + 0.5861 SCl + 0.4689 NiS2 + 0.08791 SO2 + 0.1648 Ni(PO3)2
+  V=4.50  nd_li_010: -1.5249 eV/atom   0.3871 Li5.1Nd0.1P1S4.4Cl1.6 + 0.6129 LiNiO2 -> 2.587 Li + 0.03871 NdP5O14 + 0.6194 SCl + 0.5161 NiS2 + 0.05161 SO2 + 0.09677 Ni(PO3)2
+  V=4.50  nd_only  : -1.4820 eV/atom   0.3896 Li4.8Nd0.2P1S4.4Cl1.6 + 0.6104 LiNiO2 -> 2.481 Li + 0.6234 SCl + 0.5325 NiS2 + 0.02597 SO2 + 0.07792 Ni(PO3)2 + 0.07792 Nd(PO3)3
+  V=4.50  nd_p_002 : -1.5783 eV/atom   0.3686 Li5.44Nd0.02P0.98S4.4Cl1.6 + 0.6314 LiNiO2 -> 2.636 Li + 0.007371 NdP5O14 + 0.5897 SCl + 0.4693 NiS2 + 0.09337 SO2 + 0.1622 Ni(PO3)2
+  V=4.50  nd_p_010 : -1.6325 eV/atom   0.4444 Li5.6Nd0.1P0.9S4.4Cl1.6 + 0.5556 LiNiO2 -> 3.044 Li + 0.04444 NiP4O11 + 0.04444 NdP5O14 + 0.7111 SCl + 0.5111 NiS2 + 0.2222 S
+  V=4.50  nd_p_020 : -1.7061 eV/atom   0.4651 Li5.8Nd0.2P0.8S4.4Cl1.6 + 0.5349 LiNiO2 -> 3.233 Li + 0.04651 NdP5O14 + 0.7442 SCl + 0.5349 NiS2 + 0.04651 Nd(PO3)3 + 0.2326 S
+
+######## cathode LiMnO2 (LiMnO2) ########
+  V=2.50  modelc   : -0.4570 eV/atom   0.6835 LiMnO2 + 0.3165 Li5.4P1S4.4Cl1.6 -> 0.8861 Li + 0.3165 Li3PO4 + 0.02532 Li2SO4 + 0.6835 MnS2 + 0.5063 LiCl
+  V=2.50  nd_li_002: -0.4556 eV/atom   0.6835 LiMnO2 + 0.3165 Li5.34Nd0.02P1S4.4Cl1.6 -> 0.8861 Li + 0.3101 Li3PO4 + 0.006329 NdPO4 + 0.02532 Li2SO4 + 0.6835 MnS2 + 0.5063 LiCl
+  V=2.50  nd_li_010: -0.4502 eV/atom   0.6835 LiMnO2 + 0.3165 Li5.1Nd0.1P1S4.4Cl1.6 -> 0.8861 Li + 0.2848 Li3PO4 + 0.03165 NdPO4 + 0.02532 Li2SO4 + 0.6835 MnS2 + 0.5063 LiCl
+  V=2.50  nd_only  : -0.4436 eV/atom   0.6835 LiMnO2 + 0.3165 Li4.8Nd0.2P1S4.4Cl1.6 -> 0.8861 Li + 0.2532 Li3PO4 + 0.06329 NdPO4 + 0.02532 Li2SO4 + 0.6835 MnS2 + 0.5063 LiCl
+  V=2.50  nd_p_002 : -0.4567 eV/atom   0.6827 LiMnO2 + 0.3173 Li5.44Nd0.02P0.98S4.4Cl1.6 -> 0.9264 Li + 0.3046 Li3PO4 + 0.006345 NdPO4 + 0.03046 Li2SO4 + 0.6827 MnS2 + 0.5076 LiCl
+  V=2.50  nd_p_010 : -0.4556 eV/atom   0.6795 LiMnO2 + 0.3205 Li5.6Nd0.1P0.9S4.4Cl1.6 -> 1.09 Li + 0.2564 Li3PO4 + 0.03205 NdPO4 + 0.05128 Li2SO4 + 0.6795 MnS2 + 0.5128 LiCl
+  V=2.50  nd_p_020 : -0.4541 eV/atom   0.6753 LiMnO2 + 0.3247 Li5.8Nd0.2P0.8S4.4Cl1.6 -> 1.299 Li + 0.1948 Li3PO4 + 0.06494 NdPO4 + 0.07792 Li2SO4 + 0.6753 MnS2 + 0.5195 LiCl
+  V=3.00  modelc   : -0.5675 eV/atom   0.7442 LiMnO2 + 0.2558 Li5.4P1S4.4Cl1.6 -> 1.419 Li + 0.1279 Mn2P2O7 + 0.4885 MnS2 + 0.1483 Li2SO4 + 0.4092 LiCl
+  V=3.00  nd_li_002: -0.5661 eV/atom   0.7433 LiMnO2 + 0.2567 Li5.34Nd0.02P1S4.4Cl1.6 -> 1.411 Li + 0.1258 Mn2P2O7 + 0.005135 NdPO4 + 0.4917 MnS2 + 0.1463 Li2SO4 + 0.4108 LiCl
+  V=3.00  nd_li_010: -0.5603 eV/atom   0.7392 LiMnO2 + 0.2608 Li5.1Nd0.1P1S4.4Cl1.6 -> 1.375 Li + 0.1173 Mn2P2O7 + 0.02608 NdPO4 + 0.5046 MnS2 + 0.1382 Li2SO4 + 0.4172 LiCl
+  V=3.00  nd_only  : -0.5530 eV/atom   0.734 LiMnO2 + 0.266 Li4.8Nd0.2P1S4.4Cl1.6 -> 1.33 Li + 0.1064 Mn2P2O7 + 0.05319 NdPO4 + 0.5213 MnS2 + 0.1277 Li2SO4 + 0.4255 LiCl
+  V=3.00  nd_p_002 : -0.5711 eV/atom   0.7133 LiMnO2 + 0.2867 Li5.44Nd0.02P0.98S4.4Cl1.6 -> 1.319 Li + 0.1376 Li2MnP2O7 + 0.005734 NdPO4 + 0.5757 MnS2 + 0.1101 Li2SO4 + 0.4587 LiCl
+  V=3.00  nd_p_010 : -0.5867 eV/atom   0.7059 LiMnO2 + 0.2941 Li5.6Nd0.1P0.9S4.4Cl1.6 -> 1.412 Li + 0.1176 Li2MnP2O7 + 0.02941 NdPO4 + 0.5882 MnS2 + 0.1176 Li2SO4 + 0.4706 LiCl
+  V=3.00  nd_p_020 : -0.6081 eV/atom   0.6721 LiMnO2 + 0.3279 Li5.8Nd0.2P0.8S4.4Cl1.6 -> 1.459 Li + 0.09836 Li4P2O7 + 0.06557 NdPO4 + 0.6721 MnS2 + 0.09836 Li2SO4 + 0.5246 LiCl
+  V=3.50  modelc   : -0.7787 eV/atom   0.6 LiMnO2 + 0.4 Li5.4P1S4.4Cl1.6 -> 2.76 Li + 0.64 SCl + 0.4 MnS2 + 0.2 Mn(PO3)2 + 0.32 S
+  V=3.50  nd_li_002: -0.7749 eV/atom   0.6746 LiMnO2 + 0.3254 Li5.34Nd0.02P1S4.4Cl1.6 -> 2.412 Li + 0.5011 SCl + 0.4187 MnS2 + 0.09328 MnSO4 + 0.006508 NdCl3 + 0.1627 Mn(PO3)2
+  V=3.50  nd_li_010: -0.7634 eV/atom   0.8198 LiMnO2 + 0.1802 Li5.1Nd0.1P1S4.4Cl1.6 -> 1.739 Li + 0.09009 Mn2P2O7 + 0.1171 MnCl2 + 0.2703 MnS2 + 0.2523 MnSO4 + 0.01802 NdCl3
+  V=3.50  nd_only  : -0.7525 eV/atom   0.8131 LiMnO2 + 0.1869 Li4.8Nd0.2P1S4.4Cl1.6 -> 1.71 Li + 0.09346 Mn2P2O7 + 0.09346 MnCl2 + 0.2897 MnS2 + 0.243 MnSO4 + 0.03738 NdCl3
+  V=3.50  nd_p_002 : -0.7862 eV/atom   0.5951 LiMnO2 + 0.4049 Li5.44Nd0.02P0.98S4.4Cl1.6 -> 2.798 Li + 0.6235 SCl + 0.3968 MnS2 + 0.008097 NdCl3 + 0.1984 Mn(PO3)2 + 0.3644 S
+  V=3.50  nd_p_010 : -0.8175 eV/atom   0.5745 LiMnO2 + 0.4255 Li5.6Nd0.1P0.9S4.4Cl1.6 -> 2.957 Li + 0.5532 SCl + 0.383 MnS2 + 0.04255 NdCl3 + 0.1915 Mn(PO3)2 + 0.5532 S
+  V=3.50  nd_p_020 : -0.8596 eV/atom   0.5455 LiMnO2 + 0.4545 Li5.8Nd0.2P0.8S4.4Cl1.6 -> 3.182 Li + 0.4545 SCl + 0.3636 MnS2 + 0.09091 NdCl3 + 0.1818 Mn(PO3)2 + 0.8182 S
+  V=4.00  modelc   : -1.0787 eV/atom   0.6 LiMnO2 + 0.4 Li5.4P1S4.4Cl1.6 -> 2.76 Li + 0.4 MnS2 + 0.64 SCl + 0.2 Mn(PO3)2 + 0.32 S
+  V=4.00  nd_li_002: -1.0716 eV/atom   0.6 LiMnO2 + 0.4 Li5.34Nd0.02P1S4.4Cl1.6 -> 2.736 Li + 0.4 MnS2 + 0.616 SCl + 0.008 NdCl3 + 0.2 Mn(PO3)2 + 0.344 S
+  V=4.00  nd_li_010: -1.0436 eV/atom   0.6 LiMnO2 + 0.4 Li5.1Nd0.1P1S4.4Cl1.6 -> 2.64 Li + 0.4 MnS2 + 0.52 SCl + 0.04 NdCl3 + 0.2 Mn(PO3)2 + 0.44 S
+  V=4.00  nd_only  : -1.0091 eV/atom   0.6 LiMnO2 + 0.4 Li4.8Nd0.2P1S4.4Cl1.6 -> 2.52 Li + 0.4 MnS2 + 0.4 SCl + 0.08 NdCl3 + 0.2 Mn(PO3)2 + 0.56 S
+  V=4.00  nd_p_002 : -1.0890 eV/atom   0.5951 LiMnO2 + 0.4049 Li5.44Nd0.02P0.98S4.4Cl1.6 -> 2.798 Li + 0.3968 MnS2 + 0.6235 SCl + 0.008097 NdCl3 + 0.1984 Mn(PO3)2 + 0.3644 S
+  V=4.00  nd_p_010 : -1.1329 eV/atom   0.04762 LiMnO2 + 0.9524 Li5.6Nd0.1P0.9S4.4Cl1.6 -> 5.381 Li + 0.03175 MnS2 + 0.4127 P2S7 + 1.238 SCl + 0.09524 NdCl3 + 0.01587 Mn(PO3)2
+  V=4.00  nd_p_020 : -1.2204 eV/atom   Li5.8Nd0.2P0.8S4.4Cl1.6 -> 5.8 Li + 0.4 P2S7 + SCl + 0.2 NdCl3 + 0.6 S  ⛔끝점 (mixing_x=1.000000) — 계면량 아님(자체분해)
+  V=4.30  modelc   : -1.2720 eV/atom   0.1603 LiMnO2 + 0.8397 Li5.4P1S4.4Cl1.6 -> 4.695 Li + 1.13 SCl + 0.3664 P2S7 + 0.1069 MnCl2 + 0.05344 Mn(PO3)2
+  V=4.30  nd_li_002: -1.2587 eV/atom   0.1486 LiMnO2 + 0.8514 Li5.34Nd0.02P1S4.4Cl1.6 -> 4.695 Li + 1.113 SCl + 0.3762 P2S7 + 0.09907 MnCl2 + 0.01703 NdCl3 + 0.04954 Mn(PO3)2
+  V=4.30  nd_li_010: -1.2143 eV/atom   0.6 LiMnO2 + 0.4 Li5.1Nd0.1P1S4.4Cl1.6 -> 2.64 Li + 0.52 SCl + 0.4 MnS2 + 0.04 NdCl3 + 0.2 Mn(PO3)2 + 0.44 S
+  V=4.30  nd_only  : -1.1707 eV/atom   0.6 LiMnO2 + 0.4 Li4.8Nd0.2P1S4.4Cl1.6 -> 2.52 Li + 0.4 SCl + 0.4 MnS2 + 0.08 NdCl3 + 0.2 Mn(PO3)2 + 0.56 S
+  V=4.30  nd_p_002 : -1.2910 eV/atom   Li5.44Nd0.02P0.98S4.4Cl1.6 -> 5.44 Li + 1.205 SCl + 0.06706 PCl5 + 0.4565 P2S7 + 0.02 NdCl3  ⛔끝점 (mixing_x=1.000000) — 계면량 아님(자체분해)
+  V=4.30  nd_p_010 : -1.3725 eV/atom   Li5.6Nd0.1P0.9S4.4Cl1.6 -> 5.6 Li + 1.271 SCl + 0.005882 PCl5 + 0.4471 P2S7 + 0.1 NdCl3  ⛔끝점 (mixing_x=1.000000) — 계면량 아님(자체분해)
+  V=4.30  nd_p_020 : -1.4689 eV/atom   Li5.8Nd0.2P0.8S4.4Cl1.6 -> 5.8 Li + SCl + 0.4 P2S7 + 0.2 NdCl3 + 0.6 S  ⛔끝점 (mixing_x=1.000000) — 계면량 아님(자체분해)
+  V=4.50  modelc   : -1.4249 eV/atom   Li5.4P1S4.4Cl1.6 -> 5.4 Li + 1.188 SCl + 0.4588 P2S7 + 0.08235 PCl5  ⛔끝점 (mixing_x=1.000000) — 계면량 아님(자체분해)
+  V=4.50  nd_li_002: -1.4086 eV/atom   Li5.34Nd0.02P1S4.4Cl1.6 -> 5.34 Li + 1.164 SCl + 0.4624 P2S7 + 0.07529 PCl5 + 0.02 NdCl3  ⛔끝점 (mixing_x=1.000000) — 계면량 아님(자체분해)
+  V=4.50  nd_li_010: -1.3448 eV/atom   0.09836 LiMnO2 + 0.9016 Li5.1Nd0.1P1S4.4Cl1.6 -> 4.697 Li + 1.041 SCl + 0.418 P2S7 + 0.06557 MnCl2 + 0.09016 NdCl3 + 0.03279 Mn(PO3)2
+  V=4.50  nd_only  : -1.2784 eV/atom   0.6 LiMnO2 + 0.4 Li4.8Nd0.2P1S4.4Cl1.6 -> 2.52 Li + 0.4 SCl + 0.4 MnS2 + 0.08 NdCl3 + 0.2 Mn(PO3)2 + 0.56 S
+  V=4.50  nd_p_002 : -1.4464 eV/atom   Li5.44Nd0.02P0.98S4.4Cl1.6 -> 5.44 Li + 1.205 SCl + 0.4565 P2S7 + 0.06706 PCl5 + 0.02 NdCl3  ⛔끝점 (mixing_x=1.000000) — 계면량 아님(자체분해)
+  V=4.50  nd_p_010 : -1.5325 eV/atom   Li5.6Nd0.1P0.9S4.4Cl1.6 -> 5.6 Li + 1.271 SCl + 0.4471 P2S7 + 0.005882 PCl5 + 0.1 NdCl3  ⛔끝점 (mixing_x=1.000000) — 계면량 아님(자체분해)
+  V=4.50  nd_p_020 : -1.6347 eV/atom   Li5.8Nd0.2P0.8S4.4Cl1.6 -> 5.8 Li + SCl + 0.4 P2S7 + 0.2 NdCl3 + 0.6 S  ⛔끝점 (mixing_x=1.000000) — 계면량 아님(자체분해)
+
+######## cathode NMC811 (LiNi0.8Co0.1Mn0.1O2) ########
+  V=2.50  modelc   : -0.7098 eV/atom   0.7397 Li1Mn0.1Co0.1Ni0.8O2 + 0.2603 Li5.4P1S4.4Cl1.6 -> 0.7288 Li + 0.07397 Co(NiS2)2 + 0.2603 Li3PO4 + 0.1479 Ni3S4 + 0.1096 Li2SO4 + 0.07397 MnS2 + 0.4164 LiCl
+  V=2.50  nd_li_002: -0.7083 eV/atom   0.7397 Li1Mn0.1Co0.1Ni0.8O2 + 0.2603 Li5.34Nd0.02P1S4.4Cl1.6 -> 0.7288 Li + 0.07397 Co(NiS2)2 + 0.2551 Li3PO4 + 0.005205 NdPO4 + 0.1479 Ni3S4 + 0.1096 Li2SO4 + 0.07397 MnS2 + 0.4164 LiCl
+  V=2.50  nd_li_010: -0.7027 eV/atom   0.7606 Li1Mn0.1Co0.1Ni0.8O2 + 0.2394 Li5.1Nd0.1P1S4.4Cl1.6 -> 0.8225 Li + 0.07606 LiMnPO4 + 0.07606 Co(NiS2)2 + 0.1394 Li3PO4 + 0.02394 NdPO4 + 0.1521 Ni3S4 + 0.1408 Li2SO4 + 0.3831 LiCl
+  V=2.50  nd_only  : -0.6957 eV/atom   0.7606 Li1Mn0.1Co0.1Ni0.8O2 + 0.2394 Li4.8Nd0.2P1S4.4Cl1.6 -> 0.8225 Li + 0.07606 LiMnPO4 + 0.07606 Co(NiS2)2 + 0.1155 Li3PO4 + 0.04789 NdPO4 + 0.1521 Ni3S4 + 0.1408 Li2SO4 + 0.3831 LiCl
+  V=2.50  nd_p_002 : -0.7092 eV/atom   0.739 Li1Mn0.1Co0.1Ni0.8O2 + 0.261 Li5.44Nd0.02P0.98S4.4Cl1.6 -> 0.7621 Li + 0.0739 Co(NiS2)2 + 0.2505 Li3PO4 + 0.00522 NdPO4 + 0.1478 Ni3S4 + 0.1137 Li2SO4 + 0.0739 MnS2 + 0.4176 LiCl
+  V=2.50  nd_p_010 : -0.7065 eV/atom   0.7571 Li1Mn0.1Co0.1Ni0.8O2 + 0.2429 Li5.6Nd0.1P0.9S4.4Cl1.6 -> 0.9771 Li + 0.07571 LiMnPO4 + 0.07571 Co(NiS2)2 + 0.1186 Li3PO4 + 0.02429 NdPO4 + 0.1514 Ni3S4 + 0.16 Li2SO4 + 0.3886 LiCl
+  V=2.50  nd_p_020 : -0.7032 eV/atom   0.7536 Li1Mn0.1Co0.1Ni0.8O2 + 0.2464 Li5.8Nd0.2P0.8S4.4Cl1.6 -> 1.136 Li + 0.07536 LiMnPO4 + 0.07536 Co(NiS2)2 + 0.07246 Li3PO4 + 0.04928 NdPO4 + 0.1507 Ni3S4 + 0.1797 Li2SO4 + 0.3942 LiCl
+  V=3.00  modelc   : -0.8143 eV/atom   0.7576 Li1Mn0.1Co0.1Ni0.8O2 + 0.2424 Li5.4P1S4.4Cl1.6 -> 0.9551 Li + 0.07576 Co(NiS2)2 + 0.0833 Li4P2O7 + 0.07576 LiMnPO4 + 0.1515 Ni3S4 + 0.1573 Li2SO4 + 0.3878 LiCl
+  V=3.00  nd_li_002: -0.8128 eV/atom   0.7577 Li1Mn0.1Co0.1Ni0.8O2 + 0.2423 Li5.34Nd0.02P1S4.4Cl1.6 -> 0.9512 Li + 0.07577 Co(NiS2)2 + 0.08083 Li4P2O7 + 0.07577 LiMnPO4 + 0.004846 NdPO4 + 0.1515 Ni3S4 + 0.1568 Li2SO4 + 0.3877 LiCl
+  V=3.00  nd_li_010: -0.8065 eV/atom   0.7581 Li1Mn0.1Co0.1Ni0.8O2 + 0.2419 Li5.1Nd0.1P1S4.4Cl1.6 -> 0.9355 Li + 0.07581 Co(NiS2)2 + 0.07097 Li4P2O7 + 0.07581 LiMnPO4 + 0.02419 NdPO4 + 0.1516 Ni3S4 + 0.1548 Li2SO4 + 0.3871 LiCl
+  V=3.00  nd_only  : -0.7988 eV/atom   0.7585 Li1Mn0.1Co0.1Ni0.8O2 + 0.2415 Li4.8Nd0.2P1S4.4Cl1.6 -> 0.9159 Li + 0.07585 Co(NiS2)2 + 0.05868 Li4P2O7 + 0.07585 LiMnPO4 + 0.0483 NdPO4 + 0.1517 Ni3S4 + 0.1524 Li2SO4 + 0.3864 LiCl
+  V=3.00  nd_p_002 : -0.8175 eV/atom   0.7571 Li1Mn0.1Co0.1Ni0.8O2 + 0.2429 Li5.44Nd0.02P0.98S4.4Cl1.6 -> 0.9788 Li + 0.07571 Co(NiS2)2 + 0.07873 Li4P2O7 + 0.07571 LiMnPO4 + 0.004858 NdPO4 + 0.1514 Ni3S4 + 0.1602 Li2SO4 + 0.3886 LiCl
+  V=3.00  nd_p_010 : -0.8302 eV/atom   0.7536 Li1Mn0.1Co0.1Ni0.8O2 + 0.2464 Li5.6Nd0.1P0.9S4.4Cl1.6 -> 1.136 Li + 0.07536 Co(NiS2)2 + 0.07536 Li2MnP2O7 + 0.02319 Li4P2O7 + 0.02464 NdPO4 + 0.1507 Ni3S4 + 0.1797 Li2SO4 + 0.3942 LiCl
+  V=3.00  nd_p_020 : -0.8463 eV/atom   0.7509 Li1Mn0.1Co0.1Ni0.8O2 + 0.2491 Li5.8Nd0.2P0.8S4.4Cl1.6 -> 1.258 Li + 0.07509 Co(NiS2)2 + 0.07435 Li2MnP2O7 + 0.0007435 LiMnPO4 + 0.04981 NdPO4 + 0.1502 Ni3S4 + 0.1948 Li2SO4 + 0.3985 LiCl
+  V=3.50  modelc   : -0.9853 eV/atom   0.7561 Li1Mn0.1Co0.1Ni0.8O2 + 0.2439 Li5.4P1S4.4Cl1.6 -> 1.683 Li + 0.04634 Ni(PO3)2 + 0.3634 NiS2 + 0.07561 CoS2 + 0.1951 NiCl2 + 0.1951 Li2SO4 + 0.07561 Mn(PO3)2
+  V=3.50  nd_li_002: -0.9830 eV/atom   0.7542 Li1Mn0.1Co0.1Ni0.8O2 + 0.2458 Li5.34Nd0.02P1S4.4Cl1.6 -> 1.676 Li + 0.03766 Ni(PO3)2 + 0.369 NiS2 + 0.004916 LiNd(PO3)4 + 0.07542 CoS2 + 0.1967 NiCl2 + 0.1927 Li2SO4 + 0.07542 Mn(PO3)2
+  V=3.50  nd_li_010: -0.9742 eV/atom   0.7617 Li1Mn0.1Co0.1Ni0.8O2 + 0.2383 Li5.1Nd0.1P1S4.4Cl1.6 -> 1.702 Li + 0.0715 Ni(PO3)2 + 0.07617 Li2Mn(SO4)2 + 0.3472 NiS2 + 0.02383 LiNd(PO3)4 + 0.07617 CoS2 + 0.1907 NiCl2 + 0.04974 Li2SO4
+  V=3.50  nd_only  : -0.9626 eV/atom   0.7514 Li1Mn0.1Co0.1Ni0.8O2 + 0.2486 Li4.8Nd0.2P1S4.4Cl1.6 -> 1.667 Li + 0.02486 Ni(PO3)2 + 0.07514 Li2Mn(SO4)2 + 0.3773 NiS2 + 0.04973 LiNd(PO3)4 + 0.07514 CoS2 + 0.1989 NiCl2 + 0.03892 Li2SO4
+  V=3.50  nd_p_002 : -0.9910 eV/atom   0.7533 Li1Mn0.1Co0.1Ni0.8O2 + 0.2467 Li5.44Nd0.02P0.98S4.4Cl1.6 -> 1.7 Li + 0.03567 Ni(PO3)2 + 0.3697 NiS2 + 0.004933 LiNd(PO3)4 + 0.07533 CoS2 + 0.1973 NiCl2 + 0.1954 Li2SO4 + 0.07533 Mn(PO3)2
+  V=3.50  nd_p_010 : -1.0149 eV/atom   0.7437 Li1Mn0.1Co0.1Ni0.8O2 + 0.2563 Li5.6Nd0.1P0.9S4.4Cl1.6 -> 1.776 Li + 0.01031 Li2Mn(SO4)2 + 0.39 NiS2 + 0.02563 LiNd(PO3)4 + 0.07437 CoS2 + 0.205 NiCl2 + 0.1783 Li2SO4 + 0.06407 Mn(PO3)2
+  V=3.50  nd_p_020 : -1.0448 eV/atom   0.7416 Li1Mn0.1Co0.1Ni0.8O2 + 0.2584 Li5.8Nd0.2P0.8S4.4Cl1.6 -> 1.906 Li + 0.07416 Li2Mn(SO4)2 + 0.3865 NiS2 + 0.05169 LiNd(PO3)4 + 0.07416 CoS2 + 0.2067 NiCl2 + 0.06742 Li2SO4
+  V=4.00  modelc   : -1.2395 eV/atom   0.6386 Li1Mn0.1Co0.1Ni0.8O2 + 0.3614 Li5.4P1S4.4Cl1.6 -> 2.59 Li + 0.1169 Ni(PO3)2 + 0.09639 SO2 + 0.5783 SCl + 0.394 NiS2 + 0.06386 CoS2 + 0.06386 Mn(PO3)2
+  V=4.00  nd_li_002: -1.2340 eV/atom   0.6359 Li1Mn0.1Co0.1Ni0.8O2 + 0.3641 Li5.34Nd0.02P1S4.4Cl1.6 -> 2.58 Li + 0.1075 Ni(PO3)2 + 0.08981 SO2 + 0.5825 SCl + 0.007282 Nd(PO3)3 + 0.4012 NiS2 + 0.06359 CoS2 + 0.06359 Mn(PO3)2
+  V=4.00  nd_li_010: -1.2150 eV/atom   0.7321 Li1Mn0.1Co0.1Ni0.8O2 + 0.2679 Li5.1Nd0.1P1S4.4Cl1.6 -> 2.098 Li + 0.02054 Ni(PO3)2 + 0.3304 SO2 + 0.02679 Nd(PO3)3 + 0.3509 NiS2 + 0.07321 CoS2 + 0.2143 NiCl2 + 0.07321 Mn(PO3)2
+  V=4.00  nd_only  : -1.1923 eV/atom   0.7458 Li1Mn0.1Co0.1Ni0.8O2 + 0.2542 Li4.8Nd0.2P1S4.4Cl1.6 -> 1.966 Li + 0.05254 Ni(PO3)2 + 0.2119 SO2 + 0.02542 Nd2(SO4)3 + 0.3407 NiS2 + 0.07458 CoS2 + 0.2034 NiCl2 + 0.07458 Mn(PO3)2
+  V=4.00  nd_p_002 : -1.2493 eV/atom   0.6337 Li1Mn0.1Co0.1Ni0.8O2 + 0.3663 Li5.44Nd0.02P0.98S4.4Cl1.6 -> 2.626 Li + 0.1051 Ni(PO3)2 + 0.09524 SO2 + 0.5861 SCl + 0.007326 Nd(PO3)3 + 0.4018 NiS2 + 0.06337 CoS2 + 0.06337 Mn(PO3)2
+  V=4.00  nd_p_010 : -1.2908 eV/atom   0.6 Li1Mn0.1Co0.1Ni0.8O2 + 0.4 Li5.6Nd0.1P0.9S4.4Cl1.6 -> 2.84 Li + 0.02 Ni(PO3)2 + 0.08 SO2 + 0.04 NdP5O14 + 0.64 SCl + 0.46 NiS2 + 0.06 CoS2 + 0.06 Mn(PO3)2
+  V=4.00  nd_p_020 : -1.3441 eV/atom   0.5909 Li1Mn0.1Co0.1Ni0.8O2 + 0.4091 Li5.8Nd0.2P0.8S4.4Cl1.6 -> 2.964 Li + 0.06364 SO2 + 0.006061 Nd2(SO4)3 + 0.6545 SCl + 0.0697 Nd(PO3)3 + 0.4727 NiS2 + 0.05909 CoS2 + 0.05909 Mn(PO3)2
+  V=4.30  modelc   : -1.4147 eV/atom   0.6199 Li1Mn0.1Co0.1Ni0.8O2 + 0.3801 Li5.4P1S4.4Cl1.6 -> 2.673 Li + 0.06199 MnP4O11 + 0.06608 Ni(PO3)2 + 0.6082 SCl + 0.4298 NiS2 + 0.06199 CoS2 + 0.0807 SO2
+  V=4.30  nd_li_002: -1.4078 eV/atom   0.6149 Li1Mn0.1Co0.1Ni0.8O2 + 0.3851 Li5.34Nd0.02P1S4.4Cl1.6 -> 2.671 Li + 0.06149 MnP4O11 + 0.0503 Ni(PO3)2 + 0.6161 SCl + 0.007701 NdP5O14 + 0.4416 NiS2 + 0.06149 CoS2 + 0.07192 SO2
+  V=4.30  nd_li_010: -1.3796 eV/atom   0.6129 Li1Mn0.1Co0.1Ni0.8O2 + 0.3871 Li5.1Nd0.1P1S4.4Cl1.6 -> 2.587 Li + 0.03548 Ni(PO3)2 + 0.6194 SCl + 0.03871 NdP5O14 + 0.4548 NiS2 + 0.06129 CoS2 + 0.05161 SO2 + 0.06129 Mn(PO3)2
+  V=4.30  nd_only  : -1.3429 eV/atom   0.6104 Li1Mn0.1Co0.1Ni0.8O2 + 0.3896 Li4.8Nd0.2P1S4.4Cl1.6 -> 2.481 Li + 0.01688 Ni(PO3)2 + 0.6234 SCl + 0.4714 NiS2 + 0.07792 Nd(PO3)3 + 0.06104 CoS2 + 0.02597 SO2 + 0.06104 Mn(PO3)2
+  V=4.30  nd_p_002 : -1.4268 eV/atom   0.6126 Li1Mn0.1Co0.1Ni0.8O2 + 0.3874 Li5.44Nd0.02P0.98S4.4Cl1.6 -> 2.72 Li + 0.06126 MnP4O11 + 0.04791 Ni(PO3)2 + 0.6198 SCl + 0.007747 NdP5O14 + 0.4422 NiS2 + 0.06126 CoS2 + 0.07771 SO2
+  V=4.30  nd_p_010 : -1.4776 eV/atom   0.5581 Li1Mn0.1Co0.1Ni0.8O2 + 0.4419 Li5.6Nd0.1P0.9S4.4Cl1.6 -> 3.033 Li + 0.03256 MnP4O11 + 0.707 SCl + 0.04419 NdP5O14 + 0.4465 NiS2 + 0.05581 CoS2 + 0.02326 Mn(PO3)2 + 0.2326 S
+  V=4.30  nd_p_020 : -1.5412 eV/atom   0.5455 Li1Mn0.1Co0.1Ni0.8O2 + 0.4545 Li5.8Nd0.2P0.8S4.4Cl1.6 -> 3.182 Li + 0.7091 SCl + 0.4364 NiS2 + 0.08485 Nd(PO3)3 + 0.05455 CoS2 + 0.006061 NdCl3 + 0.05455 Mn(PO3)2 + 0.3091 S
+  V=4.50  modelc   : -1.5330 eV/atom   0.6091 Li1Mn0.1Co0.1Ni0.8O2 + 0.3909 Li5.4P1S4.4Cl1.6 -> 2.72 Li + 0.03681 NiP4O11 + 0.06091 MnP4O11 + 0.6254 SCl + 0.06091 CoS2 + 0.4505 NiS2 + 0.07166 SO2
+  V=4.50  nd_li_002: -1.5252 eV/atom   0.6149 Li1Mn0.1Co0.1Ni0.8O2 + 0.3851 Li5.34Nd0.02P1S4.4Cl1.6 -> 2.671 Li + 0.06149 MnP4O11 + 0.007701 NdP5O14 + 0.6161 SCl + 0.06149 CoS2 + 0.4416 NiS2 + 0.07192 SO2 + 0.0503 Ni(PO3)2
+  V=4.50  nd_li_010: -1.4929 eV/atom   0.6 Li1Mn0.1Co0.1Ni0.8O2 + 0.4 Li5.1Nd0.1P1S4.4Cl1.6 -> 2.64 Li + 0.04 MnP4O11 + 0.04 NdP5O14 + 0.64 SCl + 0.06 CoS2 + 0.48 NiS2 + 0.04 SO2 + 0.02 Mn(PO3)2
+  V=4.50  nd_only  : -1.4501 eV/atom   0.6043 Li1Mn0.1Co0.1Ni0.8O2 + 0.3957 Li4.8Nd0.2P1S4.4Cl1.6 -> 2.504 Li + 0.01871 NdP5O14 + 0.6331 SCl + 0.06043 CoS2 + 0.4835 NiS2 + 0.02014 SO2 + 0.06043 Nd(PO3)3 + 0.06043 Mn(PO3)2
+  V=4.50  nd_p_002 : -1.5469 eV/atom   0.5745 Li1Mn0.1Co0.1Ni0.8O2 + 0.4255 Li5.44Nd0.02P0.98S4.4Cl1.6 -> 2.889 Li + 0.03617 NiP4O11 + 0.05745 MnP4O11 + 0.008511 NdP5O14 + 0.6809 SCl + 0.05745 CoS2 + 0.4234 NiS2 + 0.2298 S
+  V=4.50  nd_p_010 : -1.6048 eV/atom   0.5581 Li1Mn0.1Co0.1Ni0.8O2 + 0.4419 Li5.6Nd0.1P0.9S4.4Cl1.6 -> 3.033 Li + 0.03256 MnP4O11 + 0.04419 NdP5O14 + 0.707 SCl + 0.05581 CoS2 + 0.4465 NiS2 + 0.02326 Mn(PO3)2 + 0.2326 S
+  V=4.50  nd_p_020 : -1.6732 eV/atom   0.5455 Li1Mn0.1Co0.1Ni0.8O2 + 0.4545 Li5.8Nd0.2P0.8S4.4Cl1.6 -> 3.182 Li + 0.7091 SCl + 0.05455 CoS2 + 0.4364 NiS2 + 0.08485 Nd(PO3)3 + 0.006061 NdCl3 + 0.05455 Mn(PO3)2 + 0.3091 S
+
+══ 산물 인구조사 — 갭(§C) 대상 후보 32 종 ══
+  Li2SO4            77 회   처음 나온 곳 LiCoO2@2.50V/modelc
+  SCl               73 회   처음 나온 곳 LiCoO2@3.50V/nd_p_010
+  CoS2              69 회   처음 나온 곳 LiCoO2@2.50V/modelc
+  LiCl              61 회   처음 나온 곳 LiCoO2@2.50V/modelc
+  NiS2              56 회   처음 나온 곳 LiNiO2@3.50V/modelc
+  NdPO4             48 회   처음 나온 곳 LiCoO2@2.50V/nd_li_002
+  Ni(PO3)2          40 회   처음 나온 곳 LiNiO2@3.50V/modelc
+  SO2               38 회   처음 나온 곳 LiCoO2@4.00V/modelc
+  NdP5O14           36 회   처음 나온 곳 LiCoO2@4.00V/nd_li_002
+  Mn(PO3)2          36 회   처음 나온 곳 LiMnO2@3.50V/modelc
+  MnS2              33 회   처음 나온 곳 LiMnO2@2.50V/modelc
+  S                 32 회   처음 나온 곳 LiCoO2@4.00V/nd_p_010
+  Li3PO4            28 회   처음 나온 곳 LiCoO2@2.50V/modelc
+  Ni3S4             28 회   처음 나온 곳 LiNiO2@2.50V/modelc
+  NiCl2             22 회   처음 나온 곳 LiNiO2@3.50V/modelc
+  Li4P2O7           21 회   처음 나온 곳 LiCoO2@3.00V/modelc
+  Nd(PO3)3          20 회   처음 나온 곳 LiCoO2@4.00V/nd_p_020
+  NdCl3             18 회   처음 나온 곳 LiMnO2@3.50V/nd_li_002
+  LiNd(PO3)4        17 회   처음 나온 곳 LiCoO2@3.50V/nd_li_002
+  CoP4O11           14 회   처음 나온 곳 LiCoO2@4.00V/modelc
+  Co(NiS2)2         14 회   처음 나온 곳 NMC811@2.50V/modelc
+  LiMnPO4           10 회   처음 나온 곳 NMC811@2.50V/nd_li_010
+  MnP4O11            9 회   처음 나온 곳 NMC811@4.30V/modelc
+  LiPO3              6 회   처음 나온 곳 LiCoO2@3.50V/modelc
+  Mn2P2O7            6 회   처음 나온 곳 LiMnO2@3.00V/modelc
+  P2S7               5 회   처음 나온 곳 LiCoO2@4.50V/nd_p_010
+  Nd2(SO4)3          5 회   처음 나온 곳 LiNiO2@3.50V/nd_only
+  MnCl2              5 회   처음 나온 곳 LiMnO2@3.50V/nd_li_010
+  Li2MnP2O7          4 회   처음 나온 곳 LiMnO2@3.00V/nd_p_002
+  Li2Mn(SO4)2        4 회   처음 나온 곳 NMC811@3.50V/nd_li_010
+  NiP4O11            3 회   처음 나온 곳 LiNiO2@4.50V/nd_p_010
+  MnSO4              3 회   처음 나온 곳 LiMnO2@3.50V/nd_li_002
+  (저장소 회계로 제외: {'Li': 158} — 상이 아니라 전기화학 장부다)
+  ⛔ 끝점 퇴화로 제외: 10/168 칸 — 전해질 자체분해라 계면 산물이 아니다
+  ⛔ 이 목록은 **최소 kink 산물**만이다. 다른 kink 의 상은 여기 없다 (카드 G2).
+  ⚠ 기체·홑원소(S·SO₂·PCl₅)는 **안 걸렀다** — 갭 대상인지는 카드·사람이 정한다.
+
+══ 재현 대조 vs db/properties/cei_interface_V_x002_2026_09_28.json ══
+  REPRODUCED · 겹친 칸 120 · 문턱 0.002 eV/atom
+  최대 차 0.000000  (LiCoO2 2.50 V modelc: -0.62382 → -0.62382)
+  이번에 새로 들어간 조성: nd_li_010, nd_p_010
+  ⚠ 옛 파일에만 있는 조성: comp1, lim_li_002, lim_li_020, lim_p_002, lim_p_002_asused, lpsocl, modelc_nd, nd_p_002_asused, ndo_li_002, o_only_003, o_only_03
+
+→ db/properties/cei_interface_V_x010_2026_09_28.json
