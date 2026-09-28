@@ -1,0 +1,314 @@
+{
+ "slug": "koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-28",
+ "sources": [
+  "3934ca2c-26._Redox-active_cathode_interphases_in_solid-state_batteries.pdf",
+  "761e590b-26._Sup_Redox-active_cathode_interphases_in_solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 (a) Representative charge and discharge proﬁles of Li–In|b-Li3PS4|NCM-811+b-Li3PS4 cells applying diﬀerent upper cut-oﬀvoltages. The SSBs are cycled between 2.7 V (lower boundary) and 4.0 V, 4.3 V, 4.6 V or 5.0 V vs. Li+/Li, respectively (a–d). The bold curves show the ﬁrst charge and discharge. The grey arrows denote the 2nd, 5th, 10th, 15th, 20th and 25th cycle (from right to left). The current density for all cycles corresponds to 0.1C (214 mA cm\u00042).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    232.9
+   ],
+   "w": 2177,
+   "h": 786,
+   "dpi": 300,
+   "src": "3934ca2c-26._Redox-active_cathode_interphases_in_solid-state_batteries.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 (a) Discharge capacities of Li–In|b-Li3PS4|NCM-811+b-Li3PS4 cells charged to cut-oﬀvoltages of 4.0 V, 4.3 V, 4.6 V and 5.0 V (vs. Li+/ Li), respectively. The ﬁrst cycle discharge capacity is always lower than the following ones. The current density was 214 mA cm\u00042, which corresponds to 0.1C for the cell charged to 4.3 V. (b) Evolution of the average charging voltage. The overvoltage increases during the ﬁrst battery cycles and increases with higher cut-oﬀvoltages.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    297.7,
+    298.0,
+    549.6
+   ],
+   "w": 1090,
+   "h": 1050,
+   "dpi": 300,
+   "src": "3934ca2c-26._Redox-active_cathode_interphases_in_solid-state_batteries.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Nyquist plots of the Li–In|b-Li3PS4|NCM-811+b-Li3PS4 cells cycled at 214 mA cm\u00042 to diﬀerent upper voltage limitations between 4.0 V and 5.0 V (a–d). Spectra recorded in the discharged state after 25 cycles and a 24 hour OCV period. Open circles indicate the measured data, and solid lines represent the resulting ﬁt using an equivalent circuit of (RQ)(RQ)(RQ)(RQ). The cathode interfacial resistance is highlighted in grey. These data show that the cathode/solid electrolyte impedance is severely growing when charging occurs at higher potentials.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    298.0,
+    324.1
+   ],
+   "w": 1090,
+   "h": 1166,
+   "dpi": 300,
+   "src": "3934ca2c-26._Redox-active_cathode_interphases_in_solid-state_batteries.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 (a) Evolution of Rcathode/SE upon cycling for Li–In|b-Li3PS4|NCM-811+b-Li3PS4 batteries charged to diﬀerent upper cut-oﬀvoltages between 4.0 V and 5.0 V (a–d). The resistance was evaluated from EIS measurements, recorded after each charge and discharge process. Filled boxes represent the charged and open boxes the discharged state. At 4.0 V a formation step reduces the interfacial resistance during the ﬁrst few cycles. This formation step is less obvious when charging to higher cut-oﬀvoltages. The resistance increase by oxidative decomposition detrimentally mitigates the resistance drop from the surface formation. The diﬀerence in the interfacial resistance between the charged and discharged states during cycling suggests a partially reversible redox process that limits ion conduction at the interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    511.0,
+    558.8,
+    666.8
+   ],
+   "w": 2177,
+   "h": 650,
+   "dpi": 300,
+   "src": "3934ca2c-26._Redox-active_cathode_interphases_in_solid-state_batteries.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Waterfall plots of the S 2p signal vs. etching time after 25 cycles at 0.1C for the diﬀerent upper cut-oﬀvoltages (4.0 V to 5.0 V, a–d). Stacked spectra taken after 0 to 16 minutes of etching time are shown as the most signiﬁcant changes are observed within this etching time. Additionally, a spectrum at 40 minutes of etching is provided indicating no further changes upon increased etching time. Exemplary peak de- convolution is shown for the spectra obtained directly at the cathode/CC interface surface without etching (surface ¼ 0 min). Blue peaks are attributed to equivalent Pd+–Sd\u0004 bonds (161.4 eV). Green peaks are correlated with bridged P–[S]n–P binding environments (162.7 eV). The orange signals are assigned to more oxidized sulfur such as in S0 (163.5 eV). Clearly, the thiophosphate SE is oxidized at the interface to the CC.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    450.5,
+    558.8,
+    666.9
+   ],
+   "w": 2177,
+   "h": 902,
+   "dpi": 300,
+   "src": "3934ca2c-26._Redox-active_cathode_interphases_in_solid-state_batteries.pdf",
+   "blank": 0.867
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 (a) Quantiﬁcation of the cathode interface at the current collector from XPS S 2p spectra at diﬀerent etching times and for diﬀerent upper cut-oﬀvoltages. Cathodes were cycled 25 times at diﬀerent cut-oﬀvoltages ranging from 4.0 V to 5.0 V (a–d) and were measured in the discharged state. The current collector is illustrated in grey and the thickness of the cathode electrolyte interphase region (at the current collector) is only estimated. The checkered blue area represents the fraction of sulfur atoms in PS4 3\u0004 tetrahedra, which gives a good measure of the SE oxidation at the CC interface. The oxidized species correlated with bridging P–S–P and S–S type environments are lower in the phase fraction, and their fractions decrease with increasing etching time. The fraction at a given depth of the interphase developed after 25 cycles is larger at higher cut-oﬀvoltages. These data show ",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    425.4,
+    558.8,
+    646.9
+   ],
+   "w": 2177,
+   "h": 924,
+   "dpi": 300,
+   "src": "3934ca2c-26._Redox-active_cathode_interphases_in_solid-state_batteries.pdf",
+   "blank": 0.863
+  },
+  {
+   "key": "f7m",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7_manual_p8.png",
+   "caption": "Fig. 7 In situ XPS measurements of the SE b-Li3PS4 dispersed with C65 conductive carbon (75 : 25 wt%) during electrochemical polarization. As prepared, the S 2p signal is composed of mainly P–S bonds which can be assigned to the PS4 (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    138.0,
+    469.0,
+    457.0,
+    663.0
+   ],
+   "w": 1330,
+   "h": 809,
+   "dpi": 300,
+   "src": "3934ca2c-26._Redox-active_cathode_interphases_in_solid-state_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 자동 추출이 8 쪽 캡션 블록('Fig. 7\\nIn situ XPS …', 줄바꿈으로 시작)을 캡션으로 잡지 못해 누락. 래스터 xref 59(1314×792)의 bbox (140, 471, 455, 661) + 여백 2 pt 로 렌더"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Fig. 8 Reaction scheme for the proposed redox reactions of Li3PS4. During oxidation, two Li3PS4 units can merge to a corner- or edge-sharing species, Li4P2S8 and Li4P2S7 or Li2P2S6, respectively. Lithium ions are transferred to the counter electrode and elemental sulfur is accumulated at the positive electrode. During reduction the process is reversed, the original Li3PS4 structure is expected to be formed again. However, further reduction to Li4P2S6 under Li2S subtraction is likely. For each species only a single tautomeric structure is shown.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.9,
+    267.6
+   ],
+   "w": 2177,
+   "h": 930,
+   "dpi": 300,
+   "src": "3934ca2c-26._Redox-active_cathode_interphases_in_solid-state_batteries.pdf",
+   "blank": 0.843
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure S1: Example of an extracted SSB pellet of a NCM-811 / β-Li3PS4 | β- Li3PS4 | Li-In battery, which was used for XPS depth profiling.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.1,
+    511.5,
+    182.3
+   ],
+   "w": 1782,
+   "h": 473,
+   "dpi": 300,
+   "src": "761e590b-26._Sup_Redox-active_cathode_interphases_in_solid-state_batteries.pdf",
+   "blank": 0.617
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Figure S2: (a) XPS sample preparation. The sample pellet is placed onto an adhesive carbon pad. The indium foil on the bottom is contacted using a platinum wire. The top side of the pellet is pressed onto the holder by a stainless-steel sheet, which serves as the positive current collector. (b) SXI of the sample surface near to the current collector (CC). The measurement spot is marked in yellow.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    245.3,
+    514.1,
+    460.3
+   ],
+   "w": 1793,
+   "h": 896,
+   "dpi": 300,
+   "src": "761e590b-26._Sup_Redox-active_cathode_interphases_in_solid-state_batteries.pdf",
+   "blank": 0.235
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Figure S3: Schematic of the measurement setup for in situ XPS of SSLB.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    67.5,
+    514.3,
+    292.8
+   ],
+   "w": 1793,
+   "h": 939,
+   "dpi": 300,
+   "src": "761e590b-26._Sup_Redox-active_cathode_interphases_in_solid-state_batteries.pdf",
+   "blank": 0.782
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 3,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Figure S4: Peak deconvolution of the S 2p spectra of pristine β- Li3PS4. Two species are needed to provide a sufficient fit. Blue peaks are attributed to equivalent Pδ+−Sδ− bonds. Green peaks were correlated to bridging P−[S]n−P units.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    337.6,
+    509.4,
+    524.1
+   ],
+   "w": 1773,
+   "h": 778,
+   "dpi": 300,
+   "src": "761e590b-26._Sup_Redox-active_cathode_interphases_in_solid-state_batteries.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Figure S5: Coulombic efficiency f of Li-In | β-Li3PS4 | NCM-811 /β- Li3PS4 cells when charged to cutoff voltages of 4.0, 4.3, 4.6 and 5.0 V. Cells cycled to 4.0 and 4.3 V are cycled stable above 98 %. When charged to a voltage limitation of 5.0 V, the Coulombic efficiencies are scattered and exhibit lower values. The solid grey box indicates the values for the first discharge cycle.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.8,
+    514.4,
+    242.1
+   ],
+   "w": 1794,
+   "h": 711,
+   "dpi": 300,
+   "src": "761e590b-26._Sup_Redox-active_cathode_interphases_in_solid-state_batteries.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 5,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Figure S6: Bode plot of the NCM-811 / β-Li3PS4 | β-Li3PS4 | Li-In cells cycled at 213 µA/cm² to different upper cutoff voltages between 4.0 and 5.0 V. (a) Phase angle diagram, (b) Bode magnitude plot of the cells charged to 4.0 and 4.3 V and (c) when charging to 4.6 and 5.0 V, respectively. Spectra recorded in the discharged state after 25 cycles and a 24 hour OCV period. Open circles indicate the measured data, solid lines represent the resulting fit using an equivalent circuit of (RQ)(RQ)(RQ)(RQ) as seen in d).",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    86.9,
+    516.9,
+    602.4
+   ],
+   "w": 1804,
+   "h": 2148,
+   "dpi": 300,
+   "src": "761e590b-26._Sup_Redox-active_cathode_interphases_in_solid-state_batteries.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 6,
+   "file": "fig_S7.png",
+   "caption": "Supplementary Figure S7: Evolution of the capacitance Ccathode/SE upon cycling for Li-In | β-Li3PS4 | NCM-811+β-Li3PS4 batteries charged to different upper cutoff voltages between 4.0 V and 5.0 V (a-d). Filled circles represent the charged, open circles the discharged state. The capacitances (4.0 – 5.0 V) for the other circuit elements are in the approximate range of CSE,bulk ~ 0.05 nF, CSE,grain ~ 0.1 µF and Canode/SE ~ 0.3 mF. Table S8: Quantification (atom fractions x(i)) of the S 2p signal from XPS measurements of the cathode-current collector surface cycled to different upper voltage limitations between 4.0 and 5.0 V. Sample x(P-S-Li) / at-% x(P-[S]n-P) / at-% x(S0) / at-% 4.0 V 66 17 17 4.3 V 70 17 13 4.6 V 66 20 14 5.0 V 42 32 26",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.8,
+    514.2,
+    257.4
+   ],
+   "w": 1793,
+   "h": 766,
+   "dpi": 300,
+   "src": "761e590b-26._Sup_Redox-active_cathode_interphases_in_solid-state_batteries.pdf",
+   "blank": 0.903
+  }
+ ]
+}

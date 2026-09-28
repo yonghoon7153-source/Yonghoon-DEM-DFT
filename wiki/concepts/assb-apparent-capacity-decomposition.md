@@ -2,10 +2,10 @@
 title: ASSB 겉보기 용량의 3항 분해 — 재료 · 기하 · 동역학
 description: "Q_apparent = θ_AM · η(i) · Q_material — ASSB 복합양극에서 겉보기 LAM_PE 로 보이는 것의 세 기원과, 율(rate)이 그중 하나만 지우는 성질 (Clausnitzer 2023 + Bielefeld 2019)"
 created: 2026-09-16
-updated: 2026-09-23
+updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -413,6 +413,16 @@ Li-In 음극 셀의 것이다. **Li 금속·무음극에 그대로 옮기지 않
 - **큰 입자의 "not activated at all" 도 `η(i)` 다** — `[인쇄]` L-PSD(≤ 20 µm) 큰 입자 중심이 0.2 C 끝에 리튬화된 채 남는다(Fig. 6). 모든 입자가 연결돼 있으므로 `θ_AM` 이 아니고, `[도표]` 0.02 C 에서 L ≈178 ↔ S ≈188 mAh g⁻¹ 로 대부분 돌아온다.
 - **`θ_AM` 은 이 편에서 출력이 아니라 입력 1** — SI `[인쇄]` 42 vol% 무작위 구는 1호 모델대로면 퍼콜레이션 불가 → placeholder + 고립 입자 "moved manually". ⇒ 이 편의 모든 용량 차이는 설계상 `η(i)` 쪽이다 — 3 항 분해를 이 모델로 채점하면 `θ_AM` 칸은 비어 있다.
 - ⚠ 검증 모델은 실험 void 14 % 를 SE 로 채웠다 — 실험의 `η(i)` 에 들어 있을 void 몫이 모델에 없는데 "good agreement" 로 닫혔다.
+
+## ★★ 2026-09-28 (`assb` 64호 Koerver 2017 *JMCA*, **실험 · 컷오프 넷 × 25 사이클 · 23호와 같은 셀 설계**) — **산화환원 계면층은 3 항 곱 밖의 덧셈 항이고, 첫 방전 결손의 일부는 둘째 사이클에 돌아오는 `η` 다**
+
+`raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md`. NCM811 : β-Li₃PS₄ 70 : 30 무탄소 | In 박(무 Li) · 상한 4.0 / 4.3 / 4.6 / 5.0 V vs Li · 0.1 C · 컷오프당 셀 2.
+
+- ★★ **덧셈 항.** `[인쇄]` "In the end, every redox reaction of the electrolyte in the electrode will add up to the total capacity obtained for each cycle" — 계면층의 가역 전하는 이 페이지의 곱에 들어가지 않고 **더해진다**:
+  `Q_apparent = θ_AM · η(i) · Q_material + Q_SE,rev` (`[해석]`). 크기는 원전에 0 · `[재현]` 상한 = 양극 복합체 SE 3.6 mg 전부 1 e⁻/PS₄ ≈**0.54 mAh = 64 mAh g⁻¹_NCM**(2 e⁻ 면 ×2). OCV 적합이 이 항을 `Q_material`(스케일)에 흡수하면 계면층이 자라는 셀에서 겉보기 `LAM_PE` 가 **작아 보인다**(방향만). 5.0 V 둘째 방전 평탄이 그 전압 서명 후보(크기 인쇄 0).
+- ★ **비가역 몫은 충전 쪽에만 들어가고 `LLI` 가 아니다** — SE 산화는 Li⁺ 를 음극에 쌓는다(Fig. 8 캡션) ⇒ 무 Li In 셀의 첫 사이클 CE 결손 = `θ`(고립) + `η` + NCM 비가역 + **SE 산화 전하**. 23호 예산의 "계면층 패러데이 몫 ≈4 %" 는 SE 1 % 기준이었다 — 64호 상한은 그 몫이 원리적으로 첫 결손(58–79 mAh g⁻¹)과 같은 자릿수까지 갈 수 있다는 것까지만 말한다.
+- ★★ **첫 방전 결손의 ≈28–37 % 는 되돌아오는 `η` 다**(4.0–4.6 V) — `[도표]` 둘째 − 첫 방전 +21.0 · ≈+27 · +22.4 mAh g⁻¹(결손 58 · 73 · 79 의 36 · 37 · 28 %) · 5.0 V ≈+3(4 %). 4.0 V 에서 방전 상태 `R_cathode/SE` 105.8 → 58.7 Ω 과 동행(`[인쇄]` "formation"). ⚠ 4.0 V 의 그 호는 `C` 0.1–0.85 mF(다른 셀 ×250–700)라 양극 것이라는 근거가 약하다 — 되돌아온 몫이 음극 쪽 `η` 일 가능성도 남는다.
+- ⚠ **5.0 V 감쇠(둘째 129 → 25 번째 49 mAh g⁻¹)의 칸은 정해지지 않는다** — NCM 산소 방출(인용[34,35] · `Q_material`) · 계면층 저항(`R` ×5.5 · `η`) · 저주파 호 ≥2.5 kΩ(음극 배정 · 네 번째 항)이 같이 있고 **율 극한 대조 0**(0.1 C 한 율).
 
 ## 이 페이지가 주장하지 않는 것
 
