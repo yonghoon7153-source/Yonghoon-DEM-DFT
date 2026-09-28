@@ -396,6 +396,12 @@
   수확은 새 키만 늘었다 (`wall_touch` · `contact_scan` · `n_atom_frames`) — status 키 · 옛 값 그대로 (selftest ⑱).
 - ⬜ WSL 실행 (읽기 전용): `python3 scripts/lhs_contact_audit.py --selftest` → `--case lhs00_000 --out /tmp/audit_one` (한 건 시간) →
   `--out ~/lhs_contact_audit_<날짜>` (전 건) → `contact_audit.tsv` · `.json` 을 받아 판정 → ② 퍼콜레이션 묶음.
+  ⚠ **실행 위치 (09-29 첫 시도 실패로 확인)**: WSL `~/Yonghoon-DEM-DFT` 는 **`claude/evac-2026-09-28`** 체크아웃
+  (= `friendly-meitner-lldvar` 계열) 이라 이 브랜치의 스크립트가 없다 — 내 명령 블록이 브랜치를 주석으로만 적고 막지 않아
+  `git pull` 이 *divergent* 로 멈춘 뒤 (**아무것도 합치지 않음**) 파이썬 세 줄이 "파일 없음" 으로 떨어졌다 (쓴 것 없음).
+  ⇒ 그 체크아웃은 건드리지 않고 **분리 워크트리** `git worktree add --detach ~/dem-audit origin/claude/sdcp-dem-manuscript-si-pqwtv8`
+  에서 돌린다 (인터프리터 `~/Yonghoon-DEM-DFT/venv/bin/python` — `cKDTree` 에 scipy 필요 · 조건 = `merge-base --is-ancestor 3e20d250f`
+  + selftest 통과일 때만 본 실행).
 
 ## 인계 판정 (지금)
 
