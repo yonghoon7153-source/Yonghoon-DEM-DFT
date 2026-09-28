@@ -1,0 +1,20 @@
+{
+  "mph": {
+    "identity": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/result_Model.mph",
+      "bytes": 1185298486,
+      "sha256": "8ad573f32e59a87f300418c220929303dbf155e633293d8eb50fd4542177a971"
+    },
+    "reason": "1.185 GB model retained locally; exact identity checked; not needed for read-only CSV/log review"
+  },
+  "default_prefs": {
+    "identity": {
+      "path": "C:/Users/BML/.comsol/v63/comsol.prefs",
+      "bytes": 22252,
+      "sha256": "064d190077d7533f9fff22b61460d377cb53fb314e5c0f32a0bd02e3fa28b651"
+    },
+    "reason": "Whole prefs withheld; security-only POLICY_BEFORE and prior redacted observation included"
+  },
+  "private_prefs_configuration_data": "Not packaged; may contain private prefs/cache/license state; no fresh copies made",
+  "runtime_reexecution": false
+}

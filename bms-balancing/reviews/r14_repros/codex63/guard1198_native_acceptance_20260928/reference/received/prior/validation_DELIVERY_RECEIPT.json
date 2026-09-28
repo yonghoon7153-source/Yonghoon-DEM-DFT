@@ -1,0 +1,32 @@
+{
+  "utc": "2026-09-28T02:47:48.518462+00:00",
+  "archive": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_validation_attempt_04_20260928/COMSOL63_GUARD1198_LIMITED_VALIDATION_PASS_20260928.zip",
+    "bytes": 1304867,
+    "sha256": "6af5463ed0d395353de1a9935088c1d6f9503e476d0b5bc1fc9fb65ab80903d1"
+  },
+  "payloads": 851,
+  "entries": 852,
+  "manifest_sha256": "d91a8ae5cf1c6cebb58808e2bc562ff9433eb3d48e0a8c29d57a215e940e54c0",
+  "status": "LIMITED_OFFLINE_VALIDATION_PASS",
+  "logical_groups": 26,
+  "subcases": {
+    "PASS": 78,
+    "FAIL": 0,
+    "NOT_RUN": 0
+  },
+  "readback_exact_set_size_sha_crc_paths": true,
+  "final_pretest_files_identical": true,
+  "preservation_count": 14,
+  "preparation_seconds": 170.1353459,
+  "preservation_pack_seconds": 119.8126709,
+  "overall_seconds": 369.1560137,
+  "within_declared_limits": true,
+  "recipient": null,
+  "approved": false,
+  "usable": false,
+  "total_payload_bytes": 5830504,
+  "max_path_characters": 187,
+  "working_set_observation": "UNVERIFIED",
+  "source": "Local final snapshot before receipt write and outer return; not recipient acceptance"
+}

@@ -1,0 +1,1168 @@
+--- accepted1198/src/Guard1198Candidate.java
++++ candidate30/src/Normal30Candidate.java
+@@ -5,13 +5,13 @@
+ import java.util.Arrays;
+ import java.util.Base64;
+ 
+-/** 6.3-native bounded validation. Current distribution initialization and a 5-second transient only.
++/** 6.3-native bounded validation. Current distribution initialization and a 30-second transient only.
+  * Material literals: current public settings extracted from hashed installed library.
+  * The running Java performs no external file reads.
+  * Input hash is checked by the submitting MCP client before and after the job.
+  * Output: audit tables through stdout, COMSOL-exported Java, and worker-saved MPH.
+  */
+-public class Guard1198Candidate {
++public class Normal30Candidate {
+     static final String LIBRARY = "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/inputs/battery_lib_63.mph";
+     static final String LIBRARY_SHA = "92cfd07d16fcb148ab1de4adbf48a3b9c6f709c2b8f04d9c571e4d702c4473f6";
+ 
+@@ -22,7 +22,7 @@
+         int n=values[0].length;
+         for(double[] row:values){if(row==null||row.length!=n)throw new IllegalStateException("RAGGED:"+tag);for(double v:row)if(!Double.isFinite(v))throw new IllegalStateException("NONFINITE:"+tag);}
+         if(values[0][0]!=0.0)throw new IllegalStateException("TIME_ORIGIN:"+tag);
+-        for(int i=0;i<n;i++)if(values[0][i]<0||values[0][i]>5||(i>0&&values[0][i]<=values[0][i-1]))throw new IllegalStateException("TIME_ORDER:"+tag);
++        for(int i=0;i<n;i++)if(values[0][i]<0||values[0][i]>30||(i>0&&values[0][i]<=values[0][i-1]))throw new IllegalStateException("TIME_ORDER:"+tag);
+         if(TIMES==null)TIMES=values[0].clone();else if(!Arrays.equals(values[0],TIMES))throw new IllegalStateException("EXACT_TIMES:"+tag);
+     }
+     static void units(Model m,String tag,String phase,String[] expected) throws Exception {
+@@ -419,13 +419,13 @@
+         String[] observedTerminate=m.sol(sol).feature(time).feature("stguard").getStringArray("stopcondterminateon");
+         if(!Arrays.equals(observedConditions,conditions)||!Arrays.equals(observedActive,new String[]{"on","on","on"})||!Arrays.equals(observedTerminate,new String[]{"true","true","true"}))throw new IllegalStateException("GUARD_READBACK");
+         String observedStorage=m.sol(sol).feature(time).feature("stguard").getString("storestopcondsol");
+-        if(!"stepbefore_stepafter".equals(observedStorage)||m.param().evaluate("ce_stop_threshold")!=1198.0)throw new IllegalStateException("GUARD_THRESHOLD_STORAGE");
++        if(!"stepbefore_stepafter".equals(observedStorage)||m.param().evaluate("ce_stop_threshold")!=0.0)throw new IllegalStateException("GUARD_THRESHOLD_STORAGE");
+         table("guard_binding.csv",new String[][]{{"electrolyte_expression","stop_storage","active","terminate_on","threshold_SI"},{observedConditions[2],observedStorage,observedActive[2],observedTerminate[2],Double.toString(m.param().evaluate("ce_stop_threshold"))}});
+         System.out.println("ELECTROLYTE_THRESHOLD_EXPRESSION="+m.param().get("ce_stop_threshold"));
+         System.out.println("ELECTROLYTE_THRESHOLD_SI="+m.param().evaluate("ce_stop_threshold"));
+         System.out.println("PREFLIGHT_GUARD="+guard);
+         System.out.println("PREFLIGHT_TIME=maxstep_expression=if(t<0.1[s],0.000125[s],0.1[s])|inactive_constant_slot_s=0.1|initialstep_s=1e-5|rtol=1e-6|strict|all accepted steps|eventout|consistency="+m.sol(sol).feature(time).getString("consistent"));
+-        System.out.println("PREFLIGHT_SOLVE_BEGIN=0..5 seconds; NO full protocol or sweep");
++        System.out.println("PREFLIGHT_SOLVE_BEGIN=0..30 seconds; NO full protocol or sweep");
+         runtimeSettings(m,sol,time);
+         stage="solve";
+         m.sol(sol).runAll();
+@@ -581,8 +581,8 @@
+         System.out.println("MATERIAL_INPUT_EXPECTED_SHA256=" + LIBRARY_SHA);
+         if (!ModelUtil.checkoutLicense("BATTERYDESIGN")) throw new IllegalStateException("Battery checkout failed");
+         Model m=ModelUtil.create("Model");
+-        m.label("Guard1198Candidate - fresh common dense time grid, 5 seconds only");
+-        m.param().set("ce_stop_threshold","1198[mol/m^3]");
++        m.label("Normal30Candidate - fresh common dense time grid, 30 seconds only");
++        m.param().set("ce_stop_threshold","0[mol/m^3]");
+         String[][] params={
+             {"L_el","52[um]"},{"L_sep","25[um]"},{"L_pos","44[um]"},
+             {"A_c","1[m^2]"},{"A_cell","1.53938[cm^2]"},
+@@ -678,12 +678,12 @@
+         m.study("std1").create("cdi","CurrentDistributionInitialization");
+         m.study("std1").create("time","Transient");
+         m.study("std1").feature("time").set("tunit","s");
+-        m.study("std1").feature("time").set("tlist","0 0.0001 0.0002 0.0005 0.001 0.002 0.005 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1 0.11 0.12 0.13 0.14 0.15 0.16 0.17 0.18 0.19 0.2 0.21 0.22 0.23 0.24 0.25 0.26 0.27 0.28 0.29 0.3 0.31 0.32 0.33 0.34 0.35 0.36 0.37 0.38 0.39 0.4 0.41 0.42 0.43 0.44 0.45 0.46 0.47 0.48 0.49 0.5 0.51 0.52 0.53 0.54 0.55 0.56 0.57 0.58 0.59 0.6 0.61 0.62 0.63 0.64 0.65 0.66 0.67 0.68 0.69 0.7 0.71 0.72 0.73 0.74 0.75 0.76 0.77 0.78 0.79 0.8 0.81 0.82 0.83 0.84 0.85 0.86 0.87 0.88 0.89 0.9 0.91 0.92 0.93 0.94 0.95 0.96 0.97 0.98 0.99 1 1.05 1.1 1.15 1.2 1.25 1.3 1.35 1.4 1.45 1.5 1.55 1.6 1.65 1.7 1.75 1.8 1.85 1.9 1.95 2 2.05 2.1 2.15 2.2 2.25 2.3 2.35 2.4 2.45 2.5 2.55 2.6 2.65 2.7 2.75 2.8 2.85 2.9 2.95 3 3.05 3.1 3.15 3.2 3.25 3.3 3.35 3.4 3.45 3.5 3.55 3.6 3.65 3.7 3.75 3.8 3.85 3.9 3.95 4 4.05 4.1 4.15 4.2 4.25 4.3 4.35 4.4 4.45 4.5 4.55 4.6 4.65 4.7 4.75 4.8 4.85 4.9 4.95 5");
++        m.study("std1").feature("time").set("tlist","0 0.0001 0.0002 0.0005 0.001 0.002 0.005 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1 0.11 0.12 0.13 0.14 0.15 0.16 0.17 0.18 0.19 0.2 0.21 0.22 0.23 0.24 0.25 0.26 0.27 0.28 0.29 0.3 0.31 0.32 0.33 0.34 0.35 0.36 0.37 0.38 0.39 0.4 0.41 0.42 0.43 0.44 0.45 0.46 0.47 0.48 0.49 0.5 0.51 0.52 0.53 0.54 0.55 0.56 0.57 0.58 0.59 0.6 0.61 0.62 0.63 0.64 0.65 0.66 0.67 0.68 0.69 0.7 0.71 0.72 0.73 0.74 0.75 0.76 0.77 0.78 0.79 0.8 0.81 0.82 0.83 0.84 0.85 0.86 0.87 0.88 0.89 0.9 0.91 0.92 0.93 0.94 0.95 0.96 0.97 0.98 0.99 1 1.05 1.1 1.15 1.2 1.25 1.3 1.35 1.4 1.45 1.5 1.55 1.6 1.65 1.7 1.75 1.8 1.85 1.9 1.95 2 2.05 2.1 2.15 2.2 2.25 2.3 2.35 2.4 2.45 2.5 2.55 2.6 2.65 2.7 2.75 2.8 2.85 2.9 2.95 3 3.05 3.1 3.15 3.2 3.25 3.3 3.35 3.4 3.45 3.5 3.55 3.6 3.65 3.7 3.75 3.8 3.85 3.9 3.95 4 4.05 4.1 4.15 4.2 4.25 4.3 4.35 4.4 4.45 4.5 4.55 4.6 4.65 4.7 4.75 4.8 4.85 4.9 4.95 5 5.1 5.2 5.3 5.4 5.5 5.6 5.7 5.8 5.9 6 6.1 6.2 6.3 6.4 6.5 6.6 6.7 6.8 6.9 7 7.1 7.2 7.3 7.4 7.5 7.6 7.7 7.8 7.9 8 8.1 8.2 8.3 8.4 8.5 8.6 8.7 8.8 8.9 9 9.1 9.2 9.3 9.4 9.5 9.6 9.7 9.8 9.9 10 10.1 10.2 10.3 10.4 10.5 10.6 10.7 10.8 10.9 11 11.1 11.2 11.3 11.4 11.5 11.6 11.7 11.8 11.9 12 12.1 12.2 12.3 12.4 12.5 12.6 12.7 12.8 12.9 13 13.1 13.2 13.3 13.4 13.5 13.6 13.7 13.8 13.9 14 14.1 14.2 14.3 14.4 14.5 14.6 14.7 14.8 14.9 15 15.1 15.2 15.3 15.4 15.5 15.6 15.7 15.8 15.9 16 16.1 16.2 16.3 16.4 16.5 16.6 16.7 16.8 16.9 17 17.1 17.2 17.3 17.4 17.5 17.6 17.7 17.8 17.9 18 18.1 18.2 18.3 18.4 18.5 18.6 18.7 18.8 18.9 19 19.1 19.2 19.3 19.4 19.5 19.6 19.7 19.8 19.9 20 20.1 20.2 20.3 20.4 20.5 20.6 20.7 20.8 20.9 21 21.1 21.2 21.3 21.4 21.5 21.6 21.7 21.8 21.9 22 22.1 22.2 22.3 22.4 22.5 22.6 22.7 22.8 22.9 23 23.1 23.2 23.3 23.4 23.5 23.6 23.7 23.8 23.9 24 24.1 24.2 24.3 24.4 24.5 24.6 24.7 24.8 24.9 25 25.1 25.2 25.3 25.4 25.5 25.6 25.7 25.8 25.9 26 26.1 26.2 26.3 26.4 26.5 26.6 26.7 26.8 26.9 27 27.1 27.2 27.3 27.4 27.5 27.6 27.7 27.8 27.9 28 28.1 28.2 28.3 28.4 28.5 28.6 28.7 28.8 28.9 29 29.1 29.2 29.3 29.4 29.5 29.6 29.7 29.8 29.9 30");
+         m.study("std1").feature("time").set("rtol","1e-5");
+         for (String name:new String[]{"epss_el","epss_pos","epss_short","nLi_target","x_NCM_init","Q_areal","Q_el_proposal","i_1C","A_c"})
+             System.out.println("PARAM="+name+"|"+m.param().evaluate(name)+"|"+m.param().evaluateUnit(name));
+         preflightAudit(m);
+-        stage="complete";System.out.println("GUARD1198_PRODUCER_COMPLETE");
++        stage="complete";System.out.println("NORMAL30_PRODUCER_COMPLETE");
+         return m;
+         } catch(Exception primary) {
+             try {table("producer_failure.csv",new String[][]{{"stage","type","message"},{stage,primary.getClass().getName(),primary.toString()}});}
+--- accepted1198/src/trigger_consumer.py
++++ candidate30/src/diagnostic_consumer.py
+@@ -1,4 +1,4 @@
+-"""UNEXECUTED candidate: early-stop consumer. No COMSOL/import/process calls.
++"""UNEXECUTED candidate: normal30/protected-stop consumer. No COMSOL/import/process calls.
+ Functions below require changed-branch validation before any native release.
+ """
+ from pathlib import Path
+@@ -55,26 +55,33 @@
+     need(found,'NO_TABLES');return found
+ def guard_evidence(c,g):
+     ts=list(g);need(len(ts)>=3,'GUARD_TOO_FEW_STATES')
+-    threshold=number(c['threshold_mol_m3']);limit=number(c['limits']['minimum_consistency_mol_m3'])
+-    ties=[]
++    threshold=number(c['threshold_mol_m3']);need(threshold==0,'NORMAL_THRESHOLD')
++    need(number(c['maximum_physical_s'])==30,'NORMAL_END_CONTRACT')
++    limit=number(c['limits']['minimum_consistency_mol_m3']);ties=[]
++    keys=['electrolyte_guard','ocp_guard','surface_guard']
+     for t,v in g.items():
+-        need(0<=t<=number(c['maximum_physical_s']),'GUARD_TIME_RANGE')
+-        need(v['threshold_mol_m3']==threshold,'THRESHOLD')
++        need(0<=t<=30,'GUARD_TIME_RANGE');need(v['threshold_mol_m3']==0,'THRESHOLD')
+         vals=[v['ce_min_d%d_mol_m3'%d] for d in (1,2,3)];mn=min(vals)
+         need(abs(v['ce_min_all_mol_m3']-mn)<=limit,'MINIMUM_OPERATOR_INCONSISTENT')
+-        need(v['electrolyte_guard'] in (0,1) and v['ocp_guard']==0 and v['surface_guard']==0,'OTHER_GUARD_OR_BOOLEAN')
+-        need(v['electrolyte_guard']==D(int(v['ce_min_all_mol_m3']<=threshold)),'GUARD_VALUE')
+-        eq=[i+1 for i,x in enumerate(vals) if x==mn]
+-        near=[i+1 for i,x in enumerate(vals) if 0<x-mn<=number(c['limits']['near_tie_mol_m3'])]
+-        ties.append({'time_s':str(t),'exact_minimum_domains':eq,'near_tie_domains':near})
+-    need(g[ts[0]]['electrolyte_guard']==0,'INITIAL_GUARD')
+-    need(all(g[t]['electrolyte_guard']==0 for t in ts[:-1]) and g[ts[-1]]['electrolyte_guard']==1,'SINGLE_FINAL_TRANSITION')
+-    minus,plus=ts[-2:];need(minus>0 and minus<plus<=5,'STOP_PAIR')
+-    need(g[minus]['ce_min_all_mol_m3']>threshold>=g[plus]['ce_min_all_mol_m3'],'STOP_MINIMUM_CROSSING')
++        need(all(v[k] in (0,1) for k in keys),'GUARD_BOOLEAN')
++        need(v['electrolyte_guard']==D(int(v['ce_min_all_mol_m3']<=0)),'GUARD_VALUE')
++        ties.append({'time_s':str(t),'exact_minimum_domains':[i+1 for i,x in enumerate(vals) if x==mn],
++                     'near_tie_domains':[i+1 for i,x in enumerate(vals) if 0<x-mn<=number(c['limits']['near_tie_mol_m3'])]})
++    need(all(g[ts[0]][k]==0 for k in keys),'INITIAL_GUARD')
++    need(all(g[t][k]==0 for t in ts[:-1] for k in keys),'GUARD_BEFORE_FINAL')
++    active=[k for k in keys if g[ts[-1]][k]==1]
++    if active:
++        minus,plus=ts[-2:];need(0<minus<plus<=30,'STOP_PAIR')
++        if 'electrolyte_guard' in active:need(g[minus]['ce_min_all_mol_m3']>0>=g[plus]['ce_min_all_mol_m3'],'STOP_MINIMUM_CROSSING')
++        status='PROTECTIVE_STOP_OBSERVED';safe=minus
++    else:
++        need(ts[-1]==30,'DID_NOT_REACH_30');status='NORMAL_30S_REACHED';safe=ts[-1]
+     for a,b in zip(ts,ts[1:]):
+         cap=D('.000125') if a<D('.1') else D('.1')
+         need(b-a<=cap+D('1e-12')+cap*D('1e-9'),'ACCEPTED_STEP_CAP')
+-    return {'status':'CSV_TRIGGER_TRANSITION','t_minus':str(minus),'t_plus':str(plus),'stored_times_s':[str(x) for x in ts],'ties':ties}
++    return {'status':status,'final_time_s':str(ts[-1]),'safe_prefix_end_s':str(safe),
++            't_minus':str(ts[-2]),'t_plus':str(ts[-1]),'active_guards':active,
++            'stored_times_s':[str(x) for x in ts],'ties':ties,'threshold_mol_m3':'0'}
+ def rounded_contains(token,value):
+     x=number(token);half=D(1).scaleb(x.as_tuple().exponent)/2
+     return abs(x-value)<=half
+@@ -82,39 +89,55 @@
+     fatal=r'/\*{3,}\s*Error\s*\*{3,}/|Error running java class\.|Security preference .*does not allow|OutOfMemoryError|Exception in thread'
+     need(not re.search(fatal,batch+'\n'+console,re.I),'NATIVE_FATAL')
+     pattern=r'Information: Stop condition fulfilled at t = ([0-9.eE+\-]+) \(([^\r\n]+)\)\.'
+-    hits=list(re.finditer(pattern,batch));need(len(hits)==1,'NATIVE_STOP_COUNT')
+-    hit=hits[0];need(hit.group(2)==c['stop_description'],'NATIVE_STOP_REASON')
+-    plus=number(pair['t_plus']);need(rounded_contains(hit.group(1),plus),'NATIVE_STOP_TIME')
++    hits=list(re.finditer(pattern,batch))
++    normal=pair['status']=='NORMAL_30S_REACHED';last=number(pair['final_time_s'])
++    need(len(hits)==(0 if normal else 1),'NATIVE_STOP_COUNT')
+     opening=list(re.finditer(r'^<---- Time-Dependent Solver.*$',batch,re.M))
+     closing=list(re.finditer(r'^----- Time-Dependent Solver.*-+>\s*$',batch,re.M))
+-    need(len(opening)==len(closing)==1 and opening[0].start()<hit.start()<closing[0].start(),'SOLVER_SECTION')
++    need(len(opening)==len(closing)==1 and opening[0].start()<closing[0].start(),'SOLVER_SECTION')
++    if not normal:
++        hit=hits[0]
++        expected=[c['guard_stop_descriptions'][k] for k in pair['active_guards']]
++        need(hit.group(2) in expected,'NATIVE_STOP_REASON')
++        need(rounded_contains(hit.group(1),last),'NATIVE_STOP_TIME')
++        need(opening[0].start()<hit.start()<closing[0].start(),'STOP_OUTSIDE_SOLVER')
+     step_re=r'^\s*(\d+)\s+([0-9.eE+\-]+)\s+([0-9.eE+\-]+)\s+out\s+'
+     step=list(re.finditer(step_re,batch[opening[0].end():closing[0].start()],re.M))
+-    need(step and rounded_contains(step[-1].group(2),plus),'FINAL_NATIVE_STEP')
++    need(step and rounded_contains(step[-1].group(2),last),'FINAL_NATIVE_STEP')
+     stored=[number(x) for x in pair['stored_times_s']]
+     need(len(step)==len(stored) and [int(x.group(1)) for x in step]==list(range(len(step))),'NATIVE_STORED_STEP_COUNT')
+     need(all(rounded_contains(s.group(2),t) for s,t in zip(step,stored)),'NATIVE_STORED_TIME_BINDING')
+-    need(not re.search(step_re,batch[hit.end():],re.M),'INTEGRATION_AFTER_STOP')
+-    need(console.count('GUARD1198_PRODUCER_COMPLETE')==1 and 'producer_failure.csv|' not in console,'PRODUCER_OUTPUT_FAILURE')
+-    return {'status':'NATIVE_STOP_MATCHED','reported_time':hit.group(1),'rounding_note':'Raw native time rounded; exact pair from CSV.','after_stop_export_allowed':True}
++    boundary=closing[0].end() if normal else hits[0].end()
++    need(not re.search(step_re,batch[boundary:],re.M),'INTEGRATION_AFTER_TERMINATION')
++    need(console.count('NORMAL30_PRODUCER_COMPLETE')==1 and console.count('PREFLIGHT_SOLVER_RETURNED=true')==1 and 'producer_failure.csv|' not in console,'PRODUCER_OUTPUT_FAILURE')
++    return {'status':'NATIVE_NORMAL_END_MATCHED' if normal else 'NATIVE_PROTECTIVE_STOP_MATCHED',
++            'reported_time':step[-1].group(2),'stop_reason':None if normal else hits[0].group(2),
++            'no_integration_after_termination':True,'after_stop_export_allowed':True,
++            'step_count':len(step),'rounding_note':'Native tokens rounded; exact stored end time from CSV.'}
+ def binding_evidence(c,folder,console):
+     rr=list(rows(folder/'guard_binding.csv'));need(len(rr)==1,'GUARD_BINDING_MISSING')
+     r=rr[0]
+-    need(r=={'electrolyte_expression':c['guard_expression'],'stop_storage':'stepbefore_stepafter','active':'on','terminate_on':'true','threshold_SI':'1198.0'},'GUARD_BINDING_VALUE')
++    need(r=={'electrolyte_expression':c['guard_expression'],'stop_storage':'stepbefore_stepafter','active':'on','terminate_on':'true','threshold_SI':'0.0'},'GUARD_BINDING_VALUE')
+     for tag,selection in [('minguardall','[1, 2, 3]'),('minguard1','[1]'),('minguard2','[2]'),('minguard3','[3]')]:
+         expected='ELECTROLYTE_COUPLING='+tag+'|dimension=1|entities='+selection+'|points=lagrange|lagrange=5'
+         need(console.splitlines().count(expected)==1,'COUPLING_BINDING')
+     return 'PASS'
+ def coverage(c,target,baseline,minus):
+-    requested={number(x) for x in c['requested_times_s'] if number(x)<=minus}
+-    actual={t for t in target if t<=minus};base=set(baseline)
+-    common=sorted(actual&base)
++    comparison_end=min(D(5),minus)
++    requested={number(x) for x in c['baseline_requested_times_s'] if number(x)<=comparison_end}
++    all_actual=set(target);actual={t for t in target if t<=comparison_end};base=set(baseline)
++    common=sorted(actual&base);full=sorted(all_actual&base)
+     missing_target=sorted(requested-actual);missing_base=sorted(requested-base)
+-    info={'expected_requested':[str(x) for x in sorted(requested)],'common_stored':[str(x) for x in common],
+-          'missing_target':[str(x) for x in missing_target],'missing_baseline':[str(x) for x in missing_base],
+-          'target_noncommon':[str(x) for x in sorted(actual-base)],'common_count':len(common),
+-          'common_first':str(common[0]) if common else None,'common_last':str(common[-1]) if common else None}
+-    need(not missing_target and not missing_base,'STRICT_REQUEST_TIME_MISSING:'+json.dumps(info))
++    strict={number(x) for x in c['requested_times_s'] if number(x)<=minus}
++    missing_strict=sorted(strict-all_actual)
++    info={'status':'PASS','comparison_end_s':str(comparison_end),'expected_requested':[str(x) for x in sorted(requested)],
++          'common_stored':[str(x) for x in common],'missing_target':[str(x) for x in missing_target],
++          'missing_baseline':[str(x) for x in missing_base],'target_noncommon':[str(x) for x in sorted(actual-base)],
++          'common_count':len(common),'common_first':str(common[0]) if common else None,'common_last':str(common[-1]) if common else None,
++          'full_intersection':[str(x) for x in full],'full_intersection_count':len(full),
++          'strict_requested_through_safe_end':[str(x) for x in sorted(strict)],'missing_strict_requested':[str(x) for x in missing_strict],
++          'policy':'Exact intersection; compare <=min(5,safe-prefix end). No interpolation or nearest substitution.'}
++    need(not missing_target and not missing_base and not missing_strict,'STRICT_REQUEST_TIME_MISSING:'+json.dumps(info))
+     need(len(requested)>=2 and any(x>0 for x in requested),'INSUFFICIENT_REQUEST_PREFIX:'+json.dumps(info))
+     need(len(common)>=2 and common[0]==0 and common[-1]>0,'EMPTY_OR_ZERO_ONLY_COMMON:'+json.dumps(info))
+     return common,info
+@@ -156,6 +179,13 @@
+     common,info=coverage(c,times,base[names[0]],minus)
+     glob,n,p=(data[n] for n in names);bn,bp=base[names[1]],base[names[2]]
+     L0=sum(glob[D(0)][k] for k in ('Li_N_mol_m2','Li_P_mol_m2','Li_electrolyte_mol_m2'));need(L0>0,'LI_INITIAL')
++    components={}
++    for key in ('Li_N_mol_m2','Li_P_mol_m2','Li_electrolyte_mol_m2'):
++        current=glob[D(0)][key];reference=base[names[0]][D(0)][key]
++        need(current>0 and reference>0,'INITIAL_LI_COMPONENT_POSITIVE')
++        delta=abs((current-reference)/reference)
++        need(delta<=number(c['limits']['relative_Li']),'INITIAL_LI_COMPONENT')
++        components[key]={'status':'PASS','current':str(current),'baseline':str(reference),'relative_delta':str(delta)}
+     li=voltage=deltaV=dx=D(0)
+     for t in times:
+         v=glob[t];need(v['ocp_guard']==0,'GLOBAL_OCP_GUARD')
+@@ -171,24 +201,54 @@
+         old=profile(pinned(c['baseline_files'][name]),base[names[0]],c['coordinates'][electrode],domain,number(c['limits']['coordinate_m']))
+         for t in common:dx=max(dx,max(abs(a-b) for a,b in zip(cur[t],old[t])))
+     need(deltaV<=number(c['limits']['voltage_V']) and dx<=number(c['limits']['surface_x']),'SAMPLE_TOLERANCE')
+-    return {'status':'PASS','coverage':info,'maximum_voltage_delta_V':str(deltaV),'maximum_surface_delta':str(dx),'maximum_Li_relative_drift':str(li),'maximum_voltage_identity_V':str(voltage),'stop_times_not_interpolated':[str(t) for t in times[-2:] if t not in common]}
++    return {'status':'PASS','coverage':info,'initial_Li_components':components,'late_interval':late_summary(glob,n,p,g),'maximum_voltage_delta_V':str(deltaV),'maximum_surface_delta':str(dx),'maximum_Li_relative_drift':str(li),'maximum_voltage_identity_V':str(voltage),'terminal_times_excluded_from_comparison':[str(t) for t in times[-2:] if t not in common]}
+ def incomplete_result(state=None):
+     state=state or {}
+-    return {'limited_result':'INCOMPLETE','trigger':'INCOMPLETE','sampled_comparison':'INCOMPLETE','preservation':state.get('preservation','INCOMPLETE'),'process_cleanup':state.get('process_cleanup','INCOMPLETE'),'policy_preservation':state.get('policy_preservation','INCOMPLETE'),'errors':[],'overall':'INCOMPLETE','normal_gate':'INCOMPLETE','effective_policy':'UNVERIFIED','native_approved_by_this_result':False}
++    return {'limited_result':'INCOMPLETE','diagnostic':'INCOMPLETE','sampled_comparison':'INCOMPLETE',
++            'preservation':state.get('preservation','INCOMPLETE'),'process_cleanup':state.get('process_cleanup','INCOMPLETE'),
++            'policy_preservation':state.get('policy_preservation','INCOMPLETE'),'errors':[],
++            'overall':'INCOMPLETE','normal_gate':'INCOMPLETE','effective_policy':'UNVERIFIED','native_approved_by_this_result':False}
+ 
+ def analyze(c,folder,batch,console,state):
+-    result=incomplete_result(state)
+-    folder=Path(folder)
++    result=incomplete_result(state);folder=Path(folder)
+     try:
+-        binding_evidence(c,folder,console);g=timed(folder/'electrolyte_guard.csv');pair=guard_evidence(c,g)
+-        result['pair']=pair;result['native_stop']=native_stop(c,batch,console,pair);result['trigger']='TEST_TRIGGER_DETECTED'
+-    except Exception as e:result['errors'].append({'axis':'trigger','type':type(e).__name__,'error':str(e)});return result
++        binding_evidence(c,folder,console);result['runtime_settings']=runtime_evidence(c,folder)
++        g=timed(folder/'electrolyte_guard.csv');termination=guard_evidence(c,g)
++        result['termination']=termination;result['native_termination']=native_stop(c,batch,console,termination)
++        result['diagnostic']=termination['status']
++    except Exception as e:result['errors'].append({'axis':'termination','type':type(e).__name__,'error':str(e)});return result
+     try:
+         units_evidence(folder)
+         with localcontext() as ctx:
+-            ctx.prec=50;result['numeric']=numeric(c,folder,g,number(pair['t_minus']))
++            ctx.prec=50;result['numeric']=numeric(c,folder,g,number(termination['safe_prefix_end_s']))
+         result['sampled_comparison']='PASS'
+     except Exception as e:result['errors'].append({'axis':'numeric','type':type(e).__name__,'error':str(e)})
+-    accepted=(not result['errors'] and state.get('status')=='NATIVE_RETURN_READY' and state.get('errors')==[] and result['sampled_comparison']=='PASS' and all(result[k]=='PASS' for k in ('preservation','process_cleanup','policy_preservation')))
+-    result['limited_result']='TRIGGER_AND_SAMPLED_DATA_ACCEPTABLE' if accepted else 'INCOMPLETE'
++    accepted=(not result['errors'] and state.get('status')=='NATIVE_RETURN_READY' and state.get('errors')==[]
++              and result['sampled_comparison']=='PASS' and all(result[k]=='PASS' for k in ('preservation','process_cleanup','policy_preservation')))
++    if accepted:
++        result['limited_result']='NORMAL_30S_DIAGNOSTIC_COMPLETE' if result['diagnostic']=='NORMAL_30S_REACHED' else 'PROTECTED_STOP_30S_INCOMPLETE'
++    # Observed protection survives numeric failure in diagnostic/termination; never a normal success.
+     return result
++
++def runtime_evidence(c,folder):
++    settings={}
++    for r in rows(folder/'axes_runtime_settings.csv'):
++        need(set(r)=={'key','actual_value'} and r['key'] not in settings,'RUNTIME_SETTINGS_SCHEMA')
++        settings[r['key']]=r['actual_value']
++    need(settings.get('study_tlist','').split()==c['requested_times_s'],'RUNTIME_TLIST')
++    for k,v in c['runtime_settings_required'].items():need(settings.get(k)==v,'RUNTIME_SETTING:'+k)
++    return {'status':'PASS','requested_count':len(c['requested_times_s']),'settings':{k:settings[k] for k in c['runtime_settings_required']}}
++
++
++def late_summary(glob,n,p,g):
++    ts=[t for t in g if t>D(5)]
++    if not ts:return {'status':'NOT_REACHED','count':0,'claim':'No >5 s stored states; not a 30 s completion.'}
++    series={'voltage_V':{t:p[t]['phis_V']-n[t]['phis_V'] for t in ts}}
++    for k in ('ce_min_all_mol_m3','ce_min_d1_mol_m3','ce_min_d2_mol_m3','ce_min_d3_mol_m3','electrolyte_guard','ocp_guard','surface_guard'):
++        series[k]={t:g[t][k] for t in ts}
++    for k in ('Li_N_mol_m2','Li_P_mol_m2','Li_electrolyte_mol_m2','xavg_N','xavg_P','xsurf_N_min','xsurf_N_max','xsurf_P_min','xsurf_P_max'):
++        series[k]={t:glob[t][k] for t in ts}
++    return {'status':'OBSERVED','count':len(ts),'first_time_s':str(ts[0]),'last_time_s':str(ts[-1]),
++            'claim':'Stored-state diagnostic only. No >5 s baseline equivalence, physical validation or long-time convergence.',
++            'metrics':{k:{'first':str(v[ts[0]]),'last':str(v[ts[-1]]),'min':str(min(v.values())),'max':str(max(v.values()))} for k,v in series.items()}}
++
+--- accepted1198/src/candidate_entry.py
++++ candidate30/src/candidate_entry.py
+@@ -46,7 +46,7 @@
+     need(Path(path).resolve().as_posix()==c['approval_path'],'APPROVAL_PATH')
+     a=read(path);release=read(c['release_path'])
+     for r in (a,release):need(r.get('code_manifest_sha256')==expected and r.get('run_id')==c['run_id'],'AUTHORIZATION_IDENTITY')
+-    need(a.get('approved') is True and a.get('native1198_one_shot') is True,'SEPARATE_NATIVE_APPROVAL')
++    need(a.get('approved') is True and a.get('native30_one_shot') is True,'SEPARATE_NATIVE_APPROVAL')
+     need(a.get('allow_policy_changes') is False and a.get('effective_policy_unverified_accepted') is True,'POLICY_SCOPE')
+     need(a.get('commands')==c['commands'] and a.get('budgets_seconds')==c['budgets_seconds'],'APPROVAL_COMMAND_BUDGET')
+     need(release.get('changed_branch_validation')=='PASS' and release.get('native_permission_route_reviewed') is True,'VALIDATION_OR_ROUTE_PENDING')
+@@ -74,7 +74,7 @@
+     need(Path.cwd().resolve().as_posix()==c['cwd'],'CWD')
+     need(os.name=='nt' and sys.flags.isolated and sys.flags.no_site and sys.flags.dont_write_bytecode and sys.flags.utf8_mode,'START_OPTIONS')
+     need(ref(sys.executable)==c['python'],'PYTHON_IDENTITY')
+-    c2=source_module('_guard1198_existing_c2',c['legacy_gate']['path'],c['legacy_gate'])
++    c2=source_module('_normal30_existing_c2',c['legacy_gate']['path'],c['legacy_gate'])
+     legacy=strict(check(c['legacy_contract']));adapter=c2.NativeAdapter()
+     c2.environment(legacy,adapter)
+     state={'run_id':c['run_id'],'code_manifest_sha256':expected,'start':ENTRY_START,'status':'INCOMPLETE','errors':[],'native_attempts':{},'preservation':'INCOMPLETE','process_cleanup':'INCOMPLETE','policy_preservation':'INCOMPLETE','actual_cores':'UNVERIFIED','effective_policy':'UNVERIFIED'}
+@@ -85,25 +85,25 @@
+         baseline_before=[ref(r['path']) for r in c['baseline_files'].values()]
+         for actual,r in zip(baseline_before,c['baseline_files'].values()):need(actual==r,'BASELINE_IDENTITY')
+         with c2.VerifiedApplications(legacy) as app:
+-            gate=c2.input_gate(app,adapter,time.monotonic,ENTRY_START+180);save(run/'GATE.json',gate)
++            gate=c2.input_gate(app,adapter,time.monotonic,ENTRY_START+c['budgets_seconds']['preflight_and_input']);save(run/'GATE.json',gate)
+             app.recheck();seal(expected);permission(c,expected,c['approval_path'])
+             import winjob
+             transport=winjob.WindowsJobTransport();resources=transport.resources(str(run));save(run/'RESOURCES.json',resources)
+-            need(resources['free_disk_bytes']>=10*2**30,'DISK_START')
+-            need(time.monotonic()-ENTRY_START<=180,'PREFLIGHT_BUDGET')
++            need(resources['free_disk_bytes']>=c['resource_proposal']['disk_start_gib']*2**30,'DISK_START')
++            need(time.monotonic()-ENTRY_START<=c['budgets_seconds']['preflight_and_input'],'PREFLIGHT_BUDGET')
+             need(not any(x.get('name','').lower() in ('comsolbatch.exe','comsolcompile.exe') for x in transport.census()),'OTHER_NATIVE_BATCH_PRESENT')
+             policy_before=check(a['default_prefs_identity']);need(Path(a['default_prefs_identity']['path']).resolve()==default.resolve(),'PREFS_PATH')
+             security=policy_values(policy_before)
+             for d in ('prefs','config_compile','data_compile','config_batch','data_batch'):(run/d).mkdir()
+             with (run/'prefs/comsol.prefs').open('xb') as f:f.write(policy_before)
+             save(run/'POLICY_BEFORE.json',{'default':ref(default),'security':security,'changes_authorized':False})
+-            with (run/'Guard1198Candidate.java').open('xb') as f:f.write(check(c['candidate_java']))
++            with (run/'Normal30Candidate.java').open('xb') as f:f.write(check(c['candidate_java']))
+             native_spent=0.0
+             for phase in ('compile','batch'):
+                 check(c['native_executable_pins'][phase])
+-                need((run/'Guard1198Candidate.java').read_bytes()==check(c['candidate_java']),'STAGED_SOURCE_CHANGED')
++                need((run/'Normal30Candidate.java').read_bytes()==check(c['candidate_java']),'STAGED_SOURCE_CHANGED')
+                 if phase=='batch':
+-                    classes=list(run.glob('*.class'));need(len(classes)==1 and classes[0].name=='Guard1198Candidate.class','CLASS_SET')
++                    classes=list(run.glob('*.class'));need(len(classes)==1 and classes[0].name=='Normal30Candidate.class','CLASS_SET')
+                     need(classes[0].read_bytes()[:4]==b'\xca\xfe\xba\xbe','CLASS_MAGIC')
+                     save(run/'CLASS_IDENTITY.json',ref(classes[0]))
+                 app.recheck();seal(expected);need(default.read_bytes()==policy_before,'DEFAULT_PREFS_CHANGED')
+@@ -113,10 +113,10 @@
+                 counter=[0]
+                 def update(v):
+                     counter[0]+=1;save(run/(phase+'_event_%06d.json'%counter[0]),v)
+-                result=transport.run(c['commands'][phase],str(run),str(run/(phase+'_console.log')),1800-native_spent,60,update)
++                result=transport.run(c['commands'][phase],str(run),str(run/(phase+'_console.log')),c['budgets_seconds']['compile_batch']-native_spent,60,update)
+                 state[phase]=result;save(run/(phase+'_RETURN.json'),result)
+                 cleanup_total+=result['cleanup_elapsed_seconds'];native_spent+=result['elapsed_seconds']-result['cleanup_elapsed_seconds']
+-                need(cleanup_total<=120 and native_spent<=1800,'NATIVE_PHASE_BUDGET')
++                need(cleanup_total<=c['budgets_seconds']['process_cleanup_total'] and native_spent<=c['budgets_seconds']['compile_batch'],'NATIVE_PHASE_BUDGET')
+                 logs=(run/(phase+'_console.log')).read_text('utf-8-sig')
+                 if phase=='batch':logs+='\n'+(run/'batch.log').read_text('utf-8-sig')
+                 process_ok(result,logs)
+@@ -145,17 +145,20 @@
+     return 0 if state['status']=='NATIVE_RETURN_READY' else 1
+ def incomplete_result(state=None):
+     state=state or {}
+-    return {'limited_result':'INCOMPLETE','trigger':'INCOMPLETE','sampled_comparison':'INCOMPLETE','preservation':state.get('preservation','INCOMPLETE'),'process_cleanup':state.get('process_cleanup','INCOMPLETE'),'policy_preservation':state.get('policy_preservation','INCOMPLETE'),'errors':[],'overall':'INCOMPLETE','normal_gate':'INCOMPLETE','effective_policy':'UNVERIFIED','native_approved_by_this_result':False}
++    return {'limited_result':'INCOMPLETE','diagnostic':'INCOMPLETE','sampled_comparison':'INCOMPLETE',
++            'preservation':state.get('preservation','INCOMPLETE'),'process_cleanup':state.get('process_cleanup','INCOMPLETE'),
++            'policy_preservation':state.get('policy_preservation','INCOMPLETE'),'errors':[],
++            'overall':'INCOMPLETE','normal_gate':'INCOMPLETE','effective_policy':'UNVERIFIED','native_approved_by_this_result':False}
+ 
+ def analyze(c,expected):
+     run=Path(c['run_root']);state={};result=incomplete_result();began=time.monotonic()
+     try:
+         state=read(run/'NATIVE_STATE.json');result=incomplete_result(state)
+         need(state['run_id']==c['run_id'] and state['code_manifest_sha256']==expected,'STATE_IDENTITY')
+-        need(state['start']<=time.monotonic()<=state['start']+3000,'OVERALL_BUDGET')
+-        path=ROOT/'src/trigger_consumer.py'
+-        manifest=read(ROOT/'CODE_MANIFEST.json');pin=next(r for r in manifest['files'] if r['file']=='src/trigger_consumer.py')
+-        consumer=source_module('_guard1198_consumer',path,{'path':path.as_posix(),'bytes':pin['bytes'],'sha256':pin['sha256']})
++        need(state['start']<=time.monotonic()<=state['start']+c['budgets_seconds']['overall'],'OVERALL_BUDGET')
++        path=ROOT/'src/diagnostic_consumer.py'
++        manifest=read(ROOT/'CODE_MANIFEST.json');pin=next(r for r in manifest['files'] if r['file']=='src/diagnostic_consumer.py')
++        consumer=source_module('_normal30_consumer',path,{'path':path.as_posix(),'bytes':pin['bytes'],'sha256':pin['sha256']})
+         tables=consumer.extract_tables(run/'batch_console.log',run/'tables')
+         result=consumer.analyze(c,run/'tables',(run/'batch.log').read_text('utf-8-sig'),(run/'batch_console.log').read_text('utf-8-sig'),state)
+         result['tables_manifest']=tables
+@@ -163,15 +166,15 @@
+         result['limited_result']='INCOMPLETE'
+         result['errors'].append({'axis':'analysis','type':type(e).__name__,'error':str(e)})
+     result['run_id']=c['run_id'];result['code_manifest_sha256']=expected;result['analysis_elapsed_seconds']=time.monotonic()-began
+-    if result['analysis_elapsed_seconds']>600 or ('start' in state and time.monotonic()>state['start']+3000):
++    if result['analysis_elapsed_seconds']>c['budgets_seconds']['analysis'] or ('start' in state and time.monotonic()>state['start']+c['budgets_seconds']['overall']):
+         result['limited_result']='INCOMPLETE';result['errors'].append({'error':'FINAL_BUDGET'})
+     record=None
+     try:
+-        save(run/'TRIGGER_RESULT.json',result);record=ref(run/'TRIGGER_RESULT.json')
++        save(run/'DIAGNOSTIC_RESULT.json',result);record=ref(run/'DIAGNOSTIC_RESULT.json')
+     except BaseException as e:
+         result['limited_result']='INCOMPLETE';result['errors'].append({'axis':'record','type':type(e).__name__,'error':str(e)})
+     print(json.dumps({'result':record,'analysis_result':result,'limited_result':result['limited_result'],'overall':'INCOMPLETE'},ensure_ascii=False))
+-    return 0 if result['limited_result']=='TRIGGER_AND_SAMPLED_DATA_ACCEPTABLE' else 1
++    return 0 if result['limited_result']=='NORMAL_30S_DIAGNOSTIC_COMPLETE' else 1
+ def main():
+     p=argparse.ArgumentParser();p.add_argument('action',choices=('execute','analyze'));p.add_argument('--approval',required=True);p.add_argument('--manifest-sha',required=True);a=p.parse_args()
+     c,_=seal(a.manifest_sha);auth=permission(c,a.manifest_sha,a.approval)
+--- accepted1198/PARENT_COMMAND.ps1
++++ candidate30/PARENT_COMMAND.ps1
+@@ -2,7 +2,7 @@
+ param([Parameter(Mandatory=$true)][ValidatePattern('^[0-9a-f]{64}$')][string]$ManifestSha)
+ $ErrorActionPreference='Stop'
+ $bClock=[Diagnostics.Stopwatch]::StartNew()
+-$bRoot='C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928'
++$bRoot='C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928'
+ $bEvidence=Join-Path $bRoot 'future_parent_001'
+ $bPython='C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe'
+ $bOwned=$false
+@@ -12,6 +12,7 @@
+ $bRunReturn=$null
+ $bAnalysisReturn=$null
+ $bDeliveryStart=$null
++$limited='INCOMPLETE'
+ function BHash([string]$Path) { (Get-FileHash -LiteralPath $Path -Algorithm SHA256 -ErrorAction Stop).Hash.ToLowerInvariant() }
+ function BRef([string]$Path) { @{path=$Path;bytes=(Get-Item -LiteralPath $Path -ErrorAction Stop).Length;sha256=(BHash $Path)} }
+ function BRead([string]$Path) { ConvertFrom-Json -InputObject ([IO.File]::ReadAllText($Path)) -ErrorAction Stop }
+@@ -41,13 +42,6 @@
+     $script:bLastReturn=$result
+ }
+ function GDecision($Native,$Analysis,$Result,$Expected,[double]$Overall) {
+-    if ([double]::IsNaN($Overall) -or [double]::IsInfinity($Overall) -or $Overall -lt 0 -or $Overall -gt 3000) { return 'INCOMPLETE' }
+-    foreach ($r in @($Native,$Analysis)) {
+-        if ($null -eq $r -or $r.returned -isnot [bool] -or $r.returned -ne $true -or $r.invocation_succeeded -isnot [bool] -or $r.invocation_succeeded -ne $true -or $r.native_rc -isnot [int] -or $r.native_rc -ne 0 -or $r.new_error -isnot [bool] -or $r.new_error -ne $false -or $r.exception) { return 'INCOMPLETE' }
+-    }
+-    if ($Analysis.elapsed_seconds -isnot [double] -or [double]::IsNaN($Analysis.elapsed_seconds) -or [double]::IsInfinity($Analysis.elapsed_seconds) -or $Analysis.elapsed_seconds -lt 0 -or $Analysis.elapsed_seconds -gt 600) { return 'INCOMPLETE' }
+-    if ($null -eq $Result -or $null -eq $Result.errors -or $Result.run_id -cne $Expected.run_id -or $Result.code_manifest_sha256 -cne $Expected.manifest_sha256 -or $Result.limited_result -cne 'TRIGGER_AND_SAMPLED_DATA_ACCEPTABLE' -or $Result.overall -cne 'INCOMPLETE' -or @($Result.errors).Count -ne 0) { return 'INCOMPLETE' }
+-    # Consume producer schema/states, not CSV numerical calculations.
+     function GHas($Object,[string]$Key) {
+         if ($null -eq $Object) { return $false }
+         if ($Object -is [System.Collections.IDictionary]) { return $Object.Contains($Key) }
+@@ -56,31 +50,64 @@
+     function GStruct($Object) {
+         return ($null -ne $Object -and (($Object -is [System.Collections.IDictionary] -and $Object.Count -gt 0) -or ($Object -is [pscustomobject] -and @($Object.PSObject.Properties).Count -gt 0)))
+     }
++    function GNumber($Value,[double]$Min,[double]$Max) {
++        $v=0.0
++        return ([double]::TryParse([string]$Value,[Globalization.NumberStyles]::Float,[Globalization.CultureInfo]::InvariantCulture,[ref]$v) -and -not [double]::IsNaN($v) -and -not [double]::IsInfinity($v) -and $v -ge $Min -and $v -le $Max)
++    }
++    if (-not (GNumber $Overall 0 5100)) { return 'INCOMPLETE' }
++    foreach ($r in @($Native,$Analysis)) {
++        if ($null -eq $r -or $r.returned -isnot [bool] -or -not $r.returned -or $r.invocation_succeeded -isnot [bool] -or $r.native_rc -isnot [int] -or $r.new_error -isnot [bool] -or $r.new_error -or $r.exception) { return 'INCOMPLETE' }
++    }
++    if ($Native.native_rc -ne 0 -or -not $Native.invocation_succeeded) { return 'INCOMPLETE' }
++    if (-not (GNumber $Analysis.elapsed_seconds 0 900)) { return 'INCOMPLETE' }
++    if (-not (GStruct $Result) -or $Result.errors -isnot [array] -or @($Result.errors).Count -ne 0 -or $Result.run_id -cne $Expected.run_id -or $Result.code_manifest_sha256 -cne $Expected.manifest_sha256) { return 'INCOMPLETE' }
++    $normal=($Result.limited_result -ceq 'NORMAL_30S_DIAGNOSTIC_COMPLETE')
++    $protected=($Result.limited_result -ceq 'PROTECTED_STOP_30S_INCOMPLETE')
++    if (-not $normal -and -not $protected) { return 'INCOMPLETE' }
++    if ($normal -and ($Analysis.native_rc -ne 0 -or -not $Analysis.invocation_succeeded)) { return 'INCOMPLETE' }
++    if ($protected -and ($Analysis.native_rc -ne 1 -or $Analysis.invocation_succeeded)) { return 'INCOMPLETE' }
+     foreach ($axis in @('sampled_comparison','preservation','process_cleanup','policy_preservation')) {
+         if ($Result.$axis -cne 'PASS') { return 'INCOMPLETE' }
+     }
+-    if ($Result.trigger -cne 'TEST_TRIGGER_DETECTED' -or $Result.normal_gate -cne 'INCOMPLETE' -or $Result.effective_policy -cne 'UNVERIFIED' -or $Result.native_approved_by_this_result -isnot [bool] -or $Result.native_approved_by_this_result) { return 'INCOMPLETE' }
+-    foreach ($key in @('pair','native_stop','numeric','tables_manifest')) {
++    if ($Result.overall -cne 'INCOMPLETE' -or $Result.normal_gate -cne 'INCOMPLETE' -or $Result.effective_policy -cne 'UNVERIFIED' -or $Result.native_approved_by_this_result -isnot [bool] -or $Result.native_approved_by_this_result) { return 'INCOMPLETE' }
++    foreach ($key in @('termination','native_termination','runtime_settings','numeric','tables_manifest')) {
+         if (-not (GStruct $Result.$key)) { return 'INCOMPLETE' }
+     }
+-    $pair=$Result.pair;$numeric=$Result.numeric;$coverage=$numeric.coverage
+-    if ($pair.status -cne 'CSV_TRIGGER_TRANSITION' -or $Result.native_stop.status -cne 'NATIVE_STOP_MATCHED' -or $numeric.status -cne 'PASS' -or -not (GStruct $coverage)) { return 'INCOMPLETE' }
+-    if ($Result.native_stop.after_stop_export_allowed -isnot [bool] -or -not $Result.native_stop.after_stop_export_allowed -or [string]::IsNullOrWhiteSpace($Result.native_stop.reported_time)) { return 'INCOMPLETE' }
+-    $minus=0.0;$plus=0.0
+-    if (-not [double]::TryParse([string]$pair.t_minus,[Globalization.NumberStyles]::Float,[Globalization.CultureInfo]::InvariantCulture,[ref]$minus) -or -not [double]::TryParse([string]$pair.t_plus,[Globalization.NumberStyles]::Float,[Globalization.CultureInfo]::InvariantCulture,[ref]$plus) -or [double]::IsNaN($minus) -or [double]::IsNaN($plus) -or $minus -le 0 -or $plus -le $minus -or $plus -gt 5) { return 'INCOMPLETE' }
+-    if ($pair.stored_times_s -isnot [array] -or @($pair.stored_times_s).Count -lt 3 -or $pair.ties -isnot [array] -or @($pair.ties).Count -ne @($pair.stored_times_s).Count) { return 'INCOMPLETE' }
+-    foreach ($tie in $pair.ties) {
++    $term=$Result.termination;$native=$Result.native_termination;$numeric=$Result.numeric;$coverage=$numeric.coverage
++    if ($numeric.status -cne 'PASS' -or -not (GStruct $coverage) -or $coverage.status -cne 'PASS' -or $Result.runtime_settings.status -cne 'PASS' -or $Result.runtime_settings.requested_count -ne 437 -or -not (GStruct $Result.runtime_settings.settings)) { return 'INCOMPLETE' }
++    if ($native.no_integration_after_termination -isnot [bool] -or -not $native.no_integration_after_termination -or $native.after_stop_export_allowed -isnot [bool] -or -not $native.after_stop_export_allowed -or -not (GNumber $native.reported_time 0 30)) { return 'INCOMPLETE' }
++    if ($term.threshold_mol_m3 -cne '0' -or $term.active_guards -isnot [array] -or $term.stored_times_s -isnot [array] -or @($term.stored_times_s).Count -lt 3 -or $term.ties -isnot [array] -or @($term.ties).Count -ne @($term.stored_times_s).Count -or $native.step_count -ne @($term.stored_times_s).Count) { return 'INCOMPLETE' }
++    if (-not (GNumber $term.final_time_s 0 30) -or -not (GNumber $term.safe_prefix_end_s 0 30) -or $term.final_time_s -cne $term.stored_times_s[-1]) { return 'INCOMPLETE' }
++    if ($normal) {
++        if ($Result.diagnostic -cne 'NORMAL_30S_REACHED' -or $term.status -cne 'NORMAL_30S_REACHED' -or $native.status -cne 'NATIVE_NORMAL_END_MATCHED' -or $null -ne $native.stop_reason -or @($term.active_guards).Count -ne 0 -or -not (GNumber $term.final_time_s 30 30) -or -not (GNumber $term.safe_prefix_end_s 30 30)) { return 'INCOMPLETE' }
++    } else {
++        if ($Result.diagnostic -cne 'PROTECTIVE_STOP_OBSERVED' -or $term.status -cne 'PROTECTIVE_STOP_OBSERVED' -or $native.status -cne 'NATIVE_PROTECTIVE_STOP_MATCHED' -or @($term.active_guards).Count -lt 1) { return 'INCOMPLETE' }
++        $reasons=@{electrolyte_guard='Electrolyte minimum <= threshold';ocp_guard='OCP surface outside table';surface_guard='Invalid surface concentration'}
++        $matched=$false
++        foreach ($guard in $term.active_guards) {
++            if (-not $reasons.ContainsKey($guard)) { return 'INCOMPLETE' }
++            if ($native.stop_reason -ceq $reasons[$guard]) { $matched=$true }
++        }
++        if (-not $matched -or -not (GNumber $term.t_minus 0 30) -or -not (GNumber $term.t_plus 0 30) -or [double]$term.t_minus -le 0 -or [double]$term.t_minus -ge [double]$term.t_plus -or $term.t_plus -cne $term.final_time_s -or $term.t_minus -cne $term.safe_prefix_end_s) { return 'INCOMPLETE' }
++    }
++    foreach ($tie in $term.ties) {
+         if (-not (GHas $tie 'time_s') -or $tie.exact_minimum_domains -isnot [array] -or @($tie.exact_minimum_domains).Count -lt 1 -or $tie.near_tie_domains -isnot [array]) { return 'INCOMPLETE' }
+     }
+-    foreach ($key in @('expected_requested','common_stored','missing_target','missing_baseline','target_noncommon')) {
++    foreach ($key in @('expected_requested','common_stored','missing_target','missing_baseline','target_noncommon','full_intersection','strict_requested_through_safe_end','missing_strict_requested')) {
+         if (-not (GHas $coverage $key) -or $coverage.$key -isnot [array]) { return 'INCOMPLETE' }
+     }
+-    if (@($coverage.expected_requested).Count -lt 2 -or @($coverage.common_stored).Count -lt 2 -or @($coverage.missing_target).Count -ne 0 -or @($coverage.missing_baseline).Count -ne 0 -or $coverage.common_count -isnot [int] -or $coverage.common_count -ne @($coverage.common_stored).Count -or $coverage.common_first -cne $coverage.common_stored[0] -or $coverage.common_last -cne $coverage.common_stored[-1]) { return 'INCOMPLETE' }
+-    foreach ($key in @('maximum_voltage_delta_V','maximum_surface_delta','maximum_Li_relative_drift','maximum_voltage_identity_V')) {
+-        $metric=0.0
+-        if (-not (GHas $numeric $key) -or -not [double]::TryParse([string]$numeric.$key,[Globalization.NumberStyles]::Float,[Globalization.CultureInfo]::InvariantCulture,[ref]$metric) -or [double]::IsNaN($metric) -or [double]::IsInfinity($metric) -or $metric -lt 0) { return 'INCOMPLETE' }
++    if (@($coverage.expected_requested).Count -lt 2 -or @($coverage.common_stored).Count -lt 2 -or @($coverage.missing_target).Count -ne 0 -or @($coverage.missing_baseline).Count -ne 0 -or @($coverage.missing_strict_requested).Count -ne 0 -or $coverage.common_count -isnot [int] -or $coverage.common_count -ne @($coverage.common_stored).Count -or $coverage.full_intersection_count -ne @($coverage.full_intersection).Count -or $coverage.common_first -cne $coverage.common_stored[0] -or $coverage.common_last -cne $coverage.common_stored[-1]) { return 'INCOMPLETE' }
++    if (-not (GNumber $coverage.common_first 0 0) -or -not (GNumber $coverage.common_last 0 5) -or [double]$coverage.common_last -le 0) { return 'INCOMPLETE' }
++    if ($normal -and (@($coverage.expected_requested).Count -ne 187 -or @($coverage.strict_requested_through_safe_end).Count -ne 437 -or -not (GNumber $coverage.common_last 5 5) -or -not (GNumber $coverage.comparison_end_s 5 5))) { return 'INCOMPLETE' }
++    foreach ($time in $coverage.common_stored) { if ($coverage.full_intersection -cnotcontains $time) { return 'INCOMPLETE' } }
++    $maxima=@{maximum_voltage_delta_V=0.001;maximum_surface_delta=0.0001;maximum_Li_relative_drift=0.000001;maximum_voltage_identity_V=0.00000001}
++    foreach ($key in $maxima.Keys) { if (-not (GHas $numeric $key) -or -not (GNumber $numeric.$key 0 $maxima[$key])) { return 'INCOMPLETE' } }
++    if (-not (GStruct $numeric.initial_Li_components) -or -not (GStruct $numeric.late_interval)) { return 'INCOMPLETE' }
++    foreach ($key in @('Li_N_mol_m2','Li_P_mol_m2','Li_electrolyte_mol_m2')) {
++        if (-not (GStruct $numeric.initial_Li_components.$key) -or $numeric.initial_Li_components.$key.status -cne 'PASS' -or -not (GNumber $numeric.initial_Li_components.$key.relative_delta 0 0.000001)) { return 'INCOMPLETE' }
+     }
+-    $required=@('guard_binding.csv','electrolyte_guard.csv','preflight_global.csv','preflight_boundary1.csv','preflight_boundary4.csv','axes_profile_N.csv','axes_profile_P.csv')
++    if ($normal -and ($numeric.late_interval.status -cne 'OBSERVED' -or $numeric.late_interval.count -le 0 -or -not (GNumber $numeric.late_interval.last_time_s 30 30) -or -not (GStruct $numeric.late_interval.metrics))) { return 'INCOMPLETE' }
++    $required=@('guard_binding.csv','axes_runtime_settings.csv','electrolyte_guard.csv','preflight_global.csv','preflight_boundary1.csv','preflight_boundary4.csv','axes_profile_N.csv','axes_profile_P.csv')
+     foreach ($tag in @('eguard','nglobal','point1','point4','MinLinece','MaxLinece','profiletimes','profileN','profileP')) {
+         foreach ($phase in @('configured','evaluated')) { $required+=('units_'+$tag+'_'+$phase+'.csv') }
+     }
+@@ -90,7 +117,8 @@
+         $e=$Result.tables_manifest.$name
+         if (-not (GStruct $e) -or [string]::IsNullOrWhiteSpace($e.path) -or $e.bytes -isnot [int] -or $e.bytes -le 0 -or $e.sha256 -isnot [string] -or $e.sha256 -cnotmatch '^[0-9a-f]{64}$') { return 'INCOMPLETE' }
+     }
+-    return 'AWAITING_LIMITED_EXTERNAL_ACCEPTANCE'
++    if ($normal) { return 'AWAITING_30S_LIMITED_EXTERNAL_ACCEPTANCE' }
++    return 'PROTECTED_STOP_30S_INCOMPLETE'
+ }
+ try {
+     if ($PSVersionTable.PSEdition -cne 'Desktop' -or $PSVersionTable.PSVersion.Major -ne 5) { throw 'POWERSHELL_51_REQUIRED' }
+@@ -105,14 +133,14 @@
+     $c=BRead (Join-Path $bRoot 'CONTRACT.json')
+     $a=BRead $c.approval_path
+     $release=BRead $c.release_path
+-    if ($a.approved -ne $true -or $a.native1198_one_shot -ne $true -or $a.code_manifest_sha256 -cne $ManifestSha -or $release.code_manifest_sha256 -cne $ManifestSha -or $release.changed_branch_validation -cne 'PASS') { throw 'INACTIVE_NO_NATIVE_AUTHORIZATION' }
++    if ($a.approved -ne $true -or $a.native30_one_shot -ne $true -or $a.code_manifest_sha256 -cne $ManifestSha -or $release.code_manifest_sha256 -cne $ManifestSha -or $release.changed_branch_validation -cne 'PASS') { throw 'INACTIVE_NO_NATIVE_AUTHORIZATION' }
+     if ((BHash $bPython) -cne $c.python.sha256 -or (Get-Item -LiteralPath $bPython).Length -ne $c.python.bytes) { throw 'PYTHON_IDENTITY' }
+     if ((Test-Path -LiteralPath $bEvidence) -or (Test-Path -LiteralPath $c.run_root)) { throw 'EXISTING_PATH_NO_RETRY' }
+     Set-Location -LiteralPath $c.cwd -ErrorAction Stop
+     [void][IO.Directory]::CreateDirectory($bEvidence);$bOwned=$true
+     Start-Transcript -LiteralPath (Join-Path $bEvidence 'PARENT_TRANSCRIPT.txt') -NoClobber -ErrorAction Stop | Out-Host
+     $bTranscript=$true
+-    BSave 'PARENT_START.json' @{source='USER_VISIBLE_POWERSHELL_PARENT';manifest_sha256=$ManifestSha;approval=(BRef $c.approval_path);release=(BRef $c.release_path);cwd=(Get-Location).Path;start_utc=[DateTime]::UtcNow.ToString('o');budget_seconds=3000}
++    BSave 'PARENT_START.json' @{source='USER_VISIBLE_POWERSHELL_PARENT';manifest_sha256=$ManifestSha;approval=(BRef $c.approval_path);release=(BRef $c.release_path);cwd=(Get-Location).Path;start_utc=[DateTime]::UtcNow.ToString('o');budget_seconds=5100}
+     $entry=Join-Path $bRoot 'src/candidate_entry.py'
+     BInvoke 'native' @('-I','-S','-B','-X','utf8',$entry,'execute','--approval',$c.approval_path,'--manifest-sha',$ManifestSha) 'NATIVE_PARENT_RETURN.json'
+     $bRunReturn=$bLastReturn
+@@ -123,12 +151,13 @@
+     }
+     $bDeliveryStart=$bClock.Elapsed.TotalSeconds
+     $result=$null
+-    $resultPath=Join-Path $c.run_root 'TRIGGER_RESULT.json'
++    $resultPath=Join-Path $c.run_root 'DIAGNOSTIC_RESULT.json'
+     if (Test-Path -LiteralPath $resultPath) { $result=BRead $resultPath }
+     $limited=GDecision $bRunReturn $bAnalysisReturn $result @{run_id=$c.run_id;manifest_sha256=$ManifestSha} $bClock.Elapsed.TotalSeconds
+-    if ($bClock.Elapsed.TotalSeconds -gt 3000) { $limited='INCOMPLETE';$bErrors+=@{stage='budget';error='OVERALL_BUDGET'} }
++    if ($bClock.Elapsed.TotalSeconds -gt 5100) { $limited='INCOMPLETE';$bErrors+=@{stage='budget';error='OVERALL_BUDGET'} }
+     BSave 'PARENT_LOCAL_DECISION.json' @{limited=$limited;overall='INCOMPLETE';native_return=$bRunReturn;analysis_return=$bAnalysisReturn;auto_retry=$false}
+ } catch {
++    $limited='INCOMPLETE'
+     $bErrors+=@{stage='parent';error=$_.ToString();elapsed_seconds=$bClock.Elapsed.TotalSeconds}
+     [Console]::WriteLine(('STOP: '+$_.ToString()))
+ } finally {
+@@ -137,10 +166,11 @@
+         try {
+             if ($bTranscript) { Stop-Transcript -ErrorAction Stop | Out-Host;$bTranscript=$false }
+             $snapshot=$bClock.Elapsed.TotalSeconds
+-            $within=($snapshot -le 3000 -and ($snapshot-$bDeliveryStart) -le 300)
+-            BSave 'FINAL_BOUNDARY.json' @{source='USER_VISIBLE_POWERSHELL_PARENT';elapsed_seconds=$snapshot;delivery_elapsed_seconds=($snapshot-$bDeliveryStart);within_limits=$within;errors=$bErrors;transcript=(BRef (Join-Path $bEvidence 'PARENT_TRANSCRIPT.txt'));overall='INCOMPLETE';status='AWAITING_EXTERNAL_ACCEPTANCE';raw_host_rc='not_known_before_return'}
+-            [Console]::WriteLine((ConvertTo-Json -Compress -Depth 10 @{kind='USER_PARENT_FINAL_RETURN';boundary=(BRef (Join-Path $bEvidence 'FINAL_BOUNDARY.json'));snapshot_seconds=$bClock.Elapsed.TotalSeconds;overall='INCOMPLETE'}))
+-        } catch { [Console]::WriteLine(('FINAL_RECORD_ERROR: '+$_.ToString()));$bErrors+=@{stage='final_record';error=$_.ToString()} }
++            $within=($snapshot -le 5100 -and ($snapshot-$bDeliveryStart) -le 300)
++            if (-not $within -or @($bErrors).Count -ne 0) { $limited='INCOMPLETE' }
++            BSave 'FINAL_BOUNDARY.json' @{source='USER_VISIBLE_POWERSHELL_PARENT';elapsed_seconds=$snapshot;delivery_elapsed_seconds=($snapshot-$bDeliveryStart);within_limits=$within;errors=$bErrors;transcript=(BRef (Join-Path $bEvidence 'PARENT_TRANSCRIPT.txt'));overall='INCOMPLETE';status='AWAITING_EXTERNAL_ACCEPTANCE';raw_host_rc=$null;host_boundary='SCRIPT_FINAL_RECORD_NOT_PROCESS_EXIT';body_completed_without_error=(@($bErrors).Count -eq 0);limited=$limited;local_decision=$(if (Test-Path -LiteralPath (Join-Path $bEvidence 'PARENT_LOCAL_DECISION.json')) { BRef (Join-Path $bEvidence 'PARENT_LOCAL_DECISION.json') } else { $null })}
++            [Console]::WriteLine((ConvertTo-Json -Compress -Depth 10 @{kind='USER_PARENT_FINAL_RETURN';limited=$limited;record_errors=$bErrors;within_limits=$within;host_boundary='SCRIPT_FINAL_RECORD_NOT_PROCESS_EXIT';raw_host_rc=$null;boundary=(BRef (Join-Path $bEvidence 'FINAL_BOUNDARY.json'));snapshot_seconds=$bClock.Elapsed.TotalSeconds;overall='INCOMPLETE'}))
++        } catch { $limited='INCOMPLETE';[Console]::WriteLine(('FINAL_RECORD_ERROR: '+$_.ToString()));$bErrors+=@{stage='final_record';error=$_.ToString()} }
+     }
+     [Console]::WriteLine('STOP. No rerun, cleanup fallback, policy toggle or additional solve. Preserve this output.')
+ }
+--- accepted1198/CONTRACT.json
++++ candidate30/CONTRACT.json
+@@ -1,17 +1,17 @@
+ {
+   "schema": 1,
+-  "run_id": "guard1198_candidate_001",
++  "run_id": "normal30_candidate_001",
+   "approved": false,
+   "usable": false,
+   "preparation_only": true,
+-  "root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928",
+-  "run_root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001",
+-  "approval_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_authorizations/guard1198_001.json",
+-  "release_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_authorizations/VALIDATION_RELEASE.json",
++  "root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928",
++  "run_root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001",
++  "approval_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_authorizations/normal30_001.json",
++  "release_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_authorizations/VALIDATION_RELEASE.json",
+   "candidate_java": {
+-    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/src/Guard1198Candidate.java",
+-    "bytes": 73405,
+-    "sha256": "a742a3f6a19cc21c4c6b3be7ca9cf69eb35c68a70c52b38166971774c0ce1e95"
++    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/src/Normal30Candidate.java",
++    "bytes": 74551,
++    "sha256": "6876e774ee7788e6f5e84ba50af3952bbf41af57d541e3bc0c4f8e044c7fb84d"
+   },
+   "python": {
+     "path": "C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+@@ -335,7 +335,257 @@
+     "4.85",
+     "4.9",
+     "4.95",
+-    "5"
++    "5",
++    "5.1",
++    "5.2",
++    "5.3",
++    "5.4",
++    "5.5",
++    "5.6",
++    "5.7",
++    "5.8",
++    "5.9",
++    "6",
++    "6.1",
++    "6.2",
++    "6.3",
++    "6.4",
++    "6.5",
++    "6.6",
++    "6.7",
++    "6.8",
++    "6.9",
++    "7",
++    "7.1",
++    "7.2",
++    "7.3",
++    "7.4",
++    "7.5",
++    "7.6",
++    "7.7",
++    "7.8",
++    "7.9",
++    "8",
++    "8.1",
++    "8.2",
++    "8.3",
++    "8.4",
++    "8.5",
++    "8.6",
++    "8.7",
++    "8.8",
++    "8.9",
++    "9",
++    "9.1",
++    "9.2",
++    "9.3",
++    "9.4",
++    "9.5",
++    "9.6",
++    "9.7",
++    "9.8",
++    "9.9",
++    "10",
++    "10.1",
++    "10.2",
++    "10.3",
++    "10.4",
++    "10.5",
++    "10.6",
++    "10.7",
++    "10.8",
++    "10.9",
++    "11",
++    "11.1",
++    "11.2",
++    "11.3",
++    "11.4",
++    "11.5",
++    "11.6",
++    "11.7",
++    "11.8",
++    "11.9",
++    "12",
++    "12.1",
++    "12.2",
++    "12.3",
++    "12.4",
++    "12.5",
++    "12.6",
++    "12.7",
++    "12.8",
++    "12.9",
++    "13",
++    "13.1",
++    "13.2",
++    "13.3",
++    "13.4",
++    "13.5",
++    "13.6",
++    "13.7",
++    "13.8",
++    "13.9",
++    "14",
++    "14.1",
++    "14.2",
++    "14.3",
++    "14.4",
++    "14.5",
++    "14.6",
++    "14.7",
++    "14.8",
++    "14.9",
++    "15",
++    "15.1",
++    "15.2",
++    "15.3",
++    "15.4",
++    "15.5",
++    "15.6",
++    "15.7",
++    "15.8",
++    "15.9",
++    "16",
++    "16.1",
++    "16.2",
++    "16.3",
++    "16.4",
++    "16.5",
++    "16.6",
++    "16.7",
++    "16.8",
++    "16.9",
++    "17",
++    "17.1",
++    "17.2",
++    "17.3",
++    "17.4",
++    "17.5",
++    "17.6",
++    "17.7",
++    "17.8",
++    "17.9",
++    "18",
++    "18.1",
++    "18.2",
++    "18.3",
++    "18.4",
++    "18.5",
++    "18.6",
++    "18.7",
++    "18.8",
++    "18.9",
++    "19",
++    "19.1",
++    "19.2",
++    "19.3",
++    "19.4",
++    "19.5",
++    "19.6",
++    "19.7",
++    "19.8",
++    "19.9",
++    "20",
++    "20.1",
++    "20.2",
++    "20.3",
++    "20.4",
++    "20.5",
++    "20.6",
++    "20.7",
++    "20.8",
++    "20.9",
++    "21",
++    "21.1",
++    "21.2",
++    "21.3",
++    "21.4",
++    "21.5",
++    "21.6",
++    "21.7",
++    "21.8",
++    "21.9",
++    "22",
++    "22.1",
++    "22.2",
++    "22.3",
++    "22.4",
++    "22.5",
++    "22.6",
++    "22.7",
++    "22.8",
++    "22.9",
++    "23",
++    "23.1",
++    "23.2",
++    "23.3",
++    "23.4",
++    "23.5",
++    "23.6",
++    "23.7",
++    "23.8",
++    "23.9",
++    "24",
++    "24.1",
++    "24.2",
++    "24.3",
++    "24.4",
++    "24.5",
++    "24.6",
++    "24.7",
++    "24.8",
++    "24.9",
++    "25",
++    "25.1",
++    "25.2",
++    "25.3",
++    "25.4",
++    "25.5",
++    "25.6",
++    "25.7",
++    "25.8",
++    "25.9",
++    "26",
++    "26.1",
++    "26.2",
++    "26.3",
++    "26.4",
++    "26.5",
++    "26.6",
++    "26.7",
++    "26.8",
++    "26.9",
++    "27",
++    "27.1",
++    "27.2",
++    "27.3",
++    "27.4",
++    "27.5",
++    "27.6",
++    "27.7",
++    "27.8",
++    "27.9",
++    "28",
++    "28.1",
++    "28.2",
++    "28.3",
++    "28.4",
++    "28.5",
++    "28.6",
++    "28.7",
++    "28.8",
++    "28.9",
++    "29",
++    "29.1",
++    "29.2",
++    "29.3",
++    "29.4",
++    "29.5",
++    "29.6",
++    "29.7",
++    "29.8",
++    "29.9",
++    "30"
+   ],
+   "coordinates": {
+     "N": [
+@@ -825,8 +1075,8 @@
+       "1.21E-4"
+     ]
+   },
+-  "threshold_mol_m3": "1198",
+-  "maximum_physical_s": "5",
++  "threshold_mol_m3": "0",
++  "maximum_physical_s": "30",
+   "fresh_t0": true,
+   "runAll_calls": 1,
+   "loadCopy_calls": 0,
+@@ -849,62 +1099,63 @@
+     "near_tie_mol_m3": "1e-9"
+   },
+   "budgets_seconds": {
+-    "preflight_and_fresh_gate": 180,
+-    "compile_batch": 1800,
++    "preflight_and_input": 180,
++    "compile_batch": 3600,
+     "process_cleanup_total": 120,
+-    "analysis": 600,
++    "analysis": 900,
+     "delivery": 300,
+-    "overall": 3000
++    "overall": 5100
+   },
+   "resource_proposal": {
+     "cores_requested": 16,
+     "available_ram_floor_gib": null,
+-    "disk_start_gib": 10,
++    "disk_start_gib": 20,
+     "new_working_set_monitor_implemented": false,
+-    "owned_8GiB_and_available_1GiB_10s": "NOT_IMPLEMENTED_NOT_AUTHORIZED"
++    "owned_8GiB_and_available_1GiB_10s": "NOT_IMPLEMENTED_NOT_AUTHORIZED",
++    "memory_note": "Observe start RAM; no new RAM floor or working-set monitor. Previous 8 GiB start threshold is not reintroduced."
+   },
+   "policy": {
+     "changes_allowed": false,
+     "effective_readback": "UNVERIFIED",
+     "default_prefs_path": "C:/Users/BML/.comsol/v63/comsol.prefs",
+-    "native_permission_status": "UNVERIFIED; release requires explicit route assessment; denial stops without fallback",
++    "native_permission_status": "1198 predecessor completed under unchanged policy; new execution rechecks approved prefs identity. No blanket effective-policy claim or fallback.",
+     "private_prefs": "Byte copy of approved default reference into new owned prefs directory; security keys unchanged, no All files toggle. Global bytes must remain unchanged."
+   },
+   "commands": {
+     "compile": [
+       "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolcompile.exe",
+       "-prefsdir",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/prefs",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/prefs",
+       "-configuration",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/config_compile",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/config_compile",
+       "-data",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/data_compile",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/Guard1198Candidate.java"
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/data_compile",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/Normal30Candidate.java"
+     ],
+     "batch": [
+       "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolbatch.exe",
+       "-prefsdir",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/prefs",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/prefs",
+       "-configuration",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/config_batch",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/config_batch",
+       "-data",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/data_batch",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/data_batch",
+       "-np",
+       "16",
+       "-inputfile",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/Guard1198Candidate.class",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/Normal30Candidate.class",
+       "-outputfile",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/result.mph",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/result.mph",
+       "-batchlog",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/batch.log"
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/batch.log"
+     ]
+   },
+   "known_native_evidence_format": "COMSOL6.3 English Information: Stop condition fulfilled at t = ... (description). Other formats fail closed, no fallback parser.",
+   "future_native_blockers": [
+-    "changed-branch validation not executed",
+-    "native policy/write-route unverified",
+-    "source/class compatibility untested",
+-    "separate validation release and user approval absent"
++    "new changed branches not validated",
++    "new source/class compatibility not tested",
++    "current-policy identity must match future user approval",
++    "separate manifest-bound validation release and native30 user approval absent"
+   ],
+   "native_executable_pins": {
+     "compile": {
+@@ -919,5 +1170,224 @@
+     }
+   },
+   "expected_mph_name": "result_Model.mph",
+-  "mph_naming_basis": "Old normal -outputfile result.mph saved result_Model.mph for ModelUtil.create(\"Model\"); require exact singleton, no filename fallback."
++  "mph_naming_basis": "Old normal -outputfile result.mph saved result_Model.mph for ModelUtil.create(\"Model\"); require exact singleton, no filename fallback.",
++  "baseline_requested_times_s": [
++    "0",
++    "0.0001",
++    "0.0002",
++    "0.0005",
++    "0.001",
++    "0.002",
++    "0.005",
++    "0.01",
++    "0.02",
++    "0.03",
++    "0.04",
++    "0.05",
++    "0.06",
++    "0.07",
++    "0.08",
++    "0.09",
++    "0.1",
++    "0.11",
++    "0.12",
++    "0.13",
++    "0.14",
++    "0.15",
++    "0.16",
++    "0.17",
++    "0.18",
++    "0.19",
++    "0.2",
++    "0.21",
++    "0.22",
++    "0.23",
++    "0.24",
++    "0.25",
++    "0.26",
++    "0.27",
++    "0.28",
++    "0.29",
++    "0.3",
++    "0.31",
++    "0.32",
++    "0.33",
++    "0.34",
++    "0.35",
++    "0.36",
++    "0.37",
++    "0.38",
++    "0.39",
++    "0.4",
++    "0.41",
++    "0.42",
++    "0.43",
++    "0.44",
++    "0.45",
++    "0.46",
++    "0.47",
++    "0.48",
++    "0.49",
++    "0.5",
++    "0.51",
++    "0.52",
++    "0.53",
++    "0.54",
++    "0.55",
++    "0.56",
++    "0.57",
++    "0.58",
++    "0.59",
++    "0.6",
++    "0.61",
++    "0.62",
++    "0.63",
++    "0.64",
++    "0.65",
++    "0.66",
++    "0.67",
++    "0.68",
++    "0.69",
++    "0.7",
++    "0.71",
++    "0.72",
++    "0.73",
++    "0.74",
++    "0.75",
++    "0.76",
++    "0.77",
++    "0.78",
++    "0.79",
++    "0.8",
++    "0.81",
++    "0.82",
++    "0.83",
++    "0.84",
++    "0.85",
++    "0.86",
++    "0.87",
++    "0.88",
++    "0.89",
++    "0.9",
++    "0.91",
++    "0.92",
++    "0.93",
++    "0.94",
++    "0.95",
++    "0.96",
++    "0.97",
++    "0.98",
++    "0.99",
++    "1",
++    "1.05",
++    "1.1",
++    "1.15",
++    "1.2",
++    "1.25",
++    "1.3",
++    "1.35",
++    "1.4",
++    "1.45",
++    "1.5",
++    "1.55",
++    "1.6",
++    "1.65",
++    "1.7",
++    "1.75",
++    "1.8",
++    "1.85",
++    "1.9",
++    "1.95",
++    "2",
++    "2.05",
++    "2.1",
++    "2.15",
++    "2.2",
++    "2.25",
++    "2.3",
++    "2.35",
++    "2.4",
++    "2.45",
++    "2.5",
++    "2.55",
++    "2.6",
++    "2.65",
++    "2.7",
++    "2.75",
++    "2.8",
++    "2.85",
++    "2.9",
++    "2.95",
++    "3",
++    "3.05",
++    "3.1",
++    "3.15",
++    "3.2",
++    "3.25",
++    "3.3",
++    "3.35",
++    "3.4",
++    "3.45",
++    "3.5",
++    "3.55",
++    "3.6",
++    "3.65",
++    "3.7",
++    "3.75",
++    "3.8",
++    "3.85",
++    "3.9",
++    "3.95",
++    "4",
++    "4.05",
++    "4.1",
++    "4.15",
++    "4.2",
++    "4.25",
++    "4.3",
++    "4.35",
++    "4.4",
++    "4.45",
++    "4.5",
++    "4.55",
++    "4.6",
++    "4.65",
++    "4.7",
++    "4.75",
++    "4.8",
++    "4.85",
++    "4.9",
++    "4.95",
++    "5"
++  ],
++  "guard_stop_descriptions": {
++    "electrolyte_guard": "Electrolyte minimum <= threshold",
++    "ocp_guard": "OCP surface outside table",
++    "surface_guard": "Invalid surface concentration"
++  },
++  "parent_completion_boundary": {
++    "accepted_proposal": "SCRIPT_FINAL_RECORD_AND_USER_OBSERVED_PROMPT_RETURN",
++    "outer_powershell_exit_code": null,
++    "reason": "-NoExit keeps process alive; do not invent raw host rc. Child native and analyzer rc are captured separately."
++  },
++  "runtime_settings_required": {
++    "geometry_length_unit": "m",
++    "geometry_dimension": "1",
++    "rtol": "1.0E-6",
++    "initialstepbdf": "1.0E-5",
++    "initialstepbdfactive": "on",
++    "maxstepconstraintbdf": "expr",
++    "maxstepexpressionbdf": "if(t<0.1[s],0.000125[s],0.1[s])",
++    "maxstepbdf": "0.1",
++    "tstepsbdf": "strict",
++    "tout": "tsteps",
++    "consistent": "bweuler",
++    "atolglobalmethod": "scaled",
++    "atolglobalvaluemethod": "factor",
++    "atolglobalfactor": "0.1",
++    "atolglobal": "0.001",
++    "eventtol": "0.01",
++    "profile_time_interpolation": "off; all stored solnum; no t property set",
++    "profile_spatial_evaluation": "domain-selected FE Interp; recover off; ext 0; 241 common coordinates"
++  }
+ }

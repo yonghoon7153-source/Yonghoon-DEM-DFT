@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "run_id": "guard1198_candidate_001",
+  "code_manifest_sha256": "0c14c4f886d53398fc4869db117577066b821837cd3593a6727e2ac4d0a63c45",
+  "changed_branch_validation": "PASS",
+  "native_permission_route_reviewed": true,
+  "manifest_bytes_unchanged_since_validation": true,
+  "validation_evidence": [
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_validation_attempt_04_20260928/COMSOL63_GUARD1198_LIMITED_VALIDATION_PASS_20260928.zip",
+      "bytes": 1304867,
+      "sha256": "6af5463ed0d395353de1a9935088c1d6f9503e476d0b5bc1fc9fb65ab80903d1"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_validation_attempt_04_20260928/PRE_TEST_SEAL.json",
+      "bytes": 6267,
+      "sha256": "d389cfc17880780471b9ddab4c3b415555c5ebb13d0271290773dd35050f75d5"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_validation_attempt_04_20260928/RESULTS.json",
+      "bytes": 28476,
+      "sha256": "9294e42dbae9b9f77d2fe992574c8e6a6f2243cf1d38c272aba9e50c5fc1171a"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_preexec_review_20260928/received/DECISION.json",
+      "bytes": 1242,
+      "sha256": "65c2166666106c6068213c6c129e32a246f295f51281f9fa580afa1f582fccb5"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_preexec_review_20260928/received/REVIEW_KO.md",
+      "bytes": 9395,
+      "sha256": "c8609c2fec19f726e8a854470c66b04281a77a2822369da7957389efc6d432a7"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_preexec_review_20260928/RECEIPT_VERIFICATION.json",
+      "bytes": 771,
+      "sha256": "65055d736ff6b5c878f929dbdce264c9dbbfaaf37f778d852f0edae9cb7adef1"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_preexec_review_20260928/CURRENT_IDENTITIES.json",
+      "bytes": 23914,
+      "sha256": "b87d18df06f3c43398fe0b80f0c8c5d2e610d09752d0ff0cd43860c4301ae090"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_preexec_review_20260928/POLICY_OBSERVATION.json",
+      "bytes": 2301,
+      "sha256": "be8d8f8921494411c058e431fd01b49f826ac7bbfe26e3b0eb94be45baba03e9"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_preexec_review_20260928/PATH_OBSERVATION.json",
+      "bytes": 1869,
+      "sha256": "1abd21555c30e8e09b55b4393f2eb9fa7533f638fb84a6962aa464dcad17efee"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_preexec_review_20260928/ROUTE_ASSESSMENT_KO.md",
+      "bytes": 7994,
+      "sha256": "93da3fafbc77c543723a994d514b00bb6502e2f70c5d225285d188a38743d6fc"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_preexec_review_20260928/EXACT_COMMANDS_KO.md",
+      "bytes": 5342,
+      "sha256": "7e9fecbf7fa949d6aab4d53d4771d5d4d20575fb9cde27999f127b42721fb9e7"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_preexec_review_20260928/NEXT_1198_APPROVAL_DRAFT_KO.md",
+      "bytes": 6133,
+      "sha256": "515d0f7e17833623e97c182a1a6607586a78ae50cef71fc5551cb03c79fe87c5"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_preexec_review_20260928/APPROVAL_FIELD_MAPPING_KO.md",
+      "bytes": 3874,
+      "sha256": "c228169af9b54298e3b6b695d318318c65915f40d46469fce104a681a15a08a9"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_preexec_review_20260928/PACKAGE_MANIFEST.json",
+      "bytes": 4437,
+      "sha256": "d4b42d71121371e12e3dba9524fa849666df46f698889ad8ee62340a04dd43f7"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_preexec_review_20260928/DELIVERY_RECEIPT.json",
+      "bytes": 1074,
+      "sha256": "0f6449a6fddf03c2c2b5eccf222a570729891afe8753715d47efd0bba9270751"
+    }
+  ],
+  "scope": "Accepted offline validation and reviewed unchanged-policy route; not evidence of native permission or native success",
+  "effective_policy": "UNVERIFIED",
+  "actual_cores": "UNVERIFIED",
+  "created_utc": "2026-09-28T03:10:03.225680+00:00"
+}

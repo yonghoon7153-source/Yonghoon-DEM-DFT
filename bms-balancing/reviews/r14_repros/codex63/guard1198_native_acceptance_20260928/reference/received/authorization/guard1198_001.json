@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "run_id": "guard1198_candidate_001",
+  "code_manifest_sha256": "0c14c4f886d53398fc4869db117577066b821837cd3593a6727e2ac4d0a63c45",
+  "approved": true,
+  "native1198_one_shot": true,
+  "allow_policy_changes": false,
+  "effective_policy_unverified_accepted": true,
+  "commands": {
+    "compile": [
+      "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolcompile.exe",
+      "-prefsdir",
+      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/prefs",
+      "-configuration",
+      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/config_compile",
+      "-data",
+      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/data_compile",
+      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/Guard1198Candidate.java"
+    ],
+    "batch": [
+      "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolbatch.exe",
+      "-prefsdir",
+      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/prefs",
+      "-configuration",
+      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/config_batch",
+      "-data",
+      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/data_batch",
+      "-np",
+      "16",
+      "-inputfile",
+      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/Guard1198Candidate.class",
+      "-outputfile",
+      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/result.mph",
+      "-batchlog",
+      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/batch.log"
+    ]
+  },
+  "budgets_seconds": {
+    "preflight_and_fresh_gate": 180,
+    "compile_batch": 1800,
+    "process_cleanup_total": 120,
+    "analysis": 600,
+    "delivery": 300,
+    "overall": 3000
+  },
+  "default_prefs_identity": {
+    "path": "C:/Users/BML/.comsol/v63/comsol.prefs",
+    "bytes": 22252,
+    "sha256": "064d190077d7533f9fff22b61460d377cb53fb314e5c0f32a0bd02e3fa28b651"
+  },
+  "user_decision": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_authorizations/USER_DECISION.txt",
+    "bytes": 76,
+    "sha256": "b65e1e2859b9e3b555871062114a8044c83ddcc3fb1695192ad20d3e6bb19306"
+  },
+  "validation_release": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_authorizations/VALIDATION_RELEASE.json",
+    "bytes": 4767,
+    "sha256": "945c3ae934e364fd2eb93ecf444531b449e0aee708af6b494b042a858d6e077c"
+  },
+  "created_utc": "2026-09-28T03:10:03.225680+00:00",
+  "scope": "fresh t=0; threshold1198; physical maximum5seconds; compile<=1/batch<=1/solve<=1; no retry; no normal control; no30second extension",
+  "host": "User-owned non-elevated Windows PowerShell5.1 NoProfile foreground; two fresh responses typed directly by user",
+  "native_permission_observed": false
+}

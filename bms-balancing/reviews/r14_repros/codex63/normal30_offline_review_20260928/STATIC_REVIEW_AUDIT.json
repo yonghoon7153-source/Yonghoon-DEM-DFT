@@ -1,0 +1,144 @@
+{
+  "scope": "static byte/JSON/AST and mathematical witness; no target execution",
+  "checks": {
+    "prior_received_identity:src/Guard1198Candidate.java": true,
+    "prior_received_identity:src/trigger_consumer.py": true,
+    "prior_received_identity:src/candidate_entry.py": true,
+    "prior_received_identity:PARENT_COMMAND.ps1": true,
+    "prior_received_identity:CONTRACT.json": true,
+    "replacement_count:producer identity": true,
+    "replacement_count:requested time extension": true,
+    "replacement_count:test threshold to existing normal": true,
+    "replacement_count:time label": true,
+    "replacement_count:normal threshold readback": true,
+    "replacement_count:output time bound": true,
+    "replacement_count:identity": true,
+    "whole_java_inverse_exact": true,
+    "single_tlist": true,
+    "java_contract_tlist": true,
+    "old187_prefix": true,
+    "new250_exact_times": true,
+    "437_unique_increasing": true,
+    "unchanged:baseline_files": true,
+    "unchanged:coordinates": true,
+    "unchanged:external_source_pins": true,
+    "unchanged:legacy_gate": true,
+    "unchanged:legacy_contract": true,
+    "unchanged:legacy_inner_manifest": true,
+    "unchanged:limits": true,
+    "unchanged:guard_expression": true,
+    "unchanged:domains": true,
+    "unchanged:lagrange_order": true,
+    "unchanged:storestopcondsol": true,
+    "threshold_zero": true,
+    "end30": true,
+    "one_runall_no_loadcopy": true,
+    "budget_sum": true,
+    "mapped_argv:compile": true,
+    "mapped_cwd:compile": true,
+    "mapped_argv:batch": true,
+    "mapped_cwd:batch": true,
+    "python_argv:execute": true,
+    "python_argv:analyze": true,
+    "incomplete_schemas_same": true,
+    "parent_unchanged:function BSave": true,
+    "parent_unchanged:function BInvoke": true,
+    "38_preserved_in_sender_records": true,
+    "plan_counts": true
+  },
+  "java": {
+    "source_sha256": "6876e774ee7788e6f5e84ba50af3952bbf41af57d541e3bc0c4f8e044c7fb84d",
+    "basis_sha256": "a742a3f6a19cc21c4c6b3be7ca9cf69eb35c68a70c52b38166971774c0ce1e95",
+    "inverse_sha256": "a742a3f6a19cc21c4c6b3be7ca9cf69eb35c68a70c52b38166971774c0ce1e95",
+    "replacement_rows": 9,
+    "literal_occurrences": 10
+  },
+  "time_counts": {
+    "original": 187,
+    "added": 250,
+    "total": 437
+  },
+  "function_diff": {
+    "candidate_entry.py": {
+      "unchanged": [
+        "need",
+        "strict",
+        "read",
+        "digest",
+        "ref",
+        "check",
+        "save",
+        "source_module",
+        "seal",
+        "policy_values",
+        "process_ok",
+        "main"
+      ],
+      "changed": [
+        "permission",
+        "execute",
+        "incomplete_result",
+        "analyze"
+      ],
+      "added": [],
+      "removed": []
+    },
+    "diagnostic_consumer.py": {
+      "unchanged": [
+        "need",
+        "number",
+        "identity",
+        "pinned",
+        "rows",
+        "timed",
+        "extract_tables",
+        "rounded_contains",
+        "profile",
+        "units_evidence"
+      ],
+      "changed": [
+        "guard_evidence",
+        "native_stop",
+        "binding_evidence",
+        "coverage",
+        "numeric",
+        "incomplete_result",
+        "analyze"
+      ],
+      "added": [
+        "runtime_evidence",
+        "late_summary"
+      ],
+      "removed": []
+    }
+  },
+  "preservation": {
+    "before_count": 38,
+    "after_count": 38,
+    "before_subset_equal": true,
+    "remote_current_files_directly_observed": false
+  },
+  "plans": {
+    "groups": 17,
+    "listed_cases": 53,
+    "functional_execution": false,
+    "engines": {
+      "Python": {
+        "max": 1,
+        "seconds": 120
+      },
+      "Java_compile": {
+        "max": 1,
+        "seconds": 90
+      },
+      "Java_stub_JVM": {
+        "max": 1,
+        "seconds": 60
+      },
+      "Windows_PowerShell_5_1": {
+        "max": 1,
+        "seconds": 90
+      }
+    }
+  }
+}

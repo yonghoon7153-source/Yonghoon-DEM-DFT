@@ -1,0 +1,14 @@
+{
+  "data_read_limitations": [
+    {
+      "event": "Read of runtime_settings.csv failed because actual table is axes_runtime_settings.csv",
+      "handling": "Read actual file name from producer source; no native or analysis re-run."
+    },
+    {
+      "event": "Broad AGENTS.md search encountered unrelated access-denied work cache directories",
+      "handling": "No permissions changed or access bypass. Target source and working paths remained accessible."
+    }
+  ],
+  "functional_test_failure": null,
+  "candidate_or_native_runs": 0
+}

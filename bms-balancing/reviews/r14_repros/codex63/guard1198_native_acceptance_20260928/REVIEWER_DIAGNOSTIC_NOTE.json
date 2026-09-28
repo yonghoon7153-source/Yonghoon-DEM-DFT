@@ -1,0 +1,16 @@
+{
+  "scope": "Reviewer diagnostic, not subject simulation failure",
+  "first_numeric_audit_tool_chunk": "e6a10a",
+  "exit_code": 1,
+  "error": "AssertionError at assumption that 1.8 was absent from baseline",
+  "cause": "Reviewer initially treated the received report's noncommon description as actual time-set nonintersection. Direct CSV read found both include 1.8, with actual intersection 923. Producer deliberately restricts comparison to <=1.75, yielding 922.",
+  "correction": "Separate actual time intersection from contract comparison prefix. Preserve and report the source wording discrepancy; no received data, source, log or result modified.",
+  "evidence_first_attempt": {
+    "chunk": "e855a8",
+    "exit_code": 1,
+    "error": "Parent argv source path used Windows backslashes while command map used forward slashes",
+    "correction": "Only normalize separators of the source path argument for Windows path comparison. Preserve all other exact arguments; record non-byte-identical representation. Native compile/batch argv remain exact."
+  },
+  "evidence_second_attempt": {"chunk":"702a78","exit_code":1,"error":"Reviewer used python key instead of observed executable key in parent record","correction":"Use actual executable field; received record unchanged"},
+  "received_programs_executed": 0
+}

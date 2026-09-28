@@ -1,0 +1,2 @@
+"electrolyte_expression","stop_storage","active","terminate_on","threshold_SI"
+"comp1.minguardall(comp1.cl)<=ce_stop_threshold","stepbefore_stepafter","on","true","1198.0"

@@ -1,0 +1,26 @@
+{
+  "scope": "Reviewer arithmetic counterexamples, not execution of received functions",
+  "N30_N1": {
+    "reference_N": "1",
+    "reference_P": "1",
+    "reference_electrolyte": "1",
+    "current_N": "1.0000005",
+    "current_P": "0.9999995",
+    "current_electrolyte": "1",
+    "total_difference": "0",
+    "each_changed_absolute_difference": "0.0000005",
+    "each_changed_relative_difference": "0.0000005",
+    "candidate_relative_1e6_check": true,
+    "retained_absolute_1e9_check": false,
+    "not_actual_COMSOL_data": true
+  },
+  "N30_N2": {
+    "scenario": "Successful FINAL_BOUNDARY BSave/BRef takes time across limit; no I/O exception",
+    "before_write_overall_seconds": "5099.9",
+    "after_write_snapshot_seconds": "5100.1",
+    "before_write_within_limits": true,
+    "candidate_final_print_reuses_before_write_flag": true,
+    "post_write_acceptance_should_be": false,
+    "actual_elapsed_measurement": false
+  }
+}

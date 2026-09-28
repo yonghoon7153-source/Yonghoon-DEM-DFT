@@ -1,0 +1,27 @@
+{
+  "source": {
+    "path": "C:\\Users\\Administrator\\Downloads\\COMSOL63_GUARD1198_NATIVE_RESULT_FOR_REVIEW_20260928.zip",
+    "bytes": 66998632,
+    "sha256": "b3c49ceb31671e1cc23db6ce2e4dea2557354fb10afde275cf72dba8f236d6d8"
+  },
+  "entries": 1765,
+  "payload": 1764,
+  "uncompressed_bytes": 237475518,
+  "manifest": {
+    "bytes": 293591,
+    "sha256": "afe144f779995c7c219082f08339eba96bb9f5cc38df020365b9c46956b241d3"
+  },
+  "exact_set_size_sha_crc_path_case_link": true,
+  "prior_candidate_exact_matches": [
+    "candidate/src/Guard1198Candidate.java",
+    "candidate/src/trigger_consumer.py",
+    "candidate/src/candidate_entry.py",
+    "candidate/PARENT_COMMAND.ps1",
+    "candidate/CONTRACT.json",
+    "candidate/CODE_MANIFEST.json",
+    "candidate/COMMAND_MAP.json"
+  ],
+  "run_java_equals_candidate": true,
+  "source_unchanged": true,
+  "received_code_executions": 0
+}

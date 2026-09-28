@@ -1,0 +1,29 @@
+{
+  "archive": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_preexec_review_20260928/COMSOL63_GUARD1198_PREEXEC_POLICY_AND_APPROVAL_20260928.zip",
+    "bytes": 52741,
+    "sha256": "d15e25361e57b3ba8cc7e3260022dba60af82682ea3960b0aa0f9733794db312"
+  },
+  "payloads": 26,
+  "entries": 27,
+  "manifest_sha256": "d4b42d71121371e12e3dba9524fa849666df46f698889ad8ee62340a04dd43f7",
+  "exact_zip_readback": true,
+  "recipient": null,
+  "approved": false,
+  "usable": false,
+  "phases_seconds": {
+    "identification_policy_route": 183.95670769999998,
+    "report": 232.1107766,
+    "preservation": 0.6927274,
+    "overall": 416.7619526
+  },
+  "limits_seconds": {
+    "identification_policy_route": 600,
+    "report": 240,
+    "preservation": 60,
+    "overall": 900
+  },
+  "snapshot_utc": "2026-09-28T03:07:13.224752+00:00",
+  "boundary": "Before receipt write and tool return; not delivery arrival time",
+  "source": "Local observation and data packaging; not native execution evidence"
+}

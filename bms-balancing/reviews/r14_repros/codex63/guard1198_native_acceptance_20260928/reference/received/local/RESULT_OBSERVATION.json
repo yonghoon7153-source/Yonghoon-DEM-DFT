@@ -1,0 +1,54 @@
+{
+  "observed_utc": "2026-09-28T04:28:13.148004+00:00",
+  "scope": "Read-only result/record identity check; no analyzer or COMSOL rerun; numerical PASS is existing analyzer result",
+  "native_attempts": {
+    "batch": 1,
+    "compile": 1
+  },
+  "native_parent_rc": 0,
+  "analysis_parent_rc": 0,
+  "trigger": "TEST_TRIGGER_DETECTED",
+  "pair": {
+    "t_minus": "1.75",
+    "t_plus": "1.8"
+  },
+  "native_stop_line": [
+    "Information: Stop condition fulfilled at t = 1.8 (Electrolyte minimum <= threshold)."
+  ],
+  "axes": {
+    "sampled_comparison": "PASS",
+    "preservation": "PASS",
+    "process_cleanup": "PASS",
+    "policy_preservation": "PASS"
+  },
+  "errors": [],
+  "native_errors": [],
+  "boundary_errors": [],
+  "boundary_seconds": 876.0861560999999,
+  "within_limits_at_parent_boundary": true,
+  "source_and_default_prefs_current_identity_match": true,
+  "table_count_hash_checked": 35,
+  "mph_identity_checked": true,
+  "source_generated_java_exists": true,
+  "stored_times": 923,
+  "exact_common_count": 922,
+  "strict_requested_count": 122,
+  "missing_target": [],
+  "missing_baseline": [],
+  "numeric_reported": {
+    "maximum_Li_relative_drift": "2.9210052084956707322169999795227995635503303691108E-15",
+    "maximum_surface_delta": "2.9E-15",
+    "maximum_voltage_delta_V": "4.3E-15",
+    "maximum_voltage_identity_V": "6.19E-16",
+    "status": "PASS",
+    "stop_times_not_interpolated": [
+      "1.8"
+    ]
+  },
+  "overall": "INCOMPLETE",
+  "normal_gate": "INCOMPLETE",
+  "effective_policy": "UNVERIFIED",
+  "next_30s_approved": false,
+  "parent_outer_process_rc": "Not independently captured; child native/analysis rc recorded by parent",
+  "delivery_scope": "Existing parent boundary only; this later read-only observation does not restart or certify original delivery budget"
+}

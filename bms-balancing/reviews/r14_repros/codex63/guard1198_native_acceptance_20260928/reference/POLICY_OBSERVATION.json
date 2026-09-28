@@ -1,0 +1,96 @@
+{
+  "observed_utc": "2026-09-28T03:03:20.403778+00:00",
+  "identity": {
+    "path": "C:/Users/BML/.comsol/v63/comsol.prefs",
+    "bytes": 22252,
+    "sha256": "064d190077d7533f9fff22b61460d377cb53fb314e5c0f32a0bd02e3fa28b651"
+  },
+  "security": [
+    {
+      "line": 458,
+      "key": "security.comsol.allowapplications",
+      "value": "on"
+    },
+    {
+      "line": 459,
+      "key": "security.comsol.allowbatch",
+      "value": "on"
+    },
+    {
+      "line": 460,
+      "key": "security.comsol.allowexternallibraries",
+      "value": "off"
+    },
+    {
+      "line": 461,
+      "key": "security.comsol.allowexternalmatlab",
+      "value": "off"
+    },
+    {
+      "line": 462,
+      "key": "security.comsol.allowexternalprocess",
+      "value": "off"
+    },
+    {
+      "line": 463,
+      "key": "security.comsol.allowforms",
+      "value": "on"
+    },
+    {
+      "line": 464,
+      "key": "security.comsol.allowmethods",
+      "value": "on"
+    },
+    {
+      "line": 465,
+      "key": "security.external.enable",
+      "value": "on"
+    },
+    {
+      "line": 466,
+      "key": "security.external.filepermission",
+      "value": "limited"
+    },
+    {
+      "line": 467,
+      "key": "security.external.modelmanagerdatabasepermission",
+      "value": "off"
+    },
+    {
+      "line": 468,
+      "key": "security.external.netpermission",
+      "value": "off"
+    },
+    {
+      "line": 469,
+      "key": "security.external.propertypermission",
+      "value": "off"
+    },
+    {
+      "line": 470,
+      "key": "security.external.reflectpermission",
+      "value": "off"
+    },
+    {
+      "line": 471,
+      "key": "security.external.runtimepermission",
+      "value": "off"
+    },
+    {
+      "line": 472,
+      "key": "security.external.securitypermission",
+      "value": "off"
+    },
+    {
+      "line": 473,
+      "key": "security.external.socketpermission",
+      "value": "off"
+    }
+  ],
+  "duplicate_security_keys": [],
+  "enforce_stored_value": "on",
+  "filepermission_stored_value": "limited",
+  "internal_effective_policy": "UNVERIFIED",
+  "prefs_original_copied": false,
+  "scope": "Only whole-file hash/size and security key/value lines retained; no license/login/full prefs content"
+}

@@ -1,0 +1,10 @@
+{
+  "status": "OFFLINE_PREPARATION_COMPLETE_VALIDATION_NOT_RUN",
+  "manifest_sha256": "28dd6da5cc76885263c17b2671548a00692064807e02e77ceb6f3edbdd946fa5",
+  "approved": false,
+  "usable": false,
+  "next": "Review changed candidate and approve only limited validation; native30 requires later separate approval.",
+  "preserved_selected_count": 38,
+  "candidate_functional_runs": 0,
+  "native_runs": 0
+}

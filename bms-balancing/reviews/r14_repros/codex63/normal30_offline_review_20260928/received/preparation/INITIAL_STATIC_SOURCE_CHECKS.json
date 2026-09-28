@@ -1,0 +1,102 @@
+{
+  "status": "STATIC_CHECKS_ONLY_NOT_FUNCTIONAL_PASS",
+  "manifest_sha256": "fbafcd45a9674ca706ad5357a0ec9cb8b70620b7baf6a7f35f636af6834a42a5",
+  "java_inverse_replacement_exact_bytes": true,
+  "java_original_sha256": "a742a3f6a19cc21c4c6b3be7ca9cf69eb35c68a70c52b38166971774c0ce1e95",
+  "java_candidate_sha256": "6876e774ee7788e6f5e84ba50af3952bbf41af57d541e3bc0c4f8e044c7fb84d",
+  "java_runAll_lexical_count": 1,
+  "old_requested_count": 187,
+  "new_requested_count": 437,
+  "unchanged_requested_prefix": true,
+  "Python": [
+    {
+      "file": "src/candidate_entry.py",
+      "python_syntax": "PARSED_ONLY",
+      "functions": [
+        "need",
+        "strict",
+        "read",
+        "digest",
+        "ref",
+        "check",
+        "save",
+        "source_module",
+        "seal",
+        "permission",
+        "policy_values",
+        "process_ok",
+        "execute",
+        "incomplete_result",
+        "analyze",
+        "main"
+      ]
+    },
+    {
+      "file": "src/diagnostic_consumer.py",
+      "python_syntax": "PARSED_ONLY",
+      "functions": [
+        "need",
+        "number",
+        "identity",
+        "pinned",
+        "rows",
+        "timed",
+        "extract_tables",
+        "guard_evidence",
+        "rounded_contains",
+        "native_stop",
+        "binding_evidence",
+        "coverage",
+        "profile",
+        "units_evidence",
+        "numeric",
+        "incomplete_result",
+        "analyze",
+        "runtime_evidence",
+        "late_summary"
+      ]
+    }
+  ],
+  "unchanged_consumer_functions": [
+    "extract_tables",
+    "identity",
+    "need",
+    "number",
+    "pinned",
+    "profile",
+    "rounded_contains",
+    "rows",
+    "timed",
+    "units_evidence"
+  ],
+  "unchanged_entry_functions": [
+    "check",
+    "digest",
+    "main",
+    "need",
+    "policy_values",
+    "process_ok",
+    "read",
+    "ref",
+    "save",
+    "seal",
+    "source_module",
+    "strict"
+  ],
+  "native_compile": 0,
+  "jvm": 0,
+  "candidate_import_or_execution": 0,
+  "console_or_job_tests": 0,
+  "baseline_pins_unchanged": true,
+  "external_source_pins_unchanged": true,
+  "coordinates_and_limits_unchanged": true,
+  "not_created_paths": [
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_authorizations/normal30_001.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_authorizations/VALIDATION_RELEASE.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_parent_001",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_authorizations/USER_DECISION.json"
+  ],
+  "PowerShell": "Text reviewed only; no engine/parser invocation",
+  "Java": "Text/inverse-byte comparison only; not compiled"
+}

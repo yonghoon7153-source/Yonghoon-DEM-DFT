@@ -1,0 +1,31 @@
+{
+  "received_zip": {
+    "name": "COMSOL63_GUARD1198_NATIVE_ACCEPTANCE_REVIEW_20260928.zip",
+    "bytes": 145908,
+    "sha256": "408113f68e280cb44f94d7ab83b41532b170d77e4ea28a91ff26f91feedd73df"
+  },
+  "manifest": {
+    "name": "REVIEW_PACKAGE_MANIFEST.json",
+    "sha256": "415889ae1c758d2311601258fe93e1044b2ef6e4b0ea226beb99e14578d0d3b4",
+    "scope": "Recipient review of fixed native evidence; no future execution permission",
+    "input_zip_sha256": "b3c49ceb31671e1cc23db6ce2e4dea2557354fb10afde275cf72dba8f236d6d8"
+  },
+  "payload": {
+    "declared": 49,
+    "matched": 49,
+    "mismatched": 0,
+    "outside_manifest": 0
+  },
+  "candidate_vs_CODE_MANIFEST": {
+    "code_manifest_path": "reference/received/candidate/CODE_MANIFEST.json",
+    "code_manifest_sha256": "0c14c4f886d53398fc4869db117577066b821837cd3593a6727e2ac4d0a63c45",
+    "declared": 5,
+    "present_in_this_package": 4,
+    "matched": 4,
+    "absent": [
+      "src/Guard1198Candidate.java"
+    ]
+  },
+  "note": "bytes 그대로 보존 (unzip). 스크립트(audit_evidence.py · audit_numeric.py · audit_package.py · package_review.py)·reference/received/ 의 후보 코드(Python/PowerShell)는 실행·import 하지 않았다. native 결과 ZIP(b3c49ceb…, 66,998,632 B, 1,764 payload)·출력 MPH(8ad573f3…)·기본 prefs 전체는 이 저장소에 오지 않았다 — reference/ 는 선택 사본이다. Java 후보 사본은 이 묶음에 없고 SHA 만 기록돼 있다 (§27·§28 묶음 사본과 같은 값).",
+  "preserved_on": "2026-09-28"
+}

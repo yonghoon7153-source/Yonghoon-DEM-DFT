@@ -1,0 +1,215 @@
+{
+  "status": "PASS",
+  "precision_decimal": 60,
+  "tables_base64_bytes_matched": 35,
+  "unit_records": 19,
+  "guard": {
+    "stored_times": 923,
+    "pre": {
+      "time_s": "1.75",
+      "ce_min_all_mol_m3": "1198.0459471016604",
+      "ce_min_d1_mol_m3": "1198.0459471016604",
+      "ce_min_d2_mol_m3": "1199.5571089245",
+      "ce_min_d3_mol_m3": "1200.5474721422502",
+      "threshold_mol_m3": "1198.0",
+      "electrolyte_guard": "0.0",
+      "ocp_guard": "0.0",
+      "surface_guard": "0.0"
+    },
+    "post": {
+      "time_s": "1.8",
+      "ce_min_all_mol_m3": "1197.990365419921",
+      "ce_min_d1_mol_m3": "1197.990365419921",
+      "ce_min_d2_mol_m3": "1199.5456074652827",
+      "ce_min_d3_mol_m3": "1200.5623807750048",
+      "threshold_mol_m3": "1198.0",
+      "electrolyte_guard": "1.0",
+      "ocp_guard": "0.0",
+      "surface_guard": "0.0"
+    },
+    "minimum_consistency_max_error": "0",
+    "single_final_guard_transition": true,
+    "other_guards_zero": true
+  },
+  "native": {
+    "time_solver_sections": 1,
+    "raw_step_rows": 923,
+    "step_indices_contiguous": true,
+    "rounded_times_match_exact_csv": true,
+    "stop_line": "Information: Stop condition fulfilled at t = 1.8 (Electrolyte minimum <= threshold).",
+    "no_logged_steps_after_stop": true,
+    "core_declaration_lines": [
+      "Using 1 socket with 16 cores in total on DESKTOP-L60RV2M.",
+      "Using 1 socket with 16 cores in total on DESKTOP-L60RV2M."
+    ]
+  },
+  "coverage": {
+    "target": 923,
+    "baseline": 987,
+    "actual_time_intersection": 923,
+    "common_comparison_prefix": 922,
+    "requested_prefix": 122,
+    "common_last": "1.75",
+    "target_noncommon": [],
+    "stop_exists_in_baseline": true,
+    "stop_excluded_by_pretrigger_prefix_contract": true,
+    "no_interpolation": true
+  },
+  "profiles": {
+    "N": {
+      "target_rows": 222443,
+      "baseline_rows": 237867,
+      "coordinate_max_errors_m": [
+        "1E-20",
+        "1E-20"
+      ],
+      "points_per_time": 241,
+      "domain": 1
+    },
+    "P": {
+      "target_rows": 222443,
+      "baseline_rows": 237867,
+      "coordinate_max_errors_m": [
+        "2E-20",
+        "2E-20"
+      ],
+      "points_per_time": 241,
+      "domain": 3
+    }
+  },
+  "metrics": {
+    "maximum_voltage_delta_V": "4.3E-15",
+    "maximum_surface_delta": "2.9E-15",
+    "maximum_Li_relative_drift": "2.92100520849567073221699997952279956355033036911075455180567E-15",
+    "maximum_voltage_identity_V": "6.19E-16"
+  },
+  "initial_li_component_delta_mol_m2": {
+    "Li_N_mol_m2": "0E-18",
+    "Li_P_mol_m2": "0E-16",
+    "Li_electrolyte_mol_m2": "0E-18"
+  },
+  "eight_prefix_views_reviewer_calculated": [
+    {
+      "family": "requested",
+      "window": "0-stop_prefix",
+      "count": 122,
+      "voltage": {
+        "value": "3.5E-15",
+        "time_s": "0.42"
+      },
+      "surface": {
+        "value": "2.2E-15",
+        "time_s": "0.07"
+      }
+    },
+    {
+      "family": "requested",
+      "window": "0-0.1",
+      "count": 17,
+      "voltage": {
+        "value": "3.2E-15",
+        "time_s": "0.03"
+      },
+      "surface": {
+        "value": "2.2E-15",
+        "time_s": "0.07"
+      }
+    },
+    {
+      "family": "requested",
+      "window": "0.1-1",
+      "count": 91,
+      "voltage": {
+        "value": "3.5E-15",
+        "time_s": "0.42"
+      },
+      "surface": {
+        "value": "2.2E-15",
+        "time_s": "0.1"
+      }
+    },
+    {
+      "family": "requested",
+      "window": "1-stop_prefix",
+      "count": 16,
+      "voltage": {
+        "value": "2.3E-15",
+        "time_s": "1.65"
+      },
+      "surface": {
+        "value": "1.5E-15",
+        "time_s": "1.3"
+      }
+    },
+    {
+      "family": "common",
+      "window": "0-stop_prefix",
+      "count": 922,
+      "voltage": {
+        "value": "4.3E-15",
+        "time_s": "0.069125"
+      },
+      "surface": {
+        "value": "2.9E-15",
+        "time_s": "0.095375"
+      }
+    },
+    {
+      "family": "common",
+      "window": "0-0.1",
+      "count": 808,
+      "voltage": {
+        "value": "4.3E-15",
+        "time_s": "0.069125"
+      },
+      "surface": {
+        "value": "2.9E-15",
+        "time_s": "0.095375"
+      }
+    },
+    {
+      "family": "common",
+      "window": "0.1-1",
+      "count": 99,
+      "voltage": {
+        "value": "3.5E-15",
+        "time_s": "0.42"
+      },
+      "surface": {
+        "value": "2.2E-15",
+        "time_s": "0.1"
+      }
+    },
+    {
+      "family": "common",
+      "window": "1-stop_prefix",
+      "count": 17,
+      "voltage": {
+        "value": "2.3E-15",
+        "time_s": "1.65"
+      },
+      "surface": {
+        "value": "1.5E-15",
+        "time_s": "1.3"
+      }
+    }
+  ],
+  "solver_properties": {
+    "observed_count": 1143,
+    "expected_count": 1143,
+    "duplicates": [],
+    "differences": {}
+  },
+  "resource_mesh_markers": [
+    "ELECTROLYTE_THRESHOLD_EXPRESSION=1198[mol/m^3]",
+    "ELECTROLYTE_THRESHOLD_SI=1198.0",
+    "PREFLIGHT_TIME=maxstep_expression=if(t<0.1[s],0.000125[s],0.1[s])|inactive_constant_slot_s=0.1|initialstep_s=1e-5|rtol=1e-6|strict|all accepted steps|eventout|consistency=bweuler",
+    "AXES_PHYSICAL_MESH_DOMAIN=1|numelem=120",
+    "AXES_PHYSICAL_MESH_DOMAIN=2|numelem=60",
+    "AXES_PHYSICAL_MESH_DOMAIN=3|numelem=120",
+    "AXES_PARTICLE=pce1|Nel=320|Nord=1|Distribution=CubicRoot",
+    "AXES_PARTICLE=pce2|Nel=320|Nord=1|Distribution=CubicRoot"
+  ],
+  "elapsed_seconds": 10.614849500008859,
+  "received_programs_executed": 0
+}

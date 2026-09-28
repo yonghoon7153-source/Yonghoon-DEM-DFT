@@ -1,0 +1,18 @@
+{
+  "source": "C:\\Users\\Administrator\\Downloads\\COMSOL63_NORMAL30_OFFLINE_PREPARATION_20260928.zip",
+  "bytes": 169394,
+  "sha256": "ec9b0ea876ab7ba973c80fc924e8829f32a4cb8956334155d605c1ef61591277",
+  "errors": [],
+  "payload_count": 47,
+  "manifest_sha256": "989e95e98e0311722c0a045afb8cc9f18391d5188e154f5f89510d34d9bf699d",
+  "code_manifest_sha256": "28dd6da5cc76885263c17b2671548a00692064807e02e77ceb6f3edbdd946fa5",
+  "checks": [
+    "exact_set",
+    "size",
+    "sha256",
+    "CRC",
+    "unique_case_paths",
+    "no_path_escape_or_symlinks",
+    "candidate_code_manifest"
+  ]
+}

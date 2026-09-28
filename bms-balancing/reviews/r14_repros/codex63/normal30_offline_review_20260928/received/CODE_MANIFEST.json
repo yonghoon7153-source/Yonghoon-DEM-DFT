@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "run_id": "normal30_candidate_001",
+  "approved": false,
+  "usable": false,
+  "status": "OFFLINE_CANDIDATE_NOT_VALIDATED",
+  "previous_manifest_sha256": "0c14c4f886d53398fc4869db117577066b821837cd3593a6727e2ac4d0a63c45",
+  "files": [
+    {
+      "file": "src/Normal30Candidate.java",
+      "bytes": 74551,
+      "sha256": "6876e774ee7788e6f5e84ba50af3952bbf41af57d541e3bc0c4f8e044c7fb84d"
+    },
+    {
+      "file": "src/diagnostic_consumer.py",
+      "bytes": 18466,
+      "sha256": "9ccc37a4d251ee84d9be419f1280d812a1579a0a2618e974aa86ff14252fe2ca"
+    },
+    {
+      "file": "src/candidate_entry.py",
+      "bytes": 13992,
+      "sha256": "0e5ea1d87810bea26002f7e68e8a042080f91cb65733dac628aa56f1d85b50f4"
+    },
+    {
+      "file": "PARENT_COMMAND.ps1",
+      "bytes": 16331,
+      "sha256": "571ff9a4d06508b01302119953d84cb310d6b0854c02a8b45faa6511c93a10e0"
+    },
+    {
+      "file": "CONTRACT.json",
+      "bytes": 35177,
+      "sha256": "60cd1d6cee8814f164f62639ac3fc79d85cf31bd3db753977c83fb1295ce90ff"
+    }
+  ]
+}

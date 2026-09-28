@@ -1,0 +1,8 @@
+{
+  "utc": "2026-09-28T05:16:06.003623+00:00",
+  "monotonic_s": 1071578.687,
+  "manifest_sha256": "fbafcd45a9674ca706ad5357a0ec9cb8b70620b7baf6a7f35f636af6834a42a5",
+  "source_file_count": 5,
+  "input_selected_count": 38,
+  "result": "STATIC_CANDIDATE_WRITTEN_NOT_VALIDATED"
+}

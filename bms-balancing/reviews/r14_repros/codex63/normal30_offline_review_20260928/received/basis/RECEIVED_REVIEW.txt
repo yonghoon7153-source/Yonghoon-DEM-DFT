@@ -1,0 +1,118 @@
+# 1198 실제 발동 시험 — 독립 수신 검토
+
+2026-09-28. **한정 수용: TEST_TRIGGER_DETECTED 및 선언된 발동 전 표본 비교 PASS. 다음은 정상조건 fresh 0→30초 진단의 오프라인 준비다. 30초 실행은 별도 사용자 승인이다.**
+
+이번 범위에서 추가 COMSOL 시험을 요구할 차단 결함은 발견하지 않았다. 보고 문구 1건은 별도 정정 기록으로 바로잡아야 하지만, 계산·후처리 재실행이나 기존 산출물 덮어쓰기는 필요 없다. 원 overall/normal gate INCOMPLETE는 유지한다.
+
+## 1. 직접 확인한 식별과 검토 방식
+
+- 수신 ZIP: `COMSOL63_GUARD1198_NATIVE_RESULT_FOR_REVIEW_20260928.zip`, **66,998,632 bytes**.
+- SHA-256: `b3c49ceb31671e1cc23db6ce2e4dea2557354fb10afde275cf72dba8f236d6d8`.
+- 1,764 payload + manifest, 총 1,765 entries. 정확 집합·각 파일 크기/SHA·CRC·중복/대소문자 충돌·경로 이탈·링크 검사 통과.
+- PACKAGE_MANIFEST: 293,591 bytes / SHA `afe144f779995c7c219082f08339eba96bb9f5cc38df020365b9c46956b241d3`.
+- 후보 CODE_MANIFEST SHA `0c14c4f886d53398fc4869db117577066b821837cd3593a6727e2ac4d0a63c45`. 봉인 파일 5개, 외부 의존 사본 16개, 기준 CSV 6개의 식별 일치.
+- 이전 수신 검증본과 이번 candidate 7개 파일 전체 바이트 동일. 실제 RUN Java도 동일하며 SHA는 `a742a3f6a19cc21c4c6b3be7ca9cf69eb35c68a70c52b38166971774c0ce1e95`다.
+- 동봉 과거 검증 ZIP(851 payload)과 실행 전 정책/승인안 ZIP(26 payload)도 각 manifest·크기/SHA·CRC 등을 검증했다. 기존 시험을 다시 수행한 것은 아니다.
+
+스프레드시트 스킬의 읽기 전용 감사 원칙에 따라 원 CSV를 수정하지 않고, 리뷰어가 작성한 별도 Decimal 검산기로 시간 집합·좌표·단위·수치를 대조했다. 받은 Python/Java/PowerShell/class는 실행하거나 import하지 않았다. COMSOL/JVM/실제 입력·정책 변경·새 solve는 0회다.
+
+## 2. 발동 판정 — 수용
+
+| 실제 저장 시각 | 전체 Minimum (mol/m³) | 최소 domain | 전해질 guard | 다른 두 guard |
+|---|---:|---:|---:|---:|
+| 1.75 s | 1198.0459471016604 | 1 | 0 | 모두 0 |
+| 1.8 s | 1197.990365419921 | 1 | 1 | 모두 0 |
+
+초기 guard는 0이고 마지막 저장 상태에서만 1이다. 923개 시각 모두 전체 Minimum과 domain 1/2/3 최소의 최솟값 차이는 0이다. 임계값 1198, 동일 식 `comp1.minguardall(comp1.cl)<=ce_stop_threshold`, active=on, terminate_on=true, `stepbefore_stepafter`를 source·read-back CSV·stdout과 연결했다. 전체/개별 domain 선택, 1차원, Lagrange 5차 설정도 stdout과 일치한다.
+
+native batch 로그에는 Time-Dependent Solver 구간이 1개, step 0–922가 연속으로 있다. 반올림된 native 시간은 각 CSV의 정확 저장 시각과 부합한다. 마지막 step 1.8 뒤에 전해질 조건 충족 중단 메시지가 1개 있으며, 그 이후 적분 step은 없다. 후처리·모델 저장이 이어진 것은 추가 적분이 아니다. producer 완료 표식도 1개이며 fatal/producer_failure 증거는 없다.
+
+COMSOL의 Stop Condition은 활성식을 각 시간 step 뒤에 평가하며, 전후 저장 옵션은 정지 직전/직후 해를 저장하는 기능이다. 따라서 여기서 검증한 것은 **step 뒤 발동과 중단**이지 정확한 연속시간 임계 통과 시점이나 Newton trial의 보호가 아니다. [COMSOL 6.3 Stop Condition](https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_ref_solver.36.208.html)
+
+Lagrange Minimum은 유한한 평가점에서의 최소다. 이번 결과로 연속 공간 전체의 참 최소·항상 양수성을 입증하지 않는다. 1198은 의도적으로 올린 시험용 임계값이지 실제 고갈/생산 운전 한계가 아니다. [COMSOL 6.3 Maximum and Minimum](https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_ref_definitions.21.098.html)
+
+## 3. 표본 비교 — 원시값 독립 검산 PASS
+
+stdout의 BASE64 표 35개를 직접 디코딩하여 동봉 CSV와 바이트 대조했고, 결과 JSON의 tables_manifest와도 모두 일치했다. 19개 단위 기록의 inferred/configured/evaluated 차이를 구분하여 대조했다.
+
+현재 저장 923시각, 기준 B020 저장 987시각이다. 계약의 **발동 직전 1.75초까지** 비교 범위는 정확 공통 922시각 및 strict 요청 122시각이며 누락은 없다. 두 전극 각각 매 시각 241점, N domain 1/P domain 3, 유한값·좌표 순서·표면 허용 범위를 확인했다. 현재 profile 222,443행씩, 합계 444,886행이다. 기준은 전극별 237,867행이다. 좌표 최대 차는 N 1e-20 m/P 2e-20 m로 계약 1e-15 m 이내다. 보간/외삽/최근접 시간 대체는 하지 않았다.
+
+| 검산 항목 | 원시 CSV 재계산 | 계약 허용치 |
+|---|---:|---:|
+| 발동 전 최대 단자 전압 차 | 4.3e-15 V | 1e-3 V |
+| 발동 전 최대 표면 분율 차 | 2.9e-15 | 1e-4 |
+| 저장 923시각 Li 총량 상대 변화 | 2.9210052085e-15 | 1e-6 |
+| 저장 923시각 전압 분해 잔차 | 6.19e-16 V | 1e-8 V |
+| 초기 Li N/P/전해질 각 항의 기준 차 | 모두 0 | 1e-9 mol/m² 참고 대조 |
+
+전체 prefix·0–0.1·0.1–1·1–1.75초를 요청/공통 시각별로 나눈 여덟 검산 view도 허용치 이내다. 세부 시각·최대값은 NUMERIC_AUDIT.json에 있다. 이는 0–5초 전체 비교를 했다는 뜻이 아니다.
+
+runtime settings의 rtol=1e-6, 초기 step=1e-5, 시간별 cap, strict/all-stored 설정을 확인했다. physical 300 및 particle 320/320 설정 표식도 있다. stdout의 솔버 property 1,143개 key/type/value는 동봉 expected_solver.json과 집합·값이 모두 동일하다. 이 집합 밖 모든 COMSOL 내부 상태를 검증한 것은 아니며 guard read-back은 별도로 확인했다.
+
+### R-O1 — 1.8초의 “비공통” 설명 정정 필요, 수치 수용은 비차단
+
+REVIEW_REQUEST_KO.md §검토범위 3은 마지막 1.8초를 기준과 비공통이라고 썼다. 그러나 **기준 CSV에도 정확히 1.8이 있다. 실제 시간 교집합은 923개**다. consumer는 `t<=t_minus` 정책으로 1.75초까지만 비교하므로 비교 집합이 922개인 것이다.
+
+정확한 문구는 다음과 같다.
+
+> 전체 시간 교집합은 923개다. 계약상 발동 전 prefix(0–1.75초)의 922시각을 비교했다. 마지막 1.8초는 기준에도 존재하지만 이번 비교 집합에서는 제외하고 자체 발동 증거로 사용했다. 보간은 하지 않았다.
+
+`stop_times_not_interpolated=[1.8]`는 보간하지 않았다는 사실과 양립하지만, 기준에 그 시각이 없다는 증거로 사용하면 안 된다. 기존 raw ZIP/결과 JSON은 그대로 두고 별도 보충문에 정정하면 된다. 이 항목 때문에 native/분석기 재실행을 요구하지 않는다.
+
+## 4. 승인·실행·보존·정리·정책 — 기록 범위를 한정해 수용
+
+### 승인과 실행 식별
+
+사용자 결정 파일은 정책 무변경 1198 최대5초·1회 승인 문구다. 승인 JSON, validation release, 부모 시작 기록의 SHA/크기 결속과 release의 15개 참조를 동봉 원문에서 직접 대조했다. 원 비활성 manifest/contract를 바꾸지 않고 별도 승인 파일을 사용한 경로다. 이것은 동봉 승인 기록의 정합성 검토이며 사용자의 직접 입력 출처를 독립 인증한 것은 아니다.
+
+native compile/batch의 예약 argv·cwd는 승인/계약과 정확히 같다. 부모 Python argv의 source 경로 한 항목은 Windows 역슬래시 표기이고 계획은 슬래시 표기다. 이 한 항목만 Windows 경로 표기를 정규화하면 일치하며 나머지 인자는 그대로 일치한다. 부모 argv 전체가 원문 바이트 동일하다고 쓰지 않는다.
+
+fresh gate의 두 응답·비상승·콘솔 관측 기록과 사용자 제공 콘솔 전사도 있다. 전사의 native state/result/boundary 식별은 실제 동봉 파일과 맞는다. 새 입력 확인을 요구하지 않는다.
+
+### 실행 및 소유 정리
+
+compile 1회와 batch 1회가 기록돼 있다. Java에는 runAll 호출 1개이며 native에는 초기 전류분포용 Stationary 단계와 Time-Dependent 단계가 있다. fresh 초기화의 하위 단계를 별도 추가 재시도로 세지 않는다.
+
+compile 이벤트 48개, batch 이벤트 1,610개를 읽었다. 각각 suspended root→Job 배정→resume 1회→poll→terminal 순서이며 마지막 Job 구성원은 빈 목록이다. root/wait/exit 조회·handle close·terminal 결과가 RETURN/state와 일치한다. 종료 요청·timeout·원래 오류·정리/기록 오류는 없고 rc는 각각 0이다. 이 기록 범위에서 process_cleanup PASS를 수용하며 현재 원격 PC의 모든 프로세스를 직접 조회한 판정은 아니다.
+
+### 시간과 마지막 반환 경계
+
+compile 21.937초, batch 817.000초, 각 cleanup 0.015/0.016초다. 부모가 관측한 native 자식 851.9476319초, 분석 자식 23.0133611초와 각각 rc0을 확인했다. 부모 최종 파일 snapshot은 876.0861561초, 사용자 콘솔에 보존된 후속 출력은 876.1313049초다. 각각 한도 내이며 두 snapshot·자식 시간·물리시간 1.8초는 서로 다른 값이다.
+
+**바깥 PowerShell 프로세스 최종 종료코드는 독립 포착되지 않았다.** 사용자 실행은 -NoExit였으며 프롬프트 복귀나 자식 rc0을 바깥 프로세스 종료코드로 바꾸지 않는다. 이 한계는 그대로 남기되 이미 원시값으로 성립하는 발동·표본 비교 수용을 막거나 동일 시험 반복의 이유로 삼지 않는다.
+
+수신 ZIP은 후속 포장이다. 원 실행의 delivery 300초 전체 완료를 이번 ZIP 생성으로 소급 증명하지 않는다. 수신 ZIP 자체의 무결성과 원 실행 전달 예산 종결을 구분한다.
+
+### 보존/정책
+
+포장 전후 source map 1,758개 항목은 같고, 그 사본들의 현재 바이트는 동봉 식별과 모두 일치한다. 이는 **포장 시점의 선택 집합**이며 1,758개 모두가 실행 전후 보존 검사였다는 뜻이 아니다. 실행 코드의 기준 CSV·봉인 코드 재대조 및 state preservation PASS를 함께 검토했다.
+
+정책 before는 Enforce on/filepermission limited 및 16개 보안값이다. 봉인 코드의 기본 prefs 바이트/전용 보안값 전후 대조와 state policy_preservation PASS에 의해 기록 범위에서 수용한다. 전체 prefs 원문은 없고, 수신자가 원격 현재 파일을 재조회하거나 COMSOL 내부 실효 정책을 확인한 것은 아니다. 이번 경로의 Java 출력·상대 경로 Java 저장·batch MPH 저장 성공을 모든 파일 접근 권한의 증명으로 확대하지 않는다.
+
+출력 MPH는 1,185,298,486 bytes / SHA `8ad573f32e59a87f300418c220929303dbf155e633293d8eb50fd4542177a971`로 보고됐다. ZIP에 MPH가 없어 이 바이트를 직접 재해시/로드하지 않았으며 식별 기록끼리의 일치만 확인했다.
+
+### R-O2 — 코어 증거의 표현 범위
+
+기존 state의 actual_cores=UNVERIFIED는 수정하지 않는다. 다만 이번 native batch.log 65·70행에는 COMSOL이 1 socket/16 cores를 사용한다고 보고한 문장이 실제로 있다. 따라서 “-np 인자 외 native 로그가 전혀 없다”라고 설명할 필요는 없다. 별도 메모에 **native 로그상 16코어 보고 / 실제 이용률·병렬 효율 미측정**으로 구분할 수 있다. 기존 B020의 과거 코어 미확인을 소급 해소하지 않는다.
+
+## 5. 최종 판정과 다음 단계
+
+| 축 | 판정 |
+|---|---|
+| 1198 step 후 발동·중단 | 한정 수용 |
+| 선언된 발동 전 표본 비교·Li/단위/좌표 | 독립 검산 PASS, 수용 |
+| 보존·소유 정리·정책 보존 | 동봉 기록 범위에서 수용 |
+| R-O1 문구 정정 | 필요, 계산/수용 비차단 |
+| 바깥 parent 종료코드/전체 실행 종결 | 미확인 경계 유지 |
+| COMSOL 내부 실효 정책·연속 양수성·전체 수렴 | 미입증 유지 |
+| 원 overall/normal gate | INCOMPLETE 보존 |
+| 30초 오프라인 준비 | 다음 권고 작업 |
+| 30초 native·장시간·후보 C | 이번에 승인하지 않음 |
+
+30초로 넘어가기 위해 이번 1198 시험을 반복하거나 과거 전체 suite를 다시 열 필요는 없다. 대신 **1198 시험 전용 성공 조건을 30초 정상 진단용 소비 조건으로 바꾸는 최소 준비**가 필요하다. 시간 상한·threshold·예상 종료 종류·출력 소비·부모 판정은 함께 바뀌어야 한다. 자세한 제한 작업지시 초안은 NEXT_30S_PREPARATION_DIRECTIVE_KO.md에 있다.
+
+30초도 provisional 모델의 짧은 진단이다. 성공하더라도 실험 정량 대응이나 12시간·전체 프로토콜·CDC·finite sigma/sweep GO로 승격하지 않는다. OCP 외삽 금지, 기존 failed/pending/원복, TIME_CAPS 차이 원인 미확인과 기존 수용 결과는 유지한다.
+
+## 검토자 자체 진단 기록
+
+별도 검산기의 첫 실행은 수신 문구를 따라 1.8초가 비공통이라고 가정한 assertion에서 중단됐다. 실제 CSV 집합을 읽어 비교 prefix와 시간 교집합을 분리한 뒤 검산했다. 증거 검사기의 경로 구분자/필드명 가정 오류도 수정했다. 이들은 검토자 도구 오류이며 대상 코드·시험·COMSOL 실패가 아니다. REVIEWER_DIAGNOSTIC_NOTE.json에 구분했다. 받은 자료를 고치거나 받은 분석기를 재실행하지 않았다.

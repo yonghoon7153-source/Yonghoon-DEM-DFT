@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "run_id": "guard1198_candidate_001",
+  "approved": false,
+  "usable": false,
+  "status": "CORRECTED_CANDIDATE_NOT_VALIDATED",
+  "previous_manifest_sha256": "0994d919ed1317a1234dbc2ba4276d5a7342401bbaed1ffcd2e45a69b8a13bcf",
+  "files": [
+    {
+      "file": "src/Guard1198Candidate.java",
+      "bytes": 73405,
+      "sha256": "a742a3f6a19cc21c4c6b3be7ca9cf69eb35c68a70c52b38166971774c0ce1e95"
+    },
+    {
+      "file": "src/trigger_consumer.py",
+      "bytes": 14551,
+      "sha256": "3036b4bb45331092595ffa809f07e485292332f11f867b3dcb546fb337ace307"
+    },
+    {
+      "file": "src/candidate_entry.py",
+      "bytes": 13820,
+      "sha256": "28a299b726b9f3126ec026012cfbb43080d9c88cf93dc65e95c3c2d5ebe8ecda"
+    },
+    {
+      "file": "PARENT_COMMAND.ps1",
+      "bytes": 12803,
+      "sha256": "43a7e402c4259538e7772070ab10b7a58f0c874fdd4bf6d0ba5e119bb676e9f1"
+    },
+    {
+      "file": "CONTRACT.json",
+      "bytes": 29576,
+      "sha256": "e02f1759000348ee88c7c3bddc51d7a185d154ee0a0f8a30eba202caeec46848"
+    }
+  ]
+}

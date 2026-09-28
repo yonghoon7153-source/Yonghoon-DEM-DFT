@@ -1,0 +1,473 @@
+{
+  "status": "PROPOSED_NOT_EXECUTED",
+  "manifest_sha256": "28dd6da5cc76885263c17b2671548a00692064807e02e77ceb6f3edbdd946fa5",
+  "logical_groups": 17,
+  "listed_case_specs": 53,
+  "assertion_count": null,
+  "case_count_note": "Listed cases may contain enumerated mutation subfixtures; expand and seal exact engine fixtures before first test. No claim that listed cases are passed assertions.",
+  "sessions": {
+    "Python": {
+      "max": 1,
+      "seconds": 120
+    },
+    "Java_compile": {
+      "max": 1,
+      "seconds": 90
+    },
+    "Java_stub_JVM": {
+      "max": 1,
+      "seconds": 60
+    },
+    "Windows_PowerShell_5_1": {
+      "max": 1,
+      "seconds": 90
+    }
+  },
+  "budget_seconds": {
+    "harness_and_seal": 600,
+    "Python": 120,
+    "Java_compile": 90,
+    "Java_stub_JVM": 60,
+    "PS51": 90,
+    "preserve_package": 300,
+    "incomplete_closeout": 120,
+    "overall": 1380
+  },
+  "before_import": "Block COMSOL, native transport, console/token and Job entry points with inert adapters before target load. Execute actual final consumer/entry/PS branch, no substitute classifier.",
+  "Java_scope": "Only exact checkShape helper and minimal inert dependencies; no whole model class or COMSOL jars/model load. Compiler/JDK identities from prior accepted stub record, read then seal.",
+  "PowerShell_scope": "Extract exact GDecision and required finalization extent into fixture scope. Stub console/transcript/OS-facing adapters. No native children, input, Job or policy calls. BInvoke unchanged tests reused.",
+  "first_failure": "Preserve raw first failure and stop all later sessions. No fixes/retries/engine fallback after testing begins.",
+  "groups": [
+    {
+      "id": "PY01",
+      "engine": "isolated Python",
+      "actual_sources": [
+        "src/diagnostic_consumer.py:analyze",
+        "src/candidate_entry.py:analyze"
+      ],
+      "cases": [
+        {
+          "id": "PY01-01",
+          "setup": "Complete normal30 fixture, exact437 requested times plus legal internal steps, baseline187 prefix, all required tables/axes/state",
+          "expected": "NORMAL_30S_DIAGNOSTIC_COMPLETE; entry rc0; overall/normal INCOMPLETE"
+        },
+        {
+          "id": "PY01-02",
+          "setup": "Electrolyte protection at <30, valid pair/native reason/full evidence",
+          "expected": "PROTECTED_STOP_30S_INCOMPLETE; entry rc1; never normal complete"
+        },
+        {
+          "id": "PY01-03",
+          "setup": "OCP or surface protection observed then terminal numeric range violation",
+          "expected": "termination preserved; numeric error; INCOMPLETE/rc1"
+        }
+      ]
+    },
+    {
+      "id": "PY02",
+      "engine": "isolated Python",
+      "actual_sources": [
+        "src/diagnostic_consumer.py:guard_evidence",
+        "src/diagnostic_consumer.py:native_stop"
+      ],
+      "cases": [
+        {
+          "id": "PY02-01",
+          "setup": "threshold1198 left in candidate data",
+          "expected": "NORMAL_THRESHOLD or THRESHOLD"
+        },
+        {
+          "id": "PY02-02",
+          "setup": "All guards0 but final29.9",
+          "expected": "DID_NOT_REACH_30"
+        },
+        {
+          "id": "PY02-03",
+          "setup": "Stored time >30",
+          "expected": "GUARD_TIME_RANGE"
+        },
+        {
+          "id": "PY02-04",
+          "setup": "Guard at30 exactly with matching stop",
+          "expected": "Protected classification, never normal"
+        },
+        {
+          "id": "PY02-05",
+          "setup": "Initial guard or earlier guard followed by more integration",
+          "expected": "INITIAL_GUARD/GUARD_BEFORE_FINAL"
+        }
+      ]
+    },
+    {
+      "id": "PY03",
+      "engine": "isolated Python",
+      "actual_sources": [
+        "src/diagnostic_consumer.py:native_stop",
+        "src/candidate_entry.py:process_ok"
+      ],
+      "cases": [
+        {
+          "id": "PY03-01",
+          "setup": "Wrong stop reason or native stop on normal result",
+          "expected": "NATIVE_STOP_REASON/NATIVE_STOP_COUNT"
+        },
+        {
+          "id": "PY03-02",
+          "setup": "fatal in raw log despite native rc0",
+          "expected": "NATIVE_FATAL or NATIVE_FATAL_RC0"
+        },
+        {
+          "id": "PY03-03",
+          "setup": "Extra out step after stop/end or missing sequential step",
+          "expected": "INTEGRATION_AFTER_TERMINATION/NATIVE_STORED_STEP_COUNT"
+        },
+        {
+          "id": "PY03-04",
+          "setup": "Producer failure/absent completion/output failure",
+          "expected": "PRODUCER_OUTPUT_FAILURE"
+        }
+      ]
+    },
+    {
+      "id": "PY04",
+      "engine": "isolated Python",
+      "actual_sources": [
+        "src/diagnostic_consumer.py:coverage",
+        "src/diagnostic_consumer.py:numeric"
+      ],
+      "cases": [
+        {
+          "id": "PY04-01",
+          "setup": "Missing one old0–5 requested time",
+          "expected": "STRICT_REQUEST_TIME_MISSING"
+        },
+        {
+          "id": "PY04-02",
+          "setup": "Missing one required >5 requested time",
+          "expected": "STRICT_REQUEST_TIME_MISSING"
+        },
+        {
+          "id": "PY04-03",
+          "setup": "Empty or t0-only common times",
+          "expected": "Strict missing or EMPTY_OR_ZERO_ONLY_COMMON; no zero-delta PASS"
+        },
+        {
+          "id": "PY04-04",
+          "setup": "Stop time exists in baseline but is beyond pre-stop comparison prefix",
+          "expected": "Full intersection includes stop; common comparison excludes it"
+        }
+      ]
+    },
+    {
+      "id": "PY05",
+      "engine": "isolated Python",
+      "actual_sources": [
+        "src/diagnostic_consumer.py:runtime_evidence",
+        "src/diagnostic_consumer.py:binding_evidence"
+      ],
+      "cases": [
+        {
+          "id": "PY05-01",
+          "setup": "Readback threshold1198 or wrong storage/selection binding",
+          "expected": "GUARD_BINDING_VALUE/COUPLING_BINDING"
+        },
+        {
+          "id": "PY05-02",
+          "setup": "tlist unchanged5 or altered cap/rtol",
+          "expected": "RUNTIME_TLIST/RUNTIME_SETTING"
+        },
+        {
+          "id": "PY05-03",
+          "setup": "Duplicate runtime key or absent table",
+          "expected": "RUNTIME_SETTINGS_SCHEMA or preserved file error"
+        }
+      ]
+    },
+    {
+      "id": "PY06",
+      "engine": "isolated Python",
+      "actual_sources": [
+        "src/diagnostic_consumer.py:numeric",
+        "src/diagnostic_consumer.py:profile",
+        "src/diagnostic_consumer.py:units_evidence"
+      ],
+      "cases": [
+        {
+          "id": "PY06-01",
+          "setup": "NaN/Infinity in new late interval",
+          "expected": "NONFINITE"
+        },
+        {
+          "id": "PY06-02",
+          "setup": "Wrong unit/domain/coordinate or241 count",
+          "expected": "UNIT_STAGE/PROFILE_COORD_DOMAIN/PROFILE_COUNT"
+        },
+        {
+          "id": "PY06-03",
+          "setup": "Initial Li components changed but total preserved",
+          "expected": "INITIAL_LI_COMPONENT"
+        },
+        {
+          "id": "PY06-04",
+          "setup": "Voltage/surface comparison or Li drift/identity exceeds retained limits",
+          "expected": "SAMPLE_TOLERANCE/LI_DRIFT/VOLTAGE_IDENTITY"
+        }
+      ]
+    },
+    {
+      "id": "PY07",
+      "engine": "isolated Python",
+      "actual_sources": [
+        "src/diagnostic_consumer.py:late_summary",
+        "src/diagnostic_consumer.py:numeric"
+      ],
+      "cases": [
+        {
+          "id": "PY07-01",
+          "setup": "Normal30 complete late interval endpoints/extrema",
+          "expected": "OBSERVED; count/range correct; no baseline-equivalence claim"
+        },
+        {
+          "id": "PY07-02",
+          "setup": "Protective stop before5",
+          "expected": "NOT_REACHED; no fabricated late interval"
+        }
+      ]
+    },
+    {
+      "id": "PY08",
+      "engine": "isolated Python",
+      "actual_sources": [
+        "src/diagnostic_consumer.py:analyze",
+        "src/candidate_entry.py:analyze",
+        "src/candidate_entry.py:incomplete_result"
+      ],
+      "cases": [
+        {
+          "id": "PY08-01",
+          "setup": "Early binding/guard/CSV extraction failure routed through real entry",
+          "expected": "Original reason; schema present; rc1; no KeyError"
+        },
+        {
+          "id": "PY08-02",
+          "setup": "Analysis output save fails after a primary numeric error",
+          "expected": "Primary plus recording error preserved; rc1"
+        },
+        {
+          "id": "PY08-03",
+          "setup": "Native state error/cleanup/policy/preservation INCOMPLETE",
+          "expected": "No normal or acceptable protected result"
+        },
+        {
+          "id": "PY08-04",
+          "setup": "Analysis900 or overall5100 overrun",
+          "expected": "FINAL_BUDGET; rc1"
+        }
+      ]
+    },
+    {
+      "id": "PY09",
+      "engine": "isolated Python",
+      "actual_sources": [
+        "src/candidate_entry.py:permission",
+        "src/candidate_entry.py:execute",
+        "src/candidate_entry.py:seal"
+      ],
+      "cases": [
+        {
+          "id": "PY09-01",
+          "setup": "1198 auth or wrong manifest/run/approval path/commands",
+          "expected": "Reject before adapter/native call"
+        },
+        {
+          "id": "PY09-02",
+          "setup": "Wrong cwd/source/Python options or existingrun",
+          "expected": "Reject before gate/Job; native count0"
+        },
+        {
+          "id": "PY09-03",
+          "setup": "Future release lacks exact validation evidence/prefs identity",
+          "expected": "Reject; no real authorization created"
+        }
+      ]
+    },
+    {
+      "id": "J01",
+      "engine": "inert Java helper stub",
+      "actual_sources": [
+        "src/Normal30Candidate.java:checkShape"
+      ],
+      "cases": [
+        {
+          "id": "J01-01",
+          "setup": "Extracted actual helper accepts complete0..30 valid matrix",
+          "expected": "PASS"
+        },
+        {
+          "id": "J01-02",
+          "setup": "Legal >5 but <=30 stored times",
+          "expected": "PASS"
+        },
+        {
+          "id": "J01-03",
+          "setup": "Time >30",
+          "expected": "TIME_ORDER"
+        }
+      ]
+    },
+    {
+      "id": "J02",
+      "engine": "inert Java helper stub",
+      "actual_sources": [
+        "src/Normal30Candidate.java:checkShape"
+      ],
+      "cases": [
+        {
+          "id": "J02-01",
+          "setup": "Duplicate/decreasing time or missing t0",
+          "expected": "Reject correct shape/time reason"
+        },
+        {
+          "id": "J02-02",
+          "setup": "Nonfinite row or unequal width",
+          "expected": "Reject nonfinite/shape reason"
+        }
+      ]
+    },
+    {
+      "id": "J03",
+      "engine": "static binding inside Java validation preparation",
+      "actual_sources": [
+        "src/Normal30Candidate.java:threshold/tlist/log literals"
+      ],
+      "cases": [
+        {
+          "id": "J03-01",
+          "setup": "Extracted helper bytes and candidate SHA mismatch",
+          "expected": "Stop before compile"
+        },
+        {
+          "id": "J03-02",
+          "setup": "187 original tokens /250 new tokens /readback0 /runAll1 assertions",
+          "expected": "Static binding only, not model execution"
+        }
+      ]
+    },
+    {
+      "id": "PS01",
+      "engine": "Windows PowerShell5.1",
+      "actual_sources": [
+        "PARENT_COMMAND.ps1:GDecision"
+      ],
+      "cases": [
+        {
+          "id": "PS01-01",
+          "setup": "Actual Python fixture normal result + typed native0/analysis0",
+          "expected": "AWAITING_30S_LIMITED_EXTERNAL_ACCEPTANCE"
+        },
+        {
+          "id": "PS01-02",
+          "setup": "Actual Python fixture protected result + native0/analysis1/invocation false",
+          "expected": "PROTECTED_STOP_30S_INCOMPLETE"
+        },
+        {
+          "id": "PS01-03",
+          "setup": "rc1 with normal label or rc0 with protected label",
+          "expected": "INCOMPLETE"
+        }
+      ]
+    },
+    {
+      "id": "PS02",
+      "engine": "Windows PowerShell5.1",
+      "actual_sources": [
+        "PARENT_COMMAND.ps1:GDecision"
+      ],
+      "cases": [
+        {
+          "id": "PS02-01",
+          "setup": "Summary only /missing each result axis /empty required structure",
+          "expected": "INCOMPLETE for each sealed subfixture"
+        },
+        {
+          "id": "PS02-02",
+          "setup": "Wrong run/hash or missing table manifest/runtime evidence",
+          "expected": "INCOMPLETE"
+        },
+        {
+          "id": "PS02-03",
+          "setup": "Wrong terminal30/pair/native reason or missing requested coverage",
+          "expected": "INCOMPLETE"
+        }
+      ]
+    },
+    {
+      "id": "PS03",
+      "engine": "Windows PowerShell5.1",
+      "actual_sources": [
+        "PARENT_COMMAND.ps1:GDecision"
+      ],
+      "cases": [
+        {
+          "id": "PS03-01",
+          "setup": "Nonfinite metric /limit exceeded /missing Li component or late summary",
+          "expected": "INCOMPLETE"
+        },
+        {
+          "id": "PS03-02",
+          "setup": "Return rc null/stale7/exception/new_error or not returned",
+          "expected": "INCOMPLETE; no real child process required"
+        },
+        {
+          "id": "PS03-03",
+          "setup": "Analysis >900 or overall >5100",
+          "expected": "INCOMPLETE"
+        }
+      ]
+    },
+    {
+      "id": "PS04",
+      "engine": "Windows PowerShell5.1",
+      "actual_sources": [
+        "PARENT_COMMAND.ps1:outer catch/finally exact source extent"
+      ],
+      "cases": [
+        {
+          "id": "PS04-01",
+          "setup": "Inject body failure after local decision",
+          "expected": "Final limited INCOMPLETE; original error preserved"
+        },
+        {
+          "id": "PS04-02",
+          "setup": "Final record IO failure /transcript failure",
+          "expected": "FINAL_RECORD_ERROR; no accepted boundary"
+        },
+        {
+          "id": "PS04-03",
+          "setup": "Final snapshot/delivery budget exceeded",
+          "expected": "within_limits false; final limited INCOMPLETE"
+        }
+      ]
+    },
+    {
+      "id": "PS05",
+      "engine": "Windows PowerShell5.1",
+      "actual_sources": [
+        "PARENT_COMMAND.ps1:outer finally exact source extent",
+        "PARENT_COMMAND.ps1:BSave"
+      ],
+      "cases": [
+        {
+          "id": "PS05-01",
+          "setup": "Valid completion with inert transcript/reference adapters",
+          "expected": "Boundary says SCRIPT_FINAL_RECORD_NOT_PROCESS_EXIT; raw_host_rc null"
+        },
+        {
+          "id": "PS05-02",
+          "setup": "Missing captured final return/prompt evidence at external acceptance step",
+          "expected": "External acceptance incomplete; never synthesize OSrc0"
+        }
+      ]
+    }
+  ]
+}

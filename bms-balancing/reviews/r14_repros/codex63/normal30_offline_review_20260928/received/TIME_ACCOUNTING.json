@@ -1,0 +1,11 @@
+{
+  "start_record": "START.json",
+  "pre_package_utc": "2026-09-28T05:24:27.339592+00:00",
+  "elapsed_wall_seconds_from_new_start": 858.172515,
+  "clock_note": "UTC wall difference for preparation; not native physical time or a claim of per-phase monotonic accounting. START also retains original Stopwatch ticks.",
+  "budget": "Latest directive supplied no numerical preparation cap; future validation/native budgets are proposals only.",
+  "native_physical_seconds": 0,
+  "COMSOL_compile": 0,
+  "JVM": 0,
+  "candidate_execution": 0
+}

@@ -1,0 +1,7 @@
+{
+  "reviewer_diagnostic_notes": [
+    "A read-only path search had overbroad output and absent guessed paths; narrowed afterward. No permissions changed; no received code executed."
+  ],
+  "target_test_failures_observed_this_review": null,
+  "static_counterexamples_are_not_target_executions": true
+}
