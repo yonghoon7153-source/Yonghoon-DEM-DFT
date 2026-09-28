@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
+sources: [raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -333,6 +333,22 @@ Li₂₁Si₅/Si–Li₂₁Si₅ 이중층 음극 ‖ Li₆PS₅Cl ‖ Li₃InCl
 - S14 의 자체 압력(정변위 +1.51 MPa)은 **D1 계측이 요구하는 바로 그 신호**이고, "압력을 걸지 않아도 셀이 스스로 압력을 만든다" 는 것은 이 연산자의 영점(`P_low`)이 셀 구속에 따라 0 이
   아닐 수 있음을 뜻한다 — 설계 조건 D4 에 "운전 중 구속 형식(정하중/정변위)" 을 명시하는 것이 필요하다(카드 새 제약 1).
 
+## ★ 61호(Masias 2019)가 붙인 것 — **재가압 뒤 유지 시간은 압력의 6.56 제곱으로 갈리고, 회복의 시간 상수가 음극/양극 몫을 가를 수 있다** (2026-09-28)
+
+`raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md` — *J. Mater. Sci.* 54, 2585 · 벌크 Li 재료 실측 · 셀 0 · 21호 ref 49 · 5호 ref 15 · 3차 묶음 파일 23.
+수치의 정리는 [[li-metal-yield-creep-vs-stack-pressure]].
+
+이 편에는 셀이 없어 D1–D5 를 대조할 조작이 없다. 붙는 것은 **이 연산자의 음극 쪽 재료 시간 상수**다.
+
+- `[인쇄]` 인장 creep 0.2–0.6 MPa(항복 0.73–0.81 아래)에서 power-law `n` = 6.56 · 압축 0.8–2.4 MPa 의 시간 의존 변형은 12 · 60 · 120 분("a LMSSB charged or discharged in 12, 60, and 120 min")에서
+  속도 ×1/15–1/21 감소(마찰 · 배럴링 지배 — 응력 순서 역전, 저자 인정). `[재현]` 멱법칙으로 1 % 변형에 0.2 MPa ≈14 h · 0.6 MPa ≈26 s(측정값) · 1 MPa ≈1 s(외삽).
+- `[해석]` **D1 에 유지 시간이 붙어야 한다** — `P_low` → `P_high` 로 올린 뒤 음극 Li\|SE 계면의 응답은 `P_high` 의 6.56 제곱에 걸린 시간 상수를 가진다. 두 압력 점의 유지 시간을 같게 두면 복원 몫이
+  같지 않다. 계측(D1)에 "압력을 건 뒤 잰 시각" 을 적는다.
+- `[해석]` **회복의 시간 곡선이 전극을 가를 수 있다** — 재가압 뒤 초–분 안에 돌아오는 임피던스 · 용량 몫은 이 편의 눈금으로 Li\|SE creep(≥1 MPa 에서 초 단위)이고, 양극 복합체(취성 SE · CAM,
+  creep 0)의 복원은 탄성 접촉(즉각) 아니면 안 돌아온다. 4호(300 MPa 재가압) · 11호(Yu 2024)의 회복이 어느 시간 척도였는지 두 digest 에 기록이 없다 — 3전극(16호 형)에서 시간 곡선을 찍으면
+  직접 확인된다. **이것은 제안이고 실측 0** — 설계 조건 D1–D5 에 올리지 않는다(결정은 사용자 몫).
+- ⚠ 옮길 때 빠지는 것(61호 (c)): 벌크 AR 1–4.6 ↔ 셀 ≈10⁻⁴ · 마찰 · 접착 계수 미지 · 온도 1 점 · 반복 하중 0 · 도금 Li 미세구조 0 · 계면 void 의 경계값 문제 ≠ 단축 시험.
+
 ## 이 페이지가 주장하지 않는 것
 
 - **원문의 식이 아니다.** Shi 2020 은 `ΔQ_mech` 를 정의하지도, 10.4 % 와 60 %p 를
@@ -356,3 +372,4 @@ Li₂₁Si₅/Si–Li₂₁Si₅ 이중층 음극 ‖ Li₆PS₅Cl ‖ Li₃InCl
 - [[anode-free-li-inventory-accounting]] — 같은 논문(6호)의 음극 축. **연산자를 못 쓰는 셀에서 무엇이 남는가.**
 - [[thermo-kinetic-loss-partition]] — 액체셀 축의 같은 형식(외부 변수를 관측 축으로 쓰는 분해).
 - [[assb-maxwell-ocv-derivative-channels]] — 이 연산자의 **소신호 판**(14호 volumetry, `F(∂E/∂P)_T`).
+- [[li-metal-yield-creep-vs-stack-pressure]] — 이 연산자의 **음극 쪽 재료 시간 상수**(61호 Masias 2019, σ^6.56).

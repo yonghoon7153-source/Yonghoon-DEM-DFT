@@ -1,0 +1,330 @@
+{
+ "slug": "masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-28",
+ "sources": [
+  "7dad6b37-23._Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf",
+  "8cec13b1-23._Sup_Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Figure 4 Schematic diagram depicting the evolution of a highly ductile sample geometry (barreling) during compression. The cross-hatched regions indicate where limited deformation occurs adjacent to the platens due to friction. a original sample geometry,",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    72.0,
+    550.3,
+    176.7
+   ],
+   "w": 2106,
+   "h": 438,
+   "dpi": 300,
+   "src": "7dad6b37-23._Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf",
+   "blank": 0.765
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Young’s modulus of Li from the literature and this study (room temperature) Microstructure E (GPa) Method Reference Polycrystalline 5.0 Wire bending [11] Polycrystalline 8.0 Acoustic [26] Polycrystalline 1.9 Compression [12] Polycrystalline 7.8 Tension [13] Polycrystalline 7.8 Acoustic This work Single crystal *21.2 \\111[ Acoustic [34] Single crystal *3.0 \\100[ Acoustic [34] *E values based on crystallographic orientation calculated from Ref. [34]",
+   "rotated_deg": 0,
+   "bbox": [
+    46.0,
+    33.0,
+    549.3,
+    728.6
+   ],
+   "w": 2098,
+   "h": 2899,
+   "dpi": 300,
+   "src": "7dad6b37-23._Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 6,
+   "file": "tab_2.png",
+   "caption": "Table 2 Elastic properties of polycrystalline Li at room temperature Height (mm) Density q (g/cc) Wave speed (km/s) E (GPa) G (GPa) K (GPa) v Longitudinal, Vl Shear, Vs 12.35 0.53 5.27 ± 0.01 (N = 4) 2.29 ± 0.01 (N = 4) 7.80 2.82 11.18 0.38 8.83 0.54 5.48 ± 0.02 (N = 6) 2.30 ± 0.02 (N = 6) 7.79 2.80 12.12 0.39 0.75 0.53 5.08 ± 0.26 (N = 6) 2.32 ± 0.02 (N = 10) 7.88 2.88 9.92 0.37 Average 7.82 2.83 11.07 0.38",
+   "rotated_deg": 0,
+   "bbox": [
+    46.0,
+    33.0,
+    549.2,
+    729.6
+   ],
+   "w": 2098,
+   "h": 2904,
+   "dpi": 300,
+   "src": "7dad6b37-23._Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf",
+   "blank": 0.862
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 7,
+   "file": "tab_3.png",
+   "caption": "Table 3 Yield strength (ry) of Li from literature and this study (room temperature)",
+   "rotated_deg": 0,
+   "bbox": [
+    46.0,
+    33.2,
+    549.2,
+    727.6
+   ],
+   "w": 2098,
+   "h": 2894,
+   "dpi": 300,
+   "src": "7dad6b37-23._Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 1,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Tension Creep Minimum Secondary Creep Rate as a function of Pressure (room temperature) Pressure Minimum Secondary Creep Aspect Ratio (H/D) σ (MPa) σ/G Rate (sec-1) Strain (%)",
+   "rotated_deg": 0,
+   "bbox": [
+    89.9,
+    102.7,
+    524.5,
+    305.8
+   ],
+   "w": 1812,
+   "h": 847,
+   "dpi": 300,
+   "src": "8cec13b1-23._Sup_Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf",
+   "blank": 0.721
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 2,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Compression Creep Strain Rate as a function of Pressure and Time (room temperature)",
+   "rotated_deg": 0,
+   "bbox": [
+    71.6,
+    67.0,
+    542.8,
+    221.4
+   ],
+   "w": 1964,
+   "h": 644,
+   "dpi": 300,
+   "src": "8cec13b1-23._Sup_Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf",
+   "blank": 0.74
+  },
+  {
+   "key": "f1m",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1_manual_p5.png",
+   "caption": "Figure 1 Schematic of creep tension (left) and compression (right) test procedure. (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    71.2,
+    550,
+    274.8
+   ],
+   "w": 2105,
+   "h": 849,
+   "dpi": 300,
+   "src": "7dad6b37-23._Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 자동 추출이 '그래픽 없음(img0/draw1)' 으로 제외했으나 실제 쪽에는 캡션 왼쪽 · 래스터 그림 오른쪽 배치의 이미지 1 개가 있다(캡션 블록 + 이미지 rect 합집합)"
+  },
+  {
+   "key": "f2m",
+   "kind": "figure",
+   "label": "2",
+   "page": 7,
+   "file": "fig_2_manual_p7.png",
+   "caption": "Figure 2 Room-temperature tensile stress–strain behavior of Li (15.5 mm height, 12.7 mm diameter). The inset shows the 0.2% yield strength using the elastic modulus from the stress–strain curve (SS Slope) and pulse-echo acoustic measurements (PE Slope). (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    71.2,
+    550,
+    327.9
+   ],
+   "w": 2105,
+   "h": 1071,
+   "dpi": 300,
+   "src": "7dad6b37-23._Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 자동 추출이 '그래픽 없음(img0/draw1)' 으로 제외했으나 실제 쪽에는 캡션 왼쪽 · 래스터 그림 오른쪽 배치의 이미지 1 개가 있다(캡션 블록 + 이미지 rect 합집합)"
+  },
+  {
+   "key": "f3m",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3_manual_p8.png",
+   "caption": "Figure 3 Room-temperature compressive stress–strain behavior of Li (12.3 mm height, 12.7 mm diameter). (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    71.2,
+    550,
+    324.7
+   ],
+   "w": 2105,
+   "h": 1057,
+   "dpi": 300,
+   "src": "7dad6b37-23._Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 자동 추출이 '그래픽 없음(img0/draw1)' 으로 제외했으나 실제 쪽에는 캡션 왼쪽 · 래스터 그림 오른쪽 배치의 이미지 1 개가 있다(캡션 블록 + 이미지 rect 합집합)"
+  },
+  {
+   "key": "f5m",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5_manual_p10.png",
+   "caption": "Figure 5 Room-temperature tensile strain and strain rate of Li versus time. (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    74.1,
+    550,
+    331.1
+   ],
+   "w": 2105,
+   "h": 1072,
+   "dpi": 300,
+   "src": "7dad6b37-23._Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 자동 추출이 '그래픽 없음(img0/draw1)' 으로 제외했으나 실제 쪽에는 캡션 왼쪽 · 래스터 그림 오른쪽 배치의 이미지 1 개가 있다(캡션 블록 + 이미지 rect 합집합)"
+  },
+  {
+   "key": "f6m",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6_manual_p10.png",
+   "caption": "Figure 6 Minimum tensile strain rate of Li versus stress at room temperature. (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    340.0,
+    550,
+    599.9
+   ],
+   "w": 2105,
+   "h": 1084,
+   "dpi": 300,
+   "src": "7dad6b37-23._Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 자동 추출이 '그래픽 없음(img0/draw1)' 으로 제외했으나 실제 쪽에는 캡션 왼쪽 · 래스터 그림 오른쪽 배치의 이미지 1 개가 있다(캡션 블록 + 이미지 rect 합집합)"
+  },
+  {
+   "key": "f7m",
+   "kind": "figure",
+   "label": "7",
+   "page": 12,
+   "file": "fig_7_manual_p12.png",
+   "caption": "Figure 7 Room-temperature strain rate normalized by diffusivity versus stress normalized by shear modulus for various alkali metals [32] and Li from this work. (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    71.2,
+    550,
+    328.2
+   ],
+   "w": 2105,
+   "h": 1072,
+   "dpi": 300,
+   "src": "7dad6b37-23._Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 자동 추출이 '그래픽 없음(img0/draw1)' 으로 제외했으나 실제 쪽에는 캡션 왼쪽 · 래스터 그림 오른쪽 배치의 이미지 1 개가 있다(캡션 블록 + 이미지 rect 합집합)"
+  },
+  {
+   "key": "f8m",
+   "kind": "figure",
+   "label": "8",
+   "page": 12,
+   "file": "fig_8_manual_p12.png",
+   "caption": "Figure 8 Room-temperature engineering strain and strain rate versus time and for Li under compression. (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    341.2,
+    550,
+    596.5
+   ],
+   "w": 2105,
+   "h": 1065,
+   "dpi": 300,
+   "src": "7dad6b37-23._Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 자동 추출이 '그래픽 없음(img0/draw1)' 으로 제외했으나 실제 쪽에는 캡션 왼쪽 · 래스터 그림 오른쪽 배치의 이미지 1 개가 있다(캡션 블록 + 이미지 rect 합집합)"
+  },
+  {
+   "key": "f9m",
+   "kind": "figure",
+   "label": "9",
+   "page": 13,
+   "file": "fig_9_manual_p13.png",
+   "caption": "Figure 9 Room-temperature strain rate versus stress as a function of time. The three time points were taken to represent a LMSSB charged or discharged in 12, 60, and 120 min. (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    467.1,
+    550,
+    727.1
+   ],
+   "w": 2105,
+   "h": 1084,
+   "dpi": 300,
+   "src": "7dad6b37-23._Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 자동 추출이 '그래픽 없음(img0/draw1)' 으로 제외했으나 실제 쪽에는 캡션 왼쪽 · 래스터 그림 오른쪽 배치의 이미지 1 개가 있다(캡션 블록 + 이미지 rect 합집합)"
+  },
+  {
+   "key": "f10m",
+   "kind": "figure",
+   "label": "10",
+   "page": 14,
+   "file": "fig_10_manual_p14.png",
+   "caption": "Figure 10 Under compression; two possible scenarios determined by the deformation behavior of lithium: a–c with no adhesion between components, lithium could deform to eventually short-circuit against the cathode; d, e if lithium adheres to the solid electrolyte and current collector, frictional forces. (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    411.6,
+    550,
+    727.1
+   ],
+   "w": 2105,
+   "h": 1315,
+   "dpi": 300,
+   "src": "7dad6b37-23._Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 자동 추출이 '그래픽 없음(img0/draw1)' 으로 제외했으나 실제 쪽에는 캡션 왼쪽 · 래스터 그림 오른쪽 배치의 이미지 1 개가 있다(캡션 블록 + 이미지 rect 합집합)"
+  }
+ ]
+}

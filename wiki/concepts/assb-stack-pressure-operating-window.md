@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -84,6 +84,11 @@ P 가 높으면  →  Li 가 항복강도(≈0.8 MPa)를 넘어 크리프하고
 
 따라서 운전 가능한 구간은 **창(window)** 이고, 그 창의 두 벽은 **다른 물리**다:
 아래 벽은 **접촉/이온 수송**, 위 벽은 **Li 소성 + 전해질 공극 퍼콜레이션**.
+
+> ⚠ **2026-09-28 정정 (61호 Masias 2019 = 5호 ref 15, 항복 ≈0.8 MPa 의 원전)**: 위 도식의 "항복강도(≈0.8 MPa)를 **넘어** 크리프" 는 원전이 주지 않는다 —
+> 원전은 creep 을 **항복 아래(0.2–0.6 MPa)** 에서 쟀고 거기서 `n` = 6.56 의 멱법칙이 나왔다(`[인쇄]` "studied at loads below the 0.8 MPa yield point"). 항복은 creep 의
+> 문턱이 아니라 눈금 하나다: **creep 속도가 σ^6.56 로 커져 항복 근처에서 1 % 변형이 초 단위가 된다**(`[재현]` 0.2 MPa ≈14 h · 1 MPa ≈1 s). 위 벽의 "크리프 관통" 은
+> 이 원전의 눈금으로 **power-law breakdown 영역(> 2.83 MPa)** 의 일이고, 원전의 압축 값(0.8–2.4 MPa)은 마찰 · 배럴링이 지배해 재료 법칙이 아니다(아래 §61호 · [[li-metal-yield-creep-vs-stack-pressure]]).
 
 ⚠ **이 창은 보편 상수가 아니다.** 위 벽은 `f(음극 재료, 전해질 공극률, 전류밀도)`
 이고 아래 벽은 `f(표면 거칠기, 압착 이력)` 이다 — 아래 §"이력" 참조.
@@ -320,6 +325,11 @@ modelling**."
 >
 > ⚠ **2026-09-28 둘째 정정 (60호 Zhang 2025 = 13호 [45])**: [45] 도 "5" 를 주지 않는다 — 요구치 · 문턱 인쇄 0, 본문 `MPa` 값은 0.8 · 1.51 · 70 · 350 · 370 · 600 · 700 이고
 > "5 MPa" 는 Table S2 의 5호 Doux 2020 운전 조건 한 칸이다. 13호 `<5` 의 인용 다리 둘([23] · [45])이 모두 비었고 남은 확인처는 [35] Li Menglin *AFM* 2025(미수령 · 원장 §1 에 없음)뿐(아래 §60호).
+>
+> ⚠ **2026-09-28 셋째 주석 (61호 Masias 2019)**: 계보의 "≈1 MPa" 에 **가장 이른 인쇄(2018 온라인)** 가 있다 — `[인쇄]` "stack pressures in the 1.0 MPa range are necessary to achieve
+> low and stable cell resistance [9, 10]"(원전 [9] Sharafi … Sakamoto 2016 *JPS* 302 · [10] Wang & Sakamoto 2018 *JPS* 377 — 같은 실험실, 미열람)와 **같은 지면**의 "How much
+> compressive stress is not known … We believe 1 MPa was sufficient". 여덟 편 · 띠 0.1–5 MPa · 확인된 원전 0 그대로. 그리고 그 띠는 Li 의 눈금으로 확산 creep(< 0.28) · 멱법칙(0.2–0.6) ·
+> 항복(0.73–0.81) · power-law breakdown(> 2.83 MPa) 을 가로지른다 — **수렴했더라도 한 눈금이 아니었다**(아래 §61호).
 
 ★ 그리고 `[도표]` **Fig. 2 가 본문에 없는 클래스별 창 다섯을 준다** (레이더 축 라벨):
 **Oxides ≥30 MPa · Sulfides 5–20 · Halides 2–10 · Polymers "No or compliant" · Composites
@@ -812,6 +822,61 @@ S3: Li₂₁Si₅ 분말 100 → 700 MPa 냉간압착에서 면저항 **4.71 · 
 
 압력 대조군(같은 음극의 가압 판은 자기 인용 Zhang 2024 *EES* 50 MPa 뿐, 미열람) · 운전 중 압력 계측(본편 셀) · 경계조건 · 요구치 · 양극 쪽 어떤 관측.
 
+## ★★★ 2026-09-28 (`assb` 61호 Masias 2019, **재료 실측 · 벌크 Li 원통 · 실온 · 셀 0**) — **창의 두 벽 사이(0.1–5 MPa)가 Li 의 눈금으로는 확산 creep · 멱법칙 creep · 항복 · power-law breakdown 을 가로지르고, "항복을 넘어 creep" 은 이 편이 주지 않는다**
+
+`raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md` (*J. Mater. Sci.* 54, 2585–2600, Ford/미시간 Sakamoto — 21호 ref 49 · 5호 ref 15, **3차 묶음 파일 23**).
+이 페이지 §정의의 "항복강도(≈0.8 MPa)" 와 §5호 표의 "Li 항복강도 대비" 열이 기대는 원전이다. 수치의 정리는 [[li-metal-yield-creep-vs-stack-pressure]].
+
+### 1. 요구치 — 여덟 번째 인쇄값, 그리고 계보에서 가장 이른 것(2018)
+
+| 편 | 요구치 | 원전 |
+|---|---|---|
+| **61호 Masias 2019** | **"stack pressures in the 1.0 MPa range are necessary to achieve low and stable cell resistance"**(서론) · "0.8–2.4 MPa … anticipated stack pressures that are required"(방법) · **"How much compressive stress is not known … We believe 1 MPa was sufficient"**(결과) | **[9] Sharafi … Sakamoto 2016 *JPS* 302, 135 · [10] Wang & Sakamoto 2018 *JPS* 377, 7**(미열람 — 같은 실험실) |
+| 8 · 12 · 13 · 25 · 33 · 39 · 59호 | (§59호 표) | |
+
+- ⇒ **여덟 편 · 여섯 값(0.1 · 0.4–1 · ≈1 · 1 · 2 · 5) · 띠 0.1–5 MPa 그대로 · 확인된 원전 0 그대로.** 새것: 가장 이른 인쇄 · "necessary" 와 "not known" 이 같은 지면(61호 D10) · 원전이 **자기 실험실 두 편**.
+- `[해석]` "≈1 MPa" 가닥(이 편 · 39호 Wang 2021 *Joule* · 8호 재인용)이 Sakamoto 실험실 2016–2021 **한 뿌리**일 가능성 — 원전 넷 중 열어 본 것이 이 편뿐이라 가설. 46호(Schlenker 2020)는 [10] 을
+  "Li 항복 2 MPa" 로 전사했고 이 편은 0.73–0.81 — 같은 실험실의 두 인쇄값이 2.5× 다르다(원전 미열람).
+
+### 2. ★★★ 창의 재료 눈금 — 이 페이지의 값들을 Li 위에 놓는다
+
+`[인쇄]` E 7.82 · G 2.83 GPa · ν 0.381 · 항복 **0.73–0.81 MPa**(인장 0.2 % 오프셋; 압축 변곡 0.81 ± 0.10) · 인장 creep **0.2–0.6 MPa(항복 아래)** 에서 power-law `n` = **6.56**(Table S1: 2.0×10⁻⁷ → 3.89×10⁻⁴ s⁻¹) ·
+[32] 지도 경계 σ/G 10⁻⁴(확산 creep) · 10⁻³(power-law breakdown) → `[재현]` **0.28 · 2.83 MPa**.
+
+| 이 페이지의 값 | MPa | Li 눈금 | `[재현]` 멱법칙 1 % 변형 시간 |
+|---|---:|---|---|
+| 59호 요구치 | 0.1 | 확산 영역(시험 밖) | ≈55 일(하한) |
+| 61호 인장 creep | 0.2–0.6 | 측정 | 14 h → 26 s |
+| **항복** | **0.73–0.81** | | ≈10 → 5 s(외삽) |
+| 60호 지그 예압 · 61호 압축 하한 | 0.8 | 항복 자리 | |
+| 61호 기준값 · 8호 · 39호 · 5호 아래 벽 최저점("exceeds 500 Ω") | 1 | "we believe sufficient" · 항복 바로 위 | ≈1 s(외삽) |
+| 4호 · 33호 · 6호 | 2–4 | 압축 시험 범위(0.8–2.4) 안팎 | ms(외삽) |
+| 60호 첫 충전 총 | ≈2.3 | 압축 상한 근처 | |
+| **breakdown 경계** | **2.83** | σ/G = 10⁻³ | (그 위 외삽 무효) |
+| 5호 운전 · "optimal" · 13호 <5 | 5 | breakdown · 항복 6× | |
+| 5호 위 벽 | 10–75 | 항복 13–94× | |
+
+- `[재현]` 0.1 → 5 MPa 는 멱법칙으로 creep 속도 ×1.4×10¹¹; 외삽이 유효한 0.28–2.83 만 잡아도 ×3.8×10⁶. **압력 ×50 이 Li 시간 척도 6–11 자릿수**다.
+- `[해석]` 이 페이지의 아래 벽(5호 1 → 5 MPa 에서 임피던스 > 500 → 110 Ω)은 Li 가 항복 바로 위에서 압축 시험 범위를 지나 breakdown 경계로 넘어가는 구간과 겹친다 — 접촉이 "creep 으로 만들어진다" 는
+  읽기가 가능한 자리이지만, 5호 셀은 Li₆PS₅Cl 이고 이 편은 SE 0 이다. 위 벽(10–75 MPa)은 전부 breakdown 영역 — 5호가 잰 단락 시간(474 h → 0 h)은 멱법칙으로 설명할 범위 밖이다.
+
+### 3. ⚠ 정정 — "항복강도를 넘어 크리프" 는 이 편이 주지 않는다
+
+- §정의 · 5호 digest :205 "항복강도 ≈0.8 MPa, 그 위에서 크리프 시작" ↔ 이 편 `[인쇄]` "Tension creep performance was studied at loads **below** the 0.8 MPa yield point between 0.2 and 0.6 MPa" — creep 은
+  항복 아래에서 쟀고 `n` = 6.56 도 거기서 나왔다. 정정: **"creep 속도가 σ^6.56 로 커진다 — 항복(0.8) 근처에서 1 % 변형이 초 단위가 된다"**(§정의 아래 주석).
+- 항복 위(0.8–2.4 MPa)의 시간 의존 변형은 이 편에서 **마찰 · 배럴링이 지배**(응력 ↑ 에 속도 ↓ — 0.8 → 2.4 MPa 에서 12 분 속도 ×0.21, Fig. 9)해 재료 법칙이 아니다(저자 인정) — 위 벽의 "creep 관통" 을
+  이 편의 압축 값으로 정량화할 수 없다.
+
+### 4. ★★ 시간 축 — 압력은 걸고 얼마 뒤에 잰 값인가
+
+- `[인쇄]` 압축 시험의 세 시각 12 · 60 · 120 분 = "a LMSSB charged or discharged in 12, 60, and 120 min" — 같은 응력에서 속도가 720 → 7200 s 에 ×1/15–1/21. `[해석]` 셀에서는 이것이 **재가압 뒤
+  유지 시간**의 문제다: [[assb-pressure-reapplication-separation-test]] D1 에 유지 시간 · 회복 시간 곡선을 붙인다(61호 절). §"압력 진동"(33호 — 사이클당 ≈0.7–2.3 MPa)은 이 편의 눈금으로
+  **항복을 매 사이클 넘나드는** 진동이다 — 피로 · 래칫은 이 편에 0(61호 G10).
+
+### 5. 이 편이 이 페이지에 **안 준 것**
+
+셀 · SE · 계면 저항 · `θ(P)` · 이력 · 온도 의존(`Qc` 0) · 반복 하중 · 접착 계수 · 도금 Li. **창의 값은 하나도 움직이지 않았다** — 움직인 것은 §정의의 기구 문장(정정)과 값들의 **눈금**이다.
+
 ## 경고 (전부 원문이 준 한계에서 나온다)
 
 1. **점당 셀 1 개, 오차 막대 0.** 압력–수명 6 점 전부 N=1 이다.
@@ -853,6 +918,7 @@ S3: Li₂₁Si₅ 분말 100 → 700 MPa 냉간압착에서 면저항 **4.71 · 
   `[인쇄]` "Li 금속 덴드라이트는 XRD 로 직접 검출되지 않는다" 고 적고, 같은 대비를
   다른 그림에서 "severe cracking" 이라 부른다 (5호 digest D6).
 - **60호의 "외압 0" 을 "압력 0" 으로 옮기지 않는다** (2026-09-28) — 프레임을 뺐다는 것까지이고, 운전 중 구속(정하중/정변위)은 인쇄돼 있지 않다; 같은 편의 정변위 지그는 첫 충전에 +1.51 MPa 를 보였다. 그리고 **Table S2 의 문헌 압력 13 값을 창의 표본으로 쓰지 않는다** — 계측 방식 · 사이클 정의 규약이 없다.
+- **61호의 멱법칙 외삽값(1 % 변형 시간)을 셀의 값으로 옮기지 않는다** (2026-09-28) — 벌크 인장 · AR 4 · 실온 · 단조 하중의 외삽이고, 0.28 MPa 아래는 하한 · 2.83 MPa 위는 무효다. 그리고 **"Li 가 항복을 넘어 creep 한다" 를 다시 쓰지 않는다** — 원전은 creep 을 항복 아래에서 쟀다(§61호 3). 61호의 압축 값(0.8–2.4 MPa)은 응력 순서가 역전된 장치 값이라 위 벽의 정량에 쓰지 않는다.
 
 ## 관련
 - [[assb-pressure-reapplication-separation-test]] — `P↑` 분리 연산자. **이 페이지가 그 상한을 준다.**
@@ -864,3 +930,4 @@ S3: Li₂₁Si₅ 분말 100 → 700 MPa 냉간압착에서 면저항 **4.71 · 
 - [[anode-free-li-inventory-accounting]] — 같은 논문(Lee 2020)의 **음극 인벤토리 축**.
   이 페이지가 그 논문의 압력을, 그 페이지가 그 논문의 `LLI` 를 받는다.
 - [[assb-maxwell-ocv-derivative-channels]] — 압력을 **관측 변수**로 쓰는 편(14호). 계보 최초의 `E(P)` 와 그 비선형.
+- [[li-metal-yield-creep-vs-stack-pressure]] — 이 창의 **재료 눈금**(61호 Masias 2019): 항복 0.73–0.81 MPa · creep `n` 6.56 · 영역 경계 0.28 / 2.83 MPa. §정의의 "항복을 넘어 creep" 정정의 원전.
