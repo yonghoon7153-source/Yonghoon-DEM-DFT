@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -466,6 +466,22 @@ Li-In 음극 셀의 것이다. **Li 금속·무음극에 그대로 옮기지 않
 - ★ 그러나 SOFC 는 **저장 용량이 없다** — 끊긴 LSCF 는 **반응 자리만** 잃고(식 (7) · (9) 의 곱), 이 편에서 `P^e` 가 들어가는 곳은 전부 **동역학 쪽**(TPB 길이 · 표면 자리)이다. ASSB 로 옮기면 끊긴
   CAM 은 용량을 잃으므로 같은 `P^e` 가 `θ_AM`(용량 곱) 칸에 들어가야 한다 — `[해석]` **SOFC 식을 그대로 가져오면 `θ` 를 `η` 칸(반응 자리 ↔ 과전압)에만 넣는 모형이 된다.**
 - 22호 `θ`(= 1 − `f_inactive`)와 대면: 저자 배정 읽기로 세 점 동시 불가 · 상한 읽기로 M 의 불활성 거의 전부가 전자 밖 — 3 항 분해에서 22호 M 의 `θ` 몫은 이 식으로 정해지지 않는다(68호 digest §(b)).
+
+## ★★ 2026-09-28 (`assb` 69호 Kondrakov 2017 *JPCC* 121, 3286, **실험 · 액체 반쪽 · NCM111 · NCM811 · ASSB 아님**) — **첫 충전의 앞머리 전하는 격자를 움직이지 않고, "균열 → 용량" 은 이 편에서 상관이다**
+
+`raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md`. 코인 45 °C · C/2 · 80 사이클 · 신품 파우치 operando XRD 두 사이클 · 광학 입자 부피(둘째 사이클) · 단면 SEM. 교정
+규약은 [[nmc-lattice-li-content-calibration]] 69호 절.
+
+- ★★ **첫 충전 용량 안의 "격자 무응답" 몫.** `[재현]` NCM811 첫 충전 앞머리 Δx ≈0.12–0.18 이 3.77 V 평탄에서 격자를 움직이지 않는다(둘째 충전은 0.01–0.04) — 첫 사이클 결손(0.106)과 같은 자릿수.
+  3 항 분해로 옮기면 첫 충전 전하가 전부 활성 입자의 탈리튬이라는 가정(65호 "첫 충전 상한" 의 분자)에 **벌크 탈리튬이 아닌 전하**가 섞일 수 있다 — 섞이면 상한이 느슨해지는 방향(`[해석]` ·
+  액체 NCM811 · NCM111 에는 없다).
+- ★★ **"균열 → 용량 감쇠" 는 두 조성 대비의 상관.** `[인쇄]` "may be caused by the volume changes … a hypothesis that requires experimental proof" · "it may also lead to a loss of electrical contact of the
+  active electrode regions" — `θ`(고립) 경로에 이름만 붙는다. 광학 크기 신호의 균열 기여는 "linear background subtraction" 으로 지워졌다 — 사이클 축 `θ` 의 측정 후보가 양으로 남지 않았다.
+- ★ **`η` 쪽 — 평균 방전 전압 하락의 전극 귀속 미분리.** `[도표]` C/2 평균 방전 전압 NCM811 −0.25 V · NCM111 −0.13 V / 77 사이클; `[인쇄]` "the lithium anode and other cell components also contribute
+  to the increase in cell resistance" ↔ 결론 "related to the impedance buildup in the cathode"(EIS 0).
+- ★ **틈 채널의 θ 몫(23호).** 23호 첫 충전 176 mAh g⁻¹ 을 이 편 **첫 충전** 축(θ = 1)에 놓으면 격자 −2.0…−2.4 % — 23호 틈을 격자로 내려면 활성 입자가 4.3 V 상태(−5.1 %)에 가야 하고 그 θ 는
+  ≈0.85; 입자 수축(광학 −7.8 %)은 격자의 ×1.5 라 층위도 몫이 된다.
+- ⚠ 모집단: 액체 반쪽 · 두 조성 · BASF 전극 · 45 °C(사이클) ↔ 25 °C(격자) — ASSB 에서 잰 것은 여전히 0.
 
 ## 이 페이지가 주장하지 않는 것
 

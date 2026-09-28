@@ -5,7 +5,7 @@ created: 2026-09-28
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md]
+sources: [raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -41,6 +41,10 @@ h(t) = h_base(t) +            Σ_e Δh_e(q)        # 높이 신호(딜라토미�
 올라 4.5 V 까지 ≈−28 로 유지되고, NCM622 는 δ 0.93–0.45 에서 −2…−4 · δ 0.30–0.18 에서 −19…−21 Å³ per δ 다. NCM 은 **충전 수축**(`[인쇄]` "a large decrease in unit cell volume upon charging") — In · Si 음극의 충전 팽창과 부호가 반대라
 양극 몫은 합에서 음극 몫을 깎는다. ⇒ 같은 용량 진폭이라도 **SOC 창(컷오프)에 따라 양극 몫이 다르고**, 같은 용량에서 θ 가 작으면 활성 입자의 Δx 가 커져 몫이 비선형으로 바뀐다([[nmc-lattice-li-content-calibration]] 함정 6).
 ⚠ **2026-09-28 (67호) 주석** — 67호(Kondrakov 2017 *JPCC* — NCM811 · 전처리 셀 operando)에서도 같은 모양이다: `[재현]` `V` 변화의 **76.8 %** 가 x ≤0.5(≈4.06–4.6 V, 67호 축)에서 일어나고, 4.2 V 까지 −2.5…−2.8 % · 4.3 V −4.9…−5.4 % · 4.6 V + 1 h −7.02 %(기준 = 전처리 셀 충전 첫 점). 다만 67호의 x 축 규약이 66호와 0.10 다르므로(`x₀` 1.00 ↔ 0.90) 두 편의 `dV/dx` 를 겹칠 때는 x 가 아니라 전압으로 맞춘다([[nmc-lattice-li-content-calibration]] 67호 절).
+⚠ **2026-09-28 (69호) 주석 — 양극 몫의 크기는 층위에 따라 ×1.5 다르다.** 69호(Kondrakov 2017 *JPCC* 121, 3286 — 액체 반쪽 · 신품 셀)에서 NCM811 4.3 V + 1 h 격자 `ΔV/V` −5.0…−5.1 %(원형 기준 ·
+첫 충전 · XRD) ↔ **2차 입자 −(7.8 ± 1.5) %**(광학 + DIC · 둘째 사이클 · 선형 배경 뺌) · NCM111 −1.16 ↔ −(3.3 ± 2.4) %. 격자 부피 변화의 ≈69 % 가 4.04 V 위(방전 용량 ≈25 %)이고, 광학 입자 부피는
+정전압 중에 −8.2 → ≈−6 % 로 먼저 회복한다(격자는 최저 유지). ⇒ 두께 · 압력 신호의 양극 몫을 격자 `dV/dx` 로 추정하면 입자 · 전극 층위의 수축을 과소평가할 수 있다(`[해석]` — 광학 방법이 그
+차이를 가르지 못한다: 2D 투영 · 입자 수 · 식 부호 미인쇄). 첫 충전 앞머리 Δx ≈0.12–0.18 은 격자를 움직이지 않는다 — 신품 셀 첫 충전의 양극 몫은 그 구간에서 ≈0 이다.
 62호 원형은 LCO(충전 팽창)라 이 비선형의 표본이 아니다.
 
 ## 왜 중요한가 — 카드 Q2 · Q1 에서 이 신호를 쓸 때의 함정 다섯

@@ -1,0 +1,298 @@
+{
+ "slug": "kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-28",
+ "sources": [
+  "54a5c77b-31._Anisotropic_lattice_strain_and_mechanical_degradation_of_high-and_low-nickel_NCM_cathode_materials_for_Li-ion_batteries.pdf",
+  "2f115f39-31._Sup_Anisotropic_lattice_strain_and_mechanical_degradation_of_high-and_low-nickel_NCM_cathode_materials_for_Li-ion_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Cycling performance of NCM111 and NCM811 half-cells at 45 °C. (Top) Typical voltage proﬁles at C/10. Only the ﬁrst two cycles are shown for clarity. (Middle) Capacity retention and (bottom) mean discharge voltage at C/2. suggests the coexistence of several phases.28,29 The NCM111 and NCM811 half-cells delivered discharge capacities of 157 and 193 mAh/g in the initial cycle and 137 and 132 mAh/g in the 80th cycle (middle panel in Figure 1). The average capacity fade rate per cycle was signiﬁcantly larger for NCM811 than for NCM111 (0.40 vs 0.16%). This observation conﬁrms the lower stability of high-Ni NCMs, as reported previously.6,7 The ﬁrst cycle irreversibility was found to be 12 and 14% for NCM111 and NCM811, respectively, which is in the range typically observed for NCM materials.10,30,31 However, the Coulombic eﬃciency (Figure S4) stabilized well above 99% after the initi",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    401.3
+   ],
+   "w": 1050,
+   "h": 1410,
+   "dpi": 300,
+   "src": "54a5c77b-31._Anisotropic_lattice_strain_and_mechanical_degradation_of_high-and_low-nickel_NCM_cathode_materials_for_Li-ion_batteries.pdf",
+   "blank": 0.921,
+   "note": "⚠ 캡션 필드 과대 — 그림 1 캡션('… (bottom) mean discharge voltage at C/2.') 뒤에 3 쪽 본문 첫 문단('suggests the coexistence of several phases.28,29 …')이 붙었다(900 자에서 잘림). 이미지 크롭(래스터 xref 178, 560 × 1359)은 세 판 온전 — 라벨 ↔ 내용 맞다"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Contour plot of peak intensities of an NCM111 half-cell along with representative in situ XRD patterns and voltage proﬁles.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    536.6,
+    359.3
+   ],
+   "w": 2009,
+   "h": 1235,
+   "dpi": 300,
+   "src": "54a5c77b-31._Anisotropic_lattice_strain_and_mechanical_degradation_of_high-and_low-nickel_NCM_cathode_materials_for_Li-ion_batteries.pdf",
+   "blank": 0.778
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Structural reﬁnement results for (left) NCM111 and (right) NCM811 cathodes cycled against lithium metal anodes in pouch cells. The evolution of the cell voltage (E), lithium content (x(Li)), lattice parameters (a, c), TM−oxygen bond length (lTM−O), lithium−oxygen bond length (lLi−O), unit cell volume (V), and anisotropic microstrain parameter (S202) is shown. bond lengths (lTM−O and lLi−O). As a result, the accuracy of both the lTM−O and lLi−O estimations is limited by the accuracy of zO reﬁnement. Although oxygen interacts only weakly with X-rays and the zO values show larger scattering than those of a and c, changes in zO could be well resolved (Figure S7). Formally, at x(Li) = 1, the nickel ions are in the 3+ oxidation state (assuming Mn3+ and Co3+), and the eﬀective lTM−O is 1.959 and 1.961 Å for NCM111 and NCM811, respectively NCM111 and from 2.8702(1) to 2.8127(1) Å for N",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    378.2,
+    570.5,
+    623.2
+   ],
+   "w": 2151,
+   "h": 1022,
+   "dpi": 300,
+   "src": "54a5c77b-31._Anisotropic_lattice_strain_and_mechanical_degradation_of_high-and_low-nickel_NCM_cathode_materials_for_Li-ion_batteries.pdf",
+   "blank": 0.912,
+   "note": "⚠ 캡션 필드 과대 — 그림 3 캡션('… anisotropic microstrain parameter (S202) is shown.') 뒤에 4 · 5 쪽 본문('bond lengths (lTM−O and lLi−O). As a result, …')이 붙었다. 이미지 크롭은 온전(좌우 여백이 넓다 — 래스터 xref 214, 1316 × 971 은 rect 154.5–470.4 × 384.2–617.2 pt) — 라벨 ↔ 내용 맞다. 수치 판독은 원본 래스터에서 했다"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Microscopy of NCM811 cathodes. (a) Representative in situ light microscopy image. The primary crystallites are clearly visible. (b) SEM micrograph showing spherical particles with micrometer-scale dimensions.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    448.7,
+    306.5,
+    579.2
+   ],
+   "w": 1050,
+   "h": 545,
+   "dpi": 300,
+   "src": "54a5c77b-31._Anisotropic_lattice_strain_and_mechanical_degradation_of_high-and_low-nickel_NCM_cathode_materials_for_Li-ion_batteries.pdf",
+   "blank": 0.165
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Changes in secondary particle volume from in situ light microscopy for (left) NCM111 and (right) NCM811 cathodes cycled against metallic lithium anodes. Only the second cycle is shown for clarity. Shaded areas represent the error margin. The corresponding voltage proﬁles and the evolution of lithium content (x(Li)) with cycling time are shown as well.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    282.3
+   ],
+   "w": 2150,
+   "h": 914,
+   "dpi": 300,
+   "src": "54a5c77b-31._Anisotropic_lattice_strain_and_mechanical_degradation_of_high-and_low-nickel_NCM_cathode_materials_for_Li-ion_batteries.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Cross-sectional SEM micrographs at diﬀerent magniﬁcations of (a−d) NCM111 and (e−h) NCM811 cathodes collected before (a, b, e, f) and after (c, d, g, h) 50 cycles at C/2. the electrolyte. In addition, it may also lead to a loss of electrical contact of the active electrode regions, all of which helps to explain the cycling data shown above. ■CONCLUSIONS concentration gradients exist within the polycrystalline NCM particles, which in turn can lead to local stresses and strains. A recent study by means of transmission X-ray microscopy showed that lithium concentration proﬁles have irregular, nonspherical shapes.48 Interestingly, these proﬁles bear some resemblance to the crack patterns observed in the present work. In summary, structural and morphological changes in NCM111 and NCM811 upon electrochemical cycling have been investigated by means of in situ X-ray diﬀraction, in situ",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    321.2,
+    570.5,
+    471.4
+   ],
+   "w": 2151,
+   "h": 627,
+   "dpi": 300,
+   "src": "54a5c77b-31._Anisotropic_lattice_strain_and_mechanical_degradation_of_high-and_low-nickel_NCM_cathode_materials_for_Li-ion_batteries.pdf",
+   "blank": 0.272,
+   "note": "⚠ 캡션 필드 과대 — 그림 6 캡션('… after (c, d, g, h) 50 cycles at C/2.') 뒤에 결론 문단('In summary, structural and morphological changes …')이 붙었다. 이미지 크롭(래스터 xref 262, 3667 × 1152 회색조) 여덟 판 온전 — 라벨 ↔ 내용 맞다"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Low-magnification cross-sectional SEM micrographs of pristine (a) NCM111 and (b) NCM811 cathodes. All the electrodes were calendered to 3.2 g/cm3.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.4,
+    383.6
+   ],
+   "w": 2015,
+   "h": 1324,
+   "dpi": 300,
+   "src": "2f115f39-31._Sup_Anisotropic_lattice_strain_and_mechanical_degradation_of_high-and_low-nickel_NCM_cathode_materials_for_Li-ion_batteries.pdf",
+   "blank": 0.256
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Rietveld plots for neutron diffraction patterns for pristine (top) NCM111 and (bottom) NCM811 powder samples. The data were recorded at λ = 1.1545 Å using the HRPT diffractometer of the Swiss Spallation Neutron Source (SINQ), Paul Scherrer Institute (PSI), Villigen, Switzerland. For Rietveld refinement, FullProf software was used. The (red) observed, (black) calculated, and (blue) difference neutron diffraction profiles are shown. The green ticks indicate the position of the Bragg peaks. As evident, the experimental data are well described, with χ2 = 1.328 and 1.843 for NCM111 and NCM811, respectively. The degree of cationic disorder for the Li and Ni was found to be 4.3% and 6.8% for NCM111 and NCM811, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.4,
+    519.2
+   ],
+   "w": 2015,
+   "h": 1889,
+   "dpi": 300,
+   "src": "2f115f39-31._Sup_Anisotropic_lattice_strain_and_mechanical_degradation_of_high-and_low-nickel_NCM_cathode_materials_for_Li-ion_batteries.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Schematic of the experimental setup used for in situ light microscopy. The cell contains a polyethylene frame, with the electrodes mounted in an airtight housing, and is equipped with a thin optical borosilicate glass window. The cathode is oriented towards the microscope to ensure high-resolution imaging.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.4,
+    272.6
+   ],
+   "w": 2015,
+   "h": 861,
+   "dpi": 300,
+   "src": "2f115f39-31._Sup_Anisotropic_lattice_strain_and_mechanical_degradation_of_high-and_low-nickel_NCM_cathode_materials_for_Li-ion_batteries.pdf",
+   "blank": 0.763
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Coulombic efficiency of NCM111 and NCM811 half-cells cycled at 45 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    378.4,
+    529.2,
+    559.9
+   ],
+   "w": 1930,
+   "h": 757,
+   "dpi": 300,
+   "src": "2f115f39-31._Sup_Anisotropic_lattice_strain_and_mechanical_degradation_of_high-and_low-nickel_NCM_cathode_materials_for_Li-ion_batteries.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Contour plot of peak intensities of an NCM811 half-cell along with representative in situ XRD patterns and voltage profiles.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.4,
+    481.5
+   ],
+   "w": 2015,
+   "h": 1732,
+   "dpi": 300,
+   "src": "2f115f39-31._Sup_Anisotropic_lattice_strain_and_mechanical_degradation_of_high-and_low-nickel_NCM_cathode_materials_for_Li-ion_batteries.pdf",
+   "blank": 0.696
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 6,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. (left) Anisotropic line broadening observed for NCM811 during the initial charge, indicating the presence of a monoclinic distortion in the layered 𝑅3̅𝑚-type structure. (right) Rietveld plots for in situ XRD patterns – recorded at 3.77 V – fitted in 𝑅3̅𝑚 (hexagonal, top) and 𝐶2/𝑚 (monoclinic, bottom). The (black) observed and (red) calculated patterns as well as (blue) difference profiles of the fits are shown. The green ticks indicate the position of the Bragg peaks. As seen, the monoclinic phase as a structure model allows for slightly better description of the peak shapes (28-29° 2ϴ).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.4,
+    261.5
+   ],
+   "w": 2015,
+   "h": 815,
+   "dpi": 300,
+   "src": "2f115f39-31._Sup_Anisotropic_lattice_strain_and_mechanical_degradation_of_high-and_low-nickel_NCM_cathode_materials_for_Li-ion_batteries.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 6,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Structural refinement results for (left) NCM111 and (right) NCM811 cathodes cycled against metallic lithium anodes in pouch cells. The evolution of the cell voltage (E), lithium content (x(Li)), and oxygen z coordinate (zO) is shown. S6",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    415.8,
+    549.4,
+    666.3
+   ],
+   "w": 2015,
+   "h": 1045,
+   "dpi": 300,
+   "src": "2f115f39-31._Sup_Anisotropic_lattice_strain_and_mechanical_degradation_of_high-and_low-nickel_NCM_cathode_materials_for_Li-ion_batteries.pdf",
+   "blank": 0.924,
+   "note": "캡션 필드 끝에 쪽 번호 ' S6' 이 붙었다(무해). 이미지 온전 — 라벨 ↔ 내용 맞다. ⚠ 눈금 라벨은 등간격 눈금의 반올림(E 3.5 · 3.9 = 참 3.467 · 3.933, x(Li) 0.5 · 0.9 = 0.533 · 0.867, z_O 0.235 · 0.239 = 0.2353 · 0.2387) · z_O 축 단위 'Å' 는 분율 좌표의 오기"
+  },
+  {
+   "key": "fTOC",
+   "kind": "figure",
+   "label": "TOC",
+   "page": 1,
+   "file": "fig_TOC_manual_p1.png",
+   "caption": "(초록 그래픽 — 캡션 없음) 2차 입자 단면 'Strain'(입계 붉은 선) → 'Cycling' → 'Fracture'(입계 흰 틈) · 가운데 R3̅m 단위포 모식 'Charged'(c 축으로 길고 a 로 좁음) ↔ 'Discharged'",
+   "rotated_deg": 0,
+   "bbox": [
+    320.8,
+    295.0,
+    555.5,
+    429.8
+   ],
+   "w": 979,
+   "h": 562,
+   "dpi": 300,
+   "src": "54a5c77b-31._Anisotropic_lattice_strain_and_mechanical_degradation_of_high-and_low-nickel_NCM_cathode_materials_for_Li-ion_batteries.pdf",
+   "blank": 0.533,
+   "manual": true,
+   "note": "수동 크롭 — 캡션이 없는 초록 그래픽(1 쪽 래스터 xref 43, 978 × 562, rect 320.8–555.5 × 295.0–429.8 pt)을 300 dpi 렌더 클립. 자동 추출은 캡션 기준이라 대상 밖. 데이터 없음(모식) — ⚠ 'Charged' 단위포가 c 축으로 길게 그려졌다: NCM811 4.3 V 의 c(14.030 Å)는 방전 상태(14.195 Å)보다 짧다(본문 · 그림 3)"
+  }
+ ]
+}
