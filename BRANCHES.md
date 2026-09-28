@@ -212,3 +212,47 @@ COMSOL 명세 §18 (16 코어 통제 해 재계산, `bms-balancing/docs/COMSOL_R
 다만 새 커밋을 얹지 않는다 — 얹으면 다시 갈라진다. 서브가 남긴 인수인계 문서
 (`bms-balancing/HANDOFF_TO_GATE.md` · `MERGE_BRIEF_FOR_GATE.md`)는 역사 기록으로
 그대로 두고 머리에 흡수 사실만 한 줄 적었다.
+
+## 2026-09-28 — `claude/gate80-standby-9a26dd5f` 임시 대피
+
+세션이 교체돼 본진 세션이 끊겼다. 진행 상태(80차 게이트 회신 대기 · B020)를 잃지 않으려고 서브를 하나
+갈라 두되, **본진은 동결**해서 돌아갈 때 ff 한 번으로 끝나게 한다. 2026-09-10 분기와 목적이 다르다 —
+그때는 소유 경로를 갈랐고, 이번엔 **소유 경로가 같고 시간만 갈랐다**.
+
+| 항목 | 값 |
+|---|---|
+| 분기점 | `9a26dd5f31ca6fae45d5a55f5c59e33408371984` (원격 본진 head, 실측 일치 확인) |
+| 이유 | 세션 교체 — 본진 세션이 끊긴 사이 진행 상태를 이어받는다 |
+| 본진 | **동결.** 아무도 커밋하지 않는다. 이 규칙 하나가 ff 복귀를 보장한다 |
+| 소유 경로 | 본진과 **동일** (하드룰 1 표 그대로). 갈라 두지 않는다 |
+| 쓰기 방식 | **덧붙이기만** — 원장은 새 절, 상태 문서는 `## 다음` 앞에 새 절 + 기존 문단은 취소선, 요청문·리뷰 패키지는 새 파일/디렉터리. 기존 문단을 고쳐 쓰지 않는다 |
+
+### 복귀 규칙
+
+복귀 **전** 검사 (실측):
+
+```
+git fetch origin claude/14-gate-code-review-9qkx05 claude/gate80-standby-9a26dd5f
+git merge-base --is-ancestor origin/claude/14-gate-code-review-9qkx05 origin/claude/gate80-standby-9a26dd5f && echo FF_OK
+```
+
+`FF_OK` 가 안 나오면 본진이 움직인 것이다 → 서브에서 `git rebase origin/claude/14-gate-code-review-9qkx05`
+를 먼저 하고, 충돌 파일이 있으면 사용자에게 목록을 보이고 판단을 받는다. RUN_SCOPE 6 경로
+(`degradation-degeneracy/src/ tools/ configs/ scripts/ run.sh requirements*.txt`)가 충돌 목록에 있으면
+**자동 해결 금지** — digest 와 영수증이 걸린다 (하드룰 3).
+
+복귀:
+
+```
+git checkout claude/14-gate-code-review-9qkx05
+git merge --ff-only origin/claude/gate80-standby-9a26dd5f
+git push -u origin claude/14-gate-code-review-9qkx05
+```
+
+그 다음 커밋 하나로 `CLAUDE.md` 의 임시 한 줄을 지우고 이 절에 결과를 덧붙인다. 서브 브랜치는 지우지
+않고 새 커밋도 얹지 않는다 — `claude/bms-alpha-beta-verify` 와 같은 처리다.
+
+### 이 절은 복귀 커밋에서 결과를 덧붙인다
+
+복귀 SHA · "고유 커밋 0" 실측(`git log origin/claude/gate80-standby-9a26dd5f ^HEAD` 빈 출력) · 대피 중 한 일 요약을 그때 적는다.
+지금은 **분기·등록만** 했고 아직 아무 작업도 얹지 않았다.
