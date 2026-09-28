@@ -1,6 +1,6 @@
 # 81차 게이트 리뷰 요청 — 단계 3 **제한 구현 범위·사전 고정 사항 확인** (§3.2 단계 3 · 구현 착수 아님 · 실행 GO 아님)
 
-> **상태: 확정 (2026-09-28).** 80차는 G79-N1 종결을 수용하고 단계 1+2 를 한정 범위에서 종결했다 (잔여 P1/P2 0 · 원장 §112). 리뷰어 문장: "다음은 사용자가 원하면 **단계 3의 제한 구현 범위·사전 고정 사항을 확인해 별도 승인**하는 것이다. 이번 회신만으로 착수하거나 pilot/연구 실행 GO를 부여하지 않는다" (`gate80_review/codex/REVIEW_KO.md`). 이 요청은 그 확인이다. **사용자 결정 (2026-09-28): 이 범위 확인 요청의 발송을 승인** — 구현 착수 승인이 아니다. 착수는 81차 회신 뒤 사용자의 별도 승인으로만. 코드는 바꾸지 않았다 (RUN_SCOPE diff 0 · `source_digest eda3feb8f4536511` 그대로). 76차 종결 유지 · 새 실행 GO 아님 · `grid_fit_v5` 진단/no_active_claim 그대로.
+> **상태: 81차 회신 접수 (2026-09-28) — 수정 조건부 적합 · G81-N1·N2·N3 (P1 각) · 3-A/B/C 한 코드 라운드 권고 · Q1·Q4 수용 · Q2·Q3 조건부 · 구현 착수는 사용자 별도 승인 뒤 (원장 §114 · `gate81_review/codex/NEXT_APPROVAL_SCOPE_DRAFT.md`). 아래 취소선은 81차 정정.** ~~확정 (2026-09-28).~~ 80차는 G79-N1 종결을 수용하고 단계 1+2 를 한정 범위에서 종결했다 (잔여 P1/P2 0 · 원장 §112). 리뷰어 문장: "다음은 사용자가 원하면 **단계 3의 제한 구현 범위·사전 고정 사항을 확인해 별도 승인**하는 것이다. 이번 회신만으로 착수하거나 pilot/연구 실행 GO를 부여하지 않는다" (`gate80_review/codex/REVIEW_KO.md`). 이 요청은 그 확인이다. **사용자 결정 (2026-09-28): 이 범위 확인 요청의 발송을 승인** — 구현 착수 승인이 아니다. 착수는 81차 회신 뒤 사용자의 별도 승인으로만. 코드는 바꾸지 않았다 (RUN_SCOPE diff 0 · `source_digest eda3feb8f4536511` 그대로). 76차 종결 유지 · 새 실행 GO 아님 · `grid_fit_v5` 진단/no_active_claim 그대로.
 
 ## 판정 대상
 
@@ -52,7 +52,7 @@ GATE78 §3.2 단계 3 원문: "묶음 1·2 의 planned/realized schema · ID pre
 
 | # | 갈림 | 우리 제안 | 되돌릴 수 있는가 |
 |---|---|---|---|
-| Q1 | **unit-cube bank 생성 + bounds mapping digest** 를 단계 3 에 넣는가. `candidate_id(source="random")` 의 preimage 가 `bank_index`·`unit_cube_bytes_sha256` 를 요구하므로(계약 §4.2 · `design_wire.py:77`) 이것 없이는 3-C 의 `bank_index` 가 정의되지 않는다 | **넣는다** (3-A). 새 `candidate_mode` 경로에서만 unit cube → `lb + u·(ub−lb)` mapping · `exact_bounds_sha256` 는 실제 ordered `lb/ub` bytes digest. **legacy 경로(`rng.uniform(lb, ub)`)는 바이트 불변** (`g79_02` 골든이 지킨다) — 두 경로가 같은 난수를 내는지는 주장하지 않는다 | 예 — 단계 5(묶음 4·5)로 미루면 3-C 는 `candidate_id(random)` 를 `null` 로 두고 `bank_index` 만 남긴다 |
+| Q1 | **unit-cube bank 생성 + bounds mapping digest** 를 단계 3 에 넣는가. `candidate_id(source="random")` 의 preimage 가 `bank_index`·`unit_cube_bytes_sha256` 를 요구하므로(계약 §4.2 · `design_wire.py:77`) 이것 없이는 3-C 의 `bank_index` 가 정의되지 않는다 | **넣는다** (3-A). 새 `candidate_mode` 경로에서만 unit cube → `lb + u·(ub−lb)` mapping · `exact_bounds_sha256` 는 실제 ordered `lb/ub` bytes digest. **legacy 경로(`rng.uniform(lb, ub)`)는 바이트 불변** (`g79_02` 골든이 지킨다) — 두 경로가 같은 난수를 내는지는 주장하지 않는다 | ~~예 — 단계 5(묶음 4·5)로 미루면 3-C 는 `candidate_id(random)` 를 `null` 로 두고 `bank_index` 만 남긴다~~ **81차 정정: Q1 포함 확정 — 미채택 문구 취소 (§5 의 문구와 값이 달랐다: 여기 `candidate_id` null · §5 `bank_index` null; 리뷰 §6)** |
 | Q2 | 혼합/손상 restart 행(새 키 일부만) 정책 — 79차·80차 이월: "명시 거부 또는 부분 기록 분리" | **v6 writer 는 전부-또는-실패** (부분 행을 쓰지 않는다) · reader 는 부분 행을 `record_generation = "mixed_invalid"` 로 분류하고 validator `restart_후보` 가 **거부** (None 으로 내리지 않는다) · 옛 세대(legacy_pair/legacy_dict)는 그대로 | 예 — "부분 기록 분리"(값 있는 키는 살리고 없는 키만 None) 로 바꿀 수 있다 |
 | Q3 | provider 봉인의 **실물**: `provider_artifact_sha256` = provider leg 의 fits parquet 봉인 sha · `solution_map_sha256` = 조건별 `cond_id → p` map 파일 sha · `provider_protocol_sha256` = provider run_spec canonical digest — 이 셋으로 계약 §2 다섯 sha 를 채우는가 (`p_ini_values_sha256` 은 half-cell arm 에서만) | 위 정의. 봉인은 preserve 트랜잭션의 payload seal 을 재사용 (재구현 없음) | 예 — 리뷰가 다른 실물을 지정하면 그대로 |
 | Q4 | ID 도메인(`pair_group_id`·`bank_id`·`candidate/v2` preimage) 을 **바꾸지 않는다** — 골든 `design_golden.yaml` 재생성 없음. placeholder sha 자리에 실물 sha 를 넣는 것은 도메인 변경이 아니다 | 불변. 3-A 에서 preimage 를 늘려야 할 필요가 보이면 **구현하지 않고** 별도 질문 | 예 |
@@ -99,7 +99,7 @@ ls docs/22p_gap/sentinel_panel.yaml           부재
 ## §5 우리가 스스로 신고하는 것
 
 - 단계 3 은 단계 2 보다 크다: 3-A 하나만으로 `src/` ↔ `design_wire` 결속이 처음 생긴다 (지금은 시험·골든 생성기만 부른다). 계약 §13.1 의 "묶음 2 부분 — 실제 v6 격자 실행과의 end-to-end 결속 없음" 이 그 공백이다. 세 조각을 **한 라운드**에 묻는 것이 리뷰 부담을 키우면 3-A → 3-B → 3-C 로 쪼개 라운드마다 영수증을 재생성한다 (§3 규칙상 라운드마다 1회).
-- `bank_index` 는 현행 코드에 정의가 없다. §1.3 Q1 을 "단계 5" 로 판정하면 3-C 의 `bank_index` 는 `null` 로 남고 §9.4 다섯 필드 중 넷만 채워진다 — 그 경우 "§9.4 완료" 를 주장하지 않는다.
+- `bank_index` 는 현행 코드에 정의가 없다. ~~§1.3 Q1 을 "단계 5" 로 판정하면 3-C 의 `bank_index` 는 `null` 로 남고 §9.4 다섯 필드 중 넷만 채워진다 — 그 경우 "§9.4 완료" 를 주장하지 않는다.~~ **81차 정정: Q1 포함 확정 — 미채택 문구 취소 (§1.3 Q1 의 문구와 값이 달랐다; 리뷰 §6). base/warm 은 `bank_index` 만 null, `candidate_id` 는 세 source 모두 필요.**
 - `tools/preserve.py` 의 `provider` 는 retention provider 다. 3-B 의 warm provider 는 이름을 `warm_provider` 로 두어 검색·리뷰에서 섞이지 않게 한다 (계약 §2 `warm_provider_map` 과 같은 접두).
 - 골든 벡터의 bank·bounds·payload sha 는 placeholder 다 (§1.1). 3-A 는 실물 sha 를 만들지만 골든은 그대로 둔다 (Q4). 실물 sha 로 만든 ID 가 골든과 다른 값인 것은 당연하며 도메인 불변의 증거는 골든 31 node 가 계속 통과하는 것이다.
 - 이 요청은 서브 브랜치에서 발송한다. 본진 `9a26dd5f` 는 80차 요청 HEAD 와 같은 SHA 이고 서브는 그 ff 후손이다 — 리뷰어가 fetch 할 대상은 서브 HEAD (발송문 SHA). 본진과 서브의 RUN_SCOPE 는 같다 (실측 diff 0).
