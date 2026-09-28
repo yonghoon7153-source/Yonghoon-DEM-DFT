@@ -35,7 +35,7 @@
 #
 # 종료 코드: 0 큐 끝 · 2 가드 ①–③ (예외 닫힘) · 3 우리 MD CUDA OOM (예외 닫힘) · 4 우리 MD 가 msd.json 없이 끝남
 #            · 5 가드 ④ 탄성 GPU 오류 (예외 닫힘 · 사람이 탄성 쪽을 본다) · 6 결정 비활성 · 7 드라이버 sha 불일치
-#            · 8 구조 판별 실패 · 9 설정 불일치 (run_meta · dt)
+#            · 8 구조 판별 실패 · 9 설정 불일치 (run_meta · dt) · 10 이미 실행 중 (flock — 큐를 둘 띄우지 않는다)
 #
 # 이 러너가 **못 하는 것**
 #   · 표본 간격(2 s)보다 빠른 VRAM 급등을 막지 못한다 — 탄성 pw.x 가 스스로 OOM 날 수 있다
@@ -292,8 +292,11 @@ PY
   ck "시작 문턱: 합계 > START_MAX 면 기다렸다 뜬다 (0)" "$(run QUEUE='600:5' FAKE_SLEEP=1)" 0
   ck "시작 문턱: '대기' 를 남겼다"                  "$(grep -c '대기 — GPU' "$T/out" | awk '{print ($1>0)}')" 1
   wait
+  mkdir -p "$T/root"; ( flock -x 9; sleep 6 ) 9>"$T/root/.queue_coexist.lock" & sleep 1
+  ck "⛔음성 큐가 이미 돌면 (lock) → 10"             "$(run QUEUE='465:5')" 10
+  wait
   ck "DRY_RUN 은 띄우지 않는다 (0 · 새 폴더 0)"      "$(run QUEUE='700:5' DRY_RUN=1)/$(ls -d "$T"/root/seed5/T700 2>/dev/null | wc -l)" 0/0
-  rm -rf "$T"; [ "$f" = 0 ] && echo "selftest ✅ (음성 16 포함)" || echo "selftest ⛔"; exit "$f"
+  rm -rf "$T"; [ "$f" = 0 ] && echo "selftest ✅ (음성 17 포함)" || echo "selftest ⛔"; exit "$f"
 fi
 
 # ── 본 실행 ────────────────────────────────────────────────────────────────────
@@ -312,6 +315,10 @@ for q in $QUEUE; do
   say "  계획 T$T seed$S · $X · $st"
 done
 if [ -n "${DRY_RUN:-}" ]; then say "⇢ DRY_RUN — 띄우지 않았다 · GPU $(gpu_total) MiB · host $(host_mib) MiB"; exit 0; fi
+# 중복 실행 가드 — pgrep 은 자기 자신·watch 를 센다(CLAUDE.md) · flock 은 프로세스가 죽으면 풀린다.
+#   fd 9 는 MD 자식에게도 넘어가서, 러너가 죽어도 MD 가 살아 있는 동안은 새 큐가 못 뜬다 (한 번에 하나 유지).
+mkdir -p "$ROOT"; exec 9>"$ROOT/.queue_coexist.lock"
+flock -n 9 || { say "⛔ 큐가 이미 돌고 있다 (lock $ROOT/.queue_coexist.lock) — 둘을 동시에 띄우지 않는다"; exit 10; }
 
 mkdir -p "$ROOT/queue_logs"; TSV=$ROOT/queue_coexist.tsv
 [ -f "$TSV" ] || printf "T\tseed\trc\tdone\twall_s\tpeak_total_MiB\tpeak_ours_MiB\tkilled\tstart\thost_min_MiB\n" > "$TSV"
