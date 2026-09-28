@@ -13,7 +13,7 @@ import type { Airport, City, Festival, FestivalsDb, Mascot, MountainsDb, NoteExt
 
 export const prefectures = prefecturesJson.prefectures as Prefecture[];
 export const regions = (regionsJson.regions as Region[]).slice().sort((a, b) => a.order - b.order);
-/** Big regions that only group others (中部 › 北陸 · 甲信 · 東海) — ADR 0008. */
+/** Big regions that only group others (中部 › 北陸 · 甲信越 · 東海) — ADR 0008. */
 export const regionGroups = ((regionsJson as { groups?: RegionGroup[] }).groups ?? []) as RegionGroup[];
 export const mascots = mascotsJson.mascots as Mascot[];
 export const notes = notesJson as unknown as NotesDb;

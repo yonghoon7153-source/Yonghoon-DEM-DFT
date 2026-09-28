@@ -11,7 +11,7 @@
 | [0005](adr/0005-map-layers-and-supplement.md) | 지도 레이어 · 보충 · 사진 검색 | 県 ふりがな, 도시·다리·산맥 버튼, 빈 県은 「✦ 보충」, 사진은 📷 검색 |
 | [0006](adr/0006-canva-audit-is-a-check.md) | Canva 전수조사는 검사기가 | `nihon audit` 가 PDF 글줄 837개를 소모하며 대조, 빠지면 `nihon check` 가 멈춤 |
 | [0007](adr/0007-comment-board-on-pages-functions.md) | 💬 コメント 게시판 | Pages Function 하나 + D1, 로그인 없음, IP 는 해시만, 지우기는 `ADMIN_KEY` |
-| [0008](adr/0008-travel-regions.md) | 지방은 여행 기준 (v2) | 中部 → 北陸 · 甲信 · 東海 (中部 는 묶음), 도시 점 3단계는 데이터가 정함, 琵琶湖, 내 메모의 정정은 회색 줄 |
+| [0008](adr/0008-travel-regions.md) | 지방은 여행 기준 (v2) | 中部 → 北陸 · 甲信越 · 東海 (中部 는 묶음, 新潟는 甲信越 — 덧붙임), 도시 점 3단계는 데이터가 정함, 琵琶湖, 내 메모의 정정은 회색 줄 |
 | [0009](adr/0009-v2-features-are-layers-and-pages.md) | v2 기능은 레이어 · 페이지로 | 첫 화면은 그대로 — 🚄 가는 법 레이어(공항 · 신칸센 대략선, 기본 꺼짐), 🎆 축제 달력은 페이지(누르면 그 県으로 날아가며 축제에 어울리는 효과) |
 
 ## 그 밖에

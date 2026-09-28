@@ -184,7 +184,7 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
   });
   // nudge a few region labels into open water so they do not cover prefecture names
   const REGION_NUDGE: Record<string, [number, number]> = {
-    hokkaido: [0.5, 2.3], tohoku: [2.4, 0.2], kanto: [2.0, -1.0], hokuriku: [-0.9, 1.0], koshin: [0.7, -0.8], tokai: [0.2, -1.3], kinki: [0.5, -1.8],
+    hokkaido: [0.5, 2.3], tohoku: [2.4, 0.2], kanto: [2.0, -1.0], hokuriku: [-0.15, -0.07], koshin: [-0.18, 0.54], tokai: [0.2, -1.3], kinki: [0.5, -1.8],
     chugoku: [-0.2, 1.1], shikoku: [0.2, -1.2], kyushu: [1.8, -0.9], okinawa: [0, 1.9],
   };
   for (const r of regionLabelData) {

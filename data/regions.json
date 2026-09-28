@@ -1,6 +1,6 @@
 {
   "$schema": "./schema/regions.schema.json",
-  "_comment": "여행 기준 지방 (v2, ADR 0008). 中部 는 묶음(groups)으로만 남고, 지도·범례는 北陸 · 甲信 · 東海 로 나뉜다. 세 지방의 색은 中部 살구색의 이웃 톤.",
+  "_comment": "여행 기준 지방 (v2, ADR 0008). 中部 는 묶음(groups)으로만 남고, 지도·범례는 北陸(富山 · 石川 · 福井) · 甲信越(山梨 · 長野 · 新潟) · 東海 로 나뉜다. 세 지방의 색은 中部 살구색의 이웃 톤.",
   "groups": [
     { "id": "chubu", "name": { "ja": "中部", "kana": "ちゅうぶ", "ko": "주부", "en": "Chubu" }, "color": "#FBD3AC", "ink": "#9A5A27" }
   ],
@@ -9,7 +9,7 @@
     { "id": "tohoku",   "order": 2,  "name": { "ja": "東北",   "kana": "とうほく",   "ko": "도호쿠",   "en": "Tohoku" },   "color": "#BFE5CF", "ink": "#3E7A5A" },
     { "id": "kanto",    "order": 3,  "name": { "ja": "関東",   "kana": "かんとう",   "ko": "간토",     "en": "Kanto" },    "color": "#FBE7A3", "ink": "#8A6A16" },
     { "id": "hokuriku", "order": 4,  "group": "chubu", "name": { "ja": "北陸", "kana": "ほくりく", "ko": "호쿠리쿠", "en": "Hokuriku" }, "color": "#FAE3C6", "ink": "#9A5A27" },
-    { "id": "koshin",   "order": 5,  "group": "chubu", "name": { "ja": "甲信", "kana": "こうしん", "ko": "고신",     "en": "Koshin" },   "color": "#FBD3AC", "ink": "#9A5A27" },
+    { "id": "koshin",   "order": 5,  "group": "chubu", "name": { "ja": "甲信越", "kana": "こうしんえつ", "ko": "고신에쓰", "en": "Koshin'etsu" },   "color": "#FBD3AC", "ink": "#9A5A27" },
     { "id": "tokai",    "order": 6,  "group": "chubu", "name": { "ja": "東海", "kana": "とうかい", "ko": "도카이",   "en": "Tokai" },    "color": "#F6BE9A", "ink": "#9A5A27" },
     { "id": "kinki",    "order": 7,  "name": { "ja": "近畿",   "kana": "きんき",     "ko": "긴키",     "en": "Kinki" },    "color": "#F8C7D3", "ink": "#A0455F" },
     { "id": "chugoku",  "order": 8,  "name": { "ja": "中国",   "kana": "ちゅうごく", "ko": "주고쿠",   "en": "Chugoku" },  "color": "#DDCCF1", "ink": "#6A4E96" },
