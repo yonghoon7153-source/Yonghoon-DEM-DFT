@@ -80,7 +80,7 @@ CRLF 로 받으면 스크립트가 "bad interpreter" 로 죽습니다). `tools/n
 ```
 data/
 ├─ prefectures.json   47개 県: 이름(ja/kana/romaji/ko/en), 지방, 현청, 명물, 관광, 한마디, 마스코트 id
-├─ raw/city-areas.geojson  지도에 점이 있는 도시 68곳의 시 구역 — 政令指定都市 20 (구 합침) + 나머지 48 (国土数値情報 가공, 출처 표기 필수 — 화면 아래에)
+├─ raw/city-areas.geojson  지도에 점이 있는 도시 68곳의 시 구역 — 政令指定都市 20 (구 합침) + 나머지 48 (国土数値情報 가공, 출처 표기 필수 — 화면 아래에; 빌드 때 県 도형에 맞춰 잘림)
 ├─ transit.json       🚄 가는 법: 공항(OurAirports 좌표) · 신칸센 노선(역 좌표 ±0.01°, 정확한 노선도 아님)
 ├─ festivals.json     🎆 축제 달력: 축제 · 시즌 38개 (날짜 MM-DD, 県, 내 마인드맵 · 보충의 칸 이름 = 출처, 누르면 터지는 효과 fx)
 ├─ regions.json       11개 지방 + 묶음 中部(北陸 · 甲信 · 東海 — 여행 기준, ADR 0008): 이름, 지도 색, 글자색
