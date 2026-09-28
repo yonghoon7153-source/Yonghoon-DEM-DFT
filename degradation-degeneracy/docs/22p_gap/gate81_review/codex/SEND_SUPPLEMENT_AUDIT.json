@@ -1,0 +1,16 @@
+{
+  "file": "C:\\Users\\Administrator\\Downloads\\GATE81_SEND.md",
+  "bytes": 3406,
+  "sha256": "64847ca0d7d8cdda80e0016b5b1ac7f3754552ebb64754f1996ee691dbfb001e",
+  "same_request_head_code_digest_and_scope": true,
+  "sender_final_report": {
+    "docs_lint": "358 passed; rc0",
+    "pytest": "1960 passed; 1 xfailed; rc0",
+    "smoke": "rc0"
+  },
+  "source": "User supplied send note; raw test logs not independently obtained",
+  "initial_docs_lint_failures": 4,
+  "initial_docs_lint_causes_unresolved": 3,
+  "recipient_test_execution": 0,
+  "decision_unchanged": true
+}

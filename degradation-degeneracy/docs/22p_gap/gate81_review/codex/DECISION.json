@@ -1,0 +1,33 @@
+{
+  "review": "GATE81",
+  "date": "2026-09-28",
+  "request_head": "88ac144a8bb9a0e805b06e8240d1d64a4ca6a16e",
+  "code_commit": "6ffa98d4df542aa42abde2f94685beffec33312c",
+  "source_digest": "eda3feb8f4536511",
+  "decision": "DESIGN_SCOPE_CONDITIONALLY_SUITABLE_WITH_G81_N1_N2_N3",
+  "finding_type": "Preimplementation design corrections; not reproduced runtime defects",
+  "findings": [
+    {"id": "G81-N1", "priority": "P1", "title": "Separate immutable planned identity from realized records; bind observation roster"},
+    {"id": "G81-N2", "priority": "P1", "title": "Bind version dispatch to sealed context; preserve prep rows and reject downgrade"},
+    {"id": "G81-N3", "priority": "P1", "title": "Bind provider artifact/map/protocol to selected row and actual consumed x0"}
+  ],
+  "Q1": "Include unit-cube bank and bounds mapping in stage 3",
+  "Q2": "Explicit rejection with legacy/prep/v6 context dispatch",
+  "Q3": "Accept object types subject to semantic binding and explicit no-provider contract",
+  "Q4": "Keep ID domain and existing golden bytes unchanged",
+  "preferred_rounds": 1,
+  "additional_send_document_reviewed": true,
+  "sender_final_results": {"docs_lint_pass": 358, "pytest_pass": 1960, "pytest_xfailed": 1, "smoke_rc": 0, "provenance": "Sender report, not recipient rerun"},
+  "sender_initial_docs_lint_unresolved_causes": 3,
+  "repeat_suite_required_by_this_review": false,
+  "implementation_start_approved": false,
+  "execution_GO": false,
+  "pilot_approved": false,
+  "prior_gate76_closed": true,
+  "prior_stage1_and_2_closed": true,
+  "grid_fit_v5_role": "diagnostic/no_active_claim",
+  "subject_imports_or_calls": 0,
+  "subject_tests_smoke_mutation": 0,
+  "restore_rescore_receipt_regeneration": 0,
+  "COMSOL_JVM_calls": 0
+}

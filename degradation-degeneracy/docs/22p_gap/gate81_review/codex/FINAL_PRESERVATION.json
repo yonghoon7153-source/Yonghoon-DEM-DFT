@@ -1,0 +1,8 @@
+{
+  "base_snapshot_unchanged": 67,
+  "supplement_unchanged": 1,
+  "total_selected_files": 68,
+  "local_HEAD": "9a26dd5f31ca6fae45d5a55f5c59e33408371984",
+  "local_tree_clean": true,
+  "scope": "Selected local inputs since audit/addendum snapshots; not remote all-state evidence"
+}

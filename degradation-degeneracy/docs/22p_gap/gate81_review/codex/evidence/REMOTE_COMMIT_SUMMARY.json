@@ -1,0 +1,6 @@
+{
+  "sha": "88ac144a8bb9a0e805b06e8240d1d64a4ca6a16e",
+  "message": "81차 요청문 — 단계 3 제한 구현 범위·사전 고정 사항 확인 (`docs/22p_gap/GATE81_REQUEST.md`; 구현 착수 아님 · 실행 GO 아님)\n\n80차 종결(원장 §112) 뒤 리뷰어 문장 \"단계 3의 제한 구현 범위·사전 고정 사항을\n확인해 별도 승인\" 에 대한 범위 확인 요청. 사용자 결정 2026-09-28: 이 요청의\n발송 승인 (구현 착수 승인 아님).\n\n- §1 제안 범위 = GATE78 §3.2 단계 3 을 세 조각(3-A 결속 · 3-B provider DAG ·\n  3-C 행·검증)으로. 현행 코드 앵커는 HEAD cc4b01ad 실측 (design_wire 를 src/ 가\n  import 하지 않음 · bank 는 unit cube 아님 · candidate_id/bank_index 부재 ·\n  no-warm 은 bool off).\n- §1.3 갈림 4곳 (unit-cube bank · 혼합 restart 행 정책 · provider 봉인 실물 ·\n  ID 도메인 불변) — 우리 제안과 되돌림 가능성 명시.\n- §2 사전 고정 표 재확인 (78차 종결값 그대로; provider 동결만 이 단계가 건드림).\n- §3 실행 경계 (RUN_SCOPE 4 파일 · 라운드 끝 영수증 1회 · 봉인 3종 불변 · 서브\n  브랜치 덧붙이기).\n- 코드 변경 0 — RUN_SCOPE diff 0 (9a26dd5f·6ffa98d4 대비 실측) ·\n  source_digest eda3feb8f4536511 그대로.\n\ndocs-lint 단독 · 전체 pytest · strict smoke 는 이 커밋(clean HEAD)에서 실행해\n발송문에 기재한다.\n\nCo-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01CcftdupvBKEC3iP9HX2VA2",
+  "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/88ac144a8bb9a0e805b06e8240d1d64a4ca6a16e",
+  "provenance": "GitHub connector observation; commit metadata not local checkout execution"
+}

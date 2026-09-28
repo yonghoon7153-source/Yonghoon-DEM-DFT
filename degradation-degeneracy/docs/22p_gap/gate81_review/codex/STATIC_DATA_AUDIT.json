@@ -1,0 +1,106 @@
+{
+  "request_received": {
+    "bytes": 21518,
+    "sha256": "c09b8232a200b256f0bd83205341b749fb20be0d2e689a63423d6233e8700cb0"
+  },
+  "request_repository": {
+    "bytes": 21518,
+    "sha256": "c09b8232a200b256f0bd83205341b749fb20be0d2e689a63423d6233e8700cb0"
+  },
+  "repository_blob_sha": "e8da4018bacfdb352c662774bb87efdaff1645f9",
+  "received_raw_identical": true,
+  "received_normalized_text_identical": true,
+  "local_verified_base": "9a26dd5f31ca6fae45d5a55f5c59e33408371984",
+  "remote_request_head_observed": "88ac144a8bb9a0e805b06e8240d1d64a4ca6a16e",
+  "code_commit": "6ffa98d4df542aa42abde2f94685beffec33312c",
+  "remote_compare_ahead_by": 5,
+  "remote_compare_changed_files": 36,
+  "remote_RUN_SCOPE_changed_files": [],
+  "local_RUN_SCOPE_files": 58,
+  "source_digest": "eda3feb8f4536511",
+  "method": "Local cached fixed code bytes plus connector compare proving no intervening RUN_SCOPE changes; no checkout or execution at remote HEAD",
+  "functions": {
+    "src/fitting.py": {
+      "fit": {
+        "line": 241,
+        "end_line": 334
+      },
+      "normalize_restart_record": {
+        "line": 340,
+        "end_line": 359
+      },
+      "_fit_one": {
+        "line": 401,
+        "end_line": 518
+      }
+    },
+    "src/io.py": {
+      "_restart_ok": {
+        "line": 789,
+        "end_line": 808
+      },
+      "validate_provenance": {
+        "line": 1484,
+        "end_line": 1905
+      }
+    },
+    "tools/design_wire.py": {
+      "canonical_design_spec": {
+        "line": 219,
+        "end_line": 291
+      },
+      "bank_id": {
+        "line": 449,
+        "end_line": 458
+      },
+      "design_binding": {
+        "line": 461,
+        "end_line": 497
+      },
+      "candidate_id": {
+        "line": 500,
+        "end_line": 529
+      }
+    },
+    "tools/preserve.py": {
+      "seal_payload": {
+        "line": 2386,
+        "end_line": 2403
+      },
+      "check_envelope": {
+        "line": 3050,
+        "end_line": 3087
+      },
+      "run_transaction": {
+        "line": 3357,
+        "end_line": 3431
+      },
+      "leg_run_spec": {
+        "line": 6106,
+        "end_line": 6160
+      },
+      "run_spec_digest": {
+        "line": 6232,
+        "end_line": 6242
+      },
+      "envelope": {
+        "line": 2360,
+        "end_line": 2375
+      },
+      "planned_id": {
+        "line": 2377,
+        "end_line": 2379
+      }
+    }
+  },
+  "historical_logging_test": [
+    "test_g79_06_historical_restart_records_report_absent_fields_as_unrecorded_not_false_or_zero"
+  ],
+  "subject_modules_imported": 0,
+  "subject_functions_called": 0,
+  "pytest_smoke_mutation": 0,
+  "COMSOL_JVM": 0,
+  "restore_rescore_receipt_regeneration": 0,
+  "implementation_start": false,
+  "execution_GO": false
+}
