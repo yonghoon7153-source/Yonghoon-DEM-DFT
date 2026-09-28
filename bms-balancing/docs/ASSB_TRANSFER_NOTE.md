@@ -500,6 +500,14 @@ mothership 특칙). **셋이 안 모이면 태그를 만들지 말고 닻 한 �
 
 ²⁴ **59 번 (58호 digest)**: ⚠ **순수 계산 편 · SI 없음**. NFKC 변경 본문 **900 자**(전부 수학 이탤릭 U+1D4xx — `𝑐` 135 · `𝑖` 109 · `𝑠` 50 · `𝑑` 48 · `𝐽` 47 …) — **열 변화 0**. 소프트 하이픈 0 · 줄끝 하이픈 **70 곳**(이으면 `fracture energ*` 20 → 21 · `cycl*` 1 → 2 · `capacity` 7 → 8 — 11 열 변화 0). `calibrat` 2 = 남의 편(Nascimento "can be calibrated") 1 + "In order to **calibrate and test** the surrogate model" 1 — **학습의 뜻**, 불확실성 보정 아님. `contact loss` 3 = 셋 다 결론 문장(박리 = 접촉 손실 등치, 정량 0). 보조: `delamina*` 22 · `damage` 56 · `surrogate` 34 · `unseen` 4 · `ReLU` 9 · `extrapol*` 0 · `interpol*` 0 · `histor*` 1(향후 RNN) · `cycl*` 2(서론만 — 사이클 계산 0) · `pressure` 1(남의 P2D) · `experiment*` 7(전부 남의 편 · OCP 출처) · `threshold` 0.
 
+### 6-3-h. 3차 묶음 (2026-09-28) — **원장 §1 후속 후보 13 편 · 사용자 파일 번호 21~33**
+
+사용자가 원장(`ASSB_WANTED_PAPERS.md` §1)의 후속 후보 중 13 편을 **파일 번호 21~33** 으로 올렸다 (2026-09-28). 이 번호는 사용자 업로드 번호이며 **2차 큐 40~59 와 별개**다 (같은 숫자가 다른 편을 가리킨다 — 2차 큐 22 = Koerver *Chem. Mater.*, 3차 파일 22 = Zhang 2025 *Nat. Commun.*). 처리 순서는 21 → 22 → … → 33, 호 번호는 58호 다음(59호~)부터 처리 순서대로. 이 묶음도 흡수한 편들이 스스로 가리킨 원전(원전 추적)이다. 작업은 격리 복제본에서 하고 커밋을 서브 브랜치로 옮긴다.
+
+| # | 논문 | 종류·쪽 | sha256(앞 32) | 겨냥 |
+|---|---|---|---|---|
+| **21** | **Li Q. · Liu H. · Ye Y. · Li K.J. · Wu F. · Li L. · Chen R.** — The critical importance of stack pressure in batteries (*Nat. Energy* 2025, **10**, 1064–1073, `10.1038/s41560-025-01820-x`) · 북경이공대 | **Perspective** 10p **+ Source Data xlsx** (시트 'Figure 5' 머리 "Figure. 1b" — Fig. 1b 원자료 29 값뿐, Fig. 5 원자료 없음) | 본문 `e203387f7784468dc958a70ec7909855` / SI `1559e0f10ab083c1f4f24986f0a27b80` · ✅ **흡수 완료** (assb **59호**, 서브 커밋 `bd493a62`) — **≈20.0 → ≈20.0 (새 칸 0)**. Q6 요구 창 정본 후보 **탈락**: 1차 측정 0 · 요구치 "<0.1 MPa" 인용 없음 · 1–5 MPa 는 액체 LMB 대역 · Fig. 1b 점 ↔ Source Data 불일치 · Fig. 3a↔3b 경계 불일치 · CSP 벤치마크 = 압력 스윕 + CE 한 스칼라(채널별 신고 D5 위반) | 13호 [23] — Q6 요구 창 정본 후보 (Q6·Q7) |
+
 ### 6-3-c. ⚠ 30 번의 보충 데이터 ZIP — **30 번 에이전트에게 반드시 넘길 것**
 
 사용자 기계 `C:\Users\Administrator\Downloads\30. Sup) …zip` (82 MB, **이중 압축** —
