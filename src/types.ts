@@ -133,3 +133,7 @@ export interface Station { ja: string; kana?: string; ko?: string; pref?: string
 /** `kind` — mini (山形 · 秋田, conventional-gauge) or plan (under construction, dotted). The map joins stations with straight lines. */
 export interface ShinkansenLine { id: string; kind?: 'mini' | 'plan'; name: PlaceName; color: string; stations: Station[] }
 export interface TransitDb { airports: Airport[]; shinkansen: ShinkansenLine[] }
+
+/** 🎆 축제 달력 entry. `box` — the note box that mentions it (default: ja); `approx` — the dates move a little every year. */
+export interface Festival { id: string; kind?: 'season'; ja: string; kana: string; ko: string; pref: string; box?: string; fx: 'fireworks' | 'snow' | 'sakura' | 'momiji' | 'lanterns' | 'drums' | 'streamers'; start: string; end?: string; approx?: boolean; note?: string }
+export interface FestivalsDb { festivals: Festival[] }

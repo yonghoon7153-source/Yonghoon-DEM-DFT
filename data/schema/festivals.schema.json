@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "festivals.json — 🎆 축제 달력",
+  "description": "달마다 어디로 갈까. box 가 내 마인드맵 · 보충의 칸 이름과 같으면 화면이 그 출처를 붙이고, 아니면 Claude 가 채운 것으로 표시한다.",
+  "type": "object",
+  "required": [
+    "festivals"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "_comment": {
+      "type": "string"
+    },
+    "festivals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "ja",
+          "kana",
+          "ko",
+          "pref",
+          "start",
+          "fx"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "season"
+            ],
+            "description": "season = 벚꽃 · 단풍 같은 시즌 (축제가 아님)"
+          },
+          "ja": {
+            "type": "string"
+          },
+          "kana": {
+            "type": "string"
+          },
+          "ko": {
+            "type": "string"
+          },
+          "pref": {
+            "type": "string",
+            "description": "prefectures.json 의 slug"
+          },
+          "box": {
+            "type": "string",
+            "description": "내 마인드맵 · 보충에서 이 축제를 적은 칸의 이름 (기본 = ja)"
+          },
+          "start": {
+            "type": "string",
+            "pattern": "^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
+          },
+          "end": {
+            "type": "string",
+            "pattern": "^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
+          },
+          "approx": {
+            "type": "boolean",
+            "description": "해마다 조금씩 다름 (상순 · 주말 기준)"
+          },
+          "note": {
+            "type": "string"
+          },
+          "fx": {
+            "type": "string",
+            "enum": [
+              "fireworks",
+              "snow",
+              "sakura",
+              "momiji",
+              "lanterns",
+              "drums",
+              "streamers"
+            ],
+            "description": "누르면 터지는 효과 — 축제 느낌에 맞춰 (불꽃 · 눈 · 벚꽃잎 · 단풍잎 · 등롱 불빛 · 북소리 울림 · 리본)"
+          }
+        }
+      }
+    }
+  }
+}

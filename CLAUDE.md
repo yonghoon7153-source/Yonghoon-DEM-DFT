@@ -41,6 +41,8 @@ src/ui/tokyo23.ts       東京23区 팝업 — 구 지도(public/geo/tokyo23.top
 src/ui/panel.ts         県/지방/메모장 패널 (다이어리 페이지)
 src/ui/notes-render.ts  마인드맵 트리 → 칩
 src/ui/comments.ts      💬 コメント 게시판 화면 (ADR 0007)
+src/ui/festivals.ts     🎆 축제 달력 페이지 (data/festivals.json, 출처 표시 = 마인드맵 칸 이름으로)
+src/ui/fx.ts            축제 효과 — 불꽃 · 눈 · 벚꽃잎 · 단풍잎 · 등롱 · 북 · 리본 + 무대 색조 (#fx 층, ADR 0009)
 src/ui/easter.ts        마스코트 팝업, 図鑑, 벚꽃
 src/mascots/art.ts      마스코트 SVG
 src/styles/             tokens / base / app

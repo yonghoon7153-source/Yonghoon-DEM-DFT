@@ -56,6 +56,10 @@
           <span lang="ja">図鑑</span>
           <span class="pill__count" id="collection-count">0/21</span>
         </button>
+        <button class="pill pill--matsuri" id="matsuri-btn" type="button" aria-haspopup="dialog" title="축제 달력 — 달마다 어디로 갈까 (내 마인드맵 · 보충의 축제 + 유명 축제 · 벚꽃 · 단풍 시즌)">
+          <span class="pill__icon" aria-hidden="true">🎆</span>
+          <span>축제</span>
+        </button>
         <button class="pill pill--memo" id="memo-btn" type="button" aria-haspopup="dialog">
           <span class="pill__icon" aria-hidden="true">✎</span>
           <span>메모장</span>
@@ -70,6 +74,7 @@
     <main class="stage" id="stage">
       <div class="map" id="map" aria-label="일본 지도" role="application"></div>
       <div class="map-loading" id="map-loading" aria-live="polite">지도를 펼치는 중…</div>
+      <div class="fx-layer" id="fx" aria-hidden="true"></div>
 
       <div class="legend" id="legend" aria-label="지방"></div>
 

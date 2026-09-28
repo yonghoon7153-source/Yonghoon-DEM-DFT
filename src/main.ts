@@ -12,6 +12,8 @@ import { createEaster, createPetals } from './ui/easter';
 import { createModal } from './ui/modal';
 import { createPanel, renderGeneralMemo } from './ui/panel';
 import { renderComments } from './ui/comments';
+import { renderFestivals } from './ui/festivals';
+import { createFx } from './ui/fx';
 import { createSearch } from './ui/search';
 import { createTooltip } from './ui/tooltip';
 import { renderTokyo23, WARD_PREFECTURE } from './ui/tokyo23';
@@ -47,6 +49,7 @@ async function init() {
   const tooltip = createTooltip($('tooltip'), stage);
   const modal = createModal($('modal'));
   const petals = createPetals($('petals'));
+  const fx = createFx($('fx'));
   let map: MapApi | null = null;
   let easter: ReturnType<typeof createEaster> | null = null;
 
@@ -342,6 +345,21 @@ async function init() {
     modal.open(view);
   });
   $('memo-btn').addEventListener('click', () => modal.open(renderGeneralMemo()));
+  function openFestivals() {
+    modal.open(renderFestivals({
+      onPick: (f) => {
+        modal.close();
+        select(f.pref);
+        // the burst lands once the map has flown to the prefecture
+        window.setTimeout(() => {
+          if (state.selected !== f.pref || !map) return;
+          const at = map.anchorScreen(f.pref) ?? { x: stage.clientWidth / 2, y: stage.clientHeight / 2 };
+          fx.play(f.fx, at);
+        }, 820);
+      },
+    }));
+  }
+  $('matsuri-btn').addEventListener('click', openFestivals);
   $('comment-btn').addEventListener('click', () => modal.open(renderComments(state.selected)));
   $('brand').addEventListener('click', () => {
     const on = petals.toggle();
@@ -376,6 +394,7 @@ async function init() {
     if (!h) return;
     if (h === 'sanmyaku' && mountains.ranges.length) showMountains();
     else if (h === 'shinkansen' && transit.shinkansen.length) showTransit();
+    else if (h === 'matsuri') openFestivals();
     else if (h.startsWith('region/')) {
       // an old link to a big region (#region/chubu) opens its first travel region
       const id = h.slice(7);

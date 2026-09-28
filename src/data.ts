@@ -7,8 +7,9 @@ import placesJson from '../data/places.json';
 import mountainsJson from '../data/mountains.json';
 import supplementJson from '../data/supplement.json';
 import transitJson from '../data/transit.json';
+import festivalsJson from '../data/festivals.json';
 import geoMeta from './generated/prefecture-geo.json';
-import type { Airport, City, Mascot, MountainsDb, NoteExtra, NoteItem, NotesDb, PlacesDb, PrefGeoMeta, Prefecture, Region, RegionGroup, Station, SupplementDb, TransitDb } from './types';
+import type { Airport, City, Festival, FestivalsDb, Mascot, MountainsDb, NoteExtra, NoteItem, NotesDb, PlacesDb, PrefGeoMeta, Prefecture, Region, RegionGroup, Station, SupplementDb, TransitDb } from './types';
 
 export const prefectures = prefecturesJson.prefectures as Prefecture[];
 export const regions = (regionsJson.regions as Region[]).slice().sort((a, b) => a.order - b.order);
@@ -21,6 +22,18 @@ export const places = placesJson as unknown as PlacesDb;
 export const mountains = mountainsJson as unknown as MountainsDb;
 export const supplement = supplementJson as unknown as SupplementDb;
 export const transit = transitJson as unknown as TransitDb;
+export const festivals = (festivalsJson as unknown as FestivalsDb).festivals;
+
+/** Where a festival is written: a box in my mind map, in Claude's 보충, or only in the calendar. */
+export function festivalSource(f: Festival): 'notes' | 'supplement' | 'claude' {
+  const p = prefBySlug.get(f.pref);
+  if (!p) return 'claude';
+  const name = f.box ?? f.ja;
+  const named = (items: NoteItem[]): boolean => items.some((it) => it.t === name || named(it.children ?? []));
+  if (named(notesFor(p).items)) return 'notes';
+  if (named(supplementFor(p))) return 'supplement';
+  return 'claude';
+}
 
 /** ✈ airports in a prefecture, hubs first. */
 export function airportsOf(p: Prefecture): Airport[] {

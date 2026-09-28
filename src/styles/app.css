@@ -848,6 +848,89 @@
 .range-notes__item b { font-family: var(--font-display); font-weight: 500; }
 .range-notes__item p { margin-top: 3px; font-size: 12.5px; color: var(--ink-2); line-height: 1.45; }
 
+/* ---------- 🎆 festival effects: one-shot particles over the map ---------- */
+.fx-layer { position: absolute; inset: 0; z-index: 19; pointer-events: none; overflow: hidden; }
+/* the stage takes the festival's light for a moment: night for fireworks, dusk for lanterns, a cool or pink air for snow · petals */
+.fx-layer::before { content: ''; position: absolute; inset: 0; opacity: 0; }
+.fx-layer[data-fx="fireworks"]::before { background: radial-gradient(ellipse at 50% 35%, rgba(38, 42, 88, .16), rgba(38, 42, 88, .38)); animation: fx-tint 3.4s ease-in-out both; }
+.fx-layer[data-fx="lanterns"]::before { background: radial-gradient(ellipse at 50% 45%, rgba(120, 66, 24, .1), rgba(70, 44, 40, .3)); animation: fx-tint 4.8s ease-in-out both; }
+.fx-layer[data-fx="snow"]::before { background: rgba(186, 206, 232, .26); animation: fx-tint 5.8s ease-in-out both; }
+.fx-layer[data-fx="sakura"]::before { background: rgba(249, 200, 214, .22); animation: fx-tint 6.2s ease-in-out both; }
+.fx-layer[data-fx="momiji"]::before { background: rgba(232, 156, 74, .18); animation: fx-tint 6.4s ease-in-out both; }
+.fx-layer[data-fx="drums"]::before { background: rgba(229, 112, 141, .07); animation: fx-tint 3.4s ease-in-out both; }
+@keyframes fx-tint { 0% { opacity: 0; } 12% { opacity: 1; } 78% { opacity: 1; } 100% { opacity: 0; } }
+.fx { position: absolute; display: block; will-change: transform, opacity; }
+.fx--spark { width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%; background: var(--c); box-shadow: 0 0 8px 2px var(--c); animation: fx-spark 1.7s cubic-bezier(.1, .8, .3, 1) both; }
+.fx--flash { width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%; background: var(--white); box-shadow: 0 0 34px 12px var(--c); animation: fx-flash .55s ease-out both; }
+@keyframes fx-spark { 0% { transform: translate(0, 0) scale(.4); opacity: 0; } 6% { opacity: 1; transform: translate(calc(var(--dx) * .12), calc(var(--dy) * .12)) scale(1.1); } 55% { opacity: 1; } 100% { transform: translate(var(--dx), calc(var(--dy) + 40px)) scale(.3); opacity: 0; } }
+@keyframes fx-flash { 0% { transform: scale(.3); opacity: 1; } 100% { transform: scale(2.6); opacity: 0; } }
+.fx--snow { top: -12px; width: 9px; height: 9px; border-radius: 50%; background: var(--white); box-shadow: 0 0 0 1px rgba(120, 150, 185, .35), 0 1px 5px rgba(74, 63, 58, .16); transform: scale(var(--s, 1)); animation: fx-fall var(--dur) linear both, fx-sway 1.6s ease-in-out infinite alternate; }
+.fx--petal { top: -16px; width: 13px; height: 11px; border-radius: 12px 2px 12px 2px; background: #f9c8d6; box-shadow: inset -2px -1px 0 rgba(229, 112, 141, .4), 0 1px 2px rgba(74, 63, 58, .1); transform: rotate(var(--r)) scale(var(--s, 1)); animation: fx-fall var(--dur) linear both, fx-spin 1.4s ease-in-out infinite alternate; }
+.fx--leaf { top: -16px; width: 13px; height: 13px; border-radius: 2px 11px 2px 11px; background: var(--c); box-shadow: 0 1px 2px rgba(74, 63, 58, .12); transform: rotate(var(--r)); animation: fx-fall var(--dur) linear both, fx-spin 1.2s ease-in-out infinite alternate; opacity: .92; }
+.fx--ribbon { top: -60px; width: 5px; height: 58px; border-radius: 3px; background: var(--c); transform: rotate(var(--r)); animation: fx-fall var(--dur) linear both, fx-sway 1.3s ease-in-out infinite alternate; opacity: .88; }
+@keyframes fx-fall { 0% { top: -60px; opacity: 0; } 8% { opacity: 1; } 90% { opacity: .9; } 100% { top: 105%; opacity: 0; } }
+@keyframes fx-sway { from { margin-left: -14px; } to { margin-left: 14px; } }
+@keyframes fx-spin { from { rotate: -40deg; margin-left: -10px; } to { rotate: 40deg; margin-left: 10px; } }
+.fx--lantern { width: 12px; height: 16px; border-radius: 6px 6px 7px 7px; background: radial-gradient(circle at 50% 40%, #fff2c2, #f2b84b 70%); box-shadow: 0 0 14px 5px rgba(242, 184, 75, .6); transform: scale(var(--s, 1)); animation: fx-rise var(--dur) ease-out both, fx-flicker .35s ease-in-out infinite alternate; }
+@keyframes fx-rise { 0% { translate: 0 20px; opacity: 0; } 15% { opacity: 1; } 100% { translate: 0 -170px; opacity: 0; } }
+@keyframes fx-flicker { from { filter: brightness(.9); } to { filter: brightness(1.15); } }
+.fx--ring { width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; border: 4px solid var(--c); animation: fx-ring 1.2s ease-out both; }
+@keyframes fx-ring { 0% { transform: scale(.2); opacity: .95; } 100% { transform: scale(4.4); opacity: 0; } }
+.fx--beat { font-size: 30px; line-height: 1; color: var(--c, var(--accent)); font-family: var(--font-display); text-shadow: 0 1px 0 var(--white); animation: fx-beat 1s ease-out both; }
+@keyframes fx-beat { 0% { transform: translateY(0) scale(.5); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(-56px) scale(1.3); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .fx, .fx-layer::before { animation-duration: .01s !important; } }
+
+/* ---------- 🎆 축제 달력 (ADR 0009) ---------- */
+.pill--matsuri .pill__icon { font-size: 14px; }
+.fes h2 { flex-wrap: wrap; row-gap: 2px; }
+.fes__months { display: flex; flex-wrap: wrap; gap: 5px; margin: 4px 0 14px; }
+.fes__month {
+  display: inline-flex; align-items: baseline; gap: 4px; padding: 4px 10px; border-radius: var(--radius-pill);
+  background: var(--white); box-shadow: inset 0 0 0 1px var(--line-2); font-size: 12.5px; color: var(--ink-2);
+  transition: transform .15s var(--ease-pop), box-shadow .15s ease;
+}
+.fes__month small { font-size: 10px; color: var(--ink-3); }
+.fes__month:hover:not(:disabled) { transform: translateY(-1px); box-shadow: inset 0 0 0 1px var(--accent-2); color: var(--ink); }
+.fes__month.is-now { background: var(--accent-soft); box-shadow: inset 0 0 0 1.5px var(--accent); color: var(--ink); }
+.fes__month:disabled { opacity: .4; cursor: default; }
+.fes__sec { margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--line-2); }
+.fes__h { display: flex; align-items: baseline; gap: 8px; font-family: var(--font-display); font-size: 18px; margin-bottom: 6px; }
+.fes__h small { font-family: var(--font-body); font-size: 12px; color: var(--ink-3); }
+.fes__now { font-size: 10.5px; padding: 1px 8px; border-radius: var(--radius-pill); background: var(--accent-soft); color: var(--accent); font-family: var(--font-body); }
+.fes__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+/* each festival a little strip: when · what · where */
+.fes__item {
+  display: grid; grid-template-columns: 92px minmax(0, 1fr) auto; column-gap: 10px; align-items: center;
+  padding: 8px 12px; border-radius: var(--radius-sm); background: color-mix(in oklab, var(--paper-2) 70%, var(--white)); box-shadow: inset 0 0 0 1px var(--line);
+}
+.fes__item--season { background: color-mix(in oklab, var(--accent-soft) 45%, var(--white)); }
+.fes__when { font-family: var(--font-note); font-size: 15px; color: var(--ink-2); white-space: nowrap; }
+.fes__body, .fes__go { display: flex; flex-direction: column; min-width: 0; }
+.fes__go { text-align: left; border-radius: var(--radius-xs); transition: transform .15s var(--ease-pop); }
+.fes__go:hover { transform: translateX(2px); }
+.fes__go:hover b { color: var(--accent); }
+.fes__name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; }
+.fes__name b { font-family: var(--font-head); font-weight: 500; font-size: 15.5px; }
+.fes__ico { font-size: 13px; }
+.fes__kana { font-size: 10.5px; color: var(--ink-3); }
+.fes__ko { font-size: 12.5px; color: var(--ink-2); word-break: keep-all; }
+.fes__note { color: var(--ink-3); }
+.fes__side { display: inline-flex; align-items: center; gap: 6px; }
+.fes__pref {
+  display: inline-flex; align-items: baseline; gap: 4px; padding: 3px 9px; border-radius: var(--radius-pill);
+  background: var(--c); box-shadow: inset 0 0 0 1px rgba(74, 63, 58, .12); font-family: var(--font-head); font-size: 12.5px; color: var(--ink);
+  transition: transform .15s var(--ease-pop);
+}
+.fes__pref:hover { transform: translateY(-1px) rotate(-1deg); }
+.fes__pref small { font-family: var(--font-body); font-size: 10px; color: var(--ink-2); }
+.fes__src { font-size: 10px; padding: 1px 6px; border-radius: var(--radius-pill); background: var(--white); box-shadow: inset 0 0 0 1px var(--line-2); color: var(--ink-3); white-space: nowrap; }
+.fes__src--notes { color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.fes__src--supplement { color: var(--ink-2); border-style: dashed; }
+@media (max-width: 760px) {
+  .fes__item { grid-template-columns: 1fr; row-gap: 4px; }
+  .fes__when { font-size: 13.5px; }
+}
+
 /* ---------- 💬 comment: 「뭐뭐 넣어줘!」 board (ADR 0007) ---------- */
 .pill--comment .pill__icon { font-size: 14px; }
 .cmt h2 { flex-wrap: wrap; row-gap: 2px; }
@@ -913,8 +996,8 @@
 @media (min-width: 761px) and (max-width: 1100px) {
   .search { flex: 1 1 auto; width: auto; min-width: 150px; max-width: 380px; }
   .seg button { padding: 6px 10px; }
-  .pill--memo span:not(.pill__icon), .pill--comment span:not(.pill__icon) { display: none; }
-  .pill--memo, .pill--comment { width: 38px; padding: 0; justify-content: center; }
+  .pill--memo span:not(.pill__icon), .pill--matsuri span:not(.pill__icon), .pill--comment span:not(.pill__icon) { display: none; }
+  .pill--memo, .pill--matsuri, .pill--comment { width: 38px; padding: 0; justify-content: center; }
 }
 @media (max-width: 900px) {
   :root { --panel-w: 380px; }
@@ -934,8 +1017,8 @@
   .brand__sub { font-size: 11.5px; }
   .topbar__right { margin-left: auto; gap: 6px; }
   .pill { height: 34px; padding: 0 10px; font-size: 13px; }
-  .pill--memo span:not(.pill__icon), .pill--comment span:not(.pill__icon) { display: none; }
-  .pill--memo, .pill--comment { width: 34px; padding: 0; justify-content: center; }
+  .pill--memo span:not(.pill__icon), .pill--matsuri span:not(.pill__icon), .pill--comment span:not(.pill__icon) { display: none; }
+  .pill--memo, .pill--matsuri, .pill--comment { width: 34px; padding: 0; justify-content: center; }
   .seg { position: fixed; left: 10px; bottom: 112px; z-index: 16; }
   .seg button { padding: 5px 9px; font-size: 12.5px; }
   .search { order: 3; width: 100%; }

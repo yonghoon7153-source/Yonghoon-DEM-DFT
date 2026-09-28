@@ -19,7 +19,7 @@ async function ready(p) {
   await p.evaluate(() => document.fonts.ready);
   await p.waitForTimeout(400);
 }
-const steps = (process.env.STEPS || 'desktop,select,region,mobile,zukan,search,t23,transit').split(',');
+const steps = (process.env.STEPS || 'desktop,select,region,mobile,zukan,search,t23,transit,matsuri').split(',');
 
 if (steps.includes('desktop')) {
   const { ctx, p } = await page({ width: 1440, height: 900 });
@@ -114,6 +114,18 @@ if (steps.includes('transit')) {
   await p.evaluate(() => document.querySelectorAll('#panel .range-item')[0].click());
   await p.waitForTimeout(1500);
   await p.screenshot({ path: `${out}/17-transit-tokaido.png` });
+  await ctx.close();
+}
+if (steps.includes('matsuri')) {
+  // 🎆 축제 달력: the calendar page, then a row → the prefecture with its effect mid-flight (fireworks over 新潟)
+  const { ctx, p } = await page({ width: 1440, height: 900 });
+  await ready(p);
+  await p.click('#matsuri-btn');
+  await p.waitForTimeout(600);
+  await p.screenshot({ path: `${out}/18-matsuri.png` });
+  await p.evaluate(() => [...document.querySelectorAll('.fes__go')].find((b) => b.querySelector('b').textContent === '長岡まつり大花火大会').click());
+  await p.waitForTimeout(1500);
+  await p.screenshot({ path: `${out}/19-matsuri-hanabi.png` });
   await ctx.close();
 }
 if (steps.includes('search')) {

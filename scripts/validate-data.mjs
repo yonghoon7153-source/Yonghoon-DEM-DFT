@@ -188,6 +188,21 @@ for (const l of transitDb.shinkansen ?? []) {
     if (s.pref !== undefined && !slugs.has(s.pref)) err(`${w}: unknown prefecture "${s.pref}"`);
   }
 }
+// festivals.json (🎆 축제 달력)
+const festivalsDb = read('festivals.json');
+const festivalIds = new Set();
+const MMDD = /^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
+for (const f of festivalsDb.festivals ?? []) {
+  const where = `festivals "${f.id ?? '?'}"`;
+  if (!/^[a-z0-9-]+$/.test(f.id ?? '') || festivalIds.has(f.id)) err(`${where}: bad/duplicate id`); festivalIds.add(f.id);
+  for (const k of ['ja', 'kana', 'ko']) if (!f[k]) err(`${where}: ${k} missing`);
+  if (!slugs.has(f.pref)) err(`${where}: unknown prefecture "${f.pref}"`);
+  if (!MMDD.test(f.start ?? '')) err(`${where}: start must be MM-DD`);
+  if (f.end !== undefined && !MMDD.test(f.end)) err(`${where}: end must be MM-DD`);
+  if (f.kind !== undefined && f.kind !== 'season') err(`${where}: kind must be season`);
+  if (!['fireworks', 'snow', 'sakura', 'momiji', 'lanterns', 'drums', 'streamers'].includes(f.fx)) err(`${where}: fx must name an effect`);
+  if (f.approx !== undefined && typeof f.approx !== 'boolean') err(`${where}: approx must be true/false`);
+}
 const noteIds = new Set();
 for (const m of placesDb.mapNotes ?? []) {
   const where = `places.mapNotes "${m.id ?? '?'}"`;
@@ -230,4 +245,4 @@ if (errors.length) {
   console.error(`✗ data check failed (${errors.length}):\n  - ` + errors.join('\n  - '));
   process.exit(1);
 }
-console.log(`✓ data ok: ${prefectures.length} prefectures, ${regions.length} regions (+${groups.length} group), ${mascots.length} mascots, ${boxes} note boxes, ${(notesDb.extras ?? []).length} extras, ${supBoxes} supplement boxes, ${(placesDb.cities ?? []).length} cities, ${(mountainsDb.ranges ?? []).length} ranges, ${(transitDb.airports ?? []).length} airports, ${(transitDb.shinkansen ?? []).length} shinkansen lines`);
+console.log(`✓ data ok: ${prefectures.length} prefectures, ${regions.length} regions (+${groups.length} group), ${mascots.length} mascots, ${boxes} note boxes, ${(notesDb.extras ?? []).length} extras, ${supBoxes} supplement boxes, ${(placesDb.cities ?? []).length} cities, ${(mountainsDb.ranges ?? []).length} ranges, ${(transitDb.airports ?? []).length} airports, ${(transitDb.shinkansen ?? []).length} shinkansen lines, ${(festivalsDb.festivals ?? []).length} festivals`);
