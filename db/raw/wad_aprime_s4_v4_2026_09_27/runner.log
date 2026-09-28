@@ -1,0 +1,56 @@
+[2026-09-27 10:52:27] ════ run_sese_gpu · IN=/data/work/repo_wad/db/inputs/wad_aprime_s3v2_2026_09_26/qe · RUN=/data/work/runs/wad_aprime_s4_v4_2026_09_27 · JOBS=[V4_s_outer_A_bound V4_s_outer_A_far V4_s_outer_A_G3_c2_bound V4_s_outer_A_G3_c2_far_i V4_s_outer_A_G3_c2_far_ii V4_s_outer_A_G4_k1_bound V4_s_outer_A_G4_k1_far V4_s_outer_A_G4_s05_bound V4_s_outer_A_G4_s05_far]
+[2026-09-27 10:52:27] 공존 근거: D-2026-09-23-gabia-gpu-exception-sese · START<2048 MiB · KILL>44000 MiB · 표본 2s · UMA 공존 허용=0 · 허용 PID=[제한 없음]
+[2026-09-27 10:52:27] 랭크 NP=1 · GPU 1 장 · pseudo=/data/work/pseudo (PSEUDO_DIR 로 교체)
+[2026-09-27 10:52:28] PP Ag_ONCV_PBE-1.0.oncvpsp.upf sha256 0494aa5927b754b4 · 기준과 같음 ✓
+[2026-09-27 10:52:28] PP cl_pbe_v1.4.uspp.F.UPF sha256 5b1ebdea1e5ba743 · 기준과 같음 ✓
+[2026-09-27 10:52:28] PP C.pbe-n-kjpaw_psl.1.0.0.UPF sha256 9900d1efd50b9848 · 기준과 같음 ✓
+[2026-09-27 10:52:28] PP H.pbe-rrkjus_psl.1.0.0.UPF sha256 27f8a7e87851d59a · 기준과 같음 ✓
+[2026-09-27 10:52:28] PP li_pbe_v1.4.uspp.F.UPF sha256 02cc4b3810e28a43 · 기준과 같음 ✓
+[2026-09-27 10:52:28] PP P.pbe-n-rrkjus_psl.1.0.0.UPF sha256 2d112dfec2e2d9b7 · 기준과 같음 ✓
+[2026-09-27 10:52:28] PP s_pbe_v1.4.uspp.F.UPF sha256 84ad731864187f41 · 기준과 같음 ✓
+[2026-09-27 10:52:28] 디스크 2.3T 남음 (35% 사용)
+[2026-09-27 10:52:28] GPU 합계 사용량 지금 1 MiB · 호스트 MemAvailable 56776 MiB (시작 문턱 16384 · 중단 4096)
+[2026-09-27 10:52:28] DRY_RUN — 점검만 하고 끝낸다
+[2026-09-27 10:52:28] ════ run_sese_gpu · IN=/data/work/repo_wad/db/inputs/wad_aprime_s3v2_2026_09_26/qe · RUN=/data/work/runs/wad_aprime_s4_v4_2026_09_27 · JOBS=[V4_s_outer_A_bound V4_s_outer_A_far V4_s_outer_A_G3_c2_bound V4_s_outer_A_G3_c2_far_i V4_s_outer_A_G3_c2_far_ii V4_s_outer_A_G4_k1_bound V4_s_outer_A_G4_k1_far V4_s_outer_A_G4_s05_bound V4_s_outer_A_G4_s05_far]
+[2026-09-27 10:52:28] 공존 근거: D-2026-09-23-gabia-gpu-exception-sese · START<2048 MiB · KILL>44000 MiB · 표본 2s · UMA 공존 허용=0 · 허용 PID=[제한 없음]
+[2026-09-27 10:52:29] 랭크 NP=1 · GPU 1 장 · pseudo=/data/work/pseudo (PSEUDO_DIR 로 교체)
+[2026-09-27 10:52:29] PP Ag_ONCV_PBE-1.0.oncvpsp.upf sha256 0494aa5927b754b4 · 기준과 같음 ✓
+[2026-09-27 10:52:29] PP cl_pbe_v1.4.uspp.F.UPF sha256 5b1ebdea1e5ba743 · 기준과 같음 ✓
+[2026-09-27 10:52:29] PP C.pbe-n-kjpaw_psl.1.0.0.UPF sha256 9900d1efd50b9848 · 기준과 같음 ✓
+[2026-09-27 10:52:29] PP H.pbe-rrkjus_psl.1.0.0.UPF sha256 27f8a7e87851d59a · 기준과 같음 ✓
+[2026-09-27 10:52:29] PP li_pbe_v1.4.uspp.F.UPF sha256 02cc4b3810e28a43 · 기준과 같음 ✓
+[2026-09-27 10:52:29] PP P.pbe-n-rrkjus_psl.1.0.0.UPF sha256 2d112dfec2e2d9b7 · 기준과 같음 ✓
+[2026-09-27 10:52:29] PP s_pbe_v1.4.uspp.F.UPF sha256 84ad731864187f41 · 기준과 같음 ✓
+[2026-09-27 10:52:29] 디스크 2.3T 남음 (35% 사용)
+[2026-09-27 10:52:29] GPU 합계 사용량 지금 1 MiB · 호스트 MemAvailable 56738 MiB (시작 문턱 16384 · 중단 4096)
+[qe_gpu] MPI 를 바이너리에서 읽었다: /data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so.40
+[qe_gpu]   prefix=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi · mpirun=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
+[qe_gpu]   ⚠ libnvomp + libgomp 동시 링크 — OMP_NUM_THREADS=1 (libgomp: TODO 회피)
+[2026-09-27 10:52:30] ▶ V4_s_outer_A_bound (scf) 시작 · GPU 합계 1 MiB · 호스트 여유 56748 MiB
+[2026-09-27 10:52:31]    래퍼(mpirun) PID 439614 · pw.x PID 439632
+[2026-09-27 13:27:08] ■ V4_s_outer_A_bound rc=0 완료=1 벽시계 9276s · 피크 합계 39238 MiB · 자기 39220 MiB · 호스트 최저 49389 MiB · 중단=0
+[2026-09-27 13:27:08] ▶ V4_s_outer_A_far (scf) 시작 · GPU 합계 1 MiB · 호스트 여유 56745 MiB
+[2026-09-27 13:27:09]    래퍼(mpirun) PID 544941 · pw.x PID 544959
+[2026-09-27 15:40:18] ■ V4_s_outer_A_far rc=0 완료=1 벽시계 7989s · 피크 합계 39230 MiB · 자기 39212 MiB · 호스트 최저 49383 MiB · 중단=0
+[2026-09-27 15:40:18] ▶ V4_s_outer_A_G3_c2_bound (scf) 시작 · GPU 합계 1 MiB · 호스트 여유 56720 MiB
+[2026-09-27 15:40:20]    래퍼(mpirun) PID 635828 · pw.x PID 635846
+[2026-09-27 19:47:03] ■ V4_s_outer_A_G3_c2_bound rc=0 완료=1 벽시계 14804s · 피크 합계 41520 MiB · 자기 41500 MiB · 호스트 최저 49047 MiB · 중단=0
+[2026-09-27 19:47:03] ▶ V4_s_outer_A_G3_c2_far_i (scf) 시작 · GPU 합계 1 MiB · 호스트 여유 56549 MiB
+[2026-09-27 19:47:05]    래퍼(mpirun) PID 804980 · pw.x PID 805015
+[2026-09-27 23:24:54] ■ V4_s_outer_A_G3_c2_far_i rc=0 완료=1 벽시계 13070s · 피크 합계 41518 MiB · 자기 41498 MiB · 호스트 최저 49029 MiB · 중단=0
+[2026-09-27 23:24:54] ▶ V4_s_outer_A_G3_c2_far_ii (scf) 시작 · GPU 합계 1 MiB · 호스트 여유 56735 MiB
+[2026-09-27 23:24:56]    래퍼(mpirun) PID 956662 · pw.x PID 956680
+[2026-09-28 02:49:42] ■ V4_s_outer_A_G3_c2_far_ii rc=0 완료=1 벽시계 12287s · 피크 합계 41518 MiB · 자기 41498 MiB · 호스트 최저 49012 MiB · 중단=0
+[2026-09-28 02:49:42] ▶ V4_s_outer_A_G4_k1_bound (scf) 시작 · GPU 합계 1 MiB · 호스트 여유 56733 MiB
+[2026-09-28 02:49:43]    래퍼(mpirun) PID 1100253 · pw.x PID 1100271
+[2026-09-28 06:59:06] ■ V4_s_outer_A_G4_k1_bound rc=0 완료=1 벽시계 14961s · 피크 합계 39238 MiB · 자기 39220 MiB · 호스트 최저 49423 MiB · 중단=0
+[2026-09-28 06:59:06] ▶ V4_s_outer_A_G4_k1_far (scf) 시작 · GPU 합계 1 MiB · 호스트 여유 56777 MiB
+[2026-09-28 06:59:07]    래퍼(mpirun) PID 1270300 · pw.x PID 1270318
+[2026-09-28 13:12:33] ■ V4_s_outer_A_G4_k1_far rc=0 완료=1 벽시계 22404s · 피크 합계 39238 MiB · 자기 39220 MiB · 호스트 최저 49366 MiB · 중단=0
+[2026-09-28 13:12:33] ▶ V4_s_outer_A_G4_s05_bound (scf) 시작 · GPU 합계 1 MiB · 호스트 여유 56789 MiB
+[2026-09-28 13:12:34]    래퍼(mpirun) PID 1529842 · pw.x PID 1529860
+[2026-09-28 16:43:41] ■ V4_s_outer_A_G4_s05_bound rc=0 완료=1 벽시계 12667s · 피크 합계 39230 MiB · 자기 39212 MiB · 호스트 최저 48613 MiB · 중단=0
+[2026-09-28 16:43:41] ▶ V4_s_outer_A_G4_s05_far (scf) 시작 · GPU 합계 1 MiB · 호스트 여유 56762 MiB
+[2026-09-28 16:43:42]    래퍼(mpirun) PID 1681877 · pw.x PID 1681895
+[2026-09-28 20:36:09] ■ V4_s_outer_A_G4_s05_far rc=0 완료=1 벽시계 13947s · 피크 합계 39230 MiB · 자기 39212 MiB · 호스트 최저 48543 MiB · 중단=0
+[2026-09-28 20:36:09] ✅ 전부 완료 — 집계: python3 tools/wad/se_sym_slab.py --collect /data/work/runs/wad_aprime_s4_v4_2026_09_27 --qe_in /data/work/repo_wad/db/inputs/wad_aprime_s3v2_2026_09_26/qe
