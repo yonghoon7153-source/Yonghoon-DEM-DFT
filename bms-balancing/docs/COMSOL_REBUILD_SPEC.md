@@ -2331,3 +2331,111 @@ seal 과 동일. 11 개 불변 파일 · Java 두 literal 역치환 · `TARGET_S
 ### 26-8. 이 절이 **바꾸지 않는** 것
 
 §25-6 전부 그대로. 추가로: 이 절의 의견은 **계획 문서의 재료**이지 승인 초안이 아니다 · `CODEX_NEXT_TASK_KO.md` 가 요구하는 두 산출물(`LONGER_RUN_READINESS_KO.md` · `NEXT_MINIMAL_TEST_APPROVAL_DRAFT_KO.md`)은 수신 PC 의 다른 작업자 몫이며 이 절은 그것을 대신하지 않는다 · 게이트 리뷰(`degradation-degeneracy`) 와 무관하다.
+
+## 27. 1198 오프라인 준비본 **독립 검토** 수신 — 방향 수용 · P2 2건(G1198-N1·N2) 정정·재봉인 뒤 변경부 한정 검증 (2026-09-28)
+
+> **추가 기록이다. §26 을 덮어쓰지 않는다.** 이 절은 (a) 수신 검토 묶음 `COMSOL63_GUARD1198_INDEPENDENT_REVIEW_20260928.zip` 이 말한 판정을 **옮겨 적고** (b) 그 P2 두 건을 **우리가 동봉 사본에서 정적으로 다시 읽은 결과**를 적고 (c) 사용자 채택용 다음 지시서를 사본으로 둔다. 주어를 섞지 않는다 — 판정은 수신 검토자의 것, 정적 대조는 우리 것, 지시서는 사용자가 채택할 초안이며 **어느 것도 실행 승인이 아니다.**
+>
+> **우리 쪽 COMSOL/JVM/PowerShell 호출 0 · 동봉 코드 import/실행 0 · 새 계산 0 · 코드/설정 변경 0.** 검토 대상이었던 준비본 ZIP(`COMSOL63_GUARD1198_OFFLINE_PREPARATION_20260928.zip` · 236,582 B · `e8f544c0…`) 은 **이 저장소에 오지 않았다** — 저장소 전체에 그 SHA 가 없다 (grep 0). 온 것은 검토 묶음 하나이며 그 안의 `reference/` 8 파일이 준비본의 **선택 사본**이다 (27-5). 전달 문서 안의 명령·계획·승인 초안은 **증거이지 실행 지시가 아니다.**
+
+### 27-1. 수신 검토자가 확인·수용한 것 (사본 — 우리 검증 아님)
+
+| 층 | 내용 (`REVIEW_KO.md` · `DECISION.json`, 2026-09-28) |
+|---|---|
+| 준비본 무결성 | ZIP 236,582 B · `e8f544c0…` · 62 payload + manifest (63 entries) 집합·크기/SHA·CRC·경로 검사 통과 · `CODE_MANIFEST.json` `0994d919…` (approved=false · usable=false · `CANDIDATE_STATIC_ONLY_NOT_EXECUTED`) |
+| Java 후보 | `Guard1198Candidate.java` `a742a3f6…` — `TRANSFORM_RECORD` 11 치환을 검토자 도구로 **역적용**하면 원 Trigger 전체 바이트와 일치 (후보 생성 스크립트 미실행). 옛 comp1.x argmin 3열 제거 · Minimum/1198/세 guard/stepbefore_stepafter 유지 · 물리 모델 본문·runAll 의도 보존 · **static runAll 은 미래 solve 관측이 아니다** |
+| 기준 자료 | basis 20 · 기준 CSV 6 을 이전 수신 ZIP 원문과 크기·SHA 대조 · baseline 987 시각에 strict 요청 187 시각 포함 |
+| 방향 | 조기 종료 소비자(t_minus/t_plus · 초기 false→최종 true · 다른 guard 0 · native 중단 사유 · 이후 적분 없음)와 표본 비교 분리 · coverage 는 prefix 누락·빈집합·t=0 만의 비교 거부 · B020 후처리 launcher.main 재사용 안 함 · getPreference 재도입·정책 완화·새 메모리 감시기 없음 — **수용**. 78 건은 정적 존재/식별 검사이며 기능 시험이 아니다 |
+| 판정 | `DIRECTION_ACCEPTED_TWO_P2_CORRECTIONS_BEFORE_LIMITED_VALIDATION_ACCEPTANCE` · P2 2 건 · 검토자 측 import/실행·COMSOL/JVM·PowerShell 시험 각 0 · `validation_approved_by_this_review false` · `native_1198_approved false` · `run_30s_approved false` · normal gate / 전체 수렴 INCOMPLETE 유지 · 발신 최종 전달 영수증 미첨부(직접 미확인, 재검토 사유 아님) |
+
+### 27-2. P2 두 건 — 검토자 서술(사본)과 우리 정적 대조 (동봉 `reference/` 사본을 **읽기만** 했다)
+
+| id | 검토자 서술 (사본) | 우리가 사본에서 읽은 것 (파일:줄) | 일치 |
+|---|---|---|---|
+| **G1198-N1** (P2) 초기 실패 반환에 `limited_result` 없음 → 추가 `KeyError` | `trigger_consumer.analyze` 초기 result 에 `limited_result` 없음 · binding/guard/native_stop 실패 시 trigger 축 except 가 그 result 를 즉시 반환 · 호출부는 정상 반환으로 받아 저장 뒤 `result['limited_result']` 를 필수로 읽음 | `reference/src/trigger_consumer.py:176` 초기 result 키 10 개 (`trigger`·`sampled_comparison`·`preservation`·`process_cleanup`·`policy_preservation`·`errors`·`overall`·`normal_gate`·`effective_policy`·`native_approved_by_this_result`) — `limited_result` 없음 · `:181` `except Exception … return result` (trigger 축) · `limited_result` 는 `:189` 에서만 대입. `reference/src/candidate_entry.py:155` 정상 반환으로 받음 → `:156` `tables_manifest` · `:158` run_id/manifest/elapsed 추가 → `:159` **예산 초과일 때만** `limited_result='INCOMPLETE'` → `:160` `save(TRIGGER_RESULT.json)` 뒤 **같은 줄** print 가 `result['limited_result']` 읽음 → `:161` rc 도 같은 키. `:157` 의 entry 측 `except BaseException` 대체 result 에는 `limited_result` 는 있으나 축 5 키가 없다 | **일치** (정적 호출 경로) |
+| **G1198-N2** (P2) 부모가 요약 문자열만으로 수용 대기 상태로 넘김 | `GDecision` 은 typed rc/오류/시간과 Result 의 run/manifest·`limited_result`·`overall`·`errors` 만 읽음 · 축 5 · pair/native_stop/numeric/tables_manifest 미독 · 다섯 필드만 있는 객체 → `AWAITING_LIMITED_EXTERNAL_ACCEPTANCE` (`PARENT_SCHEMA_CASES.json`) · 최종 PASS 우회로 과장하지 않음 | `reference/PARENT_COMMAND.ps1:43–50` `GDecision($Native,$Analysis,$Result,$Expected,$Overall)` — `$Result` 참조는 `:49` 한 줄: `errors` null 여부 · `run_id` · `code_manifest_sha256` · `limited_result -cne 'TRIGGER_AND_SAMPLED_DATA_ACCEPTABLE'` · `overall -cne 'INCOMPLETE'` · `errors.Count`. 그 밖의 `$Result.` 참조 없음 (43–50 범위) → 다섯 필드 통과 시 `:50` 반환 | **일치** |
+
+검토자 최소 정정 (사본): **N1** — 초기 result 부터 `limited_result='INCOMPLETE'` · 모든 반환/예외 경로의 공통 필수 schema 고정 · 호출부의 추출/소비 예외 결과도 축별 미완·errors·overall·limited_result 일관 · broad catch 로 성공 기본값 금지 · 파일 쓰기 실패는 별도 오류. 한정 회귀 PY02/03/14 에 잘못된 binding/guard/native 사유/추출 실패를 **실제 consumer→entry 경로**로 (최초 이유 유지 · INCOMPLETE · rc 1 · KeyError 없음) + 완전 양성. **N2** — 부모에 최소 결과 schema/상태 결속 (trigger=`TEST_TRIGGER_DETECTED` · 나머지 4 축 PASS · pair/native_stop/numeric/coverage/tables_manifest 의 비어 있지 않은 구조·하위 상태) · CSV 재검산을 PowerShell 에 복제하지 않음 · 성공도 `AWAITING_LIMITED_EXTERNAL_ACCEPTANCE`. 한정 회귀 PS03/05 에 완전 양성 · 요약만 · 축 누락/INCOMPLETE · 증거 누락/빈값 · 잘못된 식별. 두 발견 모두 "후보가 잘못된 수치를 승인했다" 가 아니라 **미실행 후보의 연결 공백**이다 — 검토자 표현 그대로 읽는다.
+
+### 27-3. 다음 작업 지시서 (사본 — `NEXT_LIMITED_VALIDATION_DIRECTIVE_KO.md`; 사용자 채택용 초안 · 검토자 실행 승인 아님)
+
+| 항목 | 내용 |
+|---|---|
+| 범위 | G1198-N1/N2 최소 정정·재봉인 + 원 계획의 **26 논리군 (Python 14 · Java 6 · PowerShell 6) 한정 검증 1 건**. 개괄 계획 반복 없음 · 26 을 assertion 수로 부르지 않음 |
+| 새 개정 폴더 | 발신 workspace 의 `outputs/guard1198_limited_validation_R1_20260928/` (이미 있으면 덮어쓰기·삭제·다른 이름 없이 **중지**) · 원 준비본/ZIP/정적 첫 오류/정정 기록 보존 |
+| Java | 모델·물성·초기화·수치/좌표/단위·1198·guard·runAll 본문 불변 · 원 바이트 유지 · 새 식별에 필수적인 경로 literal 만 열거·역치환 대조 |
+| 허용 | 격리 Python 1 세션·90 s (실제 consumer/entry · 진입점 inert 치환) · Java 변경 helper + COMSOL **stub** compile 1 시도·90 s · stub JVM 1 세션·60 s (COMSOL API 호환성·전체 모델 컴파일 시험 아님) · PS 5.1 1 세션·60 s (PS01 무해 종료용 자식만) |
+| 금지 | COMSOL 전체 후보 컴파일/실행 · 실제 입력 gate · 정책 변경 · 1198 solve · 30 초 · 기존 전체 suite 38/64/67/389 · 실제 F/입력/토큰/registry/native Job · 첫 실패 뒤 수정·부분 재시험·probe·fallback · PS7/다른 셸 대체 · 승인 토큰/USER_DECISION/VALIDATION_RELEASE 생성 |
+| 예산 | 총 1,200 s (정정·harness·정적 480 · Python 90 · Java compile 90 · stub JVM 60 · PS 60 · 보존·포장 300 · 미완 정리 120) · 미사용분 재시험 전용 금지 |
+| 제출물 | 지적별 최소 diff·필수 schema·producer/consumer 연결표 · 새 식별과 Java 불변/역치환 근거 · 26 논리군·봉인 하위 사례별 결과 · 엔진별 실제 rc/시간 · ZIP 집합·SHA/CRC · 기존 전달 영수증 원문 사본(있으면) · **비활성** 1198 승인 초안 (approved=false/usable=false) |
+| 이후 경로 | 한정 검증 수용 → **별도 승인** 1198 native 최대 5 s 1 회 → 발동/수치/보존/정리/정책 증거 수용 → **별도 승인** fresh t=0→30 s 진단. 1198 은 시험 임계 · 30 s 는 장시간 승인 아님 |
+
+### 27-4. 우리 의견 (실행 승인 아님 · 계획 문서의 재료)
+
+1. 두 정정은 §26-4 의 "성공 판정 기준은 사전에" 와 같은 축의 **구현 측** 요구다 — 판정 함수가 증거를 읽지 않으면 사전 등록 기준은 강제되지 않는다. 지시서의 범위(정정 2 + 26 논리군 한정 검증, 새 suite·재시험 없음)에 동의한다.
+2. N1 정정에서 위치 하나를 특정해 둔다 (검토자 문장 "호출부의 추출/소비 예외 결과도 축별 미완… 일관되게" 의 자리): `candidate_entry.py:157` 의 entry 측 broad catch 가 만드는 대체 result 에 축 5 키가 없다. N2 정정(축 필수)이 들어오면 부모가 그 경로를 INCOMPLETE 로 잡게 되지만, 공통 필수 schema 의 뜻대로 그 자리에서도 축 5 를 `INCOMPLETE` 로 채우는 것이 맞다. 새 요구가 아니라 검토자 정정의 적용 위치다.
+3. 순서는 §26-4 권고((1) 1198 → (2) 유계 연장 → (3) 민감도)와 지시서 §6 이 같다. 연장 길이 후보값은 다르다 — §26-4 의 T1 60 s(우리 제안) 와 지시서의 30 s. 둘 다 제안값이며 **사용자가 고른다**; 이 절은 고르지 않는다.
+4. 준비본 ZIP 원문이 이 저장소에 없으므로 여기서는 정정 diff 를 만들지 않는다 — 정정·재봉인·한정 검증은 발신 PC 작업자(현지 Codex/Claude) 몫이고 이 절은 그것을 대신하지 않는다 (§26-8 과 같은 경계).
+
+### 27-5. 저장소 보존 (우리 실측 — 바이트 대조)
+
+수신 검토 묶음 `COMSOL63_GUARD1198_INDEPENDENT_REVIEW_20260928.zip` (82,546 B · SHA-256 `19eb270c1738c74ecac40a49b196b74162705ea87067f644f7e6fa8f38fc0850` · `REVIEW_PACKAGE_MANIFEST.json` `7407d14e9bef6de58e3040c3fb3f71cced66bb7fad5a5796247ba957d414df85` · payload **23** + manifest · manifest 의 `subject_zip_sha256` = 준비본 `e8f544c0…`) 을 `reviews/r14_repros/codex63/guard1198_independent_review_20260928/` 에 두었다 — §26-7 과 같은 방식 (unzip 그대로 + `TRANSFER_IDENTITY.json` + `SHA256SUMS.tsv` · `.gitattributes -text` **먼저** 커밋 — 규칙 `bd53fb98` → 풀기 `5b7e81db`). 자체 대조: manifest 23/23 일치 · 불일치 0 · manifest 밖 파일 0 · `reference/` 의 코드/계약 사본 5 ↔ `reference/CODE_MANIFEST.json` (`0994d919…` = `DECISION.json` 의 `input_code_manifest_sha256`) **5/5 일치**. 스크립트(`audit_package.py` · `seal_review.py` · `static_data_audit.py`)와 `reference/src/*` 는 **실행·import 하지 않았다.** README 가 말하는 `REVIEW_DELIVERY_RECEIPT.json` 은 ZIP 밖의 검토자 기록이라 여기 없다. 커밋 뒤 `git show HEAD:` blob 대조: **23/23 일치** (`5b7e81db` 의 `git show HEAD:` 바이트 ↔ manifest; manifest blob `7407d14e…` 동일).
+
+### 27-6. 이 절이 **바꾸지 않는** 것
+
+§25-6 · §26-8 전부 그대로. **발동 1198 미제출·미승인** · 30 s 진단 미승인 · 정상 전체 gate INCOMPLETE · 전체 수렴 미완 · 실효 정책/코어 UNVERIFIED · OCP 외삽 금지 · TIME_CAPS 차이 원인 미확인 · 기존 failed/pending/원복 유지. 준비본 ZIP·`REVIEW_DELIVERY_RECEIPT.json` 은 이 저장소에 없다 (reference 선택 사본만). 정정·재봉인·한정 검증의 실행과 그 결과 수용은 발신 PC 와 다음 검토의 일이다. 게이트 리뷰(`degradation-degeneracy`)와 무관하다.
+
+## 28. 1198 변경부 한정 검증 **수용** 수신 — G1198-N1·N2 종결 · 26 논리군/78 사례 수용 · 다음은 정책·실행 경로 읽기 전용 확인 (2026-09-28)
+
+> **추가 기록이다. §27 을 덮어쓰지 않는다.** 이 절은 (a) 수신 검토 묶음 `COMSOL63_GUARD1198_VALIDATION_ACCEPTANCE_REVIEW_20260928.zip` 의 판정을 **옮겨 적고** (b) 정정 위치를 **우리가 동봉 사본에서 읽은 결과**를 적고 (c) 다음 작업지시서를 사본으로 둔다. 판정은 수신 검토자의 것, 정적 대조는 우리 것, 지시서는 사용자가 채택할 초안이다. **이 수용은 오프라인 검증 수용이며 COMSOL 실행 승인이 아니다.**
+>
+> **우리 쪽 COMSOL/JVM/PowerShell 호출 0 · 동봉 코드 import/컴파일/실행 0 · 새 계산 0 · 코드/설정 변경 0.** 검증 ZIP 원본(`6af5463e…`, 1,304,867 B, 851 payload + manifest)·attempt03 ZIP 은 이 저장소에 **오지 않았다** — 온 것은 검토 묶음 하나이며 `reference/` 가 선택 사본이다 (28-5).
+
+### 28-1. 수신 검토자가 확인·수용한 것 (사본 — 우리 검증 아님)
+
+| 층 | 내용 (`REVIEW_KO.md` · `DECISION.json`, 2026-09-28) |
+|---|---|
+| 판정 | `LIMITED_OFFLINE_VALIDATION_ACCEPTED` · 종결 `G1198-N1` · `G1198-N2` · 새 P1/P2 0 · `native_policy_route_ready false` · `native_1198_approved false` · `run_30s_approved false` · `long_run_approved false` · normal gate / 전체 수렴 **INCOMPLETE** |
+| 검증 ZIP | 1,304,867 B · `6af5463e…` · 851 payload + PACKAGE_MANIFEST (852 entries) 집합·크기/SHA·CRC·중복·경로·링크 통과 · package manifest `d91a8ae5…` |
+| 후보 | `CODE_MANIFEST` `0c14c4f8…` (봉인 5 파일 일치 · approved=false · usable=false) · Java `a742a3f6…` **최초 준비본과 전체 바이트 동일** (물리 재계산·컴파일 판정 아님) · R1 변경 = 두 지적 + 새 폴더 경로 결속 |
+| 집계 | 26 논리군 / 78 하위 사례 = Python 14/30 · Java helper 6/13 · PowerShell 5.1 6/35 · CASE_MAP ↔ RESULTS 고유 (group, case) 일치 · FAIL/NOT_RUN 0. Python/PS 65 사례는 사례별 결과, Java 13 은 봉인된 순차 assertion + 군별 완료 표식 6 (13 개 별도 stdout 이 있다는 뜻 아님) |
+| 도구 반환 (수신 파일의 직렬화 — 검토자 원격 관측·OS 감사 아님) | Python rc 0 / 6.95 s · helper compile rc 0 / 1.61 s · stub JVM rc 0 / 0.61 s · PS 5.1 rc 0 / 2.61 s |
+| 실패 보존 | attempt03 (814,051 B · `2d6fcf69…` · 635 payload) **20 PASS / 1 FAIL / 57 NOT_RUN** 그대로 (PY11 `EXACT_ARGV_CWD` · `CLEANUP_NOT_CONFIRMED` 보존) · 후보 5 + CODE_MANIFEST 사본 attempt03→04 바이트 동일 |
+| 한계 (그대로) | stub/합성 검증은 COMSOL 전체 Java 타입 호환성 · 현재 CLI 정책 허용 · 실 사용자 콘솔 · native 1198 발동·수치·소유 정리의 실제 성공이 **아니다** — 그것이 제한 native 시행의 목적/잔여 조건 |
+| 비차단 | **V-O1** `CORRECTION.after_harness_sha256` `352ed9d4…` 는 harness 의 CRLF→LF 정규화 텍스트 SHA · 실제 raw `5cbe34b2…` / 17,527 B 는 PRE_TEST_SEAL · FINAL_SOURCE_BINDING · PACKAGE_MANIFEST 가 일관되게 가리킴 — 봉인 불일치 아님, 대상 구분만 별도 기록 · **V-O2** ZIP 밖 최종 DELIVERY_RECEIPT·마지막 포장 반환 미첨부 → 전달 300 s / 전체 1200 s 종결 직접 미확인 (재실행 사유 아님) |
+
+### 28-2. 정정 위치 — 우리가 동봉 사본에서 읽은 것 (읽기만 · 실행 0)
+
+| id | 위치 (`reference/candidate/`) | 읽은 내용 | 검토자 서술과 |
+|---|---|---|---|
+| G1198-N1 | `src/trigger_consumer.py:175` · `src/candidate_entry.py:146` | 두 파일 모두 `incomplete_result(state)` 가 `limited_result:'INCOMPLETE'` · `trigger`·`sampled_comparison` INCOMPLETE · `preservation`/`process_cleanup`/`policy_preservation` (state 값, 없으면 INCOMPLETE) · `errors:[]` · `overall`/`normal_gate` INCOMPLETE · `effective_policy:'UNVERIFIED'` 를 **처음부터** 담는다 | 일치 |
+| G1198-N2 | `PARENT_COMMAND.ps1:43` `GDecision` | 기존 rc/시간/식별 검사 뒤 `GHas`·`GStruct` 도우미 → `sampled_comparison`·`preservation`·`process_cleanup`·`policy_preservation` 전부 `PASS` · `trigger` = `TEST_TRIGGER_DETECTED` · `normal_gate` = INCOMPLETE · `effective_policy` = UNVERIFIED · `native_approved_by_this_result` 가 bool false · `pair`·`native_stop`·`numeric`·`tables_manifest` 가 비어 있지 않은 구조 — 하나라도 어긋나면 `INCOMPLETE`. 주석 그대로 "Consume producer schema/states, not CSV numerical calculations" | 일치 |
+
+**§27-4 의 우리 의견 2 (entry 측 broad catch 대체 result 에 축 5 키 없음) 는 이 R1 에서 해소됐다** — `candidate_entry.py:146` 이 consumer 와 같은 기본 schema 를 쓴다.
+
+### 28-3. 다음 작업지시서 (사본 — `NEXT_PREEXEC_DIRECTIVE_KO.md`; 사용자가 채택할 초안 · 실행 승인 아님)
+
+| 항목 | 내용 |
+|---|---|
+| 범위 | 고정 R1 실행본의 **현재 정책·읽기/쓰기 경로 읽기 전용 확인** + **비활성 1198 단발 승인문** 확정 한 건. 새 코드·재봉인·suite·입력 진단·COMSOL 호출 없음 |
+| 고정 대상 | 검증 ZIP `6af5463e…` · manifest `0c14c4f8…` · Java `a742a3f6…` · run_id `guard1198_candidate_001` · 원 실행 위치 현지 `outputs/guard1198_limited_validation_R1_20260928/` (ZIP 사본 위치에서 실행·ROOT 이동 금지) |
+| A 식별·경로 | 봉인값 대조 (읽기만 — import·버전 명령 기동·COMSOL probe 없음) · `future_run_001`·`future_parent_001`·승인/release/token 경로 미생성 확인 (있으면 삭제·재사용·fallback 없이 보고) · 기본 prefs 는 CONTRACT 지정 파일의 크기/SHA · security 키/값만 (라이선스·로그인·전체 원문 전달 금지 · 전용 prefs 사본 생성 안 함) |
+| B 주체별 대응표 | 외부 Python · compile · batch · 후보 Java(stdout BASE64 ≠ `m.save("axes_generated.java","java")` 상대경로 쓰기 — 같은 권한으로 묶지 않음) · 부모 PS 의 경로/근거/제한/native 미관측 부분. B020 의 `loadCopy`·`Files.newInputStream` 실패를 fresh 경로와 혼동하지 않음 · OS 접근 ≠ prefs 값 ≠ COMSOL 실효 정책 ≠ 실제 호출 성공. 정책 무변경 기본 (All files · 레지스트리/ACL · 기본 prefs 편집 · 관리자/다른 셸 · 우회 금지) |
+| C 승인 대응 | 일반 NoProfile PS 5.1 · 고정 Python · 동일 프로세스 새 challenge 둘 · AI 대리 입력 없음 · 사용자 결정 → RUN 밖 승인파일 → 별도 release → manifest/검증/정책 보고 대응표 · 실제 승인/release/runtime/token 은 만들지 않음 |
+| 1198 사양 (이번 실행 금지) | fresh t=0 · 임계 1198 · 최대 5 s · compile ≤1 / batch ≤1 / solve ≤1 · 자동 retry 0 · physical300/particle320·320/0.1C/sigma 1e−20/기존 초기화·물성/OCP·Time·두 guard·stepbefore_stepafter 유지 · 요청 16 코어 vs 실제 UNVERIFIED 구분 · 원 계약 예산 (사전/입력 180 · compile+batch 1800 · cleanup 120 · 분석 600 · 전달 300 · 전체 3000 s) · 판정: 정상 이전 ce_min > 1198 / 다음 ≤ 1198 · 같은 operator·guard · native 중단 사유 · 이후 적분 없음 · 출력/단위/strict prefix/241 좌표/Li·전압·표면 비교 · 축별 판정 (rc 0·ZIP·trigger 하나로 전체 PASS 아님) |
+| 문서 작업 예산 | 총 900 s (식별/정책·경로 600 · 보고/승인문 240 · 보존 60) — 시험 예산으로 전용 금지 · 사용자가 채택해야 유효 |
+| 이후 | 정책·경로 검토 → **사용자 명시 승인** → 1198 최대 5 s · 1 회 → 결과 수용 → **별도 승인** fresh 0→30 s 진단 → 장시간은 그 결과를 보고 |
+
+### 28-4. 우리 의견 (실행 승인 아님)
+
+1. 지시서의 1198 판정 기준(정상 이전 > 1198 / 다음 ≤ 1198 · 같은 operator·guard · native 중단 사유 · 이후 적분 없음)은 §26-4 에서 우리가 제안한 사전 성공 판정("계산이 멈춘다 · 정지 사유가 남는다 · 마지막 accepted 시각 ≤ 교차 시각 + 한 step")을 더 구체화한 것이다 — 어긋나는 곳이 없다. 새 요구를 더하지 않는다.
+2. 지시서 A 의 "OS 접근 ≠ prefs 값 ≠ 실효 정책 ≠ 실제 호출 성공" 네 층 구분은 §25 의 C2(TTY) 미완·실효 정책 UNVERIFIED 기록과 같은 축이다. 읽기 전용 확인이 끝나도 실효 정책은 **UNVERIFIED 로 남는 것이 정상**이며, 그 불확실성은 단발 승인문에 명시되는 것이 지시서의 뜻이다 — 이 절은 그것을 "확인 완료" 로 적지 않는다.
+3. 연장 길이 후보(§26-4 의 T1 60 s · 지시서 30 s)는 §27-4 3 그대로 사용자가 고른다.
+
+### 28-5. 저장소 보존 (우리 실측 — 바이트 대조)
+
+`COMSOL63_GUARD1198_VALIDATION_ACCEPTANCE_REVIEW_20260928.zip` (96,863 B · SHA-256 `d5170558d1b89df0ef1c43700c88982e38c426899e29a22d027d344bf0dacd25` · `REVIEW_PACKAGE_MANIFEST.json` `3534fa906ef9e22e8ba4dcaedb96f9583004bc2d52437c5b78cbbb29b575a3ba` · payload **33** + manifest · `input_zip_sha256` = 검증 ZIP `6af5463e…`) 을 `reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/` 에 §26-7 · §27-5 와 같은 방식으로 두었다 (unzip 그대로 + `TRANSFER_IDENTITY.json` + `SHA256SUMS.tsv` · `.gitattributes -text` 먼저 — 규칙 `bd53fb98` → 풀기 `5b7e81db`). 자체 대조: manifest 33/33 일치 · 불일치 0 · manifest 밖 파일 0 · `reference/candidate/` 5 ↔ `CODE_MANIFEST` `0c14c4f8…` **5/5 일치** · Java 사본 SHA `a742a3f6…` (§27 준비본 사본과 같은 값). 스크립트(`audit_evidence.py` · `audit_received.py` · `seal_review.py`)와 `reference/` 의 후보·시험 코드(`GuardHarness.java` · `run_python.py` · `run_parent.ps1` 포함)는 **실행·import·컴파일하지 않았다.** 커밋 뒤 `git show HEAD:` blob 대조: **33/33 일치** (`5b7e81db` 의 `git show HEAD:` 바이트 ↔ manifest; manifest blob `3534fa90…` 동일).
+
+### 28-6. 이 절이 **바꾸지 않는** 것
+
+§25-6 · §26-8 · §27-6 전부 그대로. **native 1198 미승인·미실행** · 30 s 진단 미승인 · 장시간 보류 · 정상 전체 gate INCOMPLETE · 전체 수렴 미완 · 실효 정책/실제 코어 UNVERIFIED · COMSOL 전체 API 호환성·실 사용자 입력·native 발동·정리 성공 **미확인** · OCP 외삽 금지 · TIME_CAPS 차이 원인 미확인 · 기존 failed/pending/원복 유지. 실제 승인/release/runtime/token 은 누구도 만들지 않았다. 정책·경로 확인과 승인문 작성은 발신 PC 작업자 몫이며 이 절은 그것을 대신하지 않는다. 게이트 리뷰(`degradation-degeneracy`)와 무관하다.
