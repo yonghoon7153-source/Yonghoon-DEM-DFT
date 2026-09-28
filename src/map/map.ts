@@ -6,6 +6,7 @@ import 'd3-transition';
 import { feature, merge, mesh } from 'topojson-client';
 import type { GeometryCollection, MultiPolygon as TopoMultiPolygon, Polygon as TopoPolygon, Topology } from 'topojson-specification';
 import type { Feature, FeatureCollection, MultiPolygon, Polygon } from 'geojson';
+import { assetUrl } from '../asset-url';
 import { prefById, prefBySlug, prefGeo, prefectures, prefecturesIn, regionOf, regions } from '../data';
 import type { LabelMode, LonLat, Prefecture } from '../types';
 import { createLayers, type LayerId } from './layers';
@@ -73,7 +74,7 @@ export function shortLabel(p: Prefecture, mode: LabelMode): string {
 }
 
 export async function createMap(container: HTMLElement, cb: MapCallbacks, initialMode: LabelMode): Promise<MapApi> {
-  const url = `${import.meta.env.BASE_URL}geo/japan.topo.json`;
+  const url = assetUrl('geo/japan.topo.json'); // ?v=hash: new map data is a new URL, the day-long cache never serves the old map
   const topo = (await fetch(url).then((r) => {
     if (!r.ok) throw new Error(`geo ${r.status}`);
     return r.json();

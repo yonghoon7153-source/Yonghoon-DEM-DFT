@@ -5,6 +5,7 @@ import { geoMercator, geoPath } from 'd3-geo';
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
 import { feature } from 'topojson-client';
 import type { GeometryCollection, Topology } from 'topojson-specification';
+import { assetUrl } from '../asset-url';
 import { notes, places, regionOf, prefBySlug } from '../data';
 import type { LabelMode, NoteItem, Ward } from '../types';
 import { clear, el } from './dom';
@@ -16,7 +17,7 @@ const SVG = 'http://www.w3.org/2000/svg';
 
 let shapes: Promise<WardFeature[]> | null = null;
 function loadShapes(): Promise<WardFeature[]> {
-  shapes ??= fetch(`${import.meta.env.BASE_URL}geo/tokyo23.topo.json`)
+  shapes ??= fetch(assetUrl('geo/tokyo23.topo.json'))
     .then((r) => {
       if (!r.ok) throw new Error(`tokyo23.topo.json ${r.status}`);
       return r.json() as Promise<Topology<{ wards: GeometryCollection<{ ja: string }> }>>;

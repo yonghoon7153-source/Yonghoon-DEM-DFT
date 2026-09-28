@@ -2,6 +2,7 @@
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
+# map data: the page asks for /geo/*.json?v=<content hash> (vite.config.ts), so a day of cache never shows an old map
 /geo/*
   Cache-Control: public, max-age=86400
 /assets/*
