@@ -47,6 +47,15 @@
 #   예 (ibb, 리포 루트): BACKEND=slurm SB_PATH=/home/yonghoon/LIGGGHTS-PUBLIC/src:/home/yonghoon/.conda/envs/myenv/bin \
 #                        bash dem_scripts/mixer_20260921/launch_highbo.sh first
 #   회귀: test_launcher.sh HS①–⑦b (가짜 sbatch · squeue · mpirun — 러너를 실제로 돌려 시작 대조를 본다).
+#
+# ★ `all` — **저자 편차** (2026-09-28 밤, 1저자 *"60 다"* · 세 시드 × 20 코어 동시): 사전등록 §8 (D-4) 의 순서 (첫 시드 → bin 0 스모크
+#   → 나머지 둘) 를 **건너뛰고** 세 시드를 한꺼번에 봉인 · 제출한다.  관문 (덱 비교 · 세 시드 모두 안 뜸 · 바이너리 · sbatch) 은 first 그대로,
+#   bin 0 스모크 증서 관문만 없다.  ⛔ 그래서 두 가지를 강제한다: ① DEVIATION='<저자 결정 · 날짜>' 가 없으면 발사 0 ② 봉인에
+#   `stage: all` · `deviation` (그 문구 · 생략한 관문 · 등록 순서) 을 적는다 — 결과 문장에 병기할 근거가 봉인에 남는다.  SLURM 판 전용.
+#   bin 0 스모크 (§8 ①–④) 는 여전히 **사람이 확인**한다 (관문이 아니라 기록) · all 뒤의 rest 는 발사 0 (첫 봉인 stage ≠ first).
+#   예 (ibb, 리포 루트): DEVIATION='1저자 결정 2026-09-28 밤 — 세 시드 동시' BACKEND=slurm LMP=<lmp_mpi 절대경로> \
+#                        bash dem_scripts/mixer_20260921/launch_highbo.sh all
+#   회귀: test_launcher.sh HA①–⑦.
 set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"; ROOT="$(cd "$HERE/../.." && pwd)"
 OUT="${OUT:-$HERE/runs}"
@@ -71,6 +80,7 @@ usage() {
 사용 (리포 루트에서) — 사전등록 §8 (D-4) 순서:
   bash dem_scripts/mixer_20260921/launch_highbo.sh first               # 관문 → 봉인 → $FIRST 하나만
   bash dem_scripts/mixer_20260921/launch_highbo.sh rest <smoke.json>   # bin 0 스모크 증서 · 코호트 · 덱 비교 → 봉인 → ${REST[*]}
+  DEVIATION='<저자 결정>' BACKEND=slurm bash dem_scripts/mixer_20260921/launch_highbo.sh all   # ⚠ 저자 편차 — 세 시드 동시 (스모크 관문 생략)
   증서 = python3 scripts/measure_mixing_index.py <OUT>/$FIRST --ref <OUT>/E0_s32452843 … --json <smoke.json>
   환경변수: OUT · LMP (기본 lmp_serial) · MAXJ (기본 nproc, 전 런 합산) · DECKDIFF (기본 scripts/mixer_deck_diff.py)
 EOF
@@ -128,6 +138,7 @@ seal() {  # seal <런> <first|rest> [증서] — 발사 직전 봉인 <OUT>/<런
   if [ -e "$d/launch_record.json" ]; then mv "$d/launch_record.json" "$d/launch_record.unlaunched.$(stamp).json" || return 1; fi
   SEAL_BACKEND="$BACKEND" SEAL_NP="${NP:-}" SEAL_FLAGS="${MPIRUN_FLAGS:-}" SEAL_RUNNER="${RUNNER:-}" SEAL_QOS="${SB_QOS:-}" \
   SEAL_PARTITION="${SB_PARTITION:-}" SEAL_TIME="${SB_TIME:-}" SEAL_ENV="${SB_ENV:-}" SEAL_PATH="${SB_PATH:-}" SEAL_CHECK="$HERE/start_check.py" \
+  SEAL_DEVIATION="${DEVIATION:-}" \
   python3 - "$d" "$stage" "$LMP" "$lp" "$head" "$(nproc)" "$MAXJ" "$(live)" "$DECKDIFF" "$OUT" "$EXPECT_DECK" "$EXPECT_ARM" \
       "$EXPECT_SEED" "$cert" "$FIRST" "${REST[@]}" <<'PY'
 import hashlib, json, os, platform, socket, sys, time
@@ -166,9 +177,17 @@ if rec['backend'] == 'slurm':      # SLURM 판 — 러너 · 시작 대조기까
                     'runner': ev['SEAL_RUNNER'], 'runner_sha256': sha(os.path.join(d, ev['SEAL_RUNNER'])),
                     'start_check': os.path.realpath(ev['SEAL_CHECK']), 'start_check_sha256': sha(ev['SEAL_CHECK']),
                     'concurrency': 'SLURM 대기열 (MAXJ 는 관문이 아니다 · live_at_seal = 대기열에 있는 우리 job 수)'}
-if stage == 'first':      # 코호트 — rest 가 '첫 시드가 스모크를 받은 그 덱 · STL' 인지 대조한다 (바이너리는 lmp_sha256)
+if stage in ('first', 'all'):      # 코호트 — rest 가 '첫 시드가 스모크를 받은 그 덱 · STL' 인지 대조한다 (바이너리는 lmp_sha256)
     rec['cohort'] = {n: {f: sha(os.path.join(out, n, f)) for f in FILES} for n in [first] + rest}
-else:
+if stage == 'all':                 # ★ 저자 편차 — 생략한 관문과 결정 문구를 봉인에 남긴다 (결과 문장에 병기할 근거)
+    dv = os.environ.get('SEAL_DEVIATION', '')
+    if not dv.strip():
+        sys.exit('⛔ stage all 인데 DEVIATION 이 비었다 — 봉인하지 않는다')
+    rec['deviation'] = {'author_decision': dv,
+                        'registered_order': '사전등록 §8 (D-4): 첫 시드 → bin 0 스모크 → 나머지 둘',
+                        'skipped_gate': 'bin 0 스모크 증서 (§8 ③ — rest 전 관문).  §8 ①–④ 확인은 사람이 기록으로 남긴다',
+                        'launched_together': [first] + rest}
+elif stage == 'rest':
     rec['smoke_certificate'] = {'path': os.path.realpath(cert), 'sha256': sha(cert)}
 tmp = os.path.join(d, '.launch_record.json.tmp')
 with open(tmp, 'w', encoding='utf-8') as f:
@@ -413,8 +432,37 @@ PY
   echo "rest 끝 — 발사 $k 개 · 건너뜀 $(( ${#REST[@]} - ${#todo[@]} )) 개.  진행: bash $HERE/watch.sh"
 }
 
+cmd_all() {  # ★ 저자 편차 (2026-09-28 밤) — 세 시드를 한꺼번에 · bin 0 스모크 관문 생략 · DEVIATION 필수 · SLURM 판 전용
+  [ $# -eq 0 ] || { usage; return 2; }
+  echo "[LH all] OUT=$OUT · LMP=$LMP · BACKEND=$BACKEND$([ "$BACKEND" = slurm ] && echo " -n $NP") — ⚠ 저자 편차: 사전등록 §8 (D-4) 의 bin 0 스모크 관문 없이 $FIRST ${REST[*]}"
+  local nm bad=0 k=0
+  if [ -z "$(printf '%s' "${DEVIATION:-}" | tr -d '[:space:]')" ]; then
+    echo "⛔ all 은 등록 순서 (§8 D-4: 첫 시드 → bin 0 스모크 → 나머지 둘) 를 건너뛴다 — DEVIATION='<저자 결정 · 날짜>' 를 주어야 한다 (봉인에 그대로 적힌다).  발사 0"
+    return 2
+  fi
+  [ "$BACKEND" = slurm ] || { echo "⛔ all 은 SLURM 판 전용 (1저자 결정: ibb 20 코어 × 3) — BACKEND=slurm.  발사 0"; return 2; }
+  command -v "$LMP" >/dev/null || { echo "⛔ $LMP 없음 — LMP=<실행파일>.  발사 0"; return 1; }
+  command -v sbatch >/dev/null && command -v squeue >/dev/null || { echo "⛔ BACKEND=slurm 인데 sbatch / squeue 가 없다 — SLURM 기계에서.  발사 0"; return 1; }
+  for nm in "$FIRST" "${REST[@]}"; do
+    [ -f "$OUT/$nm/in.mixer" ] || { echo "⛔ $OUT/$nm/in.mixer 없음 — 먼저 SET=highbo gen_all.sh"; bad=1; }
+  done
+  [ "$bad" = 0 ] || { echo "⛔ 발사 0"; return 1; }
+  deckdiff || return 1                                               #  관문 1 — first 와 같다
+  for nm in "$FIRST" "${REST[@]}"; do                                #  관문 2 — 세 시드 모두 아직 안 떴다
+    fresh "$nm" || { echo "⛔ $nm 에 이미 log.lmp / pid / jobid 가 있다 — all 은 세 시드가 모두 아직 안 떴을 때만 (재개는 resume 절차).  사람이 판단"; bad=1; }
+  done
+  [ "$bad" = 0 ] || { echo "⛔ 발사 0"; return 1; }
+  echo "   DEVIATION = $DEVIATION"
+  for nm in "$FIRST" "${REST[@]}"; do
+    launch_one "$nm" all || { echo "⛔ $nm 에서 멈춤 — 앞서 제출된 $k 개는 대기열에 있다 (squeue 로 확인 · 사람이 판단)"; return 1; }
+    k=$((k+1))
+  done
+  echo "all 끝 — 제출 $k 개 (봉인 stage all · deviation 기록).  ⚠ bin 0 스모크 (§8 ①–④) 는 관문이 아니라 사람이 확인해 기록한다 · rest 는 쓰지 않는다"
+}
+
 case "${1:-}" in
   first) shift; cmd_first "$@"; exit $?;;
+  all)   shift; cmd_all "$@"; exit $?;;
   rest)  shift; cmd_rest "$@"; exit $?;;
   *)     usage; exit 2;;
 esac

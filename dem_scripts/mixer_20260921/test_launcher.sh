@@ -502,5 +502,58 @@ chk 'HS⑦ NP=19 → #SBATCH -n 19 ↔ -np 19 짝 · 봉인 np 19' \
 s8=$(env BACKEND=slurm NP=0 OUT="$SN" LMP="$FAKE_MPI" bash "$LHL" first 2>&1); rc_s8=$?
 chk 'HS⑦b NP 가 양의 정수가 아니면 거부 (봉인 0)' "[ $rc_s8 -ne 0 ] && ! [ -e '$SN/$LH1/launch_record.json' ]"
 
+echo "── LH all · 저자 편차 (09-28 밤: 세 시드 × 20 코어 동시 · bin 0 스모크 관문 생략 — §8 D-4 이탈) (HA①–⑦) ──"
+#  all = first 의 관문 (덱 비교 · 세 시드 모두 안 뜸) 그대로 + DEVIATION 문구 필수 + SLURM 판 전용 → 세 시드를 순서대로 봉인 · 제출.
+#  봉인 stage = 'all' · deviation = {author_decision: DEVIATION, skipped_gate …} · 코호트 · 증서 없음.  all 뒤의 rest 는 발사 0.
+DEV='1저자 결정 2026-09-28 밤 — 세 시드 동시 (bin 0 스모크 관문 생략)'
+slurm_all() {  # slurm_all <OUT> <SB_DIR> [추가 env …] — all (SLURM) → 출력 $SO
+  local o="$1" sd="$2"; shift 2; mkdir -p "$sd"
+  SO=$(env PATH="$SBIN:$PATH" SB_DIR="$sd" BACKEND=slurm OUT="$o" LMP="$FAKE_MPI" DECKDIFF="$DD_OK" "$@" bash "$LHL" all 2>&1); return $?
+}
+A0="$T/hba0"; for n in $LH1 $LH2 $LH3 E0_s32452843; do mklh "$A0" $n; done
+slurm_all "$A0" "$T/sba0"; rc_a0=$?
+chk 'HA① DEVIATION 없이 all → 거부 · sbatch 0 · 봉인 0' \
+    "[ $rc_a0 -ne 0 ] && [ \$(nsb '$T/sba0') -eq 0 ] && ! ls '$A0'/*/launch_record.json >/dev/null 2>&1 && grep -q 'DEVIATION' <<<\"\$SO\""
+A1="$T/hba1"; SA="$T/sba1"; for n in $LH1 $LH2 $LH3 LC_s32452843 E0_s32452843; do mklh "$A1" $n; done
+slurm_all "$A1" "$SA" DEVIATION="$DEV"; rc_a1=$?; a1="$SO"
+chk 'HA② ★ all (DEVIATION): sbatch 정확히 세 번 — LH 세 시드만, 순서대로 (각 런 폴더에서 · jobid 901 · 902 · 903 · LC · E0 제출 0)' \
+    "[ $rc_a1 -eq 0 ] && [ \$(nsb '$SA') -eq 3 ] && [ \"\$(cut -f2 '$SA/calls' | tr '\n' ' ')\" = '$A1/$LH1 $A1/$LH2 $A1/$LH3 ' ] && [ \"\$(cat '$A1/$LH1/jobid' '$A1/$LH2/jobid' '$A1/$LH3/jobid' | tr '\n' ' ')\" = '901 902 903 ' ] && ! [ -e '$A1/LC_s32452843/jobid' ] && ! [ -e '$A1/E0_s32452843/jobid' ]"
+sa=$(python3 - "$A1" "$DEV" "$LH1" "$LH2" "$LH3" <<'PY' 2>&1
+import hashlib, json, os, sys
+out, dev, *runs = sys.argv[1:]
+sha = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
+bad = []
+for n in runs:
+    d = os.path.join(out, n)
+    r = json.load(open(os.path.join(d, 'launch_record.json'), encoding='utf-8'))
+    dv = r.get('deviation') or {}
+    ok = {'stage': r.get('stage') == 'all', 'dev': dv.get('author_decision') == dev,
+          'skip': 'bin 0' in str(dv.get('skipped_gate', '')) and 'D-4' in str(dv.get('registered_order', '')),
+          'cohort': sorted((r.get('cohort') or {}).keys()) == sorted(runs),
+          'nocert': 'smoke_certificate' not in r,
+          'slurm': (r.get('slurm') or {}).get('np') == 20 and (r.get('slurm') or {}).get('runner_sha256') == sha(os.path.join(d, 'run_lh.sbatch')),
+          'files': all(r.get('sha256', {}).get(f) == sha(os.path.join(d, f)) for f in ('in.mixer', 'Drum.stl', 'Front.stl', 'Back.stl'))}
+    bad += [f'{n}:{k}' for k, v in ok.items() if not v]
+print('OK' if not bad else 'NG ' + ' '.join(bad))
+PY
+)
+chk 'HA③ 세 봉인 모두 stage all · deviation (저자 결정 문구 · 생략한 관문 bin 0 · 등록 순서 §8 D-4) · 코호트 세 시드 · 증서 없음 · np 20 · 러너 · 덱/STL sha256' "[ \"\$sa\" = OK ]"
+runr "$A1/$LH2" SLURM_NTASKS=20; rc_a4=$?
+chk 'HA④ all 로 봉인한 런의 러너도 시작 대조를 통과 → LIGGGHTS (가짜) · job_start.json ok' \
+    "[ $rc_a4 -eq 0 ] && grep -q 'fake mpi build' '$A1/$LH2/log.lmp' && python3 -c \"import json,sys; sys.exit(0 if json.load(open('$A1/$LH2/job_start.json'))['ok'] is True else 1)\""
+mkcert "$CE/ok_a.json" "$A1/$LH1" true '[]' true
+runr "$A1/$LH1" SLURM_NTASKS=20 >/dev/null 2>&1
+a5=$(env PATH="$SBIN:$PATH" SB_DIR="$SA" BACKEND=slurm OUT="$A1" LMP="$FAKE_MPI" DECKDIFF="$DD_OK" bash "$LHL" rest "$CE/ok_a.json" 2>&1); rc_a5=$?
+chk 'HA⑤ all 뒤의 rest → 발사 0 (첫 봉인 stage 가 first 가 아니다 · sbatch 합계 3 그대로)' "[ $rc_a5 -ne 0 ] && [ \$(nsb '$SA') -eq 3 ]"
+A6="$T/hba6"; for n in $LH1 $LH2 $LH3; do mklh "$A6" $n; done; echo 777 > "$A6/$LH3/jobid"
+slurm_all "$A6" "$T/sba6" DEVIATION="$DEV"; rc_a6=$?
+chk 'HA⑥ 한 시드라도 이미 떴으면 (jobid) all 거부 · sbatch 0 · 봉인 0' \
+    "[ $rc_a6 -ne 0 ] && [ \$(nsb '$T/sba6') -eq 0 ] && ! ls '$A6'/*/launch_record.json >/dev/null 2>&1"
+A7="$T/hba7"; for n in $LH1 $LH2 $LH3; do mklh "$A7" $n; done
+slurm_all "$A7" "$T/sba7" DEVIATION="$DEV" DECKDIFF="$DD_NG"; rc_a7=$?
+a7l=$(env OUT="$A7" LMP="$FAKE_MPI" DECKDIFF="$DD_OK" DEVIATION="$DEV" bash "$LHL" all 2>&1); rc_a7l=$?
+chk 'HA⑦ 덱 비교 관문 실패 → sbatch 0 · 봉인 0 / BACKEND=local 의 all → 거부 (SLURM 판 전용)' \
+    "[ $rc_a7 -ne 0 ] && [ \$(nsb '$T/sba7') -eq 0 ] && ! ls '$A7'/*/launch_record.json >/dev/null 2>&1 && [ $rc_a7l -ne 0 ] && ! ls '$A7'/*/launch_record.json >/dev/null 2>&1"
+
 echo "test_launcher: $pass PASS / $fail FAIL"
 [ "$fail" -eq 0 ]
