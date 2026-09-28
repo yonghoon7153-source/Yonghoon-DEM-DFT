@@ -1,42 +1,74 @@
-# 재개-위상 영수증 — 1차 실측 (v0 · Codex 3차 수정 전 도구 산출)
+# 믹서 재개-위상 영수증 v1 (2026-09-28)
 
-⛔ **판정 경로에 쓰지 않는다.**  Codex 3차 리뷰 (`docs/reviews/codex_mixer_highbo_rereview2_verdict_20260927.md`, HOLD) 가 이 도구의 생산자 · 소비자를
-fail-closed 가 아니라고 판정했다 (HBR3-01 · 02).  이 파일은 **측정 기록**으로만 둔다 — 수정된 생산자로 실행 시 봉인까지 붙여 다시 만든다 (초 단위).
-`check_contact_validity.py --phase-receipt` 에 이 파일을 넣지 말 것 (지금의 소비자는 받아들인다 — 그것이 HBR3-02 다).
+`receipt_v1.json` — **1저자 WSL 원본을 한 바이트도 고치지 않고** 넣었다.
 
-## 출처
+```
+sha256  520ee5d0135b0090dce2a541bdbb6808d79b25d398c90c4b3bdaf205e228e9e0
+크기    29,231 B
+원본    /home/yonghoon71/phase_v1/receipt_v1.json   (host DESKTOP-IK8J81H)
+```
 
-- 실행: 사용자 WSL (`yonghoon71@DESKTOP-IK8J81H`) · 2026-09-28 00:0x KST (파일의 `date` 가 09-28 인 이유 — 명령에 쓴 이름은 `…_20260927.json` 이었다).
-- 도구: `scripts/mixer_restart_phase_test.py` — `db589abf7` 판에 로컬로 `DROP_FIX = ('insert/',)` 한 줄만 바꾼 것 = `04fe95ae8` 과 **기능상 같다** (`analyze` 코드는 두 판이 같다).
-  첫 시도 (템플릿 · 분포까지 뺀 덱) 는 A 가 `run 20000` 을 마친 뒤 `write_restart` 에서 `ERROR: Atom types must start from 1 for granular simulations (../properties.cpp:120)` 로 죽었다 → `04fe95ae8`.
-- 명령 (WSL, 리포 `~/dem-web`, venv python):
-  ```
-  PY=~/Yonghoon-DEM-DFT/venv/bin/python3; R=dem_scripts/mixer_20260921/runs
-  $PY scripts/mixer_restart_phase_test.py gen --deck $R/LC_s32452843/in.mixer --out ~/phase_test_20260927b
-  bash ~/phase_test_20260927b/run.sh
-  $PY scripts/mixer_restart_phase_test.py analyze ~/phase_test_20260927b --binary "$(command -v lmp_serial)" --out docs/data/mixer_phase_receipt_20260927.json
-  ```
-- 파일 `receipt_v0_pre_hbr3.json`: 사용자가 붙여 넣은 JSON 을 도구와 같은 `json.dump(…, ensure_ascii=False, indent=1)` 로 다시 쓴 것 (1,851 B · sha256 `8308decf64747949…`).
-  ⬜ WSL 원본과의 바이트 대조 = 사용자 쪽 `sha256sum` (같으면 이 줄을 ✅ 로).
+## 같은 폴더의 `receipt_v0_pre_hbr3.json` (1 차, 참고용)
 
-## 값
+09-28 00:0x 에 **HBR3 수정 전** 도구로 낸 1 차 실측 (`passed: true` · 오차 2.0015 × 10⁻⁵ °).
+표본이 **3 step** 뿐이고 (20000 · 25000 · 30000) A/B 두 경로 대조 · 봉인 · `run_status` 가 없다.
+그 자신의 note 도 범위를 좁게 적는다 — *"바이너리의 성질 … 어느 런의 벽 좌표가 아니다"*.
+⛔ **수정 전 도구 산출이라 판정 경로에 쓰지 않는다.**  v1 이 그것을 대체한다.
 
-| step | 관측 각 (°) | 예정각 (연속) | 예정각 (재개 때 0 으로 리셋) | 오차 (°) | A↔B 꼭짓점 차 (m) |
-|---:|---:|---:|---:|---:|---:|
-| 20000 | 6.352988 | 6.352978 | 0.000000 | 9.9 × 10⁻⁶ | 0 |
-| 25000 | 7.941243 | 7.941223 | 1.588245 | 2.0 × 10⁻⁵ | 0 |
-| 30000 | 9.529474 | 9.529467 | 3.176489 | 6.5 × 10⁻⁶ | 0 |
+## 무엇을 증명하나
 
-- 주기 0.799562 s · 축 x · dt 7.055 × 10⁻⁷ s · N1 20000 · N2 10000 · 덤프 5000 마다.  예정각 = 360° · step · dt / 주기 (세 점 모두 소수 9 자리까지 재계산 일치).
-- 읽는 법: B (`read_restart` 로 20000 에서 이음) 의 드럼 각이 **연속 가설** 과 10⁻⁵° 로 맞고 **리셋 가설** 과는 6.35° 떨어진다 · A (같은 프로세스로 쭉) 와 B 의 꼭짓점이 세 step 모두 **완전히 같다**.
-- ⚠ 이 시험의 표본은 재개 뒤 10,000 step 이다.  수백만 step 캠페인에서의 각 오차 상한이 아니다 (Codex 3차 HBR3-02 ⑤).
-- ⚠ 이 실측은 HBR3-01 이 보인 거짓 통과 모양 (A 대조 없음 · 재개 전 표본뿐) 이 **아니다** — A 3/3 존재 · 재개 뒤 step 2 개 · 차 0.  그래도 도구가 그 경우를 막지 못하므로 지위는 위 ⛔ 그대로다.
+09-26 WSL 크래시로 믹서 측정 10 런이 53–61 % 에서 끊겨 **체크포인트에서 이었다**.  드럼이 **39 각형**이라
+재개가 **회전 위상**을 어긋나게 잡으면 가루가 만나는 면이 달라진다 — 캠페인이 조용히 오염된다.
+이 영수증은 **처방된 회전(메시 운동 계약)이 재개를 건너 위상을 보존하는가**를 잰다.
 
-## 바이너리 · 덱 연결 (Codex 3차 HBR3-02 가 요구한 것의 일부 — 실행 시 봉인은 아니다)
+| 양 | 값 | 비고 |
+|---|---|---|
+| `passed` · `reasons` | **true** · `[]` | |
+| `angle_error_deg` (최대) | **1.9219 × 10⁻⁵ °** | A 208 + B 81 = 289 step 표본 |
+| `angle_bound_deg` | **0.0011459 °** | = `angle_resolution_deg` — **STL 출력 자릿수 바닥**이지 측정 오차가 아니다 |
+| 등록 상한 | 0.05 ° | 경계가 **43 배** 안쪽 |
+| `symmetric_gap_deg` | **3.8722 °** | ★ 39면 대칭으로 같아지는 각을 뺀 **가장 가까운 다른 리셋 후보** |
+| `reset_alternative_gap_deg` | 79.2047 ° | |
+| `ab_max_vertex_diff_m` | **0.0** | A 경로와 B 경로의 메시 꼭짓점이 완전히 같다 |
+| `residual_max_m` | 5.1373 × 10⁻⁸ | |
+| `nfacet` | **39** | |
 
-- `lmp_serial` = `/home/yonghoon71/src/LIGGGHTS-PUBLIC/src/lmp_serial` · 8,299,592 B · 수정 시각 **2026-08-25 18:16:52 +0900** · sha256 `4efca042a1bbdafb…` (분석 시점에 잰 값).
-- 배너 (A 의 `log.lmp`) = `LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-08-25-18:16:51 by yonghoon71, git commit 3d5c00f2…)`.
-- **L 캠페인 `LC_s32452843/log.lmp` 첫 줄이 같은 배너다** (사용자 확인 09-28) ⇒ 09-21 발사 때의 빌드와 컴파일 시각 · LIGGGHTS 커밋이 같다.  바이너리 파일은 08-25 이후 다시 빌드되지 않았다 (수정 시각 = 컴파일 시각).
-  ⚠ 그 런이 실행한 파일의 sha256 은 **기록된 적이 없다** — 배너 일치는 강한 정황이지 봉인이 아니다.
-- 덱 `deck_source_sha256` `72b52c17…` (8,629 B) = 생성기 `b6d9a2036` (09-21 13:13) 이 `--n-total 100000 --cgf 151.4 --arm LC --seed 32452843 --revolutions 8` 로 내는 덱과 **바이트 동일** (09-28 재생성 대조).
-  현재 생성기 (`6963632a0` 이후) 산출은 8,679 B · `94518e3a…` 로, 차이는 **LC 설명 주석 한 줄뿐**이다 (HB-01 의 라벨 정정 — 명령 차이 없음).
+★ **판별력은 경계가 아니라 이 비에 있다** — 측정 오차 1.92 × 10⁻⁵ ° 대 가장 가까운 다른 위상 3.8722 °
+= 약 **20 만 배**.  위상이 모호하지 않게 특정된다.  경계 0.00115 ° 만 인용하면 이 사실이 안 보인다.
+
+## ★ `SELF-56` 수정이 실제로 작동한 증거
+
+```json
+"run_status": { "A": {"exit":0,"complete":true,"completion_basis":"last_step","banner":false}, "B": {…같음} }
+```
+**배너가 없는데도** 마지막 thermo step(9,452,094)으로 완주를 판정했다.  이 빌드가 09-21 덱에서 배너를
+안 찍는다는 것이 `SELF-56` 이고, `ba33a4939` 가 완주 정의를 `exit 0 ∧ (배너 ∨ 마지막 thermo step = 끝)`
+으로 고쳤다.  `completion_basis` 가 **어느 근거로 판정했는지**를 남긴다.
+
+## ⛔ 이 영수증이 증명하지 **않는** 것
+
+영수증 자신이 못 박는다:
+
+> `"개별 런의 체크포인트 상태 확인이 아니다"`
+
+이것은 **바이너리 + 메시 운동 계약의 성질**이다 (처방 회전은 입자와 무관 → 같은 step 구조면 캠페인
+메시와 같은 궤적).  ⇒ **측정 10 런 각각이 옳은 체크포인트에서 이어졌다는 증명이 아니다.**
+그 구멍은 별건이고 미구현이다 — `docs/session_20260923_progress.md` ㉖ 의 남은 일 ④
+"런별 체크포인트 상태 확인 도구 (Codex 3 차 Q1)".
+
+## 봉인 (재생성 조건)
+
+`"바이너리 · STL · 주기 · dt 가 바뀌면 다시 만든다"`
+
+| | |
+|---|---|
+| LIGGGHTS | PUBLIC 3.8.0 · git `3d5c00f20519e6bb6eb6756f51f1ad36564e649d` · 2026-08-25-18:16:51 빌드 |
+| 바이너리 | `/home/yonghoon71/src/LIGGGHTS-PUBLIC/src/lmp_serial` · sha256 `4efca042a1bbdafb4c68f64815ce7965b42f43588757527e91c7d82be07e038d` |
+| 덱 A / B | `cd8fce2f…` / `19ea03e5…` |
+| STL (A·B 동일) | Back `2e7b962d…` · Drum `fe821a8a…` · Front `443f9c3c…` |
+| `deck_source` | `dem_scripts/mixer_20260921/runs/LC_s32452843/in.mixer` · `72b52c17…` |
+| `motion_signature` | `87132d1e6803906c060952526674f8364e1375fcbc67b7dcc3436aaaced41e9f` |
+| `tool_sha256` | `d846101419bacc8b1dfca274a246206e47296cdff9b6bd6c5208f8ff4c91cae7` |
+| 운동 | `period` 0.799562 s · `dt` 7.055 × 10⁻⁷ · 축 x · 원점 (0,0,0) |
+| step | `rotation_start_step` 385,337 · `run_total` 9,452,094 · `n1` 5,802,624 · `dump_every` 45,333 |
+| `sealed_at` | 2026-09-28T01:44:32.737758+09:00 · host DESKTOP-IK8J81H |
