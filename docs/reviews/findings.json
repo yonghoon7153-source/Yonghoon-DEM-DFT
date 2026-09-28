@@ -5723,12 +5723,16 @@
   {
    "id": "HBR6-01",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "Codex 6 차 적대 재리뷰 (사용자 경유, 2026-09-28 밤) — 핀 18787ab98 · 소스 23/23 git blob 일치 · 판정 HOLD · 합성 프로브만 (DEM/MPI/실제 LH·LC 판독 없음)",
    "opened_in": "docs/reviews/codex_review_mixer_highbo_round6_20260928.md",
    "title": "측정한 A/B 와 **다른 메시의 위상 증서가 생산된다** — 생산자가 `gen.json.motion_signature` 를 봉인 A/B 에서 다시 계산하지 않고 복사하고 (`scripts/mixer_restart_phase_test.py:509`), 소비자는 그 복사본을 캠페인 서명과 비교한다 (`scripts/check_contact_validity.py:606`)",
-   "note": "재현 `changed_gen_motion_signature`: 측정 A/B · 봉인 그대로, 별도 캠페인의 Drum 만 y 로 149.277 µm 이동 · 측정 폴더의 봉인 밖 gen 서명만 그 캠페인 값으로 교체 → analyze rc 0 · passed=true · 소비자 accepted=true · 위치 경계 1.39e-14 m (측정 A 서명 78c93320ad41… ≠ 내보낸 b7588c4e36fb…).  ✅ 우리 HEAD 재현 (09-28 밤 — 믹서 스크립트 5 개가 핀 사본과 sha256 동일).  해제: 봉인 A 의 STL · scale · 운동으로 서명을 **다시 만들고** gen 은 대조만 · B 의 대응 계약 · 연속 시계 · nfacet 등 재계산 가능한 기하 메타데이터도 같은 원칙 → 반례 rc 1 (또는 진짜 서명을 내보내 소비자가 다른 캠페인 거부) · 정상 rc 0.  한정: 커밋된 두 영수증이 잘못된 형상을 썼다는 실측 증거는 아니다 — 그러나 이 결함을 둔 채 새 np20 영수증을 만들면 측정 대상 일치가 보증되지 않는다."
+   "note": "재현 `changed_gen_motion_signature`: 측정 A/B · 봉인 그대로, 별도 캠페인의 Drum 만 y 로 149.277 µm 이동 · 측정 폴더의 봉인 밖 gen 서명만 그 캠페인 값으로 교체 → analyze rc 0 · passed=true · 소비자 accepted=true · 위치 경계 1.39e-14 m (측정 A 서명 78c93320ad41… ≠ 내보낸 b7588c4e36fb…).  ✅ 우리 HEAD 재현 (09-28 밤 — 믹서 스크립트 5 개가 핀 사본과 sha256 동일).  해제: 봉인 A 의 STL · scale · 운동으로 서명을 **다시 만들고** gen 은 대조만 · B 의 대응 계약 · 연속 시계 · nfacet 등 재계산 가능한 기하 메타데이터도 같은 원칙 → 반례 rc 1 (또는 진짜 서명을 내보내 소비자가 다른 캠페인 거부) · 정상 rc 0.  한정: 커밋된 두 영수증이 잘못된 형상을 썼다는 실측 증거는 아니다 — 그러나 이 결함을 둔 채 새 np20 영수증을 만들면 측정 대상 일치가 보증되지 않는다.  ⊕ 09-28 밤 수정 (1저자 비준 — 반례 먼저): 셀프테스트 ⑯ changed_gen_motion_signature · ⑯b 면 수 · ⑯c B 운동 계약 (주기) 을 먼저 옮겨 옛 코드에서 **통과 (= 결함 재현)** 확인 → 수정: 운동 서명 · 면 수를 봉인 A (와 B) 의 덱 · STL 에서 다시 만들고 gen.json 은 대조만 · B 서명 = A · B 운동 시계 (read_restart 뒤 같은 운동 fix · 같은 끝) · 내보내는 run_total · dump_every · span = 덱 값 · 영수증 `motion_signature_basis=sealed_A_recomputed` + gen 값은 `motion_signature_gen_json` 로 따로.  selftest 30/35 → 35/35 (⑥c: 재계산 서명 = 캠페인 덱 서명 — 합성 덱에서 78c93320ad41… = Codex 증거의 측정 A 서명 앞자리).  ⚠ 커밋된 옛 영수증 (v2 · v2_ibb) 은 옛 코드 산출이라 재생성 대상 (np20 새 영수증과 함께).",
+   "claimed_fixed_sha": "6e7bce4b1",
+   "evidence_tests": [
+    "scripts/mixer_restart_phase_test.py"
+   ]
   },
   {
    "id": "HBR6-02",
@@ -5743,12 +5747,16 @@
   {
    "id": "HBR6-03",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "Codex 6 차 적대 재리뷰 (사용자 경유, 2026-09-28 밤) — 핀 18787ab98 · 소스 23/23 git blob 일치 · 판정 HOLD · 합성 프로브만 (DEM/MPI/실제 LH·LC 판독 없음)",
    "opened_in": "docs/reviews/codex_review_mixer_highbo_round6_20260928.md",
    "title": "**완료 배너가 봉인 끝 step 과의 모순을 덮는다** — `Total wall time` 이 있으면 마지막 step 과 무관하게 완료로 판정 (`scripts/mixer_restart_phase_test.py:83-88` · :375-378)",
-   "note": "재현 `banner_short_tail`: 봉인 끝 14,001 · 정상 A 28 / B 11 덤프 격자 유지 · A/B 로그 마지막 step 만 14,000 + 배너 → producer rc 0 · consumer accepted · completion_basis=banner.  ✅ 우리 HEAD 재현 (09-28 밤).  해제: thermo 출력 규약에서 숫자로 확인되는 끝 step 이 봉인값과 모순이면 배너로 덮지 않는다 → 반례 rc 1 · 배너 없는 정상 대조 rc 0 유지.  한정: 4,501 step 축소의 재발이 아니다 — 마지막 1 step 의 미입증 · 합성 로그가 통과함을 보인 것이지 실제 LIGGGHTS 가 이런 로그를 냈다는 주장이 아니다."
+   "note": "재현 `banner_short_tail`: 봉인 끝 14,001 · 정상 A 28 / B 11 덤프 격자 유지 · A/B 로그 마지막 step 만 14,000 + 배너 → producer rc 0 · consumer accepted · completion_basis=banner.  ✅ 우리 HEAD 재현 (09-28 밤).  해제: thermo 출력 규약에서 숫자로 확인되는 끝 step 이 봉인값과 모순이면 배너로 덮지 않는다 → 반례 rc 1 · 배너 없는 정상 대조 rc 0 유지.  한정: 4,501 step 축소의 재발이 아니다 — 마지막 1 step 의 미입증 · 합성 로그가 통과함을 보인 것이지 실제 LIGGGHTS 가 이런 로그를 냈다는 주장이 아니다.  ⊕ 09-28 밤 수정 (비준 — 반례 먼저): ⑰ banner_short_tail (끝 14,000 + 배너) 이 옛 코드에서 통과 확인 → 수정: 완주 = 숫자 끝 step = 봉인 덱 끝 **만** (배너는 기록만 · 배너만 있는 로그 형식은 받지 않는다 — 별도 계약 전).  ⑧ 배너 빌드의 정상 로그는 basis=last_step 로 통과.  ⚠ run_all.sh `done_run` (캠페인 런 완주 표지) 은 여전히 배너 ∨ 끝 step — 영수증 판정과 따로.",
+   "claimed_fixed_sha": "6e7bce4b1",
+   "evidence_tests": [
+    "scripts/mixer_restart_phase_test.py"
+   ]
   }
  ]
 }
