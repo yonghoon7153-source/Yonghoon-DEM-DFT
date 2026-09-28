@@ -771,6 +771,73 @@ def _selftest():
     chk(_L["n_unreadable_reactions"] == 1,
         "⛔음성: 못 읽은 반응식을 **세어서 보고한다** (조용히 빼지 않는다)")
 
+    # ── li_ledger_identity (2026-09-28) — 항등식: 할선 = −ρ · 계수 1 ────────────
+    def _rx(R, n=5):
+        """비-Li 반응물 원자 0.4·6 + 0.6·3 = 4.2 인 반응식 — ρ = R / 4.2."""
+        return f"0.4 Li{n}P1S4Cl1 + 0.6 CoO2 -> {R} Li + 1 CoS2"
+    chk(abs(li_ledger_rho(_rx(2.1)) - 0.5) < 1e-12,
+        "[양성] ρ = 나간 Li / **비-Li** 반응물 원자 (2.1/4.2 = 0.5 — 모든 원자면 2.1/6.2)")
+    chk(abs(li_ledger_rho("0.21 Li + 1 CoO2 -> 1 LiCoO2") + 0.07) < 1e-12,
+        "[양성] 좌변의 맨 Li(저장고에서 들어온 것)는 **음수**로 센다 (−0.21/3)")
+    chk(li_ledger_rho("Li6PS5Cl -> 6 Li + 1 SCl") is not None,
+        "[경계] 계수 없는 좌변(자체분해 끝점)도 계수 1 로 읽는다")
+    chk(li_ledger_rho("1 X?? -> 1 Li") is None and li_ledger_rho(None) is None,
+        "⛔음성: 한 항이라도 못 읽으면 None — 0 으로 세지 않는다")
+
+    def _mki(E, R):
+        """칸 하나(양극 C · 조성 A) — E: {V: 에너지}, R: {V: 나간 Li} (ρ = R/4.2)."""
+        return {"C": {"by_voltage": {V: {"A": e} for V, e in E.items()},
+                      "reactions": {V: {"A": _rx(R[V])} for V in E}}}
+    # ρ = 0.3 (3.5·4.0 V 같은 반응) → 4.2 V 에서 0.5 로 바뀜
+    _R = {"3.50": 1.26, "4.00": 1.26, "4.50": 2.1}
+    _E = {"3.50": -1.0, "4.00": -1.0 - 0.3 * 0.5, "4.50": -1.15 - 0.3 * 0.2 - 0.5 * 0.3}
+    _I = li_ledger_identity(_mki(_E, _R))
+    chk(_I["pass"] is True and _I["n_same_reaction"] == 1 and _I["n_changed_reaction"] == 1,
+        "[양성] 항등식대로 만든 칸은 통과 (같은 반응 1 쌍 · 바뀐 반응 1 쌍은 괄호 안)")
+    chk(_I["prefactor_same_median"] is not None and abs(_I["prefactor_same_median"] - 1.0) < 1e-9,
+        "[양성] 같은 반응 쌍의 계수 = 1")
+    _I = li_ledger_identity(_mki({**_E, "4.00": -1.0 - 2 * 0.3 * 0.5}, _R))
+    chk(_I["pass"] is False and _I["violations"][0]["kind"] == "same_reaction",
+        "[⛔음성] 계수가 2 면(09-19 β 를 물리로 읽으면) 같은 반응 쌍에서 잡는다")
+    _I = li_ledger_identity(_mki({**_E, "4.00": -1.0 + 0.3 * 0.5}, _R))
+    chk(_I["pass"] is False, "[⛔음성] 부호가 반대면 잡는다 (09-19 S4 가 예측한 방향)")
+    _I = li_ledger_identity(_mki(_E, {**_R, "4.50": 0.42}))
+    chk(_I["pass"] is False and _I["n_rho_decreasing"] == 1,
+        "[⛔음성] ρ 가 전압을 따라 줄면 잡는다 (E_min(V) 는 오목해야 한다)")
+    _I = li_ledger_identity(_mki({**_E, "4.50": -1.15 - 0.8 * 0.5}, _R))
+    chk(_I["pass"] is False and _I["n_rho_decreasing"] == 0
+        and [v["kind"] for v in _I["violations"]] == ["bracket"],
+        "[⛔음성] 반응이 바뀐 쌍의 할선이 −ρ 괄호 밖이면 잡는다 (ρ 가 제대로 늘어도)")
+    _I = li_ledger_identity(_mki(_E, {V: "?" for V in _R}))
+    chk(_I["pass"] is None and _I["n_unreadable"] == 2 and _I["n_pairs"] == 0,
+        "⛔음성: 반응식을 못 읽으면 통과가 아니라 **판정 없음**이다")
+    _res = {"C": {"by_voltage": {"1.00": {"A": -0.5}, "1.50": {"A": -0.5 + 0.07 * 0.5}},
+                  "reactions": {V: {"A": "0.21 Li + 1 CoO2 -> 1 LiCoO2"} for V in ("1.00", "1.50")}}}
+    chk(li_ledger_identity(_res)["pass"] is True,
+        "[양성] 저장고에서 Li 를 받는 반응은 ρ < 0 이라 기울기가 **양수**다")
+
+    def _mkb(ns, deg=None):
+        """반응이 창 안에서 안 바뀌는 조성들 — 모든 Li 가 나간다 (n = 전해질 Li 수)."""
+        res = {"C": {"by_voltage": {}, "reactions": {}, "endpoint_degenerate": {}}}
+        for V in ("3.50", "4.00", "4.50"):
+            for lab, n in ns.items():
+                res["C"]["by_voltage"].setdefault(V, {})[lab] = -1.0 - 0.4 * n / 4.2 * (float(V) - 3.5)
+                res["C"]["reactions"].setdefault(V, {})[lab] = _rx(f"{0.4 * n:.6f}", n)
+                res["C"]["endpoint_degenerate"].setdefault(V, {})[lab] = (deg or {}).get((V, lab), False)
+        return res
+    _ns = {"modelc": 5.0, "a": 4.5, "b": 5.5, "c": 4.0}
+    _B = li_ledger_beta_decomposition(_mkb(_ns))
+    chk(abs(_B["fits"]["non_li_sampled"]["beta"] - 1) < 1e-3 and abs(_B["fits"]["non_li_sampled"]["a"]) < 1e-6,
+        "[양성] 반응이 창 안에서 안 바뀌면 비-Li 예측자의 β = 1 · 절편 0 (표본 오차가 없다)")
+    chk(abs(_B["fits"]["all_atoms_sampled"]["beta"] - 1) > 0.5,
+        "[양성] 같은 칸에서 분모만 '모든 원자' 로 바꾸면 β 가 1 에서 멀어진다 (09-19 β≈2 의 몸통)")
+    _B = li_ledger_beta_decomposition(_mkb(_ns, deg={("4.50", "a"): True}))
+    chk("a" not in _B["by_electrolyte"] and len(_B["by_electrolyte"]) == 2,
+        "[⛔음성] 창 끝이 끝점 퇴화인 칸은 안 쓴다 (자체분해 값으로 기울기를 재지 않는다)")
+    _B = li_ledger_beta_decomposition(_mkb(_ns, deg={("3.50", "b"): None}))
+    chk("b" not in _B["by_electrolyte"],
+        "[⛔음성] 끝점 판정이 None(모름)인 칸도 안 쓴다 — '아니다' 가 확인된 칸만")
+
     # ── p_capture (2026-09-21) — 양성 둘 · **음성 넷** ───────────────────────
     #   ⛔ 음성이 본체다. 이 모드는 게이트를 코드에 박는 것이 목적이라,
     #     "게이트가 실제로 잡는가" 를 안 재면 통과해도 아무것도 보증 못 한다.
@@ -925,6 +992,56 @@ def _selftest():
         "[⛔음성] x002 G3 — 중성 조합에 Nd2S3+Li2S 가 없으면 '틀림' 이 아니라 '전제 불성립'(None)")
     chk(_g3["o_only_003"]["pass"] is None and _g3["o_only_003"]["measured_V"] is None,
         "[⛔음성] x002 G3 — ESW 자료가 없는 조성은 통과로 세지 않는다")
+
+    # ── x010 (2026-09-28) — 0.02–0.20 사이 곡률(꺾임) · 항등식 무결성 ──────────────
+    _xx = {"nd_li_002": ("Li", .02), "nd_li_010": ("Li", .10), "nd_only": ("Li", .20),
+           "nd_p_002": ("P", .02), "nd_p_010": ("P", .10), "nd_p_020": ("P", .20)}
+    _km = {"Li": (0.2, -0.3), "P": (-0.3, 0.3)}   # (Δ(3.5 V)/x , Δρ/x)
+
+    def _mk10(off=None, drop=None, break_id=None, cats=("C",)):
+        """합성 결과 — **항등식을 지키고** Δ 가 x 에 선형. off: {(양극, 조성): Δ 오프셋}."""
+        out = {}
+        for cat in cats:
+            cd = out[cat] = {"by_voltage": {}, "reactions": {}, "endpoint_degenerate": {}}
+            for lab in ("modelc", *_xx):
+                site, x = _xx.get(lab, ("Li", 0.0))
+                k, m = _km[site]
+                rho = 0.5 + m * x
+                e0 = -1.0 + k * x + (off or {}).get((cat, lab), 0.0)
+                for V in ("3.50", "4.00", "4.50"):
+                    e = e0 - rho * (float(V) - 3.5) * (2.0 if lab == break_id and V == "4.50" else 1.0)
+                    if lab != drop:
+                        cd["by_voltage"].setdefault(V, {})[lab] = e
+                    cd["reactions"].setdefault(V, {})[lab] = _rx(f"{rho * 4.2:.6f}")
+                    cd["endpoint_degenerate"].setdefault(V, {})[lab] = False
+        return out
+
+    _v10 = x010_verdicts(_mk10())
+    chk(_v10["GI_identity"]["pass"] is True
+        and all(g["pass"] is True for g in _v10["GC_curvature"].values()),
+        "[양성] x010 — 항등식을 지키고 Δ 가 x 에 선형이면 GI · GC 둘 다 통과")
+    _v10 = x010_verdicts(_mk10(off={("C", "nd_p_010"): -0.02}))
+    chk(_v10["GC_curvature"]["P"]["pass"] is False and _v10["GC_curvature"]["Li"]["pass"] is True
+        and _v10["GI_identity"]["pass"] is True,
+        "[⛔음성] x010 GC — 가운데 점이 직선에서 0.02 벗어나면 그 자리만 불통과 (항등식과 무관)")
+    _v10 = x010_verdicts(_mk10(off={("C", "nd_li_010"): 0.006}))
+    chk(_v10["GC_curvature"]["Li"]["pass"] is False,
+        "[⛔음성] x010 GC — 문턱 0.005 를 조금(0.006) 넘어도 불통과 (문턱을 실제로 쓴다)")
+    _v10 = x010_verdicts(_mk10(off={("C", "nd_li_010"): 0.004}))
+    chk(_v10["GC_curvature"]["Li"]["pass"] is True,
+        "[경계] x010 GC — 문턱 안(0.004)은 통과")
+    _v10 = x010_verdicts(_mk10(off={("C1", "nd_li_010"): 0.02, ("C2", "nd_li_010"): -0.02},
+                               cats=("C1", "C2")))
+    chk(_v10["GC_curvature"]["Li"]["pass"] is True
+        and _v10["GC_curvature"]["Li"]["info_n_cells_over_tol"] == 6,
+        "[⛔음성] x010 GC — 칸끼리 상쇄된 꺾임은 평균으로 통과해도 **칸별 수로 드러난다** (6 칸)")
+    _v10 = x010_verdicts(_mk10(break_id="nd_li_010"))
+    chk(_v10["GI_identity"]["pass"] is False and _v10["GC_curvature"]["Li"]["pass"] is None
+        and _v10["GC_curvature"]["Li"].get("delta_mean") is not None,
+        "[⛔음성] x010 GI — 항등식이 깨지면 GC 를 **판정하지 않는다** (값은 적는다)")
+    _v10 = x010_verdicts(_mk10(drop="nd_p_010"))
+    chk(_v10["missing_labels"] == ["nd_p_010"] and "GC_curvature" not in _v10,
+        "[⛔음성] x010 — 조성이 빠지면 판정하지 않는다 (통과로 세지 않는다)")
 
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
@@ -1119,9 +1236,14 @@ def li_ledger_slope(results, base="modelc", open_el="Li", lo="3.50", hi="4.50"):
     Li 때문이다. 그래서 기준 조성 대비 **방출 Li/원자의 차**가 dΔ/dV 를 정해야 한다.
     이 함수는 둘을 각각 재서 회귀한다 (기울기·R²).
 
+    ⭐ 2026-09-28 유도 — 이 관계는 **항등식**이다(li_ledger_identity). 분모를 pymatgen 과
+      같게(비-Li 반응물 원자) 잡으면 칸마다 계수가 정확히 1 이다. 이 함수의 예측자는 분모가
+      **모든** 좌변 원자이고 창 안 표본 전압의 평균이라 β 가 1 이 아니다 (09-19 에 2.0) —
+      β 는 물리량이 아니라 **예측자 정의의 산물**이다. 분해는 li_ledger_beta_decomposition.
+      09-19 기록을 재현하려고 계산은 그대로 둔다. **새 판정에는 li_ledger_identity 를 쓴다.**
+
     ⚠ 이 함수가 **안 하는 것**
-      ① 전치인자를 이론값으로 가정하지 않는다 — **잰다**. 1.0 이 나오리라고 적어 두지
-         않는다 (pymatgen per-atom 정규화 관례에 달렸고, 우리는 그걸 유도하지 않았다).
+      ① 전치인자를 이론값으로 가정하지 않는다 — 회귀로 잰다 (위 ⭐: 이 예측자로는 1 이 안 나온다).
       ② 인과를 말하지 않는다 — 상관이다. 같은 hull 이 둘 다 만든다.
       ③ 끝점 퇴화 칸을 쓰지 않는다 (계면량이 아니다). 기준 조성이 퇴화한 칸도 뺀다.
       ④ 반응식을 못 읽은 칸을 **0 으로 세지 않는다** — `n_unreadable` 로 센다.
@@ -1186,14 +1308,227 @@ def li_ledger_slope(results, base="modelc", open_el="Li", lo="3.50", hi="4.50"):
         rss = sum((y - (my + beta * (x - mx))) ** 2 for x, y in zip(xs, ys))
         out["fit"] = {"n": len(xs), "beta": round(beta, 4),
                       "r2": round(1 - rss / ss, 4) if ss else None,
-                      "note": "beta 는 **실측 전치인자**다. 1.0 을 기대하지 않는다 — "
-                              "pymatgen per-atom 정규화 관례를 우리가 유도하지 않았다. "
-                              "판정에 쓰는 것은 **부호와 R²**다."}
+                      "note": "beta 는 물리 전치인자가 **아니다** — 항등식(계수 1 · 비-Li "
+                              "반응물 원자당)을 '모든 원자당 · 표본 전압 평균' 예측자로 근사한 "
+                              "값이다 (2026-09-28 유도 · li_ledger_identity). 판정에 쓰지 않는다."}
     else:
         out["fit"] = {"n": len(xs), "beta": None, "r2": None,
                       "note": "회귀를 못 했다 (점이 3 개 미만이거나 예측변수가 상수다) "
                               "— '맞았다' 가 아니라 '못 쟀다' 이다"}
     return out
+
+
+# ── Li 장부 항등식 (2026-09-28 유도) ─────────────────────────────────────────
+#: 기록 db/properties/cei_li_ledger_identity_2026_09_28.json — 09-19 의 '기울기 법칙'(β≈2)은
+#:   경험 법칙이 아니라 grand potential 구성의 **항등식**이다. 분모를 pymatgen 과 같게(비-Li 원자)
+#:   잡으면 계수가 1 이다. 아래 둘이 그걸 확인하고(li_ledger_identity) β≈2 를 분해한다.
+#: 같은 반응 두 전압의 할선이 −ρ 와 어긋나도 되는 폭 — 반응식 계수가 유효숫자 4 자리이고
+#:   에너지가 1e-5 로 반올림돼 나오는 오차보다 넉넉하게 잡았다 (x002 자료 실측 최대 1.1e-4).
+LI_IDENTITY_TOL = 5e-4
+
+
+def _rxn_terms_strict(side):
+    """반응식 한쪽 → [(계수, 화학식)]. **한 항이라도 못 읽으면 None** (_rxn_side_terms 는 건너뛴다)."""
+    out = []
+    for t in side.split("+"):
+        m = re.match(r"^\s*([0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)?\s*([A-Za-z][A-Za-z0-9().]*)\s*$", t)
+        if not m:
+            return None
+        out.append((float(m.group(1)) if m.group(1) else 1.0, m.group(2)))
+    return out
+
+
+def li_ledger_parts(rxn, open_el="Li"):
+    """반응 하나 → (ρ, 반응물 Li/N, 산물 Li/N). N = 좌변 **비-open 원자** 수. 못 읽으면 None.
+
+    ρ = 저장고로 **나간** open_el / N. 좌변에 open_el 이 있으면(저장고에서 들어온 것) 음수로 센다.
+    Li 수지로 ρ = 반응물 Li/N − 산물 Li/N 이다 (둘째·셋째 값은 그 분해).
+    왜 이 분모인가: pymatgen GrandPotentialInterfacialReactivity(norm=True) 는 반응에너지를
+      저장고 원소를 뺀 조성의 원자 1 개당으로 낸다 (`_get_grand_potential` 이 비-저장고 원자수로
+      나눈다). 그래서 ∂E_rxn/∂V = −ρ 가 **계수 1** 로 성립한다.
+    ⚠ 09-19 예측자(`_rxn_atoms_and_released`)는 분모가 좌변 **모든** 원자(Li 포함)다 — 단위가 다르다.
+    """
+    if not rxn or "->" not in rxn:
+        return None
+    lhs, rhs = rxn.split("->", 1)
+    L, R = _rxn_terms_strict(lhs), _rxn_terms_strict(rhs)
+    if L is None or R is None:
+        return None
+    n_non = rel = li_r = li_p = 0.0
+    for c, f in L:
+        if f == open_el:
+            rel -= c
+            continue
+        comp = parse_formula(f)
+        n_non += c * sum(v for el, v in comp.items() if el != open_el)
+        li_r += c * comp.get(open_el, 0.0)
+    for c, f in R:
+        if f == open_el:
+            rel += c
+        else:
+            li_p += c * parse_formula(f).get(open_el, 0.0)
+    if n_non <= 0:
+        return None
+    return rel / n_non, li_r / n_non, li_p / n_non
+
+
+def li_ledger_rho(rxn, open_el="Li"):
+    """ρ 만 — li_ledger_parts 의 첫 값. 못 읽으면 None."""
+    p = li_ledger_parts(rxn, open_el)
+    return p[0] if p else None
+
+
+def _rxn_key(rxn):
+    """반응식의 순서 무관 지문 — 같은 산물·같은 계수면 같다 (pymatgen 이 항 순서를 바꿔 찍는다)."""
+    lhs, rhs = rxn.split("->", 1)
+    L, R = _rxn_terms_strict(lhs), _rxn_terms_strict(rhs)
+    if L is None or R is None:
+        return None
+    return (frozenset((f, round(c, 6)) for c, f in L), frozenset((f, round(c, 6)) for c, f in R))
+
+
+def li_ledger_identity(results, open_el="Li", tol=LI_IDENTITY_TOL):
+    """열린계 항등식 확인 — **반응에너지의 전압 기울기 = −ρ** (ρ = 나간 Li / 비-Li 반응물 원자), 계수 1.
+
+    유도 (2026-09-28):
+      ① Φ = E − μ_Li·N_Li. pymatgen 은 반응에너지를 비-Li 원자 1 개당으로 낸다.
+      ② 산물·혼합비를 고정하면 ∂E_rxn/∂μ_Li = N_Li(반응물) − N_Li(산물) = ρ.
+      ③ μ_Li = μ_Li(금속) − eV ⇒ ∂E_rxn/∂V = −ρ.
+      ④ 최소 꺾임을 고르는 것(min over x)은 포락선 정리로 이 미분을 안 바꾼다. 또 E_min(V) 는
+         오목하다(V 에 선형인 함수들의 최소) ⇒ ρ(V) 는 V 를 따라 **줄지 않는다**.
+    그래서 칸(양극, 조성)마다 이웃한 두 전압 V1 < V2 에서
+      · 같은 반응이면 할선 (E2−E1)/(V2−V1) = −ρ   (|차| ≤ tol)
+      · 반응이 바뀌었으면 −ρ(V2) ≤ 할선 ≤ −ρ(V1)  (± tol)
+      · ρ(V2) ≥ ρ(V1) − tol
+    이어야 한다. 하나라도 어기면 **유도나 반응식 읽기가 틀린 것**이다 (물리 판정이 아니다).
+    끝점(자체분해) 칸도 넣는다 — 항등식은 거기서도 성립한다.
+
+    ⛔ 못 하는 것
+      · 항등식 검사다. 통과해도 '기전이 검증됐다' 가 아니다 — 구성이 그렇게 생겼다는 뜻이다.
+      · 반응식을 못 읽은 쌍은 0 으로 세지 않는다 (`n_unreadable`). 확인한 쌍이 0 이면 pass=None.
+      · 두 전압 사이에서 반응이 **몇 번·어디서** 바뀌었는지는 모른다 — 괄호만 본다.
+    """
+    import statistics as _st
+    pairs = same = changed = unreadable = 0
+    max_same, ratios, bad, dec = 0.0, [], [], []
+    for cat, cd in results.items():
+        byv = cd.get("by_voltage") or {}
+        rx = cd.get("reactions") or {}
+        Vs = sorted(byv, key=float)
+        for lab in sorted({l for V in Vs for l in (byv.get(V) or {})}):
+            for V1, V2 in zip(Vs, Vs[1:]):
+                E1, E2 = (byv.get(V1) or {}).get(lab), (byv.get(V2) or {}).get(lab)
+                if E1 is None or E2 is None:
+                    continue
+                r1, r2 = (rx.get(V1) or {}).get(lab), (rx.get(V2) or {}).get(lab)
+                p1, p2 = li_ledger_rho(r1, open_el), li_ledger_rho(r2, open_el)
+                if p1 is None or p2 is None:
+                    unreadable += 1
+                    continue
+                pairs += 1
+                sec = (E2 - E1) / (float(V2) - float(V1))
+                where = {"cathode": cat, "label": lab, "V": [V1, V2], "secant": round(sec, 6),
+                         "minus_rho": [round(-p1, 6), round(-p2, 6)]}
+                if p2 < p1 - tol:
+                    dec.append(where)
+                if _rxn_key(r1) == _rxn_key(r2):
+                    same += 1
+                    max_same = max(max_same, abs(sec + p1))
+                    if abs(p1) > 0.05:
+                        ratios.append(sec / -p1)
+                    if abs(sec + p1) > tol:
+                        bad.append({**where, "kind": "same_reaction", "dev": round(abs(sec + p1), 6)})
+                else:
+                    changed += 1
+                    if not (min(-p1, -p2) - tol <= sec <= max(-p1, -p2) + tol):
+                        bad.append({**where, "kind": "bracket"})
+    return {"schema": "li_ledger_identity/v1", "open_element": open_el, "tol": tol,
+            "n_pairs": pairs, "n_same_reaction": same, "max_abs_same": round(max_same, 6),
+            "prefactor_same_median": round(_st.median(ratios), 5) if ratios else None,
+            "n_prefactor_pairs": len(ratios),
+            "n_changed_reaction": changed, "n_violations": len(bad),
+            "n_rho_decreasing": len(dec), "n_unreadable": unreadable,
+            "violations": bad[:20], "rho_decreasing": dec[:20],
+            "pass": None if pairs == 0 else (not bad and not dec)}
+
+
+def li_ledger_beta_decomposition(results, base="modelc", open_el="Li", lo="3.50", hi="4.50"):
+    """09-19 β≈2 가 어디서 오나 — **같은 칸·같은 창**에서 예측자만 바꿔 회귀한다 (기록용 · 판정 아님).
+
+    칸: 그 조성과 base 가 lo·hi 두 전압에서 모두 값이 있고 끝점이 아닌 양극.
+    y = [Δ(hi) − Δ(lo)] / (hi − lo) 의 칸 평균 — **정확한** 할선이다 (Δ = E(조성) − E(base)).
+    x ① all_atoms_sampled : −(나간 Li / 좌변 **모든** 원자)의 차 — 09-19 예측자, 창 안 표본 전압 평균
+      ② non_li_sampled    : −(ρ 차) — 분모를 비-Li 원자로, 같은 표본 평균
+      ③ non_li_trapezoid  : −(ρ 차) 를 표본 전압 사이 사다리꼴로 창 적분 / 창 폭
+    항등식이 정확하므로 ②·③ 이 계수 1 에서 벗어나는 만큼은 **표본 오차**다 (반응이 표본 전압
+    사이에서 바뀐다). 행마다 ρ 차를 반응물 Li 항 · 산물 Li 항으로 나눈 값도 같이 싣는다.
+    ⚠ 창 안 표본 전압 중 하나라도 두 예측자 반응식을 못 읽으면 그 양극을 **뺀다** — 09-19 파서
+      (`_rxn_atoms_and_released`)는 계수 없는 자체분해 끝점을 못 읽는다. 뺀 결과는 `n_cells` 로 보인다.
+    ⛔ 못 하는 것: 표본 전압 사이에서 반응이 바뀐 **지점**을 모른다. 인과를 말하지 않는다.
+    """
+    import statistics as _st
+    Vw = sorted((V for V in {V for cd in results.values() for V in (cd.get("by_voltage") or {})}
+                 if float(lo) <= float(V) <= float(hi)), key=float)
+
+    def _ok(c, V, l):
+        cd = results[c]
+        return ((cd.get("by_voltage") or {}).get(V) or {}).get(l) is not None and \
+            ((cd.get("endpoint_degenerate") or {}).get(V) or {}).get(l) is False
+
+    labels = sorted({l for cd in results.values() for V in Vw
+                     for l in ((cd.get("by_voltage") or {}).get(V) or {})} - {base})
+    rows = {}
+    for lab in labels:
+        ys, x1, x2, x3, pr, pp = [], [], [], [], [], []
+        for c, cd in results.items():
+            if not all(_ok(c, V, l) for V in (lo, hi) for l in (lab, base)):
+                continue
+            rx = cd.get("reactions") or {}
+            d1, d2, dr, dp = {}, {}, [], []
+            for V in Vw:
+                t1, r1 = _rxn_atoms_and_released((rx.get(V) or {}).get(lab), open_el)
+                t0, r0 = _rxn_atoms_and_released((rx.get(V) or {}).get(base), open_el)
+                q1 = li_ledger_parts((rx.get(V) or {}).get(lab), open_el)
+                q0 = li_ledger_parts((rx.get(V) or {}).get(base), open_el)
+                if None in (t1, t0, q1, q0):
+                    break
+                d1[V], d2[V] = r1 / t1 - r0 / t0, q1[0] - q0[0]
+                dr.append(q1[1] - q0[1])
+                dp.append(q1[2] - q0[2])
+            else:
+                E = cd["by_voltage"]
+                ys.append(((E[hi][lab] - E[hi][base]) - (E[lo][lab] - E[lo][base]))
+                          / (float(hi) - float(lo)))
+                x1.append(-_st.mean(d1.values()))
+                x2.append(-_st.mean(d2.values()))
+                x3.append(-sum((float(b) - float(a)) * (d2[a] + d2[b]) / 2 for a, b in zip(Vw, Vw[1:]))
+                          / (float(hi) - float(lo)))
+                pr.append(_st.mean(dr))
+                pp.append(_st.mean(dp))
+        if ys:
+            rows[lab] = {"n_cells": len(ys), "slope_exact": round(_st.mean(ys), 6),
+                         "all_atoms_sampled": round(_st.mean(x1), 6),
+                         "non_li_sampled": round(_st.mean(x2), 6),
+                         "non_li_trapezoid": round(_st.mean(x3), 6),
+                         "minus_d_rho_reactant_Li_term": round(-_st.mean(pr), 6),
+                         "minus_d_rho_product_Li_term": round(_st.mean(pp), 6)}
+
+    def _fit(key):
+        xs = [r[key] for r in rows.values()]
+        ys = [r["slope_exact"] for r in rows.values()]
+        if len(xs) < 3 or len(set(xs)) < 2:
+            return {"n": len(xs), "a": None, "beta": None, "r2": None}
+        mx, my = _st.mean(xs), _st.mean(ys)
+        b = sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / sum((x - mx) ** 2 for x in xs)
+        a = my - b * mx
+        ss = sum((y - my) ** 2 for y in ys)
+        rs = sum((y - a - b * x) ** 2 for x, y in zip(xs, ys))
+        return {"n": len(xs), "a": round(a, 6), "beta": round(b, 4),
+                "r2": round(1 - rs / ss, 4) if ss else None}
+
+    return {"schema": "li_ledger_beta_decomposition/v1", "base": base, "window_V": [lo, hi],
+            "sampled_V": Vw, "by_electrolyte": rows,
+            "fits": {k: _fit(k) for k in ("all_atoms_sampled", "non_li_sampled", "non_li_trapezoid")}}
 
 
 def parse_formula(f: str) -> dict:
@@ -1924,6 +2259,85 @@ def x002_verdicts(results, esw=None, repro=None):
     return out
 
 
+# ── x = 0.10 곡률 확인 (2026-09-28) ──────────────────────────────────────────
+#: 사전등록 db/properties/cathode_cei_x010_curvature_prereg_2026_09_28.json — **실행 전에 박았다.**
+#:   x002 G1(선형성)은 원점(x = 0 → Δ = 0, 정의상)과 0.02 · 0.20 두 점이라 매끈한 곡률(2 차)은
+#:   이미 묶여 있다. 못 보는 것은 **그 사이의 꺾임**(산물이 바뀌는 농도)이다. 가운데 x = 0.10 이
+#:   두 점을 잇는 직선 위에 오나를 본다. 값을 보고 아래 수를 고치지 않는다.
+#: ⛔ 같은 날 첫 초안은 09-19 '기울기 법칙'(β≈2)의 표본 밖 예측(GS)도 걸었다. **실행 전에 뺐다** —
+#:   그 관계는 항등식이라(li_ledger_identity) 새 조성으로 반증될 수 없고, 통과해도 정보가 없다.
+#:   대신 항등식 자체를 이 실행의 무결성 검사(GI)로 쓴다.
+X010_PREREG = "db/properties/cathode_cei_x010_curvature_prereg_2026_09_28.json"
+X010_BASE = "modelc"
+X010_SITES = {"Li": {"x": (0.02, 0.10, 0.20), "labels": ("nd_li_002", "nd_li_010", "nd_only")},
+              "P": {"x": (0.02, 0.10, 0.20), "labels": ("nd_p_002", "nd_p_010", "nd_p_020")}}
+#: GC 허용폭 — 유의폭 0.010 을 농도비(0.10/0.20)로 줄였다 (x002 G2 축척 선례).
+X010_CURV_TOL = 0.005
+
+
+def x010_verdicts(results, repro=None):
+    """x = 0.10 곡률 판정 — **이미 나온 결과 JSON 만** 읽는다 (MP 불필요).
+
+    GI 무결성: li_ledger_identity 가 이 실행 전체에서 통과해야 한다. 어기면 에너지나 반응식
+       읽기가 틀린 것이라 GC 를 **판정하지 않는다** (값은 적는다).
+    GC 곡률: 자리별로 base 와 세 농도가 모두 유효한 칸에서 Δ 평균을 내고, x = 0.10 값이
+       0.02 · 0.20 두 점을 잇는 직선에서 벗어난 양 ≤ X010_CURV_TOL 이면 통과.
+       칸별로 같은 양이 문턱을 넘는 칸 수도 적는다 (정보 — 평균이 칸끼리 상쇄된 꺾임을 지운다).
+    G0 재현: 실행이 x002 파일과 대조한 결과를 옮긴다 (정보 — GC 는 **이 실행 안에서만** 빼므로
+       MP 스냅샷이 움직여도 GC 는 유효하다).
+
+    ⛔ 못 하는 것
+      · 문턱을 고르지 않는다 — X010_CURV_TOL(사전등록)만 쓴다.
+      · 조성이 빠지거나 칸이 0 이면 **판정하지 않는다** (pass=None · 이유를 적는다).
+      · 점 하나라 0.02–0.10 · 0.10–0.20 **안쪽**의 꺾임은 못 본다 — 통과는 '0.10 에서 직선 위' 까지다.
+      · 절대값을 내지 않는다 — 전부 modelc 기준 Δ 다 (1저자 인용정책). 인과를 말하지 않는다.
+    """
+    labels = set()
+    for cd in results.values():
+        for row in (cd.get("by_voltage") or {}).values():
+            labels |= set(row)
+    need = {X010_BASE, *(l for s in X010_SITES.values() for l in s["labels"])}
+    miss = sorted(need - labels)
+    out = {"schema": "x010_verdicts/v2", "prereg": X010_PREREG,
+           "G0_reproduce": ({k: repro.get(k) for k in ("verdict", "max_abs_delta", "n_compared", "tol")}
+                            if isinstance(repro, dict) else None),
+           "missing_labels": miss}
+    if miss:
+        out["⛔"] = f"조성이 빠졌다 {miss} — 판정하지 않는다 (0 으로 채우지 않는다)"
+        return out
+    gi = li_ledger_identity(results)
+    out["GI_identity"] = {k: gi[k] for k in ("pass", "n_pairs", "n_same_reaction", "max_abs_same",
+                                             "prefactor_same_median", "n_changed_reaction",
+                                             "n_violations", "n_rho_decreasing", "n_unreadable",
+                                             "violations")}
+    gc = {}
+    for site, s in X010_SITES.items():
+        cells = _x002_cells(results, s["labels"])
+        if not cells:
+            gc[site] = {"pass": None, "why": "세 농도가 모두 유효한 칸이 0 이다", "n_cells": 0}
+            continue
+        (x0, x1, x2) = s["x"]
+        w = (x1 - x0) / (x2 - x0)
+        m = [_x002_mean(results, cells, l) for l in s["labels"]]
+        chord = m[0] + w * (m[2] - m[0])
+        per = []
+        for c in cells:
+            d = [_x002_d(results, c, l, X010_BASE) for l in s["labels"]]
+            per.append(d[1] - (d[0] + w * (d[2] - d[0])))
+        ok = abs(m[1] - chord) <= X010_CURV_TOL
+        gc[site] = {"labels": list(s["labels"]), "n_cells": len(cells),
+                    "delta_mean": [round(v, 6) for v in m], "chord_at_x010": round(chord, 6),
+                    "residual": round(m[1] - chord, 6), "tol": X010_CURV_TOL,
+                    "pass": ok if gi["pass"] is True else None,
+                    "info_n_cells_over_tol": sum(abs(r) > X010_CURV_TOL for r in per),
+                    "info_max_abs_cell_residual": round(max(abs(r) for r in per), 6),
+                    "info_x010_minus_5x_x002": round(m[1] - 5 * m[0], 6)}
+        if gi["pass"] is not True:
+            gc[site]["why"] = "GI(항등식 무결성)가 통과하지 않았다 — 판정하지 않는다 (값만 적는다)"
+    out["GC_curvature"] = gc
+    return out
+
+
 def dopant_fate(csv_path, dopant="Nd"):
     """도펀트가 최소 꺾임에서 **어느 상으로 가는가** — 인산염 / 황산염 / 염화물 / 그 밖.
 
@@ -2041,9 +2455,59 @@ def main():
                          "— 이미 나온 결과만 읽는다 (MP 불필요)")
     ap.add_argument("--x002_esw", metavar="ESW_JSON",
                     help="--x002 와 같이: ESW 원장(esw_grand_potential.py 산출)으로 G3 onset 예측을 대조한다")
+    ap.add_argument("--x010", metavar="RESULTS_JSON",
+                    help="x = 0.10 판정 — GC(0.02–0.20 사이 곡률) · GI(Li 장부 항등식 무결성) "
+                         "(사전등록 cathode_cei_x010_curvature_prereg_2026_09_28 · MP 불필요)")
+    ap.add_argument("--li_identity", metavar="RESULTS_JSON",
+                    help="Li 장부 항등식(dE/dV = −ρ · 계수 1) 확인 + 09-19 β≈2 분해 "
+                         "— 이미 나온 결과만 읽는다 (MP 불필요 · 기준 조성은 --li_ledger_base)")
     if "--selftest" in __import__("sys").argv:
         raise SystemExit(_selftest())
     a = ap.parse_args()
+    if a.x010:
+        _D = json.loads(Path(a.x010).read_text(encoding="utf-8"))
+        out = x010_verdicts(_D["results"], repro=_D.get("reproduce_check"))
+        out["source"] = {"interface": a.x010}
+        Path(a.out).write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+        if out.get("missing_labels"):
+            print(out["⛔"])
+            return 2
+        _P = {True: "통과", False: "불통과", None: "판정 없음"}
+        g0 = out["G0_reproduce"] or {}
+        gi = out["GI_identity"]
+        print(f'G0 재현  {g0.get("verdict")} · 최대 차 {g0.get("max_abs_delta")} · 칸 {g0.get("n_compared")}')
+        print(f'GI 항등식  {_P[gi["pass"]]} · 쌍 {gi["n_pairs"]} (같은 반응 {gi["n_same_reaction"]} · '
+              f'최대 차 {gi["max_abs_same"]} · 계수 중앙값 {gi["prefactor_same_median"]}) · '
+              f'괄호 위반 {gi["n_violations"]} · ρ 감소 {gi["n_rho_decreasing"]} · 못 읽음 {gi["n_unreadable"]}')
+        for site, g in out["GC_curvature"].items():
+            if "delta_mean" not in g:
+                print(f'GC {site:3s} 판정 없음 — {g.get("why")}')
+                continue
+            print(f'GC {site:3s} Δ(0.02/0.10/0.20) {g["delta_mean"]} · 직선 {g["chord_at_x010"]} · '
+                  f'잔차 {g["residual"]:+.4f} (허용 {g["tol"]}) → {_P[g["pass"]]}  n={g["n_cells"]} · '
+                  f'칸별 초과 {g["info_n_cells_over_tol"]} (최대 {g["info_max_abs_cell_residual"]})')
+            if g.get("why"):
+                print(f'    {g["why"]}')
+        print(f'→ {a.out}')
+        return 0
+    if a.li_identity:
+        _res = json.loads(Path(a.li_identity).read_text(encoding="utf-8"))["results"]
+        gi = li_ledger_identity(_res)
+        bd = li_ledger_beta_decomposition(_res, base=a.li_ledger_base)
+        out = {"schema": "li_ledger_identity_check/v1", "source": a.li_identity,
+               "identity": gi, "beta_decomposition": bd}
+        Path(a.out).write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+        _P = {True: "통과", False: "불통과", None: "판정 없음"}
+        print(f'항등식 dE/dV = −ρ (ρ = 나간 Li / 비-Li 반응물 원자) → {_P[gi["pass"]]}')
+        print(f'  같은 반응 {gi["n_same_reaction"]} 쌍 · 최대 |할선+ρ| {gi["max_abs_same"]} · '
+              f'계수 중앙값 {gi["prefactor_same_median"]} (n {gi["n_prefactor_pairs"]})')
+        print(f'  반응이 바뀐 {gi["n_changed_reaction"]} 쌍 · 괄호 위반 {gi["n_violations"]} · '
+              f'ρ 감소 {gi["n_rho_decreasing"]} · 못 읽음 {gi["n_unreadable"]}')
+        print(f'β 분해 (같은 칸 · 창 {bd["window_V"][0]}–{bd["window_V"][1]} V · 표본 {bd["sampled_V"]})')
+        for k, f in bd["fits"].items():
+            print(f'  {k:18s} β {f["beta"]} · 절편 {f["a"]} · R² {f["r2"]} (n {f["n"]})')
+        print(f'→ {a.out}')
+        return 0 if gi["pass"] is True else 1
     if a.dopant_gap_floor:
         if not a.gap_ref:
             sys.exit("⛔ --dopant_gap_floor 는 --gap_ref 가 있어야 한다 — "

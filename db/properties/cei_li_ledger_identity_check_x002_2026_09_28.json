@@ -1,0 +1,192 @@
+{
+  "schema": "li_ledger_identity_check/v1",
+  "source": "db/properties/cei_interface_V_x002_2026_09_28.json",
+  "identity": {
+    "schema": "li_ledger_identity/v1",
+    "open_element": "Li",
+    "tol": 0.0005,
+    "n_pairs": 320,
+    "n_same_reaction": 55,
+    "max_abs_same": 0.000145,
+    "prefactor_same_median": 1.00001,
+    "n_prefactor_pairs": 55,
+    "n_changed_reaction": 265,
+    "n_violations": 0,
+    "n_rho_decreasing": 0,
+    "n_unreadable": 0,
+    "violations": [],
+    "rho_decreasing": [],
+    "pass": true
+  },
+  "beta_decomposition": {
+    "schema": "li_ledger_beta_decomposition/v1",
+    "base": "modelc",
+    "window_V": [
+      "3.50",
+      "4.50"
+    ],
+    "sampled_V": [
+      "3.50",
+      "4.00",
+      "4.30",
+      "4.50"
+    ],
+    "by_electrolyte": {
+      "comp1": {
+        "n_cells": 1,
+        "slope_exact": -0.07787,
+        "all_atoms_sampled": -0.02524,
+        "non_li_sampled": -0.065421,
+        "non_li_trapezoid": -0.064446,
+        "minus_d_rho_reactant_Li_term": -0.069209,
+        "minus_d_rho_product_Li_term": 0.003768
+      },
+      "lim_li_002": {
+        "n_cells": 3,
+        "slope_exact": 0.006687,
+        "all_atoms_sampled": 0.000901,
+        "non_li_sampled": 0.003468,
+        "non_li_trapezoid": 0.003162,
+        "minus_d_rho_reactant_Li_term": 0.005829,
+        "minus_d_rho_product_Li_term": -0.002356
+      },
+      "lim_li_020": {
+        "n_cells": 3,
+        "slope_exact": 0.066287,
+        "all_atoms_sampled": 0.024833,
+        "non_li_sampled": 0.062555,
+        "non_li_trapezoid": 0.06282,
+        "minus_d_rho_reactant_Li_term": 0.072153,
+        "minus_d_rho_product_Li_term": -0.009661
+      },
+      "lim_p_002": {
+        "n_cells": 3,
+        "slope_exact": -0.00627,
+        "all_atoms_sampled": -0.002346,
+        "non_li_sampled": -0.005951,
+        "non_li_trapezoid": -0.00509,
+        "minus_d_rho_reactant_Li_term": -0.006255,
+        "minus_d_rho_product_Li_term": 0.000309
+      },
+      "lim_p_002_asused": {
+        "n_cells": 3,
+        "slope_exact": -0.006427,
+        "all_atoms_sampled": -0.002174,
+        "non_li_sampled": -0.005523,
+        "non_li_trapezoid": -0.005349,
+        "minus_d_rho_reactant_Li_term": -0.00593,
+        "minus_d_rho_product_Li_term": 0.000429
+      },
+      "lpsocl": {
+        "n_cells": 3,
+        "slope_exact": -0.00092,
+        "all_atoms_sampled": -0.000794,
+        "non_li_sampled": -0.001025,
+        "non_li_trapezoid": 0.001558,
+        "minus_d_rho_reactant_Li_term": 0.00053,
+        "minus_d_rho_product_Li_term": -0.001559
+      },
+      "modelc_nd": {
+        "n_cells": 3,
+        "slope_exact": 0.05836,
+        "all_atoms_sampled": 0.02078,
+        "non_li_sampled": 0.055024,
+        "non_li_trapezoid": 0.055864,
+        "minus_d_rho_reactant_Li_term": 0.068051,
+        "minus_d_rho_product_Li_term": -0.013035
+      },
+      "nd_li_002": {
+        "n_cells": 3,
+        "slope_exact": 0.005487,
+        "all_atoms_sampled": 0.001803,
+        "non_li_sampled": 0.004559,
+        "non_li_trapezoid": 0.004283,
+        "minus_d_rho_reactant_Li_term": 0.004958,
+        "minus_d_rho_product_Li_term": -0.000455
+      },
+      "nd_only": {
+        "n_cells": 3,
+        "slope_exact": 0.057153,
+        "all_atoms_sampled": 0.019427,
+        "non_li_sampled": 0.050328,
+        "non_li_trapezoid": 0.051715,
+        "minus_d_rho_reactant_Li_term": 0.059947,
+        "minus_d_rho_product_Li_term": -0.009616
+      },
+      "nd_p_002": {
+        "n_cells": 3,
+        "slope_exact": -0.007593,
+        "all_atoms_sampled": -0.002625,
+        "non_li_sampled": -0.006406,
+        "non_li_trapezoid": -0.005627,
+        "minus_d_rho_reactant_Li_term": -0.006314,
+        "minus_d_rho_product_Li_term": -0.000142
+      },
+      "nd_p_002_asused": {
+        "n_cells": 3,
+        "slope_exact": -0.007747,
+        "all_atoms_sampled": -0.002902,
+        "non_li_sampled": -0.007163,
+        "non_li_trapezoid": -0.006359,
+        "minus_d_rho_reactant_Li_term": -0.007211,
+        "minus_d_rho_product_Li_term": -3e-05
+      },
+      "nd_p_020": {
+        "n_cells": 2,
+        "slope_exact": -0.080895,
+        "all_atoms_sampled": -0.027558,
+        "non_li_sampled": -0.069461,
+        "non_li_trapezoid": -0.071591,
+        "minus_d_rho_reactant_Li_term": -0.06898,
+        "minus_d_rho_product_Li_term": -0.00042
+      },
+      "ndo_li_002": {
+        "n_cells": 3,
+        "slope_exact": 0.005357,
+        "all_atoms_sampled": 0.000294,
+        "non_li_sampled": 0.002167,
+        "non_li_trapezoid": 0.001914,
+        "minus_d_rho_reactant_Li_term": 0.004844,
+        "minus_d_rho_product_Li_term": -0.002682
+      },
+      "o_only_003": {
+        "n_cells": 3,
+        "slope_exact": -0.000157,
+        "all_atoms_sampled": -8.2e-05,
+        "non_li_sampled": -0.000277,
+        "non_li_trapezoid": -0.000499,
+        "minus_d_rho_reactant_Li_term": -0.000447,
+        "minus_d_rho_product_Li_term": 0.000113
+      },
+      "o_only_03": {
+        "n_cells": 3,
+        "slope_exact": -0.00132,
+        "all_atoms_sampled": -0.001752,
+        "non_li_sampled": -0.003564,
+        "non_li_trapezoid": -0.000834,
+        "minus_d_rho_reactant_Li_term": -0.002371,
+        "minus_d_rho_product_Li_term": -0.001148
+      }
+    },
+    "fits": {
+      "all_atoms_sampled": {
+        "n": 15,
+        "a": 0.000181,
+        "beta": 2.8906,
+        "r2": 0.9953
+      },
+      "non_li_sampled": {
+        "n": 15,
+        "a": -0.000326,
+        "beta": 1.1281,
+        "r2": 0.9968
+      },
+      "non_li_trapezoid": {
+        "n": 15,
+        "a": -0.000927,
+        "beta": 1.1168,
+        "r2": 0.9964
+      }
+    }
+  }
+}

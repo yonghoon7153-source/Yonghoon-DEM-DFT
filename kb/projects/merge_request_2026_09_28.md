@@ -23,7 +23,7 @@ evidenceScope: multi-source-primary
 ## 0. 한눈에
 
 - ⚠⚠ **1저자 요청 (09-28 · "이거 나중에 꼭 얘기해줘야돼")** — 사용자 **로컬 체크아웃이 지금 `claude/evac-2026-09-28` 에 있다** (09-28 14시 로컬 웹앱에서 §0 정정을 보려고 옮겼다). friendly 에 fast-forward 한 **직후 반드시** 사용자에게 로컬을 되돌리라고 말한다: `git switch claude/friendly-meitner-lldvar && git pull --ff-only` (로컬 웹앱 127.0.0.1:5001 은 로컬 체크아웃을 읽는다). 말하지 않으면 사용자 로컬이 evac 에 남아, 그 뒤 friendly 에 쌓이는 것이 로컬 화면에 안 보인다.
-- **fast-forward 가능** (09-28 14시 확인 — friendly 에 새 커밋 **0** · 이 브랜치가 **19 커밋 앞** · 기록 커밋 포함 시 20). ⚠ 오후에 CEI x = 0.02 전환 커밋이 더 붙었다(§2 아래) — "돌아가자" 때 다시 센다.
+- **fast-forward 가능** (09-28 14시 확인 — friendly 에 새 커밋 **0** · 이 브랜치가 **19 커밋 앞** · 기록 커밋 포함 시 20). ⚠ 오후·저녁에 커밋이 더 붙었다(§2 아래 · 09-28 저녁 실측 **29 커밋 앞 · friendly 새 커밋 0**) — "돌아가자" 때 다시 센다.
 - ⭐ **CEI 화면이 Nd x = 0.02 로 바뀌었다** (1저자 결정 · 09-28 오후) — 머지 뒤 friendly 의 로컬 웹앱에서 같은 주소로 보인다.
 - 이 브랜치가 만든 **새 빨간불은 없다.** 웹앱 시험 3 건 빨강은 **09-22 부터** 이어진 cascade 매니페스트 건 (⏭-NOW-w 🔴 · §6).
 - 원격 계산 셋이 돌고 있다 (§4) — 머지와 무관하게 계속 돈다.
@@ -58,7 +58,8 @@ evidenceScope: multi-source-primary
 | `ad3456f64` | 결과 기록 · 화면 전면 개정 · 그림 `_x002` · 시험 +6 · kb 카드 반론 동기화 · G4 진단 열 |
 | `a8177e205` | **CEI G4 닫음** — 1저자 "ㅇㅇ 그렇게 해줘" · 결정 `D-2026-09-28-cei-x002-result` (active · 비준) · 결과 기록 ratified · 화면 두 곳 · 결속 시험 +1 |
 | `d2870ca0f` · `d68fb1047` | li2s 발표 덱용 그림 8 장 + 생성기(`--selftest`) + CSV — 덱 자체는 아티팩트(65foANsmpCVCaVG4zHEmuM · 비공개) |
-| (다음 커밋) | 웹앱 `/li2s` 에 「처음 보는 분께」 절 — 요약 기록(자리표시) + `data.li2s_brief()` + 시험 9 |
+| `f1780002d` | 웹앱 `/li2s` 에 「처음 보는 분께」 절 — 요약 기록(자리표시) + `data.li2s_brief()` + 시험 9 |
+| (다음 커밋) | **CEI Li 장부 = 항등식** 유도·확인 (`--li_identity` · 계수 1) + **x = 0.10 곡률 사전등록 (실행 전 커밋)** · 결정 둘 (항등식 proposed · x010 active) · run.sh |
 
 ## 3. 돌린 시험 · 검증 (09-28)
 
@@ -69,7 +70,7 @@ evidenceScope: multi-source-primary
 | `tools/kb_wiki.py lint` | 0 errors |
 | 웹앱 전체 `pytest webapp/tests` | **585 passed · 3 failed · 2 skipped** — 3 failed 는 §6 (이 브랜치 변경을 뺀 HEAD 에서도 같은 3 건 확인) · 09-28 오후 `ad3456f64` 에서 **591 passed · 같은 3 failed · 2 skipped** |
 | `test_interpretation_cards.py` | **77/77** (§0 시험 둘 뒤집기 + 신규 1 · x = 0.02 결속 +6 — 화면을 일부러 깨서 빨간불 6/6 · G4 마감 결속 +1 — 화면·결과 기록·원장을 깨서 빨간불 5/5) |
-| `interface_reactivity_v2.py --selftest` | 115 ✓ (x002 판정 16 건 · 일부러 깨서 빨간불 6 건) |
+| `interface_reactivity_v2.py --selftest` | **138 ✓** (x002 판정 16 건 · 항등식 13 · x010 7 — 일부러 깨서 빨간불: x002 6 건 · 항등식·x010 10/10) |
 | 판정 재현 | gabia 판정 파일 = 로컬 재생성 (source 필드 제외 동일) |
 | hazard 시험 (`-k hazard`) | 13/13 |
 | `quench_ss_event.py --selftest` | 35/35 (깨서 빨간불 6 건 확인) |
@@ -98,6 +99,7 @@ evidenceScope: multi-source-primary
 - **CEI x = 0.02 (09-28 오후)**: 결정 `D-2026-09-28-cei-page-x002` (active · 1저자) · 개정문 `cathode_cei_x002_amendment_2026_09_28.json` (ratified · 실행으로) ·
   결과 `cei_x002_result_2026_09_28.json` (**ratified** — G4 는 '위반 9 · 원인 규명(반올림)' 으로 닫음 · 결정 `D-2026-09-28-cei-x002-result` active · 1저자 "ㅇㅇ 그렇게 해줘") · 원자료 `cei_interface_V_x002` · `cei_esw_Li_x002` · `dopant_iface/closed_*_x002` ·
   `cei_p_host_ladder_x002_2026_09_28.json` · 그림 `cei_figs/*_x002.*` (옛 파일은 안 덮음) · kb 카드 `cei_nd_manuscript_framing_2026_09_18.md` 반론 절.
+- **CEI Li 장부 항등식 · x = 0.10 (09-28 저녁)**: 기록 `cei_li_ledger_identity_2026_09_28.json` (유도 · 수치 확인 · β 분해 · 허용/금지 서술 **제안**) · 확인 산출 `cei_li_ledger_identity_check_{x002,0919}_2026_09_28.json` · 결정 `D-2026-09-28-cei-li-ledger-identity` (**proposed** · `amends` 09-19 결정 — 비준 전엔 화면 안 바꿈) · 09-19 두 기록에 포인터 키 `⭐_유도_2026_09_28` 만 · 사전등록 `cathode_cei_x010_curvature_prereg_2026_09_28.json` + 결정 `D-2026-09-28-cei-x010-curvature` (active · 1저자 "빨리 할 수 있는 부분이면 진행하자") · 도구 `interface_reactivity_v2.py` (`li_ledger_identity` · `li_ledger_beta_decomposition` · `--li_identity` · `--x010` · li_ledger_slope 설명만 정정).
 - **CLAUDE.md**: gabia 절 — "지금 예외는 없다" → 살아 있는 범위 한정 예외 1 건 + 방 계산 근거 (V4 자폭선 44,000 기준 4,762 MiB).
 - **kb/open_items.md**: ⏭-NOW-z 추가 · 결속 시험 수 62 → 70.
 
@@ -113,7 +115,7 @@ evidenceScope: multi-source-primary
 1. **오늘 저녁** — 600 K 결과 판독 (C1 · C2 2σ · 5 ps lag p90 MSD 의 48.88 Å² 초과분 기록 → 편입 여부는 C1·C2 로만) · V4 끝 → `collect_aprime_s4.py --v4` 집계 (+ATM 열) · 465 K 두 시드 발사 확인.
 2. **새벽** — 465 K 조기확인 (seed3 · seed4 D(2–50) 비 · 문턱 2 배 · 단서 "출처는 400 K 두 런, 초기구조가 섞여 있다 — 두 런은 난수까지 같았다").
 3. **li2s 다음 편지 (CM)** — 600 K · 465 K 조기확인 · 다섯 시드 전수 · "두 400 K 런의 난수가 같았다(401)" 사실 보고 · Q-CL-3·4 판정 요청 (트랙 = 외부 1저자).
-4. **CEI** — ~~① G4 처리 1저자 확인~~ ✅ 09-28 오후 닫음 ('위반 9 · 원인 규명(반올림)') · 같이 읽기 §2 부터 (x = 0.02 판).
+4. **CEI** — ~~① G4 처리 1저자 확인~~ ✅ 09-28 오후 닫음 ('위반 9 · 원인 규명(반올림)') · **x = 0.10 곡률 실행(gabia · `db/raw/cei_x010_2026_09_28/run.sh`) → 결과 기록 · 머리 2×2 '곡률' 문장 갱신** · **항등식 결정 비준 → 화면 교체(머리 2×2 · §1 상자 · 방법 상자 · §9) + 결속 시험** · 같이 읽기 §2 부터 (x = 0.02 판).
 5. **cascade v6 끝** → §6 순서로 매니페스트 재생성 (퍼널 목록 변화 확인 → 1저자).
 6. (제안) ESW 산화 onset 을 canonical_registry 에 올릴지 — §0 표의 claim `cei.esw.nd_narrows_window` 가 원장 어디에도 없어 결속이 헛돈다 (위험 원장: "레지스트리 등록이 결속의 선결조건").
 

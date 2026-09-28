@@ -5476,6 +5476,109 @@
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
     "비준_근거": "1저자 2026-09-28 — 'ㅇㅇ 그렇게 해줘'."
    }
+  },
+  {
+   "id": "D-2026-09-28-cei-li-ledger-identity",
+   "schema_version": 2,
+   "kind": "estimand",
+   "record_kind": "derivation",
+   "scope": "cathode_cei.li_ledger_voltage_slope",
+   "slot": "cathode_cei_li_ledger_voltage_slope",
+   "applies_to": {
+    "systems": [
+     "comp1",
+     "modelc",
+     "lpsocl",
+     "modelc_nd_doped"
+    ]
+   },
+   "title": "CEI — 전압 기울기와 방출 Li 의 관계는 열린계 구성의 항등식이다 (계수 1 · 비-Li 반응물 원자당) · β≈2 는 인용하지 않는다",
+   "statement": "CEI 열린계(Li 저장고) 계면 반응에너지의 전압 기울기와 방출 Li 의 관계(09-19 S4 정정판)를 **구성상의 항등식**으로 정의한다: dE_rxn/dV = −ρ, ρ = 저장고로 나간 Li / 비-Li 반응물 원자 1 개 (pymatgen GrandPotentialInterfacialReactivity norm=True 의 에너지 분모), 계수 1 · 절편 0. ① 09-19 의 β 2.0051 은 물리 계수가 아니다 — 예측자의 분모(좌변 모든 원자) · 칸 선택 · 표본 전압이 겹친 값이라 인용하지 않는다. ② 이 관계에 걸린 '검증 전 · 다른 계에 미리 걸어 확인' 조건을 걷는다 — 항등식은 예측 검증의 대상이 아니다. S4 의 사전등록 실패 기록은 그대로 둔다. ③ 허용: 'Li 저장고를 연 계산에서 반응에너지의 전압 기울기 = 방출 Li (항등식)' · '두 치환 자리 기울기의 **부호**는 반응에 들어오는 Li 양이 정한다 (크기는 산물이 붙잡는 Li 만큼 준다)'. 금지: β 를 법칙·물리 계수로 인용 · '예측으로 검증된 기전' · 이 기울기를 Nd 화학의 효과로 · 기울기로 절대 반응에너지를 말하기.",
+   "rationale": "1저자 2026-09-28 '해결해야되나?' → '빨리 할 수 있는 부분이면 진행하자'. 유도: Φ = E − μ_Li·N_Li · pymatgen 은 비-Li 원자 1 개당 에너지 · μ_Li = μ_Li(금속) − eV · 최소 꺾임은 포락선 정리로 미분을 안 바꾸고 E_min(V) 는 오목하다. 수치 확인(--li_identity): x002 자료 같은 반응 55 쌍 계수 중앙값 1.00001 · 최대 |할선+ρ| 0.000145 · 바뀐 반응 265 쌍 괄호 위반 0 · ρ 감소 0 · 09-19 자료도 같다(35 · 165 쌍). 같은 칸에서 분모만 바꾸면 β 2.89 → 1.13 이고 남는 약 1.1 은 표본 전압 오차다 (반응이 3.5 V 바로 위에서 바뀐다). ⇒ 09-19 가 '유도하지 않았다' 로 남긴 계수가 풀렸고, x = 0.10 GS 예측 게이트는 정보가 없어 실행 전에 뺐다.",
+   "decision_state": "proposed",
+   "results_seen": true,
+   "card": "db/properties/cei_li_ledger_identity_2026_09_28.json",
+   "record": "db/properties/cei_li_ledger_identity_2026_09_28.json",
+   "method_ref": "tools/oxidation/interface_reactivity_v2.py --li_identity (li_ledger_identity · li_ledger_beta_decomposition · LI_IDENTITY_TOL 5e-4)",
+   "evidence": [
+    "db/properties/cei_li_ledger_identity_check_x002_2026_09_28.json",
+    "db/properties/cei_li_ledger_identity_check_0919_2026_09_28.json",
+    "db/properties/cei_li_ledger_identity_2026_09_28.json"
+   ],
+   "amends": [
+    "D-2026-09-19-cei-site-vs-concentration"
+   ],
+   "supersedes": [],
+   "reopen_criteria": [
+    "li_ledger_identity 가 어느 결과 파일에서든 위반(같은 반응 · 괄호 · ρ 감소)을 내면 다시 연다 — 유도나 읽기가 틀린 것이다.",
+    "도구의 열린계 설정(norm · include_no_mixing_energy · μ_Li = μ_Li(금속) − eV)을 바꾸면 다시 연다 — 분모와 부호가 바뀐다.",
+    "pymatgen 이 반응에너지 정규화를 바꾸면(버전 변경) 다시 연다.",
+    "⛔ 그 밖의 이유로 열지 않는다."
+   ],
+   "enforcement": "① li_ledger_identity(selftest 양성·음성 · 일부러 깨기 10 가지 전부 빨강)가 결과 파일마다 항등식을 확인하고, x010 실행에서는 무결성 게이트(GI)로 쓴다. ② li_ledger_slope 는 09-19 재현용으로 계산을 그대로 두고 fit.note 가 'β 는 물리 계수가 아니다' 를 적는다. 09-19 두 기록에는 포인터(⭐_유도_2026_09_28)만 더했다. ③ **비준 뒤에** 화면(cei_figs/index.html)의 머리 2×2 문단 · §1 상자 · 방법 상자의 '설명 후보' 딱지 · §9 금지 목록을 이 결정대로 고치고 결속 시험을 붙인다. 비준 전에는 화면을 바꾸지 않는다.",
+   "proposed_by": "claude-session-2026-09-28",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-09-28",
+     "state": "proposed",
+     "by": "agent",
+     "note": "유도·수치 확인은 끝났다(수학). 허용/금지 서술 변경과 09-19 '검증 전' 딱지 교체가 1저자 몫이다. 트랙 = CEI/ESW 화면(우리) → 1저자 = 사용자, 통지할 제3자 없음."
+    }
+   ]
+  },
+  {
+   "id": "D-2026-09-28-cei-x010-curvature",
+   "schema_version": 2,
+   "kind": "estimand",
+   "record_kind": "prospective",
+   "scope": "cathode_cei.x010.curvature_2026_09_28",
+   "slot": "cathode_cei_x010_curvature",
+   "applies_to": {
+    "systems": [
+     "comp1",
+     "modelc",
+     "lpsocl",
+     "modelc_nd_doped"
+    ]
+   },
+   "title": "CEI x = 0.10 곡률 확인 — 0.02–0.20 선형성 사이 꺾임 (사전등록 GC · 무결성 GI · 재현 G0)",
+   "statement": "Nd 단독 계열 두 자리(Li · P)에 x = 0.10 조성(nd_li_010 Li5.1Nd0.1P1S4.4Cl1.6 · nd_p_010 Li5.6Nd0.1P0.9S4.4Cl1.6)을 더해, 공통 유효칸 평균 Δ(x = 0.10)가 0.02 · 0.20 두 점을 잇는 직선에서 0.005 eV/atom 안인지를 본다 (GC). 이 실행 전체에서 Li 장부 항등식(li_ledger_identity)이 성립해야 GC 를 판정한다 (GI). x002 파일과의 재현(G0)은 정보다. 문턱은 실행 전에 커밋하고 값을 보고 고치지 않는다. ⛔ 이 결정은 0.02–0.10 · 0.10–0.20 안쪽의 꺾임 · Nd + O 계열 · 0.20 밖 농도 · Nd 점유 자리를 말하지 않는다.",
+   "rationale": "1저자 2026-09-28 '빨리 할 수 있는 부분이면 진행하자' — 화면이 적어 둔 약점('두 점으로 잰 선형성이라 곡률은 못 본다')을 닫는 싼 실행이다 (MP hull · 10 분 안팎 · GPU 안 씀). 원점(x = 0 → Δ = 0)이 있어 매끈한 곡률은 이미 묶였고, 남은 위험은 산물이 바뀌는 농도의 꺾임이다. 같은 날 초안의 기울기 예측 게이트(GS)는 그 관계가 항등식이라 (D-2026-09-28-cei-li-ledger-identity) 실행 전에 뺐다.",
+   "decision_state": "active",
+   "results_seen": false,
+   "results_seen_note": "새 두 조성(nd_li_010 · nd_p_010)은 한 번도 계산한 적이 없다.",
+   "card": "db/properties/cathode_cei_x010_curvature_prereg_2026_09_28.json",
+   "record": "db/properties/cathode_cei_x010_curvature_prereg_2026_09_28.json",
+   "method_ref": "tools/oxidation/interface_reactivity_v2.py --x010 (x010_verdicts · X010_CURV_TOL 0.005) · 실행 db/raw/cei_x010_2026_09_28/run.sh",
+   "amends": [],
+   "supersedes": [],
+   "reopen_criteria": [
+    "GI 가 실패하면 GC 를 판정하지 않고 원인(에너지·반응식 읽기)부터 찾는다 — 찾은 뒤 같은 사전등록으로 다시 돌린다.",
+    "MP hull 스냅샷이 움직이면(G0 초과) GC 는 이 실행 안에서 유효하지만, 화면의 x002 수를 고칠지는 x002 결정의 재개 조건대로 판단한다.",
+    "⛔ GC 결과를 보고 문턱(0.005)이나 농도점을 바꾸지 않는다."
+   ],
+   "enforcement": "① 사전등록(db/properties/cathode_cei_x010_curvature_prereg_2026_09_28.json)과 판정 코드를 실행 **전에** 커밋·푸시한다. ② gabia 작업트리는 그 커밋에서 만든다 — 실행 로그 첫 줄(START … @ <커밋>)이 사전등록 커밋이어야 한다. ③ 판정은 --x010 이 낸 cei_x010_verdicts_2026_09_28.json 만 쓴다. 결과 기록과 화면 문구는 그 판정에서 온다.",
+   "proposed_by": "claude-session-2026-09-28",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-28",
+     "state": "active",
+     "by": "1저자(사용자)",
+     "note": "사용자: '해결해야되나?' → '빨리 할 수 있는 부분이면 진행하자' — x = 0.10 확인 실행 승인. 게이트 문안(G0 · GI · GC)은 에이전트 초안이고 실행으로 비준한다(09-19 · x002 선례). 트랙 = CEI/ESW 화면(우리) → 1저자 = 사용자, 통지할 제3자 없음."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-28T09:15:04Z",
+    "commit": "f1780002d13af6cea9cb2360bb79c2b952573d1f",
+    "decision_digest": "sha256:f039e89ce515b66ac51ce189983c5fbf5d637b73e4dcbfc9de5975c968c050a0",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "비준_근거": "1저자 2026-09-28 — '빨리 할 수 있는 부분이면 진행하자'."
+   }
   }
  ]
 }
