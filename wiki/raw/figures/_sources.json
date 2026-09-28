@@ -391,6 +391,14 @@
    "978ee242-Towards_better_estimability_of_electrodespecific_state_of_health_Decoding_the_cell_expansion.pdf"
   ]
  },
+ "naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map": {
+  "figures": 19,
+  "generated": "2026-09-28",
+  "pdfs": [
+   "07684e78-37._Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "54b171a9-37._Sup_Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf"
+  ]
+ },
  "nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage": {
   "figures": 24,
   "generated": "2026-09-28",
@@ -445,7 +453,7 @@
   ]
  },
  "park2021_fictitious-phase-separation-electro-autocatalysis-layered-oxides": {
-  "figures": 29,
+  "figures": 54,
   "generated": "2026-09-28",
   "pdfs": [
    "31323b7c-36._Fictitious_phase_separation_in_Li_layered_oxides_driven_by_electro-autocatalysis.pdf",

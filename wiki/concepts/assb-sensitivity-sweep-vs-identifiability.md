@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -225,6 +225,17 @@ evidenceScope: multi-source-primary
 3. **스윕한 손잡이의 식 속 자리를 먼저 본다** — `G_c` 는 `⟨d⟩` 를 거쳐 `a·(1−⟨d⟩)` 한 곳으로 들어가고 그 결합은 `ε_p` 와 같다 → `G_c` 스윕 곡선은 **초기 활물질 분율 스윕과 같은 모양 부류**다(곱 축퇴 페이지 마흔한 번째 적용).
 ⇒ 처방 목록에 덧붙임: **대리모형 위 스윕은 (i) 원 모델 기준해가 있는 점인지 (ii) 스윕 축이 학습 격자 · 망 경계를 가로지르는지 (iii) 효과를 시간 축이 아니라 전하 · 상태 축으로도 적었는지** 본다.
 
+## ★★ 75호 — 첫 줄 한 칸, **판정 규칙이 24호와 반대 방향**이고 포화를 "다음 한계" 로 읽었다 — 그리고 판정 도구가 두 저항을 묶는다
+
+`raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md` (Naik · Vishnugopi · Mukherjee 2022, *ACS AMI* 14, 29754 — 모형 편, 실험 0 · 24호 ref 54 · 원장 "Q4 입구 후보").
+`[인쇄]` "we conduct a performance sensitivity analysis … While maintaining other electrode properties (i.e., tortuosity, ionic conductivity, and active area) constant, only the intrinsic electronic conductivity of the AM is increased" — Fig. 6c, **무탄소 세 조성 · OAT · 출력 = 끝 용량**. 첫 줄(설계)이다. `identif` 4 = 전부 "identify".
+`[해석]` 이 편에서 첫 줄 스윕과 판정 도구가 주는 것은 셋이다:
+1. **포화를 원인 검사 없이 "다음 한계" 로 읽었다** — `[인쇄]` "this limit signifies a fundamental transition from an electron transport-limited to an ion transport-limited regime". `[재현]` 40 · 60 wt% 포화값을 AM 무게로 나누면 209.5 · 210.5 mAh g⁻¹_AM — 탄소 있는 셀에서 AM 을 다 쓴 값(≈207–209)과 같은 자리다. σ_AM 방향의 0 열(평탄)의 원인은 "이온 수송" 이 아니라 "더 쓸 AM 이 없음" 이다.
+2. **판정 규칙이 24호와 반대 방향이다** — 24호: `i₀` 를 흔들어 평평 → "동역학 한계 아님"(스윕 평탄 → 부재). 75호: `k` · `c_e` 를 흔들지 않고, 세 저항 중 동역학 몫이 크면 "동역학 한계"(크기 → 한계). 이 편 안에서도 40 wt% 는 저항 순위로 "동역학 한계" 인데 AM 기준 끝 용량은 `a_s` ×2.0–3.4 에 ±1 % 로 평평하다(`[재현]` — 용량 축은 복합체 기준). 두 규칙은 같은 셀에 다른 답을 낸다.
+3. **판정 도구가 두 저항을 묶는다** — 식 12 `η_kin = (1/L_c)∫η dx` 는 전류 가중이 아닌 두께 단순 평균이라, 반응이 몰리면(큰 `R_SE`) `R_kin` 이 희석된다. `[재현]` 표 S3 · S4 아홉 값을 한 θ 의 균질 BV 로 되돌리면 함축 `i₀` 가 7.6×10⁻⁴–3.2 A m⁻²(×4,200)로 흩어진다(한 `k` · 한 `c_e` 모형). 두 "저항" 은 독립 좌표가 아니다.
+그리고 곱 `a_s·k·√c_e`(식 5 · 6 · 10)의 **`a_s` 만** 미세구조로 흔들었다 — 37호(`A_eff` 판은 짝 `k_p` 를 흔들지 않았다)의 균질판이다([[assb-lampe-contact-product-degeneracy]] 쉰여덟 번째 적용).
+⇒ 처방 목록에 한 줄(15).
+
 ## 우리 쪽 연결
 
 - `degradation-degeneracy/` 는 **"곡선이 맞는다 ≠ 파라미터가 맞다"** 를 합성 truth 로 채점하는 프로젝트다. 26호의 "RMSD 0.11 → 0.06 V + 문헌과 5 % 이내" 는 그 실패 모드를
@@ -249,6 +260,7 @@ evidenceScope: multi-source-primary
 12. (37호) **OAT 스윕의 "둔감 · minimal" 을 보면 ① 출력이 용량(설계 KPI)인지 전압(데이터)인지 ② 그 파라미터와 곱으로만 들어가는 짝이 식에 있는지 ③ 짝이 적합에서 풀렸는지를 적는다.** 짝이 풀렸고 스윕 대상이 출처 없이 고정됐으면 그 값은 데이터가 정한 것이 아니다(37호 `A_eff` 0.4938 ↔ `k_p`).
 13. (49호) **"방법들이 시간 척도를 맞추면 일치한다" 를 보면 ① 일치하는 것이 총량인지 성분인지 ② 시간 ↔ 주파수 대응 규약과 그 대역의 \|Z\| 기울기(분해능) ③ 진폭이 같은지 ④ 적합된 직렬 파라미터가 여기 대역 위쪽 끝의 \|Z\| 와 같은지를 적는다.** 같으면 그 파라미터는 물리 성분이 아니라 대역 끝의 이름이다.
 14. (54호) **"unfeasible · not separable" 을 인쇄한 모델 편이면 ① 가르는 채널이 모델 안에 있는지(절편 · 온도 · 진폭) ② 그 채널이 측정 대역 · 조건 안에 있는지 ③ 교정 단계에서 같은 분할을 입력으로 정하지 않았는지를 적는다.** 54호: ① 있다(고주파 절편) ② 없다(`f_C,B` ≈ 장비 상한) ③ 정했다(`σ⁰` 문헌 윗끝).
+15. (75호) **"X-limited" · 영역 지도를 보면 ① 판정 규칙(스윕 평탄 → 부재 ↔ 저항 크기 → 한계) ② 무엇의 순위 · 문턱인지 ③ 값의 시간 기준 ④ 조건(두께 · 전류 · 방향) ⑤ 저항 정의의 가중(전류 가중 ↔ 두께 단순 평균) ⑥ 동역학 손잡이가 곱의 어느 쪽인지(면적 ↔ `k` · `c_e`)를 적는다.** 그리고 스윕 포화를 "다음 한계로의 전이" 로 읽은 곳에서는 포화값이 **이용 가능 재고의 상한**(AM 기준 용량)에 닿았는지 본다 — 75호 40 · 60 wt% 는 닿았다.
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -260,6 +272,7 @@ evidenceScope: multi-source-primary
 - **36호의 분류가 틀렸다고 하지 않는다** — aleatory/epistemic 은 예측 불확실성을 나누는 표준 분류이고 그 목적에는 맞다. 주장은 **그 분류에 데이터량 불변의 파라미터 폭이 들어갈 칸이 없다**는 것까지이며, 분류 원전(Der Kiureghian 2009)이 그 자리를 어떻게 두는지는 미확인이다.
 - **49호의 "대역 끝 흡수" 를 일반 정리로 주장하지 않는다** — 한 셀(평탄한 스펙트럼)에서 두 사례가 맞은 것이다. 가파른 호가 대역 끝에 걸리면 적합 직렬 R 과 끝점 \|Z\| 는 다를 수 있다.
 - **29호 SI 의 dependency 절대값을 재현했다고 하지 않는다** — 순위만 재현했다(표본 배치 · 가중 미기재, OriginPro 정의식은 이 세션에서 원문 미확인). 그리고 **"창 끝 도달률이 dependency 를 정한다" 를 일반 법칙으로 주장하지 않는다** — 식 (2) 한 모형 · 14 셀의 순위 일치다.
+- **75호의 영역 지도가 틀렸다고 하지 않는다** — 기준 미인쇄 · 단순 평균 희석 · 40 · 60 wt% 포화 해석까지다. 함축 `i₀` 흩어짐은 한 θ 균질 BV 로 재현되지 않는다는 `[재현]` 이고, 원인(시간 기준 · 국소화 · θ → 1 소멸)은 가르지 않았다. 용량 축이 복합체 기준이라는 것도 지도 판독 위의 `[재현]` 이다(분모 미정).
 
 ## 관련
 

@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -511,6 +511,15 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - **68호 해석식** `[재현]`: 이 편 조성의 고상 ψ(Φ/0.86) 0.286 · 0.374 · 0.484 · 0.615 · 0.710 에서 문턱 `ρ_c` **1.04 · 0.70 · 0.44 · 0.26 · 0.17** · 포화 `ρ_1` 6.0 · 4.0 · 2.6 · 1.5 · 0.98 — 25 vol% 에서 CAM(3 µm)이 이어지려면 SE Sauter 지름 ≳3.1 µm. coarse SE 는 ">10 μm" 입자를 품는다고만 인쇄(분포 Table SV · 미수령) — **크기 대조 불가**(68호 절의 "SE 입도가 입력" 공백이 이번엔 이 편 SE 에). 방향만: SE 가 작아지면(ρ ↓) `Z_NN` ↓ → CAM 연결 ↓ — Fig. 6 fine SE 의 σ_el ×0.49 와 **같은 방향**(`[해석]`, 저자 설명 "less pronounced clustering" 과 같은 말의 다른 쪽).
 - ⚠ 대조의 한계: (i) σ 무릎 ≠ `θ`(전자 σ 는 연결 여부와 경로 폭을 함께 품는다 — [[assb-tortuosity-factor-effective-conductivity-split]] 여덟 번째 표본: 42 vol% `R_el` 의 ≈76 % 가 입자 간 접촉 몫) (ii) VGCF 이득의 고립 배정은 저자 논증(율 의존 ≈2 배 폭)이고 충전 값은 SI (iii) 공극 14 % 는 가정 · 조성마다 같은 값 (iv) 0 % SoC(NCM 전자 전도도는 탈리튬으로 커진다 — 저자 인쇄 [46]) (v) 조성당 EIS 시편 수 · 사이클 셀 산포 미인쇄 · 무릎은 24.6 ↔ 32.2 vol% 두 점 사이 한 칸.
 
+## ★★ 모형 편의 "고립 AM-CBD 클러스터" — 이름은 있고 자리는 없다: 균질 모형의 전자 수송은 DNS σ_eff 한 숫자, 계산된 미이용은 율 의존 `η` (2026-09-28 추가, `assb` 75호)
+
+`raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md` (Naik · Vishnugopi · Mukherjee 2022, *ACS AMI* 14, 29754 — GeoDict 확률 미세구조 → DNS σ_eff · 균질 1D 전기화학 · 모형 편 · 실험 0).
+
+- `[인쇄]` Fig. 7 "at low AM content, there is a higher possibility for the presence of isolated AM-CBD clusters … Such isolated AM-CBD clusters do not contribute to the electronic percolation pathways and thus remain unutilized during cell operation" · "Lower fraction of the SE results in isolated SE clusters". **연결 분율 · 고립 분율 · 퍼콜레이션 확률은 계산하지 않았다** — 전자 수송은 DNS σ_eff 한 숫자로 균질 모형에 들어간다.
+- `[재현]` 이 편에서 계산된 "미이용" 은 전부 **두께 방향 율 의존 `η`** 이다 — ΔSOC(두 끝 θ 차) 0.005–0.40(Fig. S4) · 40 wt% 는 방전 끝 θ̄ ≈0.96(지도) · `[인쇄]` "complete AM utilization". 1호 `θ_AM`(연결 여부 · 정적 상한)에 해당하는 양은 모형에 없다.
+- 무탄소 셀은 모형에서 **전자 수송 한계**(`R_AM` 219–239 Ω cm² · Fig. 6b)지만, 그것은 σ_AM 1.06×10⁻³ S m⁻¹(SOC 상수)의 옴 강하다 — σ_AM 을 올리면 40 · 60 wt% 는 AM 기준 209.5 · 210.5 mAh g⁻¹ 로 포화(다 씀). 73호 실측 전자 σ 무릎(25–33 vol%)과 같은 층위가 아니다.
+- ⇒ 이 페이지 요지와의 관계(`[해석]`): **모형 편이 "고립" 을 이름으로 부르는 자리와 계산하는 자리가 다르다** — 68호 `Pᵉ`(ASSB 로 옮기면 `ε_p` · LAM_PE 자리)에 해당하는 양을 찾을 때 균질 모형의 σ_eff · ΔSOC 는 대용이 되지 않는다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - `θ_AM` 이 접촉 손실의 **올바른** 모형이라고 주장하지 않는다. 원문의 `θ` 는 접촉 저항을
@@ -529,6 +538,7 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - ★ **2026-09-28 (65호)**: **57호 Fig. 5d 의 x 축 환산(× 0.85)을 57호 원문의 규약으로 확정하지 않는다** — 57호 digest 의 판독 위치와 1 vol% 안에서 맞는다는 `[재현]` 가설이다.
 - ★ **2026-09-28 (68호)**: **68호 해석식이 22호 불활성을 "예측한다" 고 하지 않는다** — 한 점씩은 SE 입도를 골라 맞출 수 있을 뿐이고, 세 점의 패턴은 저자 배정 읽기로 재현되지 않는다. 22호 SE 입도 · d₅₀ ↔ Sauter 환산이 지면에 없고, `√P` 가 [31] 의 식인지도 미열람이다.
 - ★ **2026-09-28 (73호)**: **전자 σ 무릎을 `p_c` 의 측정으로 쓰지 않는다** — σ 는 연결 여부와 경로 폭을 함께 품고, 무릎 위치는 두 조성(24.6 ↔ 32.2 vol%) 사이 한 칸이다. 32 vol% 고립 몫 ≲13 % 도 저자 배정(VGCF 쌍) 위의 상한이다.
+- ★ **2026-09-28 (75호)**: **75호 모형에 고립이 없다고 하지 않는다** — DNS 미세구조에는 고립 클러스터가 있을 수 있고(저자 서술), σ_eff 계산이 그 효과를 평균으로 품는다. 주장은 **균질 모형에 고립 분율의 자리가 없어 용량으로 번역되지 않는다**는 것까지다.
 
 ## 관련
 - [[assb-apparent-capacity-decomposition]] — 이 곱에 **셋째 항 `η(i)`** 를 더한다. 반례와 분리 시험.

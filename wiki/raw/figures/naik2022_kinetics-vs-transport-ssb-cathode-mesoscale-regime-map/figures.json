@@ -1,0 +1,477 @@
+{
+ "slug": "naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-28",
+ "sources": [
+  "07684e78-37._Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+  "54b171a9-37._Sup_Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Representative illustration of a composite solid-state cathode microstructure consisting of AM, SE, CBD, and voids. (b) Cross- sectional view of the electrode, depicting the spatial distribution of ionic and electronic-conductive phases. Microstructural arrangement and composition dictate key electrode performance attributes including (c) active contact area and (d) ionic and (e) electronic percolation pathways. Dependent on the applied current rates and electrode composition, these pore-scale features strongly inﬂuence the evolution of kinetic and transport resistances over cell operation. constituent phases in its composite cathode.37 In addition to the active material (AM) and SE, electrochemically inactive components such as the conductive additive and binder provide enhanced electron percolation pathways and mechan- ical integrity to the electrode, respectively.38,39 H",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    293.9
+   ],
+   "w": 2151,
+   "h": 999,
+   "dpi": 300,
+   "src": "07684e78-37._Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.801,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — bbox 가 원본 래스터 xref 133(135.3–471.5 × 60.4–287.9 pt)을 담는다). 도식 — 수치 0. x = 0 집전체 · x = L_c 분리막(본문)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Estimation of eﬀective electrode properties: (a) tortuosity for ionic transport, (b) electrochemically active area, and (c) electronic conductivity as a function of the AM and CBD content (each in wt %). Three-dimensional and two-dimensional representation of interfacial active area distribution (interface between AM and SE) for (d) kinetically limiting (40 wt % AM, 6 wt % CBD, 54 wt % SE) and (e) kinetically nonlimiting (80 wt % AM, 3 wt % CBD, 17 wt % SE) scenarios. i y AM loading and secondary phase (CBD) content results in larger tortuosities for ionic transport within the SE particle network. While increasing the AM content from 40 to 60 wt % results in only a moderate tortuosity rise, further increase in AM loading (from 60 to 80 wt %) is found to substantially reduce the ion percolation pathways. For instance, for a CBD fraction of 4 wt %, tortuosity increases from 1.3 a",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    340.9
+   ],
+   "w": 2151,
+   "h": 1195,
+   "dpi": 300,
+   "src": "07684e78-37._Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.553,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 래스터 xref 201). (a) τ [m/m] 1–6 · (b) 활성 면적 [m²/m³] ×10⁴ 0–16 · (c) σ [S/m] 0–20 색 지도 + (d)(e) 활성 면적 3D · 2D. 값 판독은 선 그림 S1 · S6 으로 했다(색 지도는 판독 안 함)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Electrochemical performance signatures at varying electrode compositions for applied current density of 7 mA/cm2. (b) Comparison of underlying resistive modes for electrode compositions of 40 wt % AM, 3 wt % CBD, 57 wt % SE and 80 wt % AM, 6 wt % CBD, 14 wt % SE. (c) Eﬀect of applied current density on cell performance at 40, 60, and 80 wt % AM loading having 6 wt % CBD. (d) Comparison of underlying resistive modes for 40 wt % AM, 4 mA/cm2 and 80 wt % AM, 7 mA/cm2. Evolution of particle level state-of-charge (θ) with the discharge capacity along the cathode thickness for (e) 40 wt % AM, 6 wt % CBD, 54 wt % SE, and applied current density of 4 mA/cm2, (f) 80 wt % AM, 6 wt % CBD, 14 wt % SE, and applied current density of 4 mA/cm2, and (g) 80 wt % AM, 6 wt % CBD, 14 wt % SE, and applied current density of 7 mA/ cm2. (h) Variation of electric potential along the nondimensional",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    287.0
+   ],
+   "w": 2151,
+   "h": 970,
+   "dpi": 300,
+   "src": "07684e78-37._Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.734,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 래스터 xref 222). 원본 래스터 픽셀 판독: (b)(d) 막대 · (a)(c) 곡선 시작 · 끝(컷오프 ≈2.30 V — 미인쇄). (h) φ_e 곡선의 시각(방전 어디)은 캡션 · 본문 미인쇄"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Electrochemical performance signatures for diﬀerent cathode thicknesses of 40, 70, and 100 μm with the composition of 70 wt % AM, 6 wt % CBD, 24 wt % SE and applied current density of 7 mA/cm2. (b) Schematic representation of ionic percolation pathways (dominant resistive mode) in thin and thick cathodes. (c) Electric potential in the SE phase as a function of nondimensional cathode thickness for the three cases considered in part a. (d) Evolution of particle level state-of-charge (θ) for the lower bound of the cathode thickness considered, that is, 40 μm. (e) Evolution of particle level state-of-charge (θ) for the upper bound of the cathode thickness considered, i.e., 100 μm. (f) Comparison of the underlying resistance modes for the two extremes of cathode thicknesses considered, that is, 40 and 100 μm. current density of 7 mA/cm2 (Figure 3g), major sections of the cathode",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    322.2
+   ],
+   "w": 2151,
+   "h": 1117,
+   "dpi": 300,
+   "src": "07684e78-37._Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.72,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 래스터 xref 279). (a) 끝점 · (f) 막대 픽셀 판독 — (f) R_kin 40 µm ≈151 · 100 µm ≈119 Ω cm² ↔ 본문 'almost identical'"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Phase maps of dimensionless discharge capacity, C/C0, (a) for varying electrode compositions (AM + CBD content) at a current density of 7 mA/cm2 and electrode thickness of 70 μm. (b) For diﬀerent electrode thicknesses and applied current densities with the electrode composition ﬁxed at 70 wt % AM, 6 wt % CBD, 24 wt % SE.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    204.9
+   ],
+   "w": 2151,
+   "h": 628,
+   "dpi": 300,
+   "src": "07684e78-37._Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.623,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 래스터 xref 300). 색 지도를 색막대(0.2/0.35–0.55)에 대어 몇 점 판독 — (b) 세 점 ↔ Fig. 4a 끝점으로 C₀(미인쇄) ≈271–276 mAh g⁻¹ 역산. 모의 격자 점 수 미인쇄(지도는 매끈한 보간)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. (a) Discharge capacity as a function of AM content for cathode compositions without the incorporation of secondary phases (conductive additive + binder). (b) Comparison of the key resistance modes over cell operation for 40 and 80 wt % AM. (c) Performance sensitivity test depicting the variation in discharge capacity with an increase in intrinsic electronic conductivity of the AM. CBD, 24 wt % SE). For thinner cathodes (40−60 μm), high discharge capacities are obtained for a wide range of applied current densities due to reduced transport resistance and enhanced utilization of the AM. With an increase in current density, lower discharge capacities are observed for a cathode thickness >60 μm. As shown in Figure 5b, as the cathode thickness increases above 60 μm, achieving higher capacities mandates the application of lower current densities. While Figure 5a,b classiﬁes favorable",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    243.4,
+    561.5,
+    375.9
+   ],
+   "w": 2151,
+   "h": 553,
+   "dpi": 300,
+   "src": "07684e78-37._Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.866,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 래스터 xref 301). (a) 막대 · (b) 막대 · (c) 표지 픽셀 판독 — (c) 60 wt% 첫 점이 σ ≈0.0019 S/m(본문 '첫 점 = 실제 값 1.06e-3') · 조건(두께 · 전류) 캡션 미인쇄"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Cathode composition regimes, based on three limiting mechanisms: (I) kinetic limitation, (II) ion transport limitation, and (III) electron transport limitation, along with schematic illustrations depicting the major factors that dictate the corresponding internal resistive modes. limit signiﬁes a fundamental transition from an electron transport-limited to an ion transport-limited regime for cell performance. Interestingly, the highest saturation capacity is obtained for 80 wt % AM loading. Thus, with further improvements in intrinsic electronic conductivity of the cathode, such design conﬁgurations with minimal incorpo- ration of secondary phases promise to mitigate challenges pertaining to ion transport and availability of active interfacial sites for achieving homogeneous reaction distributions. In addition to minimizing the use of secondary phases, minimizing the void space",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    264.6
+   ],
+   "w": 2151,
+   "h": 877,
+   "dpi": 300,
+   "src": "07684e78-37._Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.754,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 래스터 xref 324). 영역 색 여섯(I 분홍 · II 연적 · I+II 적 · III 연주황 · I+III 주황 · 초록 = 저항 최소) + II+III 조각 · 이름표 'I + III' · 'III' · 'II + III' 은 초록 안에 적혀 화살표로 아래 띠를 가리킨다. 경계 픽셀 추적(CBD 0.05–6 줄). 판정 기준 · 조건 캡션 미인쇄"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Effective ionic conductivity in SE phase as a function of AM and CBD content (each",
+   "rotated_deg": 0,
+   "bbox": [
+    67.4,
+    66.0,
+    547.6,
+    268.9
+   ],
+   "w": 2002,
+   "h": 846,
+   "dpi": 300,
+   "src": "54b171a9-37._Sup_Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.928,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 래스터 xref 86, 759 × 586 px). 표지 20 개 픽셀 판독(눈금 검산: 0.020 → 행 130 · 0.015 → 217 · 50/60/70 wt% → 열 268.5/408/547.5)"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 6,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Discharge capacity as a function of AM and CBD content for applied current of 7",
+   "rotated_deg": 0,
+   "bbox": [
+    76.2,
+    66.0,
+    538.8,
+    265.4
+   ],
+   "w": 1928,
+   "h": 831,
+   "dpi": 300,
+   "src": "54b171a9-37._Sup_Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.94,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 래스터 xref 89). 점선 곡선 넷(2 · 3 · 4 · 6 %)의 최대점 판독 · 5 % 는 검정이라 판독 생략 · 모의 점 표지 0(매끈한 곡선)"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. (a) Evolution of underlying resistive modes over cell operation at electrode",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    129.2,
+    546.0,
+    354.3
+   ],
+   "w": 2000,
+   "h": 939,
+   "dpi": 300,
+   "src": "54b171a9-37._Sup_Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.822,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 래스터 xref 92, 1429 × 651 px — 흐린 재표본 래스터). 곡선 시작 · 끝 판독 ±3–5 Ω cm²(곡선 위 글자가 중간 판독을 흐린다)"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Difference in state of charge at the two ends of the cathode as a function of ∆SOC",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    260.0,
+    538.3,
+    485.8
+   ],
+   "w": 1968,
+   "h": 942,
+   "dpi": 300,
+   "src": "54b171a9-37._Sup_Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.948,
+   "note": "⚠ 과대 — bbox 위끝 260.0 pt 가 그림(원본 래스터 xref 95: 301.1–479.8 pt) 위 본문 한 줄('near current collector is reached only 0.6.')을 담았다. 그림 자체는 온전(봤다). 캡션: 두께 70 µm · CBD 3 %"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 10,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Comparison between modeling and experimental results showing discharge",
+   "rotated_deg": 0,
+   "bbox": [
+    90.7,
+    212.0,
+    524.3,
+    411.0
+   ],
+   "w": 1808,
+   "h": 830,
+   "dpi": 300,
+   "src": "54b171a9-37._Sup_Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.951,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 래스터 xref 101). 표지 여덟 픽셀 판독 — 'Experimental' 넷 = 73호 Minnmann 2021 Fig. 3 의 1 C q_com(복합체 기준)과 +0.7…+1.3 로 겹친다(이 편 wt% 이름표 50 · 60 · 70 · 80 ↔ 73호 `[재현]` 조성 60 · 70 · 75 · ≈83.5). 캡션의 'tabulated in Table S3' 은 S5 의 오기"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 12,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. (a) Active area as a function of cathode composition. (b) Ratio , as a Active area 𝜀𝐴𝑀",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    255.3
+   ],
+   "w": 2000,
+   "h": 789,
+   "dpi": 300,
+   "src": "54b171a9-37._Sup_Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.883,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 래스터 xref 104). (a)(b) 표지 픽셀 판독 — (b)×ε_AM(표 S1 밀도 + 공극 5 %)이 (a)를 80 wt% 에서 ≤1 % 로 재현 · 40 wt% 는 (a) 표지 겹침으로 ±10 %"
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 12,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. 2D cross-section of the composite cathode microstructure and the corresponding",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    301.6,
+    535.9,
+    573.9
+   ],
+   "w": 1959,
+   "h": 1136,
+   "dpi": 300,
+   "src": "54b171a9-37._Sup_Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.8,
+   "note": "⚠ 과대 — bbox 위끝 301.6 pt 가 그림(원본 래스터 xref 105: 378.3–567.9 pt) 위의 앞 캡션 끝줄('function of cathode composition.')과 절 제목 'S7. Solid-solid interfaces between AM-SE particles' 를 담았다. 그림 자체는 온전(봤다)"
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 10,
+   "file": "tab_S1.png",
+   "caption": "Table S1, relevant properties for constituent phases considered in composite cathodes; Table S2, parameters used in the model; Tables S3 and S4, ionic and kinetic resistances for varying cathode compositions; section S1,",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    35.0,
+    584.7,
+    783.2
+   ],
+   "w": 2154,
+   "h": 2994,
+   "dpi": 288,
+   "src": "07684e78-37._Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.867,
+   "note": "⚠⚠ 오탐 — 이 파일은 **본문 PDF 10 쪽(29763) 전체**다: 'ASSOCIATED CONTENT' 의 보충자료 목록 문장 'Table S1, relevant properties for constituent phases …' 가 캡션으로 잡혔다(bbox 46.5–584.7 × 35.0–783.2 pt). 진짜 SI Table S1(SI 2 쪽 위)은 '중복(작은 쪽)' 으로 버려졌다 → 수동 tab_S1_manual_si_p2(봤다). 이 파일도 열어 확인했다(본문 결론 · 저자 정보 · 참고문헌 1–10)"
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 2,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Parameters used in the model",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    406.5,
+    544.9,
+    698.5
+   ],
+   "w": 1992,
+   "h": 1218,
+   "dpi": 300,
+   "src": "54b171a9-37._Sup_Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.944,
+   "note": "⚠ 쪽 넘김 누락 — 이 파일은 표 S2 의 SI 2 쪽 부분(k · R · F · N_a · k_b · T · L_s)만 담는다. 뒷부분(a₀ · c_s,max · x_in · D_s · U₀ 식, SI 3 쪽 위)은 수동 tab_S2_manual_si_p3(봤다). 값은 텍스트 층이 정본(봤다)"
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 3,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Ionic and kinetic resistances for varying cathode compositions at cathode thickness of",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    320.2,
+    543.2,
+    591.4
+   ],
+   "w": 1985,
+   "h": 1131,
+   "dpi": 300,
+   "src": "54b171a9-37._Sup_Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.946,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다). 값은 텍스트 층이 정본 — 70 µm · 7 mA cm⁻² 여섯 조성 R_kin · R_SE(Ω cm²). 시간 기준(방전 어디 값인지) 미인쇄"
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 4,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Ionic and kinetic resistances for varying cathode compositions at cathode thickness of",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.5,
+    543.2,
+    254.4
+   ],
+   "w": 1985,
+   "h": 780,
+   "dpi": 300,
+   "src": "54b171a9-37._Sup_Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.943,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다). 값은 텍스트 층이 정본 — 70 µm · 4 mA cm⁻² 세 조성(CBD 6 %)"
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 9,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Parameters used for the comparison between computational model results and",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    213.5,
+    548.0,
+    624.5
+   ],
+   "w": 2005,
+   "h": 1713,
+   "dpi": 300,
+   "src": "54b171a9-37._Sup_Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.947,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다). 값은 텍스트 층이 정본 — 검증 계산 입력(NMC622 4.65 · LPSCl 1.87 · CBD 0 · 분리막 200 µm · 1C · 공극 14 % · AM 3 µm · SE 1.5 µm · 1.6 · 10 mS cm⁻¹) — 검증 전극 두께 미인쇄"
+  },
+  {
+   "key": "tS1m",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1_manual_si_p2.png",
+   "caption": "Table S1. Relevant properties for constituent phases considered in composite cathodes1-3",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    380.0
+   ],
+   "w": 2000,
+   "h": 1309,
+   "dpi": 300,
+   "src": "54b171a9-37._Sup_Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.948,
+   "manual": true,
+   "note": "수동 크롭 — 진짜 SI Table S1(구성상 밀도 · 전자 · 이온 전도도 · 입자 지름, refs 1–3)을 SI 2 쪽 66–380 pt 에서 300 dpi 로(자동 tS1 은 본문 10 쪽 오탐 · SI 표는 '중복(작은 쪽)' 으로 버려짐). 봤다. 값은 텍스트 층이 정본"
+  },
+  {
+   "key": "tS2m",
+   "kind": "table",
+   "label": "S2",
+   "page": 3,
+   "file": "tab_S2_manual_si_p3.png",
+   "caption": "Table S2 (continued) — a0 · cs,max · xin · Ds · Open Circuit Potential (U0) of NMC622 (ref 4)",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    292.0
+   ],
+   "w": 2000,
+   "h": 942,
+   "dpi": 300,
+   "src": "54b171a9-37._Sup_Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.94,
+   "manual": true,
+   "note": "수동 크롭 — 표 S2 의 SI 3 쪽 연속부(a₀ 0.02 m² · c_s,max 52500 mol m⁻³ · x_in 0.35 · D_s 3×10⁻¹⁴ m² s⁻¹ · U₀(θ) 식 ref 4 = Kremer 2020). 봤다. 값은 텍스트 층이 정본 — c_e · 컷오프 전압 · 음극 · α 행 0"
+  },
+  {
+   "key": "fTOCm",
+   "kind": "figure",
+   "label": "TOC",
+   "page": 1,
+   "file": "fig_TOC_manual_p1.png",
+   "caption": "Abstract graphic (TOC) — Limitation Regime Map",
+   "rotated_deg": 0,
+   "bbox": [
+    366.0,
+    235.0,
+    558.5,
+    376.0
+   ],
+   "w": 803,
+   "h": 588,
+   "dpi": 300,
+   "src": "07684e78-37._Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",
+   "blank": 0.566,
+   "manual": true,
+   "note": "수동 크롭 — 본문 1 쪽 초록 그래픽(원본 래스터 xref 69, 776 × 562 px · 369.2–555.5 × 238.1–373.0 pt). 봤다: 'Limitation Regime Map' = Fig. 7 지도와 같은 그림 + 세 영역 도식. 같은 쪽 xref 70(299 × 397 px)은 학술지 호 표지 썸네일 — 내용 무관, 크롭 안 함"
+  }
+ ]
+}

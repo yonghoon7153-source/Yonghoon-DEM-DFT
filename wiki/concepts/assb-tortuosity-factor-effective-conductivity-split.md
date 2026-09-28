@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -174,6 +174,16 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - **막대**: τ² 에만 정의 없는 ≈±20 % 막대(12/12 · 기준점 τ² = 1 둘에도 같은 크기) · σ 막대 0 — 통계 산포로 읽을 수 없다.
 - ⇒ 이 페이지 요지의 방법 편 판: **계보가 식을 빌려 온 편에서도 측정은 `σ_eff`(두 셀의 직류 끝)이고, `τ²` 는 가정 공극 · 가정 기준 · 뺀 합 위의 이름표다.** 처방에 붙는 것(`[해석]`): `τ²` 를 옮길 때 **어느 셀에서 무엇을 뺐는지(분리막 · 상대극 계면 · 집전체 접촉)** 와 **기준 σ₀ 시편의 공극 처리**를 값 옆에 적는다. 한 셀 스펙트럼에서 호 배정이 안 갈린다는 것(두 차단 셀 교차 대입)은 [[assb-lampe-contact-product-degeneracy]] 쉰여섯 번째 적용.
 
+## ★★ 아홉 번째 표본 — 확률 미세구조 DNS 로 계산한 `τ`(인자) · 이름표는 기하 단위 · 실측(73호)의 1/1.9–1/5.9 (2026-09-28, `assb` 75호)
+
+`raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md` (Naik · Vishnugopi · Mukherjee 2022, *ACS AMI* 14, 29754 — GeoDict 확률 미세구조 · NMC622 10 µm · β-Li₃PS₄ 3 µm · CBD · 공극 5 % · 모형 편).
+
+- **정의 · 규약**: `[인쇄]` 식 3 `ε_SE/τ = −j_x L_c/(D(φ_right − φ_left))` · 식 4 `κ_eff = κ·ε_SE/τ_SE,i` · x · y · z 산술 평균 — **`τ` 는 굴곡도 인자(이 페이지의 `τ²` 와 같은 자리)** 인데 Fig. 2a 색막대 이름표는 "τ [m/m]"(기하 굴곡도의 단위). ⚠ 이름 충돌(27호 줄)의 셋째 형태.
+- **`[재현]`**: Fig. S1 κ_eff(표지 20)와 표 S1 밀도 + 공극 5 % 로 `τ = κε/κ_eff` — CBD 4 에서 1.32 · 1.69 · 3.79(40 · 60 · 80 wt%; 본문 1.3 · 1.5 · "up to 4") · 80/6 에서 5.53 · Bruggeman(`ε^1.5`) 대비 `κ_eff/κ_Brugg` 0.96(40/0) → **0.36(80/6)**.
+- **실측과 대조(방향만)**: 73호 τ²_ion(차단 셀) 2.43 · 3.27 · 4.33 · 15.3(50 · 60 · 70 · 80 wt%) ↔ 이 편 DNS τ(CBD 0) 1.29 · 1.46 · 1.75 · 2.59 — **×1.9 · 2.2 · 2.5 · 5.9**. 입도(73호 NCM 3 µm) · 공극(14 ↔ 5 %) · SE(LPSCl ↔ β-Li₃PS₄)가 달라 같은 계의 차가 아니다 — 방향은 "DNS 확률 구조가 고 AM 병목을 과소평가" 다.
+- **곱의 자리**: 이 편은 `ε/τ` 를 DNS 로 **계산해 입력으로 고정**한다 — 수송 곱을 적합하지 않으니 이 페이지의 `(ε, a)` 평탄 계곡은 생기지 않는다. 대신 검증(73호 네 점)에서 조성 이름표가 10 wt% 씩 밀렸다(75호 D1) — τ 를 조성의 함수로 옮길 때 **조성 기준(Φ ↔ wt%)** 이 사고 자리다.
+- ⇒ 처방에 붙는 것(`[해석]`): DNS · 모형 편의 "τ" 는 ① 인자인지 기하인지(식으로 확인) ② 공극 · 입도 가정 ③ 실측 대조가 있으면 그 조성 기준을 값 옆에 적는다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - **"굴곡도가 진화하지 않았다" 고 하지 않는다** — `σ_eff` 로 보면 70 % 는 변화 없음, 80 % 는 ≈3 배이고, 그 3 배의 배정이 안 갈린다는 것까지다.
@@ -182,6 +192,7 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - 근거 편수: **수송 곱을 숫자로 준 편은 24호 하나**다. 9호는 같은 식을 모델에 두고 값을 적합했을 뿐 `σ_eff` 를 재지 않았다. 1호는 이 항을 뺐다.
 - ★ **2026-09-23 (55호)**: 위 "근거 편수" 줄은 24호 시점의 기록이다 — 그 뒤 29호(측정 ÷ 공칭 `ε`) · 54호(구조 계산) · 55호(두 경로)가 수를 줬다. 55호 EIS 쪽 `ε` ≈0.65 는 **우리 역산**이고 저자 값이 아니다.
 - ★ **2026-09-28 (73호)**: 규약 재현(이온 φ_SE · 전자 φ_CAM)은 **래스터 판독값 위의 우리 산술**이다(9/9 ≤3 %) — 저자가 φ 를 표로 인쇄한 것은 아니다(SI Table SII 미수령). `R_el` 의 ≈76 % 가 접촉 몫이라는 것도 한 조성 · 한 스펙트럼 · 고주파 절편 폐합 가정 위의 `[재현]` 이고, σ_el,0 10 mS cm⁻¹ 이 공극 보정값이라고 단정하지 않는다.
+- ★ **2026-09-28 (75호)**: **DNS τ ↔ 73호 τ² 비(×1.9–5.9)를 같은 계의 모형 오차로 쓰지 않는다** — 입도 · 공극 · SE 가 다르다(방향 대조). 이 편의 τ 는 Fig. S1 래스터 판독 위의 우리 역산(표 S1 밀도 · 공극 5 %)이다 — 저자는 τ 를 표로 인쇄하지 않았다(Fig. 2a 색 지도뿐).
 
 ## 관련
 
