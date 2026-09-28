@@ -1,0 +1,158 @@
+{
+  "head": "9a26dd5f31ca6fae45d5a55f5c59e33408371984",
+  "code": "6ffa98d4df542aa42abde2f94685beffec33312c",
+  "prior_head": "b0203d1090b2659c31f8eb6f55e5a144657e9052",
+  "source_digest": "eda3feb8f4536511",
+  "scope_files": 58,
+  "scope_changed": [
+    "degradation-degeneracy/src/fitting.py"
+  ],
+  "code_to_head_scope_diff_bytes": 0,
+  "selected_files": 66,
+  "prior_review": {
+    "zip": {
+      "bytes": 610052,
+      "sha256": "f4d7e81338436bf703b35b454ee60cd315bd7678bfc0221298b6150fbd338695"
+    },
+    "manifest": {
+      "bytes": 6147,
+      "sha256": "62f6d23a565f27f1e7c799c8c70d0adb2dda927a518bf9abb84fdd74aa10b5cb"
+    },
+    "payload": 40,
+    "checks": "exact set/size/SHA/CRC/path/case/link; prior and unpacked byte identity"
+  },
+  "receipts": {
+    "paired_fixed5_v4": {
+      "history_equals_prior": true,
+      "history": {
+        "bytes": 3768,
+        "sha256": "8135ead2e3970eaed0d1da4d66ebcdf132b39a767e18467213620d51a4e30c26"
+      },
+      "current": {
+        "bytes": 3768,
+        "sha256": "a3851a971b99242ba7407d0233b856c2750961cb760440c57dd8bebdff6b470c"
+      },
+      "diff": [
+        {
+          "path": "/core/identity/validator_source_digest",
+          "before": "c78d7969ef49fd07",
+          "after": "eda3feb8f4536511"
+        },
+        {
+          "path": "/core_sha256",
+          "before": "e5893f855bf64b9f2ab8cb78dde01f8b442a77a42946a1b65bff091bf82fd9c1",
+          "after": "00db82af4377c3e0a70c521139dde8cc2ccf746a018d6f5a4e63a6b2c62803d7"
+        },
+        {
+          "path": "/stamp/generated_at_utc",
+          "before": "2026-09-27T12:44:50Z",
+          "after": "2026-09-27T15:48:50Z"
+        },
+        {
+          "path": "/stamp/validator_commit",
+          "before": "3dc269d80a7441b294d475b625b096baf3d1a459",
+          "after": "6ffa98d4df542aa42abde2f94685beffec33312c"
+        }
+      ],
+      "core_sha256": "00db82af4377c3e0a70c521139dde8cc2ccf746a018d6f5a4e63a6b2c62803d7",
+      "bundle_members": 26,
+      "bundle_bytes": 23863555,
+      "stamp": {
+        "_주의": "기록용. core 재생성 대조에서 제외된다.",
+        "validator_commit": "6ffa98d4df542aa42abde2f94685beffec33312c",
+        "validator_tree_dirty": false,
+        "generated_at_utc": "2026-09-27T15:48:50Z",
+        "runtime": {
+          "python": "3.11.15",
+          "platform": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39"
+        }
+      },
+      "validation_and_outputs_unchanged": true,
+      "validation_checks": 34,
+      "producer_digest": "d50295f980ccaa81"
+    },
+    "grid_fit_v5": {
+      "history_equals_prior": true,
+      "history": {
+        "bytes": 3703,
+        "sha256": "b244b7800a8a2887e3b7e7bfba2421ee517ba7297a50f4ff423c6695b798a667"
+      },
+      "current": {
+        "bytes": 3703,
+        "sha256": "8ccb43359e48537ec07e5ead7e205ee7443dc10a5c4d99220cbe0c9932e5208b"
+      },
+      "diff": [
+        {
+          "path": "/core/identity/validator_source_digest",
+          "before": "c78d7969ef49fd07",
+          "after": "eda3feb8f4536511"
+        },
+        {
+          "path": "/core_sha256",
+          "before": "352f55e50af3038fdf321bcd716a1fb780e6c90f6e30288ba8e07be5749d533a",
+          "after": "ffc2e9354215e3b6deb257478fc810547ac664097a4e448c55b9402beca6bfc6"
+        },
+        {
+          "path": "/stamp/generated_at_utc",
+          "before": "2026-09-27T12:45:47Z",
+          "after": "2026-09-27T15:49:46Z"
+        },
+        {
+          "path": "/stamp/validator_commit",
+          "before": "3dc269d80a7441b294d475b625b096baf3d1a459",
+          "after": "6ffa98d4df542aa42abde2f94685beffec33312c"
+        }
+      ],
+      "core_sha256": "ffc2e9354215e3b6deb257478fc810547ac664097a4e448c55b9402beca6bfc6",
+      "bundle_members": 29,
+      "bundle_bytes": 27313017,
+      "stamp": {
+        "_주의": "기록용. core 재생성 대조에서 제외된다.",
+        "validator_commit": "6ffa98d4df542aa42abde2f94685beffec33312c",
+        "validator_tree_dirty": true,
+        "generated_at_utc": "2026-09-27T15:49:46Z",
+        "runtime": {
+          "python": "3.11.15",
+          "platform": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39"
+        }
+      },
+      "validation_and_outputs_unchanged": true,
+      "validation_checks": 33,
+      "producer_digest": "c2ef1a811e70bb4c"
+    }
+  },
+  "ledger_diff": {
+    "paired_fixed5_v4": [
+      {
+        "path": "/evidence/validator_identity/source_digest",
+        "before": "c78d7969ef49fd07",
+        "after": "eda3feb8f4536511"
+      },
+      {
+        "path": "/evidence/verification_receipt_core_sha256",
+        "before": "e5893f855bf64b9f2ab8cb78dde01f8b442a77a42946a1b65bff091bf82fd9c1",
+        "after": "00db82af4377c3e0a70c521139dde8cc2ccf746a018d6f5a4e63a6b2c62803d7"
+      }
+    ],
+    "grid_fit_v5": [
+      {
+        "path": "/evidence/validator_identity/source_digest",
+        "before": "c78d7969ef49fd07",
+        "after": "eda3feb8f4536511"
+      },
+      {
+        "path": "/evidence/verification_receipt_core_sha256",
+        "before": "352f55e50af3038fdf321bcd716a1fb780e6c90f6e30288ba8e07be5749d533a",
+        "after": "ffc2e9354215e3b6deb257478fc810547ac664097a4e448c55b9402beca6bfc6"
+      }
+    ]
+  },
+  "unchanged": {
+    "artifacts": true,
+    "claims": true,
+    "class_projection": true
+  },
+  "subject_execution": 0,
+  "full_tests_rerun": false,
+  "review_scope": "static source/AST and data identity, not replay/restore/COMSOL"
+}

@@ -1,0 +1,20 @@
+{
+  "scope": "Gate80 G79-N1 correction and stage2 limited closure",
+  "head": "9a26dd5f31ca6fae45d5a55f5c59e33408371984",
+  "code": "6ffa98d4df542aa42abde2f94685beffec33312c",
+  "source_digest": "eda3feb8f4536511",
+  "G79_N1": "CLOSED_ACCEPTED",
+  "stage1": "PREVIOUS_CLOSURE_MAINTAINED",
+  "stage2": "CLOSED_LIMITED_SCOPE",
+  "remaining_P1": 0,
+  "remaining_P2": 0,
+  "stage3_start_approved": false,
+  "execution_GO": false,
+  "gate76_closure_maintained": true,
+  "grid_fit_v5": "diagnostic/no_active_claim",
+  "nonblocking_carryover": "Partial new-key restart row generation policy at stage3/4 dispatch",
+  "reviewer_target_code_execution": 0,
+  "reviewer_COMSOL_calls": 0,
+  "reviewer_restore_rescore_calls": 0,
+  "sender_full_test_counts_independently_rerun": false
+}

@@ -1,0 +1,37 @@
+{
+  "executable_AST_identical_excluding_docstrings": true,
+  "nonfinite_break_line": 223,
+  "ok_assignment_line": 227,
+  "nonfinite_break_before_ok": true,
+  "tests_read_not_run": {
+    "test_g79_03c_a_nonfinite_round_after_a_finite_success_leaves_legacy_ok_true_while_native_last_says_failure": {
+      "line": 146,
+      "assertions": [
+        "f == 1.0 and nfev == 14 and np.allclose(x, np.asarray(_INIT) + 0.01)",
+        "ok is True",
+        "term['outer'] == 'nonfinite' and term['n_rounds'] == 2",
+        "term['native_last']['success'] is False and term['native_last']['status'] == 3",
+        "term['native_best']['success'] is True and term['native_best']['status'] == 0",
+        "(ok, term['native_last']['success'], term['outer']) == (True, False, 'nonfinite')"
+      ]
+    },
+    "test_g79_03d_a_first_round_nonfinite_leaves_legacy_ok_at_its_initial_false": {
+      "line": 171,
+      "assertions": [
+        "ok is False",
+        "f == np.inf and nfev == 2 and np.allclose(x, _INIT)",
+        "term['outer'] == 'nonfinite' and term['n_rounds'] == 1 and (term['native_best'] is None)",
+        "term['native_last']['success'] is True"
+      ]
+    }
+  },
+  "mutation": {
+    "preimage_count": 1,
+    "before": "        if not np.isfinite(res.fun):\n            outer = \"nonfinite\"\n            break\n",
+    "after": "        ok = bool(res.success)\n        if not np.isfinite(res.fun):\n            outer = \"nonfinite\"\n            break\n",
+    "selector": "g79_03c"
+  },
+  "subject_imports": 0,
+  "subject_calls": 0,
+  "docstrings_are_intentionally_changed": true
+}

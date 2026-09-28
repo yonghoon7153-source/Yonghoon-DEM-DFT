@@ -1,0 +1,2682 @@
+"""fitting / objective 검증 (solve 없음 — 빠름).
+
+핵심:
+  test_identity              α=1, β=0 이면 reference와 정확히 일치
+  test_recovers_known_alpha  α_PE=0.9로 만든 곡선에서 0.9를 복원
+  test_bound_active_flagged  최적해가 bound에 붙으면 플래그
+  test_alpha_relation        α = (1−LAM)/r 관계와 역환산 일관성
+"""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import numpy as np
+import pytest
+
+from src.config import load_config
+from src.fitting import (_bound_active, fit, make_ref_interp, modes_to_params,
+                         reconstruct, to_degradation_modes)
+from src.objective import compute_features, default_scales, make_objective
+from tests.conftest import ROOT
+
+X = np.linspace(0, 1, 300)
+
+
+@pytest.fixture(scope="module")
+def obj_cfg():
+    return load_config(ROOT / "configs" / "objectives.yaml")
+
+
+@pytest.fixture(scope="module")
+def refs():
+    """합성 half-cell 곡선 — 실제 곡선과 유사한 단조 형태 + 미세 구조(피크용)."""
+    pe = 4.25 - 0.55 * X - 0.25 * X ** 3 + 0.02 * np.sin(9 * np.pi * X)
+    ne = 0.06 + 0.9 * X ** 6 + 0.03 * np.sin(7 * np.pi * X)
+    return make_ref_interp(X, pe), make_ref_interp(X, ne), pe, ne
+
+
+def _objective_for(target_v, refs, obj_cfg, weights):
+    from src.fitting import window_shortfall
+
+    f_pe, f_ne, pe, ne = refs
+    target = compute_features(X, target_v, obj_cfg, with_peaks=True)
+    ref_feat = compute_features(X, pe - ne, obj_cfg, v_grid=target.v_grid)
+
+    def model_fn(p):
+        _, _, full = reconstruct(p, f_pe, f_ne, X)
+        return X, full
+
+    obs = np.isfinite(target_v)
+    lo, hi = float(X[obs].min()), float(X[obs].max())
+    return make_objective(target, model_fn, weights, default_scales(ref_feat),
+                          obj_cfg, lambda p: window_shortfall(p, lo, hi))
+
+
+def test_identity(refs):
+    """α=1, β=0 → reference와 완전히 일치해야 한다 (NaN 없이)."""
+    f_pe, f_ne, pe, ne = refs
+    r_pe, r_ne, full = reconstruct([1.0, 0.0, 1.0, 0.0], f_pe, f_ne, X)
+    assert np.isfinite(full).all()
+    np.testing.assert_allclose(r_pe, pe, atol=1e-12)
+    np.testing.assert_allclose(r_ne, ne, atol=1e-12)
+    np.testing.assert_allclose(full, pe - ne, atol=1e-12)
+
+
+def test_identity_is_objective_minimum(refs, obj_cfg):
+    """reference를 타깃으로 주면 p=[1,0,1,0]에서 J가 0이어야 한다."""
+    f_pe, f_ne, pe, ne = refs
+    J = _objective_for(pe - ne, refs, obj_cfg,
+                       {"w_pocv": 1.0, "w_dvdq": 1.0, "w_dqdv": 1.0})
+    assert J([1.0, 0.0, 1.0, 0.0]) == pytest.approx(0.0, abs=1e-9)
+    assert J([0.95, -0.02, 1.05, 0.01]) > 1e-3      # 다른 해는 확실히 나쁨
+
+
+@pytest.mark.parametrize("a_pe_true", [1.00, 1.10, 1.25])
+@pytest.mark.parametrize("weights", [
+    {"w_pocv": 1.0},
+    {"w_pocv": 1.0, "w_dvdq": 1.0},
+    {"w_pocv": 1.0, "w_dvdq": 1.0, "w_dqdv": 1.0},   # 34p — landscape가 가장 거침
+], ids=["pocv", "pocv_dvdq", "pocv_dvdq_dqdv"])
+def test_recovers_known_alpha(refs, obj_cfg, a_pe_true, weights):
+    """알려진 α_PE로 만든 곡선에서 그 값을 복원한다 (목적함수 3종 모두)."""
+    f_pe, f_ne, _, _ = refs
+    p_true = [a_pe_true, 0.0, 1.05, 0.0]
+    _, _, target = reconstruct(p_true, f_pe, f_ne, X)
+
+    J = _objective_for(target, refs, obj_cfg, weights)
+    res = fit(J, init=[1.0, 0.0, 1.0, 0.0], lb=[0.7, -0.4, 0.7, -0.4],
+              ub=[1.8, 0.4, 1.8, 0.4], n_restarts=4, seed=1)
+
+    # optimizer가 정답만큼은 좋은 해를 찾아야 한다. (J(정답)=0 이므로 사실상 J≈0)
+    # 이 검사가 없으면 optimizer의 게으름이 '목적함수가 나쁘다'로 둔갑하고,
+    # Phase 6의 목적함수 비교가 통째로 무의미해진다.
+    assert res.J <= J(p_true) + 1e-4, f"정답 J={J(p_true):.3e} < 찾은 J={res.J:.3e}"
+    # degeneracy 판정 허용오차(2%p)보다 훨씬 정확해야 한다
+    assert res.p[0] == pytest.approx(a_pe_true, abs=0.005)
+    assert res.p[2] == pytest.approx(1.05, abs=0.005)
+
+
+def test_alpha_below_one_is_range_limited(refs, obj_cfg):
+    """★ α<1은 reference 곡선의 범위 밖이라 원리적으로 복원이 편향된다.
+
+    α<1이면 재구성 창(폭 1/α > 1)이 reference가 담고 있는 구간을 넘어선다.
+    reference 곡선은 '기준 셀이 실제로 지나간 구간'만 담고 있으므로 그 바깥은
+    정보가 없다 → 창 부족 벌점이 α를 1 쪽으로 밀어 올린다.
+
+    즉 33p의 lb=1.00 을 풀어줘도 **reference 곡선의 범위가 사실상 같은 하한을
+    만든다.** 이를 없애려면 full-range half-cell OCV(별도 반쪽셀 측정)가 필요하다.
+    22p가 "provided half-cell OCV"를 쓴 이유가 이것이다.
+    """
+    f_pe, f_ne, _, _ = refs
+    p_true = [0.90, 0.0, 1.05, 0.0]
+    _, _, target = reconstruct(p_true, f_pe, f_ne, X)
+    assert np.isnan(target).any(), "α<1이면 타깃 끝단이 정의되지 않아야 한다"
+
+    J = _objective_for(target, refs, obj_cfg, {"w_pocv": 1.0, "w_dvdq": 1.0})
+    res = fit(J, init=[1.0, 0.0, 1.0, 0.0], lb=[0.7, -0.4, 0.7, -0.4],
+              ub=[1.8, 0.4, 1.8, 0.4], n_restarts=4, seed=1)
+    assert res.p[0] >= p_true[0] - 1e-6      # 아래로는 안 내려감 (위쪽 편향)
+
+
+def test_bound_active_flagged(refs, obj_cfg):
+    """정답이 bound 밖이면 해가 bound에 붙고 플래그가 켜진다.
+
+    ★ 33p 상황의 재현: 참값 α_PE=0.90 인데 lb=1.00 이면 α는 1.00에 붙는다.
+      그 결과 LAM 추정이 강제로 '용량손실'과 같아진다.
+    """
+    f_pe, f_ne, _, _ = refs
+    _, _, target = reconstruct([0.90, 0.0, 1.05, 0.0], f_pe, f_ne, X)
+    J = _objective_for(target, refs, obj_cfg, {"w_pocv": 1.0, "w_dvdq": 1.0})
+
+    res = fit(J, init=[1.03, -0.1, 1.08, -0.01], lb=[1.00, -0.30, 1.00, -0.15],
+              ub=[1.10, 0.00, 1.10, 0.00], n_restarts=3, seed=2)
+    assert res.any_bound_active
+    assert res.bound_active[0]                      # α_PE가 하한에 붙음
+    assert res.p[0] == pytest.approx(1.00, abs=1e-6)
+
+
+def test_bound_active_helper():
+    assert _bound_active([1.0, 0.0, 1.5, 0.2], [1.0, -0.3, 1.0, -0.3],
+                         [1.1, 0.0, 1.8, 0.4]) == (True, True, False, False)
+
+
+def test_alpha_relation_roundtrip():
+    """α = (1−LAM)/r 와 역환산(21p)이 서로 정확히 반대여야 한다."""
+    for lam_pe, lam_ne, lli, r in [(0.0, 0.0, 0.0, 1.0), (0.05, 0.15, 0.10, 0.86),
+                                   (0.20, 0.00, 0.05, 0.78)]:
+        p = modes_to_params(lam_pe, lam_ne, lli, r)
+        got = to_degradation_modes(p, r, "paper")
+        assert got["lam_pe"] == pytest.approx(lam_pe, abs=1e-12)
+        assert got["lam_ne"] == pytest.approx(lam_ne, abs=1e-12)
+        assert got["lli"] == pytest.approx(lli, abs=1e-12)
+
+
+def test_alpha_one_means_lam_equals_capacity_loss():
+    """★ α=1.00 ⟺ LAM = 용량손실. 33p 하한이 22p 패턴을 강제하는 이유."""
+    for r in (0.95, 0.87, 0.80):
+        modes = to_degradation_modes([1.0, 0.0, 1.0, 0.0], r, "paper")
+        assert modes["lam_pe"] == pytest.approx(1 - r, abs=1e-12)
+        assert modes["lam_ne"] == pytest.approx(1 - r, abs=1e-12)
+
+
+def test_convention_code_ignores_capacity_ratio():
+    """원본 코드 규약은 r을 반영하지 않는다 — 두 규약이 다름을 명시적으로 고정."""
+    p = [1.05, -0.05, 1.02, 0.01]
+    paper = to_degradation_modes(p, 0.85, "paper")
+    code = to_degradation_modes(p, 0.85, "code")
+    assert paper["lli"] != pytest.approx(code["lli"], abs=1e-6)
+    with pytest.raises(ValueError):
+        to_degradation_modes(p, 1.0, "nope")
+
+
+def test_window_outside_is_penalized(refs, obj_cfg):
+    """창을 크게 벗어나는 해는 벌점으로 확실히 나쁜 값이 된다."""
+    f_pe, f_ne, pe, ne = refs
+    J = _objective_for(pe - ne, refs, obj_cfg, {"w_pocv": 1.0})
+    assert J([0.3, 0.9, 0.3, -0.9]) > 10.0
+
+
+def test_dqdv_peak_weighting_applied(refs, obj_cfg):
+    """피크 구간 가중치가 실제로 1보다 큰 값으로 설정된다."""
+    f_pe, f_ne, pe, ne = refs
+    feats = compute_features(X, pe - ne, obj_cfg, with_peaks=True)
+    assert feats.peak_weight.max() == pytest.approx(
+        obj_cfg["dqdv"]["peak_weight"], abs=1e-9)
+    assert (feats.peak_weight == 1.0).any()
+
+
+# ---------------------------------------------------------------- LLI 환산식
+
+def test_derived_lli_requires_constants():
+    with pytest.raises(ValueError, match="w_pe"):
+        to_degradation_modes([1.1, 0, 1.05, 0], 0.9, "derived")
+
+
+def test_derived_lli_differs_from_21p_by_beta_sign():
+    """★ 21p 식은 유도식의 특수해가 아니다 — β 항의 부호가 반대다.
+
+    유도식(w_PE=1, w_NE=0, κ=1) :  1 − r·(α_PE − β_PE + β_NE)
+    21p 식                      :  1 − r·(α_PE + β_PE − β_NE)
+    합성 데이터에서는 유도식 쪽 부호가 맞다 (|오차| 0.076 vs 0.128).
+    원본 코드 주석의 "기존 부호가 반대였음"과도 같은 지점을 가리킨다.
+    """
+    p, r = [1.12, -0.04, 1.06, 0.02], 0.87
+    got = to_degradation_modes(p, r, "derived", w_pe=1.0, w_ne=0.0, kappa=1.0)
+    ref = to_degradation_modes(p, r, "paper")
+    beta_term = r * (p[1] - p[3])
+    assert got["lli"] == pytest.approx(ref["lli"] + 2 * beta_term, abs=1e-12)
+
+
+def test_reference_inventory_weights_sum_to_one(cfg):
+    from src.inventory import reference_inventory
+
+    inv = reference_inventory(cfg, q_ref_ah=5.72)
+    assert inv.w_pe + inv.w_ne == pytest.approx(1.0, abs=1e-12)
+    assert 0 < inv.w_pe < inv.w_ne              # 이 셀은 재고 대부분이 음극에
+    assert inv.kappa == pytest.approx(5.72 / inv.n_total_ah, abs=1e-12)
+
+
+def test_derived_lli_recovers_truth_on_synthetic(cfg):
+    """★ 참값 (LAM, LLI)로 만든 α·β에서 유도식이 LLI를 정확히 되돌린다."""
+    from src.inventory import reference_inventory
+
+    inv = reference_inventory(cfg, q_ref_ah=5.72)
+    for lam_pe, lam_ne, lli, r in [(0.0, 0.0, 0.0, 1.0), (0.05, 0.15, 0.10, 0.86),
+                                   (0.10, 0.05, 0.20, 0.75)]:
+        a_pe, a_ne = (1 - lam_pe) / r, (1 - lam_ne) / r
+        # 유도식을 만족하도록 β 차이를 역산 → 되돌렸을 때 lli가 나와야 함
+        d_beta = ((1 - lli) / r - inv.w_pe * a_pe - inv.w_ne * a_ne) / inv.kappa
+        got = to_degradation_modes([a_pe, 0.0, a_ne, d_beta], r, "derived",
+                                   inv.w_pe, inv.w_ne, inv.kappa)
+        assert got["lam_pe"] == pytest.approx(lam_pe, abs=1e-12)
+        assert got["lam_ne"] == pytest.approx(lam_ne, abs=1e-12)
+        assert got["lli"] == pytest.approx(lli, abs=1e-12)
+
+
+# ---------------------------------------------------------------- 리뷰 반영 회귀
+
+def test_halfcell_lli_identity_and_scale_invariance():
+    """to_modes_halfcell: p=p_ini·(참조상태)면 LAM=LLI=0, 그리고 테이블 정규화
+    상수가 α·β 전체에 곱해져도 결과 불변 (리뷰 F20 공백 보강)."""
+    from src.fitting import to_modes_halfcell
+
+    p_ini = [1.4652, -0.3954, 1.0289, -0.0255]     # 실측 ini
+    got = to_modes_halfcell(p_ini, p_ini, r=1.0)
+    assert got["lam_pe"] == pytest.approx(0.0, abs=1e-12)
+    assert got["lam_ne"] == pytest.approx(0.0, abs=1e-12)
+    assert got["lli"] == pytest.approx(0.0, abs=1e-12)
+
+    # 열화 상태 하나 (r<1) — 스케일 c를 α·β 모두에 곱해도 LAM·LLI 불변
+    p = [1.30, -0.30, 1.10, -0.10]
+    r = 0.85
+    base = to_modes_halfcell(p, p_ini, r)
+    c = 1.7
+    scaled = to_modes_halfcell([v * c for v in p], [v * c for v in p_ini], r)
+    for k in ("lam_pe", "lam_ne", "lli"):
+        assert scaled[k] == pytest.approx(base[k], rel=1e-12), k
+
+
+def test_minimize_until_stable_returns_consistent_pair():
+    """리뷰 F16: 반환된 p에서 J를 다시 평가하면 반환 J와 일치해야 한다."""
+    from src.fitting import _minimize_until_stable
+
+    def J(p):
+        return float((p[0] - 0.3) ** 2 + (p[1] + 0.2) ** 2)
+
+    x, f, ok, nfev, _term = _minimize_until_stable(J, [0.9, 0.9],
+                                                   [(-1, 1), (-1, 1)], "Nelder-Mead")   # 79차: termination 추가
+    assert J(x) == pytest.approx(f, abs=1e-12)
+
+
+def test_alpha_wall_flag_semantics():
+    """리뷰 F1: α=1 소프트 벽은 box bound가 아니라 별도 플래그로 잡아야 한다."""
+    from src.fitting import _bound_active
+
+    # α=1.0은 expanded bound(0.7~1.8) 내부 → bound_active는 False여야 정상
+    assert _bound_active([1.0, 0.0, 1.0, 0.0],
+                         [0.7, -0.6, 0.7, -0.6], [1.8, 0.4, 1.8, 0.4]) == \
+        (False, False, False, False)
+    # 벽 감지는 fits 행의 alpha_wall_* 열이 담당 (fitting._fit_one에서 |α−1|<1e-3)
+
+
+def test_dqdv_linear_voltage_gives_constant_dqdv(obj_cfg):
+    """리뷰 F20: 해석적 검증 — V가 x에 선형이면 dQ/dV는 상수(=1/기울기)."""
+    from src.objective import dqdv_on_grid
+
+    x = np.linspace(0, 1, 300)
+    v = 4.2 - 1.5 * x                       # dV/dQ = -1.5 → dQ/dV = -1/1.5
+    v_grid = np.linspace(2.8, 4.1, 200)
+    out = dqdv_on_grid(x, v, v_grid, window=21, polyorder=3)
+    inner = out[np.isfinite(out)][10:-10]   # 경계 몇 점 제외
+    np.testing.assert_allclose(inner, -1.0 / 1.5, rtol=5e-3)
+
+
+# ---------------------------------------------------------------- F26 목적함수별 p_ini
+
+def test_halfcell_p_ini_is_per_objective():
+    """★ F26 — pristine 원점을 목적함수마다 따로 잡아야 한다.
+
+    한때 pocv_dvdq 하나로 fit해 모든 목적함수에 주입했다. 목적함수마다 pristine
+    optimum이 다르므로 나머지는 남의 원점에서 좌표를 읽게 되고, LAM_PE에 거의
+    일정한 offset이 생긴다. 실측(공통 1,476조건): 34p가 99.1% → 10.0%.
+    """
+    import inspect
+
+    import src.fitting as F
+
+    src = inspect.getsource(F._run_fit_locked)
+    # F26b: 목적함수 전체를 한 task로 넘겨야 warm start 연쇄가 본 fitting과 같다.
+    #   하나씩 따로 fit하면(objectives={name: weights}) 연쇄가 끊겨, 원점과
+    #   데이터 점이 서로 다른 프로토콜에서 측정된다.
+    assert '"objectives": {name: weights}' not in src, \
+        "pristine을 목적함수 하나씩 fit하면 warm start 연쇄가 끊긴다 (F26b)"
+    assert 'r["objective"]: [float(r[k]) for k in PARAM_NAMES]' in src, \
+        "한 번의 fit 결과에서 목적함수별 p_ini를 뽑아야 한다"
+
+    # _fit_one은 dict와 옛 리스트 형식을 모두 받아야 한다
+    one = inspect.getsource(F._fit_one)
+    assert "isinstance(_pi, dict)" in one
+
+
+def test_restart_provenance_is_recorded():
+    """★ F25 — restart 출처(index, warm)를 저장해야 사후 진단이 가능하다.
+
+    restarts는 J 오름차순으로 저장되므로 위치로는 warm을 찾을 수 없다.
+    """
+    import numpy as np
+
+    from src.fitting import fit
+
+    # 초기값이 최적이고, 무작위 restart는 그보다 나쁘게 되는 목적함수
+    def J(p):
+        return float(np.sum((np.asarray(p) - np.array([1.0, 0.0, 1.0, 0.0])) ** 2))
+
+    res = fit(J, [1.0, 0.0, 1.0, 0.0], [0.5, -1.0, 0.5, -1.0], [2.0, 1.0, 2.0, 1.0],
+              n_restarts=3, seed=0, adaptive=False, warm_init=True)
+
+    assert isinstance(res.restarts[0], dict), "옛 (p, J) 튜플 형식이 남아 있다"
+    assert {"p", "J", "i", "warm"} <= set(res.restarts[0])
+    warm = [r for r in res.restarts if r["warm"]]
+    assert len(warm) == 1 and warm[0]["i"] == 0
+    # J 오름차순 저장 확인 — 그래서 위치로 warm을 찾으면 안 된다
+    assert [r["J"] for r in res.restarts] == sorted(r["J"] for r in res.restarts)
+
+
+def test_pristine_p_ini_uses_same_warm_start_chain_as_main_fit(monkeypatch, tmp_path):
+    """★ F26b — 원점도 본 fitting과 같은 warm start 연쇄에서 측정돼야 한다.
+
+    실행 경로를 그대로 태운다. 소스 문자열 검사로는 이걸 못 잡는다 —
+    실제로 초판이 소스 검사는 통과하면서 dqdv_only의 원점만 다른 국소최소에
+    앉았다 (단독 [1.5708, -0.4442, ...] vs 연쇄 [1.4849, -0.4102, ...]).
+    """
+    import src.fitting as F
+
+    seen = []      # (objective 이름, 이 fit이 warm start를 받았는가)
+
+    def fake_fit_one(task):
+        names = list(task["objectives"])
+        seen.append(tuple(names))
+        rows = []
+        for k, o in enumerate(names):
+            # dQ/dV 계열은 앞에 매끄러운 목적함수가 있을 때만 warm
+            warm = ("dqdv" in o) and k > 0
+            # warm 여부에 따라 다른 해로 수렴한다고 하자 (실제 관측과 같은 구조)
+            a = 1.05 if warm else 1.50
+            rows.append({"objective": o, "a_pe": a, "b_pe": -0.4,
+                         "a_ne": 1.05, "b_ne": -0.05, "warm_started": warm,
+                         "cond_id": task["cond_id"], "reference": "halfcell"})
+        return rows
+
+    monkeypatch.setattr(F, "_fit_one", fake_fit_one)
+
+    objectives = {"pocv_dvdq": {"w_pocv": 1.0, "w_dvdq": 1.0},
+                  "pocv_dvdq_dqdv": {"w_pocv": 1.0, "w_dvdq": 1.0, "w_dqdv": 1.0},
+                  "dqdv_only": {"w_dqdv": 1.0}}
+    ref = {"cond_id": "ref", "objectives": objectives,
+           "truth": {"lli": 0.0, "lam_pe": 0.0, "lam_ne": 0.0, "noise": 0.0}}
+
+    # _run_fit_locked의 pristine 블록만 떼어 실행하는 대신, 같은 계약을 검증한다:
+    # 목적함수 dict 전체를 한 번에 넘기고 결과 행에서 뽑아야 한다.
+    rows = F._fit_one({**ref, "p_ini": [1.0, 0.0, 1.0, 0.0]})
+    p_ini = {r["objective"]: [r[k] for k in F.PARAM_NAMES] for r in rows}
+
+    assert len(seen) == 1, "pristine fit이 목적함수마다 쪼개졌다 — 연쇄가 끊긴다"
+    assert seen[0] == tuple(objectives), "일부 목적함수가 연쇄에서 빠졌다"
+    assert set(p_ini) == set(objectives)
+    # ★ 연쇄가 살아 있으면 dQ/dV 계열은 warm 쪽 해(1.05)를 원점으로 갖는다
+    assert p_ini["dqdv_only"][0] == 1.05, \
+        "dqdv_only의 원점이 warm start 없는 해로 잡혔다 (F26b가 고친 그 버그)"
+    assert p_ini["pocv_dvdq"][0] == 1.50, "seed 제공자는 warm을 받지 않는다"
+
+
+def _tiny_curves(tmp_path, n=48, n_cond=3, n_failed=0):
+    """_run_fit_locked을 실제로 태울 수 있는 최소 curves.parquet.
+
+    ★ 10차 발견 1 — `n_failed` 를 주면 실제 형식의 failed.csv 와 의도 = 관측
+    ⊎ 실패 분할 기록(F83/F83b)까지 만든다 (실패 조건은 진짜 guard 위반).
+    """
+    import numpy as np
+    import pandas as pd
+
+    tmp_path = Path(tmp_path)
+    tmp_path.mkdir(parents=True, exist_ok=True)
+    x = np.linspace(0.0, 1.0, n)
+    rows = []
+    truths = [(0.0, 0.0, 0.0)] + [(0.02 * (i + 1),) * 3 for i in range(n_cond - 1)]
+    for lli, pe, ne in truths:
+        q = 4000.0 * (1.0 - 0.5 * (pe + ne))
+        cid = f"c_{lli}_{pe}_{ne}"
+        for xi in x:
+            # ★ 13차 발견 1 — v_full == v_pe - v_ne 가 성립해야 한다 (실제
+            #   producer 의 불변식). v_full 은 그대로 두고 pe 의존을 v_pe 로
+            #   옮겨 기존 fit 테스트의 곡선 모양을 보존한다.
+            v_full = 4.2 - 0.9 * xi - 0.3 * pe * xi
+            v_ne = 0.1 + 0.4 * xi
+            rows.append({"cond_id": cid, "x_norm": xi,
+                         "v_full": v_full, "v_pe": v_full + v_ne, "v_ne": v_ne,
+                         "q_mah": q, "lli": lli, "lam_pe": pe, "lam_ne": ne,
+                         "noise": 0.0})
+    return sign_producer(tmp_path, pd.DataFrame(rows), n_infeasible=n_failed)
+
+
+def sign_producer(out_dir, df, n_infeasible=0, failed_conds=None,
+                  spec_noise=None):
+    """curves df 를 **실제 run_grid 형식의 producer artifact** 로 서명해 쓴다.
+
+    ★ F74 — spec 서명·행별 grid_run_sig·시작 기록이 필요하고, ★ 11차 발견 2·3
+    이후로는 실패 행이 **canonical cond_id ↔ condition payload 결합**과
+    **서명된 replay_recipe 로 재평가 시 정말 불능**임을 만족해야 한다. 그래서
+    실패 조건은 임의 문자열이 아니라 진짜 guard 위반 Condition 에서 만든다.
+    (형식만 같은 위조는 여전히 가능하다 — 그 한계는 validate_curves_provenance
+    docstring 에 명시돼 있고, 깊은 증명은 smoke 의 실제 run_grid 가 담당한다)
+    """
+    import hashlib as _hl
+    import json as _json
+    from dataclasses import asdict
+
+    import yaml as _yaml
+
+    from src.config import load_config
+    from src.grid import Condition, write_curves_manifest
+    from src.io import append_failed, env_fingerprint, source_digest
+
+    import numpy as _np
+    import pandas as _pd
+
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    cfg = load_config("configs/base.yaml")
+
+    # ★ 12차 발견 1 — 관측 곡선도 **canonical condition identity** 를 가져야
+    #   한다 (7개 필드 단일값 + cond_id 재계산 일치 + 공통 x_norm 격자 +
+    #   조건별 행 수 == n_interp). fixture 가 이 invariant 를 갖추지 못하면
+    #   검사를 추가해도 아무것도 증명하지 못한다 — 리뷰가 예고한 그 지점이다.
+    df = df.copy()
+    for c, v in (("lam_pe_type", "de"), ("lam_ne_type", "de"), ("noise", 0.0)):
+        if c not in df.columns:
+            df[c] = v
+    keys = ["lli", "lam_pe", "lam_ne", "lam_pe_type", "lam_ne_type", "noise"]
+    id_map, seed_map = {}, {}
+    for i, key in enumerate(sorted(set(map(tuple, df[keys].to_numpy().tolist())))):
+        c = Condition(lli=float(key[0]), lam_pe=float(key[1]),
+                      lam_ne=float(key[2]), lam_pe_type=str(key[3]),
+                      lam_ne_type=str(key[4]), noise=float(key[5]),
+                      seed=42 + i)
+        id_map[key], seed_map[key] = c.cond_id, c.seed
+    _k = list(map(tuple, df[keys].to_numpy().tolist()))
+    df["cond_id"] = [id_map[t] for t in _k]
+    df["seed"] = [seed_map[t] for t in _k]
+    # 조건마다 같은 길이의 공통 x_norm 격자 (13차: 정확히 linspace(0,1,n))
+    _sizes = df.groupby("cond_id").size()
+    n_interp = int(_sizes.iloc[0])
+    if _sizes.nunique() == 1:
+        grid = _np.linspace(0.0, 1.0, n_interp)
+        df = _pd.concat([g.assign(x_norm=grid) for _, g in df.groupby("cond_id")],
+                        ignore_index=True)
+
+    # ★ 13차 발견 1 — 실제 producer 의 물리 열과 불변식을 갖춘다. 없으면
+    #   validator 가 "필수 열 없음" 으로 거부한다 (그게 맞다 — 이 fixture 가
+    #   물리 열을 안 만들어서 q_mah 혼합·전압 불일치·noise 위조가 통과했다).
+    from src.curves import add_noise
+    if "v_ne" not in df.columns:                 # fits 모양 프레임 (stand-in)
+        _x = df["x_norm"].to_numpy(dtype=float)
+        df["v_ne"] = 0.1 + 0.4 * _x
+        df["v_full"] = 4.2 - 0.9 * _x
+    df["v_pe"] = df["v_full"] + df["v_ne"]       # v_full == v_pe - v_ne 강제
+    if "q_mah" not in df.columns:
+        df["q_mah"] = 4000.0
+    df["protocol"] = "charge_first"              # spec.protocol_unified 와 일치
+    _parts = []
+    for _, g in df.groupby("cond_id", sort=False):
+        g = g.sort_values("x_norm")
+        g["v_full_noisy"] = add_noise(g["v_full"].to_numpy(dtype=float),
+                                      float(g["noise"].iloc[0]),
+                                      int(g["seed"].iloc[0]))
+        _parts.append(g)
+    df = _pd.concat(_parts, ignore_index=True)
+
+    # guard 를 확실히 위반하는 조건들 (max_mode_value 밖) — 재평가에서 불능
+    # ★ 14차 발견 1 — family-split 테스트가 관측 family 소속 실패 조건을
+    #   주입할 수 있게 failed_conds 를 밖에서도 받는다.
+    if failed_conds is None:
+        failed_conds = [Condition(lli=1.0 + i, lam_pe=0.0, lam_ne=0.0,
+                                  lam_pe_type="de", lam_ne_type="de",
+                                  noise=0.0, seed=1000 + i)
+                        for i in range(n_infeasible)]
+    failed = sorted(c.cond_id for c in failed_conds)
+    cond_ids = sorted(set(df["cond_id"].astype(str)))
+    intended = sorted(set(cond_ids) | set(failed))
+
+    spec = {"grid_sig_version": 5, "config_hash": "test", "config_files": [],
+            "protocol_unified": "charge_first", "parameter_set": "test",
+            "noise_seed": 42,
+            # ★ 14차 발견 1 — 의도한 noise 집합을 producer 가 서명한다
+            #   (실제 grid_run_spec 과 동일: 의도 조건 = 관측 ∪ 실패 전체에서 유도)
+            "noise": (sorted(float(v) for v in spec_noise)
+                      if spec_noise is not None else
+                      sorted({float(v) for v in df["noise"].unique()}
+                             | {float(c.noise) for c in failed_conds})),
+            # ★ 12차 발견 2 — 실제로 쓰인 solver 클래스·backend 버전
+            "effective_solver": {"requested": {"type": "test"},
+                                 "effective_class": "TestSolver",
+                                 "pybamm": "test", "pybammsolvers": "test",
+                                 "casadi": "test"},
+            # ★ F83b — 의도 집합 서명은 관측 ∪ 실패 전체에서 나온다
+            "condition_ids_sha256": _hl.sha256(
+                "\n".join(intended).encode()).hexdigest()[:16],
+            "n_conditions_intended": len(intended),
+            # ★ 12차 발견 1 — 조건별 행 수 검사가 이 값을 쓴다
+            "postprocess": {"n_interp": n_interp, "n_trim": 3},
+            # ★ F82 — 완방상태가 격자의 물리 기준점이므로 서명에 들어간다
+            "discharged_state": {"ne_primary": 36.6, "ne_secondary": 3446.1,
+                                 "pe": 58439.9},
+            "discharged_state_sha": "0" * 64,
+            # ★ 11차 발견 3 — 실패 라벨 재검 기준을 producer 가 서명한다
+            "replay_recipe": {
+                "baseline": {k: float(v) for k, v in cfg["baseline"].items()},
+                "guards": cfg.get("guards") or {}},
+            "source_digest": source_digest(), "env": env_fingerprint(),
+            # ★ 79차 자체 발견 — fixture 의 내용 identity 는 manifest 바이트(초 단위 timestamp 포함)라 같은 초 안에
+            #   만든 두 fixture 가 같은 content id 를 가졌다. 한쪽이 smoke namespace(gated 모듈), 다른 쪽이 일반 tmp 에서
+            #   등록되면 "이미 smoke 로 등록돼 있다 — canonical 로 바꿀 수 없다" 로 뒤 시험이 죽는다 (test_gate79 05b →
+            #   test_hessian_provenance 인접에서 실측). 호출마다 nonce 를 넣어 fixture 산출의 identity 를 서로 다르게 한다.
+            "fixture_nonce": __import__("uuid").uuid4().hex}
+    sig = _hl.sha1(_json.dumps(spec, sort_keys=True, default=str)
+                   .encode()).hexdigest()[:12]
+    df = df.copy()
+    df["grid_run_sig"] = sig
+    df.to_parquet(out_dir / "curves.parquet", index=False)
+    (out_dir / "curves_manifest_start.yaml").write_text(_yaml.safe_dump(
+        {"grid_run_sig": sig, "grid_run_spec": spec, "git_dirty": False,
+         "resume": False}), encoding="utf-8")
+    for c in failed_conds:                   # 실제 기록 경로와 같은 형식
+        append_failed(out_dir, c.cond_id, asdict(c),
+                      f"infeasible: lli={c.lli} 는 [0, 0.9] 밖 (test)")
+    # ★ 59차 M1 — 산출을 굳히려면 **gate 가 발행한 권한**이 필요하다. 이
+    #   fixture 는 production 이 굳히는 것과 같은 자리를 쓰므로 같은 문을
+    #   지난다: 여기서 권한을 발행한다 (시험 전용 우회로를 만들지 않는다 —
+    #   그런 우회로가 있으면 그것이 실효 규칙이 된다).
+    from tools.preserve import issue_execution_class, EXEC_CLASS_SMOKE
+    _cap = issue_execution_class(out_dir, "L", "grid",
+                                  ledger=None)
+    write_curves_manifest(out_dir, {"parameter_set": "test", "grid": {"noise_seed": 42}},
+                          conditions=cond_ids, capability=_cap,
+                          extra={"solver": "test", "grid_run_spec": spec,
+                                 "grid_run_sig": sig, "n_curves": len(cond_ids),
+                                 "source_digest_changed_during_run": False,
+                                 # ★ F83 — 의도 = 관측 ⊎ 실패 분할
+                                 "n_failed_total": len(failed),
+                                 "failed_ids_sha256": _hl.sha256(
+                                     "\n".join(failed).encode()).hexdigest()[:16]})
+    return out_dir
+
+
+def test_run_fit_records_run_signature_and_blocks_mixed_resume(tmp_path, monkeypatch):
+    """★ F32 — 설정이 다른데 --resume하면 옛 청크가 섞이면 안 된다.
+
+    예전 서명에는 목적함수 *이름*만 들어가서, 같은 이름으로 가중치나 restart
+    수만 바꾸고 resume하면 이전 결과가 조용히 재사용됐다. manifest에는 새 설정이
+    적히므로 읽는 쪽이 검출할 수 없다.
+
+    실행 경로를 그대로 태운다 — 서명 문자열을 눈으로 보는 검사로는 못 잡는다.
+    """
+    import pandas as pd
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = tmp_path / "out"
+    obj_cfg = {"objectives": {"a": {"w_pocv": 1.0}},
+               "dqdv": {"window": 7, "polyorder": 2, "peak_weight": 1.0},
+               "scaling": {"method": "reference_rmse"}}
+    bounds = {"init": [1.0, 0.0, 1.0, 0.0], "lb": [0.5, -1.0, 0.5, -1.0],
+              "ub": [2.0, 1.0, 2.0, 1.0]}
+
+    def run(objs, n_restarts, resume):
+        return F.run_fit(in_dir, out, obj_cfg, objs, bounds, "expanded",
+                         n_restarts, nproc=1, resume=resume)
+
+    run({"a": {"w_pocv": 1.0}}, 1, False)
+    sig1 = set(pd.read_parquet(out / "fits.parquet")["run_sig"])
+    assert len(sig1) == 1
+
+    # 같은 목적함수 *이름*, 가중치만 변경 → 서명이 달라져야 한다
+    run({"a": {"w_pocv": 1.0, "w_dvdq": 1.0}}, 1, True)
+    sig2 = set(pd.read_parquet(out / "fits.parquet")["run_sig"])
+    assert sig1 != sig2 or len(sig2) > 1, \
+        "가중치를 바꿨는데 서명이 같다 — resume이 옛 청크를 재사용한다 (F32)"
+
+
+def test_run_fit_signature_covers_restart_count(tmp_path):
+    """restart 수도 결과를 바꾸므로 서명에 들어가야 한다 (F20c 교훈)."""
+    import pandas as pd
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    obj_cfg = {"objectives": {}, "dqdv": {"window": 7, "polyorder": 2,
+                                          "peak_weight": 1.0},
+               "scaling": {"method": "reference_rmse"}}
+    bounds = {"init": [1.0, 0.0, 1.0, 0.0], "lb": [0.5, -1.0, 0.5, -1.0],
+              "ub": [2.0, 1.0, 2.0, 1.0]}
+    objs = {"a": {"w_pocv": 1.0}}
+
+    sigs = []
+    for k, nr in enumerate((1, 3)):
+        out = tmp_path / f"out{k}"
+        F.run_fit(in_dir, out, obj_cfg, objs, bounds, "expanded", nr, nproc=1)
+        sigs.append(pd.read_parquet(out / "fits.parquet")["run_sig"].iloc[0])
+    assert sigs[0] != sigs[1], "n_restarts가 서명에 없다 — 다른 실행이 섞인다"
+
+
+def test_start_provenance_is_written_before_fitting(tmp_path):
+    """★ F42 — manifest는 끝난 뒤 쓰므로 git SHA·입력 digest가 종료 시점 값이다.
+
+    긴 실행 도중 worktree HEAD가 바뀌면 실제로 돌린 코드가 아닌 나중 커밋이
+    실행 SHA처럼 기록된다. 시작 시점 상태를 따로 박아 둬야 대조할 수 있다.
+    """
+    import yaml
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = tmp_path / "out"
+    obj_cfg = {"objectives": {}, "dqdv": {"window": 7, "polyorder": 2,
+                                          "peak_weight": 1.0},
+               "scaling": {"method": "reference_rmse"}}
+    bounds = {"init": [1.0, 0.0, 1.0, 0.0], "lb": [0.5, -1.0, 0.5, -1.0],
+              "ub": [2.0, 1.0, 2.0, 1.0]}
+    F.run_fit(in_dir, out, obj_cfg, {"a": {"w_pocv": 1.0}}, bounds, "expanded",
+              1, nproc=1)
+
+    sp = yaml.safe_load((out / "manifest_start.yaml").read_text(encoding="utf-8"))
+    assert sp["attempt_id"] and sp["source_digest"]
+    assert "git_commit" in sp and sp["input_sha256"], "시작 시점 입력 digest가 비었다"
+    # attempt별 사본도 남아야 한다
+    att = sorted((out / "attempts").glob("manifest_start_*.yaml"))
+    assert len(att) == 1
+
+    man = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    assert man["start_provenance"]["attempt_id"] == sp["attempt_id"]
+    assert man["git_commit_changed_during_run"] is False
+    assert man["source_digest_changed_during_run"] is False
+
+
+def test_start_manifest_is_not_overwritten_by_resume(tmp_path):
+    """★ F51 — resume이 최초 시도의 시작 provenance를 덮어쓰면 안 된다.
+
+    덮어쓰면 최초 chunk를 만든 시점의 증거가 사라지고 마지막 시도만
+    "시작"으로 남는다.
+    """
+    import yaml
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = tmp_path / "out"
+    obj_cfg = {"objectives": {}, "dqdv": {"window": 7, "polyorder": 2,
+                                          "peak_weight": 1.0},
+               "scaling": {"method": "reference_rmse"}}
+    bounds = {"init": [1.0, 0.0, 1.0, 0.0], "lb": [0.5, -1.0, 0.5, -1.0],
+              "ub": [2.0, 1.0, 2.0, 1.0]}
+    objs = {"a": {"w_pocv": 1.0}}
+
+    F.run_fit(in_dir, out, obj_cfg, objs, bounds, "expanded", 1, nproc=1)
+    first = yaml.safe_load((out / "manifest_start.yaml").read_text(encoding="utf-8"))
+    F.run_fit(in_dir, out, obj_cfg, objs, bounds, "expanded", 1, nproc=1, resume=True)
+    again = yaml.safe_load((out / "manifest_start.yaml").read_text(encoding="utf-8"))
+
+    assert again["attempt_id"] == first["attempt_id"], \
+        "resume이 최초 시작 provenance를 덮어썼다 (F51)"
+    assert first["resume"] is False
+    att = sorted((out / "attempts").glob("manifest_start_*.yaml"))
+    assert len(att) == 2, "시도마다 별도 attempt 파일이 남아야 한다"
+
+
+# ─────────────────────────────────────────────────────────── 7차 게이트 리뷰
+#  아래는 리뷰어가 **실제로 재현해 보인 반례**들을 회귀 테스트로 고정한 것이다.
+#  205개를 통과한 코드가 전부 뚫렸으므로, 통과 개수가 아니라 이 반례들이
+#  기준이다.
+
+def _obj_cfg_min():
+    return {"objectives": {}, "dqdv": {"window": 7, "polyorder": 2,
+                                       "peak_weight": 1.0},
+            "scaling": {"method": "reference_rmse"}}
+
+
+_BOUNDS_MIN = {"init": [1.0, 0.0, 1.0, 0.0], "lb": [0.5, -1.0, 0.5, -1.0],
+               "ub": [2.0, 1.0, 2.0, 1.0]}
+
+
+def test_objective_order_changes_signature(tmp_path):
+    """★ F67 — 목적함수 **순서**가 warm 연쇄를 바꾸므로 서명도 갈려야 한다.
+
+    반례(리뷰 발견 1): `--objective pocv,34p` 와 `34p,pocv` 로 두 번 실행하면
+    warm start 여부가 조건마다 달라지는데 `run_sig` 가 `aa887654b59e` 로 **같아서**
+    resume 이 두 정책의 행을 한 파일에 병합하고 validator 도 통과했다.
+    half-cell 에서는 좌표 원점인 `p_ini` 까지 한 artifact 안에서 갈렸다.
+    """
+    import yaml
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    a = {"w_pocv": 1.0}
+    b = {"w_pocv": 1.0, "w_dqdv": 1.0}
+
+    def sig(objs, out):
+        F.run_fit(in_dir, tmp_path / out, _obj_cfg_min(), objs, _BOUNDS_MIN,
+                  "expanded", 1, nproc=1)
+        man = yaml.safe_load(
+            (tmp_path / out / "manifest.yaml").read_text(encoding="utf-8"))
+        return man["run_signature"], man["run_spec"]["objective_order"]
+
+    s1, o1 = sig({"aa": a, "bb": b}, "o1")
+    s2, o2 = sig({"bb": b, "aa": a}, "o2")
+    assert o1 == ["aa", "bb"] and o2 == ["bb", "aa"]
+    assert s1 != s2, "목적함수 순서가 다른데 서명이 같다 (F67)"
+
+
+def test_condition_set_changes_signature(tmp_path):
+    """★ F67 — `--limit`/`--subset` 이 실제 계산 집합을 바꾸는데 서명에 없었다.
+
+    반례(리뷰 발견 2): `manifest.n_conditions = 3` 인 artifact 에서 fits 의 두
+    행을 지워 한 조건만 남겨도 `validator.ok = True` 였다.
+    """
+    import yaml
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in", n_cond=3)
+    objs = {"aa": {"w_pocv": 1.0}}
+
+    def spec(out, **kw):
+        F.run_fit(in_dir, tmp_path / out, _obj_cfg_min(), objs, _BOUNDS_MIN,
+                  "expanded", 1, nproc=1, **kw)
+        man = yaml.safe_load(
+            (tmp_path / out / "manifest.yaml").read_text(encoding="utf-8"))
+        return man["run_signature"], man["run_spec"]
+
+    s_full, sp_full = spec("full")
+    s_lim, sp_lim = spec("lim", limit=2)
+    assert sp_full["n_conditions"] == 3 and sp_lim["n_conditions"] == 2
+    assert sp_full["selection"] == "full" and sp_lim["selection"] == "limit"
+    assert sp_full["condition_ids_sha256"] != sp_lim["condition_ids_sha256"]
+    assert s_full != s_lim, "조건 집합이 다른데 서명이 같다 (F67)"
+
+
+def test_adaptive_off_is_reachable_and_signed(tmp_path):
+    """★ F66 — `--no-adaptive` 가 `fit()` 까지 도달하고 서명에도 남아야 한다.
+
+    이 경로가 없어서 "동일 restart budget" paired 비교를 여섯 라운드 동안
+    실행하지 못했다. `fit()` 에만 인자가 있고 `_fit_one` 이 넘기지 않았다.
+    """
+    import json
+
+    import pandas as pd
+    import yaml
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    objs = {"aa": {"w_pocv": 1.0}}
+
+    def run(out, adaptive):
+        F.run_fit(in_dir, tmp_path / out, _obj_cfg_min(), objs, _BOUNDS_MIN,
+                  "expanded", 4, nproc=1, adaptive=adaptive)
+        man = yaml.safe_load(
+            (tmp_path / out / "manifest.yaml").read_text(encoding="utf-8"))
+        df = pd.read_parquet(tmp_path / out / "fits.parquet")
+        n = [len(json.loads(v)) for v in df["restarts_json"]]
+        return man["run_signature"], man["run_spec"]["optimizer"], n
+
+    s_on, opt_on, n_on = run("on", True)
+    s_off, opt_off, n_off = run("off", False)
+
+    assert opt_on["adaptive"] is True and opt_off["adaptive"] is False
+    assert s_on != s_off, "adaptive 정책이 다른데 서명이 같다 (F66)"
+    # 끄면 **모든** 조건이 정확히 n_restarts 번 돈다 — 이게 공정 비교의 전제다
+    assert set(n_off) == {4}, f"adaptive를 껐는데 restart 수가 갈린다: {sorted(set(n_off))}"
+    assert min(n_on) < 4, "adaptive가 켜졌는데 아무 조건도 조기 종료하지 않았다"
+
+
+def test_optimizer_method_is_read_from_config(tmp_path):
+    """★ F66b — config 의 `fitting.method` 가 실제로 optimizer 에 전달돼야 한다.
+
+    `configs/objectives.yaml` 에 `L-BFGS-B` 라 적혀 있었지만 아무도 읽지 않아
+    실제로는 Nelder-Mead 로 돌았다. 그런데 그 config 는 resolved 전체가
+    `run_spec.obj_cfg` 로 서명에 들어간다 — **서명이 거짓을 기록**했다.
+    """
+    import yaml
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    objs = {"aa": {"w_pocv": 1.0}}
+    F.run_fit(in_dir, tmp_path / "o", _obj_cfg_min(), objs, _BOUNDS_MIN,
+              "expanded", 1, nproc=1, method="Powell")
+    man = yaml.safe_load(
+        (tmp_path / "o" / "manifest.yaml").read_text(encoding="utf-8"))
+    assert man["run_spec"]["optimizer"]["method"] == "Powell"
+
+    cfg = yaml.safe_load(Path("configs/objectives.yaml").read_text(encoding="utf-8"))
+    assert cfg["fitting"]["method"] == "Nelder-Mead", \
+        "config 의 method 가 실제 기본 optimizer 와 다르다 (F66b)"
+
+
+def test_halfcell_cache_key_includes_recipe():
+    """★ F64 — `branch`·`n_points` 가 다르면 캐시 경로도 달라져야 한다.
+
+    반례(리뷰 발견 4): 같은 경로에 `branch=lithiation, n_points=123` 으로 만든
+    곡선을 미리 넣어두면 fitting 이 그걸 쓰고도 통과했다. 실측으로 `p_ini[pocv]`
+    가 `[1.343, -0.325, 2.429, -0.100]` → `[1.628, -0.404, 1.500, -0.410]` 로
+    움직였다 — 좌표 원점이 바뀌므로 Case 1 의 모든 수치가 따라 바뀐다.
+    """
+    from src.halfcell import halfcell_cache_path, recipe_of
+
+    cfg = {"_config_path": "configs/base.yaml", "baseline": {"x": 1},
+           "parameter_set": "Chen2020_composite"}
+    base = halfcell_cache_path(cfg)
+    assert base != halfcell_cache_path(cfg, branch="lithiation")
+    assert base != halfcell_cache_path(cfg, n_points=123)
+    assert base == halfcell_cache_path(cfg, branch="delithiation", n_points=400)
+
+    r = recipe_of("ocp")
+    assert r == {"method": "ocp", "n_points": 400, "branch": "delithiation"}
+    with pytest.raises(ValueError):
+        recipe_of("ocp", nonexistent=1)      # 조용히 무시하면 서명에서 빠진다
+
+
+def test_halfcell_cold_cache_fails_with_instruction(tmp_path):
+    """★ F63 — 캐시가 없으면 **명확히** 멈춰야 한다 (조용한 생성 금지).
+
+    F58 이 "읽기 전 봉인"으로 바꾸면서, fresh clone 은 digest=None 으로 봉인한 뒤
+    캐시를 만들고 `None != 새 digest` 로 죽었다. 즉 **첫 실행이 항상 실패**했고,
+    테스트가 전부 `reference="grid"` 라 205개를 통과하고도 못 잡았다.
+    """
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    cache = tmp_path / "empty_cache"
+    cache.mkdir()
+
+    def fake_path(cfg, cache_dir=None, method="ocp", **kw):
+        return cache / f"missing_{method}.json"
+
+    import src.halfcell as H
+    orig = H.halfcell_cache_path
+    H.halfcell_cache_path = fake_path
+    try:
+        with pytest.raises(RuntimeError, match="python -m src.halfcell"):
+            F.run_fit(in_dir, tmp_path / "o", _obj_cfg_min(),
+                      {"aa": {"w_pocv": 1.0}}, _BOUNDS_MIN, "expanded", 1,
+                      nproc=1, reference="halfcell")
+    finally:
+        H.halfcell_cache_path = orig
+
+
+def _fake_halfcell_cache(tmp_path, branch="delithiation", n_points=400):
+    """전 범위 half-cell 캐시 + recipe meta 를 만든다 (pybamm 없이).
+
+    ★ 이 저장소에는 `reference="halfcell"` 로 `run_fit` 을 실제로 태우는 테스트가
+      **하나도 없었다.** 그래서 F58 이 fresh clone 의 첫 실행을 깨뜨렸는데도
+      205개가 전부 통과했다. 커버리지의 구멍이 곧 회귀의 통로였다.
+    """
+    import json
+
+    import numpy as np
+    import yaml
+
+    from src.config import baseline_hash, load_config
+    from src.halfcell import recipe_hash
+
+    # ★ F74 — fitting 이 meta 의 baseline_hash·recipe_hash 를 **재계산해 대조**
+    #   하므로, fixture 도 실제 규칙대로 만든다. "test" 같은 아무 값은 이제
+    #   validate_halfcell_cache 가 거부한다 (리뷰의 FORGED 반례가 그랬다).
+    cfg = load_config("configs/base.yaml")
+    b = baseline_hash(cfg)
+    r = recipe_hash(cfg, "ocp", n_points=n_points, branch=branch)
+
+    d = Path(tmp_path) / "hc"
+    d.mkdir(parents=True, exist_ok=True)
+    y = np.linspace(1e-4, 1 - 1e-4, n_points)
+    cache = d / f"{b}_ocp_{r}.json"
+    cache.write_text(json.dumps({
+        "y_pe": y.tolist(), "u_pe": (4.3 - 1.2 * y).tolist(),
+        "z_ne": y.tolist(), "u_ne": (0.05 + 0.35 * y).tolist(),
+    }), encoding="utf-8")
+    from src.io import env_fingerprint, source_digest
+    cache.with_name(cache.stem + ".meta.yaml").write_text(yaml.safe_dump({
+        "recipe": {"method": "ocp", "n_points": n_points, "branch": branch},
+        "baseline_hash": b, "recipe_hash": r, "cache_file": cache.name,
+        # ★ 10차 — 코드 identity 도 검증 대상이다 (stale-code 캐시 거부)
+        "source_digest": source_digest(),
+        # ★ 12차 발견 4 — 생성 runtime 도 대조된다
+        "env": env_fingerprint(),
+    }), encoding="utf-8")
+    return cache
+
+
+def test_halfcell_run_fit_end_to_end(tmp_path, monkeypatch):
+    """★ F63/F64 — half-cell 경로가 실제로 끝까지 돌고 provenance 를 갖추는가.
+
+    지금까지 검증한 것은 전부 `reference="grid"` 였다. 이 테스트가 없어서
+    "205개 통과"가 half-cell 이 아예 실행 불가인 상태를 가려 줬다.
+    """
+    import yaml
+
+    import src.fitting as F
+    import src.halfcell as H
+    from src.io import validate_provenance
+
+    cache = _fake_halfcell_cache(tmp_path)
+    monkeypatch.setattr(H, "halfcell_cache_path",
+                        lambda cfg, cache_dir=None, method="ocp", **kw: cache)
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = tmp_path / "o"
+    F.run_fit(in_dir, out, _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+              {"init": [1.05, -0.05, 1.4, -0.4], "lb": [0.5, -1.5, 0.5, -1.5],
+               "ub": [3.0, 1.0, 3.0, 1.0]},
+              "halfcell", 1, nproc=1, reference="halfcell")
+
+    man = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    spec = man["run_spec"]
+    # F64 — recipe 와 meta digest 가 서명에 있어야 한다
+    assert spec["halfcell_recipe"]["branch"] == "delithiation"
+    assert spec["halfcell_recipe"]["n_points"] == 400
+    assert spec["halfcell_sha"] and spec["halfcell_meta_sha"]
+    # F67 — half-cell 좌표 원점(p_ini)이 서명에 있어야 한다
+    assert set(spec["p_ini"]) == {"aa"} and len(spec["p_ini"]["aa"]) == 4
+
+    # clean_worktree·코드_identity 는 저장소 상태(dirty 여부)에 달렸으므로 제외하고,
+    # **half-cell 경로가 만들어 내는** 검사들이 실제로 통과하는지 본다.
+    v = validate_provenance(out)
+    for k in ("필수_입력_존재", "run_spec_schema", "sig_version",
+              "입력_digest_재해시", "입력봉인_교차일치", "optimizer_정책",
+              "목적함수_순서", "restart_출처", "manifest와_일치"):
+        assert v["checks"][k] == "통과", f"{k}: {v['checks'][k]}"
+
+
+def test_halfcell_recipe_substitution_changes_p_ini(tmp_path, monkeypatch):
+    """★ F64 — recipe 가 다르면 좌표 원점이 움직인다. 그게 서명에 남아야 한다.
+
+    반례(리뷰 발견 4): 같은 캐시 경로에 다른 recipe 의 곡선을 미리 넣어두면
+    fitting 이 그걸 쓰고도 통과했다. 이제 recipe 가 경로와 서명 양쪽에 들어간다.
+    """
+    import yaml
+
+    import src.fitting as F
+    import src.halfcell as H
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    bounds = {"init": [1.05, -0.05, 1.4, -0.4], "lb": [0.5, -1.5, 0.5, -1.5],
+              "ub": [3.0, 1.0, 3.0, 1.0]}
+
+    def run(cache, out):
+        monkeypatch.setattr(H, "halfcell_cache_path",
+                            lambda cfg, cache_dir=None, method="ocp", **kw: cache)
+        F.run_fit(in_dir, tmp_path / out, _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+                  bounds, "halfcell", 1, nproc=1, reference="halfcell")
+        man = yaml.safe_load(
+            (tmp_path / out / "manifest.yaml").read_text(encoding="utf-8"))
+        return man["run_signature"], man["run_spec"]
+
+    s1, sp1 = run(_fake_halfcell_cache(tmp_path / "a"), "o1")
+    s2, sp2 = run(_fake_halfcell_cache(tmp_path / "b", branch="lithiation",
+                                       n_points=123), "o2")
+    assert sp1["halfcell_recipe"] != sp2["halfcell_recipe"]
+    assert s1 != s2, "recipe 가 다른데 서명이 같다 (F64)"
+
+
+def test_fit_requires_curves_producer_manifest(tmp_path):
+    """★ F70 — producer 기록 없는 곡선은 fit 하지 않는다.
+
+    반례(리뷰 발견 5): 손으로 만든 **비-PyBaMM** `curves.parquet` 도 실제 fit 후
+    validator 를 통과했다. 이 연구의 전제는 "정답을 아는 PyBaMM 합성 곡선"인데,
+    artifact 가 증명하는 것은 "어떤 parquet 을 fit 했다"뿐이었다.
+    """
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    (in_dir / "curves_manifest.yaml").unlink()          # producer 기록만 제거
+
+    with pytest.raises(RuntimeError, match="producer"):
+        F.run_fit(in_dir, tmp_path / "o", _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+                  _BOUNDS_MIN, "expanded", 1, nproc=1)
+
+
+def test_producer_curves_digest_must_match(tmp_path):
+    """★ F70 — producer 기록만 있고 **다른 곡선**을 읽었다면 전제가 깨진다."""
+    import yaml
+
+    import src.fitting as F
+    from src.io import validate_provenance
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = tmp_path / "o"
+    F.run_fit(in_dir, out, _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+              _BOUNDS_MIN, "expanded", 1, nproc=1)
+    assert validate_provenance(out)["checks"]["producer_곡선일치"] == "통과"
+
+    # producer 가 주장하는 곡선 digest 만 바꾼다 (곡선 파일은 그대로)
+    m = yaml.safe_load(
+        (out / "manifest.yaml").read_text(encoding="utf-8"))
+    m["run_spec"]["producer"]["curves_sha256"] = "0" * 64
+    (out / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    assert "producer_곡선일치" in validate_provenance(out)["fail"]
+
+
+def test_fit_manifest_does_not_clobber_grid_record(tmp_path):
+    """★ F70 — 같은 디렉터리에 grid→fit 을 써도 grid 기록이 남아야 한다.
+
+    `write_manifest` 는 `existing.update()` 로 얕게 병합한다. 그래서 fit manifest 가
+    grid 의 solver·protocol·조건 수를 덮어썼고, 나중에 보면 곡선을 누가 어떤
+    solver 로 만들었는지 알 수 없었다.
+    """
+    import yaml
+
+    from src.io import write_manifest
+
+    d = tmp_path / "d"
+    d.mkdir()
+    write_manifest(d, {"run_type": "grid", "solver": "IDAKLU", "n_conditions": 3069})
+    write_manifest(d, {"run_type": "fit", "n_conditions": 12})
+
+    now = yaml.safe_load((d / "manifest.yaml").read_text(encoding="utf-8"))
+    kept = yaml.safe_load((d / "manifest_grid.yaml").read_text(encoding="utf-8"))
+    assert now["run_type"] == "fit" and now["n_conditions"] == 12
+    assert "solver" not in now, "fit manifest 가 grid 필드를 물려받았다"
+    assert kept["solver"] == "IDAKLU" and kept["n_conditions"] == 3069
+
+
+def test_input_swap_between_seal_and_read_is_impossible(tmp_path, monkeypatch):
+    """★ F72 — 봉인과 읽기 사이에 입력을 바꿔치기할 수 없어야 한다.
+
+    반례(리뷰 발견 3): `run_fit` 에서 seal 직후·`pd.read_parquet` 직전에 curves 를
+    바꾸고 읽은 뒤 원복하면 —
+
+        봉인된 cond_id  = SEALED_A
+        실제 읽은 것    = ACTUALLY_READ_B
+        start/current/manifest digest = 전부 일치, inputs_changed = False
+        fits cond_id    = ACTUALLY_READ_B,   validator.ok = True
+
+    digest 를 몇 번 더 비교해도 못 막는다. 해시한 **바이트를 그대로** 읽어야 한다.
+    """
+    import shutil
+
+    import pandas as pd
+
+    import src.fitting as F
+    import src.io as IO
+    from src.io import validate_provenance
+
+    sealed_dir = _tiny_curves(tmp_path / "sealed", n_cond=3)
+    other_dir = _tiny_curves(tmp_path / "other", n_cond=4)      # 다른 조건 집합
+    sealed_ids = set(pd.read_parquet(sealed_dir / "curves.parquet")["cond_id"])
+    other_ids = set(pd.read_parquet(other_dir / "curves.parquet")["cond_id"])
+    assert sealed_ids != other_ids
+
+    # 봉인이 끝난 **직후** 원본을 다른 곡선으로 바꿔치기한다
+    real_snap = IO.snapshot_inputs
+
+    def swap_then_snapshot(sealed, out_dir, repo_root=None):
+        snap = real_snap(sealed, out_dir, repo_root)          # 봉인 바이트를 뜬 뒤
+        shutil.copy2(other_dir / "curves.parquet",            # 원본을 갈아치운다
+                     sealed_dir / "curves.parquet")
+        return snap
+
+    monkeypatch.setattr(IO, "snapshot_inputs", swap_then_snapshot)
+
+    out = tmp_path / "o"
+    F.run_fit(sealed_dir, out, _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+              _BOUNDS_MIN, "expanded", 1, nproc=1)
+
+    fit_ids = set(pd.read_parquet(out / "fits.parquet")["cond_id"])
+    assert fit_ids <= sealed_ids, "바꿔치기된 곡선을 읽었다 (F72)"
+    assert not (fit_ids & (other_ids - sealed_ids))
+
+    # 원본이 바뀐 것 자체는 검증에서 드러나야 한다
+    v = validate_provenance(out)
+    assert "입력_digest_재해시" in v["fail"]
+    assert v["checks"]["입력_스냅샷"] == "통과", v["checks"]["입력_스냅샷"]
+
+
+def test_validator_rejects_forged_end_map_and_truncated_start(tmp_path):
+    """★ F72 — 종료 map 변조와 축약된 start 파일을 잡아야 한다.
+
+    반례: `input_sha256_at_end={'forged': 'not-a-digest'}` 에 boolean 만 false 로
+    맞추고, start/attempt 파일을 축약해도 validator 가 통과했다. 종료 map 은
+    내용을 보지 않고 `inputs_changed_during_run` 이라는 **자기신고**를 믿었고,
+    start/attempt 는 세 필드만 비교했기 때문이다.
+    """
+    import yaml
+
+    import src.fitting as F
+    from src.io import validate_provenance
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = tmp_path / "o"
+    F.run_fit(in_dir, out, _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+              _BOUNDS_MIN, "expanded", 1, nproc=1)
+    assert validate_provenance(out)["checks"]["입력봉인_교차일치"] == "통과"
+
+    # ① 종료 map 만 위조 + boolean 은 정직한 척
+    m = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    m["input_sha256_at_end"] = {"forged": "not-a-digest"}
+    m["inputs_changed_during_run"] = False
+    (out / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    assert "입력봉인_교차일치" in validate_provenance(out)["fail"]
+
+    # ② start 파일 축약 (코드·입력 필드를 지운다)
+    m = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    m["input_sha256_at_end"] = dict(m["input_sha256"])
+    (out / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    (out / "manifest_start.yaml").write_text(
+        yaml.safe_dump({"attempt_id": m["attempt_id"]}), encoding="utf-8")
+    assert "start_파일_일치" in validate_provenance(out)["fail"]
+
+
+# ─────────────────────────────────────────────── F74: producer 검증 (8차 리뷰)
+
+def test_curves_validator_rejects_handmade_and_mixed(tmp_path):
+    """★ F74/발견 1 — 수제 parquet 과 A/B resume 혼합을 잡아야 한다.
+
+    반례: 수제 선형 곡선을 `write_curves_manifest()` 로 포장하면 fitting·validator
+    가 통과했고, config A 절반 + config B resume 혼합도 B 만 주장하는 manifest
+    아래 통과했다 (ROW_MEANS 4.75/3.75 혼재, ok=True).
+    """
+    import pandas as pd
+    import yaml
+
+    from src.io import validate_curves_provenance
+
+    d = _tiny_curves(tmp_path / "good")
+    assert validate_curves_provenance(d)["ok"], validate_curves_provenance(d)["fail"]
+
+    # ① grid_run_sig 열이 없는 수제 parquet
+    df = pd.read_parquet(d / "curves.parquet").drop(columns=["grid_run_sig"])
+    df.to_parquet(d / "curves.parquet", index=False)
+    # curves_sha256 도 파일에 맞춰 고쳐 준다 — 재해시 검사와 분리해 보기 위해
+    from src.io import file_digest
+    m = yaml.safe_load((d / "curves_manifest.yaml").read_text(encoding="utf-8"))
+    m["curves_sha256"] = file_digest(d / "curves.parquet", full=True)
+    (d / "curves_manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    v = validate_curves_provenance(d)
+    assert "행별_grid서명" in v["fail"], v["checks"]
+
+    # ② 서명이 섞인 resume 혼합
+    d2 = _tiny_curves(tmp_path / "mixed")
+    df = pd.read_parquet(d2 / "curves.parquet")
+    df.loc[df.index[:len(df) // 2], "grid_run_sig"] = "othersig00000"
+    df.to_parquet(d2 / "curves.parquet", index=False)
+    m = yaml.safe_load((d2 / "curves_manifest.yaml").read_text(encoding="utf-8"))
+    m["curves_sha256"] = file_digest(d2 / "curves.parquet", full=True)
+    (d2 / "curves_manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    assert "행별_grid서명" in validate_curves_provenance(d2)["fail"]
+
+    # ③ spec 변조 — 서명 재계산이 잡는다
+    d3 = _tiny_curves(tmp_path / "spec")
+    m = yaml.safe_load((d3 / "curves_manifest.yaml").read_text(encoding="utf-8"))
+    m["grid_run_spec"]["noise_seed"] = 999
+    (d3 / "curves_manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    assert "grid_sig_재계산" in validate_curves_provenance(d3)["fail"]
+
+    # ④ dirty 생성
+    d4 = _tiny_curves(tmp_path / "dirty")
+    s = yaml.safe_load((d4 / "curves_manifest_start.yaml").read_text(encoding="utf-8"))
+    s["git_dirty"] = True
+    (d4 / "curves_manifest_start.yaml").write_text(yaml.safe_dump(s), encoding="utf-8")
+    assert "생성시점_clean" in validate_curves_provenance(d4)["fail"]
+
+
+def test_fit_gate_blocks_bad_producer(tmp_path):
+    """★ F74 — fitting 이 producer 검증 실패 곡선을 거부해야 한다."""
+    import pandas as pd
+
+    import src.fitting as F
+
+    d = _tiny_curves(tmp_path / "in")
+    df = pd.read_parquet(d / "curves.parquet").drop(columns=["grid_run_sig"])
+    df.to_parquet(d / "curves.parquet", index=False)
+
+    with pytest.raises(RuntimeError, match="producer 검증 실패"):
+        F.run_fit(d, tmp_path / "o", _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+                  _BOUNDS_MIN, "expanded", 1, nproc=1)
+
+
+def test_fit_rejects_forged_halfcell_meta(tmp_path, monkeypatch):
+    """★ F74/발견 2 — 위조 meta 의 half-cell 캐시를 fitting 이 거부해야 한다.
+
+    반례: 임의 선형 JSON + `baseline_hash: FORGED, recipe_hash: FORGED` meta 가
+    통과했다 (META_SOURCE=FORGED_SOURCE, VALIDATOR_OK=True). recipe 키 존재만
+    봤기 때문이다. 이제 해시를 재계산해 대조한다.
+    """
+    import yaml
+
+    import src.fitting as F
+    import src.halfcell as H
+
+    cache = _fake_halfcell_cache(tmp_path)
+    meta = cache.with_name(cache.stem + ".meta.yaml")
+    doc = yaml.safe_load(meta.read_text(encoding="utf-8"))
+    doc["baseline_hash"] = "FORGED"
+    doc["recipe_hash"] = "FORGED"
+    meta.write_text(yaml.safe_dump(doc), encoding="utf-8")
+
+    monkeypatch.setattr(H, "halfcell_cache_path",
+                        lambda cfg, cache_dir=None, method="ocp", **kw: cache)
+    in_dir = _tiny_curves(tmp_path / "in")
+    with pytest.raises(RuntimeError, match="캐시 검증 실패"):
+        F.run_fit(in_dir, tmp_path / "o", _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+                  {"init": [1.05, -0.05, 1.4, -0.4], "lb": [0.5, -1.5, 0.5, -1.5],
+                   "ub": [3.0, 1.0, 3.0, 1.0]},
+                  "halfcell", 1, nproc=1, reference="halfcell")
+
+
+def test_producer_block_comes_from_sealed_snapshot(tmp_path):
+    """★ F74/발견 3 — run_spec.producer 는 **봉인된 바이트**에서 나와야 한다.
+
+    반례: producer YAML 을 seal 직전에 SOLVER_A→SOLVER_B 로 바꾸면
+    RUN_SPEC_SOLVER=A, SEALED_SNAPSHOT_SOLVER=B 인 채 ok=True 였다 (선읽은
+    메모리 값을 기록했기 때문). 이제 스냅샷에서 읽으므로 구조적으로 항상 일치한다.
+    """
+    import yaml
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = tmp_path / "o"
+    F.run_fit(in_dir, out, _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+              _BOUNDS_MIN, "expanded", 1, nproc=1)
+
+    man = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    sealed_key = next(k for k in man["input_sha256"] if "curves_manifest.yaml" in k)
+    dig = man["input_sha256"][sealed_key]
+    snap = next((out / "_inputs").glob(f"{dig[:12]}_*"))
+    snap_doc = yaml.safe_load(snap.read_text(encoding="utf-8"))
+    assert man["run_spec"]["producer"]["solver"] == snap_doc.get("solver")
+    assert man["run_spec"]["producer"]["curves_sha256"] == snap_doc.get("curves_sha256")
+
+
+def test_extends_parent_is_sealed(tmp_path):
+    """★ F74/발견 3c — `extends` 부모 파일도 봉인돼야 한다.
+
+    반례: 부모를 바꿔도 최종 파일 digest 만 봐서 통과했다
+    (PARENT_SEALED=False, AFTER_PARENT_CHANGE_OK=True).
+    """
+    import shutil
+
+    import yaml
+
+    import src.fitting as F
+    from src.io import validate_provenance
+
+    cfgd = tmp_path / "cfgs"
+    cfgd.mkdir()
+    shutil.copy2("configs/base.yaml", cfgd / "parent.yaml")
+    (cfgd / "child.yaml").write_text("extends: parent.yaml\n", encoding="utf-8")
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = tmp_path / "o"
+    F.run_fit(in_dir, out, _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+              _BOUNDS_MIN, "expanded", 1, nproc=1,
+              base_config=str(cfgd / "child.yaml"))
+
+    man = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    sealed = man["input_sha256"]
+    assert any("parent.yaml" in k for k in sealed), "부모가 봉인 목록에 없다"
+    assert any("child.yaml" in k for k in sealed)
+
+    # 부모를 바꾸면 재해시가 잡아야 한다
+    (cfgd / "parent.yaml").write_text(
+        (cfgd / "parent.yaml").read_text(encoding="utf-8") + "\n# tampered\n",
+        encoding="utf-8")
+    assert "입력_digest_재해시" in validate_provenance(out)["fail"]
+
+
+def test_fixed_budget_requires_exact_restart_indices(tmp_path, monkeypatch):
+    """★ F86/9차 발견 7 — `--no-adaptive` 에서 restart 가 실패하면 예산을 못 채운다.
+
+    `adaptive=False` 는 "조기 종료 안 함"일 뿐이고, 개별 restart 가 예외를 내면
+    `fit()` 이 조용히 건너뛴다. 실제 index 가 `[0,2]` 처럼 줄어들면 두 목적함수의
+    탐색 예산이 달라져 **paired 진단의 전제 자체가 무너진다.** "fixed5" 라는
+    이름이 거짓이 되므로, validator 가 정확한 index 집합을 요구해야 한다.
+    """
+    import json
+
+    import pandas as pd
+    import yaml
+
+    import src.fitting as F
+    from src.io import fits_seal, validate_provenance
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = tmp_path / "o"
+    F.run_fit(in_dir, out, _obj_cfg_min(), {"aa": {"w_pocv": 1.0}},
+              _BOUNDS_MIN, "expanded", 3, nproc=1, adaptive=False)
+    assert validate_provenance(out)["checks"]["restart_예산_완주"] == "통과"
+
+    # 한 행의 restart 하나가 실패한 상황을 재현 (index 1 이 빠진다)
+    f = pd.read_parquet(out / "fits.parquet")
+    rs = json.loads(f.loc[f.index[0], "restarts_json"])
+    f.loc[f.index[0], "restarts_json"] = json.dumps(
+        [e for e in rs if e["i"] != 1])
+    f.to_parquet(out / "fits.parquet", index=False)
+    m = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    m["fits_seal"] = fits_seal(out / "fits.parquet")
+    (out / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+
+    v = validate_provenance(out)
+    assert "restart_예산_완주" in v["fail"], v["checks"]
+
+
+def test_discharged_state_is_in_grid_signature(tmp_path):
+    """★ F82/9차 발견 1 — 완방상태가 서명에 들어가야 한다.
+
+    반례: chunk 저장 후 discharged-state 를 바꿔 resume 하면 서로 다른 truth 의
+    행이 **같은 grid 서명** 아래 들어갔다 (ROW_MEANS 6.0/3.0 혼재, ROW_SIGS 단일,
+    SPEC_HAS_DISCHARGED=False, VALIDATOR_OK=True).
+    """
+    from src.grid import Condition, grid_run_spec
+
+    from src.config import load_config
+    # ★ 12차 발견 2 — 서명이 effective_solver 를 포함하므로 실제 solver 설정이
+    #   있는 config 를 쓴다 (요청만이 아니라 실제 클래스·backend 를 넣는다)
+    cfg = {**load_config("configs/base.yaml"), "_loaded_files": [],
+           "parameter_set": "x", "postprocess": {}, "grid": {"noise_seed": 42}}
+    conds = [Condition(0.0, 0.0, 0.0, "de", "de", 0.0, 1)]
+    a_spec, a_sig = grid_run_spec(cfg, conds,
+                                  discharged={"ne_primary": 1.0}, discharged_sha="a")
+    b_spec, b_sig = grid_run_spec(cfg, conds,
+                                  discharged={"ne_primary": 2.0}, discharged_sha="b")
+    assert a_spec["discharged_state"] != b_spec["discharged_state"]
+    assert a_sig != b_sig, "완방상태가 다른데 grid 서명이 같다 (F82)"
+
+
+def test_discharged_cache_rejects_foreign_baseline(tmp_path, monkeypatch):
+    """★ F82/F82b — 다른·무명·다른-solver 완방상태 캐시를 쓰면 안 된다."""
+    import json
+
+    import pytest
+
+    from src.baseline import _cache_path, get_discharged_state
+    from src.config import baseline_hash, load_config
+
+    cfg = load_config("configs/base.yaml")
+    cache = _cache_path(cfg, tmp_path)
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    cache.write_text(json.dumps(
+        {"ne_primary": 1.0, "ne_secondary": 2.0, "pe": 3.0,
+         "baseline_hash": "다른baseline"}), encoding="utf-8")
+    with pytest.raises(RuntimeError, match="baseline identity"):
+        get_discharged_state(cfg, cache_dir=tmp_path)
+
+    # ★ F82b/10차 발견 2-a — identity 필드가 **없는** 캐시도 거부
+    cache.write_text(json.dumps(
+        {"ne_primary": 1.0, "ne_secondary": 2.0, "pe": 3.0}), encoding="utf-8")
+    with pytest.raises(RuntimeError, match="baseline identity"):
+        get_discharged_state(cfg, cache_dir=tmp_path)
+
+    # ★ F82b/발견 2-b — 다른 solver 설정으로 계산된 캐시 거부
+    cache.write_text(json.dumps(
+        {"ne_primary": 1.0, "ne_secondary": 2.0, "pe": 3.0,
+         "baseline_hash": baseline_hash(cfg),
+         "solver": {"name": "casadi", "rtol": 1e-3}}), encoding="utf-8")
+    with pytest.raises(RuntimeError, match="다른 solver"):
+        get_discharged_state(cfg, cache_dir=tmp_path)
+
+    # ★ 10차 자체 리뷰 — 다른 **코드**로 계산된 캐시는 사용하지 않는다.
+    #   (조사가 필요한 baseline/solver 불일치와 달리 코드 변경은 일상이므로
+    #   미스로 취급해 재계산한다 — stale 값이 쓰이지 않는 것이 요점)
+    import src.baseline as bl
+    from src.io import source_digest
+    cache.write_text(json.dumps(
+        {"ne_primary": 1.0, "ne_secondary": 2.0, "pe": 3.0,
+         "baseline_hash": baseline_hash(cfg),
+         "solver": cfg.get("solver"),
+         "source_digest": "stale0000000"}), encoding="utf-8")
+    from src.baseline import DischargedState
+    fresh = DischargedState(ne_primary=11.0, ne_secondary=22.0, pe=33.0)
+    monkeypatch.setattr(bl, "compute_discharged_state",
+                        lambda c, solver=None: fresh)
+    got = get_discharged_state(cfg, cache_dir=tmp_path)
+    assert got == fresh, "stale-code 캐시가 재계산 없이 사용됐다 (10차)"
+
+    # identity·solver·코드·runtime 이 다 맞아도 비유한·음수 값이면 거부
+    from src.io import env_fingerprint
+    from src.runner import effective_solver
+    cache.write_text(json.dumps(
+        {"ne_primary": -1.0, "ne_secondary": 2.0, "pe": 3.0,
+         "baseline_hash": baseline_hash(cfg),
+         "solver": cfg.get("solver"),
+         "effective_solver": effective_solver(cfg),
+         "source_digest": source_digest(),
+         "env": env_fingerprint()}), encoding="utf-8")
+    with pytest.raises(RuntimeError, match="유효하지 않"):
+        get_discharged_state(cfg, cache_dir=tmp_path)
+
+
+# ──────────────────────────────── 10차 게이트 리뷰 (Codex 9차-재실행-전 + 자체)
+
+def test_run_fit_seals_failed_list(tmp_path):
+    """★ 10차 발견 1 — 실패 목록(failed.csv)도 fitting 입력으로 봉인된다.
+
+    F83b 분할 검증이 failed.csv 재해시를 요구하므로, 실패가 있는 곡선을
+    이 파일 없이 fit 하면 "무엇이 모집단에서 빠졌는가"가 증명되지 않는다.
+    """
+    import yaml
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in", n_failed=1)
+    out = tmp_path / "out"
+    obj_cfg = {"objectives": {"a": {"w_pocv": 1.0}},
+               "dqdv": {"window": 7, "polyorder": 2, "peak_weight": 1.0},
+               "scaling": {"method": "reference_rmse"}}
+    bounds = {"init": [1.0, 0.0, 1.0, 0.0], "lb": [0.5, -1.0, 0.5, -1.0],
+              "ub": [2.0, 1.0, 2.0, 1.0]}
+    F.run_fit(in_dir, out, obj_cfg, {"a": {"w_pocv": 1.0}}, bounds,
+              "expanded", 1, nproc=1)
+
+    # 봉인 목록에 failed.csv 가 있다
+    man = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    assert any(str(k).endswith("failed.csv") for k in man["input_sha256"]), \
+        "failed.csv 가 input_sha256 에 봉인되지 않았다"
+    # 검증 뷰(스냅샷 사본)에도 복사됐다 — F83b 재해시가 fit 시점 바이트로 성립
+    assert (out / "_inputs" / "_producer_view" / "failed.csv").is_file()
+
+
+def test_run_fit_rejects_missing_failed_list(tmp_path):
+    """★ 10차 발견 1 — n_failed>0 인데 failed.csv 가 없으면 fit 을 시작하지
+    않는다 (분할을 증명할 수 없는 producer)."""
+    import pytest
+
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in", n_failed=1)
+    (in_dir / "failed.csv").unlink()
+    obj_cfg = {"objectives": {"a": {"w_pocv": 1.0}},
+               "dqdv": {"window": 7, "polyorder": 2, "peak_weight": 1.0},
+               "scaling": {"method": "reference_rmse"}}
+    bounds = {"init": [1.0, 0.0, 1.0, 0.0], "lb": [0.5, -1.0, 0.5, -1.0],
+              "ub": [2.0, 1.0, 2.0, 1.0]}
+    with pytest.raises(RuntimeError, match="producer 검증 실패"):
+        F.run_fit(in_dir, tmp_path / "out", obj_cfg, {"a": {"w_pocv": 1.0}},
+                  bounds, "expanded", 1, nproc=1)
+
+
+def test_curves_validator_sig_v2_and_id_partition(tmp_path):
+    """★ 10차 발견 2 — 버전(F82b)·실패목록 재해시·ID 분할(F83b)을 강제한다."""
+    import hashlib
+
+    import pandas as pd
+    import yaml
+
+    from src.io import validate_curves_provenance
+
+    # ① 실패가 있는 producer 도 형식이 맞으면 통과한다
+    d = _tiny_curves(tmp_path / "ok", n_failed=2)
+    v = validate_curves_provenance(d)
+    assert v["ok"], v["fail"]
+
+    # ② grid_sig_version 다운그레이드 → 버전 검사가 잡는다
+    d2 = _tiny_curves(tmp_path / "v1")
+    mp = d2 / "curves_manifest.yaml"
+    m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    m["grid_run_spec"]["grid_sig_version"] = 1
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+    assert "grid_sig_version" in validate_curves_provenance(d2)["fail"]
+
+    # ③ failed.csv 바꿔치기 → 재해시가 잡는다
+    d3 = _tiny_curves(tmp_path / "swap_fail", n_failed=1)
+    (d3 / "failed.csv").write_text(
+        "cond_id,condition,reason,timestamp\nc_other,{},x,t\n", encoding="utf-8")
+    assert "실패목록_재해시" in validate_curves_provenance(d3)["fail"]
+
+    # ④ 관측 조건 하나를 다른 ID 로 교체 (리뷰 실측: replacement_condition) —
+    #    개수는 그대로라 예전 분할 검사는 통과했다. ID 집합 검사가 잡는다.
+    d4 = _tiny_curves(tmp_path / "swap_obs")
+    df = pd.read_parquet(d4 / "curves.parquet")
+    first = df["cond_id"].iloc[0]
+    df.loc[df["cond_id"] == first, "cond_id"] = "replacement_condition"
+    df.to_parquet(d4 / "curves.parquet", index=False)
+    from src.io import file_digest
+    mp4 = d4 / "curves_manifest.yaml"
+    m4 = yaml.safe_load(mp4.read_text(encoding="utf-8"))
+    m4["curves_sha256"] = file_digest(d4 / "curves.parquet", full=True)
+    mp4.write_text(yaml.safe_dump(m4, allow_unicode=True), encoding="utf-8")
+    v4 = validate_curves_provenance(d4)
+    assert "조건집합_ID분할" in v4["fail"], v4["fail"]
+
+    # ⑤ n_failed>0 인데 failed.csv 가 없다 → 존재 검사가 잡는다
+    d5 = _tiny_curves(tmp_path / "no_fail_file", n_failed=1)
+    (d5 / "failed.csv").unlink()
+    assert "실패목록_존재" in validate_curves_provenance(d5)["fail"]
+
+
+def test_fit_failfast_when_adaptive_off(monkeypatch):
+    """★ 10차 발견 6 — adaptive=False(공정 모드)에서 restart 예외를 조용히
+    건너뛰면 조건마다 restart 집합이 달라져 paired 비교의 전제가 무너진다."""
+    import numpy as np
+    import pytest
+
+    import src.fitting as F
+
+    calls = {"n": 0}
+
+    def boom(objective, x0, bounds, method):
+        calls["n"] += 1
+        if calls["n"] == 2:
+            raise ValueError("solver blew up")
+        # 79차: _minimize_until_stable 은 termination 을 다섯째로 돌려준다
+        return (np.array([1.0, 0.0, 1.0, 0.0]), 0.1, True, 10,
+                {"outer": "no_improvement", "n_rounds": 1, "native_last": None, "native_best": None})
+
+    monkeypatch.setattr(F, "_minimize_until_stable", boom)
+
+    with pytest.raises(RuntimeError, match="공정"):
+        F.fit(lambda p: 0.0, [1, 0, 1, 0], [0.5, -1, 0.5, -1], [2, 1, 2, 1],
+              n_restarts=3, adaptive=False)
+
+    # adaptive=True 는 기존대로 건너뛴다 (진단용 관용 — 예산 완주 검사는 F86)
+    calls["n"] = 0
+    res = F.fit(lambda p: 0.0, [1, 0, 1, 0], [0.5, -1, 0.5, -1], [2, 1, 2, 1],
+                n_restarts=3, adaptive=True)
+    assert res.n_restarts == 2
+
+
+def test_halfcell_cache_rejects_stale_code(tmp_path):
+    """★ 10차 자체 리뷰 — 캐시 키(baseline+recipe)에 코드가 없어, OCP/해석
+    코드가 바뀐 뒤 옛 캐시가 재사용되면 Case 1 좌표 원점이 조용히 달라진다.
+    meta 의 source_digest 를 대조해 fail-closed 로 거부한다."""
+    import yaml
+
+    from src.config import load_config
+    from src.halfcell import halfcell_meta_path, validate_halfcell_cache
+
+    cfg = load_config("configs/base.yaml")
+    cache = _fake_halfcell_cache(tmp_path)
+    v = validate_halfcell_cache(cfg, cache)
+    assert v["ok"], v["fail"]
+
+    mp = halfcell_meta_path(cache)
+    m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    m["source_digest"] = "stale0000000"
+    mp.write_text(yaml.safe_dump(m), encoding="utf-8")
+    assert "코드_identity" in validate_halfcell_cache(cfg, cache)["fail"]
+
+    # source_digest 가 아예 없는 옛 meta 도 거부 (fail-closed)
+    del m["source_digest"]
+    mp.write_text(yaml.safe_dump(m), encoding="utf-8")
+    assert "코드_identity" in validate_halfcell_cache(cfg, cache)["fail"]
+
+
+def test_failed_label_must_be_truly_infeasible(tmp_path):
+    """★ 10차 자체 확인 2 — F83b ID 분할은 '풀리는 조건을 failed 로 재선언'
+    하면 관측∪실패가 불변이라 통과한다 (리뷰 실측: AFTER ok=True). cfg 를
+    주면 "infeasible" 라벨을 guard 재평가로 재검해 위조를 잡아야 한다.
+
+    ★ 11차 발견 3 — 재검 기준은 호출자 cfg 가 아니라 producer 가 **서명한**
+    replay_recipe 다. cfg 를 넘길 수 없는 경로(archive·격리 복원)도 같은 판정을
+    받아야 하기 때문이다.
+    """
+    import hashlib
+    import json
+
+    import yaml
+
+    from src.grid import Condition
+    from src.io import append_failed, validate_curves_provenance
+
+    def _rewrite_failed(d, cond, reason):
+        """failed.csv 를 한 행으로 갈아끼우고 분할 기록을 맞춘다."""
+        (d / "failed.csv").unlink()
+        append_failed(d, cond.cond_id, cond.__dict__ | {}, reason)
+        mp = d / "curves_manifest.yaml"
+        m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+        m["failed_ids_sha256"] = hashlib.sha256(
+            cond.cond_id.encode()).hexdigest()[:16]
+        obs = sorted(set(pd.read_parquet(d / "curves.parquet")["cond_id"]))
+        m["grid_run_spec"]["condition_ids_sha256"] = hashlib.sha256(
+            "\n".join(sorted(obs + [cond.cond_id])).encode()).hexdigest()[:16]
+        m["grid_run_sig"] = hashlib.sha1(
+            json.dumps(m["grid_run_spec"], sort_keys=True, default=str)
+            .encode()).hexdigest()[:12]
+        mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+        sp = d / "curves_manifest_start.yaml"
+        s = yaml.safe_load(sp.read_text(encoding="utf-8"))
+        s["grid_run_spec"] = m["grid_run_spec"]
+        s["grid_run_sig"] = m["grid_run_sig"]
+        sp.write_text(yaml.safe_dump(s, allow_unicode=True), encoding="utf-8")
+        df = pd.read_parquet(d / "curves.parquet")
+        df["grid_run_sig"] = m["grid_run_sig"]
+        df.to_parquet(d / "curves.parquet", index=False)
+        from src.io import file_digest
+        m["curves_sha256"] = file_digest(d / "curves.parquet", full=True)
+        mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+
+    import pandas as pd
+
+    # ① 정말 불능인 라벨 (fixture: guard 밖 lli) → 재검 통과
+    d = _tiny_curves(tmp_path / "true_fail", n_failed=1)
+    v = validate_curves_provenance(d)
+    assert v["ok"], v["fail"]
+    assert "실패사유_불능재검" in v["checks"]
+    assert "실패목록_ID결합" in v["checks"]
+
+    # ② 풀리는 조건(lli=0.05)을 불능으로 재선언 → 잡는다
+    feasible = Condition(lli=0.05, lam_pe=0.0, lam_ne=0.0, lam_pe_type="de",
+                         lam_ne_type="de", noise=0.0, seed=7)
+    _rewrite_failed(d, feasible, "infeasible: forged")
+    v2 = validate_curves_provenance(d)
+    assert "실패사유_불능재검" in v2["fail"], v2["checks"]
+
+    # ③ ★ 11차 발견 2 — payload 는 진짜 불능인데 cond_id 가 **다른 조건**이면
+    #    "그 ID 가 실패했다"가 증명되지 않는다 (ID↔조건 결합)
+    d3 = _tiny_curves(tmp_path / "unbound", n_failed=1)
+    fp = d3 / "failed.csv"
+    rows = fp.read_text(encoding="utf-8").splitlines()
+    head, row = rows[0], rows[1]
+    fp.write_text(head + "\n" + "999999999999" + row[row.index(","):] + "\n",
+                  encoding="utf-8")
+    v3 = validate_curves_provenance(d3)
+    assert "실패목록_ID결합" in v3["fail"], v3["checks"]
+
+    # ④ 결정적 재검이 불가능한 사유(solver 실패)는 미검증으로 실패
+    d4 = _tiny_curves(tmp_path / "solverfail", n_failed=1)
+    infeasible = Condition(lli=5.0, lam_pe=0.0, lam_ne=0.0, lam_pe_type="de",
+                           lam_ne_type="de", noise=0.0, seed=9)
+    _rewrite_failed(d4, infeasible, "solver: crashed")
+    v4 = validate_curves_provenance(d4)
+    assert "실패사유_미검증" in v4["fail"], v4["checks"]
+
+    # ⑤ ★ 11차 발견 3 — recipe 가 없는 producer 는 fail-closed (cfg 로 우회 불가)
+    d5 = _tiny_curves(tmp_path / "norecipe", n_failed=1)
+    mp = d5 / "curves_manifest.yaml"
+    m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    del m["grid_run_spec"]["replay_recipe"]
+    m["grid_run_sig"] = hashlib.sha1(
+        json.dumps(m["grid_run_spec"], sort_keys=True, default=str)
+        .encode()).hexdigest()[:12]
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+    v5 = validate_curves_provenance(d5)
+    assert "실패사유_recipe" in v5["fail"], v5["checks"]
+
+
+# ──────────────────────────────── 11차 게이트 리뷰
+
+def test_discharged_cache_rejects_foreign_runtime(tmp_path, monkeypatch):
+    """★ 11차 발견 1 — 같은 코드·config·solver 라도 PyBaMM/SciPy 버전이 다르면
+    완방상태 값이 달라질 수 있다. 그 캐시가 hit 되면 격자 manifest 는 **현재**
+    env 를 기록해 "이 env 에서 만든 truth" 라는 주장이 거짓이 된다."""
+    import json
+
+    import src.baseline as bl
+    from src.baseline import DischargedState, _cache_path, get_discharged_state
+    from src.config import baseline_hash, load_config
+    from src.io import env_fingerprint, source_digest
+
+    cfg = load_config("configs/base.yaml")
+    cache = _cache_path(cfg, tmp_path)
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    from src.runner import effective_solver
+    base = {"ne_primary": 1.0, "ne_secondary": 2.0, "pe": 3.0,
+            "baseline_hash": baseline_hash(cfg), "solver": cfg.get("solver"),
+            "effective_solver": effective_solver(cfg),
+            "source_digest": source_digest()}
+
+    fresh = DischargedState(ne_primary=11.0, ne_secondary=22.0, pe=33.0)
+    monkeypatch.setattr(bl, "compute_discharged_state",
+                        lambda c, solver=None: fresh)
+
+    # ① env 필드가 아예 없는 옛 캐시 → 미스
+    cache.write_text(json.dumps(base), encoding="utf-8")
+    assert get_discharged_state(cfg, cache_dir=tmp_path) == fresh
+
+    # ② 다른 PyBaMM 버전에서 만든 캐시 → 미스
+    cache.write_text(json.dumps(
+        {**base, "env": {**env_fingerprint(), "pybamm": "0.0.0-other"}}),
+        encoding="utf-8")
+    assert get_discharged_state(cfg, cache_dir=tmp_path) == fresh
+
+    # ③ 같은 runtime 이면 hit (재계산 없음)
+    cache.write_text(json.dumps(
+        {**base, "env": env_fingerprint()}), encoding="utf-8")
+    got = get_discharged_state(cfg, cache_dir=tmp_path)
+    assert (got.ne_primary, got.ne_secondary, got.pe) == (1.0, 2.0, 3.0)
+
+    # ④ 저장 경로가 env 를 남긴다
+    cache.unlink()
+    get_discharged_state(cfg, cache_dir=tmp_path)
+    assert json.loads(cache.read_text(encoding="utf-8"))["env"] == env_fingerprint()
+
+
+def test_fit_validator_reverifies_sealed_producer(tmp_path):
+    """★ 11차 발견 3 — fit artifact 의 validator 가 봉인된 producer 를 **독립적
+    으로 재검**해야 한다. 예전에는 fitting 이 시작 전 한 번 보고 abort 여부에만
+    썼기에, 복원본을 검증하는 쪽은 곡선 모집단을 전혀 확인하지 않았다."""
+    import yaml
+
+    import src.fitting as F
+    from src.io import validate_provenance
+
+    in_dir = _tiny_curves(tmp_path / "in", n_failed=1)
+    out = tmp_path / "out"
+    obj_cfg = {"objectives": {"a": {"w_pocv": 1.0}},
+               "dqdv": {"window": 7, "polyorder": 2, "peak_weight": 1.0},
+               "scaling": {"method": "reference_rmse"}}
+    bounds = {"init": [1.0, 0.0, 1.0, 0.0], "lb": [0.5, -1.0, 0.5, -1.0],
+              "ub": [2.0, 1.0, 2.0, 1.0]}
+    F.run_fit(in_dir, out, obj_cfg, {"a": {"w_pocv": 1.0}}, bounds,
+              "expanded", 1, nproc=1)
+
+    v = validate_provenance(out)
+    assert "곡선_producer_재검" in v["checks"]
+    assert "곡선_producer_재검" not in v["fail"], v["checks"]["곡선_producer_재검"]
+
+    # 봉인된 producer 스냅샷의 실패 목록을 위조하면 fit 쪽 검증이 잡아야 한다
+    man = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    sealed = man["start_provenance"]["input_sha256"]
+    key = next(k for k in sealed if k.endswith("failed.csv"))
+    snap = out / "_inputs" / f"{str(sealed[key])[:12]}_failed.csv"
+    rows = snap.read_text(encoding="utf-8").splitlines()
+    snap.write_text(rows[0] + "\n" + "999999999999" + rows[1][rows[1].index(","):]
+                    + "\n", encoding="utf-8")
+    # 스냅샷 자체의 digest 도 맞춰 두면 입력_스냅샷 은 통과하고 producer 재검만 남는다
+    man2 = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    from src.io import file_digest
+    new_dig = file_digest(snap)
+    snap.rename(out / "_inputs" / f"{str(new_dig)[:12]}_failed.csv")
+    for blk in (man2["start_provenance"]["input_sha256"],
+                man2["input_sha256"], man2["input_sha256_at_end"],
+                man2["run_spec"]["sealed_inputs"]):
+        blk[key] = new_dig
+    (out / "manifest.yaml").write_text(yaml.safe_dump(man2, allow_unicode=True),
+                                       encoding="utf-8")
+    (out / "manifest_start.yaml").write_text(
+        yaml.safe_dump(man2["start_provenance"], allow_unicode=True),
+        encoding="utf-8")
+    v2 = validate_provenance(out)
+    assert "곡선_producer_재검" in v2["fail"], v2["checks"]
+
+
+# ──────────────────────────────── 12차 게이트 리뷰
+
+def test_observed_curve_identity_and_completeness(tmp_path):
+    """★ 12차 발견 1 — 관측 곡선의 조건 label·행 완전성을 검증해야 한다.
+
+    반례(리뷰 실측): 한 조건의 `lli` 를 0.777 로 잘못 기록해도, 48점 곡선이
+    24점만 남아도 validator 가 ok=True 였다. fitting 은 그 label 을 truth 로
+    채점하므로 복원오차·degeneracy 의 분자·분모가 직접 달라진다.
+    """
+    import pandas as pd
+    import yaml
+
+    from src.io import file_digest, validate_curves_provenance
+
+    def _reseal(d):
+        """curves 를 고친 뒤 manifest digest 만 맞춘다 (다른 검사는 통과 상태)."""
+        mp = d / "curves_manifest.yaml"
+        m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+        m["curves_sha256"] = file_digest(d / "curves.parquet", full=True)
+        mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+
+    # ① 정상 producer 는 새 검사를 전부 통과한다
+    ok_dir = _tiny_curves(tmp_path / "ok")
+    v = validate_curves_provenance(ok_dir)
+    assert v["ok"], v["fail"]
+    for k in ("관측조건_단일성", "관측조건_ID결합", "관측조건_행수",
+              "관측_x_norm_공통격자"):
+        assert k in v["checks"]
+
+    # ② truth 필드 오염 (label 과 물리조건이 어긋남)
+    d2 = _tiny_curves(tmp_path / "truth")
+    df = pd.read_parquet(d2 / "curves.parquet")
+    first = df["cond_id"].iloc[0]
+    df.loc[df["cond_id"] == first, "lli"] = 0.777
+    df.to_parquet(d2 / "curves.parquet", index=False)
+    _reseal(d2)
+    assert "관측조건_ID결합" in validate_curves_provenance(d2)["fail"]
+
+    # ③ 한 조건 안에서 truth 가 두 값 (병합 회귀)
+    d3 = _tiny_curves(tmp_path / "multi")
+    df = pd.read_parquet(d3 / "curves.parquet")
+    idx = df.index[df["cond_id"] == df["cond_id"].iloc[0]][:5]
+    df.loc[idx, "lam_pe"] = 0.5
+    df.to_parquet(d3 / "curves.parquet", index=False)
+    _reseal(d3)
+    assert "관측조건_단일성" in validate_curves_provenance(d3)["fail"]
+
+    # ④ 점 누락 (48 → 24)
+    d4 = _tiny_curves(tmp_path / "rows")
+    df = pd.read_parquet(d4 / "curves.parquet")
+    victim = df["cond_id"].iloc[0]
+    keep = ~((df["cond_id"] == victim) & (df.groupby("cond_id").cumcount() >= 24))
+    df[keep].to_parquet(d4 / "curves.parquet", index=False)
+    _reseal(d4)
+    f4 = validate_curves_provenance(d4)["fail"]
+    assert "관측조건_행수" in f4 and "관측_x_norm_공통격자" in f4, f4
+
+
+def test_grid_signature_and_cache_bind_effective_solver(tmp_path, monkeypatch):
+    """★ 12차 발견 2 — 요청 solver 가 같아도 **실제로 쓰인** backend 가 다르면
+    같은 서명이 되면 안 된다 (IDAKLU 실패 시 Casadi fallback)."""
+    import json
+
+    import src.baseline as bl
+    import src.grid as G
+    import src.runner as R
+    from src.baseline import DischargedState, _cache_path, get_discharged_state
+    from src.config import baseline_hash, load_config
+    from src.io import env_fingerprint, source_digest
+
+    cfg = load_config("configs/base.yaml")
+    conds = [G.Condition(0.0, 0.0, 0.0, "de", "de", 0.0, 1)]
+
+    spec_a, sig_a = G.grid_run_spec(cfg, conds, discharged={"ne_primary": 1.0},
+                                    discharged_sha="a")
+    assert spec_a["effective_solver"]["effective_class"]
+    assert spec_a["effective_solver"]["pybammsolvers"] != "absent"
+
+    # 같은 요청, 다른 실제 backend → 서명이 갈려야 한다
+    monkeypatch.setattr(R, "effective_solver",
+                        lambda c: {**spec_a["effective_solver"],
+                                   "effective_class": "CasadiSolver"})
+    spec_b, sig_b = G.grid_run_spec(cfg, conds, discharged={"ne_primary": 1.0},
+                                    discharged_sha="a")
+    assert spec_a["effective_solver"]["requested"] == \
+        spec_b["effective_solver"]["requested"], "요청 solver 는 같아야 한다"
+    assert sig_a != sig_b, "실제 solver 가 다른데 grid 서명이 같다 (12차 발견 2)"
+
+    # 완방 캐시도 실제 backend 가 다르면 미스로 재계산한다
+    cache = _cache_path(cfg, tmp_path)
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    cache.write_text(json.dumps(
+        {"ne_primary": 1.0, "ne_secondary": 2.0, "pe": 3.0,
+         "baseline_hash": baseline_hash(cfg), "solver": cfg.get("solver"),
+         "effective_solver": {"effective_class": "CasadiSolver"},
+         "source_digest": source_digest(), "env": env_fingerprint()}),
+        encoding="utf-8")
+    fresh = DischargedState(ne_primary=11.0, ne_secondary=22.0, pe=33.0)
+    monkeypatch.setattr(bl, "compute_discharged_state",
+                        lambda c, solver=None: fresh)
+    assert get_discharged_state(cfg, cache_dir=tmp_path) == fresh
+
+
+def test_halfcell_cache_binds_runtime(tmp_path):
+    """★ 12차 발견 4 — half-cell meta 의 생성 runtime 을 기록만 하고 대조하지
+    않으면, 다른 runtime 의 캐시가 Case 1 좌표 원점이 된다."""
+    import yaml
+
+    from src.config import load_config
+    from src.halfcell import halfcell_meta_path, validate_halfcell_cache
+
+    cfg = load_config("configs/base.yaml")
+    cache = _fake_halfcell_cache(tmp_path)
+    v = validate_halfcell_cache(cfg, cache)
+    assert v["ok"], v["fail"]
+    assert "runtime_identity" in v["checks"]
+
+    mp = halfcell_meta_path(cache)
+    m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    m["env"] = {**m["env"], "pybamm": "0.0.0-other"}
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+    assert "runtime_identity" in validate_halfcell_cache(cfg, cache)["fail"]
+
+    del m["env"]
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+    assert "runtime_identity" in validate_halfcell_cache(cfg, cache)["fail"]
+
+
+# ──────────────────────────────── 13차 게이트 리뷰
+
+def _reseal_curves(d):
+    """curves.parquet 을 고친 뒤 manifest digest 만 맞춘다 (다른 검사는 통과 상태)."""
+    import yaml
+
+    from src.io import file_digest
+    mp = d / "curves_manifest.yaml"
+    m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    m["curves_sha256"] = file_digest(d / "curves.parquet", full=True)
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+
+
+def test_observed_curves_check_physics_columns(tmp_path):
+    """★ 13차 발견 1 — 관측 곡선의 **물리 열**을 검증해야 한다 (결론이 바뀜).
+
+    반례(리뷰 실측): q_mah 가 조건 안에서 두 값이어도, v_full ≠ v_pe-v_ne 여도,
+    noise=0 인데 v_full_noisy 가 달라도, 전압에 NaN 이 있어도, noisy 열이 통째로
+    없어도, protocol 열이 없어도 validator 가 ok=True 였다.
+
+    이건 metadata 문제가 아니다:
+      · fitting 은 조건별 q_mah **첫 행**으로 r=q/q_ref 를 만든다 → 섞이면
+        같은 해에서도 LAM/LLI 가 0% ↔ 50% 로 바뀐다
+      · 목적함수는 비유한 target 점을 제외하고 계산한다 → "48행 완전" 을 통과한
+        곡선이 실제로는 28점으로 fit 된다
+      · v_full_noisy 가 없으면 fitting 이 조용히 v_full 로 fallback 한다 →
+        noise>0 조건 2,046건이 noiseless fitting 이 된다
+    """
+    import numpy as np
+    import pandas as pd
+    import yaml
+
+    from src.io import validate_curves_provenance
+
+    # ① 정상 producer 는 새 검사를 전부 통과한다
+    ok_dir = _tiny_curves(tmp_path / "ok")
+    v = validate_curves_provenance(ok_dir)
+    assert v["ok"], v["fail"]
+    for k in ("관측_필수열", "관측_q_mah", "관측_전압_유한",
+              "관측_전압_정합", "관측_noise_재현", "관측_protocol"):
+        assert k in v["checks"], f"{k} 검사가 없다"
+
+    def _mutate(name, fn):
+        d = _tiny_curves(tmp_path / name)
+        df = pd.read_parquet(d / "curves.parquet")
+        df = fn(df)
+        df.to_parquet(d / "curves.parquet", index=False)
+        _reseal_curves(d)
+        return validate_curves_provenance(d)["fail"]
+
+    # ② q_mah 가 조건 안에서 두 값 (r=q/q_ref 가 행 조립에 따라 달라진다)
+    def _mix_q(df):
+        first = df["cond_id"].iloc[0]
+        idx = df.index[df["cond_id"] == first][:5]
+        df.loc[idx, "q_mah"] = df.loc[idx, "q_mah"] * 0.5
+        return df
+    assert "관측_q_mah" in _mutate("qmix", _mix_q)
+
+    # ③ q_mah <= 0
+    def _zero_q(df):
+        df.loc[df["cond_id"] == df["cond_id"].iloc[0], "q_mah"] = 0.0
+        return df
+    assert "관측_q_mah" in _mutate("qzero", _zero_q)
+
+    # ④ 전압 NaN (목적함수가 조용히 그 점을 버린다)
+    def _nan_v(df):
+        idx = df.index[df["cond_id"] == df["cond_id"].iloc[0]][:20]
+        df.loc[idx, "v_full"] = np.nan
+        return df
+    assert "관측_전압_유한" in _mutate("vnan", _nan_v)
+
+    # ⑤ v_full != v_pe - v_ne (두 전극과 full-cell 이 같은 셀이 아니다)
+    def _bad_sum(df):
+        df.loc[df["cond_id"] == df["cond_id"].iloc[0], "v_full"] += 0.25
+        return df
+    assert "관측_전압_정합" in _mutate("vsum", _bad_sum)
+
+    # ⑥ noise 실현값 불일치 (noise=0 인데 noisy 가 다르다)
+    def _bad_noise(df):
+        df.loc[df["cond_id"] == df["cond_id"].iloc[0], "v_full_noisy"] += 0.65
+        return df
+    assert "관측_noise_재현" in _mutate("vnoise", _bad_noise)
+
+    # ⑦ noisy 열 자체가 없다 (fitting 이 v_full 로 조용히 fallback)
+    assert "관측_필수열" in _mutate("nonoisy", lambda df: df.drop(columns=["v_full_noisy"]))
+
+    # ⑧ protocol 열이 없다 / 서명과 다르다
+    assert "관측_필수열" in _mutate("noproto", lambda df: df.drop(columns=["protocol"]))
+
+    def _bad_proto(df):
+        df["protocol"] = "discharge_first"
+        return df
+    assert "관측_protocol" in _mutate("proto", _bad_proto)
+
+    # ⑨ x 격자가 0→1 linspace 가 아니다 (공통이기만 하면 통과했다)
+    d = _tiny_curves(tmp_path / "xshift")
+    df = pd.read_parquet(d / "curves.parquet")
+    n = int(df.groupby("cond_id").size().iloc[0])
+    shifted = np.linspace(0.2, 0.8, n)
+    df = pd.concat([g.assign(x_norm=shifted) for _, g in df.groupby("cond_id")],
+                   ignore_index=True)
+    df.to_parquet(d / "curves.parquet", index=False)
+    _reseal_curves(d)
+    assert "관측_x_norm_공통격자" in validate_curves_provenance(d)["fail"]
+
+
+def test_worker_actual_solver_must_match_signature(tmp_path, monkeypatch):
+    """★ 13차 발견 3 — 실제 solve 는 loky worker 안에서 일어난다 (숫자가 바뀜).
+
+    parent 가 probe 한 `effective_solver(cfg)` 만 서명에 들어가므로, 특정
+    worker 에서 IDAKLU constructor 가 실패해 Casadi 로 fallback 하면 **다른
+    solver 의 곡선이 parent 의 IDAKLU 서명 아래** 저장된다. worker 가 실제
+    사용한 identity 를 반환하고 main 이 전 조건을 대조해야 한다.
+    """
+    import pytest
+
+    import src.grid as G
+
+    # 워커가 반환한 identity 가 서명과 다르면 청크를 쓰기 전에 죽어야 한다
+    rows = [{"cond_id": "c1", "solver_identity": {"effective_class": "IDAKLUSolver"}},
+            {"cond_id": "c2", "solver_identity": {"effective_class": "CasadiSolver"}}]
+    with pytest.raises(RuntimeError, match="solver"):
+        G._assert_worker_solvers(rows, {"effective_class": "IDAKLUSolver"})
+
+    # identity 를 아예 안 실은 옛 워커 결과도 거부 (fail-closed)
+    with pytest.raises(RuntimeError, match="solver"):
+        G._assert_worker_solvers([{"cond_id": "c1"}],
+                                 {"effective_class": "IDAKLUSolver"})
+
+    # 전부 일치하면 통과
+    G._assert_worker_solvers(
+        [{"cond_id": "c1", "solver_identity": {"effective_class": "IDAKLUSolver"}}],
+        {"effective_class": "IDAKLUSolver"})
+
+
+def test_replay_recipe_schema_checks_keys(tmp_path):
+    """★ 13차 발견 9 — replay_recipe 가 존재만으로 통과하면 안 된다.
+
+    `baseline={"bogus": 1.0}` 같은 nonempty dict 도 v4 schema 주장을 만족한다고
+    판정됐다. Baseline 필수 키 집합·유한값·guards 형식을 실패 건수와 무관하게
+    검사해야 한다.
+    """
+    import json
+
+    import yaml
+
+    from src.io import validate_curves_provenance
+
+    d = _tiny_curves(tmp_path / "bogus")
+    mp = d / "curves_manifest.yaml"
+    m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    m["grid_run_spec"]["replay_recipe"] = {"baseline": {"bogus": 1.0}, "guards": {}}
+    import hashlib
+    m["grid_run_sig"] = hashlib.sha1(
+        json.dumps(m["grid_run_spec"], sort_keys=True, default=str)
+        .encode()).hexdigest()[:12]
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+    assert "replay_recipe_schema" in validate_curves_provenance(d)["fail"]
+
+
+# ──────────────────────────────── 14차 게이트 리뷰
+
+def _noise_family_df(q_by_noise, off_by_noise, n=8):
+    """한 (lli, lam_pe, lam_ne, 유형) family 를 noise 별로 만든다.
+
+    q_by_noise / off_by_noise: {noise: q_mah} / {noise: 전압 offset}.
+    조건별로는 완전히 내부 정합하다 — 갈림은 family 축에만 있다.
+    """
+    import numpy as np
+    import pandas as pd
+
+    x = np.linspace(0.0, 1.0, n)
+    rows = []
+    for noise in sorted(q_by_noise):
+        for xi in x:
+            rows.append({"x_norm": xi,
+                         "v_full": off_by_noise[noise] - 0.9 * xi,
+                         "v_ne": 0.1 + 0.4 * xi,
+                         "q_mah": q_by_noise[noise],
+                         "lli": 0.02, "lam_pe": 0.02, "lam_ne": 0.02,
+                         "noise": noise})
+    return pd.DataFrame(rows)
+
+
+def test_noise_family_divergent_clean_truth_fails(tmp_path):
+    """★ 14차 발견 1 — 같은 family 의 noise 멤버가 다른 clean truth 를 가지면
+    실패해야 한다.
+
+    반례(리뷰어): noise=0 멤버 q=4000·offset 4.2 V, noise=0.005 멤버 q=2000·
+    offset 3.2 V — 조건별 검사(단일성·ID결합·전압정합·noise재현)는 전부 내부
+    정합이라 **현재 validator 가 ok=True 를 낸다**. noise 는 solve 이후에만
+    얹히므로(src/grid.py: add_noise) clean 곡선·q_mah 는 family 안에서 같아야
+    한다. 허용오차: q_mah ≤ 1e-6 mAh · v_pe/v_ne/v_full pointwise ≤ 1e-10 V.
+    """
+    from src.io import validate_curves_provenance
+
+    # ① family 정합 producer → 통과하고 새 검사 키가 checks 에 있어야 한다
+    ok = sign_producer(tmp_path / "ok",
+                       _noise_family_df({0.0: 4000.0, 0.005: 4000.0},
+                                        {0.0: 4.2, 0.005: 4.2}))
+    v = validate_curves_provenance(ok)
+    assert v["ok"], v["fail"]
+    for k in ("관측_noise_기대집합", "관측_noise_family_완전성",
+              "관측_noise_family_분할", "관측_noise_family_q_mah",
+              "관측_noise_family_전압"):
+        assert k in v["checks"], sorted(v["checks"])
+
+    # ② 리뷰어 반례 — family 안 clean truth 갈림
+    bad = sign_producer(tmp_path / "bad",
+                        _noise_family_df({0.0: 4000.0, 0.005: 2000.0},
+                                         {0.0: 4.2, 0.005: 3.2}))
+    f = validate_curves_provenance(bad)["fail"]
+    assert "관측_noise_family_q_mah" in f, f
+    assert "관측_noise_family_전압" in f, f
+
+
+def test_noise_family_split_between_observed_and_failed_fails(tmp_path):
+    """★ 14차 발견 1 — family 가 observed / failed 로 쪼개지면 실패해야 한다.
+
+    한 noise 멤버만 실패로 빠지면 그 family 의 truth 는 관측 모집단에 남는데
+    noise 축 표본이 달라진다 — 같은 truth 인데 noise 조건마다 다른 모집단으로
+    fitting 되면 degeneracy 판별의 분모가 어긋난다.
+    """
+    from src.grid import Condition
+    from src.io import validate_curves_provenance
+
+    df = _noise_family_df({0.0: 4000.0, 0.001: 4000.0}, {0.0: 4.2, 0.001: 4.2})
+    split_fail = [Condition(lli=0.02, lam_pe=0.02, lam_ne=0.02,
+                            lam_pe_type="de", lam_ne_type="de",
+                            noise=0.005, seed=1000)]
+    d = sign_producer(tmp_path / "split", df, failed_conds=split_fail,
+                      spec_noise=[0.0, 0.001, 0.005])
+    f = validate_curves_provenance(d)["fail"]
+    assert "관측_noise_family_분할" in f, f
+
+
+def test_noise_family_missing_level_fails(tmp_path):
+    """★ 14차 발견 1 — 서명된 noise 집합의 level 이 family 에서 누락되면 실패.
+
+    반례: 어떤 family 가 {0.0, 0.001} 만 갖고 0.005 는 failed 에도 없다 —
+    의도 집합(condition_ids_sha256)은 producer 가 만든 그대로라 분할 검사는
+    통과한다. 서명된 noise 집합과 대조해야만 잡힌다.
+    """
+    from src.io import validate_curves_provenance
+
+    df = _noise_family_df({0.0: 4000.0, 0.001: 4000.0}, {0.0: 4.2, 0.001: 4.2})
+    d = sign_producer(tmp_path / "miss", df, spec_noise=[0.0, 0.001, 0.005])
+    f = validate_curves_provenance(d)["fail"]
+    assert "관측_noise_family_완전성" in f, f
+
+
+def test_noise_family_requires_signed_noise_set(tmp_path):
+    """★ 14차 발견 1 — spec 에 noise 집합이 없으면 fail-closed 여야 한다."""
+    import hashlib
+    import json
+
+    import yaml
+
+    from src.io import validate_curves_provenance
+
+    d = sign_producer(tmp_path / "nospec",
+                      _noise_family_df({0.0: 4000.0}, {0.0: 4.2}))
+    mp = d / "curves_manifest.yaml"
+    m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    del m["grid_run_spec"]["noise"]
+    m["grid_run_sig"] = hashlib.sha1(
+        json.dumps(m["grid_run_spec"], sort_keys=True, default=str)
+        .encode()).hexdigest()[:12]
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+    assert "관측_noise_기대집합" in validate_curves_provenance(d)["fail"]
+
+
+def _retamper_recipe(d, guards):
+    """manifest 의 replay_recipe.guards 를 바꾸고 서명을 다시 계산한다."""
+    import hashlib
+    import json
+
+    import yaml
+
+    mp = d / "curves_manifest.yaml"
+    m = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    m["grid_run_spec"]["replay_recipe"]["guards"] = guards
+    m["grid_run_sig"] = hashlib.sha1(
+        json.dumps(m["grid_run_spec"], sort_keys=True, default=str)
+        .encode()).hexdigest()[:12]
+    mp.write_text(yaml.safe_dump(m, allow_unicode=True), encoding="utf-8")
+
+
+def test_replay_recipe_guards_must_be_canonical_3key(tmp_path):
+    """★ 14차 발견 5 — guards 검사가 **아무 키나 허용하고 bool 도 통과**한다.
+
+    반례: `{"max_mode_valu": 0.5}` (오타 키) 를 서명하면 replay 는
+    `g.get("max_mode_value", 0.9)` 로 조용히 기본값을 쓴다 — 서명된 recipe 와
+    실제 재검 기준이 다른데 schema 검사는 통과. bool(True==1) 도 스칼라로
+    통과했다. canonical 3-key(max_mode_value·max_porosity·min_vf) 정확 일치,
+    bool 거부, 범위(0≤mode<1, 0<por≤1, 0<vf<1) 를 요구한다.
+    """
+    from src.io import validate_curves_provenance
+
+    d = _tiny_curves(tmp_path / "ok")
+    assert validate_curves_provenance(d)["ok"]
+
+    for bad in (
+        {"max_mode_valu": 0.9, "max_porosity": 0.95, "min_vf": 1e-4},  # 오타 키
+        {"max_mode_value": 0.9, "max_porosity": 0.95, "min_vf": 1e-4,
+         "extra": 1.0},                                                # 잉여 키
+        {"max_mode_value": 0.9, "max_porosity": 0.95},                 # 누락
+        {},                                                            # 전부 누락
+        {"max_mode_value": True, "max_porosity": 0.95, "min_vf": 1e-4},  # bool
+        {"max_mode_value": 1.0, "max_porosity": 0.95, "min_vf": 1e-4},   # ≥1
+        {"max_mode_value": 0.9, "max_porosity": 0.0, "min_vf": 1e-4},    # ≤0
+        {"max_mode_value": 0.9, "max_porosity": 1.5, "min_vf": 1e-4},    # >1
+        {"max_mode_value": 0.9, "max_porosity": 0.95, "min_vf": 1.0},    # ≥1
+        {"max_mode_value": 0.9, "max_porosity": 0.95, "min_vf": 0.0},    # ≤0
+    ):
+        d2 = _tiny_curves(tmp_path / f"bad_{hash(str(bad)) & 0xffff:x}")
+        _retamper_recipe(d2, bad)
+        f = validate_curves_provenance(d2)["fail"]
+        assert "replay_recipe_schema" in f, (bad, f)
+
+
+def test_grid_run_spec_signs_canonical_guards():
+    """★ 14차 발견 5 — producer 는 guards 를 canonical 3-key 로 채워 서명해야
+    한다 (없는 키를 코드 기본값으로 채운 뒤 서명). 안 그러면 부분 guards 를
+    서명한 producer 와 코드 기본값이 다른 미래 코드의 재검이 어긋난다."""
+    import pytest
+
+    from src.config import load_config
+    from src.grid import Condition, grid_run_spec
+
+    cfg = load_config("configs/base.yaml")
+    conds = [Condition(0.0, 0.0, 0.0, "de", "de", 0.0, 1)]
+
+    cfg2 = dict(cfg)
+    cfg2["guards"] = {"max_porosity": 0.95}          # 부분 지정
+    spec, _ = grid_run_spec(cfg2, conds, discharged={"ne_primary": 1.0},
+                            discharged_sha="a")
+    assert spec["replay_recipe"]["guards"] == {
+        "max_mode_value": 0.9, "max_porosity": 0.95, "min_vf": 1e-4}, \
+        "없는 guard 키는 코드 기본값으로 채워 서명해야 한다"
+
+    cfg3 = dict(cfg)
+    cfg3["guards"] = {"max_mode_valu": 0.5}          # 오타 → 조용히 무시 금지
+    with pytest.raises(ValueError, match="guard"):
+        grid_run_spec(cfg3, conds, discharged={"ne_primary": 1.0},
+                      discharged_sha="a")
+
+
+def _guard_fail_conds(noises, lli=1.0, seed0=1000):
+    """한 family 를 통째로 실패시키는 guard 위반 조건들 (noise 만 다르다)."""
+    from src.grid import Condition
+    return [Condition(lli=lli, lam_pe=0.0, lam_ne=0.0,
+                      lam_pe_type="de", lam_ne_type="de",
+                      noise=float(n), seed=seed0 + i)
+            for i, n in enumerate(noises)]
+
+
+def test_fully_failed_family_noise_completeness(tmp_path):
+    """★ 14차 2차 발견 1 — **전부 failed 인 family** 도 서명된 noise 집합을
+    정확히 한 번씩 가져야 한다.
+
+    현재 구현은 failed 조건을 noise 를 버린 family `set` 으로 축약해서,
+    noise {0, 0.001} 만 failed 이고 0.005 는 의도 집합에도 없는 family 를
+    승인한다 (리뷰 실측: ok=True, fail=[]). 그러면 의도·실패 조건 수와
+    noise 별 제외율이 달라져 인용 모집단(3,069/924)의 근거가 무효가 된다.
+
+    family 전체가 failed 인 것 자체는 허용한다 — 관측 모집단에 남지 않으므로
+    observed/failed 분할이 아니다 (리뷰 Q1 답변).
+    """
+    from src.io import validate_curves_provenance
+
+    want = [0.0, 0.001, 0.005]
+    obs = _noise_family_df({n: 4000.0 for n in want}, {n: 4.2 for n in want})
+
+    # ① 완전한 fully-failed family → 통과해야 한다
+    ok = sign_producer(tmp_path / "ok", obs,
+                       failed_conds=_guard_fail_conds(want),
+                       spec_noise=want)
+    v = validate_curves_provenance(ok)
+    assert v["ok"], v["fail"]
+    assert "실패_noise_family_완전성" in v["checks"], sorted(v["checks"])
+
+    # ② noise 하나가 빠진 fully-failed family → 실패
+    miss = sign_producer(tmp_path / "miss", obs,
+                         failed_conds=_guard_fail_conds([0.0, 0.001]),
+                         spec_noise=want)
+    f = validate_curves_provenance(miss)["fail"]
+    assert "실패_noise_family_완전성" in f, f
+
+    # ③ 같은 noise 가 두 번 (seed 만 다른 중복) → 실패
+    dup = sign_producer(tmp_path / "dup", obs,
+                        failed_conds=_guard_fail_conds([0.0, 0.001, 0.001]),
+                        spec_noise=want)
+    f3 = validate_curves_provenance(dup)["fail"]
+    assert "실패_noise_family_완전성" in f3, f3
+
+    # ④ observed/failed 가 교차하는 family 는 여전히 artifact 실패이며,
+    #    fully-failed 검사가 그 자리를 **대신하지 않는다** (교차 family 는
+    #    fully-failed 가 아니므로 완전성 검사에서 제외된다).
+    #    자동 강등도 하지 않는다 — 실제 성공 곡선을 사후에 버리면 모집단이 바뀐다.
+    from src.grid import Condition
+    split = sign_producer(
+        tmp_path / "split",
+        _noise_family_df({0.0: 4000.0, 0.001: 4000.0}, {0.0: 4.2, 0.001: 4.2}),
+        failed_conds=[Condition(lli=0.02, lam_pe=0.02, lam_ne=0.02,
+                                lam_pe_type="de", lam_ne_type="de",
+                                noise=0.005, seed=2000)],
+        spec_noise=want)
+    f4 = validate_curves_provenance(split)["fail"]
+    assert "관측_noise_family_분할" in f4, f4
+    assert "실패_noise_family_완전성" not in f4, \
+        "교차 family 를 fully-failed 완전성 검사로 이중 계상했다"
+
+
+def test_noise_family_verification_does_not_stringify_dataframes(tmp_path, monkeypatch):
+    """★ 15차 발견 D — family 정렬이 DataFrame 을 통째로 문자열화하면 안 된다.
+
+    `sorted(fams.items(), key=repr)` 는 값(`(noise, cond_id, DataFrame)` 목록)까지
+    `repr` 한다. 정렬에 필요한 것은 family 좌표(키)뿐인데 pandas `to_string()` 이
+    family 수만큼 돌아 곡선 검증이 수십 분이 됐다 (실측 16.47s → 0.838s, 19.7배).
+
+    wall-time 임계는 머신마다 흔들리므로, **`DataFrame.__repr__` 이 호출되면
+    실패**시키는 방식으로 고정한다.
+    """
+    import pandas as pd
+
+    from src.io import validate_curves_provenance
+
+    want = [0.0, 0.001, 0.005]
+    d = sign_producer(tmp_path / "fam",
+                      _noise_family_df({n: 4000.0 for n in want},
+                                       {n: 4.2 for n in want}),
+                      failed_conds=_guard_fail_conds(want), spec_noise=want)
+
+    calls: list[int] = []
+    monkeypatch.setattr(pd.DataFrame, "__repr__",
+                        lambda self: (calls.append(1), "<df>")[1])
+    v = validate_curves_provenance(d)
+
+    assert v["ok"], v["fail"]
+    assert not calls, (
+        f"검증 중 DataFrame.__repr__ 이 {len(calls)}회 호출됐다 — "
+        f"정렬 키가 값까지 문자열화하고 있다 (15차 발견 D)")
+
+
+# ── Case 1 좌표 원점의 출처를 봉인한다 ──────────────────────────────────
+#
+# ★ 13차 게이트 — 민감도 문턱이 격자마다 5배 달랐다 (dense 2 mV, seed_101
+#   10 mV). 코드·캐시는 동일했고 재실행 대조로 확인했다. 남은 축은 `p_ini`
+#   (Case 1 좌표 원점)인데, 두 격자에서 값이 크게 달랐다:
+#       dense    [1.5333, -0.4307, 1.0312, -0.0279]
+#       seed_101 [1.5128, -0.4215, 1.0629, -0.0597]
+#
+#   원점은 pristine 조건(lli=lam_pe=lam_ne=0, noise=0)을 자체 fitting 해서
+#   만든다. 그 곡선은 두 격자에서 **물리적으로 같다** — 그런데 multistart
+#   난수 seed 가 `sha1(cond_id)` 에서 나오고 cond_id 에는 noise_seed 가
+#   들어가므로, 같은 곡선이 다른 국소해로 수렴할 수 있다. 즉 조건 하나의
+#   최적화 요동이 격자 전체의 좌표계를 정한다.
+#
+#   그런데 그 조건의 cond_id 가 **로그에만 있고 manifest 에 없었다**.
+#   봉인되지 않으면 사후에 "어느 조건이 원점을 만들었나" 를 물을 수 없다 —
+#   지금 그 질문에 답해야 하는데 산출물만 보고는 답이 안 나온다.
+
+def test_run_spec_seals_the_p_ini_anchor_condition(tmp_path):
+    """★ p_ini 를 만든 기준 조건 id 가 run_spec 에 남아야 한다."""
+    import yaml
+
+    from src.fitting import run_fit
+
+    # p_ini 는 half-cell 기준에서만 만든다 (Case 1 좌표 원점) — 캐시 선생성
+    from src.config import load_config
+    from src.halfcell import get_halfcell_reference
+    get_halfcell_reference(load_config("configs/base.yaml"), force=True)
+
+    in_dir = _tiny_curves(tmp_path / "in", n=24, n_cond=3)
+    out = tmp_path / "out"
+    run_fit(in_dir, out,
+            {"objectives": {}, "dqdv": {"window": 7, "polyorder": 2,
+                                        "peak_weight": 1.0},
+             "scaling": {"method": "reference_rmse"}},
+            {"a": {"w_pocv": 1.0}},
+            {"init": [1.0, 0.0, 1.0, 0.0], "lb": [0.5, -1.0, 0.5, -1.0],
+             "ub": [2.0, 1.0, 2.0, 1.0]},
+            "expanded", 1, nproc=1, reference="halfcell")
+
+    m = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    spec = m["run_spec"]
+    assert "p_ini_cond" in spec, "원점을 만든 기준 조건이 봉인되지 않았다"
+    assert spec["p_ini_cond"], f"p_ini_cond 가 비었다: {spec['p_ini_cond']!r}"
+    # fits 에 실제로 있는 조건이어야 한다 (임의 문자열이면 증명이 안 된다)
+    import pandas as pd
+    conds = set(pd.read_parquet(out / "fits.parquet")["cond_id"])
+    assert spec["p_ini_cond"] in conds, \
+        f"p_ini_cond={spec['p_ini_cond']} 가 fits 에 없다"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 51차 P0-A1 · P0-A2 · P0-A3 · P1-E1 — 승인 축이 **실제 계산 축**을 안 덮는다
+#
+# 50차는 `subset_sha256`·`base_config_digest`·`halfcell_cache_sha256` 를 더했다.
+# 리뷰어는 그 밖에서 **행 바이트를 바꾸는** 축 셋을 더 찾았다:
+#   · objective payload — 축에는 **이름과 순서만** 들어간다. 같은 이름 아래
+#     다른 가중치를 주면 J 도 행도 달라지는데 승인 digest 는 같다.
+#   · base config 의 `extends` 부모 — leaf 만 해시한다. 부모의 `pe_vf` 를 바꾸면
+#     `reference_inventory()` 가 다른 재고를 주고 lli_hat 이 움직인다.
+#   · 검사한 바이트와 읽는 바이트 — 세 파일을 다 대조해도, 대조는 원본
+#     pathname 에 대고 계산은 **나중에 다시 연** 같은 pathname 에 대고 한다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+_FIT_AXIS_ARGS = dict(bounds={"lli": [0.0, 1.0]}, bounds_preset="expanded",
+                      n_restarts=3, use_noisy=True, limit=None, subset=None,
+                      reference="grid", warm_start=True, adaptive=True,
+                      method="Nelder-Mead", halfcell_method="ocp",
+                      halfcell_kw=None)
+
+
+def _axis(tmp_path, **over):
+    from src.fitting import live_fit_axis
+
+    kw = dict(_FIT_AXIS_ARGS)
+    kw.update(over)
+    objectives = kw.pop("objectives")
+    obj_cfg = kw.pop("obj_cfg")
+    base_config = kw.pop("base_config")
+    return live_fit_axis(objectives, obj_cfg, kw.pop("bounds"),
+                         kw.pop("bounds_preset"), kw.pop("n_restarts"),
+                         kw.pop("use_noisy"), kw.pop("limit"), kw.pop("subset"),
+                         kw.pop("reference"), kw.pop("warm_start"),
+                         kw.pop("adaptive"), kw.pop("method"),
+                         kw.pop("halfcell_method"), kw.pop("halfcell_kw"),
+                         tmp_path, tmp_path, base_config=base_config)
+
+
+def test_the_objective_payload_is_inside_the_approval_digest(tmp_path):
+    """★ 51차 P0-A1 — 목적함수의 **가중치 payload** 가 승인에 들어간다.
+
+    리뷰어 실측: 같은 이름 `same_name` 아래 A=`{w_pocv:1}` 와
+    B=`{w_pocv:1, w_dvdq:20}` 를 real optimizer 에 넣으면
+
+        authorization_digest_A == authorization_digest_B   (같다)
+        semantic_row_sha_A     != semantic_row_sha_B       (다르다)
+        J_A=[0.0114, 7.6e-16]  J_B=[0.1329, 1.7e-13]
+
+    `live_fit_axis()` 는 `list(objectives)` — **이름과 순서만** 담는다. 그런데
+    `_fit_one()` 은 `task["objectives"].items()` 로 payload 를 소비한다. CLI 가
+    지금은 둘을 함께 만든다는 것은 public production API 의 불변식이 아니다.
+    """
+    cfgp = str(tmp_path / "objectives.yaml")
+    Path(cfgp).write_text("objectives: {}\n", encoding="utf-8")
+    obj_cfg = {"objectives": {}}
+    base = tmp_path / "base.yaml"
+    base.write_text("baseline: {pe_vf: 0.665}\n", encoding="utf-8")
+
+    a = _axis(tmp_path, objectives={"same_name": {"w_pocv": 1.0}},
+              obj_cfg=obj_cfg, base_config=str(base))
+    b = _axis(tmp_path, objectives={"same_name": {"w_pocv": 1.0,
+                                                  "w_dvdq": 20.0}},
+              obj_cfg=obj_cfg, base_config=str(base))
+    assert a != b, ("같은 이름 아래 다른 가중치가 같은 승인 digest 를 냈다 — "
+                    "승인한 것은 계산이 아니라 이름이다")
+
+
+def test_the_base_config_parent_is_inside_the_approval_digest(tmp_path):
+    """★ 51차 P0-A2 — 승인은 leaf 가 아니라 **dependency closure** 를 담는다.
+
+    리뷰어 실측: leaf 는 두 실행 모두 `extends: parent.yaml` 로 byte-identical
+    이고 부모의 `pe_vf` 만 `0.665 → 0.500` 으로 바꿨다.
+
+        child_digest_A == child_digest_B                   (같다 — leaf 만 본다)
+        semantic_row_sha_A != semantic_row_sha_B           (다르다)
+        lli_hat_A=[0.017343...] lli_hat_B=[0.017400...]
+
+    본체는 `config_dependencies()` **전체**를 snapshot·merge 하고
+    `reference_inventory(base_cfg)` 가 행을 바꾼다. 승인만 leaf 를 본다.
+    """
+    parent = tmp_path / "parent.yaml"
+    leaf = tmp_path / "leaf.yaml"
+    leaf.write_text("extends: parent.yaml\n", encoding="utf-8")
+    obj_cfg = {"objectives": {}}
+    objectives = {"pocv": {"w_pocv": 1.0}}
+
+    parent.write_text("baseline: {pe_vf: 0.665}\n", encoding="utf-8")
+    a = _axis(tmp_path, objectives=objectives, obj_cfg=obj_cfg,
+              base_config=str(leaf))
+    parent.write_text("baseline: {pe_vf: 0.500}\n", encoding="utf-8")
+    b = _axis(tmp_path, objectives=objectives, obj_cfg=obj_cfg,
+              base_config=str(leaf))
+    assert a != b, ("`extends` 부모를 바꿔도 승인 digest 가 같다 — 승인은 "
+                    "실제로 읽히는 파일 전부를 담아야 한다")
+
+
+def test_the_external_input_binding_covers_the_whole_package(tmp_path):
+    """★ 51차 P1-E1 — 외부 입력 분기도 **세 파일 전부**를 승인에 결속한다.
+
+    50차는 세 digest 를 계산해 놓고 hex64 분기에서는 `curves_sha256` 하나만
+    비교했다. 나머지 둘은 계산하고 버렸다 (리뷰어 실측:
+    `real_fit_completed_with_unapproved_manifest=True`).
+
+    `in_digest` 의 의미를 "curves.parquet 하나의 digest" 에서 "묶음 전체의
+    package digest" 로 바꾼다 — 타입은 그대로 hex64 다.
+    """
+    from src.fitting import (_assert_fit_input_is_authorized,
+                             fit_input_package_digest, _fit_input_digests)
+    from tools.preserve import PHASE_INPUT_KEYS, PreserveError
+
+    names = ("curves.parquet", "curves_manifest.yaml",
+             "curves_manifest_start.yaml")
+    for n in names:
+        (tmp_path / n).write_bytes(n.encode("utf-8"))
+    pkg = fit_input_package_digest(_fit_input_digests(tmp_path))
+
+    class _Claim:                      # phase receipt 는 이 분기에서 안 쓰인다
+        pass
+
+    _assert_fit_input_is_authorized(_Claim(), {"in_digest": pkg}, tmp_path)
+
+    # 어느 파일을 갈아도 package digest 가 달라져 거부돼야 한다
+    for n in names:
+        keep = (tmp_path / n).read_bytes()
+        (tmp_path / n).write_bytes(keep + b"x")
+        with pytest.raises(PreserveError):
+            _assert_fit_input_is_authorized(_Claim(), {"in_digest": pkg},
+                                            tmp_path)
+        (tmp_path / n).write_bytes(keep)
+    assert len(PHASE_INPUT_KEYS) == 3
+
+
+def test_the_fit_body_reads_the_bytes_the_gate_verified(tmp_path, monkeypatch):
+    """★ 51차 P0-A3 — 검사한 바이트와 계산이 읽는 바이트가 **같은 사본**이다.
+
+    리뷰어 실측: 유효 package A 의 세 파일을 receipt 와 다 대조한 직후,
+    `acquire_run_lock()` 경계에서 독립적으로 유효한 package B 로 통째 교체했다.
+    snapshot·validator·optimizer·writer 가 전부 B 를 계산·게시했다
+    (`three_file_binding_rejected_swap=False`). key 를 하나에서 셋으로 늘려도
+    check-use gap 은 닫히지 않는다 — **대조 대상이 원본 pathname 이기 때문이다.**
+
+    그래서 gate 앞에서 immutable 사본을 먼저 뜨고, 승인·결속·계산이 모두 그
+    사본만 본다. 이 시험은 gate 통과 뒤 원본을 통째로 갈아 끼운 다음, 본체가
+    받은 경로의 바이트가 **승인한 A** 그대로인지 본다.
+    """
+    import src.fitting as F
+
+    src = tmp_path / "in"
+    src.mkdir()
+    names = ("curves.parquet", "curves_manifest.yaml",
+             "curves_manifest_start.yaml")
+    for n in names:
+        (src / n).write_bytes(b"package-A:" + n.encode("utf-8"))
+    (src / "failed.csv").write_text("cond_id\n", encoding="utf-8")
+    base = tmp_path / "base.yaml"
+    base.write_text("baseline: {pe_vf: 0.665}\n", encoding="utf-8")
+
+    staged = F._stage_fit_inputs(src, str(base), "grid", "ocp", None)
+    try:
+        # ── gate 를 지난 **뒤** 원본을 유효한 package B 로 통째 교체한다 ──
+        for n in names:
+            (src / n).write_bytes(b"package-B:" + n.encode("utf-8"))
+        base.write_text("baseline: {pe_vf: 0.500}\n", encoding="utf-8")
+
+        for n in names:
+            assert (staged["in_dir"] / n).read_bytes() == \
+                b"package-A:" + n.encode("utf-8"), (
+                    f"본체가 받는 {n} 이 교체된 B 를 가리킨다 — 검증한 바이트와 "
+                    "계산하는 바이트가 다르다")
+        assert Path(staged["base_config"]).read_text(encoding="utf-8") == \
+            "baseline: {pe_vf: 0.665}\n"
+        assert Path(staged["in_dir"]).resolve() != src.resolve(), (
+            "본체가 여전히 원본 pathname 을 받는다")
+    finally:
+        F._discard_staged_inputs(staged)
+
+
+def test_run_fit_hands_the_body_the_staged_copies_not_the_originals(tmp_path,
+                                                                    monkeypatch):
+    """★ 51차 P0-A3 — **배선**을 본다: `run_fit()` 이 본체에 무엇을 넘기는가.
+
+    바로 위 시험은 `_stage_fit_inputs()` 를 직접 불러 사본의 성질만 봤다. 그
+    함수가 아무리 옳아도 `run_fit()` 이 원본 경로를 그대로 넘기면 아무 것도
+    닫히지 않는다 — 변이 시험이 정확히 그것을 보여 줬다 (호출을 원본 경로를
+    쓰는 dict 로 바꿔도 위 시험은 초록이었다). 검사는 **쓰는 자리**를 봐야 한다.
+    """
+    import src.fitting as F
+
+    src = tmp_path / "in"
+    src.mkdir()
+    names = ("curves.parquet", "curves_manifest.yaml",
+             "curves_manifest_start.yaml")
+    for n in names:
+        (src / n).write_bytes(b"package-A:" + n.encode("utf-8"))
+    base = tmp_path / "base.yaml"
+    base.write_text("baseline: {pe_vf: 0.665}\n", encoding="utf-8")
+    out = tmp_path / "out"      # conftest 가 tmp_path 를 smoke namespace 로 옮긴다
+
+    seen = {}
+
+    def _fake_locked(in_dir, out_dir, *a, **kw):
+        seen["in_dir"] = Path(in_dir)
+        seen["base_config"] = kw.get("base_config") or a[8]
+        seen["stage_root"] = kw.get("stage_root")
+        # gate 를 지난 뒤 원본을 유효한 package B 로 통째 교체한다
+        for n in names:
+            (src / n).write_bytes(b"package-B:" + n.encode("utf-8"))
+        base.write_text("baseline: {pe_vf: 0.500}\n", encoding="utf-8")
+        # 본체가 **그 순간** 읽는 바이트를 그대로 뜬다 (staging 은 반환 뒤 지워진다)
+        seen["bytes"] = {n: (Path(in_dir) / n).read_bytes() for n in names}
+        seen["cfg"] = Path(seen["base_config"]).read_text(encoding="utf-8")
+        # ★ 61차 P1-1 — 굳히는 자리가 본체 **밖**으로 나왔다 (lock 정리 뒤에
+        #   권한을 소비해야 하므로). 그래서 본체를 흉내 내는 이 가짜도 본체가
+        #   만드는 것 — 내용 identity 의 근거인 manifest — 을 만들어야 한다.
+        #   안 만들면 "봉인할 것이 없다" 로 멈춘다. 이 시험이 재는 것(배선)은
+        #   그대로다.
+        (Path(out_dir) / "manifest.yaml").write_text(
+            "fits_sha256: stub\n", encoding="utf-8")
+        return {"n_rows": 0}
+
+    monkeypatch.setattr(F, "_run_fit_locked", _fake_locked)
+    F.run_fit(src, out, {"objectives": {}}, {"pocv": {"w_pocv": 1.0}},
+              {"lli": [0.0, 1.0]}, "expanded", 1, 1, base_config=str(base))
+
+    assert seen["stage_root"] is not None, "본체가 staging 뿌리를 못 받았다"
+    assert seen["in_dir"].resolve() != src.resolve(), (
+        "본체가 **원본** 입력 경로를 받았다 — 검증한 바이트와 계산하는 바이트가 "
+        "다를 수 있다")
+    for n in names:
+        assert seen["bytes"][n] == b"package-A:" + n.encode("utf-8"), (
+            f"본체가 읽는 {n} 이 교체된 package B 다 — 검증한 바이트와 계산하는 "
+            "바이트가 다르다")
+    assert seen["cfg"] == "baseline: {pe_vf: 0.665}\n"
+
+
+def test_the_effective_smoothing_backend_is_inside_the_approval(tmp_path):
+    """★ 52차 P0-6 — 결과를 바꾸는 runtime backend 는 봉인 안이다.
+
+    리뷰어 반례: `DD_SMOOTH_CACHE` 가 실제 smoothing backend 를 바꾸고 그것이
+    목적함수 `J` 를 바꾼다. 그런데 fit 승인 축에도 `env_fingerprint()` 에도
+    없었다.
+
+        AXIS_SHA: 두 실행 동일     ENV_SHA: 두 실행 동일
+        DD_SMOOTH_CACHE=1 → J=0x1.ab7510443d0efp-4
+        DD_SMOOTH_CACHE=0 → J=0x1.ab7510443ec34p-4
+
+    이 `J` 는 결과 행에 기록된다. 환경변수 하나가 승인·서명 **양쪽** 밖에서
+    행을 옮기면, 그 행이 어느 실행의 산물인지 말할 근거가 없다.
+
+    `_SMOOTH_CACHE_ENABLED` 는 import 시점에 굳으므로 **별도 process** 로
+    확인한다 (리뷰어도 그렇게 했다). 같은 process 에서 환경변수만 바꾸는
+    시험은 이 축을 못 본다 — 그 자체가 실측이다.
+    """
+    import json
+    import os
+    import subprocess
+    import sys
+
+    probe = (
+        "import json, os, sys\n"
+        "sys.path.insert(0, %r)\n"
+        "from src.io import env_fingerprint\n"
+        "from src.objective import effective_smoothing_backend\n"
+        "from src.fitting import live_fit_axis\n"
+        "ax = live_fit_axis({'pocv': {'w_pocv': 1.0}}, {'objectives': {}},\n"
+        "                   {'lli': [0.0, 1.0]}, 'expanded', 3, True, None,\n"
+        "                   None, 'grid', True, True, 'Nelder-Mead', 'ocp',\n"
+        "                   None, %r, %r, base_config=%r)\n"
+        "print(json.dumps({'backend': effective_smoothing_backend(),\n"
+        "                  'axis': ax,\n"
+        "                  'env': env_fingerprint()}, sort_keys=True,"
+        " default=str))\n"
+    ) % (str(ROOT), str(tmp_path), str(tmp_path), str(tmp_path / "base.yaml"))
+    (tmp_path / "base.yaml").write_text("baseline: {pe_vf: 0.665}\n",
+                                        encoding="utf-8")
+
+    got = {}
+    for flag in ("1", "0"):
+        r = subprocess.run([sys.executable, "-c", probe], text=True,
+                           capture_output=True, cwd=str(ROOT),
+                           env=dict(os.environ, DD_SMOOTH_CACHE=flag,
+                                    PYTHONPATH=str(ROOT)))
+        assert r.returncode == 0, r.stderr[-2000:]
+        got[flag] = json.loads(r.stdout)
+
+    assert got["1"]["backend"] != got["0"]["backend"], (
+        "두 flag 가 같은 backend 를 보고한다 — 시험 전제가 깨졌다")
+    # 승인 축과 환경 지문을 **따로** 본다. OR 로 묶으면 한쪽을 지워도 다른
+    # 쪽이 가린다 (변이 시험에서 실측했다 — 그것이 곧 약한 시험이다).
+    assert got["1"]["axis"] != got["0"]["axis"], (
+        "smoothing backend 를 갈아도 **승인 축**이 그대로다 — 결과를 바꾸는 "
+        "축이 승인 밖에 있다")
+    assert got["1"]["env"] != got["0"]["env"], (
+        "smoothing backend 를 갈아도 **환경 지문**이 그대로다 — 결과를 바꾸는 "
+        "축이 실행 서명 밖에 있다")

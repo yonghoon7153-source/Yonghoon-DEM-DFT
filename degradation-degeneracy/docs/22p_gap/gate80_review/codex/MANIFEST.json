@@ -1,0 +1,117 @@
+{
+  "scope": "Gate80 read-only static/data review; no execution or stage3 approval",
+  "files": {
+    "audit.py": {
+      "bytes": 10847,
+      "sha256": "ab4dd53aa67e5fdeba24e21962a2d899365c8e9097462d7d6b482f5333387941"
+    },
+    "CLAUDE_REPLY.md": {
+      "bytes": 2159,
+      "sha256": "29393fb0bb3d08c6d85090855f125a086195b572437a59467f742211d8d3f7d3"
+    },
+    "CODE_TO_HEAD.diff": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "DATA_AUDIT.json": {
+      "bytes": 5565,
+      "sha256": "3afcf4ece9491cc2c0ee6ea38e4aecb8b2a87ab6019ae0838fe5f9fd0e35984e"
+    },
+    "DECISION.json": {
+      "bytes": 772,
+      "sha256": "9bc74e405410bb7ea035a343985b89ba78fa3dc6186d78fe11552f7ee1e07089"
+    },
+    "package_review.py": {
+      "bytes": 2039,
+      "sha256": "47f1477279a9ff6a60aebf0cbeff2cdc63c16ec3357ebe2dd5192132d85d7a54"
+    },
+    "prior/grid_fit_v5.validate.yaml": {
+      "bytes": 3703,
+      "sha256": "b244b7800a8a2887e3b7e7bfba2421ee517ba7297a50f4ff423c6695b798a667"
+    },
+    "prior/paired_fixed5_v4.validate.yaml": {
+      "bytes": 3768,
+      "sha256": "8135ead2e3970eaed0d1da4d66ebcdf132b39a767e18467213620d51a4e30c26"
+    },
+    "prior_gate79/DECISION.json": {
+      "bytes": 1926,
+      "sha256": "7b10ff6b57a405ccc4851eb6f004d9a5d7ac47676ae33bf8c15aa8df6676129b"
+    },
+    "prior_gate79/REVIEW_KO.md": {
+      "bytes": 11780,
+      "sha256": "260b76f1c4759a264601971b947544d40dab935b9c718d1347eb5f199ca2beb2"
+    },
+    "reference/docs/22p_gap/CLAIM_STATUS.yaml": {
+      "bytes": 27279,
+      "sha256": "dde972427f0833d59b72148f1a71ea093441b23dbf07a4006f129921090f9b68"
+    },
+    "reference/docs/22p_gap/GATE79_REQUEST.md": {
+      "bytes": 12400,
+      "sha256": "18238647e19aa45c0c5b4884a0f7fa28b6d34a46ef804f963c70dd9bf556b62b"
+    },
+    "reference/docs/22p_gap/GATE80_REQUEST.md": {
+      "bytes": 8060,
+      "sha256": "88307572d9c2e22b5c3bf9d977ce20ee9cf3ea7e2b6d61b34c02cf66b023d2d7"
+    },
+    "reference/docs/22p_gap/LEG_PRESERVATION.yaml": {
+      "bytes": 65166,
+      "sha256": "bd566edc6447e7ac24fa1ea6f575d2b2310a923d003905eef8f1b78334fd08c2"
+    },
+    "reference/docs/22p_gap/mutation_replay.py": {
+      "bytes": 457646,
+      "sha256": "37abc8995288741e4ef5226e0eadb2f80a8c5800cd5f47d5867296a6d19bab05"
+    },
+    "reference/docs/22p_gap/receipts/grid_fit_v5.validate.yaml": {
+      "bytes": 3703,
+      "sha256": "8ccb43359e48537ec07e5ead7e205ee7443dc10a5c4d99220cbe0c9932e5208b"
+    },
+    "reference/docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml": {
+      "bytes": 3768,
+      "sha256": "a3851a971b99242ba7407d0233b856c2750961cb760440c57dd8bebdff6b470c"
+    },
+    "reference/docs/22p_gap/STAGE3_CONTRACT.md": {
+      "bytes": 97959,
+      "sha256": "53c7b1ff079cb40460ff2d02f8c7ab68b6eb1ac0f39451b47e357232f9530972"
+    },
+    "reference/RESPONSE_111.txt": {
+      "bytes": 6095,
+      "sha256": "e034b5d34c24ebf22d834e6986040f0a720b4c30ef2bbb4ff01aeb1df9cce68b"
+    },
+    "reference/src/fitting.py": {
+      "bytes": 104406,
+      "sha256": "37c52b89b520b63b4086df03b2d8fce0f71975dd3a654791a1bd98dfb35f08d8"
+    },
+    "reference/tests/test_fitting.py": {
+      "bytes": 128742,
+      "sha256": "29b206681f4c794413e9435317928151bb0987f3027693e0a43fddca7c13f67a"
+    },
+    "reference/tests/test_gate79_stage3_logging.py": {
+      "bytes": 20013,
+      "sha256": "9bb1529bfe048a2f1473551e79d6a57aa416352a2d3f4fb0add9909c57ca7373"
+    },
+    "REVIEW_KO.md": {
+      "bytes": 8332,
+      "sha256": "a86d2acc1d624cabbe4450aaf2a2ce1191dca760d3e2c82089c556ccd539f7e8"
+    },
+    "SCOPE_CHANGE.diff": {
+      "bytes": 2844,
+      "sha256": "eec4dc5417b1f75441008e904458f76dccb6d38e3ef1cc855054f50ed5ed2943"
+    },
+    "SOURCE_AFTER_CHECK.json": {
+      "bytes": 129,
+      "sha256": "3089ff473dcf67ad52d0fe4e3f9ca1c61464cec40d0efba462bf8eab52a801cc"
+    },
+    "SOURCE_BEFORE.json": {
+      "bytes": 10661,
+      "sha256": "ca4c64219d7d344ed0fb4cde298f01adea94571ebe5812d2a4f32b551a14f365"
+    },
+    "STATIC_CHECKS.json": {
+      "bytes": 1627,
+      "sha256": "d61a8950195870a4c44e63c494e6f6acaae57ec735df46cf07d3a64ea7af7925"
+    },
+    "TEST_DOC_RECEIPT_CHANGE.diff": {
+      "bytes": 22042,
+      "sha256": "3d29f7b921b1680be386484d9280d2ce138e81a64083a64adc437245b3aba165"
+    }
+  }
+}
