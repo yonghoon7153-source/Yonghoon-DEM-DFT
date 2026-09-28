@@ -174,6 +174,7 @@
 | **[SJ23AgC]** ⭐⭐⭐ **Ag–C 인터레이어 기전 원전 (operando PXRD)** · ⛔ **점착·응력 미측정 → 물성 4축 수치 진입 금지** · ⚠ 탄소 = 흑연(Samsung 원조는 카본블랙) | **Dominic Spencer-Jolly**/**Varnika Agarwal**/…/**Patrick S. Grant**/**Robert A. House**/**Peter G. Bruce\*** (Oxford + Diamond) 2023 ***Joule* 7, 503** (DOI 10.1016/j.joule.2023.02.001, OA) — "Structural changes in the silver-carbon composite anode interlayer of solid-state batteries" | ✅ `papers/spencerjolly2023_ag_graphite_interlayer_operando_xrd.md` — 판정은 **§E 1행** + `comparison_vs_ours_DEM.md` **§I-4** | 실험 (operando PXRD 실험실 Cu Kα + Diamond I12 · SEM/EDX · 계산 0) |
 | **[Maurer15MBD]** 🔧 **방법 원전 · 점착 트랙 Ag\|탄소 분산 모델 폭** · ⛔ **물성 4축 아님 · D3 수치 0건** | **R. J. Maurer**/V. G. Ruiz/**A. Tkatchenko\*** (Yale · FHI Berlin) 2015 ***J. Chem. Phys.* 143, 102808** (DOI 10.1063/1.4922688) — "Many-body dispersion effects in the binding of adsorbates on metal surfaces" | ✅ `papers/maurer2015_mbd_adsorbates_metal_surfaces.md` (2026-09-23, 그림 **7/7 실독**) | **[외부]** DFT 방법 검증 · 금속 흡착 · **§J-43 전용** |
 | **[Giov08]** ⚙ **점착 트랙 P1-b Ag\|흑연 — "약결합군" 분류·계면 쌍극자의 원전 (2026-09-23)** · ⛔⛔ **LSDA 단독(vdW 없음) 결합에너지 — 우리 PBE+D3(BJ) W 와 같은 줄 금지 · A–D 물성 4축 진입 금지** · ⚠ 계 = 그래핀 1장(흑연 아님) | G. Giovannetti/P. A. Khomyakov/G. Brocks/V. M. Karpan/J. van den Brink/**P. J. Kelly** (Leiden · Twente · Nijmegen) 2008 ***Phys. Rev. Lett.* 101, 026803** (본문 4 pp, SI 없음) — "Doping Graphene with Metal Contacts" | ✅ `papers/giovannetti2008_doping_graphene_metal_contacts.md` — 판정은 **§E** + `comparison_vs_ours_DEM.md` **§I-5** | DFT (VASP-PAW LSDA · 400 eV · 금속 6층 + 그래핀 · 쌍극자 보정 · 36×36/24×24 k) + 해석 모형 |
+| **[Wang15CE]** ⭐⭐⭐ **점착 트랙 흑연 층간(C\|C) 대조의 실험 앵커 (2026-09-28)** · ⛔⛔ **흑연 물성 → A–D 물성 4축 진입 금지 · 우리 흑연 값 0 건** · ⚠ **0.37(비정합·직접 측정) ≠ 0.39(AB·측정+이론)** · 🔴 **EE 0.46 인용 보류** | **Wen Wang**/S. Dai/X. Li/J. Yang/**D. J. Srolovitz\***/**Q. Zheng\*** (Tsinghua + UPenn) 2015 ***Nat. Commun.* 6, 7853** (DOI 10.1038/ncomms8853 · arXiv:1506.00536 · OA CC BY 4.0) — "Measurement of the cleavage energy of graphite" | ✅ `papers/wang2015_graphite_cleavage_energy.md` (2026-09-28, 그림 **6/6 실독**) — 판정은 **§J-50** | 실험 (자기수축 전단력 · HOPG 메사 · 대기) + 이론 (APNGB · GSFE 입력 = ACFDT-RPA 이중층 그래핀 · 계산 설정 0) |
 | **[Pust25]** ⭐⭐ **W_ad SE 종결의 원자 모형 원전 · LPSCl 표면/파괴에너지 DFT 앵커** · ⛔ **0.20 J/m² 를 "벽개 에너지"·"γ" 로 단독 인용 금지** · ⛔ **`Table 5` G 3.4 GPa 인용 금지** | **Gregory Pustorino**/H. Jagad/W. Li/M. Feng/M. Poma/J. Ko(SK On)/P. Johari/**Yue Qi\*** (Brown) 2025 ***Chem. Mater.* 37, 313–321** (DOI 10.1021/acs.chemmater.4c02577) | `papers/pustorino2025_lpscl_bulk_surface_mechanical_electronic_li_filament.md` ✅ 2026-09-23 | DFT (VASP-PBE, vdW 없음, 정적) |
 
 ---
@@ -5886,6 +5887,8 @@ A–D 4축 행 금지. 아래는 **판정**과 **우리 위치**뿐이다.
 | 실험 검산계 | Xe/Ag(111): 0.18–0.23 eV · 3.45–3.68 Å (`Table I`) | 없음 | ⭕ **이식 후보** — Xe/Ag(111) (√3×√3)R30° 19원자 D3(BJ) 대조 계산 |
 | 다체 부호 | 세 계 모두 pairwise → 다체에서 결합 감소 · 높이 증가 | C-12 브리프 §3-5 D4 → D4+ATM: PTFE −12 % | ✅ 부호 일치 · ⛔ 크기 이식 금지 (금속 vs LiNiO₂ 산화물) |
 
+> ⚠ **09-28 보류 (흑연 대조 행)** — [Wang15CE] (§J-50) 관계 BE ≈ 0.85 CE 로 보면 48 meV/C 가 **층간 결합에너지(BE)** 일 때 CE ≈ 0.35 J/m² 로 허용대 **안**이다. 원전(Ambrosetti 2014) 양 정의 확인 전까지 위 행의 '허용대 하단 밖' 판정은 쓰지 않는다 (BE 를 CE 허용대에 댄 비교일 수 있다).
+
 **J-43-a. 인용 규율** — "38 %" 는 **"vdW^surf 대비"** 를 붙인다 (표 산술 37.5 %, 결론 절 "~25 %" 로 자기모순). 결론의 "PTCDA +0.1 Å" 도 표(+0.05)와 다르다 → **표에서 인용**. 45 meV/C 를 J/m² 로 옮길 때 밀도 **0.3593**(논문 셀)을 쓴다 — 0.3816(평형 그래핀)이면 0.28 로 6 % 부푼다.
 **상호참조**: DEM 쪽 점착 트랙 서술은 `comparison_vs_ours_DEM.md` §I · 계획 `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` §0′.
 
@@ -6156,6 +6159,33 @@ A–D 4축 행 금지. 아래는 **판정**과 **우리 위치**뿐이다.
 - **이 리뷰의 인용번호 일체를 원전 재확인 없이** — §3.2 에서 Ding/Wan/Tian 번호가 한 칸씩 밀림(→ [166]/[167]/[168]) · §3.3 "Li et al. [182]" = Wen · [13] WiSE MD 를 SSE 기계강도·덴드라이트 근거로 · `Fig. 17c` 본문 [223] ↔ 캡션 [222].
 
 **6. 📥 확보 대상** — ① **Katcho 2019** *J. Appl. Crystallogr.* 52, 148(BV+ML) · ② **Bekaert 2023** *JPCC* 127, 8503(`Na₃PS₄`/Na NNP-MD) · ③ Pereznieto 2023 *Mater. Lett.* 349, 134848(분할 규약 · `NaPb₃` 갭 필터) · ④ Kim 2023 *ACS AMI* 15, 41417(NASICON 3 573) · ⑤ Ishikawa 2019 *PCCP* 21, 26399(0.02 vs 0.13 eV) · ⑥ Park 2024 *npj Comput. Mater.* 10, 226 · ⑦ Tang 2018 *Chem. Mater.* 30, 163(`Na₃PS₄` 상평형 원전).
+
+### J-50. 🔧 **실측 앵커 원전 — [Wang15CE] 흑연 벽개에너지: 0.37(비정합·측정)과 0.39(AB·측정+이론)는 다른 양 · C|C 대조 대응표 · 층간에너지 용어(CE/BE/EE/2γ) 교통정리** (2026-09-28 신설)
+
+📎 **출처: `papers/wang2015_graphite_cleavage_energy.md`** (그림 6/6 실독 · `Fig. 1` 재크롭 · `Fig. S1` 손 크롭 · GSFE 식은 PDF 렌더로 원식 대조 · 핵심 수치는 PDF 텍스트: 초록 0.37 ± 0.01 · p.4 "50 samples … 2–9 μm … 16° ≤ φ ≤ 54°" · p.5 σ₀ ≈ 22 mJ/m², 오차 < 0.005 J/m² · p.6 0.20 / 0.33 / 0.46 과 관계식 · `Table S1`–`S4`)
+
+⛔ **A–D 물성 4축 표에 행을 만들지 않는다** — 흑연 물성이고, 우리 흑연 값은 아직 **0 건**이다 (사전등록 카드 `db/properties/wad_cc_graphite_prereg_2026_09_28.json` — 2026-09-28 ratified · 결정 `D-2026-09-28-wad-cc-graphite` active · `results_seen: false`). 이 블록은 **대응표 + 인용 규율 + 기존 기록의 어긋남**만이다.
+⛔ 우리 V2 Ag(111)\|그래핀 (0.435 @ 8 Å · 0.449 @ 10 Å) 과 **같은 줄 금지** — 다른 쌍 · 그래핀 단층이다. V2 에서 옮기는 것은 과정 교훈(끝점 · ATM 열)뿐이다.
+
+| 항목 | [Wang15CE] | 우리 (사전등록 카드, 결과 전) | 판정 |
+|---|---|---|---|
+| AB 대조 기준 | Γ(0) = 2γ = **0.39 ± 0.02 J/m²** (= 0.37 + σ₀ — 측정 + APNGB/RPA) | W_sep(S33, AB) · 허용대 0.31–0.47 | ⭕ 같은 양 · ⚠ 순수 측정이 아니다 |
+| 비정합 (DEM 입자 접촉) | Γ = **0.37 ± 0.01** (50 시료 · φ 16–54° · 22–198 °C · 대기 · 직접 측정) | W_inc = (W_AA + 3·W_SP)/4 (2성 푸리에) | ⭕ RPA 없이 측정과 붙는 유일한 경로 · DEM w 앵커 |
+| σ₀ | ≈ 22 mJ/m² = GSFE 면적 평균 (SI 수치로 재구성 22.7 — 우리 산수) | σ₀(D3) = W_AB − W_inc | 진단 (합격선 아님) |
+| 보간 사전 시험 | GSFE γ_sp 9.4 · γ_peak 53.9 mJ/m² → 2성 20.5 (−7 ~ −10 %) · 1성 18.0 | registry AB · SP · AA | ⭕ 세 점이 최소 집합 · 고대칭점 개수 가중 평균(13.7)은 틀린 평균 |
+| 이완 편향 | (논문 밖) | registry 별 z 이완 | ⚠ 평균이 W_inc 를 과대 — ½·(C33/d)·Var(d_u) ≈ 1–5 mJ/m² (C33 36.5 GPa · 층간 산포 0.05–0.1 Å, 우리 산수) |
+| 끝점 · 두께 | CE = 반무한 · 완전분리 양 · 이중층 → 흑연 ~15 % (ref 47) | far ≥ 10 Å (+ 12 Å 검사) · 두께 ΔW ≤ 0.02 | ⭕ V2 교훈(8 → 10 Å +0.0136)과 같은 방향 |
+| 다체 | 실험 = 다체 효과 전부 포함 | 헤드라인 2체 · ATM 별도 열 | ⚠ 대조 표에 2체 · +ATM **둘 다** 적는다 |
+| 분산 모델 채점 | `Table S2`: QMC 0.34 · semi-empirical 0.33–0.37 · RPA 0.29 · vdW-DF 0.15 (전부 BE) — **D3 행 0** | PBE+D3(BJ) | 🔴 이 논문으로 D3 는 채점되지 않는다 |
+
+**J-50-a. 용어 — 문헌 흑연 값이 섞이는 자리.** CE (결정을 두 반쪽으로) · 2γ (= CE(AB)) · BE (층당, 낱장으로 전부) · EE (표면 한 층만). 논문 환산 γ 0.20 ✅ · BE 0.33 (= 0.85·CE, 이론 계수) · **EE 0.46 🔴 인용 보류** — *"CE ≈ 0.85 EE"* 는 쌍가산 틀(EE ≈ BE < CE)과도, SI 의 같은 출처 쌍(Zacharia CE/EE 1.16 · Chakarova-Käck 1.07)과도 방향이 반대다. 논문 자신도 서론 "0.14–0.72" (0.14 = Kis 의 SE) · Discussion "0.19–0.72 (0.43 ± 0.29 — 실은 0.14–0.72 의 중점 ± 반폭)" 로 type 을 섞는다.
+
+**J-50-b. 기존 기록과 어긋나는 곳 (수정은 메인 세션 몫).**
+1. 계획서 `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` L185 (기준 0.39) · L189 (09-28 인입 — 옳게 나눔) ↔ 단계 표 L381 (아직 *"~0.37 J/m² 와 비교"*) — **AB ↔ 0.39 · registry 평균 ↔ 0.37** 로 나눈다 (사전등록 카드는 이미 이렇게 나눴다).
+2. **§J-43 흑연 대조 행** (같은 문장이 계획 L157 · 사전등록 카드 §4 GC 에도 있다): PBE+MBD *"층간 결합"* 48 meV/C ≈ 0.29 J/m² 를 CE 허용대와 대어 *"밖"* — 48 meV/C 가 **BE** 라면 BE ≈ 0.85·CE 로 CE ≈ **0.35 J/m²** (우리 산수) → 허용대 **안**이다. BE/CE 혼용일 수 있다 — Ambrosetti 2014 원전의 양 정의를 확인하기 전까지 *"밖"* 판정은 보류. (사전등록 카드는 결과 전 보강에서 이 곁말을 철회했다 — 계획 L157 · 이 §J-43 · `maurer2015` digest 에는 남아 있다.)
+3. 사전등록 카드 §8 (커밋 fc05bdf5 판) 의 *"박리에너지 0.46"* — 인용 보류 권고 (카드는 결과 전 보강에서 보류 표시).
+
+**상호참조**: §J-43 [Maurer15MBD] · 계획 §흑연 대조 · DEM 쪽 점착 트랙 서술 `comparison_vs_ours_DEM.md` §I (이 편은 아직 안 올라가 있다).
 
 ---
 

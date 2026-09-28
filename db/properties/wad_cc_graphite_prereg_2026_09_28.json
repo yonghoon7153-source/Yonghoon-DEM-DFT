@@ -49,15 +49,15 @@
  "4_판정_규칙_결과_보기_전에_박는다": {
   "⛔": "아래는 실행 **전에** 커밋한다. 값을 보고 문턱·표본·모델을 고치지 않는다. 판정 코드 = tools/wad/cc_graphite.py --collect (문턱 상수는 code_binding 과 selftest 가 결속).",
   "G0_이완_유효성": "1단계 이완은 마지막 실행 `bfgs converged` (P0 — 실패 문구 거부) · 면내 이동 0 (≤ 1e-4 Å) · 고정층 z 이동 0 · 이완 뒤 층간 전부 3.0–4.2 Å · 층 평탄도 ≤ 0.05 Å · 좌표 판정 적층이 설계와 같음. P0·제약 위반은 **거부**(2단계 안 만듦), 층간·평탄·적층 깃발은 그 모델 **INCOMPLETE** (세고 제외 · 교체 없음).",
-  "GC_대조_S33_AB": "W(CC_S33_AB) 가 운영 허용대 **0.31–0.47 J/m²** 안 → IN_BAND · 밖 → OUT_OF_BAND. 기준 = 이상 ABAB 벽개 0.39 ± 0.02 (Wang). 허용대는 Codex 파일럿 허용오차(09-23 계획)이지 측정 불확도가 아니다. ⛔ 밖이면 **D3 계수를 만지지 않는다** — 원인 진단 (수치 설정은 G3/G4/두께가 가르고, 그 뒤 '분산 모델 계통 편차' 를 따로 적는다: Maurer 2015 PBE+MBD 흑연 48 meV/C ≈ 0.29 J/m² 도 이 허용대 밖이다).",
+  "GC_대조_S33_AB": "W(CC_S33_AB) 가 운영 허용대 **0.31–0.47 J/m²** 안 → IN_BAND · 밖 → OUT_OF_BAND. 기준 = 이상 ABAB 벽개 0.39 ± 0.02 (Wang). 허용대는 Codex 파일럿 허용오차(09-23 계획)이지 측정 불확도가 아니다. ⛔ 밖이면 **D3 계수를 만지지 않는다** — 원인 진단 (수치 설정은 G3/G4/두께가 가르고, 그 뒤 '분산 모델 계통 편차' 를 따로 적는다). ⚠ 정정 (결과 전 · digest §7e-2): 앞 판의 곁말 'Maurer 2015 PBE+MBD 흑연 48 meV/C ≈ 0.29 J/m² 도 이 허용대 밖' 은 **결합에너지(BE)를 벽개(CE) 허용대에 댄** 비교일 수 있다 — Wang 관계 BE ≈ 0.85 CE 면 CE ≈ 0.35 (허용대 안). 원전 양 정의 확인 전까지 그 곁말은 쓰지 않는다.",
   "G3_분리_끝점": "대표 2 (CC_S33_AB · CC_M41_AB): c+2 셀에서 (i) 영상 검사 (far 그대로) · (ii) 직접 검사 (위 블록 +2 → 직접 12 Å) 각각 |ΔW| ≤ **0.01** J/m² · 끝점 ΔE 는 기록만.",
   "G4_수치": "대표 2: ecut 70/700 · k 24×24×1 · smearing ½ (mv 0.005) 각각 두 끝점 → |ΔW| ≤ **0.01** J/m² (09-23 계획 — V2 의 0.02 가 아니다).",
   "G5_두께": "|W(S44_AB) − W(S33_AB)| ≤ **0.02** · |W(M61_AB) − W(M41_AB)| ≤ **0.02** J/m² (09-23 계획).",
   "라벨": "어느 게이트든 FAIL · INCOMPLETE 면 그 라벨을 값에 붙여 보고한다 (V2 선례: 'G3 FAIL' 라벨 동반). 새 계산은 1저자 결정 없이는 없다."
  },
  "5_정보량_판정_아님": {
-  "비정합_추정": "GSFE 푸리에 평균 (Wang σ0 와 같은 정의 · 강체 비정합): 2성 W_inc = (W_AA + 3·W_SP)/4 (AB 무관) · 1성 W_inc = (2·W_AB + W_AA)/3 · σ0 = W_AB − W_inc(2성) · 1성 일관성 비 r = (W_AB − W_SP)/(W_AB − W_AA) (1성 푸리에면 1/9). 2성 ↔ 1성 차가 절단 민감도다. S33 · M41 각각.",
-  "Wang_대조": "W_inc(S33) − 0.37 · W(S33_AB) − 0.39 · σ0(S33) − 0.022 — 차를 적기만 한다. ⛔ 값 대 값 합격 판정이 아니다 (판정은 GC 하나).",
+  "비정합_추정": "GSFE 푸리에 평균 (Wang σ0 와 같은 정의 · 강체 비정합): 2성 W_inc = (W_AA + 3·W_SP)/4 (AB 무관) · 1성 W_inc = (2·W_AB + W_AA)/3 · σ0 = W_AB − W_inc(2성) · 1성 일관성 비 r = (W_AB − W_SP)/(W_AB − W_AA) (1성 푸리에면 1/9). 2성 ↔ 1성 차가 절단 민감도다. S33 · M41 각각. ⚠ 알려진 치우침 (결과 전 · digest §7c): ① 2성 절단 — 논문 GSFE 에 넣으면 σ0 가 약 2 mJ/m² 작게 나온다 (20.5 vs 22.7 · W 로는 0.5 %) ② registry 마다 z 를 따로 이완 → 실제 비정합(층간거리 하나)보다 W_inc 를 크게(σ0 를 작게) 잡는 쪽 · 크기 ≈ ½·(C33/d)·Var(d_registry) (층간 산포 0.05 Å 면 ≈ 1.4 mJ/m² · 0.1 Å 면 ≈ 5) — 이완 층간거리가 기록되므로 결과 뒤 어림만 붙인다 (보정해서 헤드라인을 바꾸지 않는다). 1성 일관성 비 r 의 사전값: 논문 GSFE 에서 9.4/53.9 = 0.174 (순수 1성이면 0.111).",
+  "Wang_대조": "W_inc(S33) − 0.37 · W(S33_AB) − 0.39 · σ0(S33) − 0.022 — 차를 적기만 한다. ⛔ 값 대 값 합격 판정이 아니다 (판정은 GC 하나). 실험 Γ 는 다체 효과를 전부 품은 값이므로 2체 헤드라인과 **2체 + ATM** 열을 둘 다 나란히 적는다 (--collect --atm 이 info.wang2015.with_ATM 으로 낸다 · digest §7d).",
   "꼬리": "far8 → 10 Å 의 ΔW (V2 +0.0136 과 비교) · G3 (ii) 기울기로 1/d² 외삽 W∞ (진단)",
   "변형": "W(M41_AB_V2a) − W(M41_AB) — V2 그래핀 +1.078 % 격자의 영향",
   "V2_비": "V2(Ag(111)|그래핀) 10 Å 값 0.4491 (G3 (ii) · db/raw/wad_aprime_s4_v2s2_2026_09_26/collect_aprime_s4_2026_09_26.json) ÷ W_inc(M41) · ÷ W_inc(S33) — 같은 PBE+D3(BJ) 2체 안에서만 뜻이 있다 (V2 라벨: G3 FAIL · k 축 미검증)",
@@ -82,7 +82,7 @@
    "p1_초록": "\"The measured value, 0.37±0.01 J m⁻² for the incommensurate state of bicrystal graphite, is nearly invariant with respect to temperature (22 ≤ T ≤ 198 °C) and bicrystal twist angle … The CE for the ideal ABAB graphite stacking, 0.39±0.02 J m⁻², is calculated based on a combination of the measured CE and a theoretical calculation.\"",
    "p4": "\"average CE of G(φ) = 0.37±0.01 J m⁻², where the data was averaged over 50 samples with 2–9 μm flakes with rotation angles 16° ≤ φ ≤ 54°\" (PDF 텍스트 추출은 μ 가 'm' 으로 깨진다)",
    "p5": "\"… can be simply obtained by performing an average over the entire generalized stacking fault energy … s0 ≈ 22 mJ m⁻² for graphite\" · \"the ideal cleavage energy is G(0) = G + s0 = 2γ = 0.37 + 0.02 J m⁻² = 0.39±0.02 J m⁻² … We estimate the error in s0 to be less than ~0.005 J m⁻²\"",
-   "p6": "\"grain boundary energy with a maximum value of s = 0.02±0.005 J m⁻² … CE = 0.39±0.02 J m⁻² for perfectly stacked AB graphite\" · 유도값 표면에너지 0.20 · 층간 결합에너지 0.33 · 박리에너지 0.46 J m⁻² (관계식 surface = CE/2 · BE ≈ 0.85 CE · CE ≈ 0.85 EE)",
+   "p6": "\"grain boundary energy with a maximum value of s = 0.02±0.005 J m⁻² … CE = 0.39±0.02 J m⁻² for perfectly stacked AB graphite\" · 유도값 표면에너지 0.20 · 층간 결합에너지 0.33 · 박리에너지 0.46 J m⁻² (관계식 surface = CE/2 · BE ≈ 0.85 CE · CE ≈ 0.85 EE) — ⚠ 박리에너지 0.46 은 인용 보류 (digest §4-3: CE ≈ 0.85 EE 는 쌍가산 틀의 EE ≤ CE 와 방향이 반대 · ref 47 원문 확인 전).",
    "GSFE_입력": "Methods: GSFE 매개변수는 ACFDT-RPA 이중층 그래핀 계산 + C44 맞춤 · 오차 ~15 % (γ_sf 는 ~100 %) — 0.39 는 '측정 + 이론' 이고 0.37 이 직접 측정이다."
   },
   "Maurer_2015": "litdb/papers/maurer2015_mbd_adsorbates_metal_surfaces.md — 분산 모델만 바꿔도 Ag|그래핀이 33–78 meV/C 로 퍼진다 (그래핀/Ag 실험값 없음) · PBE+MBD 흑연 48 meV/C",
@@ -188,6 +188,12 @@
    "state": "ratified",
    "by": "1저자(사용자)",
    "note": "'이것도 진행하자' · '내가 말한건 덴카-덴카, 덴카-vgcf, vgcf-vgcf' — 결정 D-2026-09-28-wad-cc-graphite (active · ratification digest). 게이트 문안은 에이전트 초안 · 1저자는 실행 전까지 고칠 수 있다 (고치면 새 digest)."
+  },
+  {
+   "at": "2026-09-28",
+   "state": "ratified",
+   "by": "agent",
+   "note": "보강 (결과 전 · 게이트·모델·문턱 불변 · 결정 digest 대상 아님): litdb digest 대조로 ① GC 곁말의 Maurer 48 meV/C '밖' 판정 철회(BE↔CE 혼동 가능) ② 비정합 추정의 알려진 치우침 두 가지(2성 절단 · registry 별 이완)와 r 사전값 ③ Wang 대조에 2체 + ATM 병기 ④ EE 0.46 인용 보류."
   }
  ]
 }

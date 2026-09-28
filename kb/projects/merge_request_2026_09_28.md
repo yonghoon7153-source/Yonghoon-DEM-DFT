@@ -62,7 +62,7 @@ evidenceScope: multi-source-primary
 | `767d10158` · `17640b9f2` | **CEI Li 장부 = 항등식** 유도·확인 (`--li_identity` · 계수 1) + **x = 0.10 곡률 사전등록 (실행 전 커밋)** · 결정 둘 (항등식 proposed · x010 active) · run.sh · 경로 정정 |
 | `cf17c5542` | (사용자 · gabia) x = 0.10 곡률 원자료 — 7 조성 · 판정 G0/GI/GC 통과 |
 | `ae0275cfc` | x = 0.10 결과 기록(proposed) · 사전등록 ratified · 화면 머리 2×2 곡률 문장 교체 + 결속 시험 · 도구 G0 키·칸별 목록 |
-| (다음 커밋) | **W_ad 흑연 층간 C|C 사전등록 (실행 전)** — 덴카–덴카 · 덴카–VGCF · VGCF–VGCF · `tools/wad/cc_graphite.py` · 카드 · 결정 `D-2026-09-28-wad-cc-graphite` (active) · 입력 1단계 9 잡 + `run_v100.sh` · **litdb Wang 2015** (본문+SI · 그림) |
+| `fc05bdf50` · (다음 커밋) | **W_ad 흑연 층간 C|C 사전등록 (실행 전)** — 덴카–덴카 · 덴카–VGCF · VGCF–VGCF · `tools/wad/cc_graphite.py` · 카드 · 결정 `D-2026-09-28-wad-cc-graphite` (active) · 입력 1단계 9 잡 + `run_v100.sh` · **litdb Wang 2015** (본문+SI · 그림) |
 
 ## 3. 돌린 시험 · 검증 (09-28)
 
@@ -71,14 +71,14 @@ evidenceScope: multi-source-primary
 | `tools/db/validate_canonical.py` | ✅ 배선된 항목 전부 원자료와 일치 |
 | `tools/convention_check.py` | 0 위반 |
 | `tools/kb_wiki.py lint` | 0 errors |
-| 웹앱 전체 `pytest webapp/tests` | **585 passed · 3 failed · 2 skipped** — 3 failed 는 §6 (이 브랜치 변경을 뺀 HEAD 에서도 같은 3 건 확인) · 09-28 오후 `ad3456f64` 에서 **591 passed · 같은 3 failed · 2 skipped** |
+| 웹앱 전체 `pytest webapp/tests` | **585 passed · 3 failed · 2 skipped** — 3 failed 는 §6 (이 브랜치 변경을 뺀 HEAD 에서도 같은 3 건 확인) · 09-28 오후 `ad3456f64` 에서 **591 passed · 같은 3 failed · 2 skipped** · 09-28 저녁 WAD-CC + Wang digest 뒤 **602 passed · 같은 3 failed · 2 skipped** (digest 작성 도중에 돌린 판은 `test_recent_digests_are_on_every_litdb_surface` 가 INDEX 전이라 빨강 → INDEX·비교표 채운 뒤 초록) |
 | `test_interpretation_cards.py` | **77/77** (§0 시험 둘 뒤집기 + 신규 1 · x = 0.02 결속 +6 — 화면을 일부러 깨서 빨간불 6/6 · G4 마감 결속 +1 — 화면·결과 기록·원장을 깨서 빨간불 5/5) |
 | `interface_reactivity_v2.py --selftest` | **139 ✓** (x002 판정 16 건 · 항등식 13 · x010 7 — 일부러 깨서 빨간불: x002 6 건 · 항등식·x010 10/10) |
 | 판정 재현 | gabia 판정 파일 = 로컬 재생성 (source 필드 제외 동일) |
 | hazard 시험 (`-k hazard`) | 13/13 |
 | `quench_ss_event.py --selftest` | 35/35 (깨서 빨간불 6 건 확인) |
 | `msd_diffusive_check.py --selftest` | 200 ok · 0 bad |
-| `cc_graphite.py --selftest` (09-28 저녁) | **48/48** — 일부러 깨기 16 가지 전부 빨강 (2성 식 · G4 문턱 · smearing 치환 · SP 기준 · 면내 제약 · P0 · 층간 깃발 · ABC · 허용대 · 두께 · 누락 None · 간격 8 Å · degauss · G3 all→any · INCOMPLETE · 빌더 적층 가드) · 실제 V2 2단계 입력과 설정 20 키 동일 · 카드 code_binding 결속 |
+| `cc_graphite.py --selftest` (09-28 저녁) | **52/52** — 일부러 깨기 20 가지 전부 빨강 (2성 식 · G4 문턱 · smearing 치환 · SP 기준 · 면내 제약 · P0 · 층간 깃발 · ABC · 허용대 · 두께 · 누락 None · 간격 8 Å · degauss · G3 all→any · INCOMPLETE · 빌더 적층 가드 · verify 디스크·좌표·항상통과 · ATM 부호) · 실제 V2 2단계 입력과 설정 20 키 동일 · 카드 code_binding 결속 |
 | `build_aprime_interfaces` · `build_aprime_s3` · `collect_aprime_s4` selftest | 26/26 · 19/19 · 25/25 (C|C 가 import 만 한다 — 봉인 도구는 안 바꿨다) |
 | `test_adhesion.py` · `validate_canonical.py` | 13/13 · 결정 91 · 그래프 무결성 ✅ |
 

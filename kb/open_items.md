@@ -47,7 +47,7 @@
 - **W_ad 흑연 층간 C|C 사전등록 (09-28 저녁 · 1저자 *"이것도 진행하자"* · *"덴카-덴카, 덴카-vgcf, vgcf-vgcf"* · 트랙 = W_ad DFT (우리) · 1저자 = 사용자)** —
   무음극 조성 확정(LPSCl | Ag–C (Ag + Denka Black) | VGCF) → 탄소–탄소 세 쌍은 DFT 에서 모두 **흑연 기저면|기저면**이고 입자 사이라 면내 회전이 임의(= 비정합).
   카드 `db/properties/wad_cc_graphite_prereg_2026_09_28.json` · 결정 `D-2026-09-28-wad-cc-graphite` (**active · 실행 전**) · 코드 `tools/wad/cc_graphite.py`
-  (selftest 48 · 일부러 깨기 16/16 빨강 · 실제 V2 2단계 입력과 설정 20 키 동일 · 카드 문턱 결속) · 입력 `db/inputs/wad_cc_graphite_2026_09_28/` (1단계 이완 9 → 2단계 SCF 44 · `run_v100.sh` 한 번에).
+  (selftest 52 · 일부러 깨기 20/20 빨강 · 실제 V2 2단계 입력과 설정 20 키 동일 · 카드 문턱 결속 · `--verify_stage2` = V100 이 만든 2단계 입력을 repo 에서 다시 만들어 대조) · 입력 `db/inputs/wad_cc_graphite_2026_09_28/` (1단계 이완 9 → 2단계 SCF 44 · `run_v100.sh` 한 번에).
   · 모델: S33_{AB,SP,AA} (6층 3|3) · M41_{AB,SP,AA} (4층 위 그래핀 = V2 기하) · S44_AB · M61_AB (두께) · M41_AB_V2a (V2 격자 +1.078 %) · a 2.46604 · k 18×18×1 · far ≥ 10 Å · mv 0.01 (V2 와 맞춤).
   · 판정: GC S33_AB ∈ 0.31–0.47 · G3/G4 |ΔW| ≤ 0.01 · 두께 ≤ 0.02 · 이완 유효성. 정보: W_inc 2성 (W_AA+3W_SP)/4 (= Wang σ0 정의의 GSFE 평균) ↔ Wang 0.37 ± 0.01 (비정합 직접 측정) · σ0 ↔ 0.022 · V2 비 · ATM.
   · litdb `wang2015_graphite_cleavage_energy` (본문+SI · 논문 에이전트) — 09-23 계획의 '원문 확보 전 봉인 금지' 해소 · 0.37/0.39/σ0 22 mJ/m² 는 PDF p1·p4·p5·p6 에서 직접 확인.

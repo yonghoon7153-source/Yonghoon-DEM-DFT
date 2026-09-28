@@ -8,6 +8,7 @@
 
     python3 tools/wad/cc_graphite.py --stage1 --out db/inputs/wad_cc_graphite_2026_09_28/stage1
     python3 tools/wad/cc_graphite.py --stage2 --stage1_dir <stage1> --relax_raw <1단계 RUN> --out <stage2>
+    python3 tools/wad/cc_graphite.py --verify_stage2 <V100 의 stage2_pkg> --stage1_dir <stage1> --relax_raw <1단계 RUN>   # 결정성 대조
     python3 tools/wad/cc_graphite.py --collect --stage2_dir <stage2> --raw <2단계 RUN> [--atm] [--out result.json]
     python3 tools/wad/cc_graphite.py --selftest
 
@@ -339,6 +340,35 @@ def stage2(stage1_dir, relax_raw, out, pseudo_dir="/data/work/pseudo", date=None
     return man
 
 
+def verify_stage2(stage1_dir, relax_raw, pkg_dir):
+    """V100 에서 만든 2단계 패키지 ↔ 같은 이완 출력으로 **여기서 다시 만든** 것 (카드 enforcement ③).
+
+    같아야 하는 것: 잡 목록 · 잡마다 pw.in sha (manifest 값 **그리고** 디스크 파일) · 구조 좌표·셀 (1e-8 Å) · 모델 상태.
+    구조 파일 sha 는 비교하지 않는다 — ASE 판이 다르면 extxyz 머리글 서식이 달라 같은 좌표도 sha 가 갈린다 (좌표로 본다).
+    code_sha256 는 정보 (같은 커밋이면 같다)."""
+    import tempfile
+    from ase.io import read
+    theirs = json.load(open(os.path.join(pkg_dir, "cc_stage2_manifest.json"), encoding="utf-8"))
+    with tempfile.TemporaryDirectory() as T:
+        ours = stage2(stage1_dir, relax_raw, T, date=theirs.get("date"))
+        a = {j["dir"]: j["pw_in_sha256"] for j in theirs["jobs"]}
+        b = {j["dir"]: j["pw_in_sha256"] for j in ours["jobs"]}
+        disk = {d: (_sha(os.path.join(pkg_dir, "qe", d, "pw.in")) if os.path.isfile(os.path.join(pkg_dir, "qe", d, "pw.in")) else None) for d in a}
+        geo = []
+        for k in sorted(set(theirs["structures_sha256"]) | set(ours["structures_sha256"])):
+            pa, pb = os.path.join(pkg_dir, "structures", f"{k}.extxyz"), os.path.join(T, "structures", f"{k}.extxyz")
+            if not (os.path.isfile(pa) and os.path.isfile(pb)):
+                geo.append(k); continue
+            x, y = read(pa), read(pb)
+            if len(x) != len(y) or not np.allclose(x.cell.array, y.cell.array, atol=1e-8) or not np.allclose(x.get_positions(), y.get_positions(), atol=1e-8):
+                geo.append(k)
+    res = {"jobs_same": sorted(a) == sorted(b), "pw_in_sha_mismatch": sorted(d for d in a if a[d] != b.get(d)),
+           "disk_vs_manifest_mismatch": sorted(d for d in a if disk[d] != a[d]), "structure_geometry_mismatch": geo,
+           "status_same": theirs["status"] == ours["status"], "code_sha_same_info": theirs.get("code_sha256") == ours.get("code_sha256")}
+    res["pass"] = bool(res["jobs_same"] and not res["pw_in_sha_mismatch"] and not res["disk_vs_manifest_mismatch"] and not geo and res["status_same"])
+    return res
+
+
 # ─────────────────────────────── 집계 ───────────────────────────────
 def w_inc(Wab, Wsp, Waa):
     """GSFE 평균 → 비정합 추정. 값이 하나라도 없으면 None (0 으로 채우지 않는다)."""
@@ -436,6 +466,16 @@ def collect(stage2_dir, raw_dir, atm=False, v2_ref=V2_REF):
         wang["W_inc_S33_minus_CE_inc"] = reg["S33"]["W_inc_2star_J_m2"] - WANG["CE_incommensurate_J_m2"][0]
         wang["sigma0_S33_minus_Wang"] = reg["S33"]["sigma0_J_m2"] - WANG["sigma0_J_m2"][0]
     wang["⚠"] = "정보 — 값 대 값 합격 판정이 아니다 (판정은 S33_AB 운영 허용대 하나)"
+    atm_out = atm_column(stage2_dir, [n for n in rows if rows[n].get("status") == "OK"]) if atm else None
+    if atm_out and "rows" in atm_out:
+        # 실험 Γ 는 다체 효과를 다 품는다 → 2체 헤드라인 옆에 2체 + ATM 도 (카드 §5 · digest §7d)
+        wa = lambda n: (Wof(n) + atm_out["rows"][n]["dW_ATM_J_m2"]) if (Wof(n) is not None and atm_out["rows"].get(n)) else None
+        rA = w_inc(wa("CC_S33_AB"), wa("CC_S33_SP"), wa("CC_S33_AA"))
+        wang["with_ATM"] = {"W_S33_AB_plus_ATM_J_m2": wa("CC_S33_AB"),
+                            "W_S33_AB_plus_ATM_minus_CE_AB": (wa("CC_S33_AB") - WANG["CE_ideal_AB_J_m2"][0]) if wa("CC_S33_AB") is not None else None,
+                            "W_inc_S33_plus_ATM_J_m2": rA["W_inc_2star_J_m2"] if rA else None,
+                            "W_inc_S33_plus_ATM_minus_CE_inc": (rA["W_inc_2star_J_m2"] - WANG["CE_incommensurate_J_m2"][0]) if rA else None,
+                            "⚠": "ATM 은 D3 모형 안의 3체 보정 (simple-dftd3) — 헤드라인은 2체 그대로 (D-2026-09-23-wad-d3-twobody-atm-separate)"}
     strain = {"dW_V2a_minus_base_J_m2": (Wof("CC_M41_AB_V2a") - Wof("CC_M41_AB")) if (Wof("CC_M41_AB_V2a") is not None and Wof("CC_M41_AB") is not None) else None,
               "a_V2a_A": A_C_V2, "a_base_A": A_C}
     v2 = None
@@ -454,7 +494,7 @@ def collect(stage2_dir, raw_dir, atm=False, v2_ref=V2_REF):
            "info": {"registry_incommensurate": reg, "wang2015": wang, "strain_V2a": strain, "vs_V2": v2},
            "jobs_not_ok": sorted(j for j, v in J.items() if v["status"] != "OK")}
     if atm:
-        out["info"]["ATM"] = atm_column(stage2_dir, [n for n in rows if rows[n].get("status") == "OK"])
+        out["info"]["ATM"] = atm_out
     return out
 
 
@@ -593,6 +633,17 @@ def _selftest():
             kinds[j["kind"]] = kinds.get(j["kind"], 0) + 1
         ck("2단계: OK 9 · 잡 44 (scf 18 · far8 2 · E(d) 6 · G3 6 · G4 12) · 결정성", m2["n_ok"] == 9 and len(m2["jobs"]) == 44 and kinds == {"scf": 18, "info": 2, "ed": 6, "g3": 6, "g4": 12}
            and [j["pw_in_sha256"] for j in m2["jobs"]] == [j["pw_in_sha256"] for j in m2b["jobs"]], kinds)
+        v = verify_stage2(s1, raw1, s2)
+        ck("verify_stage2: 같은 이완 출력으로 다시 만들면 같다 (잡 · pw.in sha · 디스크 · 좌표 · 상태)", v["pass"] and v["code_sha_same_info"], v)
+        tam = os.path.join(T, "s2_tam"); shutil.copytree(s2, tam)
+        open(os.path.join(tam, "qe", "CC_S33_AB_G4_k24_far", "pw.in"), "a").write("! 손댄 입력\n")
+        v2t = verify_stage2(s1, raw1, tam)
+        ck("⛔음성 verify: V100 패키지 pw.in 을 손대면 디스크↔manifest 불일치로 FAIL", (not v2t["pass"]) and v2t["disk_vs_manifest_mismatch"] == ["CC_S33_AB_G4_k24_far"], v2t)
+        raw1p = os.path.join(T, "run1_p"); shutil.copytree(raw1, raw1p)
+        init = read(os.path.join(s1, "structures", "CC_M41_SP_init_bound.extxyz"))
+        _fake_relax_out(os.path.join(raw1p, "CC_M41_SP_relax", "pw.out"), init, 0.06, np.where(m1["models"]["CC_M41_SP"]["top_mask"])[0])
+        v3t = verify_stage2(s1, raw1p, s2)
+        ck("⛔음성 verify: 다른 이완 출력(0.05 → 0.06 Å)이면 pw.in sha · 좌표 불일치로 FAIL", (not v3t["pass"]) and "CC_M41_SP_dft_bound" in v3t["pw_in_sha_mismatch"] and "CC_M41_SP_dft_bound" in v3t["structure_geometry_mismatch"], v3t)
         ck("2단계: d₀ = 3.35 + 0.05 (이완 좌표에서 다시)", abs(m2["models"]["CC_S33_AB"]["d0_A"] - 3.40) < 1e-4 and abs(m2["models"]["CC_M41_SP"]["d0_A"] - 3.40) < 1e-4)
         e = m2["models"]["CC_S33_AB"]["endpoints"]
         ck("2단계 끝점: far 직접 10 · 영상 ≥ 10 · 쌍극자 여유 ≥ 4", abs(e["far_gap_direct_image_A"][0] - 10.0) < 1e-3 and e["far_gap_direct_image_A"][1] >= 10 - 1e-6 and e["dipfield"]["clearance_A"]["to_top_atom"] >= 4 - 1e-6)
@@ -657,6 +708,14 @@ def _selftest():
         v2 = o["info"]["vs_V2"]
         ck("V2 비: repo 의 V2 10 Å 값(0.4491) / M41 W_inc", v2 is not None and v2["V2_W_10A_J_m2"] is not None and abs(v2["V2_W_10A_J_m2"] - 0.4491) < 5e-4 and abs(v2["ratio_V2_over_M41_inc"] - v2["V2_W_10A_J_m2"] / o["info"]["registry_incommensurate"]["M41"]["W_inc_2star_J_m2"]) < 1e-12, v2)
         ck("변형 정보: V2a − base = −0.010", abs(o["info"]["strain_V2a"]["dW_V2a_minus_base_J_m2"] + 0.010) < TOL)
+        oa = collect(s2, raw2, atm=True)
+        if "rows" in (oa["info"]["ATM"] or {}):
+            wa_ = oa["info"]["wang2015"].get("with_ATM") or {}
+            dA = oa["info"]["ATM"]["rows"]["CC_S33_AB"]["dW_ATM_J_m2"]
+            ck("--atm: Wang 대조에 2체 + ATM 병기 (= W + ΔW_ATM · 헤드라인 2체는 그대로)", wa_.get("W_S33_AB_plus_ATM_J_m2") is not None and abs(wa_["W_S33_AB_plus_ATM_J_m2"] - (0.400 + dA)) < TOL
+               and abs(oa["rows"]["CC_S33_AB"]["W_PBE_D3_J_m2"] - 0.400) < TOL and wa_.get("W_inc_S33_plus_ATM_J_m2") is not None, wa_)
+        else:
+            ck("--atm: simple-dftd3 없으면 with_ATM 을 만들지 않는다 (0 아님)", "with_ATM" not in oa["info"]["wang2015"])
         # ⑦ 집계 음성
         A = C4.area_A2(os.path.join(s2, "structures", "CC_S33_AB_dft_bound.extxyz"))
         put("CC_S33_AB_G4_k24_far", F0 - 0.1 + 0.4 * A * A2_M2 / C4.RY_J + 0.012 * A * A2_M2 / C4.RY_J)
@@ -706,6 +765,7 @@ def main():
     ap.add_argument("--collect", action="store_true")
     ap.add_argument("--stage1_dir"); ap.add_argument("--relax_raw"); ap.add_argument("--stage2_dir"); ap.add_argument("--raw")
     ap.add_argument("--atm", action="store_true", help="simple-dftd3 로 ATM 열 (정보)")
+    ap.add_argument("--verify_stage2", metavar="PKG", help="V100 이 만든 2단계 패키지를 --stage1_dir · --relax_raw 로 다시 만들어 대조")
     ap.add_argument("--out"); ap.add_argument("--pseudo_dir", default="/data/work/pseudo")
     a = ap.parse_args()
     if a.selftest:
@@ -725,6 +785,12 @@ def main():
         print(json.dumps({"status": m["status"], "n_jobs": len(m["jobs"]), "d0_A": {n: v.get("d0_A") for n, v in m["models"].items()}}, ensure_ascii=False, indent=1))
         print(f"→ {a.out}/qe/jobs.json")
         return 0
+    if a.verify_stage2:
+        if not (a.stage1_dir and a.relax_raw):
+            ap.error("--verify_stage2 에는 --stage1_dir · --relax_raw")
+        r = verify_stage2(a.stage1_dir, a.relax_raw, a.verify_stage2)
+        print(json.dumps(r, ensure_ascii=False, indent=1)); print("✅ 같다" if r["pass"] else "⛔ 다르다 — 이 패키지로 돈 결과는 판정에 쓰지 않는다 (원인부터)")
+        return 0 if r["pass"] else 1
     if a.collect:
         if not (a.stage2_dir and a.raw):
             ap.error("--stage2_dir · --raw")
@@ -733,7 +799,7 @@ def main():
         if a.out:
             json.dump(o, open(a.out, "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=float); open(a.out, "a").write("\n"); print(f"-> {a.out}")
         return 0
-    ap.error("--selftest · --stage1 · --stage2 · --collect 중 하나")
+    ap.error("--selftest · --stage1 · --stage2 · --verify_stage2 · --collect 중 하나")
 
 
 if __name__ == "__main__":
