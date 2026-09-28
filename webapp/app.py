@@ -1442,6 +1442,7 @@ def li2s_pipeline_page():
     """
     p = D.li2s_pipeline()
     return render_template("li2s.html", active="li2s", p=p,
+                           br=D.li2s_brief(),
                            fe=D.li2s_force_by_element(),
                            cc=D.li2s_closure_card(),
                            ld=D.li2s_ladder(),

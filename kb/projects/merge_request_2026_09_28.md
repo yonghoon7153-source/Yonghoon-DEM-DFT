@@ -57,7 +57,8 @@ evidenceScope: multi-source-primary
 | `4e51aba3a` | (사용자 · gabia) x = 0.02 재계산 원자료 — 계면 16 조성 · ESW 9 · 도펀트 7 × 열린/닫힌 · 판정 |
 | `ad3456f64` | 결과 기록 · 화면 전면 개정 · 그림 `_x002` · 시험 +6 · kb 카드 반론 동기화 · G4 진단 열 |
 | `a8177e205` | **CEI G4 닫음** — 1저자 "ㅇㅇ 그렇게 해줘" · 결정 `D-2026-09-28-cei-x002-result` (active · 비준) · 결과 기록 ratified · 화면 두 곳 · 결속 시험 +1 |
-| (다음 커밋) | li2s 발표 덱용 그림 8 장 + 생성기(`--selftest`) + CSV — 덱 자체는 아티팩트(65foANsmpCVCaVG4zHEmuM · 비공개) |
+| `d2870ca0f` · `d68fb1047` | li2s 발표 덱용 그림 8 장 + 생성기(`--selftest`) + CSV — 덱 자체는 아티팩트(65foANsmpCVCaVG4zHEmuM · 비공개) |
+| (다음 커밋) | 웹앱 `/li2s` 에 「처음 보는 분께」 절 — 요약 기록(자리표시) + `data.li2s_brief()` + 시험 9 |
 
 ## 3. 돌린 시험 · 검증 (09-28)
 

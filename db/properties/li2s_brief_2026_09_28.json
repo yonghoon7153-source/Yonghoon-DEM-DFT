@@ -1,0 +1,378 @@
+{
+  "schema": "presentation_brief/v1",
+  "record_kind": "presentation_brief",
+  "date": "2026-09-28",
+  "system": "lpscl_smallcell_glass",
+  "citable": false,
+  "제목": "처음 보는 분께 — Li₂S 복합 양극 계면상 계산, 한 페이지 요약",
+  "⚠_이_기록의_성격": "발표용 요약이다. 새 판정·새 값이 **없다**. 결과 숫자는 이 파일에 쓰지 않고 `sources` 가 가리키는 원 기록에서 화면이 그 자리에서 읽는다 (본문의 {이름} 자리표시). 원 기록을 못 읽으면 화면은 `—` 와 경고를 그린다 (0 이 아니다). 결과 숫자를 본문에 직접 적으면 시험(webapp/tests/test_li2s.py)이 막는다.",
+  "⚠_용어": "사람이 처음 읽는 표면이라 필드 용어로만 쓴다 (내부 약칭·기록 이름을 본문에 쓰지 않는다). 아래 내부 절들이 기록 원문이다.",
+  "판정_권한": "분석 규칙과 판정: 공동연구 제1저자(외부) · 여기 해석은 모두 잠정",
+  "deck": {
+    "url": "https://claude.ai/artifact/65foANsmpCVCaVG4zHEmuM",
+    "slides": 19,
+    "note": "Slides 아티팩트 (16:9 · 발표 모드 · PPTX/PDF 다운로드) — 비공개, 공유는 소유자가 Share 메뉴에서"
+  },
+  "sources": {
+    "force_rmse": {
+      "file": "db/properties/lpscl_smallcell_closed_2026_09_18.json",
+      "path": "1_확정값.힘_RMSE_eVA",
+      "nd": 3
+    },
+    "energy_mae": {
+      "file": "db/properties/lpscl_smallcell_closed_2026_09_18.json",
+      "path": "1_확정값.상대_에너지_MAE_meV_atom",
+      "nd": 2
+    },
+    "neb_r1_ok": {
+      "file": "db/properties/lpscl_smallcell_neb_raw/endpoint_coupled_gate.json",
+      "path": "n_ok"
+    },
+    "neb_r1_n": {
+      "file": "db/properties/lpscl_smallcell_neb_raw/endpoint_coupled_gate.json",
+      "path": "n_events"
+    },
+    "neb_r2_ok": {
+      "file": "db/properties/lpscl_smallcell_shortlag_round_2026_09_21.json",
+      "path": "2_G-B7_N2.n_ok"
+    },
+    "neb_r2_n": {
+      "file": "db/properties/lpscl_smallcell_shortlag_round_2026_09_21.json",
+      "path": "2_G-B7_N2.n_events"
+    },
+    "mem400_gb": {
+      "file": "db/properties/lpscl_li2s_layer1_closed_2026_09_15.json",
+      "path": "자원_사실_2026_09_15.필요",
+      "regex": "per process > ([0-9.]+) GB"
+    },
+    "dens400_pct": {
+      "file": "db/properties/lpscl_li2s_layer1_g2_seed1_2026_09_14.json",
+      "path": "4_G4_대조.dev_pct_vs_center",
+      "nd": 1
+    },
+    "rho_range": {
+      "file": "db/properties/lpscl_smallcell_glass_md_cc_followup_2026_09_26.json",
+      "kind": "range",
+      "nd": 3,
+      "paths": [
+        [
+          "B3_§3_표_relax_판(Q1·Q2_적용)",
+          "표",
+          "seed1",
+          "rho"
+        ],
+        [
+          "B3_§3_표_relax_판(Q1·Q2_적용)",
+          "표",
+          "seed2",
+          "rho"
+        ],
+        [
+          "B3_§3_표_relax_판(Q1·Q2_적용)",
+          "표",
+          "seed3",
+          "rho"
+        ],
+        [
+          "B3_§3_표_relax_판(Q1·Q2_적용)",
+          "표",
+          "seed4",
+          "rho"
+        ],
+        [
+          "B3_§3_표_relax_판(Q1·Q2_적용)",
+          "표",
+          "seed5",
+          "rho"
+        ]
+      ]
+    },
+    "beta_550": {
+      "file": "db/properties/lpscl_smallcell_glass_md_cc_followup_2026_09_26.json",
+      "path": [
+        "회신_CD_판정_2026_09_27",
+        "보수값_재계산",
+        "P-2_550K_MTO",
+        "beta"
+      ],
+      "nd": 3
+    },
+    "beta_400": {
+      "file": "db/properties/lpscl_smallcell_glass_md_cc_followup_2026_09_26.json",
+      "path": [
+        "회신_CD_판정_2026_09_27",
+        "보수값_재계산",
+        "P-1_400K_400ps_MTO",
+        "beta"
+      ],
+      "nd": 3
+    },
+    "beta_400_800": {
+      "file": "db/properties/lpscl_smallcell_glass_md_cc_followup_2026_09_26.json",
+      "path": [
+        "회신_CD_판정_2026_09_27",
+        "보수값_재계산",
+        "pilot800_400K_MTO",
+        "beta"
+      ],
+      "nd": 3
+    },
+    "keep4": {
+      "file": "db/properties/li2s_deck_2026_09_28_f7_identity_census.csv",
+      "kind": "csv_join",
+      "col": "P_keeping_original_4S"
+    },
+    "coord4": {
+      "file": "db/properties/li2s_deck_2026_09_28_f7_identity_census.csv",
+      "kind": "csv_join",
+      "col": "P_bonded_to_4S_after_relax"
+    },
+    "s_moved": {
+      "file": "db/properties/li2s_deck_2026_09_28_f7_identity_census.csv",
+      "kind": "csv_join",
+      "col": "S_left_original_P"
+    },
+    "s54_t1": {
+      "file": "db/properties/lpscl_smallcell_glass_s54_history_2026_09_28.json",
+      "path": [
+        "사건_순서_실측",
+        {
+          "find": {
+            "field": "무엇",
+            "contains": "S54 가 P50 에서 이탈"
+          }
+        },
+        "t_ps"
+      ],
+      "nd": 0
+    },
+    "s54_t2": {
+      "file": "db/properties/lpscl_smallcell_glass_s54_history_2026_09_28.json",
+      "path": [
+        "사건_순서_실측",
+        {
+          "find": {
+            "field": "무엇",
+            "contains": "S59 가 P55 → P30"
+          }
+        },
+        "t_ps"
+      ],
+      "nd": 0
+    },
+    "s54_t3": {
+      "file": "db/properties/lpscl_smallcell_glass_s54_history_2026_09_28.json",
+      "path": [
+        "사건_순서_실측",
+        {
+          "find": {
+            "field": "무엇",
+            "contains": "영구 3배위"
+          }
+        },
+        "t_ps"
+      ],
+      "nd": 0
+    },
+    "s54_t4": {
+      "file": "db/properties/lpscl_smallcell_glass_s54_history_2026_09_28.json",
+      "path": [
+        "사건_순서_실측",
+        {
+          "find": {
+            "field": "무엇",
+            "contains": "말단 과황화"
+          }
+        },
+        "t_ps"
+      ],
+      "nd": 0
+    },
+    "ss_onset": {
+      "file": "db/raw/lpscl_smallcell_glass_cc_2026_09_26/seed5_ss_event_cc.json",
+      "path": "onset.d_A",
+      "nd": 2
+    },
+    "ss_last": {
+      "file": "db/raw/lpscl_smallcell_glass_cc_2026_09_26/seed5_ss_event_cc.json",
+      "path": "persistence.last_frame_pair_d_A",
+      "nd": 2
+    },
+    "s54_tset1": {
+      "file": "db/properties/lpscl_smallcell_glass_s54_history_2026_09_28.json",
+      "path": [
+        "사건_순서_실측",
+        {
+          "find": {
+            "field": "무엇",
+            "contains": "S54 가 P50 에서 이탈"
+          }
+        },
+        "T_set_K"
+      ],
+      "nd": 0
+    }
+  },
+  "blocks": [
+    {
+      "title": "배경",
+      "body": "Li₂S 양극은 용량이 크고 Li 를 이미 품고 있어 Li 금속 없이도 셀을 꾸릴 수 있지만, Li₂S 자체는 전자도 이온도 잘 안 통한다. 그래서 황화물 고체전해질(LPSCl, Li₆PS₅Cl)·탄소와 함께 고에너지 볼밀링해 쓴다 (예: 30 : 50 : 20 wt%). 이 과정에서 LPSCl 결정 피크가 사라지고 비정질 'LPS 유사상'으로 분해되는데도 셀은 잘 동작한다는 보고가 있다 (Cronk et al., Nat. Commun. 2026)."
+    },
+    {
+      "title": "질문",
+      "body": "복합 양극 안의 비정질 계면상에서 Li 는 얼마나 잘 움직이는가? 첫 단계 목표는 둘이다 — ① 이 계산 방법으로 Li 확산을 **잴 수 있는가**, ② 유리 구조를 새로 만들 때마다 값이 **얼마나 흩어지는가**. 다른 물질과 비교한 '얼마나 빠른가' 는 비교 기준 계가 생긴 뒤다."
+    },
+    {
+      "title": "계산 모델",
+      "body": "0 K 상평형(convex hull) 계산에서 Li₆PS₅Cl + Li₂S 조합은 Li₃PS₄ + LiCl + Li₂S 쪽으로 기운다. 아지로다이트 자체가 0 K 에서 준안정(고온 안정상)이라 0 K 계산만으로는 계면상 형성을 판정할 수 없어서, 분해 산물 조합 Li₃PS₄ + LiCl = **비정질 Li₄PS₄Cl** 을 계면상 후보로 둔다. 셀은 120원자(Li₄₈P₁₂S₄₈Cl₁₂, 한 변 약 14.0 Å 정육면체, 주기 경계), 힘 계산은 기계학습 원자간 포텐셜 UMA (uma-s-1p1). ⚠ 실제 계면상의 조성·구조는 실험으로 동정되지 않았다 — 이 모델은 후보 하나다."
+    }
+  ],
+  "timeline": [
+    {
+      "date": "09-11",
+      "did": "질문 설정 · 0 K 상평형 계산",
+      "result": "후보 계면상: 비정질 Li₄PS₄Cl"
+    },
+    {
+      "date": "09-12 – 15",
+      "did": "400원자 비정질 모델",
+      "result": "DFT 검증에 프로세스당 {mem400_gb} GB 넘게 필요 → 멈춤 (곁가지: 밀도 경보 {dens400_pct} %, 원인 미분류 · 포텐셜 검증 전 값)"
+    },
+    {
+      "date": "09-16 – 18",
+      "did": "120원자로 전환 · 포텐셜을 DFT 로 검증",
+      "result": "힘 RMSE {force_rmse} eV/Å · 상대 에너지 MAE {energy_mae} meV/atom · 통과"
+    },
+    {
+      "date": "09-18 – 21",
+      "did": "NEB 로 이동 장벽 직접 계산 시도",
+      "result": "쓸 수 있는 사건 {neb_r1_ok}/{neb_r1_n} · {neb_r2_ok}/{neb_r2_n} → 닫음"
+    },
+    {
+      "date": "09-21",
+      "did": "평형 MD 계획 사전 등록",
+      "result": "400 · 465 · 550 K · 독립 유리 구조 5개"
+    },
+    {
+      "date": "09-24 – 27",
+      "did": "유리 구조 5개 생성 · 예비 계산",
+      "result": "550 K 확산 구간 · 400 K 이 방법으로 측정 불가"
+    },
+    {
+      "date": "09-28",
+      "did": "600 K 예비 계산 · S 이탈 사건 추적",
+      "result": "진행 중 (465 K 본 계산 시작 대기)"
+    }
+  ],
+  "figures": [
+    {
+      "file": "docs/figures/li2s_deck_2026_09_28/f1_quench_protocol.png",
+      "title": "유리 만들기: 녹이고, 식히고, 다섯 번",
+      "caption": "PS₄ 단위·Li·Cl 을 무작위로 채운 뒤 1200 K 에서 100 ps 녹이고 1 K/ps(10¹² K/s)로 900 ps 식혀 300 K 에서 50 ps 유지, 0 K 이완 (압력 0 GPa). 초기 배치만 바꿔 독립 구조 5개. 밀도 {rho_range} g/cm³ — 절대값은 검증하지 않음 (냉각이 실험보다 10자릿수 이상 빠름)."
+    },
+    {
+      "file": "docs/figures/li2s_deck_2026_09_28/f2_force_check.png",
+      "title": "포텐셜 검증 — 원소별 힘 오차",
+      "caption": "같은 유리에서 뽑은 구조 10개로 UMA 와 DFT(QE · PBE)를 비교: 힘 RMSE {force_rmse} eV/Å, 상대 에너지 MAE {energy_mae} meV/atom. S·P 의 오차가 Li·Cl 보다 크다. ⚠ 셀 한 변(14 Å)이 포텐셜 컷오프(6 Å)의 2.33배뿐이라 400원자보다 주기 이미지 영향이 크고, 400원자 유리의 축소판도 아니다."
+    },
+    {
+      "file": "docs/figures/li2s_deck_2026_09_28/f3_neb_endpoints.png",
+      "title": "NEB 로 이동 장벽을 재려던 시도",
+      "caption": "300 K MD 에서 짧은 시간에 2 Å 넘게 움직인 Li 를 골라 이동 전·후를 0 K 로 이완하면, 두 끝점이 서로 다른 안정 자리(2.0 Å 이상)가 되어야 NEB 가 성립한다. 5 ps 간격 {neb_r1_ok}/{neb_r1_n}, 1–4 ps 간격 {neb_r2_ok}/{neb_r2_n} — 모두 Li 가 제자리로 돌아왔다. 이 사건들 위에서 장벽이 정의되지 않았을 뿐, '장벽이 없다' 는 뜻이 아니다."
+    },
+    {
+      "file": "docs/figures/li2s_deck_2026_09_28/f4_temperature_window.png",
+      "title": "MD 온도를 400 · 465 · 550 K 로 잡은 이유",
+      "caption": "아래 한계: 이 냉각 속도에서 원자 재배열이 멈추는 온도 Tg ≈ 400–450 K (실험 유리전이온도와 다름). 위 한계: 약 575 K 부터 5 ps 안에 Li 가 상자 절반(6.99 Å)을 넘어 작은 주기 셀에서는 변위를 제대로 셀 수 없다 — 설계에서 600 K 이상 제외 (600 K 는 조건을 걸고 다시 확인 중). 담금질(비평형) 중 진단값이지 확산계수가 아니다."
+    },
+    {
+      "file": "docs/figures/li2s_deck_2026_09_28/f5_pilot_beta.png",
+      "title": "예비 계산: 550 K 는 확산 구간, 400 K 는 측정 불가",
+      "caption": "구조 1 하나로 예비 계산 3개. MSD 지수 β = d ln MSD / d ln t (창 2–50 ps)가 0.8–1.2 안이어야 확산 구간이다. 550 K: β = {beta_550} (띠 안). 400 K: {beta_400}, 800 ps 로 늘려도 {beta_400_800} (띠 한참 아래) → 결과 전에 정해 둔 문장 그대로 '이 방법으로 400 K 는 측정되지 않는다'. 두 400 K 런은 MD 난수 시드가 같고 출발 구조만 다르다 — 둘의 차이를 구조 간 산포로 읽지 않는다. 잠정 · 내부 진단값."
+    },
+    {
+      "file": "docs/figures/li2s_deck_2026_09_28/f6_pcoord_stages.png",
+      "title": "담금질 중 P–S 결합 끊김: 흔하지만 대부분 돌아온다",
+      "caption": "매 프레임(1 ps 간격) 각 P 주위 2.6 Å 안에 S 가 4개 있는지 확인. 녹이고 식히는 동안 구조에 따라 끊김이 잦지만, 300 K 에 도착하면 구조 1–4 는 모두 4배위로 돌아온다. 구조 5 만 P 하나가 끝까지 3배위. 거리 기준 판정이지 결합 차수를 잰 것은 아니다."
+    },
+    {
+      "file": "docs/figures/li2s_deck_2026_09_28/f7_identity_census.png",
+      "title": "배위수는 유지돼도 S 는 P 사이를 옮겨 다닌다",
+      "caption": "원자 번호로 처음의 P–S 짝을 추적. 이완 후 4배위 P: {coord4} (12개 중). 원래 S 4개를 그대로 가진 P: {keep4}. 다른 P 로 옮긴 S: {s_moved} (주로 녹는 동안과 냉각 전반부). 그래서 'PS₄ 단위가 보존됐다' 가 아니라 **'P 의 4배위가 유지됐다'** 로 말한다."
+    },
+    {
+      "file": "docs/figures/li2s_deck_2026_09_28/f8_s54_event.png",
+      "title": "구조 5: S 하나가 떨어져 나가 말단 P–S–S 를 만들었다",
+      "caption": "① {s54_t1} ps (설정 {s54_tset1} K) S54 가 P50 에서 떨어져 다시 붙지 않음 ② {s54_t2} ps S59 가 P55 에서 P30 으로 옮김 ③ {s54_t3} ps P30 이 세 번째 S 를 잃고 끝까지 3배위 ④ {s54_t4} ps 떠돌던 S54 가 S59 옆 {ss_onset} Å 로 와 말단 P30–S59–S54, 300 K 에서 {ss_last} Å 유지. 구조 하나 · 거리 기준 관찰 — 결합 형성·속도·일반화는 말하지 않는다."
+    }
+  ],
+  "measurement": {
+    "보고하는_양": "① 확산 구간 기준(C1: 50 ps 에서 MSD ≥ 3 Å² · C2: β 가 0.8–1.2)을 통과한 런 수 ② 활성화에너지 Ea 의 구조 간 산포(중앙값 · IQR) ③ 465 K 에서 D 의 구조 간 산포",
+    "오차": "독립 구조 5개의 IQR — 구조를 합쳐 하나의 MSD 로 만들지 않는다",
+    "미리_정한_분기": "예비 계산 탈락 → 멈추고 보고 · 통과 9 런 미만 → '이 방법으로 측정 불가' · IQR(Ea) > 0.10 eV → 구조별 나열 · ≤ 0.10 eV → 비교 기준 계 단계로",
+    "보고하지_않는_것": "D · 이온전도도 · Ea 의 절대값 — 같은 조건의 비교 기준 계가 아직 없다"
+  },
+  "now_next": [
+    "진행 중 — 600 K 예비 계산 (구조 1, 0 K 이완 구조에서 출발). 결과 전에 정한 규칙: C1 · C2 를 통과할 때만 세 번째 온도로 쓴다 · Ea 값을 보고 정하지 않는다",
+    "시작 대기 — 465 K 구조 3 · 4. 조기 확인: 두 구조의 D(2–50 ps)가 2배 넘게 벌어지면 멈추고 보고",
+    "다음 — 본 계산 465 · 550 K × 구조 5개 (+ 600 K 편입 여부) → 통과 런 수 · Ea 와 D 의 구조 간 산포 판정",
+    "그 다음 (미착수) — 같은 온도의 결정질 기준 계 계산을 붙여야 '얼마나 빠른가' 를 상대 비교로 말할 수 있다"
+  ],
+  "can": [
+    "기계학습 포텐셜이 이 120원자 유리에서 DFT 힘을 RMSE {force_rmse} eV/Å 로 재현",
+    "이 방법으로 400 K 는 측정 불가, 550 K 는 확산 구간 (예비 · 구조 1개)",
+    "담금질 중 P–S 결합 끊김과 S 의 소속 교환이 흔함 (구조 5개)",
+    "본 계산 후: 기준 통과 런 수와 구조 간 산포"
+  ],
+  "cannot": [
+    "Li 확산계수 · 이온전도도 · 활성화에너지의 절대값",
+    "상온(300 K) 전도도 — Tg 를 가로지르는 외삽",
+    "결정질 LPSCl · 400원자 모델 · 다른 계와의 비교",
+    "'이 상이 볼밀링에서 실제로 생긴다 / 셀 성능을 살린다'",
+    "이동 장벽 값, 밀도 · Tg 의 실험값 대응"
+  ],
+  "rider": "모든 수치의 조건: 120원자 · L ≈ 14 Å (포텐셜 컷오프의 2.33배 — 400원자보다 주기 이미지 영향이 크다) · 냉각 10¹² K/s · 독립 구조 5개 (힘 검증은 구조 1개)",
+  "glossary": [
+    [
+      "MLIP (기계학습 포텐셜)",
+      "DFT 결과로 학습해 원자 힘을 빠르게 예측하는 모델 (여기서는 UMA)"
+    ],
+    [
+      "멜트–퀜치",
+      "고온에서 녹였다가 빠르게 식혀 유리(비정질) 구조를 만드는 방법"
+    ],
+    [
+      "MSD (평균제곱변위)",
+      "원자 변위의 제곱 평균. 확산 구간에서는 시간에 비례하고 기울기/6 = D"
+    ],
+    [
+      "MSD 지수 β",
+      "d ln MSD / d ln t. 1 이면 정상 확산, 1 보다 작으면 갇힌 운동"
+    ],
+    [
+      "Tg (동역학적 정지 온도)",
+      "이 냉각 속도에서 원자 재배열이 멈추는 온도 — 실험 Tg 와 다름"
+    ],
+    [
+      "NEB",
+      "두 안정 자리 사이의 최소 에너지 경로와 이동 장벽을 찾는 방법"
+    ],
+    [
+      "IQR (사분위 범위)",
+      "값들의 가운데 50 % 가 걸친 폭 — 여기서는 구조 5개의 흩어짐"
+    ],
+    [
+      "사전 등록",
+      "결과를 보기 전에 판정 기준과 분기를 문서로 고정해 두는 것"
+    ],
+    [
+      "주기 이미지 한계",
+      "작은 주기 셀에서 원자가 상자 절반 넘게 움직이면 변위를 셀 수 없음"
+    ]
+  ],
+  "출처": {
+    "그림_생성기": "tools/figures/fig_li2s_deck_2026_09_28.py (--selftest)",
+    "그림_원자료_CSV": "db/properties/li2s_deck_2026_09_28_*.csv · f6 은 db/properties/li2s_p_coord_frames_origin_2026_09_27.csv",
+    "문헌": "litdb/papers/cronk2026_lis_cathode_interphase_chemistry.md"
+  }
+}

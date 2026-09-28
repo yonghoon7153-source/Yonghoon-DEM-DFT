@@ -7779,6 +7779,173 @@ def li2s_closure_card() -> dict:
 
 
 # ─────────────────────────────────────────────────────────────
+# /li2s 맨 위 「처음 보는 분께」 — 발표용 요약 (2026-09-28)
+#
+# 왜: 이 화면의 나머지는 내부 기록 원문(판정 · 마감 카드 · 사다리)이라 처음 보는 사람이
+#   못 읽는다. 발표 덱(Slides 아티팩트)과 같은 줄거리를 필드 용어로 한 절에 둔다.
+# 숫자: 요약 기록에 **쓰지 않는다.** 본문의 {이름} 자리표시를 `sources` 가 가리키는 원 기록에서
+#   여기서 읽어 채운다 — 원 기록이 바뀌면 화면이 따라 바뀐다 (화면 규율 · 자체 보관 금지).
+LI2S_BRIEF_JSON = "li2s_brief_2026_09_28.json"
+#: ⚠ 대문자도 받는다 — 소문자만 받던 판이 `{s54_T1}` 을 **글자 그대로** 화면에 남겼다
+#:   (정규식이 안 걸려 unread 에도 안 올랐다 · 2026-09-28 작성 중 실측).
+_BRIEF_SLOT = re.compile(r"\{([A-Za-z0-9_]+)\}")
+
+
+def _load_csv_rows(p: Path):
+    """CSV → 행(dict) 목록 | None. `#` 로 시작하는 머리 주석 줄(따옴표로 싼 것 포함)은 건너뛴다.
+
+    ⛔ 못 하는 것: 열 이름·단위를 검사하지 않는다 — 부르는 쪽이 열이 있는지 본다.
+      못 읽으면 None 이다 (빈 목록으로 흉내내지 않는다).
+    """
+    import csv as _csv
+    try:
+        lines = [ln for ln in p.read_text(encoding="utf-8").splitlines()
+                 if not ln.lstrip('"').startswith("#")]
+    except (OSError, UnicodeDecodeError):
+        return None
+    rows = list(_csv.DictReader(lines))
+    return rows or None
+
+
+def _brief_dig(d, path):
+    """점표기 문자열 또는 키 리스트로 판다. 리스트 원소는 정수 색인이나
+    `{"find": {"field": 키, "contains": 글}}` (그 글을 가진 원소 **정확히 하나**)로 고른다.
+
+    ⛔ `find` 가 0 개나 2 개 이상을 찾으면 None 이다 — 첫 것을 조용히 고르지 않는다
+      (목록에 줄이 끼어들면 엉뚱한 사건의 시각이 화면에 뜬다).
+    """
+    cur = d
+    for k in (path.split(".") if isinstance(path, str) else path):
+        if isinstance(k, dict):
+            f = k.get("find") or {}
+            if not isinstance(cur, list) or not f.get("contains"):
+                return None
+            hit = [x for x in cur if isinstance(x, dict)
+                   and f["contains"] in str(x.get(f.get("field"), ""))]
+            if len(hit) != 1:
+                return None
+            cur = hit[0]
+        elif isinstance(k, int):
+            if not isinstance(cur, list) or not -len(cur) <= k < len(cur):
+                return None
+            cur = cur[k]
+        else:
+            if not isinstance(cur, dict) or k not in cur:
+                return None
+            cur = cur[k]
+    return cur
+
+
+def _brief_num(v, nd=None):
+    """숫자 → 화면 문자열. `nd` 자리 사사오입(0.4195 → 0.420) · 음수는 U+2212. 숫자가 아니면 None."""
+    from decimal import ROUND_HALF_UP, Decimal
+    if isinstance(v, bool) or not isinstance(v, (int, float)):
+        return None
+    if nd is None:
+        s = str(int(v)) if float(v).is_integer() else str(v)
+    else:
+        q = Decimal(1).scaleb(-int(nd))
+        s = str(Decimal(str(v)).quantize(q, rounding=ROUND_HALF_UP))
+    return s.replace("-", "−")
+
+
+def _brief_resolve(src: dict):
+    """출처 하나 → (문자열 | None, 어디서 읽었나). 못 읽으면 None — 화면이 `—` 와 경고를 그린다."""
+    rel = str(src.get("file") or "")
+    kind = src.get("kind", "value")
+    if kind == "csv_join":
+        col = src.get("col")
+        rows = _load_csv_rows(ROOT / rel)
+        where = f"{rel} :: {col}"
+        if not rows or any(r.get(col) in (None, "") for r in rows):
+            return None, where
+        return (src.get("sep") or " · ").join(r[col] for r in rows), where
+    d = _load_json(ROOT / rel)
+    if kind == "range":
+        paths = src.get("paths") or []
+        where = f"{rel} :: {len(paths)} 경로의 최소–최대"
+        vals = [_brief_dig(d, pth) for pth in paths] if d else []
+        if not vals or any(isinstance(v, bool) or not isinstance(v, (int, float)) for v in vals):
+            return None, where
+        return f"{_brief_num(min(vals), src.get('nd'))}–{_brief_num(max(vals), src.get('nd'))}", where
+    path = src.get("path")
+    shown = path if isinstance(path, str) else " › ".join(
+        (x["find"].get("contains", "?") if isinstance(x, dict) and "find" in x else str(x))
+        for x in (path or []))
+    where = f"{rel} :: {shown}"
+    v = _brief_dig(d, path) if (d and path) else None
+    if v is None:
+        return None, where
+    if src.get("regex"):
+        m = re.search(src["regex"], str(v))
+        if not m:
+            return None, where
+        try:
+            v = float(m.group(1))
+        except ValueError:
+            return None, where
+    return _brief_num(v, src.get("nd")), where
+
+
+def li2s_brief() -> dict:
+    """/li2s 맨 위 「처음 보는 분께」 절.
+
+    ⛔ 못 하는 것
+      · 판정하지 않는다. 문장을 새로 짓지 않는다 — 요약 기록의 문장을 옮기고 숫자만 채운다.
+      · 못 읽은 자리표시를 0 이나 빈칸으로 채우지 않는다 — `—` 로 두고 이름을 `unread` 에 올린다.
+      · `sources` 에 없는 자리표시도 `unread` 로 올린다 — 조용히 글자로 남기지 않는다.
+      · 요약 기록이 없으면 절을 흉내내지 않는다 (ok=False).
+      · 그림 파일이 없으면 `exists=False` 로 말한다 — 깨진 그림 상자를 그리지 않는다.
+    """
+    d = _load_json(DB / "properties" / LI2S_BRIEF_JSON)
+    if not d:
+        return {"ok": False, "why": f"db/properties/{LI2S_BRIEF_JSON} 을 못 읽었다"}
+    vals, where, unread = {}, {}, []
+    for name, src in (d.get("sources") or {}).items():
+        s, w = _brief_resolve(src if isinstance(src, dict) else {})
+        vals[name], where[name] = s, w
+        if s is None:
+            unread.append(name)
+
+    def fill(t):
+        if not isinstance(t, str):
+            return t
+
+        def rep(m):
+            k = m.group(1)
+            if vals.get(k) is None:
+                if k not in unread:
+                    unread.append(k)
+                return "—"
+            return vals[k]
+        return _BRIEF_SLOT.sub(rep, t)
+
+    out = {
+        "ok": True,
+        "title": d.get("제목") or "",
+        "authority": d.get("판정_권한") or "",
+        "deck": d.get("deck") or {},
+        "blocks": [{"title": b.get("title"), "body": fill(b.get("body"))}
+                   for b in d.get("blocks") or []],
+        "timeline": [{k: fill(v) for k, v in r.items()} for r in d.get("timeline") or []],
+        "figures": [{"file": f.get("file"), "title": fill(f.get("title")),
+                     "caption": fill(f.get("caption")),
+                     "exists": bool(f.get("file")) and (ROOT / f["file"]).is_file()}
+                    for f in d.get("figures") or []],
+        "measurement": [(k.replace("_", " "), fill(v)) for k, v in (d.get("measurement") or {}).items()],
+        "now_next": [fill(x) for x in d.get("now_next") or []],
+        "can": [fill(x) for x in d.get("can") or []],
+        "cannot": [fill(x) for x in d.get("cannot") or []],
+        "rider": fill(d.get("rider")),
+        "glossary": [g for g in d.get("glossary") or [] if isinstance(g, list) and len(g) == 2],
+        "values": vals, "where": where,
+        "record": f"db/properties/{LI2S_BRIEF_JSON}",
+    }
+    out["unread"] = unread
+    return out
+
+
+# ─────────────────────────────────────────────────────────────
 # 점착 파이프라인 (/adhesion) — 2026-09-24
 #
 # 왜 별도 화면인가: W_ad 캠페인의 기록이 계획·DEM 회신·결정·입력·런북·리뷰로 흩어져 있다.
