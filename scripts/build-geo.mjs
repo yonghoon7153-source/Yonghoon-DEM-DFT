@@ -10,6 +10,8 @@
 //   - Visvalingam simplification keeps borders shared between prefectures consistent.
 //   - Islets under MIN_RING_AREA are dropped unless they touch another ring.
 //   - Ogasawara (Tokyo, south of 30°N) is dropped: it would push the map 7° south for a few dots.
+//   - The Northern Territories (国後 · 択捉 · 色丹 · 歯舞, east of 145.5°E off Hokkaido) are not drawn: the source draws them
+//     as Japan, but they are Russian-administered and disputed, and this is a learning map — ADR 0010 (decided with friends).
 //   - Okinawa's far-flung islands are dropped — Miyako/Yaeyama (west of 126.5°E) and the Daito islands
 //     (east of 129°E; shifted with the rest they would land on the tip of Kagoshima) — and the main
 //     island group is moved into a small inset box off the west coast of Kyushu (OKINAWA_SHIFT).
@@ -29,7 +31,9 @@ const OUT_META = new URL('../src/generated/prefecture-geo.json', import.meta.url
 const SIMPLIFY_Q = 0.15;      // drop the 15% least significant points
 const MIN_RING_AREA = 6e-8;   // steradians, ≈ 2.4 km²
 export const OKINAWA_SHIFT = [-0.6, 5.4]; // [dLon, dLat] applied to Okinawa in the inset
-const OKINAWA_ID = 47, TOKYO_ID = 13;
+const OKINAWA_ID = 47, TOKYO_ID = 13, HOKKAIDO_ID = 1;
+// Northern Territories: every Hokkaido polygon whose centroid is east of this and north of Nemuro's islets (ユルリ島 43.2°N)
+const NORTHERN_TERRITORIES = { lon: 145.5, lat: 43.3 };
 
 const topo = JSON.parse(readFileSync(SRC, 'utf8'));
 
@@ -46,6 +50,11 @@ for (const f of fc.features) {
   const id = f.properties.id;
   let polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
   if (id === TOKYO_ID) polys = polys.filter((p) => geoCentroid({ type: 'Polygon', coordinates: p })[1] > 30);
+  if (id === HOKKAIDO_ID) {
+    const before = polys.length;
+    polys = polys.filter((p) => { const [lon, lat] = geoCentroid({ type: 'Polygon', coordinates: p }); return !(lon > NORTHERN_TERRITORIES.lon && lat > NORTHERN_TERRITORIES.lat); });
+    console.log(`Northern Territories left out: ${before - polys.length} polygons`);
+  }
   if (id === OKINAWA_ID) {
     polys = polys
       .filter((p) => { const lon = geoCentroid({ type: 'Polygon', coordinates: p })[0]; return lon > 126.5 && lon < 129; })
