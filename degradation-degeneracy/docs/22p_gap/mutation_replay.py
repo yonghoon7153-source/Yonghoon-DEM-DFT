@@ -5814,7 +5814,9 @@ EXPECT: dict = {
     #   첫 관측에서 `warm-map-is-regenerated-and-compared-g81s` 만 rc 0 이었다: 시작 시점 map 대조를 지워도
     #   심층 방어인 provider_x0 sha 대조가 같은 ValueError 로 막아 s06 ② 의 `map|sha` 매칭이 통과했다.
     #   s06 ② 를 시작 시점 문구(`다시 만든 map sha`) + fits.parquet 부재로 좁힌 뒤 재관측 — 13/13 rc 1.
-    #   잘린 repr 꼬리와 fixture sha 값은 증인에 담지 않는다 (안정 접두사만).
+    #   잘린 repr 꼬리와 fixture sha 값은 증인에 담지 않는다 — 가변 값은 **따옴표 직전에서** 끊는다
+    #   (G67-T1-b `test_g67_14`: 열린 따옴표 뒤에 값 조각을 남기면 안 된다. 첫 판은 0 열두 개를 남겨
+    #   전체 회귀 9d5d8d1c 에서 그 시험이 실패했다).
     "sig5-v6-row-keys-are-a-declaration-conflict-g81s": {
         "fail": [
             "tests/test_gate81_stage3_wire.py::test_g81_s01_a_sig5_run_that_carries_v6_rows_or_a_stage3_block_is_a_declaration_conflict",
@@ -5890,13 +5892,13 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_gate81_stage3_wire.py::test_g81_n3_01_solution_map_header_binds_fits_bytes_objective_and_protocol":
-                "AssertionError: assert ('000000000000",
+                "AssertionError: assert ('",
             "tests/test_gate81_stage3_wire.py::test_g81_n3_02_consumer_rejects_wrong_fits_map_combination_and_unsealed_maps":
                 "ValueError: solution map header 의 provider_protocol_sha256 (0000000000000000) ≠ edge 의 provider_protocol_sha256",
             "tests/test_gate81_stage3_wire.py::test_g81_n3_03_consumer_rejects_missing_condition_wrong_objective_and_out_of_bounds_without_clipping":
                 "AssertionError: Regex pattern did not match.",
             "tests/test_gate81_stage3_wire.py::test_g81_s05_the_map_protocol_sha_is_recomputed_from_the_provider_run_spec":
-                "AssertionError: assert '000000000000",
+                "AssertionError: assert '",
         }
     },
     "design-order-is-the-optimizer-vector-g81s": {
