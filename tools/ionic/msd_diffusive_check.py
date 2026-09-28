@@ -542,6 +542,47 @@ def block_sigma_curve(sigma_of_block, blocks):
     return out
 
 
+#: C2 구간 — 회신 CC 가 정한 β 허용 구간. 양쪽 문턱이다.
+C2_LO, C2_HI = 0.8, 1.2
+#: 회신 CH (2026-09-28): 경계 판정은 **거리/σ** 로 한다. 1σ 가 아니라 2σ —
+#  σ 가 보수값이어도 여전히 하한이라(사다리에 plateau 가 없으면 끝값이 참값보다 작을 수 있다) 여유를 둔다.
+CH_N_SIGMA = 2.0
+
+
+def _boundary_verdict(ref, sigma, ref_curve):
+    """β 가 C2 구간 안인지 · 문턱에서 몇 σ 떨어졌는지 → 통과 / 미통과 / 경계.
+
+    회신 CH 규칙 그대로:
+      |β − 문턱| ≥ 2σ_보수 이고 구간 안  → 통과
+      |β − 문턱| ≥ 2σ_보수 이고 구간 밖  → 미통과
+      |β − 문턱| < 2σ_보수               → 경계 · 구분 불가
+
+    ⚠ 회신 문구는 문턱 **하나**(0.8)를 두고 쓴 것이다. C2 는 양쪽(0.8–1.2)이므로
+      여기서는 **가까운 쪽 문턱까지의 거리**를 쓴다 — 통과를 선언하려면 넘을 수 있는
+      어느 경계에서도 2σ 밖이어야 한다. 이 해석은 우리가 정했고 외부 1저자 확인 대기다
+      (db/properties/lpscl_smallcell_glass_md_amendment_ch_2026_09_28.json).
+
+    ⛔ 이 함수가 못 하는 것: σ 가 참값인지 모른다 — 하한이다. 그래서 n_sigma 는 **상한**이고,
+      "2σ 를 넘었다" 는 낙관적일 수 있다. 판정은 도구가 아니라 사람이 한다.
+    """
+    if sigma is None or not (sigma > 0):
+        raise SystemExit("⛔ σ(β) 가 없거나 0 이다 — 경계 판정을 하지 않는다 (0 으로 나누지 않는다)")
+    near = C2_LO if abs(ref - C2_LO) <= abs(ref - C2_HI) else C2_HI
+    dist = ref - near
+    n = abs(dist) / sigma
+    inw = C2_LO <= ref <= C2_HI
+    if n < CH_N_SIGMA:
+        verdict = "경계 · 구분 불가"
+    else:
+        verdict = "통과" if inw else "미통과"
+    return {"beta_ref": ref, "ref_curve": ref_curve, "sigma": sigma,
+            "window": [C2_LO, C2_HI], "in_window": inw,
+            "nearest_threshold": near, "distance_to_nearest": dist,
+            "n_sigma": n, "rule": f"|β − 문턱| >= {CH_N_SIGMA:g}σ",
+            "ch_2sigma_verdict": verdict,
+            "⛔_폐기된_규칙": "회신 CC 의 절대폭 σ > 0.005 (회신 CH 가 오적용으로 판정)"}
+
+
 def choose_block_plateau(curve, tol=BLOCK_PLATEAU_TOL, run=BLOCK_PLATEAU_RUN, n_boot=None):
     """σ(b) 곡선에서 **plateau 에 드는 최소 b** 를 고른다 (회신 BU · 결과 보기 전 확정).
 
@@ -1967,6 +2008,30 @@ def selftest():
     _t = [float(i) for i in range(1, 101)]
     _y1 = [0.1 * x for x in _t]; _y2 = [27 + 0.1 * x for x in _t]
     _e1 = aggregation_eligible(_t, _y1, 60); _e2 = aggregation_eligible(_t, _y2, 60)
+    # ── 경계 판정 2σ 규칙 (회신 CH · 2026-09-28) ─────────────────────────────
+    #   ⛔ 종전 절대폭 규칙(σ > 0.005)은 폐기됐다 — 15σ 떨어진 점에도 '경계' 를 찍던 오적용.
+    _bv = _boundary_verdict(0.856, 0.0166, "MTO")            # 실제 P-2 550 K
+    chk(abs(_bv["n_sigma"] - 3.37) < 0.02 and _bv["ch_2sigma_verdict"] == "통과",
+        f"[양성] P-2 550 K 가 {_bv['n_sigma']:.2f}σ 로 통과 (회신 CH: 3.4σ 통과)")
+    _bv4 = _boundary_verdict(0.4266, 0.0246, "STO")          # 실제 400 K pilot800
+    chk(abs(_bv4["n_sigma"] - 15.18) < 0.05 and _bv4["ch_2sigma_verdict"] == "미통과",
+        f"[양성] 400 K 가 {_bv4['n_sigma']:.2f}σ 로 미통과 (회신 CH: 15σ 미통과)")
+    chk(_boundary_verdict(0.81, 0.02, "MTO")["ch_2sigma_verdict"] == "경계 · 구분 불가",
+        "[양성] 문턱에서 0.5σ 면 경계다")
+    #   ⛔음성 — 옛 절대폭 규칙이 되살아나면 400 K 가 '경계' 가 된다. 그렇게 되면 안 된다.
+    chk(_bv4["sigma"] > 0.005 and _bv4["ch_2sigma_verdict"] != "경계 · 구분 불가",
+        "[⛔음성] σ 가 0.005 를 넘어도 15σ 떨어졌으면 경계가 아니다 (CC 절대폭 규칙 폐기 확인)")
+    #   ⛔음성 — 구간 밖인데 2σ 밖이면 '통과' 로 새면 안 된다
+    chk(_boundary_verdict(1.40, 0.02, "MTO")["ch_2sigma_verdict"] == "미통과",
+        "[⛔음성] 위쪽 문턱 1.2 밖도 미통과로 잡는다 (양쪽 문턱)")
+    #   ⛔음성 — σ 가 0 이면 나누지 않고 죽는다
+    _died = False
+    try:
+        _boundary_verdict(0.9, 0.0, "MTO")
+    except SystemExit as _ex:
+        _died = "0 으로 나누지 않는다" in str(_ex)
+    chk(_died, "[⛔음성] σ = 0 이면 경계 판정을 하지 않고 죽는다")
+
     chk(run_verdict(_t, _y1)[0] == HOLD and run_verdict(_t, _y2)[0] == CITABLE,
         "[재현 BQ-6 ①] 절편 27 Å² 만 다른 두 곡선에서 run_verdict 가 hold ↔ citable 로 갈린다 (MSD 대용값 1.1 → 4.1)")
     chk(_e1[0] == _e2[0] and _e1[2]["msd_magnitude_alarm"] != _e2[2]["msd_magnitude_alarm"],
@@ -2929,7 +2994,9 @@ def main():
                "save_fs": sf_v, "save_fs_src": sf_src, "save_fs_assumed": bool(sf_assumed), "n_origin": po["n_origin"],
                "block_scan": scan,
                "reading": "σ 는 공통원점 행렬(MTO 추정자)의 런 내부 표준편차. 카드의 β* 가 STO(단일 원점)면 그 산포는 이보다 "
-                          "작지 않으므로 σ 는 **하한**이다. 회신 CC 규칙: 폭(σ) > 0.005 면 '경계 · 구분 불가'. 판정은 도구가 하지 않는다."}
+                          "작지 않으므로 σ 는 **하한**이다. ⛔ 회신 CC 의 절대폭 규칙(σ > 0.005)은 **폐기**됐다 — 회신 CH: "
+                          "'0.005 는 β 0.805 하나를 두고 쓴 말이라 절대폭으로 굳으면 안 되고, 15σ 떨어진 400 K 에도 같은 "
+                          "라벨을 찍는 것은 명백한 오적용'. 지금 규칙은 **|β − 문턱| 을 σ 로 나눈 거리**다. 판정은 도구가 하지 않는다."}
         if blk is None:
             print("\n⛔ **블록 길이를 고르지 않는다** ⇒ σ(β) 는 '못 구했다' 로 적는다 (회신 BU 규칙). 아무 b 나 골라 숫자를 만들지 않는다.")
             res["status"] = "판정보류_블록_plateau_없음"
@@ -2942,16 +3009,17 @@ def main():
         res["beta_boot"] = bb
         ref = b_sto if b_sto is not None else b_mto
         if ref is not None:
-            res["boundary_vs_0.8"] = {"beta_ref": ref, "ref_curve": "STO" if b_sto is not None else "MTO",
-                                     "distance": ref - 0.8, "sigma": bb["sigma_beta"],
-                                     "cc_width_rule_0.005": "경계·구분 불가" if bb["sigma_beta"] > 0.005 else "폭 ≤ 0.005",
-                                     "distance_over_sigma": (ref - 0.8) / bb["sigma_beta"] if bb["sigma_beta"] > 0 else None}
+            res["boundary_vs_0.8"] = _boundary_verdict(ref, bb["sigma_beta"],
+                                                       "STO" if b_sto is not None else "MTO")
         print(f"\n  β̂(행렬) = {bb['beta_matrix_mean']:.4f}   σ(β) = {bb['sigma_beta']:.5f}   [68 % {bb['lo68']:.4f}, {bb['hi68']:.4f}]"
               f"   block {bb['block']} · 재표본 {bb['n_boot_used']}/{bb['n_boot']} · 원점 {bb['n_origin']}")
         if ref is not None:
             bv = res["boundary_vs_0.8"]
-            print(f"  카드 β*({bv['ref_curve']}) {ref:.4f} 는 0.8 에서 {bv['distance']:+.4f} · σ 의 {bv['distance_over_sigma']:.2f} 배 · "
-                  f"회신 CC 폭 규칙(0.005): **{bv['cc_width_rule_0.005']}**")
+            _d = bv["distance_to_nearest"]
+            _n = bv["n_sigma"]
+            print(f"  카드 β*({bv['ref_curve']}) {ref:.4f} · 가까운 문턱 {bv['nearest_threshold']} 까지 {_d:+.4f} · "
+                  f"σ 의 **{_n:.2f} 배** · 구간({C2_LO}–{C2_HI}) {'안' if bv['in_window'] else '밖'} → "
+                  f"회신 CH 2σ 규칙: **{bv['ch_2sigma_verdict']}**")
         if a.out:
             pathlib.Path(a.out).write_text(json.dumps(res, ensure_ascii=False, indent=1) + "\n"); print(f"-> {a.out}")
         return 0

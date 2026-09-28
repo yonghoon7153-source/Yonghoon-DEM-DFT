@@ -1,0 +1,34 @@
+{
+ "schema": "erratum/v1",
+ "record_kind": "erratum",
+ "date": "2026-09-28",
+ "track": "li2s (외부 1저자 트랙 · 사용자 ≠ 1저자)",
+ "제목": "개정 CC(v2) 의 `amends_content_digest` 가 카드의 어떤 표현과도 안 맞는다 — 출처 미확인",
+ "대상": "db/properties/lpscl_smallcell_glass_md_amendment_cc_2026_09_26.json",
+ "⛔_원본은_고치지_않는다": "개정 v2 파일은 그대로 둔다. 이 파일이 정정이다.",
+ "사실": {
+  "v2가_적은_digest": "1e35b1e7c29d042c6f14c62daef4f386b9e4c7dab68a110bb9729c8af23449e1",
+  "카드_raw_sha256_지금": "4724703f3ed7cb77b6141592bb8ef643061a4da9a8b90fdebc85b6ba0969e082",
+  "카드_마지막_변경": "2026-09-22 (커밋 4f2cbc6e8) — v2 작성(09-26) 이후 **안 바뀌었다**. 그 시점 커밋본의 raw sha 도 4724703f3ed7cb77… 로 같다.",
+  "시도한_표현_8종": [
+   "raw bytes",
+   "text utf-8",
+   "dumps(sort_keys, ensure_ascii=False)",
+   "dumps(sort_keys, ensure_ascii=True)",
+   "dumps(sort+compact separators)",
+   "dumps(indent=1, ensure_ascii=False)",
+   "dumps(indent=2, ensure_ascii=False)",
+   "dumps(indent=1, sort_keys)"
+  ],
+  "결과": "여덟 가지 **전부 불일치**. 어느 것도 v2 의 값을 재현하지 못했다."
+ },
+ "⛔_확정하지_않은_것": "v2 의 digest 가 ① 카드 일부의 해시인지 ② 다른 파일의 해시인지 ③ 커밋 안 된 워킹트리 상태의 해시인지 **모른다**. 셋 다 가능하고 이 기록은 고르지 않는다.",
+ "왜_중요한가": "`amends_content_digest` 는 *'내가 이 내용의 카드를 개정했다'* 를 고정하는 자리다. 불일치를 덮고 새 값을 적으면 개정 사슬이 **끊긴 채 오류 없이** 남는다 (repo 규율: 조용히 틀린 경로).",
+ "조치_사용자_결정_2026_09_28": {
+  "선택": "(A) — 앞으로 `amends_content_digest` 는 **대상 파일의 raw sha256** 으로 통일한다.",
+  "개정_v3부터_적용": "4724703f3ed7cb77b6141592bb8ef643061a4da9a8b90fdebc85b6ba0969e082",
+  "v2_는": "값을 안 고치고 둔다. 이 정정이 옆에 붙는다."
+ },
+ "남은_일": "v2 digest 의 출처를 캐고 싶으면 09-26 전후 작성 스크립트·명령을 찾아야 한다. 지금은 **미확인**으로 둔다.",
+ "status": "기록 — 1저자(사용자) 선택 (A) 반영"
+}

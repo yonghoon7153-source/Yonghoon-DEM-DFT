@@ -5266,6 +5266,39 @@
     "decision_digest": "sha256:00470a170f7d5e00b4c46db1163ebd7d44e450ae0d8c1a37c33e6e1f4385c693",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
+  },
+  {
+   "id": "D-2026-09-28-lpscl-smallcell-glass-amend-ch",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": null,
+   "slot": "lpscl_smallcell_glass_md_amend_ch",
+   "applies_to": null,
+   "title": "li2s 소셀 유리 MD 카드 개정 CH — 경계 2σ · **600 K 편입 규칙 사전등록** · 시드 산포 보고량 (외부 1저자 확인 대기)",
+   "statement": "`db/properties/lpscl_smallcell_glass_md_amendment_ch_2026_09_28.json` (proposed v3). ① 경계 판정을 절대폭 0.005 → **|β − 문턱| < 2σ_보수** 로 (판정 불변: P-2 3.4σ 통과 · 400 K 15σ 미통과). ② **600 K 편입 규칙을 결과 보기 전에 박는다** — 본 런과 동시에 600 K 파일럿 1런, C1·C2 통과하고 5 ps lag p90 MSD 가 (d/2)² = 48.88 Å² 를 넘더라도 **초과분을 기록한 채** Ea 적합 셋째 점으로 편입. 미통과면 465·550 두 점 + **dof = 0 명시**. ⛔ 편입 여부는 이 규칙으로만 정하고 **Ea 값을 보고 정하지 않는다**. ③ 시드 간 P 이탈 산포(seed1 1/102 ↔ seed4 87/102 · seed1 0/897 ↔ seed5 808/897)를 보조자료 → **보고량**으로 등재. ④ '300 K 50 ps' 항목 닫힘 (1051 프레임 = 100+900+50 ps ⇒ dump 1 ps). ⑤ Q-CH-3 수정안 수용 + S54 내력·seed4 일시 P–S–S(1183 K · 5.25 Å) 추가. ⑥ 본 런 465 K 첫 2 시드 D 를 끝나는 즉시 비교하는 조기 확인 절차. ⛔ 트랙 = li2s: 규칙은 외부 1저자 판정 · 확인 전 proposed · 본 런 계산 0.",
+   "rationale": "회신 CH(외부 1저자) 판정의 이행. 회신이 *'지금, 결과를 보기 전에 규칙을 박아 두시길 제안합니다'* 라고 명시했고, 2 점만 남으면 dof 0 으로 reduced χ² 가 정의되지 않으며 Arrhenius 여부도 못 가른다. 600 K 배제 근거였던 감김 눈금은 카드가 이미 '딱 끊기는 상한이 아니라 1/L 보정의 눈금' 으로 적어 두었고, self-image correlation 은 D 에 계통적으로 들어가 기울기인 Ea 에서 상당 부분 상쇄된다(완전하지는 않다). 400 K 실패를 보고 설계를 고르는 것이 아니라, 측정 불가로 잃은 점을 사전 규칙으로 메우는 형태다.",
+   "decision_state": "proposed",
+   "record_kind": "prospective",
+   "results_seen": true,
+   "results_seen_note": "파일럿 400 K 두 런(P-1 · pilot800) 열람 — **600 K 는 아직 한 번도 안 돌렸다**. 이 규칙이 다루는 대상(600 K)에 대해서는 results_seen = false 다.",
+   "card": "db/properties/lpscl_smallcell_glass_md_estimand_2026_09_21.json",
+   "record": "db/properties/lpscl_smallcell_glass_md_amendment_ch_2026_09_28.json",
+   "supersedes": [],
+   "builds_on": "D-2026-09-26-lpscl-smallcell-glass-amend-cc",
+   "review": "kb/reviews/li2s1a_CH_reply_li2s_cd_reply_pilot800_2026_09_28.md",
+   "⚠_CLAUDE_md_충돌": "CLAUDE.md 가 '이 카드는 600 K 를 감김으로 배제한다(상한 550 K)' 로 적어 두었다. **편입이 실제로 일어나면 그 줄도 같이 고친다** — 안 고치면 다음 사람이 배제된 줄 안다.",
+   "미결": [
+    "S54 내력 (궤적 재분석)",
+    "두 문턱 해석(가까운 쪽 거리) 외부 1저자 확인",
+    "465 K '2 배' 문턱 외부 1저자 확인"
+   ],
+   "evidence": [
+    "kb/reviews/li2s1a_CH_reply_li2s_cd_reply_pilot800_2026_09_28.md",
+    "db/properties/lpscl_smallcell_glass_md_amendment_ch_2026_09_28.json",
+    "db/properties/lpscl_smallcell_glass_amendment_digest_erratum_2026_09_28.json",
+    "kb/projects/li2s_glass_external_first_author_followup_pilot800_2026_09_27.md"
+   ],
+   "status": "proposed"
   }
  ]
 }
