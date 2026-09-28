@@ -614,8 +614,8 @@
 .city-areas.is-hidden { opacity: 0; }
 .city-area { fill: none; stroke: var(--ink-2); stroke-width: 1.1px; stroke-dasharray: 1.5 3; stroke-linecap: round; opacity: .55; vector-effect: non-scaling-stroke; pointer-events: none; }
 .city-area.is-dim { opacity: .2; }
-/* the other cities of the open 県 — lighter, finer dots (사용자: 「연하게 점선」) */
-.city-area--city { stroke: var(--ink-3); stroke-width: 1px; stroke-dasharray: 1.2 3.2; opacity: .5; }
+/* the other cities of the open 県 — a soft dashed line, lighter than the 政令指定都市 dots but visible on every 지방 tint (사용자: 「연하게 점선」, then 「아직 구분 안 된다」) */
+.city-area--city { stroke: var(--ink-2); stroke-width: 1.1px; stroke-dasharray: 2.4 2.6; opacity: .62; }
 .city-area.is-hidden { opacity: 0; }
 /* 琵琶湖: water, drawn over the land — clicks fall through to 滋賀 underneath */
 .lake { fill: var(--sea); stroke: var(--sea-2); stroke-width: 1px; vector-effect: non-scaling-stroke; pointer-events: none; }
