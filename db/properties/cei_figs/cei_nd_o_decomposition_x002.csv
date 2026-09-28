@@ -1,0 +1,7 @@
+voltage_V,delta_nd_li_002_mean_eV_per_atom,delta_o_only_003_mean_eV_per_atom,delta_ndo_li_002_mean_eV_per_atom,li_site_sum_of_parts_mean,li_site_residual_mean,li_site_n_cathodes,delta_nd_p_002_mean_eV_per_atom,delta_nd_p_002_asused_mean_eV_per_atom,p_site_residual_mean,p_site_n_cathodes,nd_product_amount_mean_nd_p_002_asused,nd_product_phases_nd_p_002_asused
+2.5,0.001513,0.002095,0.003583,0.003608,2.5e-05,4,0.00059,0.002678,8e-06,4,0.005672,NdPO4:4
+3.0,0.00164,0.00219,0.003827,0.00383,2e-06,4,-0.00348,-0.00129,0.0,4,0.005435,NdPO4:4
+3.5,0.002672,0.00223,0.004835,0.004903,6.7e-05,4,-0.006625,-0.004405,1e-05,4,0.006158,LiNd(PO3)4:3 | NdCl3:1
+4.0,0.00539,0.002135,0.00755,0.007525,-2.5e-05,4,-0.009923,-0.007805,1.7e-05,4,0.007189,Nd(PO3)3:2 | NdP5O14:1 | NdCl3:1
+4.3,0.00845,0.002215,0.010688,0.010665,-2.3e-05,4,-0.012517,-0.01019,2.7e-05,3,0.010904,NdP5O14:3 | NdCl3:1
+4.5,0.007797,0.00217,0.009987,0.009967,-2e-05,3,-0.01392,-0.011753,3e-06,3,0.008181,NdP5O14:3

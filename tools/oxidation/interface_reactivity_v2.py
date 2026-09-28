@@ -874,6 +874,20 @@ def _selftest():
         "[⛔음성] x002 — Nd 인산염이 P 를 5x 보다 많이 가져가면(0.15 > 0.10) G4 위반 = 버그 신호")
     chk(x002_verdicts(_xfix())["G4_bound"]["pass"],
         "[양성] x002 — 딱 5x(0.10)는 상한 안이다 (경계에서 거짓 경보를 안 낸다)")
+    chk(_xg["G4_bound"]["n_unexplained"] == len(_xg["G4_bound"]["violations"]) > 0
+        and not any(v["explained_by_string_rounding"] for v in _xg["G4_bound"]["violations"]),
+        "[⛔음성] x002 G4 진단 — Nd 수지가 50 % 어긋난 문자열(0.03 vs 0.02)은 '반올림' 으로 설명하지 않는다")
+    _xr = _xfix()
+    for _V in ("2.50", "4.50"):
+        for _c in ("A", "B"):
+            _xr[_c]["reactions"][_V]["nd_li_002"] = (
+                "0.4206 Li5.34Nd0.02P1S4.4Cl1.6 + 0.5794 LiCoO2 -> 2.8 Li + 0.008413 NdP5O14 "
+                "+ 0.09464 CoP4O11 + 0.4848 CoS2")
+    _gr = x002_verdicts(_xr)["G4_bound"]
+    chk(_gr["pass"] is False and _gr["n_unexplained"] == 0
+        and all(v["explained_by_string_rounding"] for v in _gr["violations"]),
+        "[양성] x002 G4 진단 — 유효숫자 4 자리 반올림으로 포화 칸이 1e-4 넘으면 '설명됨' · pass 는 그대로 False "
+        "(사전등록 문구를 사후에 안 고친다)")
     _xm = _xfix()
     for _c in _xm.values():
         for _row in _c["by_voltage"].values():
@@ -1850,9 +1864,21 @@ def x002_verdicts(results, esw=None, repro=None):
                         continue
                     shares.setdefault(lab, {}).setdefault(cat, {})[V] = sh
                     if sh["dopant_phosphate"] > bound:
+                        # ⚠ 사후 진단 (2026-09-28 첫 실행에서 9 건) — pymatgen 반응식 문자열은 계수가
+                        #   **유효숫자 4 자리**다. 포화 칸(Nd 전량 → NdP5O14)이면 문자열 자체의 Nd 수지가
+                        #   1e-4 쯤 어긋나고, 몫/상한이 정확히 그만큼 넘는다. 두 비가 같고 Nd 불균형이
+                        #   반올림 폭(5e-4) 안이면 '문자열 반올림으로 설명됨' 이다. pass 판정은 안 바꾼다.
+                        L_, R_ = (_rxn_side_terms(t) for t in rx.get(lab).split("->", 1))
+                        ndl = sum(n * k.get("Nd", 0.0) for n, _, k in L_)
+                        ndr = sum(n * k.get("Nd", 0.0) for n, _, k in R_)
+                        r_nd = (ndr / ndl) if ndl > 0 else None
+                        r_sh = sh["dopant_phosphate"] / (bound - 1e-6)
                         g4_bad.append({"label": lab, "cathode": cat, "V": V,
                                        "dopant_phosphate": sh["dopant_phosphate"],
-                                       "bound": round(bound, 6)})
+                                       "bound": round(bound, 6),
+                                       "nd_rhs_over_lhs": (round(r_nd, 6) if r_nd else None),
+                                       "explained_by_string_rounding": bool(
+                                           r_nd and abs(r_sh - r_nd) <= 1e-5 and abs(r_nd - 1) <= 5e-4)})
     for cat, cd in results.items():               # 무도핑 기준 — TM 이 방을 대는 몫
         for V, rx in (cd.get("reactions") or {}).items():
             if (cd.get("endpoint_degenerate") or {}).get(V, {}).get(X002_BASE) is False:
@@ -1860,7 +1886,11 @@ def x002_verdicts(results, esw=None, repro=None):
                 if sh is not None:
                     shares.setdefault(X002_BASE, {}).setdefault(cat, {})[V] = sh
     out["p_share"] = shares
-    out["G4_bound"] = {"k_max": X002_K_MAX, "pass": not g4_bad, "violations": g4_bad}
+    out["G4_bound"] = {"k_max": X002_K_MAX, "pass": not g4_bad, "violations": g4_bad,
+                       "n_unexplained": sum(1 for g in g4_bad if not g["explained_by_string_rounding"]),
+                       "note": ("pass 는 사전등록 문구 그대로(상한 + 1e-6 절대)다. 반응식 문자열이 유효숫자 4 자리라 "
+                                "포화 칸은 1e-4 쯤 넘을 수 있다 — explained_by_string_rounding 은 **사후 진단**이다 "
+                                "(2026-09-28 첫 실행 9 건이 전부 이것이었다). n_unexplained > 0 이면 진짜 신호다.")}
 
     if esw is not None:
         edges = x002_esw_edges(esw)
@@ -2053,7 +2083,9 @@ def main():
             print(f'G2 {n:8s} x={s["x"]:.2f} Δ(Nd) {dm["nd"]} Δ(O) {dm["o"]} Δ(둘 다) {dm["both"]} '
                   f'잔차 {g2["residual_mean"]} (문턱 {g2["tol"]}) {_V3[g2["pass"]]}'
                   f'{"  · 유의폭 ±0.010 안" if s["within_resolution_band"] else ""}  n={s["n_common_cells"]}')
-        print(f'G4 상한   {"통과" if out["G4_bound"]["pass"] else "⛔ 위반 " + str(len(out["G4_bound"]["violations"]))}')
+        _g4 = out["G4_bound"]
+        _tail = "" if _g4["pass"] else f' (그중 문자열 반올림으로 설명 안 되는 것 {_g4["n_unexplained"]})'
+        print(f'G4 상한   {"통과" if _g4["pass"] else "⛔ 위반 " + str(len(_g4["violations"]))}{_tail}')
         if out["G3_esw"]:
             for lab, p in out["G3_esw"]["predictions"].items():
                 print(f'G3 ESW    {lab:16s} 예측 {p["predicted_V"]} · 실측 {p["measured_V"]} · '

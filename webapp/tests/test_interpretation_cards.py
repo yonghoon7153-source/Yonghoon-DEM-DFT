@@ -227,13 +227,15 @@ def test_local_report_is_actually_served(client):
     # 시험은 **절이 있는가**를 보지, 옛 태그 모양을 보지 않는다.
     assert '<section id="s1"' in body, "보고서 본문이 아니다"
     # 이번 세션이 고친 그 문장이 실제로 화면에 온다 (원장↔화면 결속)
-    assert "24 조건이 개별로도" in body, "§1 보강 문장이 화면에 없다"
+    # 2026-09-28 — x = 0.02 전환으로 §1 의 판정 문장이 바뀌었다 (옛 "24 조건이 개별로도" → 칸별 잔차).
+    assert "칸별 최대 |잔차|도" in body, "§1 보강 문장(x = 0.02 칸별 잔차)이 화면에 없다"
 
 
 def test_report_images_are_served_relative_to_it(client):
     """양성 — 그림도 같은 경로에서 온다 (상대 src 가 풀린다)."""
-    r = client.get("/api/file/db/properties/cei_figs/cei_nd_o_decomposition.png")
-    assert r.status_code == 200 and r.data[:4] == b"\x89PNG", "Fig 1 PNG 가 안 온다"
+    for name in ("cei_nd_o_decomposition_x002.png", "cei_nd_o_decomposition.png"):
+        r = client.get(f"/api/file/db/properties/cei_figs/{name}")
+        assert r.status_code == 200 and r.data[:4] == b"\x89PNG", f"{name} 가 안 온다"
 
 
 def test_bare_internal_path_in_prose_does_not_become_a_button():
@@ -425,7 +427,7 @@ def test_section1_order_is_figure_then_howto_then_definition(client):
     """
     h = _report_html(client)
     marks = {
-        "figure":     h.find('<img src="cei_nd_o_decomposition.png"'),
+        "figure":     h.find('<img src="cei_nd_o_decomposition_x002.png"'),
         "howto":      h.find("Fig. 1 을 읽는 법"),
         "definition": h.find("세로축의 <span"),
         "s2":         h.find('<section id="s2"'),
@@ -614,8 +616,8 @@ FIG2_CSV = REPORT.parent / "cei_p_host_ladder_fig.csv"
 def test_fig2_ladder_image_is_served(client):
     """양성 — 그림이 참조돼 있고 실제로 200 으로 나온다."""
     h = _report_html(client)
-    assert 'src="cei_p_host_ladder.png"' in h, "Fig. 2 (사다리) 가 화면에 없다"
-    r = client.get(LOCAL_REPORT.rsplit("/", 1)[0] + "/cei_p_host_ladder.png")
+    assert 'src="cei_p_host_ladder_x002.png"' in h, "Fig. 2 (사다리 · x = 0.02) 가 화면에 없다"
+    r = client.get(LOCAL_REPORT.rsplit("/", 1)[0] + "/cei_p_host_ladder_x002.png")
     assert r.status_code == 200 and len(r.data) > 20000, \
         f"그림이 안 나온다 ({r.status_code}, {len(r.data)} B)"
 
@@ -812,12 +814,13 @@ def test_fig1_is_three_panels_and_caption_carries_no_strikethrough(client):
     """양성+음성 — 옛 (c) ×6.58 패널이 그림에서 빠졌고, 캡션은 취소선 철회문 없이 선다.
     철회 표지는 한글 '읽는 법' 상자에 ⛔ 로 있다 (그림은 복사될 때 캡션을 안 데려간다)."""
     h = _report_html(client)
-    i = h.index('<img src="cei_nd_o_decomposition.png"')
+    i = h.index('<img src="cei_nd_o_decomposition_x002.png"')
     cap = h[i:h.index("</figcaption>", i)]
-    assert 'alt="Three panels.' in cap, "alt 가 아직 네 패널이다"
+    assert 'alt="Three panels' in cap, "alt 가 아직 네 패널이다"
+    assert "x&#8201;=&#8201;0.02" in cap, "Fig. 1 캡션이 x = 0.02 를 말하지 않는다"
     assert "RETRACTED" not in cap and "<s>" not in cap, "캡션 안에 취소선 철회문이 남아 있다"
     assert "lithium-matched" in cap, "Li 장부 설명이 캡션에서 빠졌다"
-    r = client.get(LOCAL_REPORT.rsplit("/", 1)[0] + "/cei_nd_o_decomposition.png")
+    r = client.get(LOCAL_REPORT.rsplit("/", 1)[0] + "/cei_nd_o_decomposition_x002.png")
     import struct
     w, hgt = struct.unpack(">II", r.data[16:24])            # PNG IHDR
     assert w / hgt > 2.5, f"그림이 1×3 이 아니다 (옛 2×2 는 비 1.38): {w}×{hgt}"
@@ -826,7 +829,10 @@ def test_fig1_is_three_panels_and_caption_carries_no_strikethrough(client):
         "생성기에 옛 (c) 패널(a3)이 되돌아왔다"
     j = h.index("Fig. 1 을 읽는 법")
     box = h[j:h.index("<!-- 방법 박스", j)]
-    assert "⛔" in box and "Li 장부" in box and "−50.8" in box, "읽는 법 상자에 철회 표지가 없다"
+    assert "⛔" in box and "Li 장부" in box, "읽는 법 상자에 철회 표지가 없다"
+    lo, hi = _x002_limatched_range()
+    assert f"{lo:.1f}".replace("-", "−") in box and f"{hi:.1f}".replace("-", "−") in box, \
+        f"읽는 법 상자의 Li 맞춤 범위가 원장({lo} ~ {hi})과 다르다"
 
 
 def test_layer_split_open_sections_are_the_thesis(client):
@@ -1370,11 +1376,159 @@ def test_s0_separates_thermodynamic_window_from_measured_CV(client):
     assert "ndo_passivation_argument_2026_09_14" in s0, "해석 카드 포인터가 없다"
 
 
-def test_s0_scopes_the_esw_to_the_Li_site_cell(client):
-    """⛔음성 — Li 자리 x=0.20 결과가 P 자리 x=0.02 이야기로 조용히 번지면 잡는다."""
+def test_s0_scopes_the_pdos_to_the_x020_cell(client):
+    """⛔음성 — x = 0.20 셀의 PDOS 가 x = 0.02 이야기로 조용히 번지면 잡는다 (2026-09-28 판).
+
+    ESW 는 x = 0.02 두 자리로 다시 쟀고 onset 이 그대로였다. PDOS 만 x = 0.20 Li 자리 셀이다 —
+    구조가 필요한 계산이라 x = 0.02 셀(약 618 원자)로 못 옮겼다. 그 이름표가 §0 에 있어야 한다.
+    """
     s0 = _section(_report_html(client), "s0")
-    assert "Li 자리에 있는 셀" in s0 and "0.20" in s0, "ESW 셀이 Li 자리 x=0.20 이라는 한정이 없다"
-    assert "P 자리" in s0 and "부호가 반대" in s0, "P 자리로 못 옮긴다는 이유가 없다"
+    assert "x = 0.20 셀" in s0 and "618 원자" in s0, "PDOS 가 x = 0.20 셀이라는 이름표가 없다"
+    assert "추론이지 계산이 아니다" in s0, "'x 가 작으면 Nd 몫이 작을 것' 이 추론이라는 한정이 없다"
+    assert "P 자리" in s0 and "부호가 반대" in s0, "PDOS 를 P 자리로 못 옮기는 이유가 없다"
+
+
+# ── x = 0.02 전환 (2026-09-28) ─────────────────────────────────────────────────
+#   왜: 1저자가 화면 전체를 Nd x = 0.02 로 옮기라고 했다 (D-2026-09-28-cei-page-x002).
+#   화면의 x = 0.02 수는 전부 원자료(cei_interface_V_x002 · cei_esw_Li_x002)와 판정·결과 기록에서
+#   왔다 — 문자열이 아니라 **값으로** 묶는다. 화면이나 원장 한쪽만 고치면 여기서 빨개진다.
+X002_IFACE = REPORT.parents[3] / "db/properties/cei_interface_V_x002_2026_09_28.json"
+X002_ESW = REPORT.parents[3] / "db/properties/cei_esw_Li_x002_2026_09_28.json"
+X002_VERD = REPORT.parents[3] / "db/properties/cei_x002_verdicts_2026_09_28.json"
+X002_RES = REPORT.parents[3] / "db/properties/cei_x002_result_2026_09_28.json"
+
+
+def _x002_tool():
+    """판정 코드는 **도구 한 곳**에만 있다 — 시험이 몫을 따로 세면 두 판정이 갈린다."""
+    import importlib.util
+    src = REPORT.parents[3] / "tools/oxidation/interface_reactivity_v2.py"
+    spec = importlib.util.spec_from_file_location("iface_v2_x002", src)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m
+
+
+def _x002_limatched_range():
+    """결과 기록의 x = 0.02 Li 맞춤 Nd 항(4.5 V · 끝점 뺀 칸) — (가장 음수, 가장 덜 음수)."""
+    r = json.loads(X002_RES.read_text("utf-8"))["1_게이트"]["G5_Li_맞춤_대조"]["Nd항_4.50V_양극별_meV_per_atom"]
+    vals = [v for k in ("Li자리_x002", "P자리_x002", "1저자조성") for v in r[k].values() if v is not None]
+    assert vals, "Li 맞춤 값을 못 읽었다 — 시험이 헛것을 재고 있다"
+    return min(vals), max(vals)
+
+
+def test_x002_esw_rows_match_the_record(client):
+    """⛔음성 — §0 표의 x = 0.02 행(산화 onset · 환원 교환 0 경계)이 x = 0.02 ESW 원장과 값으로 같다.
+
+    ⚠ 환원 칸은 reduction_limit_V 가 아니라 profile 의 '교환 0 첫 경계' 다 (HZ-esw-reduction-limit-label).
+    """
+    esw = json.loads(X002_ESW.read_text("utf-8"))["results"]
+    s0 = _section(_report_html(client), "s0")
+    for lab in ("comp1", "modelc", "lpsocl", "o_only_003", "ndo_li_002", "nd_p_002_asused", "modelc_nd"):
+        row = re.search(r'<tr><td class="mono">%s \([^<]*</td>(.*?)</tr>' % lab, s0, re.S)
+        assert row, f"§0 표에 {lab} 행이 없다"
+        cells = [re.sub(r"<[^>]+>", "", c) for c in re.findall(r"<td[^>]*>(.*?)</td>", row.group(1), re.S)]
+        assert float(cells[0]) == esw[lab]["oxidation_limit_V"], (lab, cells)
+        prof = sorted(esw[lab]["profile"], key=lambda e: e["V_vs_Li"])
+        red = next(e["V_vs_Li"] for e in prof if abs(e["evolution_Li"]) < 1e-6)
+        assert float(cells[1]) == red, (lab, cells, "교환 0 첫 경계", red)
+    assert "x 와 무관" in s0 and "0.016" in s0, "1.92 V 가 x 와 무관하고 양만 준다는 설명이 없다"
+
+
+def test_x002_series_card_shares_match_the_raw(client):
+    """⛔음성 — 계열 카드 'LiCoO₂ 4.3 V · P 가 간 곳' 표가 원자료 반응식에서 **다시 센** 몫과 같다."""
+    T = _x002_tool()
+    R = json.loads(X002_IFACE.read_text("utf-8"))["results"]["LiCoO2"]["reactions"]["4.30"]
+    labs = ("modelc", "ndo_li_002", "nd_p_002_asused", "modelc_nd")
+    h = _report_html(client)
+    i = h.index("왜 0.20 에서 0.02 로 옮겼나")
+    card = h[i:h.index("</table>", i)]
+    rows = re.findall(r"<tr><td[^>]*>(.*?)</td><td[^>]*>([\d.]+) %</td><td[^>]*>([\d.]+) %</td></tr>", card)
+    assert len(rows) == 4, f"표 행이 넷이 아니다: {rows} — 시험이 헛것을 재고 있다"
+    for (name, nd, tm), lab in zip(rows, labs):
+        sh = T.x002_p_share(R[lab])
+        assert abs(float(nd) - 100 * sh["dopant_phosphate"]) < 0.6, (lab, name, nd, sh)
+        assert abs(float(tm) - 100 * sh["tm_phosphate"]) < 0.6, (lab, name, tm, sh)
+
+
+def test_x002_decomposition_table_matches_the_verdicts(client):
+    """⛔음성 — §1 분해표(두 자리 × 전압 6)가 판정 파일의 전압별 Δ 와 **값으로** 같다."""
+    V = json.loads(X002_VERD.read_text("utf-8"))["sites"]
+    s1 = _section(_report_html(client), "s1")
+    i = s1.index("Li 자리 (x = 0.02)")
+    tbl = s1[i:s1.index("</table>", i)]
+    rows = re.findall(r"<tr><td>([\d.]+)</td>(.*?)</tr>", tbl, re.S)
+    assert len(rows) == 6, f"전압 행이 6 이 아니다: {len(rows)} — 시험이 헛것을 재고 있다"
+    for vtxt, rest in rows:
+        got = [float(x.replace("−", "-")) for x in re.findall(r">([−+-]?\d+\.\d+)<", rest)]
+        k = f"{float(vtxt):.2f}"
+        want = [V["Li"]["delta_by_V"]["nd"][k], V["Li"]["delta_by_V"]["o"][k], V["Li"]["delta_by_V"]["both"][k], None,
+                V["P"]["delta_by_V"]["nd"][k], V["P"]["delta_by_V"]["o"][k], V["P"]["delta_by_V"]["both"][k], None]
+        assert len(got) == len(want), (vtxt, got)
+        for g, w in zip(got, want):
+            if w is not None:
+                assert abs(g - w) < 6e-5, (vtxt, g, w)
+
+
+def test_x002_s2_nd_share_table_matches_the_raw(client):
+    """⛔음성 — §2 'Nd 가 가는 상과 그 몫' 표(1저자 조성)가 원자료 반응식에서 다시 센 값과 같다.
+
+    끝점(자체분해) 칸은 숫자 대신 '끝점' 이어야 한다 — 0 으로 그리면 없는 값을 0 으로 읽힌다.
+    """
+    T = _x002_tool()
+    R = json.loads(X002_IFACE.read_text("utf-8"))["results"]
+    s2 = _section(_report_html(client), "s2")
+    i = s2.index("x = 0.02 에서 Nd 가 가는 상과")
+    tbl = s2[i:s2.index("</table>", i)]
+    rows = re.findall(r"<tr><td><strong>([\d.]+)</strong></td>(.*?)</tr>", tbl, re.S)
+    assert len(rows) == 6, f"전압 행이 6 이 아니다: {len(rows)}"
+    for vtxt, rest in rows:
+        cells = re.findall(r"<td[^>]*>(.*?)</td>", rest, re.S)
+        assert len(cells) == 4, (vtxt, cells)
+        k = f"{float(vtxt):.2f}"
+        for cat, cell in zip(("LiCoO2", "LiNiO2", "LiMnO2", "NMC811"), cells):
+            if R[cat]["endpoint_degenerate"][k]["nd_p_002_asused"] is not False:
+                assert "끝점" in cell, (cat, k, cell)
+                continue
+            sh = T.x002_p_share(R[cat]["reactions"][k]["nd_p_002_asused"])
+            pct = int(re.search(r"<b>(\d+) %</b>", cell).group(1))
+            assert pct == round(100 * sh["dopant_phosphate"]), (cat, k, pct, sh)
+
+
+def test_x002_li_matched_range_and_minus_50p8_scope(client):
+    """⛔음성 — Li 맞춤 Nd 항의 x = 0.02 범위가 원장과 같고, 옛 −50.8 은 **양극 한정과 함께만** 나온다.
+
+    왜: 2026-09-28 에 '−50.8 meV/atom' 이 LiCoO₂ 한 양극의 값인데 일반값처럼 적혀 있던 것을 찾았다.
+    """
+    lo, hi = _x002_limatched_range()
+    txt = f"{hi:.1f} ~ {lo:.1f}".replace("-", "−")
+    h = _report_html(client)
+    for sec in ("s0b", "s1", "s9"):
+        assert txt in _section(h, sec), f"{sec} 의 Li 맞춤 범위가 원장({txt})과 다르다"
+    hits = list(re.finditer("−50\\.8", h))
+    assert hits, "−50.8 이 한 번도 없다 — 시험이 헛것을 재고 있다"
+    for m in hits:
+        ctx = h[max(0, m.start() - 200): m.end() + 200]
+        assert "LiCoO₂" in ctx or "−22.8" in ctx, f"−50.8 이 양극 한정 없이 쓰였다: …{ctx[140:280]}…"
+
+
+def test_x002_kink_and_dopant_axes_match_the_record(client):
+    """⛔음성 — §4 Nd 인산염 kink 수와 §5 의 x = 0.02 세 축이 결과 기록과 값으로 같다."""
+    res = json.loads(X002_RES.read_text("utf-8"))
+    h = _report_html(client)
+    s4 = _section(h, "s4")
+    for lab in ("ndo_li_002", "nd_p_002_asused"):
+        frac = res["3_혼합범위"]["Nd인산염_kink"][lab]
+        assert frac in s4, f"§4 에 {lab} 의 kink 수 {frac} 가 없다"
+    s5 = _section(h, "s5")
+    for M, v in res["4_도펀트_x002"].items():
+        row = re.search(r"<tr[^>]*><td>%s(?: ★)?</td>(.*?)</tr>" % M, s5, re.S)
+        assert row, f"§5 표에 {M} 행이 없다"
+        vals = [float(x.replace("−", "-")) for x in re.findall(r">([−+-]?\d+\.\d+)<", row.group(1))]
+        # 열 순서: B · MPO4 깊이 · 계면 Δ(x002) · kink %(x002) · 반경 · 닫힌계(x002)
+        assert abs(vals[2] - v["계면_Δ_vs_base_4.50V_LiCoO2_eV_per_atom"]) < 6e-6, (M, vals, v)
+        assert abs(vals[3] - v["M인산염_kink_비율_percent"]) < 0.06, (M, vals, v)
+        assert abs(vals[5] - v["닫힌계_0V_LiCoO2_eV_per_atom"]) < 6e-6, (M, vals, v)
+
 
 
 def test_prot_counts_dies_when_the_grid_is_broken():

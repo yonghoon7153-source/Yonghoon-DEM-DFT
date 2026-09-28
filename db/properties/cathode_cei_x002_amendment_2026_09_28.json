@@ -144,13 +144,20 @@
     "결정": "D-2026-09-28-cei-page-x002",
     "원자료_09_19": "db/properties/cei_interface_V_2026_09_19.json"
   },
-  "status": "proposed",
+  "status": "ratified",
   "status_history": [
     {
       "at": "2026-09-28",
       "state": "proposed",
       "by": "agent",
       "note": "1저자 결정(x=0.02 전환)을 받아 **값을 보기 전에** 게이트를 박는다. 게이트 문안은 에이전트 초안이다 — 1저자는 실행 전까지 고칠 수 있고, 실행으로 비준한다(09-19 선례)."
+    },
+    {
+      "at": "2026-09-28",
+      "state": "ratified",
+      "by": "1저자",
+      "note": "실행으로 비준 (09-19 선례) — gabia 14:42–14:59 · 349ecfa90 에서 시작(실행 중 0de54a1fd 로 rebase · 도구 차이는 `import sys` 한 줄). G0·G1·G2·G3 통과. G4 는 적힌 그대로 위반 9 — 전부 반응식 계수 반올림(유효숫자 4 자리)으로 원인 규명, 처리 방식('원인 규명으로 닫는다')은 1저자 확인 대기. 게이트 문안·문턱은 결과를 본 뒤 고치지 않았다."
     }
-  ]
+  ],
+  "결과": "db/properties/cei_x002_result_2026_09_28.json (판정 cei_x002_verdicts_2026_09_28.json · 원자료 커밋 4e51aba3a)"
 }
