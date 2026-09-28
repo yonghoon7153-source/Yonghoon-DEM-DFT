@@ -1,0 +1,14 @@
+{
+  "zip": "C:\\Users\\Administrator\\Downloads\\COMSOL63_GUARD1198_OFFLINE_PREPARATION_20260928.zip",
+  "bytes": 236582,
+  "sha256": "e8f544c01e3e8e8ba4ab27f294f1b8bb9124707ee0cfc38e2023a42f731279ec",
+  "payload": 62,
+  "manifest": {
+    "bytes": 10756,
+    "sha256": "7bc05fae8cb3400f73045f1ffc92b352774d9c170360e40e017e6cac8cb50ac4"
+  },
+  "exact_set_size_SHA_CRC_path_case_link": true,
+  "three_prior_reviewer_documents_byte_identical": true,
+  "source_zip_unchanged": true,
+  "subject_code_execution": 0
+}

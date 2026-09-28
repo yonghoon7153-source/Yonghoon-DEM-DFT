@@ -1,0 +1,12 @@
+--- attempt03 (newline normalized)
++++ attempt04 (newline normalized)
+@@ -114,7 +114,8 @@
+         def census(self):return []
+         def run(self,argv,cwd,log,*rest):
+             phase='compile' if not calls else 'batch';calls.append(phase);run=Path(cwd);Path(log).write_text('fixture','utf-8');res=good_process()
+-            assert argv==c['commands'][phase] and cwd==c['run_root'],'EXACT_ARGV_CWD'
++            observations.append({'path':'inert_transport_arguments','phase':phase,'argv':argv,'expected_argv':c['commands'][phase],'cwd':cwd,'expected_cwd':str(Path(c['run_root']))})
++            assert argv==c['commands'][phase] and cwd==str(Path(c['run_root'])),'EXACT_ARGV_CWD'
+             if phase=='compile':(run/'Guard1198Candidate.class').write_bytes(b'\xca\xfe\xba\xbeFIXTURE')
+             else:(run/c['expected_mph_name']).write_bytes(b'INERT_NOT_MPH');(run/'batch.log').write_text('fixture')
+             if mode=='compile_fail' and phase=='compile':res['rc']=7

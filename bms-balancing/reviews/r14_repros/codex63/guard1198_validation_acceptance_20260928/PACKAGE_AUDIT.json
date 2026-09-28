@@ -1,0 +1,42 @@
+{
+  "package": {
+    "path": "C:\\Users\\Administrator\\Downloads\\COMSOL63_GUARD1198_LIMITED_VALIDATION_PASS_20260928.zip",
+    "bytes": 1304867,
+    "sha256": "6af5463ed0d395353de1a9935088c1d6f9503e476d0b5bc1fc9fb65ab80903d1"
+  },
+  "payload_count": 851,
+  "entries": 852,
+  "manifest": {
+    "bytes": 154169,
+    "sha256": "d91a8ae5cf1c6cebb58808e2bc562ff9433eb3d48e0a8c29d57a215e940e54c0"
+  },
+  "set_size_sha_crc_case_path_link": true,
+  "attempt03": {
+    "zip": {
+      "bytes": 814051,
+      "sha256": "2d6fcf6947bf18347a5266949c9527a72eabd0b2ab2f1934c6f701f4c461aeda"
+    },
+    "payload_count": 635,
+    "entries": 636,
+    "manifest": {
+      "bytes": 116215,
+      "sha256": "7dc5465b9075623b2b1aa06b1db140599dd8aface54b26ae5a585a9af01a2327"
+    },
+    "set_size_sha_crc_case_path_link": true
+  },
+  "attempt03_to04_candidate_identical": [
+    "candidate/CODE_MANIFEST.json",
+    "candidate/CONTRACT.json",
+    "candidate/PARENT_COMMAND.ps1",
+    "candidate/src/candidate_entry.py",
+    "candidate/src/Guard1198Candidate.java",
+    "candidate/src/trigger_consumer.py"
+  ],
+  "candidate_without_attempt03_copy": [
+    "candidate/COMMAND_MAP.json",
+    "candidate/NATIVE_APPROVAL_DRAFT_KO.md"
+  ],
+  "candidate_java_unchanged_from_preparation": true,
+  "source_zip_unchanged": true,
+  "subject_imports_executions": 0
+}

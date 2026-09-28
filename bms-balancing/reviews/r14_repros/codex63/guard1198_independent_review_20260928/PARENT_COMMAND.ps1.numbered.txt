@@ -1,0 +1,103 @@
+1: # INACTIVE CANDIDATE. Not executed/tested. Separate validation release + native approval required.
+2: param([Parameter(Mandatory=$true)][ValidatePattern('^[0-9a-f]{64}$')][string]$ManifestSha)
+3: $ErrorActionPreference='Stop'
+4: $bClock=[Diagnostics.Stopwatch]::StartNew()
+5: $bRoot='C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928'
+6: $bEvidence=Join-Path $bRoot 'future_parent_001'
+7: $bPython='C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe'
+8: $bOwned=$false
+9: $bTranscript=$false
+10: $bLastReturn=$null
+11: $bErrors=@()
+12: $bRunReturn=$null
+13: $bAnalysisReturn=$null
+14: $bDeliveryStart=$null
+15: function BHash([string]$Path) { (Get-FileHash -LiteralPath $Path -Algorithm SHA256 -ErrorAction Stop).Hash.ToLowerInvariant() }
+16: function BRef([string]$Path) { @{path=$Path;bytes=(Get-Item -LiteralPath $Path -ErrorAction Stop).Length;sha256=(BHash $Path)} }
+17: function BRead([string]$Path) { ConvertFrom-Json -InputObject ([IO.File]::ReadAllText($Path)) -ErrorAction Stop }
+18: function BSave([string]$Name,$Value) {
+19:     $p=Join-Path $bEvidence $Name
+20:     $raw=[Text.UTF8Encoding]::new($false).GetBytes((ConvertTo-Json -InputObject $Value -Depth 40 -Compress)+"`n")
+21:     $s=[IO.File]::Open($p,[IO.FileMode]::CreateNew,[IO.FileAccess]::Write,[IO.FileShare]::Read)
+22:     try { $s.Write($raw,0,$raw.Length); $s.Flush($true) } finally { $s.Dispose() }
+23:     if ([Convert]::ToBase64String([IO.File]::ReadAllBytes($p)) -cne [Convert]::ToBase64String($raw)) { throw 'EVIDENCE_READBACK' }
+24: }
+25: 
+26: function BInvoke([string]$Phase,[string[]]$Argv,[string]$Record) {
+27:     # Foreground call, without pipe/redirection/background process or input injection.
+28:     $start=$bClock.Elapsed.TotalSeconds
+29:     $old=$Error[0]; $returned=$false; $ok=$false; $rc=$null; $exception=$null
+30:     $global:LASTEXITCODE=$null
+31:     try {
+32:         & $bPython @Argv
+33:         $ok=$?
+34:         $rc=$global:LASTEXITCODE
+35:         $returned=$true
+36:     } catch { $exception=$_.ToString() }
+37:     $end=$bClock.Elapsed.TotalSeconds
+38:     $newError= -not [Object]::ReferenceEquals($old,$Error[0])
+39:     $result=@{phase=$Phase;source='USER_VISIBLE_POWERSHELL_PARENT';returned=$returned;invocation_succeeded=$ok;native_rc=$rc;exception=$exception;new_error=$newError;top_error=$(if ($newError) {$Error[0].ToString()} else {$null});start_seconds=$start;end_seconds=$end;elapsed_seconds=($end-$start);executable=$bPython;argv=$Argv;cwd=(Get-Location).Path}
+40:     BSave $Record $result
+41:     $script:bLastReturn=$result
+42: }
+43: function GDecision($Native,$Analysis,$Result,$Expected,[double]$Overall) {
+44:     if ([double]::IsNaN($Overall) -or [double]::IsInfinity($Overall) -or $Overall -lt 0 -or $Overall -gt 3000) { return 'INCOMPLETE' }
+45:     foreach ($r in @($Native,$Analysis)) {
+46:         if ($null -eq $r -or $r.returned -isnot [bool] -or $r.returned -ne $true -or $r.invocation_succeeded -isnot [bool] -or $r.invocation_succeeded -ne $true -or $r.native_rc -isnot [int] -or $r.native_rc -ne 0 -or $r.new_error -isnot [bool] -or $r.new_error -ne $false -or $r.exception) { return 'INCOMPLETE' }
+47:     }
+48:     if ($Analysis.elapsed_seconds -isnot [double] -or [double]::IsNaN($Analysis.elapsed_seconds) -or [double]::IsInfinity($Analysis.elapsed_seconds) -or $Analysis.elapsed_seconds -lt 0 -or $Analysis.elapsed_seconds -gt 600) { return 'INCOMPLETE' }
+49:     if ($null -eq $Result -or $null -eq $Result.errors -or $Result.run_id -cne $Expected.run_id -or $Result.code_manifest_sha256 -cne $Expected.manifest_sha256 -or $Result.limited_result -cne 'TRIGGER_AND_SAMPLED_DATA_ACCEPTABLE' -or $Result.overall -cne 'INCOMPLETE' -or @($Result.errors).Count -ne 0) { return 'INCOMPLETE' }
+50:     return 'AWAITING_LIMITED_EXTERNAL_ACCEPTANCE'
+51: }
+52: try {
+53:     if ($PSVersionTable.PSEdition -cne 'Desktop' -or $PSVersionTable.PSVersion.Major -ne 5) { throw 'POWERSHELL_51_REQUIRED' }
+54:     if ((BHash (Join-Path $PSHOME 'powershell.exe')) -cne '8bb6fa8c283b4d92120b1ef249a9b311b0f804d4cabbe9981159976c8be76a5e') { throw 'POWERSHELL_IDENTITY' }
+55:     if ([Console]::IsInputRedirected) { throw 'INPUT_REDIRECTED' }
+56:     if ((BHash (Join-Path $bRoot 'CODE_MANIFEST.json')) -cne $ManifestSha) { throw 'MANIFEST_IDENTITY' }
+57:     $manifest=BRead (Join-Path $bRoot 'CODE_MANIFEST.json')
+58:     foreach ($r in $manifest.files) {
+59:         $p=Join-Path $bRoot $r.file
+60:         if ((BHash $p) -cne $r.sha256 -or (Get-Item -LiteralPath $p).Length -ne $r.bytes) { throw 'MANIFEST_FILE_IDENTITY' }
+61:     }
+62:     $c=BRead (Join-Path $bRoot 'CONTRACT.json')
+63:     $a=BRead $c.approval_path
+64:     $release=BRead $c.release_path
+65:     if ($a.approved -ne $true -or $a.native1198_one_shot -ne $true -or $a.code_manifest_sha256 -cne $ManifestSha -or $release.code_manifest_sha256 -cne $ManifestSha -or $release.changed_branch_validation -cne 'PASS') { throw 'INACTIVE_NO_NATIVE_AUTHORIZATION' }
+66:     if ((BHash $bPython) -cne $c.python.sha256 -or (Get-Item -LiteralPath $bPython).Length -ne $c.python.bytes) { throw 'PYTHON_IDENTITY' }
+67:     if ((Test-Path -LiteralPath $bEvidence) -or (Test-Path -LiteralPath $c.run_root)) { throw 'EXISTING_PATH_NO_RETRY' }
+68:     Set-Location -LiteralPath $c.cwd -ErrorAction Stop
+69:     [void][IO.Directory]::CreateDirectory($bEvidence);$bOwned=$true
+70:     Start-Transcript -LiteralPath (Join-Path $bEvidence 'PARENT_TRANSCRIPT.txt') -NoClobber -ErrorAction Stop | Out-Host
+71:     $bTranscript=$true
+72:     BSave 'PARENT_START.json' @{source='USER_VISIBLE_POWERSHELL_PARENT';manifest_sha256=$ManifestSha;approval=(BRef $c.approval_path);release=(BRef $c.release_path);cwd=(Get-Location).Path;start_utc=[DateTime]::UtcNow.ToString('o');budget_seconds=3000}
+73:     $entry=Join-Path $bRoot 'src/candidate_entry.py'
+74:     BInvoke 'native' @('-I','-S','-B','-X','utf8',$entry,'execute','--approval',$c.approval_path,'--manifest-sha',$ManifestSha) 'NATIVE_PARENT_RETURN.json'
+75:     $bRunReturn=$bLastReturn
+76:     # Analyze existing failure evidence once as well; it cannot erase native failure.
+77:     if (Test-Path -LiteralPath (Join-Path $c.run_root 'NATIVE_STATE.json')) {
+78:         BInvoke 'analysis' @('-I','-S','-B','-X','utf8',$entry,'analyze','--approval',$c.approval_path,'--manifest-sha',$ManifestSha) 'ANALYSIS_PARENT_RETURN.json'
+79:         $bAnalysisReturn=$bLastReturn
+80:     }
+81:     $bDeliveryStart=$bClock.Elapsed.TotalSeconds
+82:     $result=$null
+83:     $resultPath=Join-Path $c.run_root 'TRIGGER_RESULT.json'
+84:     if (Test-Path -LiteralPath $resultPath) { $result=BRead $resultPath }
+85:     $limited=GDecision $bRunReturn $bAnalysisReturn $result @{run_id=$c.run_id;manifest_sha256=$ManifestSha} $bClock.Elapsed.TotalSeconds
+86:     if ($bClock.Elapsed.TotalSeconds -gt 3000) { $limited='INCOMPLETE';$bErrors+=@{stage='budget';error='OVERALL_BUDGET'} }
+87:     BSave 'PARENT_LOCAL_DECISION.json' @{limited=$limited;overall='INCOMPLETE';native_return=$bRunReturn;analysis_return=$bAnalysisReturn;auto_retry=$false}
+88: } catch {
+89:     $bErrors+=@{stage='parent';error=$_.ToString();elapsed_seconds=$bClock.Elapsed.TotalSeconds}
+90:     [Console]::WriteLine(('STOP: '+$_.ToString()))
+91: } finally {
+92:     if ($bOwned) {
+93:         if ($null -eq $bDeliveryStart) { $bDeliveryStart=$bClock.Elapsed.TotalSeconds }
+94:         try {
+95:             if ($bTranscript) { Stop-Transcript -ErrorAction Stop | Out-Host;$bTranscript=$false }
+96:             $snapshot=$bClock.Elapsed.TotalSeconds
+97:             $within=($snapshot -le 3000 -and ($snapshot-$bDeliveryStart) -le 300)
+98:             BSave 'FINAL_BOUNDARY.json' @{source='USER_VISIBLE_POWERSHELL_PARENT';elapsed_seconds=$snapshot;delivery_elapsed_seconds=($snapshot-$bDeliveryStart);within_limits=$within;errors=$bErrors;transcript=(BRef (Join-Path $bEvidence 'PARENT_TRANSCRIPT.txt'));overall='INCOMPLETE';status='AWAITING_EXTERNAL_ACCEPTANCE';raw_host_rc='not_known_before_return'}
+99:             [Console]::WriteLine((ConvertTo-Json -Compress -Depth 10 @{kind='USER_PARENT_FINAL_RETURN';boundary=(BRef (Join-Path $bEvidence 'FINAL_BOUNDARY.json'));snapshot_seconds=$bClock.Elapsed.TotalSeconds;overall='INCOMPLETE'}))
+100:         } catch { [Console]::WriteLine(('FINAL_RECORD_ERROR: '+$_.ToString()));$bErrors+=@{stage='final_record';error=$_.ToString()} }
+101:     }
+102:     [Console]::WriteLine('STOP. No rerun, cleanup fallback, policy toggle or additional solve. Preserve this output.')
+103: }

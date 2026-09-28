@@ -1,0 +1,17 @@
+{
+  "scope": "Static review counterexample for the next authorized PS5.1 harness; not executed here",
+  "function": "PARENT_COMMAND.ps1::GDecision",
+  "source_lines": [43, 50],
+  "setup": "Native and Analysis return objects satisfy the existing typed rc/error/time checks; matching run and manifest; analysis elapsed is a finite double under600 and overall under3000",
+  "minimal_result": {
+    "run_id": "guard1198_candidate_001",
+    "code_manifest_sha256": "0994d919ed1317a1234dbc2ba4276d5a7342401bbaed1ffcd2e45a69b8a13bcf",
+    "limited_result": "TRIGGER_AND_SAMPLED_DATA_ACCEPTABLE",
+    "overall": "INCOMPLETE",
+    "errors": []
+  },
+  "missing_unread_fields": ["trigger", "sampled_comparison", "preservation", "process_cleanup", "policy_preservation", "pair", "native_stop", "numeric", "tables_manifest"],
+  "static_path": "No existing GDecision conditional reads those fields; after checking the five supplied result fields it returns AWAITING_LIMITED_EXTERNAL_ACCEPTANCE",
+  "required_next_test": "Use actual GDecision in PS5.1. Complete positive control; remove each required axis/evidence item; change each axis to INCOMPLETE while keeping the summary string; all incomplete variants must remain INCOMPLETE.",
+  "qualification": "Not a COMSOL bypass or proof of an observed bad native result. Current return is awaiting external acceptance, not final PASS. The gap is the planned PS05 empty-evidence rejection and independent parent schema validation."
+}

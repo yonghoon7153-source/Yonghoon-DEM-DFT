@@ -1,0 +1,36 @@
+{
+  "id": "G1198-N1",
+  "source": "src/trigger_consumer.py",
+  "initial_keys": [
+    "trigger",
+    "sampled_comparison",
+    "preservation",
+    "process_cleanup",
+    "policy_preservation",
+    "errors",
+    "overall",
+    "normal_gate",
+    "effective_policy",
+    "native_approved_by_this_result"
+  ],
+  "early_return_line": 181,
+  "entry_save_line": 160,
+  "entry_limited_result_access_lines": [
+    159,
+    161,
+    160
+  ],
+  "reviewer_owned_schema_example": {
+    "trigger": "INCOMPLETE",
+    "sampled_comparison": "INCOMPLETE",
+    "errors": [
+      {
+        "axis": "trigger",
+        "error": "NATIVE_STOP_REASON"
+      }
+    ],
+    "overall": "INCOMPLETE"
+  },
+  "ordinary_dict_result": "KeyError('limited_result')",
+  "limit": "Dictionary schema demonstration and static call-path analysis only. Candidate not imported or executed."
+}

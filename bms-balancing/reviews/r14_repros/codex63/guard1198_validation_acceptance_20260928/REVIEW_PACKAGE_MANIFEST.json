@@ -1,0 +1,171 @@
+{
+  "scope": "Recipient review with selected inert evidence; subject execution not authorized",
+  "input_zip_sha256": "6af5463ed0d395353de1a9935088c1d6f9503e476d0b5bc1fc9fb65ab80903d1",
+  "files": [
+    {
+      "file": "CANDIDATE_NORMALIZED.diff",
+      "bytes": 17607,
+      "sha256": "d878861026fde771c1103e8c56261204b0755829880fca54ed2f10aa50872462"
+    },
+    {
+      "file": "CLAUDE_AND_CODEX_REPLY_KO.md",
+      "bytes": 2270,
+      "sha256": "aa8c45445ee2aca0735e12b22211c13e08175f5f0783146202e4ad2e449d88b4"
+    },
+    {
+      "file": "DECISION.json",
+      "bytes": 1242,
+      "sha256": "65c2166666106c6068213c6c129e32a246f295f51281f9fa580afa1f582fccb5"
+    },
+    {
+      "file": "EVIDENCE_AUDIT.json",
+      "bytes": 44596,
+      "sha256": "b6dd85221ca9dd651a2afecab4c39bdcc0eb0773b46498d8713a985d1448b406"
+    },
+    {
+      "file": "HARNESS_NORMALIZED.diff",
+      "bytes": 991,
+      "sha256": "4ad53571e5e540c03d0c1139eeb61f5c7eb961ce6889d33862609bc0266b2c4a"
+    },
+    {
+      "file": "NEXT_PREEXEC_DIRECTIVE_KO.md",
+      "bytes": 7600,
+      "sha256": "be33885afd835d6caad2f9b5c222955f607a6915856b05e007dd70f5eb4d7d9b"
+    },
+    {
+      "file": "PACKAGE_AUDIT.json",
+      "bytes": 1371,
+      "sha256": "61861b7d16b9ffd7aca9773f48af7f252b2540d2c0ee66fbd81d099eaf24b097"
+    },
+    {
+      "file": "REVIEWER_DIAGNOSTIC_NOTE.json",
+      "bytes": 431,
+      "sha256": "51f4ec7499c20d36d42bbc906d951972fd57bad1e298cd90f1530fdcc4cd3644"
+    },
+    {
+      "file": "REVIEW_KO.md",
+      "bytes": 9395,
+      "sha256": "c8609c2fec19f726e8a854470c66b04281a77a2822369da7957389efc6d432a7"
+    },
+    {
+      "file": "audit_evidence.py",
+      "bytes": 7145,
+      "sha256": "4123439a937f672255be3752669603fe65873a8100a14e8983fefc454e2cd05f"
+    },
+    {
+      "file": "audit_received.py",
+      "bytes": 3548,
+      "sha256": "737b3575e790c4e27934e34aa2eabd47dde30d8b6882f7ea69cad4ecde3cca29"
+    },
+    {
+      "file": "reference/CASE_MAP.json",
+      "bytes": 21341,
+      "sha256": "d1dcc06d19232a956746b7fe79ace66bf6cbf85c4fd15129a994bae86a65d039"
+    },
+    {
+      "file": "reference/CORRECTION.json",
+      "bytes": 391,
+      "sha256": "687e8b516d804fe26ea2d54957d969621ec1d3cb8118f499b254c1221807a50b"
+    },
+    {
+      "file": "reference/FINAL_SOURCE_BINDING.json",
+      "bytes": 6662,
+      "sha256": "613dd6ba24480a2f4a1724ebfda107929914f457af0d248a93fc6c45bf1a7459"
+    },
+    {
+      "file": "reference/PRE_TEST_SEAL.json",
+      "bytes": 6267,
+      "sha256": "d389cfc17880780471b9ddab4c3b415555c5ebb13d0271290773dd35050f75d5"
+    },
+    {
+      "file": "reference/RESULTS.json",
+      "bytes": 28476,
+      "sha256": "9294e42dbae9b9f77d2fe992574c8e6a6f2243cf1d38c272aba9e50c5fc1171a"
+    },
+    {
+      "file": "reference/candidate/CODE_MANIFEST.json",
+      "bytes": 1079,
+      "sha256": "0c14c4f886d53398fc4869db117577066b821837cd3593a6727e2ac4d0a63c45"
+    },
+    {
+      "file": "reference/candidate/CONTRACT.json",
+      "bytes": 29576,
+      "sha256": "e02f1759000348ee88c7c3bddc51d7a185d154ee0a0f8a30eba202caeec46848"
+    },
+    {
+      "file": "reference/candidate/PARENT_COMMAND.ps1",
+      "bytes": 12803,
+      "sha256": "43a7e402c4259538e7772070ab10b7a58f0c874fdd4bf6d0ba5e119bb676e9f1"
+    },
+    {
+      "file": "reference/candidate/src/Guard1198Candidate.java",
+      "bytes": 73405,
+      "sha256": "a742a3f6a19cc21c4c6b3be7ca9cf69eb35c68a70c52b38166971774c0ce1e95"
+    },
+    {
+      "file": "reference/candidate/src/candidate_entry.py",
+      "bytes": 13820,
+      "sha256": "28a299b726b9f3126ec026012cfbb43080d9c88cf93dc65e95c3c2d5ebe8ecda"
+    },
+    {
+      "file": "reference/candidate/src/trigger_consumer.py",
+      "bytes": 14551,
+      "sha256": "3036b4bb45331092595ffa809f07e485292332f11f867b3dcb546fb337ace307"
+    },
+    {
+      "file": "reference/records/JAVA_COMPILE_TOOL_RETURN.json",
+      "bytes": 124,
+      "sha256": "27783a25b660d0bf13b1a26fdcb2d8f209e0287e738ddde179c760fea30737e4"
+    },
+    {
+      "file": "reference/records/JAVA_STUB_TOOL_RETURN.json",
+      "bytes": 478,
+      "sha256": "89f919f5d164761d0b7f71b4ff391dfdaca485092e27fbe28db3074083dea384"
+    },
+    {
+      "file": "reference/records/POWERSHELL_TOOL_RETURN.json",
+      "bytes": 147,
+      "sha256": "a783f778f7d16aad0b883e1ecaae6c52c2bf47d182c19bcc9d7a0693b424da36"
+    },
+    {
+      "file": "reference/records/PS_RESULT.json",
+      "bytes": 6657,
+      "sha256": "7c0207493fbd83bf7119fd48861df53bc73c38da70814c4cd92d70c957fd2ce9"
+    },
+    {
+      "file": "reference/records/PYTHON_RESULT.json",
+      "bytes": 28539,
+      "sha256": "e4f222934c9506b4ce94c72ac07ec95cb023b450fd0dba3bc5164c865d789870"
+    },
+    {
+      "file": "reference/records/PYTHON_TOOL_RETURN.json",
+      "bytes": 217,
+      "sha256": "62086a684a40447e2a226941351144c421e4b26e8fea0a8e28b10bcd4e3d1f17"
+    },
+    {
+      "file": "reference/tests/GuardHarness.java",
+      "bytes": 10329,
+      "sha256": "a6efe1b1b2ef78c995ee90030d1de180b38cfaae690765b50ed03669d029b345"
+    },
+    {
+      "file": "reference/tests/JAVA_SOURCE_BINDING.json",
+      "bytes": 2150,
+      "sha256": "43edf443ad60abe8ed141fa6bc6b2e8376d5db0536a033cd8c4842e6ba5523f6"
+    },
+    {
+      "file": "reference/tests/run_parent.ps1",
+      "bytes": 6032,
+      "sha256": "5e26733447bb04f19187e5e8078e6a37adac454b4637d22903675a2cd632ac2f"
+    },
+    {
+      "file": "reference/tests/run_python.py",
+      "bytes": 17527,
+      "sha256": "5cbe34b28b53a6034b5cf8e8d819aae21c1813fc4f1a53bd6bd83bd8f04d95b4"
+    },
+    {
+      "file": "seal_review.py",
+      "bytes": 3392,
+      "sha256": "f9fe820716c0da7069e2c27b1ffa82af5c5da92afa9688b133f8713c6fece197"
+    }
+  ]
+}

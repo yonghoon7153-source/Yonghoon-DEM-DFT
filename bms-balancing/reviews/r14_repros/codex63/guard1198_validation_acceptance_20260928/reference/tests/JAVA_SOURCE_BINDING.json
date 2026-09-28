@@ -1,0 +1,61 @@
+{
+  "source": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\guard1198_limited_validation_R1_20260928\\src\\Guard1198Candidate.java",
+  "source_sha256": "a742a3f6a19cc21c4c6b3be7ca9cf69eb35c68a70c52b38166971774c0ce1e95",
+  "extractions": [
+    {
+      "name": "checkShape",
+      "source_start": 985,
+      "source_end": 1805,
+      "source_text_sha256": "c93aa5f2a25f2a3bad41b95411c073cedca83480e72f7ee8d89bc37a45e536fb"
+    },
+    {
+      "name": "units",
+      "source_start": 1806,
+      "source_end": 2236,
+      "source_text_sha256": "e4f4907ecf7df40362f75a19f0ae288e7802e26cdbf22670e16b23f7b26afa4b"
+    },
+    {
+      "name": "evaluatedUnits",
+      "source_start": 2237,
+      "source_end": 2545,
+      "source_text_sha256": "568a6f3bfcc2490384378e9cebdc4ea2fea02dae00cf49c6dcf4fe41151e8e77"
+    },
+    {
+      "name": "interpSelection",
+      "source_start": 2546,
+      "source_end": 3044,
+      "source_text_sha256": "ba6f47b7478bcf588a8858a35e6c36eb0bd8e9cbf0092d5f9b694cf418b53f09"
+    },
+    {
+      "name": "interpReadback",
+      "source_start": 3045,
+      "source_end": 3784,
+      "source_text_sha256": "6c345681c086de1bd1c51cc85d0947dde2fd807015ba2292237dcecc8aa66d38"
+    },
+    {
+      "name": "evaluate",
+      "source_start": 42472,
+      "source_end": 43850,
+      "source_text_sha256": "868986c780c2f8f0c601effbdf4e9030cee5ca206e5d0bf8a729a55cf26cca0f"
+    },
+    {
+      "name": "numericTable",
+      "source_start": 43851,
+      "source_end": 44244,
+      "source_text_sha256": "24d96b6df7686fc76e6884601861d60cec5509ecb4736d1705213753bfe8383d"
+    },
+    {
+      "name": "electrolyteEvidence",
+      "source_start": 45414,
+      "source_end": 46688,
+      "source_text_sha256": "d0cf2060904aecafc542c6c2010c2489b66f8be115bf8a63197a0b1311b02b3c"
+    },
+    {
+      "name": "run catch",
+      "source_start": 73074,
+      "source_end": 73396,
+      "source_text_sha256": "7a8cb1171c61a90dfd73f1c755ad6ad1710f469882f58df1236b99be78a8a664"
+    }
+  ],
+  "model": "local inert stub; not COMSOL API type compatibility"
+}

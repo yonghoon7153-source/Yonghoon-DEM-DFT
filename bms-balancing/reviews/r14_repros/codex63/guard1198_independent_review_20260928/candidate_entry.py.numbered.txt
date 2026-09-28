@@ -1,0 +1,166 @@
+1: """Inactive, untested connection candidate. Separate validation release AND
+2: manifest-bound user approval are required before any OS/console/native action.
+3: Existing C2 source loading, input body and private Job transport are reused.
+4: No new monitor, process-name termination, policy relaxation or retry.
+5: """
+6: from pathlib import Path
+7: import argparse, hashlib, json, os, sys, time, types, shutil, re
+8: ROOT=Path(__file__).resolve().parent.parent
+9: ENTRY_START=time.monotonic()
+10: def need(x,why):
+11:     if not x:raise RuntimeError(why)
+12: def strict(raw):
+13:     def pairs(items):
+14:         d={}
+15:         for k,v in items:need(k not in d,'DUPLICATE_JSON');d[k]=v
+16:         return d
+17:     return json.loads(raw,object_pairs_hook=pairs,parse_constant=lambda _:(_ for _ in ()).throw(ValueError('NONFINITE_JSON')))
+18: def read(p):return strict(Path(p).read_bytes())
+19: def digest(raw):return hashlib.sha256(raw).hexdigest()
+20: def ref(p):
+21:     p=Path(p)
+22:     with p.open('rb') as f:h=hashlib.file_digest(f,'sha256').hexdigest()
+23:     return {'path':p.resolve().as_posix(),'bytes':p.stat().st_size,'sha256':h}
+24: def check(r):need(ref(r['path'])==r,'FILE_IDENTITY');return Path(r['path']).read_bytes()
+25: def save(p,obj):
+26:     raw=(json.dumps(obj,ensure_ascii=False,sort_keys=True,allow_nan=False)+'\n').encode()
+27:     with Path(p).open('xb') as f:f.write(raw);f.flush();os.fsync(f.fileno())
+28:     need(Path(p).read_bytes()==raw,'RECORD_READBACK')
+29: def source_module(name,path,expected):
+30:     need(name not in sys.modules,'PRELOADED_SOURCE')
+31:     raw=check(expected);need(Path(path).resolve()==Path(expected['path']).resolve(),'MODULE_PATH')
+32:     m=types.ModuleType(name);m.__file__=str(Path(path).resolve());m.__cached__=None
+33:     # Executes the retained verified source buffer; no pyc/PathFinder lookup.
+34:     exec(compile(raw,m.__file__,'exec',dont_inherit=True),m.__dict__)
+35:     return m
+36: def seal(expected):
+37:     raw=(ROOT/'CODE_MANIFEST.json').read_bytes();need(digest(raw)==expected,'MANIFEST_SHA');m=strict(raw)
+38:     need(m.get('approved') is False and m.get('usable') is False,'CANDIDATE_FLAGS')
+39:     for r in m['files']:
+40:         p=ROOT/r['file'];need(p.resolve().is_relative_to(ROOT),'MANIFEST_PATH')
+41:         need(p.stat().st_size==r['bytes'] and digest(p.read_bytes())==r['sha256'],'CODE_BYTES')
+42:     c=read(ROOT/'CONTRACT.json');need(c['approved'] is False and c['usable'] is False,'CONTRACT_FLAGS')
+43:     for r in c['external_source_pins']:check(r)
+44:     return c,m
+45: def permission(c,expected,path):
+46:     need(Path(path).resolve().as_posix()==c['approval_path'],'APPROVAL_PATH')
+47:     a=read(path);release=read(c['release_path'])
+48:     for r in (a,release):need(r.get('code_manifest_sha256')==expected and r.get('run_id')==c['run_id'],'AUTHORIZATION_IDENTITY')
+49:     need(a.get('approved') is True and a.get('native1198_one_shot') is True,'SEPARATE_NATIVE_APPROVAL')
+50:     need(a.get('allow_policy_changes') is False and a.get('effective_policy_unverified_accepted') is True,'POLICY_SCOPE')
+51:     need(a.get('commands')==c['commands'] and a.get('budgets_seconds')==c['budgets_seconds'],'APPROVAL_COMMAND_BUDGET')
+52:     need(release.get('changed_branch_validation')=='PASS' and release.get('native_permission_route_reviewed') is True,'VALIDATION_OR_ROUTE_PENDING')
+53:     need(release.get('manifest_bytes_unchanged_since_validation') is True,'VALIDATION_SEAL')
+54:     for r in release['validation_evidence']:check(r)
+55:     need(len(release['validation_evidence'])>0,'VALIDATION_EVIDENCE_EMPTY')
+56:     need(ref(c['release_path'])==a['validation_release'],'RELEASE_APPROVAL_BINDING')
+57:     check(a['user_decision']);need(Path(a['user_decision']['path']).resolve().is_relative_to(Path(c['approval_path']).parent),'DECISION_PATH')
+58:     return a
+59: def policy_values(raw):
+60:     d={}
+61:     for line in raw.decode('utf-8-sig').splitlines():
+62:         if line.startswith('security.'):
+63:             k,v=line.split('=',1);need(k not in d,'POLICY_DUPLICATE');d[k]=v
+64:     need(d and d.get('security.external.enable')=='on','ENFORCE_REQUIRED');return d
+65: def process_ok(r,logs):
+66:     need(r.get('started') is True and type(r.get('rc')) is int and r['rc']==0,'PROCESS_RC')
+67:     need(r.get('timeout') is False and r.get('cleanup')=='PASS' and r.get('ownership_verified') is True,'PROCESS_CLEANUP')
+68:     need(r.get('root_exit_observed') is True and r.get('exit_query_succeeded') is True and r.get('handles_closed') is True,'PROCESS_TERMINAL')
+69:     need(r.get('remaining_owned')==[] and r.get('unattributed_comsol')==[],'PROCESS_MEMBERS')
+70:     need(not r.get('original_error') and r.get('cleanup_errors')==[] and r.get('recording_errors')==[] and not r.get('termination_request'),'PROCESS_ERRORS')
+71:     need(not re.search(r'/\*{3,}\s*Error\s*\*{3,}/|Error running java class\.|Security preference .*does not allow',logs,re.I),'NATIVE_FATAL_RC0')
+72: def execute(c,a,expected):
+73:     run=Path(c['run_root']);need(not run.exists(),'EXISTING_RUN_NO_RETRY')
+74:     need(Path.cwd().resolve().as_posix()==c['cwd'],'CWD')
+75:     need(os.name=='nt' and sys.flags.isolated and sys.flags.no_site and sys.flags.dont_write_bytecode and sys.flags.utf8_mode,'START_OPTIONS')
+76:     need(ref(sys.executable)==c['python'],'PYTHON_IDENTITY')
+77:     c2=source_module('_guard1198_existing_c2',c['legacy_gate']['path'],c['legacy_gate'])
+78:     legacy=strict(check(c['legacy_contract']));adapter=c2.NativeAdapter()
+79:     c2.environment(legacy,adapter)
+80:     state={'run_id':c['run_id'],'code_manifest_sha256':expected,'start':ENTRY_START,'status':'INCOMPLETE','errors':[],'native_attempts':{},'preservation':'INCOMPLETE','process_cleanup':'INCOMPLETE','policy_preservation':'INCOMPLETE','actual_cores':'UNVERIFIED','effective_policy':'UNVERIFIED'}
+81:     run.mkdir();save(run/'START.json',state)
+82:     baseline_before=[]
+83:     policy_before=None;default=Path(c['policy']['default_prefs_path']);cleanup_total=0.0
+84:     try:
+85:         baseline_before=[ref(r['path']) for r in c['baseline_files'].values()]
+86:         for actual,r in zip(baseline_before,c['baseline_files'].values()):need(actual==r,'BASELINE_IDENTITY')
+87:         with c2.VerifiedApplications(legacy) as app:
+88:             gate=c2.input_gate(app,adapter,time.monotonic,ENTRY_START+180);save(run/'GATE.json',gate)
+89:             app.recheck();seal(expected);permission(c,expected,c['approval_path'])
+90:             import winjob
+91:             transport=winjob.WindowsJobTransport();resources=transport.resources(str(run));save(run/'RESOURCES.json',resources)
+92:             need(resources['free_disk_bytes']>=10*2**30,'DISK_START')
+93:             need(time.monotonic()-ENTRY_START<=180,'PREFLIGHT_BUDGET')
+94:             need(not any(x.get('name','').lower() in ('comsolbatch.exe','comsolcompile.exe') for x in transport.census()),'OTHER_NATIVE_BATCH_PRESENT')
+95:             policy_before=check(a['default_prefs_identity']);need(Path(a['default_prefs_identity']['path']).resolve()==default.resolve(),'PREFS_PATH')
+96:             security=policy_values(policy_before)
+97:             for d in ('prefs','config_compile','data_compile','config_batch','data_batch'):(run/d).mkdir()
+98:             with (run/'prefs/comsol.prefs').open('xb') as f:f.write(policy_before)
+99:             save(run/'POLICY_BEFORE.json',{'default':ref(default),'security':security,'changes_authorized':False})
+100:             with (run/'Guard1198Candidate.java').open('xb') as f:f.write(check(c['candidate_java']))
+101:             native_spent=0.0
+102:             for phase in ('compile','batch'):
+103:                 check(c['native_executable_pins'][phase])
+104:                 need((run/'Guard1198Candidate.java').read_bytes()==check(c['candidate_java']),'STAGED_SOURCE_CHANGED')
+105:                 if phase=='batch':
+106:                     classes=list(run.glob('*.class'));need(len(classes)==1 and classes[0].name=='Guard1198Candidate.class','CLASS_SET')
+107:                     need(classes[0].read_bytes()[:4]==b'\xca\xfe\xba\xbe','CLASS_MAGIC')
+108:                     save(run/'CLASS_IDENTITY.json',ref(classes[0]))
+109:                 app.recheck();seal(expected);need(default.read_bytes()==policy_before,'DEFAULT_PREFS_CHANGED')
+110:                 need(policy_values((run/'prefs/comsol.prefs').read_bytes())==security,'PRIVATE_POLICY_CHANGED')
+111:                 need(phase not in state['native_attempts'],'ATTEMPT_DUPLICATE');state['native_attempts'][phase]=1
+112:                 save(run/(phase+'_RESERVATION.json'),{'argv':c['commands'][phase],'cwd':run.as_posix(),'start':time.monotonic()})
+113:                 counter=[0]
+114:                 def update(v):
+115:                     counter[0]+=1;save(run/(phase+'_event_%06d.json'%counter[0]),v)
+116:                 result=transport.run(c['commands'][phase],str(run),str(run/(phase+'_console.log')),1800-native_spent,60,update)
+117:                 state[phase]=result;save(run/(phase+'_RETURN.json'),result)
+118:                 cleanup_total+=result['cleanup_elapsed_seconds'];native_spent+=result['elapsed_seconds']-result['cleanup_elapsed_seconds']
+119:                 need(cleanup_total<=120 and native_spent<=1800,'NATIVE_PHASE_BUDGET')
+120:                 logs=(run/(phase+'_console.log')).read_text('utf-8-sig')
+121:                 if phase=='batch':logs+='\n'+(run/'batch.log').read_text('utf-8-sig')
+122:                 process_ok(result,logs)
+123:             mph=list(run.glob('*.mph'))
+124:             need(len(mph)==1 and mph[0].name==c['expected_mph_name'],'OUTPUT_MPH_SET')
+125:             save(run/'OUTPUT_MPH_IDENTITY.json',ref(mph[0]))
+126:             state['status']='NATIVE_RETURN_READY'
+127:     except BaseException as e:state['errors'].append({'stage':'execution','type':type(e).__name__,'error':str(e)})
+128:     finally:
+129:         try:
+130:             after=[ref(r['path']) for r in c['baseline_files'].values()];need(after==baseline_before,'BASELINE_CHANGED');seal(expected);state['preservation']='PASS'
+131:         except BaseException as e:state['errors'].append({'stage':'preservation','error':str(e)})
+132:         try:
+133:             need(policy_before is not None and default.read_bytes()==policy_before,'DEFAULT_POLICY_UNCONFIRMED')
+134:             need(policy_values((run/'prefs/comsol.prefs').read_bytes())==policy_values(policy_before),'PRIVATE_POLICY_CHANGED')
+135:             state['policy_preservation']='PASS'
+136:         except BaseException as e:state['errors'].append({'stage':'policy','error':str(e)})
+137:         try:
+138:             need(state['native_attempts'] and all(state.get(p,{}).get('cleanup')=='PASS' for p in state['native_attempts']),'CLEANUP_NOT_CONFIRMED')
+139:             state['process_cleanup']='PASS'
+140:         except BaseException as e:state['errors'].append({'stage':'cleanup','error':str(e)})
+141:         if state['errors']:state['status']='INCOMPLETE'
+142:         state['end']=time.monotonic();state['elapsed_seconds']=state['end']-ENTRY_START
+143:         save(run/'NATIVE_STATE.json',state)
+144:     print(json.dumps({'status':state['status'],'record':ref(run/'NATIVE_STATE.json'),'actual_host_rc':'MUST_BE_OBSERVED_BY_PARENT'},ensure_ascii=False))
+145:     return 0 if state['status']=='NATIVE_RETURN_READY' else 1
+146: def analyze(c,expected):
+147:     run=Path(c['run_root']);state=read(run/'NATIVE_STATE.json');need(state['run_id']==c['run_id'] and state['code_manifest_sha256']==expected,'STATE_IDENTITY')
+148:     need(state['start']<=time.monotonic()<=state['start']+3000,'OVERALL_BUDGET')
+149:     path=ROOT/'src/trigger_consumer.py'
+150:     manifest=read(ROOT/'CODE_MANIFEST.json');pinned_entry=next(r for r in manifest['files'] if r['file']=='src/trigger_consumer.py')
+151:     consumer=source_module('_guard1198_consumer',path,{'path':path.as_posix(),'bytes':pinned_entry['bytes'],'sha256':pinned_entry['sha256']})
+152:     began=time.monotonic()
+153:     try:
+154:         tables=consumer.extract_tables(run/'batch_console.log',run/'tables')
+155:         result=consumer.analyze(c,run/'tables',(run/'batch.log').read_text('utf-8-sig'),(run/'batch_console.log').read_text('utf-8-sig'),state)
+156:         result['tables_manifest']=tables
+157:     except BaseException as e:result={'limited_result':'INCOMPLETE','overall':'INCOMPLETE','errors':[{'type':type(e).__name__,'error':str(e)}]}
+158:     result['run_id']=c['run_id'];result['code_manifest_sha256']=expected;result['analysis_elapsed_seconds']=time.monotonic()-began
+159:     if result['analysis_elapsed_seconds']>600 or time.monotonic()>state['start']+3000:result['limited_result']='INCOMPLETE';result['errors'].append({'error':'FINAL_BUDGET'})
+160:     save(run/'TRIGGER_RESULT.json',result);print(json.dumps({'result':ref(run/'TRIGGER_RESULT.json'),'limited_result':result['limited_result'],'overall':'INCOMPLETE'}))
+161:     return 0 if result['limited_result']=='TRIGGER_AND_SAMPLED_DATA_ACCEPTABLE' else 1
+162: def main():
+163:     p=argparse.ArgumentParser();p.add_argument('action',choices=('execute','analyze'));p.add_argument('--approval',required=True);p.add_argument('--manifest-sha',required=True);a=p.parse_args()
+164:     c,_=seal(a.manifest_sha);auth=permission(c,a.manifest_sha,a.approval)
+165:     return execute(c,auth,a.manifest_sha) if a.action=='execute' else analyze(c,a.manifest_sha)
+166: if __name__=='__main__':raise SystemExit(main())

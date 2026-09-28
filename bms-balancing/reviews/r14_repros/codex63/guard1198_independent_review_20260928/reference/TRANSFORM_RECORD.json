@@ -1,0 +1,71 @@
+{
+  "source": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/electrolyte_guard/ElectrolyteGuard300R320C16Trigger.java",
+    "bytes": 68220,
+    "sha256": "f183d5dcdba4e23bd8fbc3b0666d5f3f5d49f0805a7bc3c30567c2e3009a6e6b"
+  },
+  "candidate": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/src/Guard1198Candidate.java",
+    "bytes": 73405,
+    "sha256": "a742a3f6a19cc21c4c6b3be7ca9cf69eb35c68a70c52b38166971774c0ce1e95"
+  },
+  "operations": [
+    {
+      "category": "identity/path",
+      "old": "public class ElectrolyteGuard300R320C16Trigger",
+      "new": "public class Guard1198Candidate"
+    },
+    {
+      "category": "identity/path",
+      "old": "m.label(\"ElectrolyteGuard300R320C16Trigger - fresh common dense time grid, 5 seconds only\");",
+      "new": "m.label(\"Guard1198Candidate - fresh common dense time grid, 5 seconds only\");"
+    },
+    {
+      "category": "output",
+      "old": "    public static void main(String[] args) throws Exception { run(); }",
+      "new": "    static double[] TIMES=null;\n    static String stage=\"entry\";\n    static void checkShape(String tag,double[][] values,int count) {\n        if(values==null||values.length!=count||count==0||values[0]==null||values[0].length==0)throw new IllegalStateException(\"SHAPE:\"+tag);\n        int n=values[0].length;\n        for(double[] row:values){if(row==null||row.length!=n)throw new IllegalStateException(\"RAGGED:\"+tag);for(double v:row)if(!Double.isFinite(v))throw new IllegalStateException(\"NONFINITE:\"+tag);}\n        if(values[0][0]!=0.0)throw new IllegalStateException(\"TIME_ORIGIN:\"+tag);\n        for(int i=0;i<n;i++)if(values[0][i]<0||values[0][i]>5||(i>0&&values[0][i]<=values[0][i-1]))throw new IllegalStateException(\"TIME_ORDER:\"+tag);\n        if(TIMES==null)TIMES=values[0].clone();else if(!Arrays.equals(values[0],TIMES))throw new IllegalStateException(\"EXACT_TIMES:\"+tag);\n    }\n    static void units(Model m,String tag,String phase,String[] expected) throws Exception {\n        String[] actual=m.result().numerical(tag).getStringArray(\"unit\");\n        table(\"units_\"+tag+\"_\"+phase+\".csv\",new String[][]{{\"tag\",\"phase\",\"expected\",\"actual\"},{tag,phase,Arrays.toString(expected),Arrays.toString(actual)}});\n        if(!Arrays.equals(expected,actual))throw new IllegalStateException(\"UNIT:\"+tag+\":\"+phase);\n    }\n    static String[] evaluatedUnits(String tag,String[] configured) {\n        String[] u=configured.clone();\n        if(\"eguard\".equals(tag)){u[6]=\"\";u[7]=\"\";u[8]=\"\";}\n        if(\"nglobal\".equals(tag))u[10]=\"\";\n        if(tag.startsWith(\"profile\")&&!\"profiletimes\".equals(tag))u[7]=\"\";\n        return u;\n    }\n    static void interpSelection(Model m,String tag,int n) {\n        int[] numbers=new int[n];for(int i=0;i<n;i++)numbers[i]=i+1;\n        m.result().numerical(tag).set(\"solnum\",numbers);\n        m.result().numerical(tag).set(\"t\",new double[0]);\n        m.result().numerical(tag).set(\"timeinterp\",\"off\");\n        if(!Arrays.equals(numbers,m.result().numerical(tag).getIntArray(\"solnum\"))||m.result().numerical(tag).getDoubleArray(\"t\").length!=0)throw new IllegalStateException(\"INTERP_SOLNUM\");\n    }\n    static void interpReadback(Model m,String tag,double[] coords,int domain) {\n        if(!\"daudit\".equals(m.result().numerical(tag).getString(\"data\"))||!\"off\".equals(m.result().numerical(tag).getString(\"recover\"))||!\"off\".equals(m.result().numerical(tag).getString(\"timeinterp\"))||!\"on\".equals(m.result().numerical(tag).getString(\"coorderr\"))||m.result().numerical(tag).getDouble(\"ext\")!=0)throw new IllegalStateException(\"INTERP_MODE\");\n        if(m.result().numerical(tag).selection().dim()!=1||!Arrays.equals(m.result().numerical(tag).selection().entities(1),new int[]{domain})||!Arrays.deepEquals(m.result().numerical(tag).getDoubleMatrix(\"coord\"),new double[][]{coords}))throw new IllegalStateException(\"INTERP_COORD_DOMAIN\");\n    }\n    public static void main(String[] args) throws Exception { run(); }"
+    },
+    {
+      "category": "output",
+      "old": "    static double[][] evaluate(Model m, String tag, String type, String[] expr, String[] units, int[] entities) {\n        m.result().numerical().create(tag,type);\n        m.result().numerical(tag).set(\"data\",\"daudit\");\n        if(entities!=null) {\n            if(!type.equals(\"EvalPoint\")) m.result().numerical(tag).selection().geom(\"geom1\",1);\n            m.result().numerical(tag).selection().set(entities);\n        }\n        m.result().numerical(tag).set(\"expr\",expr);\n        if(units!=null) m.result().numerical(tag).set(\"unit\",units);\n        m.result().numerical(tag).set(\"innerinput\",\"all\");\n        double[][] values=m.result().numerical(tag).getReal();\n        if(values.length!=expr.length || values.length==0 || values[0].length==0) throw new IllegalStateException(\"Unexpected shape \"+tag);\n        for(double[] row:values) for(double value:row) if(!Double.isFinite(value)) throw new IllegalStateException(\"Nonfinite \"+tag);\n        return values;\n    }\n    static void numericTable(String file,String[] headers,double[][] data) throws Exception {\n        String[][] rows=new String[data[0].length+1][headers.length]; rows[0]=headers;\n        for(int col=0;col<data[0].length;col++) for(int row=0;row<headers.length;row++) rows[col+1][row]=Double.toString(data[row][col]);\n        table(file,rows);\n    }\n\n",
+      "new": "    static double[][] evaluate(Model m, String tag, String type, String[] expr, String[] configured, int[] entities) throws Exception {\n        m.result().numerical().create(tag,type);m.result().numerical(tag).set(\"data\",\"daudit\");\n        if(entities!=null){if(!type.equals(\"EvalPoint\"))m.result().numerical(tag).selection().geom(\"geom1\",1);m.result().numerical(tag).selection().set(entities);}\n        m.result().numerical(tag).set(\"expr\",expr);if(configured!=null)m.result().numerical(tag).set(\"unit\",configured);\n        m.result().numerical(tag).set(\"innerinput\",\"all\");\n        if(!Arrays.equals(expr,m.result().numerical(tag).getStringArray(\"expr\"))||!\"daudit\".equals(m.result().numerical(tag).getString(\"data\"))||!\"all\".equals(m.result().numerical(tag).getString(\"innerinput\")))throw new IllegalStateException(\"NUMERICAL_BINDING:\"+tag);\n        if(entities!=null){int dim=type.equals(\"EvalPoint\")?0:1;if(m.result().numerical(tag).selection().dim()!=dim||!Arrays.equals(entities,m.result().numerical(tag).selection().entities(dim)))throw new IllegalStateException(\"NUMERICAL_SELECTION:\"+tag);}\n        if(configured!=null)units(m,tag,\"configured\",configured);\n        double[][] values=m.result().numerical(tag).getReal();checkShape(tag,values,expr.length);\n        if(configured!=null)units(m,tag,\"evaluated\",evaluatedUnits(tag,configured));\n        return values;\n    }\n    static void numericTable(String file,String[] headers,double[][] data) throws Exception {\n        checkShape(file,data,headers.length);\n        String[][] rows=new String[data[0].length+1][headers.length];rows[0]=headers;\n        for(int col=0;col<data[0].length;col++)for(int row=0;row<headers.length;row++)rows[col+1][row]=Double.toString(data[row][col]);\n        table(file,rows);\n    }\n\n"
+    },
+    {
+      "category": "output",
+      "old": "    static void electrolyteEvidence(Model m,String ocpGuard,String surfaceGuard) throws Exception {\n        String[] expr={\"t\",\"comp1.minguardall(comp1.cl)\",\"comp1.minguard1(comp1.cl)\",\"comp1.minguard2(comp1.cl)\",\"comp1.minguard3(comp1.cl)\",\"ce_stop_threshold\",\"comp1.minguardall(comp1.cl)<=ce_stop_threshold\",ocpGuard,surfaceGuard,\"comp1.minguard1(comp1.cl,comp1.x)\",\"comp1.minguard2(comp1.cl,comp1.x)\",\"comp1.minguard3(comp1.cl,comp1.x)\"};\n        String[] units={\"s\",\"mol/m^3\",\"mol/m^3\",\"mol/m^3\",\"mol/m^3\",\"mol/m^3\",\"1\",\"1\",\"1\",\"m\",\"m\",\"m\"};\n        double[][] values=evaluate(m,\"eguard\",\"EvalGlobal\",expr,null,null);\n        String[] inferred=m.result().numerical(\"eguard\").getStringArray(\"unit\");\n        System.out.println(\"ELECTROLYTE_INFERRED_UNITS=\"+Arrays.toString(inferred));\n        m.result().numerical(\"eguard\").set(\"unit\",units);\n        values=m.result().numerical(\"eguard\").getReal();\n        numericTable(\"electrolyte_guard.csv\",new String[]{\"time_s\",\"ce_min_all_mol_m3\",\"ce_min_d1_mol_m3\",\"ce_min_d2_mol_m3\",\"ce_min_d3_mol_m3\",\"threshold_mol_m3\",\"electrolyte_guard\",\"ocp_guard\",\"surface_guard\",\"ce_argmin_d1_m\",\"ce_argmin_d2_m\",\"ce_argmin_d3_m\"},values);\n        System.out.println(\"ELECTROLYTE_EXPORT_UNITS=\"+Arrays.toString(m.result().numerical(\"eguard\").getStringArray(\"unit\")));\n    }\n\n",
+      "new": "    static void electrolyteEvidence(Model m,String ocpGuard,String surfaceGuard) throws Exception {\n        String[] expr={\"t\",\"comp1.minguardall(comp1.cl)\",\"comp1.minguard1(comp1.cl)\",\"comp1.minguard2(comp1.cl)\",\"comp1.minguard3(comp1.cl)\",\"ce_stop_threshold\",\"comp1.minguardall(comp1.cl)<=ce_stop_threshold\",ocpGuard,surfaceGuard};\n        String[] u={\"s\",\"mol/m^3\",\"mol/m^3\",\"mol/m^3\",\"mol/m^3\",\"mol/m^3\",\"1\",\"1\",\"1\"};\n        double[][] inferred=evaluate(m,\"eguard\",\"EvalGlobal\",expr,null,null);\n        units(m,\"eguard\",\"inferred\",evaluatedUnits(\"eguard\",u));\n        m.result().numerical(\"eguard\").set(\"unit\",u);units(m,\"eguard\",\"configured\",u);\n        double[][] values=m.result().numerical(\"eguard\").getReal();checkShape(\"eguard\",values,9);\n        units(m,\"eguard\",\"evaluated\",evaluatedUnits(\"eguard\",u));\n        if(!Arrays.deepEquals(inferred,values))throw new IllegalStateException(\"GUARD_UNIT_VALUES\");\n        for(int i:new int[]{6,7,8})for(double flag:values[i])if(flag!=0&&flag!=1)throw new IllegalStateException(\"GUARD_BOOLEAN\");\n        numericTable(\"electrolyte_guard.csv\",new String[]{\"time_s\",\"ce_min_all_mol_m3\",\"ce_min_d1_mol_m3\",\"ce_min_d2_mol_m3\",\"ce_min_d3_mol_m3\",\"threshold_mol_m3\",\"electrolyte_guard\",\"ocp_guard\",\"surface_guard\"},values);\n    }\n\n"
+    },
+    {
+      "category": "error preservation",
+      "old": "        m.sol(sol).runAll();",
+      "new": "        stage=\"solve\";\n        m.sol(sol).runAll();\n        stage=\"postprocess\";"
+    },
+    {
+      "category": "output",
+      "old": "            double[][][] data=m.result().numerical(tag).getData();",
+      "new": "            interpSelection(m,tag,times[0].length);interpReadback(m,tag,coordinates,domain);\n            String[] profileUnits={\"s\",\"m\",\"1\",\"1\",\"V\",\"V\",\"V\",\"1\"};units(m,tag,\"configured\",profileUnits);\n            double[][][] data=m.result().numerical(tag).getData();\n            interpReadback(m,tag,coordinates,domain);units(m,tag,\"evaluated\",evaluatedUnits(tag,profileUnits));"
+    },
+    {
+      "category": "output",
+      "old": "                    if(Math.abs(data[0][ti][j]-times[0][ti])>1e-12)",
+      "new": "                    if(data[0][ti][j]!=times[0][ti])"
+    },
+    {
+      "category": "error preservation",
+      "old": "    public static Model run() throws Exception {",
+      "new": "    public static Model run() throws Exception {\n        try {\n        stage=\"model_generation\";"
+    },
+    {
+      "category": "error preservation",
+      "old": "        return m;\n    }\n}",
+      "new": "        stage=\"complete\";System.out.println(\"GUARD1198_PRODUCER_COMPLETE\");\n        return m;\n        } catch(Exception primary) {\n            try {table(\"producer_failure.csv\",new String[][]{{\"stage\",\"type\",\"message\"},{stage,primary.getClass().getName(),primary.toString()}});}\n            catch(Exception reporting) {primary.addSuppressed(reporting);}\n            primary.printStackTrace(System.err);throw primary;\n        }\n    }\n}"
+    },
+    {
+      "category": "output",
+      "old": "        m.sol(sol).feature(time).feature(\"stguard\").set(\"storestopcondsol\",\"stepbefore_stepafter\");",
+      "new": "        m.sol(sol).feature(time).feature(\"stguard\").set(\"storestopcondsol\",\"stepbefore_stepafter\");\n        String[] observedConditions=m.sol(sol).feature(time).feature(\"stguard\").getStringArray(\"stopcondarr\");\n        String[] observedActive=m.sol(sol).feature(time).feature(\"stguard\").getStringArray(\"stopcondActive\");\n        String[] observedTerminate=m.sol(sol).feature(time).feature(\"stguard\").getStringArray(\"stopcondterminateon\");\n        if(!Arrays.equals(observedConditions,conditions)||!Arrays.equals(observedActive,new String[]{\"on\",\"on\",\"on\"})||!Arrays.equals(observedTerminate,new String[]{\"true\",\"true\",\"true\"}))throw new IllegalStateException(\"GUARD_READBACK\");\n        String observedStorage=m.sol(sol).feature(time).feature(\"stguard\").getString(\"storestopcondsol\");\n        if(!\"stepbefore_stepafter\".equals(observedStorage)||m.param().evaluate(\"ce_stop_threshold\")!=1198.0)throw new IllegalStateException(\"GUARD_THRESHOLD_STORAGE\");\n        table(\"guard_binding.csv\",new String[][]{{\"electrolyte_expression\",\"stop_storage\",\"active\",\"terminate_on\",\"threshold_SI\"},{observedConditions[2],observedStorage,observedActive[2],observedTerminate[2],Double.toString(m.param().evaluate(\"ce_stop_threshold\"))}});"
+    }
+  ],
+  "reverse_bytes_exact": true,
+  "method": "Exact text substitutions and reverse byte identity; no parser/compiler/execution"
+}

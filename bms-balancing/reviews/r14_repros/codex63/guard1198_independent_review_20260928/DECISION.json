@@ -1,0 +1,22 @@
+{
+  "scope": "Independent read-only review of received offline preparation; not implementation or native execution authority",
+  "status": "DIRECTION_ACCEPTED_TWO_P2_CORRECTIONS_BEFORE_LIMITED_VALIDATION_ACCEPTANCE",
+  "findings": [
+    {"id": "G1198-N1", "priority": "P2", "kind": "Incomplete early failure schema consumed by entry"},
+    {"id": "G1198-N2", "priority": "P2", "kind": "Parent acceptance-awaiting branch does not consume component states and required evidence"}
+  ],
+  "input_zip_sha256": "e8f544c01e3e8e8ba4ab27f294f1b8bb9124707ee0cfc38e2023a42f731279ec",
+  "input_code_manifest_sha256": "0994d919ed1317a1234dbc2ba4276d5a7342401bbaed1ffcd2e45a69b8a13bcf",
+  "subject_imports_or_executions": 0,
+  "COMSOL_JVM_or_native_candidate_calls": 0,
+  "powershell_subject_tests": 0,
+  "candidate_modified": false,
+  "next_action_recommended": "User-adopted narrow correction/reseal and limited 26 logical-group validation",
+  "validation_approved_by_this_review": false,
+  "native_1198_approved": false,
+  "run_30s_approved": false,
+  "long_run_approved": false,
+  "sender_final_delivery_boundary": "Not directly verified: final external receipt/tool return absent from received materials",
+  "normal_gate": "INCOMPLETE",
+  "whole_convergence": "INCOMPLETE"
+}

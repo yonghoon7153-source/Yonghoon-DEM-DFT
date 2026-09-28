@@ -1,0 +1,121 @@
+{
+  "scope": "Reviewer documents and selected inert evidence snapshots",
+  "subject_zip_sha256": "e8f544c01e3e8e8ba4ab27f294f1b8bb9124707ee0cfc38e2023a42f731279ec",
+  "files": [
+    {
+      "file": "DATA_STATIC_AUDIT.json",
+      "bytes": 7634,
+      "sha256": "37d87068085c0d60cae6c6880dda6e1d9cf7f550f4848d0d2bb8c1b3cdeaffa2"
+    },
+    {
+      "file": "DECISION.json",
+      "bytes": 1266,
+      "sha256": "baf302dc0ddd5ee9256c959f62db7580a9984930a54877b7c54e7a8607ea4ad0"
+    },
+    {
+      "file": "FAILURE_SCHEMA_EVIDENCE.json",
+      "bytes": 886,
+      "sha256": "5d97924b124ac29707de158be856ed9efaeeffb8646b5920ddd0c6de64da8eb1"
+    },
+    {
+      "file": "NEXT_LIMITED_VALIDATION_DIRECTIVE_KO.md",
+      "bytes": 8556,
+      "sha256": "abe430ea52d8412ab6f0362bdf20b4f68940b02c912384358e1d290155c003af"
+    },
+    {
+      "file": "PACKAGE_AUDIT.json",
+      "bytes": 525,
+      "sha256": "ae6a08893acf562d7dba4d14e4c97bbe2674091293ef5a334fd564e8dcf226d8"
+    },
+    {
+      "file": "PARENT_COMMAND.ps1.numbered.txt",
+      "bytes": 8716,
+      "sha256": "44880e5bc49fdb1df462410c0d72876b3db7ec00eb88437d4f938ec3e44df154"
+    },
+    {
+      "file": "PARENT_SCHEMA_CASES.json",
+      "bytes": 1466,
+      "sha256": "10fb7778cff0b62d4b12e349dfad8dd71aa2b44ae30c24b299b92362c94d0edf"
+    },
+    {
+      "file": "README_KO.md",
+      "bytes": 1178,
+      "sha256": "7ff0f2a03c93aee5e19f8e9945d4a81d7df028df1c730768c7b18942bd267b13"
+    },
+    {
+      "file": "REVIEWER_REPLY_KO.md",
+      "bytes": 2337,
+      "sha256": "80967fb00c13e980839e014b183b83a4e8427faa3f4c6f53e7904805d0d9847d"
+    },
+    {
+      "file": "REVIEW_KO.md",
+      "bytes": 10589,
+      "sha256": "a31c68bf1c6c35ed4a9a13078bb6c5d77e71af91b7f1f059f34516dbcc928b24"
+    },
+    {
+      "file": "audit_package.py",
+      "bytes": 1655,
+      "sha256": "55cd442e9426043dcfd2694d2658e6b5af574ac9e72a96482dee773e33164315"
+    },
+    {
+      "file": "candidate_entry.py.numbered.txt",
+      "bytes": 13680,
+      "sha256": "21c32af52ddc331f5db8a26c260e9dd16672567696f232de1fb14b2e355e19ab"
+    },
+    {
+      "file": "reference/CODE_MANIFEST.json",
+      "bytes": 980,
+      "sha256": "0994d919ed1317a1234dbc2ba4276d5a7342401bbaed1ffcd2e45a69b8a13bcf"
+    },
+    {
+      "file": "reference/CONTRACT.json",
+      "bytes": 29546,
+      "sha256": "1e3db5d3d4a5edeea04d82dcee333ba21a6e022e5f8d234e5afe5e19ae09d2e9"
+    },
+    {
+      "file": "reference/LIMITED_VALIDATION_PLAN.json",
+      "bytes": 8087,
+      "sha256": "f0b3c9fa10ba5187cea22a619b7564292b8a98e280c9f33800c0954cf3d21f86"
+    },
+    {
+      "file": "reference/PARENT_COMMAND.ps1",
+      "bytes": 8309,
+      "sha256": "d0006d21696aba551c7d9781f2d822b7d021f28270fb3bc0ddd9cd853e7d8170"
+    },
+    {
+      "file": "reference/TRANSFORM_RECORD.json",
+      "bytes": 13734,
+      "sha256": "d40ff0bd1669fc90bae1fc9a09c179bc1b88844c8661e9b8543179698d2a9f42"
+    },
+    {
+      "file": "reference/src/Guard1198Candidate.java",
+      "bytes": 73405,
+      "sha256": "a742a3f6a19cc21c4c6b3be7ca9cf69eb35c68a70c52b38166971774c0ce1e95"
+    },
+    {
+      "file": "reference/src/candidate_entry.py",
+      "bytes": 12792,
+      "sha256": "47373e0c140a2699fa46e071a5dbe77a286cefa4d2984619bd06757ae72c25a4"
+    },
+    {
+      "file": "reference/src/trigger_consumer.py",
+      "bytes": 14233,
+      "sha256": "930ccf3c9647e09b995c2540657f60cd674b95edc879d8b6603a8d67f9aceefc"
+    },
+    {
+      "file": "seal_review.py",
+      "bytes": 4331,
+      "sha256": "73dc219ad1413a7ed97d587a576fae7be07ac79318e1c74b3df3325db6eaa1a1"
+    },
+    {
+      "file": "static_data_audit.py",
+      "bytes": 6432,
+      "sha256": "d22f70ae8a729bf06676dc68d4b8b820b73c86af8f63e9caa7222a9259b5d76c"
+    },
+    {
+      "file": "trigger_consumer.py.numbered.txt",
+      "bytes": 15265,
+      "sha256": "4344b127f98c03933189b2d432580b836ed13172eea6a8757aba0856d0324e1c"
+    }
+  ]
+}

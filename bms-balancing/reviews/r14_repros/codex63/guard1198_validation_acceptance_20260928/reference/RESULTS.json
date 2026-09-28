@@ -1,0 +1,742 @@
+{
+  "status": "LIMITED_OFFLINE_VALIDATION_PASS",
+  "logical_groups": 26,
+  "subcases": {
+    "PASS": 78,
+    "FAIL": 0,
+    "NOT_RUN": 0
+  },
+  "results": [
+    {
+      "group": "PS01",
+      "case": "exit0",
+      "engine": "PowerShell5.1",
+      "expected": "capture invariant",
+      "actual_function": "BSave/BInvoke",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS01",
+      "case": "exit7",
+      "engine": "PowerShell5.1",
+      "expected": "capture invariant",
+      "actual_function": "BSave/BInvoke",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS01",
+      "case": "missing_clears_stale",
+      "engine": "PowerShell5.1",
+      "expected": "capture invariant",
+      "actual_function": "BSave/BInvoke",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS02",
+      "case": "earlier_record_unchanged",
+      "engine": "PowerShell5.1",
+      "expected": "capture invariant",
+      "actual_function": "BSave/BInvoke",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS03",
+      "case": "actual_producer_positive",
+      "engine": "PowerShell5.1",
+      "expected": "AWAITING_LIMITED_EXTERNAL_ACCEPTANCE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS03",
+      "case": "missing_trigger",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS03",
+      "case": "incomplete_trigger",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS03",
+      "case": "missing_sampled_comparison",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS03",
+      "case": "incomplete_sampled_comparison",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS03",
+      "case": "missing_preservation",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS03",
+      "case": "incomplete_preservation",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS03",
+      "case": "missing_process_cleanup",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS03",
+      "case": "incomplete_process_cleanup",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS03",
+      "case": "missing_policy_preservation",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS03",
+      "case": "incomplete_policy_preservation",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS04",
+      "case": "rc1",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS04",
+      "case": "null",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS04",
+      "case": "newError",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS05",
+      "case": "summary_only",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS05",
+      "case": "missing_pair",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS05",
+      "case": "empty_pair",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS05",
+      "case": "missing_native_stop",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS05",
+      "case": "empty_native_stop",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS05",
+      "case": "missing_numeric",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS05",
+      "case": "empty_numeric",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS05",
+      "case": "missing_tables_manifest",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS05",
+      "case": "empty_tables_manifest",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS05",
+      "case": "coverage_empty",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS05",
+      "case": "identity_wrong",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS05",
+      "case": "analysis_rc1",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS06",
+      "case": "analysis_time_NaN",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS06",
+      "case": "analysis_time_Infinity",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS06",
+      "case": "analysis_time_-1",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS06",
+      "case": "analysis_time_601",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "PS06",
+      "case": "overall3001",
+      "engine": "PowerShell5.1",
+      "expected": "INCOMPLETE",
+      "actual_function": "GDecision",
+      "status": "PASS",
+      "evidence": "PS_RESULT.json"
+    },
+    {
+      "group": "J01",
+      "case": "dynamic_shape_and_numeric_table",
+      "engine": "Java11 stub",
+      "expectation_source": "tests/GuardHarness.java:main; exact helper bodies in JAVA_SOURCE_BINDING.json",
+      "status": "PASS",
+      "evidence": "JAVA_STUB_TOOL_RETURN.json + sealed GuardHarness.java sequential main assertions; group-level stdout, subcase mapping inferred from completed group"
+    },
+    {
+      "group": "J02",
+      "case": "ragged",
+      "engine": "Java11 stub",
+      "expectation_source": "tests/GuardHarness.java:main; exact helper bodies in JAVA_SOURCE_BINDING.json",
+      "status": "PASS",
+      "evidence": "JAVA_STUB_TOOL_RETURN.json + sealed GuardHarness.java sequential main assertions; group-level stdout, subcase mapping inferred from completed group"
+    },
+    {
+      "group": "J02",
+      "case": "nonfinite",
+      "engine": "Java11 stub",
+      "expectation_source": "tests/GuardHarness.java:main; exact helper bodies in JAVA_SOURCE_BINDING.json",
+      "status": "PASS",
+      "evidence": "JAVA_STUB_TOOL_RETURN.json + sealed GuardHarness.java sequential main assertions; group-level stdout, subcase mapping inferred from completed group"
+    },
+    {
+      "group": "J02",
+      "case": "time_mismatch",
+      "engine": "Java11 stub",
+      "expectation_source": "tests/GuardHarness.java:main; exact helper bodies in JAVA_SOURCE_BINDING.json",
+      "status": "PASS",
+      "evidence": "JAVA_STUB_TOOL_RETURN.json + sealed GuardHarness.java sequential main assertions; group-level stdout, subcase mapping inferred from completed group"
+    },
+    {
+      "group": "J03",
+      "case": "evaluated_unit_transition",
+      "engine": "Java11 stub",
+      "expectation_source": "tests/GuardHarness.java:main; exact helper bodies in JAVA_SOURCE_BINDING.json",
+      "status": "PASS",
+      "evidence": "JAVA_STUB_TOOL_RETURN.json + sealed GuardHarness.java sequential main assertions; group-level stdout, subcase mapping inferred from completed group"
+    },
+    {
+      "group": "J03",
+      "case": "configured_positive",
+      "engine": "Java11 stub",
+      "expectation_source": "tests/GuardHarness.java:main; exact helper bodies in JAVA_SOURCE_BINDING.json",
+      "status": "PASS",
+      "evidence": "JAVA_STUB_TOOL_RETURN.json + sealed GuardHarness.java sequential main assertions; group-level stdout, subcase mapping inferred from completed group"
+    },
+    {
+      "group": "J03",
+      "case": "wrong_unit",
+      "engine": "Java11 stub",
+      "expectation_source": "tests/GuardHarness.java:main; exact helper bodies in JAVA_SOURCE_BINDING.json",
+      "status": "PASS",
+      "evidence": "JAVA_STUB_TOOL_RETURN.json + sealed GuardHarness.java sequential main assertions; group-level stdout, subcase mapping inferred from completed group"
+    },
+    {
+      "group": "J04",
+      "case": "guard9_positive",
+      "engine": "Java11 stub",
+      "expectation_source": "tests/GuardHarness.java:main; exact helper bodies in JAVA_SOURCE_BINDING.json",
+      "status": "PASS",
+      "evidence": "JAVA_STUB_TOOL_RETURN.json + sealed GuardHarness.java sequential main assertions; group-level stdout, subcase mapping inferred from completed group"
+    },
+    {
+      "group": "J04",
+      "case": "boolean_reject",
+      "engine": "Java11 stub",
+      "expectation_source": "tests/GuardHarness.java:main; exact helper bodies in JAVA_SOURCE_BINDING.json",
+      "status": "PASS",
+      "evidence": "JAVA_STUB_TOOL_RETURN.json + sealed GuardHarness.java sequential main assertions; group-level stdout, subcase mapping inferred from completed group"
+    },
+    {
+      "group": "J04",
+      "case": "unit_value_change_reject",
+      "engine": "Java11 stub",
+      "expectation_source": "tests/GuardHarness.java:main; exact helper bodies in JAVA_SOURCE_BINDING.json",
+      "status": "PASS",
+      "evidence": "JAVA_STUB_TOOL_RETURN.json + sealed GuardHarness.java sequential main assertions; group-level stdout, subcase mapping inferred from completed group"
+    },
+    {
+      "group": "J05",
+      "case": "solnum_selection_modes_positive",
+      "engine": "Java11 stub",
+      "expectation_source": "tests/GuardHarness.java:main; exact helper bodies in JAVA_SOURCE_BINDING.json",
+      "status": "PASS",
+      "evidence": "JAVA_STUB_TOOL_RETURN.json + sealed GuardHarness.java sequential main assertions; group-level stdout, subcase mapping inferred from completed group"
+    },
+    {
+      "group": "J05",
+      "case": "mode_reject",
+      "engine": "Java11 stub",
+      "expectation_source": "tests/GuardHarness.java:main; exact helper bodies in JAVA_SOURCE_BINDING.json",
+      "status": "PASS",
+      "evidence": "JAVA_STUB_TOOL_RETURN.json + sealed GuardHarness.java sequential main assertions; group-level stdout, subcase mapping inferred from completed group"
+    },
+    {
+      "group": "J06",
+      "case": "primary_reporting_suppression",
+      "engine": "Java11 stub",
+      "expectation_source": "tests/GuardHarness.java:main; exact helper bodies in JAVA_SOURCE_BINDING.json",
+      "status": "PASS",
+      "evidence": "JAVA_STUB_TOOL_RETURN.json + sealed GuardHarness.java sequential main assertions; group-level stdout, subcase mapping inferred from completed group"
+    },
+    {
+      "group": "PY01",
+      "case": "complete_actual_entry_consumer",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 138,
+      "expected_and_call": "case('PY01','complete_actual_entry_consumer',lambda:put(R/'records/positive_result.json',run_analysis(fixture())))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY02",
+      "case": "binding_schema_no_KeyError",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 139,
+      "expected_and_call": "case('PY02','binding_schema_no_KeyError',lambda:run_analysis(fixture(),failtable('guard_binding.csv',lambda x:x.replace(b'stepbefore_stepafter',b'wrong')), 'GUARD_BINDING_VALUE'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY02",
+      "case": "guard_schema_no_KeyError",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 140,
+      "expected_and_call": "case('PY02','guard_schema_no_KeyError',lambda:run_analysis(fixture(),failtable('electrolyte_guard.csv',lambda x:x.replace(b'1198,0,0,0',b'1198,0,1,0')), 'OTHER_GUARD_OR_BOOLEAN'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY03",
+      "case": "wrong_stop_reason",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 141,
+      "expected_and_call": "case('PY03','wrong_stop_reason',lambda:run_analysis(fixture(),lambda t,b,p:(b.replace(cfg['stop_description'],'WRONG'),p),'NATIVE_STOP_REASON'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY03",
+      "case": "native_fatal",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 142,
+      "expected_and_call": "case('PY03','native_fatal',lambda:run_analysis(fixture(),lambda t,b,p:(b+'\\nError running java class.\\n',p),'NATIVE_FATAL'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY03",
+      "case": "producer_completion_missing",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 143,
+      "expected_and_call": "case('PY03','producer_completion_missing',lambda:run_analysis(fixture(),lambda t,b,p:(b,p.replace('GUARD1198_PRODUCER_COMPLETE','')),'PRODUCER_OUTPUT_FAILURE'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY03",
+      "case": "integration_after_stop",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 144,
+      "expected_and_call": "case('PY03','integration_after_stop',lambda:run_analysis(fixture(),lambda t,b,p:(b+'3 0.0003 0.0001 out x\\n',p),'INTEGRATION_AFTER_STOP'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY04",
+      "case": "stored_count",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 145,
+      "expected_and_call": "case('PY04','stored_count',lambda:run_analysis(fixture(),lambda t,b,p:(b.replace('1 0.0001 0.0001 out x\\n',''),p),'NATIVE_STORED_STEP_COUNT'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY04",
+      "case": "stored_time_mismatch",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 146,
+      "expected_and_call": "case('PY04','stored_time_mismatch',lambda:run_analysis(fixture(),lambda t,b,p:(b.replace('1 0.0001 0.0001','1 0.0009 0.0001'),p),'NATIVE_STORED_TIME_BINDING'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY05",
+      "case": "missing_strict_prefix",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 147,
+      "expected_and_call": "case('PY05','missing_strict_prefix',lambda:expect(lambda:C.coverage({'requested_times_s':['0','.1','.2']},[D(0),D('.2')],[D(0),D('.1'),D('.2')],D('.2')),'STRICT_REQUEST_TIME_MISSING'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY06",
+      "case": "zero_only",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 148,
+      "expected_and_call": "case('PY06','zero_only',lambda:expect(lambda:C.coverage({'requested_times_s':['0']},[D(0)],[D(0)],D(0)),'INSUFFICIENT_REQUEST_PREFIX'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY06",
+      "case": "empty_common",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 149,
+      "expected_and_call": "case('PY06','empty_common',lambda:expect(lambda:C.coverage({'requested_times_s':[]},[],[],D(0)),'INSUFFICIENT_REQUEST_PREFIX'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY07",
+      "case": "nonfinite_csv",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 150,
+      "expected_and_call": "case('PY07','nonfinite_csv',lambda:run_analysis(fixture(),failtable('electrolyte_guard.csv',lambda x:x.replace(b'1200',b'NaN')),'NONFINITE'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY07",
+      "case": "duplicate_time",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 151,
+      "expected_and_call": "case('PY07','duplicate_time',lambda:run_analysis(fixture(),failtable('electrolyte_guard.csv',lambda x:x.replace(b'0.0001,',b'0,')),'DUPLICATE_OR_UNORDERED_TIME'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY07",
+      "case": "profile_domain",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 152,
+      "expected_and_call": "case('PY07','profile_domain',lambda:run_analysis(fixture(),failtable('axes_profile_N.csv',lambda x:x.replace(b',1\\n',b',3\\n')),'PROFILE_COORD_DOMAIN'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY08",
+      "case": "exact_near_ties",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 155,
+      "expected_and_call": "case('PY08','exact_near_ties',tie)",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY08",
+      "case": "wrong_unit",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 156,
+      "expected_and_call": "case('PY08','wrong_unit',lambda:run_analysis(fixture(),failtable('units_profileN_evaluated.csv',lambda x:x.replace(b'V',b'A')),'UNIT_STAGE'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY09",
+      "case": "Li_drift",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 157,
+      "expected_and_call": "case('PY09','Li_drift',lambda:run_analysis(fixture(),failtable('preflight_global.csv',lambda x:x.replace(b'0.0002,1,1,1',b'0.0002,2,1,1')),'LI_DRIFT'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY09",
+      "case": "voltage_identity",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 158,
+      "expected_and_call": "case('PY09','voltage_identity',lambda:run_analysis(fixture(),failtable('preflight_boundary4.csv',lambda x:x.replace(b'0.0002,2,0,2,',b'0.0002,3,0,2,')),'VOLTAGE_IDENTITY'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY10",
+      "case": "fixture_authorization",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 163,
+      "expected_and_call": "case('PY10','fixture_authorization',auth)",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY11",
+      "case": "actual_entry_and_original_two_input_bodies",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 164,
+      "expected_and_call": "case('PY11','actual_entry_and_original_two_input_bodies',lambda:inert_execute('normal'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY12",
+      "case": "compile_failure_stops_batch",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 165,
+      "expected_and_call": "case('PY12','compile_failure_stops_batch',lambda:inert_execute('compile_fail'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY12",
+      "case": "stale_extra_class",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 166,
+      "expected_and_call": "case('PY12','stale_extra_class',lambda:inert_execute('stale_class'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY12",
+      "case": "batch_output_missing",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 167,
+      "expected_and_call": "case('PY12','batch_output_missing',lambda:inert_execute('output_missing'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY13",
+      "case": "cleanup_primary_secondary",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 168,
+      "expected_and_call": "case('PY13','cleanup_primary_secondary',lambda:inert_execute('cleanup_fail'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY13",
+      "case": "private_policy_changed",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 169,
+      "expected_and_call": "case('PY13','private_policy_changed',lambda:inert_execute('policy_changed'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY13",
+      "case": "staged_source_changed",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 170,
+      "expected_and_call": "case('PY13','staged_source_changed',lambda:inert_execute('staged_changed'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY14",
+      "case": "extraction_failure_schema",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 171,
+      "expected_and_call": "case('PY14','extraction_failure_schema',lambda:run_analysis(fixture(),lambda t,b,p:(t.clear() or b,p),'NO_TABLES'))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY14",
+      "case": "record_error_preserves_trigger_error",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 172,
+      "expected_and_call": "case('PY14','record_error_preserves_trigger_error',lambda:run_analysis(fixture(),failtable('guard_binding.csv',lambda x:x.replace(b'stepbefore_stepafter',b'wrong')),'GUARD_BINDING_VALUE',True))",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    },
+    {
+      "group": "PY14",
+      "case": "overall_budget",
+      "engine": "Python",
+      "actual_source": "candidate_entry.py/trigger_consumer.py; original input_gate/timed_attest for PY11-13",
+      "source_line": 175,
+      "expected_and_call": "case('PY14','overall_budget',budget)",
+      "status": "PASS",
+      "evidence": "PYTHON_RESULT.json"
+    }
+  ],
+  "source_manifest_sha256": "0c14c4f886d53398fc4869db117577066b821837cd3593a6727e2ac4d0a63c45",
+  "approved": false,
+  "usable": false,
+  "actual_COMSOL_calls": 0,
+  "actual_input_sessions": 0,
+  "stub_compile_attempts": 1,
+  "stub_JVM_sessions": 1,
+  "PS51_sessions": 1,
+  "PS_harmless_python_exit_processes": 2,
+  "PS_nonexistent_executable_attempts": 1,
+  "previous_failure_preserved": true,
+  "java_subcase_evidence": "Sealed sequential assertions and group completion markers; no separate per-subcase Java stdout"
+}

@@ -1,0 +1,207 @@
+{
+  "status": "PROPOSED_NOT_AUTHORIZED_NOT_EXECUTED",
+  "candidate_manifest_sha256": "0994d919ed1317a1234dbc2ba4276d5a7342401bbaed1ffcd2e45a69b8a13bcf",
+  "purpose": "Only changed production branches; native COMSOL/input/Job calls replaced before source loading. No old full suite.",
+  "engine_sessions": [
+    {
+      "engine": "isolated CPython, same pinned python; retained source bytes",
+      "sessions": 1,
+      "seconds": 90,
+      "functions": [
+        "trigger_consumer.guard_evidence",
+        "native_stop",
+        "coverage",
+        "numeric",
+        "units_evidence",
+        "candidate_entry.permission",
+        "process_ok",
+        "execute",
+        "analyze"
+      ],
+      "cases": [
+        [
+          "PY01",
+          "Complete early-stop positive: real source consumer; independent CSV/log fixture, retained baseline identities; all five axes"
+        ],
+        [
+          "PY02",
+          "Initial/other/final guard invalid; exact1198 crossing mismatch; preserve trigger vs numeric states"
+        ],
+        [
+          "PY03",
+          "Wrong native stop reason/fatal/no producer completion; output after stop allowed, accepted step after stop denied"
+        ],
+        [
+          "PY04",
+          "CSV/native step count or rounded-time mismatch; no guessed language fallback"
+        ],
+        [
+          "PY05",
+          "Missing strict request target or baseline; record exact missing set"
+        ],
+        [
+          "PY06",
+          "Empty common / t0-only / request-prefix0-only reject"
+        ],
+        [
+          "PY07",
+          "Duplicate/reordered/nonfinite time; extra/missing columns; domain/coordinate or per-time count wrong"
+        ],
+        [
+          "PY08",
+          "Positive exact ties and near ties; wrong global min/units/boolean stages reject"
+        ],
+        [
+          "PY09",
+          "Positive numerical comparison and failing V/x/Li/identity/cap; do not promote trigger-only success"
+        ],
+        [
+          "PY10",
+          "Absent/false/wrong-manifest/empty-validation authorization; no OS/native adapter initialization"
+        ],
+        [
+          "PY11",
+          "Actual entry path with original C2 body + inert token/console/msvcrt/transport installed first; no fake gate PASS; fixed argv/cwd and source pins"
+        ],
+        [
+          "PY12",
+          "Compile rc/fatal stops batch, stale class/staged source refused; batch output failure retained"
+        ],
+        [
+          "PY13",
+          "Private/global policy change, source change, cleanup/record exception retain first and secondary errors; no policy edit/unknown-PID termination"
+        ],
+        [
+          "PY14",
+          "Analysis final budget/partial extraction/failed native status cannot yield limited acceptance; early init failure retained by parent"
+        ]
+      ]
+    },
+    {
+      "engine": "Java helper harness from exact final methods; no real COMSOL classes instantiated",
+      "compile_attempts": 1,
+      "compile_seconds": 90,
+      "jvm_sessions": 1,
+      "jvm_seconds": 60,
+      "functions": [
+        "checkShape",
+        "evaluatedUnits",
+        "units",
+        "evaluate",
+        "numericTable",
+        "electrolyteEvidence",
+        "interpSelection",
+        "interpReadback",
+        "run catch(Exception primary) block"
+      ],
+      "cases": [
+        [
+          "J01",
+          "Positive dynamic stored times and rectangular output; exact t equality"
+        ],
+        [
+          "J02",
+          "Empty/ragged/nonfinite/time mismatch; no fixed987 expectation"
+        ],
+        [
+          "J03",
+          "Configured/inferred/evaluated logical and domain units: allowed stages and wrong shape reject"
+        ],
+        [
+          "J04",
+          "Guard output9columns, no argmin; inferred/explicit mismatch and boolean errors reject"
+        ],
+        [
+          "J05",
+          "Interp1..n solnum, empty t, selection/domain/modes; wrong value rejects"
+        ],
+        [
+          "J06",
+          "Primary error plus report error uses actual catch block; primary identity retained"
+        ]
+      ],
+      "limits": "Compiler/JDK exact path and helper extraction harness must be sealed under later validation approval. This is not full candidate/native API compatibility validation."
+    },
+    {
+      "engine": "Windows PowerShell5.1 only, exact source BSave/BInvoke/GDecision extracted as text",
+      "sessions": 1,
+      "seconds": 60,
+      "cases": [
+        [
+          "PS01",
+          "Parent capture actual harmless exit0 then exit7 and start failure preserves null, no stale7; no original native executable"
+        ],
+        [
+          "PS02",
+          "Subsequent call does not overwrite earlier record"
+        ],
+        [
+          "PS03",
+          "Actual GDecision complete early-trigger result -> awaiting limited acceptance, overall remainsINCOMPLETE"
+        ],
+        [
+          "PS04",
+          "native rc1/null/newError even analysisrc0 -> INCOMPLETE"
+        ],
+        [
+          "PS05",
+          "analysisrc1/missing result/wrong identity/empty evidence -> INCOMPLETE"
+        ],
+        [
+          "PS06",
+          "elapsed NaN/negative/>600 or overall>3000 -> INCOMPLETE"
+        ]
+      ],
+      "limits": "No policy bypass, interactive input, COMSOL or actual Job test. If PS5.1 script invocation denied preserve refusal; no alternate shell."
+    }
+  ],
+  "logical_case_groups": 26,
+  "case_count_note": "14 Python +6 Java +6 PS logical groups; subcases enumerated/sealed before any later suite. Not production PASS counts.",
+  "overall_validation_budget_seconds_proposal": 1200,
+  "budget_breakdown": {
+    "harness_and_static": 480,
+    "python": 90,
+    "java_compile": 90,
+    "java_stub": 60,
+    "powershell": 60,
+    "preservation_pack": 300,
+    "incomplete": 120
+  },
+  "retry": false,
+  "first_failure": "preserve and stop, no extra probes or modified retry",
+  "old_38_64_67_389_suites": 0,
+  "COMSOL_solve_and_actual_input": 0,
+  "actual_code_pins": {
+    "src/Guard1198Candidate.java": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/src/Guard1198Candidate.java",
+      "bytes": 73405,
+      "sha256": "a742a3f6a19cc21c4c6b3be7ca9cf69eb35c68a70c52b38166971774c0ce1e95"
+    },
+    "src/trigger_consumer.py": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/src/trigger_consumer.py",
+      "bytes": 14233,
+      "sha256": "930ccf3c9647e09b995c2540657f60cd674b95edc879d8b6603a8d67f9aceefc"
+    },
+    "src/candidate_entry.py": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/src/candidate_entry.py",
+      "bytes": 12792,
+      "sha256": "47373e0c140a2699fa46e071a5dbe77a286cefa4d2984619bd06757ae72c25a4"
+    },
+    "PARENT_COMMAND.ps1": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/PARENT_COMMAND.ps1",
+      "bytes": 8309,
+      "sha256": "d0006d21696aba551c7d9781f2d822b7d021f28270fb3bc0ddd9cd853e7d8170"
+    },
+    "CONTRACT.json": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/CONTRACT.json",
+      "bytes": 29546,
+      "sha256": "1e3db5d3d4a5edeea04d82dcee333ba21a6e022e5f8d234e5afe5e19ae09d2e9"
+    }
+  },
+  "remaining_native_limits": [
+    "Real guard stop format/shape for this candidate unobserved",
+    "Full Java API compile/native integration untested",
+    "Private prefs permitted I/O and real policy unverified",
+    "Owned native cleanup effectiveness cannot be certified by inert harness"
+  ]
+}

@@ -1,0 +1,180 @@
+{
+    "elapsed_seconds":  0.7912901,
+    "results":  [
+                    {
+                        "group":  "PS01",
+                        "case":  "exit0",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS01",
+                        "case":  "exit7",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS01",
+                        "case":  "missing_clears_stale",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS02",
+                        "case":  "earlier_record_unchanged",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS03",
+                        "case":  "actual_producer_positive",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS03",
+                        "case":  "missing_trigger",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS03",
+                        "case":  "incomplete_trigger",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS03",
+                        "case":  "missing_sampled_comparison",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS03",
+                        "case":  "incomplete_sampled_comparison",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS03",
+                        "case":  "missing_preservation",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS03",
+                        "case":  "incomplete_preservation",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS03",
+                        "case":  "missing_process_cleanup",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS03",
+                        "case":  "incomplete_process_cleanup",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS03",
+                        "case":  "missing_policy_preservation",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS03",
+                        "case":  "incomplete_policy_preservation",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS04",
+                        "case":  "rc1",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS04",
+                        "case":  "null",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS04",
+                        "case":  "newError",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS05",
+                        "case":  "summary_only",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS05",
+                        "case":  "missing_pair",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS05",
+                        "case":  "empty_pair",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS05",
+                        "case":  "missing_native_stop",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS05",
+                        "case":  "empty_native_stop",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS05",
+                        "case":  "missing_numeric",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS05",
+                        "case":  "empty_numeric",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS05",
+                        "case":  "missing_tables_manifest",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS05",
+                        "case":  "empty_tables_manifest",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS05",
+                        "case":  "coverage_empty",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS05",
+                        "case":  "identity_wrong",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS05",
+                        "case":  "analysis_rc1",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS06",
+                        "case":  "analysis_time_NaN",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS06",
+                        "case":  "analysis_time_Infinity",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS06",
+                        "case":  "analysis_time_-1",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS06",
+                        "case":  "analysis_time_601",
+                        "status":  "PASS"
+                    },
+                    {
+                        "group":  "PS06",
+                        "case":  "overall3001",
+                        "status":  "PASS"
+                    }
+                ]
+}

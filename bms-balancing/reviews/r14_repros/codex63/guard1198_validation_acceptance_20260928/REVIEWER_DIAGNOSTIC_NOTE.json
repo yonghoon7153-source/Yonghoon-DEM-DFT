@@ -1,0 +1,8 @@
+{
+  "scope": "Reviewer archive reader, not subject validation",
+  "first_call": "7a6bc0",
+  "error": "Reader assumed identical history member layout; attempt03 lacks candidate/COMMAND_MAP.json and flattens candidate/src",
+  "correction": "Map observed history paths and distinguish absent copies; recheck existing extraction byte-for-byte before continuing",
+  "received_code_executed": false,
+  "received_files_modified": false
+}

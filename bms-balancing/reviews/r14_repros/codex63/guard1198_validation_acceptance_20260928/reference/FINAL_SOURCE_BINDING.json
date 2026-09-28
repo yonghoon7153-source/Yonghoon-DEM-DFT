@@ -1,0 +1,127 @@
+{
+  "pre_test_files_still_identical": true,
+  "files": [
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/CODE_MANIFEST.json",
+      "bytes": 1079,
+      "sha256": "0c14c4f886d53398fc4869db117577066b821837cd3593a6727e2ac4d0a63c45"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/src/Guard1198Candidate.java",
+      "bytes": 73405,
+      "sha256": "a742a3f6a19cc21c4c6b3be7ca9cf69eb35c68a70c52b38166971774c0ce1e95"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/src/trigger_consumer.py",
+      "bytes": 14551,
+      "sha256": "3036b4bb45331092595ffa809f07e485292332f11f867b3dcb546fb337ace307"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/src/candidate_entry.py",
+      "bytes": 13820,
+      "sha256": "28a299b726b9f3126ec026012cfbb43080d9c88cf93dc65e95c3c2d5ebe8ecda"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/PARENT_COMMAND.ps1",
+      "bytes": 12803,
+      "sha256": "43a7e402c4259538e7772070ab10b7a58f0c874fdd4bf6d0ba5e119bb676e9f1"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/CONTRACT.json",
+      "bytes": 29576,
+      "sha256": "e02f1759000348ee88c7c3bddc51d7a185d154ee0a0f8a30eba202caeec46848"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_validation_attempt_04_20260928/tests/GuardHarness.java",
+      "bytes": 10329,
+      "sha256": "a6efe1b1b2ef78c995ee90030d1de180b38cfaae690765b50ed03669d029b345"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_validation_attempt_04_20260928/tests/JAVA_SOURCE_BINDING.json",
+      "bytes": 2150,
+      "sha256": "43edf443ad60abe8ed141fa6bc6b2e8376d5db0536a033cd8c4842e6ba5523f6"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_validation_attempt_04_20260928/tests/prepare_java.py",
+      "bytes": 5484,
+      "sha256": "7b45c117cc116a20392f3ca9ed93c254883619dac29f3b6cf1a430efef7a5159"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_validation_attempt_04_20260928/tests/PYTHON_BODY_BINDING.json",
+      "bytes": 2059,
+      "sha256": "70df9cb177a5244ec3a496945322336ba4427077190f74b84020938fd441620d"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_validation_attempt_04_20260928/tests/run_parent.ps1",
+      "bytes": 6032,
+      "sha256": "5e26733447bb04f19187e5e8078e6a37adac454b4637d22903675a2cd632ac2f"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_validation_attempt_04_20260928/tests/run_python.py",
+      "bytes": 17527,
+      "sha256": "5cbe34b28b53a6034b5cf8e8d819aae21c1813fc4f1a53bd6bd83bd8f04d95b4"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_validation_attempt_04_20260928/CASE_MAP.json",
+      "bytes": 21341,
+      "sha256": "d1dcc06d19232a956746b7fe79ace66bf6cbf85c4fd15129a994bae86a65d039"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_validation_attempt_04_20260928/COMMANDS.json",
+      "bytes": 2117,
+      "sha256": "6ff99783c1543aa3892c57e2c96b867ded23f630a666764dc78aa1fbab322359"
+    },
+    {
+      "path": "C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      "bytes": 107312,
+      "sha256": "b7a12c3af0b4db44191eec14ea095eba731b7328917f570806183093d19ddca2"
+    },
+    {
+      "path": "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
+      "bytes": 495616,
+      "sha256": "8bb6fa8c283b4d92120b1ef249a9b311b0f804d4cabbe9981159976c8be76a5e"
+    },
+    {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/javac.exe",
+      "bytes": 20712,
+      "sha256": "c60a376855051d615b0c7cf2712573a19ed4e02b905c9d1a274ff990dac85659"
+    },
+    {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/java.exe",
+      "bytes": 46824,
+      "sha256": "e8228b02b882a4aa1a2333ede4a341b15e761cd897433d2661f2b96d7ad4952b"
+    },
+    {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/release",
+      "bytes": 826,
+      "sha256": "1380a472f48b6d7baf460e3eca51dbea816bcab70902d317f3b0993602418bfb"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/gate/c2_entry.py",
+      "bytes": 26769,
+      "sha256": "02c7c0e29d541eee336a081abec4cb8eef7c64ba32466b5cb305499bee8aa3d4"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/gate/C2_CONTRACT.json",
+      "bytes": 3851,
+      "sha256": "5376cf78dfc98a07fcd852943e482b43ee03b79d79fe99b0d39e9f2fe39bea1b"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/launcher.py",
+      "bytes": 27041,
+      "sha256": "32c9f3a68eee088069901a35a9a75d9ea8b7534b7ba32f5b726ee7863120d8fe"
+    }
+  ],
+  "PS_extracted_functions_match_parent": true,
+  "selected_original_files_preserved": 14,
+  "java_source": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/src/Guard1198Candidate.java",
+    "bytes": 73405,
+    "sha256": "a742a3f6a19cc21c4c6b3be7ca9cf69eb35c68a70c52b38166971774c0ce1e95"
+  },
+  "harness_diff": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_validation_attempt_04_20260928/HARNESS_DIFF.patch",
+    "bytes": 977,
+    "sha256": "9bf19cd167faf0543706f1ffe85df0d3f4a9f6e4efdddaf75be723ab4700bca5"
+  }
+}

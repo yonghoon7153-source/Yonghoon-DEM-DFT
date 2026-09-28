@@ -1,0 +1,190 @@
+1: """UNEXECUTED candidate: early-stop consumer. No COMSOL/import/process calls.
+2: Functions below require changed-branch validation before any native release.
+3: """
+4: from pathlib import Path
+5: from decimal import Decimal as D, localcontext
+6: import csv, json, re, base64, hashlib
+7: 
+8: class EvidenceError(ValueError): pass
+9: HEADERS={
+10:  'electrolyte_guard.csv':'time_s ce_min_all_mol_m3 ce_min_d1_mol_m3 ce_min_d2_mol_m3 ce_min_d3_mol_m3 threshold_mol_m3 electrolyte_guard ocp_guard surface_guard'.split(),
+11:  'preflight_global.csv':'time_s Li_N_mol_m2 Li_P_mol_m2 Li_electrolyte_mol_m2 xavg_N xavg_P xsurf_N_min xsurf_N_max xsurf_P_min xsurf_P_max ocp_guard reaction_N_A_m2 reaction_P_A_m2 leak_leftward_A_m2'.split(),
+12:  'guard_binding.csv':'electrolyte_expression stop_storage active terminate_on threshold_SI'.split()}
+13: for _n in ('preflight_boundary1.csv','preflight_boundary4.csv'):
+14:     HEADERS[_n]='time_s phis_V phil_V Eeq_V eta_V etamid_V x_surface x_particle_average cs_surface_mol_m3 reaction_input_mol_m3 csmax_mol_m3 direct_Eeq_surface_V Isx_A_m2'.split()
+15: for _n in ('axes_profile_N.csv','axes_profile_P.csv'):
+16:     HEADERS[_n]='time_s coordinate_m x_surface x_particle_average Eeq_V etaMid_V phil_V domain_id'.split()
+17: def need(ok, why):
+18:     if not ok: raise EvidenceError(why)
+19: def number(value):
+20:     try: x=D(value)
+21:     except Exception as e: raise EvidenceError('NUMBER') from e
+22:     need(x.is_finite(),'NONFINITE');return x
+23: def identity(p):
+24:     p=Path(p)
+25:     with p.open('rb') as f: h=hashlib.file_digest(f,'sha256').hexdigest()
+26:     return {'path':p.resolve().as_posix(),'bytes':p.stat().st_size,'sha256':h}
+27: def pinned(ref):
+28:     got=identity(ref['path']);need(got==ref,'SOURCE_IDENTITY');return Path(ref['path'])
+29: def rows(p):
+30:     with Path(p).open(encoding='utf-8-sig',newline='') as f:
+31:         reader=csv.DictReader(f);h=reader.fieldnames
+32:         need(h and len(h)==len(set(h)),'CSV_HEADER')
+33:         if Path(p).name in HEADERS:need(h==HEADERS[Path(p).name],'CSV_HEADER_CONTRACT')
+34:         if Path(p).name.startswith('units_'):need(h==['tag','phase','expected','actual'],'UNIT_HEADER')
+35:         for row in reader:
+36:             need(None not in row and all(v is not None for v in row.values()),'CSV_WIDTH')
+37:             yield row
+38: def timed(p):
+39:     result={};prior=None
+40:     for row in rows(p):
+41:         t=number(row['time_s']);need(prior is None or t>prior,'DUPLICATE_OR_UNORDERED_TIME')
+42:         values={k:number(v) for k,v in row.items()};result[t]=values;prior=t
+43:     need(result and next(iter(result))==0,'EMPTY_OR_TIME_ORIGIN');return result
+44: def extract_tables(console_path,dest):
+45:     dest=Path(dest);need(not dest.exists(),'TABLE_DEST_EXISTS');dest.mkdir()
+46:     found={}
+47:     with Path(console_path).open(encoding='utf-8-sig',errors='strict') as f:
+48:         for line in f:
+49:             if not line.startswith('AUDIT_TABLE_BASE64='):continue
+50:             name,data=line.rstrip('\r\n').split('=',1)[1].split('|',1)
+51:             need(re.fullmatch(r'[A-Za-z0-9_]+\.csv',name) is not None and name not in found,'TABLE_PATH_OR_DUPLICATE')
+52:             raw=base64.b64decode(data,validate=True);p=dest/name
+53:             with p.open('xb') as s:s.write(raw)
+54:             found[name]=identity(p)
+55:     need(found,'NO_TABLES');return found
+56: def guard_evidence(c,g):
+57:     ts=list(g);need(len(ts)>=3,'GUARD_TOO_FEW_STATES')
+58:     threshold=number(c['threshold_mol_m3']);limit=number(c['limits']['minimum_consistency_mol_m3'])
+59:     ties=[]
+60:     for t,v in g.items():
+61:         need(0<=t<=number(c['maximum_physical_s']),'GUARD_TIME_RANGE')
+62:         need(v['threshold_mol_m3']==threshold,'THRESHOLD')
+63:         vals=[v['ce_min_d%d_mol_m3'%d] for d in (1,2,3)];mn=min(vals)
+64:         need(abs(v['ce_min_all_mol_m3']-mn)<=limit,'MINIMUM_OPERATOR_INCONSISTENT')
+65:         need(v['electrolyte_guard'] in (0,1) and v['ocp_guard']==0 and v['surface_guard']==0,'OTHER_GUARD_OR_BOOLEAN')
+66:         need(v['electrolyte_guard']==D(int(v['ce_min_all_mol_m3']<=threshold)),'GUARD_VALUE')
+67:         eq=[i+1 for i,x in enumerate(vals) if x==mn]
+68:         near=[i+1 for i,x in enumerate(vals) if 0<x-mn<=number(c['limits']['near_tie_mol_m3'])]
+69:         ties.append({'time_s':str(t),'exact_minimum_domains':eq,'near_tie_domains':near})
+70:     need(g[ts[0]]['electrolyte_guard']==0,'INITIAL_GUARD')
+71:     need(all(g[t]['electrolyte_guard']==0 for t in ts[:-1]) and g[ts[-1]]['electrolyte_guard']==1,'SINGLE_FINAL_TRANSITION')
+72:     minus,plus=ts[-2:];need(minus>0 and minus<plus<=5,'STOP_PAIR')
+73:     need(g[minus]['ce_min_all_mol_m3']>threshold>=g[plus]['ce_min_all_mol_m3'],'STOP_MINIMUM_CROSSING')
+74:     for a,b in zip(ts,ts[1:]):
+75:         cap=D('.000125') if a<D('.1') else D('.1')
+76:         need(b-a<=cap+D('1e-12')+cap*D('1e-9'),'ACCEPTED_STEP_CAP')
+77:     return {'status':'CSV_TRIGGER_TRANSITION','t_minus':str(minus),'t_plus':str(plus),'stored_times_s':[str(x) for x in ts],'ties':ties}
+78: def rounded_contains(token,value):
+79:     x=number(token);half=D(1).scaleb(x.as_tuple().exponent)/2
+80:     return abs(x-value)<=half
+81: def native_stop(c,batch,console,pair):
+82:     fatal=r'/\*{3,}\s*Error\s*\*{3,}/|Error running java class\.|Security preference .*does not allow|OutOfMemoryError|Exception in thread'
+83:     need(not re.search(fatal,batch+'\n'+console,re.I),'NATIVE_FATAL')
+84:     pattern=r'Information: Stop condition fulfilled at t = ([0-9.eE+\-]+) \(([^\r\n]+)\)\.'
+85:     hits=list(re.finditer(pattern,batch));need(len(hits)==1,'NATIVE_STOP_COUNT')
+86:     hit=hits[0];need(hit.group(2)==c['stop_description'],'NATIVE_STOP_REASON')
+87:     plus=number(pair['t_plus']);need(rounded_contains(hit.group(1),plus),'NATIVE_STOP_TIME')
+88:     opening=list(re.finditer(r'^<---- Time-Dependent Solver.*$',batch,re.M))
+89:     closing=list(re.finditer(r'^----- Time-Dependent Solver.*-+>\s*$',batch,re.M))
+90:     need(len(opening)==len(closing)==1 and opening[0].start()<hit.start()<closing[0].start(),'SOLVER_SECTION')
+91:     step_re=r'^\s*(\d+)\s+([0-9.eE+\-]+)\s+([0-9.eE+\-]+)\s+out\s+'
+92:     step=list(re.finditer(step_re,batch[opening[0].end():closing[0].start()],re.M))
+93:     need(step and rounded_contains(step[-1].group(2),plus),'FINAL_NATIVE_STEP')
+94:     stored=[number(x) for x in pair['stored_times_s']]
+95:     need(len(step)==len(stored) and [int(x.group(1)) for x in step]==list(range(len(step))),'NATIVE_STORED_STEP_COUNT')
+96:     need(all(rounded_contains(s.group(2),t) for s,t in zip(step,stored)),'NATIVE_STORED_TIME_BINDING')
+97:     need(not re.search(step_re,batch[hit.end():],re.M),'INTEGRATION_AFTER_STOP')
+98:     need(console.count('GUARD1198_PRODUCER_COMPLETE')==1 and 'producer_failure.csv|' not in console,'PRODUCER_OUTPUT_FAILURE')
+99:     return {'status':'NATIVE_STOP_MATCHED','reported_time':hit.group(1),'rounding_note':'Raw native time rounded; exact pair from CSV.','after_stop_export_allowed':True}
+100: def binding_evidence(c,folder,console):
+101:     rr=list(rows(folder/'guard_binding.csv'));need(len(rr)==1,'GUARD_BINDING_MISSING')
+102:     r=rr[0]
+103:     need(r=={'electrolyte_expression':c['guard_expression'],'stop_storage':'stepbefore_stepafter','active':'on','terminate_on':'true','threshold_SI':'1198.0'},'GUARD_BINDING_VALUE')
+104:     for tag,selection in [('minguardall','[1, 2, 3]'),('minguard1','[1]'),('minguard2','[2]'),('minguard3','[3]')]:
+105:         expected='ELECTROLYTE_COUPLING='+tag+'|dimension=1|entities='+selection+'|points=lagrange|lagrange=5'
+106:         need(console.splitlines().count(expected)==1,'COUPLING_BINDING')
+107:     return 'PASS'
+108: def coverage(c,target,baseline,minus):
+109:     requested={number(x) for x in c['requested_times_s'] if number(x)<=minus}
+110:     actual={t for t in target if t<=minus};base=set(baseline)
+111:     common=sorted(actual&base)
+112:     missing_target=sorted(requested-actual);missing_base=sorted(requested-base)
+113:     info={'expected_requested':[str(x) for x in sorted(requested)],'common_stored':[str(x) for x in common],
+114:           'missing_target':[str(x) for x in missing_target],'missing_baseline':[str(x) for x in missing_base],
+115:           'target_noncommon':[str(x) for x in sorted(actual-base)],'common_count':len(common),
+116:           'common_first':str(common[0]) if common else None,'common_last':str(common[-1]) if common else None}
+117:     need(not missing_target and not missing_base,'STRICT_REQUEST_TIME_MISSING:'+json.dumps(info))
+118:     need(len(requested)>=2 and any(x>0 for x in requested),'INSUFFICIENT_REQUEST_PREFIX:'+json.dumps(info))
+119:     need(len(common)>=2 and common[0]==0 and common[-1]>0,'EMPTY_OR_ZERO_ONLY_COMMON:'+json.dumps(info))
+120:     return common,info
+121: def profile(p,expected_times,coordinates,domain,limit):
+122:     expected=[number(x) for x in coordinates];need(len(expected)==241,'COORDINATE_CONTRACT')
+123:     result={};last=None;idx=0
+124:     for raw in rows(p):
+125:         v={k:number(x) for k,x in raw.items()};t=v['time_s']
+126:         if t!=last:
+127:             if last is not None:need(idx==241,'PROFILE_COUNT')
+128:             need(last is None or t>last,'PROFILE_TIME_ORDER');need(t in expected_times,'PROFILE_UNEXPECTED_TIME')
+129:             result[t]=[];idx=0;last=t
+130:         need(idx<241 and abs(v['coordinate_m']-expected[idx])<=limit and v['domain_id']==domain,'PROFILE_COORD_DOMAIN')
+131:         lo,hi=(D(0),D('.98')) if domain==1 else (D('.2228930343076256'),D('.983245033354389'))
+132:         need(lo<=v['x_surface']<=hi and 0<v['x_surface']<1,'PROFILE_SURFACE_RANGE')
+133:         result[t].append(v['x_surface']);idx+=1
+134:     need(idx==241 and set(result)==set(expected_times),'PROFILE_MISSING_TIME_OR_COUNT');return result
+135: def units_evidence(folder):
+136:     configs={'eguard':['s']+['mol/m^3']*5+['1']*3,'nglobal':['s']+['mol/m^2']*3+['1']*7+['A/m^2']*3,
+137:              'point1':['s','V','V','V','V','V','1','1','mol/m^3','mol/m^3','mol/m^3','V','A/m^2'],
+138:              'point4':['s','V','V','V','V','V','1','1','mol/m^3','mol/m^3','mol/m^3','V','A/m^2'],
+139:              'MinLinece':['s','mol/m^3'],'MaxLinece':['s','mol/m^3'],'profiletimes':['s'],
+140:              'profileN':['s','m','1','1','V','V','V','1'],'profileP':['s','m','1','1','V','V','V','1']}
+141:     for tag,u in configs.items():
+142:         for phase in (['inferred','configured','evaluated'] if tag=='eguard' else ['configured','evaluated']):
+143:             expected=u.copy()
+144:             if phase!='configured':
+145:                 for i in ([6,7,8] if tag=='eguard' else [10] if tag=='nglobal' else [7] if tag in ('profileN','profileP') else []):expected[i]=''
+146:             rr=list(rows(folder/('units_'+tag+'_'+phase+'.csv')));need(len(rr)==1,'UNIT_ROW_COUNT')
+147:             r=rr[0];text='['+', '.join(expected)+']'
+148:             need(r=={'tag':tag,'phase':phase,'expected':text,'actual':text},'UNIT_STAGE')
+149:     return 'PASS'
+150: def numeric(c,folder,g,minus):
+151:     names=['preflight_global.csv','preflight_boundary1.csv','preflight_boundary4.csv']
+152:     data={n:timed(folder/n) for n in names};times=list(g)
+153:     need(all(list(x)==times for x in data.values()),'NUMERIC_TIME_SET')
+154:     base={n:timed(pinned(c['baseline_files'][n])) for n in names}
+155:     need(all(list(x)==list(base[names[0]]) for x in base.values()),'BASELINE_TIME_SET')
+156:     common,info=coverage(c,times,base[names[0]],minus)
+157:     glob,n,p=(data[n] for n in names);bn,bp=base[names[1]],base[names[2]]
+158:     L0=sum(glob[D(0)][k] for k in ('Li_N_mol_m2','Li_P_mol_m2','Li_electrolyte_mol_m2'));need(L0>0,'LI_INITIAL')
+159:     li=voltage=deltaV=dx=D(0)
+160:     for t in times:
+161:         v=glob[t];need(v['ocp_guard']==0,'GLOBAL_OCP_GUARD')
+162:         for lo,hi,col in [(D(0),D('.98'),'N'),(D('.2228930343076256'),D('.983245033354389'),'P')]:
+163:             need(lo<=v['xsurf_'+col+'_min']<=v['xsurf_'+col+'_max']<=hi and v['xsurf_'+col+'_min']>0 and v['xsurf_'+col+'_max']<1,'GLOBAL_SURFACE_RANGE')
+164:         Lt=sum(v[k] for k in ('Li_N_mol_m2','Li_P_mol_m2','Li_electrolyte_mol_m2'));li=max(li,abs((Lt-L0)/L0))
+165:         V=p[t]['phis_V']-n[t]['phis_V'];parts=sum(p[t][k]-n[t][k] for k in ('Eeq_V','etamid_V','phil_V'));voltage=max(voltage,abs(V-parts))
+166:         if t in common:deltaV=max(deltaV,abs(V-(bp[t]['phis_V']-bn[t]['phis_V'])))
+167:     need(li<=number(c['limits']['relative_Li']),'LI_DRIFT');need(voltage<=number(c['limits']['voltage_identity_V']),'VOLTAGE_IDENTITY')
+168:     for electrode,domain in [('N',1),('P',3)]:
+169:         name='axes_profile_'+electrode+'.csv'
+170:         cur=profile(folder/name,times,c['coordinates'][electrode],domain,number(c['limits']['coordinate_m']))
+171:         old=profile(pinned(c['baseline_files'][name]),base[names[0]],c['coordinates'][electrode],domain,number(c['limits']['coordinate_m']))
+172:         for t in common:dx=max(dx,max(abs(a-b) for a,b in zip(cur[t],old[t])))
+173:     need(deltaV<=number(c['limits']['voltage_V']) and dx<=number(c['limits']['surface_x']),'SAMPLE_TOLERANCE')
+174:     return {'status':'PASS','coverage':info,'maximum_voltage_delta_V':str(deltaV),'maximum_surface_delta':str(dx),'maximum_Li_relative_drift':str(li),'maximum_voltage_identity_V':str(voltage),'stop_times_not_interpolated':[str(t) for t in times[-2:] if t not in common]}
+175: def analyze(c,folder,batch,console,state):
+176:     result={'trigger':'INCOMPLETE','sampled_comparison':'INCOMPLETE','preservation':state.get('preservation','INCOMPLETE'),'process_cleanup':state.get('process_cleanup','INCOMPLETE'),'policy_preservation':state.get('policy_preservation','INCOMPLETE'),'errors':[],'overall':'INCOMPLETE','normal_gate':'INCOMPLETE','effective_policy':'UNVERIFIED','native_approved_by_this_result':False}
+177:     folder=Path(folder)
+178:     try:
+179:         binding_evidence(c,folder,console);g=timed(folder/'electrolyte_guard.csv');pair=guard_evidence(c,g)
+180:         result['pair']=pair;result['native_stop']=native_stop(c,batch,console,pair);result['trigger']='TEST_TRIGGER_DETECTED'
+181:     except Exception as e:result['errors'].append({'axis':'trigger','type':type(e).__name__,'error':str(e)});return result
+182:     try:
+183:         units_evidence(folder)
+184:         with localcontext() as ctx:
+185:             ctx.prec=50;result['numeric']=numeric(c,folder,g,number(pair['t_minus']))
+186:         result['sampled_comparison']='PASS'
+187:     except Exception as e:result['errors'].append({'axis':'numeric','type':type(e).__name__,'error':str(e)})
+188:     accepted=(not result['errors'] and state.get('status')=='NATIVE_RETURN_READY' and state.get('errors')==[] and result['sampled_comparison']=='PASS' and all(result[k]=='PASS' for k in ('preservation','process_cleanup','policy_preservation')))
+189:     result['limited_result']='TRIGGER_AND_SAMPLED_DATA_ACCEPTABLE' if accepted else 'INCOMPLETE'
+190:     return result

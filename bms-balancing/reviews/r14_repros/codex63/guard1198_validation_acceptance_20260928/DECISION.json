@@ -1,0 +1,19 @@
+{
+  "scope": "Independent read-only recipient review of fixed offline validation evidence",
+  "status": "LIMITED_OFFLINE_VALIDATION_ACCEPTED",
+  "input_zip_sha256": "6af5463ed0d395353de1a9935088c1d6f9503e476d0b5bc1fc9fb65ab80903d1",
+  "candidate_code_manifest_sha256": "0c14c4f886d53398fc4869db117577066b821837cd3593a6727e2ac4d0a63c45",
+  "closed_findings": ["G1198-N1", "G1198-N2"],
+  "new_blocking_P1_P2_findings": [],
+  "accepted_evidence": {"logical_groups": 26, "declared_subcases": 78, "python": 30, "java_stub": 13, "powershell": 35},
+  "nonblocking_observations": ["V-O1: normalized harness hash versus raw hash must be labeled separately", "V-O2: sender final delivery receipt/tool return absent from supplied ZIP"],
+  "subject_code_rerun_by_reviewer": false,
+  "native_policy_route_ready": false,
+  "native_1198_approved": false,
+  "run_30s_approved": false,
+  "long_run_approved": false,
+  "normal_gate": "INCOMPLETE",
+  "whole_convergence": "INCOMPLETE",
+  "next_recommended_task": "Read-only current policy/execution route assessment and fixed one-shot1198 approval draft; separate user approval required",
+  "delivery_boundary": "ZIP integrity verified; final sender packaging time/outer return not independently established"
+}

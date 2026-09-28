@@ -1,0 +1,183 @@
+--- original/src/trigger_consumer.py
++++ R1/src/trigger_consumer.py
+@@ -172,8 +172,12 @@
+         for t in common:dx=max(dx,max(abs(a-b) for a,b in zip(cur[t],old[t])))
+     need(deltaV<=number(c['limits']['voltage_V']) and dx<=number(c['limits']['surface_x']),'SAMPLE_TOLERANCE')
+     return {'status':'PASS','coverage':info,'maximum_voltage_delta_V':str(deltaV),'maximum_surface_delta':str(dx),'maximum_Li_relative_drift':str(li),'maximum_voltage_identity_V':str(voltage),'stop_times_not_interpolated':[str(t) for t in times[-2:] if t not in common]}
++def incomplete_result(state=None):
++    state=state or {}
++    return {'limited_result':'INCOMPLETE','trigger':'INCOMPLETE','sampled_comparison':'INCOMPLETE','preservation':state.get('preservation','INCOMPLETE'),'process_cleanup':state.get('process_cleanup','INCOMPLETE'),'policy_preservation':state.get('policy_preservation','INCOMPLETE'),'errors':[],'overall':'INCOMPLETE','normal_gate':'INCOMPLETE','effective_policy':'UNVERIFIED','native_approved_by_this_result':False}
++
+ def analyze(c,folder,batch,console,state):
+-    result={'trigger':'INCOMPLETE','sampled_comparison':'INCOMPLETE','preservation':state.get('preservation','INCOMPLETE'),'process_cleanup':state.get('process_cleanup','INCOMPLETE'),'policy_preservation':state.get('policy_preservation','INCOMPLETE'),'errors':[],'overall':'INCOMPLETE','normal_gate':'INCOMPLETE','effective_policy':'UNVERIFIED','native_approved_by_this_result':False}
++    result=incomplete_result(state)
+     folder=Path(folder)
+     try:
+         binding_evidence(c,folder,console);g=timed(folder/'electrolyte_guard.csv');pair=guard_evidence(c,g)
+--- original/src/candidate_entry.py
++++ R1/src/candidate_entry.py
+@@ -143,21 +143,34 @@
+         save(run/'NATIVE_STATE.json',state)
+     print(json.dumps({'status':state['status'],'record':ref(run/'NATIVE_STATE.json'),'actual_host_rc':'MUST_BE_OBSERVED_BY_PARENT'},ensure_ascii=False))
+     return 0 if state['status']=='NATIVE_RETURN_READY' else 1
++def incomplete_result(state=None):
++    state=state or {}
++    return {'limited_result':'INCOMPLETE','trigger':'INCOMPLETE','sampled_comparison':'INCOMPLETE','preservation':state.get('preservation','INCOMPLETE'),'process_cleanup':state.get('process_cleanup','INCOMPLETE'),'policy_preservation':state.get('policy_preservation','INCOMPLETE'),'errors':[],'overall':'INCOMPLETE','normal_gate':'INCOMPLETE','effective_policy':'UNVERIFIED','native_approved_by_this_result':False}
++
+ def analyze(c,expected):
+-    run=Path(c['run_root']);state=read(run/'NATIVE_STATE.json');need(state['run_id']==c['run_id'] and state['code_manifest_sha256']==expected,'STATE_IDENTITY')
+-    need(state['start']<=time.monotonic()<=state['start']+3000,'OVERALL_BUDGET')
+-    path=ROOT/'src/trigger_consumer.py'
+-    manifest=read(ROOT/'CODE_MANIFEST.json');pinned_entry=next(r for r in manifest['files'] if r['file']=='src/trigger_consumer.py')
+-    consumer=source_module('_guard1198_consumer',path,{'path':path.as_posix(),'bytes':pinned_entry['bytes'],'sha256':pinned_entry['sha256']})
+-    began=time.monotonic()
++    run=Path(c['run_root']);state={};result=incomplete_result();began=time.monotonic()
+     try:
++        state=read(run/'NATIVE_STATE.json');result=incomplete_result(state)
++        need(state['run_id']==c['run_id'] and state['code_manifest_sha256']==expected,'STATE_IDENTITY')
++        need(state['start']<=time.monotonic()<=state['start']+3000,'OVERALL_BUDGET')
++        path=ROOT/'src/trigger_consumer.py'
++        manifest=read(ROOT/'CODE_MANIFEST.json');pin=next(r for r in manifest['files'] if r['file']=='src/trigger_consumer.py')
++        consumer=source_module('_guard1198_consumer',path,{'path':path.as_posix(),'bytes':pin['bytes'],'sha256':pin['sha256']})
+         tables=consumer.extract_tables(run/'batch_console.log',run/'tables')
+         result=consumer.analyze(c,run/'tables',(run/'batch.log').read_text('utf-8-sig'),(run/'batch_console.log').read_text('utf-8-sig'),state)
+         result['tables_manifest']=tables
+-    except BaseException as e:result={'limited_result':'INCOMPLETE','overall':'INCOMPLETE','errors':[{'type':type(e).__name__,'error':str(e)}]}
++    except BaseException as e:
++        result['limited_result']='INCOMPLETE'
++        result['errors'].append({'axis':'analysis','type':type(e).__name__,'error':str(e)})
+     result['run_id']=c['run_id'];result['code_manifest_sha256']=expected;result['analysis_elapsed_seconds']=time.monotonic()-began
+-    if result['analysis_elapsed_seconds']>600 or time.monotonic()>state['start']+3000:result['limited_result']='INCOMPLETE';result['errors'].append({'error':'FINAL_BUDGET'})
+-    save(run/'TRIGGER_RESULT.json',result);print(json.dumps({'result':ref(run/'TRIGGER_RESULT.json'),'limited_result':result['limited_result'],'overall':'INCOMPLETE'}))
++    if result['analysis_elapsed_seconds']>600 or ('start' in state and time.monotonic()>state['start']+3000):
++        result['limited_result']='INCOMPLETE';result['errors'].append({'error':'FINAL_BUDGET'})
++    record=None
++    try:
++        save(run/'TRIGGER_RESULT.json',result);record=ref(run/'TRIGGER_RESULT.json')
++    except BaseException as e:
++        result['limited_result']='INCOMPLETE';result['errors'].append({'axis':'record','type':type(e).__name__,'error':str(e)})
++    print(json.dumps({'result':record,'analysis_result':result,'limited_result':result['limited_result'],'overall':'INCOMPLETE'},ensure_ascii=False))
+     return 0 if result['limited_result']=='TRIGGER_AND_SAMPLED_DATA_ACCEPTABLE' else 1
+ def main():
+     p=argparse.ArgumentParser();p.add_argument('action',choices=('execute','analyze'));p.add_argument('--approval',required=True);p.add_argument('--manifest-sha',required=True);a=p.parse_args()
+--- original/PARENT_COMMAND.ps1
++++ R1/PARENT_COMMAND.ps1
+@@ -2,7 +2,7 @@
+ param([Parameter(Mandatory=$true)][ValidatePattern('^[0-9a-f]{64}$')][string]$ManifestSha)
+ $ErrorActionPreference='Stop'
+ $bClock=[Diagnostics.Stopwatch]::StartNew()
+-$bRoot='C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928'
++$bRoot='C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928'
+ $bEvidence=Join-Path $bRoot 'future_parent_001'
+ $bPython='C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe'
+ $bOwned=$false
+@@ -47,6 +47,49 @@
+     }
+     if ($Analysis.elapsed_seconds -isnot [double] -or [double]::IsNaN($Analysis.elapsed_seconds) -or [double]::IsInfinity($Analysis.elapsed_seconds) -or $Analysis.elapsed_seconds -lt 0 -or $Analysis.elapsed_seconds -gt 600) { return 'INCOMPLETE' }
+     if ($null -eq $Result -or $null -eq $Result.errors -or $Result.run_id -cne $Expected.run_id -or $Result.code_manifest_sha256 -cne $Expected.manifest_sha256 -or $Result.limited_result -cne 'TRIGGER_AND_SAMPLED_DATA_ACCEPTABLE' -or $Result.overall -cne 'INCOMPLETE' -or @($Result.errors).Count -ne 0) { return 'INCOMPLETE' }
++    # Consume producer schema/states, not CSV numerical calculations.
++    function GHas($Object,[string]$Key) {
++        if ($null -eq $Object) { return $false }
++        if ($Object -is [System.Collections.IDictionary]) { return $Object.Contains($Key) }
++        return $null -ne $Object.PSObject.Properties[$Key]
++    }
++    function GStruct($Object) {
++        return ($null -ne $Object -and (($Object -is [System.Collections.IDictionary] -and $Object.Count -gt 0) -or ($Object -is [pscustomobject] -and @($Object.PSObject.Properties).Count -gt 0)))
++    }
++    foreach ($axis in @('sampled_comparison','preservation','process_cleanup','policy_preservation')) {
++        if ($Result.$axis -cne 'PASS') { return 'INCOMPLETE' }
++    }
++    if ($Result.trigger -cne 'TEST_TRIGGER_DETECTED' -or $Result.normal_gate -cne 'INCOMPLETE' -or $Result.effective_policy -cne 'UNVERIFIED' -or $Result.native_approved_by_this_result -isnot [bool] -or $Result.native_approved_by_this_result) { return 'INCOMPLETE' }
++    foreach ($key in @('pair','native_stop','numeric','tables_manifest')) {
++        if (-not (GStruct $Result.$key)) { return 'INCOMPLETE' }
++    }
++    $pair=$Result.pair;$numeric=$Result.numeric;$coverage=$numeric.coverage
++    if ($pair.status -cne 'CSV_TRIGGER_TRANSITION' -or $Result.native_stop.status -cne 'NATIVE_STOP_MATCHED' -or $numeric.status -cne 'PASS' -or -not (GStruct $coverage)) { return 'INCOMPLETE' }
++    if ($Result.native_stop.after_stop_export_allowed -isnot [bool] -or -not $Result.native_stop.after_stop_export_allowed -or [string]::IsNullOrWhiteSpace($Result.native_stop.reported_time)) { return 'INCOMPLETE' }
++    $minus=0.0;$plus=0.0
++    if (-not [double]::TryParse([string]$pair.t_minus,[Globalization.NumberStyles]::Float,[Globalization.CultureInfo]::InvariantCulture,[ref]$minus) -or -not [double]::TryParse([string]$pair.t_plus,[Globalization.NumberStyles]::Float,[Globalization.CultureInfo]::InvariantCulture,[ref]$plus) -or [double]::IsNaN($minus) -or [double]::IsNaN($plus) -or $minus -le 0 -or $plus -le $minus -or $plus -gt 5) { return 'INCOMPLETE' }
++    if ($pair.stored_times_s -isnot [array] -or @($pair.stored_times_s).Count -lt 3 -or $pair.ties -isnot [array] -or @($pair.ties).Count -ne @($pair.stored_times_s).Count) { return 'INCOMPLETE' }
++    foreach ($tie in $pair.ties) {
++        if (-not (GHas $tie 'time_s') -or $tie.exact_minimum_domains -isnot [array] -or @($tie.exact_minimum_domains).Count -lt 1 -or $tie.near_tie_domains -isnot [array]) { return 'INCOMPLETE' }
++    }
++    foreach ($key in @('expected_requested','common_stored','missing_target','missing_baseline','target_noncommon')) {
++        if (-not (GHas $coverage $key) -or $coverage.$key -isnot [array]) { return 'INCOMPLETE' }
++    }
++    if (@($coverage.expected_requested).Count -lt 2 -or @($coverage.common_stored).Count -lt 2 -or @($coverage.missing_target).Count -ne 0 -or @($coverage.missing_baseline).Count -ne 0 -or $coverage.common_count -isnot [int] -or $coverage.common_count -ne @($coverage.common_stored).Count -or $coverage.common_first -cne $coverage.common_stored[0] -or $coverage.common_last -cne $coverage.common_stored[-1]) { return 'INCOMPLETE' }
++    foreach ($key in @('maximum_voltage_delta_V','maximum_surface_delta','maximum_Li_relative_drift','maximum_voltage_identity_V')) {
++        $metric=0.0
++        if (-not (GHas $numeric $key) -or -not [double]::TryParse([string]$numeric.$key,[Globalization.NumberStyles]::Float,[Globalization.CultureInfo]::InvariantCulture,[ref]$metric) -or [double]::IsNaN($metric) -or [double]::IsInfinity($metric) -or $metric -lt 0) { return 'INCOMPLETE' }
++    }
++    $required=@('guard_binding.csv','electrolyte_guard.csv','preflight_global.csv','preflight_boundary1.csv','preflight_boundary4.csv','axes_profile_N.csv','axes_profile_P.csv')
++    foreach ($tag in @('eguard','nglobal','point1','point4','MinLinece','MaxLinece','profiletimes','profileN','profileP')) {
++        foreach ($phase in @('configured','evaluated')) { $required+=('units_'+$tag+'_'+$phase+'.csv') }
++    }
++    $required+='units_eguard_inferred.csv'
++    foreach ($name in $required) {
++        if (-not (GHas $Result.tables_manifest $name)) { return 'INCOMPLETE' }
++        $e=$Result.tables_manifest.$name
++        if (-not (GStruct $e) -or [string]::IsNullOrWhiteSpace($e.path) -or $e.bytes -isnot [int] -or $e.bytes -le 0 -or $e.sha256 -isnot [string] -or $e.sha256 -cnotmatch '^[0-9a-f]{64}$') { return 'INCOMPLETE' }
++    }
+     return 'AWAITING_LIMITED_EXTERNAL_ACCEPTANCE'
+ }
+ try {
+--- original/CONTRACT.json
++++ R1/CONTRACT.json
+@@ -4,12 +4,12 @@
+   "approved": false,
+   "usable": false,
+   "preparation_only": true,
+-  "root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928",
+-  "run_root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/future_run_001",
+-  "approval_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/future_authorizations/guard1198_001.json",
+-  "release_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/future_authorizations/VALIDATION_RELEASE.json",
++  "root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928",
++  "run_root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001",
++  "approval_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_authorizations/guard1198_001.json",
++  "release_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_authorizations/VALIDATION_RELEASE.json",
+   "candidate_java": {
+-    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/src/Guard1198Candidate.java",
++    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/src/Guard1198Candidate.java",
+     "bytes": 73405,
+     "sha256": "a742a3f6a19cc21c4c6b3be7ca9cf69eb35c68a70c52b38166971774c0ce1e95"
+   },
+@@ -874,29 +874,29 @@
+     "compile": [
+       "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolcompile.exe",
+       "-prefsdir",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/future_run_001/prefs",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/prefs",
+       "-configuration",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/future_run_001/config_compile",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/config_compile",
+       "-data",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/future_run_001/data_compile",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/future_run_001/Guard1198Candidate.java"
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/data_compile",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/Guard1198Candidate.java"
+     ],
+     "batch": [
+       "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolbatch.exe",
+       "-prefsdir",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/future_run_001/prefs",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/prefs",
+       "-configuration",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/future_run_001/config_batch",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/config_batch",
+       "-data",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/future_run_001/data_batch",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/data_batch",
+       "-np",
+       "16",
+       "-inputfile",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/future_run_001/Guard1198Candidate.class",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/Guard1198Candidate.class",
+       "-outputfile",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/future_run_001/result.mph",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/result.mph",
+       "-batchlog",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_offline_preparation_20260928/future_run_001/batch.log"
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/guard1198_limited_validation_R1_20260928/future_run_001/batch.log"
+     ]
+   },
+   "known_native_evidence_format": "COMSOL6.3 English Information: Stop condition fulfilled at t = ... (description). Other formats fail closed, no fallback parser.",

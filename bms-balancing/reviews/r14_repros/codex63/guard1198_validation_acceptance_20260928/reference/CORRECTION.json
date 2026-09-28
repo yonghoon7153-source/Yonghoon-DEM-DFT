@@ -1,0 +1,7 @@
+{
+  "scope": "Harness raw cwd expectation only; argv remains exact. Add raw argument evidence before assertion.",
+  "candidate_source_unchanged": true,
+  "before_harness_sha256": "10fa617d07884651eebf4933aa503d17275e4c94e840e6870ffce80a47ad1671",
+  "after_harness_sha256": "352ed9d4183b4d5629d3b74fa33c74f9788e62c5025d060b735f71231b911e35",
+  "previous_failure_not_overwritten": true
+}

@@ -1,0 +1,256 @@
+{
+  "candidate_manifest": {
+    "bytes": 980,
+    "sha256": "0994d919ed1317a1234dbc2ba4276d5a7342401bbaed1ffcd2e45a69b8a13bcf"
+  },
+  "code_files": 5,
+  "transform_operations": 11,
+  "inverse_original_bytes_equal": true,
+  "one_static_runAll_no_loadCopy_getPreference_argmin": true,
+  "basis_internal_matched": 20,
+  "basis_prior_matched": [
+    {
+      "file": "basis/00_ElectrolyteGuard300R320C16Trigger.java",
+      "matches": [
+        {
+          "archive": "guard",
+          "member": "outputs/comsol63/electrolyte_guard/ElectrolyteGuard300R320C16Trigger.java"
+        }
+      ]
+    },
+    {
+      "file": "basis/01_ElectrolyteGuard300R320C16Normal.java",
+      "matches": [
+        {
+          "archive": "guard",
+          "member": "outputs/comsol63/electrolyte_guard/ElectrolyteGuard300R320C16Normal.java"
+        }
+      ]
+    },
+    {
+      "file": "basis/02_StoredSolutionRecoveryA.java",
+      "matches": [
+        {
+          "archive": "B020",
+          "member": "workspace/outputs/b020_profile_unit_stages_20260927/src/StoredSolutionRecoveryA.java"
+        }
+      ]
+    },
+    {
+      "file": "basis/03_CODE_MANIFEST.json",
+      "matches": [
+        {
+          "archive": "B020",
+          "member": "workspace/outputs/b020_profile_unit_stages_20260927/src/CODE_MANIFEST.json"
+        }
+      ]
+    },
+    {
+      "file": "basis/04_contract.json",
+      "matches": [
+        {
+          "archive": "B020",
+          "member": "workspace/outputs/b020_profile_unit_stages_20260927/src/contract.json"
+        }
+      ]
+    },
+    {
+      "file": "basis/05_c2_entry.py",
+      "matches": [
+        {
+          "archive": "B020",
+          "member": "workspace/outputs/b020_profile_unit_stages_20260927/gate/c2_entry.py"
+        }
+      ]
+    },
+    {
+      "file": "basis/06_C2_CONTRACT.json",
+      "matches": [
+        {
+          "archive": "B020",
+          "member": "workspace/outputs/b020_profile_unit_stages_20260927/gate/C2_CONTRACT.json"
+        }
+      ]
+    },
+    {
+      "file": "basis/07_C2_CODE_MANIFEST.json",
+      "matches": [
+        {
+          "archive": "B020",
+          "member": "workspace/outputs/b020_profile_unit_stages_20260927/gate/C2_CODE_MANIFEST.json"
+        }
+      ]
+    },
+    {
+      "file": "basis/08_PARENT_COMMAND.ps1",
+      "matches": [
+        {
+          "archive": "B020",
+          "member": "workspace/outputs/b020_profile_unit_stages_20260927/annex/PARENT_COMMAND.ps1"
+        }
+      ]
+    },
+    {
+      "file": "basis/11_analyzer.py",
+      "matches": [
+        {
+          "archive": "B020",
+          "member": "workspace/outputs/b020_profile_unit_stages_20260927/src/analyzer.py"
+        }
+      ]
+    },
+    {
+      "file": "basis/12_class_artifacts.py",
+      "matches": [
+        {
+          "archive": "B020",
+          "member": "workspace/outputs/b020_profile_unit_stages_20260927/src/class_artifacts.py"
+        }
+      ]
+    },
+    {
+      "file": "basis/13_evidence_metrics.py",
+      "matches": [
+        {
+          "archive": "B020",
+          "member": "workspace/outputs/b020_profile_unit_stages_20260927/src/evidence_metrics.py"
+        }
+      ]
+    },
+    {
+      "file": "basis/14_execution_records.py",
+      "matches": [
+        {
+          "archive": "B020",
+          "member": "workspace/outputs/b020_profile_unit_stages_20260927/src/execution_records.py"
+        }
+      ]
+    },
+    {
+      "file": "basis/15_expected_solver.json",
+      "matches": [
+        {
+          "archive": "B020",
+          "member": "workspace/outputs/b020_profile_unit_stages_20260927/src/expected_solver.json"
+        }
+      ]
+    },
+    {
+      "file": "basis/16_launcher.py",
+      "matches": [
+        {
+          "archive": "B020",
+          "member": "workspace/outputs/b020_profile_unit_stages_20260927/src/launcher.py"
+        }
+      ]
+    },
+    {
+      "file": "basis/17_numerical_contract.py",
+      "matches": [
+        {
+          "archive": "B020",
+          "member": "workspace/outputs/b020_profile_unit_stages_20260927/src/numerical_contract.py"
+        }
+      ]
+    },
+    {
+      "file": "basis/18_policy_binding.py",
+      "matches": [
+        {
+          "archive": "B020",
+          "member": "workspace/outputs/b020_profile_unit_stages_20260927/src/policy_binding.py"
+        }
+      ]
+    },
+    {
+      "file": "basis/19_status_reader.py",
+      "matches": [
+        {
+          "archive": "B020",
+          "member": "workspace/outputs/b020_profile_unit_stages_20260927/src/status_reader.py"
+        }
+      ]
+    },
+    {
+      "file": "basis/20_winjob.py",
+      "matches": [
+        {
+          "archive": "B020",
+          "member": "workspace/outputs/b020_profile_unit_stages_20260927/src/winjob.py"
+        }
+      ]
+    },
+    {
+      "file": "basis/27_comparison_contract.json",
+      "matches": [
+        {
+          "archive": "guard",
+          "member": "outputs/electrolyte_guard/comparison_contract.json"
+        }
+      ]
+    }
+  ],
+  "basis_prior_unavailable": [],
+  "baseline_six_matches": [
+    {
+      "file": "electrolyte_guard.csv",
+      "identity": {
+        "bytes": 121274,
+        "sha256": "7d66d1e84c923d9350346a7b242a6533a6d946b27c6697ef8fc570a69e40dd6c"
+      },
+      "archive_member": "workspace/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/electrolyte_guard.csv"
+    },
+    {
+      "file": "preflight_global.csv",
+      "identity": {
+        "bytes": 281081,
+        "sha256": "9b5c2c1c2e5db846e1e0a3155c1ef0bdc1bb3b8e9f4978ece82efe52b89d52b2"
+      },
+      "archive_member": "workspace/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/preflight_global.csv"
+    },
+    {
+      "file": "preflight_boundary1.csv",
+      "identity": {
+        "bytes": 246248,
+        "sha256": "34d1d27d4c346faab34ae220adfe252bcac208786c58214f89988c7587a51ce4"
+      },
+      "archive_member": "workspace/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/preflight_boundary1.csv"
+    },
+    {
+      "file": "preflight_boundary4.csv",
+      "identity": {
+        "bytes": 255038,
+        "sha256": "4d5d3bd263abfca99acf5f2a83ebb11833c3f338b09f8ac5bdbaae9354ab4d30"
+      },
+      "archive_member": "workspace/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/preflight_boundary4.csv"
+    },
+    {
+      "file": "axes_profile_N.csv",
+      "identity": {
+        "bytes": 36588850,
+        "sha256": "a69d0a8dabfac8cc855e242590857210a254040d8abfbb8f64ca552acc96caf2"
+      },
+      "archive_member": "workspace/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/axes_profile_N.csv"
+    },
+    {
+      "file": "axes_profile_P.csv",
+      "identity": {
+        "bytes": 35440077,
+        "sha256": "5c24850c9c52fadd3dc3dc07c88bb95ee4f7746f5d159a041dcfe2656e0b1115"
+      },
+      "archive_member": "workspace/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/axes_profile_P.csv"
+    }
+  ],
+  "requested_times_direct_check": {
+    "baseline_times": 987,
+    "requested_times": 187,
+    "missing": []
+  },
+  "sender_selected_preservation_count": 29,
+  "sender_preservation_records_equal": true,
+  "native_stop_syntax_prior": [
+    "Information: Stop condition fulfilled at t = 0.00986 (OCP surface outside table)."
+  ],
+  "subject_import_or_execution": 0,
+  "resource_delivery_final_receipt": "not included in supplied ZIP; final sender delivery closure not independently established"
+}

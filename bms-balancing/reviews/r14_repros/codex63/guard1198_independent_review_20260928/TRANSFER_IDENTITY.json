@@ -1,0 +1,25 @@
+{
+  "received_zip": {
+    "name": "COMSOL63_GUARD1198_INDEPENDENT_REVIEW_20260928.zip",
+    "bytes": 82546,
+    "sha256": "19eb270c1738c74ecac40a49b196b74162705ea87067f644f7e6fa8f38fc0850"
+  },
+  "manifest": {
+    "name": "REVIEW_PACKAGE_MANIFEST.json",
+    "sha256": "7407d14e9bef6de58e3040c3fb3f71cced66bb7fad5a5796247ba957d414df85",
+    "scope": "Reviewer documents and selected inert evidence snapshots",
+    "subject_zip_sha256": "e8f544c01e3e8e8ba4ab27f294f1b8bb9124707ee0cfc38e2023a42f731279ec"
+  },
+  "payload": {
+    "declared": 23,
+    "matched": 23,
+    "mismatched": 0
+  },
+  "reference_code_copies_vs_CODE_MANIFEST": {
+    "code_manifest_sha256": "0994d919ed1317a1234dbc2ba4276d5a7342401bbaed1ffcd2e45a69b8a13bcf",
+    "matched": 5,
+    "declared": 5
+  },
+  "note": "bytes 그대로 보존 (unzip). 스크립트(audit_package.py · seal_review.py · static_data_audit.py)·reference/src 코드는 실행·import 하지 않았다. 검토 대상 준비본 ZIP(e8f544c0…, 236,582 B)과 REVIEW_DELIVERY_RECEIPT.json(ZIP 밖)은 이 저장소에 오지 않았다 — reference/ 는 그 준비본의 선택 사본 8 파일이다.",
+  "preserved_on": "2026-09-28"
+}

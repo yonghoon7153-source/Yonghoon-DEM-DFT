@@ -1,0 +1,7 @@
+{
+  "chunk_id": "be1a61",
+  "wall_time_seconds": 0.6148349,
+  "exit_code": 0,
+  "original_token_count": 81,
+  "output": "J01|PASS\r\nJ02|PASS\r\nJ03|PASS\r\nJ04|PASS\r\nJ05|PASS\r\njava.lang.IllegalStateException: PRIMARY\r\n\tat GuardHarness.main(GuardHarness.java:89)\r\n\tSuppressed: java.lang.IllegalStateException: REPORT_FAILURE\r\n\t\tat GuardHarness.table(GuardHarness.java:4)\r\n\t\tat GuardHarness.catchProbe(GuardHarness.java:79)\r\n\t\t... 1 more\r\nJ06|PASS\r\n"
+}

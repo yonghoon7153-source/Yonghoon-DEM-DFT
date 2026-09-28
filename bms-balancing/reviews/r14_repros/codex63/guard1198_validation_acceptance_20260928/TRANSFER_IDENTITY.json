@@ -1,0 +1,29 @@
+{
+  "received_zip": {
+    "name": "COMSOL63_GUARD1198_VALIDATION_ACCEPTANCE_REVIEW_20260928.zip",
+    "bytes": 96863,
+    "sha256": "d5170558d1b89df0ef1c43700c88982e38c426899e29a22d027d344bf0dacd25"
+  },
+  "manifest": {
+    "name": "REVIEW_PACKAGE_MANIFEST.json",
+    "sha256": "3534fa906ef9e22e8ba4dcaedb96f9583004bc2d52437c5b78cbbb29b575a3ba",
+    "scope": "Recipient review with selected inert evidence; subject execution not authorized",
+    "input_zip_sha256": "6af5463ed0d395353de1a9935088c1d6f9503e476d0b5bc1fc9fb65ab80903d1"
+  },
+  "payload": {
+    "declared": 33,
+    "matched": 33,
+    "mismatched": 0
+  },
+  "reference_candidate_vs_CODE_MANIFEST": {
+    "code_manifest_sha256": "0c14c4f886d53398fc4869db117577066b821837cd3593a6727e2ac4d0a63c45",
+    "status": "CORRECTED_CANDIDATE_NOT_VALIDATED",
+    "approved": false,
+    "usable": false,
+    "matched": 5,
+    "declared": 5
+  },
+  "java_candidate_sha256": "a742a3f6a19cc21c4c6b3be7ca9cf69eb35c68a70c52b38166971774c0ce1e95",
+  "note": "bytes 그대로 보존 (unzip). 스크립트(audit_evidence.py · audit_received.py · seal_review.py)·reference/ 의 후보·시험 코드(Java/Python/PowerShell)는 실행·import·컴파일하지 않았다. 검증 ZIP(6af5463e…, 1,304,867 B, 851 payload)·attempt03 ZIP·ZIP 밖 DELIVERY_RECEIPT 는 이 저장소에 오지 않았다 — reference/ 는 선택 사본이다.",
+  "preserved_on": "2026-09-28"
+}
