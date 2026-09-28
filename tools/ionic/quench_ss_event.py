@@ -35,8 +35,17 @@
   ⛔ 이 갈래는 **거리 컷 판정**이다 — 결합 차수를 안 본다. 그리고 첫 프레임이 이미 용융이면
   *"처음부터 자유"* 는 **담금질 시작 시점** 얘기지 조성 설계 얘기가 아니다 (그 구분을 `first_frame_segment` 로 같이 찍는다).
 
+--s_census — **48 S 전수 소속-이동 조사** (회신 CH 후속 · 2026-09-28)
+  `PS₄ 보존율` 은 P 의 **배위수**를 세고 그 넷이 **원래 그 P 의 S 인지는 안 본다** — seed5 실측에서
+  P50·P55 가 끝까지 4배위인 채 남의 S 를 하나씩 물고 있었고(S3 ← P0 · S8 ← P5), P30 은 4배위였던
+  구간에 원래 S 가 둘뿐이었다. 그래서 **정체**를 따로 센다: S 마다 프레임 0 의 주인 P 와 마지막
+  프레임의 주인 P, 주인이 바뀐 횟수·시각, P 별 '남의 S' 수.
+  ⛔ 못 하는 것: 거리 컷 판정이다 · 저장 간격 사이의 교환은 못 본다 · 다리 S(두 P 동시)는
+  주인 집합이 둘인 상태로 세고 별도 갈래로 만들지 않는다.
+
 사용
   python3 tools/ionic/quench_ss_event.py <run_dir> [--ss_cut 2.30] [--stride 1] [--table 50] [--out JSON] [--tools_dir DIR]
+  python3 tools/ionic/quench_ss_event.py <run_dir> --s_census                # 48 S 전수 소속-이동
   python3 tools/ionic/quench_ss_event.py <run_dir> --trace_S 54 59      # 특정 S 내력 (전역 원자 index)
   python3 tools/ionic/quench_ss_event.py --selftest
 """
@@ -141,6 +150,50 @@ def s_trace_stats(rows, trace):
             "note": "거리 컷 R_PS 기준 · 저장 간격 사이 사건은 못 봄 · '처음부터_자유' 는 첫 저장 프레임 기준(구간 라벨 병기)"}
 
 
+def census_frame(sym, pos, cell, mq):
+    """프레임 하나의 S → 주인 P 집합 (R_PS 컷). 다리 S 는 집합 크기가 2 이상으로 나온다."""
+    sym = np.asarray(sym); pos = np.asarray(pos, float); cell = np.asarray(cell, float)
+    iP = np.where(sym == "P")[0]; iS = np.where(sym == "S")[0]
+    if not len(iS):
+        return {}
+    if not len(iP):
+        return {int(s): () for s in iS}
+    D = mq.mic_dists(pos[iP], pos[iS], cell)            # (nP, nS)
+    return {int(iS[c]): tuple(int(iP[r]) for r in np.where(D[:, c] <= mq.R_PS)[0]) for c in range(len(iS))}
+
+
+def s_census_summary(hist, n_frames):
+    """hist[s] = [(frame, t_ps, T_set_K, segment, owners), ...] — 바뀐 프레임만 (첫 프레임 포함).
+    ⛔ '이동' 은 **첫 프레임 주인 집합 ≠ 마지막 프레임 주인 집합** 이다 (일시 이탈 후 복귀는 이동이 아니다).
+       일시 변화는 `n_changes` 로 따로 센다 — 둘을 섞지 않는다."""
+    if not hist:
+        return {"n_S": 0, "note": "S 가 없다"}
+    first = {s: v[0][4] for s, v in hist.items()}
+    last = {s: v[-1][4] for s, v in hist.items()}
+    movers, transient_only, free_end, foreign = [], [], [], {}
+    for s in sorted(hist):
+        f, l = first[s], last[s]
+        n_ch = len(hist[s]) - 1
+        if not l:
+            free_end.append(s)
+        if set(f) != set(l):
+            movers.append({"S": s, "from_P": list(f), "to_P": list(l), "n_changes": n_ch,
+                           "changes": [{"frame": c[0], "t_ps": c[1], "T_set_K": c[2], "segment": c[3], "owners": list(c[4])}
+                                       for c in hist[s][1:]]})
+        elif n_ch:
+            transient_only.append({"S": s, "P": list(f), "n_changes": n_ch})
+        for p in l:
+            if p not in f:
+                foreign.setdefault(str(p), []).append(s)
+    return {"n_S": len(hist), "n_frames_scanned": n_frames,
+            "n_moved": len(movers), "n_transient_only": len(transient_only),
+            "n_free_at_last_frame": len(free_end), "free_at_last_frame": free_end,
+            "moved": movers, "transient_only": transient_only,
+            "foreign_S_per_P_at_last_frame": {k: sorted(v) for k, v in sorted(foreign.items())},
+            "note": "'이동' = 첫 프레임 주인 ≠ 마지막 프레임 주인 · 일시 이탈 후 복귀는 transient_only · "
+                    "거리 컷 R_PS 기준 · 저장 간격 사이 교환은 못 봄 · 다리 S 는 주인 집합 크기 ≥ 2 로 나온다"}
+
+
 def frame_stats(sym, pos, cell, mq, ss_cut=SS_CUT):
     sym = np.asarray(sym); pos = np.asarray(pos, float); cell = np.asarray(cell, float)
     ind = mq.indicators(sym, pos, cell)
@@ -225,7 +278,7 @@ def p_coord_stats(rows):
             "note": "거리 컷 R_PS 기준 배위 · 저장 간격 사이 사건은 못 봄 · '회복' = 마지막 이탈 다음 저장 프레임"}
 
 
-def analyze(run_dir, mq, ss_cut=SS_CUT, stride=1, log=print, trace_S=None):
+def analyze(run_dir, mq, ss_cut=SS_CUT, stride=1, log=print, trace_S=None, census=False):
     from ase.io import iread
     run = pathlib.Path(run_dir)
     traj, thermo = run / "traj.xyz", run / "thermo.csv"
@@ -256,6 +309,7 @@ def analyze(run_dir, mq, ss_cut=SS_CUT, stride=1, log=print, trace_S=None):
     tmax = max(T_set) if T_set else None; tmin = min(T_set) if T_set else None
     rows = []
     onset = None; pair0 = None; switches = 0; last_pair = None
+    cen_hist, cen_prev, cen_n = {}, None, 0
     for k, at in enumerate(iread(str(traj), index=":", format="extxyz")):
         if k % stride:
             continue
@@ -263,6 +317,14 @@ def analyze(run_dir, mq, ss_cut=SS_CUT, stride=1, log=print, trace_S=None):
         st = frame_stats(sym, pos, cell, mq, ss_cut)
         if trace_S:
             st["S_trace"] = trace_frame(sym, pos, cell, mq, trace_S)
+        if census:
+            own = census_frame(sym, pos, cell, mq); cen_n += 1
+            for s, o in own.items():
+                if cen_prev is None or cen_prev.get(s) != o:
+                    cen_hist.setdefault(s, []).append((k, t_axis[k] if k < len(t_axis) else None,
+                                                       (T_set[k] if T_set and k < len(T_set) else None),
+                                                       _segment(T_set[k] if T_set and k < len(T_set) else None, tmax, tmin), o))
+            cen_prev = own
         d_pair0 = None
         if pair0 is not None:
             d_pair0 = float(mq.mic_dists(pos[[pair0[0]]], pos[[pair0[1]]], cell)[0, 0])
@@ -302,6 +364,8 @@ def analyze(run_dir, mq, ss_cut=SS_CUT, stride=1, log=print, trace_S=None):
     res["P_coord_stats"] = p_coord_stats(rows)
     if trace_S:
         res["S_trace_stats"] = s_trace_stats(rows, trace_S)
+    if census:
+        res["S_owner_census"] = s_census_summary(cen_hist, cen_n)
     res["summary"] = _summary(res)
     for ln in res["summary"]:
         log(ln)
@@ -478,6 +542,41 @@ def _selftest():
         st_none = s_trace_stats(rt2["rows"], [1])
         ck(st_none["per_S"]["1"]["verdict"] == "자료없음",
            "⛔음성: 프레임에 trace 기록이 없으면 '자료없음' — 갈래를 지어내지 않는다")
+    # ── --s_census (48 S 전수 소속-이동) ──
+    with tempfile.TemporaryDirectory() as td:
+        rc = analyze(_synthetic(td, event="detach"), mq, log=lambda *a: None, census=True)
+        c = rc["S_owner_census"]
+        ck(c["n_S"] == 5 and c["n_moved"] == 1 and c["n_transient_only"] == 0
+           and c["n_free_at_last_frame"] == 2 and c["free_at_last_frame"] == [1, 5],
+           f"census: S 5 개 중 이동 1 · 일시변화 0 · 마지막 자유 2 (S1 이탈 + 원래 자유 S5) — {c}")
+        m = c["moved"][0]
+        ck(m["S"] == 1 and m["from_P"] == [0] and m["to_P"] == [] and m["n_changes"] == 1
+           and m["changes"][0]["frame"] == 5 and m["changes"][0]["segment"] == "quench",
+           f"census: 이동 항목이 원래 주인·최종 주인·시각을 싣는다 — {m}")
+        ck(c["foreign_S_per_P_at_last_frame"] == {},
+           f"census: 남의 S 를 받은 P 없음 — {c['foreign_S_per_P_at_last_frame']}")
+    with tempfile.TemporaryDirectory() as td:
+        rc0 = analyze(_synthetic(td, event=False), mq, log=lambda *a: None, census=True)
+        c0 = rc0["S_owner_census"]
+        ck(c0["n_moved"] == 0 and c0["n_transient_only"] == 0 and c0["free_at_last_frame"] == [5],
+           f"⛔음성: 사건 없는 궤적 → 이동 0 · 일시변화 0 · 원래 자유 S 만 자유 — {c0}")
+        rc1 = analyze(_synthetic(td, event=False), mq, log=lambda *a: None)
+        ck("S_owner_census" not in rc1, "⛔음성: --s_census 없으면 census 를 만들지 않는다")
+    h_back = {1: [(0, 0.0, 1200.0, "melt_hold", (0,)), (3, 3.0, 900.0, "quench", ()), (5, 5.0, 300.0, "final_hold", (0,))]}
+    cb = s_census_summary(h_back, 6)
+    ck(cb["n_moved"] == 0 and cb["n_transient_only"] == 1 and cb["transient_only"][0] == {"S": 1, "P": [0], "n_changes": 2}
+       and cb["n_free_at_last_frame"] == 0,
+       f"⛔음성: 일시 이탈 후 **같은 P 로 복귀**는 이동이 아니다 (transient_only 로 센다) — {cb}")
+    h_move = {2: [(0, 0.0, 1200.0, "melt_hold", (0,)), (4, 4.0, 700.0, "quench", (7,))]}
+    cm = s_census_summary(h_move, 6)
+    ck(cm["n_moved"] == 1 and cm["moved"][0]["from_P"] == [0] and cm["moved"][0]["to_P"] == [7]
+       and cm["foreign_S_per_P_at_last_frame"] == {"7": [2]},
+       f"census: 주인이 바뀌면 이동 + 받은 P 의 '남의 S' 목록에 오른다 — {cm}")
+    h_bridge = {3: [(0, 0.0, 1200.0, "melt_hold", (0,)), (2, 2.0, 1000.0, "quench", (0, 7))]}
+    cbr = s_census_summary(h_bridge, 3)
+    ck(cbr["n_moved"] == 1 and cbr["foreign_S_per_P_at_last_frame"] == {"7": [3]} and cbr["moved"][0]["to_P"] == [0, 7],
+       f"census: 다리 S(주인 둘)는 주인 집합 크기 2 로 나오고 새 P 만 '남의 S' 로 센다 — {cbr}")
+    ck(s_census_summary({}, 0)["n_S"] == 0, "⛔음성: S 가 없으면 n_S 0 (지어내지 않는다)")
     print(f"{'✅' if not bad else '⛔'} quench_ss_event selftest {ok}/{ok + bad}")
     return 0 if not bad else 1
 
@@ -490,6 +589,8 @@ def main():
     ap.add_argument("--table", type=int, default=0, help="N 프레임마다 한 줄 표 (0 = 안 찍음)")
     ap.add_argument("--trace_S", type=int, nargs="+", metavar="IDX",
                     help="특정 S 원자(전역 index)의 내력 — 프레임별 P 이웃·이탈/재결합 (회신 CH · S54)")
+    ap.add_argument("--s_census", action="store_true",
+                    help="48 S 전수 소속-이동 조사 — PS₄ 보존율이 못 보는 '정체' 를 센다")
     ap.add_argument("--out")
     ap.add_argument("--tools_dir", help="melt_quench_uma.py 가 있는 폴더 (기본 = 이 파일 폴더)")
     ap.add_argument("--selftest", action="store_true")
@@ -499,7 +600,7 @@ def main():
     if not a.run_dir:
         ap.error("run_dir 이 필요하다")
     mq = _load_mq(a.tools_dir)
-    res = analyze(a.run_dir, mq, a.ss_cut, a.stride, trace_S=a.trace_S)
+    res = analyze(a.run_dir, mq, a.ss_cut, a.stride, trace_S=a.trace_S, census=a.s_census)
     if a.table:
         print(f"{'frame':>6s} {'t_ps':>8s} {'T_set':>7s} {'seg':>10s} {'PS4':>6s} {'ssmin':>6s} {'pair':>10s} {'kind':>9s} {'d_onset':>7s}")
         for r in res["rows"]:
