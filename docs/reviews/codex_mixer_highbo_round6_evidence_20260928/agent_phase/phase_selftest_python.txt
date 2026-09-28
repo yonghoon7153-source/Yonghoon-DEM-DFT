@@ -1,0 +1,109 @@
+  PASS  ① A: step 구조 그대로 (run 합 2,365,897 = 캠페인 2,365,897) · 회전 run 을 N1 1,502,200 에서 쪼개 write_restart 하나 · 삽입 · 원자 dump · 주기 restart 없음 · 템플릿 · 분포 남음 · mesh dump 간격 = 캠페인 원자 dump 간격
+  PASS  ② B = make_mixer_resume.transform (read_restart · RESUME_STEP · `run <끝> upto`) + 템플릿 재선언 · 운동 fix ID 가 A 와 같다
+  PASS  ③ N1 은 dump 격자 위 · 회전의 ~60% · 리셋 대안과 70.25° (면 39 개 대칭 제외 3.60° ≥ 2.0°)
+  PASS  ④ A 덱 · B 덱의 메시 운동 서명 = 캠페인 덱 (STL 내용 · scale · 축 · 주기 · 순서)
+  PASS  ④b ★ HBR4-02 — A 덱의 운동 **시계** (mover 생성 step · run 끝) = 캠페인 덱 (회전 run 을 N1 에서 쪼개도 시계는 같다)
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmp7u5htyc5\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmp7u5htyc5\phase/run.sh)
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmp7u5htyc5\r.json
+재개-위상 영수증 v2: 통과 — A 28 step · B 11 step · 예정각 오차 최대 6.12e-13° · 각 경계 1.15e-10° (등록 ε 0.05°) · 위치 경계 1.39e-14 m · A↔B 0 m · 리셋 간격 (면 대칭 제외) 2.338°
+  PASS  ⑤ 연속 · 완결 · 봉인 일치 → 통과 (A 28 step · B 11 step · 오차 6.1e-13° · 해상도 1.1e-10° · 리셋 간격 2.34°)
+  PASS  ⑥ 검사기가 이 영수증을 받는다 (주기 · dt · 축 · 운동 서명 · 운동 시계 · 발사 봉인 · 배너 · 판정 step ⊂ 실측 step · 목록) · 주기가 다른 덱에는 거부
+  PASS  ⑥b v2 필드 — 덤프 수 = 실측 step 수 · 위치 경계 유한 (1.3915163690092961e-14 m) · 운동 시계 · 회전 시작 = 덱
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpljxp99dr\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpljxp99dr\phase/run.sh)
+재개-위상 영수증 v2: 실패 — A 0 step · B 0 step · 예정각 오차 최대 0° · 각 경계 0° (등록 ε 0.05°) · 위치 경계 None · A↔B 0 m · 리셋 간격 (면 대칭 제외) 2.338°
+   ✗ A 덤프 누락 28 개 (step [500, 1000, 1500, 2000]…)
+   ✗ A 실행 결과 기록의 덤프 해시 목록이 실제 덤프 집합과 다르다 — 기록 0 개 · 실제 0 개 (빠짐 [] · 기대 밖 [] · HBR4-01)
+   ✗ A 의 회전 전 첫 덤프가 없다 — 원 기하 대조 불가
+  PASS  ⑦ 변이 — A 대조 덤프 0 개 (Codex receipt_missing_all_A) → 실패 (['A 덤프 누락 28 개 (step [500, 1000, 1500, 2000]…)'])
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpz_9ccrd_\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpz_9ccrd_\phase/run.sh)
+재개-위상 영수증 v2: 실패 — A 0 step · B 0 step · 예정각 오차 최대 0° · 각 경계 0° (등록 ε 0.05°) · 위치 경계 None · A↔B 0 m · 리셋 간격 (면 대칭 제외) 2.338°
+   ✗ A 덤프 누락 28 개 (step [500, 1000, 1500, 2000]…)
+   ✗ A 실행 결과 기록의 덤프 해시 목록이 실제 덤프 집합과 다르다 — 기록 0 개 · 실제 0 개 (빠짐 [] · 기대 밖 [] · HBR4-01)
+   ✗ B 덤프 누락 10 개 (step [9000, 9500, 10500, 11000]…)
+   ✗ A 의 회전 전 첫 덤프가 없다 — 원 기하 대조 불가
+  PASS  ⑦ 변이 — B 한 장 · A 0 개 → 실패 (['A 덤프 누락 28 개 (step [500, 1000, 1500, 2000]…)'])
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmp1ds9sgy5\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmp1ds9sgy5\phase/run.sh)
+재개-위상 영수증 v2: 실패 — A 1 step · B 1 step · 예정각 오차 최대 0° · 각 경계 1.15e-10° (등록 ε 0.05°) · 위치 경계 1.29e-14 m · A↔B 0 m · 리셋 간격 (면 대칭 제외) 2.338°
+   ✗ A 덤프 누락 27 개 (step [1000, 1500, 2000, 2500]…)
+   ✗ B 덤프 누락 11 개 (step [9000, 9500, 10000, 10500]…)
+   ✗ B 덤프 기대 밖 1 개 (step [500])
+  PASS  ⑦ 변이 — A · B 모두 회전 전 첫 덤프 한 장 (재개 전 정적 형상뿐 · Codex receipt_only_step0) → 실패 (['A 덤프 누락 27 개 (step [1000, 1500, 2000, 2500]…)'])
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpcu0lv9x7\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpcu0lv9x7\phase/run.sh)
+재개-위상 영수증 v2: 실패 — A 28 step · B 11 step · 예정각 오차 최대 6.12e-13° · 각 경계 1.15e-10° (등록 ε 0.05°) · 위치 경계 1.39e-14 m · A↔B 0 m · 리셋 간격 (면 대칭 제외) 2.338°
+   ✗ A 덤프 기대 밖 1 개 (step [7301])
+   ✗ A 실행 결과 기록의 덤프 해시 목록이 실제 덤프 집합과 다르다 — 기록 28 개 · 실제 29 개 (빠짐 ['mesh_7301.stl'] · 기대 밖 [] · HBR4-01)
+  PASS  ⑦ 변이 — 기대 밖 덤프 (step 7301) → 실패 (['A 덤프 기대 밖 1 개 (step [7301])'])
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmp44nox3zc\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmp44nox3zc\phase/run.sh)
+재개-위상 영수증 v2: 실패 — A 28 step · B 11 step · 예정각 오차 최대 6.12e-13° · 각 경계 1.15e-10° (등록 ε 0.05°) · 위치 경계 1.39e-14 m · A↔B 0.0144 m · 리셋 간격 (면 대칭 제외) 2.338°
+   ✗ B (재개) 메시 ≠ A — 꼭짓점 최대 차 0.0144 m
+  PASS  ⑦ 변이 — 재개 때 위상이 0 으로 (리셋) → 실패 (['B (재개) 메시 ≠ A — 꼭짓점 최대 차 0.0144 m'])
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmp97jk0ziz\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmp97jk0ziz\phase/run.sh)
+재개-위상 영수증 v2: 실패 — A 0 step · B 0 step · 예정각 오차 최대 0° · 각 경계 0° (등록 ε 0.05°) · 위치 경계 None · A↔B 0 m · 리셋 간격 (면 대칭 제외) —°
+   ✗ seal.json 없음 — 실행 직전 봉인이 없다 (run.sh 로 돌리지 않았다)
+  PASS  ⑦ 변이 — 봉인 없음 → 실패 (['seal.json 없음 — 실행 직전 봉인이 없다 (run.sh 로 돌리지 않았다)'])
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpnz2ovjrp\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpnz2ovjrp\phase/run.sh)
+재개-위상 영수증 v2: 실패 — A 28 step · B 11 step · 예정각 오차 최대 6.12e-13° · 각 경계 1.15e-10° (등록 ε 0.05°) · 위치 경계 1.39e-14 m · A↔B 0 m · 리셋 간격 (면 대칭 제외) 2.338°
+   ✗ B 실행이 정상 완료가 아니다 (exit 1 · 배너 False · 마지막 thermo step 14001 / 봉인 덱 끝 14001)
+  PASS  ⑦ 변이 — B exit 1 → 실패 (['B 실행이 정상 완료가 아니다 (exit 1 · 배너 False · 마지막 thermo step 14001 / 봉인 덱 끝 14001)'])
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpl24tenun\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpl24tenun\phase/run.sh)
+재개-위상 영수증 v2: 실패 — A 28 step · B 11 step · 예정각 오차 최대 6.12e-13° · 각 경계 1.15e-10° (등록 ε 0.05°) · 위치 경계 1.39e-14 m · A↔B 0 m · 리셋 간격 (면 대칭 제외) 2.338°
+   ✗ A 실행이 정상 완료가 아니다 (exit 0 · 배너 False · 마지막 thermo step 11501 / 봉인 덱 끝 14001)
+  PASS  ⑦ 변이 — A 가 끝 step 전에 끊김 (exit 0 · 배너 없음) → 실패 (['A 실행이 정상 완료가 아니다 (exit 0 · 배너 False · 마지막 thermo step 11501 / 봉인 덱 끝 14001)'])
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpmq9sdkyi\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpmq9sdkyi\phase/run.sh)
+재개-위상 영수증 v2: 실패 — A 28 step · B 11 step · 예정각 오차 최대 6.12e-13° · 각 경계 1.15e-10° (등록 ε 0.05°) · 위치 경계 1.39e-14 m · A↔B 0 m · 리셋 간격 (면 대칭 제외) 2.338°
+   ✗ B 로그가 실행 결과 기록 뒤 바뀌었다 (sha · 마지막 thermo step 이 기록과 다르다)
+  PASS  ⑦ 변이 — 실행 결과 기록 뒤 로그 수정 → 실패 (['B 로그가 실행 결과 기록 뒤 바뀌었다 (sha · 마지막 thermo step 이 기록과 다르다)'])
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpf7r96iqb\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpf7r96iqb\phase/run.sh)
+재개-위상 영수증 v2: 실패 — A 28 step · B 11 step · 예정각 오차 최대 6.12e-13° · 각 경계 1.15e-10° (등록 ε 0.05°) · 위치 경계 1.39e-14 m · A↔B 0 m · 리셋 간격 (면 대칭 제외) 2.338°
+   ✗ 봉인 뒤 바뀐 파일: B/in.phase_b
+  PASS  ⑦ 변이 — 봉인 뒤 덱 수정 → 실패 (['봉인 뒤 바뀐 파일: B/in.phase_b'])
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmp4idg_dsl\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmp4idg_dsl\phase/run.sh)
+재개-위상 영수증 v2: 실패 — A 28 step · B 11 step · 예정각 오차 최대 6.12e-13° · 각 경계 1.15e-10° (등록 ε 0.05°) · 위치 경계 1.39e-14 m · A↔B 0 m · 리셋 간격 (면 대칭 제외) 2.338°
+   ✗ B 덤프 mesh_9500.stl 가 실행 뒤 바뀌었거나 없다
+  PASS  ⑦ 변이 — 실행 뒤 덤프 수정 → 실패 (['B 덤프 mesh_9500.stl 가 실행 뒤 바뀌었거나 없다'])
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmp06tihw1p\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmp06tihw1p\phase/run.sh)
+재개-위상 영수증 v2: 실패 — A 0 step · B 0 step · 예정각 오차 최대 0° · 각 경계 1.15e-10° (등록 ε 0.05°) · 위치 경계 None · A↔B 0 m · 리셋 간격 (면 대칭 제외) 2.338°
+   ✗ A 첫 덤프가 원 STL (드럼 · 끝판) 과 꼭짓점 순서대로 맞지 않는다 (구성요소 · 순서)
+  PASS  ⑦ 변이 — 끝판 빠진 메시 (드럼 78 삼각형만) → 실패 (['A 첫 덤프가 원 STL (드럼 · 끝판) 과 꼭짓점 순서대로 맞지 않는다 (구성요소 · 순서)'])
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmp6jrhm5tf\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmp6jrhm5tf\phase/run.sh)
+재개-위상 영수증 v2: 실패 — A 28 step · B 11 step · 예정각 오차 최대 6.12e-13° · 각 경계 1.15e-10° (등록 ε 0.05°) · 위치 경계 1.39e-14 m · A↔B inf m · 리셋 간격 (면 대칭 제외) 2.338°
+   ✗ B step 9000: 삼각형 156 ≠ 156 또는 비유한 좌표
+   ✗ B step 9500: 삼각형 156 ≠ 156 또는 비유한 좌표
+   ✗ B step 10000: 삼각형 156 ≠ 156 또는 비유한 좌표
+   ✗ B step 10500: 삼각형 156 ≠ 156 또는 비유한 좌표
+   ✗ B step 11000: 삼각형 156 ≠ 156 또는 비유한 좌표
+   ✗ B step 11500: 삼각형 156 ≠ 156 또는 비유한 좌표
+   ✗ B step 12000: 삼각형 156 ≠ 156 또는 비유한 좌표
+   ✗ B step 12500: 삼각형 156 ≠ 156 또는 비유한 좌표
+  PASS  ⑦ 변이 — ⑩ HBR4-01 B 좌표 전부 NaN (max(0.0, NaN) = 0.0 으로 통과하던 것) → 실패 (['B step 9000: 삼각형 156 ≠ 156 또는 비유한 좌표'])
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpgj8sy8q2\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpgj8sy8q2\phase/run.sh)
+재개-위상 영수증 v2: 실패 — A 28 step · B 11 step · 예정각 오차 최대 6.12e-13° · 각 경계 1.15e-10° (등록 ε 0.05°) · 위치 경계 1.39e-14 m · A↔B 0 m · 리셋 간격 (면 대칭 제외) 2.338°
+   ✗ 봉인 파일 목록이 기대와 다르다 — 빠짐 ['A/Back.stl', 'A/Drum.stl', 'A/Front.stl', 'A/in.phase_a'] · 기대 밖 [] (빈 · 부분 목록 거부 · HBR4-01)
+  PASS  ⑦ 변이 — ⑪ HBR4-01 봉인 목록이 빈 객체 → 실패 (["봉인 파일 목록이 기대와 다르다 — 빠짐 ['A/Back.stl', 'A/Drum.stl', 'A/Front.stl', 'A/in.phase_a'] · 기대 밖 [] (빈 · 부분 목록 거부 · HBR4-01)"])
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpc6_ftg1x\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpc6_ftg1x\phase/run.sh)
+재개-위상 영수증 v2: 실패 — A 28 step · B 11 step · 예정각 오차 최대 6.12e-13° · 각 경계 1.15e-10° (등록 ε 0.05°) · 위치 경계 1.39e-14 m · A↔B 0 m · 리셋 간격 (면 대칭 제외) 2.338°
+   ✗ A 실행 결과 기록의 덤프 해시 목록이 실제 덤프 집합과 다르다 — 기록 0 개 · 실제 28 개 (빠짐 ['mesh_1000.stl', 'mesh_10000.stl', 'mesh_10500.stl'] · 기대 밖 [] · HBR4-01)
+   ✗ B 실행 결과 기록의 덤프 해시 목록이 실제 덤프 집합과 다르다 — 기록 0 개 · 실제 11 개 (빠짐 ['mesh_10000.stl', 'mesh_10500.stl', 'mesh_11000.stl'] · 기대 밖 [] · HBR4-01)
+  PASS  ⑦ 변이 — ⑫ HBR4-01 실행 결과 기록의 덤프 해시 목록이 빈 객체 → 실패 (["A 실행 결과 기록의 덤프 해시 목록이 실제 덤프 집합과 다르다 — 기록 0 개 · 실제 28 개 (빠짐 ['mesh_1000.stl', 'mesh_10000.stl', 'mesh_10500.stl'] · 기대 밖 [] · HBR4-01)"])
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpu3zgshz8\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpu3zgshz8\phase/run.sh)
+재개-위상 영수증 v2: 실패 — A 19 step · B 2 step · 예정각 오차 최대 6.12e-13° · 각 경계 1.15e-10° (등록 ε 0.05°) · 위치 경계 1.39e-14 m · A↔B 0 m · 리셋 간격 (면 대칭 제외) 2.338°
+   ✗ gen.json (봉인 밖) 의 끝 · N1 · 간격 (9500, 9000, 500) ≠ 봉인 덱 (14001, 9000, 500) — 짧게 바꾼 기준으로 완주를 판정하지 않는다 (HBR5-05 · gen_end_truncated)
+   ✗ A 실행이 정상 완료가 아니다 (exit 0 · 배너 False · 마지막 thermo step 9500 / 봉인 덱 끝 14001)
+   ✗ B 실행이 정상 완료가 아니다 (exit 0 · 배너 False · 마지막 thermo step 9500 / 봉인 덱 끝 14001)
+   ✗ A 덤프 누락 9 개 (step [10000, 10500, 11000, 11500]…)
+   ✗ B 덤프 누락 9 개 (step [10000, 10500, 11000, 11500]…)
+  PASS  ⑦ 변이 — ⑮ HBR5-05 gen.json 끝만 짧게 (봉인 덱 끝 14,001 · gen 9,500 · N1 9,000 · 그에 맞춘 짧은 덤프 · 로그) → 실패 (['gen.json (봉인 밖) 의 끝 · N1 · 간격 (9500, 9000, 500) ≠ 봉인 덱 (14001, 9000, 500) — 짧게 바꾼 기준으로 완주를 판정하지 않는다 (HBR5-05 · gen_end_truncated)'])
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpbfsbtcp5\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpbfsbtcp5\phase/run.sh)
+재개-위상 영수증 v2: 실패 — A 28 step · B 11 step · 예정각 오차 최대 6.12e-13° · 각 경계 1.15e-10° (등록 ε 0.05°) · 위치 경계 1.39e-14 m · A↔B 0 m · 리셋 간격 (면 대칭 제외) 2.338°
+   ✗ B 로그의 RESUME_STEP [9500] ≠ 봉인 A 덱의 write_restart step 9000 — B 가 이 영수증의 체크포인트에서 재개됐다는 실행 증거가 없다 (HBR5-05)
+  PASS  ⑦ 변이 — ⑮b HBR5-05 B 로그의 RESUME_STEP ≠ 봉인 A 덱의 write_restart step (다른 체크포인트에서 재개) → 실패 (['B 로그의 RESUME_STEP [9500] ≠ 봉인 A 덱의 write_restart step 9000 — B 가 이 영수증의 체크포인트에서 재개됐다는 실행 증거가 없다 (HBR5-05)'])
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmp10opkfvj\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmp10opkfvj\phase/run.sh)
+재개-위상 영수증 v2: 통과 — A 28 step · B 11 step · 예정각 오차 최대 6.12e-13° · 각 경계 1.15e-10° (등록 ε 0.05°) · 위치 경계 1.39e-07 m · A↔B 0 m · 리셋 간격 (면 대칭 제외) 2.338°
+  PASS  ⑬ ★ HBR4-03 — +80 nm 평행이동은 허용 안이라 통과하되 (잔차 8.00e-08 m) 위치 경계 1.39e-07 m ≥ √3·잔차 로 남긴다 (소비자가 부호거리에 더한다)
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmp457rbxnm\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmp457rbxnm\phase/run.sh)
+재개-위상 영수증 v2: 통과 — A 28 step · B 11 step · 예정각 오차 최대 6.12e-13° · 각 경계 1.15e-10° (등록 ε 0.05°) · 위치 경계 1.39e-14 m · A↔B 0 m · 리셋 간격 (면 대칭 제외) 2.338°
+  PASS  ⑧ 배너를 찍는 빌드의 로그도 통과 (banner)
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpy5pmsk_s\phase/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpy5pmsk_s\phase/run.sh)
+재개-위상 영수증 v2: 통과 — A 28 step · B 11 step · 예정각 오차 최대 6.12e-13° · 각 경계 1.15e-10° (등록 ε 0.05°) · 위치 경계 1.39e-14 m · A↔B 0 m · 리셋 간격 (면 대칭 제외) 2.338°
+  PASS  ⑨ 옛 run.sh 기록 (완료 표지 False · 로그 sha 없음) + 배너 없는 완주 로그 → 통과 (09-28 WSL 실행을 재실행 없이 판정 · [])
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpaitiuqf7\phase_mpi/A/in.phase_a · B/in.phase_b · run.sh · gen.json   (N1 9,000 · 회전 12,000 step · 리셋 대안과 150.030° (면 대칭 제외 2.338°) · 다음: bash C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\mixer_highbo_round6_evidence_20260928\agent_phase\tmpaitiuqf7\phase_mpi/run.sh)

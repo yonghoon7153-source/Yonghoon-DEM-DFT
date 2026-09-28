@@ -1,0 +1,28 @@
+{
+  "pin": "18787ab98a13361c37b2343bd07ae276142d0953",
+  "dem_executed": false,
+  "mpi_executed": false,
+  "scheduler_actions": false,
+  "real_LH_LC_frames_read": false,
+  "source_blobs": {
+    "matched": 23,
+    "total": 23
+  },
+  "python_selftests": {
+    "check_contact_validity": "83/83",
+    "measure_mixing_index": "34/34; real-deck case skipped",
+    "mixer_deck_diff": "24/24",
+    "make_mixer_deck": "89/89",
+    "mixer_restart_phase_test": "28 Python PASS; 2 Bash cases NOT EXECUTED"
+  },
+  "bash_syntax": {
+    "launch_highbo": 0,
+    "test_launcher": 0
+  },
+  "not_run": [
+    "test_launcher 98 complete suite",
+    "phase 30 complete suite",
+    "check_all",
+    "real rank-matched empty mesh A/B"
+  ]
+}

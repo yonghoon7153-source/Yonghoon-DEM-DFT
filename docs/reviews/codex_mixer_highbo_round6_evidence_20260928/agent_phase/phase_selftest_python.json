@@ -1,0 +1,9 @@
+{
+  "executed_pass": 28,
+  "executed_fail": 0,
+  "unexecuted": [
+    "14 LMP_LAUNCH Bash fixture",
+    "14b plain Bash fixture"
+  ],
+  "stop": "Stopped before Bash/fake-launcher fixtures; no simulator or MPI executed"
+}

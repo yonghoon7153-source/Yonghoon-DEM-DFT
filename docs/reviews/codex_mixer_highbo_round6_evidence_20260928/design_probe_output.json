@@ -1,0 +1,138 @@
+{
+  "scope": "Actual generator in memory; synthetic algebra, not campaign measurements",
+  "decks": {
+    "LC": {
+      "in_memory_deck_sha256": "94518e3a32b633dfec65f3ddd82c689175c72136f22bc83afe1ec3fe72f1fc59",
+      "CED_line": 54,
+      "first_run_line": 115,
+      "second_phase_insertion_line": 130,
+      "settled_checkpoint_line": 137,
+      "rotation_start_line": 140,
+      "CED_precedes_first_run": true,
+      "order_insert_then_checkpoint_then_rotation": true,
+      "runs": [
+        [
+          115,
+          "run 1"
+        ],
+        [
+          124,
+          "run 192668"
+        ],
+        [
+          133,
+          "run 192668"
+        ],
+        [
+          143,
+          "run 9066757"
+        ]
+      ],
+      "CED_matrix_J_m3": [
+        [
+          108795.27503689674,
+          108795.27503689674,
+          10458.232423831554,
+          59063.16223248812
+        ],
+        [
+          108795.27503689674,
+          142562.1403917686,
+          10458.232423831554,
+          77394.6370677786
+        ],
+        [
+          10458.232423831554,
+          10458.232423831554,
+          10458.232423831554,
+          5677.602065938484
+        ],
+        [
+          59063.16223248812,
+          77394.6370677786,
+          5677.602065938484,
+          0.0
+        ]
+      ]
+    },
+    "LH": {
+      "in_memory_deck_sha256": "6d71bd50c00797b611e1230efa8d667f9b7c5cbf2918fe9853f7384eadfabb9f",
+      "CED_line": 54,
+      "first_run_line": 115,
+      "second_phase_insertion_line": 130,
+      "settled_checkpoint_line": 137,
+      "rotation_start_line": 140,
+      "CED_precedes_first_run": true,
+      "order_insert_then_checkpoint_then_rotation": true,
+      "runs": [
+        [
+          115,
+          "run 1"
+        ],
+        [
+          124,
+          "run 192668"
+        ],
+        [
+          133,
+          "run 192668"
+        ],
+        [
+          143,
+          "run 9066757"
+        ]
+      ],
+      "CED_matrix_J_m3": [
+        [
+          3563475.4009469086,
+          2719440.6963015813,
+          10458.232423831554,
+          1934552.0809265776
+        ],
+        [
+          2719440.6963015813,
+          2719440.6963015813,
+          10458.232423831554,
+          1476339.5466652263
+        ],
+        [
+          10458.232423831554,
+          10458.232423831554,
+          10458.232423831554,
+          5677.602065938484
+        ],
+        [
+          1934552.0809265776,
+          1476339.5466652263,
+          5677.602065938484,
+          0.0
+        ]
+      ]
+    }
+  },
+  "per_arm_budget_counterexample": {
+    "LC_error": 0.020000000000000018,
+    "LH_error": -0.020000000000000018,
+    "contrast_error": 0.040000000000000036
+  },
+  "shared_E0_does_not_cancel": [
+    {
+      "S0_sq": 0.2,
+      "S_LC_sq": 0.04,
+      "S_LH_sq": 0.06,
+      "SR_sq": 0.01,
+      "M_LC": 0.8421052631578947,
+      "M_LH": 0.736842105263158,
+      "difference": 0.10526315789473673
+    },
+    {
+      "S0_sq": 0.2,
+      "S_LC_sq": 0.04,
+      "S_LH_sq": 0.06,
+      "SR_sq": 0.03,
+      "M_LC": 0.9411764705882353,
+      "M_LH": 0.823529411764706,
+      "difference": 0.11764705882352933
+    }
+  ]
+}

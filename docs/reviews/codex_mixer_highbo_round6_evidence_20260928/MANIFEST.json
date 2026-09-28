@@ -1,0 +1,262 @@
+{
+  "schema": "review_evidence/v1",
+  "pin": "18787ab98a13361c37b2343bd07ae276142d0953",
+  "scope": "Review only. Synthetic Python probes, no DEM/MPI/scheduler or real LH/LC frame reads.",
+  "files": [
+    {
+      "path": "docs/reviews/codex_review_mixer_highbo_round6_20260928.md",
+      "bytes": 33262,
+      "sha256": "a00a0111e7ff9c390f1625e0e366624def343ffc2b10299dffab69901412ff1b"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/agent_launch/launch_review.md",
+      "bytes": 8509,
+      "sha256": "7be83d4933ef85af60abba1b71de6cf9d5693b528b58af7307dace033121d6ee"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/agent_launch/probe_launch.py",
+      "bytes": 8065,
+      "sha256": "7a6fb3ff6f360a04545284bf67264678df505661ab90031594b6bc0971ec32c6"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/agent_launch/probe_launch_output.json",
+      "bytes": 36620,
+      "sha256": "0ac5926c4d5cad62717b0656c603f1482ccbf986d5a9db035c05afe25667b269"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/agent_phase/capture_selftest.py",
+      "bytes": 1766,
+      "sha256": "7184eb8c8ca1f6415c1204a1862ebf399430af752ca75c631a0f6aed6d3af0eb"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/agent_phase/phase_probe.py",
+      "bytes": 8857,
+      "sha256": "09685d0709e926a7b8606109a90f9b9e4620ac69018baf99c33d550c02e0ebed"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/agent_phase/phase_probe_output.json",
+      "bytes": 8439,
+      "sha256": "f556b07c263cbafcdefa7e6897a2031e5c666036c712f7f42a9d2510dada30e3"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/agent_phase/phase_review.md",
+      "bytes": 11561,
+      "sha256": "9e58773bffccedc186005d8539563e59d3c916d9c059b514ffc9e8bb6af8795d"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/agent_phase/phase_selftest_python.json",
+      "bytes": 227,
+      "sha256": "e43b62b74a07d297c2b039ef66fd50586d72c3e9cd86e089cbe28e4e08d0f522"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/agent_phase/phase_selftest_python.txt",
+      "bytes": 24024,
+      "sha256": "aecd22b16ab7884f5abf78fbae7f22c448fe6dd6f93864a2b928f5eb70441702"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/agent_science/q3_scientific_review.md",
+      "bytes": 14587,
+      "sha256": "809a2cc6d4934738e3d66b8406713a55a13e6d07a8e9b8c883a64ede353fb580"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/agent_science/stiffness_probe.py",
+      "bytes": 4557,
+      "sha256": "485de545d5718e4141ead74fd53390bfed9113f6357764e9bfcfcb73ed8f6d98"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/agent_science/stiffness_probe_output.json",
+      "bytes": 23688,
+      "sha256": "e159acb73eeab62000e9797a77326b120a76edd15e14e5464490daa3f4e9bc29"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/AGENTS.md",
+      "bytes": 2822,
+      "sha256": "38b8708ba8a50c8a08819c7c4138763bce02b6dc6c5b8112f4c8aa386fb17ec3"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/compare_metadata.json",
+      "bytes": 8222,
+      "sha256": "84117688e7ed03c84bdced21ec1b50999b7cbe7b3f1ec66fcc8de717e36c5217"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/dem_scripts/mixer_20260919/Back.stl",
+      "bytes": 10790,
+      "sha256": "2e7b962d14ced968d8178456feaf2f6a4856edd4b151070c23a8ac1588a461e5"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/dem_scripts/mixer_20260919/Drum.stl",
+      "bytes": 14310,
+      "sha256": "fe821a8ab6db0d94151e9d84bf19cc1fad77abb417cd640bf4577c2f87279730"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/dem_scripts/mixer_20260919/Front.stl",
+      "bytes": 5990,
+      "sha256": "443f9c3c859b2562dc041cde2af712fdfc4ab0225032ebb9420267c781843c81"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/dem_scripts/mixer_20260921/gen_all.sh",
+      "bytes": 4602,
+      "sha256": "42d265c9dc8e8adb7900779f15226a9f1673e908f79e7d7776329d6c37a57dbc"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/dem_scripts/mixer_20260921/launch_highbo.sh",
+      "bytes": 36125,
+      "sha256": "d73e28f14e1d5891b706824e3b840c04e86b2a15d1b9068d93d70d2b8931ef36"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/dem_scripts/mixer_20260921/run_all.sh",
+      "bytes": 8894,
+      "sha256": "3f2d5827d3bd34d0a1829246650054a0ef51b19b8ff5387d712491fc0fec8d03"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/dem_scripts/mixer_20260921/start_check.py",
+      "bytes": 9769,
+      "sha256": "bc6da8facd482ad318875bd53bedd3476f7c884275a0b5788bc20fba0f0f2848"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/dem_scripts/mixer_20260921/test_launcher.sh",
+      "bytes": 52327,
+      "sha256": "c0ae01aa670e3127a1f1b4c7a4600226782c66756897f9c572ddb2f2e35a1105"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/dem_scripts/mixer_20260921/watch.sh",
+      "bytes": 2033,
+      "sha256": "232a293a14c58bc56b07d0f53f940a8247a56995e13784e7e65f3b4a070bd171"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/design_probe.py",
+      "bytes": 2620,
+      "sha256": "d0f17f92c5a214626c50feb0e6cb1a374ef6ab31b507b1f5717d8b2600c8fe40"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/design_probe_output.json",
+      "bytes": 3137,
+      "sha256": "96c0a404a4f3f2c088e03952881841c0e80a2e5099c1d5c74b976edec2e45def"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/docs/data/mixer_phase_receipt_20260928/README.md",
+      "bytes": 10595,
+      "sha256": "eb6a660ae4be992776f52426fda30e1b45abbf2c423697abae90ca443c37c342"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/docs/data/mixer_phase_receipt_20260928/receipt_v2.json",
+      "bytes": 29733,
+      "sha256": "1c9e4e17897be21ea737298fbe8d9a4e02b9bb3b27e99e0e05a5f8d703389977"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/docs/data/mixer_phase_receipt_20260928/receipt_v2_ibb.json",
+      "bytes": 29800,
+      "sha256": "f2724c4afd5572f6f90579212274d7c8f6dc756cb99399f141f1822478702a17"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/docs/reviews/codex_mixer_highbo_rereview5_request_20260928.md",
+      "bytes": 12139,
+      "sha256": "1e451a90aeedc7637a1033b2b152f68b782326edeefdb7e0c7ec5c4ee88cf651"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/docs/reviews/mixer_highbo_prereg_20260927.md",
+      "bytes": 67070,
+      "sha256": "a45eeb6ef21d8586aea8464137c60b74b595f413c8b4af77ee60aae999b5c841"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/docs/reviews/mixer_layered_prereg_20260921.md",
+      "bytes": 25386,
+      "sha256": "6bfbbf0fea720a8940262575000f0c076697ae304f3760580745016180a7c72f"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/execution_summary.json",
+      "bytes": 717,
+      "sha256": "fa9eff12648c173381e0987ba81b669167b2af14411a0dc54d058f37574d6f63"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/fixture_helpers.py",
+      "bytes": 20241,
+      "sha256": "b10d56264b70fdb155b7e8c42f41539b35b9ed1e2acdf6f9ec27de9e0159e3c9"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/README.md",
+      "bytes": 2609,
+      "sha256": "17b0bb4846afefaecbef27d60999eff59b16a62ce640f4fa4e94d6cdce412d96"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/runtime.json",
+      "bytes": 181,
+      "sha256": "d93b2fa2fa49d40892a563a0e04ca1b26ee377373a94d9970198627308f3c236"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/scripts/check_contact_validity.py",
+      "bytes": 124451,
+      "sha256": "979a76a1850b1b9435e374236f076ff3e7993ab83169ddfcedcc64943def1986"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/scripts/make_mixer_deck.py",
+      "bytes": 87520,
+      "sha256": "2c12184e9d803e1a9fc4d58b5e32d2de0800b11f637797f68e637d3f85507251"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/scripts/make_mixer_resume.py",
+      "bytes": 18906,
+      "sha256": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/scripts/measure_bed_aspect.py",
+      "bytes": 24677,
+      "sha256": "b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/scripts/measure_mixing_index.py",
+      "bytes": 60953,
+      "sha256": "9f17569cdca30d4fee43be2f4353a9edc56450fbfb4066bcbe32a4447389cf76"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/scripts/mixer_deck_diff.py",
+      "bytes": 41420,
+      "sha256": "765558bd8c263b21b28bb4c69ccdaf5c902595504fca6d36676152fa7c7b065e"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/scripts/mixer_restart_phase_test.py",
+      "bytes": 63083,
+      "sha256": "31370bae54a8da3fd68b18555c35836f655b7d313e1a0891dc44f696f8315f7f"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/selftests/check_contact_validity.txt",
+      "bytes": 10127,
+      "sha256": "5c6c27e299aa2be5d771e2746436b6a8b52f9ecd5b3eee010d8167ad04a0bfae"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/selftests/make_mixer_deck.txt",
+      "bytes": 7495,
+      "sha256": "f865d722c547e963c9c81e50deb30ab0bf9c327f2b608e3c2147e773c867362d"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/selftests/measure_mixing_index.txt",
+      "bytes": 4594,
+      "sha256": "fa34ca736fedf93742dd495d3a09b7f96ed7f6c4205b76973b9a8e8e3bf580e4"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/selftests/mixer_deck_diff.txt",
+      "bytes": 3022,
+      "sha256": "242998b5c4ce0cbcc5512c30db7bdbfbac35c2da7e9e63b4fbae0f1ce5c575ae"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/source_hash_verification.json",
+      "bytes": 7779,
+      "sha256": "034b44f67d421fc3f8d48cec4d48a8e51b4d0b318f71234f220a89cc9f973cb9"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/sources.json",
+      "bytes": 5554,
+      "sha256": "be079c00744bf3e74b1f00f3024eaa770df11bfc9b4eac8d875da42f6f7fafd4"
+    },
+    {
+      "path": "mixer_highbo_round6_evidence_20260928/verify_sources.py",
+      "bytes": 885,
+      "sha256": "744db9bc38425652a3a91cc0be048cbedc78b01412cebf5126572664b7393f6b"
+    },
+    {
+      "path": "package_mixer_highbo_round6_review.py",
+      "bytes": 3009,
+      "sha256": "0d741e0c52f1d02482531a0f94bbd0974b4477e76ef227e9ff2f526c77a57250"
+    }
+  ]
+}

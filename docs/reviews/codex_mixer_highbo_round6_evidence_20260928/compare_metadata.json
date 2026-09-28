@@ -1,0 +1,305 @@
+{
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "base": "091bb21143c426beecd196d6115666fdd49155b1",
+  "head": "18787ab98a13361c37b2343bd07ae276142d0953",
+  "status": "ahead",
+  "ahead_by": 9,
+  "behind_by": 0,
+  "total_commits": 9,
+  "files": [
+    {
+      "filename": ".gitattributes",
+      "status": "modified",
+      "additions": 6,
+      "deletions": 0
+    },
+    {
+      "filename": "CLAUDE.md",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 3
+    },
+    {
+      "filename": "dem_scripts/mixer_20260921/launch_highbo.sh",
+      "status": "modified",
+      "additions": 106,
+      "deletions": 3
+    },
+    {
+      "filename": "dem_scripts/mixer_20260921/start_check.py",
+      "status": "modified",
+      "additions": 57,
+      "deletions": 11
+    },
+    {
+      "filename": "dem_scripts/mixer_20260921/test_launcher.sh",
+      "status": "modified",
+      "additions": 107,
+      "deletions": 2
+    },
+    {
+      "filename": "dem_scripts/mixer_20260921/watch.sh",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/data/lhs_handover_20260928.csv",
+      "status": "added",
+      "additions": 131,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/data/mixer_e0_contract_20260928/README.md",
+      "status": "added",
+      "additions": 39,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/data/mixer_e0_contract_20260928/e0_contract_s32452843.json",
+      "status": "added",
+      "additions": 76,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/data/mixer_e0_contract_20260928/e0_contract_s49979687.json",
+      "status": "added",
+      "additions": 76,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/data/mixer_e0_contract_20260928/e0_contract_s67867967.json",
+      "status": "added",
+      "additions": 76,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/data/mixer_phase_receipt_20260928/README.md",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 3
+    },
+    {
+      "filename": "docs/data/mixer_phase_receipt_20260928/receipt_v2.json",
+      "status": "added",
+      "additions": 1519,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/data/real14_reference_20260928/.gitattributes",
+      "status": "added",
+      "additions": 3,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/data/real14_reference_20260928/README.md",
+      "status": "added",
+      "additions": 57,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/data/real14_reference_20260928/input_real_14.liggghts",
+      "status": "added",
+      "additions": 157,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/data/real14_reference_20260928/mesh_2060000.stl",
+      "status": "added",
+      "additions": 16,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_rereview4_request_20260928.md",
+      "status": "modified",
+      "additions": 53,
+      "deletions": 3
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_rereview5_request_20260928.md",
+      "status": "added",
+      "additions": 80,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_round4_evidence_20260928/review_round4_output.json",
+      "status": "modified",
+      "additions": 1716,
+      "deletions": 1716
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_round4_evidence_20260928/selftests_output.json",
+      "status": "modified",
+      "additions": 37,
+      "deletions": 37
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_round5_evidence_20260928/README.md",
+      "status": "added",
+      "additions": 73,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_round5_evidence_20260928/codex_review_mixer_highbo_round5_20260928.md",
+      "status": "added",
+      "additions": 259,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_round5_evidence_20260928/external_sources.json",
+      "status": "added",
+      "additions": 32,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_round5_evidence_20260928/manifest_v2.json",
+      "status": "added",
+      "additions": 263,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_round5_evidence_20260928/review_round5_output.json",
+      "status": "added",
+      "additions": 432,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_round5_evidence_20260928/review_round5_probe.py",
+      "status": "added",
+      "additions": 299,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_round5_evidence_20260928/run_selftests.py",
+      "status": "added",
+      "additions": 11,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_round5_evidence_20260928/selftests_output.json",
+      "status": "added",
+      "additions": 38,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_round5_evidence_20260928/source_hash_verification.json",
+      "status": "added",
+      "additions": 166,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_round5_evidence_20260928/sources.json",
+      "status": "added",
+      "additions": 121,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_round5_supplement_20260928/README.md",
+      "status": "added",
+      "additions": 44,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_round5_supplement_20260928/history_index.json",
+      "status": "added",
+      "additions": 29,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_round5_supplement_20260928/review_round5_supplement_probe.py",
+      "status": "added",
+      "additions": 78,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_round5_supplement_20260928/snapshot_comparison.json",
+      "status": "added",
+      "additions": 100,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_round5_supplement_20260928/sources.json",
+      "status": "added",
+      "additions": 102,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/codex_mixer_highbo_round5_supplement_20260928/supplement_output.json",
+      "status": "added",
+      "additions": 217,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/codex_review_mixer_highbo_round5_v2_20260928.md",
+      "status": "added",
+      "additions": 472,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/doc_refs_allowlist.tsv",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 0
+    },
+    {
+      "filename": "docs/reviews/fam_platen_prereg_20260812.md",
+      "status": "modified",
+      "additions": 81,
+      "deletions": 8
+    },
+    {
+      "filename": "docs/reviews/findings.json",
+      "status": "modified",
+      "additions": 149,
+      "deletions": 22
+    },
+    {
+      "filename": "docs/reviews/lhs_handover_judgments_20260924.md",
+      "status": "modified",
+      "additions": 9,
+      "deletions": 1
+    },
+    {
+      "filename": "docs/reviews/mixer_highbo_prereg_20260927.md",
+      "status": "modified",
+      "additions": 17,
+      "deletions": 3
+    },
+    {
+      "filename": "docs/reviews/mixer_layered_prereg_20260921.md",
+      "status": "modified",
+      "additions": 13,
+      "deletions": 1
+    },
+    {
+      "filename": "docs/reviews/pure_se_union_prereg_20260927.md",
+      "status": "modified",
+      "additions": 14,
+      "deletions": 1
+    },
+    {
+      "filename": "docs/session_20260921_mixer_decisions.md",
+      "status": "modified",
+      "additions": 7,
+      "deletions": 1
+    },
+    {
+      "filename": "docs/session_20260923_progress.md",
+      "status": "modified",
+      "additions": 49,
+      "deletions": 0
+    },
+    {
+      "filename": "scripts/lhs_design_dataset.py",
+      "status": "modified",
+      "additions": 171,
+      "deletions": 6
+    },
+    {
+      "filename": "scripts/mixer_restart_phase_test.py",
+      "status": "modified",
+      "additions": 103,
+      "deletions": 8
+    }
+  ]
+}

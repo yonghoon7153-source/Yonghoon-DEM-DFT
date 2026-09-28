@@ -1,0 +1,6 @@
+{
+  "python": "3.12.14 (MSC v.1944 64 bit AMD64)",
+  "numpy": "2.5.3",
+  "scipy": "1.18.1",
+  "environment": "Windows PowerShell, UTF-8 enabled; separate read-only source mirror"
+}

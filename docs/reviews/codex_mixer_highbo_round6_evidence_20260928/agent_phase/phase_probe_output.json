@@ -1,0 +1,315 @@
+{
+  "pin": "18787ab98a13361c37b2343bd07ae276142d0953",
+  "scope": "Synthetic geometry and logs only; no simulator, MPI, job, or Git mutation",
+  "normal": {
+    "passed": true,
+    "cli_rc": 0,
+    "reasons": [],
+    "deck_steps": {
+      "end": 14001,
+      "n1": 9000,
+      "dump_every": 500,
+      "end_b": 14001,
+      "dump_every_b": 500,
+      "read_restart_b": true
+    },
+    "resume_steps_B": [
+      9000
+    ],
+    "run_total": 14001,
+    "nA": 28,
+    "nB": 11,
+    "angle_error_deg": 6.115201030866884e-13,
+    "pos_bound_m": 1.3915163690092961e-14,
+    "residual_max_m": 5.700735022928782e-16,
+    "ab_max": 0.0,
+    "completion": {
+      "A": {
+        "complete": true,
+        "completion_basis": "last_step",
+        "last_thermo_step": 14001,
+        "banner": false
+      },
+      "B": {
+        "complete": true,
+        "completion_basis": "last_step",
+        "last_thermo_step": 14001,
+        "banner": false
+      }
+    },
+    "consumer": {
+      "accepted": true,
+      "eps": 1.1520307912925133e-10,
+      "pos_bound": 1.3915163690092961e-14
+    }
+  },
+  "gen_end_truncated": {
+    "passed": false,
+    "cli_rc": 1,
+    "reasons": [
+      "gen.json (봉인 밖) 의 끝 · N1 · 간격 (9500, 9000, 500) ≠ 봉인 덱 (14001, 9000, 500) — 짧게 바꾼 기준으로 완주를 판정하지 않는다 (HBR5-05 · gen_end_truncated)",
+      "A 실행이 정상 완료가 아니다 (exit 0 · 배너 False · 마지막 thermo step 9500 / 봉인 덱 끝 14001)",
+      "B 실행이 정상 완료가 아니다 (exit 0 · 배너 False · 마지막 thermo step 9500 / 봉인 덱 끝 14001)",
+      "A 덤프 누락 9 개 (step [10000, 10500, 11000, 11500]…)",
+      "B 덤프 누락 9 개 (step [10000, 10500, 11000, 11500]…)"
+    ],
+    "deck_steps": {
+      "end": 14001,
+      "n1": 9000,
+      "dump_every": 500,
+      "end_b": 14001,
+      "dump_every_b": 500,
+      "read_restart_b": true
+    },
+    "resume_steps_B": [
+      9000
+    ],
+    "run_total": 9500,
+    "nA": 19,
+    "nB": 2,
+    "angle_error_deg": 6.115201030866884e-13,
+    "pos_bound_m": 1.3915163690092961e-14,
+    "residual_max_m": 5.700735022928782e-16,
+    "ab_max": 0.0,
+    "completion": {
+      "A": {
+        "complete": false,
+        "completion_basis": null,
+        "last_thermo_step": 9500,
+        "banner": false
+      },
+      "B": {
+        "complete": false,
+        "completion_basis": null,
+        "last_thermo_step": 9500,
+        "banner": false
+      }
+    }
+  },
+  "bad_resume_step": {
+    "passed": false,
+    "cli_rc": 1,
+    "reasons": [
+      "B 로그의 RESUME_STEP [9500] ≠ 봉인 A 덱의 write_restart step 9000 — B 가 이 영수증의 체크포인트에서 재개됐다는 실행 증거가 없다 (HBR5-05)"
+    ],
+    "deck_steps": {
+      "end": 14001,
+      "n1": 9000,
+      "dump_every": 500,
+      "end_b": 14001,
+      "dump_every_b": 500,
+      "read_restart_b": true
+    },
+    "resume_steps_B": [
+      9500
+    ],
+    "run_total": 14001,
+    "nA": 28,
+    "nB": 11,
+    "angle_error_deg": 6.115201030866884e-13,
+    "pos_bound_m": 1.3915163690092961e-14,
+    "residual_max_m": 5.700735022928782e-16,
+    "ab_max": 0.0,
+    "completion": {
+      "A": {
+        "complete": true,
+        "completion_basis": "last_step",
+        "last_thermo_step": 14001,
+        "banner": false
+      },
+      "B": {
+        "complete": true,
+        "completion_basis": "last_step",
+        "last_thermo_step": 14001,
+        "banner": false
+      }
+    }
+  },
+  "banner_short_tail": {
+    "passed": true,
+    "cli_rc": 0,
+    "reasons": [],
+    "deck_steps": {
+      "end": 14001,
+      "n1": 9000,
+      "dump_every": 500,
+      "end_b": 14001,
+      "dump_every_b": 500,
+      "read_restart_b": true
+    },
+    "resume_steps_B": [
+      9000
+    ],
+    "run_total": 14001,
+    "nA": 28,
+    "nB": 11,
+    "angle_error_deg": 6.115201030866884e-13,
+    "pos_bound_m": 1.3915163690092961e-14,
+    "residual_max_m": 5.700735022928782e-16,
+    "ab_max": 0.0,
+    "completion": {
+      "A": {
+        "complete": true,
+        "completion_basis": "banner",
+        "last_thermo_step": 14000,
+        "banner": true
+      },
+      "B": {
+        "complete": true,
+        "completion_basis": "banner",
+        "last_thermo_step": 14000,
+        "banner": true
+      }
+    },
+    "consumer": {
+      "accepted": true,
+      "eps": 1.1520307912925133e-10,
+      "pos_bound": 1.3915163690092961e-14
+    }
+  },
+  "changed_gen_motion_signature": {
+    "passed": true,
+    "cli_rc": 0,
+    "reasons": [],
+    "deck_steps": {
+      "end": 14001,
+      "n1": 9000,
+      "dump_every": 500,
+      "end_b": 14001,
+      "dump_every_b": 500,
+      "read_restart_b": true
+    },
+    "resume_steps_B": [
+      9000
+    ],
+    "run_total": 14001,
+    "nA": 28,
+    "nB": 11,
+    "angle_error_deg": 6.115201030866884e-13,
+    "pos_bound_m": 1.3915163690092961e-14,
+    "residual_max_m": 5.700735022928782e-16,
+    "ab_max": 0.0,
+    "completion": {
+      "A": {
+        "complete": true,
+        "completion_basis": "last_step",
+        "last_thermo_step": 14001,
+        "banner": false
+      },
+      "B": {
+        "complete": true,
+        "completion_basis": "last_step",
+        "last_thermo_step": 14001,
+        "banner": false
+      }
+    },
+    "consumer": {
+      "accepted": true,
+      "eps": 1.1520307912925133e-10,
+      "pos_bound": 1.3915163690092961e-14
+    },
+    "measured_A_signature": "78c93320ad41c8acfbadb4e6f76a431c11f512ea2334ba75daf0131e995ef52a",
+    "advertised_signature": "b7588c4e36fbc3edb93e17d6484e90dcb009ab20fd27b6a8357e652f30969488",
+    "signature_different": true,
+    "unmeasured_campaign_drum_shift_m": 0.00014927700000000001,
+    "seal_unchanged": true
+  },
+  "B_checkpoint_other_path": {
+    "passed": true,
+    "cli_rc": 0,
+    "reasons": [],
+    "deck_steps": {
+      "end": 14001,
+      "n1": 9000,
+      "dump_every": 500,
+      "end_b": 14001,
+      "dump_every_b": 500,
+      "read_restart_b": true
+    },
+    "resume_steps_B": [
+      9000
+    ],
+    "run_total": 14001,
+    "nA": 28,
+    "nB": 11,
+    "angle_error_deg": 6.115201030866884e-13,
+    "pos_bound_m": 1.3915163690092961e-14,
+    "residual_max_m": 5.700735022928782e-16,
+    "ab_max": 0.0,
+    "completion": {
+      "A": {
+        "complete": true,
+        "completion_basis": "last_step",
+        "last_thermo_step": 14001,
+        "banner": false
+      },
+      "B": {
+        "complete": true,
+        "completion_basis": "last_step",
+        "last_thermo_step": 14001,
+        "banner": false
+      }
+    },
+    "consumer": {
+      "accepted": true,
+      "eps": 1.1520307912925133e-10,
+      "pos_bound": 1.3915163690092961e-14
+    },
+    "read_restart_line": "read_restart unrelated/other.bin"
+  },
+  "permuted_triangles": {
+    "passed": false,
+    "cli_rc": 1,
+    "reasons": [
+      "A 첫 덤프가 원 STL (드럼 · 끝판) 과 꼭짓점 순서대로 맞지 않는다 (구성요소 · 순서)"
+    ],
+    "deck_steps": {
+      "end": 14001,
+      "n1": 9000,
+      "dump_every": 500,
+      "end_b": 14001,
+      "dump_every_b": 500,
+      "read_restart_b": true
+    },
+    "resume_steps_B": [
+      9000
+    ],
+    "run_total": 14001,
+    "nA": 0,
+    "nB": 0,
+    "angle_error_deg": 0.0,
+    "pos_bound_m": null,
+    "residual_max_m": 0.0,
+    "ab_max": 0.0,
+    "completion": {
+      "A": {
+        "complete": true,
+        "completion_basis": "last_step",
+        "last_thermo_step": 14001,
+        "banner": false
+      },
+      "B": {
+        "complete": true,
+        "completion_basis": "last_step",
+        "last_thermo_step": 14001,
+        "banner": false
+      }
+    }
+  },
+  "triangle_oracle": {
+    "permutation_pass": true,
+    "rewire_same_point_bag": true,
+    "rewire_triangle_bag_equal": false,
+    "duplicate_change_same_triangle_set": true,
+    "duplicate_change_triangle_bag_equal": false
+  },
+  "assertions": {
+    "normal_passes": true,
+    "original_truncation_closed": true,
+    "bad_resume_closed": true,
+    "banner_tail_remaining": true,
+    "metadata_signature_remaining": true,
+    "permutation_false_red": true,
+    "triangle_topology_oracle": true
+  }
+}

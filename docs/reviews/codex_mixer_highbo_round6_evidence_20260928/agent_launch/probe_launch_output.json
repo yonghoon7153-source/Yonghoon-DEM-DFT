@@ -1,0 +1,245 @@
+{
+  "start_valid": {
+    "rc": 0,
+    "expected_rc": 0,
+    "stdout": "✓ 시작 대조 통과 — start_guard · job 12345 · ntasks 20 · lmp c2d3a377b21c… · 러너 d71d6b87a642… → job_start.json\n",
+    "stderr": "",
+    "job_start_exists": true,
+    "refused_exists": false
+  },
+  "start_empty_dict": {
+    "rc": 3,
+    "expected_rc": 3,
+    "stdout": "⛔ 시작 대조 실패 — LIGGGHTS 를 부르지 않는다 (job_start.refused.12345.json)\n   ✗ 봉인이 빈 객체 {} 다 — 빈 봉인은 봉인이 아니다 (HBR5-01)\n   ✗ 바이너리 경로 C:\\Users\\Administrator\\AppData\\Local\\Temp\\hbr6_launch_jh8r5k8k\\guard_binary ≠ 봉인 None\n   ✗ 바이너리 sha256 c2d3a377b21c… ≠ 봉인 None… (제출 뒤 다시 빌드됐거나 다른 파일)\n   ✗ 제출 뒤 바뀌었거나 없는 파일 ['in.mixer', 'Drum.stl', 'Front.stl', 'Back.stl']\n   ✗ 실행 중인 러너 sha256 d71d6b87a642… ≠ 봉인한 러너 None… (제출 뒤 러너 수정)\n   ✗ 이 시작 대조기 sha256 bc6da8facd48… ≠ 봉인 None…\n   ✗ SLURM_NTASKS 20 ≠ 봉인 np None (#SBATCH -n ↔ mpirun -np 짝)\n",
+    "stderr": "",
+    "job_start_exists": false,
+    "refused_exists": true
+  },
+  "start_null": {
+    "rc": 3,
+    "expected_rc": 3,
+    "stdout": "⛔ 시작 대조 실패 — LIGGGHTS 를 부르지 않는다 (job_start.refused.12345.json)\n   ✗ 봉인이 JSON 객체가 아니다 (NoneType) — 빈 · 비객체 봉인은 봉인이 아니다 (HBR5-01)\n   ✗ 바이너리 경로 C:\\Users\\Administrator\\AppData\\Local\\Temp\\hbr6_launch_jh8r5k8k\\guard_binary ≠ 봉인 None\n   ✗ 바이너리 sha256 c2d3a377b21c… ≠ 봉인 None… (제출 뒤 다시 빌드됐거나 다른 파일)\n   ✗ 제출 뒤 바뀌었거나 없는 파일 ['in.mixer', 'Drum.stl', 'Front.stl', 'Back.stl']\n   ✗ 실행 중인 러너 sha256 d71d6b87a642… ≠ 봉인한 러너 None… (제출 뒤 러너 수정)\n   ✗ 이 시작 대조기 sha256 bc6da8facd48… ≠ 봉인 None…\n   ✗ SLURM_NTASKS 20 ≠ 봉인 np None (#SBATCH -n ↔ mpirun -np 짝)\n",
+    "stderr": "",
+    "job_start_exists": false,
+    "refused_exists": true
+  },
+  "start_list": {
+    "rc": 3,
+    "expected_rc": 3,
+    "stdout": "⛔ 시작 대조 실패 — LIGGGHTS 를 부르지 않는다 (job_start.refused.12345.json)\n   ✗ 봉인이 JSON 객체가 아니다 (list) — 빈 · 비객체 봉인은 봉인이 아니다 (HBR5-01)\n   ✗ 바이너리 경로 C:\\Users\\Administrator\\AppData\\Local\\Temp\\hbr6_launch_jh8r5k8k\\guard_binary ≠ 봉인 None\n   ✗ 바이너리 sha256 c2d3a377b21c… ≠ 봉인 None… (제출 뒤 다시 빌드됐거나 다른 파일)\n   ✗ 제출 뒤 바뀌었거나 없는 파일 ['in.mixer', 'Drum.stl', 'Front.stl', 'Back.stl']\n   ✗ 실행 중인 러너 sha256 d71d6b87a642… ≠ 봉인한 러너 None… (제출 뒤 러너 수정)\n   ✗ 이 시작 대조기 sha256 bc6da8facd48… ≠ 봉인 None…\n   ✗ SLURM_NTASKS 20 ≠ 봉인 np None (#SBATCH -n ↔ mpirun -np 짝)\n",
+    "stderr": "",
+    "job_start_exists": false,
+    "refused_exists": true
+  },
+  "start_string": {
+    "rc": 3,
+    "expected_rc": 3,
+    "stdout": "⛔ 시작 대조 실패 — LIGGGHTS 를 부르지 않는다 (job_start.refused.12345.json)\n   ✗ 봉인이 JSON 객체가 아니다 (str) — 빈 · 비객체 봉인은 봉인이 아니다 (HBR5-01)\n   ✗ 바이너리 경로 C:\\Users\\Administrator\\AppData\\Local\\Temp\\hbr6_launch_jh8r5k8k\\guard_binary ≠ 봉인 None\n   ✗ 바이너리 sha256 c2d3a377b21c… ≠ 봉인 None… (제출 뒤 다시 빌드됐거나 다른 파일)\n   ✗ 제출 뒤 바뀌었거나 없는 파일 ['in.mixer', 'Drum.stl', 'Front.stl', 'Back.stl']\n   ✗ 실행 중인 러너 sha256 d71d6b87a642… ≠ 봉인한 러너 None… (제출 뒤 러너 수정)\n   ✗ 이 시작 대조기 sha256 bc6da8facd48… ≠ 봉인 None…\n   ✗ SLURM_NTASKS 20 ≠ 봉인 np None (#SBATCH -n ↔ mpirun -np 짝)\n",
+    "stderr": "",
+    "job_start_exists": false,
+    "refused_exists": true
+  },
+  "shape_np_bool": {
+    "ok": false,
+    "reasons": [
+      "봉인 slurm.np 가 양의 정수가 아니다 (True)",
+      "SLURM_NTASKS 20 ≠ 봉인 np True (#SBATCH -n ↔ mpirun -np 짝)"
+    ],
+    "expected_ok": false
+  },
+  "shape_np_float": {
+    "ok": false,
+    "reasons": [
+      "봉인 slurm.np 가 양의 정수가 아니다 (20.0)"
+    ],
+    "expected_ok": false
+  },
+  "shape_np_zero": {
+    "ok": false,
+    "reasons": [
+      "봉인 slurm.np 가 양의 정수가 아니다 (0)",
+      "SLURM_NTASKS 20 ≠ 봉인 np 0 (#SBATCH -n ↔ mpirun -np 짝)"
+    ],
+    "expected_ok": false
+  },
+  "shape_no_binary_sha": {
+    "ok": false,
+    "reasons": [
+      "봉인 lmp_sha256 이 64 자리 16 진이 아니다",
+      "바이너리 sha256 c2d3a377b21c… ≠ 봉인 None… (제출 뒤 다시 빌드됐거나 다른 파일)"
+    ],
+    "expected_ok": false
+  },
+  "shape_no_deck_sha": {
+    "ok": false,
+    "reasons": [
+      "봉인 sha256 이 ['in.mixer', 'Drum.stl', 'Front.stl', 'Back.stl'] 전부의 64 자리 16 진 dict 가 아니다",
+      "제출 뒤 바뀌었거나 없는 파일 ['in.mixer']"
+    ],
+    "expected_ok": false
+  },
+  "shape_bad_runner_sha": {
+    "ok": false,
+    "reasons": [
+      "봉인 slurm.runner_sha256 가 64 자리 16 진이 아니다",
+      "실행 중인 러너 sha256 d71d6b87a642… ≠ 봉인한 러너 zzzzzzzzzzzz… (제출 뒤 러너 수정)"
+    ],
+    "expected_ok": false
+  },
+  "shape_relative_binary": {
+    "ok": false,
+    "reasons": [
+      "봉인 lmp_realpath 가 절대경로 문자열이 아니다 ('binary')",
+      "바이너리 경로 C:\\Users\\Administrator\\AppData\\Local\\Temp\\hbr6_launch_jh8r5k8k\\guard_binary ≠ 봉인 binary"
+    ],
+    "expected_ok": false
+  },
+  "shape_wrong_backend": {
+    "ok": false,
+    "reasons": [
+      "봉인 backend = 'local' (slurm 이어야 — 이 대조기는 SLURM 러너 전용)"
+    ],
+    "expected_ok": false
+  },
+  "smoke_normal": {
+    "rc": 0,
+    "stdout": "── 관문: 스모크 증서 (bin 0 · 사전등록 §8 ③ · D-4) — C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr6_launch_jh8r5k8k\\smoke\\smoke.json\n  ✓ run = LH_s32452843 (목록의 첫 원소 · 기대 LH_s32452843)\n  ✓ smoke.complete = true (true 여야 — bin 0 계획 프레임 전부)\n  ✓ smoke.tech_smoke = [] ([] 여야)\n  ✓ smoke.qc_repr.pass = true (true 여야 — bin 0 부피 누락 QC)\n  ✓ 첫 시드 봉인 = LH_s32452843 · first 단계\n── 관문: 증서 출처 — 판독 규약 · 판독기 · 덱 · 발사 봉인 · 프레임 (이 폴더에서 다시 해시)\n  ✓ provenance.schema = \"mixing_provenance/1\" (출처 블록이 없는 판독기의 증서는 받지 않는다)\n  ✓ 판독 규약 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138} = 등록 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138}\n  ✓ 판독기 sha256 9f17569cdca3… = 지금 리포의 판독기\n  ✓ 출처 run = \"LH_s32452843\" · 덱 sha256 = 첫 봉인 때\n  ✓ 증서가 본 발사 봉인 sha256 = 지금 첫 시드 봉인 (다른 발사 · 옛 봉인 때의 증서가 아니다)\n  ✓ 판독 프레임 = 첫 시드 post/ 의 그 파일 (다시 해시)\n  ✓ 기준 = E0_s32452843 · 덱 · 프레임 (다시 해시)\n── 관문: 스모크 창 입력 집합 — 지금 폴더를 판독기 파일 규칙으로 다시 열거 (bin 0 · E0 t₀ · HBR5-02)\n  ✓ 증서의 창 정의 — t0_step 200 · plan.steps_per_rev 1000.0 · dump_every 40 · steps_total 8201\n  ✓ bin 0 에 같은 step 의 덤프 둘 이상: 없음\n  ✓ bin 0 격자 밖 프레임 (격자 = t₀ + k·dump_every): 없음\n  ✓ bin 0 결손: 없음 (계획 격자 25 장)\n  ✓ bin 0 파일 (step · 이름 · sha256) = 증서가 판독한 그 파일들 (25 장 / 증서 25)\n  ✓ E0 기준 t₀ step 200 의 덤프 = 정확히 한 장 · 증서와 같은 파일 (지금 1 장)\n  · (참고) 증서 mtime ≥ 첫 시드 봉인 mtime — 판정에 안 쓴다 (복사 · 재판독이면 mtime 은 새로워진다 · HBR4-05)\n── 관문: 코호트 — 첫 시드 봉인 (first) 때의 덱 · STL · 바이너리 그대로인가\n  ✓ LH_s49979687: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ LH_s67867967: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ 바이너리 sha256 658dc0ec8abc… = 첫 시드 658dc0ec8abc…\n",
+    "stderr": "",
+    "expected_rc": 0,
+    "matches_expected": true
+  },
+  "smoke_after_duplicate": {
+    "rc": 1,
+    "stdout": "── 관문: 스모크 증서 (bin 0 · 사전등록 §8 ③ · D-4) — C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr6_launch_jh8r5k8k\\smoke\\smoke.json\n  ✓ run = LH_s32452843 (목록의 첫 원소 · 기대 LH_s32452843)\n  ✓ smoke.complete = true (true 여야 — bin 0 계획 프레임 전부)\n  ✓ smoke.tech_smoke = [] ([] 여야)\n  ✓ smoke.qc_repr.pass = true (true 여야 — bin 0 부피 누락 QC)\n  ✓ 첫 시드 봉인 = LH_s32452843 · first 단계\n── 관문: 증서 출처 — 판독 규약 · 판독기 · 덱 · 발사 봉인 · 프레임 (이 폴더에서 다시 해시)\n  ✓ provenance.schema = \"mixing_provenance/1\" (출처 블록이 없는 판독기의 증서는 받지 않는다)\n  ✓ 판독 규약 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138} = 등록 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138}\n  ✓ 판독기 sha256 9f17569cdca3… = 지금 리포의 판독기\n  ✓ 출처 run = \"LH_s32452843\" · 덱 sha256 = 첫 봉인 때\n  ✓ 증서가 본 발사 봉인 sha256 = 지금 첫 시드 봉인 (다른 발사 · 옛 봉인 때의 증서가 아니다)\n  ✓ 판독 프레임 = 첫 시드 post/ 의 그 파일 (다시 해시)\n  ✓ 기준 = E0_s32452843 · 덱 · 프레임 (다시 해시)\n── 관문: 스모크 창 입력 집합 — 지금 폴더를 판독기 파일 규칙으로 다시 열거 (bin 0 · E0 t₀ · HBR5-02)\n  ✓ 증서의 창 정의 — t0_step 200 · plan.steps_per_rev 1000.0 · dump_every 40 · steps_total 8201\n  ✗ bin 0 에 같은 step 의 덤프 둘 이상: [400]\n  ✓ bin 0 격자 밖 프레임 (격자 = t₀ + k·dump_every): 없음\n  ✓ bin 0 결손: 없음 (계획 격자 25 장)\n  ✗ bin 0 파일 (step · 이름 · sha256) = 증서가 판독한 그 파일들 (24 장 / 증서 25)\n  ✓ E0 기준 t₀ step 200 의 덤프 = 정확히 한 장 · 증서와 같은 파일 (지금 1 장)\n  · (참고) 증서 mtime ≥ 첫 시드 봉인 mtime — 판정에 안 쓴다 (복사 · 재판독이면 mtime 은 새로워진다 · HBR4-05)\n── 관문: 코호트 — 첫 시드 봉인 (first) 때의 덱 · STL · 바이너리 그대로인가\n  ✓ LH_s49979687: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ LH_s67867967: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ 바이너리 sha256 658dc0ec8abc… = 첫 시드 658dc0ec8abc…\n",
+    "stderr": "",
+    "expected_rc": 1,
+    "matches_expected": true
+  },
+  "reader_after_duplicate": {
+    "complete": false,
+    "tech_smoke": [
+      "bin 0 결손 1/25 프레임 (step [400])",
+      "bin 0 에 같은 step 의 덤프가 둘 이상"
+    ],
+    "expected": 25,
+    "present": 24
+  },
+  "smoke_after_offgrid": {
+    "rc": 1,
+    "stdout": "── 관문: 스모크 증서 (bin 0 · 사전등록 §8 ③ · D-4) — C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr6_launch_jh8r5k8k\\smoke\\smoke.json\n  ✓ run = LH_s32452843 (목록의 첫 원소 · 기대 LH_s32452843)\n  ✓ smoke.complete = true (true 여야 — bin 0 계획 프레임 전부)\n  ✓ smoke.tech_smoke = [] ([] 여야)\n  ✓ smoke.qc_repr.pass = true (true 여야 — bin 0 부피 누락 QC)\n  ✓ 첫 시드 봉인 = LH_s32452843 · first 단계\n── 관문: 증서 출처 — 판독 규약 · 판독기 · 덱 · 발사 봉인 · 프레임 (이 폴더에서 다시 해시)\n  ✓ provenance.schema = \"mixing_provenance/1\" (출처 블록이 없는 판독기의 증서는 받지 않는다)\n  ✓ 판독 규약 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138} = 등록 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138}\n  ✓ 판독기 sha256 9f17569cdca3… = 지금 리포의 판독기\n  ✓ 출처 run = \"LH_s32452843\" · 덱 sha256 = 첫 봉인 때\n  ✓ 증서가 본 발사 봉인 sha256 = 지금 첫 시드 봉인 (다른 발사 · 옛 봉인 때의 증서가 아니다)\n  ✓ 판독 프레임 = 첫 시드 post/ 의 그 파일 (다시 해시)\n  ✓ 기준 = E0_s32452843 · 덱 · 프레임 (다시 해시)\n── 관문: 스모크 창 입력 집합 — 지금 폴더를 판독기 파일 규칙으로 다시 열거 (bin 0 · E0 t₀ · HBR5-02)\n  ✓ 증서의 창 정의 — t0_step 200 · plan.steps_per_rev 1000.0 · dump_every 40 · steps_total 8201\n  ✓ bin 0 에 같은 step 의 덤프 둘 이상: 없음\n  ✗ bin 0 격자 밖 프레임 (격자 = t₀ + k·dump_every): [410]\n  ✓ bin 0 결손: 없음 (계획 격자 25 장)\n  ✗ bin 0 파일 (step · 이름 · sha256) = 증서가 판독한 그 파일들 (26 장 / 증서 25)\n  ✓ E0 기준 t₀ step 200 의 덤프 = 정확히 한 장 · 증서와 같은 파일 (지금 1 장)\n  · (참고) 증서 mtime ≥ 첫 시드 봉인 mtime — 판정에 안 쓴다 (복사 · 재판독이면 mtime 은 새로워진다 · HBR4-05)\n── 관문: 코호트 — 첫 시드 봉인 (first) 때의 덱 · STL · 바이너리 그대로인가\n  ✓ LH_s49979687: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ LH_s67867967: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ 바이너리 sha256 658dc0ec8abc… = 첫 시드 658dc0ec8abc…\n",
+    "stderr": "",
+    "expected_rc": 1,
+    "matches_expected": true
+  },
+  "reader_after_offgrid": {
+    "complete": true,
+    "tech_smoke": [
+      "step 410: 계획 덤프 격자 밖 (t₀ 200 + k·40 ≤ 덱 끝 8201) — 계산 (M · SD · 평탄 · QC) 에서 뺐다"
+    ],
+    "expected": 25,
+    "present": 25
+  },
+  "smoke_after_e0_duplicate": {
+    "rc": 1,
+    "stdout": "── 관문: 스모크 증서 (bin 0 · 사전등록 §8 ③ · D-4) — C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr6_launch_jh8r5k8k\\smoke\\smoke.json\n  ✓ run = LH_s32452843 (목록의 첫 원소 · 기대 LH_s32452843)\n  ✓ smoke.complete = true (true 여야 — bin 0 계획 프레임 전부)\n  ✓ smoke.tech_smoke = [] ([] 여야)\n  ✓ smoke.qc_repr.pass = true (true 여야 — bin 0 부피 누락 QC)\n  ✓ 첫 시드 봉인 = LH_s32452843 · first 단계\n── 관문: 증서 출처 — 판독 규약 · 판독기 · 덱 · 발사 봉인 · 프레임 (이 폴더에서 다시 해시)\n  ✓ provenance.schema = \"mixing_provenance/1\" (출처 블록이 없는 판독기의 증서는 받지 않는다)\n  ✓ 판독 규약 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138} = 등록 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138}\n  ✓ 판독기 sha256 9f17569cdca3… = 지금 리포의 판독기\n  ✓ 출처 run = \"LH_s32452843\" · 덱 sha256 = 첫 봉인 때\n  ✓ 증서가 본 발사 봉인 sha256 = 지금 첫 시드 봉인 (다른 발사 · 옛 봉인 때의 증서가 아니다)\n  ✓ 판독 프레임 = 첫 시드 post/ 의 그 파일 (다시 해시)\n  ✓ 기준 = E0_s32452843 · 덱 · 프레임 (다시 해시)\n── 관문: 스모크 창 입력 집합 — 지금 폴더를 판독기 파일 규칙으로 다시 열거 (bin 0 · E0 t₀ · HBR5-02)\n  ✓ 증서의 창 정의 — t0_step 200 · plan.steps_per_rev 1000.0 · dump_every 40 · steps_total 8201\n  ✓ bin 0 에 같은 step 의 덤프 둘 이상: 없음\n  ✓ bin 0 격자 밖 프레임 (격자 = t₀ + k·dump_every): 없음\n  ✓ bin 0 결손: 없음 (계획 격자 25 장)\n  ✓ bin 0 파일 (step · 이름 · sha256) = 증서가 판독한 그 파일들 (25 장 / 증서 25)\n  ✗ E0 기준 t₀ step 200 의 덤프 = 정확히 한 장 · 증서와 같은 파일 (지금 2 장)\n  · (참고) 증서 mtime ≥ 첫 시드 봉인 mtime — 판정에 안 쓴다 (복사 · 재판독이면 mtime 은 새로워진다 · HBR4-05)\n── 관문: 코호트 — 첫 시드 봉인 (first) 때의 덱 · STL · 바이너리 그대로인가\n  ✓ LH_s49979687: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ LH_s67867967: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ 바이너리 sha256 658dc0ec8abc… = 첫 시드 658dc0ec8abc…\n",
+    "stderr": "",
+    "expected_rc": 1,
+    "matches_expected": true
+  },
+  "reader_after_e0_duplicate": {
+    "refused": "⛔ E0 기준 C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr6_launch_jh8r5k8k\\smoke\\E0_s32452843: 계획 t₀ step 200 의 덤프가 2 장 — 어느 것이 참인지 모른다"
+  },
+  "smoke_after_bin1_duplicate": {
+    "rc": 0,
+    "stdout": "── 관문: 스모크 증서 (bin 0 · 사전등록 §8 ③ · D-4) — C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr6_launch_jh8r5k8k\\smoke\\smoke.json\n  ✓ run = LH_s32452843 (목록의 첫 원소 · 기대 LH_s32452843)\n  ✓ smoke.complete = true (true 여야 — bin 0 계획 프레임 전부)\n  ✓ smoke.tech_smoke = [] ([] 여야)\n  ✓ smoke.qc_repr.pass = true (true 여야 — bin 0 부피 누락 QC)\n  ✓ 첫 시드 봉인 = LH_s32452843 · first 단계\n── 관문: 증서 출처 — 판독 규약 · 판독기 · 덱 · 발사 봉인 · 프레임 (이 폴더에서 다시 해시)\n  ✓ provenance.schema = \"mixing_provenance/1\" (출처 블록이 없는 판독기의 증서는 받지 않는다)\n  ✓ 판독 규약 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138} = 등록 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138}\n  ✓ 판독기 sha256 9f17569cdca3… = 지금 리포의 판독기\n  ✓ 출처 run = \"LH_s32452843\" · 덱 sha256 = 첫 봉인 때\n  ✓ 증서가 본 발사 봉인 sha256 = 지금 첫 시드 봉인 (다른 발사 · 옛 봉인 때의 증서가 아니다)\n  ✓ 판독 프레임 = 첫 시드 post/ 의 그 파일 (다시 해시)\n  ✓ 기준 = E0_s32452843 · 덱 · 프레임 (다시 해시)\n── 관문: 스모크 창 입력 집합 — 지금 폴더를 판독기 파일 규칙으로 다시 열거 (bin 0 · E0 t₀ · HBR5-02)\n  ✓ 증서의 창 정의 — t0_step 200 · plan.steps_per_rev 1000.0 · dump_every 40 · steps_total 8201\n  ✓ bin 0 에 같은 step 의 덤프 둘 이상: 없음\n  ✓ bin 0 격자 밖 프레임 (격자 = t₀ + k·dump_every): 없음\n  ✓ bin 0 결손: 없음 (계획 격자 25 장)\n  ✓ bin 0 파일 (step · 이름 · sha256) = 증서가 판독한 그 파일들 (25 장 / 증서 25)\n  ✓ E0 기준 t₀ step 200 의 덤프 = 정확히 한 장 · 증서와 같은 파일 (지금 1 장)\n  · (참고) 증서 mtime ≥ 첫 시드 봉인 mtime — 판정에 안 쓴다 (복사 · 재판독이면 mtime 은 새로워진다 · HBR4-05)\n── 관문: 코호트 — 첫 시드 봉인 (first) 때의 덱 · STL · 바이너리 그대로인가\n  ✓ LH_s49979687: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ LH_s67867967: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ 바이너리 sha256 658dc0ec8abc… = 첫 시드 658dc0ec8abc…\n",
+    "stderr": "",
+    "expected_rc": 0,
+    "matches_expected": true
+  },
+  "reader_after_bin1_duplicate": {
+    "complete": true,
+    "tech_smoke": [],
+    "expected": 25,
+    "present": 25
+  },
+  "smoke_with_later_bin_additions": {
+    "rc": 0,
+    "stdout": "── 관문: 스모크 증서 (bin 0 · 사전등록 §8 ③ · D-4) — C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr6_launch_jh8r5k8k\\smoke\\smoke.json\n  ✓ run = LH_s32452843 (목록의 첫 원소 · 기대 LH_s32452843)\n  ✓ smoke.complete = true (true 여야 — bin 0 계획 프레임 전부)\n  ✓ smoke.tech_smoke = [] ([] 여야)\n  ✓ smoke.qc_repr.pass = true (true 여야 — bin 0 부피 누락 QC)\n  ✓ 첫 시드 봉인 = LH_s32452843 · first 단계\n── 관문: 증서 출처 — 판독 규약 · 판독기 · 덱 · 발사 봉인 · 프레임 (이 폴더에서 다시 해시)\n  ✓ provenance.schema = \"mixing_provenance/1\" (출처 블록이 없는 판독기의 증서는 받지 않는다)\n  ✓ 판독 규약 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138} = 등록 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138}\n  ✓ 판독기 sha256 9f17569cdca3… = 지금 리포의 판독기\n  ✓ 출처 run = \"LH_s32452843\" · 덱 sha256 = 첫 봉인 때\n  ✓ 증서가 본 발사 봉인 sha256 = 지금 첫 시드 봉인 (다른 발사 · 옛 봉인 때의 증서가 아니다)\n  ✓ 판독 프레임 = 첫 시드 post/ 의 그 파일 (다시 해시)\n  ✓ 기준 = E0_s32452843 · 덱 · 프레임 (다시 해시)\n── 관문: 스모크 창 입력 집합 — 지금 폴더를 판독기 파일 규칙으로 다시 열거 (bin 0 · E0 t₀ · HBR5-02)\n  ✓ 증서의 창 정의 — t0_step 200 · plan.steps_per_rev 1000.0 · dump_every 40 · steps_total 8201\n  ✓ bin 0 에 같은 step 의 덤프 둘 이상: 없음\n  ✓ bin 0 격자 밖 프레임 (격자 = t₀ + k·dump_every): 없음\n  ✓ bin 0 결손: 없음 (계획 격자 25 장)\n  ✓ bin 0 파일 (step · 이름 · sha256) = 증서가 판독한 그 파일들 (25 장 / 증서 25)\n  ✓ E0 기준 t₀ step 200 의 덤프 = 정확히 한 장 · 증서와 같은 파일 (지금 1 장)\n  · (참고) 증서 mtime ≥ 첫 시드 봉인 mtime — 판정에 안 쓴다 (복사 · 재판독이면 mtime 은 새로워진다 · HBR4-05)\n── 관문: 코호트 — 첫 시드 봉인 (first) 때의 덱 · STL · 바이너리 그대로인가\n  ✓ LH_s49979687: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ LH_s67867967: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ 바이너리 sha256 658dc0ec8abc… = 첫 시드 658dc0ec8abc…\n",
+    "stderr": "",
+    "expected_rc": 0,
+    "matches_expected": true
+  },
+  "opaque_allowlisted_certificate": {
+    "rc": 0,
+    "stdout": "── 관문: 스모크 증서 (bin 0 · 사전등록 §8 ③ · D-4) — C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr6_launch_jh8r5k8k\\smoke\\smoke.json\n  ✓ run = LH_s32452843 (목록의 첫 원소 · 기대 LH_s32452843)\n  ✓ smoke.complete = true (true 여야 — bin 0 계획 프레임 전부)\n  ✓ smoke.tech_smoke = [] ([] 여야)\n  ✓ smoke.qc_repr.pass = true (true 여야 — bin 0 부피 누락 QC)\n  ✓ 첫 시드 봉인 = LH_s32452843 · first 단계\n── 관문: 증서 출처 — 판독 규약 · 판독기 · 덱 · 발사 봉인 · 프레임 (이 폴더에서 다시 해시)\n  ✓ provenance.schema = \"mixing_provenance/1\" (출처 블록이 없는 판독기의 증서는 받지 않는다)\n  ✓ 판독 규약 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138} = 등록 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138}\n  ✓ 판독기 sha256 9f17569cdca3… = 지금 리포의 판독기\n  ✓ 출처 run = \"LH_s32452843\" · 덱 sha256 = 첫 봉인 때\n  ✓ 증서가 본 발사 봉인 sha256 = 지금 첫 시드 봉인 (다른 발사 · 옛 봉인 때의 증서가 아니다)\n  ✓ 판독 프레임 = 첫 시드 post/ 의 그 파일 (다시 해시)\n  ✓ 기준 = E0_s32452843 · 덱 · 프레임 (다시 해시)\n── 관문: 스모크 창 입력 집합 — 지금 폴더를 판독기 파일 규칙으로 다시 열거 (bin 0 · E0 t₀ · HBR5-02)\n  ✓ 증서의 창 정의 — t0_step 200 · plan.steps_per_rev 1000.0 · dump_every 40 · steps_total 8201\n  ✓ bin 0 에 같은 step 의 덤프 둘 이상: 없음\n  ✓ bin 0 격자 밖 프레임 (격자 = t₀ + k·dump_every): 없음\n  ✓ bin 0 결손: 없음 (계획 격자 25 장)\n  ✓ bin 0 파일 (step · 이름 · sha256) = 증서가 판독한 그 파일들 (25 장 / 증서 25)\n  ✓ E0 기준 t₀ step 200 의 덤프 = 정확히 한 장 · 증서와 같은 파일 (지금 1 장)\n  · (참고) 증서 mtime ≥ 첫 시드 봉인 mtime — 판정에 안 쓴다 (복사 · 재판독이면 mtime 은 새로워진다 · HBR4-05)\n── 관문: 코호트 — 첫 시드 봉인 (first) 때의 덱 · STL · 바이너리 그대로인가\n  ✓ LH_s49979687: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ LH_s67867967: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ 바이너리 sha256 658dc0ec8abc… = 첫 시드 658dc0ec8abc…\n",
+    "stderr": "",
+    "expected_rc": 0,
+    "matches_expected": true
+  },
+  "opaque_projection_fields": {
+    "top_level": [
+      "plan",
+      "provenance",
+      "run",
+      "smoke",
+      "t0_step"
+    ],
+    "smoke": [
+      "complete",
+      "qc_repr",
+      "tech_smoke"
+    ],
+    "qc_repr": [
+      "pass"
+    ]
+  },
+  "tampered_certificate_narrows_bin0": {
+    "rc": 0,
+    "stdout": "── 관문: 스모크 증서 (bin 0 · 사전등록 §8 ③ · D-4) — C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr6_launch_jh8r5k8k\\smoke\\smoke.json\n  ✓ run = LH_s32452843 (목록의 첫 원소 · 기대 LH_s32452843)\n  ✓ smoke.complete = true (true 여야 — bin 0 계획 프레임 전부)\n  ✓ smoke.tech_smoke = [] ([] 여야)\n  ✓ smoke.qc_repr.pass = true (true 여야 — bin 0 부피 누락 QC)\n  ✓ 첫 시드 봉인 = LH_s32452843 · first 단계\n── 관문: 증서 출처 — 판독 규약 · 판독기 · 덱 · 발사 봉인 · 프레임 (이 폴더에서 다시 해시)\n  ✓ provenance.schema = \"mixing_provenance/1\" (출처 블록이 없는 판독기의 증서는 받지 않는다)\n  ✓ 판독 규약 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138} = 등록 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138}\n  ✓ 판독기 sha256 9f17569cdca3… = 지금 리포의 판독기\n  ✓ 출처 run = \"LH_s32452843\" · 덱 sha256 = 첫 봉인 때\n  ✓ 증서가 본 발사 봉인 sha256 = 지금 첫 시드 봉인 (다른 발사 · 옛 봉인 때의 증서가 아니다)\n  ✓ 판독 프레임 = 첫 시드 post/ 의 그 파일 (다시 해시)\n  ✓ 기준 = E0_s32452843 · 덱 · 프레임 (다시 해시)\n── 관문: 스모크 창 입력 집합 — 지금 폴더를 판독기 파일 규칙으로 다시 열거 (bin 0 · E0 t₀ · HBR5-02)\n  ✓ 증서의 창 정의 — t0_step 200 · plan.steps_per_rev 1.0 · dump_every 40 · steps_total 8201\n  ✓ bin 0 에 같은 step 의 덤프 둘 이상: 없음\n  ✓ bin 0 격자 밖 프레임 (격자 = t₀ + k·dump_every): 없음\n  ✓ bin 0 결손: 없음 (계획 격자 1 장)\n  ✓ bin 0 파일 (step · 이름 · sha256) = 증서가 판독한 그 파일들 (1 장 / 증서 1)\n  ✓ E0 기준 t₀ step 200 의 덤프 = 정확히 한 장 · 증서와 같은 파일 (지금 1 장)\n  · (참고) 증서 mtime ≥ 첫 시드 봉인 mtime — 판정에 안 쓴다 (복사 · 재판독이면 mtime 은 새로워진다 · HBR4-05)\n── 관문: 코호트 — 첫 시드 봉인 (first) 때의 덱 · STL · 바이너리 그대로인가\n  ✓ LH_s49979687: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ LH_s67867967: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ 바이너리 sha256 658dc0ec8abc… = 첫 시드 658dc0ec8abc…\n",
+    "stderr": "",
+    "expected_rc": 0,
+    "matches_expected": true
+  },
+  "fractional_window": {
+    "steps_per_rev": 1000.2500000000001,
+    "expected": 26
+  },
+  "fractional_smoke_normal": {
+    "rc": 0,
+    "stdout": "── 관문: 스모크 증서 (bin 0 · 사전등록 §8 ③ · D-4) — C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr6_launch_jh8r5k8k\\fractional\\smoke.json\n  ✓ run = LH_s32452843 (목록의 첫 원소 · 기대 LH_s32452843)\n  ✓ smoke.complete = true (true 여야 — bin 0 계획 프레임 전부)\n  ✓ smoke.tech_smoke = [] ([] 여야)\n  ✓ smoke.qc_repr.pass = true (true 여야 — bin 0 부피 누락 QC)\n  ✓ 첫 시드 봉인 = LH_s32452843 · first 단계\n── 관문: 증서 출처 — 판독 규약 · 판독기 · 덱 · 발사 봉인 · 프레임 (이 폴더에서 다시 해시)\n  ✓ provenance.schema = \"mixing_provenance/1\" (출처 블록이 없는 판독기의 증서는 받지 않는다)\n  ✓ 판독 규약 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138} = 등록 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138}\n  ✓ 판독기 sha256 9f17569cdca3… = 지금 리포의 판독기\n  ✓ 출처 run = \"LH_s32452843\" · 덱 sha256 = 첫 봉인 때\n  ✓ 증서가 본 발사 봉인 sha256 = 지금 첫 시드 봉인 (다른 발사 · 옛 봉인 때의 증서가 아니다)\n  ✓ 판독 프레임 = 첫 시드 post/ 의 그 파일 (다시 해시)\n  ✓ 기준 = E0_s32452843 · 덱 · 프레임 (다시 해시)\n── 관문: 스모크 창 입력 집합 — 지금 폴더를 판독기 파일 규칙으로 다시 열거 (bin 0 · E0 t₀ · HBR5-02)\n  ✓ 증서의 창 정의 — t0_step 200 · plan.steps_per_rev 1000.2500000000001 · dump_every 40 · steps_total 8201\n  ✓ bin 0 에 같은 step 의 덤프 둘 이상: 없음\n  ✓ bin 0 격자 밖 프레임 (격자 = t₀ + k·dump_every): 없음\n  ✓ bin 0 결손: 없음 (계획 격자 26 장)\n  ✓ bin 0 파일 (step · 이름 · sha256) = 증서가 판독한 그 파일들 (26 장 / 증서 26)\n  ✓ E0 기준 t₀ step 200 의 덤프 = 정확히 한 장 · 증서와 같은 파일 (지금 1 장)\n  · (참고) 증서 mtime ≥ 첫 시드 봉인 mtime — 판정에 안 쓴다 (복사 · 재판독이면 mtime 은 새로워진다 · HBR4-05)\n── 관문: 코호트 — 첫 시드 봉인 (first) 때의 덱 · STL · 바이너리 그대로인가\n  ✓ LH_s49979687: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ LH_s67867967: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ 바이너리 sha256 658dc0ec8abc… = 첫 시드 658dc0ec8abc…\n",
+    "stderr": "",
+    "expected_rc": 0,
+    "matches_expected": true
+  },
+  "fractional_duplicate_1200": {
+    "rc": 1,
+    "stdout": "── 관문: 스모크 증서 (bin 0 · 사전등록 §8 ③ · D-4) — C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr6_launch_jh8r5k8k\\fractional\\smoke.json\n  ✓ run = LH_s32452843 (목록의 첫 원소 · 기대 LH_s32452843)\n  ✓ smoke.complete = true (true 여야 — bin 0 계획 프레임 전부)\n  ✓ smoke.tech_smoke = [] ([] 여야)\n  ✓ smoke.qc_repr.pass = true (true 여야 — bin 0 부피 누락 QC)\n  ✓ 첫 시드 봉인 = LH_s32452843 · first 단계\n── 관문: 증서 출처 — 판독 규약 · 판독기 · 덱 · 발사 봉인 · 프레임 (이 폴더에서 다시 해시)\n  ✓ provenance.schema = \"mixing_provenance/1\" (출처 블록이 없는 판독기의 증서는 받지 않는다)\n  ✓ 판독 규약 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138} = 등록 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138}\n  ✓ 판독기 sha256 9f17569cdca3… = 지금 리포의 판독기\n  ✓ 출처 run = \"LH_s32452843\" · 덱 sha256 = 첫 봉인 때\n  ✓ 증서가 본 발사 봉인 sha256 = 지금 첫 시드 봉인 (다른 발사 · 옛 봉인 때의 증서가 아니다)\n  ✓ 판독 프레임 = 첫 시드 post/ 의 그 파일 (다시 해시)\n  ✓ 기준 = E0_s32452843 · 덱 · 프레임 (다시 해시)\n── 관문: 스모크 창 입력 집합 — 지금 폴더를 판독기 파일 규칙으로 다시 열거 (bin 0 · E0 t₀ · HBR5-02)\n  ✓ 증서의 창 정의 — t0_step 200 · plan.steps_per_rev 1000.2500000000001 · dump_every 40 · steps_total 8201\n  ✗ bin 0 에 같은 step 의 덤프 둘 이상: [1200]\n  ✓ bin 0 격자 밖 프레임 (격자 = t₀ + k·dump_every): 없음\n  ✓ bin 0 결손: 없음 (계획 격자 26 장)\n  ✗ bin 0 파일 (step · 이름 · sha256) = 증서가 판독한 그 파일들 (25 장 / 증서 26)\n  ✓ E0 기준 t₀ step 200 의 덤프 = 정확히 한 장 · 증서와 같은 파일 (지금 1 장)\n  · (참고) 증서 mtime ≥ 첫 시드 봉인 mtime — 판정에 안 쓴다 (복사 · 재판독이면 mtime 은 새로워진다 · HBR4-05)\n── 관문: 코호트 — 첫 시드 봉인 (first) 때의 덱 · STL · 바이너리 그대로인가\n  ✓ LH_s49979687: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ LH_s67867967: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ 바이너리 sha256 658dc0ec8abc… = 첫 시드 658dc0ec8abc…\n",
+    "stderr": "",
+    "expected_rc": 1,
+    "matches_expected": true
+  },
+  "fractional_reader_1200": {
+    "complete": false,
+    "tech_smoke": [
+      "bin 0 결손 1/26 프레임 (step [1200])",
+      "bin 0 에 같은 step 의 덤프가 둘 이상"
+    ],
+    "expected": 26,
+    "present": 25
+  },
+  "fractional_duplicate_1240": {
+    "rc": 0,
+    "stdout": "── 관문: 스모크 증서 (bin 0 · 사전등록 §8 ③ · D-4) — C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr6_launch_jh8r5k8k\\fractional\\smoke.json\n  ✓ run = LH_s32452843 (목록의 첫 원소 · 기대 LH_s32452843)\n  ✓ smoke.complete = true (true 여야 — bin 0 계획 프레임 전부)\n  ✓ smoke.tech_smoke = [] ([] 여야)\n  ✓ smoke.qc_repr.pass = true (true 여야 — bin 0 부피 누락 QC)\n  ✓ 첫 시드 봉인 = LH_s32452843 · first 단계\n── 관문: 증서 출처 — 판독 규약 · 판독기 · 덱 · 발사 봉인 · 프레임 (이 폴더에서 다시 해시)\n  ✓ provenance.schema = \"mixing_provenance/1\" (출처 블록이 없는 판독기의 증서는 받지 않는다)\n  ✓ 판독 규약 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138} = 등록 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138}\n  ✓ 판독기 sha256 9f17569cdca3… = 지금 리포의 판독기\n  ✓ 출처 run = \"LH_s32452843\" · 덱 sha256 = 첫 봉인 때\n  ✓ 증서가 본 발사 봉인 sha256 = 지금 첫 시드 봉인 (다른 발사 · 옛 봉인 때의 증서가 아니다)\n  ✓ 판독 프레임 = 첫 시드 post/ 의 그 파일 (다시 해시)\n  ✓ 기준 = E0_s32452843 · 덱 · 프레임 (다시 해시)\n── 관문: 스모크 창 입력 집합 — 지금 폴더를 판독기 파일 규칙으로 다시 열거 (bin 0 · E0 t₀ · HBR5-02)\n  ✓ 증서의 창 정의 — t0_step 200 · plan.steps_per_rev 1000.2500000000001 · dump_every 40 · steps_total 8201\n  ✓ bin 0 에 같은 step 의 덤프 둘 이상: 없음\n  ✓ bin 0 격자 밖 프레임 (격자 = t₀ + k·dump_every): 없음\n  ✓ bin 0 결손: 없음 (계획 격자 26 장)\n  ✓ bin 0 파일 (step · 이름 · sha256) = 증서가 판독한 그 파일들 (26 장 / 증서 26)\n  ✓ E0 기준 t₀ step 200 의 덤프 = 정확히 한 장 · 증서와 같은 파일 (지금 1 장)\n  · (참고) 증서 mtime ≥ 첫 시드 봉인 mtime — 판정에 안 쓴다 (복사 · 재판독이면 mtime 은 새로워진다 · HBR4-05)\n── 관문: 코호트 — 첫 시드 봉인 (first) 때의 덱 · STL · 바이너리 그대로인가\n  ✓ LH_s49979687: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ LH_s67867967: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ 바이너리 sha256 658dc0ec8abc… = 첫 시드 658dc0ec8abc…\n",
+    "stderr": "",
+    "expected_rc": 0,
+    "matches_expected": true
+  },
+  "fractional_reader_1240": {
+    "complete": true,
+    "tech_smoke": [],
+    "expected": 26,
+    "present": 26
+  },
+  "scope": "Only start_check CLI/functions, reader functions, and Python extracted from rest; no shell launch, MPI, SLURM, or DEM invocation. Synthetic data only.",
+  "pin": "18787ab98a13361c37b2343bd07ae276142d0953"
+}

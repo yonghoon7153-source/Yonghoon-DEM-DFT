@@ -1,0 +1,26 @@
+  PASS  ① LC → LH (B): CED 밖 차이 0 · 바뀐 쌍 = 허용 다섯 쌍 (5)
+  PASS  ② 같은 두 덱을 A (AM–AM 단독) 로 보면 AM–벽 변화가 허용목록 밖 = FAIL ([('AM_P', 'WALL'), ('AM_S', 'WALL')])
+  PASS  ③ 변이: SE–SE CED 를 바꾸면 허용목록 밖 = FAIL ([('SE', 'SE')])
+  PASS  ④ 변이: timestep 이 다르면 CED 밖 차이 = FAIL (1 건)
+  PASS  ⑤ 주석만 다르면 CED 밖 차이 0 (개입 없음 → 허용 쌍 누락으로 FAIL 이 정상)
+  PASS  ⑥ 캠페인 조건 LC_s* → LH_s* 세 시드 모두 PASS (바뀐 쌍 다섯)
+  PASS  ⑦ 시드가 다르면 CED 밖 차이 = FAIL (짝은 같은 시드끼리)
+  PASS  ⑧ 변이: 새 덱 P–S 한 방향만 ×2 (비대칭) → FAIL (기준 덱만 대칭 검사하던 구멍)
+  PASS  ⑨ 변이: 고정이어야 할 SE–SE 를 NaN 으로 → FAIL (비유한)
+  PASS  ⑩ 변이: 새 P–P 를 음수로 → FAIL (물리 범위)
+  PASS  ⑪ 변이: CED fix 의 ID/group 을 바꾸면 → FAIL (명령 머리도 비교)
+  PASS  ⑫ 변이: 허용 쌍이 바뀌었어도 **방향이 반대** (P–P 가 LC 보다 작아짐) 면 FAIL ([('AM_P', 'AM_P')])
+  PASS  ⑬ 목표 행렬 (생성기가 낸 LH) 을 주면 일치할 때만 PASS (1 % 어긋나면 FAIL)
+  PASS  ⑭ --runs: 예정 세 시드 중 하나만 있으면 1/3 로 세고 빠진 시드를 보고한다 ([49979687, 67867967])
+  PASS  ⑮ Codex 반례: seed 32452843 의 LC/LH 한 쌍을 예정 세 디렉터리에 복사 + --expect-deck → FAIL (rc 1 · 0/3 · 기대 서명 불일치 · 같은 서명이 다른 시드에) [옛 판: 3/3 PASS · rc 0]
+  PASS  ⑯ 옳은 코호트 옆 예정 밖 LH_s91648301 하나 → FAIL (rc 1) · "예정 밖" 보고 [옛 판: 기준 덱을 열다 예외]
+  PASS  ⑰ 옳은 코호트 옆 예정 밖 LC_s91648301 (기준 팔) 하나 → FAIL (rc 1) [옛 판: 보지도 않고 rc 0]
+  PASS  ⑱ 예정 밖 짝 (LC+LH_s91648301) 을 더해도 4/3 이 아니라 3/3 짝 + 예정 밖 → FAIL (rc 1) [옛 판: 4/4 PASS · rc 0]
+  PASS  ⑲ LH_s32452843 의 삽입 시드만 15485863 으로 → FAIL (rc 1) · 서명이 기대와 다르다며 insA 를 짚는다
+  PASS  ⑳ LC·LH 둘 다 같은 시드 명령을 고치면 (짝 비교는 못 본다) → 넷 다 FAIL · 고친 fix 를 짚는다 {'insA': (2, 1, True), 'insB': (2, 1, True), 'pddA': (2, 1, True), 'pt3': (2, 1, True)}
+  PASS  ㉑ 생성기 CLI 로 만든 옳은 세 시드 코호트 → 3/3 PASS · rc 0 (예정 밖 · ⛔ 없음)
+  PASS  ㉑b 디렉터리 여섯의 실제 시드 서명을 한 줄씩 찍고 (✓) --json 에 짝마다 시드 · 서명 (실제 · 기대) · 코호트를 남긴다
+  PASS  ㉒ expected_deck(팔, 시드) = 생성기 CLI 가 쓴 in.mixer (바이트 동일 · 여섯 덱) — 시드 유도를 다시 짜지 않는다
+  PASS  ㉓ seed_signature: 층상 LC (pt1-3 · pddA/B · insA/B, insA = 설계 시드) · 균일 E1 (다섯) · 섬유 multisphere 템플릿 — 원문 정규식과 일치
+
+mixer_deck_diff selftest: 24/24 PASS

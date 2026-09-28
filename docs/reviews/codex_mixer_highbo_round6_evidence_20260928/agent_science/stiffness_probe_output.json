@@ -1,0 +1,641 @@
+{
+  "scope": "synthetic arithmetic only; no simulation or campaign-frame reads",
+  "base": {
+    "SE_multiplier": 1,
+    "plan_dt_s": 7.054887347174009e-07,
+    "deck_dt_s": 7.055e-07,
+    "rayleigh20_by_phase_s": {
+      "AM_P": 1.5873496531141521e-06,
+      "AM_S": 7.054887347174009e-07,
+      "SE": 1.171890191196987e-06
+    },
+    "dt_min_phase": "AM_S",
+    "diameters_m": {
+      "AM_P": 0.0013626,
+      "AM_S": 0.0006056,
+      "SE": 0.0001514
+    },
+    "R_m": 0.013137687235248028,
+    "pairs": {
+      "LC": {
+        "AM_P--AM_P": {
+          "E_star_Pa": 553066666.6666666,
+          "CED_J_m3": 108795.27503689674,
+          "adhesive_equilibrium_overlap_m": 2.9272226502571447e-10,
+          "adhesive_equilibrium_force_N": 6.816384073278251e-08,
+          "pull_off_N": 1.0098346775227038e-08,
+          "separation_energy_J": 1.9953073852152154e-18
+        },
+        "AM_P--AM_S": {
+          "E_star_Pa": 553066666.6666666,
+          "CED_J_m3": 108795.27503689674,
+          "adhesive_equilibrium_overlap_m": 1.801367784773627e-10,
+          "adhesive_equilibrium_force_N": 2.581352548460402e-08,
+          "pull_off_N": 3.824225997719114e-09,
+          "separation_energy_J": 4.649965321939871e-19
+        },
+        "AM_P--SE": {
+          "E_star_Pa": 10880913.28321328,
+          "CED_J_m3": 10458.232423831554,
+          "adhesive_equilibrium_overlap_m": 1.3976760806606712e-09,
+          "adhesive_equilibrium_force_N": 6.257243841428148e-09,
+          "pull_off_N": 9.269990876189849e-10,
+          "separation_energy_J": 8.745600048025419e-19
+        },
+        "AM_P--WALL": {
+          "E_star_Pa": 658364683.8282923,
+          "CED_J_m3": 59063.16223248812,
+          "adhesive_equilibrium_overlap_m": 1.2176458431265919e-10,
+          "adhesive_equilibrium_force_N": 3.078618984042486e-08,
+          "pull_off_N": 4.5609170133962755e-09,
+          "separation_energy_J": 3.7486676084899447e-19
+        },
+        "AM_S--AM_S": {
+          "E_star_Pa": 553066666.6666666,
+          "CED_J_m3": 142562.1403917686,
+          "adhesive_equilibrium_overlap_m": 2.2338889725827096e-10,
+          "adhesive_equilibrium_force_N": 3.029504032568112e-08,
+          "pull_off_N": 4.488154122323129e-09,
+          "separation_energy_J": 6.767575650748755e-19
+        },
+        "AM_S--SE": {
+          "E_star_Pa": 10880913.28321328,
+          "CED_J_m3": 10458.232423831554,
+          "adhesive_equilibrium_overlap_m": 1.2423787383650405e-09,
+          "adhesive_equilibrium_force_N": 4.943995133967917e-09,
+          "pull_off_N": 7.324437235508025e-10,
+          "separation_energy_J": 6.142314437021959e-19
+        },
+        "AM_S--WALL": {
+          "E_star_Pa": 658364683.8282923,
+          "CED_J_m3": 77394.6370677786,
+          "adhesive_equilibrium_overlap_m": 9.292376926752472e-11,
+          "adhesive_equilibrium_force_N": 1.368275104018884e-08,
+          "pull_off_N": 2.0270742281761244e-09,
+          "separation_energy_J": 1.2714528006034915e-19
+        },
+        "SE--SE": {
+          "E_star_Pa": 5494505.494505494,
+          "CED_J_m3": 10458.232423831554,
+          "adhesive_equilibrium_overlap_m": 3.0451416685218765e-09,
+          "adhesive_equilibrium_force_N": 7.573760081420283e-09,
+          "pull_off_N": 1.1220385305807826e-09,
+          "separation_energy_J": 2.3063172411320543e-18
+        },
+        "SE--WALL": {
+          "E_star_Pa": 10915259.237406887,
+          "CED_J_m3": 5677.602065938484,
+          "adhesive_equilibrium_overlap_m": 4.5482039829293053e-10,
+          "adhesive_equilibrium_force_N": 1.2282326338028619e-09,
+          "pull_off_N": 1.8196039019301656e-10,
+          "separation_energy_J": 5.586252557025927e-20
+        }
+      },
+      "LH": {
+        "AM_P--AM_P": {
+          "E_star_Pa": 553066666.6666666,
+          "CED_J_m3": 3563475.4009469086,
+          "adhesive_equilibrium_overlap_m": 3.1403873439785713e-07,
+          "adhesive_equilibrium_force_N": 0.0023952190948813416,
+          "pull_off_N": 0.0003548472733157543,
+          "separation_energy_J": 7.521915731621175e-11
+        },
+        "AM_P--AM_S": {
+          "E_star_Pa": 553066666.6666666,
+          "CED_J_m3": 2719440.6963015813,
+          "adhesive_equilibrium_overlap_m": 1.1254896555506842e-07,
+          "adhesive_equilibrium_force_N": 0.0004031400974948218,
+          "pull_off_N": 5.972445888812175e-05,
+          "separation_energy_J": 4.5373000946811625e-12
+        },
+        "AM_P--SE": {
+          "E_star_Pa": 10880913.28321328,
+          "CED_J_m3": 10458.232423831554,
+          "adhesive_equilibrium_overlap_m": 1.3976760806606712e-09,
+          "adhesive_equilibrium_force_N": 6.257243841428148e-09,
+          "pull_off_N": 9.269990876189849e-10,
+          "separation_energy_J": 8.745600048025419e-19
+        },
+        "AM_P--WALL": {
+          "E_star_Pa": 658364683.8282923,
+          "CED_J_m3": 1934552.0809265776,
+          "adhesive_equilibrium_overlap_m": 1.306316618883417e-07,
+          "adhesive_equilibrium_force_N": 0.0010818003940462164,
+          "pull_off_N": 0.0001602667250438839,
+          "separation_energy_J": 1.4131738330572015e-11
+        },
+        "AM_S--AM_S": {
+          "E_star_Pa": 553066666.6666666,
+          "CED_J_m3": 2719440.6963015813,
+          "adhesive_equilibrium_overlap_m": 8.128536401199385e-08,
+          "adhesive_equilibrium_force_N": 0.00021027986566859525,
+          "pull_off_N": 3.115257269164374e-05,
+          "separation_energy_J": 1.7092675425264933e-12
+        },
+        "AM_S--SE": {
+          "E_star_Pa": 10880913.28321328,
+          "CED_J_m3": 10458.232423831554,
+          "adhesive_equilibrium_overlap_m": 1.2423787383650405e-09,
+          "adhesive_equilibrium_force_N": 4.943995133967917e-09,
+          "pull_off_N": 7.324437235508025e-10,
+          "separation_energy_J": 6.142314437021959e-19
+        },
+        "AM_S--WALL": {
+          "E_star_Pa": 658364683.8282923,
+          "CED_J_m3": 1476339.5466652263,
+          "adhesive_equilibrium_overlap_m": 3.381252382272373e-08,
+          "adhesive_equilibrium_force_N": 9.497287410007932e-05,
+          "pull_off_N": 1.4070055422233972e-05,
+          "separation_energy_J": 3.211272568021473e-13
+        },
+        "SE--SE": {
+          "E_star_Pa": 5494505.494505494,
+          "CED_J_m3": 10458.232423831554,
+          "adhesive_equilibrium_overlap_m": 3.0451416685218765e-09,
+          "adhesive_equilibrium_force_N": 7.573760081420283e-09,
+          "pull_off_N": 1.1220385305807826e-09,
+          "separation_energy_J": 2.3063172411320543e-18
+        },
+        "SE--WALL": {
+          "E_star_Pa": 10915259.237406887,
+          "CED_J_m3": 5677.602065938484,
+          "adhesive_equilibrium_overlap_m": 4.5482039829293053e-10,
+          "adhesive_equilibrium_force_N": 1.2282326338028619e-09,
+          "pull_off_N": 1.8196039019301656e-10,
+          "separation_energy_J": 5.586252557025927e-20
+        }
+      }
+    },
+    "CED_matrices_J_m3": {
+      "LC": [
+        [
+          108795.27503689674,
+          108795.27503689674,
+          10458.232423831554,
+          59063.16223248812
+        ],
+        [
+          108795.27503689674,
+          142562.1403917686,
+          10458.232423831554,
+          77394.6370677786
+        ],
+        [
+          10458.232423831554,
+          10458.232423831554,
+          10458.232423831554,
+          5677.602065938484
+        ],
+        [
+          59063.16223248812,
+          77394.6370677786,
+          5677.602065938484,
+          0.0
+        ]
+      ],
+      "LH": [
+        [
+          3563475.4009469086,
+          2719440.6963015813,
+          10458.232423831554,
+          1934552.0809265776
+        ],
+        [
+          2719440.6963015813,
+          2719440.6963015813,
+          10458.232423831554,
+          1476339.5466652263
+        ],
+        [
+          10458.232423831554,
+          10458.232423831554,
+          10458.232423831554,
+          5677.602065938484
+        ],
+        [
+          1934552.0809265776,
+          1476339.5466652263,
+          5677.602065938484,
+          0.0
+        ]
+      ]
+    }
+  },
+  "stiff": {
+    "SE_multiplier": 14,
+    "plan_dt_s": 3.132008278842952e-07,
+    "deck_dt_s": 3.132e-07,
+    "rayleigh20_by_phase_s": {
+      "AM_P": 1.5873496531141521e-06,
+      "AM_S": 7.054887347174009e-07,
+      "SE": 3.132008278842952e-07
+    },
+    "dt_min_phase": "SE",
+    "diameters_m": {
+      "AM_P": 0.0013626,
+      "AM_S": 0.0006056,
+      "SE": 0.0001514
+    },
+    "R_m": 0.013137687235248028,
+    "pairs": {
+      "LC": {
+        "AM_P--AM_P": {
+          "E_star_Pa": 553066666.6666666,
+          "CED_J_m3": 108795.27503689674,
+          "adhesive_equilibrium_overlap_m": 2.9272226502571447e-10,
+          "adhesive_equilibrium_force_N": 6.816384073278251e-08,
+          "pull_off_N": 1.0098346775227038e-08,
+          "separation_energy_J": 1.9953073852152154e-18
+        },
+        "AM_P--AM_S": {
+          "E_star_Pa": 553066666.6666666,
+          "CED_J_m3": 108795.27503689674,
+          "adhesive_equilibrium_overlap_m": 1.801367784773627e-10,
+          "adhesive_equilibrium_force_N": 2.581352548460402e-08,
+          "pull_off_N": 3.824225997719114e-09,
+          "separation_energy_J": 4.649965321939871e-19
+        },
+        "AM_P--SE": {
+          "E_star_Pa": 135061213.85777545,
+          "CED_J_m3": 60749.631301846086,
+          "adhesive_equilibrium_overlap_m": 3.0608824281495616e-10,
+          "adhesive_equilibrium_force_N": 7.959917232857351e-09,
+          "pull_off_N": 1.1792469974603482e-09,
+          "separation_energy_J": 2.4364370787577947e-19
+        },
+        "AM_P--WALL": {
+          "E_star_Pa": 658364683.8282923,
+          "CED_J_m3": 59063.16223248812,
+          "adhesive_equilibrium_overlap_m": 1.2176458431265919e-10,
+          "adhesive_equilibrium_force_N": 3.078618984042486e-08,
+          "pull_off_N": 4.5609170133962755e-09,
+          "separation_energy_J": 3.7486676084899447e-19
+        },
+        "AM_S--AM_S": {
+          "E_star_Pa": 553066666.6666666,
+          "CED_J_m3": 142562.1403917686,
+          "adhesive_equilibrium_overlap_m": 2.2338889725827096e-10,
+          "adhesive_equilibrium_force_N": 3.029504032568112e-08,
+          "pull_off_N": 4.488154122323129e-09,
+          "separation_energy_J": 6.767575650748755e-19
+        },
+        "AM_S--SE": {
+          "E_star_Pa": 135061213.85777545,
+          "CED_J_m3": 60749.631301846086,
+          "adhesive_equilibrium_overlap_m": 2.720784380577388e-10,
+          "adhesive_equilibrium_force_N": 6.289317319788523e-09,
+          "pull_off_N": 9.317507140427442e-10,
+          "separation_energy_J": 1.7111876328175456e-19
+        },
+        "AM_S--WALL": {
+          "E_star_Pa": 658364683.8282923,
+          "CED_J_m3": 77394.6370677786,
+          "adhesive_equilibrium_overlap_m": 9.292376926752472e-11,
+          "adhesive_equilibrium_force_N": 1.368275104018884e-08,
+          "pull_off_N": 2.0270742281761244e-09,
+          "separation_energy_J": 1.2714528006034915e-19
+        },
+        "SE--SE": {
+          "E_star_Pa": 76923076.92307691,
+          "CED_J_m3": 60749.631301846086,
+          "adhesive_equilibrium_overlap_m": 5.242303311218326e-10,
+          "adhesive_equilibrium_force_N": 7.573760081420286e-09,
+          "pull_off_N": 1.122038530580783e-09,
+          "separation_energy_J": 3.970394755320274e-19
+        },
+        "SE--WALL": {
+          "E_star_Pa": 140550807.21747386,
+          "CED_J_m3": 32979.97388147528,
+          "adhesive_equilibrium_overlap_m": 9.255759667470374e-11,
+          "adhesive_equilibrium_force_N": 1.4519047448998825e-09,
+          "pull_off_N": 2.1509699924442703e-10,
+          "separation_energy_J": 1.3438481378853196e-20
+        }
+      },
+      "LH": {
+        "AM_P--AM_P": {
+          "E_star_Pa": 553066666.6666666,
+          "CED_J_m3": 3563475.4009469086,
+          "adhesive_equilibrium_overlap_m": 3.1403873439785713e-07,
+          "adhesive_equilibrium_force_N": 0.0023952190948813416,
+          "pull_off_N": 0.0003548472733157543,
+          "separation_energy_J": 7.521915731621175e-11
+        },
+        "AM_P--AM_S": {
+          "E_star_Pa": 553066666.6666666,
+          "CED_J_m3": 2719440.6963015813,
+          "adhesive_equilibrium_overlap_m": 1.1254896555506842e-07,
+          "adhesive_equilibrium_force_N": 0.0004031400974948218,
+          "pull_off_N": 5.972445888812175e-05,
+          "separation_energy_J": 4.5373000946811625e-12
+        },
+        "AM_P--SE": {
+          "E_star_Pa": 135061213.85777545,
+          "CED_J_m3": 60749.631301846086,
+          "adhesive_equilibrium_overlap_m": 3.0608824281495616e-10,
+          "adhesive_equilibrium_force_N": 7.959917232857351e-09,
+          "pull_off_N": 1.1792469974603482e-09,
+          "separation_energy_J": 2.4364370787577947e-19
+        },
+        "AM_P--WALL": {
+          "E_star_Pa": 658364683.8282923,
+          "CED_J_m3": 1934552.0809265776,
+          "adhesive_equilibrium_overlap_m": 1.306316618883417e-07,
+          "adhesive_equilibrium_force_N": 0.0010818003940462164,
+          "pull_off_N": 0.0001602667250438839,
+          "separation_energy_J": 1.4131738330572015e-11
+        },
+        "AM_S--AM_S": {
+          "E_star_Pa": 553066666.6666666,
+          "CED_J_m3": 2719440.6963015813,
+          "adhesive_equilibrium_overlap_m": 8.128536401199385e-08,
+          "adhesive_equilibrium_force_N": 0.00021027986566859525,
+          "pull_off_N": 3.115257269164374e-05,
+          "separation_energy_J": 1.7092675425264933e-12
+        },
+        "AM_S--SE": {
+          "E_star_Pa": 135061213.85777545,
+          "CED_J_m3": 60749.631301846086,
+          "adhesive_equilibrium_overlap_m": 2.720784380577388e-10,
+          "adhesive_equilibrium_force_N": 6.289317319788523e-09,
+          "pull_off_N": 9.317507140427442e-10,
+          "separation_energy_J": 1.7111876328175456e-19
+        },
+        "AM_S--WALL": {
+          "E_star_Pa": 658364683.8282923,
+          "CED_J_m3": 1476339.5466652263,
+          "adhesive_equilibrium_overlap_m": 3.381252382272373e-08,
+          "adhesive_equilibrium_force_N": 9.497287410007932e-05,
+          "pull_off_N": 1.4070055422233972e-05,
+          "separation_energy_J": 3.211272568021473e-13
+        },
+        "SE--SE": {
+          "E_star_Pa": 76923076.92307691,
+          "CED_J_m3": 60749.631301846086,
+          "adhesive_equilibrium_overlap_m": 5.242303311218326e-10,
+          "adhesive_equilibrium_force_N": 7.573760081420286e-09,
+          "pull_off_N": 1.122038530580783e-09,
+          "separation_energy_J": 3.970394755320274e-19
+        },
+        "SE--WALL": {
+          "E_star_Pa": 140550807.21747386,
+          "CED_J_m3": 32979.97388147528,
+          "adhesive_equilibrium_overlap_m": 9.255759667470374e-11,
+          "adhesive_equilibrium_force_N": 1.4519047448998825e-09,
+          "pull_off_N": 2.1509699924442703e-10,
+          "separation_energy_J": 1.3438481378853196e-20
+        }
+      }
+    },
+    "CED_matrices_J_m3": {
+      "LC": [
+        [
+          108795.27503689674,
+          108795.27503689674,
+          60749.631301846086,
+          59063.16223248812
+        ],
+        [
+          108795.27503689674,
+          142562.1403917686,
+          60749.631301846086,
+          77394.6370677786
+        ],
+        [
+          60749.631301846086,
+          60749.631301846086,
+          60749.631301846086,
+          32979.97388147528
+        ],
+        [
+          59063.16223248812,
+          77394.6370677786,
+          32979.97388147528,
+          0.0
+        ]
+      ],
+      "LH": [
+        [
+          3563475.4009469086,
+          2719440.6963015813,
+          60749.631301846086,
+          1934552.0809265776
+        ],
+        [
+          2719440.6963015813,
+          2719440.6963015813,
+          60749.631301846086,
+          1476339.5466652263
+        ],
+        [
+          60749.631301846086,
+          60749.631301846086,
+          60749.631301846086,
+          32979.97388147528
+        ],
+        [
+          1934552.0809265776,
+          1476339.5466652263,
+          32979.97388147528,
+          0.0
+        ]
+      ]
+    }
+  },
+  "ratios": {
+    "LC": {
+      "AM_P--AM_P": {
+        "E_star_Pa": 1.0,
+        "CED_J_m3": 1.0,
+        "adhesive_equilibrium_overlap_m": 1.0,
+        "adhesive_equilibrium_force_N": 1.0,
+        "pull_off_N": 1.0,
+        "separation_energy_J": 1.0,
+        "fixed_load_overlap_ratio": 1.0,
+        "fixed_velocity_elastic_impact_overlap_ratio": 1.0
+      },
+      "AM_P--AM_S": {
+        "E_star_Pa": 1.0,
+        "CED_J_m3": 1.0,
+        "adhesive_equilibrium_overlap_m": 1.0,
+        "adhesive_equilibrium_force_N": 1.0,
+        "pull_off_N": 1.0,
+        "separation_energy_J": 1.0,
+        "fixed_load_overlap_ratio": 1.0,
+        "fixed_velocity_elastic_impact_overlap_ratio": 1.0
+      },
+      "AM_P--SE": {
+        "E_star_Pa": 12.412672570982025,
+        "CED_J_m3": 5.808785733563703,
+        "adhesive_equilibrium_overlap_m": 0.218997983188115,
+        "adhesive_equilibrium_force_N": 1.2721123604223463,
+        "pull_off_N": 1.2721123604223463,
+        "separation_energy_J": 0.2785900413211662,
+        "fixed_load_overlap_ratio": 0.186533340174652,
+        "fixed_velocity_elastic_impact_overlap_ratio": 0.36513534974791445
+      },
+      "AM_P--WALL": {
+        "E_star_Pa": 1.0,
+        "CED_J_m3": 1.0,
+        "adhesive_equilibrium_overlap_m": 1.0,
+        "adhesive_equilibrium_force_N": 1.0,
+        "pull_off_N": 1.0,
+        "separation_energy_J": 1.0,
+        "fixed_load_overlap_ratio": 1.0,
+        "fixed_velocity_elastic_impact_overlap_ratio": 1.0
+      },
+      "AM_S--AM_S": {
+        "E_star_Pa": 1.0,
+        "CED_J_m3": 1.0,
+        "adhesive_equilibrium_overlap_m": 1.0,
+        "adhesive_equilibrium_force_N": 1.0,
+        "pull_off_N": 1.0,
+        "separation_energy_J": 1.0,
+        "fixed_load_overlap_ratio": 1.0,
+        "fixed_velocity_elastic_impact_overlap_ratio": 1.0
+      },
+      "AM_S--SE": {
+        "E_star_Pa": 12.412672570982025,
+        "CED_J_m3": 5.808785733563703,
+        "adhesive_equilibrium_overlap_m": 0.21899798318811511,
+        "adhesive_equilibrium_force_N": 1.2721123604223468,
+        "pull_off_N": 1.2721123604223468,
+        "separation_energy_J": 0.2785900413211666,
+        "fixed_load_overlap_ratio": 0.186533340174652,
+        "fixed_velocity_elastic_impact_overlap_ratio": 0.36513534974791445
+      },
+      "AM_S--WALL": {
+        "E_star_Pa": 1.0,
+        "CED_J_m3": 1.0,
+        "adhesive_equilibrium_overlap_m": 1.0,
+        "adhesive_equilibrium_force_N": 1.0,
+        "pull_off_N": 1.0,
+        "separation_energy_J": 1.0,
+        "fixed_load_overlap_ratio": 1.0,
+        "fixed_velocity_elastic_impact_overlap_ratio": 1.0
+      },
+      "SE--SE": {
+        "E_star_Pa": 14.0,
+        "CED_J_m3": 5.808785733563703,
+        "adhesive_equilibrium_overlap_m": 0.17215301886965934,
+        "adhesive_equilibrium_force_N": 1.0000000000000004,
+        "pull_off_N": 1.0000000000000004,
+        "separation_energy_J": 0.17215301886965942,
+        "fixed_load_overlap_ratio": 0.1721530188696593,
+        "fixed_velocity_elastic_impact_overlap_ratio": 0.3479755946976367
+      },
+      "SE--WALL": {
+        "E_star_Pa": 12.876543209876543,
+        "CED_J_m3": 5.808785733563704,
+        "adhesive_equilibrium_overlap_m": 0.20350361818005208,
+        "adhesive_equilibrium_force_N": 1.1821089140128818,
+        "pull_off_N": 1.1821089140128818,
+        "separation_energy_J": 0.24056344108451352,
+        "fixed_load_overlap_ratio": 0.18202615983346732,
+        "fixed_velocity_elastic_impact_overlap_ratio": 0.3598158449817894
+      }
+    },
+    "LH": {
+      "AM_P--AM_P": {
+        "E_star_Pa": 1.0,
+        "CED_J_m3": 1.0,
+        "adhesive_equilibrium_overlap_m": 1.0,
+        "adhesive_equilibrium_force_N": 1.0,
+        "pull_off_N": 1.0,
+        "separation_energy_J": 1.0,
+        "fixed_load_overlap_ratio": 1.0,
+        "fixed_velocity_elastic_impact_overlap_ratio": 1.0
+      },
+      "AM_P--AM_S": {
+        "E_star_Pa": 1.0,
+        "CED_J_m3": 1.0,
+        "adhesive_equilibrium_overlap_m": 1.0,
+        "adhesive_equilibrium_force_N": 1.0,
+        "pull_off_N": 1.0,
+        "separation_energy_J": 1.0,
+        "fixed_load_overlap_ratio": 1.0,
+        "fixed_velocity_elastic_impact_overlap_ratio": 1.0
+      },
+      "AM_P--SE": {
+        "E_star_Pa": 12.412672570982025,
+        "CED_J_m3": 5.808785733563703,
+        "adhesive_equilibrium_overlap_m": 0.218997983188115,
+        "adhesive_equilibrium_force_N": 1.2721123604223463,
+        "pull_off_N": 1.2721123604223463,
+        "separation_energy_J": 0.2785900413211662,
+        "fixed_load_overlap_ratio": 0.186533340174652,
+        "fixed_velocity_elastic_impact_overlap_ratio": 0.36513534974791445
+      },
+      "AM_P--WALL": {
+        "E_star_Pa": 1.0,
+        "CED_J_m3": 1.0,
+        "adhesive_equilibrium_overlap_m": 1.0,
+        "adhesive_equilibrium_force_N": 1.0,
+        "pull_off_N": 1.0,
+        "separation_energy_J": 1.0,
+        "fixed_load_overlap_ratio": 1.0,
+        "fixed_velocity_elastic_impact_overlap_ratio": 1.0
+      },
+      "AM_S--AM_S": {
+        "E_star_Pa": 1.0,
+        "CED_J_m3": 1.0,
+        "adhesive_equilibrium_overlap_m": 1.0,
+        "adhesive_equilibrium_force_N": 1.0,
+        "pull_off_N": 1.0,
+        "separation_energy_J": 1.0,
+        "fixed_load_overlap_ratio": 1.0,
+        "fixed_velocity_elastic_impact_overlap_ratio": 1.0
+      },
+      "AM_S--SE": {
+        "E_star_Pa": 12.412672570982025,
+        "CED_J_m3": 5.808785733563703,
+        "adhesive_equilibrium_overlap_m": 0.21899798318811511,
+        "adhesive_equilibrium_force_N": 1.2721123604223468,
+        "pull_off_N": 1.2721123604223468,
+        "separation_energy_J": 0.2785900413211666,
+        "fixed_load_overlap_ratio": 0.186533340174652,
+        "fixed_velocity_elastic_impact_overlap_ratio": 0.36513534974791445
+      },
+      "AM_S--WALL": {
+        "E_star_Pa": 1.0,
+        "CED_J_m3": 1.0,
+        "adhesive_equilibrium_overlap_m": 1.0,
+        "adhesive_equilibrium_force_N": 1.0,
+        "pull_off_N": 1.0,
+        "separation_energy_J": 1.0,
+        "fixed_load_overlap_ratio": 1.0,
+        "fixed_velocity_elastic_impact_overlap_ratio": 1.0
+      },
+      "SE--SE": {
+        "E_star_Pa": 14.0,
+        "CED_J_m3": 5.808785733563703,
+        "adhesive_equilibrium_overlap_m": 0.17215301886965934,
+        "adhesive_equilibrium_force_N": 1.0000000000000004,
+        "pull_off_N": 1.0000000000000004,
+        "separation_energy_J": 0.17215301886965942,
+        "fixed_load_overlap_ratio": 0.1721530188696593,
+        "fixed_velocity_elastic_impact_overlap_ratio": 0.3479755946976367
+      },
+      "SE--WALL": {
+        "E_star_Pa": 12.876543209876543,
+        "CED_J_m3": 5.808785733563704,
+        "adhesive_equilibrium_overlap_m": 0.20350361818005208,
+        "adhesive_equilibrium_force_N": 1.1821089140128818,
+        "pull_off_N": 1.1821089140128818,
+        "separation_energy_J": 0.24056344108451352,
+        "fixed_load_overlap_ratio": 0.18202615983346732,
+        "fixed_velocity_elastic_impact_overlap_ratio": 0.3598158449817894
+      }
+    }
+  },
+  "overall_dt_shrink": 2.252512355995519,
+  "SE14_fixed_load_projected_max_delta_over_rmin": 0.010749916394265195,
+  "SE14_fixed_velocity_elastic_impact_projected_max_delta_over_rmin": 0.02104275020597231,
+  "SE_multiplier_for_fixed_load_projected_1pct_from_known_mixed_max": 15.856666491912367,
+  "assumptions": [
+    "No network-force or velocity redistribution",
+    "Same geometry, mass, Poisson ratios",
+    "Exact generator CED output; contact force ratios use small-overlap SJKR",
+    "Baseline observed maximum is development data, not prediction validation"
+  ]
+}
