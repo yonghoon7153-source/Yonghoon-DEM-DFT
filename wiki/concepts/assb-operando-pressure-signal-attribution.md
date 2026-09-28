@@ -5,7 +5,7 @@ created: 2026-09-28
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md]
+sources: [raw/papers/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade.md, raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -46,6 +46,7 @@ h(t) = h_base(t) +            Σ_e Δh_e(q)        # 높이 신호(딜라토미�
 정전압 중에 −8.2 → ≈−6 % 로 먼저 회복한다(격자는 최저 유지). ⇒ 두께 · 압력 신호의 양극 몫을 격자 `dV/dx` 로 추정하면 입자 · 전극 층위의 수축을 과소평가할 수 있다(`[해석]` — 광학 방법이 그
 차이를 가르지 못한다: 2D 투영 · 입자 수 · 식 부호 미인쇄). 첫 충전 앞머리 Δx ≈0.12–0.18 은 격자를 움직이지 않는다 — 신품 셀 첫 충전의 양극 몫은 그 구간에서 ≈0 이다.
 62호 원형은 LCO(충전 팽창)라 이 비선형의 표본이 아니다.
+⚠ **2026-09-28 (72호) 주석 — 양극 몫은 조성 · 상한 전압에 더해 연구실 · 사이클로도 흔들린다.** 72호(Ishidzu 2016 *SSI* 288, 176 — 액체 반쪽 · 여섯 조성 · 첫 충전으로 읽힘 · 2.5–4.5 V · 0.05 C)에서 4.5 V 격자 `ΔV/V` 가 Ni 1/3 → 0.7 에 2.24 → 5.76 %(×2.6 · `[도표]` 벡터 좌표)이고, NCM111 부피 변화의 ≈47 % 가 `c` 최대(x ≈0.59) 뒤 Δx 21 % 에 몰린다(`[재현]` dV/dx ≈2.0 → 9.6 Å³ per x). 같은 조성 · 같은 4.5 V 에서 66호 표 S1 보다 +0.4…+1.0 %p(×1.1–1.5) — 격자 층위 안의 이 폭이 69호 층위 몫(입자/격자 ×1.5)과 같은 크기다. ⇒ 두께 · 압력 신호의 양극 몫을 한 교정 곡선의 `dV/dx` 로 추정할 때 조성 · 상한 전압 · 교정 셀(사이클 번호 · 율 · 로트)을 값 옆에 적는다(`[해석]`).
 
 ## 왜 중요한가 — 카드 Q2 · Q1 에서 이 신호를 쓸 때의 함정 다섯
 

@@ -1,0 +1,246 @@
+{
+ "slug": "ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-28",
+ "sources": [
+  "27610f9d-34._Lattice_volume_change_during_chargedischarge_reaction_and_cycle_performance_of_Li_NixCoyMnz_O2.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. The specimens prepared in this work are represented in the ternary phase diagram of LiCoO2, LiNiO2 and LiNi0.5Mn0.5O2.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    70.4,
+    299.6,
+    229.9
+   ],
+   "w": 1097,
+   "h": 665,
+   "dpi": 300,
+   "src": "27610f9d-34._Lattice_volume_change_during_chargedischarge_reaction_and_cycle_performance_of_Li_NixCoyMnz_O2.pdf",
+   "blank": 0.958,
+   "note": "⚠ 잘림 — bbox 위끝 70.4 pt 가 꼭짓점 이름 'LiCoO2'(텍스트 56.5–68.4 pt)를 잘랐다(삼각형 · A–F 원은 온전). 수동 fig_1_manual_p2(위끝 52.0 pt)로 보정. 라벨 ↔ 내용 맞다. `[재현]` 표 1 공칭 조성을 세 끝성분 몫으로 놓으면 여섯 원 중심과 맞는다(D · E · F = Co 0.2 한 줄 · A · B · C = LiCoO2–LiNi0.5Mn0.5O2 변). 벡터 그림"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. The lattice parameter variation of the cathode compound A, LiNi1/3Co1/3Mn1/3O2, during the reaction: delithiation process (○) and lithiation process (●).",
+   "rotated_deg": 0,
+   "bbox": [
+    70.9,
+    570.6,
+    533.1,
+    731.0
+   ],
+   "w": 1927,
+   "h": 670,
+   "dpi": 300,
+   "src": "27610f9d-34._Lattice_volume_change_during_chargedischarge_reaction_and_cycle_performance_of_Li_NixCoyMnz_O2.pdf",
+   "blank": 0.935,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0. 벡터 그림 — 표지 원 ○ 23/23/26 · ● 17/17/17(판 a/b/c). ⚠ (c) 세로축 'Unit cell volume / Å'(세제곱 없음 — digest D2) · (c) 의 ○ x 0.698 · 0.718 · 0.727 · 0.738 은 (a)(b) 짝 없음(D3). 짝 있는 39 점은 V = (√3/2)a²c 로 −0.015 ± 0.002 Å³(●) 재현. 가로축 이름표 = 식 'Li1-x MO2'(x 정의 인쇄 0)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. The relationship between the unit cell volume difference during the charge– discharge reaction and the Ni fraction. The dashed line is drawn as a guide for the eyes.",
+   "rotated_deg": 0,
+   "bbox": [
+    27.7,
+    65.8,
+    290.7,
+    236.1
+   ],
+   "w": 1097,
+   "h": 710,
+   "dpi": 300,
+   "src": "27610f9d-34._Lattice_volume_change_during_chargedischarge_reaction_and_cycle_performance_of_Li_NixCoyMnz_O2.pdf",
+   "blank": 0.96,
+   "note": "⚠ 잘림 — bbox 위끝 65.8 pt 가 세로축 최댓값 '8.0'(55.8–63.8 pt)과 축 이름 '(%)' 윗부분을 잘랐다(여섯 점 · 점선은 온전). 수동 fig_3_manual_p3(위끝 50.0 pt)로 보정. 라벨 ↔ 내용 맞다. 축 이름 인쇄 철자 'differance'. Ni 0.5 두 점 이름표 없음. 점선('guide for the eyes') = 여섯 점 최소제곱선(기울기 8.61 ↔ 8.62 %/Ni — `[재현]`)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 3,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. The variation of the initial capacity (a), the average discharge voltage (b) and the capacity retention after the cycling test (c) with the Ni fraction in the cathode compounds. The dashed lines are drawn as a guide for the eyes.",
+   "rotated_deg": 0,
+   "bbox": [
+    27.7,
+    566.1,
+    558.8,
+    722.6
+   ],
+   "w": 2214,
+   "h": 653,
+   "dpi": 300,
+   "src": "27610f9d-34._Lattice_volume_change_during_chargedischarge_reaction_and_cycle_performance_of_Li_NixCoyMnz_O2.pdf",
+   "blank": 0.957,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0 · 세 판 온전. 벡터 그림 — (a) 초기 방전 용량 (b) 평균 방전 전압 (c) 유지율 · 조건 0.1 C · 25 °C · 2.5–4.5 V(실험 절). 점선 셋 = 여섯 점 최소제곱선(`[재현]`). Ni 0.5 두 점 이름표 없음(그리기 순서 셋째 · 넷째)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. SEM photographs of the cross-section of the cathode ﬁlms extracted from the cycled cells: specimen A (a) and specimen F (b).",
+   "rotated_deg": 0,
+   "bbox": [
+    107.7,
+    47.2,
+    496.4,
+    222.0
+   ],
+   "w": 1621,
+   "h": 729,
+   "dpi": 300,
+   "src": "27610f9d-34._Lattice_volume_change_during_chargedischarge_reaction_and_cycle_performance_of_Li_NixCoyMnz_O2.pdf",
+   "blank": 0.276,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0. 원본 래스터 xref 134(950 × 453 JPEG, rect 131.2–472.9 × 53.2–216.0 pt) — 막대 5 µm = 118–119 px. (a) 시료 A 단면 ≈10 × 14 µm · 큰 균열 몇 줄 (b) 시료 F 단면 ∅ ≈13.3–13.6 µm · 입계 미세균열 다수. 조성당 한 장 · 원형 사진 0"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1 Chemical compositions of the prepared Li[NixCoyMnz]O2 powders. Sample A Li[Ni1/3Co1/3Mn1/3]O2 Sample B Li[Ni0.45Co0.1Mn0.45]O2 Sample C Li[Ni0.5Mn0.5]O2 Sample D Li[Ni0.5Co0.2Mn0.3]O2 Sample E Li[Ni0.6Co0.2Mn0.2]O2 Sample F Li[Ni0.7Co0.2Mn0.1]O2",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    32.7,
+    566.7,
+    750.7
+   ],
+   "w": 2206,
+   "h": 2992,
+   "dpi": 300,
+   "src": "27610f9d-34._Lattice_volume_change_during_chargedischarge_reaction_and_cycle_performance_of_Li_NixCoyMnz_O2.pdf",
+   "blank": 0.891,
+   "note": "⚠ 과대 — bbox 가 2 쪽 거의 전체(37.5–566.7 × 32.7–750.7 pt: 그림 1 · 표 1 · 본문 두 단 · 그림 2 포함). 수동 tab_1_manual_p2(표 영역 70–266 × 284–364.5 pt)로 대체. 값은 텍스트 층이 정본 — 공칭 조성(분석값 0)"
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2.png",
+   "caption": "Table 2 Variation of individual resistances during the charge–discharge cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    28.7,
+    32.7,
+    557.9,
+    750.0
+   ],
+   "w": 2206,
+   "h": 2989,
+   "dpi": 300,
+   "src": "27610f9d-34._Lattice_volume_change_during_chargedischarge_reaction_and_cycle_performance_of_Li_NixCoyMnz_O2.pdf",
+   "blank": 0.884,
+   "note": "⚠ 과대 — bbox 가 3 쪽 거의 전체(28.7–557.9 × 32.7–750.0 pt: 그림 3 · 표 2 · 본문 · 그림 4 포함). 수동 tab_2_manual_p3(표 영역 299–555 × 55–174.5 pt)로 대체. 값은 텍스트 층이 정본(R1 · R2 · R3 만 — Q2 · Q3 · W 미인쇄)"
+  },
+  {
+   "key": "f1m",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1_manual_p2.png",
+   "caption": "Fig. 1. The specimens prepared in this work are represented in the ternary phase diagram of LiCoO2, LiNiO2 and LiNi0.5Mn0.5O2.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    52.0,
+    299.6,
+    229.9
+   ],
+   "w": 1097,
+   "h": 742,
+   "dpi": 300,
+   "src": "27610f9d-34._Lattice_volume_change_during_chargedischarge_reaction_and_cycle_performance_of_Li_NixCoyMnz_O2.pdf",
+   "blank": 0.96,
+   "manual": true,
+   "note": "수동 크롭 — 자동 fig_1 이 꼭짓점 이름 'LiCoO2'(56.5–68.4 pt)를 잘라 위끝을 52.0 pt 로 늘려 300 dpi 렌더 클립. 라벨 ↔ 내용 맞다(세 꼭짓점 이름 · A–F 온전)"
+  },
+  {
+   "key": "f3m",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3_manual_p3.png",
+   "caption": "Fig. 3. The relationship between the unit cell volume difference during the charge– discharge reaction and the Ni fraction. The dashed line is drawn as a guide for the eyes.",
+   "rotated_deg": 0,
+   "bbox": [
+    27.7,
+    50.0,
+    290.7,
+    236.1
+   ],
+   "w": 1097,
+   "h": 776,
+   "dpi": 300,
+   "src": "27610f9d-34._Lattice_volume_change_during_chargedischarge_reaction_and_cycle_performance_of_Li_NixCoyMnz_O2.pdf",
+   "blank": 0.957,
+   "manual": true,
+   "note": "수동 크롭 — 자동 fig_3 이 세로축 '8.0' · '(%)' 를 잘라 위끝을 50.0 pt 로 늘려 300 dpi 렌더 클립. 벡터 좌표 판독 ΔV(%) = (209.04 − y)/149.70 × 8(틀 · 눈금 경로) — 여섯 점 2.244 · 4.156 · 3.469 · 3.606 · 4.396 · 5.763(그리기 순서)"
+  },
+  {
+   "key": "t1m",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1_manual_p2.png",
+   "caption": "Table 1 Chemical compositions of the prepared Li[NixCoyMnz]O2 powders.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    284.0,
+    266.0,
+    364.5
+   ],
+   "w": 818,
+   "h": 336,
+   "dpi": 300,
+   "src": "27610f9d-34._Lattice_volume_change_during_chargedischarge_reaction_and_cycle_performance_of_Li_NixCoyMnz_O2.pdf",
+   "blank": 0.893,
+   "manual": true,
+   "note": "수동 크롭 — 자동 tab_1 이 쪽 전체라 표 영역(캡션 286.9 pt · 위아래 괘선 306.0 · 361.8 pt)만 300 dpi 렌더 클립. 렌더 = 텍스트 층"
+  },
+  {
+   "key": "t2m",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2_manual_p3.png",
+   "caption": "Table 2 Variation of individual resistances during the charge–discharge cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    299.0,
+    55.0,
+    555.0,
+    174.5
+   ],
+   "w": 1068,
+   "h": 499,
+   "dpi": 300,
+   "src": "27610f9d-34._Lattice_volume_change_during_chargedischarge_reaction_and_cycle_performance_of_Li_NixCoyMnz_O2.pdf",
+   "blank": 0.912,
+   "manual": true,
+   "note": "수동 크롭 — 자동 tab_2 가 쪽 전체라 표 영역(캡션 57.7 pt · 괘선 76.8 · 171.4 pt)만 300 dpi 렌더 클립. 렌더 = 텍스트 층(Ω 기호 포함)"
+  }
+ ]
+}
