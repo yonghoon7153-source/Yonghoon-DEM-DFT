@@ -1,0 +1,197 @@
+{
+ "slug": "li2025_stack-pressure-critical-importance-perspective",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-28",
+ "sources": [
+  "55d82036-21._The_critical_importance_of_stack_pressure_in_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Schematic and range distribution of stack pressure in LIBs, liquid-state LMBs and solid-state LMBs. a, Schematic of equivalent stack pressures on coin-sized cells across different kinds of lithium battery. b, Range distribution of stack pressures in lithium batteries, showing variation by multiple orders of magnitude. The grey, yellow and blue data points represent pressure values",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    65.9,
+    563.8,
+    634.0
+   ],
+   "w": 2210,
+   "h": 2368,
+   "dpi": 300,
+   "src": "55d82036-21._The_critical_importance_of_stack_pressure_in_batteries.pdf",
+   "blank": 0.465
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Stack pressure effects on preventing voids in batteries. a, Schematic of stack pressure effects on solid-state LMBs. The labels 1–4 relate to panels b–e, respectively. b–e, Schematics showing how stack pressure suppresses lithium filament voids (b), grain boundary voids (c), SSE/active material voids",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    66.1,
+    355.3,
+    278.7
+   ],
+   "w": 1341,
+   "h": 887,
+   "dpi": 300,
+   "src": "55d82036-21._The_critical_importance_of_stack_pressure_in_batteries.pdf",
+   "blank": 0.616
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Electrochemomechanical relationship of stack pressure in batteries, where electrochemical behaviour and stack pressure serve as two distinct dimensions. a, Map of interfacial void formation as a function of stack pressure and current density in batteries. The transition curve represents the critical boundary. b, Lithium flux as a function of lithium atom creep, lithium atom diffusion and lithium-ion migration with stack pressure and current density. c, The operando dP/dQ signal serves as an indicator with which to detect",
+   "rotated_deg": 0,
+   "bbox": [
+    33.9,
+    65.9,
+    559.3,
+    444.2
+   ],
+   "w": 2190,
+   "h": 1577,
+   "dpi": 300,
+   "src": "55d82036-21._The_critical_importance_of_stack_pressure_in_batteries.pdf",
+   "blank": 0.389
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Issues and failure mechanisms posed by excessive stack pressure. a,b, Schematics of excessive stack pressure on liquid- (a) and solid-state LMBs (b). The labels 1–11 relate to panels c–m, respectively. c, Current collector deformation or rupture under excessive stack pressure, leading to layer lamination and threatening battery seamlessness. d–i, Electrode crack (d and e), material pulverization (f and g) and lithium deformation (h and i) in liquid-",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    65.9,
+    562.6,
+    506.1
+   ],
+   "w": 2344,
+   "h": 1835,
+   "dpi": 300,
+   "src": "55d82036-21._The_critical_importance_of_stack_pressure_in_batteries.pdf",
+   "blank": 0.463
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | CSP empirical model and its analysis in batteries. a, Statistic Coulombic efficiency (left) and its amplification (right) across different types of battery. All data represent measured Coulombic efficiencies in batteries, as reported in published articles (summarized in Source Data Fig. 5), where blue points denote cases with stack pressure information and grey points represent those without. b, Statistic stack pressure (left) and its amplification (right) across different types of battery. All data represent experimentally applied stack pressures reported in",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    65.9,
+    332.7,
+    344.7
+   ],
+   "w": 1247,
+   "h": 1163,
+   "dpi": 300,
+   "src": "55d82036-21._The_critical_importance_of_stack_pressure_in_batteries.pdf",
+   "blank": 0.612
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 | Future directions for stack pressure in batteries. a, The establishment of a stack pressure benchmark is critical for determining the optimal stack pressure range for specific battery systems. b, Schematic of the diagnosis of battery electrochemical states through dynamic stack pressure variation. c, Controlling",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    69.9,
+    562.3,
+    283.5
+   ],
+   "w": 2203,
+   "h": 891,
+   "dpi": 300,
+   "src": "55d82036-21._The_critical_importance_of_stack_pressure_in_batteries.pdf",
+   "blank": 0.78
+  },
+  {
+   "key": "f2m",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2_manual_p3.png",
+   "caption": "Fig. 2 | Stack pressure effects on preventing voids in batteries. a–e 전체 (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    50.0,
+    563.8,
+    278.7
+   ],
+   "w": 2210,
+   "h": 954,
+   "dpi": 300,
+   "src": "55d82036-21._The_critical_importance_of_stack_pressure_in_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 자동 크롭(fig_2.png)이 bbox x1 355.3 에서 잘려 패널 d(SSE/active material voids)·e(interfacial voids)와 패널 문자 a·b·d 가 빠짐"
+  },
+  {
+   "key": "f5m",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5_manual_p7.png",
+   "caption": "Fig. 5 | CSP empirical model and its analysis in batteries. a–c 전체 (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    50.0,
+    563.8,
+    345.5
+   ],
+   "w": 2210,
+   "h": 1232,
+   "dpi": 300,
+   "src": "55d82036-21._The_critical_importance_of_stack_pressure_in_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 자동 크롭(fig_5.png)이 bbox x1 332.7 에서 잘려 패널 c(CSP 개념 곡선)와 패널 문자 a 가 빠짐"
+  },
+  {
+   "key": "f6m",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6_manual_p8.png",
+   "caption": "Fig. 6 | Future directions for stack pressure in batteries. a–d 패널 제목 줄 포함 (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    50.0,
+    562.3,
+    284.0
+   ],
+   "w": 2203,
+   "h": 976,
+   "dpi": 300,
+   "src": "55d82036-21._The_critical_importance_of_stack_pressure_in_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 자동 크롭(fig_6.png)이 y0 69.9 에서 시작해 패널 제목 줄(a Stack pressure benchmark · b Stack pressure diagnosis · c Spatial homogeneity control · d Stack pressure optimization)이 빠짐"
+  }
+ ]
+}

@@ -2,10 +2,10 @@
 title: 압력 재인가 분리 시험 — ASSB 겉보기 용량 손실의 가역/비가역 가르기
 description: "Pressure re-application as the second separation operator in ASSB: rate erases the kinetic term η(i), stack pressure (partially) restores the geometric term θ_AM, and what is left is true LAM_PE (Shi 2020 measured instance)"
 created: 2026-09-16
-updated: 2026-09-23
+updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
+sources: [raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -286,6 +286,30 @@ void 는 소신호로만 보인다. 4호(60 %p)와 14호(0)가 사상의 양 끝
 
 ⇒ 이 조건들은 [[assb-synthetic-truth-contact-loss-requirements]] 의 **R4(θ-전용 조작)** 를 실측 쪽에서
 만족시키려는 시도다. D1–D5 를 다 지켜도 연산자가 θ-전용이 된다는 보장은 없다(D5 가 그 확인 수단).
+
+## ★★ 59호(Li Q. 2025)가 붙인 것 — **CSP 측정법은 이 연산자의 가압 분기를 CE 한 스칼라로 읽는 판이다** (2026-09-28)
+
+`raw/papers/li2025_stack-pressure-critical-importance-perspective.md` — *Nat. Energy* 10, 1064 · Perspective, 1차 측정 0 · 13호 [23].
+
+`[인쇄]` "By continuously measuring the Coulombic efficiency values of batteries while gradually increasing the stack pressure, the minimum stack pressure that
+yields the highest Coulombic efficiency can be identified as the CSP" — 같은 셀에서 `P` 를 올리며 출력 하나를 보는 조작이다. 이 페이지의 연산자(`P↑` 로
+`θ_AM` 을 되돌려 가역 몫을 뗀다)와 **같은 조작, 다른 출력**이다. 설계 조건 D1–D5 와 대조:
+
+| ID | 59호 CSP 측정법 | 판정 |
+|---|---|---|
+| **D1** 사이클 해상 압력 계측 | 언급 0 — "gradually increasing" 이 설정값인지 계측값인지 없다 | ❌ |
+| **D2** 기준셀 이중차분 | 0 | ❌ |
+| **D3** 압력만 바꾸기 | 한 셀 · 한 조건에서 압력만 — 원리상 | ✓ (원리) |
+| **D4** 제조 ↔ 운전 분리 | `[인쇄]` "fabrication pressures … (~100–500 MPa), this Perspective specifically focuses on operating stack pressures" · 동적 프로토콜 "25 MPa SSE/Li interfacial formation pressure before reducing to 5 MPa for cycling"[36] | ✓ |
+| **D5** 채널별 신고 | **CE 하나** | ❌ |
+
+- `[해석]` **가압 분기만 정의한다** — 5호 이력 아래서 "CE 최대의 최소 압력" 은 분기에 따라 다르다. 이 연산자처럼 `P_high` 로 올렸다 내린 뒤의 상태는 CSP 측정법의 대상이 아니다.
+- `[해석]` **CE 는 이 연산자가 가르려는 가역 `θ` 몫과 Li 재고 손실 · 누설(41 · 52호)을 한 비로 합친다** — CE 로 읽은 "되돌림" 은 `ΔQ_mech` 가 아니다. 압력으로 CE 가
+  오르는 것이 접촉 복원인지 누설 억제인지 CE 는 말하지 않는다.
+- **Fig. 2d**(활물질 ↔ SE void — 무압에서 입자 전체를 두른 void, 가압에서 서로 붙어 SE 에 묻힌 입자)는 이 연산자의 전제("압력이 접촉을 되돌린다")를
+  **그림으로** 적는다. 그러나 해당 문장 `[인쇄]` "Stack pressure minimizes this effect, thereby preventing disengagement between the SSE and active materials"
+  는 **인용 0** 이고 앞 문장 [17](= 23호 Koerver 2017)은 운전 압력 고정 편이다 — 33호 G4 와 같은 형태의 두 번째 종설 층 표본. 이 연산자의 실측 사례는
+  여전히 4호(Shi 2020) 하나다.
 
 ## 이 페이지가 주장하지 않는 것
 

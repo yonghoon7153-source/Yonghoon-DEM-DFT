@@ -2,10 +2,10 @@
 title: ASSB 스택 압력의 작동 창 — 아래는 접촉 손실, 위는 단락
 description: "Stack pressure in ASSBs is a two-sided constraint: too low gives interfacial contact loss, too high drives Li creep into electrolyte pores and shorts the cell. Doux 2020 gives the first measured pressure sweeps (P→impedance, P→time-to-short, P→overpotential) and a hard upper bound"
 created: 2026-09-16
-updated: 2026-09-23
+updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -314,6 +314,9 @@ modelling**."
 
 ⇒ **≈1–5 MPa 가 세 종설·세 원전에서 독립 수렴**. 이 페이지의 실측 창(5호 5–75 MPa · 6호
 운전 2–4 MPa · 11호 20 MPa · 4호 ~2 MPa) 중 **6호·4호만** 그 안에 있다.
+
+> ⚠ **2026-09-28 정정 (59호 Li Q. 2025 = 13호 [23])**: 위 "독립 수렴" 은 서지 않는다 — "Q6 요구 창의 정본 후보" 였던 [23] 이
+> 요구치를 `<0.1 MPa`(인용 0)로 적고 1–5 MPa 는 요구치로 인쇄하지 않는다. 계보는 **일곱 편 · 0.1–5 MPa · 확인된 원전 0**(아래 §59호).
 
 ★ 그리고 `[도표]` **Fig. 2 가 본문에 없는 클래스별 창 다섯을 준다** (레이더 축 라벨):
 **Oxides ≥30 MPa · Sulfides 5–20 · Halides 2–10 · Polymers "No or compliant" · Composites
@@ -695,6 +698,78 @@ LiNbO₃-NCM811 \| LPSCl \| MgSiGr(Mg 200 nm 위 SiGr, 과충전 Li 도금) · 2
 
 압력 스윕 · 압력 계측 · 사이클 중 압력(20 MPa 셀은 `[재현]` 사이클당 도금 ≈15 µm) · 반쪽전지 압력 · 양극 쪽 어떤 관측 · 조건당 반복.
 
+## ★★ 2026-09-28 (`assb` 59호 Li Q. 2025, **Perspective · 1차 측정 0 · Source Data = Fig. 1b 원자료**) — **"정본 후보" 가 요구치를 `<0.1 MPa` 로 적어 "≈1–5 MPa 수렴" 이 무너지고, 창 전체를 CE 한 곡선(CSP)으로 그리지만 수치는 0 이다**
+
+`raw/papers/li2025_stack-pressure-critical-importance-perspective.md` (*Nat. Energy* 10, 1064–1073, 북경이공대 — 13호 [23], **3차 묶음 파일 21**).
+13호 절(§1)이 "Q6 요구 창의 정본 후보" 로 남긴 편이다.
+
+### 1. 요구치 — 일곱 번째 인쇄, 원전 0 ⇒ 13호 절의 "독립 수렴" 은 서지 않는다
+
+| 편 | 요구치 | 원전 |
+|---|---|---|
+| 8호 | < ≈1 MPa | Xu 2024 (확인 편 0) |
+| 12호 | 0.4–1 MPa | Tian & Qi 2017 / Shao 2022 (미확정) |
+| 13호 | < 5 MPa | [35] · [45] (미열람 — [45] 는 3차 묶음 파일 22) |
+| 25호 | ≤ 5 MPa | 없음 |
+| 33호 | < 2 / ≤ 2 MPa | 없음 ("To our knowledge") |
+| 39호 | 1 MPa | Wang · Kazyak · Dasgupta · Sakamoto *Joule* 2021 (미열람) |
+| **59호** | **< 0.1 MPa** — `[인쇄]` "driven by practical considerations (typically requiring a pressure of <0.1 MPa)" | **없음** |
+
+- 이 편은 1–5 MPa 를 **요구치로** 인쇄하지 않는다. `[인쇄]` SSB 실험실 필요치 = "several to hundreds of MPa" · "at least 20 MPa"(Li 석출 공극률 · 비활성 Li) ·
+  "above 10 MPa … limit practical viability"(입계 덴드라이트, Albertus 2021). 5 MPa 는 인용 프로토콜 "25 MPa SSE/Li interfacial formation pressure before
+  reducing to 5 MPa for cycling"[36] 한 번. 그리고 `[인쇄]` "0.1 to a few MPa" 는 이 편 지도에서 **액체 LMB** 대역이다.
+- ⇒ **일곱 편 · 여섯 값(0.1 · 0.4–1 · ≈1 · 1 · 2 · 5) · 확인된 원전 0 · 띠 0.1–5 MPa(×50).** "원전 셋" 중 처음 열어 본 다리([23])가 띠 밖이고 그 자신도
+  원전이 아니다. 13호 자신은 `<5` 에 [35] · [45] 를 달았다 — 13호 오귀속이 아니고, [23] 을 요구치 원전 줄에 같이 적었던 것은 우리 13호 digest 대조표다.
+- `[해석]` `<0.1 MPa` 는 이 편 자기 원자료의 **LIB 범주(0.01–0.1 MPa)** 와 겹친다 — "실용" = LIB 모듈 수준 압력으로 정의한 것으로 읽힌다.
+  Fig. 1b 의 "Future target — Low or zero pressure" 별표도 `[도표]` ≈0.03 MPa.
+
+### 2. ★★ 문헌 운전 압력 원자료 — 계보 첫 수록, 단 그림 점은 원자료와 다르다
+
+Source Data xlsx(시트명 'Figure 5' · 머리 셀 "Figure. 1b" — **Fig. 5 원자료는 없다**) `[데이터]`:
+
+| 범주 | n (출처 편) | 범위 · 중앙 (MPa) | 메모 |
+|---|---|---|---|
+| LIBs | 7 (6) | 0.01–0.1 · 0.05 | 파우치 압축 · 팽창 문헌 |
+| Liquid-state LMBs | 9 (8) | 0.69–1.4 · 1.1 | 무음극 파우치 포함 |
+| Solid-state LMBs | 13 (13) | 5–400 · 45 | ≥50 MPa 6 · ≤5 MPa 1 · 1–2 MPa 0. 제목상 Li 금속이 드러나지 않는 행 6(Ni-rich 양극 · Li-In/Sn 음극 · 시뮬 1 포함) — 사실상 SSB 전반 |
+
+- ⚠ `[도표]` 화소 판독한 Fig. 1b 의 점은 이 원자료와 **다르다** — 액체 LMB ≈0.34–2.5 MPa(원자료 0.69–1.4), 고체 가운데 순위 −25 … −33 % (59호 D1).
+  **값은 원자료로만 옮긴다.**
+- `[해석]` 33호 D4("most labs 50–600 MPa", 출처 0)와 대조: 59호 원자료의 고체 13 값 중앙은 **45 MPa**, `[도표]` Fig. 5b 의 Li 전체 상자는 ≈1–34 MPa(위 수염 ≈75) —
+  59호의 집계도 "대부분 50 MPa 이상" 을 받치지 않는다. 다만 원자료에 시뮬 편 · 비-Li 금속 편이 섞여 있고 Fig. 5 는 원자료가 없다.
+- 운전 압력 표본(이 페이지)에 붙는 것: Koerver 2018 *EES* 가 **143 MPa**(59호 원자료) ↔ **70 MPa**(33호 Table 1) — 같은 원전의 두 인쇄값, 원전 미열람.
+
+### 3. ★★ CSP — 창 전체를 CE 한 곡선으로, 수치 0
+
+- `[인쇄]` "Based on our statistical analysis, we propose a CSP empirical model" — 액체 LMB: L1(상승) → CSP_L → L2(평탄 = 최적) → L3(실패);
+  고체 LMB: **S0**(작동 개시에 필요한 높은 초기 압력, CSP_S1) → S1(상승) → CSP_S2 → S2(평탄 = 최적) → S3(실패). `[도표]` Fig. 5c 두 축 **눈금 0**.
+- 이 페이지의 틀로 옮기면: S0/S1 = **아래 벽**(접촉 손실), S3 = **위 벽**(이 편은 집전체 파단 · 전극 균열 · 분쇄 · Li 변형 · SSE 피로 · 덴드라이트 단락을 한 줄로
+  나열 — Fig. 4), S2 = 창. ⚠ 그러나 **창의 값이 하나도 없고**(CSP_L · CSP_S1 · CSP_S2 수치 0), 경험 근거라는 Fig. 5a/b 는 CE · 압력의 **주변 분포**라
+  CE(P) 를 주지 않는다. "validation" 인용 둘은 양극 압력 **모델**(Naik 2024)과 **Na** 계(Spencer Jolly 2019).
+- `[인쇄]` 측정법 "continuously measuring the Coulombic efficiency … while gradually increasing the stack pressure, the minimum stack pressure that yields the
+  highest Coulombic efficiency" — `[해석]` §"이력"(5호: 처녀 5 MPa 110 Ω ↔ 25 MPa 를 찍고 내려온 5 MPa 50 Ω) 아래서 이 "최소 압력" 은 **가압 분기의 값**이다.
+  감압 분기(고압 형성 뒤 운전 — 25 · 33 · 52호의 "고압 제조 · 저압 운전" 모양)의 최소 압력은 더 낮을 수 있다. 그리고 CE 는 Li 재고 손실 · 양극 고립 · 누설
+  (41 · 52호)을 한 비로 합친다 — 창의 아래 끝을 CE 로 정하면 **무엇이 막혔는지**가 사라진다.
+- 인용 기준 하나(`[인쇄]` "stack pressure (P)/current density (I) > 25 MPa cm⁻² mA⁻¹", **SSE/양극 계면**, [27] 모델): `[재현]` 단위를 MPa cm² mA⁻¹ 로 읽으면
+  1 mA cm⁻² 에 25 MPa · 13호 그리드 5 mA cm⁻² 에 125 MPa · 이 편 실용 목표 0.1 MPa 에서 허용 0.004 mA cm⁻² — **이 편의 두 명제가 서로 맞지 않는다**(조정 0).
+
+### 4. ★★ 위 벽 "피로" 의 하중 형태 — 계보 안에서 반대로 적힌다
+
+| | 59호 (13호 [23]) | 13호 (§5 · §4) |
+|---|---|---|
+| 피로를 만드는 하중 | `[인쇄]` "**fluctuations** in stack pressure at the MPa level can induce mechanical fatigue in the SSE"[39] · Fig. 4m "continued pressure fluctuation" | `[인쇄]` "**high, constant** stack pressure can induce … fatigue-driven micro-crack initiation" |
+| 처방 | 압력 **일정 유지**(Fig. 6c "Maintain constant", Now 진동 → Future 평평) + 압력 **신호로 운전 조절**(`[인쇄]` "Battery operation can therefore be dynamically regulated adaptively from the feedback of stack pressure") | 압력을 **조작 변수**로 — 율↑ → P↑ · 휴지 · 노화 → P↓ |
+| 근거 | [39] = **5호 Doux 2020** — 5호 digest 의 균열은 75 MPa **정압** "severe cracking", `fatigue` · `fluctuat` 명제 없음(digest 기준) | 인용 0 · 데이터 0 |
+
+`[해석]` 59호의 기구(요동 → 피로)를 받으면 13호의 변조 정책은 피로의 구동 하중을 **늘린다**. 두 편 모두 근거가 비어 있으므로 이 페이지의 두 번째 위 벽은
+**"피로, 하중 형태 미정"** 으로 둔다. 그리고 §"압력 진동"(33호 — 상대극이 만드는 사이클당 ≈0.7–2.3 MPa)은 59호 기구가 맞다면 운전 중 **저절로** 가해지는 요동이다.
+
+### 5. 이 편이 이 페이지에 **안 준 것**
+
+압력의 함수 — `θ(P)` · `R(P)` · 용량(P) · CE(P) 어느 것도 1차 자료 0(CE(P) 는 개념 곡선) · 이력 0(`hysteres*` · `histor*` 0) · 압력 계측 장치의 정확도 0 ·
+공간 분포 실측 0(식 (2)(3)만 — 범위 정규화라 척도 불변, `[재현]` 한 점 +10 MPa 핫스팟이 "균일" 판정; 59호 digest D8). **창의 값은 하나도 움직이지 않았다.**
+움직인 것은 **요구치 띠의 폭**(0.4–5 → 0.1–5 MPa)과 **"수렴" 판정**(반박)이다.
+
 ## 경고 (전부 원문이 준 한계에서 나온다)
 
 1. **점당 셀 1 개, 오차 막대 0.** 압력–수명 6 점 전부 N=1 이다.
@@ -727,6 +802,8 @@ LiNbO₃-NCM811 \| LPSCl \| MgSiGr(Mg 200 nm 위 SiGr, 과충전 Li 도금) · 2
   **unavoidable for high-current operations**" 라고 적는다.
 - **"5 MPa 가 최적" 을 받아들이지 않는다** (경고 3).
 - **산업 요구치를 한 값으로 옮기지 않는다** (2026-09-23, 33호) — 계보 다섯 편이 ≈1 · 0.4–1 · 2 · 5 MPa 를 인쇄했고 확인된 원전은 0 이다.
+- **요구치 띠를 "수렴" 으로 적지 않는다** (2026-09-28, 59호) — 일곱 편이 0.1 · 0.4–1 · ≈1 · 1 · 2 · 5 MPa 를 인쇄했고(×50) 확인된 원전은 0 이다. 13호 절의 "≈1–5 MPa 독립 수렴" 은 59호에서 반박됐다.
+- **59호 Fig. 1b 의 그림 점 · Fig. 5 의 상자그림을 운전 압력 표본으로 쓰지 않는다** (2026-09-28) — 그림 점은 자기 원자료와 다르고(D1), Fig. 5 는 원자료가 없다. 쓸 수 있는 것은 Source Data 의 29 값(시뮬 편 · 비-Li 금속 편 포함)뿐이다.
 - **39호의 제조 압력 5 점을 운전 압력 문턱으로 옮기지 않는다** (2026-09-23) — 제조 가압이 없는 셀의 단조 가압이고, 되돌림 뒤 전기화학은 0 점이다. 그리고 `φ` 판독값은 CT 0.5 µm 화소 판정 · 분할 문턱 미인쇄 위의 값이다.
 - **압력이 `LAM_PE` 와 접촉 손실을 가른다고 주장하지 않는다.** Doux 는 양극 열화를
   다루지 않는다 — 이 페이지의 기여는 **연산자의 사용 조건**이지 분리 자체가 아니다.
