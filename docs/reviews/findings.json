@@ -5761,30 +5761,34 @@
   {
    "id": "SELF-63",
    "severity": "P2",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "found_by": "claude (WSL 감사 v1 결과 판독 09-29 — 1저자 실행)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "LHS 접촉 감사기 v1 의 판정 경계 폭 `1e-6·Σr` (0.01 nm) 이 덤프 자릿수 (LIGGGHTS `%g` 6 유효숫자 → 좌표 반폭 0.05 nm · 거리 오차 ≤ 0.17 nm) 보다 좁아 130 건 중 **113 을 FLAG** 로 냈다 — 원자료 결함이 아니라 감사기의 폭",
-   "note": "실측 (WSL 09-29): 프레임 1 · 중복 0 · δ≤0 0 · 플래그 누락 0 은 130/130 인데 \"기하≠덤프\" 가 113 건 (케이스당 0–1,034 쌍 · 대부분 덤프에만).  원인 = `atom_2020000` 토큰 `0.0304637` 등 6 유효숫자 (x·y 마지막 자리 0.1 nm) 인데 v1 폭은 0.01 nm.  LIGGGHTS 는 전 정밀도로 접촉을 판정하므로 틀린 쪽은 재계산이고 웹앱 CN (덤프 행) 이 옳다 — 단 이것은 가설이라 **비준 없이 CLEAN 으로 바꾸지 않았다**.  수정 = v2 (비준 09-29): 파일에서 실측한 유효숫자로 쌍마다 반올림 폭을 계산해 ①②③ 으로 판별 (`ROUNDING` / far) · 양쪽 쌍의 δ 대조 (v1 에 없던 검사) · 반례 먼저 (⑫–⑮d).  합성 6 만 입자 침대 (정밀 좌표 → %g) 에서 반올림 쌍 정확히 2 · CLEAN 재현.  ⬜ 검증 = WSL v2 재실행 (FLAG 0 · rounding 113 건 기대).  ★ 수정 커밋 ea7cfef96 (v2 · 자기리뷰 12 항 반영 · 34/34).  ⬜ 검증 = WSL v2 실측.",
+   "note": "실측 (WSL 09-29): 프레임 1 · 중복 0 · δ≤0 0 · 플래그 누락 0 은 130/130 인데 \"기하≠덤프\" 가 113 건 (케이스당 0–1,034 쌍 · 대부분 덤프에만).  원인 = `atom_2020000` 토큰 `0.0304637` 등 6 유효숫자 (x·y 마지막 자리 0.1 nm) 인데 v1 폭은 0.01 nm.  LIGGGHTS 는 전 정밀도로 접촉을 판정하므로 틀린 쪽은 재계산이고 웹앱 CN (덤프 행) 이 옳다 — 단 이것은 가설이라 **비준 없이 CLEAN 으로 바꾸지 않았다**.  수정 = v2 (비준 09-29): 파일에서 실측한 유효숫자로 쌍마다 반올림 폭을 계산해 ①②③ 으로 판별 (`ROUNDING` / far) · 양쪽 쌍의 δ 대조 (v1 에 없던 검사) · 반례 먼저 (⑫–⑮d).  합성 6 만 입자 침대 (정밀 좌표 → %g) 에서 반올림 쌍 정확히 2 · CLEAN 재현.  ⬜ 검증 = WSL v2 재실행 (FLAG 0 · rounding 113 건 기대).  ★ 수정 커밋 ea7cfef96 (v2 · 자기리뷰 12 항 반영 · 34/34).  ⬜ 검증 = WSL v2 실측.  ★ 검증 (WSL v2 · 09-29): 130/130 CLEAN · far 0 · δ 불일치 0 · 반올림 쌍 114 건 (최대 1,090) · 유효숫자 6 전 건 = v1 FLAG 113 은 전부 폭.  (검증자 = 1저자 WSL 실행 09-29 · 감사기 v2 · 봉인 코호트 130 건 실물.)",
    "evidence_tests": [
     "scripts/lhs_contact_audit.py"
    ],
-   "claimed_fixed_sha": "ea7cfef96"
+   "claimed_fixed_sha": "ea7cfef96",
+   "verified_by": "user",
+   "verified_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "verified_sha": "acab799c4"
   },
   {
    "id": "LHS-16",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (WSL 감사 v1 · LIGGGHTS-PUBLIC master 원문 열람 09-29)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "`c_cpl[9]` 를 `parse_liggghts` 가 `periodic_flag` 라 부르지만 LIGGGHTS 의 뜻은 \"주기 고스트 관여\" (`is_periodic_ghost`: 고스트이고 주기 축의 `boxlo+cutneighmax` / `boxhi−cutneighmax` 띠 안) — MPI 런에서는 경계를 안 넘는 쌍에도 켜진다: `lhs00_029` 4,065 행 · `lhs00_098` 5,024 행 (나머지 128 건 0)",
-   "note": "원문: `compute_pair_gran_local.cpp` add_pair (두 입자 다 local → 0 · 아니면 `is_periodic_ghost(i)||is_periodic_ghost(j)`) · `domain_I.h` (cutneighmax = 2 r_max + skin ≈ 12 µm = 50 µm 상자의 24 %/면).  직렬 런은 고스트 = 주기 영상뿐이라 플래그 = 경계 넘음 (128/130 정합).  029 · 098 은 ibb 에서 돈 런 (area_contract §, 09-14) — 로컬에 로그가 없어 분할 격자는 덤프에서 추정 (감사기 v2: id2 띠 안 + 최소 균일 격자).  ⚠ ibb/WSL 빌드 3.8 과 master 의 동일성 미확인.  **인계 값 무영향** — 리포에 이 플래그의 소비자가 없다 (grep 0 · CN 은 행 수만 센다).  처방: 이름은 두고 `parse_liggghts` 주석에 뜻을 적는다 · 검증 = WSL v2 에서 두 케이스 \"설명됨\" + (가능하면) ibb 로그 `MPI processor grid` 줄.",
+   "note": "원문: `compute_pair_gran_local.cpp` add_pair (두 입자 다 local → 0 · 아니면 `is_periodic_ghost(i)||is_periodic_ghost(j)`) · `domain_I.h` (cutneighmax = 2 r_max + skin ≈ 12 µm = 50 µm 상자의 24 %/면).  직렬 런은 고스트 = 주기 영상뿐이라 플래그 = 경계 넘음 (128/130 정합).  029 · 098 은 ibb 에서 돈 런 (area_contract §, 09-14) — 로컬에 로그가 없어 분할 격자는 덤프에서 추정 (감사기 v2: id2 띠 안 + 최소 균일 격자).  ⚠ ibb/WSL 빌드 3.8 과 master 의 동일성 미확인.  **인계 값 무영향** — 리포에 이 플래그의 소비자가 없다 (grep 0 · CN 은 행 수만 센다).  처방: 이름은 두고 `parse_liggghts` 주석에 뜻을 적는다 · 검증 = WSL v2 에서 두 케이스 \"설명됨\" + (가능하면) ibb 로그 `MPI processor grid` 줄.  ★ 처방 반영 ea7cfef96 (parse_liggghts 주석 · 감사기 v2 고스트 규칙).  WSL v2 실측 (09-29): 029 · 098 의 플래그만 행이 **전부** 설명됨 — id2 띠 안 100 % · 최소 설명 격자 1x1x24 · 1x1x30 · 예측 누락 0 (자기리뷰 #5c 충분성).  ⚠ 여전히 가설 정합이지 실행 증명이 아니다 — verified 는 ibb 로그 `MPI processor grid` 줄 (또는 sbatch -n) 이 있을 때.",
    "evidence_tests": [
     "scripts/lhs_contact_audit.py",
     "scripts/parse_liggghts.py"
-   ]
+   ],
+   "claimed_fixed_sha": "ea7cfef96"
   }
  ]
 }
