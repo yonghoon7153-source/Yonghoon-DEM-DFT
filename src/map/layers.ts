@@ -35,6 +35,7 @@ export interface LayerFrame {
   mode: LabelMode;
   selected: string | null;
   region: string | null;
+  ts: number; // names grow a little with the zoom (map.ts textScale)
 }
 
 /** Zoom levels at which names appear. */
@@ -332,7 +333,7 @@ export function createLayers(ctx: LayerContext) {
   /** Place a name next to its dot (right, left, above, below); returns its box, or null when every side collides. */
   function placeName(sel: Selection<SVGTextElement, LabelItem, SVGGElement, unknown>, d: LabelItem, x: number, y: number, f: LayerFrame, gap: number, sides: ('r' | 'l' | 'u' | 'd' | 'c')[]): Rect | null {
     const { main, furi } = parts(d.name, f.mode);
-    const fs = d.fs;
+    const fs = d.fs * f.ts;
     const note = d.note ?? '';
     const w = Math.max(textW(main, fs), furi ? textW(furi, fs * 0.68) : 0, note ? textW(note, fs * 0.82) : 0) + 4;
     const up = furi ? fs * 1.33 : fs / 2;
@@ -351,7 +352,7 @@ export function createLayers(ctx: LayerContext) {
       f.placed.push(rect);
       const t = sel.filter((q) => q === d);
       // inline style: the .label rule's text-anchor: middle would beat a presentation attribute
-      t.attr('transform', `translate(${ax.toFixed(1)},${ay.toFixed(1)})`).style('text-anchor', anchor).classed('is-hidden', false);
+      t.attr('transform', `translate(${ax.toFixed(1)},${ay.toFixed(1)})`).style('text-anchor', anchor).style('font-size', `${fs.toFixed(2)}px`).classed('is-hidden', false);
       t.select('.label__main').attr('x', 0).attr('y', 0).text(main);
       t.select('.label__furi').attr('x', 0).attr('y', '-1.45em').text(furi);
       const noteT = t.select('.label__note').attr('x', 0).attr('y', '1.35em').text('');
@@ -435,7 +436,7 @@ export function createLayers(ctx: LayerContext) {
     if (on.mountains && active && !hideRangeNames) {
       const [x, y] = t.apply(rangeMid.get(active.no) ?? [0, 0]);
       const { main, furi } = parts(active.name, f.mode);
-      rangeTag.classed('is-hidden', false).attr('transform', `translate(${(x + 13).toFixed(1)},${y.toFixed(1)})`).style('text-anchor', 'start');
+      rangeTag.classed('is-hidden', false).attr('transform', `translate(${(x + 13).toFixed(1)},${y.toFixed(1)})`).style('text-anchor', 'start').style('font-size', `${(13 * f.ts).toFixed(2)}px`);
       rangeTag.select('.label__main').attr('x', 0).attr('y', 0).text(main);
       rangeTag.select('.label__furi').attr('x', 0).attr('y', '-1.45em').text(furi);
     } else rangeTag.classed('is-hidden', true);

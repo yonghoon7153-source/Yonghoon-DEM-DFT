@@ -73,6 +73,14 @@ export function shortLabel(p: Prefecture, mode: LabelMode): string {
   return p.name.ko.replace(/(현|도|부)$/, '');
 }
 
+/**
+ * Names grow a little as you zoom in (사용자: 「확대했을 때 글씨를 약간 크게 만들어서 잘 보이게」): the same size up to 2×,
+ * then +16% per doubling, at most 1.45× (reached near the 16× limit). The first screen does not change.
+ */
+export function textScale(k: number): number {
+  return Math.min(1.45, Math.max(1, 1 + 0.16 * Math.log2(k / 2)));
+}
+
 export async function createMap(container: HTMLElement, cb: MapCallbacks, initialMode: LabelMode): Promise<MapApi> {
   const url = assetUrl('geo/japan.topo.json'); // ?v=hash: new map data is a new URL, the day-long cache never serves the old map
   const topo = (await fetch(url).then((r) => {
@@ -280,6 +288,7 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
   // ---- screen-space update (labels & stickers)
   function updateScreenSpace() {
     const k = transform.k;
+    const ts = textScale(k);
     const placed: { x: number; y: number; w: number; h: number }[] = [];
     regionLabels.classed('is-hidden', (d) => d.id !== highlightedRegion || k > 3).attr('transform', (d) => {
       const pt = projection(d.anchor)!;
@@ -300,7 +309,7 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
       if (!a) continue;
       const [x, y] = transform.apply(a);
       const text = shortLabel(p, labelMode);
-      const fs = p.slug === selected || p.slug === hovered ? 14 : 12;
+      const fs = (p.slug === selected || p.slug === hovered ? 14 : 12) * ts;
       const furi = labelMode === 'furi';
       const w = Math.max(text.length * fs * 1.02, furi ? p.short.kana.length * fs * 0.68 * 1.02 : 0) + 6;
       const top = furi ? fs * 1.33 : fs / 2; // the reading line adds height above the name
@@ -318,13 +327,14 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
     prefLabels
       .classed('is-hidden', (d) => !visible.has(d.p.slug))
       .classed('is-active', (d) => d.p.slug === selected || d.p.slug === hovered)
+      .style('font-size', (d) => `${((d.p.slug === selected || d.p.slug === hovered ? 14 : 12) * ts).toFixed(2)}px`)
       .attr('transform', (d) => {
         const a = anchorPx.get(d.p.slug)!;
         const [x, y] = transform.apply(a);
         return `translate(${x.toFixed(1)},${y.toFixed(1)})`;
       });
 
-    layers.update({ t: transform, placed, W, H, mode: labelMode, selected, region: highlightedRegion });
+    layers.update({ t: transform, placed, W, H, mode: labelMode, selected, region: highlightedRegion, ts });
     // city outlines only once the map is close enough for them to read as areas, not specks
     // city areas: the 政令指定都市 once zoomed in a little (other regions' faint); every mapped city of the open prefecture, lightly
     gCityAreas.classed('is-hidden', k < CITY_AREAS_AT && !selected);
