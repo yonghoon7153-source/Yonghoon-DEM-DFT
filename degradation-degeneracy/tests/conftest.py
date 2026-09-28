@@ -213,6 +213,9 @@ _GATED_ENTRYPOINT_MODULES = frozenset({
     # ★ 79차 — 단계 2 한정 구현(restart 행 필드 · restart_errors_json · 깨진 parquet 발견)을 production
     #   `run_fit()` 으로 잰다. 같은 이유로 gated.
     "test_gate79_stage3_logging", "tests.test_gate79_stage3_logging",
+    # ★ 81차 — 단계 3 라운드 1 (v6 후보 경로 · execution record · validator sig 6) 을 production `run_fit()` 으로
+    #   잰다. 같은 이유로 gated (smoke namespace 안에서만 계획 gate 가 면제된다 — 47차 P0-3).
+    "test_gate81_stage3_wire", "tests.test_gate81_stage3_wire",
 })
 
 

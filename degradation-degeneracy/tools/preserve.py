@@ -2379,6 +2379,60 @@ class PlannedLeg:
         return digest(self.envelope())
 
 
+@dataclass
+class PlannedLegV4:
+    """★ 81차 G81-N1 — 단계 3 의 **planned** envelope (`planned-leg/v4`).
+
+    `planned-leg/v3`(`PlannedLeg`) 는 손대지 않는다 — 기존 receipt·승인 바이트는 읽기 전용이다.
+    v4 는 **계획만** 담는다: version · stage×objective×arm 예산/mode · 계획 후보 count(유도값) ·
+    bank/설계/입력/provider 식별 · 사전 roster. **실현값(실제 count·prefix·후보 map)은 여기 없다** —
+    그것은 `execution-record/v1` 이 따로 적고 `planned_id` 를 참조한다. 표: STAGE3_IMPL_ROUND1_SPEC §1.
+    """
+
+    leg_id: str
+    protocol_generation: str
+    pairing_design_sha256: str
+    parameter_order_sha256: str
+    source_digest: str
+    objective_order: list
+    stages: list
+    planned_counts: dict
+    bank: dict
+    inputs: dict
+    provider_edges: list
+    roster: dict
+    min_retention_days: int = MIN_RETENTION_DAYS
+    design_label: str = ""          # 사람용 — hash 밖
+    notes: str = ""
+
+    def __post_init__(self):
+        bad = check_envelope_v4(self.envelope())
+        if bad:
+            raise PreserveError("planned_seal", "; ".join(bad[:4]))
+
+    def envelope(self) -> dict:
+        """hash 대상. label·notes 는 밖. 실현값은 자리 자체가 없다."""
+        return json.loads(canonical_bytes({
+            "schema": "planned-leg/v4",
+            "leg_id": self.leg_id,
+            "protocol_generation": self.protocol_generation,
+            "pairing_design_sha256": self.pairing_design_sha256,
+            "parameter_order_sha256": self.parameter_order_sha256,
+            "source_digest": self.source_digest,
+            "objective_order": list(self.objective_order),
+            "stages": list(self.stages),
+            "planned_counts": dict(self.planned_counts),
+            "bank": dict(self.bank),
+            "inputs": dict(self.inputs),
+            "provider_edges": list(self.provider_edges),
+            "roster": dict(self.roster),
+            "min_retention_days": self.min_retention_days,
+        }).decode("utf-8"))
+
+    def planned_id(self) -> str:
+        return digest(self.envelope())
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # 2단계 — payload seal
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2991,6 +3045,24 @@ _ENVELOPE_KEYS = frozenset({
     "min_retention_days"})
 _VALIDATION_KEYS = frozenset({"ok", "n_checks", "checks"})
 
+#: ★ 81차 — `planned-leg/v4` 의 닫힌 키 집합 (`PlannedLegV4.envelope()` 와 같은 규격).
+_ENVELOPE_KEYS_V4 = frozenset({
+    "schema", "leg_id", "protocol_generation", "pairing_design_sha256",
+    "parameter_order_sha256", "source_digest", "objective_order", "stages",
+    "planned_counts", "bank", "inputs", "provider_edges", "roster", "min_retention_days"})
+_STAGE_KEYS = frozenset({"stage", "arm", "budget_by_objective", "candidate_mode", "warm_provider_map"})
+_BANK_KEYS = frozenset({"generator", "version", "length", "n_params", "exact_bounds_sha256"})
+_INPUT_KEYS = frozenset({"reference", "curves_sha256", "base_config_digest"})
+_ROSTER_KEYS = frozenset({"roster_sha256", "n_obs", "comparison_family_id", "treatment_id", "replicate_id"})
+#: `execution-record/v1` (실현 기록) 의 닫힌 키 집합
+_RECORD_KEYS = frozenset({"schema", "leg_id", "planned_id", "source_digest", "protocol_generation",
+                          "realized", "record_digest"})
+_REALIZED_KEYS = frozenset({"by_objective", "candidate_map_sha256", "n_candidates",
+                            "roster_observed_sha256", "n_obs_observed", "provider_consumed"})
+_REALIZED_OBJ_KEYS = frozenset({"attempted", "returned", "failed", "not_attempted",
+                                "counts_by_source", "random_bank_prefix_len"})
+_SOURCE_KEYS = frozenset({"base_init", "warm", "random"})
+
 #: planned envelope 의 **값 domain** (★ 30차 P1-2)
 #:
 #: 초판은 design SHA 하나만 봤다. JSON 으로 표현 가능한 다음이 오류 없이
@@ -3085,6 +3157,202 @@ def check_envelope(env) -> list[str]:
         bad.append(f"min_retention_days 가 정책 하한 미만이다: "
                    f"{env['min_retention_days']!r}")
     return bad
+
+
+def _nonneg_int(v) -> bool:
+    return isinstance(v, int) and not isinstance(v, bool) and v >= 0
+
+
+def check_envelope_v4(env) -> list[str]:
+    """`planned-leg/v4` 의 키 **와 값**. 생성(`PlannedLegV4`)·복구(`check_receipt`)가 같은 함수를 쓴다.
+
+    ★ 81차 G81-N1 — planned 는 유도값(planned_counts)까지 포함해 실행 **전**에 닫힌다. 실현값 키가
+      하나라도 섞이면 닫힌 키 집합에서 걸린다. 이번 라운드는 `stage="condition"` 한 단계만 받는다
+      (p_ini stage 는 명시 거부 — 표 C).
+    """
+    from tools.design_wire import check_provider_edges, planned_counts as _planned_counts, WireError
+    if not isinstance(env, dict):
+        return [f"planned_envelope 가 dict 가 아니다: {type(env).__name__}"]
+    if set(env) != _ENVELOPE_KEYS_V4:
+        return [f"planned-leg/v4 envelope 가 닫혀 있지 않다: {sorted(set(env) ^ _ENVELOPE_KEYS_V4)}"]
+    bad = []
+    if env["schema"] != "planned-leg/v4":
+        bad.append(f"planned_envelope schema: {env['schema']!r}")
+    if not _nonempty_str(env["leg_id"]):
+        bad.append(f"leg_id 가 비어 있지 않은 NFC 문자열이 아니다: {env['leg_id']!r}")
+    if not _nonempty_str(env["protocol_generation"]) or not _GENERATION_RE.match(env["protocol_generation"]):
+        bad.append(f"protocol_generation 이 세대 문법이 아니다: {env['protocol_generation']!r}")
+    for k in ("pairing_design_sha256", "parameter_order_sha256"):
+        if not _is_hex64(env[k] or ""):
+            bad.append(f"{k} 가 64-hex 가 아니다")
+    if not _nonempty_str(env["source_digest"]) or not re.fullmatch(r"[0-9a-f]{16}", env["source_digest"]):
+        bad.append(f"source_digest 가 16-hex 가 아니다: {env['source_digest']!r}")
+    order = env["objective_order"]
+    if not isinstance(order, list) or not order or not all(_nonempty_str(o) for o in order) \
+            or len(set(order)) != len(order):
+        bad.append(f"objective_order 가 비어 있지 않은 unique 문자열 목록(순서 보존)이 아니다: {order!r}")
+        return bad
+    stages = env["stages"]
+    if not isinstance(stages, list) or len(stages) != 1:
+        bad.append("이번 라운드는 stages 가 정확히 한 단계(condition)여야 한다")
+        return bad
+    st = stages[0]
+    if not isinstance(st, dict) or set(st) != _STAGE_KEYS:
+        bad.append(f"stage 블록이 닫혀 있지 않다: {sorted(st) if isinstance(st, dict) else st!r}")
+        return bad
+    if st["stage"] == "p_ini":
+        bad.append("stage='p_ini' 는 이번 라운드 명시 거부 (선언만 · 구현 다음 라운드)")
+    elif st["stage"] != "condition":
+        bad.append(f"stage 가 condition 이 아니다: {st['stage']!r}")
+    if not _nonempty_str(st["arm"]):
+        bad.append(f"arm 이 비었다: {st['arm']!r}")
+    bud = st["budget_by_objective"]
+    if not isinstance(bud, dict) or set(bud) != set(order) or not all(_pos_int(v) for v in bud.values()):
+        bad.append(f"budget_by_objective 가 objective_order 와 같은 집합의 양의 정수가 아니다: {bud!r}")
+    if st["candidate_mode"] not in candidate_modes():
+        bad.append(f"candidate_mode 가 계약 enum 이 아니다: {st['candidate_mode']!r}")
+    wm = st["warm_provider_map"]
+    if not isinstance(wm, dict) or set(wm) != set(order) or \
+            not all(v is None or (isinstance(v, str) and v in order) for v in wm.values()):
+        bad.append(f"warm_provider_map 이 objective_order 위의 (None | objective) 사상이 아니다: {wm!r}")
+    if bad:
+        return bad
+    try:
+        want = _planned_counts(st["candidate_mode"], bud, wm)
+    except WireError as ex:
+        return bad + [f"planned_counts 를 유도할 수 없다: {ex}"]
+    if env["planned_counts"] != want:
+        bad.append("planned_counts 가 mode·B·provider 에서 유도한 값과 다르다 — 실현값을 넣었거나 손으로 고쳤다")
+    bank = env["bank"]
+    if not isinstance(bank, dict) or set(bank) != _BANK_KEYS:
+        bad.append(f"bank 블록이 닫혀 있지 않다: {sorted(bank) if isinstance(bank, dict) else bank!r}")
+    else:
+        if not (_nonempty_str(bank["generator"]) and _nonempty_str(bank["version"])):
+            bad.append("bank.generator/version 이 비었다")
+        if not _pos_int(bank["length"]) or not _pos_int(bank["n_params"]):
+            bad.append("bank.length/n_params 가 양의 정수가 아니다")
+        elif bank["length"] < max(c["random"] for c in want.values()):
+            bad.append(f"bank.length {bank['length']} 가 계획 random prefix {max(c['random'] for c in want.values())} 보다 짧다")
+        if not _is_hex64(bank["exact_bounds_sha256"] or ""):
+            bad.append("bank.exact_bounds_sha256 가 64-hex 가 아니다")
+    inp = env["inputs"]
+    if not isinstance(inp, dict) or set(inp) != _INPUT_KEYS:
+        bad.append(f"inputs 블록이 닫혀 있지 않다: {sorted(inp) if isinstance(inp, dict) else inp!r}")
+    else:
+        if inp["reference"] not in ("grid", "halfcell"):
+            bad.append(f"inputs.reference: {inp['reference']!r}")
+        if not _is_hex64(inp["curves_sha256"] or ""):
+            bad.append("inputs.curves_sha256 가 64-hex 가 아니다")
+        if inp["base_config_digest"] is not None and not _is_hex64(inp["base_config_digest"]):
+            bad.append("inputs.base_config_digest 가 64-hex 도 null 도 아니다")
+    bad += [f"provider_edges: {m}" for m in check_provider_edges(
+        env["provider_edges"], objective_order=order, warm_provider_map=wm, arm=st["arm"])]
+    ro = env["roster"]
+    if not isinstance(ro, dict) or set(ro) != _ROSTER_KEYS:
+        bad.append(f"roster 블록이 닫혀 있지 않다: {sorted(ro) if isinstance(ro, dict) else ro!r}")
+    else:
+        if not _is_hex64(ro["roster_sha256"] or ""):
+            bad.append("roster.roster_sha256 가 64-hex 가 아니다")
+        if not _pos_int(ro["n_obs"]):
+            bad.append("roster.n_obs 가 양의 정수가 아니다")
+        if not (_nonempty_str(ro["comparison_family_id"]) and _nonempty_str(ro["treatment_id"])):
+            bad.append("roster.comparison_family_id/treatment_id 가 비었다")
+        if not _nonneg_int(ro["replicate_id"]):
+            bad.append("roster.replicate_id 가 0 이상의 정수가 아니다")
+    if not _pos_int(env["min_retention_days"]) or env["min_retention_days"] < MIN_RETENTION_DAYS:
+        bad.append(f"min_retention_days 가 정책 하한 미만이다: {env['min_retention_days']!r}")
+    return bad
+
+
+def check_planned_envelope(env) -> list[str]:
+    """schema 로 v3/v4 를 **분기**한다 — 모르는 schema 는 거부 (G81-N2 의 version branch 원칙)."""
+    if not isinstance(env, dict):
+        return [f"planned_envelope 가 dict 가 아니다: {type(env).__name__}"]
+    schema = env.get("schema")
+    if schema == "planned-leg/v3":
+        return check_envelope(env)
+    if schema == "planned-leg/v4":
+        return check_envelope_v4(env)
+    return [f"모르는 planned envelope schema: {schema!r}"]
+
+
+def check_execution_record(rec, planned_env) -> list[str]:
+    """`execution-record/v1` (실현 기록) 을 그 계획과 대조한다 (★ 81차 G81-N1).
+
+    계획은 바뀌지 않는다: record 는 `planned_id` 로 계획을 **참조**하고, 실현 count 는 계획 count 와
+    같은 자료가 아니라 계획 **아래** 있어야 한다 (attempted = returned + failed · attempted + not_attempted =
+    계획 총합 · source 별 ≤ 계획 · prefix ≤ bank.length). 예상 count 를 실제로 복사해 채운 record 도
+    정상 record 와 구별되지 않지만, 그것은 writer 의 시험(candidate map sha)이 잡는다.
+    """
+    if not isinstance(rec, dict):
+        return [f"execution record 가 dict 가 아니다: {type(rec).__name__}"]
+    if set(rec) != _RECORD_KEYS:
+        return [f"execution record 키 집합이 닫혀 있지 않다: {sorted(set(rec) ^ _RECORD_KEYS)}"]
+    bad = []
+    if rec["schema"] != "execution-record/v1":
+        bad.append(f"schema: {rec['schema']!r}")
+    if rec["record_digest"] != digest({k: v for k, v in rec.items() if k != "record_digest"}):
+        bad.append("record_digest 가 자기 내용과 다르다")
+    envbad = check_planned_envelope(planned_env)
+    if envbad or planned_env.get("schema") != "planned-leg/v4":
+        return bad + ["대조할 계획이 유효한 planned-leg/v4 가 아니다: " + "; ".join(envbad[:2])]
+    if rec["leg_id"] != planned_env["leg_id"]:
+        bad.append("leg_id 가 계획과 다르다")
+    if rec["planned_id"] != digest(planned_env):
+        bad.append(f"planned_id {str(rec['planned_id'])[:16]!r} 가 이 계획의 digest 가 아니다 — 다른 계획의 기록")
+    if rec["source_digest"] != planned_env["source_digest"]:
+        bad.append("source_digest 가 계획과 다르다 (code identity)")
+    if rec["protocol_generation"] != planned_env["protocol_generation"]:
+        bad.append("protocol_generation 이 계획과 다르다")
+    rz = rec["realized"]
+    if not isinstance(rz, dict) or set(rz) != _REALIZED_KEYS:
+        return bad + [f"realized 키 집합이 닫혀 있지 않다: {sorted(rz) if isinstance(rz, dict) else rz!r}"]
+    pc = planned_env["planned_counts"]
+    bo = rz["by_objective"]
+    if not isinstance(bo, dict) or set(bo) != set(planned_env["objective_order"]):
+        bad.append("realized.by_objective 의 objective 집합이 계획과 다르다")
+    else:
+        for obj, r in bo.items():
+            if not isinstance(r, dict) or set(r) != _REALIZED_OBJ_KEYS:
+                bad.append(f"{obj}: realized 항목 키가 닫혀 있지 않다")
+                continue
+            ints = {k: r[k] for k in ("attempted", "returned", "failed", "not_attempted", "random_bank_prefix_len")}
+            if not all(_nonneg_int(v) for v in ints.values()):
+                bad.append(f"{obj}: 실현 count 가 음이 아닌 정수가 아니다: {ints!r}")
+                continue
+            if r["attempted"] != r["returned"] + r["failed"]:
+                bad.append(f"{obj}: attempted {r['attempted']} ≠ returned {r['returned']} + failed {r['failed']}")
+            # 계획 count 는 **조건 하나**의 후보 구성이고 실현 count 는 다리 전체(조건 × 후보)의 합이다 —
+            #   계획 총합 = 조건당 계획 × roster n_obs (계획 roster 가 조건 집합의 사전 크기다)
+            n_obs = planned_env["roster"]["n_obs"]
+            planned_total = sum(pc[obj].values()) * n_obs
+            if r["attempted"] + r["not_attempted"] != planned_total:
+                bad.append(f"{obj}: attempted + not_attempted = {r['attempted'] + r['not_attempted']} ≠ 계획 총합 {planned_total} (조건당 {sum(pc[obj].values())} × roster {n_obs})")
+            cs = r["counts_by_source"]
+            if not isinstance(cs, dict) or set(cs) != _SOURCE_KEYS or not all(_nonneg_int(v) for v in cs.values()):
+                bad.append(f"{obj}: counts_by_source 가 {{base_init, warm, random}} 의 음이 아닌 정수가 아니다")
+                continue
+            for src in _SOURCE_KEYS:
+                if cs[src] > pc[obj][src] * n_obs:
+                    bad.append(f"{obj}: 실현 {src} {cs[src]} > 계획 {pc[obj][src]} × roster {n_obs}")
+            if sum(cs.values()) != r["returned"]:
+                bad.append(f"{obj}: counts_by_source 합 {sum(cs.values())} ≠ returned {r['returned']}")
+            # random_bank_prefix_len 은 **조건당** 소비한 prefix 길이 (같은 봉인 bank 의 앞부분) — 계획 random 수 이하 ·
+            #   bank.length 이하 · 실현 random 총수는 prefix × roster 이하
+            pl = r["random_bank_prefix_len"]
+            if not (pl <= pc[obj]["random"] and pl <= planned_env["bank"]["length"] and cs["random"] <= pl * n_obs):
+                bad.append(f"{obj}: random_bank_prefix_len {pl} 가 계획 random {pc[obj]['random']}·bank.length "
+                           f"{planned_env['bank']['length']}·실현 random {cs['random']} 과 맞지 않는다")
+    for k in ("candidate_map_sha256", "roster_observed_sha256"):
+        if not _is_hex64(rz[k] or ""):
+            bad.append(f"realized.{k} 가 64-hex 가 아니다")
+    if not _nonneg_int(rz["n_candidates"]):
+        bad.append("realized.n_candidates 가 음이 아닌 정수가 아니다")
+    if not _nonneg_int(rz["n_obs_observed"]) or rz["n_obs_observed"] > planned_env["roster"]["n_obs"]:
+        bad.append(f"realized.n_obs_observed {rz['n_obs_observed']!r} 가 계획 roster n_obs {planned_env['roster']['n_obs']} 를 넘거나 정수가 아니다")
+    if not isinstance(rz["provider_consumed"], list):
+        bad.append("realized.provider_consumed 가 목록이 아니다")
+    return bad
 #: 산출 descriptor 의 닫힌 키 집합
 _OUTPUT_KEYS = frozenset({
     "role", "canonicalizer", "semantic_schema", "semantic_sha256",
@@ -3116,8 +3384,9 @@ def check_receipt(rec, entry: dict, backend: "CasBackend",
         bad.append("receipt 안의 digest 가 자기 내용과 다르다")
     # ★ 계획이 실제로 그 계획인가 — 내용 주소를 다시 계산한다
     env = rec["planned_envelope"]
-    bad += check_envelope(env)
-    if isinstance(env, dict) and set(env) == _ENVELOPE_KEYS:
+    # ★ 81차 — schema 로 v3/v4 를 분기한다 (`check_planned_envelope`); 모르는 schema 는 거부.
+    bad += check_planned_envelope(env)
+    if isinstance(env, dict) and set(env) in (_ENVELOPE_KEYS, _ENVELOPE_KEYS_V4):
         if env["leg_id"] != rec["leg_id"]:
             bad.append("planned_envelope 의 leg_id 가 receipt 와 다르다")
         if digest(env) != rec["planned_id"]:
@@ -3394,6 +3663,20 @@ def run_transaction(planned: PlannedLeg, run_dir: Path, backend: CasBackend,
     got = "다른-digest" if "wrong_source_digest" in faults else spec["source_digest"]
     if got != planned.source_digest:
         raise PreserveError("planned_seal", f"code identity 가 계획과 다르다: {got!r}")
+    # ★ 81차 G81-N1 — v4 계획은 **실현 기록** 없이 봉인하지 않는다. record 는 planned_id 로 계획을
+    #   참조하고, 실현 count 는 계획 아래 있어야 한다 (`check_execution_record`). 다른 계획의 record 혼입도
+    #   여기서 멈춘다. v3 계획은 기존 경로 그대로.
+    env = planned.envelope()
+    if env.get("schema") == "planned-leg/v4":
+        rec_path = run_dir / "execution_record.json"
+        if not rec_path.is_file():
+            raise PreserveError("planned_seal",
+                                "execution_record.json 이 없다 — v4 계획은 실현 기록(실제 count·후보 map) "
+                                "없이 봉인하지 않는다")
+        rec = json.loads(rec_path.read_text(encoding="utf-8"))
+        rbad = check_execution_record(rec, env)
+        if rbad:
+            raise PreserveError("planned_seal", "execution_record 가 계획과 맞지 않는다: " + "; ".join(rbad[:4]))
 
     # ── 2. payload seal ─────────────────────────────────────────────────
     man = seal_payload(run_dir, faults=faults)

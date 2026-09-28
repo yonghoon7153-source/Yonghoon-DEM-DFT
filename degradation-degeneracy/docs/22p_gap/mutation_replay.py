@@ -49,6 +49,7 @@ G66T = ROOT / "tests" / "test_gate66_defensive.py"                  # 67차 T1
 RUNSH = ROOT / "run.sh"                                              # 70차 G70-N1
 ARCHSH = ROOT / "scripts" / "archive_results.sh"                     # 74차 G74-4
 IDXY = ROOT / "tools" / "index_yaml.py"                              # 75차 G75-N2
+DW = ROOT / "tools" / "design_wire.py"                               # 81차 G81-N1·N3
 
 #: ★ 46차 #9 조건 9 — 변이는 **작업 트리에 손대지 않는다.** 45차 runner 는
 #:   실제 저장소 파일을 고쳤다가 `finally` 로 되돌렸다. 그러면 (a) 중단되면
@@ -1895,6 +1896,35 @@ MUTANTS = [
      "the_committed_control_asserts_the_token_probe_negative or "
      "a_constant_true_token_probe_is_caught_by_the_committed_control or "
      "the_committed_probe_control_asserts_both_directions"),
+    # ── 81차 (단계 3 라운드 1 — G81-N1·N2·N3 · Q1; 고정 표 docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md §7) ──
+    ("record-must-reference-this-plan-g81", PRESERVE,                     # N1: 다른 계획의 실현 기록 혼입
+     '        bad.append(f"planned_id {str(rec[\'planned_id\'])[:16]!r} 가 이 계획의 digest 가 아니다 — 다른 계획의 기록")\n',
+     '        pass  # 변이: 계획 참조 대조를 지운다\n',
+     "g81_n1_03 or g81_n1_05"),
+    ("planned-counts-are-derived-not-copied-g81", PRESERVE,               # N1: 실현값을 계획 자리에 넣은 envelope 거부
+     '        bad.append("planned_counts 가 mode·B·provider 에서 유도한 값과 다르다 — 실현값을 넣었거나 손으로 고쳤다")\n',
+     '        pass  # 변이: 유도값 대조를 지운다\n',
+     "g81_n1_06"),
+    ("stripped-v6-row-is-not-downgraded-to-prep-g81", FITTING,           # N2: ID 를 지운 v6 행이 prep 으로 내려가면 안 된다
+     '        gen = "v6" if (shape == "v6" and _restart_ok_v6(r)) else "mixed_invalid"\n',
+     '        gen = "v6" if (shape == "v6" and _restart_ok_v6(r)) else ("v6_prep_logging" if shape == "prep" else "mixed_invalid")\n',
+     "g81_n2_02"),
+    ("v6-random-row-needs-a-bank-index-g81", IO,                          # N2: random 행의 bank_index 규칙
+     '    if e["source"] == "random":\n        return isinstance(bi, int) and not isinstance(bi, bool) and bi >= 0\n    return bi is None\n',
+     '    return True  # 변이: source 별 bank_index 규칙을 지운다\n',
+     "g81_n2_05"),
+    ("warm-required-slot-is-not-turned-into-no-warm-g81", DW,             # N3: warm arm 두 번째 objective 의 null 은 오류
+     '                bad.append(f"warm arm {arm} 의 {obj!r} 에 provider 가 없다 — no-warm 전환 금지 (첫 objective 만 null 가능)")\n',
+     '                pass  # 변이: no-warm 으로 조용히 전환\n',
+     "g81_n3_04"),
+    ("provider-x0-is-not-clipped-g81", FITTING,                           # N3: bounds 밖 provider 좌표를 clip 하면 안 된다
+     '    if (p < lb).any() or (p > ub).any():\n        raise ValueError(f"provider 좌표가 bounds 밖이다 — clip 하지 않고 거부한다: {p.tolist()}")\n',
+     '    p = np.clip(p, lb, ub)  # 변이: legacy 처럼 clip\n',
+     "g81_n3_03"),
+    ("solution-map-is-consumed-only-when-sealed-g81", FITTING,            # N3: 봉인 전(sha 불일치) map 소비
+     '    if got != edge.get("solution_map_sha256"):\n        raise ValueError(f"solution map 바이트 sha {got[:16]} ≠ edge 의 solution_map_sha256 "\n',
+     '    if False:\n        raise ValueError(f"solution map 바이트 sha {got[:16]} ≠ edge 의 solution_map_sha256 "\n',
+     "g81_n3_02"),
 ]
 
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
@@ -5652,6 +5682,77 @@ EXPECT: dict = {
         "witness": {
             "tests/test_gate66_defensive.py::test_g66_07_the_replay_context_is_measured_once":
                 "AssertionError: ('한 번의 진입점 호출이 재생 문맥을 여러 번 쟀다', 2)",
+        }
+    },
+    # ── 81차 — `--emit-expect -k g81` 관측값 (단계 3 라운드 1 · G81-N1·N2·N3). 첫 관측에서 두 변이가
+    #   rc 0 이었다: `record-must-reference-this-plan-g81` 은 반례가 `other_leg` 라 leg_id 대조가 먼저
+    #   걸려 planned_id 참조 대조를 가렸고, `solution-map-is-consumed-only-when-sealed-g81` 은 마지막
+    #   바이트 뒤집기가 JSONDecodeError(ValueError 하위)로 통과해 봉인 대조를 가렸다. 시험을 같은 leg ·
+    #   다른 계획 / header 를 보존한 유효 JSON 변조로 바꾼 뒤 재관측 — 7/7 rc 1. 잘린 repr 꼬리는 담지 않는다.
+    "record-must-reference-this-plan-g81": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_n1_03_execution_record_of_another_plan_or_inconsistent_counts_is_rejected",
+            "tests/test_gate81_stage3_wire.py::test_g81_n1_05_run_transaction_with_a_v4_plan_requires_a_consistent_execution_record",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_n1_03_execution_record_of_another_plan_or_inconsistent_counts_is_rejected":
+                "AssertionError: 같은 leg 의 다른 계획 기록이 통과했다: []",
+            "tests/test_gate81_stage3_wire.py::test_g81_n1_05_run_transaction_with_a_v4_plan_requires_a_consistent_execution_record":
+                "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "planned-counts-are-derived-not-copied-g81": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_n1_06_planned_counts_are_derived_and_a_hand_edited_count_is_refused",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_n1_06_planned_counts_are_derived_and_a_hand_edited_count_is_refused":
+                "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "stripped-v6-row-is-not-downgraded-to-prep-g81": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_n2_02_declared_v6_accepts_exactly_ten_keys_and_never_downgrades_a_stripped_row",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_n2_02_declared_v6_accepts_exactly_ten_keys_and_never_downgrades_a_stripped_row":
+                "AssertionError: assert 'v6_prep_logging' == 'mixed_invalid'",
+        }
+    },
+    "v6-random-row-needs-a-bank-index-g81": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_n2_05_v6_restart_validator_requires_all_ten_keys_and_source_consistent_bank_index",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_n2_05_v6_restart_validator_requires_all_ten_keys_and_source_consistent_bank_index":
+                "AssertionError: random 인데 index 없음",
+        }
+    },
+    "warm-required-slot-is-not-turned-into-no-warm-g81": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_n3_04_provider_edges_must_match_the_warm_map_precede_the_consumer_and_not_be_cyclic",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_n3_04_provider_edges_must_match_the_warm_map_precede_the_consumer_and_not_be_cyclic":
+                "AssertionError: warm arm(G_C) 에서 두 번째 objective 의 provider 가 null — no-warm 으로 전환 금지",
+        }
+    },
+    "provider-x0-is-not-clipped-g81": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_n3_03_consumer_rejects_missing_condition_wrong_objective_and_out_of_bounds_without_clipping",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_n3_03_consumer_rejects_missing_condition_wrong_objective_and_out_of_bounds_without_clipping":
+                "Failed: DID NOT RAISE ValueError",
+        }
+    },
+    "solution-map-is-consumed-only-when-sealed-g81": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_n3_02_consumer_rejects_wrong_fits_map_combination_and_unsealed_maps",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_n3_02_consumer_rejects_wrong_fits_map_combination_and_unsealed_maps":
+                "Failed: DID NOT RAISE ValueError",
         }
     },
 }

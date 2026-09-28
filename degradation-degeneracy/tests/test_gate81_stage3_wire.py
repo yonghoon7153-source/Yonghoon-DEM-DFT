@@ -44,6 +44,8 @@ COORDS = {"lli": "0.17", "lam_pe": "0.13", "lam_ne": "0.13",
 COORDS2 = {"lli": "0", "lam_pe": "0", "lam_ne": "0",
            "lam_pe_type": "capacity", "lam_ne_type": "capacity"}
 HEX64 = "a" * 64
+#: validate_provenance 의 dirty-tree 검사 — 개발 중(미커밋 RUN_SCOPE)에는 떨어지지만 clean 커밋의 전체 회귀에서는 통과한다
+_DIRTY_TREE_CHECKS = {"clean_worktree", "코드_identity"}
 
 
 def _design(arms=("G_A", "G_C")) -> dict:
@@ -118,10 +120,11 @@ def _record_for(planned, *, realized=None, candidate_entries=None):
     """planned 와 정합하는 최소 execution record."""
     env = planned.envelope()
     pc = env["planned_counts"]
+    n = env["roster"]["n_obs"]                       # 실현 count 는 조건 × 후보의 합, 계획 count 는 조건당
     by_obj = realized or {
-        o: {"attempted": sum(pc[o].values()), "returned": sum(pc[o].values()), "failed": 0,
+        o: {"attempted": sum(pc[o].values()) * n, "returned": sum(pc[o].values()) * n, "failed": 0,
             "not_attempted": 0,
-            "counts_by_source": dict(pc[o]),
+            "counts_by_source": {k: v * n for k, v in pc[o].items()},
             "random_bank_prefix_len": pc[o]["random"]} for o in OBJS}
     entries = candidate_entries if candidate_entries is not None else []
     rec = {"schema": "execution-record/v1", "leg_id": env["leg_id"],
@@ -259,7 +262,8 @@ def test_g81_n1_02_planned_id_is_invariant_to_realized_counts_and_v3_validator_r
     p = _planned_v4()
     before = p.planned_id()
     rec_a = _record_for(p)
-    short = {o: {"attempted": 2, "returned": 2, "failed": 0, "not_attempted": 1,
+    n = p.envelope()["roster"]["n_obs"]; per = sum(p.envelope()["planned_counts"][OBJS[0]].values())
+    short = {o: {"attempted": 2, "returned": 2, "failed": 0, "not_attempted": per * n - 2,
                  "counts_by_source": {"base_init": 1, "warm": 0, "random": 1},
                  "random_bank_prefix_len": 1} for o in OBJS}
     rec_b = _record_for(p, realized=short)
@@ -275,6 +279,12 @@ def test_g81_n1_03_execution_record_of_another_plan_or_inconsistent_counts_is_re
     good = _record_for(p)
     assert PV.check_execution_record(good, p.envelope()) == []
     assert PV.check_execution_record(good, q.envelope()), "다른 계획의 receipt 혼입"
+    # 같은 leg · 다른 계획 (bank 길이만 다르다 — leg_id·count·digest 는 전부 같다). 변이 재생에서 `other_leg` 는
+    #   leg_id 대조가 먼저 걸려 planned_id 참조 대조를 가렸다 (실측: 변이 rc 0). 이 자리만이 잡는 반례.
+    p2 = _planned_v4(bank_length=16)
+    assert p2.leg_id == p.leg_id and p2.planned_id() != p.planned_id()
+    probs = PV.check_execution_record(_record_for(p2), p.envelope())
+    assert any("다른 계획의 기록" in b for b in probs), f"같은 leg 의 다른 계획 기록이 통과했다: {probs}"
     bad = copy.deepcopy(good); bad["realized"]["by_objective"][OBJS[0]]["failed"] = 1
     assert PV.check_execution_record(bad, p.envelope()), "attempted ≠ returned + failed"
     bad = copy.deepcopy(good); bad["realized"]["by_objective"][OBJS[0]]["attempted"] = 9
@@ -288,6 +298,17 @@ def test_g81_n1_03_execution_record_of_another_plan_or_inconsistent_counts_is_re
     assert PV.check_execution_record(bad, p.envelope()), "code identity 불일치"
     bad = copy.deepcopy(good); bad["extra"] = 1
     assert PV.check_execution_record(bad, p.envelope()), "닫힌 키"
+
+
+def test_g81_n1_06_planned_counts_are_derived_and_a_hand_edited_count_is_refused():
+    """RED: 계획 count 는 mode·B·provider 에서 유도한 값과 같아야 한다 — 손으로 고친(또는 실현값을 넣은) 계획은 봉인되지 않는다."""
+    good = _planned_v4()
+    pc = copy.deepcopy(good.envelope()["planned_counts"])
+    pc[OBJS[0]]["random"] += 1                                  # "실현값" 을 계획 자리에 넣은 꼴
+    with pytest.raises(PV.PreserveError, match="planned_counts"):
+        _planned_v4(planned_counts=pc)
+    env = good.envelope(); env["planned_counts"] = pc
+    assert any("planned_counts" in m for m in PV.check_envelope_v4(env))
 
 
 def test_g81_n1_04_roster_rejects_duplicate_obs_key_cross_seed_and_cond_id_collision():
@@ -326,6 +347,12 @@ def test_g81_n1_05_run_transaction_with_a_v4_plan_requires_a_consistent_executio
     with pytest.raises(PV.PreserveError) as ei:
         PV.run_transaction(p, run, backend, index, _hooks())
     assert ei.value.stage == "planned_seal"
+    # 같은 leg · 다른 계획의 기록 (bank 길이만 다르다) — leg_id 가 같으니 planned_id 참조 대조만이 멈춘다
+    (run / "execution_record.json").write_text(json.dumps(_record_for(_planned_v4(bank_length=16))),
+                                               encoding="utf-8")
+    with pytest.raises(PV.PreserveError) as ei:
+        PV.run_transaction(p, run, backend, index, _hooks())
+    assert ei.value.stage == "planned_seal" and "다른 계획의 기록" in str(ei.value), str(ei.value)
     (run / "execution_record.json").write_text(json.dumps(_record_for(p)), encoding="utf-8")
     res = PV.run_transaction(p, run, backend, tmp_path / "index2", _hooks())
     assert res["ok"]
@@ -406,6 +433,7 @@ def test_g81_n2_05_v6_restart_validator_requires_all_ten_keys_and_source_consist
 # §3 표 C — provider 결속 (G81-N3)  (RED)
 # ═════════════════════════════════════════════════════════════════════════════
 def _provider_fits(tmp: Path, objective: str, rows: dict[str, list[float]]) -> Path:
+    tmp = Path(tmp); tmp.mkdir(parents=True, exist_ok=True)
     df = pd.DataFrame([{"cond_id": c, "objective": objective, "lli": p[0], "lam_pe": p[1],
                         "lam_ne": p[2], "shift": p[3], "J": 0.1, "converged": True}
                        for c, p in rows.items()])
@@ -450,11 +478,17 @@ def test_g81_n3_02_consumer_rejects_wrong_fits_map_combination_and_unsealed_maps
     # fits A 의 edge 로 map B 를 소비 — header 의 artifact sha 가 edge 와 다르다
     with pytest.raises(ValueError):
         F.provider_x0(tmp_path / "b" / "map.json", edge=edge_ok, cond_id="c1", lb=LB, ub=UB, parameter_order=order)
-    # 봉인 전 소비 — map 파일을 한 바이트 바꾼다
-    raw = bytearray((tmp_path / "a" / "map.json").read_bytes()); raw[-2] ^= 0x20
-    (tmp_path / "a" / "tampered.json").write_bytes(bytes(raw))
-    with pytest.raises(ValueError):
+    # 봉인 전 소비 — header 는 그대로 두고 **유효한 JSON** 으로 바꾼다 (좌표 하나 · 공백 하나). 바이트 봉인만이
+    #   이것을 잡는다. (처음 반례는 마지막 바이트를 뒤집었는데, 그것은 JSONDecodeError(ValueError 의 하위)
+    #   로 통과해 봉인 대조 변이를 가렸다 — 실측: 변이 rc 0.)
+    doc = json.loads((tmp_path / "a" / "map.json").read_text(encoding="utf-8"))
+    doc["entries"]["c1"]["p"] = [1.3, 0.1, 0.9, 0.0]
+    (tmp_path / "a" / "tampered.json").write_text(json.dumps(doc), encoding="utf-8")
+    with pytest.raises(ValueError, match="봉인 전 소비"):
         F.provider_x0(tmp_path / "a" / "tampered.json", edge=edge_ok, cond_id="c1", lb=LB, ub=UB, parameter_order=order)
+    (tmp_path / "a" / "respaced.json").write_bytes((tmp_path / "a" / "map.json").read_bytes() + b"\n")
+    with pytest.raises(ValueError, match="봉인 전 소비"):
+        F.provider_x0(tmp_path / "a" / "respaced.json", edge=edge_ok, cond_id="c1", lb=LB, ub=UB, parameter_order=order)
 
 
 def test_g81_n3_03_consumer_rejects_missing_condition_wrong_objective_and_out_of_bounds_without_clipping(tmp_path):
@@ -531,6 +565,9 @@ def test_g81_w02_fit_with_candidates_rejects_adaptive_and_out_of_bounds_x0():
     bad = copy.deepcopy(cands); bad[0]["x0"] = np.array([9.0, 0.0, 1.0, 0.0])
     with pytest.raises(ValueError):
         F.fit(_obj, INIT, LB, UB, n_restarts=3, seed=7, adaptive=False, candidates=bad)
+    dup = copy.deepcopy(cands); dup[2]["bank_index"] = dup[1]["bank_index"]      # 같은 bank 행을 두 번
+    with pytest.raises(ValueError, match="중복"):
+        F.fit(_obj, INIT, LB, UB, n_restarts=3, seed=7, adaptive=False, candidates=dup)
 
 
 def test_g81_w03_legacy_fit_is_byte_identical_golden_still_holds():
@@ -593,8 +630,11 @@ def test_g81_w04_run_fit_with_stage3_context_writes_sig6_run_spec_execution_reco
     ids_rows = {e["candidate_id"] for rs in fits["restarts_json"] for e in json.loads(rs)}
     assert ids_rows == {m["candidate_id"] for m in cmap["entries"]}
     v = IO.validate_provenance(out)
-    assert v["ok"] is True, v["fail"]
-    assert "restart_후보" in v["checks"]
+    # 개발 중 dirty tree 에서는 dirty-tree 검사 둘(`clean_worktree` · `코드_identity`)만 떨어질 수 있다 — 이 시험의 축이 아니다
+    assert [k for k in v["fail"] if k not in _DIRTY_TREE_CHECKS] == [], v["fail"]
+    assert "restart_후보" in v["checks"] and v["checks"]["restart_후보"] == "통과"
+    for k in ("stage3_schema", "stage3_planned_envelope", "execution_record", "candidate_map", "candidate_ids_결속"):
+        assert v["checks"][k] == "통과", (k, v["checks"][k])
 
 
 def test_g81_w05_validate_provenance_dispatches_on_sig_version_and_fails_closed(tmp_path):
@@ -603,7 +643,9 @@ def test_g81_w05_validate_provenance_dispatches_on_sig_version_and_fails_closed(
     import yaml
     in_dir = _tiny_curves(tmp_path / "in"); out = tmp_path / "o"
     F.run_fit(in_dir, out, _obj_cfg_min(), {"aa": {"w_pocv": 1.0}}, _BOUNDS_MIN, "expanded", 2, nproc=1, adaptive=False)
-    assert IO.validate_provenance(out)["ok"] is True, "legacy sig 5 산출 — 기존 검사 불변"
+    v0 = IO.validate_provenance(out)
+    assert [k for k in v0["fail"] if k not in _DIRTY_TREE_CHECKS] == [], "legacy sig 5 산출 — 기존 검사 불변"
+    assert "restart_출처" in v0["checks"] and "restart_후보" not in v0["checks"]
     man_p = out / "manifest.yaml"
     man = yaml.safe_load(man_p.read_text(encoding="utf-8"))
     man["run_spec"]["sig_version"] = 6                       # v6 라고 주장하지만 stage3 축이 없다

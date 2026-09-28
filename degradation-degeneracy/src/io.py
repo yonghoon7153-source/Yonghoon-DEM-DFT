@@ -808,6 +808,37 @@ def _restart_ok(e) -> bool:
     return s_ in _RESTART_SOURCES
 
 
+#: ★ 81차 — v6 restart 행의 닫힌 10 키 (8 prep 키 + candidate_id + bank_index). 표 B.
+_RESTART_V6_KEYS = frozenset({"p", "J", "i", "source", "warm", "converged", "n_eval",
+                              "termination_status", "candidate_id", "bank_index"})
+
+
+def _restart_ok_v6(e) -> bool:
+    """v6 restart 원소 하나 — **정확히 10 키** · 타입 · source 별 bank_index 규칙 (★ 81차 G81-N2).
+
+    v6 에서 `candidate_id`/`bank_index` 를 지운 8 키 행은 여기서 거부된다 — prep 으로 내려가지 않는다.
+    옛 `_restart_ok`(sig 5) 는 그대로다 (넓히지 않는다).
+    """
+    if not isinstance(e, dict) or set(e) != _RESTART_V6_KEYS:
+        return False
+    if not _restart_ok(e):
+        return False
+    if not isinstance(e["warm"], bool) or not isinstance(e["converged"], bool):
+        return False
+    n = e["n_eval"]
+    if isinstance(n, bool) or not isinstance(n, int) or n < 1:
+        return False
+    if not isinstance(e["termination_status"], dict):
+        return False
+    cid = e["candidate_id"]
+    if not (isinstance(cid, str) and len(cid) == 64 and all(c in "0123456789abcdef" for c in cid)):
+        return False
+    bi = e["bank_index"]
+    if e["source"] == "random":
+        return isinstance(bi, int) and not isinstance(bi, bool) and bi >= 0
+    return bi is None
+
+
 def _sha256_lines(items) -> str:
     return hashlib.sha256("\n".join(items).encode()).hexdigest()
 
@@ -1481,6 +1512,72 @@ def validate_curves_provenance(curves_dir, repo_root=None) -> dict:
             "reasons": [checks[k][1] for k in fail]}
 
 
+_STAGE3_SPEC_KEYS = ("planned_id", "planned_envelope", "pairing_design_sha256", "parameter_order_sha256",
+                     "bank_version", "exact_bounds_sha256", "candidate_mode", "budget_by_objective",
+                     "warm_provider_map", "provider_edges_sha256", "roster_sha256", "arm", "stage")
+
+
+def _stage3_checks(run_dir, spec0: dict) -> dict:
+    """★ 81차 — sig_version 6 산출의 추가 검사 (STAGE3_IMPL_ROUND1_SPEC §5).
+
+    v6 writer 필수축(`stage3` 블록) · 계획 envelope 유효성 · `planned_id == digest(envelope)` ·
+    `execution_record.json` ↔ 계획 대조(`check_execution_record`) · `candidate_map.json` sha ↔ record ·
+    fits 행의 candidate_id 집합 == map 의 집합 · optimizer 정책(adaptive=False · unit_cube_bank/v1).
+    """
+    from tools.preserve import check_execution_record, check_planned_envelope, digest
+    run_dir = Path(run_dir)
+    out: dict[str, tuple[bool, str]] = {}
+    s3 = spec0.get("stage3")
+    missing = [k for k in _STAGE3_SPEC_KEYS if not isinstance(s3, dict) or k not in s3]
+    out["stage3_schema"] = (not missing, f"sig_version 6 인데 run_spec.stage3 필수 키가 없다: {missing or 'stage3 블록 없음'}")
+    opt = spec0.get("optimizer") or {}
+    out["stage3_optimizer"] = (opt.get("adaptive") is False and opt.get("seed_scheme") == "unit_cube_bank/v1",
+                               f"v6 optimizer 정책이 아니다: adaptive={opt.get('adaptive')!r} seed_scheme={opt.get('seed_scheme')!r}")
+    if missing:
+        return out
+    env = s3["planned_envelope"]
+    ebad = check_planned_envelope(env)
+    out["stage3_planned_envelope"] = (not ebad and isinstance(env, dict) and env.get("schema") == "planned-leg/v4"
+                                      and digest(env) == s3["planned_id"],
+                                      "planned_envelope 가 유효한 planned-leg/v4 가 아니거나 planned_id 와 다르다: "
+                                      + "; ".join(ebad[:2]))
+    rec_p = run_dir / "execution_record.json"
+    rec = None
+    if rec_p.is_file():
+        try:
+            rec = json.loads(rec_p.read_text(encoding="utf-8"))
+        except (ValueError, OSError):
+            rec = None
+    if rec is None:
+        out["execution_record"] = (False, "execution_record.json 이 없거나 읽을 수 없다 (v6 는 실현 기록이 필수)")
+        return out
+    rbad = check_execution_record(rec, env) if not ebad else ["계획이 유효하지 않아 대조 불가"]
+    out["execution_record"] = (not rbad, "execution_record 가 계획과 맞지 않는다: " + "; ".join(rbad[:3]))
+    cm_p = run_dir / "candidate_map.json"
+    ids_map: set = set()
+    try:
+        cm = json.loads(cm_p.read_text(encoding="utf-8"))
+        ents = cm.get("entries") if isinstance(cm, dict) else None
+        ok_map = isinstance(ents, list) and cm.get("schema") == "candidate-map/v1" \
+            and digest(ents) == (rec.get("realized") or {}).get("candidate_map_sha256")
+        ids_map = {m.get("candidate_id") for m in (ents or [])}
+    except (ValueError, OSError):
+        ok_map = False
+    out["candidate_map"] = (bool(ok_map), "candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다")
+    fp = run_dir / "fits.parquet"
+    ids_rows: set = set()
+    if fp.is_file():
+        try:
+            for v in pd.read_parquet(fp, columns=["restarts_json"])["restarts_json"]:
+                for e in json.loads(v):
+                    ids_rows.add(e.get("candidate_id"))
+        except Exception:  # noqa: BLE001 — 읽기 실패는 별도 검사(`_parquet_read_failure`)가 보고한다
+            ids_rows = set()
+    out["candidate_ids_결속"] = (bool(ids_rows) and ids_rows == ids_map,
+                               f"fits 행의 candidate_id 집합({len(ids_rows)})이 candidate_map({len(ids_map)})과 다르다")
+    return out
+
+
 def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
     """★ F38/F43 — 결과를 인용해도 되는 상태인지 **실제로** 검사한다.
 
@@ -1573,8 +1670,13 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
     checks["run_spec_schema"] = (not missing_key,
                                  f"run_spec에 필수 키가 없거나 비었다: {missing_key}")
     # ★ F58 — 존재만 보면 안 된다. 버전 값도 확인한다.
-    checks["sig_version"] = (spec0.get("sig_version") == 5,
-                             f"sig_version이 {spec0.get('sig_version')}이다 (5 필요)")
+    # ★ 81차 — sig_version 으로 세대를 **분기**한다: 5 = legacy/prep (기존 검사 불변) · 6 = v6 (기존 + stage3 검사).
+    #   행 모양으로 세대를 추론하지 않는다 (G81-N2). 5 도 6 도 아니면 실패.
+    _gen = spec0.get("sig_version")
+    checks["sig_version"] = (_gen in (5, 6),
+                             f"sig_version이 {_gen!r}이다 (5 또는 6 필요)")
+    if _gen == 6:
+        checks.update(_stage3_checks(run_dir, spec0))
     # ★ F67 — optimizer 정책은 서명에 있기만 하면 안 되고 완전해야 한다.
     _opt = spec0.get("optimizer") or {}
     _need_opt = [k for k in ("method", "adaptive", "n_restarts", "seed_scheme")
@@ -1867,12 +1969,16 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
                     n_bad += 1
                     continue
                 # ★ F61 — 키 존재만 보면 값이 전부 null 이어도 통과한다.
-                if not rs or not all(_restart_ok(e) for e in rs):
+                # ★ 81차 — v6(sig 6) 는 10 키 검사(`_restart_ok_v6`), 그 밖은 기존 4 키 검사 그대로.
+                _rok = _restart_ok_v6 if _gen == 6 else _restart_ok
+                if not rs or not all(_rok(e) for e in rs):
                     n_bad += 1
-            checks["restart_출처"] = (
+            _rname = "restart_후보" if _gen == 6 else "restart_출처"
+            checks[_rname] = (
                 n_bad == 0 and n_null == 0,
                 f"{n_bad}행이 형식 위반, {n_null}행이 비어 있다 "
-                f"(모든 원소가 p·J·i·source 를 가져야 한다)")
+                + ("(v6: 모든 원소가 정확히 10 키 — candidate_id·bank_index 포함 — 여야 한다)" if _gen == 6
+                   else "(모든 원소가 p·J·i·source 를 가져야 한다)"))
             # ★ F86/9차 발견 7 — `adaptive=False` 는 "조기 종료 안 함"일 뿐,
             #   개별 restart 가 예외로 실패하면 조용히 건너뛴다 (fitting.py 의
             #   `except` → 다음 restart). 그러면 실제 index 가 [0,2,4] 처럼 줄어

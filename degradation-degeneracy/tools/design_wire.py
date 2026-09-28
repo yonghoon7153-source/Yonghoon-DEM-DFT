@@ -23,9 +23,12 @@ wire schema · arm registry · hash domain · golden vector 가 먼저 고정돼
 
 from __future__ import annotations
 
+import hashlib
 import re
 import unicodedata
 from decimal import Decimal, InvalidOperation
+
+import numpy as np
 
 from tools.preserve import canonical_bytes, digest
 
@@ -535,3 +538,320 @@ __all__ = ["SCHEMA", "ARM_REGISTRY", "EXCLUDED_FROM_PAIR_ID",
            "coords_from_condition", "canonical_design_spec",
            "pairing_design_sha256", "parameter_order_sha256", "pair_group_id",
            "bank_id", "design_binding", "candidate_id", "canonical_bytes"]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 81차 — 단계 3 라운드 1 (G81-N1·N3 · Q1) : unit-cube bank · 후보 배열 · planned roster · provider edge
+# 고정 표: docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md §3·§4. ID 도메인(pair-group/v1 · bank/v1 ·
+# candidate/v2)과 golden 은 여기서 바꾸지 않는다 — 아래는 그 preimage 에 **실물 바이트**를 공급하는 쪽이다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+STAGE3_STAGES = ("condition", "p_ini")
+ROSTER_SCHEMA = "planned-roster/v1"
+OBS_KEY_FIELDS = ("comparison_family_id", "pair_group_id", "treatment_id",
+                  "noise_level", "noise_realization_id", "replicate_id")
+PROVIDER_EDGE_KEYS = frozenset({
+    "stage", "arm", "consumer_objective", "provider_objective",
+    "provider_artifact_sha256", "solution_map_sha256", "provider_protocol_sha256"})
+_RESTART_SOURCES_ORDERED = ("base_init", "warm", "random")
+
+
+def _pos_int(v) -> bool:
+    return isinstance(v, int) and not isinstance(v, bool) and v > 0
+
+
+def _bank_seed(pair_group_id: str, bank_version: str) -> int:
+    """seed derivation `H(pair_group_id, bank_version)` — 공유 pair group 기준.
+
+    조건별 `cond_id` seed(noise·seed 포함)를 여기 쓰지 않는다: 같은 물리좌표의 다른 잡음 실현이
+    **같은 bank** 를 받아야 짝 비교가 성립한다 (계약 §4.2 · 리뷰 §6).
+    """
+    if not _is_hex64(pair_group_id):
+        raise WireError(f"pair_group_id 가 64-hex 가 아니다: {pair_group_id!r}")
+    if not _nonempty_str(bank_version):
+        raise WireError(f"bank_version 이 비었거나 NFC 가 아니다: {bank_version!r}")
+    h = digest({"schema": "bank-seed/v1", "pair_group_id": pair_group_id,
+                "bank_version": bank_version})
+    return int(h[:16], 16)
+
+
+def unit_cube_bank(pair_group_id: str, bank_version: str, length: int,
+                   n_params: int) -> np.ndarray:
+    """봉인 **full bank** — `(length, n_params)` float64, unit cube `[0, 1)`.
+
+    B 마다 짧은 bank 를 다시 만들지 않는다. 계획은 이 full bank 의 prefix 를 소비하고,
+    소비한 길이는 실현 기록(`random_bank_prefix_len`)에만 적는다 (리뷰 §6).
+    """
+    for name, v in (("length", length), ("n_params", n_params)):
+        if not _pos_int(v):
+            raise WireError(f"{name} 는 양의 정수여야 한다: {v!r}")
+    rng = np.random.Generator(np.random.PCG64(_bank_seed(pair_group_id, bank_version)))
+    return rng.uniform(0.0, 1.0, size=(int(length), int(n_params))).astype(np.float64)
+
+
+def bank_bytes(bank) -> bytes:
+    arr = np.ascontiguousarray(np.asarray(bank, dtype="<f8"))
+    if arr.ndim != 2 or arr.size == 0:
+        raise WireError(f"bank 는 비어 있지 않은 2차원 배열이어야 한다: shape {arr.shape}")
+    if not np.isfinite(arr).all():
+        raise WireError("bank 에 비유한 값이 있다")
+    return arr.tobytes(order="C")
+
+
+def unit_cube_bank_sha256(bank) -> str:
+    """full-bank identity. prefix 길이와 무관하다."""
+    return hashlib.sha256(bank_bytes(bank)).hexdigest()
+
+
+def unit_cube_bytes_sha256(row) -> str:
+    """선택한 **실제 row** 의 바이트 digest — `candidate/v2` random payload 의 preimage."""
+    arr = np.ascontiguousarray(np.asarray(row, dtype="<f8"))
+    if arr.ndim != 1 or arr.size == 0 or not np.isfinite(arr).all():
+        raise WireError(f"bank row 는 유한한 1차원 배열이어야 한다: shape {arr.shape}")
+    return hashlib.sha256(arr.tobytes()).hexdigest()
+
+
+def _bounds_arrays(lb, ub) -> tuple[np.ndarray, np.ndarray]:
+    lb = np.ascontiguousarray(np.asarray(lb, dtype="<f8"))
+    ub = np.ascontiguousarray(np.asarray(ub, dtype="<f8"))
+    if lb.ndim != 1 or lb.shape != ub.shape or lb.size == 0:
+        raise WireError(f"lb/ub 는 같은 길이의 1차원 배열이어야 한다: {lb.shape} vs {ub.shape}")
+    if not (np.isfinite(lb).all() and np.isfinite(ub).all()) or (lb > ub).any():
+        raise WireError("lb/ub 가 비유한이거나 lb > ub 인 자리가 있다")
+    return lb, ub
+
+
+def exact_bounds_sha256(lb, ub) -> str:
+    """실제 ordered `lb/ub` 바이트의 digest — preset 이름이 아니다 (계약 §4.2)."""
+    lb, ub = _bounds_arrays(lb, ub)
+    return hashlib.sha256(b"exact-bounds/v1" + lb.tobytes() + ub.tobytes()).hexdigest()
+
+
+def map_unit_to_bounds(u, lb, ub) -> np.ndarray:
+    """`x0 = lb + u·(ub − lb)` — unit cube 행을 실제 bounds 로 사상한다 (float64)."""
+    lb, ub = _bounds_arrays(lb, ub)
+    u = np.asarray(u, dtype=np.float64)
+    if u.shape != lb.shape:
+        raise WireError(f"unit row 길이 {u.shape} ≠ bounds 길이 {lb.shape}")
+    if not np.isfinite(u).all() or (u < 0.0).any() or (u > 1.0).any():
+        raise WireError("unit row 는 [0, 1] 안의 유한값이어야 한다")
+    return (lb + u * (ub - lb)).astype(np.float64)
+
+
+def x0_sha256(x0) -> str:
+    """solver 에 **실제로 전달한** 초기값의 바이트 digest (표 C x0 결속)."""
+    arr = np.ascontiguousarray(np.asarray(x0, dtype="<f8"))
+    if arr.ndim != 1 or arr.size == 0 or not np.isfinite(arr).all():
+        raise WireError(f"x0 는 유한한 1차원 배열이어야 한다: shape {arr.shape}")
+    return hashlib.sha256(arr.tobytes()).hexdigest()
+
+
+def candidate_plan(mode: str, budget: int, has_provider: bool) -> list[tuple[str, int | None]]:
+    """계약 §3 표의 후보 배열 — `(source, bank_index)` 순서 목록.
+
+    provider 가 없는 연쇄 첫 번째는 어느 mode 든 `[base] + bank[:B-1]` 다. random 의 index 는
+    0 부터 순서대로이고, J 정렬 순서와 무관하다. 지원하지 않는 mode/B 는 **거부**한다 — legacy
+    난수 경로로 조용히 대체하지 않는다 (리뷰 §6).
+    """
+    from tools.preserve import candidate_modes
+    if mode not in candidate_modes():
+        raise WireError(f"candidate_mode 가 계약 §3 enum 이 아니다: {mode!r}")
+    if not _pos_int(budget):
+        raise WireError(f"총 시작점 예산 B 는 양의 정수여야 한다: {budget!r}")
+    if not isinstance(has_provider, bool):
+        raise WireError(f"has_provider 는 bool 이어야 한다: {has_provider!r}")
+    if not has_provider:
+        head, n_random = ["base_init"], budget - 1
+    elif mode == "legacy_slot_replace":
+        head, n_random = ["warm"], budget - 1
+    elif mode == "equal_start_count_base_retained":
+        if budget < 2:
+            raise WireError("equal_start_count_base_retained 는 provider 가 있을 때 B ≥ 2 여야 한다")
+        head, n_random = ["base_init", "warm"], budget - 2
+    elif mode == "union":
+        head, n_random = ["base_init", "warm"], budget - 1
+    else:                                                   # pragma: no cover — enum 이 늘면 여기서 멈춘다
+        raise WireError(f"이번 라운드가 지원하지 않는 mode: {mode!r}")
+    plan: list[tuple[str, int | None]] = [(s, None) for s in head]
+    plan += [("random", i) for i in range(n_random)]
+    return plan
+
+
+def planned_counts(mode: str, budget_by_objective: dict, warm_provider_map: dict) -> dict:
+    """계획 count — mode · B · provider 유무에서 **유도**한다. 실행 결과가 아니다 (G81-N1)."""
+    if not isinstance(budget_by_objective, dict) or not budget_by_objective:
+        raise WireError("budget_by_objective 가 비었다")
+    if not isinstance(warm_provider_map, dict) or set(warm_provider_map) != set(budget_by_objective):
+        raise WireError("warm_provider_map 의 objective 집합이 budget_by_objective 와 다르다")
+    out = {}
+    for obj, b in budget_by_objective.items():
+        plan = candidate_plan(mode, b, warm_provider_map[obj] is not None)
+        out[obj] = {s: sum(1 for src, _ in plan if src == s) for s in _RESTART_SOURCES_ORDERED}
+    return out
+
+
+def obs_key(*, comparison_family_id: str, pair_group_id: str, treatment_id: str,
+            noise_level, noise_realization_id: str, replicate_id: int) -> dict:
+    """79차 합의 관측 쌍 key (GATE78 §2.1). objective 는 key 의 값이 아니다 — 비교의 두 열이다."""
+    for name, v in (("comparison_family_id", comparison_family_id), ("treatment_id", treatment_id),
+                    ("noise_realization_id", noise_realization_id)):
+        if not _nonempty_str(v):
+            raise WireError(f"{name} 가 비었거나 NFC 문자열이 아니다: {v!r}")
+    if not _is_hex64(pair_group_id):
+        raise WireError(f"pair_group_id 가 64-hex 가 아니다: {pair_group_id!r}")
+    if isinstance(replicate_id, bool) or not isinstance(replicate_id, int) or replicate_id < 0:
+        raise WireError(f"replicate_id 는 0 이상의 정수여야 한다: {replicate_id!r}")
+    return {"comparison_family_id": comparison_family_id, "pair_group_id": pair_group_id,
+            "treatment_id": treatment_id, "noise_level": _check_decimal("noise_level", noise_level),
+            "noise_realization_id": noise_realization_id, "replicate_id": int(replicate_id)}
+
+
+def _check_roster_entry(i: int, e) -> list[str]:
+    bad = []
+    if not isinstance(e, dict) or set(e) != {"obs_key", "cond_id", "pair_group_id"}:
+        return [f"roster[{i}]: 항목 키가 {{obs_key, cond_id, pair_group_id}} 가 아니다"]
+    k = e["obs_key"]
+    if not isinstance(k, dict) or set(k) != set(OBS_KEY_FIELDS):
+        return [f"roster[{i}]: obs_key 필드가 {list(OBS_KEY_FIELDS)} 가 아니다 "
+                f"(objective 는 key 의 값이 아니다): {sorted(k) if isinstance(k, dict) else k!r}"]
+    try:
+        obs_key(**k)
+    except WireError as ex:
+        bad.append(f"roster[{i}]: {ex}")
+    if not _nonempty_str(e["cond_id"]):
+        bad.append(f"roster[{i}]: cond_id 가 비었다")
+    if e["pair_group_id"] != k.get("pair_group_id"):
+        bad.append(f"roster[{i}]: pair_group_id 가 obs_key 의 것과 다르다")
+    return bad
+
+
+def check_roster(entries) -> list[str]:
+    """planned roster 의 구조 오류 — 중복 obs_key · cond_id 충돌(교차 seed) · key 안의 objective 는 **거부**."""
+    if not isinstance(entries, list) or not entries:
+        return ["roster 가 비어 있거나 목록이 아니다"]
+    bad = []
+    seen_key: dict[tuple, str] = {}
+    seen_cond: dict[str, int] = {}
+    for i, e in enumerate(entries):
+        bad += _check_roster_entry(i, e)
+        if not isinstance(e, dict) or not isinstance(e.get("obs_key"), dict):
+            continue
+        kt = tuple(e["obs_key"].get(f) for f in OBS_KEY_FIELDS)
+        if kt in seen_key:
+            bad.append(f"roster[{i}]: obs_key 중복 (cond_id {e.get('cond_id')!r} 와 {seen_key[kt]!r})")
+        else:
+            seen_key[kt] = e.get("cond_id")
+        c = e.get("cond_id")
+        if c in seen_cond:
+            bad.append(f"roster[{i}]: cond_id {c!r} 가 roster[{seen_cond[c]}] 와 충돌 — 한 cond_id 는 한 obs_key 다")
+        else:
+            seen_cond[c] = i
+    return bad
+
+
+def _canonical_roster(entries) -> list[dict]:
+    return sorted(({"obs_key": {f: e["obs_key"][f] for f in OBS_KEY_FIELDS},
+                    "cond_id": e["cond_id"], "pair_group_id": e["pair_group_id"]} for e in entries),
+                  key=lambda e: e["cond_id"])
+
+
+def roster_sha256(entries) -> str:
+    """사전 roster 의 내용 주소. 구조 오류가 있는 roster 는 digest 를 내지 않는다."""
+    bad = check_roster(entries)
+    if bad:
+        raise WireError("roster 구조 오류: " + "; ".join(bad[:4]))
+    return digest({"schema": ROSTER_SCHEMA, "entries": _canonical_roster(entries)})
+
+
+def roster_from_conditions(conds, *, design: dict, comparison_family_id: str,
+                           treatment_id: str, replicate_id: int) -> list[dict]:
+    """`src.grid.Condition` 목록 → planned roster. `cond_id ↔ obs_key ↔ pair_group_id` 일대일."""
+    if not isinstance(design, dict) or "coordinate" not in design:
+        raise WireError("design 봉인물이 아니다 — coordinate 블록이 없다")
+    places = int(design["coordinate"]["decimal_places"])
+    d_sha = pairing_design_sha256(design)
+    pos = parameter_order_sha256(design["parameter_order"])
+    entries = []
+    for c in conds:
+        coords = coords_from_condition(c, places)
+        pg = pair_group_id(d_sha, coords, pos)
+        entries.append({"obs_key": obs_key(comparison_family_id=comparison_family_id, pair_group_id=pg,
+                                           treatment_id=treatment_id,
+                                           noise_level=decimal_from_float(float(c.noise), places),
+                                           noise_realization_id=str(int(c.seed)),
+                                           replicate_id=replicate_id),
+                        "cond_id": str(c.cond_id), "pair_group_id": pg})
+    bad = check_roster(entries)
+    if bad:
+        raise WireError("조건 집합이 roster 가 되지 못한다: " + "; ".join(bad[:4]))
+    return _canonical_roster(entries)
+
+
+def check_provider_edges(edges, *, objective_order: list, warm_provider_map: dict, arm: str) -> list[str]:
+    """provider edge 선언 ↔ warm_provider_map ↔ arm 의 정합성 (표 C).
+
+    no-provider 는 (a) `objective_order[0]` 이거나 (b) arm 의 `condition_warm_start=False` 일 때만이다.
+    warm 이 필요한 자리(warm arm 의 두 번째 이후 objective)의 null 은 **오류**다 — no-warm 으로
+    전환하지 않는다 (G81-N3). `stage="p_ini"` edge 는 이번 라운드 명시 거부다.
+    """
+    bad = []
+    if arm not in ARM_REGISTRY:
+        return [f"등록되지 않은 arm: {arm!r}"]
+    warm_on = ARM_REGISTRY[arm]["condition_warm_start"] is True
+    if not isinstance(objective_order, list) or not objective_order or \
+            len(set(objective_order)) != len(objective_order):
+        return [f"objective_order 가 비었거나 중복이다: {objective_order!r}"]
+    if not isinstance(warm_provider_map, dict) or set(warm_provider_map) != set(objective_order):
+        return [f"warm_provider_map 의 objective 집합이 objective_order 와 다르다: "
+                f"{sorted(warm_provider_map) if isinstance(warm_provider_map, dict) else warm_provider_map!r}"]
+    pos = {o: i for i, o in enumerate(objective_order)}
+    for obj, prov in warm_provider_map.items():
+        if prov is None:
+            if warm_on and pos[obj] > 0:
+                bad.append(f"warm arm {arm} 의 {obj!r} 에 provider 가 없다 — no-warm 전환 금지 (첫 objective 만 null 가능)")
+            continue
+        if not warm_on:
+            bad.append(f"arm {arm} 은 condition warm 이 꺼져 있는데 {obj!r} 에 provider {prov!r} 가 있다")
+        if prov not in pos:
+            bad.append(f"{obj!r} 의 provider {prov!r} 가 objective_order 에 없다")
+        elif prov == obj:
+            bad.append(f"{obj!r} 가 자기 자신을 provider 로 삼는다")
+        elif pos[prov] >= pos[obj]:
+            bad.append(f"provider {prov!r} 가 consumer {obj!r} 보다 앞서지 않는다 (순환/역방향)")
+    if not isinstance(edges, list):
+        return bad + [f"provider_edges 가 목록이 아니다: {type(edges).__name__}"]
+    seen: set[str] = set()
+    for i, e in enumerate(edges):
+        if not isinstance(e, dict) or set(e) != PROVIDER_EDGE_KEYS:
+            bad.append(f"edge[{i}]: 키 집합이 닫혀 있지 않다: "
+                       f"{sorted(e) if isinstance(e, dict) else type(e).__name__}")
+            continue
+        if e["stage"] == "p_ini":
+            bad.append(f"edge[{i}]: stage='p_ini' 는 이번 라운드 명시 거부 (선언만 · 구현 다음 라운드)")
+        elif e["stage"] not in STAGE3_STAGES:
+            bad.append(f"edge[{i}]: stage {e['stage']!r} 는 {STAGE3_STAGES} 가 아니다")
+        if e["arm"] != arm:
+            bad.append(f"edge[{i}]: arm {e['arm']!r} ≠ {arm!r}")
+        c, p = e["consumer_objective"], e["provider_objective"]
+        if c not in pos:
+            bad.append(f"edge[{i}]: consumer {c!r} 가 objective_order 에 없다")
+        elif warm_provider_map.get(c) != p:
+            bad.append(f"edge[{i}]: provider {p!r} 가 warm_provider_map[{c!r}]={warm_provider_map.get(c)!r} 와 다르다")
+        if c in seen:
+            bad.append(f"edge[{i}]: consumer {c!r} 의 edge 가 중복이다")
+        seen.add(c)
+        for k in ("provider_artifact_sha256", "solution_map_sha256", "provider_protocol_sha256"):
+            if not _is_hex64(e[k]):
+                bad.append(f"edge[{i}]: {k} 가 64-hex 가 아니다")
+    want = {o for o, p in warm_provider_map.items() if p is not None}
+    missing = sorted(want - seen)
+    if missing:
+        bad.append(f"warm_provider_map 은 provider 를 말하는데 edge 가 없는 consumer: {missing}")
+    return bad
+
+
+__all__ += ["STAGE3_STAGES", "ROSTER_SCHEMA", "OBS_KEY_FIELDS", "PROVIDER_EDGE_KEYS",
+            "unit_cube_bank", "bank_bytes", "unit_cube_bank_sha256", "unit_cube_bytes_sha256",
+            "exact_bounds_sha256", "map_unit_to_bounds", "x0_sha256", "candidate_plan",
+            "planned_counts", "obs_key", "check_roster", "roster_sha256",
+            "roster_from_conditions", "check_provider_edges"]

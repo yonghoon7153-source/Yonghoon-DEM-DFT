@@ -35,6 +35,7 @@ import hashlib
 import json
 import logging
 from dataclasses import dataclass, field
+from pathlib import Path
 
 import numpy as np
 from scipy.interpolate import interp1d
@@ -167,6 +168,10 @@ class FitResult:
     #: ★ 79차 (단계 3 §9.4 한정 구현) — 예외로 실패한 restart 의 기록. `restarts`·`n_restarts` 의 뜻(성공한 것만)은
     #:   바꾸지 않는다; 실패는 여기 index·source·오류로 남아 fits 행의 `restart_errors_json` 이 된다.
     restart_errors: list = field(default_factory=list)
+    #: ★ 81차 (단계 3 라운드 1) — v6 후보 경로에서만 채워진다: 후보 순서대로
+    #:   `{i, source, candidate_id, bank_index, x0_sha256}` (solver 에 **실제로 전달한** x0 의 digest — 표 C x0 결속).
+    #:   legacy 경로는 빈 목록이다.
+    candidate_map: list = field(default_factory=list)
 
     @property
     def any_bound_active(self) -> bool:
@@ -240,7 +245,8 @@ def _minimize_until_stable(objective, x0, bounds, method: str,
 
 def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
         method: str = "Nelder-Mead", agree_tol: float = 1e-3,
-        adaptive: bool = True, warm_init: bool = False) -> FitResult:
+        adaptive: bool = True, warm_init: bool = False,
+        candidates: list | None = None) -> FitResult:
     """multi-start 최적화.
 
     ★ restart마다 다른 해에 수렴하면 그 자체가 degeneracy의 직접 증거다.
@@ -258,6 +264,10 @@ def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
     """
     lb = np.asarray(lb, float)
     ub = np.asarray(ub, float)
+    # ★ 81차 — 명시 후보 목록(v6 경로). 아래 legacy 본문(clip · rng.uniform(lb, ub) · adaptive)은 손대지 않는다.
+    if candidates is not None:
+        return _fit_candidates(objective, candidates, lb, ub, method=method,
+                               agree_tol=agree_tol, adaptive=adaptive)
     init = np.clip(np.asarray(init, float), lb, ub)
     bounds = list(zip(lb, ub))
     rng = np.random.default_rng(seed)
@@ -357,6 +367,271 @@ def normalize_restart_record(r) -> dict:
     p, J = r
     return {"record_generation": "legacy_pair", "p": list(p), "J": J, "i": None, "source": None, "warm": None,
             "converged": None, "n_eval": None, "termination_status": None}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ★ 81차 — 단계 3 라운드 1 (G81-N2·N3 · Q1). 고정 표: docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md
+# ─────────────────────────────────────────────────────────────────────────────
+_LEGACY_DICT_KEYS = ("p", "J", "i", "source", "warm")
+_PREP_KEYS = _LEGACY_DICT_KEYS + _RESTART_NEW_KEYS                  # 8 — 79~80차 v6_prep_logging
+_V6_ROW_KEYS = _PREP_KEYS + ("candidate_id", "bank_index")          # 10 — v6 (§9.4 다섯 필드 완성)
+_DECLARED_GENERATIONS = ("legacy", "v6_prep_logging", "v6")
+_RESTART_SOURCES = ("base_init", "warm", "random")
+_SOLUTION_MAP_SCHEMA = "solution-map/v1"
+
+
+def _row_shape(r) -> str:
+    """행 **모양** — 세대가 아니다. 세대는 선언 문맥이 정하고 모양은 그것에 대조한다 (표 B)."""
+    if isinstance(r, dict):
+        ks = set(r)
+        if ks == set(_V6_ROW_KEYS):
+            return "v6"
+        if ks == set(_PREP_KEYS):
+            return "prep"
+        if {"p", "J"} <= ks <= set(_LEGACY_DICT_KEYS):
+            return "dict"
+        return "other"
+    if isinstance(r, (list, tuple)) and len(r) == 2:
+        return "pair"
+    return "other"
+
+
+def _read_row(r) -> dict:
+    """값은 **있는 것만** 보여 준다 — 없는 것은 None(미기록). 승인은 여기서 하지 않는다."""
+    out = {k: None for k in _V6_ROW_KEYS}
+    if isinstance(r, dict):
+        for k in _V6_ROW_KEYS:
+            if k in r:
+                out[k] = r[k]
+        if isinstance(out["p"], (list, tuple)):
+            out["p"] = list(out["p"])
+    elif isinstance(r, (list, tuple)) and len(r) == 2:
+        out["p"], out["J"] = list(r[0]), r[1]
+    return out
+
+
+def normalize_restart_record(r, declared: str | None = None) -> dict:      # noqa: F811 — 81차 dispatch 판
+    """restart 기록 하나를 **선언된 세대 문맥**에 대조해 읽는다 (★ 81차 G81-N2; 79차 역사적 reader 를 대체).
+
+    · `declared=None` (역사적 호출 그대로): 2-튜플 → `legacy_pair` · 5 키 이하 dict → `legacy_dict` ·
+      정확히 8 키 → `v6_prep_logging` · **정확히 10 키 → `v6_undeclared`** (값은 보여 주되 v6 로 승인하지 않는다) ·
+      그 밖 → `mixed_invalid`. 79차 `g79_06` 의 세 결과는 그대로다.
+    · `declared="v6"`: 정확히 10 키 + 타입·유한성(`src.io._restart_ok_v6`) → `v6`; 키 하나라도 없거나 타입이 틀리면
+      `mixed_invalid` — **prep/legacy 로 내려가지 않는다** (ID 를 지운 v6 행이 prep 으로 통과하는 길을 막는다).
+    · `declared="v6_prep_logging"`: 정확히 8 키 → prep (로깅 3 값 보존 · `candidate_id`/`bank_index` 미기록이 정상);
+      10 키/5 키 행은 선언-행 충돌 → `mixed_invalid`.
+    · `declared="legacy"`: 튜플/5 키 이하 dict 만.
+    `candidate_mode` 이름(`legacy_slot_replace` 등)은 세대 선택자가 **아니다** — 여기 넣으면 ValueError.
+    """
+    if declared is not None and declared not in _DECLARED_GENERATIONS:
+        raise ValueError(f"declared 는 {_DECLARED_GENERATIONS} 중 하나여야 한다 (candidate_mode 이름은 세대가 아니다): {declared!r}")
+    shape = _row_shape(r)
+    out = _read_row(r)
+    if declared is None:
+        gen = {"pair": "legacy_pair", "dict": "legacy_dict", "prep": "v6_prep_logging",
+               "v6": "v6_undeclared", "other": "mixed_invalid"}[shape]
+    elif declared == "legacy":
+        gen = {"pair": "legacy_pair", "dict": "legacy_dict"}.get(shape, "mixed_invalid")
+    elif declared == "v6_prep_logging":
+        gen = "v6_prep_logging" if shape == "prep" else "mixed_invalid"
+    else:                                                       # "v6"
+        from src.io import _restart_ok_v6
+        gen = "v6" if (shape == "v6" and _restart_ok_v6(r)) else "mixed_invalid"
+    if gen in ("legacy_pair", "legacy_dict"):
+        for k in _RESTART_NEW_KEYS + ("candidate_id", "bank_index"):
+            out[k] = None
+    elif gen == "v6_prep_logging":
+        out["candidate_id"] = None
+        out["bank_index"] = None
+    return {"record_generation": gen, **out}
+
+
+def _fit_candidates(objective, candidates, lb, ub, *, method: str, agree_tol: float,
+                    adaptive: bool) -> FitResult:
+    """v6 후보 경로 (★ 81차). 후보는 `{source, x0, candidate_id, bank_index}` 목록이며 **주어진 순서대로** 돈다.
+
+    · `adaptive=True` 는 거부 — 계약 v6 arm 은 adaptive=false 다 (adaptive diagnostic arm 은 이번 라운드 밖).
+    · x0 는 bounds 안이어야 한다 — legacy 의 `np.clip` 을 쓰지 않는다 (clip 한 점을 provider/base 좌표와 같다고 기록하지 않는다).
+    · 예외로 실패한 후보는 legacy 공정 모드(F86)와 같이 즉시 실패 — 조용히 건너뛰지 않는다.
+    · restart 행은 정확히 10 키(8 + `candidate_id` + `bank_index`), `candidate_map` 은 후보 순서대로 x0 digest 를 잇는다.
+    """
+    from tools.design_wire import _is_hex64, x0_sha256
+    if adaptive:
+        raise ValueError("candidates 경로는 adaptive=False 만 받는다 (계약 v6 arm; adaptive diagnostic arm 은 이번 라운드 밖)")
+    if not isinstance(candidates, list) or not candidates:
+        raise ValueError("candidates 가 비어 있다")
+    bounds = list(zip(lb, ub))
+    seen_idx: set[int] = set()
+    prepared = []
+    for k, c in enumerate(candidates):
+        if not isinstance(c, dict) or set(c) != {"source", "x0", "candidate_id", "bank_index"}:
+            raise ValueError(f"candidates[{k}]: 키가 {{source, x0, candidate_id, bank_index}} 가 아니다")
+        src = c["source"]
+        if src not in _RESTART_SOURCES:
+            raise ValueError(f"candidates[{k}]: source {src!r}")
+        x0 = np.asarray(c["x0"], float)
+        if x0.shape != lb.shape or not np.isfinite(x0).all():
+            raise ValueError(f"candidates[{k}]: x0 길이/유한성 위반")
+        if (x0 < lb).any() or (x0 > ub).any():
+            raise ValueError(f"candidates[{k}] ({src}): x0 가 bounds 밖이다 — clip 하지 않고 거부한다: {x0.tolist()}")
+        if not _is_hex64(c["candidate_id"]):
+            raise ValueError(f"candidates[{k}]: candidate_id 가 64-hex 가 아니다")
+        bi = c["bank_index"]
+        if src == "random":
+            if isinstance(bi, bool) or not isinstance(bi, int) or bi < 0:
+                raise ValueError(f"candidates[{k}]: random 후보의 bank_index 는 0 이상의 정수여야 한다: {bi!r}")
+            if bi in seen_idx:
+                raise ValueError(f"candidates[{k}]: bank_index {bi} 중복")
+            seen_idx.add(bi)
+        elif bi is not None:
+            raise ValueError(f"candidates[{k}]: {src} 후보의 bank_index 는 null 이어야 한다: {bi!r}")
+        prepared.append((k, src, x0, c["candidate_id"], bi))
+
+    results = []
+    cmap = []
+    for k, src, x0, cid, bi in prepared:
+        cmap.append({"i": k, "source": src, "candidate_id": cid, "bank_index": bi,
+                     "x0_sha256": x0_sha256(x0)})
+        try:
+            x, f, ok, nfev, term = _minimize_until_stable(objective, x0, bounds, method)
+        except Exception as e:  # noqa: BLE001
+            raise RuntimeError(f"후보 {k} ({src}) 실패 (v6 공정 모드): {e} — 조건을 조용히 빼면 비교불능 데이터가 된다 (F86)") from e
+        results.append((x, f, ok, nfev, k, src, term, cid, bi))
+
+    results.sort(key=lambda t: t[1])                     # legacy 와 같은 J 오름차순 저장
+    p_best, J_best, ok, _, _, _, _, _, _ = results[0]
+    nfev = sum(t[3] for t in results)
+    near = [p for p, J, *_ in results if abs(J - J_best) <= agree_tol * max(1.0, abs(J_best))]
+    agree = sum(1 for p in near if np.max(np.abs(p - p_best)) <= agree_tol * 10)
+    spread = float(np.max([np.max(np.abs(p - p_best)) for p in near])) if near else 0.0
+    j_spread = float(max(J for _, J, *_ in results) - J_best)
+    return FitResult(
+        p=p_best, J=J_best, converged=ok, n_eval=nfev,
+        bound_active=_bound_active(p_best, lb, ub),
+        n_restarts=len(results), n_restarts_agree=agree,
+        p_spread=spread, J_spread=j_spread,
+        restarts=[{"p": p.tolist(), "J": J, "i": k, "source": src,
+                   "warm": src == "warm",
+                   "converged": bool(ok_k), "n_eval": int(nfev_k), "termination_status": term,
+                   "candidate_id": cid, "bank_index": bi}
+                  for p, J, ok_k, nfev_k, k, src, term, cid, bi in results],
+        restart_errors=[],
+        candidate_map=cmap,
+    )
+
+
+def make_solution_map(fits_path, provider_objective: str, out_path, *, provider_protocol_sha256: str,
+                      parameter_order: list) -> dict:
+    """provider leg 의 봉인 fits → objective 별 solution map 파일 (`solution-map/v1`, 표 C).
+
+    header 가 **어느 fits 바이트**(`provider_artifact_sha256`)·**어느 objective**·**어느 protocol** 의 해인지를
+    고정한다. 같은 cond_id 행이 둘이면 거부, 비유한 해는 entries 가 아니라 `excluded_cond_ids` 로 분리한다
+    (planned coverage ≠ 사용 coverage). p_ini map 과 condition map 은 각각 별도 파일이다.
+    """
+    import pandas as pd
+    from tools.design_wire import _is_hex64
+    from tools.preserve import canonical_bytes
+    fits_path = Path(fits_path)
+    raw = fits_path.read_bytes()
+    if not _is_hex64(provider_protocol_sha256):
+        raise ValueError("provider_protocol_sha256 가 64-hex 가 아니다")
+    order = list(parameter_order)
+    if not order or len(set(order)) != len(order):
+        raise ValueError(f"parameter_order 가 비었거나 중복이다: {order!r}")
+    df = pd.read_parquet(fits_path)
+    for col in ("cond_id", "objective", *order):
+        if col not in df.columns:
+            raise ValueError(f"fits 에 {col!r} 열이 없다")
+    sub = df[df["objective"] == provider_objective]
+    if sub.empty:
+        raise ValueError(f"fits 에 objective {provider_objective!r} 행이 없다 — 다른 objective 의 해를 provider 로 쓰지 않는다")
+    dup = sub["cond_id"][sub["cond_id"].duplicated()].tolist()
+    if dup:
+        raise ValueError(f"provider fits 에 같은 cond_id 행이 둘 이상이다: {sorted(set(dup))[:4]}")
+    entries, excluded = {}, []
+    for _, row in sub.iterrows():
+        pvec = [float(row[c]) for c in order]
+        if all(np.isfinite(pvec)):
+            entries[str(row["cond_id"])] = {"p": [repr(v) for v in pvec]}
+        else:
+            excluded.append(str(row["cond_id"]))
+    header = {"schema": _SOLUTION_MAP_SCHEMA, "provider_objective": provider_objective,
+              "provider_artifact_sha256": hashlib.sha256(raw).hexdigest(),
+              "provider_protocol_sha256": provider_protocol_sha256,
+              "parameter_order": order, "n_entries": len(entries),
+              "excluded_cond_ids": sorted(excluded)}
+    out_path = Path(out_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_bytes(canonical_bytes({"header": header, "entries": entries}))
+    return header
+
+
+def provider_x0(map_path, *, edge: dict, cond_id: str, lb, ub, parameter_order: list) -> tuple:
+    """봉인된 solution map 에서 **이 조건·이 objective** 의 좌표를 꺼내 실제 x0 로 만든다 (표 C 소비 규칙).
+
+    거부: 파일 sha ≠ edge(봉인 전 소비 · 다른 map) · header 의 objective/artifact/protocol/order ≠ edge ·
+    cond_id 부재(**no-warm 으로 바꾸지 않는다**) · 비유한 · 길이 불일치 · **bounds 밖(clip 없음)**.
+    반환 `(x0, x0_sha256)` — 이 digest 가 후보 map 에 기록돼 solver 입력과 결속된다.
+    """
+    from tools.design_wire import x0_sha256
+    raw = Path(map_path).read_bytes()
+    got = hashlib.sha256(raw).hexdigest()
+    if got != edge.get("solution_map_sha256"):
+        raise ValueError(f"solution map 바이트 sha {got[:16]} ≠ edge 의 solution_map_sha256 "
+                         f"{str(edge.get('solution_map_sha256'))[:16]} — 봉인 전 소비이거나 다른 map 이다")
+    doc = json.loads(raw.decode("utf-8"))
+    hdr = doc.get("header") or {}
+    if hdr.get("schema") != _SOLUTION_MAP_SCHEMA:
+        raise ValueError(f"solution map schema: {hdr.get('schema')!r}")
+    for hk, ek in (("provider_objective", "provider_objective"),
+                   ("provider_artifact_sha256", "provider_artifact_sha256"),
+                   ("provider_protocol_sha256", "provider_protocol_sha256")):
+        if hdr.get(hk) != edge.get(ek):
+            raise ValueError(f"solution map header 의 {hk} ({str(hdr.get(hk))[:16]}) ≠ edge 의 {ek} "
+                             f"({str(edge.get(ek))[:16]}) — 다른 fits/objective/protocol 의 map 이다")
+    if hdr.get("parameter_order") != list(parameter_order):
+        raise ValueError(f"solution map parameter_order {hdr.get('parameter_order')!r} ≠ {list(parameter_order)!r}")
+    entry = (doc.get("entries") or {}).get(cond_id)
+    if entry is None:
+        raise ValueError(f"solution map 에 cond_id {cond_id!r} 가 없다 — warm 이 필요한 자리의 누락은 오류이지 no-warm 이 아니다"
+                         + (f" (제외 목록에 있음: 비유한 provider 해)" if cond_id in (hdr.get("excluded_cond_ids") or []) else ""))
+    p = np.asarray([float(v) for v in entry["p"]], float)
+    lb = np.asarray(lb, float); ub = np.asarray(ub, float)
+    if p.shape != lb.shape or not np.isfinite(p).all():
+        raise ValueError(f"provider 좌표 길이/유한성 위반: {p.tolist()}")
+    if (p < lb).any() or (p > ub).any():
+        raise ValueError(f"provider 좌표가 bounds 밖이다 — clip 하지 않고 거부한다: {p.tolist()}")
+    return p, x0_sha256(p)
+
+
+def _stage3_candidates(s3: dict, objective: str, task: dict) -> list[dict]:
+    """조건 하나 · objective 하나의 v6 후보 목록 — 계획(mode·B·provider) 과 봉인 bank 에서 유도한다."""
+    from tools import design_wire as DW
+    lb = np.asarray(task["lb"], float); ub = np.asarray(task["ub"], float)
+    prov = s3["warm_provider_map"][objective]
+    plan = DW.candidate_plan(s3["candidate_mode"], s3["budget_by_objective"][objective], prov is not None)
+    bank = np.asarray(s3["bank"], float)
+    out = []
+    for src, idx in plan:
+        if src == "base_init":
+            x0 = np.asarray(task["init"], float)
+            payload = {"base_coord_sha256": DW.x0_sha256(x0)}
+        elif src == "warm":
+            edge = s3["provider_edges"][objective]
+            x0, _ = provider_x0(s3["provider_maps"][objective], edge=edge, cond_id=task["cond_id"],
+                                lb=lb, ub=ub, parameter_order=s3["parameter_order"])
+            payload = {"provider_objective": edge["provider_objective"],
+                       "provider_artifact_sha256": edge["provider_artifact_sha256"],
+                       "solution_map_sha256": edge["solution_map_sha256"]}
+        else:
+            if idx >= bank.shape[0]:
+                raise RuntimeError(f"bank prefix {idx} 가 bank 길이 {bank.shape[0]} 를 넘는다")
+            x0 = DW.map_unit_to_bounds(bank[idx], lb, ub)
+            payload = {"bank_index": int(idx), "unit_cube_bytes_sha256": DW.unit_cube_bytes_sha256(bank[idx])}
+        cid = DW.candidate_id(s3["exact_bounds_sha256"], src, payload, design=s3["design"],
+                              coords=s3["coords"], unit_cube_bank_sha256=s3["unit_cube_bank_sha256"])
+        out.append({"source": src, "x0": x0, "candidate_id": cid, "bank_index": idx})
+    return out
 
 
 # ---------------------------------------------------------------- grid 구동
@@ -464,13 +739,23 @@ def _fit_one(task: dict) -> list[dict]:
         if warm and _has_dqdv(weights) and seed_p is not None:
             init = seed_p
         warmed = init is not task["init"]
-        # ★ F66 — adaptive·method 를 task 로 받아 넘긴다. 예전에는 `fit()` 의
-        #   기본값(adaptive=True, Nelder-Mead)이 그대로 굳어 끌 방법이 없었다.
-        res = fit(J, init, task["lb"], task["ub"],
-                  n_restarts=task["n_restarts"], seed=task["seed"],
-                  warm_init=warmed,
-                  adaptive=bool(task.get("adaptive", True)),
-                  method=str(task.get("method", "Nelder-Mead")))
+        s3 = task.get("stage3")
+        if s3 is not None:
+            # ★ 81차 — v6 후보 경로: 계획·봉인 bank·provider map 에서 후보를 유도한다. legacy 의 seed_p
+            #   in-process 물려주기는 쓰지 않는다 (warm 은 봉인된 provider map 에서만 온다 — 표 C).
+            cands = _stage3_candidates(s3, name, task)
+            res = fit(J, task["init"], task["lb"], task["ub"], n_restarts=len(cands),
+                      seed=task["seed"], warm_init=False, adaptive=False,
+                      method=str(task.get("method", "Nelder-Mead")), candidates=cands)
+            warmed = any(c["source"] == "warm" for c in cands)
+        else:
+            # ★ F66 — adaptive·method 를 task 로 받아 넘긴다. 예전에는 `fit()` 의
+            #   기본값(adaptive=True, Nelder-Mead)이 그대로 굳어 끌 방법이 없었다.
+            res = fit(J, init, task["lb"], task["ub"],
+                      n_restarts=task["n_restarts"], seed=task["seed"],
+                      warm_init=warmed,
+                      adaptive=bool(task.get("adaptive", True)),
+                      method=str(task.get("method", "Nelder-Mead")))
         if warm and not _has_dqdv(weights) and np.all(np.isfinite(res.p)):
             seed_p = list(map(float, res.p))    # 가장 최근의 매끄러운 해
         inv = task["inventory"]
@@ -515,6 +800,16 @@ def _fit_one(task: dict) -> list[dict]:
             # F20: 이 목적함수가 매끄러운 해를 초기값으로 받았는가 (사후 감사용)
             "warm_started": bool(warm and _has_dqdv(weights) and init is not task["init"]),
         })
+        if s3 is not None:
+            # ★ 81차 — v6 행 표식 (legacy 행에는 이 키가 없다). candidate_map 은 후보 순서 · 실제 x0 digest.
+            rows[-1].update({
+                "record_generation": "v6",
+                "pair_group_id": s3["pair_group_id"], "bank_id": s3["bank_id"],
+                "warm_provider_objective": s3["warm_provider_map"][name],
+                "warm_started": warmed,
+                "candidate_map_json": json.dumps([{"cond_id": task["cond_id"], "objective": name, **m}
+                                                  for m in res.candidate_map]),
+            })
     return rows
 
 
@@ -981,6 +1276,147 @@ def _assert_fit_authorized(live_fit: dict, out_dir, leg: str | None = None,
                                                  ledger=None)
 
 
+def _prepare_stage3(stage3: dict, tasks: list, df, objectives: dict, bounds: dict, reference: str,
+                    adaptive: bool, warm_start: bool, in_dir) -> dict:
+    """★ 81차 — v6 실행 전 대조 (표 A·C·§5). 어긋나면 시작하지 않는다."""
+    from src.grid import Condition
+    from tools import design_wire as DW
+    from tools.preserve import check_planned_envelope
+    if not isinstance(stage3, dict) or set(stage3) != {"planned", "design", "provider_maps"}:
+        raise ValueError("stage3 는 {planned, design, provider_maps} 를 가진 dict 여야 한다")
+    planned = stage3["planned"]
+    env = planned.envelope()
+    bad = check_planned_envelope(env)
+    if bad or env.get("schema") != "planned-leg/v4":
+        raise ValueError("stage3.planned 가 유효한 planned-leg/v4 가 아니다: " + "; ".join(bad[:3]))
+    if adaptive:
+        raise ValueError("stage3 경로는 adaptive=False 만 받는다 (계약 v6 arm)")
+    if warm_start:
+        raise ValueError("stage3 경로는 legacy warm_start 물려주기를 쓰지 않는다 — warm 은 봉인 provider map 에서만 (warm_start=False)")
+    if reference != "grid":
+        raise ValueError("stage3 라운드 1 은 reference='grid' 만 받는다 (p_ini stage 는 명시 거부)")
+    if list(objectives) != list(env["objective_order"]):
+        raise ValueError(f"objectives 순서 {list(objectives)} ≠ 계획 objective_order {env['objective_order']}")
+    design = stage3["design"]
+    if DW.pairing_design_sha256(design) != env["pairing_design_sha256"]:
+        raise ValueError("stage3.design 의 digest 가 계획의 pairing_design_sha256 와 다르다")
+    if DW.parameter_order_sha256(design["parameter_order"]) != env["parameter_order_sha256"]:
+        raise ValueError("design 의 parameter_order 가 계획과 다르다")
+    st = env["stages"][0]
+    lb, ub = np.asarray(bounds["lb"], float), np.asarray(bounds["ub"], float)
+    eb = DW.exact_bounds_sha256(lb, ub)
+    if eb != env["bank"]["exact_bounds_sha256"]:
+        raise ValueError("실제 ordered lb/ub 의 exact_bounds_sha256 가 계획과 다르다")
+    _cp = Path(in_dir) / "curves.parquet"                      # staging 사본 — 본체가 실제로 읽는 바이트
+    curves_sha = hashlib.sha256(_cp.read_bytes()).hexdigest() if _cp.is_file() else None
+    if curves_sha != env["inputs"]["curves_sha256"]:
+        raise ValueError("입력 curves.parquet 바이트가 계획 inputs.curves_sha256 와 다르다")
+    # roster — 실제 조건 집합(subset/limit 뒤)이 계획 roster 와 같아야 한다
+    want = {t["cond_id"] for t in tasks}
+    conds = []
+    for cid, g in df.groupby("cond_id", sort=True):
+        if cid not in want:
+            continue
+        r0 = g.iloc[0]
+        conds.append(Condition(float(r0["lli"]), float(r0["lam_pe"]), float(r0["lam_ne"]),
+                               str(r0["lam_pe_type"]), str(r0["lam_ne_type"]), float(r0["noise"]), int(r0["seed"])))
+    roster = DW.roster_from_conditions(conds, design=design,
+                                       comparison_family_id=env["roster"]["comparison_family_id"],
+                                       treatment_id=env["roster"]["treatment_id"],
+                                       replicate_id=env["roster"]["replicate_id"])
+    r_sha = DW.roster_sha256(roster)
+    if r_sha != env["roster"]["roster_sha256"] or len(roster) != env["roster"]["n_obs"]:
+        raise RuntimeError(f"실제 조건 집합의 roster ({len(roster)} 관측, {r_sha[:16]}) 가 계획 roster "
+                           f"({env['roster']['n_obs']}, {env['roster']['roster_sha256'][:16]}) 와 다르다 — 시작하지 않는다")
+    # provider map — edge 마다 파일이 있고 봉인 sha 가 같아야 한다
+    edges = {e["consumer_objective"]: e for e in env["provider_edges"]}
+    maps = {}
+    for consumer, prov in st["warm_provider_map"].items():
+        if prov is None:
+            continue
+        path = (stage3["provider_maps"] or {}).get(consumer)
+        if path is None or not Path(path).is_file():
+            raise ValueError(f"{consumer!r} 의 provider map 파일이 없다 — warm 필요 자리의 누락은 오류다 (no-warm 전환 금지)")
+        got = hashlib.sha256(Path(path).read_bytes()).hexdigest()
+        if got != edges[consumer]["solution_map_sha256"]:
+            raise ValueError(f"{consumer!r} 의 provider map sha {got[:16]} ≠ 계획 edge {edges[consumer]['solution_map_sha256'][:16]}")
+        maps[consumer] = str(path)
+    places = int(design["coordinate"]["decimal_places"])
+    d_sha, pos = env["pairing_design_sha256"], env["parameter_order_sha256"]
+    by_cid = {}
+    for c in conds:
+        coords = DW.coords_from_condition(c, places)
+        pg = DW.pair_group_id(d_sha, coords, pos)
+        bank = DW.unit_cube_bank(pg, env["bank"]["version"], env["bank"]["length"], env["bank"]["n_params"])
+        bsha = DW.unit_cube_bank_sha256(bank)
+        by_cid[c.cond_id] = {"coords": coords, "pair_group_id": pg, "bank": bank,
+                             "unit_cube_bank_sha256": bsha,
+                             "bank_id": DW.bank_id(pg, env["bank"]["version"], bsha)}
+    for t in tasks:
+        t["stage3"] = {**by_cid[t["cond_id"]], "design": design, "exact_bounds_sha256": eb,
+                       "candidate_mode": st["candidate_mode"], "budget_by_objective": st["budget_by_objective"],
+                       "warm_provider_map": st["warm_provider_map"], "provider_edges": edges,
+                       "provider_maps": maps, "parameter_order": list(design["parameter_order"])}
+        t["adaptive"], t["warm_start"] = False, False
+    spec_block = {"planned_id": planned.planned_id(), "planned_envelope": env,
+                  "pairing_design_sha256": d_sha, "parameter_order_sha256": pos,
+                  "bank_version": env["bank"]["version"], "exact_bounds_sha256": eb,
+                  "candidate_mode": st["candidate_mode"], "budget_by_objective": st["budget_by_objective"],
+                  "warm_provider_map": st["warm_provider_map"],
+                  "provider_edges_sha256": hashlib.sha256(json.dumps(env["provider_edges"], sort_keys=True).encode()).hexdigest(),
+                  "roster_sha256": r_sha, "arm": st["arm"], "stage": st["stage"]}
+    return {"planned_env": env, "roster_sha256": r_sha, "n_obs": len(roster), "spec_block": spec_block}
+
+
+def write_execution_record(out_dir, fits, *, planned_env: dict, objective_order: list,
+                           roster_sha256: str, n_obs: int) -> dict:
+    """★ 81차 G81-N1 — 실현 기록 `execution-record/v1` + 후보 map `candidate-map/v1` 을 run_dir 에 쓴다.
+
+    실현 count 는 fits 행(`restarts_json` · `restart_errors_json`)에서 **세어서** 적는다 — 계획 count 를 복사하지
+    않는다. 계획은 `planned_id` 로 참조만.
+    """
+    from tools.preserve import canonical_bytes, digest
+    out_dir = Path(out_dir)
+    pc = planned_env["planned_counts"]
+    by_obj, entries, consumed = {}, [], {}
+    for obj in objective_order:
+        sub = fits[fits["objective"] == obj]
+        attempted = returned = failed = 0
+        cs = {"base_init": 0, "warm": 0, "random": 0}
+        prefix = 0
+        for _, row in sub.iterrows():
+            rs = json.loads(row["restarts_json"])
+            errs = json.loads(row["restart_errors_json"]) if "restart_errors_json" in row and isinstance(row["restart_errors_json"], str) else []
+            returned += len(rs); failed += len(errs); attempted += len(rs) + len(errs)
+            for e in rs:
+                cs[e["source"]] += 1
+                if e["source"] == "random":
+                    prefix = max(prefix, int(e["bank_index"]) + 1)
+            entries += json.loads(row["candidate_map_json"])
+            wp = row.get("warm_provider_objective")
+            if isinstance(wp, str) and wp:
+                consumed.setdefault((obj, wp), 0)
+                consumed[(obj, wp)] += 1
+        planned_total = sum(pc[obj].values()) * int(planned_env["roster"]["n_obs"])   # 조건당 계획 × 사전 roster
+        by_obj[obj] = {"attempted": attempted, "returned": returned, "failed": failed,
+                       "not_attempted": max(0, planned_total - attempted),
+                       "counts_by_source": cs, "random_bank_prefix_len": prefix}
+    entries.sort(key=lambda m: (m["cond_id"], m["objective"], m["i"]))
+    cmap = {"schema": "candidate-map/v1", "entries": entries}
+    (out_dir / "candidate_map.json").write_bytes(canonical_bytes(cmap))
+    rec = {"schema": "execution-record/v1", "leg_id": planned_env["leg_id"],
+           "planned_id": digest(planned_env), "source_digest": planned_env["source_digest"],
+           "protocol_generation": planned_env["protocol_generation"],
+           "realized": {"by_objective": by_obj, "candidate_map_sha256": digest(entries),
+                        "n_candidates": len(entries), "roster_observed_sha256": roster_sha256,
+                        "n_obs_observed": int(n_obs),
+                        "provider_consumed": [{"consumer_objective": c, "provider_objective": p, "n_conditions": n}
+                                              for (c, p), n in sorted(consumed.items())]}}
+    rec["record_digest"] = digest(rec)
+    (out_dir / "execution_record.json").write_bytes(canonical_bytes(rec))
+    return rec
+
+
 def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
             bounds_preset: str, n_restarts: int, nproc: int,
             use_noisy: bool = True, limit: int | None = None,
@@ -990,8 +1426,14 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
             method: str = "Nelder-Mead",
             halfcell_method: str = "ocp",
             halfcell_kw: dict | None = None,
-            leg: str | None = None, may_open: bool = False) -> dict:
+            leg: str | None = None, may_open: bool = False,
+            stage3: dict | None = None) -> dict:
     """grid 결과 전체에 fitting 수행 → fits.parquet.
+
+    stage3: ★ 81차 — v6 후보 경로의 **봉인 문맥** `{planned: PlannedLegV4, design: <design spec>,
+            provider_maps: {consumer_objective: path}}`. None(기본) 이면 legacy 경로 그대로(sig_version 5,
+            바이트 동일). 주어지면 sig_version 6 · unit-cube bank · candidate_id/bank_index ·
+            execution_record.json · candidate_map.json 을 쓴다 (docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md §5).
 
     subset: 이 cond_id 집합만 fitting (Phase 6 가중치 sweep의 층화 표본용).
             limit이 "앞 N개"인 것과 달리 격자 전체에 고르게 걸칠 수 있다.
@@ -1042,7 +1484,8 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
                                bounds, bounds_preset, n_restarts, nproc,
                                use_noisy, limit, base_config, reference, resume,
                                subset, warm_start, adaptive, method,
-                               halfcell_method, halfcell_kw, leg, may_open)
+                               halfcell_method, halfcell_kw, leg, may_open,
+                               stage3=stage3)
     finally:
         _discard_staged_inputs(_staged)
 
@@ -1051,7 +1494,7 @@ def _run_fit_staged(_staged, in_dir, out_dir, obj_cfg, objectives, bounds,
                     bounds_preset, n_restarts, nproc, use_noisy, limit,
                     base_config, reference, resume, subset, warm_start,
                     adaptive, method, halfcell_method, halfcell_kw, leg,
-                    may_open) -> dict:
+                    may_open, stage3: dict | None = None) -> dict:
     """`run_fit()` 본체 — 입력이 이미 staging 사본으로 고정된 뒤."""
     from pathlib import Path
 
@@ -1120,7 +1563,7 @@ def _run_fit_staged(_staged, in_dir, out_dir, obj_cfg, objectives, bounds,
                                   warm_start, adaptive, method, halfcell_method,
                                   halfcell_kw, stage_root=_staged["root"],
                                   logical_in=logical_in,
-                                  logical_out=logical_out)
+                                  logical_out=logical_out, stage3=stage3)
         # ★ 59차 M1 — 굳히는 것은 **마지막 사용자 뒤**다. 대상은 **논리
         #   경로**로 준다 — `staged_root` 를 주면 `_assert_still_the_judged_dir()`
         #   이 자기 자신을 보고 일찍 돌아가서 "이름이 아직 그 실물인가" 를
@@ -1158,7 +1601,8 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
                     method: str = "Nelder-Mead",
                     halfcell_method: str = "ocp",
                     halfcell_kw: dict | None = None, stage_root=None,
-                    logical_in=None, logical_out=None) -> dict:
+                    logical_in=None, logical_out=None,
+                    stage3: dict | None = None) -> dict:
     """run_fit 본체. 호출자가 이미 .fit.lock 을 보유한 상태여야 한다.
 
     ★ 61차 P0-2 — 이 함수가 받는 `in_dir`·`out_dir` 은 **실제로 읽고 쓰는
@@ -1501,6 +1945,11 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         for t in tasks:
             t["p_ini"] = p_ini
 
+    # ★ 81차 — v6 후보 경로: 계획 envelope · 설계 · roster · bounds · provider map 을 **실행 전에** 대조하고
+    #   조건마다 봉인 bank 를 붙인다. 하나라도 어긋나면 시작하지 않는다 (RUN 밖 승인 파일 등은 만들지 않는다).
+    _s3 = _prepare_stage3(stage3, tasks, df, objectives, bounds, reference, adaptive,
+                          warm_start, in_dir) if stage3 is not None else None
+
     from src.io import chunk_files, load_completed, mark_completed, merge_chunks, save_chunk
 
     # ── resume: 완료 조건 건너뛰기 ──
@@ -1535,7 +1984,7 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     run_spec = {
         # ★ F49 — 코드 identity 를 서명에 넣는다. 없으면 코드만 바꾸고 resume 했을 때
         #   서로 다른 코드의 행이 같은 서명으로 섞이고 병합 검사를 통과한다.
-        "sig_version": 5,
+        "sig_version": 6 if _s3 is not None else 5,       # ★ 81차 — v6 writer 는 6 (validator 가 분기)
         # ── 무엇을 계산했나 (F67) ──
         "objective_order": list(objectives),      # warm 연쇄가 이 순서를 따른다
         "condition_ids_sha256": _cond_sha,
@@ -1547,8 +1996,11 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         "optimizer": {                            # 실제로 쓴 정책 전부
             "method": method, "adaptive": bool(adaptive),
             "n_restarts": n_restarts, "agree_tol": 1e-3,
-            "seed_scheme": "sha1(cond_id)[:8]",
+            "seed_scheme": "unit_cube_bank/v1" if _s3 is not None else "sha1(cond_id)[:8]",
         },
+        # ★ 81차 — v6 필수축 (없으면 validator 가 실패). 계획 envelope 전체를 싣는다 — run_dir 만으로
+        #   execution_record ↔ 계획 대조가 닫히게 (STAGE3_IMPL_ROUND1_SPEC §5).
+        **({"stage3": _s3["spec_block"]} if _s3 is not None else {}),
         "git_commit": _gi.get("git_commit"),
         "git_dirty": _gi.get("git_dirty"),
         "source_digest": source_digest(),
@@ -1691,6 +2143,12 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
             f"중복 {len(seal['duplicated'])} "
             f"(예: {(seal['missing'] or seal['extra'] or seal['duplicated'])[:3]}). "
             f"불완전한 결과를 봉인하면 분모가 조용히 달라집니다 (F68).")
+
+    if _s3 is not None:
+        # ★ 81차 G81-N1 — 실현값은 **별도 record** 에. 계획(planned_id)은 참조만 한다.
+        write_execution_record(out_dir, fits, planned_env=_s3["planned_env"],
+                               objective_order=list(objectives),
+                               roster_sha256=_s3["roster_sha256"], n_obs=_s3["n_obs"])
 
     # F30: config_hash를 비워 두면 어떤 목적함수 정의로 돌았는지 남지 않는다.
     #   실제 obj_cfg 내용을 해시해 박고, 입력 curves와 config 파일의 SHA도 남긴다.
