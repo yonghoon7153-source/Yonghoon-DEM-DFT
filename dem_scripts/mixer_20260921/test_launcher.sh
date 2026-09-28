@@ -555,5 +555,11 @@ a7l=$(env OUT="$A7" LMP="$FAKE_MPI" DECKDIFF="$DD_OK" DEVIATION="$DEV" bash "$LH
 chk 'HA⑦ 덱 비교 관문 실패 → sbatch 0 · 봉인 0 / BACKEND=local 의 all → 거부 (SLURM 판 전용)' \
     "[ $rc_a7 -ne 0 ] && [ \$(nsb '$T/sba7') -eq 0 ] && ! ls '$A7'/*/launch_record.json >/dev/null 2>&1 && [ $rc_a7l -ne 0 ] && ! ls '$A7'/*/launch_record.json >/dev/null 2>&1"
 
+echo "── watch.sh · SLURM 런 (pid 없음 · jobid) — 09-28 밤 (HW①–②) ──"
+W="$T/wat"; mkdir -p "$T/sbw"; for n in $LH1 $LH2; do mklh "$W" $n; printf 'run 1\nrun 100000\n' > "$W/$n/in.mixer"; printf '      1000   100000 0.1 0.2\n' > "$W/$n/log.lmp"; done   # 1000 < 100001 = 진행 중
+echo 555 > "$W/$LH1/jobid"; echo 556 > "$W/$LH2/jobid"; echo 555 > "$T/sbw/live"
+wo=$(env PATH="$SBIN:$PATH" SB_DIR="$T/sbw" OUT="$W" bash "$HERE/watch.sh" 2>&1)
+chk 'HW① SLURM 런 — jobid 가 대기열 (squeue) 에 있으면 실행 (pid 가 없다고 ⛔죽음 으로 찍지 않는다)' "grep -E '^$LH1 +실행' <<<\"\$wo\" >/dev/null"
+chk 'HW② jobid 가 대기열에 없고 완주도 아니면 ⛔죽음 (SLURM 판도 죽은 런은 죽었다고 찍는다)' "grep -E '^$LH2 +⛔죽음' <<<\"\$wo\" >/dev/null"
 echo "test_launcher: $pass PASS / $fail FAIL"
 [ "$fail" -eq 0 ]
