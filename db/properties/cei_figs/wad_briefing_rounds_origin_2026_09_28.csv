@@ -1,0 +1,7 @@
+round_letter,P0_blocking_count,P1_count,verdict_class
+CE,4,5,nogo
+CF,3,3,nogo
+CG,0,3,nogo
+CI,0,1,nogo
+CJ,0,1,nogo
+CK,0,0,go
