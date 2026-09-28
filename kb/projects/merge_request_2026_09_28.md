@@ -88,8 +88,8 @@ evidenceScope: multi-source-primary
 |---|---|---|---|
 | kgy | li2s **600 K 파일럿** (relax 초기구조 · 400 ps) | tmux `gp600` · PID 3367458 · 11:57 재발사 | 09-28 저녁 |
 | kgy | cascade v6 E′ 40 런 | 마스터 PID 372656 · 28 끝 · 13 남음 · 164 / 320 GPU-h | 실측 기준 ~3 일 |
-| gabia | W_ad **V4** 9 잡 | tmux `v4main` · 러너 PID 439244 · 6 끝 · 7 번째 G4_k1_far | 09-28 19–20 시 |
-| gabia | li2s **465 K 가드 러너** (seed3·seed4) | tmux `glass465b` · wait 모드 | V4 끝나면 자동 발사 → 새벽 끝 |
+| gabia | W_ad **V4** 9 잡 | ✅ **끝 20:36:09** (9/9 rc 0 · 피크 41,520 MiB) | 원자료 회수 + `--v4` 집계 대기 |
+| gabia | li2s **465 K seed3·seed4** | ✅ **발사 20:36:15** (V4 뒤 단독 · PID 1848161 · 1848169 · 공존 예외 미사용) · 21:32 에 110 / 405 ps | ≈ 09-29 00:05 끝 → D(2–50) 비 |
 
 ⚠ 중단한 원시 600 K 런의 산출은 `…/pilot600/T600_raw_aborted_20260928` 에 **보존**했다 (지우지 않는다).
 

@@ -1,0 +1,47 @@
+{
+ "schema": "d3_atm_column/v1",
+ "date": "2026-09-28",
+ "what": "A′ V4 (C₆H₆ | SE 4층 S 바깥 · registry A) 조각 결합 ΔE_frag 의 D3 3체(ATM) 몫 — 별도 열 ΔE_ATM (결정 D-2026-09-23-wad-d3-twobody-atm-separate 의무)",
+ "decision": "D-2026-09-23-wad-d3-twobody-atm-separate — 헤드라인은 2체 · ATM 은 같은 기하에서 dftd3 패키지로 별도 열",
+ "method": {
+  "impl": "simple-dftd3 1.6.0 (python · DispersionModel)",
+  "params": "PBE D3(BJ) s6 1.0 · s8 0.7875 · a1 0.4289 · a2 4.4407 · alp 14 · ATM = E(s9=1) − E(s9=0) (V2 ATM 열과 같은 값)",
+  "pbc": "3D (QE 와 같은 주기 셀)",
+  "geometry": "S3v2 봉인 패키지 구조 (QE SCF 에 쓴 그 좌표) · db/inputs/wad_aprime_s3v2_2026_09_26/structures/",
+  "재현": "ΔE_ATM = [E_D3(far; s9=1) − E_D3(far; s9=0)] − [E_D3(bound; s9=1) − E_D3(bound; s9=0)] · eV/조각 (카드 V3_V4: J/m² 로 바꾸지 않는다)"
+ },
+ "structures_sha256": {
+  "V4_s_outer_A_bound": "aaa10bd70ea3f5d2f7fa00aa1bb20f9596ad4924f94992e418437d97776e9834",
+  "V4_s_outer_A_far": "20260c9c03514a6158ec17df81b4a607990ba7f3213e969ff1fdffee871d5b5f",
+  "V4_s_outer_A_G3_c2_bound": "046551c3350918fad20720697d328343545d2470300d8af4dc8248b9d7203caa",
+  "V4_s_outer_A_G3_c2_far_i": "e215b50fd30ab85172d81d509070143d8af685fe4dc040184b3d7c2f7a3d4a87",
+  "V4_s_outer_A_G3_c2_far_ii": "713e63a9099f61518c47bc0987c7f381e0ef07df5e462b55dbd266340a90c22b"
+ },
+ "results": {
+  "base": {
+   "dE_ATM_meV_per_frag": -18.288,
+   "dE_D3_2body_sdftd3_meV": 253.254,
+   "nat": 122
+  },
+  "G3_i": {
+   "dE_ATM_meV_per_frag": -19.671,
+   "dE_D3_2body_sdftd3_meV": 257.227,
+   "nat": 122
+  },
+  "G3_ii": {
+   "dE_ATM_meV_per_frag": -20.481,
+   "dE_D3_2body_sdftd3_meV": 260.003,
+   "nat": 122
+  }
+ },
+ "cutoff_convergence_base": {
+  "(disp2,disp3,cn) bohr": {
+   "기본(60,40,40)": -18.288,
+   "(95,60,40)": -18.204,
+   "(150,80,40)": -18.205
+  },
+  "읽기": "기본 컷오프는 0.08 meV 크다 — 수렴값 −18.20 meV/조각을 쓴다"
+ },
+ "⏳": "QE ΔD3(2체) 교차확인과 ΔE_frag(DFT) 옆 병기는 V4 원자료(collect_aprime_s4 --v4) 뒤 — 이 파일은 D3 모형만의 기하량이라 DFT 에너지를 보지 않았다",
+ "⛔": "ATM 은 D3 모형 안의 보정이지 실험 대조가 아니다 · eV/조각 (면적 환산 금지)"
+}
