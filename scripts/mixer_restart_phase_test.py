@@ -180,23 +180,25 @@ def gen_decks(deck_text, n1):
 
 RUN_SH = r"""#!/bin/bash
 # 재개-위상 영수증 v1 — 실행 직전 봉인 → A (기준 · 체크포인트) → B (read_restart 재개) → 실행 결과.  WSL: bash run.sh  (LMP=경로)
+# ibb (MPI 빌드 · 2026-09-28): LMP=lmp_mpi LMP_LAUNCH="mpirun --oversubscribe --bind-to none -np 1" bash run.sh  (sbatch -n 1 안에서 — 짝)
 set -u
 cd "$(dirname "$0")"
 LMP=${LMP:-lmp_serial}
 BIN=$(command -v "$LMP") || { echo "⛔ $LMP 없음 — LMP=<실행파일> 로"; exit 1; }
+read -r -a PRE <<< "${LMP_LAUNCH:-}"      # (선택) 실행 접두사 — 비우면 옛 동작 (직접 실행) 그대로 · 봉인에 launch_prefix 로 남는다
 rm -rf A/post_mesh A/restart_pt B/post_mesh B/restart_pt A/log.lmp B/log.lmp seal.json run_status.json
 mkdir -p A/post_mesh A/restart_pt B/post_mesh
-python3 - "$BIN" <<'PY' || { echo "⛔ 봉인 실패"; exit 1; }
+python3 - "$BIN" "${LMP_LAUNCH:-}" <<'PY' || { echo "⛔ 봉인 실패"; exit 1; }
 import datetime, hashlib, json, os, platform, sys
 h = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
 b = sys.argv[1]
 files = {p: h(p) for p in ['A/in.phase_a', 'B/in.phase_b'] + [f'{d}/{n}' for d in ('A', 'B') for n in sorted(os.listdir(d)) if n.lower().endswith('.stl')]}
-json.dump(dict(binary_path=os.path.realpath(b), binary_sha256=h(b), files=files, host=platform.node(),
+json.dump(dict(binary_path=os.path.realpath(b), binary_sha256=h(b), launch_prefix=sys.argv[2], files=files, host=platform.node(),
                sealed_at=datetime.datetime.now().astimezone().isoformat()), open('seal.json', 'w'), indent=1)
 PY
-( cd A && "$BIN" -in in.phase_a > log.lmp 2>&1 ); ra=$?
+( cd A && ${PRE[@]+"${PRE[@]}"} "$BIN" -in in.phase_a > log.lmp 2>&1 ); ra=$?
 rb=-1
-if [ "$ra" -eq 0 ]; then cp -r A/restart_pt B/; ( cd B && "$BIN" -in in.phase_b > log.lmp 2>&1 ); rb=$?; fi
+if [ "$ra" -eq 0 ]; then cp -r A/restart_pt B/; ( cd B && ${PRE[@]+"${PRE[@]}"} "$BIN" -in in.phase_b > log.lmp 2>&1 ); rb=$?; fi
 python3 - "$ra" "$rb" <<'PY'
 import hashlib, json, os, re, sys
 h = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
@@ -757,6 +759,42 @@ def _selftest():                                                      # noqa: C9
         rc = analyze(out_)
         chk(f'⑨ 옛 run.sh 기록 (완료 표지 False · 로그 sha 없음) + 배너 없는 완주 로그 → 통과 (09-28 WSL 실행을 재실행 없이 판정 · '
             f'{rc["reasons"][:1]})', rc['passed'] is True and (rc['run_status'] or {}).get('B', {}).get('last_thermo_step') == rc['run_total'])
+    #  ⑭ 2026-09-28 (1저자 결정: LH 를 ibb SLURM 으로) — MPI 빌드 실행 접두사 LMP_LAUNCH.  **생성된 run.sh 를 실제로** 돌린다
+    #    (가짜 바이너리 · 가짜 mpirun).  접두사가 A · B 둘 다에 붙고 봉인에 남아야 한다 · 비우면 옛 동작 (WSL) 그대로.
+    import subprocess
+    with tempfile.TemporaryDirectory() as td:
+        run_ = os.path.join(td, 'camp')
+        os.makedirs(run_)
+        for nm in ('Drum.stl', 'Front.stl', 'Back.stl'):
+            shutil.copyfile(os.path.join(stl_src, nm), os.path.join(run_, nm))
+        open(os.path.join(run_, 'in.mixer'), 'w').write(small)
+        fb = os.path.join(td, 'lmp_mpi_fake')
+        open(fb, 'w').write('#!/usr/bin/env bash\necho "LIGGGHTS (fake) $*"\n')
+        fm = os.path.join(td, 'mpirun_fake')
+        open(fm, 'w').write('#!/usr/bin/env bash\necho "mpirun $*" >> "$MPI_LOG"\n'
+                            'while [ $# -gt 0 ]; do case "$1" in -np) shift 2; break;; *) shift;; esac; done\nexec "$@"\n')
+        os.chmod(fb, 0o755)
+        os.chmod(fm, 0o755)
+        res = {}
+        for tag, pre in (('mpi', f'{fm} --oversubscribe --bind-to none -np 1'), ('plain', '')):
+            o_ = os.path.join(td, f'phase_{tag}')
+            gen(os.path.join(run_, 'in.mixer'), o_)
+            env_ = dict(os.environ, LMP=fb, MPI_LOG=os.path.join(td, f'mpi_{tag}.log'))
+            env_.pop('LMP_LAUNCH', None)
+            if pre:
+                env_['LMP_LAUNCH'] = pre
+            p_ = subprocess.run(['bash', os.path.join(o_, 'run.sh')], env=env_, capture_output=True, text=True)
+            sl_ = json.load(open(os.path.join(o_, 'seal.json')))
+            lg_ = open(env_['MPI_LOG']).read() if os.path.isfile(env_['MPI_LOG']) else ''
+            res[tag] = (p_.returncode, sl_, lg_, open(os.path.join(o_, 'A', 'log.lmp')).read(), open(os.path.join(o_, 'B', 'log.lmp')).read())
+        rc_m, sl_m, lg_m, la_m, lb_m = res['mpi']
+        chk('⑭ ★ LMP_LAUNCH (ibb: mpirun … -np 1) — A · B 둘 다 접두사로 실행 · 봉인에 launch_prefix · 바이너리는 봉인한 그 파일',
+            rc_m == 0 and sl_m.get('launch_prefix') == f'{fm} --oversubscribe --bind-to none -np 1'
+            and lg_m.count(f'-np 1 {fb} -in in.phase_') == 2 and 'in.phase_a' in la_m and 'in.phase_b' in lb_m
+            and sl_m.get('binary_sha256') == _sha(fb))
+        rc_p, sl_p, lg_p, la_p, lb_p = res['plain']
+        chk('⑭b (대조) LMP_LAUNCH 없으면 옛 동작 그대로 — 접두사 없이 직접 실행 · 봉인 launch_prefix = ""',
+            rc_p == 0 and sl_p.get('launch_prefix') == '' and lg_p == '' and 'in.phase_a' in la_p and 'in.phase_b' in lb_p)
     print(f'\nmixer_restart_phase_test selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
 

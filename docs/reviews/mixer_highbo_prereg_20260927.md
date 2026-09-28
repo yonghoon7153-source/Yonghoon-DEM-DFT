@@ -16,6 +16,7 @@
 | **Q2 조건부 A** | **B 에서 차이가 크면 A 팔로 기전을 가른다** | 사용자 원문 *"B로 실제 수준의 효과가 있는지 먼저 보고, 차이가 크게 나오면 A 팔로 기전을 가르는 것"*.  발동 규칙은 §6 에 **결과 전에** 고정 |
 | **Q3 Bo 값** | **38.4 = 내부 고-Bo 탐색값** | Hare 분말 재현 · 문헌 앵커 · 유동성 상사 라벨을 **붙이지 않는다** (§1-2).  20.25 는 돌리지 않는다 |
 | **Q4 시점** | **본 캠페인 L 10 런 완주 뒤** | Codex J8.  발사 전 기록 §2-5 |
+| **Q5 실행 기계** (09-28 · 사용자) | **ibb SLURM — LH 세 시드 × 20 코어 (`lmp_mpi`)** · Q4 **해제** | 사용자 원문 *"ibb로 진행하자"* (마감).  Q4 의 근거 Codex J8 은 **WSL CPU 경합** (13 런 동시 → L 이 느려진다) 이었다 — ibb 는 L 10 런 (WSL) 을 늦추지 않으므로 그 이유가 사라진다.  기계 · 바이너리 · MPI 분할 차이 (§3-2) 는 사용자 판단 *"걱정 안 해도 될 듯"* 으로 **판정 차단 사유가 아니다** — 결론 문장에 한정어로 붙인다.  발사 경로 = §2-5b.  ⛔ 발사는 여전히 Codex GO 뒤 |
 
 ## 1. 질문과 한정
 
@@ -138,6 +139,28 @@ AM–AM 단독 효과 · 응집체만의 인과 · 실제 코팅 효과 · Hare 
 - 기록: `nproc` · `lscpu | head -20` · `free -h` · `df -h ~` · `sha256sum "$(command -v lmp_serial)"` · 리포 SHA · 발사 시각 · 첫 1 시간 step/s.
 - 재개가 필요해지면 본 캠페인과 같은 도구 (`resume_all.sh`) 와 같은 기록 (영수증 · `RESUME_STEP`).
 
+### 2-5b. ibb (SLURM) 발사 — 1저자 결정 09-28 (§0 Q5) · ⛔ 발사는 Codex GO 뒤
+- 런처 = 같은 `launch_highbo.sh` + **`BACKEND=slurm`** — 관문 (덱 비교 `--expect-deck` · first/rest 순서 · 스모크 증서 · 출처 · 코호트) 은 **한 글자도 안 바뀐다**.  바뀌는 것은 발사 한 줄:
+  러너 `<런>/run_lh.sbatch` (ibb 실물 형식 = `docs/data/pure_se_*_20260927/run_pse_*.sh`: `#SBATCH -n 20` ↔ `mpirun --oversubscribe --bind-to none -np 20` 짝 · `--qos=cpu-60` ·
+  `--partition=cpu` · `--time=5-00:00:00` · `conda activate myenv` · 출력 `logs/` = 제출 폴더 기준) → 봉인 (`backend: slurm` · np · 러너 sha256 · 시작 대조기 sha256 포함) →
+  런 폴더에서 `sbatch --parsable` → `<런>/jobid`.
+- **시작 대조** (`dem_scripts/mixer_20260921/start_check.py`): SLURM 은 제출 ↔ 시작 사이 **대기열 틈**이 있어 Codex Q5 의 *"실행 직전 봉인"* 이 그대로는 서지 않는다 ⇒ job 이 시작하면
+  러너가 LIGGGHTS **앞에서** 봉인을 다시 대조한다 — 바이너리 realpath · sha256 · `in.mixer` · STL · **실행 중인 러너 자신** (`$0` = SLURM 이 제출 때 복사한 사본) · 대조기 자신 ·
+  `SLURM_NTASKS` = 봉인 np · `log.lmp` · `job_start.json` 없음.  통과 = `job_start.json` · 거부 = `job_start.refused.<job>.json` + exit 3 (LIGGGHTS 0 · 통과 기록을 덮지 않는다).
+- **소비자** (`check_contact_validity.launch_binding`): 봉인이 `backend: slurm` 이면 `job_start.json` (ok · 바이너리 · 실행된 러너 · 대조기 · 봉인 sha256 · ntasks) 이 봉인과 맞아야
+  영수증을 잇는다 — 없거나 어긋나면 실행 바이너리 **미상** (셀프테스트 ㉛).
+- "아직 안 뜬 런" = `log.lmp` · `pid` · **`jobid`** 가 모두 없음 (대기열에만 있는 job 은 `log.lmp` 가 아직 없다 — 두 번 제출하지 않는다 · HS②).  동시 실행은 SLURM 대기열이 맡는다 (MAXJ 는 관문이 아니다).
+- **영수증 (ibb)**: 영수증은 **바이너리 + 메시 운동 계약**의 성질이라 WSL 영수증 (08-25 `lmp_serial`) 은 ibb 런에 이어지지 않는다 (소비자가 봉인 바이너리 sha256 을 대조 · HBR4-02) ⇒
+  ibb `lmp_mpi` 로 다시 만든다: `mixer_restart_phase_test.py gen --deck <OUT>/LH_s32452843/in.mixer --out <폴더>` → sbatch `-n 1` 안에서
+  `LMP=lmp_mpi LMP_LAUNCH="mpirun --oversubscribe --bind-to none -np 1" bash run.sh` → `analyze <폴더> --binary "$(command -v lmp_mpi)" --out <영수증>`.
+  ⚠ **가정 (등록)**: `-np 1` 로 잰 메시 운동을 `-np 20` 런에 쓴다 — 처방 회전은 요소마다 같은 산술이라 분할과 무관하다는 가정이다.  `-np 1` 인 이유: 병렬 `dump mesh/stl` 은
+  삼각형을 프로세서 소유 순서로 써서 생산자의 *"원 STL 과 꼭짓점 순서대로"* 대조가 서지 않는다.  (Codex 5 차 요청서 §S 의 질문.)
+  영수증은 계약 검사 (판정) 때만 쓰이므로 LH 와 **동시에** 돌려도 된다 (코어 1).
+- 기록 (발사 때): `nproc` · `sinfo` · `sha256sum "$(command -v lmp_mpi)"` · 리포 SHA · 발사 시각 · 첫 1 시간 step/s (§2-5 와 같은 뜻 — `lmp_serial` 자리에 `lmp_mpi`).
+- 명령 (ibb · 리포 루트 · `conda activate myenv` 뒤): `BACKEND=slurm SB_PATH=/home/yonghoon/LIGGGHTS-PUBLIC/src:/home/yonghoon/.conda/envs/myenv/bin bash dem_scripts/mixer_20260921/launch_highbo.sh first`
+  → bin 0 스모크 증서 (§8) → 같은 환경변수로 `… launch_highbo.sh rest <smoke.json>`.
+- 회귀 (09-28 오후, 전부 **옛 코드에서 실패 재현** 뒤 구현): `test_launcher.sh` HS①–⑦b 17 (가짜 sbatch · squeue · mpirun — 러너를 **실제로** 돌려 시작 대조 7 변이 거부) · 검사기 ㉛ 10 · 영수증 도구 ⑭ 2.
+
 ## 3. 대조 재사용과 그 한계 (Codex J3) — 해제조건 ③
 
 ### 3-1. 짝
@@ -153,6 +176,9 @@ AM–AM 단독 효과 · 응집체만의 인과 · 실제 코팅 효과 · Hare 
   ~~이것은 접촉 계약 검사기가 **데이터로** 확인한다 (회전각 되읽기, §2-4).~~ ⛔ **정정 09-27 저녁 (Codex HBR2-01)**: 입자 배치로 되읽는 확인은 증거가 아니었다
   (참 겹침 2 % + 반 면각 어긋남을 PASS · 5/5 ok 로 승격시켰다).  근거는 **재개-위상 영수증** (§2-4 ②) 이다 — 그 영수증이 없으면 LC 의 벽 판정은 상·하한으로만 나오고
   (대개 `unidentified` = TECH), 그 짝은 선행 조건 2 를 못 넘는다.
+- **실행 기계가 다르다** (§0 Q5, 09-28): `LC` = WSL `lmp_serial` (08-25 빌드) 직렬 · `LH` = ibb `lmp_mpi` 20 rank.  MPI 는 합산 순서가 달라 궤적이 비트로 같지 않고,
+  같은 시드의 병렬 `insert/pack` 이 직렬과 **같은 초기 침대**를 주는지는 **확인하지 않았다** (삽입 난수가 분할에 걸릴 수 있다 — 같으면 짝이 초기 배치를 공유한다).
+  사용자 판단 (09-28): 판정 차단 사유로 두지 않는다 ⇒ 결론 문장에 **"LH 는 ibb MPI 20 rank · LC 는 WSL 직렬"** 을 재개 이력 한정어와 함께 붙인다.
 - ⇒ LH–LC 차이에는 *재개 이력 차이* 가 원리적으로 섞일 수 있다.  별도 증거 (재개 민감도) 가 없으므로 결론 문장에 **"LC 는 체크포인트 재개 이력이 있다"** 를 붙인다.
   이 사실만으로 LC 를 버리거나 다시 돌리지 않는다 (Codex §5.2).
 - 판독기 · 칸 · E0 기준은 두 팔이 같다 (같은 판독기 판으로 둘 다 다시 읽는다 — §2-3).
@@ -316,3 +342,7 @@ completion_basis "last_step" · last_thermo_step 9,452,094` — **배너가 없�
 | 정지 벽 (E0) | 영수증 형식 그대로 (§2-4 옛 문구) | `static` 계약 — 회전 전 · fresh · 덱 = 기대 덱 · STL = 원본 → 원 STL | E0 0.5 % 가 TECH (과잉차단, HBR4-07) | 09-28 낮 · 4 차 수정 커밋 | 없음 (E0 계약 미실행) | 발사 봉인 이전 세대 = 덮어쓰기 가드에 기댄다고 병기 |
 | 스모크 증서 출처 | run basename · smoke 불리언 · mtime | 출처 블록 (판독기 · 규약 · 덱 · 발사 봉인 · 프레임 sha256) 을 관문이 다시 해시해 대조 · mtime 참고 | 다른 폴더 2×2×1 실제 판독 결과가 rest 통과 (HBR4-05) | 09-28 낮 · 4 차 수정 커밋 | 없음 | — |
 | 런처 덱 관문 | `--runs … --allow B` | + `--expect-deck` (expected_deck LH) · 봉인에 sha256 | CED 두 배 덱 3/3 PASS (HBR4-06) | 09-28 낮 · 4 차 수정 커밋 | 없음 | — |
+| 실행 기계 · 시점 (Q4 → Q5) | WSL · L 10 런 완주 뒤 (Codex J8) | **ibb SLURM 20 × 3** · Q4 해제 | 사용자 결정 09-28 (마감) · J8 근거 = WSL CPU 경합 → ibb 는 해당 없음 | 09-28 오후 · ibb 경로 커밋 (§10) | 없음 (LH 미발사) | 결론에 *"LH 는 ibb MPI 20 rank · LC 는 WSL 직렬"* |
+| 발사 백엔드 | `run_all.sh` 경유 `setsid lmp_serial` (봉인 바로 뒤 exec) | `BACKEND=slurm` — 러너 → 봉인 (러너 · 대조기 sha256) → sbatch → jobid · **시작 대조** (`start_check.py`) | SLURM 제출 ↔ 시작 대기열 틈 (Codex Q5 *"실행 직전"*) | 09-28 오후 · ibb 경로 커밋 | 없음 | 관문 불변 |
+| 영수증 바이너리 · 실행 | WSL `lmp_serial` 직접 | ibb `lmp_mpi` · `LMP_LAUNCH="mpirun … -np 1"` (sbatch `-n 1`) | 소비자가 영수증 ↔ 봉인 바이너리 대조 (HBR4-02) · 병렬 mesh 덤프는 삼각형 순서가 달라 `-np 1` | 09-28 오후 · ibb 경로 커밋 | 없음 | `-np 1` → `-np 20` 적용은 **가정** (Codex 5 차 §S) |
+| 소비자 봉인 잇기 (SLURM) | 봉인의 바이너리 · 덱 · STL | + `job_start.json` (ok · 바이너리 · 실행된 러너 · 대조기 · 봉인 sha256 · ntasks) | 대기열 틈 — 시작 대조 기록 없이는 실행 바이너리 미상 | 09-28 오후 · ibb 경로 커밋 | 없음 | — |

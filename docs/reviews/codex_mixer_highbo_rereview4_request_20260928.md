@@ -54,3 +54,35 @@ bash dem_scripts/mixer_20260921/test_launcher.sh        # 64/64 (HL②e 는 진�
 ⬜ WSL `~/phase_v1` 에서 고친 도구로 `analyze` 만 다시 → **영수증 v2** 커밋 (LIGGGHTS 재실행 불요 — 봉인 · 덤프 · 로그는 그대로) ·
 ⬜ E0 세 개에 정지 벽 계약 (§2-4 ③ 명령) · ⬜ L 완주 → ⬜ 생산 덱 3 쌍 대조 (`--expect-deck`) → `launch_highbo.sh first` (봉인) → bin 0 스모크 증서 (출처 블록) → `launch_highbo.sh rest`.
 ⚠ 이 요청서가 **발송됐는지는 1저자가 확인한 뒤에만** 정본에 적는다 (`SELF-59`).
+
+## 5. 추가 (09-28 오후, 발송 전) — **ibb SLURM 경로** (1저자 결정 · 한 번에 리뷰받기 위해 이 요청서에 합친다)
+
+**결정** (사전등록 §0 Q5 · §2-5b · §3-2 · §12 새 행 넷): LH 세 시드를 WSL 직렬이 아니라 **ibb SLURM 20 코어 × 3** (`lmp_mpi`) 에서 돌린다 (마감).
+Q4 (*"L 10 런 완주 뒤"*) 는 해제 — 그 근거였던 J8 은 WSL CPU 경합이었고 ibb 는 L 을 늦추지 않는다.  기계 · 바이너리 · MPI 분할 차이는 1저자 판단으로
+**판정 차단 사유가 아니다** (결론 한정어로 붙인다).  문턱 · Bo · seed · LC · 칸 규약 · 관문 (덱 비교 · first/rest · 스모크 증서 · 출처 · 코호트) 은 **안 바꿨다**.
+
+**바꾼 것** (전부 셀프테스트를 먼저 쓰고 옛 코드에서 실패 = 부재 재현 뒤 구현):
+- `launch_highbo.sh` `BACKEND=slurm` — 러너 `<런>/run_lh.sbatch` (ibb 실물 형식 `docs/data/pure_se_*_20260927/run_pse_*.sh` 그대로: `#SBATCH -n N` ↔
+  `mpirun --oversubscribe --bind-to none -np N` · qos · partition · 5 일 · conda) → 봉인 (`backend` · `slurm` 블록 = np · 플래그 · 러너 sha256 · 시작 대조기 sha256) → 런 폴더에서
+  `sbatch --parsable` → `jobid`.  "아직 안 뜬 런" 에 `jobid` 없음을 더했다 (대기열에만 있는 job 은 `log.lmp` 가 없다 — 두 번 제출 방지).  로컬 경로는 그대로 (HL 64/64 유지).
+- `dem_scripts/mixer_20260921/start_check.py` (새, 표준 라이브러리) — job 이 **시작할 때** 러너가 LIGGGHTS 앞에서 봉인을 다시 대조: 바이너리 realpath · sha256 · 덱 · STL ·
+  **실행 중인 러너 자신** (`$0` = SLURM 사본) · 대조기 자신 · `SLURM_NTASKS` = np · `log.lmp` / `job_start.json` 없음.  통과 = `job_start.json` · 거부 = `job_start.refused.<job>.json` + exit 3.
+- `check_contact_validity.launch_binding` — 봉인이 `backend: slurm` 이면 `job_start.json` (ok · 바이너리 · 실행된 러너 · 대조기 · 봉인 sha256 · ntasks) 이 봉인과 맞아야 영수증을 잇는다.
+- `mixer_restart_phase_test.py` `run.sh` — `LMP_LAUNCH` 실행 접두사 (ibb: `mpirun … -np 1`, 비우면 옛 동작) · 봉인에 `launch_prefix`.
+
+**시험**: `test_launcher.sh` **81/81** (HS①–⑦b 17 새로 — 가짜 sbatch · squeue · mpirun 으로 **러너를 실제로 돌려** 시작 대조가 덱 · STL · 러너 · 바이너리 · ntasks ·
+SLURM 밖 · 두 번째 시작을 막는지) · `check_contact_validity.py --selftest` **83/83** (㉛ 10) · `mixer_restart_phase_test.py --selftest` **28/28** (⑭ 2 — 생성된 `run.sh` 를 실제로 돌린다).
+
+**§S 질문 — 동의 · 반대를 받고 싶은 것**
+- **S1 대기열 틈.**  Q5 의 *"실행 직전 봉인"* 을 SLURM 에서 **제출 때 봉인 + 시작 때 재대조** 로 대신했다.  재대조 목록 (위) 에 빠진 것이 있는가 (예: `mpirun` 자체 · conda 환경 · 노드).
+- **S2 영수증 `-np 1` → 런 `-np 20`.**  영수증 A/B 를 같은 `lmp_mpi` 로 **`-np 1`** 에서 잰다 — 병렬 `dump mesh/stl` 은 삼각형을 프로세서 소유 순서로 써서 생산자의
+  *"원 STL 과 꼭짓점 순서대로"* 대조가 서지 않기 때문이다.  처방 회전은 요소마다 같은 산술이라 분할과 무관하다는 **가정**을 등록했다.  이 가정을 받는가, 아니면
+  `-np 20` 영수증 (삼각형 순서 무관 대조로 생산자 수정) 을 요구하는가.
+- **S3 소비자의 `job_start.json` 잇기.**  SLURM 봉인에 시작 대조 통과 기록이 없으면 영수증을 거부한다 (실행 바이너리 미상).  충분한가, 과한가.
+- **S4 짝의 기계 차이.**  LC (WSL 직렬 · 08-25 빌드) ↔ LH (ibb MPI 20).  1저자는 차단 사유가 아니라고 판단했다 (결론 한정어).  같은 시드의 병렬 `insert/pack` 이 직렬과
+  같은 초기 침대를 주는지는 **확인하지 않았다**.  한정어 외에 요구할 것이 있는가.
+
+**추기 (Q3 에 대한 사실)**: 생성기 `b6d9a2036` · `6963632a0` · `20568797b` · HEAD 네 판이 E0 세 시드에서 **바이트 동일**한 덱을 낸다 (7,779 B · sha256 앞 16 자리
+`a38cdc7494671979` · `b8ba25ace11e1300` · `f38f0093433d251a`).  09-22 에 E0 를 다시 만든 판이 `b6d9a2036` 이므로 지금 생성기의 기대 덱 = 실행 덱으로 **예상**된다
+(WSL 해시 대조는 1저자가 실행 중).
+

@@ -584,3 +584,9 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
   ⚠ v1 영수증 거부 → WSL `analyze` 재실행 필요 · E0 정지 벽 계약 = WSL 에서 세 시드 (명령 prereg §2-4 ③) · 원장 `claimed_fixed` 와 5 차 요청서는 다음 커밋 (수정 커밋 SHA 필요).
 - ✅ **수정 커밋 `999a5bf85`** (게이트 두 레인 0) → 원장 HBR4-01~08 `claimed_fixed 999a5bf85` · **5 차 요청서 작성됨**
   (`docs/reviews/codex_mixer_highbo_rereview4_request_20260928.md`) — ⚠ **발송 여부는 1저자 확인 뒤에만** 적는다 (`SELF-59`).
+- ★ **1저자 결정 (09-28 오후): 믹서 LH 는 ibb SLURM 20 코어 × 3** (*"ibb로 진행하자 · 1,3 같이 통합 · 2번은 걱정 안 해도"* — 마감).  Q4 (L 완주 뒤) 해제 — 근거 J8 = WSL CPU 경합.
+  ① Codex 5 차 GO 와 ③ sbatch 런처를 **한 리뷰로** (5 차 요청서 §5 · 미발송) · ② 기계 · 바이너리 · MPI 분할 차이는 **차단 사유 아님** — 결론 한정어 (사전등록 §0 Q5 · §3-2).
+  구현 (시험 먼저 — 옛 코드에서 29 건 실패 재현): 런처 `BACKEND=slurm` (ibb 실물 러너 형식 · 봉인에 러너 · 시작 대조기 sha256 · `jobid` = "뜬 런") ·
+  `start_check.py` (job 시작 때 봉인 재대조 — 대기열 틈) · 검사기 `launch_binding` 이 SLURM 봉인이면 `job_start.json` 까지 · 영수증 `run.sh` 의 `LMP_LAUNCH` (ibb `mpirun -np 1`).
+  런처 81/81 · 검사기 83/83 · 영수증 도구 28/28.  ⚠ ibb 영수증은 `lmp_mpi` 로 **다시** (WSL 영수증은 08-25 `lmp_serial` 에 묶임 — L/LC 의 측정 기록으로만).
+  ⚠ ibb a5/a6 3 job (`a6_p04` ckpt 1,650,000 · `a5_p08`/`a5_p10` 3,600,000) 취소 요청 → 명령만 드림 (이번 실행분 ≈ 3 h/job 손실 경고 · 재개는 `resume_ckpt.sh`).

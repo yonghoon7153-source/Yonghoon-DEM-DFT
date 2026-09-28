@@ -316,6 +316,26 @@ def launch_binding(run_dir, spec, path=None):
     if bad:
         raise ValueError(f'발사 봉인 (launch_record.json) 뒤 바뀌었거나 봉인에 없는 파일 {bad} — 검사기가 읽는 덱 · STL 이 그 런이 '
                          '실행한 것이 아니다')
+    #  ★ SLURM 판 (2026-09-28, 1저자 결정: LH 를 ibb 에서) — 로컬 발사는 봉인 바로 뒤 exec 라 틈이 없지만, SLURM 은 제출 ↔ 시작 사이
+    #    대기열 틈이 있다.  러너의 시작 대조 (dem_scripts/mixer_20260921/start_check.py) 가 남긴 **통과 기록**이 봉인과 맞아야
+    #    "실행된 바이너리 = 봉인" 이 선다.  없거나 어긋나면 **미상** — 영수증을 잇지 않는다 (셀프테스트 ㉛).
+    if lr.get('backend') == 'slurm':
+        sl = lr.get('slurm') if isinstance(lr.get('slurm'), dict) else {}
+        jp = os.path.join(os.path.dirname(lp), 'job_start.json')
+        try:
+            js = json.load(open(jp, encoding='utf-8'))
+        except (OSError, ValueError):
+            raise ValueError('SLURM 발사인데 시작 대조 기록 (job_start.json) 이 없다 — 대기열 뒤 실제로 실행된 바이너리가 봉인 것이라는 '
+                             '증거가 없어 영수증을 잇지 않는다')
+        want_js = {'schema': 'mixer_highbo_job_start/1', 'lmp_sha256': ls, 'runner_sha256_executed': sl.get('runner_sha256'),
+                   'start_check_sha256': sl.get('start_check_sha256'), 'launch_record_sha256': _sha_file(lp),
+                   'slurm_ntasks': sl.get('np')}
+        off = [k for k, v in want_js.items() if not isinstance(js, dict) or v is None or js.get(k) != v]
+        if not isinstance(js, dict) or js.get('ok') is not True:
+            off.append('ok')
+        if off:
+            raise ValueError(f'SLURM 시작 대조 기록 (job_start.json) 이 봉인과 맞지 않는다 {off} — 실행된 바이너리 · 러너가 봉인 것이라는 '
+                             '증거가 서지 않아 영수증을 잇지 않는다')
     return lr
 
 
@@ -1702,6 +1722,40 @@ def _selftest():
             undo()
         w = check_window(run, stl_ref_dir=ref)
         chk('㉚d 기대 덱 (--expect-deck) 없이는 입력 동일성을 세우지 못해 정적 계약을 주지 않는다', w['phase_status'] != 'static')
+    # ══ ㉛ 2026-09-28 (1저자 결정: LH 를 ibb SLURM 으로) — SLURM 봉인은 러너의 시작 대조 기록 (job_start.json) 까지 잇는다 ══════
+    #   로컬 발사는 봉인 바로 뒤 exec 라 틈이 없다 (Codex Q5).  SLURM 은 제출 ↔ 시작 사이 대기열 틈이 있어, 러너의 시작 대조
+    #   (dem_scripts/mixer_20260921/start_check.py) 가 남긴 통과 기록이 봉인과 맞아야 "실행된 바이너리 = 봉인" 이 선다.
+    with tempfile.TemporaryDirectory() as td:
+        run = _run(td)
+        for st in (2000, 2500, 3000):
+            _dump(run, st, BASE + _pair(0.0025) + _ring(_th(st), 0.005))
+        SL_ = dict(np=20, runner='run_lh.sbatch', runner_sha256='d' * 64, start_check_sha256='e' * 64)
+        _launch(run, backend='slurm', slurm=SL_)
+        w = check_window(run, phase_receipt=_receipt1(td, run, name='s0.json'))
+        chk('㉛ ★ SLURM 봉인인데 시작 대조 기록 (job_start.json) 이 없으면 영수증을 잇지 않는다 (대기열 틈 — 실행된 바이너리 미상)',
+            w['phase_status'] != 'receipt' and any('job_start' in t for t in w['tech']))
+        good_ = dict(schema='mixer_highbo_job_start/1', ok=True, lmp_sha256='a' * 64, runner_sha256_executed='d' * 64,
+                     start_check_sha256='e' * 64, launch_record_sha256=_sha_f(os.path.join(run, 'launch_record.json')),
+                     slurm_ntasks=20)
+        _json.dump(good_, open(os.path.join(run, 'job_start.json'), 'w'))
+        w = check_window(run, phase_receipt=_receipt1(td, run, name='s1.json'))
+        chk(f'㉛b (대조) 시작 대조 기록이 봉인과 맞으면 받는다 ({w["phase_status"]} · {w["verdict"]})',
+            w['phase_status'] == 'receipt' and w['verdict'] == 'PASS')
+        for k_, (key_, val_) in {'바이너리': ('lmp_sha256', 'c' * 64), '실행된 러너': ('runner_sha256_executed', '0' * 64),
+                                 '시작 대조기': ('start_check_sha256', '1' * 64), 'ntasks': ('slurm_ntasks', 19),
+                                 '봉인 sha256': ('launch_record_sha256', '2' * 64), 'ok (문자열 "true")': ('ok', 'true'),
+                                 '스키마': ('schema', 'x')}.items():
+            bad_ = dict(good_)
+            bad_[key_] = val_
+            _json.dump(bad_, open(os.path.join(run, 'job_start.json'), 'w'))
+            w = check_window(run, phase_receipt=_receipt1(td, run, name=f's_{key_}.json'))
+            chk(f'㉛c 시작 대조 기록의 {k_} 가 봉인과 다르면 영수증을 잇지 않는다',
+                w['phase_status'] != 'receipt' and any('job_start' in t for t in w['tech']))
+        _json.dump(good_, open(os.path.join(run, 'job_start.json'), 'w'))
+        _launch(run)                                          # 로컬 봉인 (backend 없음) — job_start.json 은 요구하지 않는다
+        os.remove(os.path.join(run, 'job_start.json'))
+        w = check_window(run, phase_receipt=_receipt1(td, run, name='s_local.json'))
+        chk('㉛d (대조) 로컬 봉인은 시작 대조 기록 없이도 그대로 받는다 (틈이 없다)', w['phase_status'] == 'receipt' and w['verdict'] == 'PASS')
     print(f'\ncheck_contact_validity selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0

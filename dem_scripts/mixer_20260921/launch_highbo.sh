@@ -32,10 +32,35 @@
 # ⚠ rest 가 기계로 읽는 것은 판독기 증서 (§8 ③ 의 smoke 필드) 뿐이다 — §8 ① 보존 · ② 접촉 계약 · ③ 의 8×8×2 바닥 비 · ④ step/s 는
 #   사람이 확인한다 (그 중 하나라도 실패면 rest 를 부르지 않는다 = 전체 확장 HOLD).
 #   회귀: test_launcher.sh HL①–⑦ (가짜 실행파일 · 덱 비교기 대역).
+#
+# ★ SLURM 판 (2026-09-28, 1저자 결정: LH 를 ibb 에서 20 코어 × 3) — `BACKEND=slurm`.  관문 (덱 비교 · first/rest 순서 · 스모크 증서 ·
+#   출처 · 코호트) 은 **한 글자도 안 바뀐다**.  바뀌는 것은 발사 한 줄뿐이다:
+#     로컬   봉인 → run_all.sh 가 `setsid lmp_serial` (봉인 바로 뒤 exec — 틈이 없다)
+#     SLURM  러너 <런>/run_lh.sbatch (ibb 실물 형식: docs/data/pure_se_*_20260927/run_pse_*.sh — `#SBATCH -n NP` ↔
+#            `mpirun --oversubscribe --bind-to none -np NP` 짝) → 봉인 (러너 · 시작 대조기 sha256 포함) → 런 폴더에서 `sbatch --parsable` →
+#            <런>/jobid.  job 이 **시작하면** 러너가 start_check.py 로 봉인을 다시 대조하고 (바이너리 · 덱 · STL · 실행 중인 러너 자신 ·
+#            SLURM_NTASKS · log.lmp 없음) 하나라도 다르면 LIGGGHTS 를 부르지 않는다 (대기열 틈 = Codex Q5 의 "실행 직전" 을 지키는 자리).
+#   "아직 안 뜬 런" = log.lmp · pid · **jobid** 가 모두 없음 (대기열에만 있는 job 은 log.lmp 가 아직 없다 — 두 번 제출하지 않는다).
+#   동시 실행은 SLURM 대기열이 맡는다 (MAXJ 는 기다리지 않는다 · 봉인의 live_at_seal = 대기열에 있는 우리 job 수).
+#   환경변수: NP (기본 20) · LMP (기본 lmp_mpi — 봉인은 `command -v` 의 절대경로) · SB_QOS (cpu-60) · SB_PARTITION (cpu) ·
+#            SB_TIME (5-00:00:00) · SB_ENV (conda env, 기본 myenv — 빈 값이면 source/activate 줄 없음) · SB_PATH (러너가 PATH 앞에 붙일 것)
+#   예 (ibb, 리포 루트): BACKEND=slurm SB_PATH=/home/yonghoon/LIGGGHTS-PUBLIC/src:/home/yonghoon/.conda/envs/myenv/bin \
+#                        bash dem_scripts/mixer_20260921/launch_highbo.sh first
+#   회귀: test_launcher.sh HS①–⑦b (가짜 sbatch · squeue · mpirun — 러너를 실제로 돌려 시작 대조를 본다).
 set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"; ROOT="$(cd "$HERE/../.." && pwd)"
 OUT="${OUT:-$HERE/runs}"
-LMP="${LMP:-lmp_serial}"; MAXJ="${MAXJ:-$(nproc)}"
+BACKEND="${BACKEND:-local}"
+case "$BACKEND" in
+  local) LMP="${LMP:-lmp_serial}";;
+  slurm) LMP="${LMP:-lmp_mpi}"; NP="${NP:-20}"
+         SB_QOS="${SB_QOS:-cpu-60}"; SB_PARTITION="${SB_PARTITION:-cpu}"; SB_TIME="${SB_TIME:-5-00:00:00}"
+         SB_ENV="${SB_ENV-myenv}"; SB_PATH="${SB_PATH:-}"
+         MPIRUN_FLAGS='--oversubscribe --bind-to none'; RUNNER=run_lh.sbatch      # ibb: 둘이 없으면 여러 코어에서 바인딩 오류
+         [[ "$NP" =~ ^[1-9][0-9]*$ ]] || { echo "⛔ NP=$NP — 양의 정수여야 한다 (#SBATCH -n ↔ mpirun -np).  발사 0"; exit 2; };;
+  *) echo "⛔ BACKEND=$BACKEND — local | slurm.  발사 0"; exit 2;;
+esac
+MAXJ="${MAXJ:-$(nproc)}"
 DECKDIFF="${DECKDIFF:-$ROOT/scripts/mixer_deck_diff.py}"
 FIRST=LH_s32452843; REST=(LH_s49979687 LH_s67867967)     # §8 (D-4) 순서 = 생성기 CAMPAIGN_HIGHBO 순서 (첫 시드 = 캠페인 첫 시드)
 EXPECT_ARM=LH; EXPECT_SEED=32452843                       # 사전등록 §2-2 — 목표 CED 덱 (seed 는 CED 와 무관 — 등록 명령 그대로)
@@ -52,11 +77,22 @@ EOF
 }
 
 #  run_all.sh 와 같은 정의 — pid 파일 + kill -0 로 **살아 있는 런만**, LH 가 아닌 런까지 전부 센다
-live() { local c=0; for f in "$OUT"/*_s*/pid; do [ -f "$f" ] && kill -0 "$(cat "$f")" 2>/dev/null && c=$((c+1)); done; echo $c; }
-fresh() { [ ! -e "$OUT/$1/log.lmp" ] && [ ! -e "$OUT/$1/pid" ]; }       # 한 번도 안 뜬 런
+#  SLURM 판: 대기열 (squeue) 에 있는 우리 job (<런>/jobid) 만 센다 — 대기 · 실행 둘 다
+live() {
+  local c=0 f q
+  if [ "$BACKEND" = slurm ]; then
+    q=$(squeue -h -o %i 2>/dev/null) || q=""
+    for f in "$OUT"/*_s*/jobid; do [ -s "$f" ] && grep -qxF "$(cat "$f")" <<<"$q" && c=$((c+1)); done
+  else
+    for f in "$OUT"/*_s*/pid; do [ -f "$f" ] && kill -0 "$(cat "$f")" 2>/dev/null && c=$((c+1)); done
+  fi
+  echo $c
+}
+fresh() { [ ! -e "$OUT/$1/log.lmp" ] && [ ! -e "$OUT/$1/pid" ] && [ ! -e "$OUT/$1/jobid" ]; }   # 한 번도 안 뜬 (제출도 안 된) 런
 stamp() { date -u +%Y%m%dT%H%M%S.%NZ; }                                 # 옆으로 옮긴 봉인 이름 — 같은 초에 둘이어도 안 덮게
 
 wait_slot() {  # 전 런 합산 live < MAXJ 가 될 때까지 (run_all.sh 와 같은 30 초 주기) — 봉인은 그 **뒤**
+  [ "$BACKEND" = slurm ] && return 0                                  # SLURM 판: 대기열이 동시 실행을 맡는다
   local said=0
   while [ "$(live)" -ge "$MAXJ" ]; do
     [ "$said" = 1 ] || { echo "… 동시 상한 대기 — 살아 있는 런 $(live)/$MAXJ (30 초마다 다시 본다 · 봉인은 슬롯이 난 뒤)"; said=1; }
@@ -90,6 +126,8 @@ seal() {  # seal <런> <first|rest> [증서] — 발사 직전 봉인 <OUT>/<런
   head=$(git -C "$ROOT" rev-parse HEAD 2>/dev/null) || head=no-git
   #  fresh 인데 봉인이 있다 = 발사되지 않은 옛 봉인 — 지우지 않고 옆으로
   if [ -e "$d/launch_record.json" ]; then mv "$d/launch_record.json" "$d/launch_record.unlaunched.$(stamp).json" || return 1; fi
+  SEAL_BACKEND="$BACKEND" SEAL_NP="${NP:-}" SEAL_FLAGS="${MPIRUN_FLAGS:-}" SEAL_RUNNER="${RUNNER:-}" SEAL_QOS="${SB_QOS:-}" \
+  SEAL_PARTITION="${SB_PARTITION:-}" SEAL_TIME="${SB_TIME:-}" SEAL_ENV="${SB_ENV:-}" SEAL_PATH="${SB_PATH:-}" SEAL_CHECK="$HERE/start_check.py" \
   python3 - "$d" "$stage" "$LMP" "$lp" "$head" "$(nproc)" "$MAXJ" "$(live)" "$DECKDIFF" "$OUT" "$EXPECT_DECK" "$EXPECT_ARM" \
       "$EXPECT_SEED" "$cert" "$FIRST" "${REST[@]}" <<'PY'
 import hashlib, json, os, platform, socket, sys, time
@@ -120,6 +158,14 @@ rec = {
     'gate_deckdiff': {'script': os.path.realpath(dd), 'script_sha256': sha(dd), 'argv': ['--runs', out, '--allow', 'B', '--expect-deck', exp],
                       'expect_deck_sha256': sha(exp), 'expect_deck_source': f'mixer_deck_diff.expected_deck({earm!r}, {int(eseed)})', 'rc': 0},
 }
+rec['backend'] = os.environ.get('SEAL_BACKEND', 'local')
+if rec['backend'] == 'slurm':      # SLURM 판 — 러너 · 시작 대조기까지 봉인한다 (job 이 시작할 때 start_check.py 가 다시 대조)
+    ev = os.environ
+    rec['slurm'] = {'np': int(ev['SEAL_NP']), 'mpirun_flags': ev['SEAL_FLAGS'], 'qos': ev['SEAL_QOS'], 'partition': ev['SEAL_PARTITION'],
+                    'time': ev['SEAL_TIME'], 'conda_env': ev['SEAL_ENV'], 'path_prefix': ev['SEAL_PATH'],
+                    'runner': ev['SEAL_RUNNER'], 'runner_sha256': sha(os.path.join(d, ev['SEAL_RUNNER'])),
+                    'start_check': os.path.realpath(ev['SEAL_CHECK']), 'start_check_sha256': sha(ev['SEAL_CHECK']),
+                    'concurrency': 'SLURM 대기열 (MAXJ 는 관문이 아니다 · live_at_seal = 대기열에 있는 우리 job 수)'}
 if stage == 'first':      # 코호트 — rest 가 '첫 시드가 스모크를 받은 그 덱 · STL' 인지 대조한다 (바이너리는 lmp_sha256)
     rec['cohort'] = {n: {f: sha(os.path.join(out, n, f)) for f in FILES} for n in [first] + rest}
 else:
@@ -130,13 +176,58 @@ with open(tmp, 'w', encoding='utf-8') as f:
     f.write('\n')
 os.replace(tmp, os.path.join(d, 'launch_record.json'))
 print(f"🔒 봉인 {nm}/launch_record.json — {rec['time_local']} · lmp {rec['lmp_sha256'][:12]}… · "
-      f"in.mixer {rec['sha256']['in.mixer'][:12]}… · git {head[:12]}")
+      f"in.mixer {rec['sha256']['in.mixer'][:12]}… · git {head[:12]} · {rec['backend']}"
+      + (f" -n {rec['slurm']['np']} · 러너 {rec['slurm']['runner_sha256'][:12]}…" if rec['backend'] == 'slurm' else ''))
 PY
+}
+
+write_runner() {  # write_runner <런> — ibb 실물 형식 러너 · 바이너리는 봉인과 같은 절대경로 · 시작 대조가 mpirun 앞
+  local nm="$1" d="$OUT/$1" lp lpr dabs
+  lp=$(command -v "$LMP") || return 1
+  lpr=$(readlink -f "$lp") || return 1
+  dabs=$(cd "$d" && pwd) || return 1
+  {
+    echo '#!/bin/bash'
+    echo "#SBATCH --job-name=$nm"
+    echo "#SBATCH --output=logs/output_${nm}_%j.out"
+    echo "#SBATCH --qos=$SB_QOS"
+    echo "#SBATCH --partition=$SB_PARTITION"
+    echo "#SBATCH -n $NP"
+    echo "#SBATCH --time=$SB_TIME"
+    echo "# 고-Bo LH (SLURM 판) — dem_scripts/mixer_20260921/launch_highbo.sh 가 썼다.  고치지 말 것 (봉인 · 시작 대조가 이 파일의 sha256 을 본다)"
+    echo
+    echo 'SELF=$(readlink -f "$0")      # SLURM 이 제출 때 복사해 둔 이 러너 — 시작 대조가 봉인한 러너와 같은지 본다'
+    if [ -n "$SB_ENV" ]; then echo 'source ~/.bashrc'; echo "conda activate $SB_ENV"; fi
+    if [ -n "$SB_PATH" ]; then printf 'export PATH=%q:$PATH\n' "$SB_PATH"; fi
+    echo
+    printf 'cd %q || exit 3\n' "$dabs"
+    printf 'python3 %q %q %q "$SELF" || { echo "⛔ 시작 대조 실패 — LIGGGHTS 를 부르지 않는다 (job_start.refused.*.json)"; exit 3; }\n' \
+        "$HERE/start_check.py" "$dabs" "$lpr"
+    printf 'mpirun %s -np %s %q -in in.mixer > log.lmp 2>&1\n' "$MPIRUN_FLAGS" "$NP" "$lpr"
+  } > "$d/.$RUNNER.tmp" && mv -f "$d/.$RUNNER.tmp" "$d/$RUNNER"
+}
+
+submit() {  # submit <런> — 런 폴더에서 sbatch (러너의 logs/ 가 제출 폴더 기준) → <런>/jobid
+  local nm="$1" d="$OUT/$1" jid
+  mkdir -p "$d/logs" || return 1
+  jid=$(cd "$d" && sbatch --parsable "$RUNNER") || { echo "⛔ $nm: sbatch 실패"; return 1; }
+  jid=${jid%%;*}
+  [[ "$jid" =~ ^[0-9]+$ ]] || { echo "⛔ $nm: sbatch 가 job id 를 주지 않았다 ('$jid')"; return 1; }
+  echo "$jid" > "$d/jobid" || return 1
+  echo "▶ $nm 제출 — job $jid · -n $NP · 봉인 $d/launch_record.json · 러너 $d/$RUNNER (job 이 시작하면 러너가 봉인을 다시 대조한다)"
 }
 
 launch_one() {  # launch_one <런> <first|rest> [증서] — 슬롯 → 봉인 → run_all.sh (ALLOW_LH=1 ONLY=<런>) → pid 확인
   local nm="$1" d="$OUT/$1"
   wait_slot
+  if [ "$BACKEND" = slurm ]; then                                    #  SLURM 판 — 러너 → 봉인 → sbatch → jobid
+    write_runner "$nm" || { echo "⛔ $nm: 러너를 못 썼다 — 발사 0"; return 1; }
+    seal "$@" || { echo "⛔ $nm: 봉인 실패 — 발사 0"; return 1; }
+    submit "$nm" && return 0
+    mv "$d/launch_record.json" "$d/launch_record.unlaunched.$(stamp).json" 2>/dev/null
+    echo "⛔ $nm: 제출되지 않았다 — 봉인은 launch_record.unlaunched.*.json 으로 옮겼다 (대기열에 들어갔다면 시작 대조가 봉인 없음으로 막는다)"
+    return 1
+  fi
   seal "$@" || { echo "⛔ $nm: 봉인 실패 — 발사 0"; return 1; }
   OUT="$OUT" LMP="$LMP" MAXJ="$MAXJ" FORCE=0 ALLOW_LH=1 ONLY="$nm" bash "$HERE/run_all.sh"
   if [ -s "$d/pid" ]; then echo "▶ $nm 발사 확인 — pid $(cat "$d/pid") · 봉인 $d/launch_record.json"; return 0; fi
@@ -146,16 +237,19 @@ launch_one() {  # launch_one <런> <first|rest> [증서] — 슬롯 → 봉인 �
 
 cmd_first() {
   [ $# -eq 0 ] || { usage; return 2; }
-  echo "[LH first] OUT=$OUT · LMP=$LMP · MAXJ=$MAXJ (전 런 합산) — 사전등록 §8 (D-4): $FIRST 하나만"
+  echo "[LH first] OUT=$OUT · LMP=$LMP · BACKEND=$BACKEND$([ "$BACKEND" = slurm ] && echo " -n $NP" || echo " · MAXJ=$MAXJ (전 런 합산)") — 사전등록 §8 (D-4): $FIRST 하나만"
   local nm bad=0
   command -v "$LMP" >/dev/null || { echo "⛔ $LMP 없음 — LMP=<실행파일>.  발사 0"; return 1; }
+  if [ "$BACKEND" = slurm ]; then
+    command -v sbatch >/dev/null && command -v squeue >/dev/null || { echo "⛔ BACKEND=slurm 인데 sbatch / squeue 가 없다 — SLURM 기계에서.  발사 0"; return 1; }
+  fi
   for nm in "$FIRST" "${REST[@]}"; do
     [ -f "$OUT/$nm/in.mixer" ] || { echo "⛔ $OUT/$nm/in.mixer 없음 — 먼저 SET=highbo gen_all.sh"; bad=1; }
   done
   [ "$bad" = 0 ] || { echo "⛔ 발사 0"; return 1; }
   deckdiff || return 1                                               #  관문 1
   for nm in "$FIRST" "${REST[@]}"; do                                #  관문 2 — 세 시드 모두 아직 안 떴다
-    fresh "$nm" || { echo "⛔ $nm 에 이미 log.lmp / pid 가 있다 — first 는 LH 세 시드가 모두 아직 안 떴을 때만 (§8 순서 · 재개는 resume_all.sh).  사람이 판단"; bad=1; }
+    fresh "$nm" || { echo "⛔ $nm 에 이미 log.lmp / pid / jobid 가 있다 — first 는 LH 세 시드가 모두 아직 안 떴을 (제출도 안 된) 때만 (§8 순서 · 재개는 resume_all.sh).  사람이 판단"; bad=1; }
   done
   [ "$bad" = 0 ] || { echo "⛔ 발사 0"; return 1; }
   launch_one "$FIRST" first || return 1
@@ -165,7 +259,10 @@ cmd_first() {
 cmd_rest() {
   [ $# -eq 1 ] && [ -n "$1" ] || { usage; return 2; }
   local cert="$1" nm lp k=0 todo=()
-  echo "[LH rest] OUT=$OUT · LMP=$LMP · MAXJ=$MAXJ (전 런 합산) · 증서 $cert — 사전등록 §8 (D-4): ${REST[*]}"
+  echo "[LH rest] OUT=$OUT · LMP=$LMP · BACKEND=$BACKEND$([ "$BACKEND" = slurm ] && echo " -n $NP" || echo " · MAXJ=$MAXJ (전 런 합산)") · 증서 $cert — 사전등록 §8 (D-4): ${REST[*]}"
+  if [ "$BACKEND" = slurm ]; then
+    command -v sbatch >/dev/null && command -v squeue >/dev/null || { echo "⛔ BACKEND=slurm 인데 sbatch / squeue 가 없다 — SLURM 기계에서.  발사 0"; return 1; }
+  fi
   #  관문 0 — 첫 시드가 first 로 봉인 · 발사됐다 (순서)
   if [ ! -s "$OUT/$FIRST/launch_record.json" ] || [ ! -e "$OUT/$FIRST/log.lmp" ]; then
     echo "⛔ 첫 시드 $FIRST 가 'launch_highbo.sh first' 로 봉인 · 발사된 기록 (launch_record.json · log.lmp) 이 없다 — first 먼저.  발사 0"
@@ -310,7 +407,7 @@ PY
   deckdiff || return 1                                               #  관문 3 — 덱 비교 (발사 직전 다시)
   for nm in "${REST[@]}"; do
     if fresh "$nm"; then todo+=("$nm")
-    else echo "· $nm: 이미 log.lmp / pid 가 있다 — 건너뜀 (다시 띄우지 않고 봉인도 덮지 않는다 · 재개는 resume_all.sh)"; fi
+    else echo "· $nm: 이미 log.lmp / pid / jobid 가 있다 — 건너뜀 (다시 띄우지 않고 봉인도 덮지 않는다 · 재개는 resume_all.sh)"; fi
   done
   for nm in "${todo[@]}"; do launch_one "$nm" rest "$cert" || return 1; k=$((k+1)); done
   echo "rest 끝 — 발사 $k 개 · 건너뜀 $(( ${#REST[@]} - ${#todo[@]} )) 개.  진행: bash $HERE/watch.sh"

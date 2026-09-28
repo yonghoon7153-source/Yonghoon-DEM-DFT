@@ -395,5 +395,112 @@ chk 'HL⑦b ★ 전역 상한: rest 도 첫 시드 · 다른 런을 함께 센�
     "[ $rc_e2 -eq 124 ] && [ -s '$E2/$LH2/pid' ] && ! [ -e '$E2/$LH3/pid' ] && ! [ -e '$E2/$LH3/launch_record.json' ]"
 kill "$SL4" 2>/dev/null
 
+echo "── LH 발사 · SLURM 판 (2026-09-28 · 1저자 결정: ibb 20 코어 × 3) — 관문은 그대로 · 발사만 sbatch (HS①–⑦) ──"
+#  가짜 sbatch · squeue · mpirun.  sbatch = 인자 · 제출 폴더 · 스크립트 사본을 적고 job id 를 준다 (SB_FAIL=1 이면 실패).
+#  squeue = $SB_DIR/live 의 job id 를 "대기열에 있다" 로 · mpirun = 플래그와 -np N 을 건너뛰고 나머지를 그대로 실행.
+SBIN="$T/sbin"; mkdir -p "$SBIN"
+cat > "$SBIN/sbatch" <<'SH'
+#!/usr/bin/env bash
+[ "${SB_FAIL:-0}" = 1 ] && { echo "sbatch: error: Batch job submission failed" >&2; exit 1; }
+n=$(( $(cat "$SB_DIR/n" 2>/dev/null || echo 900) + 1 )); echo "$n" > "$SB_DIR/n"
+printf '%s\t%s\t%s\n' "$n" "$PWD" "$*" >> "$SB_DIR/calls"
+cp "${@: -1}" "$SB_DIR/script_$n"
+echo "$n"
+SH
+printf '#!/usr/bin/env bash\ncat "$SB_DIR/live" 2>/dev/null\nexit 0\n' > "$SBIN/squeue"
+cat > "$SBIN/mpirun" <<'SH'
+#!/usr/bin/env bash
+echo "mpirun $*" >> "${MPI_LOG:-/dev/null}"
+while [ $# -gt 0 ]; do case "$1" in -np) shift 2; break;; *) shift;; esac; done
+exec "$@"
+SH
+chmod +x "$SBIN"/*
+FAKE_MPI="$T/lmp_mpi_fake"; printf '#!/usr/bin/env bash\necho "LIGGGHTS (fake mpi build)"\necho "Total wall time: 0:00:00"\n' > "$FAKE_MPI"; chmod +x "$FAKE_MPI"
+LMPR=$(readlink -f "$FAKE_MPI")
+nsb() { [ -f "$1/calls" ] && wc -l < "$1/calls" || echo 0; }
+slurm_first() {  # slurm_first <OUT> <SB_DIR> [추가 env …] — first (SLURM) 를 부르고 출력을 $SO 에
+  local o="$1" sd="$2"; shift 2; mkdir -p "$sd"
+  SO=$(env PATH="$SBIN:$PATH" SB_DIR="$sd" BACKEND=slurm OUT="$o" LMP="$FAKE_MPI" DECKDIFF="$DD_OK" "$@" bash "$LHL" first 2>&1); return $?
+}
+S="$T/hbs"; SD="$T/sbd"; for n in $LH1 $LH2 $LH3 LC_s32452843 E0_s32452843; do mklh "$S" $n; done
+slurm_first "$S" "$SD"; rc_s1=$?; s1="$SO"
+chk 'HS① ★ SLURM first: sbatch 정확히 한 번 — LH_s32452843 만 (그 런 폴더에서 제출 · jobid 기록 · pid 없음 · logs/ · 나머지 LH · LC · E0 제출 0)' \
+    "[ $rc_s1 -eq 0 ] && [ \$(nsb '$SD') -eq 1 ] && [ \"\$(cut -f2 '$SD/calls')\" = '$S/$LH1' ] && [ \"\$(cat '$S/$LH1/jobid' 2>/dev/null)\" = 901 ] && ! ls '$S'/*/pid >/dev/null 2>&1 && ! [ -e '$S/$LH2/jobid' ] && [ -d '$S/$LH1/logs' ]"
+RS="$S/$LH1/run_lh.sbatch"
+chk 'HS①b 러너 = ibb 실물 형식 (docs/data/pure_se_*_20260927/run_pse_*.sh) — #SBATCH -n 20 ↔ mpirun --oversubscribe --bind-to none -np 20 짝 · qos cpu-60 · partition cpu · 5 일 · conda myenv · logs/ · 절대경로 바이너리 · 시작 대조가 mpirun 앞' \
+    "grep -qx '#SBATCH --job-name=$LH1' '$RS' && grep -qxF '#SBATCH --output=logs/output_${LH1}_%j.out' '$RS' && grep -qx '#SBATCH --qos=cpu-60' '$RS' && grep -qx '#SBATCH --partition=cpu' '$RS' && grep -qx '#SBATCH -n 20' '$RS' && grep -qx '#SBATCH --time=5-00:00:00' '$RS' && grep -qx 'conda activate myenv' '$RS' && grep -qxF 'mpirun --oversubscribe --bind-to none -np 20 $LMPR -in in.mixer > log.lmp 2>&1' '$RS' && [ \"\$(grep -n 'start_check.py' '$RS' | cut -d: -f1)\" -lt \"\$(grep -n '^mpirun' '$RS' | cut -d: -f1)\" ]"
+ss=$(python3 - "$S/$LH1" "$FAKE_MPI" "$HERE" <<'PY' 2>&1
+import hashlib, json, os, sys
+d, lmp, here = sys.argv[1:]
+sha = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
+r = json.load(open(os.path.join(d, 'launch_record.json'), encoding='utf-8'))
+sl = r.get('slurm') or {}
+ok = {'backend': r.get('backend') == 'slurm', 'np': sl.get('np') == 20, 'flags': sl.get('mpirun_flags') == '--oversubscribe --bind-to none',
+      'runner': sl.get('runner') == 'run_lh.sbatch' and sl.get('runner_sha256') == sha(os.path.join(d, 'run_lh.sbatch')),
+      'check': sl.get('start_check_sha256') == sha(os.path.join(here, 'start_check.py')),
+      'lmp': r.get('lmp_sha256') == sha(lmp) and r.get('lmp_realpath') == os.path.realpath(lmp),
+      'files': all(r.get('sha256', {}).get(f) == sha(os.path.join(d, f)) for f in ('in.mixer', 'Drum.stl', 'Front.stl', 'Back.stl')),
+      'before': os.stat(os.path.join(d, 'launch_record.json')).st_mtime_ns <= os.stat(os.path.join(d, 'jobid')).st_mtime_ns,
+      'stage': r.get('stage') == 'first' and isinstance(r.get('cohort'), dict)}
+print('OK' if all(ok.values()) else 'NG ' + ' '.join(k for k, v in ok.items() if not v))
+PY
+)
+chk 'HS①c SLURM 봉인 — backend slurm · np 20 · mpirun 플래그 · 러너 · 시작 대조기 sha256 · 바이너리 · 덱 · STL · 코호트 · 제출 전 (봉인 mtime ≤ jobid)' "[ \"\$ss\" = OK ]"
+slurm_first "$S" "$SD"; rc_s2=$?; s2="$SO"
+chk 'HS② ★ 대기열에만 있는 첫 시드 (jobid 있음 · log.lmp 아직 없음) 는 "안 뜬 런" 이 아니다 — first 를 다시 불러도 거부 · 두 번째 sbatch 0' \
+    "[ $rc_s2 -ne 0 ] && [ \$(nsb '$SD') -eq 1 ] && grep -q 'jobid' <<<\"\$s2\""
+#  시작 대조 — 러너를 **실제로** 돌린다 (가짜 mpirun · 가짜 바이너리 · 없는 ~/.bashrc · 없는 conda 는 무해)
+runr() {  # runr <런 폴더> [env …] — 러너 실행 → rc
+  local d="$1"; shift
+  ( cd "$d" && env HOME="$T/home" PATH="$SBIN:$PATH" MPI_LOG="$T/mpi.log" SLURM_JOB_ID=4242 "$@" bash run_lh.sbatch > "$T/runr.out" 2>&1 ); return $?
+}
+mkdir -p "$T/home"
+runr "$S/$LH1" SLURM_NTASKS=20; rc_r1=$?
+chk 'HS③ ★ 시작 대조 통과 → LIGGGHTS (가짜) 가 돈다 · log.lmp · job_start.json (ok · job id · ntasks 20 · 바이너리 · 러너 · 봉인 sha256)' \
+    "[ $rc_r1 -eq 0 ] && grep -q 'fake mpi build' '$S/$LH1/log.lmp' && python3 -c \"import json,sys; j=json.load(open('$S/$LH1/job_start.json')); sys.exit(0 if j['ok'] is True and j['slurm_job_id']=='4242' and j['slurm_ntasks']==20 and j['schema']=='mixer_highbo_job_start/1' else 1)\""
+tamper() {  # tamper <이름> <변이 명령 (그 런 폴더에서)> [runr env …] — 새로 first 한 런을 변이 → 러너 → 거부면 참
+  local o="$T/hbt_$1" sd="$T/sbt_$1" mut="$2"; shift 2
+  for n in $LH1 $LH2 $LH3 E0_s32452843; do mklh "$o" $n; done
+  slurm_first "$o" "$sd" || return 1
+  ( cd "$o/$LH1" && eval "$mut" ) || return 1
+  runr "$o/$LH1" "$@"; local rc=$?
+  [ "$rc" -eq 3 ] && ! [ -e "$o/$LH1/job_start.json" ] && ls "$o/$LH1"/job_start.refused.*.json >/dev/null 2>&1 && ! grep -q 'fake mpi build' "$o/$LH1/log.lmp" 2>/dev/null
+}
+chk 'HS③b 제출 뒤 덱이 바뀌면 시작 대조가 막는다 (exit 3 · LIGGGHTS 0 · job_start.refused.*.json)' "tamper deck 'echo \"# 제출 뒤 수정\" >> in.mixer' SLURM_NTASKS=20"
+chk 'HS③c 제출 뒤 STL 이 바뀌면 막는다' "tamper stl 'echo x >> Drum.stl' SLURM_NTASKS=20"
+chk 'HS③d SLURM_NTASKS ≠ 봉인 np (19 ≠ 20) 면 막는다' "tamper ntasks ':' SLURM_NTASKS=19"
+chk 'HS③e SLURM 밖 (SLURM_NTASKS 없음) 에서 러너를 돌리면 막는다' "tamper noslurm ':'"
+chk 'HS③f log.lmp 가 이미 있으면 (두 번째 시작) 막고 그 로그를 안 덮는다' "tamper twice 'echo 첫실행 > log.lmp' SLURM_NTASKS=20 && grep -qx 첫실행 '$T/hbt_twice/$LH1/log.lmp'"
+chk 'HS③g 실행 중인 러너가 봉인한 러너와 다르면 (제출 뒤 러너 수정) 막는다' "tamper runner 'echo \"# 수정\" >> run_lh.sbatch' SLURM_NTASKS=20"
+LMPC="$T/lmp_mpi_copy"; cp "$FAKE_MPI" "$LMPC"
+tamper_bin() {
+  local o="$T/hbt_bin" sd="$T/sbt_bin"; for n in $LH1 $LH2 $LH3 E0_s32452843; do mklh "$o" $n; done
+  mkdir -p "$sd"; env PATH="$SBIN:$PATH" SB_DIR="$sd" BACKEND=slurm OUT="$o" LMP="$LMPC" DECKDIFF="$DD_OK" bash "$LHL" first > /dev/null 2>&1 || return 1
+  echo '# 다시 빌드' >> "$LMPC"
+  runr "$o/$LH1" SLURM_NTASKS=20; [ $? -eq 3 ] && ! grep -q 'fake mpi build' "$o/$LH1/log.lmp" 2>/dev/null
+}
+chk 'HS③h 제출 뒤 바이너리가 바뀌면 (sha256) 막는다' "tamper_bin"
+#  rest (SLURM) — 첫 시드가 시작돼 log.lmp 가 있고 증서 합격이면 나머지 둘만 sbatch
+mkcert "$CE/ok_s.json" "$S/$LH1" true '[]' true
+echo 901 > "$SD/live"
+s4=$(env PATH="$SBIN:$PATH" SB_DIR="$SD" BACKEND=slurm OUT="$S" LMP="$FAKE_MPI" DECKDIFF="$DD_OK" bash "$LHL" rest "$CE/ok_s.json" 2>&1); rc_s4=$?
+chk 'HS④ ★ SLURM rest: 증서 합격 → 나머지 둘만 sbatch (합계 3 · 첫 시드 jobid 그대로) · 둘 다 stage rest 봉인 · 러너 · live_at_seal = 대기열의 첫 시드' \
+    "[ $rc_s4 -eq 0 ] && [ \$(nsb '$SD') -eq 3 ] && [ -s '$S/$LH2/jobid' ] && [ -s '$S/$LH3/jobid' ] && [ \"\$(cat '$S/$LH1/jobid')\" = 901 ] && python3 -c \"import json,sys; r=json.load(open('$S/$LH2/launch_record.json')); sys.exit(0 if r['stage']=='rest' and r['backend']=='slurm' and r['live_at_seal']>=1 else 1)\" && [ -s '$S/$LH3/run_lh.sbatch' ]"
+#  sbatch 실패 · sbatch 없음 · NP 바꾸기
+SF="$T/hbsf"; for n in $LH1 $LH2 $LH3 E0_s32452843; do mklh "$SF" $n; done
+slurm_first "$SF" "$T/sbf" SB_FAIL=1; rc_s5=$?
+chk 'HS⑤ sbatch 실패 → 발사 0 (jobid 없음) · 봉인은 launch_record.unlaunched.*.json 으로 · 0 이 아닌 종료' \
+    "[ $rc_s5 -ne 0 ] && ! [ -e '$SF/$LH1/jobid' ] && ! [ -e '$SF/$LH1/launch_record.json' ] && ls '$SF/$LH1'/launch_record.unlaunched.*.json >/dev/null 2>&1"
+SN="$T/hbsn"; for n in $LH1 $LH2 $LH3; do mklh "$SN" $n; done
+s6=$(env BACKEND=slurm OUT="$SN" LMP="$FAKE_MPI" DECKDIFF="$DD_OK" bash "$LHL" first 2>&1); rc_s6=$?
+chk 'HS⑥ sbatch 가 없는 기계에서 BACKEND=slurm → 관문 전에 거부 (봉인 0)' \
+    "[ $rc_s6 -ne 0 ] && ! [ -e '$SN/$LH1/launch_record.json' ] && grep -q 'sbatch' <<<\"\$s6\""
+SP_="$T/hbsp"; for n in $LH1 $LH2 $LH3; do mklh "$SP_" $n; done
+slurm_first "$SP_" "$T/sbp" NP=19; rc_s7=$?
+chk 'HS⑦ NP=19 → #SBATCH -n 19 ↔ -np 19 짝 · 봉인 np 19' \
+    "[ $rc_s7 -eq 0 ] && grep -qx '#SBATCH -n 19' '$SP_/$LH1/run_lh.sbatch' && grep -q -- '-np 19 ' '$SP_/$LH1/run_lh.sbatch' && python3 -c \"import json,sys; sys.exit(0 if json.load(open('$SP_/$LH1/launch_record.json'))['slurm']['np']==19 else 1)\""
+s8=$(env BACKEND=slurm NP=0 OUT="$SN" LMP="$FAKE_MPI" bash "$LHL" first 2>&1); rc_s8=$?
+chk 'HS⑦b NP 가 양의 정수가 아니면 거부 (봉인 0)' "[ $rc_s8 -ne 0 ] && ! [ -e '$SN/$LH1/launch_record.json' ]"
+
 echo "test_launcher: $pass PASS / $fail FAIL"
 [ "$fail" -eq 0 ]
