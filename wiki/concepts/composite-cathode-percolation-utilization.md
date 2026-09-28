@@ -2,10 +2,10 @@
 title: 복합양극 퍼콜레이션 이용률 (utilization level)
 description: "Bielefeld 2019 utilization level θ = V_c/V_ν as the geometric surrogate for ASSB composite-cathode contact loss, its units, closed forms, and its own irreducible width"
 created: 2026-09-16
-updated: 2026-09-23
+updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -447,6 +447,23 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - **이온 쪽 새 무릎**: 바인더 0.10 에서 **`θ_SE`** 가 ε_AM > ≈61 vol% 부터 떨어져 68 vol% 에서 ≈55 %(무바인더 ≈98 %) — 1호가 공극으로 본 "ionic limitation" 의 바인더 판. `θ_AM` 은 구성상 불변(바인더를 기존 AM 배열 위에 얹었다).
 - **"pore 문턱 → 저항 급증"(14호가 56호에 붙인 문장) 귀속 판정: 출처 불명.** 세 요소(void 축 · 문턱 · 저항 급증)가 한 편에 같이 있는 곳이 없다 — **1호** Fig. 9: 공극률 43 → 3 % 에서 `[인쇄]` "above 34 %" 고립 · "Down to 21 %" 전자 제한(이용률 판정 · 전도도 0) · **57호** Fig. 4: void 5 · 10 · 20 % 에서 `σ_eff` ×≈2 단조(문턱 0) · **56호**: 둘 다 0. 14호는 1호 · 57호를 인용하지 않는다(PDF 검색 — `Bielefeld` 는 [69] = 56호 한 번).
 - ⇒ 계보 요약: **1호 `p_c(d)` 출력(무작위 단분산 구) → 57호 무언 상속 + 이온 쪽 바인더 무릎 → 56호 반례(42 vol% 실셀 연결) · 고립 입자 수작업 이동으로 `θ = 1`**. `p_c` 는 이 연구실 안에서 한 번도 실측과 맞춰진 적이 없고, 맞지 않았을 때 모델이 아니라 구조를 고쳤다. 합성 truth 에서 `θ` · `p_c` 를 이 계보 한 모델의 출력으로 정하지 않는다(56호 절과 같은 결론, 한 편 더).
+
+## ★★★ 1호가 ref 12 로 인용한 조성 스윕 — 29 vol% 에서 0.1 C 68 %, `p_c` 보다 한참 아래에서 쓰인다 (2026-09-28 추가, `assb` 63호)
+
+`raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md` (Zhang W. … Weber … Janek 2017, *ACS AMI* 9, 17835 — **1호 ref 12**("LCO + LGPS 조성 변화"), 1호 공저자 Weber). **탄소 없는 LCO : LGPS** 복합양극, 10 mg · ∅10 mm · 조성 다섯.
+
+| wt | vol%(`[인쇄]`) | 0.1 C 방전(`[도표]`, mAh g⁻¹) | 이용률(`[재현]` ÷137) | 이 편의 서술 |
+|---|---:|---:|---:|---|
+| 40:60 | 21 | ≈21(충전 ≈25.7, S9) | ≈15–19 % | "most of the LiCoO2 particles are separated by solid electrolyte" |
+| 50:50 (A) | 29 | 93.3 | **68 %** | Fig. 2 캡션 "most … separated"(63호 D6 — 자료와 불합) |
+| 60:40 (B) | 38 | 98.5 | 72 % | "balanced" |
+| 70:30 (C) | 49 | 113.7 | 83 % | "balanced" |
+| 80:20 (D) | 62 | **134.7** | 98 % | "contact area … limited" |
+
+- `[재현]` 1호 식 (8) `p_c(d) = 7.83 ln d + 36.67` 은 LCO 윤곽 ≈2–5 µm(`[도표]` Fig. 1b · 입도 인쇄 0)에서 **42.1–49.3 vol%** — 1호대로면 29 · 38 vol% 는 문턱 아래(`θ` ≈0)인데 이 편은 68 · 72 % 를 낸다. 이용률 40 %(1호의 `p_c` 정의 문턱)를 넘는 자리는 `[재현]` 선형 보간으로 **≈24–25 vol%**.
+- ⇒ 22호(불활성 3–15 배 과대) · 56호(42 vol% 실셀 연결)에 이은 **세 번째 같은 방향 표본** — 이번에는 **1호가 직접 인용한 원전**이다. 1호는 이 자료를 자기 `p_c` 와 대조하지 않았다.
+- ⚠ 대조의 한계: (i) 이용률 ≠ `θ`(0.1 C 율 · 이온 경로 · 첫 사이클 손실 포함; 충전 0.05 C) (ii) 탈리튬 LCO 는 금속성(`[인쇄]` "changes from semiconducting to metallic character") — 1호의 전자 퍼콜레이션 가정과 전자 경로가 다를 수 있다 (iii) SE 는 입자가 아니라 기질일 수 있다(55호) (iv) 조성당 1 셀 · LCO 입도 미인쇄.
+- 이 편의 해석은 `[인쇄]` "effective electronic conductive paths between particles need to be created by the overlap of LiCoO2 particles" · 고율에서는 "a sufficient electrolyte fraction must be provided" — 전자 · 이온 두 퍼콜레이션의 **율 의존 균형**이고, 그것을 식 (1) 의 "확산 길이"(63호 D1 — h ↔ s ×60)로 정량하려 했다.
 
 ## 이 페이지가 주장하지 않는 것
 

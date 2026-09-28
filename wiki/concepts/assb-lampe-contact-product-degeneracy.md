@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/illig2012_charge-transfer-contact-resistance-lfp-drt-ecm.md, raw/papers/miss2022_exchange-current-density-tlm-thickness-lco-nmc-assb.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/dugas2021_engineered-three-electrode-cell-assb-li-in-reference-layer.md, raw/papers/solchenbach2016_gold-wire-micro-reference-electrode-liquid-t-cell.md, raw/papers/schlenker2020_li6ps5cl-li-metal-lifetime-three-electrode.md, raw/papers/hertle2023_micro-reference-electrode-lithiated-gold-wire-assb.md, raw/papers/jin2015_lithium-silicide-anode-electrode-design-assb.md, raw/papers/fukunishi2023_graphite-three-electrode-impedance-cyclability.md, raw/papers/santhosha2019_indium-lithium-electrode-phase-formation-redox-potential.md, raw/papers/nam2018_three-electrode-assb-failure-modes-li-in-depletion.md, raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/illig2012_charge-transfer-contact-resistance-lfp-drt-ecm.md, raw/papers/miss2022_exchange-current-density-tlm-thickness-lco-nmc-assb.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/dugas2021_engineered-three-electrode-cell-assb-li-in-reference-layer.md, raw/papers/solchenbach2016_gold-wire-micro-reference-electrode-liquid-t-cell.md, raw/papers/schlenker2020_li6ps5cl-li-metal-lifetime-three-electrode.md, raw/papers/hertle2023_micro-reference-electrode-lithiated-gold-wire-assb.md, raw/papers/jin2015_lithium-silicide-anode-electrode-design-assb.md, raw/papers/fukunishi2023_graphite-three-electrode-impedance-cyclability.md, raw/papers/santhosha2019_indium-lithium-electrode-phase-formation-redox-potential.md, raw/papers/nam2018_three-electrode-assb-failure-modes-li-in-depletion.md, raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -191,6 +191,8 @@ physical significance** of the parameters" 라고 쓴다.
 | ↳ ⚠ **압력 축 벤치마크가 CE 한 스칼라일 때 — 52호 줄과 D5 가 먼저다** (2026-09-28, **59호에서**, `[해석]`) | 오름 압력 스윕에서 "CE 최대의 최소 압력"(59호 CSP 측정법)은 CE 결손을 Li 재고 · 양극 접근(`θ`) · 누설로 나누지 않은 채 압력의 최적을 정한다 — 저압 쪽 CE 결손이 누설이면(41 · 52호) 그 "최적" 은 접촉 복원이 아니라 누설 억제의 문턱일 수 있다. 곱을 가르기 전에 52호 줄(누적 결손 ↔ Li 재고 상한)로 CE 를 거르고, 압력 조작의 출력은 채널별로 신고한다([[assb-pressure-reapplication-separation-test]] D5). 분기(가압 ↔ 감압)도 같이 적는다(5호 이력) | ⚠ **59호**(Li Q. 2025 *Nat. Energy*, Perspective): 수치 0 · 적합 0 · CE–압력 짝 원자료 미공개(Fig. 5) — 처방의 입력이 아니라 경고 |
 | ↳ ⚠ **상대극 Li 재고 ≫ 양극 재고인 셀에서 CE 의 방향 — 52호 줄 앞에 재고비(M2)를 적는다** (2026-09-28, **60호에서**, `[재현]` + `[데이터]`) | 프리리튬화 합금 · Li 금속 과잉 상대극에서 CE 결손은 Li 재고가 아니라 **양극 접근(`θ` · `η`) · 누설 · 음극 SEI** 의 합이고, 방전 시 저장고가 양극이 준 것보다 더 돌려줄 수 있어 **CE > 100 %** 가 나온다. 누적 결손 ↔ 재고 상한(52호 줄)은 재고가 크면 무조건 통과해 검사력이 0 이다 — 곱을 가르기 전에 재고비를 적고, CE 를 `LLI` 대리로 쓰지 않는다 | **60호**(Zhang 2025 *Nat. Commun.*): `[재현]` 음극 Li₂₁Si₅ 15 mg → 29.5 mAh cm⁻² = 양극 2.8 의 **10.5×** · `[데이터]` 1–1000 사이클 중 **145 사이클 CE > 100 %**(최대 107.9 %) · 누적 결손 1.39 mAh cm⁻² = 재고의 4.7 % |
 | ↳ ⚠ **압력 · 두께 진폭을 활성 분율(`θ·ε_p`)의 대리로 쓸 때 — `k_eff(N)` · 기저선 규약 · 음극 몫이 먼저** (2026-09-28, **62호에서**, `[도표]` + `[재현]` + `[해석]`) | 운전 중 압력은 `ΔP = k_eff · Σ Δh_e` 이고 `Δh_e ∝ (Δx 를 겪은 활성 부피) · Δx` 다 — 입자 고립(`θ`)과 `LAM_PE` 는 둘 다 Δx 를 멈추므로 **같은 서명**이고, 압력이 용량과 다르게 보는 것은 Δx 없는 전하와 강성 `k_eff(N)` 뿐이다 ⇒ 압력 채널은 관측 하나와 미지수 하나를 같이 더한다(순 식별 이득 0 — `k_eff` 를 따로 재기 전에는). 진폭을 쓰기 전에 (i) 원시 신호(기저 포함) (ii) 기저선 규약 (iii) 상대극 몫을 적는다([[assb-operando-pressure-signal-attribution]]) | **62호**(Zhang W. 2017 *JMCA*): `[도표]` 보정 진폭 1.267 → 1.152 MPa ↔ 용량 116.7 → 93.2 mAh g⁻¹ — 비 **+14 %** · 원시 충전 상승 0.1 C 에서 평탄(+1.07 → +1.13 → +1.10) · 음극(In) 몫 `[재현]` ≈90–95 % · 운전 기저 ≈61.8 MPa 는 ESI 축에만 |
+| ↳ ★★ **SOC 축 1단계 — 한 충전 안의 `R`·`C` 궤적으로 구간별 기구 종류를 가른다** (2026-09-28 신설, **63호에서**, `[도표]` + `[재현]`) | 노화 전후 두 상태 대신 **한 충전(또는 방전) 안 SOC 점마다** 같은 호의 `R` · `C` 를 보고 구간마다 τ 보존(면적형) ↔ `C` 불변 · `R` 증가(저항형)를 판정한다 — 노화 셀에 같은 SOC 해상 EIS 를 반복하면 노화 몫도 같은 규칙으로 분류된다. 조건: CPE α 를 SOC 별로 인쇄 · 호 형성 직후 첫 점 분리 · 호의 `C` 가 이중층 크기(3단계-b) | ★★★ **63호**(In ‖ LGPS ‖ LNTO-LCO, Fig. 5 · 6): `[도표]` MF 첫 충전 앞 절반(명목 SOC ≈10 → 60 %) `R` ×1.18 · `C` ×0.83 · τ ×0.98(면적형) · 뒤 절반 `R` ×1.76 · `C` ×1.03 · τ ×1.82(저항형) — 저자 · 10호의 "접촉 손실 + 분해층 동시 귀속" 을 구간으로 가른다. LF(방전 `R` ×23.8 · `C` ×3.5)는 `C` 가 이중층 ×80–600 이라 불가. ⚠ 셀 1 · α 미인쇄 · 픽셀 판독 |
+| ↳ ⚠ **율 스윕으로 "확산 길이" 를 읽을 때 — 곱 `d²/D` 에서 `D` 고정은 가정이고, 기울기 단위(h) ↔ `D` 단위(s) 환산을 값 옆에 적는다** (2026-09-28, **63호에서**, `[재현]`) | 용량–전류 기울기(`Q = Q_1c − (1/3)(d²/D)·j`)가 주는 것은 `d²/D` 한 조합이다. `D` 를 문헌 한 값으로 모든 조성에 두면 이온 경로(SE 분율) · 전하이동 · 고체 확산의 율 손실이 전부 `d` 로 간다 — 29 · 30호 율 스윕 줄의 세 번째 실패 조건 | ⚠ **63호** Fig. 8b: A 53 · B 53 · C 62 · D 101 nm 는 기울기(h)를 s 로 넣은 값(`[재현]` ≤1 nm; D 는 그림에 없는 0.1 C 점 포함) — 교정 3.1 · 3.2 · 3.7 · 6.0 µm. 캡션의 `D` 는 m² s⁻¹(본문 cm² s⁻¹) |
 
 ★ **`R_CT·C_dl` 줄이 우리가 바로 할 수 있는 것이다.** 필요한 입력은 두 가지뿐:
 반쪽전지 OCP 두 곡선(원전이 출처를 안 적었다)과 비공개 6 개 파라미터.
@@ -1930,6 +1932,8 @@ Li 금속의 탄성 · 항복 · creep 실측 — 셀 · 양극 · 임피던스 
 | **4단계** (20호) | 시간 영역 동일 검사 | 압력–시간(원시 · 보정) 11 사이클 — 전기화학 시간 영역 아님 | ❌ |
 | 52호 줄 | 누적 결손 ↔ Li 재고 | 무 Li In 조립 → 재고 = 양극. 압력 셀 CE 0 · S3 셀(다른 셀) CE 91.0 → ≈99.6 % | ⚠ 입력 부분 |
 
+⚠ **2026-09-28 정정(63호)**: S3 셀 = 63호 Fig. 9 셀 C(픽셀 동일 — 63호 digest §픽셀 판독 ②)이고 63호 방법상 **Li 박 1:60 장기 셀**(`[재현]` 재고 2.96 mAh = 양극의 ×3.1)이다 — "무 Li In 조립 → 재고 = 양극" 은 62호 압력 셀에만 해당하고, S3 셀 CE 는 `LLI` 게이지가 아니다(60호 M2 줄).
+
 ### ★ `[해석]` 곱 앞에서 — 압력은 `θ·ε_p` 를 용량과 같은 방식으로 본다
 
 `ΔP = k_eff · Σ Δh_e` · `Δh_ca ∝ (θ·ε_p·V)·Δx`. 고립 입자와 구조 열화 입자는 둘 다 Δx 를 멈추므로 압력 진폭은 곱의 `θ·ε_p` 를 **용량과 같은 서명**으로 받는다. 용량과 다르게 받는 것은 Δx 없는 전하(부반응 · 누설)와
@@ -1940,6 +1944,46 @@ Li 금속의 탄성 · 항복 · creep 실측 — 셀 · 양극 · 임피던스 
 
 이 편은 곱을 말하지 않는다 — 압력 진폭과 용량의 "correlates well" 을 적고, 접촉 손실은 무가압 셀에서 추론한다. `ΔP` 분해와 서명 동일성은 우리 대수이고, 유효 길이 ≈22–36 mm(지그 순응) 계산은 인쇄 SE 탄성률 ·
 ESI ⅓ 규칙 두께 위의 `[재현]` 이다.
+
+## ★★ 처방의 마흔여섯 번째 적용 (2026-09-28, `assb` 63호 — 실험 · SOC/SOD 해상 EIS · In ‖ LGPS ‖ LNTO-LCO · 23호의 방법 원전 · 62호 [27]) — **부분 적용: 1단계를 SOC 축에 걸어 한 충전 안의 두 구간을 가르고, LF 호는 3단계-b 에서 탈락한다**
+
+`raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md` (Zhang W. · Weber · Weigand · Arlt · Manke · Schröder · Koerver · Leichtweiss · Hartmann · Zeier · Janek 2017, *ACS Appl. Mater. Interfaces* 9, 17835–17845 —
+22호 ref 16 · 23호 ref 29 · 24 · 39 · 41 · 42호, **3차 묶음 파일 25**). 10호가 "`R_MF` 에 접촉 손실 + 분해층이 함께 귀속된 그 논문" 으로 든 편이고, 62호 ESI 의 EIS · 장기 사이클 그림(S2 · S3)과 같은 자료다.
+
+### 입력 점검
+
+| 단계 | 요구 | 이 편 | 판정 |
+|---|---|---|---|
+| **1단계** (16호) | `R` 과 `C` 를 같이 | 표 S1 · S2(±) · Fig. 5 · 6 — 충전 10 · 방전 10 SOC 점, 세 호 | ✅ **SOC 축** · 사이클 축 ❌(S15 는 `R` 만 · 적합 0) |
+| **2단계** (18 · 25호) | + 면적을 아는 대조군 | 조성 넷(S11 — `C` 없음) · 코팅 유무 쌍(표 S1 ↔ S2 — 화학 대조, 24호 줄) | ⚠ 화학 대조만 |
+| **3단계-a** (19호) | `Ea` | 25 °C | ❌ |
+| **3단계-b** (19 · 20호) | `C` 상한 | MF ≈8 µF(기하 ≈10 µF cm⁻² · LCO 실면적 `[재현]` 17–42 cm² 당 ≈0.2–0.4) ✓ · LF 2–16 mF(4–30 mF cm⁻², 이중층 ×80–600) ✗ · HF ±84 %(표 S1) | ⚠ MF 만 |
+| **4단계** (20호) | 시간 영역 | 펄스 · GITT 0(율 시험은 있으나 짝 EIS 0) | ❌ |
+| 52호 줄 | 누적 결손 ↔ Li 재고 | 장기 셀 Li 박 1:60 — 재고 2.96 mAh(양극 ×3.1) ↔ 결손 0.53 mAh(≈18 %) | ⚠ 검사력 약함(60호 M2 줄) |
+
+### ★★★ SOC 축 1단계 — MF 호의 두 구간 (`[도표]` + `[재현]`, 전제 `C ∝ 면적`)
+
+| 구간 | `R_MF` | `C_MF` | τ | 서명 |
+|---|---|---|---|---|
+| 첫 충전 3.296 → 3.352 V(EIS 1–6 단계 · 명목 SOC ≈10 → 60 % · LCO 2상 평탄) | 20.2 → 23.8 Ω | 9.44 → 7.83 µF | 191 → 186 µs | **면적형 감소 −17 %**(둘째 점부터도 τ 보존) |
+| 3.352 → 3.578 V(≈60 → 100 % · 육방–단사 포함) | 23.8 → 41.9 Ω | 7.83 → 8.08 µF | 186 → 339 µs | **저항형**(`C` 불변) |
+| 코팅 → 비코팅(표 S1 → S2, 첫 충전 뒤) | 28.15 → 127.61 Ω(MF1) | 7.05 → 10.4 ± 5.8 µF | — | 화학 변화에 `C` 불감(전제의 음성 쪽 정합) |
+
+⇒ 저자(p. 17840)와 10호가 한 호에 같이 매단 두 기구 — 코팅 균열의 "local contact loss" 와 LGPS 분해 — 중 **"끝에서 ×2"(뒤 구간)는 저항형**이다. 23호 SI(두 셀 · 다섯 구간 화학형)와 같은 방향([[assb-interphase-vs-contact-loss-attribution]]).
+앞 구간의 면적형 감소는 저자가 "geometrically consolidated"(접촉 증가 쪽 낱말)로 부른 자리다 — 서명과 낱말 방향이 반대다.
+
+### ⚠ LF 호 — 3단계-b 탈락, 그리고 23호와 방향이 반대
+
+방전 LF: `R` 33.6 → 801 Ω · `C` 1.86 → 6.53 mF(τ ×84). `C` 가 이중층의 ×80–600 이라 면적 서명을 읽을 수 없다 — `[해석]` 2상 합금의 화학 용량이나 확산 요소에 가깝다. 23호는 같은 배정(저주파 = 음극)에서
+방전 끝 `C` **붕괴**(≈×1/90)를 인쇄했고 이 편은 **증가**(×3.5)다. "In 동역학 장애" 는 곱의 어느 인자로도 옮겨지지 않는다.
+
+### ⚠ 율 스윕의 곱 — `d²/D`
+
+식 (1) 의 기울기는 `d²/D` 하나다. 이 편은 `D` 를 종설 값으로 모든 조성에 고정해 조성 차 전부를 `d` 에 줬고, 그 `d` 는 h ↔ s 혼동으로 ×60 작다(`[재현]` 교정 3–6 µm). 처방 표 경고 행.
+
+### ⚠ 이것이 곱을 푼 것은 아니다
+
+분류는 전제 `C ∝ 면적`(18 · 19호에서 깨지고 23호에서 한 호만 양성 대조) · CPE 환산(α 의 SOC 의존 미인쇄) · 셀 1 · 픽셀 판독 위다. 완전 고립 입자(호에서 빠짐)는 판정 밖이고, 저자는 곱을 말하지 않는다.
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -2009,3 +2053,4 @@ ESI ⅓ 규칙 두께 위의 `[재현]` 이다.
 - ★ **2026-09-23 (50호)**: **"16호의 SE 전도도 서사가 틀렸다" 고 주장하지 않는다** — 편 간 R·C 면적 서명은 **다른 SE 사이에서 면적당 이중층 용량이 같다는 약한 전제**와 Brug 근사 위의 우리 계산이다. 주장은 "그 비교가 곱을 가르지 않았다" 까지. 그리고 **수정 (ii)가 틀렸다고 하지 않는다** — 기하 논증은 합당하다. 주장은 "그 한 줄이 `j₀` 의 ×τ 를 정하고, 규약을 맞추지 않은 편 간 비교는 방향까지만 선다" 는 것이다. `dU/dc` 닻은 모형이 확산과 전하이동을 같은 `a_v` 로 통과시키는 **구조의 산물**이라 실접촉 θ 를 재는 채널이 아니다.
 - ★ **2026-09-28 (59호)**: **"CSP 는 접촉이 아니라 누설 문턱을 읽는다" 고 주장하지 않는다** — 가능성이다. 주장은 "CE 한 비로는 어느 몫이 압력에 반응했는지 정해지지 않는다(41 · 52 · 17호의 CE 오염 실측)" 까지이고, 59호는 CE–압력 짝 자료를 공개하지 않아 어느 쪽도 검사할 수 없다.
 - ★ **2026-09-28 (62호)**: **"압력 채널은 곱을 못 가른다" 를 정리로 주장하지 않는다** — Δx 를 멈추는 두 기구(고립 · 구조 열화)에 대한 우리 대수다. Δx 를 멈추지 않고 속도만 늦추는 접촉 손실(부분 피복)이라면 율에 따라 압력과 용량이 다르게 반응할 수 있다 — 검사하지 않았다. 그리고 **비 +14 % 를 `k_eff` 변화로 확정하지 않는다** — 부반응 몫 · 기저선 규약과 가르지 못했다는 것까지다.
+- ★ **2026-09-28 (63호)**: **SOC 축 1단계의 "면적형 · 저항형" 을 측정으로 주장하지 않는다** — 전제 `C ∝ 면적` · CPE 환산(α 미상) · 셀 1 · 픽셀 판독 위의 분류다. 그리고 **식 (1) 의 `d` 가 입자 크기라고 하지 않는다** — 교정값이 입자 척도와 같은 자릿수라는 것까지이고, 그 값도 `D` 가정 위의 곱이다.

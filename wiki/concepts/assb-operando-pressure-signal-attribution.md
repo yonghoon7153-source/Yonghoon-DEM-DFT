@@ -5,7 +5,7 @@ created: 2026-09-28
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md]
+sources: [raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -67,6 +67,8 @@ h(t) = h_base(t) +            Σ_e Δh_e(q)        # 높이 신호(딜라토미�
 | 9호 Huo 2025 | NCM811 ‖ 황화물 ‖ Li-Si | 예압 · 수압 면적 0 | 12 사이클 힘 시계열 — **단위 Kg** · MPa 환산 · 교정 0 | — | — |
 
 ⚠ 33호 재수록 값은 33호 digest 의 그림 판독이고 원전 미열람이다. 62호 LTO 자료 제공자(R. K.)와 [58] Koerver 2018 이 같은 측정 계열인지는 **미확인**이다.
+
+⚠ **2026-09-28 (63호) 정정 둘.** (i) 62호 LTO 셀의 "air-tight cell casing designed by our group27" 은 63호 SI Fig. S3 케이스다 — **나사 10 N·m 토크 · Al 프레임 · 하중계 없음**. 62호 Fig. 4 의 In ↔ LTO 비교는 hot-press 셀 ↔ 나사 케이스 셀의 비교였을 수 있고(62호가 LTO 셀 압력을 어떻게 쟀는지는 여전히 0), 함정 1 의 음극 몫 ≈90–95 %(`[재현]`, 같은 `k_eff` 가정)는 **조건부**다. (ii) 62호 ESI S3("stable electrochemical performance")의 셀은 63호 Fig. 9 셀 C 이고 63호 방법상 **Li 박 1:60 장기 셀**이다 — 62호 압력 셀과 다른 셀 · 다른 Li 재고.
 
 ## 이 위키에서의 적용
 

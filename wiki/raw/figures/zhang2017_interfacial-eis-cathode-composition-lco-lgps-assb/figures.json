@@ -1,0 +1,576 @@
+{
+ "slug": "zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-28",
+ "sources": [
+  "26ade823-25._Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+  "9a450b55-25._Sup_Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Scanning electron micrograph (SEM) in a cross-sectional view of the all-solid-state composite cathode and Li10GeP2S12 solid electrolyte. Thickness of the composite cathode is around 90 μm. (b) SEM top view of the SSB composite cathode (m(LiCoO2):m(LGPS) = 70:30). Some of the active material LiCoO2 is highlighted using red broken lines. (c) Photo taken from the composite cathode side. Homogeneous distribution of the composite cathode is achieved. (d) Photo taken from the indium anode side. Indium foil completely covers the SE pellet after cold pressing. (e) 3D reconstruction of the X-ray tomography of a cold-pressed all-solid-state battery, showing the thicknesses of the diﬀerent layers within the cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    261.1,
+    570.5,
+    463.6
+   ],
+   "w": 1052,
+   "h": 845,
+   "dpi": 300,
+   "src": "26ade823-25._Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.398
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. EDX mapping of composite cathodes of cells A−D representing diﬀerent cathode compositions. Co is shown in orange and S in blue. In cell A, most of the LiCoO2 particles are separated by the solid electrolyte. From cell B to D, more overlap between LiCoO2 particles can be observed, which creates more electronic-conducting paths but also extends the average Li+ diﬀusion length (see Figure 8). In cell D, the contact area between LiCoO2 and Li10GeP2S12 is limited, which restricts Li+ conductivity. Cells B and C show a much more balanced and homogeneous distribution of LiCoO2 and Li10GeP2S12, which is the basis for good electrochemical performance.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    162.7,
+    306.5,
+    419.9
+   ],
+   "w": 1051,
+   "h": 1073,
+   "dpi": 300,
+   "src": "26ade823-25._Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.393
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Nyquist plots for SSBs after the initial charge with LNTO-coated LiCoO2. Equivalent circuit R(RQ) (RQ) (RQ)Q is used for the ﬁtting (Q is a constant phase element, CPE, which represents an imperfect capacitor). Spectra were recorded in the frequency range from 7 MHz to 10 mHz. The subscripts HF, MF, and LF represent high-frequency, midfrequency, and low-frequency, respectively. Tail at low frequency could be attributed to a Warburg region, which is characterized by a ∼45° angle to the real axis. Warburg region can be assigned to the solid-state diﬀusion of Li+ inside LiCoO2 particles. Detailed ﬁtting parameters are listed in the Supporting Information. (b) Charge−discharge curves of SSB with LNTO-coated LiCoO2 (red curves). Charge−discharge curves of LiCoO2 in liquid electrolyte as comparison is also shown in gray. All-solid-state cells are cycled at 0.1 C (115 μA/cm2).",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    349.2
+   ],
+   "w": 1050,
+   "h": 1193,
+   "dpi": 300,
+   "src": "26ade823-25._Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Stacked Nyquist plots of SSB with LNTO-coated LiCoO2 as active material during (a) the charge and (b) the discharge process. Galvanostatic charge was carried out at 0.1 C, and EIS was carried out after 1 h charge and 30 min rest. Given potential values denote the potential after the galvanostatic process. In parentheses the OCV after 30 min rest and at which the impedance measurements were carried out is given. R(RQ) (RQ) (RQ)Q equivalent circuit is employed for the ﬁtting. While in the charge process the interfacial resistance between the solid electrolyte and the coating appears to increase, the major impedance increase in the discharge can be related to the interface between the electrolyte and the indium anode. As depicted in Figure 3, a Warburg impedance at very low frequency forms with the increase of SOC, indicating the solid-state Li+ diﬀusion in LiCoO2.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    430.8
+   ],
+   "w": 1052,
+   "h": 1532,
+   "dpi": 300,
+   "src": "26ade823-25._Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Summary of EIS results of SSB with LNTO-coated LiCoO2 as active material. Potential dependence of the resistance of SE (RHF) (including bulk and grain boundary contributions) of the interface between the cathode and the SE (RMF) and of interface between In and SE (RLF): (left) During charge and (right) discharge process.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    222.7
+   ],
+   "w": 1050,
+   "h": 666,
+   "dpi": 300,
+   "src": "26ade823-25._Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Summary of capacitance data of SSB with LNTO-coated LiCoO2 as active material at diﬀerent state-of-charge (left) and state- of-discharge (right). Due to the depressed semicircles shown in EIS, constant phase elements (CPEs) were applied for the equivalent circuit and used for the ﬁtting to the measured impedance data. Real capacities were derived from the CPEs (see the derivative processes and error analysis in the Supporting Information).",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    393.7,
+    570.5,
+    552.3
+   ],
+   "w": 1051,
+   "h": 662,
+   "dpi": 300,
+   "src": "26ade823-25._Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Discharge curves of SSBs with diﬀerent mass ratios ranging from 50 to 80 wt % of LiCoO2 in the composite cathodes corresponding to cells A−D were shown. All LiCoO2 used in the cells were coated with LNTO. Discharge capacities dependent on C rate are shown in a from right to left; C-rate increases from 0.1 to 10 C. (b) Comparison of discharge curves of cells A−D at diﬀerent C rates. Overpotential and maximum capacities change with discharging C rate and strongly depend on the ratio between the active material and the solid electrolyte. shown in Supporting Information Figure S9. These data in Figure 7 agree well with the fact that eﬀective electronic conductive paths between particles need to be created by the overlap of LiCoO2 particles. A well-performing SSB, without any additional additive, is obtained once the loading of LiCoO2 is larger than 50 wt % in the composite cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    301.0
+   ],
+   "w": 2151,
+   "h": 992,
+   "dpi": 300,
+   "src": "26ade823-25._Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.899
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Figure 8. (a) Rate capabilities of cells A−D plotted against current densities. (b) Average Li+ diﬀusion length calculated based on the plots in a. Li+",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    220.8
+   ],
+   "w": 2150,
+   "h": 658,
+   "dpi": 300,
+   "src": "26ade823-25._Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Long cycle performance of cells A−D at a current of 0.1 C. Capacity retention of 80% of the theoretical capacity (137 mAh/g) was achieved with cell C. For all cells, Coulombic eﬃciency is low for the ﬁrst cycle, due to formation of interfaces. Cell D shows relatively lower Coulombic eﬃciency due to the partial overcharge of LiCoO2 in the composite cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    250.3
+   ],
+   "w": 1050,
+   "h": 781,
+   "dpi": 300,
+   "src": "26ade823-25._Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Schematic representation of the structure of a typical SSB with a sulfide-based SE. In the zoom-in, the formation of a highly resistive layer between the uncoated oxide based cathode material and SE is depicted.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.9,
+    514.2,
+    291.4
+   ],
+   "w": 1793,
+   "h": 919,
+   "dpi": 300,
+   "src": "9a450b55-25._Sup_Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.611
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: XRD patterns of bare LiCoO2 and LNTO-coated LiCoO2. For the sample taken after coating, all reflections can be assigned to LiCoO2 with a layered structure. No reflections from the coating layer could be observed, indicating the amorphous character of the coating layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    336.9,
+    503.3,
+    611.6
+   ],
+   "w": 1747,
+   "h": 1146,
+   "dpi": 300,
+   "src": "9a450b55-25._Sup_Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Schematic representation of the cell casing designed and used in this work. a) Overview of the complete cell. The screw applies a torque of 10 Nm onto the current collectors. PEEK is used as insulator between the current collector and the screw, as well as the inner wall of the cell. b) Detailed view of the cell construction. The current collectors are made of stainless steel.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    72.5,
+    514.1,
+    274.3
+   ],
+   "w": 1793,
+   "h": 841,
+   "dpi": 300,
+   "src": "9a450b55-25._Sup_Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.824
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Nyquist plots for SSBs after the initial charge, with bare LiCoO2 (blue circles) and LNTO-coated LiCoO2 (red circles). The insert shows the magnified Nyquist plot of the cell with LNTO-coated LiCoO2. The equivalent circuit R(RQ)(RQ)(RQ)Q is used for the fitting (Q is a constant phase element, CPE, which represents an imperfect capacitor). The spectra were recorded in the frequency range from 7 MHz to 10 mHz. The subscripts HF, MF and LF represent high-frequency, mid-frequency and low-frequency, respectively. A tail at low frequency could be attributed to a Warburg region, which is characterized by a ~45° angle to the real axis. The Warburg region can be assigned to the solid-state diffusion of Li+ inside LiCoO2 particles. For the spectrum with bare LiCoO2, the equivalent circuit R(RQ)(RC)(RQ)Q is used for the fitting, because the semicircle is less depressed in this case. The ",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.3,
+    514.2,
+    273.5
+   ],
+   "w": 1793,
+   "h": 835,
+   "dpi": 300,
+   "src": "9a450b55-25._Sup_Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.832
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: a) Charge-discharge curves and b) cyclic voltammetry results of SSBs with uncoated LiCoO2 (blue curve) and with LNTO-coated LiCoO2 (red curves). The charge-discharge curves of LiCoO2 in liquid electrolyte as comparison is also shown in grey. S-4",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    542.6,
+    514.3,
+    674.8
+   ],
+   "w": 1793,
+   "h": 551,
+   "dpi": 300,
+   "src": "9a450b55-25._Sup_Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 6,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Impedance plots of SSB with bare LiCoO2 as active material during a). Charge and b). Discharge process. The same parameters were used as in the experiments with coated LiCoO2. An R(RQ)(RC)(RQ)Q equivalent circuit was used for fitting of the spectra.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    68.5,
+    514.2,
+    481.1
+   ],
+   "w": 1793,
+   "h": 1720,
+   "dpi": 300,
+   "src": "9a450b55-25._Sup_Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.865
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 7,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: Summary of EIS results of SSB with bare LiCoO2 as active material. Potential dependence of resistances of SE (RHF, of interface between cathode and SE (RMF), of interface between In and SE (RLF) and of a new semicircle between cathode and SE, called RMF2. left: During the charging process and right: During the discharging process.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    235.0,
+    514.1,
+    514.9
+   ],
+   "w": 1793,
+   "h": 1167,
+   "dpi": 300,
+   "src": "9a450b55-25._Sup_Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 8,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: Summary of capacitance data of SSB with bare LiCoO2 as active material at different state of charge (left) and state of discharge (right). As before, CPE is used for the fitting to impedance spectra. The relative large error bar shown here may be due to lowα values for some of the fitting results (α accounts for the deviation of CPE behavior to an ideal capacitor behavior, 0 < α < 1, α = 1 corresponds to an ideal capacitor).",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.6,
+    514.2,
+    306.4
+   ],
+   "w": 1793,
+   "h": 979,
+   "dpi": 300,
+   "src": "9a450b55-25._Sup_Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 9,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: Electrochemical characteristics of ASSB with LNTO-coated LiCoO2: LGPS = 40 : 60 wt% at T = 25 °C and fixed with a screw with a 10 Nm torque, as shown in the setup in the",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.2,
+    514.2,
+    457.7
+   ],
+   "w": 1793,
+   "h": 1612,
+   "dpi": 300,
+   "src": "9a450b55-25._Sup_Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 10,
+   "file": "fig_S10.png",
+   "caption": "Figure S10: a) Nyquist plot of a fresh ASSB with LiCoO2 : LGPS = 70 : 30 wt%. Before cycling, only a line starting from 20 ohm is observed. The insert b) shows the amplified graph in the high frequency range.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    102.1,
+    514.2,
+    338.1
+   ],
+   "w": 1793,
+   "h": 984,
+   "dpi": 300,
+   "src": "9a450b55-25._Sup_Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 10,
+   "file": "fig_S11.png",
+   "caption": "Figure S11: Nyquist plots of cells A - D, which are taken after first charge in the frequency of 7 MHz - 10 mHz. All the cell shows the same resistance R for SE at high frequencies. Two semicircles representing cathode/SE and In/SE interfaces in the medium and low frequency are observed.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    487.4,
+    514.2,
+    595.7
+   ],
+   "w": 1793,
+   "h": 453,
+   "dpi": 300,
+   "src": "9a450b55-25._Sup_Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 11,
+   "file": "fig_S12.png",
+   "caption": "Figure S12: A Photo of the in situ cell casing used for the X-ray tomography.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.4,
+    437.5,
+    322.2
+   ],
+   "w": 1473,
+   "h": 1046,
+   "dpi": 300,
+   "src": "9a450b55-25._Sup_Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.522
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 11,
+   "file": "fig_S13.png",
+   "caption": "Figure S13: Comparison of XPS spectra of pure LGPS (first row) and 100-times cycled LGPS (second row), in terms of S 2p signals. A significant peak broadening towards higher binding energy is observed after galvanostatic cycling, indicating LGPS in the composite cathode is S-11",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    346.3,
+    514.3,
+    686.0
+   ],
+   "w": 1793,
+   "h": 1416,
+   "dpi": 300,
+   "src": "9a450b55-25._Sup_Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.968
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 12,
+   "file": "fig_S14.png",
+   "caption": "Figure S14: EIS data of symmetric cell: a). composite cathode/LGPS/composite cathode. b). In/LGPS/In. The composite cathode composes of LiCoO2 : LGPS = 70 : 30 wt%.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.7,
+    513.9,
+    299.8
+   ],
+   "w": 1792,
+   "h": 951,
+   "dpi": 300,
+   "src": "9a450b55-25._Sup_Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 12,
+   "file": "fig_S15.png",
+   "caption": "Figure S15: EIS spectra of the model SSB after 100th charge. The increase in total impedance indicate unstable interfaces inside the SSB.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    344.4,
+    514.0,
+    547.7
+   ],
+   "w": 1792,
+   "h": 847,
+   "dpi": 300,
+   "src": "9a450b55-25._Sup_Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 13,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Resistance and capacitance data used for the fitting of EIS spectrum of SSB with coated cathode material shown in Supplementary Figure S4.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    104.5,
+    582.0,
+    781.4
+   ],
+   "w": 2071,
+   "h": 2821,
+   "dpi": 300,
+   "src": "9a450b55-25._Sup_Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.948
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 14,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Resistance and capacitance data used for the fitting of EIS spectrum of SSB with bare cathode material shown in Supplementary Figure S4.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    72.7,
+    582.0,
+    781.4
+   ],
+   "w": 2071,
+   "h": 2954,
+   "dpi": 300,
+   "src": "9a450b55-25._Sup_Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": 0.961
+  },
+  {
+   "key": "fS11m",
+   "kind": "figure",
+   "label": "S11",
+   "page": 10,
+   "file": "fig_S11_manual_p10.png",
+   "caption": "Figure S11: Nyquist plots of cells A - D, which are taken after first charge in the frequency of 7 MHz - 10 mHz. (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    140.0,
+    425.0,
+    455.0,
+    592.0
+   ],
+   "w": 1313,
+   "h": 697,
+   "dpi": 300,
+   "src": "9a450b55-25._Sup_Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 벡터 그림이라 자동 크롭(fig_S11.png)이 bbox y0 487.4 에서 시작해 세로축 위쪽(≈33–55 Ω)과 범례 네 줄(mLCO : mLGPS = 50:50 · 60:40 · 70:30 · 80:20)이 빠짐 — 드로잉 합집합 bbox(175.5, 430.7, 445.7, 567.8) + 축 표지로 다시 렌더"
+  },
+  {
+   "key": "fTOCm",
+   "kind": "figure",
+   "label": "TOC",
+   "page": 1,
+   "file": "fig_TOC_manual_p1.png",
+   "caption": "Abstract (TOC) graphic — X-ray tomography 3D rendering (left) and capacity / Coulombic efficiency vs cycle number 0–100 with cell schematic inset (right). (캡션 없음 · 수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    132.2,
+    327.2,
+    492.7,
+    451.7
+   ],
+   "w": 1503,
+   "h": 520,
+   "dpi": 300,
+   "src": "26ade823-25._Interfacial_processes_and_influence_of_composite_cathode_microstructure_controlling_the_performance_of_all-solid-state_lithium_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 캡션이 없는 초록 그래픽이라 자동 추출 대상이 아님(1 쪽 래스터 1502×519). 오른쪽 사이클 그림은 62호 ESI Fig. S3(용량 0–200 · CE 86–100 %)와 같은 축 · 같은 곡선 — 62호 [27] 동일 편 판정의 근거 중 하나"
+  }
+ ]
+}

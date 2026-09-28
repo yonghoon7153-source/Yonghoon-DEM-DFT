@@ -2,10 +2,10 @@
 title: "ASSB 양극의 계면층(CEI) 대 접촉 손실 — 두 비-LAM 기구를 무엇으로 가르고, 문헌은 어떻게 배정해 왔나"
 description: "In sulfide ASSB composite cathodes two non-LAM mechanisms, oxidative interphase growth and chemo-mechanical contact loss, raise the cathode interface resistance and cut capacity at the same time (first charge); their source paper shows each one's existence with a dedicated channel (XPS, SEM) and assigns shares by time window, while its own SI resistance and capacitance traces let the resistance increase be classified as chemical, not area-type"
 created: 2026-09-23
-updated: 2026-09-23
+updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md]
+sources: [raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -69,13 +69,14 @@ evidenceScope: multi-source-primary
 | **1호 Bielefeld 2019** | 원전을 "contact loss **throughout** the composite cathode" 로 강화 인용 | — (모델) |
 | **24호 Stavola 2023** | 이봉은 **계면층**(`[인쇄]` "decomposition products … a higher i₀ … less bifurcation"), 수송 저하는 **접촉**(`[인쇄]` "rearrangement of particle contacts")을 기구로 대고 **이름은 `τ`** 로 — 세 번째 이름 **"굴곡도 진화"** | ⚠ **코팅 쌍**(화학 대조, 계보 첫) — 이봉의 코팅 의존분은 화학 형; 첫 사이클 비가역은 코팅으로 ≈14 % 만 줄어듦(`[도표]`, n = 1) |
 | **53호 Ren · Danner 2023** (⚠ Perspective, **산화물** LLZO) | **시간 배정을 뒤집어 인용**: `[인쇄]` 첫 사이클 = "electrochemical oxidation of the interface"(인용 [56a,103]) · 이후 = "fatigue failure of the CAM/SE interface and loss of electrochemically active surface area"(**인용 0**) — 두 영역 문장의 [103] 이 23호. 같은 편 §5.2(황화물)는 23호를 원문대로("irreversible resistance increase in the first cycle"). 33호(2025)에 앞선 **첫 역전 표본**(발행 2022) | ⚠ 공정 대조만 재인용 — FAST/SPS 치밀 셀 "cracking … ruled out" → 전기화학([105]); 근거 채널 · n 0 |
+| **63호 Zhang W. 2017 *ACS AMI*** (23호의 방법 원전 · 같은 연구실 LCO\|LGPS\|In · 62호 [27]) | 코팅 균열 → "local contact loss" · LGPS 산화 · 부산물 누적 — **셋 다 "may"**, 한 호(`R_MF`)에 병치(10호가 "동시 귀속" 의 원전으로 인용); 결론은 `[인쇄]` "the volume change during deintercalation increases the interfacial resistance irreversibly" 하나만 남김 | ✅ `R`·`C` **SOC 궤적**(Fig. 5 · 6, 충전 10 점) — 우리가 갈라 **앞 절반(2상 평탄) 면적형 −17 % · 뒤 절반(고전위 — 저자의 "×2") 화학형**; 코팅 쌍(표 S1 ↔ S2)도 화학 변화에 `C` 불감. ⚠ 셀 1 · α 미인쇄 |
 
 ⇒ `[해석]` **원전이 "expected · suspect · suggests" 로 쓴 접촉 손실이 인용을 거치며 평서문이 되고, 원전 자신의 SI 는 EIS 창 안에서
 그 면적 변화를 보지 못한다.** 계면층 쪽은 XPS 라는 화학 증거가 있고 SI 궤적도 그쪽이다.
 
 ## 무엇을 재면 가를 수 있나 (처방)
 
-1. **`R` 과 `C` 를 상태축(OCV·사이클) 위 연속으로 같이 인쇄** — 16호 처방 1단계. 23호가 계보 첫 연속 사례.
+1. **`R` 과 `C` 를 상태축(OCV·사이클) 위 연속으로 같이 인쇄** — 16호 처방 1단계. 23호가 계보 첫 연속 사례. ★ **2026-09-28 두 번째 = 63호** — 한 충전 안 10 점에서 구간별(면적형 ↔ 화학형) 판정이 갈린다 · 조건: CPE α 를 SOC 별로 인쇄(63호는 안 했다).
 2. **무전류 기계 이완 대조를 같은 셀에서** — XPS 로 화학 불변을 확인하고 `R·C` 가 보존되는지 본다(전제의 양성 대조).
 3. **첫 충전 뒤 · 첫 방전 뒤 SEM(또는 단층촬영)을 같은 조건으로** — 틈이 재리튬화에서 닫히는지(23호 G7 공백).
 4. **격자 `V(x)` 곡선을 같은 지면에** — `ΔR` 급등 전위창이 격자 수축 구간과 겹치는지 떨어지는지(시점 판별).
@@ -90,6 +91,8 @@ evidenceScope: multi-source-primary
 - **손실 예산의 ≳85 % 를 접촉 손실로 돌리지 않는다** — `η(i)`(0.25 C 에서 이미 66 mAh g⁻¹)와 상대극 고갈(무 Li 상대극, 방전 끝 `C_anode`
   두 자릿수 붕괴)이 같은 칸에 있다.
 - 근거는 **실험 다섯 편**이고 그중 `R`·`C` 입력이 있는 것은 **두 편(18·23호)** 뿐이다. 24호는 `R`·`C` 대신 **코팅 쌍(화학 대조)** 을 준다 — 그 쌍은 n = 1 씩이다.
+  → **2026-09-28 (63호)**: 실험 **여섯 편** · `R`·`C` 입력 **세 편(18 · 23 · 63호)** — 63호는 코팅 쌍도 준다(n = 1).
+- **63호 셀에서 접촉 손실이 없었다고 주장하지 않는다** (2026-09-28) — 앞 절반의 면적형 감소는 오히려 면적 쪽 서명이다; 주장은 "뒤 절반의 ×2 는 면적형이 아니다(전제 위)" 까지다.
 
 ## 관련
 
