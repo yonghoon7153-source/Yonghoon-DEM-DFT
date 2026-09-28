@@ -219,13 +219,30 @@ def _selftest():
 
 
 def main():
+    global ND_BEARING
+    import argparse
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     from matplotlib.patches import Patch
     from house_style import INK, MUT, apply_axes
 
-    d, pts = load()
+    #: 2026-09-28 — x = 0.02 화면 전환 (개정문 cathode_cei_x002_amendment_2026_09_28).
+    #:   기본값은 종전 x = 0.20 판 그대로다. x = 0.02 판은 레코드·Nd 조성 라벨·출력 폴더를 준다:
+    #:   --rec db/properties/cei_p_host_ladder_x002_2026_09_28.json
+    #:   --nd_bearing nd_li_002,ndo_li_002,nd_p_002,nd_p_002_asused --out <폴더>
+    #:   ⛔ 레코드에 **Nd 라벨이 하나도 안 보이면 멈춘다** — 라벨을 틀리게 주면 Nd 막대가 조용히 0 이 된다.
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--rec", default=str(REC))
+    ap.add_argument("--nd_bearing", default=",".join(sorted(ND_BEARING)))
+    ap.add_argument("--out", default=str(OUT))
+    a = ap.parse_args()
+    ND_BEARING = set(x for x in a.nd_bearing.split(",") if x)
+    out_dir = Path(a.out); out_dir.mkdir(parents=True, exist_ok=True)
+
+    d, pts = load(a.rec)
+    if not any(q["nd_side"] for q in pts):
+        raise SystemExit(f"⛔ 레코드에 Nd 라벨 {sorted(ND_BEARING)} 이 하나도 없다 — 라벨을 확인한다")
     dE, src = exchange_map()
     have = [q for q in pts if q["dE_exchange"] is not None]
     miss = sorted({q["formula"] for q in pts if q["dE_exchange"] is None})
@@ -311,10 +328,10 @@ def main():
                frameon=False, fontsize=7.6, loc="lower right")
 
     fig.tight_layout()
-    png = OUT / "cei_p_host_ladder.png"
+    png = out_dir / "cei_p_host_ladder.png"
     fig.savefig(png, dpi=300); plt.close(fig)
 
-    csv_path = OUT / "cei_p_host_ladder_fig.csv"
+    csv_path = out_dir / "cei_p_host_ladder_fig.csv"
     with open(csv_path, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["panel", "voltage_V", "electrolyte", "cathode", "p_host_formula",

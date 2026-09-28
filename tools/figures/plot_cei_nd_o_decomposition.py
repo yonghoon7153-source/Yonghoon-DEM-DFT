@@ -38,8 +38,56 @@ import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from tools.figures.house_style import INK, MUT, ELEM, apply_axes
 
-OUT = Path("/tmp/claude-0/cei_fig"); OUT.mkdir(exist_ok=True)
-D = json.load(open("db/properties/cei_interface_V_2026_09_16.json"))
+# ── 계열 선택 (2026-09-28 · x = 0.02 화면 전환 · 개정문 cathode_cei_x002_amendment_2026_09_28) ──
+#   x020 (기본값) 은 종전 그림을 **그대로** 다시 만든다 (재현용 · 09-21 판과 CSV 가 바이트 같아야 한다).
+#   x002 는 1저자 목표 농도다 — Li 자리(ndo_li_002 …)와 P 자리(1저자 조성 nd_p_002_asused)를 같이 싣는다.
+#   ⛔ 출력 폴더를 가른다 — 두 계열이 같은 파일명을 덮으면 어느 판이 어느 판인지 모른다.
+#   ⛔ 이 도구가 못 하는 것: x002 의 (c) 패널은 결과 JSON 의 최소 꺾임 반응식에서 **직접** 센다
+#     (x020 은 cei_nd_fate 기록을 읽는다 — 그 기록이 같은 최소 꺾임에서 나왔지만 경로가 둘이다).
+import argparse as _argparse
+_ap = _argparse.ArgumentParser(description="CEI 그림·CSV 생성기 (index.html 은 안 쓴다)")
+_ap.add_argument("--series", choices=("x020", "x002"), default="x020",
+                 help="x020 = 종전 Li 자리 x=0.20 (재현용) · x002 = 1저자 목표 농도 x=0.02")
+_ap.add_argument("--iface", help="계면 결과 JSON 경로를 덮어쓴다 (시험용 — 기본은 계열 표의 경로)")
+_ap.add_argument("--dop_glob", help="도펀트 파일 glob 을 덮어쓴다 (시험용)")
+_ap.add_argument("--out", help="출력 폴더를 덮어쓴다 (시험용 — 실데이터 폴더를 안 더럽힌다)")
+_A = _ap.parse_args()
+SERIES = {
+    "x020": {"iface": "db/properties/cei_interface_V_2026_09_16.json",
+             "nd": "nd_only", "o": "o_only_03", "both": "modelc_nd", "p_nd": None, "p_both": None,
+             "fate": "db/properties/cei_nd_fate_2026_09_17.json", "fate_label": "nd_only",
+             "nd_leg": "Nd only (Nd$^{3+}$$\\leftrightarrow$3Li$^+$)",
+             "o_leg": "O only (O 0.3, S$\\rightarrow$O)",
+             "both_leg": "LPSCl$_{1.6}$@Nd$_2$O$_3$ (measured)",
+             "band": 0.010, "band_leg": "pre-registered band  $\\pm$0.010",
+             "elecs": ["comp1", "modelc", "lpsocl", "o_only_03", "nd_only", "modelc_nd"],
+             "nd_e": {"nd_only", "modelc_nd"}, "non_e": {"comp1", "modelc", "lpsocl", "o_only_03"},
+             "dop_glob": "db/properties/dopant_iface_*_2026_09_16.json", "dop_suffix": "",
+             "dop_title": "{m} only",
+             "out": Path("/tmp/claude-0/cei_fig")},
+    "x002": {"iface": "db/properties/cei_interface_V_x002_2026_09_28.json",
+             "nd": "nd_li_002", "o": "o_only_003", "both": "ndo_li_002",
+             "p_nd": "nd_p_002", "p_both": "nd_p_002_asused",
+             "fate": None, "fate_label": "nd_p_002_asused",
+             "nd_leg": "Nd only, Li site (Nd$^{3+}$$\\leftrightarrow$3Li$^+$)",
+             "o_leg": "O only (O 0.03, S$\\rightarrow$O)",
+             "both_leg": "Nd + O, Li site (measured)",
+             "band": 0.0010, "band_leg": "pre-registered band  $\\pm$0.0010 (0.010 scaled to x)",
+             "elecs": ["comp1", "modelc", "lpsocl", "o_only_003", "ndo_li_002", "nd_p_002_asused"],
+             "nd_e": {"nd_li_002", "ndo_li_002", "nd_p_002", "nd_p_002_asused"},
+             "non_e": {"comp1", "modelc", "lpsocl", "o_only_003"},
+             "dop_glob": "db/properties/dopant_iface_*_x002_2026_09_28.json", "dop_suffix": "_x002",
+             "dop_title": "{m}, x = 0.02",
+             "out": Path("/tmp/claude-0/cei_fig/x002")},
+}
+SER = dict(SERIES[_A.series])
+for _k in ("iface", "dop_glob"):
+    if getattr(_A, _k):
+        SER[_k] = getattr(_A, _k)
+if _A.out:
+    SER["out"] = Path(_A.out)
+OUT = SER["out"]; OUT.mkdir(parents=True, exist_ok=True)
+D = json.load(open(SER["iface"]))
 VS = [2.5, 3.0, 3.5, 4.0, 4.3, 4.5]
 CATS = list(D["results"])
 
@@ -51,9 +99,37 @@ def delta(key, V):
             out.append(r[key] - r["modelc"])
     return out
 
-dn = {V: delta("nd_only", V) for V in VS}
-do = {V: delta("o_only_03", V) for V in VS}
-dt = {V: delta("modelc_nd", V) for V in VS}
+def delta_common(keys, V):
+    """x002 전용 — base 와 keys 가 **모두** 값이 있고 끝점이 아닌 양극에서만 Δ 를 낸다.
+
+    ⚠ x020 의 `delta()` 는 끝점을 안 거른다(종전 그림 재현을 위해 그대로 둔다). x002 는
+      판정 코드(interface_reactivity_v2.x002_verdicts)와 **같은 칸**을 써야 그림과 판정이 안 갈린다.
+    반환: {key: [Δ …]} — 목록 순서가 양극 순서로 맞춰져 있다 (zip 해도 된다).
+    """
+    out = {k: [] for k in keys}
+    for c in CATS:
+        r = D["results"][c]["by_voltage"][f"{V:.2f}"]
+        dg = (D["results"][c].get("endpoint_degenerate") or {}).get(f"{V:.2f}") or {}
+        if all(r.get(k) is not None and dg.get(k) is False for k in ("modelc", *keys)):
+            for k in keys:
+                out[k].append(r[k] - r["modelc"])
+    return out
+
+if SER["p_nd"]:
+    _gl = {V: delta_common((SER["nd"], SER["o"], SER["both"]), V) for V in VS}
+    _gp = {V: delta_common((SER["p_nd"], SER["o"], SER["p_both"]), V) for V in VS}
+    dn = {V: _gl[V][SER["nd"]] for V in VS}
+    do = {V: _gl[V][SER["o"]] for V in VS}
+    dt = {V: _gl[V][SER["both"]] for V in VS}
+    #: x002 — P 자리(1저자 조성) 두 줄을 같은 그림에 싣는다. x020 에는 없다(그때는 P 자리를 안 돌렸다).
+    pn = {V: _gp[V][SER["p_nd"]] for V in VS}
+    po = {V: _gp[V][SER["o"]] for V in VS}
+    pt = {V: _gp[V][SER["p_both"]] for V in VS}
+    pres = {V: [a + b - t for a, b, t in zip(pn[V], po[V], pt[V])] for V in VS}
+else:
+    dn = {V: delta(SER["nd"], V) for V in VS}
+    do = {V: delta(SER["o"], V) for V in VS}
+    dt = {V: delta(SER["both"], V) for V in VS}
 res = {V: [a + b - t for a, b, t in zip(dn[V], do[V], dt[V])] for V in VS}
 # ⚠ house ELEM["Nd"] 는 O(#be123c)와 같은 붉은 계열이라 한 그림에서 구분이 안 된다.
 #   Nd 는 CLAUDE.md 원소 팔레트에 없으므로 여기서 **보라**로 고정한다 (P #7c3aed 는 이 그림에 없다).
@@ -67,22 +143,39 @@ ND, OX, BOTH = "#6d28d9", ELEM.get("O", "#be123c"), INK
 #   ⛔ 짝을 맞춘다: (a) 의 Δ 는 `nd_only` 가지다. 산물도 **nd_only 만** 쓴다 —
 #     modelc_nd 를 섞으면 다른 계의 양을 다른 계의 Δ 에 붙인다
 #     (2026-09-17 실측: 섞으면 ×1.80, 짝을 맞추면 ×1.42. 결론이 갈린다).
-_FATE = Path("db/properties/cei_nd_fate_2026_09_17.json")
-if not _FATE.is_file():
-    raise SystemExit(f"⛔ {_FATE} 가 없다 — interface_reactivity_v2.py --dopant_fate 먼저")
-_fj = json.load(open(_FATE, encoding="utf-8"))
 namt = {V: [] for V in VS}
 nphase = {V: {} for V in VS}
-for _r in _fj["rows"]:
-    if _r["electrolyte"] != "nd_only" or _r["voltage_V"] not in namt:
-        continue
-    namt[_r["voltage_V"]].append(sum(p.get("n_dopant", 0) or 0 for p in _r["phases"]))
-    for _p in _r["phases"]:
-        nphase[_r["voltage_V"]][_p["formula"]] = \
-            nphase[_r["voltage_V"]].get(_p["formula"], 0) + 1
+if SER["fate"]:
+    _FATE = Path(SER["fate"])
+    if not _FATE.is_file():
+        raise SystemExit(f"⛔ {_FATE} 가 없다 — interface_reactivity_v2.py --dopant_fate 먼저")
+    _fj = json.load(open(_FATE, encoding="utf-8"))
+    for _r in _fj["rows"]:
+        if _r["electrolyte"] != SER["fate_label"] or _r["voltage_V"] not in namt:
+            continue
+        namt[_r["voltage_V"]].append(sum(p.get("n_dopant", 0) or 0 for p in _r["phases"]))
+        for _p in _r["phases"]:
+            nphase[_r["voltage_V"]][_p["formula"]] = \
+                nphase[_r["voltage_V"]].get(_p["formula"], 0) + 1
+else:
+    #: x002 — 결과 JSON 의 **최소 꺾임 반응식**에서 바로 센다 (끝점 칸은 뺀다 · 판정 코드와 같은 칸).
+    #:   n_dopant = 계수 × 그 상의 Nd 수 (fate 기록의 같은 이름 열과 같은 정의).
+    from tools.oxidation.interface_reactivity_v2 import _rxn_side_terms
+    for c in CATS:
+        for V in VS:
+            _k = f"{V:.2f}"
+            if (D["results"][c].get("endpoint_degenerate") or {}).get(_k, {}).get(SER["fate_label"]) is not False:
+                continue
+            _rx = (D["results"][c]["reactions"].get(_k) or {}).get(SER["fate_label"]) or ""
+            if "->" not in _rx:
+                continue
+            _nd = [(n, f, k) for n, f, k in _rxn_side_terms(_rx.split("->", 1)[1]) if k.get("Nd", 0) > 0]
+            namt[V].append(sum(n * k["Nd"] for n, f, k in _nd))
+            for _n, _f, _kk in _nd:
+                nphase[V][_f] = nphase[V].get(_f, 0) + 1
 _bad = [V for V in VS if not namt[V]]
 if _bad:
-    raise SystemExit(f"⛔ nd_only 산물이 없는 전압 {_bad} — (c)(d) 를 그리지 않는다")
+    raise SystemExit(f"⛔ {SER['fate_label']} 산물이 없는 전압 {_bad} — (c)(d) 를 그리지 않는다")
 
 #: (d) 세로축 순서 = **P per Nd** (축합도). 비인산염을 아래, 축합될수록 위.
 #:   ⛔ 결과를 보고 고른 순서가 아니다 — 조성에서 바로 나오는 값이다.
@@ -106,15 +199,25 @@ if _miss:
 #   그 비율(×1.42 · ×6.58)은 CSV 의 rel_* 열에 **자료로만** 남는다
 #   (산문에서 "hull 이 만드는 Nd 산물의 양은 ×1.42 뿐" 을 인용할 수 있게).
 fig, (a1, a2, a4) = plt.subplots(1, 3, figsize=(15.6, 4.7))
-for s, col, lab, mk in ((dn, ND, "Nd only (Nd$^{3+}$$\\leftrightarrow$3Li$^+$)", "o"),
-                        (do, OX, "O only (O 0.3, S$\\rightarrow$O)", "s"),
-                        (dt, BOTH, "LPSCl$_{1.6}$@Nd$_2$O$_3$ (measured)", "^")):
+if SER["p_nd"]:
+    #: x002 — 이 캠페인이 '유의' 로 부르는 폭(±0.010)을 회색으로 깐다. 그 안의 곡선은 크기를 인용하지 않는다.
+    a1.axhspan(-0.010, 0.010, color="#e5e7eb", zorder=0, lw=0)
+    a1.text(0.03, 0.06, "grey band $\\pm$0.010: not resolved by this method",
+            transform=a1.transAxes, fontsize=8, color=MUT, ha="left")
+for s, col, lab, mk in ((dn, ND, SER["nd_leg"], "o"),
+                        (do, OX, SER["o_leg"], "s"),
+                        (dt, BOTH, SER["both_leg"], "^")):
     m = [st.mean(s[V]) for V in VS]
     lo = [min(s[V]) for V in VS]; hi = [max(s[V]) for V in VS]
     a1.fill_between(VS, lo, hi, color=col, alpha=0.13, lw=0)
     a1.plot(VS, m, marker=mk, color=col, lw=2.0, ms=6, label=lab)
 a1.plot(VS, [st.mean(dn[V]) + st.mean(do[V]) for V in VS], ls=":", lw=1.8,
         color=MUT, label="Nd only $+$ O only (sum of parts)")
+if SER["p_nd"]:
+    for s, col, lab, mk in ((pn, ND, "Nd only, P site", "o"),
+                            (pt, BOTH, "Nd + O, P site (target)", "^")):
+        a1.plot(VS, [st.mean(s[V]) for V in VS], marker=mk, color=col, lw=1.6, ms=5,
+                ls="--", mfc="white", label=lab)
 apply_axes(a1, "Voltage (V vs Li/Li$^+$)",
            "$\\Delta$ reaction energy vs LPSCl$_{1.6}$ (eV/atom)")
 a1.axhline(0, color=MUT, lw=0.8, ls="--")
@@ -123,15 +226,21 @@ a1.text(0.03, 0.62, "higher = less reactive", transform=a1.transAxes,
         fontsize=8.5, color=MUT, style="italic")
 
 rm = [st.mean(res[V]) for V in VS]
-a2.axhspan(-0.010, 0.010, color="#fef9c3", zorder=0)
-a2.plot(VS, rm, marker="D", color=INK, lw=2.0, ms=5)
+_bd = SER["band"]
+a2.axhspan(-_bd, _bd, color="#fef9c3", zorder=0)
+a2.plot(VS, rm, marker="D", color=INK, lw=2.0, ms=5,
+        label=("Li site" if SER["p_nd"] else None))
 a2.fill_between(VS, [min(res[V]) for V in VS], [max(res[V]) for V in VS],
                 color=INK, alpha=0.12, lw=0)
+if SER["p_nd"]:
+    a2.plot(VS, [st.mean(pres[V]) for V in VS], marker="D", color=INK, lw=1.6, ms=5,
+            ls="--", mfc="white", label="P site")
+    a2.legend(frameon=False, fontsize=8.5, loc="lower right")
 a2.axhline(0, color=MUT, lw=0.8, ls="--")
 apply_axes(a2, "Voltage (V vs Li/Li$^+$)", "Additivity residual (eV/atom)")
-a2.text(0.04, 0.90, "pre-registered band  $\\pm$0.010", transform=a2.transAxes,
+a2.text(0.04, 0.90, SER["band_leg"], transform=a2.transAxes,
         fontsize=8.5, color="#92400e")
-a2.set_ylim(-0.014, 0.014)
+a2.set_ylim(-1.4 * _bd, 1.4 * _bd)
 
 # ── (옛 c) 상대 성장 패널 — 2026-09-21 제거. 위 주석 참조. 자료는 CSV rel_* 열. ──
 
@@ -160,14 +269,38 @@ a4.text(-0.44, len(_ORD) - 1.5, "more condensed", fontsize=8, color=MUT,
 
 #: 제목에 해석을 싣지 않는다 (2026-09-21). 옛 "(a) Doping helps more as voltage rises" 는
 #:   철회된 읽기(기울기 = Li 장부)였다. 제목은 축이 무엇인지까지만 말한다.
+_ctitle = ("(c)  Phase the Nd ends up in, by voltage" if not SER["p_nd"] else
+           "(c)  Phase the Nd ends up in (target, P site, x = 0.02)")
 for _ax, _t in ((a1, "(a)  $\\Delta$ reaction energy vs voltage (Li inventory not matched)"),
                 (a2, "(b)  Additivity residual, Nd + O"),
-                (a4, "(c)  Phase the Nd ends up in, by voltage")):
+                (a4, _ctitle)):
     _ax.set_title(_t, fontsize=10, color=INK, pad=8, loc="left")
 
 fig.tight_layout(); fig.savefig(OUT / "cei_nd_o_decomposition.png", dpi=300); plt.close(fig)
 
-with open(OUT / "cei_nd_o_decomposition.csv", "w", newline="") as f:
+if SER["p_nd"]:
+    #: x002 — 열 이름에 **조성 라벨을 박는다** (종전 열 이름 'nd_only' 를 다른 조성에 재사용하면
+    #:   Origin 에서 두 판이 같은 양처럼 보인다). 칸 = 끝점 아닌 공통 유효칸 (판정 코드와 같다).
+    with open(OUT / "cei_nd_o_decomposition.csv", "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["voltage_V",
+                    f"delta_{SER['nd']}_mean_eV_per_atom", f"delta_{SER['o']}_mean_eV_per_atom",
+                    f"delta_{SER['both']}_mean_eV_per_atom", "li_site_sum_of_parts_mean",
+                    "li_site_residual_mean", "li_site_n_cathodes",
+                    f"delta_{SER['p_nd']}_mean_eV_per_atom", f"delta_{SER['p_both']}_mean_eV_per_atom",
+                    "p_site_residual_mean", "p_site_n_cathodes",
+                    f"nd_product_amount_mean_{SER['fate_label']}",
+                    f"nd_product_phases_{SER['fate_label']}"])
+        _m = lambda xs: (round(st.mean(xs), 6) if xs else None)
+        for V in VS:
+            w.writerow([V, _m(dn[V]), _m(do[V]), _m(dt[V]),
+                        (round(st.mean(dn[V]) + st.mean(do[V]), 6) if dn[V] else None),
+                        _m(res[V]), len(dn[V]), _m(pn[V]), _m(pt[V]), _m(pres[V]), len(pn[V]),
+                        _m(namt[V]),
+                        " | ".join(f"{f}:{k}" for f, k in
+                                   sorted(nphase[V].items(), key=lambda kv: -kv[1]))])
+else:
+  with open(OUT / "cei_nd_o_decomposition.csv", "w", newline="") as f:
     w = csv.writer(f)
     w.writerow(["voltage_V", "delta_nd_only_mean_eV_per_atom", "delta_nd_only_min", "delta_nd_only_max",
                 "delta_o_only_mean_eV_per_atom", "delta_o_only_min", "delta_o_only_max",
@@ -211,12 +344,21 @@ def prods(r):
 fig, axs = plt.subplots(1, 4, figsize=(13.0, 3.5), sharey=True)
 COL = {"comp1": "#9ca3af", "modelc": "#6b7280", "lpsocl": "#be123c",
        "o_only_03": "#f472b6", "nd_only": "#a78bfa", "modelc_nd": ND}
+if SER["p_nd"]:
+    #: x002 — 같은 여섯 자리에 x=0.02 조성을 넣고, 1저자 조성(P 자리)을 일곱째로 더한다.
+    COL = {"comp1": "#9ca3af", "modelc": "#6b7280", "lpsocl": "#be123c",
+           "o_only_003": "#f472b6", "nd_li_002": "#a78bfa", "ndo_li_002": ND,
+           "nd_p_002_asused": "#0f766e"}
 #: ⚠ **표시명만** 여기서 바꾼다 — 키(comp1·modelc·modelc_nd)는 CSV·JSON 열 이름이고
 #:   기계 경로라 안 건드린다 (1저자 2026-09-16: "modelc 라 하지 말고 lpscl1.6 으로,
 #:   공치환은 lpscl1.6@nd2o3 로 — 같이 보는 문서니까").
 LAB = {"comp1": "LPSCl", "modelc": "LPSCl$_{1.6}$", "lpsocl": "LPSOCl$_{1.6}$",
        "o_only_03": "O 0.3 only", "nd_only": "Nd only",
-       "modelc_nd": "LPSCl$_{1.6}$@Nd$_2$O$_3$"}
+       "modelc_nd": "LPSCl$_{1.6}$@Nd$_2$O$_3$",
+       # x002 (2026-09-28) — 표시명에 **자리와 x** 를 박는다 (0.20 판과 한 화면에 같이 나오지 않게)
+       "o_only_003": "O 0.03 only", "nd_li_002": "Nd only, Li site (x = 0.02)",
+       "ndo_li_002": "Nd + O, Li site (x = 0.02)",
+       "nd_p_002_asused": "LPSCl$_{1.6}$@Nd$_2$O$_3$, P site (x = 0.02, target)"}
 #: ⛔ LAB 은 **matplotlib mathtext** 다. HTML 에 그대로 쓰면 `LPSCl$_{1.6}$` 가 날것으로
 #:   찍힌다 — 2026-09-16 에 §4 표·본문이 그렇게 나갔다(오류 없음·화면만 깨짐).
 #:   렌더러가 둘이면 문자열도 둘이라야 한다. 파일 끝 assert 가 HTML 로 새는 `$` 를 잡는다.
@@ -235,12 +377,13 @@ fig.tight_layout(); fig.savefig(OUT / "cei_reaction_energy_by_cathode.png", dpi=
 
 with open(OUT / "cei_reaction_energy_by_cathode.csv", "w", newline="") as f:
     w3 = csv.writer(f)
-    w3.writerow(["cathode", "voltage_V"] + list(COL) + ["min_kink_reaction_modelc_nd"])
+    _rxk = SER["p_both"] or "modelc_nd"   # x002 은 1저자 조성의 반응식을 싣는다
+    w3.writerow(["cathode", "voltage_V"] + list(COL) + [f"min_kink_reaction_{_rxk}"])
     for c in CATS:
         for V in VS:
             r = D["results"][c]["by_voltage"][f"{V:.2f}"]
             w3.writerow([c, V] + [r.get(e) for e in COL]
-                        + [D["results"][c]["reactions"][f"{V:.2f}"].get("modelc_nd")])
+                        + [D["results"][c]["reactions"][f"{V:.2f}"].get(_rxk)])
 # ══ 2026-09-16 추가 — §D(생성에너지·균형반응) · §B kinks(x-스캔) ══════════════
 FJ = Path("db/properties/cei_formation_2026_09_16.json")
 
@@ -387,7 +530,7 @@ if FJ.exists():
 # ── Fig 5: x-스캔 (Richards/Ong 식 — LiPOF Fig. 1b–f 형태) ─────────────────
 #   ⚠ 전압은 원소가 아니라 **순차량**이라 원소 팔레트를 안 쓴다. 명도 단조 앰버→적갈 램프.
 VRAMP = ["#fcd34d", "#fbbf24", "#f59e0b", "#ea580c", "#c2410c", "#7f1d1d"]
-ELECS = ["comp1", "modelc", "lpsocl", "o_only_03", "nd_only", "modelc_nd"]
+ELECS = SER["elecs"]
 CAT_X = "NMC811" if "NMC811" in CATS else CATS[0]
 have_kinks = bool(D["results"][CAT_X].get("kinks"))
 
@@ -787,7 +930,7 @@ than to the element palette used elsewhere.</figcaption>
 
 <div class="card answer">
 <p style="margin:0"><strong>가장 깨끗한 신호</strong> — Nd 인산염이 나오는 kink 비율이
-<strong>이분법</strong>이다. Nd 없는 넷은 <strong>0 %</strong>(전 조건 {sum(nt for e,m,a,ns,nt in srow if e in ("comp1","modelc","lpsocl","o_only_03")):,} kink 중 <strong>0 개</strong>),
+<strong>이분법</strong>이다. Nd 없는 넷은 <strong>0 %</strong>(전 조건 {sum(nt for e,m,a,ns,nt in srow if e in SER["non_e"]):,} kink 중 <strong>0 개</strong>),
 Nd 있는 둘은 <strong>{min(100*ns/nt for e,m,a,ns,nt in srow if ns):.0f}–{max(100*ns/nt for e,m,a,ns,nt in srow):.0f} %</strong>. 최소점 하나만 보면 안 보이던 것이다 —
 Nd 인산염은 특정 혼합비에서만 나오는 게 아니라 <strong>x 축 거의 전체에 걸쳐</strong> 나온다.</p>
 </div>
@@ -808,7 +951,7 @@ if sec:
 #     카드와 화면이 같은 자료를 보게 한다 (둘이 갈라지면 화면이 이긴다 — 사람은 화면을
 #     인용하니까. CLAUDE.md §화면·claim 결속 규율).
 TM = ("Co", "Ni", "Mn")
-ND_E, NON_E = {"nd_only", "modelc_nd"}, {"comp1", "modelc", "lpsocl", "o_only_03"}
+ND_E, NON_E = SER["nd_e"], SER["non_e"]
 
 
 def _has_tm(f):
@@ -816,9 +959,15 @@ def _has_tm(f):
 
 
 _seen = {}
+#: ⚠ 2026-09-28 — 판별종은 **이 계열의 조성만**으로 센다 (ND_E ∪ NON_E). x002 결과 JSON 에는
+#:   x=0.20 조성·Li 맞춤 대조가 같이 들어 있어서, 안 거르면 판별 규칙이 다른 계열의 산물을 섞는다.
+#:   (x020 의 09-16 JSON 은 딱 그 여섯이라 이 거름은 x020 출력을 안 바꾼다 — 바이트 대조로 확인.)
+_ELECSET = ND_E | NON_E
 for _c in CATS:
     for _V, _row in D["results"][_c]["kinks"].items():
         for _e, _ks in _row.items():
+            if _e not in _ELECSET:
+                continue
             for _k in _ks:
                 for _p in prods(_k["reaction"]):
                     if _p == "Li":
@@ -832,7 +981,7 @@ _minset = set()
 for _c in CATS:
     for _V, _row in D["results"][_c]["reactions"].items():
         for _e, _rx in _row.items():
-            if _rx:
+            if _rx and _e in _ELECSET:
                 _minset |= {p for p in prods(_rx) if p != "Li"}
 
 _all = set(_seen)
@@ -959,7 +1108,7 @@ sec.append(f"""
 
 <p>{len(_done)} 종은 이미 있다 (<span class="mono">{', '.join(_done)}</span>, frozen-4f,
 2026-08-12 마감). ⇒ <strong>신규는 {len(_target) - len(_done)} 종</strong>.
-전압 6 구간 전부에 나오는 것은 <strong>{_target[0]}</strong> 하나뿐이라, 그것을
+전압 6 구간 전부에 나오는 것은 <strong>{(_target[0] if _target else "없음")}</strong> 하나뿐이라, 그것을
 <strong>파일럿</strong>으로 먼저 완주하고 실측 벽시계로 나머지를 추정한다.</p>
 
 <div class="card warn">
@@ -1056,7 +1205,7 @@ print("  sections_new.html (§5 포함)", (OUT / "sections_new.html").stat().st_
 #     M-인산염이 나오느냐**다. 곡선을 겹쳐 그려 "차이가 없다" 를 보이고, 표식으로
 #     "그런데 산물은 다르다" 를 보인다.
 import glob as _glob, os as _os
-_DF = sorted(_glob.glob("db/properties/dopant_iface_*_2026_09_16.json"))
+_DF = sorted(_glob.glob(SER["dop_glob"]))
 if _DF:
     _MS = [_os.path.basename(f).split("_")[2] for f in _DF]
     _D = {m: json.load(open(f))["results"] for m, f in zip(_MS, _DF)}
@@ -1074,7 +1223,7 @@ if _DF:
 
     fig, axs = plt.subplots(2, 4, figsize=(15.0, 7.2), sharex=True, sharey=True)
     for ax, m in zip(axs.ravel(), _ORDER + ["base"]):
-        key = m
+        key = m if m == "base" else m + SER["dop_suffix"]   # x002 파일은 라벨이 "Al_x002" 다
         for V, col in zip(_VS, _RAMP):
             row = _D[_ORDER[0] if m == "base" else m][_CAT]["kinks"][V]
             ks = sorted(row.get(key) or [], key=lambda k: k["x_atomic_frac"])
@@ -1093,7 +1242,7 @@ if _DF:
                             mec=ND, mew=1.1, zorder=4)
         apply_axes(ax, None, None)
         ax.axhline(0, color=MUT, lw=0.8, ls="--")
-        ax.set_title("undoped (base)" if m == "base" else f"{m} only",
+        ax.set_title("undoped (base)" if m == "base" else SER["dop_title"].format(m=m),
                      fontsize=10, color=(MUT if m == "base" else INK))
     for ax in axs[1]:
         ax.set_xlabel("$x$  (atomic fraction of electrolyte)", fontsize=10, color=INK)
@@ -1120,7 +1269,7 @@ if _DF:
         for m in _ORDER:
             for c in _D[m]:
                 for V in _VS:
-                    for k in sorted(_D[m][c]["kinks"][V].get(m) or [],
+                    for k in sorted(_D[m][c]["kinks"][V].get(m + SER["dop_suffix"]) or [],
                                     key=lambda k: k["x_atomic_frac"]):
                         hit = any({m, "P", "O"} <= _els(p) for p in _plist(k["reaction"]))
                         w7.writerow([c, m, V, k["x_atomic_frac"],
