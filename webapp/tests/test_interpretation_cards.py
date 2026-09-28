@@ -1530,6 +1530,36 @@ def test_x002_kink_and_dopant_axes_match_the_record(client):
         assert abs(vals[5] - v["닫힌계_0V_LiCoO2_eV_per_atom"]) < 6e-6, (M, vals, v)
 
 
+def test_x002_g4_closure_matches_the_ledger(client):
+    """⛔음성 — G4 마감 상태가 원장 · 결과 기록 · 화면에서 같다 (1저자 2026-09-28 'ㅇㅇ 그렇게 해줘').
+
+    G4 는 적힌 그대로 위반 9 이고, 원인(반응식 계수 반올림)이 규명돼 1저자가 그대로 닫았다.
+    잡는 것 셋: ① 원장은 닫혔는데 화면에 '확인 대기' 가 남는 것 ② 화면이 G4 를 '통과' 로
+    격상하는 것 ③ 결과 기록에서 '위반 9' 이력이 지워지는 것.
+    """
+    did = "D-2026-09-28-cei-x002-result"
+    ds = {d["id"]: d for d in json.loads(DECISIONS.read_text(encoding="utf-8"))["decisions"]}
+    assert did in ds, f"원장에 {did} 가 없다 — 시험이 헛것을 재고 있다"
+    d = ds[did]
+    assert Path(d["record"]).name == X002_RES.name, "결정이 x = 0.02 결과 기록을 안 가리킨다"
+    res = json.loads(X002_RES.read_text("utf-8"))
+    g4 = res["1_게이트"]["G4_상한"]
+    assert len(g4["위반_칸"]) == 9 and g4["적힌_그대로"].startswith("위반 9"), "위반 이력이 지워졌다"
+    closed = d["decision_state"] == "active"
+    assert (res["status"] == "ratified") == closed, (res["status"], d["decision_state"])
+    assert g4["상태"].startswith("닫힘") == closed, g4["상태"][:40]
+    h = _report_html(client)
+    ctx = [h[max(0, m.start() - 300): m.end() + 500] for m in re.finditer(r"G4", h)]
+    x002 = [c for c in ctx if "적힌 그대로" in c and "위반" in c]
+    assert len(x002) >= 2, f"화면의 x = 0.02 G4 문구가 {len(x002)} 곳뿐이다 (§2 주 · 꼬리말)"
+    for c in x002:
+        assert "원인 규명" in c, "G4 문구에 원인 규명이 없다"
+        if closed:
+            assert "확인 대기" not in c, "원장은 닫혔는데 화면이 아직 '확인 대기' 다"
+            assert did in c, "G4 문구가 마감 결정을 안 가리킨다"
+    assert not re.search(r"G4\s*(?:는|은|가|이|:)?\s*[‘'\"]?통과", h), "화면이 G4 를 '통과' 로 격상했다"
+
+
 
 def test_prot_counts_dies_when_the_grid_is_broken():
     """⛔음성 — 시험 쪽 전농도통과 판정도 격자가 깨지면 **세지 않고 죽는다** (2차 리뷰 ①②).
