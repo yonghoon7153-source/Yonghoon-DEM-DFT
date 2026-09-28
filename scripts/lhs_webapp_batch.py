@@ -21,6 +21,9 @@
   • 네 파일의 sha256 = **수확 JSON 의 `raw.*.sha256`** 과 같아야 한다 — 다르면 그 케이스를 거부한다
     (웹앱 열과 수확기 열이 **같은 침대 · 같은 프레임**이어야 한 행에 둘 수 있다)
   • type_map = 덱 판독 (`type_map_resolve`, 업로드 입구와 같은 게이트) = 수확 JSON 의 type_map
+  • ★ J20-a ⓑ (1저자 비준 09-28 밤): atom · contact 파일이 **한 프레임**이고 contact 에 **같은 쌍이 두 행** 없어야 한다 —
+    웹앱 파서는 파일 안 모든 프레임을 이어 붙이고 (`parse_liggghts`) CN · 접촉 수는 행마다 +1 이다 (DESC-06 · 합성 2 프레임에서
+    CN 정확히 2 배).  점검 결과 (`contact_scan` · `atom_frames`) 는 status.json 에 남는다 (δ ≤ 0 행 수 포함 — 거부는 안 한다)
   • 스테이징 폴더에는 그 네 파일 링크와 meta.json **만** 둔다 — `run_pipeline` 은 폴더를 glob 한다
     (옛 파일이 남으면 다른 프레임이 섞인다: SELF-47)
 
@@ -59,6 +62,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'scripts'))
 import lhs_harvest_batch as HB          # noqa: E402  (코호트 · 경로 치환 · 같은 step 메시 · sha — 새로 만들지 않는다)
+import lhs_descriptor_harvest as H      # noqa: E402  (J20-a ⓑ — 접촉 덤프 점검 · 프레임 수: 감사기 `lhs_contact_audit` 와 같은 함수)
 
 SCHEMA = 'lhs_webapp_batch/v1'
 DEF_HARVEST = ROOT / 'docs' / 'data' / 'lhs_descriptors_20260925'
@@ -125,6 +129,18 @@ def stage_case(case: str, row: dict, hj: dict, uploads: Path, root_from: str, ro
         if got != want:
             raise Refuse(f'{k} sha {got[:12]}… ≠ 수확 JSON {want[:12]}… — 다른 프레임/파일')
         sha[k] = got
+    #  J20-a ⓑ — 웹앱 경로는 행을 거르지 않는다: 한 프레임 · 쌍마다 한 행이 아니면 CN · 접촉 수 · 면적 합이 부푼다 (DESC-06)
+    try:
+        scan = H.scan_contact_dump(str(src['contact']))
+    except H.BedRefusal as e:
+        raise Refuse(f'contact 덤프 점검 실패 — {e}')
+    n_af = H.count_blocks(str(src['atom']), 'ITEM: TIMESTEP')
+    if scan['n_frames'] != 1:
+        raise Refuse(f"contact 프레임 {scan['n_frames']} ≠ 1 — 웹앱 파서가 전부 이어 붙여 CN · 접촉 수가 부푼다 (DESC-06)")
+    if n_af != 1:
+        raise Refuse(f'atom 프레임 {n_af} ≠ 1 — 웹앱 atoms.csv 에 같은 id 가 여러 번 들어간다 (DESC-06)')
+    if scan['n_dup_rows'] or scan['n_self_pairs']:
+        raise Refuse(f"contact 중복 행 {scan['n_dup_rows']} · 자기쌍 {scan['n_self_pairs']} — 웹앱은 행마다 CN 을 +1 한다")
     ts = hj.get('timestep')
     if ts is None:
         raise Refuse('수확 JSON 에 timestep 이 없다')
@@ -137,7 +153,7 @@ def stage_case(case: str, row: dict, hj: dict, uploads: Path, root_from: str, ro
     for k, nm in names.items():
         (d / nm).symlink_to(Path(src[k]).resolve())
     return dict(case_dir=d, src={k: str(v) for k, v in src.items()}, sha=sha, mesh_pick=pick,
-                names=names)
+                names=names, contact_scan=scan, atom_frames=int(n_af))
 
 
 def resolve_mode(case_dir: Path, names: dict, hj: dict, A, TMR) -> tuple:
@@ -231,7 +247,8 @@ def run_batch(args, deps=None) -> int:
                       for s in (out.get('log') or []) if isinstance(s, dict)]
             rec.update(status=out.get('status') or ('done' if out.get('success') else 'failed'),
                        failed_stages=out.get('failed_stages') or [], stages=stages,
-                       mode=mode, type_map=tm, sha=st['sha'], mesh_pick=st['mesh_pick'])
+                       mode=mode, type_map=tm, sha=st['sha'], mesh_pick=st['mesh_pick'],
+                       contact_scan=st['contact_scan'], atom_frames=st['atom_frames'])
             if (rd / 'full_metrics.json').exists():
                 rows[case] = EM.row_for(rd)
                 rows[case]['case'] = case
@@ -271,7 +288,9 @@ def _selftest() -> int:
         raw = tmp / 'raw' / 'lhs00_900' / 'post'
         raw.mkdir(parents=True)
         (raw / 'atom_100.liggghts').write_text('ITEM: TIMESTEP\n100\nITEM: ATOMS id type\n1 1\n2 2\n3 3\n')
-        (raw / 'contact_100.liggghts').write_text('ITEM: TIMESTEP\n100\n')
+        _CHD = 'ITEM: ENTRIES c_cpl[7] c_cpl[8] c_cpl[9] c_cpl[22] c_cpl[23]\n'
+        C_OK = 'ITEM: TIMESTEP\n100\nITEM: NUMBER OF ENTRIES\n2\n' + _CHD + '1 2 0 0.1 0.01\n2 3 1 0.1 0.02\n'
+        (raw / 'contact_100.liggghts').write_text(C_OK)
         (raw / 'mesh_100.stl').write_text('solid p\nendsolid p\n')
         (raw / 'mesh_90.stl').write_text('solid old\nendsolid old\n')
         deck = tmp / 'raw' / 'lhs00_900' / 'input_lhs00_900.liggghts'
@@ -366,7 +385,7 @@ def _selftest() -> int:
             r3 = json.loads((out / 'status.json').read_text(encoding='utf-8'))['cases']['lhs00_900']
             chk('③ ★ contact sha ≠ 수확 JSON → REFUSED · run_pipeline 호출 없음',
                 r3['status'] == 'REFUSED' and 'contact sha' in r3.get('why', '') and len(calls) == 2)
-            (raw / 'contact_100.liggghts').write_text('ITEM: TIMESTEP\n100\n')
+            (raw / 'contact_100.liggghts').write_text(C_OK)
             # ④ type_map 불일치 — 거부
             FakeTMR.m = {1: 'AM_S', 2: 'AM_P', 3: 'SE'}
             run_batch(_parse(base + ['--force']), deps)
@@ -397,6 +416,39 @@ def _selftest() -> int:
             chk('⑦ 파이프라인 예외 → 그 케이스 failed · 배치 rc 1 (조용히 초록이 아니다)',
                 r7['status'] == 'failed' and 'solver died' in r7.get('why', '') and rc7 == 1)
             FakeA.run_pipeline = _orig
+            # ⑧–⑩ J20-a ⓑ (1저자 비준 09-28 밤) — 웹앱 파서는 파일 안 모든 프레임을 이어 붙이고 행을 거르지 않는다 (DESC-06).
+            #   sha 는 수확 JSON 과 **같게** 맞춰 두고 (다른 관문이 먼저 막지 않게) 새 관문만 시험한다.
+            def _reseal():
+                (hdir / 'lhs00_900.json').write_text(json.dumps(_hj()), encoding='utf-8')
+            n_calls = len(calls)
+            (raw / 'contact_100.liggghts').write_text(C_OK + 'ITEM: TIMESTEP\n101\nITEM: NUMBER OF ENTRIES\n1\n' + _CHD + '1 2 0 0.1 0.01\n')
+            _reseal()
+            run_batch(_parse(base + ['--force']), deps)
+            r8 = json.loads((out / 'status.json').read_text(encoding='utf-8'))['cases']['lhs00_900']
+            chk('⑧ ★ contact 파일에 프레임 2 개 → REFUSED (웹앱 파서가 이어 붙여 CN 2 배) · 실행 없음',
+                r8['status'] == 'REFUSED' and '프레임' in r8.get('why', '') and len(calls) == n_calls)
+            (raw / 'contact_100.liggghts').write_text(C_OK + '3 2 1 0.1 0.02\n')
+            _reseal()
+            run_batch(_parse(base + ['--force']), deps)
+            r9 = json.loads((out / 'status.json').read_text(encoding='utf-8'))['cases']['lhs00_900']
+            chk('⑨ ★ 같은 쌍이 두 행 (2–3 · 3–2) → REFUSED (웹앱은 행마다 CN +1) · 실행 없음',
+                r9['status'] == 'REFUSED' and '중복' in r9.get('why', '') and len(calls) == n_calls)
+            (raw / 'contact_100.liggghts').write_text(C_OK)
+            (raw / 'atom_100.liggghts').write_text('ITEM: TIMESTEP\n90\nITEM: ATOMS id type\n1 1\n2 2\n3 3\n'
+                                                   'ITEM: TIMESTEP\n100\nITEM: ATOMS id type\n1 1\n2 2\n3 3\n')
+            _reseal()
+            run_batch(_parse(base + ['--force']), deps)
+            r10 = json.loads((out / 'status.json').read_text(encoding='utf-8'))['cases']['lhs00_900']
+            chk('⑩ ★ atom 파일에 프레임 2 개 → REFUSED · 실행 없음',
+                r10['status'] == 'REFUSED' and 'atom 프레임' in r10.get('why', '') and len(calls) == n_calls)
+            (raw / 'atom_100.liggghts').write_text('ITEM: TIMESTEP\n100\nITEM: ATOMS id type\n1 1\n2 2\n3 3\n')
+            _reseal()
+            run_batch(_parse(base + ['--force']), deps)
+            r11 = json.loads((out / 'status.json').read_text(encoding='utf-8'))['cases']['lhs00_900']
+            chk('⑪ 깨끗한 한 프레임으로 되돌리면 done · 접촉 점검 기록 (contact_scan: 프레임 1 · 중복 0 · δ≤0 0 · 주기 1)',
+                r11['status'] == 'done' and (r11.get('contact_scan') or {}).get('n_frames') == 1
+                and (r11.get('contact_scan') or {}).get('n_dup_rows') == 0
+                and (r11.get('contact_scan') or {}).get('n_periodic_flag') == 1 and r11.get('atom_frames') == 1)
         finally:
             for k, v in env_keep.items():
                 if v is None:

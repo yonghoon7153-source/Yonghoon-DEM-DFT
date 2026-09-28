@@ -140,6 +140,10 @@ N_TAU_PAIRS = 200
 TAU_LO, TAU_HI = 1.0, 20.0
 #: 접촉 덤프의 면적·겹침 열 (`parse_liggghts.py:47` 과 같은 규약).
 COL_AREA, COL_D1, COL_D2 = 'c_cpl[22]', 'c_cpl[7]', 'c_cpl[8]'
+#: J20-a (1저자 비준 09-28 밤 "권고하는걸로") — 접촉 덤프 점검용 두 열: 주기 경계 플래그 · 겹침 δ (`parse_liggghts.py` 열 사전과 같은 번호).
+COL_PERIODIC, COL_DELTA = 'c_cpl[9]', 'c_cpl[23]'
+#: J20-a ⓓ — 상별 벽 · 플래튼 **접촉 입자 비율**.  닿음 = 구가 그 면에 겹치거나 맞닿는다 (sim 단위 · 허용오차 없음).
+WALL_TOUCH_RULE = 'floor: z - r <= z_floor · plate: z + r >= plate_z (sim units, no tolerance)'
 #: L1-04 — 이 열이 **무엇인지** 매 행에 박는다 (별칭의 `hertz` 는 물려받은 오해다).
 AREA_CHANNEL = ('dem_geometric_c_cpl22 — LIGGGHTS 기하 교차 원판 pi(r d - d^2/4); '
                 'Hertz 탄성 pi R* d 가 **아니다** (동일 반경 비 = 2 - d/(2r))')
@@ -187,11 +191,12 @@ def last_timestep(path):
     return ts
 
 
-def read_contact_dump(path):
-    """**마지막 프레임만**의 (id1, id2, contact_area).
+def read_contact_dump(path, extra_cols=None):
+    """**마지막 프레임만**의 (id1, id2, contact_area) (+ `extra_cols` 를 주면 그 열들의 dict 를 다섯째로).
 
     ⚠ `parse_liggghts.parse_contact_file` 은 모든 프레임 행을 **이어 붙인다**
     (`DESC-06`).  여기서는 마지막 `ITEM: ENTRIES` 블록만 읽는다.
+    `extra_cols` 의 열이 헤더에 없으면 그 값은 None (거부하지 않는다 — 점검 도구가 "열 없음" 으로 적는다).
     """
     with open(path, 'r', encoding='utf-8', errors='replace') as fh:
         lines = fh.read().splitlines()
@@ -206,7 +211,9 @@ def read_contact_dump(path):
                 f'{path}: 접촉 열 {col} 이 없다 (있는 열: {headers}).  '
                 'DEM contact-area 규약을 모르는 채로 피복률을 내지 않는다')
     ia, i1, i2 = headers.index(COL_AREA), headers.index(COL_D1), headers.index(COL_D2)
+    ix = {c: (headers.index(c) if c in headers else None) for c in (extra_cols or ())}
     id1, id2, area = [], [], []
+    xv = {c: [] for c in ix}
     i += 1
     while i < len(lines) and not lines[i].startswith('ITEM:'):
         v = lines[i].split()
@@ -214,9 +221,52 @@ def read_contact_dump(path):
             id1.append(int(float(v[i1])))
             id2.append(int(float(v[i2])))
             area.append(float(v[ia]))
+            for c, k in ix.items():
+                if k is not None:
+                    xv[c].append(float(v[k]))
         i += 1
-    return (np.asarray(id1, dtype=np.int64), np.asarray(id2, dtype=np.int64),
+    base = (np.asarray(id1, dtype=np.int64), np.asarray(id2, dtype=np.int64),
             np.asarray(area, dtype=np.float64), tuple(headers))
+    if extra_cols is None:
+        return base
+    return base + ({c: (np.asarray(xv[c], dtype=np.float64) if ix[c] is not None else None) for c in ix},)
+
+
+def count_blocks(path, marker):
+    """파일 안 `marker` 로 시작하는 줄 수 — 'ITEM: ENTRIES' = 접촉 프레임 수 · 'ITEM: TIMESTEP' = 원자 프레임 수."""
+    n = 0
+    with open(path, 'r', encoding='utf-8', errors='replace') as fh:
+        for ln in fh:
+            if ln.startswith(marker):
+                n += 1
+    return n
+
+
+def scan_contact_dump(path):
+    """J20-a ⓐ·ⓑ — 접촉 덤프가 "한 프레임 · 쌍마다 한 행" 인지 센다 (수확 값에는 영향 없음 — 수확은 마지막 블록만 읽는다).
+
+    웹앱 경로 (`parse_liggghts.parse_contact_file` → `dem_analysis_core.calc_*_cn` · `calc_interface_area`) 는 **모든 프레임 행을
+    이어 붙이고 행마다 두 입자에 +1** 한다 — 거르지 않는다.  합성 2 프레임 파일에서 SE-SE CN 이 정확히 2 배 (DESC-06 실증).
+    ⇒ `n_frames ≠ 1` 이나 `n_dup_rows > 0` 이면 웹앱 CN · 접촉 수 · 면적 합이 부푼다.  δ ≤ 0 행도 접촉으로 센다 (있는지 기록).
+    """
+    n_frames = count_blocks(path, 'ITEM: ENTRIES')
+    if n_frames == 0:
+        raise BedRefusal(f'{path}: `ITEM: ENTRIES` 가 없다 — LIGGGHTS local 덤프가 아니다')
+    id1, id2, _area, headers, ex = read_contact_dump(path, extra_cols=(COL_DELTA, COL_PERIODIC))
+    n = int(id1.size)
+    a, b = np.minimum(id1, id2), np.maximum(id1, id2)
+    if n:
+        _u, cnt = np.unique(np.stack([a, b], axis=1), axis=0, return_counts=True)
+        n_unique, n_dup_pairs, n_dup_rows = int(_u.shape[0]), int((cnt > 1).sum()), int((cnt - 1).sum())
+    else:
+        n_unique = n_dup_pairs = n_dup_rows = 0
+    dl, pf = ex[COL_DELTA], ex[COL_PERIODIC]
+    return dict(n_frames=int(n_frames), n_rows_last=n, n_unique_pairs=n_unique,
+                n_dup_pairs=n_dup_pairs, n_dup_rows=n_dup_rows, n_self_pairs=int((id1 == id2).sum()),
+                n_delta_nonpos=(None if dl is None else int((dl <= 0.0).sum())),
+                delta_min=(None if dl is None or not dl.size else float(dl.min())),
+                n_periodic_flag=(None if pf is None else int((pf != 0.0).sum())),
+                has_delta_col=dl is not None, has_periodic_col=pf is not None)
 
 
 PLATE_SPAN_TOL = 1e-7      # sim (= 0.1 nm 실물).  평판이면 꼭짓점 z 가 전부 같다 (실측: heckel 메시 6 꼭짓점 동일)
@@ -364,6 +414,31 @@ def _wall_side(labels, r, z, dist, vsum):
                 v_out_by_phase={l: float(v_out[np.asarray([str(q) == l for q in labels])].sum()) for l in labs},
                 v_out_sim=float(v_out.sum()), v_out_pct=100.0 * float(v_out.sum()) / vsum,
                 deepest=deepest)
+
+
+def wall_touch_fractions(labels, z, r, plate_z, z_floor=Z_FLOOR):
+    """J20-a ⓓ (1저자 비준 09-28 밤) — 상별 바닥 벽 · 플래튼 **접촉 입자 비율** (0–1).
+
+    CN (`dem_analysis_core.calc_se_se_cn` · `calc_am_isolation_risk` · `calc_am_am_cn`) 은 벽 · 플래튼 접촉을 세지 않고
+    그 상 **전 입자**로 나눈다 ⇒ 벽에 닿은 입자는 그쪽 이웃이 없어 CN 이 낮다 (정의 주의이지 결함 아님).  이 비율이 그 몫을
+    가르는 설명 변수다 — 벽 인접 입자를 뺀 CN 은 AM_P 가 두께 2–10 개인 얇은 침대에서 남는 입자가 거의 없어 택하지 않았다.
+    규칙 `WALL_TOUCH_RULE`.  3 상 침대는 AM_P · AM_S 에 더해 합친 'AM' 도 낸다 (am_se_cn_mean 과 같은 모집단).
+    상이 없으면 키가 없다 (= N/A · 0 이 아니다, DESC-05).
+    """
+    labels = np.asarray([str(q) for q in labels], dtype=object)
+    z, r = np.asarray(z, dtype=np.float64), np.asarray(r, dtype=np.float64)
+    fl, pl = (z - r) <= z_floor, (z + r) >= float(plate_z)
+    groups = {ph: labels == ph for ph in sorted(set(labels))}
+    if 'AM_P' in groups and 'AM_S' in groups:
+        groups['AM'] = groups['AM_P'] | groups['AM_S']
+    out = {}
+    for ph, m in groups.items():
+        k = int(m.sum())
+        if k == 0:
+            continue
+        out[ph] = dict(n=k, n_floor=int(fl[m].sum()), n_plate=int(pl[m].sum()),
+                       floor=float(fl[m].mean()), plate=float(pl[m].mean()), either=float((fl[m] | pl[m]).mean()))
+    return out
 
 
 def volumes_and_phi(atoms, labels, box_lo, box_hi, plate_z):
@@ -709,6 +784,10 @@ def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None
 
     ids = _atom_ids(atom_path)
     c1, c2, carea, cheaders = read_contact_dump(contact_path)
+    #  J20-a — 새 키만 더한다 (옛 키 · status 는 그대로: run_lhs_fill_wsl.sh [2] 의 옛 수확 대조가 선다)
+    wall_touch = wall_touch_fractions(labels, atoms['z'], atoms['radius'], plate_z)
+    contact_scan = scan_contact_dump(contact_path)
+    n_atom_frames = count_blocks(atom_path, 'ITEM: TIMESTEP')
     cov = coverage_hertz(ids, labels, atoms['radius'], c1, c2, carea)
     #  plate_z 는 **진단 전용**으로만 넘긴다 (LHS-08) — 보고 τ 의 규약은 안 바뀐다.
     tau = tortuosity_se(atoms, labels, box_lo, box_hi, n_pairs=n_pairs,
@@ -803,6 +882,8 @@ def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None
             n_free_surface_invalid=cov['n_free_surface_invalid'],
             counts=cov['counts'], contact_headers=cheaders),
         V_box_sim=phi['V_box_sim'], raw=raw, area_channel=AREA_CHANNEL,
+        wall_touch=wall_touch, wall_touch_rule=WALL_TOUCH_RULE,
+        contact_scan=contact_scan, n_atom_frames=int(n_atom_frames),
         contract='codex_verdict_lhs_descriptors_20260913 §7 (1~6)')
 
 
@@ -1374,6 +1455,41 @@ def selftest():
             'tortuosity_dijkstra_SE_wall' in r14 and isinstance(r14.get('tau_wall_detail'), dict)
             and 'tortuosity_wall' in (r14.get('status') or {})
             and 'tortuosity_dijkstra_SE' in r14 and 'tau_detail' in r14)
+
+        # ── ⑱ J20-a (1저자 비준 09-28 밤 "권고하는걸로") — 접촉 덤프 점검 · 상별 벽 접촉 비율 (새 키만 · 옛 키 그대로) ──
+        _hd18 = [COL_D1, COL_D2, COL_PERIODIC, COL_AREA, COL_DELTA]
+        _rows18 = [(1, 2, 1, 0.1, 0.2), (2, 3, 0, 0.1, 0.1), (3, 2, 0, 0.1, 0.1), (4, 5, 0, 0.0, -0.3)]
+        _c18 = _contact_file(tmp, _rows18, name='contact_180.liggghts', ts=180, headers=_hd18)
+        with open(_c18, 'a') as _fh:                              # 같은 파일에 둘째 프레임 (LIGGGHTS 고정 파일명 덤프 모양)
+            _fh.write('ITEM: TIMESTEP\n181\nITEM: NUMBER OF ENTRIES\n1\nITEM: ENTRIES ' + ' '.join(_hd18) + '\n1 2 1 0.1 0.2\n')
+        _s18 = scan_contact_dump(_c18)
+        chk('⑱ scan: 프레임 2 · 마지막 블록만 행으로 (1 행) — 수확의 읽기와 같다',
+            _s18['n_frames'] == 2 and _s18['n_rows_last'] == 1)
+        _c18b = _contact_file(tmp, _rows18, name='contact_181.liggghts', ts=181, headers=_hd18)
+        _s18b = scan_contact_dump(_c18b)
+        chk('⑱ scan: 중복 무순서 쌍 (2–3 · 3–2) 1 쌍 · 초과 행 1 · δ ≤ 0 행 1 · 주기 플래그 행 1 · δ 최솟값 −0.3',
+            _s18b['n_frames'] == 1 and _s18b['n_dup_pairs'] == 1 and _s18b['n_dup_rows'] == 1
+            and _s18b['n_delta_nonpos'] == 1 and _s18b['n_periodic_flag'] == 1 and _s18b['delta_min'] == -0.3
+            and _s18b['n_unique_pairs'] == 3 and _s18b['n_self_pairs'] == 0)
+        _s18c = scan_contact_dump(_contact_file(tmp, [(1, 2, 0.1)], name='contact_182.liggghts', ts=182))
+        chk('⑱ scan: δ · 주기 열이 없는 덤프 → 그 칸은 None (거부하지 않는다 · "열 없음" 으로 적는다)',
+            _s18c['n_delta_nonpos'] is None and _s18c['n_periodic_flag'] is None
+            and _s18c['has_delta_col'] is False and _s18c['n_rows_last'] == 1)
+        _wt = wall_touch_fractions(np.asarray(['SE', 'SE', 'AM_P', 'AM_S'], dtype=object),
+                                   np.asarray([0.5, 10.0, 0.9, 19.5]), np.asarray([1.0, 1.0, 1.0, 1.0]), 20.0)
+        chk('⑱ 벽 접촉 비율: SE 바닥 1/2 · AM_P 바닥 1 · AM_S 플래튼 1 · 합친 AM 바닥 1/2 · 플래튼 1/2',
+            _wt['SE']['floor'] == 0.5 and _wt['SE']['plate'] == 0.0 and _wt['AM_P']['floor'] == 1.0
+            and _wt['AM_S']['plate'] == 1.0 and _wt['AM']['floor'] == 0.5 and _wt['AM']['plate'] == 0.5
+            and _wt['AM']['n'] == 2)
+        _wt2 = wall_touch_fractions(np.asarray(['AM', 'SE'], dtype=object), np.asarray([0.5, 5.0]),
+                                    np.asarray([1.0, 1.0]), 20.0)
+        chk('⑱ 2-type 침대: AM_P · AM_S 키 없음 (N/A · 0 이 아니다) · AM 은 그대로',
+            'AM_P' not in _wt2 and 'AM_S' not in _wt2 and _wt2['AM']['floor'] == 1.0)
+        chk('⑱ harvest() 산출물: wall_touch · wall_touch_rule · contact_scan · n_atom_frames (새 키) · status 키는 늘지 않았다',
+            isinstance(r14.get('wall_touch'), dict) and r14.get('wall_touch_rule') == WALL_TOUCH_RULE
+            and isinstance(r14.get('contact_scan'), dict) and r14.get('n_atom_frames') == 1
+            and set((r14.get('status') or {}).keys()) == {'phi', 'porosity', 'coverage_AM_P', 'coverage_AM_S',
+                                                           'coverage_AM_total', 'tortuosity', 'tortuosity_wall'})
 
     print()
     if _FAILS:

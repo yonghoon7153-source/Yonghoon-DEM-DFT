@@ -35,6 +35,7 @@ import csv
 import hashlib
 import json
 import pathlib
+import re
 import sys
 
 import numpy as np
@@ -908,6 +909,62 @@ HANDOVER_VALUE_MEANING = {
 }
 
 
+#: J20-a ⓒ (1저자 비준 09-28 밤 "권고하는걸로") — 접촉 위상 열의 **정의**.  09-19 판정의 why ("cap 선택과 무관 Δ = 0 %") 는 좁은 검사
+#:   결과이지 뜻이 아니다.  공통: 접촉 = LIGGGHTS pair/gran/local 덤프의 **행** (벽 · 플래튼 접촉은 없다 · x·y 주기 경계를 넘는 접촉은
+#:   c_cpl[9] 플래그와 함께 들어 있다 — `scripts/lhs_contact_audit.py` 가 원자 좌표 최소영상 재계수와 쌍 단위로 맞댄다) · CN = 그 상
+#:   **전 입자**로 나눈 평균 (접촉 0 · 벽 · 플래튼에 닿은 입자 포함) — `scripts/dem_analysis_core.py`.
+CAVEAT_WALL = ('벽 효과 (정의상 — 결함 아님): 바닥 벽 · 플래튼에 닿은 입자는 그쪽에 이웃이 없어 CN 이 낮다 · 설계 d/T AM_P 0.10–0.52 '
+               '(두께가 AM_P 2–10 개) ⇒ 두께에 따라 체계적 — wall_touch_frac_* 열과 함께 쓸 것')
+CAVEAT_DERIVED_NUM = ('파생 — (N_P·CN_P + N_S·CN_S)/(N_P + N_S) 항등식: AM_P_se_cn_mean · AM_S_se_cn_mean · 상별 입자 수로 정해진다 '
+                      '(독립 타깃 아님 · DESC-07 과 같은 부류)')
+CAVEAT_DERIVED_SW = ('파생 — 상별 반경이 한 값이면 (N_P r_P² CN_P + N_S r_S² CN_S)/(N_P r_P² + N_S r_S²) 항등식 · r² 가중이라 '
+                     'AM_P 가 지배 → 벽 효과가 크다')
+CAVEAT_COUNT = ('총량 (개수) — 두께 · 입자 수에 비례한다 · 특징으로 쓰려면 입자당 · 부피당으로 나눌 것 · 면적이 아니다 '
+                '(A_dem_geometric 주의는 해당 없음)')
+WA_DEFINE = {
+    'se_se_cn': ('z_SE-SE — SE 1 개당 SE 접촉 수, SE 전 입자 평균 (접촉 0 · 벽 · 플래튼에 닿은 입자 포함)', CAVEAT_WALL),
+    'se_se_cn_std': ('z_SE-SE 의 입자간 표준편차 (모집단 · SE 전 입자)', CAVEAT_WALL),
+    'am_se_cn_mean': ('z_AM-SE — AM 1 개당 SE 접촉 수, AM 전 입자 (AM_P + AM_S) 의 개수 가중 평균',
+                      CAVEAT_DERIVED_NUM + ' · ' + CAVEAT_WALL),
+    'am_se_cn_surface_weighted': ('Σ r²·CN_AM-SE / Σ r² (AM 전 입자) — 표면적 가중 AM–SE CN', CAVEAT_DERIVED_SW),
+    'am_am_cn': ('z_AM-AM — AM 1 개당 AM 접촉 수 (AM_P–AM_S 교차 포함), AM 전 입자 평균', CAVEAT_WALL),
+    'am_am_cn_std': ('z_AM-AM 의 입자간 표준편차 (모집단)', CAVEAT_WALL),
+    'am_am_n_contacts': ('AM–AM 접촉 개수', CAVEAT_COUNT),
+    'A_binding_AM_SE_n_contacts': ('Physics 모듈 (coverage_physics_vs_hertzian) 이 센 AM–SE 접촉 개수 — area_AM전체_SE_n 과 같은 '
+                                   '집합인지는 한 건 대조 전', CAVEAT_COUNT),
+    'A_binding_total_n_contacts': ('Physics 모듈이 센 전체 접촉 개수 — 같은 집합인지는 한 건 대조 전', CAVEAT_COUNT),
+    'n_am_am_contacts_total': ('파괴 모듈이 센 AM–AM 접촉 개수', CAVEAT_COUNT),
+    'n_am_am_contacts_excluded': ('파괴 모듈이 제외한 AM–AM 접촉 개수', CAVEAT_COUNT),
+}
+_STAT_KO = {'mean': '평균', 'std': '표준편차 (모집단)', 'median': '중앙값', 'max': '최댓값'}
+
+
+def wa_define(col):
+    """J20-a ⓒ — 접촉 위상 열이면 (뜻, 주의), 아니면 None.  열 이름은 코퍼스 (case_master) 그대로."""
+    if col in WA_DEFINE:
+        return WA_DEFINE[col]
+    m = re.fullmatch(r'(AM_P|AM_S)_se_cn_(mean|std|median|max)', col)
+    if m:
+        ph, st = m.groups()
+        return (f'{ph} 1 개당 SE 접촉 수의 {_STAT_KO[st]} — {ph} 전 입자 (접촉 0 · 벽 입자 포함) · 상이 없으면 빈칸 (N/A)',
+                CAVEAT_WALL)
+    m = re.fullmatch(r'area_(.+)_n', col)
+    if m:
+        return (f'{m.group(1)} 접촉 개수 (쌍 종류별 덤프 행 수)', CAVEAT_COUNT)
+    return None
+
+
+#: J20-a ⓓ (1저자 비준 09-28 밤 "권고하는걸로") — 상별 바닥 벽 · 플래튼 **접촉 입자 비율** (수확 v3 `wall_touch`).  CN 이 벽 · 플래튼
+#:   접촉을 세지 않아 벽에 닿은 입자의 CN 이 낮은 몫을 가르는 설명 변수.  규칙 = 수확기 `WALL_TOUCH_RULE` (z − r ≤ 0 · z + r ≥ plate_z).
+#:   벽 인접 입자를 뺀 CN 은 택하지 않았다 — AM_P 가 두께 2–10 개인 침대에서 남는 입자가 거의 없어 정의가 흔들린다.
+WALL_TOUCH_PHASES = ('SE', 'AM_P', 'AM_S', 'AM')
+HANDOVER_WALL_TOUCH = tuple(
+    (f'wall_touch_frac_{ph}_{side}', ph, side,
+     f'{ph} 입자 중 ' + ('바닥 벽 (z − r ≤ 0)' if side == 'floor' else '플래튼 (z + r ≥ plate_z)') + ' 에 닿은 비율 (0–1) · '
+     + ('AM = AM_P + AM_S 합친 모집단 (am_se_cn_mean 과 같은 분모) · ' if ph == 'AM' else '') + '상이 없으면 빈칸 (N/A)')
+    for ph in WALL_TOUCH_PHASES for side in ('floor', 'plate'))
+
+
 def load_webapp(dir_path, census_path=None):
     """`scripts/lhs_webapp_batch.py` 산출 (status.json · metrics_flat.csv) + 전수 판정 census → `build_handover(webapp=…)` 인자."""
     root = pathlib.Path(__file__).resolve().parent.parent
@@ -944,6 +1001,7 @@ def column_dictionary(cols, webapp=None):
     union = {n: w for n, _c, w in HANDOVER_UNION}
     union.update({n: w for n, w in HANDOVER_UNION_DERIVED})
     tauw = {n: w for n, _k, w in HANDOVER_TAU_WALL}
+    tauw.update({n: w for n, _p, _s, w in HANDOVER_WALL_TOUCH})
     warow = dict(WA_ROW_COLS)
     qc = {n: w for n, _a, _b, w in WA_QC}
     out = []
@@ -967,9 +1025,10 @@ def column_dictionary(cols, webapp=None):
             d.update(source='qc', meaning=qc[c])
         elif webapp is not None and c in webapp.get('verdict', {}):
             v = webapp['verdict'][c]
-            d.update(source='webapp', verdict=v,
-                     meaning=(webapp.get('why', {}).get(c) or '웹앱 파이프라인 산출 (코퍼스 case_master 와 같은 이름 · 같은 계산)'))
-            d['caveat'] = CAVEAT_NAME if '이름 주의' in v else _frac_caveat(c)
+            why = webapp.get('why', {}).get(c) or '웹앱 파이프라인 산출 (코퍼스 case_master 와 같은 이름 · 같은 계산)'
+            dfn = wa_define(c)                       # J20-a ⓒ — 접촉 위상 열은 정의를 먼저 (판정 근거는 괄호로 남긴다)
+            d.update(source='webapp', verdict=v, meaning=(f'{dfn[0]} (09-19 판정 근거: {why})' if dfn else why))
+            d['caveat'] = dfn[1] if dfn else (CAVEAT_NAME if '이름 주의' in v else _frac_caveat(c))
         else:
             d.update(source='design', meaning='LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)')
         out.append(d)
@@ -1064,6 +1123,14 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None):
     tw_on = bool(_tw_has) and all(_tw_has)
     if tw_on:
         cols += [n for n, _k, _w in HANDOVER_TAU_WALL]
+    #  J20-a ⓓ — 상별 벽 접촉 비율: 전부 있거나 전부 없어야 한다 (수확 세대 혼합 금지)
+    _wt_has = [('wall_touch' in hv[r[key]]) for r in rows]
+    if any(_wt_has) and not all(_wt_has):
+        _no = [r[key] for r, h_ in zip(rows, _wt_has) if not h_]
+        raise FillRefusal(f'벽 접촉 비율 (wall_touch) 이 {sum(_wt_has)}/{len(rows)} 수확에만 있다 — 수확 세대가 섞였다 (없는 행 {_no[:5]})')
+    wt_on = bool(_wt_has) and all(_wt_has)
+    if wt_on:
+        cols += [n for n, _p, _s, _w in HANDOVER_WALL_TOUCH]
     wv, wa_take = webapp, []
     if wv is not None:
         miss_w = [r[key] for r in rows if r[key] not in (wv.get('status') or {})]
@@ -1115,6 +1182,11 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None):
                 else:
                     o[name] = '' if v is None else str(v)
             rep['tau_wall_status'][t.get('status')] += 1
+        if wt_on:
+            wt = h.get('wall_touch') or {}
+            for name, ph, side, _w in HANDOVER_WALL_TOUCH:
+                v = (wt.get(ph) or {}).get(side)
+                o[name] = '' if v is None else repr(float(v))          # 없는 상 = 빈칸 (N/A · 0 이 아니다)
         if wv is not None:
             rec = wv['status'][r[key]] or {}
             s = rec.get('status') or 'UNKNOWN'
@@ -1681,6 +1753,46 @@ def _selftest():
         _hc = f'{type(e).__name__}: {e}'
     chk('⑲n 벽 τ 규약 문자열 — 생성기 = 수확기 (`lhs_descriptor_harvest.TAU_WALL_CONVENTION`) · 한쪽만 바뀌면 걸린다',
         _hc == TAU_WALL_CONVENTION)
+
+    #  ═══ ⑲o–p J20-a (1저자 비준 09-28 밤 "권고하는걸로") — ⓒ 접촉 위상 열의 정의 · ⓓ 상별 벽 접촉 비율 새 열 ═══════════════
+    _vd2 = dict(_vd, am_se_cn_mean='✅ 쓴다', am_se_cn_surface_weighted='✅ 쓴다', AM_P_se_cn_mean='✅ 쓴다',
+                am_am_cn='✅ 쓴다', am_am_n_contacts='✅ 쓴다', area_SE_SE_n='✅ 쓴다(이름 주의)',
+                area_SE_SE_total='✅ 쓴다(이름 주의)')
+    _cols2 = list(_vd2)
+    _dm2 = {d['column']: d for d in column_dictionary(_cols2, webapp={'verdict': _vd2, 'why': {k: f'why:{k}' for k in _vd2}})}
+    _g = lambda c, k: (_dm2.get(c) or {}).get(k, '')                        # noqa: E731
+    chk('⑲o ⓒ CN 정의 — 분모 (전 입자 · 접촉 0 · 벽 입자 포함) 와 벽 효과 주의 · 파생 열 (AM–SE 전체 · 표면 가중) 표시',
+        '전 입자' in _g('se_se_cn', 'meaning') and '벽' in _g('se_se_cn', 'caveat')
+        and '파생' in _g('am_se_cn_mean', 'caveat') and '파생' in _g('am_se_cn_surface_weighted', 'caveat')
+        and 'AM_P' in _g('AM_P_se_cn_mean', 'meaning') and '벽' in _g('AM_P_se_cn_mean', 'caveat')
+        and 'AM_P–AM_S' in _g('am_am_cn', 'meaning'))
+    chk('⑲o ⓒ 접촉 개수 열은 **총량** 주의 — area_*_n 에 면적 (A_dem_geometric) 주의를 붙이지 않는다 · 면적 열은 그대로',
+        _g('area_SE_SE_n', 'caveat').startswith('총량') and not _g('area_SE_SE_n', 'caveat').startswith('A_dem_geometric')
+        and _g('am_am_n_contacts', 'caveat').startswith('총량')
+        and _g('area_SE_SE_total', 'caveat').startswith('A_dem_geometric')
+        and _g('coverage_AM_P_mean', 'caveat').startswith('A_dem_geometric'))
+    _wt3 = {'SE': {'n': 3, 'floor': 0.25, 'plate': 0.125}, 'AM_P': {'n': 2, 'floor': 0.5, 'plate': 0.5},
+            'AM_S': {'n': 4, 'floor': 0.0, 'plate': 0.25}, 'AM': {'n': 6, 'floor': 1 / 6, 'plate': 1 / 3}}
+    _wt2 = {'SE': {'n': 3, 'floor': 0.5, 'plate': 0.0}, 'AM': {'n': 2, 'floor': 1.0, 'plate': 0.0}}
+    _hwt = {'q1': dict(_hqs['q1'], wall_touch=_wt3), 'q2': dict(_hqs['q2'], wall_touch=_wt2)}
+    try:
+        _ot, _ct, _rt = build_handover(_dq, _hwt)
+        _et = ''
+    except Exception as e:                                                # noqa: BLE001
+        _ot, _ct, _rt, _et = [], [], {}, f'{type(e).__name__}: {e}'
+    _t1 = next((r for r in _ot if r['case_id'] == 'q1'), {})
+    _t2 = next((r for r in _ot if r['case_id'] == 'q2'), {})
+    chk('⑲p ⓓ 상별 벽 접촉 비율 새 열 — 값 · 없는 상 (2-type 의 AM_P · AM_S) 은 **빈칸** (0 이 아니다)' + (f' — {_et}' if _et else ''),
+        not _et and _t1.get('wall_touch_frac_AM_P_floor') == repr(0.5) and _t1.get('wall_touch_frac_SE_plate') == repr(0.125)
+        and _t2.get('wall_touch_frac_AM_P_floor') == '' and _t2.get('wall_touch_frac_AM_floor') == repr(1.0)
+        and 'wall_touch_frac_AM_S_plate' in _ct)
+    _neg('⑲p ⓓ 수확 세대가 섞이면 거부 (wall_touch 가 일부 JSON 에만 있다)',
+         lambda: build_handover(_dq, {'q1': _hwt['q1'], 'q2': _hqs['q2']}))
+    _dm3 = {d['column']: d for d in column_dictionary(_ct)}
+    chk('⑲p ⓓ 벽 비율이 없는 옛 수확이면 그 열 없이 (하위 호환) · 열 사전에 출처 harvest_v3 · 규칙 설명',
+        'wall_touch_frac_SE_floor' not in build_handover(_dq, _hqs)[1]
+        and _dm3.get('wall_touch_frac_SE_floor', {}).get('source') == 'harvest_v3'
+        and 'z − r' in _dm3.get('wall_touch_frac_SE_floor', {}).get('meaning', ''))
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
