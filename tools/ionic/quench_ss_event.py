@@ -24,8 +24,20 @@
   · thermo 행 수와 프레임 수가 다르면 시간축을 **plan.json 의 save_ps 로 가정**하고 그 사실을 기록한다(조용히 넘어가지 않는다).
   · 저장 간격(save_ps) 사이의 사건은 못 본다.
 
+--trace_S — **특정 S 원자의 내력** (회신 CH · 2026-09-28 · 외부 1저자)
+  *"S54 의 내력을 세어 주세요. S54 가 처음부터 자유 S 였는지, 냉각 중 어딘가에서 떨어져 나온 것인지에 따라
+   이 관측의 의미가 달라집니다. 후자라면 '끊김 두 건이 만나 P–S–S 가 됐다' 는 경로가 되고, 그건 기계화학
+   종 생성과 훨씬 가까운 그림입니다."*
+  프레임마다 그 S 의 P 이웃(R_PS 컷) · 최근접 P 거리 · 최근접 S 짝을 찍고, 붙었다/떨어졌다 전이를
+  구간 라벨과 함께 센다. 판정은 세 갈래로만 나온다 —
+    `처음부터_자유` (프레임 0 에서 P 없음 **그리고** 끝까지 한 번도 안 붙음) ·
+    `이탈` (붙어 있다가 떨어져 마지막 프레임에 자유) · `붙어있음` (마지막 프레임에 P 에 붙어 있음).
+  ⛔ 이 갈래는 **거리 컷 판정**이다 — 결합 차수를 안 본다. 그리고 첫 프레임이 이미 용융이면
+  *"처음부터 자유"* 는 **담금질 시작 시점** 얘기지 조성 설계 얘기가 아니다 (그 구분을 `first_frame_segment` 로 같이 찍는다).
+
 사용
   python3 tools/ionic/quench_ss_event.py <run_dir> [--ss_cut 2.30] [--stride 1] [--table 50] [--out JSON] [--tools_dir DIR]
+  python3 tools/ionic/quench_ss_event.py <run_dir> --trace_S 54 59      # 특정 S 내력 (전역 원자 index)
   python3 tools/ionic/quench_ss_event.py --selftest
 """
 import argparse
@@ -48,6 +60,85 @@ def _load_mq(tools_dir=None):
         sys.path.insert(0, d)
     import melt_quench_uma as mq  # noqa: E402
     return mq
+
+
+def trace_frame(sym, pos, cell, mq, trace):
+    """trace 의 각 전역 원자 index 에 대해 프레임 하나의 P 이웃·최근접 P·최근접 S 를 낸다.
+    ⛔ index 가 S 가 아니면 죽는다 (조용히 다른 원소를 재지 않는다)."""
+    sym = np.asarray(sym); pos = np.asarray(pos, float); cell = np.asarray(cell, float)
+    iP = np.where(sym == "P")[0]; iS = np.where(sym == "S")[0]
+    out = {}
+    for g in trace:
+        if g < 0 or g >= len(sym):
+            raise ValueError(f"⛔ --trace_S {g} 가 원자 수 {len(sym)} 밖이다")
+        if sym[g] != "S":
+            raise ValueError(f"⛔ --trace_S {g} 는 S 가 아니라 {sym[g]} 다 — 다른 원소를 S 로 세지 않는다")
+        rec = {"P_neighbors": [], "d_nearest_P_A": None, "nearest_S": None, "d_nearest_S_A": None}
+        if len(iP):
+            dP = mq.mic_dists(pos[[g]], pos[iP], cell)[0]
+            rec["P_neighbors"] = [int(iP[k]) for k in np.where(dP <= mq.R_PS)[0]]
+            rec["d_nearest_P_A"] = round(float(dP.min()), 4)
+        others = iS[iS != g]
+        if len(others):
+            dS = mq.mic_dists(pos[[g]], pos[others], cell)[0]
+            k = int(np.argmin(dS))
+            rec["nearest_S"] = int(others[k]); rec["d_nearest_S_A"] = round(float(dS[k]), 4)
+        rec["bonded"] = len(rec["P_neighbors"]) > 0
+        out[str(g)] = rec
+    return out
+
+
+def s_trace_stats(rows, trace):
+    """trace 한 S 마다 붙음/떨어짐 내력. 판정은 세 갈래 (docstring --trace_S 참조).
+    ⛔ 못 하는 것: 거리 컷 판정이다 · 저장 간격 사이의 이탈·재결합은 못 본다 ·
+       '처음부터 자유' 는 **첫 저장 프레임** 기준이다 (그 구간 라벨을 같이 찍는다)."""
+    out = {}
+    for g in trace:
+        key = str(g)
+        seq = [(r, (r.get("S_trace") or {}).get(key)) for r in rows]
+        seq = [(r, t) for r, t in seq if t is not None]
+        if not seq:
+            out[key] = {"verdict": "자료없음", "note": "이 원자에 대한 프레임 기록이 없다"}
+            continue
+        first_r, first_t = seq[0]
+        last_r, last_t = seq[-1]
+        by_seg, partners, ev = {}, {}, []
+        n_bonded = 0
+        prev = None
+        for r, t in seq:
+            s = r.get("segment") or "unknown"
+            g_ = by_seg.setdefault(s, {"frames": 0, "frames_bonded": 0})
+            g_["frames"] += 1
+            if t["bonded"]:
+                g_["frames_bonded"] += 1; n_bonded += 1
+                for pp in t["P_neighbors"]:
+                    partners[str(pp)] = partners.get(str(pp), 0) + 1
+            if prev is not None and t["bonded"] != prev:
+                ev.append({"kind": "재결합" if t["bonded"] else "이탈", "frame": r.get("frame"), "t_ps": r.get("t_ps"),
+                           "T_K": r.get("T_K"), "T_set_K": r.get("T_set_K"), "segment": s,
+                           "P_neighbors": list(t["P_neighbors"]), "d_nearest_P_A": t["d_nearest_P_A"]})
+            prev = t["bonded"]
+        for v in by_seg.values():
+            v["fraction_bonded"] = round(v["frames_bonded"] / v["frames"], 4) if v["frames"] else None
+        if last_t["bonded"]:
+            verdict = "붙어있음"
+        elif n_bonded == 0:
+            verdict = "처음부터_자유"
+        else:
+            verdict = "이탈"
+        out[key] = {"verdict": verdict,
+                    "first_frame_bonded": bool(first_t["bonded"]), "first_frame": first_r.get("frame"),
+                    "first_frame_segment": first_r.get("segment"), "first_frame_T_set_K": first_r.get("T_set_K"),
+                    "first_frame_P_neighbors": list(first_t["P_neighbors"]), "first_frame_d_nearest_P_A": first_t["d_nearest_P_A"],
+                    "last_frame_bonded": bool(last_t["bonded"]), "last_frame_d_nearest_P_A": last_t["d_nearest_P_A"],
+                    "last_frame_nearest_S": last_t["nearest_S"], "last_frame_d_nearest_S_A": last_t["d_nearest_S_A"],
+                    "frames_total": len(seq), "frames_bonded": n_bonded,
+                    "by_segment": by_seg, "P_partner_frames": partners,
+                    "transitions": ev, "n_detach": sum(1 for e in ev if e["kind"] == "이탈"),
+                    "n_reattach": sum(1 for e in ev if e["kind"] == "재결합"),
+                    "first_detach": next((e for e in ev if e["kind"] == "이탈"), None)}
+    return {"trace": list(trace), "per_S": out,
+            "note": "거리 컷 R_PS 기준 · 저장 간격 사이 사건은 못 봄 · '처음부터_자유' 는 첫 저장 프레임 기준(구간 라벨 병기)"}
 
 
 def frame_stats(sym, pos, cell, mq, ss_cut=SS_CUT):
@@ -134,7 +225,7 @@ def p_coord_stats(rows):
             "note": "거리 컷 R_PS 기준 배위 · 저장 간격 사이 사건은 못 봄 · '회복' = 마지막 이탈 다음 저장 프레임"}
 
 
-def analyze(run_dir, mq, ss_cut=SS_CUT, stride=1, log=print):
+def analyze(run_dir, mq, ss_cut=SS_CUT, stride=1, log=print, trace_S=None):
     from ase.io import iread
     run = pathlib.Path(run_dir)
     traj, thermo = run / "traj.xyz", run / "thermo.csv"
@@ -170,6 +261,8 @@ def analyze(run_dir, mq, ss_cut=SS_CUT, stride=1, log=print):
             continue
         sym, pos, cell = at.get_chemical_symbols(), at.get_positions(), np.asarray(at.get_cell())
         st = frame_stats(sym, pos, cell, mq, ss_cut)
+        if trace_S:
+            st["S_trace"] = trace_frame(sym, pos, cell, mq, trace_S)
         d_pair0 = None
         if pair0 is not None:
             d_pair0 = float(mq.mic_dists(pos[[pair0[0]]], pos[[pair0[1]]], cell)[0, 0])
@@ -207,6 +300,8 @@ def analyze(run_dir, mq, ss_cut=SS_CUT, stride=1, log=print):
             kinds[r["ss_kind"]] = kinds.get(r["ss_kind"], 0) + 1
         res["kind_histogram_after_onset"] = kinds
     res["P_coord_stats"] = p_coord_stats(rows)
+    if trace_S:
+        res["S_trace_stats"] = s_trace_stats(rows, trace_S)
     res["summary"] = _summary(res)
     for ln in res["summary"]:
         log(ln)
@@ -236,6 +331,19 @@ def _summary(res):
             L.append(f"   P{pk}: {q['frames_not4']} 프레임 {q['by_segment']} · 배위 {q['coord_values']} · 이탈 {q['episodes']} 회 · 처음 #{q['first']['frame']} "
                      f"({q['first']['segment']} · T_set {q['first']['T_set_K']}) · "
                      + ("**끝까지 이탈**" if q["in_last_frame"] else f"회복 #{rec['frame']} ({rec['segment']} · T_set {rec['T_set_K']})"))
+    ts = res.get("S_trace_stats")
+    if ts:
+        for sk, q in ts["per_S"].items():
+            if q["verdict"] == "자료없음":
+                L.append(f"   S{sk} 내력: **자료없음** — {q['note']}"); continue
+            fd = q["first_detach"]
+            L.append(f"   S{sk} 내력: **{q['verdict']}** · 첫 프레임 #{q['first_frame']} ({q['first_frame_segment']} · T_set {q['first_frame_T_set_K']}) "
+                     f"{'P 에 붙어 있었다 ' + str(q['first_frame_P_neighbors']) if q['first_frame_bonded'] else 'P 없음 (최근접 P ' + str(q['first_frame_d_nearest_P_A']) + ' Å)'} · "
+                     f"붙은 프레임 {q['frames_bonded']}/{q['frames_total']} · 이탈 {q['n_detach']} 회 · 재결합 {q['n_reattach']} 회 · "
+                     + (f"첫 이탈 #{fd['frame']} t={fd['t_ps']} ps (설정 {fd['T_set_K']} K · {fd['segment']})" if fd else "이탈 없음")
+                     + f" · 마지막 프레임 {'붙어있음' if q['last_frame_bonded'] else '자유'} (최근접 P {q['last_frame_d_nearest_P_A']} Å · 최근접 S S{q['last_frame_nearest_S']} {q['last_frame_d_nearest_S_A']} Å)")
+            L.append(f"      구간별 붙음 분율: " + " · ".join(f"{k} {v['frames_bonded']}/{v['frames']}" for k, v in q["by_segment"].items())
+                     + f" · P 짝 {q['P_partner_frames']}")
     o = res.get("onset")
     if not o:
         L.append("S–S 근접 사건: **없음** (전 프레임 최단 S–S ≥ 컷)")
@@ -336,6 +444,40 @@ def _selftest():
         p0 = rp["per_P"].get("0", {})
         ck(p0.get("first", {}).get("frame") == 5 and p0.get("in_last_frame") is True and p0.get("episodes") == 1 and rp["n_P_ever_not4"] == 1,
            f"합성 궤적(떨어짐): P0 이 5 프레임부터 끝까지 3 배위 — {rp}")
+    # ── --trace_S (회신 CH · S54 내력) ──
+    with tempfile.TemporaryDirectory() as td:
+        rt = analyze(_synthetic(td, event="detach"), mq, log=lambda *a: None, trace_S=[1, 5])
+        q1 = rt["S_trace_stats"]["per_S"]["1"]; q5 = rt["S_trace_stats"]["per_S"]["5"]
+        ck(q1["verdict"] == "이탈" and q1["first_frame_bonded"] is True and q1["n_detach"] == 1
+           and q1["first_detach"]["frame"] == 5 and q1["first_detach"]["segment"] == "quench" and q1["last_frame_bonded"] is False,
+           f"trace: 붙어 있다 냉각 중 떨어진 S → '이탈' · 첫 이탈 프레임 5 · quench — {q1}")
+        ck(q5["verdict"] == "처음부터_자유" and q5["frames_bonded"] == 0 and q5["n_detach"] == 0
+           and q5["first_frame_bonded"] is False and q5["first_frame_segment"] == "melt_hold",
+           f"trace: 한 번도 P 에 안 붙은 S → '처음부터_자유' · 첫 프레임 구간 melt_hold 병기 — {q5}")
+        ck(q1["by_segment"]["melt_hold"]["frames_bonded"] == 3 and q1["by_segment"]["quench"]["frames_bonded"] == 2
+           and q1["by_segment"]["final_hold"]["frames_bonded"] == 0 and q1["P_partner_frames"] == {"0": 5},
+           f"trace: 구간별 붙음 분율 · P 짝 셈 — {q1['by_segment']} {q1['P_partner_frames']}")
+    with tempfile.TemporaryDirectory() as td:
+        ra2 = analyze(_synthetic(td, event="attach"), mq, log=lambda *a: None, trace_S=[1, 5])
+        a1 = ra2["S_trace_stats"]["per_S"]["1"]; a5 = ra2["S_trace_stats"]["per_S"]["5"]
+        ck(a1["verdict"] == "붙어있음" and a1["n_detach"] == 0 and a5["verdict"] == "처음부터_자유"
+           and a5["last_frame_nearest_S"] == 1 and abs(a5["last_frame_d_nearest_S_A"] - 2.05) < 1e-3,
+           f"trace: 자유 S 가 결합 S 옆에 붙어도 P 가 없으면 '처음부터_자유' · 최근접 S 짝이 그 S — {a5}")
+        ck(a5["verdict"] != "이탈", "⛔음성: P 에 한 번도 안 붙은 S 를 '이탈' 로 읽지 않는다")
+    with tempfile.TemporaryDirectory() as td:
+        run_t = _synthetic(td, event="detach")
+        for idx, why in ((0, "P 원자"), (7, "Li 원자"), (99, "범위 밖")):
+            try:
+                analyze(run_t, mq, log=lambda *a: None, trace_S=[idx]); died = False
+            except ValueError:
+                died = True
+            ck(died, f"⛔음성: --trace_S {idx} ({why}) 면 죽는다 — 다른 원소를 S 로 세지 않는다")
+        rt2 = analyze(run_t, mq, log=lambda *a: None)
+        ck("S_trace_stats" not in rt2 and (rt2["rows"][0].get("S_trace") is None),
+           "⛔음성: --trace_S 없으면 S_trace 를 만들지 않는다 (빈 dict 로 채우지 않는다)")
+        st_none = s_trace_stats(rt2["rows"], [1])
+        ck(st_none["per_S"]["1"]["verdict"] == "자료없음",
+           "⛔음성: 프레임에 trace 기록이 없으면 '자료없음' — 갈래를 지어내지 않는다")
     print(f"{'✅' if not bad else '⛔'} quench_ss_event selftest {ok}/{ok + bad}")
     return 0 if not bad else 1
 
@@ -346,6 +488,8 @@ def main():
     ap.add_argument("--ss_cut", type=float, default=SS_CUT)
     ap.add_argument("--stride", type=int, default=1)
     ap.add_argument("--table", type=int, default=0, help="N 프레임마다 한 줄 표 (0 = 안 찍음)")
+    ap.add_argument("--trace_S", type=int, nargs="+", metavar="IDX",
+                    help="특정 S 원자(전역 index)의 내력 — 프레임별 P 이웃·이탈/재결합 (회신 CH · S54)")
     ap.add_argument("--out")
     ap.add_argument("--tools_dir", help="melt_quench_uma.py 가 있는 폴더 (기본 = 이 파일 폴더)")
     ap.add_argument("--selftest", action="store_true")
@@ -355,7 +499,7 @@ def main():
     if not a.run_dir:
         ap.error("run_dir 이 필요하다")
     mq = _load_mq(a.tools_dir)
-    res = analyze(a.run_dir, mq, a.ss_cut, a.stride)
+    res = analyze(a.run_dir, mq, a.ss_cut, a.stride, trace_S=a.trace_S)
     if a.table:
         print(f"{'frame':>6s} {'t_ps':>8s} {'T_set':>7s} {'seg':>10s} {'PS4':>6s} {'ssmin':>6s} {'pair':>10s} {'kind':>9s} {'d_onset':>7s}")
         for r in res["rows"]:
