@@ -123,7 +123,12 @@
     **CPU 줄**: LOBSTER SCF/nscf 등 `qe-7.4.1-cpu` 빌드.
     ⇒ **CPU pw.x 와 UMA 는 공존한다**(2026-09-22 실측: LOBSTER 8랭크 CPU 799 %·RSS 39.6 GB 가
       UMA 담금질 시작 전후로 **불변**). 금지는 **GPU pw.x ↔ UMA** 에만 걸린다.
-  · ⛔ **지금 예외는 없다.** 2026-09-23 에 준 예외 1건(SE|SE 대조 DFT 5잡 · `D-2026-09-23-gabia-gpu-exception-sese`)은
+  · ⚠ **지금 살아 있는 예외는 1건 — 범위가 좁다** (`D-2026-09-28-gabia-uma-coexist-v4-li2s465` · 1저자 09-28 *"3500정도로 넣자"*):
+    li2s 본 런 465 K **seed3·seed4 두 런만** V4(W_ad GPU pw.x)와 공존 · 내 MD VRAM 합 ≤ **3,500 MiB** · GPU 합계 ≤ V4 KILL − 1,000 ·
+    V4 의 다음 잡 시작을 막지 않을 때만 (V4 러너 START_MAX_MIB ≥ 4,524 · ONLY_PIDS 비어 있음 — 아니면 V4 끝까지 대기) · 어기면 **우리 MD 만** 멈춘다.
+    ⛔ 다른 UMA 런·다른 GPU pw.x 잡으로 **넘어가지 않는다**. 두 런이 끝나거나 V4 가 끝나면 소멸한다. 가드가 한 번이라도 발동하면 닫는다.
+    ⚠ 계산 근거를 잊지 마라 — V4 러너 **자폭선은 44,000 MiB** 라 V4 (39.2 GB) 옆 실제 방은 49,140 − 39,238 = 9,902 가 아니라 **4,762 MiB** 다.
+  · 옛 예외: 2026-09-23 에 준 예외 1건(SE|SE 대조 DFT 5잡 · `D-2026-09-23-gabia-gpu-exception-sese`)은
     **실행 전에 철회했고 쓰인 적이 없다** (1저자 · 같은 날). 6층 슬랩의 CPU 추정치가 50–56 GB 로 48 GB 를 넘었다
     (GPU OOM 실측이 아니다). 4층 SE|SE · CP2K · 다른 GPU pw.x 잡에 **자동으로 넘어가지 않는다** — 필요하면 새 결정을 받는다.
     러너 `tools/wad/run_sese_gpu.sh` 는 `ALLOW_UMA_COEXIST=1` 을 줘도, 원장에서 **active** 인 결정 ID 가 아니면

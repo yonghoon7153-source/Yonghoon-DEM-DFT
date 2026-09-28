@@ -5299,6 +5299,66 @@
     "kb/projects/li2s_glass_external_first_author_followup_pilot800_2026_09_27.md"
    ],
    "status": "proposed"
+  },
+  {
+   "id": "D-2026-09-28-gabia-uma-coexist-v4-li2s465",
+   "kind": "policy",
+   "scope": "ops.gabia.gpu.concurrency",
+   "slot": "gabia_gpu_pwx_uma_coexist_exception",
+   "applies_to": {
+    "systems": [
+     "lpscl_smallcell_glass"
+    ],
+    "tasks": [
+     "li2s_glass_md_main_465K_seed3_seed4"
+    ],
+    "methods": [
+     "uma_md_turbo"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "gabia GPU — 'pw.x ↔ UMA 동시 실행 금지' 의 범위 한정 예외 (2): li2s 본 런 465 K seed3·seed4 를 V4 와 공존 — 내 MD ≤ 3,500 MiB",
+   "statement": "li2s 소셀 유리 본 런 465 K 의 seed3·seed4 두 런에 한해, W_ad V4 (wad_aprime_s4_v4_2026_09_27 · GPU pw.x) 가 도는 gabia A6000 에 UMA MD 를 같이 올려도 된다. 조건은 가드 러너(guard465.sh)가 기계로 건다: ① GPU pw.x 가 도는 동안 **우리 MD 프로세스 VRAM 합 ≤ 3,500 MiB** (사용자 지정) ② GPU 합계 ≤ V4 러너 KILL_MIB − 1,000 (V4 자폭선보다 1 GB 아래 · 44,000 이면 43,000) ③ 호스트 MemAvailable ≥ V4 HOST_KILL_MIB + 4,096 ④ 공존은 V4 러너의 START_MAX_MIB ≥ 3,500 + 1,024 이고 ONLY_PIDS 가 비었을 때만 — 아니면 우리 MD 가 V4 의 **다음 잡 시작을 막으므로** V4 가 끝날 때까지 기다린다 ⑤ 어느 조건이든 어기면 **우리 MD 만** PID 트리로 멈추고 러너를 끝낸다 (자동 재시작 없음 · V4·남의 잡은 안 건드린다). seed4 는 seed3 워밍업(300 s) 뒤 실측 VRAM 의 2 배가 3,500 이하일 때만 공존으로 띄우고, 아니면 V4 가 끝난 뒤 띄운다.",
+   "rationale": "규칙을 만든 사람이 1저자라 예외도 1저자가 정한다 (gabia 운용 = 우리 트랙 → 1저자 = 사용자 · li2s 과학 판정과 무관). 근거 실측 (09-28 12:06 V4 watch): V4 사용 39,238 / 49,140 MiB · V4 러너 자폭선 44,000 → 실제 방 4,762 MiB. 사용자가 처음 '9000 가드' 를 제안했으나 그 수는 방(4,762)보다 커서 V4 를 자폭시키거나(상한으로 읽을 때) MD 를 못 올리는(여유 하한으로 읽을 때) 수였다 → 사용자가 3,500 으로 정했다 (방의 74 % · 여유 1,262 MiB). 120 원자 UMA 1 런 ≈ 1.5 GB (gabia 담금질 실측 · CLAUDE.md) · kgy turbo 파일럿 실측 ≈ 2.0 GB.",
+   "record_kind": "scope_declaration",
+   "card": "db/properties/lpscl_smallcell_glass_md_amendment_ch_2026_09_28.json",
+   "record": "/data/work/runs/lpscl_glass_md_main_2026_09_28/guard465.sh (gabia · 붙여넣기 블록 G465b 가 쓴다)",
+   "evidence": [
+    "tools/wad/run_sese_gpu.sh (V4 러너 — 시작 문턱 ② · 자폭선 ③ · ONLY_PIDS ⑥)",
+    "kb/open_items.md (V4 시험: 피크 far 39,230 · G3 c+2 41,518 MiB · KILL 44,000)",
+    "V4 watch 2026-09-28 12:06 (사용자 붙여넣기 · 39,238 / 49,140 MiB · 6/9 완료)"
+   ],
+   "method_ref": "guard465.sh — OURCAP 3500 · TOTALCAP = V4 KILL_MIB − 1000 · HOSTFLOOR = V4 HOST_KILL_MIB + 4096 · SAMPLE 2 s · WARM 300 s · 모드 coexist / wait / free 는 V4 러너 환경변수(/proc/<pid>/environ)로 정한다",
+   "reopen_criteria": "가드가 한 번이라도 발동하거나, 공존 중 V4 러너가 잡을 중단·종료하거나, 우리 MD 에 CUDA OOM 이 나면 **예외를 닫고** 원 규칙(동시 금지)으로 돌아간다. seed3·seed4 465 K 두 런이 끝나거나 V4 가 끝나면 예외는 소멸한다. 다른 UMA 런·다른 GPU pw.x 잡으로 **넘어가지 않는다**.",
+   "enforcement": "가드 러너가 조건 ①–⑤ 를 2 s 표본으로 건다. ⚠ 확률적 보호다 — 표본 간격보다 빠른 VRAM 급등은 못 막는다 (V4 러너도 같은 한계를 문서화했다). ⚠ 계산 자원 경쟁으로 V4 잡이 느려질 수 있다 (VRAM 이 아니라 SM 을 나눠 쓴다).",
+   "amends": [],
+   "amends_note": "CLAUDE.md §계산 자원 gabia 의 '⛔ 지금 예외는 없다' 줄에 이 범위 한정 예외를 적는다 (같은 커밋). 규칙 본문(GPU pw.x ↔ UMA 동시 금지)은 그대로다.",
+   "supersedes": [],
+   "schema_version": 2,
+   "decision_state": "active",
+   "results_seen": false,
+   "proposed_by": "claude-session-2026-09-28",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-28",
+     "state": "active",
+     "by": "1저자(사용자)",
+     "note": "사용자: 'gabia에서 가능할거 같은데 md 니까 가능할듯' → 'gpu이긴한데 md 관련해서 될듯' → '9000 으로 가드 넣고 돌려' → (방이 4,762 MiB 라는 계산을 본 뒤) '아 그럼 3500정도로 넣자'. 트랙 = gabia 운용(우리) → 1저자 = 사용자, 통지할 제3자 없음. 에이전트는 처음에 'V4 가 끝날 때까지 기다렸다 자동 발사' 를 권했고 (조기확인 판정 시각이 어차피 V4 종료에 묶인다는 이유), 사용자가 공존을 택했다."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-28T03:16:07Z",
+    "commit": "ccde59e15546b418fde779eac0f0fcb2c032da90",
+    "decision_digest": "sha256:f9de624ae9ae51aab95c709f29b8846f9ea28c5de643b642f62591e8a7665543",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "'아 그럼 3500정도로 넣자' (2026-09-28 · 이 세션) — 방 4,762 MiB 계산을 본 뒤의 선택"
+   }
   }
  ]
 }
