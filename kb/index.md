@@ -1,12 +1,12 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-28 · managed-files: 484
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-28 · managed-files: 485
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 281건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 282건)
 - 2026-09-28 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-28 · `kb/reviews/li2s1a_CH_prompt_li2s_cd_reply_pilot800_2026_09_27.md` — CH 프롬프트 — li2s 소셀 유리 MD: 회신 CD 반영 · 파일럿 400 K 800 ps 결과 (C2·C1 미통과 → 400 K 측정 안 됨) · 카드 개정 v2 · 다섯 시드 P 배위 통계 (새 항목 1) · 결정·확인 요청 셋 (외부 1저자에게) · 발송됨 (사용자 · 2026-09-27 · 발송판 = 다섯 시드 결과…
 - 2026-09-28 · `kb/reviews/li2s1a_CH_reply_li2s_cd_reply_pilot800_2026_09_28.md` — 회신 CH — 외부 1저자 (li2s 소셀 유리 MD): 편지 CH 판정 (Q-CH-1 2σ 로 상향 · Q-CH-2 600 K pre-register · Q-CH-3 수정안 수용 + S54 내력·seed4 일시 · 새 항목 둘 — 400 K 두 런 D 2.2 배 · 시드 간 P 이탈 산포) · 수령 (2026-09-28 · 사용자 붙여넣기) — 회신 원문 · 고…
@@ -14,6 +14,7 @@
 - 2026-09-28 · `kb/reviews/li2s1a_CL_reply_li2s_ch_reply_s54_census_2026_09_28.md` — 회신 CL — 외부 1저자 (li2s 소셀 유리 MD): 초안 CL 수령 · Q-CL-2 먼저 답 (465 K '2 배' 확정 + 출처 단서) · Q-CL-1 확정 (가까운 쪽 문턱 · 양쪽 2σ) · Q-CL-3·4 는 결과와 같이 · 네 시드 전수는 발송 전 권장 · 수령 (2026-09-28 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-09-28 · `kb/reports/weekly_2026_09_27.md` — 주간 정리 2026-09-21 ~ 09-27 (주간보고 초안) · 완료 (2026-09-28 · 다음 주 문서는 새 파일)
 - 2026-09-28 · `kb/projects/handoff_2026_09_28_evacuation.md` — 대피 인계 — 2026-09-28 (friendly 세션 컨텍스트 소진 → 서브 브랜치 임시 작업) · 진행
+- 2026-09-28 · `kb/projects/merge_request_2026_09_28.md` — 머지 요청 (초안) — 대피 브랜치 claude/evac-2026-09-28 → claude/friendly-meitner-lldvar · 초안 — 사용자가 "돌아가자" 할 때 커밋 목록·시험을 다시 찍어 최…
 - 2026-09-27 · `kb/reviews/codex_CE_prompt_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` — 리뷰 CE 프롬프트 — A′ V5 (LPSCl|Ag(111) 작은 주기 계면) VASP 외주 패키지 준비본: QE→VASP 대응 · INCAR · 쌍극자 · D3 · 반송 검사 · G3 경계선 예측 · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…
 - 2026-09-27 · `kb/reviews/codex_CE_reply_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` — 리뷰 CE 회신 — A′ V5 VASP 외주 준비본: NO-GO (P0 4 · P1 5 · 3b 원안 반대 · 3c 찬성) · 수령 (1저자 붙여넣기 · 원문 그대로) → 대응 v2 커밋 e025…
 - 2026-09-27 · `kb/reviews/codex_CF_prompt_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` — 리뷰 CF 프롬프트 — A′ V5 VASP 외주 준비본 v2 재리뷰 (CE NO-GO 대응: P0 4 · P1 5 · 3b′ · 3c · PP/버전 · D3 예산) · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…
@@ -26,7 +27,6 @@
 - 2026-09-27 · `kb/reviews/codex_CJ_reply_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md` — 리뷰 CJ 회신 — A′ V5 VASP 외주 준비본 v5: NO-GO (CI 재현 3 경로 해제 · 같은 P1 의 관리 파일 목록 쓰기 경로 1 · S1–S6 · 권고 3: sha 파이프 · 정리 실패 · 반송 문구) · 수령 (1저자 붙여넣기 + zip 첨부 · 원문 그대로) → 대응 v…
 - 2026-09-27 · `kb/reviews/codex_CK_prompt_wad_aprime_v5_vasp_outsourcing_v6_2026_09_27.md` — 리뷰 CK 프롬프트 — A′ V5 VASP 외주 준비본 v6 재리뷰 (CJ NO-GO 대응: 관리 파일 목록 쓰기마다 검사 + 목록 내용 검증 · sha 명령/형식 분리 · 정리 실패 ⚠ · 발송 조건 · 지원 환경) · 발송 완료 · 회신 수령 2026-09-27 **GO** (`code…
 - 2026-09-27 · `kb/reviews/codex_CK_reply_wad_aprime_v5_vasp_outsourcing_v6_2026_09_27.md` — 리뷰 CK 회신 — A′ V5 VASP 외주 준비본 v6: GO (CJ 해제조건 충족 · 새 P0/P1 없음 · S1–S5 판정 · P2 정리 2 — 기술 검토 GO · 실행 승인 아님) · 수령 (1저자 붙여넣기 + zip 첨부 · 원문 그대로) — **GO…
-- 2026-09-27 · `kb/reviews/li2s1a_CD_prompt_li2s_cc_report_2026_09_26.md` — CD 프롬프트 — li2s 소셀 유리 MD 회신 CC 이행 보고 (외부 1저자에게 발송 · 발송판은 kb/projects 에) · 발송됨 (사용자) · 회신 CD 수령 2026-09-27 → `li2…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -405,7 +405,7 @@
 - `kb/reports/weekly_2026_09_20.md` — 주간 정리 2026-09-14 ~ 09-20 (주간보고 초안)  (2026-09-20 · 완료 (2026-09-20 · 다음 주 문서는 새 파일))
 - `kb/reports/weekly_2026_09_27.md` — 주간 정리 2026-09-21 ~ 09-27 (주간보고 초안)  (2026-09-28 · 완료 (2026-09-28 · 다음 주 문서는 새 파일))
 
-## projects/ (35)
+## projects/ (36)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
 - `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
@@ -426,6 +426,7 @@
 - `kb/projects/li2s_glass_external_first_author_report_2026_09_26.md` — li2s 소셀 유리 MD — 회신 CC 이행 보고 (외부 1저자에게) · B 실측 3 건 · 카드 개정 초안 확인 요청 · 400 K prod 800 ps 채택 제안  (2026-09-26 · 초안 — 사용자(실행자 · 카드 저자) 검토 뒤 외부 1저자에게 발송…)
 - `kb/projects/li2s_glass_external_first_author_report_send_2026_09_26.md` — li2s_glass_external_first_author_report_send_2026_09_26
 - `kb/projects/li_neb_anode_free.md` — Li Adatom Diffusion on Anode-Free SSB Interphases  (2026-06-01 · setup)
+- `kb/projects/merge_request_2026_09_28.md` — 머지 요청 (초안) — 대피 브랜치 claude/evac-2026-09-28 → claude/friendly-meitner-lldvar  (2026-09-28 · 초안 — 사용자가 "돌아가자" 할 때 커밋 목록·시험을 다시 찍어 최…)
 - `kb/projects/ml_opportunities_from_lab_ppt_2026_07.md` — 랩 ML 파이프라인(TabPFN)과 우리 캠페인의 접점 — 2026-07-28
 - `kb/projects/mlip_next_campaigns_2026_07.md` — MLIP(UMA) 차기 캠페인 후보 제안서 — cascade 확장 7건  (2026-07-27 · proposal)
 - `kb/projects/restart_runbook_2026_09_07.md` — 재기동 절차서 — 2026-09-07 재부팅 (gabia · desktop)  (2026-09-07 · 진행)

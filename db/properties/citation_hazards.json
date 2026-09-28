@@ -222,7 +222,7 @@
     "후": "같은 원장(cei_esw_Li_2026_09_16.json)의 profile 에서 **Li 교환 0 인 첫 경계**로 다시 읽음 — 네 조성(comp1 · modelc · lpsocl · modelc_nd) **모두 1.717 V**. Nd 는 산화 쪽만 움직인다(2.14 → 1.92). 창 폭 비교 철회.",
     "산화_쪽": "첫 Li 방출 전압 = oxidation_limit_V 로 네 조성 모두 일치 확인 (이 금지 밖이라는 판정과 맞다).",
     "시험": "webapp/tests/test_interpretation_cards.py — 옛 값을 **강제하던** 두 시험(표 환원 칸 = reduction_limit_V · 창 폭이 화면에 있어야 함)을 뒤집어 교환 0 첫 경계와 대조하고 옛 값·창 폭이 **없어야** 통과하게 했다. 깨서 빨간불 확인.",
-    "⚠_남은_것": "이 파일(oxidation_stability_cascade_v3_pinned.json 등 네 파일)을 09-22 에 고친 뒤 cascade 풀 매니페스트를 다시 만들지 않아 webapp 시험 셋(test_cascade_headline_comes_from_the_manifest · test_manifest_tamper_fails_closed · test_audit_figures_are_the_only_default_figures)이 **09-22 부터 빨강**이다 — 처방은 tools/cascade/rebuild_pool_inputs.py (파이프라인 단계라 1저자 확인 후)."
+    "⚠_남은_것": "cascade 풀 매니페스트 — **이미 kb/open_items.md ⏭-NOW-w 🔴 (09-23) 에 기록된 건**이다 (이 세션이 새로 찾은 것이 아니다). 09-22 라벨 수정이 네 파일(oxidation_stability_cascade_v3_pinned · b2o3_esw · cascade_screening_funnel{,_v2})을 바꾸고 cascade_audit_manifest 를 다시 안 만들어 webapp 시험 셋이 빨강 (cascade 화면 fail-closed). ⛔ 해시만 다시 박지 않는다 — 순서: 풀 입력(rebuild_pool_inputs.py) → build_screening_funnel.py → 감사 그림 → build_cascade_audit_manifest.py · 퍼널 통과 목록이 바뀔 수 있다 (ESW 트랙 = 1저자 = 사용자). ✅ 1저자 09-28: **cascade v6 (E′ 40 런) 가 끝난 뒤 한 번에** 한다 — v6 결과도 같은 풀 입력으로 들어가야 해서 지금 돌리면 두 번 돈다."
    }
   },
   {
