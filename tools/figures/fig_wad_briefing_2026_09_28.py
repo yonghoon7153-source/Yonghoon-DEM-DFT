@@ -1,22 +1,20 @@
 #!/usr/bin/env python3
 """fig_wad_briefing_2026_09_28.py — 점착(W_ad) 트랙 브리핑 그림 1장 (슬라이드용).
 
-  (a) Decision path — 계획 v1 → v2 → v3 → A′ 와 A′ 파일럿 사전등록 BY → CB → S1 봉인.
-      판정은 `db/pipelines/adhesion_pipeline.json` 의 reviews[].verdict 앞머리에서 읽는다.
-  (b) V5 VASP 외주 준비본 리뷰 라운드 CE → CK 의 P0 · P1 개수.
-      값은 `db/properties/weekly_review_traffic_origin_2026_09_27.csv` (이미 검증된 주간 산출물)에서 읽는다.
-  (c) 트랙 현재 상태 — V2 / V4 / V5 한 줄씩.
+  (a) What we measure — 슬랩 둘을 떼어내는 모식도 + W_sep 정의. DEM 은 이 값을 JKR 의 w 로 쓴다.
+  (b) Which interfaces — 대상별 상태. 잡 수는 점착 원장 runs[].jobs 의 state 를 **세어서** 넣는다.
+  (c) A′ rule — 작은 모형은 DFT 값 · 전체 계면은 UMA+D3 예측 · DEM 은 민감도 시나리오로만.
 
     python3 tools/figures/fig_wad_briefing_2026_09_28.py
     python3 tools/figures/fig_wad_briefing_2026_09_28.py --selftest
 
 이 도구가 **못 하는 것**
   · ⛔ **W_ad 숫자를 그리지 않는다** (W_sep · SE|SE 4층 값 · ATM 열 · G3 차이값).
-    결과 기록이 *"원장·화면 게재는 1저자 별도"* 로 막아 두었다. 라벨(G3 FAIL)만 쓴다.
+    결과 기록이 *"원장·화면 게재는 1저자 별도"* 로 막아 두었다. 라벨(G3 FAIL)·정의식만 쓴다.
     같은 금지가 `tools/figures/fig_weekly_2026_09_27.py` 에도 박혀 있다.
-  · 판정을 내리지 않는다 — 전부 원장·CSV 에서 읽고, 없으면 **죽는다**(0 으로 두지 않는다).
-  · 원격 기계의 **지금** 상태를 모른다. (c) 의 V4 문구는 원장 기준이고 실측 시각을 같이 적는다.
-  · 리뷰 P0/P1 은 회신 제목 세기 규칙의 결과다 — 규칙은 주간 도구 docstring 에 있다.
+  · 판정을 내리지 않는다 — 상태·잡 수는 원장에서 읽고, 없으면 **죽는다**(0 으로 두지 않는다).
+  · 원격 기계의 **지금** 상태를 모른다. (b) 는 원장 기준이고 실측 시각을 같이 적는다.
+  · 모식도는 **정의를 보여주는 그림**이다 — 실제 셀 크기·원자 배치가 아니다.
 """
 from __future__ import annotations
 
@@ -84,74 +82,96 @@ def load_path():
     return [(n, _verdict_class(v)) for n, v in steps]
 
 
-def panel_a(ax, steps):
-    col = {"nogo": NOGO, "cond": COND, "go": GO}
-    for i, (name, cls) in enumerate(steps):
-        ax.scatter(i, 0, s=340, color=col[cls], zorder=3, edgecolor="white", lw=1.4)
-        ax.text(i, .42, name, ha="center", va="bottom", fontsize=8.6, color=INK, rotation=28)
-        ax.text(i, -.40, {"nogo": "NO-GO", "cond": "cond. GO", "go": "GO"}[cls],
-                ha="center", va="top", fontsize=7.8, color=col[cls])
-        if i:
-            ax.add_patch(FancyArrowPatch((i - 1, 0), (i, 0), arrowstyle="-|>",
-                                         mutation_scale=11, color=MUT, lw=1.0, zorder=1,
-                                         shrinkA=11, shrinkB=11))
-    ax.scatter(len(steps), 0, s=340, marker="s", color=GO, zorder=3,
-               edgecolor="white", lw=1.4)
-    ax.text(len(steps), .42, "S1 sealed", ha="center", va="bottom",
-            fontsize=8.6, color=INK, rotation=28)
-    ax.text(len(steps), -.40, "09-25", ha="center", va="top", fontsize=7.8, color=MUT)
-    ax.add_patch(FancyArrowPatch((len(steps) - 1, 0), (len(steps), 0), arrowstyle="-|>",
-                                 mutation_scale=11, color=MUT, lw=1.0, zorder=1,
-                                 shrinkA=11, shrinkB=11))
-    ax.set_xlim(-.7, len(steps) + .7); ax.set_ylim(-1.5, 1.7)
-    ax.set_yticks([]); ax.set_xticks([])
-    #: 개수를 손으로 적지 않는다 — 원장 단계가 늘면 제목이 조용히 틀려진다.
-    apply_axes(ax, None, None,
-               f"(a)  {len(steps)} review rounds fixed the plan before any production run")
-    for s in ("left", "bottom"):
-        ax.spines[s].set_visible(False)
+def load_v4():
+    """(b) 용 — V4 본 잡의 state 별 개수. 원장에서 세고, 없으면 죽는다."""
+    d = json.loads(LEDGER.read_text("utf-8"))
+    run = next((r for r in d["runs"] if r["id"] == "aprime_v4_main_gabia_2026_09_27"), None)
+    if run is None:
+        raise SystemExit("⛔ 원장에 V4 본 잡 run 이 없다")
+    cnt = {}
+    for j in run["jobs"]:
+        cnt[j.get("state", "?")] = cnt.get(j.get("state", "?"), 0) + 1
+    if "?" in cnt:
+        raise SystemExit("⛔ state 없는 잡이 있다 — 세지 않는다")
+    return len(run["jobs"]), cnt
 
 
-def panel_b(ax, rounds):
-    xs = range(len(rounds))
-    p0 = [r[1] for r in rounds]
-    p1 = [r[2] for r in rounds]
-    ax.bar([x - .19 for x in xs], p0, width=.36, color=NOGO, label="P0 (blocking)")
-    ax.bar([x + .19 for x in xs], p1, width=.36, color=COND, label="P1")
-    for x, (lt, a, b, cls) in zip(xs, rounds):
-        if cls == "go":
-            ax.text(x, .28, "GO", ha="center", fontsize=9, color=GO, fontweight="bold")
-    ax.set_xticks(list(xs)); ax.set_xticklabels([r[0] for r in rounds])
-    ax.set_ylim(0, max(p0 + p1) + 1.2)
-    apply_axes(ax, "Review round (V5 VASP outsourcing package)", "Findings",
-               "(b)  Blocking findings driven to zero")
-    ax.legend(frameon=False, fontsize=8.6, labelcolor=INK)
-
-
-def panel_c(ax):
-    rows = [("V2  Ag | graphene", GO,
-             "done — reported with a G3 FAIL label; DEM open questions 0"),
-            ("V4  production", COND,
-             f"9 jobs running on one GPU (as of {AS_OF})"),
-            ("V5  largest model", NOGO,
-             "does not fit 48 GB → VASP outsourcing package, technical GO only")]
-    for i, (name, c, txt) in enumerate(rows):
-        y = 2 - i
-        ax.scatter(0, y, s=190, color=c, edgecolor="white", lw=1.3, zorder=3)
-        ax.text(.22, y + .17, name, fontsize=9.4, color=INK, va="center", fontweight="bold")
-        ax.text(.22, y - .22, txt, fontsize=8.4, color=MUT, va="center")
-    ax.set_xlim(-.25, 5.2); ax.set_ylim(-.7, 2.8)
+def panel_a(ax):
+    """무엇을 재나 — 정의를 보여주는 모식도 (실제 셀이 아니다)."""
+    import matplotlib.patches as mp
+    for y, lab, c in ((2.55, "slab A", "#7c3aed"), (0.35, "slab B", "#c05621")):
+        ax.add_patch(mp.FancyBboxPatch((0.25, y), 3.5, 1.0, boxstyle="round,pad=0.03",
+                                       fc=c, ec="none", alpha=.28))
+        ax.text(2.0, y + .5, lab, ha="center", va="center", fontsize=11, color=INK)
+    ax.annotate("", xy=(2.0, 3.95), xytext=(2.0, 3.05),
+                arrowprops=dict(arrowstyle="-|>", color=INK, lw=1.6))
+    ax.annotate("", xy=(2.0, -0.60), xytext=(2.0, 0.30),
+                arrowprops=dict(arrowstyle="-|>", color=INK, lw=1.6))
+    ax.text(4.05, 1.95, "separate\nat fixed geometry", fontsize=9, color=MUT,
+            va="center", linespacing=1.3)
+    ax.text(2.0, 1.83, r"$W_{\rm sep}=\dfrac{E_A+E_B-E_{AB}}{A}$",
+            ha="center", va="center", fontsize=13, color=INK)
+    ax.text(2.0, -1.35, "DEM uses it as the JKR work of adhesion $w$",
+            ha="center", fontsize=9.4, color=MUT)
+    ax.set_xlim(-.3, 6.3); ax.set_ylim(-1.9, 4.5)
     ax.set_xticks([]); ax.set_yticks([])
-    apply_axes(ax, None, None, "(c)  Where the track stands")
-    for s in ("left", "bottom"):
-        ax.spines[s].set_visible(False)
+    apply_axes(ax, None, None, "(a)  What we compute")
+    for sp in ("left", "bottom"):
+        ax.spines[sp].set_visible(False)
+
+
+def panel_b(ax, n_v4, cnt):
+    run_n = cnt.get("run", 0) + cnt.get("done", 0)
+    rows = [("SE | SE  (control)", GO, "5 jobs done \u2014 alarm kept, diagnosis only"),
+            ("V2  Ag | graphene", GO, "done \u2014 delivered with a G3 FAIL label"),
+            ("V4  production", COND,
+             f"{n_v4} jobs: {cnt.get('done',0)} done, {cnt.get('run',0)} running, "
+             f"{cnt.get('wait',0)} queued"),
+            ("V5  largest model", NOGO, "over one GPU \u2192 VASP outsourcing package"),
+            ("P1  LPSCl | Ag(111)", MUT, "not started \u2014 what DEM actually asked for"),
+            ("P2  LPSCl | graphite", MUT, "not started")]
+    for i, (name, c, txt) in enumerate(rows):
+        y = len(rows) - 1 - i
+        ax.scatter(0, y, s=150, color=c, edgecolor="white", lw=1.2, zorder=3)
+        ax.text(.20, y + .15, name, fontsize=9.6, color=INK, va="center", fontweight="bold")
+        ax.text(.20, y - .24, txt, fontsize=8.5, color=MUT, va="center")
+    ax.text(0, -1.15, f"as of {AS_OF} \u2014 remote state is not live here",
+            fontsize=8.2, color=MUT)
+    ax.set_xlim(-.22, 5.4); ax.set_ylim(-1.6, len(rows) - .3)
+    ax.set_xticks([]); ax.set_yticks([])
+    apply_axes(ax, None, None, "(b)  Which interfaces, and where each stands")
+    for sp in ("left", "bottom"):
+        ax.spines[sp].set_visible(False)
+
+
+def panel_c(ax, steps):
+    lines = [("Small periodic model", GO, "report its own DFT value (PBE+D3)"),
+             ("Full interface", COND, "UMA+D3 prediction, kept separately"),
+             ("What DEM may do", NOGO,
+              "use the two as a sensitivity band \u2014\nnot a validated material constant")]
+    for i, (h, c, t) in enumerate(lines):
+        y = 2 - i
+        ax.scatter(0, y, s=150, color=c, edgecolor="white", lw=1.2, zorder=3)
+        ax.text(.20, y + .18, h, fontsize=9.6, color=INK, va="center", fontweight="bold")
+        ax.text(.20, y - .28, t, fontsize=8.5, color=MUT, va="center", linespacing=1.35)
+    n_nogo = sum(1 for _, cls in steps if cls == "nogo")
+    ax.text(0, -1.15,
+            f"fixed before any production run \u2014 {len(steps)} review rounds, "
+            f"{n_nogo} NO-GO",
+            fontsize=8.2, color=MUT)
+    ax.set_xlim(-.22, 5.4); ax.set_ylim(-1.6, 2.7)
+    ax.set_xticks([]); ax.set_yticks([])
+    apply_axes(ax, None, None, "(c)  Decision A\u2032 \u2014 what each number may be used for")
+    for sp in ("left", "bottom"):
+        ax.spines[sp].set_visible(False)
 
 
 def build(out=None):
-    steps, rounds = load_path(), load_rounds()
-    fig, axs = plt.subplots(1, 3, figsize=(14.4, 3.9),
-                            gridspec_kw={"width_ratios": [1.25, 1.0, 1.05]})
-    panel_a(axs[0], steps); panel_b(axs[1], rounds); panel_c(axs[2])
+    steps = load_path()
+    n_v4, cnt = load_v4()
+    fig, axs = plt.subplots(1, 3, figsize=(14.4, 4.3),
+                            gridspec_kw={"width_ratios": [.92, 1.12, 1.02]})
+    panel_a(axs[0]); panel_b(axs[1], n_v4, cnt); panel_c(axs[2], steps)
     fig.tight_layout()
     p = pathlib.Path(out) if out else OUT / "wad_briefing_2026_09_28.png"
     fig.savefig(p, dpi=300, bbox_inches="tight"); plt.close(fig)
@@ -185,6 +205,12 @@ def _selftest():
             f"[양성] P0 가 {rounds[0][1]} → {rounds[-1][1]} 로 떨어진다")
         chk(rounds[-1][3] == "go", "[양성] 마지막 라운드가 GO 다")
         src_all = pathlib.Path(__file__).read_text("utf-8")
+        n_v4, cnt = load_v4()
+        chk(n_v4 == sum(cnt.values()) and n_v4 > 0,
+            f"[양성] V4 잡 {n_v4} 개가 state 합과 같다 {cnt}")
+        chk(set(cnt) <= {"done", "run", "wait", "failed_technical", "not_started",
+                         "incomplete"},
+            f"[⛔음성] 모르는 state 가 섞여 있지 않다 {set(cnt)}")
         steps = load_path()
         chk(len(steps) == 7 and steps[0][1] == "nogo",
             f"[양성] 판정 사슬 {len(steps)} 단계 · 첫 단계 NO-GO")
