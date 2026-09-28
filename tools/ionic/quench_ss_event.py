@@ -395,6 +395,15 @@ def _summary(res):
             L.append(f"   P{pk}: {q['frames_not4']} 프레임 {q['by_segment']} · 배위 {q['coord_values']} · 이탈 {q['episodes']} 회 · 처음 #{q['first']['frame']} "
                      f"({q['first']['segment']} · T_set {q['first']['T_set_K']}) · "
                      + ("**끝까지 이탈**" if q["in_last_frame"] else f"회복 #{rec['frame']} ({rec['segment']} · T_set {rec['T_set_K']})"))
+    cs = res.get("S_owner_census")
+    if cs and cs.get("n_S"):
+        L.append(f"S 소속-이동 (전수 {cs['n_S']}): **이동 {cs['n_moved']}** · 일시변화만 {cs['n_transient_only']} · "
+                 f"마지막 프레임 자유 {cs['n_free_at_last_frame']} {cs['free_at_last_frame']}")
+        L.append(f"   P 별 '남의 S' (마지막 프레임): {cs['foreign_S_per_P_at_last_frame'] or '없음'}")
+        for m in cs["moved"]:
+            c0 = m["changes"][0]
+            L.append(f"   S{m['S']}: P{m['from_P']} → P{m['to_P']} · 변화 {m['n_changes']} 회 · "
+                     f"첫 변화 #{c0['frame']} t={c0['t_ps']} ps (설정 {c0['T_set_K']} K · {c0['segment']})")
     ts = res.get("S_trace_stats")
     if ts:
         for sk, q in ts["per_S"].items():
