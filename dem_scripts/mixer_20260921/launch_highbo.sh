@@ -290,7 +290,7 @@ cmd_rest() {
   lp=$(command -v "$LMP") || { echo "⛔ $LMP 없음 — LMP=<실행파일>.  발사 0"; return 1; }
   #  관문 1 — 스모크 증서 · 관문 2 — 코호트 (표준 라이브러리 python3 만)
   python3 - "$cert" "$OUT" "$FIRST" "$lp" "$ROOT" "${REST[@]}" <<'PY' || { echo "⛔ 증서 · 코호트 관문 불합격 — 나머지 둘 발사 0"; return 1; }
-import hashlib, json, os, sys
+import glob, hashlib, json, math, os, re, sys
 cert, out, first, lmp_path, root, *rest = sys.argv[1:]
 FILES = ('in.mixer', 'Drum.stl', 'Front.stl', 'Back.stl')
 bad = 0
@@ -395,6 +395,61 @@ e0d = os.path.join(out, e0, 'in.mixer')
 b2 = refiles(os.path.join(out, e0, 'post'), rf.get('frames'))
 say(rf.get('name') == e0 and os.path.isfile(e0d) and rf.get('deck_sha256') == sha(e0d) and not b2,
     f'기준 = {e0} · 덱 · 프레임 (다시 해시)' + (f' — 어긋남 {b2[:3]}' if b2 else ''))
+#  ★ 스모크 창의 **입력 집합** (2026-09-28, Codex 5 차 HBR5-02) — 위 refiles 는 증서 목록 **안** 파일만 다시 해시한다 ⇒ 증서 뒤 bin 0 에
+#    같은 step 의 복제 (copy_400) 를 넣어도 통과했는데, 같은 폴더를 판독기로 재판독하면 24/25 · smoke.complete=false 였다.
+#    판독기와 **같은 파일 규칙** (scripts/measure_bed_aspect.py STEP_RE · frames — test_launcher HL④o 가 같음을 본다) 으로 지금 폴더의
+#    bin 0 창 [t₀, t₀ + 한 바퀴) 과 E0 t₀ 를 다시 열거해 중복 · 격자 밖 · 결손 · 증서와 다른 파일을 거부한다.  bin 1 이후의 정상 프레임
+#    추가는 막지 않는다 (첫 런은 계속 돈다).  바이트가 증서 판독 때와 같으면 스키마 검사도 그때 선 것이다 (판독기 validate_frame).
+print('── 관문: 스모크 창 입력 집합 — 지금 폴더를 판독기 파일 규칙으로 다시 열거 (bin 0 · E0 t₀ · HBR5-02)')
+STEP_RE = re.compile(r'_(\d+)\.[A-Za-z]+$')
+
+
+def enum(post):
+    got = {}
+    for f_ in glob.glob(os.path.join(post, '*')):
+        m_ = STEP_RE.search(os.path.basename(f_))
+        if m_:
+            got.setdefault(int(m_.group(1)), []).append(f_)
+    return got
+
+
+def _int(x):
+    return isinstance(x, int) and not isinstance(x, bool)
+
+
+t0 = e.get('t0_step')
+pl = e.get('plan') if isinstance(e.get('plan'), dict) else {}
+spr, de_, end_ = pl.get('steps_per_rev'), pl.get('dump_every'), pl.get('steps_total')
+okw = (_int(t0) and t0 >= 0 and isinstance(spr, (int, float)) and not isinstance(spr, bool) and math.isfinite(spr) and spr > 0
+       and _int(de_) and de_ > 0 and _int(end_) and end_ >= t0)
+say(okw, f'증서의 창 정의 — t0_step {show(t0)} · plan.steps_per_rev {show(spr)} · dump_every {show(de_)} · steps_total {show(end_)}')
+if okw:
+    def in0(s_):
+        return s_ >= t0 and math.floor((s_ - t0) / spr + 1e-9) == 0        # 판독기 _bin 과 같은 식
+    lat0 = {s_ for s_ in range(t0, end_ + 1, de_) if in0(s_)}
+    cur = {s_: ps_ for s_, ps_ in enum(os.path.join(out, first, 'post')).items() if in0(s_)}
+    dup = sorted(s_ for s_, ps_ in cur.items() if len(ps_) > 1)
+    off = sorted(set(cur) - lat0)
+    miss = sorted(lat0 - set(cur))
+    say(not dup, f'bin 0 에 같은 step 의 덤프 둘 이상: {dup[:4] if dup else "없음"}')
+    say(not off, f'bin 0 격자 밖 프레임 (격자 = t₀ + k·dump_every): {off[:4] if off else "없음"}')
+    say(not miss, f'bin 0 결손: {miss[:4] if miss else "없음"} (계획 격자 {len(lat0)} 장)')
+    try:
+        cf = sorted([int(a_), os.path.basename(str(b_)), str(c_)] for a_, b_, c_ in ((ru.get('frames') or {}).get('files') or [])
+                    if in0(int(a_)))
+    except (TypeError, ValueError):
+        cf = None
+    now = sorted([s_, os.path.basename(ps_[0]), sha(ps_[0])] for s_, ps_ in cur.items() if len(ps_) == 1)
+    say(cf is not None and bool(now) and cf == now,
+        f'bin 0 파일 (step · 이름 · sha256) = 증서가 판독한 그 파일들 ({len(now)} 장 / 증서 {len(cf) if cf is not None else "읽기 실패"})')
+rfl = (rf.get('frames') or {}).get('files') or []
+try:
+    rst0 = int(rfl[0][0]) if len(rfl) == 1 else None
+except (TypeError, ValueError, IndexError):
+    rst0 = None
+e0cur = enum(os.path.join(out, e0, 'post')).get(rst0, []) if rst0 is not None else []
+say(rst0 is not None and len(e0cur) == 1 and [rst0, os.path.basename(e0cur[0]), sha(e0cur[0])] == [rst0, os.path.basename(str(rfl[0][1])), str(rfl[0][2])],
+    f'E0 기준 t₀ step {rst0} 의 덤프 = 정확히 한 장 · 증서와 같은 파일 (지금 {len(e0cur)} 장)')
 print(f'  · (참고) 증서 mtime {"≥" if os.stat(cert).st_mtime_ns >= os.stat(fs).st_mtime_ns else "<"} 첫 시드 봉인 mtime — 판정에 안 쓴다 '
       '(복사 · 재판독이면 mtime 은 새로워진다 · HBR4-05)')
 print('── 관문: 코호트 — 첫 시드 봉인 (first) 때의 덱 · STL · 바이너리 그대로인가')

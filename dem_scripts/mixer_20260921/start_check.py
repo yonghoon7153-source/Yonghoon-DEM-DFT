@@ -8,6 +8,8 @@
   거부 기록 = <런>/job_start.refused.<job id>.json (통과 기록을 **덮지 않는다** — 두 번째 시작이 첫 실행의 증거를 지우지 않게).
 
 대조 (전부 서야 통과):
+  ★ 봉인 **모양** 먼저 (2026-09-28, Codex 5 차 HBR5-01 — 옛 판은 `{}` · `null` · `[]` · `"invalid"` 를 rc 0 · ok=true 로 통과시켰다):
+  비어 있지 않은 dict · schema · backend · lmp_realpath (절대경로) · 64 자리 sha256 들 · slurm.np (양의 정수) → 그 뒤 비교는 조건 없이 ·
   봉인 스키마 · backend = slurm · 바이너리 (러너가 부를 절대경로) realpath = 봉인 · sha256 = 봉인 ·
   in.mixer · Drum/Front/Back.stl sha256 = 봉인 · **실행 중인 러너 자신** (SLURM 이 제출 때 복사해 둔 사본 = 러너의 "$0") sha256 =
   봉인의 러너 sha256 · 이 대조기 자신의 sha256 = 봉인 · SLURM_NTASKS = 봉인 np (SLURM 밖이면 거부) ·
@@ -21,6 +23,7 @@ import hashlib
 import json
 import os
 import platform
+import re
 import socket
 import sys
 import time
@@ -46,8 +49,53 @@ def _sha_or_none(p):
         return None
 
 
+_HEX64 = re.compile(r'[0-9a-f]{64}')
+
+
+def _is_sha(x):
+    return isinstance(x, str) and _HEX64.fullmatch(x) is not None
+
+
+def seal_problems(lr):
+    """봉인의 **모양** 검사 → 사유 목록 (비면 통과).  비교 전에 먼저 선다 (2026-09-28, Codex 5 차 HBR5-01).
+
+    옛 판은 `json.load` 에 성공한 비객체 (`null` · `[]` · `"invalid"`) 를 빈 dict 로 바꾸고, 주요 검사가 전부 `if lr and …` 라
+    **빈 봉인이면 비교를 통째로 건너뛰어** rc 0 · ok=true 를 냈다 (러너는 그 뒤 mpirun 을 부른다).  이제 비어 있지 않은 dict ·
+    정확한 schema / backend · 필수 nested 구조 · 타입 (sha256 = 64 자리 16 진 · np = bool 아닌 양의 정수) 을 먼저 요구한다."""
+    if not isinstance(lr, dict):
+        return [f'봉인이 JSON 객체가 아니다 ({type(lr).__name__}) — 빈 · 비객체 봉인은 봉인이 아니다 (HBR5-01)']
+    if not lr:
+        return ['봉인이 빈 객체 {} 다 — 빈 봉인은 봉인이 아니다 (HBR5-01)']
+    why = []
+    if lr.get('schema') != LAUNCH_SCHEMA:
+        why.append(f'봉인 스키마 {lr.get("schema")!r} ≠ {LAUNCH_SCHEMA}')
+    if lr.get('backend') != 'slurm':
+        why.append(f'봉인 backend = {lr.get("backend")!r} (slurm 이어야 — 이 대조기는 SLURM 러너 전용)')
+    if not (isinstance(lr.get('lmp_realpath'), str) and os.path.isabs(lr.get('lmp_realpath'))):
+        why.append(f'봉인 lmp_realpath 가 절대경로 문자열이 아니다 ({lr.get("lmp_realpath")!r})')
+    if not _is_sha(lr.get('lmp_sha256')):
+        why.append('봉인 lmp_sha256 이 64 자리 16 진이 아니다')
+    fs = lr.get('sha256')
+    if not (isinstance(fs, dict) and all(_is_sha(fs.get(f)) for f in FILES)):
+        why.append(f'봉인 sha256 이 {list(FILES)} 전부의 64 자리 16 진 dict 가 아니다')
+    sl = lr.get('slurm')
+    if not isinstance(sl, dict):
+        why.append('봉인 slurm 블록이 dict 가 아니다')
+    else:
+        np_ = sl.get('np')
+        if not (isinstance(np_, int) and not isinstance(np_, bool) and np_ >= 1):
+            why.append(f'봉인 slurm.np 가 양의 정수가 아니다 ({np_!r})')
+        for k in ('runner_sha256', 'start_check_sha256'):
+            if not _is_sha(sl.get(k)):
+                why.append(f'봉인 slurm.{k} 가 64 자리 16 진이 아니다')
+    return why
+
+
 def check(d, lmp, runner, env):
-    """→ (기록 dict, 사유 목록).  사유가 비어야 통과."""
+    """→ (기록 dict, 사유 목록).  사유가 비어야 통과.
+
+    ★ HBR5-01 — 모양 검사 (seal_problems) 가 먼저 서고, 아래 비교는 **조건 없이** 전부 돈다 (옛 `if lr and …` 는 빈 봉인이면
+      건너뛰었다).  모양이 틀린 봉인은 비교 항목도 같이 실패해 사유가 여럿 나온다 — 거부만 확실하면 된다."""
     why = []
     lp = os.path.join(d, 'launch_record.json')
     try:
@@ -56,29 +104,27 @@ def check(d, lmp, runner, env):
     except (OSError, ValueError) as e:
         lr = None
         why.append(f'봉인 (launch_record.json) 을 읽을 수 없다 ({type(e).__name__})')
+    else:
+        why += seal_problems(lr)
     if not isinstance(lr, dict):
         lr = {}
-    if lr and lr.get('schema') != LAUNCH_SCHEMA:
-        why.append(f'봉인 스키마 {lr.get("schema")!r} ≠ {LAUNCH_SCHEMA}')
-    if lr and lr.get('backend') != 'slurm':
-        why.append(f'봉인 backend = {lr.get("backend")!r} (slurm 이어야 — 이 대조기는 SLURM 러너 전용)')
     sl = lr.get('slurm') if isinstance(lr.get('slurm'), dict) else {}
     lmp_real = os.path.realpath(lmp)
     lmp_sha = _sha_or_none(lmp)
-    if lr and lmp_real != lr.get('lmp_realpath'):
+    if lmp_real != lr.get('lmp_realpath'):
         why.append(f'바이너리 경로 {lmp_real} ≠ 봉인 {lr.get("lmp_realpath")}')
-    if lr and (lmp_sha is None or lmp_sha != lr.get('lmp_sha256')):
+    if lmp_sha is None or lmp_sha != lr.get('lmp_sha256'):
         why.append(f'바이너리 sha256 {str(lmp_sha)[:12]}… ≠ 봉인 {str(lr.get("lmp_sha256"))[:12]}… (제출 뒤 다시 빌드됐거나 다른 파일)')
     want = lr.get('sha256') if isinstance(lr.get('sha256'), dict) else {}
     got = {f: _sha_or_none(os.path.join(d, f)) for f in FILES}
     changed = [f for f in FILES if got[f] is None or got[f] != want.get(f)]
-    if lr and changed:
+    if changed:
         why.append(f'제출 뒤 바뀌었거나 없는 파일 {changed}')
     run_sha = _sha_or_none(runner)
-    if lr and (run_sha is None or run_sha != sl.get('runner_sha256')):
+    if run_sha is None or run_sha != sl.get('runner_sha256'):
         why.append(f'실행 중인 러너 sha256 {str(run_sha)[:12]}… ≠ 봉인한 러너 {str(sl.get("runner_sha256"))[:12]}… (제출 뒤 러너 수정)')
     me = _sha_or_none(os.path.abspath(__file__))
-    if lr and me != sl.get('start_check_sha256'):
+    if me is None or me != sl.get('start_check_sha256'):
         why.append(f'이 시작 대조기 sha256 {str(me)[:12]}… ≠ 봉인 {str(sl.get("start_check_sha256"))[:12]}…')
     nt = env.get('SLURM_NTASKS')
     try:
@@ -87,7 +133,7 @@ def check(d, lmp, runner, env):
         nt_i = None
     if nt_i is None:
         why.append('SLURM_NTASKS 없음 — SLURM job 밖에서 러너를 돌렸다 (sbatch 로만)')
-    elif lr and nt_i != sl.get('np'):
+    elif nt_i != sl.get('np'):
         why.append(f'SLURM_NTASKS {nt_i} ≠ 봉인 np {sl.get("np")} (#SBATCH -n ↔ mpirun -np 짝)')
     for f in ('log.lmp', 'job_start.json'):
         if os.path.exists(os.path.join(d, f)):

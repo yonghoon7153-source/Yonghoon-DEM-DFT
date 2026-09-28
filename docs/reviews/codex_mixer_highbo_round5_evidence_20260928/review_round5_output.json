@@ -1,0 +1,432 @@
+{
+  "normal": {
+    "passed": true,
+    "reasons": [],
+    "pos_bound_m": 1.3915163690092961e-14,
+    "angle_bound_deg": 1.1520307912925133e-10,
+    "ab_max": 0.0,
+    "consumer": {
+      "accepted": true,
+      "eps": 1.1520307912925133e-10,
+      "pos_bound": 1.3915163690092961e-14
+    }
+  },
+  "different_binary": {
+    "accepted": false,
+    "reason": "영수증 바이너리 8c06fd57d279… ≠ 이 런 발사 봉인의 바이너리 000000000000… — 배너가 같아도 다른 빌드 (HBR4-02)"
+  },
+  "different_clock": {
+    "accepted": false,
+    "reason": "영수증 운동 시계 [['move', 'mvD', 'Drum', 2001], ['move', 'mvF', 'Front', 2001], ['move', 'mvB', 'Back', 2001], ['end', 14001]] ≠ 이 덱 [['move', 'mvD', 'Drum', 3001], ['move', 'mvF', 'Front', 3001], ['move', 'mvB', 'Back', 3001], ['end', 15001]] (mover 생성·해제 · read_restart · run 끝 step) — 다른 step 구조에서 잰 각 오차는 이식하지 않는다 (HBR4-02)"
+  },
+  "resume_refused": {
+    "accepted": false,
+    "reason": "재개된 런 (['in.resume']) — 이 영수증은 바이너리 + 메시 운동 계약이고 런별 상태 확인 (3차 Q5) 이 아니다"
+  },
+  "nan_B": {
+    "passed": false,
+    "reasons": [
+      "B step 9000: 삼각형 156 ≠ 156 또는 비유한 좌표",
+      "B step 9500: 삼각형 156 ≠ 156 또는 비유한 좌표",
+      "B step 10000: 삼각형 156 ≠ 156 또는 비유한 좌표",
+      "B step 10500: 삼각형 156 ≠ 156 또는 비유한 좌표",
+      "B step 11000: 삼각형 156 ≠ 156 또는 비유한 좌표",
+      "B step 11500: 삼각형 156 ≠ 156 또는 비유한 좌표",
+      "B step 12000: 삼각형 156 ≠ 156 또는 비유한 좌표",
+      "B step 12500: 삼각형 156 ≠ 156 또는 비유한 좌표",
+      "B step 13000: 삼각형 156 ≠ 156 또는 비유한 좌표",
+      "B step 13500: 삼각형 156 ≠ 156 또는 비유한 좌표",
+      "B step 14000: 삼각형 156 ≠ 156 또는 비유한 좌표",
+      "B (재개) 메시 ≠ A — 꼭짓점 최대 차 inf m",
+      "영수증 지표에 비유한 값 (오차 6.115201030866884e-13 · 잔차 5.700735022928782e-16 · A↔B inf · 경계 1.1520307912925133e-10 · 위치 1.3915163690092961e-14)"
+    ],
+    "pos_bound_m": 1.3915163690092961e-14,
+    "angle_bound_deg": 1.1520307912925133e-10,
+    "ab_max": "inf",
+    "consumer": {
+      "accepted": false,
+      "reason": "영수증 passed = False — 불리언 true 가 아니다"
+    }
+  },
+  "translation": {
+    "passed": true,
+    "reasons": [],
+    "pos_bound_m": 1.3856407753358143e-07,
+    "angle_bound_deg": 1.1520307912925133e-10,
+    "ab_max": 0.0,
+    "consumer": {
+      "accepted": true,
+      "eps": 1.1520307912925133e-10,
+      "pos_bound": 1.3856407753358143e-07
+    }
+  },
+  "translation_wall": {
+    "verdict": "TECH",
+    "phase_status": "receipt",
+    "wall_max": 0.011330436955530035,
+    "wall_lower_max": 0.0076695630444710795,
+    "tech": [
+      "위상 불확실성으로 미식별 — ± 1.15e-10° 구간 안에서 벽 δ/r 0.7670–1.1330 % 가 1 % 를 걸친다 (실제 1 % 초과 실측이 아니다 · HBR3-03)"
+    ],
+    "reject": [],
+    "window": [
+      2000,
+      3000
+    ],
+    "n_frames": 3
+  },
+  "empty_seal_lists": {
+    "passed": false,
+    "reasons": [
+      "봉인 파일 목록이 기대와 다르다 — 빠짐 ['A/Back.stl', 'A/Drum.stl', 'A/Front.stl', 'A/in.phase_a'] · 기대 밖 [] (빈 · 부분 목록 거부 · HBR4-01)",
+      "A 실행 결과 기록의 덤프 해시 목록이 실제 덤프 집합과 다르다 — 기록 0 개 · 실제 28 개 (빠짐 ['mesh_1000.stl', 'mesh_10000.stl', 'mesh_10500.stl'] · 기대 밖 [] · HBR4-01)",
+      "B 실행 결과 기록의 덤프 해시 목록이 실제 덤프 집합과 다르다 — 기록 0 개 · 실제 11 개 (빠짐 ['mesh_10000.stl', 'mesh_10500.stl', 'mesh_11000.stl'] · 기대 밖 [] · HBR4-01)"
+    ],
+    "pos_bound_m": 1.3915163690092961e-14,
+    "angle_bound_deg": 1.1520307912925133e-10,
+    "ab_max": 0.0,
+    "consumer": {
+      "accepted": false,
+      "reason": "영수증 passed = False — 불리언 true 가 아니다"
+    }
+  },
+  "static_e0": {
+    "verdict": "PASS",
+    "phase_status": "static",
+    "wall_max": 0.005000000000007114,
+    "wall_lower_max": 0.005000000000007114,
+    "tech": [],
+    "reject": [],
+    "window": [
+      2000,
+      2000
+    ],
+    "n_frames": 1
+  },
+  "static_no_expected": {
+    "verdict": "TECH",
+    "phase_status": "unidentified",
+    "wall_max": 0.005000000000007114,
+    "wall_lower_max": 0.005000000000007114,
+    "tech": [
+      "드럼 회전각의 독립 근거가 없고 (재개-위상 영수증 없음 · 정지 벽 아님 · post_mesh/ 덤프는 판정 근거가 아니다 — HBR4-04) 벽 δ/r 가 각에 따라 -5.31–26.68 % — 한도 1 % 판정 불가.  예정각으로 잰 0.500 % 는 미검증 (판정에 안 씀)"
+    ],
+    "reject": [],
+    "window": [
+      2000,
+      2000
+    ],
+    "n_frames": 1
+  },
+  "static_end_overlap": {
+    "verdict": "REJECT",
+    "phase_status": "static",
+    "wall_max": 0.02000000000000053,
+    "wall_lower_max": 0.02000000000000053,
+    "tech": [],
+    "reject": [
+      "벽 최대 δ/r 2.000 % > 1 % (step 2000 · 타입 3 · Back · 넘은 접촉 1 건/창 · 근거 static)"
+    ],
+    "window": [
+      2000,
+      2000
+    ],
+    "n_frames": 1
+  },
+  "disabled_garbage_mesh": {
+    "verdict": "REJECT",
+    "phase_status": "static",
+    "wall_max": 0.02000000000000053,
+    "wall_lower_max": 0.02000000000000053,
+    "tech": [],
+    "reject": [
+      "벽 최대 δ/r 2.000 % > 1 % (step 2000 · 타입 3 · Back · 넘은 접촉 1 건/창 · 근거 static)"
+    ],
+    "window": [
+      2000,
+      2000
+    ],
+    "n_frames": 1
+  },
+  "start_guard_normal": {
+    "ok": true,
+    "reasons": []
+  },
+  "start_empty_dict": {
+    "rc": 0,
+    "stdout": "✓ 시작 대조 통과 — start_guard · job 12345 · ntasks 20 · lmp c2d3a377b21c… · 러너 d71d6b87a642… → job_start.json\n",
+    "stderr": "",
+    "job_start": {
+      "schema": "mixer_highbo_job_start/1",
+      "ok": true,
+      "reasons": [],
+      "run": "start_guard",
+      "time_local": "2026-09-28T15:07:54+09:00",
+      "time_utc": "2026-09-28T06:07:54Z",
+      "hostname": "DESKTOP-IK8J81H",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "slurm_job_id": "12345",
+      "slurm_ntasks": 20,
+      "slurm_nodelist": null,
+      "lmp_path": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr5_synthetic_dvq6uy96\\guard_binary",
+      "lmp_realpath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\hbr5_synthetic_dvq6uy96\\guard_binary",
+      "lmp_sha256": "c2d3a377b21cfdee7ea2402665b589dd3e9340c519a94fa3fab6bb817dcc906f",
+      "runner_executed": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr5_synthetic_dvq6uy96\\start_guard\\run_lh.sbatch",
+      "runner_sha256_executed": "d71d6b87a642de3941d56951ed16a49dfbd6bc8602b8c72a56fc302a470c0851",
+      "start_check_sha256": "c60835b0d266dac977b735648510b49b6da4f2e6e338bc91d41ff1339f189112",
+      "launch_record_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "sha256": {
+        "in.mixer": "fce85c543e0b6bbc7d21505d8a8316806e89960d1436d77d679c74d3e2155755",
+        "Drum.stl": "fe821a8ab6db0d94151e9d84bf19cc1fad77abb417cd640bf4577c2f87279730",
+        "Front.stl": "443f9c3c859b2562dc041cde2af712fdfc4ab0225032ebb9420267c781843c81",
+        "Back.stl": "2e7b962d14ced968d8178456feaf2f6a4856edd4b151070c23a8ac1588a461e5"
+      }
+    }
+  },
+  "start_null": {
+    "rc": 0,
+    "stdout": "✓ 시작 대조 통과 — start_guard · job 12345 · ntasks 20 · lmp c2d3a377b21c… · 러너 d71d6b87a642… → job_start.json\n",
+    "stderr": "",
+    "job_start": {
+      "schema": "mixer_highbo_job_start/1",
+      "ok": true,
+      "reasons": [],
+      "run": "start_guard",
+      "time_local": "2026-09-28T15:07:54+09:00",
+      "time_utc": "2026-09-28T06:07:54Z",
+      "hostname": "DESKTOP-IK8J81H",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "slurm_job_id": "12345",
+      "slurm_ntasks": 20,
+      "slurm_nodelist": null,
+      "lmp_path": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr5_synthetic_dvq6uy96\\guard_binary",
+      "lmp_realpath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\hbr5_synthetic_dvq6uy96\\guard_binary",
+      "lmp_sha256": "c2d3a377b21cfdee7ea2402665b589dd3e9340c519a94fa3fab6bb817dcc906f",
+      "runner_executed": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr5_synthetic_dvq6uy96\\start_guard\\run_lh.sbatch",
+      "runner_sha256_executed": "d71d6b87a642de3941d56951ed16a49dfbd6bc8602b8c72a56fc302a470c0851",
+      "start_check_sha256": "c60835b0d266dac977b735648510b49b6da4f2e6e338bc91d41ff1339f189112",
+      "launch_record_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "sha256": {
+        "in.mixer": "fce85c543e0b6bbc7d21505d8a8316806e89960d1436d77d679c74d3e2155755",
+        "Drum.stl": "fe821a8ab6db0d94151e9d84bf19cc1fad77abb417cd640bf4577c2f87279730",
+        "Front.stl": "443f9c3c859b2562dc041cde2af712fdfc4ab0225032ebb9420267c781843c81",
+        "Back.stl": "2e7b962d14ced968d8178456feaf2f6a4856edd4b151070c23a8ac1588a461e5"
+      }
+    }
+  },
+  "start_list": {
+    "rc": 0,
+    "stdout": "✓ 시작 대조 통과 — start_guard · job 12345 · ntasks 20 · lmp c2d3a377b21c… · 러너 d71d6b87a642… → job_start.json\n",
+    "stderr": "",
+    "job_start": {
+      "schema": "mixer_highbo_job_start/1",
+      "ok": true,
+      "reasons": [],
+      "run": "start_guard",
+      "time_local": "2026-09-28T15:07:54+09:00",
+      "time_utc": "2026-09-28T06:07:54Z",
+      "hostname": "DESKTOP-IK8J81H",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "slurm_job_id": "12345",
+      "slurm_ntasks": 20,
+      "slurm_nodelist": null,
+      "lmp_path": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr5_synthetic_dvq6uy96\\guard_binary",
+      "lmp_realpath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\hbr5_synthetic_dvq6uy96\\guard_binary",
+      "lmp_sha256": "c2d3a377b21cfdee7ea2402665b589dd3e9340c519a94fa3fab6bb817dcc906f",
+      "runner_executed": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr5_synthetic_dvq6uy96\\start_guard\\run_lh.sbatch",
+      "runner_sha256_executed": "d71d6b87a642de3941d56951ed16a49dfbd6bc8602b8c72a56fc302a470c0851",
+      "start_check_sha256": "c60835b0d266dac977b735648510b49b6da4f2e6e338bc91d41ff1339f189112",
+      "launch_record_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "sha256": {
+        "in.mixer": "fce85c543e0b6bbc7d21505d8a8316806e89960d1436d77d679c74d3e2155755",
+        "Drum.stl": "fe821a8ab6db0d94151e9d84bf19cc1fad77abb417cd640bf4577c2f87279730",
+        "Front.stl": "443f9c3c859b2562dc041cde2af712fdfc4ab0225032ebb9420267c781843c81",
+        "Back.stl": "2e7b962d14ced968d8178456feaf2f6a4856edd4b151070c23a8ac1588a461e5"
+      }
+    }
+  },
+  "start_string": {
+    "rc": 0,
+    "stdout": "✓ 시작 대조 통과 — start_guard · job 12345 · ntasks 20 · lmp c2d3a377b21c… · 러너 d71d6b87a642… → job_start.json\n",
+    "stderr": "",
+    "job_start": {
+      "schema": "mixer_highbo_job_start/1",
+      "ok": true,
+      "reasons": [],
+      "run": "start_guard",
+      "time_local": "2026-09-28T15:07:55+09:00",
+      "time_utc": "2026-09-28T06:07:55Z",
+      "hostname": "DESKTOP-IK8J81H",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "slurm_job_id": "12345",
+      "slurm_ntasks": 20,
+      "slurm_nodelist": null,
+      "lmp_path": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr5_synthetic_dvq6uy96\\guard_binary",
+      "lmp_realpath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\hbr5_synthetic_dvq6uy96\\guard_binary",
+      "lmp_sha256": "c2d3a377b21cfdee7ea2402665b589dd3e9340c519a94fa3fab6bb817dcc906f",
+      "runner_executed": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr5_synthetic_dvq6uy96\\start_guard\\run_lh.sbatch",
+      "runner_sha256_executed": "d71d6b87a642de3941d56951ed16a49dfbd6bc8602b8c72a56fc302a470c0851",
+      "start_check_sha256": "c60835b0d266dac977b735648510b49b6da4f2e6e338bc91d41ff1339f189112",
+      "launch_record_sha256": "5300ed0fabc7e270acce0ed6f1a575ec29129cc30c617e1e31540b6ebdc0e411",
+      "sha256": {
+        "in.mixer": "fce85c543e0b6bbc7d21505d8a8316806e89960d1436d77d679c74d3e2155755",
+        "Drum.stl": "fe821a8ab6db0d94151e9d84bf19cc1fad77abb417cd640bf4577c2f87279730",
+        "Front.stl": "443f9c3c859b2562dc041cde2af712fdfc4ab0225032ebb9420267c781843c81",
+        "Back.stl": "2e7b962d14ced968d8178456feaf2f6a4856edd4b151070c23a8ac1588a461e5"
+      }
+    }
+  },
+  "start_changed_deck": {
+    "ok": false,
+    "reasons": [
+      "제출 뒤 바뀌었거나 없는 파일 ['in.mixer']"
+    ]
+  },
+  "np1_receipt_on_np20": {
+    "accepted": true,
+    "eps": 0.001165134577770176,
+    "pos_bound": 3.1653155079665423e-07,
+    "receipt_prefix": "mpirun --oversubscribe --bind-to none -np 1",
+    "run_np": 20,
+    "fixture_note": "Synthetic run seal/start record; not an executed MPI job"
+  },
+  "smoke_normal": {
+    "rc": 0,
+    "stdout": "── 관문: 스모크 증서 (bin 0 · 사전등록 §8 ③ · D-4) — C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr5_synthetic_dvq6uy96\\smoke\\smoke.json\n  ✓ run = LH_s32452843 (목록의 첫 원소 · 기대 LH_s32452843)\n  ✓ smoke.complete = true (true 여야 — bin 0 계획 프레임 전부)\n  ✓ smoke.tech_smoke = [] ([] 여야)\n  ✓ smoke.qc_repr.pass = true (true 여야 — bin 0 부피 누락 QC)\n  ✓ 첫 시드 봉인 = LH_s32452843 · first 단계\n── 관문: 증서 출처 — 판독 규약 · 판독기 · 덱 · 발사 봉인 · 프레임 (이 폴더에서 다시 해시)\n  ✓ provenance.schema = \"mixing_provenance/1\" (출처 블록이 없는 판독기의 증서는 받지 않는다)\n  ✓ 판독 규약 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138} = 등록 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138}\n  ✓ 판독기 sha256 9f17569cdca3… = 지금 리포의 판독기\n  ✓ 출처 run = \"LH_s32452843\" · 덱 sha256 = 첫 봉인 때\n  ✓ 증서가 본 발사 봉인 sha256 = 지금 첫 시드 봉인 (다른 발사 · 옛 봉인 때의 증서가 아니다)\n  ✓ 판독 프레임 = 첫 시드 post/ 의 그 파일 (다시 해시)\n  ✓ 기준 = E0_s32452843 · 덱 · 프레임 (다시 해시)\n  · (참고) 증서 mtime ≥ 첫 시드 봉인 mtime — 판정에 안 쓴다 (복사 · 재판독이면 mtime 은 새로워진다 · HBR4-05)\n── 관문: 코호트 — 첫 시드 봉인 (first) 때의 덱 · STL · 바이너리 그대로인가\n  ✓ LH_s49979687: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ LH_s67867967: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ 바이너리 sha256 658dc0ec8abc… = 첫 시드 658dc0ec8abc…\n",
+    "stderr": ""
+  },
+  "smoke_wrong_grid": {
+    "rc": 1,
+    "stdout": "── 관문: 스모크 증서 (bin 0 · 사전등록 §8 ③ · D-4) — C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr5_synthetic_dvq6uy96\\smoke\\smoke.json\n  ✓ run = LH_s32452843 (목록의 첫 원소 · 기대 LH_s32452843)\n  ✓ smoke.complete = true (true 여야 — bin 0 계획 프레임 전부)\n  ✓ smoke.tech_smoke = [] ([] 여야)\n  ✓ smoke.qc_repr.pass = true (true 여야 — bin 0 부피 누락 QC)\n  ✓ 첫 시드 봉인 = LH_s32452843 · first 단계\n── 관문: 증서 출처 — 판독 규약 · 판독기 · 덱 · 발사 봉인 · 프레임 (이 폴더에서 다시 해시)\n  ✓ provenance.schema = \"mixing_provenance/1\" (출처 블록이 없는 판독기의 증서는 받지 않는다)\n  ✗ 판독 규약 {\"cells\": 2, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138} = 등록 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138}\n  ✓ 판독기 sha256 9f17569cdca3… = 지금 리포의 판독기\n  ✓ 출처 run = \"LH_s32452843\" · 덱 sha256 = 첫 봉인 때\n  ✓ 증서가 본 발사 봉인 sha256 = 지금 첫 시드 봉인 (다른 발사 · 옛 봉인 때의 증서가 아니다)\n  ✓ 판독 프레임 = 첫 시드 post/ 의 그 파일 (다시 해시)\n  ✓ 기준 = E0_s32452843 · 덱 · 프레임 (다시 해시)\n  · (참고) 증서 mtime ≥ 첫 시드 봉인 mtime — 판정에 안 쓴다 (복사 · 재판독이면 mtime 은 새로워진다 · HBR4-05)\n── 관문: 코호트 — 첫 시드 봉인 (first) 때의 덱 · STL · 바이너리 그대로인가\n  ✓ LH_s49979687: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ LH_s67867967: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ 바이너리 sha256 658dc0ec8abc… = 첫 시드 658dc0ec8abc…\n",
+    "stderr": ""
+  },
+  "smoke_after_duplicate": {
+    "rc": 0,
+    "stdout": "── 관문: 스모크 증서 (bin 0 · 사전등록 §8 ③ · D-4) — C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\hbr5_synthetic_dvq6uy96\\smoke\\smoke.json\n  ✓ run = LH_s32452843 (목록의 첫 원소 · 기대 LH_s32452843)\n  ✓ smoke.complete = true (true 여야 — bin 0 계획 프레임 전부)\n  ✓ smoke.tech_smoke = [] ([] 여야)\n  ✓ smoke.qc_repr.pass = true (true 여야 — bin 0 부피 누락 QC)\n  ✓ 첫 시드 봉인 = LH_s32452843 · first 단계\n── 관문: 증서 출처 — 판독 규약 · 판독기 · 덱 · 발사 봉인 · 프레임 (이 폴더에서 다시 해시)\n  ✓ provenance.schema = \"mixing_provenance/1\" (출처 블록이 없는 판독기의 증서는 받지 않는다)\n  ✓ 판독 규약 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138} = 등록 {\"cells\": 16, \"x_cells\": 4, \"n_min\": 20, \"axis\": \"x\", \"r_container\": 0.013138}\n  ✓ 판독기 sha256 9f17569cdca3… = 지금 리포의 판독기\n  ✓ 출처 run = \"LH_s32452843\" · 덱 sha256 = 첫 봉인 때\n  ✓ 증서가 본 발사 봉인 sha256 = 지금 첫 시드 봉인 (다른 발사 · 옛 봉인 때의 증서가 아니다)\n  ✓ 판독 프레임 = 첫 시드 post/ 의 그 파일 (다시 해시)\n  ✓ 기준 = E0_s32452843 · 덱 · 프레임 (다시 해시)\n  · (참고) 증서 mtime ≥ 첫 시드 봉인 mtime — 판정에 안 쓴다 (복사 · 재판독이면 mtime 은 새로워진다 · HBR4-05)\n── 관문: 코호트 — 첫 시드 봉인 (first) 때의 덱 · STL · 바이너리 그대로인가\n  ✓ LH_s49979687: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ LH_s67867967: in.mixer · Drum/Front/Back.stl sha256 = 첫 봉인 때\n  ✓ 바이너리 sha256 658dc0ec8abc… = 첫 시드 658dc0ec8abc…\n",
+    "stderr": ""
+  },
+  "smoke_recomputed_duplicate": {
+    "smoke": {
+      "bin": 0,
+      "expected": 25,
+      "present": 24,
+      "complete": false,
+      "n": 24,
+      "M_mean": 0.4312500000000001,
+      "qc_repr": {
+        "pass": true,
+        "am_mean": 1.0,
+        "se_mean": 1.0,
+        "min_by_type": {
+          "1": 1.0000000000000002,
+          "3": 1.0000000000000002
+        },
+        "rule": "mean(AM, SE) ≥ 0.9 ∧ 프레임별 · 상별 최솟값 ≥ 0.8 (부피 누락 QC — 대표성 보증 아님)"
+      },
+      "tech_smoke": [
+        "bin 0 결손 1/25 프레임 (step [400])",
+        "bin 0 에 같은 step 의 덤프가 둘 이상"
+      ]
+    },
+    "tech": [
+      "같은 step 의 덤프가 둘 이상 ([400]) — 그 step 은 계산에서 뺐다"
+    ]
+  },
+  "gen_end_truncated": {
+    "passed": true,
+    "reasons": [],
+    "original_run_total": 14001,
+    "reported_run_total": 9500,
+    "motion_clock": [
+      [
+        "move",
+        "mvD",
+        "Drum",
+        2001
+      ],
+      [
+        "move",
+        "mvF",
+        "Front",
+        2001
+      ],
+      [
+        "move",
+        "mvB",
+        "Back",
+        2001
+      ],
+      [
+        "end",
+        14001
+      ]
+    ],
+    "nA": 19,
+    "nB": 2,
+    "consumer": {
+      "accepted": true,
+      "eps": 1.1520307912925133e-10,
+      "pos_bound": 1.3915163690092961e-14
+    }
+  },
+  "position_uncertainty_pct_points": {
+    "AM_P": 0.046459937002297697,
+    "AM_S": 0.10453485825516982,
+    "SE": 0.4181394330206793
+  },
+  "radii_um": {
+    "AM_P": 681.3000000000001,
+    "AM_S": 302.8,
+    "SE": 75.7
+  },
+  "current_e0_decks": {
+    "32452843": {
+      "bytes": 7779,
+      "sha256": "a38cdc7494671979400c2037fac551b3a2567a64204def8b4b8338064130039c"
+    },
+    "49979687": {
+      "bytes": 7779,
+      "sha256": "b8ba25ace11e1300741d49e0ff6e2aadf47bf0ccd8fd1dd97de2283486582230"
+    },
+    "67867967": {
+      "bytes": 7779,
+      "sha256": "f38f0093433d251a5045a9da70f3750a8e4a8318a77265e413c01ef2afb36439"
+    }
+  },
+  "receipt_rows_comparison": {
+    "n1": 208,
+    "n2": 208,
+    "exact_equal": true,
+    "receipt_sha256": "f2724c4afd5572f6f90579212274d7c8f6dc756cb99399f141f1822478702a17"
+  },
+  "confounding_example": {
+    "Bo_effect": 0.0,
+    "environment_effects": [
+      0.12,
+      0.13,
+      0.11
+    ],
+    "delta": 0.12,
+    "SE": 0.005773502691896259,
+    "large": true,
+    "note": "constructed identifiability example, not measured mixer effect"
+  },
+  "assertions": {
+    "nan_closed": true,
+    "empty_seal_closed": true,
+    "binary_closed": true,
+    "clock_closed": true,
+    "resume_closed": true,
+    "position_closed": true,
+    "normal_receipt": true,
+    "normal_start": true,
+    "empty_start_bug": true,
+    "normal_smoke": true,
+    "wrong_grid_closed": true,
+    "extra_dump_bug": true,
+    "np20_unvalidated": true,
+    "gen_truncation_bug": true,
+    "static_closed": true,
+    "mesh_disabled": true
+  }
+}

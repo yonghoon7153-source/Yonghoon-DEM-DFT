@@ -1,0 +1,29 @@
+{
+  "note": "Commit timestamps record document versions, not exact run/read times. No commit messages or author/model identities included.",
+  "versions": [
+    {
+      "sha": "978158d334611847ed72c3086278cbee69091b63",
+      "committed_utc": "2026-09-28T07:26:59Z"
+    },
+    {
+      "sha": "e3858c8435ea148eb756937e6d3e006e2c42d811",
+      "committed_utc": "2026-09-28T06:13:16Z"
+    },
+    {
+      "sha": "20568797bea1b9895bfa92c293200941d0442178",
+      "committed_utc": "2026-09-27T13:33:00Z"
+    },
+    {
+      "sha": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "committed_utc": "2026-09-27T04:58:14Z"
+    },
+    {
+      "sha": "4cdcbf7bf0feff67bc2a2ae938ea6ca71d67c382",
+      "committed_utc": "2026-09-27T03:27:01Z"
+    },
+    {
+      "sha": "71a00bdd99e8d0a0ee8f3abef6d5df48ae823c17",
+      "committed_utc": "2026-09-22T01:58:28Z"
+    }
+  ]
+}

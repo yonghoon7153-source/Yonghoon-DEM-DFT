@@ -1,0 +1,102 @@
+{
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "pin": "978158d334611847ed72c3086278cbee69091b63",
+  "files": [
+    {
+      "path": "docs/reviews/codex_mixer_highbo_rereview4_request_20260928.md",
+      "ref": "978158d334611847ed72c3086278cbee69091b63",
+      "blob_sha": "708b8a5e5b7688190017c7decde6ba53fc42bfd6",
+      "trailing_lf": 2,
+      "crlf": false,
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/978158d334611847ed72c3086278cbee69091b63/docs/reviews/codex_mixer_highbo_rereview4_request_20260928.md"
+    },
+    {
+      "path": "docs/reviews/mixer_highbo_prereg_20260927.md",
+      "ref": "978158d334611847ed72c3086278cbee69091b63",
+      "blob_sha": "55d4c883012ff24fc6ba74d7e47aea7f55d7e098",
+      "trailing_lf": 1,
+      "crlf": false,
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/978158d334611847ed72c3086278cbee69091b63/docs/reviews/mixer_highbo_prereg_20260927.md"
+    },
+    {
+      "path": "docs/reviews/mixer_layered_prereg_20260921.md",
+      "ref": "978158d334611847ed72c3086278cbee69091b63",
+      "blob_sha": "d44efe1e8bc48001ab83db1b15fcf5716db46541",
+      "trailing_lf": 1,
+      "crlf": false,
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/978158d334611847ed72c3086278cbee69091b63/docs/reviews/mixer_layered_prereg_20260921.md"
+    },
+    {
+      "path": "docs/data/mixer_e0_contract_20260928/README.md",
+      "ref": "978158d334611847ed72c3086278cbee69091b63",
+      "blob_sha": "a3ef4193e666dd3e89a02109b78400d80b73e9f1",
+      "trailing_lf": 1,
+      "crlf": false,
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/978158d334611847ed72c3086278cbee69091b63/docs/data/mixer_e0_contract_20260928/README.md"
+    },
+    {
+      "path": "docs/data/mixer_e0_contract_20260928/e0_contract_s32452843.json",
+      "ref": "978158d334611847ed72c3086278cbee69091b63",
+      "blob_sha": "e689c4e13acf7a819f39c5d6d7b99f3e9ebc3fa1",
+      "trailing_lf": 0,
+      "crlf": false,
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/978158d334611847ed72c3086278cbee69091b63/docs/data/mixer_e0_contract_20260928/e0_contract_s32452843.json"
+    },
+    {
+      "path": "docs/data/mixer_e0_contract_20260928/e0_contract_s49979687.json",
+      "ref": "978158d334611847ed72c3086278cbee69091b63",
+      "blob_sha": "74b3352ebb46d792e3e5a77dbf62d44159ae050d",
+      "trailing_lf": 0,
+      "crlf": false,
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/978158d334611847ed72c3086278cbee69091b63/docs/data/mixer_e0_contract_20260928/e0_contract_s49979687.json"
+    },
+    {
+      "path": "docs/data/mixer_e0_contract_20260928/e0_contract_s67867967.json",
+      "ref": "978158d334611847ed72c3086278cbee69091b63",
+      "blob_sha": "4335b685f0e55e492c0d2d90af6de93ce5db356a",
+      "trailing_lf": 0,
+      "crlf": false,
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/978158d334611847ed72c3086278cbee69091b63/docs/data/mixer_e0_contract_20260928/e0_contract_s67867967.json"
+    },
+    {
+      "path": "docs/data/mixer_phase_receipt_20260928/receipt_v2.json",
+      "ref": "978158d334611847ed72c3086278cbee69091b63",
+      "blob_sha": "5a72c81c7e73fa45f5dc886fa7f2c2c3c1ab8cdc",
+      "trailing_lf": 0,
+      "crlf": false,
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/978158d334611847ed72c3086278cbee69091b63/docs/data/mixer_phase_receipt_20260928/receipt_v2.json"
+    },
+    {
+      "path": "docs/session_20260921_mixer_decisions.md",
+      "ref": "978158d334611847ed72c3086278cbee69091b63",
+      "blob_sha": "a46fc97cd4401e464be6b65b0ef98db82d8a1a5b",
+      "trailing_lf": 1,
+      "crlf": false,
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/978158d334611847ed72c3086278cbee69091b63/docs/session_20260921_mixer_decisions.md"
+    },
+    {
+      "path": "history/71a00bdd99e8d0a0ee8f3abef6d5df48ae823c17/mixer_layered_prereg_20260921.md",
+      "ref": "71a00bdd99e8d0a0ee8f3abef6d5df48ae823c17",
+      "blob_sha": "f6a482261f022ebd83410b96ff8986ad5d1de6ca",
+      "trailing_lf": 1,
+      "crlf": false,
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/71a00bdd99e8d0a0ee8f3abef6d5df48ae823c17/docs/reviews/mixer_layered_prereg_20260921.md"
+    },
+    {
+      "path": "history/4cdcbf7bf0feff67bc2a2ae938ea6ca71d67c382/mixer_layered_prereg_20260921.md",
+      "ref": "4cdcbf7bf0feff67bc2a2ae938ea6ca71d67c382",
+      "blob_sha": "2c74b1df8c43379ad2fbf5c5ca824c91ec1fe50e",
+      "trailing_lf": 1,
+      "crlf": false,
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/4cdcbf7bf0feff67bc2a2ae938ea6ca71d67c382/docs/reviews/mixer_layered_prereg_20260921.md"
+    },
+    {
+      "path": "history/6963632a0f63e344b3994ecbcc00a604b2a0465f/mixer_layered_prereg_20260921.md",
+      "ref": "6963632a0f63e344b3994ecbcc00a604b2a0465f",
+      "blob_sha": "98d8c145a2a32151acc8b3bc216268e88a511f5c",
+      "trailing_lf": 1,
+      "crlf": false,
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/6963632a0f63e344b3994ecbcc00a604b2a0465f/docs/reviews/mixer_layered_prereg_20260921.md"
+    }
+  ]
+}

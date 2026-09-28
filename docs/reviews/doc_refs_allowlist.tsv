@@ -42,6 +42,8 @@ webapp/data.py	cross_branch	origin/claude/friendly-meitner-lldvar	DFT 쪽 브랜
 scratchpad/SI_21.txt	generated	(세션 작업공간)	일회성 스크래치 — 커밋 대상 아님
 litdb_cache/context__literature_yonsei_dtbl_2026.md	generated	litdb 캐시 생성	생성물 — 커밋 대상 아님
 docs/db/.mtime_cache.json	generated	(gitignore)	캐시 파일
+post/mix_400.liggghts	generated	PYTHONDONTWRITEBYTECODE=1 python3 docs/reviews/codex_mixer_highbo_round5_evidence_20260928/review_round5_probe.py	Codex 5 차 HBR5-02 반례의 합성 픽스처 — 프로브가 tempfile 안에 만드는 첫 시드 bin 0 프레임 (리포 파일 아님 · 판정문 두 곳이 인용)
+post/copy_400.liggghts	generated	PYTHONDONTWRITEBYTECODE=1 python3 docs/reviews/codex_mixer_highbo_round5_evidence_20260928/review_round5_probe.py	Codex 5 차 HBR5-02 반례 — 증서 뒤 같은 폴더에 넣은 같은 step 복제 (tempfile 안 · 리포 파일 아님)
 #
 # ── ⑤ 받았으나 커밋하지 않은 Codex 원문 ──
 docs/codex_phase_ab_crosscheck_20260807.md	absent	-	Codex 산출 원문 — 받았으나 커밋하지 않았다 (우리 응답 문서만 있다)

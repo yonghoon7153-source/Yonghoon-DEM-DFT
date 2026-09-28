@@ -1,0 +1,100 @@
+{
+  "base": "091bb21143c426beecd196d6115666fdd49155b1",
+  "head": "978158d334611847ed72c3086278cbee69091b63",
+  "source": "GitHub compare API (read-only)",
+  "status": "ahead",
+  "commits": 4,
+  "files": [
+    {
+      "path": "CLAUDE.md",
+      "sha": "dfaba1962cf74606216b09e7b0889eaed83d717a",
+      "status": "modified"
+    },
+    {
+      "path": "docs/data/lhs_handover_20260928.csv",
+      "sha": "6a5e0bbfc8ccf87e9e77da293821612d031a7343",
+      "status": "added"
+    },
+    {
+      "path": "docs/data/mixer_e0_contract_20260928/README.md",
+      "sha": "a3ef4193e666dd3e89a02109b78400d80b73e9f1",
+      "status": "added"
+    },
+    {
+      "path": "docs/data/mixer_e0_contract_20260928/e0_contract_s32452843.json",
+      "sha": "e689c4e13acf7a819f39c5d6d7b99f3e9ebc3fa1",
+      "status": "added"
+    },
+    {
+      "path": "docs/data/mixer_e0_contract_20260928/e0_contract_s49979687.json",
+      "sha": "74b3352ebb46d792e3e5a77dbf62d44159ae050d",
+      "status": "added"
+    },
+    {
+      "path": "docs/data/mixer_e0_contract_20260928/e0_contract_s67867967.json",
+      "sha": "4335b685f0e55e492c0d2d90af6de93ce5db356a",
+      "status": "added"
+    },
+    {
+      "path": "docs/data/mixer_phase_receipt_20260928/README.md",
+      "sha": "fdb617c278b10179691d1de7c772fd6f608a6ffc",
+      "status": "modified"
+    },
+    {
+      "path": "docs/data/mixer_phase_receipt_20260928/receipt_v2.json",
+      "sha": "5a72c81c7e73fa45f5dc886fa7f2c2c3c1ab8cdc",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_mixer_highbo_rereview4_request_20260928.md",
+      "sha": "708b8a5e5b7688190017c7decde6ba53fc42bfd6",
+      "status": "modified"
+    },
+    {
+      "path": "docs/reviews/fam_platen_prereg_20260812.md",
+      "sha": "54c4d7d459e8558955793300f4a87683cbe49dbf",
+      "status": "modified"
+    },
+    {
+      "path": "docs/reviews/findings.json",
+      "sha": "aa6d8f3927af871f07301240e7494c12c9931add",
+      "status": "modified"
+    },
+    {
+      "path": "docs/reviews/lhs_handover_judgments_20260924.md",
+      "sha": "46f73ec1c87a3d68854da12918649e3e527cad96",
+      "status": "modified"
+    },
+    {
+      "path": "docs/reviews/mixer_highbo_prereg_20260927.md",
+      "sha": "55d4c883012ff24fc6ba74d7e47aea7f55d7e098",
+      "status": "modified"
+    },
+    {
+      "path": "docs/reviews/mixer_layered_prereg_20260921.md",
+      "sha": "d44efe1e8bc48001ab83db1b15fcf5716db46541",
+      "status": "modified"
+    },
+    {
+      "path": "docs/reviews/pure_se_union_prereg_20260927.md",
+      "sha": "619da96f44aa5f2de2e381269a5edc9591b66b1a",
+      "status": "modified"
+    },
+    {
+      "path": "docs/session_20260921_mixer_decisions.md",
+      "sha": "a46fc97cd4401e464be6b65b0ef98db82d8a1a5b",
+      "status": "modified"
+    },
+    {
+      "path": "docs/session_20260923_progress.md",
+      "sha": "58f162ad3b7413af91932a3d9f48b302bc56fc0a",
+      "status": "modified"
+    },
+    {
+      "path": "scripts/lhs_design_dataset.py",
+      "sha": "d183045a35976329e3ca2275b125ae67a3237ff1",
+      "status": "modified"
+    }
+  ],
+  "mixer_code_changed": []
+}

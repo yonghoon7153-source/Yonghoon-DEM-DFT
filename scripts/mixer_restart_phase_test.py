@@ -101,6 +101,45 @@ def deck_structure(deck_text):
                 dump_ids={t[1] for t in toks if t[:1] == ['dump']})
 
 
+RESUME_RE = re.compile(r'^RESUME_STEP\s+(\d+)\s*$')   # B 덱 (make_mixer_resume.transform) 의 `print "RESUME_STEP ${resume_step}"` 줄
+
+
+def deck_steps(a_text, b_text):
+    """**봉인된** A/B 덱의 logical commands → 영수증 완주 기준 (2026-09-28, Codex 5 차 HBR5-05).
+
+    옛 analyze 는 끝 step · 덤프 간격 · N1 을 **봉인 밖 gen.json** 에서 읽었다 ⇒ 덱은 그대로 (끝 14,001) 두고 gen.json 끝만 9,500 으로
+    줄인 뒤 그 범위의 짧은 로그 · 덤프를 두면 passed=true 였다 (재현 키 gen_end_truncated).  이제 기준은 덱이다:
+      end        = A 의 run 합 (= 운동 시계의 end)
+      n1         = A 의 `write_restart` 앞 run 합 (B 가 read_restart 하는 체크포인트의 step)
+      dump_every = A 의 `dump dmesh … mesh/stl <간격>`
+      end_b      = B 의 유일한 `run <끝> upto`
+    gen.json 은 이것과 **대조**만 한다.  → dict(end, n1, dump_every, end_b, dump_every_b, read_restart_b)."""
+    ta = [_tokens(b) for _, b in logical_commands(a_text)]
+    tb = [_tokens(b) for _, b in logical_commands(b_text)]
+    cum, n1, n_wr, de_a = 0, None, 0, None
+    for t in ta:
+        if t[:1] == ['run'] and len(t) > 1:
+            cum += int(t[1])
+        elif t[:1] == ['write_restart']:
+            n_wr += 1
+            n1 = cum
+        elif t[:2] == ['dump', 'dmesh'] and len(t) > 4:
+            de_a = int(t[4])
+    runs_b = [t for t in tb if t[:1] == ['run']]
+    end_b = int(runs_b[0][1]) if len(runs_b) == 1 and len(runs_b[0]) > 2 and runs_b[0][2] == 'upto' else None
+    de_b = next((int(t[4]) for t in tb if t[:2] == ['dump', 'dmesh'] and len(t) > 4), None)
+    return dict(end=cum, n1=n1 if n_wr == 1 else None, dump_every=de_a, end_b=end_b, dump_every_b=de_b,
+                read_restart_b=sum(t[:1] == ['read_restart'] for t in tb) == 1)
+
+
+def resume_steps(log_path):
+    """B 로그의 `RESUME_STEP <n>` 줄들 (B 덱이 read_restart 직후 찍는다) → 정수 목록."""
+    if not os.path.isfile(log_path):
+        return []
+    with open(log_path, encoding='utf-8', errors='replace') as fh:
+        return [int(m.group(1)) for m in (RESUME_RE.match(line) for line in fh) if m]
+
+
 def drum_facets(stl_dir, deck_text):
     """드럼 면 수 (축에 수직이 아닌 평면 수)."""
     sp = deck_walls(deck_text)
@@ -295,6 +334,9 @@ def analyze(d, out=None, binary=None):
     need(seal is not None, 'seal.json 없음 — 실행 직전 봉인이 없다 (run.sh 로 돌리지 않았다)')
     need(rs is not None, 'run_status.json 없음 — 실행 결과 기록이 없다')
     a_deck = open(os.path.join(d, 'A', 'in.phase_a'), encoding='utf-8').read()
+    bp = os.path.join(d, 'B', 'in.phase_b')
+    b_deck = open(bp, encoding='utf-8').read() if os.path.isfile(bp) else ''
+    dk = deck_steps(a_deck, b_deck)                # ★ HBR5-05 — 완주 기준은 봉인된 덱에서 (gen.json 은 대조만)
     sp = deck_walls(a_deck)
     mv = sp['moves']['Drum']
     dt, period, axis, origin = sp['dt'], mv['period'], mv['axis'], mv['origin']
@@ -317,21 +359,39 @@ def analyze(d, out=None, binary=None):
             need(os.path.isfile(os.path.join(d, p)) and _sha(os.path.join(d, p)) == h, f'봉인 뒤 바뀐 파일: {p}')
         if binary:
             need(os.path.isfile(binary) and _sha(binary) == seal.get('binary_sha256'), '지목한 바이너리 sha256 ≠ 봉인 값')
+        #  ★ HBR5-05 (Codex 5 차) — 끝 · N1 · 간격을 **봉인된 덱**으로 재구성하고 세 출처 (A 덱 · B 덱 · 운동 시계) 가 한 값인지,
+        #    봉인 밖 gen.json 이 그것과 같은지 본다.  아래 완주 · 기대 덤프 · 재개 step 은 전부 덱 값으로 판정한다.
+        mc_end = mclock[-1][1] if mclock and mclock[-1][:1] == ['end'] else None
+        dk_ok = need(dk['n1'] is not None and dk['dump_every'] and dk['end_b'] is not None and dk['read_restart_b']
+                     and dk['end'] == dk['end_b'] == mc_end and dk['dump_every_b'] == dk['dump_every'],
+                     f'봉인 덱에서 완주 기준을 한 값으로 재구성할 수 없다 — A 끝 {dk["end"]} · B `run … upto` {dk["end_b"]} · 운동 시계 끝 {mc_end} · '
+                     f'A write_restart step {dk["n1"]} · 간격 A {dk["dump_every"]} / B {dk["dump_every_b"]} · B read_restart 하나 {dk["read_restart_b"]} (HBR5-05)')
+        need((g.get('run_total'), g.get('n1'), g.get('dump_every')) == (dk['end'], dk['n1'], dk['dump_every']),
+             f'gen.json (봉인 밖) 의 끝 · N1 · 간격 {(g.get("run_total"), g.get("n1"), g.get("dump_every"))} ≠ 봉인 덱 '
+             f'{(dk["end"], dk["n1"], dk["dump_every"])} — 짧게 바꾼 기준으로 완주를 판정하지 않는다 (HBR5-05 · gen_end_truncated)')
+        rt_d = dk['end'] if dk_ok else None
         for part in ('A', 'B'):
             s_ = rs.get(part, {})
-            lc = comp[part] = log_completion(os.path.join(d, part, 'log.lmp'), g['run_total'])
+            lc = comp[part] = log_completion(os.path.join(d, part, 'log.lmp'), rt_d)
             need(s_.get('exit') == 0 and lc['complete'],
                  f'{part} 실행이 정상 완료가 아니다 (exit {s_.get("exit")} · 배너 {lc["banner"]} · 마지막 thermo step '
-                 f'{lc["last_thermo_step"]} / 끝 {g["run_total"]})')
+                 f'{lc["last_thermo_step"]} / 봉인 덱 끝 {rt_d})')
             if s_.get('log_sha256') is not None or 'last_thermo_step' in s_:      # 옛 run.sh 기록 (09-28 WSL) 에는 없다 → 로그 판정만
                 need(s_.get('log_sha256') == lc['log_sha256'] and s_.get('last_thermo_step') == lc['last_thermo_step'],
                      f'{part} 로그가 실행 결과 기록 뒤 바뀌었다 (sha · 마지막 thermo step 이 기록과 다르다)')
             for f, h in s_.get('dumps', {}).items():
                 pth = os.path.join(d, part, 'post_mesh', f)
                 need(os.path.isfile(pth) and _sha(pth) == h, f'{part} 덤프 {f} 가 실행 뒤 바뀌었거나 없다')
+        #  ★ HBR5-05 — B 가 **이 영수증의 체크포인트** (A 덱의 write_restart step) 에서 재개됐다는 실행 증거 = B 로그의 RESUME_STEP
+        #    (B 덱이 read_restart 직후 찍는다 — L 런 재개 로그 실측).  덤프 격자만 보면 다른 체크포인트에서의 재개를 못 가린다.
+        rsb = resume_steps(os.path.join(d, 'B', 'log.lmp'))
+        need(bool(rsb) and dk['n1'] is not None and all(x == dk['n1'] for x in rsb),
+             f'B 로그의 RESUME_STEP {rsb[:3]} ≠ 봉인 A 덱의 write_restart step {dk["n1"]} — B 가 이 영수증의 체크포인트에서 재개됐다는 '
+             f'실행 증거가 없다 (HBR5-05)')
         ver = _banner(os.path.join(d, 'A', 'log.lmp'))
         need(ver.startswith('LIGGGHTS') and ver == _banner(os.path.join(d, 'B', 'log.lmp')), 'A/B 로그 배너가 없거나 다르다')
-        de, n1, rt, r0 = g['dump_every'], g['n1'], g['run_total'], g['rot_start']
+        #  ★ HBR5-05 — 기대 덤프 격자도 **덱 값**으로 (gen.json 이 덱과 다르면 위에서 이미 실패 — 그래도 판정 기준은 덱이다)
+        de, n1, rt, r0 = dk['dump_every'] or g['dump_every'], dk['n1'] or g['n1'], dk['end'], g['rot_start']
         need(r0 == rot_start, f'gen.json 회전 시작 {r0} ≠ A 덱의 운동 fix 시작 {rot_start} (두 정의가 갈렸다 · HBR4-02)')
         #  기대 step — A: dump 명령이 선 step 이후의 dump 격자 · B: N1 ~ 끝
         pre = 0
@@ -419,7 +479,7 @@ def analyze(d, out=None, binary=None):
         sym, raw = symmetric_gap_deg(n1, r0, dt, period, g['nfacet'])
         need(sym >= RESET_GAP_DEG, f'리셋 대안과의 간격 (면 대칭 제외) {sym:.3f}° < {RESET_GAP_DEG}° — 이 N1 으로는 재개 리셋을 못 가린다')
     else:
-        ver, sym, raw, n1 = '', None, None, None
+        ver, sym, raw, n1, rsb = '', None, None, None, []
     #  ★ HBR4-03 — 옛 판은 max() 였는데 그것은 오차 **합성**의 상한이 아니다 (두 성분은 같은 방향으로 겹칠 수 있다) → 최악 방향 합.
     bound = err_max + (ang_res or 0.0)
     need(bound <= PHASE_EPS_DEG, f'각 경계 {bound:.4g}° (실측 {err_max:.4g} + 출력 해상도 {ang_res}) > 등록 ε {PHASE_EPS_DEG}°')
@@ -431,6 +491,7 @@ def analyze(d, out=None, binary=None):
               rotation_start_step=rot_start, motion_clock=mclock, run_total=g['run_total'] if g else None,
               n1=n1, dump_every=g['dump_every'] if g else None,
               span_rotation_steps=(g['run_total'] - g['rot_start']) if g else None,
+              deck_steps=dk, resume_steps_B=rsb,             # ★ HBR5-05 — 완주 기준의 출처 (봉인 덱) 와 B 로그의 재개 step
               steps_checked_A=sorted(A_st), steps_checked_B=sorted(B_st),
               angle_error_deg=float(err_max), angle_resolution_deg=ang_res, angle_bound_deg=float(bound),
               reset_alternative_gap_deg=raw, symmetric_gap_deg=sym, nfacet=g['nfacet'] if g else None,
@@ -552,12 +613,16 @@ def _selftest():                                                      # noqa: C9
         import subprocess
         subprocess.run([sys.executable, '-c', _status_code(), str(ra), str(rb)], cwd=o, check=True)
 
-    def _write_log(path, lo, end, banner=False):
+    def _write_log(path, lo, end, banner=False, resume=None):
         """이 빌드 (LIGGGHTS-PUBLIC 3.8.0 · 09-21 덱) 의 로그 꼴: 배너 첫 줄 · thermo (step atoms …) · Loop time — `Total wall time` 은
-        **없다** (09-22 E0 3/3 · 09-28 WSL 영수증 A/B 실측, 둘 다 exit 0).  banner=True = 배너를 찍는 빌드."""
+        **없다** (09-22 E0 3/3 · 09-28 WSL 영수증 A/B 실측, 둘 다 exit 0).  banner=True = 배너를 찍는 빌드.
+        재개 (B, lo > 0) 로그는 B 덱의 `print "RESUME_STEP ${resume_step}"` 줄을 갖는다 (L 런 재개 로그 실측 — 본 캠페인 prereg §3 2b).
+        resume = 찍힌 값 (기본 = lo)."""
         steps = sorted(set(range(lo, end, 500)) | {end})
         with open(path, 'w') as fh:
-            fh.write('LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled test)\n…\nStep Atoms KinEng c_rke Volume\n')
+            fh.write('LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled test)\n…\n'
+                     + (f'RESUME_STEP {lo if resume is None else resume}\n' if lo > 0 else '')
+                     + 'Step Atoms KinEng c_rke Volume\n')
             fh.write(''.join(f'{s:10d}        0            0            0 6.4e-05\n' for s in steps))
             fh.write('Loop time of 1.0 on 1 procs for 1000 steps with 0 atoms\n' + ('Total wall time: 0:00:01\n' if banner else ''))
 
@@ -721,6 +786,34 @@ def _selftest():                                                      # noqa: C9
             rs[p_]['dumps'] = {}
         json.dump(rs, open(os.path.join(o, 'run_status.json'), 'w'))
 
+    #  ── Codex 5 차 HBR5-05 반례 (2026-09-28) ─────────────────────────────────────────────────
+    def _gen_short(o, r):
+        """봉인된 A/B 덱은 그대로 (끝 14,001) 인데 **봉인 밖 gen.json** 의 끝만 9,500 · N1 9,000 으로 줄이고, 그 짧은 범위에 맞춘
+        덤프 · 로그 (마지막 thermo step 9,500) 를 둔다.  옛 판은 gen.json 의 끝으로 완주 · 기대 덤프를 정해 passed=true (A 19 / B 2 —
+        재현 키 gen_end_truncated)."""
+        gp = os.path.join(o, 'gen.json')
+        g_ = json.load(open(gp))
+        rt_s, n1_s, de_ = 9500, 9000, g_['dump_every']
+        g_['run_total'], g_['n1'] = rt_s, n1_s
+        json.dump(g_, open(gp, 'w'), indent=1)
+        pa, pb = os.path.join(o, 'A', 'post_mesh'), os.path.join(o, 'B', 'post_mesh')
+        for f in os.listdir(pa):
+            if int(re.sub(r'\D', '', f)) > rt_s:
+                os.remove(os.path.join(pa, f))
+        for f in os.listdir(pb):
+            os.remove(os.path.join(pb, f))
+        for s in range(n1_s, rt_s + 1, de_):
+            shutil.copyfile(os.path.join(pa, f'mesh_{s}.stl'), os.path.join(pb, f'mesh_{s}.stl'))
+        _write_log(os.path.join(o, 'A', 'log.lmp'), 0, rt_s)
+        _write_log(os.path.join(o, 'B', 'log.lmp'), n1_s, rt_s)
+        _restatus(o)
+
+    def _resume_other(o, r):
+        """B 가 N1 이 아닌 체크포인트에서 재개됐다 (로그의 RESUME_STEP = N1 + 500) — 덤프 · 끝은 정상.  덤프 격자만 보면 못 가린다."""
+        g_ = json.load(open(os.path.join(o, 'gen.json')))
+        _write_log(os.path.join(o, 'B', 'log.lmp'), g_['n1'], g_['run_total'], resume=g_['n1'] + 500)
+        _restatus(o)
+
     cases = [('A 대조 덤프 0 개 (Codex receipt_missing_all_A)', 'cont', _rm_all_A), ('B 한 장 · A 0 개', 'cont', _one_B),
              ('A · B 모두 회전 전 첫 덤프 한 장 (재개 전 정적 형상뿐 · Codex receipt_only_step0)', 'cont', _only0), ('기대 밖 덤프 (step 7301)', 'cont', _extra),
              ('재개 때 위상이 0 으로 (리셋)', 'reset', None), ('봉인 없음', 'cont', _no_seal), ('B exit 1', 'cont', _exit1),
@@ -729,7 +822,9 @@ def _selftest():                                                      # noqa: C9
              ('끝판 빠진 메시 (드럼 78 삼각형만)', 'cont', _drop_cap),
              ('⑩ HBR4-01 B 좌표 전부 NaN (max(0.0, NaN) = 0.0 으로 통과하던 것)', 'cont', _nan_B),
              ('⑪ HBR4-01 봉인 목록이 빈 객체', 'cont', _empty_seal_files),
-             ('⑫ HBR4-01 실행 결과 기록의 덤프 해시 목록이 빈 객체', 'cont', _empty_dumps)]
+             ('⑫ HBR4-01 실행 결과 기록의 덤프 해시 목록이 빈 객체', 'cont', _empty_dumps),
+             ('⑮ HBR5-05 gen.json 끝만 짧게 (봉인 덱 끝 14,001 · gen 9,500 · N1 9,000 · 그에 맞춘 짧은 덤프 · 로그)', 'cont', _gen_short),
+             ('⑮b HBR5-05 B 로그의 RESUME_STEP ≠ 봉인 A 덱의 write_restart step (다른 체크포인트에서 재개)', 'cont', _resume_other)]
     for name, mode, f in cases:
         with tempfile.TemporaryDirectory() as td:
             out_, run_, binp = _fake_run(td, mode=mode, fix=f)

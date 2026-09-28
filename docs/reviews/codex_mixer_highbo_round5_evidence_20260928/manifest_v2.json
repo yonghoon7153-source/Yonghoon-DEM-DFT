@@ -1,0 +1,263 @@
+{
+  "schema": "review_package/v1",
+  "report": "codex_review_mixer_highbo_round5_v2_20260928.md",
+  "current_pin": "978158d334611847ed72c3086278cbee69091b63",
+  "original_code_pin": "091bb21143c426beecd196d6115666fdd49155b1",
+  "files": [
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/AGENTS.md",
+      "bytes": 2822,
+      "sha256": "38b8708ba8a50c8a08819c7c4138763bce02b6dc6c5b8112f4c8aa386fb17ec3"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/codex_review_mixer_highbo_round5_20260928.md",
+      "bytes": 29044,
+      "sha256": "59d8e52228801048459f4587f403d8be5de494e79f5b50203f172d2bd1fad986"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/external_sources.json",
+      "bytes": 1455,
+      "sha256": "b3d966437a21738688f9f2c9420c16b2385d4d74c98c289e9fe6f762e003a1a1"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/README.md",
+      "bytes": 4333,
+      "sha256": "9e13f9f821f9730a4f1636a915a5db326697c32b211fbbec54261ab3881b8bb8"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/review_round5_output.json",
+      "bytes": 22126,
+      "sha256": "0fe3b8ec48b08375d643f03f1de3498b7b36389821dcdfd8cd1322e315e1fdd3"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/review_round5_probe.py",
+      "bytes": 20241,
+      "sha256": "b10d56264b70fdb155b7e8c42f41539b35b9ed1e2acdf6f9ec27de9e0159e3c9"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/run_selftests.py",
+      "bytes": 844,
+      "sha256": "b9580ad380a620b1ec9adbac3c5e82e78c78675897795753370961e9c8ab6b29"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/selftests_output.json",
+      "bytes": 47552,
+      "sha256": "243cd7ab6b13de5cf07cdb0cc68a7faebf73d2d5845a8b90f33d75dd5a8a597e"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/source_hash_verification.json",
+      "bytes": 5972,
+      "sha256": "4d33a37bbd60635985e903e9c15e1ccb17dfb8ece5e68f8876689f4467aacb41"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/sources.json",
+      "bytes": 3759,
+      "sha256": "6dd52346b53a8118adb2f27de7416879b5009c061a0cb67918092c5c63277a16"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/dem_scripts/mixer_20260919/Back.stl",
+      "bytes": 10790,
+      "sha256": "2e7b962d14ced968d8178456feaf2f6a4856edd4b151070c23a8ac1588a461e5"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/dem_scripts/mixer_20260919/Drum.stl",
+      "bytes": 14310,
+      "sha256": "fe821a8ab6db0d94151e9d84bf19cc1fad77abb417cd640bf4577c2f87279730"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/dem_scripts/mixer_20260919/Front.stl",
+      "bytes": 5990,
+      "sha256": "443f9c3c859b2562dc041cde2af712fdfc4ab0225032ebb9420267c781843c81"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/dem_scripts/mixer_20260921/gen_all.sh",
+      "bytes": 4602,
+      "sha256": "42d265c9dc8e8adb7900779f15226a9f1673e908f79e7d7776329d6c37a57dbc"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/dem_scripts/mixer_20260921/launch_highbo.sh",
+      "bytes": 28059,
+      "sha256": "c4c2fe3f7ad78f1866708bb5be9836c937e4708babc475975713205aae8bf9a8"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/dem_scripts/mixer_20260921/run_all.sh",
+      "bytes": 8894,
+      "sha256": "3f2d5827d3bd34d0a1829246650054a0ef51b19b8ff5387d712491fc0fec8d03"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/dem_scripts/mixer_20260921/start_check.py",
+      "bytes": 7024,
+      "sha256": "c60835b0d266dac977b735648510b49b6da4f2e6e338bc91d41ff1339f189112"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/dem_scripts/mixer_20260921/test_launcher.sh",
+      "bytes": 42680,
+      "sha256": "28ae3c1a27bf60795ae1b1485b81550c0382cd2e4d4d4adc0a4b6e8bb3bb72f6"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/docs/data/mixer_phase_receipt_20260928/README.md",
+      "bytes": 10068,
+      "sha256": "a1ea6e79d849d6265ab065226d5437ec6fe234c7b20b9dea25b249409380ffe3"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/docs/data/mixer_phase_receipt_20260928/receipt_v1.json",
+      "bytes": 29231,
+      "sha256": "520ee5d0135b0090dce2a541bdbb6808d79b25d398c90c4b3bdaf205e228e9e0"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/docs/data/mixer_phase_receipt_20260928/receipt_v2_ibb.json",
+      "bytes": 29800,
+      "sha256": "f2724c4afd5572f6f90579212274d7c8f6dc756cb99399f141f1822478702a17"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/docs/mixer_devlog/v09_20260927.md",
+      "bytes": 8235,
+      "sha256": "a11480a488164d75e8035ff735cc1e54fabff177901b76f2983d0a70ef70c241"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/docs/reviews/codex_mixer_highbo_rereview4_request_20260928.md",
+      "bytes": 16179,
+      "sha256": "25ea328a278f48c0f629f43b2b9f278cd31ed11dbaf3709e835bb765b118f253"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/docs/reviews/mixer_highbo_prereg_20260927.md",
+      "bytes": 58614,
+      "sha256": "e8e316d18c9d3a63c5666c4b0ae0cb771c3fcc41aa542822bf9628f481007ba7"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/docs/reviews/mixer_layered_prereg_20260921.md",
+      "bytes": 20475,
+      "sha256": "2133a3a0cecf1fbb96598763bb672af8a988f0c00314693f7be4ff75df563674"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/scripts/check_contact_validity.py",
+      "bytes": 124451,
+      "sha256": "979a76a1850b1b9435e374236f076ff3e7993ab83169ddfcedcc64943def1986"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/scripts/make_mixer_deck.py",
+      "bytes": 87520,
+      "sha256": "2c12184e9d803e1a9fc4d58b5e32d2de0800b11f637797f68e637d3f85507251"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/scripts/make_mixer_resume.py",
+      "bytes": 18906,
+      "sha256": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/scripts/measure_bed_aspect.py",
+      "bytes": 24677,
+      "sha256": "b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/scripts/measure_mixing_index.py",
+      "bytes": 60953,
+      "sha256": "9f17569cdca30d4fee43be2f4353a9edc56450fbfb4066bcbe32a4447389cf76"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/scripts/mixer_deck_diff.py",
+      "bytes": 41420,
+      "sha256": "765558bd8c263b21b28bb4c69ccdaf5c902595504fca6d36676152fa7c7b065e"
+    },
+    {
+      "entry": "mixer_highbo_round5_evidence_20260928/scripts/mixer_restart_phase_test.py",
+      "bytes": 55747,
+      "sha256": "b1facac15b163d82907b7149fa82d8b63733acf183462dad02b9b720735dd70a"
+    },
+    {
+      "entry": "mixer_highbo_round5_supplement_20260928/history_index.json",
+      "bytes": 858,
+      "sha256": "a982538adda95697a795d02b7d81c03dfb889473fbb5943a2a0dd63949cd3cf5"
+    },
+    {
+      "entry": "mixer_highbo_round5_supplement_20260928/README.md",
+      "bytes": 2667,
+      "sha256": "72f38549d192febeeb0c272a5f82f7aeef318f51433e67d85c0f54f120e687ce"
+    },
+    {
+      "entry": "mixer_highbo_round5_supplement_20260928/review_round5_supplement_probe.py",
+      "bytes": 5247,
+      "sha256": "4484dc37d7fc9aa506256e12100bd1cd5e2bc8068ff3e0707a4769be16d881e9"
+    },
+    {
+      "entry": "mixer_highbo_round5_supplement_20260928/snapshot_comparison.json",
+      "bytes": 3084,
+      "sha256": "e69ba3b4bdba0b4a8753f5ae5e641acb0764cbac7d9fa8c87701c9dd53ef9eae"
+    },
+    {
+      "entry": "mixer_highbo_round5_supplement_20260928/sources.json",
+      "bytes": 5221,
+      "sha256": "a7dc72ae14ab25357a2aa3500d0bab39b734ec7573eb787331853c65c2a4633c"
+    },
+    {
+      "entry": "mixer_highbo_round5_supplement_20260928/supplement_output.json",
+      "bytes": 8112,
+      "sha256": "216da3a995a32784a21dd52dee1826e6daddfe700be5086d7689bea7bdd82dcb"
+    },
+    {
+      "entry": "mixer_highbo_round5_supplement_20260928/docs/session_20260921_mixer_decisions.md",
+      "bytes": 26594,
+      "sha256": "d8ec7edbe5c121a1539898671c73f523d4b7974d5d134b0e95341c282150bacb"
+    },
+    {
+      "entry": "mixer_highbo_round5_supplement_20260928/docs/data/mixer_e0_contract_20260928/e0_contract_s32452843.json",
+      "bytes": 2329,
+      "sha256": "3f92acf6551ec76dfea9362072e2d64398ebc5ef025b6f7b0985748e60177804"
+    },
+    {
+      "entry": "mixer_highbo_round5_supplement_20260928/docs/data/mixer_e0_contract_20260928/e0_contract_s49979687.json",
+      "bytes": 2325,
+      "sha256": "4213d629fa3ed834e7e1da6a61040002432872410be597462d4915f4f7d22b9b"
+    },
+    {
+      "entry": "mixer_highbo_round5_supplement_20260928/docs/data/mixer_e0_contract_20260928/e0_contract_s67867967.json",
+      "bytes": 2322,
+      "sha256": "70fe7b4021b84c591dc38f1f32ad1e324030c2ea80e1d954819c817813323e49"
+    },
+    {
+      "entry": "mixer_highbo_round5_supplement_20260928/docs/data/mixer_e0_contract_20260928/README.md",
+      "bytes": 3678,
+      "sha256": "aeb18b10f6ac9c70c71cd3d96b38dc0e318041b69c06bb918a343989e642b4d0"
+    },
+    {
+      "entry": "mixer_highbo_round5_supplement_20260928/docs/data/mixer_phase_receipt_20260928/receipt_v2.json",
+      "bytes": 29733,
+      "sha256": "1c9e4e17897be21ea737298fbe8d9a4e02b9bb3b27e99e0e05a5f8d703389977"
+    },
+    {
+      "entry": "mixer_highbo_round5_supplement_20260928/docs/reviews/codex_mixer_highbo_rereview4_request_20260928.md",
+      "bytes": 22366,
+      "sha256": "40ed4aa097450f40de4a71cb994e2c9933c73fb516e1fab801d6b44411c3bfb9"
+    },
+    {
+      "entry": "mixer_highbo_round5_supplement_20260928/docs/reviews/mixer_highbo_prereg_20260927.md",
+      "bytes": 61314,
+      "sha256": "3051702d4660f17bc7c1971a4bff86947c029f5aebf03c3878d30eaf22037ac3"
+    },
+    {
+      "entry": "mixer_highbo_round5_supplement_20260928/docs/reviews/mixer_layered_prereg_20260921.md",
+      "bytes": 22286,
+      "sha256": "daf5dcec7d87743234c7feda7ed225a5485b94ab4f9208dc553116ed1705abe0"
+    },
+    {
+      "entry": "mixer_highbo_round5_supplement_20260928/history/4cdcbf7bf0feff67bc2a2ae938ea6ca71d67c382/mixer_layered_prereg_20260921.md",
+      "bytes": 15991,
+      "sha256": "d7c224c362fb0c5877779645d45f958967f16f762456d4d8167ff7ef1a8036ef"
+    },
+    {
+      "entry": "mixer_highbo_round5_supplement_20260928/history/6963632a0f63e344b3994ecbcc00a604b2a0465f/mixer_layered_prereg_20260921.md",
+      "bytes": 20009,
+      "sha256": "e520d322204619e58179b368a5cd0b70d2e801423ab892731f15cf71a227b7f9"
+    },
+    {
+      "entry": "mixer_highbo_round5_supplement_20260928/history/71a00bdd99e8d0a0ee8f3abef6d5df48ae823c17/mixer_layered_prereg_20260921.md",
+      "bytes": 8061,
+      "sha256": "c793faf3357cc517c5bbbdc7ab1ddf6dc4aada49b4e31de6441e340d6dbc7293"
+    },
+    {
+      "entry": "codex_review_mixer_highbo_round5_v2_20260928.md",
+      "bytes": 54389,
+      "sha256": "e272f20887369231fe9a6eb6ba71abbf48808af5822a3249f5aef1d838df87f0"
+    }
+  ]
+}

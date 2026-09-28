@@ -177,7 +177,9 @@ ref = os.path.join(os.path.dirname(rn), 'E0_s32452843')
 args = dict(cells=int(cells[0]) if cells else 16, x_cells=4, n_min=20, axis='x', r_container=0.013138)
 pv = provenance_block(rn, ref, args, [(100, os.path.join(rn, 'post', 'mix_100.liggghts'))],
                       [(100, os.path.join(ref, 'post', 'mix_100.liggghts'))])
-e = dict(run=run, ref=ref, provenance=pv,
+#  t0_step · plan = 판독기 JSON 의 같은 키 (HBR5-02 관문이 bin 0 창을 여기서 정한다) — 픽스처: t₀ 100 · 한 바퀴 100 step · 간격 100
+#  ⇒ bin 0 = [100, 200) 의 격자 {100} = mklh 의 프레임 한 장
+e = dict(run=run, ref=ref, provenance=pv, t0_step=100, plan=dict(steps_per_rev=100.0, dump_every=100, steps_total=900),
          smoke=dict(bin=0, complete=json.loads(complete), tech_smoke=json.loads(tech), qc_repr={'pass': json.loads(qc)}))
 json.dump([e], open(out, 'w'), ensure_ascii=False)
 PY
@@ -344,10 +346,37 @@ chk 'HL④i ★ HBR4-05 재현→수정: 다른 폴더의 **실제** 판독 증�
     "rest_ng '$CE/foreign.json' && grep -q '✗ 판독 프레임' <<<\"\$RO\""
 chk 'HL④j rest: 판독기 sha256 이 지금 리포의 판독기와 다르면 거부 · 발사 0' "rest_ng '$CE/tool.json' && grep -q '✗ 판독기 sha256' <<<\"\$RO\""
 chk 'HL④k rest: 출처 블록이 없는 (옛 판독기) 증서는 거부 · 발사 0' "rest_ng '$CE/noprov.json' && grep -q '✗ provenance.schema' <<<\"\$RO\""
+#  ★ HBR5-02 (Codex 5 차, 2026-09-28) — 옛 관문은 증서 목록 **안** 파일만 다시 해시했다 ⇒ 증서 뒤 bin 0 에 같은 step 의 복제를 넣어도
+#    rc 0 인데 같은 폴더를 판독기로 재판독하면 24/25 · smoke.complete=false (재현 키 smoke_after_duplicate).  판독기와 **같은 파일 규칙**
+#    (measure_bed_aspect.STEP_RE) 으로 지금 폴더의 bin 0 창과 E0 t₀ 를 다시 열거해 중복 · 격자 밖 · 결손 · 다른 파일을 막는다.
+mkcert "$CE/ok5.json" "$B/$LH1" true '[]' true
+cp "$B/$LH1/post/mix_100.liggghts" "$B/$LH1/post/copy_100.liggghts"
+chk 'HL④l ★ HBR5-02 재현→수정: 증서 뒤 bin 0 에 같은 step 의 복제 (copy_100 · 바이트 동일) 를 넣으면 거부 · 발사 0' \
+    "rest_ng '$CE/ok5.json' && grep -q '✗ bin 0 에 같은 step' <<<\"\$RO\""
+rm -f "$B/$LH1/post/copy_100.liggghts"
+echo "frame off-grid" > "$B/$LH1/post/mix_150.liggghts"
+chk 'HL④m ★ HBR5-02: 증서 뒤 bin 0 창 안에 격자 밖 프레임 (step 150) 이 생기면 거부 · 발사 0' \
+    "rest_ng '$CE/ok5.json' && grep -q '✗ bin 0 격자 밖' <<<\"\$RO\""
+rm -f "$B/$LH1/post/mix_150.liggghts"
+cp "$B/E0_s32452843/post/mix_100.liggghts" "$B/E0_s32452843/post/dup_100.liggghts"
+chk 'HL④n ★ HBR5-02: E0 기준 t₀ step 의 덤프가 둘이면 거부 · 발사 0' \
+    "rest_ng '$CE/ok5.json' && grep -q '✗ E0 기준 t₀' <<<\"\$RO\""
+rm -f "$B/E0_s32452843/post/dup_100.liggghts"
+rx=$(python3 - "$ROOT" "$LHL" <<'PY' 2>&1
+import os, re, sys
+root, lhl = sys.argv[1:]
+sys.path.insert(0, os.path.join(root, 'scripts'))
+import measure_bed_aspect as m
+g = re.search(r"^STEP_RE = re\.compile\(r'([^']*)'\)", open(lhl, encoding='utf-8').read(), re.M)
+print('OK' if g and g.group(1) == m.STEP_RE.pattern else f'NG {g and g.group(1)!r} vs {m.STEP_RE.pattern!r}')
+PY
+)
+chk 'HL④o HBR5-02: rest 관문의 파일 규칙 = 판독기의 규칙 (measure_bed_aspect.STEP_RE — 한쪽만 바뀌면 여기서 걸린다)' "[ \"\$rx\" = OK ]"
 #  (d) rest = 합격 증서면 나머지 둘
 mkcert "$CE/ok.json" "$B/$LH1/" true '[]' true        # 끝에 / — 판독기는 명령줄 경로를 그대로 적는다
+echo "frame bin1" > "$B/$LH1/post/mix_200.liggghts"   # ★ HBR5-02 대조 — 증서 뒤 **bin 1** 의 정상 프레임 추가는 막지 않는다
 d1=$(OUT="$B" LMP="$FAKE_LH" MAXJ=8 DECKDIFF="$DD_OK" DD_ARGS="$T/dd_args_d" bash "$LHL" rest "$CE/ok.json" 2>&1); rc_d1=$?
-chk 'HL⑤ ★ rest: 증서 합격 → 나머지 둘만 정확히 뜬다 (LH 합계 3 · LC · E0 는 여전히 0)' \
+chk 'HL⑤ ★ rest: 증서 합격 → 나머지 둘만 정확히 뜬다 (LH 합계 3 · LC · E0 는 여전히 0) · 증서 뒤 bin 1 프레임 추가는 통과 (HBR5-02 대조)' \
     "[ $rc_d1 -eq 0 ] && [ -s '$B/$LH2/pid' ] && [ -s '$B/$LH3/pid' ] && [ \$(npid '$B') -eq 3 ]"
 sd=$(python3 - "$B" "$CE/ok.json" <<'PY' 2>&1
 import hashlib, json, os, sys
@@ -480,6 +509,23 @@ tamper_bin() {
   runr "$o/$LH1" SLURM_NTASKS=20; [ $? -eq 3 ] && ! grep -q 'fake mpi build' "$o/$LH1/log.lmp" 2>/dev/null
 }
 chk 'HS③h 제출 뒤 바이너리가 바뀌면 (sha256) 막는다' "tamper_bin"
+#  ★ HBR5-01 (Codex 5 차, 2026-09-28) — 문법적으로 정상인 **빈 / 비객체 봉인** ({} · null · [] · "invalid") 을 옛 시작 대조기는
+#    rc 0 · ok=true 로 통과시켰다 (비객체 → 빈 dict · 주요 검사가 전부 `if lr and …`).  네 입력 모두 rc 3 · mpirun 호출 0 ·
+#    job_start.json 없음 · 거부 영수증만 (재현 키 start_empty_dict / start_null / start_list / start_string).  정상 봉인 = HS③ 그대로 통과.
+seal_as() {  # seal_as <empty|null|list|str> — 지금 폴더의 launch_record.json 을 문법상 정상인 빈 객체 / 비객체로 덮는다
+  python3 - "$1" <<'PY'
+import json, sys
+json.dump({'empty': {}, 'null': None, 'list': [], 'str': 'invalid'}[sys.argv[1]], open('launch_record.json', 'w'))
+PY
+}
+chk 'HS③i ★ HBR5-01 봉인이 빈 객체 {} 면 막는다 (rc 3 · mpirun 0 · 거부 영수증만)' \
+    "tamper seal_empty 'seal_as empty' SLURM_NTASKS=20 MPI_LOG='$T/mpi_seal_empty.log' && ! [ -s '$T/mpi_seal_empty.log' ]"
+chk 'HS③j ★ HBR5-01 봉인이 null 이면 막는다' \
+    "tamper seal_null 'seal_as null' SLURM_NTASKS=20 MPI_LOG='$T/mpi_seal_null.log' && ! [ -s '$T/mpi_seal_null.log' ]"
+chk 'HS③k ★ HBR5-01 봉인이 빈 목록 [] 이면 막는다' \
+    "tamper seal_list 'seal_as list' SLURM_NTASKS=20 MPI_LOG='$T/mpi_seal_list.log' && ! [ -s '$T/mpi_seal_list.log' ]"
+chk 'HS③l ★ HBR5-01 봉인이 문자열 "invalid" 면 막는다' \
+    "tamper seal_str 'seal_as str' SLURM_NTASKS=20 MPI_LOG='$T/mpi_seal_str.log' && ! [ -s '$T/mpi_seal_str.log' ]"
 #  rest (SLURM) — 첫 시드가 시작돼 log.lmp 가 있고 증서 합격이면 나머지 둘만 sbatch
 mkcert "$CE/ok_s.json" "$S/$LH1" true '[]' true
 echo 901 > "$SD/live"

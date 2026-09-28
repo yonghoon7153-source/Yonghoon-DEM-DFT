@@ -1,0 +1,32 @@
+{
+  "repository": "CFDEMproject/LIGGGHTS-PUBLIC",
+  "pin": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+  "note": "Read-only primary-source inspection, not an executed simulator. Sources used to test the same-seed claim, not to estimate a mixer effect.",
+  "files": [
+    {
+      "path": "src/random.cpp",
+      "blob_sha": "14d9005e8cfa5c47af6c0c714558c81fc65621c0",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/random.cpp"
+    },
+    {
+      "path": "src/random.h",
+      "blob_sha": "824c535ef8777a487b3c3cba544dd25cbbd8f18d",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/random.h"
+    },
+    {
+      "path": "src/random_park.h",
+      "blob_sha": "2278d8d1ecab4ae5f1b7b2f361b14f01b101df89",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/random_park.h"
+    },
+    {
+      "path": "src/fix_insert.cpp",
+      "blob_sha": "21e0b92007df263588032bc3ae4d0ce3532496fb",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/fix_insert.cpp"
+    },
+    {
+      "path": "src/fix_insert_pack.cpp",
+      "blob_sha": "224a132824a0024b403c3b972b70c6712f1793bf",
+      "url": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC/blob/3d5c00f20519e6bb6eb6756f51f1ad36564e649d/src/fix_insert_pack.cpp"
+    }
+  ]
+}
