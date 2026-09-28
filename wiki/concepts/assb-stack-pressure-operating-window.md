@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -946,6 +946,25 @@ S3: Li₂₁Si₅ 분말 100 → 700 MPa 냉간압착에서 면저항 **4.71 · 
 
 요구치 · 운전 MPa · 스윕 · 압력 → 용량. 창의 값은 움직이지 않았다 — 움직인 것은 "제조 압력만 인쇄하고 운전은 사진이 대신한다" 는 한 줄이다(63호 "토크만" · 64호 "≈70 MPa 한 값" 에 이어).
 
+## ★ 2026-09-28 (`assb` 73호 Minnmann 2021 *JES* 168, 040537, **실험 · 차단 셀 EIS + In/(InLi)ₓ 반쪽 · PEEK ∅10 mm · 무탄소 NCM-622 \| Li₆PS₅Cl**) — **측정 압력 ≈40 MPa 를 힘 센서 + 스프링(이완 보상) 장치로 인쇄한 표본 — 사이클 셀의 구속 형식은 없고, 압력 스윕 · 압력 → 전도도 · 용량은 0**
+
+`raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md` (24 · 50 · 56호 지목 · 02호 Fig. 3 원자료, **3차 묶음 파일 35**).
+
+### 1. 요구치 — 인쇄 0
+
+`pressure` 8 회 · `MPa` 6 회(380 · 100 · 40 MPa). 요구치 · 문턱 0 ⇒ 띠(0.1–5 MPa) · 확인된 원전 0 **그대로**.
+
+### 2. ★ 제조 ↔ 측정 · 운전 — 값은 있고 스윕은 없다
+
+- `[인쇄]` 제조: 복합체 100 mg "380 MPa for 3 min at room temperature" · 이온 전도도 셀은 그 펠릿을 풀어 SE ≈60 mg 씩 더하고 "again compacted with a uniaxial pressure of 380 MPa for 3 min"(**두 번 압착** — 전자 셀과 같은 L · 같은 공극 가정을 두 측정에 쓴다) · 반쪽 셀 분리막 100 MPa · 이층 380 MPa × 3 min.
+- `[인쇄]` EIS 측정 "A constant pressure of approx. 40 MPa was applied to the pellets during the measurements. A specially designed cell setup comprising a force sensor to adjust the force (and thus the pressure) and a spring to compensate for pressure relaxation caused by elastic deformations of individual components was used" — **정하중(이완 보상) 쪽 구속의 인쇄 표본**(`[해석]` 63호 셀 틀의 나사 토크 서술과 다른 장치 — 이 편은 그 장치의 원전을 달지 않는다; ref 36 = 63호는 PEEK ∅10 mm 셀 케이스에 붙는다).
+- `[인쇄]` 사이클 "During cycling, a pressure of about 40 MPa was applied." — 구속 형식(정하중 / 정변위) 미인쇄.
+- `[해석]` 24호가 "이 편 방법" 을 따른 EIS 셀은 50 · 150 MPa(제조) — 같은 방법 이름 아래 시편 제조 압력이 다르다([[assb-tortuosity-factor-effective-conductivity-split]] 처방 2).
+
+### 3. 이 편이 이 페이지에 **안 준 것**
+
+요구치 · 압력 스윕 · 압력 → σ · τ² · 용량 · 운전 중 압력 변화. 창의 값은 움직이지 않았다 — 움직인 것은 운전 압력 계보에 "측정 셀은 힘 센서 + 스프링 ≈40 MPa · 사이클 셀은 값만" 이라는 한 줄이다(보류 (하) ① D4 구속 형식의 약한 근거 — 결정 안 함).
+
 ## 경고 (전부 원문이 준 한계에서 나온다)
 
 1. **점당 셀 1 개, 오차 막대 0.** 압력–수명 6 점 전부 N=1 이다.
@@ -991,6 +1010,7 @@ S3: Li₂₁Si₅ 분말 100 → 700 MPa 냉간압착에서 면저항 **4.71 · 
 - **62호의 ΔP(1.25 MPa)를 운전 압력 요구치나 창의 표본으로 옮기지 않는다** (2026-09-28) — ≈61.8 MPa 기저(ESI 그림 축) 위 · 기저선 보정 · 지그 순응이 정한 값이다(원시 +1.07). 그리고 **무가압 셀(딜라토 · X-CT)의 낮은 용량을 "압력 0 의 효과" 로 옮기지 않는다** — 압력 말고도 SE 두께 · In 지름 · 전류 · 장치가 다르다.
 - **63호의 토크(10 N·m)를 MPa 로 옮기지 않는다** (2026-09-28) — 나사 규격 · 마찰이 인쇄되지 않아 `[재현]` 42–106 MPa 의 띠만 선다. 그리고 **23호의 64 / 70 MPa 를 63호의 값으로 인용하지 않는다** — 23호가 같은 절차를 빌리며 자기 셀에 적은 값이다.
 - **65호 파우치를 무가압 셀로도 가압 셀로도 인용하지 않는다** (2026-09-28) — 사진의 바인더 클립 둘은 정량 0 이고 운전 압력 서술이 없다.
+- **73호의 ≈40 MPa 를 운전 압력 요구치나 창의 표본으로 옮기지 않는다** (2026-09-28) — 측정 · 사이클 조건의 한 값이고 스윕이 없다. 사이클 셀의 구속 형식(정하중 / 정변위)은 인쇄 0 이다.
 
 ## 관련
 - [[assb-pressure-reapplication-separation-test]] — `P↑` 분리 연산자. **이 페이지가 그 상한을 준다.**

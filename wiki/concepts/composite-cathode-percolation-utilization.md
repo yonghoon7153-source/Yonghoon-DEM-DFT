@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -495,6 +495,22 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - `[해석]` **이 페이지의 규율에 붙는 것**: (1) 합성 truth 에서 `θ₀` 를 **퍼콜레이션 해석식 하나의 출력으로 정하지 않는다**(56 · 57호 결론에 한 편 더 — 이번엔 해석식 계열) (2) **평균장 `P` 는 폭이 0** — 01호의 이봉(±20 %p)이 지워진다; 해석식을 쓰면 폭을 따로 붙인다 (3) CAM 입도 스윕을 대질하려면 **SE 입도(복합체 안 SE 영역 크기)** 가 입력이다 — 없으면 한 점 예측은 0–100 % 로 퍼진다.
 - ⚠ SOFC 식에는 **용량 칸이 없다** — `1 − P^e` 가 반응 자리(TPB · 표면)에만 들어간다. ASSB 로 옮기면 이 페이지의 곱 `Q_apparent = θ_AM · Q_material` 자리(= `ε_p`)로 가야 한다([[assb-apparent-capacity-decomposition]] 68호 절 · [[assb-lampe-contact-product-degeneracy]] 쉰한 번째 적용).
 
+## ★★ 같은 연구실의 무탄소 조성 스윕 — 전자 σ 무릎은 25–33 vol%, 01호 `p_c(3 µm)` 45.3 vol% 보다 한참 아래 · 68호 식은 SE 입도 없이 대입 불가 (2026-09-28 추가, `assb` 73호)
+
+`raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md` (Minnmann · Quillman · Burkhardt · Richter · Janek 2021, *JES* 168, 040537 — 무탄소 · 무바인더 NCM-622("typical particle size of 3 μm") \| Li₆PS₅Cl · 차단 셀 EIS · 01호를 ref 24 로 인용). Φ 는 공극(14 % 가정) 포함 전체 부피 기준 — 01호 식 (8) 과 같은 기준. SI 미수령.
+
+| Φ_NCM (vol%) — `[재현]` wt% | σ_el,eff (`[도표]`, S cm⁻¹) | τ²_el (`[도표]`) | q_mat 0.1 C 무탄소 (`[도표]`, mAh g⁻¹) |
+|---|---:|---:|---:|
+| 24.6 — 50 | 2.07e-5 | 121.5 | — (사이클 조성 아님) |
+| 32.2 — 60 | 2.37e-4 | 13.7 | 137.2 (+ VGCF 157.0) |
+| 41.6 — 70 | 5.62e-4 | 7.47 | 154.6 |
+| 52.9 — 80 | 1.13e-3 | 4.73 | — (사이클은 46.9 · 57.5 vol%) |
+| 61.1 — 86 | 1.44e-3 | 4.34 | 132.3 |
+
+- `[재현]` 01호 식 (8) `p_c(3 µm)` = **45.3 vol%** ⇒ 1호대로면 32 vol% 는 문턱 13 %p 아래(`θ` 가 40 % 문턱보다 한참 작음)인데, 전자 σ 는 24.6 → 32.2 vol% 에서 **×11.5** 로 이미 무릎을 지나고, 32 vol% 무탄소 셀의 0.1 C q_mat 은 VGCF 쌍의 **0.87** — 용량으로 본 전자 고립 몫은 ≲13 %(`[해석]` VGCF 쌍 상한 · 저자 배정). ⇒ **22 · 56 · 63호에 이은 같은 방향(1호 과대 비연결) 네 번째 실측 표본 — 이번엔 1호와 같은 연구실**이고, 이 편 자신은 ref 24(= 01호)를 인용해 42 vol% 의 부분 고립을 **τ²_el "above eight"(인쇄 자기 값 7.4 — D5) 한 수**로 추론한다(1호 `p_c` 와의 대조 0).
+- **68호 해석식** `[재현]`: 이 편 조성의 고상 ψ(Φ/0.86) 0.286 · 0.374 · 0.484 · 0.615 · 0.710 에서 문턱 `ρ_c` **1.04 · 0.70 · 0.44 · 0.26 · 0.17** · 포화 `ρ_1` 6.0 · 4.0 · 2.6 · 1.5 · 0.98 — 25 vol% 에서 CAM(3 µm)이 이어지려면 SE Sauter 지름 ≳3.1 µm. coarse SE 는 ">10 μm" 입자를 품는다고만 인쇄(분포 Table SV · 미수령) — **크기 대조 불가**(68호 절의 "SE 입도가 입력" 공백이 이번엔 이 편 SE 에). 방향만: SE 가 작아지면(ρ ↓) `Z_NN` ↓ → CAM 연결 ↓ — Fig. 6 fine SE 의 σ_el ×0.49 와 **같은 방향**(`[해석]`, 저자 설명 "less pronounced clustering" 과 같은 말의 다른 쪽).
+- ⚠ 대조의 한계: (i) σ 무릎 ≠ `θ`(전자 σ 는 연결 여부와 경로 폭을 함께 품는다 — [[assb-tortuosity-factor-effective-conductivity-split]] 여덟 번째 표본: 42 vol% `R_el` 의 ≈76 % 가 입자 간 접촉 몫) (ii) VGCF 이득의 고립 배정은 저자 논증(율 의존 ≈2 배 폭)이고 충전 값은 SI (iii) 공극 14 % 는 가정 · 조성마다 같은 값 (iv) 0 % SoC(NCM 전자 전도도는 탈리튬으로 커진다 — 저자 인쇄 [46]) (v) 조성당 EIS 시편 수 · 사이클 셀 산포 미인쇄 · 무릎은 24.6 ↔ 32.2 vol% 두 점 사이 한 칸.
+
 ## 이 페이지가 주장하지 않는 것
 
 - `θ_AM` 이 접촉 손실의 **올바른** 모형이라고 주장하지 않는다. 원문의 `θ` 는 접촉 저항을
@@ -512,6 +528,7 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
   해상도 바닥이 미명시라 **하한**이다.
 - ★ **2026-09-28 (65호)**: **57호 Fig. 5d 의 x 축 환산(× 0.85)을 57호 원문의 규약으로 확정하지 않는다** — 57호 digest 의 판독 위치와 1 vol% 안에서 맞는다는 `[재현]` 가설이다.
 - ★ **2026-09-28 (68호)**: **68호 해석식이 22호 불활성을 "예측한다" 고 하지 않는다** — 한 점씩은 SE 입도를 골라 맞출 수 있을 뿐이고, 세 점의 패턴은 저자 배정 읽기로 재현되지 않는다. 22호 SE 입도 · d₅₀ ↔ Sauter 환산이 지면에 없고, `√P` 가 [31] 의 식인지도 미열람이다.
+- ★ **2026-09-28 (73호)**: **전자 σ 무릎을 `p_c` 의 측정으로 쓰지 않는다** — σ 는 연결 여부와 경로 폭을 함께 품고, 무릎 위치는 두 조성(24.6 ↔ 32.2 vol%) 사이 한 칸이다. 32 vol% 고립 몫 ≲13 % 도 저자 배정(VGCF 쌍) 위의 상한이다.
 
 ## 관련
 - [[assb-apparent-capacity-decomposition]] — 이 곱에 **셋째 항 `η(i)`** 를 더한다. 반례와 분리 시험.

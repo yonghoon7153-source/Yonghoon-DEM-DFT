@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -162,6 +162,18 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - **바인더**: `τ²` 는 **순수 SE `ε`** 로 나눈다(`[재현]` ε_AM 68 · 0.10: 835 ↔ SE+바인더 1391, `[도표]` ≈800) ⇒ 바인더 `τ²` 증가(70:30 에서 4.2 → 10)는 SE 부피 손실이 아니라 **경로 차단** 몫. 그러나 같은 편 전류 추정은 SE+바인더 `v_SE` 로 곱해 ×1.15–1.30 과대(D4) — 규약이 한 지면 안에서 바뀐다.
 - **경로 A(측정)와의 대조는 한 점, 가정 `ε` 로**: Kato 2018 `σ_eff` 0.73 ↔ 모의 0.68(void **15 % 가정** — 시편 void 미보고); `τ²` 2.29 ↔ 2.47 의 차는 `ε` 규약(`[재현]` 2.28 · 2.50). ⇒ 여섯 번째 표본(55호)의 교훈 "같은 시편 · 같은 `ε`" 의 **실패형**: 시편 `ε` 를 모르면 구조 계산은 곱을 예측하지 않고 맞춘다 — 같은 지면의 void 손잡이(×2)가 일치 폭(7 %)보다 크다.
 
+## ★★★ 여덟 번째 표본 — 계보가 식 (2)(4)를 빌려 온 방법 편: 차단 셀 두 종 · T형 TLM · 규약은 57호와 같고, 14 % 는 여기서도 가정이다 (2026-09-28, `assb` 73호)
+
+`raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md` (Minnmann · Quillman · Burkhardt · Richter · Janek 2021, *JES* 168, 040537 — 무탄소 · 무바인더 NCM-622(3 µm) \| Li₆PS₅Cl, Φ 25–61 vol%). 24호 ref 42 · 50호 SI 4 · 56호 ref 27 이 "차단 셀 + TLM 방법" · "void 14 %" 의 근거로 단 편이고, 02호 Fig. 3 의 실험 점이 이 편 Fig. 2(a) 에서 왔다. SI 미수령.
+
+- **정의 · 규약**: `[인쇄]` 식 2 `σ_i,eff = L/(R_i A)` · 식 3 `τ_i = l_i/l_0`(기하 굴곡도) · 식 4 `τ_i² = σ_i,0 φ_i/σ_i,eff`(ref 6 = 57호) — 이 편의 τ² 는 이 페이지의 `τ²` 와 같은 양이다. `[재현]` Fig. 2(b) τ² 가 (a) σ 에서 **이온 φ_SE = 1 − Φ − 0.14**(4/4 −2.9…+0.9 %) · **전자 φ_CAM = Φ**(5/5 −2.5…−0.9 %)로 재현된다(σ_ion,0 1.6 · σ_el,0 10 mS cm⁻¹) — 공극 포함 전체 부피 기준, 57호 식 (11) 과 같은 규약. ⇒ **24호 D1(이온 τ² 를 CAM 분율로)은 57호 · 이 편 어느 원전의 규약도 아니다.** 42 vol% 에서는 두 규약이 4.00 ↔ 4.27 로 가까워 이 편의 42 % 예시 한 점으로는 차가 안 보인다.
+- **14 % 의 인쇄 자리**: `[인쇄]` "an average porosity of 14 % is assumed"(도출 SI Section 3) · 측정 범위 "13 %–17 % (Table SIII)" — 24호 "assuming 14% of the cathode is void (refs 7, 41, 42, 48, 49)" 의 ref 42 가 이 편이다(57호 = ref 41 은 15 %). `[재현]` 두께를 인쇄한 유일한 시편(42 vol% · 100 mg · 470 µm)은 15.8 %. **조성마다 같은 가정 값**이 모든 τ² 의 φ 와 Φ 축에 들어간다.
+- **두 운반자 · 두 셀 · 뺀 합**: 전자 σ 는 이온 차단 셀(SS \| 복합체 \| SS)의 직류 끝 `R_el = L(r_el,1 + r_el,2)`, 이온 σ 는 전자 차단 셀(In/(InLi)ₓ \| LPSCl \| 복합체 \| LPSCl \| In/(InLi)ₓ)의 직류 끝에서 분리막 `2R_SE`(고주파 오프셋 귀속) · In 계면 `2R_In`(대칭셀 "considered")을 뺀 `R_ion` 이다. `[재현]` 뺀 합(42 vol% 역산 ≈100 Ω)은 조성 따라 `R_ion` 의 ≈59 %(25 vol%) → ≈1 %(61 vol%) — **저 CAM 의 τ²_ion 이 빼는 방법에 가장 민감**하고, 고 CAM 의 τ²_el 은 회로에 없는 강철 접촉 몇 Ω 에 ≈10 % 로 걸린다.
+- **점 접촉이 τ²_el 안에 — 수 한 개**: `[인쇄]` 이 편도 식 4 가 "current constriction, cathode-electrolyte-interphase (CEI) formation, interface polarization, and space charge layers" 를 무시한다고 적는다("the determined tortuosity factor might deviate from the 'true' geometrical tortuosity factor"). `[재현]` 42 vol% 에서 `R_el` 107 Ω 의 ≈76 %(`r_el,2` ≈81.5 Ω)가 입자 간 전자 계면("interfacial charge transfer") 몫 — τ²_el 7.4 는 NCM 벌크 경로보다 **접촉 저항**을 주로 적은 수다(고주파 절편이 7 MHz 에서 닫혔다는 가정 위). 위 "왜 중요한가" 표의 둘째 줄(경로가 좁아짐 → `σ_eff` ↓)이 전자 쪽에서 수를 얻었다.
+- **기준값도 가정이다**: 두 순수 기준점이 다른 공극 처리로만 τ² ≈1 에 앉는다 — LPSCl 점 1.006(σ₀ 1.6 · φ = 1) · NCM 점 0.99(`[도표]` σ 8.37e-3 ↔ 캡션 σ_el,0 10 mS cm⁻¹ — `[해석]` 8.37/0.86 = 9.7 로 읽힌다). LPSCl 에도 같은 보정을 하면 모든 τ²_ion 이 ×1.19(판정 아님 — 기준값의 시편 조건은 SI Table S2).
+- **막대**: τ² 에만 정의 없는 ≈±20 % 막대(12/12 · 기준점 τ² = 1 둘에도 같은 크기) · σ 막대 0 — 통계 산포로 읽을 수 없다.
+- ⇒ 이 페이지 요지의 방법 편 판: **계보가 식을 빌려 온 편에서도 측정은 `σ_eff`(두 셀의 직류 끝)이고, `τ²` 는 가정 공극 · 가정 기준 · 뺀 합 위의 이름표다.** 처방에 붙는 것(`[해석]`): `τ²` 를 옮길 때 **어느 셀에서 무엇을 뺐는지(분리막 · 상대극 계면 · 집전체 접촉)** 와 **기준 σ₀ 시편의 공극 처리**를 값 옆에 적는다. 한 셀 스펙트럼에서 호 배정이 안 갈린다는 것(두 차단 셀 교차 대입)은 [[assb-lampe-contact-product-degeneracy]] 쉰여섯 번째 적용.
+
 ## 이 페이지가 주장하지 않는 것
 
 - **"굴곡도가 진화하지 않았다" 고 하지 않는다** — `σ_eff` 로 보면 70 % 는 변화 없음, 80 % 는 ≈3 배이고, 그 3 배의 배정이 안 갈린다는 것까지다.
@@ -169,6 +181,7 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - **옴 강하 추정을 측정값으로 쓰지 않는다** — OCP 기울기는 우리 가정이고 1차원 균일 반응 근사다.
 - 근거 편수: **수송 곱을 숫자로 준 편은 24호 하나**다. 9호는 같은 식을 모델에 두고 값을 적합했을 뿐 `σ_eff` 를 재지 않았다. 1호는 이 항을 뺐다.
 - ★ **2026-09-23 (55호)**: 위 "근거 편수" 줄은 24호 시점의 기록이다 — 그 뒤 29호(측정 ÷ 공칭 `ε`) · 54호(구조 계산) · 55호(두 경로)가 수를 줬다. 55호 EIS 쪽 `ε` ≈0.65 는 **우리 역산**이고 저자 값이 아니다.
+- ★ **2026-09-28 (73호)**: 규약 재현(이온 φ_SE · 전자 φ_CAM)은 **래스터 판독값 위의 우리 산술**이다(9/9 ≤3 %) — 저자가 φ 를 표로 인쇄한 것은 아니다(SI Table SII 미수령). `R_el` 의 ≈76 % 가 접촉 몫이라는 것도 한 조성 · 한 스펙트럼 · 고주파 절편 폐합 가정 위의 `[재현]` 이고, σ_el,0 10 mS cm⁻¹ 이 공극 보정값이라고 단정하지 않는다.
 
 ## 관련
 
