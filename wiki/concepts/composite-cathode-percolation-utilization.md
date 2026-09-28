@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -474,6 +474,27 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - **57호 Fig. 5d 삼각형 넷** `[재현]` = 표 1 비 69.4(W70/D70) · 90.9(W80/D80) · 45.0(W85/D85) · **72.9 %(예비혼합 W85L/D85L)** — 넷째는 바인더 함량이 아니라 다른 공정의 점. x 위치 ≈41 · 52 · 59(57호 판독)는 고체 기준 48.1 · 61.3 · 69.0 vol%(`ρ_SE` 1.97) × 0.85(57호 기본 void 15 %)와 1 vol% 안에서 맞는다 — 57호의 "작은 AM 점은 `p_c` 아래(≈0 ÷ ≈0)" 는 **모델 축의 환산** 위이고, 실험 전극은 탄소로 연결돼 있다(`[재현]` 가설 — 57호 원문 미열람).
 - ⚠ 57호 대조의 실험 쪽은 GITT 피복률 = 1.2355 × ΔE_s/ΔE_t — 연결 입자 기준(통째 고립 약분)이고 가져온 `D` · BET 로 척도된다([[assb-lampe-contact-product-degeneracy]] 65호 줄). 모델 `A_spec,a`(퍼콜레이션하는 두 클러스터 사이 면적)와는 **같은 양이 아니다**.
 
+## ★★★ 22호가 기댄 "percolation theory" 의 원전 — SOFC 좌표수 평균장 해석식: 방향은 식에서 서고, 22호 세 점은 동시에 안 맞는다 (2026-09-28 추가, `assb` 68호)
+
+`raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md` (Chen D. · He · Zhang · Wang · Ni 2013, *Energies* 6, 1632 — **22호 ref 26**, SOFC 복합 공기극 LSCF(혼합 전도체) + YSZ(이온 전도체) · 실험 0).
+
+- **무엇인가**: 좌표수 평균장(`Z̄ = 6` 강체구 RCP · 식 (2)) → 경험식 `P(Z) = 1 − ((4.236 − Z)/2.472)^3.7`([31] Bertei 2011) → MIEC 의 전자 경로 소속 확률 `P^e`. 이 페이지의 `θ` 와 **같은 양**(전자 퍼콜레이팅 클러스터 소속 분율)을 **해석식**으로 준다 — 01호의 복셀 시뮬레이션과 다른 계산이다.
+- **닫힌 식** `[재현]`: `θ₀ = P^e(Z_NN)`, `Z_NN = 6ψρ/(ψρ + 1 − ψ)`, `ρ = r₃₂(SE)/r₃₂(CAM)`(고상 ψ · 수 분포 Sauter 반경 · 두 상 폭이 같으면 폭은 약분). 문턱 `ρ_c = 1.764(1−ψ)/(4.236ψ)` · 포화 `ρ_1 = 4.236(1−ψ)/(1.764ψ)` · `ρ_1/ρ_c = 5.77`(ψ 무관). **크기 효과는 비뿐**이고 공극률은 `P` 에 안 들어간다(`Z̄` 고정) — 01호 식 (8) 과 달리 **공극률 없이 22호와 비교가 선다**.
+- ⚠ **인쇄식과 그림이 다르다** — 그림 6 · 8 은 `√P` 로 계산됐다(문턱 바로 위 ×≈2) · 식 (24) 분자 오기 · 그림 7 은 `P` 미적용(68호 digest §(a')). 이 식을 쓰면 **두 꼴을 폭으로** 둔다.
+
+| 22호 대조 `[재현]`(ψ 0.479–0.498 · SE 입도 폭 · 인쇄 `P` · `√P`) | S (4.0 µm) | M (8.3) | L (15.6) |
+|---|---|---|---|
+| 측정 `f_inactive`(XRD) · 용량만의 상한 | 2 · ≤3 % | 27 · ≤39 % | 31 · ≤44 % |
+| 한 점씩 맞추는 d_SE(`ρ × d₅₀` — d₅₀ 를 Sauter 지름으로 본 환산) | 4.6–5.6 µm | 4.9–6.5 | 8.9–11.6 |
+| S · M 을 같이 맞추면(d_SE 4.9–6.5) | 0.7–1.4 % | 27 % | **100 %** |
+| 셋 최소제곱(d_SE 8.5–11.1) | 0 % | 2.6–3.6 % | 34.8 % |
+| 01호 SE 3 µm 그대로 | 13–30 % | 100 % | 100 % |
+
+- ⇒ **저자 배정 읽기**(`f_inactive` = 전자 비연결)로는 세 점을 동시에 못 맞춘다 — 모형의 27 → 31 % 는 크기비 ×1.04–1.05 안에서 지나가는데 22호 M → L 은 ×1.88(같은 로트) — **"M ≈ L" 평탄은 함수족 밖**(`Z̄` · 폭 · `P` 꼴을 바꿔도). **상한 읽기**(이 페이지 22호 절의 `f_inactive ≥ 1 − θ^elec`)로는 모순 없는 영역이 d_SE ≥8.9–11.6 µm 이고 거기서 M 의 전자 비연결 ≤3 %p — M 의 27 % 는 거의 전부 전자 밖이어야 한다(22호 배정과 반대).
+- **01호 식 (8)(3–15 배 과대)에 이은 두 번째 모형 계열 · 같은 방향**(비연결 과대). SE 3 µm 에서 문턱(θ/P = 0.4)의 d 3 → 15 µm 이동: 01호 45 → 58 vol%(전체 부피) ↔ 68호 35 → 73 %(고상, 인쇄 `P`) — 크기 민감도 ×3. `[해석]` 01호는 AM 을 SE 와 독립으로 배치하므로(01호 digest §4.2) 그 d 의존은 이산화(복셀 접촉 거리 0.2 µm/d · 도메인/d)일 가능성이 있다 — 가설, 검증 안 함.
+- `[해석]` **이 페이지의 규율에 붙는 것**: (1) 합성 truth 에서 `θ₀` 를 **퍼콜레이션 해석식 하나의 출력으로 정하지 않는다**(56 · 57호 결론에 한 편 더 — 이번엔 해석식 계열) (2) **평균장 `P` 는 폭이 0** — 01호의 이봉(±20 %p)이 지워진다; 해석식을 쓰면 폭을 따로 붙인다 (3) CAM 입도 스윕을 대질하려면 **SE 입도(복합체 안 SE 영역 크기)** 가 입력이다 — 없으면 한 점 예측은 0–100 % 로 퍼진다.
+- ⚠ SOFC 식에는 **용량 칸이 없다** — `1 − P^e` 가 반응 자리(TPB · 표면)에만 들어간다. ASSB 로 옮기면 이 페이지의 곱 `Q_apparent = θ_AM · Q_material` 자리(= `ε_p`)로 가야 한다([[assb-apparent-capacity-decomposition]] 68호 절 · [[assb-lampe-contact-product-degeneracy]] 쉰한 번째 적용).
+
 ## 이 페이지가 주장하지 않는 것
 
 - `θ_AM` 이 접촉 손실의 **올바른** 모형이라고 주장하지 않는다. 원문의 `θ` 는 접촉 저항을
@@ -490,6 +511,7 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - **4호의 10.4 %·9.50 % 가 확정값이라고 주장하지 않는다** — 분할 정확도 수치가 없고
   해상도 바닥이 미명시라 **하한**이다.
 - ★ **2026-09-28 (65호)**: **57호 Fig. 5d 의 x 축 환산(× 0.85)을 57호 원문의 규약으로 확정하지 않는다** — 57호 digest 의 판독 위치와 1 vol% 안에서 맞는다는 `[재현]` 가설이다.
+- ★ **2026-09-28 (68호)**: **68호 해석식이 22호 불활성을 "예측한다" 고 하지 않는다** — 한 점씩은 SE 입도를 골라 맞출 수 있을 뿐이고, 세 점의 패턴은 저자 배정 읽기로 재현되지 않는다. 22호 SE 입도 · d₅₀ ↔ Sauter 환산이 지면에 없고, `√P` 가 [31] 의 식인지도 미열람이다.
 
 ## 관련
 - [[assb-apparent-capacity-decomposition]] — 이 곱에 **셋째 항 `η(i)`** 를 더한다. 반례와 분리 시험.

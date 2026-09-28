@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -457,6 +457,15 @@ Li-In 음극 셀의 것이다. **Li 금속·무음극에 그대로 옮기지 않
 - ★★ **22호 `η` 의 교정 축 — 규약 항의 크기.** 66호 절의 "교정 선택으로 `η` ≈±0.1" 중 **규약 항**은 같은 연구망에서 0.10(`x₀` 1.00 ↔ 0.90)까지 흔들린다(`[재현]` NCM811 쌍 전압 맞춤 +0.10). 22호 첫 충전
   교정은 규약 항과 시편 항을 전압 맞춤으로 가르지 못한다(+0.157 → +0.033) — `θ`(상 분율)는 여전히 교정 없이 선다.
 - ⚠ 모집단: 액체 반쪽 · NCM811 · BASF 전극 — ASSB 에서 잰 교정 곡선은 이 위키에 여전히 0.
+
+## ★★ 2026-09-28 (`assb` 68호 Chen 2013 *Energies*, **SOFC 해석 모형 · 실험 0 · ASSB 아님**) — **SOFC 식에는 용량 칸이 없다: `1 − P^e` 는 반응 자리에만 들어가고, ASSB 로 옮기면 `θ_AM` 칸으로 가야 한다**
+
+`raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md` (22호 ref 26 — 22호가 "in agreement with percolation theory" 로 기댄 원전).
+
+- 이 편은 3 항 분해의 `θ_AM` 과 **같은 양**(전자 퍼콜레이팅 클러스터 소속 분율 `P^e`)을 해석식으로 준다 — `[재현]` `θ₀ = P^e(6ψρ/(ψρ + 1 − ψ))`, ρ = SE/CAM Sauter 반경비. 정적 · 무한계 · 폭 0.
+- ★ 그러나 SOFC 는 **저장 용량이 없다** — 끊긴 LSCF 는 **반응 자리만** 잃고(식 (7) · (9) 의 곱), 이 편에서 `P^e` 가 들어가는 곳은 전부 **동역학 쪽**(TPB 길이 · 표면 자리)이다. ASSB 로 옮기면 끊긴
+  CAM 은 용량을 잃으므로 같은 `P^e` 가 `θ_AM`(용량 곱) 칸에 들어가야 한다 — `[해석]` **SOFC 식을 그대로 가져오면 `θ` 를 `η` 칸(반응 자리 ↔ 과전압)에만 넣는 모형이 된다.**
+- 22호 `θ`(= 1 − `f_inactive`)와 대면: 저자 배정 읽기로 세 점 동시 불가 · 상한 읽기로 M 의 불활성 거의 전부가 전자 밖 — 3 항 분해에서 22호 M 의 `θ` 몫은 이 식으로 정해지지 않는다(68호 digest §(b)).
 
 ## 이 페이지가 주장하지 않는 것
 

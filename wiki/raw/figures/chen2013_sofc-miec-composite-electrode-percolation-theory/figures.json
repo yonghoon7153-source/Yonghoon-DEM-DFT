@@ -1,0 +1,294 @@
+{
+ "slug": "chen2013_sofc-miec-composite-electrode-percolation-theory",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-28",
+ "sources": [
+  "bcdc44d6-30._Percolation_theory_in_solid_oxide_fuel_cell_composite_electrodes_with_a_mixed_electronic_and_ionic_conductor.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. The typical components of a planar solid oxide fuel cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    131.9,
+    342.0,
+    466.6,
+    521.3
+   ],
+   "w": 1395,
+   "h": 748,
+   "dpi": 300,
+   "src": "bcdc44d6-30._Percolation_theory_in_solid_oxide_fuel_cell_composite_electrodes_with_a_mixed_electronic_and_ionic_conductor.pdf",
+   "blank": 0.716
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Illustration of the microstructure and physical processes within a single cell. Grey particles for Ni particles within composite anode, yellow particles represent YSZ particles while blue particles represent mixed ion and electron conducting LSCF particles within composite cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    71.8,
+    298.4,
+    526.8,
+    491.3
+   ],
+   "w": 1897,
+   "h": 805,
+   "dpi": 300,
+   "src": "bcdc44d6-30._Percolation_theory_in_solid_oxide_fuel_cell_composite_electrodes_with_a_mixed_electronic_and_ionic_conductor.pdf",
+   "blank": 0.761
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Microstructure of a two-component, randomly packed mixture of LSCF and YSZ particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    71.8,
+    483.4,
+    529.9,
+    632.0
+   ],
+   "w": 1910,
+   "h": 620,
+   "dpi": 300,
+   "src": "bcdc44d6-30._Percolation_theory_in_solid_oxide_fuel_cell_composite_electrodes_with_a_mixed_electronic_and_ionic_conductor.pdf",
+   "blank": 0.73
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 10,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Illustration of the four different assumptions of the electrochemical reaction sites: (a) the 2D contact area at the contact intersection, (b) the 1D circular length around the contact intersection, (c) the particle surfaces within a finite distance of the contact circular length and (d) the exposed surface area of each LSCF particle.",
+   "rotated_deg": 0,
+   "bbox": [
+    71.8,
+    320.3,
+    526.8,
+    560.0
+   ],
+   "w": 1898,
+   "h": 1000,
+   "dpi": 300,
+   "src": "bcdc44d6-30._Percolation_theory_in_solid_oxide_fuel_cell_composite_electrodes_with_a_mixed_electronic_and_ionic_conductor.pdf",
+   "blank": 0.61
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 13,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Comparison of the two different calculating methods used to obtain the inter-particle ion conductivity among the LSCF and YSZ particles when LSCF YSZ r r  : (a,b) the smaller particle layer is used to obtain the expression and (c) the larger particle layer is used to obtain the expression.",
+   "rotated_deg": 0,
+   "bbox": [
+    71.8,
+    265.4,
+    529.8,
+    363.4
+   ],
+   "w": 1909,
+   "h": 408,
+   "dpi": 300,
+   "src": "bcdc44d6-30._Percolation_theory_in_solid_oxide_fuel_cell_composite_electrodes_with_a_mixed_electronic_and_ionic_conductor.pdf",
+   "blank": 0.787
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 17,
+   "file": "fig_6.png",
+   "caption": "Figure 6. The non-dimensional percolated TPB length YSZ LSCF / r r , the non-dimensional standard deviations LSCF  and YSZ  .",
+   "rotated_deg": 0,
+   "bbox": [
+    71.8,
+    570.5,
+    423.1,
+    769.6
+   ],
+   "w": 1464,
+   "h": 830,
+   "dpi": 300,
+   "src": "bcdc44d6-30._Percolation_theory_in_solid_oxide_fuel_cell_composite_electrodes_with_a_mixed_electronic_and_ionic_conductor.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 18,
+   "file": "fig_7.png",
+   "caption": "Figure 7. The non-dimensional LSCF particle surface electrochemical reaction site per unit volume V es, per S as a function of LSCF  , YSZ LSCF / r r , the non-dimensional standard deviations LSCF  and YSZ  for 0 29.5  .",
+   "rotated_deg": 0,
+   "bbox": [
+    71.8,
+    590.9,
+    526.9,
+    790.0
+   ],
+   "w": 1897,
+   "h": 830,
+   "dpi": 300,
+   "src": "bcdc44d6-30._Percolation_theory_in_solid_oxide_fuel_cell_composite_electrodes_with_a_mixed_electronic_and_ionic_conductor.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 19,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Dependence of the non-dimensional percolated TPB length V TPB,per  on LSCF  , YSZ LSCF / r r , LSCF  and YSZ  .",
+   "rotated_deg": 0,
+   "bbox": [
+    71.8,
+    354.5,
+    526.8,
+    553.7
+   ],
+   "w": 1897,
+   "h": 831,
+   "dpi": 300,
+   "src": "bcdc44d6-30._Percolation_theory_in_solid_oxide_fuel_cell_composite_electrodes_with_a_mixed_electronic_and_ionic_conductor.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 20,
+   "file": "fig_9.png",
+   "caption": "Figure 9. The effect of LSCF  , YSZ LSCF / r r , LSCF  and YSZ  on the effective non-dimensional -  . i,ter,eff inter-particle ionic conductivity YSZ YSZ",
+   "rotated_deg": 0,
+   "bbox": [
+    71.8,
+    234.5,
+    526.8,
+    433.6
+   ],
+   "w": 1897,
+   "h": 830,
+   "dpi": 300,
+   "src": "bcdc44d6-30._Percolation_theory_in_solid_oxide_fuel_cell_composite_electrodes_with_a_mixed_electronic_and_ionic_conductor.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 20,
+   "file": "fig_10.png",
+   "caption": "Figure 10. The effective non-dimensional inter-particle ionic conductivity LSCF-LSCF function of LSCF  , YSZ LSCF / r r , LSCF  and YSZ  .",
+   "rotated_deg": 0,
+   "bbox": [
+    71.8,
+    597.6,
+    497.8,
+    796.7
+   ],
+   "w": 1776,
+   "h": 830,
+   "dpi": 300,
+   "src": "bcdc44d6-30._Percolation_theory_in_solid_oxide_fuel_cell_composite_electrodes_with_a_mixed_electronic_and_ionic_conductor.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 21,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Dependence of the effective non-dimensional inter-particle ionic conductivity -  on LSCF  , YSZ LSCF / r r , LSCF  and YSZ  . i,ter,eff LSCF YSZ",
+   "rotated_deg": 0,
+   "bbox": [
+    71.8,
+    266.5,
+    526.8,
+    467.0
+   ],
+   "w": 1897,
+   "h": 836,
+   "dpi": 300,
+   "src": "bcdc44d6-30._Percolation_theory_in_solid_oxide_fuel_cell_composite_electrodes_with_a_mixed_electronic_and_ionic_conductor.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 22,
+   "file": "fig_12.png",
+   "caption": "Figure 12. The non-dimensional hydraulic radius gr as a function of LSCF  , YSZ LSCF / r r , LSCF  and YSZ  .",
+   "rotated_deg": 0,
+   "bbox": [
+    43.7,
+    120.5,
+    529.8,
+    348.7
+   ],
+   "w": 2026,
+   "h": 952,
+   "dpi": 300,
+   "src": "bcdc44d6-30._Percolation_theory_in_solid_oxide_fuel_cell_composite_electrodes_with_a_mixed_electronic_and_ionic_conductor.pdf",
+   "blank": 0.946,
+   "note": "⚠ 약간 과대 — bbox 아래끝(y 348.7 pt)이 '5. Conclusions' 절 제목(y 329.4–342.7 pt)을 품는다. 그림 자체는 온전하고 라벨 ↔ 내용은 맞다"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 14,
+   "file": "tab_1.png",
+   "caption": "Table 1. The non-dimensional radii of nine type particle sizes and the relevant normalized probabilities. Type 1 2 3 4 5 6 7 8 9 r 8 2 1 9 mat    6 2 1 9 mat    4 2 1 9 mat    2 2 1 9 mat    1 2 2 1 9 mat    4 2 1 9 mat    6 2 1 9 mat    8 2 1 9 mat    k mat r mat k mat p 6.77% 9.53% 12.2% 14.1% 14.8% 14.1% 12.2% 9.53% 6.77% For a composite cathode that consists of LSCF and YSZ ceramic powders, because the particle sizes are typically poly-dispersed, the probabilities of the material phase belonging to the percolated electron or ion conducting paths can be estimated by:  i P 1 YSZ  i . P 1 LSCF (23) 3.7 , e        Z P 4.236 1 2.472 LSCF LSCF LSCF The probabilities of the YSZ and LSCF particles belonging to the ion conducting path are 1 because both the YSZ and LSCF materials can contribute to the ion conducting path within the composite",
+   "rotated_deg": 0,
+   "bbox": [
+    44.7,
+    42.1,
+    554.0,
+    766.6
+   ],
+   "w": 2109,
+   "h": 2999,
+   "dpi": 298,
+   "src": "bcdc44d6-30._Percolation_theory_in_solid_oxide_fuel_cell_composite_electrodes_with_a_mixed_electronic_and_ionic_conductor.pdf",
+   "blank": 0.927,
+   "note": "⚠ 과대 크롭 — bbox [44.7, 42.1, 554.0, 766.6] 가 14 쪽 거의 전체(식 (20)–(23) 본문 포함)다. 표 본체는 tab_1_manual_p14.png(파일은 지우지 않았다). 라벨 ↔ 내용은 맞다(표가 이 쪽 안에 있다). 값은 PDF 텍스트 층이 정본"
+  },
+  {
+   "key": "t1m",
+   "kind": "table",
+   "label": "1",
+   "page": 14,
+   "file": "tab_1_manual_p14.png",
+   "caption": "Table 1. The non-dimensional radii of nine type particle sizes and the relevant normalized probabilities.",
+   "rotated_deg": 0,
+   "bbox": [
+    60,
+    472,
+    545,
+    583
+   ],
+   "w": 2021,
+   "h": 464,
+   "dpi": 300,
+   "src": "bcdc44d6-30._Percolation_theory_in_solid_oxide_fuel_cell_composite_electrodes_with_a_mixed_electronic_and_ionic_conductor.pdf",
+   "manual": true,
+   "note": "수동 크롭 — 자동 tab_1.png 가 14 쪽 거의 전체를 잡아(과대) 표만 다시 잘랐다. 캡션(y 477.1–505 pt) · 위 괘선(y 513.5) · 표 본체 · 아래 괘선(y 578.5)을 300 dpi 렌더 클립. 값은 PDF 텍스트 층이 정본"
+  }
+ ]
+}
