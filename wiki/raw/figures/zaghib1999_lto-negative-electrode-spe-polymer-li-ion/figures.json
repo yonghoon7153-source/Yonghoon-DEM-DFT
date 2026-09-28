@@ -1,0 +1,160 @@
+{
+ "slug": "zaghib1999_lto-negative-electrode-spe-polymer-li-ion",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-28",
+ "sources": [
+  "efb4286e-32._Electrochemical_study_of_Li4Ti5O12_as_negative_electrode_for_Li-ion_polymer_rechargeable_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. X-ray diffraction patterns of white sample of Li Ti O . 4 5 12",
+   "rotated_deg": 0,
+   "bbox": [
+    45.3,
+    133.9,
+    553.3,
+    702.4
+   ],
+   "w": 2118,
+   "h": 2370,
+   "dpi": 300,
+   "src": "efb4286e-32._Electrochemical_study_of_Li4Ti5O12_as_negative_electrode_for_Li-ion_polymer_rechargeable_batteries.pdf",
+   "blank": 0.936,
+   "note": "⚠ 크롭 과대 — bbox 가 2 쪽 본문 두 단(y 133.9 pt 부터)을 포함한다(래스터 xref 4, 7000 × 4579 1 비트는 rect 51.3–547.3 × 375.6–699.6 pt). 그림 자체는 온전 — 라벨 ↔ 내용 맞다. 캡션 필드는 합자 깨짐('Li Ti O . 4 5 12'). 수치(봉우리 2θ → a)는 원본 래스터에서 판독"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. DSC of sample Li Ti O prepared by method B. 4 5 12",
+   "rotated_deg": 0,
+   "bbox": [
+    46.8,
+    366.6,
+    551.8,
+    702.4
+   ],
+   "w": 2105,
+   "h": 1400,
+   "dpi": 300,
+   "src": "efb4286e-32._Electrochemical_study_of_Li4Ti5O12_as_negative_electrode_for_Li-ion_polymer_rechargeable_batteries.pdf",
+   "blank": 0.961,
+   "note": "온전 — 라벨 ↔ 내용 맞다(래스터 xref 8, 6961 × 4621 1 비트). 캡션 '… prepared by method B' 는 본문('HEBM precursor sample') · 그림 라벨('TiO2 + Li2CO3 SPEX 2 hres')과 어긋난다(digest D8). 곡선 판독은 원본 래스터"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. SEM image of sample Li Ti O . 4 5 12",
+   "rotated_deg": 0,
+   "bbox": [
+    47.3,
+    39.7,
+    288.6,
+    357.5
+   ],
+   "w": 1006,
+   "h": 1325,
+   "dpi": 300,
+   "src": "efb4286e-32._Electrochemical_study_of_Li4Ti5O12_as_negative_electrode_for_Li-ion_polymer_rechargeable_batteries.pdf",
+   "blank": 0.111,
+   "note": "온전(래스터 xref 12, 637 × 862 8 비트) — 라벨 ↔ 내용 맞다. ⚠ 사진 발 라벨 'lot 10 avant tt 5000x'(열처리 전 — 해석) ↔ 캡션 'sample Li4Ti5O12' · 본문 'synthesized … method B'(digest D9). 머리 경로 'K:\\PHOTOS POST-MORTEM\\ACEP_MARIJULIE\\LOT10_2.PCI'"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Discharge and charge curves of two LirSPErLi Ti O cells at 4 5 12 Ž . Ž . Cr12. a Prepared by method A; b prepared by method B.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.8,
+    39.7,
+    555.9,
+    210.1
+   ],
+   "w": 1047,
+   "h": 711,
+   "dpi": 300,
+   "src": "efb4286e-32._Electrochemical_study_of_Li4Ti5O12_as_negative_electrode_for_Li-ion_polymer_rechargeable_batteries.pdf",
+   "blank": 0.913,
+   "note": "온전(래스터 xref 13, 634 × 448 8 비트 — 이 편의 중심 그림) — 라벨 ↔ 내용 맞다. 캡션 필드 합자 깨짐('LirSPErLi Ti O … Cr12 … Ž . Ž .'). 곡선 판독(방전 · 충전 평탄 · 끝)은 원본 래스터 · 틀 = 눈금(3/1 V · −50/200 mAh g⁻¹)"
+  },
+  {
+   "key": "f5a",
+   "kind": "figure",
+   "label": "5a",
+   "page": 4,
+   "file": "fig_5a_manual_p4.png",
+   "caption": "Fig. 5. (a) Capacity vs. cycle life of the cell Li/SPE/Li4Ti5O12 at 60°C; (b) ASI vs. cycle life of the cell Li/SPE/Li4Ti5O12 at 60°C. — (a) 판: 제목 's852 - Li4Ti5O12 60°C' · Capacity (Ah) 0–5 · Efficiency (%) 0–250 · Cycles number 0–1500 · Discharge Ah(◆) · Effic. Ah · Effic. Wh",
+   "rotated_deg": 0,
+   "bbox": [
+    46.0,
+    398.0,
+    552.0,
+    742.0
+   ],
+   "w": 2109,
+   "h": 1434,
+   "dpi": 300,
+   "src": "efb4286e-32._Electrochemical_study_of_Li4Ti5O12_as_negative_electrode_for_Li-ion_polymer_rechargeable_batteries.pdf",
+   "blank": 0.956,
+   "manual": true,
+   "note": "수동 크롭 — 자동 추출이 4 쪽 Fig. 5 캡션(텍스트 층 'Ž . Ž . Fig. 5. a Capacity vs. …')을 놓쳤다. 래스터 xref 14(6873 × 4201 1 비트, rect 55.8–542.8 × 402.3–700.3 pt) + 캡션을 300 dpi 렌더 클립. 라벨 ↔ 내용 맞다. ⚠ 용량이 Ah 급(1.75 Ah)이라 본문의 '4 cm² lab cell' 과 다른 셀(digest D7). 곡선 판독은 원본 래스터"
+  },
+  {
+   "key": "f5b",
+   "kind": "figure",
+   "label": "5b",
+   "page": 5,
+   "file": "fig_5b_manual_p5.png",
+   "caption": "Fig. 5 (continued). — (b) 판: 제목 's852 - Li4Ti5O12 60°C' · ASI (Ω-cm2) 0–1000 · Cycles 0–1500 · ASI 1,6 V · ASI 1,5 V",
+   "rotated_deg": 0,
+   "bbox": [
+    46.0,
+    40.0,
+    552.0,
+    372.0
+   ],
+   "w": 2109,
+   "h": 1384,
+   "dpi": 300,
+   "src": "efb4286e-32._Electrochemical_study_of_Li4Ti5O12_as_negative_electrode_for_Li-ion_polymer_rechargeable_batteries.pdf",
+   "blank": 0.977,
+   "manual": true,
+   "note": "수동 크롭 — 자동 추출이 5 쪽 'Fig. 5 (continued).'(텍스트 층 'Ž . Fig. 5 continued .')을 놓쳤다. 래스터 xref 18(6945 × 4224 1 비트, rect 53.3–545.3 × 45.7–344.7 pt) + 캡션을 300 dpi 렌더 클립. 라벨 ↔ 내용 맞다. 본문 'ASI … very stable' ↔ 그림 ×1.7–3(digest D5). 곡선 판독은 원본 래스터"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Capacity vs. cycle life of the cell LirSPErLi Ti O at 808C. 4 5 12",
+   "rotated_deg": 0,
+   "bbox": [
+    46.8,
+    39.7,
+    551.8,
+    702.3
+   ],
+   "w": 2105,
+   "h": 2762,
+   "dpi": 300,
+   "src": "efb4286e-32._Electrochemical_study_of_Li4Ti5O12_as_negative_electrode_for_Li-ion_polymer_rechargeable_batteries.pdf",
+   "blank": 0.968,
+   "note": "⚠ 크롭 과대 — bbox 가 5 쪽 전체(y 39.7–702.3 pt)라 위쪽의 Fig. 5(b) 와 그 캡션 'Fig. 5 (continued).' 까지 포함한다. 아래쪽 그림 6(래스터 xref 19, 6963 × 4262) 은 온전 — 라벨 ↔ 내용 맞다. Fig. 5(b) 는 수동 크롭 fig_5b_manual_p5 로 따로 뒀다"
+  }
+ ]
+}
