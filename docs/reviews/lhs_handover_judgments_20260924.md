@@ -472,14 +472,14 @@
 `electronic_active_fraction` · `electronic_percolating_fraction` (AM 전자 · `network_conductivity.build_network` + `run_decomposition` 의 성분 셈) ·
 `se_se_cn_perc` · `se_se_cn_n_perc` · `se_se_cn_eff_area_perc` (`calc_se_se_cn` — 관통 SE 부분집합).  (+ 🔶 `top_reachable_pct` · `ionic_active_pct` — F4.)
 
-### ② 정의 (코드 그대로 — `dem_analysis_core.py:380–460` · `network_conductivity.py:179–245 · 1101–1120`)
+### ② 정의 (코드 그대로 — `dem_analysis_core.py:380–460` · `network_conductivity.py:179–249` · `active_fractions` (옛 `run_decomposition:1101–1120` 에서 추출))
 
 | 항목 | SE (이온 · `calc_percolation`) | AM (전자 · `build_network`) |
 |---|---|---|
 | 그래프 | 접촉 덤프 **행마다** 양끝이 SE 면 간선 (면적 · δ 로 거르지 않음) · **모든 SE 가 노드** (외톨이 = 크기 1 성분) | AM_P + AM_S **한 상** · 양끝 AM · `ca > 0 or δ > 0` 인 행만 (① 실측 δ > 0 전 행이라 실효 없음) · 성분 셈 `G_active` 는 **간선 있는 노드만** (외톨이는 active/percolating 에서 빠짐) |
 | 바닥 밴드 L0 | z_i ≤ 2·r_i — **바닥 벽 = z 0 을 암묵 가정** (확인 없음) | 같음 |
 | 위 밴드 L0 | z_i ≥ plate_z − 2·r_i — plate_z = `mesh_info.json` (STL 꼭짓점 z 평균 · 평판 검사 없음 `HND-06`) · 없으면 최고 입자 중심 | 같음 |
-| ★ 폴백 | 어느 한쪽 밴드가 **3 개 미만**이면 **두 밴드를 함께** L1 (z ≤ 0.15·plate_z · z ≥ 0.85·plate_z) 로 → 여전히 3 미만이면 L2 (관측 SE z-범위의 15/85 %) — **어느 단계가 쓰였는지 산출물에 없다** | 같은 규칙 (관측 범위 = AM) · `n_boundary_overlap` 은 재지만 **전자 것은 full_metrics 에 안 올라간다** (이온 것만) |
+| ★ 폴백 | 어느 한쪽 밴드가 **3 개 미만**이면 **두 밴드를 함께** L1 (z ≤ 0.15·plate_z · z ≥ 0.85·plate_z) 로 → 여전히 3 미만이면 L2 (관측 SE z-범위의 15/85 %) — **어느 단계가 쓰였는지 산출물에 없다** | 같은 규칙 (관측 범위 = AM) · `n_boundary_overlap` 은 재지만 **어느 채널 것도 full_metrics 에 안 올라간다** (`pipeline_service.NET_MERGE_KEYS` 에 경계 키 없음 · 이온 것은 `network_conductivity.json` 에만 · 전자 것은 어디에도 없다 — 자기리뷰 #9 정정) |
 | 관통 | 성분이 두 밴드에 다 닿음 → `percolation_pct` = 관통 SE / 전 SE · `top_reachable_pct` = 위 밴드 닿는 성분의 SE / 전 SE (**위 밴드에 앉은 외톨이 포함**) | `percolating_fraction` = 관통 AM / 전 AM · `active_fraction` = 바닥 닿는 성분의 AM / 전 AM |
 | 그 밖 | `n_components` = 성분 수 (**외톨이 포함**) · `n_large_components` = 크기 ≥ **10** 성분 수 (코드 안 상수 · 출처 없음) · `se_se_cn_*_perc` = 관통 SE 만의 CN · 면적 CN (관통 0 이면 **키 자체가 없음** → 빈칸) | — |
 
@@ -490,7 +490,7 @@
   빈도는 실측 전 **미상** — SE 가 적은 설계점 (am_pct 95 · mono_AM_P) 과 AM_S 만 있는 얇은 밴드에서 가능.  ⇒ 검사기가 케이스마다 단계 · L0 인원을 센다.
 - **F2 (P3 · `LHS-18`) bottom∩top 겹침 인공물.**  두께 < 4·r 이면 한 입자가 두 밴드에 동시에 들고 그 성분은 **통째로 관통**이 된다 (간선 0 인 외톨이
   셋만으로 `percolation_pct` = 100 — 합성 재현 selftest ④ · 생산 실사고 P600 부류).  LHS 는 **기하상 0 건** (벽 간극 두께 − 4·r_AM,max 최소 **+1.47 µm** ·
-  `lhs00_075` · SE 는 r ≤ 1 이라 불가) — 실측으로 확인만.  전자 `n_boundary_overlap` 이 full_metrics 에 안 올라가는 것은 그대로 등재.
+  `lhs00_075` · SE 는 r ≤ 1 이라 불가) — 실측으로 확인만.  겹침 수가 full_metrics 에 안 올라가는 것 (이온은 network JSON 에만 · 전자는 어디에도 없음) 은 그대로 등재.
 - **F3 (P3 · `LHS-19`) 열의 뜻이 이름과 다르다 (열 사전 대상).**  `n_components` 는 외톨이 SE 를 성분으로 센다 — 단절 침대는 SE 의 **최대 49 %** 가
   무접촉 (`LHS-06`) 이라 이 열은 사실상 **외톨이 수**다 · `n_large_components` 의 10 은 출처 없는 관례 · `top_reachable_pct` 는 위 밴드의 외톨이도 센다
   (합성: 관통 11/15 인데 top_reach 13/15) · `se_se_cn_*_perc` 는 비관통이면 빈칸 (= N/A · `DESC-05` 부류) · RVE 50 µm 고정이라 성분 수는 두께에 비례 (총량).
@@ -500,10 +500,14 @@
 - **F5 (정보) 바닥 z = 0 암묵.**  웹앱은 덱을 보지 않는다.  수확기 `check_deck_floor` 가 130/130 에서 z = 0 을 확인했고 (J16), 검사기가 케이스마다 재확인한다 (덱 없으면 fail-closed FLAG).
 - **F6 (정보) 수확기 AM perc 와 웹앱 전자 관통은 다른 정의다.**  수확기 `lhs_perc_extract.percolation` = 고체 외피 (min(z−r) · max(z+r)) 기준 슬래브 t = r_AM,max ·
   **표면** 기준 · **기하** 접촉 (d ≤ Σr) · 폴백 없음 ↔ 웹앱 = 벽/플래튼 기준 2·r_i **중심** · **덤프** 접촉 · 폴백 있음.  작은 AM_S 에는 수확기 밴드가 훨씬 넓다
-  (r_max 7.5 vs r_S 0.5 µm).  09-15 생산 팔 `ionic_percolates` (25/127 False) 는 웹앱과 같은 규칙 (network solver) 이라 plate_z 시점 (LHS-11 이전 메시) 만 다를 수 있다.
+  (r_max 7.5 vs r_S 0.5 µm).  09-15 생산 팔 `ionic_percolates` (25/127 False) 는 **솔버 결과** (`ionic_status` OK vs SOLVE_NONE) 이고 그 그래프는
+  `ca > 0 or δ > 0` 행만 · 간선 있는 노드만 (`G_active`) 이라 `calc_percolation` (거르지 않음 · 외톨이 포함) 과 **LHS 에서만** 일치한다 (① 실측 δ > 0 전 행 ·
+  겹침 0 일 때) — 그 밖에 plate_z 시점 (LHS-11 이전 메시) 이 다를 수 있다 (자기리뷰 #9 한정어).
   ⇒ 검사기가 **접촉 원천 {덤프 · 기하} × 경계 규칙 {웹앱 · 수확기}** 2×2 로 불일치를 귀속한다 (밴드 · 접촉 · 둘 다).
-- **F7 (정보 · τ 묶음으로 이월) 상자 크기.**  배치는 `input_params.json` 을 만들지 않아 웹앱 `_get_box_xy` 가 **0.05 기본**을 쓴다 — LHS RVE 가 130/130 = 50 µm 라
-  우연히 맞는다.  ② 값은 무영향 (간선 거리 가중만) · τ (`LHS-08`) 에서 등재.
+- **F7 (정보 · τ 묶음으로 이월) 상자 크기.**  ~~배치는 `input_params.json` 을 만들지 않아 웹앱이 0.05 기본을 쓴다~~ — **틀린 서술이었다** (자기리뷰 #9 · `SELF-64`):
+  배치가 덱을 `input_<case>.liggghts` 로 잇고 `run_pipeline` 이 `input*.liggghts` 를 `parse_liggghts` 에 넘겨 `parse_input_script` 가 `region reg_box block 0.0 0.05 …`
+  에서 box_x/box_y 를 읽어 `input_params.json` 을 **쓴다** (`webapp/app.py:3184` · `parse_liggghts.py:335–340`).  ⇒ 웹앱 상자 = 덱 상자 (0.05 · RVE 50 µm 130/130).
+  검사기의 `box_is_lhs_rve` 는 덤프 상자와 0.05 의 **대조**일 뿐이다.  ② 값은 무영향 (간선 거리 가중만) · τ (`LHS-08`) 에서 다시 본다.
 - **F8 (정보) 독립 재현 경로.**  SE 가 단분산이면 웹앱 L0 밴드 (z ≤ 2r · 중심) 와 수확기 벽 밴드 (`tortuosity_se` — z − r ≤ 0 + r_max · 표면) 는 **같은 집합**이다
   ⇒ 수확기 `wall_n_span_components > 0` 이 웹앱 `percolation_pct > 0` 의 독립 재현 (접촉 원천만 다름).  검사기가 케이스마다 같은 집합인지 단언한다 (다르면 재현 오류 FLAG).
 
@@ -511,11 +515,29 @@
 
 - 케이스마다: 프레임 · 고아 행 · 덱 바닥 · plate_z (수확과 같은 정의) → SE/AM **경계 단계 L0/L1/L2 · L0 인원 · 쓰인 인원 · 겹침** → 성분 통계
   (관통 · top_reach · 성분 · 외톨이 · ≥10 · 최대) → **재현 ↔ 정본 대조** (웹앱 `calc_percolation` 값 · 밴드 집합 · `calc_se_se_cn` 관통 키 · `build_network`
-  밴드 집합 · 간선 수 · 겹침 · `run_decomposition` 방식 분율 · 수확기 `percolation` 슬래브 인원 · perc) — 하나라도 다르면 FLAG (내 판독을 정본이 검증) →
+  밴드 집합 · 간선 수 · 겹침 · `network_conductivity.active_fractions` (run_decomposition 이 쓰는 함수 그대로 — 복사본 아님) · 수확기 `percolation` 슬래브 인원 · perc) —
+  하나라도 다르면 FLAG (내 판독을 정본이 검증) · 중복 행 · 자기쌍 (`scan_contact_dump` — ① 과 같은 함수) · 선언 수 ↔ 읽은 행 · 메시 sha256 기록 →
   2×2 귀속 (SE · AM) → legacy 09-15 대조.  FLAG = 폴백 발동 · 겹침 · 재현 불일치 · 덱/프레임/고아 (그 케이스의 열 정의가 명목과 다르다는 뜻 · 원자료 결함 아님).
 - 반례 먼저 (selftest): L1 ② · L2 ③ · 겹침 인공물 ④ · ≥10 문턱 ⑤ · 귀속 band ⑥ · contact ⑦ · 비관통 키 없음 ⑧ · 덱 바닥 ⑨ · 다분산 ⑩ · 프레임/고아 ⑪ ·
   **변이 ⑫ (재현 폭만 3.0 으로 바꾸면 정본과 어긋나 FLAG)** · CLI ⑭ · 2-type ⑮ · 정본 `run_decomposition`/`tortuosity_se` 와 분율·성분 일치 ①f·①g.
-- ⚠ 시간: 웹앱 정본 (`build_network` 파이썬 루프) 을 케이스마다 부른다 — AM_S 10⁵ 급 mono 침대에서 수십 초 · 전 건 수십 분 추정.
+- ⚠ 시간 (자기리뷰 실측 · 합성 150,006 입자 / 441,500 행): AM 주 침대 12.2 s · 1.3 GB (`build_network` 5.3 s) · SE 주 침대 6.9 s · 0.8 GB ⇒ 130 건 ≲ 30 분
+  (실물 덤프는 열이 26 개라 읽기가 더 무겁다 — +0.5–1 GB 예상).
+
+### 자기리뷰 (적대 서브에이전트 · 09-29) — 9 항 전부 반영 (반례 먼저 · selftest 23 → 32)
+
+| # | 판정 | 반례 | 반영 |
+|---|---|---|---|
+| 1 | P2 | 중복 행 · 자기쌍 행이 CLEAN — `calc_se_se_cn` 은 행마다 세서 `se_se_cn_perc` 1.818 → 2.0 / 2.364 로 부풀고, ① 감사는 같은 파일을 FLAG (모순) | `scan_contact_dump` (① 과 같은 함수) → FLAG ⑯ |
+| 2 | P2 | 토큰 수가 다른 원자 행을 모든 파서가 조용히 버린다 — `NUMBER OF ATOMS` 와 대조하지 않았다 | 선언 수 ↔ 읽은 행 (atom · contact) ⑰ |
+| 3 | P2 | 전자 분율을 **복사본** (`_electronic_fractions`) 과 대조했다 — 정본 `run_decomposition` 이 바뀌어도 초록 | 셈을 `network_conductivity.active_fractions` 로 **추출** (동작 중립 · NC selftest 29/29) · 감사기가 그 함수를 부른다 ⑱ (정본을 바꾸면 FLAG) |
+| 4 | P2 | `_xcheck` 가 정본 둘만 같으면 'agree' — 기하 지지 없는 덤프 행 하나로 웹앱 관통이 서도 'agree' | 네 칸 전부 같을 때만 'agree' · 그 밖은 `prod_agree:` / `prod_differ:` + 축 · 웹앱 값이 접촉 원천에 기대면 note ⑲ |
+| 5 | P2 | 감사된 케이스 0 (전부 SKIPPED) 이 rc 0 "전부 CLEAN" | rc 2 ⑳ |
+| 6 | P3 | AM 자기쌍이 "재현 오류" 로 읽힌다 | #1 + 불일치 문구에 원인 명시 |
+| 7 | P3 | legacy `TRUE`/`1` 이 조용히 미대조 · `case_id` 열 없으면 산출물 없이 중단 | true/false/1/0 · 모르는 값 거부 · rc 2 ㉑ |
+| 8 | P3 | rc 3 이 INPUT_ERROR (rc 2) 를 가린다 | ① 과 같은 규약으로 **명시** (docstring) — 요약 `status` 에 수는 항상 남는다 |
+| 9 | P3 | 문서 서술 셋이 코드와 다르다 — "이온 겹침만 병합" (둘 다 안 됨) · F7 "input_params.json 부재" (배치가 덱을 넘겨 **만든다**) · F6 "같은 규칙" (솔버 결과 · LHS 에서만 일치) · 분율 4 자리 반올림 · 줄 번호 | 본 절 정정 · `SELF-64` |
+| 의심 | — | 메시 sha 미봉인 · 예상 밖 예외에 산출물 없음 · `np.mod` 경계 | 메시 sha 를 행에 기록 ㉒ · 예외 → INPUT_ERROR 행 + 기록 ㉓ · `np.mod` 는 수확기 함수 (INPUT_ERROR 쪽 · false-green 아님 — 그대로) |
+
 
 ### 권고 (비준 요청) — 순서: WSL 실측 → 판정 → 열 사전 → ③ φ_SE
 

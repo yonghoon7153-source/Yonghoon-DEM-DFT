@@ -9,11 +9,14 @@
 발동하는가** 를 원자료에서 센다.  **인계 값은 만들지 않는다** (값은 웹앱 정본 함수를 그대로 불러 재현 대조에만 쓴다).
 
 케이스마다 (코호트 봉인 파일 — 수확과 같은 atom · contact · 같은 step mesh · 덱):
-  ① 프레임 수 (atom `ITEM: TIMESTEP` · contact `ITEM: ENTRIES`) · 원자에 없는 id 를 가진 접촉 행 (웹앱은 조용히 버린다)
+  ① 프레임 수 (atom `ITEM: TIMESTEP` · contact `ITEM: ENTRIES`) · 원자에 없는 id 를 가진 접촉 행 (웹앱은 조용히 버린다) ·
+     중복 쌍 · 자기쌍 행 (`calc_se_se_cn` 은 행마다 센다 — ① 감사와 같은 `scan_contact_dump`) · 선언 수 (`NUMBER OF ATOMS` · `NUMBER OF ENTRIES`)
+     ↔ 읽은 행 수 (토큰 수가 다른 행은 모든 파서가 조용히 버린다)
   ② 바닥 벽 = 0 확인 (`lhs_descriptor_harvest.check_deck_floor` — 웹앱은 확인 없이 z = 0 을 쓴다)
   ③ ★ **경계 규칙 재현** — SE (이온 · `calc_percolation`) · AM (전자 · `build_network`) 각각 L0 → L1 → L2 중 어느 단계가 쓰였는지 ·
      L0 밴드 인원 · 쓰인 밴드 인원 · bottom∩top 겹침 (겹친 입자는 자기 성분을 통째로 "관통" 으로 만든다).
-     재현 값은 웹앱 정본 (`calc_percolation` · `calc_se_se_cn` · `build_network` + `run_decomposition` 의 성분 셈) 과 **케이스마다 대조**한다 —
+     재현 값은 웹앱 정본 (`calc_percolation` · `calc_se_se_cn` · `build_network` + `network_conductivity.active_fractions` — `run_decomposition`
+     이 쓰는 바로 그 함수) 과 **케이스마다 대조**한다 —
      다르면 재현이 틀린 것이므로 FLAG (내 판독을 정본이 검증한다).
   ④ 교차 대조 2×2 — 접촉 원천 {덤프 행, 기하 재계수 (`lhs_perc_extract._pairs_within`)} × 경계 규칙 {웹앱 밴드, 수확기 밴드}.
      AM: 수확기 정본 `lhs_perc_extract.percolation` (고체 외피 슬래브 t = r_AM,max · 폴백 없음) ↔ 웹앱 전자 관통.
@@ -23,7 +26,9 @@
   ⑤ 09-15 생산 솔버 legacy 팔 (`docs/data/lhs_percolation_measured_20260915.csv` 의 `ionic_percolates`) 과 대조 (있으면).
 
 출력: <out>/perc_audit.tsv (케이스당 한 행) · perc_audit.json (행 + 요약 + 실행 정보).
-rc 0 = 전부 CLEAN · rc 3 = FLAG 케이스가 있다 (보고용 — 인계 열의 정의가 그 케이스에서 명목과 다르다) · rc 2 = 입력 오류.
+rc 0 = 전부 CLEAN · rc 3 = FLAG 케이스가 있다 (보고용 — 인계 열의 정의가 그 케이스에서 명목과 다르다) · rc 2 = 입력 오류 ·
+감사된 케이스 0 (전부 SKIPPED/오류).  ⚠ 우선순위: FLAG (3) 가 입력 오류 (2) 보다 앞선다 (① 감사와 같은 규약 — 결손 행이 어긋난 케이스를
+가리지 않게; 입력 오류 수는 요약 `status` 에 항상 남는다).
 
     python3 scripts/lhs_perc_audit.py --out ~/lhs_perc_audit_$(date +%Y%m%d)        # 코호트 전 건
     python3 scripts/lhs_perc_audit.py --case lhs00_000 --out /tmp/perc_one           # 한 건
@@ -62,15 +67,16 @@ SCHEMA = 'lhs_perc_audit/v1'
 BOUNDARY_FACTOR = 2.0        # calc_percolation · build_network 의 boundary_factor 기본
 MIN_BAND = 3                 # 폴백 문턱: len(bottom) < 3 or len(top) < 3
 LARGE_COMP = 10              # n_large_components 의 문턱 (코드 안 상수 · 출처 없음 — 기록만)
-WEBAPP_BOX_DEFAULT = 0.05    # input_params.json 이 없을 때 `_get_box_xy` 가 쓰는 상자 (sim) — 배치는 그 파일을 만들지 않는다
+LHS_BOX = 0.05               # LHS 덱 `region reg_box block 0.0 0.05 0.0 0.05 …` (RVE 50 µm · 130/130).  웹앱은 덱을 파싱해 input_params.json 으로
+                             # 상자를 읽으므로 (`parse_liggghts.parse_input_script`) 이 값은 덤프 상자와의 **대조용**이다 (② 값과 무관 · τ 묶음)
 SCALE = 1000.0               # sim → µm (parse_liggghts · 수확기 SIM_TO_UM 과 같은 규약)
 LEGACY_CSV = _SCR.parent / 'docs' / 'data' / 'lhs_percolation_measured_20260915.csv'
 LEVELS = ('L0', 'L1', 'L2')
 
 TSV_COLS = (
     'case', 'status', 'verdict', 'why', 'note', 'design_family', 'n_types', 't_s',
-    'atom_frames', 'contact_frames', 'orphan_rows', 'n_rows', 'has_delta_col',
-    'floor_z_deck', 'floor_wall_type', 'plate_z_sim', 'thickness_um', 'mesh_pick', 'box_lx', 'box_ly', 'box_is_webapp_default',
+    'atom_frames', 'contact_frames', 'orphan_rows', 'dup_rows', 'self_pairs', 'atoms_declared', 'entries_declared', 'n_rows', 'has_delta_col',
+    'floor_z_deck', 'floor_wall_type', 'plate_z_sim', 'thickness_um', 'mesh_pick', 'mesh_sha256', 'box_lx', 'box_ly', 'box_is_lhs_rve',
     'n_se', 'n_am', 'r_se_classes', 'r_se_max_um', 'r_am_max_um',
     # SE (이온) — 웹앱 calc_percolation 규칙
     'se_level', 'se_n_bot_L0', 'se_n_top_L0', 'se_n_bot', 'se_n_top', 'se_overlap',
@@ -152,25 +158,6 @@ def _graph_stats(n, pairs, bot, top, singletons=True, large=LARGE_COMP):
     return out
 
 
-def _electronic_fractions(net):
-    """`network_conductivity.run_decomposition` 의 active/percolating 셈 그대로 (:1101–1120) — 정본 대조용."""
-    import networkx as nx
-    G = nx.Graph()
-    for e in net['edges']:
-        G.add_edge(e['id1'], e['id2'])
-    n_nodes = len(net['nodes'])
-    bottom_reachable, perc_nodes = set(), set()
-    for comp in nx.connected_components(G):
-        has_bot = len(comp & net['bottom']) > 0
-        has_top = len(comp & net['top']) > 0
-        if has_bot:
-            bottom_reachable |= comp
-        if has_bot and has_top:
-            perc_nodes |= comp
-    return (len(bottom_reachable) / n_nodes if n_nodes else 0.0,
-            len(perc_nodes) / n_nodes if n_nodes else 0.0)
-
-
 def _unique_pairs(a, b):
     if len(a) == 0:
         return np.empty((0, 2), dtype=np.int64)
@@ -184,29 +171,54 @@ def _pair_set(pairs):
 
 
 def _xcheck(webapp_dump, webapp_geom, other_geom, other_dump):
-    """2×2 귀속 — 정본 둘 (webapp_dump · other_geom) 이 같으면 'agree'.  다르면 밴드만 바꿔서 뒤집히면 'band', 접촉 원천만
-    바꿔서 뒤집히면 'contact', 그 밖은 'both' (교호)."""
-    if webapp_dump == other_geom:
+    """2×2 귀속.  'agree' 는 **네 칸이 전부 같을 때만** (자기리뷰 #4 — 정본 둘만 같고 대각 칸이 다르면 접촉 원천이나 밴드가
+    결과를 뒤집고 있다는 뜻이라 'agree' 라 부르면 안 된다).  그 밖은 `prod_agree:` / `prod_differ:` 접두 + 어느 축이 뒤집는가
+    (`band` = 밴드만 · `contact` = 접촉 원천만 · `both`)."""
+    cells = (webapp_dump, webapp_geom, other_geom, other_dump)
+    if all(c == cells[0] for c in cells):
         return 'agree'
     contact_matters = (webapp_dump != webapp_geom) or (other_geom != other_dump)
     band_matters = (webapp_dump != other_dump) or (webapp_geom != other_geom)
-    if band_matters and not contact_matters:
-        return 'band'
-    if contact_matters and not band_matters:
-        return 'contact'
-    return 'both'
+    axis = 'band' if band_matters and not contact_matters else 'contact' if contact_matters and not band_matters else 'both'
+    return ('prod_agree:' if webapp_dump == other_geom else 'prod_differ:') + axis
+
+
+def _declared(path, marker):
+    """마지막 `<marker>` 블록의 선언 수 (다음 줄 정수) — 없으면 None.  읽은 행 수와 대조한다 (토큰 수가 다른 행은 모든 파서가 조용히 버린다 · 자기리뷰 #2)."""
+    val = None
+    with open(path, 'r', encoding='utf-8', errors='replace') as fh:
+        lines = fh.read().splitlines()
+    for i, ln in enumerate(lines):
+        if ln.startswith(marker) and i + 1 < len(lines):
+            try:
+                val = int(lines[i + 1].split()[0])
+            except (ValueError, IndexError):
+                val = None
+    return val
 
 
 def _read_legacy(path):
-    """09-15 legacy 팔 CSV → {case_id: (ionic_percolates: bool|None, ionic_status)}."""
+    """09-15 legacy 팔 CSV → {case_id: (ionic_percolates: bool|None, ionic_status)}.  true/false/1/0 (대소문자 무관) 만 받고
+    다른 문자열은 거부한다 (자기리뷰 #7 — 조용히 '미대조' 가 되지 않게).  `case_id` 열이 없으면 거부."""
     if not path or not os.path.isfile(path):
         return None
     with open(path, encoding='utf-8') as fh:
         lines = [l for l in fh if not l.startswith('#')]
+    rd = csv.DictReader(lines)
+    if not rd.fieldnames or 'case_id' not in rd.fieldnames:
+        raise BedRefusal(f'{path}: legacy CSV 에 case_id 열이 없다 (있는 열: {rd.fieldnames})')
     out = {}
-    for r in csv.DictReader(lines):
-        v = (r.get('ionic_percolates') or '').strip()
-        out[r['case_id']] = ((True if v == 'True' else False if v == 'False' else None), (r.get('ionic_status') or '').strip())
+    for r in rd:
+        v = (r.get('ionic_percolates') or '').strip().lower()
+        if v in ('true', '1'):
+            lp = True
+        elif v in ('false', '0'):
+            lp = False
+        elif v == '':
+            lp = None
+        else:
+            raise BedRefusal(f'{path}: ionic_percolates 값을 모른다 {v!r} (case {r["case_id"]}) — true/false/1/0 만 받는다')
+        out[r['case_id']] = (lp, (r.get('ionic_status') or '').strip())
     return out
 
 
@@ -224,11 +236,20 @@ def audit_case(atom_path, contact_path, n_types, mesh_path, deck_path=None, lega
     rec['contact_frames'] = int(H.count_blocks(contact_path, 'ITEM: ENTRIES'))
     if rec['atom_frames'] != 1 or rec['contact_frames'] != 1:
         flags.append(f"프레임 atom {rec['atom_frames']} · contact {rec['contact_frames']} ≠ 1 (웹앱 파서는 전 프레임을 이어 붙인다 · DESC-06)")
+    scan = H.scan_contact_dump(contact_path)                 # ① 감사와 같은 함수 — 중복 쌍 · 자기쌍은 calc_se_se_cn 이 행마다 센다 (자기리뷰 #1)
+    rec['dup_rows'] = int(scan['n_dup_rows'])
+    rec['self_pairs'] = int(scan['n_self_pairs'])
+    if rec['dup_rows'] or rec['self_pairs']:
+        flags.append(f"접촉 중복 행 {rec['dup_rows']} · 자기쌍 {rec['self_pairs']} — calc_se_se_cn 은 행마다 +1 (se_se_cn_*_perc 부풂) · build_network 는 자기쌍을 간선으로 만든다")
+    rec['mesh_sha256'] = HB.sha256_of(Path(mesh_path))
     atoms, box_lo, box_hi, _bc = read_atom_dump(atom_path)
     ids = H._atom_ids(atom_path)
     n = int(atoms['x'].size)
     if ids.size != n or np.unique(ids).size != n:
         raise BedRefusal(f'{atom_path}: id 열 {ids.size} 개 / 고유 {np.unique(ids).size} 개 ≠ 입자 {n} 개')
+    rec['atoms_declared'] = _declared(atom_path, 'ITEM: NUMBER OF ATOMS')
+    if rec['atoms_declared'] is None or rec['atoms_declared'] != n:
+        flags.append(f"원자 선언 수 {rec['atoms_declared']} ≠ 읽은 행 {n} (토큰 수가 다른 행은 조용히 버려진다 — 웹앱 파서도 같다)")
     labels, tmap = H.phase_labels(atoms['type'], int(n_types))
     se_types = [t for t, l in tmap.items() if l == 'SE']
     am_types = [t for t, l in tmap.items() if l in AM_LABELS]
@@ -236,10 +257,10 @@ def audit_case(atom_path, contact_path, n_types, mesh_path, deck_path=None, lega
     is_am = np.asarray([l in AM_LABELS for l in labels])
     lx = float(box_hi[0] - box_lo[0])
     ly = float(box_hi[1] - box_lo[1])
-    rec.update(box_lx=lx, box_ly=ly, box_is_webapp_default=bool(abs(lx - WEBAPP_BOX_DEFAULT) < 1e-12 and abs(ly - WEBAPP_BOX_DEFAULT) < 1e-12),
+    rec.update(box_lx=lx, box_ly=ly, box_is_lhs_rve=bool(abs(lx - LHS_BOX) < 1e-12 and abs(ly - LHS_BOX) < 1e-12),
                n_se=int(is_se.sum()), n_am=int(is_am.sum()), n_types=int(n_types))
-    if not rec['box_is_webapp_default']:
-        notes.append(f'상자 {lx:.6g}×{ly:.6g} ≠ 웹앱 기본 {WEBAPP_BOX_DEFAULT} (input_params.json 부재 시) — ② 값에는 무영향 · τ 묶음으로 이월')
+    if not rec['box_is_lhs_rve']:
+        notes.append(f'덤프 상자 {lx:.6g}×{ly:.6g} ≠ LHS RVE {LHS_BOX} (웹앱은 덱에서 상자를 읽는다 — 대조용 · ② 값에는 무영향 · τ 묶음)')
     r_all = atoms['radius']
     r_se = r_all[is_se]
     r_am = r_all[is_am]
@@ -256,6 +277,9 @@ def audit_case(atom_path, contact_path, n_types, mesh_path, deck_path=None, lega
         flags.append('접촉 덤프에 δ 열 (c_cpl[23]) 이 없다 — 웹앱 contacts.csv 의 delta 열이 비어 파이프라인이 선다')
         delta = np.zeros(c1.size)
     rec['n_rows'] = int(c1.size)
+    rec['entries_declared'] = _declared(contact_path, 'ITEM: NUMBER OF ENTRIES')
+    if rec['entries_declared'] is None or rec['entries_declared'] != rec['n_rows']:
+        flags.append(f"접촉 선언 수 {rec['entries_declared']} ≠ 읽은 행 {rec['n_rows']}")
     idx_of = {int(i): k for k, i in enumerate(ids.tolist())}
     k1 = np.asarray([idx_of.get(int(i), -1) for i in c1.tolist()], dtype=np.int64)
     k2 = np.asarray([idx_of.get(int(i), -1) for i in c2.tolist()], dtype=np.int64)
@@ -397,9 +421,11 @@ def audit_case(atom_path, contact_path, n_types, mesh_path, deck_path=None, lega
                 replica_bad.append(f"AM 겹침 재현 {b['overlap']} ≠ 정본 {net.get('n_boundary_overlap')}")
             if len(net['edges']) != len(ad):
                 replica_bad.append(f"AM 간선 수 재현 {len(ad)} ≠ 정본 {len(net['edges'])}")
-            act, pf = _electronic_fractions(net)
+            af = NC.active_fractions(net)                    # 정본 — run_decomposition 이 쓰는 함수 그대로 (자기리뷰 #3)
+            act, pf = af['active_fraction'], af['percolating_fraction']
             if abs(act - rec['am_active_frac']) > 1e-9 or abs(pf - rec['am_perc_frac']) > 1e-9:
-                replica_bad.append(f"AM active/percolating 재현 {rec['am_active_frac']:.6g}/{rec['am_perc_frac']:.6g} ≠ 정본 {act:.6g}/{pf:.6g}")
+                replica_bad.append(f"AM active/percolating 재현 {rec['am_active_frac']:.6g}/{rec['am_perc_frac']:.6g} ≠ 정본 {act:.6g}/{pf:.6g}"
+                                   + (' (자기쌍 행이 build_network 에서 간선이 된다 — 입력 결함, 재현 오류 아님)' if rec['self_pairs'] else ''))
     else:
         rec.update(am_level='NA', am_xcheck=None)
         notes.append('AM 입자 0 — 전자망 열은 비어야 한다')
@@ -430,6 +456,9 @@ def audit_case(atom_path, contact_path, n_types, mesh_path, deck_path=None, lega
         xc = rec.get(f'{ph}_xcheck')
         if xc and xc != 'agree':
             notes.append(f'{ph.upper()} 교차 대조 불일치 = {xc}')
+        wd, wg = rec.get(f'{ph}_perc_webapp_dump'), rec.get(f'{ph}_perc_webapp_geom')
+        if wd is not None and wg is not None and wd != wg:
+            notes.append(f"{ph.upper()} 웹앱 관통 {wd} 이 덤프에만/기하에만 있는 접촉에 기댄다 (기하 재계수면 {wg} · geom_only {rec.get(f'{ph}_geom_only')} · dump_only {rec.get(f'{ph}_dump_only')})")
     if rec.get('legacy_agree') is False:
         notes.append(f"legacy 09-15 ionic_percolates {rec['legacy_ionic_percolates']} ≠ 웹앱 SE 관통 {rec['se_perc_webapp_dump']}")
     rec['verdict'] = 'FLAG' if flags else 'CLEAN'
@@ -507,7 +536,11 @@ def run(args):
         if len(rows) != len(want):
             print(f'⛔ 코호트에 없는 case: {sorted(want - {r["case"] for r in rows})}', file=sys.stderr)
             return 2
-    legacy = None if args.no_legacy else _read_legacy(args.legacy_csv)
+    try:
+        legacy = None if args.no_legacy else _read_legacy(args.legacy_csv)
+    except (BedRefusal, OSError, ValueError) as e:
+        print(f'⛔ legacy CSV 읽기 실패 — {e}', file=sys.stderr)
+        return 2
     out = []
     for k, row in enumerate(rows, 1):
         rec = dict(case=row['case'], design_family=row.get('design_family'), n_types=row.get('n_types'), status='OK',
@@ -541,6 +574,8 @@ def run(args):
             rec.update(r)
         except (BedRefusal, OSError, ValueError, KeyError) as e:
             rec.update(status='INPUT_ERROR', verdict='', why=str(e))
+        except Exception as e:                                # noqa: BLE001 — 예상 밖 예외도 행으로 남기고 산출물을 쓴다 (자기리뷰 의심 #3)
+            rec.update(status='INPUT_ERROR', verdict='', why=f'{type(e).__name__}: {e}')
         out.append(rec)
         print(f"  [{k}/{len(rows)}] {rec['case']}: {rec['status']} {rec.get('verdict', '')} "
               f"SE {rec.get('se_level', '')} {rec.get('se_perc_pct', '')} · AM {rec.get('am_level', '')} {rec.get('am_perc_frac', '')} "
@@ -554,6 +589,9 @@ def run(args):
     if s['verdict'].get('FLAG'):
         return 3
     if s['status'].get('INPUT_ERROR') or s['status'].get('NO_MESH'):
+        return 2
+    if not s['status'].get('OK'):                             # 감사된 케이스 0 = "전부 CLEAN" 이 아니다 (자기리뷰 #5)
+        print('⛔ 감사된 케이스가 0 이다 (전부 SKIPPED) — CLEAN 을 주장하지 않는다', file=sys.stderr)
         return 2
     return 0
 
@@ -627,7 +665,7 @@ def selftest():
             r['se_xcheck'] == 'agree' and r['am_xcheck'] == 'agree' and r['harv_perc'] == 1 and r['se_wall_band_equal'] is True)
         chk('①e se_se_cn_*_perc 키 있음 · n_perc = 관통 SE 11 · 덱 바닥 0 (SE 벽 type 3) · 상자 20 ≠ 웹앱 기본 0.05 는 note 만',
             r['se_cn_perc_keys'] and r['se_cn_n_perc'] == 11 and r['floor_z_deck'] == 0.0 and r['floor_wall_type'] == 3
-            and r['box_is_webapp_default'] is False and '상자' in r['note'] and r['verdict'] == 'CLEAN')
+            and r['box_is_lhs_rve'] is False and '상자' in r['note'] and r['verdict'] == 'CLEAN')
 
         # ★ 정본 run_decomposition 과 전자 분율 대조 (재현 셈이 정본과 같은가)
         atoms_d = {i: dict(type=t, x=x, y=y, z=z, radius=rr) for (i, x, y, z, rr, t) in A}
@@ -679,20 +717,20 @@ def selftest():
         A6 += [(40 + k, 10.0, 10.0, round(1.4 + 0.9 * k, 6), 0.5, 2) for k in range(20)]
         C6 = [(1 + k, 2 + k, 0.1, 0.1) for k in range(10)] + [(40 + k, 41 + k, 0.05, 0.1) for k in range(19)]
         r6 = _run(td, A6, C6, tag='band')
-        chk('⑥ ★ AM 교차 대조 = band (웹앱 관통 0 · 수확기 관통 1 · 접촉 원천을 바꿔도 안 뒤집힘) · 웹앱은 L0 (AM_P 3/3) · CLEAN',
-            r6['am_xcheck'] == 'band' and r6['am_perc_webapp_dump'] is False and r6['am_perc_harv_geom'] is True and r6['am_level'] == 'L0'
-            and r6['verdict'] == 'CLEAN' and 'AM 교차 대조 불일치 = band' in r6['note'])
+        chk('⑥ ★ AM 교차 대조 = prod_differ:band (웹앱 관통 0 · 수확기 관통 1 · 접촉 원천을 바꿔도 안 뒤집힘) · 웹앱은 L0 (AM_P 3/3) · CLEAN',
+            r6['am_xcheck'] == 'prod_differ:band' and r6['am_perc_webapp_dump'] is False and r6['am_perc_harv_geom'] is True and r6['am_level'] == 'L0'
+            and r6['verdict'] == 'CLEAN' and 'AM 교차 대조 불일치 = prod_differ:band' in r6['note'])
         # ⑦ AM 교차 대조 'contact' — 덤프에서 AM 사슬 간선 하나를 뺀다 (기하는 그대로)
         C7 = [c for c in C if c != (22, 23, 0.4, 0.1)]
         r7 = _run(td, A, C7, tag='contact')
-        chk('⑦ ★ AM 교차 대조 = contact (덤프 관통 0 · 기하 관통 1 · geom_only 1) · 정본 percolating 0',
-            r7['am_xcheck'] == 'contact' and r7['am_geom_only'] == 1 and r7['am_perc_webapp_dump'] is False
+        chk('⑦ ★ AM 교차 대조 = prod_differ:contact (덤프 관통 0 · 기하 관통 1 · geom_only 1) · 정본 percolating 0 · 웹앱 값이 접촉 원천에 기댄다 note',
+            r7['am_xcheck'] == 'prod_differ:contact' and '덤프에만/기하에만' in r7['note'] and r7['am_geom_only'] == 1 and r7['am_perc_webapp_dump'] is False
             and r7['am_perc_webapp_geom'] is True and r7['am_perc_frac'] == 0.0 and r7['replica_ok'])
         # ⑧ SE 비관통 → se_se_cn_*_perc 키 없음 · SE 교차 대조 contact
         C8 = [c for c in C if c != (5, 6, 0.1, 0.1)]
         r8 = _run(td, A, C8, tag='secut')
         chk('⑧ ★ SE 덤프 사슬 끊김 → 정본 percolation 0 · se_se_cn_*_perc 키 없음 · SE 교차 대조 = contact',
-            r8['se_perc_pct'] == 0.0 and r8['se_cn_perc_keys'] is False and r8['se_cn_n_perc'] is None and r8['se_xcheck'] == 'contact'
+            r8['se_perc_pct'] == 0.0 and r8['se_cn_perc_keys'] is False and r8['se_cn_n_perc'] is None and r8['se_xcheck'] == 'prod_differ:contact'
             and r8['replica_ok'])
         # ⑨ 덱 — 바닥 0.5 → FLAG · 덱 없음 → FLAG
         r9 = _run(td, A, C, deck_z=0.5, tag='floor')
@@ -769,6 +807,70 @@ def selftest():
                          deck_path=_deck(td, name='input_t2.liggghts'))
         chk('⑮ 2-type (AM · SE) 침대 → CLEAN · AM 10 · 재현 = 정본',
             r15['verdict'] == 'CLEAN' and r15['n_am'] == 10 and r15['replica_ok'])
+        # ── 자기리뷰 (09-29) 반례 ──
+        r16 = _run(td, A, C + [(3, 4, 0.1, 0.1)], tag='dup')
+        r16b = _run(td, A, C + [(3, 3, 0.1, 0.1)], tag='self')
+        chk('⑯ ★ 자기리뷰 #1: 중복 행 → FLAG (dup 1) · 자기쌍 → FLAG (self 1) — 옛 판은 CLEAN 이었다',
+            r16['verdict'] == 'FLAG' and r16['dup_rows'] == 1 and '중복 행 1' in r16['why']
+            and r16b['verdict'] == 'FLAG' and r16b['self_pairs'] == 1 and '자기쌍 1' in r16b['why'])
+        a17 = H._atom_file(td, A, name='atom_trunc.liggghts', lo=_LO, hi=_HI)
+        lines = Path(a17).read_text().splitlines()
+        lines[-1] = ' '.join(lines[-1].split()[:5])           # 마지막 행 토큰 5 개 (헤더 6) → 모든 파서가 조용히 버린다
+        Path(a17).write_text('\n'.join(lines) + '\n')
+        r17 = audit_case(a17, H._contact_file(td, C, name='contact_trunc.liggghts', headers=_HD), 3, H._stl(td, z=20.0, name='mesh_trunc.stl'),
+                         deck_path=_deck(td, name='input_trunc.liggghts'))
+        c17 = Path(H._contact_file(td, C, name='contact_decl.liggghts', headers=_HD))
+        c17.write_text(c17.read_text().replace(f'NUMBER OF ENTRIES\n{len(C)}', f'NUMBER OF ENTRIES\n{len(C) + 1}'))
+        r17b = _run(td, A, C, tag='decl', contact_path=str(c17))
+        chk('⑰ ★ 자기리뷰 #2: 원자 행 절단 → 선언 25 ≠ 읽은 24 → FLAG (n_am 9 · 웹앱 파서도 같은 행을 버린다) · 접촉 선언 수 ≠ 행 → FLAG',
+            r17['verdict'] == 'FLAG' and r17['atoms_declared'] == len(A) and r17['n_am'] == 9 and f'원자 선언 수 {len(A)} ≠ 읽은 행 {len(A) - 1}' in r17['why']
+            and r17b['verdict'] == 'FLAG' and '접촉 선언 수' in r17b['why'])
+        _orig_af = NC.active_fractions
+        try:
+            NC.active_fractions = lambda net: dict(active_fraction=0.123, percolating_fraction=0.456, bottom_reachable=set(), perc_nodes=set())
+            r18 = _run(td, A, C, tag='afmut')
+        finally:
+            NC.active_fractions = _orig_af
+        chk('⑱ ★ 자기리뷰 #3: 정본 NC.active_fractions 를 바꾸면 재현 불일치 FLAG (감사가 정본 함수를 실제로 부른다)',
+            r18['replica_ok'] is False and 'AM active/percolating' in r18['replica_why'] and r18['verdict'] == 'FLAG')
+        r19 = _run(td, A6, C6 + [(26, 28, 0.4, 0.1)], tag='phantom')   # 기하 지지 없는 덤프 행 (중심 거리 15.6 > 4) 이 웹앱 관통을 만든다
+        chk('⑲ ★ 자기리뷰 #4: 정본 둘이 같아도 대각 칸이 다르면 agree 가 아니다 — prod_agree:both (덤프 유령 행 + 밴드 의존) · 웹앱 값이 덤프에만 있는 접촉에 기댄다 note',
+            r19['am_xcheck'] == 'prod_agree:both' and r19['am_perc_webapp_dump'] is True and r19['am_perc_webapp_geom'] is False
+            and r19['am_dump_only'] == 1 and '덤프에만/기하에만' in r19['note'])
+        chk('⑲b _xcheck 진리표: 네 칸 같아야 agree · 정본 다름 + 밴드만 → prod_differ:band · 접촉만 → prod_differ:contact · 둘 다 → prod_differ:both',
+            _xcheck(True, True, True, True) == 'agree' and _xcheck(False, False, True, True) == 'prod_differ:band'
+            and _xcheck(False, True, True, False) == 'prod_differ:contact' and _xcheck(False, True, False, True) == 'prod_agree:both'
+            and _xcheck(True, False, False, False) == 'prod_differ:both' and r6['am_xcheck'] == 'prod_differ:band' and r7['am_xcheck'] == 'prod_differ:contact')
+        od3 = Path(td) / 'out3'
+        rc3 = main(['--cohort', str(tsv), '--case', 'perc', '--out', str(od3), '--no-legacy'])
+        chk('⑳ ★ 자기리뷰 #5: 감사된 케이스 0 (전부 SKIPPED) → rc 2 (rc 0 "전부 CLEAN" 이 아니다)', rc3 == 2)
+        leg2 = Path(td) / 'legacy2.csv'
+        leg2.write_text('case_id,ionic_status,ionic_percolates\nc1,OK,TRUE\nc2,SOLVE_NONE,0\n', encoding='utf-8')
+        lg = _read_legacy(str(leg2))
+        leg3 = Path(td) / 'legacy3.csv'
+        leg3.write_text('case_id,ionic_status,ionic_percolates\nc1,OK,maybe\n', encoding='utf-8')
+        leg4 = Path(td) / 'legacy4.csv'
+        leg4.write_text('case,ionic_percolates\nc1,True\n', encoding='utf-8')
+        od4 = Path(td) / 'out4'
+        rc4 = main(['--cohort', str(tsv), '--case', 'c1', '--out', str(od4), '--legacy-csv', str(leg3)])
+        rc4b = main(['--cohort', str(tsv), '--case', 'c1', '--out', str(od4), '--legacy-csv', str(leg4)])
+        chk('㉑ ★ 자기리뷰 #7: legacy TRUE/0 을 받는다 · 모르는 문자열 → rc 2 · case_id 열 없음 → rc 2 (조용한 미대조 없음)',
+            lg == {'c1': (True, 'OK'), 'c2': (False, 'SOLVE_NONE')} and rc4 == 2 and rc4b == 2)
+        chk('㉒ 메시 sha256 을 행에 남긴다 (코호트가 메시를 봉인하지 않는다 — 의심 #2)',
+            r['mesh_sha256'] == HB.sha256_of(Path(td, 'mesh_c.stl')) and len(r['mesh_sha256']) == 64)
+        import lhs_perc_audit as _me
+        _orig_ac = _me.audit_case
+        try:
+            def _boom(*a, **k):
+                raise TypeError('synthetic')
+            _me.audit_case = _boom
+            od5 = Path(td) / 'out5'
+            rc5 = _me.main(['--cohort', str(tsv), '--case', 'c2', '--out', str(od5), '--no-legacy'])   # c1 은 ⑭d 에서 메시를 지웠다
+        finally:
+            _me.audit_case = _orig_ac
+        js5 = json.loads((od5 / 'perc_audit.json').read_text(encoding='utf-8'))
+        chk('㉓ 예상 밖 예외 (TypeError) → INPUT_ERROR 행 + 산출물 기록 · rc 2 (실행 중단 아님 — 의심 #3)',
+            rc5 == 2 and js5['rows'][0]['status'] == 'INPUT_ERROR' and 'TypeError' in js5['rows'][0]['why'])
 
     print()
     if fails:

@@ -996,6 +996,32 @@ def dump_network_raw(dump_dir, atoms_raw, net, field_full, tag='hertzian'):
         json.dump(summary, f, indent=2)
 
 
+def active_fractions(net):
+    """`run_decomposition` 의 active / percolating 분율 셈 — 정본은 이 함수 하나다.
+
+    `G_active` 는 **간선이 있는 노드만** 담는다 (외톨이 노드는 bottom/top 밴드에 있어도 active · percolating 에
+    들지 않는다 — `dem_analysis_core.calc_percolation` 이 모든 노드를 그래프에 넣는 것과 다른 규약) · 분모는 전 노드.
+    (id, id) 자기쌍 행은 `build_network` 에서 간선이 되므로 그 노드는 G_active 에 들어간다 (입력 결함 — 감사기가 잡는다).
+    → dict(active_fraction, percolating_fraction, bottom_reachable, perc_nodes)  (반올림 없음 — 결과 dict 에서만 4 자리).
+    """
+    import networkx as nx
+    G_active = nx.Graph()
+    for e in net['edges']:
+        G_active.add_edge(e['id1'], e['id2'])
+    bottom_reachable, perc_nodes = set(), set()
+    for comp in nx.connected_components(G_active):
+        has_bot = len(comp & net['bottom']) > 0
+        has_top = len(comp & net['top']) > 0
+        if has_bot:
+            bottom_reachable |= comp
+        if has_bot and has_top:
+            perc_nodes |= comp
+    n_nodes = len(net['nodes'])
+    return dict(active_fraction=(len(bottom_reachable) / n_nodes if n_nodes > 0 else 0),
+                percolating_fraction=(len(perc_nodes) / n_nodes if n_nodes > 0 else 0),
+                bottom_reachable=bottom_reachable, perc_nodes=perc_nodes)
+
+
 def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
                       plate_z, box_x=0.05, box_y=0.05,
                       sigma_bulk=SIGMA_BULK_DEFAULT, results_dir=None,
@@ -1099,25 +1125,11 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
     sigma_bruggeman = phi_se ** 1.5 if phi_se > 0 else 0
 
     # Active fraction: percolating nodes / total nodes
-    import networkx as nx
-    G_active = nx.Graph()
-    for e in net['edges']:
-        G_active.add_edge(e['id1'], e['id2'])
-
-    # Bottom-reachable (electronic active)
-    bottom_reachable = set()
-    # Top+bottom percolating
-    perc_nodes = set()
-    for comp in nx.connected_components(G_active):
-        has_bot = len(comp & net['bottom']) > 0
-        has_top = len(comp & net['top']) > 0
-        if has_bot:
-            bottom_reachable |= comp
-        if has_bot and has_top:
-            perc_nodes |= comp
-
-    active_fraction = len(bottom_reachable) / n_nodes if n_nodes > 0 else 0
-    perc_fraction = len(perc_nodes) / n_nodes if n_nodes > 0 else 0
+    #  ★ 2026-09-29 (J20-b · 자기리뷰 #3) — 셈을 `active_fractions()` 로 추출했다 (동작 중립).  감사기
+    #    `lhs_perc_audit` 가 **같은 함수**를 불러 정본과 대조한다 — 복사본이면 정본이 바뀌어도 초록이 된다.
+    _af = active_fractions(net)
+    active_fraction = _af['active_fraction']
+    perc_fraction = _af['percolating_fraction']
 
     # Results
     results = {

@@ -5810,8 +5810,8 @@
    "owner": "claude",
    "found_by": "claude (② 코드 정의 감사 09-29)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
-   "title": "bottom∩top 겹침 (두께 < 4·r) 은 겹친 입자의 성분을 **통째로 관통**으로 센다 — 간선 0 인 외톨이 셋만으로 `percolation_pct` = 100 (합성 재현) — 그리고 **전자망의 `n_boundary_overlap` 은 full_metrics 로 올라가지 않는다** (이온 것만 · run_decomposition 병합 누락) ⇒ 전자 열에서는 보이지 않는다",
-   "note": "생산 실사고 P600 (얇은 고압 침대 · 08-19 `n_boundary_overlap` 신설) 과 같은 기전의 **값 쪽** 결과.  LHS 는 기하상 **0 건** — 벽 간극 두께 − 4·r_AM,max 최소 +1.47 µm (`lhs00_075` · d_AM_P 15 · 31.47 µm) · SE 는 r ≤ 1 µm 라 불가 ⇒ 실측 확인만 (검사기 `se_overlap` · `am_overlap` · 수확기 슬래브 겹침 `harv_overlap`).  처방 (코드 · 저자 결정): `network_conductivity.run_decomposition` 병합에 `electronic_n_boundary_overlap` · `electronic_n_bottom` · `electronic_n_top` 추가 (동작 중립 · 진단 키).  selftest ④.",
+   "title": "bottom∩top 겹침 (두께 < 4·r) 은 겹친 입자의 성분을 **통째로 관통**으로 센다 — 간선 0 인 외톨이 셋만으로 `percolation_pct` = 100 (합성 재현) — 그리고 **`n_boundary_overlap` 은 어느 채널 것도 full_metrics 로 올라가지 않는다** (`pipeline_service.NET_MERGE_KEYS` 에 경계 키 없음 · 이온 것은 `network_conductivity.json` 에만 · 전자 것은 어디에도 없다) ⇒ 인계 열에서는 보이지 않는다",
+   "note": "생산 실사고 P600 (얇은 고압 침대 · 08-19 `n_boundary_overlap` 신설) 과 같은 기전의 **값 쪽** 결과.  LHS 는 기하상 **0 건** — 벽 간극 두께 − 4·r_AM,max 최소 +1.47 µm (`lhs00_075` · d_AM_P 15 · 31.47 µm) · SE 는 r ≤ 1 µm 라 불가 ⇒ 실측 확인만 (검사기 `se_overlap` · `am_overlap` · 수확기 슬래브 겹침 `harv_overlap`).  처방 (코드 · 저자 결정): `run_decomposition` 병합에 `electronic_n_boundary_overlap` · `electronic_n_bottom` · `electronic_n_top` 추가 + `NET_MERGE_KEYS` 에 경계 키 (동작 중립 · 진단 키).  ⚠ 초판 제목의 \"이온 것만 병합\" 은 틀렸다 (자기리뷰 #9 · `SELF-64`).  selftest ④.",
    "evidence_tests": [
     "scripts/lhs_perc_audit.py"
    ]
@@ -5838,6 +5838,19 @@
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "09-19 census (`docs/data/case_master_column_census_20260919.tsv`) 가 `top_reachable_pct` · `ionic_active_pct` 를 `COND_cov` (\"coverage 문턱 기반 → Hertz 채널 종속\") 로 분류했는데 둘 다 **SE 그래프 양**이다 — `calc_percolation` 의 위 밴드 성분 · `calc_ionic_active_am` 의 AM–SE 접촉 유무 × top-reachable SE (coverage 값을 읽지 않는다)",
    "note": "방향은 보수적 (🔶 라 인계에서 빠진다 — 잘못 들어가는 쪽이 아니다).  census 생성 스크립트가 리포에 없어 규칙을 재현 못 했다 (grep `COND_cov` 0 건 in scripts/).  처방 = 저자 결정: 두 열을 ✅ 로 승격해 인계할지 (그러면 `LHS-19` 의 top_reachable 한정어 필요) · 그대로 둘지.  `ionic_active_pct` 는 `top_reachable_se` 에 종속이라 `LHS-17` 폴백의 영향을 같이 받는다.",
+   "evidence_tests": [
+    "scripts/lhs_perc_audit.py"
+   ]
+  },
+  {
+   "id": "SELF-64",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex-style 적대 자기리뷰 서브에이전트 (09-29 · lhs_perc_audit)",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "J20-b 초판 (`66129a9fc`) 이 코드로 확인하지 않은 서술 둘을 적었다 — ① *\"배치는 input_params.json 을 만들지 않아 웹앱이 상자 0.05 기본을 쓴다\"* (배치가 덱을 `input_<case>.liggghts` 로 잇고 `run_pipeline` → `parse_input_script` 가 덱 `region` 에서 상자를 읽어 **만든다**) · ② *\"전자 `n_boundary_overlap` 만 full_metrics 에 안 올라간다 (이온 것만)\"* (`NET_MERGE_KEYS` 에 경계 키가 없어 **둘 다** 안 올라간다) — 그리고 검사기가 전자 분율을 정본이 아닌 **복사본**과 대조했다",
+   "note": "수치 영향 0 (상자는 어느 쪽이든 0.05 · ② 값 무관) 이지만 규율 ④ 부류 — \"확인하지 않은 추정을 지시문에 쓰지 않는다\" (09-27 체크리스트 ⚠) 를 문서에서 다시 어겼다.  둘 다 같은 세션의 자기리뷰가 반례로 잡았다 (webapp/app.py:3184 · parse_liggghts.py:335–340 · pipeline_service.NET_MERGE_KEYS).  복사본 대조는 `network_conductivity.active_fractions` 추출 (동작 중립) + 변이 selftest ⑱ 로 닫았다.  ⇒ 처방: 문서 F6 · F7 · 정의 표 정정 · LHS-18 제목 정정 (같은 커밋).  교훈 한 줄 — 파이프라인 서술은 **호출 경로를 끝까지 따라가 파일이 실제로 써지는 줄**을 댈 수 있을 때만 적는다.",
    "evidence_tests": [
     "scripts/lhs_perc_audit.py"
    ]
