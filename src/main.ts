@@ -2,7 +2,7 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/app.css';
 
-import { mountains, places, prefBySlug, regionById, regions, regionsInGroup } from './data';
+import { mountains, places, prefBySlug, regionById, regions, regionsInGroup, transit } from './data';
 import { createMap, type MapApi } from './map/map';
 import type { LayerId } from './map/layers';
 import { artReady } from './mascots/visual';
@@ -31,7 +31,7 @@ try {
 const state = {
   selected: null as string | null,
   region: null as string | null,
-  layers: { cities: true, bridges: true, mountains: false } as Record<LayerId, boolean>,
+  layers: { cities: true, bridges: true, transit: false, mountains: false } as Record<LayerId, boolean>,
   range: { active: null as number | null, hide: false },
   labelMode: 'furi' as LabelMode,
 };
@@ -244,7 +244,7 @@ async function init() {
     map.focusRange(no);
   }
   // a layer without data yet keeps its button out of sight
-  const hasData: Record<LayerId, boolean> = { cities: places.cities.length > 0, bridges: places.bridges.length > 0, mountains: mountains.ranges.length > 0 };
+  const hasData: Record<LayerId, boolean> = { cities: places.cities.length > 0, bridges: places.bridges.length > 0, transit: transit.airports.length + transit.shinkansen.length > 0, mountains: mountains.ranges.length > 0 };
   layerBtns.forEach((b) => (b.hidden = !hasData[b.dataset.layer as LayerId]));
   $('layers').hidden = !Object.values(hasData).some(Boolean);
   layerBtns.forEach((b) =>
@@ -259,7 +259,7 @@ async function init() {
       } else setLayer(id, !state.layers[id]);
     }),
   );
-  for (const id of ['cities', 'bridges'] as const) setLayer(id, state.layers[id]);
+  for (const id of ['cities', 'bridges', 'transit'] as const) setLayer(id, state.layers[id]);
 
   // ---- label mode
   const seg = $('label-mode');

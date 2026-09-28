@@ -3,16 +3,17 @@
 //              wrote the name of (grey, named when zoomed in), Tokyo's 23 wards, 琵琶湖, the four main-island
 //              names (in the sea, with a leader line, as on my map) and other places I noted (隠岐諸島)
 //   bridges  — the three Honshu–Shikoku routes
+//   transit  — 🚄 가는 법: shinkansen lines (stations joined by straight lines), ✈ airports, named stations (v2, ADR 0009)
 //   mountains — the worksheet 「高い山脈・山地・高地」: green ridges with their numbers, plus my two notes
 // Data lives in data/places.json and data/mountains.json. Lines are drawn in map space (they zoom with the land);
 // dots, numbers and names are drawn in screen space and placed so they do not cover the prefecture names.
 import { geoCircle, geoPath, type GeoProjection } from 'd3-geo';
 import type { Selection } from 'd3-selection';
 import type { ZoomTransform } from 'd3-zoom';
-import { cityTier, mountains, places } from '../data';
-import type { LabelMode, LonLat, PlaceName } from '../types';
+import { cityTier, mountains, places, transit } from '../data';
+import type { LabelMode, LonLat, PlaceName, ShinkansenLine } from '../types';
 
-export type LayerId = 'cities' | 'bridges' | 'mountains';
+export type LayerId = 'cities' | 'bridges' | 'transit' | 'mountains';
 export interface Rect { x: number; y: number; w: number; h: number }
 type G = Selection<SVGGElement, unknown, null, undefined>;
 
@@ -46,6 +47,10 @@ const BRIDGE_NAMES_AT = 2.2;
 const OKI_AT = 1.8;
 /** 「山↑」-style notes belong to the whole-country / region view. */
 const MAP_NOTES_UNTIL = 5;
+/** 🚄 가는 법: international hubs always; the other airports, named stations and line names when zoomed in. */
+const AIRPORTS_AT = 1.9;
+const STATIONS_AT = 2.4;
+const LINE_NAMES_AT = 1.7;
 
 function parts(n: PlaceName, mode: LabelMode): { main: string; furi: string } {
   if (mode === 'kana') return { main: n.kana, furi: '' };
@@ -76,7 +81,7 @@ function edgeToward(r: Rect, p: [number, number], gap: number): [number, number]
 
 export function createLayers(ctx: LayerContext) {
   const path = geoPath(ctx.projection);
-  const on: Record<LayerId, boolean> = { cities: true, bridges: true, mountains: false };
+  const on: Record<LayerId, boolean> = { cities: true, bridges: true, transit: false, mountains: false };
   let hideRangeNames = false;
   let activeRange: number | null = null;
 
@@ -130,6 +135,25 @@ export function createLayers(ctx: LayerContext) {
       return g;
     });
   const bridgeMid = new Map<string, [number, number]>();
+  // 🚄 가는 법 — lines in map space; airports, named stations and line names in screen space (below)
+  const gTransit = ctx.geo.append('g').attr('class', 'layer layer--transit');
+  const lineSel = gTransit.selectAll<SVGGElement, ShinkansenLine>('g.shinkansen')
+    .data(transit.shinkansen, (d) => d.id)
+    .join((enter) => {
+      const g = enter.append('g').attr('class', (d) => `shinkansen${d.kind ? ` shinkansen--${d.kind}` : ''}`).style('--line-color', (d) => d.color);
+      g.append('path').attr('class', 'shinkansen__casing');
+      g.append('path').attr('class', 'shinkansen__line');
+      g.append('title').text((d) => `${d.name.ja} (${d.name.kana}) ${d.name.ko}`);
+      return g;
+    });
+  const lineMid = new Map<string, [number, number]>();
+  const lineColor = new Map(transit.shinkansen.map((l) => [l.id, l.color]));
+  const airportItems: LabelItem[] = transit.airports.map((a) => ({ id: a.id, name: a.name, pref: a.pref, px: [0, 0], fs: 9.5, cls: `airport${a.hub ? ' airport--hub' : ''}`, prio: a.hub ? 3 : 1 }));
+  const airportAt = new Map(transit.airports.map((a) => [a.id, shift(a.at, a.pref)]));
+  const stationItems: LabelItem[] = transit.shinkansen.flatMap((l) => l.stations.filter((s) => s.major).map((s) => ({ id: `${l.id}:${s.ja}`, name: { ja: s.ja, kana: s.kana ?? s.ja, ko: s.ko ?? s.ja }, pref: s.pref, px: [0, 0], fs: 9, cls: 'station', prio: 0 })));
+  const stationAt = new Map<string, LonLat>(transit.shinkansen.flatMap((l) => l.stations.filter((s) => s.major).map((s): [string, LonLat] => [`${l.id}:${s.ja}`, shift(s.at, s.pref)])));
+  const stationLine = new Map<string, string>(transit.shinkansen.flatMap((l) => l.stations.filter((s) => s.major).map((s): [string, string] => [`${l.id}:${s.ja}`, l.id])));
+  const lineItems: LabelItem[] = transit.shinkansen.map((l) => ({ id: l.id, name: l.name, px: [0, 0], fs: 9.5, cls: 'line-name', prio: 0 }));
 
   const gRanges = ctx.geo.append('g').attr('class', 'layer layer--ranges');
   const rangeSel = gRanges.selectAll<SVGPathElement, (typeof mountains.ranges)[number]>('path.range')
@@ -168,6 +192,17 @@ export function createLayers(ctx: LayerContext) {
         return g;
       });
   const cityDots = dot(gCityMarks, cities, 'city');
+  const gTransitMarks = ctx.marks.append('g').attr('class', 'layer layer--transit-marks');
+  const airportDots = gTransitMarks.selectAll<SVGGElement, LabelItem>('g.airport')
+    .data(airportItems, (d) => d.id)
+    .join((enter) => {
+      const g = enter.append('g').attr('class', (d) => d.cls);
+      g.append('circle').attr('class', 'mark__ring').attr('r', (d) => (d.cls.includes('hub') ? 6.2 : 4.8));
+      g.append('text').attr('class', 'mark__glyph').text('✈');
+      g.append('title').text((d) => `${d.name.ja} (${d.name.kana}) ${d.name.ko}`);
+      return g;
+    });
+  const stationDots = dot(gTransitMarks, stationItems, 'station').style('--line-color', (d) => lineColor.get(stationLine.get(d.id) ?? '') ?? '#888');
   const wardDots = dot(gCityMarks, wards, 'ward');
   const extraDots = dot(gCityMarks, extras.filter((e) => !e.area), 'extra-place');
 
@@ -206,6 +241,9 @@ export function createLayers(ctx: LayerContext) {
   const KIND_NOTE = { tunnel: '바다 밑 터널', plan: '구상만 · 안 지어짐' } as const;
   const bridgeItems: LabelItem[] = places.bridges.map((b) => ({ id: b.id, name: b.name, note: b.kind ? KIND_NOTE[b.kind] : undefined, px: [0, 0], fs: 10.5, cls: 'bridge-name', prio: 0 }));
   const bridgeNames = textOf(ctx.text, bridgeItems, 'bridge-name');
+  const airportNames = textOf(ctx.text, airportItems, 'airport-name');
+  const stationNames = textOf(ctx.text, stationItems, 'station-name');
+  const lineNames = textOf(ctx.text, lineItems, 'line-name').style('--line-color', (d) => lineColor.get(d.id) ?? '#888');
   const rangeTag = ctx.text.append('text').attr('class', 'label label--place range-tag').attr('lang', 'ja');
   rangeTag.append('tspan').attr('class', 'label__furi');
   rangeTag.append('tspan').attr('class', 'label__main');
@@ -251,6 +289,11 @@ export function createLayers(ctx: LayerContext) {
     bridgeSel.selectAll<SVGPathElement, (typeof places.bridges)[number]>('path').attr('d', (d) => path({ type: 'LineString', coordinates: d.line }) ?? '');
     for (const b of places.bridges) bridgeMid.set(b.id, midpoint(b.line.map(project)));
     for (const b of bridgeItems) b.px = bridgeMid.get(b.id) ?? [0, 0];
+    lineSel.selectAll<SVGPathElement, ShinkansenLine>('path').attr('d', (d) => path({ type: 'LineString', coordinates: d.stations.map((s) => s.at) }) ?? '');
+    for (const l of transit.shinkansen) lineMid.set(l.id, midpoint(l.stations.map((s) => project(s.at))));
+    for (const l of lineItems) l.px = lineMid.get(l.id) ?? [0, 0];
+    for (const a of airportItems) a.px = project(airportAt.get(a.id)!);
+    for (const s of stationItems) s.px = project(stationAt.get(s.id)!);
     rangeSel.attr('d', (d) => path({ type: 'LineString', coordinates: d.line }) ?? '');
     for (const r of mountains.ranges) {
       const pts = r.line.map(project);
@@ -311,6 +354,40 @@ export function createLayers(ctx: LayerContext) {
       const [x, y] = t.apply(b.px);
       const show = on.bridges && k >= BRIDGE_NAMES_AT && onScreen(x, y) && placeName(bridgeNames, b, x, y, f, 10, ['u', 'd', 'r', 'l']);
       if (!show) bridgeNames.filter((q) => q === b).classed('is-hidden', true);
+    }
+
+    // 🚄 가는 법: hubs always; other airports, named stations and line names when zoomed in (or their prefecture is open)
+    gTransit.classed('is-off', !on.transit);
+    gTransitMarks.classed('is-off', !on.transit);
+    const shownAirports = new Set<string>();
+    for (const a of [...airportItems].sort((p, q) => q.prio - p.prio)) {
+      const [x, y] = t.apply(a.px);
+      const hub = a.cls.includes('airport--hub');
+      const vis = on.transit && onScreen(x, y) && (hub || k >= AIRPORTS_AT || a.pref === f.selected);
+      if (vis) shownAirports.add(a.id);
+      const named = vis && placeName(airportNames, a, x, y, f, hub ? 9 : 8, ['r', 'l', 'd', 'u']);
+      if (!named) airportNames.filter((q) => q === a).classed('is-hidden', true);
+    }
+    airportDots.classed('is-hidden', (d) => !shownAirports.has(d.id)).attr('transform', (d) => {
+      const [x, y] = t.apply(d.px);
+      return `translate(${x.toFixed(1)},${y.toFixed(1)})`;
+    });
+    const shownStations = new Set<string>();
+    for (const s of stationItems) {
+      const [x, y] = t.apply(s.px);
+      const vis = on.transit && onScreen(x, y) && (k >= STATIONS_AT || s.pref === f.selected);
+      if (vis) shownStations.add(s.id);
+      const named = vis && placeName(stationNames, s, x, y, f, 6, ['d', 'u', 'r', 'l']);
+      if (!named) stationNames.filter((q) => q === s).classed('is-hidden', true);
+    }
+    stationDots.classed('is-hidden', (d) => !shownStations.has(d.id)).attr('transform', (d) => {
+      const [x, y] = t.apply(d.px);
+      return `translate(${x.toFixed(1)},${y.toFixed(1)})`;
+    });
+    for (const l of lineItems) {
+      const [x, y] = t.apply(l.px);
+      const show = on.transit && k >= LINE_NAMES_AT && onScreen(x, y) && placeName(lineNames, l, x, y, f, 8, ['u', 'd', 'r', 'l']);
+      if (!show) lineNames.filter((q) => q === l).classed('is-hidden', true);
     }
 
     // mountain mode

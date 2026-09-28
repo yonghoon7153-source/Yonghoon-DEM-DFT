@@ -35,7 +35,7 @@
 index.html              마크업 (헤더·지도·패널·모달)
 src/main.ts             상태·이벤트 연결, 해시 라우팅 (#kyoto, #region/kinki)
 src/map/map.ts          d3-geo + d3-zoom 지도, 라벨 배치(충돌 회피, ふりがな), 오키나와 인셋, 스티커
-src/map/layers.ts       지도 레이어 — 도시 · 다리 · 산맥 (data/places.json, mountains.json)
+src/map/layers.ts       지도 레이어 — 도시 · 다리 · 가는 법(✈ 공항 · 🚄 신칸센) · 산맥 (data/places.json, transit.json, mountains.json)
 src/ui/compass.ts       지도 둘레의 방위 北 · 南 · 西 左 · 東 右
 src/ui/tokyo23.ts       東京23区 팝업 — 구 지도(public/geo/tokyo23.topo.json) + 구마다 내 칸
 src/ui/panel.ts         県/지방/메모장 패널 (다이어리 페이지)

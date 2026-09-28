@@ -161,6 +161,33 @@ for (const w of placesDb.wards ?? []) {
   if (w.note !== undefined && !(typeof w.note === 'string' && w.note.trim())) err(`places.wards "${w.id}": note must be text`);
   if (w.mark !== undefined && typeof w.mark !== 'boolean') err(`places.wards "${w.id}": mark must be true/false`);
 }
+// transit.json (🚄 가는 법: airports + shinkansen lines)
+const transitDb = read('transit.json');
+const airportIds = new Set();
+for (const a of transitDb.airports ?? []) {
+  const where = `transit.airports "${a.id ?? '?'}"`;
+  if (!/^[a-z]{3}$/.test(a.id ?? '') || airportIds.has(a.id)) err(`${where}: bad/duplicate id`); airportIds.add(a.id);
+  if (!/^[A-Z]{3}$/.test(a.iata ?? '') || a.iata.toLowerCase() !== a.id) err(`${where}: iata must be 3 capitals matching id`);
+  names(a.name, where);
+  if (!slugs.has(a.pref)) err(`${where}: unknown prefecture "${a.pref}"`);
+  if (!inJapan(a.at)) err(`${where}: "at" must be [lon, lat] in Japan`);
+  if (a.hub !== undefined && a.hub !== true) err(`${where}: hub must be true when present`);
+}
+const lineIds = new Set();
+for (const l of transitDb.shinkansen ?? []) {
+  const where = `transit.shinkansen "${l.id ?? '?'}"`;
+  if (!/^[a-z-]+$/.test(l.id ?? '') || lineIds.has(l.id)) err(`${where}: bad/duplicate id`); lineIds.add(l.id);
+  names(l.name, where);
+  if (!/^#[0-9A-Fa-f]{6}$/.test(l.color ?? '')) err(`${where}: color must be #rrggbb`);
+  if (l.kind !== undefined && !['mini', 'plan'].includes(l.kind)) err(`${where}: kind must be mini or plan`);
+  if (!Array.isArray(l.stations) || l.stations.length < 2) err(`${where}: needs at least two stations`);
+  for (const s of l.stations ?? []) {
+    const w = `${where} station "${s.ja ?? '?'}"`;
+    if (!s.ja || !inJapan(s.at)) err(`${w}: ja and [lon, lat] "at" required`);
+    if (s.major && !(s.kana && s.ko && slugs.has(s.pref))) err(`${w}: a major station needs kana, ko and a known pref`);
+    if (s.pref !== undefined && !slugs.has(s.pref)) err(`${w}: unknown prefecture "${s.pref}"`);
+  }
+}
 const noteIds = new Set();
 for (const m of placesDb.mapNotes ?? []) {
   const where = `places.mapNotes "${m.id ?? '?'}"`;
@@ -203,4 +230,4 @@ if (errors.length) {
   console.error(`✗ data check failed (${errors.length}):\n  - ` + errors.join('\n  - '));
   process.exit(1);
 }
-console.log(`✓ data ok: ${prefectures.length} prefectures, ${regions.length} regions (+${groups.length} group), ${mascots.length} mascots, ${boxes} note boxes, ${(notesDb.extras ?? []).length} extras, ${supBoxes} supplement boxes, ${(placesDb.cities ?? []).length} cities, ${(mountainsDb.ranges ?? []).length} ranges`);
+console.log(`✓ data ok: ${prefectures.length} prefectures, ${regions.length} regions (+${groups.length} group), ${mascots.length} mascots, ${boxes} note boxes, ${(notesDb.extras ?? []).length} extras, ${supBoxes} supplement boxes, ${(placesDb.cities ?? []).length} cities, ${(mountainsDb.ranges ?? []).length} ranges, ${(transitDb.airports ?? []).length} airports, ${(transitDb.shinkansen ?? []).length} shinkansen lines`);

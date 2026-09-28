@@ -125,3 +125,11 @@ export interface PlacesDb { cities: City[]; wards: Ward[]; islands: Island[]; la
 export interface MountainRange { no: number; id: string; kind: '山脈' | '山地' | '高地'; name: PlaceName; line: LonLat[]; ko?: string }
 export interface MountainNote { id: string; t: string; sub?: string; ko?: string; at: LonLat; arrow?: LonLat[] }
 export interface MountainsDb { ranges: MountainRange[]; notes: MountainNote[] }
+
+/** 🚄 가는 법 layer (ADR 0009). `hub` — an international gateway, shown even on the whole-country view. */
+export interface Airport { id: string; iata: string; name: PlaceName; pref: string; at: LonLat; hub?: boolean }
+/** A station on a line; only a `major` one carries a name on the map (then kana, ko and pref are set). */
+export interface Station { ja: string; kana?: string; ko?: string; pref?: string; at: LonLat; major?: boolean }
+/** `kind` — mini (山形 · 秋田, conventional-gauge) or plan (under construction, dotted). The map joins stations with straight lines. */
+export interface ShinkansenLine { id: string; kind?: 'mini' | 'plan'; name: PlaceName; color: string; stations: Station[] }
+export interface TransitDb { airports: Airport[]; shinkansen: ShinkansenLine[] }

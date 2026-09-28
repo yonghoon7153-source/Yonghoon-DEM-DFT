@@ -19,7 +19,7 @@ async function ready(p) {
   await p.evaluate(() => document.fonts.ready);
   await p.waitForTimeout(400);
 }
-const steps = (process.env.STEPS || 'desktop,select,region,mobile,zukan,search,t23').split(',');
+const steps = (process.env.STEPS || 'desktop,select,region,mobile,zukan,search,t23,transit').split(',');
 
 if (steps.includes('desktop')) {
   const { ctx, p } = await page({ width: 1440, height: 900 });
@@ -102,6 +102,18 @@ if (steps.includes('t23')) {
   await p.evaluate(() => document.querySelector('.t23__ward[aria-label="港区"]').dispatchEvent(new MouseEvent('click', { bubbles: true })));
   await p.waitForTimeout(900);
   await p.screenshot({ path: `${out}/15-t23-minato.png` });
+  await ctx.close();
+}
+if (steps.includes('transit')) {
+  // 🚄 가는 법 layer: hubs and lines on the whole country, airports · stations · line names when zoomed in
+  const { ctx, p } = await page({ width: 1440, height: 900 });
+  await ready(p);
+  await p.click('button[data-layer="transit"]');
+  await p.waitForTimeout(400);
+  await p.screenshot({ path: `${out}/16-transit.png` });
+  await p.click('#legend button[data-region="kinki"]');
+  await p.waitForTimeout(1500);
+  await p.screenshot({ path: `${out}/17-transit-kinki.png` });
   await ctx.close();
 }
 if (steps.includes('search')) {

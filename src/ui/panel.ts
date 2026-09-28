@@ -1,5 +1,5 @@
 // The diary-page panel: prefecture view, region view, and the general memo view.
-import { countBoxes, extrasFor, extrasForRegion, generalExtras, groupOf, mascotSearchUrl, mascotsOf, mountains, notes, notesFor, places, prefById, prefBySlug, prefecturesIn, regionById, regionNotes, regionOf, regionTitle, supplementFor } from '../data';
+import { airportsOf, countBoxes, extrasFor, extrasForRegion, generalExtras, groupOf, mascotSearchUrl, mascotsOf, mountains, notes, notesFor, places, prefById, prefBySlug, prefecturesIn, regionById, regionNotes, regionOf, regionTitle, stationsOf, supplementFor } from '../data';
 import type { Mascot } from '../types';
 import type { NoteExtra, NoteItem, Prefecture, Region } from '../types';
 import { mascotVisualHtml } from '../mascots/visual';
@@ -164,6 +164,14 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
     out.push(
       el('p', { class: 'ph__cap' }, el('span', { class: 'k' }, '県庁所在地'), el('span', { lang: 'ja' }, p.capital.ja), el('span', { class: 'kana', lang: 'ja' }, p.capital.kana ?? ''), el('span', { class: 'kana' }, p.capital.ko ?? '')),
     );
+    // 🚄 가는 법 (v2): the prefecture's airports and named shinkansen stations, straight from transit.json
+    const air = airportsOf(p), sta = stationsOf(p);
+    if (air.length || sta.length) {
+      const go = el('p', { class: 'ph__cap ph__go' }, el('span', { class: 'k' }, '가는 법'));
+      for (const a of air) go.append(el('span', { class: 'go', title: a.name.ko }, '✈ ', el('span', { lang: 'ja' }, a.name.ja), el('span', { class: 'kana', lang: 'ja' }, a.name.kana)));
+      for (const s of sta) go.append(el('span', { class: 'go', title: s.lines.join(' · ') }, '🚄 ', el('span', { lang: 'ja' }, `${s.station.ja}駅`), el('span', { class: 'kana', lang: 'ja' }, s.station.kana ?? '')));
+      out.push(go);
+    }
 
     // my mind map
     const notesSec = el('section', { class: 'sec sec--notes' }, el('h3', {}, el('span', { class: 'emoji' }, '✎'), '내 마인드맵', el('span', { class: 'n' }, nBoxes ? `${nBoxes} boxes` : '')));

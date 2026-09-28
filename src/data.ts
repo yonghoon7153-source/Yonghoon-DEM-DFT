@@ -6,8 +6,9 @@ import notesJson from '../data/notes.json';
 import placesJson from '../data/places.json';
 import mountainsJson from '../data/mountains.json';
 import supplementJson from '../data/supplement.json';
+import transitJson from '../data/transit.json';
 import geoMeta from './generated/prefecture-geo.json';
-import type { City, Mascot, MountainsDb, NoteExtra, NoteItem, NotesDb, PlacesDb, PrefGeoMeta, Prefecture, Region, RegionGroup, SupplementDb } from './types';
+import type { Airport, City, Mascot, MountainsDb, NoteExtra, NoteItem, NotesDb, PlacesDb, PrefGeoMeta, Prefecture, Region, RegionGroup, Station, SupplementDb, TransitDb } from './types';
 
 export const prefectures = prefecturesJson.prefectures as Prefecture[];
 export const regions = (regionsJson.regions as Region[]).slice().sort((a, b) => a.order - b.order);
@@ -19,6 +20,25 @@ export const prefGeo = geoMeta as unknown as Record<string, PrefGeoMeta>;
 export const places = placesJson as unknown as PlacesDb;
 export const mountains = mountainsJson as unknown as MountainsDb;
 export const supplement = supplementJson as unknown as SupplementDb;
+export const transit = transitJson as unknown as TransitDb;
+
+/** ✈ airports in a prefecture, hubs first. */
+export function airportsOf(p: Prefecture): Airport[] {
+  return transit.airports.filter((a) => a.pref === p.slug).sort((a, b) => Number(!!b.hub) - Number(!!a.hub));
+}
+/** 🚄 named shinkansen stations in a prefecture, with their lines (a station on two lines is listed once). */
+export function stationsOf(p: Prefecture): { station: Station; lines: string[] }[] {
+  const out = new Map<string, { station: Station; lines: string[] }>();
+  for (const l of transit.shinkansen) {
+    for (const s of l.stations) {
+      if (!s.major || s.pref !== p.slug) continue;
+      const e = out.get(s.ja) ?? { station: s, lines: [] };
+      e.lines.push(l.name.ja);
+      out.set(s.ja, e);
+    }
+  }
+  return [...out.values()];
+}
 
 export const prefById = new Map<number, Prefecture>(prefectures.map((p) => [p.id, p]));
 export const prefBySlug = new Map<string, Prefecture>(prefectures.map((p) => [p.slug, p]));

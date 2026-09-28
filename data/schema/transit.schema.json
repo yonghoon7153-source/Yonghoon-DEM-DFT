@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "transit.json — 🚄 가는 법 레이어 (공항 · 신칸센)",
+  "description": "airports 는 OurAirports 좌표(퍼블릭 도메인). shinkansen 은 역을 직선으로 이은 대략선 — 노선의 실제 모양이 아니다. 좌표는 [경도, 위도].",
+  "type": "object",
+  "required": ["airports", "shinkansen"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "_comment": { "type": "string" },
+    "airports": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "iata", "name", "pref", "at"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z]{3}$" },
+          "iata": { "type": "string", "pattern": "^[A-Z]{3}$" },
+          "name": { "type": "object", "required": ["ja", "kana", "ko"] },
+          "pref": { "type": "string", "description": "prefectures.json 의 slug" },
+          "at": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+          "hub": { "type": "boolean", "description": "국제 관문 — 전국 화면에서도 보인다 (나머지는 확대하면)" }
+        }
+      }
+    },
+    "shinkansen": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "color", "stations"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z-]+$" },
+          "kind": { "type": "string", "enum": ["mini", "plan"], "description": "mini = 재래선 규격(山形 · 秋田), plan = 공사 중 (점선)" },
+          "name": { "type": "object", "required": ["ja", "kana", "ko"] },
+          "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+          "stations": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "required": ["ja", "at"],
+              "additionalProperties": false,
+              "properties": {
+                "ja": { "type": "string" },
+                "kana": { "type": "string" },
+                "ko": { "type": "string" },
+                "pref": { "type": "string" },
+                "at": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+                "major": { "type": "boolean", "description": "이름이 붙는 역 (kana · ko · pref 필요)" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
