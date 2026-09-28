@@ -590,3 +590,11 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
   `start_check.py` (job 시작 때 봉인 재대조 — 대기열 틈) · 검사기 `launch_binding` 이 SLURM 봉인이면 `job_start.json` 까지 · 영수증 `run.sh` 의 `LMP_LAUNCH` (ibb `mpirun -np 1`).
   런처 81/81 · 검사기 83/83 · 영수증 도구 28/28.  ⚠ ibb 영수증은 `lmp_mpi` 로 **다시** (WSL 영수증은 08-25 `lmp_serial` 에 묶임 — L/LC 의 측정 기록으로만).
   ⚠ ibb a5/a6 3 job (`a6_p04` ckpt 1,650,000 · `a5_p08`/`a5_p10` 3,600,000) 취소 요청 → 명령만 드림 (이번 실행분 ≈ 3 h/job 손실 경고 · 재개는 `resume_ckpt.sh`).
+- ✅ **ibb 준비 (09-28 오후, 1저자 실행)**: 리포 `77919b8` (depth 1) · 입력 tgz (LC 3 덱 = WSL 원본 · E0 기준 런) · `SET=highbo gen_all.sh` LH 3 덱
+  (`6d71bd50` · `bf9d54fd` · `36ad6edf` — 컨테이너 재생성과 같다) · 덱 관문 3/3 PASS · E0 세 시드 입력 대조 = 기대 덱 · STL 원본 (WSL).
+- ✅ **ibb 영수증 v2 통과 · 커밋** (`docs/data/mixer_phase_receipt_20260928/receipt_v2_ibb.json` · job 235118 · node01 · `lmp_mpi -np 1`): WSL v1 과 **208 행 비트 동일** ·
+  소비자 LH 덱 수용 · 런 잇기는 발사 봉인 뒤 (지금은 거부 = 설계).  ⚠ 처음 job 은 `QOSMaxCpuPerUserLimit` 로 대기 — a5/a6 3 job (60 CPU) 을 1저자가 **scancel**
+  (234562 · 234563 · 234568) 한 뒤 돌았다.  ⚠⚠ **QOS `cpu-60` = 사용자당 60 CPU = LH 3 × 20 전부** — LH 가 도는 동안 a5/a6 재개 (`resume_ckpt.sh`) 는 같이 못 돈다 (순서 = 1저자).
+- WSL 영수증 v2 재분석 = 통과 (1저자 출력 · sha256 `1c9e4e17…`) — ⬜ 파일 미커밋 (L · LC 측정 기록용 · LH 에는 잇지 않는다).
+- **5 차 요청서 고정 스냅샷 정정** — 초판은 `999a5bf85` 를 가리켜 §5 SLURM 코드 (`77919b860`) 가 스냅샷 밖이었다 → 스냅샷 = 요청서가 든 커밋 · §4 현황 · §5 추기 (E0 대조 확인) ·
+  §6 (ibb 영수증).  1저자: *"게이트 끝나면 요청서 보낼게"* — ⬜ 발송 확인 전 (`SELF-59`).

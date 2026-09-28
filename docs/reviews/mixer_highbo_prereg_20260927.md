@@ -156,6 +156,11 @@ AM–AM 단독 효과 · 응집체만의 인과 · 실제 코팅 효과 · Hare 
   ⚠ **가정 (등록)**: `-np 1` 로 잰 메시 운동을 `-np 20` 런에 쓴다 — 처방 회전은 요소마다 같은 산술이라 분할과 무관하다는 가정이다.  `-np 1` 인 이유: 병렬 `dump mesh/stl` 은
   삼각형을 프로세서 소유 순서로 써서 생산자의 *"원 STL 과 꼭짓점 순서대로"* 대조가 서지 않는다.  (Codex 5 차 요청서 §S 의 질문.)
   영수증은 계약 검사 (판정) 때만 쓰이므로 LH 와 **동시에** 돌려도 된다 (코어 1).
+  ✅ **09-28 14:19 KST 실측 = 통과 · 커밋** (`docs/data/mixer_phase_receipt_20260928/receipt_v2_ibb.json` · sha256 `f2724c4a…` · job 235118 · node01 · `lmp_mpi` `ee2d7726…`) —
+  각 오차 1.9219 × 10⁻⁵ ° · 각 경계 0.0011651 ° · 위치 경계 3.165 × 10⁻⁷ m · 대칭 간격 3.8722 °.  ★ **WSL v1 (`lmp_serial` 08-25 빌드 · LC 덱) 과 208 행 전부 비트 동일**
+  (같은 git `3d5c00f2` · 다른 빌드 · 다른 실행 파일 · 운동 서명 같음).  소비자는 LH 덱에서 수용 · 런 잇기는 발사 봉인이 생긴 뒤 (지금은 봉인 없음 → 거부 = 설계대로).
+  ⚠ `-np 20` 동등성은 이것으로 서지 않는다 (가정 그대로 · §S2).  ⛔ GO 전 발사 · 판정 결정에 쓰지 않는다.
+  ⚠ QOS `cpu-60` = 사용자당 CPU 60 = LH 3 × 20 **전부** — LH 가 도는 동안 같은 계정의 다른 job (a5/a6 재개 등) 은 대기열에서 기다린다 (순서 = 1저자).
 - 기록 (발사 때): `nproc` · `sinfo` · `sha256sum "$(command -v lmp_mpi)"` · 리포 SHA · 발사 시각 · 첫 1 시간 step/s (§2-5 와 같은 뜻 — `lmp_serial` 자리에 `lmp_mpi`).
 - 명령 (ibb · 리포 루트 · `conda activate myenv` 뒤): `BACKEND=slurm SB_PATH=/home/yonghoon/LIGGGHTS-PUBLIC/src:/home/yonghoon/.conda/envs/myenv/bin bash dem_scripts/mixer_20260921/launch_highbo.sh first`
   → bin 0 스모크 증서 (§8) → 같은 환경변수로 `… launch_highbo.sh rest <smoke.json>`.
@@ -344,5 +349,5 @@ completion_basis "last_step" · last_thermo_step 9,452,094` — **배너가 없�
 | 런처 덱 관문 | `--runs … --allow B` | + `--expect-deck` (expected_deck LH) · 봉인에 sha256 | CED 두 배 덱 3/3 PASS (HBR4-06) | 09-28 낮 · 4 차 수정 커밋 | 없음 | — |
 | 실행 기계 · 시점 (Q4 → Q5) | WSL · L 10 런 완주 뒤 (Codex J8) | **ibb SLURM 20 × 3** · Q4 해제 | 사용자 결정 09-28 (마감) · J8 근거 = WSL CPU 경합 → ibb 는 해당 없음 | 09-28 오후 · ibb 경로 커밋 (§10) | 없음 (LH 미발사) | 결론에 *"LH 는 ibb MPI 20 rank · LC 는 WSL 직렬"* |
 | 발사 백엔드 | `run_all.sh` 경유 `setsid lmp_serial` (봉인 바로 뒤 exec) | `BACKEND=slurm` — 러너 → 봉인 (러너 · 대조기 sha256) → sbatch → jobid · **시작 대조** (`start_check.py`) | SLURM 제출 ↔ 시작 대기열 틈 (Codex Q5 *"실행 직전"*) | 09-28 오후 · ibb 경로 커밋 | 없음 | 관문 불변 |
-| 영수증 바이너리 · 실행 | WSL `lmp_serial` 직접 | ibb `lmp_mpi` · `LMP_LAUNCH="mpirun … -np 1"` (sbatch `-n 1`) | 소비자가 영수증 ↔ 봉인 바이너리 대조 (HBR4-02) · 병렬 mesh 덤프는 삼각형 순서가 달라 `-np 1` | 09-28 오후 · ibb 경로 커밋 | 없음 | `-np 1` → `-np 20` 적용은 **가정** (Codex 5 차 §S) |
+| 영수증 바이너리 · 실행 | WSL `lmp_serial` 직접 | ibb `lmp_mpi` · `LMP_LAUNCH="mpirun … -np 1"` (sbatch `-n 1`) | 소비자가 영수증 ↔ 봉인 바이너리 대조 (HBR4-02) · 병렬 mesh 덤프는 삼각형 순서가 달라 `-np 1` | 09-28 오후 · ibb 경로 커밋 · ✅ 실측 통과 14:19 KST (`receipt_v2_ibb.json` · WSL v1 과 208 행 비트 동일) | 없음 | `-np 1` → `-np 20` 적용은 **가정** (Codex 5 차 §S) |
 | 소비자 봉인 잇기 (SLURM) | 봉인의 바이너리 · 덱 · STL | + `job_start.json` (ok · 바이너리 · 실행된 러너 · 대조기 · 봉인 sha256 · ntasks) | 대기열 틈 — 시작 대조 기록 없이는 실행 바이너리 미상 | 09-28 오후 · ibb 경로 커밋 | 없음 | — |

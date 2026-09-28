@@ -1,4 +1,50 @@
-# 믹서 재개-위상 영수증 v1 (2026-09-28)
+# 믹서 재개-위상 영수증 (2026-09-28) — v2 ibb · v1 WSL · v0
+
+## ★ v2 (ibb) — `receipt_v2_ibb.json` (09-28 오후) · LH 가 잇는 영수증
+
+**1저자 ibb 원본을 한 바이트도 고치지 않고** 넣었다 (ibb → WSL scp → 업로드 · 1저자 WSL 사본 sha256 = 업로드 파일 sha256).
+
+```
+sha256  f2724c4afd5572f6f90579212274d7c8f6dc756cb99399f141f1822478702a17
+크기    29,800 B
+생성    ibb SLURM job 235118 (sbatch -n 1) · host node01 · sealed_at 2026-09-28T14:19:04.717690+09:00
+```
+
+| 양 | 값 | 비고 |
+|---|---|---|
+| `schema` · `passed` · `reasons` | `restart_phase_v2` · **true** · `[]` | 소비자 (`load_phase_receipt`) 는 v2 만 받는다 |
+| `angle_error_deg` (최대) | **1.9219 × 10⁻⁵ °** | A 208 + B 81 = 289 step |
+| `angle_bound_deg` | **0.0011651 °** | = 해상도 0.0011459 + 실측 오차 (합 — `HBR4-03`) |
+| `pos_bound_m` | **3.165 × 10⁻⁷ m** | = (형상 잔차 5.137 × 10⁻⁸ + 출력 반올림 1.314 × 10⁻⁷) × √3 — 검사기가 부호거리에 더한다 |
+| `symmetric_gap_deg` | **3.8722 °** | 가장 가까운 다른 위상 후보 — 판별력 = 이것 ÷ 오차 ≈ 20 만 배 |
+| `nfacet` · `dumps_n` A / B | 39 · 208 / 81 | |
+| `motion_clock` | mover 셋 (Drum · Front · Back) 385,337 · 끝 9,452,094 | 소비자가 판정할 덱의 시계와 대조 |
+
+| 봉인 | |
+|---|---|
+| LIGGGHTS | PUBLIC 3.8.0 · git `3d5c00f20519e6bb6eb6756f51f1ad36564e649d` · **2026-03-26-14:37:06 빌드** (WSL 판과 같은 소스 · 다른 빌드) |
+| 바이너리 | `/lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi` · sha256 `ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f` |
+| 실행 | `launch_prefix` = `mpirun --oversubscribe --bind-to none -np 1` (병렬 mesh 덤프는 삼각형 순서가 바뀐다 — 사전등록 §2-5b) |
+| `deck_source` | `…/runs/LH_s32452843/in.mixer` · `6d71bd50c00797b6…` (= 이 리포 생성기 산출 — 컨테이너 재생성 LH 3 덱 해시가 ibb 와 같다) |
+| `motion_signature` | `87132d1e…` (= v1) |
+| `tool_sha256` | `b1facac1…` = `scripts/mixer_restart_phase_test.py` @ `77919b860` |
+
+★ **WSL v1 과 행 단위 비트 동일** — `rows` 208 행 (step · `error_deg` · `resid_m`) · `steps_checked_A/B` · 각 오차 · 잔차 · 대칭 간격 · 리셋 간격이
+v1 (WSL `lmp_serial` 08-25 빌드 · LC 덱) 과 **전부 같다**.  빌드 · 실행 파일 · 덱 출처 (LC ↔ LH, 운동 서명 같음) 가 달라도 처방 회전의 **출력된** 궤적이
+STL 출력 자릿수에서 같다는 실측이다.
+⚠ 이것은 `-np 1` 끼리의 비교다 — **`-np 20` 런의 메시 운동이 같다는 증명이 아니다** (가정 그대로 · Codex 5 차 요청서 §S2).
+
+소비자 대조 (컨테이너, 이 파일이 들어간 커밋의 코드): `load_phase_receipt(receipt_v2_ibb, deck_walls(LH_s32452843))` → **수용** (덱 문자열 유무 모두).
+`run_dir` 을 주면 → **거부** *"발사 봉인 (launch_record.json) 이 없다"* — 설계대로다: 런에 잇는 것은 `launch_highbo.sh first` 가 봉인한 뒤이고,
+그때 봉인의 바이너리 sha256 = `ee2d7726…` · SLURM 이면 `job_start.json` 까지 맞아야 한다 (사전등록 §2-5b).
+⛔ **Codex 5 차 GO 전에는 이 영수증으로 발사 · 판정 결정을 하지 않는다.**  ⛔ 이것도 개별 런의 체크포인트 상태 확인이 **아니다** (아래 v1 절 그대로).
+
+WSL v2 (`~/phase_v1` 재분석): 1저자 출력으로 **통과** (sha256 `1c9e4e17…`) — ⬜ 파일 미커밋.  LH (ibb) 에는 이어지지 않는다 (WSL 바이너리 `4efca042…` 에 묶임) —
+L · LC 측정 기록용.
+
+---
+
+## v1 (WSL) — `receipt_v1.json`
 
 `receipt_v1.json` — **1저자 WSL 원본을 한 바이트도 고치지 않고** 넣었다.
 

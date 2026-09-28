@@ -1,6 +1,6 @@
 # Codex 5차 리뷰 요청 — 믹서 고-Bo 확장 LH (4차 HOLD 해제 목록 반영, 2026-09-28)
 
-- 브랜치 **`claude/sdcp-dem-manuscript-si-pqwtv8`** (= `claude/stoic-knuth-NObVQ` 의 fast-forward 연장 — stoic-knuth 로 되돌려 합치는 것은 1저자 비준 뒤) · 고정 스냅샷 = **§0 의 수정 커밋**.
+- 브랜치 **`claude/sdcp-dem-manuscript-si-pqwtv8`** (= `claude/stoic-knuth-NObVQ` 의 fast-forward 연장 — stoic-knuth 로 되돌려 합치는 것은 1저자 비준 뒤) · 고정 스냅샷 = **이 요청서가 든 커밋** (§0 — 두 수정 커밋의 후손).
 - 4차 판정문 = `docs/reviews/codex_review_mixer_highbo_round4_20260928.md` (HOLD · HBR4-01 ~ 08 · Q1 ~ Q5) · 증거 = `docs/reviews/codex_mixer_highbo_round4_evidence_20260928/`
   (우리가 핀 `ba33a4939` 의 blob 과 `sources.json` 18/18 일치를 확인).
 - 사전등록 = `docs/reviews/mixer_highbo_prereg_20260927.md` §2-2 · §2-4 (⛔⛔ 4 차 수정 블록) · §2-5 · §8 · §12 (새 행 다섯).
@@ -10,7 +10,9 @@
 
 ## 0. 수정 커밋
 
-수정 커밋 = **`999a5bf85`** (게이트: selftest 레인 · 리포 레인 둘 다 0).  원장 등재 (HBR4-01~08 → `claimed_fixed 999a5bf85`) 는 이 요청서와 같은 커밋이다.
+수정 커밋 = **`999a5bf85`** (HBR4 · 게이트: selftest 레인 · 리포 레인 둘 다 0) + **`77919b860`** (§5 ibb SLURM 경로 · 게이트 둘 다 0).  원장 등재 (HBR4-01~08 → `claimed_fixed 999a5bf85`) 는 `bc1a7cd83`.
+**리뷰 스냅샷 = 이 요청서가 든 커밋** (둘의 후손).  `77919b860` 뒤로는 **코드 변경이 없다** — ibb 영수증 v2 (데이터 · §6) 와 문서 문구뿐
+(`git diff --stat 77919b860 <스냅샷> -- '*.py' '*.sh'` = 빈 출력).  ⚠ 초판 (09-28 오후) 은 고정 스냅샷을 `999a5bf85` 로 적어 §5 의 SLURM 코드가 스냅샷 **밖**에 있었다 — 발송 전에 고쳤다.
 
 ## 1. 항목별 — 무엇을 바꿨고 어느 셀프테스트가 지키나
 
@@ -51,8 +53,10 @@ bash dem_scripts/mixer_20260921/test_launcher.sh        # 64/64 (HL②e 는 진�
 
 ## 4. 실데이터 순서 (5차 GO 뒤) — ⬜ 는 아직 안 한 것
 
-⬜ WSL `~/phase_v1` 에서 고친 도구로 `analyze` 만 다시 → **영수증 v2** 커밋 (LIGGGHTS 재실행 불요 — 봉인 · 덤프 · 로그는 그대로) ·
-⬜ E0 세 개에 정지 벽 계약 (§2-4 ③ 명령) · ⬜ L 완주 → ⬜ 생산 덱 3 쌍 대조 (`--expect-deck`) → `launch_highbo.sh first` (봉인) → bin 0 스모크 증서 (출처 블록) → `launch_highbo.sh rest`.
+✅ (09-28 · GO 전 **측정만** — 발사 · 판정 결정에 쓰지 않았다) 영수증 v2: **ibb `lmp_mpi` 통과 · 커밋** (§6) · WSL `~/phase_v1` 재분석도 통과 (1저자 출력 · 파일 미커밋 · LH 에는 잇지 않는다) ·
+✅ E0 세 시드 입력 대조 (지금 생성기 덱 = 실행 덱 · STL = 캠페인 원본) · ⬜ E0 정지 벽 계약 실행 (§2-4 ③ · 1저자 실행 중) ·
+✅ ibb 준비: 리포 `77919b8` · 입력 (LC 3 덱 = WSL 원본 · E0 기준 런) · LH 3 덱 = 이 리포 생성기 산출 해시 · 생산 덱 3 쌍 대조 (`--expect-deck`) **3/3 PASS** ·
+⛔ **GO 뒤**: `launch_highbo.sh first` (ibb · `BACKEND=slurm` · 봉인) → bin 0 스모크 증서 (출처 블록) → `launch_highbo.sh rest`.  (L 완주는 Q5 로 LH 발사의 선행 조건에서 빠졌다 — §5.)
 ⚠ 이 요청서가 **발송됐는지는 1저자가 확인한 뒤에만** 정본에 적는다 (`SELF-59`).
 
 ## 5. 추가 (09-28 오후, 발송 전) — **ibb SLURM 경로** (1저자 결정 · 한 번에 리뷰받기 위해 이 요청서에 합친다)
@@ -83,6 +87,16 @@ SLURM 밖 · 두 번째 시작을 막는지) · `check_contact_validity.py --sel
   같은 초기 침대를 주는지는 **확인하지 않았다**.  한정어 외에 요구할 것이 있는가.
 
 **추기 (Q3 에 대한 사실)**: 생성기 `b6d9a2036` · `6963632a0` · `20568797b` · HEAD 네 판이 E0 세 시드에서 **바이트 동일**한 덱을 낸다 (7,779 B · sha256 앞 16 자리
-`a38cdc7494671979` · `b8ba25ace11e1300` · `f38f0093433d251a`).  09-22 에 E0 를 다시 만든 판이 `b6d9a2036` 이므로 지금 생성기의 기대 덱 = 실행 덱으로 **예상**된다
-(WSL 해시 대조는 1저자가 실행 중).
+`a38cdc7494671979` · `b8ba25ace11e1300` · `f38f0093433d251a`).  09-22 에 E0 를 다시 만든 판이 `b6d9a2036` 이므로 지금 생성기의 기대 덱 = 실행 덱으로 **예상**했다
+→ ✅ **09-28 1저자 WSL 해시 대조로 확인** (세 시드 모두 실행 덱 = 기대 덱 · STL = 캠페인 원본 · 정지 벽 계약 실행 자체는 ⬜).
 
+## 6. 추가 2 (09-28 오후, 발송 전) — **ibb 영수증 v2 실측** (S2 · S4 에 대한 사실)
+
+`docs/data/mixer_phase_receipt_20260928/receipt_v2_ibb.json` (sha256 `f2724c4a…` · 같은 폴더 README) — ibb SLURM job 235118 (`-n 1`) · node01 · `lmp_mpi` `ee2d7726…`
+(LIGGGHTS 3.8.0 git `3d5c00f2` · 03-26 빌드) · `LMP_LAUNCH = mpirun --oversubscribe --bind-to none -np 1` · 덱 출처 = `LH_s32452843` (`6d71bd50…`) · 도구 = 스냅샷의 `mixer_restart_phase_test.py` (`b1facac1…`).
+- **통과**: 각 오차 1.9219 × 10⁻⁵ ° · 각 경계 0.0011651 ° (해상도 + 오차) · 위치 경계 3.165 × 10⁻⁷ m · 대칭 간격 3.8722 ° · A 208 / B 81 step · `run_status` 둘 다 exit 0 · `last_step`.
+- ★ **WSL v1 (`lmp_serial` 08-25 빌드 · LC 덱) 과 208 행 전부 비트 동일** (step · `error_deg` · `resid_m`) — 같은 소스 · 다른 빌드 · 다른 실행 파일 · 다른 덱 출처 (운동 서명 같음).
+  S4 에 대해: **메시 궤적**은 기계 · 빌드에 무관함을 출력 자릿수에서 실측했다.  입자 침대 (`insert/pack` 의 직렬 ↔ 병렬) 는 이것과 **별개로 여전히 미확인**이다.
+  S2 에 대해: 이것은 `-np 1` 끼리다 — `-np 20` 동등성은 가정 그대로다.
+- 소비자 (스냅샷 코드): `load_phase_receipt(…, deck_walls(LH_s32452843))` **수용** · `run_dir` 을 주면 *"발사 봉인이 없다"* 로 **거부** (LH 미발사 = 설계대로).
+- ⛔ GO 전에는 이 영수증으로 발사 · 판정 결정을 하지 않았다 — 측정만 했다.
