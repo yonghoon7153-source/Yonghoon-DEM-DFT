@@ -22,6 +22,7 @@ evidenceScope: multi-source-primary
 
 ## 0. 한눈에
 
+- ⚠⚠ **1저자 요청 (09-28 · "이거 나중에 꼭 얘기해줘야돼")** — 사용자 **로컬 체크아웃이 지금 `claude/evac-2026-09-28` 에 있다** (09-28 14시 로컬 웹앱에서 §0 정정을 보려고 옮겼다). friendly 에 fast-forward 한 **직후 반드시** 사용자에게 로컬을 되돌리라고 말한다: `git switch claude/friendly-meitner-lldvar && git pull --ff-only` (로컬 웹앱 127.0.0.1:5001 은 로컬 체크아웃을 읽는다). 말하지 않으면 사용자 로컬이 evac 에 남아, 그 뒤 friendly 에 쌓이는 것이 로컬 화면에 안 보인다.
 - **fast-forward 가능** (09-28 14시 확인 — friendly 에 새 커밋 **0** · 이 브랜치가 **19 커밋 앞** · 기록 커밋 포함 시 20).
 - 이 브랜치가 만든 **새 빨간불은 없다.** 웹앱 시험 3 건 빨강은 **09-22 부터** 이어진 cascade 매니페스트 건 (⏭-NOW-w 🔴 · §6).
 - 원격 계산 셋이 돌고 있다 (§4) — 머지와 무관하게 계속 돈다.
@@ -32,7 +33,7 @@ evidenceScope: multi-source-primary
 2. friendly 가 그사이 움직였는지 다시 본다: `git fetch origin claude/friendly-meitner-lldvar` → `git rev-list --count HEAD..origin/claude/friendly-meitner-lldvar` 가 **0** 이면
 3. `git push origin HEAD:claude/friendly-meitner-lldvar` (**강제 없이** — fast-forward 만).
 4. 움직였으면 멈추고 rebase / merge 를 사용자에게 묻는다.
-5. 로컬 웹앱(127.0.0.1:5001)은 로컬 체크아웃을 읽는다 — 머지 뒤 로컬에서 `git pull` 해야 화면이 바뀐다.
+5. ⚠⚠ **1저자 요청 (09-28 · "이거 나중에 꼭 얘기해줘야돼")** — 사용자 **로컬 체크아웃이 지금 `claude/evac-2026-09-28` 에 있다** (09-28 14시 로컬 웹앱에서 §0 정정을 보려고 옮겼다). friendly 에 fast-forward 한 **직후 반드시** 사용자에게 로컬을 되돌리라고 말한다: `git switch claude/friendly-meitner-lldvar && git pull --ff-only` (로컬 웹앱 127.0.0.1:5001 은 로컬 체크아웃을 읽는다). 말하지 않으면 사용자 로컬이 evac 에 남아, 그 뒤 friendly 에 쌓이는 것이 로컬 화면에 안 보인다.
 
 ## 2. 커밋 (09-28 14시 · `git log --oneline origin/claude/friendly-meitner-lldvar..HEAD`)
 

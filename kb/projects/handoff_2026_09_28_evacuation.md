@@ -78,6 +78,7 @@ evidenceScope: multi-source-primary
 - friendly 가 그사이 안 움직였으면 (fast-forward 가능) 사용자 허락을 받고
   git push origin HEAD:claude/friendly-meitner-lldvar  (강제 없이). 움직였으면 멈추고 rebase / merge 를 묻는다.
 - 세션을 닫기 전에 kb/open_items.md 의 ⏭ 절을 갱신한다 (머리 줄에 굵게를 겹쳐 쓰지 않는다 — 대시보드 시험이 깨진다).
+- ⚠⚠ 1저자 요청 (09-28 · "이거 나중에 꼭 얘기해줘야돼") — 사용자 로컬 체크아웃이 지금 `claude/evac-2026-09-28` 에 있다 (09-28 14시 로컬 웹앱에서 §0 정정을 보려고 옮겼다). friendly 에 fast-forward 한 직후 반드시 사용자에게 로컬을 되돌리라고 말한다: `git switch claude/friendly-meitner-lldvar && git pull --ff-only` (로컬 웹앱 127.0.0.1:5001 은 로컬 체크아웃을 읽는다). 말하지 않으면 사용자 로컬이 evac 에 남아, 그 뒤 friendly 에 쌓이는 것이 로컬 화면에 안 보인다.
 
 ■ 6. 사용자 운영 규칙 (어기면 바로 잡힌다)
 - 원격 작업은 "붙여넣기 블록 → 사용자가 실행 → 출력 회수". ssh 한 줄 명령으로 주지 않는다.
