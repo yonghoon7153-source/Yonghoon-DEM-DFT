@@ -34,7 +34,10 @@ from tools import preserve as PV                                    # noqa: E402
 # ─────────────────────────────────────────────────────────────────────────────
 # 공통 fixture 재료
 # ─────────────────────────────────────────────────────────────────────────────
-ORDER = ["lli", "lam_pe", "lam_ne", "p_ini_scale", "shift"]
+#: ★ 82차 전 자체 점검 F11 — 설계의 parameter_order 는 **optimizer 벡터** 순서다 (bounds·bank n_params·solution map 열과
+#:   같은 것). 라운드 1 fixture 는 5 개 좌표 이름(lli·lam_pe·lam_ne·p_ini_scale·shift)을 썼고, 그 이름이 fits 의
+#:   **truth 열**과 겹쳐 solution map 이 해 대신 truth 를 읽을 수 있다는 것을 가렸다.
+ORDER = list(F.PARAM_NAMES)
 OBJS = ["pocv_dvdq", "pocv_dvdq_dqdv"]
 LB = np.array([0.5, -1.0, 0.5, -1.0])
 UB = np.array([2.0, 1.0, 2.0, 1.0])
@@ -83,9 +86,9 @@ def _roster_entries(design=None, n=2, seeds=(1, 2)):
     return out
 
 
-def _stages(mode="legacy_slot_replace", budget=3, arm="G_A", warm_map=None):
+def _stages(mode="legacy_slot_replace", budget=3, arm="G_A", warm_map=None, budgets=None):
     return [{"stage": "condition", "arm": arm,
-             "budget_by_objective": {o: budget for o in OBJS},
+             "budget_by_objective": dict(budgets) if budgets is not None else {o: budget for o in OBJS},
              "candidate_mode": mode,
              "warm_provider_map": warm_map if warm_map is not None
              else {o: None for o in OBJS}}]
@@ -432,47 +435,61 @@ def test_g81_n2_05_v6_restart_validator_requires_all_ten_keys_and_source_consist
 # ═════════════════════════════════════════════════════════════════════════════
 # §3 표 C — provider 결속 (G81-N3)  (RED)
 # ═════════════════════════════════════════════════════════════════════════════
-def _provider_fits(tmp: Path, objective: str, rows: dict[str, list[float]]) -> Path:
+def _provider_fits(tmp: Path, objective: str, rows: dict[str, list[float]], *, run_spec=None) -> Path:
+    """provider **run 디렉터리** (fits.parquet + manifest.yaml) — ★ 82차 전 자체 점검 F5·F11.
+
+    해는 실제 fits 처럼 `PARAM_NAMES` 열(a_pe·b_pe·a_ne·b_ne)에 두고, 같은 행의 truth 열(lli·lam_pe·lam_ne)에는
+    **다른 값(0.5)** 을 넣는다 — map 이 truth 를 해로 읽으면 좌표가 틀려 시험이 잡는다. 라운드 1 판은 해를
+    truth 열 이름으로 적어 그 구분을 가렸다.
+    """
+    import yaml
     tmp = Path(tmp); tmp.mkdir(parents=True, exist_ok=True)
-    df = pd.DataFrame([{"cond_id": c, "objective": objective, "lli": p[0], "lam_pe": p[1],
-                        "lam_ne": p[2], "shift": p[3], "J": 0.1, "converged": True}
+    df = pd.DataFrame([{"cond_id": c, "objective": objective, **dict(zip(F.PARAM_NAMES, p)),
+                        "lli": 0.5, "lam_pe": 0.5, "lam_ne": 0.5, "J": 0.1, "converged": True}
                        for c, p in rows.items()])
-    path = tmp / "fits.parquet"; df.to_parquet(path, index=False)
-    return path
+    df.to_parquet(tmp / "fits.parquet", index=False)
+    spec = run_spec if run_spec is not None else {"sig_version": 6, "objective_order": list(OBJS), "note": "provider"}
+    (tmp / "manifest.yaml").write_text(yaml.safe_dump({"run_spec": spec}, allow_unicode=True), encoding="utf-8")
+    return tmp
 
 
-def _edge(fits: Path, map_path: Path, *, provider=OBJS[0], consumer=OBJS[1], protocol="e" * 64):
+def _protocol_sha(run: Path) -> str:
+    import yaml
+    spec = yaml.safe_load((Path(run) / "manifest.yaml").read_text(encoding="utf-8"))["run_spec"]
+    return hashlib.sha256(PV.canonical_bytes(spec)).hexdigest()
+
+
+def _edge(run: Path, map_path: Path, *, provider=OBJS[0], consumer=OBJS[1]):
     return {"stage": "condition", "arm": "G_C", "consumer_objective": consumer,
             "provider_objective": provider,
-            "provider_artifact_sha256": hashlib.sha256(fits.read_bytes()).hexdigest(),
+            "provider_artifact_sha256": hashlib.sha256((Path(run) / "fits.parquet").read_bytes()).hexdigest(),
             "solution_map_sha256": hashlib.sha256(map_path.read_bytes()).hexdigest(),
-            "provider_protocol_sha256": protocol}
+            "provider_protocol_sha256": _protocol_sha(run)}
 
 
 def test_g81_n3_01_solution_map_header_binds_fits_bytes_objective_and_protocol(tmp_path):
     """RED: `make_solution_map` 가 없다. header = objective · fits sha · protocol sha · parameter_order · 제외 목록."""
-    fits = _provider_fits(tmp_path, OBJS[0], {"c1": [1.2, 0.1, 0.9, 0.0], "c2": [1.4, float("nan"), 0.8, 0.1]})
-    hdr = F.make_solution_map(fits, OBJS[0], tmp_path / "map.json",
-                              provider_protocol_sha256="e" * 64, parameter_order=["lli", "lam_pe", "lam_ne", "shift"])
+    run = _provider_fits(tmp_path, OBJS[0], {"c1": [1.2, 0.1, 0.9, 0.0], "c2": [1.4, float("nan"), 0.8, 0.1]})
+    hdr = F.make_solution_map(run, OBJS[0], tmp_path / "map.json")
     assert hdr["schema"] == "solution-map/v1" and hdr["provider_objective"] == OBJS[0]
-    assert hdr["provider_artifact_sha256"] == hashlib.sha256(fits.read_bytes()).hexdigest()
-    assert hdr["provider_protocol_sha256"] == "e" * 64 and hdr["n_entries"] == 1
+    assert hdr["provider_artifact_sha256"] == hashlib.sha256((run / "fits.parquet").read_bytes()).hexdigest()
+    assert hdr["provider_protocol_sha256"] == _protocol_sha(run) and hdr["n_entries"] == 1
+    assert hdr["parameter_order"] == list(F.PARAM_NAMES)
     assert hdr["excluded_cond_ids"] == ["c2"], "비유한 해는 entries 가 아니라 제외 목록"
     doc = json.loads((tmp_path / "map.json").read_text(encoding="utf-8"))
     assert set(doc["entries"]) == {"c1"} and doc["header"] == hdr
     with pytest.raises(ValueError):
-        F.make_solution_map(fits, "pocv_dvdq_dqdv", tmp_path / "map2.json",
-                            provider_protocol_sha256="e" * 64, parameter_order=["lli", "lam_pe", "lam_ne", "shift"])
+        F.make_solution_map(run, "pocv_dvdq_dqdv", tmp_path / "map2.json")
 
 
 def test_g81_n3_02_consumer_rejects_wrong_fits_map_combination_and_unsealed_maps(tmp_path):
     """RED: `provider_x0` 가 없다. 세 sha 가 전부 진짜라도 fits A + map B(다른 조건 세트) 결합은 거부."""
-    order = ["lli", "lam_pe", "lam_ne", "shift"]
-    fits_a = _provider_fits(tmp_path / "a", OBJS[0], {"c1": [1.2, 0.1, 0.9, 0.0]})
-    fits_b = _provider_fits(tmp_path / "b", OBJS[0], {"c1": [1.9, 0.9, 1.9, 0.9]})
-    F.make_solution_map(fits_a, OBJS[0], tmp_path / "a" / "map.json", provider_protocol_sha256="e" * 64, parameter_order=order)
-    F.make_solution_map(fits_b, OBJS[0], tmp_path / "b" / "map.json", provider_protocol_sha256="e" * 64, parameter_order=order)
-    edge_ok = _edge(fits_a, tmp_path / "a" / "map.json")
+    order = list(F.PARAM_NAMES)
+    run_a = _provider_fits(tmp_path / "a", OBJS[0], {"c1": [1.2, 0.1, 0.9, 0.0]})
+    run_b = _provider_fits(tmp_path / "b", OBJS[0], {"c1": [1.9, 0.9, 1.9, 0.9]})
+    F.make_solution_map(run_a, OBJS[0], tmp_path / "a" / "map.json")
+    F.make_solution_map(run_b, OBJS[0], tmp_path / "b" / "map.json")
+    edge_ok = _edge(run_a, tmp_path / "a" / "map.json")
     x0, sha = F.provider_x0(tmp_path / "a" / "map.json", edge=edge_ok, cond_id="c1", lb=LB, ub=UB, parameter_order=order)
     assert np.allclose(x0, [1.2, 0.1, 0.9, 0.0]) and sha == DW.x0_sha256(x0)
     # fits A 의 edge 로 map B 를 소비 — header 의 artifact sha 가 edge 와 다르다
@@ -493,10 +510,10 @@ def test_g81_n3_02_consumer_rejects_wrong_fits_map_combination_and_unsealed_maps
 
 def test_g81_n3_03_consumer_rejects_missing_condition_wrong_objective_and_out_of_bounds_without_clipping(tmp_path):
     """RED: 누락 cond_id 는 오류(no-warm 전환 아님) · objective 불일치 거부 · bounds 밖 p 는 clip 하지 않고 거부."""
-    order = ["lli", "lam_pe", "lam_ne", "shift"]
-    fits = _provider_fits(tmp_path, OBJS[0], {"c1": [1.2, 0.1, 0.9, 0.0], "c3": [3.5, 0.0, 0.9, 0.0]})
-    F.make_solution_map(fits, OBJS[0], tmp_path / "map.json", provider_protocol_sha256="e" * 64, parameter_order=order)
-    edge = _edge(fits, tmp_path / "map.json")
+    order = list(F.PARAM_NAMES)
+    run = _provider_fits(tmp_path, OBJS[0], {"c1": [1.2, 0.1, 0.9, 0.0], "c3": [3.5, 0.0, 0.9, 0.0]})
+    F.make_solution_map(run, OBJS[0], tmp_path / "map.json")
+    edge = _edge(run, tmp_path / "map.json")
     with pytest.raises(ValueError, match="c9"):
         F.provider_x0(tmp_path / "map.json", edge=edge, cond_id="c9", lb=LB, ub=UB, parameter_order=order)
     with pytest.raises(ValueError):
@@ -581,8 +598,9 @@ def test_g81_w03_legacy_fit_is_byte_identical_golden_still_holds():
                for e in r.restarts), "legacy 행은 8 키 그대로 — candidate 키가 새지 않는다"
 
 
-def _v6_context(in_dir: Path, *, design=None, budget=2, arm="G_A"):
-    """tiny curves → 조건 → roster → PlannedLegV4 (no-provider · grid 기준)."""
+def _v6_context(in_dir: Path, *, design=None, budget=2, arm="G_A", warm_map=None, edges=None, budgets=None,
+                provider_runs=None):
+    """tiny curves → 조건 → roster → PlannedLegV4 (기본 no-provider · grid 기준; warm arm 은 warm_map·edges·provider_runs)."""
     from src.grid import Condition
     design = design or _design()
     cur = pd.read_parquet(in_dir / "curves.parquet")
@@ -593,13 +611,13 @@ def _v6_context(in_dir: Path, *, design=None, budget=2, arm="G_A"):
                                str(r0["lam_pe_type"]), str(r0["lam_ne_type"]), float(r0["noise"]), int(r0["seed"])))
     roster = DW.roster_from_conditions(conds, design=design, comparison_family_id="p22_grid_primary_v6",
                                        treatment_id="none", replicate_id=0)
-    stages = _stages(budget=budget, arm=arm)
-    planned = _planned_v4(design=design, roster=roster, stages=stages,
+    stages = _stages(budget=budget, arm=arm, warm_map=warm_map, budgets=budgets)
+    planned = _planned_v4(design=design, roster=roster, stages=stages, edges=edges,
                           source_digest=IO.source_digest(),
                           inputs={"reference": "grid",
                                   "curves_sha256": hashlib.sha256((in_dir / "curves.parquet").read_bytes()).hexdigest(),
                                   "base_config_digest": None})
-    return {"planned": planned, "design": design, "provider_maps": {}}
+    return {"planned": planned, "design": design, "provider_runs": dict(provider_runs or {})}
 
 
 def test_g81_w04_run_fit_with_stage3_context_writes_sig6_run_spec_execution_record_and_candidate_map(tmp_path):
@@ -659,7 +677,11 @@ def test_g81_w05_validate_provenance_dispatches_on_sig_version_and_fails_closed(
 
 
 def test_g81_w06_stage3_run_refuses_a_roster_that_does_not_match_the_curves_and_p_ini_edges(tmp_path):
-    """RED: 계획 roster 와 실제 조건 집합이 다르면 시작하지 않는다 · warm arm 인데 provider map 이 없으면 시작하지 않는다."""
+    """RED: 계획 roster 와 실제 조건 집합이 다르면 시작하지 않는다 · adaptive=True 는 시작하지 않는다.
+
+    (라운드 1 docstring 은 "warm arm 인데 provider map 이 없으면" 도 적었지만 몸체는 그것을 재지 않았다 — 82차 전 자체
+    점검 F6. 그 사례는 `test_g81_s06_*` 가 실제 warm arm 으로 잰다.)
+    """
     from tests.test_fitting import _BOUNDS_MIN, _obj_cfg_min, _tiny_curves
     in_dir = _tiny_curves(tmp_path / "in"); out = tmp_path / "o"
     ctx = _v6_context(in_dir)
@@ -674,3 +696,329 @@ def test_g81_w06_stage3_run_refuses_a_roster_that_does_not_match_the_curves_and_
     with pytest.raises((ValueError, RuntimeError)):
         F.run_fit(in_dir, out, _obj_cfg_min(), {OBJS[0]: {"w_pocv": 1.0}, OBJS[1]: {"w_pocv": 1.0, "_warm": False}},
                   _BOUNDS_MIN, "expanded", 2, nproc=1, adaptive=True, warm_start=False, stage3=ctx)
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# §s 82차 발송 전 자체 점검 (2026-09-28) — 81차 회신 닫힘 조건을 코드에 하나씩 대조해 찾은 구멍
+#   F1 선언-행 충돌(sig 5) · F2 후보 재유도 · F3 실현 재계산 · F4 provider_consumed ↔ 계획 edge ·
+#   F5 protocol sha 재계산 · F6 warm 공급 경로 실행 · F7 두 noise 실현 소비 경로 · F11 parameter_order = optimizer
+#   벡터 · F12 objective 별 예산. 반례는 먼저 실측했다 (원장 §115 · 사용자 결정 "지금 고치고 영수증 한 번 더").
+# ═════════════════════════════════════════════════════════════════════════════
+_OBJ_W = {OBJS[0]: {"w_pocv": 1.0}, OBJS[1]: {"w_pocv": 1.0, "_warm": False}}
+
+
+def _run_v6(tmp_path, name, ctx, in_dir, n_restarts=2):
+    from tests.test_fitting import _BOUNDS_MIN, _obj_cfg_min
+    out = tmp_path / name
+    F.run_fit(in_dir, out, _obj_cfg_min(), _OBJ_W, _BOUNDS_MIN, "expanded", n_restarts, nproc=1,
+              adaptive=False, warm_start=False, stage3=ctx)
+    return out
+
+
+def _fails(v) -> list:
+    return [k for k in v["fail"] if k not in _DIRTY_TREE_CHECKS]
+
+
+def _rewrite_map_and_record(out, mutate):
+    """candidate_map 을 바꾸고 record 의 map sha · n · record_digest 를 **다시 맞춘다** — 자기일관 위조."""
+    cm = json.loads((out / "candidate_map.json").read_text(encoding="utf-8"))
+    mutate(cm["entries"])
+    (out / "candidate_map.json").write_bytes(PV.canonical_bytes(cm))
+    rec = json.loads((out / "execution_record.json").read_text(encoding="utf-8"))
+    rec["realized"]["candidate_map_sha256"] = PV.digest(cm["entries"])
+    rec["realized"]["n_candidates"] = len(cm["entries"])
+    rec["record_digest"] = PV.digest({k: v for k, v in rec.items() if k != "record_digest"})
+    (out / "execution_record.json").write_bytes(PV.canonical_bytes(rec))
+
+
+def _snapshot(out, names=("candidate_map.json", "execution_record.json", "fits.parquet", "manifest.yaml")):
+    snap = {n: (out / n).read_bytes() for n in names}
+    return lambda: [(out / n).write_bytes(b) for n, b in snap.items()]
+
+
+def test_g81_s01_a_sig5_run_that_carries_v6_rows_or_a_stage3_block_is_a_declaration_conflict(tmp_path):
+    """RED (F1): sig 5 선언 아래 v6 전용 행 키(candidate_id·bank_index) · `stage3` 블록 · v6 표식 열을 거부하지 않는다 —
+    행 모양을 선언 문맥에 대조하지 않는다 (81차 N2 "행 모양은 그 문맥에 대조한다")."""
+    from tests.test_fitting import _BOUNDS_MIN, _obj_cfg_min, _tiny_curves
+    import yaml
+    in_dir = _tiny_curves(tmp_path / "in"); out = tmp_path / "o"
+    F.run_fit(in_dir, out, _obj_cfg_min(), {"aa": {"w_pocv": 1.0}}, _BOUNDS_MIN, "expanded", 2, nproc=1, adaptive=False)
+    restore = _snapshot(out, ("fits.parquet", "manifest.yaml"))
+    # (a) sig 5 행에 v6 전용 키
+    fits = pd.read_parquet(out / "fits.parquet")
+    fits["restarts_json"] = [json.dumps([{**e, "candidate_id": HEX64, "bank_index": None} for e in json.loads(v)])
+                             for v in fits["restarts_json"]]
+    fits.to_parquet(out / "fits.parquet", index=False)
+    v = IO.validate_provenance(out)
+    assert "세대_선언_일치" in v["fail"], v["fail"]
+    restore()
+    # (b) sig 5 run_spec 에 stage3 블록
+    man = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    man["run_spec"]["stage3"] = {"planned_id": HEX64}
+    (out / "manifest.yaml").write_text(yaml.safe_dump(man, allow_unicode=True), encoding="utf-8")
+    v = IO.validate_provenance(out)
+    assert "세대_선언_일치" in v["fail"], v["fail"]
+    restore()
+    # (c) sig 5 fits 에 v6 표식 열
+    fits = pd.read_parquet(out / "fits.parquet"); fits["record_generation"] = "v6"
+    fits.to_parquet(out / "fits.parquet", index=False)
+    v = IO.validate_provenance(out)
+    assert "세대_선언_일치" in v["fail"], v["fail"]
+    restore()
+    v0 = IO.validate_provenance(out)
+    assert _fails(v0) == [] and v0["checks"]["세대_선언_일치"] == "통과", "정상 sig 5 산출은 그대로 통과 (넓히지도 좁히지도 않음)"
+
+
+def test_g81_s02_the_validator_rederives_every_candidate_from_plan_bank_bounds_and_design(tmp_path):
+    """RED (F2): sig 6 validator 가 후보 ID **집합**만 대조한다 — 가짜 x0 digest · map 과 행에서 함께 바꾼 candidate_id ·
+    뒤바꾼 bank_index 를 못 잡는다 ("64hex 존재만으로 통과 금지", 81차 §6)."""
+    from tests.test_fitting import _tiny_curves
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = _run_v6(tmp_path, "o", _v6_context(in_dir, budget=3), in_dir, n_restarts=3)
+    restore = _snapshot(out)
+    # (a) random 후보의 x0 digest 를 가짜로 (map 만 — 행에는 x0 가 없다)
+    _rewrite_map_and_record(out, lambda ents: next(m for m in ents if m["source"] == "random").update(x0_sha256="0" * 64))
+    assert "후보_재유도" in IO.validate_provenance(out)["fail"]
+    restore()
+    # (b) candidate_id 를 map 과 행에서 **같이** 바꾼다 — 집합 대조(candidate_ids_결속)는 통과한다
+    target = {}
+
+    def bad_id(ents):
+        e = next(m for m in ents if m["source"] == "random")
+        target.update(e); e["candidate_id"] = "1" * 64
+    _rewrite_map_and_record(out, bad_id)
+    fits = pd.read_parquet(out / "fits.parquet")
+
+    def fix(v, cid, obj):
+        rows = json.loads(v)
+        if cid == target["cond_id"] and obj == target["objective"]:
+            for e in rows:
+                if e["i"] == target["i"]:
+                    e["candidate_id"] = "1" * 64
+        return json.dumps(rows)
+    fits["restarts_json"] = [fix(v, c, o) for v, c, o in zip(fits["restarts_json"], fits["cond_id"], fits["objective"])]
+    fits.to_parquet(out / "fits.parquet", index=False)
+    v = IO.validate_provenance(out)
+    assert v["checks"]["candidate_ids_결속"] == "통과", "집합 대조는 이 위조를 통과시킨다 — 그래서 재유도가 필요하다"
+    assert "후보_재유도" in v["fail"], v["fail"]
+    restore()
+    # (c) 한 (조건, objective) 의 random 두 후보의 bank_index 를 map 에서 맞바꾼다 → 계획 구성과 다르다
+    def swap(ents):
+        key = next((m["cond_id"], m["objective"]) for m in ents if m["source"] == "random")
+        rs = [m for m in ents if (m["cond_id"], m["objective"]) == key and m["source"] == "random"]
+        rs[0]["bank_index"], rs[1]["bank_index"] = rs[1]["bank_index"], rs[0]["bank_index"]
+    _rewrite_map_and_record(out, swap)
+    assert "후보_재유도" in IO.validate_provenance(out)["fail"]
+    restore()
+    # (d) bank 를 계획 순서가 아닌 순서로 소비한 producer — 두 random 후보의 index·x0·ID 를 map 과 행에서 **통째로**
+    #   맞바꾼다. x0 digest·candidate_id 는 각자 자기 bank 행과 맞으므로 구성(계획 순서) 대조만이 잡는다.
+    moved = {}
+
+    def reorder(ents):
+        key = next((m["cond_id"], m["objective"]) for m in ents if m["source"] == "random")
+        a, b = [m for m in ents if (m["cond_id"], m["objective"]) == key and m["source"] == "random"][:2]
+        for f in ("bank_index", "x0_sha256", "candidate_id"):
+            a[f], b[f] = b[f], a[f]
+        moved.update({"key": key, a["i"]: (a["candidate_id"], a["bank_index"]), b["i"]: (b["candidate_id"], b["bank_index"])})
+    _rewrite_map_and_record(out, reorder)
+    fits = pd.read_parquet(out / "fits.parquet")
+
+    def reorder_rows(v, cid, obj):
+        rows = json.loads(v)
+        if (cid, obj) == moved["key"]:
+            for e in rows:
+                if e["i"] in moved:
+                    e["candidate_id"], e["bank_index"] = moved[e["i"]]
+        return json.dumps(rows)
+    fits["restarts_json"] = [reorder_rows(v, c, o) for v, c, o in zip(fits["restarts_json"], fits["cond_id"], fits["objective"])]
+    fits.to_parquet(out / "fits.parquet", index=False)
+    v = IO.validate_provenance(out)
+    assert "후보_재유도" in v["fail"] and "계획 candidate_plan" in v["checks"]["후보_재유도"], v["checks"].get("후보_재유도")
+    restore()
+    v0 = IO.validate_provenance(out)
+    assert _fails(v0) == [] and v0["checks"]["후보_재유도"] == "통과", v0["fail"]
+
+
+def test_g81_s03_the_validator_recounts_realized_counts_from_the_rows(tmp_path):
+    """RED (F3): 계획 범위 안에서 조작한 실현 count (한 random 후보를 미시도로 옮김) 가 통과한다 — validator 가 기록을
+    fits 행·후보 map 에서 다시 세어 대조하지 않는다 (계획만 보는 `check_execution_record` 는 정의상 못 잡는다)."""
+    from tests.test_fitting import _tiny_curves
+    in_dir = _tiny_curves(tmp_path / "in")
+    ctx = _v6_context(in_dir)
+    out = _run_v6(tmp_path, "o", ctx, in_dir)
+    rec = json.loads((out / "execution_record.json").read_text(encoding="utf-8"))
+    r = rec["realized"]["by_objective"][OBJS[0]]
+    r["attempted"] -= 1; r["returned"] -= 1; r["not_attempted"] += 1; r["counts_by_source"]["random"] -= 1
+    rec["record_digest"] = PV.digest({k: v for k, v in rec.items() if k != "record_digest"})
+    (out / "execution_record.json").write_bytes(PV.canonical_bytes(rec))
+    assert PV.check_execution_record(rec, ctx["planned"].envelope()) == [], "계획 대조만으로는 이 조작이 보이지 않는다"
+    v = IO.validate_provenance(out)
+    assert "실현_재계산" in v["fail"], v["fail"]
+
+
+def test_g81_s04_provider_consumed_must_be_exactly_the_planned_edges_that_were_used():
+    """RED (F4): `provider_consumed` 는 목록이기만 하면 통과했다 — 계획 edge 와 대조하지 않는다."""
+    p = _planned_v4()                                        # no-provider 계획
+    rec = _record_for(p)
+    for garbage in ([{"consumer_objective": OBJS[1], "provider_objective": OBJS[0], "n_conditions": 1}],
+                    [{"consumer_objective": "없음", "provider_objective": "x", "n_conditions": 999}],
+                    [{"x": 1}]):
+        bad = copy.deepcopy(rec); bad["realized"]["provider_consumed"] = garbage
+        bad["record_digest"] = PV.digest({k: v for k, v in bad.items() if k != "record_digest"})
+        assert PV.check_execution_record(bad, p.envelope()), garbage
+    edge = {"stage": "condition", "arm": "G_C", "consumer_objective": OBJS[1], "provider_objective": OBJS[0],
+            "provider_artifact_sha256": HEX64, "solution_map_sha256": HEX64, "provider_protocol_sha256": HEX64}
+    w = _planned_v4(stages=_stages(arm="G_C", warm_map={OBJS[0]: None, OBJS[1]: OBJS[0]}), edges=[edge])
+    n = w.envelope()["roster"]["n_obs"]
+    ok = _record_for(w)
+    ok["realized"]["provider_consumed"] = [{"consumer_objective": OBJS[1], "provider_objective": OBJS[0], "n_conditions": n}]
+    ok["record_digest"] = PV.digest({k: v for k, v in ok.items() if k != "record_digest"})
+    assert PV.check_execution_record(ok, w.envelope()) == []
+    missing = copy.deepcopy(ok); missing["realized"]["provider_consumed"] = []
+    missing["record_digest"] = PV.digest({k: v for k, v in missing.items() if k != "record_digest"})
+    assert PV.check_execution_record(missing, w.envelope()), "warm 으로 시도했는데 공급 기록이 없다"
+
+
+def test_g81_s05_the_map_protocol_sha_is_recomputed_from_the_provider_run_spec(tmp_path):
+    """RED (F5): protocol sha 를 호출자 인자로 받아 그대로 봉인했다 — 고정 표 C 의 정의(provider run_spec 의
+    canonical_bytes sha256)를 파일에서 다시 재지 않는다."""
+    run = _provider_fits(tmp_path / "a", OBJS[0], {"c1": [1.2, 0.1, 0.9, 0.0]})
+    hdr = F.make_solution_map(run, OBJS[0], tmp_path / "a" / "map.json")
+    assert hdr["provider_protocol_sha256"] == _protocol_sha(run)
+    other = _provider_fits(tmp_path / "b", OBJS[0], {"c1": [1.2, 0.1, 0.9, 0.0]}, run_spec={"sig_version": 6, "note": "다른 protocol"})
+    assert F.make_solution_map(other, OBJS[0], tmp_path / "b" / "map.json")["provider_protocol_sha256"] != hdr["provider_protocol_sha256"]
+    with pytest.raises(TypeError):
+        F.make_solution_map(run, OBJS[0], tmp_path / "a" / "m2.json", provider_protocol_sha256="0" * 64)
+
+
+def _warm_context(in_dir, provider_run, planning_dir, *, budget=2):
+    """provider run(no-provider v6) 의 OBJS[0] 해 → 계획 map → G_C arm 계획 (edge 는 실제 바이트에서)."""
+    planning_dir = Path(planning_dir); planning_dir.mkdir(parents=True, exist_ok=True)
+    map_p = planning_dir / "plan_map.json"
+    hdr = F.make_solution_map(provider_run, OBJS[0], map_p)
+    edge = {"stage": "condition", "arm": "G_C", "consumer_objective": OBJS[1], "provider_objective": OBJS[0],
+            "provider_artifact_sha256": hdr["provider_artifact_sha256"],
+            "solution_map_sha256": hashlib.sha256(map_p.read_bytes()).hexdigest(),
+            "provider_protocol_sha256": hdr["provider_protocol_sha256"]}
+    return _v6_context(in_dir, budget=budget, arm="G_C", warm_map={OBJS[0]: None, OBJS[1]: OBJS[0]},
+                       edges=[edge], provider_runs={OBJS[1]: provider_run})
+
+
+def test_g81_s06_the_warm_supply_path_runs_end_to_end_and_its_x0_is_rederived(tmp_path):
+    """RED (F6): warm 공급 경로 전체(`_stage3_candidates` 의 warm 가지 · provider run 을 가진 run_fit)를 실행하는 시험이
+    0 이었다. 정상 봉인 공급 · warm 필요 자리 누락 → 시작 거부 · 계획 뒤 바뀐 provider → 시작 거부 · warm x0 위조 → validator
+    거부 (81차 N3 닫힘 조건)."""
+    import shutil
+    from tests.test_fitting import _tiny_curves
+    in_dir = _tiny_curves(tmp_path / "in")
+    prov = _run_v6(tmp_path, "provider", _v6_context(in_dir), in_dir)
+    ctx = _warm_context(in_dir, prov, tmp_path / "plan")
+    out = _run_v6(tmp_path, "consumer", ctx, in_dir)
+    env = ctx["planned"].envelope()
+    pf = pd.read_parquet(prov / "fits.parquet")
+    cm = json.loads((out / "candidate_map.json").read_text(encoding="utf-8"))["entries"]
+    warm = [m for m in cm if m["source"] == "warm"]
+    assert warm and {m["objective"] for m in warm} == {OBJS[1]}
+    for m in warm:                                           # warm x0 = provider 의 그 조건 · OBJS[0] 해 (PARAM_NAMES 열)
+        row = pf[(pf["cond_id"] == m["cond_id"]) & (pf["objective"] == OBJS[0])].iloc[0]
+        assert m["x0_sha256"] == DW.x0_sha256(np.array([float(row[c]) for c in F.PARAM_NAMES]))
+    rec = json.loads((out / "execution_record.json").read_text(encoding="utf-8"))
+    assert rec["realized"]["provider_consumed"] == [{"consumer_objective": OBJS[1], "provider_objective": OBJS[0],
+                                                     "n_conditions": env["roster"]["n_obs"]}]
+    sealed = out / "_inputs" / "provider_maps" / f"{OBJS[1]}.solution_map.json"
+    assert hashlib.sha256(sealed.read_bytes()).hexdigest() == env["provider_edges"][0]["solution_map_sha256"]
+    fits = pd.read_parquet(out / "fits.parquet")
+    assert set(fits[fits["objective"] == OBJS[1]]["warm_started"]) == {True}
+    assert set(fits[fits["objective"] == OBJS[0]]["warm_started"]) == {False}
+    v = IO.validate_provenance(out)
+    assert _fails(v) == [], v["fail"]
+    assert v["checks"]["후보_재유도"] == "통과" and v["checks"]["실현_재계산"] == "통과"
+    # 음성 ① warm 이 필요한 자리의 provider run 누락 → 시작하지 않는다 (no-warm 전환 금지)
+    with pytest.raises(ValueError, match="provider"):
+        _run_v6(tmp_path, "c_missing", {**ctx, "provider_runs": {}}, in_dir)
+    # 음성 ② 계획 뒤 provider fits 가 바뀌었다 → 다시 만든 map 이 계획 edge 와 다르다 → 시작하지 않는다
+    prov2 = tmp_path / "provider_changed"; shutil.copytree(prov, prov2)
+    pf2 = pd.read_parquet(prov2 / "fits.parquet")
+    pf2.loc[pf2.index[0], F.PARAM_NAMES[0]] = float(pf2.loc[pf2.index[0], F.PARAM_NAMES[0]]) + 1e-6
+    pf2.to_parquet(prov2 / "fits.parquet", index=False)
+    with pytest.raises(ValueError, match="map|sha"):
+        _run_v6(tmp_path, "c_changed", {**ctx, "provider_runs": {OBJS[1]: prov2}}, in_dir)
+    # 음성 ③ consumer 산출의 warm x0 digest 위조 → validator 재유도가 잡는다
+    _rewrite_map_and_record(out, lambda ents: next(m for m in ents if m["source"] == "warm").update(x0_sha256="0" * 64))
+    assert "후보_재유도" in IO.validate_provenance(out)["fail"]
+
+
+def _two_noise_curves(tmp):
+    """같은 물리좌표 (0.02, 0.02, 0.02) 의 noise 0 · 0.001 두 실현 + reference — 실제 producer 형식 (sign_producer).
+
+    producer 검증(`관측_noise_family_완전성`)은 **모든** 물리 family 가 서명된 noise 집합 전체를 갖기를 요구한다 —
+    그래서 reference family 도 두 noise 를 갖는다 (첫 판은 reference 를 noise 0 하나로 두어 실측으로 거부됐다).
+    """
+    from tests.test_fitting import sign_producer
+    x = np.linspace(0.0, 1.0, 48); rows = []
+    for lli, pe, ne, noise in [(0.0, 0.0, 0.0, 0.0), (0.0, 0.0, 0.0, 0.001),
+                               (0.02, 0.02, 0.02, 0.0), (0.02, 0.02, 0.02, 0.001)]:
+        q = 4000.0 * (1.0 - 0.5 * (pe + ne))
+        for xi in x:
+            v_full = 4.2 - 0.9 * xi - 0.3 * pe * xi; v_ne = 0.1 + 0.4 * xi
+            rows.append({"cond_id": f"c_{lli}_{noise}", "x_norm": xi, "v_full": v_full, "v_pe": v_full + v_ne,
+                         "v_ne": v_ne, "q_mah": q, "lli": lli, "lam_pe": pe, "lam_ne": ne, "noise": noise})
+    return sign_producer(tmp, pd.DataFrame(rows))
+
+
+def test_g81_s07_two_noise_realizations_of_one_pair_group_through_the_real_consumption_path(tmp_path):
+    """81차 N1 닫힘 조건 (F7): 같은 pair group 의 두 noise 실현을 실제 소비 경로(run_fit → validate)에 건다.
+
+    기능은 라운드 1 에 있었고 빠졌던 것은 **실제 소비 경로의 fixture** 다 — 처음부터 GREEN 일 수 있는 대조군 (리뷰 §7-4).
+    둘은 pair_group·bank 를 공유하고(noise 는 제외 축) obs_key 로만 갈린다.
+    """
+    from src.grid import Condition
+    in_dir = _two_noise_curves(tmp_path / "in")
+    ctx = _v6_context(in_dir, budget=3)
+    out = _run_v6(tmp_path, "o", ctx, in_dir, n_restarts=3)
+    fits = pd.read_parquet(out / "fits.parquet")
+    pair = fits[fits["lli"] == 0.02]
+    assert pair["cond_id"].nunique() == 2 and set(pair["noise"]) == {0.0, 0.001}
+    assert pair["pair_group_id"].nunique() == 1 and pair["bank_id"].nunique() == 1
+    cm = json.loads((out / "candidate_map.json").read_text(encoding="utf-8"))["entries"]
+    ids = [sorted(m["candidate_id"] for m in cm if m["cond_id"] == c and m["objective"] == OBJS[0] and m["source"] == "random")
+           for c in sorted(pair["cond_id"].unique())]
+    assert ids[0] == ids[1] and ids[0], "같은 bank 행 → 같은 random candidate_id (noise 는 ID 축이 아니다)"
+    cur = pd.read_parquet(in_dir / "curves.parquet")
+    conds = [Condition(float(g["lli"].iloc[0]), float(g["lam_pe"].iloc[0]), float(g["lam_ne"].iloc[0]),
+                       str(g["lam_pe_type"].iloc[0]), str(g["lam_ne_type"].iloc[0]), float(g["noise"].iloc[0]),
+                       int(g["seed"].iloc[0])) for _, g in cur.groupby("cond_id")]
+    roster = DW.roster_from_conditions(conds, design=ctx["design"], comparison_family_id="p22_grid_primary_v6",
+                                       treatment_id="none", replicate_id=0)
+    two = [e for e in roster if e["pair_group_id"] == pair["pair_group_id"].iloc[0]]
+    assert len(two) == 2 and two[0]["obs_key"] != two[1]["obs_key"]
+    v = IO.validate_provenance(out)
+    assert _fails(v) == [], v["fail"]
+
+
+def test_g81_s08_parameter_order_is_the_optimizer_vector_and_the_map_reads_solution_columns(tmp_path):
+    """RED (F11): 설계 parameter_order 가 optimizer 벡터(`PARAM_NAMES`)에 묶이지 않았다 — 5 이름 좌표 order 로도 v6 실행이
+    시작되고, solution map 은 이름이 같은 **truth 열**(lli·lam_pe·lam_ne)을 해로 읽을 수 있었다."""
+    from tests.test_fitting import _tiny_curves
+    in_dir = _tiny_curves(tmp_path / "in")
+    old = DW.canonical_design_spec(
+        label="p22_grid_primary_v6", arms=["G_A", "G_C"], parameter_order=["lli", "lam_pe", "lam_ne", "p_ini_scale", "shift"],
+        bounds_policy="exact_ordered_bounds_digest", objective_plan=OBJS, bank_generator="pcg64", bank_version="v6.0",
+        seed_derivation="H(pair_group_id, bank_version)", dtype="float64", endian="little", coordinate_unit="fraction")
+    with pytest.raises(ValueError, match="parameter_order"):
+        _run_v6(tmp_path, "o", _v6_context(in_dir, design=old), in_dir)
+    run = _provider_fits(tmp_path / "p", OBJS[0], {"c1": [1.2, 0.1, 0.9, 0.0]})      # truth 열은 0.5 (미끼)
+    hdr = F.make_solution_map(run, OBJS[0], tmp_path / "p" / "map.json")
+    assert hdr["parameter_order"] == list(F.PARAM_NAMES)
+    doc = json.loads((tmp_path / "p" / "map.json").read_text(encoding="utf-8"))
+    assert [float(v) for v in doc["entries"]["c1"]["p"]] == [1.2, 0.1, 0.9, 0.0], "해 열을 읽어야 한다 — truth 0.5 가 아니다"
+
+
+def test_g81_s09_budgets_are_checked_per_objective_for_v6(tmp_path):
+    """RED (F12): sig 6 산출에도 legacy `restart_예산_완주`(전역 n_restarts) 를 적용해 objective 별 예산(2 · 3)을 거부했다."""
+    from tests.test_fitting import _tiny_curves
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = _run_v6(tmp_path, "o", _v6_context(in_dir, budgets={OBJS[0]: 2, OBJS[1]: 3}), in_dir, n_restarts=3)
+    v = IO.validate_provenance(out)
+    assert _fails(v) == [], v["fail"]
+    assert v["checks"]["restart_예산_완주"] == "통과"
