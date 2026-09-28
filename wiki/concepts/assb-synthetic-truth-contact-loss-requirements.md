@@ -2,10 +2,10 @@
 title: ASSB 합성 truth 의 접촉 손실 요구 — 카드 물음을 truth 단계에서 미리 답하지 않으려면
 description: "Requirements for an ASSB synthetic truth in which contact loss is NOT pre-identified with LAM_PE: a separate capacity-multiplying θ, Li-holding disconnected particles, dead volume that does not become electrolyte, θ-only manipulation, area-proportional double layer, relaxation time as a truth parameter, φ vs u distinction, and θ(N) shape as an explicit assumption"
 created: 2026-09-23
-updated: 2026-09-23
+updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
+sources: [raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -47,7 +47,7 @@ evidenceScope: multi-source-mixed
 | **R3** | **죽은 부피가 전해질이 되지 않는다** — 비연결 입자·void 가 이온 경로로 바뀌지 않게 | 37호 · 56호(검증 구조가 void 14 % 를 SE 로 채움) · 57호 | 56호가 정확히 이것을 위반 |
 | **R4** | **`θ` 에만 반응하는 조작** 을 truth 에 둔다 (압력 되돌림 등) | 37호 · 39호 Sakka (압력이 `φ` ×1.10 · `R_ct` ×14 — 여러 인자를 같이 움직임) · 57호 (바인더 한 손잡이가 경로와 접촉 두 곱을 같이 깎음) · 56호 (`φ` 스윕은 θ-전용 아님) | 실측·모델 모두 **θ-전용 조작 0** — [[assb-pressure-reapplication-separation-test]] 설계 조건 참조 |
 | **R5** | **면적에 비례하는 이중층** `C_dl ∝ A` | 37호 (원형 모델 `c_dl` 은 면적 무관 상수) · 43·48·51호 (여러 호의 `C` 가 이중층 상한을 수백–수천 배 넘음) · 51호 (전자 접촉 호의 `C` 는 비접촉 여집합에 앉을 수 있음) | 곱 축퇴 처방 1단계의 전제 — **검증 없이 가정하면 1단계가 truth 에서 거짓** |
-| **R6** | **OCV 관측의 이완 시간을 truth 파라미터로** 둔다 | 38호 Conforto (1 h 이완 ↔ 자기 `τ=L²/D` 로 13–17 h) | 이완 부족이면 동역학 손실이 질량 채널로 샌다 |
+| **R6** | **OCV 관측의 이완 시간을 truth 파라미터로** 둔다 | 38호 Conforto (1 h 이완 ↔ 자기 `τ=L²/D` 로 13–17 h) · 38호 SI(S3): 방전 뒤도 1 h · 기준 곡선은 **2 h** 휴지 · 충전 가지 · **4.19 V 에서 끝**(high-V 초기 여섯 사이클이 범위 밖) — 게이지 ↔ 눈금의 이완 불일치 · 범위 밖 외삽도 파라미터로 | 이완 부족이면 동역학 손실이 질량 채널로 샌다 |
 | **R7** | **표면 피복 `φ` 와 통째 비연결 `u` 를 별개 변수로** 둔다 | 37호 · 39호 (CT 가 잰 것은 `φ`) · 55호 Hlushkou (void 경로 효과만) · 56호 (`φ` 자리만) | 두 효과를 한 구조에서 같이 계산한 편 0 |
 | **R8** | **`θ(N)` 의 형태를 명시적 가정으로 적는다** — 계단형(첫 충전만) vs 점진형 | 23호 Koerver 원문("contact loss should only occur during the initial charge") ↔ 33·53호가 이것을 **역전 인용** · Barai 2021(원장 ★★★★, 사이클 축 박리 모델 — 미흡수) | ⚠ **미결정** — 두 형태를 다 돌릴지는 사용자 결정 대기(원장 §3-b) |
 

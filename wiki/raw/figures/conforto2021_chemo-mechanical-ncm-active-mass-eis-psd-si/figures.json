@@ -1,0 +1,193 @@
+{
+ "slug": "conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-28",
+ "sources": [
+  "d33c40b3-jesac13d2supp1.pdf"
+ ],
+ "figures": [
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Schematic representation of the mechanisms that can lead to a deviation of spherical diffusion geometry and an increase in length of pathways for lithium diffusion inside NCM. Left: Diffusion paths in the ideal pristine material are straight and homogeneously distributed; middle: Contact loss causes longer diffusion paths from other regions of the surface, right: Cracking causes more tortuous and, thus, longer diffusion paths.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    533.5,
+    241.1
+   ],
+   "w": 1953,
+   "h": 735,
+   "dpi": 300,
+   "src": "d33c40b3-jesac13d2supp1.pdf",
+   "blank": 0.349
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Charge that is transferred during one sine half-wave of the input signal of the EIS measurement in an SSB cell with SC-NCM as CAM. The empty black symbols represent the charge if the amplitude was kept constant at 10 mV, while the filled blue symbols represent the progressively decreasing amplitude (down to 3 mV below 1 mHz) as presently used.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    75.9,
+    533.4,
+    291.3
+   ],
+   "w": 1953,
+   "h": 898,
+   "dpi": 300,
+   "src": "d33c40b3-jesac13d2supp1.pdf",
+   "blank": 0.974
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Schematic representation of the determination of active mass 𝑚act from the measured capacity 𝑄meas and the actual specific capacity 𝑞act. (a) Voc measured after potential relaxation for 1 h subsequent to the galvanostatic charge or discharge of an SSB cell with PC- NCM cycled with the high-V conditions. (b) The number of moles x of lithium in NCM-811 vs. the relaxed Voc of an LEB cell with PC-NCM measured by repeated galvanostatic charging for 2 h with 0.02 C followed by potential relaxation for 2 h. (c) Discharge capacity of the same SSB cell with PC-NCM as shown in (a).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    87.7,
+    533.5,
+    476.9
+   ],
+   "w": 1953,
+   "h": 1623,
+   "dpi": 300,
+   "src": "d33c40b3-jesac13d2supp1.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: EIS data fitted with the equivalent circuit shown in (a) of SSB-cells with PC-NCM in the first cycle at 3.77 V vs. Li+/Li at 60 °C (b) and 25 °C (c). Blue circles represent the data points while the line represents the fit with the red dots being the fitted points at the same frequency as the data points.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    533.5,
+    481.4
+   ],
+   "w": 1953,
+   "h": 1737,
+   "dpi": 300,
+   "src": "d33c40b3-jesac13d2supp1.pdf",
+   "blank": 0.852
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Distribution of particle sizes as determined by fitting the SSB impedance (EIS-PSD) at 60 °C (blue), from particle counting on SEM images (green) or from an analytical centrifuge measurement (brown).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    76.1,
+    533.5,
+    291.8
+   ],
+   "w": 1953,
+   "h": 901,
+   "dpi": 300,
+   "src": "d33c40b3-jesac13d2supp1.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Impedance data and fits of SSB cells with either PC-NCM or SC-NCM as CAM, cycled with low-V or high-V conditions as specified in the main text. Fitting was performed with the equivalent circuit model shown in Figure 7 (a), while equation [5] was used to fit the diffusion tail.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    533.4,
+    258.3
+   ],
+   "w": 1953,
+   "h": 807,
+   "dpi": 300,
+   "src": "d33c40b3-jesac13d2supp1.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: Distribution of pathways for lithium diffusion Ldiff in SC-NCM. The data are shown with error bar for the 1st, 20th and 40th cycle under low-V cycling conditions. The bold line shows the median over 25 different fits and the shaded area indicates the maximum deviation from the median.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    76.0,
+    533.4,
+    294.9
+   ],
+   "w": 1953,
+   "h": 913,
+   "dpi": 300,
+   "src": "d33c40b3-jesac13d2supp1.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: Schematic representation of the calculation of capacity from the distribution of pathway lengths for lithium diffusion in NCM.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.9,
+    530.5,
+    256.5
+   ],
+   "w": 1941,
+   "h": 799,
+   "dpi": 300,
+   "src": "d33c40b3-jesac13d2supp1.pdf",
+   "blank": 0.814
+  },
+  {
+   "key": "fS7m",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7_manual_p8.png",
+   "caption": "Figure S7: Cycle-dependent ionic tortuosities T for lithium diffusion in PC-NCM or SC-NCM, cycled with either low-V or high-V cycling conditions. Calculated via T = L_i/L_1 with L_i and L_1 being the mean value of Ldiff in the i-th cycle and the first cycle, respectively. (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    78.0,
+    76.0,
+    300.0,
+    292.0
+   ],
+   "w": 1234,
+   "h": 1201,
+   "dpi": 400,
+   "src": "d33c40b3-jesac13d2supp1.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 벡터 그림(선 4 개)이라 자동 추출이 영역 없음(⛔)으로 버림. 축 눈금 텍스트 블록 (86–298, 82–286) 을 감싸는 영역을 400 dpi 로 렌더. 수치는 벡터 경로 좌표에서 읽었다"
+  }
+ ]
+}

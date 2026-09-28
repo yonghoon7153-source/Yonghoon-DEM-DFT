@@ -2,10 +2,10 @@
 title: "ASSB 복합양극의 굴곡도 인자 — 측정되는 것은 σ_eff 하나이고 ε·τ² 분할은 가정이 정한다"
 description: "In ASSB composite cathodes the tortuosity factor tau^2 = eps x sigma_bulk / sigma_eff is not measured but obtained by dividing a measured effective conductivity by an assumed phase fraction; the only operando-plus-EIS paper in the lineage shows the same measured conductivities giving opposite tau^2 trends under two eps conventions, reads the mismatch between its EIS and model-fitted values as tortuosity evolution, and by its own definition places point-contact loss inside tau^2"
 created: 2026-09-23
-updated: 2026-09-23
+updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -129,6 +129,7 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - `[재현]` `ε = τ·σ_eff/σ₀` 로 역산하면 조성마다 하나(**0.57 / 0.37 / 0.234 / 0.153**)이고 gran·sc·BM 에 공통 ⇒ **공칭 catholyte 분율**이다. 공극은 측정되지 않았고 **`τ` 로 들어간다** — 저자도 `τ` 를 "geometric and porosity-related effects" 로 부른다(24호 D1 과 달리 규약이 서술과 맞는다).
 - ⚠ sc73-BM 행만 `ε` 0.326 — `τ` 2.6 ↔ 정합값 2.9(같은 행 `φ` 도 불일치, 29호 D4).
 - `τ` 1.5 → 54.2 (한 자릿수 반). 29호는 `τ` 를 결론에 쓰지 않는다(SI Fig. S8 로만) — 병목 판정은 `σ_eff`·`D` 로 한다.
+- ↳ **2026-09-28 29호 SI 보강**(`raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md`): 공칭 `ε` 의 정체가 인쇄됐다 — Tab. S1 SE 부피비(66.20 / 43.50 / 27.80 / 18.10 %) × **(1 − 0.15)**, `[인쇄]` 두께도 "calculated … assuming 15% porosity"(얇아서 못 쟀다고 적었다). `[재현]` 역산 `ε` 가 12/13 셀에서 ±2.2 % 안(sc73-BM −11.9 % = 29호 D4 그대로). ⇒ `σ_eff ∝ L ∝ 1/(1−p)` · `ε ∝ (1−p)` 라 **`τ ∝ (1−p)²`** — 공극을 5 · 25 % 로 바꾸면 `τ` ×1.25 · ×0.78. 이 표본의 `τ` 는 **공극 가정의 제곱**을 품는다(측정 `σ_eff` 에 가정 두께 — 24호 · 25호 · 27호와 다른 규약). SI Fig. S8 의 `τ` · `φ` 는 Table I 값 그대로다.
 
 ## ★★★ 다섯 번째 표본 — 굴곡도를 **구조로 계산**해 곱을 풀고, 남은 합은 입력으로 닫았다 (2026-09-23, `assb` 54호)
 

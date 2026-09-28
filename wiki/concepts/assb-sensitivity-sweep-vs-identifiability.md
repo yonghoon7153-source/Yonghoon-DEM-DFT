@@ -2,10 +2,10 @@
 title: "ASSB 모델 논문의 '민감도 분석' — OAT 스윕은 야코비안의 열이고, 겹쳐 보면 비식별 방향이 보인다"
 description: "In the ASSB modelling literature 'sensitivity analysis' means one-at-a-time parameter sweeps of a forward model against design KPIs, not identifiability analysis; when a paper prints both a parameter fit and such sweeps, overlaying the sweep figures exposes parallel or null Jacobian columns, and the first such paper shows a fitted parameter that drifted ten orders of magnitude along a direction its own sweep had found flat"
 created: 2026-09-23
-updated: 2026-09-23
+updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -124,6 +124,19 @@ evidenceScope: multi-source-primary
 **Q4 는 ASSB 첫 반 칸(0/28 → 0.5).** 이 페이지 표의 둘째 줄 정의("`J` 의 열이 평행하거나 0 이면 비식별 **후보** — 절반")와 같은 무게로 셌다.
 ⇒ **세 줄 표에 더하는 것**: 둘째 줄은 "후보" 로만 남는 것이 아니라 **적합 소프트웨어가 기본으로 내놓는 dependency/상관 행렬**로 수치가 된다 — 추정 논문이 그 표를 SI 에 싣는지 먼저 본다(처방 8).
 
+### ↳ 29호 SI 보강 (2026-09-28) — 둘째 줄의 수치를 봤다
+
+`raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md` (SI 6 쪽 — Tab. S2 · 그림 S1–S8).
+
+| 물음 | SI 뒤 |
+|---|---|
+| 값 | `[인쇄]` 14 셀 × (`Q_M` · `α` · `n`) 값과 dependency. **0.95 를 넘는 셀은 셋** — sc90 0.998 / 0.998 / 0.885 · sc90-BM 0.976 / 0.962 / 0.830 · **sc84 0.973 / 0.957 / 0.832**(`Q_M` / `α` / `n`) — 본문이 경고한 것은 sc90 하나. 넷째 gran90 0.82 / 0.73 / 0.54, 나머지 `Q_M` 0.14–0.56. **표준오차 · CI 0** |
+| 무엇을 쟀나 | `[재현]` 창 끝(0.02 C)에서 적합 곡선이 `Q_M` 에 닿은 정도(`Q(R_min)/Q_M`)와 `Q_M` dependency 의 Spearman **ρ = −0.991** — 진단은 **측정 창(설계)의 성질**을 잰다. 3-파라미터 야코비안 모사(설계 가정 넷)는 순위를 재현(0.965–0.991), 절대값은 못 한다(표본 배치 · 가중 미기재) |
+| 진단이 옳았나 | `[도표]`+`[재현]` 경고 수준인데 본문이 경고하지 않은 두 셀의 `Q_M`(sc84 236 · sc90-BM 179–205)이 **자기 형성 첫 CCCV 충전(Fig. S6, ≈209 · ≈158 mAh g⁻¹)을 넘는다** — 방전이 돌려줄 수 있는 Li 의 상한 밖. dependency 가 낮은 11 셀은 상한 안 |
+| 약점 | 국소 · 폭 0 · 축이 정적 ↔ 동적 — **그대로**. 그리고 같은 셀의 파라미터가 Tab. S2 · Fig. 4 · Fig. S7 에서 다르다(sc84-BM `α` ×1.9 · sc90-BM 세 값) |
+
+⇒ **Q4 반 칸 확정**(반 칸 이유 ① 해소 · ④ 강화) — 누적 변화 0. 이 페이지 세 줄 표에 더하는 것: **둘째 줄 진단은 "창 끝에서 곡선이 얼마나 굽었나" 를 잰다** — 같은 곡선 모양이면 창을 더 낮은 율까지 넓히는 것이 진단을 바꾸는 손잡이다. 그리고 1 에 붙은 값은 **물리 상한(그 셀의 충전 전하 · 재고)** 으로 교차 검사할 수 있다(처방 8 덧붙임).
+
 ## ★★ 30호 — 세 줄 어디에도 없는 편: 교과서 선형화 추출
 
 `raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md` (Park 2024, *Materials* 17, 5014 — LATP 펠릿 Li 금속 셀, 주사율 CV).
@@ -229,7 +242,7 @@ evidenceScope: multi-source-primary
 6. (27호) **모델 비교 논문의 "상수 차이 = 보정 가능" 은 구조 오차가 파라미터로 흡수되는 자리다.** 그 상수의 크기를 **알려진 구조량**(연결 분율 `1 − u` 등)과 대조한다.
 7. (28호) **식별성을 한 논문이면 식별 집합의 목록을 먼저 적는다.** 용량 스케일(`Q_th`) · 정렬(`x⁰`) · OCV 곡선이 **입력**이면 그 논문은 모드 분해의 유일성을 말하지 않는다.
    그리고 사후 보정 손잡이(28호 ×0.78)가 **어느 묶음**에 걸리는지 본다 — 식별 집합에서 뺀 축이면 그 보정이 그 축의 추정이다.
-8. (29호) **적합 논문이면 파라미터 dependency/상관 행렬을 SI 에서 찾는다** — 둘째 줄의 수치다. 찾았으면 **진단이 경고한 셀이 결론에 쓰였는지** 추적한다(29호는 sc90 을 빼고 같은 문제의 sc84 로 결론을 냈다).
+8. (29호) **적합 논문이면 파라미터 dependency/상관 행렬을 SI 에서 찾는다** — 둘째 줄의 수치다. 찾았으면 **진단이 경고한 셀이 결론에 쓰였는지** 추적한다(29호는 sc90 을 빼고 같은 문제의 sc84 로 결론을 냈다). (29호 SI 보강) 찾으면 ① 전 셀을 전사해 **본문이 경고한 셀 수와 대조**하고 ② 1 에 붙은 파라미터를 **그 셀의 물리 상한**(충전 전하 · Li 재고)과 대조하고 ③ **표 ↔ 그림 값**이 같은지 본다 — 29호는 ① 1 ↔ 3 ② 두 셀 상한 밖 ③ 두 셀 불일치.
 9. (30호) **교과서 선형화 추출(b 값 · Randles–Ševčík · Dunn)이면 식별성 이전에 두 가지를 본다** — ① 같은 데이터가 식의 전제(b = 0.5 · 원점 통과)를 만족하는가 ② 인쇄된 값과 **라벨**(산화/환원 · 계)이 그 논문 자기 그림에서 다시 구한 값과 맞는가. 30호는 ② 에서 뒤집혀 있었다.
 10. (35호) **"calibrated uncertainty" · "confidence interval" 을 보면 대상이 예측(스칼라 목표의 오차)인지 파라미터(해 집합)인지 먼저 적는다.** 예측이면 Q4 근거가 아니다. 그리고 적중률 점수(`C_score`)는 **목표와의 거리**로 읽는다 — 90 % 목표에서 100 은 과소 확신이다. 이름도 대조한다: "α-accuracy · β"(예측 지표) ≠ 우리 α·β(전극 스케일 · 오프셋).
 11. (36호) **"posterior" · "parameter uncertainty" · "epistemic" 을 보면 ① 무엇의 파라미터인지(물리 ↔ ML 가중치) ② 데이터를 늘리면 줄어드는 폭인지(실제적) 아닌지(구조적) ③ 공분산을 보고했는지(평균장 근사면 상관이 지워진다)를 적는다.** 셋 다 아니면 Q4 근거가 아니다.
@@ -246,6 +259,7 @@ evidenceScope: multi-source-primary
 - **35호의 보정된 구간이 쓸모없다고 하지 않는다** — 스칼라 SOH 를 운용하는 데는 이 계보에서 가장 정직한 불확실성 보고다. 주장은 **그것이 파라미터 식별성과 다른 물음에 답한다**는 것까지다.
 - **36호의 분류가 틀렸다고 하지 않는다** — aleatory/epistemic 은 예측 불확실성을 나누는 표준 분류이고 그 목적에는 맞다. 주장은 **그 분류에 데이터량 불변의 파라미터 폭이 들어갈 칸이 없다**는 것까지이며, 분류 원전(Der Kiureghian 2009)이 그 자리를 어떻게 두는지는 미확인이다.
 - **49호의 "대역 끝 흡수" 를 일반 정리로 주장하지 않는다** — 한 셀(평탄한 스펙트럼)에서 두 사례가 맞은 것이다. 가파른 호가 대역 끝에 걸리면 적합 직렬 R 과 끝점 \|Z\| 는 다를 수 있다.
+- **29호 SI 의 dependency 절대값을 재현했다고 하지 않는다** — 순위만 재현했다(표본 배치 · 가중 미기재, OriginPro 정의식은 이 세션에서 원문 미확인). 그리고 **"창 끝 도달률이 dependency 를 정한다" 를 일반 법칙으로 주장하지 않는다** — 식 (2) 한 모형 · 14 셀의 순위 일치다.
 
 ## 관련
 

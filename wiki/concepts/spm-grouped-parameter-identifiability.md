@@ -2,10 +2,10 @@
 title: "SPM 파라미터 묶음과 식별 집합 — 용량 스케일은 입력이고, LAM 과 입자 비연결은 같은 묶음에 든다"
 description: "Bizeray et al. 2019 reduce the single particle model to six parameter groups and, after linearisation, to three identifiable ones (two diffusion time constants and a lumped charge-transfer resistance); electrode capacity and initial stoichiometry - the degradation-mode axes - are assumed known through measured OCV slopes, so in this model class whole-particle disconnection enters exactly like active material loss and partial contact loss disappears into a lumped resistance"
 created: 2026-09-23
-updated: 2026-09-23
+updated: 2026-09-28
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/miss2022_exchange-current-density-tlm-thickness-lco-nmc-assb.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md]
+sources: [raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si.md, raw/papers/miss2022_exchange-current-density-tlm-thickness-lco-nmc-assb.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -59,6 +59,7 @@ evidenceScope: multi-source-primary
 | 29호 Yanev 2024 (ASSB 실험) | GITT `D_app` (식 3, `A` = BET) | `D_app ∝ 1/A²` 라 데이터가 보는 것은 `D·(A_eff/V)²` = **`1/τ_d`**(`L = V/A`). 29호는 **`D_LIB` 수입**으로 `D` 와 면적을 쪼개 "피복률 `φ`" 를 만든다 — 묶음을 푸는 것은 가정이다 |
 | 29호 | 율 곡선 `Q_M` ↔ `α` | `Q_M` 은 `Q_th` 자리(용량 스케일)를 **적합**했다. 저율 평탄이 창 밖이면 `Q_M·α⁻ⁿ` 한 조합 — `[인쇄]` dependency ≈1. 28호의 비식별 조건(`β = 0`)과 같은 부류: **여기(excitation)가 그 방향을 안 건드린다** |
 | 29호 | 표면 피복 `φ` | 이 표의 "표면 일부 접촉 → `R_ct`" 를 29호는 **확산 묶음의 면적**으로 읽는다 — 같은 물리량이 모델에 따라 다른 묶음에 배정된다 |
+| 29호 SI 보강 (2026-09-28) | Tab. S2 dependency · S3 입도 · S6 형성 | `[인쇄]` `Q_M`–`α` dependency ≥0.95 는 sc90 · sc84 · sc90-BM — `[재현]` 순위는 창 끝 평탄 도달률과 ρ −0.991: 위 행 **"여기(excitation)가 그 방향을 안 건드린다" 의 실측 수치판**. 1 에 붙은 두 `Q_M`(sc84 · sc90-BM)은 자기 형성 첫 충전을 넘는다(용량 스케일 칸의 **물리 상한 검사**). `τ_d` 묶음을 쪼갠 면적 입력은 BET ↔ 구 면적(S3, ×1.65–4.3) 선택만으로 `D` 를 ×2.7–18 움직인다 |
 | 30호 Park 2024 (ASSB 실험, LATP 펠릿) | CV Randles–Ševčík `D` | 기울기 `I_p/ν^½ ∝ A·C·√D` ⇒ `D_app ∝ 1/(A·C)²` — 29호 GITT 와 **같은 `τ_d` 부류 묶음의 CV 판**. `A`·`C_Li` 미인쇄라 재현되는 것은 방향 간 비뿐(`[재현]` 기울기 비² 1.94 ↔ 인쇄 1.97). 액체 대비 10.9 배를 **전부 `D`** 에 배정 — 29호(면적에 배정)와 **반대 방향으로 같은 묶음을 쪼갰다** |
 | 30호 | Dunn `k₁ν + k₂ν^½` | 용량성/확산 비 `∝ c_s/(C√D)` — **면적이 약분되는 조합**(이 표의 `R_ct·C_dl` 류). 묶음을 푸는 도구가 아니라 묶음 **밖**의 비교 축 후보 |
 | 31호 Chien 2023 (⚠ 액체, ICI 방법 원전) | ICI `D` (식 19, `A` = BET 상수) | 관측 비 `k·I/(dE_OC/dt) ∝ (V/A)/√D` = **`1/√τ_d` 묶음 그 자체**(`L = V/A`). GITT 와 같은 묶음을 1–5 s 차단창에서 본다 — 묶음을 푸는 것은 **상수 입력**이고 저자가 그것을 고지(`[인쇄]` "BET … may differ from the electrochemically active surface area") |
@@ -68,6 +69,7 @@ evidenceScope: multi-source-primary
 | 37호 | `R_s` ("Measured with SEM" 9.315 µm ↔ SI SEM ≈0.5–1.5 µm) | 확산에서는 `τ_d = R_s²/D_p`, 동역학에서는 `k·ε/R_s` 로만 보인다 ⇒ `D_p` · `k_p` 를 PSO 로 풀면 **틀린 `R_s` 를 둘이 흡수**하고 적합은 안 깨진다. 이 표의 묶음이 "반경 오기 검출 불가" 를 예측한다 |
 | 38호 Conforto 2021 (ASSB 실험, NCM811 PC/SC · In/InLi, 40 사이클) | 이완 OCP 두 점 활성 질량 `m_act = ΔQ/(Δx·q)` | 이 표의 **용량 스케일(`Q_th` 자리)을 측정**했다 — 평탄 상대극이라 음극 곡선 · 오프셋이 없어 두 점으로 정해진다. 그러나 `[인쇄]` "disconnected … cannot contribute to the OCP … inactive" ⇒ 이 표 "입자 통째 비연결 → `Q_th`" 행 그대로 **`ε`·`θ` 한 묶음**. 이완 1 h 가 `τ_d` 보다 짧으면(`[재현]` PC 후반 ≈13–17 h) `τ_d` 묶음이 이 값으로 샌다(`[추론]`) |
 | 38호 | EIS-PSD 유한공간 꼬리 `L_diff`(원통 앙상블, 빈 16 개) | 빈마다 `τ_d = L²/D̃` 묶음 — `L` 은 `D̃`(신품 Warburg + BET 면적) 고정으로만 나온다. 반무한 영역(`ωτ ≫ 1`, 저자 한계 `√(D̃/f_min)` = 1.8 µm @ 25 °C 밖)에서는 `L/(C_diff√D̃)` 하나 — `C_diff` 를 위 행(OCP 질량)에서 **고정 입력**으로 받아 두 행이 곱으로 묶인다. 용량성 극한에 닿으면 `C_diff` 단독이 위 행의 **독립 교차 검사**(이 편은 안 닿았다) |
+| 38호 SI 보강 (2026-09-28) | S3 기준 곡선 · S8 다중 시작 · S2 | 용량 스케일 행의 게이지 눈금(액체 PC-NCM · 충전 가지 · 2 h 휴지)은 **4.19 V 에서 끝** — high-V 초기 사이클은 외삽이고, S3 재료로 Fig. 6 은 N ≥ 20 만 재현된다. 기준 곡선의 3.77 V 기울기(≈0.53 V)가 `C_diff/m` 520 을 준다(`[재현]`). `τ_d` 묶음 행의 폭: SC low-V N40 `L_diff,50` 1.70–3.84 µm(25 적합, PC 0). S2 — **SC 셀도** 0.6 mHz 에서 용량성 극한 밖 ⇒ 위 행의 독립 교차 검사는 SC 에서도 없다 |
 | 50호 Miß 2022 (ASSB 실험, LCO · NMC83 \| LPSI \| In, TLM 두께 4 점) | TLM 두 극한 | `[해석]` 계면은 `Z_loc/(a_v d)` 로만 보인다 ⇒ 얇은 쪽 `j₀·a_v`(= `k·A_eff` 자리, 이 표 `τ_k` 묶음) · 두꺼운 극한 `j₀·a_v/τ`(수송 τ 와 한 묶음). NMC 는 두께가 전이를 가로질러 두 묶음이 갈리고, LCO 는 네 두께 전부 두꺼운 극한이라 한 묶음만 — 두께 스윕이 이 표의 "여기(excitation)" 역할을 할 때와 못 할 때 |
 | 50호 | 면적 규약 `a_v·τd → a_v·d` | `[재현]` `(j₀, Q_DL, dU/dc) → (j₀/s, Q_DL/s, s·dU/dc)` 정확한 재척도 — 저주파 화학 용량 `F·ε·d/\|dU/dc\|` 는 이 표 `β = dU/dQ` 입력 자리(원전처럼 OCV 기울기로 고정하면 s 가 선다). 50호는 `dU/dc` 를 가변으로 두어(시작 대비 ×1.31 · ×1.07) 닻을 반쯤 풀었다. 용량성 극한 밖(반무한)이면 위 38호 행과 같은 `√D` 곱으로 약해진다 |
 

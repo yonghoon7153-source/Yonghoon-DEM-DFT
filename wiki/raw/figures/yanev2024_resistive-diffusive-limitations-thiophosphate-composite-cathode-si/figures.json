@@ -1,0 +1,217 @@
+{
+ "slug": "yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-28",
+ "sources": [
+  "a63f7865-jesad47d7supp1.pdf"
+ ],
+ "figures": [
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2 FESEM images of granulated NCM811 (gran), single crystalline NCM811 (sc), LPSCl electrolyte, and ball-milled LPSCl electrolyte (LPSCl-BM) at various magnifications between 500 and 10000.",
+   "rotated_deg": 0,
+   "bbox": [
+    53.8,
+    64.9,
+    544.5,
+    523.8
+   ],
+   "w": 2045,
+   "h": 1913,
+   "dpi": 300,
+   "src": "a63f7865-jesad47d7supp1.pdf",
+   "blank": 0.11
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3 Particle size distribution measurement for polycrystalline granulated (gran) and single crystal (sc) NCM811 measured via laser diffraction on a Masterziser 2000.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    541.9,
+    271.2
+   ],
+   "w": 1988,
+   "h": 861,
+   "dpi": 300,
+   "src": "a63f7865-jesad47d7supp1.pdf",
+   "blank": 0.97
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4 Cell scheme and impedance measurement of pure NCM811 AM in ion-blocking conditions at 30°C. The sample thickness was measured with a caliper and the measured value and electronic resistance were used to calculate the electronic conducitivity: 15.7 mS cm-1 (gran) and 14.5 mS cm-1 (sc)",
+   "rotated_deg": 0,
+   "bbox": [
+    46.6,
+    296.6,
+    553.8,
+    509.9
+   ],
+   "w": 2114,
+   "h": 890,
+   "dpi": 300,
+   "src": "a63f7865-jesad47d7supp1.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5 Cell scheme, impedance measurements and circuit model of the bulk ionic conductivity of LSPCl and LPSCl-BM SE at 30°C. The sample thickness was measured with a caliper and the measured value was used to calculate the ionic conducitivity: 3.13 mS cm-1 (LPSCl) and 1.62 mS cm-1 (LPSCl-BM).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    546.5,
+    563.5,
+    751.9
+   ],
+   "w": 2155,
+   "h": 856,
+   "dpi": 300,
+   "src": "a63f7865-jesad47d7supp1.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 5,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6 Initial formation cycles for the studied cathodes, measured via a constant-current constant-voltage (CCCV) protocol at 30°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.8,
+    64.8,
+    554.2,
+    272.9
+   ],
+   "w": 2078,
+   "h": 868,
+   "dpi": 300,
+   "src": "a63f7865-jesad47d7supp1.pdf",
+   "blank": 0.82
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 5,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7 Capacity vs discharge rate R data and corresponding fits to Eq. 2 (main text) for the gran-BM, sc and sc-BM cathodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.4,
+    285.9,
+    553.8,
+    655.5
+   ],
+   "w": 2115,
+   "h": 1541,
+   "dpi": 300,
+   "src": "a63f7865-jesad47d7supp1.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 6,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8 Ionic tortuosity 𝜏 (left) and relative surface coverage 𝜑 (right) for the studied composite cathodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    65.1,
+    502.0,
+    238.0
+   ],
+   "w": 1822,
+   "h": 721,
+   "dpi": 300,
+   "src": "a63f7865-jesad47d7supp1.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "fS1m",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1_manual_p2.png",
+   "caption": "Fig. S1 a) Examples for impedance measurements for the determination of the effective ionic conductivity of the cathodes. b) Scheme of the cathode symmetric cell. c) TLM circuit model used to fit the cathode impedance. The image was adapted from the TLM model builder of the RelaxIS software (rhd Instruments). (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    68.9,
+    91.3,
+    531.5,
+    260.5
+   ],
+   "w": 1928,
+   "h": 706,
+   "dpi": 300,
+   "src": "a63f7865-jesad47d7supp1.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 자동 추출이 2 쪽 캡션('Fig. S1 a) …')을 잡지 못해 누락. 래스터 xref 39(1495×538)의 bbox (70.85, 93.34, 529.5, 258.49) + 여백 2 pt 로 렌더"
+  },
+  {
+   "key": "tS1m",
+   "kind": "table",
+   "label": "S1",
+   "page": 1,
+   "file": "tab_S1_manual_p1.png",
+   "caption": "Tab. S1 Mass and volume ratios of the studied composite cathodes with NCM811 AM, LPSCl or LPSCl-BM SE, and VGCF conductive additive. … (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    69.0,
+    168.0,
+    538.0,
+    392.0
+   ],
+   "w": 1955,
+   "h": 934,
+   "dpi": 300,
+   "src": "a63f7865-jesad47d7supp1.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 표 캡션 'Tab. S1'(자동 추출은 'Table' 형만 잡는다)을 놓쳐 누락. 텍스트 층 블록 (71, 172)–(535, 388) + 여백으로 렌더. 값은 텍스트 층에서 전사"
+  },
+  {
+   "key": "tS2m",
+   "kind": "table",
+   "label": "S2",
+   "page": 1,
+   "file": "tab_S2_manual_p1.png",
+   "caption": "Tab. S2 Fit parameter values and dependencies for the studied composite cathodes. Dependency values approaching unity means that the fit parameters are intertwined, meaning that they cannot be fitted independetly from each other with reasonable accuracy. (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    69.0,
+    418.0,
+    531.0,
+    703.0
+   ],
+   "w": 1926,
+   "h": 1189,
+   "dpi": 300,
+   "src": "a63f7865-jesad47d7supp1.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 표 캡션 'Tab. S2' 를 자동 추출이 놓쳐 누락. 텍스트 층 블록 (71, 422)–(526, 699) + 여백으로 렌더. 값은 텍스트 층에서 전사하고 이 렌더로 열 배정을 확인"
+  }
+ ]
+}
