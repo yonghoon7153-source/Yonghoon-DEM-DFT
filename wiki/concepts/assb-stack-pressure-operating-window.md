@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -634,7 +634,7 @@ NCM811–Li₆PS₅Cl 복합양극을 **SE 입도만** 바꿔(coarse ↔ fine) *
 
 ### 3. ★★ `[해석]` 사이클당 압력 진동 ≈ 요구치 — 운전 압력은 상수가 아니다
 
-33호에 재수록된 정변위 지그 원자료(`[도표]`): 흑연 ± LGPS [59] ≈0.7–0.8 MPa · μ-Si ‖ LTO [88] ≈0.5–1.0 MPa(기저 ≈45) · Sb ‖ Li [90] ≈1.2–2.3 MPa(기저 ≈20) ↔ LCO/NCM 양극 [58] ≈0.05–0.07 MPa · 스프링(정압) 지그 [19] ≈5 → 5.21 MPa(+4 %). ⇒ **상대극 호흡의 ΔP 가 요구치(≤2 MPa)와 같은 자릿수**다 — 산업 조건에서 스택 압력은 사이클 안에서 ≈100 % 움직이는 **상태변수**(8호 "coupled state/control variable" 의 숫자판). §"세 개의 결과" 3 의 `P↑` 연산자에 **"양극에 걸리는 압력 = 지그 + 상대극 ΔP(SOC)"** 조건이 붙는다. ⚠ 기저가 고압(20–45 MPa)이라 저압 기저의 진동 크기는 미상.
+33호에 재수록된 정변위 지그 원자료(`[도표]`): 흑연 ± LGPS [59] ≈0.7–0.8 MPa · μ-Si ‖ LTO [88] ≈0.5–1.0 MPa(기저 ≈45) · Sb ‖ Li [90] ≈1.2–2.3 MPa(기저 ≈20) ↔ LCO/NCM 양극 [58] ≈0.05–0.07 MPa · 스프링(정압) 지그 [19] ≈5 → 5.21 MPa(+4 %). ⇒ **상대극 호흡의 ΔP 가 요구치(≤2 MPa)와 같은 자릿수**다 — 산업 조건에서 스택 압력은 사이클 안에서 ≈100 % 움직이는 **상태변수**(8호 "coupled state/control variable" 의 숫자판). §"세 개의 결과" 3 의 `P↑` 연산자에 **"양극에 걸리는 압력 = 지그 + 상대극 ΔP(SOC)"** 조건이 붙는다. ⚠ 기저가 고압(20–45 MPa)이라 저압 기저의 진동 크기는 미상. (→ 2026-09-28 62호: **이 관찰의 원형 표본** — In ‖ LCO 충전 ΔP 원시 +1.0–1.13 · 보정 1.25 MPa ↔ LTO ‖ LCO ≈0.067 MPa(상대극 몫 `[재현]` ≈90–95 %), 기저 ≈61.8 MPa 는 역시 ESI 그림 축에만. 크기는 기저선 규약 · 지그 순응이 정한다 — [[assb-operando-pressure-signal-attribution]] · 62호 절.)
 
 ### 4. 이 편이 이 페이지에 **안 준 것**
 
@@ -877,6 +877,39 @@ S3: Li₂₁Si₅ 분말 100 → 700 MPa 냉간압착에서 면저항 **4.71 · 
 
 셀 · SE · 계면 저항 · `θ(P)` · 이력 · 온도 의존(`Qc` 0) · 반복 하중 · 접착 계수 · 도금 Li. **창의 값은 하나도 움직이지 않았다** — 움직인 것은 §정의의 기구 문장(정정)과 값들의 **눈금**이다.
 
+## ★★ 2026-09-28 (`assb` 62호 Zhang W. 2017, **실험 · In ‖ LGPS ‖ LCO + LTO 대조 · in situ 압력 · 운전 기저 ≈62 MPa**) — **운전 중 압력 변화의 첫 실측은 창의 값을 주지 않는다: 운전 압력은 본문에 없고, ΔP 는 기저선 · 지그 · 음극이 정한다**
+
+`raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md` (*J. Mater. Chem. A* 5, 9929–9936, JLU Giessen(Zeier · Janek) + HZB — 22호 ref 18 · 23호 ref 40 · 33호 [89] · 59호 ref 23, **3차 묶음 파일 24**).
+신호의 분해(음극 지배 · 강성 곱 · 기저선 규약)는 [[assb-operando-pressure-signal-attribution]].
+
+### 1. 요구치 — 인쇄 0
+
+- `[인쇄]` "external confinement is of paramount importance in preventing cell bending and maintaining cathode/SE contact" — 값 0. 본문 `MPa` **1 회**("1.25 MPa" — ΔP) · `stack pressure` **0**. ⇒ 요구치 띠(여덟 편 · 0.1–5 MPa) · 확인된 원전 0 **그대로**.
+
+### 2. ★★★ 운전 압력 — 창의 표본으로 쓸 수 없는 이유
+
+- 운전 기저는 `[도표]` ESI S7 세로축 **≈61.8 MPa**(61.83 → 60.63 MPa / 110 h)에만 있다 — 본문 0. 같은 연구망 22호(55 MPa) · 23호(≈70 / 64 MPa)와 같은 자릿수다. 조립은 3.5 t · 1.5 t(`[재현]` ∅10 mm 로 437 · 187 MPa) ·
+  CT/XRD 펠릿은 등방 4000 bar.
+- 무가압 대조(딜라토미터 · X-CT)는 **다른 셀**이다 — 이용률 `[재현]` ≈8 %(무가압, 11.4 mAh g⁻¹) ↔ ≈85 %(≈62 MPa, 116.7 mAh g⁻¹) 는 SE 두께 · In 지름 · 전류(28 ↔ 146 µA cm⁻²) · 장치가 같이 바뀐 대조다 —
+  창의 아래 벽 표본으로 옮기지 않는다.
+
+### 3. ★★★ §압력 진동의 원형 — 그러나 크기는 셀의 성질이 아니다
+
+- In ‖ LCO: 원시 충전 상승 `[도표]` +1.07 → +1.13(0.1 C) · +1.00–1.05(0.25 C) MPa · 보정 1.25(인쇄) ↔ LTO ‖ LCO ≈0.067 ⇒ 상대극 몫 `[재현]` ≈90–95 %. 33호 재수록 표본(상대극 ≈0.5–2.3 · 양극 ≈0.05–0.07 MPa)과 같은
+  그림 — 그리고 같은 관행(기저는 본문에 없다).
+- `[재현]` ΔP 를 셀 탄성만으로 내려면 유효 길이 ≈22–36 mm(인쇄 SE 탄성률 18–25 GPa · ESI ⅓ 규칙 두께) ⇒ 크기는 지그 순응 · 공극 압밀이 정한다 — 60호 S14(+1.51 @ 0.8 MPa)와 **같은 눈금이 아니다**.
+- 원시 기저 표류 **−1.2 MPa / 110 h**(한 사이클 진폭과 같은 크기) — 시간당 ≈0.02 → 0.009 MPa h⁻¹ 로 준다. §이력(5호)과 같은 종류의 경로 의존이 **운전 중에** 있다는 표본 — 원인(압밀 · In 흐름 · 장치 이완)은
+  가를 대조가 없다. 이 편은 방전 말 골을 잇는 기저선을 빼 이 표류를 그림에서 지웠다.
+
+### 4. 61호 눈금으로
+
+- 기저 ≈61.8 MPa = Li 항복(0.73–0.81)의 ≈80× · σ/G ≈2.2×10⁻²(breakdown 영역) — 이 셀은 In 이라 Li 눈금 밖이다. 이 편의 "Li 금속이면 ≈2.2 µm" 는 ⅓ 규칙을 평면 석출에 곱한 값(`[재현]` 6.7–9.4 µm).
+
+### 5. 이 편이 이 페이지에 **안 준 것**
+
+요구치 · 운전 압력 값(본문) · 지그 강성 · 기저선 정의 · 압력 스윕 · 압력 → 용량(구속 셀 1 점 — 무가압 셀은 다른 셀) · 셀 수. **창의 값은 하나도 움직이지 않았다** — 움직인 것은 §압력 진동의 원형 표본과,
+ΔP 를 옮길 때 붙일 단서 셋(**기저 · 구속 형식 · 기저선 규약**)이다.
+
 ## 경고 (전부 원문이 준 한계에서 나온다)
 
 1. **점당 셀 1 개, 오차 막대 0.** 압력–수명 6 점 전부 N=1 이다.
@@ -919,6 +952,7 @@ S3: Li₂₁Si₅ 분말 100 → 700 MPa 냉간압착에서 면저항 **4.71 · 
   다른 그림에서 "severe cracking" 이라 부른다 (5호 digest D6).
 - **60호의 "외압 0" 을 "압력 0" 으로 옮기지 않는다** (2026-09-28) — 프레임을 뺐다는 것까지이고, 운전 중 구속(정하중/정변위)은 인쇄돼 있지 않다; 같은 편의 정변위 지그는 첫 충전에 +1.51 MPa 를 보였다. 그리고 **Table S2 의 문헌 압력 13 값을 창의 표본으로 쓰지 않는다** — 계측 방식 · 사이클 정의 규약이 없다.
 - **61호의 멱법칙 외삽값(1 % 변형 시간)을 셀의 값으로 옮기지 않는다** (2026-09-28) — 벌크 인장 · AR 4 · 실온 · 단조 하중의 외삽이고, 0.28 MPa 아래는 하한 · 2.83 MPa 위는 무효다. 그리고 **"Li 가 항복을 넘어 creep 한다" 를 다시 쓰지 않는다** — 원전은 creep 을 항복 아래에서 쟀다(§61호 3). 61호의 압축 값(0.8–2.4 MPa)은 응력 순서가 역전된 장치 값이라 위 벽의 정량에 쓰지 않는다.
+- **62호의 ΔP(1.25 MPa)를 운전 압력 요구치나 창의 표본으로 옮기지 않는다** (2026-09-28) — ≈61.8 MPa 기저(ESI 그림 축) 위 · 기저선 보정 · 지그 순응이 정한 값이다(원시 +1.07). 그리고 **무가압 셀(딜라토 · X-CT)의 낮은 용량을 "압력 0 의 효과" 로 옮기지 않는다** — 압력 말고도 SE 두께 · In 지름 · 전류 · 장치가 다르다.
 
 ## 관련
 - [[assb-pressure-reapplication-separation-test]] — `P↑` 분리 연산자. **이 페이지가 그 상한을 준다.**
@@ -931,3 +965,4 @@ S3: Li₂₁Si₅ 분말 100 → 700 MPa 냉간압착에서 면저항 **4.71 · 
   이 페이지가 그 논문의 압력을, 그 페이지가 그 논문의 `LLI` 를 받는다.
 - [[assb-maxwell-ocv-derivative-channels]] — 압력을 **관측 변수**로 쓰는 편(14호). 계보 최초의 `E(P)` 와 그 비선형.
 - [[li-metal-yield-creep-vs-stack-pressure]] — 이 창의 **재료 눈금**(61호 Masias 2019): 항복 0.73–0.81 MPa · creep `n` 6.56 · 영역 경계 0.28 / 2.83 MPa. §정의의 "항복을 넘어 creep" 정정의 원전.
+- [[assb-operando-pressure-signal-attribution]] — 압력을 **관측 신호**로 쓸 때의 분해(62호 Zhang W. 2017 원형): 음극 지배 · 강성 곱 · 기저선 규약 — §압력 진동의 값을 옮길 때 붙일 단서.

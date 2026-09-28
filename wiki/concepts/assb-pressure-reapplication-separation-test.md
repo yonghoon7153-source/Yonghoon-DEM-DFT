@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
+sources: [raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -349,6 +349,25 @@ Li₂₁Si₅/Si–Li₂₁Si₅ 이중층 음극 ‖ Li₆PS₅Cl ‖ Li₃InCl
   직접 확인된다. **이것은 제안이고 실측 0** — 설계 조건 D1–D5 에 올리지 않는다(결정은 사용자 몫).
 - ⚠ 옮길 때 빠지는 것(61호 (c)): 벌크 AR 1–4.6 ↔ 셀 ≈10⁻⁴ · 마찰 · 접착 계수 미지 · 온도 1 점 · 반복 하중 0 · 도금 Li 미세구조 0 · 계면 void 의 경계값 문제 ≠ 단축 시험.
 
+## ★ 62호(Zhang W. 2017)가 붙인 것 — **"사이클 해상 압력 계측(D1)" 을 실제로 한 계보 첫 편 — 그리고 그 신호의 원시값 · 기저선 · 전극 몫이 D1 에 같이 붙어야 한다는 것** (2026-09-28)
+
+`raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md` — *J. Mater. Chem. A* 5, 9929 · 실험(In ‖ LGPS ‖ LCO + LTO 대조) · 22호 ref 18 · 33호 [89] · 3차 묶음 파일 24.
+신호의 분해는 [[assb-operando-pressure-signal-attribution]]. 이 편에는 재가압 조작이 없다(압력 스윕 0) — 대조할 것은 **계측 쪽 D1** 과 **대조 설계 D2 · D3** 이다.
+
+| ID | 62호 | 판정 |
+|---|---|---|
+| **D1** 사이클 해상 압력 계측 | hot-press 바닥 전자 게이지 · 11 사이클 연속 — 그러나 본문 그림은 **기저선 보정본**, 기저 `[도표]` ≈61.8 MPa 는 ESI 축에만, 구속 형식은 "fixed volume" 한 구절 · 강성 0 | ⚠ 계측 있음 · 신고 불완전 |
+| **D2** 기준셀 이중차분 | LTO 셀은 다른 케이스(air-tight casing · 25 °C 캐비닛 — 본문 "both setups") — 같은 압력 이력이 아니다 | ❌ |
+| **D3** 압력만 바꾸기 | 무가압 대조(딜라토 · X-CT)는 SE 두께 · In 지름 · 전류 · 장치가 같이 다르다 | ❌ |
+| **D4** 제조 ↔ 운전 분리 | 제조 3.5 t · 1.5 t · 4000 bar(힘 · bar 단위) · 운전 값 본문 0 | ⚠ |
+| **D5** 채널별 신고 | 같은 셀에서 압력 + 용량(Fig. 1b) — EIS · CT · XRD 는 다른 셀 | ⚠ |
+
+- `[해석]` **D1 에 붙일 것 셋(후보 — 결정은 사용자 몫)**: (i) **원시 압력**(기저 제거 전) — 62호 원시 첫 충전 +1.07 ↔ 보정 1.25 MPa, 원시 110 h 표류 −1.2 MPa 는 한 사이클 진폭과 같은 크기 (ii) **기저선 규약** —
+  방전 말 골을 잇는 선을 빼면 방전 말 잔류(상대극에 남은 Li · 압밀)가 구성상 0 이 된다 (iii) **전극 몫** — 평탄 · 합금 상대극이면 신호의 ≈90–95 % 가 상대극(`[재현]` LTO 교체). 이 연산자의 출력(`ΔQ_mech`)을
+  압력 신호와 짝지을 때 셋이 없으면 압력 쪽 값은 셀의 성질이 아니라 지그의 성질이다(`[재현]` 셀 탄성만으로는 유효 길이 ≈22–36 mm).
+- `[해석]` 61호 절의 "유지 시간" 과 같은 방향 — 62호 원시 기저의 시간당 표류(≈0.02 → 0.009 MPa h⁻¹, 율을 올린 구간에도 시간에 따라 준다)는 **압력을 건 뒤의 시간**이 신호를 움직인다는 셀 안 표본이다
+  (재료는 In · LGPS — Li 가 아니다).
+
 ## 이 페이지가 주장하지 않는 것
 
 - **원문의 식이 아니다.** Shi 2020 은 `ΔQ_mech` 를 정의하지도, 10.4 % 와 60 %p 를
@@ -373,3 +392,4 @@ Li₂₁Si₅/Si–Li₂₁Si₅ 이중층 음극 ‖ Li₆PS₅Cl ‖ Li₃InCl
 - [[thermo-kinetic-loss-partition]] — 액체셀 축의 같은 형식(외부 변수를 관측 축으로 쓰는 분해).
 - [[assb-maxwell-ocv-derivative-channels]] — 이 연산자의 **소신호 판**(14호 volumetry, `F(∂E/∂P)_T`).
 - [[li-metal-yield-creep-vs-stack-pressure]] — 이 연산자의 **음극 쪽 재료 시간 상수**(61호 Masias 2019, σ^6.56).
+- [[assb-operando-pressure-signal-attribution]] — 이 연산자와 짝지을 **압력 관측 신호**의 분해(62호 Zhang W. 2017) — D1 계측에 붙일 원시값 · 기저선 규약 · 전극 몫.

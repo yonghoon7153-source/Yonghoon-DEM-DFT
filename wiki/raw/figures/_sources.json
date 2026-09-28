@@ -302,7 +302,7 @@
   ]
  },
  "masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal": {
-  "figures": 6,
+  "figures": 15,
   "generated": "2026-09-28",
   "pdfs": [
    "7dad6b37-23._Elastic_plastic_and_creep_mechanical_properties_of_lithium_metal.pdf",
@@ -578,6 +578,14 @@
   "pdfs": [
    "fe443ab3-38._Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.pdf",
    "ac1ae225-38._Sup_Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.docx"
+  ]
+ },
+ "zhang2017_in-situ-pressure-electrochemical-expansion-assb": {
+  "figures": 12,
+  "generated": "2026-09-28",
+  "pdfs": [
+   "50cb2994-24._Electro_chemical_expansion_during_cycling_monitoring_the_pressure_changes_in_operating_solid-state_lithium_batteries.pdf",
+   "f880b439-24._Sup_Electro_chemical_expansion_during_cycling_monitoring_the_pressure_changes_in_operating_solid-state_lithium_batteries.pdf"
   ]
  },
  "zhang2020_eis-gpr-capacity-rul": {

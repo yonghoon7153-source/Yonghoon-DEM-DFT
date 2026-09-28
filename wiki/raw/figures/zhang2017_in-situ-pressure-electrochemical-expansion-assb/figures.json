@@ -1,0 +1,252 @@
+{
+ "slug": "zhang2017_in-situ-pressure-electrochemical-expansion-assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-28",
+ "sources": [
+  "50cb2994-24._Electro_chemical_expansion_during_cycling_monitoring_the_pressure_changes_in_operating_solid-state_lithium_batteries.pdf",
+  "f880b439-24._Sup_Electro_chemical_expansion_during_cycling_monitoring_the_pressure_changes_in_operating_solid-state_lithium_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 (a) Pressure change monitored during galvanostatic cycling (2.0–3.6 V vs. In/InLi) of a solid-state battery composed of In/Li10- GeP2S12/LiCoO2 at 25 \u0001C with a current density of 146 mA cm\u00032 (corresponding to 0.1C) and 366 mA cm\u00032 (corresponding to 0.25C). The pressure increases almost linearly during charging, and decreases during discharging. The observed pressure changes agree well with the charge–discharge curves, indicating that the SSB experiences volume expansion during charging, and compression during the discharge. At a higher C-rate less capacity is obtained and leads to a lower pressure change. (b) Summarized capacity retention (blue) and pressure amplitude (red) with cycle numbers for the pressure moni- tored SSB. The observed decrease in capacity correlates well with the decrease of pressure peaks with cycling, and is indicative of irreversible processes at the electr",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    44.6,
+    558.9,
+    324.2
+   ],
+   "w": 1091,
+   "h": 1166,
+   "dpi": 300,
+   "src": "50cb2994-24._Electro_chemical_expansion_during_cycling_monitoring_the_pressure_changes_in_operating_solid-state_lithium_batteries.pdf",
+   "blank": 0.779
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Schematic representation of the volume change during lith- iation of tetragonal indium metal (Vm ¼ 15.71 cm3 mol\u00031) resulting in cubic InLi1\u0003x (Vm ¼ 23.597 cm3 mol\u00031 for the stoichiometric phase). The phase transformation is accompanied by a volume expansion of 105.6%; the tetragonal indium unit cell is depicted in the InLi structure for comparison. The tetragonal indium cell expands in the x–y-plane slightly more than in the z-direction in order to achieve the trans- formation from the tetragonal to the cubic lattice. This transformation contributes to the volume expansion of the SSB cell during charging.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    499.2,
+    298.0,
+    636.9
+   ],
+   "w": 1090,
+   "h": 574,
+   "dpi": 300,
+   "src": "50cb2994-24._Electro_chemical_expansion_during_cycling_monitoring_the_pressure_changes_in_operating_solid-state_lithium_batteries.pdf",
+   "blank": 0.653
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 (a) Pressure change monitored during galvanostatic cycling (1.0–2.7 V vs. Li4Ti5O12/Li7Ti5O12) of a solid-state battery composed of Li4Ti5O12/Li10GeP2S12/LiCoO2 at 25 \u0001C. The current density used was the same as in the metal anode SSB shown in Fig. 1. The pressure increases linearly during charging, and decreases during discharging. At higher C-rates (0.25C), the magnitude of the pressure peak decreases to \u000560% of the previous values at low C-rate, as was also observed when using In anode. (b) The charge capacity and pressure amplitudes with increasing cycle numbers for the SSB using Li4Ti5O12 anode. The pressure-changes correspond well with the decrease in capacity at higher C-rates.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    298.0,
+    334.2
+   ],
+   "w": 1090,
+   "h": 1208,
+   "dpi": 300,
+   "src": "50cb2994-24._Electro_chemical_expansion_during_cycling_monitoring_the_pressure_changes_in_operating_solid-state_lithium_batteries.pdf",
+   "blank": 0.787
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 A direct comparison of the pressure-change in SSBs with an indium anode (deep blue) and a Li4Ti5O12 anode (light blue). The curves have been smoothed and are extracted from the second charge process of the corresponding SSBs. In both cases, the pressure increases with the increasing charge transfer of Li+ and the pressure change of using Li4Ti5O12 is much weaker.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    44.6,
+    558.8,
+    170.1
+   ],
+   "w": 1091,
+   "h": 524,
+   "dpi": 300,
+   "src": "50cb2994-24._Electro_chemical_expansion_during_cycling_monitoring_the_pressure_changes_in_operating_solid-state_lithium_batteries.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 (a) Ex situ transmission X-ray tomography of a pristine SSB pellet In/LGPS/LCO fabricated by isostatic pressing (see the experi- mental section), and for another pellet after the 1st charge at a current density corresponding to 0.1C. Since there is no external compressive pressure applied on the pellet during the galvanostatic charging, change in the shape of the cell was observed. The purple planes in the top row indicate the slices from the tomography images that are shown below, viewing these slices from above. Bright areas in the gray-scale images obtained by X-ray tomography refer to a high attenuation for the incoming X-rays, i.e. heavy elements or higher material density. Therefore, the bright area on the top of each pellet in the middle column refers to LixCoO2 in the composite cathode. The very bright area at the bottom of each pellet corresponds to the indium metal as an",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    298.0,
+    350.2
+   ],
+   "w": 1090,
+   "h": 1275,
+   "dpi": 300,
+   "src": "50cb2994-24._Electro_chemical_expansion_during_cycling_monitoring_the_pressure_changes_in_operating_solid-state_lithium_batteries.pdf",
+   "blank": 0.549
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure S1: Electrochemical impedance spectroscopy (EIS) measurements of a SSB (In / LGPS / LNTO-LCO). The decrease in the resistance during the charge process indicates the consolidation of the SE.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.5,
+    117.4,
+    519.3,
+    338.0
+   ],
+   "w": 1812,
+   "h": 920,
+   "dpi": 300,
+   "src": "f880b439-24._Sup_Electro_chemical_expansion_during_cycling_monitoring_the_pressure_changes_in_operating_solid-state_lithium_batteries.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Figure S2: EIS evolvement of a model SSB during 1st charge, using coated LiCoO2 as active material and Indium as anode, with LGPS as solid electrolyte. The galvanostatic charge was carried out at 0.1C and EIS was carried out after one-hour charge followed by a rest of 30 min rest. The two semicircles were observed only when the cell potential reached the plateau of LiCoO2, i.e. 3.3 V vs. In/InLi. Even though, the impedance evolves with the increasing potential, the total value was maintained below 100 Ohm in the whole charge process. The small interfacial resistance ensures good electrochemical performance of the SSB.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.5,
+    69.2,
+    519.4,
+    383.8
+   ],
+   "w": 1813,
+   "h": 1312,
+   "dpi": 300,
+   "src": "f880b439-24._Sup_Electro_chemical_expansion_during_cycling_monitoring_the_pressure_changes_in_operating_solid-state_lithium_batteries.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Figure S3: Long cycle performance of a model SSB used in the study. 80% of its initial capacity could be maintained after 100 cycles at 0.1 C and the Coulombic efficiency was maintained above 99% from the 2nd cycle on.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.5,
+    73.3,
+    519.3,
+    336.4
+   ],
+   "w": 1812,
+   "h": 1097,
+   "dpi": 300,
+   "src": "f880b439-24._Sup_Electro_chemical_expansion_during_cycling_monitoring_the_pressure_changes_in_operating_solid-state_lithium_batteries.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Figure S4: In situ XRD measurements of the In/LGPS/LNTO-LCO SSB. The SSB was charged with a current density of 19.1 µA/cm2, corresponding to a C-rate of C/33. The charging curve is shown in the insertion. Upper: the complete diffraction patterns recorded at different state of charge. Lower left: evolution of the (003) reflections with decreasing x in LixCoO2. Lower right: evolution of the",
+   "rotated_deg": 0,
+   "bbox": [
+    84.5,
+    72.2,
+    519.5,
+    666.6
+   ],
+   "w": 1813,
+   "h": 2478,
+   "dpi": 300,
+   "src": "f880b439-24._Sup_Electro_chemical_expansion_during_cycling_monitoring_the_pressure_changes_in_operating_solid-state_lithium_batteries.pdf",
+   "blank": 0.852
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Figure S5: Visualization of the porosity analysis via intensity threshold analysis for the ex situ transmission X-ray tomography pristine SSB pellet and the charged SSB pellet as presented for Fig 4 a) in the main text of the manuscript: region of interest showing only the solid electrolyte (light gray color) and void space filled with gas phase (dark gray color). Porosity decreases approximately by 50% from for the pristine pellet to the charged pellet, whereas pores below the spatial resolution of 6.25 µm are not accounted for.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.5,
+    69.7,
+    519.5,
+    447.2
+   ],
+   "w": 1813,
+   "h": 1574,
+   "dpi": 300,
+   "src": "f880b439-24._Sup_Electro_chemical_expansion_during_cycling_monitoring_the_pressure_changes_in_operating_solid-state_lithium_batteries.pdf",
+   "blank": 0.502
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 10,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Figure S6: Results of the dilatometer test of a non-pressurized SSB under galvanostatic cycling with a current density of 28 µA/cm2 between 2.0 – 3.6 V vs. In/LiIn. The height-change curve (red) follows well the charge-discharge curve (blue) from the third cycle on. The highly asymmetric peak and inclined baseline of the height-change curve in the first of a few cycles indicate the consolidation of SE due to the volume expansion of electrodes upon cycling. As shown at the end of the red curve, no height change could be observed once the galvanostatic cycling stops, which excludes the relaxation of setup components leading to the inclined baseline.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.5,
+    71.6,
+    537.5,
+    384.8
+   ],
+   "w": 1888,
+   "h": 1306,
+   "dpi": 300,
+   "src": "f880b439-24._Sup_Electro_chemical_expansion_during_cycling_monitoring_the_pressure_changes_in_operating_solid-state_lithium_batteries.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 11,
+   "file": "fig_S7.png",
+   "caption": "Supplementary Figure S7: the pressure change curve of the In/SE/LiCoO2 without subtracting the baseline. An inclined baseline indicates the consolidation of SE due to the pressure generated by the volume expansion of electrode materials during cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.5,
+    139.7,
+    519.2,
+    516.5
+   ],
+   "w": 1812,
+   "h": 1571,
+   "dpi": 300,
+   "src": "f880b439-24._Sup_Electro_chemical_expansion_during_cycling_monitoring_the_pressure_changes_in_operating_solid-state_lithium_batteries.pdf",
+   "blank": 0.941
+  }
+ ]
+}
