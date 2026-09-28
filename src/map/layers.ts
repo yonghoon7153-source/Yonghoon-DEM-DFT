@@ -56,9 +56,13 @@ const MAP_NOTES_UNTIL = 5;
 const AIRPORTS_AT = 1.9;
 const STATIONS_AT = 1.4;
 const LINE_NAMES_AT = 1.7;
-/** Landmark stickers: from a light zoom (or when their prefecture is open); their names once there is room. */
-const LANDMARKS_AT = 2.2;
-const LANDMARK_NAMES_AT = 4;
+/**
+ * Landmark stickers only once the map is close — 사용자: 「더 확대했을 때 나오게」 (at 2.2× they crowded). Measured in
+ * on-screen map density (projection scale × zoom, px per radian) rather than zoom, so a phone needs the same closeness as a
+ * desktop: 14 800 ≈ 7× on a 1440 px desktop ≈ 260 px per degree; names from ≈ 10× (or in the open prefecture) where there is room.
+ */
+const LANDMARKS_DENSITY = 14800;
+const LANDMARK_NAMES_DENSITY = 21000;
 /** At most this many stickers stand side by side where they would overlap; more come out as you zoom in. */
 const LANDMARK_ROW = 3;
 
@@ -118,7 +122,8 @@ export function createLayers(ctx: LayerContext) {
     };
   });
   const cityAt = new Map(places.cities.map((c) => [c.id, shift(c.at, c.pref)]));
-  const wards: LabelItem[] = places.wards.map((w) => ({ id: w.id, name: w.name, note: w.note, red: w.mark, px: [0, 0], fs: 9, cls: 'ward', prio: 0 }));
+  // ward names without their rank notes (犯罪率↓ 3위 …): those stay in the 23区 popup's card and rankings (사용자)
+  const wards: LabelItem[] = places.wards.map((w) => ({ id: w.id, name: w.name, red: w.mark, px: [0, 0], fs: 9, cls: 'ward', prio: 0 }));
   const wardAt = new Map(places.wards.map((w) => [w.id, w.at]));
   const islands: LabelItem[] = places.islands.map((i) => ({ id: i.id, name: i.name, px: [0, 0], fs: 15, cls: 'island', prio: 0 }));
   const islandLabelAt = new Map(places.islands.map((i) => [i.id, i.label]));
@@ -133,8 +138,9 @@ export function createLayers(ctx: LayerContext) {
   /** A capital that is also one of the 23 wards (都庁 in 新宿区) leaves its name to the ward when wards show. */
   const wardNamesJa = new Set(places.wards.map((w) => w.name.ja));
   const extraAt = new Map(places.extraPlaces.map((e) => [e.id, shift(e.at, e.pref)]));
-  // landmark stickers, each a little tilted like a sticker stuck by hand; 보충 ones carry a small ✦
-  const landmarkItems: LandmarkItem[] = landmarks.map((l, i) => ({
+  // landmark stickers, each a little tilted like a sticker stuck by hand; 보충 ones carry a small ✦. The 23区 ones
+  // (those with a ward) live only in the 東京23区 popup — on the map they were a heap (사용자: 「23구 확대했을 때만」)
+  const landmarkItems: LandmarkItem[] = landmarks.filter((l) => !l.ward).map((l, i) => ({
     id: `lm-${l.id}`, name: l.name, pref: l.pref, px: [0, 0], fs: 10, prio: 0, lm: l, tilt: ((i * 7) % 11) - 5,
     cls: `landmark-name${landmarkSource(l) === 'supplement' ? ' is-sup' : ''}`,
   }));
@@ -502,6 +508,8 @@ export function createLayers(ctx: LayerContext) {
     // by side in a short row (like a prefecture's mascot stickers); the rest come out as you zoom in. The open
     // prefecture's go first, then the data order.
     // stickers may overlap a little, like real ones; closer than 1.5 radii they stand in a row instead
+    // a narrow screen shows less land at once, so its bar is lower (at most by half) — a phone gets them without 26× zoom
+    const density = (ctx.projection.scale() * k) / Math.min(1, Math.max(0.5, f.W / 1200));
     const R = 14 * Math.min(f.ts, 1.15);
     const near = R * 1.5;
     const step = R * 1.55;
@@ -510,7 +518,7 @@ export function createLayers(ctx: LayerContext) {
     const lmOrder = [...landmarkItems].sort((a, b) => Number(b.pref === f.selected) - Number(a.pref === f.selected));
     for (const d of lmOrder) {
       const [x0, y0] = t.apply(d.px);
-      if (!(on.cities && onScreen(x0, y0) && (k >= LANDMARKS_AT || d.pref === f.selected))) continue;
+      if (!(on.cities && density >= LANDMARKS_DENSITY && onScreen(x0, y0))) continue;
       const row = rows.find((r) => Math.abs(r.y - y0) < near && r.members.some((m) => Math.abs(m.x - x0) < near));
       if (!row) {
         rows.push({ x: x0, y: y0, members: [{ d, x: x0 }] });
@@ -548,7 +556,7 @@ export function createLayers(ctx: LayerContext) {
     // a sticker standing alone gets its name (below it first) once there is room, after the city names
     for (const r of rows) {
       for (const m of r.members) {
-        const named = r.members.length === 1 && (k >= LANDMARK_NAMES_AT || m.d.pref === f.selected)
+        const named = r.members.length === 1 && (density >= LANDMARK_NAMES_DENSITY || m.d.pref === f.selected)
           && placeName(landmarkNames, m.d, m.x, r.y, f, R + 1, ['d', 'r', 'l', 'u']);
         if (!named) landmarkNames.filter((q) => q === m.d).classed('is-hidden', true);
       }
