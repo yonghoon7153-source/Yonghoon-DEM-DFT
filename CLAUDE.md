@@ -142,7 +142,8 @@
   · 📏 **VRAM 실측**: **탄성 41 GB** (`kb/projects/cascade_rebuild_log_2026_09.md` §3-1 —
     그것 때문에 **V100 서버를 새로 세웠다**) · **UMA 담금질 120원자 1.5 GB**(호스트 RSS 2 GB).
     ⇒ 탄성 + UMA = 42.5/49 GB 로 **들어는 가지만** 여유 6.5 GB 다. 47/48 사례의 재현이라 **안 한다** — 단 위 예외 1건만
-    (modelc_2x 23_p 실측 **30.6 GB** · 기록 피크 41.2 GB + li2s 120 원자 MD 1 런 **2.0 GB** = 최악 43.2 / 49.1 GB).
+    (modelc_2x 23_p 실측 **30.6 GB (첫 SCF) → 40.0 GB (09-29 01:26)** — pw.x VRAM 은 계산 단계마다 다르다 · 기록 피크 41.2 GB
+    + li2s 120 원자 MD 1 런 **2.0 GB** = 최악 43.2 / 49.1 GB). ⚠ 한 시점 값으로 '보통' 을 말하지 마라 — 첫 SCF 의 30.6 을 보통으로 적었다가 틀렸다.
   ⚠ 내가 `build_elastic_strain_inputs.py`(입력 **생성기**)만 보고 *"탄성은 DFT SCF 니까 CPU"* 라고
     단정했다가 틀렸다. **생성기는 실행 경로를 말해 주지 않는다** — 러너 스크립트의 바이너리 경로를 본다.
   · UMA python = **`/data/apps/miniforge3/envs/uma/bin/python`** (envs: dft·mace·mlipx·sevennet·uma).

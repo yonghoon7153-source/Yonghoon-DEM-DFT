@@ -288,5 +288,13 @@
   ],
   "기계_이후": "gabia GPU 는 2026-09-29 00:03:30 부터 탄성 modelc_2x (우리 트랙 · 수일). ✅ 사용자 배정 (09-29 00:4x): 본 런 나머지 8 런 (465 K seed1·2·5 · 550 K seed1–5) 은 **gabia 에서 탄성 옆 한 번에 하나씩** — 예외 결정 D-2026-09-29-gabia-uma-coexist-elastic-li2s-main · 러너 tools/ionic/glass_main_queue_gabia.sh (seed3 T465 와 같은 설정 · 구조는 값으로 판별 · 가드가 뜨면 큐 정지). seed1·2 초기구조는 kgy → gabia 로 옮겨야 한다 (없으면 러너가 그 차례에서 기다린다). 과학 판정과 무관한 기계 배정이다.",
   "⏭": "다음 편지(외부 1저자)에 결과 한 줄 + 위 단서 넷 · 본 런 나머지 착수 (기계 배정 뒤) · C1·C2·감김 판독은 본 런 판독 때 같이"
+ },
+ "✅_본런_나머지_발사_2026_09_29": {
+  "출처": "사용자 붙여넣기 gabia watch 2026-09-29 01:26:40 (w_glassq.sh)",
+  "기계": "gabia A6000 · tmux glassq · 러너 tools/ionic/glass_main_queue_gabia.sh (worktree /data/work/wt_li2s_0929) · 예외 D-2026-09-29-gabia-uma-coexist-elastic-li2s-main",
+  "큐": "465:5 → 550:3 → 550:4 → 550:5 (seed1·2 네 런은 1저자 '나중에' · kgy 꺼짐)",
+  "구조_판별": "4/4 값으로 OK — seed3 최단 P–S 2.0055 · seed4 2.0324 · seed5 2.0302 (PS₄ 11/12 · ρ 1.6181) · 이름이 아니라 기록값 대조",
+  "첫_런": "T465 seed5 PID 2023556 · 01:25:36 발사 · run_meta = seed3 T465 판 (T·seed·v0 만 다름 · 01:26:37)",
+  "GPU": "시작 전 합계 39,990 MiB (탄성 pw.x 39,972) · 과학 판정과 무관 — 공존은 속도만 바꾼다"
  }
 }
