@@ -474,8 +474,8 @@ SE|SE 4층 PBE 대조에서 조성 상쇄와 PS₄ 연결 보존을 확인했습
 >   ④ 시나리오에 따라 "어느 접촉이 먼저 떨어지는가" 가 뒤집히면 결론을 **"모델 안에서 판별 불가 (점착 입력에 좌우)"** 로 보고합니다.
 >   결과는 라벨 (세 registry 평균 추정 · 이상 기저면 · 게이트 라벨) 그대로 받겠습니다.
 >
-> 근거: 트랙 문서 `docs/adhesion_agc_interlayer_20260923.md` §3 (JKR F = 1.5πR·w · w = W) · §5-8 · `docs/dem_reply_to_dft_adhesion_20260923.md` ① (ATM 따로 보고 동의) ·
-> `docs/dft_reply5_adhesion_20260926.md` §3 ((iv) = 라벨) · §4-1 (C–C 카드 계획 · [미확인]) · 정본 litdb `maurer2015_mbd_adsorbates_metal_surfaces` §7-2 (d) — C–C 전용 정본 카드는 없다.
+> 근거: 트랙 문서 `docs/adhesion_agc_interlayer_20260923.md` §3 (JKR F = 1.5πR·w · w = W) · §5-8 · `docs/dem_reply_to_dft_adhesion_20260923.md` ① (ATM 따로 보고 동의) · <!-- lint-skip-path: DEM 리포 경로 (이 repo 아님) -->
+> `docs/dft_reply5_adhesion_20260926.md` §3 ((iv) = 라벨) · §4-1 (C–C 카드 계획 · [미확인]) · 정본 litdb `maurer2015_mbd_adsorbates_metal_surfaces` §7-2 (d) — C–C 전용 정본 카드는 없다. <!-- lint-skip-path: DEM 리포 경로 (이 repo 아님) -->
 
 **우리 읽기** — 인계 성립: 벤젠 참고 · 3체 라벨 열 · 그쪽 C–C 카드 없음 (Wang 은 정본 병합 뒤 인용) · C–C 둘 다 시나리오 · 짝 원칙 ①–④.
 ② 의 판정은 우리 몫이다 — WAD-CC 카드 `6_보고_규칙.짝_규칙_판정_입력_DEM_7차` (PAIR_TIE 0.01 · `--collect --atm` 의 `info.wang2015.pairing_column` · 결과 전에 코드·selftest 결속). 열린 질문 0. ⏭ 흑연 결과 뒤 회신 8 (값 + 라벨 + 짝 판정).
