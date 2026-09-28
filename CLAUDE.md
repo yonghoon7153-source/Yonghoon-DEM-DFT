@@ -44,7 +44,7 @@ src/ui/comments.ts      💬 コメント 게시판 화면 (ADR 0007)
 src/ui/festivals.ts     🎆 축제 달력 페이지 (data/festivals.json, 출처 표시 = 마인드맵 칸 이름으로)
 src/ui/fx.ts            축제 효과 — 불꽃 · 눈 · 벚꽃잎 · 단풍잎 · 등롱 · 북 · 리본 + 무대 색조 (#fx 층, ADR 0009)
 src/ui/easter.ts        마스코트 팝업, 図鑑, 벚꽃
-src/landmarks/          랜드마크 스티커 — 내 마인드맵 · 보충의 장소를 닮은꼴로 (data/landmarks.json, 확대하면 지도 · 23区 팝업에, ADR 0011)
+src/landmarks/          랜드마크 스티커 — 내 마인드맵 · 보충의 장소, 기본 정보의 観光을 닮은꼴로 (data/landmarks.json, 확대하면 지도 · 23区 팝업에, ADR 0011)
 src/mascots/art.ts      마스코트 SVG
 src/styles/             tokens / base / app
 data/                   JSON DB + schema + raw 지리 데이터

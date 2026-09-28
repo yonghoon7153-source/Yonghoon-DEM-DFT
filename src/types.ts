@@ -138,6 +138,9 @@ export interface TransitDb { airports: Airport[]; shinkansen: ShinkansenLine[] }
 export interface Festival { id: string; kind?: 'season'; ja: string; kana: string; ko: string; pref: string; box?: string; fx: 'fireworks' | 'snow' | 'sakura' | 'momiji' | 'lanterns' | 'drums' | 'streamers'; start: string; end?: string; approx?: boolean; note?: string }
 export interface FestivalsDb { festivals: Festival[] }
 
-/** A place box of my mind map (or 보충) as a look-alike sticker on the map when zoomed in (ADR 0011). */
-export interface Landmark { id: string; box: string; name: PlaceName; pref: string; ward?: string; at: LonLat; icon: string }
+/**
+ * A place as a look-alike sticker on the map when zoomed in (ADR 0011): a box of my mind map (or 보충) — `box` — or,
+ * instead, one of the prefecture's 기본 정보 観光 spots — `spot` (#93). Exactly one of the two.
+ */
+export interface Landmark { id: string; box?: string; spot?: string; name: PlaceName; pref: string; ward?: string; at: LonLat; icon: string }
 export interface LandmarksDb { landmarks: Landmark[] }

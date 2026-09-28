@@ -129,7 +129,8 @@ if (steps.includes('matsuri')) {
   await ctx.close();
 }
 if (steps.includes('landmarks')) {
-  // 랜드마크 스티커: the 近畿 region with its stickers, then 京都 open
+  // 랜드마크 스티커: the 近畿 region (none yet — they wait for a closer zoom), 京都 open with its stickers, then a
+  // 기본 정보 sticker tapped (姫路城): the map stays as it is, the 図鑑 unfolds and its 観光 word blinks
   const { ctx, p } = await page({ width: 1440, height: 900 });
   await ready(p);
   await p.evaluate(() => { location.hash = 'region/kinki'; });
@@ -138,6 +139,11 @@ if (steps.includes('landmarks')) {
   await p.evaluate(() => { location.hash = 'kyoto'; });
   await p.waitForTimeout(1800);
   await p.screenshot({ path: `${out}/21-landmarks-kyoto.png` });
+  await p.evaluate(() => { location.hash = 'hyogo'; });
+  await p.waitForTimeout(1800);
+  await p.evaluate(() => document.querySelector('.map .landmark[data-id="himejijo"]')?.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+  await p.waitForTimeout(900);
+  await p.screenshot({ path: `${out}/22-landmarks-spot.png` });
   await ctx.close();
 }
 if (steps.includes('search')) {

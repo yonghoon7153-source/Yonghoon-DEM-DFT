@@ -3,8 +3,8 @@ import { airportsOf, countBoxes, extrasFor, extrasForRegion, generalExtras, grou
 import type { Mascot } from '../types';
 import type { NoteExtra, NoteItem, Prefecture, Region } from '../types';
 import { mascotVisualHtml } from '../mascots/visual';
-import { clear, el, ruby } from './dom';
-import { glossNote, photoSearch, renderTree } from './notes-render';
+import { clear, el } from './dom';
+import { glossNote, renderTree, termChip } from './notes-render';
 
 export interface PanelCallbacks {
   onClose(): void;
@@ -377,13 +377,6 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
     );
   }
 
-  /** A 名物 / 観光 word: reading above, Korean below, and 📷 to look it up (searched with the prefecture's name). */
-  function termChip(t: { ja: string; kana?: string; ko?: string }, where: string): HTMLElement {
-    return el('span', { class: 'term' },
-      el('span', { class: 'term__text' }, el('span', { class: 'term__ja', lang: 'ja' }, ruby(t.ja, t.kana)), t.ko ? el('span', { class: 'term__ko' }, t.ko) : null),
-      photoSearch(`${t.ja} ${where}`));
-  }
-
   function renderExtra(ex: NoteExtra, r: Region, open: boolean): HTMLElement {
     const d = el('details', { class: 'extra', ...(open ? { open: '' } : {}) }, el('summary', {}, el('span', { lang: 'ja' }, ex.title), ex.sub ? el('small', {}, ex.sub) : null));
     d.append(renderTree(ex.items, { color: r.color, ink: r.ink }));
@@ -435,11 +428,17 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
     return out;
   }
 
-  /** Scroll to a box of the open page (a landmark sticker's box) and make it blink once; false when it is not shown. */
-  function flashBox(t: string): boolean {
-    const hit = [...body.querySelectorAll<HTMLElement>('.nchip__t')].find((e) => e.textContent === t);
-    const chip = hit?.closest<HTMLElement>('.nchip');
+  /**
+   * Scroll to a box of the open page (a landmark sticker's box) and make it blink once; `spot` — a 観光 word of the
+   * 図鑑 instead, which is unfolded first. False when it is not shown.
+   */
+  function flashBox(t: string, spot = false): boolean {
+    const chip = spot
+      ? [...body.querySelectorAll<HTMLElement>('.facts .term')].find((e) => e.dataset.t === t)
+      : [...body.querySelectorAll<HTMLElement>('.nchip__t')].find((e) => e.textContent === t)?.closest<HTMLElement>('.nchip');
     if (!chip) return false;
+    const fold = chip.closest('details');
+    if (fold) fold.open = true;
     chip.scrollIntoView({ block: 'center', behavior: 'smooth' });
     chip.classList.remove('is-flash');
     void chip.offsetWidth; // blink again on a second tap

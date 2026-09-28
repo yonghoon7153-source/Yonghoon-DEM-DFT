@@ -12,7 +12,7 @@ import { geoCircle, geoPath, type GeoProjection } from 'd3-geo';
 import { select, type Selection } from 'd3-selection';
 import type { ZoomTransform } from 'd3-zoom';
 import { cityTier, landmarkSource, landmarks, mountains, places, transit } from '../data';
-import { drawLandmark } from '../landmarks/art';
+import { drawLandmark, landmarkArtReady, loadLandmarkArt } from '../landmarks/draw';
 import type { LabelMode, Landmark, LonLat, PlaceName, ShinkansenLine } from '../types';
 
 export type LayerId = 'cities' | 'bridges' | 'transit' | 'mountains';
@@ -63,10 +63,20 @@ const LINE_NAMES_AT = 1.7;
  */
 const LANDMARKS_DENSITY = 14800;
 const LANDMARK_NAMES_DENSITY = 21000;
-/** At most this many stickers stand side by side where they would overlap; more come out as you zoom in. */
+/** 기본 정보 観光 stickers (#93, three times as many) come a step closer, ≈ 10× — except in the open prefecture. */
+const LANDMARK_INFO_DENSITY = 21000;
+/**
+ * At most this many stickers stand side by side where they would overlap; more come out as you zoom in — and near full
+ * zoom, where there is no closer, a row takes up to `LANDMARK_ROW_CLOSE` (金沢 · 長崎 have four within 2 km).
+ */
 const LANDMARK_ROW = 3;
+const LANDMARK_ROW_CLOSE = 5;
+const LANDMARK_CLOSE_AT = 24;
+/** A sticker's tooltip says where it is written. */
+const SOURCE_NOTE = { notes: '내 마인드맵', supplement: '✦ 보충', info: '📘 기본 정보 · 観光' } as const;
 
-interface LandmarkItem extends LabelItem { lm: Landmark; tilt: number }
+/** `info` — a 기본 정보 観光 spot rather than a box of mine; `drawn` — its art is made. */
+interface LandmarkItem extends LabelItem { lm: Landmark; tilt: number; info: boolean; drawn?: boolean }
 
 function parts(n: PlaceName, mode: LabelMode): { main: string; furi: string } {
   if (mode === 'kana') return { main: n.kana, furi: '' };
@@ -140,9 +150,12 @@ export function createLayers(ctx: LayerContext) {
   const extraAt = new Map(places.extraPlaces.map((e) => [e.id, shift(e.at, e.pref)]));
   // landmark stickers, each a little tilted like a sticker stuck by hand; 보충 ones carry a small ✦. The 23区 ones
   // (those with a ward) live only in the 東京23区 popup — on the map they were a heap (사용자: 「23구 확대했을 때만」)
+  // a sticker named like a label of the map takes the name over while it shows — the city dot (江の島 · 尾道) or lake (琵琶湖)
+  // stays nameless; a bridge's name, placed first, keeps it (瀬戸大橋) and then the sticker goes without
+  const sameName = (ja: string) => ja.replace(/[市町]$/, '');
   const landmarkItems: LandmarkItem[] = landmarks.filter((l) => !l.ward).map((l, i) => ({
     id: `lm-${l.id}`, name: l.name, pref: l.pref, px: [0, 0], fs: 10, prio: 0, lm: l, tilt: ((i * 7) % 11) - 5,
-    cls: `landmark-name${landmarkSource(l) === 'supplement' ? ' is-sup' : ''}`,
+    cls: `landmark-name${landmarkSource(l) === 'supplement' ? ' is-sup' : ''}`, info: l.spot !== undefined,
   }));
   const landmarkAt = new Map(landmarks.map((l) => [l.id, shift(l.at, l.pref)]));
 
@@ -261,9 +274,9 @@ export function createLayers(ctx: LayerContext) {
     .join((enter) => {
       const g = enter.append('g').attr('class', (d) => `landmark${d.cls.includes('is-sup') ? ' is-sup' : ''}`)
         .attr('role', 'button').attr('tabindex', 0).attr('data-id', (d) => d.lm.id);
-      g.append('g').attr('class', 'landmark__art').each(function (d) { drawLandmark(this, d.lm.icon); });
+      g.append('g').attr('class', 'landmark__art'); // drawn the first time it comes out (200-odd stickers, most never seen)
       g.filter((d) => d.cls.includes('is-sup')).append('text').attr('class', 'landmark__sup').text('✦');
-      g.append('title').text((d) => `${d.lm.name.ja} (${d.lm.name.kana}) ${d.lm.name.ko} — ${d.cls.includes('is-sup') ? '✦ 보충' : '내 마인드맵'}`);
+      g.append('title').text((d) => `${d.lm.name.ja} (${d.lm.name.kana}) ${d.lm.name.ko} — ${SOURCE_NOTE[landmarkSource(d.lm)]}`);
       g.on('click', (event: MouseEvent, d) => { event.stopPropagation(); ctx.onLandmark(d.lm.id); });
       g.on('keydown', (event: KeyboardEvent, d) => {
         if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); ctx.onLandmark(d.lm.id); }
@@ -423,10 +436,12 @@ export function createLayers(ctx: LayerContext) {
 
     // bridges (lines always when on; names when zoomed in)
     gBridges.classed('is-off', !on.bridges);
+    const bridgeNamed = new Set<string>();
     for (const b of bridgeItems) {
       const [x, y] = t.apply(b.px);
       const show = on.bridges && k >= BRIDGE_NAMES_AT && onScreen(x, y) && placeName(bridgeNames, b, x, y, f, 10, ['u', 'd', 'r', 'l']);
       if (!show) bridgeNames.filter((q) => q === b).classed('is-hidden', true);
+      else bridgeNamed.add(b.name.ja);
     }
 
     // 🚄 가는 법: hubs always; other airports, named stations and line names when zoomed in (or their prefecture is open)
@@ -513,30 +528,42 @@ export function createLayers(ctx: LayerContext) {
     const R = 14 * Math.min(f.ts, 1.15);
     const near = R * 1.5;
     const step = R * 1.55;
-    const rows: { x: number; y: number; members: { d: LandmarkItem; x: number }[] }[] = [];
+    // members: where each sits in the row (x) and where it really is (rx, ry); a finished row is centred on its members
+    const rows: { x: number; y: number; members: { d: LandmarkItem; x: number; rx: number; ry: number }[] }[] = [];
     const stickerAt = new Map<string, [number, number]>();
     const lmOrder = [...landmarkItems].sort((a, b) => Number(b.pref === f.selected) - Number(a.pref === f.selected));
+    const rowMax = k >= LANDMARK_CLOSE_AT ? LANDMARK_ROW_CLOSE : LANDMARK_ROW;
     for (const d of lmOrder) {
       const [x0, y0] = t.apply(d.px);
-      if (!(on.cities && density >= LANDMARKS_DENSITY && onScreen(x0, y0))) continue;
+      const bar = d.info && d.pref !== f.selected ? LANDMARK_INFO_DENSITY : LANDMARKS_DENSITY;
+      if (!(on.cities && density >= bar && onScreen(x0, y0))) continue;
       const row = rows.find((r) => Math.abs(r.y - y0) < near && r.members.some((m) => Math.abs(m.x - x0) < near));
-      if (!row) {
-        rows.push({ x: x0, y: y0, members: [{ d, x: x0 }] });
-        stickerAt.set(d.id, [x0, y0]);
-      } else if (row.members.length < LANDMARK_ROW) {
-        const x = row.x + row.members.length * step;
-        row.members.push({ d, x });
-        stickerAt.set(d.id, [x, row.y]);
-      }
+      if (!row) rows.push({ x: x0, y: y0, members: [{ d, x: x0, rx: x0, ry: y0 }] });
+      else if (row.members.length < rowMax) row.members.push({ d, x: row.x + row.members.length * step, rx: x0, ry: y0 });
     }
-    for (const r of rows) f.placed.push({ x: r.x - R, y: r.y - R, w: 2 * R + (r.members.length - 1) * step, h: 2 * R });
+    for (const r of rows) {
+      const n = r.members.length;
+      if (n > 1) {
+        r.members.sort((a, b) => a.rx - b.rx); // west stays west
+        r.x = r.members.reduce((s, m) => s + m.rx, 0) / n - ((n - 1) * step) / 2;
+        r.y = r.members.reduce((s, m) => s + m.ry, 0) / n;
+        r.members.forEach((m, i) => { m.x = r.x + i * step; });
+      }
+      for (const m of r.members) stickerAt.set(m.d.id, [m.x, r.y]);
+      f.placed.push({ x: r.x - R, y: r.y - R, w: 2 * R + (n - 1) * step, h: 2 * R });
+    }
     const artScale = `scale(${((2 * R) / 100).toFixed(3)}) translate(-50,-50)`;
     landmarkSel.classed('is-hidden', (d) => !stickerAt.has(d.id)).attr('transform', (d) => {
       const p = stickerAt.get(d.id);
       return p ? `translate(${p[0].toFixed(1)},${p[1].toFixed(1)}) rotate(${d.tilt})` : null;
     });
+    // a sticker's picture is made the first time it comes out — after the pictures load, the first time any does
+    const drawShown = () => landmarkSel.filter(function (d) { return !d.drawn && !this.classList.contains('is-hidden'); })
+      .select<SVGGElement>('.landmark__art').each(function (d) { d.drawn = drawLandmark(this, d.lm.icon); });
+    if (stickerAt.size) { if (landmarkArtReady()) drawShown(); else void loadLandmarkArt().then(drawShown); }
     landmarkSel.select('.landmark__art').attr('transform', artScale);
     landmarkSel.select('.landmark__sup').attr('x', (R * 0.78).toFixed(1)).attr('y', (-R * 0.72).toFixed(1));
+    const takenOver = new Set(landmarkItems.filter((d) => stickerAt.has(d.id)).map((d) => `${d.pref}|${d.lm.name.ja}`));
     const wardsOn = on.cities && k >= WARDS_AT;
     const order = [...cities].sort((a, b) => (b.pref === f.selected ? 10 : 0) + b.prio - ((a.pref === f.selected ? 10 : 0) + a.prio));
     const shownDot = new Set<string>();
@@ -544,9 +571,10 @@ export function createLayers(ctx: LayerContext) {
       const [x, y] = t.apply(c.px);
       const vis = on.cities && onScreen(x, y);
       if (vis) shownDot.add(c.id);
-      const leaveToWard = wardsOn && c.pref === 'tokyo' && wardNamesJa.has(c.name.ja);
+      // its name goes to the ward (都庁 in 新宿区) or to a sticker of the same name standing there (江の島)
+      const leaveName = (wardsOn && c.pref === 'tokyo' && wardNamesJa.has(c.name.ja)) || takenOver.has(`${c.pref}|${sameName(c.name.ja)}`);
       const namesAt = c.cls.includes('city--note') ? NOTE_NAMES_AT : CITY_NAMES_AT;
-      const named = vis && !leaveToWard && (k >= namesAt || c.pref === f.selected) && placeName(cityNames, c, x, y, f, 7, ['r', 'l', 'u', 'd']);
+      const named = vis && !leaveName && (k >= namesAt || c.pref === f.selected) && placeName(cityNames, c, x, y, f, 7, ['r', 'l', 'u', 'd']);
       if (!named) cityNames.filter((q) => q === c).classed('is-hidden', true);
     }
     cityDots.classed('is-hidden', (d) => !shownDot.has(d.id)).attr('transform', (d) => {
@@ -556,7 +584,7 @@ export function createLayers(ctx: LayerContext) {
     // a sticker standing alone gets its name (below it first) once there is room, after the city names
     for (const r of rows) {
       for (const m of r.members) {
-        const named = r.members.length === 1 && (density >= LANDMARK_NAMES_DENSITY || m.d.pref === f.selected)
+        const named = r.members.length === 1 && !bridgeNamed.has(m.d.lm.name.ja) && (density >= LANDMARK_NAMES_DENSITY || m.d.pref === f.selected)
           && placeName(landmarkNames, m.d, m.x, r.y, f, R + 1, ['d', 'r', 'l', 'u']);
         if (!named) landmarkNames.filter((q) => q === m.d).classed('is-hidden', true);
       }
@@ -579,7 +607,7 @@ export function createLayers(ctx: LayerContext) {
     // the lake's name sits in the water, once the lake is big enough to hold it (or its prefecture is open)
     for (const l of lakeItems) {
       const [x, y] = t.apply(l.px);
-      const box = on.cities && onScreen(x, y) && (k >= LAKE_NAMES_AT || l.pref === f.selected) ? placeName(lakeNames, l, x, y, f, 0, ['c']) : null;
+      const box = on.cities && onScreen(x, y) && (k >= LAKE_NAMES_AT || l.pref === f.selected) && !takenOver.has(`${l.pref}|${l.name.ja}`) ? placeName(lakeNames, l, x, y, f, 0, ['c']) : null;
       if (!box) lakeNames.filter((q) => q === l).classed('is-hidden', true);
     }
     const islandsOn = on.cities && k <= ISLANDS_UNTIL && !f.selected && !f.region;

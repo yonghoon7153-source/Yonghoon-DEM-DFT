@@ -626,7 +626,7 @@
 .landmark__sup { font-size: 10px; fill: var(--accent-2); paint-order: stroke; stroke: var(--white); stroke-width: 2.6px; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
 .label--place.landmark-name { fill: var(--ink-2); font-family: var(--font-body); }
 .t23__landmarks .landmark__art { filter: url(#lm-shadow); }
-.nchip.is-flash { animation: nchip-flash 1.8s ease-out; }
+.nchip.is-flash, .term.is-flash { animation: nchip-flash 1.8s ease-out; }
 @keyframes nchip-flash { 0%, 100% { box-shadow: 0 0 0 0 transparent; } 15%, 55% { box-shadow: 0 0 0 3px var(--accent); } 35%, 75% { box-shadow: 0 0 0 3px transparent; } }
 /* inside the open 県 every city area is washed a little lighter, like a highlighter, so how big each 시 is shows without a heavier line (사용자: 「시 사이즈 정도는 볼 수 있게」) */
 .city-area.is-open { fill: var(--white); fill-opacity: .34; opacity: .8; }
@@ -771,6 +771,8 @@
 .t23__name small { font-size: 11px; color: var(--ink-3); font-family: var(--font-body); }
 .t23__ko { font-size: 13px; color: var(--ink-2); padding-bottom: 2px; }
 .t23__note { margin: 0 0 8px; font-size: 12.5px; color: var(--ink-2); }
+.t23__sights { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--line-2); }
+.t23__sights .k { flex-basis: 100%; font-size: 11px; color: var(--ink-3); }
 .t23__others { margin-top: 16px; }
 .t23 h2 { flex-wrap: wrap; row-gap: 2px; }
 .nfold {

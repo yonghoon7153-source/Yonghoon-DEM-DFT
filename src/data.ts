@@ -27,8 +27,12 @@ export const festivals = (festivalsJson as unknown as FestivalsDb).festivals;
 export const landmarks = (landmarksJson as unknown as LandmarksDb).landmarks;
 export const landmarkById = new Map(landmarks.map((l) => [l.id, l]));
 
-/** Where a landmark is written: a box of my mind map or of Claude's 보충 (the checker makes sure it is one of them). */
-export function landmarkSource(l: Landmark): 'notes' | 'supplement' {
+/**
+ * Where a landmark is written: a box of my mind map or of Claude's 보충, or a 観光 spot of the 기본 정보 (図鑑) — the
+ * checker makes sure it is one of them.
+ */
+export function landmarkSource(l: Landmark): 'notes' | 'supplement' | 'info' {
+  if (l.spot !== undefined) return 'info';
   const p = prefBySlug.get(l.pref);
   const named = (items: NoteItem[]): boolean => items.some((it) => it.t === l.box || named(it.children ?? []));
   return p && named(notesFor(p).items) ? 'notes' : 'supplement';

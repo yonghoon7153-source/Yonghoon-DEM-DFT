@@ -10,10 +10,10 @@ import { feature } from 'topojson-client';
 import type { GeometryCollection, Topology } from 'topojson-specification';
 import { assetUrl } from '../asset-url';
 import { landmarkSource, landmarks, notes, places, regionOf, prefBySlug } from '../data';
-import { drawLandmark } from '../landmarks/art';
+import { drawLandmark, loadLandmarkArt } from '../landmarks/draw';
 import type { LabelMode, NoteItem, Ward } from '../types';
 import { clear, el } from './dom';
-import { glossNote, photoSearch, renderTree } from './notes-render';
+import { glossNote, photoSearch, renderTree, termChip } from './notes-render';
 
 export const WARD_PREFECTURE = 'tokyo';
 type WardFeature = Feature<Geometry, { ja: string }>;
@@ -119,6 +119,10 @@ export function renderTokyo23(mode: LabelMode, focus?: string): HTMLElement {
     if (gn) card.append(gn);
     if (kids.length) card.append(renderTree(kids, style));
     else card.append(el('p', { class: 'empty' }, box ? '구 이름만 적어 둔 칸이에요' : '아직 적어 둔 칸이 없어요 ✿'));
+    // the 기본 정보 観光 spots in this ward (渋谷 · 明治神宮 …), which have stickers on the map too — kept apart from my boxes
+    const sights = landmarks.filter((l) => l.pref === WARD_PREFECTURE && l.ward === ja && l.spot !== undefined)
+      .map((l) => pref.spots.find((t) => t.ja === l.spot) ?? { ja: l.spot! });
+    if (sights.length) card.append(el('div', { class: 't23__sights' }, el('span', { class: 'k' }, '📘 관광 · 기본 정보'), ...sights.map((t) => termChip(t, '東京'))));
     card.hidden = false;
     hint.hidden = true;
     card.style.animation = 'none';
@@ -137,8 +141,9 @@ export function renderTokyo23(mode: LabelMode, focus?: string): HTMLElement {
     }
   }
 
-  loadShapes()
-    .then((features) => {
+  // the ward shapes, and the sticker pictures with them (a chunk of their own)
+  Promise.all([loadShapes(), loadLandmarkArt()])
+    .then(([features]) => {
       mapBox.querySelector('.t23__loading')?.remove();
       const W = Math.max(280, mapBox.clientWidth || 700);
       const H = Math.round(W * 0.8);
@@ -201,10 +206,12 @@ export function renderTokyo23(mode: LabelMode, focus?: string): HTMLElement {
         const title = svg('title');
         title.textContent = `${l.name.ja} (${l.name.kana}) ${l.name.ko} — ${l.ward}`;
         g.append(title);
-        // the ward's card opens and, inside it, this place's own box blinks (as on the map's panel)
+        // the ward's card opens and, inside it, this place's own box (or 観光 word) blinks (as on the map's panel)
         const open = () => {
           showCard(l.ward!, ward.g, ward.at);
-          const chip = [...card.querySelectorAll<HTMLElement>('.nchip__t')].find((e) => e.textContent === l.box)?.closest<HTMLElement>('.nchip');
+          const chip = l.spot !== undefined
+            ? [...card.querySelectorAll<HTMLElement>('.term')].find((e) => e.dataset.t === l.spot)
+            : [...card.querySelectorAll<HTMLElement>('.nchip__t')].find((e) => e.textContent === l.box)?.closest<HTMLElement>('.nchip');
           if (!chip) return;
           chip.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
           chip.classList.remove('is-flash');

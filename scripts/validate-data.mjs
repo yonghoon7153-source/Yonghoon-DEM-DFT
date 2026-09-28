@@ -203,10 +203,12 @@ for (const f of festivalsDb.festivals ?? []) {
   if (!['fireworks', 'snow', 'sakura', 'momiji', 'lanterns', 'drums', 'streamers'].includes(f.fx)) err(`${where}: fx must name an effect`);
   if (f.approx !== undefined && typeof f.approx !== 'boolean') err(`${where}: approx must be true/false`);
 }
-// landmarks.json (확대하면 붙는 랜드마크 스티커, ADR 0011): the box must be one of that prefecture's boxes, the point inside
-// its box (bbox, dependency-free — the full check against the shapes was done once when the points were written), the icon drawn
+// landmarks.json (확대하면 붙는 랜드마크 스티커, ADR 0011): the box must be one of that prefecture's boxes — or, instead, the
+// spot one of its 기본 정보 観光 (#93) — the point inside its box (bbox, dependency-free — the full check against the shapes
+// was done once when the points were written), the icon drawn
 const landmarksDb = read('landmarks.json');
-const artSrc = ['art-a.ts', 'art-b.ts'].map((f) => readFileSync(new URL(`../src/landmarks/${f}`, import.meta.url), 'utf8')).join('\n');
+const okinawaShift = JSON.parse(readFileSync(new URL('../public/geo/japan.topo.json', import.meta.url), 'utf8')).meta?.okinawaShift ?? [0, 0];
+const artSrc = ['art-a.ts', 'art-b.ts', 'art-c.ts', 'art-d.ts', 'art-e.ts', 'art-f.ts'].map((f) => readFileSync(new URL(`../src/landmarks/${f}`, import.meta.url), 'utf8')).join('\n');
 const artIds = new Set([...artSrc.matchAll(/^ {2}([a-z]+): /gm)].map((m) => m[1]));
 const boxesOf = (slug) => {
   const out = new Set();
@@ -218,16 +220,21 @@ const boxesOf = (slug) => {
 const wardNames = new Set((placesDb.wards ?? []).map((w) => w.name.ja));
 const prefIdBySlug = new Map(prefectures.map((p) => [p.slug, p.id]));
 const landmarkIds = new Set();
+const landmarkSpots = new Set();
 for (const l of landmarksDb.landmarks ?? []) {
   const where = `landmarks "${l.id ?? '?'}"`;
   if (!/^[a-z0-9-]+$/.test(l.id ?? '') || landmarkIds.has(l.id)) err(`${where}: bad/duplicate id`); landmarkIds.add(l.id);
   names(l.name, where);
   if (!slugs.has(l.pref)) { err(`${where}: unknown prefecture "${l.pref}"`); continue; }
-  if (!boxesOf(l.pref).has(l.box)) err(`${where}: no box "${l.box}" in ${l.pref} (내 마인드맵 · 보충)`);
+  if ((l.box === undefined) === (l.spot === undefined)) err(`${where}: exactly one of box / spot`);
+  else if (l.box !== undefined && !boxesOf(l.pref).has(l.box)) err(`${where}: no box "${l.box}" in ${l.pref} (내 마인드맵 · 보충)`);
+  else if (l.spot !== undefined && !prefectures.find((p) => p.slug === l.pref)?.spots?.some((t) => t.ja === l.spot)) err(`${where}: no 観光 spot "${l.spot}" in ${l.pref} (prefectures.json)`);
+  if (l.spot !== undefined) { if (landmarkSpots.has(`${l.pref}|${l.spot}`)) err(`${where}: spot "${l.spot}" has a sticker already`); landmarkSpots.add(`${l.pref}|${l.spot}`); }
   if (!artIds.has(l.icon)) err(`${where}: no drawing "${l.icon}" in src/landmarks`);
   if (l.ward !== undefined && (l.pref !== 'tokyo' || !wardNames.has(l.ward))) err(`${where}: ward only for 東京, one of places.json wards`);
   const b = geo[prefIdBySlug.get(l.pref)]?.bbox;
-  const [x, y] = l.at ?? [];
+  // 沖縄 is drawn in the inset (its bbox too), moved by the map's okinawaShift — and without 宮古 · 八重山
+  const [x, y] = l.pref === 'okinawa' && inJapan(l.at) ? [l.at[0] + okinawaShift[0], l.at[1] + okinawaShift[1]] : l.at ?? [];
   if (!inJapan(l.at) || !b || x < b[0] - 0.05 || x > b[2] + 0.05 || y < b[1] - 0.05 || y > b[3] + 0.05) err(`${where}: at [lon, lat] is not in ${l.pref}`);
 }
 const noteIds = new Set();

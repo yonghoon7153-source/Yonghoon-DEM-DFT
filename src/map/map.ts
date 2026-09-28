@@ -29,6 +29,8 @@ export interface MapApi {
   zoomBy(factor: number): void;
   reset(animate?: boolean): void;
   setInset(inset: Partial<Inset>): void;
+  /** Slide the map (same zoom) just enough that a point is not under the panel — a tapped sticker stays in sight. */
+  keepInView(at: LonLat, pref?: string): void;
   anchorScreen(slug: string): { x: number; y: number } | null;
   /** The part of the map that no panel covers, in screen pixels. */
   visibleArea(): { x0: number; y0: number; x1: number; y1: number };
@@ -467,6 +469,17 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
     inset = { ...inset, ...next };
   }
 
+  function keepInView(at: LonLat, pref?: string) {
+    const p = projection(pref === 'okinawa' ? [at[0] + okinawaShift[0], at[1] + okinawaShift[1]] : at);
+    if (!p) return;
+    const [x, y] = transform.apply(p);
+    const [[vx0, vy0], [vx1, vy1]] = visibleExtent();
+    const m = 56; // room for the sticker and its name
+    const dx = x < vx0 + m ? vx0 + m - x : x > vx1 - m ? vx1 - m - x : 0;
+    const dy = y < vy0 + m ? vy0 + m - y : y > vy1 - m ? vy1 - m - y : 0;
+    if (dx || dy) applyTransform(zoomIdentity.translate(transform.x + dx, transform.y + dy).scale(transform.k), true, 450);
+  }
+
   function anchorScreen(slug: string) {
     const a = anchorPx.get(slug);
     if (!a) return null;
@@ -530,6 +543,7 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
     zoomBy,
     reset,
     setInset,
+    keepInView,
     anchorScreen,
     visibleArea() {
       const [[x0, y0], [x1, y1]] = visibleExtent();

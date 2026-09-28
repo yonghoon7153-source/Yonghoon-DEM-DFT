@@ -148,17 +148,19 @@ async function init() {
     }
   }
 
-  function select(slug: string, opts: { animate?: boolean; mascot?: string } = {}) {
+  /** `quiet` — from a landmark sticker: the map stays as it is (no zooming out to the whole 県) and no mascot pops out. */
+  function select(slug: string, opts: { animate?: boolean; mascot?: string; quiet?: boolean } = {}) {
     if (!map || !easter || !prefBySlug.has(slug)) return;
     state.selected = slug;
     state.region = null;
     setLegendActive(null);
     map.highlightRegion(null);
     applyInset(true);
-    map.selectPrefecture(slug, { animate: opts.animate });
+    map.selectPrefecture(slug, { animate: opts.animate, zoom: !opts.quiet });
     panel.showPrefecture(slug);
     easter.dismiss(true);
     setHash(slug);
+    if (opts.quiet) return;
     window.setTimeout(() => {
       if (state.selected === slug && easter) {
         easter.reveal(slug, opts.mascot);
@@ -175,19 +177,22 @@ async function init() {
   function openWards(focus?: string) {
     modal.open(renderTokyo23(state.labelMode, focus), { wide: true });
   }
-  /** A landmark sticker was tapped: its prefecture opens and its box blinks; in 東京, the 23区 popup opens on its ward. */
+  /**
+   * A landmark sticker was tapped: its prefecture's page opens and its box blinks (a 기본 정보 spot: its 観光 word in the
+   * 図鑑); in 東京, the 23区 popup opens on its ward. The map stays where it is — no zooming out, no mascot (사용자:
+   * 「지도 축소되면서 캐릭터 나오고 그거 안 해도 돼, 오히려 방해」) — and only slides if the panel would cover the sticker.
+   */
   function openLandmark(id: string) {
     const l = landmarkById.get(id);
     if (!l) return;
-    const opening = state.selected !== l.pref;
-    if (opening) select(l.pref, { animate: true });
+    if (state.selected !== l.pref) select(l.pref, { quiet: true });
     if (modal.isOpen()) modal.close();
+    map?.keepInView(l.at, l.pref);
     if (l.pref === WARD_PREFECTURE && l.ward) {
-      window.setTimeout(() => { if (state.selected === l.pref && !modal.isOpen()) openWards(l.ward); }, opening ? 700 : 0);
+      openWards(l.ward);
       return;
     }
-    // after the panel's second drawing (the mascot comes out at 0.76 s and the page is drawn again)
-    window.setTimeout(() => panel.flashBox(l.box), opening ? 950 : 0);
+    window.setTimeout(() => panel.flashBox(l.box ?? l.spot ?? '', l.box === undefined), 250);
   }
 
   function deselect() {

@@ -1,7 +1,7 @@
 // Renders mind-map boxes (NoteItem trees) as connected chips.
 import { countBoxes } from '../data';
 import type { NoteItem } from '../types';
-import { el } from './dom';
+import { el, ruby } from './dom';
 
 export interface TreeStyle { color: string; ink: string }
 /** `fold`: boxes at this depth show 「+N칸」 instead of their branches; `onFold` may take the tap (true) instead of opening in place. */
@@ -71,6 +71,16 @@ export function photoSearch(q: string): HTMLElement {
     class: 'nphoto', href: `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(q)}`,
     target: '_blank', rel: 'noopener noreferrer', title: `사진 보기 — ${q}`, 'aria-label': `사진 보기: ${q}`,
   }, '📷');
+}
+
+/**
+ * A 名物 / 観光 word of the 기본 정보: reading above, Korean below, and 📷 to look it up (searched with `where`, the
+ * prefecture's name). `data-t` is the word, for a landmark sticker to find it and make it blink.
+ */
+export function termChip(t: { ja: string; kana?: string; ko?: string }, where: string): HTMLElement {
+  return el('span', { class: 'term', 'data-t': t.ja },
+    el('span', { class: 'term__text' }, el('span', { class: 'term__ja', lang: 'ja' }, ruby(t.ja, t.kana)), t.ko ? el('span', { class: 'term__ko' }, t.ko) : null),
+    photoSearch(`${t.ja} ${where}`));
 }
 
 export function hasJapanese(s: string): boolean {
