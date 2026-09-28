@@ -243,14 +243,20 @@ MP GGA/GGA+U hull, Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries · n = 24 (4 cathodes ×
 <div class="tblwrap" style="margin:0 0 8px"><table>
 <thead><tr><th>조성</th><th>산화 onset (V vs Li/Li⁺)</th><th>환원 onset (V)</th></tr></thead>
 <tbody>
-<tr><td class="mono">comp1 (Li₆PS₅Cl)</td><td class="mono">2.14</td><td class="mono">1.242</td></tr>
-<tr><td class="mono">modelc (LPSCl₁.₆)</td><td class="mono">2.14</td><td class="mono">1.242</td></tr>
-<tr><td class="mono">lpsocl (O 치환)</td><td class="mono">2.14</td><td class="mono">1.242</td></tr>
-<tr><td class="mono">modelc_nd (Nd + O)</td><td class="mono" style="color:var(--ox)"><b>1.92</b></td><td class="mono" style="color:var(--ox)"><b>1.518</b></td></tr>
+<tr><td class="mono">comp1 (Li₆PS₅Cl)</td><td class="mono">2.14</td><td class="mono">1.717</td></tr>
+<tr><td class="mono">modelc (LPSCl₁.₆)</td><td class="mono">2.14</td><td class="mono">1.717</td></tr>
+<tr><td class="mono">lpsocl (O 치환)</td><td class="mono">2.14</td><td class="mono">1.717</td></tr>
+<tr><td class="mono">modelc_nd (Nd + O)</td><td class="mono" style="color:var(--ox)"><b>1.92</b></td><td class="mono">1.717</td></tr>
 </tbody></table></div>
-<p style="margin:0;font-size:.9rem">O 치환은 onset 을 <b>안 움직이고</b>(2.14 고정), Nd 는 <b>0.22 V 내린다</b> — 환원 쪽도 0.28 V 올라가 창은 양쪽에서 좁아진다.
+<p style="margin:0;font-size:.9rem">O 치환은 onset 을 <b>안 움직이고</b>(2.14 고정), Nd 는 <b>0.22 V 내린다</b>. 환원 onset 은 네 조성 모두 1.717 V 로 같다 — Nd 가 움직이는 것은 <b>산화 쪽뿐</b>이다.
 grand-potential element profile (Li 열림, MP hull) — <code>db/properties/cei_esw_Li_2026_09_16.json</code>.
 심사자가 찾아낼 것이 아니라 우리가 먼저 싣는 것이다.</p>
+<p class="plain" style="margin:8px 0 0;padding:9px 11px;border-left:3px solid var(--ox);background:var(--ox-soft);font-size:.9rem"><b>⛔ 2026-09-28 정정 — 환원 쪽 열을 다시 읽었다.</b>
+이 열에는 전에 다른 값이 실려 있었고, 그 값으로 “환원 쪽도 올라가 창이 양쪽에서 좁아진다” 고 적었다.
+그런데 그 값은 계산 도구가 <b>아직 Li 를 받아들이며 분해되는 단계</b>를 환원 한계로 잘못 집은 것이었다
+(인용위험 원장 <code>HZ-esw-reduction-limit-label</code>). 같은 원장에서 <b>Li 를 더 이상 주고받지 않는 첫 지점</b>으로
+다시 읽으면 네 조성 모두 1.717 V 다. 그래서 환원 쪽 차이와 창 폭 비교는 <b>철회</b>한다.
+산화 onset(2.14 · 1.92)은 이 오류와 무관하다.</p>
 </div>
 
 
@@ -289,11 +295,11 @@ VBM 이 S 지배인 데다, 우리 계산은 <b>frozen-4f</b>(<span class="mono"
 <div class="rx">무도핑   Li₅.₄PS₄.₄Cl₁.₆ → Li₃PS₄ + 0.1 <span style="color:#c05621;font-weight:600">LiS₄</span> + 1.6 LiCl + 0.7 Li          (2.14 V)
 Nd 계    Li₄₈Nd₂P₁₀S₄₁Cl₁₆O₃ → 0.2 <span style="color:#6d28d9;font-weight:600">Nd₁₀S₁₉</span> + 9.25 Li₃PS₄ + 0.2 Li₂S + 0.75 Li₃PO₄ + 16 LiCl + 1.6 Li   (1.92 V)
 
-환원 쪽도 같다 — 무도핑은 Li₂S, Nd 계는 <span style="color:#6d28d9;font-weight:600">Nd₂S₃</span> 가 먼저 생긴다 (1.242 → 1.518 V)</div>
+환원 쪽은 안 움직인다 — 네 조성 모두 1.717 V 에서 시작한다 (Nd 계는 산물에 <span style="color:#6d28d9;font-weight:600">Nd₂S₃</span> 가 끼지만 전압은 같다)</div>
 <p style="margin:10px 0 0">무도핑은 황이 <b>리튬 폴리설파이드(LiS₄)</b> 로 가는데, Nd 계는
 <b>네오디뮴 폴리설파이드(Nd₁₀S₁₉)</b> 로 간다. <b>Nd–S 상이 hull 에 낮게 깔려 있어 새 분해 채널이 열리고</b>,
-그래서 황이 <b>더 낮은 전압에서 먼저 나간다</b>. 환원 쪽에서는 Nd₂S₃ 가 같은 일을 해 창이 위에서도 좁아진다.
-⇒ 창이 <b>0.898 V → 0.402 V</b> 로 절반 이하가 된다.
+그래서 황이 <b>더 낮은 전압에서 먼저 나간다</b>. 환원 쪽은 그렇지 않다 — Nd₂S₃ 가 산물에 끼기는 하지만
+환원이 시작되는 전압은 무도핑과 같다. ⇒ 창은 <b>산화 쪽에서만</b> 좁아진다 (2.14 → 1.92 V).
 <span style="color:var(--mut);font-size:.9rem">(“Nd 가 황친화라서” 는 <b>해석</b>이고, 측정된 것은 반응식의 산물이 바뀐다는 사실이다.)</span></p>
 
 <div class="card warn" style="margin:12px 0">
@@ -331,11 +337,16 @@ VBM 이 PS₄³⁻ 비결합 + free S²⁻ 라 <b>S 가 조성에 있는 한 S �
 우리 2.14 V 고정이 정확히 그 S-pinning 이다. <b>정면으로 받으면 진다. 동의하고 인용한다.</b></p>
 
 <div class="card answer">
-<p style="margin:0"><b>⇒ 그래서 창이 아니라 산물을 본다.</b> 창은 S 가 고정하지만, 산화가 <i>일어난 뒤</i>
-<b>무엇이 생기느냐</b>는 도펀트가 바꾼다. 무도핑 LPSCl 은 4 V 위에서 남은 P 를 <b>양극의 전이금속</b>으로 받아
-CoP₄O₁₁ · Ni(PO₃)₂ 를 만들고(§2 표), Nd 계는 그 P 를 <b>Nd 인산염</b>(NdPO₄ → LiNd(PO₃)₄ → NdP₅O₁₄)으로
-선점한다 — Li 를 안 쓰는 방을 전해질이 <b>제자리에서</b> 들고 온다. Banik 이 말한 “코팅” 의 기능을 SE 도펀트가
-in-situ 로 하는 셈이고, onset 은 건드리지 않으므로 그의 결론과 충돌하지 않는다.</p>
+<p style="margin:0"><b>⇒ 그래서 창이 아니라 산물을 본다.</b> 창의 한계는 S 가 잡고, 도펀트는 그걸 <b>올리지 못한다</b> —
+Nd 는 오히려 산화 onset 을 2.14 → 1.92 V 로 조금 내린다(위 표). 대신 산화가 <i>일어난 뒤</i>
+<b>무엇이 생기느냐</b>는 도펀트가 바꾼다. 4 V 위에서 풀려난 P 는 들어갈 방이 필요한데,
+<b>양쪽 다 Li 를 안 쓰는 방</b>을 찾는다. 무도핑 LPSCl 은 그 방을 <b>양극의 전이금속</b>에서 얻어
+CoP₄O₁₁ · Ni(PO₃)₂ 를 만들고(§2 표), Nd 계는 <b>Nd 인산염</b>(NdPO₄ → LiNd(PO₃)₄ → NdP₅O₁₄ ·
+가운데 것만 P 넷에 Li 하나)으로 먼저 채운다. 차이는 <b>방을 누가 대느냐</b>다 — 무도핑은 양극을 헐어서 대고,
+Nd 계는 전해질이 <b>제자리에서</b> 들고 온다.</p>
+<p style="margin:8px 0 0">그래서 Banik 이 말한 “코팅” 이 하는 일 가운데 <b>양극을 아끼는 부분</b>을 SE 도펀트가
+in-situ 로 하는 셈이다. 다만 그 층이 빈틈없이 덮는지 · 얼마나 두꺼운지 · Li⁺ 를 통과시키는지는
+이 계산에 없다(<a href="#s6">§6</a> G5). onset 을 올리지 않으므로 그의 결론과도 충돌하지 않는다.</p>
 <p style="margin:8px 0 0;font-size:.9rem">읽는 순서 — <a href="#s2">§2</a> 무엇이 생기나(산물 사다리) →
 <a href="#s2b">§2b</a> 얼마나 아끼나(정량 규칙 · 1저자 조성) → <a href="#s6">§6</a> 그 산물이 전자를 막나(우리 DFT 갭 10/10) →
 <a href="#s7">§7</a> 전해질 쪽에서도 지내나(양면 검사). <b>접힌 절은 근거·검산·반론</b>이고, 요지는 접힘 밖 한 줄에 있다.</p>

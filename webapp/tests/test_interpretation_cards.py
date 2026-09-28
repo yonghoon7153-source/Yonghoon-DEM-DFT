@@ -905,7 +905,12 @@ def test_s0_onset_table_matches_the_esw_record(client):
         assert row, f"§0 표에 {lab} 행이 없다"
         cells = [re.sub(r"<[^>]+>", "", c) for c in re.findall(r"<td[^>]*>(.*?)</td>", row.group(1), re.S)]
         assert float(cells[0]) == esw[lab]["oxidation_limit_V"], (lab, cells)
-        assert float(cells[1]) == esw[lab]["reduction_limit_V"], (lab, cells)
+        # ⛔ 2026-09-28 — 환원 칸은 reduction_limit_V 가 **아니다** (그 필드는 '아직 Li 를 흡수하는 단계' 를 집는
+        #   계통 오류 · HZ-esw-reduction-limit-label). 같은 원장 profile 에서 Li 교환 0 인 첫 경계와 대조한다.
+        prof = sorted(esw[lab]["profile"], key=lambda e: e["V_vs_Li"])
+        red = next(e["V_vs_Li"] for e in prof if abs(e["evolution_Li"]) < 1e-6)
+        assert float(cells[1]) == red, (lab, cells, "교환 0 첫 경계", red)
+        assert float(cells[1]) != esw[lab]["reduction_limit_V"], (lab, "계통 오류 값이 표에 남았다")
     assert "1.92" in s0 and "좁힌다" in s0 and "Banik" in s0
     assert "고전압 양극 계면 열화 억제" in h[:h.index('<ul class="toc">')], "부제가 아직 '안정성 개선' 이다"
 
@@ -1301,12 +1306,43 @@ def test_s0_nd_s_channel_reactions_match_the_esw_record(client):
     s0 = _section(_report_html(client), "s0")
     assert "Nd₁₀S₁₉" in s0 and "LiS₄" in s0, "산화 onset 산물이 바뀐다는 사실이 화면에 없다"
     assert "Nd₂S₃" in s0, "환원 쪽 Nd 산물이 없다"
-    # 창 폭이 두 원장값에서 나온다
-    w0 = esw["modelc"]["oxidation_limit_V"] - esw["modelc"]["reduction_limit_V"]
-    w1 = esw["modelc_nd"]["oxidation_limit_V"] - esw["modelc_nd"]["reduction_limit_V"]
-    assert f"{w0:.3f}" in s0 and f"{w1:.3f}" in s0, f"창 폭 {w0:.3f}/{w1:.3f} 이 화면에 없다"
+    # ⛔ 2026-09-28 뒤집음 — 종전 이 시험은 창 폭(oxidation − reduction_limit_V)이 화면에 **있어야** 통과했다.
+    #   그런데 reduction_limit_V 는 '아직 Li 를 흡수하는 단계' 를 집는 계통 오류다 (HZ-esw-reduction-limit-label ·
+    #   2026-09-22). 원장만 고쳐지고 화면·시험은 따라가지 않아 **막힌 숫자를 시험이 강제**하고 있었다.
+    #   ⇒ 환원 쪽은 같은 원장 profile 에서 **Li 교환이 0 인 첫 경계**로 다시 읽고, 옛 값·창 폭은 **없어야** 한다.
+    for sysn in ("comp1", "modelc", "lpsocl", "modelc_nd"):
+        prof = sorted(esw[sysn]["profile"], key=lambda e: e["V_vs_Li"])
+        red = next(e["V_vs_Li"] for e in prof if abs(e["evolution_Li"]) < 1e-6)
+        ox = min(e["V_vs_Li"] for e in prof if e["evolution_Li"] < -1e-6)
+        assert abs(ox - esw[sysn]["oxidation_limit_V"]) < 1e-9, f"{sysn}: 첫 Li 방출 {ox} ≠ oxidation_limit_V (원장 자체 모순)"
+        assert f"{red}" in s0, f"{sysn}: 교환 0 첫 경계 {red} V 가 §0 에 없다"
+        assert f"{ox}" in s0, f"{sysn}: 산화 onset {ox} V 가 §0 에 없다"
+        bad = esw[sysn]["reduction_limit_V"]
+        assert f"{bad}" not in s0, f"{sysn}: 계통 오류 값 reduction_limit_V {bad} 가 §0 에 남아 있다"
+        w_bad = esw[sysn]["oxidation_limit_V"] - bad
+        assert f"{w_bad:.3f}" not in s0, f"{sysn}: 막힌 창 폭 {w_bad:.3f} 가 §0 에 남아 있다"
+    assert "HZ-esw-reduction-limit-label" in s0, "환원 열을 다시 읽은 근거(위험 원장 id)가 화면에 없다"
+    assert "산화 쪽뿐" in s0 or "산화 쪽에서만" in s0, "Nd 가 산화 쪽만 움직인다는 문장이 없다"
     # 해석과 측정을 갈라 적었는가
     assert "해석" in s0 and "측정된 것은" in s0, "'황친화' 가 해석이라는 구분이 없다"
+
+
+def test_s0_conclusion_keeps_the_onset_and_coating_claims_honest(client):
+    """⛔음성 — §0 결론 단락 (2026-09-28 같이 읽기에서 잡은 셋).
+
+    ① 'onset 은 건드리지 않는다' — 같은 §0 머리 줄·반응식이 2.14 → 1.92 V 로 **내린다**고 쓴다.
+    ② 코팅 비유를 G5 단서 없이 쓰기 — 연속성·두께·Li⁺ 전도는 계산에 없다 (§6 G5).
+    ③ 'Li 를 안 쓰는 방' 을 Nd 만의 차별점처럼 쓰기 — 무도핑 TM 인산염도 Li/P = 0 이다.
+       차이는 **방을 누가 대느냐** (양극을 헐어서 · 전해질이 제자리에서).
+    """
+    s0 = _section(_report_html(client), "s0")
+    i0 = s0.index("그래서 창이 아니라 산물을 본다"); i1 = s0.index("읽는 순서", i0)
+    concl = s0[i0:i1]
+    assert "건드리지 않" not in concl, "① Nd 는 onset 을 2.14 → 1.92 V 로 내린다 — '안 건드린다' 는 §0 과 모순"
+    assert "올리지 못한다" in concl and "1.92" in concl, "① 'onset 을 올리지 못한다 · 오히려 내린다' 가 없다"
+    assert "G5" in concl and "Li⁺" in concl, "② 코팅 비유에 G5 단서(Li⁺ 통과 등 미계산)가 없다"
+    assert "양쪽 다" in concl and "누가 대느냐" in concl, "③ 차별점이 'Li 를 안 쓴다' 로 읽힌다 — 방을 누가 대느냐가 없다"
+    assert "Li 하나" in concl, "③ LiNd(PO₃)₄ 에 Li 가 있다는 단서가 없다"
 
 
 def test_s0_refuses_to_harden_the_0p22V_and_to_call_nd_passivating(client):
