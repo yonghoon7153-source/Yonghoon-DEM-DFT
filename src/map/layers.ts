@@ -48,9 +48,9 @@ const BRIDGE_NAMES_AT = 2.2;
 const OKI_AT = 1.8;
 /** 「山↑」-style notes belong to the whole-country / region view. */
 const MAP_NOTES_UNTIL = 5;
-/** 🚄 가는 법: international hubs always; the other airports, named stations and line names when zoomed in. */
+/** 🚄 가는 법: international hubs always; the other airports and line names when zoomed in, the major stations (with 駅 names) from a light zoom. */
 const AIRPORTS_AT = 1.9;
-const STATIONS_AT = 2.4;
+const STATIONS_AT = 1.4;
 const LINE_NAMES_AT = 1.7;
 
 function parts(n: PlaceName, mode: LabelMode): { main: string; furi: string } {
@@ -155,7 +155,7 @@ export function createLayers(ctx: LayerContext) {
   const lineColor = new Map(transit.shinkansen.map((l) => [l.id, l.color]));
   const airportItems: LabelItem[] = transit.airports.map((a) => ({ id: a.id, name: a.name, pref: a.pref, px: [0, 0], fs: 9.5, cls: `airport${a.hub ? ' airport--hub' : ''}`, prio: a.hub ? 3 : 1 }));
   const airportAt = new Map(transit.airports.map((a) => [a.id, shift(a.at, a.pref)]));
-  const stationItems: LabelItem[] = transit.shinkansen.flatMap((l) => l.stations.filter((s) => s.major).map((s) => ({ id: `${l.id}:${s.ja}`, name: { ja: s.ja, kana: s.kana ?? s.ja, ko: s.ko ?? s.ja }, pref: s.pref, px: [0, 0], fs: 9, cls: 'station', prio: 0 })));
+  const stationItems: LabelItem[] = transit.shinkansen.flatMap((l) => l.stations.filter((s) => s.major).map((s) => ({ id: `${l.id}:${s.ja}`, name: { ja: `${s.ja}駅`, kana: `${s.kana ?? s.ja}えき`, ko: s.ko ? `${s.ko}역` : `${s.ja}駅` }, pref: s.pref, px: [0, 0], fs: 9, cls: 'station', prio: 0 })));
   const stationAt = new Map<string, LonLat>(transit.shinkansen.flatMap((l) => l.stations.filter((s) => s.major).map((s): [string, LonLat] => [`${l.id}:${s.ja}`, shift(s.at, s.pref)])));
   const stationLine = new Map<string, string>(transit.shinkansen.flatMap((l) => l.stations.filter((s) => s.major).map((s): [string, string] => [`${l.id}:${s.ja}`, l.id])));
   const lineItems: LabelItem[] = transit.shinkansen.map((l) => ({ id: l.id, name: l.name, px: [0, 0], fs: 9.5, cls: 'line-name', prio: 0 }));

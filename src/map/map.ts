@@ -48,8 +48,8 @@ export interface Sticker { id: string; image?: string; svg?: string }
 
 interface Inset { top: number; right: number; bottom: number; left: number }
 type PrefFeature = Feature<MultiPolygon, { id: number; ja: string }>;
-interface JapanTopology extends Topology { objects: { japan: GeometryCollection<{ id: number; ja: string }>; lakes?: GeometryCollection<{ id: string; ja: string }>; cities?: GeometryCollection<{ code: string; ja: string; pref: string }> } }
-type CityFeature = Feature<Polygon | MultiPolygon, { code: string; ja: string; pref: string }>;
+interface JapanTopology extends Topology { objects: { japan: GeometryCollection<{ id: number; ja: string }>; lakes?: GeometryCollection<{ id: string; ja: string }>; cities?: GeometryCollection<{ code: string; ja: string; pref: string; kind: 'designated' | 'city' }> } }
+type CityFeature = Feature<Polygon | MultiPolygon, { code: string; ja: string; pref: string; kind: 'designated' | 'city' }>;
 type LakeFeature = Feature<Polygon | MultiPolygon, { id: string; ja: string }>;
 
 /** Zoom from which the 政令指定都市 outlines show. */
@@ -87,7 +87,7 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
   // lakes (琵琶湖) are their own object: the land data has no hole for them
   const lakes = topo.objects.lakes ? (feature(topo, topo.objects.lakes) as unknown as FeatureCollection<Polygon | MultiPolygon, { id: string; ja: string }>).features : [];
   // 政令指定都市 outlines — a faint dotted hint of how big 仙台市 or 横浜市 really is (v2, 톡방 피드백)
-  const cityAreas = topo.objects.cities ? (feature(topo, topo.objects.cities) as unknown as FeatureCollection<Polygon | MultiPolygon, { code: string; ja: string; pref: string }>).features : [];
+  const cityAreas = topo.objects.cities ? (feature(topo, topo.objects.cities) as unknown as FeatureCollection<Polygon | MultiPolygon, { code: string; ja: string; pref: string; kind: 'designated' | 'city' }>).features : [];
   const bySlug = new Map<string, PrefFeature>();
   for (const f of features) {
     const p = prefById.get(f.properties.id);
@@ -143,8 +143,8 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
     .style('fill', (d) => regionOf(prefById.get(d.properties.id)!).color)
     .style('--hover-fill', (d) => `color-mix(in oklab, ${regionOf(prefById.get(d.properties.id)!).color} 80%, white)`);
   const lakePaths = gLakes.selectAll<SVGPathElement, LakeFeature>('path').data(lakes, (d) => d.properties.id).join('path').attr('class', 'lake');
-  const cityAreaPaths = gCityAreas.selectAll<SVGPathElement, CityFeature>('path').data(cityAreas, (d) => d.properties.code).join('path').attr('class', 'city-area').attr('data-pref', (d) => d.properties.pref);
-  cityAreaPaths.append('title').text((d) => `${d.properties.ja} — 政令指定都市 (시 구역)`);
+  const cityAreaPaths = gCityAreas.selectAll<SVGPathElement, CityFeature>('path').data(cityAreas, (d) => d.properties.code).join('path').attr('class', (d) => `city-area city-area--${d.properties.kind}`).attr('data-pref', (d) => d.properties.pref);
+  cityAreaPaths.append('title').text((d) => `${d.properties.ja} — ${d.properties.kind === 'designated' ? '政令指定都市 (시 구역)' : '시 구역'}`);
 
   gLines.append('path').attr('class', 'border-inner');
   gLines.append('path').attr('class', 'coast');
@@ -325,8 +325,11 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
 
     layers.update({ t: transform, placed, W, H, mode: labelMode, selected, region: highlightedRegion });
     // city outlines only once the map is close enough for them to read as areas, not specks
-    gCityAreas.classed('is-hidden', k < CITY_AREAS_AT);
-    cityAreaPaths.classed('is-dim', (d) => !!highlightedRegion && prefBySlug.get(d.properties.pref)?.region !== highlightedRegion);
+    // city areas: the 政令指定都市 once zoomed in a little (other regions' faint); every mapped city of the open prefecture, lightly
+    gCityAreas.classed('is-hidden', k < CITY_AREAS_AT && !selected);
+    cityAreaPaths
+      .classed('is-hidden', (d) => d.properties.pref !== selected && (d.properties.kind !== 'designated' || k < CITY_AREAS_AT))
+      .classed('is-dim', (d) => d.properties.kind === 'designated' && d.properties.pref !== selected && !!highlightedRegion && prefBySlug.get(d.properties.pref)?.region !== highlightedRegion);
 
     const [ix, iy] = transform.apply([okinawaBox[0][0] - 14, okinawaBox[1][1] + 14]);
     insetNote.attr('transform', `translate(${ix.toFixed(1)},${(iy + 11).toFixed(1)})`).classed('is-hidden', k > 2.2);
