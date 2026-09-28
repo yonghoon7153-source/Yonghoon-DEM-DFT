@@ -58,7 +58,7 @@
   },
   "5_실행": {
     "기계": "gabia · uma env (/data/apps/miniforge3/envs/uma/bin/python — mp_api · pymatgen) · MP GGA_GGA+U · **GPU 안 씀** (V4 · 465 K 가드와 겹치지 않는다)",
-    "코드_위치": "정본 clone 작업트리를 건드리지 않는다 — /data/work/repo 에서 이 사전등록 커밋으로 새 작업트리 /data/work/wt_x010_2026_09_28 을 만든다 (x002 선례).",
+    "코드_위치": "정본 clone /root/Yonghoon-DEM-DFT 의 작업트리를 **건드리지 않는다** (V4 러너가 그 트리의 스크립트를 쓸 수 있다) — 거기서 `git worktree add --detach` 로 사전등록 커밋의 새 작업트리 /data/work/wt_x010_2026_09_28 을 만든다 (x002 선례).",
     "스크립트": "db/raw/cei_x010_2026_09_28/run.sh",
     "예상_시간": "x002(16 조성 · 17 분)의 절반 아래 — 10 분 안팎",
     "키": "MP_API_KEY 는 gabia 환경변수로만. 없으면 스크립트가 시작하지 않는다. 출력에 찍지 않는다."
@@ -77,6 +77,12 @@
       "state": "proposed",
       "by": "agent",
       "note": "1저자 '빨리 할 수 있는 부분이면 진행하자' — 실행 승인. 게이트 문안(G0 · GI · GC)은 에이전트 초안이다. **새 두 조성의 값을 보기 전에** 커밋한다. 1저자는 실행 전까지 고칠 수 있고, 실행으로 비준한다 (09-19 · 09-28 x002 선례)."
+    },
+    {
+      "at": "2026-09-28",
+      "state": "proposed",
+      "by": "agent",
+      "note": "실행 전 정정 — §5 코드_위치의 clone 경로가 /data/work/repo 로 잘못 적혀 있었다(x002 개정문 §5 는 /root/Yonghoon-DEM-DFT). 게이트(§3)·조성(§2)은 그대로다. 값을 본 적 없음."
     }
   ]
 }
