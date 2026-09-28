@@ -1,0 +1,11 @@
+{
+ "schema": "mixer_highbo_launch_policy/1",
+ "policy_id": "Q8-2026-09-29-first-smoke-rest",
+ "allowed_stages": ["first", "rest"],
+ "registered_in": "docs/reviews/mixer_highbo_prereg_20260927.md §0 Q8 · §9 D-4 — 첫 시드 → bin 0 (M-맹검) 스모크 → 나머지 둘",
+ "history": [
+  "2026-09-28 밤: all (세 시드 동시) = 저자 편차 (caba30c7a · DEVIATION 문구) → 18:07 발사 → 20:23 정지 (§0 Q8)",
+  "Codex 5 차 v2 ADD-Q7-01 · 6 차 §7-2: 정책 ID/해시에 허용 stage 를 고정 — 옛 DEVIATION 환경변수만 남았다고 all 이 다시 열리지 않게"
+ ],
+ "note": "stage 를 늘리려면 (예: all) 이 파일을 고쳐 커밋하고 사전등록 §0 에 결정을 적는다 — 봉인 launch_record.json 이 policy_id · sha256 · allowed_stages 를 적는다.  DEVIATION 환경변수는 문구 기록일 뿐 허가가 아니다."
+}

@@ -39,6 +39,10 @@ def parse_contact_file(filepath):
         'c_cpl[1]': 'p1_x', 'c_cpl[2]': 'p1_y', 'c_cpl[3]': 'p1_z',
         'c_cpl[4]': 'p2_x', 'c_cpl[5]': 'p2_y', 'c_cpl[6]': 'p2_z',
         'c_cpl[7]': 'id1', 'c_cpl[8]': 'id2',
+        #  ★ LHS-16 (09-29): 이름은 `periodic_flag` 지만 LIGGGHTS 의 뜻은 "주기 **고스트** 관여" — compute_pair_gran_local.cpp
+        #    add_pair: 두 입자가 다 local 이면 0, 아니면 is_periodic_ghost(i)||is_periodic_ghost(j) (domain_I.h: 고스트이고 주기 축의
+        #    boxlo+cutneighmax / boxhi−cutneighmax 띠 안).  직렬 런 = 경계를 넘는 접촉.  MPI 런은 내부 분할면 너머 고스트도 띠 안이면 1
+        #    (lhs00_029 · 098 실측).  리포에 이 값을 쓰는 소비자는 없다 — CN 은 행 수만 센다.  키 이름은 바꾸지 않는다.
         'c_cpl[9]': 'periodic_flag',
         'c_cpl[10]': 'fx', 'c_cpl[11]': 'fy', 'c_cpl[12]': 'fz',
         'c_cpl[13]': 'fn_x', 'c_cpl[14]': 'fn_y', 'c_cpl[15]': 'fn_z',

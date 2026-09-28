@@ -60,6 +60,9 @@ set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"; ROOT="$(cd "$HERE/../.." && pwd)"
 OUT="${OUT:-$HERE/runs}"
 BACKEND="${BACKEND:-local}"
+#  ★ 발사 정책 (2026-09-29, Codex 6 차 §7-2 · Q8): 허용 stage 는 **파일** launch_policy.json (id · sha256 이 봉인에 남는다) 이 정한다.
+#    all 은 기본 정책에 없다 — 옛 DEVIATION 환경변수만 남아 있어도 다시 열리지 않는다.  정책을 바꾸려면 파일을 고쳐 커밋 + 사전등록 §0.
+POLICY_FILE="${POLICY_FILE:-$HERE/launch_policy.json}"
 case "$BACKEND" in
   local) LMP="${LMP:-lmp_serial}";;
   slurm) LMP="${LMP:-lmp_mpi}"; NP="${NP:-20}"
@@ -130,6 +133,26 @@ PY
   [ "$rc" -eq 0 ] || { echo "⛔ 덱 비교 관문 실패 (종료 코드 $rc) — 발사 0"; return 1; }
 }
 
+policy_allows() {  # policy_allows <stage> — 정책 파일이 이 stage 를 허용하는가 (파일 없음 · 모양 아님 · 미허용 = 발사 0)
+  python3 - "$POLICY_FILE" "$1" <<'PY'
+import json, sys
+p, st = sys.argv[1:]
+try:
+    d = json.load(open(p, encoding='utf-8'))
+except (OSError, ValueError) as e:
+    sys.exit(f'⛔ 발사 정책 파일을 읽을 수 없다 ({p}: {type(e).__name__}: {e}) — 발사 0')
+ok = (isinstance(d, dict) and d.get('schema') == 'mixer_highbo_launch_policy/1' and isinstance(d.get('policy_id'), str)
+      and d['policy_id'].strip() and isinstance(d.get('allowed_stages'), list) and d['allowed_stages']
+      and all(isinstance(x, str) and x in ('first', 'rest', 'all') for x in d['allowed_stages']))
+if not ok:
+    sys.exit(f'⛔ 발사 정책 파일 모양이 아니다 ({p}: schema · policy_id · allowed_stages ⊂ first/rest/all) — 발사 0')
+if st not in d['allowed_stages']:
+    sys.exit(f"⛔ 발사 정책 {d['policy_id']} 은 stage '{st}' 를 허용하지 않는다 (허용: {d['allowed_stages']}) — 정책을 바꾸려면 "
+             f"{p} 를 고쳐 커밋하고 사전등록 §0 에 적는다 (봉인에 id · sha256 이 남는다).  발사 0")
+print(f"   발사 정책 {d['policy_id']} — stage '{st}' 허용 ({p})")
+PY
+}
+
 seal() {  # seal <런> <first|rest> [증서] — 발사 직전 봉인 <OUT>/<런>/launch_record.json (임시 파일 → rename)
   local nm="$1" stage="$2" cert="${3:-}" d="$OUT/$1" lp head
   lp=$(command -v "$LMP") || { echo "⛔ $LMP 없음 — LMP=<실행파일>"; return 1; }
@@ -138,7 +161,7 @@ seal() {  # seal <런> <first|rest> [증서] — 발사 직전 봉인 <OUT>/<런
   if [ -e "$d/launch_record.json" ]; then mv "$d/launch_record.json" "$d/launch_record.unlaunched.$(stamp).json" || return 1; fi
   SEAL_BACKEND="$BACKEND" SEAL_NP="${NP:-}" SEAL_FLAGS="${MPIRUN_FLAGS:-}" SEAL_RUNNER="${RUNNER:-}" SEAL_QOS="${SB_QOS:-}" \
   SEAL_PARTITION="${SB_PARTITION:-}" SEAL_TIME="${SB_TIME:-}" SEAL_ENV="${SB_ENV:-}" SEAL_PATH="${SB_PATH:-}" SEAL_CHECK="$HERE/start_check.py" \
-  SEAL_DEVIATION="${DEVIATION:-}" \
+  SEAL_DEVIATION="${DEVIATION:-}" SEAL_POLICY="$POLICY_FILE" \
   python3 - "$d" "$stage" "$LMP" "$lp" "$head" "$(nproc)" "$MAXJ" "$(live)" "$DECKDIFF" "$OUT" "$EXPECT_DECK" "$EXPECT_ARM" \
       "$EXPECT_SEED" "$cert" "$FIRST" "${REST[@]}" <<'PY'
 import hashlib, json, os, platform, socket, sys, time
@@ -170,6 +193,12 @@ rec = {
                       'expect_deck_sha256': sha(exp), 'expect_deck_source': f'mixer_deck_diff.expected_deck({earm!r}, {int(eseed)})', 'rc': 0},
 }
 rec['backend'] = os.environ.get('SEAL_BACKEND', 'local')
+pf = os.environ['SEAL_POLICY']          # ★ 발사 정책 (Codex 6 차 §7-2) — 봉인이 id · sha256 · 허용 stage 를 적는다 · 이 stage 가 허용이 아니면 봉인 없음
+with open(pf, encoding='utf-8') as f:
+    pol = json.load(f)
+if stage not in (pol.get('allowed_stages') or []):
+    sys.exit(f"⛔ 정책 {pol.get('policy_id')} 이 stage {stage} 를 허용하지 않는다 — 봉인하지 않는다")
+rec['policy'] = {'file': os.path.realpath(pf), 'sha256': sha(pf), 'policy_id': pol.get('policy_id'), 'allowed_stages': pol.get('allowed_stages')}
 if rec['backend'] == 'slurm':      # SLURM 판 — 러너 · 시작 대조기까지 봉인한다 (job 이 시작할 때 start_check.py 가 다시 대조)
     ev = os.environ
     rec['slurm'] = {'np': int(ev['SEAL_NP']), 'mpirun_flags': ev['SEAL_FLAGS'], 'qos': ev['SEAL_QOS'], 'partition': ev['SEAL_PARTITION'],
@@ -262,6 +291,7 @@ cmd_first() {
   if [ "$BACKEND" = slurm ]; then
     command -v sbatch >/dev/null && command -v squeue >/dev/null || { echo "⛔ BACKEND=slurm 인데 sbatch / squeue 가 없다 — SLURM 기계에서.  발사 0"; return 1; }
   fi
+  policy_allows first || return 2                                   #  관문 0 — 발사 정책 (파일)
   for nm in "$FIRST" "${REST[@]}"; do
     [ -f "$OUT/$nm/in.mixer" ] || { echo "⛔ $OUT/$nm/in.mixer 없음 — 먼저 SET=highbo gen_all.sh"; bad=1; }
   done
@@ -288,6 +318,7 @@ cmd_rest() {
     return 1
   fi
   lp=$(command -v "$LMP") || { echo "⛔ $LMP 없음 — LMP=<실행파일>.  발사 0"; return 1; }
+  policy_allows rest || return 2                                    #  관문 0 — 발사 정책 (파일)
   #  관문 1 — 스모크 증서 · 관문 2 — 코호트 (표준 라이브러리 python3 만)
   python3 - "$cert" "$OUT" "$FIRST" "$lp" "$ROOT" "${REST[@]}" <<'PY' || { echo "⛔ 증서 · 코호트 관문 불합격 — 나머지 둘 발사 0"; return 1; }
 import glob, hashlib, json, math, os, re, sys
@@ -496,6 +527,7 @@ cmd_all() {  # ★ 저자 편차 (2026-09-28 밤) — 세 시드를 한꺼번에
     return 2
   fi
   [ "$BACKEND" = slurm ] || { echo "⛔ all 은 SLURM 판 전용 (1저자 결정: ibb 20 코어 × 3) — BACKEND=slurm.  발사 0"; return 2; }
+  policy_allows all || return 2                                     #  ★ 관문 0 — 발사 정책 (파일): 기본 정책에 all 은 없다 (DEVIATION 만으로는 안 열린다)
   command -v "$LMP" >/dev/null || { echo "⛔ $LMP 없음 — LMP=<실행파일>.  발사 0"; return 1; }
   command -v sbatch >/dev/null && command -v squeue >/dev/null || { echo "⛔ BACKEND=slurm 인데 sbatch / squeue 가 없다 — SLURM 기계에서.  발사 0"; return 1; }
   for nm in "$FIRST" "${REST[@]}"; do

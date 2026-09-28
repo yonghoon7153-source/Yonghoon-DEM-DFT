@@ -2072,7 +2072,7 @@
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
    "title": "덤프를 읽었다고 **같은 최종 프레임**인 것은 아니다",
-   "note": "(Codex 판정문 라벨: **P2-DESC-06**)\n`parse_liggghts.py:243` 의 파일 선택은 atom/contact/mesh **각 종류의 최신 파일을 독립 선택**한다.  Codex: 합성 `atom_100 + contact_200 + mesh_100` 을 **rc=0** 으로 받았다.  다중 프레임 파일은 행을 이어 붙이고, atom loader 는 ID 사전으로 마지막 값을 쓰는 반면 contact 는 중복될 수 있다.\n`dem_analysis_core.py:110` — mesh 가 없으면 **최고 입자 중심으로 벽을 추정**한다.  실제 벽 .020 · 최고 중심 .019 이면 부피 분율에 **5.263 % 상대차**.\n⇒ 수확 계약은 **같은 최종 timestep · 상자/벽 실물 · type map · 완료 압력 · 원파일 해시**를 검사해야 한다.  기본값·추정값으로 조용히 메우지 않는다.  ⚠ 130 배치가 이런 입력을 가진다고 **단정하지 않는다**.  ⊕ 09-28 밤 (LHS J20-a · 접촉 위상 감사): **CN 에 직접 걸린다** — 합성 2 프레임 접촉 덤프를 웹앱 경로 (`parse_liggghts.parse_contact_file` → `dem_analysis_core.calc_se_se_cn`) 로 읽으면 SE-SE CN 이 정확히 2 배 (1.333 → 2.667) · 접촉 수 · 면적 · AM–SE CN 도 같은 부류.  LHS 배치 (`lhs_webapp_batch.stage_case`) 는 수확과 **같은 파일** (sha) 을 쓰지만 **파일 안 프레임 수**는 검사하지 않는다 (수확기 `read_contact_dump` 는 마지막 블록만) ⇒ ⬜ 130 접촉 덤프의 ENTRIES 블록 수 실측 · 관문 추가는 비준 대기.  ⊕ 09-28 밤 (J20-a ⓑ · 비준): LHS 배치 관문 — atom · contact 프레임 ≠ 1 · contact 중복 행 · 자기쌍이면 REFUSED (`lhs_webapp_batch` selftest ⑧–⑪, 옛 코드에서 실패 확인 뒤 수정) · 읽기 전용 감사 `scripts/lhs_contact_audit.py` 가 130 덤프를 센다 (WSL 대기).  ⚠ 웹앱 파서 (`parse_liggghts`) 자체는 그대로 — 일반 업로드 경로의 다중 프레임은 여전히 이어 붙인다 (열림).",
+   "note": "(Codex 판정문 라벨: **P2-DESC-06**)\n`parse_liggghts.py:243` 의 파일 선택은 atom/contact/mesh **각 종류의 최신 파일을 독립 선택**한다.  Codex: 합성 `atom_100 + contact_200 + mesh_100` 을 **rc=0** 으로 받았다.  다중 프레임 파일은 행을 이어 붙이고, atom loader 는 ID 사전으로 마지막 값을 쓰는 반면 contact 는 중복될 수 있다.\n`dem_analysis_core.py:110` — mesh 가 없으면 **최고 입자 중심으로 벽을 추정**한다.  실제 벽 .020 · 최고 중심 .019 이면 부피 분율에 **5.263 % 상대차**.\n⇒ 수확 계약은 **같은 최종 timestep · 상자/벽 실물 · type map · 완료 압력 · 원파일 해시**를 검사해야 한다.  기본값·추정값으로 조용히 메우지 않는다.  ⚠ 130 배치가 이런 입력을 가진다고 **단정하지 않는다**.  ⊕ 09-28 밤 (LHS J20-a · 접촉 위상 감사): **CN 에 직접 걸린다** — 합성 2 프레임 접촉 덤프를 웹앱 경로 (`parse_liggghts.parse_contact_file` → `dem_analysis_core.calc_se_se_cn`) 로 읽으면 SE-SE CN 이 정확히 2 배 (1.333 → 2.667) · 접촉 수 · 면적 · AM–SE CN 도 같은 부류.  LHS 배치 (`lhs_webapp_batch.stage_case`) 는 수확과 **같은 파일** (sha) 을 쓰지만 **파일 안 프레임 수**는 검사하지 않는다 (수확기 `read_contact_dump` 는 마지막 블록만) ⇒ ⬜ 130 접촉 덤프의 ENTRIES 블록 수 실측 · 관문 추가는 비준 대기.  ⊕ 09-28 밤 (J20-a ⓑ · 비준): LHS 배치 관문 — atom · contact 프레임 ≠ 1 · contact 중복 행 · 자기쌍이면 REFUSED (`lhs_webapp_batch` selftest ⑧–⑪, 옛 코드에서 실패 확인 뒤 수정) · 읽기 전용 감사 `scripts/lhs_contact_audit.py` 가 130 덤프를 센다 (WSL 대기).  ⚠ 웹앱 파서 (`parse_liggghts`) 자체는 그대로 — 일반 업로드 경로의 다중 프레임은 여전히 이어 붙인다 (열림).  ⊕ 09-29 WSL 실측 (감사 v1 · 봉인 코호트 130): 접촉 · 원자 프레임 **전부 1** · 중복 행 0 ⇒ 이 코호트에서는 CN 배가 경로가 실현되지 않는다 (관문 `stage_case` 는 그대로 — 다른 입력을 막는다).",
    "evidence_tests": [
     "scripts/parse_liggghts.py",
     "scripts/dem_analysis_core.py"
@@ -5756,6 +5756,33 @@
    "claimed_fixed_sha": "6e7bce4b1",
    "evidence_tests": [
     "scripts/mixer_restart_phase_test.py"
+   ]
+  },
+  {
+   "id": "SELF-63",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (WSL 감사 v1 결과 판독 09-29 — 1저자 실행)",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "LHS 접촉 감사기 v1 의 판정 경계 폭 `1e-6·Σr` (0.01 nm) 이 덤프 자릿수 (LIGGGHTS `%g` 6 유효숫자 → 좌표 반폭 0.05 nm · 거리 오차 ≤ 0.17 nm) 보다 좁아 130 건 중 **113 을 FLAG** 로 냈다 — 원자료 결함이 아니라 감사기의 폭",
+   "note": "실측 (WSL 09-29): 프레임 1 · 중복 0 · δ≤0 0 · 플래그 누락 0 은 130/130 인데 \"기하≠덤프\" 가 113 건 (케이스당 0–1,034 쌍 · 대부분 덤프에만).  원인 = `atom_2020000` 토큰 `0.0304637` 등 6 유효숫자 (x·y 마지막 자리 0.1 nm) 인데 v1 폭은 0.01 nm.  LIGGGHTS 는 전 정밀도로 접촉을 판정하므로 틀린 쪽은 재계산이고 웹앱 CN (덤프 행) 이 옳다 — 단 이것은 가설이라 **비준 없이 CLEAN 으로 바꾸지 않았다**.  수정 = v2 (비준 09-29): 파일에서 실측한 유효숫자로 쌍마다 반올림 폭을 계산해 ①②③ 으로 판별 (`ROUNDING` / far) · 양쪽 쌍의 δ 대조 (v1 에 없던 검사) · 반례 먼저 (⑫–⑮d).  합성 6 만 입자 침대 (정밀 좌표 → %g) 에서 반올림 쌍 정확히 2 · CLEAN 재현.  ⬜ 검증 = WSL v2 재실행 (FLAG 0 · rounding 113 건 기대).  (원장 규약: 코드 커밋 뒤 다음 커밋에서 claimed_fixed_sha.)",
+   "evidence_tests": [
+    "scripts/lhs_contact_audit.py"
+   ]
+  },
+  {
+   "id": "LHS-16",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (WSL 감사 v1 · LIGGGHTS-PUBLIC master 원문 열람 09-29)",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "`c_cpl[9]` 를 `parse_liggghts` 가 `periodic_flag` 라 부르지만 LIGGGHTS 의 뜻은 \"주기 고스트 관여\" (`is_periodic_ghost`: 고스트이고 주기 축의 `boxlo+cutneighmax` / `boxhi−cutneighmax` 띠 안) — MPI 런에서는 경계를 안 넘는 쌍에도 켜진다: `lhs00_029` 4,065 행 · `lhs00_098` 5,024 행 (나머지 128 건 0)",
+   "note": "원문: `compute_pair_gran_local.cpp` add_pair (두 입자 다 local → 0 · 아니면 `is_periodic_ghost(i)||is_periodic_ghost(j)`) · `domain_I.h` (cutneighmax = 2 r_max + skin ≈ 12 µm = 50 µm 상자의 24 %/면).  직렬 런은 고스트 = 주기 영상뿐이라 플래그 = 경계 넘음 (128/130 정합).  029 · 098 은 ibb 에서 돈 런 (area_contract §, 09-14) — 로컬에 로그가 없어 분할 격자는 덤프에서 추정 (감사기 v2: id2 띠 안 + 최소 균일 격자).  ⚠ ibb/WSL 빌드 3.8 과 master 의 동일성 미확인.  **인계 값 무영향** — 리포에 이 플래그의 소비자가 없다 (grep 0 · CN 은 행 수만 센다).  처방: 이름은 두고 `parse_liggghts` 주석에 뜻을 적는다 · 검증 = WSL v2 에서 두 케이스 \"설명됨\" + (가능하면) ibb 로그 `MPI processor grid` 줄.",
+   "evidence_tests": [
+    "scripts/lhs_contact_audit.py",
+    "scripts/parse_liggghts.py"
    ]
   }
  ]

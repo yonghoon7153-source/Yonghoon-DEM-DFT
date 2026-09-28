@@ -552,9 +552,15 @@ echo "── LH all · 저자 편차 (09-28 밤: 세 시드 × 20 코어 동시 
 #  all = first 의 관문 (덱 비교 · 세 시드 모두 안 뜸) 그대로 + DEVIATION 문구 필수 + SLURM 판 전용 → 세 시드를 순서대로 봉인 · 제출.
 #  봉인 stage = 'all' · deviation = {author_decision: DEVIATION, skipped_gate …} · 코호트 · 증서 없음.  all 뒤의 rest 는 발사 0.
 DEV='1저자 결정 2026-09-28 밤 — 세 시드 동시 (bin 0 스모크 관문 생략)'
-slurm_all() {  # slurm_all <OUT> <SB_DIR> [추가 env …] — all (SLURM) → 출력 $SO
+#  ★ 발사 정책 (09-29): 리포 기본 정책은 first · rest 만 — all 시험은 all 을 허용하는 시험용 정책 파일을 꽂는다 (HA⑧ 은 기본 정책으로 거부를 본다)
+PALL="$T/policy_all.json"
+python3 - "$PALL" <<'PY'
+import json, sys
+json.dump({"schema": "mixer_highbo_launch_policy/1", "policy_id": "TEST-all-allowed", "allowed_stages": ["first", "rest", "all"]}, open(sys.argv[1], "w"), ensure_ascii=False)
+PY
+slurm_all() {  # slurm_all <OUT> <SB_DIR> [추가 env …] — all (SLURM · all 허용 시험 정책) → 출력 $SO
   local o="$1" sd="$2"; shift 2; mkdir -p "$sd"
-  SO=$(env PATH="$SBIN:$PATH" SB_DIR="$sd" BACKEND=slurm OUT="$o" LMP="$FAKE_MPI" DECKDIFF="$DD_OK" "$@" bash "$LHL" all 2>&1); return $?
+  SO=$(env PATH="$SBIN:$PATH" SB_DIR="$sd" BACKEND=slurm OUT="$o" LMP="$FAKE_MPI" DECKDIFF="$DD_OK" POLICY_FILE="$PALL" "$@" bash "$LHL" all 2>&1); return $?
 }
 A0="$T/hba0"; for n in $LH1 $LH2 $LH3 E0_s32452843; do mklh "$A0" $n; done
 slurm_all "$A0" "$T/sba0"; rc_a0=$?
@@ -564,7 +570,7 @@ A1="$T/hba1"; SA="$T/sba1"; for n in $LH1 $LH2 $LH3 LC_s32452843 E0_s32452843; d
 slurm_all "$A1" "$SA" DEVIATION="$DEV"; rc_a1=$?; a1="$SO"
 chk 'HA② ★ all (DEVIATION): sbatch 정확히 세 번 — LH 세 시드만, 순서대로 (각 런 폴더에서 · jobid 901 · 902 · 903 · LC · E0 제출 0)' \
     "[ $rc_a1 -eq 0 ] && [ \$(nsb '$SA') -eq 3 ] && [ \"\$(cut -f2 '$SA/calls' | tr '\n' ' ')\" = '$A1/$LH1 $A1/$LH2 $A1/$LH3 ' ] && [ \"\$(cat '$A1/$LH1/jobid' '$A1/$LH2/jobid' '$A1/$LH3/jobid' | tr '\n' ' ')\" = '901 902 903 ' ] && ! [ -e '$A1/LC_s32452843/jobid' ] && ! [ -e '$A1/E0_s32452843/jobid' ]"
-sa=$(python3 - "$A1" "$DEV" "$LH1" "$LH2" "$LH3" <<'PY' 2>&1
+sa=$(PALL="$PALL" python3 - "$A1" "$DEV" "$LH1" "$LH2" "$LH3" <<'PY' 2>&1
 import hashlib, json, os, sys
 out, dev, *runs = sys.argv[1:]
 sha = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
@@ -578,12 +584,23 @@ for n in runs:
           'cohort': sorted((r.get('cohort') or {}).keys()) == sorted(runs),
           'nocert': 'smoke_certificate' not in r,
           'slurm': (r.get('slurm') or {}).get('np') == 20 and (r.get('slurm') or {}).get('runner_sha256') == sha(os.path.join(d, 'run_lh.sbatch')),
-          'files': all(r.get('sha256', {}).get(f) == sha(os.path.join(d, f)) for f in ('in.mixer', 'Drum.stl', 'Front.stl', 'Back.stl'))}
+          'files': all(r.get('sha256', {}).get(f) == sha(os.path.join(d, f)) for f in ('in.mixer', 'Drum.stl', 'Front.stl', 'Back.stl')),
+          'policy': (r.get('policy') or {}).get('policy_id') == 'TEST-all-allowed' and (r.get('policy') or {}).get('sha256') == sha(os.environ['PALL'])
+                    and 'all' in ((r.get('policy') or {}).get('allowed_stages') or [])}
     bad += [f'{n}:{k}' for k, v in ok.items() if not v]
 print('OK' if not bad else 'NG ' + ' '.join(bad))
 PY
 )
-chk 'HA③ 세 봉인 모두 stage all · deviation (저자 결정 문구 · 생략한 관문 bin 0 · 등록 순서 §8 D-4) · 코호트 세 시드 · 증서 없음 · np 20 · 러너 · 덱/STL sha256' "[ \"\$sa\" = OK ]"
+chk 'HA③ 세 봉인 모두 stage all · deviation (저자 결정 문구 · 생략한 관문 bin 0 · 등록 순서 §8 D-4) · 코호트 세 시드 · 증서 없음 · np 20 · 러너 · 덱/STL sha256 · ★ 정책 (id · sha256 · all 허용)' "[ \"\$sa\" = OK ]"
+A8="$T/hba8"; for n in $LH1 $LH2 $LH3 E0_s32452843; do mklh "$A8" $n; done
+a8=$(env PATH="$SBIN:$PATH" SB_DIR="$T/sba8" BACKEND=slurm OUT="$A8" LMP="$FAKE_MPI" DECKDIFF="$DD_OK" DEVIATION="$DEV" bash "$LHL" all 2>&1); rc_a8=$?
+chk 'HA⑧ ★ 기본 정책 (리포 launch_policy.json = first · rest) 에서는 DEVIATION 이 있어도 all 거부 · sbatch 0 · 봉인 0 (Codex 6 차 §7-2 — 옛 DEVIATION 만으로 안 열린다)' \
+    "[ $rc_a8 -ne 0 ] && [ \$(nsb '$T/sba8') -eq 0 ] && ! ls '$A8'/*/launch_record.json >/dev/null 2>&1 && grep -q '발사 정책' <<<\"\$a8\" && grep -q \"'all'\" <<<\"\$a8\""
+PBAD="$T/policy_bad.json"; echo '{"schema": "x"}' > "$PBAD"
+a8b=$(env PATH="$SBIN:$PATH" SB_DIR="$T/sba8b" BACKEND=slurm OUT="$A8" LMP="$FAKE_MPI" DECKDIFF="$DD_OK" DEVIATION="$DEV" POLICY_FILE="$PBAD" bash "$LHL" all 2>&1); rc_a8b=$?
+a8c=$(env PATH="$SBIN:$PATH" SB_DIR="$T/sba8c" BACKEND=slurm OUT="$A8" LMP="$FAKE_MPI" DECKDIFF="$DD_OK" POLICY_FILE="$T/no_such_policy.json" bash "$LHL" first 2>&1); rc_a8c=$?
+chk 'HA⑧b 정책 파일 모양 아님 → all 거부 / 정책 파일 없음 → first 도 거부 (fail-closed · sbatch 0)' \
+    "[ $rc_a8b -ne 0 ] && [ $rc_a8c -ne 0 ] && [ \$(nsb '$T/sba8b') -eq 0 ] && [ \$(nsb '$T/sba8c') -eq 0 ] && grep -q '모양' <<<\"\$a8b\" && grep -q '읽을 수 없다' <<<\"\$a8c\""
 runr "$A1/$LH2" SLURM_NTASKS=20; rc_a4=$?
 chk 'HA④ all 로 봉인한 런의 러너도 시작 대조를 통과 → LIGGGHTS (가짜) · job_start.json ok' \
     "[ $rc_a4 -eq 0 ] && grep -q 'fake mpi build' '$A1/$LH2/log.lmp' && python3 -c \"import json,sys; sys.exit(0 if json.load(open('$A1/$LH2/job_start.json'))['ok'] is True else 1)\""
