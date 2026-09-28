@@ -5346,16 +5346,22 @@
    "amends_note": "CLAUDE.md §계산 자원 gabia 의 '⛔ 지금 예외는 없다' 줄에 이 범위 한정 예외를 적는다 (같은 커밋). 규칙 본문(GPU pw.x ↔ UMA 동시 금지)은 그대로다.",
    "supersedes": [],
    "schema_version": 2,
-   "decision_state": "active",
+   "decision_state": "superseded",
    "results_seen": false,
    "proposed_by": "claude-session-2026-09-28",
-   "status": "active",
+   "status": "superseded",
    "status_history": [
     {
      "at": "2026-09-28",
      "state": "active",
      "by": "1저자(사용자)",
      "note": "사용자: 'gabia에서 가능할거 같은데 md 니까 가능할듯' → 'gpu이긴한데 md 관련해서 될듯' → '9000 으로 가드 넣고 돌려' → (방이 4,762 MiB 라는 계산을 본 뒤) '아 그럼 3500정도로 넣자'. 트랙 = gabia 운용(우리) → 1저자 = 사용자, 통지할 제3자 없음. 에이전트는 처음에 'V4 가 끝날 때까지 기다렸다 자동 발사' 를 권했고 (조기확인 판정 시각이 어차피 V4 종료에 묶인다는 이유), 사용자가 공존을 택했다."
+    },
+    {
+     "at": "2026-09-29",
+     "state": "superseded",
+     "by": "1저자(사용자)",
+     "note": "자기 조건('두 런이 끝나거나 V4 가 끝나면 소멸')대로 09-28 20:36 에 이미 소멸했고 **쓰이지 않았다** (V4 러너 START_MAX 2048 → 대기 모드 → V4 종료 6 초 뒤 단독 발사). 같은 slot 의 예외 (3) D-2026-09-29-gabia-uma-coexist-elastic-li2s-main 이 명시적으로 대체한다 — 원장 규칙 '충돌 해소는 명시적 supersedes 로만'. 내용(statement 등)은 그대로다."
     }
    ],
    "ratification": {
@@ -5364,10 +5370,22 @@
     "actor_id": "yonghoon7153@gmail.com",
     "timestamp": "2026-09-28T03:16:07Z",
     "commit": "ccde59e15546b418fde779eac0f0fcb2c032da90",
-    "decision_digest": "sha256:f9de624ae9ae51aab95c709f29b8846f9ea28c5de643b642f62591e8a7665543",
+    "decision_digest": "sha256:55fd085d915336c978e7475a3d1d3f3635ac8fa1f023997199122b9a7514b78b",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
-    "근거_발화": "'아 그럼 3500정도로 넣자' (2026-09-28 · 이 세션) — 방 4,762 MiB 계산을 본 뒤의 선택"
-   }
+    "근거_발화": "'아 그럼 3500정도로 넣자' (2026-09-28 · 이 세션) — 방 4,762 MiB 계산을 본 뒤의 선택",
+    "_원본_비준": {
+     "state": "ratified",
+     "role": "scientific_owner",
+     "actor_id": "yonghoon7153@gmail.com",
+     "timestamp": "2026-09-28T03:16:07Z",
+     "commit": "ccde59e15546b418fde779eac0f0fcb2c032da90",
+     "decision_digest": "sha256:f9de624ae9ae51aab95c709f29b8846f9ea28c5de643b642f62591e8a7665543",
+     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+     "근거_발화": "'아 그럼 3500정도로 넣자' (2026-09-28 · 이 세션) — 방 4,762 MiB 계산을 본 뒤의 선택"
+    },
+    "_재봉인_사유": "2026-09-29 대체 표시(decision_state · status · superseded_by · status_history)만 더했다 — 결정 내용은 불변. 1저자 AskUserQuestion 답 'gabia 직렬 공존 (Recommended)' 이 새 예외를 active 로 만들며 이 예외를 대체한다. 선례: D-2026-09-24-nd-icohp-densek-k331 재봉인."
+   },
+   "superseded_by": "D-2026-09-29-gabia-uma-coexist-elastic-li2s-main"
   },
   {
    "id": "D-2026-09-28-cei-page-x002",
@@ -5646,6 +5664,71 @@
     "decision_digest": "sha256:ea9b68daf7d3d59e86bd18cf3aaabf0dee946fe509711570ad341a0068622234",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
     "비준_근거": "1저자 2026-09-28 — '이것도 진행하자' (흑연 층간 같은 D3(BJ) 계산) · '내가 말한건 덴카-덴카, 덴카-vgcf, vgcf-vgcf 말한거였어'."
+   }
+  },
+  {
+   "id": "D-2026-09-29-gabia-uma-coexist-elastic-li2s-main",
+   "kind": "policy",
+   "scope": "ops.gabia.gpu.concurrency",
+   "slot": "gabia_gpu_pwx_uma_coexist_exception",
+   "applies_to": {
+    "systems": [
+     "lpscl_smallcell_glass",
+     "modelc_2x_elastic"
+    ],
+    "tasks": [
+     "li2s_glass_md_main_remainder_8runs"
+    ],
+    "methods": [
+     "uma_md_turbo",
+     "qe_gpu_relax"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "gabia GPU — 'pw.x ↔ UMA 동시 실행 금지' 의 범위 한정 예외 (3): li2s 본 런 나머지 8 런을 탄성 modelc_2x 옆에서 한 번에 하나씩 — 우리 MD ≤ 3,500 MiB · 합계 ≤ 46,000 MiB",
+   "statement": "li2s 소셀 유리 본 런의 나머지 8 런 (465 K seed1·2·5 · 550 K seed1–5 · 평형 5 + 생산 400 ps · 드라이버 sha16 c3e2d358ee53cefa · seed3 T465 와 같은 설정) 에 한해, 탄성 modelc_2x (GPU pw.x · run_elastic_relaxedion_gabia.sh · 2026-09-29 00:03:30 재개) 가 도는 gabia A6000 에 UMA MD 를 **한 번에 하나씩** 올려도 된다. 조건은 러너 tools/ionic/glass_main_queue_gabia.sh 가 기계로 건다: ① GPU 합계 > 46,000 MiB 면 우리 MD kill ② 우리 MD (PID 트리) > 3,500 MiB (시작 300 s 뒤부터) 면 kill ③ host MemAvailable < 8,192 MiB 면 kill ④ 탄성 작업방 최신 *.out 에 우리 런 시작 뒤 GPU 메모리 오류가 새로 쓰이면 kill ⑤ 시작은 GPU 합계 ≤ 42,500 · host ≥ 12,288 MiB 일 때만 ⑥ ①–④ 가 한 번이라도 발동하거나 우리 MD 에 CUDA OOM 이 나면 **예외를 닫는다** (큐 정지 · 자동 재시작 없음) ⑦ 탄성 pw.x·탄성 러너는 건드리지 않는다. 부속 해석 (1저자 같은 답): 09-11 2차 개정 (D-2026-09-11-elastic-conv-threshold) 의 '중단' 은 자원 경합으로 인한 비정상 종료(OOM·kill)다 — 09-27 23_p 의 EXIT 통제 정지 + BFGS 이력 승계 재개 (09-29 00:03:30 · density·wfc from file · 첫 accuracy 3.72e-5 Ry) 는 해당하지 않는다.",
+   "rationale": "규칙을 만든 사람이 1저자라 예외도 1저자가 정한다 (gabia 운용 = 우리 트랙 → 1저자 = 사용자 · li2s 과학 판정과 무관 — 기계 배정은 CH 개정 기록대로 사용자 몫). 과학 쪽: 탄성 사전등록의 '동시 실행' 무효조건은 09-11 2차 개정 (1저자 B · ratified) 으로 이미 조건부다 — SCF 결과는 GPU 를 누가 같이 쓰든 결정적이고, 막을 것은 경합으로 탄성 잡이 죽는 것 (그 경우 modelc_2x 를 처음부터). VRAM: 탄성 23_p 실측 30,586 MiB (09-29 00:17) · 기록 피크 41.2 GB (09-11 V0 단독) · li2s 120 원자 MD 1 런 2,038 MiB (09-28 465 K 실측) → 최악 43.2 / 49.1 GB (여유 ~5.9 GB) · 보통 32.6 GB (여유 ~16.5 GB). 에이전트는 처음에 09-11 개정을 못 보고 '공존하면 탄성 사전등록상 무효' 라고 잘못 말했고 (정정 · CLAUDE.md 에 교훈), 사용자 제안 '직렬로 하나씩' 을 위 조건과 함께 권했다.",
+   "record_kind": "scope_declaration",
+   "card": "db/properties/lpscl_smallcell_glass_md_amendment_ch_2026_09_28.json",
+   "record": "tools/ionic/glass_main_queue_gabia.sh",
+   "evidence": [
+    "db/properties/shear_b2o3_vs_lpscl16_2x_amendment_2026_09_11.json §4_추가개정_2026_09_11b_동시실행_무효조건 (ratified · 41.2 GB 기록)",
+    "gabia watch 2026-09-29 00:17 (사용자 붙여넣기 · pw.x 2001378 30,586 MiB · 합계 30,604 / 49,140)",
+    "db/properties/lpscl_smallcell_glass_md_amendment_ch_2026_09_28.json ✅_본런_465K_발사_실측_2026_09_28_2036 (UMA 둘 2,038 + 1,616 MiB)",
+    "tools/ionic/glass_main_queue_gabia.sh --selftest (29 · 음성 16) · 돌연변이 8"
+   ],
+   "method_ref": "glass_main_queue_gabia.sh — TOTALCAP 46000 · OURCAP 3500 · WARM 300 s · HOSTFLOOR 8192 · START_MAX 42500 · SAMPLE 2 s · POLL 60 s · 구조 판별 (120 원자 · 단일 프레임 · 최단 P–S ±0.003 Å · PS₄ 개수 · ρ ±0.001) · 설정 대조 (seed3 T465 run_meta · md.log dt)",
+   "reopen_criteria": "가드 ①–④ 가 한 번이라도 발동하거나, 우리 MD 에 CUDA OOM 이 나거나, 공존 중 탄성 pw.x 가 비정상 종료하면 **예외를 닫고** 원 규칙(동시 금지)으로 돌아간다. 8 런이 끝나거나 탄성이 끝나면 예외는 소멸한다. 다른 UMA 런 · 다른 GPU pw.x 잡 · 둘 이상 동시 실행으로 **넘어가지 않는다**.",
+   "enforcement": "러너가 조건 ①–⑤ 를 2 s 표본으로 건다. ⚠ 확률적 보호다 — 표본 간격보다 빠른 VRAM 급등은 못 막는다. ⚠ SM 을 나눠 써서 탄성 BFGS 스텝이 느려질 수 있다 (VRAM 이 아니라 계산 경쟁).",
+   "amends": [],
+   "amends_note": "CLAUDE.md §계산 자원 gabia 의 '지금 살아 있는 예외' 줄을 이 예외로 바꾼다 (같은 커밋) — 09-28 예외 (V4 · 465 K seed3·4) 는 쓰이지 않고 소멸했다. 규칙 본문(GPU pw.x ↔ UMA 동시 금지)은 그대로다.",
+   "supersedes": [
+    "D-2026-09-28-gabia-uma-coexist-v4-li2s465"
+   ],
+   "schema_version": 2,
+   "decision_state": "active",
+   "results_seen": false,
+   "proposed_by": "claude-session-2026-09-28",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-29",
+     "state": "active",
+     "by": "1저자(사용자)",
+     "note": "사용자: 'LI2S 나머지는 GABIA에서 직렬로 하나씩 돌리면 충분히 돌릴거 같은데' → 에이전트가 09-11 개정(공존 허용 · 탄성 OOM 이면 처음부터) · VRAM 최악 43.2 / 49.1 GB · 조건(한 번에 1 런 · 우리 ≤ 3,500 · 합계 > 46,000 이면 우리만 kill · 가드 1 회면 닫음)을 제시 → 사용자 선택 'gabia 직렬 공존 (Recommended)' · 23_p 해석 '해당 안 됨 — 기록 (Recommended)'. 트랙 = gabia 운용(우리) → 1저자 = 사용자, 통지할 제3자 없음 (li2s 외부 1저자에게는 기계 배정 사실만 다음 편지에 싣는다)."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-28T16:00:54Z",
+    "commit": "7fb77206f78d7e0df5d025e56e0fedf9a948e455",
+    "decision_digest": "sha256:97aedbc0b67d5d6a3ac417d2d2a54057bd5677ef6b01bfc877765e78acbedca5",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "AskUserQuestion 답 (2026-09-29 00:4x KST · 이 세션): 'gabia 직렬 공존 (Recommended)' · '해당 안 됨 — 기록 (Recommended)' — 앞선 제안 'LI2S 나머지는 GABIA에서 직렬로 하나씩 돌리면 충분히 돌릴거 같은데'"
    }
   }
  ]
