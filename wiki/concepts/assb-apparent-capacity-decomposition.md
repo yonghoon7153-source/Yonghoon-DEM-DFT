@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -447,6 +447,17 @@ Li-In 음극 셀의 것이다. **Li 금속·무음극에 그대로 옮기지 않
 - ★★ **용량 닫힘도 교정 의존** — 22호 ±7 %(자기 교정) → 이 편 곡선(원시 V)이면 L · M +11…+16 %. 닫힘은 "상 분율 + 교정" 합성의 검증이지 상 분율 단독의 검증이 아니다.
 - ⚠ 모집단: 액체 반쪽 · 넷째 사이클 · BASF 로트 — ASSB 에서 잰 교정 곡선은 이 위키에 0.
 
+## ★★ 2026-09-28 (`assb` 67호 Kondrakov 2017 *JPCC*, **실험 + 계산 · 액체 반쪽 · NCM811 · ASSB 아님**) — **겉보기 감쇠의 `η` 몫에 저자가 이름을 붙였고, 22호 `η` 가 기대는 교정 축은 같은 연구망 안에서 규약이 셋이다**
+
+`raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md`. NCM811 코인 컷오프 여섯 × 50 사이클 · operando XRD(전처리 셀) · 22호 ref 21. 교정 규약은 [[nmc-lattice-li-content-calibration]] 67호 절.
+
+- ★★ **`η` 몫의 인쇄 표본(액체).** `[인쇄]` "the capacity fading is virtually enhanced at such conditions because overpotentials arising during cycling, e.g., due to material fracture, lower the actual cell voltage.
+  Thus, the data shown in Figure 1a reflect the 'worst-case performance'" — 정전압 없는 반쪽전지 사이클에서 겉보기 용량 감쇠의 일부가 **분극(`η`)** 이라는 저자 문장(양 0). 3항 분해의 `η` 항이
+  액체셀에서도 "균열 → 과전압" 경로로 이름 붙은 표본이다.
+- ★★ **22호 `η` 의 교정 축 — 규약 항의 크기.** 66호 절의 "교정 선택으로 `η` ≈±0.1" 중 **규약 항**은 같은 연구망에서 0.10(`x₀` 1.00 ↔ 0.90)까지 흔들린다(`[재현]` NCM811 쌍 전압 맞춤 +0.10). 22호 첫 충전
+  교정은 규약 항과 시편 항을 전압 맞춤으로 가르지 못한다(+0.157 → +0.033) — `θ`(상 분율)는 여전히 교정 없이 선다.
+- ⚠ 모집단: 액체 반쪽 · NCM811 · BASF 전극 — ASSB 에서 잰 교정 곡선은 이 위키에 여전히 0.
+
 ## 이 페이지가 주장하지 않는 것
 
 - **3항 분해가 논문의 식이라고 주장하지 않는다.** 우리 해석이고, 위 G1 때문에 `C_norm` 이
@@ -475,6 +486,7 @@ Li-In 음극 셀의 것이다. **Li 금속·무음극에 그대로 옮기지 않
   방전 1 회 · 구조 실현 1 개**라는 한 모집단의 것이다.
 - ★ **2026-09-28 (65호)**: **첫 충전 상한을 `θ_AM` 의 측정으로 쓰지 않는다** — 공정 대조군 사이의 상한이고, 판독 ±1 mAh g⁻¹ · 셀 하나씩 위다. D85H 는 두 충전 곡선이 겹쳐 판정 밖이다.
 - ★ **2026-09-28 (66호)**: **22호 `η` 값이 틀렸다고 하지 않는다** — 교정 규약에 따라 ≈±0.1 움직일 수 있다는 것까지이고, 어느 교정이 참 Li 함량에 맞는지는 화학 분석 0 이라 모른다.
+- ★ **2026-09-28 (67호)**: **Fig. 1a 감쇠의 `η` 몫을 정량했다고 하지 않는다** — 저자 문장이고 양은 0 이다(정전압 없는 반쪽 · C/2). 규약 항 0.10 은 NCM811 쌍의 `[재현]` 이다.
 
 ## 관련
 - [[nmc-lattice-li-content-calibration]] — 22호 `η` 가 기대는 격자 ↔ `x` 교정 곡선의 축 규약 · 단조 채널 · 이송 오차(66호).

@@ -5,7 +5,7 @@ created: 2026-09-28
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md]
+sources: [raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -54,8 +54,27 @@ evidenceScope: multi-source-primary
 | **66호** de Biasi 2017 | NCM 여섯(111 … 851005) · 파우치 LIB · LP47 · Mo Kα 투과 · 넷째 충전 C/10 3.0–4.6 V | 공칭 1.02 · 전처리 결손 = 양극 Li 손실 · 전하 계수 | `a` · `c` · `V` · `z` · TM–O · Li–O · U | 수치 표(101 행) · 충전만 | `c` 꼭짓점 δ ≈0.45(여섯) · `V` 잔차 esd ×14–37 · 인쇄 오기 셋 · 원형(표 2)과 첫 점의 `V` 부호 섞임 |
 | **22호** Strauss 2018 | NCM622(NCM-M) · 파우치 LIB · LP57 · 첫 사이클 C/10 4.4–2.9 V | x 1.02 부터 · 전하 계수 | `a` · `c`(+ `V`, Fig. S4) | 그림만 | 66호 곡선과 x ≈0.067 가로 이동 · L ↔ M 은 바닥 아래 |
 | **24호** Stavola 2023 | NMC111 · Buchberger 2015 식(액체 NMC111/흑연) · 투과 EDXRD | 원전 미열람 | c/a 선형(0 < x < 0.5) | 식 하나 | 초기값 > 1.0 → 오프셋 ≥0.02–0.05(24호 D5) · 66호 NCM111 과 ±0.03 안 |
+| **67호** Kondrakov 2017 | NCM811 · 파우치 LIB(전해질 미기재 — 3286 위임) · 전처리 C/10 3.0–4.3 V(횟수 미인쇄) → C/20 3.0–4.6 V + 1 h | **전처리 셀 충전 첫 점 = 1.00**(결손 미배정) · `[인쇄]`(67호) "estimated from current and charging time" · 첫 사이클은 격자 "delayed change" 때문에 피함 | `a` · `c` · `V` · `h_TM-O` · `h_Li-O`(`z_O` 첫값 = 원형 중성자) | 그림 + 네 점 표(표 2) · 충전만 | `c` 최대 x ≈0.555(≈4.0 V) · 66호 NCM811 과 전압 맞춤 +0.10(= 규약) · 격자 맞춤 붕괴 구간 +0.123…+0.133 · 슬랩 잔차 esd ×2–6 · 표 2 `a`(0.5) ↔ 그림 어긋남 |
 
-⚠ 3차 묶음 파일 29(Kondrakov 2017 *JPCC* 121, 24381 — 66호 [19], `c` 붕괴 위임처) · 31(Kondrakov 2017 *JPCC* 121, 3286 — 66호 [15]) · 40(Buchberger 2015 — 24호 교정 원전)이 같은 축의 편이다(미흡수).
+⚠ 3차 묶음 파일 29(Kondrakov 2017 *JPCC* 121, 24381 — 66호 [19])는 **67호로 흡수**했다(아래 67호 절). 31(Kondrakov 2017 *JPCC* 121, 3286 — 66호 [15] · 67호 [5], 첫 사이클 격자 지연 · 교정 절차 · 파우치 사양의 위임처) · 40(Buchberger 2015 — 24호 교정 원전)은 미흡수.
+
+## 67호 절 (2026-09-28) — 같은 연구망 세 규약 · 규약 항 ↔ 시편 항
+
+> 67호 = Kondrakov 2017 *J. Phys. Chem. C* 121, 24381(3차 묶음 파일 29 · 22호 ref 21 · 66호 [19]) — NCM811 한 조성 · 파우치 LIB · 전처리 셀 · C/20 · operando XRD(그림 + 네 점 표). 액체 반쪽.
+> 원자료는 그림 판독(`[도표]`)이고 교정 수치 표는 여전히 66호 표 S1 하나다.
+
+1. ★★★ **규약이 셋이다.** 같은 연구망 · 같은 장치 계열의 세 교정이 `x₀` 를 다르게 둔다 — 22호 첫 충전 **1.02**(공칭) · 66호 넷째 충전 **1.02 − 전처리 CE 결손**(NCM811 0.90 · NCM622 0.93) ·
+   67호 전처리 셀 충전 **1.00**(결손 미배정). 셋 다 전하 계수 · 화학 분석 0. 67호는 첫 사이클 교정을 피한 이유를 인쇄한다 — `[인쇄]`(67호) "first cycle irreversibilities (up to 14%), resulting in
+   partial active lithium loss and delayed change in lattice parameters in the initial charge cycle".
+2. ★★★ **규약 항과 시편 항을 따로 잰다.** 두 교정을 비교할 때 (i) **전압 맞춤 이동**(같은 율대 통전 전압에서의 x 차) = 규약 항 − 율 분극 항 (ii) **격자 맞춤 이동**(같은 `V` · `a` · `c` 에서의 x 차)
+   = 규약 항 + 시편(로트 · 격자 경로) 항 ⇒ (ii) − (i) ≈ 시편 항. `[재현]`(67호) NCM811 쌍(67호 ↔ 66호, 둘 다 전처리 셀 — 규약 차 1.00 − 0.90 = 0.10): 전압 맞춤 +0.096…+0.112(δ ≤0.65, 정전압 전하
+   0 기준) ≈ 0.10 ✓ · 격자 맞춤 붕괴 구간 +0.123…+0.133(`V` · `c` 일치) ⇒ 시편 항 **0 … +0.03**(67호 정전압 전하 미인쇄) · 충전 초반은 채널마다 +0.07(`c`) · +0.12(`a`) · +0.17(`V`) — 같은 `V` 에서
+   두 셀의 (`a`, `c`) 쌍이 다르다.
+3. ★★ **첫 충전 교정에는 이 분해가 서지 않는다.** `[재현]`(67호) NCM622 쌍(22호 첫 충전 ↔ 66호)의 전압 맞춤 이동은 x 따라 **+0.157 → +0.033** 으로 변한다(격자 맞춤은 0.057–0.082 로 거의
+   일정) — 첫 충전 전압 곡선 자체가 다르다. ⇒ 66호 x 이동 ≈0.067 의 원인은 여전히 못 가른다.
+4. ★★ **전이의 위치는 전압으로도 적는다.** NCM811 `c` 최대가 x 로는 0.45(66호) ↔ ≈0.555(67호)지만 전압으로는 둘 다 ≈3.99–4.0 V(`[재현]`).
+5. ★★ **축 규약은 `ΔV/V` 로 번진다.** 23호 첫 충전 176 mAh g⁻¹(θ = 1) → 66호 축 −1.3…−1.7 % · 67호 축 **−4.0 %**(`[재현]`) — θ 몫(66호, θ 0.8 → −4.2…−4.6 %)과 같은 크기다.
+6. ★ **esd ≠ 산포, 세 번째 표본** — 67호 슬랩 높이 잔차 RMS 0.004–0.006 Å ↔ esd 0.001–0.003 Å(×2–6). 67호 표 2 의 `a`(x 0.5) 2.8221 은 그림 ≈2.8207 · 본문 2.8211 과 어긋난다.
 
 ## 이 위키에서의 적용
 
@@ -71,7 +90,9 @@ evidenceScope: multi-source-primary
 - **이동의 원인이 결손 배정 규약이라고 단정하지 않는다** — 크기가 66호 전처리 보정(0.09)과 같은 자릿수라는 것까지이고, 로트 · 전해질 · 22호 그림 판독(±0.01–0.02)이 섞인다.
 - **액체 교정의 θ_ref = 1 이 틀렸다고 하지 않는다** — 66호 S3 · Fig. 6 에 둘째 상은 안 보인다(우리 판독). 검사되지 않은 가정이라는 것까지다.
 - **ASSB 셀의 격자가 액체 교정 곡선을 따른다고 전제하지 않는다** — 구속 · 응력 · 전해질이 다르다(ASSB 에서 잰 교정 곡선은 이 위키에 0).
-- **`evidenceScope: multi-source-primary` · `confidence: low`** — 교정 원자료는 66호 하나이고, 22호 곡선은 그림 판독, 24호 식은 전사(원전 미열람)다.
+- **`evidenceScope: multi-source-primary` · `confidence: low`** — 교정 원자료는 66호 하나이고, 22호 곡선은 그림 판독, 24호 식은 전사(원전 미열람)다. 67호 곡선도 그림 판독이다(표는 네 점).
+- **(67호) 전압 맞춤이 늘 규약 항을 준다고 하지 않는다** — 두 교정이 전처리 셀 · 비슷한 율일 때의 근사이고, 67호 쪽 x ↔ 전압 대응은 S2 그림 판독 + 선형 x(정전압 전하 미인쇄 0 … 0.02) 위다. 66호 NCM622 이동의 원인은 정하지 않았다.
+- **(67호) 67호의 `x = 1.00` 을 완전 리튬화로 읽지 않는다** — 전처리 셀 충전 첫 점의 이름이다. 67호 DFT(LiₓNiO₂ 절대 조성)와 같은 눈금이라는 근거는 지면에 없다.
 
 ## 관련
 - [[assb-contact-loss-vs-lampe]] — 닻. Q1 · Q2 의 구조 채널 항목.

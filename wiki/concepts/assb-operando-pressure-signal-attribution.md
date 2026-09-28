@@ -5,7 +5,7 @@ created: 2026-09-28
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md]
+sources: [raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -40,6 +40,7 @@ h(t) = h_base(t) +            Σ_e Δh_e(q)        # 높이 신호(딜라토미�
 ⚠ **2026-09-28 (66호) 주석 — 둘째 인자 "Δx 당 몰부피 변화" 는 상수가 아니다.** 66호(de Biasi 2017 *JPCC* — 액체 반쪽 · NCM 여섯 조성 operando 격자, 표 S1)에서 `[재현]` NCM811 dV/dδ 가 3.99–4.05 V ≈−4 → 4.24–4.32 V ≈−30 Å³ per δ(×7)로
 올라 4.5 V 까지 ≈−28 로 유지되고, NCM622 는 δ 0.93–0.45 에서 −2…−4 · δ 0.30–0.18 에서 −19…−21 Å³ per δ 다. NCM 은 **충전 수축**(`[인쇄]` "a large decrease in unit cell volume upon charging") — In · Si 음극의 충전 팽창과 부호가 반대라
 양극 몫은 합에서 음극 몫을 깎는다. ⇒ 같은 용량 진폭이라도 **SOC 창(컷오프)에 따라 양극 몫이 다르고**, 같은 용량에서 θ 가 작으면 활성 입자의 Δx 가 커져 몫이 비선형으로 바뀐다([[nmc-lattice-li-content-calibration]] 함정 6).
+⚠ **2026-09-28 (67호) 주석** — 67호(Kondrakov 2017 *JPCC* — NCM811 · 전처리 셀 operando)에서도 같은 모양이다: `[재현]` `V` 변화의 **76.8 %** 가 x ≤0.5(≈4.06–4.6 V, 67호 축)에서 일어나고, 4.2 V 까지 −2.5…−2.8 % · 4.3 V −4.9…−5.4 % · 4.6 V + 1 h −7.02 %(기준 = 전처리 셀 충전 첫 점). 다만 67호의 x 축 규약이 66호와 0.10 다르므로(`x₀` 1.00 ↔ 0.90) 두 편의 `dV/dx` 를 겹칠 때는 x 가 아니라 전압으로 맞춘다([[nmc-lattice-li-content-calibration]] 67호 절).
 62호 원형은 LCO(충전 팽창)라 이 비선형의 표본이 아니다.
 
 ## 왜 중요한가 — 카드 Q2 · Q1 에서 이 신호를 쓸 때의 함정 다섯

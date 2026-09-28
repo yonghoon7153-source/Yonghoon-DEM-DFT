@@ -1,0 +1,360 @@
+{
+ "slug": "kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-28",
+ "sources": [
+  "1b43a382-29._Charge-transfer-induced_lattice_collapse_in_Ni-rich_NCM_cathode_materials_during_delithiation.pdf",
+  "e36bc2a5-29._Sup_Charge-transfer-induced_lattice_collapse_in_Ni-rich_NCM_cathode_materials_during_delithiation.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Capacity retention at C/2 for NCM811/Li cells charged to diﬀerent cutoﬀvoltages and (b) representative charge/discharge curves at C/10.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    340.2,
+    570.4,
+    590.0
+   ],
+   "w": 1051,
+   "h": 1042,
+   "dpi": 300,
+   "src": "1b43a382-29._Charge-transfer-induced_lattice_collapse_in_Ni-rich_NCM_cathode_materials_during_delithiation.pdf",
+   "blank": 0.899
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Contour plot of operando XRD patterns obtained on a NCM811/Li cell, together with structural reﬁnement results (b, c) as well as diﬀerential lattice parameter (d) and capacity curves (e). The changes in unit cell volume and lattice parameters a and c versus the lithium content are shown in (b) and (c), respectively. DOI: 10.1021/acs.jpcc.7b06598 J. Phys. Chem. C 2017, 121, 24381−24388 24383",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    463.0,
+    570.5,
+    723.2
+   ],
+   "w": 2151,
+   "h": 1085,
+   "dpi": 300,
+   "src": "1b43a382-29._Charge-transfer-induced_lattice_collapse_in_Ni-rich_NCM_cathode_materials_during_delithiation.pdf",
+   "blank": 0.762
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Crystal structure of NCM811 with highlighted transition metal−oxygen layers (gray) and lithium interlayers (green) as well as TM-O (hTM‑O) and Li-O slab heights (hLi‑O). The unit cell is indicated by a white rectangle. (b) hTM‑O and hLi‑O versus the lithium content.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    514.7,
+    306.5,
+    632.7
+   ],
+   "w": 1050,
+   "h": 493,
+   "dpi": 300,
+   "src": "1b43a382-29._Charge-transfer-induced_lattice_collapse_in_Ni-rich_NCM_cathode_materials_during_delithiation.pdf",
+   "blank": 0.745
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Operando Ni, Co, and Mn K-edge hXAS spectra obtained on a NCM811/Li cell during the charge cycle (top) and ﬁrst derivative absorbance curves (bottom). Ni0.33Co0.33Mn0.33O2 (NCM111).14 Instead, nickel is continu- ously oxidized over the whole x(Li) range. Assuming that cobalt and manganese remain in their initial oxidation states and nickel changes by 0.8 charge units, we obtain 12% diﬀerence in nickel ionic radius, which qualitatively agrees with the 15% decrease in hTM‑O from XRD. Such correlation suggests that the shrinkage of the TM-O slabs occurs due to oxidation of nickel to higher states (for charge compensation reasons). Oxygen K-Edge Evolution. To gain more insight into the mechanism that triggers the changes in the Li-O slabs during delithiation, we analyzed the evolution of the O K-edge using ex situ sXAS in TEY mode. It should be noted that the probing depth is limit",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.4,
+    425.5
+   ],
+   "w": 2150,
+   "h": 1511,
+   "dpi": 300,
+   "src": "1b43a382-29._Charge-transfer-induced_lattice_collapse_in_Ni-rich_NCM_cathode_materials_during_delithiation.pdf",
+   "blank": 0.6
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Ex situ O K-edge sXAS spectra obtained on NCM811 in pristine and delithiated states.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    454.2,
+    570.5,
+    665.4
+   ],
+   "w": 1051,
+   "h": 881,
+   "dpi": 300,
+   "src": "1b43a382-29._Charge-transfer-induced_lattice_collapse_in_Ni-rich_NCM_cathode_materials_during_delithiation.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Specific discharge capacity of a NCM811/graphite cell cycled at 1C between 3.0 V and 4.3 V with a 2 h potentiostatic step at the end of charge (or until the current dropped below C/100).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    65.9,
+    549.4,
+    228.8
+   ],
+   "w": 2015,
+   "h": 680,
+   "dpi": 300,
+   "src": "e36bc2a5-29._Sup_Charge-transfer-induced_lattice_collapse_in_Ni-rich_NCM_cathode_materials_during_delithiation.pdf",
+   "blank": 0.969
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Contour plot of peak intensities obtained on a NCM811/Li cell, together with representative XRD patterns and the corresponding charge/discharge curves.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    301.0,
+    549.4,
+    677.8
+   ],
+   "w": 2015,
+   "h": 1570,
+   "dpi": 300,
+   "src": "e36bc2a5-29._Sup_Charge-transfer-induced_lattice_collapse_in_Ni-rich_NCM_cathode_materials_during_delithiation.pdf",
+   "blank": 0.689
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Ni, Co, and Mn K-edge hXAS spectra obtained on both discharged (i.e., prior to cycling) and charged NCM811 and various reference materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    87.7,
+    549.4,
+    680.9
+   ],
+   "w": 2015,
+   "h": 2472,
+   "dpi": 300,
+   "src": "e36bc2a5-29._Sup_Charge-transfer-induced_lattice_collapse_in_Ni-rich_NCM_cathode_materials_during_delithiation.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Ni, Co, and Mn L-edge sXAS spectra obtained on NCM811 for various states of charge and discharge (see Figure S6 for assignment). The L3-to-L2 peak ratio is estimated by comparing the height of the L2 peak (dashed black lines) with that of the L3 peak. The vertical red lines represent the difference in peak heights. Because of shape variations, the height of the L2 peak is compared with that of the L3 saddle point in the case of Ni.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    87.7,
+    549.4,
+    304.4
+   ],
+   "w": 2015,
+   "h": 904,
+   "dpi": 300,
+   "src": "e36bc2a5-29._Sup_Charge-transfer-induced_lattice_collapse_in_Ni-rich_NCM_cathode_materials_during_delithiation.pdf",
+   "blank": 0.849
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. O K-edge sXAS spectra obtained on both NCM811 and various reference materials, indicating that the surface of the pristine cathode material is free of contaminants.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    423.4,
+    549.4,
+    611.2
+   ],
+   "w": 2015,
+   "h": 783,
+   "dpi": 300,
+   "src": "e36bc2a5-29._Sup_Charge-transfer-induced_lattice_collapse_in_Ni-rich_NCM_cathode_materials_during_delithiation.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 5,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. O K-edge sXAS spectra obtained on NCM811 for various states of charge and discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    65.9,
+    549.4,
+    361.0
+   ],
+   "w": 2015,
+   "h": 1230,
+   "dpi": 300,
+   "src": "e36bc2a5-29._Sup_Charge-transfer-induced_lattice_collapse_in_Ni-rich_NCM_cathode_materials_during_delithiation.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 6,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Fully relaxed geometries for (a) x(Li) = 1, (b) x(Li) = 0.75, (c) x(Li) = 0.5, and (d) x(Li) = 0.25. The unit cell used in the DFT calculations is shown in black.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    65.9,
+    549.4,
+    393.6
+   ],
+   "w": 2015,
+   "h": 1367,
+   "dpi": 300,
+   "src": "e36bc2a5-29._Sup_Charge-transfer-induced_lattice_collapse_in_Ni-rich_NCM_cathode_materials_during_delithiation.pdf",
+   "blank": 0.8,
+   "note": "⚠ 부분 크롭 — 캡션 상자 상단(y 396 pt)에서 잘려 (d) x(Li) = 0.25 판의 아래 ≈12 pt 가 빠졌다. 전체는 fig_S7_manual_p6.png(파일은 지우지 않았다). 라벨 ↔ 내용은 맞다"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 7,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Density of states (DOS) for (a) x(Li) = 1, (b) x(Li) = 0.75, (c) x(Li) = 0.5, and (d) x(Li) = 0.25, where the geometries from Figure S7 were used. The vertical black line indicates the Fermi level (set to zero). The full DOS is shown in red, the projected DOS (PDOS) for Ni in green, and the PDOS for O atoms in blue. Only slight changes in DOS as a function of lithium content are observed. The (P)DOS preserves its basic shape during delithiation, thus indicating that only the occupation of the Li/Ni conduction bands is altered. We note that the gaps are usually underestimated in DFT calculations involving our choice of XC functional (GGA). This can possibly explain the less pronounced gap for x(Li) = 0.25.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    65.9,
+    549.4,
+    416.2
+   ],
+   "w": 2015,
+   "h": 1461,
+   "dpi": 300,
+   "src": "e36bc2a5-29._Sup_Charge-transfer-induced_lattice_collapse_in_Ni-rich_NCM_cathode_materials_during_delithiation.pdf",
+   "blank": 0.899
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 6,
+   "file": "tab_2.png",
+   "caption": "Table 2. Lattice Parameters and Unit Cell Volume of the Experimental and Calculated Relaxed Structures as Well as Average Bader Charges for Oxygen and Nickel at x(Li) = 1.00, 0.75, 0.5, and 0.2554 V (Å3) a (Å) c (Å) x(Li) DFT XRD DFT XRD DFT XRD O charge |e| Ni charge |e| 1.00 99.96 101.38(1) 2.91 2.8661(1) 13.63 14.249(1) −1.2 +1.38 0.75 99.05 100.64(1) 2.883 2.8421(1) 13.76 14.386(1) −1.1 +1.43 0.50 97.84 99.73(1) 2.855 2.8221(1) 13.86 14.460(1) −1.0 +1.47 0.25 93.39 94.26(2) 2.840 2.8153(1) 13.37 13.732(2) −0.8 +1.43 Figures S7 and S8 for model geometries and calculated density of states [DOS]). The structures were based on the experimental XRD results, and the geometries were con- sequently fully optimized (including volume relaxation). Table 2 shows that the unit cell volume of the calculated relaxed structures (VDFT) is smaller by up to 1.9% than that of the experimental structures",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    64.0,
+    569.5,
+    317.5
+   ],
+   "w": 2143,
+   "h": 1057,
+   "dpi": 300,
+   "src": "1b43a382-29._Charge-transfer-induced_lattice_collapse_in_Ni-rich_NCM_cathode_materials_during_delithiation.pdf",
+   "blank": 0.778,
+   "note": "⚠ 과대 크롭 — 표 전체는 들어 있으나 아래 ≈60 % 가 본문(양 단 '… narrow peak at 528 eV (A1) …' · 'Figures S7 and S8 …')이다. 라벨 ↔ 내용은 맞다. 값은 PDF 텍스트 층이 정본(제목 끝 '0.25⁵⁴' 의 54 = 참고문헌 [54] Bader 알고리즘)"
+  },
+  {
+   "key": "t1m",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1_manual_p3.png",
+   "caption": "Table 1. First Cycle Discharge Capacity at C/10 and Specific Capacity Loss Per Cycle at C/2 for NCM811/Li Cells Charged to Different Cutoff Voltages",
+   "rotated_deg": 0,
+   "bbox": [
+    58,
+    193,
+    303,
+    325
+   ],
+   "w": 1022,
+   "h": 551,
+   "dpi": 300,
+   "src": "1b43a382-29._Charge-transfer-induced_lattice_collapse_in_Ni-rich_NCM_cathode_materials_during_delithiation.pdf",
+   "blank": 0.831,
+   "manual": true,
+   "note": "수동 크롭 — 자동 추출이 Table 1 을 '영역 없음' 으로 제외(텍스트 표). 3 쪽 위 괘선(y 194.7 pt) · 캡션(y 200.7–233.5) · 표 본체(y 239.7–317.5) · 아래 괘선(y 322.5–323.0)을 300 dpi 렌더 클립. 값은 PDF 텍스트 층이 정본"
+  },
+  {
+   "key": "fS7m",
+   "kind": "figure",
+   "label": "S7",
+   "page": 6,
+   "file": "fig_S7_manual_p6.png",
+   "caption": "Figure S7. Fully relaxed geometries for (a) x(Li) = 1, (b) x(Li) = 0.75, (c) x(Li) = 0.5, and (d) x(Li) = 0.25. The unit cell used in the DFT calculations is shown in black.",
+   "rotated_deg": 0,
+   "bbox": [
+    190,
+    68,
+    422,
+    409
+   ],
+   "w": 968,
+   "h": 1422,
+   "dpi": 300,
+   "src": "e36bc2a5-29._Sup_Charge-transfer-induced_lattice_collapse_in_Ni-rich_NCM_cathode_materials_during_delithiation.pdf",
+   "blank": 0.588,
+   "manual": true,
+   "note": "수동 크롭 — 자동 fig_S7.png 는 캡션 블록 상단(y 396 pt)에서 잘려 (d) x(Li) = 0.25 판의 아래 ≈12 pt 가 빠졌다(래스터 띠 다섯 xref 140–144 · rect 197.6–414.4 × 71.9–406.4 pt 의 마지막 띠가 캡션 상자와 겹친다). 전체 그림을 300 dpi 렌더 클립"
+  },
+  {
+   "key": "fTOC",
+   "kind": "figure",
+   "label": "TOC",
+   "page": 1,
+   "file": "fig_TOC_manual_p1.png",
+   "caption": "(초록 그래픽 — 캡션 없음) LiNi0.8Co0.1Mn0.1O2 · delithiation · 'Ni^red / O — charge transfer' → 'Ni^ox / O — charge depletion on O atoms'",
+   "rotated_deg": 0,
+   "bbox": [
+    345,
+    346,
+    557,
+    485
+   ],
+   "w": 884,
+   "h": 580,
+   "dpi": 300,
+   "src": "1b43a382-29._Charge-transfer-induced_lattice_collapse_in_Ni-rich_NCM_cathode_materials_during_delithiation.pdf",
+   "blank": 0.619,
+   "manual": true,
+   "note": "수동 크롭 — 캡션이 없는 초록 그래픽(1 쪽 래스터 xref 53, 869 × 562, rect 346.9–555.4 × 348.0–482.9 pt). 내용 = O → Ni 화살표 'charge transfer' 모식(데이터 없음)"
+  }
+ ]
+}
