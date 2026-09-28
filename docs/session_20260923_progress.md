@@ -523,3 +523,26 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
   다만 Codex 는 실제 캠페인 결함을 주장한 적이 없으므로 **런은 계속 돈다** (막히는 것은 판정뿐).
 
 - ⬜ 받을 것: v100 전수 로그 확인 · WSL `receipt_v1.json` · `pse_r075_a` 상태 · 순수 SE 3 침대 union 측정.
+
+### ㉗-1 v100 재현 런 — 재사용된 eq288 점의 실물 (09-28, 사용자 v100)
+
+`~/Yonghoon-DEM-DFT/se_curve/xfer_res_kit_ps_10_0_g288_e1181.json` · **1,503 B · mtime 2026-09-14 10:50**
+
+- ⛔ **세대 오염 확정**: eq288 배치는 09-27 에 돌았지만 이 점은 `--skip-existing` 이 **09-14 파일을 재사용**했다.
+  네 킷의 **가운데 ε 점 전부**(`e1201` · `e1185` · `e1189` · `e1181`)가 SKIP 이다 ⇒ 배치 로그의
+  `repo HEAD 93a8b2d27` 는 **재사용된 점에는 해당하지 않는다**.  ㉕ 의 "세대 셋" 위에 **한 겹 더** 있다.
+- ⚠⚠ **이 JSON 에 코드 출처 필드가 하나도 없다** — `repo_head` · `mpm3d_md5` · `code_sha` · 생성 시각 전부 부재.
+  세대를 말해 주는 것은 **파일 mtime 뿐**이다.  Phase A 의 `code_sha=null` (`PASL-03`) 과 **같은 부류의
+  결손이 se_curve 파이프라인에서 재발**한 것이다.
+- ✅ **frames 우려는 해소됐다 (내 앞선 경고를 정정)**: `frames_budget` **400** 으로 **rep288 과 같다**.
+  그리고 `porosity_at_target_pct 11.762` · `settled_over_target 1.3467` 이 **non-None** = 코드가
+  `reached` 로 게이트하는 두 필드가 채워졌다 ⇒ **400 프레임으로 목표에 닿았다**.
+  ⇒ rep288 xfer 로그의 *"최대 444 프레임 필요"* 는 **WALL0 → WALL_MIN 전 구간 주파의 상한**이지 ε 목표
+  도달에 필요한 수가 아니다.  ⇒ **§⑩-b 대조는 성립한다** (공통모드).
+- ✅ 침대·격자도 동일: `n_pts` **96,322,600** · `n_grid` 288 · `nz` 651 · `sub` 160 · `mach 0.03` ·
+  `dt 0.0002` · `compact_to_pct 11.81` · `protocol hold` · `readout wallP` · `se_frac 0.27` · `n_AM 175`.
+- ★ **대조 기준값** (§⑩-b `|Δ두께| ≤ 0.01 µm`): `thickness_um` **108.419** · `porosity_at_target_pct` 11.762 ·
+  `settled_over_target` 1.3467 · `final_stress_GPa` 0.4037 (target 0.3 — `hold` 이므로 목표 초과는 정상).
+  ⚠ 이 JSON 에 **σ 는 없다** — `|Δ ln σ|` 쪽 기준값은 STEP3 산출에서 따로 가져와야 한다.
+- ⇒ **rep288 무성 종료의 원인은 frames 가 아니다.**  남은 후보는 외부 SIGKILL (호스트 OOM 등) 뿐이고
+  아직 미확인이다.  ⛔ 원인 확인 전에는 15 런을 띄우지 않는다.
