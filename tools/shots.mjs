@@ -19,7 +19,7 @@ async function ready(p) {
   await p.evaluate(() => document.fonts.ready);
   await p.waitForTimeout(400);
 }
-const steps = (process.env.STEPS || 'desktop,select,region,mobile,zukan,search,t23,transit,matsuri').split(',');
+const steps = (process.env.STEPS || 'desktop,select,region,mobile,zukan,search,t23,transit,matsuri,landmarks').split(',');
 
 if (steps.includes('desktop')) {
   const { ctx, p } = await page({ width: 1440, height: 900 });
@@ -126,6 +126,18 @@ if (steps.includes('matsuri')) {
   await p.evaluate(() => [...document.querySelectorAll('.fes__go')].find((b) => b.querySelector('b').textContent === '長岡まつり大花火大会').click());
   await p.waitForTimeout(1500);
   await p.screenshot({ path: `${out}/19-matsuri-hanabi.png` });
+  await ctx.close();
+}
+if (steps.includes('landmarks')) {
+  // 랜드마크 스티커: the 近畿 region with its stickers, then 京都 open
+  const { ctx, p } = await page({ width: 1440, height: 900 });
+  await ready(p);
+  await p.evaluate(() => { location.hash = 'region/kinki'; });
+  await p.waitForTimeout(1600);
+  await p.screenshot({ path: `${out}/20-landmarks-kinki.png` });
+  await p.evaluate(() => { location.hash = 'kyoto'; });
+  await p.waitForTimeout(1800);
+  await p.screenshot({ path: `${out}/21-landmarks-kyoto.png` });
   await ctx.close();
 }
 if (steps.includes('search')) {

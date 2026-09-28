@@ -617,6 +617,17 @@
 /* the other cities of the open 県 — a soft dashed line, lighter than the 政令指定都市 dots but visible on every 지방 tint (사용자: 「연하게 점선」, then 「아직 구분 안 된다」) */
 .city-area--city { stroke: var(--ink-2); stroke-width: 1.1px; stroke-dasharray: 2.4 2.6; opacity: .62; }
 .city-area.is-hidden { opacity: 0; }
+/* 랜드마크 스티커 (ADR 0011): the drawing over a white cut-out edge of itself, a soft shadow, a ✦ on 보충 ones */
+.landmark { cursor: pointer; outline: none; }
+.landmark__art { filter: url(#lm-shadow); transition: opacity .2s ease; }
+.landmark__edge * { fill: var(--white); stroke: var(--white); stroke-width: 14px; stroke-linejoin: round; stroke-linecap: round; }
+.landmark:hover .landmark__edge *, .landmark:focus-visible .landmark__edge * { stroke: var(--accent-soft); }
+.landmark:focus-visible .landmark__edge * { stroke: var(--accent); }
+.landmark__sup { font-size: 10px; fill: var(--accent-2); paint-order: stroke; stroke: var(--white); stroke-width: 2.6px; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.label--place.landmark-name { fill: var(--ink-2); font-family: var(--font-body); }
+.t23__landmarks .landmark__art { filter: url(#lm-shadow); }
+.nchip.is-flash { animation: nchip-flash 1.8s ease-out; }
+@keyframes nchip-flash { 0%, 100% { box-shadow: 0 0 0 0 transparent; } 15%, 55% { box-shadow: 0 0 0 3px var(--accent); } 35%, 75% { box-shadow: 0 0 0 3px transparent; } }
 /* inside the open 県 every city area is washed a little lighter, like a highlighter, so how big each 시 is shows without a heavier line (사용자: 「시 사이즈 정도는 볼 수 있게」) */
 .city-area.is-open { fill: var(--white); fill-opacity: .34; opacity: .8; }
 /* 琵琶湖: water, drawn over the land — clicks fall through to 滋賀 underneath */

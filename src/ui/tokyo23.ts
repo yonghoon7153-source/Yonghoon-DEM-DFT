@@ -6,7 +6,8 @@ import type { Feature, FeatureCollection, Geometry } from 'geojson';
 import { feature } from 'topojson-client';
 import type { GeometryCollection, Topology } from 'topojson-specification';
 import { assetUrl } from '../asset-url';
-import { notes, places, regionOf, prefBySlug } from '../data';
+import { landmarkSource, landmarks, notes, places, regionOf, prefBySlug } from '../data';
+import { drawLandmark } from '../landmarks/art';
 import type { LabelMode, NoteItem, Ward } from '../types';
 import { clear, el } from './dom';
 import { glossNote, photoSearch, renderTree } from './notes-render';
@@ -143,6 +144,7 @@ export function renderTokyo23(mode: LabelMode, focus?: string): HTMLElement {
       // on a phone-sized map the central wards are tiny: short names only (the card has the reading)
       const small = W < 520;
       let focusAt: { g: SVGGElement; at: [number, number] } | null = null;
+      const wardAt = new Map<string, { g: SVGGElement; at: [number, number] }>();
       for (const f of features) {
         const ja = f.properties.ja;
         const ward = wardByJa.get(ja);
@@ -173,13 +175,35 @@ export function renderTokyo23(mode: LabelMode, focus?: string): HTMLElement {
         labelsG.append(text);
 
         const open = () => showCard(ja, g, [cx, cy]);
+        wardAt.set(ja, { g, at: [cx, cy] });
         if (ja === focus) focusAt = { g, at: [cx, cy] };
         g.addEventListener('click', (e) => { e.stopPropagation(); open(); });
         g.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
         });
       }
-      map.append(shapesG, labelsG);
+      // my Tokyo landmarks as the same stickers as on the map, where they are; a tap opens the ward they hang from
+      const stickersG = svg('g', { class: 't23__landmarks' });
+      const r = small ? 12 : 16;
+      landmarks.filter((l) => l.pref === WARD_PREFECTURE).forEach((l, i) => {
+        const p = projection(l.at);
+        const ward = l.ward ? wardAt.get(l.ward) : undefined;
+        if (!p || !ward) return;
+        const g = svg('g', { class: `landmark${landmarkSource(l) === 'supplement' ? ' is-sup' : ''}`, role: 'button', tabindex: 0, 'aria-label': l.name.ja, transform: `translate(${p[0].toFixed(1)},${p[1].toFixed(1)}) rotate(${((i * 7) % 11) - 5})` });
+        const art = svg('g', { class: 'landmark__art', transform: `scale(${((2 * r) / 100).toFixed(3)}) translate(-50,-50)` });
+        drawLandmark(art, l.icon);
+        g.append(art);
+        const title = svg('title');
+        title.textContent = `${l.name.ja} (${l.name.kana}) ${l.name.ko} — ${l.ward}`;
+        g.append(title);
+        const open = () => showCard(l.ward!, ward.g, ward.at);
+        g.addEventListener('click', (e) => { e.stopPropagation(); open(); });
+        g.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+        });
+        stickersG.append(g);
+      });
+      map.append(shapesG, stickersG, labelsG); // the ward names stay readable over the stickers
       map.addEventListener('click', closeCard);
       mapBox.append(map);
       const f = focusAt as { g: SVGGElement; at: [number, number] } | null;

@@ -2,7 +2,7 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/app.css';
 
-import { mountains, places, prefBySlug, regionById, regions, regionsInGroup, transit } from './data';
+import { landmarkById, mountains, places, prefBySlug, regionById, regions, regionsInGroup, transit } from './data';
 import { createMap, type MapApi } from './map/map';
 import type { LayerId } from './map/layers';
 import { artReady } from './mascots/visual';
@@ -113,6 +113,7 @@ async function init() {
       },
       onRange: (no) => pickRange(no),
       onLine: (id) => pickLine(id),
+      onLandmark: (id) => openLandmark(id),
     },
     state.labelMode,
   );
@@ -173,6 +174,20 @@ async function init() {
   }
   function openWards(focus?: string) {
     modal.open(renderTokyo23(state.labelMode, focus), { wide: true });
+  }
+  /** A landmark sticker was tapped: its prefecture opens and its box blinks; in 東京, the 23区 popup opens on its ward. */
+  function openLandmark(id: string) {
+    const l = landmarkById.get(id);
+    if (!l) return;
+    const opening = state.selected !== l.pref;
+    if (opening) select(l.pref, { animate: true });
+    if (modal.isOpen()) modal.close();
+    if (l.pref === WARD_PREFECTURE && l.ward) {
+      window.setTimeout(() => { if (state.selected === l.pref && !modal.isOpen()) openWards(l.ward); }, opening ? 700 : 0);
+      return;
+    }
+    // after the panel's second drawing (the mascot comes out at 0.76 s and the page is drawn again)
+    window.setTimeout(() => panel.flashBox(l.box), opening ? 950 : 0);
   }
 
   function deselect() {

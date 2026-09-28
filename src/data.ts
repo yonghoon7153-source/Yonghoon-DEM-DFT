@@ -8,8 +8,9 @@ import mountainsJson from '../data/mountains.json';
 import supplementJson from '../data/supplement.json';
 import transitJson from '../data/transit.json';
 import festivalsJson from '../data/festivals.json';
+import landmarksJson from '../data/landmarks.json';
 import geoMeta from './generated/prefecture-geo.json';
-import type { Airport, City, Festival, FestivalsDb, Mascot, MountainsDb, NoteExtra, NoteItem, NotesDb, PlacesDb, PrefGeoMeta, Prefecture, Region, RegionGroup, Station, SupplementDb, TransitDb } from './types';
+import type { Airport, City, Festival, FestivalsDb, Landmark, LandmarksDb, Mascot, MountainsDb, NoteExtra, NoteItem, NotesDb, PlacesDb, PrefGeoMeta, Prefecture, Region, RegionGroup, Station, SupplementDb, TransitDb } from './types';
 
 export const prefectures = prefecturesJson.prefectures as Prefecture[];
 export const regions = (regionsJson.regions as Region[]).slice().sort((a, b) => a.order - b.order);
@@ -23,6 +24,15 @@ export const mountains = mountainsJson as unknown as MountainsDb;
 export const supplement = supplementJson as unknown as SupplementDb;
 export const transit = transitJson as unknown as TransitDb;
 export const festivals = (festivalsJson as unknown as FestivalsDb).festivals;
+export const landmarks = (landmarksJson as unknown as LandmarksDb).landmarks;
+export const landmarkById = new Map(landmarks.map((l) => [l.id, l]));
+
+/** Where a landmark is written: a box of my mind map or of Claude's 보충 (the checker makes sure it is one of them). */
+export function landmarkSource(l: Landmark): 'notes' | 'supplement' {
+  const p = prefBySlug.get(l.pref);
+  const named = (items: NoteItem[]): boolean => items.some((it) => it.t === l.box || named(it.children ?? []));
+  return p && named(notesFor(p).items) ? 'notes' : 'supplement';
+}
 
 /** Where a festival is written: a box in my mind map, in Claude's 보충, or only in the calendar. */
 export function festivalSource(f: Festival): 'notes' | 'supplement' | 'claude' {

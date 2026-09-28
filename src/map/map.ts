@@ -17,6 +17,7 @@ export interface MapCallbacks {
   onZoom?(k: number): void;
   onRange?(no: number): void;
   onLine?(id: string): void;
+  onLandmark?(id: string): void;
 }
 
 export interface MapApi {
@@ -130,7 +131,7 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
   const gLabels = gScreen.append('g').attr('class', 'labels');
   const gLayerText = gScreen.append('g').attr('class', 'layer-text');
   const okinawaShift = ((topo as unknown as { meta?: { okinawaShift?: LonLat } }).meta?.okinawaShift ?? [-0.6, 5.4]) as LonLat;
-  const layers = createLayers({ geo: gGeoLayers, marks: gMarks, text: gLayerText, projection, okinawaShift, onRange: (no) => cb.onRange?.(no), onLine: (id) => cb.onLine?.(id) });
+  const layers = createLayers({ geo: gGeoLayers, marks: gMarks, text: gLayerText, projection, okinawaShift, onRange: (no) => cb.onRange?.(no), onLine: (id) => cb.onLine?.(id), onLandmark: (id) => cb.onLandmark?.(id) });
 
   gWash.append('path').attr('class', 'sea-halo sea-halo--wide');
   gWash.append('path').attr('class', 'sea-halo');
@@ -272,7 +273,7 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
 
   // ---- zoom
   const zoomBehavior: ZoomBehavior<SVGSVGElement, unknown> = zoom<SVGSVGElement, unknown>()
-    .scaleExtent([0.8, 16])
+    .scaleExtent([0.8, 32]) // 32×: close enough for a city's landmark stickers to stand apart (ADR 0011)
     .clickDistance(5)
     .on('zoom', (event) => {
       transform = event.transform as ZoomTransform;

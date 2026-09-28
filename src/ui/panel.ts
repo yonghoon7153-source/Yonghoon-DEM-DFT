@@ -435,7 +435,19 @@ export function createPanel(root: HTMLElement, cb: PanelCallbacks) {
     return out;
   }
 
-  return { showPrefecture, showRegion, showMountains, showTransit, refresh, close, isOpen: () => root.classList.contains('is-open'), current: () => current };
+  /** Scroll to a box of the open page (a landmark sticker's box) and make it blink once; false when it is not shown. */
+  function flashBox(t: string): boolean {
+    const hit = [...body.querySelectorAll<HTMLElement>('.nchip__t')].find((e) => e.textContent === t);
+    const chip = hit?.closest<HTMLElement>('.nchip');
+    if (!chip) return false;
+    chip.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    chip.classList.remove('is-flash');
+    void chip.offsetWidth; // blink again on a second tap
+    chip.classList.add('is-flash');
+    return true;
+  }
+
+  return { showPrefecture, showRegion, showMountains, showTransit, refresh, close, flashBox, isOpen: () => root.classList.contains('is-open'), current: () => current };
 }
 
 /** Content for the 메모장 modal: notes that belong to no particular place. */

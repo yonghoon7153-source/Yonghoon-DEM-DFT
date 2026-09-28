@@ -1,0 +1,110 @@
+{
+  "$schema": "./schema/landmarks.schema.json",
+  "_comment": "지도를 확대하면 그 자리에 붙는 랜드마크 스티커 (v2, ADR 0011). box = 내 마인드맵 · 보충에서 그 장소를 적은 칸의 이름 (출처는 화면이 칸 이름으로 찾음), icon = src/landmarks 의 닮은꼴 그림, at = [경도, 위도] 대략값(±0.01°, 기억으로 적은 것 — 정확한 지도로 쓰지 않음), ward = 東京 23区 팝업에서 열 구. 장소 칸만 (음식 · 명물은 나중에 다른 버튼).",
+  "landmarks": [
+    { "id": "tsurugajo", "box": "쓰루가성", "name": { "ja": "鶴ヶ城", "kana": "つるがじょう", "ko": "쓰루가성" }, "pref": "fukushima", "at": [139.930, 37.488], "icon": "tsurugajo" },
+
+    { "id": "disneyland", "box": "東京ディズニーランド", "name": { "ja": "東京ディズニーランド", "kana": "とうきょうディズニーランド", "ko": "도쿄 디즈니랜드" }, "pref": "chiba", "at": [139.880, 35.633], "icon": "fairycastle" },
+    { "id": "disneysea", "box": "東京ディズニーシー", "name": { "ja": "東京ディズニーシー", "kana": "とうきょうディズニーシー", "ko": "도쿄 디즈니씨" }, "pref": "chiba", "at": [139.885, 35.627], "icon": "globe" },
+
+    { "id": "asukayama", "box": "飛鳥山公園", "name": { "ja": "飛鳥山公園", "kana": "あすかやまこうえん", "ko": "아스카야마 공원" }, "pref": "tokyo", "ward": "北区", "at": [139.739, 35.752], "icon": "sakura" },
+    { "id": "toden", "box": "都電荒川線", "name": { "ja": "都電荒川線", "kana": "とでんあらかわせん", "ko": "도덴 아라카와선" }, "pref": "tokyo", "ward": "荒川区", "at": [139.791, 35.732], "icon": "tram" },
+    { "id": "ikebukuro", "box": "池袋", "name": { "ja": "池袋", "kana": "いけぶくろ", "ko": "이케부쿠로" }, "pref": "tokyo", "ward": "豊島区", "at": [139.711, 35.730], "icon": "night" },
+    { "id": "sensoji", "box": "浅草寺", "name": { "ja": "浅草寺", "kana": "せんそうじ", "ko": "센소지" }, "pref": "tokyo", "ward": "台東区", "at": [139.797, 35.715], "icon": "kaminarimon" },
+    { "id": "skytree", "box": "東京スカイツリー", "name": { "ja": "東京スカイツリー", "kana": "とうきょうスカイツリー", "ko": "도쿄 스카이트리" }, "pref": "tokyo", "ward": "台東区", "at": [139.811, 35.710], "icon": "skytree" },
+    { "id": "omotesando", "box": "表参道", "name": { "ja": "表参道", "kana": "おもてさんどう", "ko": "오모테산도" }, "pref": "tokyo", "ward": "台東区", "at": [139.712, 35.666], "icon": "avenue" },
+    { "id": "todai", "box": "東京大学 本キャンパス", "name": { "ja": "東京大学 赤門", "kana": "とうきょうだいがく あかもん", "ko": "도쿄대 아카몬" }, "pref": "tokyo", "ward": "文京区", "at": [139.761, 35.710], "icon": "akamon" },
+    { "id": "akihabara", "box": "秋葉原駅", "name": { "ja": "秋葉原", "kana": "あきはばら", "ko": "아키하바라" }, "pref": "tokyo", "ward": "千代田区", "at": [139.773, 35.698], "icon": "akiba" },
+    { "id": "kokkai", "box": "국회의사당", "name": { "ja": "国会議事堂", "kana": "こっかいぎじどう", "ko": "국회의사당" }, "pref": "tokyo", "ward": "千代田区", "at": [139.745, 35.676], "icon": "kokkai" },
+    { "id": "roppongi", "box": "롯폰기", "name": { "ja": "六本木", "kana": "ろっぽんぎ", "ko": "롯폰기" }, "pref": "tokyo", "ward": "港区", "at": [139.731, 35.663], "icon": "night" },
+
+    { "id": "akarenga", "box": "赤レンガ倉庫", "name": { "ja": "赤レンガ倉庫", "kana": "あかレンガそうこ", "ko": "아카렌가 창고" }, "pref": "kanagawa", "at": [139.643, 35.453], "icon": "akarenga" },
+    { "id": "cosmoclock", "box": "コスモクロック21", "name": { "ja": "コスモクロック21", "kana": "コスモクロックにじゅういち", "ko": "코스모클록 21 (대관람차)" }, "pref": "kanagawa", "at": [139.637, 35.456], "icon": "cosmoclock" },
+    { "id": "chinatown", "box": "中華街", "name": { "ja": "横浜中華街", "kana": "よこはまちゅうかがい", "ko": "요코하마 차이나타운" }, "pref": "kanagawa", "at": [139.646, 35.444], "icon": "chinatown" },
+    { "id": "hakone-jinja", "box": "箱根神社", "name": { "ja": "箱根神社", "kana": "はこねじんじゃ", "ko": "하코네 신사" }, "pref": "kanagawa", "at": [139.024, 35.205], "icon": "hakonetorii" },
+    { "id": "hakone-onsen", "box": "箱根温泉", "name": { "ja": "箱根温泉", "kana": "はこねおんせん", "ko": "하코네 온천" }, "pref": "kanagawa", "at": [139.106, 35.233], "icon": "onsen" },
+
+    { "id": "ponshukan", "box": "ぽんしゅ館", "name": { "ja": "ぽんしゅ館", "kana": "ぽんしゅかん", "ko": "폰슈칸 (사케)" }, "pref": "niigata", "at": [138.809, 36.936], "icon": "sake" },
+
+    { "id": "kirari", "box": "TOYAMAキラリ", "name": { "ja": "TOYAMAキラリ", "kana": "トヤマキラリ", "ko": "도야마 키라리" }, "pref": "toyama", "at": [137.214, 36.690], "icon": "kirari" },
+    { "id": "yukinootani", "box": "雪の大谷", "name": { "ja": "雪の大谷", "kana": "ゆきのおおたに", "ko": "유키노오타니 (눈벽)" }, "pref": "toyama", "at": [137.595, 36.578], "icon": "yukinootani" },
+    { "id": "shomyo", "box": "称名滝", "name": { "ja": "称名滝", "kana": "しょうみょうだき", "ko": "쇼묘 폭포" }, "pref": "toyama", "at": [137.521, 36.581], "icon": "waterfall" },
+    { "id": "tonami", "box": "チューリップ", "name": { "ja": "砺波のチューリップ", "kana": "となみのチューリップ", "ko": "도나미 튤립" }, "pref": "toyama", "at": [136.963, 36.628], "icon": "tulip" },
+
+    { "id": "kanazawa-eki", "box": "金沢駅", "name": { "ja": "金沢駅 鼓門", "kana": "かなざわえき つづみもん", "ko": "가나자와역 쓰즈미몬" }, "pref": "ishikawa", "at": [136.648, 36.578], "icon": "tsuzumimon" },
+
+    { "id": "ichijodani", "box": "一乗谷朝倉氏遺跡", "name": { "ja": "一乗谷朝倉氏遺跡", "kana": "いちじょうだにあさくらしいせき", "ko": "이치조다니 아사쿠라 유적" }, "pref": "fukui", "at": [136.298, 35.998], "icon": "ruins" },
+    { "id": "sabae", "box": "鯖江市", "name": { "ja": "鯖江", "kana": "さばえ", "ko": "사바에 (안경)" }, "pref": "fukui", "at": [136.184, 35.957], "icon": "glasses" },
+
+    { "id": "churei", "box": "忠霊塔", "name": { "ja": "忠霊塔", "kana": "ちゅうれいとう", "ko": "주레이토 (오층탑과 후지산)" }, "pref": "yamanashi", "at": [138.803, 35.501], "icon": "churei" },
+
+    { "id": "hidafurukawa", "box": "君の名は", "name": { "ja": "飛騨古川", "kana": "ひだふるかわ", "ko": "히다후루카와 (너의 이름은 성지)" }, "pref": "gifu", "at": [137.187, 36.238], "icon": "comet" },
+
+    { "id": "fuji", "box": "富士山", "name": { "ja": "富士山", "kana": "ふじさん", "ko": "후지산" }, "pref": "shizuoka", "at": [138.728, 35.345], "icon": "fuji" },
+    { "id": "sunpujo", "box": "駿府城", "name": { "ja": "駿府城", "kana": "すんぷじょう", "ko": "슨푸성" }, "pref": "shizuoka", "at": [138.383, 34.979], "icon": "castle" },
+    { "id": "gakki", "box": "楽器の街", "name": { "ja": "楽器の街", "kana": "がっきのまち", "ko": "악기의 도시 (하마마쓰)" }, "pref": "shizuoka", "at": [137.734, 34.706], "icon": "piano" },
+
+    { "id": "toyota", "box": "トヨタ自動車 本社", "name": { "ja": "トヨタ自動車 本社", "kana": "トヨタじどうしゃ ほんしゃ", "ko": "도요타 본사" }, "pref": "aichi", "at": [137.154, 35.084], "icon": "car" },
+
+    { "id": "ise-jingu", "box": "伊勢神宮", "name": { "ja": "伊勢神宮", "kana": "いせじんぐう", "ko": "이세 신궁" }, "pref": "mie", "at": [136.726, 34.455], "icon": "ise" },
+    { "id": "kashikojima", "box": "賢島", "name": { "ja": "賢島", "kana": "かしこじま", "ko": "가시코지마 (진주)" }, "pref": "mie", "at": [136.823, 34.305], "icon": "pearl" },
+
+    { "id": "kyoto-tower", "box": "京都タワー", "name": { "ja": "京都タワー", "kana": "きょうとタワー", "ko": "교토 타워" }, "pref": "kyoto", "at": [135.759, 34.988], "icon": "kyototower" },
+    { "id": "fushimi-inari", "box": "伏見稲荷大社", "name": { "ja": "伏見稲荷大社", "kana": "ふしみいなりたいしゃ", "ko": "후시미 이나리 신사" }, "pref": "kyoto", "at": [135.773, 34.967], "icon": "senbontorii" },
+    { "id": "kiyomizu", "box": "清水寺", "name": { "ja": "清水寺", "kana": "きよみずでら", "ko": "기요미즈데라" }, "pref": "kyoto", "at": [135.785, 34.995], "icon": "kiyomizu" },
+    { "id": "kinkaku", "box": "金閣寺・銀閣寺", "name": { "ja": "金閣寺", "kana": "きんかくじ", "ko": "금각사" }, "pref": "kyoto", "at": [135.729, 35.039], "icon": "kinkaku" },
+    { "id": "ginkaku", "box": "金閣寺・銀閣寺", "name": { "ja": "銀閣寺", "kana": "ぎんかくじ", "ko": "은각사" }, "pref": "kyoto", "at": [135.798, 35.027], "icon": "ginkaku" },
+    { "id": "byodoin", "box": "平等院", "name": { "ja": "平等院", "kana": "びょうどういん", "ko": "뵤도인 (10엔)" }, "pref": "kyoto", "at": [135.808, 34.889], "icon": "byodoin" },
+    { "id": "gion", "box": "祇園", "name": { "ja": "祇園", "kana": "ぎおん", "ko": "기온" }, "pref": "kyoto", "at": [135.775, 35.004], "icon": "gion" },
+
+    { "id": "osakajo", "box": "大阪城", "name": { "ja": "大阪城", "kana": "おおさかじょう", "ko": "오사카성" }, "pref": "osaka", "at": [135.526, 34.687], "icon": "osakajo" },
+    { "id": "dotonbori", "box": "道頓堀", "name": { "ja": "道頓堀", "kana": "どうとんぼり", "ko": "도톤보리" }, "pref": "osaka", "at": [135.501, 34.669], "icon": "dotonbori" },
+    { "id": "tsutenkaku", "box": "通天閣", "name": { "ja": "通天閣", "kana": "つうてんかく", "ko": "쓰텐카쿠" }, "pref": "osaka", "at": [135.506, 34.652], "icon": "tsutenkaku" },
+    { "id": "harukas", "box": "あべのハルカス", "name": { "ja": "あべのハルカス", "kana": "あべのハルカス", "ko": "아베노 하루카스" }, "pref": "osaka", "at": [135.514, 34.646], "icon": "harukas" },
+    { "id": "banpaku", "box": "万博記念公園", "name": { "ja": "万博記念公園", "kana": "ばんぱくきねんこうえん", "ko": "만박기념공원 (태양의 탑)" }, "pref": "osaka", "at": [135.532, 34.809], "icon": "taiyo" },
+    { "id": "usj", "box": "ユニバーサルスタジオ", "name": { "ja": "ユニバーサル・スタジオ・ジャパン", "kana": "ユニバーサル・スタジオ・ジャパン", "ko": "유니버설 스튜디오 재팬" }, "pref": "osaka", "at": [135.432, 34.665], "icon": "coaster" },
+
+    { "id": "arima", "box": "温泉", "name": { "ja": "有馬温泉", "kana": "ありまおんせん", "ko": "아리마 온천" }, "pref": "hyogo", "at": [135.248, 34.798], "icon": "onsen" },
+
+    { "id": "nara-koen", "box": "シカ", "name": { "ja": "奈良公園", "kana": "ならこうえん", "ko": "나라 공원 (사슴)" }, "pref": "nara", "at": [135.843, 34.685], "icon": "deer" },
+
+    { "id": "kumano", "box": "熊野三山", "name": { "ja": "熊野三山", "kana": "くまのさんざん", "ko": "구마노산잔 (대도리이)" }, "pref": "wakayama", "at": [135.773, 33.840], "icon": "otorii" },
+    { "id": "kumanogawa", "box": "熊野川舟下り", "name": { "ja": "熊野川舟下り", "kana": "くまのがわふなくだり", "ko": "구마노강 뱃놀이" }, "pref": "wakayama", "at": [135.853, 33.762], "icon": "boat" },
+    { "id": "nachi", "box": "那智の大滝", "name": { "ja": "那智の大滝", "kana": "なちのおおたき", "ko": "나치 폭포" }, "pref": "wakayama", "at": [135.889, 33.676], "icon": "nachi" },
+
+    { "id": "sakyu", "box": "鳥取砂丘", "name": { "ja": "鳥取砂丘", "kana": "とっとりさきゅう", "ko": "돗토리 사구" }, "pref": "tottori", "at": [134.238, 35.541], "icon": "sakyu" },
+
+    { "id": "matsuejo", "box": "松江城", "name": { "ja": "松江城", "kana": "まつえじょう", "ko": "마쓰에성" }, "pref": "shimane", "at": [133.051, 35.475], "icon": "matsuejo" },
+    { "id": "izumo", "box": "出雲大社", "name": { "ja": "出雲大社", "kana": "いずもたいしゃ", "ko": "이즈모 대사" }, "pref": "shimane", "at": [132.686, 35.402], "icon": "izumo" },
+
+    { "id": "genbaku", "box": "原爆ドーム", "name": { "ja": "原爆ドーム", "kana": "げんばくドーム", "ko": "원폭 돔" }, "pref": "hiroshima", "at": [132.454, 34.396], "icon": "genbaku" },
+    { "id": "itsukushima", "box": "厳島神社", "name": { "ja": "厳島神社", "kana": "いつくしまじんじゃ", "ko": "이쓰쿠시마 신사" }, "pref": "hiroshima", "at": [132.320, 34.296], "icon": "itsukushima" },
+
+    { "id": "bizan", "box": "眉山", "name": { "ja": "眉山", "kana": "びざん", "ko": "비잔" }, "pref": "tokushima", "at": [134.535, 34.066], "icon": "bizan" },
+    { "id": "uzushio", "box": "渦潮", "name": { "ja": "鳴門の渦潮", "kana": "なるとのうずしお", "ko": "나루토 소용돌이" }, "pref": "tokushima", "at": [134.640, 34.236], "icon": "uzushio" },
+    { "id": "ryozenji", "box": "霊山寺", "name": { "ja": "霊山寺", "kana": "りょうぜんじ", "ko": "료젠지 (오헨로 1번)" }, "pref": "tokushima", "at": [134.503, 34.159], "icon": "temple" },
+
+    { "id": "dogo", "box": "道後温泉本館", "name": { "ja": "道後温泉本館", "kana": "どうごおんせんほんかん", "ko": "도고 온천 본관" }, "pref": "ehime", "at": [132.786, 33.852], "icon": "dogo" },
+
+    { "id": "harimaya", "box": "はりまや橋", "name": { "ja": "はりまや橋", "kana": "はりまやばし", "ko": "하리마야 다리" }, "pref": "kochi", "at": [133.542, 33.561], "icon": "harimaya" },
+    { "id": "chinkabashi", "box": "沈下橋", "name": { "ja": "沈下橋", "kana": "ちんかばし", "ko": "친카바시 (시만토강)" }, "pref": "kochi", "at": [132.915, 33.045], "icon": "chinkabashi" },
+
+    { "id": "arita", "box": "有田焼", "name": { "ja": "有田", "kana": "ありた", "ko": "아리타 (도자기)" }, "pref": "saga", "at": [129.883, 33.191], "icon": "porcelain" },
+    { "id": "ureshino", "box": "嬉野温泉", "name": { "ja": "嬉野温泉", "kana": "うれしのおんせん", "ko": "우레시노 온천" }, "pref": "saga", "at": [129.995, 33.101], "icon": "onsen" },
+
+    { "id": "heiwa", "box": "平和祈念像", "name": { "ja": "平和祈念像", "kana": "へいわきねんぞう", "ko": "평화기념상" }, "pref": "nagasaki", "at": [129.864, 32.777], "icon": "heiwa" },
+    { "id": "megane", "box": "眼鏡橋", "name": { "ja": "眼鏡橋", "kana": "めがねばし", "ko": "메가네바시" }, "pref": "nagasaki", "at": [129.881, 32.748], "icon": "meganebashi" },
+    { "id": "kujukushima", "box": "九十九島", "name": { "ja": "九十九島", "kana": "くじゅうくしま", "ko": "구주쿠시마" }, "pref": "nagasaki", "at": [129.666, 33.205], "icon": "islands" },
+
+    { "id": "beppu", "box": "別府", "name": { "ja": "別府", "kana": "べっぷ", "ko": "벳푸 (지옥 순례)" }, "pref": "oita", "at": [131.476, 33.316], "icon": "beppu" },
+    { "id": "yufuin", "box": "由布院", "name": { "ja": "由布院", "kana": "ゆふいん", "ko": "유후인" }, "pref": "oita", "at": [131.369, 33.265], "icon": "yufuin" },
+    { "id": "usa", "box": "宇佐神宮", "name": { "ja": "宇佐神宮", "kana": "うさじんぐう", "ko": "우사 신궁" }, "pref": "oita", "at": [131.373, 33.527], "icon": "shrine" },
+
+    { "id": "takachiho", "box": "高千穂", "name": { "ja": "高千穂峡", "kana": "たかちほきょう", "ko": "다카치호 협곡" }, "pref": "miyazaki", "at": [131.302, 32.705], "icon": "takachiho" },
+    { "id": "amanoiwato", "box": "天岩戸神社", "name": { "ja": "天岩戸神社", "kana": "あまのいわとじんじゃ", "ko": "아마노이와토 신사" }, "pref": "miyazaki", "at": [131.357, 32.746], "icon": "shrine" },
+
+    { "id": "sakurajima", "box": "桜島", "name": { "ja": "桜島", "kana": "さくらじま", "ko": "사쿠라지마" }, "pref": "kagoshima", "at": [130.657, 31.586], "icon": "sakurajima" },
+    { "id": "tanegashima", "box": "宇宙センター", "name": { "ja": "種子島宇宙センター", "kana": "たねがしまうちゅうセンター", "ko": "다네가시마 우주센터" }, "pref": "kagoshima", "at": [130.968, 30.392], "icon": "rocket" },
+    { "id": "yakushima", "box": "苔むす森", "name": { "ja": "苔むす森", "kana": "こけむすもり", "ko": "이끼 숲 (야쿠시마)" }, "pref": "kagoshima", "at": [130.566, 30.379], "icon": "yakusugi" }
+  ]
+}

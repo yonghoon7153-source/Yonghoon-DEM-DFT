@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "landmarks.json — 확대하면 붙는 랜드마크 스티커",
+  "description": "내 마인드맵 · 보충의 장소 칸을 지도 위 그 자리에 닮은꼴 스티커로 (ADR 0011). box 가 그 県의 칸 이름과 같아야 하고(검사기), 출처(내 마인드맵 / 보충)는 화면이 칸 이름으로 찾는다.",
+  "type": "object",
+  "required": ["landmarks"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "_comment": { "type": "string" },
+    "landmarks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "box", "name", "pref", "at", "icon"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "box": { "type": "string", "description": "이 장소를 적은 칸의 이름 (내 마인드맵 또는 보충, 같은 県)" },
+          "name": {
+            "type": "object",
+            "required": ["ja", "kana", "ko"],
+            "additionalProperties": false,
+            "properties": { "ja": { "type": "string" }, "kana": { "type": "string" }, "ko": { "type": "string" } },
+            "description": "지도에 붙는 이름 (라벨 모드를 따름)"
+          },
+          "pref": { "type": "string", "description": "prefectures.json 의 slug" },
+          "ward": { "type": "string", "description": "東京만: 23区 팝업에서 열 구 (places.json wards 의 이름)" },
+          "at": {
+            "type": "array",
+            "prefixItems": [{ "type": "number" }, { "type": "number" }],
+            "minItems": 2,
+            "maxItems": 2,
+            "description": "[경도, 위도] — 대략값 (±0.01°)"
+          },
+          "icon": { "type": "string", "description": "src/landmarks 의 그림 이름 (닮은꼴 · 같은 종류는 같은 그림)" }
+        }
+      }
+    }
+  }
+}

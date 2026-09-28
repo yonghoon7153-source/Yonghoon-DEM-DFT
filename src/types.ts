@@ -137,3 +137,7 @@ export interface TransitDb { airports: Airport[]; shinkansen: ShinkansenLine[] }
 /** 🎆 축제 달력 entry. `box` — the note box that mentions it (default: ja); `approx` — the dates move a little every year. */
 export interface Festival { id: string; kind?: 'season'; ja: string; kana: string; ko: string; pref: string; box?: string; fx: 'fireworks' | 'snow' | 'sakura' | 'momiji' | 'lanterns' | 'drums' | 'streamers'; start: string; end?: string; approx?: boolean; note?: string }
 export interface FestivalsDb { festivals: Festival[] }
+
+/** A place box of my mind map (or 보충) as a look-alike sticker on the map when zoomed in (ADR 0011). */
+export interface Landmark { id: string; box: string; name: PlaceName; pref: string; ward?: string; at: LonLat; icon: string }
+export interface LandmarksDb { landmarks: Landmark[] }

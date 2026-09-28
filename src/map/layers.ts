@@ -5,13 +5,15 @@
 //   bridges  — the three Honshu–Shikoku routes
 //   transit  — 🚄 가는 법: shinkansen lines (stations joined by straight lines), ✈ airports, named stations (v2, ADR 0009)
 //   mountains — the worksheet 「高い山脈・山地・高地」: green ridges with their numbers, plus my two notes
+//   (with cities) landmarks — the place boxes of my notes and 보충 as look-alike stickers once zoomed in (ADR 0011)
 // Data lives in data/places.json and data/mountains.json. Lines are drawn in map space (they zoom with the land);
 // dots, numbers and names are drawn in screen space and placed so they do not cover the prefecture names.
 import { geoCircle, geoPath, type GeoProjection } from 'd3-geo';
-import type { Selection } from 'd3-selection';
+import { select, type Selection } from 'd3-selection';
 import type { ZoomTransform } from 'd3-zoom';
-import { cityTier, mountains, places, transit } from '../data';
-import type { LabelMode, LonLat, PlaceName, ShinkansenLine } from '../types';
+import { cityTier, landmarkSource, landmarks, mountains, places, transit } from '../data';
+import { drawLandmark } from '../landmarks/art';
+import type { LabelMode, Landmark, LonLat, PlaceName, ShinkansenLine } from '../types';
 
 export type LayerId = 'cities' | 'bridges' | 'transit' | 'mountains';
 export interface Rect { x: number; y: number; w: number; h: number }
@@ -25,6 +27,7 @@ export interface LayerContext {
   okinawaShift: LonLat;
   onRange(no: number): void;
   onLine(id: string): void;
+  onLandmark(id: string): void;
 }
 
 export interface LayerFrame {
@@ -53,6 +56,13 @@ const MAP_NOTES_UNTIL = 5;
 const AIRPORTS_AT = 1.9;
 const STATIONS_AT = 1.4;
 const LINE_NAMES_AT = 1.7;
+/** Landmark stickers: from a light zoom (or when their prefecture is open); their names once there is room. */
+const LANDMARKS_AT = 2.2;
+const LANDMARK_NAMES_AT = 4;
+/** At most this many stickers stand side by side where they would overlap; more come out as you zoom in. */
+const LANDMARK_ROW = 3;
+
+interface LandmarkItem extends LabelItem { lm: Landmark; tilt: number }
 
 function parts(n: PlaceName, mode: LabelMode): { main: string; furi: string } {
   if (mode === 'kana') return { main: n.kana, furi: '' };
@@ -123,6 +133,12 @@ export function createLayers(ctx: LayerContext) {
   /** A capital that is also one of the 23 wards (都庁 in 新宿区) leaves its name to the ward when wards show. */
   const wardNamesJa = new Set(places.wards.map((w) => w.name.ja));
   const extraAt = new Map(places.extraPlaces.map((e) => [e.id, shift(e.at, e.pref)]));
+  // landmark stickers, each a little tilted like a sticker stuck by hand; 보충 ones carry a small ✦
+  const landmarkItems: LandmarkItem[] = landmarks.map((l, i) => ({
+    id: `lm-${l.id}`, name: l.name, pref: l.pref, px: [0, 0], fs: 10, prio: 0, lm: l, tilt: ((i * 7) % 11) - 5,
+    cls: `landmark-name${landmarkSource(l) === 'supplement' ? ' is-sup' : ''}`,
+  }));
+  const landmarkAt = new Map(landmarks.map((l) => [l.id, shift(l.at, l.pref)]));
 
   // ---------------------------------------------------------------- map-space lines
   const gAreas = ctx.geo.append('g').attr('class', 'layer layer--areas');
@@ -226,6 +242,29 @@ export function createLayers(ctx: LayerContext) {
   const wardDots = dot(gCityMarks, wards, 'ward');
   const extraDots = dot(gCityMarks, extras.filter((e) => !e.area), 'extra-place');
 
+  // the sticker's shadow, once per map
+  const svgNode = ctx.marks.node()?.ownerSVGElement;
+  if (svgNode && !svgNode.querySelector('#lm-shadow')) {
+    const defs = select(svgNode).insert('defs', ':first-child');
+    defs.append('filter').attr('id', 'lm-shadow').attr('x', '-30%').attr('y', '-30%').attr('width', '160%').attr('height', '160%')
+      .append('feDropShadow').attr('dx', 0).attr('dy', 1.4).attr('stdDeviation', 1.1).attr('flood-color', '#4a3f3a').attr('flood-opacity', 0.32);
+  }
+  const gLandmarks = gCityMarks.append('g').attr('class', 'landmarks');
+  const landmarkSel = gLandmarks.selectAll<SVGGElement, LandmarkItem>('g.landmark')
+    .data(landmarkItems, (d) => d.id)
+    .join((enter) => {
+      const g = enter.append('g').attr('class', (d) => `landmark${d.cls.includes('is-sup') ? ' is-sup' : ''}`)
+        .attr('role', 'button').attr('tabindex', 0).attr('data-id', (d) => d.lm.id);
+      g.append('g').attr('class', 'landmark__art').each(function (d) { drawLandmark(this, d.lm.icon); });
+      g.filter((d) => d.cls.includes('is-sup')).append('text').attr('class', 'landmark__sup').text('✦');
+      g.append('title').text((d) => `${d.lm.name.ja} (${d.lm.name.kana}) ${d.lm.name.ko} — ${d.cls.includes('is-sup') ? '✦ 보충' : '내 마인드맵'}`);
+      g.on('click', (event: MouseEvent, d) => { event.stopPropagation(); ctx.onLandmark(d.lm.id); });
+      g.on('keydown', (event: KeyboardEvent, d) => {
+        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); ctx.onLandmark(d.lm.id); }
+      });
+      return g;
+    });
+
   const gRangeMarks = ctx.marks.append('g').attr('class', 'layer layer--ranges');
   const rangeNos = gRangeMarks.selectAll<SVGGElement, (typeof mountains.ranges)[number]>('g.range-no')
     .data(mountains.ranges, (d) => d.id)
@@ -264,6 +303,8 @@ export function createLayers(ctx: LayerContext) {
   const airportNames = textOf(ctx.text, airportItems, 'airport-name');
   const stationNames = textOf(ctx.text, stationItems, 'station-name');
   const lineNames = textOf(ctx.text, lineItems, 'line-name').style('--line-color', (d) => lineColor.get(d.id) ?? '#888');
+  const landmarkNames = textOf(ctx.text, landmarkItems, 'landmark-name');
+  landmarkNames.classed('is-sup', (d) => d.cls.includes('is-sup'));
   const rangeTag = ctx.text.append('text').attr('class', 'label label--place range-tag').attr('lang', 'ja');
   rangeTag.append('tspan').attr('class', 'label__furi');
   rangeTag.append('tspan').attr('class', 'label__main');
@@ -297,6 +338,7 @@ export function createLayers(ctx: LayerContext) {
 
   function refit() {
     for (const c of cities) c.px = project(cityAt.get(c.id)!);
+    for (const l of landmarkItems) l.px = project(landmarkAt.get(l.lm.id)!);
     for (const w of wards) w.px = project(wardAt.get(w.id)!);
     for (const l of lakeItems) l.px = project(lakeAt.get(l.id)!);
     for (const i of islands) {
@@ -455,6 +497,38 @@ export function createLayers(ctx: LayerContext) {
 
     // cities, wards, islands, other places
     gCityMarks.classed('is-off', !on.cities);
+
+    // landmark stickers first, so the names placed after them go round them. Stickers that would overlap stand side
+    // by side in a short row (like a prefecture's mascot stickers); the rest come out as you zoom in. The open
+    // prefecture's go first, then the data order.
+    // stickers may overlap a little, like real ones; closer than 1.5 radii they stand in a row instead
+    const R = 14 * Math.min(f.ts, 1.15);
+    const near = R * 1.5;
+    const step = R * 1.55;
+    const rows: { x: number; y: number; members: { d: LandmarkItem; x: number }[] }[] = [];
+    const stickerAt = new Map<string, [number, number]>();
+    const lmOrder = [...landmarkItems].sort((a, b) => Number(b.pref === f.selected) - Number(a.pref === f.selected));
+    for (const d of lmOrder) {
+      const [x0, y0] = t.apply(d.px);
+      if (!(on.cities && onScreen(x0, y0) && (k >= LANDMARKS_AT || d.pref === f.selected))) continue;
+      const row = rows.find((r) => Math.abs(r.y - y0) < near && r.members.some((m) => Math.abs(m.x - x0) < near));
+      if (!row) {
+        rows.push({ x: x0, y: y0, members: [{ d, x: x0 }] });
+        stickerAt.set(d.id, [x0, y0]);
+      } else if (row.members.length < LANDMARK_ROW) {
+        const x = row.x + row.members.length * step;
+        row.members.push({ d, x });
+        stickerAt.set(d.id, [x, row.y]);
+      }
+    }
+    for (const r of rows) f.placed.push({ x: r.x - R, y: r.y - R, w: 2 * R + (r.members.length - 1) * step, h: 2 * R });
+    const artScale = `scale(${((2 * R) / 100).toFixed(3)}) translate(-50,-50)`;
+    landmarkSel.classed('is-hidden', (d) => !stickerAt.has(d.id)).attr('transform', (d) => {
+      const p = stickerAt.get(d.id);
+      return p ? `translate(${p[0].toFixed(1)},${p[1].toFixed(1)}) rotate(${d.tilt})` : null;
+    });
+    landmarkSel.select('.landmark__art').attr('transform', artScale);
+    landmarkSel.select('.landmark__sup').attr('x', (R * 0.78).toFixed(1)).attr('y', (-R * 0.72).toFixed(1));
     const wardsOn = on.cities && k >= WARDS_AT;
     const order = [...cities].sort((a, b) => (b.pref === f.selected ? 10 : 0) + b.prio - ((a.pref === f.selected ? 10 : 0) + a.prio));
     const shownDot = new Set<string>();
@@ -471,6 +545,15 @@ export function createLayers(ctx: LayerContext) {
       const [x, y] = t.apply(d.px);
       return `translate(${x.toFixed(1)},${y.toFixed(1)})`;
     });
+    // a sticker standing alone gets its name (below it first) once there is room, after the city names
+    for (const r of rows) {
+      for (const m of r.members) {
+        const named = r.members.length === 1 && (k >= LANDMARK_NAMES_AT || m.d.pref === f.selected)
+          && placeName(landmarkNames, m.d, m.x, r.y, f, R + 1, ['d', 'r', 'l', 'u']);
+        if (!named) landmarkNames.filter((q) => q === m.d).classed('is-hidden', true);
+      }
+    }
+    landmarkNames.filter((q) => !stickerAt.has(q.id)).classed('is-hidden', true);
 
     const shownWard = new Set<string>();
     for (const w of wards) {
