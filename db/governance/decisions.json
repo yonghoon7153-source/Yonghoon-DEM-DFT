@@ -5298,7 +5298,15 @@
     "db/properties/lpscl_smallcell_glass_amendment_digest_erratum_2026_09_28.json",
     "kb/projects/li2s_glass_external_first_author_followup_pilot800_2026_09_27.md"
    ],
-   "status": "proposed"
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-09-28",
+     "state": "proposed",
+     "by": "외부 1저자 (회신 CL · 부분)",
+     "note": "변경 1 두 문턱 해석 **확인** (가까운 쪽 거리 = 양쪽 모두 2σ 밖) · 변경 6 문턱 **2 배 확정** + 카드 단서 '출처는 400 K 두 런이며 초기구조가 섞여 있다' · Q-CL-3·4 는 결과와 같이 · 네 시드 전수는 발송 전 권장. 여전히 proposed — 나머지 항목(Q-CL-3·4)이 남았다. 트랙 = li2s (사용자 ≠ 1저자)."
+    }
+   ]
   },
   {
    "id": "D-2026-09-28-gabia-uma-coexist-v4-li2s465",

@@ -7,7 +7,7 @@ updated: 2026-09-28
 track: li2s / lpscl_smallcell_glass
 channel: li2s1a
 kind: prompt
-status: 초안 (미발송) — ⏳ 빈 칸 둘 (§4 600 K 파일럿 결과 · §5 본 런 착수) · 사용자 검토 → 발송
+status: 발송됨 (초안 판 · 빈 칸 둘 — 사용자 · 2026-09-28) · ✅ 회신 수령 2026-09-28 (부분 · `li2s1a_CL_reply_…` — Q-CL-1 확정 · Q-CL-2 확정 + 출처 단서 · Q-CL-3·4 는 결과와 같이) → 답장은 600 K · 465 K 조기확인 · 네 시드 전수와 함께
 confidence: medium
 verificationStatus: verified
 verifiedAt: 2026-09-28
