@@ -148,7 +148,13 @@ CONTRACT_MAX_OVL = 0.01          # prereg §1 "최대 겹침 실측 ≤ 1 %" —
 #:   영수증 생산자 (`mixer_restart_phase_test.py`) 는 실측 오차가 이 값 이하일 때만 통과를 내고, 소비자는 **실측값이 아니라 이 값**
 #:   으로 벽 겹침을 [θ − ε, θ + ε] **구간 전체**에서 잰다 (실측 최대가 0 에 가깝다고 캠페인 ε 를 0 으로 두지 않는다).
 PHASE_EPS_DEG = 0.05
-RECEIPT_SCHEMA = 'restart_phase_v1'   # 봉인 (실행 직전 바이너리 · 덱 · STL 해시 + 실행 결과) 이 붙은 영수증.  옛 v0 는 거부.
+RECEIPT_SCHEMA = 'restart_phase_v2'   # v2 (2026-09-28 Codex 4 차 HBR4-01 · 02 · 03): 봉인 · 덤프 목록 완전성 · 운동 시계 · 위치 경계.
+                                      #   v1 (수정 전 생산자 — B 유한성 · 빈 목록 · 형상 잔차 누락) · v0 (봉인 없음) 은 거부.
+MESH_DUMP_BASIS = False               # ★ HBR4-04 (나, 1저자 09-28) — post_mesh/ 덤프를 벽 판정 근거로 쓰지 않는다.  삼각형 수 ·
+                                      #   꼭짓점 집합 보존은 "전체 용기" 의 증명이 아니다 (끝판을 [중심·테두리·중심] 으로 퇴화시키면
+                                      #   평면 하나가 조용히 사라진다).  면 연결 검증 (가) 을 세우기 전까지 정지 벽 · 영수증 · 상·하한만.
+STL_REF_DIR = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'dem_scripts', 'mixer_20260919'))
+LAUNCH_SCHEMA = 'mixer_highbo_launch_record/1'   # launch_highbo.sh 의 발사 봉인
 PHASE_TOL_FRAC = 0.02            # 데이터로 되읽은 드럼 회전각 vs 덱 예정각 — 면 각도의 2 % (9.23° 면이면 0.18°)
 PHASE_FRAMES = 5                 # 위상을 데이터로 확인할 프레임 수 (창 안에 고르게)
 
@@ -239,6 +245,117 @@ def motion_signature(deck_text, stl_dir):
                         [repr(float(x)) for x in t[io + 1:io + 4]], [repr(float(x)) for x in t[ia + 1:ia + 4]],
                         repr(float(t[t.index('period') + 1])) if 'period' in t else '?'])
     return hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest()
+
+
+def motion_clock(deck_text):
+    """메시 운동의 **시계** — 운동 fix 의 생성 · 해제 step · read_restart · run 끝 step (2026-09-28, Codex 4 차 HBR4-02).
+
+    motion_signature 는 운동의 **모양** (축 · 주기 · 메시 · 순서) 만 담고 run 길이 · 회전 시작을 뺀다 → 회전 시작 2001 과 3001 을
+    구분하지 못했다.  영수증의 각 오차는 그 **시계**에서 잰 것이라 판정할 덱과 시계가 같아야 이식된다.
+    """
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from make_mixer_resume import logical_commands, _tokens
+    ev, steps, movers = [], 0, set()
+    for _, blk in logical_commands(deck_text):
+        t = _tokens(blk)
+        if not t:
+            continue
+        if t[0] == 'run':
+            steps = int(t[1]) if 'upto' in t else steps + int(t[1])
+        elif t[0] == 'fix' and len(t) > 3 and t[3] == 'move/mesh':
+            movers.add(t[1])
+            ev.append(['move', t[1], t[t.index('mesh') + 1] if 'mesh' in t[4:] else '?', steps])
+        elif t[0] == 'unfix' and len(t) > 1 and t[1] in movers:
+            movers.discard(t[1])
+            ev.append(['unmove', t[1], steps])
+        elif t[0] == 'read_restart':
+            ev.append(['read_restart', steps])
+    ev.append(['end', steps])
+    return ev
+
+
+def _sha_file(path):
+    import hashlib
+    h = hashlib.sha256()
+    with open(path, 'rb') as f:
+        for b in iter(lambda: f.read(1 << 20), b''):
+            h.update(b)
+    return h.hexdigest()
+
+
+def resume_marks(run_dir):
+    """재개 흔적 (make_mixer_resume 산출) — in.resume · post_pre_resume_* · restart/resume_from_*."""
+    out = []
+    for pat in ('in.resume', 'post_pre_resume_*', os.path.join('restart', 'resume_from_*')):
+        out += sorted(os.path.relpath(q, run_dir) for q in glob.glob(os.path.join(run_dir, pat)))
+    return out
+
+
+def launch_binding(run_dir, spec, path=None):
+    """판정할 런의 **실행 직전 봉인** (launch_highbo.sh 의 launch_record.json) → dict.  못 세우면 ValueError.
+
+    ★ HBR4-02 (Codex 4 차) — 옛 소비자는 영수증 바이너리를 영수증 **안에서만** 대조하고 런과는 배너 문자열로만 이었다 (배너가 같으면
+      다른 바이너리도 수락).  이제 그 런을 실제로 띄운 바이너리의 sha256 (봉인) 과 대조하고, 봉인 때의 덱 · STL 이 지금 파일과
+      같은지 본다 (검사기가 읽는 덱 · STL = 그 런이 실행한 것).  ⚠ 봉인이 없으면 **미상**이다 — 지금 파일을 해시해 과거 실행
+      기록처럼 채우지 않는다 (Codex 단서).
+    """
+    lp = path or os.path.join(run_dir, 'launch_record.json')
+    if not os.path.isfile(lp):
+        raise ValueError('판정할 런의 발사 봉인 (launch_record.json) 이 없다 — 실행 당시 바이너리가 미상이라 영수증을 잇지 않는다 '
+                         '(HBR4-02 · 지금 파일을 해시해 채우지 않는다)')
+    lr = json.load(open(lp, encoding='utf-8'))
+    if not isinstance(lr, dict) or lr.get('schema') != LAUNCH_SCHEMA:
+        raise ValueError(f'발사 봉인 (launch_record.json) 스키마가 {LAUNCH_SCHEMA} 가 아니다')
+    ls = lr.get('lmp_sha256')
+    if not (isinstance(ls, str) and re.fullmatch(r'[0-9a-f]{64}', ls)):
+        raise ValueError('발사 봉인 (launch_record.json) 의 바이너리 sha256 (lmp_sha256) 이 없거나 형식이 아니다')
+    want = lr.get('sha256') if isinstance(lr.get('sha256'), dict) else {}
+    files = ['in.mixer'] + [spec['meshes'][m][0] for m in spec['used']]
+    bad = [f for f in files if want.get(f) is None or not os.path.isfile(os.path.join(run_dir, f))
+           or _sha_file(os.path.join(run_dir, f)) != want.get(f)]
+    if bad:
+        raise ValueError(f'발사 봉인 (launch_record.json) 뒤 바뀌었거나 봉인에 없는 파일 {bad} — 검사기가 읽는 덱 · STL 이 그 런이 '
+                         '실행한 것이 아니다')
+    return lr
+
+
+def static_wall_contract(run_dir, spec, deck_text, steps, expect_deck=None, stl_ref_dir=None):
+    """정지 벽 계약 (2026-09-28, Codex 4 차 HBR4-07) → (적용되나, 성립하나, 사유 목록).
+
+    E0 (회전 0) 는 운동 fix 가 있어도 한 step 도 돌지 않는다 — 그런데 옛 검사기는 회전 캠페인용 근거 (영수증 · mesh 덤프) 만 알아
+    멀쩡한 E0 를 과잉차단했다 (TECH).  **적용** = 창의 모든 step 이 모든 운동 fix 의 시작 step 이하 (θ = 0 이 식으로 정확).  **성립** =
+      fresh     덱에 read_restart 없음 · 재개 흔적 없음 (make_mixer_resume 산출)
+      입력      덱 = 기대 덱 (`expect_deck` — 생성기로 다시 만든 등록 덱) · 주석을 뺀 모든 명령이 토큰 단위로 같다
+      기하      벽 STL = 캠페인 원본 (`stl_ref_dir`, 기본 dem_scripts/mixer_20260919) 과 내용 sha256 이 같다
+    성립하면 벽 = 원 STL 그대로 (각 0 · 불확실성 0).  ⛔ 이것을 풀려고 step 포함 검사나 1 % 문턱을 느슨하게 하지 않았다.
+    ⚠ 한계 (출력에 남긴다): E0 는 발사 봉인 이전 세대라 "디스크의 덱 = 실행한 덱" 은 gen_all.sh 의 덮어쓰기 가드 (로그가 있으면
+      덱을 다시 쓰지 않는다) 에 기댄다 — 실행 기록을 뒤늦게 만들어 채우지 않는다.
+    """
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from make_mixer_resume import logical_commands, _tokens
+    last = max(steps)
+    if not all(mv['start_step'] >= last for mv in spec['moves'].values()):
+        return False, False, []
+    why = []
+
+    def tok(x):
+        return [tt for tt in (_tokens(b) for _, b in logical_commands(x)) if tt]
+    if any(tt[:1] == ['read_restart'] for tt in tok(deck_text)):
+        why.append('덱에 read_restart (fresh 아님)')
+    rm = resume_marks(run_dir)
+    if rm:
+        why.append(f'재개 흔적 {rm[:3]}')
+    if not expect_deck:
+        why.append('기대 덱 (--expect-deck) 없음 — 입력 동일성을 세울 수 없다')
+    elif tok(open(expect_deck, encoding='utf-8', errors='replace').read()) != tok(deck_text):
+        why.append('덱 ≠ 기대 덱 (주석 뺀 명령 토큰)')
+    ref = stl_ref_dir or STL_REF_DIR
+    for m in spec['used']:
+        f = spec['meshes'][m][0]
+        a_, b_ = os.path.join(run_dir, f), os.path.join(ref, f)
+        if not (os.path.isfile(a_) and os.path.isfile(b_)) or _sha_file(a_) != _sha_file(b_):
+            why.append(f'{f} ≠ 캠페인 원본 ({ref})')
+    return True, not why, why
 
 
 def _rot(axis, th):
@@ -384,8 +501,18 @@ def _is_num(v):
     return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
 
 
-def load_phase_receipt(path, spec, run_dir=None, deck_text=None, need_steps=None):
-    """재개-위상 영수증 (`scripts/mixer_restart_phase_test.py` v1) → dict.  못 쓰면 ValueError (그 런은 영수증 없이 판정).
+def load_phase_receipt(path, spec, run_dir=None, deck_text=None, need_steps=None, launch_record=None):
+    """재개-위상 영수증 (`scripts/mixer_restart_phase_test.py` v2) → dict.  못 쓰면 ValueError (그 런은 영수증 없이 판정).
+
+    ★★ 2026-09-28 Codex 4 차 HBR4-01 · 02 · 03 — v1 소비자는 ① 봉인 목록 · 덤프 목록이 **비어도** 받았다 ("있는 항목만" 검사)
+      ② 영수증 바이너리를 **판정할 런**의 실행 기록과 대조하지 않고 배너 문자열만 봤으며, 운동 서명이 회전 시작 · run 길이를 빼서
+      시작 2001 과 3001 을 구분하지 못했다 ③ 생산자가 허용한 형상 잔차 (≤ 1e-7 m) 를 버렸다.  이제 (v2):
+        목록   seal.files = 두 덱 + 부분마다 벽 STL (정확히 · 빈 · 부분 거부) · run_status.A/B.dumps_n = 실측 step 수 (> 0) ·
+               A↔B 차 · 잔차 · 위치 경계 유한 ≥ 0
+        런     판정할 런의 launch_record.json (실행 **직전** 봉인) 의 바이너리 sha256 = 영수증 · 봉인 때 in.mixer · STL = 지금 파일
+               (봉인이 없으면 미상 — 지금 파일을 해시해 채우지 않는다) · 재개 흔적이 있으면 거부 (런별 상태 확인 = 3차 Q5 는 이 영수증이 아니다)
+        시계   운동 시계 (mover 생성·해제 step · read_restart · run 끝 step) = 이 덱 · 회전 시작 step = 이 덱
+        경계   pos_bound_m (형상 잔차 + 출력 반올림, 좌표 최대 → 거리 √3) → check_window 가 부호거리에 더한다
 
     ★ 2026-09-28 Codex 3차 HBR3-01 · 02 — 옛 소비자는 키 존재만 보고 SHA null · dt 2 배 · 축 0 · NaN 주기 · `passed="false"` 를
       받았다.  이제 **v1 스키마**만 받고 값 · 봉인 · 호환을 엄격히 본다:
@@ -401,7 +528,8 @@ def load_phase_receipt(path, spec, run_dir=None, deck_text=None, need_steps=None
     if not isinstance(rc, dict):
         raise ValueError('영수증이 JSON 객체가 아니다')
     if rc.get('schema') != RECEIPT_SCHEMA:
-        raise ValueError(f'영수증 스키마 {rc.get("schema")!r} ≠ {RECEIPT_SCHEMA} — 봉인 없는 옛 (v0) 영수증은 쓰지 않는다 (HBR3-01 · 02)')
+        raise ValueError(f'영수증 스키마 {rc.get("schema")!r} ≠ {RECEIPT_SCHEMA} — v1 = 수정 전 생산자 (B 유한성 · 빈 목록 · 형상 잔차 누락, '
+                         f'HBR4-01 · 03) · v0 = 봉인 없음 → 고친 도구로 analyze 를 다시 돌린다 (LIGGGHTS 재실행 불요)')
     if rc.get('test') != 'restart_phase':
         raise ValueError('영수증이 restart_phase 시험 기록이 아니다')
     if rc.get('passed') is not True:
@@ -434,17 +562,46 @@ def load_phase_receipt(path, spec, run_dir=None, deck_text=None, need_steps=None
     seal = rc.get('seal')
     if not isinstance(seal, dict) or seal.get('binary_sha256') != sha:
         raise ValueError('영수증 봉인 (실행 직전 바이너리 SHA) 이 없거나 영수증 SHA 와 다르다')
+    #  ★ HBR4-01 — 목록 완전성 (빈 · 부분 목록이면 "있는 항목만" 검사가 통과해 버린다)
+    files = seal.get('files') if isinstance(seal.get('files'), dict) else {}
+    want = {'A/in.phase_a', 'B/in.phase_b'} | {f'{p_}/{spec["meshes"][m][0]}' for p_ in ('A', 'B') for m in spec['used']}
+    if set(files) != want or not all(isinstance(v, str) and re.fullmatch(r'[0-9a-f]{64}', v) for v in files.values()):
+        raise ValueError(f'영수증 봉인 파일 목록 ({len(files)} 개) ≠ 기대 {len(want)} 개 {sorted(want)} — 빈 · 부분 목록 거부 (HBR4-01)')
     rs = rc.get('run_status') if isinstance(rc.get('run_status'), dict) else {}
-    for part in ('A', 'B'):
+    for part, key in (('A', 'steps_checked_A'), ('B', 'steps_checked_B')):
         st = rs.get(part) if isinstance(rs.get(part), dict) else {}
         if st.get('exit') != 0 or st.get('complete') is not True:
             raise ValueError(f'영수증 실행 {part} 가 정상 완료가 아니다 ({st})')
+        n_, have_ = st.get('dumps_n'), rc.get(key)
+        if not (isinstance(n_, int) and not isinstance(n_, bool) and n_ > 0 and isinstance(have_, list) and len(have_) == n_):
+            raise ValueError(f'영수증 {part} 덤프 목록 {n_!r} 개 ≠ 실측 step {len(have_) if isinstance(have_, list) else None} 개 — '
+                             '빈 · 부분 목록 거부 (HBR4-01)')
+    for k in ('ab_max_vertex_diff_m', 'residual_max_m', 'pos_bound_m'):
+        if not (_is_num(rc.get(k)) and rc[k] >= 0):
+            raise ValueError(f'영수증 {k} = {rc.get(k)!r} — 유한한 0 이상 수가 아니다 (HBR4-01 · 03)')
     ver = rc.get('liggghts_version')
     if not (isinstance(ver, str) and ver.startswith('LIGGGHTS')):
         raise ValueError('영수증 배너 (liggghts_version) 가 없다')
     if deck_text is not None and run_dir is not None:
         if rc.get('motion_signature') != motion_signature(deck_text, run_dir):
             raise ValueError('영수증 운동 서명 ≠ 이 런 덱의 메시 운동 계약 (STL 내용 · scale · 축 · 주기 · 순서)')
+    #  ★ HBR4-02 — 운동 **시계** (서명이 뺀 회전 시작 · run 길이) 와 판정할 런의 실행 기록에 잇는다
+    if deck_text is not None:
+        mc = motion_clock(deck_text)
+        if rc.get('motion_clock') != mc:
+            raise ValueError(f'영수증 운동 시계 {rc.get("motion_clock")} ≠ 이 덱 {mc} (mover 생성·해제 · read_restart · run 끝 step) — '
+                             '다른 step 구조에서 잰 각 오차는 이식하지 않는다 (HBR4-02)')
+        if rc.get('rotation_start_step') != mv['start_step']:
+            raise ValueError(f'영수증 회전 시작 step {rc.get("rotation_start_step")} ≠ 이 덱 {mv["start_step"]} (운동 시계 · HBR4-02)')
+    if run_dir is not None:
+        rm = resume_marks(run_dir)
+        if rm:
+            raise ValueError(f'재개된 런 ({rm[:3]}) — 이 영수증은 바이너리 + 메시 운동 계약이고 런별 상태 확인 (3차 Q5) 이 아니다')
+        lr = launch_binding(run_dir, spec, launch_record)
+        if lr['lmp_sha256'] != sha:
+            raise ValueError(f'영수증 바이너리 {sha[:12]}… ≠ 이 런 발사 봉인의 바이너리 {lr["lmp_sha256"][:12]}… — 배너가 같아도 다른 빌드 '
+                             '(HBR4-02)')
+        rc['launch_record_sha256'] = _sha_file(launch_record or os.path.join(run_dir, 'launch_record.json'))
     if run_dir is not None:
         bn = run_banners(run_dir)
         if not bn:
@@ -463,6 +620,7 @@ def load_phase_receipt(path, spec, run_dir=None, deck_text=None, need_steps=None
     rc['eps_wall_deg'] = float(max(b, rc.get('angle_resolution_deg', 0.0) if _is_num(rc.get('angle_resolution_deg')) else 0.0))
     if rc['eps_wall_deg'] > PHASE_EPS_DEG:
         raise ValueError(f'영수증 각 해상도 {rc.get("angle_resolution_deg")}° > 등록 ε {PHASE_EPS_DEG}°')
+    rc['pos_bound_m'] = float(rc['pos_bound_m'])
     return rc
 
 
@@ -603,15 +761,18 @@ def container_from_stl(path, spec):
 
 
 def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None, walls=True,
-                 phase_receipt=None, expect_counts=None, diag_fit=False, progress=False):
+                 phase_receipt=None, expect_counts=None, diag_fit=False, progress=False,
+                 launch_record=None, expect_deck=None, stl_ref_dir=None):
     """★ 등록 계약 판정 — 분석 창 **전 프레임** (정착 끝 t₀ = `measure_mixing_index` 와 같은 정의 → 마지막 덤프).
 
       ① 입자–입자 최대 δ/r_min ≤ max_ovl (강체 내부 쌍 제외)
       ② 벽 — 드럼 다각 원통 + 두 끝판 — 최대 δ/r ≤ max_ovl.  **드럼 회전각의 근거** (2026-09-27 Codex HBR2-01: 입자 배치로
          회전각을 되읽는 fitting 은 증거가 아니다 — 참 벽 겹침 2 % 인데 위상이 반 면각 어긋나면 PASS · 5/5 ok 를 냈고, 참
          위상 · 0.5 % 는 TECH 로 막았다.  셀프테스트 ⑮ · ⑯):
-           mesh-dump     post_mesh/mesh_<step>.stl (LIGGGHTS `dump mesh/stl`) 이 창 **전 프레임**에 있으면 그 삼각형 = 독립 기하
-           receipt       `phase_receipt` (재개-위상 영수증) 가 덱과 맞으면 예정각 ± 영수증 각 오차 (최댓값)
+           static        정지 벽 계약 (HBR4-07) — 창 전체가 회전 전 · fresh · 덱 = 기대 덱 · STL = 캠페인 원본 → 원 STL (각 0)
+           receipt       `phase_receipt` (재개-위상 영수증 v2) 가 덱 · 발사 봉인 · 운동 시계와 맞으면 예정각 ± 각 경계의 구간 극값
+                         + 위치 경계 (형상 잔차 · 출력 반올림, HBR4-03)
+           (mesh-dump    post_mesh/ 덤프 — ⛔ HBR4-04 (나) 로 **판정 근거에서 뺐다** (MESH_DUMP_BASIS = False) · 있으면 notes 에만 적는다)
            bounded       둘 다 없으면 회전각과 무관한 상·하한 — 상한 ≤ max_ovl 이면 PASS · 하한 > max_ovl 이면 REJECT
            unidentified  그 사이 = TECH (판정 불가.  예정각으로 잰 값은 **미검증**으로 보고만 한다)
       ③ 상별 입자 수 · id 집합 · **id 별 type · radius** = t₀ (총수 = n_expected · 상별 = expect_counts)  (HBR2-08)
@@ -633,7 +794,7 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
                pp_max=float('-inf'), pp_max_step=None, pp_max_types=None, pp_max_by_pair={},
                wall_max=float('-inf'), wall_max_step=None, wall_max_type=None, wall_max_mesh=None,
                wall_max_by_type={}, wall_lower_max=float('-inf'), wall_basis=None, phase=[], phase_status='not_run', phase_note='',
-               n_frames=0, window=None)
+               n_frames=0, window=None, notes=[], pos_bound_m=None, static_why=[])
     if not fr:
         tech.append('덤프가 없다')
         out['verdict'] = 'TECH'
@@ -681,9 +842,13 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
     #  ② 회전각의 근거 — mesh 덤프 (전 프레임) > 영수증 > 상·하한
     mesh_dir = os.path.join(run_dir, 'post_mesh')
     mesh_src, receipt, eps, planes0, mesh_cache = None, None, 0.0, None, {}
+    static_ok = False
     if spec is not None:
         have = [st for st, _ in win if os.path.isfile(os.path.join(mesh_dir, f'mesh_{st}.stl'))]
-        if have and len(have) == len(win):
+        if have and not MESH_DUMP_BASIS:
+            out['notes'].append(f'post_mesh/ 덤프 {len(have)}/{len(win)} 장 — 판정 근거로 쓰지 않는다 (Codex 4 차 HBR4-04 · (나): 삼각형 수 · '
+                                '꼭짓점 집합 보존은 전체 용기의 증명이 아니다 — 면 연결 검증 전까지)')
+        elif have and len(have) == len(win):
             #  ★ 완결성 (HBR3-04) — 전 프레임의 덤프가 원 용기 (드럼 + 두 끝판) 의 강체 회전이고 예정각과 맞아야 쓴다
             try:
                 for st in have:
@@ -695,12 +860,24 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
                 tech.append(f'mesh 덤프를 독립 기하로 쓸 수 없다 (step {st}: {e}) — 안 쓴다')
         elif have:
             tech.append(f'mesh 덤프가 창의 일부 프레임에만 있다 ({len(have)}/{len(win)}) — 전부 있거나 없어야 한다 (안 쓴다)')
-        if phase_receipt:
+        #  ★ 정지 벽 (HBR4-07) — 창 전체가 회전 전이면 영수증이 필요 없다 (θ = 0 이 식으로 정확).  성립 조건 = static_wall_contract
+        try:
+            s_app, static_ok, s_why = static_wall_contract(run_dir, spec, deck_text, [st for st, _ in win], expect_deck, stl_ref_dir)
+        except (ValueError, OSError, KeyError) as e:
+            s_app, static_ok, s_why = True, False, [f'정지 벽 계약 검사 불가 ({e})']
+        out['static_why'] = s_why
+        if s_app and not static_ok:
+            out['notes'].append(f'정지 벽 계약 불성립 — {"; ".join(s_why)} (영수증 · 상·하한으로 판정)')
+        if static_ok:
+            if phase_receipt:
+                out['notes'].append('정지 벽 계약 성립 — 창 전체가 회전 전이라 영수증을 쓰지 않는다')
+        elif phase_receipt:
             try:
                 receipt = load_phase_receipt(phase_receipt, spec, run_dir=run_dir, deck_text=deck_text,
-                                             need_steps=[st for st, _ in win])
+                                             need_steps=[st for st, _ in win], launch_record=launch_record)
                 eps = float(np.radians(receipt['eps_wall_deg']))
                 planes0 = container_planes0(run_dir, spec)
+                out['pos_bound_m'] = receipt['pos_bound_m']
             except (ValueError, OSError, KeyError, TypeError) as e:
                 receipt = None
                 tech.append(f'재개-위상 영수증 불가 ({e}) — 영수증 없이 상·하한으로 판정')
@@ -788,6 +965,9 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
                     th_ = mesh_angle(spec, 'Drum', st)
                     e_ = eps if st > spec['moves']['Drum']['start_step'] else 0.0
                     wr, wl, wk = wall_interval(P, r, planes0, th_ - e_, th_ + e_)
+                    #  ★ HBR4-03 — 생산자가 허용한 형상 잔차 + 출력 반올림 (거리 · √3 합성) 을 부호거리에 넣는다.  각 오차 0 ≠ 위치 오차 0
+                    u_ = receipt['pos_bound_m']
+                    wr, wl = wr + u_ / r, wl - u_ / r
                     owner = planes0[2]
                 else:
                     wr, wk = wall_overlaps(P, r, Ng, Cg)
@@ -835,10 +1015,16 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
         if mesh_src is not None:
             out['phase_status'], out['wall_basis'] = 'mesh-dump', 'post_mesh/ 덤프 = 독립 기하 (창 전 프레임)'
             over = out['wall_max'] > max_ovl
+        elif static_ok:
+            out['phase_status'] = 'static'
+            out['wall_basis'] = ('정지 벽 계약 (HBR4-07) — 창 전체가 회전 전 · fresh · 덱 = 기대 덱 · STL = 캠페인 원본 → 원 STL (각 0 · 불확실성 0).  '
+                                 '⚠ 발사 봉인 이전 세대면 "디스크의 덱 = 실행한 덱" 은 gen_all.sh 덮어쓰기 가드에 기댄다')
+            over = out['wall_max'] > max_ovl
         elif receipt is not None:
             out['phase_status'] = 'receipt'
             out['wall_basis'] = (f'예정각 ± {receipt["eps_wall_deg"]:.3g}° 구간 극값 (재개-위상 영수증 {os.path.basename(phase_receipt)} 이 '
-                                 f'그 step 에서 잰 각 경계 · 바이너리 {str(receipt["binary_sha256"])[:12]}…)')
+                                 f'그 step 에서 잰 각 경계 · 바이너리 {str(receipt["binary_sha256"])[:12]}… = 발사 봉인 · '
+                                 f'위치 경계 {receipt["pos_bound_m"]*1e9:.0f} nm)')
             lo_ = out['wall_lower_max']
             if out['wall_max'] > max_ovl and lo_ > max_ovl:
                 reject.append(f'벽 δ/r 가 위상 불확실성 구간 (± {receipt["eps_wall_deg"]:.3g}°) 의 **어느 각에서도** {lo_*100:.3f} % 이상 '
@@ -856,7 +1042,8 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
             reject.append(f'벽 δ/r 가 **어느 회전각이어도** {best*100:.3f} % 이상 > {max_ovl*100:g} %')
         else:
             out['phase_status'], out['wall_basis'] = 'unidentified', '없음'
-            tech.append(f'드럼 회전각의 독립 근거가 없고 (post_mesh/ 덤프 · 재개-위상 영수증 없음) 벽 δ/r 가 각에 따라 '
+            tech.append(f'드럼 회전각의 독립 근거가 없고 (재개-위상 영수증 없음 · 정지 벽 아님 · post_mesh/ 덤프는 판정 근거가 아니다 — '
+                        f'HBR4-04) 벽 δ/r 가 각에 따라 '
                         f'{best*100:.2f}–{worst*100:.2f} % — 한도 {max_ovl*100:g} % 판정 불가.  '
                         f'예정각으로 잰 {out["wall_max"]*100:.3f} % 는 미검증 (판정에 안 씀)')
         if over:
@@ -881,6 +1068,8 @@ def report_window(rs):
             print(f'{"":22s}   ⛔ {b}')
         for b in m['tech']:
             print(f'{"":22s}   ⚠ TECH {b}')
+        for b in m.get('notes', []):
+            print(f'{"":22s}   · {b}')
     n_bad = sum(m['verdict'] != 'PASS' for m in rs)
     if n_bad:
         print(f'\n⛔ {n_bad} 런이 계약 (최대 겹침 ≤ {CONTRACT_MAX_OVL*100:g} % · 벽 포함 · 상별 보존) 을 통과하지 못했다 — '
@@ -1107,10 +1296,10 @@ def _selftest():
         for st in (2000, 2500, 3000):
             _mesh_dump(run, st, _th(st))
         w = check_window(run)
-        chk(f'⑩c ★ mesh 덤프 (독립 기하) 가 있으면 회전된 드럼 면에 2 % 박힌 입자를 기각한다 (벽 최대 {w["wall_max"]*100:.2f} % @ {w["wall_max_step"]} · '
-            f'{w["wall_max_mesh"]} · 근거 {w["phase_status"]})',
-            w['verdict'] == 'REJECT' and abs(w['wall_max'] - 0.02) < 1e-6 and w['wall_max_step'] == 2500
-            and w['wall_max_mesh'] == 'Drum' and w['phase_status'] == 'mesh-dump')
+        chk(f'⑩c (HBR4-04 · 나) mesh 덤프가 있어도 판정 근거로 쓰지 않는다 — 회전된 드럼 면의 참 2 % 는 PASS 로 새지 않고 TECH '
+            f'(unidentified · 예정각 값 {w["wall_max"]*100:.2f} % 는 미검증) · notes 에 사유',
+            w['verdict'] == 'TECH' and w['phase_status'] == 'unidentified' and abs(w['wall_max'] - 0.02) < 1e-6
+            and any('HBR4-04' in n for n in w['notes']))
         #  ⚠ 위상을 틀리게(0) 두면 **같은 입자가 안 닿은 것으로** 보인다 — 위상이 판정을 좌우한다
         spec = deck_walls(open(os.path.join(run, 'in.mixer')).read())
         P7 = np.array([_on_facet(TH2500, 3, 2e-4, 0.02)])
@@ -1149,17 +1338,37 @@ def _selftest():
 
     BANNER = 'LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-08-25-18:16:51 by test, git commit 3d5c)'
 
-    def _receipt1(td, run_, name='receipt1.json', **kw):
-        """봉인된 (v1) 영수증 — 이 시험 덱과 **맞게** 만든다 (주기 · dt · 축 · 운동 서명 · 배너 · 범위).  kw 로 한 칸씩 망가뜨린다."""
+    import hashlib as _hl
+
+    def _sha_f(p_):
+        return _hl.sha256(open(p_, 'rb').read()).hexdigest()
+
+    def _launch(run_, lmp='a' * 64, **over):
+        """판정할 런의 발사 봉인 (launch_highbo.sh 의 launch_record.json 꼴) — 지금 파일의 sha256 으로."""
+        rec = dict(schema='mixer_highbo_launch_record/1', run=os.path.basename(run_), stage='first', lmp_sha256=lmp,
+                   sha256={f_: _sha_f(os.path.join(run_, f_)) for f_ in ('in.mixer', 'Drum.stl', 'Front.stl', 'Back.stl')})
+        rec.update(over)
+        _json.dump(rec, open(os.path.join(run_, 'launch_record.json'), 'w'))
+
+    def _receipt1(td, run_, name='receipt1.json', launch=True, **kw):
+        """봉인된 (v2) 영수증 — 이 시험 덱과 **맞게** 만든다 (주기 · dt · 축 · 운동 서명 · 운동 시계 · 배너 · 범위 · 목록 · 경계).
+        kw 로 한 칸씩 망가뜨린다.  launch=True 면 런에 발사 봉인이 없을 때 **지금 파일로** 하나 둔다 (시험 전용)."""
         open(os.path.join(run_, 'log.lmp'), 'w').write(BANNER + '\nCreated orthogonal box\n')
         dk = open(os.path.join(run_, 'in.mixer')).read()
         sp = deck_walls(dk)
+        stA, stB = list(range(0, 14001, 500)), list(range(9000, 14001, 500))
+        files = {f'{p_}/{n_}': 'f' * 64 for p_ in ('A', 'B') for n_ in ('Drum.stl', 'Front.stl', 'Back.stl')}
+        files.update({'A/in.phase_a': 'f' * 64, 'B/in.phase_b': 'f' * 64})
         v = dict(schema=RECEIPT_SCHEMA, test='restart_phase', passed=True, period=sp['moves']['Drum']['period'],
                  dt=sp['dt'], axis=[1.0, 0.0, 0.0], angle_error_deg=1e-5, angle_bound_deg=1e-5, binary_sha256='a' * 64,
-                 liggghts_version=BANNER, motion_signature=motion_signature(dk, run_), span_rotation_steps=10 ** 7,
-                 steps_checked_A=list(range(0, 14001, 500)),
-                 seal=dict(binary_sha256='a' * 64), run_status=dict(A=dict(exit=0, complete=True), B=dict(exit=0, complete=True)))
+                 liggghts_version=BANNER, motion_signature=motion_signature(dk, run_), motion_clock=motion_clock(dk),
+                 rotation_start_step=sp['moves']['Drum']['start_step'], span_rotation_steps=10 ** 7,
+                 steps_checked_A=stA, steps_checked_B=stB, ab_max_vertex_diff_m=0.0, residual_max_m=0.0, pos_bound_m=0.0,
+                 seal=dict(binary_sha256='a' * 64, files=files),
+                 run_status=dict(A=dict(exit=0, complete=True, dumps_n=len(stA)), B=dict(exit=0, complete=True, dumps_n=len(stB))))
         v.update(kw)
+        if launch and not os.path.isfile(os.path.join(run_, 'launch_record.json')):
+            _launch(run_)
         p_ = os.path.join(td, name)
         _json.dump(v, open(p_, 'w'))
         return p_
@@ -1333,21 +1542,32 @@ def _selftest():
         for st in (2000, 2500, 3000):
             _mesh_part(st, _th(st), ('Drum.stl',))
         w = check_window(run)
-        chk(f'㉓ ★ HBR3-04 재현→수정: 끝판 없는 (Drum 만) mesh 덤프로 끝판 2 % 를 놓치지 않는다 ({w["verdict"]} · {w["phase_status"]})',
-            w['verdict'] != 'PASS' and w['phase_status'] != 'mesh-dump' and any('mesh' in t for t in w['tech']))
+        chk(f'㉓ ★ HBR3-04: 끝판 없는 (Drum 만) mesh 덤프로 끝판 2 % 를 놓치지 않는다 — 덤프는 근거가 아니고 (HBR4-04) 끝판 겹침은 회전과 '
+            f'무관해 상·하한으로 REJECT ({w["verdict"]} · {w["phase_status"]})',
+            w['verdict'] == 'REJECT' and w['phase_status'] == 'bounded' and any('HBR4-04' in n for n in w['notes']))
+        try:
+            mesh_dump_container(os.path.join(run, 'post_mesh', 'mesh_2500.stl'), run, deck_walls(open(os.path.join(run, 'in.mixer')).read()),
+                                2500, float(np.radians(PHASE_EPS_DEG)))
+            _rej = False
+        except (ValueError, SystemExit):
+            _rej = True
+        chk('㉓e mesh_dump_container 자체는 끝판 없는 덤프를 여전히 거부한다 (면 연결 검증 (가) 를 세울 때의 바탕)', _rej)
         for st in (2000, 2500, 3000):
             _mesh_part(st, _th(st), ('Drum.stl', 'Front.stl'))
         w = check_window(run)
-        chk('㉓b 끝판 하나 빠진 mesh 덤프도 거부 (TECH 사유에 mesh)', w['phase_status'] != 'mesh-dump' and any('mesh' in t for t in w['tech']))
+        chk('㉓b 끝판 하나 빠진 mesh 덤프도 근거가 아니다 → 끝판 2 % 는 상·하한으로 REJECT',
+            w['verdict'] == 'REJECT' and w['phase_status'] == 'bounded' and any('HBR4-04' in n for n in w['notes']))
         for st in (2000, 2500, 3000):
             _mesh_part(st, _th(st) + _m.radians(5.0), ('Drum.stl', 'Front.stl', 'Back.stl'))
         w = check_window(run)
-        chk('㉓c 예정각과 5° 어긋난 (다른 시각/런) 전체 mesh 덤프는 거부', w['phase_status'] != 'mesh-dump' and any('예정각' in t for t in w['tech']))
+        chk('㉓c 예정각과 5° 어긋난 (다른 시각/런) 전체 mesh 덤프도 근거가 아니다 → 상·하한으로 REJECT',
+            w['verdict'] == 'REJECT' and w['phase_status'] == 'bounded' and any('HBR4-04' in n for n in w['notes']))
         for st in (2000, 2500, 3000):
             _mesh_part(st, _th(st), ('Drum.stl', 'Front.stl', 'Back.stl'))
         w = check_window(run)
-        chk(f'㉓d 완전한 mesh 덤프면 그 벽으로 끝판 2 % 를 기각한다 ({w["phase_status"]} · {w["wall_max"]*100:.2f} % · {w["wall_max_mesh"]})',
-            w['verdict'] == 'REJECT' and w['phase_status'] == 'mesh-dump' and abs(w['wall_max'] - 0.02) < 1e-6)
+        chk(f'㉓d 완전한 mesh 덤프도 근거가 아니지만 (HBR4-04) 끝판 2 % 는 회전과 무관해 상·하한으로 REJECT '
+            f'({w["phase_status"]} · {w["wall_max"]*100:.2f} % · {w["wall_max_mesh"]})',
+            w['verdict'] == 'REJECT' and w['phase_status'] == 'bounded' and abs(w['wall_max'] - 0.02) < 1e-6)
     with tempfile.TemporaryDirectory() as td:            # ㉔ HBR3-06 — **매 프레임** 필수 스키마
         run = _run(td)
         _dump(run, 2000, BASE + _pair(0.0025))
@@ -1371,6 +1591,117 @@ def _selftest():
         w = check_window(run)
         chk(f'㉕ 계획 t₀ (2000) 프레임이 없으면 TECH — 1500 으로 대체하지 않는다 ({"; ".join(w["tech"])[:80]})',
             w['verdict'] == 'TECH' and any('계획 t₀' in t for t in w['tech']) and w.get('window') is None)
+    # ══ ㉖~㉚ 2026-09-28 Codex 4 차 HBR4-01 · 02 · 03 · 04 · 07 — 반례를 **먼저 재현**하고 고친다 ══════════════════════════
+    #   (docs/reviews/codex_mixer_highbo_round4_evidence_20260928/review_round4_probe.py 의 경우들을 이 12 각형 기하로)
+    import shutil as _sh2
+    with tempfile.TemporaryDirectory() as td:            # ㉖ HBR4-01 (소비자) — 빈 봉인 목록 · 빈 덤프 목록 · 비유한 지표
+        run = _run(td)
+        for st in (2000, 2500, 3000):
+            _dump(run, st, BASE + _pair(0.0025) + _ring(_th(st), 0.005))
+        _launch(run)
+        w = check_window(run, phase_receipt=_receipt1(td, run))
+        chk(f'㉖ (대조) 완전한 영수증 + 발사 봉인 → 받는다 ({w["phase_status"]} · {w["verdict"]})',
+            w['phase_status'] == 'receipt' and w['verdict'] == 'PASS')
+        for k_, kw_ in {'봉인 파일 목록이 빈 객체 (empty_seal_lists_receipt)': dict(seal=dict(binary_sha256='a' * 64, files={})),
+                        '덤프 해시 목록이 빈 (dumps_n 0)': dict(run_status=dict(A=dict(exit=0, complete=True, dumps_n=0),
+                                                                              B=dict(exit=0, complete=True, dumps_n=0))),
+                        'A↔B 차가 비유한 (nan_B_receipt)': dict(ab_max_vertex_diff_m=float('nan'))}.items():
+            w = check_window(run, phase_receipt=_receipt1(td, run, name=f'h1_{abs(hash(k_))}.json', **kw_))
+            chk(f'㉖b ★ HBR4-01 재현→수정: {k_} → 영수증 거부', w['phase_status'] != 'receipt' and any('영수증' in t for t in w['tech']))
+    with tempfile.TemporaryDirectory() as td:            # ㉗ HBR4-02 — 영수증 바이너리 · 운동 시계를 **판정할 런**에 잇는다
+        run = _run(td)
+        for st in (2000, 2500, 3000):
+            _dump(run, st, BASE + _pair(0.0025) + _ring(_th(st), 0.005))
+        _launch(run, lmp='c' * 64)                        # 이 런을 실행한 바이너리 ≠ 영수증 바이너리 ('a'*64) · 배너는 같다
+        w = check_window(run, phase_receipt=_receipt1(td, run))
+        chk('㉗ ★ HBR4-02 재현→수정: 영수증 바이너리 ≠ 판정할 런의 발사 봉인 lmp_sha256 (배너는 같다) → 영수증 거부 (binary_mismatch_accepted)',
+            w['phase_status'] != 'receipt' and any('바이너리' in t for t in w['tech']))
+        os.remove(os.path.join(run, 'launch_record.json'))
+        w = check_window(run, phase_receipt=_receipt1(td, run, name='nolr.json', launch=False))
+        chk('㉗b 판정할 런에 발사 봉인이 없으면 (실행 당시 바이너리 미상) 영수증을 잇지 않는다 — 지금 파일을 해시해 채우지 않는다',
+            w['phase_status'] != 'receipt' and any('launch_record' in t for t in w['tech']))
+        _launch(run)
+        rp_ = _receipt1(td, run, name='rs2001.json')          # 회전 시작 2001 덱으로 만든 영수증
+        open(os.path.join(run, 'in.mixer'), 'w').write(
+            _deck().replace('run 1000\nrun 1000\n', 'run 1000\nrun 1000\nrun 1000\n').replace('run 12000\n', 'run 11000\n'))
+        _launch(run)                                          # 새 덱을 봉인 — 바이너리 · 덱 봉인은 정상이고 다른 것은 **시계**뿐
+        w = check_window(run, phase_receipt=rp_)
+        chk('㉗c ★ HBR4-02 재현→수정: 회전 시작 2001 로 잰 영수증을 시작 3001 덱에 쓰지 않는다 (운동 서명 · step 부분집합은 같다 — '
+            'rotation_start_mismatch_accepted)', w['phase_status'] != 'receipt' and any('시계' in t for t in w['tech']))
+        open(os.path.join(run, 'in.mixer'), 'w').write(_deck())
+        _launch(run)
+        open(os.path.join(run, 'in.resume'), 'w').write('# make_mixer_resume 산출 흉내\n')
+        w = check_window(run, phase_receipt=_receipt1(td, run, name='resumed.json'))
+        chk('㉗d 재개된 런 (in.resume) 은 이 영수증으로 잇지 않는다 — 런별 상태 확인 (3차 Q5) 은 이 영수증이 아니다',
+            w['phase_status'] != 'receipt' and any('재개' in t for t in w['tech']))
+    with tempfile.TemporaryDirectory() as td:            # ㉘ HBR4-03 — 생산자가 허용한 형상 잔차를 부호거리에 넣는다
+        run = _run(td)
+        xh = XH_ * SC_
+        rr_ = 2e-4
+        for st in (2000, 2500, 3000):
+            _dump(run, st, BASE + _pair(0.0025) + [(7, 3, xh - (1 - 0.0095) * rr_, 0.0, 0.003, rr_)])   # 원 STL 로 끝판 δ/r 0.95 %
+        _launch(run)
+        pb = float(np.sqrt(3.0) * 8e-8)                      # +80 nm 평행이동 (생산자 허용 1e-7 안) — 좌표 최대 잔차 → 거리 √3 배
+        w = check_window(run, phase_receipt=_receipt1(td, run, residual_max_m=8e-8, pos_bound_m=pb))
+        chk(f'㉘ ★ HBR4-03 재현→수정: 원 STL 로 0.95 % 인 끝판 겹침을 위치 경계 {pb*1e9:.0f} nm 를 빼고 PASS 로 넘기지 않는다 '
+            f'(translation_receipt · {w["verdict"]} · 상한 {w.get("wall_max", 0)*100:.4f} %)',
+            w['verdict'] == 'TECH' and w['phase_status'] == 'receipt' and w['wall_max'] > 0.01 and w['wall_lower_max'] < 0.01)
+        w = check_window(run, phase_receipt=_receipt1(td, run, name='pb0.json', residual_max_m=0.0, pos_bound_m=0.0))
+        chk('㉘b (대조) 위치 경계 0 이면 같은 0.95 % 는 PASS — 경계가 판정을 무조건 막는 것이 아니다',
+            w['verdict'] == 'PASS' and w['phase_status'] == 'receipt')
+    with tempfile.TemporaryDirectory() as td:            # ㉙ HBR4-04 — 면 연결 없이 꼭짓점 집합만 보존한 퇴화 끝판
+        run = _run(td)
+        xh = XH_ * SC_
+        for st in (2000, 2500, 3000):
+            _dump(run, st, BASE + _pair(0.0025) + [(7, 3, xh - 0.98 * 2e-4, 0.0, 0.003, 2e-4)])        # 원 Front 에 δ/r 2 %
+        os.makedirs(os.path.join(run, 'post_mesh'), exist_ok=True)
+        for st in (2000, 2500, 3000):
+            Rm = _rot(np.array([1.0, 0, 0]), _th(st))
+            tris = []
+            for nm in ('Drum.stl', 'Front.stl', 'Back.stl'):
+                for t_ in read_stl(os.path.join(run, nm)) * SC_:
+                    if nm == 'Front.stl':
+                        t_ = np.array([t_[0], t_[1], t_[0]])          # [중심, 테두리점, 중심] — 면 수 · 꼭짓점 집합은 그대로
+                    tris.append(tuple(map(tuple, t_ @ Rm.T)))
+            _stl(os.path.join(run, 'post_mesh', f'mesh_{st}.stl'), tris)
+        w = check_window(run)
+        chk(f'㉙ ★ HBR4-04 재현→수정: Front 를 [중심·테두리·중심] 으로 퇴화시킨 mesh 덤프로 끝판 2 % 를 놓치지 않는다 '
+            f'(degenerate_front_false_pass · {w["verdict"]} · {w["phase_status"]})',
+            w['verdict'] == 'REJECT' and w['phase_status'] != 'mesh-dump')
+    with tempfile.TemporaryDirectory() as td:            # ㉚ HBR4-07 — 정지 E0 의 정적 벽 계약 (과잉차단 → 증거 경로)
+        run = _run(td)
+        e0 = _deck().replace('run 12000\n', 'run 0\n')        # 회전 0 (E0) — 운동 fix 는 있으되 한 step 도 돌지 않는다
+        open(os.path.join(run, 'in.mixer'), 'w').write(e0)
+        half_ = APO * _m.tan(_m.pi / NP_)
+        near_v = (7, 3, *_on_facet(0.0, 2, 2e-4, 0.005, u=0.9 * half_), 2e-4)   # 꼭짓점 옆 · 참 δ/r 0.5 % (각 모르면 가능 범위가 넓다)
+        _dump(run, 2000, BASE + _pair(0.0025) + [near_v])
+        ref = os.path.join(td, 'ref')
+        os.makedirs(ref)
+        for nm in ('Drum.stl', 'Front.stl', 'Back.stl'):
+            _sh2.copyfile(os.path.join(run, nm), os.path.join(ref, nm))
+        exp_ = os.path.join(td, 'expect_e0.mixer')
+        open(exp_, 'w').write(e0)
+        w = check_window(run, expect_deck=exp_, stl_ref_dir=ref)
+        chk(f'㉚ ★ HBR4-07 재현→수정: 회전 0 · fresh · 원 STL · 기대 덱 = 정적 벽 (θ = 0) → 꼭짓점 옆 0.5 % 를 PASS (E0_static_contract · '
+            f'{w["verdict"]} · {w["phase_status"]} · {w["wall_max"]*100:.3f} %)',
+            w['verdict'] == 'PASS' and w['phase_status'] == 'static' and abs(w['wall_max'] - 0.005) < 1e-6)
+        _dump(run, 2000, BASE + _pair(0.0025) + [(7, 3, *_on_facet(0.0, 3, 2e-4, 0.02), 2e-4)])
+        w = check_window(run, expect_deck=exp_, stl_ref_dir=ref)
+        chk(f'㉚b 정적 벽에서 2 % 는 REJECT ({w["verdict"]} · {w["phase_status"]})', w['verdict'] == 'REJECT' and w['phase_status'] == 'static')
+        _dump(run, 2000, BASE + _pair(0.0025) + [near_v])
+        for k_, (mut, undo) in {
+                'STL 이 캠페인 원본과 다르다': (lambda: open(os.path.join(run, 'Back.stl'), 'a').write('\n'),
+                                          lambda: _sh2.copyfile(os.path.join(ref, 'Back.stl'), os.path.join(run, 'Back.stl'))),
+                '덱이 기대 덱과 다르다': (lambda: open(os.path.join(run, 'in.mixer'), 'w').write(e0.replace('timestep 1e-6', 'timestep 2e-6')),
+                                     lambda: open(os.path.join(run, 'in.mixer'), 'w').write(e0)),
+                '재개 흔적 (in.resume)': (lambda: open(os.path.join(run, 'in.resume'), 'w').write('#\n'),
+                                       lambda: os.remove(os.path.join(run, 'in.resume')))}.items():
+            mut()
+            w = check_window(run, expect_deck=exp_, stl_ref_dir=ref)
+            chk(f'㉚c 음성 대조 — {k_} → 정적 계약 불성립 (static 아님 · {w["verdict"]})', w['phase_status'] != 'static' and w['verdict'] != 'PASS')
+            undo()
+        w = check_window(run, stl_ref_dir=ref)
+        chk('㉚d 기대 덱 (--expect-deck) 없이는 입력 동일성을 세우지 못해 정적 계약을 주지 않는다', w['phase_status'] != 'static')
     print(f'\ncheck_contact_validity selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -1385,9 +1716,14 @@ if __name__ == '__main__':
     ap.add_argument('--contract', action='store_true',
                     help='★ 등록 계약 판정 (런 디렉터리 = in.mixer · post/ · STL): 분석 창 전 프레임 (저장 프레임 최대) · '
                          f'입자–입자와 벽 최대 겹침 ≤ {CONTRACT_MAX_OVL*100:g} %% · 상별 · id 별 속성 보존 · 창 결손 없음 · '
-                         '벽 회전각 근거 = post_mesh/ 덤프 > 영수증 > 상·하한')
+                         '벽 회전각 근거 = 정지 벽 (회전 전 · --expect-deck) > 영수증 v2 (+ 발사 봉인) > 상·하한 (post_mesh/ 덤프는 근거 아님 · HBR4-04)')
     ap.add_argument('--phase-receipt', default=None,
                     help='(--contract) 재개-위상 영수증 JSON (scripts/mixer_restart_phase_test.py) — 있으면 벽을 예정각 ± 오차로 잰다')
+    ap.add_argument('--launch-record', default=None,
+                    help='(--contract) 판정할 런의 발사 봉인 JSON (기본 <런>/launch_record.json) — 영수증 바이너리를 이것과 대조한다 (HBR4-02)')
+    ap.add_argument('--expect-deck', default=None,
+                    help='(--contract) 정지 벽 계약의 기대 덱 (생성기로 다시 만든 등록 덱, 예 E0) — 입력 동일성 (HBR4-07)')
+    ap.add_argument('--stl-ref', default=None, help='(--contract) 정지 벽 계약의 캠페인 원본 STL 폴더 (기본 dem_scripts/mixer_20260919)')
     ap.add_argument('--expect-types', default=None, help='(--contract) t₀ 상별 입자 수, 예 "1:36,2:421,3:32832"')
     ap.add_argument('--diag-fit', action='store_true',
                     help='(--contract) 입자 배치로 회전각을 되읽는 진단을 같이 낸다 (증거 아님 · 판정에 안 씀)')
@@ -1405,7 +1741,8 @@ if __name__ == '__main__':
         if a.expect_types:
             ec = {int(k): int(v) for k, v in (x.split(':') for x in a.expect_types.split(','))}
         rs = [check_window(d, a.n_expected, label=labs[i] if i < len(labs) else None, phase_receipt=a.phase_receipt,
-                           expect_counts=ec, diag_fit=a.diag_fit, progress=a.progress)
+                           expect_counts=ec, diag_fit=a.diag_fit, progress=a.progress, launch_record=a.launch_record,
+                           expect_deck=a.expect_deck, stl_ref_dir=a.stl_ref)
               for i, d in enumerate(a.dirs)]
         if a.json:
             import json

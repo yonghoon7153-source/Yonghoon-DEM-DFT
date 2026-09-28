@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""mixer_restart_phase_test.py — 재개-위상 영수증 v1 (2026-09-28, Codex 3차 HBR3-01 · 02 · 03 · Q1 · Q2 · Q5).
+"""mixer_restart_phase_test.py — 재개-위상 영수증 v2 (2026-09-28, Codex 3차 HBR3-01 · 02 · 03 · Q1 · Q2 · Q5 · 4 차 HBR4-01 · 02 · 03).
+
+★ v2 (Codex 4 차) — ① B 에도 좌표 유한성 · 형상 검사 (B 가 전부 NaN 이면 `max(0.0, NaN)` = 0.0 으로 통과했다) · 봉인 목록과 덤프 해시
+  목록을 기대 집합과 **정확히** 대조 (빈 목록이 통과했다) · 내보내는 수 전부 유한  ② 운동 시계 (mover 생성·해제 · run 끝 step) 와
+  회전 시작 step 을 영수증에 남긴다 (소비자가 판정할 덱 · 발사 봉인과 대조)  ③ 형상 잔차 + 출력 반올림을 **거리** (`pos_bound_m`,
+  좌표 최대 → √3) 로 남기고 각 경계는 max 가 아니라 합.
 
 왜 — 믹서 드럼은 39 각형이라 벽 겹침은 회전각에 걸린다 (면 한가운데와 꼭짓점의 차 = SE 반경의 56 %).  캠페인 덱은 mesh 를 덤프하지
 않으므로 벽 판정의 근거는 **예정각** 2π·(s − start)·dt/period 뿐이다.  그 식이 (i) 긴 회전 내내 (ii) 재개 (read_restart) 뒤에도
@@ -49,8 +54,8 @@ import numpy as np
 _SCR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _SCR)
 from make_mixer_resume import logical_commands, _tokens, transform      # noqa: E402  캠페인 재개와 **같은 변환**
-from check_contact_validity import (PHASE_EPS_DEG, RECEIPT_SCHEMA, motion_signature, read_stl, deck_walls,   # noqa: E402
-                                    _rot, _planes, mesh_angle)
+from check_contact_validity import (PHASE_EPS_DEG, RECEIPT_SCHEMA, motion_signature, motion_clock, read_stl,   # noqa: E402
+                                    deck_walls, _rot, _planes, mesh_angle)
 
 RESET_GAP_DEG = 1.0          # 재개-리셋 대안과의 최소 간격 (면 대칭을 뺀 뒤) — 등록값
 N1_FRAC = 0.6                # 체크포인트 자리 = 회전 run 의 이 비율 근처 (L 런 재개 53–61 %)
@@ -292,9 +297,21 @@ def analyze(d, out=None, binary=None):
     mv = sp['moves']['Drum']
     dt, period, axis, origin = sp['dt'], mv['period'], mv['axis'], mv['origin']
     rows, A_st, B_st, comp = [], [], [], {}
+    mclock = motion_clock(a_deck)                  # ★ HBR4-02 — A 는 캠페인 step 구조 그대로 (회전 run 을 N1 에서 쪼갤 뿐) → 같은 시계
+    rot_start = mv['start_step']                   # 소비자 (deck_walls) 와 **같은 정의**
     err_max, resid_max, ab_max, ang_res = 0.0, 0.0, 0.0, None
+    out_round_m, pos_bound_m, scale = None, None, None
     if g is not None and seal is not None and rs is not None:
-        for p, h in seal.get('files', {}).items():
+        #  ★ HBR4-01 (Codex 4 차) — "있는 항목만" 검사하면 **빈 목록**이 통과한다.  봉인 목록은 기대 집합과 **정확히** 같아야 한다.
+        want_seal = ({'A/in.phase_a', 'B/in.phase_b'}
+                     | {f'{s_}/{sp["meshes"][m_][0]}' for s_ in ('A', 'B') for m_ in sp['used']})
+        got_seal = set(seal.get('files') or {})
+        need(got_seal == want_seal,
+             f'봉인 파일 목록이 기대와 다르다 — 빠짐 {sorted(want_seal - got_seal)[:4]} · 기대 밖 {sorted(got_seal - want_seal)[:4]} '
+             f'(빈 · 부분 목록 거부 · HBR4-01)')
+        bsha = seal.get('binary_sha256')
+        need(isinstance(bsha, str) and re.fullmatch(r'[0-9a-f]{64}', bsha or ''), '봉인 바이너리 sha256 이 없거나 형식이 아니다')
+        for p, h in (seal.get('files') or {}).items():
             need(os.path.isfile(os.path.join(d, p)) and _sha(os.path.join(d, p)) == h, f'봉인 뒤 바뀐 파일: {p}')
         if binary:
             need(os.path.isfile(binary) and _sha(binary) == seal.get('binary_sha256'), '지목한 바이너리 sha256 ≠ 봉인 값')
@@ -313,6 +330,7 @@ def analyze(d, out=None, binary=None):
         ver = _banner(os.path.join(d, 'A', 'log.lmp'))
         need(ver.startswith('LIGGGHTS') and ver == _banner(os.path.join(d, 'B', 'log.lmp')), 'A/B 로그 배너가 없거나 다르다')
         de, n1, rt, r0 = g['dump_every'], g['n1'], g['run_total'], g['rot_start']
+        need(r0 == rot_start, f'gen.json 회전 시작 {r0} ≠ A 덱의 운동 fix 시작 {rot_start} (두 정의가 갈렸다 · HBR4-02)')
         #  기대 step — A: dump 명령이 선 step 이후의 dump 격자 · B: N1 ~ 끝
         pre = 0
         for c in a_deck.split('\n'):
@@ -328,6 +346,12 @@ def analyze(d, out=None, binary=None):
             miss, extra = sorted(set(exp) - set(have)), sorted(set(have) - set(exp))
             need(not miss, f'{nm} 덤프 누락 {len(miss)} 개 (step {miss[:4]}{"…" if len(miss) > 4 else ""})')
             need(not extra, f'{nm} 덤프 기대 밖 {len(extra)} 개 (step {extra[:4]})')
+            #  ★ HBR4-01 — 실행 결과 기록의 덤프 해시 목록도 **집합으로** 대조 (빈 · 부분 목록 거부)
+            want_d = {os.path.basename(v) for v in have.values()}
+            got_d = set(((rs.get(nm) or {}).get('dumps')) or {})
+            need(bool(want_d) and got_d == want_d,
+                 f'{nm} 실행 결과 기록의 덤프 해시 목록이 실제 덤프 집합과 다르다 — 기록 {len(got_d)} 개 · 실제 {len(want_d)} 개 '
+                 f'(빠짐 {sorted(want_d - got_d)[:3]} · 기대 밖 {sorted(got_d - want_d)[:3]} · HBR4-01)')
         comps = {m: read_stl(os.path.join(d, 'A', sp['meshes'][m][0])) * sp['meshes'][m][1] for m in sp['used']}
         n_tri = sum(len(v) for v in comps.values())
         scale = float(max(np.abs(v).max() for v in comps.values()))
@@ -341,7 +365,10 @@ def analyze(d, out=None, binary=None):
                     order = perm
                     break
             need(order is not None, 'A 첫 덤프가 원 STL (드럼 · 끝판) 과 꼭짓점 순서대로 맞지 않는다 (구성요소 · 순서)')
-            ang_res = float(np.degrees(2 * 10.0 ** (1 - _sig_digits(hA[first]))))
+            _sig = _sig_digits(hA[first])
+            ang_res = float(np.degrees(2 * 10.0 ** (1 - _sig)))
+            #  ★ HBR4-03 — 같은 반올림을 **길이**로도 남긴다 (소비자가 부호거리 불확실성에 전파한다)
+            out_round_m = float(10.0 ** (1 - _sig) * scale)
         if order is not None:
             k = axis
             Uall = np.vstack([comps[m] for m in order])
@@ -367,9 +394,15 @@ def analyze(d, out=None, binary=None):
                 row = dict(step=s, error_deg=err, resid_m=resid)
                 if s in hB:
                     TB = read_stl(hB[s])
-                    ab = float(np.abs(TB - T).max()) if TB.shape == T.shape else float('inf')
+                    #  ★ HBR4-01 — A 에만 있던 유한성 검사를 B 에도.  없으면 B 가 전부 NaN 이어도 `max(0.0, NaN)` 이 0.0 을
+                    #    유지해 `ab_max ≤ 허용치` 를 통과한다 (Codex 4 차 재현 키 nan_B_receipt).
+                    okB = need(TB.shape == T.shape and bool(np.all(np.isfinite(TB))),
+                               f'B step {s}: 삼각형 {len(TB)} ≠ {n_tri} 또는 비유한 좌표')
+                    ab = float(np.abs(TB - T).max()) if okB else float('inf')
+                    if not np.isfinite(ab):
+                        ab = float('inf')
                     row['ab_m'] = ab
-                    ab_max = max(ab_max, ab)
+                    ab_max = max(ab_max, ab) if np.isfinite(ab) else float('inf')
                     B_st.append(s)
                 rows.append(row)
                 if s > r0:
@@ -377,26 +410,38 @@ def analyze(d, out=None, binary=None):
                 resid_max = max(resid_max, resid)
             need(resid_max <= tol, f'메시가 원 STL 의 강체 회전이 아니다 (남는 어긋남 최대 {resid_max:.3g} m > {tol:.3g})')
             need(ab_max <= 1e-12 * scale, f'B (재개) 메시 ≠ A — 꼭짓점 최대 차 {ab_max:.3g} m')
+            #  ★ HBR4-03 — 생산자가 **허용한** 형상 잔차와 출력 반올림을 소비자가 쓸 수 있게 길이로 남긴다.
+            #    resid_max · out_round_m 은 **좌표별** 최대라 유클리드 변위는 최악 √3 배다 (좌표 최대와 거리 노름을 혼동하지 않는다).
+            pos_bound_m = float(np.sqrt(3.0) * (resid_max + (out_round_m or 0.0)))
         need(err_max <= PHASE_EPS_DEG, f'예정각 오차 최대 {err_max:.4g}° > 등록 ε {PHASE_EPS_DEG}°')
         sym, raw = symmetric_gap_deg(n1, r0, dt, period, g['nfacet'])
         need(sym >= RESET_GAP_DEG, f'리셋 대안과의 간격 (면 대칭 제외) {sym:.3f}° < {RESET_GAP_DEG}° — 이 N1 으로는 재개 리셋을 못 가린다')
     else:
         ver, sym, raw, n1 = '', None, None, None
-    bound = max(err_max, ang_res or 0.0)
-    need(bound <= PHASE_EPS_DEG, f'각 경계 {bound:.4g}° (실측 {err_max:.4g} · 출력 해상도 {ang_res}) > 등록 ε {PHASE_EPS_DEG}°')
+    #  ★ HBR4-03 — 옛 판은 max() 였는데 그것은 오차 **합성**의 상한이 아니다 (두 성분은 같은 방향으로 겹칠 수 있다) → 최악 방향 합.
+    bound = err_max + (ang_res or 0.0)
+    need(bound <= PHASE_EPS_DEG, f'각 경계 {bound:.4g}° (실측 {err_max:.4g} + 출력 해상도 {ang_res}) > 등록 ε {PHASE_EPS_DEG}°')
+    #  ★ HBR4-01 — 영수증이 내보내는 수는 전부 유한해야 한다 (비유한이 지표를 조용히 0 으로 만들던 자리)
+    need(all(np.isfinite(x) for x in (err_max, resid_max, ab_max, bound) ) and (pos_bound_m is None or np.isfinite(pos_bound_m)),
+         f'영수증 지표에 비유한 값 (오차 {err_max} · 잔차 {resid_max} · A↔B {ab_max} · 경계 {bound} · 위치 {pos_bound_m})')
     rc = dict(schema=RECEIPT_SCHEMA, test='restart_phase', passed=not reasons, reasons=reasons,
               period=float(period), dt=float(dt), axis=[float(x) for x in axis], origin=[float(x) for x in origin],
-              rotation_start_step=g['rot_start'] if g else None, run_total=g['run_total'] if g else None,
+              rotation_start_step=rot_start, motion_clock=mclock, run_total=g['run_total'] if g else None,
               n1=n1, dump_every=g['dump_every'] if g else None,
               span_rotation_steps=(g['run_total'] - g['rot_start']) if g else None,
               steps_checked_A=sorted(A_st), steps_checked_B=sorted(B_st),
               angle_error_deg=float(err_max), angle_resolution_deg=ang_res, angle_bound_deg=float(bound),
               reset_alternative_gap_deg=raw, symmetric_gap_deg=sym, nfacet=g['nfacet'] if g else None,
               ab_max_vertex_diff_m=float(ab_max), residual_max_m=float(resid_max),
+              pos_bound_m=None if pos_bound_m is None else float(pos_bound_m),
+              output_rounding_m=None if out_round_m is None else float(out_round_m),
               rows=rows, liggghts_version=ver,
               binary_sha256=(seal or {}).get('binary_sha256'), seal=seal,
               run_status={p: dict(exit=(rs or {}).get(p, {}).get('exit'), complete=comp[p]['complete'], completion_basis=comp[p]['basis'],
-                                  last_thermo_step=comp[p]['last_thermo_step'], banner=comp[p]['banner'], log_sha256=comp[p]['log_sha256'])
+                                  last_thermo_step=comp[p]['last_thermo_step'], banner=comp[p]['banner'], log_sha256=comp[p]['log_sha256'],
+                                  dumps_n=len(((rs or {}).get(p) or {}).get('dumps') or {}),
+                                  dumps_sha256=hashlib.sha256(json.dumps(((rs or {}).get(p) or {}).get('dumps') or {},
+                                                                         sort_keys=True).encode()).hexdigest())
                           for p in ('A', 'B')} if comp else None,
               motion_signature=(g or {}).get('motion_signature'), deck_source=(g or {}).get('deck'),
               deck_source_sha256=(g or {}).get('deck_sha256'), tool_sha256=_sha(os.path.abspath(__file__)),
@@ -407,8 +452,9 @@ def analyze(d, out=None, binary=None):
         os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
         json.dump(rc, open(out, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         print(f'→ {out}')
-    print(f'재개-위상 영수증 v1: {"통과" if rc["passed"] else "실패"} — A {len(A_st)} step · B {len(B_st)} step · 예정각 오차 최대 {err_max:.3g}° · '
-          f'각 경계 {bound:.3g}° (등록 ε {PHASE_EPS_DEG}°) · A↔B {ab_max:.3g} m · 리셋 간격 (면 대칭 제외) '
+    print(f'재개-위상 영수증 v2: {"통과" if rc["passed"] else "실패"} — A {len(A_st)} step · B {len(B_st)} step · 예정각 오차 최대 {err_max:.3g}° · '
+          f'각 경계 {bound:.3g}° (등록 ε {PHASE_EPS_DEG}°) · 위치 경계 {pos_bound_m if pos_bound_m is None else f"{pos_bound_m:.3g} m"} · '
+          f'A↔B {ab_max:.3g} m · 리셋 간격 (면 대칭 제외) '
           f'{"—" if sym is None else f"{sym:.3f}"}°'
           + ('' if rc['passed'] else '\n   ✗ ' + '\n   ✗ '.join(reasons[:8])))
     return rc
@@ -462,6 +508,9 @@ def _selftest():                                                      # noqa: C9
             shutil.copyfile(os.path.join(stl_src, nm), os.path.join(td, nm))
         chk('④ A 덱 · B 덱의 메시 운동 서명 = 캠페인 덱 (STL 내용 · scale · 축 · 주기 · 순서)',
             motion_signature(a, td) == motion_signature(lc, td) == motion_signature(b, td))
+    chk('④b ★ HBR4-02 — A 덱의 운동 **시계** (mover 생성 step · run 끝) = 캠페인 덱 (회전 run 을 N1 에서 쪼개도 시계는 같다)',
+        motion_clock(a) == motion_clock(lc) and motion_clock(lc)[-1] == ['end', st['run_total']]
+        and all(e_[3] == st['rot_start'] for e_ in motion_clock(lc) if e_[0] == 'move'))
     # ── ⑤–⑦ 분석기 (작은 캠페인꼴 덱 · 실제 STL · 합성 덤프) ─────────────────────────────────────────
     small = '\n'.join([
         'atom_style granular', 'region reg block -0.02 0.02 -0.02 0.02 -0.02 0.02 units box', 'create_box 4 reg', 'timestep 1e-6',
@@ -553,6 +602,10 @@ def _selftest():                                                      # noqa: C9
         from check_contact_validity import load_phase_receipt
         spc = deck_walls(small)
         open(os.path.join(run_, 'log.lmp'), 'w').write('LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled test)\n')
+        #  판정할 런의 발사 봉인 (launch_highbo.sh 꼴) — 영수증을 만든 바이너리로 띄운 런 (HBR4-02)
+        json.dump(dict(schema='mixer_highbo_launch_record/1', run='camp', stage='first', lmp_sha256=_sha(binp),
+                       sha256={f_: _sha(os.path.join(run_, f_)) for f_ in ('in.mixer', 'Drum.stl', 'Front.stl', 'Back.stl')}),
+                  open(os.path.join(run_, 'launch_record.json'), 'w'))
         need = list(range(2000, 14001, 500))
         try:
             r_ok = load_phase_receipt(os.path.join(td, 'r.json'), spc, run_dir=run_, deck_text=small, need_steps=need)
@@ -564,8 +617,12 @@ def _selftest():                                                      # noqa: C9
             rej = False
         except ValueError:
             rej = True
-        chk('⑥ 검사기가 이 영수증을 받는다 (주기 · dt · 축 · 운동 서명 · 배너 · 판정 step ⊂ 실측 step) · 주기가 다른 덱에는 거부',
-            r_ok['passed'] is True and rej)
+        chk('⑥ 검사기가 이 영수증을 받는다 (주기 · dt · 축 · 운동 서명 · 운동 시계 · 발사 봉인 · 배너 · 판정 step ⊂ 실측 step · 목록) · '
+            '주기가 다른 덱에는 거부', r_ok['passed'] is True and rej)
+        chk(f'⑥b v2 필드 — 덤프 수 = 실측 step 수 · 위치 경계 유한 ({rc.get("pos_bound_m")} m) · 운동 시계 · 회전 시작 = 덱',
+            rc['run_status']['A']['dumps_n'] == len(rc['steps_checked_A']) and rc['run_status']['B']['dumps_n'] == len(rc['steps_checked_B'])
+            and rc['pos_bound_m'] is not None and np.isfinite(rc['pos_bound_m']) and rc['pos_bound_m'] > 0
+            and rc['motion_clock'] == motion_clock(small) and rc['rotation_start_step'] == spc['moves']['Drum']['start_step'])
     #  ⑦ HBR3-01 반례 — 필수 대조 · 재개 뒤 표본이 없거나 · 봉인 · 실행 기록이 어긋나면 **실패**
     def _restatus(o):
         """변이를 '실행이 실제로 그렇게 끝난' 경우로 — run.sh 의 기록 코드를 지금 파일로 다시 돌린다 (exit 는 그대로 · 위조 검사가
@@ -629,12 +686,48 @@ def _selftest():                                                      # noqa: C9
                 T = read_stl(os.path.join(pm, f))[:78]
                 _write_stl(os.path.join(pm, f), T)
         _restatus(o)
+    #  ── Codex 4 차 HBR4-01 반례 (2026-09-28) ─────────────────────────────────────────────────
+    def _nan_B(o, r):
+        """B 좌표만 전부 NaN (A 는 정상 · 기대 step · 로그 · 해시 전부 갖춤).  옛 판은 B 에 유한성 검사가 없어
+        `max(0.0, NaN)` 이 0.0 을 유지해 `ab_max_vertex_diff_m = 0.0` 으로 **통과**했다 (재현 키 nan_B_receipt)."""
+        pm = os.path.join(o, 'B', 'post_mesh')
+        for f in sorted(os.listdir(pm)):
+            T = read_stl(os.path.join(pm, f))
+            _write_stl(os.path.join(pm, f), np.full(T.shape, np.nan))
+        _restatus(o)
+
+    def _empty_seal_files(o, r):
+        """봉인 목록이 비었다 — 옛 판은 '있는 항목만' 검사해 통과했다 (재현 키 empty_seal_lists_receipt)."""
+        s_ = json.load(open(os.path.join(o, 'seal.json')))
+        s_['files'] = {}
+        json.dump(s_, open(os.path.join(o, 'seal.json'), 'w'))
+
+    def _translate(o, r):
+        """회전 뒤 A/B 메시 전부를 축 방향 +80 nm 평행이동 (A · B 는 서로 같다) — 생산자 허용 (1e-7 m) 안이라 통과는 맞지만
+        그 잔차를 **거리로** 남겨야 소비자가 쓴다 (Codex 4 차 재현 키 translation_receipt)."""
+        for sub in ('A', 'B'):
+            pm = os.path.join(o, sub, 'post_mesh')
+            for f in sorted(os.listdir(pm)):
+                T = read_stl(os.path.join(pm, f))
+                _write_stl(os.path.join(pm, f), T + np.array([8e-8, 0.0, 0.0]))
+        _restatus(o)
+
+    def _empty_dumps(o, r):
+        """실행 결과 기록의 덤프 해시 목록이 비었다 — 같은 부류 (재현 키 empty_seal_lists_receipt)."""
+        rs = json.load(open(os.path.join(o, 'run_status.json')))
+        for p_ in ('A', 'B'):
+            rs[p_]['dumps'] = {}
+        json.dump(rs, open(os.path.join(o, 'run_status.json'), 'w'))
+
     cases = [('A 대조 덤프 0 개 (Codex receipt_missing_all_A)', 'cont', _rm_all_A), ('B 한 장 · A 0 개', 'cont', _one_B),
              ('A · B 모두 회전 전 첫 덤프 한 장 (재개 전 정적 형상뿐 · Codex receipt_only_step0)', 'cont', _only0), ('기대 밖 덤프 (step 7301)', 'cont', _extra),
              ('재개 때 위상이 0 으로 (리셋)', 'reset', None), ('봉인 없음', 'cont', _no_seal), ('B exit 1', 'cont', _exit1),
              ('A 가 끝 step 전에 끊김 (exit 0 · 배너 없음)', 'cont', _short_A), ('실행 결과 기록 뒤 로그 수정', 'cont', _log_edit),
              ('봉인 뒤 덱 수정', 'cont', _deck_edit), ('실행 뒤 덤프 수정', 'cont', _dump_edit),
-             ('끝판 빠진 메시 (드럼 78 삼각형만)', 'cont', _drop_cap)]
+             ('끝판 빠진 메시 (드럼 78 삼각형만)', 'cont', _drop_cap),
+             ('⑩ HBR4-01 B 좌표 전부 NaN (max(0.0, NaN) = 0.0 으로 통과하던 것)', 'cont', _nan_B),
+             ('⑪ HBR4-01 봉인 목록이 빈 객체', 'cont', _empty_seal_files),
+             ('⑫ HBR4-01 실행 결과 기록의 덤프 해시 목록이 빈 객체', 'cont', _empty_dumps)]
     for name, mode, f in cases:
         with tempfile.TemporaryDirectory() as td:
             out_, run_, binp = _fake_run(td, mode=mode, fix=f)
@@ -642,6 +735,12 @@ def _selftest():                                                      # noqa: C9
             chk(f'⑦ 변이 — {name} → 실패 ({rc["reasons"][:1]})', rc['passed'] is False and rc['reasons'])
     #  ⑧ ⑨ SELF-56 — 완주 = exit 0 ∧ (배너 ∨ 마지막 thermo step = 끝).  배너를 찍는 빌드도 통과 · 옛 run.sh 기록 (완료 표지 False,
     #  로그 sha 없음) 으로 끝난 09-28 WSL 실행은 LIGGGHTS 재실행 없이 analyze 만 다시 돌려 판정할 수 있어야 한다.
+    with tempfile.TemporaryDirectory() as td:
+        out_, run_, binp = _fake_run(td, fix=_translate)
+        rc = analyze(out_)
+        chk(f'⑬ ★ HBR4-03 — +80 nm 평행이동은 허용 안이라 통과하되 (잔차 {rc["residual_max_m"]:.2e} m) 위치 경계 '
+            f'{rc["pos_bound_m"]:.2e} m ≥ √3·잔차 로 남긴다 (소비자가 부호거리에 더한다)',
+            rc['passed'] is True and rc['residual_max_m'] >= 7.9e-8 and rc['pos_bound_m'] >= np.sqrt(3.0) * rc['residual_max_m'])
     with tempfile.TemporaryDirectory() as td:
         out_, run_, binp = _fake_run(td, log='banner')
         rc = analyze(out_)

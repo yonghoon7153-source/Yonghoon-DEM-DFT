@@ -67,7 +67,9 @@ AM–AM 단독 효과 · 응집체만의 인과 · 실제 코팅 효과 · Hare 
 - 발사 전 WSL 에서 **실제 실행 덱**으로 (2026-09-28 Codex 3차 HBR3-07 · Q5 반영 — `--expect-deck` 와 실제 seed 서명):
   `python3 scripts/make_mixer_deck.py --out /tmp/lh_expect --n-total 100000 --cgf 151.4 --arm LH --seed 32452843 --revolutions 8` →
   `python3 scripts/mixer_deck_diff.py --runs dem_scripts/mixer_20260921/runs --ref-arm LC --arm LH --allow B --expect-deck /tmp/lh_expect/in.mixer --json <기록>`
-  → **3/3 PASS · exit 0 필수**.  `--runs` 는 디렉터리 이름만 세지 않는다: 각 덱의 **실제 seed 서명** (insert · particledistribution · particletemplate 의 seed) 이
+  → **3/3 PASS · exit 0 필수**.  ★ 2026-09-28 (Codex 4 차 HBR4-06) — **런처의 자동 관문도 이 `--expect-deck` 를 쓴다** (옛 런처는 `--runs … --allow B` 만 불러
+  허용 다섯 CED 를 전부 두 배로 한 실제 생성 덱이 3/3 PASS 였다).  기대 덱 = `mixer_deck_diff.expected_deck('LH', 32452843)` (위 CLI 출력과 바이트 동일 · 비교기 셀프테스트 ㉒) ·
+  발사 봉인 `gate_deckdiff` 에 argv 와 기대 덱 sha256 을 적는다 · 회귀 `test_launcher.sh` HL②e (진짜 비교기 · 진짜 생성 덱 — 옛 런처는 받아서 발사했다) · HL②f (대조).  `--runs` 는 디렉터리 이름만 세지 않는다: 각 덱의 **실제 seed 서명** (insert · particledistribution · particletemplate 의 seed) 이
   생성기가 그 시드로 내는 기대값과 같고 · LC 와 LH 가 같고 · 세 시드가 서로 다르고 · 예정 밖 `LC_s*`/`LH_s*` 디렉터리가 없어야 통과.  검사 = 주석을 뺀 모든 명령이 토큰 단위로 같고 (입경 · 밀도 · E/ν · e/마찰 · dt · 삽입 · 시드 · rpm · 메시 · 8 바퀴 · 덤프 간격 · 체크포인트) ·
   CED 변화가 허용 다섯 쌍 (AM_P–AM_P · AM_P–AM_S · AM_S–AM_S · AM_P–벽 · AM_S–벽) **안이고 다섯 다 실제로 변했다**.
 - 근거: 돌고 있는 LC 덱은 생성기 `b6d9a2036` (09-21 13:13 UTC, 체크포인트 추가) 판으로 만들어졌고 그 뒤 덱 내용을 바꾼 커밋은 없다.
@@ -104,6 +106,22 @@ AM–AM 단독 효과 · 응집체만의 인과 · 실제 코팅 효과 · Hare 
   ③ 둘 다 없으면 회전각-무관 상·하한 (`bounded`) — 상한 ≤ 1 % 만 PASS · 하한 > 1 % 는 REJECT · 그 사이 = **TECH (`unidentified`)**.
   본 캠페인 · 이 확장의 덱은 mesh 를 덤프하지 않으므로 실제 판정 경로는 ② 다.  영수증은 발사 **직전** WSL 에서 만든다 (§2-5).  09-28 의 1 차 실측 (v0,
   `docs/data/mixer_phase_receipt_20260928/`) 은 측정 기록일 뿐 판정 경로에 쓰지 않는다.
+- ⛔⛔ **4 차 수정 (2026-09-28 · Codex HBR4-01~07 · 실데이터 결과 0 건 · LH 미발사) — 위 ①~③ 을 이렇게 바꿨다** (§12 원장):
+  ① **mesh-dump 는 판정 근거에서 뺐다** (HBR4-04 (나), 1저자 결정 09-28).  삼각형 수 · 꼭짓점 집합 보존은 "전체 용기" 의 증명이 아니다 — 끝판을
+     [중심 · 테두리 · 중심] 으로 퇴화시키면 평면이 조용히 사라져 끝판 2 % 가 PASS 했다.  덤프가 있으면 `notes` 에만 적는다 (`MESH_DUMP_BASIS = False` — 면 연결 검증 (가) 을 세우기 전까지).
+  ② **영수증 v2** (`restart_phase_v2`) — 생산자: B 에도 유한성 · 형상 검사 · 봉인 목록과 덤프 해시 목록을 기대 집합과 **정확히** (빈 목록 통과 차단) · 내보내는 수 전부 유한 ·
+     운동 **시계** (mover 생성 · 해제 step · run 끝) · 회전 시작 step · **위치 경계** `pos_bound_m` (허용한 형상 잔차 + 출력 반올림, 좌표 최대 → 거리 √3) · 각 경계 = 실측 + 해상도 (**합**, 옛 max 아님).
+     소비자: 목록 완전성 · **판정할 런의 발사 봉인** (`launch_record.json` — 바이너리 sha256 = 영수증, 봉인 때 덱 · STL = 지금 파일; 없으면 실행 당시 바이너리 **미상** → 잇지 않는다,
+     지금 파일을 해시해 채우지 않는다) · 운동 시계 · 회전 시작 = 이 덱 · **재개된 런** (in.resume · post_pre_resume_* · restart/resume_from_*) 거부 · 구간 극값에 위치 경계를 더한다 (부호거리 ± u).
+     ⇒ **09-28 WSL 의 v1 영수증 (`docs/data/mixer_phase_receipt_20260928/receipt_v1.json`) 은 새 소비자가 거부한다** — WSL `~/phase_v1` 에서 고친 도구로 `analyze` 만 다시 (LIGGGHTS 재실행 불요).
+  ③ **정지 벽 계약** (`static`, HBR4-07 — 옛 검사기는 회전 캠페인용 근거만 알아 멀쩡한 E0 를 과잉차단했다): 창 전체가 회전 전 (모든 운동 fix 시작 ≥ 창 끝 → θ = 0 이 식으로 정확) ·
+     fresh (덱에 read_restart 없음 · 재개 흔적 없음) · 덱 = 기대 덱 (`--expect-deck`, 생성기로 다시 만든 등록 덱) · 벽 STL = 캠페인 원본 (`--stl-ref`, 기본 `dem_scripts/mixer_20260919`) →
+     원 STL (각 0 · 불확실성 0) 로 판정.  ⛔ 이를 위해 step 포함 검사 · 1 % 문턱을 느슨하게 하지 않았다.  **E0 세 개에 적용하는 명령** (WSL, 시드마다):
+     `python3 scripts/make_mixer_deck.py --out /tmp/e0_s<시드> --n-total 100000 --cgf 151.4 --arm E0 --seed <시드> --revolutions 0` →
+     `python3 scripts/check_contact_validity.py --contract dem_scripts/mixer_20260921/runs/E0_s<시드> --n-expected 100000 --expect-deck /tmp/e0_s<시드>/in.mixer --json <기록>`.
+     ⚠ 한계: E0 는 발사 봉인 이전 세대라 *"디스크의 덱 = 실행한 덱"* 은 `gen_all.sh` 의 덮어쓰기 가드 (로그가 있으면 덱을 다시 쓰지 않는다) 에 기댄다 — 판정 출력의 `wall_basis` 에 적힌다.
+  ⚠ **L · LC 는 재개된 런이라 영수증 경로가 서지 않는다** (런별 상태 확인 = 3차 Q1 · Q5 미구현) → 벽은 상·하한으로만 판정된다 (`unidentified` 면 판정 없음).
+  ⚠ LH 는 `launch_highbo.sh` 의 발사 봉인 (`launch_record.json`) 이 있어야 영수증을 잇는다.
 - ⚠ 영수증은 **바이너리 + 메시 운동 계약**의 성질이다 — 각 L/LC 런이 실제로 그 위상에서 이어졌는지 (체크포인트 상태) 는 런별 상태 확인이 따로 맡는다 (Codex Q1, 미실행).
 - 형식 (HBR3-06): 창의 **매 프레임**이 헤더 (TIMESTEP = 파일명 · 원자 수 = 행 수) · 필수 열 · id/type 유한 정수 · id 유일 · 좌표 유한 · 반경 양수를 통과해야 계산에 쓴다.
 - 판정 = PASS · REJECT · **TECH** (창 덤프 결손 · 헤더 step/원자 수 ≠ 파일명/행 수 · 같은 step 중복 · 벽 근거 없음 · 기하 불가 = 검사 자체가 서지 않음 = **통과 아님**).
@@ -116,7 +134,7 @@ AM–AM 단독 효과 · 응집체만의 인과 · 실제 코팅 효과 · Hare 
   발사 직전 순서: 재개-위상 영수증 v1 생성 (§2-4 ②, WSL) → §2-2 덱 대조 → **`bash dem_scripts/mixer_20260921/launch_highbo.sh first`**
   (덱 비교 게이트 · 세 시드 모두 미시작 확인 · `MAXJ` 전역 상한 · **첫 시드 런 폴더의 launch_record.json 봉인** (발사 때 WSL 에서 생긴다) = 바이너리 · `in.mixer` · Drum/Front/Back.stl sha256 · git HEAD ·
   시각 · 호스트 · `nproc` → 첫 시드 **하나만**) → bin 0 스모크 (§8) → **`bash dem_scripts/mixer_20260921/launch_highbo.sh rest <smoke.json>`**
-  (증서가 서야 나머지 둘 · 두 덱 · STL · 바이너리가 first 봉인과 같아야 · 덱 비교 재실행).  런처 회귀 `test_launcher.sh` (가짜 실행파일 58/58).
+  (증서가 서야 나머지 둘 · 두 덱 · STL · 바이너리가 first 봉인과 같아야 · 덱 비교 재실행).  런처 회귀 `test_launcher.sh` (가짜 실행파일 · 09-28 낮 64/64 — HL②e 는 진짜 비교기 · 진짜 생성 덱).
 - 기록: `nproc` · `lscpu | head -20` · `free -h` · `df -h ~` · `sha256sum "$(command -v lmp_serial)"` · 리포 SHA · 발사 시각 · 첫 1 시간 step/s.
 - 재개가 필요해지면 본 캠페인과 같은 도구 (`resume_all.sh`) 와 같은 기록 (영수증 · `RESUME_STEP`).
 
@@ -195,7 +213,12 @@ AM–AM 단독 효과 · 응집체만의 인과 · 실제 코팅 효과 · Hare 
   벽 근거가 `receipt` (또는 `mesh-dump` · `bounded` 통과) 로 서야 한다 (`unidentified` = 계측 근거 부재 = 실패) ③ 판독기 `smoke.complete` · `smoke.tech_smoke` 비어 있음
   (⚠ 전체 미완주 `tech` 는 스모크에서 **예상 상태** — 그것으로 중단하지 않는다.  옛 등록은 이 둘을 안 갈라 정상 스모크도 통과 못 했다) · 8×8×2 `S₀²/S_R² ≥ 5` ④ step/s.
 - **스모크 증서** (`launch_highbo.sh rest` 가 읽는 것): §2-3 의 판독 명령 (16×16×4 · `--n-min 20`) 을 `LH_s32452843` · `E0_s32452843` 에 돌린 `--json` 출력.
-  `rest` 는 `run` = `LH_s32452843` · `smoke.complete` true · `smoke.tech_smoke` [] · `smoke.qc_repr.pass` true 만 기계로 본다 — ① 보존 · ② 접촉 계약 (bin 0 창) ·
+  ★ 2026-09-28 (Codex 4 차 HBR4-05) — 옛 관문은 run 을 basename 으로만 · *"다른 발사가 아니다"* 를 mtime 으로 봐서, 다른 폴더 · 2×2×1 칸의 **실제** 판독 결과를
+  첫 봉인 뒤에 복사하면 통과했다.  이제 판독기가 증서에 **출처 블록** (`provenance`: 판독기 sha256 · 규약 인자 전부 · 평가/기준 덱 sha256 · 판독 프레임과 E0 기준 프레임의
+  step · 파일명 · sha256 · 평가 런의 발사 봉인 sha256) 을 쓰고, `rest` 가 **불변 식별자**로 대조한다: 규약 = 등록 (16×16×4 · n_min 20 · x · r 0.013138) · 판독기 = 지금 리포 ·
+  run = 첫 시드 · 덱 = 첫 봉인 때 · 증서가 본 발사 봉인 = 지금 봉인 · 프레임을 **첫 시드 폴더와 E0 폴더에서 다시 해시**.  mtime 은 참고로만 찍는다.
+  (회귀: 판독기 ㉖ · ㉖b · 런처 HL④g–k.)
+  `rest` 는 그 밖에 `run` = `LH_s32452843` · `smoke.complete` true · `smoke.tech_smoke` [] · `smoke.qc_repr.pass` true 를 기계로 본다 — ① 보존 · ② 접촉 계약 (bin 0 창) ·
   8×8×2 바닥 비 · ④ step/s 는 **사람이 확인하고 기록한 뒤** `rest` 를 부른다 (증서가 대신하지 않는다).
 - **중단 (전체 확장 HOLD + 원인 기록)**: ①–③ 중 하나라도 실패 = 안전 · 계측 실패.  세 시드가 다 돌면 **각 시드**에 최종 계약을 따로 적용한다 (첫 시드 통과가 나머지의
   계측 유효성을 대신하지 않는다).
@@ -288,3 +311,8 @@ completion_basis "last_step" · last_thermo_step 9,452,094` — **배너가 없�
 | t₀ | 있는 것 중 2·steps_fill 이하 마지막 | 계획 t₀ (정착 끝 dump 격자) 정확히 — 평가 · E0 둘 다 · 없으면 판독기 정지 / 검사기 TECH | 기준 t₀ 대체로 M 0.450 → 0.529 (HBR3-05) | 09-28 · §10 3차 수정 커밋 | 없음 | — |
 | 프레임 형식 · 격자 | t₀ 에서만 id · 격자 밖은 기록만 | 매 프레임 `validate_frame` · 격자 밖 · 중복 = 제외 + tech | id 부재 · 헤더 부재 · 소수 type PASS (HBR3-06) · 격자 밖 평균 편입 (HBR3-05) | 09-28 · §10 3차 수정 커밋 | 없음 | — |
 | 덱 동등성 코호트 | 디렉터리 이름 n/N | 실제 seed 서명 = 생성기 기대값 · LC = LH · 고유 · 예정 밖 거부 · `--expect-deck` | 같은 seed 복사 세 벌 3/3 PASS (HBR3-07) | 09-28 · §10 3차 수정 커밋 | 없음 | — |
+| mesh 덤프 근거 (4 차) | 원 용기 삼각형 수 · 꼭짓점 집합 · 예정각 ≤ 0.05° | **판정 근거 아님** (`MESH_DUMP_BASIS = False`) · 있으면 notes | 퇴화 끝판 (면 수 · 꼭짓점 집합 보존) 으로 2 % PASS (HBR4-04) · 1저자 (나) | 09-28 낮 · 4 차 수정 커밋 (§10) | 없음 (LH 미발사) | 면 연결 검증 (가) 전까지 mesh 덤프로 판정 문장 금지 |
+| 재개-위상 영수증 (4 차) | v1 (위 행) | **v2**: B 유한 · 목록 정확 · 지표 유한 · 운동 시계 · 위치 경계 · 각 경계 = 합 · 소비자는 **판정할 런의 발사 봉인** · 재개 런 거부 | B NaN 통과 · 빈 목록 통과 (HBR4-01) · 배너만 잇기 · 시작 2001↔3001 (HBR4-02) · 형상 잔차 버림 (HBR4-03) | 09-28 낮 · 4 차 수정 커밋 | v1 1 차 실측 (측정 기록 — 판정 미사용) | v1 영수증은 거부 — `analyze` 재실행 뒤에만 인용 · 발사 봉인 없는 런 (L · LC · E0) 에 영수증 판정 없음 |
+| 정지 벽 (E0) | 영수증 형식 그대로 (§2-4 옛 문구) | `static` 계약 — 회전 전 · fresh · 덱 = 기대 덱 · STL = 원본 → 원 STL | E0 0.5 % 가 TECH (과잉차단, HBR4-07) | 09-28 낮 · 4 차 수정 커밋 | 없음 (E0 계약 미실행) | 발사 봉인 이전 세대 = 덮어쓰기 가드에 기댄다고 병기 |
+| 스모크 증서 출처 | run basename · smoke 불리언 · mtime | 출처 블록 (판독기 · 규약 · 덱 · 발사 봉인 · 프레임 sha256) 을 관문이 다시 해시해 대조 · mtime 참고 | 다른 폴더 2×2×1 실제 판독 결과가 rest 통과 (HBR4-05) | 09-28 낮 · 4 차 수정 커밋 | 없음 | — |
+| 런처 덱 관문 | `--runs … --allow B` | + `--expect-deck` (expected_deck LH) · 봉인에 sha256 | CED 두 배 덱 3/3 PASS (HBR4-06) | 09-28 낮 · 4 차 수정 커밋 | 없음 | — |

@@ -209,6 +209,55 @@ def _t0_exact(fr, plan, run_dir, who):
     return t0, hit[0]
 
 
+PROVENANCE_SCHEMA = 'mixing_provenance/1'
+
+
+def _sha_file(path):
+    import hashlib
+    h = hashlib.sha256()
+    with open(path, 'rb') as f:
+        for b in iter(lambda: f.read(1 << 20), b''):
+            h.update(b)
+    return h.hexdigest()
+
+
+def frame_digest(files):
+    """[[step, 파일명, sha256], …] → 묶음 sha256 (step 순 · 'step:파일명:sha' 줄).  launch_highbo.sh rest 관문이 같은 식으로 다시 계산한다."""
+    import hashlib
+    return hashlib.sha256(''.join(f'{int(a)}:{b}:{c}\n' for a, b, c in sorted(files, key=lambda t: int(t[0]))).encode()).hexdigest()
+
+
+def frame_bundle(pairs):
+    """[(step, 경로)] → dict(files=[[step, 파일명, sha256]…], sha256=묶음)."""
+    files = [[int(s_), os.path.basename(p_), _sha_file(p_)] for s_, p_ in sorted(pairs, key=lambda t: int(t[0]))]
+    return dict(files=files, sha256=frame_digest(files))
+
+
+def verify_frames(post_dir, bundle):
+    """증서의 프레임 묶음을 **이 폴더**의 파일로 다시 해시 → 어긋난 목록 (빈 목록 = 같다)."""
+    bad = []
+    for s_, name, h in (bundle or {}).get('files') or []:
+        p_ = os.path.join(post_dir, os.path.basename(str(name)))
+        if not os.path.isfile(p_) or _sha_file(p_) != h:
+            bad.append((s_, name))
+    if not bad and frame_digest((bundle or {}).get('files') or []) != (bundle or {}).get('sha256'):
+        bad.append(('digest', None))
+    return bad
+
+
+def provenance_block(run_dir, ref_dir, args, used, ref_used):
+    """★ 증서의 출처 (2026-09-28, Codex 4 차 HBR4-05) — 옛 증서는 run 경로 문자열 · smoke 불리언뿐이라 **다른 폴더 · 다른 칸
+    규약 (2×2×1)** 의 실제 판독 결과가 16×16×4 첫 시드 증서로 rest 관문을 통과했다 (basename 만 비교 · mtime 으로 "다른 발사가
+    아니다" 판정 — 복사 · 재판독이면 mtime 은 새로워진다).  이제 관문이 **불변 식별자**로 잇는다: 판독기 sha256 · 모든 규약 인자 ·
+    평가 런 / E0 기준의 덱 sha256 · 판독한 프레임 (step · 파일명 · sha256) · 평가 런의 발사 봉인 sha256."""
+    lr = os.path.join(run_dir, 'launch_record.json')
+    return dict(schema=PROVENANCE_SCHEMA, tool_sha256=_sha_file(os.path.abspath(__file__)), args=dict(args),
+                run=dict(name=os.path.basename(os.path.normpath(run_dir)), deck_sha256=_sha_file(os.path.join(run_dir, 'in.mixer')),
+                         launch_record_sha256=_sha_file(lr) if os.path.isfile(lr) else None, frames=frame_bundle(used)),
+                ref=dict(name=os.path.basename(os.path.normpath(ref_dir)), deck_sha256=_sha_file(os.path.join(ref_dir, 'in.mixer')),
+                         frames=frame_bundle(ref_used)))
+
+
 def analyse(run_dir, ref_dir, r_container, cells=8, x_cells=2, n_min=20, axis='x'):
     deck = os.path.join(run_dir, 'in.mixer')
     plan = deck_plan(deck)
@@ -224,7 +273,7 @@ def analyse(run_dir, ref_dir, r_container, cells=8, x_cells=2, n_min=20, axis='x
     #  무작위 기준 — 균일 삽입 런의 **같은 위치**(그 덱의 계획 정착 끝) 프레임 · 같은 규칙
     rplan = deck_plan(os.path.join(ref_dir, 'in.mixer'))
     rfr = frames(os.path.join(ref_dir, 'post'))
-    _, rp = _t0_exact(rfr, rplan, ref_dir, 'E0 기준')
+    rst0, rp = _t0_exact(rfr, rplan, ref_dir, 'E0 기준')
     cR = cell_stats(read_dump(rp), r_container, **kw)
     sR, nR = cR['s2'], cR['used']
     if not (s0 > sR):
@@ -349,7 +398,10 @@ def analyse(run_dir, ref_dir, r_container, cells=8, x_cells=2, n_min=20, axis='x
     smoke['tech_smoke'] += [m_ for s_, m_ in ex_msg.items() if _bin(s_) == 0]
     if any(d_ in b0 for d_ in dups):
         smoke['tech_smoke'].append('bin 0 에 같은 step 의 덤프가 둘 이상')
-    return dict(run=run_dir, ref=ref_dir, plan=plan, t0_step=st0, S0=s0, SR=sR,
+    prov = provenance_block(run_dir, ref_dir, dict(cells=int(cells), x_cells=int(x_cells), n_min=int(n_min), axis=str(axis),
+                                                   r_container=float(r_container)),
+                            [(r_['step'], by_step[r_['step']][0]) for r_ in rows], [(rst0, rp)])
+    return dict(run=run_dir, ref=ref_dir, provenance=prov, plan=plan, t0_step=st0, S0=s0, SR=sR,
                 cells_t0=n0, cells_ref=nR, rows=rows, by_rev=revs,
                 M_final=revs[last_k]['M_mean'], M_final_sd=revs[last_k]['M_sd'], final_rev=last_k,
                 M_t0=rows[0]['M'], planned=planned, smoke=smoke, tech=tech, dump_gaps=gaps,
@@ -592,6 +644,22 @@ def _selftest():                                              # noqa: C901
         chk(f'⑯ ★ HBR2-02: 정상 bin 0 스모크 — smoke 창은 통과 (tech_smoke {sm["tech_smoke"]}) · 최종 창의 미완주 표지와 분리',
             sm['complete'] and not sm['tech_smoke'] and sm['n'] == 26 and not res['planned']['complete']
             and any('미완주' in t for t in res['tech']))
+        pv = res['provenance']
+        chk('㉖ ★ HBR4-05 — 증서의 출처: 판독기 sha256 · 칸 규약 (실제 인자 전부) · 평가/기준 덱 sha256 · 판독 프레임 (step · 파일 · sha256) = '
+            '계산에 쓴 행 · 발사 봉인 없음은 None (지어내지 않는다)',
+            pv['schema'] == PROVENANCE_SCHEMA and pv['tool_sha256'] == _sha_file(os.path.abspath(__file__))
+            and pv['args'] == dict(cells=2, x_cells=1, n_min=20, axis='x', r_container=0.02)
+            and [f_[0] for f_ in pv['run']['frames']['files']] == [r_['step'] for r_ in res['rows']]
+            and pv['run']['frames']['sha256'] == frame_digest(pv['run']['frames']['files'])
+            and [f_[0] for f_ in pv['ref']['frames']['files']] == [200] and pv['run']['launch_record_sha256'] is None
+            and not verify_frames(os.path.join(run, 'post'), pv['run']['frames']))
+        foreign = _case(td, 'foreign', [0])                        # 다른 폴더 · 같은 계획 · 다른 데이터 (Codex foreign_wrong_grid_smoke_gate)
+        for i in range(1, 26):
+            write_dump(os.path.join(foreign, 'post', f'mix_{200 + 40 * i}.liggghts'), _cloud('ref_alt'))
+        pvf = analyse(foreign, ref, .02, cells=2, x_cells=1)['provenance']
+        chk('㉖b 다른 폴더의 **실제** 판독 증서 (같은 이름 규칙 · 같은 계획 · 다른 데이터) 는 이 런의 프레임으로 다시 해시하면 어긋난다 — '
+            '칸 규약 불일치는 인자로 드러나 런처 관문이 거부한다 (test_launcher HL④h)',
+            bool(verify_frames(os.path.join(run, 'post'), pvf['run']['frames'])))
         os.remove(os.path.join(run, 'post', 'mix_600.liggghts'))
         res = analyse(run, ref, .02, cells=2, x_cells=1)
         chk('⑯b bin 0 안의 덤프 결손은 스모크 실패 (tech_smoke)',

@@ -158,14 +158,38 @@ FAKE_LH2="$T/lmp_lh2"; printf '#!/usr/bin/env bash\n# 다른 빌드\nsleep 15\n'
 DD_OK="$T/dd_ok.py"; DD_NG="$T/dd_ng.py"          # 덱 비교기 대역 (DECKDIFF) — 통과 대역은 받은 인자를 $DD_ARGS 에 적는다
 printf 'import os, sys\np = os.environ.get("DD_ARGS")\nif p: open(p, "a").write(" ".join(sys.argv[1:]) + "\\n")\nprint("3/3 PASS")\n' > "$DD_OK"
 printf 'print("0/3 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지")\nraise SystemExit(1)\n' > "$DD_NG"
-mklh() {  # mklh <OUT> <이름> — 아직 안 돈 런 (덱 + STL 셋)
+mklh() {  # mklh <OUT> <이름> — 아직 안 돈 런 (덱 + STL 셋 + 판독 프레임 하나 — 내용에 전체 경로 = 폴더마다 다른 데이터)
   local d="$1/$2"; mkdir -p "$d/post"; printf 'run 1\nrun 10\n# %s\n' "$2" > "$d/in.mixer"
   for f in Drum Front Back; do echo "solid $f $2" > "$d/$f.stl"; done
+  echo "frame $d" > "$d/post/mix_100.liggghts"
 }
 npid() { ls "$1"/*/pid 2>/dev/null | wc -l; }
-mkcert() {  # mkcert <파일> <run 경로> <complete> <tech_smoke JSON> <qc_repr.pass> — measure_mixing_index.py --json 의 모양
-  printf '[{"run": "%s", "ref": "%s", "smoke": {"bin": 0, "complete": %s, "tech_smoke": %s, "qc_repr": {"pass": %s}}}]\n' \
-    "$2" "$(dirname "$2")/E0_s32452843" "$3" "$4" "$5" > "$1"
+mkcert() {  # mkcert <파일> <run 경로> <complete> <tech_smoke JSON> <qc_repr.pass> [cells] — measure_mixing_index.py --json 의 모양
+  #  ★ HBR4-05 — 출처 블록은 **판독기의 같은 함수** (provenance_block) 로 만든다 (관문과 판독기가 형식을 따로 갖지 않게).
+  #    그 폴더의 발사 봉인 · 덱 · 판독 프레임 · E0 기준을 **지금** 해시한다 — 그래서 first 뒤에 불러야 봉인 sha 가 맞는다.
+  python3 - "$ROOT" "$@" <<'PY'
+import json, os, sys
+root, out, run, complete, tech, qc, *cells = sys.argv[1:]
+sys.path.insert(0, os.path.join(root, 'scripts'))
+from measure_mixing_index import provenance_block
+rn = os.path.normpath(run)
+ref = os.path.join(os.path.dirname(rn), 'E0_s32452843')
+args = dict(cells=int(cells[0]) if cells else 16, x_cells=4, n_min=20, axis='x', r_container=0.013138)
+pv = provenance_block(rn, ref, args, [(100, os.path.join(rn, 'post', 'mix_100.liggghts'))],
+                      [(100, os.path.join(ref, 'post', 'mix_100.liggghts'))])
+e = dict(run=run, ref=ref, provenance=pv,
+         smoke=dict(bin=0, complete=json.loads(complete), tech_smoke=json.loads(tech), qc_repr={'pass': json.loads(qc)}))
+json.dump([e], open(out, 'w'), ensure_ascii=False)
+PY
+}
+cedit() {  # cedit <증서> <python 식 — e (첫 원소) 를 고친다> — 증서 JSON 한 칸 변이
+  python3 - "$1" "$2" <<'PY'
+import json, sys
+p, code = sys.argv[1:]
+d = json.load(open(p)); e = d[0]
+exec(code)
+json.dump(d, open(p, 'w'), ensure_ascii=False)
+PY
 }
 #  (a) run_all.sh 는 LH 를 기본으로 건너뛴다
 A="$T/hba"; for n in $LH1 $LH2 $LH3 L0_s11 E0_s12; do mklh "$A" $n; done
@@ -204,13 +228,63 @@ mkcert "$T/cert_f.json" "$F/$LH1" true '[]' true
 f4=$(OUT="$F" LMP="$FAKE_LH" MAXJ=8 DECKDIFF="$DD_OK" bash "$LHL" rest "$T/cert_f.json" 2>&1); rc_f4=$?
 chk 'HL②d rest 를 first 보다 먼저 부르면 거부 (첫 시드 봉인 · 로그 없음)' \
     "[ $rc_f4 -ne 0 ] && ! [ -e '$F/$LH3/pid' ] && ! [ -e '$F/$LH3/launch_record.json' ] && grep -q '⛔ 첫 시드' <<<\"\$f4\""
+#  ★ HBR4-06 통합 (대역 없음) — 진짜 비교기 + 진짜 생성 덱.  LH 의 허용 다섯 CED 를 전부 두 배로 한 덱은 약한 호출
+#    (--runs … --allow B) 을 통과하지만 (Codex launcher_target_without_expect) 런처는 거부해야 한다.  대조: 참 LH 덱은 통과.
+DX="$T/hbx"; DY="$T/hby"
+python3 - "$ROOT" "$DX" "$DY" <<'PY'
+import os, sys
+root, dx, dy = sys.argv[1:]
+sys.path.insert(0, os.path.join(root, 'scripts'))
+import mixer_deck_diff as dd
+from make_mixer_resume import logical_commands, _tokens
+import make_mixer_deck as gen
+
+
+def doubled(txt):                  # Codex 4 차 프로브의 matrix_mutant 그대로 — seed · 비-CED 명령 유지, 허용 다섯 쌍만 ×2
+    parsed = dd.parse_deck(txt)
+    n, vals = parsed['ced']
+    names = parsed['names']
+    vv = list(vals)
+    for i in range(n):
+        for j in range(n):
+            if tuple(sorted((names[i + 1], names[j + 1]))) in dd.ALLOW['B']:
+                vv[i * n + j] *= 2
+    out = []
+    for _, blk in logical_commands(txt):
+        t = _tokens(blk)
+        if 'cohesionEnergyDensity' in t:
+            ix = t.index('cohesionEnergyDensity')
+            out.append(' '.join(t[:ix + 3] + [format(v, '.12g') for v in vv]))
+        else:
+            out.append('\n'.join(blk) if isinstance(blk, list) else blk)
+    return '\n'.join(out) + '\n'
+
+
+for base, mut in ((dx, True), (dy, False)):
+    for sd in gen.CAMPAIGN_SEEDS:
+        for arm in ('LC', 'LH'):
+            d = os.path.join(base, f'{arm}_s{sd}')
+            os.makedirs(os.path.join(d, 'post'))
+            t = dd.expected_deck(arm, sd)
+            open(os.path.join(d, 'in.mixer'), 'w').write(doubled(t) if (mut and arm == 'LH') else t)
+            for f in ('Drum', 'Front', 'Back'):
+                open(os.path.join(d, f + '.stl'), 'w').write(f'solid {f}\n')
+PY
+python3 "$ROOT/scripts/mixer_deck_diff.py" --runs "$DX" --allow B > /dev/null 2>&1; rc_weak=$?
+x1=$(OUT="$DX" LMP="$FAKE_LH" MAXJ=8 bash "$LHL" first 2>&1); rc_x1=$?
+chk 'HL②e ★ HBR4-06 재현→수정 (진짜 비교기): LH 허용 다섯 CED 를 두 배로 한 덱 — 약한 호출은 rc 0 인데 런처 first 는 거부 · 발사 0 · 봉인 0' \
+    "[ $rc_weak -eq 0 ] && [ $rc_x1 -ne 0 ] && [ \$(npid '$DX') -eq 0 ] && ! ls '$DX'/*/launch_record.json >/dev/null 2>&1 && grep -q '⛔ 덱 비교 관문 실패' <<<\"\$x1\""
+y1=$(OUT="$DY" LMP="$FAKE_LH" MAXJ=8 bash "$LHL" first 2>&1); rc_y1=$?
+chk 'HL②f (대조 · 진짜 비교기) 참 LH 덱이면 덱 관문을 통과해 첫 시드 하나만 뜬다' \
+    "[ $rc_y1 -eq 0 ] && [ \$(npid '$DY') -eq 1 ] && [ -s '$DY/$LH1/pid' ]"
 #  (b) first = 정확히 하나 + 발사 전 봉인
 B="$T/hbl"; for n in $LH1 $LH2 $LH3 LC_s32452843 E0_s32452843; do mklh "$B" $n; done
 echo '{"stage": "first", "note": "발사 안 된 옛 봉인"}' > "$B/$LH1/launch_record.json"      # 끊긴 옛 시도가 남긴 것
 b1=$(OUT="$B" LMP="$FAKE_LH" MAXJ=8 DECKDIFF="$DD_OK" DD_ARGS="$T/dd_args_b" bash "$LHL" first 2>&1); rc_b1=$?
 chk 'HL③ ★ first: 정확히 하나 — LH_s32452843 만 뜬다 (나머지 LH 둘 · 같은 runs/ 의 LC · E0 는 안 뜬다)' \
     "[ $rc_b1 -eq 0 ] && [ \$(npid '$B') -eq 1 ] && [ -s '$B/$LH1/pid' ] && kill -0 \"\$(cat '$B/$LH1/pid')\""
-chk 'HL③b first: 덱 비교 관문을 --runs <OUT> --allow B 로 불렀다' "grep -qx -- '--runs $B --allow B' '$T/dd_args_b'"
+chk 'HL③b ★ first: 덱 비교 관문을 --runs <OUT> --allow B **--expect-deck <기대 LH 덱>** 으로 불렀다 (HBR4-06)' \
+    "grep -qE -- '^--runs $B --allow B --expect-deck .+/in\\.mixer\$' '$T/dd_args_b'"
 sb=$(python3 - "$B/$LH1" "$FAKE_LH" "$ROOT" <<'PY' 2>&1
 import hashlib, json, os, socket, subprocess, sys
 d, fake, root = sys.argv[1:]
@@ -225,10 +299,16 @@ ok = {'lmp': r.get('lmp_path') == fake and r.get('lmp_sha256') == sha(fake),
       'time': bool(r.get('time_local')) and str(r.get('time_utc', '')).endswith('Z'),
       'who': r.get('run') == os.path.basename(d) and r.get('seed') == 32452843 and r.get('stage') == 'first',
       'before': os.stat(os.path.join(d, 'launch_record.json')).st_mtime_ns <= os.stat(os.path.join(d, 'pid')).st_mtime_ns}
+sys.path.insert(0, os.path.join(root, 'scripts'))
+import mixer_deck_diff as dd
+g_ = r.get('gate_deckdiff') or {}
+ok['gate'] = (g_.get('argv', [])[:5] == ['--runs', os.path.dirname(d), '--allow', 'B', '--expect-deck']
+              and g_.get('expect_deck_sha256') == hashlib.sha256(dd.expected_deck('LH', 32452843).encode()).hexdigest())
 print('OK' if all(ok.values()) else 'NG ' + ' '.join(k for k, v in ok.items() if not v))
 PY
 )
-chk 'HL③c first: 발사 전 봉인 launch_record.json — 바이너리 · in.mixer · Drum/Front/Back.stl sha256 · git HEAD · 시각 (지역 · UTC) · 호스트 · nproc · LMP 경로' "[ \"\$sb\" = OK ]"
+chk 'HL③c first: 발사 전 봉인 launch_record.json — 바이너리 · in.mixer · Drum/Front/Back.stl sha256 · git HEAD · 시각 (지역 · UTC) · 호스트 · nproc · LMP 경로 · '\
+'덱 비교 관문의 기대 덱 sha256 (= expected_deck LH · HBR4-06)' "[ \"\$sb\" = OK ]"
 chk 'HL③d first: 발사 안 된 옛 봉인은 지우지 않고 launch_record.unlaunched.*.json 으로 옆에 둔다' \
     "grep -q '발사 안 된 옛 봉인' '$B/$LH1'/launch_record.unlaunched.*.json"
 #  (c) rest 의 증서 관문 — 어느 하나라도 틀리면 나머지 둘 발사 0
@@ -239,7 +319,12 @@ mkcert "$CE/run.json"      "$B/$LH2" true '[]' true
 mkcert "$CE/qc.json"       "$B/$LH1" true '[]' false
 mkcert "$CE/truthy.json"   "$B/$LH1" 1 '[]' true
 echo '[{"run": ' > "$CE/garbage.json"
-mkcert "$CE/old.json"      "$B/$LH1" true '[]' true; touch -d '2026-01-01 00:00' "$CE/old.json"
+mkcert "$CE/old.json"      "$B/$LH1" true '[]' true; cedit "$CE/old.json" "e['provenance']['run']['launch_record_sha256'] = '0' * 64"
+mkcert "$CE/grid.json"     "$B/$LH1" true '[]' true 2                                    # 2×2×1 이 아니라 2×2×4 — 등록 16×16×4 와 다른 칸
+mkcert "$CE/tool.json"     "$B/$LH1" true '[]' true; cedit "$CE/tool.json" "e['provenance']['tool_sha256'] = 'f' * 64"
+mkcert "$CE/noprov.json"   "$B/$LH1" true '[]' true; cedit "$CE/noprov.json" "e.pop('provenance')"
+FO="$T/foreign"; mklh "$FO" $LH1; mklh "$FO" E0_s32452843; cp "$B/$LH1/launch_record.json" "$FO/$LH1/"
+mkcert "$CE/foreign.json"  "$FO/$LH1" true '[]' true                                     # 다른 폴더 · 같은 이름 · 같은 봉인 사본 · 다른 데이터
 rest_ng() {  # rest_ng <증서> — 거부 (rc ≠ 0) · 나머지 둘 발사 0 · 봉인 0 이면 참.  출력은 $RO
   local rc; RO=$(OUT="$B" LMP="$FAKE_LH" MAXJ=8 DECKDIFF="$DD_OK" bash "$LHL" rest "$1" 2>&1); rc=$?
   [ $rc -ne 0 ] && ! [ -e "$B/$LH2/pid" ] && ! [ -e "$B/$LH3/pid" ] && ! [ -e "$B/$LH2/launch_record.json" ] && ! [ -e "$B/$LH3/launch_record.json" ]
@@ -251,7 +336,14 @@ chk 'HL④d rest: 증서의 run 이 첫 시드가 아니면 거부 · 발사 0' 
 chk 'HL④e rest: smoke.qc_repr.pass = false → 거부 · 발사 0'        "rest_ng '$CE/qc.json' && grep -q '✗ smoke.qc_repr.pass' <<<\"\$RO\""
 chk 'HL④f rest: 깨진 JSON · true 가 아닌 참값 (complete: 1) 도 거부 · 발사 0' \
     "rest_ng '$CE/garbage.json' && rest_ng '$CE/truthy.json' && grep -q '✗ smoke.complete' <<<\"\$RO\""
-chk 'HL④g rest: 첫 시드 봉인보다 오래된 증서 (다른 발사의 것) 는 거부 · 발사 0' "rest_ng '$CE/old.json' && grep -q '✗ 증서 시각' <<<\"\$RO\""
+chk 'HL④g ★ rest: 다른 (옛) 발사 봉인을 본 증서는 거부 · 발사 0 — mtime 이 아니라 봉인 sha256 으로 (HBR4-05)' \
+    "rest_ng '$CE/old.json' && grep -q '✗ 증서가 본 발사 봉인' <<<\"\$RO\""
+chk 'HL④h ★ HBR4-05 재현→수정: 등록과 다른 칸 규약의 증서는 거부 · 발사 0 (foreign_wrong_grid_smoke_gate 의 칸 쪽)' \
+    "rest_ng '$CE/grid.json' && grep -q '✗ 판독 규약' <<<\"\$RO\""
+chk 'HL④i ★ HBR4-05 재현→수정: 다른 폴더의 **실제** 판독 증서 (같은 run 이름 · 같은 봉인 사본) 는 첫 시드 프레임을 다시 해시하면 어긋나 거부 · 발사 0' \
+    "rest_ng '$CE/foreign.json' && grep -q '✗ 판독 프레임' <<<\"\$RO\""
+chk 'HL④j rest: 판독기 sha256 이 지금 리포의 판독기와 다르면 거부 · 발사 0' "rest_ng '$CE/tool.json' && grep -q '✗ 판독기 sha256' <<<\"\$RO\""
+chk 'HL④k rest: 출처 블록이 없는 (옛 판독기) 증서는 거부 · 발사 0' "rest_ng '$CE/noprov.json' && grep -q '✗ provenance.schema' <<<\"\$RO\""
 #  (d) rest = 합격 증서면 나머지 둘
 mkcert "$CE/ok.json" "$B/$LH1/" true '[]' true        # 끝에 / — 판독기는 명령줄 경로를 그대로 적는다
 d1=$(OUT="$B" LMP="$FAKE_LH" MAXJ=8 DECKDIFF="$DD_OK" DD_ARGS="$T/dd_args_d" bash "$LHL" rest "$CE/ok.json" 2>&1); rc_d1=$?
@@ -271,13 +363,14 @@ for n in ('LH_s49979687', 'LH_s67867967'):
 print('OK' if all(ok) else f'NG {ok}')
 PY
 )
-chk 'HL⑤b rest: 둘 다 발사 전 봉인 (stage rest · 증서 sha256) · 덱 비교를 다시 불렀다' "[ \"\$sd\" = OK ] && grep -qx -- '--runs $B --allow B' '$T/dd_args_d'"
+chk 'HL⑤b rest: 둘 다 발사 전 봉인 (stage rest · 증서 sha256) · 덱 비교를 --expect-deck 과 함께 다시 불렀다' \
+    "[ \"\$sd\" = OK ] && grep -qE -- '^--runs $B --allow B --expect-deck .+/in\\.mixer\$' '$T/dd_args_d'"
 k2=$(cat "$B/$LH2/pid" "$B/$LH2/launch_record.json" "$B/$LH3/pid" "$B/$LH3/launch_record.json" | sha256sum)
 d2=$(OUT="$B" LMP="$FAKE_LH" MAXJ=8 DECKDIFF="$DD_OK" bash "$LHL" rest "$CE/ok.json" 2>&1); rc_d2=$?
 chk 'HL⑤c rest 를 다시 불러도 이미 뜬 둘은 다시 안 띄우고 봉인 · pid 를 안 덮는다 (발사 0)' \
     "[ $rc_d2 -eq 0 ] && [ \"\$(cat '$B/$LH2/pid' '$B/$LH2/launch_record.json' '$B/$LH3/pid' '$B/$LH3/launch_record.json' | sha256sum)\" = '$k2' ] && grep -q '발사 0 개' <<<\"\$d2\""
 #  코호트 — 첫 발사 뒤 나머지 덱 · 바이너리가 바뀌면 거부
-CO="$T/hbc"; for n in $LH1 $LH2 $LH3; do mklh "$CO" $n; done
+CO="$T/hbc"; for n in $LH1 $LH2 $LH3 E0_s32452843; do mklh "$CO" $n; done
 OUT="$CO" LMP="$FAKE_LH" MAXJ=8 DECKDIFF="$DD_OK" bash "$LHL" first > /dev/null 2>&1
 mkcert "$CE/ok_c.json" "$CO/$LH1" true '[]' true
 cp "$CO/$LH2/in.mixer" "$T/lh2.bak"; echo '# 첫 발사 뒤에 바뀐 줄' >> "$CO/$LH2/in.mixer"
@@ -294,7 +387,7 @@ sleep 60 & SL4=$!; echo "$SL4" > "$E/L0_s21/pid"
 e1=$(OUT="$E" LMP="$FAKE_LH" MAXJ=1 DECKDIFF="$DD_OK" timeout 5 bash "$LHL" first 2>&1); rc_e1=$?
 chk 'HL⑦ ★ 전역 상한: 다른 런 하나가 살아 MAXJ=1 이 차 있으면 first 는 기다린다 (발사 0 · 봉인은 슬롯이 난 뒤)' \
     "[ $rc_e1 -eq 124 ] && ! [ -e '$E/$LH1/pid' ] && ! [ -e '$E/$LH1/launch_record.json' ] && grep -q '동시 상한 대기' <<<\"\$e1\""
-E2="$T/hbe2"; for n in $LH1 $LH2 $LH3 L0_s22; do mklh "$E2" $n; done
+E2="$T/hbe2"; for n in $LH1 $LH2 $LH3 L0_s22 E0_s32452843; do mklh "$E2" $n; done
 OUT="$E2" LMP="$FAKE_LH" MAXJ=8 DECKDIFF="$DD_OK" bash "$LHL" first > /dev/null 2>&1
 echo "$SL4" > "$E2/L0_s22/pid"; mkcert "$CE/ok_e.json" "$E2/$LH1" true '[]' true
 e2=$(OUT="$E2" LMP="$FAKE_LH" MAXJ=3 DECKDIFF="$DD_OK" timeout 8 bash "$LHL" rest "$CE/ok_e.json" 2>&1); rc_e2=$?

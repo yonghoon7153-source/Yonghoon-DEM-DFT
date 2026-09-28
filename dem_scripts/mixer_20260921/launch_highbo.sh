@@ -9,7 +9,8 @@
 #
 # 사용 (리포 루트에서):
 #   ① bash dem_scripts/mixer_20260921/launch_highbo.sh first
-#        관문: 덱 비교 (`python3 scripts/mixer_deck_diff.py --runs <OUT> --allow B` 가 0 으로 끝남) · LH 세 시드 모두 log.lmp · pid 없음
+#        관문: 덱 비교 (`python3 scripts/mixer_deck_diff.py --runs <OUT> --allow B --expect-deck <기대 LH 덱>` 가 0 으로 끝남 —
+#              기대 덱 = 비교기 모듈의 expected_deck('LH', 32452843), 생성기 CLI 와 바이트 동일 · HBR4-06) · LH 세 시드 모두 log.lmp · pid 없음
 #        → 슬롯 (전 런 합산 live < MAXJ) → 봉인 <OUT>/LH_s32452843/launch_record.json → LH_s32452843 **하나만** 발사하고 끝난다
 #   ② bin 0 (첫 완전 바퀴) 이 끝나면 스모크 증서:
 #        python3 scripts/measure_mixing_index.py <OUT>/LH_s32452843 --ref <OUT>/E0_s32452843 --r-container 0.013138 --axis x … --json <smoke.json>
@@ -17,7 +18,9 @@
 #   ③ bash dem_scripts/mixer_20260921/launch_highbo.sh rest <smoke.json>
 #        관문: 첫 시드가 ① 로 봉인 · 발사됨 · 증서 (JSON 목록의 첫 원소) `run` = LH_s32452843 · `smoke.complete` = true ·
 #        `smoke.tech_smoke` = [] · `smoke.qc_repr.pass` = true (JSON true 만 — 1 · "true" 는 거부) · 증서가 첫 봉인보다 나중 ·
-#        코호트 (나머지 둘의 in.mixer · STL · 바이너리 sha256 = 첫 봉인 때) · 덱 비교 재통과
+#        코호트 (나머지 둘의 in.mixer · STL · 바이너리 sha256 = 첫 봉인 때) · 덱 비교 재통과 ·
+#        ★ 증서 출처 (HBR4-05): 판독 규약 = 등록 (16×16×4 · n_min 20 · x · r 0.013138) · 판독기 sha256 = 지금 리포 · run = 첫 시드 ·
+#          덱 = 첫 봉인 때 · 증서가 본 발사 봉인 sha256 = 지금 봉인 · 판독 프레임 · E0 기준 프레임을 **이 폴더에서 다시 해시** (mtime 은 참고)
 #        → 하나라도 틀리면 **발사 0** · 0 이 아닌 종료.  통과하면 런마다 슬롯 → 봉인 → 발사 (LH_s49979687 · LH_s67867967)
 #   환경변수: OUT (기본 dem_scripts/mixer_20260921/runs) · LMP (기본 lmp_serial) · MAXJ (기본 nproc — **전 런** 합산 상한)
 #            DECKDIFF (덱 비교기 경로 — 기본 scripts/mixer_deck_diff.py, python3 로 부른다 · 시험은 대역을 꽂는다)
@@ -35,6 +38,8 @@ OUT="${OUT:-$HERE/runs}"
 LMP="${LMP:-lmp_serial}"; MAXJ="${MAXJ:-$(nproc)}"
 DECKDIFF="${DECKDIFF:-$ROOT/scripts/mixer_deck_diff.py}"
 FIRST=LH_s32452843; REST=(LH_s49979687 LH_s67867967)     # §8 (D-4) 순서 = 생성기 CAMPAIGN_HIGHBO 순서 (첫 시드 = 캠페인 첫 시드)
+EXPECT_ARM=LH; EXPECT_SEED=32452843                       # 사전등록 §2-2 — 목표 CED 덱 (seed 는 CED 와 무관 — 등록 명령 그대로)
+EXPECT_DECK=""; EXP_DIR=""
 
 usage() {
   cat <<EOF
@@ -59,9 +64,23 @@ wait_slot() {  # 전 런 합산 live < MAXJ 가 될 때까지 (run_all.sh 와 �
   done
 }
 
-deckdiff() {  # 관문 — 실행 덱 LC_s* → LH_s* 허용 diff B (사전등록 §2-2 · Codex HB-03)
-  echo "── 관문: 덱 비교 — python3 $DECKDIFF --runs $OUT --allow B"
-  python3 "$DECKDIFF" --runs "$OUT" --allow B; local rc=$?
+deckdiff() {  # 관문 — 실행 덱 LC_s* → LH_s* 허용 diff B **+ 목표 CED** (사전등록 §2-2 · Codex HB-03 · 4 차 HBR4-06)
+  #  ★ HBR4-06 — 옛 판은 `--runs … --allow B` 만 불렀다 = "어디를 바꿀 수 있나" 만 보고 "얼마로 바꾸기로 했나" 는 안 봤다 (LH 허용
+  #    다섯 CED 를 전부 두 배로 한 실제 생성 덱이 3/3 PASS · rc 0).  이제 등록된 기대 덱을 **이 리포의 비교기 모듈**로 만들어
+  #    (expected_deck — 생성기 CLI 와 바이트 동일, 비교기 셀프테스트 ㉒) `--expect-deck` 로 넘기고 발사 봉인에 그 sha256 을 적는다.
+  if [ -z "$EXPECT_DECK" ]; then
+    EXP_DIR=$(mktemp -d) || { echo "⛔ 임시 폴더를 못 만든다 — 발사 0"; return 1; }
+    trap 'rm -rf "$EXP_DIR"' EXIT
+    python3 - "$ROOT/scripts" "$EXPECT_ARM" "$EXPECT_SEED" > "$EXP_DIR/in.mixer" <<'PY' || { echo "⛔ 기대 덱 생성 실패 — 발사 0"; return 1; }
+import sys
+sys.path.insert(0, sys.argv[1])
+import mixer_deck_diff as dd
+sys.stdout.write(dd.expected_deck(sys.argv[2], int(sys.argv[3])))
+PY
+    EXPECT_DECK="$EXP_DIR/in.mixer"
+  fi
+  echo "── 관문: 덱 비교 — python3 $DECKDIFF --runs $OUT --allow B --expect-deck <기대 $EXPECT_ARM s$EXPECT_SEED 덱>"
+  python3 "$DECKDIFF" --runs "$OUT" --allow B --expect-deck "$EXPECT_DECK"; local rc=$?
   [ "$rc" -eq 0 ] || { echo "⛔ 덱 비교 관문 실패 (종료 코드 $rc) — 발사 0"; return 1; }
 }
 
@@ -71,10 +90,11 @@ seal() {  # seal <런> <first|rest> [증서] — 발사 직전 봉인 <OUT>/<런
   head=$(git -C "$ROOT" rev-parse HEAD 2>/dev/null) || head=no-git
   #  fresh 인데 봉인이 있다 = 발사되지 않은 옛 봉인 — 지우지 않고 옆으로
   if [ -e "$d/launch_record.json" ]; then mv "$d/launch_record.json" "$d/launch_record.unlaunched.$(stamp).json" || return 1; fi
-  python3 - "$d" "$stage" "$LMP" "$lp" "$head" "$(nproc)" "$MAXJ" "$(live)" "$DECKDIFF" "$OUT" "$cert" "$FIRST" "${REST[@]}" <<'PY'
+  python3 - "$d" "$stage" "$LMP" "$lp" "$head" "$(nproc)" "$MAXJ" "$(live)" "$DECKDIFF" "$OUT" "$EXPECT_DECK" "$EXPECT_ARM" \
+      "$EXPECT_SEED" "$cert" "$FIRST" "${REST[@]}" <<'PY'
 import hashlib, json, os, platform, socket, sys, time
 from datetime import datetime, timezone
-d, stage, lmp, lmp_path, head, nproc, maxj, live, dd, out, cert, first, *rest = sys.argv[1:]
+d, stage, lmp, lmp_path, head, nproc, maxj, live, dd, out, exp, earm, eseed, cert, first, *rest = sys.argv[1:]
 FILES = ('in.mixer', 'Drum.stl', 'Front.stl', 'Back.stl')
 
 
@@ -97,7 +117,8 @@ rec = {
     'lmp': lmp, 'lmp_path': lmp_path, 'lmp_realpath': os.path.realpath(lmp_path), 'lmp_sha256': sha(lmp_path),
     'sha256': {f: sha(os.path.join(d, f)) for f in FILES},
     'git_head': head,
-    'gate_deckdiff': {'script': os.path.realpath(dd), 'script_sha256': sha(dd), 'argv': ['--runs', out, '--allow', 'B'], 'rc': 0},
+    'gate_deckdiff': {'script': os.path.realpath(dd), 'script_sha256': sha(dd), 'argv': ['--runs', out, '--allow', 'B', '--expect-deck', exp],
+                      'expect_deck_sha256': sha(exp), 'expect_deck_source': f'mixer_deck_diff.expected_deck({earm!r}, {int(eseed)})', 'rc': 0},
 }
 if stage == 'first':      # 코호트 — rest 가 '첫 시드가 스모크를 받은 그 덱 · STL' 인지 대조한다 (바이너리는 lmp_sha256)
     rec['cohort'] = {n: {f: sha(os.path.join(out, n, f)) for f in FILES} for n in [first] + rest}
@@ -152,9 +173,9 @@ cmd_rest() {
   fi
   lp=$(command -v "$LMP") || { echo "⛔ $LMP 없음 — LMP=<실행파일>.  발사 0"; return 1; }
   #  관문 1 — 스모크 증서 · 관문 2 — 코호트 (표준 라이브러리 python3 만)
-  python3 - "$cert" "$OUT" "$FIRST" "$lp" "${REST[@]}" <<'PY' || { echo "⛔ 증서 · 코호트 관문 불합격 — 나머지 둘 발사 0"; return 1; }
+  python3 - "$cert" "$OUT" "$FIRST" "$lp" "$ROOT" "${REST[@]}" <<'PY' || { echo "⛔ 증서 · 코호트 관문 불합격 — 나머지 둘 발사 0"; return 1; }
 import hashlib, json, os, sys
-cert, out, first, lmp_path, *rest = sys.argv[1:]
+cert, out, first, lmp_path, root, *rest = sys.argv[1:]
 FILES = ('in.mixer', 'Drum.stl', 'Front.stl', 'Back.stl')
 bad = 0
 
@@ -213,8 +234,53 @@ except (OSError, ValueError) as e_:
     say(False, f'첫 시드 봉인을 읽을 수 없다 ({e_})')
     sys.exit(1)
 say(fr.get('stage') == 'first' and fr.get('run') == first, f'첫 시드 봉인 = {first} · first 단계')
-say(os.stat(cert).st_mtime_ns >= os.stat(fs).st_mtime_ns,
-    '증서 시각 — 첫 시드 봉인 뒤에 만들어졌다 (다른 발사 · 옛 시험의 증서가 아니다)')
+#  ★ 증서 출처 (2026-09-28, Codex 4 차 HBR4-05) — 옛 관문은 run 을 basename 으로만 · "다른 발사가 아니다" 를 mtime 으로 봤다 ⇒
+#    다른 폴더 · 2×2×1 칸의 **실제** 판독 결과를 봉인 뒤에 복사하면 통과했다.  이제 불변 식별자로 잇는다 (mtime 은 참고로만).
+print('── 관문: 증서 출처 — 판독 규약 · 판독기 · 덱 · 발사 봉인 · 프레임 (이 폴더에서 다시 해시)')
+REG = {'cells': 16, 'x_cells': 4, 'n_min': 20, 'axis': 'x', 'r_container': 0.013138}      # 사전등록 §2-3 · §8 ③
+pv = e.get('provenance') if isinstance(e.get('provenance'), dict) else {}
+say(pv.get('schema') == 'mixing_provenance/1', f'provenance.schema = {show(pv.get("schema"))} (출처 블록이 없는 판독기의 증서는 받지 않는다)')
+say(pv.get('args') == REG, f'판독 규약 {show(pv.get("args"))} = 등록 {show(REG)}')
+rdr = os.path.join(root, 'scripts', 'measure_mixing_index.py')
+say(os.path.isfile(rdr) and pv.get('tool_sha256') == sha(rdr), f'판독기 sha256 {str(pv.get("tool_sha256"))[:12]}… = 지금 리포의 판독기')
+ru = pv.get('run') if isinstance(pv.get('run'), dict) else {}
+say(ru.get('name') == first and ru.get('deck_sha256') == (fr.get('sha256') or {}).get('in.mixer'),
+    f'출처 run = {show(ru.get("name"))} · 덱 sha256 = 첫 봉인 때')
+say(ru.get('launch_record_sha256') == sha(fs), '증서가 본 발사 봉인 sha256 = 지금 첫 시드 봉인 (다른 발사 · 옛 봉인 때의 증서가 아니다)')
+
+
+def refiles(post, b):
+    fl = b.get('files') if isinstance(b, dict) else None
+    if not isinstance(fl, list) or not fl:
+        return ['프레임 목록 없음']
+    bad = []
+    for it in fl:
+        try:
+            st_, name, h = it
+            p_ = os.path.join(post, os.path.basename(str(name)))
+            if not os.path.isfile(p_) or sha(p_) != h:
+                bad.append(f'{st_}:{name}')
+        except (TypeError, ValueError):
+            bad.append(str(it)[:40])
+    try:
+        dg = hashlib.sha256(''.join(f'{int(a)}:{b_}:{c}\n' for a, b_, c in sorted(fl, key=lambda t: int(t[0]))).encode()).hexdigest()
+    except (TypeError, ValueError):
+        dg = None
+    if dg != b.get('sha256'):
+        bad.append('묶음 sha256')
+    return bad
+
+
+b1 = refiles(os.path.join(out, first, 'post'), ru.get('frames'))
+say(not b1, '판독 프레임 = 첫 시드 post/ 의 그 파일 (다시 해시)' + (f' — 어긋남 {b1[:3]}' if b1 else ''))
+rf = pv.get('ref') if isinstance(pv.get('ref'), dict) else {}
+e0 = 'E0_s' + first.rsplit('_s', 1)[1]
+e0d = os.path.join(out, e0, 'in.mixer')
+b2 = refiles(os.path.join(out, e0, 'post'), rf.get('frames'))
+say(rf.get('name') == e0 and os.path.isfile(e0d) and rf.get('deck_sha256') == sha(e0d) and not b2,
+    f'기준 = {e0} · 덱 · 프레임 (다시 해시)' + (f' — 어긋남 {b2[:3]}' if b2 else ''))
+print(f'  · (참고) 증서 mtime {"≥" if os.stat(cert).st_mtime_ns >= os.stat(fs).st_mtime_ns else "<"} 첫 시드 봉인 mtime — 판정에 안 쓴다 '
+      '(복사 · 재판독이면 mtime 은 새로워진다 · HBR4-05)')
 print('── 관문: 코호트 — 첫 시드 봉인 (first) 때의 덱 · STL · 바이너리 그대로인가')
 co = fr.get('cohort') if isinstance(fr.get('cohort'), dict) else {}
 for n in rest:

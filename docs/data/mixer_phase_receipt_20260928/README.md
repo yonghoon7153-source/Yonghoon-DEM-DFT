@@ -79,3 +79,12 @@ sha256  520ee5d0135b0090dce2a541bdbb6808d79b25d398c90c4b3bdaf205e228e9e0
 | 운동 | `period` 0.799562 s · `dt` 7.055 × 10⁻⁷ · 축 x · 원점 (0,0,0) |
 | step | `rotation_start_step` 385,337 · `run_total` 9,452,094 · `n1` 5,802,624 · `dump_every` 45,333 |
 | `sealed_at` | 2026-09-28T01:44:32.737758+09:00 · host DESKTOP-IK8J81H |
+
+## ⛔ 2026-09-28 낮 — 이 v1 영수증은 새 소비자 (v2) 가 **거부한다** (Codex 4 차 HBR4-01 · 02 · 03)
+
+- 생산자 (`scripts/mixer_restart_phase_test.py`) 가 v2 로 바뀌었다: B 에도 유한성 · 형상 검사 · 봉인 목록과 덤프 해시 목록을 기대 집합과 **정확히** · 내보내는 수 전부 유한 ·
+  운동 시계 · 회전 시작 · 위치 경계 `pos_bound_m` (형상 잔차 + 출력 반올림 → 거리) · 각 경계 = 실측 + 해상도 (합).
+- 소비자 (`check_contact_validity.load_phase_receipt`) 는 `restart_phase_v2` 만 받는다 — 이 파일 (`restart_phase_v1`) 은 스키마에서 거부된다.
+- ⇒ **WSL `~/phase_v1` 에서 고친 도구로 `analyze` 만 다시** 돌려 v2 를 만든다 (A/B LIGGGHTS 실행 · 봉인 · 덤프는 그대로 쓴다 — 재실행 불요):
+  `python3 scripts/mixer_restart_phase_test.py analyze ~/phase_v1 --out docs/data/mixer_phase_receipt_20260928/receipt_v2.json`
+- 이 v1 파일은 **측정 기록**으로 남긴다 (바이트 동일 · 지우지 않는다).  위의 `ab_max_vertex_diff_m = 0.0` 은 여전히 A/B 동일의 증거가 아니다 (HBR4-01).
