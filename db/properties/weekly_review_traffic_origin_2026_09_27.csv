@@ -1,0 +1,23 @@
+"# Review letters with prompt or reply dated 2026-09-21..27. verdict_class: Codex verdicts from db/pipelines/adhesion_pipeline.json reviews[].verdict; li2s = reply (rules/judgments, not a GO vote); sent = reply pending."
+# P0/P1 (V5 rounds only) = count of '### P0-n' / '### P1-n' headings in the reply (section heading 'P1 하나/한 묶음' counts 1). sources: kb/reviews/INDEX.md ; db/pipelines/adhesion_pipeline.json ; kb/reviews/codex_C[E-K]_reply_*.md
+letter,channel,date,day_index,verdict_class,P0_count,P1_count,reply_file
+BS,li2s,2026-09-22,1,reply,,,li2s1a_BS_reply_li2s_relax_provenance_2026_09_22.md
+BT,li2s,2026-09-22,1,reply,,,li2s1a_BT_reply_neff_window_bootstrap_2026_09_22.md
+BU,li2s,2026-09-22,1,reply,,,li2s1a_BU_reply_variance_ratio_rule_2026_09_22.md
+BV,wad,2026-09-23,2,nogo,,,codex_BV_reply_wad_lpscl_ag_c_vgcf_2026_09_23.md
+BW,wad,2026-09-23,2,cond,,,codex_BW_reply_wad_validation_without_cluster_2026_09_23.md
+Fable,wad,2026-09-23,2,nogo,,,internal_review_wad_agc_fable_2026_09_23.md
+BX,wad,2026-09-25,4,cond,,,codex_BX_reply_wad_sese_4L_alarm_2026_09_25.md
+BY,wad,2026-09-25,4,nogo,,,codex_BY_reply_wad_aprime_pilot_prereg_2026_09_25.md
+BZ,wad,2026-09-25,4,nogo,,,codex_BZ_reply_wad_aprime_pilot_prereg_v2_2026_09_25.md
+CA,wad,2026-09-25,4,nogo,,,codex_CA_reply_wad_aprime_pilot_prereg_v3_2026_09_25.md
+CB,wad,2026-09-25,4,cond,,,codex_CB_reply_wad_aprime_pilot_prereg_v4_2026_09_25.md
+CC,li2s,2026-09-26,5,reply,,,li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md
+CD,li2s,2026-09-27,6,reply,,,li2s1a_CD_reply_li2s_cc_report_2026_09_27.md
+CE,v5,2026-09-27,6,nogo,4,5,codex_CE_reply_wad_aprime_v5_vasp_outsourcing_2026_09_27.md
+CF,v5,2026-09-27,6,nogo,3,3,codex_CF_reply_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md
+CG,v5,2026-09-27,6,nogo,0,3,codex_CG_reply_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md
+CH,li2s,2026-09-27,6,sent,,,
+CI,v5,2026-09-27,6,nogo,0,1,codex_CI_reply_wad_aprime_v5_vasp_outsourcing_v4_2026_09_27.md
+CJ,v5,2026-09-27,6,nogo,0,1,codex_CJ_reply_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md
+CK,v5,2026-09-27,6,go,0,0,codex_CK_reply_wad_aprime_v5_vasp_outsourcing_v6_2026_09_27.md

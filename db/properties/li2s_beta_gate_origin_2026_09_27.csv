@@ -1,0 +1,5 @@
+"# li2s glass pilot runs (seed1): MSD exponent beta (MTO) vs card gate C2 0.8-1.2. sigma = block-bootstrap ladder end (lower bound). Internal diagnostic, citable false. source: db/properties/lpscl_smallcell_glass_md_cc_followup_2026_09_26.json ; db/properties/lpscl_smallcell_glass_md_estimand_2026_09_21.json"
+run,T_K,prod_ps,beta_MTO,sigma_lower_bound,d_over_sigma_vs_gate_lo,gate_lo,gate_hi
+P-2_550K_MTO,550,400,0.8562,0.01656,3.4,0.8,1.2
+P-1_400K_400ps_MTO,400,400,0.5624,0.02542,-9.4,0.8,1.2
+pilot800_400K_MTO,400,800,0.4195,0.02459,-15.5,0.8,1.2

@@ -1,0 +1,17 @@
+"# li2s small-cell glass melt-quench (120 atoms): saved frames (1 ps apart) with >= 1 P not 4-coordinated (P-S distance cut 2.6 A). Internal diagnostic, citable false. source: db/raw/lpscl_smallcell_glass_cc_2026_09_26/p_coord_5seeds_cd_2026_09_27.json"
+seed,stage,frames_with_P_not4,frames_total,percent
+seed1,melt_hold,1,102,0.98
+seed1,quench,0,897,0.00
+seed1,final_hold,0,52,0.00
+seed2,melt_hold,5,102,4.90
+seed2,quench,2,897,0.22
+seed2,final_hold,0,52,0.00
+seed3,melt_hold,7,102,6.86
+seed3,quench,185,897,20.62
+seed3,final_hold,0,52,0.00
+seed4,melt_hold,87,102,85.29
+seed4,quench,17,897,1.90
+seed4,final_hold,0,52,0.00
+seed5,melt_hold,1,102,0.98
+seed5,quench,808,897,90.08
+seed5,final_hold,52,52,100.00
