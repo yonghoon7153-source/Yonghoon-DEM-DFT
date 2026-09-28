@@ -813,6 +813,12 @@ _RESTART_V6_KEYS = frozenset({"p", "J", "i", "source", "warm", "converged", "n_e
                               "termination_status", "candidate_id", "bank_index"})
 
 
+#: ★ 82차 전 자체 점검 F1 — v6 에만 있는 restart 행 키 · fits 열. sig 5 선언 아래 나타나면 선언-행 충돌이다.
+_V6_ONLY_ROW_KEYS = frozenset({"candidate_id", "bank_index"})
+_V6_FITS_COLS = frozenset({"record_generation", "pair_group_id", "bank_id", "warm_provider_objective",
+                           "candidate_map_json"})
+
+
 def _restart_ok_v6(e) -> bool:
     """v6 restart 원소 하나 — **정확히 10 키** · 타입 · source 별 bank_index 규칙 (★ 81차 G81-N2).
 
@@ -1514,7 +1520,190 @@ def validate_curves_provenance(curves_dir, repo_root=None) -> dict:
 
 _STAGE3_SPEC_KEYS = ("planned_id", "planned_envelope", "pairing_design_sha256", "parameter_order_sha256",
                      "bank_version", "exact_bounds_sha256", "candidate_mode", "budget_by_objective",
-                     "warm_provider_map", "provider_edges_sha256", "roster_sha256", "arm", "stage")
+                     "warm_provider_map", "provider_edges_sha256", "roster_sha256", "arm", "stage",
+                     # ★ 82차 전 자체 점검 F2 — validator 가 후보를 다시 유도하려면 설계 본체가 run_dir 안에 있어야 한다
+                     "pairing_design")
+
+
+def realized_from_fits(fits_df, *, planned_env: dict, objective_order: list) -> dict:
+    """★ 82차 전 자체 점검 F3 — 실현 count 를 **fits 행에서** 센다.
+
+    writer(`src.fitting.write_execution_record`)와 validator(`_stage3_checks` 의 `실현_재계산`)가 **같은 정의**를 쓴다 —
+    두 곳에 따로 구현하면 약한 쪽이 실효 규칙이 된다. 예외로 실패한 후보는 공정 모드가 실행을 멈추므로(F86) 완주한
+    산출의 failed 는 `restart_errors_json` 에서만 온다. 계획 count 는 조건당, 실현은 다리 전체 합이다.
+    """
+    pc = planned_env["planned_counts"]
+    n_plan = int(planned_env["roster"]["n_obs"])
+    has_err = "restart_errors_json" in fits_df.columns
+    has_wp = "warm_provider_objective" in fits_df.columns
+    by_obj: dict = {}
+    consumed: dict = {}
+    for obj in objective_order:
+        sub = fits_df[fits_df["objective"] == obj]
+        returned = failed = prefix = 0
+        cs = {"base_init": 0, "warm": 0, "random": 0}
+        for _, row in sub.iterrows():
+            rs = json.loads(row["restarts_json"])
+            ej = row["restart_errors_json"] if has_err else None
+            errs = json.loads(ej) if isinstance(ej, str) else []
+            returned += len(rs)
+            failed += len(errs)
+            for e in rs:
+                cs[e["source"]] += 1
+                if e["source"] == "random":
+                    prefix = max(prefix, int(e["bank_index"]) + 1)
+            wp = row["warm_provider_objective"] if has_wp else None
+            if isinstance(wp, str) and wp:
+                consumed[(obj, wp)] = consumed.get((obj, wp), 0) + 1
+        attempted = returned + failed
+        total = sum(pc[obj].values()) * n_plan
+        by_obj[obj] = {"attempted": attempted, "returned": returned, "failed": failed,
+                       "not_attempted": max(0, total - attempted), "counts_by_source": cs,
+                       "random_bank_prefix_len": prefix}
+    return {"by_objective": by_obj,
+            "n_obs_observed": int(fits_df["cond_id"].nunique()) if len(fits_df) else 0,
+            "provider_consumed": [{"consumer_objective": c, "provider_objective": p, "n_conditions": n}
+                                  for (c, p), n in sorted(consumed.items())]}
+
+
+def _stage3_rederive(run_dir, spec0: dict, s3: dict, env: dict, ents: list, fits_df) -> tuple:
+    """★ 82차 전 자체 점검 F2·F12 — 후보를 **다시 유도**한다 (81차 §6 "64hex 존재만으로 통과 금지").
+
+    run_spec 의 pairing design(digest 대조) · run_spec.bounds(exact_bounds 대조) · 행의 truth 좌표 → pair_group_id → 봉인
+    bank(generator·version·length·n_params) → bank_id · candidate_plan(mode·B·provider) → 후보 구성 · base = bounds.init ·
+    random = lb + u·(ub−lb) · warm = 봉인 provider map 사본(`_inputs/provider_maps/`) → x0 digest · candidate_id ·
+    restart 행 대조. 반환 `(재유도 문제, 예산 미완 (조건/objective))` — 예산은 objective 별 계획 길이로 본다.
+    """
+    from types import SimpleNamespace
+    import numpy as np
+    from src.fitting import PARAM_NAMES, provider_x0
+    from tools import design_wire as DW
+    bad: list = []
+    budget_bad: list = []
+    design = s3.get("pairing_design")
+    try:
+        d_sha = DW.pairing_design_sha256(design)
+        pos = DW.parameter_order_sha256(design["parameter_order"])
+        places = int(design["coordinate"]["decimal_places"])
+    except Exception as e:  # noqa: BLE001 — 설계를 못 읽으면 재유도가 불가능하다 (그 자체가 실패)
+        return [f"run_spec.stage3.pairing_design 을 읽지 못한다: {type(e).__name__}: {e}"], budget_bad
+    if not (d_sha == s3["pairing_design_sha256"] == env["pairing_design_sha256"]):
+        bad.append("pairing_design 의 digest 가 run_spec·계획과 다르다")
+    if pos != env["parameter_order_sha256"] or list(design["parameter_order"]) != list(PARAM_NAMES):
+        bad.append(f"parameter_order 가 계획 digest 또는 optimizer 벡터 {list(PARAM_NAMES)} 와 다르다")
+    b = spec0.get("bounds") or {}
+    try:
+        lb = np.asarray(b["lb"], float)
+        ub = np.asarray(b["ub"], float)
+        init = np.asarray(b["init"], float)
+    except Exception as e:  # noqa: BLE001
+        return bad + [f"run_spec.bounds 를 읽지 못한다: {type(e).__name__}: {e}"], budget_bad
+    eb = DW.exact_bounds_sha256(lb, ub)
+    if not (eb == s3["exact_bounds_sha256"] == env["bank"]["exact_bounds_sha256"]):
+        bad.append("run_spec.bounds 에서 다시 잰 exact_bounds_sha256 가 run_spec·계획과 다르다")
+    if bad:
+        return bad, budget_bad
+    st = env["stages"][0]
+    bank_cfg = env["bank"]
+    edges = {e["consumer_objective"]: e for e in env["provider_edges"]}
+    maps: dict = {}
+    for obj, prov in st["warm_provider_map"].items():
+        if prov is None:
+            continue
+        mp = Path(run_dir) / "_inputs" / "provider_maps" / f"{obj}.solution_map.json"
+        if obj not in edges or not mp.is_file() or \
+                hashlib.sha256(mp.read_bytes()).hexdigest() != edges[obj]["solution_map_sha256"]:
+            bad.append(f"{obj}: 봉인한 provider map 사본이 없거나 계획 edge 의 solution_map_sha256 와 다르다")
+            continue
+        maps[obj] = mp
+    by_key: dict = {}
+    for m in ents:
+        by_key.setdefault((str(m.get("cond_id")), str(m.get("objective"))), []).append(m)
+    banks: dict = {}
+    seen: set = set()
+    for _, row in fits_df.iterrows():
+        cid, obj = str(row["cond_id"]), str(row["objective"])
+        seen.add((cid, obj))
+        where = f"{cid[:10]}/{obj}"
+        try:
+            coords = DW.coords_from_condition(SimpleNamespace(
+                lli=float(row["lli"]), lam_pe=float(row["lam_pe"]), lam_ne=float(row["lam_ne"]),
+                lam_pe_type=str(row["lam_pe_type"]), lam_ne_type=str(row["lam_ne_type"])), places)
+            pg = DW.pair_group_id(d_sha, coords, pos)
+        except Exception as e:  # noqa: BLE001
+            bad.append(f"{where}: 좌표에서 pair_group_id 를 다시 잴 수 없다: {type(e).__name__}: {e}")
+            continue
+        if pg != row.get("pair_group_id"):
+            bad.append(f"{where}: pair_group_id 가 좌표·설계에서 다시 잰 값과 다르다")
+            continue
+        if pg not in banks:
+            bank = DW.unit_cube_bank(pg, bank_cfg["version"], bank_cfg["length"], bank_cfg["n_params"])
+            bsha = DW.unit_cube_bank_sha256(bank)
+            banks[pg] = (bank, bsha, DW.bank_id(pg, bank_cfg["version"], bsha))
+        bank, bsha, bid = banks[pg]
+        if bid != row.get("bank_id"):
+            bad.append(f"{where}: bank_id 가 다시 만든 봉인 bank 와 다르다")
+            continue
+        if obj not in st["warm_provider_map"]:
+            bad.append(f"{where}: 계획에 없는 objective")
+            continue
+        prov = st["warm_provider_map"][obj]
+        wp = row.get("warm_provider_objective")
+        wp = wp if isinstance(wp, str) and wp else None
+        if wp != prov:
+            bad.append(f"{where}: warm_provider_objective {wp!r} ≠ 계획 {prov!r}")
+        plan = DW.candidate_plan(st["candidate_mode"], st["budget_by_objective"][obj], prov is not None)
+        es = sorted(by_key.get((cid, obj), []), key=lambda m: (m.get("i") if isinstance(m.get("i"), int) else -1))
+        if [(m.get("i"), m.get("source"), m.get("bank_index")) for m in es] != \
+                [(k, s, idx) for k, (s, idx) in enumerate(plan)]:
+            bad.append(f"{where}: 후보 구성(i·source·bank_index)이 계획 candidate_plan 과 다르다")
+            continue
+        try:
+            rows_r = json.loads(row["restarts_json"])
+        except (TypeError, ValueError):
+            bad.append(f"{where}: restarts_json 을 읽지 못한다")
+            continue
+        if sorted(e.get("i") for e in rows_r if isinstance(e, dict)) != list(range(len(plan))):
+            budget_bad.append(where)
+        by_i = {e.get("i"): e for e in rows_r if isinstance(e, dict)}
+        if bool(row.get("warm_started")) != any(s == "warm" for s, _ in plan):
+            bad.append(f"{where}: warm_started 가 후보 구성과 다르다")
+        for m in es:
+            src, idx = m["source"], m["bank_index"]
+            if src == "base_init":
+                x0 = init
+                payload = {"base_coord_sha256": DW.x0_sha256(x0)}
+            elif src == "random":
+                x0 = DW.map_unit_to_bounds(bank[idx], lb, ub)
+                payload = {"bank_index": int(idx), "unit_cube_bytes_sha256": DW.unit_cube_bytes_sha256(bank[idx])}
+            else:
+                if obj not in maps:
+                    bad.append(f"{where}: warm 후보인데 봉인 provider map 사본이 없다")
+                    continue
+                try:
+                    x0, _ = provider_x0(maps[obj], edge=edges[obj], cond_id=cid, lb=lb, ub=ub,
+                                        parameter_order=list(design["parameter_order"]))
+                except ValueError as e:
+                    bad.append(f"{where}: warm x0 를 다시 유도하지 못한다: {e}")
+                    continue
+                payload = {k: edges[obj][k] for k in ("provider_objective", "provider_artifact_sha256",
+                                                        "solution_map_sha256")}
+            if DW.x0_sha256(x0) != m.get("x0_sha256"):
+                bad.append(f"{where}/i{m['i']}: x0 digest 가 다시 만든 {src} x0 와 다르다")
+                continue
+            want = DW.candidate_id(eb, src, payload, design=design, coords=coords, unit_cube_bank_sha256=bsha)
+            if want != m.get("candidate_id"):
+                bad.append(f"{where}/i{m['i']}: candidate_id 가 다시 유도한 값과 다르다")
+                continue
+            r = by_i.get(m["i"])
+            if not isinstance(r, dict) or \
+                    (r.get("source"), r.get("candidate_id"), r.get("bank_index"), r.get("warm")) != \
+                    (src, m.get("candidate_id"), idx, src == "warm"):
+                bad.append(f"{where}/i{m['i']}: restart 행이 후보 map 과 다르다")
+    extra = sorted(set(by_key) - seen)
+    if extra:
+        bad.append(f"후보 map 에 fits 행이 없는 (조건, objective) 가 있다: {extra[:2]}")
+    return bad, budget_bad
 
 
 def _stage3_checks(run_dir, spec0: dict) -> dict:
@@ -1555,12 +1744,14 @@ def _stage3_checks(run_dir, spec0: dict) -> dict:
     out["execution_record"] = (not rbad, "execution_record 가 계획과 맞지 않는다: " + "; ".join(rbad[:3]))
     cm_p = run_dir / "candidate_map.json"
     ids_map: set = set()
+    ents: list = []
+    ok_map = False
     try:
         cm = json.loads(cm_p.read_text(encoding="utf-8"))
-        ents = cm.get("entries") if isinstance(cm, dict) else None
-        ok_map = isinstance(ents, list) and cm.get("schema") == "candidate-map/v1" \
+        ents = (cm.get("entries") if isinstance(cm, dict) else None) or []
+        ok_map = isinstance(cm.get("entries"), list) and cm.get("schema") == "candidate-map/v1" \
             and digest(ents) == (rec.get("realized") or {}).get("candidate_map_sha256")
-        ids_map = {m.get("candidate_id") for m in (ents or [])}
+        ids_map = {m.get("candidate_id") for m in ents if isinstance(m, dict)}
     except (ValueError, OSError):
         ok_map = False
     out["candidate_map"] = (bool(ok_map), "candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다")
@@ -1575,6 +1766,41 @@ def _stage3_checks(run_dir, spec0: dict) -> dict:
             ids_rows = set()
     out["candidate_ids_결속"] = (bool(ids_rows) and ids_rows == ids_map,
                                f"fits 행의 candidate_id 집합({len(ids_rows)})이 candidate_map({len(ids_map)})과 다르다")
+    # ★ 82차 전 자체 점검 F2·F3·F12 — 집합 대조만으로는 자기일관 위조(가짜 ID · 가짜 x0 digest · 계획 범위 안의 조작
+    #   count)가 통과한다 (실측 반례: 6 검사 전부 통과). 계획·설계·bounds·봉인 bank·봉인 provider map 사본에서 후보를
+    #   **다시 유도**하고, 실현 count 를 행에서 **다시 센다**. 예산 완주는 objective 별 계획 길이다.
+    fits_df = None
+    if fp.is_file():
+        try:
+            fits_df = pd.read_parquet(fp)
+        except Exception:  # noqa: BLE001 — 읽기 실패는 별도 검사가 보고한다
+            fits_df = None
+    if fits_df is None or not ok_map or not isinstance(ents, list):
+        out["후보_재유도"] = (False, "fits 또는 candidate_map 을 읽지 못해 후보를 다시 유도할 수 없다")
+        out["실현_재계산"] = (False, "fits 또는 candidate_map 을 읽지 못해 실현 count 를 다시 셀 수 없다")
+        out["restart_예산_완주"] = (False, "fits 또는 candidate_map 을 읽지 못했다")
+        return out
+    rd_bad, budget_bad = _stage3_rederive(run_dir, spec0, s3, env, ents, fits_df)
+    out["후보_재유도"] = (not rd_bad, "; ".join(rd_bad[:3]))
+    out["restart_예산_완주"] = (not budget_bad,
+                              f"{len(budget_bad)} (조건/objective) 의 restart index 가 objective 별 계획 길이와 다르다: "
+                              f"{budget_bad[:3]}")
+    rc_bad: list = []
+    try:
+        exp = realized_from_fits(fits_df, planned_env=env, objective_order=list(env["objective_order"]))
+    except Exception as e:  # noqa: BLE001
+        exp = None
+        rc_bad.append(f"fits 행에서 실현 count 를 셀 수 없다: {type(e).__name__}: {e}")
+    rz = (rec.get("realized") or {}) if isinstance(rec, dict) else {}
+    if exp is not None:
+        for k in ("by_objective", "n_obs_observed", "provider_consumed"):
+            if rz.get(k) != exp[k]:
+                rc_bad.append(f"realized.{k} 가 fits 행에서 다시 센 값과 다르다")
+    if rz.get("n_candidates") != len(ents):
+        rc_bad.append(f"realized.n_candidates {rz.get('n_candidates')!r} ≠ candidate_map 항목 {len(ents)}")
+    if rz.get("roster_observed_sha256") != env["roster"]["roster_sha256"]:
+        rc_bad.append("realized.roster_observed_sha256 가 계획 roster 와 다르다")
+    out["실현_재계산"] = (not rc_bad, "; ".join(rc_bad[:3]))
     return out
 
 
@@ -1677,6 +1903,12 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
                              f"sig_version이 {_gen!r}이다 (5 또는 6 필요)")
     if _gen == 6:
         checks.update(_stage3_checks(run_dir, spec0))
+    # ★ 82차 전 자체 점검 F1 — 행 모양을 **선언 문맥에 대조**한다 (81차 N2). sig 5 아래 stage3 블록 · v6 표식 열 · v6 전용
+    #   행 키, sig 6 아래 v6 표식 열 부재 · 다른 세대 행은 선언-행 충돌이다. 옛 `_restart_ok` 는 그대로 두고(넓히지
+    #   않는다) 충돌만 별도 검사로 본다 — 정상 역사 산출에는 이 열·키가 없다.
+    _conf: list = []
+    if _gen == 5 and "stage3" in spec0:
+        _conf.append("sig 5 인데 run_spec.stage3 블록이 있다")
     # ★ F67 — optimizer 정책은 서명에 있기만 하면 안 되고 완전해야 한다.
     _opt = spec0.get("optimizer") or {}
     _need_opt = [k for k in ("method", "adaptive", "n_restarts", "seed_scheme")
@@ -1940,6 +2172,13 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
                     f"중복 {len(_dup)} (예 {_dup[:2]}), 누락 {len(_miss)} "
                     f"(예 {_miss[:2]}), 잉여 {len(_extra)} (예 {_extra[:2]})")
         cols = list(pd.read_parquet(fp).columns)
+        if _gen == 5 and (_V6_FITS_COLS & set(cols)):
+            _conf.append(f"sig 5 인데 v6 표식 열 {sorted(_V6_FITS_COLS & set(cols))}")
+        elif _gen == 6:
+            if _V6_FITS_COLS - set(cols):
+                _conf.append(f"sig 6 인데 v6 표식 열 {sorted(_V6_FITS_COLS - set(cols))} 이 없다")
+            elif not (pd.read_parquet(fp, columns=["record_generation"])["record_generation"] == "v6").all():
+                _conf.append("sig 6 인데 record_generation 이 v6 가 아닌 행이 있다")
         want = [c for c in ("run_sig", "restarts_json") if c in cols]
         need = pd.read_parquet(fp, columns=want) if want else pd.DataFrame()
         has_sig = "run_sig" in need.columns
@@ -1959,6 +2198,7 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
             #   `rs[0]` 만 보면 두 번째 원소부터 source 가 없어도 통과한다.
             #   모든 행 · 모든 원소를 본다.
             n_bad, n_null = 0, 0
+            _v6rows = 0
             for v in need["restarts_json"]:
                 if v is None or (isinstance(v, float) and pd.isna(v)):
                     n_null += 1
@@ -1973,6 +2213,11 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
                 _rok = _restart_ok_v6 if _gen == 6 else _restart_ok
                 if not rs or not all(_rok(e) for e in rs):
                     n_bad += 1
+                if _gen == 5 and isinstance(rs, list) and \
+                        any(isinstance(e, dict) and (_V6_ONLY_ROW_KEYS & set(e)) for e in rs):
+                    _v6rows += 1
+            if _v6rows:
+                _conf.append(f"sig 5 인데 v6 전용 행 키(candidate_id·bank_index)를 가진 행 {_v6rows}")
             _rname = "restart_후보" if _gen == 6 else "restart_출처"
             checks[_rname] = (
                 n_bad == 0 and n_null == 0,
@@ -1985,7 +2230,9 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
             #   **두 목적함수의 탐색 예산이 달라지고**, "fixed5" 라는 이름이
             #   거짓이 된다. paired 진단의 전제가 여기서 무너진다.
             _opt = spec0.get("optimizer") or {}
-            if _opt.get("adaptive") is False:
+            # ★ 82차 전 자체 점검 F12 — sig 6 은 objective 별 예산이라 전역 n_restarts 로 보면 정상 산출을 거부한다.
+            #   sig 6 의 `restart_예산_완주` 는 `_stage3_checks` 가 계획 길이로 낸다.
+            if _opt.get("adaptive") is False and _gen != 6:
                 _n = int(_opt.get("n_restarts") or 0)
                 _want_idx = set(range(_n))
                 _short = 0
@@ -2002,6 +2249,7 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
                     f"{_short}행의 restart index 집합이 {sorted(_want_idx)}와 다르다 "
                     f"— adaptive=False 인데 예산을 못 채웠다 (실패한 restart가 있다)")
 
+    checks["세대_선언_일치"] = (not _conf, "; ".join(_conf[:3]))
     fail = [k for k, (ok, _) in checks.items() if not ok]
     # 통과한 검사에 실패 사유를 같이 실으면 전부 실패한 것처럼 읽힌다.
     return {"ok": not fail,

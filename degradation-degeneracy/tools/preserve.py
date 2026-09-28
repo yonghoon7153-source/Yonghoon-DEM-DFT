@@ -3350,8 +3350,33 @@ def check_execution_record(rec, planned_env) -> list[str]:
         bad.append("realized.n_candidates 가 음이 아닌 정수가 아니다")
     if not _nonneg_int(rz["n_obs_observed"]) or rz["n_obs_observed"] > planned_env["roster"]["n_obs"]:
         bad.append(f"realized.n_obs_observed {rz['n_obs_observed']!r} 가 계획 roster n_obs {planned_env['roster']['n_obs']} 를 넘거나 정수가 아니다")
-    if not isinstance(rz["provider_consumed"], list):
+    # ★ 82차 전 자체 점검 F4 — "목록인가" 만 보면 아무 공급 기록이나 통과한다. **계획 edge** 와 대조한다: 항목은 계획한
+    #   (consumer ← provider) 쌍이어야 하고(중복 없음 · 1 ≤ n ≤ roster n_obs), 계획 edge 의 consumer 를 실제로 시도했다면
+    #   (attempted > 0) 그 쌍이 반드시 있어야 한다 — warm 이 필요한 자리를 no-warm 으로 조용히 바꾸지 않았다는 기록이다.
+    pcons = rz["provider_consumed"]
+    if not isinstance(pcons, list):
         bad.append("realized.provider_consumed 가 목록이 아니다")
+    else:
+        plan_pairs = {(e.get("consumer_objective"), e.get("provider_objective"))
+                      for e in planned_env["provider_edges"] if isinstance(e, dict)}
+        seen_pairs: set = set()
+        for it in pcons:
+            if not isinstance(it, dict) or set(it) != {"consumer_objective", "provider_objective", "n_conditions"}:
+                bad.append(f"provider_consumed 항목 키가 닫혀 있지 않다: {it!r}"[:160])
+                continue
+            pair = (it["consumer_objective"], it["provider_objective"])
+            if pair not in plan_pairs:
+                bad.append(f"provider_consumed {pair} 는 계획 edge 가 아니다")
+            if pair in seen_pairs:
+                bad.append(f"provider_consumed {pair} 가 두 번 있다")
+            seen_pairs.add(pair)
+            if not _pos_int(it["n_conditions"]) or it["n_conditions"] > planned_env["roster"]["n_obs"]:
+                bad.append(f"provider_consumed {pair} 의 n_conditions {it['n_conditions']!r} 가 1..roster n_obs 가 아니다")
+        for pair in sorted(plan_pairs, key=str):
+            r = bo.get(pair[0]) if isinstance(bo, dict) else None
+            att = r.get("attempted") if isinstance(r, dict) else 0
+            if _nonneg_int(att) and att > 0 and pair not in seen_pairs:
+                bad.append(f"계획 edge {pair[0]} ← {pair[1]} 로 {att} 번 시도했는데 provider_consumed 에 없다")
     return bad
 #: 산출 descriptor 의 닫힌 키 집합
 _OUTPUT_KEYS = frozenset({

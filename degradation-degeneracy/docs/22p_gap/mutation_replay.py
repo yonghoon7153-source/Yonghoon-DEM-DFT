@@ -1925,6 +1925,61 @@ MUTANTS = [
      '    if got != edge.get("solution_map_sha256"):\n        raise ValueError(f"solution map 바이트 sha {got[:16]} ≠ edge 의 solution_map_sha256 "\n',
      '    if False:\n        raise ValueError(f"solution map 바이트 sha {got[:16]} ≠ edge 의 solution_map_sha256 "\n',
      "g81_n3_02"),
+    # ── 82차 발송 전 자체 점검 (F1·F2·F3·F4·F5·F6·F11·F12 · 고정 표 STAGE3_IMPL_ROUND1_SPEC §9) ── 이름 끝 `-g81s`
+    #   (`-k g81` 은 라운드 1 과 자체 점검을 함께 · `-k g81s` 는 자체 점검만)
+    ("sig5-v6-row-keys-are-a-declaration-conflict-g81s", IO,               # F1: sig 5 아래 v6 전용 행 키
+     '                _conf.append(f"sig 5 인데 v6 전용 행 키(candidate_id·bank_index)를 가진 행 {_v6rows}")\n',
+     '                pass  # 변이: v6 전용 행 키 충돌을 지운다\n',
+     "g81_s01"),
+    ("validator-rederives-every-x0-g81s", IO,                               # F2: base/random/warm x0 재유도
+     '            if DW.x0_sha256(x0) != m.get("x0_sha256"):\n',
+     '            if False:  # 변이: x0 재유도 대조를 끈다\n',
+     "g81_s02 or g81_s06"),
+    ("validator-rederives-every-candidate-id-g81s", IO,                     # F2: candidate_id 재유도
+     '            if want != m.get("candidate_id"):\n',
+     '            if False:  # 변이: candidate_id 재유도 대조를 끈다\n',
+     "g81_s02"),
+    ("validator-rederives-the-candidate-plan-g81s", IO,                     # F2: 계획 순서 구성
+     '            bad.append(f"{where}: 후보 구성(i·source·bank_index)이 계획 candidate_plan 과 다르다")\n            continue\n',
+     '            pass  # 변이: 구성 대조를 지운다\n',
+     "g81_s02"),
+    ("validator-recounts-realized-counts-g81s", IO,                         # F3: 실현 count 재계산
+     '            if rz.get(k) != exp[k]:\n',
+     '            if False:  # 변이: 실현 count 재계산 대조를 끈다\n',
+     "g81_s03"),
+    ("provider-consumed-must-be-a-planned-edge-g81s", PRESERVE,             # F4: 계획 edge 대조
+     '                bad.append(f"provider_consumed {pair} 는 계획 edge 가 아니다")\n',
+     '                pass  # 변이: 계획 edge 대조를 지운다\n',
+     "g81_s04"),
+    ("a-used-edge-must-be-recorded-g81s", PRESERVE,                         # F4: 시도한 edge 의 공급 기록
+     '                bad.append(f"계획 edge {pair[0]} ← {pair[1]} 로 {att} 번 시도했는데 provider_consumed 에 없다")\n',
+     '                pass  # 변이: 공급 기록 누락을 허용\n',
+     "g81_s04"),
+    ("map-protocol-is-measured-from-the-run-spec-g81s", FITTING,            # F5: protocol sha 재계산
+     '    provider_protocol_sha256 = hashlib.sha256(canonical_bytes(spec)).hexdigest()\n',
+     '    provider_protocol_sha256 = "0" * 64  # 변이: run_spec 을 재지 않는다\n',
+     "g81_s05 or g81_n3_01 or g81_n3_02 or g81_n3_03"),
+    ("design-order-is-the-optimizer-vector-g81s", FITTING,                  # F11: parameter_order = PARAM_NAMES
+     '    if list(design["parameter_order"]) != list(PARAM_NAMES):\n        raise ValueError(f"design 의 parameter_order',
+     '    if False:\n        raise ValueError(f"design 의 parameter_order',
+     "g81_s08"),
+    ("warm-map-is-regenerated-and-compared-g81s", FITTING,                  # F5·F6: provider run 에서 다시 만든 map 대조
+     '        if got != edges[consumer]["solution_map_sha256"]:\n            raise ValueError(f"{consumer!r}: provider run 에서',
+     '        if False:\n            raise ValueError(f"{consumer!r}: provider run 에서',
+     "g81_s06"),
+    ("v6-budget-is-checked-per-objective-g81s", IO,                         # F12: sig 6 은 objective 별 예산
+     '            if _opt.get("adaptive") is False and _gen != 6:\n',
+     '            if _opt.get("adaptive") is False:  # 변이: sig 6 에도 전역 n_restarts 예산\n',
+     "g81_s09"),
+    # ── 고정 표 §7 변이 계획 중 라운드 1 에 등록되지 않았던 둘 (⑦ prefix 재해시 · ④ 중복 index 허용) ──
+    ("full-bank-identity-is-not-a-prefix-g81s", FITTING,                    # ⑦: B 길이 bank → bank_id 가 B 에 따라 바뀐다
+     '        bank = DW.unit_cube_bank(pg, env["bank"]["version"], env["bank"]["length"], env["bank"]["n_params"])\n',
+     '        bank = DW.unit_cube_bank(pg, env["bank"]["version"], max(st["budget_by_objective"].values()), env["bank"]["n_params"])  # 변이: B 길이 bank\n',
+     "g81_w04"),
+    ("duplicate-bank-index-is-refused-g81s", FITTING,                       # ④: 같은 bank 행을 두 번 쓰는 후보
+     '            if bi in seen_idx:\n                raise ValueError(f"candidates[{k}]: bank_index {bi} 중복")\n',
+     '            if False:\n                raise ValueError(f"candidates[{k}]: bank_index {bi} 중복")\n',
+     "g81_w02"),
 ]
 
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면

@@ -99,3 +99,26 @@
 ## §8 이번 라운드에 없는 것 (명시)
 
 실제 v6 연구 leg · provider 운영 canary · floor 측정 · B 채택/plateau/pilot · 단계 4(구 필드 제거·claim 세대 게시)~6 · `stage="p_ini"` edge 구현(선언만) · adaptive diagnostic arm · `row_projection.py`·골든·과거 fits/영수증 변경 · 본진 ff 복귀(별도) · COMSOL.
+
+## §9 82차 발송 전 자체 점검 뒤 보강 (2026-09-28 · 사용자 결정 "지금 고치고 영수증 한 번 더" · 원장 §115)
+
+> **추가 기록이다. §1~§8 을 고쳐 쓰지 않는다.** 라운드 1 구현(`20ab9655`)을 81차 회신(`gate81_review/codex/REVIEW_KO.md` §3~§7)
+> 닫힘 조건에 하나씩 대조해 아래 구멍을 찾았다. 반례는 트리 수정 없이 먼저 실측했다 (`scratchpad/selfreview82/repro.py`).
+> 같은 4 파일 안에서 RED 먼저 고치고, RUN_SCOPE 가 영수증 뒤에 다시 움직이므로 영수증을 **최종 코드에서 한 번 더** 만든다
+> (첫 재생성 `03f907cc` 은 history 로 보존 — 리뷰 §7-6 의 "멈추고 보고" 대신 사용자 결정으로 바꿨다는 사실을 요청문에 적는다).
+
+| # | 표 | 구멍 (반례) | 보강 |
+|---|---|---|---|
+| F1 | B | sig 5 선언 아래 v6 전용 행 키(`candidate_id`·`bank_index`) · `stage3` 블록 · v6 표식 열을 validator 가 거부하지 않는다 (`_restart_ok(ROW10R)` → True) | `validate_provenance` 에 `세대_선언_일치` — sig 5: stage3 블록·v6 열·v6 전용 행 키 거부 / sig 6: v6 열 필수·`record_generation == "v6"`. 옛 `_restart_ok` 는 그대로 |
+| F2 | A·C·§4 | sig 6 validator 는 후보 ID **집합**만 대조 — 가짜 ID·가짜 x0 digest 로 만든 자기일관 산출이 6 검사 전부 통과 | `_stage3_checks` 에 `후보_재유도` — run_spec 의 `pairing_design`(새 필수 키, digest 대조) · `bounds`(exact_bounds 대조) · 행 truth 좌표 → pair_group_id → 봉인 bank → bank_id · `candidate_plan` → 구성 · base/random/warm x0 digest · candidate_id · restart 행 대조 |
+| F3 | A | 계획 범위 안의 조작 count 가 통과 (계획만 보는 검사는 정의상 못 잡음) | `실현_재계산` — `src.io.realized_from_fits` 로 행에서 다시 세어 record 와 대조. writer 도 같은 함수를 쓴다 (한 정의) |
+| F4 | A·C | `provider_consumed` 는 "목록인가" 만 검사 | `check_execution_record` — 항목은 계획 edge 쌍 · 중복 없음 · 1 ≤ n ≤ roster n_obs · 계획 edge 의 consumer 를 시도했으면 반드시 기록 |
+| F5 | C | `make_solution_map` 이 protocol sha 를 인자로 받아 그대로 봉인 (표 C 의 정의를 재계산하지 않음) | `make_solution_map(provider_run_dir, objective, out)` — fits 바이트 sha 와 `manifest.yaml` run_spec 의 `canonical_bytes` sha 를 **여기서** 잰다 |
+| F6 | C | warm 공급 경로 전체를 실행하는 시험 0 (w06 docstring 은 warm 누락을 적었지만 몸체는 adaptive 만 쟀다) | stage3 문맥 키 `provider_maps` → `provider_runs`: consumer 가 provider **run** 에서 map 을 다시 만들어 계획 edge sha 와 대조 → `out_dir/_inputs/provider_maps/<consumer>.solution_map.json` 에 사본 → validator 가 warm x0 재유도. 양성 1 · 음성 3 (누락 · 계획 뒤 변경 · x0 위조) |
+| F7 | A | "같은 pair group 의 두 noise 실현" 이 실제 소비 경로 fixture 에 없다 | `sign_producer` 형식의 두 noise 실현 curves 로 run_fit → validate (처음부터 GREEN 일 수 있는 대조군) |
+| F11 | C·§4 | 설계 `parameter_order` 가 optimizer 벡터(`PARAM_NAMES`)에 묶이지 않음 — fixture 의 5 이름 좌표 order 가 fits 의 truth 열 이름과 겹쳐 map 이 truth 를 해로 읽을 수 있다는 것을 가렸다 | `_prepare_stage3` 가 `parameter_order == PARAM_NAMES` · `bank.n_params == len(bounds) == 4` 요구 · map 열은 `PARAM_NAMES` 고정 · 시험 fixture 를 실제 모양으로 (해 = a_pe·b_pe·a_ne·b_ne 열, truth 열은 미끼 값) |
+| F12 | B | sig 6 산출에 legacy `restart_예산_완주`(전역 n_restarts) 를 적용해 objective 별 예산(2·3)을 거부 | sig 6 은 `_stage3_checks` 가 objective 별 계획 길이로 `restart_예산_완주` 를 낸다 |
+| — | §7 | 변이 계획 ⑦ "prefix 재해시" 와 ④ 의 "중복 허용" 이 라운드 1 에 등록되지 않았다 (대신 "다른 계획 기록" 이 등록됨) | 두 변이를 추가 등록 — `full-bank-identity-is-not-a-prefix-g81s` (B 길이 bank → validator 의 bank_id 재유도가 문다) · `duplicate-bank-index-is-refused-g81s` (`_fit_candidates` 중복 index → w02). 자체 점검 변이는 이름 끝 `-g81s` 13 건 |
+
+**RUN_SCOPE:** `src/io.py` · `src/fitting.py` · `tools/preserve.py` (design_wire 불변). 새 production 파일·helper 파일 0 (`realized_from_fits` · `_stage3_rederive` 는 `src/io.py` 안).
+**그대로인 것:** 표 A·B·C 의 모든 거부 규칙 (보강만) · legacy/prep 경로 바이트 · `_restart_ok` · 골든 31 · p_ini 명시 거부 · adaptive False 만 · reference grid 만.

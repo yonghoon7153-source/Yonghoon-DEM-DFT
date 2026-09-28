@@ -520,25 +520,32 @@ def _fit_candidates(objective, candidates, lb, ub, *, method: str, agree_tol: fl
     )
 
 
-def make_solution_map(fits_path, provider_objective: str, out_path, *, provider_protocol_sha256: str,
-                      parameter_order: list) -> dict:
-    """provider leg 의 봉인 fits → objective 별 solution map 파일 (`solution-map/v1`, 표 C).
+def make_solution_map(provider_run_dir, provider_objective: str, out_path) -> dict:
+    """provider run(봉인 `fits.parquet` + `manifest.yaml` 의 run_spec) → objective 별 solution map (`solution-map/v1`, 표 C).
 
+    ★ 82차 전 자체 점검 F5·F11 — `provider_protocol_sha256` 은 호출자 인자가 아니라 provider run_spec 의
+      `canonical_bytes` sha256 로 **여기서 잰다** (고정 표 C 의 정의). 좌표 열은 optimizer 벡터 `PARAM_NAMES` 로
+      고정한다 — 호출자가 준 이름 목록을 쓰면 이름이 같은 truth 열(lli·lam_pe·lam_ne)을 해로 읽을 수 있다.
     header 가 **어느 fits 바이트**(`provider_artifact_sha256`)·**어느 objective**·**어느 protocol** 의 해인지를
     고정한다. 같은 cond_id 행이 둘이면 거부, 비유한 해는 entries 가 아니라 `excluded_cond_ids` 로 분리한다
-    (planned coverage ≠ 사용 coverage). p_ini map 과 condition map 은 각각 별도 파일이다.
+    (planned coverage ≠ 사용 coverage). p_ini map 과 condition map 은 각각 별도 파일이다. fits 는 해시한 **그 바이트**
+    에서 읽는다 (해시 시점과 읽기 시점 사이 교체 방지).
     """
+    import io as _bio
     import pandas as pd
-    from tools.design_wire import _is_hex64
+    import yaml
     from tools.preserve import canonical_bytes
-    fits_path = Path(fits_path)
+    run = Path(provider_run_dir)
+    fits_path, man_path = run / "fits.parquet", run / "manifest.yaml"
+    if not fits_path.is_file() or not man_path.is_file():
+        raise ValueError(f"provider run 에 fits.parquet · manifest.yaml 이 없다: {run}")
     raw = fits_path.read_bytes()
-    if not _is_hex64(provider_protocol_sha256):
-        raise ValueError("provider_protocol_sha256 가 64-hex 가 아니다")
-    order = list(parameter_order)
-    if not order or len(set(order)) != len(order):
-        raise ValueError(f"parameter_order 가 비었거나 중복이다: {order!r}")
-    df = pd.read_parquet(fits_path)
+    spec = (yaml.safe_load(man_path.read_text(encoding="utf-8")) or {}).get("run_spec")
+    if not isinstance(spec, dict) or not spec:
+        raise ValueError(f"provider manifest 에 run_spec 이 없다: {man_path}")
+    provider_protocol_sha256 = hashlib.sha256(canonical_bytes(spec)).hexdigest()
+    order = list(PARAM_NAMES)
+    df = pd.read_parquet(_bio.BytesIO(raw))
     for col in ("cond_id", "objective", *order):
         if col not in df.columns:
             raise ValueError(f"fits 에 {col!r} 열이 없다")
@@ -1277,13 +1284,13 @@ def _assert_fit_authorized(live_fit: dict, out_dir, leg: str | None = None,
 
 
 def _prepare_stage3(stage3: dict, tasks: list, df, objectives: dict, bounds: dict, reference: str,
-                    adaptive: bool, warm_start: bool, in_dir) -> dict:
+                    adaptive: bool, warm_start: bool, in_dir, out_dir) -> dict:
     """★ 81차 — v6 실행 전 대조 (표 A·C·§5). 어긋나면 시작하지 않는다."""
     from src.grid import Condition
     from tools import design_wire as DW
     from tools.preserve import check_planned_envelope
-    if not isinstance(stage3, dict) or set(stage3) != {"planned", "design", "provider_maps"}:
-        raise ValueError("stage3 는 {planned, design, provider_maps} 를 가진 dict 여야 한다")
+    if not isinstance(stage3, dict) or set(stage3) != {"planned", "design", "provider_runs"}:
+        raise ValueError("stage3 는 {planned, design, provider_runs} 를 가진 dict 여야 한다")
     planned = stage3["planned"]
     env = planned.envelope()
     bad = check_planned_envelope(env)
@@ -1302,6 +1309,14 @@ def _prepare_stage3(stage3: dict, tasks: list, df, objectives: dict, bounds: dic
         raise ValueError("stage3.design 의 digest 가 계획의 pairing_design_sha256 와 다르다")
     if DW.parameter_order_sha256(design["parameter_order"]) != env["parameter_order_sha256"]:
         raise ValueError("design 의 parameter_order 가 계획과 다르다")
+    # ★ 82차 전 자체 점검 F11 — 설계의 parameter_order 는 **optimizer 벡터** 순서다 (bounds · bank n_params · solution map
+    #   열과 같은 것). 좌표 이름 목록을 넣으면 hash 는 통과하지만 map 이 이름이 같은 truth 열을 읽을 수 있다.
+    if list(design["parameter_order"]) != list(PARAM_NAMES):
+        raise ValueError(f"design 의 parameter_order {list(design['parameter_order'])} 가 optimizer 벡터 "
+                         f"{list(PARAM_NAMES)} 가 아니다 — bounds·bank·solution map 열이 이 순서다")
+    if env["bank"]["n_params"] != len(PARAM_NAMES) or len(bounds["lb"]) != len(PARAM_NAMES) \
+            or len(bounds["ub"]) != len(PARAM_NAMES):
+        raise ValueError("bank.n_params · bounds 길이가 optimizer 벡터 길이와 다르다")
     st = env["stages"][0]
     lb, ub = np.asarray(bounds["lb"], float), np.asarray(bounds["ub"], float)
     eb = DW.exact_bounds_sha256(lb, ub)
@@ -1328,19 +1343,26 @@ def _prepare_stage3(stage3: dict, tasks: list, df, objectives: dict, bounds: dic
     if r_sha != env["roster"]["roster_sha256"] or len(roster) != env["roster"]["n_obs"]:
         raise RuntimeError(f"실제 조건 집합의 roster ({len(roster)} 관측, {r_sha[:16]}) 가 계획 roster "
                            f"({env['roster']['n_obs']}, {env['roster']['roster_sha256'][:16]}) 와 다르다 — 시작하지 않는다")
-    # provider map — edge 마다 파일이 있고 봉인 sha 가 같아야 한다
+    # provider — ★ 82차 전 자체 점검 F5·F6 (81차 N3-2 "consumer 는 header 를 실제 입력에 대조한다"): 받은 map 파일을 믿지
+    #   않고 warm 이 필요한 consumer 마다 **provider run**(봉인 fits + run_spec) 에서 map 을 다시 만든다. 그 바이트가 계획
+    #   edge 의 solution_map_sha256 과 같아야 시작한다. 사본은 `out_dir/_inputs/provider_maps/<consumer>.solution_map.json`
+    #   에 두어 validator 가 warm x0 를 다시 유도한다.
     edges = {e["consumer_objective"]: e for e in env["provider_edges"]}
     maps = {}
+    pdir = Path(out_dir) / "_inputs" / "provider_maps"
     for consumer, prov in st["warm_provider_map"].items():
         if prov is None:
             continue
-        path = (stage3["provider_maps"] or {}).get(consumer)
-        if path is None or not Path(path).is_file():
-            raise ValueError(f"{consumer!r} 의 provider map 파일이 없다 — warm 필요 자리의 누락은 오류다 (no-warm 전환 금지)")
-        got = hashlib.sha256(Path(path).read_bytes()).hexdigest()
+        run_p = (stage3["provider_runs"] or {}).get(consumer)
+        if run_p is None or not Path(run_p).is_dir():
+            raise ValueError(f"{consumer!r} 의 provider run 이 없다 — warm 필요 자리의 누락은 오류다 (no-warm 전환 금지)")
+        dest = pdir / f"{consumer}.solution_map.json"
+        make_solution_map(run_p, edges[consumer]["provider_objective"], dest)
+        got = hashlib.sha256(dest.read_bytes()).hexdigest()
         if got != edges[consumer]["solution_map_sha256"]:
-            raise ValueError(f"{consumer!r} 의 provider map sha {got[:16]} ≠ 계획 edge {edges[consumer]['solution_map_sha256'][:16]}")
-        maps[consumer] = str(path)
+            raise ValueError(f"{consumer!r}: provider run 에서 다시 만든 map sha {got[:16]} ≠ 계획 edge "
+                             f"{edges[consumer]['solution_map_sha256'][:16]} — 계획 뒤 provider 가 바뀌었거나 다른 run 이다")
+        maps[consumer] = str(dest)
     places = int(design["coordinate"]["decimal_places"])
     d_sha, pos = env["pairing_design_sha256"], env["parameter_order_sha256"]
     by_cid = {}
@@ -1359,6 +1381,7 @@ def _prepare_stage3(stage3: dict, tasks: list, df, objectives: dict, bounds: dic
                        "provider_maps": maps, "parameter_order": list(design["parameter_order"])}
         t["adaptive"], t["warm_start"] = False, False
     spec_block = {"planned_id": planned.planned_id(), "planned_envelope": env,
+                  "pairing_design": design,          # ★ 82차 전 자체 점검 F2 — validator 의 후보 재유도 입력
                   "pairing_design_sha256": d_sha, "parameter_order_sha256": pos,
                   "bank_version": env["bank"]["version"], "exact_bounds_sha256": eb,
                   "candidate_mode": st["candidate_mode"], "budget_by_objective": st["budget_by_objective"],
@@ -1369,49 +1392,31 @@ def _prepare_stage3(stage3: dict, tasks: list, df, objectives: dict, bounds: dic
 
 
 def write_execution_record(out_dir, fits, *, planned_env: dict, objective_order: list,
-                           roster_sha256: str, n_obs: int) -> dict:
+                           roster_sha256: str) -> dict:
     """★ 81차 G81-N1 — 실현 기록 `execution-record/v1` + 후보 map `candidate-map/v1` 을 run_dir 에 쓴다.
 
     실현 count 는 fits 행(`restarts_json` · `restart_errors_json`)에서 **세어서** 적는다 — 계획 count 를 복사하지
     않는다. 계획은 `planned_id` 로 참조만.
     """
+    from src.io import realized_from_fits
     from tools.preserve import canonical_bytes, digest
     out_dir = Path(out_dir)
-    pc = planned_env["planned_counts"]
-    by_obj, entries, consumed = {}, [], {}
+    # ★ 82차 전 자체 점검 F3 — count 는 validator 와 **같은 정의**(`src.io.realized_from_fits`)로 센다
+    real = realized_from_fits(fits, planned_env=planned_env, objective_order=list(objective_order))
+    entries: list = []
     for obj in objective_order:
-        sub = fits[fits["objective"] == obj]
-        attempted = returned = failed = 0
-        cs = {"base_init": 0, "warm": 0, "random": 0}
-        prefix = 0
-        for _, row in sub.iterrows():
-            rs = json.loads(row["restarts_json"])
-            errs = json.loads(row["restart_errors_json"]) if "restart_errors_json" in row and isinstance(row["restart_errors_json"], str) else []
-            returned += len(rs); failed += len(errs); attempted += len(rs) + len(errs)
-            for e in rs:
-                cs[e["source"]] += 1
-                if e["source"] == "random":
-                    prefix = max(prefix, int(e["bank_index"]) + 1)
-            entries += json.loads(row["candidate_map_json"])
-            wp = row.get("warm_provider_objective")
-            if isinstance(wp, str) and wp:
-                consumed.setdefault((obj, wp), 0)
-                consumed[(obj, wp)] += 1
-        planned_total = sum(pc[obj].values()) * int(planned_env["roster"]["n_obs"])   # 조건당 계획 × 사전 roster
-        by_obj[obj] = {"attempted": attempted, "returned": returned, "failed": failed,
-                       "not_attempted": max(0, planned_total - attempted),
-                       "counts_by_source": cs, "random_bank_prefix_len": prefix}
+        for v in fits[fits["objective"] == obj]["candidate_map_json"]:
+            entries += json.loads(v)
     entries.sort(key=lambda m: (m["cond_id"], m["objective"], m["i"]))
     cmap = {"schema": "candidate-map/v1", "entries": entries}
     (out_dir / "candidate_map.json").write_bytes(canonical_bytes(cmap))
     rec = {"schema": "execution-record/v1", "leg_id": planned_env["leg_id"],
            "planned_id": digest(planned_env), "source_digest": planned_env["source_digest"],
            "protocol_generation": planned_env["protocol_generation"],
-           "realized": {"by_objective": by_obj, "candidate_map_sha256": digest(entries),
+           "realized": {"by_objective": real["by_objective"], "candidate_map_sha256": digest(entries),
                         "n_candidates": len(entries), "roster_observed_sha256": roster_sha256,
-                        "n_obs_observed": int(n_obs),
-                        "provider_consumed": [{"consumer_objective": c, "provider_objective": p, "n_conditions": n}
-                                              for (c, p), n in sorted(consumed.items())]}}
+                        "n_obs_observed": real["n_obs_observed"],
+                        "provider_consumed": real["provider_consumed"]}}
     rec["record_digest"] = digest(rec)
     (out_dir / "execution_record.json").write_bytes(canonical_bytes(rec))
     return rec
@@ -1948,7 +1953,7 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     # ★ 81차 — v6 후보 경로: 계획 envelope · 설계 · roster · bounds · provider map 을 **실행 전에** 대조하고
     #   조건마다 봉인 bank 를 붙인다. 하나라도 어긋나면 시작하지 않는다 (RUN 밖 승인 파일 등은 만들지 않는다).
     _s3 = _prepare_stage3(stage3, tasks, df, objectives, bounds, reference, adaptive,
-                          warm_start, in_dir) if stage3 is not None else None
+                          warm_start, in_dir, out_dir) if stage3 is not None else None
 
     from src.io import chunk_files, load_completed, mark_completed, merge_chunks, save_chunk
 
@@ -2148,7 +2153,7 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         # ★ 81차 G81-N1 — 실현값은 **별도 record** 에. 계획(planned_id)은 참조만 한다.
         write_execution_record(out_dir, fits, planned_env=_s3["planned_env"],
                                objective_order=list(objectives),
-                               roster_sha256=_s3["roster_sha256"], n_obs=_s3["n_obs"])
+                               roster_sha256=_s3["roster_sha256"])
 
     # F30: config_hash를 비워 두면 어떤 목적함수 정의로 돌았는지 남지 않는다.
     #   실제 obj_cfg 내용을 해시해 박고, 입력 curves와 config 파일의 SHA도 남긴다.
