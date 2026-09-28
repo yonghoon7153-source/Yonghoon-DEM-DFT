@@ -137,13 +137,47 @@
     "전압 기울기의 기전 — 그 관계는 항등식이다 (cei_li_ledger_identity_2026_09_28.json · 결정 proposed)"
   ],
   "화면": "db/properties/cei_figs/index.html 머리 2×2 의 '두 점으로 잰 선형성이라 곡률은 못 본다' 를 사전등록 §3 GC '통과하면' 문안대로 바꾼다 (결속 시험 test_x010_curvature_line_matches_the_result).",
-  "status": "proposed",
+  "status": "ratified",
   "status_history": [
     {
       "at": "2026-09-28",
       "state": "proposed",
       "by": "agent",
       "note": "G0 · GI · GC 사전등록대로 통과 — 판정 문구·문턱 그대로. 화면 반영은 결정 D-2026-09-28-cei-x010-curvature 의 enforcement ③ 에 따른다. 1저자 확인 시 ratified."
+    },
+    {
+      "at": "2026-09-29",
+      "state": "ratified",
+      "by": "1저자(사용자)",
+      "note": "사용자 09-29: '이거 내용도 추가안됐는데 수정해서 넣자 0.1도 돌렸잖앙' · 'nd 관련이야' — x = 0.10 결과를 화면에 넣으라는 지시를 이 결과 기록의 1저자 확인으로 적는다 (트랙 = 우리 CEI · 1저자 = 사용자 · G0 · GI · GC 사전등록대로 통과 · 판정 문구·문턱 그대로 · 아니면 되돌린다). 같은 날 머리 2×2 표에 x = 0.10 행(공통 20 칸 · ★_표_x010_행_공통기준)을 더했다."
     }
-  ]
+  ],
+  "★_표_x010_행_공통기준": {
+    "왜": "화면 머리 2×2 (09-19 공통 20 칸 · cei_site_concentration_result_2026_09_19.json ★_2x2_공통기준) 에 x = 0.10 행을 **같은 기준**으로 싣는다. GC 판정(1_게이트)은 자리별 유효칸(Li 23 · P 20)이고 이 표 행은 여섯 조성 공통 칸이다 — 다른 묶음이라 둘을 섞지 않는다.",
+    "기준": "modelc 와 여섯 조성(nd_li_002 · nd_li_010 · nd_only · nd_p_002 · nd_p_010 · nd_p_020)이 모두 비퇴화인 칸 — n = 20 / 24. 09-19 네 조성 공통 칸과 **같은 20 칸**이다 (집합 일치 확인 — 0.10 이 빠뜨린 칸이 없다).",
+    "도구": "tools/oxidation/interface_reactivity_v2.py _x002_cells · _x002_mean (09-19 공통기준 규약 그대로)",
+    "원자료": "db/properties/cei_interface_V_x010_2026_09_28.json",
+    "09_19_네_값_재현": {
+      "최대_차_eV_per_atom": 5e-06,
+      "뜻": "09-19 표의 네 값을 x010 원자료·같은 20 칸으로 다시 재도 같다 — 두 실행이 한 기준 위에 있다"
+    },
+    "표_행": {
+      "Li자리_x010": {
+        "값": 0.01828,
+        "양수_칸": "20/20"
+      },
+      "P자리_x010": {
+        "값": -0.03439,
+        "음수_칸": "16/20"
+      }
+    },
+    "가운데_어긋남_공통20칸": {
+      "Li": 0.00013,
+      "P": 0.00077,
+      "문턱": 0.005,
+      "⚠": "정보다 — 곡률 판정은 1_게이트 GC (자리별 유효칸) 가 한다. 두 묶음 다 문턱의 1/6 아래다."
+    },
+    "화면": "db/properties/cei_figs/index.html 머리 2×2 표의 가운데 행 · Nd 카드 ndo_passivation_argument_2026_09_14.json §8 결과",
+    "결속_시험": "webapp/tests/test_interpretation_cards.py::test_x010_row_on_the_2x2_matches_the_raw"
+  }
 }

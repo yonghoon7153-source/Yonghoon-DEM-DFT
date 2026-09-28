@@ -1603,6 +1603,40 @@ def test_x010_curvature_line_matches_the_result(client):
     assert "점 하나" in t and "안쪽" in t, "'점 하나 · 안쪽 꺾임은 못 봤다' 한정이 빠졌다"
 
 
+def test_x010_row_on_the_2x2_matches_the_raw(client):
+    """⛔음성 — 머리 2×2 의 가운데 x = 0.10 행이 원자료에서 도구로 다시 잰 **공통 20 칸** 평균과 같고,
+    두 화면(보고서 표 · Nd 카드)에 같은 값이 있다 (2026-09-29 · 1저자 '0.1도 돌렸잖앙 … 넣자').
+
+    사슬: ① 원자료 → _x002_cells · _x002_mean (09-19 공통기준 규약) = 결과 기록 ★_표_x010_행_공통기준
+    ② 여섯 조성 공통 칸이 09-19 네 조성 공통 칸과 **같은 20 칸** ③ 같은 칸에서 09-19 네 값이 재현된다
+    ④ 보고서 표 · Nd 카드에 두 값.
+    잡는 것: 0.10 행을 다른 묶음(GC 의 Li 23 칸 평균 0.0216)에서 뽑아 표에 섞는 것 · 한 화면만 고치는 것.
+    """
+    tool = _x002_tool()
+    raw = json.loads(X010_RAW.read_text("utf-8"))["results"]
+    rec = json.loads(X010_RES.read_text("utf-8"))["★_표_x010_행_공통기준"]
+    four = ["nd_li_002", "nd_p_002", "nd_only", "nd_p_020"]
+    c4 = tool._x002_cells(raw, four)
+    c6 = tool._x002_cells(raw, four + ["nd_li_010", "nd_p_010"])
+    assert len(c6) == 20 and sorted(c4) == sorted(c6), ("공통 칸이 09-19 의 20 칸이 아니다", len(c4), len(c6))
+    got = {"Li자리_x010": tool._x002_mean(raw, c6, "nd_li_010"),
+           "P자리_x010": tool._x002_mean(raw, c6, "nd_p_010")}
+    for k, v in got.items():
+        assert abs(rec["표_행"][k]["값"] - v) < 5e-6, (k, "결과 기록", rec["표_행"][k]["값"], "원자료", v)
+    for k, lab in (("Li자리_x002", "nd_li_002"), ("P자리_x002", "nd_p_002"),
+                   ("Li자리_x020", "nd_only"), ("P자리_x020", "nd_p_020")):
+        assert abs(_site_2x2()[k] - tool._x002_mean(raw, c6, lab)) < 1e-5, (k, "09-19 값이 같은 칸에서 재현되지 않는다")
+    h = _report_html(client)
+    i = h.find("빠진 칸을 채웠다")
+    assert i > 0, "2×2 카드를 못 찾았다 — 시험이 헛것을 재고 있다"
+    seen = _nums(h[i:h.index("</table>", i)])
+    seen_card = _nums(json.dumps(V.interpretation_cards_for(ND), ensure_ascii=False))
+    for k, v in got.items():
+        assert any(abs(x - v) < 5e-5 for x in seen), (k, "보고서 2×2 표에 없다", v, sorted(seen))
+        assert any(abs(x - v) < 5e-5 for x in seen_card), (k, "Nd 카드에 없다", v)
+    assert "0.02 · 0.10 · 0.20 을 잇는 다리다" in h, "머리 문장이 아직 '0.02 와 0.20 을 잇는' 이다"
+
+
 
 def test_prot_counts_dies_when_the_grid_is_broken():
     """⛔음성 — 시험 쪽 전농도통과 판정도 격자가 깨지면 **세지 않고 죽는다** (2차 리뷰 ①②).

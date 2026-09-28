@@ -438,24 +438,29 @@ Nd 계는 전해질이 <b>제자리에서</b> 들고 온다.</p>
         셀이 Li₄₈Nd₂P₁₀O₃S₄₁Cl₁₆(Nd 2 · P 10 · 120 원자 = x 0.20)이다. x = 0.02 셀은 Nd 1 개에 P 50 개라
         <b>약 618 원자</b> — 우리 기계(단일 GPU 48 GB)로는 못 돈다.</li>
     <li><b><a href="#s2b">§2b</a> 보호율 곡선</b> — 원래 농도 축(0.02–0.20)이다. 0.20 은 곡선의 끝점이다.</li>
-    <li><b>아래 2×2</b> — 0.02 와 0.20 을 잇는 선형성 근거다.</li>
+    <li><b>아래 2×2</b> (+ 가운데 <i>x</i> = 0.10 행 · 09-28) — 0.02 · 0.10 · 0.20 을 잇는 선형성 근거다.</li>
   </ol>
   </div>
   <div class="card" style="margin:12px 0 0;border-left:3px solid var(--ok)">
-  <p style="margin:0 0 8px"><b>✅ 2026-09-19 — 빠진 칸을 채웠다. 같은 농도에서 자리를 맞대 봤다.</b> <span style="font-weight:400;color:var(--mut)">— 이 표가 x = 0.02 와 x = 0.20 을 잇는 다리다</span></p>
+  <p style="margin:0 0 8px"><b>✅ 2026-09-19 — 빠진 칸을 채웠다. 같은 농도에서 자리를 맞대 봤다.</b> <span style="font-weight:400;color:var(--mut)">— 이 표가 x = 0.02 · 0.10 · 0.20 을 잇는 다리다</span></p>
   <p style="margin:0 0 8px;font-size:.88rem">종전에는 A 가 <span class="mono">x=0.20</span>,
   B 가 <span class="mono">x=0.02</span> 로 <b>자리와 농도가 같이 달랐다</b>. 네 칸을 한 실행에
-  넣어 갈랐다 (음이온은 넷 다 S 4.4 Cl 1.6 으로 고정, O 없음).</p>
+  넣어 갈랐다 (음이온은 넷 다 S 4.4 Cl 1.6 으로 고정, O 없음).
+  <b>2026-09-28</b> 에 가운데 <span class="mono">x=0.10</span> 두 칸을 더했다 (x010 실행 · 위 네 값은 그 원자료로 다시 재도
+  차가 0.00001 아래다).</p>
   <div class="tblwrap" style="margin:0 0 8px">
   <table>
   <thead><tr><th>Δ 반응에너지 <span class="mono">(eV/atom)</span><br>
     <span style="font-weight:400;color:var(--mut)">무도핑 기준 · <b>양수 = 덜 반응</b><br>
-    네 조성이 모두 유효한 <b>공통 20 칸</b> 평균</span></th>
+    여섯 조성이 모두 유효한 <b>공통 20 칸</b> 평균<br>(0.10 을 넣어도 같은 20 칸이다)</span></th>
     <th>Nd → <b>Li 자리</b></th><th>Nd → <b>P 자리</b></th></tr></thead>
   <tbody>
   <tr><td class="mono"><i>x</i> = 0.02</td>
       <td class="mono" style="color:var(--ok)"><b>+0.0037</b></td>
       <td class="mono" style="color:var(--ox)"><b>−0.0066</b></td></tr>
+  <tr><td class="mono"><i>x</i> = 0.10 <span style="font-weight:400;color:var(--mut)">(09-28)</span></td>
+      <td class="mono" style="color:var(--ok)"><b>+0.0183</b></td>
+      <td class="mono" style="color:var(--ox)"><b>−0.0344</b></td></tr>
   <tr><td class="mono"><i>x</i> = 0.20</td>
       <td class="mono" style="color:var(--ok)"><b>+0.0362</b></td>
       <td class="mono" style="color:var(--ox)"><b>−0.0709</b></td></tr>
@@ -466,12 +471,14 @@ Nd 계는 전해질이 <b>제자리에서</b> 들고 온다.</p>
         <span id="x010-curvature"><b>2026-09-28 — 가운데 x = 0.10 도 쟀다</b> (사전등록 · 문턱은 결과 전 커밋):
         두 자리 다 0.02↔0.20 직선 위다 — 어긋남 Li 자리 <b>+0.0004</b> · P 자리 <b>+0.0008</b>
         (문턱 0.005 · 세 농도가 모두 유효한 칸 Li 23 · P 20 평균 — 위 표의 공통 20 칸과 다른 묶음이다).
+        위 표의 공통 20 칸으로 다시 재도 Li 자리 <b>+0.0001</b> · P 자리 <b>+0.0008</b> 이다.
         매끈하게 휘는 몫은 원점(x = 0 이면 Δ = 0)이 이미 묶으므로, 남는 것은 0.02–0.10 · 0.10–0.20
         <b>안쪽</b>의 꺾임뿐이다(점 하나). 칸별로는 고전압 한 칸씩(Li 자리 LiMnO₂ 4.3 V <b>0.0053</b> ·
         P 자리 LiNiO₂ 4.0 V <b>0.0052</b>)이 문턱을 살짝 넘는다 — 그 칸들은 Δ 자체가 커서(x = 0.20 에서 약 0.10)
         그 값의 1 할 안팎이다. 판정은 칸 평균으로 한다(<span class="mono">cei_x010_result_2026_09_28.json</span>).</span></li>
     <li><b>자리는 부호를 뒤집는다.</b> 같은 농도에서 Li 자리는 <b>+</b>(덜 반응), P 자리는
-        <b>−</b>(더 반응)다. 공통 20 칸에서 Li 자리는 <b>20 칸 다</b> 양수, P 자리는 16 칸이 음수다.</li>
+        <b>−</b>(더 반응)다. 공통 20 칸에서 Li 자리는 <b>20 칸 다</b> 양수, P 자리는 16 칸이 음수다
+        (x = 0.10 에서도 같다 — Li 20/20 · P 16/20).</li>
     <li><b>그 차이는 고전압에서만 커진다.</b> 두 자리의 간격이 2.5 V 에서 0.0009,
         4.5 V 에서 <b>0.0210</b> 으로 23 배가 된다. 저전압에서는 자리가 거의 무관하다.
         ⚠ 4.5 V 의 공통 칸은 <b>2 칸</b>뿐이다 (P 자리 <i>x</i>=0.20 이 그 전압에서 자체분해로 빠진다)
