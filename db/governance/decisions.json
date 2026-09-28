@@ -5367,6 +5367,58 @@
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
     "근거_발화": "'아 그럼 3500정도로 넣자' (2026-09-28 · 이 세션) — 방 4,762 MiB 계산을 본 뒤의 선택"
    }
+  },
+  {
+   "id": "D-2026-09-28-cei-page-x002",
+   "kind": "estimand",
+   "scope": "cathode_cei.report_page.concentration",
+   "slot": "cathode_cei_reported_concentration",
+   "applies_to": {
+    "systems": [
+     "comp1",
+     "modelc",
+     "lpsocl",
+     "modelc_nd_doped"
+    ]
+   },
+   "title": "CEI 화면 — 조성 계열을 x = 0.02 로 옮긴다 (Li 자리도 0.02 · 1저자 목표 농도)",
+   "statement": "CEI 보고 화면(db/properties/cei_figs/index.html)의 **조성으로만 정해지는** 계산 — §0 ESW · §1 Nd/O 분해 · §2 산물 · §4 전 혼합범위 · §5 3가 도펀트 · §8 양극별 원자료 — 은 Nd 함량 **x = 0.02** 에서 보고한다. 자리는 둘 다 싣는다: Li 자리 Li5.34Nd0.02P1S4.37O0.03Cl1.6 · P 자리(1저자 목표 조성) Li5.44Nd0.02P0.98S4.37O0.03Cl1.6. x = 0.20 은 ① 09-19 2×2 선형성 근거 ② §2b 농도 곡선 ③ **구조가 필요한 계산**(PDOS n5fu 셀 · BVSE · 이완 구조 — 셀 Li48Nd2P10O3S41Cl16)에만 남기고, 화면에서 그 자리에 'x = 0.20 셀' 이라고 이름을 단다. ⛔ 이 결정은 Nd 의 실제 점유 자리를 정하지 않는다 (hull 조성점).",
+   "rationale": "1저자 2026-09-28: \"li 자리도 0.2 말고 0.02로 하면 안돼?\" · \"계속 그게 걸렸어\" · \"0.02에 맞게 이 webpage를 전면 업데이트 해주고 필요한 시뮬레이션 있으면 명령어 줘\". 09-19 에도 같은 지적이 있었고 그때는 2×2 한 장만 채워 본문이 x=0.20 에 남았다. x=0.20 은 NdP5O14(P/Nd=5) 기준 포화점이라 'Nd 가 양극 대신 P 방을 전부 댄다' 로 보이는데, 목표 농도 x=0.02 에서 그 몫은 최대 1 할이다. 조성 계산은 hull 에너지를 쓰므로(use_hull_energy=True) x 를 바꾸는 데 DFT 셀이 필요 없다. 구조 계산은 x=0.02 셀이 약 618 원자라 단일 GPU 48 GB 로 못 옮긴다.",
+   "record_kind": "scope_declaration",
+   "card": "db/properties/cathode_cei_x002_amendment_2026_09_28.json",
+   "record": "db/properties/cathode_cei_x002_amendment_2026_09_28.json",
+   "method_ref": "tools/oxidation/interface_reactivity_v2.py (열린계 · use_hull_energy=True) · ESW grand-potential element profile — 개정문 §2 조성 16 · §3 G0–G5",
+   "reopen_criteria": [
+    "목표 Nd 함량이 0.02 가 아니게 되면 다시 연다 (예: §8b ⑧ 의 0.05 검토)",
+    "구조 계산(PDOS·BVSE)을 x = 0.02 로 옮기려면 자원 결정이 먼저다 — 약 618 원자",
+    "MP hull 스냅샷이 움직이면(개정문 G0 초과) 화면의 옛 수를 전부 새 실행 값으로 바꾼다"
+   ],
+   "enforcement": "① 개정문 §3 G0–G5 를 **실행 전에** 커밋한다 (값을 보고 문턱을 고치지 않는다). ② 화면 결속 시험(webapp/tests/test_interpretation_cards.py)이 x = 0.02 결과 기록과 화면의 수를 **값으로** 묶는다. ③ x = 0.20 이 남는 자리는 화면에 이름을 달고, 시험이 그 이름표를 확인한다.",
+   "amends": [],
+   "supersedes": [],
+   "schema_version": 2,
+   "decision_state": "active",
+   "results_seen": false,
+   "proposed_by": "claude-session-2026-09-28",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-28",
+     "state": "active",
+     "by": "1저자(사용자)",
+     "note": "사용자: 'li 자리도 0.2 말고 0.02로 하면 안돼?' → '계속 그게 걸렸어 ㅇㅇ' → 'ㅇㅇ 0.02에 맞게 이 webpage를 전면 업데이트 해주고 필요한 시뮬레이션 있으면 명령어 줘'. 트랙 = CEI/ESW 화면(우리) → 1저자 = 사용자, 통지할 제3자 없음. 게이트 문안(G0–G5)은 에이전트 초안이다."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-28T05:31:11Z",
+    "commit": "5b44f56f30ee69e1fc258011a1328744a901edb9",
+    "decision_digest": "sha256:19dead602fb883eb8a0dccc44cecc38f4b4af131b31dcedd75114c0fd69f29a2",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "비준_근거": "1저자 2026-09-28 — 'ㅇㅇ 0.02에 맞게 이 webpage를 전면 업데이트 해주고 필요한 시뮬레이션 있으면 명령어 줘'."
+   }
   }
  ]
 }

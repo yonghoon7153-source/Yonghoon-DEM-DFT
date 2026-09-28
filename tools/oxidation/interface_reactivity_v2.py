@@ -831,6 +831,87 @@ def _selftest():
         "[양성] 탈락 행도 세어 남긴다 (조용히 버리지 않는다)")
     _sh.rmtree(_dir, ignore_errors=True)
 
+    # ── x = 0.02 화면 전환 판정 (2026-09-28) ─────────────────────────────────
+    #   픽스처: 양극 A·B × 전압 2.50·4.50 = 4 칸, 기준 E = −1.0. Δ 는 손으로 정했다.
+    #   Li 자리: Nd +0.004 · O +0.002 · 둘 다 +0.006 (정확히 더해짐) — 단 (A, 4.50) 은
+    #   ndo_li_002 가 **끝점**이라 분해 칸에서 빠져야 한다 (n = 3).
+    #   x=0.20: Nd +0.040 · O +0.020 · 둘 다 +0.060 (정확히 10 배 → 선형).
+    #   P 자리: Nd −0.007 · 둘 다 −0.005 (O +0.002 와 더하면 잔차 0).
+    def _xfix(both_li=0.006, both_020=0.060, nd_share=0.02):
+        dv = {"modelc": 0.0, "nd_li_002": 0.004, "o_only_003": 0.002, "ndo_li_002": both_li,
+              "lim_li_002": 0.001, "nd_p_002": -0.007, "nd_p_002_asused": -0.005,
+              "lim_p_002": -0.002, "lim_p_002_asused": -0.001, "nd_only": 0.040,
+              "o_only_03": 0.020, "modelc_nd": both_020, "lim_li_020": 0.030}
+        rx_nd = (f"1 Li5.34Nd0.02P1S4.4Cl1.6 + 1 LiCoO2 -> 1 Li + {nd_share:g} NdP5O14 "
+                 f"+ {(1 - 5 * nd_share) / 4:g} CoP4O11 + 1 CoS2")
+        res = {}
+        for cat in ("A", "B"):
+            res[cat] = {"by_voltage": {}, "endpoint_degenerate": {}, "reactions": {}}
+            for V in ("2.50", "4.50"):
+                res[cat]["by_voltage"][V] = {k: -1.0 + d for k, d in dv.items()}
+                res[cat]["endpoint_degenerate"][V] = {
+                    k: (cat == "A" and V == "4.50" and k == "ndo_li_002") for k in dv}
+                res[cat]["reactions"][V] = {"nd_li_002": rx_nd}
+        return res
+    _xo = x002_verdicts(_xfix())
+    _li = _xo["sites"]["Li"]
+    chk(_li["n_common_cells"] == 3 and abs(_li["G2_additivity"]["residual_mean"]) < 1e-9
+        and _li["G2_additivity"]["pass"],
+        f'[양성] x002 — 끝점 칸을 빼고(n={_li["n_common_cells"]}) 정확히 더해지면 잔차 0 · G2 통과')
+    chk(_xo["sites"]["P"]["G2_additivity"]["pass"]
+        and abs(_xo["sites"]["P"]["delta_mean_eV_per_atom"]["both"] + 0.005) < 1e-9,
+        "[양성] x002 — P 자리도 같은 규칙 (Δ 둘 다 −0.005, 음수는 더 반응)")
+    chk(_xo["G1_linearity"]["both"]["pass"] and _xo["G1_linearity"]["o"]["pass"],
+        "[양성] x002 — 정확히 10 배면 G1 선형성 통과")
+    _xn = x002_verdicts(_xfix(both_li=0.009))
+    chk(_xn["sites"]["Li"]["G2_additivity"]["pass"] is False,
+        f'[⛔음성] x002 — 잔차 {_xn["sites"]["Li"]["G2_additivity"]["residual_mean"]} 이 문턱 0.0010 을 넘으면 G2 탈락 '
+        '(x=0.20 문턱 0.010 을 그대로 쓰면 이게 통과해 버린다)')
+    chk(x002_verdicts(_xfix(both_020=0.030))["G1_linearity"]["both"]["pass"] is False,
+        "[⛔음성] x002 — x=0.20 이 10 배에서 0.030 어긋나면 G1 탈락 (비선형 → 환산 금지)")
+    _xg = x002_verdicts(_xfix(nd_share=0.03))
+    chk(not _xg["G4_bound"]["pass"] and _xg["G4_bound"]["violations"][0]["label"] == "nd_li_002",
+        "[⛔음성] x002 — Nd 인산염이 P 를 5x 보다 많이 가져가면(0.15 > 0.10) G4 위반 = 버그 신호")
+    chk(x002_verdicts(_xfix())["G4_bound"]["pass"],
+        "[양성] x002 — 딱 5x(0.10)는 상한 안이다 (경계에서 거짓 경보를 안 낸다)")
+    _xm = _xfix()
+    for _c in _xm.values():
+        for _row in _c["by_voltage"].values():
+            _row.pop("o_only_003")
+    _xmv = x002_verdicts(_xm)
+    chk(_xmv["missing_labels"] == ["o_only_003"] and "sites" not in _xmv,
+        "[⛔음성] x002 — 조성이 빠지면 판정하지 않는다 (0 으로 채워 통과시키지 않는다)")
+    _sh3 = x002_p_share("1 Li5.34Nd0.02P1S4.4Cl1.6 + 1 LiCoO2 -> 0.005 LiNd(PO3)4 "
+                        "+ 0.2 CoP4O11 + 0.1 Li3PS4 + 0.1 PCl5")
+    chk(abs(_sh3["dopant_phosphate"] - 0.02) < 1e-9 and abs(_sh3["tm_phosphate"] - 0.8) < 1e-9
+        and abs(_sh3["thiophosphate"] - 0.1) < 1e-9 and abs(_sh3["other"] - 0.1) < 1e-9
+        and abs(_sh3["sum"] - 1.02) < 1e-9,
+        "[양성] x002_p_share — LiNd(PO3)4 는 도펀트 인산염 · CoP4O11 TM · Li3PS4 티오 · PCl5 기타 "
+        "(합이 1 이 아니면 그대로 보인다: 1.02)")
+    chk(not _x002_rhs_has("1 Li5.4P1S4.4Cl1.6 -> 0.5 Li2SO4 + S", "Li2S"),
+        "[⛔음성] _x002_rhs_has — Li2SO4 안의 'Li2S' 를 산물 Li2S 로 읽지 않는다 (항 단위)")
+    _esw = {"ndo_li_002": {"composition": "x", "oxidation_limit_V": 1.92,
+                           "oxidation_onset_rxn": "X -> 0.002 Nd10S19 + 0.16 Li",
+                           "neutral_rxn": "X -> 0.01 Nd2S3 + 0.37 Li2S + Li3PS4",
+                           "profile": [{"V_vs_Li": 1.5, "evolution_Li": 2.0},
+                                       {"V_vs_Li": 1.717, "evolution_Li": 0.0}]},
+            "nd_li_002": {"composition": "x", "oxidation_limit_V": 1.92,
+                          "oxidation_onset_rxn": "X -> 0.3 LiS4 + 0.7 Li",
+                          "neutral_rxn": "X -> 0.01 Nd2S3 + 0.37 Li2S",
+                          "profile": []},
+            "nd_p_002": {"composition": "x", "oxidation_limit_V": 2.14,
+                         "oxidation_onset_rxn": "X -> 0.1 LiS4 + 0.7 Li",
+                         "neutral_rxn": "X -> 0.02 NdPS4 + Li3PS4", "profile": []}}
+    _g3 = x002_verdicts(_xfix(), esw=_esw)["G3_esw"]["predictions"]
+    chk(_g3["ndo_li_002"]["pass"] is True and _g3["ndo_li_002"]["reduction_pass"] is True,
+        "[양성] x002 G3 — 1.92 V + 첫 방출에 Nd10S19 + 환원 교환 0 경계 1.717 → 맞음")
+    chk(_g3["nd_li_002"]["pass"] is False,
+        "[⛔음성] x002 G3 — 전압이 1.92 여도 첫 방출 산물에 Nd10S19 가 없으면 '맞음' 이 아니다")
+    chk(_g3["nd_p_002"]["pass"] is None and _g3["nd_p_002"]["premise_holds"] is False,
+        "[⛔음성] x002 G3 — 중성 조합에 Nd2S3+Li2S 가 없으면 '틀림' 이 아니라 '전제 불성립'(None)")
+    chk(_g3["o_only_003"]["pass"] is None and _g3["o_only_003"]["measured_V"] is None,
+        "[⛔음성] x002 G3 — ESW 자료가 없는 조성은 통과로 세지 않는다")
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -1565,6 +1646,254 @@ def dopant_gap_floor(fate_json, gap_json, dopant="Nd"):
                 "도펀트 함유 상만 본다. 갭은 MP PBE 참조값(Nd 상은 하한)이다."}
 
 
+# ── x = 0.02 화면 전환 판정 (2026-09-28) ─────────────────────────────────────
+#: 개정문 db/properties/cathode_cei_x002_amendment_2026_09_28.json §3 — **실행 전에 박았다.**
+#:   값을 보고 아래 수를 고치지 않는다 (고치면 사전등록이 죽는다).
+X002_AMENDMENT = "db/properties/cathode_cei_x002_amendment_2026_09_28.json"
+X002_BASE = "modelc"
+X002_SITES = {
+    "Li": {"x": 0.02, "P_fu": 1.00, "nd": "nd_li_002", "o": "o_only_003",
+           "both": "ndo_li_002", "lim_nd": "lim_li_002"},
+    "P": {"x": 0.02, "P_fu": 0.98, "nd": "nd_p_002", "o": "o_only_003",
+          "both": "nd_p_002_asused", "lim_nd": "lim_p_002", "lim_both": "lim_p_002_asused"},
+    "Li_x020": {"x": 0.20, "P_fu": 1.00, "nd": "nd_only", "o": "o_only_03",
+                "both": "modelc_nd", "lim_nd": "lim_li_020"},
+}
+#: G1 — |Δ(x=0.20) − 10·Δ(x=0.02)| (09-19 S1 과 같은 문턱)
+X002_G1_TOL = 0.010
+#: G2 — 가산성 잔차. x=0.20 의 사전등록 문턱 0.010 을 농도비(0.02/0.20)만큼 줄였다.
+X002_G2_TOL = {0.02: 0.0010, 0.20: 0.010}
+#: 이 캠페인이 '유의' 로 부르는 폭 — |Δ| 가 이 안이면 크기를 인용하지 않는다 (부호만).
+X002_BAND = 0.010
+#: G4 — Nd 가 가져갈 수 있는 P 의 상한 계수 (NdP5O14 의 P/Nd = 5).
+X002_K_MAX = 5
+
+
+def _x002_cells(res, labels, base=X002_BASE):
+    """base 와 labels 가 **모두** 값이 있고 끝점이 아닌 (양극, 전압) 칸.
+
+    ⚠ 끝점 판정이 None(판정 불가)인 칸도 뺀다 — '아니다' 가 확인된 칸만 쓴다.
+    ⚠ 조성마다 유효칸이 다르므로 **비교할 조성 묶음마다** 칸을 새로 잡는다(09-19 공통기준 규약).
+    """
+    out = []
+    for cat, cd in res.items():
+        deg_all = cd.get("endpoint_degenerate") or {}
+        for V, row in (cd.get("by_voltage") or {}).items():
+            deg = deg_all.get(V) or {}
+            if all(row.get(l) is not None and deg.get(l) is False for l in (base, *labels)):
+                out.append((cat, V))
+    return out
+
+
+def _x002_d(res, cell, lab, ref):
+    c, V = cell
+    return res[c]["by_voltage"][V][lab] - res[c]["by_voltage"][V][ref]
+
+
+def _x002_mean(res, cells, lab, ref=X002_BASE):
+    """Δ = E(lab) − E(ref) 의 칸 평균. **양수 = 덜 반응**. 칸이 없으면 None (0 이 아니다)."""
+    if not cells:
+        return None
+    return sum(_x002_d(res, c, lab, ref) for c in cells) / len(cells)
+
+
+def _x002_by_v(res, cells, lab, ref=X002_BASE):
+    by = {}
+    for c in cells:
+        by.setdefault(c[1], []).append(_x002_d(res, c, lab, ref))
+    return {V: round(sum(v) / len(v), 6)
+            for V, v in sorted(by.items(), key=lambda t: float(t[0]))}
+
+
+def x002_p_share(rxn, dopant="Nd", tms=TM_DEFAULT):
+    """반응식 → 좌변 전해질의 P 가 **어느 방**으로 갔나 (몫, 합 ≈ 1). 못 읽으면 None.
+
+    방 다섯: 도펀트 인산염 · 전이금속 인산염 · Li 인산염 · 티오인산염(P–S, 무산소) · 기타(PCl5·P2O5·P).
+    ⚠ LiNd(PO3)4 처럼 Li 와 Nd 를 같이 품은 상은 **도펀트 인산염**으로 센다 (도펀트를 먼저 본다).
+    ⚠ 이 함수가 못 하는 것: 끝점(자체분해) 여부를 모른다 — 호출부가 끝점 칸을 먼저 뺀다.
+    """
+    if not rxn or "->" not in rxn:
+        return None
+    lhs, rhs = rxn.split("->", 1)
+    L, R = _rxn_side_terms(lhs), _rxn_side_terms(rhs)
+    p_lhs = sum(n * k.get("P", 0.0) for n, _, k in L)
+    if p_lhs <= 0:
+        return None
+    acc = dict.fromkeys(("dopant_phosphate", "tm_phosphate", "li_phosphate",
+                         "thiophosphate", "other"), 0.0)
+    for n, f, k in R:
+        p = k.get("P", 0.0)
+        if p <= 0:
+            continue
+        has_o = k.get("O", 0.0) > 0
+        if has_o and k.get(dopant, 0.0) > 0:
+            acc["dopant_phosphate"] += n * p
+        elif has_o and any(k.get(t, 0.0) > 0 for t in tms):
+            acc["tm_phosphate"] += n * p
+        elif has_o and k.get("Li", 0.0) > 0:
+            acc["li_phosphate"] += n * p
+        elif k.get("S", 0.0) > 0 and not has_o:
+            acc["thiophosphate"] += n * p
+        else:
+            acc["other"] += n * p
+    out = {k: round(v / p_lhs, 6) for k, v in acc.items()}
+    out["sum"] = round(sum(acc.values()) / p_lhs, 6)
+    out["dopant_products"] = [f"{n:g} {f}" for n, f, k in R if k.get(dopant, 0.0) > 0]
+    return out
+
+
+def x002_esw_edges(esw_results):
+    """ESW 원장 results → 조성별 {산화 onset, 환원 쪽 교환 0 첫 경계, 첫 방출 반응}.
+
+    ⛔ 환원 쪽은 `reduction_limit_V` 필드를 **쓰지 않는다** — 그 값은 '아직 Li 를 흡수하는 마지막 단계'
+      를 집는 계통 오류다 (HZ-esw-reduction-limit-label). profile 에서 evolution_Li == 0 인 첫 경계를 읽는다.
+    """
+    out = {}
+    for lab, r in (esw_results or {}).items():
+        prof = sorted(r.get("profile") or [], key=lambda e: e["V_vs_Li"])
+        red = next((e["V_vs_Li"] for e in prof if abs(e["evolution_Li"]) < 1e-6), None)
+        out[lab] = {"composition": r.get("composition"),
+                    "oxidation_onset_V": r.get("oxidation_limit_V"),
+                    "reduction_edge_V_zero_exchange": red,
+                    "oxidation_onset_rxn": r.get("oxidation_onset_rxn"),
+                    "neutral_rxn": r.get("neutral_rxn")}
+    return out
+
+
+def _x002_rhs_has(rxn, formula):
+    """반응식 **오른쪽**에 그 화학식이 산물로 있나 (부분문자열이 아니라 항 단위 — Li2S ≠ Li2SO4)."""
+    if not rxn or "->" not in rxn:
+        return False
+    return any(f == formula for _, f, _ in _rxn_side_terms(rxn.split("->", 1)[1]))
+
+
+def x002_verdicts(results, esw=None, repro=None):
+    """x = 0.02 화면 전환의 판정 G1·G2·G4(+G3·G5 관찰) — **이미 나온 결과 JSON 만** 읽는다 (MP 불필요).
+
+    results : interface 실행의 `results` (양극 → by_voltage · reactions · endpoint_degenerate)
+    esw     : ESW 실행의 `results` (없으면 G3 을 '자료 없음' 으로 둔다 — 통과로 세지 않는다)
+    repro   : interface 실행의 `reproduce_check` (G0 — 도구가 이미 판정했다, 여기선 옮겨 적기만 한다)
+
+    ⛔ 이 함수가 못 하는 것
+      · 문턱을 고르지 않는다 — 위 X002_* 상수(개정문 §3)만 쓴다.
+      · 조성이 빠지면 **판정하지 않는다** (빠진 조성 이름을 적고 끝낸다 — 0 으로 채우지 않는다).
+      · 계면 반응의 **절대값**을 내지 않는다 — 전부 modelc 기준 Δ 다 (1저자 인용정책).
+      · 속도·두께·연속성·부동태를 말하지 않는다 (0 K hull).
+    """
+    labels = set()
+    for cd in results.values():
+        for row in (cd.get("by_voltage") or {}).values():
+            labels |= set(row)
+    need = {X002_BASE} | {v for s in X002_SITES.values()
+                          for k, v in s.items() if isinstance(v, str)}
+    missing = sorted(need - labels)
+    out = {"schema": "cei_x002_verdicts/v1", "amendment": X002_AMENDMENT,
+           "base": X002_BASE, "missing_labels": missing,
+           "G0_reproduce": ({"verdict": repro.get("verdict"), "ok": repro.get("ok"),
+                             "max_abs_delta": repro.get("max_abs_delta"),
+                             "n_compared": repro.get("n_compared")} if repro else None)}
+    if missing:
+        out["⛔"] = f"조성이 빠졌다 {missing} — 판정하지 않는다 (0 으로 채우지 않는다)"
+        return out
+
+    sites = {}
+    for name, s in X002_SITES.items():
+        cells = _x002_cells(results, [s["nd"], s["o"], s["both"]])
+        d = {k: _x002_mean(results, cells, s[k]) for k in ("nd", "o", "both")}
+        resid = (d["nd"] + d["o"] - d["both"]) if cells else None
+        by_v = {k: _x002_by_v(results, cells, s[k]) for k in ("nd", "o", "both")}
+        tol = X002_G2_TOL[s["x"]]
+        lim = {}
+        for key in ("nd", "both"):
+            lk = s.get("lim_" + key)
+            if not lk:
+                continue
+            cl = _x002_cells(results, [s[key], lk])
+            lim[key] = {"pair": [s[key], lk], "n_cells": len(cl),
+                        "nd_term_by_V_eV_per_atom": _x002_by_v(results, cl, s[key], ref=lk)}
+        sites[name] = {
+            "x": s["x"], "labels": {k: s[k] for k in ("nd", "o", "both")},
+            "n_common_cells": len(cells),
+            "delta_mean_eV_per_atom": {k: (round(v, 6) if v is not None else None) for k, v in d.items()},
+            "delta_by_V": by_v,
+            "G2_additivity": {"residual_mean": (round(resid, 6) if resid is not None else None),
+                              "tol": tol,
+                              "pass": (abs(resid) <= tol) if resid is not None else None},
+            "within_resolution_band": ((abs(d["both"]) < X002_BAND) if d["both"] is not None else None),
+            "li_matched": lim}
+    out["sites"] = sites
+
+    lin = {}
+    for key in ("both", "o", "nd"):
+        a, b = X002_SITES["Li_x020"][key], X002_SITES["Li"][key]
+        cl = _x002_cells(results, [a, b])
+        da, db = _x002_mean(results, cl, a), _x002_mean(results, cl, b)
+        r = (da - 10 * db) if cl else None
+        lin[key] = {"pair": [a, b], "n_cells": len(cl),
+                    "delta_x020": (round(da, 6) if da is not None else None),
+                    "delta_x002": (round(db, 6) if db is not None else None),
+                    "residual": (round(r, 6) if r is not None else None),
+                    "pass": (abs(r) <= X002_G1_TOL) if r is not None else None,
+                    "gated": key in ("both", "o")}
+    out["G1_linearity"] = lin
+
+    shares, g4_bad = {}, []
+    for name, s in X002_SITES.items():
+        bound = X002_K_MAX * s["x"] / s["P_fu"] + 1e-6
+        for lab in (s["nd"], s["both"]):
+            for cat, cd in results.items():
+                for V, rx in (cd.get("reactions") or {}).items():
+                    if (cd.get("endpoint_degenerate") or {}).get(V, {}).get(lab) is not False:
+                        continue
+                    sh = x002_p_share(rx.get(lab))
+                    if sh is None:
+                        continue
+                    shares.setdefault(lab, {}).setdefault(cat, {})[V] = sh
+                    if sh["dopant_phosphate"] > bound:
+                        g4_bad.append({"label": lab, "cathode": cat, "V": V,
+                                       "dopant_phosphate": sh["dopant_phosphate"],
+                                       "bound": round(bound, 6)})
+    for cat, cd in results.items():               # 무도핑 기준 — TM 이 방을 대는 몫
+        for V, rx in (cd.get("reactions") or {}).items():
+            if (cd.get("endpoint_degenerate") or {}).get(V, {}).get(X002_BASE) is False:
+                sh = x002_p_share(rx.get(X002_BASE))
+                if sh is not None:
+                    shares.setdefault(X002_BASE, {}).setdefault(cat, {})[V] = sh
+    out["p_share"] = shares
+    out["G4_bound"] = {"k_max": X002_K_MAX, "pass": not g4_bad, "violations": g4_bad}
+
+    if esw is not None:
+        edges = x002_esw_edges(esw)
+        pred = {}
+        for lab, want in (("ndo_li_002", 1.92), ("nd_li_002", 1.92), ("o_only_003", 2.14),
+                          ("nd_p_002_asused", 1.92), ("nd_p_002", 1.92)):
+            e = edges.get(lab)
+            if not e or e["oxidation_onset_V"] is None:
+                pred[lab] = {"predicted_V": want, "measured_V": None, "pass": None,
+                             "note": "ESW 자료 없음 — 통과로 세지 않는다"}
+                continue
+            m = e["oxidation_onset_V"]
+            nd10 = _x002_rhs_has(e.get("oxidation_onset_rxn"), "Nd10S19")
+            # 전제: 중성 조합에 Nd2S3 와 Li2S 가 같이 있어야 1.92 V 유도가 선다 (O 단독은 전제 없음)
+            premise = (want == 2.14 or (_x002_rhs_has(e.get("neutral_rxn"), "Nd2S3")
+                                        and _x002_rhs_has(e.get("neutral_rxn"), "Li2S")))
+            ok = abs(m - want) <= 0.005 and (want == 2.14 or nd10)
+            pred[lab] = {"predicted_V": want, "measured_V": m,
+                         "premise_holds": premise,
+                         "pass": (ok if premise else None),
+                         "note": (None if premise else "중성 조합에 Nd2S3 + Li2S 가 없다 — 전제 불성립 (틀림이 아니다)"),
+                         "first_release_has_Nd10S19": nd10,
+                         "reduction_edge_V": e["reduction_edge_V_zero_exchange"],
+                         "reduction_pred_V": 1.717,
+                         "reduction_pass": (abs(e["reduction_edge_V_zero_exchange"] - 1.717) <= 0.005
+                                            if e["reduction_edge_V_zero_exchange"] is not None else None)}
+        out["G3_esw"] = {"edges": edges, "predictions": pred,
+                         "⚠": "P 자리는 중성 조합에 Nd2S3 + Li2S 가 없으면 예측의 전제가 안 선다 — 틀림이 아니라 전제 불성립으로 읽는다 (개정문 G3)."}
+    else:
+        out["G3_esw"] = None
+    return out
+
+
 def dopant_fate(csv_path, dopant="Nd"):
     """도펀트가 최소 꺾임에서 **어느 상으로 가는가** — 인산염 / 황산염 / 염화물 / 그 밖.
 
@@ -1677,6 +2006,11 @@ def main():
     ap.add_argument("--p_host_ladder", metavar="PANELS_CSV",
                     help="x-scan 패널 CSV 를 읽어 최소 꺾임의 P 수용상·Li:P 사다리를 뽑는다 "
                          "(MP·pymatgen 불필요 — 이미 나온 반응식만 읽는다)")
+    ap.add_argument("--x002", metavar="RESULTS_JSON",
+                    help="x = 0.02 화면 전환 판정 G0–G5 (개정문 cathode_cei_x002_amendment_2026_09_28) "
+                         "— 이미 나온 결과만 읽는다 (MP 불필요)")
+    ap.add_argument("--x002_esw", metavar="ESW_JSON",
+                    help="--x002 와 같이: ESW 원장(esw_grand_potential.py 산출)으로 G3 onset 예측을 대조한다")
     if "--selftest" in __import__("sys").argv:
         raise SystemExit(_selftest())
     a = ap.parse_args()
@@ -1696,6 +2030,35 @@ def main():
                   f'{str(r["min_gap_phase"]):14s} {ps}')
             if r["GAP_UNKNOWN_phases"]:
                 print(f'        ⛔ 갭 모르는 상 {r["GAP_UNKNOWN_phases"]} — 최솟값 안 냄')
+        print(f'→ {a.out}')
+        return 0
+    if a.x002:
+        _D = json.loads(Path(a.x002).read_text(encoding="utf-8"))
+        _esw = (json.loads(Path(a.x002_esw).read_text(encoding="utf-8"))["results"]
+                if a.x002_esw else None)
+        out = x002_verdicts(_D["results"], esw=_esw, repro=_D.get("reproduce_check"))
+        out["source"] = {"interface": a.x002, "esw": a.x002_esw}
+        Path(a.out).write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+        if out.get("missing_labels"):
+            print(out["⛔"])
+            return 2
+        _V3 = {True: "통과", False: "초과", None: "판정 없음(칸 0)"}
+        g0 = out["G0_reproduce"] or {}
+        print(f'G0 재현   {g0.get("verdict")} · 최대 차 {g0.get("max_abs_delta")} · 칸 {g0.get("n_compared")}')
+        for k, r in out["G1_linearity"].items():
+            print(f'G1 선형성 {k:4s} {r["pair"][0]:>12} vs 10×{r["pair"][1]:<16} 잔차 {r["residual"]}'
+                  f'  {_V3[r["pass"]]}{"" if r["gated"] else "  (게이트 아님 · 09-19 S1 재현)"}  n={r["n_cells"]}')
+        for n, s in out["sites"].items():
+            dm, g2 = s["delta_mean_eV_per_atom"], s["G2_additivity"]
+            print(f'G2 {n:8s} x={s["x"]:.2f} Δ(Nd) {dm["nd"]} Δ(O) {dm["o"]} Δ(둘 다) {dm["both"]} '
+                  f'잔차 {g2["residual_mean"]} (문턱 {g2["tol"]}) {_V3[g2["pass"]]}'
+                  f'{"  · 유의폭 ±0.010 안" if s["within_resolution_band"] else ""}  n={s["n_common_cells"]}')
+        print(f'G4 상한   {"통과" if out["G4_bound"]["pass"] else "⛔ 위반 " + str(len(out["G4_bound"]["violations"]))}')
+        if out["G3_esw"]:
+            for lab, p in out["G3_esw"]["predictions"].items():
+                print(f'G3 ESW    {lab:16s} 예측 {p["predicted_V"]} · 실측 {p["measured_V"]} · '
+                      f'{ {True: "맞음", False: "틀림", None: "판정 없음"}[p["pass"]] }'
+                      f'{" (" + p["note"] + ")" if p.get("note") else ""}')
         print(f'→ {a.out}')
         return 0
     if a.li_ledger:
