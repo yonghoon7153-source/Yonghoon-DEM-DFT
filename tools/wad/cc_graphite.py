@@ -73,6 +73,7 @@ REPS = ("CC_S33_AB", "CC_M41_AB")          # E(d) · far8 · G3 · G4 대상 (�
 BAND = (0.31, 0.47)                        # S33_AB 운영 허용대 (Codex 파일럿 허용오차 · 측정 불확도 아님)
 G3_DW, G4_DW, THICK_DW = 0.01, 0.01, 0.02
 SPACING_OK = (3.0, 4.2)                    # 이완 뒤 층간 [Å] — 밖이면 INCOMPLETE (세고 제외 · 교체 없음)
+PAIR_TIE = 0.01                            # 짝 규칙 ② (DEM 7차 회신 · 09-28 1저자 비준 · 결과 전): 두 D3 열의 |W_inc − 0.37| 차가 이 안이면 '구분 안 됨 → 2체'
 FLAT_TOL = 0.05                            # 한 층 안 z 폭 [Å]
 WANG = {"CE_incommensurate_J_m2": (0.37, 0.01), "CE_ideal_AB_J_m2": (0.39, 0.02), "sigma0_J_m2": (0.022, 0.005),
         "src": "Wang et al., Nat. Commun. 6, 7853 (2015) — litdb wang2015_graphite_cleavage_energy (초록 · 본문 식 G(0) = G + σ0)"}
@@ -381,6 +382,14 @@ def w_inc(Wab, Wsp, Waa):
             "⚠": "강체 비정합 = GSFE 평균 (Wang 2015 σ0 정의) · 3 registry 푸리에 절단 추정 — 정보량"}
 
 
+def pairing_choice(d_2body, d_atm, tie=PAIR_TIE):
+    """짝 규칙 ② — 흑연 대조에서 Wang 0.37 에 더 가까운 D3 열. 입력 = W_inc(S33) − 0.37 (2체 · 2체+ATM). 값이 없으면 None."""
+    if d_2body is None or d_atm is None:
+        return None
+    g = abs(d_2body) - abs(d_atm)
+    return "2체" if g < -tie else ("2체+ATM" if g > tie else "구분 안 됨 → 2체 (헤드라인 결정 그대로)")
+
+
 def atm_column(stage2_dir, names):
     """ΔW_ATM = 같은 기하에서 E_D3(s9=1) − E_D3(s9=0) 의 끝점 차 (simple-dftd3 · 3D 주기) — V2 ATM 열과 같은 방법. 없으면 None."""
     try:
@@ -476,6 +485,10 @@ def collect(stage2_dir, raw_dir, atm=False, v2_ref=V2_REF):
                             "W_inc_S33_plus_ATM_J_m2": rA["W_inc_2star_J_m2"] if rA else None,
                             "W_inc_S33_plus_ATM_minus_CE_inc": (rA["W_inc_2star_J_m2"] - WANG["CE_incommensurate_J_m2"][0]) if rA else None,
                             "⚠": "ATM 은 D3 모형 안의 3체 보정 (simple-dftd3) — 헤드라인은 2체 그대로 (D-2026-09-23-wad-d3-twobody-atm-separate)"}
+        wang["pairing_column"] = {"선택": pairing_choice(wang.get("W_inc_S33_minus_CE_inc"), wang["with_ATM"]["W_inc_S33_plus_ATM_minus_CE_inc"]),
+                                  "기준": f"|W_inc(S33) − 0.37| 가 {PAIR_TIE} J/m² 넘게 작은 열 · 아니면 구분 안 됨 → 2체",
+                                  "보조_AB_0.39": {"2체": wang["W_S33_AB_minus_CE_AB"], "2체+ATM": wang["with_ATM"]["W_S33_AB_plus_ATM_minus_CE_AB"]},
+                                  "⚠": "DEM 7차 회신 짝 규칙 ② (09-28 1저자 비준 · 결과 전) — 한 계(흑연) 대조로 D3 열을 고르는 경험 규칙이지 Ag–C 오차 보증이 아니다"}
     strain = {"dW_V2a_minus_base_J_m2": (Wof("CC_M41_AB_V2a") - Wof("CC_M41_AB")) if (Wof("CC_M41_AB_V2a") is not None and Wof("CC_M41_AB") is not None) else None,
               "a_V2a_A": A_C_V2, "a_base_A": A_C}
     v2 = None
@@ -746,13 +759,18 @@ def _selftest():
             ck("ATM: 값이 유한 · 2체 ΔD3 > 0 (분리하면 분산 에너지가 오른다)", v is not None and math.isfinite(v["dW_ATM_J_m2"]) and v["dD3_2body_sdftd3_J_m2"] > 0, v)
         else:
             ck("ATM: simple-dftd3 없으면 0 이 아니라 문구", "없음" in at.get("status", ""), at)
+    # ⑧′ 짝 규칙 ② — 경계 양쪽 · 동률 · 값 없음
+    ck("짝 규칙 ②: 2체가 0.01 넘게 가까우면 '2체' · ATM 이 가까우면 '2체+ATM' · 차 0.01 안이면 구분 안 됨 · 값 없으면 None",
+       pairing_choice(0.005, -0.03) == "2체" and pairing_choice(0.04, -0.005) == "2체+ATM" and pairing_choice(0.02, -0.015).startswith("구분 안 됨")
+       and pairing_choice(-0.02, 0.02).startswith("구분 안 됨") and pairing_choice(None, 0.01) is None)
     # ⑨ 카드 결속 — 사전등록 카드가 있으면 문턱·모델·registry·설정이 코드와 같아야 한다
     card_p = os.path.join(REPO, PREREG)
     if os.path.isfile(card_p):
         c = json.load(open(card_p, encoding="utf-8"))["code_binding"]
         ck("카드 결속: 문턱 · 허용대 · 모델 · REPS · k · 간격 · smearing", c["BAND"] == list(BAND) and c["G3_DW"] == G3_DW and c["G4_DW"] == G4_DW and c["THICK_DW"] == THICK_DW
            and c["MODELS"] == [list(t) for t in MODELS] and c["REPS"] == list(REPS) and c["KPTS"] == list(KPTS) and c["KPTS_DENSE"] == list(KPTS_DENSE) and c["GAP"] == GAP
-           and c["SMEAR"] == [SMEAR, DEGAUSS, DEGAUSS_HALF] and c["SPACING_OK"] == list(SPACING_OK) and c["FLAT_TOL"] == FLAT_TOL, c)
+           and c["SMEAR"] == [SMEAR, DEGAUSS, DEGAUSS_HALF] and c["SPACING_OK"] == list(SPACING_OK) and c["FLAT_TOL"] == FLAT_TOL
+           and c.get("PAIR_TIE") == PAIR_TIE, c)
     print(f"{'✅' if n_bad == 0 else '⛔'} cc_graphite selftest {n_ok}/{n_ok + n_bad} 통과")
     return 0 if n_bad == 0 else 1
 
