@@ -153,6 +153,11 @@ STATUS_NOPERC = 'NOT_PERCOLATING'
 STATUS_BAND_EMPTY = 'ELECTRODE_BAND_EMPTY'
 STATUS_NOPAIR = 'NO_VALID_SAMPLED_PAIR'
 STATUS_MISSING = 'INPUT_MISSING'
+#: 벽 τ 는 플래튼 높이가 있어야 밴드가 선다 — 없으면 추정하지 않고 이 상태로 둔다.
+STATUS_NO_PLATE = 'PLATE_Z_MISSING'
+#: LHS-08 규약 판단 (1저자 비준 2026-09-28 "벽 기준 τ 새 열") — 밴드 = 바닥 벽 (z = Z_FLOOR) · 플래튼 (plate_z) 에서
+#: 반지름 최대값 두께.  옛 `harvest_v1/solid_zrange/…` 는 **그대로** 두고 이 규약은 새 키 (`wall_tau`) 로만 낸다.
+TAU_WALL_CONVENTION = 'harvest_v3/wall_z0_plate/rSEmax/no_fallback/same_component'
 
 
 def sha256_of(path):
@@ -533,8 +538,15 @@ def tortuosity_se(atoms, labels, box_lo, box_hi, n_pairs=N_TAU_PAIRS, seed=42,
                 n_sampled=0, n_valid=0, n_truncated=0, status=STATUS_NOPERC,
                 tau_convention='harvest_v1/solid_zrange/rSEmax/no_fallback/same_component',
                 band_detail=band)
+    #  벽 τ 의 기본값 — plate_z 가 없으면 **추정하지 않는다** (DESC-06 과 같은 원칙)
+    base['wall_tau'] = dict(tau_mean=None, tau_median=None, tau_mean_untruncated=None,
+                            n_sampled=0, n_valid=0, n_truncated=0, n_span_components=None,
+                            status=(STATUS_NO_PLATE if plate_z is None else STATUS_NOPERC),
+                            tau_convention=TAU_WALL_CONVENTION)
     if sel.size < 2:
         base['status'] = STATUS_ABSENT
+        if plate_z is not None:
+            base['wall_tau']['status'] = STATUS_ABSENT
         return base
 
     r_all, z_all = atoms['radius'], atoms['z']
@@ -589,24 +601,49 @@ def tortuosity_se(atoms, labels, box_lo, box_hi, n_pairs=N_TAU_PAIRS, seed=42,
         band['wall_n_top'] = None
         band['wall_n_span_components'] = None
     band['wall_note'] = '진단 전용 — 벽 (z = Z_FLOOR) · 플래튼 기준 밴드 인원 (Codex §8-3).  보고 τ 는 solid_zrange 규약 그대로.'
+    #  ★ 벽 기준 τ — **새 열** (1저자 비준 09-28 "벽 기준 τ 새 열", 판단 J20).  같은 성분 그래프 · 같은 표본 규칙 · 같은 seed,
+    #    밴드만 벽 (바닥 z = Z_FLOOR · 플래튼 plate_z) 이다.  옛 τ (아래) 는 그대로 — 규약 판단은 새 이름으로 드러낸다.
+    if plate_z is not None:
+        wt = _tau_sample(G, xyz, comps, wall_bot, wall_top, lx, ly, n_pairs, seed)
+        wt['tau_convention'] = TAU_WALL_CONVENTION
+        base['wall_tau'] = wt
     if not bot or not top:
         base['status'] = STATUS_BAND_EMPTY      # ⓐ — 규약(밴드 정의)이 용의자
         return base
 
+    res = _tau_sample(G, xyz, comps, bot, top, lx, ly, n_pairs, seed)
+    band['n_span_components'] = res.pop('n_span_components')
+    base.update(res)                            # ⓑ (관통 성분 0) 이면 NOT_PERCOLATING · 유한 τ 없음 — 물리
+    return base
+
+
+def _tau_sample(G, xyz, comps, bot, top, lx, ly, n_pairs, seed):
+    """두 밴드 (`bot` · `top`, SE 색인 집합) 를 **같은 성분 안에서** 잇는 쌍으로 τ 를 표본한다.
+
+    옛 규약 (solid_zrange) 과 벽 규약 (wall_z0_plate) 이 **이 함수 하나**를 쓴다 — 밴드만 다르고 규칙은 같다
+    (selftest ⑰: 두 밴드가 같은 침대에서 두 τ 가 같다 · 옛 τ 는 옮기기 전 값 그대로).
+    """
+    import networkx as nx
+
+    out = dict(tau_mean=None, tau_median=None, tau_mean_untruncated=None,
+               n_sampled=0, n_valid=0, n_truncated=0, status=STATUS_NOPERC, n_span_components=0)
+    if not bot or not top:
+        out['status'] = STATUS_BAND_EMPTY
+        return out
     cands = []
     for comp in comps:
         cb, ct = comp & bot, comp & top
         if cb and ct:
             cands.append((sorted(cb), sorted(ct)))
-    band['n_span_components'] = int(len(cands))
+    out['n_span_components'] = int(len(cands))
     if not cands:                                   # ⓑ — 유한 τ 를 내지 않는다 (물리)
-        return base
+        return out
 
     rng = np.random.default_rng(seed)
     allp = [(s, tt) for cb, ct in cands for s in cb for tt in ct if s != tt]
     if not allp:
-        base['status'] = STATUS_NOPAIR
-        return base
+        out['status'] = STATUS_NOPAIR
+        return out
     idx = rng.permutation(len(allp))[:n_pairs]
     taus = []
     for k in idx:
@@ -622,20 +659,20 @@ def tortuosity_se(atoms, labels, box_lo, box_hi, n_pairs=N_TAU_PAIRS, seed=42,
             taus.append(plen / dz)
 
     if not taus:
-        base['status'] = STATUS_NOPAIR
-        base['n_sampled'] = int(len(idx))
-        return base
+        out['status'] = STATUS_NOPAIR
+        out['n_sampled'] = int(len(idx))
+        return out
     raw = np.asarray(taus)
     keep = raw[(raw >= TAU_LO) & (raw < TAU_HI)]
-    base.update(n_sampled=int(len(idx)), n_valid=int(raw.size),
-                n_truncated=int(raw.size - keep.size),
-                tau_mean_untruncated=float(raw.mean()))
+    out.update(n_sampled=int(len(idx)), n_valid=int(raw.size),
+               n_truncated=int(raw.size - keep.size),
+               tau_mean_untruncated=float(raw.mean()))
     if keep.size == 0:
-        base['status'] = STATUS_NOPAIR
-        return base
-    base.update(tau_mean=float(keep.mean()), tau_median=float(np.median(keep)),
-                status=STATUS_OK)
-    return base
+        out['status'] = STATUS_NOPAIR
+        return out
+    out.update(tau_mean=float(keep.mean()), tau_median=float(np.median(keep)),
+               status=STATUS_OK)
+    return out
 
 
 def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None,
@@ -676,6 +713,8 @@ def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None
     #  plate_z 는 **진단 전용**으로만 넘긴다 (LHS-08) — 보고 τ 의 규약은 안 바뀐다.
     tau = tortuosity_se(atoms, labels, box_lo, box_hi, n_pairs=n_pairs,
                         plate_z=plate_z)
+    #  벽 τ 는 **따로** 싣는다 — 옛 `tau_detail` 은 키 하나 늘지 않게 (09-25 산출물과 같은 모양) 둔다.
+    tau_wall = tau.pop('wall_tau')
 
     raw = {'atom': dict(path=os.path.basename(atom_path), sha256=sha256_of(atom_path)),
            'contact': dict(path=os.path.basename(contact_path),
@@ -755,10 +794,11 @@ def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None
         coverage_AM_P_hertz_pct=cp, coverage_AM_S_hertz_pct=cs,
         coverage_AM_total_hertz_pct=ct, coverage_AM_only_hertz_pct=ca,
         tortuosity_dijkstra_SE=tau['tau_mean'],
+        tortuosity_dijkstra_SE_wall=tau_wall['tau_mean'],
         status=dict(phi=STATUS_OK, porosity=STATUS_OK,
                     coverage_AM_P=sp, coverage_AM_S=ss, coverage_AM_total=st,
-                    tortuosity=tau['status']),
-        tau_detail=tau, coverage_detail=dict(
+                    tortuosity=tau['status'], tortuosity_wall=tau_wall['status']),
+        tau_detail=tau, tau_wall_detail=tau_wall, coverage_detail=dict(
             n_capped=cov['n_capped'],
             n_free_surface_invalid=cov['n_free_surface_invalid'],
             counts=cov['counts'], contact_headers=cheaders),
@@ -1293,6 +1333,47 @@ def selftest():
             (_bw.get('wall_n_bot') or 0) >= 1 and _bw.get('wall_n_top') is not None and _bw.get('wall_z_floor') == 0.0)
         chk('⑯ 벽 기준 진단: 벽 밴드 둘을 잇는 성분 수 (여기선 1)', _bw.get('wall_n_span_components') == 1)
         chk('⑯ 보고 τ 규약은 불변 (solid_zrange 문자열 그대로)', 'solid_zrange' in _tw['tau_convention'])
+
+        # ── ⑰ LHS-08 규약 판단 (1저자 비준 09-28 "벽 기준 τ 새 열"): 바닥 벽 (z = Z_FLOOR) · 플래튼 밴드 τ 를 **새 열**로 ──
+        #  옛 τ (solid_zrange) 는 바이트 그대로 둔다 — 새 규약은 새 키 (`wall_tau`) · 새 규약 문자열.
+        _tw3 = tortuosity_se(*_bed(_c_rows2), _lo8, _hi8, plate_z=20.0)
+        _ww = _tw3.get('wall_tau') or {}
+        chk('⑰ ★ 벽 τ: 옛 규약이 BAND_EMPTY 인 침대 (벽 아래 AM) 에서 새 규약은 OK · τ = 1 (곧은 기둥)',
+            _ww.get('status') == STATUS_OK and _ww.get('tau_mean') is not None and abs(_ww['tau_mean'] - 1.0) < 1e-12)
+        chk('⑰ 벽 τ 규약 문자열 = TAU_WALL_CONVENTION (harvest_v3/wall_z0_plate/…)',
+            _ww.get('tau_convention') == 'harvest_v3/wall_z0_plate/rSEmax/no_fallback/same_component')
+        chk('⑰ 옛 τ 는 그대로 — status · 값 · 규약 문자열 (solid_zrange)',
+            _tw3['status'] == STATUS_BAND_EMPTY and _tw3['tau_mean'] is None
+            and _tw3['tau_convention'] == 'harvest_v1/solid_zrange/rSEmax/no_fallback/same_component')
+        chk('⑰ 벽 τ 의 관통 성분 수 = 진단 wall_n_span_components (같은 밴드 정의)',
+            _ww.get('n_span_components') == (_tw3.get('band_detail') or {}).get('wall_n_span_components') == 1)
+        _tb3 = tortuosity_se(*_bed(_b_rows), _lo8, _hi8, plate_z=20.0)
+        chk('⑰ 벽 τ 도 진짜 미관통 (두 덩어리) 은 NOT_PERCOLATING · 유한 τ 없음',
+            (_tb3.get('wall_tau') or {}).get('status') == STATUS_NOPERC
+            and (_tb3.get('wall_tau') or {}).get('tau_mean') is None)
+        _tn3 = tortuosity_se(*_bed(_c_rows2), _lo8, _hi8)
+        chk('⑰ plate_z 가 없으면 벽 τ 를 내지 않는다 (추정하지 않는다)',
+            (_tn3.get('wall_tau') or {}).get('status') == 'PLATE_Z_MISSING'
+            and (_tn3.get('wall_tau') or {}).get('tau_mean') is None)
+        #  ★ 회귀 — 옛 τ 가 바이트 그대로인가 (공통 표본 함수로 옮기기 **전** 값, 2026-09-28 기록)
+        _rng7 = np.random.default_rng(7)
+        _rr = [(float(x), float(y), float(z), 0.6, 'SE')
+               for x, y, z in _rng7.uniform([0, 0, 0.3], [10, 10, 19.7], size=(900, 3))]
+        _tr = tortuosity_se(*_bed(_rr), _lo8, _hi8, plate_z=20.0)
+        chk('⑰ 회귀: 옛 τ (무작위 900 SE) = 옮기기 전 값 그대로 (mean · median · 표본 수)',
+            _tr['status'] == STATUS_OK and _tr['tau_mean'] == 2.0612290410739833
+            and _tr['tau_median'] == 2.0805329527696066 and _tr['n_sampled'] == 160 and _tr['n_valid'] == 160)
+        chk('⑰ 회귀: 옛 τ (⑬a 사슬) = 1.0198039027185568 그대로', _t1 == 1.0198039027185568)
+        #  두 규약의 밴드가 **같은** 침대 (맨 아래 입자가 바닥에 · 맨 위 입자가 플래튼에 닿는다) 에서는 같은 표본 규칙이므로 τ 가 같아야 한다
+        _tc = tortuosity_se(*_chain(_xs), _lo, _hi, plate_z=5.55)
+        chk('⑰ 밴드가 같은 침대에서는 벽 τ = 옛 τ (같은 표본 규칙 · 같은 seed)',
+            (_tc.get('wall_tau') or {}).get('status') == STATUS_OK
+            and (_tc.get('wall_tau') or {}).get('tau_mean') == _tc['tau_mean'] == _t1)
+        #  수확 산출물 — 새 키 셋 (옛 키는 그대로)
+        chk('⑰ harvest() 산출물: tortuosity_dijkstra_SE_wall · tau_wall_detail · status.tortuosity_wall',
+            'tortuosity_dijkstra_SE_wall' in r14 and isinstance(r14.get('tau_wall_detail'), dict)
+            and 'tortuosity_wall' in (r14.get('status') or {})
+            and 'tortuosity_dijkstra_SE' in r14 and 'tau_detail' in r14)
 
     print()
     if _FAILS:

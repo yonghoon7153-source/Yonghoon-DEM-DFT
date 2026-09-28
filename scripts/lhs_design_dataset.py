@@ -734,7 +734,8 @@ HANDOVER_VALUE_COLS = ('phi_se', 'phi_am',
 #: ⛔ 인계표에서 **제외**하는 열 (사유를 남긴다 — 조용히 빠지면 안 된다).
 HANDOVER_HELD_BACK = {
     'tortuosity_dijkstra_SE': 'LHS-08 열림 — 130 중 14 만 값이 있고 `NOT_PERCOLATING` 이 '
-                              '규약 실패와 물리 미관통을 **한 값으로 접는다**.  재수확 뒤 공급.',
+                              '규약 실패와 물리 미관통을 **한 값으로 접는다**.  재수확 뒤 공급.  '
+                              '↪ J20 (09-28): 벽 규약 τ 를 **새 열** `tortuosity_SE_wall` 로 공급 — 이 옛 규약 열은 계속 보류.',
 }
 #: 기본 수확 스냅샷 — ⛔ 옛 판 (20260919) 은 분모 바닥 · 이른 메시 (LHS-10 · 11) 로 폐기됐다.  조용히 옛 판을 가리키지 않는다 (HND-04).
 #: 2026-09-28 (J19): 20260924 → **20260925** — 0924 JSON 에는 `handover_qc` (두께 · 벽 QC · 적격성) 가 없어 HND-04 열이 빈칸으로 나갔고
@@ -852,6 +853,129 @@ HANDOVER_UNION_DERIVED = (
 )
 
 
+#: J20 (1저자 비준 2026-09-28 "벽 기준 τ 새 열") — 수확 v3 의 `tau_wall_detail` 을 **새 열**로 싣는다.  옛 τ (solid_zrange) 는
+#:   HANDOVER_HELD_BACK 그대로 (LHS-08).  값 칸은 status OK 일 때만 (계약 ②) — 미관통을 0 이나 큰 수로 채우지 않는다.
+#:   규약 문자열은 수확기 `lhs_descriptor_harvest.TAU_WALL_CONVENTION` 과 같아야 한다 (selftest ⑲n 이 둘을 맞댄다).
+TAU_WALL_CONVENTION = 'harvest_v3/wall_z0_plate/rSEmax/no_fallback/same_component'
+HANDOVER_TAU_WALL = (
+    ('tortuosity_SE_wall',        'tau_mean',
+     '★ SE τ (벽 규약) — 바닥 벽 (z = 0) 밴드와 플래튼 밴드를 **같은 SE 성분 안에서** 잇는 쌍의 최단경로 길이 / 두께 방향 거리, '
+     '[1, 20) 절단 평균.  status OK 일 때만 값'),
+    ('tortuosity_SE_wall_median', 'tau_median',     '같은 표본의 중앙값 (status OK 일 때만)'),
+    ('tortuosity_SE_wall_status', 'status',
+     'OK · NOT_PERCOLATING (벽 밴드 둘을 잇는 SE 성분이 없다 = 미관통) · ELECTRODE_BAND_EMPTY · NO_VALID_SAMPLED_PAIR · N_A_PHASE_ABSENT'),
+    ('tau_wall_n_sampled',        'n_sampled',      '표본 쌍 수 (최대 200)'),
+    ('tau_wall_n_valid',          'n_valid',        '경로가 난 표본 수'),
+    ('tau_wall_n_truncated',      'n_truncated',    '[1, 20) 밖으로 잘린 수'),
+    ('tau_wall_convention',       'tau_convention', '규약 문자열 (harvest_v3/wall_z0_plate/…)'),
+)
+TAU_WALL_VALUE = ('tortuosity_SE_wall', 'tortuosity_SE_wall_median')
+
+#: J20 (1저자 비준 2026-09-28 "✅ 만 이번에" · "채운 뒤 넘김") — 웹앱 파이프라인을 **그대로** 돌린 열 (`scripts/lhs_webapp_batch.py`) 중
+#:   09-19 전수 판정 (`docs/param_audit_report_20260919.md` §2) 이 ✅ 로 판정한 열만 싣는다 ('✅ 쓴다' · '✅ 쓴다(이름 주의)').
+#:   ⛔ 🔶 (σ · fallback · τ(웹앱 폴백) · MPM · Stage E · 피복 문턱) · 🔧 (Physics) 는 **싣지 않는다**.  이름은 코퍼스 (case_master) 그대로.
+DEFAULT_CENSUS_TSV = 'docs/data/case_master_column_census_20260919.tsv'
+#: 같은 프레임 관문 (%p) — 웹앱 porosity (`dem_analysis_core.calc_porosity`, ε_sphere) 와 수확 구 부피 합 porosity 의 차.
+#:   같은 식 · 같은 step 메시면 ~1e-13 (J15 · J16 교차검사 5.6e-14 %p) · 이른 메시 (다른 프레임) 면 수 %p 이상 (LHS-11).
+#:   ⇒ 0.05 %p 는 "같은 프레임인가" 의 판별선이지 물리 허용오차가 아니다.
+WA_SAME_FRAME_TOL_PCT = 0.05
+WA_OK_STATUS = ('done', 'partial')      # partial = 선택 단계만 실패 (예: Stage E) — 필수 단계는 성공
+WA_ROW_COLS = (
+    ('wa_status',        '웹앱 배치 상태 — done · partial (선택 단계 실패) · failed · REFUSED (같은 프레임 · type_map 관문 거부) — '
+                         'done · partial 이 아니면 웹앱 열은 빈칸'),
+    ('wa_failed_stages', '실패한 파이프라인 단계 (| 로 이음)'),
+)
+WA_QC = (
+    ('qc_wa_porosity_minus_harvest_pct', 'porosity', 'porosity_sphere_pct_RECORD_ONLY',
+     '같은 프레임 관문 — 웹앱 porosity (ε_sphere) − 수확 porosity (%p).  |값| > 0.05 면 인계표 생성 자체를 거부한다'),
+    ('qc_wa_cov_AM_P_minus_harvest_pct', 'coverage_AM_P_mean', 'coverage_AM_P_hertz_pct',
+     '검산 — 웹앱 coverage_AM_P_mean − 수확 coverage_AM_P_hertz_pct (%p).  같은 c_cpl[22] 채널 (A_dem_geometric)'),
+    ('qc_wa_cov_AM_S_minus_harvest_pct', 'coverage_AM_S_mean', 'coverage_AM_S_hertz_pct',
+     '검산 — 웹앱 coverage_AM_S_mean − 수확 coverage_AM_S_hertz_pct (%p)'),
+)
+#: 넘길 때 **이름을 고쳐 설명**해야 하는 열 (L1-04) — 코퍼스 이름은 frozen 이라 열 이름은 안 바꾼다.
+CAVEAT_NAME = ('A_dem_geometric — LIGGGHTS 기하 교차 원판 π(rδ − δ²/4) 이지 Hertz 탄성 πR*δ 가 아니다 '
+               '(같은 반경 비 = 2 − δ/2r ≈ 1.99배) · L1-04')
+CAVEAT_FRAC_DELTA = 'δ-based 파괴 분류 — force-based 열 (_force_) 과 같은 표에 나란히 인용 금지 (분류 규칙이 다르다) · force-based 권장'
+CAVEAT_FRAC_FORCE = 'force-based 파괴 분류 (Auerbach — 권장) · δ-based 열과 같은 표에 나란히 인용 금지'
+HANDOVER_VALUE_MEANING = {
+    'phi_se': 'SE 부피분율 — 명목 구 부피 합 / (L² · 플래튼−바닥 간격) (장부값, 겹침 이중계상 포함 · 정본 이름 phi_se_spheresum_nominal_gap)',
+    'phi_am': 'AM 부피분율 — 같은 규약',
+    'coverage_AM_P_hertz_pct': 'AM_P 표면 피복률 (%) — 접촉 면적 c_cpl[22] 합 / 표면적, 입자 평균 · 이름의 hertz 는 물려받은 오해 (A_dem_geometric · L1-04)',
+    'coverage_AM_S_hertz_pct': 'AM_S 표면 피복률 (%) — 같은 채널',
+    'coverage_AM_total_hertz_pct': 'AM 전체 피복률 (%) — 위 둘에서 유도 (독립 타깃 아님)',
+    'porosity_sphere_pct_RECORD_ONLY': 'ε_sphere 공극률 (%) — 1 − phi_se − phi_am (기록 전용 · 물리 공극률은 porosity_union_exact_pct)',
+}
+
+
+def load_webapp(dir_path, census_path=None):
+    """`scripts/lhs_webapp_batch.py` 산출 (status.json · metrics_flat.csv) + 전수 판정 census → `build_handover(webapp=…)` 인자."""
+    root = pathlib.Path(__file__).resolve().parent.parent
+    d = pathlib.Path(dir_path)
+    st = json.loads((d / 'status.json').read_text(encoding='utf-8'))
+    if st.get('schema') != 'lhs_webapp_batch/v1':
+        raise FillRefusal(f'{d}/status.json schema {st.get("schema")!r} ≠ lhs_webapp_batch/v1')
+    rows = {}
+    with (d / 'metrics_flat.csv').open(encoding='utf-8', newline='') as fh:
+        for r in csv.DictReader(fh):
+            if r['case'] in rows:
+                raise FillRefusal(f'{d}/metrics_flat.csv: case {r["case"]!r} 가 둘 이상이다')
+            rows[r['case']] = r
+    cp = pathlib.Path(census_path or (root / DEFAULT_CENSUS_TSV))
+    verdict, why = {}, {}
+    with cp.open(encoding='utf-8') as fh:
+        for r in csv.DictReader(fh, delimiter='\t'):
+            verdict[r['column']] = r['verdict']
+            why[r['column']] = r.get('why') or ''
+    return {'verdict': verdict, 'why': why, 'status': st.get('cases') or {}, 'rows': rows,
+            'source': str(d), 'runs': st.get('runs') or []}
+
+
+def _frac_caveat(col):
+    c = col.lower()
+    if not any(k in c for k in ('frac_', 'fracture_index', 'fragmentation', 'pulverization', 'microcrack', 'multicrack', 'intact')):
+        return ''
+    return CAVEAT_FRAC_FORCE if 'force' in c else CAVEAT_FRAC_DELTA
+
+
+def column_dictionary(cols, webapp=None):
+    """인계표 열 사전 — 열마다 출처 · 판정 · 뜻 · 주의.  빈 뜻은 없다 (selftest ⑲m)."""
+    extra = {n: w for n, _p, w in HANDOVER_EXTRA}
+    union = {n: w for n, _c, w in HANDOVER_UNION}
+    union.update({n: w for n, w in HANDOVER_UNION_DERIVED})
+    tauw = {n: w for n, _k, w in HANDOVER_TAU_WALL}
+    warow = dict(WA_ROW_COLS)
+    qc = {n: w for n, _a, _b, w in WA_QC}
+    out = []
+    for c in cols:
+        d = {'column': c, 'source': '', 'verdict': '', 'meaning': '', 'caveat': ''}
+        if c in HANDOVER_VALUE_MEANING:
+            d.update(source='harvest', meaning=HANDOVER_VALUE_MEANING[c])
+            if c.startswith('coverage_'):
+                d['caveat'] = CAVEAT_NAME
+        elif c.endswith('_status') and c[:-7] in HANDOVER_VALUE_MEANING:
+            d.update(source='harvest', meaning=f'{c[:-7]} 의 상태 — OK 가 아니면 값 칸은 빈칸 (0 이 아니다)')
+        elif c in extra:
+            d.update(source='harvest', meaning=extra[c])
+        elif c in union:
+            d.update(source='union', meaning=union[c])
+        elif c in tauw:
+            d.update(source='harvest_v3', meaning=tauw[c])
+        elif c in warow:
+            d.update(source='webapp_batch', meaning=warow[c])
+        elif c in qc:
+            d.update(source='qc', meaning=qc[c])
+        elif webapp is not None and c in webapp.get('verdict', {}):
+            v = webapp['verdict'][c]
+            d.update(source='webapp', verdict=v,
+                     meaning=(webapp.get('why', {}).get(c) or '웹앱 파이프라인 산출 (코퍼스 case_master 와 같은 이름 · 같은 계산)'))
+            d['caveat'] = CAVEAT_NAME if '이름 주의' in v else _frac_caveat(c)
+        else:
+            d.update(source='design', meaning='LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)')
+        out.append(d)
+    return out
+
+
 def load_union(path):
     """union TSV (scripts/lhs_union_webapp.py 산출) → dict(case → 행).  같은 case 가 둘이면 거부."""
     with open(path, encoding='utf-8') as fh:
@@ -899,12 +1023,15 @@ def _dig(h, path):
     return cur
 
 
-def build_handover(rows, harvest, key='case_id', union=None):
-    """설계행 + 수확 (+ union) → 인계용 행 리스트.  **순수 함수**(파일을 안 쓴다) 라 시험 가능하다.
+def build_handover(rows, harvest, key='case_id', union=None, webapp=None):
+    """설계행 + 수확 (+ union) (+ 웹앱) → 인계용 행 리스트.  **순수 함수**(파일을 안 쓴다) 라 시험 가능하다.
 
     union (J19, 선택): `load_union` 산출 dict 또는 행 목록.  주면 설계 케이스 **전부**에 짝이 있어야 하고 (부분 병기 금지),
     짝마다 구 부피 합 porosity · 두께 · 상별 입자 수가 수확과 같아야 한다 (`_union_cols`).  설계에 없는 union 행 (코호트의 perc 등) 은
     인계표에 넣지 않고 report['union_extra'] 에 남긴다.
+    벽 τ (J20): 수확 JSON 에 `tau_wall_detail` 이 **전부** 있으면 새 열로 싣는다 (일부만 있으면 수확 세대 혼합 → 거부).
+    webapp (J20, 선택): `load_webapp` 산출.  설계행 **전부**를 배치가 시도했어야 하고, done · partial 행은 웹앱 porosity = 수확 porosity
+    (WA_SAME_FRAME_TOL_PCT) 여야 한다.  ✅ 열만 · 이름 충돌이면 기존 열이 정본 (report['wa_collisions']).  거부 · 실패 행은 빈칸 + wa_status.
     반환 (out_rows, cols, report).  계약 위반이면 `FillRefusal`.
     """
     #  ⚠ `load_harvest` 는 **dict(case → h)** 를 준다.  초판은 list 만 받아서
@@ -929,10 +1056,33 @@ def build_handover(rows, harvest, key='case_id', union=None):
         if miss_u:
             raise FillRefusal(f'union 에 없는 설계행 {len(miss_u)} 건: {miss_u[:5]} — 부분 병기 금지 (J19)')
         cols += [n for n, _c, _w in HANDOVER_UNION] + [n for n, _w in HANDOVER_UNION_DERIVED]
+    #  J20 — 벽 τ: 전부 있거나 전부 없어야 한다 (한 표에 수확 세대 둘을 섞지 않는다)
+    _tw_has = [('tau_wall_detail' in hv[r[key]]) for r in rows]
+    if any(_tw_has) and not all(_tw_has):
+        _no = [r[key] for r, h_ in zip(rows, _tw_has) if not h_]
+        raise FillRefusal(f'벽 τ (tau_wall_detail) 가 {sum(_tw_has)}/{len(rows)} 수확에만 있다 — 수확 세대가 섞였다 (없는 행 {_no[:5]})')
+    tw_on = bool(_tw_has) and all(_tw_has)
+    if tw_on:
+        cols += [n for n, _k, _w in HANDOVER_TAU_WALL]
+    wv, wa_take = webapp, []
+    if wv is not None:
+        miss_w = [r[key] for r in rows if r[key] not in (wv.get('status') or {})]
+        if miss_w:
+            raise FillRefusal(f'웹앱 배치가 시도하지 않은 설계행 {len(miss_w)} 건: {miss_w[:5]} — 배치 미완 (재개로 채울 것)')
+        ok_cols = [c for c, v in (wv.get('verdict') or {}).items() if str(v).startswith('✅')]
+        have = set(cols)
+        wa_take = [c for c in ok_cols if c not in have and c not in {n for n, _w in WA_ROW_COLS}]
+        wa_coll = [c for c in ok_cols if c in have]
+        cols += [n for n, _w in WA_ROW_COLS] + wa_take + [n for n, _a, _b, _w in WA_QC]
     out, rep = [], {'n': 0, 'blank_by_status': collections.Counter(),
                     'held_back': dict(HANDOVER_HELD_BACK)}
     if uv is not None:
         rep['union_extra'] = sorted(set(uv) - {r[key] for r in rows})
+    if tw_on:
+        rep['tau_wall_status'] = collections.Counter()
+    if wv is not None:
+        rep.update(wa_collisions=wa_coll, wa_n_cols=len(wa_take), wa_status_counts=collections.Counter(),
+                   wa_porosity_absmax=0.0)
     for r in rows:
         h = hv[r[key]]
         o = {c: r.get(c, '') for c in design_cols}
@@ -954,6 +1104,46 @@ def build_handover(rows, harvest, key='case_id', union=None):
             raise FillRefusal(f"{r[key]}: DESC-07 항등식 위반 {e1:.3e}")
         if uv is not None:
             o.update(_union_cols(r[key], h, uv[r[key]]))
+        if tw_on:
+            t = h['tau_wall_detail']
+            if t.get('tau_convention') != TAU_WALL_CONVENTION:
+                raise FillRefusal(f'{r[key]}: 벽 τ 규약 {t.get("tau_convention")!r} ≠ {TAU_WALL_CONVENTION} — 다른 규약의 값을 같은 열에 넣지 않는다')
+            for name, k, _w in HANDOVER_TAU_WALL:
+                v = t.get(k)
+                if name in TAU_WALL_VALUE:        # 계약 ② — OK 가 아니면 값 칸은 빈칸
+                    o[name] = repr(float(v)) if (t.get('status') == 'OK' and v is not None) else ''
+                else:
+                    o[name] = '' if v is None else str(v)
+            rep['tau_wall_status'][t.get('status')] += 1
+        if wv is not None:
+            rec = wv['status'][r[key]] or {}
+            s = rec.get('status') or 'UNKNOWN'
+            rep['wa_status_counts'][s] += 1
+            o['wa_status'] = s
+            o['wa_failed_stages'] = '|'.join(str(x) for x in (rec.get('failed_stages') or []))
+            wr = (wv.get('rows') or {}).get(r[key]) if s in WA_OK_STATUS else None
+            if s in WA_OK_STATUS and wr is None:
+                raise FillRefusal(f'{r[key]}: 배치 상태 {s} 인데 metrics_flat 행이 없다')
+            for c in wa_take:
+                v = None if wr is None else wr.get(c)
+                o[c] = '' if v is None else str(v)
+            for name, wcol, hcol, _w in WA_QC:
+                o[name] = ''
+            if wr is not None:
+                wp = wr.get('porosity_spheresum') or wr.get('porosity')
+                if wp in (None, ''):
+                    raise FillRefusal(f'{r[key]}: 웹앱 행에 porosity 가 없다 — 같은 프레임인지 확인할 수 없다')
+                dpor = float(wp) - float(h['porosity_sphere_pct_RECORD_ONLY'])
+                if abs(dpor) > WA_SAME_FRAME_TOL_PCT:
+                    raise FillRefusal(f'{r[key]}: 웹앱 porosity − 수확 porosity = {dpor:+.4f} %p (> {WA_SAME_FRAME_TOL_PCT}) — '
+                                      '다른 프레임 · 다른 메시의 웹앱 행이다')
+                rep['wa_porosity_absmax'] = max(rep['wa_porosity_absmax'], abs(dpor))
+                o['qc_wa_porosity_minus_harvest_pct'] = repr(dpor)
+                for name, wcol, hcol, _w in WA_QC[1:]:
+                    a, b = wr.get(wcol), h.get(hcol)
+                    st_h = (h.get('status') or {}).get(DESCRIPTOR_STATUS_KEY.get(hcol, ''), '')
+                    if a not in (None, '') and b is not None and st_h == 'OK':
+                        o[name] = repr(float(a) - float(b))
         out.append(o)
         rep['n'] += 1
     return out, cols, rep
@@ -1404,6 +1594,93 @@ def _selftest():
             len(_ol) == 130 and min(_eu) > 0 and _ra[0] >= 1.0)
     except Exception as e:                                                # noqa: BLE001
         chk(f'⑱l 실물 130 병기 ({type(e).__name__}: {e})', False)
+
+    #  ═══ ⑲ J20 (1저자 비준 09-28 — "벽 기준 τ 새 열" · "✅ 만 이번에" · "채운 뒤 넘김") ═══════════════════════════════
+    #   (1) 수확 v3 의 벽 τ 를 **새 열**로 — 값은 status OK 일 때만 (계약 ②) · 옛 τ 는 계속 보류 · 수확 세대가 섞이면 거부
+    #   (2) 웹앱 파이프라인 열 (scripts/lhs_webapp_batch.py) 중 전수 판정 ✅ 만 — 같은 프레임 관문 (웹앱 porosity = 수확 porosity)
+    _WC = 'harvest_v3/wall_z0_plate/rSEmax/no_fallback/same_component'
+
+    def _tw(status='OK', mean=1.7, med=1.65):
+        return {'tau_mean': (mean if status == 'OK' else None), 'tau_median': (med if status == 'OK' else None),
+                'tau_mean_untruncated': (mean if status == 'OK' else None), 'status': status,
+                'n_sampled': 200, 'n_valid': (200 if status == 'OK' else 0), 'n_truncated': 0,
+                'n_span_components': (1 if status == 'OK' else 0), 'tau_convention': _WC}
+    _hw = {'q1': dict(_hqs['q1'], tau_wall_detail=_tw()), 'q2': dict(_hqs['q2'], tau_wall_detail=_tw('NOT_PERCOLATING'))}
+    try:
+        _ow, _cw, _rw = build_handover(_dq, _hw)
+        _ew = ''
+    except Exception as e:                                                # noqa: BLE001
+        _ow, _cw, _rw, _ew = [], [], {}, f'{type(e).__name__}: {e}'
+    _w1 = next((r for r in _ow if r['case_id'] == 'q1'), {})
+    _w2 = next((r for r in _ow if r['case_id'] == 'q2'), {})
+    chk('⑲a 벽 τ 새 열 — OK 행은 값 · 미관통 행은 **빈칸** + status (0 이 아니다) · 규약 문자열' + (f' — {_ew}' if _ew else ''),
+        _w1.get('tortuosity_SE_wall') == repr(1.7) and _w1.get('tortuosity_SE_wall_median') == repr(1.65)
+        and _w2.get('tortuosity_SE_wall') == '' and _w2.get('tortuosity_SE_wall_status') == 'NOT_PERCOLATING'
+        and _w1.get('tau_wall_convention') == _WC)
+    chk('⑲b 옛 τ (solid_zrange) 는 여전히 보류 — tortuosity_dijkstra_SE 열이 없다 (LHS-08)',
+        'tortuosity_dijkstra_SE' not in _cw and 'tortuosity_dijkstra_SE' in _rw.get('held_back', {}))
+    _neg('⑲c 수확 세대가 섞이면 거부 (벽 τ 가 일부 JSON 에만 있다)',
+         lambda: build_handover(_dq, {'q1': _hw['q1'], 'q2': _hqs['q2']}))
+    chk('⑲d 벽 τ 가 없는 옛 수확이면 그 열 없이 옛 인계표 그대로 (하위 호환)',
+        'tortuosity_SE_wall' not in build_handover(_dq, _hqs)[1])
+    _neg('⑲e 벽 τ 규약 문자열이 다르면 거부 (다른 규약의 값을 같은 열에 넣지 않는다)',
+         lambda: build_handover(_dq, {'q1': _hw['q1'], 'q2': dict(_hqs['q2'], tau_wall_detail=dict(_tw(), tau_convention='x'))}))
+
+    _vd = {'se_se_cn': '✅ 쓴다', 'coverage_AM_P_mean': '✅ 쓴다(이름 주의)', 'phi_se': '✅ 쓴다', 'porosity': '✅ 쓴다',
+           'sigma_full_mScm': '🔶 행 선별', 'coverage_AM_P_mean_physics': '🔧 재실행', 'case': '· 식별자'}
+    _why = {k: f'why:{k}' for k in _vd}
+
+    def _wa(q1=None, q2=None, st1='done', st2='done'):
+        r1 = {'case': 'q1', 'se_se_cn': '4.25', 'coverage_AM_P_mean': '13.1', 'phi_se': '', 'porosity': repr(-2.0),
+              'sigma_full_mScm': '0.08', 'coverage_AM_P_mean_physics': '31.0'}
+        r2 = {'case': 'q2', 'se_se_cn': '6.5', 'coverage_AM_P_mean': '20.0', 'phi_se': '0.5', 'porosity': repr(20.0),
+              'sigma_full_mScm': '0.2', 'coverage_AM_P_mean_physics': '40.0'}
+        r1.update(q1 or {})
+        r2.update(q2 or {})
+        return {'verdict': dict(_vd), 'why': dict(_why),
+                'status': {'q1': {'status': st1, 'failed_stages': []}, 'q2': {'status': st2, 'failed_stages': ['Stage E']}},
+                'rows': {'q1': r1, 'q2': r2}}
+    try:
+        _oa, _ca, _ra = build_handover(_dq, _hqs, webapp=_wa(st2='partial'))
+        _ea = ''
+    except Exception as e:                                                # noqa: BLE001
+        _oa, _ca, _ra, _ea = [], [], {}, f'{type(e).__name__}: {e}'
+    _a1 = next((r for r in _oa if r['case_id'] == 'q1'), {})
+    _a2 = next((r for r in _oa if r['case_id'] == 'q2'), {})
+    chk('⑲f 웹앱 ✅ 열만 들어간다 (🔶 σ · 🔧 Physics · 식별자는 안 들어간다) · 이름은 코퍼스 그대로' + (f' — {_ea}' if _ea else ''),
+        not _ea and 'se_se_cn' in _ca and 'coverage_AM_P_mean' in _ca and 'porosity' in _ca
+        and 'sigma_full_mScm' not in _ca and 'coverage_AM_P_mean_physics' not in _ca
+        and _a1.get('se_se_cn') == '4.25')
+    chk('⑲g 이름 충돌 (phi_se) 은 수확 열이 정본 — 웹앱 값은 안 덮고 보고에 남긴다',
+        _a2.get('phi_se') == repr(0.5) and 'phi_se' in (_ra.get('wa_collisions') or []))
+    chk('⑲h 같은 프레임 QC 열 — 웹앱 porosity − 수확 porosity (여기선 0) · 행 상태 (done · partial) · 실패 단계',
+        _a1.get('qc_wa_porosity_minus_harvest_pct') == repr(0.0) and _a1.get('wa_status') == 'done'
+        and _a2.get('wa_status') == 'partial' and _a2.get('wa_failed_stages') == 'Stage E')
+    _neg('⑲i ★ 웹앱 porosity ≠ 수확 porosity (0.05 %p 넘게) → 거부 — 다른 프레임의 웹앱 행을 붙이지 않는다',
+         lambda: build_handover(_dq, _hqs, webapp=_wa(q2={'porosity': repr(20.5)})))
+    _oa3, _ca3, _ra3 = build_handover(_dq, _hqs, webapp=_wa(st2='REFUSED'))
+    _a3 = next((r for r in _oa3 if r['case_id'] == 'q2'), {})
+    chk('⑲j 배치가 거부 · 실패한 행은 웹앱 열이 **빈칸** + wa_status (0 이 아니다) · 보고에 셈',
+        _a3.get('wa_status') == 'REFUSED' and _a3.get('se_se_cn') == '' and _ra3.get('wa_status_counts', {}).get('REFUSED') == 1)
+    _wm = _wa()
+    _wm['status'].pop('q2')
+    _neg('⑲k 배치가 **시도하지 않은** 설계행이 있으면 거부 (배치 미완)', lambda: build_handover(_dq, _hqs, webapp=_wm))
+    _neg('⑲l done 행에 porosity 가 없으면 거부 (같은 프레임을 확인할 수 없다)',
+         lambda: build_handover(_dq, _hqs, webapp=_wa(q1={'porosity': ''})))
+    _dct = column_dictionary(_ca, webapp=_wa()) if 'column_dictionary' in globals() else []
+    _dm = {d['column']: d for d in _dct}
+    chk('⑲m 열 사전 — 모든 열에 출처 · 설명 · (웹앱 열은) 판정 · 이름 주의 표지',
+        len(_dct) == len(_ca) and _dm.get('se_se_cn', {}).get('source') == 'webapp'
+        and _dm.get('coverage_AM_P_mean', {}).get('caveat', '').startswith('A_dem_geometric')
+        and _dm.get('case_id', {}).get('source') == 'design' and all(d.get('meaning') for d in _dct))
+    try:
+        sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+        import lhs_descriptor_harvest as _LDH
+        _hc = getattr(_LDH, 'TAU_WALL_CONVENTION', None)
+    except Exception as e:                                                # noqa: BLE001
+        _hc = f'{type(e).__name__}: {e}'
+    chk('⑲n 벽 τ 규약 문자열 — 생성기 = 수확기 (`lhs_descriptor_harvest.TAU_WALL_CONVENTION`) · 한쪽만 바뀌면 걸린다',
+        _hc == TAU_WALL_CONVENTION)
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -1440,6 +1717,11 @@ if __name__ == '__main__':
     ap.add_argument('--union', default=None, metavar='TSV',
                     help='(--export-handover) J19 union TSV (scripts/lhs_union_webapp.py 산출) — 겹침 보정 porosity · 질량 보존 두께 · '
                          f'SE-rich 표지를 **병기**한다 (기본 {DEFAULT_UNION_TSV} · 빈 문자열이면 옛 인계표).  짝이 안 맞으면 거부')
+    ap.add_argument('--webapp', default='', metavar='DIR',
+                    help='(--export-handover) J20 웹앱 배치 산출 (scripts/lhs_webapp_batch.py 의 --out-dir) — 전수 판정 ✅ 열을 싣는다.  '
+                         '설계행 전부를 배치가 시도했어야 하고 웹앱 porosity = 수확 porosity (같은 프레임) 여야 한다')
+    ap.add_argument('--census', default='', metavar='TSV',
+                    help=f'(--webapp) 전수 판정 census (기본 {DEFAULT_CENSUS_TSV})')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
@@ -1488,7 +1770,11 @@ if __name__ == '__main__':
         if _un:
             _upth = pathlib.Path(_un)
             _uv = load_union(_upth if _upth.is_absolute() else _root / _upth)
-        _out, _cols, _rep = build_handover(_rows, _harv, union=_uv)
+        _wv = None
+        if a.webapp:
+            _wp = pathlib.Path(a.webapp)
+            _wv = load_webapp(_wp if _wp.is_absolute() else _root / _wp, a.census or None)
+        _out, _cols, _rep = build_handover(_rows, _harv, union=_uv, webapp=_wv)
         _op = pathlib.Path(a.export_handover)
         if not _op.is_absolute():
             _op = _root / _op
@@ -1497,7 +1783,19 @@ if __name__ == '__main__':
             _w.writeheader()
             for _r in _out:
                 _w.writerow(_r)
-        print(f'→ {_op}   {_rep["n"]}행 × {len(_cols)}열')
+        #  열 사전 — 받는 쪽이 열마다 출처 · 판정 · 뜻 · 주의를 읽는다 (J20)
+        _dp2 = _op.with_name(_op.stem + '_columns.tsv')
+        with _dp2.open('w', encoding='utf-8', newline='') as _fh:
+            _w = csv.DictWriter(_fh, ['column', 'source', 'verdict', 'meaning', 'caveat'], delimiter='\t', lineterminator='\n')
+            _w.writeheader()
+            for _d in column_dictionary(_cols, webapp=_wv):
+                _w.writerow(_d)
+        print(f'→ {_op}   {_rep["n"]}행 × {len(_cols)}열   (열 사전 {_dp2.name})')
+        if 'tau_wall_status' in _rep:
+            print(f'   J20 벽 τ: {dict(_rep["tau_wall_status"])}')
+        if _wv is not None:
+            print(f'   J20 웹앱 ✅ {_rep["wa_n_cols"]} 열 · 행 상태 {dict(_rep["wa_status_counts"])} · '
+                  f'같은 프레임 |Δporosity| 최대 {_rep["wa_porosity_absmax"]:.3e} %p · 이름 충돌 (수확 열 정본) {_rep["wa_collisions"]}')
         print(f'   빈칸 사유: {dict(_rep["blank_by_status"])}')
         for _k, _v in _rep['held_back'].items():
             print(f'   ⛔ 보류 열 `{_k}` — {_v}')

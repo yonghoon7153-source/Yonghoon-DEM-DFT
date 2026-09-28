@@ -309,7 +309,35 @@
   이 판은 재수확 v2 (`lhs_descriptors_20260925` = 0924 와 공통 값 Δ 0) 다: ε_sphere 중앙 **47.28 → 9.89 %** (−2.43 … 27.07 · 음수 0 → **18**) · union 중앙 **13.60 %** (6.07 … 28.81) ·
   질량 보존 두께 / 벽 간격 중앙 **1.043** (1.015 … 1.114) · SE-rich 21 행.  = J2 · J18 이 요구한 *"재수확 v2 뒤 인계표 재생성"* 그것이다.
 
+## J20. ✅ 파라미터 채우기 (웹앱 파이프라인 그대로) · 벽 기준 τ 새 열 · 배포 (**비준 09-28 · 코드 구현 — WSL 실행 대기**)
+
+- 요청 (1저자 09-28): 전수 판정 (`docs/param_audit_report_20260919.md` §2) 의 ✅ 파라미터 — 접촉 위상 (z_SE-SE · z_AM-SE · AM_P-SE CN ·
+  surface-weighted · z_AM-AM · 접촉 수) · 퍼콜 (SE 성분 · top↔bottom · f_SE^sep · AM 퍼콜 · f_AM^cc) · 협착 분율 · CV(σ_VM) · σ_VM 비 ·
+  F1 근접쌍 · Auerbach force-based · A_dem_geometric 면적 · 피복 — 를 인계표에 **채운 뒤** 수영 님께 넘긴다.
+- 비준 (09-28, 네 권고 전부): ① **벽 기준 τ 새 열** (옛 τ 열은 그대로 보류) ② **채운 뒤 넘김** (README 와 함께) ③ SE-rich 문턱 **0.50 유지**
+  (J19 의 ⬜ 닫힘) ④ **✅ 만 이번에** — 🔧 Physics 피복 (DESC-03 · L1-01 · L1-02 를 함께 고쳐야 한다 · DESC-10) 은 10/2 보고 뒤.
+- 경로 — 새로 구현하지 않는다 (규율 ①): 웹앱 `run_pipeline` 을 **그대로** 부르는 배치 `scripts/lhs_webapp_batch.py` (그림 · 자동 DB 만 뺀다 —
+  `run_pipeline(figures=False, auto_db=False)` · `webapp/test_pipeline_provenance.py` T9: 계산 단계 순서 동일) + 코퍼스와 같은
+  `export_master_csv.row_for` ⇒ **열 이름 = case_master**.  DESC-01 (τ 가 없으면 φ 둘을 버린다) 은 φ 에만 걸리고 φ 는 수확기 값이 정본이다.
+- 같은 프레임 (fail-closed): 네 파일 (atom · contact · 같은 step mesh · deck) sha = 수확 JSON · type_map 덱 판독 = 수확 JSON · 스테이징 청소 ·
+  인계표 생성 때 **웹앱 porosity − 수확 porosity ≤ 0.05 %p** (같은 식이라 같은 프레임이면 ~1e-13, 다른 프레임이면 수 %p — LHS-11).
+- 벽 τ (`lhs_descriptor_harvest.py`, 규약 `harvest_v3/wall_z0_plate/rSEmax/no_fallback/same_component`): 밴드만 바닥 벽 (z = 0) · 플래튼이고
+  표본 규칙 · seed 는 옛 τ 와 **같은 함수** (`_tau_sample`).  selftest ⑰ — 벽 아래 AM 이 옛 밴드를 비우는 침대에서 새 τ = 1 (곧은 기둥) · 진짜 미관통은
+  NOT_PERCOLATING · 두 밴드가 같은 침대에서 두 τ 동일 · **옛 τ 는 옮기기 전 값 그대로** (무작위 900 SE 2.0612290410739833 · 사슬 1.0198039027185568).
+  진단 (0925 수확): 벽 밴드를 잇는 SE 성분이 있는 침대 **106/130** (옛 규약 τ OK 는 14).
+- 인계표 생성기 (`lhs_design_dataset.py --export-handover … --webapp DIR`): ✅ 열만 (🔶 σ · fallback · 웹앱 τ · MPM · Stage E · 🔧 Physics 제외) ·
+  이름 충돌 (`phi_se` · `phi_am` · `plate_z_source`) 은 **수확 열이 정본** · 행마다 `wa_status` (done · partial · failed · REFUSED — 아니면 웹앱 열 빈칸) ·
+  배치가 시도하지 않은 설계행이 있으면 거부 · 수확 세대 혼합 (벽 τ 일부만) 거부 · **열 사전** `<출력>_columns.tsv` (출처 · 판정 · 뜻 · 주의 —
+  이름 주의 35 열은 A_dem_geometric · δ-based 파괴 열은 "force-based 와 나란히 인용 금지").  selftest ⑲a–n (78/78) · 옛 인자로는 09-28 인계표와 **바이트 동일**.
+- 실행 (WSL): `ONE=lhs00_000 bash scripts/run_lhs_fill_wsl.sh` (한 건 — 실제로 도는지 · 한 건 시간) → `bash scripts/run_lhs_fill_wsl.sh` (전 건 ·
+  재개 안전) → `~/lhs_fill_<날짜>.tar.gz` 를 받아 커밋 · 인계 README 작성 · 배포.
+- ⚠ 남는 한정: ① `physical_target_status` HOLD 59 · 음수 ε_sphere 18 은 그대로 (J18 · J19) ② 🔧 Physics 피복 · σ_e · κ 는 이번 인계에 없다
+  ③ 웹앱 열의 뜻은 **코퍼스와 같은 계산**이라는 것이지 추가 검증이 아니다 — 09-19 판정의 한정어 (이름 주의 · force/δ) 가 그대로 따라간다.
+
 ## 인계 판정 (지금)
+
+**↪ 갱신 09-28 (J20)** — 1저자 비준 "채운 뒤 넘김": WSL 전 건 실행 → 인계표 재생성 (✅ 열 · 벽 τ · 열 사전) → README 와 함께 **배포**.
+아래 "보류 유지" 는 J20 이전 (J9 · J2 · J3 시점) 서술이다 — 그 사유들은 J12–J19 로 닫혔다.
 
 **보류 유지.**  사유 = J9 (97 건의 플래튼이 이른 시점) · J2 (분모 바닥 10 µm) · J3 (두께 측정값 부재).  J5 는 J9 로 대부분 설명됨.
 다음 = ✅ 97 건 메시 재반입 (J12) → ✅ 수확기 수정 (J13) → ⛔ 재수확 72/130 (J14 — 가드 과잉 거부) → ✅ J14 비준 · 가드 교체

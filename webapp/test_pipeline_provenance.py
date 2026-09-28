@@ -369,6 +369,49 @@ def main():
         chk('R1) ★ Stage E rc=0 인데 무산출 → partial (done 금지)',
             out.get('status') == 'partial'
             and any('Stage E' in s for s in out.get('failed_stages', [])))
+
+        # T9 (LHS 배치 2026-09-28 — `scripts/lhs_webapp_batch.py`): `figures=False` · `auto_db=False` 는 그림 단계와
+        #   자동 DB 재구축 **만** 뺀다.  계산 단계 (파싱 · 접촉 · 피복 · network · Stage E · 이중 공극률 · 고급 분석) 는
+        #   순서까지 그대로여야 한다 — 배치가 웹앱과 **다른 계산**을 하면 코퍼스 열과 같은 이름을 붙일 수 없다.
+        #   자동 DB 는 `subprocess.Popen` 직접 호출이라 app 모듈의 이름만 가짜로 바꿔 센다 (전역 subprocess 는 안 건드린다).
+        import types as _types
+        _popen_calls = []
+
+        class _FakePopen:
+            def __init__(self, cmd, **kw):
+                _popen_calls.append(cmd)
+        _real_sp = webapp.subprocess
+        webapp.subprocess = _types.SimpleNamespace(**{**vars(_real_sp), 'Popen': _FakePopen})
+        _t9 = {}
+        try:
+            for _mode, _tm in (('standard', '1:AM,3:SE'), ('bimodal', '1:AM_P,2:AM_S,3:SE')):
+                for _kw in ({}, {'figures': False, 'auto_db': False}):
+                    shutil.rmtree(res_dir, ignore_errors=True)
+                    _r = make_runner(contact_rc=0)
+                    ps._RUNNER = _r
+                    _n0 = len(_popen_calls)
+                    try:
+                        _o = webapp.run_pipeline('case1', _mode, _tm, 1000, **_kw)
+                    except TypeError as _e:                 # 옛 서명 — 키워드가 없다
+                        _o = {'status': f'TypeError: {_e}'}
+                    _t9[(_mode, bool(_kw))] = (_r, _o, len(_popen_calls) - _n0)
+        finally:
+            webapp.subprocess = _real_sp
+
+        def _scripts(r):
+            return [os.path.basename(str(c[1])) for c in r.calls if len(c) > 1]
+
+        def _figs(r):
+            return [s for s in _scripts(r) if s.startswith('generate_') and 'figures' in s]
+        for _mode in ('standard', 'bimodal'):
+            _rd, _od, _pd = _t9[(_mode, False)]
+            _ro, _oo, _po = _t9[(_mode, True)]
+            chk(f'T9a) {_mode} 기본값: 그림 단계 ≥ 2 · 자동 DB 1 회 (웹앱 동작 불변)',
+                len(_figs(_rd)) >= 2 and _pd == 1 and _od.get('status') == 'done')
+            chk(f'T9b) ★ {_mode} figures=False · auto_db=False: 그림 단계 0 · 자동 DB 0 · done',
+                _figs(_ro) == [] and _po == 0 and _oo.get('status') == 'done')
+            chk(f'T9c) ★ {_mode} 계산 단계는 순서까지 그대로 (그림을 뺀 스크립트 열이 같다)',
+                [s for s in _scripts(_rd) if s not in _figs(_rd)] == _scripts(_ro))
     finally:
         ps._RUNNER = prev_runner
         for k, v in prev_env.items():

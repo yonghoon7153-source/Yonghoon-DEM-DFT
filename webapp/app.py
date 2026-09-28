@@ -3151,12 +3151,18 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
 
 
 def run_pipeline(case_id, mode, type_map, scale=1000,
-                 preserve_network=False, network_snapshot=None):
+                 preserve_network=False, network_snapshot=None, *,
+                 figures=True, auto_db=True):
     """Run the DEM analysis pipeline for a case.
 
     preserve_network : True 면 network solver 를 **호출하지 않고** network_snapshot 을
                        복원해 그 baseline 으로 Stage E 를 만든다 (코드리뷰 F-02).
     network_snapshot : pipeline_service.snapshot_network() 가 만든 임시 디렉터리.
+    figures          : False 면 그림 단계 (generate_*figures*) 만 건너뛴다 — 계산 단계는 그대로.
+    auto_db          : False 면 끝의 자동 DB 재구축 (build_metrics_db.py 백그라운드) 을 건너뛴다.
+                       ★ 두 키워드는 LHS 일괄 배치 (`scripts/lhs_webapp_batch.py`, 2026-09-28) 용이다 — 130 건에
+                         그림 수백 장과 동시 DB 재구축 130 번은 필요 없다.  기본값 = 웹앱 동작 그대로
+                         (test_pipeline_provenance T9: 뺀 것은 그림 · DB 뿐이고 계산 단계 순서가 같다).
     """
     # Clear pyc cache to ensure latest code runs
     import glob as globmod
@@ -3333,12 +3339,13 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
             log.append({'step': 'Dual porosity (sphere-sum / union / overlap)',
                         'stdout': '', 'stderr': str(_e), 'rc': 1})
 
-        # Step 3: Basic figures
-        cmd = [sys.executable, os.path.join(scripts, 'generate_figures_bimodal.py'),
-               results_dir, '-o', figures_dir, '-s', str(scale)]
-        _st = _ps.run_stage('Basic Figures', cmd, required=False,
-                            expects=(), results_dir=results_dir)
-        stages.append(_st); log.append(_st)
+        if figures:
+            # Step 3: Basic figures
+            cmd = [sys.executable, os.path.join(scripts, 'generate_figures_bimodal.py'),
+                   results_dir, '-o', figures_dir, '-s', str(scale)]
+            _st = _ps.run_stage('Basic Figures', cmd, required=False,
+                                expects=(), results_dir=results_dir)
+            stages.append(_st); log.append(_st)
 
         # Step 4: Advanced
         atoms_analyzed = os.path.join(results_dir, 'atoms_analyzed.csv')
@@ -3349,11 +3356,12 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
                             expects=(), results_dir=results_dir)
         stages.append(_st); log.append(_st)
 
-        cmd = [sys.executable, os.path.join(scripts, 'generate_advanced_figures_bimodal.py'),
-               results_dir, '-o', figures_dir, '-s', str(scale)]
-        _st = _ps.run_stage('Advanced Figures', cmd, required=False,
-                            expects=(), results_dir=results_dir)
-        stages.append(_st); log.append(_st)
+        if figures:
+            cmd = [sys.executable, os.path.join(scripts, 'generate_advanced_figures_bimodal.py'),
+                   results_dir, '-o', figures_dir, '-s', str(scale)]
+            _st = _ps.run_stage('Advanced Figures', cmd, required=False,
+                                expects=(), results_dir=results_dir)
+            stages.append(_st); log.append(_st)
 
         # Step 5: Bimodal specific
         cmd = [sys.executable, os.path.join(scripts, 'bimodal_specific_analysis.py'),
@@ -3405,11 +3413,12 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
             log.append({'step': 'Dual porosity (sphere-sum / union / overlap)',
                         'stdout': '', 'stderr': str(_e), 'rc': 1})
 
-        cmd = [sys.executable, os.path.join(scripts, 'generate_figures.py'),
-               results_dir, '-o', figures_dir, '-s', str(scale)]
-        _st = _ps.run_stage('Basic Figures', cmd, required=False,
-                            expects=(), results_dir=results_dir)
-        stages.append(_st); log.append(_st)
+        if figures:
+            cmd = [sys.executable, os.path.join(scripts, 'generate_figures.py'),
+                   results_dir, '-o', figures_dir, '-s', str(scale)]
+            _st = _ps.run_stage('Basic Figures', cmd, required=False,
+                                expects=(), results_dir=results_dir)
+            stages.append(_st); log.append(_st)
 
         atoms_analyzed = os.path.join(results_dir, 'atoms_analyzed.csv')
         contacts_analyzed = os.path.join(results_dir, 'contacts_analyzed.csv')
@@ -3420,11 +3429,12 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
                             expects=(), results_dir=results_dir)
         stages.append(_st); log.append(_st)
 
-        cmd = [sys.executable, os.path.join(scripts, 'generate_advanced_figures.py'),
-               results_dir, '-o', figures_dir, '-s', str(scale)]
-        _st = _ps.run_stage('Advanced Figures', cmd, required=False,
-                            expects=(), results_dir=results_dir)
-        stages.append(_st); log.append(_st)
+        if figures:
+            cmd = [sys.executable, os.path.join(scripts, 'generate_advanced_figures.py'),
+                   results_dir, '-o', figures_dir, '-s', str(scale)]
+            _st = _ps.run_stage('Advanced Figures', cmd, required=False,
+                                expects=(), results_dir=results_dir)
+            stages.append(_st); log.append(_st)
 
     # ── Auto-DB hook ─────────────────────────────────────────────────────
     # Trigger an incremental rebuild of docs/db/metrics_master.csv so the
@@ -3434,18 +3444,19 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
     # Incremental mode reuses unchanged cases via the mtime cache, so the
     # actual work is bounded by the new/changed full_metrics.json files
     # (typically a few seconds for one case).
-    try:
-        subprocess.Popen(
-            [sys.executable, os.path.join(scripts, 'build_metrics_db.py')],
-            cwd=os.path.dirname(scripts),
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-        )
-        log.append({'step': 'Auto-DB Rebuild (background)',
-                    'stdout': 'incremental build_metrics_db dispatched',
-                    'stderr': '', 'rc': 0})
-    except Exception as e:
-        log.append({'step': 'Auto-DB Rebuild (background)',
-                    'stdout': '', 'stderr': str(e), 'rc': 1})
+    if auto_db:
+        try:
+            subprocess.Popen(
+                [sys.executable, os.path.join(scripts, 'build_metrics_db.py')],
+                cwd=os.path.dirname(scripts),
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            )
+            log.append({'step': 'Auto-DB Rebuild (background)',
+                        'stdout': 'incremental build_metrics_db dispatched',
+                        'stderr': '', 'rc': 0})
+        except Exception as e:
+            log.append({'step': 'Auto-DB Rebuild (background)',
+                        'stdout': '', 'stderr': str(e), 'rc': 1})
 
     # ── 단계 계약 판정 (F-05) ───────────────────────────────────────────────
     #   done    = 필수 단계 전부 성공
