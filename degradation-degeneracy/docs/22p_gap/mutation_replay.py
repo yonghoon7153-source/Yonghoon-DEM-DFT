@@ -5810,6 +5810,140 @@ EXPECT: dict = {
                 "Failed: DID NOT RAISE ValueError",
         }
     },
+    # ── 82차 발송 전 자체 점검 — `--emit-expect -k g81s` 관측값 (F1·F2·F3·F4·F5·F6·F11·F12 · 고정 표 ⑦·④).
+    #   첫 관측에서 `warm-map-is-regenerated-and-compared-g81s` 만 rc 0 이었다: 시작 시점 map 대조를 지워도
+    #   심층 방어인 provider_x0 sha 대조가 같은 ValueError 로 막아 s06 ② 의 `map|sha` 매칭이 통과했다.
+    #   s06 ② 를 시작 시점 문구(`다시 만든 map sha`) + fits.parquet 부재로 좁힌 뒤 재관측 — 13/13 rc 1.
+    #   잘린 repr 꼬리와 fixture sha 값은 증인에 담지 않는다 (안정 접두사만).
+    "sig5-v6-row-keys-are-a-declaration-conflict-g81s": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_s01_a_sig5_run_that_carries_v6_rows_or_a_stage3_block_is_a_declaration_conflict",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_s01_a_sig5_run_that_carries_v6_rows_or_a_stage3_block_is_a_declaration_conflict":
+                "AssertionError: ['출력봉인_재계산']",
+        }
+    },
+    "validator-rederives-every-x0-g81s": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_s02_the_validator_rederives_every_candidate_from_plan_bank_bounds_and_design",
+            "tests/test_gate81_stage3_wire.py::test_g81_s06_the_warm_supply_path_runs_end_to_end_and_its_x0_is_rederived",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_s02_the_validator_rederives_every_candidate_from_plan_bank_bounds_and_design":
+                "AssertionError: assert '후보_재유도' in []",
+            "tests/test_gate81_stage3_wire.py::test_g81_s06_the_warm_supply_path_runs_end_to_end_and_its_x0_is_rederived":
+                "AssertionError: assert '후보_재유도' in []",
+        }
+    },
+    "validator-rederives-every-candidate-id-g81s": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_s02_the_validator_rederives_every_candidate_from_plan_bank_bounds_and_design",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_s02_the_validator_rederives_every_candidate_from_plan_bank_bounds_and_design":
+                "AssertionError: ['출력봉인_재계산']",
+        }
+    },
+    "validator-rederives-the-candidate-plan-g81s": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_s02_the_validator_rederives_every_candidate_from_plan_bank_bounds_and_design",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_s02_the_validator_rederives_every_candidate_from_plan_bank_bounds_and_design":
+                "AssertionError: 통과",
+        }
+    },
+    "validator-recounts-realized-counts-g81s": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_s03_the_validator_recounts_realized_counts_from_the_rows",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_s03_the_validator_recounts_realized_counts_from_the_rows":
+                "AssertionError: []",
+        }
+    },
+    "provider-consumed-must-be-a-planned-edge-g81s": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_s04_provider_consumed_must_be_exactly_the_planned_edges_that_were_used",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_s04_provider_consumed_must_be_exactly_the_planned_edges_that_were_used":
+                "AssertionError: [{'consumer_objective': 'pocv_dvdq_dqdv', 'provider_objective': 'pocv_dvdq', 'n_conditions': 1}]",
+        }
+    },
+    "a-used-edge-must-be-recorded-g81s": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_s04_provider_consumed_must_be_exactly_the_planned_edges_that_were_used",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_s04_provider_consumed_must_be_exactly_the_planned_edges_that_were_used":
+                "AssertionError: warm 으로 시도했는데 공급 기록이 없다",
+        }
+    },
+    "map-protocol-is-measured-from-the-run-spec-g81s": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_n3_01_solution_map_header_binds_fits_bytes_objective_and_protocol",
+            "tests/test_gate81_stage3_wire.py::test_g81_n3_02_consumer_rejects_wrong_fits_map_combination_and_unsealed_maps",
+            "tests/test_gate81_stage3_wire.py::test_g81_n3_03_consumer_rejects_missing_condition_wrong_objective_and_out_of_bounds_without_clipping",
+            "tests/test_gate81_stage3_wire.py::test_g81_s05_the_map_protocol_sha_is_recomputed_from_the_provider_run_spec",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_n3_01_solution_map_header_binds_fits_bytes_objective_and_protocol":
+                "AssertionError: assert ('000000000000",
+            "tests/test_gate81_stage3_wire.py::test_g81_n3_02_consumer_rejects_wrong_fits_map_combination_and_unsealed_maps":
+                "ValueError: solution map header 의 provider_protocol_sha256 (0000000000000000) ≠ edge 의 provider_protocol_sha256",
+            "tests/test_gate81_stage3_wire.py::test_g81_n3_03_consumer_rejects_missing_condition_wrong_objective_and_out_of_bounds_without_clipping":
+                "AssertionError: Regex pattern did not match.",
+            "tests/test_gate81_stage3_wire.py::test_g81_s05_the_map_protocol_sha_is_recomputed_from_the_provider_run_spec":
+                "AssertionError: assert '000000000000",
+        }
+    },
+    "design-order-is-the-optimizer-vector-g81s": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_s08_parameter_order_is_the_optimizer_vector_and_the_map_reads_solution_columns",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_s08_parameter_order_is_the_optimizer_vector_and_the_map_reads_solution_columns":
+                "Failed: DID NOT RAISE ValueError",
+        }
+    },
+    "warm-map-is-regenerated-and-compared-g81s": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_s06_the_warm_supply_path_runs_end_to_end_and_its_x0_is_rederived",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_s06_the_warm_supply_path_runs_end_to_end_and_its_x0_is_rederived":
+                "AssertionError: Regex pattern did not match.",
+        }
+    },
+    "v6-budget-is-checked-per-objective-g81s": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_s09_budgets_are_checked_per_objective_for_v6",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_s09_budgets_are_checked_per_objective_for_v6":
+                "AssertionError: ['restart_예산_완주']",
+        }
+    },
+    "full-bank-identity-is-not-a-prefix-g81s": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_w04_run_fit_with_stage3_context_writes_sig6_run_spec_execution_record_and_candidate_map",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_w04_run_fit_with_stage3_context_writes_sig6_run_spec_execution_record_and_candidate_map":
+                "AssertionError: ['후보_재유도']",
+        }
+    },
+    "duplicate-bank-index-is-refused-g81s": {
+        "fail": [
+            "tests/test_gate81_stage3_wire.py::test_g81_w02_fit_with_candidates_rejects_adaptive_and_out_of_bounds_x0",
+        ],
+        "witness": {
+            "tests/test_gate81_stage3_wire.py::test_g81_w02_fit_with_candidates_rejects_adaptive_and_out_of_bounds_x0":
+                "Failed: DID NOT RAISE ValueError",
+        }
+    },
 }
 
 

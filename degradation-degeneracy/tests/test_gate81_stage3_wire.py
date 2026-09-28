@@ -941,8 +941,11 @@ def test_g81_s06_the_warm_supply_path_runs_end_to_end_and_its_x0_is_rederived(tm
     pf2 = pd.read_parquet(prov2 / "fits.parquet")
     pf2.loc[pf2.index[0], F.PARAM_NAMES[0]] = float(pf2.loc[pf2.index[0], F.PARAM_NAMES[0]]) + 1e-6
     pf2.to_parquet(prov2 / "fits.parquet", index=False)
-    with pytest.raises(ValueError, match="map|sha"):
+    #   (실행 **시작 전** 거부여야 한다 — 변이 재생 실측: 시작 대조를 끄면 worker 안의 `provider_x0` 봉인 대조가 같은
+    #   조건을 늦게 잡아 "map|sha" 는 여전히 맞았다. 그래서 시작 대조의 문장과 fits 미생성을 함께 본다.)
+    with pytest.raises(ValueError, match="다시 만든 map sha"):
         _run_v6(tmp_path, "c_changed", {**ctx, "provider_runs": {OBJS[1]: prov2}}, in_dir)
+    assert not (tmp_path / "c_changed" / "fits.parquet").exists(), "계획 뒤 바뀐 provider 로는 fitting 이 시작되지 않는다"
     # 음성 ③ consumer 산출의 warm x0 digest 위조 → validator 재유도가 잡는다
     _rewrite_map_and_record(out, lambda ents: next(m for m in ents if m["source"] == "warm").update(x0_sha256="0" * 64))
     assert "후보_재유도" in IO.validate_provenance(out)["fail"]
