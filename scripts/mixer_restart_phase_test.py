@@ -71,10 +71,14 @@ THERMO_RE = re.compile(r'^\s*(\d+)\s+(\d+)(?:\s|$)')     # thermo 줄 (덱 `ther
 
 
 def log_completion(path, run_total):
-    """완주 = 배너 `Total wall time` **또는** 로그의 마지막 thermo step = 계획 끝 step — `run_all.sh` `done_run` 과 같은 기준 (09-22).
-    ⚠ 배너만 보면 안 된다: 이 빌드 (LIGGGHTS-PUBLIC 3.8.0) 는 09-21 덱에서 마지막 run 을 끝내고 **배너 없이** 끝난다 (09-22 E0 3/3 ·
-    09-28 WSL 영수증 A/B 실측 — 둘 다 exit 0).  배너-전용 판정이 그 영수증을 '미완' 으로 떨어뜨렸다 (원장 SELF-56).
-    → dict(complete, basis ∈ {banner, last_step, None}, last_thermo_step, banner, log_sha256)."""
+    """완주 = 로그의 **마지막 thermo step = 봉인 덱의 끝 step** (숫자로만).  배너 `Total wall time` 은 **기록만** 한다.
+    ⚠ 배너만 보면 안 된다 (1): 이 빌드 (LIGGGHTS-PUBLIC 3.8.0) 는 09-21 덱에서 마지막 run 을 끝내고 **배너 없이** 끝난다 (09-22 E0 3/3 ·
+      09-28 WSL 영수증 A/B 실측 — 둘 다 exit 0) — 배너-전용 판정이 그 영수증을 '미완' 으로 떨어뜨렸다 (원장 SELF-56).
+    ⚠ 배너가 숫자를 덮으면 안 된다 (2): 옛 판은 배너가 있으면 끝 step 과 무관하게 완주로 봤다 — 마지막 thermo step 14,000 (봉인 끝
+      14,001) + 배너가 통과했다 (Codex 6 차 HBR6-03 · 재현 키 banner_short_tail).  숫자로 확인되는 끝 step 이 봉인 값과 다르면 미완이다.
+      배너만 있고 thermo 줄이 없는 다른 로그 형식은 **받지 않는다** — 지원하려면 별도 증거 계약을 먼저 정한다.
+    ⚠ `run_all.sh` `done_run` (캠페인 런 완주 표지) 은 아직 배너 ∨ 끝 step 이다 — 영수증 판정과 따로다.
+    → dict(complete, basis ∈ {last_step, None}, last_thermo_step, banner, log_sha256)."""
     if not os.path.isfile(path):
         return dict(complete=False, basis=None, last_thermo_step=None, banner=False, log_sha256=None)
     last, banner = None, False
@@ -84,7 +88,7 @@ def log_completion(path, run_total):
             m = THERMO_RE.match(line)
             if m:
                 last = int(m.group(1))
-    basis = 'banner' if banner else ('last_step' if last is not None and last == run_total else None)
+    basis = 'last_step' if (last is not None and run_total is not None and last == run_total) else None   # HBR6-03 — 배너는 기록만
     return dict(complete=basis is not None, basis=basis, last_thermo_step=last, banner=banner, log_sha256=_sha(path))
 
 
@@ -369,6 +373,37 @@ def analyze(d, out=None, binary=None):
         need((g.get('run_total'), g.get('n1'), g.get('dump_every')) == (dk['end'], dk['n1'], dk['dump_every']),
              f'gen.json (봉인 밖) 의 끝 · N1 · 간격 {(g.get("run_total"), g.get("n1"), g.get("dump_every"))} ≠ 봉인 덱 '
              f'{(dk["end"], dk["n1"], dk["dump_every"])} — 짧게 바꾼 기준으로 완주를 판정하지 않는다 (HBR5-05 · gen_end_truncated)')
+        #  ★ HBR6-01 (Codex 6 차) — 운동 서명 · 면 수는 **봉인된 A (와 B) 의 덱 · STL** 에서 다시 만든다.  옛 판은 봉인 밖 gen.json 의
+        #    서명을 영수증에 복사해, 측정하지 않은 메시 (드럼 149 µm 이동) 의 증서가 나왔다 (재현 키 changed_gen_motion_signature).
+        #    gen.json 은 **대조만** 한다.  (위에서 봉인 파일 sha 를 이미 확인했다 — 여기서 읽는 STL 이 실행 직전 그 파일이다.)
+        try:
+            sig_a = motion_signature(a_deck, os.path.join(d, 'A'))
+            sig_b = motion_signature(b_deck, os.path.join(d, 'B'))
+        except (OSError, ValueError, IndexError, KeyError) as e:
+            sig_a = sig_b = None
+            need(False, f'봉인 A/B 덱 · STL 에서 운동 서명을 다시 만들 수 없다 ({type(e).__name__}: {e}) — HBR6-01')
+        if sig_a is not None:
+            need(sig_a == sig_b, 'B 덱의 메시 운동 계약 (서명: STL · scale · 축 · 주기 · 순서) ≠ A — B 는 A 와 같은 벽을 같은 규칙으로 '
+                                 '돌려야 한다 (HBR6-01)')
+            need(g.get('motion_signature') == sig_a,
+                 f'gen.json (봉인 밖) 의 운동 서명 {str(g.get("motion_signature"))[:12]}… ≠ 봉인 A 에서 다시 만든 서명 {sig_a[:12]}… — '
+                 '측정하지 않은 메시의 증서를 내지 않는다 (HBR6-01 · changed_gen_motion_signature)')
+        try:
+            nf_a = drum_facets(os.path.join(d, 'A'), a_deck)
+        except (OSError, ValueError, IndexError, KeyError) as e:
+            nf_a = None
+            need(False, f'봉인 A 의 드럼 STL 에서 면 수를 다시 셀 수 없다 ({type(e).__name__}: {e}) — HBR6-01')
+        need(nf_a is not None and g.get('nfacet') == nf_a,
+             f'gen.json 면 수 {g.get("nfacet")} ≠ 봉인 A 드럼 STL 에서 다시 센 {nf_a} (재계산 가능한 기하 메타데이터 · HBR6-01)')
+        #  B 의 운동 **시계**: read_restart 뒤에 A 와 같은 운동 fix (id · 메시) 가 서고 끝 step 이 같다 (위치 연속성 자체는 아래 A↔B 꼭짓점 대조)
+        clk_b = motion_clock(b_deck)
+        mov_a = sorted((e_[1], e_[2]) for e_ in mclock if e_[0] == 'move')
+        mov_b = sorted((e_[1], e_[2]) for e_ in clk_b if e_[0] == 'move')
+        i_rr = next((i_ for i_, e_ in enumerate(clk_b) if e_[0] == 'read_restart'), None)
+        i_mv = next((i_ for i_, e_ in enumerate(clk_b) if e_[0] == 'move'), None)
+        need(bool(mov_a) and mov_a == mov_b and clk_b[-1] == mclock[-1] and i_rr is not None and (i_mv is None or i_rr < i_mv),
+             f'B 덱의 운동 시계가 A 와 이어지지 않는다 — 운동 fix A {mov_a} / B {mov_b} · 끝 A {mclock[-1]} / B {clk_b[-1]} · '
+             f'read_restart 위치 {i_rr} (HBR6-01)')
         rt_d = dk['end'] if dk_ok else None
         for part in ('A', 'B'):
             s_ = rs.get(part, {})
@@ -393,6 +428,7 @@ def analyze(d, out=None, binary=None):
         #  ★ HBR5-05 — 기대 덤프 격자도 **덱 값**으로 (gen.json 이 덱과 다르면 위에서 이미 실패 — 그래도 판정 기준은 덱이다)
         de, n1, rt, r0 = dk['dump_every'] or g['dump_every'], dk['n1'] or g['n1'], dk['end'], g['rot_start']
         need(r0 == rot_start, f'gen.json 회전 시작 {r0} ≠ A 덱의 운동 fix 시작 {rot_start} (두 정의가 갈렸다 · HBR4-02)')
+        r0 = rot_start                                 # HBR6-01 — 이 아래 판정 · 내보내는 값은 덱 값 (gen 은 위에서 대조만)
         #  기대 step — A: dump 명령이 선 step 이후의 dump 격자 · B: N1 ~ 끝
         pre = 0
         for c in a_deck.split('\n'):
@@ -476,10 +512,11 @@ def analyze(d, out=None, binary=None):
             #    resid_max · out_round_m 은 **좌표별** 최대라 유클리드 변위는 최악 √3 배다 (좌표 최대와 거리 노름을 혼동하지 않는다).
             pos_bound_m = float(np.sqrt(3.0) * (resid_max + (out_round_m or 0.0)))
         need(err_max <= PHASE_EPS_DEG, f'예정각 오차 최대 {err_max:.4g}° > 등록 ε {PHASE_EPS_DEG}°')
-        sym, raw = symmetric_gap_deg(n1, r0, dt, period, g['nfacet'])
+        sym, raw = (symmetric_gap_deg(n1, r0, dt, period, nf_a) if nf_a else (0.0, 0.0))
         need(sym >= RESET_GAP_DEG, f'리셋 대안과의 간격 (면 대칭 제외) {sym:.3f}° < {RESET_GAP_DEG}° — 이 N1 으로는 재개 리셋을 못 가린다')
     else:
         ver, sym, raw, n1, rsb = '', None, None, None, []
+        sig_a, nf_a = None, None
     #  ★ HBR4-03 — 옛 판은 max() 였는데 그것은 오차 **합성**의 상한이 아니다 (두 성분은 같은 방향으로 겹칠 수 있다) → 최악 방향 합.
     bound = err_max + (ang_res or 0.0)
     need(bound <= PHASE_EPS_DEG, f'각 경계 {bound:.4g}° (실측 {err_max:.4g} + 출력 해상도 {ang_res}) > 등록 ε {PHASE_EPS_DEG}°')
@@ -488,13 +525,13 @@ def analyze(d, out=None, binary=None):
          f'영수증 지표에 비유한 값 (오차 {err_max} · 잔차 {resid_max} · A↔B {ab_max} · 경계 {bound} · 위치 {pos_bound_m})')
     rc = dict(schema=RECEIPT_SCHEMA, test='restart_phase', passed=not reasons, reasons=reasons,
               period=float(period), dt=float(dt), axis=[float(x) for x in axis], origin=[float(x) for x in origin],
-              rotation_start_step=rot_start, motion_clock=mclock, run_total=g['run_total'] if g else None,
-              n1=n1, dump_every=g['dump_every'] if g else None,
-              span_rotation_steps=(g['run_total'] - g['rot_start']) if g else None,
+              rotation_start_step=rot_start, motion_clock=mclock, run_total=dk['end'],
+              n1=n1, dump_every=dk['dump_every'],
+              span_rotation_steps=(dk['end'] - rot_start) if (dk['end'] is not None and rot_start is not None) else None,
               deck_steps=dk, resume_steps_B=rsb,             # ★ HBR5-05 — 완주 기준의 출처 (봉인 덱) 와 B 로그의 재개 step
               steps_checked_A=sorted(A_st), steps_checked_B=sorted(B_st),
               angle_error_deg=float(err_max), angle_resolution_deg=ang_res, angle_bound_deg=float(bound),
-              reset_alternative_gap_deg=raw, symmetric_gap_deg=sym, nfacet=g['nfacet'] if g else None,
+              reset_alternative_gap_deg=raw, symmetric_gap_deg=sym, nfacet=nf_a,
               ab_max_vertex_diff_m=float(ab_max), residual_max_m=float(resid_max),
               pos_bound_m=None if pos_bound_m is None else float(pos_bound_m),
               output_rounding_m=None if out_round_m is None else float(out_round_m),
@@ -506,7 +543,8 @@ def analyze(d, out=None, binary=None):
                                   dumps_sha256=hashlib.sha256(json.dumps(((rs or {}).get(p) or {}).get('dumps') or {},
                                                                          sort_keys=True).encode()).hexdigest())
                           for p in ('A', 'B')} if comp else None,
-              motion_signature=(g or {}).get('motion_signature'), deck_source=(g or {}).get('deck'),
+              motion_signature=sig_a, motion_signature_basis='sealed_A_recomputed',      # HBR6-01 — gen.json 복사가 아니다
+              motion_signature_gen_json=(g or {}).get('motion_signature'), deck_source=(g or {}).get('deck'),
               deck_source_sha256=(g or {}).get('deck_sha256'), tool_sha256=_sha(os.path.abspath(__file__)),
               date=datetime.date.today().isoformat(),
               note='바이너리 + 메시 운동 계약의 성질 (처방 회전은 입자와 무관 → 같은 step 구조면 캠페인 메시와 같은 궤적).  '
@@ -686,6 +724,9 @@ def _selftest():                                                      # noqa: C9
             rej = True
         chk('⑥ 검사기가 이 영수증을 받는다 (주기 · dt · 축 · 운동 서명 · 운동 시계 · 발사 봉인 · 배너 · 판정 step ⊂ 실측 step · 목록) · '
             '주기가 다른 덱에는 거부', r_ok['passed'] is True and rej)
+        chk('⑥c ★ HBR6-01 — 영수증의 운동 서명 = **봉인 A 덱 · STL 에서 다시 만든** 값 (= 캠페인 덱) · 면 수도 A 에서 (39)',
+            rc.get('motion_signature') == motion_signature(open(os.path.join(out_, 'A', 'in.phase_a')).read(), os.path.join(out_, 'A'))
+            == motion_signature(small, run_) and rc.get('motion_signature_basis') == 'sealed_A_recomputed' and rc.get('nfacet') == 39)
         chk(f'⑥b v2 필드 — 덤프 수 = 실측 step 수 · 위치 경계 유한 ({rc.get("pos_bound_m")} m) · 운동 시계 · 회전 시작 = 덱',
             rc['run_status']['A']['dumps_n'] == len(rc['steps_checked_A']) and rc['run_status']['B']['dumps_n'] == len(rc['steps_checked_B'])
             and rc['pos_bound_m'] is not None and np.isfinite(rc['pos_bound_m']) and rc['pos_bound_m'] > 0
@@ -814,6 +855,46 @@ def _selftest():                                                      # noqa: C9
         _write_log(os.path.join(o, 'B', 'log.lmp'), g_['n1'], g_['run_total'], resume=g_['n1'] + 500)
         _restatus(o)
 
+    #  ── Codex 6 차 HBR6-01 · HBR6-03 반례 (2026-09-28 밤 · 비준) ─────────────────────────────────
+    def _gen_sig(o, r):
+        """측정 A/B · 봉인 · 덤프는 그대로, **봉인 밖 gen.json 의 운동 서명만** 다른 캠페인 (드럼 STL 을 y 로 0.01 옮긴 것) 의 값으로.
+        옛 판은 그 서명을 영수증에 **복사**해 passed=true · 소비자 accepted (재현 키 changed_gen_motion_signature)."""
+        od = os.path.join(o, '_other_campaign')
+        os.makedirs(od, exist_ok=True)
+        for nm in ('Front.stl', 'Back.stl'):
+            shutil.copyfile(os.path.join(stl_src, nm), os.path.join(od, nm))
+        T = read_stl(os.path.join(stl_src, 'Drum.stl'))
+        _write_stl(os.path.join(od, 'Drum.stl'), T + np.array([0.0, 0.01, 0.0]))
+        gp = os.path.join(o, 'gen.json')
+        g_ = json.load(open(gp))
+        g_['motion_signature'] = motion_signature(small, od)
+        json.dump(g_, open(gp, 'w'), indent=1)
+
+    def _gen_nfacet(o, r):
+        """gen.json 의 면 수만 바꿈 (재계산 가능한 기하 메타데이터도 봉인 A 에서 다시 만든다 — HBR6-01 해제 조건)."""
+        gp = os.path.join(o, 'gen.json')
+        g_ = json.load(open(gp))
+        g_['nfacet'] = int(g_['nfacet']) + 1
+        json.dump(g_, open(gp, 'w'), indent=1)
+
+    def _b_contract(o, r):
+        """B 덱의 회전 주기만 다르게 **봉인까지 다시** (실행 전에 그렇게 만든 B) — A 와 B 의 운동 계약이 같아야 한다 (HBR6-01)."""
+        bp_ = os.path.join(o, 'B', 'in.phase_b')
+        txt_ = open(bp_).read()                      # 읽고 나서 쓴다 (open(…, 'w') 가 먼저 비운다)
+        assert 'period 0.012' in txt_
+        open(bp_, 'w').write(txt_.replace('period 0.012', 'period 0.024'))
+        s_ = json.load(open(os.path.join(o, 'seal.json')))
+        s_['files']['B/in.phase_b'] = _sha(bp_)
+        json.dump(s_, open(os.path.join(o, 'seal.json'), 'w'))
+
+    def _banner_tail(o, r):
+        """봉인 끝 14,001 · 덤프 격자 그대로 · A/B 로그의 마지막 thermo step 만 14,000 + 완료 배너.  옛 판은 배너가 있으면 끝 step 과
+        무관하게 완주로 봐 passed=true · completion_basis=banner (재현 키 banner_short_tail)."""
+        g_ = json.load(open(os.path.join(o, 'gen.json')))
+        _write_log(os.path.join(o, 'A', 'log.lmp'), 0, g_['run_total'] - 1, banner=True)
+        _write_log(os.path.join(o, 'B', 'log.lmp'), g_['n1'], g_['run_total'] - 1, banner=True)
+        _restatus(o)
+
     cases = [('A 대조 덤프 0 개 (Codex receipt_missing_all_A)', 'cont', _rm_all_A), ('B 한 장 · A 0 개', 'cont', _one_B),
              ('A · B 모두 회전 전 첫 덤프 한 장 (재개 전 정적 형상뿐 · Codex receipt_only_step0)', 'cont', _only0), ('기대 밖 덤프 (step 7301)', 'cont', _extra),
              ('재개 때 위상이 0 으로 (리셋)', 'reset', None), ('봉인 없음', 'cont', _no_seal), ('B exit 1', 'cont', _exit1),
@@ -824,7 +905,11 @@ def _selftest():                                                      # noqa: C9
              ('⑪ HBR4-01 봉인 목록이 빈 객체', 'cont', _empty_seal_files),
              ('⑫ HBR4-01 실행 결과 기록의 덤프 해시 목록이 빈 객체', 'cont', _empty_dumps),
              ('⑮ HBR5-05 gen.json 끝만 짧게 (봉인 덱 끝 14,001 · gen 9,500 · N1 9,000 · 그에 맞춘 짧은 덤프 · 로그)', 'cont', _gen_short),
-             ('⑮b HBR5-05 B 로그의 RESUME_STEP ≠ 봉인 A 덱의 write_restart step (다른 체크포인트에서 재개)', 'cont', _resume_other)]
+             ('⑮b HBR5-05 B 로그의 RESUME_STEP ≠ 봉인 A 덱의 write_restart step (다른 체크포인트에서 재개)', 'cont', _resume_other),
+             ('⑯ ★ HBR6-01 gen.json 운동 서명만 다른 캠페인 값 (측정 A/B · 봉인 그대로 — changed_gen_motion_signature)', 'cont', _gen_sig),
+             ('⑯b HBR6-01 gen.json 면 수만 다름 (재계산 가능한 기하 메타데이터)', 'cont', _gen_nfacet),
+             ('⑯c HBR6-01 B 덱의 운동 계약 (주기) ≠ A — 봉인까지 다시 한 B', 'cont', _b_contract),
+             ('⑰ ★ HBR6-03 로그 마지막 thermo step 14,000 (봉인 끝 14,001) + 완료 배너 (banner_short_tail)', 'cont', _banner_tail)]
     for name, mode, f in cases:
         with tempfile.TemporaryDirectory() as td:
             out_, run_, binp = _fake_run(td, mode=mode, fix=f)
@@ -841,7 +926,9 @@ def _selftest():                                                      # noqa: C9
     with tempfile.TemporaryDirectory() as td:
         out_, run_, binp = _fake_run(td, log='banner')
         rc = analyze(out_)
-        chk(f'⑧ 배너를 찍는 빌드의 로그도 통과 ({rc["run_status"] and rc["run_status"]["A"].get("completion_basis")})', rc['passed'] is True)
+        chk(f'⑧ 배너를 찍는 빌드의 로그도 통과 — 완주 근거는 숫자 끝 step (배너는 기록만 · HBR6-03) '
+            f'({rc["run_status"] and rc["run_status"]["A"].get("completion_basis")})',
+            rc['passed'] is True and rc['run_status']['A'].get('completion_basis') == 'last_step' and rc['run_status']['A'].get('banner') is True)
 
     def _old_status(o, r):
         rs = {}
