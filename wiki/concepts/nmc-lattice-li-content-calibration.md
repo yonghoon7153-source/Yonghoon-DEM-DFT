@@ -5,7 +5,7 @@ created: 2026-09-28
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade.md, raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md]
+sources: [raw/papers/park2021_fictitious-phase-separation-electro-autocatalysis-layered-oxides.md, raw/papers/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade.md, raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -57,8 +57,9 @@ evidenceScope: multi-source-primary
 | **67호** Kondrakov 2017 | NCM811 · 파우치 LIB(전해질 미기재 — 3286 위임) · 전처리 C/10 3.0–4.3 V(횟수 미인쇄) → C/20 3.0–4.6 V + 1 h | **전처리 셀 충전 첫 점 = 1.00**(결손 미배정) · `[인쇄]`(67호) "estimated from current and charging time" · 첫 사이클은 격자 "delayed change" 때문에 피함 | `a` · `c` · `V` · `h_TM-O` · `h_Li-O`(`z_O` 첫값 = 원형 중성자) | 그림 + 네 점 표(표 2) · 충전만 | `c` 최대 x ≈0.555(≈4.0 V) · 66호 NCM811 과 전압 맞춤 +0.10(= 규약) · 격자 맞춤 붕괴 구간 +0.123…+0.133 · 슬랩 잔차 esd ×2–6 · 표 2 `a`(0.5) ↔ 그림 어긋남 |
 | **69호** Kondrakov 2017 *JPCC* 121, 3286 | NCM111 · NCM811 · 파우치 LIB 4 × 2 cm²(LP57 — 실험 절 일반 문장) · **신품 셀 첫 두 사이클** C/10 3.0–4.3 V + 1 h | **신품 첫 점 = 1.00 · 사이클 사이 결손 이월**(둘째 충전 0.894 · 0.939 — 그림의 규약, 인쇄 0) · `[인쇄]`(69호) "calculated from cycling data" · 정규화 상수 미인쇄 · 광학 그림은 둘째 사이클을 ≈0.99 로 재설정 | `a` · `c` · `V` · `l_TM-O` · `l_Li-O` · `z_O`(S7) · S202 | 그림(두 사이클 시간축) + 인쇄 끝값 · 첫 충전 수치만 | NCM811 첫 충전 앞머리 Δx ≈0.12–0.18 격자 무응답 · 같은 셀 사이클 항(아래 69호 절) · `c` 최대 x 0.465(4.03 V) · 그림 Δx × 이론 용량 ↔ 인쇄 용량 −6 · −10 % |
 | **72호** Ishidzu 2016 *SSI* 288, 176 | NCM111(격자 곡선) + 조성 여섯(`ΔV` 한 값씩) · 자작 Be 창 셀 · Li · 1 M LiPF₆ EC:DMC 3:7 v/v · Cu Kα · 0.05 C · 2.5–4.5 V · 온도 미기재 · **KIT · BASF 연구망 밖(Univ. of Hyogo)** | **인쇄 0**(축 정의 · 계수 · 정규화 · 사이클 번호 — 가로축 이름표가 식 "Li1-x MO2") · 그림 모양 = 원형 x 0 → 충전 끝 0.755 → 방전 끝 0.109(69호형 · 결손 이월) | `a` · `c` · `V`(in situ 정련 방법 미기재 · 오차 0) | 그림만(벡터 — 좌표로 판독) · 본문 수치 0 | `V = (√3/2)a²c` 재현(● −0.015 ± 0.002 Å³ · ○ `a` 0.001 Å 반올림) · 부피 판에만 있는 점 넷 · `c` 최대 Li ≈0.41 · 원형 `V` 101.24 Å³(66 · 69호 NCM111 100.50–100.53) · 4.5 V `ΔV/V` 가 66호 같은 조성보다 +0.4…+1.0 %p |
+| **74호** Park 2021 *Nat. Mater.* 20, 991 | NMC111 판 · 응집체 · 파우치 LIB(Li · LP-40 · Be 판 가압) · SSRL 12.7 keV · 둘째 사이클 C/15 · C/2 · 2.24C/4C · operando (003) 한 봉우리 · **Stanford · MIT 연구망(KIT · BASF 밖)** | **둘째 사이클 · 방전 끝 정전압(2 / 2.5 V) 뒤 = 1.00 · 이론 278 mAh g⁻¹ · 전하 계수**(형성 C/20 · SOC 50 %까지) · 출발을 회절로 ±0.02 확인(캡션) | (003) `Q` 하나 — 선형 기준선(Li 0.5–1.0) · `a` · `V` 0 | 그림만(벡터 — 좌표로 판독) · 기준선 계수 인쇄 0 | `[도표]` `Q₀₀₃ = 1.27839 + 0.04461·Li`(리튬화 가지 적합) · **72호 점 = 72호 `c` 를 Li = 1 − x 로 옮긴 것**(세 점 ≤0.004 Å) · 한 그림 안 출처 넷의 폭 ≈0.04–0.05(Li 0.9–0.96) → ≈0.17(Li 0.6) · `[데이터]` 충전 가지 XRD 평균 − 전하 −0.07 … +0.02 · 첫 스캔 1.012–1.022(캡션 c 0.96 ✗) |
 
-⚠ 3차 묶음 파일 29(Kondrakov 2017 *JPCC* 121, 24381 — 66호 [19])는 **67호로**, 31(Kondrakov 2017 *JPCC* 121, 3286 — 66호 [15] · 67호 [5], 첫 사이클 격자 지연 · 교정 절차 · 파우치 사양의 위임처)은 **69호로 흡수**했다(아래 67 · 69호 절). 34(Ishidzu 2016 *SSI* 288, 176 — 23호 ref 48 · 66호 [13] · 67호 [4] · 69호 [17])는 **72호로 흡수**했다(아래 72호 절). 40(Buchberger 2015 — 24호 교정 원전)은 미흡수.
+⚠ 3차 묶음 파일 29(Kondrakov 2017 *JPCC* 121, 24381 — 66호 [19])는 **67호로**, 31(Kondrakov 2017 *JPCC* 121, 3286 — 66호 [15] · 67호 [5], 첫 사이클 격자 지연 · 교정 절차 · 파우치 사양의 위임처)은 **69호로 흡수**했다(아래 67 · 69호 절). 34(Ishidzu 2016 *SSI* 288, 176 — 23호 ref 48 · 66호 [13] · 67호 [4] · 69호 [17])는 **72호로 흡수**했다(아래 72호 절). 40(Buchberger 2015 — 24호 교정 원전)은 미흡수. 36(Park 2021 *Nat. Mater.* — 24호 ref 51 · 교정 원전 지목은 아님)은 **74호로 흡수**했다 — SI Fig. S16 의 기준선과 72호 점(아래 74호 절).
 
 ## 67호 절 (2026-09-28) — 같은 연구망 세 규약 · 규약 항 ↔ 시편 항
 
@@ -117,6 +118,24 @@ evidenceScope: multi-source-primary
 4. ★ **esd 도 없다 — 오차 0 · 반올림된 그림** — 열린 원 `a` 23 값이 0.001 Å 단위로 그려졌다(벡터 좌표) · 부피 판에는 격자 판에 없는 점 넷(x 0.698–0.738)이 있다 · 짝 있는 39 점은 `V = (√3/2)a²c` 로 재현된다.
    `[해석]` 축 정의가 없는 곡선은 교정 원자료라기보다 대조용 표본으로 읽힌다(교정 수치 표는 여전히 66호 표 S1 하나).
 
+## 74호 절 (2026-09-28) — 여섯째 규약 · 72호 축의 재사용 · 한 그림 안의 출처 간 폭
+
+> 74호 = Park · Zhao · Kang · … · Chueh 2021 *Nat. Mater.* 20, 991(3차 묶음 파일 36 · 24호 ref 51) — 교정 원전으로 지목된 편은 아니지만 SI Fig. S16 이 **(003) `Q` ↔ Li 기준선**을 싣고 72호(Ishidzu 2016
+> in situ) · Seidlmayer 2016(첫 사이클) · Yin 2006(화학 탈리튬) · ex situ 응집체 점을 같은 판에 둔다. 액체 반쪽 · NMC111. 원자료는 벡터 좌표 판독(`[도표]`) + Source Data(`[데이터]`).
+
+1. ★★ **여섯째 규약 — 정전압 재리튬화 뒤 1.00.** `[인쇄]` "The state-of-charge in this study was defined based on the theoretical capacity assuming full lithium occupation, corresponding to a gravimetric capacity of
+   278 mAh g−1" · 형성(C/20 · SOC 50 %까지) 뒤 방전 끝 2 / 2.5 V 정전압으로 완전 리튬화 · "1C is defined based on the lithium fraction changing by 1.0". 22호(첫 충전 1.02) · 66호(1.02 − 결손) · 67호(전처리 셀 1.00) ·
+   69호(신품 1.00 + 이월) · 72호(인쇄 0)와 다르다 — 출발을 **정전압으로 되돌린 상태**에 두고 회절로 확인(캡션 "estimated from diffraction … ±0.02"). `[데이터]` 기준선으로 첫 스캔은 1.022 · 1.012 · 1.016(캡션 1.00 ·
+   **0.96** · 1.00 — c 재현 안 됨).
+2. ★★ **72호 축이 그대로 쓰였다.** `[재현]` S16 의 "Ishidzu et al. 2016 (in situ)" 점 = 72호 그림 2(b) ○(탈리튬) `c` 를 `Q = 6π/c` · **Li = 1 − x** 로 옮긴 것(Li 0.845 → 14.315 ↔ 72호 14.314 · 0.688 → 14.409 ↔ 14.408 ·
+   0.531 → 14.515 ↔ 14.511 Å). 72호 `x` 축의 규약은 인쇄 0 인데(72호 절 1) 하류 편이 그것을 Li 분율로 그대로 읽었다 — 교정 이송의 한 사례.
+3. ★★ **한 그림 안 출처 간 폭 — 고 Li 에서 ≈0.04–0.05, Li 0.6 근처 ≈0.17.** `[도표]` 기준선(`Q₀₀₃ = 1.27839 + 0.04461·Li`)으로 읽은 Li − 그려진 Li: 72호 −0.077 … +0.031 · Seidlmayer +0.010 … +0.072 · Yin −0.098 … +0.030 · ex situ
+   −0.036 … +0.054 — 출처 사이가 Li 0.9–0.96 에서 ≈0.04–0.05(72호 ↔ Seidlmayer) · Li 0.6 근처 ≈0.17(Yin ↔ Seidlmayer) 벌어진다(66호 이송 오차 0.067 과 같은 자릿수).
+4. ★★ **리튬화 가지 기준선을 충전 자료에 쓴다.** `[인쇄]` "The reference curve is obtained by fitting to the lithiation curve, where the reaction is autoinhibitory and curves are more consistent" — 역문제는 이 선으로 **충전**
+   XRD 를 모집단 밀도로 바꾼다. `[데이터]` 판 2.24C 충전은 전하와 ±0.02 · 응집체 4C 충전은 XRD 쪽이 −0.04 … −0.07(중반 이후) · 방전 끝 +0.014 … +0.033 — Methods 의 "consistent" 는 판 쪽에서만 그대로 선다.
+5. ★ **단일 채널 `c`(Q₀₀₃)의 아래 끝** — NMC111 `c` 최대의 Li 가 72호 ≈0.41 · 66호 ≈0.45 · 69호 ≈0.53 이라 기준선 범위(0.5–1.0)의 아래 끝이 꼭짓점 근처다 — 72호 점이 Li ≤0.61 에서 −0.06 … −0.08 로 벌어지는
+   자리와 겹친다(`[해석]`). 74호는 `a` · `V` 를 쓰지 않았다(단조 채널 규칙 — 위 함정 2).
+
 ## 이 위키에서의 적용
 
 - **카드 [[assb-contact-loss-vs-lampe]] Q1 · Q2** — 구조 채널을 "`θ` 의 측정" 으로 셀 때 상 분율(교정 비의존)과 `x_active`(교정 의존)를 따로 적고, 교정 규약(δ₀ · 사이클 · 결손 배정 · 교정 셀 θ_ref)을 값 옆에 적는다.
@@ -142,6 +161,8 @@ evidenceScope: multi-source-primary
   부반응 전하여도 똑같이 생긴다(`[해석]`) — 결손의 정체도, 참 조성과의 오프셋도 정하지 않는다.
 - **(72호) 72호 `x` 축이 통과 전하 · 이론 용량 정규화라고 하지 않는다** — 인쇄 0 이고, 그 가정 위의 산술이 같은 편 그림 4a 와 모순 없다는 것까지다. "69호형" 은 그림 모양의 이름이다.
 - **(72호) 연구실 간 폭 +0.4…+1.0 %p 를 어느 인자(사이클 번호 · 율 · 로트 · 원형 격자)에도 배정하지 않는다** — 두 편 사이의 `[재현]` 차이까지이고, 66호 값은 표 S1 을 4.5 V 에 선형 보간한 값이다.
+- **(74호) 74호 기준선을 교정 원자료로 쓰지 않는다** — 계수 인쇄 0 · 벡터 판독 위의 선이고 리튬화 가지에 적합됐다. 출처 간 폭(고 Li ≈0.04–0.05 · Li 0.6 ≈0.17)은 한 그림 안의 대조이지 어느 쪽이 참 Li 인지는 아니다.
+- **(74호) 72호 `x` 축이 Li 분율이라고 확정하지 않는다** — 74호가 그렇게 옮겼다는 것(`c` 재현)까지이고, 72호의 축 규약은 여전히 인쇄 0 이다.
 
 ## 관련
 - [[assb-contact-loss-vs-lampe]] — 닻. Q1 · Q2 의 구조 채널 항목.

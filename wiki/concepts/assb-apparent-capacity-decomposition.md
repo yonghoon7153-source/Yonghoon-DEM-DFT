@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade.md, raw/papers/jung2015_sulfide-assb-bulk-type-issues-challenges-review.md, raw/papers/zaghib1999_lto-negative-electrode-spe-polymer-li-ion.md, raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/park2021_fictitious-phase-separation-electro-autocatalysis-layered-oxides.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade.md, raw/papers/jung2015_sulfide-assb-bulk-type-issues-challenges-review.md, raw/papers/zaghib1999_lto-negative-electrode-spe-polymer-li-ion.md, raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -522,6 +522,21 @@ Li-In 음극 셀의 것이다. **Li 금속·무음극에 그대로 옮기지 않
 - ★ **SE 입도 쌍 — 한 손잡이가 두 항을 같이.** 61 vol% coarse ↔ fine SE: σ_ion ×3.2 · σ_el ×0.49 · 용량 ↑(0.25 C 이상은 어느 읽기로도). ⚠ 저율(0.1 C) 이득은 Fig. 6 coarse 막대가 q_mat 축 이름표 아래 **q_com 값**이라(D1) 132.3 ↔ 133.3(+0.8 %) 또는 155(+17 %) 사이 — `θ` 증가 여부를 가를 수 없다.
 - ⚠ 모집단: 신품 · 0 % SoC EIS · 조성당 셀 수 · 산포 미인쇄 · 방전 곡선 · OCV 0 — `Q_material` 은 200 mAh g⁻¹ 가정.
 
+## ★★ 2026-09-28 (`assb` 74호 Park 2021 *Nat. Mater.* 20, 991, **실험 + 모형 · 액체 반쪽(Li 금속 · LP-40) · NMC111 판 · 응집체 · operando XRD · 급랭 STXM · ASSB 아님**) — **`η` 에 충전 쪽 성분이 붙는다: 전기-자촉매 지연 무리는 한 사이클 안에서 `θ_AM` 과 같은 서명이고, 가르는 것은 시간 궤적(휴지 · 율 · 깊이 · 다음 사이클)이다**
+
+`raw/papers/park2021_fictitious-phase-separation-electro-autocatalysis-layered-oxides.md`. 파우치 · 4 : 4 : 2 · ≈20 µm · 판 2.24C · 응집체 4C ↔ C/15 · 둘째 사이클 · 급랭 STXM(2C · C/20) · 형성 뒤 방전 끝 정전압으로 완전 리튬화.
+
+- ★★ **`θ_AM` 과 같은 모양의 `η`.** 빠른 탈리튬에서 입자 간 이봉 — `[도표]` 평균 0.80 에서 넓이 42.6 % 가 Li > 0.933(Fig. 2a) · `[데이터]` Source Data 과잉(Li ≥0.95) 최대 +0.235 → 충전 끝 +0.002. 충전 컷오프에 남은 미반응 무리는 첫 충전을 깎고,
+  방전에서는 이미 차 있으니 첫 방전도 같은 양 깎는다 — **한 사이클 안에서는 `θ_AM` 과 구별되지 않는다.** `[인쇄]` 기구: 탈리튬될수록 커지는 교환전류(식 S3 `A > 0`) · 리튬화는 율과 무관하게 자억제 · 문턱 ∝ `j₀`(판 · 출발 1.0 →
+  0.231 C) · 완전 리튬화 출발에서 가장 크다.
+- ★★ **65호 "첫 충전 상한" 은 선다 — 느슨해진다.** 상한 부등식(`θ` 변화 ≤ `ΔQ_ch/Q_ch`)은 그대로이고, 상한과 참 `θ` 사이 틈에 충전 쪽 동역학이 들어간다 — 신품 첫 충전(완전 리튬화 출발)이 그 성분이 가장 큰 조건이다.
+  29호 SI 의 "방향 비대칭"(방전 쪽 `η`)에 **셋째 성분(충전 쪽 · 자촉매)** 이 붙는다.
+- ★★ **`θ` 판정의 시간 궤적 조건(`[해석]` — 원전 명제를 옮김).** 미반응 무리를 `θ_AM` 으로 셀 때 (i) 셀 안 휴지(연결 유지) — 자촉매 무리는 1/`j₀`(미반응 무리의 Li) 척도로 풀린다(`[재현]` Python FP 이식 · 식 S20 `j₀` · 액체 ≈3–6 분 ·
+  시간 ∝ 1/`j₀`) (ii) 문턱 아래 율 또는 율 계열 (iii) 더 깊은 충전(합쳐짐) (iv) 다음 사이클 회복 — 넷 다 `θ` 는 안 움직인다. **급랭(교환 차단)은 가르지 않는다**(S27 21 h — 두 가설 모두 남긴다). 원전은 셀 안 휴지를 재지 않았다.
+- ★ **22호 두 상** — 22호 C/10(= 원전 단위 0.065 C) 은 원전 C/15(액체 단봉)와 같은 전류 · 자촉매 설명엔 ASSB `j₀(x≈1)` ≲ 액체 판의 1/30(`[재현]` 규모 논증) · 22호 ex situ(펠릿째 ≈5.1 h)는 암묵적 휴지 → `θ` 쪽
+  조건부 근거(측정까지 시간 · 해체 뒤 연결 미인쇄). 무탄소 복합체의 **전자 접촉 옴 자촉매**(원전 Fig. 4d)는 `θ` 와 같은 모양으로 남는 연결된 `η` 형의 넷째 후보다(`[해석]`).
+- ⚠ 모집단: 액체 · Li 금속 · 신품 · 셀 수 · XRD 온도 미인쇄 · ASSB `j₀(x)` 0 — 3 항 분해로 옮길 수치는 없고 **조건**만 옮긴다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - **3항 분해가 논문의 식이라고 주장하지 않는다.** 우리 해석이고, 위 G1 때문에 `C_norm` 이
@@ -551,6 +566,7 @@ Li-In 음극 셀의 것이다. **Li 금속·무음극에 그대로 옮기지 않
 - ★ **2026-09-28 (65호)**: **첫 충전 상한을 `θ_AM` 의 측정으로 쓰지 않는다** — 공정 대조군 사이의 상한이고, 판독 ±1 mAh g⁻¹ · 셀 하나씩 위다. D85H 는 두 충전 곡선이 겹쳐 판정 밖이다.
 - ★ **2026-09-28 (66호)**: **22호 `η` 값이 틀렸다고 하지 않는다** — 교정 규약에 따라 ≈±0.1 움직일 수 있다는 것까지이고, 어느 교정이 참 Li 함량에 맞는지는 화학 분석 0 이라 모른다.
 - ★ **2026-09-28 (67호)**: **Fig. 1a 감쇠의 `η` 몫을 정량했다고 하지 않는다** — 저자 문장이고 양은 0 이다(정전압 없는 반쪽 · C/2). 규약 항 0.10 은 NCM811 쌍의 `[재현]` 이다.
+- ★ **2026-09-28 (74호)**: **충전 쪽 자촉매 성분의 크기를 ASSB `η` 로 옮기지 않는다** — 액체 · 판 입자 · 2.24C 의 미반응 넓이(42.6 %)와 Source Data 과잉(+0.235)은 조건 논거의 근거이지 ASSB 값이 아니다. 22호 암묵적 휴지 논증과 옴 자촉매 후보는 조건부 `[해석]` 이다.
 
 ## 관련
 - [[nmc-lattice-li-content-calibration]] — 22호 `η` 가 기대는 격자 ↔ `x` 교정 곡선의 축 규약 · 단조 채널 · 이송 오차(66호).
