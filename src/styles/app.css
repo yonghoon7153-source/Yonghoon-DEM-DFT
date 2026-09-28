@@ -617,6 +617,8 @@
 /* the other cities of the open 県 — a soft dashed line, lighter than the 政令指定都市 dots but visible on every 지방 tint (사용자: 「연하게 점선」, then 「아직 구분 안 된다」) */
 .city-area--city { stroke: var(--ink-2); stroke-width: 1.1px; stroke-dasharray: 2.4 2.6; opacity: .62; }
 .city-area.is-hidden { opacity: 0; }
+/* inside the open 県 every city area is washed a little lighter, like a highlighter, so how big each 시 is shows without a heavier line (사용자: 「시 사이즈 정도는 볼 수 있게」) */
+.city-area.is-open { fill: var(--white); fill-opacity: .34; opacity: .8; }
 /* 琵琶湖: water, drawn over the land — clicks fall through to 滋賀 underneath */
 .lake { fill: var(--sea); stroke: var(--sea-2); stroke-width: 1px; vector-effect: non-scaling-stroke; pointer-events: none; }
 .label--place.lake-name { fill: color-mix(in oklab, var(--note-sky) 65%, var(--ink)); letter-spacing: .12em; stroke-width: 3.5px; }

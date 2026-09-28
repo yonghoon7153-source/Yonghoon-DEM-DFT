@@ -328,6 +328,7 @@ export async function createMap(container: HTMLElement, cb: MapCallbacks, initia
     // city areas: the 政令指定都市 once zoomed in a little (other regions' faint); every mapped city of the open prefecture, lightly
     gCityAreas.classed('is-hidden', k < CITY_AREAS_AT && !selected);
     cityAreaPaths
+      .classed('is-open', (d) => d.properties.pref === selected) // the open 県's cities get a soft wash so their size reads at a glance
       .classed('is-hidden', (d) => d.properties.pref !== selected && (d.properties.kind !== 'designated' || k < CITY_AREAS_AT))
       .classed('is-dim', (d) => d.properties.kind === 'designated' && d.properties.pref !== selected && !!highlightedRegion && prefBySlug.get(d.properties.pref)?.region !== highlightedRegion);
 
