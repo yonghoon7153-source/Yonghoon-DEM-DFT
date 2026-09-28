@@ -8,3 +8,9 @@
 *.md text eol=lf
 *.py text eol=lf
 *.sh text eol=lf
+#  ★ 외부 리뷰 증거 꾸러미는 **바이트 그대로** 둔다 (2026-09-28, Codex 5 차 반입).
+#  ⚠ Codex 산출 JSON 은 CRLF 인데 위의 `*.json text eol=lf` 가 커밋 때 LF 로 바꿔 매니페스트
+#    sha256 과 어긋났다 (round5 3 파일 · round4 2 파일 — 작업트리만 맞고 클론은 틀린다).
+#    증거는 봉인값과 같은 바이트여야 제3자 대조가 선다 ⇒ 변환하지 않는다.
+docs/reviews/codex_*_evidence_*/** -text
+docs/reviews/codex_*_supplement_*/** -text
