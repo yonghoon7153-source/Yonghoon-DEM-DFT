@@ -8,7 +8,9 @@ Checks (SCHEMA.md conventions):
   4. all wikilinks resolve to real pages (code spans/blocks excluded)
   5. each page has >= 2 distinct wikilinks (warning)
   6. index.md lists every page, lists nothing that doesn't exist, and its
-     "Total pages" count is accurate
+     "Total pages" / "전체 페이지" count is accurate (한국어 머리도 잰다 —
+     2026-09-28: 머리가 "전체 페이지: 48" 인 채 실제 53 이었는데 영어 표기만
+     찾아서 잡히지 않았다)
   7. raw file sha256 matches body (immutability check)
   8. orphan pages — zero inbound wikilinks from other pages (warning)
   9. stale pages — `updated` older than STALE_DAYS (warning)
@@ -144,7 +146,7 @@ for stem in pages:
 for l in idx_links:
     if l not in pages:
         errors.append(f'index.md: listed but file missing: {l}')
-mc = re.search(r'Total pages: (\d+)', index)
+mc = re.search(r'(?:Total pages|전체 페이지): (\d+)', index)
 if mc and int(mc.group(1)) != len(pages):
     errors.append(f'index.md: claims {mc.group(1)} pages, actual {len(pages)}')
 
