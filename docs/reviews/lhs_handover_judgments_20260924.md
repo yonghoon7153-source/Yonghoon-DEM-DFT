@@ -466,6 +466,73 @@
 
 ⛔ 이 판정은 **① 묶음의 열**에 한한다 — ② 퍼콜레이션 이후 묶음은 각자 감사한다.  일괄 실행 (`run_lhs_fill_wsl.sh`) 은 여전히 보류.
 
+## J20-b. ② 퍼콜레이션 묶음 — 1차 감사 (코드 정의 읽기 + 합성 프로브 · 실데이터 미확인 · **비준 대기 09-29**)
+
+대상 열 (09-19 census ✅): `percolation_pct` · `n_components` · `n_large_components` (SE 이온 · `dem_analysis_core.calc_percolation`) ·
+`electronic_active_fraction` · `electronic_percolating_fraction` (AM 전자 · `network_conductivity.build_network` + `run_decomposition` 의 성분 셈) ·
+`se_se_cn_perc` · `se_se_cn_n_perc` · `se_se_cn_eff_area_perc` (`calc_se_se_cn` — 관통 SE 부분집합).  (+ 🔶 `top_reachable_pct` · `ionic_active_pct` — F4.)
+
+### ② 정의 (코드 그대로 — `dem_analysis_core.py:380–460` · `network_conductivity.py:179–245 · 1101–1120`)
+
+| 항목 | SE (이온 · `calc_percolation`) | AM (전자 · `build_network`) |
+|---|---|---|
+| 그래프 | 접촉 덤프 **행마다** 양끝이 SE 면 간선 (면적 · δ 로 거르지 않음) · **모든 SE 가 노드** (외톨이 = 크기 1 성분) | AM_P + AM_S **한 상** · 양끝 AM · `ca > 0 or δ > 0` 인 행만 (① 실측 δ > 0 전 행이라 실효 없음) · 성분 셈 `G_active` 는 **간선 있는 노드만** (외톨이는 active/percolating 에서 빠짐) |
+| 바닥 밴드 L0 | z_i ≤ 2·r_i — **바닥 벽 = z 0 을 암묵 가정** (확인 없음) | 같음 |
+| 위 밴드 L0 | z_i ≥ plate_z − 2·r_i — plate_z = `mesh_info.json` (STL 꼭짓점 z 평균 · 평판 검사 없음 `HND-06`) · 없으면 최고 입자 중심 | 같음 |
+| ★ 폴백 | 어느 한쪽 밴드가 **3 개 미만**이면 **두 밴드를 함께** L1 (z ≤ 0.15·plate_z · z ≥ 0.85·plate_z) 로 → 여전히 3 미만이면 L2 (관측 SE z-범위의 15/85 %) — **어느 단계가 쓰였는지 산출물에 없다** | 같은 규칙 (관측 범위 = AM) · `n_boundary_overlap` 은 재지만 **전자 것은 full_metrics 에 안 올라간다** (이온 것만) |
+| 관통 | 성분이 두 밴드에 다 닿음 → `percolation_pct` = 관통 SE / 전 SE · `top_reachable_pct` = 위 밴드 닿는 성분의 SE / 전 SE (**위 밴드에 앉은 외톨이 포함**) | `percolating_fraction` = 관통 AM / 전 AM · `active_fraction` = 바닥 닿는 성분의 AM / 전 AM |
+| 그 밖 | `n_components` = 성분 수 (**외톨이 포함**) · `n_large_components` = 크기 ≥ **10** 성분 수 (코드 안 상수 · 출처 없음) · `se_se_cn_*_perc` = 관통 SE 만의 CN · 면적 CN (관통 0 이면 **키 자체가 없음** → 빈칸) | — |
+
+### 발견 (원장 `LHS-17` ~ `LHS-20`)
+
+- **F1 (P2 · `LHS-17`) 조용한 경계 폴백.**  L1 · L2 가 발동하면 같은 열 이름이 **다른 정의**로 채워지는데 기록이 없다 (`calc_percolation` 과
+  `build_network` 가 같은 코드).  LHS 규모: SE 밴드 = 2·r_SE = **1–2 µm** (d_SE 1.0/1.5/2.0) · AM 밴드 = 2·r_i (AM_S 1–5 · AM_P 5–15 µm).
+  빈도는 실측 전 **미상** — SE 가 적은 설계점 (am_pct 95 · mono_AM_P) 과 AM_S 만 있는 얇은 밴드에서 가능.  ⇒ 검사기가 케이스마다 단계 · L0 인원을 센다.
+- **F2 (P3 · `LHS-18`) bottom∩top 겹침 인공물.**  두께 < 4·r 이면 한 입자가 두 밴드에 동시에 들고 그 성분은 **통째로 관통**이 된다 (간선 0 인 외톨이
+  셋만으로 `percolation_pct` = 100 — 합성 재현 selftest ④ · 생산 실사고 P600 부류).  LHS 는 **기하상 0 건** (벽 간극 두께 − 4·r_AM,max 최소 **+1.47 µm** ·
+  `lhs00_075` · SE 는 r ≤ 1 이라 불가) — 실측으로 확인만.  전자 `n_boundary_overlap` 이 full_metrics 에 안 올라가는 것은 그대로 등재.
+- **F3 (P3 · `LHS-19`) 열의 뜻이 이름과 다르다 (열 사전 대상).**  `n_components` 는 외톨이 SE 를 성분으로 센다 — 단절 침대는 SE 의 **최대 49 %** 가
+  무접촉 (`LHS-06`) 이라 이 열은 사실상 **외톨이 수**다 · `n_large_components` 의 10 은 출처 없는 관례 · `top_reachable_pct` 는 위 밴드의 외톨이도 센다
+  (합성: 관통 11/15 인데 top_reach 13/15) · `se_se_cn_*_perc` 는 비관통이면 빈칸 (= N/A · `DESC-05` 부류) · RVE 50 µm 고정이라 성분 수는 두께에 비례 (총량).
+- **F4 (P3 · `LHS-20`) census 오분류.**  09-19 census 가 `top_reachable_pct` · `ionic_active_pct` 를 `COND_cov` (*"coverage 문턱 기반 → Hertz 채널 종속"*) 로
+  적었는데 둘 다 **SE 그래프 양**이다 (coverage 무관 — `calc_ionic_active_am` 은 AM–SE **접촉 유무**와 top-reachable SE 만 본다).  방향은 보수적 (인계에서 빠짐).
+  생성 규칙을 리포에서 찾지 못했다 (census 생성 스크립트 없음).  승격 여부 = **저자 결정**.
+- **F5 (정보) 바닥 z = 0 암묵.**  웹앱은 덱을 보지 않는다.  수확기 `check_deck_floor` 가 130/130 에서 z = 0 을 확인했고 (J16), 검사기가 케이스마다 재확인한다 (덱 없으면 fail-closed FLAG).
+- **F6 (정보) 수확기 AM perc 와 웹앱 전자 관통은 다른 정의다.**  수확기 `lhs_perc_extract.percolation` = 고체 외피 (min(z−r) · max(z+r)) 기준 슬래브 t = r_AM,max ·
+  **표면** 기준 · **기하** 접촉 (d ≤ Σr) · 폴백 없음 ↔ 웹앱 = 벽/플래튼 기준 2·r_i **중심** · **덤프** 접촉 · 폴백 있음.  작은 AM_S 에는 수확기 밴드가 훨씬 넓다
+  (r_max 7.5 vs r_S 0.5 µm).  09-15 생산 팔 `ionic_percolates` (25/127 False) 는 웹앱과 같은 규칙 (network solver) 이라 plate_z 시점 (LHS-11 이전 메시) 만 다를 수 있다.
+  ⇒ 검사기가 **접촉 원천 {덤프 · 기하} × 경계 규칙 {웹앱 · 수확기}** 2×2 로 불일치를 귀속한다 (밴드 · 접촉 · 둘 다).
+- **F7 (정보 · τ 묶음으로 이월) 상자 크기.**  배치는 `input_params.json` 을 만들지 않아 웹앱 `_get_box_xy` 가 **0.05 기본**을 쓴다 — LHS RVE 가 130/130 = 50 µm 라
+  우연히 맞는다.  ② 값은 무영향 (간선 거리 가중만) · τ (`LHS-08`) 에서 등재.
+- **F8 (정보) 독립 재현 경로.**  SE 가 단분산이면 웹앱 L0 밴드 (z ≤ 2r · 중심) 와 수확기 벽 밴드 (`tortuosity_se` — z − r ≤ 0 + r_max · 표면) 는 **같은 집합**이다
+  ⇒ 수확기 `wall_n_span_components > 0` 이 웹앱 `percolation_pct > 0` 의 독립 재현 (접촉 원천만 다름).  검사기가 케이스마다 같은 집합인지 단언한다 (다르면 재현 오류 FLAG).
+
+### 검사기 `scripts/lhs_perc_audit.py` (읽기 전용 · 인계 값은 만들지 않는다 · selftest 23 건)
+
+- 케이스마다: 프레임 · 고아 행 · 덱 바닥 · plate_z (수확과 같은 정의) → SE/AM **경계 단계 L0/L1/L2 · L0 인원 · 쓰인 인원 · 겹침** → 성분 통계
+  (관통 · top_reach · 성분 · 외톨이 · ≥10 · 최대) → **재현 ↔ 정본 대조** (웹앱 `calc_percolation` 값 · 밴드 집합 · `calc_se_se_cn` 관통 키 · `build_network`
+  밴드 집합 · 간선 수 · 겹침 · `run_decomposition` 방식 분율 · 수확기 `percolation` 슬래브 인원 · perc) — 하나라도 다르면 FLAG (내 판독을 정본이 검증) →
+  2×2 귀속 (SE · AM) → legacy 09-15 대조.  FLAG = 폴백 발동 · 겹침 · 재현 불일치 · 덱/프레임/고아 (그 케이스의 열 정의가 명목과 다르다는 뜻 · 원자료 결함 아님).
+- 반례 먼저 (selftest): L1 ② · L2 ③ · 겹침 인공물 ④ · ≥10 문턱 ⑤ · 귀속 band ⑥ · contact ⑦ · 비관통 키 없음 ⑧ · 덱 바닥 ⑨ · 다분산 ⑩ · 프레임/고아 ⑪ ·
+  **변이 ⑫ (재현 폭만 3.0 으로 바꾸면 정본과 어긋나 FLAG)** · CLI ⑭ · 2-type ⑮ · 정본 `run_decomposition`/`tortuosity_se` 와 분율·성분 일치 ①f·①g.
+- ⚠ 시간: 웹앱 정본 (`build_network` 파이썬 루프) 을 케이스마다 부른다 — AM_S 10⁵ 급 mono 침대에서 수십 초 · 전 건 수십 분 추정.
+
+### 권고 (비준 요청) — 순서: WSL 실측 → 판정 → 열 사전 → ③ φ_SE
+
+- ⓐ WSL 130 건 실행 (읽기 전용 · `~/dem-audit` 워크트리 · 이 커밋 이후):
+  ```
+  cd ~/dem-audit && git fetch origin claude/sdcp-dem-manuscript-si-pqwtv8 && git checkout --detach origin/claude/sdcp-dem-manuscript-si-pqwtv8 && git log -1 --oneline
+  ~/Yonghoon-DEM-DFT/venv/bin/python scripts/lhs_perc_audit.py --selftest
+  ~/Yonghoon-DEM-DFT/venv/bin/python scripts/lhs_perc_audit.py --case lhs00_000 --out ~/lhs_perc_audit_one          # 한 건 (시간)
+  ~/Yonghoon-DEM-DFT/venv/bin/python scripts/lhs_perc_audit.py --out ~/lhs_perc_audit_$(date +%Y%m%d)              # 전 건 · rc 0/3 둘 다 정상 종료
+  ```
+  받을 것: `perc_audit.tsv` · `perc_audit.json` (+ 화면 요약 줄).
+- ⓑ 판정 규칙 (미리 적는다): 폴백 0 건 · 겹침 0 건 · 재현 전부 일치 ⇒ ② 열은 **명목 정의 그대로** = 인계 적격 (열 사전 한정어 F3 만).  폴백 n > 0 ⇒ 인계표에
+  단계 열 (`perc_band_level_se` · `perc_band_level_am`) + 발동 케이스 표지 (값은 웹앱 규약 그대로 — 생산 코퍼스와 같은 정의) · 저자 결정.  겹침 n > 0 ⇒ 그 케이스의
+  전자 열 HOLD 표지.  2×2 불일치는 판정에 안 쓰고 **기록** (수확기 AM perc 는 인계 열이 아니다).
+- ⓒ 열 사전 문구 (F3) — 판정 뒤 생성기 `column_dictionary` 에 반영.  ⓓ census 오분류 (F4) — 저자 결정.
+- ⛔ 값 산출 (`run_lhs_fill_wsl.sh` 전 건) 은 여전히 보류.
+
 ## 인계 판정 (지금)
 
 **↪ 갱신 09-28 밤 (J20-a)** — ⏸ **일괄 실행 보류**: ✅ 열을 묶음별로 코드 정의부터 감사한 뒤 실행 (① 접촉 위상 1차 감사 = J20-a).
