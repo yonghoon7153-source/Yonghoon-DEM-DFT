@@ -5379,6 +5379,19 @@
     "scripts/mixer_restart_phase_test.py"
    ],
    "claimed_fixed_sha": "ba33a4939"
+  },
+  {
+   "id": "SELF-57",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "사용자 v100 실행 (09-28 02:02) — 재현 2 런 배치가 첫 런 전에 ABORT",
+   "opened_in": "docs/se_curve_transfer_verdict_20260806.md",
+   "title": "SELF-55 재발 — 재현 2 런 명령에서 `--data ~/rep288` 로 바꾸며 배치의 venv 탐색 경로가 바뀌는 것과, `(uma)` 셸에서는 activate_dem.sh 가 venv 를 건너뛰는 것을 확인하지 않았다 · `--dry` 는 numpy 만 봐서 못 잡았다 · 첫 원인 추정 (~/rep288/venv 심링크) 도 틀렸다 (CUDA 경로 설정을 건너뜀) · 배치의 ABORT 힌트 `ln -sfn $DATA/venv $REPO/venv` 는 --data 를 바꾼 경우 기존 venv 링크를 덮는 명령을 권한다",
+   "note": "로그로 확인: eq288 venv 줄 = activate_dem.sh · python /home/ubuntu/runyourai/1/Yonghoon-DEM-DFT/venv/bin/python3.  재발사는 conda deactivate 뒤 같은 명령 (09-28, PID 1676896) — venv 줄이 eq288 과 같은지 확인할 것.  처방 후보 (보고 뒤 비준): run_se_curve_batch.sh 가 CONDA_DEFAULT_ENV 가 base 가 아니면 경고 · ABORT 힌트를 REPO/DATA 실재 여부에 맞춰 · --dry 가 실제 실행 환경 (taichi · scipy) 도 점검.  닫기 = 그 수정 + 재현 2 런 정상 완주.",
+   "evidence_tests": [
+    "scripts/run_se_curve_batch.sh"
+   ]
   }
  ]
 }

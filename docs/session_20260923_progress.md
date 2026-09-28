@@ -465,3 +465,18 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
   ✅ 수정 (비준): 완주 = exit 0 ∧ (배너 ∨ 로그의 마지막 thermo step = 끝) · `run.sh` 는 사실만 기록 · `analyze` 가 로그로 판정 (옛 기록이어도 **재실행 없이 analyze 만** 다시) ·
   셀프테스트가 `run.sh` 의 실제 기록 코드를 돌린다 (17 → 20, 옛 코드에서 ⑤ · ⑨ 실패 확인).  ⬜ WSL 에서 pull → analyze 한 줄 → 영수증 커밋.
 - ps45 킷 (§5-B): 웹앱 케이스 셋 (ps_10_0 `0853b1` · ps_0_10 `0bee25` · ps_3_7 `bd85f9`) + 5_5 · 7_3 업로드 대기 → 킷 5 개 → v100 C 15 런 (재현 2 런 뒤).
+
+## ㉖ 09-28 오전 — 영수증 v1 통과 · 재현 2 런 재발사 · 주간 리포트 (대피 직전 상태)
+
+- ✅ **WSL 재개-위상 영수증 v1 = 통과** (`ba33a4939` 로 analyze 만 다시, LIGGGHTS 재실행 없음): A 208 step · B 81 step · 예정각 오차 최대 1.92 × 10⁻⁵° ·
+  **각 경계 0.00115°** (등록 상한 0.05° 의 약 1/43 — STL 출력 자릿수 한계) · A↔B 0 m · 리셋 간격 (면 대칭 제외) 3.872°.
+  ⬜ 파일 `~/phase_v1/receipt_v1.json` (사용자 WSL → Downloads 복사됨) 을 받아 `docs/data/mixer_phase_receipt_20260928/` 에 receipt_v1.json 으로 커밋 ·
+  README · 믹서 고-Bo prereg §10 · CLAUDE.md 믹서 줄 (⬜ WSL 영수증 v1 → ✅) 갱신 — 파일이 오기 전에는 판정 경로에 쓰지 않는다.
+- ⚠ **v100 재현 2 런 (세대 점검, verdict §⑩-b) 첫 발사 실패** (02:02): `★★ ABORT: numpy+scipy+taichi 되는 venv 없음`.  원인 (로그로 확인) —
+  eq288 은 `activate_dem.sh` 가 `~/Yonghoon-DEM-DFT/venv` 를 source 해 `python: /home/ubuntu/runyourai/1/Yonghoon-DEM-DFT/venv/bin/python3` 로 돌았는데,
+  이번엔 `(uma)` 셸이라 `activate_dem.sh` 가 venv 를 건너뛰었고 (`CONDA_DEFAULT_ENV` 가 base 가 아니면 건너뜀) `--data ~/rep288` 이라 나머지 후보도 없었다.
+  내 첫 추정 ("`~/rep288/venv` 심링크") 은 틀렸다 — 그 길은 `activate_dem.sh` 의 CUDA `LD_LIBRARY_PATH` 설정도 건너뛴다.  원장 `SELF-57`.
+  ⇒ **09-28 오전 `conda deactivate` (CONDA_DEFAULT_ENV=없음) 뒤 같은 명령으로 재발사** (PID 1676896).  ⬜ 확인: `grep -m3 -E '^venv:|repo HEAD|ABORT|^=== ' ~/rep288.log`
+  의 `venv:` 줄이 eq288 과 같아야 한다.  완료 뒤 대조 명령과 판정선은 verdict §⑩-b (|Δ ln σ| ≤ 0.01 · |Δ두께| ≤ 0.01 µm).
+- ✅ **주간 리포트 09-21 ~ 27** = `docs/worklog/weekly_20260927.md` (`/worklog` 에 뜬다 · 처음 보는 사람용 · 인라인 SVG 바닥 검사 그림 · test_worklog 통과).
+- ⬜ 남은 일 (우선순위): ① 영수증 파일 커밋 ② rep288 확인 → 결과 대조 ③ Codex 4 차 리뷰 (요청서 §0-b 포함) 처리 ④ 런별 체크포인트 상태 확인 도구 (Codex 3 차 Q1) ⑤ ps45 킷 5 개 (5_5 · 7_3 웹앱 업로드 대기) → v100 15 런 (`~/Yonghoon-DEM-DFT` @`93a8b2d27` 그대로, pull 금지 · conda deactivate 뒤) ⑥ 순수 SE r050 (ibb 233951) 완주 → Q1–Q3 ⑦ Phase A 100 GPa STEP3 (kgy) ⑧ `SELF-52` 정정 ⑨ 배치 ABORT 힌트 결함 (`SELF-57`) 수정안 보고.
