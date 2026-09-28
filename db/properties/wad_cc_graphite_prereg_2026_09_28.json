@@ -1,0 +1,193 @@
+{
+ "schema": "prospective_prereg/v1",
+ "record_kind": "prospective",
+ "sealed_on": "2026-09-28",
+ "results_seen": false,
+ "results_seen_note": "흑연 C|C 는 이 프로젝트에서 한 번도 계산한 적이 없다 (PBE+D3(BJ) 2체 · QE). 본 값은 문헌(Wang 2015 실험 · Maurer 2015 표)뿐이다.",
+ "status": "ratified",
+ "system": "wad_anode_free_interlayer",
+ "track": "W_ad (DEM 협업) — 무음극 LPSCl | Ag–C (Ag + Denka Black) | VGCF",
+ "citable": false,
+ "제목": "WAD-CC — 흑연 층간(C|C) 접착일: 덴카–덴카 · 덴카–VGCF · VGCF–VGCF 접촉을 V2 와 같은 PBE+D3(BJ) 2체로 (결과 보기 전에 박는다)",
+ "0_왜": {
+  "1저자_2026_09_28": [
+   "\"전해질 - interlayer (ag-C) - host (vgcf) 이렇게 무음극 구성인데 저 후보로만 해도 되는건가?\"",
+   "\"C에 있는 덴카블랙이랑 host인 vgcf 사이에도 필요하지 않을까\"",
+   "(같은 D3(BJ) 로 흑연 층간을 한 번 계산하자는 제안에) \"이것도 진행하자\"",
+   "\"후보라기 보다는 저 조성이 확정이야\"",
+   "\"내가 말한건 덴카-덴카, 덴카-vgcf, vgcf-vgcf 말한거였어\""
+  ],
+  "트랙": "W_ad = DEM 협업 트랙이지만 DFT 계산·카드는 우리 몫 → 1저자 = 사용자. DEM 에는 결과 뒤 회신으로 알린다 (이 카드는 DEM 입력값을 정하지 않는다 — §7).",
+  "물리": "세 쌍(덴카–덴카 · 덴카–VGCF · VGCF–VGCF)은 DFT 에서 모두 **흑연 기저면(0001) | 기저면** 접촉이다. 서로 다른 입자라 면내 회전이 임의 = 비정합(incommensurate). 쌍마다 다른 것(입자 크기·곡률·결정성·표면 거칠기·모서리·작용기)은 이상 기저면 DFT 가 보지 못한다 → DEM 기하(R · 접촉 면적) 몫이거나 이 카드 밖이다.",
+  "대조를_겸한다": "흑연은 실험 앵커가 있다 — Wang et al., Nat. Commun. 6, 7853 (2015) (litdb `wang2015_graphite_cleavage_energy`). 09-23 계획 §흑연 대조가 이 대조를 요구했고 'litdb 원문 확보 전 봉인 금지' 를 걸었다 → 2026-09-28 1저자가 PDF(본문·SI)를 줬고 litdb 에 인입했다."
+ },
+ "1_무엇을_재는가": {
+  "W_sep": "W = [E(far) − E(bound)] / A — V2 카드 v5 와 같은 식 · E = QE `!` total energy (자유에너지 F) · E_int = F − (−TS) 병기 · n_if = 1 · A = 셀 면적 · 보고 J/m² + meV/C (**접촉층 C 원자당** = 셀당 2 — V2 의 '그래핀 C 원자당' 과 같은 뜻)",
+  "bound": "제약 이완 좌표 (맨 아래층 고정 · 나머지 z 만) — 강체 분리 (far 는 위 블록을 +z 로만 옮김 · 이완 없음)",
+  "Wang_과_같은_양인가": "이상 흑연을 가르는 W_sep(S33_AB) = 이상 벽개에너지 CE_AB = 2γ (Wang 식 G(0) = G + σ0 = 2γ). 입자 접촉(임의 회전)에 맞는 양은 **비정합 CE** — Wang 이 직접 잰 0.37 ± 0.01 J/m² 가 바로 이것이다."
+ },
+ "2_모델": {
+  "셀": "1×1 육방 (60° 벡터) · a = 2.46604 Å (A_C_PBE_D3 — 09-25 선행 배치 PBE+D3 그래핀 vc-relax · db/raw/wad_aprime_prep_2026_09_25) · 층당 C 2 · 초기 층간 3.35 Å",
+  "목록": {
+   "CC_S33_AB · CC_S33_SP · CC_S33_AA": "6층 흑연을 3|3 에서 가른다 — 두꺼운|두꺼운 (입자–입자 접촉 · Wang CE 와 같은 기하) · 12 원자",
+   "CC_M41_AB · CC_M41_SP · CC_M41_AA": "4층 흑연 위 그래핀 1장 — V2(Ag(111) 위 그래핀 1장)와 같은 기하 → V2 와 같은-기하 비 · 10 원자",
+   "CC_S44_AB": "두께 점검 (8층 4|4) · 16 원자",
+   "CC_M61_AB": "두께 점검 (6층 위 그래핀) · 14 원자",
+   "CC_M41_AB_V2a": "V2 의 그래핀 격자 a = a_Ag·√3/(2√2) = 2.49263 Å (+1.078 %) — 변형 영향 (정보)"
+  },
+  "registry": "계면 한 쌍의 면내 어긋남 (60° 분수좌표 대각선 (s, s)): AA s = 0 · AB = 아래 블록의 ABAB 를 잇는 Bernal · SP s = ½ (AB↔BA 안장점). 블록 안은 항상 Bernal. **좌표에서 다시 판정** (`stacking_label` — 위층 두 원자의 아래층 최근접 면내 거리 AA [0,0] · AB [0, a/√3] · SP [a/(2√3), a/(2√3)] · 허용 0.05 Å).",
+  "registry_수가_셋인_이유": "1×1 흑연에서 대칭 비등가 고극점은 AA(최대) · AB(최소) · SP(안장) 셋이다. 09-23 계획의 'registry ≥ 4' 는 Ag|흑연(V2) 규칙이고 V2 가 4 로 이미 채웠다 — 여기는 GSFE 푸리에 평균에 필요한 세 점이다.",
+  "제약": "relax = 맨 아래층 2 원자 '0 0 0' · 나머지 전부 '0 0 1' (면내 고정 → registry 유지). 맨 아래층만 고정하는 이유: PBE+D3(BJ) 흑연 벌크 c 를 아직 안 쟀다 — 두 층 이상을 3.35 Å 에 묶으면 검증 안 한 간격을 강요한다."
+ },
+ "3_QE_설정": {
+  "원칙": "V2 와 같다 — 작성기 `tools/wad/build_aprime_s3.qe_input` 을 그대로 쓰고 smearing 두 줄만 바꾼다 (원 함수는 Ag 가 없으면 gaussian 0.005 를 낸다 → V2 와 맞춰 **mv 0.01**). selftest 가 실제 V2 2단계 입력(V2_top_fcc_dft_bound)과 설정 키 20 개(ecut · smearing · D3 · 혼합 · 쌍극자 …)가 같음을 확인한다.",
+  "값": "PBE · C.pbe-n-kjpaw_psl.1.0.0.UPF (sha 9900d1ef…) · ecutwfc 52 / ecutrho 520 Ry · vdw_corr grimme-d3 · dftd3_version 4 (BJ) · **dftd3_threebody .false.** (2체 — 결정 D-2026-09-23-wad-d3-twobody-atm-separate) · smearing mv 0.01 Ry · nspin 1 · conv_thr 1e-8 · mixing 0.3 local-TF · tefield/dipfield edir 3 eamp 0 (쌍극자 개정 2 — 진공 중앙 · 양쪽 핵 ≥ 4 Å) · relax etot 1e-5 · forc 1e-3 · bfgs · nstep 200",
+  "k": "Γ 중심 18×18×1 — 간격 |b|/18 = 0.163 Å⁻¹ ≤ 0.20 (09-23 계획 규칙) · 3 의 배수 (그래핀 K 점 포함)",
+  "끝점": "far 직접·영상 간격 ≥ **10 Å** (V2 교훈 — 8 Å 끝점에서 G3 FAIL · 8→10 +0.0136) · far8(같은 셀 · 직접 8 Å)은 정보",
+  "기계": "V100 · QE 7.4.1 GPU (pw.x sha 912d8c8f — V2 와 같은 바이너리) · run_sese_gpu.sh 그대로 (NP 1 · START_MAX_MIB 2048 · KILL_MIB 31000 · PSEUDO_DIR pseudo_kgy — V2 와 같은 값) · 예상 VRAM ≤ 3 GB · 1단계 이완 9 + 2단계 SCF 44"
+ },
+ "4_판정_규칙_결과_보기_전에_박는다": {
+  "⛔": "아래는 실행 **전에** 커밋한다. 값을 보고 문턱·표본·모델을 고치지 않는다. 판정 코드 = tools/wad/cc_graphite.py --collect (문턱 상수는 code_binding 과 selftest 가 결속).",
+  "G0_이완_유효성": "1단계 이완은 마지막 실행 `bfgs converged` (P0 — 실패 문구 거부) · 면내 이동 0 (≤ 1e-4 Å) · 고정층 z 이동 0 · 이완 뒤 층간 전부 3.0–4.2 Å · 층 평탄도 ≤ 0.05 Å · 좌표 판정 적층이 설계와 같음. P0·제약 위반은 **거부**(2단계 안 만듦), 층간·평탄·적층 깃발은 그 모델 **INCOMPLETE** (세고 제외 · 교체 없음).",
+  "GC_대조_S33_AB": "W(CC_S33_AB) 가 운영 허용대 **0.31–0.47 J/m²** 안 → IN_BAND · 밖 → OUT_OF_BAND. 기준 = 이상 ABAB 벽개 0.39 ± 0.02 (Wang). 허용대는 Codex 파일럿 허용오차(09-23 계획)이지 측정 불확도가 아니다. ⛔ 밖이면 **D3 계수를 만지지 않는다** — 원인 진단 (수치 설정은 G3/G4/두께가 가르고, 그 뒤 '분산 모델 계통 편차' 를 따로 적는다: Maurer 2015 PBE+MBD 흑연 48 meV/C ≈ 0.29 J/m² 도 이 허용대 밖이다).",
+  "G3_분리_끝점": "대표 2 (CC_S33_AB · CC_M41_AB): c+2 셀에서 (i) 영상 검사 (far 그대로) · (ii) 직접 검사 (위 블록 +2 → 직접 12 Å) 각각 |ΔW| ≤ **0.01** J/m² · 끝점 ΔE 는 기록만.",
+  "G4_수치": "대표 2: ecut 70/700 · k 24×24×1 · smearing ½ (mv 0.005) 각각 두 끝점 → |ΔW| ≤ **0.01** J/m² (09-23 계획 — V2 의 0.02 가 아니다).",
+  "G5_두께": "|W(S44_AB) − W(S33_AB)| ≤ **0.02** · |W(M61_AB) − W(M41_AB)| ≤ **0.02** J/m² (09-23 계획).",
+  "라벨": "어느 게이트든 FAIL · INCOMPLETE 면 그 라벨을 값에 붙여 보고한다 (V2 선례: 'G3 FAIL' 라벨 동반). 새 계산은 1저자 결정 없이는 없다."
+ },
+ "5_정보량_판정_아님": {
+  "비정합_추정": "GSFE 푸리에 평균 (Wang σ0 와 같은 정의 · 강체 비정합): 2성 W_inc = (W_AA + 3·W_SP)/4 (AB 무관) · 1성 W_inc = (2·W_AB + W_AA)/3 · σ0 = W_AB − W_inc(2성) · 1성 일관성 비 r = (W_AB − W_SP)/(W_AB − W_AA) (1성 푸리에면 1/9). 2성 ↔ 1성 차가 절단 민감도다. S33 · M41 각각.",
+  "Wang_대조": "W_inc(S33) − 0.37 · W(S33_AB) − 0.39 · σ0(S33) − 0.022 — 차를 적기만 한다. ⛔ 값 대 값 합격 판정이 아니다 (판정은 GC 하나).",
+  "꼬리": "far8 → 10 Å 의 ΔW (V2 +0.0136 과 비교) · G3 (ii) 기울기로 1/d² 외삽 W∞ (진단)",
+  "변형": "W(M41_AB_V2a) − W(M41_AB) — V2 그래핀 +1.078 % 격자의 영향",
+  "V2_비": "V2(Ag(111)|그래핀) 10 Å 값 0.4491 (G3 (ii) · db/raw/wad_aprime_s4_v2s2_2026_09_26/collect_aprime_s4_2026_09_26.json) ÷ W_inc(M41) · ÷ W_inc(S33) — 같은 PBE+D3(BJ) 2체 안에서만 뜻이 있다 (V2 라벨: G3 FAIL · k 축 미검증)",
+  "ATM": "D3 3체 몫 ΔW_ATM = 같은 기하에서 E_D3(s9=1) − E_D3(s9=0) 의 끝점 차 (simple-dftd3 1.6.0 · V2 ATM 열과 같은 파라미터 s6 1 · s8 0.7875 · a1 0.4289 · a2 4.4407) — 집계 때 `--atm` (repo 쪽에서)"
+ },
+ "6_보고_규칙": {
+  "헤드라인_후보": "C–C 접촉(덴카–덴카 · 덴카–VGCF · VGCF–VGCF — DFT 에서 구분 불가) = W_inc(S33, 2성) + 괄호 [W_AA, W_AB](S33) + 'PBE+D3(BJ) 2체 조건부 · 이상 기저면' + 게이트 라벨. 실험 0.37 ± 0.01 J/m² (비정합 직접 측정) 을 **나란히** 적는다.",
+  "V2_와_비교할_때": "같은 기하(그래핀 1장)끼리 — W_inc(M41) 과 V2. S33 과 V2 의 비는 기하가 다름을 적고 낸다.",
+  "DEM_입력값": "⛔ 이 카드는 DEM 이 쓸 C–C 값을 정하지 않는다. 결과 뒤 1저자 결정 — 선택지: (a) 같은-방법 일관성(DFT W_inc — Ag–C 도 같은 DFT) · (b) 실험 직접값 0.37 ± 0.01 · (c) 둘 다 시나리오.",
+  "허용_문장_한계": "통과 문장은 '이 작은 주기 모델(1×1 흑연)의 지정 표본에서 운영 기준을 충족했다' 까지 (D-2026-09-23-wad-a-prime-scope ⑥) — 실물 덴카블랙·VGCF 표면의 오차 보증으로 넓히지 않는다."
+ },
+ "7_이_카드가_답하지_않는_것": [
+  "⛔ 덴카블랙·VGCF 실물 표면의 차이 — 모서리 · 결함 · 산소 작용기 · 곡률 · 결정 크기 (이상 기저면만 계산한다).",
+  "⛔ 세 쌍 사이의 W 차 — DFT 에서 같은 값이다. 쌍마다의 차는 DEM 기하(R · 접촉 면적 · 거칠기) 몫.",
+  "⛔ 비정합 계면의 **직접** 계산 (비틀림 초격자) — 여기는 세 registry 의 푸리에 평균 추정이다.",
+  "⛔ 바인더 · 리튬화된 탄소 (P3) · 온도 · 거칠기 · 실측 박리 강도 (G_c 는 다른 부류 — 값 대 값 비교 금지).",
+  "⛔ '분산 보정이 맞다' 는 증명 — 한 계의 대조 하나다."
+ ],
+ "8_문헌_앵커_원문_대조": {
+  "digest": "litdb/papers/wang2015_graphite_cleavage_energy.md (그림 litdb/figures/wang2015_graphite_cleavage_energy/)",
+  "PDF_직접_확인_2026_09_28": {
+   "p1_초록": "\"The measured value, 0.37±0.01 J m⁻² for the incommensurate state of bicrystal graphite, is nearly invariant with respect to temperature (22 ≤ T ≤ 198 °C) and bicrystal twist angle … The CE for the ideal ABAB graphite stacking, 0.39±0.02 J m⁻², is calculated based on a combination of the measured CE and a theoretical calculation.\"",
+   "p4": "\"average CE of G(φ) = 0.37±0.01 J m⁻², where the data was averaged over 50 samples with 2–9 μm flakes with rotation angles 16° ≤ φ ≤ 54°\" (PDF 텍스트 추출은 μ 가 'm' 으로 깨진다)",
+   "p5": "\"… can be simply obtained by performing an average over the entire generalized stacking fault energy … s0 ≈ 22 mJ m⁻² for graphite\" · \"the ideal cleavage energy is G(0) = G + s0 = 2γ = 0.37 + 0.02 J m⁻² = 0.39±0.02 J m⁻² … We estimate the error in s0 to be less than ~0.005 J m⁻²\"",
+   "p6": "\"grain boundary energy with a maximum value of s = 0.02±0.005 J m⁻² … CE = 0.39±0.02 J m⁻² for perfectly stacked AB graphite\" · 유도값 표면에너지 0.20 · 층간 결합에너지 0.33 · 박리에너지 0.46 J m⁻² (관계식 surface = CE/2 · BE ≈ 0.85 CE · CE ≈ 0.85 EE)",
+   "GSFE_입력": "Methods: GSFE 매개변수는 ACFDT-RPA 이중층 그래핀 계산 + C44 맞춤 · 오차 ~15 % (γ_sf 는 ~100 %) — 0.39 는 '측정 + 이론' 이고 0.37 이 직접 측정이다."
+  },
+  "Maurer_2015": "litdb/papers/maurer2015_mbd_adsorbates_metal_surfaces.md — 분산 모델만 바꿔도 Ag|그래핀이 33–78 meV/C 로 퍼진다 (그래핀/Ag 실험값 없음) · PBE+MBD 흑연 48 meV/C",
+  "계획": "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md §흑연 대조 (기준 · 허용대 · k 간격 · ΔW 문턱 · 'litdb 원문 확보 전 봉인 금지')"
+ },
+ "9_실행": {
+  "순서": "① 1단계 (V100 · 이완 9) → ② 2단계 입력 생성 (V100 · ASE 가 있는 python · 결정적 — repo 로 돌아온 이완 출력으로 다시 만들어 pw.in sha 가 같은지 대조한다) → ③ 2단계 SCF 44 → ④ 집계(ATM 제외) → ⑤ 회수 묶음 → repo db/raw/wad_cc_graphite_2026_09_28/ · repo 에서 --collect --atm",
+  "입력": "db/inputs/wad_cc_graphite_2026_09_28/ (stage1/qe/jobs.json · cc_stage1_manifest.json · run_v100.sh)",
+  "코드_위치": "V100 ~/wad4l 은 git 이 아니라 kgy `v100-serve` ref 의 git archive 사본 — CODE_ID 파일에 이 카드를 담은 커밋을 적는다 (플랫폼 문서 함정 ⑦)"
+ },
+ "code_binding": {
+  "code": "tools/wad/cc_graphite.py (selftest ⑨ 가 아래 값과 코드 상수를 대조한다)",
+  "BAND": [
+   0.31,
+   0.47
+  ],
+  "G3_DW": 0.01,
+  "G4_DW": 0.01,
+  "THICK_DW": 0.02,
+  "MODELS": [
+   [
+    "S33",
+    "AB",
+    "base"
+   ],
+   [
+    "S33",
+    "SP",
+    "base"
+   ],
+   [
+    "S33",
+    "AA",
+    "base"
+   ],
+   [
+    "M41",
+    "AB",
+    "base"
+   ],
+   [
+    "M41",
+    "SP",
+    "base"
+   ],
+   [
+    "M41",
+    "AA",
+    "base"
+   ],
+   [
+    "S44",
+    "AB",
+    "base"
+   ],
+   [
+    "M61",
+    "AB",
+    "base"
+   ],
+   [
+    "M41",
+    "AB",
+    "V2a"
+   ]
+  ],
+  "REPS": [
+   "CC_S33_AB",
+   "CC_M41_AB"
+  ],
+  "KPTS": [
+   18,
+   18,
+   1
+  ],
+  "KPTS_DENSE": [
+   24,
+   24,
+   1
+  ],
+  "GAP": 10.0,
+  "SMEAR": [
+   "mv",
+   0.01,
+   0.005
+  ],
+  "SPACING_OK": [
+   3.0,
+   4.2
+  ],
+  "FLAT_TOL": 0.05
+ },
+ "결정": "D-2026-09-28-wad-cc-graphite",
+ "status_history": [
+  {
+   "at": "2026-09-28",
+   "state": "proposed",
+   "by": "agent",
+   "note": "1저자 '이것도 진행하자' — 계산 준비·실행 승인. 게이트 문안은 에이전트 초안이다. **값을 보기 전에** 커밋한다 (litdb Wang 원문 인입 뒤 — 09-23 계획의 봉인 조건). 1저자는 실행 전까지 고칠 수 있고, 실행으로 비준한다 (09-19 · 09-28 x010 선례)."
+  },
+  {
+   "at": "2026-09-28",
+   "state": "ratified",
+   "by": "1저자(사용자)",
+   "note": "'이것도 진행하자' · '내가 말한건 덴카-덴카, 덴카-vgcf, vgcf-vgcf' — 결정 D-2026-09-28-wad-cc-graphite (active · ratification digest). 게이트 문안은 에이전트 초안 · 1저자는 실행 전까지 고칠 수 있다 (고치면 새 digest)."
+  }
+ ]
+}

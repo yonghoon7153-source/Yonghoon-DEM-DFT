@@ -186,6 +186,8 @@ evidenceScope: multi-source-mixed
 - k 출발 간격 ≤ 0.20 Å⁻¹ (2π 포함) → 조밀화로 확인 · k · cutoff · smearing 각각 ΔW ≤ 0.01 · 흑연 벽개 모델 두께 ΔW ≤ 0.02 J/m².
 - Ag|흑연: 결합 상태 DFT+D3 이완 → 강체 분리곡선 (독립 슬랩 이완값은 별도). registry 는 **결과 전에 고정한, 서로 대칭적으로 비등가인 것 최소 4개** (Codex 보충 · *BV 제안 운영값*).
 - ⚠ 0.37 / 0.39 의 원 논문 = **Wang et al., arXiv:1506.00536** (Codex 보충 링크) — **litdb 에 아직 없다**. 봉인 전에 PDF 로 인입한다.
+  ✅ **09-28 인입** — litdb slug `wang2015_graphite_cleavage_energy` (Nat. Commun. 6, 7853 · 본문+SI · 1저자 PDF · 그림 `litdb/figures/wang2015_graphite_cleavage_energy/` · digest 는 논문 에이전트 작성 중). 0.37 ± 0.01 = 비정합 **직접 측정** · 0.39 ± 0.02 = 0.37 + σ0(≈ 22 mJ/m², GSFE 평균 · ACFDT-RPA 입력) — PDF p1·p4·p5·p6 확인.
+  → 사전등록 `db/properties/wad_cc_graphite_prereg_2026_09_28.json` · 결정 `D-2026-09-28-wad-cc-graphite` (C|C = 덴카–덴카 · 덴카–VGCF · VGCF–VGCF · 비정합 추정 W_inc 는 정보량).
 
 ### 재개 조건 (Codex · 본 계산 전 최소 5묶음)
 1. 정상 NCM 모결정과 SE 절단면을 **좌표·배위·조성**으로 검증하고 입력 고정.
@@ -376,7 +378,7 @@ Pustorino 0.22 vs 0.20 은 한 종결의 문헌 두께 비교 — **얇은 경�
 | **P1-a LPSCl↔Ag** | 같은 SE + **Ag(111) 직사각 7×4 · 4층** (a 4.086: 2.889 × 5.004 → 20.225 × 20.017 Å) | Ag −0.57 % / +0.46 % (a 4.086) · −0.91 % / +0.12 % (4.10) · **−2.33 % / −1.32 % (PBE 4.16)** | 624 + 224 = **848** |
 | **P1-b Ag↔흑연** | Ag(111) × 흑연(0001) 작은 초격자 — 워크플로 밖 · **DFT+D3 직접** | (√3×√3)R30° Ag / 흑연 2×2 류 — 셀은 봉인 때 다시 계산 | 36–114 |
 | P2 LPSCl↔탄소 | ⚠ **미해결** — 정방 20.11 Å 에 그래핀 직사각이 잘 안 맞는다 (8×5: −2.1 / +5.9 %) | — | — |
-| P2 흑연 층간 | **DFT 세팅 대조 잡** (문헌 소환값 ~0.37 J/m² 와 비교 — litdb 원문 확보 전 봉인 금지) | — | 4–8 |
+| P2 흑연 층간 | **DFT 세팅 대조 잡** (문헌 소환값 ~0.37 J/m² 와 비교 — litdb 원문 확보 전 봉인 금지) → ✅ 09-28 WAD-CC 카드 (1×1 · 이완 9 + SCF 44 · V100) | — | 4–8 |
 
 - **면·종단**: F-43m 은 반전대칭이 없어 두 (001) 면이 다르다 → comp1 **face 'A'** (v30u 선례, `tools/adhesion_v30u/run_li_migration_FINAL_combo.py`)로 고정하고 NCM·Ag 에 **같은 면**을 쓴다.
 - **SE 원본**: repo 에 있는 것은 `db/structures/comp1_V0_k444.cif` (a 10.055). 옛 슬랩이 쓴 원격 `comp1_V0.cif` 와 같은지는 **확인 전** — 어차피 재생성이라 새 기준값·Ag 가 같은 파일을 쓰면 된다.

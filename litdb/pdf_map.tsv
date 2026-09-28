@@ -288,3 +288,9 @@ sankar2026_fiber_scale_dem_carbon_felt_manufacturing	fiber-scale
 #   ↑ 2026-09-27. 'fiber-scale' = 업로드명·inbox명 양쪽에 드는 고유 조각 (원제 "Fiber-Scale Discrete Element Modeling Approach …"). 자동 매칭은 실패했다 (위와 같은 시험).
 #   손작업 4장: fig_4 · fig_6 · fig_7 (본문 줄 섞임) · fig_12 (오른쪽 빈 띠) recrop — 같은 가드가 막는다.
 li2026_li_kinetic_promoter_aqueous_mn_sulfur	kinetic_promoter   # 2026-09-27 논문 에이전트 · 'kinetic_promoter' = 업로드명(본문·SI)·inbox명(0927-1 본문·SI) 넷 모두에 드는 고유 조각 (inbox 안 다른 파일 0건 확인) · 동시 작업 중이라 --inbox 자동매칭은 시험하지 않고 명시 등록 · 크롭은 --pdf 두 개 + --clean 으로 32장(손작업 없음)
+# ── 점착 트랙 · 흑연 층간(C|C) 대조의 실험 앵커 ──────────────
+wang2015_graphite_cleavage_energy	measurement of the cleavage energy of graphite
+#   ↑ 2026-09-28 논문 에이전트. '--slug' 자동 매칭 실패 실측 ("PDF 를 못 찾았다" · digest 작성 전 실행 · 원인 미조사) → 이 줄로 고정.
+#   이 조각은 본문·SI 두 파일명에 모두 들어 있고 inbox 의 다른 파일에는 없다 (확인 시점 inbox = 이 두 편뿐).
+#   손작업 2장: fig_1 recrop (자동 크롭이 위 21 pt 를 잘라 GF2·패널 라벨 a/c 가 빠졌다) · fig_S1 manual_crop (캡션이 'Supplementary Figure 1(a)' 로 붙어 있고 그림 아래에 있어 번호 공백으로 떴다).
+#   [!] 그래서 '--clean' · '--inbox --run' · '--refresh --apply' 는 손작업 가드에 걸린다. '--force_clean' 을 주면 두 장이 되돌아간다/사라진다.

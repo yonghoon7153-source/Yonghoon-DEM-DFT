@@ -1,0 +1,231 @@
+{
+ "slug": "wang2015_graphite_cleavage_energy",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-28",
+ "sources": [
+  "Wang 2015 - Measurement of the cleavage energy of graphite (Nat Commun 6 7853).pdf",
+  "Wang 2015 - Sup) Measurement of the cleavage energy of graphite (Nat Commun 6 7853) SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1 | Illustration of the cleavage energy measurement. (a) The graphite sample is a stack of two thin, single crystal, rectangular graphite ﬂakes, GF1 (blue) and GF2 (grey), with parallel basal planes, but rotated with respect to each other about [0001] by an angle, f. Hence, the (0001) planar interface between GF1 and GF2 is a twist grain boundary on the (0001) plane. The sample is ﬁxed to a rigid substrate. (b) The cleavage energy is measured through shearing the lower ﬂake relative to the upper one in the superlubric state. (c) Schematic illustration of the experimental setup to shear the sample using an XYZ stage, measure the shear force, Fapp, using an in situ calibrated (see Methods) and ﬁxed micro-force sensor, and control the temperature and vacuum.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    45.0,
+    557.7,
+    179.8
+   ],
+   "w": 2168,
+   "h": 563,
+   "dpi": 300,
+   "src": "Wang 2015 - Measurement of the cleavage energy of graphite (Nat Commun 6 7853).pdf",
+   "blank": 0.833,
+   "recrop": "auto crop started at y 66.0 and cut off the top of the figure (panel a GF2 flake, panel labels a/c, 'Vacuum chamber' label) - re-rendered p.3 clip y 45.0-179.8 (below the running header) at 300 dpi (2026-09-28)",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2 | Measured force–shear displacement curves. Typical measured force–shear displacement curves for loading (red solid line) and unloading (blue dashed line) in ambient conditions at temperatures (a) 22 \u0002C, (b) 50 \u0002C and (c) 119 \u0002C. The shaded area in b between the entire region (III) loading curve and the unloading curve is the energy dissipated in sliding and retraction. This energy dissipation can be normalized by the region (III) width, w, and the sample width B to ﬁnd the dissipative energy (see more below). (d) The time traces of the shearing distance (black dashed line) and the shear force (red solid line) at 22 \u0002C. (e) Optical images of the sheared mesa (left) and retracted mesa (right). Scale bar, 4 mm.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    254.2,
+    557.8,
+    476.8
+   ],
+   "w": 2169,
+   "h": 928,
+   "dpi": 300,
+   "src": "Wang 2015 - Measurement of the cleavage energy of graphite (Nat Commun 6 7853).pdf",
+   "blank": 0.856,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3 | Temperature and twist angle dependence of the CE. (a) The measured cleavage energy as a function of temperature. Red, blue and black symbols represent three different samples with the same side length (B ¼ 4 mm) and the error bars represent the s.d. of ﬁve independent measurements on each. The inset shows the dissipative energy, deﬁned in the caption of Fig. 2b, versus temperatures. (b) The measured cleavage energy as a function of twist angle f at T ¼ 20 \u0002C. The CE values were measured from 11 different samples with the same side length (B ¼ 3 mm). Each sample corresponds to a different twist angle. The error bars represent the standard deviation of ﬁve independent measurements for each sample. The insert shows a typical sample at lock-in from which the rotation angle is measured. 4 NATURE COMMUNICATIONS | 6:7853 | DOI: 10.1038/ncomms8853 | www.nature.com/naturecommunications",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    532.7,
+    557.7,
+    676.4
+   ],
+   "w": 2168,
+   "h": 600,
+   "dpi": 300,
+   "src": "Wang 2015 - Measurement of the cleavage energy of graphite (Nat Commun 6 7853).pdf",
+   "blank": 0.895,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4 | Theoretical results. (a) The (0001) twist grain boundary (GB) energy in graphite obtained from the APNGB model as a function of twist angle f (black symbols). The contributions to the GB energy from the elastic and misﬁt (GSFE) energies are shown by blue and red symbols. The solid black horizontal line shows the GB energy assuming that the graphite crystals are rigid and incommensurate with each other (obtained as the average over the entire GSFE). The inset shows the spatial distribution of the misﬁt energy in a f ¼ 1\u0002 twist grain boundary (dislocations cores are seen as green lines). (b) The results from a plotted over the entire twist angle range (lower black curve) and the corresponding cleavage energy G(f) over the same range based upon the measured values of G(f) (shown as the red line). The green dashed curve shown for comparison, is the typical shape of s(f) for a twis",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    510.6,
+    557.7,
+    665.3
+   ],
+   "w": 2168,
+   "h": 646,
+   "dpi": 300,
+   "src": "Wang 2015 - Measurement of the cleavage energy of graphite (Nat Commun 6 7853).pdf",
+   "blank": 0.902,
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure 1(a) The trajectory of the levitated pyrolytic graphite test sample (blue curve) and the envelope from free vibration theory (red curve). (b) The FFT of the displacement-time curve in (a) for pyrolytic graphite. (c) Loading calibration results for the force sensor. The blue line represents the D-LFC force output, the red dots represent the micro-force sensor voltage outputs and the blue dotted line represents the micro-force sensor force outputs after calibration. (d) Unloading calibration results for the force sensor.",
+   "rotated_deg": 0,
+   "manual_crop": "caption is written 'Supplementary Figure 1(a) ...' (no space/punctuation between the number and the panel letter) and sits BELOW the raster, so the tool reported fS1 as a number gap; clip = embedded raster bbox on SI p.1 (72.0,79.8,485.9,391.6) + 2 pt (2026-09-28)",
+   "bbox": [
+    70.0,
+    77.8,
+    487.9,
+    393.6
+   ],
+   "w": 1742,
+   "h": 1316,
+   "dpi": 300,
+   "src": "Wang 2015 - Sup) Measurement of the cleavage energy of graphite (Nat Commun 6 7853) SI.pdf",
+   "blank": 0.87,
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Figure 2. The GSFE landscape in the graphite basal plane where the locations of the position of the points to which the GSFE is fitted are indicated. The colors indicate the magnitude of the GSFE as per the color bar on the right (J/m2).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    28.0,
+    532.0,
+    320.0
+   ],
+   "w": 1942,
+   "h": 1218,
+   "dpi": 300,
+   "src": "Wang 2015 - Sup) Measurement of the cleavage energy of graphite (Nat Commun 6 7853) SI.pdf",
+   "blank": 0.646,
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "caption": "Supplementary Table 1. Reported experimental measurements of the graphite interlayer interaction energy (in J/m2). The type of measurement is indicated as 2SE, EE, BE, and CE representing twice the surface energy, exfoliation energy, binding energy and cleavage energy, respectively. “Stack”, where reported, indicates the layer stacking sequence.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    73.0,
+    531.1,
+    452.3
+   ],
+   "w": 1934,
+   "h": 1581,
+   "dpi": 300,
+   "src": "Wang 2015 - Sup) Measurement of the cleavage energy of graphite (Nat Commun 6 7853) SI.pdf",
+   "blank": 0.945,
+   "viewed": true
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 4,
+   "file": "tab_S2.png",
+   "caption": "Supplementary Table 2. Theoretical results for the graphite interlayer interaction energy (in J/m2), where the notation is the same as in Supplementary Table 1. Theory Stack Energy value Type DFT-LDA 7 AB AA 0.12 0.06 BE BE DFT-LDA 8 AB 0.31 BE GGA 9 AB ~0.03 BE AB 0.15 BE vdW-DF 10 vdW-DF 11 0.15 0.32 BE EE vdW-DF 12 AB 0.51 EE vdW-DF 13 Semi-empirical 14 AB AB EE CE BE Semi-empirical 15 - 0.37 BE QMC 16 AB 0.34 BE ACFDT-RPA 17 AB 0.29 BE LCAO-S2+vdW 18 Turbostratic AB AB AB 0.29 0.31 0.33-0.37 0.43 ± 0.02 0.49 EE EE AB",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    71.1,
+    531.1,
+    568.4
+   ],
+   "w": 1934,
+   "h": 2073,
+   "dpi": 300,
+   "src": "Wang 2015 - Sup) Measurement of the cleavage energy of graphite (Nat Commun 6 7853) SI.pdf",
+   "blank": 0.939,
+   "viewed": true
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 4,
+   "file": "tab_S3.png",
+   "caption": "Supplementary Table 3. Elastic constants of graphite (GPa) 19.",
+   "rotated_deg": 0,
+   "bbox": [
+    108.4,
+    120.6,
+    451.8,
+    568.4
+   ],
+   "w": 1432,
+   "h": 1867,
+   "dpi": 300,
+   "src": "Wang 2015 - Sup) Measurement of the cleavage energy of graphite (Nat Commun 6 7853) SI.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 4,
+   "file": "tab_S4.png",
+   "caption": "Supplementary Table 4. The energy values used in fitting the GSFE (mJ/m2).",
+   "rotated_deg": 0,
+   "bbox": [
+    108.4,
+    120.6,
+    467.3,
+    568.6
+   ],
+   "w": 1497,
+   "h": 1868,
+   "dpi": 300,
+   "src": "Wang 2015 - Sup) Measurement of the cleavage energy of graphite (Nat Commun 6 7853) SI.pdf",
+   "blank": 0.928
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "fS1",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": [],
+   "resolved": "manual_crop fig_S1.png (2026-09-28, litdb-curator) - see figures[fS1].manual_crop"
+  }
+ ]
+}

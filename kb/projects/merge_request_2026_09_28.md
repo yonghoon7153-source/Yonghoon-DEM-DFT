@@ -61,7 +61,8 @@ evidenceScope: multi-source-primary
 | `f1780002d` | 웹앱 `/li2s` 에 「처음 보는 분께」 절 — 요약 기록(자리표시) + `data.li2s_brief()` + 시험 9 |
 | `767d10158` · `17640b9f2` | **CEI Li 장부 = 항등식** 유도·확인 (`--li_identity` · 계수 1) + **x = 0.10 곡률 사전등록 (실행 전 커밋)** · 결정 둘 (항등식 proposed · x010 active) · run.sh · 경로 정정 |
 | `cf17c5542` | (사용자 · gabia) x = 0.10 곡률 원자료 — 7 조성 · 판정 G0/GI/GC 통과 |
-| (다음 커밋) | x = 0.10 결과 기록(proposed) · 사전등록 ratified · 화면 머리 2×2 곡률 문장 교체 + 결속 시험 · 도구 G0 키·칸별 목록 |
+| `ae0275cfc` | x = 0.10 결과 기록(proposed) · 사전등록 ratified · 화면 머리 2×2 곡률 문장 교체 + 결속 시험 · 도구 G0 키·칸별 목록 |
+| (다음 커밋) | **W_ad 흑연 층간 C|C 사전등록 (실행 전)** — 덴카–덴카 · 덴카–VGCF · VGCF–VGCF · `tools/wad/cc_graphite.py` · 카드 · 결정 `D-2026-09-28-wad-cc-graphite` (active) · 입력 1단계 9 잡 + `run_v100.sh` · **litdb Wang 2015** (본문+SI · 그림) |
 
 ## 3. 돌린 시험 · 검증 (09-28)
 
@@ -77,6 +78,9 @@ evidenceScope: multi-source-primary
 | hazard 시험 (`-k hazard`) | 13/13 |
 | `quench_ss_event.py --selftest` | 35/35 (깨서 빨간불 6 건 확인) |
 | `msd_diffusive_check.py --selftest` | 200 ok · 0 bad |
+| `cc_graphite.py --selftest` (09-28 저녁) | **48/48** — 일부러 깨기 16 가지 전부 빨강 (2성 식 · G4 문턱 · smearing 치환 · SP 기준 · 면내 제약 · P0 · 층간 깃발 · ABC · 허용대 · 두께 · 누락 None · 간격 8 Å · degauss · G3 all→any · INCOMPLETE · 빌더 적층 가드) · 실제 V2 2단계 입력과 설정 20 키 동일 · 카드 code_binding 결속 |
+| `build_aprime_interfaces` · `build_aprime_s3` · `collect_aprime_s4` selftest | 26/26 · 19/19 · 25/25 (C|C 가 import 만 한다 — 봉인 도구는 안 바꿨다) |
+| `test_adhesion.py` · `validate_canonical.py` | 13/13 · 결정 91 · 그래프 무결성 ✅ |
 
 ## 4. 원격에 아직 도는 것 (마지막 실측)
 
@@ -102,6 +106,7 @@ evidenceScope: multi-source-primary
   결과 `cei_x002_result_2026_09_28.json` (**ratified** — G4 는 '위반 9 · 원인 규명(반올림)' 으로 닫음 · 결정 `D-2026-09-28-cei-x002-result` active · 1저자 "ㅇㅇ 그렇게 해줘") · 원자료 `cei_interface_V_x002` · `cei_esw_Li_x002` · `dopant_iface/closed_*_x002` ·
   `cei_p_host_ladder_x002_2026_09_28.json` · 그림 `cei_figs/*_x002.*` (옛 파일은 안 덮음) · kb 카드 `cei_nd_manuscript_framing_2026_09_18.md` 반론 절.
 - **CEI Li 장부 항등식 · x = 0.10 (09-28 저녁)**: 기록 `cei_li_ledger_identity_2026_09_28.json` (유도 · 수치 확인 · β 분해 · 허용/금지 서술 **제안**) · 확인 산출 `cei_li_ledger_identity_check_{x002,0919}_2026_09_28.json` · 결정 `D-2026-09-28-cei-li-ledger-identity` (**proposed** · `amends` 09-19 결정 — 비준 전엔 화면 안 바꿈) · 09-19 두 기록에 포인터 키 `⭐_유도_2026_09_28` 만 · 사전등록 `cathode_cei_x010_curvature_prereg_2026_09_28.json` + 결정 `D-2026-09-28-cei-x010-curvature` (active · 1저자 "빨리 할 수 있는 부분이면 진행하자") · 도구 `interface_reactivity_v2.py` (`li_ledger_identity` · `li_ledger_beta_decomposition` · `--li_identity` · `--x010` · li_ledger_slope 설명만 정정).
+- **W_ad 흑연 C|C (09-28 저녁)**: 결정 `D-2026-09-28-wad-cc-graphite` (**active** · 1저자 '이것도 진행하자' · 실행 전 비준 도장) · 카드 `wad_cc_graphite_prereg_2026_09_28.json` (ratified) · 도구 `tools/wad/cc_graphite.py` (새 파일 — 봉인 도구 무변경) · 입력 `db/inputs/wad_cc_graphite_2026_09_28/` · litdb `papers/wang2015_graphite_cleavage_energy.md` + `figures/wang2015_graphite_cleavage_energy/` · 09-23 계획 §흑연 대조에 인입 표시.
 - **CLAUDE.md**: gabia 절 — "지금 예외는 없다" → 살아 있는 범위 한정 예외 1 건 + 방 계산 근거 (V4 자폭선 44,000 기준 4,762 MiB).
 - **kb/open_items.md**: ⏭-NOW-z 추가 · 결속 시험 수 62 → 70.
 
