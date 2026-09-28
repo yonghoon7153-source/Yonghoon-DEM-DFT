@@ -17,6 +17,7 @@
 | **Q3 Bo 값** | **38.4 = 내부 고-Bo 탐색값** | Hare 분말 재현 · 문헌 앵커 · 유동성 상사 라벨을 **붙이지 않는다** (§1-2).  20.25 는 돌리지 않는다 |
 | **Q4 시점** | **본 캠페인 L 10 런 완주 뒤** | Codex J8.  발사 전 기록 §2-5 |
 | **Q5 실행 기계** (09-28 · 사용자) | **ibb SLURM — LH 세 시드 × 20 코어 (`lmp_mpi`)** · Q4 **해제** | 사용자 원문 *"ibb로 진행하자"* (마감).  Q4 의 근거 Codex J8 은 **WSL CPU 경합** (13 런 동시 → L 이 느려진다) 이었다 — ibb 는 L 10 런 (WSL) 을 늦추지 않으므로 그 이유가 사라진다.  기계 · 바이너리 · MPI 분할 차이 (§3-2) 는 사용자 판단 *"걱정 안 해도 될 듯"* 으로 **판정 차단 사유가 아니다** — 결론 문장에 한정어로 붙인다.  발사 경로 = §2-5b.  ⛔ 발사는 여전히 Codex GO 뒤 |
+| **Q7 발사 시점** (09-28 밤 · 사용자 *"발사할게 q6 보내자"*) | **첫 시드 `LH_s32452843` 를 Codex 5 차 GO 전에 발사** (마감) · `rest` (나머지 두 시드) 는 등록대로 bin 0 스모크 뒤 | 등록 규칙 (§2-5b *"발사는 Codex GO 뒤"*) 을 저자가 바꾼 것 — 결론에 병기.  조건: ① 코드 = 리뷰 스냅샷 `622066f8e` 의 믹서 코드 (ibb 클론 `77919b8` · 믹서 파일 diff 0 줄) ② ⛔ bin 0 스모크의 **접촉 계약 ② 는 D-1 결정 (Q6 답 뒤) 전에 돌리지 않는다** — LH 겹침을 열면 D-1 개정이 LH 에 대해 맹검이 아니게 된다 ⇒ `rest` 는 스모크 ① ③ ④ · D-1 결정 · 계약 ② 뒤 ③ Codex 가 발사 · 봉인 사슬에서 이 런을 무효로 만드는 결함을 찾으면 **다시 발사** (지금 런의 시간이 비용) ④ D-1 이 1 % 그대로면 §5 선행 2 가 E0 에서 이미 서지 않으므로 확장 = HOLD — 이 발사는 기술 보고용 M 을 남긴다 |
 
 ## 1. 질문과 한정
 
@@ -142,7 +143,7 @@ AM–AM 단독 효과 · 응집체만의 인과 · 실제 코팅 효과 · Hare 
 - 기록: `nproc` · `lscpu | head -20` · `free -h` · `df -h ~` · `sha256sum "$(command -v lmp_serial)"` · 리포 SHA · 발사 시각 · 첫 1 시간 step/s.
 - 재개가 필요해지면 본 캠페인과 같은 도구 (`resume_all.sh`) 와 같은 기록 (영수증 · `RESUME_STEP`).
 
-### 2-5b. ibb (SLURM) 발사 — 1저자 결정 09-28 (§0 Q5) · ⛔ 발사는 Codex GO 뒤
+### 2-5b. ibb (SLURM) 발사 — 1저자 결정 09-28 (§0 Q5) · ⛔ 발사는 Codex GO 뒤 → ⚠ **09-28 밤 저자 결정: 첫 시드는 GO 전 (§0 Q7)**
 - 런처 = 같은 `launch_highbo.sh` + **`BACKEND=slurm`** — 관문 (덱 비교 `--expect-deck` · first/rest 순서 · 스모크 증서 · 출처 · 코호트) 은 **한 글자도 안 바뀐다**.  바뀌는 것은 발사 한 줄:
   러너 `<런>/run_lh.sbatch` (ibb 실물 형식 = `docs/data/pure_se_*_20260927/run_pse_*.sh`: `#SBATCH -n 20` ↔ `mpirun --oversubscribe --bind-to none -np 20` 짝 · `--qos=cpu-60` ·
   `--partition=cpu` · `--time=5-00:00:00` · `conda activate myenv` · 출력 `logs/` = 제출 폴더 기준) → 봉인 (`backend: slurm` · np · 러너 sha256 · 시작 대조기 sha256 포함) →
@@ -357,3 +358,4 @@ completion_basis "last_step" · last_thermo_step 9,452,094` — **배너가 없�
 | 발사 백엔드 | `run_all.sh` 경유 `setsid lmp_serial` (봉인 바로 뒤 exec) | `BACKEND=slurm` — 러너 → 봉인 (러너 · 대조기 sha256) → sbatch → jobid · **시작 대조** (`start_check.py`) | SLURM 제출 ↔ 시작 대기열 틈 (Codex Q5 *"실행 직전"*) | 09-28 오후 · ibb 경로 커밋 | 없음 | 관문 불변 |
 | 영수증 바이너리 · 실행 | WSL `lmp_serial` 직접 | ibb `lmp_mpi` · `LMP_LAUNCH="mpirun … -np 1"` (sbatch `-n 1`) | 소비자가 영수증 ↔ 봉인 바이너리 대조 (HBR4-02) · 병렬 mesh 덤프는 삼각형 순서가 달라 `-np 1` | 09-28 오후 · ibb 경로 커밋 · ✅ 실측 통과 14:19 KST (`receipt_v2_ibb.json` · WSL v1 과 208 행 비트 동일) | 없음 | `-np 1` → `-np 20` 적용은 **가정** (Codex 5 차 §S) |
 | 소비자 봉인 잇기 (SLURM) | 봉인의 바이너리 · 덱 · STL | + `job_start.json` (ok · 바이너리 · 실행된 러너 · 대조기 · 봉인 sha256 · ntasks) | 대기열 틈 — 시작 대조 기록 없이는 실행 바이너리 미상 | 09-28 오후 · ibb 경로 커밋 | 없음 | — |
+| 발사 시점 (Q7) | Codex 5 차 GO 뒤 (§2-5b) | **첫 시드는 GO 전** · `rest` = bin 0 스모크 ① ③ ④ + D-1 결정 + 계약 ② 뒤 · 계약 ② 는 D-1 결정 전 금지 | 저자 결정 (마감) — E0 계약 REJECT 로 D-1 이 열린 상태에서 계산 시간을 먼저 쓴다 | 09-28 밤 · 이 커밋 | E0 계약 (3/3 REJECT) · M 없음 · LH/LC 겹침 없음 | 결론에 *"첫 시드는 Codex GO 전 발사"* 병기 · Codex 가 사슬 결함을 찾으면 재발사 |
