@@ -185,7 +185,30 @@ def s_census_summary(hist, n_frames):
         for p in l:
             if p not in f:
                 foreign.setdefault(str(p), []).append(s)
-    return {"n_S": len(hist), "n_frames_scanned": n_frames,
+    # ── 정체 기준 온전율 (배위 기준 PS₄ 보존율과 **다른 양**이다) ──
+    orig = {}                                  # P → 프레임 0 에 그 P 것이던 S 집합
+    free0 = [s for s in sorted(hist) if not first[s]]
+    for s in sorted(hist):
+        for pp in first[s]:
+            orig.setdefault(int(pp), []).append(s)
+    intact, broken = [], []
+    for pp, ss in sorted(orig.items()):
+        lost = [s for s in ss if pp not in last[s]]
+        (intact if not lost else broken).append({"P": pp, "original_S": ss, "lost_S": lost} if lost else {"P": pp, "original_S": ss})
+    kept = [s for s in sorted(hist) if first[s] and set(first[s]) == set(last[s])]
+    n_own0 = len(hist) - len(free0)
+    identity = {
+        "⛔_배위_보존율과_다른_양이다": "PS₄ 보존율은 P 의 **4배위**를 세고 그 넷이 원래 그 P 의 S 인지는 안 본다. 아래는 **정체**다.",
+        "n_P": len(orig), "n_P_all_original_S_kept": len(intact),
+        "fraction_P_all_original_S_kept": round(len(intact) / len(orig), 4) if orig else None,
+        "P_broken": broken,
+        "n_S_with_owner_at_frame0": n_own0, "n_S_free_at_frame0": len(free0), "S_free_at_frame0": free0,
+        "n_S_kept_original_owner": len(kept),
+        "fraction_S_kept_original_owner": round(len(kept) / n_own0, 4) if n_own0 else None,
+        "note": "'온전' = 프레임 0 에 그 P 것이던 S **전부**가 마지막 프레임에도 그 P 에 있다. "
+                "**남의 S 를 받은 것은 온전성을 깨지 않는다** (배위수만 늘 뿐이다).",
+    }
+    return {"n_S": len(hist), "n_frames_scanned": n_frames, "identity": identity,
             "n_moved": len(movers), "n_transient_only": len(transient_only),
             "n_free_at_last_frame": len(free_end), "free_at_last_frame": free_end,
             "moved": movers, "transient_only": transient_only,
@@ -400,6 +423,13 @@ def _summary(res):
         L.append(f"S 소속-이동 (전수 {cs['n_S']}): **이동 {cs['n_moved']}** · 일시변화만 {cs['n_transient_only']} · "
                  f"마지막 프레임 자유 {cs['n_free_at_last_frame']} {cs['free_at_last_frame']}")
         L.append(f"   P 별 '남의 S' (마지막 프레임): {cs['foreign_S_per_P_at_last_frame'] or '없음'}")
+        idt = cs.get("identity") or {}
+        if idt:
+            L.append(f"   ★ **정체** 기준: 원래 S 를 전부 지킨 P **{idt['n_P_all_original_S_kept']}/{idt['n_P']}** "
+                     f"({idt['fraction_P_all_original_S_kept']}) · 원래 주인을 지킨 S "
+                     f"{idt['n_S_kept_original_owner']}/{idt['n_S_with_owner_at_frame0']} ({idt['fraction_S_kept_original_owner']})"
+                     + (f" · 프레임 0 자유 S {idt['n_S_free_at_frame0']}" if idt['n_S_free_at_frame0'] else "")
+                     + "  ⛔ 배위 기준 PS₄ 보존율과 다른 양이다")
         for m in cs["moved"]:
             c0 = m["changes"][0]
             L.append(f"   S{m['S']}: P{m['from_P']} → P{m['to_P']} · 변화 {m['n_changes']} 회 · "
@@ -586,6 +616,24 @@ def _selftest():
     ck(cbr["n_moved"] == 1 and cbr["foreign_S_per_P_at_last_frame"] == {"7": [3]} and cbr["moved"][0]["to_P"] == [0, 7],
        f"census: 다리 S(주인 둘)는 주인 집합 크기 2 로 나오고 새 P 만 '남의 S' 로 센다 — {cbr}")
     ck(s_census_summary({}, 0)["n_S"] == 0, "⛔음성: S 가 없으면 n_S 0 (지어내지 않는다)")
+    # ── 정체 기준 온전율 ──
+    with tempfile.TemporaryDirectory() as td:
+        ci = analyze(_synthetic(td, event="detach"), mq, log=lambda *a: None, census=True)["S_owner_census"]["identity"]
+        ck(ci["n_P"] == 1 and ci["n_P_all_original_S_kept"] == 0 and ci["P_broken"][0]["lost_S"] == [1]
+           and ci["n_S_with_owner_at_frame0"] == 4 and ci["n_S_free_at_frame0"] == 1 and ci["S_free_at_frame0"] == [5]
+           and ci["n_S_kept_original_owner"] == 3 and ci["fraction_S_kept_original_owner"] == 0.75,
+           f"정체: S 하나를 잃은 P 는 온전하지 않다 · 프레임 0 자유 S 는 분모에서 빠진다 — {ci}")
+    i2 = s_census_summary({10: [(0, 0.0, 1200.0, "melt_hold", (0,))],
+                           20: [(0, 0.0, 1200.0, "melt_hold", (7,)), (4, 4.0, 700.0, "quench", (0,))]}, 6)["identity"]
+    ck(i2["n_P"] == 2 and i2["n_P_all_original_S_kept"] == 1 and [b["P"] for b in i2["P_broken"]] == [7],
+       f"⛔음성: **남의 S 를 받은 것은 온전성을 깨지 않는다** — P0 은 온전, 잃은 P7 만 깨진다 — {i2}")
+    i3 = s_census_summary({11: [(0, 0.0, 1200.0, "melt_hold", (0,)), (3, 3.0, 900.0, "quench", ()),
+                                (5, 5.0, 300.0, "final_hold", (0,))]}, 6)["identity"]
+    ck(i3["n_P_all_original_S_kept"] == 1 and i3["n_S_kept_original_owner"] == 1 and i3["P_broken"] == [],
+       f"⛔음성: 일시 이탈 후 **같은 P 로 복귀**는 온전성을 깨지 않는다 — {i3}")
+    i4 = s_census_summary({12: [(0, 0.0, 1200.0, "melt_hold", ())]}, 2)["identity"]
+    ck(i4["n_P"] == 0 and i4["fraction_P_all_original_S_kept"] is None and i4["fraction_S_kept_original_owner"] is None,
+       f"⛔음성: 프레임 0 에 주인이 아무도 없으면 분율을 **0 으로 그리지 않고 None** 이다 — {i4}")
     print(f"{'✅' if not bad else '⛔'} quench_ss_event selftest {ok}/{ok + bad}")
     return 0 if not bad else 1
 
