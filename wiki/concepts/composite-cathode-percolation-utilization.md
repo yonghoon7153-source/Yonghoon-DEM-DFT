@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -465,6 +465,15 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - ⚠ 대조의 한계: (i) 이용률 ≠ `θ`(0.1 C 율 · 이온 경로 · 첫 사이클 손실 포함; 충전 0.05 C) (ii) 탈리튬 LCO 는 금속성(`[인쇄]` "changes from semiconducting to metallic character") — 1호의 전자 퍼콜레이션 가정과 전자 경로가 다를 수 있다 (iii) SE 는 입자가 아니라 기질일 수 있다(55호) (iv) 조성당 1 셀 · LCO 입도 미인쇄.
 - 이 편의 해석은 `[인쇄]` "effective electronic conductive paths between particles need to be created by the overlap of LiCoO2 particles" · 고율에서는 "a sufficient electrolyte fraction must be provided" — 전자 · 이온 두 퍼콜레이션의 **율 의존 균형**이고, 그것을 식 (1) 의 "확산 길이"(63호 D1 — h ↔ s ×60)로 정량하려 했다.
 
+## ★★ 1호가 ref 11 로 인용한 "5 성분" 원전 · 57호 Fig. 5d 실험 점의 원전 — 탄소가 있어 `p_c` 대조군이 아니고, 삼각형 넷은 표 1 의 비다 (2026-09-28 추가, `assb` 65호)
+
+`raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md` (Nam · Oh · Jung · Jung 2018, *J. Power Sources* 375, 93 — **1호 ref 11**("5 성분") · **57호 ref 25**(Fig. 5d)). NCM622 : Li₆PS₅Cl : Super C65 1.3 wt% (: NBR 1.4 wt%), AM 68.1–84.3 wt%.
+
+- **1호 ref 11 "5 성분(AM, SE, 도전재, 바인더, 공극)"** ✅ — 고체 넷 인쇄 · 공극은 모식도(Fig. 1d · e)의 흰 틈뿐(`porosity` 0 회).
+- **조성 스윕은 `p_c` 대조군이 아니다** — C65 1.3 wt% 가 전자 경로를 대신한다. `[재현]` AM 43.8–69.0 vol%(고체 기준, `ρ_SE` 1.64–1.97)에서 0.1 C 첫 방전 130–155 · 첫 충전 `[도표]` ≈179–188 mAh g⁻¹(건식 L) — 1호 `p_c(d)`(탄소 없는 AM 연결) 문턱 근처 조성도 전부 쓰인다. 용량을 깎는 것은 SE 쪽(`[인쇄]` "longer percolation pathways of Li+ ions in the SE regions")과 바인더 · 두께다.
+- **57호 Fig. 5d 삼각형 넷** `[재현]` = 표 1 비 69.4(W70/D70) · 90.9(W80/D80) · 45.0(W85/D85) · **72.9 %(예비혼합 W85L/D85L)** — 넷째는 바인더 함량이 아니라 다른 공정의 점. x 위치 ≈41 · 52 · 59(57호 판독)는 고체 기준 48.1 · 61.3 · 69.0 vol%(`ρ_SE` 1.97) × 0.85(57호 기본 void 15 %)와 1 vol% 안에서 맞는다 — 57호의 "작은 AM 점은 `p_c` 아래(≈0 ÷ ≈0)" 는 **모델 축의 환산** 위이고, 실험 전극은 탄소로 연결돼 있다(`[재현]` 가설 — 57호 원문 미열람).
+- ⚠ 57호 대조의 실험 쪽은 GITT 피복률 = 1.2355 × ΔE_s/ΔE_t — 연결 입자 기준(통째 고립 약분)이고 가져온 `D` · BET 로 척도된다([[assb-lampe-contact-product-degeneracy]] 65호 줄). 모델 `A_spec,a`(퍼콜레이션하는 두 클러스터 사이 면적)와는 **같은 양이 아니다**.
+
 ## 이 페이지가 주장하지 않는 것
 
 - `θ_AM` 이 접촉 손실의 **올바른** 모형이라고 주장하지 않는다. 원문의 `θ` 는 접촉 저항을
@@ -480,6 +489,7 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
   넣으면 자기 실험(압력 회복 60 %p)과 **6 배 어긋난다.**
 - **4호의 10.4 %·9.50 % 가 확정값이라고 주장하지 않는다** — 분할 정확도 수치가 없고
   해상도 바닥이 미명시라 **하한**이다.
+- ★ **2026-09-28 (65호)**: **57호 Fig. 5d 의 x 축 환산(× 0.85)을 57호 원문의 규약으로 확정하지 않는다** — 57호 digest 의 판독 위치와 1 vol% 안에서 맞는다는 `[재현]` 가설이다.
 
 ## 관련
 - [[assb-apparent-capacity-decomposition]] — 이 곱에 **셋째 항 `η(i)`** 를 더한다. 반례와 분리 시험.

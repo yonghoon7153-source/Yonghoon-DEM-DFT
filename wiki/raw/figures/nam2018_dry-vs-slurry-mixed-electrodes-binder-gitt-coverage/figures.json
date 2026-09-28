@@ -1,0 +1,508 @@
+{
+ "slug": "nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-28",
+ "sources": [
+  "4bbca78e-27._Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+  "bf4378b5-27._Sup_Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Comparison of a-solid-state lithium-ion battery (ASLB) electrodes fabricated by dry-mixing and wet-slurry processes. Photographs of a) a dry-mixture of active materials, SEs, and super C65 without polymeric binders and b) a slurry comprised of active materials, SEs, super C65, and polymeric binders in xylene. c) Sheet-type NCM622 electrode fabricated by the wet- slurry process. Schematic diagrams representing the micro- structures of ASLB electrodes a) by dry-mixing process without binders and b) by wet-slurry process using binders. Active ma- terials, SEs, super P, and polymeric binders (NBR) are shown in gray, yellow, black, and green, respectively. (For interpretation of the references to colour in this ﬁgure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    64.2,
+    307.9,
+    563.7,
+    589.3
+   ],
+   "w": 2082,
+   "h": 1174,
+   "dpi": 300,
+   "src": "4bbca78e-27._Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": 0.901,
+   "note": "⚠ 자동 크롭 오류 — bbox 가 4 쪽 Fig. 2 래스터(xref 98) 영역이라 이 PNG 의 내용은 Fig. 2 다(캡션만 Fig. 1). Fig. 1 은 fig_1_manual_p4.png"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. First-cycle charge-discharge voltage proﬁles at 0.1C and 30 °C for all-solid-state NCM622/Li-In half-cells employing dry- and slurry-mixed electrodes with a) the lower mass loading and b) the higher mass loading of NCM622.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    173.0,
+    563.6,
+    589.3
+   ],
+   "w": 2218,
+   "h": 1736,
+   "dpi": 300,
+   "src": "4bbca78e-27._Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": 0.768,
+   "note": "⚠ 자동 크롭 오류 — bbox y0 173.0 이 Fig. 1 래스터(xref 97, y 56.6–294.2) 아래 절반을 끌어들여 Fig. 1(d·e) + Fig. 2 가 한 장에 있다. Fig. 2 정본은 fig_2_manual_p4.png"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Discharge capacities for all-solid-state NCM622/Li-In half-cells cycled between 3.0 and 4.3 V (vs. Li/Li+) varied by C-rates at 30 °C. The C-rates for charge and discharge were the same.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    302.9,
+    294.7,
+    590.8
+   ],
+   "w": 1097,
+   "h": 1201,
+   "dpi": 300,
+   "src": "4bbca78e-27._Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": 0.862
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. FESEM surface images of NCM622 electrodes fabricated by dry-mixing process with a) ∼70 wt% (D70) and b) ∼85 wt% of NCM622 (D85) and wet-slurry process using NBR with c) ∼70 wt% (W70) and d) ∼85 wt% (W85) of NCM622. Their corresponding EDXS elemental maps for sulfur are also shown.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.8,
+    563.7,
+    221.6
+   ],
+   "w": 2218,
+   "h": 713,
+   "dpi": 300,
+   "src": "4bbca78e-27._Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": 0.245
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Nyquist plots at 30 °C for all-solid-state NCM622/Li-In half-cells employing dry-and slurry-mixed electrodes with a) the lower mass loading and b) the higher mass loading.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.2,
+    248.1,
+    560.1,
+    474.9
+   ],
+   "w": 2188,
+   "h": 946,
+   "dpi": 300,
+   "src": "4bbca78e-27._Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Transient discharge voltage proﬁles at 30 °C and their corresponding polarization (ΔV) curves for all-solid-state NCM622/Li-In half-cells employing dry- and slurry-mixed electrodes with a) ∼70 wt%, b) ∼80 wt%, and c) ∼85 wt% NCM622, obtained by GITT. The enlarged view where QOCV and CCV are indicated is shown in the inset in a. The polarization data were plotted by subtracting CCV from QOCV in the transient voltage proﬁles in transient discharge voltage proﬁles.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    494.6,
+    563.6,
+    649.1
+   ],
+   "w": 2218,
+   "h": 645,
+   "dpi": 300,
+   "src": "4bbca78e-27._Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Results of NCM622 electrodes fabricated by wet-slurry process using a premixed powder of NCM622 and SEs. a) Schematic diagram of premixing process for NCM622 and SE powders by mechanical milling. b) XRD patterns of Li6PS5Cl, pristine NCM622, and NCM622 premixed with Li6PS5Cl. c) Cross-sectional FESEM images of wet-mixed NCM622 electrodes without and with premixing process and their corresponding EDXS elemental maps for Ni (red) and sulfur (green). d) First-cycle charge-discharge voltage proﬁles at 0.1C, e) Nyquist plots, and f) transient discharge voltage proﬁles and their corresponding polarization (ΔV) curves for slurry-mixed NCM622 electrodes without and with premixing process, and their corresponding polarization curves. (For interpretation of the references to colour in this ﬁgure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.8,
+    563.6,
+    435.1
+   ],
+   "w": 2218,
+   "h": 1602,
+   "dpi": 300,
+   "src": "4bbca78e-27._Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": 0.735
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Results of NCM622/graphite all-solid-state full-cells. a) Photograph of 80 × 60 mm2 pouch-type NCM622/graphite full-cell and its cross-sectional FESEM image. b) First-cycle charge-discharge voltage proﬁles of pelletized and pouch-type full-cells of NCM622/graphite at 0.025C. The pelletized cell and pouch-cell were tested at 30 °C and 25 °C, respectively. The detailed speciﬁcations are provided in Table 2. Photographs of 80 × 60 mm2 pouch-type NCM622/graphite all-solid-state full-cells c) after cutting with scissors and d) being placed on the hot plate at 111 °C for > 1 h.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.8,
+    563.7,
+    381.1
+   ],
+   "w": 2218,
+   "h": 1378,
+   "dpi": 300,
+   "src": "4bbca78e-27._Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": 0.468
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1. FESEM images of a) NCM622 and b) graphite. c) The EDXS elemental maps of Ni and Nb for NCM622, which correspond with (a).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    67.8,
+    523.2,
+    358.3
+   ],
+   "w": 1911,
+   "h": 1211,
+   "dpi": 300,
+   "src": "bf4378b5-27._Sup_Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": 0.183
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3. a) XRD pattern and b) Arrhenius plot of Li-ion conductivity for as-prepared Li6PS5Cl. The Bragg position for argyrodite Li6PS5Cl (CIF no. 418490) is shown in a panel a. Conductivity after exposure to anhydrous xylene is also provided in a panel b.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    536.5,
+    514.2
+   ],
+   "w": 1966,
+   "h": 1873,
+   "dpi": 300,
+   "src": "bf4378b5-27._Sup_Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": 0.971
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4. First-cycle discharge capacity for the dry- and slurry-mixed NCM622 electrodes as a function of weight fraction of active materials. The NCM622/Li-In all-solid-state half-cells were cycled between 3.0-4.3 V (vs. Li/Li+) at 0.1C and 30 °C. The data were plotted from those in Fig. 2.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    528.6,
+    328.2
+   ],
+   "w": 1933,
+   "h": 1098,
+   "dpi": 300,
+   "src": "bf4378b5-27._Sup_Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": 0.821
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5. Cross-section FESEM images of a) dry- and b) slurry-mixed electrode with 85 wt.% of active materials and their corresponding EDXS elemental maps for Ni, sulfur, and nitrogen.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    533.1,
+    601.5
+   ],
+   "w": 1952,
+   "h": 2237,
+   "dpi": 300,
+   "src": "bf4378b5-27._Sup_Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": 0.283
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6. Discharge capacities as a function of cycle number varied by different C-rates for the NCM622 electrodes fabricated by a) dry-mixing and b) wet-slurry processes. The NCM622/Li-In all-solid-state half-cells were cycled between 3.0-4.3 V (vs. Li/Li+) at 30 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    532.9,
+    235.1
+   ],
+   "w": 1951,
+   "h": 710,
+   "dpi": 300,
+   "src": "bf4378b5-27._Sup_Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7. a) Equivalent circuit model for NCM622/Li-In all-solid-state half-cells. b) Resistance values (R2 in a panel a) as a function of weight fraction of active materials for the dry- and slurry-mixed NCM622 electrodes. The data were obtained from Nyquist plots in Fig. 5.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    531.6,
+    425.7
+   ],
+   "w": 1946,
+   "h": 1504,
+   "dpi": 300,
+   "src": "bf4378b5-27._Sup_Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8. Discharge capacities as a function of cycle number varied by different C-rates for the NCM622 electrodes fabricated by wet-slurry process without and with pre-mixing. The NCM622/Li-In all-solid-state half-cells were cycled between 3.0-4.3 V (vs. Li/Li+) at 30 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    530.0,
+    280.2
+   ],
+   "w": 1939,
+   "h": 898,
+   "dpi": 300,
+   "src": "bf4378b5-27._Sup_Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Fig. S9. First-cycle charge-discharge voltage profiles for the wet-slurry fabricated graphite electrode at 0.025C and 30 °C. The composition of graphite, SE, and NBR was 58.6:39.1:2.3 weight ratio. The mass loading of the graphite electrode was 18 mg cm-2.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    526.2,
+    284.7
+   ],
+   "w": 1923,
+   "h": 917,
+   "dpi": 300,
+   "src": "bf4378b5-27._Sup_Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": 0.971
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1 Characteristics of dry- and slurry-mixed NCM622 electrodes for ASLBs. Process Sample name Compositiona Q0.1C",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    32.1,
+    562.7,
+    751.9
+   ],
+   "w": 2210,
+   "h": 3001,
+   "dpi": 300,
+   "src": "4bbca78e-27._Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": 0.888,
+   "note": "⚠ 자동 크롭이 5 쪽 거의 전체(bbox 32.6–751.9)다 — 표는 PDF 텍스트 층이 정본이고, 표 영역만은 tab_1_manual_p5.png"
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2. Fig. 8b shows their ﬁrst-cycle charge-discharge proﬁles for the pelletized and pouch-type NCM622/graphite full-cells at 0.025C at 25 °C and 30 °C, respectively. The ﬁrst-cycle discharge capacities for the pelletized and pouch-type NCM622/graphite full-cells were 121 and 112 mA h gNCM622 electrode −1, respectively, which translates into 190 and 184 W h kg−1 based on total weight of the electrodes (active materials, SEs, carbon additives, polymeric binders, and current col- lectors). In turn, the volumetric energy density of the pouch-type full- cell is calculated to be 432 W h L−1. The NCM622/graphite full-cell also showed a stable cycling performance at 0.025C (the inset in Fig. 8b).",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    32.1,
+    562.7,
+    750.8
+   ],
+   "w": 2210,
+   "h": 2996,
+   "dpi": 300,
+   "src": "4bbca78e-27._Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": 0.79,
+   "note": "⚠ 자동 크롭 오류 — 7 쪽 본문 문장 '…presented in Table 2. Fig. 8b shows…' 를 캡션으로 잡아 7 쪽 전체(Fig. 7 + 본문)를 잘랐다. 진짜 Table 2 는 8 쪽(자동 추출이 '중복(작은 쪽)' 으로 제외) — tab_2_manual_p8.png"
+  },
+  {
+   "key": "f1m",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1_manual_p4.png",
+   "caption": "Fig. 1. Comparison of a-solid-state lithium-ion battery (ASLB) electrodes fabricated by dry-mixing and wet-slurry processes. (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    35.6,
+    54.6,
+    366.9,
+    296.2
+   ],
+   "w": 1381,
+   "h": 1008,
+   "dpi": 300,
+   "src": "4bbca78e-27._Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 자동 크롭 fig_1.png 가 Fig. 2 영역을 잡았다. 4 쪽 래스터 xref 97(1364×990)의 bbox (37.6, 56.6, 364.9, 294.2) + 여백 2 pt 로 300 dpi 렌더(캡션은 오른쪽 376–558 pt 에 따로 있다)"
+  },
+  {
+   "key": "f2m",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2_manual_p4.png",
+   "caption": "Fig. 2. First-cycle charge-discharge voltage profiles at 0.1C and 30 °C for all-solid-state NCM622/Li-In half-cells employing dry- and slurry-mixed electrodes with a) the lower mass loading and b) the higher mass loading of NCM622. (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    68.2,
+    311.9,
+    527.0,
+    585.8
+   ],
+   "w": 1912,
+   "h": 1142,
+   "dpi": 300,
+   "src": "4bbca78e-27._Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 자동 크롭 fig_2.png 가 Fig. 1 아래 절반을 끌어들였다. 4 쪽 래스터 xref 98(1895×1125)의 bbox (70.2, 313.9, 525.0, 583.8) + 여백 2 pt"
+  },
+  {
+   "key": "t1m",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1_manual_p5.png",
+   "caption": "Table 1 Characteristics of dry- and slurry-mixed NCM622 electrodes for ASLBs. (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    35.6,
+    58.0,
+    559.7,
+    299.0
+   ],
+   "w": 2185,
+   "h": 1005,
+   "dpi": 300,
+   "src": "4bbca78e-27._Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 표 영역만(5 쪽 y 58–299 pt). 값은 PDF 텍스트 층이 정본. 조성 · 피복률 열은 각 조성 묶음의 첫 줄(L 행)에만 인쇄된다(단어 좌표로 확인)"
+  },
+  {
+   "key": "t2m",
+   "kind": "table",
+   "label": "2",
+   "page": 8,
+   "file": "tab_2_manual_p8.png",
+   "caption": "Table 2 Characteristics of NCM622/graphite all-solid-state full-cells. (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    35.6,
+    543.0,
+    559.7,
+    743.5
+   ],
+   "w": 2185,
+   "h": 836,
+   "dpi": 300,
+   "src": "4bbca78e-27._Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 자동 추출이 8 쪽의 진짜 Table 2 를 '중복(작은 쪽)' 으로 제외하고 7 쪽 본문 문장을 표로 잡았다. 8 쪽 y 543–743.5 pt. 값은 PDF 텍스트 층이 정본"
+  },
+  {
+   "key": "fS2m",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2_manual_p3.png",
+   "caption": "Fig. S2. a) Raman and b) FTIR spectra for NBR. (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    60.0,
+    40.5,
+    533.3,
+    244.7
+   ],
+   "w": 1973,
+   "h": 852,
+   "dpi": 300,
+   "src": "bf4378b5-27._Sup_Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 벡터 그림이라 자동 추출이 '그래픽 없음(img0/draw4)' 으로 제외. SI 3 쪽 드로잉 합집합 bbox (64.0, 44.5, 529.3, 240.7) + 여백 4 pt"
+  },
+  {
+   "key": "fTOCm",
+   "kind": "figure",
+   "label": "TOC",
+   "page": 1,
+   "file": "fig_TOC_manual_p1.png",
+   "caption": "Graphical abstract (캡션 없음 — 수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    201.1,
+    302.9,
+    319.6,
+    402.9
+   ],
+   "w": 495,
+   "h": 417,
+   "dpi": 300,
+   "src": "4bbca78e-27._Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭 — 캡션이 없는 초록 그래픽(1 쪽 래스터 xref 622, 477×401). 슬러리 모식도 · 바인더 클립 둘로 집은 파우치가 LED 를 켠 사진 · NCM/Li-In GITT(건식 · 슬러리 · 슬러리/예비혼합) · NCM/흑연 완전지 곡선(184 W h kg⁻¹ · 432 W h L⁻¹, 가로축 mA h g_cathode⁻¹)"
+  }
+ ]
+}

@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -425,6 +425,17 @@ Li-In 음극 셀의 것이다. **Li 금속·무음극에 그대로 옮기지 않
 - ★★ **첫 방전 결손의 ≈28–37 % 는 되돌아오는 `η` 다**(4.0–4.6 V) — `[도표]` 둘째 − 첫 방전 +21.0 · ≈+27 · +22.4 mAh g⁻¹(결손 58 · 73 · 79 의 36 · 37 · 28 %) · 5.0 V ≈+3(4 %). 4.0 V 에서 방전 상태 `R_cathode/SE` 105.8 → 58.7 Ω 과 동행(`[인쇄]` "formation"). ⚠ 4.0 V 의 그 호는 `C` 0.1–0.85 mF(다른 셀 ×250–700)라 양극 것이라는 근거가 약하다 — 되돌아온 몫이 음극 쪽 `η` 일 가능성도 남는다.
 - ⚠ **5.0 V 감쇠(둘째 129 → 25 번째 49 mAh g⁻¹)의 칸은 정해지지 않는다** — NCM 산소 방출(인용[34,35] · `Q_material`) · 계면층 저항(`R` ×5.5 · `η`) · 저주파 호 ≥2.5 kΩ(음극 배정 · 네 번째 항)이 같이 있고 **율 극한 대조 0**(0.1 C 한 율).
 
+## ★★★ 2026-09-28 (`assb` 65호 Nam 2018 *JPS*, **실험 · 반쪽 13 전극 공정 대조 · 신품**) — **첫 충전 상한: 공정이 바꾼 첫 방전 중 `θ_AM` 몫은 첫 충전 차로 위에서 막히고, 나머지는 방전 쪽 `η` 다**
+
+`raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md`. NCM622(LiNbO₃) : Li₆PS₅Cl : C65 (: NBR 1.4 wt%) \| Li₀.₅In · 건식 ↔ 슬러리 × 70 · 80 · 85 wt% × 20 · 28 mg cm⁻² + 예비혼합 · 0.1 C · 30 °C · 3.0–4.3 V vs Li/Li⁺ · 셀 수 미인쇄.
+
+- ★★★ **방향 축으로 3 항을 가른다.** `θ_AM`(통째 고립)은 신품 첫 충전(완전 리튬화 → 탈리튬)과 첫 방전을 같은 비율로 깎고, `η`(재리튬화 말단 · 계면 · 수송)는 방전만 깎는다 ⇒ 대조군 사이 첫 충전 비는 `θ_AM` 변화의 **상한**:
+  `Δθ/θ ≤ ΔQ_ch/Q_ch` → 첫 방전 결손 중 `θ` 몫 ≤ `Q_dis·(ΔQ_ch/Q_ch)/ΔQ_dis`.
+  `[도표]` 첫 충전(Fig. 2 · 7d) ↔ `[인쇄]` 첫 방전(표 1): 바인더 70L 187.8 → ≈182.7 · 155 → 133 ⇒ ≤19 % · 80L 185.1 → 177.3 · 152 → 122 ⇒ ≤21 % · 85L 179.2 → 158.7 · 130 → 95 ⇒ ≤42 % · 70H ≈0 · 80H ≤16 % · 예비혼합 158.3 → 173.7 · 94.8 → 126.9 ⇒ ≤29 %.
+  ⇒ `[해석]` 바인더 · 예비혼합이 바꾼 0.1 C 첫 방전의 **≥58–100 % 는 `η` 칸**이다 — 이 페이지 식에서 `θ_AM·Q_material` 이 아니라 `η(i)` 가 움직였다. 29호 SI 의 "방향 비대칭"(신품 한 셀) · 25호의 "충전 쪽은 같고 방전 쪽이 다르다"(압력)에 이은 **세 번째 같은 모양 · 첫 공정 대조판**.
+- ★★ **율 시험 뒤의 회복** — `[도표]` S6: 두꺼운(H) 전극은 30 사이클 율 시험 뒤 0.1 C 가 첫 사이클보다 크다(D85H 85 → 88.5 · W85H 78 → 89.1 · D70H 149 → 153.8) — 첫 방전이 `η` 로 잘린 몫이 돌아온다(64호 "첫 결손의 `η` 형 회복" 과 같은 방향).
+- ⚠ 조건: 같은 충전 컷오프 · 같은 율 · 첫 충전 SE 산화 전하(64호 덧셈 항 `Q_SE,rev`)가 두 전극에 다르게 섞이지 않을 것 · 판독 ±1 mAh g⁻¹ · 셀 하나씩 · 충전 쪽 분극이 섞일수록 상한이 느슨해진다(방향은 유지). 같은 편의 GITT 피복률은 `θ` 가 약분된 양(연결 입자 기준)이라 이 상한과 경쟁하지 않는다([[assb-lampe-contact-product-degeneracy]] 65호 줄).
+
 ## 이 페이지가 주장하지 않는 것
 
 - **3항 분해가 논문의 식이라고 주장하지 않는다.** 우리 해석이고, 위 G1 때문에 `C_norm` 이
@@ -451,6 +462,7 @@ Li-In 음극 셀의 것이다. **Li 금속·무음극에 그대로 옮기지 않
   겉보기 용량이 두 배이고, **OCV 로는 안 보인다.**
 - 이 수치들은 **LCO/LLZO 소결 복합양극 · Li 금속 음극(이상 접촉) · 두께 50 µm ·
   방전 1 회 · 구조 실현 1 개**라는 한 모집단의 것이다.
+- ★ **2026-09-28 (65호)**: **첫 충전 상한을 `θ_AM` 의 측정으로 쓰지 않는다** — 공정 대조군 사이의 상한이고, 판독 ±1 mAh g⁻¹ · 셀 하나씩 위다. D85H 는 두 충전 곡선이 겹쳐 판정 밖이다.
 
 ## 관련
 - [[assb-interphase-vs-contact-loss-attribution]] — 계면층 ↔ 접촉 손실(둘 다 `θ`·`η` 에 들어간다)의 분리. 23호 손실 예산의 근거.

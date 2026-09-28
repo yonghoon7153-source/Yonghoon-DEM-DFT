@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-28
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -929,6 +929,23 @@ S3: Li₂₁Si₅ 분말 100 → 700 MPa 냉간압착에서 면저항 **4.71 · 
 
 요구치 · MPa · 스윕 · 압력 → 용량. 창의 값은 움직이지 않았다 — 움직인 것은 같은 연구망 셀들의 운전 압력 계보가 **"토크 · 힘 · 기저 중 하나만 인쇄"** 로 한 줄 더 채워졌다는 것이다(22호 55 MPa · 23호 5 kN(64) / ≈70 MPa · 62호 ≈61.8 MPa(그림 축) · 63호 10 N·m).
 
+## ★ 2026-09-28 (`assb` 65호 Nam, Oh, Jung, Jung 2018 *JPS*, **실험 · 반쪽 PEEK ∅13 mm · 펠릿 · 파우치 80 × 60 mm²**) — **압력은 제조값 셋뿐이고 운전 압력은 0 이다: 파우치는 492 MPa 제조 뒤 사진에서 바인더 클립 둘로 집혀 있다**
+
+`raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md` (*J. Power Sources* 375, 93–101 — 22 · 39 · 57호 지목, **3차 묶음 파일 27**).
+
+### 1. 요구치 — 인쇄 0
+
+`pressure` **0 회** · `MPa` 3 회(전부 제조). 요구치 · 문턱 0 ⇒ 띠(0.1–5 MPa) · 확인된 원전 0 **그대로**.
+
+### 2. ★ 운전 압력 — 없다
+
+- `[인쇄]` 제조: SE 전도도 펠릿 370 MPa · 반쪽 · 펠릿 완전지 "all the assembled components were pressed at 370 MPa in a PEEK (polyether ether ketone) mold (diameter of 13 mm)" · 파우치 "sealing … in a pouch, and pressing subsequently at 492 MPa". 운전 구속(지그 · 토크 · 하중) 서술 **0**.
+- `[도표]` Fig. 8c(가위로 자른 파우치가 LED 를 켠다)와 초록 그래픽의 파우치는 **바인더 클립 둘**로 집혀 있다 — 가압 정량 0. Fig. 8d(111 °C 핫플레이트)에는 클립이 안 보인다. `[해석]` 이 파우치를 "무가압 운전" 으로도 "가압 운전" 으로도 인용할 수 없다 — 안전 시연(절단 · 가열)도 압력 조건 없이 인쇄됐다.
+
+### 3. 이 편이 이 페이지에 **안 준 것**
+
+요구치 · 운전 MPa · 스윕 · 압력 → 용량. 창의 값은 움직이지 않았다 — 움직인 것은 "제조 압력만 인쇄하고 운전은 사진이 대신한다" 는 한 줄이다(63호 "토크만" · 64호 "≈70 MPa 한 값" 에 이어).
+
 ## 경고 (전부 원문이 준 한계에서 나온다)
 
 1. **점당 셀 1 개, 오차 막대 0.** 압력–수명 6 점 전부 N=1 이다.
@@ -973,6 +990,7 @@ S3: Li₂₁Si₅ 분말 100 → 700 MPa 냉간압착에서 면저항 **4.71 · 
 - **61호의 멱법칙 외삽값(1 % 변형 시간)을 셀의 값으로 옮기지 않는다** (2026-09-28) — 벌크 인장 · AR 4 · 실온 · 단조 하중의 외삽이고, 0.28 MPa 아래는 하한 · 2.83 MPa 위는 무효다. 그리고 **"Li 가 항복을 넘어 creep 한다" 를 다시 쓰지 않는다** — 원전은 creep 을 항복 아래에서 쟀다(§61호 3). 61호의 압축 값(0.8–2.4 MPa)은 응력 순서가 역전된 장치 값이라 위 벽의 정량에 쓰지 않는다.
 - **62호의 ΔP(1.25 MPa)를 운전 압력 요구치나 창의 표본으로 옮기지 않는다** (2026-09-28) — ≈61.8 MPa 기저(ESI 그림 축) 위 · 기저선 보정 · 지그 순응이 정한 값이다(원시 +1.07). 그리고 **무가압 셀(딜라토 · X-CT)의 낮은 용량을 "압력 0 의 효과" 로 옮기지 않는다** — 압력 말고도 SE 두께 · In 지름 · 전류 · 장치가 다르다.
 - **63호의 토크(10 N·m)를 MPa 로 옮기지 않는다** (2026-09-28) — 나사 규격 · 마찰이 인쇄되지 않아 `[재현]` 42–106 MPa 의 띠만 선다. 그리고 **23호의 64 / 70 MPa 를 63호의 값으로 인용하지 않는다** — 23호가 같은 절차를 빌리며 자기 셀에 적은 값이다.
+- **65호 파우치를 무가압 셀로도 가압 셀로도 인용하지 않는다** (2026-09-28) — 사진의 바인더 클립 둘은 정량 0 이고 운전 압력 서술이 없다.
 
 ## 관련
 - [[assb-pressure-reapplication-separation-test]] — `P↑` 분리 연산자. **이 페이지가 그 상한을 준다.**
