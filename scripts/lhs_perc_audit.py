@@ -505,7 +505,8 @@ def _summary(rows):
     s['harv_overlap_cases'] = sum(1 for r in ok if r.get('harv_overlap'))
     s['replica_ok_all'] = all(r.get('replica_ok') for r in ok) if ok else None
     s['se_polydisperse_cases'] = sum(1 for r in ok if (r.get('r_se_classes') or 0) > 1)
-    s['box_default_cases'] = sum(1 for r in ok if r.get('box_is_webapp_default'))
+    # 행 값은 box_is_lhs_rve 다 — 옛 키 box_is_webapp_default 는 어느 행에도 없어 항상 0 을 찍었다 (WSL 09-29 요약 · SELF-65)
+    s['box_not_lhs_rve_cases'] = sum(1 for r in ok if r.get('box_is_lhs_rve') is False)
     s['legacy'] = dict(compared=sum(1 for r in ok if r.get('legacy_agree') is not None),
                        agree=sum(1 for r in ok if r.get('legacy_agree') is True),
                        disagree=sum(1 for r in ok if r.get('legacy_agree') is False))
@@ -795,6 +796,9 @@ def selftest():
         chk('⑭c TSV 열 = TSV_COLS · 요약에 level 분포 · 재현 전부 정본과 일치',
             (od / 'perc_audit.tsv').read_text(encoding='utf-8').splitlines()[0].split('\t') == list(TSV_COLS)
             and js['meta']['summary']['se_level']['L1'] == 1 and js['meta']['summary']['replica_ok_all'] is True)
+        chk('⑭e ★ 요약 상자 계수는 낡은 키 (box_is_webapp_default) 가 아니라 행 값 box_is_lhs_rve 를 센다 — 합성 상자 20 ≠ 0.05 → OK 2 건 전부 '
+            '(옛 요약은 항상 0 = false-green 부류 · SELF-65)',
+            js['meta']['summary'].get('box_not_lhs_rve_cases') == 2 and 'box_default_cases' not in js['meta']['summary'])
         os.remove(post / 'mesh_100.stl')
         od2 = Path(td) / 'out2'
         rc2 = main(['--cohort', str(tsv), '--case', 'c1', '--out', str(od2), '--no-legacy'])

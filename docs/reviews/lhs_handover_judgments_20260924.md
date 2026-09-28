@@ -466,7 +466,7 @@
 
 ⛔ 이 판정은 **① 묶음의 열**에 한한다 — ② 퍼콜레이션 이후 묶음은 각자 감사한다.  일괄 실행 (`run_lhs_fill_wsl.sh`) 은 여전히 보류.
 
-## J20-b. ② 퍼콜레이션 묶음 — 1차 감사 (코드 정의 읽기 + 합성 프로브 · 실데이터 미확인 · **비준 대기 09-29**)
+## J20-b. ② 퍼콜레이션 묶음 — 1차 감사 → ✅ WSL 실측 130/130 CLEAN (09-29) → **② 판정 = 명목 정의 그대로 인계 적격** (규칙 ⓑ · ⓒ 열 사전 문구 · ⓓ `LHS-20` = 비준 대기)
 
 대상 열 (09-19 census ✅): `percolation_pct` · `n_components` · `n_large_components` (SE 이온 · `dem_analysis_core.calc_percolation`) ·
 `electronic_active_fraction` · `electronic_percolating_fraction` (AM 전자 · `network_conductivity.build_network` + `run_decomposition` 의 성분 셈) ·
@@ -554,6 +554,52 @@
   전자 열 HOLD 표지.  2×2 불일치는 판정에 안 쓰고 **기록** (수확기 AM perc 는 인계 열이 아니다).
 - ⓒ 열 사전 문구 (F3) — 판정 뒤 생성기 `column_dictionary` 에 반영.  ⓓ census 오분류 (F4) — 저자 결정.
 - ⛔ 값 산출 (`run_lhs_fill_wsl.sh` 전 건) 은 여전히 보류.
+
+### ② WSL 실측 (09-29 · 1저자 · `~/dem-audit` 워크트리 `c0c2d4f44` · selftest 32/32 · 131 행 · 전 건 309.7 s · 한 건 1.4–5.9 s) — **130/130 CLEAN · rc 0**
+
+산출물 (저자 기계): `~/lhs_perc_audit_20260929/perc_audit.tsv · perc_audit.json` · 한 건 `~/lhs_perc_audit_one/` (⬜ 반입 → `docs/data/lhs_perc_audit_20260929/`).
+
+| 검사 | 130 건 결과 |
+|---|---|
+| 상태 · 판정 | OK 130 · SKIPPED 1 (`perc` · 원본 없음 · ① 과 같음) · **CLEAN 130 · FLAG 0** |
+| 프레임 ≠ 1 · 중복 행 · 자기쌍 · 고아 행 · 선언 수 불일치 · 덱 바닥 | 전부 0 (FLAG 0 이 곧 그 뜻) · 덱 바닥 z = **0.0** 130/130 (`floor_z_deck`) |
+| **경계 밴드 단계 (F1 · `LHS-17`)** | SE **L0 130/130** · AM **L0 130/130** — 폴백 L1 · L2 **0 건** (⇒ 이 코호트에서는 조용한 정의 변경이 실현되지 않았다) |
+| **bottom∩top 겹침 (F2 · `LHS-18`)** | SE 0 · AM 0 · 수확기 슬래브 0 — 기하 예측 (최소 여유 +1.47 µm) 그대로 |
+| 재현 ↔ 정본 (`calc_percolation` · `calc_se_se_cn` · `build_network` + `active_fractions` · 수확기 `percolation` · `tortuosity_se` 벽 밴드) | **130/130 일치** (`replica_ok_all` true) |
+| 2×2 SE (접촉 원천 × 경계 규칙) | `agree` 130 |
+| 2×2 AM | `agree` 128 · **`prod_differ:band` 2** (`lhs00_107` · `lhs00_110`) — 웹앱 밴드 (중심 z ≤ 2r) 는 관통, 수확기 슬래브 (표면 ≤ r_AM,max) 는 비관통 · 접촉 원천 (덤프/기하) 은 무관 = 밴드 규칙에만 귀속 |
+| 덤프 ↔ 기하 접촉 차 (① 의 반올림 부류) | SE 기하에만 ≤ 7 · 덤프에만 ≤ 17 · AM 기하에만 ≤ 46 · 덤프에만 ≤ 1,032 (케이스 최대) — 관통 판정을 바꾼 케이스 **0** (`contact` 귀속 0) |
+| SE 관통 (`percolation_pct` > 0) | **106/130** · 비관통 24 (0.0 %): `001 012 018 023 026 030 037 041 053 062 074 075 079 082 083 087 093 105 107 108 111 112 126 128` — 09-19 수확 진단 106/130 과 같은 집합 |
+| AM 관통 (`electronic_percolating_fraction` > 0) | **130/130** (예: `000` 0.99703 · `009` 0.83178 · `107` 0.99992) |
+| 수확기 AM `percolation` | 128/130 (위 107 · 110 만 비관통) |
+| legacy 09-15 `ionic_percolates` (= 솔버 결과) | 대조 127 · 일치 126 · **불일치 1 = `lhs00_009`** (웹앱 밴드 규칙 SE 관통 99.993 % vs 솔버 False) = 원장 `LHS-04` 의 바로 그 케이스 (솔버 전극 규칙 · P1 open) · legacy 행 없음 3 (`034` `089` `098`) |
+| 단분산 SE · 상자 | 다분산 0 (SE r 한 종류 ⇒ 웹앱 L0 밴드 = 수확기 벽 밴드 · `se_wall_band_equal`) · ⚠ 화면 요약의 `box_default_cases: 0` 은 감사기의 **낡은 키** (`box_is_webapp_default` 는 어느 행에도 없다 · 행 값 `box_is_lhs_rve` 는 옳다 · 원장 `SELF-65` · 같은 커밋에서 반례 ⑭e 먼저 → `box_not_lhs_rve_cases`) — 상자 판정은 TSV 열로 반입 뒤 확인 (설계상 130/130 RVE 50 µm) |
+
+- 실행 순서 (ⓐ 명령 그대로): selftest 32 ✓ → 한 건 `lhs00_000: OK CLEAN SE L0 92.5356 · AM L0 0.99703 · 5.89 s` → 전 건.  코드 = `c0c2d4f44` (자기리뷰 반영판) — 실측이 곧 ⓐ 의 비준이다.
+- ⚠ 이 실측은 **정의가 이 코호트에서 어떻게 실현됐는가** 를 말한다 — `LHS-17` (폴백 미기록) · `LHS-18` (겹침 인공물 · 경계 키 미병합) 의 **코드 결함은 그대로 open** 이다 (생산 코퍼스 · 다른 침대에서는 발동할 수 있다).  실측 0 건은 원장 note 에 적었다.
+
+### ② 판정 — 퍼콜레이션 묶음은 **명목 정의 그대로 인계 적격** (규칙 ⓑ 적용: 폴백 0 건 · 겹침 0 건 · 재현 130/130 일치)
+
+| 열 | 판정 | 근거 · 열 사전 한정어 (F3 · `LHS-19`) |
+|---|---|---|
+| `percolation_pct` (SE 이온 · `calc_percolation`) | ✅ | 밴드 L0 130/130 (중심 z ≤ 2r_i · z ≥ plate_z − 2r_i · 바닥 z = 0 암묵 = 덱 바닥 0.0 과 같다) · 관통 성분에 든 SE / 전 SE (분모에 외톨이 포함) · **밴드 규칙 관통 ≠ 솔버 관통** — `lhs00_009` 는 이 열 99.99 인데 σ_ion 열은 SOLVE_NONE (N/A) 이 된다 (`LHS-04`) |
+| `n_components` | ✅ (뜻 한정) | **외톨이 SE (간선 0) 도 성분 1 로 센다** — 단절 침대에서는 사실상 외톨이 수 (`LHS-06` 무접촉 최대 49 %) · RVE 50 µm 고정이라 두께에 비례하는 총량 |
+| `n_large_components` | ✅ (뜻 한정) | 문턱 ≥ 10 입자 = 출처 없는 코드 상수 — 열 사전에 그대로 명시 (값은 바꾸지 않는다) |
+| `electronic_active_fraction` · `electronic_percolating_fraction` (AM 전자 · `build_network` + `active_fractions`) | ✅ | AM_P + AM_S 한 상 · 밴드 L0 130/130 · 분자 = **간선 있는 노드** 만 (바닥 밴드에 앉은 외톨이 AM 은 active 에서 빠진다 — `G_active` 규약) · 분모 = 전 AM · 130/130 관통 |
+| `se_se_cn_perc` · `se_se_cn_n_perc` · `se_se_cn_eff_area_perc` (`calc_se_se_cn`) | ✅ (N/A 24 건) | 관통 SE 부분집합 위의 CN · **비관통 24 건은 키 자체가 없다 → 인계표 빈칸 = N/A** (0 이 아니다 · `DESC-05` 부류 — 생성기가 빈칸을 0 으로 채우지 않는지 ③ 전에 확인) |
+| `top_reachable_pct` · `ionic_active_pct` (🔶 census `COND_cov` · F4 · `LHS-20`) | ⬜ 저자 결정 | 둘 다 SE 그래프 양 (coverage 값을 읽지 않는다) — ✅ 로 승격하면 `top_reachable_pct` 는 **위 밴드에 앉은 외톨이도 센다** 한정어가 붙는다 · 그대로 두면 인계에서 빠진다 (보수적) |
+| `perc_band_level_se` · `perc_band_level_am` (ⓑ 의 조건부 새 열) | — 불요 | 폴백 0 건이라 만들지 않는다 (규칙 ⓑ 그대로) |
+| 수확기 AM `percolation` (설계 CSV 진단 열) | — 인계 열 아님 | `107` · `110` 의 밴드 불일치는 **기록만** (ⓑ: 2×2 불일치는 판정에 안 쓴다) |
+
+- ⓒ **열 사전 문구 초안** (비준 뒤 생성기 `lhs_design_dataset.column_dictionary` 에 반영 — 생산 생성기 코드 변경이라 **비준 대기**):
+  - `percolation_pct`: *"SE 그래프 (접촉 덤프 행 · 양끝 SE) 에서 바닥 밴드 (z ≤ 2r · 바닥 z=0) 와 플래튼 밴드 (z ≥ plate_z − 2r) 를 잇는 성분에 든 SE 의 % (분모 = 전 SE · 외톨이 포함).  밴드 규칙 관통이며 솔버 (전극 규칙) 관통과 다를 수 있다 (`lhs00_009`).  LHS 130 건 전부 기본 밴드 (L0) · 폴백 없음."*
+  - `n_components`: *"SE 접촉 그래프의 연결 성분 수 — 간선 0 인 외톨이 SE 도 성분 1.  RVE 50 µm 고정 총량."*
+  - `n_large_components`: *"입자 ≥ 10 인 성분 수 (문턱 10 = 코드 상수 · 문헌 출처 없음)."*
+  - `electronic_active_fraction` / `electronic_percolating_fraction`: *"AM (AM_P + AM_S 한 상) 접촉 그래프에서 바닥 밴드에 닿는 성분 / 두 밴드를 잇는 성분에 든 AM 의 분율 (분자 = 간선 있는 노드만 · 분모 = 전 AM).  밴드 = 웹앱 L0."*
+  - `se_se_cn_perc` · `se_se_cn_n_perc` · `se_se_cn_eff_area_perc`: *"관통 SE 부분집합 위의 SE–SE CN (수 · 면적 가중).  비관통 케이스 (24/130) 는 정의되지 않아 **빈칸 = N/A** (0 아님)."*
+  - (승격 시) `top_reachable_pct`: *"플래튼 밴드에 닿는 성분에 든 SE % — 밴드에 앉은 외톨이 SE 도 센다."*
+- 원장: `LHS-17` · `LHS-18` open 유지 (코드 결함 · 실측 0 건 note) · `LHS-19` 실측 note · `LHS-20` 저자 결정 · `LHS-04` 에 ② 대조 note · `SELF-64` claimed_fixed (`c0c2d4f44`) · `SELF-65` 신규 (요약 낡은 키 · 반례 먼저).
+- ⛔ 값 산출 (`run_lhs_fill_wsl.sh` 전 건) 은 **여전히 보류** — 이 판정은 ② 묶음 열에 한한다.  다음 = ③ φ_SE (코드 정의부터).
 
 ## 인계 판정 (지금)
 
