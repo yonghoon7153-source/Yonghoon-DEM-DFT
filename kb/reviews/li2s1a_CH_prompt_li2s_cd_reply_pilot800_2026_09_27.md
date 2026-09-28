@@ -3,11 +3,11 @@ title: "CH 프롬프트 — li2s 소셀 유리 MD: 회신 CD 반영 · 파일럿
 tags: [review, li2s, lpscl_smallcell, glass, md, pilot, gate, beta, mto, external-first-author, prompt, letter]
 letter: CH
 date: 2026-09-27
-updated: 2026-09-27
+updated: 2026-09-28
 track: li2s / lpscl_smallcell_glass
 channel: li2s1a
 kind: prompt
-status: 발송됨 (사용자 · 2026-09-27 · 발송판 = 다섯 시드 결과 반영판 a67b39634 의 '보내는 글' 로 본다) · 외부 1저자 회신 대기 (Q-CH-1 폭 규칙 · Q-CH-2 본 런 400 K · Q-CH-3 P–S–S 문구) · 550 K 겸용 선택은 발송으로 카드 저자 확정
+status: 발송됨 (사용자 · 2026-09-27 · 발송판 = 다섯 시드 결과 반영판 a67b39634 의 '보내는 글' 로 본다) · ✅ 회신 수령 2026-09-28 (`li2s1a_CH_reply_…` · Q-CH-1 2σ · Q-CH-2 465·550 유지 + 600 K 사전등록 · Q-CH-3 수정안 수용 + S54 내력 요청) → 답장 CL 초안 · 550 K 겸용 선택은 발송으로 카드 저자 확정
 confidence: medium
 verificationStatus: verified
 verifiedAt: 2026-09-27

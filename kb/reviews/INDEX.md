@@ -1,13 +1,13 @@
 ---
 title: "리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)"
-date: 2026-09-27
-updated: 2026-09-27
+date: 2026-09-28
+updated: 2026-09-28
 tags: [index, review, codex]
 status: 자동생성
 kind: index
 confidence: high
 verificationStatus: verified
-verifiedAt: 2026-09-27
+verifiedAt: 2026-09-28
 verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)
 explored: false
 authoredBy: agent
@@ -102,7 +102,7 @@ evidenceScope: multi-source-primary
 | BZ | 2026-09-25 | `codex_BZ_prompt_wad_aprime_pilot_prereg_v2_2026_09_25.md` | `codex_BZ_reply_wad_aprime_pilot_prereg_v2_2026_09_25.md` | 발송 완료 · 회신 수령 2026-09-25 밤 **NO-GO** (`codex_BZ_reply_…`) → 카드 v3 + G2 재작성 → CA 재심 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'pilot', 'prereg', 'v2', 'wad'] |
 | CA | 2026-09-25 | `codex_CA_prompt_wad_aprime_pilot_prereg_v3_2026_09_25.md` | `codex_CA_reply_wad_aprime_pilot_prereg_v3_2026_09_25.md` | 발송 완료 · 회신 수령 2026-09-25 밤 **NO-GO** (`codex_CA_reply_…` · V2 측방 마스크 P0 등 5) → 카드 v4 → CB 재심 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'pilot', 'prereg', 'v3', 'wad'] |
 | CB | 2026-09-25 | `codex_CB_prompt_wad_aprime_pilot_prereg_v4_2026_09_25.md` | `codex_CB_reply_wad_aprime_pilot_prereg_v4_2026_09_25.md` | 발송 완료 · 회신 수령 2026-09-25 밤 **조건부 GO** (`codex_CB_reply_…`) → 조건 4 이행 → 카드 v5 봉인 후보 (1저자 비준 대기) | 같은 라벨 · 주제 토큰 일치 ['aprime', 'pilot', 'prereg', 'v4', 'wad'] |
-| CC | 2026-09-26 | `li2s1a_CC_prompt_li2s_pilot_gateA_ledger_2026_09_26.md` | `li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` | 발송됨 (사용자 · 2026-09-26) · 회신 CC 수령 → `li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` | 같은 라벨 · 주제 토큰 일치 ['gateA', 'ledger', 'li2s', 'pilot']; 판정 인용 5회 |
+| CC | 2026-09-26 | `li2s1a_CC_prompt_li2s_pilot_gateA_ledger_2026_09_26.md` | `li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` | 발송됨 (사용자 · 2026-09-26) · 회신 CC 수령 → `li2s1a_CC_reply_li2s_pilot_gateA_ledger_2026_09_26.md` | 같은 라벨 · 주제 토큰 일치 ['gateA', 'ledger', 'li2s', 'pilot']; 판정 인용 10회 |
 | CD | 2026-09-26 | `li2s1a_CD_prompt_li2s_cc_report_2026_09_26.md` | `li2s1a_CD_reply_li2s_cc_report_2026_09_27.md` | 발송됨 (사용자) · 회신 CD 수령 2026-09-27 → `li2s1a_CD_reply_li2s_cc_report_2026_09_27.md` | 같은 라벨 · 주제 토큰 일치 ['cc', 'li2s', 'report']; 판정 인용 3회 |
 | CE | 2026-09-27 | `codex_CE_prompt_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` | `codex_CE_reply_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` | 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`codex_CE_reply_…` · P0 4 · P1 5 · 3b 원안 반대 · 3c 찬성) → v2 (커밋 e025c0db7) → 재리뷰 CF 발송 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'outsourcing', 'v5', 'vasp', 'wad'] |
 | CF | 2026-09-27 | `codex_CF_prompt_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` | `codex_CF_reply_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` | 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`codex_CF_reply_…` · P0 3 · P1 3) → v3 (커밋 c8d77dfd5) → 재리뷰 CG 발송 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'outsourcing', 'v2', 'v5', 'vasp', 'wad'] |
@@ -110,7 +110,8 @@ evidenceScope: multi-source-primary
 | CI | 2026-09-27 | `codex_CI_prompt_wad_aprime_v5_vasp_outsourcing_v4_2026_09_27.md` | `codex_CI_reply_wad_aprime_v5_vasp_outsourcing_v4_2026_09_27.md` | 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`codex_CI_reply_…` · CG P1 3 해제 · 새 P1 1 포장 오류 처리) → v5 → 재리뷰 CJ 발송 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'outsourcing', 'v4', 'v5', 'vasp', 'wad'] |
 | CJ | 2026-09-27 | `codex_CJ_prompt_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md` | `codex_CJ_reply_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md` | 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`codex_CJ_reply_…` · CI 경로 3 해제 · 같은 P1 의 관리 파일 목록 쓰기 경로 1) → v6 → 재리뷰 CK 발송 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'outsourcing', 'v5', 'vasp', 'wad'] |
 | CK | 2026-09-27 | `codex_CK_prompt_wad_aprime_v5_vasp_outsourcing_v6_2026_09_27.md` | `codex_CK_reply_wad_aprime_v5_vasp_outsourcing_v6_2026_09_27.md` | 발송 완료 · 회신 수령 2026-09-27 **GO** (`codex_CK_reply_…` · 준비본 v6 기술 검토 · 새 P0/P1 없음 · P2 정리 2 → 개정 v6.1) → 1저자 비준 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'outsourcing', 'v5', 'v6', 'vasp', 'wad'] |
-| CH | 2026-09-27 | `li2s1a_CH_prompt_li2s_cd_reply_pilot800_2026_09_27.md` | — | 발송됨 (사용자 · 2026-09-27 · 발송판 = 다섯 시드 결과 반영판 a67b39634 의 '보내는 글' 로 본다) · 외부 1저자 회신 대기 (Q-CH-1 폭 규칙 · Q-CH-2 본 런 400 K · Q-CH-3 P–S–S 문구) · 550 K 겸용 선택은 발송으로 카드 저자 확정 | — |
+| CH | 2026-09-27 | `li2s1a_CH_prompt_li2s_cd_reply_pilot800_2026_09_27.md` | `li2s1a_CH_reply_li2s_cd_reply_pilot800_2026_09_28.md` | 발송됨 (사용자 · 2026-09-27 · 발송판 = 다섯 시드 결과 반영판 a67b39634 의 '보내는 글' 로 본다) · ✅ 회신 수령 2026-09-28 (`li2s1a_CH_reply_…` · Q-CH-1 2σ · Q-CH-2 465·550 유지 + 600 K 사전등록 · Q-CH-3 수정안 수용 + S54 내력 요청) → 답장 CL 초안 · 550 K 겸용 선택은 발송으로 카드 저자 확정 | 같은 라벨 · 주제 토큰 일치 ['cd', 'li2s', 'pilot800', 'reply']; 판정 인용 3회 |
+| CL | 2026-09-28 | `li2s1a_CL_prompt_li2s_ch_reply_s54_census_2026_09_28.md` | — | 초안 (미발송) — ⏳ 빈 칸 둘 (§4 600 K 파일럿 결과 · §5 본 런 착수) · 사용자 검토 → 발송 | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
