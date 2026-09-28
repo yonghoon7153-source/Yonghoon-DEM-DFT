@@ -155,7 +155,7 @@ export function createLayers(ctx: LayerContext) {
   const lineColor = new Map(transit.shinkansen.map((l) => [l.id, l.color]));
   const airportItems: LabelItem[] = transit.airports.map((a) => ({ id: a.id, name: a.name, pref: a.pref, px: [0, 0], fs: 9.5, cls: `airport${a.hub ? ' airport--hub' : ''}`, prio: a.hub ? 3 : 1 }));
   const airportAt = new Map(transit.airports.map((a) => [a.id, shift(a.at, a.pref)]));
-  const stationItems: LabelItem[] = transit.shinkansen.flatMap((l) => l.stations.filter((s) => s.major).map((s) => ({ id: `${l.id}:${s.ja}`, name: { ja: `${s.ja}駅`, kana: `${s.kana ?? s.ja}えき`, ko: s.ko ? `${s.ko}역` : `${s.ja}駅` }, pref: s.pref, px: [0, 0], fs: 9, cls: 'station', prio: 0 })));
+  const stationItems: LabelItem[] = transit.shinkansen.flatMap((l) => l.stations.filter((s) => s.major).map((s) => ({ id: `${l.id}:${s.ja}`, name: { ja: `${s.ja}駅`, kana: `${s.kana ?? s.ja}えき`, ko: s.ko ? `${s.ko}역` : `${s.ja}駅` }, pref: s.pref, px: [0, 0], fs: 10.5, cls: 'station', prio: 0 })));
   const stationAt = new Map<string, LonLat>(transit.shinkansen.flatMap((l) => l.stations.filter((s) => s.major).map((s): [string, LonLat] => [`${l.id}:${s.ja}`, shift(s.at, s.pref)])));
   const stationLine = new Map<string, string>(transit.shinkansen.flatMap((l) => l.stations.filter((s) => s.major).map((s): [string, string] => [`${l.id}:${s.ja}`, l.id])));
   const lineItems: LabelItem[] = transit.shinkansen.map((l) => ({ id: l.id, name: l.name, px: [0, 0], fs: 9.5, cls: 'line-name', prio: 0 }));
