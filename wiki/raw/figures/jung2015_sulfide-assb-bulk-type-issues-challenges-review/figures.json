@@ -1,0 +1,368 @@
+{
+ "slug": "jung2015_sulfide-assb-bulk-type-issues-challenges-review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-28",
+ "sources": [
+  "2a1c9ff9-33._Issues_and_challenges_for_bulk_type_all_solid_state_rechargeable_lithium_batteries_using_sulfide_solid_electrolytes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic diagram of bulk-type all-solid-state lithium batteries (ASLBs) using sulfide solid electrolyte (SE).",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    119.3,
+    295.1,
+    288.4
+   ],
+   "w": 1067,
+   "h": 705,
+   "dpi": 300,
+   "src": "2a1c9ff9-33._Issues_and_challenges_for_bulk_type_all_solid_state_rechargeable_lithium_batteries_using_sulfide_solid_electrolytes.pdf",
+   "blank": 0.581,
+   "note": "온전 — 라벨 ↔ 내용 맞다(래스터 xref 65). 모식도 · 출처 표기 없음 = 이 편 작성. 수치 0."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Ionic conductivity of various sulfides suitable for SEs as a function of temperature. The ionic conductivities of other liquid and solid electrolytes (LEs and SEs) are shown for comparison.[3a,4]",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    28.2,
+    556.0,
+    381.4
+   ],
+   "w": 1067,
+   "h": 1473,
+   "dpi": 300,
+   "src": "2a1c9ff9-33._Issues_and_challenges_for_bulk_type_all_solid_state_rechargeable_lithium_batteries_using_sulfide_solid_electrolytes.pdf",
+   "blank": 0.929,
+   "note": "⚠ 크롭 과대(경미) — 오른쪽 단 머리의 저널 로고 'Israel Journal of Chemistry' 가 크롭 위쪽에 들어왔다. 그림 자체는 온전 — 라벨 ↔ 내용 맞다. 문헌값 모은 도표 — 캡션 끝 '[3a,4]'('Adapted' 문구 없음, 재작도로 읽힌다). 래스터 xref 68."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) XRD patterns and b) Arrhenius plots for a Li3.833Sn0.833As0.166S4-based SE before and after air exposure. Re- sults of b-Li3PS4 are shown for comparison. Adapted with permis- sion from Ref. [10d].",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    235.5,
+    555.9,
+    565.0
+   ],
+   "w": 1067,
+   "h": 1374,
+   "dpi": 300,
+   "src": "2a1c9ff9-33._Issues_and_challenges_for_bulk_type_all_solid_state_rechargeable_lithium_batteries_using_sulfide_solid_electrolytes.pdf",
+   "blank": 0.913,
+   "note": "온전 — 라벨 ↔ 내용 맞다(래스터 xref 91). 재인용 'Adapted with permission from Ref. [10d]'."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Cyclic voltammograms of Ti/Li3PS4 (LPS)/LiIn and Ti/ LGPS/LiIn cells: a) in the negative potential range; and b) in the positive potential range. Adapted with permission from Ref. [35].",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    487.2,
+    295.2,
+    693.2
+   ],
+   "w": 1067,
+   "h": 860,
+   "dpi": 300,
+   "src": "2a1c9ff9-33._Issues_and_challenges_for_bulk_type_all_solid_state_rechargeable_lithium_batteries_using_sulfide_solid_electrolytes.pdf",
+   "blank": 0.943,
+   "note": "온전 — 라벨 ↔ 내용 맞다(래스터 xref 99). 재인용 [35](자기 연구실 Shin 2014). ★ 셀은 Ti/SE/LiIn 인데 축은 'Voltage (V vs. Li/Li+)' — 환산 오프셋 캡션 · 본문 0. LGPS 환원 전류는 digest 픽셀 판독(원본 래스터)."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. SEM images of a) 80Li2S·20P2S5 SE surface before cy- cling; and b) 80Li2S·20P2S5 SE cross-section after lithium deposition on the side of a stainless steel (SS) current collector in all-solid- state cells of Li/SE/SS. Adapted with permission from Ref. [40]. c) First discharge-charge voltage profile of TiS2/SE/Li cell at 0.075 mAcm¢2 at 308, with the 75Li2S·25P2S5 glass-ceramic as the SE. a reducing center.[10d] A protective coating on Li3.833Sn0.833As0.166S4, made with 3LiBH4·LiI, enabled the reversible cycling of lithium metal.[10d] A thin indium layer prepared by vacuum evaporation can be employed to achieve good cyclability of Li/Li4Ti5O12 cells at high current density, due to the intimate contacts formed at the SE/Li interface.[41] Enabling the use of lithium metal as the anode will remain a challenge until significant de- velopments of composition, surface modifications, a",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    64.9,
+    295.1,
+    257.9
+   ],
+   "w": 1067,
+   "h": 805,
+   "dpi": 300,
+   "src": "2a1c9ff9-33._Issues_and_challenges_for_bulk_type_all_solid_state_rechargeable_lithium_batteries_using_sulfide_solid_electrolytes.pdf",
+   "blank": 0.563,
+   "note": "온전 — 라벨 ↔ 내용 맞다(래스터 xref 109). (a)(b) 재인용 [40] · (c) 출처 표기 없음(캡션 'at 30°' — C 빠짐). 이 편의 유일한 1차 자료 후보."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Figure 6. a) First charge and discharge voltage profiles; and b) cycle performance for LiCoO2/SE/In cells. Adapted with permission from Ref. [42h].",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    28.2,
+    556.0,
+    337.2
+   ],
+   "w": 1067,
+   "h": 1289,
+   "dpi": 300,
+   "src": "2a1c9ff9-33._Issues_and_challenges_for_bulk_type_all_solid_state_rechargeable_lithium_batteries_using_sulfide_solid_electrolytes.pdf",
+   "blank": 0.938,
+   "note": "⚠ 크롭 과대(경미) — 오른쪽 단 머리의 저널 로고 'Israel Journal of Chemistry' 가 크롭 위쪽에 들어왔다. 그림 자체는 온전 — 라벨 ↔ 내용 맞다. 재인용 [42h]. 원본은 1 비트 CCITT 이미지 마스크(xref 108, 반전) — 판독은 원본에서. 축 'Cell Voltage / V'(기준 이름 0) ↔ 본문 'vs. LiIn'. (b) 범례 없음."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Figure 7. a) Cross-sectional high-angle annular dark field scanning transmission electron microscopy (HAADF-STEM) image of LiCoO2/ Li2S·P2S5 interface after initial charging; and b) cross-sectional energy dispersive X-ray spectroscopy (EDX) elemental line profiles. Adapted with permission from Ref. [5a].",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    64.9,
+    295.1,
+    316.6
+   ],
+   "w": 1067,
+   "h": 1050,
+   "dpi": 300,
+   "src": "2a1c9ff9-33._Issues_and_challenges_for_bulk_type_all_solid_state_rechargeable_lithium_batteries_using_sulfide_solid_electrolytes.pdf",
+   "blank": 0.723,
+   "note": "온전 — 라벨 ↔ 내용 맞다(래스터 xref 118). 재인용 [5a]."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Comparative a) Nyquist plots; and b) discharge voltage profiles, of the bare and Li2SiO3-coated LiCoO2/Li2S·P2S5/In cells at ¢308C. Adapted with permission from Ref. [5a].",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    395.7,
+    295.1,
+    693.2
+   ],
+   "w": 1067,
+   "h": 1241,
+   "dpi": 300,
+   "src": "2a1c9ff9-33._Issues_and_challenges_for_bulk_type_all_solid_state_rechargeable_lithium_batteries_using_sulfide_solid_electrolytes.pdf",
+   "blank": 0.908,
+   "note": "온전 — 라벨 ↔ 내용 맞다(래스터 xref 119 회색조). 재인용 [5a] · −30 °C(캡션 렌더로 확인). ★ (b) 이중 축 vs Li-In · vs Li — 오프셋 [재현] 0.600 V(원본 래스터 눈금 적합). 캡션 '/In cells' ↔ 축 'Li-In'."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 8,
+   "file": "fig_9.png",
+   "caption": "Figure 9. a) Cross-sectional HAADF-STEM image; and b) corre- sponding electron energy loss spectroscopy (EELS) map for Li2S composite electrodes. c) Discharge voltage profiles of Li2S compo- site electrodes in ASLBs. Adapted with permission from Ref. [14a].",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    385.4,
+    295.1,
+    683.1
+   ],
+   "w": 1067,
+   "h": 1242,
+   "dpi": 300,
+   "src": "2a1c9ff9-33._Issues_and_challenges_for_bulk_type_all_solid_state_rechargeable_lithium_batteries_using_sulfide_solid_electrolytes.pdf",
+   "blank": 0.569,
+   "note": "온전 — 라벨 ↔ 내용 맞다(래스터 xref 127). 재인용 [14a]. ★ (c) 이중 축 vs Li-In · vs Li — 오프셋 [재현] 0.600 V."
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 9,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Comparison of electrochemical performance of FeS2 at 308C and 608C in conventional liquid cells and in solid-state cells. Adapted with permission from Ref. [14c]. at RT, using a wet chemical method based on THF.[68] Lithium polysulfidophosphate (LPSP, Li3PS4+n) was also prepared by a wet chemical method and was tested as a cathode material for ASLBs.[14h] The proposed mecha- nism for the formation of LPSP and for the electrochemi- cal reaction of LPSP with lithium are shown in Fig- ure 11.[14h] LPSP showed an initial discharge capacity of 1272 mAhg¢1 (based on the incorporated sulfur content) at RT.[14h]",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    28.2,
+    556.0,
+    387.4
+   ],
+   "w": 1067,
+   "h": 1498,
+   "dpi": 300,
+   "src": "2a1c9ff9-33._Issues_and_challenges_for_bulk_type_all_solid_state_rechargeable_lithium_batteries_using_sulfide_solid_electrolytes.pdf",
+   "blank": 0.856,
+   "note": "⚠ 크롭 과대(경미) — 오른쪽 단 머리의 저널 로고 'Israel Journal of Chemistry' 가 크롭 위쪽에 들어왔다. 그림 자체는 온전 — 라벨 ↔ 내용 맞다. 재인용 [14c]. 래스터 xref 135."
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 10,
+   "file": "fig_11.png",
+   "caption": "Figure 11. a) Formation of lithium polysulfidophosphate (LPSP, Li3PS4+n, n=(x+y+z)/3) by reaction of sulfur with Li3PS4 in THF. b) Electrochemical reaction mechanism for the charge and discharge of LPSP, indicating reversible scission and formation of S-S bonds in LPSP. Adapted with permission from Ref. [14h].",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    64.9,
+    295.1,
+    200.0
+   ],
+   "w": 1067,
+   "h": 564,
+   "dpi": 300,
+   "src": "2a1c9ff9-33._Issues_and_challenges_for_bulk_type_all_solid_state_rechargeable_lithium_batteries_using_sulfide_solid_electrolytes.pdf",
+   "blank": 0.945,
+   "note": "온전 — 라벨 ↔ 내용 맞다(래스터 xref 146). 재인용 [14h]. 구조식 — 수치 0."
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 10,
+   "file": "fig_12.png",
+   "caption": "Figure 12. a) Cross-sectional TEM image of the Li2S·P2S5 SE-coated LiCoO2 particles by pulsed laser deposition. b) Charge-discharge curves of an ASLB consisting of an LiCoO2 positive electrode coated with Li2S·P2S5 SE, a graphite negative electrode coated with Li2S·P2S5 SE, and a Li2S·P2S5 SE layer. Adapted with permission from Refs. [9, 69a].",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    28.2,
+    556.0,
+    195.1
+   ],
+   "w": 1067,
+   "h": 696,
+   "dpi": 300,
+   "src": "2a1c9ff9-33._Issues_and_challenges_for_bulk_type_all_solid_state_rechargeable_lithium_batteries_using_sulfide_solid_electrolytes.pdf",
+   "blank": 0.665,
+   "note": "⚠ 크롭 과대(경미) — 오른쪽 단 머리의 저널 로고 'Israel Journal of Chemistry' 가 크롭 위쪽에 들어왔다. 그림 자체는 온전 — 라벨 ↔ 내용 맞다. 재인용 [9, 69a]. 래스터 xref 147."
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 10,
+   "file": "fig_13.png",
+   "caption": "Figure 13. SEM images of cross sections of 80Li2S·20P2S5 glassy SE prepared by a) cold pressing; and by b) hot pressing at 2008C. The photographs of pellets are shown in the insets. c) First charge-dis- charge voltage profiles of the Li4Ti5O12/80Li2S·20P2S5 glass/LiNbO3- coated LiCoO2 full cells prepared by hot press and cold press. Adapted with permission from Refs. [9,42v].",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    524.6,
+    555.9,
+    662.8
+   ],
+   "w": 1067,
+   "h": 577,
+   "dpi": 300,
+   "src": "2a1c9ff9-33._Issues_and_challenges_for_bulk_type_all_solid_state_rechargeable_lithium_batteries_using_sulfide_solid_electrolytes.pdf",
+   "blank": 0.64,
+   "note": "온전 — 라벨 ↔ 내용 맞다(래스터 xref 148). 재인용 [9, 42v]. (c) 방전 끝 판독은 원본 래스터(열간 ≈120 · 냉간 ≈54 mAh g⁻¹)."
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 11,
+   "file": "fig_14.png",
+   "caption": "Figure 14. a)–f) First two charge-discharge voltage curves of hand- mixed (HMe) and ball-milled electrodes (BMe) of TiS2-based nano- composite electrodes. g) Cross-sectional HRTEM image of BMe. h) Schematic diagram of BMe showing the nanostructures and the roles of each components. Adapted with permission from Ref. [14f].",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    28.2,
+    556.0,
+    345.6
+   ],
+   "w": 1067,
+   "h": 1323,
+   "dpi": 300,
+   "src": "2a1c9ff9-33._Issues_and_challenges_for_bulk_type_all_solid_state_rechargeable_lithium_batteries_using_sulfide_solid_electrolytes.pdf",
+   "blank": 0.704,
+   "note": "⚠ 크롭 과대(경미) — 오른쪽 단 머리의 저널 로고 'Israel Journal of Chemistry' 가 크롭 위쪽에 들어왔다. 그림 자체는 온전 — 라벨 ↔ 내용 맞다. 재인용 [14f](자기 연구실 Shin 2014). 래스터 xref 164."
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 11,
+   "file": "fig_15.png",
+   "caption": "Figure 15. Schematic diagram showing the summary of issues and challenges in development of high-performance bulk-type ASLB using sulfide SEs.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    423.1,
+    555.9,
+    560.9
+   ],
+   "w": 1067,
+   "h": 576,
+   "dpi": 300,
+   "src": "2a1c9ff9-33._Issues_and_challenges_for_bulk_type_all_solid_state_rechargeable_lithium_batteries_using_sulfide_solid_electrolytes.pdf",
+   "blank": 0.632,
+   "note": "온전 — 라벨 ↔ 내용 맞다(래스터 xref 163). 요약 모식도 · 출처 표기 없음 = 이 편 작성."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1. Ionic conductivity of crystalline and glass-ceramic sulfide SEs. Composition Structure Conductivity (Ö10¢3 Scm¢1) Activation energy (kJmol¢1) Reference Crystal 2.1[a] 20 [10a] Li3.25Ge0.25P0.75S4 (Thio-LISICON) Li10GeP2S12 Crystal 12[a] 24 [3a] Li6PS5Cl (Li-argyrodite) Crystal 1.33 29–39 [23b] Li3.833Sn0.833As0.166S4 Crystal 1.39 20 [10d] Li10SnP2S12 Crystal 4 [19] Li7P3S11 Glass-ceramic 1.4[b]/4.2[c]/5.4[d]/17[a] 17[a] [4,21e] [a] Measured using the pellet densified at elevated temperature. [b] Measured using the cold pressed pellet (Ref. 4). [c] Measured using the cold pressed pellet (Ref. 21e). [d] Li7P3S11¢z. Measured using the cold pressed pellet (Ref. 21e).",
+   "rotated_deg": 0,
+   "bbox": [
+    39.5,
+    13.2,
+    589.1,
+    830.2
+   ],
+   "w": 2017,
+   "h": 2997,
+   "dpi": 264,
+   "src": "2a1c9ff9-33._Issues_and_challenges_for_bulk_type_all_solid_state_rechargeable_lithium_batteries_using_sulfide_solid_electrolytes.pdf",
+   "blank": 0.909,
+   "note": "⚠ 크롭 과대 — bbox 가 쪽 전체(39.5–589.1 × 13.2–830.2 pt): 표 1 + 본문 두 단 + Fig. 3 + 머리 · 쪽 번호 · 내려받기 띠 포함. 축소본으로 열어 확인. 표 값은 텍스트 층에서 읽었다(문헌값 모은 표)."
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 8,
+   "file": "tab_2.png",
+   "caption": "Table 2. Electrochemical performance of sulfur and Li2S electrode in ASLB. Sample Preparation method Reversible capacity (mAh (g of Li2S or S)¢1/mAh (g of electrode)¢1) Current density (mAcm¢2)",
+   "rotated_deg": 0,
+   "bbox": [
+    39.5,
+    13.2,
+    589.1,
+    830.2
+   ],
+   "w": 2017,
+   "h": 2997,
+   "dpi": 264,
+   "src": "2a1c9ff9-33._Issues_and_challenges_for_bulk_type_all_solid_state_rechargeable_lithium_batteries_using_sulfide_solid_electrolytes.pdf",
+   "blank": 0.86,
+   "note": "⚠ 크롭 과대 — bbox 가 쪽 전체(39.5–589.1 × 13.2–830.2 pt): 표 2 + Fig. 9 + 본문 + 머리 · 내려받기 띠 포함. 축소본으로 열어 확인 · 표 윗부분은 170 dpi 부분 렌더로 칸 확인([14g] 행 전압 창 '0.2–0.5'). 표 값은 텍스트 층(문헌값 모은 표)."
+  }
+ ]
+}
