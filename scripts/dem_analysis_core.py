@@ -739,6 +739,10 @@ def calc_am_isolation_risk(atoms, contacts, type_map):
         'vulnerable_pct': float((no_se + single_se) / n_am * 100),
         'am_se_cn_mean': float(np.mean(counts)),
         'am_se_cn_std': float(np.std(counts)),
+        # 2026-09-30 (LHS 인계 7a · J20-k (C)) — AM **전 입자** 의 분포도 상별 (아래 {lbl}_se_cn_median/max) 과 같은 통계로
+        # 낸다.  같은 counts · 같은 np.median / np.max (모집단 · 접촉 0 인 AM 포함).  mono 침대는 전체 = 그 한 상.
+        'am_se_cn_median': float(np.median(counts)),
+        'am_se_cn_max': int(np.max(counts)),
     }
 
     # ─── Per-AM-type breakdown (bimodal: AM_P-SE vs AM_S-SE) ────────────────

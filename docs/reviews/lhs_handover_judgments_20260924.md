@@ -766,6 +766,12 @@
 - 7번 분할: **7a** 웹앱 분포 내보내기 (코드 · 지금) · **7b** 생성기 (B) (지금 · 재실행 불요 · 이미 실린 mono 쌍 개수부터) · **7c** AM–SE CN 10 열 + 고립 비율 3 열 +
   분포 3 열을 표에 (coverage 가 닫힌 뒤 · 관문 = 위 항등식들).
 - 고립 비율 census 오분류 = 원장 `LHS-23`.
+- ✅ **7a 구현 (09-30 · 시험 먼저)**: `calc_am_isolation_risk` (`dem_analysis_core.py:736–746`) 가 전체 `am_se_cn_median` (float · np.median) · `am_se_cn_max` (int) 를 더 내고,
+  `analyze_contacts.py:435–444` 가 전체 `am_se_cn_std` · `_median` · `_max` 를 full_metrics 에 싣는다 (추가만 · 옛 키 · 옛 값 그대로 · 상별 통계와 같은 counts · 같은 함수).
+  새 시험 `scripts/analyze_contacts.py --selftest` (12 항 · 등재): 3 상 (AM_P 3 · AM_S 4 · SE 접촉 수 3,0,1 / 2,2,5,0 · AM–AM 행 · SE 사슬은 안 센다) + mono (AM 4 · 0,1,4,2) 작은 침대를
+  **웹앱과 같은 CLI** (`analyze_contacts_bimodal.py` · `analyze_contacts.py`) 로 돌려 손계산과 대조 — 옛 코드 6/12 (새 키 셋 없음) → 12/12 · 항등식 (전체 평균 × 7 = `area_AM전체_SE_n` 13 ·
+  상별 평균 × N = 4 · 9) · mono 전체 분포 = `AM_S_*` 와 같다 (짝수 개 중앙값 1.5 = 가운데 둘의 평균 · 7b 근거).  값은 5번 coverage 배치 (접촉 단계 포함) 재실행 뒤 생긴다 — 커밋된 09-29/30 배치
+  원자료에는 없다 (인계표 무변경 · 7c 에서 census 확장 기록과 함께 싣는다).
 
 ## 인계 판정 (지금)
 

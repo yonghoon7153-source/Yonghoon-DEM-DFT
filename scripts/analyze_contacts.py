@@ -436,6 +436,11 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
     if am_risk:
         metrics['am_vulnerable_pct'] = am_risk['vulnerable_pct']
         metrics['am_se_cn_mean'] = am_risk['am_se_cn_mean']
+        # 2026-09-30 (LHS 인계 7a · J20-k (C)) — AM 전 입자의 AM–SE 분포 (std · median · max).  옛 코드는 std 를
+        # 계산만 하고 버렸고 median · max 는 상별로만 내보냈다 (`--selftest` ④–⑥ · ⑪).  추가만 — 옛 키는 그대로.
+        for key in ('am_se_cn_std', 'am_se_cn_median', 'am_se_cn_max'):
+            if key in am_risk:
+                metrics[key] = am_risk[key]
         # Per-AM-type AM-SE CN (bimodal): for COMSOL Butler-Volmer per-phase
         for key in ['AM_P_se_cn_mean', 'AM_P_se_cn_std', 'AM_P_se_cn_median', 'AM_P_se_cn_max',
                     'AM_P_n_particles', 'AM_P_vulnerable_pct',
@@ -862,5 +867,173 @@ def main():
     return 0
 
 
+def _selftest():
+    """AM 고립 (AM–SE 배위수) 키 계약 — 작은 침대를 **웹앱과 같은 CLI** 로 돌려 full_metrics.json 을 본다.
+
+    2026-09-30 · LHS 인계 7a (판정 J20-k (C)) — AM **전 입자** 의 AM–SE 분포 (`am_se_cn_std` · `am_se_cn_median` ·
+    `am_se_cn_max`) 를 내보낸다.  옛 코드는 std 를 계산만 하고 버렸고, median · max 는 상별 (AM_P_ · AM_S_) 로만 있었다.
+    mono 침대는 AM 이 한 상이라 전체 분포 = 그 상의 분포다 (7b — J20-k (B) 의 근거).
+    3 상 침대는 `analyze_contacts_bimodal.py`, mono 는 이 파일 — 웹앱 `run_pipeline` 이 부르는 그대로 (app.py 의 두 cmd).
+    기대값은 설계한 접촉 수에서 **손으로** 셈한다 (numpy 를 다시 부르지 않는다).
+    """
+    import math
+    import re
+    import shutil
+    import subprocess
+    import tempfile
+
+    fails, n_chk = [], [0]
+
+    def chk(name, ok, extra=''):
+        n_chk[0] += 1
+        print(('  ✓ ' if ok else '  ✗ ') + name + ('' if ok or not extra else f'  — {extra}'))
+        if not ok:
+            fails.append(name)
+
+    def same(a, b, tol=1e-12):
+        try:
+            return abs(float(a) - float(b)) <= tol * max(1.0, abs(float(b)))
+        except (TypeError, ValueError):
+            return False
+
+    def pop_std(xs):
+        m = sum(xs) / len(xs)
+        return math.sqrt(sum((x - m) ** 2 for x in xs) / len(xs))
+
+    def median(xs):
+        s = sorted(xs)
+        k = len(s) // 2
+        return float(s[k]) if len(s) % 2 else (s[k - 1] + s[k]) / 2.0
+
+    def is_int(v):
+        return isinstance(v, int) and not isinstance(v, bool)
+
+    here = os.path.dirname(os.path.abspath(__file__))
+    R_SE, PLATE_Z = 0.0005, 0.02                        # sim 단위 (scale 1000 → 0.5 µm · 20 µm)
+    ISO_KEY = re.compile(r'am_vulnerable_pct|am_se_cn_\w+|AM_[PS]_(se_cn_\w+|n_particles|vulnerable_pct)')
+    PHASE_KEYS = ('se_cn_mean', 'se_cn_std', 'se_cn_median', 'se_cn_max', 'n_particles', 'vulnerable_pct')
+    AGG_KEYS = {'am_vulnerable_pct', 'am_se_cn_mean', 'am_se_cn_std', 'am_se_cn_median', 'am_se_cn_max',
+                'am_se_cn_surface_weighted'}
+
+    def run_bed(tmp, name, script, type_map, se_type, am, links, extra=()):
+        """am = [(id, type, r, x, y, z)] · links = [(am_id, k, 뒤집기)] — AM 마다 짝 SE k 개와 닿는 행 (뒤집기 = SE 가 id1).
+        SE 사슬 (바닥 → 플래튼 · id 101–120) 을 깔아 퍼콜레이션 · 굴곡도 단계가 빈 집합에서 돌지 않게 한다 (AM 고립과 무관)."""
+        d = os.path.join(tmp, name)
+        out = os.path.join(d, 'out')
+        os.makedirs(out)
+        rows_a = [(aid, t, x, y, z, r) for aid, t, r, x, y, z in am]
+        rows_c = []
+        for k in range(20):
+            rows_a.append((101 + k, se_type, 0.025, 0.025, R_SE + 2 * R_SE * k, R_SE))
+            if k:
+                rows_c.append((100 + k, 101 + k))
+        pos = {aid: (x, y, z, r) for aid, _t, r, x, y, z in am}
+        sid = 201
+        for aid, k, flip in links:
+            x, y, z, r = pos[aid]
+            for j in range(k):
+                th, g = 2 * math.pi * j / k, r + R_SE - 1e-5
+                rows_a.append((sid, se_type, x + g * math.cos(th), y + g * math.sin(th), z, R_SE))
+                rows_c.append((sid, aid) if flip else (aid, sid))
+                sid += 1
+        rows_c += list(extra)
+        with open(os.path.join(d, 'atoms.csv'), 'w') as fh:
+            fh.write('id,type,x,y,z,radius\n')
+            fh.writelines(f'{a},{t},{x!r},{y!r},{z!r},{r!r}\n' for a, t, x, y, z, r in rows_a)
+        with open(os.path.join(d, 'contacts.csv'), 'w') as fh:
+            fh.write('id1,id2,fn_x,fn_y,fn_z,ft_x,ft_y,ft_z,contact_area,delta\n')
+            fh.writelines(f'{i},{j},0,0,0.001,0,0,0,1e-08,1e-05\n' for i, j in rows_c)
+        with open(os.path.join(out, 'mesh_info.json'), 'w') as fh:
+            json.dump({'plate_z': PLATE_Z}, fh)
+        pr = subprocess.run([sys.executable, os.path.join(here, script), os.path.join(d, 'atoms.csv'),
+                             os.path.join(d, 'contacts.csv'), '-o', out, '-t', type_map, '-s', '1000'],
+                            capture_output=True, text=True, timeout=300)
+        met = {}
+        if os.path.exists(os.path.join(out, 'full_metrics.json')):
+            with open(os.path.join(out, 'full_metrics.json')) as fh:
+                met = json.load(fh)
+        return pr, met
+
+    tmp = tempfile.mkdtemp(prefix='ac_selftest_')
+    try:
+        # ── 3 상 침대: AM_P 3 · AM_S 4 · AM 마다 SE 접촉 수를 정해 둔다 (0 인 AM 둘 · 1 인 AM 하나) ──
+        am3 = [(1, 1, 0.006, 0.010, 0.010, 0.006), (2, 1, 0.006, 0.040, 0.010, 0.006), (3, 1, 0.006, 0.010, 0.040, 0.006),
+               (4, 2, 0.002, 0.040, 0.040, 0.002), (5, 2, 0.002, 0.018, 0.030, 0.012), (6, 2, 0.002, 0.034, 0.024, 0.012),
+               (7, 2, 0.002, 0.030, 0.040, 0.016)]
+        k3 = {1: 3, 2: 0, 3: 1, 4: 2, 5: 2, 6: 5, 7: 0}
+        pr3, m3 = run_bed(tmp, 'bimodal', 'analyze_contacts_bimodal.py', '1:AM_P,2:AM_S,3:SE', 3, am3,
+                          [(a, k, a in (5, 6)) for a, k in k3.items()],     # 5 · 6 은 SE 가 id1 인 행
+                          extra=[(1, 4)])                                    # AM_P–AM_S 접촉 한 행 — AM–SE 로 세지 않는다
+        allc = [k3[a] for a in sorted(k3)]
+        pc, sc = [k3[a] for a in (1, 2, 3)], [k3[a] for a in (4, 5, 6, 7)]
+        r2 = {a: r * r for a, _t, r, _x, _y, _z in am3}
+        sw = sum(r2[a] * k3[a] for a in k3) / sum(r2.values())
+        chk('① 3 상 침대 — analyze_contacts_bimodal.py (웹앱 cmd 그대로) rc 0 · full_metrics.json',
+            pr3.returncode == 0 and bool(m3), (pr3.stderr or '')[-400:])
+        chk('② 옛 전체 키 그대로 — am_se_cn_mean 13/7 · am_vulnerable_pct 3/7 (접촉 0 · 1 인 AM) · surface_weighted = Σr²·CN/Σr²',
+            same(m3.get('am_se_cn_mean'), 13 / 7) and same(m3.get('am_vulnerable_pct'), 300 / 7)
+            and same(m3.get('am_se_cn_surface_weighted'), sw),
+            f"{m3.get('am_se_cn_mean')} · {m3.get('am_vulnerable_pct')} · {m3.get('am_se_cn_surface_weighted')}")
+        want_p = dict(se_cn_mean=4 / 3, se_cn_std=pop_std(pc), se_cn_median=median(pc), se_cn_max=3, n_particles=3,
+                      vulnerable_pct=200 / 3)
+        want_s = dict(se_cn_mean=9 / 4, se_cn_std=pop_std(sc), se_cn_median=median(sc), se_cn_max=5, n_particles=4,
+                      vulnerable_pct=25.0)
+        chk('③ 옛 상별 키 그대로 — AM_P (3,0,1) · AM_S (2,2,5,0) 의 평균 · 표준편차 · 중앙값 · 최댓값 · 입자 수 · 취약 비율',
+            all(same(m3.get(f'AM_P_{k}'), v) for k, v in want_p.items())
+            and all(same(m3.get(f'AM_S_{k}'), v) for k, v in want_s.items())
+            and all(is_int(m3.get(f'{ph}_se_cn_max')) for ph in ('AM_P', 'AM_S')),
+            str({k: m3.get(k) for k in sorted(m3) if k.startswith(('AM_P_', 'AM_S_'))}))
+        chk('④ ★ 7a am_se_cn_std = AM 전 입자 7 개 (접촉 0 인 AM 포함) 의 모집단 표준편차',
+            same(m3.get('am_se_cn_std'), pop_std(allc)), f"{m3.get('am_se_cn_std')} vs {pop_std(allc)}")
+        chk('⑤ ★ 7a am_se_cn_median = 2 (7 개 · 가운데 값) · float',
+            same(m3.get('am_se_cn_median'), median(allc)) and isinstance(m3.get('am_se_cn_median'), float),
+            repr(m3.get('am_se_cn_median')))
+        chk('⑥ ★ 7a am_se_cn_max = 5 · int (JSON 문자열 아님) · = max(AM_P_se_cn_max, AM_S_se_cn_max)',
+            m3.get('am_se_cn_max') == 5 and is_int(m3.get('am_se_cn_max'))
+            and m3.get('am_se_cn_max') == max(m3.get('AM_P_se_cn_max', -1), m3.get('AM_S_se_cn_max', -1)),
+            repr(m3.get('am_se_cn_max')))
+        chk('⑦ 항등식 — am_se_cn_mean × N_AM = area_AM전체_SE_n (13) · 상별 평균 × 입자 수 = area_AM_P_SE_n (4) · area_AM_S_SE_n (9)',
+            same(m3.get('am_se_cn_mean', 0) * 7, m3.get('area_AM전체_SE_n')) and m3.get('area_AM전체_SE_n') == 13
+            and same(m3.get('AM_P_se_cn_mean', 0) * m3.get('AM_P_n_particles', 0), m3.get('area_AM_P_SE_n'))
+            and same(m3.get('AM_S_se_cn_mean', 0) * m3.get('AM_S_n_particles', 0), m3.get('area_AM_S_SE_n'))
+            and m3.get('area_AM_P_SE_n') == 4 and m3.get('area_AM_S_SE_n') == 9,
+            f"{m3.get('area_AM전체_SE_n')} · {m3.get('area_AM_P_SE_n')} · {m3.get('area_AM_S_SE_n')}")
+        chk('⑧ AM–AM 행 (1–4) · SE 사슬 19 행은 AM–SE 로 세지 않는다 — area_AM_P_AM_S_n 1 · area_SE_SE_n 19 · AM_P 1 의 SE 수 3',
+            m3.get('area_AM_P_AM_S_n') == 1 and m3.get('area_SE_SE_n') == 19 and m3.get('AM_P_se_cn_max') == 3,
+            f"{m3.get('area_AM_P_AM_S_n')} · {m3.get('area_SE_SE_n')} · {m3.get('AM_P_se_cn_max')}")
+        want3 = AGG_KEYS | {f'{ph}_{k}' for ph in ('AM_P', 'AM_S') for k in PHASE_KEYS}
+        got3 = {k for k in m3 if ISO_KEY.fullmatch(k)}
+        chk(f'⑨ AM 고립 키 집합 = 계약 {len(want3)} (전체 6 · 상별 6 × 2) — 빠지거나 더 붙으면 실패',
+            got3 == want3, f'빠짐 {sorted(want3 - got3)} · 더 {sorted(got3 - want3)}')
+
+        # ── mono 침대: 웹앱은 AM 한 종류를 반지름으로 부른다 (r 2 µm → AM_S) · AM 4 개 (짝수 — 중앙값 규약) ──
+        am1 = [(1, 1, 0.002, 0.010, 0.010, 0.002), (2, 1, 0.002, 0.040, 0.010, 0.002),
+               (3, 1, 0.002, 0.010, 0.040, 0.002), (4, 1, 0.002, 0.040, 0.040, 0.002)]
+        k1 = {1: 0, 2: 1, 3: 4, 4: 2}
+        pr1, m1 = run_bed(tmp, 'mono', 'analyze_contacts.py', '1:AM_S,2:SE', 2, am1,
+                          [(a, k, False) for a, k in k1.items()])
+        c1 = [k1[a] for a in sorted(k1)]
+        chk('⑩ mono (1:AM_S,2:SE) — analyze_contacts.py rc 0 · 옛 키 그대로 (평균 1.75 · 취약 50 % · AM_S 중앙값 1.5 · 최댓값 4) · AM_P 키 없음',
+            pr1.returncode == 0 and same(m1.get('am_se_cn_mean'), 1.75) and same(m1.get('am_vulnerable_pct'), 50.0)
+            and same(m1.get('AM_S_se_cn_median'), 1.5) and m1.get('AM_S_se_cn_max') == 4
+            and m1.get('AM_S_n_particles') == 4 and not any(k.startswith('AM_P_') for k in m1),
+            (pr1.stderr or '')[-400:] if pr1.returncode else str({k: m1.get(k) for k in sorted(m1) if ISO_KEY.fullmatch(k)}))
+        chk('⑪ ★ 7a mono 전체 분포 = 그 상 — std · 중앙값 (짝수 개 = 가운데 둘의 평균 1.5) · 최댓값 4 가 AM_S_* 와 같다 (7b 근거)',
+            same(m1.get('am_se_cn_std'), pop_std(c1)) and same(m1.get('am_se_cn_median'), median(c1))
+            and m1.get('am_se_cn_max') == 4 and is_int(m1.get('am_se_cn_max'))
+            and all(same(m1.get(f'am_se_cn_{s}'), m1.get(f'AM_S_se_cn_{s}')) for s in ('mean', 'std', 'median', 'max')),
+            str({k: m1.get(k) for k in sorted(m1) if k.startswith(('am_se_cn_', 'AM_S_se_cn_'))}))
+        want1 = AGG_KEYS | {f'AM_S_{k}' for k in PHASE_KEYS}
+        got1 = {k for k in m1 if ISO_KEY.fullmatch(k)}
+        chk(f'⑫ mono AM 고립 키 집합 = 계약 {len(want1)} (전체 6 · AM_S 6)',
+            got1 == want1, f'빠짐 {sorted(want1 - got1)} · 더 {sorted(got1 - want1)}')
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+    print(f'\n{n_chk[0] - len(fails)}/{n_chk[0]}  ' + ('✓ 전부 통과' if not fails else f'✗ {len(fails)} 건 실패'))
+    return 0 if not fails else 1
+
+
 if __name__ == '__main__':
+    if '--selftest' in sys.argv:
+        sys.exit(_selftest())
     sys.exit(main())
