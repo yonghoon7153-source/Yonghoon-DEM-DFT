@@ -5961,6 +5961,19 @@
    ]
   },
   {
+   "id": "LHS-22",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (09-30 · 접촉 ① 둘째 함수 `calc_se_se_cn` 코드 검토 — J20-i)",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "F1 근접쌍 CN (`se_se_cn_aug*`) 의 격자 탐색 (`scripts/dem_analysis_core.py:297–342`) 이 주기 영상을 보지 않는다 — 원자 좌표를 그대로 칸에 넣어 x · y 주기 경계 너머의 근접쌍 (틈 ≤ h_spread) 을 못 센다.  탄성 접촉 `cn` 은 LIGGGHTS 덤프라 경계 너머 접촉을 포함하므로 `mean_aug` 는 두 규칙 (경계 포함 · 경계 제외) 이 섞인 값이다",
+   "note": "인계 열 아님 (J20-i 는 `se_se_cn` · `se_se_cn_std` 만 싣는다) — 영향 = `se_se_cn_aug` · `_aug_std` · `_aug_n_extra` (과소 · 상자 크기에 따라 다름) · `_aug_h_spread_sim` 은 설정값.  함수는 상자 크기를 인자로 받지 않는다 (`box_x` · `box_y` 는 퍼콜레이션에만 넘어간다).  크기 미측정.  처방 = ⑤ F1 근접쌍 묶음 차례에: 반례 먼저 (경계 양쪽에 틈 < h 인 두 SE — 옛 코드 0 건) → 최소영상 · 주기 칸 감싸기 · 상자 크기 인자.  census 는 ✅ 라 ⑤ 전에는 싣지 않는다.",
+   "evidence_tests": [
+    "scripts/dem_analysis_core.py"
+   ]
+  },
+  {
    "id": "HBR8-01",
    "severity": "P1",
    "title": "v2.2 한 파일에 상반된 실행 정책이 동시에 활성 — \"후행 진단\" (§4-d 시점 · B:192–193 · 205 취소선) 과 \"확인 전 수준 변경\" (B:197–198 \"후보 유지 → GO 뒤 확인\" · \"수준 올려 재봉인\" · B:207 \"넘으면 확인 런 전에 수준을 고친다\") 이 같은 입력 (r₁ .06 · t₁ .01) 에 다른 절차를 지시한다 · 부수: B:7/57 옛 해시 4a9ec223 (241 행 v2.1) ↔ 본문 v2.2 ab20ef77 (245 행) · B:186 \"개발에서 수준 바꾸면 새 holdout\" ↔ B:187 반대 · B:87 \"hold 는 벽시계를 늘리지 않는다\" 가 §8-3 철회 뒤에도 §0 활성 표에 · B:177 D-2 미결 표지 ↔ §10 결정 완료",

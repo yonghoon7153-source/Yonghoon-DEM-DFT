@@ -13,6 +13,7 @@
 | 두께 `thickness_mass_conserving_um` | ✅ J19 ② | ✅ | ✅ 들어 있음 | — |
 | AM · SE 분율 `phi_am_mass_conserving` · `phi_se_mass_conserving` (라) | ✅ J20-e | ✅ (새 계산 없음 · 닫힘 ≤ 3.3e-16) | ✅ 들어 있음 | — |
 | **계면 개수** `area_<쌍>_n` (쌍 종류별 접촉 **개수**) | ✅ **09-30 `calc_interface_area` 검토** (`dem_analysis_core.py:131–168` · 코드 수정 불요 · 약점 1 = 없는 id 의 행을 조용히 버림 → 64 는 재수확의 고아 행 수로 확인) | ✅ 130/130 · 64/64 done (09-30 · 1차 `4b42179ec` + mono 재실행 `27933b44e` · 원자료 `docs/data/lhs_webapp_contact_20260929/` 외 3 · README) | ✅ `lhs_handover_20260930.csv` 130×133 · `lhsx_handover_20260930.csv` 64×135 (새 열 12 = `area_<쌍>_n` 7 + 상태 2 + QC 3 · 옛 칸 변경 0 · bimodal P+S = 전체 100/100 · 48/48) | ✅ **bimodal 의 없는 쌍 = 0** (J20-h · 09-30 비준 · 웹앱은 접촉 0 인 쌍의 키를 안 만든다 → 생성기가 0 으로 채움 · 130 에서 3 · 64 에서 6 칸 · 107/107) · mono AM–AM 개수는 상별 칸이 비어 표에 없다 (`am_am_n_contacts` 검토 뒤) |
+| **SE–SE 배위수** `se_se_cn` · `se_se_cn_std` | ✅ **09-30 `calc_se_se_cn` 검토** (`dem_analysis_core.py:232–344` · 코드 수정 불요 · SE 전 입자 평균 (접촉 0 · 벽 입자 포함) · 표준편차 = 모집단 · 같은 함수의 `_perc` · `_eff_area` · `_aug` 8 열은 ② · ⑦ · ⑤ 차례) | ✅ 같은 배치 130/130 · 64/64 · 평균 = 2 × `area_SE_SE_n` / SE 입자 수 — **194/194 차이 0** | ✅ `lhs_handover_20260930.csv` 130×135 · `lhsx_handover_20260930.csv` 64×137 (새 열 2 · 옛 칸 변경 0 · 배치 원값 그대로 · 생성기 항등식 관문 J20-i) | 벽 효과 주의 (열 사전 그대로) — 같이 볼 `wall_touch_frac_*` 는 수확기 item 4 병합 뒤 · ⚠ F1 근접쌍 (`_aug`) 주기 경계 결함 `LHS-22` (⑤ 차례) |
 
 ⚠ **mono (2-type) 의 쌍 이름** — 웹앱은 AM 이 한 종류인 덱의 AM 을 **반지름**으로 AM_S/AM_P 라 부른다 (J20-f) ⇒ mono 의 `area_AM_S_SE_n` 같은 **상별 쌍** 칸에 값이 들어가고,
 설계 상과 이름이 다른 9 건 (130: `118 · 121 · 124 · 125 · 126` · 64 예측: `lhsx_003 · 017 · 048 · 062`) 은 설계와 다른 이름 칸에 들어간다.  **총량 쌍** `area_AM전체_SE_n` · `area_SE_SE_n` 은 이름과 무관.
@@ -33,7 +34,7 @@
 | **φ_SE · φ_AM 질량 보존 (라)** `phi_se_mass_conserving` · `phi_am_mass_conserving` | ✅ 저장 (φ_SE 0.079–0.474 · φ_AM 0.422–0.715) | ✅ 저장 (φ_SE 0.476–0.798 · φ_AM 0.143–0.449) | ✅ **이것을 넘김** (1저자 09-29 밤 *"(라) 에 해당하는 것만"*) — union porosity 와 닫힘 잔차 ≤ 3.3e-16 · 적재량 = 레시피 |
 | coverage (AM_P · AM_S · 전체 · 이름은 hertz 지만 A_dem_geometric) | ✅ 저장 (mono 30 은 P · S 둘 다 빈칸 · 값은 전체 열) | ✅ 저장 (mono 16 도 같음) | ⏸ **09-30: 코드 갱신 중이라 이번 추출에서 뺀다** — 수확기 coverage 4 커밋 (벽 규칙 하나 · 벽 분할 · 면적 대조 · 접촉 행 문) · cap v2 3 커밋 모두 **미병합** · 하나씩 같이 본 뒤 (item 4 설명 끝 · 비준 대기) |
 | τ (굴곡도) | 상태 열만 · 값은 보류 (`LHS-08` 14/130) | ⬜ | ⏸ 벽 기준 τ 판정 뒤 |
-| **① 접촉 위상** — z_SE-SE mean·σ · z_AM-SE · AM_P/AM_S–SE CN · surface-weighted · z_AM-AM · 접촉 수 · 벽 접촉 비율 | 09-30 WSL 접촉만 배치 (옛 코드 기준선 `4b42179ec`): done 100 · mono 30 REFUSED → 재실행 대기 | 진행 중 (mono 16 거부 예상) | **함수마다 같이 확인한 열만**: 계면 개수 ✅ (09-30) → SE–SE CN ⬜ → AM–AM CN ⬜ → AM 고립 (am_se_cn_*) ⬜ · 벽 접촉 비율은 수확기 item 4 (벽 규칙) 병합 뒤 |
+| **① 접촉 위상** — z_SE-SE mean·σ · z_AM-SE · AM_P/AM_S–SE CN · surface-weighted · z_AM-AM · 접촉 수 · 벽 접촉 비율 | 09-30 WSL 접촉만 배치 (옛 코드 기준선 `4b42179ec`): done 100 · mono 30 REFUSED → 재실행 대기 | 진행 중 (mono 16 거부 예상) | **함수마다 같이 확인한 열만**: 계면 개수 ✅ (09-30) → SE–SE CN ✅ (09-30 · J20-i) → AM–AM CN ⬜ → AM 고립 (am_se_cn_*) ⬜ · 벽 접촉 비율은 수확기 item 4 (벽 규칙) 병합 뒤 |
 | **② 퍼콜레이션** — percolation_pct · n_components · n_large · electronic_*_fraction · se_se_cn_*_perc | ⬜ 계산 전 (감사 ✅ 적격 · 비관통 24 건은 빈칸) | ⬜ | ✅ ① 다음 |
 | ③ φ_SE(웹앱) · ④ 협착 저항 · σ_VM · ⑤ F1 근접쌍 · ⑥ Auerbach · ⑦ A_dem_geometric | 감사 전 | — | ⛔ 감사 끝나기 전엔 안 넘김 |
 | 내부 전용 — sphere-sum porosity 4 종 · 두께 wall gap/envelope/pushback · 경계 QC · sha · 상태 열 | ✅ 저장 | ✅ 저장 (hold NEGATIVE_POROSITY 60 = 구 부피 합의 음수 · union 은 전부 양수) | ✗ 내부 표에만 |
@@ -50,8 +51,8 @@
 | 2 | **재수확 v3** (130 + 64 · 벽 τ · 벽 접촉 비율) — WSL 명령 = J20-c · **한 건 먼저** (`--case lhs00_000` · `--case lhsx_001`) | 사용자 (WSL) | ✅ 09-30 실행 130/130 · 64/64 (**옛 코드 기준선** — 수확기 coverage 수정 병합 뒤 다시 · 비교) |
 | 3 | **웹앱 배치 — 묶음별** (1저자 09-29 밤 *"단독적으로 하나씩"*): ① = `--stop-after contact` (접촉 분석 단계 — ⚠ 이 단계는 웹앱 분석 14 가지를 **한꺼번에** 돈다 (`run_full_analysis`) · 표에는 같이 확인한 열만) → 한 건 대조 → 130 + 64 · ② 이후는 그 묶음 차례에 | 사용자 (WSL) | ✅ 코드 · ✅ 한 건 대조 · ▶ 09-30 전 건: 130 done 100 · mono 30 REFUSED (`SELF-66` · J20-f · 관문 수정 `70e1203be`) · 64 진행 중 |
 | 3b | **REFUSED 재실행** — 같은 두 배치 명령 · 같은 `--out-dir` (done 은 건너뛴다) → tgz | 사용자 (WSL) | ⬜ 64 배치가 끝난 뒤 (명령은 그때) |
-| 4 | 생성기 코드 — ✅ `--webapp-groups contact` (09-29 밤 · 95/95) · ~~64 설계 변환 어댑터~~ ✅ (14/14) · ✅ φ (라) 두 열 · ✅ **확인된 열만 싣기** (J20-g `WA_REVIEWED` · 지금 계면 개수 `area_<쌍>_n` 만 — 함수 검토가 끝날 때마다 늘린다) · ✅ mono 상별 빈칸 (J20-f (A)) · 배포 프로필 (`--deliver`) ⬜ · `n_AM_measured` (`LHS-21`) ⬜ — 반례 먼저 · 비준 뒤 | 나 | 일부 ✅ |
-| 4b | **접촉 단계 함수 검토 (1저자와 하나씩)** — 계면 개수 ✅ (09-30) → SE–SE CN (`calc_se_se_cn`) → AM–AM CN (`calc_am_am_cn`) → AM 고립 (`calc_am_isolation_risk`) · 나머지 분석 (굴곡도 · von Mises · 접촉력 · 압력 · 겹침 · 유효 전도도 · Auerbach) 은 그 묶음 차례에 | 나 → 1저자 | ▶ 1/4 |
+| 4 | 생성기 코드 — ✅ `--webapp-groups contact` (09-29 밤 · 95/95) · ~~64 설계 변환 어댑터~~ ✅ (14/14) · ✅ φ (라) 두 열 · ✅ **확인된 열만 싣기** (J20-g `WA_REVIEWED` · 지금 계면 개수 `area_<쌍>_n` + SE–SE CN 두 열 (J20-i · 항등식 관문) — 함수 검토가 끝날 때마다 늘린다) · ✅ mono 상별 빈칸 (J20-f (A)) · 배포 프로필 (`--deliver`) ⬜ · `n_AM_measured` (`LHS-21`) ⬜ — 반례 먼저 · 비준 뒤 | 나 | 일부 ✅ |
+| 4b | **접촉 단계 함수 검토 (1저자와 하나씩)** — 계면 개수 ✅ (09-30) → SE–SE CN ✅ (09-30 · `calc_se_se_cn` · J20-i) → AM–AM CN (`calc_am_am_cn`) → AM 고립 (`calc_am_isolation_risk`) · 나머지 분석 (굴곡도 · von Mises · 접촉력 · 압력 · 겹침 · 유효 전도도 · Auerbach) 은 그 묶음 차례에 | 나 → 1저자 | ▶ 2/4 |
 | 4c | **coverage 코드 갱신 (에이전트 산출 · 미병합)** — 수확기 4 커밋 (`worktree-agent-a8425b12f9b01f5bb`) · cap v2 3 커밋 (`worktree-agent-a308bd30eb1820cd1` · 배치 selftest 번호 충돌 1 곳 · 새 결함 등재 필요: 옛 피복 스크립트가 `WEBAPP_*_FOLDER` 무시) → 하나씩 설명 · 비준 뒤 병합 → 재수확 · coverage 배치 → 기준선과 비교 | 나 → 1저자 | ▶ item 4 설명 끝 · 비준 대기 |
 | 5 | 인계표 재생성 130 + 64 → 열 사전 (`*_columns.tsv`) → 커밋 · ① 열 설명을 열 사전에 그대로 | 나 | ⬜ (2 · 3 · 4 뒤) |
 | 6 | 결정 셋 — `LHS-20` (top_reachable_pct · ionic_active_pct 넘길지) · ② 열 사전 문구 (J20-b ⓒ) · 배포 프로필 (§3) | 사용자 | ⬜ |
@@ -62,7 +63,7 @@
 
 | 파일 | 내용 |
 |---|---|
-| `lhs_handover_<날짜>.csv` (130) · `lhsx_handover_<날짜>.csv` (64) | **09-30 이번 판 = §0** (설계 + 두께 (mass-conserving) + porosity union + `se_rich` + φ_SE · φ_AM (라) + 계면 개수).  그 뒤 같이 확인하는 대로: ① 나머지 열 → coverage (갱신 뒤) → ② 퍼콜레이션 → ③~⑦ |
+| `lhs_handover_<날짜>.csv` (130) · `lhsx_handover_<날짜>.csv` (64) | **09-30 이번 판 = §0** (설계 + 두께 (mass-conserving) + porosity union + `se_rich` + φ_SE · φ_AM (라) + 계면 개수 + SE–SE CN).  그 뒤 같이 확인하는 대로: ① 나머지 열 → coverage (갱신 뒤) → ② 퍼콜레이션 → ③~⑦ |
 | `*_columns.tsv` (열 사전) | 열마다 출처 · 판정 · 뜻 · 분모 · 주의 (벽 효과 · 파생 · 총량 · 빈칸 = N/A) |
 | README | 규약 한 줄씩 — union 은 상한 규약 · 구 부피 합은 안 넘김 · τ 보류 · 64 는 SE-rich (SE/고체 0.51–0.85) |
 
@@ -93,7 +94,7 @@
 | 열 | 내는 함수 | 검토 | 메모 |
 |---|---|---|---|
 | `area_<쌍>_n` | `calc_interface_area` (`dem_analysis_core.py:131–168`) → `analyze_contacts.py:405–409` | ✅ 09-30 · 수정 불요 | 한 줄 = 한 접촉 · 짝 이름은 두 상 이름을 정렬해 잇는다 · 없는 id 의 행은 **조용히 버린다** (130 은 0 — 수확기 에이전트 보고 · 64 는 재수확 고아 행 수로 확인) · 중복 · 여러 프레임은 배치가 실행 전 거부 · δ ≤ 0 행도 센다 (130 은 0) · 종류표 밖 `?` 는 AM전체-SE 에 섞일 수 있으나 배치가 종류표를 먼저 대조 · 벽 접촉은 안 센다 · mono 쌍 이름 = 반지름 이름 (위 §0 ⚠) · ⚠ **접촉 0 인 쌍은 키가 없다** → 표에서 빈칸이었다 (09-30 실측: bimodal 의 `area_AM_P_AM_P_n` 130 에서 3 · 64 에서 6 — 뜻은 0) → ✅ 생성기가 0 으로 채움 (J20-h) |
-| `se_se_cn` · `se_se_cn_std` | `calc_se_se_cn` | ⬜ 다음 | |
+| `se_se_cn` · `se_se_cn_std` | `calc_se_se_cn` (`dem_analysis_core.py:232–344`) → `analyze_contacts.py:376–377` | ✅ 09-30 · 수정 불요 (J20-i) | SE 한 알마다 SE 와의 접촉 수를 세고 SE **전 입자**로 평균 (접촉 0 · 벽 · 플래튼 입자 포함) · 표준편차 = 모집단 (`np.std`) · 접촉 = 계면 개수와 같은 덤프 행 (원자 프레임에 없는 id 의 행은 버림 · 벽 접촉은 안 셈) · 평균 = 2 × `area_SE_SE_n` / SE 입자 수 — 130/130 · 64/64 차이 0 → 생성기 관문 (어긋나거나 SE 수를 모르면 거부) · 같은 함수의 나머지 8 열 (`_perc` 3 · `_eff_area` 1 · `_aug` 4) 은 ② · ⑦ · ⑤ 차례 · ⚠ F1 근접쌍 (`_aug`) 격자 탐색에 주기 영상이 없어 x · y 경계 너머 쌍을 못 본다 → `LHS-22` (⑤ 차례에 수정) |
 | `am_am_cn` · `am_am_cn_std` · `am_am_n_contacts` | `calc_am_am_cn` | ⬜ | |
 | `am_se_cn_mean` · `am_se_cn_surface_weighted` · `AM_P/AM_S_se_cn_*` | `calc_am_isolation_risk` | ⬜ | mono 상별 = 반지름 이름 (§0 ⚠) |
 
