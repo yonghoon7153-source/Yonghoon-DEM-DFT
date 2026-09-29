@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -194,6 +194,15 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - **곱의 자리**: 모형은 κ 를 한 값으로 두고 기하(영상)로 τ 를 넣는다 — S16 "κ ×≈11" 은 수송 곱 전체를 ×11 한 것이고, S14 수축부 넓히기는 τ −28 % 와 함께 계면 모양도 바꿨다(한 손잡이 두 곱 — 57호 줄).
 - ⇒ 처방에 붙는 것(`[해석]`): 한 편이 측정 κ_eff 와 모형 τ 를 다 냈으면 **둘을 같은 규약으로 나란히 적는다** — 76호처럼 모형이 자기 측정에 묶이지 않은 채 "qualitative" 로 남으면 크기(옴 강하)가 과소인 방향이 지면에서 안 보인다. 보충 그림 두 장이 같은 양을 다른 단위로 적었으면 환산식을 찾기 전에 값을 옮기지 않는다.
 
+## ★ 열한 번째 표본 — 굴곡도 인쇄 0 · 최단 경로를 뽑고도 τ 로 쓰지 않았다: 24호 "굴곡도 진화" 의 원전 자리에는 연결(θ)만 있다 (2026-09-29, `assb` 77호)
+
+`raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md` (Shi · Tu · … · Ceder 2020, *Adv. Energy Mater.* 10, 1902881 — 24호 ref 53 "CAM/SE 입도비 → 이온 수송 — '수축 → 입도비 변화 → τ↑' 논거의 원전").
+
+- **정의 · 규약**: `tortuos` **0 회**(본문 · SI) · `[인쇄]` "we extracted the shortest percolating pathway of each active CAM particle to a SE target particle" — 경로 길이 · 곧은 거리 비(기하 τ) · 분포는 **인쇄 0**. 출력은 이진 연결 부피 분율 `θ_CAM` 하나.
+- **측정**: 복합체 유효 이온 전도도 0 · SE 펠릿 σ 만(표 S3 — 입도가 작을수록 0.32 → 0.14 mS cm⁻¹ · `[인쇄]` "likely because of the increased grain boundary (or particle boundary) resistance, which can be worsened by any residual solvent") — 곱 `κ_eff = κ·ε/τ²` 의 κ 가 λ 손잡이와 함께 움직인다는 것만 인쇄.
+- **곱의 자리**: 이 편에서는 곱이 **연결(θ) 한 인자로 줄었다** — `ε`(SE 분율)과 λ 가 θ 를 정하고, τ · κ 는 결과에 들어가지 않는다. 논의의 "a smaller percolation channel width and an increased number of particle/grain boundaries that may increase the impedance within the SE network" 가 τ · κ 쪽 이야기이고 계산 0.
+- ⇒ 처방에 붙는 것(`[해석]`): 24호가 이 편을 "τ↑ 논거의 원전" 으로 매단 자리는 **연결(θ)과 굴곡도(τ)를 한 이름으로 묶은 것**이다 — 같은 λ 손잡이가 둘을 함께 움직이지만(작은 SE → 연결 ↑ · 입계 ↑ · 채널 폭 ↓) 이 편이 계산한 것은 연결뿐이다. "굴곡도 진화" 를 옮길 때 그 출처가 τ 를 인쇄했는지 먼저 본다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - **"굴곡도가 진화하지 않았다" 고 하지 않는다** — `σ_eff` 로 보면 70 % 는 변화 없음, 80 % 는 ≈3 배이고, 그 3 배의 배정이 안 갈린다는 것까지다.
@@ -204,6 +213,7 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - ★ **2026-09-28 (73호)**: 규약 재현(이온 φ_SE · 전자 φ_CAM)은 **래스터 판독값 위의 우리 산술**이다(9/9 ≤3 %) — 저자가 φ 를 표로 인쇄한 것은 아니다(SI Table SII 미수령). `R_el` 의 ≈76 % 가 접촉 몫이라는 것도 한 조성 · 한 스펙트럼 · 고주파 절편 폐합 가정 위의 `[재현]` 이고, σ_el,0 10 mS cm⁻¹ 이 공극 보정값이라고 단정하지 않는다.
 - ★ **2026-09-28 (75호)**: **DNS τ ↔ 73호 τ² 비(×1.9–5.9)를 같은 계의 모형 오차로 쓰지 않는다** — 입도 · 공극 · SE 가 다르다(방향 대조). 이 편의 τ 는 Fig. S1 래스터 판독 위의 우리 역산(표 S1 밀도 · 공극 5 %)이다 — 저자는 τ 를 표로 인쇄하지 않았다(Fig. 2a 색 지도뿐).
 - ★ **2026-09-29 (76호)**: **S1 ↔ S2 중 어느 단위가 틀렸는지 확정하지 않는다** — S1 ≈ (0.86–0.97)/R_ion 은 별표 픽셀 판독 · 교점 공식 가정 위의 `[재현]` 이다. 모형 ↔ 측정 κ_eff ×5–9.5 도 밀도 가정 ε 와 2D 영상 ε_SE 위의 산술이고, 모형 τ 의 정의식은 미인쇄다.
+- ★ **2026-09-29 (77호)**: **24호의 "굴곡도 진화" 가 틀렸다고 하지 않는다** — 원전 자리(이 편)에 τ 가 인쇄되지 않았다는 것까지이고, 24호 자신의 σ_eff 대조(24호 digest §4-2d)는 이 편과 무관하다.
 
 ## 관련
 

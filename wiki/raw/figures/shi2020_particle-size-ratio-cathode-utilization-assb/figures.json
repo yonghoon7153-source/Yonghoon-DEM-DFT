@@ -1,0 +1,285 @@
+{
+ "slug": "shi2020_particle-size-ratio-cathode-utilization-assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-29",
+ "sources": [
+  "60f0083f-39._High_active_material_loading_in_all_solid_state_battery_electrode_via_particle_size_optimization.pdf",
+  "01aec276-39._Sup_High_active_material_loading_in_all_solid_state_battery_electrode_via_particle_size_optimization.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) Example microstructures showing the composite cathode from its initial cubic shape (top-left, with box size Lbox) to its final compact shape (bottom-left, with height L) under a pressing pressure of 200 MPa. The model was built using the following parameters: fCAM = 80 wt%, = µ 5 m SE D , = µ 5 m CAM D . b) Particle size distributions used in the simulation. The average particle diameters and standard deviations measured from the SEM images were used as inputs in the log-normal distributions. c) Ionic percolating paths for two typical CAM particles (black dash lines). The paths con- nect CAM particles to the composite cathode/bulk SE interface (bottom of the simulation box).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    64.9,
+    552.3,
+    346.5
+   ],
+   "w": 2128,
+   "h": 1174,
+   "dpi": 300,
+   "src": "60f0083f-39._High_active_material_loading_in_all_solid_state_battery_electrode_via_particle_size_optimization.pdf",
+   "blank": 0.768,
+   "note": "봤다(원본 래스터 xref 60 · 1500 × 1126 · CMYK JPEG → RGB). (a) 초기 입방 상자 L_box → 압착 뒤 높이 L 도식(예시 모형 80 wt% · D_SE = D_CAM = 5 µm) — `[도표]` 원근 보정 L/L_box ≈0.5–0.56(도식 · 거친 판독 · 인쇄 0) (b) 모의 입도 분포 — 세로축 'Volume ratio / %'(부피 가중 표시 · 1 % 아래는 축 밖) · SE 1.5/3/5/8 · CAM 5/12 µm · SE-5 와 CAM-5 곡선이 거의 겹친다(λ = 1) · 곡선 양끝이 표 S2 최소 · 최대 지름에서 잘림(절단 로그정규) (c) CAM 두 입자 → SE 사슬 → 바닥(분리막 쪽) 경로 삽화. 캡션 텍스트 칸의 수식 조각('= µ 5 m SE D')은 텍스트 층 깨짐 — 그림은 온전. 자동 크롭 과대(좌우 흰 여백) · 잘림 0."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a–d) SEM images of LPS with average particle diameters of a) 8, b) 5, c) 3, and d) 1.5 µm prepared using different wet-ball-milling conditions. e,f) SEM images of LZO-coated NMC cathode particles with average diameters of e) 5 and f) 12 µm. ( V V θ = / CAM CAM active is likely because of the increased grain boundary (or particle boundary) resistance, which can be worsened by any residual solvent from the wet ball milling process. LPS with four dif- ferent average particle sizes (8, 5, 3, and 1.5 µm) was tested with LZO-coated NMC particles with average particle sizes of 5 and 12 µm. Representative SEM images of all the particles are presented in Figure 2. CAM). The result for each condition was averaged using at least three different random initial configurations. The convergence of the percolation results with the simula- tion box size is discussed in Section S2 in the Support",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    60.9,
+    555.4,
+    267.6
+   ],
+   "w": 2128,
+   "h": 862,
+   "dpi": 300,
+   "src": "60f0083f-39._High_active_material_loading_in_all_solid_state_battery_electrode_via_particle_size_optimization.pdf",
+   "blank": 0.253,
+   "note": "봤다(xref 96). (a–d) LPS 8 · 5 · 3 · 1.5 µm(막대 20 · 10 · 5 · 3 µm — 배율이 패널마다 다름) · (e)(f) LZO 코팅 NMC 5 · 12 µm(막대 10 µm). ⚠ LPS 는 판상 · 각진 조각 · 응집(b 는 큰 덩이 위 ≈1 µm 잔입자) — 모형의 구와 모양이 다르다 · NMC 는 구형 2차 입자. 입도는 SEM ≈200 입자 평균(인쇄) — 분포 그림 0. 잘림 0."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Modeling results showing the effect of a) fCAM and b) λ on θCAM. c) θCAM as a function of both λ and fCAM. d) Critical λ needed to achieve θCAM = 80%, 90%, and 98% as a function of fCAM.",
+   "rotated_deg": 0,
+   "bbox": [
+    41.8,
+    64.9,
+    552.3,
+    417.7
+   ],
+   "w": 2128,
+   "h": 1471,
+   "dpi": 300,
+   "src": "60f0083f-39._High_active_material_loading_in_all_solid_state_battery_electrode_via_particle_size_optimization.pdf",
+   "blank": 0.819,
+   "note": "봤다(xref 112 — 픽셀 판독의 정본). (a) λ = 1.67 · f_CAM 60–90 wt% 1 wt% 간격 31 점: `[도표]` 75 → 0.92 · 76 → 0.83 · 78 → 0.64 · 80 → 0.50 · 82 → 0.33 · 85 → 0.19 · 90 → 0.13 (b) f_CAM 70 wt%: **표지 7 개** λ 0.334 · 0.420 · 0.627 · 1.000 · 1.668 · 3.335 · 4.001 → θ 0.21 · 0.35 · 0.44 · 0.66 · 0.99 · 1.00 · 1.00 — 본문은 SE 여섯 크기(λ 여섯)만 적는다(λ = 4 는 출처 미인쇄 · D1) (c) λ 0.36–8 × f_CAM 59–90 wt% 색지도(윗축 'SE size for 5 µm CAM') — 색막대 역변환 판독(색 거리 ≤12) · 80 wt%: λ 1 → 29 % · 3 → 63 % · 8 → 93 % (본문 '≈30 → ≈60 %' 와 맞음) (d) θ 80 · 90 · 98 % 임계 λ vs f_CAM 65–82: 98 % 곡선 75 wt% → 2.06(본문 2.1) · 78 → 3.62 · 79.5 → 7.1. 잘림 0."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Visualization of models for a) fCAM = 70 wt%, = µ 3 m SE D , b) fCAM = 80 wt%, = µ 3 m SE D , and c) fCAM = 80 wt%, = µ 5 m SE D , with CAM shown in gray and SE showed in yellow ( = µ 5 m CAM D for all three models). The composite microstructures, isolated SE percolating networks, and isolated CAM particles are shown in the left-hand, middle, and right-hand columns, respectively. The yellow surfaces in the middle column were generated using the QuickSurf method by Gaussian interpolating the SE positions weighted by their diameters.[28] The solid-gray and transparent-gray colors in the right-hand column represent the active and inactive CAM, respectively. λ from 1 to 3 doubles θCAM from ≈30% to ≈60%, but at fCAM = 85 wt% increasing λ from 1 to 8 only slightly increases θCAM from ≈16% to ≈20%. Therefore, most of the active CAM in model c is limited to the volume near the separato",
+   "rotated_deg": 0,
+   "bbox": [
+    44.6,
+    63.9,
+    555.4,
+    326.3
+   ],
+   "w": 2129,
+   "h": 1094,
+   "dpi": 300,
+   "src": "60f0083f-39._High_active_material_loading_in_all_solid_state_battery_electrode_via_particle_size_optimization.pdf",
+   "blank": 0.416,
+   "note": "봤다(xref 135). (a) 70 wt% · D_SE 3 µm — SE 망이 상자 전체에 걸침 · 거의 전부 활성(98 %) (b) 80 wt% · 3 µm — SE 망 조각 · 활성은 아래쪽 + 가운데 기둥(52 %) (c) 80 wt% · 5 µm — 활성은 바닥(분리막 쪽) 한 층(25 %). 본문과 정성 일치. 3D 투명 렌더라 뒤쪽 활성 입자가 가려질 수 있다(개수 판독 안 함). 캡션 텍스트 칸 수식 조각 깨짐 — 그림 온전. 잘림 0."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) First-cycle voltage curves of SSBs using different-sized LPS particles in the cathode composite with fixed NMC size (5 µm) and fCAM (60 wt%). b) Comparison of experimental capacities in with model-predicted capacities. c,d) First-cycle voltage curves of SSBs using different-sized NMC particles (5 and 12 µm) in the cathode composite with fixed LPS size (3 µm for (c) and 1.5 µm for (d)) and fCAM (80 wt%). e) Comparison of experimental capacities in (c) and (d) with model-predicted capacities. delivered larger discharge capacities than those with 5-µm CAM particles (red curves), further demonstrating that a larger λ benefits θCAM. The initial discharge capacities of the four cells are compared with the model-predicted specific capacities in Figure 5e and show good agreement. energy density and safety. However, high energy density can only be achieved if cathode composites can b",
+   "rotated_deg": 0,
+   "bbox": [
+    41.7,
+    64.9,
+    552.5,
+    338.4
+   ],
+   "w": 2130,
+   "h": 1141,
+   "dpi": 300,
+   "src": "60f0083f-39._High_active_material_loading_in_all_solid_state_battery_electrode_via_particle_size_optimization.pdf",
+   "blank": 0.886,
+   "note": "봤다(xref 144 — 벡터 0 · 래스터 픽셀 판독). (a) 60 wt% · NMC 5 µm · LPS 8 · 5 · 3 · 1.5: `[도표]` 방전 끝 75.9 · 122.8 · 151.5 · 152.4 mAh g⁻¹ · **충전(CV 5 h 포함) 끝 152.4 · 183.4 · 214.8 · ≈205** · CV 평탄 3.70 V · **방전 끝 전압 ≈1.40 V**(인쇄 창 2–3.7 V 와 다름 — D6) (b) 모형 ≈155 · ≈155 · 127.9 · 87.2 ↔ 실험 152.4 · 151.4 · 122.8 · 75.8 (c)(d) 80 wt% · LPS 3 / 1.5 · NMC 5 ↔ 12: 방전 78.3 · 127.6 / 95.1 · 141.1 · 충전 끝 137.5 · 186.8 / 147.7 · 186.6 · 5 µm NMC 곡선은 3.0 V 위에서 방전의 ≈35 % 만(평탄 소실) (e) 모형(1.5 µm SE) 110.9 · ≈141(가려짐) · 실험 96.1 · 141.1 · 모형(3 µm SE) 74.7 · 134.3 · 실험 78.3 · 127.8. 충전 용량 · CE 는 본문에서 한 번도 다루지 않는다(0 회). 잘림 0."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. First-cycle voltage profiles of SSBs using a) 3-µm and c) 1.5-µm LPS in the cathode composite. The blue curves represent the cells with 60 wt% NMC, 35 wt% LPS, and 5 wt% CNF (fCAM = 60 wt%), the orange curves represent the cells with 70 wt% NMC, 25 wt% LPS, and 5 wt% CNF (fCAM = 70 wt%), and the black curves represent the cells with 80 wt% NMC, 15 wt% LPS, and 5 wt% CNF (fCAM = 80 wt%). b,d) Comparison of experimental first-cycle discharge capacities with model-predicted capacities. In all the cells, 5-µm NMC particles were used. λ is increased to ≈8. To put this finding into perspective, we calculate the CAM volume ratio in the cathode composite as a function of cathode loading using previously reported densities and composite cathode porosities (Figure 7a).[29] For fCAM = 80 wt%, the volume loading is ≈50 vol%, comparable to that of a common liquid cell cathode (usually >45 v",
+   "rotated_deg": 0,
+   "bbox": [
+    44.7,
+    64.9,
+    555.5,
+    401.1
+   ],
+   "w": 2129,
+   "h": 1402,
+   "dpi": 300,
+   "src": "60f0083f-39._High_active_material_loading_in_all_solid_state_battery_electrode_via_particle_size_optimization.pdf",
+   "blank": 0.904,
+   "note": "봤다(xref 150). (a) 3 µm LPS · (c) 1.5 µm LPS × f_CAM 60 · 70 · 80 wt%(NMC 5 µm) · 방전 곡선이 불투명 이름표 상자 윗변(≈1.40 V)에서 끝난다 — Fig. 5a(상자 없음)도 같은 ≈1.40 V 라 가림이 아니라 컷오프로 읽음 (b) 모형 155.2 · 153.4 · 74.5 ↔ 실험 151.6 · 137.6 · 78.5 (d) 모형 ≈155 · ≈155 · 111.0 ↔ 실험 152.5 · 154.1 · 96.1. ⚠ 60 · 80 wt% 네 곡선은 Fig. 5 의 같은 셀(`[도표]` 3.0 · 2.5 · 2.0 V 용량이 ≤1 mAh g⁻¹ 안에서 일치) — 서로 다른 조건은 모두 10 개 · 조건당 셀 1. (d) 가로축 이름표 'f_CAM (%)'(b 는 wt%). 잘림 0."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Figure 7. a) CAM volume loading in cathode composite as a function of fCAM. The shaded area represents the experimentally reported porosities for SSB cathode composites (between 0.1 and 0.2).[29] b) θCAM as a function of both λ and CAM volume loading.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    64.9,
+    552.3,
+    251.9
+   ],
+   "w": 2127,
+   "h": 780,
+   "dpi": 300,
+   "src": "60f0083f-39._High_active_material_loading_in_all_solid_state_battery_electrode_via_particle_size_optimization.pdf",
+   "blank": 0.739,
+   "note": "봤다(xref 156). (a) CAM 부피 적재 vs f_CAM(Φ = 0 · 0.1 · 0.2) — `[재현]` 표 1 밀도(4.85 · 1.87) + CNF 5 wt% 밀도 ≈1.52 g cm⁻³(미인쇄 · 맞춤) 로 세 곡선 전부 RMS 0.15 vol% 재현 · 80 wt% → 59.3 · 53.4 · 47.5 vol% (b) '부피 적재' θ 지도 — ⚠⚠ **세로축 윗눈금이 '80'(등간격이면 90) · 지도는 Fig. 3c 와 모든 λ · 수준에서 ≈1.7–2.4 단위만 아래로 밀린 같은 지도** — (a) 의 환산(80 wt% → 47–59 vol%)도 DEM 두 상 부피분율(80 wt% → 67.3 vol%)도 적용되지 않았다(D3). 본문 'converting the data from wt% to vol%. An example of this is shown in Figure 7b' 와 어긋남. 잘림 0."
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. a) Size distributions of three types of particles. The dashed red lines represent the theoretically designed distributions, and the solid blue lines represent the real distribution after filling these particles into a cubic box of 30-𝜇𝑚 length. b) Active cathode ratios of four composite models with mass ratio of AM:SE=80:15 as a function of cubic length. Models CAM-5𝜇𝑚/SE-1.5𝜇𝑚 and CAM-5𝜇𝑚/SE-3𝜇𝑚 share the cubic length of the first horizontal axis, and models CAM-12𝜇𝑚/SE-5𝜇𝑚 and CAM-12𝜇𝑚/SE- 8𝜇𝑚 share the cubic length of the second horizontal axis.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    282.4
+   ],
+   "w": 2012,
+   "h": 902,
+   "dpi": 300,
+   "src": "01aec276-39._Sup_High_active_material_loading_in_all_solid_state_battery_electrode_via_particle_size_optimization.pdf",
+   "blank": 0.887,
+   "note": "봤다(SI xref 70 — RGBA · 소프트 마스크를 흰 바탕에 합성해 판독). (a) 30 µm 상자에 채운 세 분포의 설계(빨강 점선) ↔ 실제(파랑) — 큰 분포일수록 어긋남 · 가로축 눈금 이름표 간격이 로그(5→10 ≈ 10→20)인데 왼쪽 끝 이름표 '0'(D18) (b) 80:15 네 모형의 활성 비 vs 상자 길이 11 점 — ⚠ 세로축 이름표 'f_CAM (%)'(캡션은 'Active cathode ratios' — D4) · `[도표]` 수렴값 CAM-5/SE-1.5 68.8 % · CAM-5/SE-3 48.7 % · CAM-12/SE-5 59.6 % · CAM-12/SE-8 45.9 %(±1–2 %p) · 점선 = L ≈50 µm(CAM-5) / 120 µm(CAM-12) = **평균 CAM 지름의 10 배**(표 S2 최대 지름의 5 배 — D5) · 가로축 눈금 없음(이름표 중심으로 교정). 잘림 0."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 6,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Active CAM ratio (𝜃𝐶𝐴𝑀) as a function of average particle size ratio of CAM to SE (λ). Two sets of data with different CAM sizes (5 and 12 µm) were calculated. The same results were obtained for the same λ, indicating that the utilization is controlled by λ rather than by the absolute particle sizes. The CAM loading was fixed at 60 wt%.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    322.2
+   ],
+   "w": 2012,
+   "h": 1068,
+   "dpi": 300,
+   "src": "01aec276-39._Sup_High_active_material_loading_in_all_solid_state_battery_electrode_via_particle_size_optimization.pdf",
+   "blank": 0.97,
+   "note": "봤다(SI xref 76). θ vs λ, CAM 5 · 12 µm, 캡션 '60 wt%': `[도표]` 5 µm λ 0.40 · 0.625 · 1.0 · 1.67 → 0.39 · 0.60 · 0.80 · 1.00 · 12 µm 0.42 · 0.625 · 1.0 · 1.67 · 3.33 → 0.36 · 0.56 · 0.78 · 0.98 · 0.99 — 같은 λ 에서 차 ≤0.04(비만의 함수). ⚠ 본문은 이 그림을 Fig. 3b(70 wt%)의 12 µm 판으로 인용하는데 값은 60 wt%(Fig. 5b 모형 0.56 · 0.83)와 맞고 3b(0.44 · 0.66)와 다르다(D2). 12 µm 계열의 SE 크기(3.6–28.8 µm)는 표 S2 에 없다. 잘림 0."
+  },
+  {
+   "key": "tS1m",
+   "kind": "table",
+   "label": "S1(인쇄 'Table 1')",
+   "page": 3,
+   "file": "tab_S1_manual_si_p3.png",
+   "caption": "Table 1. Simulation parameters used in the Hertzian contact model",
+   "rotated_deg": 0,
+   "bbox": [
+    150,
+    503,
+    470,
+    668
+   ],
+   "dpi": 300,
+   "src": "01aec276-39._Sup_High_active_material_loading_in_all_solid_state_battery_electrode_via_particle_size_optimization.pdf",
+   "manual": true,
+   "note": "수동 크롭(SI 3 쪽 · 300 dpi 렌더 · 벡터 표). ⚠ 자동 추출기는 이 표를 'tS1 p3 거의 백지(1.000)' 로 버렸다(오탐 — 표는 벡터 선 + 텍스트). SI 가 이 표를 **'Table 1'** 로 인쇄한다 — 'Table S1' 표기가 없는 이유(파일 누락 아님 · D8). 봤다: E 18.5(SE [1] McGrogan 2017) · 177.5 GPa(AM [2] de Vasconcelos 2016) · ν 0.3 · 0.3 · ρ 1.87([3] PAULING FILE) · 4.85 g cm⁻³([2]) · γ_t 50 · 25 GPa([4] Zhang · Makse 2005) · σ_y 2([1]) · 12.6 GPa([2]). 마찰계수 · k_n · k_t · γ_n 값은 표에 없다.",
+   "w": 1334,
+   "h": 689
+  },
+  {
+   "key": "tS2m",
+   "kind": "table",
+   "label": "S2",
+   "page": 4,
+   "file": "tab_S2_manual_si_p4.png",
+   "caption": "Table S2. Detailed parameters for the statistic distribution of each particle sizes.",
+   "rotated_deg": 0,
+   "bbox": [
+    86,
+    316,
+    528,
+    470
+   ],
+   "dpi": 300,
+   "src": "01aec276-39._Sup_High_active_material_loading_in_all_solid_state_battery_electrode_via_particle_size_optimization.pdf",
+   "manual": true,
+   "note": "수동 크롭(SI 4 쪽). ⚠ 자동 추출기가 캡션을 못 잡았다(누락 — 캡션 글자가 표 셀 블록과 합쳐짐). 봤다: 로그정규 · CAM 5(σ 1.6 · 3.0–10.0) · 12(3.5 · 5.0–25.0) · SE 1.5(0.5 · 0.8–3.0) · 3(1.0 · 2.0–6.0) · 5(1.5 · 3.2–10.0) · 8 µm(2.0 · 5.8–13.0) — 여섯 분포뿐(Fig. 3b 의 SE 12 · 15 µm · S2 의 12 µm 계열 SE · Fig. 3c λ 격자의 분포는 없다 · G5). `[재현]` 절단 평균 5.12 · 11.96 · 1.51 · 3.16 · 5.16 · 8.26 µm · Sauter 비 λ_d32 = 명목 λ 의 0.96–1.06 배.",
+   "w": 1842,
+   "h": 643
+  },
+  {
+   "key": "tS3m",
+   "kind": "table",
+   "label": "S3",
+   "page": 7,
+   "file": "tab_S3_manual_si_p7.png",
+   "caption": "Table S3. Detailed wet-ball-milling conditions used to obtain various sized LPS particles and their ionic conductivities.",
+   "rotated_deg": 0,
+   "bbox": [
+    64,
+    102,
+    548,
+    416
+   ],
+   "dpi": 300,
+   "src": "01aec276-39._Sup_High_active_material_loading_in_all_solid_state_battery_electrode_via_particle_size_optimization.pdf",
+   "manual": true,
+   "note": "수동 크롭(SI 7 쪽 · 캡션 네 줄 포함). ⚠ 자동 추출기가 'tS3 p7 거의 백지(1.000)' 로 버렸다(오탐). 봤다: LPS 8 µm(SPEX 8000M · 볼 5 mm · 1060 cycles/min · heptane · 0.5 h · 0.32 mS cm⁻¹) · 5(SPEX · 3 mm · 1.5 h · 0.24) · 3(Retsch PM200 · 3 + 1 mm · 300 rpm · heptane + dibutyl ether · 15 h · 0.22) · 1.5 µm(PM200 · 1 mm · 40 h · 0.14) · In 차단 전극 임피던스. 본문 'PM200 · heptane + dibutyl ether' · '볼 1–10 mm' 와 부분 어긋남(8 · 5 µm 는 SPEX · heptane 만 · 볼 최대 5 mm — D9).",
+   "w": 2018,
+   "h": 1309
+  },
+  {
+   "key": "eqS1m",
+   "kind": "equation",
+   "label": "S1 식",
+   "page": 3,
+   "file": "eq_S1_manual_si_p3.png",
+   "caption": "SI Section 1 — Hertzian contact force equation",
+   "rotated_deg": 0,
+   "bbox": [
+    110,
+    168,
+    500,
+    216
+   ],
+   "dpi": 300,
+   "src": "01aec276-39._Sup_High_active_material_loading_in_all_solid_state_battery_electrode_via_particle_size_optimization.pdf",
+   "manual": true,
+   "note": "수동 크롭(SI 3 쪽 식 — 그림 아님, D7 근거로 보관). 봤다: F_ij = √δ √(R_iR_j/(R_i+R_j)) [(k_n δ n_ij − γ_n (v·n_ij) n_ij) + (k_t δ t_ij − γ_t (v·t_ij) t_ij)] — 접선항에 법선 겹침 δ 를 씀(접선 변위가 아님) · 본문 정의 δ = d − (R_i + R_j) 는 겹칠 때 음수(부호 오기) — D7.",
+   "w": 1626,
+   "h": 200
+  }
+ ]
+}

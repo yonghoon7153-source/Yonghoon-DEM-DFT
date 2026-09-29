@@ -131,7 +131,7 @@
   ]
  },
  "davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing": {
-  "figures": 25,
+  "figures": 28,
   "generated": "2026-09-28",
   "pdfs": [
    "38. Rate Limitations in Composite Solid-State Battery Electrodes Revealing Heterogeneity with Operando Microscopy.pdf",
@@ -565,6 +565,14 @@
   "pdfs": [
    "shi2020_main.pdf",
    "shi2020_SI.pdf"
+  ]
+ },
+ "shi2020_particle-size-ratio-cathode-utilization-assb": {
+  "figures": 9,
+  "generated": "2026-09-29",
+  "pdfs": [
+   "60f0083f-39._High_active_material_loading_in_all_solid_state_battery_electrode_via_particle_size_optimization.pdf",
+   "01aec276-39._Sup_High_active_material_loading_in_all_solid_state_battery_electrode_via_particle_size_optimization.pdf"
   ]
  },
  "sinzig2024_p2d-validity-ssb-global-sensitivity": {
