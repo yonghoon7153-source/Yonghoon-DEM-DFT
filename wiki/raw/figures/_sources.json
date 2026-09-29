@@ -72,7 +72,7 @@
   ]
  },
  "buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance": {
-  "figures": 11,
+  "figures": 14,
   "generated": "2026-09-29",
   "pdfs": [
    "da6ac009-40._Aging_Analysis_of_GraphiteLiNi13Mn13Co13O2_Cells_Using_XRD_PGAA_and_AC_Impedance.pdf"
@@ -323,6 +323,14 @@
   "generated": "2026-09-04",
   "pdfs": [
    "55c52065-Estimation_Error_Bound_of_Battery_Electrode_Parameters_With_Limited_Data_Window.pdf"
+  ]
+ },
+ "li2020_synchrotron-operando-depth-profiling-soc-gradients-thick-nmc811": {
+  "figures": 14,
+  "generated": "2026-09-29",
+  "pdfs": [
+   "08ae88a5-41._Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
+   "c755d6e4-41._Sup1_Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf"
   ]
  },
  "li2024_assb-composite-cathode-model-contact-area-edl": {

@@ -1,0 +1,369 @@
+{
+ "slug": "li2020_synchrotron-operando-depth-profiling-soc-gradients-thick-nmc811",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-29",
+ "sources": [
+  "08ae88a5-41._Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
+  "c755d6e4-41._Sup1_Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Evolution of a- and c-lattice parameters during an operando scan at z = +189 microns (relative to the center of the ﬁlm) that exclusively probed the front of the NMC811 electrode. (b) Voltage proﬁle during cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    515.3,
+    306.5,
+    713.2
+   ],
+   "w": 1051,
+   "h": 825,
+   "dpi": 300,
+   "src": "08ae88a5-41._Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
+   "blank": 0.943,
+   "note": "봤다(벡터 — 3 쪽 경로 좌표 판독). (a) z = +189 µm(앞 — 분리막 쪽 끝 주사) a(빨강 ●) · c(짙은 빨강 ●) vs 시간 · 점 235 개(6 분 간격 — 범례 표지 하나 제외) (b) 전압 2.8–4.4 V. `[도표]` 원형 a 2.8735 · c 14.2042 · V 101.57 Å³ · c 최대 14.445(7.2 h · ≈4.04 V) · a 최소 2.8160(9.7 h) → 4.4 V 정전압 중 2.8195 로 증가(본문 '비단조' ✓) · V 최소 94.34(12.1 h — ΔV/V −7.12 %) · 방전 c 최대 14.417(충전보다 0.028 낮음 ✓) · 끝(23.4 h) a 2.8748 · c 14.2287 · V 101.84(원형 +0.27 Å³ — 원형 ASOC 0.12 의 근거 · D9). 시작 0–0.3 h 개회로 3.31 V(C/10 셀의 유일한 개회로). S8 교정 곡선을 이 자료 + 표 S1 로 재구성했다(원형 0.126). 자동 크롭 여백 과대(내용 온전) · 잘림 0."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Depth-dependent evolution of (a) c-lattice parameter, (b) a-lattice parameter, and (c) cell volume during electrochemical cycling at C/10 with (d) the recorded voltage proﬁle. Data from four scans probing the front layers of the cathode closest to the separator (z = +189, +169, +149, and +129 microns) are shown in red→orange, while data from four scans probing the back layers of the electrode closest to the current collector (z = −191, −171, −151, and −131 microns) are shown in purple→blue.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    335.4
+   ],
+   "w": 1051,
+   "h": 1135,
+   "dpi": 300,
+   "src": "08ae88a5-41._Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
+   "blank": 0.919,
+   "note": "봤다(벡터 판독). (a) c (b) a (c) V (d) 전압 — 앞 넷(+189 · +169 · +149 · +129 빨강→노랑) · 뒤 넷(−131 · −151 · −171 · −191 파랑→보라). `[도표]` 앞 넷은 선 두께 안으로 겹침 · 충전 끝(11.9 h) V 앞 94.39–94.41 · −131 98.77 · −151 99.32 · −171 100.32 · −191 100.67 Å³(ΔV/V 앞 −7.1 % ↔ −191 −0.9 %) · −191 은 c 붕괴 0. 방전 전환 뒤 −191 V 100.65 → 100.15(14.4 h) · a 2.842 → 2.831(계속 탈리튬) · −171 V 100.31 → 99.60(13.0 h). ⚠ −131 은 V 가 12.2 h 부터 오르는데 a 는 2.831 → 2.824 로 준다(두 상 가중평균의 채널 불일치 — D16). ⚠ (c) 판의 −171 곡선만 색 (0, 0.24, 1) — 범례 · 다른 판 (0.42, 0, 1)(D12). 곡선은 베지어 끝점 선형 보간(가파른 구간 ±0.3 Å³). 자동 크롭 여백 과대 · 잘림 0."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Evolution of ASOC during operando studies of an NMC811 cathode compared for four scans at the front of the cathode (purple→blue) and four scans at the back of the cathode (red→ orange), plotted with (b) the voltage proﬁle during cycling. Dashed and solid lines indicate the end of the CC and CV stages during cycling, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    242.5
+   ],
+   "w": 1052,
+   "h": 748,
+   "dpi": 300,
+   "src": "08ae88a5-41._Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
+   "blank": 0.911,
+   "note": "봤다(래스터 708 × 697 · 색조 분류 판독 — 1 px = 0.039 h · 0.0024 ASOC). ASOC(위 0 · 아래 1) 0–≈23.0 h(Fig. 1 · 2 는 23.4 h — D23) · 초록 세로 화살표 ≈6 h · 가로 화살표(역전) · 점선 9.6 h(CC 충전 끝) · 실선 ≈12.0 h(정전압 끝) · 점선 20.7 h(CC 방전 끝). `[도표]` 6.0 h 앞 0.63–0.65 ↔ −191 0.415 · 11.9 h −131 0.72 · −151 0.68 · −171 0.63 · −191 0.52 · 역전 뒤 최대 −131 0.87(13.0 h) · −151 0.86 · −171 0.84 · −191 0.72(13.9 h) · 2.8 V 유지 중 뒤층 −0.09 … −0.15 h⁻¹ · 22.9 h 앞 0.008–0.05 ↔ 뒤 0.18–0.22. ⚠ 캡션 색 서술이 범례와 반대(D4) · ⚠ 두 상 조각 −131 · −151 이 Fig. 2c 부피를 S8 곡선에 넣은 값(0.92 · 0.88)과 11.9 h 에 0.20 다르다(단상 −191 · 경계 −171 은 ≤0.02 — D16) · 마지막 6 h 뒤층 변화 +0.10 … +0.16 ↔ 본문 '<10%'(D11). 자동 크롭 여백 과대 · 잘림 0."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Evolution of the depth-dependent ASOC during operando studies of an NMC811 cathode during fast cycling. (b) Comparison of the accessible SOC (ASOC) calculated from diﬀraction and the electrochemical SOC (ESOC) calculated from a potentiostat, which was linearly rescaled and oﬀset to match the ASOC scale. (c) Voltage proﬁle during cycling of the NMC811 ﬁlm.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    320.4
+   ],
+   "w": 1052,
+   "h": 1072,
+   "dpi": 300,
+   "src": "08ae88a5-41._Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
+   "blank": 0.883,
+   "note": "봤다(래스터 1547 × 2043 · 색조 판독 — 판마다 자기 축). (a) 17 높이(+166 … −154 · 범례 색조 33.8° → 306.8°) ASOC (b) +26 ASOC(청록) ↔ ESOC(검정 점선 — '선형 재척도 · 오프셋') (c) 전압. `[도표]` 1.1 h 앞 0.81 ↔ 뒤 0.21(차 0.6 ✓) · −154(앞층 충전 끝 시각) 0.21 → 0.59(15.5 h — +0.46 · 포화 없음) · 13.6 h 주기 최대 시각 +166 13.61 → −154 14.18 h(방전 시작 13.70 — 뒤층 0–0.5 h 계속 충전 · 저자 서술 0) · (b) 단계별 ΔASOC ↔ 표 S2 용량 → 1 ASOC ≈197–271(중앙 246) mAh g⁻¹(교정 정의 189.7 — 재척도 ≈0.77) · 드리프트 +0.39(→ 14.58 h) ↔ 첫 여덟 사이클 알짜 95.3 mAh g⁻¹ 가 같은 척도로 맞는다. ⚠ (c) 7.28 → 7.59 h 전압이 2.8 → ≈3.7 V 직선(표 S2 · 본문에 없는 ≈0.3 h 무전류 구간 — 그동안 ASOC 전 높이 ±0.006 · 구배 ≈0.05 — D14) · ⚠ 세 판의 시간축 원점 · 눈금이 다르다(0 h = 202 · 198.5 · 231 px — D13) · 표 S2 보다 사이클 6–9 단계 0.02–0.06 h 길다(D14). 자동 크롭 여백 과대 · 잘림 0."
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Photograph (a) and schematic representations (b-d) of experiment, approximately to scale. (a) Photo of experiment at 11-ID-B. The Teflon sample holder was held in place with an insulating C-clamp with threaded screws used to make contact to stainless steel rods inside the sample holder that directly contact the battery cell. (b) Schematic of in situ sample assembly showing entrance direction of the beam (blue arrow) and location of battery cell stack within the Teflon housing. (c) Components of the battery cell stack and their position relative to the experiment coordinate axes. (d) Zoomed view of the cathode layer, showing the 41 positions of the X-ray beam in each vertical (+z) scan, where each box shows the dimensions of the x-ray beam cross-section (20 x 250 µm) relative to the cathode size. The origin of the axes is at the center of the cathode disc, and this origin is us",
+   "rotated_deg": 0,
+   "bbox": [
+    48.7,
+    56.7,
+    566.3,
+    583.3
+   ],
+   "w": 2158,
+   "h": 2195,
+   "dpi": 300,
+   "src": "c755d6e4-41._Sup1_Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
+   "blank": 0.581,
+   "note": "봤다(JPEG 사진 + 도식). (a) 11-ID-B 에 나란히 놓인 C 클램프 셀 셋 (b) C 클램프 50 mm · Teflon 홀더 · 빔 +x (c) 적층 — Li 음극 · 유리 분리막 · NMC 양극 · Al 집전체 · '5 mm' · z 위 = 분리막 쪽 (d) 41 주사 위치(20 × 250 µm 상자) · 양극 '170 µm'. ⚠ (c) 5 mm · (d) 170 µm ↔ SI 글 4.75 mm · 172 µm(D1 · D2) · 셋째 셀의 결과는 지면에 없다(G5). 자동 크롭 양호('a)' 라벨은 캡션 텍스트 뒤에 따로 인쇄)."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Schematic illustration of depth profiling experiment. Data were collected on a cylindrical battery stack in which the beam height (20 microns) was small relative to the height of the cathode (172 microns) and the anode (250 microns). During experiments, the sample was translated vertically with a 20 microns step size so that the beam would probe different heights within the cathode film, with a series of consecutive patterns for regions of the cell shown here in a waterfall plot. As a result, diffraction patterns from the cathode (indicated with red dashed lines) could be collected free of signals from the anode, with only partial overlap from the signal from the stainless steel pills (iron peaks marked with black arrows). A signal from the Teflon cell housing (green) was seen at all heights.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.7,
+    180.0,
+    566.3,
+    431.6
+   ],
+   "w": 2157,
+   "h": 1049,
+   "dpi": 300,
+   "src": "c755d6e4-41._Sup1_Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
+   "blank": 0.807,
+   "note": "봤다(래스터 1209 × 611). 높이별 패턴 폭포(분리막 · 양극 · 집전체) 2θ 1–12° · NMC(빨강 점선) · Fe(검정 화살표 ≈5.85 · 6.75 · 9.55 · 11.1 · 11.6°) · Teflon(초록 ≈2.45°) · 분리막 쪽 ≈3° 넓은 산란 · 인셋: 빔이 음극 · 양극 사이를 수평으로 · 2D 패턴. Teflon 봉우리가 NMC (003)(≈2.51–2.56°) 바로 옆. 자동 크롭 양호."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Extra broadening of diffraction peaks on the 2D area detector due to the extended length of the sample along the path of the beam. Ideally, a point sample at a distance D from the 2D area detector that is normal to the beam path produces a diffraction spot that is measured at a radius R from the spot where the beam intersects the detector. If the sample is extended along the beam path away from the detector to have a finite pathlength of L along the beam, diffraction will occur at the same angle 2θ from both the front and back of the sample (dashed lines) as well as all points in between. The measured reflection on the detector will therefore also be extended by a width W, which will be approximately equal to L sin 2θ at low angles where the approximate relationship sin(2θ) ≈ 2θ holds when the diffraction angle is specified in radians. For a pathlength of 5 mm, the extra peak ",
+   "rotated_deg": 0,
+   "bbox": [
+    48.7,
+    45.4,
+    587.1,
+    311.0
+   ],
+   "w": 2244,
+   "h": 1107,
+   "dpi": 300,
+   "src": "c755d6e4-41._Sup1_Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
+   "blank": 0.974,
+   "note": "봤다(벡터 + 수식 조각 PNG 13). 빔 방향 시편 길이 L 에 따른 검출기 위 폭 W ≈ L sin 2θ · 식 (1) − (2). `[재현]` 5 mm × sin 1° = 0.087 mm · × sin 12° = 1.04 mm ✓ 인쇄값. 자동 크롭 양호."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Comparison of 11-BM and 11 ID-B diffraction experimental diffraction data collected for the same NMC811 sample under different conditions, specifically in a 1.1 mm diameter capillary on the point detector of the high-resolution 11-BM diffractometer (green), in a 1.1 mm diameter on the 2D area detector of the 11-ID-B beamline (blue), and in a 5 mm cathode disc in the operando depth profiling cell before the start of electrochemical cycling using the 2D area detector of the 11-ID-B beamline (red). Note that the operando data contains extra diffraction peaks from the Teflon holder (Q ~ 1.4 Å-1) and the stainless steel pills (Q ~ 3.0, 3.5, and 4.9 Å-1), where Q = 2π/d. The plotted range spans diffraction angles of approximately 2θ = 2° to 2θ = 11° on 11-ID-B. The extended sample length in the operando cell causes negligible extra broadening of the lowest angle peak and increases t",
+   "rotated_deg": 0,
+   "bbox": [
+    48.7,
+    30.0,
+    566.3,
+    355.6
+   ],
+   "w": 2158,
+   "h": 1357,
+   "dpi": 300,
+   "src": "c755d6e4-41._Sup1_Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
+   "blank": 0.904,
+   "note": "봤다(JPEG 1436 × 959). 같은 NMC811 — 11-BM 모세관(초록) · 11-ID-B 모세관(파랑) · operando 셀 원형(빨강) vs q. 인셋: (003) q ≈1.33 — 셀에 Teflon 어깨(q ≈1.28 = d 4.90 Å) · (108)/(110) q ≈4.35/4.37 쌍이 셀에서 거의 안 갈린다 · (113) 4.57. 셀 여분 봉우리 q ≈3.03 · 3.5 · 4.9(Fe). 캡션 '≈25 %'(모세관 대비) ↔ SI 글 '11-BM 대비 ≈2 배'(비교 대상이 달라 모순 아님). 자동 크롭 양호."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Influence of tilt misalignment on depth-profiling diffraction data, with the aspect ratio and tilt of the sample (grey rectangle) drawn approximately to scale. The tilt of the sample during experiments was estimated to be about 2.9° for the sample cycled at C/10 and 2.4° for the sample cycled at C/3 (fits shown in Figure S6). Due to the aspect ratio of this sample (172 microns thick, 4750 microns wide), this misalignment results in an X-ray beam passing through the sample center (green) interrogating all heights of the sample. However, when the beam is translated ~150 microns above (red) or below (violet), it is still possible to exclusively probe the top (front) or bottom (back) of the cathode film. The beam passes through a significantly reduced volume when it is moved away from the sample center, resulting in a reduced intensity away from the center position (Figure S6).",
+   "rotated_deg": 0,
+   "bbox": [
+    48.7,
+    78.0,
+    566.3,
+    141.5
+   ],
+   "w": 2157,
+   "h": 265,
+   "dpi": 300,
+   "src": "c755d6e4-41._Sup1_Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
+   "blank": 0.482,
+   "note": "봤다(벡터). 기울어진 시편(회색 · 대략 축척) · 빔 다섯(빨강 · 주황 · 초록 = 중심 · 파랑 · 보라). 위 · 아래 끝 빔은 서로 반대쪽 가장자리의 앞면 · 뒷면만 지난다(`[해석]` — 앞 ↔ 뒤 대조에 측면 위치가 섞인다) · 중심 빔은 전 깊이. 자동 크롭 양호(높이 265 px 는 도식 크기)."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Variation in intensity of NMC diffraction peaks (determined from the scale factor for this phase in Rietveld refinements) as a function of the z-position of the incident beam relative to the sample center for the NMC film. It can be seen that NMC peaks are visible over a range of about 400 microns that is substantially larger than the width of the sample (172 microns) for the reasons discussed in Figure S5. In general, the intensity profile should be trapezoidal. However, the aspect ratio of the C/3 sample coincidentally was such that the width of the top line of the trapezoid was very nearly zero, resulting in a triangular shape. It is expected that the rounding of the experimental sample response is mostly due to the tails of the beam intensity profile (as the experimental intensity profile of the 20 micron beam is not a perfect hat function), though sample shape effects (e.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.7,
+    328.2,
+    566.3,
+    522.8
+   ],
+   "w": 2157,
+   "h": 812,
+   "dpi": 300,
+   "src": "c755d6e4-41._Sup1_Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
+   "blank": 0.921,
+   "note": "봤다(래스터 1038 × 381 · 픽셀 판독). NMC scale(상대 세기) vs z · 실험(×) · 모의(빨강 사다리꼴). `[재현]` C/10 판 바닥 ±205–207 · 윗변 ±31–33 µm ↔ t/2 + R tanα · R tanα − t/2(t 172 · R 2375 µm · 2.9°) = ±206.3 · ±34.3 ✓ / C/3 판 바닥 ±185 · 윗변 ±12 ↔ 2.4° ±185.5 · ±13.5 ✓. ⚠ 범례는 C/10 판 '2.4° tilt' · C/3 판 '2.9° tilt' — SI 글 · 본문과 반대(D5). 두 판 가로축 범위 · 눈금 간격이 다르다(0.668 ↔ 0.71 px µm⁻¹). C/10 실험점 꼬리 −270 · +230(빔 꼬리 — 인쇄). 자동 크롭 양호."
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Representative Rietveld refinement of diffraction patterns (λ = 0.2113 Å) collected near the separator (top plot, z = +189 microns) and the current collector (bottom plot, z = –71 microns) for the pristine sample in the operando cell before cycling. Only the most intense peak from Teflon was modeled in refinements as the rest of the Teflon peaks were typically negligible in intensity relative to the sample peaks. The top pattern has an unusually low intensity associated with the NMC peaks due to the geometric reasons discussed in Figure S5.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.7,
+    30.0,
+    566.3,
+    584.6
+   ],
+   "w": 2157,
+   "h": 2311,
+   "dpi": 300,
+   "src": "c755d6e4-41._Sup1_Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
+   "blank": 0.939,
+   "note": "봤다(JPEG 1215 × 1659). 원형(순환 전) 정련 둘: 위 z = +189 '분리막 근처'(NMC 세기 낮음 · ≈3° 넓은 산란 · Teflon 가장 센 봉우리만 모형 → 5.0 · 5.55° 차분 잔차) · 아래 z = −71 '집전체 근처'(Fe 봉우리 셋 겹침). `[해석]` 기울기 기하로 −71(C/10)은 앞면에서 37–172 µm — '집전체 근처' 는 느슨(D20) · 어느 셀 원형인지 · 정련 지표 인쇄 0. 자동 크롭 양호."
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Left: Plot of calibration data used to interpolate the NMC accessible state of charge (ASOC) from the unit cell volume. This curve was generated using the unit cell data collected for the frontmost layer of the NMC cathode together with the overall cell state of charge (SOC) recorded on the potentiostat controlling the cycling in the slowly charged (C/10) cell during the first discharge cycle carried out without any previous formation cycles. This unit cell volume data corresponds to the red curve on the right plot, which is shown plotted against specific capacity (rather than time) in the plot on the right.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.7,
+    30.0,
+    566.3,
+    202.0
+   ],
+   "w": 2158,
+   "h": 717,
+   "dpi": 300,
+   "src": "c755d6e4-41._Sup1_Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
+   "blank": 0.927,
+   "note": "봤다(왼쪽 JPEG 728 × 490 · 오른쪽 PNG 558 × 356). 왼쪽: 교정 곡선 V(94.5–101.8 Å³) vs 전위차계 ASOC(1 → 0) · 이름표 'Discharge ASOC vs. cell volume change of the topmost layer' · 오른쪽: C/10 8 높이 V vs 통과 전하 0–3.6 mAh. `[재현]` Fig. 1 벡터 + 표 S1 로 왼쪽 곡선을 다시 만들었다 — ASOC 0.9 ↔ 99.05–99.2 · 0.6 ↔ 100.45 · 0.2 ↔ 101.43 · 0 ↔ 101.84 · 원형 101.57 ↔ 0.126(인쇄 0.12) · ΔV 의 64 % 가 방전 첫 10.7 %(본문 '선형 부피 변화' 와 다르다 — D10). 오른쪽 충전 끝(1.91 mAh) 앞 ≈94.4 ↔ 뒤 98.7–100.7 · −191 최소 ≈100.1 @≈2.2 mAh. 자동 크롭 양호."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1. Speciﬁc Capacity Charge (Electrochemical) at C/3",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    43.7,
+    602.7,
+    792.0
+   ],
+   "w": 2190,
+   "h": 2994,
+   "dpi": 288,
+   "src": "08ae88a5-41._Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
+   "blank": 0.856,
+   "note": "봤다 — ⚠ 자동 크롭이 5 쪽 전체(그림 4 · 본문 두 단 포함 — 과대 영역). 표 1 내용은 온전 → 수동 크롭 tab_1_manual_p5.png 를 더했다(자동 파일은 지우지 않았다)."
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 10,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Time and observed capacity for each step of C/3 cycling # of C/3 State Time (hrs) Capacity (mAh) Specific Cap. (mAhg-1) 1 Charge 1.15 0.6885 76.79 1 Discharge 0.62 0.3723 41.53 2 Charge 0.87 0.5200 58.00 2 Discharge 0.76 0.4532 50.54 3 Charge 0.91 0.5431 60.57 3 Discharge 0.81 0.4838 53.96 4 Charge 0.80 0.4758 53.07 4 Discharge 0.65 0.3862 43.07 5 Charge 0.69 0.4100 45.73 5 Hold 0.10 0.0353 3.94 5 Discharge 0.65 0.3859 43.04 5 Hold 0.10 0.0402 4.49 6 Charge 0.81 0.4842 54.00 6 Hold 0.10 0.0372 4.15 6 Discharge 0.62 0.3702 41.29 6 Hold 0.10 0.0413 4.61 7 Charge 0.80 0.4756 53.04 7 Hold 0.10 0.0383 4.28 7 Discharge 0.62 0.3705 41.32 7 Hold 0.10 0.0414 4.61 8 Charge 0.86 0.5146 57.39 8 Hold 0.10 0.0383 4.27 8 Discharge 0.70 0.4184 46.66 8 Hold 0.10 0.0429 4.78 9 Charge 0.80 0.4799 53.52 9 Hold 0.10 0.0394 4.40 9 Discharge 0.68 0.4046 45.13 9 Hold 0.10 0.0422 4.70",
+   "rotated_deg": 0,
+   "bbox": [
+    49.7,
+    212.1,
+    490.8,
+    696.6
+   ],
+   "w": 1838,
+   "h": 2020,
+   "dpi": 300,
+   "src": "c755d6e4-41._Sup1_Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
+   "blank": 0.944,
+   "note": "봤다. 표 S2(C/3 사이클 1–9 단계별 시간 · mAh · mAh g⁻¹ · 사이클 5–9 는 0.10 h Hold 행). 텍스트 층과 같다. `[재현]` mAh ÷ mAh g⁻¹ = 8.966 mg(C/10 셀 8.969 — 같은 질량) · 시간 × 0.598 mA = mAh ✓ · 알짜 과잉 합 103.4 mAh g⁻¹. 1C 세 사이클은 표에 없다(G6). 같은 쪽 표 S1 은 자동 누락 → 수동 tab_S1_manual_p10.png. 자동 크롭 양호."
+  },
+  {
+   "key": "tS1m",
+   "kind": "table",
+   "label": "S1",
+   "page": 10,
+   "file": "tab_S1_manual_p10.png",
+   "caption": "Table S1. Time and observed capacity for each step of C/10 cycling",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    36,
+    495,
+    202
+   ],
+   "dpi": 300,
+   "src": "c755d6e4-41._Sup1_Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
+   "manual": true,
+   "note": "수동 크롭(SI 10 쪽 위 · 300 dpi) — 자동 추출기는 같은 쪽의 표 S2 만 잡고 표 S1 은 '영역 없음' 으로 뺐다(누락). 봤다: 충전 4.4 V 까지 9.38 h 1.6833 mAh 187.68 · 4.4 V 유지 2.50 h 0.2306 · 25.71 · 충전 합 11.88 h 1.9138 · 213.39 · 방전 2.8 V 까지 8.88 h 1.5918 · 177.48 · 2.8 V 유지 2.50 h 0.1094 · 12.19 · 방전 합 11.38 h 1.7012 · 189.68 mAh g⁻¹ — 텍스트 층과 일치. `[재현]` mAh ÷ mAh g⁻¹ = 8.969 mg · 0.1793 mA × 9.38 h = 1.682 mAh ✓ · × 8.88 h = 1.592 ✓ · 첫 사이클 CE 88.9 % · S8 교정 곡선 재구성의 전하 입력.",
+   "w": 1876,
+   "h": 692
+  },
+  {
+   "key": "t1m",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1_manual_p5.png",
+   "caption": "Table 1. Specific Capacity Charge (Electrochemical) at C/3",
+   "rotated_deg": 0,
+   "bbox": [
+    55,
+    383,
+    306,
+    547
+   ],
+   "dpi": 300,
+   "src": "08ae88a5-41._Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
+   "manual": true,
+   "note": "수동 크롭(본문 5 쪽 왼단 · 300 dpi) — 자동 t1 이 쪽 전체를 잡아(과대 영역) 표만 따로 잘랐다. 봤다: C/3 사이클 1–9 충전 · 방전 · excess(5–9 는 6 분 정전압 포함 — 각주 a). ⚠ 사이클 1 excess '25' ↔ 77 − 42 = 35(표 S2 76.79 − 41.53 = 35.26 — D6) · 사이클 3 · 8 은 반올림 값의 차(6 ↔ 6.61 · 11 ↔ 10.22). 값은 텍스트 층과 같다.",
+   "w": 1046,
+   "h": 685
+  },
+  {
+   "key": "tocm",
+   "kind": "figure",
+   "label": "TOC",
+   "page": 1,
+   "file": "toc_manual_p1.png",
+   "caption": "(초록 그래픽 — 캡션 없음) Accessible SOC vs Time (hrs), Current collector → Separator",
+   "rotated_deg": 0,
+   "bbox": [
+    406,
+    257,
+    568,
+    347
+   ],
+   "dpi": 300,
+   "src": "08ae88a5-41._Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
+   "manual": true,
+   "note": "수동 크롭(본문 1 쪽 초록 그래픽 · 300 dpi — 캡션이 없어 자동 대상 아님). 봤다: 'Accessible SOC' 0.0(위)–1.0(아래) vs 시간 0–16 h · 범례 없음 · 'Current collector'(위) → 'Separator'(아래) 점선 화살표 — Fig. 4a 와 같은 곡선(주황 = 분리막 쪽 · 자홍 = 집전체 쪽). 1 쪽의 다른 이미지(xref 52 — 학술지 호 표지 2020-08-11 · 32 권 15 호)는 크롭하지 않았다.",
+   "w": 676,
+   "h": 376
+  }
+ ]
+}

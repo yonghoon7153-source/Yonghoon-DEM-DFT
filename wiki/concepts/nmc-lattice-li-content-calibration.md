@@ -5,7 +5,7 @@ created: 2026-09-28
 updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance.md, raw/papers/park2021_fictitious-phase-separation-electro-autocatalysis-layered-oxides.md, raw/papers/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade.md, raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md]
+sources: [raw/papers/li2020_synchrotron-operando-depth-profiling-soc-gradients-thick-nmc811.md, raw/papers/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance.md, raw/papers/park2021_fictitious-phase-separation-electro-autocatalysis-layered-oxides.md, raw/papers/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade.md, raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -59,8 +59,9 @@ evidenceScope: multi-source-primary
 | **72호** Ishidzu 2016 *SSI* 288, 176 | NCM111(격자 곡선) + 조성 여섯(`ΔV` 한 값씩) · 자작 Be 창 셀 · Li · 1 M LiPF₆ EC:DMC 3:7 v/v · Cu Kα · 0.05 C · 2.5–4.5 V · 온도 미기재 · **KIT · BASF 연구망 밖(Univ. of Hyogo)** | **인쇄 0**(축 정의 · 계수 · 정규화 · 사이클 번호 — 가로축 이름표가 식 "Li1-x MO2") · 그림 모양 = 원형 x 0 → 충전 끝 0.755 → 방전 끝 0.109(69호형 · 결손 이월) | `a` · `c` · `V`(in situ 정련 방법 미기재 · 오차 0) | 그림만(벡터 — 좌표로 판독) · 본문 수치 0 | `V = (√3/2)a²c` 재현(● −0.015 ± 0.002 Å³ · ○ `a` 0.001 Å 반올림) · 부피 판에만 있는 점 넷 · `c` 최대 Li ≈0.41 · 원형 `V` 101.24 Å³(66 · 69호 NCM111 100.50–100.53) · 4.5 V `ΔV/V` 가 66호 같은 조성보다 +0.4…+1.0 %p |
 | **74호** Park 2021 *Nat. Mater.* 20, 991 | NMC111 판 · 응집체 · 파우치 LIB(Li · LP-40 · Be 판 가압) · SSRL 12.7 keV · 둘째 사이클 C/15 · C/2 · 2.24C/4C · operando (003) 한 봉우리 · **Stanford · MIT 연구망(KIT · BASF 밖)** | **둘째 사이클 · 방전 끝 정전압(2 / 2.5 V) 뒤 = 1.00 · 이론 278 mAh g⁻¹ · 전하 계수**(형성 C/20 · SOC 50 %까지) · 출발을 회절로 ±0.02 확인(캡션) | (003) `Q` 하나 — 선형 기준선(Li 0.5–1.0) · `a` · `V` 0 | 그림만(벡터 — 좌표로 판독) · 기준선 계수 인쇄 0 | `[도표]` `Q₀₀₃ = 1.27839 + 0.04461·Li`(리튬화 가지 적합) · **72호 점 = 72호 `c` 를 Li = 1 − x 로 옮긴 것**(세 점 ≤0.004 Å) · 한 그림 안 출처 넷의 폭 ≈0.04–0.05(Li 0.9–0.96) → ≈0.17(Li 0.6) · `[데이터]` 충전 가지 XRD 평균 − 전하 −0.07 … +0.02 · 첫 스캔 1.012–1.022(캡션 c 0.96 ✗) |
 | **78호** Buchberger 2015 *JES* 162, A2737 | NMC111 · 자작 in situ 반쪽(**Li 금속** · LP57 · Al 창) · 비단색 Mo Kα 반사 · 0.1C · 3.0–4.3 V · 실온 · **첫 두 사이클** · 노화 읽기는 ex situ 투과 Kα1(흑연/NMC111 풀셀 해체 양극) · **TUM(Gasteiger) · MLZ — KIT · BASF 밖** | **신품 Li1.00(공칭 · 인쇄) · 통과 전하 ÷ 278 · 결손 이월**(첫 방전 끝 0.084 — 69호형을 **인쇄로**) · 읽기 쪽 기준 0.084(0.1 C) · 0.109(1 C 보정 — 도출 미인쇄) | c/a 하나 — 선형 x 0–0.5 | **식 하나**(`c/a = 0.3552 x + 4.9722` · R² 0.9952 — 그림 이름표 'R') + 그림 | = 24호 식(역함수) · `[재현]` 판독 31 점 풀링 0.368x + 4.965(R² 0.984) — 인쇄는 첫 충전 쪽 적합과 가깝다 · 둘째 충전 = 첫 충전 + 0.025…0.040(같은 c/a) · **원형 다섯(in situ 셋 · ex situ 둘)이 전부 절편 위 → Li 0.975–0.998** · c 최대 x ≈0.59(Li ≈0.41) · 기하 이송 원형 대조 0(캡션 ↔ 본문 x 0.022 차) |
+| **79호** Li Z. 2020 *Chem. Mater.* 32, 6358 | NMC811(Ecopro) · 액체 Li 반쪽 · 두꺼운 캐스트 필름 170–172 µm(≈50 mg cm⁻²) · APS 11-ID-B 0.2113 Å 투과 · 방사형 깊이 주사(41 × 20 µm) · 첫 사이클 C/10 CC-CV 2.8–4.4 V · **Stony Brook · BNL(Khalifah) — KIT · BASF 밖** | **일곱째 — x 가 아닌 자기 교정(ASOC)**: 같은 셀 맨 앞 층의 첫 방전 부피 ↔ 셀 방전 전하 · 0 = 2.8 V 유지 끝 · 1 = 4.4 V 유지 끝 · 원형 0.12 · 기준 층 = 셀 평균 가정 | `V` 하나(단조) — `a` 비단조 · `c` 꼭짓점 ≈4.04 V | 그림만(S8 곡선 — 식 · 점 표 0) | `[재현]` Fig. 1 벡터 + 표 S1 로 S8 재구성 · 원형 0.126 · ΔV 의 64 % 가 방전 첫 10.7 % · 66 · 69호 NCM811 대비 가파른 부분 ×1.9–3.0(기준 층 앞섬 쪽) · 두 상 조각은 평균 순서로 0.20 차(79호 D16) · C/3 척도 ≈0.77 |
 
-⚠ 3차 묶음 파일 29(Kondrakov 2017 *JPCC* 121, 24381 — 66호 [19])는 **67호로**, 31(Kondrakov 2017 *JPCC* 121, 3286 — 66호 [15] · 67호 [5], 첫 사이클 격자 지연 · 교정 절차 · 파우치 사양의 위임처)은 **69호로 흡수**했다(아래 67 · 69호 절). 34(Ishidzu 2016 *SSI* 288, 176 — 23호 ref 48 · 66호 [13] · 67호 [4] · 69호 [17])는 **72호로 흡수**했다(아래 72호 절). 40(Buchberger 2015 — 24호 교정 원전)은 **78호로 흡수**했다(아래 78호 절). 36(Park 2021 *Nat. Mater.* — 24호 ref 51 · 교정 원전 지목은 아님)은 **74호로 흡수**했다 — SI Fig. S16 의 기준선과 72호 점(아래 74호 절).
+⚠ 3차 묶음 파일 29(Kondrakov 2017 *JPCC* 121, 24381 — 66호 [19])는 **67호로**, 31(Kondrakov 2017 *JPCC* 121, 3286 — 66호 [15] · 67호 [5], 첫 사이클 격자 지연 · 교정 절차 · 파우치 사양의 위임처)은 **69호로 흡수**했다(아래 67 · 69호 절). 34(Ishidzu 2016 *SSI* 288, 176 — 23호 ref 48 · 66호 [13] · 67호 [4] · 69호 [17])는 **72호로 흡수**했다(아래 72호 절). 40(Buchberger 2015 — 24호 교정 원전)은 **78호로 흡수**했다(아래 78호 절). 36(Park 2021 *Nat. Mater.* — 24호 ref 51 · 교정 원전 지목은 아님)은 **74호로 흡수**했다 — SI Fig. S16 의 기준선과 72호 점(아래 74호 절). 41(Li Z. 2020 *Chem. Mater.* — 24호 ref 34 · '깊이 프로파일 · 가중평균의 선례' 지목 — 교정 원전 지목은 아님)은 **79호로 흡수**했다(아래 79호 절 — x 가 아닌 자기 교정).
 
 ## 67호 절 (2026-09-28) — 같은 연구망 세 규약 · 규약 항 ↔ 시편 항
 
@@ -159,6 +160,18 @@ evidenceScope: multi-source-primary
    기준 두 개(0.084 ↔ 0.109)가 LLI 를 7.0 mAh g⁻¹ 옮기고(표 I ↔ 표 III), 경미 셀(용량 손실 7)의 LLI 가 정의에 따라 −2 … +16 mAh g⁻¹ 로 벌어진다(78호 `[재현]` · `[해석]`).
 7. ★ **`c` 최대 · 격자 부피** — `[도표]` NMC111 `c` 최대 x ≈0.59(Li ≈0.41) — 72호 ≈0.41 과 같고 66호 0.45 · 69호 0.53 과 다르다 · 원형 `V` 100.87 Å³(in situ) · 4.3 V(x 0.64–0.65 · CV 없음) `ΔV/V` −0.45 … −0.63 % ↔ 69호 −1.16 %(4.3 V + 1 h).
 
+## 79호 절 (2026-09-29) — 일곱째: x 가 아닌 자기 교정 눈금 · 기준 층 = 셀 평균 가정 · 비선형 `V(x)` 와 두 상 평균 순서
+
+> 79호 = Li Z. · Yin · Mattei · … · Khalifah 2020 *Chem. Mater.* 32, 6358(3차 묶음 파일 41 · 24호 ref 34 · SI ref 14 — "두꺼운 NMC811(액체) 깊이 프로파일 · 가중평균의 선례" 로 지목 · 교정 원전 지목은 아님) — 액체 Li/NMC811 두꺼운 캐스트 필름(170–172 µm) · APS 11-ID-B 방사형 operando 깊이 회절 · 첫 사이클 C/10 CC-CV · Stony Brook · BNL(KIT · BASF 밖).
+> 원자료는 PDF 벡터(Fig. 1 · 2) · 래스터 판독(`[도표]`)과 표 S1 이고, 교정 곡선(S8)은 그림 한 장이다.
+
+1. ★★★ **x 가 아닌 눈금 — 일곱째 교정 형태.** `[인쇄]`(79호) "Instead of calculating the true SOC … we have instead calculated the relative quantity of an accessible state of charge (ASOC)" — 같은 두꺼운 셀 **맨 앞 층의 첫 방전 부피 ↔ 셀 방전 전하**를 보간(S8) · 0 = 첫 방전 2.8 V 유지 끝 · 1 = 첫 충전 4.4 V 유지 끝 · 원형 = 0.12. 얇은 기준 셀 · Li 함량 · 출발 조성 · 결손 규약 칸이 **없다** — 정의표의 δ₀ · 결손 배정 줄 대신 "기준 층 · 0 점" 줄이 필요한 형태(`[해석]`).
+2. ★★★ **기준 층 = 셀 평균 가정 — 같은 편이 반증한다.** 교정은 앞층 부피를 셀 전체 전하에 짝지었는데, 방전 첫 1–2 h 에 뒤층이 계속 충전했다(79호 전류 역전). `[재현]` Fig. 1 벡터 + 표 S1 로 S8 을 다시 만들면 원형 **0.126**(인쇄 0.12) · **ΔV 의 64 % 가 방전 첫 10.7 %** — 가파른 부분 −73 Å³ per δ(1 ASOC = 189.7 mAh g⁻¹ = 0.689 δ)가 66호 NCM811 최대 계단(−24 … −30)의 ×2.4–3.0 · 셀 전압 4.04 V 위 ΔV 68 % 를 셀 전하 25.4 mAh g⁻¹ 로 지남(69호 ≈47 — ×≈1.9) ⇒ 기준 층이 평균보다 앞서 방전한 몫이 교정에 들어갔다는 쪽(`[해석]` — 연구실 · 가지 · 상한 전압이 달라 크기 미정).
+3. ★★★ **비선형 `V(x)` 에서는 두 상 평균 순서가 값을 정한다.** 두 상 조각은 첫 충전 끝 고정 scale 비의 가중평균 · `[재현]` Fig. 2c 가중 부피를 S8 에 넣으면 −131 · −151 이 11.9 h 에 0.92 · 0.88 ↔ Fig. 3 0.72 · 0.68(단상 −191 · 경계 −171 ≤0.02) · 앞 같은 상 31 % + 뒤 같은 상 69 % 예시가 0.92 ↔ 0.67 을 재현 — **상별로 먼저 SOC 로 옮기고 무게 분율로 평균**해야 한다(22호 처리). NMC111 선형 c/a(78호)에서는 이 차가 작다 — 함정 5(조성 특이)의 새 모양.
+4. ★★ **NMC811 단조 채널은 `V` 하나.** `[도표]` c 최대 ≈4.04 V(C/10 충전 · 셀 평균 Li ≈0.50 — 66호 0.45 · 67호 0.555 · 69호 0.465 · 전압은 넷 다 ≈4.0 V) · a 는 4.4 V 정전압에서 2.8160 → 2.8195 로 되오른다 · 원형 V 101.57 Å³(66호 101.12 · 69호 101.27 보다 +0.30 … +0.45 — 로트 · 연구실) · 첫 충전 끝 앞층 ΔV/V −7.1 % ↔ 뒷면 −0.9 %(깊이 층위).
+5. ★★ **0 점이 원형이 아니다.** 첫 방전 끝(2.8 V 유지) 앞층 부피가 원형보다 +0.27 Å³ 크다(저자 "irreversible structural changes" — 인쇄 문장은 방향이 뒤집혔다, 79호 D9) — "읽기 쪽 기준" 이 눈금 정의 안에 박힌 형태(78호 절 6 과 짝).
+6. ★ **척도 이송.** C/3 셀 +26 에서 1 ASOC ≈197–271(중앙 246) mAh g⁻¹(`[재현]`) ↔ 정의 189.7 — 다른 셀 · 다른 율 · 두 상 조각으로 옮기면 척도가 ≈0.77 로 움직였다(저자는 ESOC 를 재척도 · 오프셋해 맞췄다 — 계수 미인쇄).
+
 ## 이 위키에서의 적용
 
 - **카드 [[assb-contact-loss-vs-lampe]] Q1 · Q2** — 구조 채널을 "`θ` 의 측정" 으로 셀 때 상 분율(교정 비의존)과 `x_active`(교정 의존)를 따로 적고, 교정 규약(δ₀ · 사이클 · 결손 배정 · 교정 셀 θ_ref)을 값 옆에 적는다.
@@ -189,6 +202,8 @@ evidenceScope: multi-source-primary
 - **(78호) 원전 식이 어느 점 집합의 적합인지 확정하지 않는다** — 판독 풀링이 인쇄 계수를 재현하지 않고 첫 충전 쪽 적합이 가깝다는 것(가려진 두 점을 이웃 값으로 둔 `[해석]` · 판독 폭 ±0.001–0.003)까지다.
 - **(78호) 24호 >1.0 의 원인을 한 인자에 배정하지 않는다** — 교정식 절편이 아니라 측정 · 시편 쪽이라는 것(원형 c/a 비교)까지다. 24호 원형 격자는 인쇄 0 이고 24호 값은 digest 전사다.
 - **(78호) 결손의 '동역학' 배정을 다른 조성 · ASSB 로 옮기지 않는다** — NMC111 액체 반쪽 한 셀(정전압 30 h)의 격자 복귀까지이고, 전하 계정은 결손을 넘친다. 66호 규약이 틀렸다고도 하지 않는다 — 두 연구실이 같은 결손을 다른 칸에 둔다는 것까지.
+- **(79호) ASOC 를 Li 함량으로 옮기지 않는다** — 저자가 x 를 세지 않았고, 교정 정의(1 ASOC = 첫 방전 189.7 mAh g⁻¹)로 옮긴 Δx 는 비교용 `[해석]` 이다(기준 층 앞섬 · 척도 ≈0.77 이송이 걸린다).
+- **(79호) 기준 층 앞섬의 크기를 정하지 않는다** — 66 · 69호 NCM811 과의 기울기 대조(×1.9–3.0)는 연구실 · 로트 · 가지 · 상한 전압 · 율 분극이 다른 교차 대조다. 두 상 평균 순서의 0.20 은 79호 그림 둘(Fig. 2c ↔ 3)의 `[재현]` 이고 Fig. 3 의 계산 절차는 미인쇄다.
 
 ## 관련
 - [[assb-contact-loss-vs-lampe]] — 닻. Q1 · Q2 의 구조 채널 항목.
