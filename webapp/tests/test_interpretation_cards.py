@@ -770,21 +770,38 @@ def test_site_decision_is_ratified_by_a_human():
         f"사람(scientific_owner) 비준이 없다: {rat.get('state')!r}/{rat.get('role')!r}"
 
 
+_IDENTITY_DECISION = "D-2026-09-28-cei-li-ledger-identity"
+
+
 def test_slope_mechanism_stays_forbidden_on_both_surfaces(client):
     """⛔음성 — **풀리지 않은 것**이 풀린 것처럼 보이면 잡는다.
 
-    자리 판정은 해제됐지만 '전압 기울기를 Li 수로 설명한다' 는 사후 적합이라
+    자리 판정은 해제됐지만, 전압 기울기를 '예측으로 검증된 기전' 이나 'Nd 화학의 효과' 로 쓰는 것은
     여전히 금지다. 해제가 통째로 번지는 것이 제일 흔한 사고다.
+    2026-09-29 개정 — 1저자가 항등식 결정(D-2026-09-28-cei-li-ledger-identity)을 비준했다 ('권고하는걸로 해줘'):
+    기울기 = 방출 Li 는 계산 방식의 항등식이라 '검증 전' 딱지를 걷고 '항등식' 으로 적는다. 사전등록 예측의
+    실패 기록(부호가 틀렸다)은 남긴다. 두 화면(보고서 · Nd 카드)이 같은 상태를 말해야 한다 — 한쪽만 고치면 잡는다.
+    잡는 것: 비준 전인데 '항등식' 으로 적기 · 옛 '검증 전' 딱지가 기울기 설명에 남기 · 09-19 직선 계수(β) 인용 ·
+      'Nd 화학의 효과로 읽지 않는다' 금지가 빠지기.
     """
     import json as _json
     rec = _json.loads(SITE_RESULT.read_text(encoding="utf-8"))
     assert any("기울기" in x and "⛔" in x for x in rec["금지_서술"]), \
         "원장 금지 목록에 기울기 항목이 없다 — 시험이 헛것을 재고 있다"
+    ds = {d["id"]: d for d in _json.loads(DECISIONS.read_text(encoding="utf-8"))["decisions"]}
+    dec = ds.get(_IDENTITY_DECISION) or {}
+    assert dec.get("decision_state") == "active" and (dec.get("ratification") or {}).get("state") == "ratified", \
+        "항등식 결정이 비준되지 않았는데 화면이 '항등식' 으로 적는다"
     h = _report_html(client)
-    assert "부호가 틀렸고" in h, "보고서가 예측 실패를 안 싣는다"
-    assert "검증 전" in h, "보고서가 '아직 검증 전' 한정을 안 싣는다"
     blob = json.dumps(V.interpretation_cards_for(ND), ensure_ascii=False)
-    assert "검증 전" in blob, "Nd 카드가 '아직 검증 전' 한정을 안 싣는다"
+    assert "부호가 틀렸고" in h, "보고서가 사전등록 예측의 실패 기록을 안 싣는다"
+    for name, text in (("보고서", h), ("Nd 카드", blob)):
+        assert "항등식" in text, f"{name}: 기울기 = 방출 Li 를 항등식으로 적지 않았다"
+        assert "Nd 화학" in text, f"{name}: 기울기를 Nd 화학의 효과로 읽지 말라는 금지가 없다"
+        assert "2.0051" not in text, f"{name}: 09-19 직선의 계수(β)를 싣는다 — 물리 계수가 아니다"
+        stale = [m.start() for m in re.finditer("검증 전", text)
+                 if re.search("기울기|Li 장부|dΦ/dV|방출 Li", text[max(0, m.start() - 200): m.start() + 60])]
+        assert not stale, f"{name}: 기울기 설명에 옛 '검증 전' 딱지가 남았다 ({len(stale)} 곳)"
 
 
 # ── 2026-09-21 쇄신 — 층 가르기 · Fig 번호 · Fig. 1 3패널 · §6 10/10 · §9 개수 · §0 onset ────

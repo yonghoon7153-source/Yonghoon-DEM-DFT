@@ -223,13 +223,19 @@
     ],
     "결정": "D-2026-09-28-cei-li-ledger-identity"
   },
-  "status": "proposed",
+  "status": "ratified",
   "status_history": [
     {
       "at": "2026-09-28",
       "state": "proposed",
       "by": "agent",
       "note": "유도·수치 확인은 끝났다(수학). 허용/금지 서술 변경(§6·§7)과 09-19 '검증 전' 딱지 교체는 1저자 비준 뒤 화면·원장에 반영한다."
+    },
+    {
+      "at": "2026-09-29",
+      "state": "ratified",
+      "by": "1저자(사용자)",
+      "note": "사용자 09-29: '권고하는걸로 해줘' — 에이전트 권고(비준)대로. 결정 D-2026-09-28-cei-li-ledger-identity active. 화면(cei_figs/index.html 머리 카드 · §0b 상자 · §1 상자 · 방법 상자 · §9)과 Nd 카드의 '검증 전' 딱지를 '항등식(유도·확인)' 으로 교체 · 결속 시험 갱신."
     }
   ]
 }
