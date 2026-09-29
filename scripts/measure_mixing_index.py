@@ -258,6 +258,34 @@ def provenance_block(run_dir, ref_dir, args, used, ref_used):
                          frames=frame_bundle(ref_used)))
 
 
+def bin_of(step, t0, steps_per_rev):
+    """판독기의 bin 식 (analyse 의 _bin 과 같다) — ⌊(s − t₀)/바퀴 step + 1e-9⌋."""
+    return int(np.floor((step - t0) / steps_per_rev + 1e-9))
+
+
+def bin_window_files(post_dir, t0, steps_per_rev, dump_every, steps_total, bins):
+    """그 bin 들의 **계획 덤프 격자** 와 지금 폴더의 파일 (판독기 파일 규칙 = measure_bed_aspect.frames) 을 맞춘다 (2026-09-30 · piece 3 · 4).
+    → dict(lattice={step}, cur={step: [경로…]} (창 안 파일), dup=[step], off=[step] (창 안 격자 밖), miss=[step] (격자에 없음)).
+    관문 (scripts/mixer_stage_gate.py rest-gate · mixer_smoke_blind 중간 판정의 사전조건) 이 **판독기와 같은 식** 으로 입력 집합을 다시 연다
+    (Codex 5 차 HBR5-02 — 증서 목록 안 파일만 다시 해시하면 같은 step 복제 · 격자 밖 추가를 못 본다)."""
+    want = {int(b_) for b_ in bins}
+    lat = {s_ for s_ in range(int(t0), int(steps_total) + 1, int(dump_every)) if bin_of(s_, t0, steps_per_rev) in want}
+    cur = {}
+    for st, p_ in frames(post_dir) if os.path.isdir(post_dir) else []:
+        if st >= t0 and bin_of(st, t0, steps_per_rev) in want:
+            cur.setdefault(st, []).append(p_)
+    return dict(lattice=lat, cur=cur, dup=sorted(s_ for s_, ps in cur.items() if len(ps) > 1),
+                off=sorted(set(cur) - lat), miss=sorted(lat - set(cur)))
+
+
+def e0_t0_stats(ref_dir, r_container, cells=8, x_cells=2, n_min=20, axis='x'):
+    """E0 기준의 **계획 t₀** 프레임 통계 → (t₀ step, 경로, cell_stats) — analyse 가 S_R² 를 재는 바로 그 경로 (계획 t₀ 정확히 · 대체 금지).
+    E0 진단 (강성 축 §4-c "S_R² 변화 ≤ 1 % (상대)") 이 판독기와 **같은 식** 으로 S_R² 를 잰다 (2026-09-30 · piece 1)."""
+    rplan = deck_plan(os.path.join(ref_dir, 'in.mixer'))
+    rst0, rp = _t0_exact(frames(os.path.join(ref_dir, 'post')), rplan, ref_dir, 'E0 기준')
+    return rst0, rp, cell_stats(read_dump(rp), r_container, cells, x_cells, n_min, axis)
+
+
 def analyse(run_dir, ref_dir, r_container, cells=8, x_cells=2, n_min=20, axis='x'):
     deck = os.path.join(run_dir, 'in.mixer')
     plan = deck_plan(deck)
@@ -270,11 +298,8 @@ def analyse(run_dir, ref_dir, r_container, cells=8, x_cells=2, n_min=20, axis='x
     st0, p0 = _t0_exact(fr, plan, run_dir, '평가 런')
     c0 = cell_stats(read_dump(p0), r_container, **kw)
     s0, n0 = c0['s2'], c0['used']
-    #  무작위 기준 — 균일 삽입 런의 **같은 위치**(그 덱의 계획 정착 끝) 프레임 · 같은 규칙
-    rplan = deck_plan(os.path.join(ref_dir, 'in.mixer'))
-    rfr = frames(os.path.join(ref_dir, 'post'))
-    rst0, rp = _t0_exact(rfr, rplan, ref_dir, 'E0 기준')
-    cR = cell_stats(read_dump(rp), r_container, **kw)
+    #  무작위 기준 — 균일 삽입 런의 **같은 위치**(그 덱의 계획 정착 끝) 프레임 · 같은 규칙 (e0_t0_stats — E0 진단과 같은 경로)
+    rst0, rp, cR = e0_t0_stats(ref_dir, r_container, **kw)
     sR, nR = cR['s2'], cR['used']
     if not (s0 > sR):
         raise SystemExit(f'⛔ S₀² ({s0:.4g}) ≤ S_R² ({sR:.4g}) — 층상 시작이 아니거나 기준이 틀렸다.  '
@@ -291,7 +316,7 @@ def analyse(run_dir, ref_dir, r_container, cells=8, x_cells=2, n_min=20, axis='x
     lat = set(range(st0, plan['steps_total'] + 1, de))
 
     def _bin(s_):
-        return int(np.floor((s_ - st0) / spr + 1e-9))
+        return bin_of(s_, st0, spr)                      # 같은 식 (bin_of — 관문 · 중간 판정이 같은 함수를 쓴다)
     by_step = {}
     for st, pth in fr:
         if st >= st0:
@@ -788,6 +813,41 @@ def _selftest():                                              # noqa: C901
         chk('㉔ ★ HBR3-05 · 06: t₀ 프레임이 검사를 못 넘으면 (평가 런 머리 없음 · E0 소수 type) 없는 것처럼 거부한다',
             _refuses(lambda: analyse(run, ref, **_an), 't₀', 'step 200')
             and _refuses(lambda: analyse(run_nom, ref_b, **_an), 't₀', 'step 200', 'E0'))
+
+    # ══ ㉘ ㉙ 2026-09-30 — 강성 축 코드 선행조건 2 단계 piece 1: bin 창 파일 열거 (관문 공용) · E0 t₀ 통계 (E0 진단) ═══════════
+    #    ★ 반례를 먼저 옮겼다 — 옛 판: bin_window_files · e0_t0_stats 없음 (NameError) ⇒ 전부 FAIL.
+    def _okm(fn):
+        try:
+            return bool(fn())
+        except Exception as e_:                                       # noqa: BLE001
+            print(f'        ({type(e_).__name__}: {str(e_)[:100]})')
+            return False
+    with tempfile.TemporaryDirectory() as td:
+        ref = _case(td, 'ref_i', []); write_dump(os.path.join(ref, 'post', 'mix_200.liggghts'), _cloud('ref_p'))
+        #  DECK3: 정착 끝 t₀ 200 · 간격 40 · 바퀴 1000.01 step ⇒ bin 3 = step 3240 … 4200 (25 프레임)
+        run4 = _case(td, 'r4', range(101))                         # 200 … 4200 = bin 0–3 완전 · bin 4 이후 아직 안 돔
+        def _t28():
+            post = os.path.join(run4, 'post')
+            w3 = bin_window_files(post, 200, 1000.01, 40, 8201, (3,))
+            w0 = bin_window_files(post, 200, 1000.01, 40, 8201, (0,))
+            a_ = analyse(run4, ref, **_an)
+            ok0 = (w3['lattice'] == {s_ for s_ in range(200, 8201, 40) if bin_of(s_, 200, 1000.01) == 3} and not (w3['dup'] or w3['off'] or w3['miss'])
+                   and len(w0['lattice']) == a_['lattice']['expected_by_bin'][0] and len(w3['lattice']) == a_['lattice']['expected_by_bin'][3])
+            __import__('shutil').copyfile(os.path.join(post, 'mix_3600.liggghts'), os.path.join(post, 'copy_3600.liggghts'))
+            write_dump(os.path.join(post, 'mix_3610.liggghts'), _cloud('mid'))
+            os.remove(os.path.join(post, 'mix_4000.liggghts'))
+            w3b = bin_window_files(post, 200, 1000.01, 40, 8201, (3,))
+            return ok0 and w3b['dup'] == [3600] and w3b['off'] == [3610] and w3b['miss'] == [4000]
+        chk('㉘ bin_window_files = 판독기 계획 격자 (bin 0 · 3 의 수가 analyse 의 expected_by_bin 과 같다) · 중복 (copy_3600) · 격자 밖 (3610) · 결손 (4000) 을 '
+            '그대로 낸다 (관문 · 중간 판정 사전조건이 판독기와 같은 식을 쓴다)', _okm(_t28))
+
+        run2 = _case(td, 'r2', range(76))                          # bin 2 까지만 (3200)
+
+        def _t29():
+            st_, p_, cs_ = e0_t0_stats(ref, **_an)
+            a_ = analyse(run2, ref, **_an)
+            return st_ == 200 and os.path.basename(p_) == 'mix_200.liggghts' and cs_['s2'] == a_['SR'] and bin_of(3240, 200, 1000.01) == 3
+        chk('㉙ e0_t0_stats = analyse 가 S_R² 를 재는 바로 그 경로 (계획 t₀ 200 · 같은 S_R²) — E0 진단 (§4-c) 이 판독기와 같은 식으로 잰다', _okm(_t29))
 
     #  ㉕ planned_t0 — 실제 캠페인 덱 생성기 (make_mixer_deck) 로 만든 LC 8 바퀴 · E0 (`--revolutions 0`) 덱 (2026-09-28 실측값 고정).
     #     생성기를 못 불러오면 이름으로 보고하고 건너뛴다 (⑪ 과 같은 규약).

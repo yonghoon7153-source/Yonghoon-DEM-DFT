@@ -11,6 +11,8 @@
 #     로그 없음 (아직 안 돈 런) → run_all.sh 소관이라 건너뜀 · 그 밖 = 죽은 런 → 잇는다.
 #   ★ 로그는 `>> log.lmp` 로 **이어 붙인다** (watch.sh 그대로 쓴다) · LIGGGHTS 자체 로그는 log.resume.liggghts.
 #   ★ 재개 덱이 `read_restart` 직후 `RESUME_STEP <n>` 을 찍는다 — 영수증 (resume_receipt.json) 의 checkpoint_step 과 같아야 한다.
+#   ⛔ 2026-09-30 — 강성 축 셀 · NP 프로브는 잇지 않는다 (사전등록 mixer_highbo_stiffness_prereg_20260929 §8-1 "재개 없음 (fresh)" · §8-4 실패는
+#     같은 seed **새 폴더** 한 번 재실행).  이어 붙이면 판정 도구 (정지 벽 계약 · 영수증) 가 재개 흔적으로 거부한다 — 그 전에 여기서 막는다.
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"; ROOT="$(cd "$HERE/../.." && pwd)"
 OUT="${OUT:-$HERE/runs}"
@@ -84,6 +86,7 @@ for d in "$OUT"/*_s*/; do
   d="${d%/}"; nm=$(basename "$d")
   [ -f "$d/in.mixer" ] || continue
   case "$nm" in *_old_*) continue;; esac
+  if [[ "$nm" =~ ^(npprobe[1-9][0-9]*_)?(E0|LC|LH)_(soft|ref|ref2)(_dthalf)?(_r[1-9][0-9]*)?_s[1-9][0-9]*$ ]]; then echo "· 강성 축 셀 — 재개 없음 (fresh 전용 · §8-1) — 건너뜀: $nm"; continue; fi
   [ -n "${ONLY:-}" ] && [ "$nm" != "$ONLY" ] && continue
   if [ -f "$d/pid" ] && kill -0 "$(cat "$d/pid")" 2>/dev/null; then echo "· 실행 중 — 건너뜀: $nm"; continue; fi
   [ -f "$d/log.lmp" ] || { echo "· 로그 없음 (아직 안 돈 런 — run_all.sh 소관): $nm"; continue; }

@@ -3,6 +3,7 @@
 #   사고 ① 완주했는데 배너가 없는 런을 "죽음" 으로 읽고 재발사 → 로그·덤프 소실 (E0_s49979687)
 #   사고 ② 실행 중인 런의 덱을 제자리 덮어쓰기 → EOF 자리에서 새 파일 바이트를 명령으로 읽음 (E0_s32452843)
 #   + 2026-09-28 (Codex 3차 HBR3-08) 발사 순서 — LH 첫 시드 하나 → bin 0 스모크 증서 → 나머지 둘 (HL①–⑦)
+#   + 2026-09-30 강성 축 새 단계 (DV · CF · CR — dev-e0 · dev-rot · confirm-first · confirm-rest · 시작 직전 관문 · 디스크 · run_all/resume 가드)
 #   사용: bash dem_scripts/mixer_20260921/test_launcher.sh      (check_all.sh 에 배선)
 set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"; ROOT="$(cd "$HERE/../.." && pwd)"
@@ -624,5 +625,243 @@ echo 555 > "$W/$LH1/jobid"; echo 556 > "$W/$LH2/jobid"; echo 555 > "$T/sbw/live"
 wo=$(env PATH="$SBIN:$PATH" SB_DIR="$T/sbw" OUT="$W" bash "$HERE/watch.sh" 2>&1)
 chk 'HW① SLURM 런 — jobid 가 대기열 (squeue) 에 있으면 실행 (pid 가 없다고 ⛔죽음 으로 찍지 않는다)' "grep -E '^$LH1 +실행' <<<\"\$wo\" >/dev/null"
 chk 'HW② jobid 가 대기열에 없고 완주도 아니면 ⛔죽음 (SLURM 판도 죽은 런은 죽었다고 찍는다)' "grep -E '^$LH2 +⛔죽음' <<<\"\$wo\" >/dev/null"
+echo "── 강성 축 새 단계 (2026-09-30 · 사전등록 mixer_highbo_stiffness_prereg_20260929 §8-2 · 코드 2 단계 piece 1 · 5) — DV · CF · CR ──"
+#  ★ 반례를 먼저 옮겼다 — 옛 런처에는 dev-e0 · dev-rot · confirm-first · confirm-rest 가 없다 (usage rc 2) · 정책 v2 를 '모양 아님' 으로 거부 ·
+#    run_all.sh 가 강성 축 셀을 로컬로 띄운다 (LH_* 만 막았다).  가짜 sbatch (--hold 기록) · squeue (-j 상태 조회) · scontrol · df · mpirun.
+SB2="$T/sbin2"; mkdir -p "$SB2"
+cat > "$SB2/sbatch" <<'SH'
+#!/usr/bin/env bash
+n=$(( $(cat "$SB_DIR/n" 2>/dev/null || echo 900) + 1 ))
+if [ -n "${SB_FAIL_AT:-}" ] && [ "$n" -ge "$SB_FAIL_AT" ]; then echo "sbatch: error: fake failure" >&2; exit 1; fi
+echo "$n" > "$SB_DIR/n"
+printf '%s\t%s\t%s\n' "$n" "$PWD" "$*" >> "$SB_DIR/calls"
+cp "${@: -1}" "$SB_DIR/script_$n"
+case " $* " in *" --hold "*) echo "$n|PENDING|JobHeldUser" >> "$SB_DIR/state";; *) echo "$n|PENDING|None" >> "$SB_DIR/state";; esac
+echo "$n"
+SH
+cat > "$SB2/squeue" <<'SH'
+#!/usr/bin/env bash
+ids=""
+while [ $# -gt 0 ]; do case "$1" in -j) ids="$2"; shift 2;; *) shift;; esac; done
+if [ -n "$ids" ]; then
+  IFS=, read -ra A <<< "$ids"
+  for i in "${A[@]}"; do l=$(grep "^$i|" "$SB_DIR/state" 2>/dev/null | tail -1); [ -n "$l" ] && echo "$l"; done
+else
+  cut -d'|' -f1 "$SB_DIR/state" 2>/dev/null | sort -u
+fi
+exit 0
+SH
+cat > "$SB2/scontrol" <<'SH'
+#!/usr/bin/env bash
+echo "scontrol $*" >> "$SB_DIR/scontrol_calls"
+[ "${SC_FAIL:-0}" = 1 ] && { echo "scontrol: error: fake failure" >&2; exit 1; }
+[ "$1" = release ] || exit 0
+IFS=, read -ra A <<< "$2"
+for i in "${A[@]}"; do echo "$i|PENDING|None" >> "$SB_DIR/state"; done
+exit 0
+SH
+cat > "$SB2/df" <<'SH'
+#!/usr/bin/env bash
+echo "Filesystem 1-blocks Used Available Capacity Mounted on"
+echo "fakefs 999999999999999999 0 ${DF_AVAIL:-1000000000000000} 0% /"
+SH
+cp "$SBIN/mpirun" "$SB2/mpirun"; chmod +x "$SB2"/*
+nsb2() { [ -f "$1/calls" ] && wc -l < "$1/calls" || echo 0; }
+nsc() { [ -f "$1/scontrol_calls" ] && wc -l < "$1/scontrol_calls" || echo 0; }
+stg() {  # stg <OUT> <SB_DIR> <단계> [인자] [-- env …] — 새 단계 (SLURM · 가짜 기계) → 출력 $SO
+  local o="$1" sd="$2" st="$3"; shift 3; local args=() envs=()
+  while [ $# -gt 0 ]; do if [ "$1" = -- ]; then shift; envs=("$@"); break; fi; args+=("$1"); shift; done
+  mkdir -p "$sd"
+  SO=$(env PATH="$SB2:$PATH" SB_DIR="$sd" BACKEND=slurm OUT="$o" LMP="$FAKE_MPI" "${envs[@]}" bash "$LHL" "$st" "${args[@]}" 2>&1); return $?
+}
+runr2() {  # runr2 <런 폴더> [env …] — 러너 (시작 대조 → 가짜 mpirun → 가짜 lmp) → rc
+  local d="$1"; shift
+  ( cd "$d" && env HOME="$T/home" PATH="$SB2:$PATH" MPI_LOG="$T/mpi2.log" SLURM_JOB_ID=5151 "$@" bash run_lh.sbatch > "$T/runr2.out" 2>&1 ); return $?
+}
+fx() {  # fx <python 본문> [인자 …] — scripts/mixer_stage_gate.py 의 합성 고정물 (_fx_*) 을 부른다
+  local code="$1"; shift
+  python3 - "$ROOT" "$@" <<PY
+import sys, os, json
+sys.path.insert(0, os.path.join(sys.argv[1], 'scripts'))
+import mixer_stage_gate as sg
+import mixer_deck_diff as dd
+A = sys.argv[2:]
+$code
+PY
+}
+PCF="$T/policy_cf.json"                                                    # 확인 두 단계를 허용하는 시험용 정책 (리포 정책 = dev 까지만)
+python3 - "$HERE/launch_policy.json" "$PCF" <<'PY'
+import json, sys
+p = json.load(open(sys.argv[1], encoding='utf-8'))
+p['allowed_stages'] = p['allowed_stages'] + ['confirm-first', 'confirm-rest']
+p['policy_id'] = 'TEST-confirm-allowed'
+json.dump(p, open(sys.argv[2], 'w'), ensure_ascii=False)
+PY
+
+#  (DV) dev-e0 — 리포 정책 (dev 허용) · 진짜 덱 비교기 · 진짜 관문
+DV="$T/dv"; fx 'for n in list(dd.DEV_E0) + list(dd.DEV_ROT): sg._fx_cell(A[0], n)' "$DV"
+stg "$DV" "$T/sdv" dev-e0; rc_dv1=$?; dv1="$SO"
+chk 'DV① ★ dev-e0: sbatch 정확히 8 — NP 프로브 셋 (npprobe5/10/20 · 같은 덱 · -n 5/10/20 · 1 h) 먼저 + E0 다섯 (-n 20 · 정책 시간) · --hold 없음 · 회전 2 런 · 확인 셀 제출 0' \
+    "[ $rc_dv1 -eq 0 ] && [ \$(nsb2 '$T/sdv') -eq 8 ] && ! grep -q -- '--hold' '$T/sdv/calls' && grep -qx '#SBATCH -n 5' '$DV/npprobe5_E0_ref_s32452843/run_lh.sbatch' && grep -qx '#SBATCH --time=01:00:00' '$DV/npprobe20_E0_ref_s32452843/run_lh.sbatch' && grep -qx '#SBATCH -n 20' '$DV/E0_ref2_s32452843/run_lh.sbatch' && ! [ -e '$DV/LC_ref_r2_s32452843/jobid' ] && cmp -s '$DV/npprobe10_E0_ref_s32452843/in.mixer' '$DV/E0_ref_s32452843/in.mixer'"
+sdv=$(python3 - "$DV" "$ROOT" <<'PY' 2>&1
+import hashlib, json, os, sys
+out, root = sys.argv[1:]
+sys.path.insert(0, os.path.join(root, 'scripts'))
+import mixer_deck_diff as dd
+bad = []
+for n, blk in [(n, 'dev') for n in dd.DEV_E0] + [(n, 'probe') for n in dd.DEV_PROBES]:
+    r = json.load(open(os.path.join(out, n, 'launch_record.json'), encoding='utf-8'))
+    g = r.get('gate_deckdiff') or {}
+    ok = {'stage': r.get('stage') == 'dev-e0', 'block': r.get('block') == blk, 'cell': (r.get('cell') or {}).get('name') == dd.parse_run(n)['name'],
+          'gate': g.get('argv') == ['--runs', os.path.realpath(out), '--cohort', 'dev-e0']
+                  and g.get('expect_deck_sha256') == hashlib.sha256(dd.cell_expected_deck(n).encode()).hexdigest(),
+          'pre': (r.get('stage_gate') or {}).get('preflight', {}).get('sha256') is not None,
+          'policy': (r.get('policy') or {}).get('policy_id', '').startswith('STIFF-'), 'np': (r.get('slurm') or {}).get('np') == (20 if blk == 'dev' else int(n[7:n.index('_')])),
+          'disk': (r.get('disk_estimate') or {}).get('frames') == {'E0_ref_s32452843': 867, 'E0_ref2_s32452843': 1227}.get(n, (r.get('disk_estimate') or {}).get('frames')),
+          'probe': (('probe' in r) == (blk == 'probe')), 'no_legacy': 'cohort' not in r and 'deviation' not in r}
+    bad += [f'{n}:{k}' for k, v in ok.items() if not v]
+print('OK' if not bad else 'NG ' + ' '.join(bad))
+PY
+)
+chk 'DV①b dev-e0 봉인 — stage dev-e0 · block (dev / probe) · cell · 덱 관문 = --cohort dev-e0 · 기대 덱 sha256 (이름에서 재생성) · preflight sha · 새 정책 id · np (프로브 = 5/10/20) · 디스크 추정 (E0_ref 867 · ×28 1,227 프레임) · probe 표지' "[ \"\$sdv\" = OK ]"
+DV2="$T/dv2"; fx 'for n in dd.DEV_E0: sg._fx_cell(A[0], n)
+open(os.path.join(A[0], "E0_ref_s49979687", "in.mixer"), "w").write(dd.cell_expected_deck("E0_ref_s15485863"))' "$DV2"
+stg "$DV2" "$T/sdv2" dev-e0; rc_dv2=$?
+chk 'DV② ★ DEV 폴더에 holdout seed 덱 (E0_ref_s49979687 ← E0_ref_s15485863 덱) → 덱 코호트 관문 거부 · sbatch 0 · 봉인 0' \
+    "[ $rc_dv2 -ne 0 ] && [ \$(nsb2 '$T/sdv2') -eq 0 ] && ! ls '$DV2'/*/launch_record.json >/dev/null 2>&1 && grep -q '덱 코호트 관문 실패' <<<\"\$SO\""
+PDV="$T/policy_dv_bad.json"
+python3 - "$HERE/launch_policy.json" "$PDV" <<'PY'
+import json, sys
+p = json.load(open(sys.argv[1], encoding='utf-8'))
+p['stages']['dev-e0']['runs'] = p['stages']['dev-e0']['runs'] + ['E0_ref_s15485863']
+json.dump(p, open(sys.argv[2], 'w'), ensure_ascii=False)
+PY
+DV3="$T/dv3"; fx 'for n in dd.DEV_E0: sg._fx_cell(A[0], n)' "$DV3"
+stg "$DV3" "$T/sdv3" dev-e0 -- POLICY_FILE="$PDV"; rc_dv3=$?; dv3="$SO"
+stg "$DV3" "$T/sdv3" dev-e0 -- DF_AVAIL=5000000000; rc_dv4=$?; dv4="$SO"
+stg "$DV3" "$T/sdv3" dev-e0 -- SB_TIME=5-00:00:00; rc_dv5=$?; dv5="$SO"
+dv5b=$(env OUT="$DV3" LMP="$FAKE_MPI" bash "$LHL" dev-e0 2>&1); rc_dv5b=$?
+chk 'DV③ ★ 정책의 dev-e0 목록에 holdout seed 셀 → 거부 (정책 인자 불합격) · 디스크 5 GB (필요 ≈ 100 GB × 1.10) → 거부 · SB_TIME 을 주면 거부 · BACKEND=local → 거부 — 넷 다 sbatch 0' \
+    "[ $rc_dv3 -ne 0 ] && grep -q '정책 stages.dev-e0 인자 불합격' <<<\"\$dv3\" && [ $rc_dv4 -ne 0 ] && grep -q '디스크' <<<\"\$dv4\" && [ $rc_dv5 -ne 0 ] && grep -q 'SB_TIME' <<<\"\$dv5\" && [ $rc_dv5b -ne 0 ] && grep -q 'SLURM 판 전용' <<<\"\$dv5b\" && [ \$(nsb2 '$T/sdv3') -eq 0 ]"
+stg "$DV" "$T/sdv" dev-rot; rc_dr0=$?
+stg "$DV" "$T/sdv" dev-rot "$DV/none.json"; rc_dr1=$?; dr1="$SO"
+chk 'DV④ dev-rot: E0 진단 기록 인자 없음 → usage · 없는 기록 → preflight 거부 — sbatch 합계 8 그대로 (회전 0)' \
+    "[ $rc_dr0 -eq 2 ] && [ $rc_dr1 -ne 0 ] && grep -q 'E0 진단 기록' <<<\"\$dr1\" && [ \$(nsb2 '$T/sdv') -eq 8 ]"
+#  E0 다섯을 '돌린다' — 러너 (시작 대조 → 가짜 lmp) 뒤 완주 로그 · t₀ 덤프 (고정물) → 진짜 생산자로 E0 진단 기록 (검사기 · S_R² 대역)
+for n in E0_ref_s32452843 E0_ref_s49979687 E0_ref_s67867967 E0_ref2_s32452843 E0_ref_dthalf_s32452843; do runr2 "$DV/$n" SLURM_NTASKS=20; done
+fx 'for n in dd.DEV_E0: sg._fx_e0_done(A[0], n)
+rc, rec = sg._fx_e0_record(A[0], os.path.join(A[0], "dev_e0_diag.json"))
+print("E0DIAG", rc, rec["verdict"])' "$DV" > "$T/e0diag.out" 2>&1
+stg "$DV" "$T/sdv" dev-rot "$DV/dev_e0_diag.json" -- NP=10; rc_dr2=$?; dr2="$SO"
+chk 'DV⑤ ★ E0 진단 PASS (진짜 생산자) 여도 NP 가 다르면 (10 ≠ 기록 20) dev-rot 거부 — 블록 NP 통일 · sbatch 합계 8' \
+    "grep -q 'E0DIAG 0 PASS' '$T/e0diag.out' && [ $rc_dr2 -ne 0 ] && grep -q 'NP' <<<\"\$dr2\" && [ \$(nsb2 '$T/sdv') -eq 8 ]"
+stg "$DV" "$T/sdv" dev-rot "$DV/dev_e0_diag.json"; rc_dr3=$?; dr3="$SO"
+sdr=$(python3 - "$DV" <<'PY' 2>&1
+import hashlib, json, os, sys
+out = sys.argv[1]
+rec = os.path.join(out, 'dev_e0_diag.json')
+h = hashlib.sha256(open(rec, 'rb').read()).hexdigest()
+bad = []
+for n in ('LC_ref_r2_s32452843', 'LH_ref_r2_s32452843'):
+    r = json.load(open(os.path.join(out, n, 'launch_record.json'), encoding='utf-8'))
+    rq = r.get('requires') or [{}]
+    if not (r.get('stage') == 'dev-rot' and rq[0].get('path') == os.path.realpath(rec) and rq[0].get('sha256') == h and rq[0].get('kind') == 'dev_e0_diag'):
+        bad.append(n)
+print('OK' if not bad else 'NG ' + ' '.join(bad))
+PY
+)
+chk 'DV⑥ ★ dev-rot (기록 PASS · 같은 NP) → 회전 두 런만 제출 (합계 10) · 봉인 requires = E0 진단 기록 (절대경로 · sha256)' \
+    "[ $rc_dr3 -eq 0 ] && [ \$(nsb2 '$T/sdv') -eq 10 ] && [ \"\$sdr\" = OK ]"
+runr2 "$DV/LC_ref_r2_s32452843" SLURM_NTASKS=20; rc_r1=$?
+echo ' ' >> "$DV/dev_e0_diag.json"                                                              # 봉인 뒤 기록이 바뀐다
+runr2 "$DV/LH_ref_r2_s32452843" SLURM_NTASKS=20; rc_r2=$?
+chk 'DV⑦ ★ 시작 직전 관문 — 기록 그대로면 회전 런 시작 (LIGGGHTS 가짜) · 봉인 뒤 기록이 바뀌면 시작 대조가 막는다 (exit 3 · LIGGGHTS 0 · 거부 영수증)' \
+    "[ $rc_r1 -eq 0 ] && grep -q 'fake mpi build' '$DV/LC_ref_r2_s32452843/log.lmp' && [ $rc_r2 -eq 3 ] && ! [ -e '$DV/LH_ref_r2_s32452843/log.lmp' ] && ls '$DV/LH_ref_r2_s32452843'/job_start.refused.*.json >/dev/null 2>&1"
+ra=$(OUT="$DV2" LMP="$FAKE" MAXJ=8 bash "$HERE/run_all.sh" 2>&1)
+chk 'DV⑧ ★ run_all.sh 는 강성 축 셀을 띄우지 않는다 (SLURM 새 단계로만 · 봉인 · 관문) — 옛 판: LH_* 만 막아 E0_ref_s* 를 로컬로 띄웠다' \
+    "! ls '$DV2'/*/pid >/dev/null 2>&1 && [ \$(grep -c '강성 축 셀 건너뜀' <<<\"\$ra\") -eq \$(ls -d '$DV2'/*_s*/ | wc -l) ] && [ \$(ls -d '$DV2'/*_s*/ | wc -l) -ge 5 ]"
+
+#  (CF · CR) 확인 — 시험용 정책 (confirm 두 단계 허용)
+mkcf() { fx 'for n in dd.COHORTS["confirm"]: sg._fx_cell(A[0], n)' "$1"; }
+CF="$T/cf"; mkcf "$CF"
+stg "$CF" "$T/scf0" confirm-first; rc_cf0=$?; cf0="$SO"
+chk 'CF① 리포 정책 (확인 단계 미허용 — Codex GO 전) → confirm-first 거부 · sbatch 0' \
+    "[ $rc_cf0 -ne 0 ] && [ \$(nsb2 '$T/scf0') -eq 0 ] && grep -q \"'confirm-first'\" <<<\"\$cf0\""
+PNULL="$T/policy_cf_null.json"
+python3 - "$PCF" "$PNULL" <<'PY'
+import json, sys
+p = json.load(open(sys.argv[1], encoding='utf-8'))
+p['stages']['confirm-first']['soft_range_pct'] = None
+json.dump(p, open(sys.argv[2], 'w'), ensure_ascii=False)
+PY
+stg "$CF" "$T/scf0" confirm-first -- POLICY_FILE="$PNULL"; rc_cfn=$?; cfn="$SO"
+chk 'CF② ★ soft 진단 범위 null → 확인 soft 발사 거부 (§6) · sbatch 0' "[ $rc_cfn -ne 0 ] && [ \$(nsb2 '$T/scf0') -eq 0 ]"
+CFD="$T/cfd"; mkcf "$CFD"; cp "$DV/LC_ref_r2_s32452843/in.mixer" "$CFD/LC_ref_r8_s15485863/in.mixer"
+stg "$CFD" "$T/scfd" confirm-first -- POLICY_FILE="$PCF"; rc_cfd=$?
+chk 'CF③ ★ 확인 셀 폴더에 DEV 덱 (LC_ref_r2_s32452843) → 덱 코호트 관문 거부 · sbatch 0' "[ $rc_cfd -ne 0 ] && [ \$(nsb2 '$T/scfd') -eq 0 ]"
+stg "$CF" "$T/scf" confirm-first -- POLICY_FILE="$PCF"; rc_cf=$?; cf1="$SO"
+scf=$(python3 - "$CF" "$T/scf" "$ROOT" <<'PY' 2>&1
+import json, os, sys
+out, sd, root = sys.argv[1:]
+sys.path.insert(0, os.path.join(root, 'scripts'))
+import mixer_deck_diff as dd
+calls = [l.rstrip('\n').split('\t') for l in open(os.path.join(sd, 'calls'), encoding='utf-8')]
+first = [os.path.basename(c[1]) for c in calls if '--hold' not in c[2]]
+held = [os.path.basename(c[1]) for c in calls if '--hold' in c[2]]
+m = json.load(open(os.path.join(out, 'confirm_manifest.json'), encoding='utf-8'))
+bad = []
+if first != list(dd.CONFIRM_FIRST) or held != list(dd.CONFIRM_REST):
+    bad.append('order')
+if not (m['complete'] is True and m['held_query']['held_ok'] is True and len(m['cells']) == 18 and all(c['jobid'] for c in m['cells'])):
+    bad.append('manifest')
+for n in dd.COHORTS['confirm']:
+    r = json.load(open(os.path.join(out, n, 'launch_record.json'), encoding='utf-8'))
+    want_ap = n in dd.CONFIRM_REST
+    if ('approval' in r) != want_ap or r.get('soft_range_pct') != 5.8 or r.get('stage') != 'confirm-first':
+        bad.append(n)
+print('OK' if not bad else 'NG ' + ' '.join(bad))
+PY
+)
+chk 'CF④ ★ confirm-first (§8-2 ④ first-seed-block 6 → rest 12): sbatch 18 = 첫 seed 6 즉시 + 나머지 12 처음부터 --hold (순서 = 등록) · manifest 18 칸 (job ID · 봉인 · held 조회 ok) · held 봉인만 approval 요구 · soft 범위 5.8 봉인' \
+    "[ $rc_cf -eq 0 ] && [ \$(nsb2 '$T/scf') -eq 18 ] && [ \"\$scf\" = OK ]"
+#  첫 seed 6 런을 '돌린다' (시작 대조 → 가짜 lmp) → bin 0 · E0 고정물 → 진짜 생산자로 증서 6
+for n in LC_soft_r8_s15485863 LH_soft_r8_s15485863 LC_ref_r8_s15485863 LH_ref_r8_s15485863 E0_soft_s15485863 E0_ref_s15485863; do runr2 "$CF/$n" SLURM_NTASKS=20; done
+fx 'for n in dd.CONFIRM_FIRST:
+    (sg._fx_e0_done if n.startswith("E0_") else sg._fx_rot_frames)(A[0], n)
+sg._fx_certs(A[0], A[1])' "$CF" "$T/certs_cf"
+HX=LC_soft_r8_s86028121
+runr2 "$CF/$HX" SLURM_NTASKS=20; rc_hx=$?
+chk 'CR① ★ 관문 전에 held 런이 풀려 시작하면 (사람의 scontrol release — 수동 편차) 시작 대조가 막는다 (승인 증서 없음 · exit 3 · LIGGGHTS 0)' \
+    "[ $rc_hx -eq 3 ] && ! [ -e '$CF/$HX/log.lmp' ] && grep -q '승인 증서' '$CF/$HX'/job_start.refused.*.json"
+stg "$CF" "$T/scf" confirm-rest "$T/certs_cf" -- POLICY_FILE="$PCF"; rc_cr1=$?; cr1="$SO"
+chk 'CR①b 그 뒤 confirm-rest 는 거부 (승인 없이 시작된 held 런 = 수동 편차 · 사람이 판단) · scontrol 0' \
+    "[ $rc_cr1 -ne 0 ] && [ \$(nsc '$T/scf') -eq 0 ] && grep -q '승인 없이 이미 시작' <<<\"\$cr1\""
+CG="$T/cg"; mkcf "$CG"
+stg "$CG" "$T/scg" confirm-first -- POLICY_FILE="$PCF"; rc_cg=$?
+for n in LC_soft_r8_s15485863 LH_soft_r8_s15485863 LC_ref_r8_s15485863 LH_ref_r8_s15485863 E0_soft_s15485863 E0_ref_s15485863; do runr2 "$CG/$n" SLURM_NTASKS=20; done
+fx 'for n in dd.CONFIRM_FIRST:
+    (sg._fx_e0_done if n.startswith("E0_") else sg._fx_rot_frames)(A[0], n)
+sg._fx_certs(A[0], A[1])
+sg._fx_certs(A[0], A[2], status={"LH_soft_r8_s15485863": "TECH_FAIL"})' "$CG" "$T/certs_cg" "$T/certs_cg_tech"
+stg "$CG" "$T/scg" confirm-rest "$T/certs_cg_tech" -- POLICY_FILE="$PCF"; rc_cg1=$?; cg1="$SO"
+chk 'CR② ★ soft TECH_FAIL 증서 → 관문표가 거부 (release 0 · 승인 0 · 전체 HOLD)' \
+    "[ $rc_cg ] && [ $rc_cg1 -ne 0 ] && [ \$(nsc '$T/scg') -eq 0 ] && ! ls '$CG'/*/release_approval.json >/dev/null 2>&1 && grep -q 'TECH_FAIL' <<<\"\$cg1\""
+stg "$CG" "$T/scg" confirm-rest "$T/certs_cg" -- POLICY_FILE="$PCF" SC_FAIL=1; rc_cg2=$?; cg2="$SO"
+chk 'CR③ ★ release 재시도 ① — 관문 통과 (승인 12) 인데 scontrol 실패 → rc≠0 · 기록 (confirm_release.jsonl · still_held 12)' \
+    "[ $rc_cg2 -ne 0 ] && [ \$(ls '$CG'/*/release_approval.json | wc -l) -eq 12 ] && [ \$(nsc '$T/scg') -eq 1 ] && grep -q '\"still_held\": \[\"' '$CG/confirm_release.jsonl'"
+stg "$CG" "$T/scg" confirm-rest "$T/certs_cg" -- POLICY_FILE="$PCF"; rc_cg3=$?
+HY=LH_ref_r8_s104395301
+runr2 "$CG/$HY" SLURM_NTASKS=20; rc_hy=$?
+chk 'CR④ ★ release 재시도 ② — 같은 증서로 다시 → 승인 그대로 · scontrol release 12 (합계 2 호출) · 풀린 held 런은 시작 직전 승인 대조를 통과해 돈다' \
+    "[ $rc_cg3 -eq 0 ] && [ \$(nsc '$T/scg') -eq 2 ] && [ \$(tail -1 '$T/scg/scontrol_calls' | tr ',' ' ' | wc -w) -eq 14 ] && [ $rc_hy -eq 0 ] && grep -q 'fake mpi build' '$CG/$HY/log.lmp' && python3 -c \"import json,sys; j=json.load(open('$CG/$HY/job_start.json')); sys.exit(0 if j['ok'] is True and j.get('approval_sha256') else 1)\""
+CH="$T/ch"; mkcf "$CH"
+stg "$CH" "$T/sch" confirm-first -- POLICY_FILE="$PCF" SB_FAIL_AT=908; rc_ch=$?
+stg "$CH" "$T/sch" confirm-rest "$T/certs_cg" -- POLICY_FILE="$PCF"; rc_ch2=$?; ch2="$SO"
+chk 'CR⑤ ★ 제출 일부 실패 (8 번째 sbatch) → confirm-first rc≠0 · 7 제출 · manifest 불완전 (failed_at) → confirm-rest 거부 · scontrol 0' \
+    "[ $rc_ch -ne 0 ] && [ \$(nsb2 '$T/sch') -eq 7 ] && python3 -c \"import json,sys; m=json.load(open('$CH/confirm_manifest.json')); sys.exit(0 if m['complete'] is False and m['failed_at'] else 1)\" && [ $rc_ch2 -ne 0 ] && [ \$(nsc '$T/sch') -eq 0 ]"
+mkres LC_ref_r2_s32452843 $((CK + THERMO)) 0
+rsm=$(OUT="$R" DRY=1 ONLY=LC_ref_r2_s32452843 bash "$HERE/resume_all.sh" 2>&1)
+chk 'DV⑨ resume_all.sh 는 강성 축 셀을 잇지 않는다 (fresh 전용 · §8-1 — 실패는 §8-4 새 폴더 재실행) · in.resume 없음' \
+    "! [ -f '$R/LC_ref_r2_s32452843/in.resume' ] && grep -q '재개 없음' <<<\"\$rsm\""
 echo "test_launcher: $pass PASS / $fail FAIL"
 [ "$fail" -eq 0 ]

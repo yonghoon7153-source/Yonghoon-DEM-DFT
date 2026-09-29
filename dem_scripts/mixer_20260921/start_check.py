@@ -14,6 +14,11 @@
   in.mixer · Drum/Front/Back.stl sha256 = 봉인 · **실행 중인 러너 자신** (SLURM 이 제출 때 복사해 둔 사본 = 러너의 "$0") sha256 =
   봉인의 러너 sha256 · 이 대조기 자신의 sha256 = 봉인 · SLURM_NTASKS = 봉인 np (SLURM 밖이면 거부) ·
   log.lmp · job_start.json 이 아직 없다 (두 번 뜨지 않는다).
+  ★ 강성 축 새 단계 (2026-09-30 · 사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §8-2 ② · ⑤ · 코드 선행조건 2 단계 piece 1):
+    봉인 `requires` = [{kind, path (절대경로), sha256}] — dev-rot 은 E0 진단 PASS 기록 (mixer_smoke_blind.py --e0-diag) 이 봉인 때 그대로여야 뜬다.
+    봉인 `approval` = {file: release_approval.json, schema} — confirm held 12 런은 "관문은 release 순간뿐 아니라 **실제 시작 직전** (러너 시작
+    스크립트) 에 봉인 · 유효 승인 증서를 다시 대조한다" (§8-2 ⑤): 승인 증서가 있고 · 이 런 · PASS · 승인이 본 봉인 = 지금 봉인 · manifest ·
+    증서 · 정책 파일이 승인 때 그대로.  없으면 = 관문 없이 풀렸다 (사람의 scontrol release — 수동 편차) → LIGGGHTS 를 부르지 않는다.
 
 사용 (러너 안 — launch_highbo.sh 가 쓴다):  python3 start_check.py <런 폴더> <바이너리 절대경로> "$SELF"
 셀프테스트: dem_scripts/mixer_20260921/test_launcher.sh HS③–③h (가짜 mpirun · 가짜 바이너리로 러너를 실제로 돌린다).
@@ -32,6 +37,8 @@ from datetime import datetime, timezone
 SCHEMA = 'mixer_highbo_job_start/1'
 LAUNCH_SCHEMA = 'mixer_highbo_launch_record/1'
 FILES = ('in.mixer', 'Drum.stl', 'Front.stl', 'Back.stl')
+APPROVAL_SCHEMA = 'mixer_highbo_release_approval/1'           # scripts/mixer_stage_gate.py rest-gate 가 쓴다 (같은 문자열 — 그 셀프테스트가 대조)
+APPROVAL_FILE = 'release_approval.json'
 
 
 def sha(p):
@@ -88,6 +95,53 @@ def seal_problems(lr):
         for k in ('runner_sha256', 'start_check_sha256'):
             if not _is_sha(sl.get(k)):
                 why.append(f'봉인 slurm.{k} 가 64 자리 16 진이 아니다')
+    #  (강성 축 · 선택 필드) — 있으면 모양부터 (HBR5-01 같은 규율: 모양이 틀린 선행 · 승인 요구를 '없음' 으로 읽지 않는다)
+    if 'requires' in lr:
+        rq = lr.get('requires')
+        if not (isinstance(rq, list) and rq and all(isinstance(x, dict) and isinstance(x.get('path'), str) and os.path.isabs(x['path'])
+                                                    and _is_sha(x.get('sha256')) for x in rq)):
+            why.append('봉인 requires 가 [{kind, path (절대경로), sha256 (64 자리)}] 목록이 아니다')
+    if 'approval' in lr:
+        ap = lr.get('approval')
+        if not (isinstance(ap, dict) and ap.get('file') == APPROVAL_FILE and ap.get('schema') == APPROVAL_SCHEMA):
+            why.append(f'봉인 approval 이 {{file: {APPROVAL_FILE}, schema: {APPROVAL_SCHEMA}}} 가 아니다')
+    return why
+
+
+def approval_problems(d, lp, spec):
+    """held 런의 **시작 직전** 승인 대조 → 사유 목록 (비면 통과).  scripts/mixer_stage_gate.py 가 쓴 승인 증서가 지금 봉인 · manifest · 증서 ·
+    정책 파일과 이어지는가.  승인 증서가 없으면 = confirm-rest 관문 없이 풀렸다 (수동 release 편차)."""
+    p = os.path.join(d, spec.get('file') or APPROVAL_FILE)
+    try:
+        with open(p, encoding='utf-8') as f:
+            a = json.load(f)
+    except (OSError, ValueError) as e:
+        return [f'승인 증서 ({os.path.basename(p)}) 를 읽을 수 없다 ({type(e).__name__}) — confirm-rest 관문 없이 풀렸다 (수동 release 편차) · '
+                'LIGGGHTS 를 부르지 않는다']
+    if not isinstance(a, dict) or not a:
+        return ['승인 증서가 JSON 객체가 아니다']
+    why = []
+    if a.get('schema') != spec.get('schema'):
+        why.append(f'승인 증서 스키마 {a.get("schema")!r} ≠ {spec.get("schema")!r}')
+    if a.get('run') != os.path.basename(os.path.normpath(d)):
+        why.append(f'승인 증서 run {a.get("run")!r} ≠ 이 런 (다른 런의 승인)')
+    if a.get('verdict') != 'PASS':
+        why.append(f'승인 증서 verdict {a.get("verdict")!r} ≠ PASS')
+    if not _is_sha(a.get('launch_record_sha256')) or a.get('launch_record_sha256') != _sha_or_none(lp):
+        why.append('승인이 본 발사 봉인 sha256 ≠ 지금 봉인 (승인 뒤 다시 봉인됐거나 다른 봉인의 승인)')
+    for key in ('manifest', 'policy'):
+        m = a.get(key)
+        if not (isinstance(m, dict) and isinstance(m.get('path'), str) and _is_sha(m.get('sha256'))
+                and _sha_or_none(m['path']) == m['sha256']):
+            why.append(f'승인 증서의 {key} 파일이 없거나 승인 뒤 바뀌었다')
+    cs = a.get('certificates')
+    if not (isinstance(cs, list) and cs):
+        why.append('승인 증서에 증서 목록이 없다')
+    else:
+        for c in cs:
+            if not (isinstance(c, dict) and isinstance(c.get('path'), str) and _is_sha(c.get('sha256'))
+                    and _sha_or_none(c['path']) == c['sha256']):
+                why.append(f'승인 때의 증서 {c.get("run") if isinstance(c, dict) else c!r} 가 없거나 바뀌었다 (오래된 · 바뀐 증서)')
     return why
 
 
@@ -138,6 +192,18 @@ def check(d, lmp, runner, env):
     for f in ('log.lmp', 'job_start.json'):
         if os.path.exists(os.path.join(d, f)):
             why.append(f'{f} 가 이미 있다 — 이 런은 이미 시작됐다 (두 번 뜨지 않는다 · 재개는 resume 절차로)')
+    #  ★ 강성 축 (2026-09-30) — 선행 기록 · 승인 증서 (봉인에 있을 때만 · 모양은 seal_problems 가 먼저 봤다)
+    req_seen = []
+    for rq in lr.get('requires') if isinstance(lr.get('requires'), list) else []:
+        if isinstance(rq, dict) and isinstance(rq.get('path'), str):
+            g_ = _sha_or_none(rq['path'])
+            req_seen.append(dict(kind=rq.get('kind'), path=rq['path'], sha256=g_))
+            if g_ is None or g_ != rq.get('sha256'):
+                why.append(f'선행 기록 {rq.get("kind")} ({rq["path"]}) 이 없거나 봉인 뒤 바뀌었다 — 봉인 때 그대로여야 뜬다 (§8-2 ②)')
+    appr = None
+    if isinstance(lr.get('approval'), dict):
+        why += approval_problems(d, lp, lr['approval'])
+        appr = _sha_or_none(os.path.join(d, lr['approval'].get('file') or APPROVAL_FILE))
     now = time.time()
     rec = {
         'schema': SCHEMA, 'ok': not why, 'reasons': why,
@@ -153,6 +219,10 @@ def check(d, lmp, runner, env):
         'launch_record_sha256': _sha_or_none(lp),
         'sha256': got,
     }
+    if req_seen:
+        rec['requires_seen'] = req_seen
+    if isinstance(lr.get('approval'), dict):
+        rec['approval_sha256'] = appr
     return rec, why
 
 

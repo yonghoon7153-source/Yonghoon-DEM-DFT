@@ -28,6 +28,9 @@ rc 0 = 증서 씀 (합격 여부는 관문이 판정한다 — 이 래퍼는 판
   GATE_TABLE = arm × E × 검사 → rest 해제 관문 (셀프테스트 ⑧ 이 36 칸을 고정 — Codex 7 차 HBR7-02 해결 증거).  M 은 여전히 맹검 (허용목록 투영만).
     python3 scripts/mixer_smoke_blind.py <OUT>/LC_ref_r8_s15485863 --ref <OUT>/E0_ref_s15485863 --cert <증서> --contract [--phase-receipt R]
     python3 scripts/mixer_smoke_blind.py <OUT>/E0_ref_s15485863 --cert <증서> --contract
+  `--e0-diag <OUT> --record <OUT>/dev_e0_diag.json` = DEV E0 다섯의 **E0 진단 PASS 기록** (§8-2 ② "① E0 5 런 … → 1 % 계약 · 정규화 · 완주 진단
+    (M 미열람 · 허용목록 투영) → ② 통과 시에만 LC_ref · LH_ref 회전 2 런") — 런처 `launch_highbo.sh dev-rot <기록>` 이 이어 본다
+    (scripts/mixer_stage_gate.py verify_e0_record: 기록 = 지금 폴더 · 봉인 · 로그 · 도구 · NP).  rc 0 = PASS · 1 = FAIL (기록은 남는다).
 """
 from __future__ import annotations
 
@@ -52,6 +55,7 @@ import measure_mixing_index as mi     # noqa: E402
 import check_contact_validity as cv   # noqa: E402  (2026-09-30 · piece 3) 접촉 상태
 import mixer_deck_diff as dd          # noqa: E402  셀 이름 · 재생성 덱 (단일 출처)
 from mixer_restart_phase_test import log_completion   # noqa: E402  완주 = 마지막 thermo step = run 합 (HBR6-03 — 배너는 기록만)
+import mixer_stage_gate as sg         # noqa: E402  (piece 1) E0 진단 기록 스키마 · 등록 통과선 · 도구 sha256 — 관문과 한 벌
 
 REG = dict(r_container=0.013138, cells=16, x_cells=4, n_min=20, axis='x')     # 사전등록 §2-3 · §8 ③ — 관문 REG 와 같다 (바꾸지 않는다)
 ALLOW_TOP = ('run', 'provenance', 'plan', 't0_step')
@@ -326,6 +330,101 @@ def run_contract_cert(run_dir, ref_dir, cert, phase_receipt=None, reg=REG):
     return 0, dict(full_file=fp, full_sha256=fsha, cert=str(cert), status=block['status']['status'], kind=e.get('kind', 'rotating'))
 
 
+def e0_diag(out, record, reg=REG):
+    """DEV E0 다섯 (E0_ref ×3 · E0_ref2 · E0_ref@dt/2) → **봉인된 E0 진단 기록** (piece 1 · §8-2 ② · §4 a · b · c).  반환 (rc, 기록).
+      complete   다섯 다 log 마지막 thermo step = run 합 (mixer_restart_phase_test.log_completion — HBR6-03)
+      technical  다섯 다 상태 ≠ TECH_FAIL · 발사 봉인 stage = dev-e0 · 다섯 봉인의 np 가 하나 (블록 NP)
+      a          E0_ref ×3 CONTRACT_MET (§4 a "≤ 1 % 3/3")
+      b          E0_ref2 CONTRACT_MET ∧ x_hi(E0_ref2) ≤ x_hi(E0_ref_s32452843) + 1e-9 % (§4 b "계약 안 · E_ref 대비 증가하지 않음")
+      c          E0_ref@dt/2 CONTRACT_MET ∧ |x_hi 차| ≤ 0.1 %p ∧ |ΔS_R²| / S_R² ≤ 1 % (§4 c) — S_R² = 판독기 e0_t0_stats (등록 칸 · 계획 t₀)
+    x = 저장 프레임 최대 (입자–입자 · 벽) — contact_eval (검사기 check_window · 정지 벽 계약 · 이름에서 재생성한 기대 덱).
+    ⚠ c 의 사전등록 지위는 '진단' 이다 — 여기서는 fail-closed 로 회전 관문 (dev-rot) 에 넣었다 (보고의 모호점) · dt/2 · ref2 도 ref 수준이라
+      CONTRACT_MET 을 요구한다 (fail-closed).  M 은 계산하지 않는다 (E0 뿐) · S_R² 원값은 봉인 파일에만 (기록 = 상대 변화).
+    soft 일관성 (§6: "DEV E0_ref 실측 최대 × 5.81 이 5.8 % 를 넘으면 그 사실을 보고하되 범위를 올리지 않는다") 은 **보고만**."""
+    out = os.path.normpath(out)
+    vault = Path(out) / '.e0_diag'
+    rg = sg.E0_DIAG_REG
+    buf_out, buf_err = io.StringIO(), io.StringIO()
+    runs, fulls, sr2, refused = {}, {}, {}, None
+    with contextlib.redirect_stdout(buf_out), contextlib.redirect_stderr(buf_err):
+        try:
+            for n in dd.DEV_E0:
+                d = os.path.join(out, n)
+                w, block = contact_eval(d, n)
+                fulls[n] = w
+                tot = _run_total(d)
+                lc = log_completion(os.path.join(d, 'log.lmp'), tot)
+                try:
+                    lr = json.loads(Path(d, 'launch_record.json').read_text(encoding='utf-8'))
+                except (OSError, ValueError):
+                    lr = {}
+                st_ = block['status'] or {}
+                runs[n] = dict(dir=os.path.realpath(d), deck_sha256=_sha_file(Path(d, 'in.mixer')),
+                               launch_record_sha256=sg.sha_or_none(os.path.join(d, 'launch_record.json')),
+                               job_start_sha256=sg.sha_or_none(os.path.join(d, 'job_start.json')), log_sha256=lc['log_sha256'],
+                               stage=lr.get('stage'), np=(lr.get('slurm') or {}).get('np'), complete=lc['complete'],
+                               last_thermo_step=lc['last_thermo_step'], run_total=tot,
+                               contact=dict({k: st_.get(k) for k in ('status', 'technical', 'original_1pct', 'x_lo_pct', 'x_hi_pct')},
+                                            verdict=block['verdict'], wall_basis=block['wall_basis'], window=block['window'],
+                                            frames_sha256=block['frames']['sha256']))
+            for n in ('E0_ref_s32452843', 'E0_ref_dthalf_s32452843'):
+                st0, p0, cs = mi.e0_t0_stats(os.path.join(out, n), reg['r_container'], cells=reg['cells'], x_cells=reg['x_cells'],
+                                             n_min=reg['n_min'], axis=reg['axis'])
+                sr2[n] = dict(t0_step=st0, frame=os.path.basename(p0), s2=cs['s2'])
+        except SystemExit as e:
+            refused = dict(kind='SystemExit', message=str(e))
+        except Exception as e:                                          # noqa: BLE001
+            refused = dict(kind=type(e).__name__, message=str(e), traceback=traceback.format_exc())
+    checks = {}
+    if refused is None:
+        st = {n: runs[n]['contact']['status'] for n in dd.DEV_E0}
+        xh = {n: runs[n]['contact']['x_hi_pct'] for n in dd.DEV_E0}
+        nps = {runs[n]['np'] for n in dd.DEV_E0}
+        one_np = len(nps) == 1 and isinstance(next(iter(nps)), int) and not isinstance(next(iter(nps)), bool)
+        checks['complete'] = dict(pass_=all(runs[n]['complete'] is True for n in dd.DEV_E0))
+        checks['technical'] = dict(pass_=(all(st[n] not in (None, 'TECH_FAIL') for n in dd.DEV_E0)
+                                          and all(runs[n]['stage'] == 'dev-e0' for n in dd.DEV_E0) and one_np),
+                                   np_values=sorted(str(x) for x in nps))
+        checks['a'] = dict(pass_=all(st[n] == 'CONTRACT_MET' for n in dd.DEV_E0[:3]), status={n: st[n] for n in dd.DEV_E0[:3]})
+        r2, r1 = xh['E0_ref2_s32452843'], xh['E0_ref_s32452843']
+        checks['b'] = dict(pass_=(st['E0_ref2_s32452843'] == 'CONTRACT_MET' and r2 is not None and r1 is not None and r2 <= r1 + rg['eps_pct']),
+                           x_ref2_pct=r2, x_ref_pct=r1)
+        dh = xh['E0_ref_dthalf_s32452843']
+        dmax = abs(dh - r1) if (dh is not None and r1 is not None) else None
+        s_a, s_b = sr2['E0_ref_s32452843']['s2'], sr2['E0_ref_dthalf_s32452843']['s2']
+        rel = abs(s_b - s_a) / s_a if (isinstance(s_a, float) and s_a > 0 and s_a == s_a and s_b == s_b) else None
+        checks['c'] = dict(pass_=(st['E0_ref_dthalf_s32452843'] == 'CONTRACT_MET' and dmax is not None and rel is not None
+                                  and dmax <= rg['c_dmax_pp'] + rg['eps_pct'] and rel <= rg['c_sr2_rel'] + rg['eps_rel']),
+                           dmax_pp=dmax, sr2_rel=rel)
+        for v in checks.values():
+            v['pass'] = bool(v.pop('pass_'))
+    nps_all = {runs[n]['np'] for n in runs}
+    np_rec = next(iter(nps_all)) if len(nps_all) == 1 else None
+    fp, fsha = _vault(vault, 'e0_diag_full', dict(schema='mixer_e0_diag_full/1', out=out, reg=dict(reg), contact=fulls, sr2=sr2,
+                                                     stdout=buf_out.getvalue(), stderr=buf_err.getvalue(), refused=refused))
+    verdict = 'PASS' if (refused is None and checks and all(v['pass'] for v in checks.values())) else 'FAIL'
+    k14 = 14 ** (2.0 / 3.0)
+    rec = dict(schema=sg.E0_DIAG_SCHEMA, verdict=verdict, time_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+               out=os.path.realpath(out), np=np_rec, registered=dict(rg), reader=dict(sg.READER_REG), tools=sg.e0_record_tools(),
+               runs=runs, checks=checks, refused_kind=(refused or {}).get('kind'),
+               soft_range_consistency=[dict(run=n, x_hi_pct=runs[n]['contact']['x_hi_pct'],
+                                            soft_predicted_pct=(None if runs[n]['contact']['x_hi_pct'] is None
+                                                                else runs[n]['contact']['x_hi_pct'] * k14),
+                                            exceeds_soft_range=bool(runs[n]['contact']['x_hi_pct'] is not None
+                                                                    and runs[n]['contact']['x_hi_pct'] * k14 > cv.SOFT_RANGE_PCT + cv.SOFT_RANGE_EPS))
+                                       for n in dd.DEV_E0[:3] if n in runs],
+               vault=dict(file=fp, sha256=fsha),
+               blind='M 은 계산하지 않는다 (E0 뿐) · S_R² 원값은 봉인 파일에만 (기록 = 상대 변화) · soft 일관성은 보고만 (범위를 올리지 않는다 · §6)')
+    Path(record).parent.mkdir(parents=True, exist_ok=True)
+    tmp = str(record) + '.tmp'
+    Path(tmp).write_text(json.dumps(rec, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
+    os.replace(tmp, record)
+    _blind_log(vault, dict(time_utc=rec['time_utc'], user=getpass.getuser(), host=socket.gethostname(), mode='e0-diag', full_file=fp,
+                           full_sha256=fsha, record=os.path.realpath(record), record_sha256=_sha_file(record), verdict=verdict,
+                           wrapper_sha256=_sha_file(__file__), viewed='projection only' if refused is None else 'refusal code only'))
+    return (0 if verdict == 'PASS' else 1), rec
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description='bin 0 스모크 M-맹검 래퍼 (Codex 6 차 Q5) · 강성 축 접촉 상태 증서 (--contract)')
     ap.add_argument('run', nargs='?', help='평가 런 폴더 (예 <OUT>/LH_s32452843 · 강성 축 셀 <OUT>/LC_ref_r8_s15485863)')
@@ -334,10 +433,20 @@ def main(argv=None):
     ap.add_argument('--contract', action='store_true',
                     help='강성 축 셀: 접촉 상태 증서 (회전 = bin 0 스모크 + contact · E0 = contact + 완주 · --ref 불요) — 사전등록 §6 · §8-2 ⑤')
     ap.add_argument('--phase-receipt', default=None, help='(--contract · 회전 팔) 재개-위상 영수증 — 벽 회전각 근거')
+    ap.add_argument('--e0-diag', default=None, metavar='OUT', help='DEV E0 다섯 (강성 축 §8-2 ②) 의 E0 진단 PASS 기록을 쓴다 (--record 필수)')
+    ap.add_argument('--record', default=None, help='(--e0-diag) 기록 경로 (예 <OUT>/dev_e0_diag.json — launch_highbo.sh dev-rot 의 인자)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
         return selftest()
+    if a.e0_diag:
+        if not a.record or a.run or a.contract:
+            ap.error('--e0-diag <OUT> --record <기록> 만 (런 · --contract 와 섞지 않는다)')
+        rc, rec = e0_diag(a.e0_diag, a.record)
+        ck = rec.get('checks') or {}
+        print(f"{'✓' if rc == 0 else '⛔'} E0 진단 {rec['verdict']} → {a.record} · " + ' · '.join(f'{k} {"✓" if v.get("pass") else "✗"}' for k, v in ck.items())
+              + (f" · 거부 {rec['refused_kind']}" if rec.get('refused_kind') else '') + ' — M 은 계산하지 않았다 (E0 뿐)')
+        return rc
     if a.contract:
         if not (a.run and a.cert):
             ap.error('--contract 는 <run> --cert <cert> 가 필요하다')

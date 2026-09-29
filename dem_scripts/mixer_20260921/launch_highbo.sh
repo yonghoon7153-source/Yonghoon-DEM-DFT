@@ -56,13 +56,34 @@
 #   예 (ibb, 리포 루트): DEVIATION='1저자 결정 2026-09-28 밤 — 세 시드 동시' BACKEND=slurm LMP=<lmp_mpi 절대경로> \
 #                        bash dem_scripts/mixer_20260921/launch_highbo.sh all
 #   회귀: test_launcher.sh HA①–⑦.
+#
+# ★★ 강성 축 새 단계 (2026-09-30 · 사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md v2.5 · 코드 선행조건 2 단계 piece 1 · 5)
+#   dev-e0 · dev-rot · confirm-first · confirm-rest — **SLURM 판 전용** (§8-1 "ibb 같은 바이너리 · 같은 MPI launcher · 같은 rank 수 NP").
+#   결정은 scripts/mixer_stage_gate.py (정책 v2 · 등록 코호트 · 폴더 계약 · fresh · 디스크 · 선행 기록 · 증서 · 승인), 발사는 이 파일
+#   (러너 → 봉인 (+ SEAL_EXTRA) → sbatch [--hold] / scontrol release).  옛 first · rest · all 은 **한 글자도 안 바뀐다**.
+#     dev-e0            "① E0 5 런 (E0_ref ×3 · E0_ref2 · E0_ref@dt/2 · 회전 없음) … NP 프로브 = E0_ref 첫 시드를 NP 5/10/20 으로 1 h 씩
+#                       (같은 덱 · 처리량만 · 확인 자료 전용 금지)" (§8-2 ②) — 프로브 폴더 npprobe<NP>_E0_ref_s32452843 는 기준 셀에서 만든다
+#     dev-rot <기록>    "② 통과 시에만 LC_ref · LH_ref 회전 2 런 · E0 진단 실패 시 회전 보류" — 기록 = mixer_smoke_blind.py --e0-diag 의
+#                       봉인된 E0 진단 PASS 기록 (verify_e0_record) · 봉인 requires 에 그 sha256 → job 시작 직전 start_check 가 다시 대조
+#     confirm-first     "확인 18 런을 한 번에 제출 — 첫 holdout 시드 블록 (6 런) 은 즉시 · 나머지 두 시드 블록 (12 런) 은 sbatch --hold
+#                       (처음부터 held …)" (§8-2 ④ · first-seed-block(6)) → <OUT>/confirm_manifest.json (18 칸 · job ID · 해시 · held 조회)
+#     confirm-rest <증서 폴더>  "… 관문 → 통과면 관문이 scontrol release 를 낸다 … 실제 시작 직전 (러너 시작 스크립트) 에 봉인 · 유효 승인
+#                       증서를 다시 대조한다" (§8-2 ⑤ · rest(12)) — 증서 = <폴더>/<첫 seed 6 셀>.json (mixer_smoke_blind.py --contract)
+#   ⛔ DEV 단계는 확인 셀 · holdout seed 를 못 띄우고 (정책 = 등록 코호트 정확히 · 덱 = 이름에서 재생성한 등록 덱과 바이트 동일),
+#     확인 단계는 DEV 덱을 못 띄운다.  새 단계는 모든 런이 아직 안 떴을 때만 (fresh · 재개 없음) · 시간 한도 = 정책 stages.<단계>.time
+#     (SB_TIME 을 주면 거부) · NP = 환경 NP (dev-rot 은 E0 진단 기록의 NP 와 같아야 — 블록 NP 통일).
+#   ★ 디스크 (piece 5): preflight 가 덱에서 프레임 수 (E0 385 → 867 (×14) → 1,227 (×28)) · 프레임 바이트 상한을 세어 필요 × 1.10 ≤ df 가용 이 아니면 발사 0.
+#   회귀: test_launcher.sh DV① … · CF① … (가짜 sbatch · squeue · scontrol · df).
 set -uo pipefail
+unset SEAL_EXTRA NP_RUN TIME_RUN                                     # 새 단계 내부 변수 — 밖에서 새어 들어오지 않게
 HERE="$(cd "$(dirname "$0")" && pwd)"; ROOT="$(cd "$HERE/../.." && pwd)"
 OUT="${OUT:-$HERE/runs}"
 BACKEND="${BACKEND:-local}"
 #  ★ 발사 정책 (2026-09-29, Codex 6 차 §7-2 · Q8): 허용 stage 는 **파일** launch_policy.json (id · sha256 이 봉인에 남는다) 이 정한다.
 #    all 은 기본 정책에 없다 — 옛 DEVIATION 환경변수만 남아 있어도 다시 열리지 않는다.  정책을 바꾸려면 파일을 고쳐 커밋 + 사전등록 §0.
 POLICY_FILE="${POLICY_FILE:-$HERE/launch_policy.json}"
+STAGEGATE="${STAGEGATE:-$ROOT/scripts/mixer_stage_gate.py}"      # 새 단계 관문 (강성 축)
+SB_TIME_USER="${SB_TIME:-}"                                         # 새 단계는 시간 한도를 정책에서 읽는다 — 사람이 준 SB_TIME 이면 거부
 case "$BACKEND" in
   local) LMP="${LMP:-lmp_serial}";;
   slurm) LMP="${LMP:-lmp_mpi}"; NP="${NP:-20}"
@@ -84,6 +105,11 @@ usage() {
   bash dem_scripts/mixer_20260921/launch_highbo.sh first               # 관문 → 봉인 → $FIRST 하나만
   bash dem_scripts/mixer_20260921/launch_highbo.sh rest <smoke.json>   # bin 0 스모크 증서 · 코호트 · 덱 비교 → 봉인 → ${REST[*]}
   DEVIATION='<저자 결정>' BACKEND=slurm bash dem_scripts/mixer_20260921/launch_highbo.sh all   # ⚠ 저자 편차 — 세 시드 동시 (스모크 관문 생략)
+  강성 축 (SLURM 판 전용 · 사전등록 mixer_highbo_stiffness_prereg_20260929 §8-2):
+    BACKEND=slurm bash dem_scripts/mixer_20260921/launch_highbo.sh dev-e0                        # E0 5 + NP 프로브 3
+    BACKEND=slurm bash dem_scripts/mixer_20260921/launch_highbo.sh dev-rot <E0 진단 PASS 기록>    # LC_ref · LH_ref 2 바퀴
+    BACKEND=slurm bash dem_scripts/mixer_20260921/launch_highbo.sh confirm-first                 # 18 제출 (6 즉시 · 12 held)
+    BACKEND=slurm bash dem_scripts/mixer_20260921/launch_highbo.sh confirm-rest <증서 폴더>       # 관문 → 승인 12 → scontrol release
   증서 = python3 scripts/measure_mixing_index.py <OUT>/$FIRST --ref <OUT>/E0_s32452843 … --json <smoke.json>
   환경변수: OUT · LMP (기본 lmp_serial) · MAXJ (기본 nproc, 전 런 합산) · DECKDIFF (기본 scripts/mixer_deck_diff.py)
 EOF
@@ -141,11 +167,15 @@ try:
     d = json.load(open(p, encoding='utf-8'))
 except (OSError, ValueError) as e:
     sys.exit(f'⛔ 발사 정책 파일을 읽을 수 없다 ({p}: {type(e).__name__}: {e}) — 발사 0')
-ok = (isinstance(d, dict) and d.get('schema') == 'mixer_highbo_launch_policy/1' and isinstance(d.get('policy_id'), str)
+#  v1 = 옛 (first · rest · all) · v2 (2026-09-30 · 강성 축) = + dev-e0 · dev-rot · confirm-first · confirm-rest (단계 인자는 mixer_stage_gate.py policy 가 따로 본다)
+KNOWN = {'mixer_highbo_launch_policy/1': ('first', 'rest', 'all'),
+         'mixer_highbo_launch_policy/2': ('first', 'rest', 'all', 'dev-e0', 'dev-rot', 'confirm-first', 'confirm-rest')}
+sc = d.get('schema') if isinstance(d, dict) else None
+ok = (isinstance(d, dict) and sc in KNOWN and isinstance(d.get('policy_id'), str)
       and d['policy_id'].strip() and isinstance(d.get('allowed_stages'), list) and d['allowed_stages']
-      and all(isinstance(x, str) and x in ('first', 'rest', 'all') for x in d['allowed_stages']))
+      and all(isinstance(x, str) and x in KNOWN[sc] for x in d['allowed_stages']))
 if not ok:
-    sys.exit(f'⛔ 발사 정책 파일 모양이 아니다 ({p}: schema · policy_id · allowed_stages ⊂ first/rest/all) — 발사 0')
+    sys.exit(f'⛔ 발사 정책 파일 모양이 아니다 ({p}: schema (v1 · v2) · policy_id · allowed_stages ⊂ 그 판의 단계) — 발사 0')
 if st not in d['allowed_stages']:
     sys.exit(f"⛔ 발사 정책 {d['policy_id']} 은 stage '{st}' 를 허용하지 않는다 (허용: {d['allowed_stages']}) — 정책을 바꾸려면 "
              f"{p} 를 고쳐 커밋하고 사전등록 §0 에 적는다 (봉인에 id · sha256 이 남는다).  발사 0")
@@ -159,9 +189,9 @@ seal() {  # seal <런> <first|rest> [증서] — 발사 직전 봉인 <OUT>/<런
   head=$(git -C "$ROOT" rev-parse HEAD 2>/dev/null) || head=no-git
   #  fresh 인데 봉인이 있다 = 발사되지 않은 옛 봉인 — 지우지 않고 옆으로
   if [ -e "$d/launch_record.json" ]; then mv "$d/launch_record.json" "$d/launch_record.unlaunched.$(stamp).json" || return 1; fi
-  SEAL_BACKEND="$BACKEND" SEAL_NP="${NP:-}" SEAL_FLAGS="${MPIRUN_FLAGS:-}" SEAL_RUNNER="${RUNNER:-}" SEAL_QOS="${SB_QOS:-}" \
-  SEAL_PARTITION="${SB_PARTITION:-}" SEAL_TIME="${SB_TIME:-}" SEAL_ENV="${SB_ENV:-}" SEAL_PATH="${SB_PATH:-}" SEAL_CHECK="$HERE/start_check.py" \
-  SEAL_DEVIATION="${DEVIATION:-}" SEAL_POLICY="$POLICY_FILE" \
+  SEAL_BACKEND="$BACKEND" SEAL_NP="${NP_RUN:-${NP:-}}" SEAL_FLAGS="${MPIRUN_FLAGS:-}" SEAL_RUNNER="${RUNNER:-}" SEAL_QOS="${SB_QOS:-}" \
+  SEAL_PARTITION="${SB_PARTITION:-}" SEAL_TIME="${TIME_RUN:-${SB_TIME:-}}" SEAL_ENV="${SB_ENV:-}" SEAL_PATH="${SB_PATH:-}" SEAL_CHECK="$HERE/start_check.py" \
+  SEAL_DEVIATION="${DEVIATION:-}" SEAL_POLICY="$POLICY_FILE" SEAL_EXTRA="${SEAL_EXTRA:-}" \
   python3 - "$d" "$stage" "$LMP" "$lp" "$head" "$(nproc)" "$MAXJ" "$(live)" "$DECKDIFF" "$OUT" "$EXPECT_DECK" "$EXPECT_ARM" \
       "$EXPECT_SEED" "$cert" "$FIRST" "${REST[@]}" <<'PY'
 import hashlib, json, os, platform, socket, sys, time
@@ -189,9 +219,19 @@ rec = {
     'lmp': lmp, 'lmp_path': lmp_path, 'lmp_realpath': os.path.realpath(lmp_path), 'lmp_sha256': sha(lmp_path),
     'sha256': {f: sha(os.path.join(d, f)) for f in FILES},
     'git_head': head,
-    'gate_deckdiff': {'script': os.path.realpath(dd), 'script_sha256': sha(dd), 'argv': ['--runs', out, '--allow', 'B', '--expect-deck', exp],
-                      'expect_deck_sha256': sha(exp), 'expect_deck_source': f'mixer_deck_diff.expected_deck({earm!r}, {int(eseed)})', 'rc': 0},
 }
+#  ★ 새 단계 (2026-09-30 · 강성 축) — 덱 관문 = 등록 코호트 (mixer_deck_diff --cohort) · 단계 필드는 mixer_stage_gate.py seal-extra 가 준다.
+#    옛 단계 (SEAL_EXTRA 없음) 는 그대로 — 기대 LH 덱 한 벌 (--expect-deck).
+extra = os.environ.get('SEAL_EXTRA', '')
+if extra:
+    ex = json.loads(extra)
+    core = set(rec) | {'backend', 'policy', 'slurm', 'cohort', 'deviation', 'smoke_certificate'}
+    if not isinstance(ex, dict) or not ex or set(ex) & core:
+        sys.exit(f'⛔ SEAL_EXTRA 가 비었거나 핵심 필드와 겹친다 ({sorted(set(ex) & core) if isinstance(ex, dict) else type(ex).__name__}) — 봉인하지 않는다')
+else:
+    ex = {}
+    rec['gate_deckdiff'] = {'script': os.path.realpath(dd), 'script_sha256': sha(dd), 'argv': ['--runs', out, '--allow', 'B', '--expect-deck', exp],
+                            'expect_deck_sha256': sha(exp), 'expect_deck_source': f'mixer_deck_diff.expected_deck({earm!r}, {int(eseed)})', 'rc': 0}
 rec['backend'] = os.environ.get('SEAL_BACKEND', 'local')
 pf = os.environ['SEAL_POLICY']          # ★ 발사 정책 (Codex 6 차 §7-2) — 봉인이 id · sha256 · 허용 stage 를 적는다 · 이 stage 가 허용이 아니면 봉인 없음
 with open(pf, encoding='utf-8') as f:
@@ -218,6 +258,7 @@ if stage == 'all':                 # ★ 저자 편차 — 생략한 관문과 �
                         'launched_together': [first] + rest}
 elif stage == 'rest':
     rec['smoke_certificate'] = {'path': os.path.realpath(cert), 'sha256': sha(cert)}
+rec.update(ex)
 tmp = os.path.join(d, '.launch_record.json.tmp')
 with open(tmp, 'w', encoding='utf-8') as f:
     json.dump(rec, f, ensure_ascii=False, indent=1)
@@ -230,7 +271,8 @@ PY
 }
 
 write_runner() {  # write_runner <런> — ibb 실물 형식 러너 · 바이너리는 봉인과 같은 절대경로 · 시작 대조가 mpirun 앞
-  local nm="$1" d="$OUT/$1" lp lpr dabs
+  #  (새 단계: NP_RUN · TIME_RUN 이 있으면 그 런의 -n · --time — NP 프로브 5/10/20 · 1 h · 정책의 단계 시간)
+  local nm="$1" d="$OUT/$1" lp lpr dabs np_r="${NP_RUN:-$NP}" tm_r="${TIME_RUN:-$SB_TIME}"
   lp=$(command -v "$LMP") || return 1
   lpr=$(readlink -f "$lp") || return 1
   dabs=$(cd "$d" && pwd) || return 1
@@ -240,8 +282,8 @@ write_runner() {  # write_runner <런> — ibb 실물 형식 러너 · 바이너
     echo "#SBATCH --output=logs/output_${nm}_%j.out"
     echo "#SBATCH --qos=$SB_QOS"
     echo "#SBATCH --partition=$SB_PARTITION"
-    echo "#SBATCH -n $NP"
-    echo "#SBATCH --time=$SB_TIME"
+    echo "#SBATCH -n $np_r"
+    echo "#SBATCH --time=$tm_r"
     echo "# 고-Bo LH (SLURM 판) — dem_scripts/mixer_20260921/launch_highbo.sh 가 썼다.  고치지 말 것 (봉인 · 시작 대조가 이 파일의 sha256 을 본다)"
     echo
     echo 'SELF=$(readlink -f "$0")      # SLURM 이 제출 때 복사해 둔 이 러너 — 시작 대조가 봉인한 러너와 같은지 본다'
@@ -251,18 +293,20 @@ write_runner() {  # write_runner <런> — ibb 실물 형식 러너 · 바이너
     printf 'cd %q || exit 3\n' "$dabs"
     printf 'python3 %q %q %q "$SELF" || { echo "⛔ 시작 대조 실패 — LIGGGHTS 를 부르지 않는다 (job_start.refused.*.json)"; exit 3; }\n' \
         "$HERE/start_check.py" "$dabs" "$lpr"
-    printf 'mpirun %s -np %s %q -in in.mixer > log.lmp 2>&1\n' "$MPIRUN_FLAGS" "$NP" "$lpr"
+    printf 'mpirun %s -np %s %q -in in.mixer > log.lmp 2>&1\n' "$MPIRUN_FLAGS" "$np_r" "$lpr"
   } > "$d/.$RUNNER.tmp" && mv -f "$d/.$RUNNER.tmp" "$d/$RUNNER"
 }
 
-submit() {  # submit <런> — 런 폴더에서 sbatch (러너의 logs/ 가 제출 폴더 기준) → <런>/jobid
-  local nm="$1" d="$OUT/$1" jid
+submit() {  # submit <런> [held 1] — 런 폴더에서 sbatch (러너의 logs/ 가 제출 폴더 기준) → <런>/jobid
+  #  held = `sbatch --hold` — **처음부터 held** (priority 0 · 제출 뒤 hold 는 race — 강성 축 §8-2 ④ · Codex 7 차 §9-1)
+  local nm="$1" hold="${2:-0}" d="$OUT/$1" jid args=(--parsable)
+  [ "$hold" = 1 ] && args+=(--hold)
   mkdir -p "$d/logs" || return 1
-  jid=$(cd "$d" && sbatch --parsable "$RUNNER") || { echo "⛔ $nm: sbatch 실패"; return 1; }
+  jid=$(cd "$d" && sbatch "${args[@]}" "$RUNNER") || { echo "⛔ $nm: sbatch 실패"; return 1; }
   jid=${jid%%;*}
   [[ "$jid" =~ ^[0-9]+$ ]] || { echo "⛔ $nm: sbatch 가 job id 를 주지 않았다 ('$jid')"; return 1; }
   echo "$jid" > "$d/jobid" || return 1
-  echo "▶ $nm 제출 — job $jid · -n $NP · 봉인 $d/launch_record.json · 러너 $d/$RUNNER (job 이 시작하면 러너가 봉인을 다시 대조한다)"
+  echo "▶ $nm 제출 — job $jid · -n ${NP_RUN:-$NP}$([ "$hold" = 1 ] && echo ' · held (처음부터 --hold)') · 봉인 $d/launch_record.json · 러너 $d/$RUNNER (job 이 시작하면 러너가 봉인을 다시 대조한다)"
 }
 
 launch_one() {  # launch_one <런> <first|rest> [증서] — 슬롯 → 봉인 → run_all.sh (ALLOW_LH=1 ONLY=<런>) → pid 확인
@@ -547,9 +591,85 @@ cmd_all() {  # ★ 저자 편차 (2026-09-28 밤) — 세 시드를 한꺼번에
   echo "all 끝 — 제출 $k 개 (봉인 stage all · deviation 기록).  ⚠ bin 0 스모크 (§8 ①–④) 는 관문이 아니라 사람이 확인해 기록한다 · rest 는 쓰지 않는다"
 }
 
+new_stage_env() {  # new_stage_env <단계> — 새 단계 공통 전제 (SLURM · 바이너리 · sbatch · squeue [· scontrol] · SB_TIME 없음 · 정책 두 층)
+  local stage="$1"
+  [ "$BACKEND" = slurm ] || { echo "⛔ $stage 는 SLURM 판 전용 (강성 축 §8-1 같은 환경 · 같은 rank 수) — BACKEND=slurm.  발사 0"; return 2; }
+  [ -z "$SB_TIME_USER" ] || { echo "⛔ $stage: SB_TIME=$SB_TIME_USER — 새 단계의 시간 한도는 정책 stages.$stage.time 이 정한다 (사람이 주지 않는다).  발사 0"; return 2; }
+  command -v "$LMP" >/dev/null || { echo "⛔ $LMP 없음 — LMP=<실행파일>.  발사 0"; return 1; }
+  command -v sbatch >/dev/null && command -v squeue >/dev/null || { echo "⛔ BACKEND=slurm 인데 sbatch / squeue 가 없다 — SLURM 기계에서.  발사 0"; return 1; }
+  if [ "$stage" = confirm-rest ]; then command -v scontrol >/dev/null || { echo "⛔ scontrol 이 없다 — release 불가.  0"; return 1; }; fi
+  policy_allows "$stage" || return 2                                                   #  관문 0a — 정책 파일 모양 · 단계 허용
+  python3 "$STAGEGATE" policy "$POLICY_FILE" "$stage" > /dev/null || { echo "⛔ 정책 stages.$stage 인자 불합격 (등록 코호트 · soft 범위 · 시간) — 발사 0"; return 2; }
+  mkdir -p "$OUT/.stage_gate" || return 1
+}
+
+cmd_stage() {  # cmd_stage <dev-e0|dev-rot|confirm-first> [E0 진단 PASS 기록 (dev-rot)] — 강성 축 새 단계 발사 (SLURM 판 전용)
+  local stage="$1" rec="" cohort ts cj pre plan nm np tm hold kind k=0 fail=0
+  shift
+  case "$stage" in
+    dev-rot) [ $# -eq 1 ] && [ -n "$1" ] || { usage; return 2; }; rec="$1";;
+    *)       [ $# -eq 0 ] || { usage; return 2; };;
+  esac
+  case "$stage" in dev-e0) cohort=dev-e0;; dev-rot) cohort=dev-rot;; *) cohort=confirm;; esac
+  echo "[$stage] OUT=$OUT · LMP=$LMP · BACKEND=$BACKEND -n ${NP:-?} — 강성 축 (사전등록 mixer_highbo_stiffness_prereg_20260929 §8-2)"
+  new_stage_env "$stage" || return $?
+  python3 "$STAGEGATE" prepare "$stage" "$OUT" --policy "$POLICY_FILE" || { echo "⛔ 준비 (NP 프로브 폴더) 실패 — 발사 0"; return 1; }
+  ts=$(stamp); cj="$OUT/.stage_gate/cohort_${stage}_$ts.json"; pre="$OUT/.stage_gate/preflight_${stage}_$ts.json"
+  echo "── 관문 1: 덱 코호트 — python3 $DECKDIFF --runs $OUT --cohort $cohort --json $cj"
+  python3 "$DECKDIFF" --runs "$OUT" --cohort "$cohort" --json "$cj" || { echo "⛔ 덱 코호트 관문 실패 — 발사 0"; return 1; }
+  echo "── 관문 2: preflight (폴더 계약 · fresh · 디스크 추정${rec:+ · E0 진단 PASS 기록})"
+  plan=$(python3 "$STAGEGATE" preflight "$stage" "$OUT" --policy "$POLICY_FILE" --np "$NP" --cohort-json "$cj" --out-json "$pre" \
+         ${rec:+--e0-record "$rec"}) || { echo "⛔ preflight 불합격 — 발사 0 (기록 $pre)"; return 1; }
+  while IFS=$'\t' read -r nm np tm hold kind; do
+    [ -n "$nm" ] || continue
+    NP_RUN="$np"; TIME_RUN="$tm"
+    if ! write_runner "$nm"; then echo "⛔ $nm: 러너를 못 썼다"; fail=1; break; fi
+    if ! SEAL_EXTRA=$(python3 "$STAGEGATE" seal-extra "$OUT" "$nm" --preflight "$pre"); then echo "⛔ $nm: 봉인 필드 실패"; fail=1; break; fi
+    if ! seal "$nm" "$stage"; then echo "⛔ $nm: 봉인 실패"; fail=1; break; fi
+    if ! submit "$nm" "$hold"; then
+      mv "$OUT/$nm/launch_record.json" "$OUT/$nm/launch_record.unlaunched.$(stamp).json" 2>/dev/null
+      echo "⛔ $nm: 제출되지 않았다 — 봉인은 launch_record.unlaunched.*.json 으로 옮겼다"; fail=1; break
+    fi
+    k=$((k+1))
+  done <<< "$plan"
+  unset NP_RUN TIME_RUN SEAL_EXTRA
+  if [ "$stage" = confirm-first ]; then                                                  #  18 칸 manifest — 실패해도 남긴다 (제출 일부 실패의 기록)
+    python3 "$STAGEGATE" manifest "$OUT" --preflight "$pre" || fail=1
+  fi
+  if [ "$fail" != 0 ]; then
+    echo "⛔ $stage 멈춤 — 앞서 제출된 $k 개는 대기열에 있다 (squeue 로 확인 · 사람이 판단 · 새 단계는 fresh 만 다시 받는다)"; return 1
+  fi
+  echo "$stage 끝 — 제출 $k 개 (봉인 stage $stage · preflight $pre)"
+  case "$stage" in
+    dev-e0) echo "다음: E0 다섯 완주 뒤  python3 scripts/mixer_smoke_blind.py --e0-diag $OUT --record $OUT/dev_e0_diag.json  →  PASS 면  launch_highbo.sh dev-rot $OUT/dev_e0_diag.json";;
+    confirm-first) echo "다음: 첫 seed 6 런 bin 0 · E0 완주 뒤  mixer_smoke_blind.py … --contract --cert <폴더>/<런>.json  →  launch_highbo.sh confirm-rest <폴더>";;
+  esac
+}
+
+cmd_confirm_rest() {  # cmd_confirm_rest <증서 폴더> — 관문 → 승인 증서 12 → scontrol release (사람이 손으로 풀지 않는다)
+  [ $# -eq 1 ] && [ -n "$1" ] || { usage; return 2; }
+  local certdir="$1" ts cj ids rc
+  echo "[confirm-rest] OUT=$OUT · 증서 $certdir — 강성 축 §8-2 ⑤ (첫 seed bin 0 스모크 + E0 둘 → 나머지 두 seed 블록 release)"
+  new_stage_env confirm-rest || return $?
+  ts=$(stamp); cj="$OUT/.stage_gate/cohort_confirm-rest_$ts.json"
+  echo "── 관문 1: 덱 코호트 (confirm) — 봉인 뒤 덱이 그대로인가"
+  python3 "$DECKDIFF" --runs "$OUT" --cohort confirm --json "$cj" || { echo "⛔ 덱 코호트 관문 실패 — release 0 (전체 HOLD)"; return 1; }
+  echo "── 관문 2: manifest · held 상태 · 증서 6 (arm × E × 검사 관문표) · 승인 증서"
+  ids=$(python3 "$STAGEGATE" rest-gate "$OUT" "$certdir" --policy "$POLICY_FILE" --cohort-json "$cj") || { echo "⛔ confirm-rest 관문 불합격 — release 0 (전체 HOLD)"; return 1; }
+  if [ -z "$ids" ]; then
+    echo "· 풀 held job 이 없다 (앞선 confirm-rest 가 이미 풀었다)"; python3 "$STAGEGATE" release-record "$OUT" --ids "" --rc 0; return $?
+  fi
+  echo "── scontrol release $(tr ' ' ',' <<< "$ids")"
+  scontrol release "$(tr ' ' ',' <<< "$ids")"; rc=$?
+  python3 "$STAGEGATE" release-record "$OUT" --ids "$ids" --rc "$rc" || { echo "⛔ release 미완 — 다시 confirm-rest (승인 증서는 같으면 그대로)"; return 1; }
+  echo "confirm-rest 끝 — release $(wc -w <<< "$ids") 개 (승인 증서 = <런>/release_approval.json · job 시작 직전 start_check 가 다시 대조)"
+}
+
 case "${1:-}" in
   first) shift; cmd_first "$@"; exit $?;;
   all)   shift; cmd_all "$@"; exit $?;;
   rest)  shift; cmd_rest "$@"; exit $?;;
+  dev-e0|dev-rot|confirm-first) cmd_stage "$@"; exit $?;;
+  confirm-rest) shift; cmd_confirm_rest "$@"; exit $?;;
   *)     usage; exit 2;;
 esac
