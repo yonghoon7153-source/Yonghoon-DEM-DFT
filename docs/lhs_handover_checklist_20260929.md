@@ -4,7 +4,8 @@
 
 ## 1. 한눈에 — 지금 어디까지 있나 (2026-09-29 밤)
 
-저장된 파일 = `docs/data/lhs_handover_20260928.csv` (130 행 × 119 열) · **`docs/data/lhsx_handover_20260929.csv` (64 행 × 121 열 · 09-29 밤 생성)** + 각각의 열 사전 `*_columns.tsv`.
+저장된 파일 = **`docs/data/lhs_handover_20260929.csv` (130 행 × 121 열)** · **`docs/data/lhsx_handover_20260929.csv` (64 행 × 123 열)** + 각각의 열 사전 `*_columns.tsv` —
+09-29 밤 (라) φ 두 열을 더해 다시 만들었다 (옛 열 칸 변경 0 · 130 의 열 사전은 이번에 처음 생겼다).  옛 판 `lhs_handover_20260928.csv` (119 열) 는 이력으로 둔다.
 64 는 수확 (`docs/data/lhsx_descriptors_20260925/`) + union (`docs/data/lhs_union_20260927/lhsx64_union.tsv`) + 변환 설계 (`docs/data/lhsx_design_adapted_20260929.csv`) 로 같은 생성기에서 만들었다.
 
 | 묶음 | 130 건 | 64 건 (lhsx) | 넘길까 |
@@ -12,7 +13,8 @@
 | 설계 값 (입경 · 조성 · RVE · 하중 …) | ✅ 저장 | ✅ **변환됨** (`scripts/lhsx_design_adapter.py` · 130 전용 추정 열 10 은 없음 · lhsx 원래 값은 `lhsx_*` 열로 같이) | ✅ |
 | **두께** `thickness_mass_conserving_um` (+ wall gap · envelope 는 내부) | ✅ 저장 | ✅ 저장 (25.0–44.7 µm) | ✅ |
 | **porosity union** `porosity_union_exact_pct` + `se_rich` 표지 | ✅ 저장 | ✅ 저장 (5.43–9.43 % · se_rich 64/64) | ✅ **union 만** |
-| φ_SE · φ_AM (구 부피 합 규약) | ✅ 저장 | ✅ 저장 (φ_SE 0.52–0.92) | ⚠ **이 값 그대로는 안 넘김** (§6) — 분모가 넘기는 두께가 아니라 DEM 판 간격이라 union porosity 와 안 닫힌다 (합 > 1 : 130 중 18 · 64 중 60) · 대안 = **질량 보존 φ (라) ★권고** (09-29 밤 정정 — 앞 판 (가) 권고 철회) · ⬜ 저자 결정 |
+| φ_SE · φ_AM (구 부피 합 규약) | ✅ 저장 | ✅ 저장 (φ_SE 0.52–0.92) | ✗ **내부 표에만** (§6) — 분모가 넘기는 두께가 아니라 DEM 판 간격이라 union porosity 와 안 닫힌다 (합 > 1 : 130 중 18 · 64 중 60) |
+| **φ_SE · φ_AM 질량 보존 (라)** `phi_se_mass_conserving` · `phi_am_mass_conserving` | ✅ 저장 (φ_SE 0.079–0.474 · φ_AM 0.422–0.715) | ✅ 저장 (φ_SE 0.476–0.798 · φ_AM 0.143–0.449) | ✅ **이것을 넘김** (1저자 09-29 밤 *"(라) 에 해당하는 것만"*) — union porosity 와 닫힘 잔차 ≤ 3.3e-16 · 적재량 = 레시피 |
 | coverage (AM_P · AM_S · 전체 · 이름은 hertz 지만 A_dem_geometric) | ✅ 저장 (mono 30 은 P · S 둘 다 빈칸 · 값은 전체 열) | ✅ 저장 (mono 16 도 같음) | ✅ 이름 · 벽 주의 표기 (§6 — 잘림 0 · 무효 0) |
 | τ (굴곡도) | 상태 열만 · 값은 보류 (`LHS-08` 14/130) | ⬜ | ⏸ 벽 기준 τ 판정 뒤 |
 | **① 접촉 위상** — z_SE-SE mean·σ · z_AM-SE · AM_P/AM_S–SE CN · surface-weighted · z_AM-AM · 접촉 수 · 벽 접촉 비율 | ⬜ 계산 전 (감사 ✅ 적격) | ⬜ | ✅ **다음에 저장** |
@@ -100,7 +102,8 @@
 다른 장부가 된다 (받는 쪽이 φ × 두께 로 적재량을 내면 위 표대로 틀린다).  J19 ③ 의 *"union 판 φ · 겹침 배분 = 저자 결정"* 도 같은 이유로 ② (질량 보존 두께) 와 짝이 안 맞는다.
 세 장부 — S 구 부피 합 (두께 H · ε_sphere · 지금 φ) · G DEM 형상 (두께 H · ε_union · (가)~(다)) · **M 질량 보존 (두께 H_mc · ε_union · (라))** — 에서 **넘기는 두께 · porosity 가 M 이니 φ 도 M**.
 
-⇒ 권고: **(라) 두 열을 생성기에서 만들어 넘기고, 구 부피 합 φ 는 내부 표에만** (porosity 를 union 만 넘기는 09-29 결정과 같은 논리).
-구현 = 생성기 열 둘 (반례 먼저 · 검사 = φ_SE + φ_AM + ε_union = 1 (1e-9) · φ_i × H_mc × L² = 구 부피 합 · SE/고체 = `se_of_solid_vol`) — 비준 뒤.  (가)~(다) 의 MC 부피는 내부 표에 남긴다.
+⇒ ✅ **결정 · 구현 (1저자 09-29 밤 *"φ 는 (라) 에 해당하는 것만"*)**: 생성기 `lhs_design_dataset.py` 에 `phi_se_mass_conserving` · `phi_am_mass_conserving` 두 열
+(반례 먼저 — 새 시험 6 건이 옛 코드에서 실패 → 구현 뒤 90/90) · 런타임 관문 = 닫힘 1e-9 (넘으면 거부) · φ status ≠ OK 면 빈칸 · 실물 130 닫힘 3.3e-16 · SE/고체 ↔ union
+`se_of_solid_vol` 1.7e-16.  구 부피 합 φ 는 내부 표에만.  (가)~(다) 는 만들지 않는다 (MC 부피는 union TSV 에 이미 있다).  **새로 돌린 계산은 없다** — 저장된 세 열의 곱셈이다.
 웹앱 φ_SE (③ 감사 묶음) 도 같은 구 부피 합 식이다 (`network_conductivity.py:1120-1123` · 분모 = 상자 가로 × 세로 × `plate_z`) — ③ 감사 때 같은 장부 문제로 다룬다.
 ⚠ 130 의 열 사전 파일 (`lhs_handover_20260928_columns.tsv`) 은 리포에 없다 — 09-28 표가 열 사전 기능 이전 판이라 **다음 재생성 때** 같은 생성기로 생긴다.

@@ -829,6 +829,8 @@ HANDOVER_EXTRA = (
 #:   겹침 보정 porosity 를 **병기**한다.  구 부피 합 열 (`porosity_sphere_pct_RECORD_ONLY`) 은 J1 대로 **그대로** 남는다 — 교체가 아니다
 #:   (CLAUDE.md porosity 규약 · 생산 코퍼스가 그 규약을 공유한다).  ⛔ φ_SE · φ_AM 의 union 판은 **넣지 않는다** (AM–SE 겹침 배분 = 별도 저자
 #:   결정) · 물리 타깃 적격성 (`physical_target_status`) 도 **안 바꾼다** (§6-2 비준 범위 밖).
+#:   ↪ J20-e (1저자 09-29 밤 "φ 는 (라) 만"): 겹침 배분이 필요 없는 **질량 보존 φ** 두 열을 넣는다 (인계 두께 · union porosity 와 같은 장부) —
+#:     union 점유 φ ((가)~(다) · 겹침 배분) 는 여전히 넣지 않는다.
 DEFAULT_UNION_TSV = 'docs/data/lhs_union_20260927/lhs130_union.tsv'
 #: SE-rich 문턱 (SE / 고체, 구 부피) — ⚠ 등록된 정의가 없어 선례를 따른 **도구 선택**이다 (저자 확인 항목):
 #:   CLAUDE.md 신뢰성 regime map *"SE-rich (SE/sol ≳ 50 %) → DEM ε_sphere 과압축"* · union README *"음수 ε_sphere 는 SE/고체 0.5–0.6 칸부터"*.
@@ -836,6 +838,8 @@ DEFAULT_UNION_TSV = 'docs/data/lhs_union_20260927/lhs130_union.tsv'
 SE_RICH_MIN = 0.50
 #: union 행 ↔ 수확 짝 검사 허용치 — union README 실측 최대 차: 구 부피 합 5.6e-14 %p · 두께 0 µm
 UNION_TOL = {'eps_sphere_pct': 1e-9, 'thickness_um': 1e-6}
+#: J20-e — 질량 보존 φ 닫힘 (φ_SE + φ_AM + ε_union = 1) 허용치.  식으로는 정확하다 — 넘으면 DESC-07 (φ 둘 ↔ ε_sphere) 이 깨진 것이다.
+PHI_MC_CLOSURE_TOL = 1e-9
 HANDOVER_UNION = (
     ('porosity_union_exact_pct',        'mc_void_pct',
      '★ 겹침 보정 porosity (정확 union — 상자 [0,Lx)×[0,Ly)×[0,plate_z) 무작위 점 · 세 입자 이상 겹침까지) — 물리 porosity 열 (J19)'),
@@ -851,6 +855,13 @@ HANDOVER_UNION_DERIVED = (
      '질량 보존 두께 = 두께 × (1 − ε_sphere)/(1 − ε_union) — union 을 실제 공극률로 받을 때 **같은 고체**의 두께 (DEM 에서 겹친 부피는 사라지므로 '
      'union 과 DEM 간격 두께를 둘 다 실제 값으로 받을 수 없다)'),
     ('se_rich', f'SE / 고체 ≥ {SE_RICH_MIN} (구 부피 합이 겹침 이중계상으로 퇴화하는 영역 — 문턱은 도구 선택, 연속값 옆 열)'),
+    ('phi_se_mass_conserving',
+     '★ 인계용 SE 부피분율 (J20-e (라) · 1저자 09-29 밤) — 질량 보존 φ = phi_se × (1 − ε_union)/(1 − ε_sphere) '
+     '= SE 구 부피 / (L² · thickness_mass_conserving_um) = (1 − porosity_union_exact_pct/100) × se_of_solid_vol.  '
+     '인계 두께 · union porosity 와 **같은 장부**: φ_SE + φ_AM + ε_union = 1 (정확) · φ × 인계 두께 = 레시피 적재량.  '
+     '유도량 (두께 · 레시피로 정해짐 — 독립 측정 아님) · union 과 같은 상한 규약의 짝 (소성으로 밀려난 재료를 빈틈이 아니라 두께로 보낸다)'),
+    ('phi_am_mass_conserving',
+     '인계용 AM 부피분율 (J20-e (라)) — 같은 규약 = (1 − porosity_union_exact_pct/100) × (1 − se_of_solid_vol)'),
 )
 
 
@@ -900,8 +911,9 @@ CAVEAT_NAME = ('A_dem_geometric — LIGGGHTS 기하 교차 원판 π(rδ − δ�
 CAVEAT_FRAC_DELTA = 'δ-based 파괴 분류 — force-based 열 (_force_) 과 같은 표에 나란히 인용 금지 (분류 규칙이 다르다) · force-based 권장'
 CAVEAT_FRAC_FORCE = 'force-based 파괴 분류 (Auerbach — 권장) · δ-based 열과 같은 표에 나란히 인용 금지'
 HANDOVER_VALUE_MEANING = {
-    'phi_se': 'SE 부피분율 — 명목 구 부피 합 / (L² · 플래튼−바닥 간격) (장부값, 겹침 이중계상 포함 · 정본 이름 phi_se_spheresum_nominal_gap)',
-    'phi_am': 'AM 부피분율 — 같은 규약',
+    'phi_se': ('SE 부피분율 — 명목 구 부피 합 / (L² · 플래튼−바닥 간격) (장부값, 겹침 이중계상 포함 · 정본 이름 phi_se_spheresum_nominal_gap) · '
+               '⚠ 내부 기록 — union porosity 와 닫히지 않는다 (분모가 인계 두께가 아니다) · 인계용은 phi_se_mass_conserving (J20-e)'),
+    'phi_am': 'AM 부피분율 — 같은 규약 · ⚠ 내부 기록 · 인계용은 phi_am_mass_conserving (J20-e)',
     'coverage_AM_P_hertz_pct': 'AM_P 표면 피복률 (%) — 접촉 면적 c_cpl[22] 합 / 표면적, 입자 평균 · 이름의 hertz 는 물려받은 오해 (A_dem_geometric · L1-04)',
     'coverage_AM_S_hertz_pct': 'AM_S 표면 피복률 (%) — 같은 채널',
     'coverage_AM_total_hertz_pct': 'AM 전체 피복률 (%) — 위 둘에서 유도 (독립 타깃 아님)',
@@ -1070,6 +1082,18 @@ def _union_cols(case, h, u):
     o = {name: (str(u[col]) if col == 'pair_upper_bound_ok' else repr(float(u[col]))) for name, col, _w in HANDOVER_UNION}
     o['thickness_mass_conserving_um'] = repr(float(th) * (1.0 - eps_s / 100.0) / (1.0 - eps_u / 100.0))
     o['se_rich'] = str(float(u['se_of_solid_vol']) >= SE_RICH_MIN)
+    #  J20-e (1저자 09-29 밤 "φ 는 (라) 만") — 질량 보존 φ: 인계 두께 (질량 보존) · porosity (union) 와 **같은 장부**.
+    #   φ_i = φ_i(구) × (1 − ε_union)/(1 − ε_sphere) = V_i / (L² · 질량 보존 두께).  겹침 배분 규칙이 필요 없다.
+    #   φ status 가 OK 가 아니면 빈칸 (계약 ② — 0 이 아니다).
+    o['phi_se_mass_conserving'] = o['phi_am_mass_conserving'] = ''
+    if ((h.get('status') or {}).get(DESCRIPTOR_STATUS_KEY['phi_se']) == 'OK'
+            and h.get('phi_se') is not None and h.get('phi_am') is not None):
+        k = (1.0 - eps_u / 100.0) / (1.0 - eps_s / 100.0)
+        pse, pam = float(h['phi_se']) * k, float(h['phi_am']) * k
+        e = abs(pse + pam + eps_u / 100.0 - 1.0)
+        if e > PHI_MC_CLOSURE_TOL:
+            raise FillRefusal(f'{case}: 질량 보존 φ 닫힘 {e:.3e} > {PHI_MC_CLOSURE_TOL:.0e} — DESC-07 (φ 둘 ↔ ε_sphere) 이 깨졌다')
+        o['phi_se_mass_conserving'], o['phi_am_mass_conserving'] = repr(pse), repr(pam)
     return o
 
 
@@ -1649,6 +1673,35 @@ def _selftest():
     _hno.pop('handover_qc')
     _neg('⑱k 수확에 두께 (handover_qc) 가 없으면 union 을 붙이지 않는다 (09-24 판 수확 — 0925 판을 쓸 것)',
          lambda: build_handover(_dq, dict(_hqs, q2=_hno), union=_uq))
+    #  ⑱m–r J20-e (1저자 09-29 밤 *"φ 는 (라) 에 해당하는 것만"*) — 질량 보존 φ = φ(구) × (1 − ε_union)/(1 − ε_sphere)
+    #   = 재료 부피 / (L² · 질량 보존 두께).  인계 두께 (질량 보존) · porosity (union) 와 **같은 장부**다 — 옛 φ (구 부피 합 ÷ DEM 판 간격) 는
+    #   union 과 닫히지 않는다 (130 중앙 +3.77 %p · 64 중앙 +10.91 %p).  겹침 배분 (union 점유 (가)~(다)) 은 쓰지 않는다.
+    def _fl(x):
+        try:
+            return float(x)
+        except (TypeError, ValueError):
+            return float('nan')
+    _km = (1 - 6.5 / 100) / (1 - (-2.0) / 100)
+    chk('⑱m J20-e 질량 보존 φ 두 열 = 구 부피 합 φ × (1 − ε_union)/(1 − ε_sphere) (q1: 0.5 · 0.52 × 0.935/1.02)',
+        abs(_fl(_q1.get('phi_se_mass_conserving')) - 0.5 * _km) < 1e-12
+        and abs(_fl(_q1.get('phi_am_mass_conserving')) - 0.52 * _km) < 1e-12)
+    _clo = [abs(_fl(r.get('phi_se_mass_conserving')) + _fl(r.get('phi_am_mass_conserving'))
+                + _fl(r.get('porosity_union_exact_pct')) / 100 - 1) for r in (_q1, _q2)]
+    chk('⑱n 닫힘 — φ_SE + φ_AM + ε_union = 1 (1e-12 · q1 · q2)', max(_clo) < 1e-12)
+    _ldg = [abs(_fl(r.get(f'phi_{p}_mass_conserving')) * _fl(r.get('thickness_mass_conserving_um'))
+                - _fl(r.get(f'phi_{p}')) * _fl(r.get('thickness_wall_gap_um'))) for r in (_q1, _q2) for p in ('se', 'am')]
+    chk('⑱o 적재량 보존 — φ(질량 보존) × 질량 보존 두께 = φ(구) × 판 간격 두께 (= 재료 부피 / L²) (1e-9 µm)', max(_ldg) < 1e-9)
+    chk('⑱p 옛 φ (구 부피 합 ÷ 판 간격) 는 union 과 **안 닫힌다** — 잔차 = (ε_union − ε_sphere)/100 (q1 +0.085) · 그래서 새 열',
+        abs(_fl(_q1.get('phi_se')) + _fl(_q1.get('phi_am')) + 0.065 - 1 - 0.085) < 1e-12)
+    _hbad = dict(_hqs['q2'], status=dict(_hqs['q2']['status'], phi='N_A_TEST'))
+    _b2 = next((r for r in build_handover(_dq, dict(_hqs, q2=_hbad), union=_uq)[0] if r['case_id'] == 'q2'), {})
+    chk('⑱q φ status ≠ OK 면 질량 보존 φ 도 빈칸 (0 이 아니다 · 계약 ②)',
+        _b2.get('phi_se_mass_conserving') == '' and _b2.get('phi_am_mass_conserving') == '')
+    _cdq = {d['column']: d for d in column_dictionary(_cq)}
+    chk('⑱r 열 사전 — 질량 보존 φ 두 열: 출처 union · 뜻에 J20-e · 옛 phi_se 뜻에 인계용 열 안내',
+        all(_cdq.get(c, {}).get('source') == 'union' and 'J20-e' in _cdq.get(c, {}).get('meaning', '')
+            for c in ('phi_se_mass_conserving', 'phi_am_mass_conserving'))
+        and 'phi_se_mass_conserving' in _cdq.get('phi_se', {}).get('meaning', ''))
     #  ⑱l 실물 — 동결 설계 CSV 130 · 기본 수확 (0925) · 기본 union TSV
     _rt = pathlib.Path(__file__).resolve().parent.parent
     _dp_, _up_, _hd_ = (_rt / DESCRIPTOR_FILL_EXPECTED['path'], _rt / str(globals().get('DEFAULT_UNION_TSV', '')),
@@ -1664,6 +1717,13 @@ def _selftest():
         chk(f'⑱l 실물 130 (설계 CSV · 0925 수확 · union TSV) — {len(_ol)} 행 전부 병기 · union 최소 {min(_eu):.2f} % > 0 · '
             f'질량 보존 비 {_ra[0]:.3f}–{_ra[-1]:.3f} (중앙 {_ra[len(_ra) // 2]:.3f}) ≥ 1 · SE-rich {_ns} · 구 부피 합 음수 {_neg_s}',
             len(_ol) == 130 and min(_eu) > 0 and _ra[0] >= 1.0)
+        _cm = max(abs(float(r['phi_se_mass_conserving']) + float(r['phi_am_mass_conserving'])
+                      + float(r['porosity_union_exact_pct']) / 100 - 1) for r in _ol)
+        _sr = max(abs(float(r['phi_se_mass_conserving'])
+                      / (float(r['phi_se_mass_conserving']) + float(r['phi_am_mass_conserving'])) - float(r['se_of_solid_vol']))
+                  for r in _ol)
+        chk(f'⑱l2 실물 130 — 질량 보존 φ 닫힘 최대 {_cm:.1e} · SE/고체 ↔ union se_of_solid_vol (다른 코드 · 같은 덤프) 최대 차 {_sr:.1e} (≤ 1e-9)',
+            _cm <= 1e-9 and _sr <= 1e-9)
     except Exception as e:                                                # noqa: BLE001
         chk(f'⑱l 실물 130 병기 ({type(e).__name__}: {e})', False)
 
