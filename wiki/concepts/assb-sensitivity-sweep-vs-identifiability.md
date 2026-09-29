@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -256,6 +256,16 @@ evidenceScope: multi-source-primary
 3. **관측이 하나다** — 첫 충전(5 h CV)에 대면 두 저 λ 셀에서 모형 θ 가 충전 비보다 낮다(0.56 < 0.71 · 0.48 < 0.64). 한 관측(방전)에서의 일치가 다른 관측(충전)에서는 반례가 된다 — 관측 선택이 결론을 정한다.
 ⇒ 처방 목록에 한 줄(17).
 
+## ★★ 82호 — 실험 스윕 한 축(SE 입도 네 수준): **한 손잡이가 공극 · 면적 · σ_ion · σ_el 를 같이 움직이는데 "균형(σ_ion/σ_el → 1)" 한 축으로 귀속** — 비 > 1 표본이 없어 경쟁 설명과 갈리지 않고, 크기 검사를 거치지 않았다
+
+`raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md` (Schlautmann · … · Bielefeld · Zeier 2023, *Adv. Energy Mater.* 13, 2302309 — 실험 네 수준 × 셀 셋 + GeoDict 모형).
+`[인쇄]` "An increase in capacity can be observed when the conductivity is balanced and closer to unity. It becomes evident that for a high-performance electrode not only fast charge transport but also balanced charge transport is essential" — Fig. 6b 네 점(σ_ion/σ_el ↔ 용량). 첫 줄(실험 OAT — 손잡이 하나)이다. `identif` 1(ORCID) · `uniqu` 0.
+`[해석]` 이 편에서 첫 줄이 주는 것은 셋이다:
+1. **한 손잡이 · 다섯 양** — SE 입도가 void(14.1 → 24.3 %) · 모형 면적(×8.6) · 균질도 · σ_ion(×1.54) · σ_el(×0.74 AC)을 함께 움직인다. 네 점 위의 상관은 다섯 중 무엇이 용량을 정하는지 말하지 않는다 — 실험 스윕판의 "평행 열"(처방 2)이다.
+2. **경쟁 설명이 같은 예측을 한다** — 네 비가 전부 1 아래(0.41–0.84)라 "균형(→ 1)" 과 "σ_ion 증가" 가 같은 순서를 준다. 둘이 갈리는 쌍(L ↔ XL)은 σ_ion 차가 오차 막대 안이고 면적 · void 도 같은 쪽이며, DC 로 비를 셈하면 순서가 뒤집힌다.
+3. **크기 검사가 없다** — `[재현]` 측정 σ_eff 의 옴 강하(가정 두께)는 C/20 2–4 mV · 1C 차 ≤28 mV 로, 1C 전압 간격 0.33–0.92 V · C/20 결손 30 mAh g⁻¹ 의 작은 몫이다. 상관의 크기가 제안된 기구의 크기와 맞는지 보지 않고 귀속했다.
+⇒ 처방 목록에 한 줄(18).
+
 ## 우리 쪽 연결
 
 - `degradation-degeneracy/` 는 **"곡선이 맞는다 ≠ 파라미터가 맞다"** 를 합성 truth 로 채점하는 프로젝트다. 26호의 "RMSD 0.11 → 0.06 V + 문헌과 5 % 이내" 는 그 실패 모드를
@@ -283,6 +293,7 @@ evidenceScope: multi-source-primary
 15. (75호) **"X-limited" · 영역 지도를 보면 ① 판정 규칙(스윕 평탄 → 부재 ↔ 저항 크기 → 한계) ② 무엇의 순위 · 문턱인지 ③ 값의 시간 기준 ④ 조건(두께 · 전류 · 방향) ⑤ 저항 정의의 가중(전류 가중 ↔ 두께 단순 평균) ⑥ 동역학 손잡이가 곱의 어느 쪽인지(면적 ↔ `k` · `c_e`)를 적는다.** 그리고 스윕 포화를 "다음 한계로의 전이" 로 읽은 곳에서는 포화값이 **이용 가능 재고의 상한**(AM 기준 용량)에 닿았는지 본다 — 75호 40 · 60 wt% 는 닿았다.
 16. (76호) **"A 무늬는 B 원인" 배정을 보면 ① 가를 대상으로 적은 후보를 전부 흔들었는지(76호 `i₀` 0 회) ② 흔든 배수가 문헌값 복귀인지(76호 `D` ×10 = 문헌값) ③ 한 손잡이가 다른 무늬도 움직였는지(비대각 — 76호 S17) ④ 입력 파라미터의 무차원 영역(Wa 등)이 결론을 미리 정하지 않았는지를 적는다.** ④ 가 정했으면 "X 가 한계가 아니다" 는 시험이 아니라 입력이다.
 17. (77호) **모형 ↔ 실험 "good agreement" 를 보면 ① 정규화 척도(완전 용량 · 닻)의 출처 — 실험 최대값이면 그 근처 점은 자동으로 맞는다 ② 관측의 수(충전 · 방전 · 율 · 사이클) ③ 닻에 걸린 점을 뺀 나머지 점 수와 차 ④ 대안 한계(전자 · 수송 · 동역학)를 흔든 시험이 있는지를 적는다.** 77호: ① 실험 최대값 155 ② 첫 방전 하나 ③ 여섯 점 RMS 8.5 mAh g⁻¹ ④ 0 — 그리고 첫 충전에 대면 두 점이 반례다.
+18. (82호) **실험 스윕(한 손잡이 여러 수준)에서 "Y 가 성능을 정한다" 상관을 보면 ① 손잡이가 같이 움직인 양의 목록(공극 · 면적 · 균질도 · 두 σ) ② 경쟁 설명이 다른 예측을 하는 표본이 있는지(비 > 1 등) ③ 측정 방법을 바꿔도 순서가 유지되는지 ④ 제안 기구의 크기 검사(옴 강하 ↔ 관측 간격)를 적는다.** 82호: ① 다섯 ② 0 개 ③ 아니다(AC ↔ DC 로 L ↔ XL 뒤집힘) ④ 없다 — `[재현]` 작은 몫.
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -297,6 +308,7 @@ evidenceScope: multi-source-primary
 - **75호의 영역 지도가 틀렸다고 하지 않는다** — 기준 미인쇄 · 단순 평균 희석 · 40 · 60 wt% 포화 해석까지다. 함축 `i₀` 흩어짐은 한 θ 균질 BV 로 재현되지 않는다는 `[재현]` 이고, 원인(시간 기준 · 국소화 · θ → 1 소멸)은 가르지 않았다. 용량 축이 복합체 기준이라는 것도 지도 판독 위의 `[재현]` 이다(분모 미정).
 - **76호의 원인 배정이 틀렸다고 하지 않는다** — `i₀` 미시험 · ×10 = 문헌값 · S17 비대각까지다. Wa 는 인쇄 파라미터(선형 극한 `R_ct` · 영상 계면 길이 판독 12–15 · τ 정의 두 가지)로 만든 `[재현]` 범위이고, 실제 황화물 계면의 `j₀` 는 이 위키에 없다.
 - **77호의 "ionic percolation being the limiting factor" 가 틀렸다고 하지 않는다** — 대안 한계를 흔든 시험이 없고 관측이 방전 하나라는 것까지다. 첫 충전 반례 둘은 `[도표]` · 조건당 셀 1 위의 검사다.
+- **82호의 "balanced transport" 가 틀렸다고 하지 않는다** — 네 점 표본으로 σ_ion 증가 · 면적 · 공극과 가를 수 없다는 것까지다. 옴 강하 크기 검사는 가정 두께(밀도 · void) 위의 `[재현]` 이고, 반응 분포를 통한 수송 한계는 배제되지 않는다.
 
 ## 관련
 

@@ -1,0 +1,680 @@
+{
+ "slug": "schlautmann2023_lpscl-particle-size-distribution-composite-transport",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-29",
+ "sources": [
+  "688dd9ec-44._Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+  "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Scheme of a solid-state battery with tortuous charge transport pathways and microstructures of electrode composites with diﬀerent solid electrolyte particle sizes.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.2,
+    550.1,
+    326.7
+   ],
+   "w": 2118,
+   "h": 1070,
+   "dpi": 300,
+   "src": "688dd9ec-44._Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.667,
+   "note": "봤다. 저자 모식 — 셀 단면(In/LiIn · 분리막 · 양극 복합체) + 네 칸 S(4 µm) · M(11) · L(20) · XL(40) · 20 µm 눈금. 값 0. 모식의 SE 는 단분산 구 — Fig. 2a · S2 의 fines(M 부피 ≈24 % < 1.49 µm)가 없고, 모형 입력(D4)과 같은 그림이다."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Characterization of Li6PS5Cl with diﬀerent particle sizes. a) Volumetric cumulative particle size distribution measured by a laser diﬀraction particle size analyzer. b) Impedance spectroscopy to determine the ionic conductivity, c) X-ray diﬀraction patterns, and d) pair distribution functions suggest no strong diﬀerences in the structure and transport at diﬀerent particle sizes.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.4,
+    552.9,
+    413.7
+   ],
+   "w": 2118,
+   "h": 1431,
+   "dpi": 300,
+   "src": "688dd9ec-44._Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.915,
+   "note": "봤다(a 화소 판독). (a) 부피 누적 PSD — x 1–300 µm(1 µm 에서 잘림 · S16a 는 0.1 µm 부터) · D50 ≈3.8 · 9.9 · 17.1 · 39.7 µm (±4 %) ↔ 이름표 4 · 11 · 20 · 40 · 첫 점(≈1.5 µm) M ≈24 · L ≈12–15 · XL ≈4–5 % · L 90 % ≈59 µm ↔ ST2 D90 118.66(D9). (b) 막는 전극 Nyquist 넷 — Z′ ≈93–100 Ω 에서 시작 · 두께 미인쇄 · (c) XRD · (d) PDF 네 개 동일."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) Scanning electron microscopy with EDS-mapping of the pressed composites with diﬀerent particle sizes of Li6PS5Cl and b) modeled microstructures indicate a more homogeneous distribution of solid electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.5,
+    550.0,
+    255.7
+   ],
+   "w": 2118,
+   "h": 773,
+   "dpi": 300,
+   "src": "688dd9ec-44._Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.56,
+   "note": "봤다. (a) SEM-EDS(보라 NCM · 노랑 LPSCl · 25 µm) — 정성 · 정량 0 · 본문 'cross-sections' ↔ 방법 'surface'(D14). (b) 모형 단면(청록 LPSCl · 금색 NCM) — M/L/XL 의 청록이 ≈15–40 µm 고른 덩어리: 입력 PSD 가 거의 단분산인 결과(D4)."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Cell performance tests of composite electrodes with diﬀerent solid electrolyte particle sizes in half-cell setups. a) First cycle charge and discharge curves at 0.05 C (j = 0.107 mA cm−2). b) Charge and discharge curve at 1 C (j = 2.14 mA cm−2). c) Discharge capacities for 50 cycles at 0.1 C (j = 0.214 mA cm−2). d) Discharge capacities of rate-performance test. All data show that with decreasing particle size distribution, higher capacities and better rate-performance can be obtained.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.8,
+    552.9,
+    398.7
+   ],
+   "w": 2118,
+   "h": 1367,
+   "dpi": 300,
+   "src": "688dd9ec-44._Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.858,
+   "note": "봤다(화소 판독 — 가로 이름표가 눈금보다 ≈12 px 밀려 있어 눈금 표시로 읽음). (a) 방전 끝 S 197.9 · M/L 163.8(겹침) · XL 151.9 · 충전 끝 ≈246 · ≈213 · ≈206 — 인쇄와 ±2 · S 곡선 = S9a Cell 1(D1). (b) 1C 방전 끝 ≈108 · 93 · 65 · 48 · 47 mAh/g 에서 S 3.05 · M 3.02 · L 2.72 · XL 2.13 V. (c) N1 179.1 · 161.3 · 157.1 · 150.9 → 최소 170.6 · 149.7 · 140.2 · 130.0 → N50 177.0 · 156.1 · 143.5 · 133.5 ⚠ 본문 'No difference … capacity retention'(D7). (d) 사이클 1 186.0(= Cell 1 · 2 평균 185.9) · 1C ≈100 · 88.6–90 · 70.4–71.8 · 53.2–55 ⚠ 4b · 6b 와 1C 값이 다름(D11)."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Nyquist plots of impedance data of composites with diﬀerent particle sizes of Li6PS5Cl and the transmission line model. Impedance spec- tra measured in a) ionic blocking symmetric cells with electron-electron “T-type” connection for measuring the eﬀective electronic transport and in b) electronic blocking symmetric cells with “T-type” ion–ion connection for measuring the eﬀective ionic transport.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.6,
+    550.0,
+    323.7
+   ],
+   "w": 2118,
+   "h": 1055,
+   "dpi": 300,
+   "src": "688dd9ec-44._Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.887,
+   "note": "봤다. (a) 이온 차단 steel|복합체|steel — Z′ ≈15 → 150–215 Ω · (b) 전자 차단 In/LiIn|SE|복합체|SE|In/LiIn — Z′ ≈40 → 200–440 Ω · T형 TLM 회로 둘. 어느 셀인지 · 적합값 · 두께 미인쇄(G5 · G6)."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. a) Eﬀective electronic (blue) and ionic (yellow) conductivity of composites with diﬀerent particle sizes of Li6PS5Cl measured with impedance spectroscopy and compared to simulated conductivities. The electronic conductivity keeps constant while the ionic conductivity increases with smaller particle size. b) Capacity of composite electrodes at C/20 and 1 C versus the ratio of ionic and electronic conductivity measured by impedance spec- troscopy. The initial charge capacity is increasing when the ionic and electronic conductivity are more balanced. c) Comparison of the eﬀective ionic conductivity from the ﬂux-based simulation for all composites. The small Li6PS5Cl particles show a uniform current distribution, while the composite XL exhibits a localized ionic current ﬂow.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.3,
+    552.9,
+    388.7
+   ],
+   "w": 2118,
+   "h": 1328,
+   "dpi": 300,
+   "src": "688dd9ec-44._Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.799,
+   "note": "봤다(화소 판독). (a) 이온 관측 0.255 · 0.199 · 0.153 · ≈0.165 · 모의 0.197 · 0.134 · 0.101 · ≈0.11 · 전자 관측 ≈0.30 · 0.26 · 0.31 · 0.41 · 모의 ≈0.77 · 0.77 · 0.64 · 0.43 — ST4 와 ±0.005 ⚠ 캡션 'electronic conductivity keeps constant'(D12) · 본문 S 전자 0.38 은 이 그림 값이 아님(D2). (b) 가로 σ_ion/σ_el 0.844 · 0.774 · 0.492 · 0.406 · C/20 181.2 · 164.5 · 158.6 · 151.1 · 1C 100.2 · 83.6 · 70.8 · 54.2 ⚠ 캡션 'initial charge capacity' ↔ 방전 값(D11). (c) 이온 전류 지도 0–100 mA/cm² · 눈금 S 25 µm ↔ M/L/XL 90 µm(상자 90 ↔ 300 µm)."
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Scanning electron microscopy of LiNi0.83Co0.11Mn0.06O2 particles with a D50 value of 3.4 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.0,
+    237.0
+   ],
+   "w": 1953,
+   "h": 714,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.68,
+   "note": "봤다. CAM SEM — 값은 캡션 'D50 value of 3.4 µm' 뿐(가중 미인쇄) ↔ ST3 µa 4.57 · S18a 개수 중앙 ≈4.5–4.8(D10)."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Scanning electron microscope images of Li6PS5Cl samples with a) 4 µm, b) 11 µm c) 20 µm and d) 40 µm D50vol value of particle size.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    263.0,
+    534.1,
+    637.8
+   ],
+   "w": 1953,
+   "h": 1563,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.412,
+   "note": "봤다. SE 분말 SEM a–d — M/L/XL 큰 입자 사이 작은 입자 다수(SI p. S11 서술의 근거). ⚠ 과대 영역: 크롭 위쪽에 S1 캡션 꼬리 '3.4 µm.' 가 들어 있다(그림 내용은 온전 · 자동 파일 유지)."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Arrhenius graph of Li6PS5Cl samples measured by temperature dependent impedance spectroscopy showing similar activation barriers for ionic transport.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    252.6
+   ],
+   "w": 1953,
+   "h": 779,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.968,
+   "note": "봤다(화소 판독). Arrhenius — 세로 'ln(σT) / ln(KS cm-1)' · 네 시료 겹침 · 재현 Ea ≈0.40 eV · 25 °C 외삽 σ ≈13.8 mS/cm ↔ 본문 2.2(×6.3, D8) · Ea 인쇄 0."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Rietveld refinements of Li6PS5Cl samples with a) 4 µm, b) 11 µm c) 20 µm and d) 40 µm D50vol value of particle size. No changes of the structure are observed for different particle sizes of Li6PS5Cl.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    307.9,
+    534.1,
+    433.3
+   ],
+   "w": 1953,
+   "h": 524,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.887,
+   "note": "봤다. Rietveld a–d — 적합 · 차 곡선 · 반사 표지 · 격자 상수 · R 값 인쇄 0('No changes')."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Pair distribution function analysis of of Li6PS5Cl samples with a) 4 µm, b) 11 µm c) 20 µm and d) 40 µm D50vol value of particle size. No changes of the local structure are observed for different particle sizes of Li6PS5Cl.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    481.9,
+    534.1,
+    638.8
+   ],
+   "w": 1953,
+   "h": 655,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.897,
+   "note": "봤다. PDF small-box 적합 a–d(r 1.5–40 Å) — 수치 0 · 캡션 'analysis of of'(D18). ⚠ 과대 영역: 크롭 위쪽에 S4 캡션 꼬리 'particle sizes of Li6PS5Cl.' 가 들어 있다(그림 내용은 온전 · 자동 파일 유지)."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 5,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Raman Spectra of Li6PS5Cl samples with D50vol values of a) 4 µm, b) 11 µm, c) 20 µm and d) 40 µm for Li6PS5Cl particle size showing a sharp signal at 427 cm-1 which is characteristic for the PS43- unit.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    198.7
+   ],
+   "w": 1953,
+   "h": 555,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.927,
+   "note": "봤다. Raman a–d — 427 cm-1 PS4 봉우리 넷 동일."
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 5,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: Scanning electron microscopy images with energy dispersive X-ray spectroscopy mapping of pressed composites with NCM811 (false color purple) and Li6PS5Cl (false color yellow) with D50vol values of a) 4 µm, b) 11 µm, c) 20 µm and d) 40 µm for Li6PS5Cl particle size. A more homogeneous distribution of Li6PS5Cl in the composite with smaller particle size is evident.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    239.5,
+    534.1,
+    455.8
+   ],
+   "w": 1953,
+   "h": 903,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.477,
+   "note": "봤다. SEM-EDS 고배율 a–d(보라 NCM · 노랑 LPSCl) — 정성. ⚠ 과대 영역: 크롭 위쪽에 S6 캡션 꼬리 'for the PS4³⁻ unit.' 가 들어 있다(그림 내용은 온전 · 자동 파일 유지)."
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 6,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: Triplicates from charge and discharge capacities over 50 cycles at 0.1 C (j = 0.214 mA cm-2) and Coulombic efficiencies of composites with a) 4 µm, b) 11 µm, c) 20 µm and d) 40 µm D50vol value of Li6PS5Cl particle size.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    292.1
+   ],
+   "w": 1953,
+   "h": 944,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.893,
+   "note": "봤다(화소 판독). 50 사이클 셀 셋 + CE — S 셀 1 ≈188 → 180 → 184 · 셀 3 ≈170 → 164 → 172 · 셀 2 는 ≈7 사이클 뒤 안 보임 · 첫 CE S ≈78–79 · M ≈77 · L ≈75 · XL ≈72–73 %."
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 6,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: Triplicates from charge and discharge capacities and Coulombic efficiencies of composites with a) 4 µm, b) 11 µm, c) 20 µm and d) 40 µm D50vol value of Li6PS5Cl particle size for C/20 (j = 0.107 mA cm-2), C/10 (j = 0.214 mA cm-2), C/5 (j = 0.428 mA cm-2), C/2 (j = 1.070 mA cm-2) and 1C (j = 2.140 mA cm-2).",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    332.6,
+    539.2,
+    620.9
+   ],
+   "w": 1974,
+   "h": 1203,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.916,
+   "note": "봤다(고리 템플릿 + ASCII 판독). D1 원자료 — S 첫 방전 Cell 1 199.2 · Cell 2 172.7 · Cell 3 163.6(±1.5) → 평균 178.5 ↔ 본문 '198 (±18)' · 첫 충전 Cell 2 214.2 · Cell 3 ≈206 · Cell 1 축 위 · S 1C ≈110 · 92 · 80 · 첫 CE ≈80 · 79 · 76 · 74 %. M/L/XL 셀별 값은 반투명 표지 겹침으로 판정에 안 씀. ⚠ 과대 영역: 크롭 위쪽에 S8 캡션 꼬리 'D50vol value of Li6PS5Cl particle size.' 가 들어 있다(그림 내용은 온전 · 자동 파일 유지)."
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 7,
+   "file": "fig_S10.png",
+   "caption": "Figure S10: Triplicates of impedance spectroscopy measured in ionic blocking symmetric cell and analyzed with transmission line model of composites with a) 4 µm, b) 11 µm, c) 20 µm and d) 40 µm D50vol value of Li6PS5Cl particle size. At the particle sizes of 4 µm, a higher deviation in the triplicate measurements can be seen. This is assumed to be due to a slightly changing processing mechanics, which may be inferred from the slightly changed stickier haptics of the smaller particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    324.7
+   ],
+   "w": 1953,
+   "h": 1080,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.919,
+   "note": "봤다. 이온 차단 셀 셋 Nyquist — 끝 Z′ S ≈105 · 170 · 210 Ω(×2 산포 · 캡션 'stickier haptics') · M ≈210–245 · L ≈125–180 · XL ≈120–168 Ω · 적합값 0."
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 8,
+   "file": "fig_S11.png",
+   "caption": "Figure S11: Triplicates of impedance spectroscopy measured in electronic blocking symmetric cell and analyzed with transmission line model of composites with a) 4 µm, b) 11 µm, c) 20 µm and d) 40 µm D50vol value of Li6PS5Cl particle size.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    326.2
+   ],
+   "w": 1953,
+   "h": 1086,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.922,
+   "note": "봤다. 전자 차단 셀 셋 Nyquist — 끝 Z′ S ≈210–250 · M ≈320–345 · L ≈390–440 · XL ≈360–485 Ω · 적합값 0."
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 8,
+   "file": "fig_S12.png",
+   "caption": "Figure S12: DC polarization measurements in ionic blocking symmetric cell of composites with a) 4 µm, b) 11 µm, c) 20 µm and d) 40 µm D50vol value of Li6PS5Cl particle size.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    396.1,
+    534.1,
+    631.1
+   ],
+   "w": 1953,
+   "h": 980,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.882,
+   "note": "봤다. 전자 DC(이온 차단) 셀 셋 — 계단 ±5 → ±45 mV(부호 교대 · ≈2 h) ↔ 인쇄 '45 to 50 mV … 5 mV steps'(D17) · ⚠ b1 축 이름 'E' · 'CC29'(D16)."
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 9,
+   "file": "fig_S13.png",
+   "caption": "Figure S13: DC polarization measurements in electronic blocking symmetric cell of composites with a) 4 µm, b) 11 µm, c) 20 µm and d) 40 µm D50vol value of Li6PS5Cl particle size.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    304.1
+   ],
+   "w": 1953,
+   "h": 994,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.902,
+   "note": "봤다. 이온 DC(전자 차단) 셀 둘 — 계단 ≈1–3.6 mV(4–5 계단 · ≈5–6 h) ↔ 인쇄 '0.5 to 5 mV … 0.5 mV'(D17) · V–I 점이 원점을 안 지난다."
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 9,
+   "file": "fig_S14.png",
+   "caption": "Figure S14: Comparison of effective electronic (blue) and ionic conductivity (yellow) measured with DC polarization and impedance spectroscopy. No significant difference in measured conductivities shows validity of both approaches.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    354.5,
+    534.1,
+    604.6
+   ],
+   "w": 1953,
+   "h": 1043,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.958,
+   "note": "봤다(벡터 — 그리기 명령 81 개 좌표). 전자 AC 0.301 · 0.258 · 0.311 · 0.406 ± 0.147 · 0.020 · 0.114 · 0.065 · 전자 DC 0.381 · 0.230 · 0.361 · 0.368 · 이온 AC 0.254 · 0.200 · 0.154 · 0.165 · 이온 DC 0.273 · 0.157 · 0.130 · 0.154 — DC/AC −21.6 … +26.3 % ⚠ 캡션 'No significant difference'(D13) · 본문 S '0.38 (±0.15)' = DC 점 + AC 막대(D2)."
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 10,
+   "file": "fig_S15.png",
+   "caption": "Figure S15: Comparison of observed and simulated tortuosity factor for a) ion transport and b) electron transport. Tortuosity factor for ion transport is decreasing with smaller particle size while tortuosity factor of electronic transport shows no trend.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    305.8
+   ],
+   "w": 1953,
+   "h": 1001,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.939,
+   "note": "봤다(화소 판독). (a) κ_ion 관측 3.57 · 4.35 · 5.43 · 4.85 · 모의 4.70 · 6.65 · 8.56 · 7.50(ST4 · 재현 규약 ε = 0.48(1 − void) 와 ±0.02). (b) κ_el 관측 7.72 · 8.62 · 6.83 · 5.04 · ⚠ 모의 4.7 · 6.65 · 8.56 · 7.5 = (a) 이온 모의 값 복제 ↔ ST4 κ_el,sim 3.04 · 2.89 · 3.35 · 4.75(D5)."
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 12,
+   "file": "fig_S16.png",
+   "caption": "Figure S16: Cumulative distribution functions based on volume a) and count b) for different Li6PS5Cl particle sizes.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    322.1
+   ],
+   "w": 1953,
+   "h": 1069,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.896,
+   "note": "봤다(화소 판독). (a) 부피 CDF 0.1–1000 µm + 로그정규 적합선 · (b) 개수 CDF — S D50 ≈0.16 µm · M/L/XL D50 ≈2.7 µm(세 분포가 개수로는 거의 같다 — SI 서술과 맞다)."
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 14,
+   "file": "fig_S17.png",
+   "caption": "Figure S17: Experimental cumulative distribution functions for different particle sizes (circles) together with the simulated CDFs with a) σa and b) s as the distribution width (DW).",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    322.7
+   ],
+   "w": 1953,
+   "h": 1071,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.858,
+   "note": "봤다(화소 판독). (a) σa 폭 입력(D10–D90 절단) · (b) s 폭 입력 = 모형이 쓴 판 — M/L/XL 중앙 ≈20.7 · 30.1 · 64.9 µm · 10–90 % 폭 ≈11 · 8 · 8 µm로 측정 원과 안 겹침 · 재현: 평균 µa · SD = s(µm) 로그정규 ⚠ SI 'can successfully be compensated'(D4)."
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 15,
+   "file": "fig_S18.png",
+   "caption": "Figure S18: a) Experimental and fitted cumulative distribution function for the CAM. b) Scanning electron microscopy image of the particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    307.7
+   ],
+   "w": 1953,
+   "h": 1009,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.678,
+   "note": "봤다(화소 판독). (a) CAM 개수 CDF(FESEM 영상 분석) — 중앙 ≈4.5–4.8 µm · 최소 측정 입자 ≈2.1 µm ↔ ST3 D10num 1.54 · D50num 3.38(D10) · (b) SEM."
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 16,
+   "file": "fig_S19.png",
+   "caption": "Figure S19: Generation of an L-Microstructure used for the flux-based simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    301.6,
+    526.3,
+    674.0
+   ],
+   "w": 1921,
+   "h": 1553,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.535,
+   "note": "봤다. L 미세구조 생성 — 무작위 LPSCl(청록 다면체) · NCM811(금색 구) · 잔여 NCM → 청소 · 90 µm 눈금(상자 300 µm). LPSCl 다면체 크기가 고르다(입력 거의 단분산 — D4)."
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 17,
+   "file": "fig_S20.png",
+   "caption": "Figure S20: Top: Modelled microstructures, bottom: Scanning electron microscopy images with energy dispersive X-ray spectroscopy mapping of pressed a) S, b) M, c) L and d) XL composites.",
+   "rotated_deg": 0,
+   "bbox": [
+    59.6,
+    65.8,
+    554.2,
+    255.4
+   ],
+   "w": 2062,
+   "h": 791,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.332,
+   "note": "봤다. 위 모형 단면 · 아래 SEM-EDS a–d — 대응은 정성(지표 0)."
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 17,
+   "file": "fig_S21.png",
+   "caption": "Figure S21: Flux-based simulation of effective electronic conductivity for composite PSDs: a) S, b) M, c) L, and d) XL. Smaller particle sizes exhibit a more uniform current distribution, leading to higher effective conductivities until reaching a plateau. Composite a) and b) demonstrate similar electronic ionic conductivities. Note that the simulation of composite a) was performed with a potential difference of 0.3 V to scale the current density according to the different model sizes. Achieving the same conductivities in smaller models requires a higher current density, which would result in exceptionally high current density in composite a).",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    310.7,
+    534.1,
+    620.7
+   ],
+   "w": 1953,
+   "h": 1293,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.435,
+   "note": "봤다. 모의 전자 전류 지도 0–220 mA/cm²(색 막대 'eletronic' — D18) · 캡션 'similar electronic ionic conductivities'(D18) · 눈금 S 25 µm ↔ 90 µm."
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 18,
+   "file": "fig_S22.png",
+   "caption": "Figure S22: Specific interface area between Li6PS5Cl and CAM for all modelled composites. The function “Surface Area” of the MatDict-module was used for the calculation. The specific",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    420.2,
+    534.1,
+    665.5
+   ],
+   "w": 1953,
+   "h": 1023,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "blank": 0.963,
+   "note": "봤다(화소 판독). 비계면 면적 1.43 · 0.38 · 0.27 · 0.17 × 10⁵ m⁻¹(±0.01) · S/M 3.74 ⚠ 본문 '142.7 × 10⁵ … 16.5 × 10⁵' = ×100 · 'factor of 3.5'(D6) · 재현 피복 φ 0.24 · 0.07 · 0.05 · 0.03(구 4.57 µm)."
+  },
+  {
+   "key": "tST1m",
+   "kind": "table",
+   "label": "ST1",
+   "page": 11,
+   "file": "tab_ST1_manual.png",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    133.0,
+    529.5,
+    366.0
+   ],
+   "w": 1916,
+   "h": 971,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "manual": true,
+   "note": "수동 크롭(SI 11 쪽 · 300 dpi · 캡션 포함) — 추출기가 'Table ST1:' 를 표 캡션으로 잡지 않아 자동 표 0. 봤다: Li6PS5Cl 30 wt% · 48 vol% · 1.87 g/cm³ · NCM811 70 · 52 · 4.78 · void S 14.1 · M 18.1 · L 21.4 · XL 24.3 % · 캡션 'Minnemann'(D18). ⚠ 밀도로 재현하면 52.3 · 47.7 vol% — 부피 분율이 뒤바뀌었다(D3). 값은 텍스트 층과 같다."
+  },
+  {
+   "key": "tST2m",
+   "kind": "table",
+   "label": "ST2",
+   "page": 13,
+   "file": "tab_ST2_manual.png",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    212.0,
+    510.0,
+    361.0
+   ],
+   "w": 1834,
+   "h": 622,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "manual": true,
+   "note": "수동 크롭(SI 13 쪽 · 300 dpi · 캡션 포함). 봤다: D50vol · µa · σa · 's / µm' · D90vol · D10vol 네 행(4 | 4.81 | 4.48 | 1.95 | 9.22 | 0.97 · 11 | 21.10 | 37.79 | 4.45 | 52.71 | 2.16 · 20 | 30.64 | 44.64 | 3.28 | 118.66 | 3.76 · 40 | 65.29 | 100.73 | 2.98 | 133.16 | 8.12). ⚠ 내부 불일치 — span 재현 안 됨 · L D90 118.66 ↔ 측정 ≈59 · D50 열 = 이름표 · 무차원 span 에 µm 단위(D9) · 모형은 s 를 µm 표준편차로 넣었다(D4). 값은 텍스트 층과 같다."
+  },
+  {
+   "key": "tST3m",
+   "kind": "table",
+   "label": "ST3",
+   "page": 15,
+   "file": "tab_ST3_manual.png",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    477.0,
+    527.5,
+    575.0
+   ],
+   "w": 1907,
+   "h": 409,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "manual": true,
+   "note": "수동 크롭(SI 15 쪽 · 300 dpi · 캡션 포함). 봤다: CAM µa 4.57 · σa 0.99 · D90num 6.89 · D50num 3.38 · D10num 1.54 µm. ⚠ µa · σa 로그정규의 중앙 4.47 · D10 3.39 · D90 5.88 과 안 맞고 D10 1.54 는 S18a 최소 측정 입자(≈2.1)보다 작다(D10). 값은 텍스트 층과 같다."
+  },
+  {
+   "key": "tST4m",
+   "kind": "table",
+   "label": "ST4",
+   "page": 18,
+   "file": "tab_ST4_manual.png",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    97.5,
+    529.5,
+    398.5
+   ],
+   "w": 1916,
+   "h": 1255,
+   "dpi": 300,
+   "src": "7eb1bcba-44._Sup_Impact_of_the_solid_electrolyte_particle_size_distribution_in_sulfide_based_solid_state_battery_composites.pdf",
+   "manual": true,
+   "note": "수동 크롭(SI 18 쪽 · 300 dpi · 캡션 포함). 봤다: 이온 exp 0.254 · 0.199 · 0.153 · 0.165 · sim 0.193 · 0.130 · 0.097 · 0.107 · κ_sim 4.70 · 6.65 · 8.56 · 7.50 · 전자 exp 0.301 · 0.257 · 0.311 · 0.406 · sim 0.765 · 0.767 · 0.635 · 0.431 · κ_sim 3.04 · 2.89 · 3.35 · 4.75(mS/cm). 본문이 한 번도 부르지 않는 표인데 본문 σ · κ 의 원표 · κ_sim 8/8 이 ε = 0.48/0.52 × (1 − void) 로 재현(±0.4 %). 값은 텍스트 층과 같다."
+  }
+ ]
+}

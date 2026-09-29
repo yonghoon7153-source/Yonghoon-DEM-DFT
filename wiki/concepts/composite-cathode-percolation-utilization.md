@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -549,6 +549,17 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - `[재현]` **22호 교차 대입** — 22호 7 : 3 무탄소(ψ ≈0.47 · 이 편 66.5 wt% 상당)에서 22호-S(4.0 µm · 불활성 2 %)는 이온 반쪽이 d_SE ≲2.7 µm, 68호 전자 평균장이 ≥4.6 µm 를 요구 — 두 정적 반쪽이 한 점도 함께 못 맞춘다(계 다름 — 방향만).
 - ⇒ 이 페이지 규율에 붙는 것(`[해석]`): (1) 계산 `θ` 는 **네 칸(가중 · 연결 기준 · 경계 · 반쪽)** 을 달아 옮긴다 — 같은 "방법" 인용이 같은 양이 아니다(25호) (2) `θ₀` 사전은 DEM 지도 · 해석식 · 첫 충전 하한 **세 출처의 폭**으로 둔다(이 편 λ 1.67 · 80 wt%: 0.49 · 0.64 · 0.99 — 보류 새 판단 거리) (3) 원전 DEM 에도 운전 압력 단계가 없다 — 25호 절의 (3) 은 계보 전체의 빈칸이다.
 
+## ★★ SE 입도 네 수준의 독립 표본 — 입도 대표값(부피 ↔ 개수)이 77호 지도 위의 자리를 뒤집고, 모형의 "균질도 · 병목" 은 측정이 아닌 입력 PSD 위에 있다 (2026-09-29 추가, `assb` 82호)
+
+`raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md` (Schlautmann · … · Bielefeld · Zeier 2023, *Adv. Energy Mater.* 13, 2302309 — 시판 Li₆PS₅Cl 네 분말 × NCM811 70 : 30 · 무탄소 · 반쪽 셀 + 차단 셀 + GeoDict 모형).
+
+- **`θ` 는 없다** — 이 편은 연결(퍼콜레이션) 분율을 계산하지 않았다(`percolat` 0 · `isolat` 1 = 청소 규칙). 모형 출력은 σ_sim · κ_sim · 전류 지도 · 계면 면적이고, "localized ionic current flow" · "a few particle-to-particle-point contacts that can be regarded as bottlenecks" 는 연결의 **폭** 쪽 서술이다([[assb-tortuosity-factor-effective-conductivity-split]] 열두 번째 표본).
+- **λ(같은 정의 D_CAM/D_SE)** `[재현]`: 부피 D50 기준 **0.85 · 0.31 · 0.17 · 0.085**(이름표) · 0.89 · 0.34 · 0.20 · 0.086(측정) ↔ 개수 D50 기준 ≈21 · 1.26 · 1.26 · 1.26 — 77호 70 wt% 지도(같은 조성 · Fig. 3b 표지 선형 보간)에 대면 **≤0.37(부피) ↔ ≈0.79(개수)**. 77호 지도는 단분산 구의 λ 라 fines(이 편 M 부피 ≈24 % < 1.5 µm)를 모른다.
+- **측정 ↔ 지도**: 이 편 C/20 용량 비(÷ S) 0.908 · 0.875 · 0.834 — `θ`(분리막까지 SE 로 이어진 CAM 부피 · 모형)와 **정의가 달라** 수치 대조하지 않는다. 방향(작은 SE → 연결 · 피복 ↑)은 68 · 77호와 같다.
+- **C/20 결손의 자리** `[재현]`: 복합체 수송 옴 강하(가정 두께 55–62 µm · 측정 σ_eff) C/20 **2–4 mV** — S ↔ XL 차 30 mAh g⁻¹ 을 만들 수 없다. 율 되돌림(Fig. 4d)에서 1C 결손은 돌아오고 C/20 차는 남는다 → `θ` 형 고립 · `A_eff` · 첫 사이클 손실 후보(가르지 못함). 첫 충전 상한: XL/S 충전 비 0.83(본문 — S = 셀 하나) · 0.92(S 셋 평균) ↔ 방전 비 0.77 · 0.85 → 고립 몫 상한 8–17 %, 방전 결손 중 6–7 %p 는 충전 뒤에 생긴다(25 · 77호 절과 같은 모양).
+- ⚠ **모형의 "균질도" 는 입력의 결과다** — 입력 PSD 가 측정이 아니다(S17b: M/L/XL 중앙 ≈20.7 · 30.1 · 64.9 µm · CV 0.21 · 0.11 · 0.046 · fines 0 — span 을 µm 표준편차로 넣음) · S 만 다면체 CAM · 300 nm · (90 µm)³ ↔ 구 · 600 nm · (300 µm)³ · 청소 문턱(고립 CAM < 1000 복셀 → SE)이 3.7 ↔ 7.4 µm — M/L/XL 에서는 CAM 입자 하나 전체가 문턱 아래(보류 (고) 복셀 이산화 물음의 한 표본). 겹침 → CAM 배정은 01호([32])와 같고 정지 기준은 3 %(01호 ≈10⁻⁵ vol%).
+- ⇒ 이 페이지 규율에 붙는 것(`[해석]`): (1) λ · `θ` 지도에 입도를 넣을 때 **가중(부피 · 개수) · fines · 모형 입력 분포**를 같이 적는다 (2) 모형 편의 "균질도 · 병목" 서술은 모형 입력이 측정인지 먼저 본다 (3) 반쪽 셀 XL 양극(≈62 µm)은 SE 입자 한두 개 두께 — 연결을 두께 무관 부피 성질로 읽는 전제(77호 S1b)가 이 체제에서는 시험되지 않았다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - `θ_AM` 이 접촉 손실의 **올바른** 모형이라고 주장하지 않는다. 원문의 `θ` 는 접촉 저항을
@@ -570,6 +581,7 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - ★ **2026-09-28 (75호)**: **75호 모형에 고립이 없다고 하지 않는다** — DNS 미세구조에는 고립 클러스터가 있을 수 있고(저자 서술), σ_eff 계산이 그 효과를 평균으로 품는다. 주장은 **균질 모형에 고립 분율의 자리가 없어 용량으로 번역되지 않는다**는 것까지다.
 - ★ **2026-09-29 (76호)**: **SE 부피 분율 · 문턱 통과 자리를 이 편의 값으로 쓰지 않는다** — 흑연 · LPSCl 밀도는 다른 편의 외부 값이고 공극률은 0 으로 둔 `[재현]` 이다. 영상의 "60 ↔ 80 % 전이" 와 S1 급락(40 → 60 %)의 어긋남은 반정량 판독 위의 긴장이지 어느 쪽이 틀렸다는 판정이 아니다.
 - ★ **2026-09-29 (77호)**: **이 편 DEM `θ` 가 틀렸다고도, 거울 평균장이 맞다고도 하지 않는다** — 첫 충전 상한 위반은 `[도표]` 판독 · 기준 셀 하나 · 조건당 셀 1 위의 검사이고, 거울 평균장은 원전들 어디에도 없는 우리 확장이다. Fig. 7b 가 무엇을 그렸는지도 확정하지 않는다(7a 환산도 두 상 부피분율도 아니라는 것까지).
+- ★ **2026-09-29 (82호)**: **82호의 용량 비를 `θ` 로 쓰지 않는다** — 연결 분율은 계산되지 않았고, C/20 결손의 `θ` · `A_eff` · 첫 사이클 손실 배분은 이 편 자료로 갈리지 않는다. 77호 지도 대입은 λ 정의만 같은 우리 산술이다.
 
 ## 관련
 - [[assb-apparent-capacity-decomposition]] — 이 곱에 **셋째 항 `η(i)`** 를 더한다. 반례와 분리 시험.

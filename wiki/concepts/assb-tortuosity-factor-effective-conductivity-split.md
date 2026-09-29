@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -203,6 +203,17 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - **곱의 자리**: 이 편에서는 곱이 **연결(θ) 한 인자로 줄었다** — `ε`(SE 분율)과 λ 가 θ 를 정하고, τ · κ 는 결과에 들어가지 않는다. 논의의 "a smaller percolation channel width and an increased number of particle/grain boundaries that may increase the impedance within the SE network" 가 τ · κ 쪽 이야기이고 계산 0.
 - ⇒ 처방에 붙는 것(`[해석]`): 24호가 이 편을 "τ↑ 논거의 원전" 으로 매단 자리는 **연결(θ)과 굴곡도(τ)를 한 이름으로 묶은 것**이다 — 같은 λ 손잡이가 둘을 함께 움직이지만(작은 SE → 연결 ↑ · 입계 ↑ · 채널 폭 ↓) 이 편이 계산한 것은 연결뿐이다. "굴곡도 진화" 를 옮길 때 그 출처가 τ 를 인쇄했는지 먼저 본다.
 
+## ★★ 열두 번째 표본 — 측정 κ(차단 셀 두 종 · AC · DC)와 모형 κ(GeoDict)가 한 편에: 규약은 57 · 73호와 같고 같은 70 : 30 wt% 에서 73호와 같은 크기 — 그러나 모형 입력 PSD 는 측정이 아니고 상 분율 표기가 뒤바뀌었다 (2026-09-29, `assb` 82호)
+
+`raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md` (Schlautmann · … · Bielefeld · Zeier 2023, *Adv. Energy Mater.* 13, 2302309 — 시판 Li₆PS₅Cl 네 입도 × NCM811 70 : 30 · 무탄소 · 차단 대칭 셀 + GeoDict).
+
+- **정의 · 규약**: `[인쇄]` "κ = volume fraction · bulk conductivity / effective conductivity" — 이 페이지의 `τ²`(굴곡도 인자) · 27 · 29호의 `τ` 와 같은 양. `[재현]` ST4 κ_sim 8/8 · S15 관측 κ 8/8 이 `ε_SE = 0.48(1 − void)` · `ε_CAM = 0.52(1 − void)`(전체 부피 기준 — 57 · 73호 규약)로 ±0.4 % 안. ⚠ ST1 의 48/52 vol% 는 같은 행 밀도로 `[재현]` 52.3/47.7 — **뒤바뀐 분율 위의 κ**(밀도 분율이면 κ_ion ×1.089 · κ_el ×0.918).
+- **측정**: 이온 차단(steel) · 전자 차단(In/LiIn \| SE) 대칭 셀 · T형 TLM(73호와 같은 회로) + DC 분극 · 셀 셋(DC 이온 둘). κ_ion 관측 **3.57 · 4.35 · 5.43 · 4.85**(S → XL) · κ_el 관측 **7.72 · 8.62 · 6.83 · 5.04** · DC/AC −21.6 … +26.3 %.
+- **`[재현]` 같은 정의 · 같은 조성 대조**: 73호 42 vol% 점(= 70 : 30 wt% · NCM622 · void 14 % 가정) `τ²_ion` 4.27 · `τ²_el` 7.40 ↔ 이 편 3.57–5.43 · 5.04–8.62 — **같은 크기**. 등가 Bruggeman 지수(이온) **2.44–2.73**(ST1 분율 · 밀도 분율 2.70–3.00) — 37호의 가정 3.67 은 이 `ε` 에서 κ 10.7–14.9(×3).
+- **모형 ↔ 측정**: κ_sim 이온 4.70 · 6.65 · 8.56 · 7.50 — 측정의 ×1.3–1.6(모의 σ 가 측정의 0.63–0.76) · 전자 3.04 · 2.89 · 3.35 · 4.75 — 측정의 ×0.34–0.94. ⚠ 모형 입력 PSD 는 측정 PSD 가 아니다(S17b — span 을 µm 표준편차로 넣은 거의 단분산 · fines 0 — 82호 D4) · S15b 의 모의 κ_el 은 이온 모의 값 복제(D5).
+- **곱의 자리**: SE 입도 한 손잡이가 `ε`(공극 14.1 → 24.3 %)와 κ 를 **같이** 움직인다 — σ_ion,eff 변화 ×1.54(AC) 중 `ε` 몫 `[재현]` ×1.13(0.4123/0.3634) · κ 몫 ×1.36. 전자 쪽은 σ_eff 가 거꾸로 간다(×0.74 AC · ×1.03 DC).
+- ⇒ 처방에 붙는 것(`[해석]`): 같은 편에서 측정 κ 와 모형 κ 가 어긋나면(이온 모형이 ×1.3–1.6 더 굴곡) **모형 입력이 측정인지부터** 본다 — 82호의 격차는 입력 PSD(단분산 큰 SE · fines 0)와 뒤바뀐 분율 표기 위에 있어, 모형 오차로도 미세구조 기구로도 읽을 수 없다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - **"굴곡도가 진화하지 않았다" 고 하지 않는다** — `σ_eff` 로 보면 70 % 는 변화 없음, 80 % 는 ≈3 배이고, 그 3 배의 배정이 안 갈린다는 것까지다.
@@ -214,6 +225,7 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - ★ **2026-09-28 (75호)**: **DNS τ ↔ 73호 τ² 비(×1.9–5.9)를 같은 계의 모형 오차로 쓰지 않는다** — 입도 · 공극 · SE 가 다르다(방향 대조). 이 편의 τ 는 Fig. S1 래스터 판독 위의 우리 역산(표 S1 밀도 · 공극 5 %)이다 — 저자는 τ 를 표로 인쇄하지 않았다(Fig. 2a 색 지도뿐).
 - ★ **2026-09-29 (76호)**: **S1 ↔ S2 중 어느 단위가 틀렸는지 확정하지 않는다** — S1 ≈ (0.86–0.97)/R_ion 은 별표 픽셀 판독 · 교점 공식 가정 위의 `[재현]` 이다. 모형 ↔ 측정 κ_eff ×5–9.5 도 밀도 가정 ε 와 2D 영상 ε_SE 위의 산술이고, 모형 τ 의 정의식은 미인쇄다.
 - ★ **2026-09-29 (77호)**: **24호의 "굴곡도 진화" 가 틀렸다고 하지 않는다** — 원전 자리(이 편)에 τ 가 인쇄되지 않았다는 것까지이고, 24호 자신의 σ_eff 대조(24호 digest §4-2d)는 이 편과 무관하다.
+- ★ **2026-09-29 (82호)**: **82호 κ 와 73호 `τ²` 의 "같은 크기" 를 같은 계의 재현으로 쓰지 않는다** — NCM622 ↔ 811 · SE 입도 · 공극(가정 14 % ↔ 밀도 14.1–24.3 %)이 다르다. 규약 재현(8/8)은 인쇄 분율(뒤바뀐 48/52) 위의 우리 산술이고, 등가 Bruggeman 지수도 같은 산술이다.
 
 ## 관련
 
