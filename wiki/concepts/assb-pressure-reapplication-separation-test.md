@@ -2,10 +2,10 @@
 title: 압력 재인가 분리 시험 — ASSB 겉보기 용량 손실의 가역/비가역 가르기
 description: "Pressure re-application as the second separation operator in ASSB: rate erases the kinetic term η(i), stack pressure (partially) restores the geometric term θ_AM, and what is left is true LAM_PE (Shi 2020 measured instance)"
 created: 2026-09-16
-updated: 2026-09-28
+updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
+sources: [raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -368,6 +368,24 @@ Li₂₁Si₅/Si–Li₂₁Si₅ 이중층 음극 ‖ Li₆PS₅Cl ‖ Li₃InCl
 - `[해석]` 61호 절의 "유지 시간" 과 같은 방향 — 62호 원시 기저의 시간당 표류(≈0.02 → 0.009 MPa h⁻¹, 율을 올린 구간에도 시간에 따라 준다)는 **압력을 건 뒤의 시간**이 신호를 움직인다는 셀 안 표본이다
   (재료는 In · LGPS — Li 가 아니다).
 
+## ★ 81호(Xu 2024)가 붙인 것 — **4호 재가압의 종설 전사가 D5 를 어긴 형태로 퍼진다: MF 만 인쇄 · LF · HF "불변"** (2026-09-29)
+
+`raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md` — *Adv. Energy Mater.* 14, 2303539 · Review(1차 측정 0) · 8 · 25 · 33호 지목 · 3차 묶음 파일 43.
+이 연산자의 유일한 양극 실측(4호 = 이 편 [81])을 종설이 어떻게 옮기는지의 표본이다. 이 편에 새 재가압 조작은 없다 — 실측 표본은 4호 한 편 그대로다.
+
+| 항목 | 4호 원전(4호 digest) | 81호 본문 | 81호 재수록 그림(Fig. 7c,d) |
+|---|---|---|---|
+| 셀 | NMC532(LZO)/비정질 LPS/CNF · In 음극 · ~2 MPa 스프링 | "LLZO-based SSBs" | 분할 범례 NMC · CNF · LPS · Void |
+| 재가압 뒤 EIS | `[인쇄]` MF 3283 → 2755 Ω · LF(음극 계면 배정) "decreases after pressing" | "mid-frequency … 3283 to 2755 Ω **while the low-frequency and high-frequency regions remain unchanged**" | `[도표]` LF **108.3 → 38.6 kΩ** · HF 4.5 → ≈2.75 · MF 3.27 → 2.75 kΩ(인쇄 MF 값을 ±0.02 kΩ 로 재현 — 눈금 검증) |
+| 결론 | 초록 · 결론 = 양극 접촉 손실(4호 D8) · 본문은 음극 몫 인정 | "the primary cause of deterioration is primarily attributed to the loss of contact between the SSE and cathode" | — |
+
+- `[재현]` 재수록 그림에서 LF 감소 −69.7 kΩ(−64 %)는 MF 감소(−0.53 kΩ)의 **≈132 배** — 이 편 자신이 실은 그림이 본문의 "불변" 을 반박한다(81호 D1).
+- `[해석]` **D5(채널별 신고)를 어긴 전사**: 연산자가 움직인 채널 셋 중 MF 하나만 인쇄되고, 가장 크게 움직인 LF(음극 배정)가 "불변" 으로 바뀌었다 — 경고 2(회복의 대부분이 음극일 수 있다)가 종설 층에서
+  **지워진다**. 33호 D1/G4(원전 없는 재활성) · 59호 D7(인용 0 "Stack pressure minimizes this effect")에 이은 **셋째 종설 층 표본** — 종설을 거치며 "압력 → 양극 접촉 되돌림" 이 원전보다 강해진다.
+- 설계 조건 쪽 재수록 근거(보류 (하) 근거 — 결정 안 함): **D1 · D4** — Lee 2021 [45] 개방 회로에서 30 MPa 가 20 h 에 `[도표]` 27.6(LPSC) · 24.8 MPa(LSPS)로 내려간다(구속 형식은 이 편 · 캡션 모두 미인쇄) — 걸어 둔 압력은
+  상수가 아니다. **유지 시간** — Zhang X. [8] 모형 4.5 MPa 에서 접촉 영역이 0 → 1 → 5 h 에 넓어진다(61호 절의 "유지 시간" 과 같은 방향 · Li 금속 · 모형). **D1 의 전극 몫** — 62호 두 패널을 떼어 싣고
+  LTO 패널을 "LCO + In-Li" 로 적어 상대극 몫(62호 `[재현]` ≈90–95 %)이 전사에서 사라진다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - **원문의 식이 아니다.** Shi 2020 은 `ΔQ_mech` 를 정의하지도, 10.4 % 와 60 %p 를
@@ -381,6 +399,8 @@ Li₂₁Si₅/Si–Li₂₁Si₅ 이중층 음극 ‖ Li₆PS₅Cl ‖ Li₃InCl
   모집단은 NMC532+LZO / 비정질 LPS / In 음극 / ~2 MPa / ≈C/15 / 50 사이클이다.
 - **압력이 열화 축이라고 주장하지 않는다.** 4호에서 압력은 **진단 조작**이지
   사이클 변수가 아니다. 압력 스윕 하에서의 `θ(N)` 은 `assb` **4/4 편이 안 줬다.**
+- **종설의 재가압 서술을 이 연산자의 근거로 쓰지 않는다** (2026-09-29, 81호) — 81호 본문의 "LF · HF 불변" 은 자기 재수록 그림과 어긋나고, 4호 원전은 LF 감소를 인쇄한다.
+  근거는 원전(4호)의 그림과 원문이다.
 
 ## 관련
 - [[assb-stack-pressure-operating-window]] — **이 연산자의 사용 조건**: 압력의 2 측 구속과 상한(5호 Doux 2020).

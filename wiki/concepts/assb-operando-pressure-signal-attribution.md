@@ -5,7 +5,7 @@ created: 2026-09-28
 updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade.md, raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md]
+sources: [raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade.md, raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -49,6 +49,12 @@ h(t) = h_base(t) +            Σ_e Δh_e(q)        # 높이 신호(딜라토미�
 ⚠ **2026-09-28 (72호) 주석 — 양극 몫은 조성 · 상한 전압에 더해 연구실 · 사이클로도 흔들린다.** 72호(Ishidzu 2016 *SSI* 288, 176 — 액체 반쪽 · 여섯 조성 · 첫 충전으로 읽힘 · 2.5–4.5 V · 0.05 C)에서 4.5 V 격자 `ΔV/V` 가 Ni 1/3 → 0.7 에 2.24 → 5.76 %(×2.6 · `[도표]` 벡터 좌표)이고, NCM111 부피 변화의 ≈47 % 가 `c` 최대(x ≈0.59) 뒤 Δx 21 % 에 몰린다(`[재현]` dV/dx ≈2.0 → 9.6 Å³ per x). 같은 조성 · 같은 4.5 V 에서 66호 표 S1 보다 +0.4…+1.0 %p(×1.1–1.5) — 격자 층위 안의 이 폭이 69호 층위 몫(입자/격자 ×1.5)과 같은 크기다. ⇒ 두께 · 압력 신호의 양극 몫을 한 교정 곡선의 `dV/dx` 로 추정할 때 조성 · 상한 전압 · 교정 셀(사이클 번호 · 율 · 로트)을 값 옆에 적는다(`[해석]`).
 ⚠ **2026-09-29 (80호) 주석 — `P(t)` 는 면 적분(총 하중 ÷ 면적)이고, 국소 압축의 면 분포는 이 식에 없다.** 80호(Okasinski 2020 *PCCP* — 액체 NCM523/흑연 CR2032 · in situ EDXRD 로 두 전극 경계를 측면 주사)에서 비슷한 크기의 코인셀 하중(`[인쇄]` 0.14 · 0.185 MPa · `[재현]` 스프링 셀 1 · 3 · 5 · 8 ≈0.1–0.2 MPa)에서도 바닥 전극 판 휨 δ 가 구성에 따라 3.5–15.8 µm(×4.5)이고 전극 간극이 가장자리 ↔ 가운데 15–44 % 다르다 — 하중 한 값이 같아도 전극 간극 · 분리막 압축의 면 분포는 설계(스페이서 지지 · 캔 모양 · 구속 형식)가 정한다.
 ⇒ 압력(두께) 신호를 전극 몫으로 나눌 때 `Σ_e Δh_e` 는 면 평균이고, 측면 `η(r)`(80호 가장자리 띠 = 면적 50 %)로 활성 부피의 Δx 가 측면 불균일하면 "실제로 Δx 를 겪은 활성 부피" 도 측면 가중이다(`[해석]`). 80호 자체에는 운전 중 압력 신호가 없다(표본 표 행 0).
+⚠ **2026-09-29 (81호) 주석 — 종설 전사가 전극 몫을 지운다(함정 1 의 종설판).** 81호(Xu 2024 *Adv. Energy Mater.* 14, 2303539 — Review · 1차 측정 0)는 62호([9])의 두 패널을 **떼어** 싣는다 — In ‖ LCO 패널
+(`[도표]` 충전 ΔP 0.1 C 1.20–1.27 MPa)은 Fig. 1 연표에, LTO ‖ LCO 대조 패널(≈0.065 MPa)은 Fig. 8b 에 — 그리고 본문은 LTO 패널을 `[인쇄]` "The regular “cell breathing” phenomenon was triggered by the volume changes of
+the LiCoO2 cathode **and the In-Li anode**.[81]" 로 설명한다(인용 번호도 4호 [81] — 81호 D3). `[재현]` 두 패널 비 ≈19 배(62호 ×18.9 와 같은 크기)가 한 지면 안에 있는데 서술은 상대극 몫(≈90–95 %)을 말하지 않는다.
+같은 쪽에서 Ham [93] 의 ΔP ≈2 MPa(기저 ≈4.9 — 진폭 ≈40 %)를 "more sensitive to the cathode loading instead of applied current densities" 로 옮기지만 그림은 전류만 바꿨다(D4), 개방 회로 Lee [45]
+(30 → `[도표]` 27.6 · 24.8 MPa / 20 h)는 `P_base(t)` 표류의 **무전류 재수록 표본**인데 본문은 "from 5.2 to 2.3 MPa" 로 하강 폭을 절대값처럼 옮긴다(D2). ⇒ 압력 신호가 종설을 거치면 전극 몫 · 기저 · 조작 변수가
+같이 흐려진다 — 표본 표의 재수록 행은 원전 판독이 아니다.
 
 ## 왜 중요한가 — 카드 Q2 · Q1 에서 이 신호를 쓸 때의 함정 다섯
 
@@ -78,8 +84,12 @@ h(t) = h_base(t) +            Σ_e Δh_e(q)        # 높이 신호(딜라토미�
 | 33호 재수록 [58] Koerver 2018 | LCO/NCM 양극 | — | ≈0.05–0.07 | — | — |
 | 33호 재수록 [19] | (스프링 = 정압 지그) | 5 MPa | 5 → 5.21(+4 %) | — | — |
 | 9호 Huo 2025 | NCM811 ‖ 황화물 ‖ Li-Si | 예압 · 수압 면적 0 | 12 사이클 힘 시계열 — **단위 Kg** · MPa 환산 · 교정 0 | — | — |
+| 81호 재수록 [92] Liang 2021 | LTO(영변형 기준) ‖ Li 금속 · 그림 글자 "Stress Sensor" | 기저 ≈1.67 MPa(그림에만) | 3300 h 에 ≈1.67 → ≈1.76 · 사이클 진폭 ≈0.02–0.03(`[도표]`) | — | "stress … directly proportional to the amount of Li deposition"(값 0) |
+| 81호 재수록 [93] Ham 2023 | NCM811 ‖ LPSCl ‖ Li 금속 | 기저 ≈4.9 MPa(그림에만) | ≈4.9 ↔ ≈7.0 · 전류 0.2 → 0.5 mA cm⁻² · "Cell short 0.5 mA/cm²"(`[도표]`) | — | 본문 "cathode loading" — 그림은 전류만(81호 D4) |
+| 81호 재수록 [45] Lee 2021 | Li ‖ LPSC ‖ Li · Li ‖ LSPS ‖ Li(개방 회로) | 초기 30 MPa(캡션) | 무전류 20 h → ≈27.6(LPSC) · ≈24.8(LSPS)(`[도표]` ±0.05) | — | 본문 "from 5.2 to 2.3 MPa"(하강 폭의 오전사 — 81호 D2) |
+| 81호 인쇄 [91] Han 2021(= 33호 [90]) | 합금 음극(Sb · Sn · Si) · 아지로다이트 · NMC111(81호 본문) | — | "2.25 MPa for Sb anode, 1.28 MPa for Sn, and 1.49 MPa for Si" | — | 33호 재수록 그림(Sb:LPSC ‖ Li)과 같은 원전의 다른 셀일 수 있다(미열람) |
 
-⚠ 33호 재수록 값은 33호 digest 의 그림 판독이고 원전 미열람이다. 62호 LTO 자료 제공자(R. K.)와 [58] Koerver 2018 이 같은 측정 계열인지는 **미확인**이다.
+⚠ 33호 · 81호 재수록 값은 각 digest 의 그림 판독이고 원전 미열람이다. 81호가 62호 두 패널(In ≈1.2 · LTO ≈0.065 MPa)을 따로 싣는 것은 새 행으로 세지 않는다(62호 행과 같은 자료). 62호 LTO 자료 제공자(R. K.)와 [58] Koerver 2018 이 같은 측정 계열인지는 **미확인**이다.
 
 ⚠ **2026-09-28 (63호) 정정 둘.** (i) 62호 LTO 셀의 "air-tight cell casing designed by our group27" 은 63호 SI Fig. S3 케이스다 — **나사 10 N·m 토크 · Al 프레임 · 하중계 없음**. 62호 Fig. 4 의 In ↔ LTO 비교는 hot-press 셀 ↔ 나사 케이스 셀의 비교였을 수 있고(62호가 LTO 셀 압력을 어떻게 쟀는지는 여전히 0), 함정 1 의 음극 몫 ≈90–95 %(`[재현]`, 같은 `k_eff` 가정)는 **조건부**다. (ii) 62호 ESI S3("stable electrochemical performance")의 셀은 63호 Fig. 9 셀 C 이고 63호 방법상 **Li 박 1:60 장기 셀**이다 — 62호 압력 셀과 다른 셀 · 다른 Li 재고.
 
@@ -101,6 +111,7 @@ h(t) = h_base(t) +            Σ_e Δh_e(q)        # 높이 신호(딜라토미�
 - **33호 재수록 값 · 9호 힘 시계열을 MPa 눈금에서 62호와 나란히 비교하지 않는다** — 재수록 판독 · 단위 Kg · 기저 미인쇄가 섞여 있다. 표는 **무엇이 인쇄됐는가**의 대조다.
 - **`evidenceScope: multi-source-mixed` · `confidence: low`** — 1차 측정은 62호 · 60호 둘이고 나머지는 재수록 · Perspective 다.
 - **80호 코인셀의 면 분포 수치(δ · 간극)를 운전 압력 신호의 보정 인자로 쓰지 않는다** (2026-09-29) — 액체 코인셀의 판 휨이고 80호에는 운전 중 압력 신호가 없다; 주석은 신호 식의 성질(면 적분)을 적은 것이다.
+- **81호의 재수록 압력 신호(Liang · Ham · Lee · Han)를 이 페이지의 1차 표본으로 세지 않는다** (2026-09-29) — 종설 재수록 그림의 판독이고 원전 미열람이며, 그중 둘(Ham · Lee)은 81호 본문 서술이 자기 그림과 어긋난다. 표 행은 무엇이 재수록됐는가의 목록이다.
 
 ## 관련
 - [[assb-contact-loss-vs-lampe]] — 닻. Q2 칸의 압력 센서 항목이 이 페이지의 함정 다섯에 걸린다.

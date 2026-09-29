@@ -2,10 +2,10 @@
 title: Li 금속의 항복 · creep 과 스택 압력 계보 — 벌크 실측이 0.1–5 MPa 띠에 놓는 눈금
 description: "Bulk polycrystalline Li at room temperature (Masias 2019): E 7.82 / G 2.83 GPa, yield 0.73–0.81 MPa, tensile power-law creep n = 6.56 measured below yield (0.2–0.6 MPa). Laid over the ASSB operating-pressure lineage (0.1–5 MPa) the band crosses diffusional creep, power-law creep, yield and power-law breakdown - a x50 pressure band is a 6–11 decade creep-rate band"
 created: 2026-09-28
-updated: 2026-09-28
+updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/schlenker2020_li6ps5cl-li-metal-lifetime-three-electrode.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md]
+sources: [raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/schlenker2020_li6ps5cl-li-metal-lifetime-three-electrode.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -39,7 +39,8 @@ evidenceScope: single-source
 
 ## 왜 중요한가 — 계보의 압력 띠는 한 물리가 아니다
 
-[[assb-stack-pressure-operating-window]] 가 모은 운전 압력 요구치는 **여덟 편 · 0.1–5 MPa · 확인된 원전 0**(59 · 60 · 61호). 그 띠를 Li 의 눈금 위에 놓으면:
+[[assb-stack-pressure-operating-window]] 가 모은 운전 압력 요구치는 **여덟 편 · 0.1–5 MPa · 확인된 원전 0**(59 · 60 · 61호). (2026-09-29 81호: 8호가 가리킨 원문 Xu 2024 도
+`< 1 MPa` 를 인용 0 으로 인쇄 — 아홉 편 · 독립 인쇄 여덟 · 원전 0 그대로.) 그 띠를 Li 의 눈금 위에 놓으면:
 
 | 계보 값 (MPa) | 출처 | σ/G | Li 눈금 | `[재현]` 인장 멱법칙(`n` 6.56)으로 1 % 변형에 걸리는 시간 |
 |---:|---|---:|---|---|
@@ -47,7 +48,7 @@ evidenceScope: single-source
 | 0.2 · 0.4 · 0.6 | 61호 인장 creep 측정 | 0.7–2.1×10⁻⁴ | **멱법칙 creep(측정)** | 14 h · ≈12 분 · ≈26 s(측정값) |
 | **0.73–0.81** | **항복** | 2.6–2.9×10⁻⁴ | | ≈10 → 5 s(외삽) |
 | 0.8 | 60호 정변위 지그 예압 · 61호 압축 하한 | 2.85×10⁻⁴ | 항복 자리 | |
-| 1 | 61호 기준값("we believe sufficient") · 8호 ≈1 · 39호 1 · 5호 아래 벽 최저점 | 3.5×10⁻⁴ | 항복 바로 위 · 압축 시험 범위 | ≈1 s(외삽) |
+| 1 | 61호 기준값("we believe sufficient") · 8호 ≈1(= 81호 < 1 의 재인용) · 39호 1 · 5호 아래 벽 최저점 | 3.5×10⁻⁴ | 항복 바로 위 · 압축 시험 범위 | ≈1 s(외삽) |
 | 2 | 33호 <2 · 4호 ~2 · 6호 2–4 | 7.1×10⁻⁴ | 압축 시험 범위 | ms(외삽) |
 | ≈2.3 | 60호 첫 충전 총(0.8 + 1.51) | 8.2×10⁻⁴ | 압축 상한 근처 | |
 | **2.83** | σ/G = 10⁻³ | 10⁻³ | **power-law breakdown 경계** — 위로는 멱법칙 외삽 무효 | |
@@ -71,6 +72,19 @@ evidenceScope: single-source
 | 46호 Schlenker 2020 ref 51 → Wang & Sakamoto 2018 | "Li 항복 2 MPa" | 같은 실험실 1 년 뒤 0.73–0.81 | ⚠ 2.5× — Wang 2018 미열람; 46호 논증(Li 경도로는 44 MPa 까지의 계면 임피던스 감소를 설명 못 함)은 항복이 낮을수록 강해진다 |
 | 14호 · 5호 → LePage 2019 | "10 MPa 는 Li creep 을 일으키기에 충분" | 10 MPa = 항복 13× · breakdown 영역 | ✅ 방향(a fortiori) — LePage 미열람 |
 | 61호 자신 → [9] Sharafi 2016 · [10] Wang & Sakamoto 2018 | "stack pressures in the 1.0 MPa range are necessary to achieve low and stable cell resistance" | 같은 지면: "How much compressive stress is not known … We believe 1 MPa was sufficient" | ⚠ 요구치와 미지가 같은 지면 — 계보 "≈1 MPa" 의 가장 이른 인쇄(2018); 원전 둘 미열람 |
+
+⚠ **2026-09-29 (81호 Xu 2024 *Adv. Energy Mater.* — 종설 · 1차 측정 0) 주석 — 이 눈금에 대조 넷.** 81호는 이 원전을 [68] 로 인용하되 Li 연성 문장("[66–68]")에만 붙이고 수치를 옮기지 않는다.
+같은 지면의 다른 Li 값을 이 페이지 눈금과 맞대면:
+
+| 81호 인쇄 · 재수록 | 값 | 이 눈금과 | 판정 |
+|---|---|---|---|
+| Fig. 5b 이론 띠 [69](`[도표]` 그림 속 글자) | Li 경도 `H_Li` = 2–8 MPa | `[재현]` Tabor(H ≈3 σ_y) × 항복 0.73–0.81 = 2.2–2.4 MPa | 띠의 아래 끝과 맞는다 — 위 끝 8 MPa 는 항복의 ≈10 배 |
+| Monroe–Newman 문장 [95] | `G_Li` "4.8 GPa at 298 K" | 이 원전 실측 2.83 GPa | ×1.7 — 기준 `G_SE ≥ 2 G_Li` 가 9.6 ↔ 5.66 GPa 로 갈린다 |
+| Ding 2021 [67] | Li 박 압축 creep 0.6–3.6 MPa · "notable … even at applied pressures below 2 MPa" | 멱법칙 · 항복 · breakdown 경계(2.83)를 가로지른다 | 방향 일치(Li 박 · 압축 — 원전 미열람) |
+| Wang 2019 [7] 재수록(Fig. 6c) | "critical stack pressure" ≈0.4 MPa · `[재현]` 두 변형률 교차 ≈0.64–0.67 · 공극 봉우리 ≈0.25 MPa | 항복 0.73–0.81 바로 아래 · 멱법칙 영역 | 모형의 아래 벽이 이 원전의 creep 측정 구간(0.2–0.6) 가까이 앉는다 — Wang 2019 은 같은 실험실 |
+
+⇒ "≈1 MPa 가닥 = Sakamoto 실험실 한 뿌리" 가설은 81호로 진전이 없다 — 81호 참고문헌에 Sharafi 2016 · Wang & Sakamoto 2018 · Wang 2021 *Joule* 은 0 이고, Sakamoto 실험실 편 여덟은 인용되지만
+"< 1 MPa" 문장에는 붙지 않는다.
 
 ## 이 위키에서의 적용
 

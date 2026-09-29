@@ -1,0 +1,429 @@
+{
+ "slug": "xu2024_pressure-effects-countermeasures-ssb-review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-29",
+ "sources": [
+  "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. A brief timeline of the milestones in studying the pressure impacts and developing pressure-insensitive SSBs. Reproduced with permission.[6] Copyright 2018, IOP Publishing. Reproduced with permission.[7,8] Copyright 2019, 2020, Elsevier. Reproduced with permission.[9] Copyright 2017, Royal Society of Chemistry. Reproduced with permission.[10,11] Copyright 2021, 2023, John Wiley and Sons. Reproduced with permission.[12] Copyright 2021, Springer Nature.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.8,
+    550.1,
+    431.5
+   ],
+   "w": 2118,
+   "h": 1504,
+   "dpi": 300,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "blank": 0.763,
+   "note": "봤다(패널 셋 2 배 확대 · 화소 눈금). 저자 틀 = 연표(2013 → '2023-- Toward pressure-insensitive SSBs') + 재수록 패널 여덟 — 요구치 · 압력 목표 글자 0(초록 '<1 MPa' 가 그림 속에만 있을 가능성을 닫음). `[도표]` Xu 2023 [11] 패널 0.36 → 0.55 → 2.1 MPa · 방전 ≈151.8 · 155.6 · 156.8 mAh/g(압력 오름 순서 = 사이클 순서) · Zhang 2017 [9] In ‖ LCO ΔP 봉우리 0.1 C 1.20–1.27 MPa(62호 그림) · Hänsel [10] 단락 ≈63(250 µm Li) · ≈123 MPa(750 µm) — 본문 무언급. ⚠ 2015 Whiteley 패널(20 · 10 · 0.05 MPa)은 캡션 · 참고문헌에 출처 0 · 캡션 '[12] Copyright 2021' ↔ 참고문헌 [12] 2023(D16)."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. A summary of the positive inﬂuence of external pressures on solid-state batteries (SSBs). The application of pressure inﬂuences SSEs, SSE/electrode interfaces, and the SSB units, throughout the manufacturing, assembly, and operation stages.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.9,
+    552.8,
+    411.7
+   ],
+   "w": 2118,
+   "h": 1421,
+   "dpi": 300,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "blank": 0.763,
+   "note": "봤다. 저자 모식 — Manufacturing(SSE) → Assembling(SSE-electrode interface) → Operating(SSB unit) · 효과 여섯. 압력 값 0. 양극 접촉 개선이 조립 단계 칸에 놓인다(운전 압력의 몫으로 그리지 않음)."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. The inﬂuence of pressure on the density and tortuosity of SSE. a) SEM images of FIB cross-sections of Li6PS5Cl electrolyte pellets prepared with a fabrication pressure of 50 and 370 MPa. b) Conductivity and relative density of the Li6PS5Cl electrolyte as a function of the fabrication pressure.[26] Reproduced with permission. Copyright 2013, Royal Society of Chemistry. c) Schematic shows the eﬀects pores or void spaces have on the tortuosity of SSEs.[27] Reproduced with permission. Copyright 2019, American Chemical Society. d) 3D composite electrode images and e) histogram of tortuosity for various pressures.[28]",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.6,
+    550.1,
+    500.7
+   ],
+   "w": 2118,
+   "h": 1793,
+   "dpi": 300,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "blank": 0.674,
+   "note": "봤다. (a)(b) [26] Doux 2020 50–370 MPa · 밀도 ≈68–77 % · σ ≈0.99 → 2.28 mS/cm(본문 ✓) · (d)(e) [28] = 39호 Sakka 굴곡도 0–100 MPa(최빈 ≈5.6 · 5.1 · 4.7 · 3.8 · 5.6 — 39호 digest 판독과 일치). ⚠ 표 1 Li6PS5Cl [45] 250 MPa 97.80 % ↔ 이 그림 ≈75 %(D19)."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. The inﬂuence of pressure on the voltage window of LGPS. a) CV tests at 0.1 mV s−1 in Swagelok battery cells pressed with 78 MPa (black), 233 MPa (red), and 467 MPa (blue), compared with the test under pressurized cell initially pressed at 467 MPa and tested at ≈250 MPa (pink). b) Decomposition reaction pathways at diﬀerent Keﬀand the products.[59] Reproduced with permission. Copyright 2020, John Wiley and Sons. c) Illustration of the impact of strain on LGPS decomposition.[56] Reproduced with permission. Copyright 2019, John Wiley and Sons. d) Illustration of restricted decomposition front propagation limited by kinetics. Where p is the pressure that is present at the front, and ji is the ionic current density.[59]",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.4,
+    550.0,
+    356.0
+   ],
+   "w": 2118,
+   "h": 1191,
+   "dpi": 300,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "blank": 0.75,
+   "note": "봤다. (a) [59] LGPS 범례 '78MPa @3MPa · 233MPa@3MPa · 467MPa@3MPa · 467MPa@250MPa' — 시험 압력 3 MPa 는 그림에만 있다. ⚠ 본문 '476 MPa' ↔ 467 · 본문 'LSV' ↔ 캡션 'CV' · (b) 15 GPa 열 LGPS ≈3.37 V ↔ 본문 '4 V'(D11)."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. The inﬂuence of external pressure on the SSE-Li contact. a) The measured interfacial resistances Rint as well as interface capacity values C as a function of the external pressure. b) Calculating the interface resistances assuming a Vickers hardness for lithium in the range from 2 to 8 Mpa.[69] Reproduced with permission. Copyright 2019, American Chemical Society. c) Calculated interface resistance (red curve) plotted as a function of stack pressure. d) Schematic illustration of the SSE-Li interfacial creep process. e) Li contact stress under stack pressure of 4.5 MPa for 0, 1, and 5 h.[8] Reproduced with permission. Copyright 2020, Elsevier.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.3,
+    550.0,
+    389.7
+   ],
+   "w": 2118,
+   "h": 1332,
+   "dpi": 300,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "blank": 0.736,
+   "note": "봤다. (a) [69] Li/LLZO Nyquist(400 MPa 인셋) · (b) R_int ↔ F^−1/2 — 이론 띠 H_Li 2–8 MPa 가 실험 점 위(≈2–3 배) · (c) [8] R_int ≈280 → ≈68 Ω cm²(10.5 → 41 MPa) · (d)(e) 접촉 응력 지도 10–40 MPa · 4.5 MPa 0 · 1 · 5 h(접촉 확장 · 응력 이완). 본문과 맞다(본문 p. 2 의 '수백 MPa' 문장은 [14] — 캡션 [69] 과 다른 편, D14)."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Mapping the dynamic evolution of the SSE-Li interface. a) Interface pore formation during the stripping process using large-scale molecular dynamics simulations. b) Map of interface morphological stability for incoherent SSE-Li interfaces under lithium plating b1) and stripping b2).[75] Repro- duced with permission. Copyright 2021, John Wiley and Sons. c1) The proposed depletion of Li at the SSE-Li interface during cycling. c2) Comparison of the pressure-induced strain rate and the current-induced strain rate for cycling at 0.1 mA cm−2.[7] Reproduced with permission. Copyright 2019, Elsevier. d1) A map of void formation as a function of stack pressure and current density. d2) A map of void formation as a function of pore length and pore depth.[76] Reproduced with permission. Copyright 2021, John Wiley and Sons. e1) Loss of interfacial contact after a ﬁnite amount of Li depositi",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.2,
+    552.9,
+    343.7
+   ],
+   "w": 2118,
+   "h": 1137,
+   "dpi": 300,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "blank": 0.575,
+   "note": "봤다(c2 2 배 확대 · 로그 축 43.9 px/decade). (b1) 도금 지도 W 0.25 ≈160–175 MPa ⚠ 본문 'Wad < 0.25 → 100 MPa'(D7) · (c) [7] Wang 2019 두 변형률 교차 `[재현]` ≈0.64–0.67 MPa · 공극 봉우리 ≈0.25 MPa ↔ 본문 '≈0.4 MPa'(D8) · (d1) [76] FSI 지도의 θ = 공극 성장 지표(우리 θ 와 이름만 같다) · (e) [74] Tu 1 · 2 · 3 MPa."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 11,
+   "file": "fig_7.png",
+   "caption": "Figure 7. The inﬂuence of pressure on the cathode-SSE contact. a) Schematic illustration of morphological structural changes in a composite electrode by pressure application.[28] b) FIB-SEM tomography of the cathode composite. c) The discharge capacity of the cell. A pressure of 300 MPa was applied after 50 cycles. d) Summary of cell resistances determined through EIS measurements.[81]",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.0,
+    552.9,
+    462.7
+   ],
+   "w": 2118,
+   "h": 1634,
+   "dpi": 300,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "blank": 0.741,
+   "note": "봤다(d 파단 축 세 토막 화소 눈금 — MF 3283 · 2755 Ω 을 ±0.02 kΩ 로 재현). (b) [81] Shi FIB-SEM 범례 NMC · CNF · LPS · Void ↔ 본문 'LLZO-based' · (c) 300 MPa 재가압 전후 ≈2–3 → ≈79 mAh/g · (d) LF 108.3 → 38.6 kΩ · HF 4.5 → ≈2.75 kΩ — ⚠ 본문 'low-frequency and high-frequency regions remain unchanged' 와 어긋난다(D1 · 4호 원문은 'decreases after pressing')."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 12,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Pressure Impact on SSB units. a) the electrochemistry–mechanics-coupled cell device for the detection of the Li plating/stripping induced stress and stress–charging/discharging curves.[92] Reproduced with permission. Copyright 2021, American Chemical Society. b) Pressure change monitored during galvanostatic cycling (1.0–2.7 V vs. Li4Ti5O12/Li7Ti5O12).[9] Reproduced with permission. Copyright 2017, Royal Society of Chemistry. c) The operando pressure monitoring and corresponding voltage proﬁles of NCM811 | LPSCl | Li metal cells.[93] Reproduced with permission. Copyright 2023, Elsevier. d) Stack pressure evolution after pressing to an initial stack pressure of 30 MPa and holding at an open circuit for two diﬀerent symmetric cells based on LSPS (red) and LPSC (blue).[45] Reproduced with permission. Copyright 2021, American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    71.1,
+    550.1,
+    325.7
+   ],
+   "w": 2118,
+   "h": 1062,
+   "dpi": 300,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "blank": 0.817,
+   "note": "봤다(b · d 2 배 확대 · d 화소 판독 ±0.05 MPa). (a) [92] Liang 응력 ≈1.67 → 1.76 MPa / 3300 h · (b) [9] = 62호 LTO 대조 셀 ΔP ≈0.065 MPa ⚠ 본문 'LiCoO2 cathode and the In-Li anode'(D3) · (c) [93] Ham ≈4.9 ↔ 7.0 MPa · 바뀐 것은 전류뿐 ⚠ 본문 'cathode loading' · 인용 [80](D4) · (d) [45] Lee 2021 개방 회로 30 → 20 h 에 LPSC 27.6 · LSPS 24.8 MPa ⚠ 본문 'from 5.2 to 2.3 MPa' = 두 재료의 하강 폭(D2)."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 13,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Diﬀerent failure modes of Li-based SSBs under high pressures.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.2,
+    484.8,
+    217.7
+   ],
+   "w": 1835,
+   "h": 612,
+   "dpi": 300,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "blank": 0.653,
+   "note": "봤다. 저자 모식(GB 전자 농축 · 결함 따라 Li 압출 · SSE 입자 파괴 · 내부 응력 · 외부 압력). 압력 값 0 · 양극 쪽 실패 모드 0."
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 14,
+   "file": "fig_10.png",
+   "caption": "Figure 10. The pressure triggered lithium dendrite growth and penetration. Eﬀect of stacking pressure on dendrite behavior: a) farthest lithium dendrite growth distance (x) in GB; b) Newly grown dendrite area (SGB) in the GB.[99] Reproduced with permission. Copyright 2021, Elsevier. c) Nucleation of a crack following brittle fracture of the SSE; inﬁltration of the nucleated crack and crack opening and branching due to stress accumulation at the tips.[100] Reproduced with permission. Copyright 2021, John Wiley and Sons. d) In situ TEM observation of the LLZO GB during biasing. e) Schematic illustrations of ﬁlament formation and penetration in SSBs.[97] Reproduced with permission. Copyright 2021, Springer Nature. f) The response of a metal dendrite to mechanical loading along the horizontal direction g) Schematic of loading conditions used in modeling kinked propagation of metal dendrites.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    71.1,
+    550.1,
+    643.7
+   ],
+   "w": 2118,
+   "h": 2387,
+   "dpi": 300,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "blank": 0.594,
+   "note": "봤다. (a) [99] Yuan 상장 200 s 최원 성장 ≈105 µm(0–10 MPa) → ≈230 µm(60 MPa) · (b) 그림 인쇄 면적 Baseline 100 → 458 % ⚠ 본문 'five-fold'(D18) · (c)–(g) 모식 · in situ TEM · 하중 방향 — 압력 값 0."
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 15,
+   "file": "fig_11.png",
+   "caption": "Figure 11. The Pressure accelerated cell short-circuit. a) Schematic of the eﬀect of the stack pressure on the shorting behavior of Li metal SSBs.[103] Reproduced with permission. Copyright 2019, John Wiley and Sons. b) Impedance evolution for a symmetric Li|Li6PS5Cl|Li cell at a stack pressure of 11 MPa. c) OCV evolution with time for Cu|Li6PS5Cl|Li cells at 11 and 45 MPa for various SE thicknesses.[10] Reproduced with permission. Copyright 2021, John Wiley and Sons. d) SEM images and corresponding simpliﬁed cartoon illustration of Li protrusions from polycrystalline grain boundaries along the exposed crack.[15] e) The net change in lithium dendrite length within the crack on one charge/discharge cycle as a function of capacity under various stack pressures. f) Cumulative dendrite length during cell cycling under various stack pressures. g) and h) Cycling of a Li/Li6PS5Cl cell with curr",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.9,
+    552.9,
+    353.5
+   ],
+   "w": 2118,
+   "h": 1178,
+   "dpi": 300,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "blank": 0.727,
+   "note": "봤다. (a) [103] = 5호 Doux 5 · 25 · 75 MPa(5호 digest 와 일치) · (b) [10] 11 MPa 호 ≈60–72 → ≈17–33 Ω · (c) 45 MPa × 두께 130–1280 µm · 750 µm 11 MPa 만 750 h 무단락 · (e)(f) [104] 7 · 1 · 0 MPa · (g)(h) 0.1 ↔ 7 MPa 단락 용량 `[재현]` ×4.86(본문 'five times' ✓). 본문과 맞다."
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 17,
+   "file": "fig_12.png",
+   "caption": "Figure 12. Strategies toward pressure-insensitive SSBs",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.1,
+    484.8,
+    262.7
+   ],
+   "w": 1835,
+   "h": 799,
+   "dpi": 300,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "blank": 0.524,
+   "note": "봤다. 저자 모식 — Electrode Design · SSE Interfacial Engineering · SSE Structure Engineering. 압력 값 0."
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 18,
+   "file": "fig_13.png",
+   "caption": "Figure 13. Surface modiﬁcation and microstructure engineering of SSEs. a) Schematic of Li2CO3 covered LLZO and corresponding contact angle mea- surements before and after polishing.[114] b) Schematic representation of LLZT surface cleaning and h-BN deposition.[115] c) The adhesion energies (Wad) of LLZO/Li with diﬀerent surface determinations.[116] Reproduced with permission. Copyright 2017, 2021, American Chemical Society. d) The schematic of the in-situ formed LiMgSx/LiH-Li3N/LiMgLa interlayer.[117] Reproduced with permission. Copyright 2023, Springer Nature. e) Schematic and SEM of Ag-C modiﬁed LLZTO-based cell.[12] f) The Schematic shows the adhesive and cohesive force of P-P-I modiﬁed Li/LLZO interface.[11] g) Diagram of a trilayer lithium garnet cell using the tape-casting method.[118] Reproduced with permission. Copyright 2019, Elsevier. h) Schematic of the in situ acid-etching pr",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.5,
+    550.1,
+    439.7
+   ],
+   "w": 2118,
+   "h": 1540,
+   "dpi": 300,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "blank": 0.723,
+   "note": "봤다. (a) [114] 접촉각 146° → 95° · (c) [116] γ 0.76 · 0.48 J/m²(본문 ✓) · (e) [12] Cu | Li | Ag-C | LLZTO 350 µm | NCM333 · (f) [11] P-P-I 접착 모식 — '250 N · 1.9 MPa' 글자 0. 압력 값 0."
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 21,
+   "file": "fig_14.png",
+   "caption": "Figure 14. Electrode design for pressure-insensitive SSBs. a) Schematic depiction of the lithium stripping process of composite anodes consisting of lithium and CNTs. b) Voltage proﬁles of lithium and a Li–CNT30 electrode during stripping with 100 μA cm−2 in combination with a gradual decrease in applied stack pressure.[140] Reproduced with permission. Copyright 2022, John Wiley and Sons. c) Illustration of the semiliquid lithium metal anode.[141] Reproduced with permission. Copyright 2019, Elsevier. d) Schematic of Li plating–stripping on the current collector with an Ag–C nanocomposite layer during charging and discharging processes e) Schematic of pressurization process during the fabrication and operation of the lithium-free ASSB. f) Charge-discharge curves for 0.6 Ah pouch-type full cell at a 0.1 C/0.1 C charge/discharge rate without external pressure.[126] Reproduced with permis- s",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.0,
+    552.9,
+    418.7
+   ],
+   "w": 2118,
+   "h": 1450,
+   "dpi": 300,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "blank": 0.758,
+   "note": "봤다(b 2 배 확대). (b) [140] Fuchs 압력 띠 0.0(0–4 h) → 3.0 → … → 0.5 MPa(14–30 h) ⚠ 본문 'Li–CNT30 smaller and more stable polarization' 은 0.0 띠에서만 맞다 · ≤1.5 MPa 띠에서는 Li–CNT30 이 0.075 → 0.13 V 로 오른다('voiding') · 본문 '25 mAh/cm² … <1 MPa' 는 이 그림에 없다(패널 끝 `[재현]` 3 mAh/cm²)(D9) · (d)–(f) [126] = 6호 'w/o external pressure' ≈217 mAh/g · (g) [142] Doerrer 인셋 '0.2 MPa'(본문의 2.5 MPa 는 그림에 없음) · (i) [143] Kwon 'NCM/LTO … no external pressure' ↔ 본문 '2 MPa'(D5)."
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 22,
+   "file": "fig_15.png",
+   "caption": "Figure 15. Prospect and research avenues toward pressure-independent SSBs. (Publication data from Web of Science)",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    71.1,
+    482.0,
+    254.7
+   ],
+   "w": 1835,
+   "h": 766,
+   "dpi": 300,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "blank": 0.888,
+   "note": "봤다. 저자 모식 — Computation · Characterization · Material · Criteria('Pressure standard and monitoring on larger battery systems') + 출판 수 막대(y 축 눈금 0 — G4). 압력 값 0 · 요구치 0."
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 23,
+   "file": "fig_16.png",
+   "caption": "Figure 16. a) Schematics shows the e X-ray CT measurement for SSBs.[28] b) 3D stress mapping of bulk SSE.[158] Reproduced with permission. Copyright 2022, Elsevier.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.9,
+    552.9,
+    181.0
+   ],
+   "w": 2118,
+   "h": 460,
+   "dpi": 300,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "blank": 0.66,
+   "note": "봤다. (a) [28] Sakka CT 장치(∅1 mm In-Li | LGPS | NCM · Pressure Monitor · 20 keV) · (b) [158] 3D 응력 지도(눈금 수치 0). 압력 값 0."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1. The summarized manufacturing pressure and corresponding properties.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.8,
+    11.9,
+    589.2,
+    771.1
+   ],
+   "w": 2145,
+   "h": 2996,
+   "dpi": 284,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "blank": 0.881,
+   "note": "봤다 — ⚠ 자동 크롭이 5 쪽 전체(과대 영역 — 표 1 은 왼쪽 단 위 · 본문 두 단이 같이 들어옴). 표 내용은 온전 → 수동 tab_1_manual.png 를 더했다(자동 파일은 지우지 않았다). tab_2.png 와 바이트 다름."
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 17,
+   "file": "tab_2.png",
+   "caption": "Table 2. A summary of recently reported low-pressure SSBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.8,
+    11.9,
+    589.2,
+    771.1
+   ],
+   "w": 2145,
+   "h": 2996,
+   "dpi": 284,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "blank": 0.836,
+   "note": "봤다 — ⚠ 자동 크롭이 17 쪽 전체(과대 영역 — 그림 12 · 본문 두 단 · 표 2). 표 내용은 온전 → 수동 tab_2_manual.png 를 더했다(자동 파일은 지우지 않았다)."
+  },
+  {
+   "key": "t1m",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1_manual.png",
+   "rotated_deg": 0,
+   "bbox": [
+    46.8,
+    71.8,
+    295.7,
+    333.3
+   ],
+   "w": 1038,
+   "h": 1090,
+   "dpi": 300,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "manual": true,
+   "note": "수동 크롭(본문 5 쪽 왼단 위 · 300 dpi · 캡션 포함) — 자동 t1 이 쪽 전체(과대 영역)라 표만 잘랐다. 봤다: 17 행 × SSE sample · Density · Manufacturing Pressure (MPa) · Conductivity (S cm−1)/RT — 제조 압력 125–504 MPa · 밀도 83–99 %. ⚠ Li6PS5Cl [45] 250 MPa 97.80 % ↔ 그림 3 Doux 250 MPa ≈75 %(D19) · [41] · [45] 가 두 행씩. 값은 텍스트 층과 같다."
+  },
+  {
+   "key": "t2m",
+   "kind": "table",
+   "label": "2",
+   "page": 17,
+   "file": "tab_2_manual.png",
+   "rotated_deg": 0,
+   "bbox": [
+    46.8,
+    472.5,
+    550.9,
+    719.1
+   ],
+   "w": 2101,
+   "h": 1029,
+   "dpi": 300,
+   "src": "ab0db106-43._Pressure_effects_and_countermeasures_in_solid_state_batteries_A_comprehensive_review.pdf",
+   "manual": true,
+   "note": "수동 크롭(본문 17 쪽 아래 · 두 단 폭 · 300 dpi · 캡션 포함) — 자동 t2 가 쪽 전체(과대 영역)라 표만 잘랐다. 봤다: 14 행 × Electrolyte samples · Temperature (°C) · Pressure (MPa) · Cathode (mg cm−2) · Full cell [rate(C)/retention(%)/cycle] · Sym-Li cell [(mA cm−2)/h] · Strategy — 압력 0.1 여섯 · 0.4 · 1 · 2 · 2-4 · 3 · 3.3 · 4 · 4.9 MPa(< 1 MPa 일곱 행 중 여섯이 0.1 — G3). ⚠ 마지막 행 Li6PS5Cl[143] 'Pressurization' 의 조건 · 값 = 그림 11g [104] Ning · [143] 행이 'Anode design' ↔ 본문 Cathode Design(D6) · Li6PS5Cl0.5Br0.5[143] 0.1 ↔ 본문 2 MPa ↔ 그림 14i 'no external pressure'(D5). 값은 텍스트 층과 같다."
+  }
+ ]
+}
