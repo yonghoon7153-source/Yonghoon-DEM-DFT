@@ -20,11 +20,22 @@
        · 서로 다른 시드 디렉터리에 같은 실제 서명이 없다 (코호트 고유성)
      예정 밖 `<arm>_s*` · `<ref-arm>_s*` 디렉터리는 짝 수에 넣지 않고 '예정 밖' 으로 보고하며 rc 를 1 로 만든다.
      (옛 판은 짝 **안** 만 비교하고 디렉터리 **이름**만 셌다 → seed 32452843 한 쌍을 예정 세 디렉터리에 복사하면 3/3 PASS.)
+  ④ (--allow E · EB, 2026-09-30 — 강성 축 사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3 · Codex 7 차 §5 · 9 차 §3)
+     E  = 같은 팔 · 다른 강성 (soft → ×14 · ×14 → ×28) **또는** 같은 강성 · dt 만 1/k (E0_ref@dt/2).  달라도 되는 것은
+          SE 영률 (영률 줄의 SE 칸만) · timestep · run · dump 간격 · restart 간격 · CED 뿐이고, 각각 **규칙대로만**:
+          CED_new = CED_old · (E*_new/E*_old)^(2/3) (쌍별 · 0 은 0 · AM–AM · AM–벽은 E* 불변이라 그대로) · dt = 이 덱의 Rayleigh 규칙
+          (경화) 또는 정확히 1/k (dt 경로) · 정착 · 회전 물리 시간 불변 · 덤프 · 체크포인트 = 생성기 규칙 (dt 경로는 정확히 k 배).
+          나머지 명령 (ν · 중력 · 이웃 · 삽입 · 기구 …) 은 토큰까지 같다.  SE 영률도 dt 도 같으면 FAIL (빈 E 비교).
+     EB = E 와 B 를 **동시에**: LC (한 강성) → LH (다른 강성) 에서 B 다섯 쌍은 증가 · 나머지 쌍은 E 규칙.  B 는 그대로 같은 강성
+          LC → LH 전용 (E 필드가 다르면 FAIL).  --expect-deck 를 주면 E · EB 는 새 덱이 재생성 덱과 **전 명령 토큰 동일**이어야 한다
+          (필드 규칙의 물리 시간 허용 1e-3 보다 작은 step 변조까지 잡는다 — 셀프테스트 ㉜).  --runs 는 A · B 전용.
   ⚠ 이 도구는 덱만 본다 — 실행 바이너리 · 재개 이력 · 판독 규약은 사전등록의 발사 기록이 맡는다.
 
 usage
   python3 scripts/mixer_deck_diff.py <기준 덱 (LC)> <새 덱 (LH)> --allow B [--json out.json]
   python3 scripts/mixer_deck_diff.py --runs <runs 디렉터리> --ref-arm LC --arm LH --allow B    # 같은 시드끼리 전부
+  python3 scripts/mixer_deck_diff.py <LC_soft/in.mixer> <LC_ref/in.mixer> --allow E [--expect-deck <재생성 LC_ref 덱>]
+  python3 scripts/mixer_deck_diff.py <LC_soft/in.mixer> <LH_ref/in.mixer> --allow EB
   python3 scripts/mixer_deck_diff.py --selftest
 """
 import argparse
@@ -46,6 +57,66 @@ ALLOW = {
     'A': {('AM_P', 'AM_P'), ('AM_P', 'AM_S'), ('AM_S', 'AM_S')},
 }
 REL_TOL = 1e-6          # 덱은 CED 를 유효숫자 몇 자리로 찍는다 — 같은 값의 재생성 잡음보다 크고 개입보다 훨씬 작게
+#: E · EB 규칙 허용오차 (2026-09-30) — 인쇄 형식에서 비교 **전에** 정한다 (결과를 보고 넓히지 않는다)
+E_RULE = dict(
+    ced_rel=1.0e-5,          # CED %g 6 유효숫자 두 값 — 쌍별 규칙 대조
+    dt_print_rel=5.0e-4,     # timestep .4g — 생성기는 반올림 전 dt 로 step 을 센다 (물리 시간 대조: 2 × 이 값 × T + 반올림 step)
+    rayleigh_rel=5.05e-4,    # 덱 dt (.4g) ↔ 덱 값 (반지름 .6g) 으로 다시 낸 Rayleigh dt
+    exact_rel=1e-12,         # dt 경로 (정수배)
+)
+_E_VAR = {'timestep': {1}, 'run': {1}, 'restart': {1}, 'dump': {4}}      # E 에서 달라도 되는 토큰 위치 (값은 규칙으로 따로 본다)
+
+
+def _dump_rule(n_run):
+    """생성기 run_steps 의 덤프 간격 규칙 **사본** (셀프테스트 ㉞ 가 생성기와 대조)."""
+    return max(1000, n_run // 200)
+
+
+def _restart_rule(n_fill, n_run):
+    """생성기 run_steps 의 체크포인트 간격 규칙 사본."""
+    return max(50_000, min(200_000, (n_run or 2 * n_fill) // 20))
+
+
+def _e_fields(p):
+    """parse_deck 결과 → 강성 축 필드 (영률 · ν (타입 순) · dt · run · 덤프 · 체크포인트 · Drum 주기 · 템플릿 (반지름, 밀도))."""
+    f = dict(E=None, nu=None, dt=None, dt_txt=None, runs=[], dump=None, restart=None, period=None, tpl={})
+    for t in p['cmds']:
+        if t[0] == 'fix' and len(t) > 5 and t[3] == 'property/global' and t[5] == 'peratomtype' and t[4] in ('youngsModulus', 'poissonsRatio'):
+            f['E' if t[4] == 'youngsModulus' else 'nu'] = [float(x) for x in t[6:]]
+        elif t[0] == 'timestep':
+            f['dt_txt'], f['dt'] = t[1], float(t[1])
+        elif t[0] == 'run':
+            f['runs'].append(int(t[1]))
+        elif t[0] == 'dump' and len(t) > 4:
+            f['dump'] = int(t[4])
+        elif t[0] == 'restart':
+            f['restart'] = int(t[1])
+        elif t[0] == 'fix' and len(t) > 5 and t[3] == 'move/mesh' and t[5] == 'Drum' and 'period' in t:
+            f['period'] = float(t[t.index('period') + 1])
+        elif t[0] == 'fix' and len(t) > 6 and t[3].startswith('particletemplate/') and 'atom_type' in t:
+            f['tpl'][int(t[t.index('atom_type') + 1])] = (float(t[t.index('radius') + 2]) if 'radius' in t else None,
+                                                          float(t[t.index('density') + 2]) if 'density' in t else None)
+    return f
+
+
+def _rayleigh_dt(f):
+    """생성기 plan() 의 Rayleigh 시간스텝 규칙 **사본** — 덱의 영률 · ν · 반지름 · 밀도에서 → (dt, 정한 타입).
+    ⚠ 이 대조가 없으면 SE 를 경화하고 dt 를 다시 안 센 덱 (soft 0.7055 µs = 경화 SE 한계 0.3132 µs 의 2.25 배) 이 E 필드 규칙을 전부 통과한다 (㉙)."""
+    best = None
+    for k, (r, rho) in sorted(f['tpl'].items()):
+        if r is None or rho is None:
+            continue
+        E, nu = f['E'][k - 1], f['nu'][k - 1]
+        G = E / (2.0 * (1.0 + nu))
+        dt = 0.2 * math.pi * r * math.sqrt(rho / G) / (0.1631 * nu + 0.8766)
+        if best is None or dt < best[0]:
+            best = (dt, k)
+    return best
+
+
+def _estar(Ei, nui, Ej, nuj):
+    """E*_ij = [(1−ν_i²)/E_i + (1−ν_j²)/E_j]⁻¹ — 벽은 덱에 선언된 벽 영률 · ν."""
+    return 1.0 / ((1.0 - nui ** 2) / Ei + (1.0 - nuj ** 2) / Ej)
 
 
 def parse_deck(text):
@@ -79,13 +150,18 @@ def parse_deck(text):
     return dict(cmds=cmds, ced=ced, names=names, ced_head=head)
 
 
-def diff_decks(text_ref, text_new, allow='B', expect=None):
+def diff_decks(text_ref, text_new, allow='B', expect=None, expect_text=None):
     """두 덱 → 판정 dict(verdict, non_ced_diffs, changed, outside, missing, wrong_direction, target_mismatch, table).
+
+    ★ allow ∈ E · EB (2026-09-30) 는 _diff_decks_E 로 — 강성 축 규칙 (모듈 설명 ④).  `expect_text` = 재생성 덱 텍스트 (E · EB 는 전 명령 대조).
+      A · B 경로는 아래 그대로다 (expect = CED 목표만).
 
     2026-09-27 저녁 (Codex HBR2-05) 넓힌 것: CED 명령 머리 (fix id · group · style · n) 동일 · **양쪽** 행렬 유한 · 비음수 ·
     대칭 · 허용 쌍은 **증가** 방향 (고-Bo 확장) · `expect` = (n, 값) 을 주면 새 행렬이 그 목표와 1e-5 안에서 같아야 한다.
     ⚠ PASS 는 **덱 텍스트의 계약**이다 — 실제 STL 내용 · 바이너리 · 실행 환경은 발사 기록 (§2-5) 이 따로 묶는다.
     """
+    if allow in ('E', 'EB'):
+        return _diff_decks_E(text_ref, text_new, allow, expect_text=expect_text)
     a, b = parse_deck(text_ref), parse_deck(text_new)
     out = dict(allow=allow, non_ced_diffs=[], changed=[], outside=[], missing=[], wrong_direction=[], target_mismatch=[], table=[])
     if len(a['cmds']) != len(b['cmds']):
@@ -143,6 +219,128 @@ def diff_decks(text_ref, text_new, allow='B', expect=None):
                         out['target_mismatch'].append(f'{nm[i]}–{nm[j]}: 목표 {x:.6g} vs 새 {y:.6g}')
     out['verdict'] = 'PASS' if not (out['non_ced_diffs'] or out['outside'] or out['missing']
                                     or out['wrong_direction'] or out['target_mismatch']) else 'FAIL'
+    return out
+
+
+def _diff_decks_E(text_ref, text_new, allow, expect_text=None):
+    """E · EB 판정 (2026-09-30) — 모듈 설명 ④.  반환 = diff_decks 와 같은 키 + e_rule (규칙 위반) · e_case (경화 ×F · dt ×1/k)."""
+    a, b = parse_deck(text_ref), parse_deck(text_new)
+    out = dict(allow=allow, non_ced_diffs=[], changed=[], outside=[], missing=[], wrong_direction=[], target_mismatch=[], table=[],
+               e_rule=[], e_case=None)
+    er = out['e_rule']
+    fa, fb = _e_fields(a), _e_fields(b)
+    if a['names'] != b['names']:
+        out['non_ced_diffs'].append(f'타입 이름 {a["names"]} ≠ {b["names"]}')
+    if a['ced_head'] != b['ced_head']:
+        out['non_ced_diffs'].append(f'CED 명령 머리가 다르다: {" ".join(a["ced_head"])}  ⇄  {" ".join(b["ced_head"])}')
+    se = [k for k, v in a['names'].items() if v == 'SE']
+    need = ('E', 'nu', 'dt', 'dump', 'restart', 'period')
+    if len(se) != 1 or any(fx[k] is None for fx in (fa, fb) for k in need):
+        out['non_ced_diffs'].append(f'E 필드를 못 읽었다 (SE 타입 {se} · {[k for fx in (fa, fb) for k in need if fx[k] is None]})')
+        out['verdict'] = 'FAIL'
+        return out
+    se = se[0]
+    #  ① 명령 — E 허용 위치 (영률 줄은 **SE 칸만**) 를 빼고 토큰까지 같다
+    if len(a['cmds']) != len(b['cmds']):
+        out['non_ced_diffs'].append(f'명령 수 {len(a["cmds"])} ≠ {len(b["cmds"])}')
+    for i, (x, y) in enumerate(zip(a['cmds'], b['cmds'])):
+        var = set(_E_VAR.get(x[0], ()))
+        if x[0] == 'fix' and len(x) > 5 and x[3] == 'property/global' and x[4] == 'youngsModulus':
+            var = {5 + se}
+        if len(x) != len(y) or any(p_ != q_ for j, (p_, q_) in enumerate(zip(x, y)) if j not in var):
+            out['non_ced_diffs'].append(f'#{i}: {" ".join(x)[:120]}  ⇄  {" ".join(y)[:120]}')
+    (na, va), (nb, vb) = a['ced'], b['ced']
+    if na != nb or len(fa['E']) != na or len(fb['E']) != nb or len(fa['nu']) != na:
+        out['non_ced_diffs'].append(f'CED {na}×{na} · {nb}×{nb} ↔ 영률 {len(fa["E"])} · {len(fb["E"])} · ν {len(fa["nu"])} 개가 안 맞는다')
+        out['verdict'] = 'FAIL'
+        return out
+    nm = [a['names'].get(k + 1, f't{k + 1}') for k in range(na)]
+    for lab, v_ in (('기준', va), ('새', vb)):
+        if any(not math.isfinite(x) for x in v_):
+            out['non_ced_diffs'].append(f'{lab} 덱 CED 에 비유한 값')
+        if any(math.isfinite(x) and x < 0 for x in v_):
+            out['non_ced_diffs'].append(f'{lab} 덱 CED 에 음수')
+        for i in range(na):
+            for j in range(i + 1, na):
+                if v_[i * na + j] != v_[j * na + i]:
+                    out['non_ced_diffs'].append(f'{lab} 덱 CED 비대칭 ({nm[i]},{nm[j]})')
+    #  ② 경우 — 경화 (SE 영률 다름) · dt 경로 (영률 같고 dt 정확히 1/k) · 없음 (FAIL)
+    F = fb['E'][se - 1] / fa['E'][se - 1]
+    Ra, Rb = fa['runs'], fb['runs']
+    struct = len(Ra) == len(Rb) == 4 and Ra[0] == Rb[0] == 1 and Ra[1] == Ra[2] and Rb[1] == Rb[2]
+    if not struct:
+        er.append(f'run 구조 {Ra} → {Rb} ≠ [1, F, F, N] (삽입 · 정착 ×2 · 회전)')
+    rule_a = _rayleigh_dt(fa)
+    if rule_a is None or abs(fa['dt'] / rule_a[0] - 1.0) > E_RULE['rayleigh_rel']:
+        er.append(f'기준 덱 dt {fa["dt_txt"]} ≠ Rayleigh 규칙 {rule_a[0] if rule_a else float("nan"):.6g} s')
+    if F != 1.0:
+        out['e_case'] = f'경화 ×{F:g} (SE {fa["E"][se - 1]:g} → {fb["E"][se - 1]:g})'
+        rule_b = _rayleigh_dt(fb)
+        if rule_b is None or abs(fb['dt'] / rule_b[0] - 1.0) > E_RULE['rayleigh_rel']:
+            er.append(f'새 덱 dt {fb["dt_txt"]} ≠ Rayleigh 규칙 {rule_b[0] if rule_b else float("nan"):.6g} s (타입 {rule_b[1] if rule_b else "?"} 가 정함) — '
+                      f'경화했으면 dt 를 새 영률로 다시 세야 한다 (적분 안정)')
+        if struct:
+            ts_a, ts_b = 2 * Ra[1] * fa['dt'], 2 * Rb[1] * fb['dt']
+            tol_s = 2 * E_RULE['dt_print_rel'] * max(ts_a, ts_b) + fa['dt'] + fb['dt']
+            if abs(ts_a - ts_b) > tol_s:
+                er.append(f'물리 시간 — 정착 2F·dt {ts_a:.9g} → {ts_b:.9g} s (허용 {tol_s:.3g})')
+            tr_a, tr_b = Ra[3] * fa['dt'], Rb[3] * fb['dt']
+            tol_r = 2 * E_RULE['dt_print_rel'] * max(tr_a, tr_b) + 0.5 * (fa['dt'] + fb['dt'])
+            if abs(tr_a - tr_b) > tol_r:
+                er.append(f'물리 시간 — 회전 N·dt {tr_a:.9g} → {tr_b:.9g} s (허용 {tol_r:.3g})')
+            for lab, fx, R in (('기준', fa, Ra), ('새', fb, Rb)):
+                if fx['dump'] != _dump_rule(R[3]):
+                    er.append(f'{lab} 덱 덤프 간격 {fx["dump"]} ≠ 생성기 규칙 {_dump_rule(R[3])}')
+                if fx['restart'] != _restart_rule(R[1], R[3]):
+                    er.append(f'{lab} 덱 체크포인트 간격 {fx["restart"]} ≠ 생성기 규칙 {_restart_rule(R[1], R[3])}')
+    elif fb['dt'] != fa['dt']:
+        kr = fa['dt'] / fb['dt']
+        k = int(round(kr))
+        out['e_case'] = f'dt ×1/{k} (영률 같음)'
+        if k < 2 or abs(fb['dt'] * k / fa['dt'] - 1.0) > E_RULE['exact_rel']:
+            er.append(f'dt {fa["dt_txt"]} → {fb["dt_txt"]} (비 {kr:.12g}) — 정확히 1/k (k 정수 ≥ 2) 가 아니다')
+        if struct and Rb[1:] != [k * x for x in Ra[1:]]:
+            er.append(f'dt ×1/{k}: run 이 정확히 {k} 배가 아니다 ({Ra} → {Rb} · run 1 은 그대로)')
+        if fb['dump'] != k * fa['dump']:
+            er.append(f'dt ×1/{k}: 덤프 간격 {fa["dump"]} → {fb["dump"]} (정확히 {k} 배여야 덤프 시각이 같다)')
+        if struct and fb['restart'] != _restart_rule(Rb[1], Rb[3]):
+            er.append(f'새 덱 체크포인트 간격 {fb["restart"]} ≠ 생성기 규칙 {_restart_rule(Rb[1], Rb[3])}')
+    else:
+        er.append('E 비교인데 SE 영률도 dt 도 같다 — 강성 · dt 변화가 없다 (같은 강성의 LC↔LH 는 --allow B)')
+    #  ③ CED — 쌍별 규칙 (EB 의 B 다섯 쌍은 증가)
+    changed = set()
+    for i in range(na):
+        for j in range(i, na):
+            x, y = va[i * na + j], vb[i * na + j]
+            pair = tuple(sorted((nm[i], nm[j])))
+            ek = _estar(fb['E'][i], fb['nu'][i], fb['E'][j], fb['nu'][j]) / _estar(fa['E'][i], fa['nu'][i], fa['E'][j], fa['nu'][j])
+            want = x * ek ** (2.0 / 3.0) if x else 0.0
+            in_b = allow == 'EB' and pair in ALLOW['B']
+            if math.isfinite(x) and math.isfinite(y) and abs(y - x) > REL_TOL * max(abs(x), abs(y), 1e-30):
+                changed.add(pair)
+            out['table'].append(dict(pair=f'{nm[i]}–{nm[j]}', ref=x, new=y, rule=None if in_b else want,
+                                     ratio=(y / x) if x else None, abs_diff=y - x))     # 0 기준 비 = N/A (0/0 을 1 로 만들지 않는다 · Codex 9 차 §3)
+            if in_b:
+                if not (math.isfinite(y) and y > x * (1.0 + REL_TOL)):
+                    (out['wrong_direction'] if y < x else out['missing']).append(pair)
+            elif x == 0.0:
+                if y != 0.0:
+                    er.append(f'{nm[i]}–{nm[j]}: 0 → {y:g} (0 은 정확히 0 이어야 한다)')
+            elif not (math.isfinite(y) and abs(y / want - 1.0) <= E_RULE['ced_rel']):
+                er.append(f'{nm[i]}–{nm[j]}: {x:g} → {y:g} (쌍별 규칙 {want:.6g} · E* ×{ek:.6g} → CED ×{ek ** (2.0 / 3.0):.6g})')
+    out['changed'] = sorted(changed)
+    #  ④ 재생성 덱 — 전 명령 토큰 동일 (CED 포함)
+    if expect_text is not None:
+        pe = parse_deck(expect_text)
+        if pe['cmds'] != b['cmds'] or pe['ced'] != b['ced'] or pe['ced_head'] != b['ced_head']:
+            bad = [f'#{i}: {" ".join(x)[:100]}  ⇄  {" ".join(y)[:100]}' for i, (x, y) in enumerate(zip(pe['cmds'], b['cmds'])) if x != y]
+            if len(pe['cmds']) != len(b['cmds']):
+                bad.append(f'명령 수 {len(pe["cmds"])} ≠ {len(b["cmds"])}')
+            if pe['ced'] != b['ced'] or pe['ced_head'] != b['ced_head']:
+                bad.append('CED 행렬 (또는 명령 머리) 이 재생성 덱과 다르다')
+            out['target_mismatch'] += bad or ['재생성 덱과 다르다']
+    out['verdict'] = 'PASS' if not (out['non_ced_diffs'] or er or out['missing'] or out['wrong_direction']
+                                    or out['target_mismatch']) else 'FAIL'
     return out
 
 
@@ -319,11 +517,19 @@ def collect_pairs(runs, arm, ref_arm, expect_seeds=None):
 def report(label, r):
     print(f'── {label}  (허용목록 {r["allow"]}) → {r["verdict"]}')
     for row in r['table']:
+        if row['ratio'] is None:                             # E · EB: 0 기준 (2026-09-30) — 비 대신 절대차
+            mark = '≠' if row['new'] != row['ref'] else ' '
+            print(f'   {mark} {row["pair"]:12s} {row["ref"]:14.6g} → {row["new"]:14.6g}   비 N/A (0 기준 · 차 {row["new"] - row["ref"]:+.6g})')
+            continue
         mark = '≠' if abs(row['ratio'] - 1.0) > REL_TOL else ' '
-        print(f'   {mark} {row["pair"]:12s} {row["ref"]:14.6g} → {row["new"]:14.6g}   ×{row["ratio"]:.4g}')
+        print(f'   {mark} {row["pair"]:12s} {row["ref"]:14.6g} → {row["new"]:14.6g}   ×{row["ratio"]:.4g}'
+              + (f'   (규칙 {row["rule"]:.6g})' if row.get('rule') is not None and row['rule'] != row['ref'] else ''))
+    if r.get('e_case'):
+        print(f'   경우: {r["e_case"]}')
     for k, msg in (('non_ced_diffs', 'CED 밖 차이'), ('outside', '허용목록 밖 CED 변화'), ('missing', '개입 누락 (허용 쌍인데 안 바뀜)'),
-                   ('wrong_direction', '개입 방향 반대 (증가여야 한다)'), ('target_mismatch', '목표 행렬과 불일치')):
-        if r[k]:
+                   ('wrong_direction', '개입 방향 반대 (증가여야 한다)'), ('target_mismatch', '목표 행렬과 불일치'),
+                   ('e_rule', 'E 규칙 위반')):
+        if r.get(k):
             print(f'   ⛔ {msg}: {r[k][:8]}')
     for p_ in r.get('seed_problems') or ():                 # --runs 만 (2026-09-28, Codex 3차 HBR3-07)
         print(f'   ⛔ 시드 서명: {p_}')
@@ -561,6 +767,94 @@ def _selftest():
                 and list(ss(df)) == _oracle(df) and sum(st_ == 'particletemplate/multisphere' for _, st_, _ in ss(df)) == 2)
     chk('㉓ seed_signature: 층상 LC (pt1-3 · pddA/B · insA/B, insA = 설계 시드) · 균일 E1 (다섯) · 섬유 multisphere 템플릿 — 원문 정규식과 일치',
         _ok(_t23))
+
+    # ══ ㉔~㉞ 2026-09-30 — 강성 축 허용목록 E · EB (사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3 ·
+    #    Codex 7 차 §5 · 9 차 §3/§6).  ★ 반례를 먼저 옮겼다: 옛 판에는 E 허용목록이 **없었다** (ALLOW = A · B 뿐 — 사전등록 §8-3 표의
+    #    "`--allow E` (있음)" 은 사실이 아니었다) ⇒ ㉔~㉞ 은 옛 판에서 전부 FAIL (KeyError 'E' · argparse choices).
+    PE = {F_: m.plan(100000, cgf=151.4, stiffen_se=F_) for F_ in (1.0, 14.0, 28.0)}
+    rpmE = m.resolve_rpm(PE[1.0]['R'])
+
+    def mkE(arm, F_, rev, dtf=1.0):
+        return m.deck(PE[F_], rpmE, rev, seed=32452843, arm=arm, hold_bo_pairwise=(F_ != 1.0), dt_factor=dtf)
+    DE = {'LC_soft': mkE('LC', 1.0, 2), 'LH_soft': mkE('LH', 1.0, 2), 'LC_ref': mkE('LC', 14.0, 2), 'LH_ref': mkE('LH', 14.0, 2),
+          'LC_ref2': mkE('LC', 28.0, 2), 'E0_soft': mkE('E0', 1.0, 0), 'E0_ref': mkE('E0', 14.0, 0), 'E0_ref2': mkE('E0', 28.0, 0),
+          'E0_refdt': mkE('E0', 14.0, 0, 0.5), 'LC_refdt': mkE('LC', 14.0, 2, 0.5)}
+
+    def _sub1(text, pat, rep):
+        new_, n_ = re.subn(pat, rep, text, count=1, flags=re.M)
+        assert n_ == 1, pat
+        return new_
+
+    def _ced(text, i, j):
+        lines_ = text.split('\n')
+        k0_ = next(k for k, l in enumerate(lines_) if l.startswith('fix mC '))
+        return float(lines_[k0_ + 1 + i].rstrip().rstrip('&').split()[j])
+    pos = [('E', 'LC_soft', 'LC_ref'), ('E', 'LH_soft', 'LH_ref'), ('E', 'LC_ref', 'LC_ref2'), ('E', 'E0_soft', 'E0_ref'),
+           ('E', 'E0_ref', 'E0_ref2'), ('E', 'E0_ref', 'E0_refdt'), ('E', 'LC_ref', 'LC_refdt'), ('EB', 'LC_soft', 'LH_ref'),
+           ('B', 'LC_ref', 'LH_ref')]
+    res_ = {(a_, x_, y_): _ok(lambda: diff_decks(DE[x_], DE[y_], a_)['verdict'] == 'PASS') for a_, x_, y_ in pos}
+    chk(f'㉔ ★ 등록 설계대로 만든 덱 → PASS: E (soft→×14 LC · LH · ×14→×28 · E0 soft→×14 · ×14→×28 · dt/2 E0 · LC) · '
+        f'EB (LC soft → LH ×14) · B (×14 LC→LH) — 실패 {[k for k, v in res_.items() if not v]}', all(res_.values()))
+    nu_ = _sub1(DE['LC_ref'], r'(poissonsRatio peratomtype \S+ \S+ )0\.30', r'\g<1>0.31')
+    nb_ = _sub1(DE['LC_ref'], r'^(neighbor\s+)(\S+)', lambda mm: mm.group(1) + f'{float(mm.group(2)) * 1.5:.6g}')
+    gv_ = _sub1(DE['LC_ref'], r'(gravity )9\.81', r'\g<1>9.80')
+    chk('㉕ 반례 E 밖 필드 변경 — ν · neighbor · 중력 (×14 덱에서) → 셋 다 FAIL (CED 밖 차이)',
+        _ok(lambda: all((lambda r_: r_['verdict'] == 'FAIL' and r_['non_ced_diffs'])(diff_decks(DE['LC_soft'], x_, 'E'))
+                        for x_ in (nu_, nb_, gv_))))
+    c13 = _ced(DE['LC_soft'], 0, 2)
+    one_ = _mutrow(DE['LC_ref'], 0, 2, lambda v: f'{c13 * 14 ** (2.0 / 3.0):.6g}', sym=True)
+    chk('㉖ 반례 한 쌍만 다른 CED — ×14 덱의 AM_P–SE 만 옛 동일상 규칙 값 (soft × 14^(2/3)) → FAIL · E 규칙 위반이 그 쌍을 짚는다',
+        _ok(lambda: (lambda r_: r_['verdict'] == 'FAIL' and any('AM_P' in e_ and 'SE' in e_ for e_ in r_['e_rule'])
+                     and not any('AM_S–SE' in e_ or 'SE–SE' in e_ for e_ in r_['e_rule']))(diff_decks(DE['LC_soft'], one_, 'E'))))
+    se_ = _mutrow(DE['LH_ref'], 2, 2, lambda v: f'{v * 1.01:.6g}', sym=True)
+    am_ = _mutrow(DE['LC_ref'], 0, 0, lambda v: f'{v * 2:.6g}', sym=True)
+    chk('㉗ 반례 B 다섯 항 밖 CED — EB (LC soft → LH ×14) 에서 SE–SE ×1.01 · E (LC soft → LC ×14) 에서 AM_P–AM_P ×2 (E 는 AM–AM 을 '
+        '못 바꾼다) → 둘 다 FAIL',
+        _ok(lambda: diff_decks(DE['LC_soft'], se_, 'EB')['verdict'] == 'FAIL' and diff_decks(DE['LC_soft'], am_, 'E')['verdict'] == 'FAIL'))
+    ame_ = _sub1(DE['LC_ref'], r'(youngsModulus peratomtype )1\.037e\+09', r'\g<1>1.1e+09')
+    wle_ = _sub1(DE['LC_ref'], r'(youngsModulus peratomtype \S+ \S+ \S+ )1\.48e\+09', r'\g<1>2.96e+09')
+    chk('㉘ 반례 AM 영률 변경 (AM_P 1.037e9 → 1.1e9) · 벽 영률 변경 → E FAIL (SE 영률만 허용)',
+        _ok(lambda: all(diff_decks(DE['LC_soft'], x_, 'E')['verdict'] == 'FAIL' for x_ in (ame_, wle_))))
+
+    def _stale(ref, soft):
+        out_ = _sub1(ref, r'^timestep\s+\S+$', re.search(r'^timestep\s+\S+$', soft, re.M).group(0))
+        it_ = iter(re.findall(r'^run (\d+)$', soft, re.M))
+        out_ = re.sub(r'^run (\d+)$', lambda mm: 'run ' + next(it_), out_, flags=re.M)
+        out_ = _sub1(out_, r'^(dump dmp all custom )\d+', lambda mm: mm.group(1) + re.search(r'^dump dmp all custom (\d+)', soft, re.M).group(1))
+        return _sub1(out_, r'^(restart )\d+', lambda mm: mm.group(1) + re.search(r'^restart (\d+) ', soft, re.M).group(1))
+    chk('㉙ ★ 반례 stale dt — SE ×14 인데 dt · step · 덤프 · 체크포인트를 soft 그대로 (LC · E0) → FAIL (Rayleigh 규칙 · 적분 불안정 덱)',
+        _ok(lambda: all((lambda r_: r_['verdict'] == 'FAIL' and any('Rayleigh' in e_ for e_ in r_['e_rule']))(
+            diff_decks(DE[s_], _stale(DE[t_], DE[s_]), 'E')) for s_, t_ in (('LC_soft', 'LC_ref'), ('E0_soft', 'E0_ref')))))
+    r1_ = _sub1(DE['E0_refdt'], r'^run (\d+)$\n(?=unfix ins)', lambda mm: f'run {int(mm.group(1)) + 1}\n')
+    d1_ = _sub1(DE['E0_refdt'], r'^(dump dmp all custom )(\d+)', lambda mm: mm.group(1) + str(int(mm.group(2)) - 1000))
+    chk('㉚ 반례 dt/2 경로 — 정착 step +1 (정확히 2 배 아님) · 덤프 간격이 2 배 아님 → 둘 다 FAIL',
+        _ok(lambda: all(diff_decks(DE['E0_ref'], x_, 'E')['verdict'] == 'FAIL' for x_ in (r1_, d1_))))
+    chk('㉛ 빈 비교 · 범주 혼동 — 같은 덱을 E · EB 로 (개입 없음) · soft LC → ×14 LH 를 B 로 (E 필드 차이) → 셋 다 FAIL',
+        _ok(lambda: diff_decks(DE['LC_ref'], DE['LC_ref'], 'E')['verdict'] == 'FAIL'
+            and diff_decks(DE['LC_ref2'], DE['LC_ref2'], 'EB')['verdict'] == 'FAIL'
+            and diff_decks(DE['LC_soft'], DE['LH_ref'], 'B')['verdict'] == 'FAIL'))
+    tweak_ = re.sub(r'^run (\d+)$\n(?=unfix insA|unfix insB|\n)', lambda mm: f'run {int(mm.group(1)) + 100}\n', DE['LC_ref'], flags=re.M)
+    tw_n = sum(1 for a_, b_ in zip(re.findall(r'^run (\d+)$', DE['LC_ref'], re.M), re.findall(r'^run (\d+)$', tweak_, re.M)) if a_ != b_)
+    chk(f'㉜ --expect-deck (E) = 재생성 덱과 **전 명령 토큰 동일** — 정착 step +100 ({tw_n} 줄 · 물리 시간 허용 안) 은 필드 규칙으로는 PASS 이지만 '
+        f'expect 로 FAIL · 재생성 덱 그대로면 PASS',
+        _ok(lambda: tw_n == 2 and diff_decks(DE['LC_soft'], tweak_, 'E')['verdict'] == 'PASS'
+            and diff_decks(DE['LC_soft'], tweak_, 'E', expect_text=DE['LC_ref'])['verdict'] == 'FAIL'
+            and diff_decks(DE['LC_soft'], DE['LC_ref'], 'E', expect_text=mkE('LC', 14.0, 2))['verdict'] == 'PASS'))
+    with _tf.TemporaryDirectory() as td_:
+        pa_, pb_, pc_ = (os.path.join(td_, n_) for n_ in ('soft.mixer', 'ref.mixer', 'bad.mixer'))
+        open(pa_, 'w').write(DE['LC_soft']); open(pb_, 'w').write(DE['LC_ref']); open(pc_, 'w').write(one_)
+        c_ok, t_ok = _cli([pa_, pb_, '--allow', 'E'])
+        c_bad, t_bad = _cli([pa_, pc_, '--allow', 'E'])
+        c_runs, t_runs = _cli(['--runs', td_, '--allow', 'E'])
+    chk(f'㉝ CLI --allow E: 옳은 짝 rc 0 · 한 쌍 틀린 덱 rc 1 · --runs 와 E 는 거부 (rc {c_runs!r} — 짝 모드 전용, dev 정책 단계 몫)',
+        c_ok == 0 and 'PASS' in t_ok and c_bad == 1 and c_runs == 2 and '--runs' in t_runs)
+    chk('㉞ 규칙 사본 = 생성기 — Rayleigh dt (F 1 · 14 · 28 · CGF 151.4 · 200) · 덤프 · 체크포인트 간격 (run_steps) 이 생성기와 같다',
+        _ok(lambda: all(abs(_rayleigh_dt(_e_fields(parse_deck(m.deck(m.plan(100000, cgf=c_, stiffen_se=F_), rpmE, 0, arm='E0',
+                                                                          hold_bo_pairwise=True))))[0]
+                            / m.plan(100000, cgf=c_, stiffen_se=F_)['dt'] - 1.0) <= E_RULE['rayleigh_rel']
+                        for F_ in (1.0, 14.0, 28.0) for c_ in (151.4, 200.0))
+            and all(_dump_rule(st_['steps_run']) == st_['dump_every'] and _restart_rule(st_['steps_fill'], st_['steps_run']) == st_['restart_every']
+                    for F_ in (1.0, 14.0) for rv_ in (0, 2, 8) for st_ in (m.run_steps(PE[F_], rpmE, rv_),))))
     print(f'\nmixer_deck_diff selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
 
@@ -568,7 +862,9 @@ def _selftest():
 def main():
     ap = argparse.ArgumentParser(description='믹서 실행 덱 두 벌의 CED 차이 = 허용목록인가 (Codex HB-03)')
     ap.add_argument('decks', nargs='*', help='<기준 덱> <새 덱>')
-    ap.add_argument('--allow', choices=sorted(ALLOW), default='B')
+    ap.add_argument('--allow', choices=sorted(ALLOW) + ['E', 'EB'], default='B',
+                    help='B = 같은 강성 LC→LH (다섯 쌍) · A = AM–AM 셋 · E = 같은 팔 · 다른 강성 (또는 dt 만 1/k) · '
+                         'EB = LC→LH 이면서 다른 강성 (E 와 B 동시).  E · EB 는 두 덱 모드 전용')
     ap.add_argument('--runs', help='runs 디렉터리 — <ref-arm>_s<시드>/in.mixer 와 <arm>_s<시드>/in.mixer 를 같은 시드끼리 '
                                    '+ 디렉터리마다 실제 시드 서명 = 생성기 기대 서명 · 시드 간 고유 (HBR3-07)')
     ap.add_argument('--ref-arm', default='LC')
@@ -583,7 +879,10 @@ def main():
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
-    expect = parse_deck(open(a.expect_deck, encoding='utf-8').read())['ced'] if a.expect_deck else None
+    if a.runs and a.allow in ('E', 'EB'):
+        ap.error(f'--runs 는 A · B 전용이다 — --allow {a.allow} 는 두 덱 모드 (<기준 덱> <새 덱>) 로 부른다 (코호트 확장은 dev 정책 단계)')
+    expect_text = open(a.expect_deck, encoding='utf-8').read() if a.expect_deck else None
+    expect = parse_deck(expect_text)['ced'] if expect_text is not None else None
     pairs, missing_seeds, coh, cohort, unplanned, orphan = [], set(), None, None, [], {}
     if a.runs:
         from make_mixer_deck import CAMPAIGN_SEEDS
@@ -614,7 +913,7 @@ def main():
         try:
             if t_ref is None or t_new is None:
                 raise ValueError('덱 없음: ' + ' · '.join(p_ for p_, t_ in ((ref, t_ref), (new, t_new)) if t_ is None))
-            r = diff_decks(t_ref, t_new, a.allow, expect=expect)
+            r = diff_decks(t_ref, t_new, a.allow, expect=expect, expect_text=expect_text)
         except ValueError as e:                     # 없는 덱 · 파싱 불가 덱 = 짝 FAIL (옛 판은 예외로 죽었다)
             r = dict(allow=a.allow, verdict='FAIL', non_ced_diffs=[str(e)], changed=[], outside=[], missing=[],
                      wrong_direction=[], target_mismatch=[], table=[])

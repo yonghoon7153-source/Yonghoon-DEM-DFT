@@ -397,7 +397,7 @@ def compare(kind, A, B):
             rs, eo, en = rstar(a, b), estar(a, b), estar(a2, b2)
             fo, fn = f0(co, rs, eo), f0(cn, rs, en)
             r_.update(R_star=rs, Estar_old=eo, Estar_new=en, Estar_mult=en / eo, CED_mult=(cn / co) if co else None,
-                      F0_old=fo, F0_new=fn, F0_ratio=None, tol=TOL['f0_ratio'])
+                      F0_old=fo, F0_new=fn, F0_ratio=None, tol=TOL['f0_ratio'] if co else None)   # 0 기준 = 정확히 0 (허용 없음)
             if co == 0.0:
                 r_['ok'] = cn == 0.0
                 r_['reason'] = '' if r_['ok'] else f'0 → {cn:g} (0 은 정확히 0 이어야 한다)'
