@@ -955,19 +955,12 @@ def _parse_k_spread(s: str) -> list:
 
 
 # ─── selftest (L1-01 · L1-02) ────────────────────────────────────────────────
-def _intersection_disc_area(r1, r2, delta):
-    """두 구의 **교차 원판** 면적 (판정문이 `ligg_area` 로 쓴 규약).
-
-    중심거리 `d = r₁+r₂−δ` 일 때 교차원 반지름 a 는
-        `a² = [4d²r₁² − (d² − r₂² + r₁²)²] / (4d²)`
-    ★ 동일 반경 검산: `A = π δ(4r − δ)/4`, 얕은 극한에서 Hertz(`πR*δ`)의 **2배**
-      (`A_LIGG/A_Hertz = 2 − δ/(2r)` = `L1-04` 의 형태).
-    """
-    d = r1 + r2 - delta
-    if d <= 0 or delta <= 0:
-        return 0.0
-    a2 = (4.0 * d * d * r1 * r1 - (d * d - r2 * r2 + r1 * r1) ** 2) / (4.0 * d * d)
-    return float(np.pi * max(a2, 0.0))
+#  ★ 2026-09-30 (Codex LHSC-05 계약 (a)) — 두 구의 교차 원판은 순수 기하 모듈 `lens_geometry` 로 옮겼다 (한 구현 · 규율 ①).
+#    이 이름은 그 함수의 **별칭**이다 (여기서 가져오던 코드 · selftest 는 그대로).  수확기는 이 모듈 대신 `lens_geometry` 를 쓴다.
+_HERE = os.path.dirname(os.path.abspath(__file__))
+if _HERE not in sys.path:
+    sys.path.append(_HERE)
+from lens_geometry import intersection_disc_area as _intersection_disc_area  # noqa: E402
 
 
 def _lens_volume_quadrature(r1, r2, delta, n=400001):
@@ -1209,6 +1202,12 @@ def _selftest() -> int:
         f"({c3['V_lens_exact'] / c3['V_overlap_legacy']:.4f}배)")
 
     ok = _selftest_v2(chk) and ok
+
+    # ⑲ LHSC-05 (a) — 교차 원판은 lens_geometry 의 함수 그 객체 (별칭 · 한 구현) · 값은 옮기기 전 식 그대로
+    import lens_geometry as _lg
+    chk('⑲ _intersection_disc_area 는 lens_geometry.intersection_disc_area 와 같은 객체 (별칭 · 한 구현 · LHSC-05 (a))',
+        _intersection_disc_area is _lg.intersection_disc_area
+        and abs(_intersection_disc_area(0.5, 0.5, 0.0125) - np.pi * 0.0125 * (4 * 0.5 - 0.0125) / 4) < 1e-12 * 0.0195)
 
     print('plastic_coverage SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1

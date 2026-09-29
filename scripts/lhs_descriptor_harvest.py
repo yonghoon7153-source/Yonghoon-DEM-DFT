@@ -133,10 +133,11 @@ from lhs_perc_extract import (  # noqa: E402
     AM_LABELS, BedRefusal, REQUIRED_BC, TYPE_MAP,
     _pairs_within, check_boundary_flags, read_atom_dump,
 )
-#  item 2 (09-29) — 두 구의 **정확한 교차 원판** 은 이미 있다 (규율 ①: 다시 짜지 않는다).  ⚠ DESC-03 · 계약④: plastic_coverage 에서
-#  쓰는 것은 이 순수 기하 함수 **하나**뿐이다 — Physics 피복률 경로 (film_area_from_overlap · A_volume = V/H_FILM_MIN) 는 부르지
-#  않는다.  selftest ⑬ 이 소스 **전체** AST 로 강제한다 (허용 이름 = `PLASTIC_COVERAGE_ALLOWED`).
-from plastic_coverage import _intersection_disc_area  # noqa: E402
+#  item 2 (09-29) — 두 구의 **정확한 교차 원판** 은 이미 있다 (규율 ①: 다시 짜지 않는다).  ★ 09-30 (Codex `LHSC-05` · 계약 (a)):
+#  그 순수 기하는 `lens_geometry` 로 분리됐다 — 이 도구는 **plastic_coverage 를 어떤 모양으로도 가져오지 않는다** (DESC-03 · 계약④:
+#  Physics 피복률 경로 film_area_from_overlap · A_volume = V/H_FILM_MIN 에 의존 없음).  selftest ⑬ · ㉑′ 이 소스 **전체** AST 로
+#  강제한다 (허용 이름 = `PLASTIC_COVERAGE_ALLOWED` = 없음 · 가드 = `_plastic_coverage_uses` — lint 이지 완전 증명이 아니다).
+from lens_geometry import intersection_disc_area as _intersection_disc_area  # noqa: E402
 
 #: 계약 ③ — τ 표본 예산.  legacy 와 같은 수지만 **같은 성분 안에서만** 쓴다.
 N_TAU_PAIRS = 200
@@ -153,8 +154,9 @@ COL_PERIODIC, COL_DELTA = 'c_cpl[9]', 'c_cpl[23]'
 WALL_TOUCH_RULE = ('floor: r - (z - z_floor) > 0 · plate: r - (plate_z - z) > 0 — overlap depth > 0; tangent (depth = 0) is '
                    'not touching (sim units, no tolerance) · one implementation `_wall_contact` shared by wall_record, '
                    'wall_touch and the coverage wall split')
-#: DESC-03 · 계약④ (item 2 개정) — 이 도구가 plastic_coverage 에서 가져와도 되는 이름 (순수 기하 · Physics 피복률 경로가 아니다).
-PLASTIC_COVERAGE_ALLOWED = frozenset({'_intersection_disc_area'})
+#: DESC-03 · 계약④ (item 2 개정 · 09-30 LHSC-05 (a)) — 이 도구가 plastic_coverage 에서 가져와도 되는 이름: **없다** (순수 기하는
+#:   `lens_geometry` 에 있다).  비어 있어야 ⑬ · ㉑′ 이 "사용 0" 을 강제한다.
+PLASTIC_COVERAGE_ALLOWED = frozenset()
 #: item 2 — 접촉 면적 대조 (진단 기록) 의 유효숫자 전제: LIGGGHTS `dump local` 기본 `%g` = 6 유효숫자 (`lhs_contact_audit.SIGFIG_FLOOR`
 #:   와 같은 값 · WSL 감사 v2 130/130 관측 최대 6).  전제가 틀린 침대는 `n_values_beyond_6sig` 가 0 이 아니다 (그때 허용폭이 헐겁다).
 AREA_CHECK_SIGFIG = 6
@@ -162,7 +164,10 @@ AREA_CHECK_SIGFIG = 6
 AREA_CHECK_MARGIN = 1.001
 AREA_CHECK_TOL_RULE = (
     '행마다 |A_dump − A_calc| > B 이면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  '
-    'A_calc = plastic_coverage._intersection_disc_area(r1, r2, δ = c_cpl[23]) · '
+    '지원 범위 (LHSC-04 · 09-30) = d − |r1 − r2| > 2h(r1) + 2h(r2) + h(δ) (d = r1 + r2 − δ · 포함 경계 = 한 구가 다른 구 안 · d → 0 의 '
+    '깊은 겹침도 같은 경계): 그 밖의 행은 면적이 r1 − r2 에 불연속 · 비단조라 축별 탐침 상한이 서지 않으므로 초과가 아니라 '
+    'containment_boundary (n_boundary_excluded) 로 따로 센다 — 범위 밖 행의 불일치 · 치환은 이 진단이 판정하지 않는다.  '
+    'A_calc = lens_geometry.intersection_disc_area(r1, r2, δ = c_cpl[23]) · '
     'B = 1.001·[Σ_{x∈r1,r2,δ} max(|A(x+h_x) − A_calc|, |A(x−h_x) − A_calc|) + h(A_dump)] + 32·eps·π·max(r1,r2)² · '
     'h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 (E = 십진 지수 · 끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  '
     '교차 원판은 r1 · r2 · δ 각각에 단조라 (해석 · 20 만 표본 확인) 축마다 ±h 한쪽 최댓값이 그 토큰 반올림의 상한 · '
@@ -358,8 +363,23 @@ def _n_beyond_sig(v, sig=AREA_CHECK_SIGFIG):
                    if np.isfinite(x) and float(fmt.format(x)) != x))
 
 
+def _in_domain_rows(r1, r2, delta, sig=AREA_CHECK_SIGFIG):
+    """LHSC-04 (Codex 09-30) — 행마다 허용폭 규칙이 서는 **지원 범위** 인가: 중심거리 d = r1 + r2 − δ 가 포함 경계 |r1 − r2| 에서
+    토큰 반올림 폭 2h(r1) + 2h(r2) + h(δ) 보다 멀리 있다 (h = `_half_unit`).  경계 근처 — 한 구가 다른 구 안에 들어가기 직전, 그리고
+    d → 0 의 깊은 겹침 (같은 경계) — 에서는 면적이 r1 − r2 에 불연속 · 비단조라 축별 탐침의 합이 상한이 아니다 (Codex 반례: 반올림만으로
+    되읽은 토큰이 경계를 넘어 A_calc = 0 · 깊은 겹침에서 B > A 라 치환을 못 잡음).  그 행은 `contact_area_check` 가 초과가 아니라
+    `n_boundary_excluded` 로 따로 센다 (전역 상수 `AREA_CHECK_MARGIN` 은 그대로).  범위 안 성적 (합성 3000 · 15,000 행 0/0) 은
+    범위 안의 성적이다 — 전역 보증이 아니다.
+    """
+    r1, r2, delta = (np.asarray(v, dtype=np.float64) for v in (r1, r2, delta))
+    gap = (r1 + r2 - delta) - np.abs(r1 - r2)
+    margin = 2.0 * _half_unit(r1, sig) + 2.0 * _half_unit(r2, sig) + _half_unit(delta, sig)
+    return gap > margin
+
+
 def _contact_area_rows(r1, r2, delta, area):
-    """행마다 (A_calc, |A_dump − A_calc|, 허용폭 B) — 규칙 `AREA_CHECK_TOL_RULE`.  A_calc = plastic_coverage 의 교차 원판 (재구현 없음)."""
+    """행마다 (A_calc, |A_dump − A_calc|, 허용폭 B) — 규칙 `AREA_CHECK_TOL_RULE`.  A_calc = lens_geometry 의 교차 원판 (재구현 없음).
+    ⚠ 범위 판정은 하지 않는다 — `contact_area_check` 가 `_in_domain_rows` 로 경계 행을 가른다 (LHSC-04)."""
     f = _intersection_disc_area
     r1, r2 = np.asarray(r1, dtype=np.float64), np.asarray(r2, dtype=np.float64)
     delta, area = np.asarray(delta, dtype=np.float64), np.asarray(area, dtype=np.float64)
@@ -388,7 +408,7 @@ def contact_area_check(ids, labels, radius, c1, c2, carea, delta, pflag):
     """
     n = int(len(c1))
     base = dict(role='진단 기록 — 거부하지 않는다 · 피복률 값에 쓰지 않는다 (item 2)',
-                reference='plastic_coverage._intersection_disc_area(r1, r2, delta = c_cpl[23]) — 두 구의 교차 원판 (L1-04 A_LIGG)',
+                reference='lens_geometry.intersection_disc_area(r1, r2, delta = c_cpl[23]) — 두 구의 교차 원판 (L1-04 A_LIGG)',
                 compared_to=COL_AREA, delta_col=COL_DELTA, flag_col=COL_PERIODIC,
                 tolerance_rule=AREA_CHECK_TOL_RULE, sigfig_assumed=AREA_CHECK_SIGFIG, n_rows=n)
     if delta is None:
@@ -407,17 +427,20 @@ def contact_area_check(ids, labels, radius, c1, c2, carea, delta, pflag):
     _ac, diff, bnd = _contact_area_rows(r1[idx], r2[idx], dl[idx], ad[idx])
     A = ad[idx]
     ratio = diff / np.where(bnd > 0, bnd, np.finfo(np.float64).tiny)
+    dom = _in_domain_rows(r1[idx], r2[idx], dl[idx])            # LHSC-04 — 포함 경계 행은 초과 · 상대차 통계에서 뺀다 (따로 센다)
 
     def _grp(m):
         k = int(m.sum())
-        p = m & (A > 0)
+        md = m & dom
+        p = md & (A > 0)
         rel, tol = diff[p] / A[p], bnd[p] / A[p]
         return dict(n_rows=k, n_area_dump_zero=int((m & (A == 0)).sum()),
+                    n_boundary_excluded=int((m & ~dom).sum()),
                     rel_diff_max=(float(rel.max()) if rel.size else None),
                     rel_diff_median=(float(np.median(rel)) if rel.size else None),
                     tol_rel_median=(float(np.median(tol)) if tol.size else None),
-                    diff_over_tol_max=(float(ratio[m].max()) if k else None),
-                    n_beyond_tol=int((m & (diff > bnd)).sum()))
+                    diff_over_tol_max=(float(ratio[md].max()) if md.any() else None),
+                    n_beyond_tol=int((md & (diff > bnd)).sum()))
 
     every = np.ones(idx.size, dtype=bool)
     if pflag is None:
@@ -439,29 +462,47 @@ def contact_area_check(ids, labels, radius, c1, c2, carea, delta, pflag):
 
 
 def _plastic_coverage_uses(src):
-    """소스 **전체** AST 에서 plastic_coverage 를 쓰는 곳 — (가져온 이름 집합, 위반 목록).  DESC-03 · 계약④ 의 selftest ⑬ 가드.
+    """소스 **전체** AST 에서 plastic_coverage 를 쓰는 곳 — (가져온 이름 집합, 위반 목록).  DESC-03 · 계약④ 의 selftest ⑬ · ㉑′ 가드.
 
-    위반 = `PLASTIC_COVERAGE_ALLOWED` 밖 이름 · `*` · 모듈째 import · 동적 import (`import_module` / `__import__` — 인자가 문자열
-    상수가 아니면 무엇을 가져오는지 검증할 수 없어 위반).  item 2 전의 ⑬ 은 "머리 (첫 함수 독스트링 앞) 에 문자열 plastic_coverage
-    가 없다" 였다 — 머리 밖 (함수 안 지연 import) 을 못 봤고, 순수 기하 함수 하나를 가져오는 것도 막았다.
+    위반 = `PLASTIC_COVERAGE_ALLOWED` (09-30 부터 비어 있다) 밖 이름 · `*` · 모듈째 import (`import plastic_coverage` · 점 경로) ·
+    **패키지 경유** (`from scripts import plastic_coverage as pc` — ImportFrom 의 이름 쪽) · 동적 import (`import_module` / `__import__`
+    와 그 **별칭** — `from importlib import import_module as im` · `import importlib as il` 을 1 패스에서 모아 둔다; 인자가 문자열
+    상수가 아니면 무엇을 가져오는지 검증할 수 없어 위반).  ★ Codex `LHSC-05` (09-30): 옛 판은 패키지 경유 (module == 'scripts') 와
+    별칭 호출 (`im(...)`) 을 통과시켰다.  ⚠ 이것은 **lint** 이지 임의 Python 실행의 안전 증명이 아니다 (getattr · exec · 문자열 조립은
+    못 본다) — 그래서 계약 (a) 로 의존 자체를 없앴다 (순수 기하 = `lens_geometry`).
+    item 2 전의 ⑬ 은 "머리 (첫 함수 독스트링 앞) 에 문자열 plastic_coverage 가 없다" 였다 — 머리 밖 (함수 안 지연 import) 을 못 봤고,
+    순수 기하 함수 하나를 가져오는 것도 막았다.
     """
     import ast
     mod = 'plastic_coverage'
     names, bad = set(), []
-    for node in ast.walk(ast.parse(src)):
-        if isinstance(node, ast.ImportFrom) and (node.module or '').split('.')[-1] == mod:
+    tree = ast.parse(src)
+    dyn_names = {'import_module', '__import__'}          # 동적 import 를 부르는 이름 (별칭 포함)
+    for node in ast.walk(tree):                            # 1 패스 — importlib 별칭 수집
+        if isinstance(node, ast.ImportFrom) and (node.module or '') == 'importlib':
             for a in node.names:
-                names.add(a.name)
-                if a.name not in PLASTIC_COVERAGE_ALLOWED:
-                    bad.append(f'from {mod} import {a.name} (줄 {node.lineno})')
+                if a.name in ('import_module', '__import__'):
+                    dyn_names.add(a.asname or a.name)
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom):
+            if (node.module or '').split('.')[-1] == mod:
+                for a in node.names:
+                    names.add(a.name)
+                    if a.name not in PLASTIC_COVERAGE_ALLOWED:
+                        bad.append(f'from {node.module} import {a.name} (줄 {node.lineno})')
+            else:
+                for a in node.names:
+                    if a.name == mod:
+                        bad.append(f'from {node.module} import {mod} (줄 {node.lineno}) — 패키지 경유 모듈째 import')
         elif isinstance(node, ast.Import):
             for a in node.names:
                 if a.name.split('.')[-1] == mod:
                     bad.append(f'import {a.name} (줄 {node.lineno}) — 모듈째 가져오면 Physics 경로가 열린다')
         elif isinstance(node, ast.Call):
             fn = node.func
-            nm = fn.attr if isinstance(fn, ast.Attribute) else (fn.id if isinstance(fn, ast.Name) else None)
-            if nm in ('import_module', '__import__'):
+            nm = (fn.attr if isinstance(fn, ast.Attribute) and fn.attr in ('import_module', '__import__')
+                  else fn.id if isinstance(fn, ast.Name) and fn.id in dyn_names else None)
+            if nm is not None:
                 arg = node.args[0] if node.args else None
                 if not (isinstance(arg, ast.Constant) and isinstance(arg.value, str)):
                     bad.append(f'{nm}(<상수 아님>) (줄 {node.lineno}) — 무엇을 가져오는지 검증할 수 없다')
@@ -1597,7 +1638,7 @@ def selftest():
         #  ⇒ 소스 **전체** AST 로 보고, 허용 이름을 그 하나로 한정한다.  DESC-03 의 뜻 (Physics 피복률 경로를 부르지 않는다) 은 그대로
         #  — 금지 모양 여섯 (Physics 이름 · * · 모듈째 · 동적 import 상수/비상수) 을 잡는지는 ㉑ 의 변이 검사가 본다.
         _pcn, _pcb = _plastic_coverage_uses(src)
-        chk(f'⑬ DESC-03: plastic_coverage 에서는 순수 기하 `_intersection_disc_area` 만 (소스 전체 AST · 위반 {_pcb})',
+        chk(f'⑬ DESC-03: plastic_coverage 를 어떤 모양으로도 쓰지 않는다 (소스 전체 AST · 허용 이름 없음 · 09-30 LHSC-05 (a) · 위반 {_pcb})',
             _pcn <= PLASTIC_COVERAGE_ALLOWED and not _pcb)
 
         # ── ⑭ LHS-10 (2026-09-24): 분모 바닥 = 벽 z = 0 (웹앱 `V_box = L²·plate_z`) — 덤프 상자 바닥이 아니다 ──
@@ -2052,8 +2093,8 @@ def selftest():
             and abs(_nz((_ac21.get('all') or {}).get('rel_diff_max')) - 0.01 / 1.01) < 2e-5)
         chk('㉑ item 2: 진단 기록일 뿐 — 거부하지 않고 피복률은 덤프 면적 그대로 (AM_S = 100 · A22 / 4π·0.8²)',
             abs(r21['coverage_AM_S_hertz_pct'] - 100.0 * _con21[2][3] / (4.0 * np.pi * 0.8 ** 2)) < 1e-9)
-        chk('㉑ item 2: 교차 원판은 plastic_coverage 의 함수 그대로 (다시 짜지 않았다 — 규율 ①)',
-            _ida is not None and getattr(_ida, '__module__', '') == 'plastic_coverage')
+        chk('㉑ item 2: 교차 원판은 한 구현 그대로 (다시 짜지 않았다 — 규율 ① · 09-30 부터 `lens_geometry` · plastic_coverage 도 같은 객체)',
+            _ida is not None and getattr(_ida, '__module__', '') in ('plastic_coverage', 'lens_geometry'))
         chk('㉑ item 2: δ 열이 없는 덤프는 대조하지 않고 NO_DELTA_COLUMN 으로 적는다 (거부 없음)',
             (r20.get('contact_area_check') or {}).get('status') == 'NO_DELTA_COLUMN')
         #  허용폭 — 6 유효숫자 `%g` 토큰의 반올림만 있는 합성 3000 행 (반지름 0.4–6 µm · δ/r 1e-7–0.3) 은 **0 행 초과** 여야 하고,
@@ -2090,9 +2131,59 @@ def selftest():
                     'import plastic_coverage as P\nP.film_area_from_overlap(1.0, 1.0, 1.0)\n',
                     'import importlib\nimportlib.import_module("plastic_coverage")\n', '__import__("plastic_coverage")\n',
                     'import importlib\nm = "x"\nimportlib.import_module(m)\n')
-        chk('㉑ item 2: ⑬ 가드 변이 — 금지 모양 여섯을 전부 위반으로 잡는다 · 허용 이름 하나만 가져오는 소스는 통과',
-            _pcu is not None and all(bool(_pcu(s)[1]) for s in _bad_src)
-            and not _pcu('from plastic_coverage import _intersection_disc_area\n')[1])
+        chk('㉑ item 2: ⑬ 가드 변이 — 금지 모양 여섯을 전부 위반으로 잡는다',
+            _pcu is not None and all(bool(_pcu(s)[1]) for s in _bad_src))
+
+        # ── ㉑′ ★ Codex LHSC-04 · LHSC-05 (09-30 · P2 · 1저자 비준 "권고대로") — 반례 먼저 ──
+        #  LHSC-04: 허용폭 B 는 축별 탐침의 합이라 **포함 경계** (한 구가 다른 구 안에 들어가기 직전 — 중심거리 d 와 |r1 − r2| 의 차가
+        #    토큰 반올림 폭 안) 에서 순수 반올림 입력을 초과로 셌고 (Codex: 되읽은 토큰이 경계를 넘어 A_calc = 0 · diff/tol 1.18e6),
+        #    d → 0 (같은 경계 · 깊은 겹침) 에서는 B 가 면적보다 커 Hertz · 3e-5 치환도 못 잡았다.  계약: 그런 행은 "면적 불일치" 가 아니라
+        #    **지원 범위 밖 (containment_boundary)** 으로 따로 센다 (초과 수에서 뺀다 · 전역 상수 AREA_CHECK_MARGIN 은 그대로).
+        #  LHSC-05: 옛 가드가 `from scripts import plastic_coverage as pc` (module == 'scripts') · `from importlib import import_module as
+        #    im; im("plastic_coverage")` (호출 이름이 별칭) 을 통과시켰다.  계약 (a): 순수 기하 `_intersection_disc_area` 는 별도 모듈
+        #    `lens_geometry` 로 — 수확기는 plastic_coverage 를 **어떤 모양으로도** 가져오지 않는다 (허용 이름 없음) · 가드는 패키지 경유 ·
+        #    별칭 동적 import 도 잡는다 (완전 증명이 아니라 lint — 동적 import 의 비상수 인자는 전부 위반).
+        _idr = globals().get('_in_domain_rows')
+        _cb = (2.0, 1.0000049, 2.0000051)                                  # Codex rounding_only_false_alarm (×1000): d − |r1−r2| = 4.7e-6
+        if _ida is not None:
+            _con21b = [(1, 90, 0, _g6(_ida(*_cb)), _g6(_cb[2])),                    # AM_P–SE · 토큰은 반올림만 (r2 → 1.0 · δ → 2.00001) · 경계
+                       (91, 92, 0, _g6(np.pi * 0.25 * 0.999999), 0.999999),         # SE–SE · d = 1e-6 (깊은 겹침 = 같은 경계) · Hertz 면적 치환
+                       (1, 91, 0, _g6(1.01 * _ida(2.0, 0.5, 0.05)), 0.05)]           # AM_P–SE · 범위 안 · ★ 1 % 틀림 = 초과
+        else:
+            _con21b = [(1, 90, 0, 0.1, 2.00001), (91, 92, 0, 0.1, 0.999999), (1, 91, 0, 0.1, 0.05)]
+        _rows21b = [(1, 2.0, 2.0, 5.0, 2.0, 1), (90, 5.0, 5.0, 5.0, 1.0, 3), (91, 6.0, 5.0, 5.0, 0.5, 3), (92, 8.0, 8.0, 5.0, 0.5, 3)]
+        _a21b = _atom_file(tmp, _rows21b, name='atom_2150.liggghts', ts=2150)
+        _c21b = _contact_file(tmp, _con21b, name='contact_2150.liggghts', ts=2150, headers=_hd21)
+        r21b = harvest(_a21b, _c21b, 3, 'areaboundary', mesh_path=_stl(tmp))
+        _ac21b = r21b.get('contact_area_check') or {}
+        _all21b, _bk21b = (_ac21b.get('all') or {}), (_ac21b.get('by_pair_kind') or {})
+        chk('㉑′ ★ LHSC-04: 포함 경계 두 행 (반올림 오탐 · 깊은 겹침) 은 초과가 아니라 범위 밖으로 센다 — 전체: 비교 3 · 초과 1 (범위 안 1 % 행) · '
+            '범위 밖 2 · AM-SE (초과 1 · 범위 밖 1) · SE-SE (초과 0 · 범위 밖 1)',
+            _ac21b.get('status') == STATUS_OK and _ac21b.get('n_compared') == 3 and _all21b.get('n_beyond_tol') == 1
+            and _all21b.get('n_boundary_excluded') == 2
+            and (_bk21b.get('AM-SE') or {}).get('n_beyond_tol') == 1 and (_bk21b.get('AM-SE') or {}).get('n_boundary_excluded') == 1
+            and (_bk21b.get('SE-SE') or {}).get('n_beyond_tol') == 0 and (_bk21b.get('SE-SE') or {}).get('n_boundary_excluded') == 1)
+        chk('㉑′ LHSC-04: 지원 범위 규칙 = d − |r1 − r2| > 2h(r1) + 2h(r2) + h(δ) — 반올림 오탐 행 · 깊은 겹침 행은 밖, 범위 안 행은 안 · '
+            '규칙 문자열에 적혀 있다',
+            _idr is not None and list(_idr(np.array([2.0, 0.5, 2.0]), np.array([1.0, 0.5, 0.5]), np.array([2.00001, 0.999999, 0.05])))
+            == [False, False, True] and 'containment' in str(_ac21b.get('tolerance_rule')))
+        if _car is not None and _ida is not None and _idr is not None:
+            chk(f'㉑′ LHSC-04: 무작위 3000 행 성적 (초과 0) 은 **범위 안**의 성적 — 범위 밖 행 {int((~_idr(_R1, _R2, _D)).sum())} (0 이어야) · '
+                f'전역 보증으로 쓰지 않는다',
+                int((~_idr(_R1, _R2, _D)).sum()) == 0)
+        else:
+            chk('㉑′ LHSC-04: 범위 판정 함수 `_in_domain_rows` 가 있다', False)
+        _bypass = ('from scripts import plastic_coverage as pc\npc.film_area_from_overlap(.1, .5)\n',
+                   'from importlib import import_module as im\npc = im("plastic_coverage")\n',
+                   'import importlib as il\nil.import_module("plastic_coverage")\n',
+                   'from scripts.plastic_coverage import _intersection_disc_area\n',
+                   'from plastic_coverage import _intersection_disc_area\n')            # 옛 허용 이름 — 이제 수확기에서는 위반
+        chk('㉑′ ★ LHSC-05: 가드가 패키지 경유 · 별칭 동적 import · 점 경로 · 옛 허용 이름을 전부 위반으로 잡는다 · '
+            '`lens_geometry` 에서 가져오는 소스는 통과 · 허용 이름 집합은 비어 있다',
+            _pcu is not None and all(bool(_pcu(s)[1]) for s in _bypass)
+            and not _pcu('from lens_geometry import intersection_disc_area\n')[1] and not PLASTIC_COVERAGE_ALLOWED)
+        chk('㉑′ LHSC-05 (a): 교차 원판은 순수 기하 모듈 `lens_geometry` 의 함수 — 수확기 소스에 plastic_coverage 사용 0 (소스 전체 AST)',
+            _ida is not None and getattr(_ida, '__module__', '') == 'lens_geometry' and not _pcn and not _pcb)
 
         # ── ㉒ item 3 (09-29 · 1저자 "권고대로") — 접촉 행의 문: 중복 · 자기쌍 **거부** · 고아 행 **기록** · 반례 먼저 ──
         #  ★ 반례: 같은 AM–SE 행이 두 번 — 옛 코드는 면적을 두 번 더해 AM_S 피복률 25 → 50 % 를 status OK 로 냈다.
