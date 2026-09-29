@@ -242,6 +242,9 @@ a:hover { text-decoration: underline; }
   color: var(--ink-2);
   font-weight: 500;
   font-size: 13px;
+  /* "대칭셀 (이온전도도)" 처럼 긴 이름이 창이 좁을 때 50px 줄 안에서 두 줄로
+     갈라지지 않게 — 이름은 한 덩어리로 읽힌다. */
+  white-space: nowrap;
   cursor: pointer;
   transition: background 0.12s, color 0.12s;
 }
