@@ -1,0 +1,306 @@
+{
+ "slug": "wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-29",
+ "sources": [
+  "97f838d5-47._Fast_Kinetics_Design_for_Solid_State_Battery_Device.pdf",
+  "1e2faad3-47._Sup_Fast_Kinetics_Design_for_Solid_State_Battery_Device.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) Critical C-rate at diﬀerent areal capacity of our solid-state batteries at RT and 55 °C in this work (stars), in comparison with literature (dots).[6,8,9,15–19] Reproduced with permission. [6] Copyright 2023, Springer Nature. [8] Copyright 2021, AAAS. [9] Copyright 2022, Wiley. [15] Copyright 2021, Wiley. [16] Copyright 2020, Wiley. [17] Copyright 2021, Springer Nature. [18] Copyright 2021, ACS. [19] Copyright 2018, ACS. b) Illustration of battery conﬁguration of a 2.7 mAh cm−2 battery. c) Illustration of the mechanism of fast Li ion transport kinetics from catholyte network with mixed particle sizes (right panel) in comparison with large (left panel) and small (middle panel) catholyte-only cases. d) Illustration of the eﬀect of sulﬁde anolyte mixed with Si to better transport Li toward the current collector to prevent Li dendrite penetration (right panel), in comparison wit",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.7,
+    550.1,
+    505.7
+   ],
+   "w": 2118,
+   "h": 1813,
+   "dpi": 300,
+   "src": "97f838d5-47._Fast_Kinetics_Design_for_Solid_State_Battery_Device.pdf",
+   "blank": 0.637,
+   "note": "봤다 (a) 축 'Charge C rate (1/hr)' ↔ 캡션 'Critical C-rate' — 별 값은 사이클 율(5·4·3·1·0.5 C RT · 15·4·2 C 55 °C), 단락 임계율(8–11 C)이 아님(D7) · 오른쪽 축 충전 시간 4·12·20·30 min · (b) 라벨 'Large LPSCl 20wt% · Small LPSCl 10wt%' 가 실험 절(20 wt% small · 10 wt% large)과 반대(D3) · Si–Cl '8 um (NP 1.9)' · 'Graphite · Li metal 20 um' · (c) 굴곡도가 나오는 유일한 그림 = 모식 · (d) 음극 모식. 크롭 온전 · caption 필드는 캡션 전문(잘림 없음)."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Electrode design for fast battery kinetics. a) Rate performance comparison for SSBs with diﬀerent cell conﬁguration at RT and a cathode loading of 18 mg cm−2. The label of Si–G represents anode layers made by an Si–Graphite composite layer above a Li metal layer (i.e., Si–G|Li); while, Si–Cl represents the anode structure of a layer of Si and argyrodite Li7−yPS6−yCly (LPSCly) composite above a separate graphite layer and a separate Li metal layer in the battery assembly (i.e., Si–Cl|G|Li). The mixed catholyte represents mixed small and large particle size of argyrodite Li5.5PS4.5Cl1.5 (LPSCl1.5) electrolyte in the cathode composite layer; while, small or large catholyte represents cathode layer with only small or only large LPSCl1.5 electrolyte particles. b) Corresponding charge–discharge voltage curves at diﬀerent C-rates of the full cell conﬁguration with mixed catholyte cath",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.1,
+    552.9,
+    472.7
+   ],
+   "w": 2118,
+   "h": 1674,
+   "dpi": 300,
+   "src": "97f838d5-47._Fast_Kinetics_Design_for_Solid_State_Battery_Device.pdf",
+   "blank": 0.721,
+   "note": "봤다 (a) 25 °C 18 mg/cm² 율 성능 — mixed/Si–Cl 점 셋(0.3·4·5 C ≈171·155·150) · mixed/Si–G 165→116 · large/Si–G 150→75 · small/Si–G 152→55(0.3→4 C) — 0.3 C 에서 large≈small · (b) 율별 충전 컷오프 4.1→4.35 V · 0.3 C 충전 ≈205 vs 방전 ≈165 · (c) 4 C 넷 · (d)(e) SEM 20/4 µm 눈금 · (f) S/Ni EDS 부분 시야 · (g) 회로 R1-(R2‖CPE2)-(R3‖CPE3)-CPE1 · 확대 판독 R1 절편 37·68·27·35 Ω(large·small·mixed/Si–Cl·mixed/Si–G ±3) · 호 폭은 표 S1 과 일치 · 주파수 표지 10 kHz·500 Hz·10 Hz·0.1 Hz 는 데이터 점 라벨 · (h) 0.3 C 온도별 — large/small 이 여기서는 Si–Cl 위(D17). 크롭 온전."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) Cycling performance of full cells with the mixed catholyte paired with Si–Cl anode conﬁguration at RT (temperature ﬂuctuates in a range of 22–30 °C without environmental temperature control), with diﬀerent areal capacity (≈2.5–4.6 mAh cm−2 or ≈18–27 mg cm−2 cathode loading), C-rate (≈3–5 C-rate or ≈12–14 mA cm−2 current density), and nominal NP ratio (≈1.7–1.9), at a speciﬁc capacity ≈150 mAh gNMC −1. The central electrolyte separator layer used our iodine doped LPSCl1.5-I (See the Experimental Section). b) Cycling performance in pouch cell at 10 MPa external pressure and 5 C charge and discharge with a separator thickness of 75 um. b–d) Corresponding voltage curves to (a) as labeled in each panel. e–g) Corresponding speciﬁc capacity of NMC and coulombic eﬃciency to the three batteries in (a) as labeled in each panel. Note that the lowest capacities in initial cycles, corres",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.2,
+    552.9,
+    476.7
+   ],
+   "w": 2118,
+   "h": 1691,
+   "dpi": 300,
+   "src": "97f838d5-47._Fast_Kinetics_Design_for_Solid_State_Battery_Device.pdf",
+   "blank": 0.877,
+   "note": "봤다 (a) 세 셀 면적 용량 4275·2504·4200 사이클 — 범례 '23 mg/cm² 4C-3C NP 1.6' ↔ 캡션 NP ≈1.7–1.9(D9) · 전류 밀도 12·14·13.5 mA/cm² · 22–30 °C · (b)(c)(d) 전압 곡선(사이클 번호 표기) · (e)(f)(g) 비용량 · CE(눈금 0.80–1.10) · ⚠ 캡션 '(b) pouch cell 10 MPa · 75 um' 에 해당하는 패널 없음 — (b) 는 18 mg/cm² 5 C 전압 곡선 · (b) 가 캡션에 두 번(D5). 크롭 온전."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Electrochemistry analysis and comparison of anode conﬁgurations. a) Charge and b) discharge voltage curves of SSB with Si–G|Li anode of the same total weight of Si and graphite but diﬀerent Si wt% and c) corresponding dQ/dV curves. d) The tradeoﬀrelationship between critical C rate at short circuit and the turning point voltage at the end of discharge at 0.3 C for SSBs with diﬀerent anode conﬁguration. The turning point is deﬁned as the voltage at the capacity of full discharge capacity minus 15 mAh g−1. Anode conﬁguration includes Si–G|Li (green dots) and doped Si–G|Li (black dots) anode at diﬀerent NP ratios and the Si–Cl|G|Li anodes with small or large Si and LPSCly particles (orange dots). e) Comparison of CV curves of full cells with diﬀerent anodes. f) The b value obtained from CV cycling test of cells with diﬀerent anode_1|electrolyte|anode_2 conﬁgurations. g) Cycling pe",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.4,
+    550.1,
+    475.9
+   ],
+   "w": 2118,
+   "h": 1691,
+   "dpi": 300,
+   "src": "97f838d5-47._Fast_Kinetics_Design_for_Solid_State_Battery_Device.pdf",
+   "blank": 0.867,
+   "note": "봤다 (a)(b) Si wt% 0–100 % 0.5 C 충·방전(액체 Li 금속 셀 = 0 %) · (c) dQ/dV 범례 20Si NP1·50Si NP2.4·70Si NP3.4·100Si NP4.8·50Si no Li · (d) 임계 C-rate ↔ V_end: Si–G NP3.4(3.06 V, 9)·2.4(3.15, 8)·1.7(3.25, 4)·1.2(3.35, 4) + 도핑 열여덟 + Small_Si-Cl(3.16, 11)·Large_Si-Cl(3.27, 8) · (e) 완전지 CV(주사 속도 미인쇄) · (f) b 값 0.615·0.605·0.69·0.77(±0.01 — S7 평균 0.755 와 어긋남 D12) · (g) 55 °C 15 C/10 C 넷 — 촉매전해질×음극×중앙층 단계별 절제 · 빨강 LPSCl-I ≈1100 · 오렌지 LGPS+Si–Cl ≈600 · 청록 ≈250 · large-only ≈600 사이클. 크롭 온전."
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. (a, c, e, g) Impedance measurement and circuit model fitting for different cathode and anode combinations of SSB at -5 oC, 10 oC, 25 oC, and 55 oC. (b, d, f, g) Activation energy of R3 of different SSBs, where R3 represents the interface resistance between active material and solid electrolyte. (a, b) Mixed catholyte vs. Si-Cl; (c, d) Mixed catholyte vs. Si- G; (e, f) Large catholyte only vs. Si-Cl; (g, h) Small catholyte only vs. Si-Cl.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    139.0,
+    523.7,
+    592.6
+   ],
+   "w": 1832,
+   "h": 1891,
+   "dpi": 300,
+   "src": "1e2faad3-47._Sup_Fast_Kinetics_Design_for_Solid_State_Battery_Device.pdf",
+   "blank": 0.877,
+   "note": "봤다 (a)(c)(e)(g) Nyquist −5·10·25·55 °C 네 구성 + 회로 · (b)(d)(f)(h) Log(T/R3) vs 1000/T 네 점 + Ea 284·242·247·198 meV. 확대 판독 (b): 점 (3.05, 2.00)·(3.35, 0.88)·(3.53, 0.36)·(3.73, −0.25) — 55 °C 점이 표 S1 R3(5.59 → 1.77)이 아니라 R2(3.276 → 2.00)와 맞음(D2). 캡션 (g)(h) 표기 오류: 캡션은 '(b, d, f, g)' 로 h 를 g 로 씀. 크롭 온전 · 라벨 일치."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Voltage profile and cycling performance of batteries at different temperatures (55 oC or RT), cathode loading (18 ~ 58 mg/cm2), and C-rates (0.3 C ~ 15 C), as labeled in each panel.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    268.4,
+    511.9,
+    501.1
+   ],
+   "w": 1783,
+   "h": 970,
+   "dpi": 300,
+   "src": "1e2faad3-47._Sup_Fast_Kinetics_Design_for_Solid_State_Battery_Device.pdf",
+   "blank": 0.925,
+   "note": "봤다 다섯 곡선 — (a) 55 °C 41.2 mg/cm² 4C/2C ≈170 (b) 55 °C 64.4 mg 2C/1C ≈150 (c) RT 39 mg 6.8 mAh/cm² 1C/0.3C ≈170 (d) RT 58 mg 11 mAh/cm² 0.5C/0.3C ≈190 (e) 55 °C 18 mg 15C/10C 2nd·550th·1100th ≈147·150·135 mAh/g. (a)–(d) 는 한 곡선씩(사이클 번호 없음). 크롭 아래 축 라벨 일부 잘림('Capacity (mAh/g)' 절반) — 값 판독에는 영향 없음."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. The effect of carbon nano fiber (CNF) additive. (a) Adding CNF to cathode composite with low NMC ratio can increase capacity by connecting more NMC electronically. LPSCl makes the composite lose electronic percolation at a lower NMC ratio than in LGPS composite, i.e., NMC in LPSCl can better percolate than in LGPS. This is due to the different particle size distributions of the two catholytes. (b-d) Adding extra CNF to the cathode composite with NMC:catholyte weight ratio of 7:3 for (b) mix-sized catholyte, (c) large catholyte and (d) small catholyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    519.7,
+    410.2
+   ],
+   "w": 1816,
+   "h": 1435,
+   "dpi": 300,
+   "src": "1e2faad3-47._Sup_Fast_Kinetics_Design_for_Solid_State_Battery_Device.pdf",
+   "blank": 0.919,
+   "note": "봤다 (a) NMC:catholyte 4:6 Cl1.5(+2 % CNF) · 4:6 LGPS(+CNF) · 2:8 Cl1.5 — LPSCl1.5 40 wt% NMC 는 퍼콜(133 mAh/g) · LGPS 40 wt% 비퍼콜(≈5) · 20 wt% 비퍼콜 (b)(c)(d) 7:3 에서 CNF 0.5/2 wt% 효과(mixed·large 는 감소 · small 만 미미 증가). 크롭 아래 축 라벨 잘림('C-rate (1/hr)' 절반) — 값 판독 영향 없음."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. An example of critical C-rate and Vend measurement from a full cell with 18 mg/cm2 cathode loading (2.7 mAh/cm2 area capacity) and a battery configuration as labelled in the figure. The battery was first charged and discharged at 0.3 C to measure the Vend turning point defined at 15 mAh/g capacity to the full discharge. After cycling at 0.3 C, 0.5 C, and 1 C, the battery was then discharged to 2 V at 0.3 C. In subsequent cycles to test the critical C-rate, the battery was charged at increasing C-rates started from 4 C and increased by 1 C per cycle, where the charge cutoff is always at 150 mAh/g charge capacity and discharged first quickly at 4 C to 2 V and then followed by 0.3 C to 2V in each cycle.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    519.3,
+    360.2
+   ],
+   "w": 1814,
+   "h": 1226,
+   "dpi": 300,
+   "src": "1e2faad3-47._Sup_Fast_Kinetics_Design_for_Solid_State_Battery_Device.pdf",
+   "blank": 0.926,
+   "note": "봤다 임계 C-rate 절차 예시 — 셀 'NMC|Cl1.5|LGPS|Cl1.5|Si-Cl1.5|G|Li'(중앙층 LGPS — 그림 3·4g 의 LPSCl-I 와 다름 D18) · 충전 컷오프 150 mAh/g 고정 · 8C short(≈4.8 V) · V_end 전환점 ≈3.3 V(0.3 C 방전 끝 −15 mAh/g) · '0.3C following 1C or 4C' 꼬리 ≈5–10 mAh/g(율 되돌림). 캡션 'started from 4 C' ↔ 본문 'from 0.3 C'(D10). 크롭 온전."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. FIB-SEM-EDS of cycled Li|Si-G anode after critical C-rate test of a SSB with NP ratio of 2.4 and a battery configuration of mixed catholyte|LPSCl1.5|LPSCl-I|LPSCl1.5|Si- G|Li. The Li metal layer originally at the top surface of the SEM image here was stripped during cycling and merged into the Si-G layers. (a) FIB-SEM image. (b) EDS of the inset of (a).",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    433.3,
+    514.2,
+    590.1
+   ],
+   "w": 1793,
+   "h": 654,
+   "dpi": 300,
+   "src": "1e2faad3-47._Sup_Fast_Kinetics_Design_for_Solid_State_Battery_Device.pdf",
+   "blank": 0.215,
+   "note": "봤다 (a) 임계 시험 뒤 Li|Si–G(NP 2.4) FIB-SEM 단면 — PTFE·'G (Li_x)Si'·Li5.5PS4.5Cl1.5 · 10 µm 눈금 · Si–G(+흡수 Li) 층 ≈10–15 µm(±5 · 경사 미상) ↔ 치밀 두께 하한 ≥26 µm(외부 밀도) (b) EDS Si·C·S·F 5 µm 눈금. 크롭 아래 눈금 라벨 '10 µm' 절반 잘림 · EDS 범례 글자 잘림 — 판독 가능."
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. The b value measurement from CV sweeping test of different anode configurations in the battery of anode_1| electrolyte |anode_2 in Figure 4f. NP ratio is defined as if it is paired with 18 mg/cm2 cathode to represent different thickness of the anode. Anode_1 is always the configuration of Si + 20wt%_Cl1.5|G|Li using large particles of Si and LPSCl1.5 (Large Si-Cl). Anode_2 is (a) Si-G|Li NP1.2; (b) Si-G|Li NP3.6; (c) Large_Si-Cl|G|Li using large particles of Si and LPSCl1.5; (d) Small_Si-Cl|G|Li using small particles of Si and LPSCl1.0. Peak currents (y) at each CV scan rates (x) are used to fit y = axb. The average b value of top part (charge) and bottom part (discharge) of the CV scan is presented in Figure 4f. Multi-electrolyte-layer configuration of LPSCl1.5|LPSCl-I|LPSCl1.5 is used as the separator. Reference [1] C. Hsu, F. Mansfeld, Corrosion 2001, 57. [2] Y. Morino, H. ",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    533.9,
+    526.3
+   ],
+   "w": 1875,
+   "h": 1918,
+   "dpi": 300,
+   "src": "1e2faad3-47._Sup_Fast_Kinetics_Design_for_Solid_State_Battery_Device.pdf",
+   "blank": 0.917,
+   "note": "봤다 CV 열둘 — (a)–(d) 각 CV(0.75·1·2·3 mV/s) + 피크 전류 vs 주사 속도 적합 y=ax^b: 5.6x^0.6/4x^0.63 · 4.6x^0.63/6.3x^0.58 · 6.1x^0.69/6x^0.69 · 5.1x^0.74/4.9x^0.77 → 평균 0.615·0.605·0.69·0.755 · 산점도에 (0,0) 점 포함 · 전류 mA(면적 미인쇄). 크롭 아래 축 라벨 잘림 — 판독 영향 없음."
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "caption": "Table S1 Fitted R2 and R3 values. -5 oC Mixed catholyte vs. Si-Cl Small catholyte only vs. Si-Cl R2 (Ω) 98.59 102.8 135.8 374 R3 (Ω) 480.9 592.3 756.5 177.7 Mixed catholyte vs. Si-G Large catholyte only vs. Si-Cl 10 oC Mixed catholyte vs. Si-Cl Small catholyte only vs. Si-Cl R2 (Ω) 38.9 39.87 35.11 129.4 R3 (Ω) 122.2 143.7 217.9 67.73 Mixed catholyte vs. Si-G Large catholyte only vs. Si-Cl 25 oC Mixed catholyte vs. Si-Cl Small catholyte only vs. Si-Cl R2 (Ω) 15.74 17.61 12.36 41.84 R3 (Ω) 38.96 51.36 71.97 30.88 Mixed catholyte vs. Si-G Large catholyte only vs. Si-Cl 55 oC Mixed catholyte vs. Si-Cl Small catholyte only vs. Si-Cl R2 (Ω) 3.276 0.914 2.755 6.047 R3 (Ω) 5.59 8.517 10.18 5.844 Mixed catholyte vs. Si-G Large catholyte only vs. Si-Cl Small catholyte only vs. Si-Cl Ea_R2 (meV) 193 270 223 239 Ea_R3 (meV) 284 242 247 198 Table S2 Fitted CPE2 and CPE3 values. Activation energy Ea ",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    67.4,
+    513.3,
+    769.4
+   ],
+   "w": 1785,
+   "h": 2926,
+   "dpi": 300,
+   "src": "1e2faad3-47._Sup_Fast_Kinetics_Design_for_Solid_State_Battery_Device.pdf",
+   "blank": 0.619,
+   "note": "봤다 · ⚠ 과대 영역: bbox 가 SI p. 3 전체(y 67–769 pt)라 표 S1 아래의 **표 S2 까지 포함**(추출기가 'Table S2' 캡션을 따로 인식하지 못함 → 표 S2 는 수동 크롭 tab_S2_manual_p3.png 로 별도). 값은 텍스트 층과 같다(R2·R3 × 4 온도 × 4 구성 · Ea)."
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 7,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Data points in Figure 4d with Vend and critical C-rate being obtained following the procedure described in Figure S4. Vend (V) Critical C-rate Si-G NP1.2 3.35 4 Si-G NP1.7 3.25 4 Si-G NP2.4 3.15 8 Si-G NP3.4 3.06 9 Si + 1wt% Ag _Hand mill 3.1 7 Si + 2wt% Ag _Hand mill 3.07 7 Si + 1wt% Ag _Ball mill 3.18 8 Si + 2wt% Ag _Ball mill 3.11 7 Si + 2wt% Mg2Si _Ball mill 3.18 6 Si + 5wt% LiAl alloy _Hand mill 3.23 4 Si + 1wt% Sn _Ball mill 3.22 7 Si + 2wt% Sn _Ball mill 3.254 6 Si + 2wt% Al _Ball mill 3.24 6 Si + 5wt% Al _Ball mill 3.22 6 Si + 2wt% Mg _Ball mill 3.05 8 pre-heating Li|Si-G at 200 oC 3.23 4 Si + 1wt% Pb _Ball mill 3.23 6 Si + 5wt% LPSCl1.5 NP 2.1 3.2 6 Si + 2wt%total GeSnPb_Ball mill 3.215 6 Si-Hard carbon (HC) 1:1 NP1.6 3.215 6 Si + 10wt% Ge _Ball mill 3.215 6 Si-HC(1:1)|Si-HC(1:9)|Li, total NP = 1 3.19 7 Si + 10wt% LPSCl1.5 NP2 3.23 7 Si + 10wt% LPSCl1.5|G NP2 3.27 8 1u",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    67.4,
+    505.2,
+    437.0
+   ],
+   "w": 1751,
+   "h": 1541,
+   "dpi": 300,
+   "src": "1e2faad3-47._Sup_Fast_Kinetics_Design_for_Solid_State_Battery_Device.pdf",
+   "blank": 0.91,
+   "note": "봤다 26 행 V_end·임계 C-rate — 값은 텍스트 층과 같다 · Small Si-Cl 3.16 V·11 ↔ 본문 3.15·'above 10'(D11). 크롭 온전."
+  },
+  {
+   "key": "fS5m",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5_manual_p6.png",
+   "caption": "Figure S5. Si-G|Li anode discharge voltage profile in a SSB with the configuration of Li|G|Li5.5PS4.5Cl1.5|LPSCl-I|Li5.5PS4.5Cl1.5|Si-G at the current density of 0.2 mA/cm2 at room temperature.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.0,
+    488.0,
+    545.0,
+    778.0
+   ],
+   "w": 2042,
+   "h": 1209,
+   "dpi": 300,
+   "src": "1e2faad3-47._Sup_Fast_Kinetics_Design_for_Solid_State_Battery_Device.pdf",
+   "manual": true,
+   "note": "수동 크롭 (SI p. 6 · 300 dpi · 캡션 포함) — 추출기가 벡터 그림(img0/draw4)이라 '그래픽 없음' 으로 제외. 봤다: 2.2 V 에서 급락 → ≈100 mAh/g 안에 0 V → −0.1 … −0.2 V vs Li 평탄이 ≈2700 mAh/g 까지(0 V 아래 = Li 도금 영역 `[해석]`)."
+  },
+  {
+   "key": "tS2m",
+   "kind": "table",
+   "label": "S2",
+   "page": 3,
+   "file": "tab_S2_manual_p3.png",
+   "caption": "Table S2 Fitted CPE2 and CPE3 values. Z_CPE = 1/(T(iω)^P) (Ω). ω\"max = (RT)^(−1/P) = 1/RC is the frequency that maximizes the imaginary part of Z_CPE, and C is the equivalent capacitance.[1]",
+   "rotated_deg": 0,
+   "bbox": [
+    55.0,
+    425.0,
+    545.0,
+    765.0
+   ],
+   "w": 2042,
+   "h": 1418,
+   "dpi": 300,
+   "src": "1e2faad3-47._Sup_Fast_Kinetics_Design_for_Solid_State_Battery_Device.pdf",
+   "manual": true,
+   "note": "수동 크롭 (SI p. 3 하단 · 300 dpi · 식 줄 포함) — 자동 추출기가 'Table S2' 캡션을 인식하지 못해 tab_S1 과대 영역 안에만 있었다. 봤다: CPE-T·CPE-P·ω_max\"(Hz)·C × 4 구성 × 4 온도 · mixed/Si–G 55 °C 열 회색(6.84E-18 · 4.916) · 55 °C CPE2-P > 1 셋(D14) · `[재현]` C 32 칸 Hsu–Mansfeld 재현 · ω 열 32 칸 중 8(large·small R3)만 Hz, 24 는 rad/s(D8)."
+  }
+ ]
+}

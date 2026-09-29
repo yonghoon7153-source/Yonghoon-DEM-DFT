@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -218,6 +218,17 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 
 `raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md` (Jiao · … · Liu Y. 2023, *Energy Storage Mater.* 61, 102864 — 순수 모형: 3D 복합 양극(COMSOL) + 2D 입계 CZM). 25호 digest 후속 표가 이 편을 "DEM 입자 데이터 → 연결성 · 굴곡도 후처리 방법 원전" 으로 매달았는데, 지면에 **굴곡도가 없다** — `tortuos` 0 · `path` 0 · Bruggeman 0 · `σ_eff` 계산 0. SE 는 3D 형상 안에서 이원 농축 용액 수송(`[도표]` 초기 ≈1 mol L⁻¹ · t_Li+ · D_SE 미인쇄)으로 풀렸고, 수송 결론은 σ 스윕의 농도 CoV · 정규화 용량 · 중간 전압으로만 나온다(굴곡도 인자로 요약되지 않음). ⇒ 이 페이지 25호 절의 "기하 τ(경로 길이비)" 는 **원전이 아직 없다** — 25호 SI 의 ref 3 문장을 원문으로 다시 봐야 한다(83호 G1). 수치 표본이 아니므로 표본 번호를 매기지 않는다.
 
+## ★★ 열세 번째 표본 — 굴곡도 낱말 9 · 값 0: "계층형 SE → 낮은 굴곡도" 의 원전(25호 ref 16)은 EIS 두 호의 순서에 붙인 이름표이고, 저자 정의의 "연결 전해질 망" 저항(R1)은 논의되지 않았다 (2026-09-29, `assb` 85호)
+
+`raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md` (Wang Y. · Li X. 2024, *Adv. Mater.* 36, 2309306 — 단결정 NMC83 70 : LPSCl1.5 30 wt% 무탄소 · SE 세 판(≈20 µm · ≈300 nm–4 µm · 혼합) · Si–Cl\|G\|Li · 50 MPa · 1차 측정).
+
+- **정의 · 규약**: 없다 — `tortuos` 9 회(서론 2 · 모식 2 · §2.2 3 · CNF 2) · τ · τ² · Bruggeman · σ_eff · 두께 · 면적 **0**. "low/high tortuosity" 는 큰/작은 SE 판의 이름표.
+- **근거의 실체**: `[인쇄]` "R2 is decided by the Li ion conduction in the catholyte network; while, R3 is decided by the cathode–electrolyte interface contact" — large ↔ small 두 구성에서 R2 · R3 순서가 뒤집힌다는 것(표 S1 · Ω · 면적 미인쇄) + 그림 1c 모식. 적합 특성 주파수 `[재현]` R2 1.9–3.9 kHz · R3 136–462 Hz(본문 "10 kHz · 500 Hz" 는 데이터 점 라벨).
+- **R1 의 침묵**: 저자 정의 R1 = "connected electrolyte network including separator layers, catholyte, and anolyte" — `[도표]` small-only **68** ↔ large 37 ↔ mixed 27 Ω(25 °C · ±3) · −5 °C ≈360 ↔ ≈150 ↔ ≈130. 차(+31 Ω)가 R2 차(+29 Ω)와 같은 크기인데 본문에 R1 값 · 비교 0(`R1` 1 회 = 정의). 분리막이 같다면(가정) 굴곡도가 있을 자리는 여기다.
+- **25호 귀속**: 25호 :104 `[인쇄]` "계층형 SE(≈300 nm–4 µm + ≈20 µm) → 낮은 굴곡도(ref 16)" — 전사 ✅ 정확 · 이 편에 굴곡도 양 0 → 25호의 기하 τ(DEM 경로 길이비 1.21 ↔ 1.84)와 정의 공유 0 · 25호 :481 자기 판정("σ_eff 를 한 번도 재지 않았다")과 같은 자리 — **계보 두 편 연속 측정 없는 명제**. 혼합비(20 : 10)는 그림 1b ↔ 실험 절이 반대(85호 D3).
+- **옴 강하 크기 검사(82호식)**: 면적 미인쇄 → Ω·cm² 불가 · 비만 — 총 EIS 저항 중 (R1+R2) 몫 large 41 · small 78 · mixed/Si–Cl 52 · mixed/Si–G 51 % · `[재현]` 5 C 분극(그림 3b 왕복 ≈0.7 V − 0.3 C 0.15 V)에서 A·R_dc ≈22 Ω·cm².
+- ⇒ 처방에 붙는 것(`[해석]`): "저 굴곡도" 를 인용하는 편을 만나면 ① 굴곡도 양(τ · τ² · σ_eff)이 인쇄됐는지 ② 아니면 어느 회로 호의 순서인지 ③ 그 회로에 "망" 저항 자리(R1)가 따로 있고 그 값이 어떻게 움직였는지를 적는다 — 85호는 ① 0 ② R2 ③ R1 이 R2 만큼 움직였는데 미논의.
+
 ## 이 페이지가 주장하지 않는 것
 
 - **"굴곡도가 진화하지 않았다" 고 하지 않는다** — `σ_eff` 로 보면 70 % 는 변화 없음, 80 % 는 ≈3 배이고, 그 3 배의 배정이 안 갈린다는 것까지다.
@@ -231,6 +242,7 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - ★ **2026-09-29 (77호)**: **24호의 "굴곡도 진화" 가 틀렸다고 하지 않는다** — 원전 자리(이 편)에 τ 가 인쇄되지 않았다는 것까지이고, 24호 자신의 σ_eff 대조(24호 digest §4-2d)는 이 편과 무관하다.
 - ★ **2026-09-29 (82호)**: **82호 κ 와 73호 `τ²` 의 "같은 크기" 를 같은 계의 재현으로 쓰지 않는다** — NCM622 ↔ 811 · SE 입도 · 공극(가정 14 % ↔ 밀도 14.1–24.3 %)이 다르다. 규약 재현(8/8)은 인쇄 분율(뒤바뀐 48/52) 위의 우리 산술이고, 등가 Bruggeman 지수도 같은 산술이다.
 - ★ **2026-09-29 (83호)**: **25호의 기하 τ(1.21 ↔ 1.84)가 틀렸다고 하지 않는다** — 25호가 가리킨 원전(83호) 지면에 경로 계산이 없다는 것까지이고, 25호 SI 문장은 다시 보지 못했다.
+- ★ **2026-09-29 (85호)**: **85호 R1 차(+31 Ω)를 굴곡도로 배정하지 않는다** — 분리막 · 음극 동일성이 가정이고 면적이 없다; "저 굴곡도" 주장이 틀렸다고도 하지 않는다 — 양이 인쇄되지 않았다는 것까지다.
 
 ## 관련
 

@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -570,6 +570,17 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - **입계 "loss of contact"** — 2D CZM 의 1차 입자 사이 균열(파괴 사이클 95–1545 · 총 균열 · 피로 파라미터 0) · SI "손상 > 80 % → σ_ion 0" 은 이차 입자 **안** 고립의 자리를 정의만 하고 용량으로 옮기지 않았다 — 이 페이지의 `θ`(입자 단위 연결)와 다른 층위(입자 안 1차 입자).
 - ⇒ 이 페이지 규율에 붙는 것(`[해석]`): **"방법 원전" 귀속은 연결 판정 · 경로 계산이 지면에 있는지 확인한 뒤에만 옮긴다**(25호 → 83호가 반례) · 모형 편의 "contact" 는 어느 계면인지(CAM\|SE · 입계 · CAM\|CAM) 먼저 적는다.
 
+## ★★ 25호가 ref 16 으로 가리킨 "계층형 SE → 낮은 굴곡도" 의 원전 — 전자 퍼콜 문턱이 SE 분포를 따라 20 ↔ 40 wt% 를 사이에 두고 갈리고, λ 는 77호 지도 밖이며, 신품 정적 차는 ≤10 % 다 (2026-09-29 추가, `assb` 85호)
+
+`raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md` (Wang Y. · Li X. 2024, *Adv. Mater.* 36, 2309306 — 단결정 NMC83 1–5 µm · LPSCl1.5 세 판 · 무탄소 · 완전지 · 50 MPa).
+
+- **`θ` 는 없다** — 연결 분율 계산 · 측정 0(`percolat` 5 · 값 0). 대신 **전자 퍼콜 문턱의 표본**(S3a · 0.3 C `[도표]`): NMC:LPSCl1.5 **4:6 → 133 mAh g⁻¹(퍼콜) · 2:8 → ≈3(비퍼콜)** · NMC:LGPS 4:6 → ≈5(비퍼콜) · CNF 2 wt% 로 복구(113–149) · SI `[인쇄]` "This is due to the different particle size distributions of the two catholytes." — 68호 식(SE 입도 의존)의 **정성 표본** · 대입은 SE 입도 값 0(공칭 · SEM 범위)이라 불가.
+- **7:3 에서 탄소는 해롭다** — CNF 0.5 wt% 가 mixed · large 를 깎고 small 만 미미하게 돕는다(S3b–d) · 73호 VGCF(고 CAM 에서 깎음)와 같은 방향 · 저자 배정 "CNF and/or CNF-induced decomposition will only increase the ionic tortuosity"(측정 0).
+- **λ(77호 정의 D_CAM/D_SE)** `[재현]`: CAM 1–5 µm · large SE ≈20 → **0.05–0.25** · small SE 0.3–4 → 0.25–17 — large 판은 77호 지도(0.33–4) **왼쪽 밖**(CAM 이 SE 보다 작다 — 77호 · 25호 · 82호와 반대 기하). 이 편이 [10] 으로 77호를 "large CAM + small SE" 선행으로 인용하면서 자기 기하는 반대라는 점에 유의.
+- **신품 정적 차의 상한** `[도표]`: 0.3 C 용량(Si–G 음극) mixed 165 · large 150 · small 152 → 비 0.91–0.92 — SE 판 사이 정적(`θ₀` 형) 차 ≤10 % · 4 C 차(116 ↔ 75 · 55)는 `η`(율 되돌림 S4 ✓). 82호(C/20 결손 ≤17 % 상한)와 같은 모양.
+- **부피 분율** `[재현·외부 밀도]`: 70 : 30 wt% → SE 49.9–53.2 vol%(PTFE 4 %) — 82호 47.7 · 73호 42 vol% 점과 같은 띠 · mixed 의 SE 안 small 몫 2/3(실험 절) ↔ 1/3(그림 1b — D3).
+- ⇒ 이 페이지 규율에 붙는 것(`[해석]`): (1) "large + small 혼합" 편은 **CAM 과 SE 중 어느 쪽이 큰지**(λ 의 방향)를 먼저 적는다 — 같은 "계층형" 낱말이 반대 기하를 덮는다 (2) 전자 퍼콜 문턱은 SE 종류 · 분포와 함께 적는다(같은 40 wt% 가 LPSCl1.5 퍼콜 · LGPS 비퍼콜) (3) 0.3 C 용량의 판 무관성은 `θ₀` 차의 상한이지 측정이 아니다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - `θ_AM` 이 접촉 손실의 **올바른** 모형이라고 주장하지 않는다. 원문의 `θ` 는 접촉 저항을
@@ -593,6 +604,7 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - ★ **2026-09-29 (77호)**: **이 편 DEM `θ` 가 틀렸다고도, 거울 평균장이 맞다고도 하지 않는다** — 첫 충전 상한 위반은 `[도표]` 판독 · 기준 셀 하나 · 조건당 셀 1 위의 검사이고, 거울 평균장은 원전들 어디에도 없는 우리 확장이다. Fig. 7b 가 무엇을 그렸는지도 확정하지 않는다(7a 환산도 두 상 부피분율도 아니라는 것까지).
 - ★ **2026-09-29 (82호)**: **82호의 용량 비를 `θ` 로 쓰지 않는다** — 연결 분율은 계산되지 않았고, C/20 결손의 `θ` · `A_eff` · 첫 사이클 손실 배분은 이 편 자료로 갈리지 않는다. 77호 지도 대입은 λ 정의만 같은 우리 산술이다.
 - ★ **2026-09-29 (83호)**: **25호의 DEM 굴곡도 · 이용률 계산이 틀렸다고 하지 않는다** — 25호가 원전으로 가리킨 83호 지면에 그 방법이 없다는 것까지이고, 25호 SI 의 해당 문장은 다시 보지 못했다. 83호 단면 분율 0.187 은 단면 하나의 화소 판독이다.
+- ★ **2026-09-29 (85호)**: **85호의 0.3 C 용량 무관성을 `θ₀` 의 측정으로 쓰지 않는다** — 상한(≤10 %)까지이고 셀 하나씩 · 음극이 다른 비교(2a Si–G ↔ 2h Si–Cl)다; 25호 ref 16 귀속은 "주장의 선행 ✅ · 측정 0" 까지다.
 
 ## 관련
 - [[assb-apparent-capacity-decomposition]] — 이 곱에 **셋째 항 `η(i)`** 를 더한다. 반례와 분리 시험.

@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -1051,6 +1051,16 @@ Lee [45] **개방 회로 이완 30 → 27.6(LPSC) · 24.8 MPa(LSPS) / 20 h**(`[�
 요구치의 출처 · 같은 전극의 압력 스윕 · 양극 쪽 `θ(P)` · `R(P)` · 용량(P) · 감쇠(P) · 압력 계측 · 구속 형식(로드셀 · 스프링 · 정변위 구분 0) · "low pressure" 의 정의(표 2 0.1–4.9 MPa ↔ 초록 < 1).
 창의 값은 움직이지 않았다 — 움직인 것은 계보 한 줄(8호 가닥의 끝)과 재수록 표본의 목록이다.
 
+## ★ 2026-09-29 (`assb` 85호 Wang Y. · Li X. 2024 *Adv. Mater.* 36, 2309306, **실험 · 황화물 완전지 · Li 박 + Si(–SE) 음극 · 성형 400 MPa → 운전 50 MPa 한 점 · 스윕 0**) — **창의 값은 움직이지 않는다: 50 MPa 에서 3–5 C 4000 사이클 단락 0(RT) · 15 C 40.5 mA cm⁻² 1100 사이클 단락 0(55 °C) — 단락 벽을 넘지 않은 표본이고, 캡션에만 있는 "pouch cell 10 MPa · 75 µm" 는 패널 · 실험 절 · 데이터가 없다**
+
+`raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md` (25호 ref 16 지목 · **3차 묶음 파일 47**).
+
+- **압력 서술 셋**: `[인쇄]` "pressed together in a homemade pressurized cell at 400 MPa and kept at 50 MPa during testing" · 그림 3 캡션 "b) Cycling performance in pouch cell at 10 MPa external pressure … separator thickness of 75 um"(패널 없음 — 85호 D5) · 서론 "comparable separator layer thickness and stack pressure of pressurized coin cells"(값 0). 구속 형식(정하중 / 정변위) · 압력 계측 · 온도 통제(RT 22–30 °C 무통제) 미인쇄.
+- **단락 벽 쪽 표본**: 임계 C-rate(단락의 첫 율) 4–11 C(18 mg cm⁻² · 2.7 mAh cm⁻² → 10.8–29.7 mA cm⁻²) — 음극 구성의 함수로 인쇄(표 S3 26 행) · 압력은 한 점이라 `j_crit(P)` 는 없다 · 중앙층 LGPS ↔ LPSCl-I 가 수명을 ×2–4 움직임(그림 4g · 셀 하나씩) — 단락은 압력 밖의 손잡이(분리막 · 음극 구조)에도 걸린다는 표본.
+- **아래 벽(접촉) 쪽**: 50 MPa 한 점 · 접촉 관측 0 — 이 페이지에 값 0.
+- **분리막 두께**: 120 mg SE · 면적 미인쇄 → `[재현]` 363–817 µm(A 1.77–0.785 cm² 가정 · ρ 1.87) — "comparable … thickness" 의 실체는 두꺼운 펠릿 급(`[해석]`) · 파우치 75 µm 는 캡션뿐.
+- 이 편이 이 페이지에 **안 준 것**: 압력 스윕 · `θ(P)` · `R(P)` · 용량(P) · 구속 형식 · 계측 · 파우치 자료.
+
 ## 경고 (전부 원문이 준 한계에서 나온다)
 
 1. **점당 셀 1 개, 오차 막대 0.** 압력–수명 6 점 전부 N=1 이다.
@@ -1099,6 +1109,7 @@ Lee [45] **개방 회로 이완 30 → 27.6(LPSC) · 24.8 MPa(LSPS) / 20 h**(`[�
 - **73호의 ≈40 MPa 를 운전 압력 요구치나 창의 표본으로 옮기지 않는다** (2026-09-28) — 측정 · 사이클 조건의 한 값이고 스윕이 없다. 사이클 셀의 구속 형식(정하중 / 정변위)은 인쇄 0 이다.
 - **80호의 코인셀 하중(≈0.1–0.2 MPa)을 창의 표본이나 요구치로 옮기지 않는다** (2026-09-29) — 액체 코인셀의 두 추정(판 식 · 스프링 — 스프링 식은 인쇄 값으로 재현 안 됨)이고, 판 휨 · 간극 수치는 오목 캔 · 단순 지지 스페이서라는 설계의 값이다. 가장자리 분리막 기공 폐쇄가 측면 구배의 원인이라는 것도 저자 배정이다(절대 간극은 셀 절반에서 공칭 이상).
 - **81호의 "< 1 MPa" 를 산업 요구치의 원전으로 인용하지 않는다** (2026-09-29) — 초록 한 줄 · 인용 0 · 본문 재진술 0 이다. 8호의 "<≈1 MPa" 는 그 재인용이라 독립 인쇄로 세지 않는다. 그리고 **81호 표 2 의 "0.1 MPa" 행을 저압 운전 표본으로 쓰지 않는다** — 여섯 중 둘은 같은 지면이 대기압 / 무가압이고 하나는 본문 126 kPa 이며, 압력 계측 · 구속 형식은 전부 미인쇄다.
+- **85호의 "pouch cell 10 MPa" 를 운전 압력 값으로 세지 않는다** (2026-09-29) — 캡션 한 줄 · 패널 · 실험 절 0 이다. 50 MPa 4000 사이클 단락 0 을 창의 위 벽 값으로도 쓰지 않는다 — 한 점 · 벽을 넘지 않은 표본이다.
 
 ## 관련
 - [[assb-pressure-reapplication-separation-test]] — `P↑` 분리 연산자. **이 페이지가 그 상한을 준다.**
