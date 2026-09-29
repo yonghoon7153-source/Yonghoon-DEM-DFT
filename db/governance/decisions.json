@@ -5730,6 +5730,57 @@
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
     "근거_발화": "AskUserQuestion 답 (2026-09-29 00:4x KST · 이 세션): 'gabia 직렬 공존 (Recommended)' · '해당 안 됨 — 기록 (Recommended)' — 앞선 제안 'LI2S 나머지는 GABIA에서 직렬로 하나씩 돌리면 충분히 돌릴거 같은데'"
    }
+  },
+  {
+   "id": "D-2026-09-29-cei-limatched-additivity",
+   "schema_version": 2,
+   "kind": "estimand",
+   "record_kind": "prospective",
+   "scope": "cathode_cei.x002.limatched_additivity_2026_09_29",
+   "slot": "cathode_cei_limatched_additivity",
+   "applies_to": {
+    "systems": [
+     "modelc",
+     "modelc_nd_doped"
+    ]
+   },
+   "title": "CEI Li 맞춤 축 가산성 — Li 를 맞춰도 Nd·O 효과가 더해지나 (사전등록 GA · 대조 짝 검사 · 재현 G0)",
+   "statement": "x = 0.02 두 자리(Li · P)에서, 같은 Li 수의 무-Nd 대조와 견준 Nd 항이 O 유무와 무관한지 본다: N0 = E(nd) − E(lim_nd) · N1 = E(both) − E(lim_both) · 칸 평균(N1 − N0) 의 절댓값이 0.0010 eV/atom(x002 G2 문턱 그대로) 안이면 통과(GA). 칸은 base 와 다섯 조성이 모두 유효한 공통 칸. Li 자리는 새 대조 lim_li_002_o(Li5.34P1S4.37Cl1.6O0.03) 하나를 더해 같은 실행에서 열 조성을 다시 잰다. 대조가 설계대로 짝인지(Nd 만 빼고 Li·P·S·Cl·O 같음)는 반응식 조성으로 확인하고, 틀리면 그 자리는 판정하지 않는다. x002 와의 재현(G0)은 정보다. 통과한 자리는 화면의 '두 효과가 더해진다' 에서 'Li 를 보정하지 않으면' 조건을 뗀다. ⛔ 이 결정은 x = 0.02 의 Δ 크기 · 전압 기울기 기전 · x = 0.20 · Nd 점유 자리를 말하지 않는다.",
+   "rationale": "1저자 2026-09-29 — '이건 시뮬레이션 돌릴 수 있는거 있어?' → 'gabia에 다 명령어로 줘봐용'. 화면(§s0b · §1)이 '더해진다' 를 Li 미보정 축 조건으로만 쓰고 있어 논문 문장에 조건이 붙는다. MP hull 계산이라 싸다(GPU 안 씀 · 5 분 안팎). P 자리 Nd 항 두 판의 4.5 V 값을 x002 G5 에서 이미 봤으므로 문턱은 새로 고르지 않고 x002 G2 문턱을 가져온다.",
+   "decision_state": "active",
+   "results_seen": true,
+   "results_seen_note": "GA 잔차는 계산한 적 없다 · lim_li_002_o 는 계산한 적 없다. P 자리 Nd 항 두 판의 4.5 V 양극별 값(0.1 meV 반올림)만 x002 G5 에서 봤다.",
+   "card": "db/properties/cathode_cei_limatched_additivity_prereg_2026_09_29.json",
+   "record": "db/properties/cathode_cei_limatched_additivity_prereg_2026_09_29.json",
+   "method_ref": "tools/oxidation/interface_reactivity_v2.py --x002_ga (ga_verdicts · ga_design_pairs · GA_TOL 0.0010) · 실행 db/raw/cei_ga_2026_09_29/run.sh",
+   "amends": [],
+   "supersedes": [],
+   "reopen_criteria": [
+    "짝 검사가 실패하면 GA 를 판정하지 않고 조성·라벨부터 고친다 — 고친 뒤 같은 사전등록으로 다시 돌린다.",
+    "MP hull 스냅샷이 움직이면(G0 초과) GA 는 이 실행 안에서 유효하지만, 화면의 x002 수를 고칠지는 x002 결정의 재개 조건대로 판단한다.",
+    "⛔ GA 결과를 보고 문턱(0.0010)·칸 규칙·짝을 바꾸지 않는다."
+   ],
+   "enforcement": "① 사전등록과 판정 코드를 실행 **전에** 커밋·푸시한다. ② gabia 작업트리는 그 커밋에서 만든다 — 실행 로그 첫 줄(START … @ <커밋>)이 사전등록 커밋이어야 한다. ③ 판정은 --x002_ga 가 낸 cei_ga_verdicts_2026_09_29.json 만 쓴다 — 결과 기록과 화면 문구는 그 판정에서 온다.",
+   "proposed_by": "claude-session-2026-09-29",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-29",
+     "state": "active",
+     "by": "1저자(사용자)",
+     "note": "사용자: '이건 시뮬레이션 돌릴 수 있는거 있어?' → 제안 → 'gabia에 다 명령어로 줘봐용' — 실행 승인. 게이트 문안(GA · 짝 검사 · G0)은 에이전트 초안이고 실행으로 비준한다(x010 선례). 트랙 = CEI 화면(우리) → 1저자 = 사용자, 통지할 제3자 없음."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-29T02:26:43Z",
+    "commit": "ff7c15c33d112dc124627e2a4e89022751711113",
+    "decision_digest": "sha256:b956c627085605514a304cc1bbcc0e060e1c7099d08cbb2682f11584493aee10",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "비준_근거": "1저자 2026-09-29 — 'gabia에 다 명령어로 줘봐용' (제안한 설계 그대로 실행 승인)."
+   }
   }
  ]
 }

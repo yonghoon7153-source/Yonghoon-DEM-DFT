@@ -1049,6 +1049,80 @@ def _selftest():
     chk(_v10["missing_labels"] == ["nd_p_010"] and "GC_curvature" not in _v10,
         "[⛔음성] x010 — 조성이 빠지면 판정하지 않는다 (통과로 세지 않는다)")
 
+    # ── GA (2026-09-29) — Li 맞춤 축 가산성 · 대조 짝 검사 ──────────────────────────
+    _GF = {"modelc": "Li5.4P1S4.4Cl1.6",
+           "nd_li_002": "Li5.34Nd0.02P1S4.4Cl1.6", "o_only_003": "Li5.4P1S4.37Cl1.6O0.03",
+           "ndo_li_002": "Li5.34Nd0.02P1S4.37Cl1.6O0.03", "lim_li_002": "Li5.34P1S4.4Cl1.6",
+           "lim_li_002_o": "Li5.34P1S4.37Cl1.6O0.03",
+           "nd_p_002": "Li5.44Nd0.02P0.98S4.4Cl1.6", "nd_p_002_asused": "Li5.44Nd0.02P0.98S4.37Cl1.6O0.03",
+           "lim_p_002": "Li5.44P0.98S4.4Cl1.6", "lim_p_002_asused": "Li5.44P0.98S4.37Cl1.6O0.03"}
+
+    def _mkga(off=None, drop=None, formula=None, deg=None, cats=("C",)):
+        """합성 결과 — 효과가 **더해지는** 계 (Li 수 · Nd · O · P 결손 항의 합). off: {(양극, 조성): 오프셋}."""
+        fm = {**_GF, **(formula or {})}
+        out = {}
+        for cat in cats:
+            cd = out[cat] = {"by_voltage": {}, "reactions": {}, "endpoint_degenerate": {}}
+            for lab, f in fm.items():
+                c = parse_formula(f)
+                for V in ("3.50", "4.00", "4.50"):
+                    dv = float(V) - 3.5
+                    e = (-1.0 + (c.get("Li", 0) - 5.4) * (0.3 + 0.2 * dv)
+                         + (0.004 - 0.002 * dv if c.get("Nd", 0) else 0.0)
+                         + (0.002 if c.get("O", 0) else 0.0) + (1.0 - c.get("P", 1.0)) * 0.1
+                         + (off or {}).get((cat, lab), 0.0))
+                    if lab != drop:
+                        cd["by_voltage"].setdefault(V, {})[lab] = e
+                    cd["reactions"].setdefault(V, {})[lab] = f"0.4 {f} + 0.6 LiCoO2 -> 1 Li + 1 CoS2"
+                    cd["endpoint_degenerate"].setdefault(V, {})[lab] = bool((deg or {}).get(lab, False))
+        return out
+
+    _vga = ga_verdicts(_mkga())
+    chk(all(g["pass"] is True and abs(g["residual"]) < 1e-12 for g in _vga["GA_additivity"].values())
+        and all(pr["ok"] for pr in _vga["design_pairs"].values()),
+        "[양성] GA — 효과가 더해지는 계면 두 자리 다 통과 · 대조 짝 검사도 통과")
+    _vga = ga_verdicts(_mkga(off={("C", "lim_li_002_o"): 0.002}))
+    _gg = _vga["GA_additivity"]
+    chk(_gg["Li"]["pass"] is False and abs(_gg["Li"]["info_R2_same_cells"]) < 1e-12 and _gg["P"]["pass"] is True,
+        "[⛔음성] GA — Li 를 맞춘 축에서만 보이는 상호작용(대조에 +0.002)은 G2(R2 = 0)로 안 보이고 GA 가 잡는다")
+    _vga = ga_verdicts(_mkga(off={("C", "ndo_li_002"): 0.0011}))
+    chk(_vga["GA_additivity"]["Li"]["pass"] is False,
+        "[⛔음성] GA — 문턱 0.0010 을 조금(0.0011) 넘어도 불통과 (문턱을 실제로 쓴다)")
+    _vga = ga_verdicts(_mkga(off={("C", "ndo_li_002"): 0.0009}))
+    chk(_vga["GA_additivity"]["Li"]["pass"] is True, "[경계] GA — 문턱 안(0.0009)은 통과")
+    _vga = ga_verdicts(_mkga(off={("C1", "ndo_li_002"): 0.003, ("C2", "ndo_li_002"): -0.003},
+                             cats=("C1", "C2")))
+    chk(_vga["GA_additivity"]["Li"]["pass"] is True
+        and _vga["GA_additivity"]["Li"]["info_n_cells_over_tol"] == 6,
+        "[⛔음성] GA — 칸끼리 상쇄된 상호작용은 평균으로 통과해도 칸별 초과 수(6)로 드러난다")
+    _vga = ga_verdicts(_mkga(formula={"lim_li_002_o": "Li5.34P1S4.4Cl1.6"}))
+    chk(_vga["design_pairs"]["Li"]["ok"] is False and _vga["GA_additivity"]["Li"]["pass"] is None
+        and _vga["GA_additivity"]["P"]["pass"] is True,
+        "[⛔음성] GA 짝 검사 — O 가 빠진 대조를 lim_both 로 이으면 그 자리는 판정하지 않는다")
+    _vga = ga_verdicts(_mkga(formula={"lim_p_002": "Li5.44Nd0.02P0.98S4.4Cl1.6"}))
+    chk(_vga["design_pairs"]["P"]["ok"] is False
+        and any("Nd 가 있다" in x for x in _vga["design_pairs"]["P"]["problems"]),
+        "[⛔음성] GA 짝 검사 — 대조에 Nd 가 섞이면 잡는다")
+    _vga = ga_verdicts(_mkga(formula={"lim_li_002": "Li5.4P1S4.4Cl1.6"}))
+    chk(_vga["design_pairs"]["Li"]["ok"] is False
+        and any("Li 가 다르다" in x for x in _vga["design_pairs"]["Li"]["problems"]),
+        "[⛔음성] GA 짝 검사 — Li 를 안 맞춘 대조(Li 5.4)를 잡는다")
+    _vga = ga_verdicts(_mkga(formula={"ndo_li_002": "Li5.34Nd0.02P1S4.4Cl1.6",
+                                      "lim_li_002_o": "Li5.34P1S4.4Cl1.6"}))
+    chk(_vga["design_pairs"]["Li"]["ok"] is False
+        and any("ndo_li_002) 에 O 가 없다" in x for x in _vga["design_pairs"]["Li"]["problems"]),
+        "[⛔음성] GA 짝 검사 — 'both' 와 그 대조가 **둘 다** O 가 없으면(짝끼리는 맞아도) O 효과를 못 잰다 → 잡는다")
+    _vga = ga_verdicts(_mkga(drop="lim_li_002_o"))
+    chk(_vga["missing_labels"] == ["lim_li_002_o"] and "GA_additivity" not in _vga,
+        "[⛔음성] GA — 새 대조가 빠지면 판정하지 않는다 (통과로 세지 않는다)")
+    _vga = ga_verdicts(_mkga(deg={"lim_li_002_o": True}))
+    chk(_vga["GA_additivity"]["Li"]["pass"] is None and _vga["GA_additivity"]["Li"]["n_cells"] == 0,
+        "[⛔음성] GA — 유효 칸이 0 이면 판정 없음 (0 칸을 통과로 읽지 않는다)")
+    _vga = ga_verdicts(_mkga(), repro={"verdict": "REPRODUCED", "max_abs_delta": 0.0, "n_compared": 9,
+                                       "tol_eV_per_atom": 0.002})
+    chk(_vga["G0_reproduce"]["tol"] == 0.002 and _vga["tol"] == 0.0010,
+        "[양성] GA — G0 허용폭은 reproduce_check 에서 읽고 · GA 문턱은 x002 G2 문턱 0.0010 이다")
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -2361,6 +2435,154 @@ def x010_verdicts(results, repro=None):
     return out
 
 
+
+# ── Li 맞춤 축 가산성 GA (2026-09-29) ─────────────────────────────────────────────
+#: 사전등록 db/properties/cathode_cei_limatched_additivity_prereg_2026_09_29.json — **실행 전에 박았다.**
+#:   값을 보고 아래 짝·문턱을 고치지 않는다 (고치면 사전등록이 죽는다).
+GA_PREREG = "db/properties/cathode_cei_limatched_additivity_prereg_2026_09_29.json"
+GA_BASE = "modelc"
+GA_SITES = {
+    "Li": {"nd": "nd_li_002", "o": "o_only_003", "both": "ndo_li_002",
+           "lim_nd": "lim_li_002", "lim_both": "lim_li_002_o"},
+    "P": {"nd": "nd_p_002", "o": "o_only_003", "both": "nd_p_002_asused",
+          "lim_nd": "lim_p_002", "lim_both": "lim_p_002_asused"},
+}
+#: GA 문턱 — x002 G2(x = 0.02 가산성) 문턱을 **그대로** 쓴다. 새로 고르지 않는다
+#:   (P 자리 Nd 항 두 판의 4.5 V 값을 x002 G5 에서 이미 봤다 — 문턱을 고를 자격이 없다).
+GA_TOL = X002_G2_TOL[0.02]
+#: 짝 검사의 조성 허용폭 (화학식 문자열 반올림)
+GA_PAIR_TOL = 1e-6
+
+
+def _ga_formula(results, label):
+    """반응식 좌변에서 전해질(Cl 을 가진 항)의 조성을 읽는다 — 처음 읽히는 칸.
+    못 읽으면 None 이다 (추측하지 않는다)."""
+    for cd in results.values():
+        for rxs in (cd.get("reactions") or {}).values():
+            rx = (rxs or {}).get(label)
+            if not rx or "->" not in rx:
+                continue
+            for term in rx.split("->")[0].split(" + "):
+                toks = term.strip().split()
+                if not toks:
+                    continue
+                comp = parse_formula(toks[-1])
+                if comp.get("Cl", 0) > 0:
+                    return comp
+    return None
+
+
+def ga_design_pairs(results, sites=None):
+    """Li 맞춤 대조가 **설계대로 짝인가** — 원자료 반응식의 조성으로 직접 본다.
+
+    lim_nd ↔ nd · lim_both ↔ both: Nd 만 빼고 Li · P · S · Cl · O 가 같다 · lim 쪽 Nd 0 · 짝 쪽 Nd > 0.
+    both · o 는 O 가 있고 nd 는 O 가 없다.
+    ⛔ 짝이 틀리면(라벨을 잘못 이었거나 조성을 잘못 넣었으면) GA 를 판정하지 않는다.
+    """
+    sites = sites or GA_SITES
+    out = {}
+    for site, s in sites.items():
+        comp = {k: _ga_formula(results, lab) for k, lab in s.items()}
+        probs = [f"{k}({s[k]}) 조성을 반응식에서 못 읽었다" for k, v in comp.items() if v is None]
+        if not probs:
+            for lim, par in (("lim_nd", "nd"), ("lim_both", "both")):
+                a, b = comp[lim], comp[par]
+                if a.get("Nd", 0) > GA_PAIR_TOL:
+                    probs.append(f"{lim}({s[lim]}) 에 Nd 가 있다")
+                if b.get("Nd", 0) <= GA_PAIR_TOL:
+                    probs.append(f"{par}({s[par]}) 에 Nd 가 없다")
+                for el in sorted((set(a) | set(b)) - {"Nd"}):
+                    if abs(a.get(el, 0) - b.get(el, 0)) > GA_PAIR_TOL:
+                        probs.append(f"{lim}({s[lim]}) ↔ {par}({s[par]}) 의 {el} 가 다르다 "
+                                     f"({a.get(el, 0):g} vs {b.get(el, 0):g})")
+            if comp["nd"].get("O", 0) > GA_PAIR_TOL:
+                probs.append(f"nd({s['nd']}) 에 O 가 있다")
+            for k in ("both", "o"):
+                if comp[k].get("O", 0) <= GA_PAIR_TOL:
+                    probs.append(f"{k}({s[k]}) 에 O 가 없다")
+        out[site] = {"ok": not probs, "problems": probs,
+                     "compositions": {s[k]: v for k, v in comp.items()}}
+    return out
+
+
+def ga_verdicts(results, repro=None, sites=None):
+    """Li 맞춤 축 가산성 판정 — **이미 나온 결과 JSON 만** 읽는다 (MP 불필요).
+
+    자리마다 base 와 다섯 조성(nd · o · both · lim_nd · lim_both)이 모두 유효한 칸(09-19 공통기준 규약)에서
+      N0 = E(nd) − E(lim_nd)       O 없을 때, Li 를 맞춘 Nd 항
+      N1 = E(both) − E(lim_both)   O 있을 때, Li 를 맞춘 Nd 항
+      GA 잔차 = 칸 평균(N1 − N0) · |잔차| ≤ GA_TOL 이면 통과
+      = Li 를 맞춘 축에서도 Nd 항이 O 에 기대지 않는다 = 두 효과가 Li 보정과 무관하게 더해진다.
+    정보: R2 = 같은 칸의 E(nd) + E(o) − E(both) − E(base) (x002 G2 와 같은 양) ·
+          R_O = [E(lim_both) − E(lim_nd)] − [E(o) − E(base)] (Li 가 모자란 상태의 O 항 − 기준 O 항).
+          세 잔차는 R2 + GA + R_O = 0 으로 묶여 있다(대수) — R2 ≈ 0 이면 R_O ≈ −GA 라 따로 판정하지 않는다.
+    짝 검사(design_pairs): 반응식 조성으로 대조가 설계대로 짝인지 본다. 틀리면 그 자리는 판정하지 않는다.
+    G0 재현: 실행이 x002 파일과 대조한 결과를 옮긴다 (정보 — GA 는 **이 실행 안에서만** 뺀다).
+
+    ⛔ 못 하는 것
+      · 문턱을 고르지 않는다 — x002 G2 문턱(GA_TOL)만 쓴다.
+      · 조성이 빠지거나 칸이 0 이면 **판정하지 않는다** (pass=None · 이유) — 0 으로 채우지 않는다.
+      · x = 0.02 의 Δ 크기를 인용 가능하게 만들지 않는다 — 유의폭 안이라 부호·가산성만 쓴다 (x002 결정).
+      · Nd 의 점유 자리 · 합성 가능성 · 전압 기울기 기전 · 절대 반응에너지를 말하지 않는다.
+    """
+    sites = sites or GA_SITES
+    labels = set()
+    for cd in results.values():
+        for row in (cd.get("by_voltage") or {}).values():
+            labels |= set(row)
+    need = {GA_BASE, *(l for s in sites.values() for l in s.values())}
+    miss = sorted(need - labels)
+    out = {"schema": "ga_verdicts/v1", "prereg": GA_PREREG, "tol": GA_TOL,
+           "G0_reproduce": ({**{k: repro.get(k) for k in ("verdict", "max_abs_delta", "n_compared")},
+                             "tol": repro.get("tol_eV_per_atom", repro.get("tol"))}
+                            if isinstance(repro, dict) else None),
+           "missing_labels": miss}
+    if miss:
+        out["⛔"] = f"조성이 빠졌다 {miss} — 판정하지 않는다 (0 으로 채우지 않는다)"
+        return out
+    pairs = ga_design_pairs(results, sites)
+    out["design_pairs"] = pairs
+    ga = {}
+    for site, s in sites.items():
+        cells = _x002_cells(results, list(s.values()))
+        if not pairs[site]["ok"]:
+            ga[site] = {"pass": None, "n_cells": len(cells),
+                        "why": "Li 맞춤 대조의 짝이 설계와 다르다 — 판정하지 않는다 (design_pairs 참조)"}
+            continue
+        if not cells:
+            ga[site] = {"pass": None, "n_cells": 0, "why": "여섯 조성이 모두 유효한 칸이 0 이다"}
+            continue
+        per = []
+        for cat, V in cells:
+            row = results[cat]["by_voltage"][V]
+            E = {k: row[lab] for k, lab in s.items()}
+            base = row[GA_BASE]
+            n0, n1 = E["nd"] - E["lim_nd"], E["both"] - E["lim_both"]
+            per.append({"cathode": cat, "V": V, "N0": n0, "N1": n1, "r_ga": n1 - n0,
+                        "r2": E["nd"] + E["o"] - E["both"] - base,
+                        "r_o": (E["lim_both"] - E["lim_nd"]) - (E["o"] - base)})
+        n = len(per)
+        mean = {k: sum(r[k] for r in per) / n for k in ("N0", "N1", "r_ga", "r2", "r_o")}
+        by_v = {}
+        for r in per:
+            by_v.setdefault(r["V"], []).append(r["r_ga"])
+        over = sorted((r for r in per if abs(r["r_ga"]) > GA_TOL),
+                      key=lambda r: (-abs(r["r_ga"]), r["cathode"], float(r["V"])))
+        ga[site] = {"labels": dict(s), "n_cells": n,
+                    "N0_mean": round(mean["N0"], 6), "N1_mean": round(mean["N1"], 6),
+                    "residual": round(mean["r_ga"], 6), "tol": GA_TOL,
+                    "pass": abs(mean["r_ga"]) <= GA_TOL,
+                    "info_R2_same_cells": round(mean["r2"], 6),
+                    "info_R_O": round(mean["r_o"], 6),
+                    "info_by_V": {V: round(sum(v) / len(v), 6)
+                                  for V, v in sorted(by_v.items(), key=lambda t: float(t[0]))},
+                    "info_n_cells_over_tol": len(over),
+                    "info_max_abs_cell_residual": round(max(abs(r["r_ga"]) for r in per), 6),
+                    "info_cells_over_tol": [{"cathode": r["cathode"], "V": r["V"],
+                                             "residual": round(r["r_ga"], 6)} for r in over]}
+    out["GA_additivity"] = ga
+    return out
+
 def dopant_fate(csv_path, dopant="Nd"):
     """도펀트가 최소 꺾임에서 **어느 상으로 가는가** — 인산염 / 황산염 / 염화물 / 그 밖.
 
@@ -2481,12 +2703,40 @@ def main():
     ap.add_argument("--x010", metavar="RESULTS_JSON",
                     help="x = 0.10 판정 — GC(0.02–0.20 사이 곡률) · GI(Li 장부 항등식 무결성) "
                          "(사전등록 cathode_cei_x010_curvature_prereg_2026_09_28 · MP 불필요)")
+    ap.add_argument("--x002_ga", metavar="RESULTS_JSON",
+                    help="Li 맞춤 축 가산성 GA · 대조 짝 검사 (사전등록 "
+                         "cathode_cei_limatched_additivity_prereg_2026_09_29) — 이미 나온 결과만 읽는다 (MP 불필요)")
     ap.add_argument("--li_identity", metavar="RESULTS_JSON",
                     help="Li 장부 항등식(dE/dV = −ρ · 계수 1) 확인 + 09-19 β≈2 분해 "
                          "— 이미 나온 결과만 읽는다 (MP 불필요 · 기준 조성은 --li_ledger_base)")
     if "--selftest" in __import__("sys").argv:
         raise SystemExit(_selftest())
     a = ap.parse_args()
+    if a.x002_ga:
+        _D = json.loads(Path(a.x002_ga).read_text(encoding="utf-8"))
+        out = ga_verdicts(_D["results"], repro=_D.get("reproduce_check"))
+        out["source"] = {"interface": a.x002_ga}
+        Path(a.out).write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+        if out.get("missing_labels"):
+            print(out["⛔"])
+            return 2
+        _P = {True: "통과", False: "불통과", None: "판정 없음"}
+        g0 = out["G0_reproduce"] or {}
+        print(f'G0 재현  {g0.get("verdict")} · 최대 차 {g0.get("max_abs_delta")} · 칸 {g0.get("n_compared")} '
+              f'(허용 {g0.get("tol")})')
+        for site, pr in out["design_pairs"].items():
+            print(f'짝 검사 {site:3s} ' + ("OK" if pr["ok"] else "⛔ " + " · ".join(pr["problems"])))
+        for site, g in out["GA_additivity"].items():
+            if "residual" not in g:
+                print(f'GA {site:3s} 판정 없음 — {g.get("why")}')
+                continue
+            print(f'GA {site:3s} Li 맞춘 Nd 항  O 없음 {g["N0_mean"]:+.5f} · O 있음 {g["N1_mean"]:+.5f} · '
+                  f'잔차 {g["residual"]:+.6f} (허용 {g["tol"]}) → {_P[g["pass"]]}  n={g["n_cells"]}')
+            print(f'    정보: R2(같은 칸) {g["info_R2_same_cells"]:+.6f} · R_O {g["info_R_O"]:+.6f} · '
+                  f'칸별 초과 {g["info_n_cells_over_tol"]} (최대 {g["info_max_abs_cell_residual"]}) · '
+                  f'전압별 {g["info_by_V"]}')
+        print(f'→ {a.out}')
+        return 0
     if a.x010:
         _D = json.loads(Path(a.x010).read_text(encoding="utf-8"))
         out = x010_verdicts(_D["results"], repro=_D.get("reproduce_check"))
@@ -2806,4 +3056,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # ⛔ 2026-09-29 — 종전엔 `main()` 만 불러서 판정 거부(return 2 · 조성 빠짐)와 항등식 실패(return 1)가
+    #   **종료코드로 안 나갔다** (전부 0). run.sh 의 `V EXIT=$?` 가 거부를 성공처럼 찍을 수 있었다 (조용히 틀린 경로).
+    raise SystemExit(main())
