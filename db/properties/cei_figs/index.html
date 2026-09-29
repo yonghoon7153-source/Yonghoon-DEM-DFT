@@ -211,12 +211,12 @@ MP GGA/GGA+U hull, Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries (09-19 실행과 240 칸
     <div class="tldr-yes"><div class="tldr-lbl">✅ 말하는 것</div><ul>
       <li>고전압에서 Nd 는 <b>전량</b> 인산염으로 가며 P 를 <b>먼저</b> 잡는다(Co·Ni·NMC811 양극 · LiMnO₂ 는 NdCl₃) — 다만 목표 농도 <b>x = 0.02</b> 에서
           Nd 가 가져가는 P 는 <b>1 할</b>(NdP₅O₁₄ · P/Nd 5 × 0.02)이고, <b>나머지 9 할은 무도핑처럼 양극 TM 인산염</b>으로 간다.
-          양극 TM 이 그만큼 덜 빠진다</li>
+          그만큼 양극 금속이 인산염으로 덜 끌려간다 — 양극이 덜 녹는 것은 아니다(인산염을 면한 금속은 대부분 황화물이 된다)</li>
       <li>그 이득은 <b>조건부</b>다. 전조건 라운드(<b>120 칸</b> = 4 양극 × 6 전압 × 5 농도)에서 (양극,전압) 열 <b>24 개 중 17 개</b>가 전 농도 통과다(종전 7 중 2) —
           ⚠ 이 통과는 <b>대조군과 같은 잣대로 잴 수 있다</b>는 뜻이지 이득이 확인됐다는 뜻이 아니다.
           식이 잘 맞는 열은 견줄 수 있는 <b>11 중 셋</b>(LiCoO₂ 4.30 V · LiNiO₂ 3.50 V · NMC811 3.50 V)이고,
           목표 조성 x = 0.02 의 실측 보호율은 잴 수 있는 16 칸에서 <b>−3~12 %</b> 다 (<a href="#s2b">§2b</a>)</li>
-      <li>다만 <b>식이 예측하는 것은 “Nd 가 가로챈 P”</b> 이고 실측은 <b>“아껴진 양극 TM”</b> 이다. 둘이 같아지는 것은 <b>TM 이 그 P 를 노리고 있을 때뿐</b> — 저전압 NMC811 에서는 Nd 가 P 를 25 % 가져가도 보호율이 <b>0</b> 이다</li>
+      <li>다만 <b>식이 예측하는 것은 “Nd 가 가로챈 P”</b> 이고 실측은 <b>“인산염을 면한 양극 TM”</b> 이다. 둘이 같아지는 것은 <b>TM 이 그 P 를 노리고 있을 때뿐</b> — 저전압 NMC811 에서는 Nd 가 P 를 25 % 가져가도 보호율이 <b>0</b> 이다</li>
       <li>전해질 쪽은 <b>“새로 망가뜨리지는 않는다”</b> 까지</li>
       <li><b>치환 자리가 부호를 바꾼다</b> — 같은 Nd 농도에서 <b>Li 자리</b>는 계면 반응을 줄이고
           <b>P 자리</b>(1저자 조성 포함)는 늘린다. 농도는 두 자리 다 선형이다 <span class="mono">(x 0.02–0.20)</span>.
@@ -225,7 +225,7 @@ MP GGA/GGA+U hull, Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries (09-19 실행과 240 칸
           x = 0.02 에서도 hull 이 고르는 판별종은 <b>같은 10 종</b>이다.
           9 종은 MP 와 ±0.12 eV 안에서 재현, <b>NdP₅O₁₄ 1 종은 −0.94 eV 미재현</b>(원인 미확정, 그래도 5.39 eV 절연체)</li>
     </ul></div>
-    <div class="tldr-no"><div class="tldr-lbl">⛔ 말하지 않는 것 <span class="mono">— 전체 33 개는 <a href="#s9">§9</a></span></div><ul>
+    <div class="tldr-no"><div class="tldr-lbl">⛔ 말하지 않는 것 <span class="mono">— 전체 34 개는 <a href="#s9">§9</a></span></div><ul>
       <li><b>“Nd 가 산화 안정성·전압창을 넓힌다”</b> — 우리 데이터가 <b>반증한다</b>. 2.14 V → <b>1.92 V</b>, 0.22 V <b>좁힌다</b>.
           이 전압은 <b>x 와 무관</b>하다(x = 0.02 에서도 1.92 V) — 줄어드는 것은 그 전압에서 반응하는 양이다</li>
       <li><b>“x = 0.02 에서 Nd 가 양극 대신 P 방을 댄다”</b> — <b>1 할만</b> 댄다. 9 할은 여전히 양극이 댄다
@@ -372,11 +372,13 @@ Nd 계는 전해질이 <b>제자리에서</b> 들고 온다.</p>
 전해질이 댈 수 있는 방은 P 의 <b>5x</b> 까지다. 목표 농도 <b>x = 0.02</b> 에서는 <b>1 할</b>이고,
 나머지 <b>9 할은 Nd 계에서도 양극이 댄다</b> (LiCoO₂ 4.3 V: P 의 10 % → NdP₅O₁₄, 90 % → CoP₄O₁₁ · 두 자리 같음).
 예전 판이 “전해질이 방을 전부 댄다” 로 읽혔던 것은 x = 0.20 이 마침 그 <b>포화점</b>(5 × 0.20 = 1)이었기 때문이다.</p>
-<p style="margin:8px 0 0">그래서 Banik 이 말한 “코팅” 이 하는 일 가운데 <b>양극을 아끼는 부분</b>의 <b>일부</b>
-(x = 0.02 에서 약 1 할)를 SE 도펀트가 in-situ 로 하는 셈이다. 다만 그 층이 빈틈없이 덮는지 · 얼마나 두꺼운지 · Li⁺ 를 통과시키는지는
-이 계산에 없다(<a href="#s6">§6</a> G5). onset 을 올리지 않으므로 그의 결론과도 충돌하지 않는다.</p>
+<p style="margin:8px 0 0">그래서 이것은 Banik 이 말한 <b>“코팅” 을 대신하지 않는다</b>. 코팅은 양극과 전해질이 닿지 않게 해서
+반응 자체를 줄이지만, Nd 는 반응을 그대로 두고 그 <b>산물</b>만 바꾼다 — 금속 인산염이 될 P 의 일부(x = 0.02 에서 약 1 할)가
+Nd 인산염으로 가고, 인산염을 면한 양극 금속은 대부분 황화물이 된다(<a href="#s2b-plain">§2b ‘쉽게 다시 읽기’ ①</a>).
+산물 층이 빈틈없이 덮는지 · 얼마나 두꺼운지 · Li⁺ 를 통과시키는지도 이 계산에 없다(<a href="#s6">§6</a> G5).
+onset 을 올리지 않으므로 그의 결론(“코팅이 필요하다”)과 충돌하지 않는다.</p>
 <p style="margin:8px 0 0;font-size:.9rem">읽는 순서 — <a href="#s2">§2</a> 무엇이 생기나(산물 사다리) →
-<a href="#s2b">§2b</a> 얼마나 아끼나(정량 규칙 · 1저자 조성) → <a href="#s6">§6</a> 그 산물이 전자를 막나(우리 DFT 갭 10/10) →
+<a href="#s2b">§2b</a> 금속 인산염을 얼마나 줄이나(정량 규칙 · 1저자 조성) → <a href="#s6">§6</a> 그 산물이 전자를 막나(우리 DFT 갭 10/10) →
 <a href="#s7">§7</a> 전해질 쪽에서도 지내나(양면 검사). <b>접힌 절은 근거·검산·반론</b>이고, 요지는 접힘 밖 한 줄에 있다.</p>
 </div>
 
@@ -842,12 +844,14 @@ Fig. S1(b) 에서 측정된 사실이고(x = 0.02 에서 잔차가 축척 문턱
 </section>
 <section id="s2b" class="sec">
 <details class="secfold" open>
-<summary><h2 class="sec-h">2b. 그 산물이 양극을 <b>얼마나</b> 아끼나 — 정량 곡선</h2><span class="serbadge sb">P 자리 · x 0.02–0.20 곡선</span><span class="sec-one">보호율 = min(1, k·x/(1−x)), 맞춘 매개변수 0 — <b>120 칸</b> 전조건에서 열 <b>24 중 17</b> 통과(<b>NMC811 6/6</b>). 이 통과는 <b>대조군과 같은 잣대로 잴 수 있다</b>는 뜻이지 식이 맞았다는 뜻이 아니다 — 식이 잘 맞는 열은 견줄 수 있는 <b>11 중 셋</b>: LiCoO₂ 4.30 V · LiNiO₂ 3.50 V · <b>NMC811 3.50 V</b>(≤3.1 %p, <b>식 기준</b>). ⚠ <b>식은 P 를 세고 실측은 TM 을 센다</b> — 저전압에서는 갈린다. 1저자 조성 x = 0.02 는 LiCoO₂ 4.3 V 에서 <b>10.3 %</b>, 잴 수 있는 x = 0.02 칸 16 개 전체로는 <b>−3~12 %</b></span></summary>
+<summary><h2 class="sec-h">2b. 그 산물이 금속 인산염을 <b>얼마나</b> 줄이나 — 정량 곡선</h2><span class="serbadge sb">P 자리 · x 0.02–0.20 곡선</span><span class="sec-one">보호율 = min(1, k·x/(1−x)), 맞춘 매개변수 0 — <b>120 칸</b> 전조건에서 열 <b>24 중 17</b> 통과(<b>NMC811 6/6</b>). 이 통과는 <b>대조군과 같은 잣대로 잴 수 있다</b>는 뜻이지 식이 맞았다는 뜻이 아니다 — 식이 잘 맞는 열은 견줄 수 있는 <b>11 중 셋</b>: LiCoO₂ 4.30 V · LiNiO₂ 3.50 V · <b>NMC811 3.50 V</b>(≤3.1 %p, <b>식 기준</b>). ⚠ <b>식은 P 를 세고 실측은 TM 을 센다</b> — 저전압에서는 갈린다. 1저자 조성 x = 0.02 는 LiCoO₂ 4.3 V 에서 <b>10.3 %</b>, 잴 수 있는 x = 0.02 칸 16 개 전체로는 <b>−3~12 %</b></span></summary>
 <div class="secbody">
 
 <p>§2 는 <i>무엇이</i> 생기는지를 보였다. 여기는 <i>얼마나</i> 다. 지표는
 <b>좌변 양극이 내놓은 전이금속 중 인산염으로 끌려간 몫</b>이고, 대조군은 <b>Li 를 같게 맞춘 무-Nd 조성</b>이다
-(base 가 아니다 — base 와 비교하면 §S1 을 무너뜨린 그 Li 재고 교란이 그대로 들어온다).</p>
+(base 가 아니다 — base 와 비교하면 §S1 을 무너뜨린 그 Li 재고 교란이 그대로 들어온다).
+<b>⚠ 보호율은 양극이 덜 녹는지가 아니라 녹은 금속이 어디로 가는지를 잰다</b> — 인산염을 면한 금속은 반응에서 빠지지 않고
+대부분 황화물이 된다(아래 <a href="#s2b-plain">‘쉽게 다시 읽기’ ①</a>).</p>
 
 <p>⭐ <b>예측식을 곡선보다 먼저 세웠다.</b> x(Nd) = 0.02 와 0.20 두 점만 보고
 NdP₅O₁₄ 의 화학식(P/Nd = 5)에서 <b>보호율 = min(1, k·x/(1−x))</b> 를 유도한 뒤
@@ -855,7 +859,7 @@ NdP₅O₁₄ 의 화학식(P/Nd = 5)에서 <b>보호율 = min(1, k·x/(1−x))<
 
 <figure>
 <img src="cei_nd_protection.png" alt="Three panels. (a) Cathode transition-metal spared from phosphate versus Nd content for three columns — LiCoO2 at 4.3 V, LiNiO2 at 3.5 V and NMC811 at 3.5 V; measured points sit on dashed curves min(1, k x over 1 minus x) with k equal to 5, 4 and 4. (b) Measured cathode transition metal spared against the share of phosphorus predicted to be intercepted by neodymium, for the eleven comparable columns in which a neodymium phosphate forms; most points lie on the diagonal inside a plus-minus five percentage-point band, a group of low-voltage points sits at zero measured sparing, and open markers flag three columns that are not monotonic in Nd content. (c) Absolute difference in mixing fraction against the lithium-matched control versus Nd content, one line per cathode and voltage, solid where every concentration is comparable and dotted where some concentration failed a gate; seventeen of twenty-four columns survive.">
-<figcaption><b>Fig. 3. How much cathode transition metal the neodymium phosphate spares,
+<figcaption><b>Fig. 3. How much cathode transition metal the neodymium phosphate keeps out of phosphate products,
 and where the rule stops holding.</b>
 (a) Fraction of the cathode transition metal kept out of a phosphate product, against Nd content
 <i>x</i> in Li<sub>5.4+2x</sub>Nd<sub>x</sub>P<sub>1&#8722;x</sub>S<sub>4.37</sub>O<sub>0.03</sub>Cl<sub>1.6</sub>,
@@ -876,7 +880,9 @@ hull selects a neodymium phosphate at all. The twelfth, LiMnO<sub>2</sub> at 3.5
 the rule has no <i>k</i> there and both quantities are zero; it is left out rather than drawn at the
 origin, and the panel states the count. The predicted
 quantity is the share of the electrolyte&#8217;s <b>phosphorus</b> intercepted by neodymium; the measured
-quantity is the share of cathode <b>transition metal</b> spared. They coincide only where the transition
+quantity is the share of cathode <b>transition metal</b> kept out of a phosphate. That metal is not kept in the
+cathode: summed over the 72 cells that pass the gates and have a defined value, 94&#8201;% of it forms sulfides (CoS<sub>2</sub>, NiS<sub>2</sub> and others)
+and the rest sulfates and chlorides. The two quantities coincide only where the transition
 metal was competing for that phosphorus: the filled red points at zero measured sparing are the 2.5 and
 3.0&#8201;V cells of NMC811, where the transition metal that reaches a phosphate is a fixed floor equal
 to the manganese content and neodymium taking a quarter of the phosphorus does not move it.
@@ -913,7 +919,7 @@ or whether the layer is continuous.</figcaption>
 그게 전조건 라운드가 새로 알려준 <b>조건</b>이다.
 바닥(실측 0)에 깔린 점들이 그 반례다 — NMC811 2.5·3.0 V 에서 도핑·대조의 TM-인산염 몫이 <b>둘 다 0.100</b>,
 정확히 <b>Mn 분율</b>이다. Nd 가 P 를 25 % 가져가도 Mn 은 그대로 인산염으로 간다.
-⇒ 저전압에서는 <b>P 를 가로채는 것과 TM 을 아끼는 것이 같은 일이 아니다</b>.</p>
+⇒ 저전압에서는 <b>P 를 가로채는 것과 TM 인산염을 줄이는 것이 같은 일이 아니다</b>.</p>
 <p style="margin:0 0 8px"><b>P₂S₇ 칸은 "보호" 로 읽지 않는다.</b> P₂S₇ 가 나오는 <b>16 칸</b>(LiCoO₂ 4.5 V · LiMnO₂ 4.0 V 의
 x ≥ 0.10 과 LiMnO₂ 4.3·4.5 V 전 농도)에서는 남은 P 의 일부가 양극 대신 <b>티오인산염</b>으로 간다. P₂S₇ 는 §3 이 <b>이 집합에서 제일 얕은 P 싱크</b>(E_f −0.5120 eV/atom)로 못박은 상이다.
 <b>⚠ 나쁜 이유를 정확히 쓴다</b> — P₂S₇ 는 전해질과 <b>−0.0112 로 거의 안 싸운다</b>(같은 티오인산염 계열이다, §7 추가분).
@@ -968,7 +974,7 @@ Nd 인산염이 아예 안 나와 <b>k 가 정의되지 않는다</b>. 예측도
 그중 일부는 전해질의 P 와 만나 <b>금속 인산염</b>(예: CoP₄O₁₁)이 된다. Nd 를 넣으면 Nd 가 P 일부를 자기 인산염으로
 가져가므로 금속 인산염이 덜 생길 것이다. 이 절의 <b>보호율</b>은 그 줄어든 비율이다 — 반응한 양극 금속 중 인산염이 되는 몫이,
 Nd 만 뺀 계산용 대조 조성보다 몇 % 줄었나. 그림의 “실측” 은 실험이 아니라 이 반응 계산의 결과다.</p>
-<p>⚠ 인산염을 면한 금속은 반응에서 빠지는 게 아니다. 비교할 수 있는 <b>72 경우</b>를 합치면 그 몫의 <b>94 %</b> 는
+<p>⚠ 인산염을 면한 금속은 반응에서 빠지는 게 아니다. 아래 ⑤ 의 검사를 통과하고 보호율이 정해지는 <b>72 경우</b>를 합치면 그 몫의 <b>94 %</b> 는
 황화물(CoS₂·NiS₂ 등)이 되고 나머지는 황산염·염화물이 된다. 그래서 보호율은 “양극이 덜 녹는다” 가 아니라
 <b>“녹은 금속이 인산염 대신 다른 산물이 된다”</b> 는 뜻이다.</p>
 <p><b>② 예측은 곱셈 하나다.</b> (Nd 하나가 붙잡는 P 개수) × (전해질에서 P 대비 Nd 비율).
@@ -2361,12 +2367,13 @@ Li 를 같게 맞춘 무-Nd 대조군을 넣으면 Nd 항이 음수로 뒤집힌
 </section>
 <section id="s9" class="sec">
 <details class="secfold">
-<summary><h2 class="sec-h">9. 말하면 안 되는 것</h2><span class="sec-one"><b>금지 서술 33 개</b> — 값을 인용하기 전에 여기부터 본다 (2026-09-28 x = 0.02 전환에서 셋 추가 · 옛 x = 0.20 숫자 항목 정정)</span></summary>
+<summary><h2 class="sec-h">9. 말하면 안 되는 것</h2><span class="sec-one"><b>금지 서술 34 개</b> — 값을 인용하기 전에 여기부터 본다 (2026-09-28 x = 0.02 전환에서 셋 추가 · 옛 x = 0.20 숫자 항목 정정 · 2026-09-29 보호율의 뜻 하나 추가)</span></summary>
 <div class="secbody">
 <p style="margin:0 0 10px;font-size:.9rem;color:var(--mut)">
 ⭐ 아래 <b>다섯</b>은 2026-09-18 에 추가됐다 — Li-맞춤 대조군과 문헌 감사에서 나왔다.
 2026-09-21 에 셋이 추가됐고(Li 장부 · Xiao 선행 · NdP₅O₁₄ 단서), 부동태 항목은 §6 완주에 맞춰 좁혔다.
-<b>맨 끝의 셋</b>은 2026-09-28 x = 0.02 전환에서 더했다(1 할 · 유의폭 · x = 0.20 셀)
+<b>맨 끝의 셋</b>은 2026-09-28 x = 0.02 전환에서 더했다(1 할 · 유의폭 · x = 0.20 셀).
+2026-09-29 에 하나(보호율을 ‘양극이 덜 녹는다’ 로 읽기)를 보호율 항목 옆에 더했다
 (<code>db/properties/cei_nd_p_capture_result_2026_09_18.json</code> · <code>db/properties/cei_nd_novelty_audit_2026_09_18.json</code>).</p>
 <ul>
 <li><span class="no">⛔</span> <b>"Nd 치환이 산화 안정성·전압창을 넓힌다"</b> —
@@ -2398,6 +2405,10 @@ LiCoO₂ 4.30 V · LiNiO₂ 3.50 V · NMC811 3.50 V.
 NMC811 2.5·3.0 V 에서는 TM-인산염 몫이 도핑·대조 <b>둘 다 0.100</b>(=Mn 분율)이라
 Nd 가 P 를 25 % 가져가도 <b>실측 보호율이 0</b> 이다.
 <b>LiMnO₂ 3.00 V 는 곡선으로 읽지 않는다</b>(x 를 따라 1.5 → 44.9 → 9.8 → 100 → 100 %).</li>
+<li><span class="no">⛔</span> <b>보호율을 “양극이 덜 녹는다 · 덜 빠진다” 나 “코팅처럼 양극을 지킨다” 로 읽기</b> —
+보호율은 반응한 양극 금속 중 <b>인산염이 되는 몫</b>이 얼마나 줄었나다. 인산염을 면한 금속은 반응에서 빠지지 않는다 —
+게이트를 통과하고 값이 정해지는 <b>72 칸</b>을 합치면 그 몫의 <b>94 %</b> 가 황화물(CoS₂·NiS₂ 등), 나머지가 황산염·염화물이 된다.
+쓸 수 있는 문장은 <b>“P 가 양극 금속을 인산염으로 끌고 가는 경로의 일부를 Nd 인산염으로 돌린다”</b> 까지다(원고 틀 논지).</li>
 <li><span class="no">⛔</span> 반응에너지 <strong>절대값</strong>을 다른 논문 값과 나란히 놓기 —
 MP 보정 눈금이 산화물(+U)·황화물(GGA) <strong>혼합</strong>이다.</li>
 <li><span class="no">⛔</span> "Nd 효과" 를 <strong>Nd 원자 단독</strong>의 효과라 쓰기 —

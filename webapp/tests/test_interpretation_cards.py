@@ -1415,6 +1415,18 @@ def test_s2b_plain_box_matches_the_raw(client):
         (r for r in rows if r["cathode"] == "LiMnO2" and r["voltage_V"] == "3.0"), key=lambda r: _fnum(r["x_Nd"]))]
     assert " → ".join(f"{round(v * 100, 1):g}" for v in seq) + " %" in box
     #: 인산염을 면한 금속의 행선지 — 반응식에서 다시 센다 (게이트 통과 · 보호율 정의 칸)
+    n_cells, sul = _tm_escape_to_sulfide(rows)
+    assert f"<b>{n_cells} 경우</b>를 합치면 그 몫의 <b>{sul:.0f} %</b> 는" in box, \
+        f"황화물 몫이 자료({n_cells} 경우 · {sul:.1f} %)와 다르다"
+
+
+def _tm_escape_to_sulfide(rows):
+    """인산염을 면한 양극 금속이 어디로 가나 — (칸 수, 황화물 몫 %).
+
+    게이트를 통과하고 보호율이 정해지는 칸마다 도핑·대조 반응식(cei_protection_full.jsonl)의 우변을
+    도구 `_rxn_side_terms` 로 다시 읽어, 좌변 양극 금속 중 인산염(P 포함)·황화물(S 포함 · O·P 없음)·기타로
+    간 몫을 센다. 도핑 − 대조의 인산염 감소분 합계 중 황화물 증가분 합계가 차지하는 몫을 돌려준다.
+    ⚠ 이 도구가 못 하는 것: 칸마다의 몫은 돌려주지 않는다 (화면은 합계만 인용한다)."""
     T = _x002_tool()
     recs = {}
     for ln in (REPORT.parents[3] / "db/properties/cei_protection_full.jsonl").read_text("utf-8").splitlines():
@@ -1443,9 +1455,38 @@ def test_s2b_plain_box_matches_the_raw(client):
         c = _where(f"liMatch{tag}", r["cathode"], _fnum(r["voltage_V"]))
         dP += d["P"] - c["P"]
         dS += d["S"] - c["S"]
-    assert dP < 0, "도핑 쪽 금속 인산염 몫이 줄지 않았다 — 시험이 헛것을 잰다"
-    assert f"<b>{len(cells)} 경우</b>를 합치면 그 몫의 <b>{100 * dS / -dP:.0f} %</b> 는" in box, \
-        f"황화물 몫이 자료({len(cells)} 경우 · {100 * dS / -dP:.1f} %)와 다르다"
+    assert cells and dP < 0, "도핑 쪽 금속 인산염 몫이 줄지 않았다 — 시험이 헛것을 잰다"
+    return len(cells), 100 * dS / -dP
+
+
+def test_protection_is_not_read_as_cathode_sparing(client):
+    """⛔음성 — 보호율을 '양극을 아낀다 · 덜 빠진다 · 코팅처럼' 으로 쓰는 문장이 화면에 다시 생기면 잡는다
+    (1저자 2026-09-29 "고치자"). 인산염을 면한 금속은 반응에서 빠지지 않고 대부분 황화물이 된다.
+    잡는 것: 제목·머리 요약·§0·§2b·Fig. 3 캡션의 옛 표현 되살림 · §9 금지 항목과 캡션·원고 틀 카드의
+    72 칸·94 % 가 반응식 재계수와 다름. §9 안의 금지 문장만 검사에서 뺀다.
+    ⚠ 따옴표 안을 빼지 않는다 — 첫 판은 “ ” 안을 지웠는데, 옛 표현 “아껴진 양극 TM” 자체가 따옴표 안이라
+      되살아나도 못 잡았다. 부정문(“양극이 덜 녹는다” 가 아니라)은 아래 어느 꼴에도 안 걸린다."""
+    h = _report_html(client)
+    s9 = _section(h, "s9")
+    body = h.replace(s9, "")
+    body = re.sub(r"<!--.*?-->", "", body, flags=re.S)
+    text = re.sub(r"<[^>]+>", "", body)
+    bad = [p for p in ("양극을 아끼", "얼마나 아끼", "아껴진 양극", "덜 빠진다",
+                       "phosphate spares", "하는 일 가운데 양극", "양극을 지킨") if p in text]
+    assert not bad, f"보호율을 양극 절약으로 읽는 표현이 남았다: {bad}"
+    s2b = _section(h, "s2b")
+    title = re.sub(r"<[^>]+>", "", re.search(r'<h2 class="sec-h">(.*?)</h2>', s2b).group(1))
+    assert "금속 인산염을 얼마나 줄이나" in title, title
+    n, sul = _tm_escape_to_sulfide(_prot_rows())
+    item = [li for li in re.findall(r"<li>(.*?)</li>", s9, re.S) if "보호율을 “양극이 덜 녹는다" in li]
+    assert len(item) == 1, "§9 에 보호율 뜻 금지 항목이 없다"
+    assert f"<b>{n} 칸</b>을 합치면 그 몫의 <b>{sul:.0f} %</b> 가 황화물" in item[0], "§9 항목의 수가 반응식과 다르다"
+    i = s2b.index("<figcaption><b>Fig. 3.")
+    cap = s2b[i:s2b.index("</figcaption>", i)]
+    assert "keeps out of phosphate products" in cap
+    assert f"summed over the {n} cells that pass the gates and have a defined value, {sul:.0f}&#8201;% of it forms sulfides" in cap
+    card = (REPORT.parents[3] / "kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md").read_text("utf-8")
+    assert f"{n} 칸 합계로 그 몫의 **{sul:.0f} % 가 황화물**" in card, "원고 틀 카드의 보강이 반응식과 다르다"
 
 
 def test_resume_block_does_not_carry_retracted_numbers(client):
