@@ -12,7 +12,7 @@
 | porosity union `porosity_union_exact_pct` (+ `se_rich`) | ✅ J19 ① | ✅ union TSV (130 + 64) | ✅ 들어 있음 | — |
 | 두께 `thickness_mass_conserving_um` | ✅ J19 ② | ✅ | ✅ 들어 있음 | — |
 | AM · SE 분율 `phi_am_mass_conserving` · `phi_se_mass_conserving` (라) | ✅ J20-e | ✅ (새 계산 없음 · 닫힘 ≤ 3.3e-16) | ✅ 들어 있음 | — |
-| **계면 개수** `area_<쌍>_n` (쌍 종류별 접촉 **개수**) | ✅ **09-30 `calc_interface_area` 검토** (`dem_analysis_core.py:131–168` · 코드 수정 불요 · 약점 1 = 없는 id 의 행을 조용히 버림 → 64 는 재수확의 고아 행 수로 확인) | ✅ 130/130 · 64/64 done (09-30 · 1차 `4b42179ec` + mono 재실행 `27933b44e` · 원자료 `docs/data/lhs_webapp_contact_20260929/` 외 3 · README) | ✅ `lhs_handover_20260930.csv` 130×133 · `lhsx_handover_20260930.csv` 64×135 (새 열 12 = `area_<쌍>_n` 7 + 상태 2 + QC 3 · 옛 칸 변경 0 · bimodal P+S = 전체 100/100 · 48/48) | ⬜ **bimodal 의 없는 쌍 = 빈칸** (웹앱은 접촉이 0 인 쌍의 키를 안 만든다 → `area_AM_P_AM_P_n` 빈칸 130 에서 3 · 64 에서 6 = AM_P 3–16 알 침대 · 뜻은 0) — 0 으로 채울지 결정 · mono AM–AM 개수는 상별 칸이 비어 표에 없다 (`am_am_n_contacts` 검토 뒤) |
+| **계면 개수** `area_<쌍>_n` (쌍 종류별 접촉 **개수**) | ✅ **09-30 `calc_interface_area` 검토** (`dem_analysis_core.py:131–168` · 코드 수정 불요 · 약점 1 = 없는 id 의 행을 조용히 버림 → 64 는 재수확의 고아 행 수로 확인) | ✅ 130/130 · 64/64 done (09-30 · 1차 `4b42179ec` + mono 재실행 `27933b44e` · 원자료 `docs/data/lhs_webapp_contact_20260929/` 외 3 · README) | ✅ `lhs_handover_20260930.csv` 130×133 · `lhsx_handover_20260930.csv` 64×135 (새 열 12 = `area_<쌍>_n` 7 + 상태 2 + QC 3 · 옛 칸 변경 0 · bimodal P+S = 전체 100/100 · 48/48) | ✅ **bimodal 의 없는 쌍 = 0** (J20-h · 09-30 비준 · 웹앱은 접촉 0 인 쌍의 키를 안 만든다 → 생성기가 0 으로 채움 · 130 에서 3 · 64 에서 6 칸 · 107/107) · mono AM–AM 개수는 상별 칸이 비어 표에 없다 (`am_am_n_contacts` 검토 뒤) |
 
 ⚠ **mono (2-type) 의 쌍 이름** — 웹앱은 AM 이 한 종류인 덱의 AM 을 **반지름**으로 AM_S/AM_P 라 부른다 (J20-f) ⇒ mono 의 `area_AM_S_SE_n` 같은 **상별 쌍** 칸에 값이 들어가고,
 설계 상과 이름이 다른 9 건 (130: `118 · 121 · 124 · 125 · 126` · 64 예측: `lhsx_003 · 017 · 048 · 062`) 은 설계와 다른 이름 칸에 들어간다.  **총량 쌍** `area_AM전체_SE_n` · `area_SE_SE_n` 은 이름과 무관.
@@ -92,7 +92,7 @@
 
 | 열 | 내는 함수 | 검토 | 메모 |
 |---|---|---|---|
-| `area_<쌍>_n` | `calc_interface_area` (`dem_analysis_core.py:131–168`) → `analyze_contacts.py:405–409` | ✅ 09-30 · 수정 불요 | 한 줄 = 한 접촉 · 짝 이름은 두 상 이름을 정렬해 잇는다 · 없는 id 의 행은 **조용히 버린다** (130 은 0 — 수확기 에이전트 보고 · 64 는 재수확 고아 행 수로 확인) · 중복 · 여러 프레임은 배치가 실행 전 거부 · δ ≤ 0 행도 센다 (130 은 0) · 종류표 밖 `?` 는 AM전체-SE 에 섞일 수 있으나 배치가 종류표를 먼저 대조 · 벽 접촉은 안 센다 · mono 쌍 이름 = 반지름 이름 (위 §0 ⚠) · ⚠ **접촉 0 인 쌍은 키가 없다** → 표에서 빈칸 (09-30 실측: bimodal 의 `area_AM_P_AM_P_n` 130 에서 3 · 64 에서 6 — 뜻은 0 · 처리 = 1저자 결정) |
+| `area_<쌍>_n` | `calc_interface_area` (`dem_analysis_core.py:131–168`) → `analyze_contacts.py:405–409` | ✅ 09-30 · 수정 불요 | 한 줄 = 한 접촉 · 짝 이름은 두 상 이름을 정렬해 잇는다 · 없는 id 의 행은 **조용히 버린다** (130 은 0 — 수확기 에이전트 보고 · 64 는 재수확 고아 행 수로 확인) · 중복 · 여러 프레임은 배치가 실행 전 거부 · δ ≤ 0 행도 센다 (130 은 0) · 종류표 밖 `?` 는 AM전체-SE 에 섞일 수 있으나 배치가 종류표를 먼저 대조 · 벽 접촉은 안 센다 · mono 쌍 이름 = 반지름 이름 (위 §0 ⚠) · ⚠ **접촉 0 인 쌍은 키가 없다** → 표에서 빈칸이었다 (09-30 실측: bimodal 의 `area_AM_P_AM_P_n` 130 에서 3 · 64 에서 6 — 뜻은 0) → ✅ 생성기가 0 으로 채움 (J20-h) |
 | `se_se_cn` · `se_se_cn_std` | `calc_se_se_cn` | ⬜ 다음 | |
 | `am_am_cn` · `am_am_cn_std` · `am_am_n_contacts` | `calc_am_am_cn` | ⬜ | |
 | `am_se_cn_mean` · `am_se_cn_surface_weighted` · `AM_P/AM_S_se_cn_*` | `calc_am_isolation_risk` | ⬜ | mono 상별 = 반지름 이름 (§0 ⚠) |

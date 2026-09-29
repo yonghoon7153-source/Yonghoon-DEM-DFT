@@ -1012,6 +1012,20 @@ MONO_PHASE_NOTE = ('mono (2-type) 침대는 빈칸 (N/A · J20-f (A)) — 웹앱
                    '어긋날 수 있다 · 총량 열 (area_AM전체_SE_n 등) 을 쓸 것')
 
 
+#: J20-h (1저자 비준 09-30 — *"bimodal 에서 빠진 쌍을 0 으로 채우게 · 시험 먼저"*) — `calc_interface_area` 는 접촉이 0 인 쌍의 키를 만들지 않는다
+#:   (dem_analysis_core.py:131–168 — 덤프에 나온 쌍만 센다) → metrics_flat 빈칸.  두 상이 다 있는 침대에서 그 뜻은 **측정된 0** 이다.
+WA_PAIR_COUNT = re.compile(r'area_(AM_P|AM_S|SE|AM전체)_(AM_P|AM_S|SE)_n')
+PAIR_ZERO_NOTE = ('접촉 0 인 쌍 = 0 — 웹앱 `calc_interface_area` 는 접촉이 없는 쌍의 키를 만들지 않아 빈칸이 되므로, 두 상이 다 있는 침대 '
+                  '(수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · 상이 없거나 mono 상별 칸이면 빈칸 (N/A)')
+
+
+def _phase_n(pc, ph):
+    """수확 `phase_counts` 에서 상의 입자 수 — `AM전체` 는 AM (mono) + AM_P + AM_S."""
+    if ph == 'AM전체':
+        return sum(int(pc.get(k, 0) or 0) for k in ('AM', 'AM_P', 'AM_S'))
+    return int(pc.get(ph, 0) or 0)
+
+
 def wa_phase_specific(col):
     """AM_P / AM_S 한 상에 딸린 열인가 (상별 CN · 상별 쌍 개수) — AM전체 · 소문자 am_ 열은 아니다."""
     return WA_PHASE_COL.search(col) is not None
@@ -1096,6 +1110,8 @@ def column_dictionary(cols, webapp=None):
                 meaning += f' · 1저자 검토: {note}'
             if wa_phase_specific(c):                 # J20-f (A)
                 meaning += ' · ' + MONO_PHASE_NOTE
+            if WA_PAIR_COUNT.fullmatch(c):           # J20-h
+                meaning += ' · ' + PAIR_ZERO_NOTE
             d.update(source='webapp', verdict=v, meaning=meaning)
             d['caveat'] = dfn[1] if dfn else (CAVEAT_NAME if '이름 주의' in v else _frac_caveat(c))
         else:
@@ -1242,7 +1258,7 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
     if wv is not None:
         rep.update(wa_collisions=wa_coll, wa_n_cols=len(wa_take), wa_status_counts=collections.Counter(),
                    wa_porosity_absmax=0.0, wa_reviewed_only=bool(wa_reviewed_only),
-                   wa_unreviewed_dropped=n_census_ok - len(ok_cols), wa_mono_phase_blanked=0)
+                   wa_unreviewed_dropped=n_census_ok - len(ok_cols), wa_mono_phase_blanked=0, wa_pair_zero_filled=0)
     for r in rows:
         h = hv[r[key]]
         o = {c: r.get(c, '') for c in design_cols}
@@ -1302,6 +1318,15 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                     if v not in (None, ''):
                         rep['wa_mono_phase_blanked'] += 1
                     v = None
+                elif v in (None, '') and wr is not None and WA_PAIR_COUNT.fullmatch(c):
+                    #  J20-h — 웹앱 행이 있는데 쌍 키가 없다 = 접촉 0.  두 상이 다 있어야 0 (없으면 N/A 빈칸) · 상을 모르면 거부
+                    pc = h.get('phase_counts')
+                    if not isinstance(pc, dict):
+                        raise FillRefusal(f'{r[key]}: 수확 JSON 에 phase_counts 가 없다 — {c} 의 빈칸이 접촉 0 인지 상이 없는 것인지 '
+                                          '가를 수 없다 (J20-h)')
+                    if all(_phase_n(pc, ph) > 0 for ph in WA_PAIR_COUNT.fullmatch(c).groups()):
+                        v = '0'
+                        rep['wa_pair_zero_filled'] += 1
                 o[c] = '' if v is None else str(v)
             for name, wcol, hcol, _w in WA_QC:
                 o[name] = ''
@@ -2027,6 +2052,51 @@ def _selftest():
     chk('⑳f 열 사전 — 상별 쌍 열의 뜻에 mono 빈칸 규약 · 검토 기록 (J20-g)',
         'mono' in _d20.get('area_AM_S_SE_n', {}).get('meaning', '')
         and 'J20-g' in _d20.get('area_SE_SE_n', {}).get('meaning', ''))
+
+    #  ⑳g–l J20-h (1저자 비준 09-30 — *"bimodal 에서 빠진 쌍을 0 으로 채우게 · 시험 먼저"*) — 웹앱 `calc_interface_area` 는 접촉이 0 인
+    #   쌍의 키를 **만들지 않는다** → metrics_flat 에서 빈칸.  bimodal 에서 그 뜻은 **측정된 0** 이지 N/A 가 아니다 (09-30 실측: 130 에서
+    #   `area_AM_P_AM_P_n` 3 건 · 64 에서 6 건 — AM_P 3–16 알 침대).  규칙: 웹앱 행이 있고 (done · partial) · 쌍 개수 열이고 · 쌍의 두 상이
+    #   수확 `phase_counts` 에 **있으면** 0 · mono 상별 칸은 J20-f (A) 대로 빈칸 · 상이 없으면 빈칸 (N/A) · `phase_counts` 가 없으면 거부.
+    def _wa4(st2='done'):
+        w = _wa3()
+        w['verdict'].update(area_AM_P_AM_P_n='✅ 쓴다', area_AM_S_AM_S_n='✅ 쓴다')
+        w['why'] = {k: f'why:{k}' for k in w['verdict']}
+        w['rows']['q1'].update(area_AM_S_AM_S_n='7')             # mono — 반지름 이름 AM_S · AM_P_AM_P 키 없음
+        w['rows']['q2'].update(area_AM_S_AM_S_n='12')            # bimodal — AM_P_AM_P 키 없음 (접촉 0)
+        w['status']['q2']['status'] = st2
+        return w
+    try:
+        _o21, _c21, _r21 = build_handover(_dq, _hq3, webapp=_wa4(), webapp_groups='contact')
+        _e21 = ''
+    except Exception as e:                                                # noqa: BLE001
+        _o21, _c21, _r21, _e21 = [], [], {}, f'{type(e).__name__}: {e}'
+    _m21 = next((r for r in _o21 if r['case_id'] == 'q1'), {})
+    _b21 = next((r for r in _o21 if r['case_id'] == 'q2'), {})
+    chk('⑳g ★ J20-h — bimodal 의 빠진 쌍 개수 = 0 (측정된 0) · 있는 값은 그대로 · 보고에 셈' + (f' — {_e21}' if _e21 else ''),
+        _b21.get('area_AM_P_AM_P_n') == '0' and _b21.get('area_AM_S_AM_S_n') == '12'
+        and _r21.get('wa_pair_zero_filled') == 1)
+    chk('⑳h mono 는 0 으로 채우지 않는다 — 상별 칸은 J20-f (A) 빈칸 그대로',
+        _m21.get('area_AM_P_AM_P_n') == '' and _m21.get('area_AM_S_AM_S_n') == '' and _m21.get('area_AM전체_SE_n') == '40')
+    _hq4 = dict(_hq3, q2=dict(_hq3['q2'], phase_counts={'AM_P': 0, 'AM_S': 10, 'SE': 100}))
+    try:
+        _b22 = next((r for r in build_handover(_dq, _hq4, webapp=_wa4(), webapp_groups='contact')[0] if r['case_id'] == 'q2'), {})
+    except Exception as e:                                                # noqa: BLE001
+        _b22 = {'_err': f'{type(e).__name__}: {e}'}
+    chk('⑳i 쌍의 상이 없으면 (phase_counts 0) 0 이 아니라 빈칸 (N/A)', _b22.get('area_AM_P_AM_P_n') == '')
+    _hq5 = dict(_hq3, q2={k: v for k, v in _hq3['q2'].items() if k != 'phase_counts'})
+    _neg('⑳j ★ 빠진 쌍을 채워야 하는데 수확 JSON 에 phase_counts 가 없으면 거부 (상이 있는지 모른다)',
+         lambda: build_handover(_dq, _hq5, webapp=_wa4(), webapp_groups='contact'))
+    try:
+        _o23, _c23, _r23 = build_handover(_dq, _hq3, webapp=_wa4(st2='REFUSED'), webapp_groups='contact')
+        _b23 = next((r for r in _o23 if r['case_id'] == 'q2'), {})
+    except Exception as e:                                                # noqa: BLE001
+        _b23, _r23 = {'_err': f'{type(e).__name__}: {e}'}, {}
+    chk('⑳k 배치가 거부한 행 (REFUSED) 은 0 을 채우지 않는다 — 웹앱 열 전부 빈칸',
+        _b23.get('area_AM_P_AM_P_n') == '' and _b23.get('wa_status') == 'REFUSED' and _r23.get('wa_pair_zero_filled') == 0)
+    _d21 = {d['column']: d for d in column_dictionary(_c21, webapp=_wa4())} if _c21 else {}
+    chk('⑳l 열 사전 — 쌍 개수 열의 뜻에 0 채움 규약 (J20-h)',
+        'J20-h' in _d21.get('area_AM_P_AM_P_n', {}).get('meaning', '')
+        and 'J20-h' in _d21.get('area_SE_SE_n', {}).get('meaning', ''))
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -2146,7 +2216,7 @@ if __name__ == '__main__':
             print(f'   J20 웹앱 ✅ {_rep["wa_n_cols"]} 열 · 행 상태 {dict(_rep["wa_status_counts"])} · '
                   f'같은 프레임 |Δporosity| 최대 {_rep["wa_porosity_absmax"]:.3e} %p · 이름 충돌 (수확 열 정본) {_rep["wa_collisions"]}')
             print(f'   J20-g 같이 확인한 웹앱 열만 ({len(WA_REVIEWED)} 패턴) — 뺀 census ✅ 열 {_rep["wa_unreviewed_dropped"]} · '
-                  f'J20-f (A) mono 상별 칸 빈칸 {_rep["wa_mono_phase_blanked"]}')
+                  f'J20-f (A) mono 상별 칸 빈칸 {_rep["wa_mono_phase_blanked"]} · J20-h 접촉 0 쌍 = 0 채움 {_rep["wa_pair_zero_filled"]}')
         print(f'   빈칸 사유: {dict(_rep["blank_by_status"])}')
         for _k, _v in _rep['held_back'].items():
             print(f'   ⛔ 보류 열 `{_k}` — {_v}')
