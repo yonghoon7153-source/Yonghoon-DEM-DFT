@@ -140,7 +140,11 @@ E_YOUNG = 1.0e7             # Pa — SE 급 연화값 (앵커 시험·하위호�
 #  실물 AM 1.4e11 · SE(E_eff, 18배 연화) 1.35e9 · 강철 벽 2.0e11 을 **같은 배수**로 내린다.
 #  옛 "전 상 1e7" 은 AM 을 14,000배, SE 를 135배 연화해 실물 대비 104 가 1.0 으로 사라져 있었다.
 #  ⛔ 기각된 안 — SE 를 9.64e4 로 내리기(÷14,000): 중력만으로 SE 겹침 5.39 % (천장 1 % 초과).
-#  ⇒ SE 는 그대로 두고 **AM 을 올린다**.  dt 는 가장 작은 SE 가 정하므로 **비용 변화 0**.
+#  ⇒ SE 는 그대로 두고 **AM 을 올린다**.
+#  ⛔ 정정 2026-09-30 — 이 줄의 옛 문구 (dt 는 SE 가 정하니 AM 을 올려도 비용이 그대로라는 것) 는 **틀렸다**.  AM 을 ×103.7 올리면
+#    상별 Rayleigh dt 가 AM_S 0.7055 µs < SE 1.1719 µs 가 되어 AM_S 가 dt 를 정하고, A안 전 (전 상 1e7 · SE 가 정함) 대비 step ×1.661 (비용 증가)
+#    (CGF 151.4 캠페인 · plan()['dt_by'] — 지름이 CGF 에 비례하므로 이 대소는 CGF 와 무관).  SE 를 ×14 이상 경화한 덱에서는 다시 SE 가
+#    정한다 (강성 축 · plan() docstring · 셀프테스트 ST⑥ · ST⑭).  덱 출력은 이 주석과 무관하다 (골든 해시 그대로).
 #  검증(10만 원자·2 g): 중력 겹침 AM 0.011 % · SE 0.244 % · 접촉시간 = 회전주기의 0.042 %.
 #  ⛔ 물성으로 인용 금지 · 믹서에서 압밀/porosity 를 읽지 말 것 · 압연 겹침과 비교 금지.
 E_PHASE = {'AM_P': 1.037e9, 'AM_S': 1.037e9, 'SE': 1.0e7, 'VGCF': 1.0e7, 'PTFE': 1.0e7,
@@ -574,8 +578,9 @@ def plan(n_total, cgf=200.0, fill=0.30, pack=0.60, drum_r_over_l=2.5, stiffen_se
     v_drum = v_solid / (fill * pack)
     R = (drum_r_over_l * v_drum / math.pi) ** (1 / 3.0)
     L = R / drum_r_over_l
-    #  시간스텝 — Rayleigh 의 20 %, 가장 작은 입자·SE 밀도 기준
-    #  ★ 상별 영률로 상별 Rayleigh dt 를 내고 **최소**를 쓴다 (가장 작고 무른 SE 가 정한다)
+    #  시간스텝 — Rayleigh 의 20 %, 상마다 (반지름 · 밀도 · 영률 · ν) 로 내고
+    #  ★ 상별 영률로 상별 Rayleigh dt 를 내고 **최소**를 쓴다 — 어느 상이 정하는지는 영률에 달렸다 (정정 2026-09-30):
+    #    soft 캠페인 = **AM_S** (A안 AM 1.037e9 라 AM_S 가 SE 보다 작다) · SE ×14 이상 = SE.  반환의 `dt_by` 가 실제로 정한 상이다.
     dts = []
     for t in TYPES:
         nu_t, mat = PHASE_MECH[t]
@@ -1727,6 +1732,31 @@ def _selftest():
         return good
     chk('ST⑬ ★ 경화해도 LC↔LH 공동 개입 B 는 그대로 — ×14 · ×28 에서 달라지는 쌍 = 허용 다섯 (AM–AM 셋 · AM–벽 둘) 이고 다섯 다 LH > LC '
         '· SE 낀 쌍은 LC = LH (정확히)', _ok(_st13))
+
+    def _st14():
+        """★ 주석 = 실측 (2026-09-30 · 강성 축 코드 선행조건 2 단계 piece 6).  옛 주석 둘은 'dt 를 정하는 상 = SE' 라 적었는데 캠페인 soft 에서는
+        **AM_S** 가 정한다 (plan()['dt_by'] · Codex 7 차 §5-1 의 ×2.2525 가 그래서 √14 가 아니다).  ① 주석 줄 (소스에서 `#` 로 시작) 에 그 두 문장이
+        남아 있으면 FAIL ② 고친 주석의 숫자 (AM_S · SE Rayleigh dt · A안 전 대비 step 배수) 를 **독립 산술**로 다시 내 인쇄 자릿수까지 대조."""
+        src = open(os.path.abspath(__file__), encoding='utf-8').read().split('\n')
+        com = [l_ for l_ in src if l_.lstrip().startswith('#')]
+        stale = ('dt 는 가장 작은 SE 가 정하므로', '가장 작고 무른 SE 가 정한다')
+        if any(s_ in l_ for s_ in stale for l_ in com):
+            return False
+        pc = plan(100000, cgf=151.4)
+
+        def ray(t, E):                                   # 독립 산술 — Rayleigh 20 % (plan 과 같은 식을 여기서 다시 적는다)
+            nu, mat = PHASE_MECH[t]
+            G = E / (2.0 * (1.0 + nu))
+            return 0.2 * math.pi * (pc['d'][t] / 2) * math.sqrt(DENS[mat] * 1000.0 / G) / (0.1631 * nu + 0.8766)
+        now = {t: ray(t, E_PHASE[t]) for t in TYPES}
+        pre = {t: ray(t, 1.0e7) for t in TYPES}          # A안 전 = 전 상 1e7 (옛 판)
+        by_now, by_pre = min(now, key=now.get), min(pre, key=pre.get)
+        want = (f'AM_S {now["AM_S"] * 1e6:.4f} µs', f'SE {now["SE"] * 1e6:.4f} µs', f'×{min(pre.values()) / min(now.values()):.3f}')
+        hit = [l_ for l_ in com if all(w_ in l_ for w_ in want)]
+        return (by_now == 'AM_S' == pc['dt_by'] and by_pre == 'SE' and abs(pc['dt'] - now['AM_S']) < 1e-18
+                and len(hit) >= 1 and plan(100000, cgf=151.4, stiffen_se=14.0)['dt_by'] == 'SE')
+    chk('ST⑭ ★ 주석 = 실측 — "dt 를 SE 가 정한다" 옛 주석 둘이 없고, 고친 주석의 숫자 (soft 캠페인 AM_S 0.7055 µs < SE 1.1719 µs · '
+        'A안 전 (전 상 1e7 · SE 가 정함) 대비 step ×1.661) 를 독립 산술로 다시 낸 값과 인쇄 자릿수까지 같다 · ×14 는 SE 가 정한다', _ok(_st14))
     print(f'\nmake_mixer_deck selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
