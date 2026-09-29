@@ -601,6 +601,37 @@
 - 원장: `LHS-17` · `LHS-18` open 유지 (코드 결함 · 실측 0 건 note) · `LHS-19` 실측 note · `LHS-20` 저자 결정 · `LHS-04` 에 ② 대조 note · `SELF-64` claimed_fixed (`c0c2d4f44`) · `SELF-65` 신규 (요약 낡은 키 · 반례 먼저).
 - ⛔ 값 산출 (`run_lhs_fill_wsl.sh` 전 건) 은 **여전히 보류** — 이 판정은 ② 묶음 열에 한한다.  다음 = ③ φ_SE (코드 정의부터).
 
+## J20-c. ① 접촉 위상 **값 산출** — 130 + 64 · 열마다 설명하며 저장 (1저자 09-29 밤 지시 · ⬜ 비준 항목 셋)
+
+지시: *"z_SE-SE mean·σ · z_AM-SE · AM_P-SE CN · surface-weighted · z_AM-AM · contact count — 이 부분 관련해서 130, 64 관련해서 하나하나 설명하면서 저장해가자"* ·
+*"porosity 는 보낼 때 union 정도만"* · ③ φ_SE 감사는 그 뒤 (② 판정 뒤 바로 ③ 으로 가지 않는다).
+
+- **지금 저장된 것** (`docs/data/lhs_handover_20260928.csv` · 130 행 × 119 열): 설계 32 열 · 수확 측정 = φ_SE · φ_AM (구 부피 합) · coverage Hertz P/S/total (= A_dem_geometric) ·
+  porosity **5 규약** (sphere RECORD_ONLY · nominal gap · clipped · pushback · union exact / pair-clipped / SE) · 두께 **3 규약** (wall gap · envelope · mass-conserving) + pushback 등가 ·
+  τ 는 상태 열만 (값은 `LHS-08` 로 보류) · 경계 QC · sha.  **① CN · ② 퍼콜레이션 열은 아직 없다** (웹앱 배치 미실행).
+  **64 (lhsx)** 는 수확 (`lhsx_descriptors_20260925` · v2) 과 union (`lhs_union_20260927/lhsx64_union.tsv`) 만 있고 인계표가 없다 — 설계 CSV 스키마가 130 과 다르다
+  (`id · pdd_SE · w_AM_P · w_AM_S · rP_um …` ↔ `case_id · am_pct · d_am_p_um …`) ⇒ 생성기용 **설계 어댑터**가 필요하다 (⬜).
+- **① 열 (인계 이름 = 코퍼스 이름 · 뜻 = 생성기 `WA_DEFINE` · 상세 = J20-a ① 정의표)**:
+  `se_se_cn` · `se_se_cn_std` (z_SE-SE mean · σ — SE 전 입자 · 접촉 0 · 벽 입자 포함 · 모집단 σ) · `am_se_cn_mean` (z_AM-SE — AM 전 입자 개수 가중 · **파생**) ·
+  `AM_P_se_cn_{mean,std,median,max}` · `AM_S_se_cn_{…}` (상별 · 상 없으면 빈칸 = N/A) · `am_se_cn_surface_weighted` (Σ r²·CN / Σ r² · AM_P 지배 · **파생**) ·
+  `am_am_cn` · `am_am_cn_std` (z_AM-AM · P–S 교차 포함) · `am_am_n_contacts` · `area_<쌍>_n` (접촉 **개수** = 덤프 행 수 · 총량 · 면적 아님) · ⓓ `wall_touch_frac_<상>_<floor|plate>` (수확 v3).
+  130 실측 (① 감사): 프레임 1 · 중복 0 · 자기쌍 0 · δ ≤ 0 0 ⇒ 정의 그대로 셈이 선다.  64 는 SE-rich (SE/고체 0.51–0.85) 라 z_SE-SE 가 130 (중앙 4.75) 보다 높게 나온다 (J19 실측 9.6).
+- **계획 (⬜ 비준 ⓐ–ⓒ)**: ⓐ WSL 산출 = 재수확 v3 (130 + 64 · wall_touch · 벽 τ) → 웹앱 배치 (130 + 64) → tgz 송부 (아래 · **인계표 재생성 [4] 는 돌리지 않는다**) ·
+  ⓑ 생성기 `--webapp-groups contact` (① 열만 저장 · 반례 먼저) + lhsx 설계 어댑터 (id → case_id · rP_um → r_AM_P_um … · 검산 = 수확 입자 수 ↔ n_*_est) — 코드 · 비준 뒤 ·
+  ⓒ **배포 프로필** (저자 제안 "union 정도만"): porosity = `porosity_union_exact_pct` (+ `se_rich`) · 두께 = `thickness_mass_conserving_um` · 내부 표는 전부 유지 — 근거: 구 부피 합은 겹침 이중계상으로
+  SE-rich 에서 음수 (130 중 18 · 64 중 60) · union 은 194 건 전부 양수 · 단 union 은 소성 압축의 고체를 과소계상하는 상한 규약 (CLAUDE.md E_SE 절) — 열 사전에 그대로 적는다 · ⬜ 저자 결정.
+  그 뒤 ② 열 같은 방식 → ③ φ_SE 감사.
+- WSL 명령 (한 건 먼저 · `--case lhs00_000` · `--case lhsx_001` · 64 배치가 안 서면 보고):
+  ```
+  cd ~/dem-audit && git fetch origin claude/sdcp-dem-manuscript-si-pqwtv8 && git checkout --detach origin/claude/sdcp-dem-manuscript-si-pqwtv8 && git log -1 --oneline
+  P=~/Yonghoon-DEM-DFT/venv/bin/python; D=$(date +%Y%m%d)
+  $P scripts/lhs_harvest_batch.py --verify-sha --out-dir docs/data/lhs_descriptors_$D --summary docs/data/lhs_descriptors_$D/_batch_summary.json
+  $P scripts/lhs_webapp_batch.py --harvest-dir docs/data/lhs_descriptors_$D --work ~/lhs_webapp_work --out-dir docs/data/lhs_webapp_$D
+  $P scripts/lhs_harvest_batch.py --verify-sha --cohort docs/data/lhsx_descriptors_20260925/_cohort.tsv --out-dir docs/data/lhsx_descriptors_$D --summary docs/data/lhsx_descriptors_$D/_batch_summary.json
+  $P scripts/lhs_webapp_batch.py --cohort docs/data/lhsx_descriptors_20260925/_cohort.tsv --harvest-dir docs/data/lhsx_descriptors_$D --work ~/lhsx_webapp_work --out-dir docs/data/lhsx_webapp_$D
+  tar czf ~/lhs_fill_$D.tar.gz docs/data/lhs_descriptors_$D docs/data/lhs_webapp_$D docs/data/lhsx_descriptors_$D docs/data/lhsx_webapp_$D
+  ```
+
 ## 인계 판정 (지금)
 
 **↪ 갱신 09-28 밤 (J20-a)** — ⏸ **일괄 실행 보류**: ✅ 열을 묶음별로 코드 정의부터 감사한 뒤 실행 (① 접촉 위상 1차 감사 = J20-a).
