@@ -37,6 +37,7 @@
         --work ~/lhs_webapp_work --out-dir docs/data/lhs_webapp_<날짜> \\
         [--root-from <코호트 경로 접두사> --root-to <실제 접두사>]
     python3 scripts/lhs_webapp_batch.py … --case lhs00_000       # 한 건 먼저 (시간 · 산출 확인)
+    python3 scripts/lhs_webapp_batch.py … --stop-after contact   # ① 접촉 위상만 (묶음별 · 산출 폴더는 따로)
     python3 scripts/lhs_webapp_batch.py --selftest
 
 산출 (`--out-dir`)
@@ -213,7 +214,15 @@ def run_batch(args, deps=None) -> int:
     if args.case:
         cases = [c for c in cases if c in set(args.case)]
     prev, rows = load_previous(out_dir)
+    stop = getattr(args, 'stop_after', None) or None
+    #  묶음별 실행 (1저자 09-29 밤 "단독적으로 하나씩") — 한 산출 폴더에 모드 둘을 섞지 않는다 (섞이면 metrics_flat 의 행마다
+    #   채워진 묶음이 달라진다).  옛 폴더 (stop_after 키 없음) = 전체 실행.
+    if prev and prev.get('schema') == SCHEMA and (prev.get('stop_after') or None) != stop:
+        print(f'⛔ {out_dir} 는 stop_after={prev.get("stop_after")!r} 로 만든 산출 폴더다 — 이번 실행 stop_after={stop!r} 와 섞지 않는다 '
+              '(다른 --out-dir 을 쓸 것)', file=sys.stderr)
+        return 2
     status = prev if (prev and prev.get('schema') == SCHEMA) else dict(schema=SCHEMA, cases={})
+    status['stop_after'] = stop
     status['harvest_dir'] = str(hdir)
     status['cohort'] = str(args.cohort)
     status.setdefault('runs', []).append(dict(started=time.strftime('%Y-%m-%dT%H:%M:%S'),
@@ -241,10 +250,14 @@ def run_batch(args, deps=None) -> int:
             rd = work / 'results' / case
             if rd.exists():
                 shutil.rmtree(rd)       # 옛 세대가 섞이지 않게 (run_pipeline 의 인과 계약과 같은 뜻)
-            out = A.run_pipeline(case, mode, tm, 1000, figures=False, auto_db=False)
+            kw = dict(figures=False, auto_db=False)
+            if stop:
+                kw['stop_after'] = stop           # 전체 실행은 키워드를 넘기지 않는다 (옛 웹앱 서명에서도 돈다)
+            out = A.run_pipeline(case, mode, tm, 1000, **kw)
             n_run += 1
             stages = [dict(step=s.get('step'), rc=s.get('rc'), ok=s.get('ok'))
                       for s in (out.get('log') or []) if isinstance(s, dict)]
+            rec['stop_after'] = stop
             rec.update(status=out.get('status') or ('done' if out.get('success') else 'failed'),
                        failed_stages=out.get('failed_stages') or [], stages=stages,
                        mode=mode, type_map=tm, sha=st['sha'], mesh_pick=st['mesh_pick'],
@@ -320,8 +333,9 @@ def _selftest() -> int:
                 return 'bimodal'
 
             @staticmethod
-            def run_pipeline(case, mode, tm, scale, figures=True, auto_db=True):
+            def run_pipeline(case, mode, tm, scale, figures=True, auto_db=True, **kw):
                 calls.append(dict(case=case, mode=mode, tm=tm, figures=figures, auto_db=auto_db,
+                                  passed_stop=('stop_after' in kw), stop_after=kw.get('stop_after'),
                                   files=sorted(os.listdir(Path(os.environ['WEBAPP_UPLOAD_FOLDER']) / case))))
                 rd = Path(os.environ['WEBAPP_RESULTS_FOLDER']) / case
                 rd.mkdir(parents=True, exist_ok=True)
@@ -449,6 +463,30 @@ def _selftest() -> int:
                 r11['status'] == 'done' and (r11.get('contact_scan') or {}).get('n_frames') == 1
                 and (r11.get('contact_scan') or {}).get('n_dup_rows') == 0
                 and (r11.get('contact_scan') or {}).get('n_periodic_flag') == 1 and r11.get('atom_frames') == 1)
+            # ⑫–⑬ 묶음별 실행 (1저자 09-29 밤 *"단독적으로 하나씩 돌려서 표를 채워나갈 거야"*) — `--stop-after contact` 는
+            #   웹앱 파이프라인을 접촉 분석 단계까지만 돌린다 (① 접촉 위상).  산출 폴더에 모드를 새기고, 다른 모드와 섞지 않는다.
+            out_c = tmp / 'out_contact'
+            base_c = ['--harvest-dir', str(hdir), '--cohort', str(coh), '--work', str(tmp / 'work_c'), '--out-dir', str(out_c)]
+            n0 = len(calls)
+            try:
+                rc12 = run_batch(_parse(base_c + ['--stop-after', 'contact']), deps)
+            except SystemExit as e:                         # 옛 파서 — 옵션이 없다
+                rc12 = f'SystemExit {e.code}'
+            st12 = json.loads((out_c / 'status.json').read_text(encoding='utf-8')) if (out_c / 'status.json').exists() else {}
+            chk('⑫ ★ --stop-after contact → run_pipeline(stop_after="contact") · status.json 최상위 · 케이스에 stop_after 기록',
+                rc12 == 0 and len(calls) == n0 + 1 and calls[-1].get('stop_after') == 'contact'
+                and st12.get('stop_after') == 'contact'
+                and (st12.get('cases', {}).get('lhs00_900') or {}).get('stop_after') == 'contact')
+            chk('⑫b 전체 실행은 stop_after 키워드를 넘기지 않는다 (옛 웹앱 서명에서도 돈다)',
+                not any(c.get('passed_stop') for c in calls[:n0]))
+            try:
+                rc13 = run_batch(_parse(base + ['--stop-after', 'contact', '--force']), deps)   # out = 전체 실행 폴더
+            except SystemExit as e:
+                rc13 = f'SystemExit {e.code}'
+            chk('⑬ ★ 전체 실행 산출 폴더에 --stop-after contact 를 섞으면 거부 (rc 2 · 실행 0)',
+                rc13 == 2 and len(calls) == n0 + 1)
+            rc13b = run_batch(_parse(base_c + ['--force']), deps)                              # out_c = 접촉만 폴더
+            chk('⑬b ★ 접촉만 폴더에 전체 실행을 섞으면 거부 (rc 2 · 실행 0)', rc13b == 2 and len(calls) == n0 + 1)
         finally:
             for k, v in env_keep.items():
                 if v is None:
@@ -472,6 +510,9 @@ def _parse(argv=None):
     ap.add_argument('--root-from', default='', help='코호트 경로 접두사')
     ap.add_argument('--root-to', default='', help='실제 경로 접두사로 치환')
     ap.add_argument('--force', action='store_true', help='done · partial 도 다시 돌린다')
+    ap.add_argument('--stop-after', choices=['contact'], default=None,
+                    help='웹앱 파이프라인을 이 단계에서 멈춘다 — contact = 접촉 분석까지 (① 접촉 위상 · network · Stage E 없음). '
+                         '산출 폴더에 모드가 새겨지고 다른 모드와 섞으면 거부한다')
     ap.add_argument('--selftest', action='store_true')
     return ap.parse_args(argv)
 

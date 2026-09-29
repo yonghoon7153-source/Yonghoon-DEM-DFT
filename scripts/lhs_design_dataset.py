@@ -966,6 +966,23 @@ def wa_define(col):
     return None
 
 
+#: 묶음별 채우기 (1저자 09-29 밤 "단독적으로 하나씩 돌려서 표를 채워나갈 거야") — 웹앱 **접촉 분석 단계** (`analyze_contacts.py` ·
+#:   bimodal 은 그것을 감싼 `analyze_contacts_bimodal.py`) 가 full_metrics.json 에 쓰는 ① 열.  WA_DEFINE 의 나머지 넷은 뒤 단계 산출이라
+#:   접촉 단계만 돈 배치 (`lhs_webapp_batch --stop-after contact`) 에서는 빈칸이 된다 — 이 묶음에 넣지 않는다:
+#:   A_binding_AM_SE_n_contacts · A_binding_total_n_contacts (`coverage_physics_vs_hertzian.py`) ·
+#:   n_am_am_contacts_total · n_am_am_contacts_excluded (`run_network_fracture_aware.py`).
+WA_GROUP_CONTACT_EXACT = ('se_se_cn', 'se_se_cn_std', 'am_se_cn_mean', 'am_se_cn_surface_weighted',
+                          'am_am_cn', 'am_am_cn_std', 'am_am_n_contacts')
+WA_GROUPS = ('contact',)
+
+
+def wa_group_contact(col):
+    """① 접촉 위상 묶음 중 **접촉 분석 단계**가 내는 열인가."""
+    return (col in WA_GROUP_CONTACT_EXACT
+            or re.fullmatch(r'(AM_P|AM_S)_se_cn_(mean|std|median|max)', col) is not None
+            or re.fullmatch(r'area_(.+)_n', col) is not None)
+
+
 #: J20-a ⓓ (1저자 비준 09-28 밤 "권고하는걸로") — 상별 바닥 벽 · 플래튼 **접촉 입자 비율** (수확 v3 `wall_touch`).  CN 이 벽 · 플래튼
 #:   접촉을 세지 않아 벽에 닿은 입자의 CN 이 낮은 몫을 가르는 설명 변수.  규칙 = 수확기 `WALL_TOUCH_RULE` (z − r ≤ 0 · z + r ≥ plate_z).
 #:   벽 인접 입자를 뺀 CN 은 택하지 않았다 — AM_P 가 두께 2–10 개인 침대에서 남는 입자가 거의 없어 정의가 흔들린다.
@@ -997,7 +1014,7 @@ def load_webapp(dir_path, census_path=None):
             verdict[r['column']] = r['verdict']
             why[r['column']] = r.get('why') or ''
     return {'verdict': verdict, 'why': why, 'status': st.get('cases') or {}, 'rows': rows,
-            'source': str(d), 'runs': st.get('runs') or []}
+            'source': str(d), 'runs': st.get('runs') or [], 'stop_after': st.get('stop_after')}
 
 
 def _frac_caveat(col):
@@ -1106,7 +1123,7 @@ def _dig(h, path):
     return cur
 
 
-def build_handover(rows, harvest, key='case_id', union=None, webapp=None):
+def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp_groups=None):
     """설계행 + 수확 (+ union) (+ 웹앱) → 인계용 행 리스트.  **순수 함수**(파일을 안 쓴다) 라 시험 가능하다.
 
     union (J19, 선택): `load_union` 산출 dict 또는 행 목록.  주면 설계 케이스 **전부**에 짝이 있어야 하고 (부분 병기 금지),
@@ -1156,11 +1173,19 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None):
     if wt_on:
         cols += [n for n, _p, _s, _w in HANDOVER_WALL_TOUCH]
     wv, wa_take = webapp, []
+    if webapp_groups is not None and webapp_groups not in WA_GROUPS:
+        raise FillRefusal(f'webapp_groups {webapp_groups!r} — 아는 묶음은 {WA_GROUPS} 뿐이다 (① 접촉 위상 = contact)')
     if wv is not None:
+        #  묶음별 — 접촉 단계만 돈 배치는 그 묶음으로만 부른다 (뒤 단계 열이 빈칸 = 측정된 N/A 로 읽히지 않게)
+        if wv.get('stop_after') and wv.get('stop_after') != webapp_groups:
+            raise FillRefusal(f'웹앱 배치가 stop_after={wv.get("stop_after")!r} 로 돌았다 — webapp_groups={webapp_groups!r} 로는 '
+                              '싣지 않는다 (그 묶음만: --webapp-groups ' + str(wv.get('stop_after')) + ')')
         miss_w = [r[key] for r in rows if r[key] not in (wv.get('status') or {})]
         if miss_w:
             raise FillRefusal(f'웹앱 배치가 시도하지 않은 설계행 {len(miss_w)} 건: {miss_w[:5]} — 배치 미완 (재개로 채울 것)')
         ok_cols = [c for c, v in (wv.get('verdict') or {}).items() if str(v).startswith('✅')]
+        if webapp_groups == 'contact':
+            ok_cols = [c for c in ok_cols if wa_group_contact(c)]
         have = set(cols)
         wa_take = [c for c in ok_cols if c not in have and c not in {n for n, _w in WA_ROW_COLS}]
         wa_coll = [c for c in ok_cols if c in have]
@@ -1853,6 +1878,53 @@ def _selftest():
         'wall_touch_frac_SE_floor' not in build_handover(_dq, _hqs)[1]
         and _dm3.get('wall_touch_frac_SE_floor', {}).get('source') == 'harvest_v3'
         and 'z − r' in _dm3.get('wall_touch_frac_SE_floor', {}).get('meaning', ''))
+
+    #  ⑲q–u 묶음별 (1저자 09-29 밤 *"단독적으로 하나씩 돌려서 표를 채워나갈 거야"*) — webapp_groups='contact' 는 **접촉 분석 단계가
+    #   내는** ① 열만 싣는다.  접촉 단계만 돈 배치 (status.json stop_after=contact) 를 묶음 제한 없이 부르면 거부한다 — 뒤 단계 열이
+    #   빈칸으로 들어가 '측정된 N/A' 처럼 읽힌다.  ① 사전 (WA_DEFINE) 중 A_binding_*_n_contacts (피복 단계) ·
+    #   n_am_am_contacts_* (파괴 네트워크) 는 접촉 단계 산출이 아니다 → 이 묶음에서 뺀다.
+    _vd2 = dict(_vd, am_am_cn='✅ 쓴다', AM_P_se_cn_mean='✅ 쓴다', area_SE_SE_n='✅ 쓴다', percolation_pct='✅ 쓴다',
+                A_binding_total_n_contacts='✅ 쓴다', n_am_am_contacts_total='✅ 쓴다')
+
+    def _wa2(stop=None):
+        w = _wa()
+        w['verdict'] = dict(_vd2)
+        w['why'] = {k: f'why:{k}' for k in _vd2}
+        for r in w['rows'].values():
+            r.update(am_am_cn='1.2', AM_P_se_cn_mean='7.0', area_SE_SE_n='900', percolation_pct='',
+                     A_binding_total_n_contacts='', n_am_am_contacts_total='')
+        if stop:
+            w['stop_after'] = stop
+        return w
+    try:
+        _og, _cg, _rg = build_handover(_dq, _hqs, webapp=_wa2('contact'), webapp_groups='contact')
+        _eg = ''
+    except Exception as e:                                                # noqa: BLE001
+        _og, _cg, _rg, _eg = [], [], {}, f'{type(e).__name__}: {e}'
+    chk('⑲q ★ webapp_groups=contact — 웹앱 열은 접촉 단계 ① 만 (se_se_cn · am_am_cn · AM_P_se_cn_mean · area_SE_SE_n) · '
+        'porosity · coverage · percolation · A_binding · n_am_am_contacts 는 없다' + (f' — {_eg}' if _eg else ''),
+        not _eg and all(c in _cg for c in ('se_se_cn', 'am_am_cn', 'AM_P_se_cn_mean', 'area_SE_SE_n'))
+        and not any(c in _cg for c in ('porosity', 'coverage_AM_P_mean', 'percolation_pct',
+                                       'A_binding_total_n_contacts', 'n_am_am_contacts_total')))
+    _neg('⑲r ★ 접촉 단계만 돈 배치 (stop_after=contact) 를 묶음 제한 없이 부르면 거부 — 뒤 단계 열이 빈칸 = N/A 로 읽힌다',
+         lambda: build_handover(_dq, _hqs, webapp=_wa2('contact')))
+    _neg('⑲s 모르는 묶음 이름은 거부', lambda: build_handover(_dq, _hqs, webapp=_wa2(), webapp_groups='percolation'))
+    _g1 = next((r for r in _og if r['case_id'] == 'q1'), {})
+    chk('⑲t 같은 프레임 관문은 그대로 — 웹앱 porosity (접촉 단계 산출) − 수확 porosity 가 QC 열에 (여기선 0)',
+        _g1.get('qc_wa_porosity_minus_harvest_pct') == repr(0.0) and _g1.get('am_am_cn') == '1.2')
+    import shutil
+    import tempfile
+    _tdw = pathlib.Path(tempfile.mkdtemp(prefix='lhsdd_wa_'))
+    try:
+        (_tdw / 'status.json').write_text(json.dumps({'schema': 'lhs_webapp_batch/v1', 'stop_after': 'contact', 'cases': {}}),
+                                          encoding='utf-8')
+        (_tdw / 'metrics_flat.csv').write_text('case\n', encoding='utf-8')
+        _lw = load_webapp(_tdw)
+        chk('⑲u load_webapp 이 배치의 stop_after 를 넘긴다 (묶음 관문의 근거)', _lw.get('stop_after') == 'contact')
+    except Exception as e:                                                # noqa: BLE001
+        chk(f'⑲u load_webapp stop_after ({type(e).__name__}: {e})', False)
+    finally:
+        shutil.rmtree(_tdw, ignore_errors=True)
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -1892,6 +1964,9 @@ if __name__ == '__main__':
     ap.add_argument('--webapp', default='', metavar='DIR',
                     help='(--export-handover) J20 웹앱 배치 산출 (scripts/lhs_webapp_batch.py 의 --out-dir) — 전수 판정 ✅ 열을 싣는다.  '
                          '설계행 전부를 배치가 시도했어야 하고 웹앱 porosity = 수확 porosity (같은 프레임) 여야 한다')
+    ap.add_argument('--webapp-groups', default=None, choices=['contact'],
+                    help='(--export-handover --webapp) 웹앱 열을 이 묶음만 싣는다 — contact = ① 접촉 위상 (접촉 분석 단계 산출). '
+                         '`lhs_webapp_batch --stop-after contact` 산출은 이것 없이는 거부된다')
     ap.add_argument('--census', default='', metavar='TSV',
                     help=f'(--webapp) 전수 판정 census (기본 {DEFAULT_CENSUS_TSV})')
     ap.add_argument('--selftest', action='store_true')
@@ -1946,7 +2021,7 @@ if __name__ == '__main__':
         if a.webapp:
             _wp = pathlib.Path(a.webapp)
             _wv = load_webapp(_wp if _wp.is_absolute() else _root / _wp, a.census or None)
-        _out, _cols, _rep = build_handover(_rows, _harv, union=_uv, webapp=_wv)
+        _out, _cols, _rep = build_handover(_rows, _harv, union=_uv, webapp=_wv, webapp_groups=a.webapp_groups)
         _op = pathlib.Path(a.export_handover)
         if not _op.is_absolute():
             _op = _root / _op

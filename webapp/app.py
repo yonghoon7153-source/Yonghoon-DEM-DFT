@@ -3150,9 +3150,16 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
     return stages, prov.get('network_run_id')
 
 
+def _stopped_after_contact(stages, log):
+    """`run_pipeline(stop_after='contact')` 의 반환 — 지금까지의 단계로 상태를 판정한다 (끝의 판정과 같은 `_ps.summarize`)."""
+    status, failed_stages = _ps.summarize(stages)
+    return {'success': status != 'failed', 'status': status, 'log': log, 'network_run_id': None,
+            'failed_stages': [s.get('step') for s in failed_stages], 'stopped_after': 'contact'}
+
+
 def run_pipeline(case_id, mode, type_map, scale=1000,
                  preserve_network=False, network_snapshot=None, *,
-                 figures=True, auto_db=True):
+                 figures=True, auto_db=True, stop_after=None):
     """Run the DEM analysis pipeline for a case.
 
     preserve_network : True 면 network solver 를 **호출하지 않고** network_snapshot 을
@@ -3163,7 +3170,13 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
                        ★ 두 키워드는 LHS 일괄 배치 (`scripts/lhs_webapp_batch.py`, 2026-09-28) 용이다 — 130 건에
                          그림 수백 장과 동시 DB 재구축 130 번은 필요 없다.  기본값 = 웹앱 동작 그대로
                          (test_pipeline_provenance T9: 뺀 것은 그림 · DB 뿐이고 계산 단계 순서가 같다).
+    stop_after       : None (기본 · 전 단계) 또는 'contact' — 접촉 분석 단계 (`analyze_contacts[_bimodal].py`) 가
+                       성공하면 거기서 멈춘다 (network · Stage E · 고급 분석 없음).  ★ LHS 묶음별 채우기
+                       (1저자 2026-09-29 밤 "단독적으로 하나씩") 용 — 멈추기 전 명령은 전체 실행과 **인자까지 같다**
+                       (test_pipeline_provenance T10).  다른 값은 ValueError (조용히 전체를 돌지 않는다).
     """
+    if stop_after not in (None, 'contact'):
+        raise ValueError(f"stop_after={stop_after!r} — None 또는 'contact' 만 허용")
     # Clear pyc cache to ensure latest code runs
     import glob as globmod
     scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
@@ -3308,6 +3321,8 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
         if not _st.ok:
             return {'error': f'Contact analysis failed: {_st["stderr"][-300:]}',
                     'success': False, 'status': 'failed', 'log': log, 'failed_stages': [_st['step']]}
+        if stop_after == 'contact':
+            return _stopped_after_contact(stages, log)
 
         # Step 2b: Dual-mode coverage + AM-SE/SE-SE totals (Hertzian vs Physics).
         # Writes coverage_AM_*_mean_physics, area_AM전체_SE_total_physics,
@@ -3385,6 +3400,8 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
         if not _st.ok:
             return {'error': f'Contact analysis failed: {_st["stderr"][-300:]}',
                     'success': False, 'status': 'failed', 'log': log, 'failed_stages': [_st['step']]}
+        if stop_after == 'contact':
+            return _stopped_after_contact(stages, log)
 
         # Dual-mode coverage + AM-SE/SE-SE totals (Hertzian vs Physics).
         # Populates *_mean_physics and area_*_total_physics keys in

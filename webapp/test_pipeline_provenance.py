@@ -412,6 +412,51 @@ def main():
                 _figs(_ro) == [] and _po == 0 and _oo.get('status') == 'done')
             chk(f'T9c) ★ {_mode} 계산 단계는 순서까지 그대로 (그림을 뺀 스크립트 열이 같다)',
                 [s for s in _scripts(_rd) if s not in _figs(_rd)] == _scripts(_ro))
+
+        # T10 (LHS 묶음별 · 1저자 09-29 밤 *"단독적으로 하나씩 돌려서 표를 채워나갈 거야"*): stop_after='contact' 는
+        #   접촉 분석 단계에서 멈춘다 — 그때까지의 명령은 전체 실행의 **앞부분과 인자까지 같고**, network · Stage E ·
+        #   고급 분석은 돌지 않는다.  명령이 다르면 ① 열을 코퍼스와 같은 이름으로 붙일 수 없다.
+        _t10 = {}
+        for _mode, _tm in (('standard', '1:AM,3:SE'), ('bimodal', '1:AM_P,2:AM_S,3:SE')):
+            for _stop in (None, 'contact'):
+                shutil.rmtree(res_dir, ignore_errors=True)
+                _r = make_runner(contact_rc=0)
+                ps._RUNNER = _r
+                _kw = {'figures': False, 'auto_db': False}
+                if _stop:
+                    _kw['stop_after'] = _stop
+                try:
+                    _o = webapp.run_pipeline('case1', _mode, _tm, 1000, **_kw)
+                except TypeError as _e:                 # 옛 서명 — 키워드가 없다
+                    _o = {'status': f'TypeError: {_e}'}
+                _t10[(_mode, _stop)] = (_r, _o)
+        for _mode, _cs in (('standard', 'analyze_contacts.py'), ('bimodal', 'analyze_contacts_bimodal.py')):
+            _rf, _of = _t10[(_mode, None)]
+            _rs, _os10 = _t10[(_mode, 'contact')]
+            _ss = _scripts(_rs)
+            chk(f'T10a) ★ {_mode} stop_after=contact: 접촉 분석에서 끝난다 (network · Stage E 없음) · done · stopped_after 표지',
+                bool(_ss) and _ss[-1] == _cs and 'network_conductivity.py' not in _ss
+                and _os10.get('status') == 'done' and _os10.get('stopped_after') == 'contact')
+            chk(f'T10b) ★ {_mode} 멈춘 실행의 명령 = 전체 실행의 앞부분 (인자까지 같다)',
+                len(_rs.calls) >= 2 and [list(map(str, c)) for c in _rs.calls]
+                == [list(map(str, c)) for c in _rf.calls[:len(_rs.calls)]])
+        shutil.rmtree(res_dir, ignore_errors=True)
+        ps._RUNNER = make_runner(contact_rc=0)
+        try:
+            webapp.run_pipeline('case1', 'standard', '1:AM,3:SE', 1000, stop_after='network')
+            _t10c = 'no error'
+        except ValueError:
+            _t10c = 'ValueError'
+        except TypeError as _e:
+            _t10c = f'TypeError: {_e}'
+        chk(f'T10c) stop_after 가 contact 가 아니면 ValueError — 조용히 전체를 돌지 않는다 ({_t10c})', _t10c == 'ValueError')
+        shutil.rmtree(res_dir, ignore_errors=True)
+        ps._RUNNER = make_runner(contact_rc=1)
+        try:
+            _o10d = webapp.run_pipeline('case1', 'standard', '1:AM,3:SE', 1000, stop_after='contact')
+        except TypeError as _e:
+            _o10d = {'status': f'TypeError: {_e}'}
+        chk('T10d) stop_after=contact 이어도 접촉 분석 실패는 failed (기존 계약 그대로)', _o10d.get('status') == 'failed')
     finally:
         ps._RUNNER = prev_runner
         for k, v in prev_env.items():

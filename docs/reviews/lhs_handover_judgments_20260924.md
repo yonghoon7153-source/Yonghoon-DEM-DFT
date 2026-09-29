@@ -669,6 +669,9 @@
 - ⚠ **같은 날의 방향 정정** — J20-c ⓐ 는 ① 을 얻으려고 웹앱 파이프라인 **전체**를 돌리는 계획이었다 (한 건 575.6 s · 743.4 s → 194 건 ≈ 34 h · ③~⑦ 까지 계산).
   1저자 *"왜 전체에 대해서 뽑고 있는 거야"* · *"단독적으로 하나씩 돌려서 표를 채워나갈 거야"* ⇒ 묶음마다 **그 묶음을 내는 단계만** 돌린다 (① = 접촉 분석 단계) —
   09-28 밤 *"일괄적으로 뽑지 말고"* 와 같은 뜻.  한 건 시험 (lhs00_000 · lhsx_001 · 둘 다 `partial` = 선택 단계 실패 · 필수 단계 성공) 의 산출은 대조 기준으로 쓴다.
+- ✅ **① 전용 실행 모드 (09-29 밤 · 1저자 *"ㅇㅇ 단독적으로 하나씩"* · 반례 먼저)** — 웹앱 `run_pipeline(stop_after='contact')` 는 접촉 분석 단계 (`analyze_contacts[_bimodal].py`) 가 성공하면 멈춘다 (T10: 멈추기 전 명령 = 전체 실행의 앞부분 · 인자까지 같다 · 다른 값 ValueError · 접촉 실패는 failed · 옛 코드 182/188 → 188/188) · 배치 `lhs_webapp_batch.py --stop-after contact` (산출 폴더에 모드를 새기고 다른 모드와 섞으면 rc 2 · ⑫ ⑬) · 생성기 `--webapp-groups contact` (접촉 단계 산출 열만 · 접촉만 돈 배치를 묶음 없이 부르면 거부 · ⑲q–u · 90/95 → 95/95).
+  ⚠ ① 사전 (WA_DEFINE) 중 넷은 접촉 단계 산출이 **아니다** — `A_binding_AM_SE_n_contacts` · `A_binding_total_n_contacts` (피복 단계 `coverage_physics_vs_hertzian.py`) · `n_am_am_contacts_total` · `_excluded` (`run_network_fracture_aware.py`) ⇒ 이 묶음에서 뺐다 (필요하면 그 단계 묶음에서).
+  ⬜ WSL 한 건 대조: 접촉만 실행의 ① 값 = 전체 실행 (`$O/wa130` · `$O/wa64`) 의 ① 값 (문자열 동일) 이면 전 건 실행.
 
 ## 인계 판정 (지금)
 
