@@ -18,6 +18,10 @@
 | fractional_duplicate_1200 (1000.25 step/rev · bin 0 의 마지막 step 복제) | 1 | bin 0 25/26 · complete=false |
 | fractional_duplicate_1240 (같은 설정 · 첫 bin 1 step 복제) | 0 | complete · tech_smoke [] |
 
+★ 2026-09-30 (강성 축 §5-a 중간 판정 · piece 4) — 같은 방식으로 **bin 3 창**: 사전조건 `mixer_smoke_blind.interim_window_problems` ↔ bin 3 판독
+`measure_mixing_index.bin_window_stats` ↔ 전체 판독기 `analyse` (by_rev · expected_by_bin = bin_of 와 따로 쓴 식) — 정상 · bin 3 마지막 복제 · 첫 bin 4 복제 ·
+bin 3 결손 · bin_of 변이 판별력 (1000.25 step/rev · bin 3 만 다른 구름).
+
 기록만 (판정 아님 · Codex §3 "증서 신뢰 경계"): `opaque_allowlisted_certificate` (Q5 허용목록 투영만으로 관문 rc 0 — 런처 입력으로
 충분하다는 뜻) · `tampered_certificate_narrows_bin0` (증서 `plan.steps_per_rev` 를 손으로 1.0 으로 바꾸면 추가한 복제가 창 밖으로
 밀려 rc 0 — 증서 필드는 신뢰된 주장이라 맹검 투영기는 이 필드를 손대면 안 된다.  HBR5-02 재개방 사유 아님).
@@ -91,7 +95,7 @@ def _cloud(kind):
                 if kind == 'seg':
                     types.append(1 if j < 2 else 3)
                 else:
-                    n_am = {'ref': (10, 14), 'mid': (3, 21)}[kind][0 if j < 2 else 1]
+                    n_am = {'ref': (10, 14), 'mid': (3, 21), 'mid2': (6, 18)}[kind][0 if j < 2 else 1]
                     types.append(1 if k < n_am else 3)
     P = np.asarray(P)
     n = len(P)
@@ -251,6 +255,51 @@ def main(argv=None):
         d_.unlink()
         case('mutation_bin_epsilon_detected', dict(rc_mutated=pm.returncode), dict(rc_mutated=0),
              '★ 관문 bin 식을 epsilon 0.5 로 변이 → 같은 복제 (1200) 가 rc 0 (등록 1 과 다름) = 이 시험이 갈라짐을 잡는다')
+
+        #  ★ 중간 판정 (강성 축 §5-a · bin 3 = 4 바퀴 · 2026-09-30 piece 4) — 사전조건 (mixer_smoke_blind.interim_window_problems = bin_window_files)
+        #    ↔ bin 3 판독 (measure_mixing_index.bin_window_stats) ↔ 전체 판독기 analyse.  analyse 의 bin 묶음 (by_rev) · 계획 격자 (expected_by_bin) 는
+        #    bin_of 와 **따로 쓴 식** 이다 — 셋이 갈라지면 이 표가 깨진다.  bin 3 프레임만 다른 구름 (mid2) 이라 창이 한 장이라도 밀리면 평균이 바뀐다.
+        import mixer_smoke_blind as sb
+        fdeck = DECK.replace('period 1\n', 'period 1.00025\n')
+        spr_f = 1000.25
+        b3 = [s for s in range(200, 8201, 40) if int(np.floor((s - 200) / spr_f + 1e-9)) == 3]      # 3240 … 4200 (25 장)
+        irun = _rundir(td / 'interim', 'LC_ref_r8_s15485863', fdeck)
+        iref = _rundir(td / 'interim', 'E0_ref_s15485863', fdeck.replace('run 8000', 'run 0'))
+        _dump(iref / 'post/mix_200.liggghts', 200, _cloud('ref'))
+        for s in range(200, 8201, 40):
+            _dump(irun / 'post' / f'mix_{s}.liggghts', s, _cloud('seg' if s == 200 else ('mid2' if s in b3 else 'mid')))
+
+        def _interim():
+            pre = sb.interim_window_problems(str(irun))
+            w = _quiet(mi.bin_window_stats, str(irun), str(iref), REG['r_container'], 3, cells=REG['cells'], x_cells=REG['x_cells'],
+                       n_min=REG['n_min'], axis=REG['axis'])
+            z = _quiet(mi.analyse, str(irun), str(iref), REG['r_container'], cells=REG['cells'], x_cells=REG['x_cells'], n_min=REG['n_min'],
+                       axis=REG['axis'])
+            r3 = z['by_rev'].get(3) or {}
+            return dict(pre_ok=not pre, stats_complete=bool(w['complete']), reader_complete=r3.get('n') == z['lattice']['expected_by_bin'].get(3),
+                        same_M=bool(w['M_bin'] is not None and r3.get('M_mean') is not None and abs(w['M_bin'] - r3['M_mean']) < 1e-12))
+        case('interim_bin3_normal', _interim(), dict(pre_ok=True, stats_complete=True, reader_complete=True, same_M=True),
+             '1000.25 step/rev · bin 3 = 3240 … 4200 — 사전조건 통과 · bin 3 판독 완전 · 전체 판독기 bin 3 25/25 · 같은 M')
+        for step, ok_ in ((4200, False), (4240, True)):
+            d_ = irun / f'post/copy_{step}.liggghts'
+            shutil.copyfile(irun / f'post/mix_{step}.liggghts', d_)
+            case(f'interim_duplicate_{step}', _interim(), dict(pre_ok=ok_, stats_complete=ok_, reader_complete=ok_, **({'same_M': True} if ok_ else {})),
+                 f'★ step {step} 복제 ({"bin 3 마지막" if step == 4200 else "첫 bin 4"}) → 사전조건 · bin 3 판독 · 전체 판독기 모두 {"통과" if ok_ else "불완전"}')
+            d_.unlink()
+        miss = irun / 'post/mix_4200.liggghts'
+        keep = miss.read_text(encoding='utf-8')
+        miss.unlink()
+        case('interim_missing_4200', _interim(), dict(pre_ok=False, stats_complete=False, reader_complete=False),
+             '★ bin 3 마지막 계획 덤프 없음 (= 아직 4 바퀴 전) → 셋 다 불완전')
+        miss.write_text(keep, encoding='utf-8')
+        real_bo = mi.bin_of
+        mi.bin_of = lambda s_, t0_, spr_: int(np.floor((s_ - t0_) / spr_ + 0.5))
+        try:
+            mut_i = _interim()
+        finally:
+            mi.bin_of = real_bo
+        case('mutation_interim_bin_epsilon_detected', dict(same_M=mut_i['same_M'], pre_ok=mut_i['pre_ok']), dict(same_M=False, pre_ok=True),
+             '★ bin_of 를 epsilon 0.5 로 변이 → 사전조건은 여전히 통과하지만 bin 3 판독이 전체 판독기의 bin 3 (따로 쓴 식) 과 갈라진다 = 이 시험이 잡는다')
 
     res['scope'] = ('합성 파일만 · 관문 = launch_highbo.sh rest 의 파이썬 블록 (추출 실행) · 판독기 = measure_mixing_index.analyse · '
                     'LIGGGHTS/MPI/SLURM 없음')

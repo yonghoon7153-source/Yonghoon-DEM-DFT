@@ -31,6 +31,15 @@ rc 0 = 증서 씀 (합격 여부는 관문이 판정한다 — 이 래퍼는 판
   `--e0-diag <OUT> --record <OUT>/dev_e0_diag.json` = DEV E0 다섯의 **E0 진단 PASS 기록** (§8-2 ② "① E0 5 런 … → 1 % 계약 · 정규화 · 완주 진단
     (M 미열람 · 허용목록 투영) → ② 통과 시에만 LC_ref · LH_ref 회전 2 런") — 런처 `launch_highbo.sh dev-rot <기록>` 이 이어 본다
     (scripts/mixer_stage_gate.py verify_e0_record: 기록 = 지금 폴더 · 봉인 · 로그 · 도구 · NP).  rc 0 = PASS · 1 = FAIL (기록은 남는다).
+
+★ 2026-09-30 — 중간 판정 **한 번** (사전등록 §5-a v2.5 · 코드 선행조건 2 단계 piece 4):
+    python3 scripts/mixer_smoke_blind.py --interim <OUT> --eps <ε 등록.json> [--phase-receipt R]
+  확인 회전 12 런이 모두 4 바퀴 (판독기 계획 bin 3 창) 를 지났을 때 — 판독기 bin_window_stats (bin 3 격자 + 계획 t₀ + E0 계획 t₀ **만** 읽는다) →
+  d_s = M(LC_ref) − M(LH_ref) · interim_rule (세 seed 양수 ∧ Δ3 − u_mean ≥ 0.10 ∧ ≥ 3·(SE3 + u_SE)) → 허용목록 투영 <OUT>/interim_record.json
+  (세 d_s 부호 · Δ3 · SE3 · u 항 · 충족 + d_soft · q 요약 · M-맹검 적격 표) · 전체 결과 0600 봉인 · blind_log (누가 · 언제 · 입력 sha256).
+  rc 0 = 봤다 (MET · NOT_MET · INELIGIBLE · TECH — 기록에) · 3 = 사전조건 불성립 (M 미계산 · **소진 아님**: ε 등록 · confirm manifest · 봉인 · 덱 ·
+  4 바퀴 전 · ref 접촉 (bin 0–3 창) · ref 바닥 (8×8×2)) · 4 = 이미 봤다 (OUT claim · 기록 · 18 런 표지 — 두 번째 중간 판정은 없다).
+  최종 (bin 7 · §5) 판독은 따로다 — 이 모드는 bin 7 을 읽지도 쓰지도 않고, 최종 보고가 interim_record.json 을 무조건 병기한다.
 """
 from __future__ import annotations
 
@@ -425,6 +434,471 @@ def e0_diag(out, record, reg=REG):
     return (0 if verdict == 'PASS' else 1), rec
 
 
+# ══ 중간 판정 한 번 (--interim · 2026-09-30 · 강성 축 코드 선행조건 2 단계 piece 4) ═══════════════════════════════════════
+#  사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §5-a (v2.5 · 결과 전 등록) — 구현한 문장:
+#    "보는 시점 = 한 번: 확인 회전 12 런이 모두 4 바퀴 (판독기 계획 bin 3 창) 를 지난 때.  그 전 · 그 사이에 M 을 보지 않는다 (M-맹검 래퍼 유지).
+#     두 번째 중간 판정은 없다."
+#    "열람 범위: 중간 판정 때 래퍼가 내놓는 것은 이 절의 통계 (세 d_s 의 부호 · Δ3 · SE3 · 충족 여부) + d_soft(bin 3) · q(bin 3) 의 값 보고용 요약뿐이다 ·
+#     M(t) 곡선 전체와 다른 bin 은 최종까지 봉인.  열람 시각 · 파일 sha256 을 기록한다."
+#  흐름: ① 이미 본 흔적 (OUT claim · 기록 · 18 런 표지) 이면 rc 4 (소진 — 두 번째 없음)
+#        ② M-맹검 사전조건 (못 서면 rc 3 · M 미계산 · **소진 아님**): ε 등록 · 캠페인 동일성 (confirm manifest · 발사 봉인 · 덱) · 덱 코호트 ·
+#           12 런 bin 3 계획 격자 완전 + 계획 t₀ · E0 계획 t₀ · 접촉 (회전 = bin 0–3 창 · E0 = 계획 t₀) · 바닥 (8×8×2 ≥ 5)
+#           — ref 팔 (LC_ref · LH_ref · E0_ref) 이 접촉 CONTRACT_MET · 바닥 통과가 아니면 조기 확정이 원리상 불가 → M 을 계산하지 않는다
+#        ③ claim (O_EXCL · OUT) + 18 런 표지 (O_EXCL) = 소진 — 그 뒤 무슨 일이 나도 기록을 남긴다 (TECH 도 한 번으로 친다)
+#        ④ 판독 (판독기 bin_window_stats — bin 3 격자 + 계획 t₀ + E0 계획 t₀ 만) → d_ref · d_soft · q → interim_rule
+#        ⑤ 전부 0600 봉인 → 허용목록 투영 = OUT/interim_record.json (O_EXCL) · 화면 · blind_log
+#  결과: MET (조기 확정 · 4 바퀴 estimand) · NOT_MET (8 바퀴까지 · §5 최종) · INELIGIBLE (판독 적격 실패 — 8 바퀴까지) · TECH (예외 — 8 바퀴까지).
+INTERIM_SCHEMA = 'mixer_interim_look/1'
+INTERIM_EPS_SCHEMA = 'mixer_interim_eps/1'
+INTERIM_CLAIM_SCHEMA = 'mixer_interim_claim/1'
+INTERIM_DIR = '.interim_look'           # OUT/.interim_look/ (0700) · <런>/.interim_look/ (0700)
+INTERIM_CLAIM = 'claim.json'            # OUT/.interim_look/claim.json — 있으면 소진
+INTERIM_MARKER = 'marker.json'          # <런>/.interim_look/marker.json — 런 폴더가 다른 OUT 으로 가도 한 번 규칙이 따라간다
+INTERIM_RECORD = 'interim_record.json'  # OUT/interim_record.json — 허용목록 투영 (= 본 것 전부 · 최종 보고가 무조건 병기)
+RC_REFUSED, RC_CONSUMED = 3, 4          # 3 = 사전조건 불성립 (M 미계산 · 소진 아님) · 4 = 이미 봤다 (두 번째 없음)
+INTERIM_WINDOW_BINS = tuple(range(mi.INTERIM_BIN + 1))       # 접촉 창 = 계획 t₀ → bin 3 끝 (조기 확정의 관측 창)
+INTERIM_TOP = ('schema', 'kind', 'bin', 'revolutions', 'campaign', 'look', 'inputs', 'eligibility', 'statistics', 'outcome', 'next',
+               'vault', 'blind')
+INTERIM_STATS_REF = ('schema', 'bin', 'seeds', 'n', 'signs', 'delta3', 'se3', 'u_mean', 'u_se', 'lhs', 'mid', 'k_se', 'rhs_se', 'tol',
+                     'cond', 'met', 'rule')
+INTERIM_STATS_SOFT = ('d_soft', 'q', 'qualifiers', 'why_none', 'note')
+INTERIM_RUN_INPUT = ('deck_sha256', 'launch_record_sha256', 'reader_frames', 'ref_frames', 'contact_frames_sha256')
+INTERIM_ELIG = ('ok', 'contact', 'floor', 'window', 'qc', 'reasons')
+INTERIM_NEXT = {
+    'MET': ('조기 확정 — 확인 판정 = "4 바퀴 뒤 LC − LH 차이 · 등록된 중간 판정으로 조기 확정" (4 바퀴 estimand 를 제목 · 표 · 결론에 적는다 · 평탄 조건 '
+            '미적용) · 12 런은 멈춰도 된다 (계속 돌리면 8 바퀴 값은 기술 보고만 · 다시 판정하지 않는다)'),
+    'NOT_MET': ('8 바퀴까지 계속 — 최종 판정 = §5 그대로 (bin 7 · 2·SE) · 이 중간 값은 최종과 함께 무조건 보고 · 문턱 · seed · 런 길이를 바꾸지 않는다 · '
+                '무익 중단 없음 · 8 바퀴 넘어 연장 없음'),
+    'INELIGIBLE': ('조기 확정 불가 (판독 적격 실패 — eligibility.reasons) — 8 바퀴까지 계속 · 최종 판정 = §5 그대로 · 이 기록은 최종과 함께 보고'),
+    'TECH': ('조기 확정 불가 (기술 실패 — 봉인 파일) — 8 바퀴까지 계속 · 최종 판정 = §5 그대로 · 이 기록은 최종과 함께 보고'),
+}
+
+
+def _rot_cells():
+    return [n for n in dd.COHORTS['confirm'] if dd.parse_cell(n)['arm'] != 'E0']
+
+
+def _e0_of(n):
+    c_ = dd.parse_cell(n)
+    return f'E0_{c_["level"]}_s{c_["seed"]}'
+
+
+def _interim_tools():
+    return dict(wrapper=_sha_file(__file__), reader=_sha_file(mi.__file__), checker=_sha_file(cv.__file__), deckdiff=_sha_file(dd.__file__),
+                stage_gate=_sha_file(sg.__file__))
+
+
+def _now():
+    return datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+
+
+def load_eps(path):
+    """ε 등록 (§5 "seed 별 확정 수치 오차 상한 ε_s … 항목과 값은 결과 전 개발 자료로 배정") → ({seed: ε}, 정보).  fail-closed — ValueError:
+    파일 없음 · 스키마 ≠ mixer_interim_eps/1 · registered (등록 위치) 빈칸 · items (항목) 없음 · bins['3'] 없음 (다른 bin 의 값을 옮겨 쓰지 않는다) ·
+    seed ≠ 등록 holdout 셋 · 비유한 · 음수 · 불리언.  **0 으로 채우지 않는다** (등록이 명시적으로 0 을 적는 것은 받는다)."""
+    if not path:
+        raise ValueError('ε 등록 파일이 없다 (--eps) — §5 "ε_s 의 항목과 값은 결과 전 … 배정" (⬜ §10) · 빠진 ε 를 0 으로 채우지 않는다')
+    try:
+        raw = Path(path).read_bytes()
+        d = json.loads(raw)
+    except (OSError, ValueError) as e:
+        raise ValueError(f'ε 등록 파일을 읽을 수 없다 ({path}: {type(e).__name__})')
+    if not isinstance(d, dict) or d.get('schema') != INTERIM_EPS_SCHEMA:
+        raise ValueError(f'ε 등록 스키마 ≠ {INTERIM_EPS_SCHEMA}')
+    if not (isinstance(d.get('registered'), str) and d['registered'].strip()):
+        raise ValueError('ε 등록에 registered (사전등록의 등록 위치 — 결과 전 커밋) 가 없다')
+    it = d.get('items')
+    if not (isinstance(it, list) and it and all(isinstance(x, str) and x.strip() for x in it)):
+        raise ValueError('ε 등록에 items (ε_s 에 든 항목 — 판독기 반올림 · 등록된 결정론적 항) 가 없다')
+    b3 = (d.get('bins') or {}).get(str(mi.INTERIM_BIN)) if isinstance(d.get('bins'), dict) else None
+    if not isinstance(b3, dict):
+        raise ValueError(f'ε 등록에 bin {mi.INTERIM_BIN} 값이 없다 — 다른 bin (예 7) 의 ε 를 bin 3 에 옮겨 쓰지 않는다')
+    vals = mi._seed_map(b3, dd.HOLDOUT_SEEDS, f'ε(bin {mi.INTERIM_BIN})', nonneg=True)
+    return ({s_: v_ for s_, v_ in zip(dd.HOLDOUT_SEEDS, vals)},
+            dict(path=os.path.realpath(path), sha256=_sha_bytes(raw), registered=d['registered'], n_items=len(it)))
+
+
+def interim_evidence(out):
+    """이미 본 흔적 → 경로 목록 (빈 목록 = 아직 안 봤다): OUT claim · OUT 기록 · 18 런 표지."""
+    o_ = Path(out)
+    ev = [p for p in (o_ / INTERIM_DIR / INTERIM_CLAIM, o_ / INTERIM_RECORD) if p.exists()]
+    ev += [o_ / n / INTERIM_DIR / INTERIM_MARKER for n in dd.COHORTS['confirm'] if (o_ / n / INTERIM_DIR / INTERIM_MARKER).exists()]
+    return [str(p) for p in ev]
+
+
+def interim_identity(out):
+    """확인 캠페인의 동일성 → (문제, 정보).  confirm-first 가 쓴 confirm_manifest.json (스키마 · complete · 18 칸 = 등록 코호트) · 칸마다 발사 봉인
+    sha256 = manifest · 봉인 run/stage = 이름/confirm-first · in.mixer = 봉인의 sha256 (대기 · 실행 중 덱 변경 없음)."""
+    pr = []
+    mp = Path(out) / 'confirm_manifest.json'
+    try:
+        raw = mp.read_bytes()
+        man = json.loads(raw)
+    except (OSError, ValueError) as e:
+        return [f'확인 manifest 없음 · 읽기 불가 ({mp}: {type(e).__name__}) — confirm-first 의 캠페인이 아니다'], None
+    if not isinstance(man, dict) or man.get('schema') != sg.MANIFEST_SCHEMA or man.get('complete') is not True:
+        pr.append(f'확인 manifest 스키마 · complete ≠ {sg.MANIFEST_SCHEMA} · true')
+        man = man if isinstance(man, dict) else {}
+    cells = {c.get('run'): c for c in man.get('cells') or [] if isinstance(c, dict)}
+    if sorted(cells) != sorted(dd.COHORTS['confirm']):
+        pr.append(f'manifest 칸 {len(cells)} ≠ 등록 확인 코호트 18')
+    info = dict(manifest=dict(path=os.path.realpath(mp), sha256=_sha_bytes(raw)), cells={})
+    for n in dd.COHORTS['confirm']:
+        d = Path(out) / n
+        lr_sha = sg.sha_or_none(str(d / 'launch_record.json'))
+        if lr_sha is None or (cells.get(n) or {}).get('launch_record_sha256') != lr_sha:
+            pr.append(f'{n}: 발사 봉인이 manifest 와 다르다 (없거나 다시 봉인됐다)')
+        lr = sg._seal(str(d)) or {}
+        if lr.get('run') != n or lr.get('stage') != 'confirm-first':
+            pr.append(f'{n}: 발사 봉인 run/stage {lr.get("run")!r}/{lr.get("stage")!r} ≠ {n}/confirm-first')
+        deck = sg.sha_or_none(str(d / 'in.mixer'))
+        if deck is None or (lr.get('sha256') or {}).get('in.mixer') != deck:
+            pr.append(f'{n}: in.mixer ≠ 발사 봉인 (봉인 뒤 바뀌었거나 없다)')
+        info['cells'][n] = dict(launch_record_sha256=lr_sha, deck_sha256=deck)
+    return pr, info
+
+
+def interim_window_problems(run_dir, name=None, e0=False):
+    """런 하나의 중간 판정 창 사전조건 → 문제 목록 — 계획 t₀ 덤프 정확히 한 장 · (회전) bin 3 계획 격자 완전 (결손 = 아직 4 바퀴 전 · 중복 ·
+    격자 밖 없음).  파일 이름 · 계획 격자만 본다 (M 미계산) — 판독기와 같은 식 (bin_window_files) · mixer_gate_reader_diff 가 전체 판독기와 대조한다."""
+    n = name or os.path.basename(os.path.normpath(run_dir))
+    try:
+        pl = mi.deck_plan(os.path.join(run_dir, 'in.mixer'))
+        t0 = mi.planned_t0(pl)
+    except (OSError, ValueError, AttributeError) as e:
+        return [f'{n}: 덱 계획을 못 읽었다 ({type(e).__name__})']
+    pr = []
+    post = os.path.join(run_dir, 'post')
+    fr = mi.frames(post) if os.path.isdir(post) else []
+    k0 = sum(1 for st, _ in fr if st == t0)
+    if k0 != 1:
+        pr.append(f'{n}: 계획 t₀ {t0} 의 덤프가 {k0} 장 (정확히 1 장이어야 한다)')
+    if e0:
+        return pr
+    w = mi.bin_window_files(post, t0, pl['steps_per_rev'], pl['dump_every'], pl['steps_total'], (mi.INTERIM_BIN,))
+    if not w['lattice']:
+        pr.append(f'{n}: bin {mi.INTERIM_BIN} 계획 격자가 없다 (덱의 계획 바퀴 수)')
+    if w['miss']:
+        pr.append(f'{n}: 아직 4 바퀴 전 — bin {mi.INTERIM_BIN} 계획 덤프 결손 {len(w["miss"])}/{len(w["lattice"])} (§5-a "12 런이 모두 4 바퀴를 지난 때")')
+    if w['dup'] or w['off']:
+        pr.append(f'{n}: bin {mi.INTERIM_BIN} 창 입력 집합 — 중복 {w["dup"][:3]} · 격자 밖 {w["off"][:3]}')
+    return pr
+
+
+def interim_windows(out):
+    """12 회전 런 + 6 E0 의 창 사전조건 (interim_window_problems) → 문제 목록."""
+    pr = []
+    for n in dd.COHORTS['confirm']:
+        pr += interim_window_problems(os.path.join(out, n), n, e0=n.startswith('E0_'))
+    return pr
+
+
+def interim_contact(out, phase_receipt=None):
+    """18 셀 접촉 상태 (M 과 무관) — 회전 = bin 0–3 창 (계획 t₀ → bin 3 끝 · 그 bin 들의 계획 격자 전부) · E0 = 계획 t₀ (정지 벽 계약).
+    → ({이름: 요약}, {이름: 전체})."""
+    summ, full = {}, {}
+    for n in dd.COHORTS['confirm']:
+        c_ = dd.parse_cell(n)
+        rot = c_['arm'] != 'E0'
+        try:
+            w, block = contact_eval(os.path.join(out, n), n, bins=INTERIM_WINDOW_BINS if rot else None,
+                                    phase_receipt=phase_receipt if rot else None)
+            summ[n] = dict(level=c_['level'], arm=c_['arm'], status=(block.get('status') or {}).get('status'), bins=block.get('bins'),
+                           frames_sha256=(block.get('frames') or {}).get('sha256'), checker_sha256=block.get('checker_sha256'))
+            full[n] = w
+        except (SystemExit, Exception) as e:                            # noqa: BLE001 — 검사 불능 = 기술 실패 (통과가 아니다)
+            summ[n] = dict(level=c_['level'], arm=c_['arm'], status='TECH_FAIL', error=type(e).__name__)
+            full[n] = dict(error=type(e).__name__, message=str(e))
+    return summ, full
+
+
+def interim_floor(out, reg=REG):
+    """12 회전 런의 바닥 검사 (8×8×2 · S₀²/S_R² ≥ 5 · 같은 강성 · seed E0) → {이름: t0_floor 결과} — 계획 t₀ 두 장만 연다 (M(t) 와 무관)."""
+    res = {}
+    for n in _rot_cells():
+        try:
+            res[n] = mi.t0_floor(os.path.join(out, n), os.path.join(out, _e0_of(n)), reg['r_container'], n_min=reg['n_min'], axis=reg['axis'])
+        except (SystemExit, Exception) as e:                            # noqa: BLE001
+            res[n] = {'ratio': None, 'pass': False, 'error': type(e).__name__}
+    return res
+
+
+def _excl_json(path, obj, mode=0o600):
+    """O_EXCL 로 새 파일에 JSON (있으면 FileExistsError) → sha256."""
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, mode)
+    with os.fdopen(fd, 'w', encoding='utf-8') as fh:
+        json.dump(obj, fh, ensure_ascii=False, indent=1, default=str)
+        fh.write('\n')
+    os.chmod(path, mode)
+    return _sha_file(path)
+
+
+def interim_projection_problems(p):
+    """허용목록 투영 (interim_record.json) 의 모양 → 문제 목록 (빈 목록 = 통과).  최상위 · statistics.ref · soft · 요약 · 런별 입력 · 적격 표의 키가
+    **정확히** 등록 목록이어야 하고, 어디에도 결과 키 (M · rows · S0 · SR …) 가 없어야 한다 — seed 별 값 · 런별 M 이 숨을 자리가 없다."""
+    pr = []
+    if not isinstance(p, dict):
+        return ['투영이 JSON 객체가 아니다']
+    if sorted(p) != sorted(INTERIM_TOP):
+        pr.append(f'최상위 키 {sorted(set(p) ^ set(INTERIM_TOP))} ≠ 허용목록')
+    st = p.get('statistics') if isinstance(p.get('statistics'), dict) else {}
+    if sorted(st) != ['ref', 'soft']:
+        pr.append(f'statistics 키 {sorted(st)} ≠ [ref, soft]')
+    ref = st.get('ref')
+    if ref is not None and (not isinstance(ref, dict) or sorted(ref) != sorted(INTERIM_STATS_REF)):
+        pr.append(f'statistics.ref 키 ≠ 허용목록 ({sorted(set(ref or {}) ^ set(INTERIM_STATS_REF))})')
+    if isinstance(ref, dict) and (sorted(ref.get('cond') or {}) != ['all_positive', 'mid', 'se']
+                                  or any(v not in ('+', '−', '0') for v in (ref.get('signs') or {}).values())):
+        pr.append('statistics.ref cond · signs 모양')
+    so = st.get('soft')
+    if not isinstance(so, dict) or sorted(so) != sorted(INTERIM_STATS_SOFT):
+        pr.append(f'statistics.soft 키 ≠ 허용목록 ({sorted(set(so or {}) ^ set(INTERIM_STATS_SOFT))})')
+    else:
+        for k in ('d_soft', 'q'):
+            v = so.get(k)
+            if v is not None and (not isinstance(v, dict) or sorted(v) != ['mean', 'n', 'se']):
+                pr.append(f'statistics.soft.{k} 키 {sorted(v) if isinstance(v, dict) else type(v).__name__} ≠ [mean, n, se]')
+    runs = (p.get('inputs') or {}).get('runs') if isinstance(p.get('inputs'), dict) else None
+    if not isinstance(runs, dict) or sorted(runs) != sorted(_rot_cells()):
+        pr.append('inputs.runs ≠ 12 회전 런')
+    else:
+        for n, v in runs.items():
+            if not isinstance(v, dict) or sorted(v) != sorted(INTERIM_RUN_INPUT):
+                pr.append(f'inputs.runs.{n} 키 ≠ 허용목록 ({sorted(set(v or {}) ^ set(INTERIM_RUN_INPUT))})')
+    el = p.get('eligibility')
+    if not isinstance(el, dict) or sorted(el) != sorted(INTERIM_ELIG):
+        pr.append(f'eligibility 키 ≠ 허용목록 ({sorted(set(el or {}) ^ set(INTERIM_ELIG))})')
+    lk = leak_check(p) + sorted(k for k in _keys(p) if k in ('M_bin', 'M_sd', 'M_mean', 'd_ref', 'per_seed', 'd_by_seed', 'values'))
+    if lk:
+        pr.append(f'결과 키 {sorted(set(lk))}')
+    return pr
+
+
+def _run_input(identity, contact, per, n):
+    r = per.get(n) or {}
+    pv = r.get('provenance') if isinstance(r.get('provenance'), dict) else {}
+    return dict(deck_sha256=identity['cells'][n]['deck_sha256'], launch_record_sha256=identity['cells'][n]['launch_record_sha256'],
+                reader_frames=(pv.get('run') or {}).get('frames'), ref_frames=(pv.get('ref') or {}).get('frames'),
+                contact_frames_sha256=(contact.get(n) or {}).get('frames_sha256'))
+
+
+def interim_look(out, eps_path, phase_receipt=None, reg=REG):
+    """§5-a 중간 판정 한 번 → (rc, 요약 dict).  rc 0 = 봤다 (기록 · 봉인) · 3 = 사전조건 불성립 (M 미계산 · 소진 아님) · 4 = 이미 봤다."""
+    out = os.path.normpath(out)
+    vdir = Path(out) / INTERIM_DIR
+    base_log = dict(user=getpass.getuser(), host=socket.gethostname(), tool=os.path.realpath(__file__),
+                    wrapper_sha256=_sha_file(__file__), mode='interim', out=os.path.realpath(out))
+
+    def _log(entry):
+        vdir.mkdir(parents=True, exist_ok=True)
+        os.chmod(vdir, 0o700)
+        _blind_log(vdir, dict(base_log, time_utc=_now(), **entry))
+    #  ① 한 번 규칙 — 이미 본 흔적이면 아무것도 계산하지 않는다
+    ev = interim_evidence(out)
+    if ev:
+        _log(dict(event='refused-consumed', viewed='nothing (second interim look refused)', evidence=ev))
+        return RC_CONSUMED, dict(evidence=ev)
+    #  ② M-맹검 사전조건 — 못 서면 M 을 계산하지 않고 돌아간다 (소진 아님)
+    why = []
+    try:
+        eps, eps_info = load_eps(eps_path)
+    except ValueError as e:
+        eps, eps_info = None, None
+        why.append(str(e))
+    id_pr, identity = interim_identity(out)
+    why += id_pr
+    coh = dd.check_cohort(out, 'confirm')
+    if coh.get('verdict') != 'PASS':
+        why.append('덱 코호트 (confirm) ≠ PASS — ' + '; '.join(
+            [f'{n}: {v["problems"][0]}' for n, v in (coh.get('dirs') or {}).items() if v.get('problems')][:3]
+            + [f'{p_["ref"]}→{p_["new"]} {p_["verdict"]}' for p_ in coh.get('pairs') or [] if p_.get('verdict') != 'PASS'][:2]
+            + ([coh['guard']] if coh.get('guard') else [])))
+    why += interim_windows(out)
+    contact, contact_full, floor = {}, {}, {}
+    rx = None
+    if phase_receipt:
+        rx = dict(path=os.path.realpath(phase_receipt), sha256=sg.sha_or_none(phase_receipt))
+    if not why:                                                   # 접촉 · 바닥은 무거우니 앞의 조건이 선 뒤에만
+        contact, contact_full = interim_contact(out, phase_receipt)
+        floor = interim_floor(out, reg)
+        for n, v in contact.items():
+            if v['level'] != 'soft' and v['status'] != 'CONTRACT_MET':
+                why.append(f'조기 확정 불가 — {n} 접촉 {v["status"]} (ref 팔 · E0_ref 는 창 t₀ → bin 3 끝에서 CONTRACT_MET 이어야 · §6 "실패면 해당 '
+                           f'확인 주장 HOLD")')
+        for n, v in floor.items():
+            if dd.parse_cell(n)['level'] != 'soft' and not v.get('pass'):
+                why.append(f'조기 확정 불가 — {n} 바닥 검사 (8×8×2 S₀²/S_R² ≥ 5) 불합격')
+    if why:
+        pre_p, pre_sha = (_vault(vdir, 'precheck', dict(schema='mixer_interim_precheck/1', out=os.path.realpath(out), why=why,
+                                                         contact=contact, contact_full=contact_full, floor=floor, eps=eps_info, cohort=coh))
+                          if (contact or floor) else (None, None))
+        _log(dict(event='refused-precondition', viewed='refusal reasons only (M not computed · look not consumed)', why=why,
+                  precheck_file=pre_p, precheck_sha256=pre_sha))
+        return RC_REFUSED, dict(why=why)
+    #  ③ 소진 — claim (OUT) 먼저 (동시 실행은 여기서 하나만 산다) · 18 런 표지
+    vdir.mkdir(parents=True, exist_ok=True)
+    os.chmod(vdir, 0o700)
+    look = dict(time_utc=_now(), user=getpass.getuser(), host=socket.gethostname(), tool=os.path.realpath(__file__), tools=_interim_tools())
+    claim = dict(schema=INTERIM_CLAIM_SCHEMA, kind='interim', bin=mi.INTERIM_BIN, out=os.path.realpath(out), look=look,
+                 manifest=identity['manifest'], eps=eps_info, phase_receipt=rx)
+    cp = vdir / INTERIM_CLAIM
+    try:
+        claim_sha = _excl_json(cp, claim)
+    except FileExistsError:
+        _log(dict(event='refused-consumed', viewed='nothing (claim race)', evidence=[str(cp)]))
+        return RC_CONSUMED, dict(evidence=[str(cp)])
+    marker_err = []
+    for n in dd.COHORTS['confirm']:
+        md = Path(out) / n / INTERIM_DIR
+        md.mkdir(exist_ok=True)
+        os.chmod(md, 0o700)
+        try:
+            _excl_json(md / INTERIM_MARKER, dict(schema=INTERIM_CLAIM_SCHEMA, kind='interim', run=n, out=os.path.realpath(out),
+                                                 claim_sha256=claim_sha, time_utc=look['time_utc']))
+        except FileExistsError:
+            marker_err.append(n)
+    _log(dict(event='claim', viewed='nothing yet (look claimed — consumed from here)', claim=str(cp), claim_sha256=claim_sha,
+              marker_conflict=marker_err))
+    #  ④ 판독 (소진 뒤 — 어떤 실패도 기록으로 남긴다 · 중단 (Ctrl-C) 도 TECH 기록을 쓴 뒤 끝난다)
+    buf_out, buf_err = io.StringIO(), io.StringIO()
+    per, fatal = {}, None
+    seeds = tuple(dd.HOLDOUT_SEEDS)
+    rule, dref, dsoft, q = None, {}, {}, {}
+    with contextlib.redirect_stdout(buf_out), contextlib.redirect_stderr(buf_err):
+        try:
+            if marker_err:
+                raise RuntimeError(f'런 표지가 이미 있다 {marker_err} (동시 실행 · 복사) — 판독하지 않는다')
+            for n in _rot_cells():
+                try:
+                    per[n] = mi.bin_window_stats(os.path.join(out, n), os.path.join(out, _e0_of(n)), reg['r_container'], mi.INTERIM_BIN,
+                                                 cells=reg['cells'], x_cells=reg['x_cells'], n_min=reg['n_min'], axis=reg['axis'])
+                except SystemExit as e:
+                    per[n] = dict(refused=dict(kind='SystemExit', message=str(e)))
+                except Exception as e:                                  # noqa: BLE001
+                    per[n] = dict(refused=dict(kind=type(e).__name__, message=str(e), traceback=traceback.format_exc()))
+
+            def mval(n_):
+                r_ = per.get(n_) or {}
+                return r_.get('M_bin') if (not r_.get('refused') and r_.get('complete')) else None
+            for s_ in seeds:
+                a_, b_ = mval(f'LC_ref_r8_s{s_}'), mval(f'LH_ref_r8_s{s_}')
+                c_, e_ = mval(f'LC_soft_r8_s{s_}'), mval(f'LH_soft_r8_s{s_}')
+                dref[s_] = (a_ - b_) if (a_ is not None and b_ is not None) else None
+                dsoft[s_] = (c_ - e_) if (c_ is not None and e_ is not None) else None
+                q[s_] = (dsoft[s_] - dref[s_]) if (dsoft[s_] is not None and dref[s_] is not None) else None
+            if all(v is not None for v in dref.values()):
+                rule = mi.interim_rule(dref, eps, seeds)
+        except BaseException as e:                                      # noqa: BLE001 — 소진 뒤에는 무엇이 나도 TECH 기록을 남긴다
+            fatal = dict(kind=type(e).__name__, message=str(e), traceback=traceback.format_exc())
+    #  적격 (판독 뒤) — ref 팔: 창 완전 · 유한 · tech 없음 · D-2 QC
+    reasons, window, qc = [], {}, {}
+    for n in _rot_cells():
+        r_ = per.get(n) or {}
+        window[n] = bool(r_ and not r_.get('refused') and r_.get('complete') and not r_.get('tech'))
+        qc[n] = bool((r_.get('qc_repr') or {}).get('pass') is True)
+        if dd.parse_cell(n)['level'] == 'soft':
+            continue
+        if not r_ or r_.get('refused'):
+            reasons.append(f'{n}: 판독기 거부 ({(r_.get("refused") or {}).get("kind", "없음")}) — 사유는 봉인 파일')
+        elif not window[n]:
+            reasons.append(f'{n}: bin {mi.INTERIM_BIN} 창 판독 기술 실패 ({len(r_.get("tech") or [])} 건 · 봉인 파일)')
+        elif not qc[n]:
+            reasons.append(f'{n}: 부피 누락 QC (D-2) 미달 — 선택-셀 M · 조기 확정 결론 불가')
+    if fatal:
+        outcome = 'TECH'
+        reasons.append(f'기술 실패 ({fatal["kind"]}) — 봉인 파일')
+    elif reasons or rule is None:
+        outcome = 'INELIGIBLE'
+    else:
+        outcome = 'MET' if rule['met'] else 'NOT_MET'
+    #  soft 요약 (값 보고 · 판정 아님) — 세 seed 가 다 유효할 때만 · 한정어
+    soft_ok, quals = True, []
+    for s_ in seeds:
+        cells_ = (f'LC_soft_r8_s{s_}', f'LH_soft_r8_s{s_}', f'E0_soft_s{s_}')
+        if dsoft.get(s_) is None or any((contact.get(c_) or {}).get('status') in (None, 'TECH_FAIL') for c_ in cells_):
+            soft_ok = False
+        for c_ in cells_:
+            if (contact.get(c_) or {}).get('status') == 'OUT_OF_RANGE':
+                quals.append(f'{c_}: soft 진단 범위 5.8 % 초과 (OUT_OF_RANGE) — soft 수준 d 는 이 한정어와 함께')
+        for c_ in cells_[:2]:
+            if not (floor.get(c_) or {}).get('pass'):
+                quals.append(f'{c_}: 바닥 검사 (8×8×2 S₀²/S_R² ≥ 5) 불합격')
+            if window.get(c_) and not qc.get(c_):
+                quals.append(f'{c_}: 부피 누락 QC (D-2) 미달 — 선택-셀 M')
+    d_soft_sum = mi.value_summary(dsoft, seeds) if soft_ok else None
+    q_sum = mi.value_summary(q, seeds) if soft_ok else None
+    why_none = None
+    if not soft_ok:
+        why_none = ('soft 요약 없음 — 세 seed 중 soft 판독 · 접촉 (TECH_FAIL) · E0_soft 가 서지 않은 seed 가 있다 (§8-4 — 부분 요약을 만들지 않는다) · '
+                    'q 도 없음')
+    elif q_sum is None:
+        why_none = 'q 요약 없음 — d_ref 가 서지 않은 seed 가 있다 (ref 판독 적격 실패 · §8-4 "ref 팔 실패 → 그 seed 의 d_ref · q 둘 다 무효")'
+    stats = dict(ref={k: copy.deepcopy(rule[k]) for k in INTERIM_STATS_REF} if rule else None,
+                 soft=dict(d_soft=d_soft_sum, q=q_sum, qualifiers=quals, why_none=why_none,
+                           note='값 보고용 요약 (평균 · SE · n) — 판정 아님 · soft 는 원 1 % NOT_MET 이 보존되는 계약 밖 진단 (§6) · q 동등성 판정은 bin 7 에서만'))
+    vault_rec = dict(schema='mixer_interim_full/1', out=os.path.realpath(out), claim=dict(path=str(cp), sha256=claim_sha), reg=dict(reg),
+                     eps=dict(info=eps_info, values={str(k): v for k, v in (eps or {}).items()}), per_run=per,
+                     d_ref={str(k): v for k, v in dref.items()}, d_soft={str(k): v for k, v in dsoft.items()}, q={str(k): v for k, v in q.items()},
+                     rule=rule, contact=contact, contact_full=contact_full, floor=floor, cohort=coh, reader_stdout=buf_out.getvalue(),
+                     reader_stderr=buf_err.getvalue(), fatal=fatal, marker_conflict=marker_err, outcome=outcome, reasons=reasons)
+    vp, vsha = _vault(vdir, 'interim_full', vault_rec)
+    proj = dict(schema=INTERIM_SCHEMA, kind='interim', bin=mi.INTERIM_BIN, revolutions=mi.INTERIM_BIN + 1,
+                campaign=dict(out=os.path.realpath(out), manifest=identity['manifest']),
+                look=dict(look, viewed_utc=_now()), inputs=dict(eps=eps_info, phase_receipt=rx, claim=dict(path=str(cp), sha256=claim_sha),
+                                                                runs={n: _run_input(identity, contact, per, n) for n in _rot_cells()}),
+                eligibility=dict(ok=bool(outcome in ('MET', 'NOT_MET')), contact={n: v['status'] for n, v in contact.items()},
+                                 floor={n: bool(v.get('pass')) for n, v in floor.items()}, window=window, qc=qc, reasons=reasons),
+                statistics=stats, outcome=outcome, next=INTERIM_NEXT[outcome], vault=dict(file=vp, sha256=vsha),
+                blind=('§5-a 허용목록 투영 — 세 d_s 의 부호 · Δ3 · SE3 · u 항 · 충족 + d_soft · q 요약 (평균 · SE · n) 만.  seed 별 d · 런별 M · 프레임별 M · '
+                       'M(t) · 다른 bin 은 봉인 파일에만 (bin 3 밖 프레임은 읽지도 않았다) · 봉인 파일을 여는 것은 사람의 규율 (blind_log)'))
+    bad = interim_projection_problems(proj)
+    if bad:                                                        # 투영기가 스스로 허용목록을 어겼다 — 값 · 런별 입력을 비우고 TECH 로만 남긴다
+        proj = dict(proj, outcome='TECH', next=INTERIM_NEXT['TECH'],
+                    inputs=dict(eps=eps_info, phase_receipt=rx, claim=dict(path=str(cp), sha256=claim_sha),
+                                runs={n: dict.fromkeys(INTERIM_RUN_INPUT) for n in _rot_cells()}),
+                    statistics=dict(ref=None, soft=dict(d_soft=None, q=None, qualifiers=[], why_none='투영 모양 실패', note=stats['soft']['note'])),
+                    eligibility=dict(ok=False, contact={}, floor={}, window={}, qc={},
+                                     reasons=reasons + [f'투영 모양 실패 ({len(bad)} 건 — 내용은 blind_log · 기록에 옮기지 않는다)']))
+    rp = Path(out) / INTERIM_RECORD
+    body = json.dumps(proj, ensure_ascii=False, indent=1, default=str) + '\n'
+    fd = os.open(rp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o644)
+    with os.fdopen(fd, 'w', encoding='utf-8') as fh:
+        fh.write(body)
+    _log(dict(event='look', viewed='interim allow-list projection', outcome=proj['outcome'], record=str(rp), record_sha256=_sha_file(rp),
+              vault_file=vp, vault_sha256=vsha, claim_sha256=claim_sha, projected_fields=list(INTERIM_TOP), projection_problems=bad))
+    return 0, dict(record=str(rp), projection=proj)
+
+
+def interim_screen(rc, s):
+    """화면 문구 — 허용목록 투영 (rc 0) · 거부 사유 (rc 3 · M 미계산) · 흔적 (rc 4) 만."""
+    if rc == RC_CONSUMED:
+        return [f'⛔ 중간 판정은 이미 한 번 했다 — 두 번째 중간 판정은 없다 (§5-a).  흔적: {s["evidence"][:3]}  (최종은 bin 7 · §5 로 따로)']
+    if rc == RC_REFUSED:
+        return (['⛔ 중간 판정 사전조건 불성립 — M 을 계산하지 않았다 · 소진되지 않았다 (조건이 서면 다시):']
+                + [f'   ✗ {w}' for w in s['why'][:20]] + ([f'   … 외 {len(s["why"]) - 20} 건'] if len(s['why']) > 20 else []))
+    p = s['projection']
+    st = p['statistics']
+    L = [f'★ 중간 판정 (bin {p["bin"]} · {p["revolutions"]} 바퀴) — 결과 {p["outcome"]}']
+    r = st['ref']
+    if r:
+        c = r['cond']
+        L += ['   세 seed d_s 부호: ' + ' · '.join(f'{s_} {v}' for s_, v in r['signs'].items()),
+              f'   Δ3 = {r["delta3"]:.4f} · SE3 = {r["se3"]:.4f} · u_mean = {r["u_mean"]:.4g} · u_SE = {r["u_se"]:.4g}',
+              f'   조건: 모두 양수 {"✓" if c["all_positive"] else "✗"} · Δ3 − u_mean ≥ {r["mid"]} {"✓" if c["mid"] else "✗"} · '
+              f'Δ3 − u_mean ≥ {r["k_se"]:g}·(SE3 + u_SE) = {r["rhs_se"]:.4f} {"✓" if c["se"] else "✗"}']
+    else:
+        L.append('   ref 통계 없음 (판독 적격 실패 — 사유 아래)')
+    so = st['soft']
+
+    def _ms(v):
+        return f'{v["mean"]:.4f} ± {v["se"]:.4f} (n {v["n"]})' if isinstance(v, dict) else '없음'
+    L.append(f'   soft 요약 (값 보고 · 판정 아님): d_soft {_ms(so["d_soft"])} · q {_ms(so["q"])}'
+             + (f' · 한정어 {len(so["qualifiers"])} 건' if so['qualifiers'] else '') + (f' — {so["why_none"]}' if so['why_none'] else ''))
+    L += [f'   ✗ {w}' for w in p['eligibility']['reasons'][:10]]
+    L += [f'   다음: {p["next"]}', f'   기록 → {s["record"]} · 전체 결과 봉인 → {p["vault"]["file"]} (0600 · sha256 {p["vault"]["sha256"][:12]}…)']
+    return L
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description='bin 0 스모크 M-맹검 래퍼 (Codex 6 차 Q5) · 강성 축 접촉 상태 증서 (--contract)')
     ap.add_argument('run', nargs='?', help='평가 런 폴더 (예 <OUT>/LH_s32452843 · 강성 축 셀 <OUT>/LC_ref_r8_s15485863)')
@@ -435,10 +909,28 @@ def main(argv=None):
     ap.add_argument('--phase-receipt', default=None, help='(--contract · 회전 팔) 재개-위상 영수증 — 벽 회전각 근거')
     ap.add_argument('--e0-diag', default=None, metavar='OUT', help='DEV E0 다섯 (강성 축 §8-2 ②) 의 E0 진단 PASS 기록을 쓴다 (--record 필수)')
     ap.add_argument('--record', default=None, help='(--e0-diag) 기록 경로 (예 <OUT>/dev_e0_diag.json — launch_highbo.sh dev-rot 의 인자)')
+    ap.add_argument('--interim', default=None, metavar='OUT',
+                    help='확인 캠페인 OUT 의 중간 판정 **한 번** (강성 축 §5-a · bin 3 = 4 바퀴) — 허용목록 투영 → <OUT>/interim_record.json · '
+                         'rc 0 봤다 · 3 사전조건 불성립 (M 미계산 · 소진 아님) · 4 이미 봤다')
+    ap.add_argument('--eps', default=None, help='(--interim) ε 등록 JSON (mixer_interim_eps/1 · bins["3"] = holdout seed 별 ε_s · 결과 전 등록)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
         return selftest()
+    if a.interim:
+        if a.run or a.contract or a.e0_diag or a.cert or a.ref or a.record:
+            ap.error('--interim <OUT> --eps <ε 등록> [--phase-receipt R] 만 (다른 방식과 섞지 않는다)')
+        if not os.path.isdir(a.interim):
+            print(f'⛔ OUT 폴더 없음: {a.interim}')
+            return 1
+        rc, s = interim_look(a.interim, a.eps, phase_receipt=a.phase_receipt)
+        try:
+            print('\n'.join(interim_screen(rc, s)))
+        except Exception as e:                                         # noqa: BLE001 — 기록 · 봉인은 이미 썼다 (화면 문구 실패가 판정을 바꾸지 않는다)
+            print(f'⚠ 화면 문구 실패 ({type(e).__name__}) — rc {rc} · 기록 {s.get("record")} 을 연다')
+        return rc
+    if a.eps:
+        ap.error('--eps 는 --interim 과 함께만')
     if a.e0_diag:
         if not a.record or a.run or a.contract:
             ap.error('--e0-diag <OUT> --record <기록> 만 (런 · --contract 와 섞지 않는다)')
@@ -764,6 +1256,405 @@ def selftest():
                     and full_ and all(oct(p_.stat().st_mode)[-3:] == '600' for p_ in full_))
     chk('⑭ soft OUT_OF_RANGE 는 증서에 그대로 · 관문 통과 (§6 "팔은 완주 · 값 보존 · 짝 블록의 다른 팔 계속") · 전체 결과 (판독기 + 검사기) 는 0600 '
         '봉인 · 열람 기록 mode contract-cert', okx(_t14))
+
+    # ══ ⑮~㉓ 2026-09-30 — 강성 축 코드 선행조건 2 단계 piece 4: 중간 판정 한 번 (--interim · 사전등록 §5-a · bin 3 = 4 바퀴) ═══════════
+    #    ★ 반례를 먼저 옮겼다 — 옛 래퍼: --interim 없음 (argparse 거부) · 상수 · 투영 검사 없음 ⇒ ⑮~㉓ 전부 FAIL.
+    #    고정물 = 합성 확인 캠페인 (18 셀 = 등록 덱 · 캠페인 STL · 봉인 · confirm_manifest) · 검사기만 대역 (M 과 무관) · 판독기는 **진짜**.
+    #    구름: 4 모서리 × 4 x-슬랩 × 24 알 (16×16×4 칸마다 24 ≥ n_min · r 0.013138) · 앞 두 모서리 AM a 알 · 뒤 두 모서리 24 − a 알 ⇒
+    #    M(a) = (0.25 − ((a − 12)/24)²)/(0.25 − 1/144) (t₀ = 층상 a 24 · E0 = a 10).  bin 3 밖 (t₀ 제외) 은 **쓰레기** — 판독기가 열면 값이 없어진다.
+    import numpy as np
+    from mixer_gate_reader_diff import _dump as _gdump
+    SEEDS = tuple(dd.HOLDOUT_SEEDS)
+    ROT = [n_ for n_ in dd.COHORTS['confirm'] if not n_.startswith('E0_')]
+
+    def _Ma(a):
+        return (0.25 - ((a - 12) / 24.0) ** 2) / (0.25 - 1.0 / 144.0)
+
+    def _icloud(a, sparse=False):
+        P, types, rad = [], [], []
+        for j, (y, z) in enumerate([(-.008, -.008), (-.008, .008), (.008, -.008), (.008, .008)]):
+            for x in (-.003, -.001, .001, .003):
+                for k in range(24):
+                    P.append([x, y, z]); types.append(1 if k < (a if j < 2 else 24 - a) else 3); rad.append(1e-5)
+        if sparse:                                            # 가운데 칸에 큰 SE 19 알 (n_min 미만 → 버린 칸) ⇒ SE 유지 부피 < 0.9 = D-2 QC 미달
+            for k in range(19):
+                P.append([0.0, 0.0, 0.0]); types.append(3); rad.append(3e-5)
+        P = np.asarray(P)
+        n = len(P)
+        return dict(id=np.arange(1, n + 1), type=np.asarray(types), x=P[:, 0], y=P[:, 1], z=P[:, 2], radius=np.asarray(rad))
+
+    #  설계 (seed 순서 = 등록 holdout 순서) — ref: d = M(9)−M(4) · M(8)−M(5) · M(9)−M(5) > 0 ⇒ MET (ε 0) · soft: d = M(6)−M(5) · M(8)−M(5) · M(6)−M(4)
+    LC_REF, LH_REF, LC_SOFT, LH_SOFT = (9, 8, 9), (4, 5, 5), (6, 8, 6), (5, 5, 4)
+    EPS_OK = {'3': {str(s_): 0.0 for s_ in SEEDS}}
+
+    def _ifix(td_, lc_ref=LC_REF, lh_ref=LH_REF, lc_soft=LC_SOFT, lh_soft=LH_SOFT, t0_a=None, sparse=(), eps_bins=EPS_OK):
+        out_ = Path(td_) / 'OUT'
+        for n_ in dd.COHORTS['confirm']:
+            sg._fx_cell(str(out_), n_)
+            sg._fx_seal(str(out_), n_, 'confirm-first', 5)
+        cells_ = [dict(run=n_, launch_record_sha256=_sha_file(out_ / n_ / 'launch_record.json')) for n_ in dd.COHORTS['confirm']]
+        (out_ / 'confirm_manifest.json').write_text(json.dumps(dict(schema=sg.MANIFEST_SCHEMA, complete=True, cells=cells_)), encoding='utf-8')
+        A = {}
+        for i_, s_ in enumerate(SEEDS):
+            A[f'LC_ref_r8_s{s_}'], A[f'LH_ref_r8_s{s_}'] = lc_ref[i_], lh_ref[i_]
+            A[f'LC_soft_r8_s{s_}'], A[f'LH_soft_r8_s{s_}'] = lc_soft[i_], lh_soft[i_]
+        for n_, a_ in A.items():
+            post_ = out_ / n_ / 'post'
+            post_.mkdir(exist_ok=True)
+            pl = mi.deck_plan(str(out_ / n_ / 'in.mixer'))
+            t0 = mi.planned_t0(pl)
+            _gdump(post_ / f'mix_{t0}.liggghts', t0, _icloud((t0_a or {}).get(n_, 24)))
+            for b_ in range(5):
+                lat = sorted(mi.bin_window_files(str(post_), t0, pl['steps_per_rev'], pl['dump_every'], pl['steps_total'], (b_,))['lattice'])
+                for st in (lat[:1] if b_ == 4 else lat):
+                    if st == t0:
+                        continue
+                    if b_ == 3:
+                        _gdump(post_ / f'mix_{st}.liggghts', st, _icloud(a_, sparse=n_ in sparse))
+                    else:
+                        (post_ / f'mix_{st}.liggghts').write_text('쓰레기 — 중간 판정의 판독기는 이 파일을 열면 안 된다\n', encoding='utf-8')
+        for s_ in SEEDS:
+            for lv_ in ('soft', 'ref'):
+                d_ = out_ / f'E0_{lv_}_s{s_}'
+                (d_ / 'post').mkdir(exist_ok=True)
+                t0 = mi.planned_t0(mi.deck_plan(str(d_ / 'in.mixer')))
+                _gdump(d_ / 'post' / f'mix_{t0}.liggghts', t0, _icloud(10))
+        ep_ = Path(td_) / 'eps.json'
+        ep_.write_text(json.dumps(dict(schema='mixer_interim_eps/1', registered='(합성 고정물) 사전등록 §5 ε_s 표',
+                                       items=['판독기 float64 — 반올림 항 0 (합성)'], bins=eps_bins)), encoding='utf-8')
+        return out_, ep_
+
+    def _imain(argv, status=None, x_pct=None):
+        """main(argv) — 검사기만 대역 (sg._fx_fake_cw · 기본 ref CONTRACT_MET · soft CONTRACT_NOT_MET) · 화면 · rc (SystemExit 도 rc 로)."""
+        st_ = dict(status or {})
+        real_ = G['cv'].check_window
+        G['cv'].check_window = sg._fx_fake_cw(lambda n_: st_.get(n_, sg._fx_default_status(n_)), x_pct=x_pct)
+        o_, e_ = io.StringIO(), io.StringIO()
+        try:
+            with contextlib.redirect_stdout(o_), contextlib.redirect_stderr(e_):
+                try:
+                    rc_ = main(argv)
+                except SystemExit as ex_:
+                    rc_ = ex_.code if isinstance(ex_.code, int) else 2
+        finally:
+            G['cv'].check_window = real_
+        return rc_, o_.getvalue() + e_.getvalue()
+
+    def _canaries(vals):
+        """seed 별 d · 런별 M · q — 화면 · 기록에 나오면 안 되는 표기 (소수 4 자리 · repr 앞 7 자).  소수 3 자리에서 끝나는 '둥근' 값은 뺀다
+        (0.2000 · 0.0000 같은 표기는 다른 등록 수치 · u 항과 구별되지 않는다)."""
+        out_ = set()
+        for v_ in vals:
+            if abs(v_ * 1000 - round(v_ * 1000)) < 1e-6:
+                continue
+            out_ |= {f'{v_:.4f}', repr(float(v_))[:7]}
+        return out_
+
+    def _t15():
+        with tempfile.TemporaryDirectory(prefix='sb_i1_') as tmp_:
+            td_ = Path(tmp_)
+            out_, ep_ = _ifix(td_)
+            e0 = str(out_ / f'E0_ref_s{SEEDS[0]}')
+            before = json.dumps(mi.analyse(str(out_ / ROT[2]), e0, REG['r_container'], cells=REG['cells'], x_cells=REG['x_cells'],
+                                           n_min=REG['n_min'], axis=REG['axis']), sort_keys=True, default=str)
+            rc_, shown = _imain(['--interim', str(out_), '--eps', str(ep_)])
+            rec = json.loads((out_ / G['INTERIM_RECORD']).read_text(encoding='utf-8'))
+            st = rec['statistics']['ref']
+            d = [_Ma(LC_REF[i_]) - _Ma(LH_REF[i_]) for i_ in range(3)]
+            dm = sum(d) / 3
+            se = (sum((x - dm) ** 2 for x in d) / 2) ** 0.5 / 3 ** 0.5
+            ds = [_Ma(LC_SOFT[i_]) - _Ma(LH_SOFT[i_]) for i_ in range(3)]
+            q = [ds[i_] - d[i_] for i_ in range(3)]
+            per_run = [_Ma(a_) for a_ in set(LC_REF + LH_REF + LC_SOFT + LH_SOFT)]
+            canary = _canaries(d + ds + q + per_run)
+            text = (out_ / G['INTERIM_RECORD']).read_text(encoding='utf-8')
+            leaked = sorted(c_ for c_ in canary if c_ in shown or c_ in text)
+            vault = Path(rec['vault']['file'])
+            vj = json.loads(vault.read_text(encoding='utf-8'))
+            sm = rec['statistics']['soft']
+            after = json.dumps(mi.analyse(str(out_ / ROT[2]), e0, REG['r_container'], cells=REG['cells'], x_cells=REG['x_cells'],
+                                          n_min=REG['n_min'], axis=REG['axis']), sort_keys=True, default=str)
+            bund_ok = all(not mi.verify_frames(str(out_ / n_ / 'post'), rec['inputs']['runs'][n_]['reader_frames']) for n_ in ROT)
+            marks = [out_ / n_ / G['INTERIM_DIR'] / G['INTERIM_MARKER'] for n_ in dd.COHORTS['confirm']]
+            logs = [json.loads(l_) for l_ in (out_ / G['INTERIM_DIR'] / 'blind_log.jsonl').read_text(encoding='utf-8').splitlines()]
+            res = dict(rc=rc_ == 0, outcome=rec['outcome'] == 'MET' and 'MET' in shown, keys=sorted(rec) == sorted(G['INTERIM_TOP']),
+                       shape=G['interim_projection_problems'](rec) == [],
+                       stats=(abs(st['delta3'] - dm) < 1e-9 and abs(st['se3'] - se) < 1e-9 and st['signs'] == {str(s_): '+' for s_ in SEEDS}
+                              and st['met'] is True and st['u_mean'] == 0 and (st['mid'], st['k_se']) == (0.10, 3.0)),
+                       soft=(sm['d_soft'] is not None and abs(sm['d_soft']['mean'] - sum(ds) / 3) < 1e-9 and sm['q'] is not None
+                             and abs(sm['q']['mean'] - sum(q) / 3) < 1e-9 and sm['qualifiers'] == []),
+                       no_leak=not leaked, vault=(oct(vault.stat().st_mode)[-3:] == '600'
+                                                  and abs(vj['per_run'][ROT[0]]['M_bin'] - _Ma(LC_SOFT[0])) < 1e-9),
+                       frames=bund_ok and rec['inputs']['eps']['sha256'] == _sha_file(ep_),
+                       claim=(out_ / G['INTERIM_DIR'] / G['INTERIM_CLAIM']).is_file() and all(p_.is_file() for p_ in marks),
+                       log=logs[-1]['viewed'] == 'interim allow-list projection' and logs[-1]['record_sha256'] == _sha_file(out_ / G['INTERIM_RECORD']),
+                       who=bool(rec['look'].get('user')) and bool(rec['look'].get('time_utc')) and rec['look']['tools']['reader'] == _sha_file(mi.__file__),
+                       final_separate=before == after and rec['bin'] == 3 and rec['kind'] == 'interim')
+            if leaked:
+                print(f'        누설: {leaked[:6]}')
+            print('        ' + ' · '.join(f'{k_}:{"✓" if v_ else "✗"}' for k_, v_ in res.items()))
+            return all(res.values())
+    chk('⑮ ★ 중간 판정 (정상 · MET) — rc 0 · 기록 = 허용목록 정확히 (§5-a: 세 d_s 부호 · Δ3 · SE3 · u 항 · 충족 + d_soft · q 요약) · 값 = 독립 산술 · '
+        '화면 · 기록에 seed 별 d · 런별 M · q 값 없음 · 전체 결과는 0600 봉인 · 누가/언제/입력 sha256 (프레임 묶음 = 지금 폴더) · claim + 18 표지 · '
+        '최종 (bin 7) 판독 경로는 그대로 (analyse 전후 같음)', okx(_t15))
+
+    def _t16():
+        with tempfile.TemporaryDirectory(prefix='sb_i2_') as tmp_:
+            td_ = Path(tmp_)
+            out_, ep_ = _ifix(td_)
+            rc1, _s1 = _imain(['--interim', str(out_), '--eps', str(ep_)])
+            rsha = _sha_file(out_ / G['INTERIM_RECORD'])
+            vault_n = len(list((out_ / G['INTERIM_DIR']).glob('interim_full_*.json')))
+            rc2, s2 = _imain(['--interim', str(out_), '--eps', str(ep_)])
+            st = json.loads((out_ / G['INTERIM_RECORD']).read_text(encoding='utf-8'))['statistics']['ref']
+            res = dict(first=rc1 == 0, second=rc2 == G['RC_CONSUMED'] and _sha_file(out_ / G['INTERIM_RECORD']) == rsha
+                       and len(list((out_ / G['INTERIM_DIR']).glob('interim_full_*.json'))) == vault_n
+                       and f"{st['delta3']:.4f}" not in s2 and '두 번째' in s2)
+            out2 = td_ / 'OUT2'                                   # 18 런 폴더 + manifest 를 새 OUT 으로 복사 (OUT 의 claim · 기록 없이) — 표지가 따라온다
+            out2.mkdir()
+            for n_ in dd.COHORTS['confirm']:
+                shutil.copytree(out_ / n_, out2 / n_)
+            shutil.copyfile(out_ / 'confirm_manifest.json', out2 / 'confirm_manifest.json')
+            rc3, s3 = _imain(['--interim', str(out2), '--eps', str(ep_)])
+            res['copied_runs'] = rc3 == G['RC_CONSUMED'] and not (out2 / G['INTERIM_RECORD']).exists()
+            (out_ / G['INTERIM_DIR'] / G['INTERIM_CLAIM']).unlink()          # OUT 의 claim · 기록을 지워도 런 표지가 남아 거부
+            (out_ / G['INTERIM_RECORD']).unlink()
+            rc4, _s4 = _imain(['--interim', str(out_), '--eps', str(ep_)])
+            res['claim_deleted'] = rc4 == G['RC_CONSUMED']
+            print('        ' + ' · '.join(f'{k_}:{"✓" if v_ else "✗"}' for k_, v_ in res.items()))
+            return all(res.values())
+    chk('⑯ ★ 두 번째 중간 판정 거부 (§5-a "두 번째 중간 판정은 없다") — 같은 OUT 재실행 rc 4 · 새 봉인 없음 · 기록 불변 · 화면에 값 없음 / 런 폴더를 새 OUT 으로 '
+        '복사해도 · OUT 의 claim · 기록을 지워도 런 표지로 거부', okx(_t16))
+
+    def _t17():
+        with tempfile.TemporaryDirectory(prefix='sb_i3_') as tmp_:
+            td_ = Path(tmp_)
+            out_, ep_ = _ifix(td_)
+            allowed = set()
+            for n_ in ROT:
+                c_ = dd.parse_cell(n_)
+                pl = mi.deck_plan(str(out_ / n_ / 'in.mixer'))
+                t0 = mi.planned_t0(pl)
+                w_ = mi.bin_window_files(str(out_ / n_ / 'post'), t0, pl['steps_per_rev'], pl['dump_every'], pl['steps_total'], (3,))
+                allowed |= {os.path.realpath(str(out_ / n_ / 'post' / f'mix_{s_}.liggghts')) for s_ in [t0] + sorted(w_['lattice'])}
+                e0d = out_ / f'E0_{c_["level"]}_s{c_["seed"]}'
+                allowed.add(os.path.realpath(str(e0d / 'post' / f'mix_{mi.planned_t0(mi.deck_plan(str(e0d / "in.mixer")))}.liggghts')))
+            seen = []
+            rd_, vf_ = mi.read_dump, mi.validate_frame
+            mi.read_dump = lambda p_, *a_, **k_: (seen.append(os.path.realpath(p_)), rd_(p_, *a_, **k_))[1]
+            mi.validate_frame = lambda p_, *a_, **k_: (seen.append(os.path.realpath(p_)), vf_(p_, *a_, **k_))[1]
+            try:
+                rc_, _s = _imain(['--interim', str(out_), '--eps', str(ep_)])
+            finally:
+                mi.read_dump, mi.validate_frame = rd_, vf_
+            rec = json.loads((out_ / G['INTERIM_RECORD']).read_text(encoding='utf-8'))
+            extra = sorted(set(seen) - allowed)
+            if extra:
+                print(f'        허용 밖 열람: {extra[:3]}')
+            return rc_ == 0 and rec['outcome'] == 'MET' and not extra and set(seen) == allowed
+    chk('⑰ ★ 판독기가 연 파일 = 12 런의 계획 t₀ + bin 3 격자 + 같은 강성 · seed E0 계획 t₀ **정확히** (bin 0–2 · 4 는 쓰레기인데 결과 MET — 열었다면 값이 없다)',
+        okx(_t17))
+
+    def _t18():
+        with tempfile.TemporaryDirectory(prefix='sb_i4_') as tmp_:
+            td_ = Path(tmp_)
+            out_, ep_ = _ifix(td_)
+            n_ = ROT[5]
+            pl = mi.deck_plan(str(out_ / n_ / 'in.mixer'))
+            t0 = mi.planned_t0(pl)
+            last = max(mi.bin_window_files(str(out_ / n_ / 'post'), t0, pl['steps_per_rev'], pl['dump_every'], pl['steps_total'], (3,))['lattice'])
+            p_ = out_ / n_ / 'post' / f'mix_{last}.liggghts'
+            keep = p_.read_text(encoding='utf-8')
+            p_.unlink()                                           # 한 런이 아직 4 바퀴 전 (bin 3 마지막 계획 덤프 없음)
+            rc1, s1 = _imain(['--interim', str(out_), '--eps', str(ep_)])
+            res = dict(refused=rc1 == G['RC_REFUSED'] and '4 바퀴' in s1 and not (out_ / G['INTERIM_RECORD']).exists()
+                       and not (out_ / G['INTERIM_DIR'] / G['INTERIM_CLAIM']).exists()
+                       and not any((out_ / m_ / G['INTERIM_DIR'] / G['INTERIM_MARKER']).exists() for m_ in dd.COHORTS['confirm'])
+                       and 'Δ3' not in s1)
+            p_.write_text(keep, encoding='utf-8')
+            rc2, _s2 = _imain(['--interim', str(out_), '--eps', str(ep_)])
+            res['later_ok'] = rc2 == 0
+            print('        ' + ' · '.join(f'{k_}:{"✓" if v_ else "✗"}' for k_, v_ in res.items()))
+            return all(res.values())
+    chk('⑱ 12 런 중 하나가 아직 4 바퀴 전 (bin 3 결손) → rc 3 · M 미계산 · 소진 아님 (claim · 표지 · 기록 없음) — 다 지난 뒤에는 볼 수 있다', okx(_t18))
+
+    def _t19():
+        with tempfile.TemporaryDirectory(prefix='sb_i5_') as tmp_:
+            td_ = Path(tmp_)
+            out_, ep_ = _ifix(td_)
+            good = json.loads(ep_.read_text(encoding='utf-8'))
+            res = {}
+            rc0, s0 = _imain(['--interim', str(out_)])
+            res['none'] = rc0 == G['RC_REFUSED'] and 'ε' in s0
+            bad = dict(bin7_only=dict(good, bins={'7': good['bins']['3']}),
+                       missing_seed=dict(good, bins={'3': {str(SEEDS[0]): 0.0, str(SEEDS[1]): 0.0}}),
+                       negative=dict(good, bins={'3': dict(good['bins']['3'], **{str(SEEDS[2]): -0.01})}),
+                       nan=dict(good, bins={'3': dict(good['bins']['3'], **{str(SEEDS[2]): float('nan')})}),
+                       schema=dict(good, schema='x'), no_items=dict(good, items=[]), no_registered=dict(good, registered=''))
+            for k_, v_ in bad.items():
+                bp = td_ / f'eps_{k_}.json'
+                bp.write_text(json.dumps(v_), encoding='utf-8')
+                rc_, _s = _imain(['--interim', str(out_), '--eps', str(bp)])
+                res[k_] = rc_ == G['RC_REFUSED']
+            res['not_consumed'] = (not (out_ / G['INTERIM_DIR'] / G['INTERIM_CLAIM']).exists() and not (out_ / G['INTERIM_RECORD']).exists())
+            print('        ' + ' · '.join(f'{k_}:{"✓" if v_ else "✗"}' for k_, v_ in res.items()))
+            return all(res.values())
+    chk('⑲ ★ ε 등록 fail-closed (§5 "ε_s 의 항목과 값은 결과 전 … 배정" · ⬜ §10) — 없음 · bin 7 만 (옮겨 쓰지 않는다) · seed 빠짐 · 음수 · NaN · 스키마 · 항목 없음 · '
+        '등록 위치 없음 → rc 3 · 0 으로 채우지 않는다 · 소진 아님', okx(_t19))
+
+    def _t20():
+        res = {}
+        with tempfile.TemporaryDirectory(prefix='sb_i6_') as tmp_:
+            td_ = Path(tmp_)
+            out_, ep_ = _ifix(td_)
+            s0 = SEEDS[1]
+            for lab, st_ in (('ref_notmet', {f'LH_ref_r8_s{s0}': 'CONTRACT_NOT_MET'}), ('e0ref_tech', {f'E0_ref_s{s0}': 'TECH_FAIL'})):
+                rc_, s_ = _imain(['--interim', str(out_), '--eps', str(ep_)], status=st_)
+                res[lab] = (rc_ == G['RC_REFUSED'] and '조기 확정' in s_ and next(iter(st_)) in s_
+                            and not (out_ / G['INTERIM_DIR'] / G['INTERIM_CLAIM']).exists())
+        with tempfile.TemporaryDirectory(prefix='sb_i7_') as tmp_:
+            td_ = Path(tmp_)
+            out_, ep_ = _ifix(td_, t0_a={f'LC_ref_r8_s{SEEDS[2]}': 16})              # ref 런 층상 약함 — 8×8×2 비 4.0 < 5 (16×16×4 의 M 은 정의됨)
+            rc_, s_ = _imain(['--interim', str(out_), '--eps', str(ep_)])
+            res['ref_floor'] = rc_ == G['RC_REFUSED'] and '바닥' in s_ and not (out_ / G['INTERIM_DIR'] / G['INTERIM_CLAIM']).exists()
+        with tempfile.TemporaryDirectory(prefix='sb_i8_') as tmp_:
+            td_ = Path(tmp_)
+            out_, ep_ = _ifix(td_, t0_a={f'LH_soft_r8_s{SEEDS[0]}': 16})
+            rc_, s_ = _imain(['--interim', str(out_), '--eps', str(ep_)], status={f'LC_soft_r8_s{SEEDS[2]}': 'OUT_OF_RANGE'})
+            rec = json.loads((out_ / G['INTERIM_RECORD']).read_text(encoding='utf-8'))
+            ql = ' '.join(rec['statistics']['soft']['qualifiers'])
+            res['soft_pass'] = (rc_ == 0 and rec['outcome'] == 'MET' and 'OUT_OF_RANGE' in ql and f'LC_soft_r8_s{SEEDS[2]}' in ql
+                                and f'LH_soft_r8_s{SEEDS[0]}' in ql and rec['statistics']['soft']['d_soft'] is not None)
+        print('        ' + ' · '.join(f'{k_}:{"✓" if v_ else "✗"}' for k_, v_ in res.items()))
+        return all(res.values())
+    chk('⑳ ★ M-맹검 적격 (접촉 창 bin 0–3 · 바닥 8×8×2) — ref 팔 · E0_ref 가 CONTRACT_MET 아니거나 ref 바닥 미달이면 조기 확정 불가 → rc 3 · M 미계산 · 소진 아님 / '
+        'soft 의 OUT_OF_RANGE · 바닥 미달은 막지 않고 soft 요약의 한정어로 (§6 · §8-4)', okx(_t20))
+
+    def _t21():
+        with tempfile.TemporaryDirectory(prefix='sb_i9_') as tmp_:
+            td_ = Path(tmp_)
+            out_, ep_ = _ifix(td_, lc_ref=(9, 5, 9), lh_ref=(4, 6, 5))             # seed 2 = M(5) − M(6) < 0
+            rc_, s_ = _imain(['--interim', str(out_), '--eps', str(ep_)])
+            rec = json.loads((out_ / G['INTERIM_RECORD']).read_text(encoding='utf-8'))
+            st = rec['statistics']['ref']
+            rc2, _s2 = _imain(['--interim', str(out_), '--eps', str(ep_)])
+            return (rc_ == 0 and rec['outcome'] == 'NOT_MET' and st['met'] is False and st['cond']['all_positive'] is False
+                    and st['signs'][str(SEEDS[1])] == '−' and '8 바퀴' in rec['next'] and '8 바퀴' in s_ and rc2 == G['RC_CONSUMED'])
+    chk('⑳b 충족 못 함 (한 seed 음수) — rc 0 · NOT_MET · 다음 = 8 바퀴까지 · §5 최종 그대로 · 이 값은 최종과 함께 보고 · 그 뒤 두 번째 판정 거부', okx(_t21))
+
+    def _t22():
+        res = {}
+        with tempfile.TemporaryDirectory(prefix='sb_ia_') as tmp_:
+            td_ = Path(tmp_)
+            out_, ep_ = _ifix(td_)
+            n_ = f'LH_ref_r8_s{SEEDS[0]}'
+            pl = mi.deck_plan(str(out_ / n_ / 'in.mixer'))
+            t0 = mi.planned_t0(pl)
+            st3 = sorted(mi.bin_window_files(str(out_ / n_ / 'post'), t0, pl['steps_per_rev'], pl['dump_every'], pl['steps_total'], (3,))['lattice'])[4]
+            p_ = out_ / n_ / 'post' / f'mix_{st3}.liggghts'
+            p_.write_text(p_.read_text(encoding='utf-8').split('ITEM: ATOMS', 1)[1].join(['ITEM: ATOMS', '']), encoding='utf-8')   # 머리 없는 프레임
+            rc_, s_ = _imain(['--interim', str(out_), '--eps', str(ep_)])
+            rec = json.loads((out_ / G['INTERIM_RECORD']).read_text(encoding='utf-8'))
+            rc2, _s2 = _imain(['--interim', str(out_), '--eps', str(ep_)])
+            res['tech'] = (rc_ == 0 and rec['outcome'] == 'INELIGIBLE' and rec['statistics']['ref'] is None and n_ in ' '.join(rec['eligibility']['reasons'])
+                           and rc2 == G['RC_CONSUMED'] and '8 바퀴' in rec['next'])
+        with tempfile.TemporaryDirectory(prefix='sb_ib_') as tmp_:
+            td_ = Path(tmp_)
+            n_ = f'LC_ref_r8_s{SEEDS[2]}'
+            out_, ep_ = _ifix(td_, sparse=(n_,))                                   # 버린 칸에 SE 가 몰린다 → D-2 부피 누락 QC 미달
+            rc_, _s = _imain(['--interim', str(out_), '--eps', str(ep_)])
+            rec = json.loads((out_ / G['INTERIM_RECORD']).read_text(encoding='utf-8'))
+            res['qc'] = (rc_ == 0 and rec['outcome'] == 'INELIGIBLE' and rec['statistics']['ref'] is not None
+                         and rec['statistics']['ref']['met'] is True and any(n_ in r_ and 'QC' in r_ for r_ in rec['eligibility']['reasons']))
+        with tempfile.TemporaryDirectory(prefix='sb_ie_') as tmp_:
+            #  claim 뒤 중단 (Ctrl-C 같은 BaseException) — 옛 초판: 기록 없이 새어 나가 소진만 남았다 (자기 리뷰에서 찾음 · 이 반례로 먼저 재현)
+            td_ = Path(tmp_)
+            out_, ep_ = _ifix(td_)
+
+            class _Stop(BaseException):
+                pass
+            real_bw = mi.bin_window_stats
+
+            def boom(run_dir, *a_, **k_):
+                if os.path.basename(os.path.normpath(run_dir)) == ROT[3]:
+                    raise _Stop('중단 (합성)')
+                return real_bw(run_dir, *a_, **k_)
+            mi.bin_window_stats = boom
+            try:
+                try:
+                    rc_, _s = _imain(['--interim', str(out_), '--eps', str(ep_)])
+                except BaseException:                                            # noqa: BLE001
+                    rc_ = 'crash'
+            finally:
+                mi.bin_window_stats = real_bw
+            rp_ = out_ / G['INTERIM_RECORD']
+            rec = json.loads(rp_.read_text(encoding='utf-8')) if rp_.exists() else {}
+            lg = out_ / G['INTERIM_DIR'] / 'blind_log.jsonl'
+            ev_ = [json.loads(l_).get('event') for l_ in lg.read_text(encoding='utf-8').splitlines()] if lg.exists() else []
+            res['interrupt'] = (rc_ == 0 and rec.get('outcome') == 'TECH' and (rec.get('statistics') or {}).get('ref') is None
+                                and ev_[-2:] == ['claim', 'look'] and '8 바퀴' in rec.get('next', '')
+                                and _imain(['--interim', str(out_), '--eps', str(ep_)])[0] == G['RC_CONSUMED'])
+        print('        ' + ' · '.join(f'{k_}:{"✓" if v_ else "✗"}' for k_, v_ in res.items()))
+        return all(res.values())
+    chk('㉑ ★ 판독 적격 실패 (봉인 뒤) — ref 런 bin 3 프레임 형식 실패 = INELIGIBLE · 값 없음 / D-2 부피 누락 QC 미달 = INELIGIBLE (값은 보고 · 판정선 충족이어도 '
+        '조기 확정 아님) / claim 뒤 중단 (BaseException) = TECH 기록 (claim → look 로그) · 셋 다 소진 · 다음 = 8 바퀴', okx(_t22))
+
+    def _t23():
+        res = {}
+        with tempfile.TemporaryDirectory(prefix='sb_ic_') as tmp_:
+            td_ = Path(tmp_)
+            out_, ep_ = _ifix(td_)
+            mp_ = out_ / 'confirm_manifest.json'
+            keep = mp_.read_text(encoding='utf-8')
+            mp_.unlink()
+            res['no_manifest'] = _imain(['--interim', str(out_), '--eps', str(ep_)])[0] == G['RC_REFUSED']
+            mp_.write_text(keep.replace('"complete": true', '"complete": false'), encoding='utf-8')
+            res['partial'] = _imain(['--interim', str(out_), '--eps', str(ep_)])[0] == G['RC_REFUSED']
+            mp_.write_text(keep, encoding='utf-8')
+            dk = out_ / ROT[4] / 'in.mixer'
+            kd = dk.read_text(encoding='utf-8')
+            dk.write_text(kd + '# 봉인 뒤 수정\n', encoding='utf-8')
+            rc_, s_ = _imain(['--interim', str(out_), '--eps', str(ep_)])
+            res['deck'] = rc_ == G['RC_REFUSED'] and ROT[4] in s_
+            dk.write_text(kd, encoding='utf-8')
+            sg._fx_seal(str(out_), ROT[1], 'confirm-first', 5, note='다시 봉인')
+            res['reseal'] = _imain(['--interim', str(out_), '--eps', str(ep_)])[0] == G['RC_REFUSED']
+            res['not_consumed'] = not (out_ / G['INTERIM_DIR'] / G['INTERIM_CLAIM']).exists()
+        print('        ' + ' · '.join(f'{k_}:{"✓" if v_ else "✗"}' for k_, v_ in res.items()))
+        return all(res.values())
+    chk('㉒ 캠페인 동일성 (confirm manifest · 발사 봉인 · 덱) — manifest 없음 · 불완전 · 봉인 뒤 덱 수정 · 다시 봉인 → rc 3 · 소진 아님', okx(_t23))
+
+    def _t24():
+        #  투영 검사기 자체 — 허용목록 밖 키 · 결과 키 (M · rows · S0 …) · seed 별 값이 숨어 들어오면 문제로 잡는다
+        with tempfile.TemporaryDirectory(prefix='sb_id_') as tmp_:
+            td_ = Path(tmp_)
+            out_, ep_ = _ifix(td_)
+            rc_, _s = _imain(['--interim', str(out_), '--eps', str(ep_)])
+            rec = json.loads((out_ / G['INTERIM_RECORD']).read_text(encoding='utf-8'))
+            pp = G['interim_projection_problems']
+            v1 = copy.deepcopy(rec); v1['statistics']['ref']['d_by_seed'] = {str(SEEDS[0]): 0.3}
+            v2 = copy.deepcopy(rec); v2['inputs']['runs'][ROT[0]]['M_bin'] = 0.5
+            v3 = copy.deepcopy(rec); v3['extra'] = 1
+            v4 = copy.deepcopy(rec); v4['statistics']['soft']['d_soft']['per_seed'] = [0.1, 0.2, 0.3]
+            v5 = copy.deepcopy(rec); v5['eligibility']['rows'] = []
+            ok_val = rc_ == 0 and pp(rec) == [] and all(pp(v_) for v_ in (v1, v2, v3, v4, v5))
+        with tempfile.TemporaryDirectory(prefix='sb_if_') as tmp_:
+            #  투영기 자신이 허용목록을 어기면 (합성: 런별 입력에 M_bin 을 끼운다) — 값 · 런별 입력을 비운 TECH 기록만 쓴다 (새지 않는다)
+            td_ = Path(tmp_)
+            out_, ep_ = _ifix(td_)
+            real_ri = G['_run_input']
+            G['_run_input'] = lambda identity, contact, per, n: dict(real_ri(identity, contact, per, n), M_bin=(per.get(n) or {}).get('M_bin'))
+            try:
+                rc2, s2 = _imain(['--interim', str(out_), '--eps', str(ep_)])
+            finally:
+                G['_run_input'] = real_ri
+            text = (out_ / G['INTERIM_RECORD']).read_text(encoding='utf-8')
+            rec2 = json.loads(text)
+            ok_self = (rc2 == 0 and rec2['outcome'] == 'TECH' and G['interim_projection_problems'](rec2) == [] and 'M_bin' not in text
+                       and rec2['statistics']['ref'] is None and f'{_Ma(LC_REF[0]):.4f}' not in text + s2)
+        return ok_val and ok_self
+    chk('㉓ 투영 검사기 (interim_projection_problems) — 정상 기록은 문제 0 · seed 별 값 · 런별 M_bin · 허용 밖 최상위 키 · 요약 안 seed 별 목록 · 결과 키 (rows) 가 '
+        '들어오면 잡는다 / 투영기가 스스로 어기면 (런별 입력에 M_bin) 값 · 런별 입력을 비운 TECH 기록만 쓴다 (기록 자체는 검사 통과 · 새지 않는다)', okx(_t24))
     print()
     if fails:
         print(f'✗ {len(fails)} 건 실패')

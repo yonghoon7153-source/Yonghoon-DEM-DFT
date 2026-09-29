@@ -286,6 +286,195 @@ def e0_t0_stats(ref_dir, r_container, cells=8, x_cells=2, n_min=20, axis='x'):
     return rst0, rp, cell_stats(read_dump(rp), r_container, cells, x_cells, n_min, axis)
 
 
+#: 프레임 행의 보조 진단 키 (analyse 와 bin_window_stats 가 같은 목록을 쓴다)
+ROW_DIAG = ('am_vol_kept', 'se_vol_kept', 'am_n_kept', 'se_n_kept', 'nonempty', 'cell_n_median', 's2_all', 'vol_kept_by_type')
+
+# ══ 중간 판정 한 번 (2026-09-30 · 강성 축 코드 선행조건 2 단계 piece 4) ═══════════════════════════════════════════════
+#  사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §5-a (v2.5 · 결과 전 등록 — 값을 바꾸지 않는다):
+#    "보는 시점 = 한 번: 확인 회전 12 런이 모두 4 바퀴 (판독기 계획 bin 3 창) 를 지난 때 … 두 번째 중간 판정은 없다"
+#    "중간 문턱 (최종보다 엄격): E_ref 에서 bin 3 의 d_s = M(LC_ref,s) − M(LH_ref,s) 세 seed 가 모두 양수 ∧ Δ3 − u_mean ≥ 0.10 ∧
+#     Δ3 − u_mean ≥ 3·(SE3 + u_SE) (… u 항은 §5 와 같은 식).  경계 비교는 §5 의 수치 규약 (여유 1e−12)."
+#    "열람 범위: … 세 d_s 의 부호 · Δ3 · SE3 · 충족 여부 + d_soft(bin 3) · q(bin 3) 의 값 보고용 요약뿐 · M(t) 곡선 전체와 다른 bin 은 최종까지 봉인"
+#  이 모듈은 **계산만** 한다 (bin 3 창 · 판정선 · 요약).  열람 · 한 번 규칙 · 봉인 · 허용목록 투영은 scripts/mixer_smoke_blind.py --interim.
+INTERIM_BIN = 3            # "4 바퀴 (판독기 계획 bin 3 창)"
+INTERIM_MID = 0.10         # "Δ3 − u_mean ≥ 0.10"
+INTERIM_K_SE = 3.0         # "Δ3 − u_mean ≥ 3·(SE3 + u_SE)" — 최종 판정선의 2·SE 대신 3·SE
+INTERIM_TOL = 1e-12        # "경계 비교는 §5 의 수치 규약 (여유 1e−12)" — 부동소수 비교 규약 (물리 허용치 아님)
+#  바닥 검사 = 본 캠페인 결정 (b) (mixer_layered_prereg_20260921.md §4-1 · 모체 mixer_highbo_prereg_20260927.md §5-5): 거친 칸 8×8×2 · 문턱 5
+FLOOR_CELLS, FLOOR_X_CELLS, FLOOR_MIN = 8, 2, 5.0
+
+
+def bin_window_stats(run_dir, ref_dir, r_container, bin_, cells=8, x_cells=2, n_min=20, axis='x'):
+    """한 bin 의 **계획 덤프 격자만** 으로 M → dict (2026-09-30 · piece 4 · §5-a 중간 판정의 판독).
+
+    읽는 파일 = 평가 런의 계획 t₀ (S₀²) · 그 bin 의 계획 격자 프레임 · E0 기준의 계획 t₀ (S_R²) — **이것뿐**이다.  다른 bin 의 프레임은
+    열지 않는다 (§5-a "다른 bin 은 최종까지 봉인" — 계산하지 않은 값은 새지 않는다 · 셀프테스트 ㉚ 이 연 파일 집합을 고정한다).
+    M 의 식 · t₀ · S_R² 경로 · 칸 규약 · bin 식은 analyse 와 같다 (그 bin 이 완전하면 값 = analyse 의 by_rev[bin].M_mean · ㉚).
+
+    fail-closed (값 없음 = M_bin None · tech 에 사유):
+      ① 그 bin 의 계획 격자가 비었다 (계획 바퀴 수 밖)
+      ② 창 입력 집합이 판독기 규칙에 안 맞는다 — 결손 (= 아직 그 bin 을 지나지 않음) · 같은 step 중복 · 격자 밖 (bin_window_files — 관문과 같은 식)
+         ⇒ **bin 프레임 · E0 를 열지 않고** 돌아간다 (M 미계산)
+      ③ 창 프레임 형식 검사 실패 (validate_frame) — 이때도 M 을 계산하지 않는다
+      ④ 비유한 M
+    S₀² ≤ S_R² 면 analyse 와 같이 SystemExit (M 정의 불가 — §24-4).
+    반환 키: run · ref · bin · t0_step · plan · expected · n · complete · M_bin · M_sd · n_nonfinite · S0 · SR · rows · qc_repr · tech · provenance ·
+    args.  ⚠ M_bin · rows · S0 · SR 은 **결과**다 — 화면 · 증서에 내는 것은 호출자 (mixer_smoke_blind --interim) 의 허용목록 투영뿐이다."""
+    plan = deck_plan(os.path.join(run_dir, 'in.mixer'))
+    post = os.path.join(run_dir, 'post')
+    st0, p0 = _t0_exact(frames(post), plan, run_dir, '평가 런')
+    spr, de = plan['steps_per_rev'], plan['dump_every']
+    b_ = int(bin_)
+    w = bin_window_files(post, st0, spr, de, plan['steps_total'], (b_,))
+    lat = sorted(w['lattice'])
+    args = dict(cells=int(cells), x_cells=int(x_cells), n_min=int(n_min), axis=str(axis), r_container=float(r_container))
+    out = dict(run=run_dir, ref=ref_dir, bin=b_, t0_step=st0, plan=plan, expected=len(lat), n=0, complete=False, M_bin=None, M_sd=None,
+               n_nonfinite=None, S0=None, SR=None, rows=[], qc_repr=None, tech=[], provenance=None, args=args)
+    tech = out['tech']
+    if not lat:
+        n_revs = int(round(plan['steps_run'] / spr))
+        tech.append(f'bin {b_} 의 계획 덤프 격자가 비었다 (덱의 계획 {n_revs} 바퀴 = bin 0–{n_revs - 1}) — 값 없음')
+        return out
+    if w['miss'] or w['dup'] or w['off']:
+        if w['miss']:
+            tech.append(f'bin {b_} 결손 {len(w["miss"])}/{len(lat)} 프레임 (step {w["miss"][:4]}{"…" if len(w["miss"]) > 4 else ""}) — '
+                        '아직 그 bin 을 지나지 않았거나 덤프가 빠졌다')
+        if w['dup']:
+            tech.append(f'bin {b_} 에 같은 step 의 덤프가 둘 이상 (step {w["dup"][:4]}) — 어느 것이 참인지 모른다')
+        if w['off']:
+            tech.append(f'bin {b_} 에 계획 덤프 격자 밖 step {w["off"][:4]} (t₀ {st0} + k·{de})')
+        return out                                                  # ★ M 미계산 — bin 프레임 · E0 를 열지 않는다
+    bad = {}
+    for s_ in lat:
+        pr_ = validate_frame(w['cur'][s_][0])
+        if pr_:
+            bad[s_] = pr_
+    if bad:
+        tech += [f'step {s_}: 프레임 검사 (헤더 · 스키마) 실패 {pr_[:3]} — 값 없음' for s_, pr_ in sorted(bad.items())]
+        return out
+    kw = dict(cells=cells, x_cells=x_cells, n_min=n_min, axis=axis)
+    c0 = cell_stats(read_dump(p0), r_container, **kw)
+    rst0, rp, cR = e0_t0_stats(ref_dir, r_container, **kw)
+    s0, sR = c0['s2'], cR['s2']
+    if not (s0 > sR):
+        raise SystemExit(f'⛔ S₀² ({s0:.4g}) ≤ S_R² ({sR:.4g}) — 층상 시작이 아니거나 기준이 틀렸다.  '
+                         f'M 을 정의할 수 없다 (§24-4 바닥 검사 실패)')
+    rows = []
+    for s_ in lat:
+        cs = cell_stats(read_dump(w['cur'][s_][0]), r_container, **kw)
+        row = dict(step=s_, rev=(s_ - st0) / spr, s2=cs['s2'], M=(s0 - cs['s2']) / (s0 - sR), cells_used=cs['used'],
+                   cells_dropped=cs['dropped'], n=cs['n'])
+        row.update({k: cs[k] for k in ROW_DIAG})
+        rows.append(row)
+    v = [r_['M'] for r_ in rows]
+    nonfin = sum(1 for x in v if not np.isfinite(x))
+    out.update(S0=s0, SR=sR, rows=rows, n=len(rows), n_nonfinite=nonfin, qc_repr=qc_representativeness(rows),
+               provenance=provenance_block(run_dir, ref_dir, args, [(st0, p0)] + [(s_, w['cur'][s_][0]) for s_ in lat], [(rst0, rp)]))
+    if nonfin:
+        tech.append(f'bin {b_} 에 비유한 M {nonfin} 프레임 — 값 없음')
+        return out
+    out.update(complete=True, M_bin=float(np.mean(v)), M_sd=float(np.std(v, ddof=1)) if len(v) > 1 else 0.0)
+    return out
+
+
+def t0_floor(run_dir, ref_dir, r_container, cells=FLOOR_CELLS, x_cells=FLOOR_X_CELLS, n_min=20, axis='x', thr=FLOOR_MIN):
+    """바닥 검사 (본 캠페인 결정 (b) — 8×8×2 에서 S₀²/S_R² ≥ 5) → dict(ratio, pass, s0, sR, cells, x_cells, min, t0_step, ref_t0_step).
+    읽는 파일 = 평가 런의 계획 t₀ · E0 기준의 계획 t₀ **두 장** (M(t) 와 무관 — 회전 뒤 프레임을 열지 않는다).  S_R² = 0 이고 S₀² > 0 이면 비 = ∞ (통과) ·
+    비유한 · 0/0 은 불합격 (fail-closed)."""
+    plan = deck_plan(os.path.join(run_dir, 'in.mixer'))
+    st0, p0 = _t0_exact(frames(os.path.join(run_dir, 'post')), plan, run_dir, '평가 런')
+    kw = dict(cells=cells, x_cells=x_cells, n_min=n_min, axis=axis)
+    s0 = cell_stats(read_dump(p0), r_container, **kw)['s2']
+    rst0, _rp, cR = e0_t0_stats(ref_dir, r_container, **kw)
+    sR = cR['s2']
+    if np.isfinite(s0) and np.isfinite(sR) and sR > 0:
+        ratio = float(s0 / sR)
+    elif np.isfinite(s0) and s0 > 0 and sR == 0:
+        ratio = float('inf')
+    else:
+        ratio = float('nan')
+    return {'ratio': ratio, 'pass': bool(ratio == ratio and ratio >= thr), 's0': float(s0), 'sR': float(sR), 'cells': int(cells),
+            'x_cells': int(x_cells), 'min': float(thr), 't0_step': st0, 'ref_t0_step': rst0}
+
+
+def _seed_map(m, S, what, nonneg=False):
+    """{seed: 값} (키 = int 또는 십진 문자열) → 등록 seed 순서의 float 목록.  seed 집합이 다르거나 · 값이 유한 실수가 아니거나 (불리언 거부) ·
+    (nonneg) 음수면 ValueError — fail-closed (빠진 seed 를 0 으로 채우지 않는다)."""
+    import numbers
+    if not isinstance(m, dict):
+        raise ValueError(f'{what} 이 {{seed: 값}} 이 아니다 ({type(m).__name__})')
+    nm = {}
+    for k, v in m.items():
+        try:
+            ik = int(k)
+        except (TypeError, ValueError):
+            raise ValueError(f'{what} 의 seed 키 {k!r} 가 정수가 아니다')
+        if ik in nm:
+            raise ValueError(f'{what} 에 seed {ik} 가 두 번 있다')
+        nm[ik] = v
+    if sorted(nm) != sorted(S):
+        raise ValueError(f'{what} 의 seed {sorted(nm)} ≠ 등록 {sorted(S)}')
+    out = []
+    for s_ in S:
+        v = nm[s_]
+        if isinstance(v, (bool, np.bool_)) or not isinstance(v, numbers.Real) or not np.isfinite(float(v)):
+            raise ValueError(f'{what}[{s_}] = {v!r} — 유한 실수가 아니다')
+        if nonneg and float(v) < 0:
+            raise ValueError(f'{what}[{s_}] = {v!r} < 0')
+        out.append(float(v))
+    return out
+
+
+def _seeds3(seeds):
+    S = tuple(int(s_) for s_ in seeds)
+    if len(S) != 3 or len(set(S)) != 3:
+        raise ValueError(f'seed 는 등록 셋 (n = 3 · 서로 다름) 이어야 한다: {seeds!r}')
+    return S
+
+
+def interim_rule(d_ref, eps, seeds):
+    """§5-a 중간 판정선 → dict (seed 별 **값은 담지 않는다** — 부호 · Δ3 · SE3 · u 항 · 조건 · 충족만).
+
+      d_ref  {seed: d_s} — d_s = M_bin3(LC_ref, s) − M_bin3(LH_ref, s) (같은 강성 · 같은 seed 의 E0 로 정규화)
+      eps    {seed: ε_s} — 결과 전 등록된 seed 별 확정 수치 오차 상한 (bin 3 용 · §5 "판독기 반올림 · 등록된 결정론적 항만")
+      seeds  등록 holdout 세 seed (순서 = 보고 순서)
+    Δ3 = mean(d) · SE3 = sd(d, ddof 1)/√n · u_mean = mean(ε) · u_SE = √(Σε²)/√(n(n−1)) (§5 식 그대로) ·
+    충족 = 모두 양수 (**엄격** d > 0 — 0 은 양수가 아니다 · 여유를 주지 않는다) ∧ Δ3 − u_mean ≥ 0.10 − 1e−12 ∧ Δ3 − u_mean ≥ 3·(SE3 + u_SE) − 1e−12.
+    입력이 등록 seed 셋과 다르거나 비유한 · ε 음수/불리언이면 ValueError (fail-closed)."""
+    import math
+    S = _seeds3(seeds)
+    d = _seed_map(d_ref, S, 'd_ref')
+    e = _seed_map(eps, S, 'ε', nonneg=True)
+    n = len(S)
+    delta = math.fsum(d) / n
+    se = math.sqrt(math.fsum((x - delta) ** 2 for x in d) / (n - 1)) / math.sqrt(n)
+    u_mean = math.fsum(e) / n
+    u_se = math.sqrt(math.fsum(x * x for x in e)) / math.sqrt(n * (n - 1))
+    lhs = delta - u_mean
+    rhs_se = INTERIM_K_SE * (se + u_se)
+    cond = dict(all_positive=bool(all(x > 0 for x in d)), mid=bool(lhs >= INTERIM_MID - INTERIM_TOL),
+                se=bool(lhs >= rhs_se - INTERIM_TOL))
+    return dict(schema='mixer_interim_rule/1', bin=INTERIM_BIN, seeds=[str(s_) for s_ in S], n=n,
+                signs={str(s_): ('+' if x > 0 else ('−' if x < 0 else '0')) for s_, x in zip(S, d)},
+                delta3=delta, se3=se, u_mean=u_mean, u_se=u_se, lhs=lhs, mid=INTERIM_MID, k_se=INTERIM_K_SE, rhs_se=rhs_se, tol=INTERIM_TOL,
+                cond=cond, met=bool(all(cond.values())),
+                rule='세 seed d_s > 0 ∧ Δ3 − u_mean ≥ 0.10 ∧ Δ3 − u_mean ≥ 3·(SE3 + u_SE) (경계 여유 1e−12 · §5-a)')
+
+
+def value_summary(vals, seeds):
+    """seed 별 값 → dict(mean, se, n) — **세 seed 가 다 있고 유한할 때만** (아니면 None · 부분 요약을 만들지 않는다).
+    §5-a 의 d_soft(bin 3) · q(bin 3) '값 보고용 요약' 에 쓴다 (판정 아님)."""
+    import math
+    try:
+        S = _seeds3(seeds)
+        v = _seed_map(vals, S, 'value')
+    except ValueError:
+        return None
+    n = len(v)
+    mean = math.fsum(v) / n
+    return dict(mean=mean, se=math.sqrt(math.fsum((x - mean) ** 2 for x in v) / (n - 1)) / math.sqrt(n), n=n)
+
+
 def analyse(run_dir, ref_dir, r_container, cells=8, x_cells=2, n_min=20, axis='x'):
     deck = os.path.join(run_dir, 'in.mixer')
     plan = deck_plan(deck)
@@ -306,7 +495,7 @@ def analyse(run_dir, ref_dir, r_container, cells=8, x_cells=2, n_min=20, axis='x
                          f'M 을 정의할 수 없다 (§24-4 바닥 검사 실패)')
     #  민감도 (판정에 안 씀): 빈 칸만 뺀 모든 칸의 M — 버린 칸이 분리를 숨기는지 보이게
     s0a, sRa = c0['s2_all'], cR['s2_all']
-    DIAG = ('am_vol_kept', 'se_vol_kept', 'am_n_kept', 'se_n_kept', 'nonempty', 'cell_n_median', 's2_all', 'vol_kept_by_type')
+    DIAG = ROW_DIAG                                          # bin_window_stats 와 같은 목록
     #  ★ 행 (= M · SD · 평탄 · QC 에 들어가는 프레임) = **계획 덤프 격자** (t₀ + k·dump_every ≤ 덱 끝) 위 · step 당 한 장 ·
     #    스키마 검사 (measure_bed_aspect.validate_frame) 통과 (2026-09-28, Codex 3차 HBR3-05 · 06).  나머지 — 격자 밖 · 같은 step
     #    둘 이상 · 머리 없음 · 머리 step ≠ 파일명 · 소수 type · id 없음 … — 는 계산에 **넣지 않고** tech (bin 0 이면 tech_smoke 도) 에
@@ -848,6 +1037,169 @@ def _selftest():                                              # noqa: C901
             a_ = analyse(run2, ref, **_an)
             return st_ == 200 and os.path.basename(p_) == 'mix_200.liggghts' and cs_['s2'] == a_['SR'] and bin_of(3240, 200, 1000.01) == 3
         chk('㉙ e0_t0_stats = analyse 가 S_R² 를 재는 바로 그 경로 (계획 t₀ 200 · 같은 S_R²) — E0 진단 (§4-c) 이 판독기와 같은 식으로 잰다', _okm(_t29))
+
+    # ══ ㉚~㉞ 2026-09-30 — 강성 축 코드 선행조건 2 단계 piece 4: 중간 판정 한 번 (사전등록 §5-a · bin 3 = 4 바퀴) ════════════════
+    #    ★ 반례를 먼저 옮겼다 — 옛 판: bin_window_stats · t0_floor · interim_rule · value_summary 없음 (NameError) ⇒ ㉚~㉞ 전부 FAIL.
+    #    §5-a "M(t) 곡선 전체와 다른 bin 은 최종까지 봉인" ⇒ 판독기는 bin 3 의 **계획 격자** + 정규화에 필요한 계획 t₀ · E0 계획 t₀ 만 연다.
+    G_ = globals()
+
+    def _logged(fn):
+        """fn() 을 돌리며 read_dump · validate_frame 이 연 경로를 모은다 → (결과, 연 경로 집합 (realpath))."""
+        seen = []
+        rd_, vf_ = G_['read_dump'], G_['validate_frame']
+
+        def rd2(p, *a, **k):
+            seen.append(os.path.realpath(p))
+            return rd_(p, *a, **k)
+
+        def vf2(p, *a, **k):
+            seen.append(os.path.realpath(p))
+            return vf_(p, *a, **k)
+        G_['read_dump'], G_['validate_frame'] = rd2, vf2
+        try:
+            return fn(), set(seen)
+        finally:
+            G_['read_dump'], G_['validate_frame'] = rd_, vf_
+
+    def _rp(d_, s_):
+        return os.path.realpath(os.path.join(d_, 'post', f'mix_{s_}.liggghts'))
+    with tempfile.TemporaryDirectory() as td:
+        ref = _case(td, 'ref_i3', []); write_dump(os.path.join(ref, 'post', 'mix_200.liggghts'), _cloud('ref_p'))
+        #  DECK3: t₀ 200 · 간격 40 · 바퀴 1000.01 step ⇒ bin 3 = 3240 … 4200 (25 장) · 계획 bin 0–7
+        b3 = [s_ for s_ in range(200, 8201, 40) if bin_of(s_, 200, 1000.01) == 3]
+
+        def _t30():
+            run_ = _case(td, 'r_all', range(201))                          # bin 0–7 완전
+            full = analyse(run_, ref, **_an)
+            w, seen = _logged(lambda: bin_window_stats(run_, ref, bin_=3, **_an))
+            allowed = {_rp(run_, s_) for s_ in [200] + b3} | {_rp(ref, 200)}
+            ok0 = (w['complete'] and not w['tech'] and w['n'] == w['expected'] == full['lattice']['expected_by_bin'][3] == 25
+                   and abs(w['M_bin'] - full['by_rev'][3]['M_mean']) < 1e-12 and w['qc_repr']['pass'] == full['by_rev'][3]['qc']['pass']
+                   and seen == allowed and [f_[0] for f_ in w['provenance']['run']['frames']['files']] == [200] + b3
+                   and [f_[0] for f_ in w['provenance']['ref']['frames']['files']] == [200])
+            for s_ in range(240, 8201, 40):                                   # bin 3 밖 (t₀ 제외) 을 전부 쓰레기로 — 열면 값이 바뀌거나 거부된다
+                if s_ not in b3:
+                    open(os.path.join(run_, 'post', f'mix_{s_}.liggghts'), 'w').write('쓰레기 — 중간 판정은 이 파일을 열면 안 된다\n')
+            w2 = bin_window_stats(run_, ref, bin_=3, **_an)
+            return (ok0 and w2['complete'] and w2['M_bin'] == w['M_bin'] and w2['provenance']['run']['frames'] == w['provenance']['run']['frames']
+                    and len(analyse(run_, ref, **_an)['tech']) > 0)            # (대조) 전체 판독기는 쓰레기를 보고 tech 를 낸다
+        chk('㉚ ★ §5-a bin 3 창 판독 = 계획 격자 25 장 · 값 = analyse 의 bin 3 평균 (같은 식 · 1e-12) · 연 파일 = 계획 t₀ + bin 3 격자 + E0 계획 t₀ '
+            '**정확히** · 다른 bin 을 전부 쓰레기로 바꿔도 같은 값 · 같은 출처 (열지 않는다)', _okm(_t30))
+
+        def _t31():
+            run_ = _case(td, 'r_inc', range(101))                          # bin 0–3 까지만 (4200)
+            p_ = os.path.join(run_, 'post')
+            res = {}
+            w0 = bin_window_stats(run_, ref, bin_=3, **_an)
+            res['ok'] = w0['complete'] and w0['M_bin'] is not None
+            os.remove(os.path.join(p_, 'mix_4200.liggghts'))               # bin 3 마지막 계획 덤프 결손 = 아직 4 바퀴 전
+            w1, seen1 = _logged(lambda: bin_window_stats(run_, ref, bin_=3, **_an))
+            res['miss'] = (not w1['complete'] and w1['M_bin'] is None and any('결손' in t_ for t_ in w1['tech'])
+                           and seen1 <= {_rp(run_, 200)})                    # M 을 계산하지 않았다 (bin 3 · E0 를 열지 않음)
+            write_dump(os.path.join(p_, 'mix_4200.liggghts'), _cloud('mid'))
+            __import__('shutil').copyfile(os.path.join(p_, 'mix_3600.liggghts'), os.path.join(p_, 'copy_3600.liggghts'))
+            w2 = bin_window_stats(run_, ref, bin_=3, **_an)
+            res['dup'] = not w2['complete'] and w2['M_bin'] is None and any('3600' in t_ for t_ in w2['tech'])
+            os.remove(os.path.join(p_, 'copy_3600.liggghts'))
+            write_dump(os.path.join(p_, 'mix_3610.liggghts'), _cloud('mid'))
+            w3 = bin_window_stats(run_, ref, bin_=3, **_an)
+            res['off'] = not w3['complete'] and w3['M_bin'] is None and any('3610' in t_ for t_ in w3['tech'])
+            os.remove(os.path.join(p_, 'mix_3610.liggghts'))
+            _dump_raw(os.path.join(p_, 'mix_3640.liggghts'), _cloud('mid'), header=False)
+            w4 = bin_window_stats(run_, ref, bin_=3, **_an)
+            res['format'] = not w4['complete'] and w4['M_bin'] is None and any('3640' in t_ for t_ in w4['tech'])
+            write_dump(os.path.join(p_, 'mix_3640.liggghts'), _cloud('mid'))
+            w5 = bin_window_stats(run_, ref, bin_=8, **_an)                # 계획 8 바퀴 = bin 0–7 · bin 8 은 계획에 없다
+            res['beyond'] = not w5['complete'] and w5['M_bin'] is None and w5['expected'] == 0
+            run6 = _case(td, 'r_flat', range(1, 101)); write_dump(os.path.join(run6, 'post', 'mix_200.liggghts'), _cloud('ref_p'))
+            res['floor16'] = _refuses(lambda: bin_window_stats(run6, ref, bin_=3, **_an), '바닥 검사')     # S₀² ≤ S_R² (analyse ⑨ 와 같은 거부)
+            print('        ' + ' · '.join(f'{k_}:{"✓" if v_ else "✗"}' for k_, v_ in res.items()))
+            return all(res.values())
+        chk('㉛ ★ bin 3 창이 불완전 (결손 = 4 바퀴 전 · 중복 · 격자 밖 · 형식 실패 · 계획 밖 bin) 이면 값 없음 · tech — 결손이면 bin 3 · E0 프레임을 '
+            '열지도 않는다 (M 미계산) · S₀² ≤ S_R² 는 analyse 와 같이 거부', _okm(_t31))
+
+    def _flat_cloud(n_a, n_b):
+        """x 가 모두 같은 4 모서리 × 24 알 (8×8×2 에서도 칸당 24 ≥ n_min) — 앞 두 모서리 AM n_a 알 · 뒤 두 모서리 n_b 알."""
+        ys, zs, ts = [], [], []
+        for j, (y, z) in enumerate([(-.01, -.01), (-.01, .01), (.01, -.01), (.01, .01)]):
+            for k in range(24):
+                ys.append(y); zs.append(z); ts.append(1 if k < (n_a if j < 2 else n_b) else 3)
+        n = len(ys)
+        return dict(id=np.arange(1, n + 1, dtype=float), type=np.array(ts, float), mol=-np.ones(n), x=np.zeros(n),
+                    y=np.array(ys), z=np.array(zs), radius=np.full(n, 1e-5))
+    with tempfile.TemporaryDirectory() as td:
+        def _t32():
+            ref_ = _case(td, 'ref_f', []); write_dump(os.path.join(ref_, 'post', 'mix_200.liggghts'), _flat_cloud(10, 14))
+            res = {}
+            for lab, (na, nb), want_pass in (('seg', (24, 0), True), ('weak', (9, 15), False)):
+                run_ = _case(td, f'fl_{lab}', range(1, 30)); write_dump(os.path.join(run_, 'post', 'mix_200.liggghts'), _flat_cloud(na, nb))
+                fl, seen = _logged(lambda: t0_floor(run_, ref_, r_container=.02))
+                want = (cell_stats(_flat_cloud(na, nb), .02, 8, 2)['s2'] / cell_stats(_flat_cloud(10, 14), .02, 8, 2)['s2'])
+                res[lab] = (abs(fl['ratio'] - want) < 1e-12 and fl['pass'] is want_pass and (fl['cells'], fl['x_cells'], fl['min']) == (8, 2, 5.0)
+                            and seen == {_rp(run_, 200), _rp(ref_, 200)})
+            print('        ' + ' · '.join(f'{k_}:{"✓" if v_ else "✗"}' for k_, v_ in res.items()))
+            return all(res.values())
+        chk('㉜ 바닥 검사 t0_floor = 8×8×2 에서 S₀²/S_R² ≥ 5 (본 캠페인 결정 (b) 의 칸 · 문턱) — 계획 t₀ · E0 계획 t₀ 두 장만 연다 · 층상 36 통과 · 약한 층상 '
+            '2.25 불합격', _okm(_t32))
+
+    def _t33():
+        S = (15485863, 86028121, 104395301)
+        res = {}
+
+        def rule(d, e):
+            return interim_rule(dict(zip(S, d)), dict(zip(S, e)), S)
+        r = rule((0.30, 0.25, 0.35), (0.0, 0.0, 0.0))
+        se = 0.05 / 3 ** 0.5
+        res['met'] = (r['met'] is True and abs(r['delta3'] - 0.30) < 1e-12 and abs(r['se3'] - se) < 1e-12 and r['u_mean'] == 0 and r['u_se'] == 0
+                      and r['signs'] == {str(s_): '+' for s_ in S} and (r['mid'], r['k_se'], r['tol'], r['bin']) == (0.10, 3.0, 1e-12, 3))
+        r = rule((0.30, 0.25, 0.35), (0.01, 0.02, 0.02))
+        res['u'] = (abs(r['u_mean'] - 0.05 / 3) < 1e-15 and abs(r['u_se'] - 0.03 / 6 ** 0.5) < 1e-15 and abs(r['lhs'] - (0.30 - 0.05 / 3)) < 1e-12
+                    and abs(r['rhs_se'] - 3 * (se + 0.03 / 6 ** 0.5)) < 1e-12 and r['met'] is True)
+        #  Codex (7 차 HBR7-04) 의 d = .04/.14/.24 — 최종 판정선 (2·SE) 은 통과하지만 중간 (3·SE) 은 못 넘는다 = 중간이 더 엄격하다
+        r = rule((0.04, 0.14, 0.24), (0.0, 0.0, 0.0))
+        res['3se'] = (r['met'] is False and r['cond'] == dict(all_positive=True, mid=True, se=False)
+                      and r['delta3'] >= 2 * r['se3'] and r['delta3'] < 3 * r['se3'])
+        r = rule((0.60, -0.01, 0.60), (0.0, 0.0, 0.0))
+        res['neg'] = r['met'] is False and r['cond']['all_positive'] is False and r['signs'][str(S[1])] == '−' and r['cond']['mid'] is True
+        r = rule((0.0, 0.5, 0.5), (0.0, 0.0, 0.0))
+        res['zero'] = r['met'] is False and r['signs'][str(S[0])] == '0' and r['cond']['all_positive'] is False
+        r = rule((0.1, 0.2, 0.3), (0.3, 0.0, 0.0))                     # Δ − u_mean = 0.09999999999999999 (부동소수) — 등록 여유 1e−12 로 경계 안
+        res['tol'] = r['lhs'] < 0.10 and r['cond']['mid'] is True
+        bad = []
+        for d_, e_, s_ in (((0.3, 0.3, 0.3), (0.0, 0.0, 0.0), S[:2]), ((0.3, float('nan'), 0.3), (0.0, 0.0, 0.0), S),
+                           ((0.3, 0.3, 0.3), (0.0, -0.01, 0.0), S), ((0.3, 0.3, 0.3), (0.0, True, 0.0), S)):
+            try:
+                interim_rule(dict(zip(s_, d_)), dict(zip(s_, e_)), s_)
+                bad.append(False)
+            except ValueError:
+                bad.append(True)
+        try:
+            interim_rule(dict(zip(S, (0.3, 0.3, 0.3))), {S[0]: 0.0, S[1]: 0.0}, S)
+            bad.append(False)
+        except ValueError:
+            bad.append(True)
+        res['fail_closed'] = all(bad) and len(bad) == 5
+        r = rule((0.371, 0.2468, 0.3913), (0.0, 0.0, 0.0))
+        flo = [v_ for v_ in _keys_vals(r) if isinstance(v_, float)]
+        res['no_seed_values'] = not any(abs(v_ - x_) < 1e-12 for v_ in flo for x_ in (0.371, 0.2468, 0.3913))
+        sm = value_summary(dict(zip(S, (0.1, 0.2, 0.3))), S)
+        res['summary'] = (abs(sm['mean'] - 0.2) < 1e-12 and abs(sm['se'] - 0.1 / 3 ** 0.5) < 1e-12 and sm['n'] == 3
+                          and value_summary({S[0]: 0.1, S[1]: 0.2}, S) is None and value_summary(dict(zip(S, (0.1, float('inf'), 0.3))), S) is None)
+        print('        ' + ' · '.join(f'{k_}:{"✓" if v_ else "✗"}' for k_, v_ in res.items()))
+        return all(res.values())
+
+    def _keys_vals(v):
+        if isinstance(v, dict):
+            for x_ in v.values():
+                yield from _keys_vals(x_)
+        elif isinstance(v, (list, tuple)):
+            for x_ in v:
+                yield from _keys_vals(x_)
+        else:
+            yield v
+    chk('㉝ ★ §5-a 중간 판정선 — 세 seed 모두 양수 (엄격 · 0 은 양수 아님) ∧ Δ3 − u_mean ≥ 0.10 ∧ Δ3 − u_mean ≥ 3·(SE3 + u_SE) (u = §5 식 · 경계 여유 1e−12) · '
+        'Codex d .04/.14/.24 는 2·SE 는 넘고 3·SE 는 못 넘는다 · 입력 fail-closed (seed 누락 · NaN · 음수/불리언 ε) · 출력에 seed 별 d 값 없음 · 요약 = 세 seed 다 유한할 때만',
+        _okm(_t33))
 
     #  ㉕ planned_t0 — 실제 캠페인 덱 생성기 (make_mixer_deck) 로 만든 LC 8 바퀴 · E0 (`--revolutions 0`) 덱 (2026-09-28 실측값 고정).
     #     생성기를 못 불러오면 이름으로 보고하고 건너뛴다 (⑪ 과 같은 규약).
