@@ -2542,3 +2542,59 @@ seal 과 동일. 11 개 불변 파일 · Java 두 literal 역치환 · `TARGET_S
 ### 30-6. 이 절이 **바꾸지 않는** 것
 
 §25-6 · §26-8 · §27-6 · §28-6 · §29-7 전부 그대로. **30 s native 미승인·미실행** · 변경부 한정 검증 미승인·미실행 (지시서는 사용자 채택 대기 초안) · 장시간 보류 · 후보 C 미승인 · 정상 전체 gate / overall **INCOMPLETE** · 전체 수렴 미완 · 실효 정책/실제 코어 이용률 UNVERIFIED · 바깥 PowerShell 최종 rc 미포착 · OCP 외삽 금지 · TIME_CAPS 차이 원인 미확인 · 기존 failed/pending/원복 · recipient=null 유지. 두 보완의 코드 수정은 발신 PC 작업자 몫이며 이 절은 그것을 대신하지 않는다. 게이트 리뷰(`degradation-degeneracy`)와 무관하다.
+
+## 31. 정상30초 변경부 한정 검증 **수용** 수신 — N30-N1 · N30-N2 종결 · 기능 111 + 정적 2 수용 · 다음은 fresh 0→30 s 최대 1 회 **별도 사용자 승인** (2026-09-30)
+
+> **추가 기록이다. §30 을 덮어쓰지 않는다.** 이 절은 (a) 수신 검토 묶음 `COMSOL63_NORMAL30_VALIDATION_RECIPIENT_REVIEW_20260930.zip` 의 판정을 **옮겨 적고** (b) 현지 작업자에게 줄 회신(`NEXT_CODEX_REPLY_KO.md`)을 사본으로 두고 (c) `CLAUDE_UPDATE_KO.md` 에 대한 **우리 의견**을 31-5 에 둔다. 판정은 수신 검토자의 것이다. **30 s native 실행 · 실제 approval/release/runtime/token/USER_DECISION 생성 · 장시간 운전은 승인되지 않았다** (검토자 전달문: "COMSOL·동봉 시험은 실행하지 않았고, 30초 계산 자체는 아직 미승인").
+>
+> **우리 쪽 COMSOL/JVM/PowerShell 호출 0 · 동봉 코드 import/컴파일/실행 0 · 새 계산 0 · 코드/설정 변경 0.** 통합 ZIP(`0854dbd1…`, 322,912 B)과 전달 보충 ZIP(`5f5b4dfe…`, 7,597 B)은 이 저장소에 오지 않았다 — 검토 묶음의 식별 · 대조 기록과 소스 diff(`INDEPENDENT_SOURCE_DIFF.patch`)가 그 사본이다 (31-6).
+
+### 31-1. 수신 검토자가 확인·수용한 것 (사본 — 우리 검증 아님)
+
+| 층 | 내용 (`REVIEW_KO.md` · `DECISION.json`, 2026-09-30) |
+|---|---|
+| 판정 | `ACCEPT_LIMITED_VALIDATION_NATIVE30_PENDING_SEPARATE_USER_APPROVAL` · N30-N1 · N30-N2 `CLOSED_WITHIN_DECLARED_SCOPE` · `native30_approved false` · `long_run_approved false` · normal gate / overall **INCOMPLETE** · 실효 정책 UNVERIFIED · 검토자의 대상 시험 재실행 0 · COMSOL/JVM 호출 0 · 소스 수정 없음 |
+| 입력 | 통합 ZIP 322,912 B · `0854dbd1…` · PACKAGE_MANIFEST `ff7075a3…` · 102 payload + manifest · 내부 attempt02 ZIP (155,025 B · `e55bf647…` · 66 payload) · 전달 보충 ZIP 7,597 B · `5f5b4dfe…` · 5 payload — 각각 정확 집합 · 크기/SHA · CRC · 경로/대소문자/링크 통과 · 후보 CODE_MANIFEST **`6b9ae2a75a2035d0cc80359f5d83cc3ca5dc5aa744b68255d219ce8a55feb603`** (5 파일 일치) · run_id `normal30_candidate_001` |
+| 이전 준비본과의 차이 | Java · `candidate_entry.py` **바이트 동일** · 바뀐 것 = 소비자 (초기 Li 계산 · 결과 필드) · 부모 (그 필드 소비 · 최종 예산 재확인 · 새 root) · 계약 (root/파생 경로 · 초기 Li 한도) — LF/CRLF 정규화 diff 와 원시 바이트 동일성 검사를 구분 |
+| 기능 사례 | Python 47 (attempt02 결과 · 고유 ID · 실행 소스 seal · raw stdout/rc) · Java helper 8 (attempt02 · javac/JVM rc 0) · Windows PowerShell 5.1 56 (이번 단일 fixture · CASE_MAP) = **기능 사례 111 + 정적 대조 2** (helper 본문 · Java 437 시각/threshold 0/runAll lexical 1) · **논리군 17** — "113 회 실행" · "113 독립 assertion" 으로 부르지 않는다 · CASE_MAP 중복 (group, case) 0 · 재사용한 시험은 재실행 수에 넣지 않는다 |
+| 검토자 자체 대조 | 데이터 · 정적 대조 **109 항목 전부 일치** — 첫 판은 107 + 불일치 2 였고 그 둘은 검토자 감사기의 전제 오류(외부 영수증을 내부 파일로 기대 · helper CRLF/LF 비교)다. 후보 · 기능 시험 실패가 아니며 첫 판 기록(`EVIDENCE_AUDIT_FIRST_PASS.json`)을 보존했다 · 109 는 기능 사례 수에 합산하지 않는다 |
+| 보존 | 송신 측 선택 28 개 before/after 동일 · 그중 24 개는 수신 바이트와 SHA/크기로 연결 · 실행 파일 4 개 (python/javac/java/powershell) 는 식별 기록만 · MPH · 현지 전체 prefs · 전역 프로세스 상태는 검토 대상 밖 |
+
+### 31-2. N30-N1 · N30-N2 종결 — 우리가 동봉 diff 에서 읽은 것 (읽기만 · 실행 0)
+
+| id | 자리 (후보 기준) | 읽은 것 |
+|---|---|---|
+| N30-N1 | `src/diagnostic_consumer.py:183–` · `PARENT_COMMAND.ps1:105–` · `CONTRACT.json` | 소비자: 세 항 (`Li_N` · `Li_P` · `Li_electrolyte`, mol/m²) 각각 `abs(current−reference)` · 계약 한도 `initial_Li_absolute_mol_m2` 가 정확히 `1e-9` 인지 확인 (`INITIAL_LI_LIMIT`) · 결과에 `absolute_delta` · `unit mol/m^2` · `absolute_limit 1e-9` 를 남기고 상대값은 `relative_delta_reference_only` 로만 · 총량 시간 drift 상대 `1e-6` 은 별도 유지. 부모: 항마다 PASS · 단위 · 한도 · absolute 필드를 소비 (부모가 원 CSV 를 재계산하는 분석기라는 뜻은 아님 — 검토자 문장) |
+| N30-N2 | `PARENT_COMMAND.ps1:163–185` (outer finally) | `FINAL_BOUNDARY.json` 은 `observation_phase PRE_WRITE` 로 쓰고, 쓰기 · read-back · 해시 뒤 **POST_WRITE** 경과로 전체 5100 s · 전달 300 s 를 다시 확인 → 초과면 `limited=INCOMPLETE` + `FINAL_POST_WRITE_BUDGET` 오류를 최종 반환 (`observation_phase POST_WRITE`) 에 남김 · PRE_WRITE 파일을 사후 성공 기록으로 덮어쓰지 않음 |
+
+검토자 표 (PS fixture 원 기록): 5099→5100.01 s · 299→300.01 s 는 PRE_WRITE 예산 내 → POST_WRITE 초과 → INCOMPLETE · 정확 5100 s · 300 s 는 둘 다 예산 내 → 외부 수용 대기 · 본문 오류는 INCOMPLETE 유지 · writer/transcript/마지막 반환 오류는 이전 파일만으로 수용하지 않음. clock/transcript/reference 는 inert 이고 BSave 는 주입 writer 오류 외에는 실제 본문이다. **실제 native 실행의 시간 보증이 아니다** · 마지막 stdout 이후를 소급 측정하지 않는다 · `-NoExit` 부모 OS rc 는 null.
+
+### 31-3. 남은 조건 · 한계 (사본 — 새 기능 결함으로 재분류하지 않음)
+
+| 항목 | 내용 |
+|---|---|
+| **생산 시작 환경** | 이번 PS 56 개는 PSHOME Utility 모듈 manifest 를 **명시적으로 Import-Module** 한 fixture 에서 통과했다. 생산 부모에는 그 import 가 없다 → **fixture 성공 ≠ 생산 부모 startup 성공.** attempt02 의 `Get-FileHash` 미인식 stderr 는 보존 · 자동 로딩 실패의 근본 원인 미확정. 현 부모는 첫 BHash 를 native 위임보다 먼저 한다 → 고정 코드 그대로면 모듈/해시 오류는 compile/batch **이전 중지** (대체 해시 · 다른 셸 · 권한/정책 변경 · 자동 재시도 금지). 명시 import 를 넣으려면 **추가 운영 명령 변경**으로 정확 명령 · 출처 · 오류 중단을 제시해 그 범위만 따로 승인받는다 (현 코드가 틀렸다고 단정하지 않음) |
+| 전달 시간 기록 | 통합 전달 영수증 237.264968 s 는 START→성공 closeout 의 ZIP 검증 뒤 영수증 객체 구성 시점 snapshot · 포장 1.0886146000120789 s 는 성공한 closeout 호출 안의 시점 (앞선 포장 실패 구간 불포함) → **ZIP 무결성 · 성공 반환 (전사된 rc 0 — c0126c 후속 전사, 원시 OS 감사 아님) 은 수용, 전 전달 lifecycle 끝까지의 정밀 예산 준수는 독립 확인 아님** (`exact_full_delivery_postwrite_budget: UNVERIFIED_BOUNDARY_LIMITATION_NOT_FUNCTIONAL_TEST_FAILURE`) · 재시험 · 재포장 사유 아님 · 원 영수증 recipient=null 그대로 |
+
+### 31-4. 다음 작업 범위 (사본 — `NEXT_CODEX_REPLY_KO.md`; 사용자가 채택해 현지 작업자에게 줄 회신 · **실행 승인 아님**)
+
+| 항목 | 내용 |
+|---|---|
+| 반복 금지 | 같은 개괄 계획 · 전체 111 시험 · 옛 389/67/78 suite · 1198 재시험 · C2 check-only 진단을 반복하지 않는다 · 한 장의 사용자 승인 요청을 만든 뒤 **명시 승인 전 정지** |
+| 승인 요청에 확정할 것 | ① manifest `6b9ae2a7…` · run_id · 원 source `outputs/normal30_limited_validation_R1_20260928/` 고정 (snapshot 실행 · 경로 변경 · 봉인 코드 수정 금지) ② COMMAND_MAP 의 부모/execute/analyze/native argv · cwd · 예정 approval/release/USER_DECISION 경로 · 존재 충돌 중단 조건 (원 CODE_MANIFEST · CONTRACT 의 false 플래그 수정 금지 · 실제 승인 파일은 사용자 승인 뒤 허용 경로에만) ③ **PS 5.1 NoProfile 생산 시작 경로의 모듈 자동 로딩은 미확인** — 첫 BHash 오류 = compile/batch 이전 중지 · 재시도 0 을 승인문에 명시 ④ 현재 기본 prefs 정확 크기/SHA · 승인할 security 값 · 1198 정책 무변경 경로와의 연결을 **읽기 전용** 확인 (다르면 차이만 보고하고 정지 · All files 변경 · 관리자 · registry/ACL 변경은 범위 밖 · 실효 정책 UNVERIFIED 유지) ⑤ fresh t=0→30 s · 정상 threshold 0 · 기존 OCP/표면 보호식 · physical 300 · particle 320/320 · 0.1C · sigma 1e-20 · 요청 437 시각 (실제 상태 수 고정 아님) · compile/batch/solve 각 최대 1 · 추가 control 0 · retry 0 · 저장 MPH restart 아님 ⑥ 요청 16 코어 · 디스크 20 GiB · RAM 관측 · 사전/입력 180 s · compile+batch 3600 s · 소유 정리 합계 120 s · 분석 900 s · 로컬 증거 300 s · 부모 전체 5100 s 를 정확 명령과 묶어 요청 (임의 RAM 문턱/새 감시기 금지 · fresh 두 입력은 승인된 같은 Python 프로세스에서 사용자가 직접 · 대리 입력 금지) ⑦ PRE_WRITE boundary 뿐 아니라 POST_WRITE 최종 반환 · 자식 rc · 프롬프트 복귀 수집 (부모 OS rc null · 마지막 반환 실패/누락 · 예산 초과를 이전 PASS 로 덮지 않음 · 보호중단/오류 ≠ 정상 30 s 완료) |
+| 승인 뒤 한 번 | 실제 종료 시각/guard · 전압 · 농도 · 표면/평균 분율 · Li · 0–5 s 기준 비교와 5 s 이후 경향 · 수치/보존/정리/정책/자원/예산을 분리해 전달하고 멈춤 → 30 s 결과를 독립 수용한 뒤에만 다음 진단 시간 · 출력량 · 자원 한도를 제안 (12 h · CDC · 휴지 · sweep · 후보 C 로 자동 이행 없음 · B020 분석 · 1198 한정 수용은 다시 열지 않음) |
+
+### 31-5. 우리 의견 (실행 승인 아님)
+
+1. 두 보완은 §30-4 1 에서 적은 범위 ("결과에 붙는 라벨이 선언한 기준대로 계산되는가") 안에서 닫혔다 — 초기 Li 는 서로 다른 두 양이 **다른 필드 · 다른 단위**로 갈렸고 (`absolute_delta` mol/m² ↔ 총량 drift 상대), 예산은 마지막 관측 시점 (POST_WRITE) 에서 다시 잰다. 물리 모델 · 437 시각 · threshold · 수치 설정은 그대로다 (Java · `candidate_entry.py` 바이트 동일 — 검토자 대조). 전체 재시험을 다시 요구하지 않는다는 판단에 동의한다.
+2. 남은 **생산 PowerShell 시작 조건**을 결함이 아니라 **승인문에 적을 조건**으로 둔 검토자 분류에 동의한다. 하나를 덧붙인다 — 명시 모듈 import 를 넣는 "추가 운영 명령 변경" 을 택하면 그 변경은 봉인 manifest `6b9ae2a7…` **밖**이므로, 승인문에 변경 전후 명령 문자열과 그 SHA 를 따로 적고, 30 s 결과 보고에서도 어느 명령으로 돌았는지를 분리해 적어야 한다 (manifest 동일성이 실행 명령 동일성을 보증하지 않는다).
+3. 30 s 결과를 볼 때의 판단 재료는 §30-4 3 의 다섯 (ce_min 추세와 guard 여유 · 총 Li drift 누적 모양 · 전압 분해 잔차/체제 변화 · 물리시간 대비 비용 증가율 · 최종 목적과의 간격) 그대로다 — 기술통계로 보고하고 연장 길이는 사용자가 고른다. 이번 묶음은 그 목록을 바꾸지 않는다.
+4. 승인은 사용자 몫이다. 이 절 · 검토 묶음 · 회신문 어느 것도 실행 승인이 아니다 (B020 규칙 — 사용자 명시 승인 전 COMSOL/JVM/Java · 기존 launcher 실행 · 승인 JSON true 변경 금지).
+
+### 31-6. 저장소 보존 (우리 실측 — 바이트 대조)
+
+`COMSOL63_NORMAL30_VALIDATION_RECIPIENT_REVIEW_20260930.zip` (31,118 B · SHA-256 `fb8c09fa79a6f965c070ef3abb94df63716d5adacc5bcdc125b25c7f4f514363` · `REVIEW_MANIFEST.json` `15061dc1e4ee5fc743ccca62d4ee44f313c26db6dfc1f2d8b60a269bd803ac50` · 16 파일 + manifest) 을 `reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/` 에 §30-5 와 같은 방식으로 두었다 (`-text` 규칙과 풀기를 한 커밋 `13558bd24` 에 — 규칙을 먼저 썼다 · CRLF 가 든 파일 6 개). 자체 대조: manifest 16/16 일치 · 불일치 0 · manifest 밖 파일 0 · 커밋 뒤 `git show HEAD:<path>` 바이트 16/16 재대조. 검토자 스크립트 (`audit_*.py` · `package_review.py`) 는 **실행·import 하지 않았다.** 통합 ZIP · 보충 ZIP 원본은 받지 않았다 (식별만 — 31-1).
+
+### 31-7. 이 절이 **바꾸지 않는** 것
+
+§25-6 · §26-8 · §27-6 · §28-6 · §29-7 · §30-6 전부 그대로. **30 s native 미승인 · 미실행** · 실제 approval/release/runtime/token/USER_DECISION 미생성 · 장시간 보류 · 후보 C 미승인 · 정상 전체 gate / overall **INCOMPLETE** · 전체 수렴 미완 · 실효 정책/실제 코어 이용률 UNVERIFIED · 생산 PowerShell startup 성공 미확인 · 바깥 PowerShell 최종 rc 미포착 · OCP 외삽 금지 · TIME_CAPS 차이 원인 미확인 · 기존 failed/pending/원복 · recipient=null 유지. B020 저장해 회수 · 0–5 s 시각화/전압 분해 · 1198 보호 발동의 한정 수용 유지. 게이트 리뷰(`degradation-degeneracy`)와 무관하다.
