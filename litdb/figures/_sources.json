@@ -452,6 +452,13 @@
    "db3b4ca3-am4c23103_si_001.pdf"
   ]
  },
+ "gan2026_defective_carbon_orr_selectivity_review": {
+  "figures": 8,
+  "generated": "2026-09-29",
+  "pdfs": [
+   "0929-1. ChemComm_2026_Gan_defective_carbon_ORR_2e4e_selectivity_review_MAIN.pdf"
+  ]
+ },
  "gao2026_sib_electrolyte_ai_review": {
   "figures": 21,
   "generated": "2026-09-27",
@@ -1996,7 +2003,7 @@
   ]
  },
  "wang2015_graphite_cleavage_energy": {
-  "figures": 9,
+  "figures": 10,
   "generated": "2026-09-28",
   "pdfs": [
    "Wang 2015 - Measurement of the cleavage energy of graphite (Nat Commun 6 7853).pdf",

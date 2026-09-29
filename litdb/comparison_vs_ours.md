@@ -176,6 +176,7 @@
 | **[Giov08]** ⚙ **점착 트랙 P1-b Ag\|흑연 — "약결합군" 분류·계면 쌍극자의 원전 (2026-09-23)** · ⛔⛔ **LSDA 단독(vdW 없음) 결합에너지 — 우리 PBE+D3(BJ) W 와 같은 줄 금지 · A–D 물성 4축 진입 금지** · ⚠ 계 = 그래핀 1장(흑연 아님) | G. Giovannetti/P. A. Khomyakov/G. Brocks/V. M. Karpan/J. van den Brink/**P. J. Kelly** (Leiden · Twente · Nijmegen) 2008 ***Phys. Rev. Lett.* 101, 026803** (본문 4 pp, SI 없음) — "Doping Graphene with Metal Contacts" | ✅ `papers/giovannetti2008_doping_graphene_metal_contacts.md` — 판정은 **§E** + `comparison_vs_ours_DEM.md` **§I-5** | DFT (VASP-PAW LSDA · 400 eV · 금속 6층 + 그래핀 · 쌍극자 보정 · 36×36/24×24 k) + 해석 모형 |
 | **[Wang15CE]** ⭐⭐⭐ **점착 트랙 흑연 층간(C\|C) 대조의 실험 앵커 (2026-09-28)** · ⛔⛔ **흑연 물성 → A–D 물성 4축 진입 금지 · 우리 흑연 값 0 건** · ⚠ **0.37(비정합·직접 측정) ≠ 0.39(AB·측정+이론)** · 🔴 **EE 0.46 인용 보류** | **Wen Wang**/S. Dai/X. Li/J. Yang/**D. J. Srolovitz\***/**Q. Zheng\*** (Tsinghua + UPenn) 2015 ***Nat. Commun.* 6, 7853** (DOI 10.1038/ncomms8853 · arXiv:1506.00536 · OA CC BY 4.0) — "Measurement of the cleavage energy of graphite" | ✅ `papers/wang2015_graphite_cleavage_energy.md` (2026-09-28, 그림 **6/6 실독**) — 판정은 **§J-50** | 실험 (자기수축 전단력 · HOPG 메사 · 대기) + 이론 (APNGB · GSFE 입력 = ACFDT-RPA 이중층 그래핀 · 계산 설정 0) |
 | **[Pust25]** ⭐⭐ **W_ad SE 종결의 원자 모형 원전 · LPSCl 표면/파괴에너지 DFT 앵커** · ⛔ **0.20 J/m² 를 "벽개 에너지"·"γ" 로 단독 인용 금지** · ⛔ **`Table 5` G 3.4 GPa 인용 금지** | **Gregory Pustorino**/H. Jagad/W. Li/M. Feng/M. Poma/J. Ko(SK On)/P. Johari/**Yue Qi\*** (Brown) 2025 ***Chem. Mater.* 37, 313–321** (DOI 10.1021/acs.chemmater.4c02577) | `papers/pustorino2025_lpscl_bulk_surface_mechanical_electronic_li_filament.md` ✅ 2026-09-23 | DFT (VASP-PBE, vdW 없음, 정적) |
+| **[Gan26ORR]** 🔧 **결함 탄소 ORR(2e⁻/4e⁻) 리뷰 · ⛔ 자체 계산 0 · 자체 실험 0 · 황화물 0회 · 전위 vs RHE(수계) → A–D 물성 4축에 행을 만들지 않는다 (방법 원전 §J-51 · §K-14 만)** | **Chao Gan**/**Qi Yang\***/H. Zhang/**Zhichang Xiao\*** (Civil Aviation Univ. of China · Hebei Agricultural Univ.) 2026 ***Chem. Commun.* Accepted Manuscript** (2026-09-26 온라인 · DOI n/a — PDF 에 없음 · refs 87 · 그림 6 · 표 2 · SI 없음) — "**Unraveling the Catalytic Mechanisms of Defective Carbons for Selective 2e⁻/4e⁻ Oxygen Reduction: From Intrinsic Defects to Synergies with Heteroatoms and Single-Metal Atoms**". 🔑 계산 조건 0 줄 · "최적 ΔG\*OOH" 4.22 / 3.52 eV 두 규약 혼재(차 0.70 eV) · 스핀 규약 0 · `Fig. 3a` I_D/I_G 가 본문 결함 순서와 대체로 반대 | ✅ `papers/gan2026_defective_carbon_orr_selectivity_review.md` (2026-09-29 · 그림 6/6 실독) — **§J-51** | 리뷰 (전량 2차 인용 · 방법 원전) |
 
 ---
 
@@ -6187,6 +6188,29 @@ A–D 4축 행 금지. 아래는 **판정**과 **우리 위치**뿐이다.
 
 **상호참조**: §J-43 [Maurer15MBD] · 계획 §흑연 대조 · DEM 쪽 점착 트랙 서술 `comparison_vs_ours_DEM.md` §I (이 편은 아직 안 올라가 있다).
 
+### J-51. 🔧 **방법 원전 — [Gan26ORR] 결함 탄소 ORR(2e⁻/4e⁻) 리뷰: 계산 조건 0 줄 · 서술자 수치는 전량 2차 소환 · 가져올 것은 "보고 규약" 교훈** (2026-09-29 신설)
+
+📎 **출처: `papers/gan2026_defective_carbon_orr_selectivity_review.md`** (그림 6/6 실독 · `Fig. 3c` 2× 확대 · 표 2장 손 재크롭 · 수치는 PDF 텍스트: §2.1 "≈ 4.22 eV" · §3.1.1 "3.56 eV (… thermodynamic optimum of 3.52 eV)" · §3.3.1 "4.28 eV" · "3.46 eV … 3.52 eV" · §5.2 Zhao & Liu 요약)
+
+⛔ **A–D 물성 4축 표에 행을 만들지 않는다** — 겹치는 물성값 0 건. 전위가 전부 **vs RHE(수계)** 라 우리 ESW(vs Li⁺/Li)와 **같은 표 금지**.
+⛔ ΔG\*OOH · d/p-band center · 이론 과전압 · Bader 값을 우리 값 옆에 놓지 않는다 — 계산 조건이 원전 어디에서도 옮겨지지 않았다.
+
+| 우리 쪽 | [Gan26ORR] 쪽 | 판정 |
+|---|---|---|
+| §K C3 — CHE ΔG_H\* (`kb/projects/zn_alzib_dft_md_contribution_2026_09_03.md` §C3) | CHE 서술자 ΔG\*OOH/\*O/\*OH · §5.2 의 한계: 정적 구조 · 고정 전하 · 암시적 용매 · 속도론 없음 → 정전위 · 명시적 용매 AIMD · 미시속도론 (ref 80 Zhao & Liu 2021 *JACS* 143, 9423 의 요약) | ⭕ **같은 틀 · 같은 한계 목록** — C3 "못 하는 것" 의 외부 목소리 하나 추가 (⚠ 원전 미확보 → 원고에는 원전을 직접) |
+| 보고량 규율 (CLAUDE.md · `db/properties/sdcp_neutral_closed_2026_08_28.json`) | 결함 탄소(지그재그 가장자리 · 공공 = 국소 자기모멘트) + 라디칼 중간체 · "spin density" 기전어 4회 · 스핀 계산 규약 0회 | 🟡 **규율의 분야 규모 적용 사례** — 상태 선택 규칙 없는 스칼라 |
+| p-band center (`papers/liu2024_pband_center_sbo_dual_interface.md` · §D) | 탄소 p-band center S-pC −4.37 · P/S-pC −4.07 · P-pC −3.74 · pC −3.71 eV (`Fig. 3f` 그림 인쇄값 · 기준 미기재) | 🟡 이름만 같은 서술자 · ⛔ 수치 비교 금지 |
+| LOBSTER ICOHP · Bader (우리 도구) | Co–O ICOHP (ref 62) · Fe 1.15 vs 1.07 e (ref 61) | 도구만 같다 · ⛔ 수치 비교 금지 |
+| 도핑 슈퍼셀 농도 (Nd/O 치환 등) | HDPC 5각 간격 1.2 → 0.5 nm 에서 이론 과전압 0.46 → 0.42 V (ref 9) | 🟡 반면교사 — 주기 셀에서 "거리" 를 줄이면 농도·셀이 같이 바뀐다 |
+
+**J-51-a. 기준 규약 — 0.70 eV 가 통째로 날아가는 자리.** "최적 ΔG\*OOH" 가 §2.1 에서 **≈ 4.22 eV**, §3 에서 **3.52 eV** 다. 차 0.70 eV = O₂/H₂O₂ 평형전위이고, 3.52 는 CHE 2e⁻ 식 U_L = min(4.92 − ΔG\*OOH, ΔG\*OOH − 3.52) 의 H₂O₂ 선 상수(= 2 × 1.76 eV)다 (교과서 배경 · 우리 추론 — 리뷰는 규약을 안 밝힌다). 인용 사례도 각자 규약을 따른다: Ni–N₃O₂ 4.28 (4.22 규약으로 보임) · PED-CF 3.56 · NOS14 3.52 · Fe–O₄ 3.46 (3.52 규약). 네 값 모두 제 최적 ±0.06 eV 안 → "누가 더 최적에 가깝다" 순위는 의미가 없다. ⇒ **우리가 CHE 값을 쓰면 기준 상태(½H₂ · U vs RHE · ZPE/TS 포함 여부)와 적용 전위를 값 옆에 적는다.**
+
+**J-51-b. I_D/I_G 비단조.** `Fig. 3a`(ref 18): 본문의 결함 순서(oxo-G < oxo-G/H₂O₂ < GO < GO/H₂O₂)는 Γ_2D(≈ 80 → ≈ 350 cm⁻¹)와 맞고 I_D/I_G(≈ 3 → ≈ 1.0)와는 대체로 반대다 (figure-read). 리뷰는 다른 곳(CNC-700 2.29 · KB@pPNT 0.94 · CNT-D-O-Fe 1.045)에서 I_D/I_G 를 단조 지표로 쓴다. ⇒ 점착 트랙 탄소(Ag–C 인터레이어 · VGCF)의 Raman 을 인용할 때 단계 판정 없이 I_D/I_G 를 결함량으로 읽지 않는다.
+
+**J-51-c. 장벽 규칙 적용 (`D-2026-09-27-barrier-hop-count`).** 활성화 장벽 0.31 eV (\*OOH → H₂O₂, ref 62) → 🔢 ν₀ 10¹³ s⁻¹ 가정 · 298 K: Γ ≈ 5.7×10⁷ s⁻¹ · 평균 대기 ≈ 1.8×10⁻⁸ s (`tools/sei/collect_neb.py::hop_check`). refs 59 · 61 의 "thermodynamic barrier"(0.57 → 0.39 eV @ 1.23 V · 0.345 eV)는 ΔG 계단이라 검산 대상 아니다. ref 46 의 "theoretical reaction barrier 0.56 eV" 는 어느 쪽인지 불명. 리뷰의 측정 TOF(0.0065–5.01 s⁻¹)를 같은 가정으로 뒤집으면 유효 장벽 ≈ 0.73–0.90 eV (우리 산수 · 같은 계가 아니라 모순 판정은 안 한다).
+
+**상호참조**: §K-14 · §D (산화 onset ≈ 음이온 p-band) · `papers/liu2024_pband_center_sbo_dual_interface.md` · 보고량 카드 `kb/templates/estimand_card.md`.
+
 ---
 
 ## K. 🧪 **수계 Zn 축 (신규, 2026-09-03)** — ⛔ 물성 4축과 *수치로* 섞지 않는다
@@ -6457,6 +6481,17 @@ code · 범함수 · vdW · 유사퍼텐셜 · k-mesh · cutoff · 슬랩두께/
 | C1 · C2 · C3 · C4 · C6 | 겹침 **0** (음극·HER·갈바닉·배향 데이터 없음) |
 
 ⛔ 이 논문의 용량·CE·Rd·자가방전 값을 §K-1(덱) · §K-5([Zhu26Zn]) · §K-10([Wu26Zn]) 값과 **같은 표에 놓지 않는다** — 전극(황 양극 vs Zn 음극) · 전해질 · 측정량이 전부 다르다.
+
+### K-14. 🔧 **C3(CHE ΔG_H\*) 상호참조 — [Gan26ORR]** (2026-09-29, 논문 에이전트) — ⚠ Zn 음극 축이 아니다 · 방법만
+
+> `papers/gan2026_defective_carbon_orr_selectivity_review.md` — 결함 탄소 ORR(2e⁻/4e⁻) 리뷰. §4.1 이 아연–공기 전지를 다루지만 **공기극(ORR 촉매)** 쪽이고 Zn 음극 · Cu 집전체 · HER · calendar 는 **0건**. 방법 감사 전문은 **§J-51**.
+
+| 우리 후보 | [Gan26ORR] 와의 관계 |
+|---|---|
+| **C3 (HER ΔG_H\*)** | ⭕ **같은 CHE 틀** — 리뷰 §5.2 가 꼽는 정적 CHE 의 한계(정적 구조 · 고정 전하 · 암시적 용매 · 속도론 없음 → 정전위 · 명시적 용매 AIMD · 미시속도론, ref 80 요약)가 우리 C3 카드의 "못 하는 것" 과 같은 목록이다. 교훈: CHE 값은 **기준 규약과 함께** 적는다 (§J-51-a — 이 분야는 "최적 ΔG\*OOH" 를 4.22 / 3.52 eV 두 규약으로 섞어 0.70 eV 가 흔들린다) |
+| C1 · C2 · C4 · C5 · C6 · C7 | 겹침 **0** |
+
+⛔ 이 리뷰의 ZAB 수치(OCV · 출력 · Zn 용량)를 §K 의 Zn 음극 셀 값(§K-1 · §K-5 · §K-10)과 **같은 표에 놓지 않는다** — 셀 구조(공기극 ZAB vs 무음극 Zn 셀) · 측정량이 다르다.
 
 ---
 

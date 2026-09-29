@@ -1,0 +1,185 @@
+{
+ "slug": "gan2026_defective_carbon_orr_selectivity_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-29",
+ "sources": [
+  "0929-1. ChemComm_2026_Gan_defective_carbon_ORR_2e4e_selectivity_review_MAIN.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. A dual-branch chronological roadmap of carbonaceous electrocatalysts targeting selective 2e- (left)/ 4e- (right) oxygen reduction pathways. Reproduced from ref. 8 under the ACS AuthorChoice License. Copyright 2015 American Chemical Society. Reproduced from ref. 9 with permission from Elsevier, copyright 2022. Reprinted with permission from ref. 10. Copyright 2023 American Chemical Society. Reprinted with permission from ref. 16. Copyright 2018 American Chemical Society. Reproduced from ref. 17 with permission from Wiley- VCH GmbH. Copyright 2019 Wiley-VCH Verlag GmbH & Co. KGaA, Weinheim. Reprinted with permission from ref. 18. Copyright 2019 American Chemical Society. Reproduced from C. Xia et al., Science 366, 226–231, DOI: 10.1126/science.aay1844 (2019), AAAS. Reprinted with permission from ref. 20. Copyright 2021 American Chemical Society. Reprinted with permission from ref",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    60.7,
+    561.1,
+    549.3
+   ],
+   "w": 2187,
+   "h": 2037,
+   "dpi": 300,
+   "src": "0929-1. ChemComm_2026_Gan_defective_carbon_ORR_2e4e_selectivity_review_MAIN.pdf",
+   "blank": 0.173,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 7,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) D1-D8 designate double-vacancy induced defective configurations. D2-D4 and D7-D8 are line or double-vacancy defects (555-777, 55-8-55, 55-77, and 5555-6-7777), while D1 and D6 feature distinct active sites within 555-6-777 structures. Numbers 5-8 refer to the pentagon, hexagon, heptagon, and octagon, respectively. Reprinted with permission from ref. 16. Copyright 2018 American Chemical Society. (b) AC-TEM image and corresponding Fourier-transform-fitted image of PED-CF-4, revealing pentagonal edge defects. Reproduced from ref. 38 with permission from Elsevier, copyright 2025. (c) Preparation of edge-engineered unzipped MWCNTs (i) Intact MWCNTs. (ii) unzipped MWCNTs with variable unzipping degree and edge content. Reproduced from ref. 12 with permission from Elsevier, copyright 2019. (d) Schematic structural characteristics of the carbon nanocages. Reproduced from ref. 8 und",
+   "rotated_deg": 0,
+   "bbox": [
+    36.6,
+    60.7,
+    561.1,
+    432.2
+   ],
+   "w": 2187,
+   "h": 1549,
+   "dpi": 300,
+   "src": "0929-1. ChemComm_2026_Gan_defective_carbon_ORR_2e4e_selectivity_review_MAIN.pdf",
+   "blank": 0.585,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 10,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Statistical Raman spectroscopy of samples deposited on SiO2/Si. Reprinted with permission from ref. 18. Copyright 2019 American Chemical Society. (b) High-resolution O 1s, N 1s, and P 2p XPS spectra and deconvoluted Raman spectra of KB@pPNT samples. Reprinted with permission from ref. 45. Copyright 2024 American Chemical Society. (c) Deconvoluted Raman and N 1s XPS spectra of PD/N-C and N-GNS. Reprinted with permission from ref. 21. Copyright 2023 American Chemical Society. (d) N-doping and topological defect types in graphene nanoribbons. (PR: pyrrolic nitrogen; PN: pyridinic nitrogen; Q: edge quaternary N; QN: bulk quaternary N; C5/C7: 5/7-membered rings; C5+7: adjacent 5/7 rings). Reproduced from ref. 26 with permission from Wiley-VCH GmbH. Copyright 2016 WILEY-VCH Verlag GmbH & Co. KGaA, Weinheim. (e) High-resolution N 1s XPS and deconvoluted Raman spectra of NDC materi",
+   "rotated_deg": 0,
+   "bbox": [
+    36.7,
+    204.8,
+    560.5,
+    667.2
+   ],
+   "w": 2184,
+   "h": 1928,
+   "dpi": 300,
+   "src": "0929-1. ChemComm_2026_Gan_defective_carbon_ORR_2e4e_selectivity_review_MAIN.pdf",
+   "blank": 0.785,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 14,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Structural characterization and representative configurations of single-atom-defect synergistic catalysts. (a) Normalized Ni K-edge XANES spectra, Ni K-edge FT-EXAFS spectra, and corresponding EXAFS fitting curves of NiSA-NC, revealing the Ni-N3O2 coordination configuration. Reproduced from ref. 55 with permission from Elsevier, copyright 2025. (b) Area ratio of the D3 to G Raman bands for Co-N-C and D-Co-N-C-X catalysts. Reproduced from ref. 56 with permission from the Royal Society of Chemistry, copyright 2026. (c) Optimized structural models of basal-plane and edge-hosted Co-N4 sites, including Co-N₄/G, Co-N4/ACG, Co-N4/AC-edge, Co-N4/ZZG, and Co-N4/ZZ-edge. Reproduced from ref. 57 under the terms of the Creative Commons Attribution License (CC BY). Copyright 2022 The Authors; published by Wiley-VCH GmbH. (d) Fe K-edge XANES and FT-EXAFS spectra of Fe foil, Fe2O3, and CNT-D-",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    60.7,
+    561.1,
+    451.4
+   ],
+   "w": 2187,
+   "h": 1629,
+   "dpi": 300,
+   "src": "0929-1. ChemComm_2026_Gan_defective_carbon_ORR_2e4e_selectivity_review_MAIN.pdf",
+   "blank": 0.795,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 17,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Representative electrochemical performance of defect-engineered carbon catalysts toward selective 2e - and 4e- ORR. (a) RRDE polarization curves, H2O2 selectivity, and electron-transfer numbers of PED-CF-x and CF, highlighting the optimized PED-CF-4 for 2e - ORR. Reproduced from ref. 38 with permission from Elsevier, copyright 2025. (b) RRDE polarization curves of PD/N-C and N-GNS, together with the H2O2 yield rate and Faradaic efficiency of PD/N-C at different potentials. Reprinted with permission from ref. 21. Copyright 2023 American Chemical Society. (c) ORR polarization curves and H2O2 selectivity of NC, FeSA-NC, NiSA-NC, and CuSA-NC, showing the superior 2e - ORR performance of NiSA-NC. Reproduced from ref. 55 with permission from Elsevier, copyright 2025. (d) LSV curves, electron-transfer number, and H2O2 yield of N/CNs, VP/CNs, and Pt/C, demonstrating the near- four-elec",
+   "rotated_deg": 0,
+   "bbox": [
+    36.7,
+    200.8,
+    560.5,
+    634.9
+   ],
+   "w": 2184,
+   "h": 1810,
+   "dpi": 300,
+   "src": "0929-1. ChemComm_2026_Gan_defective_carbon_ORR_2e4e_selectivity_review_MAIN.pdf",
+   "blank": 0.842,
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 24,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Future perspectives for the rational design of defective carbon catalysts toward selective 2e - and 4e- ORR. The representative image in the upper-right corner is reprinted with permission from ref. 21. Copyright 2023 American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.6,
+    416.8,
+    560.3,
+    731.5
+   ],
+   "w": 2183,
+   "h": 1312,
+   "dpi": 300,
+   "src": "0929-1. ChemComm_2026_Gan_defective_carbon_ORR_2e4e_selectivity_review_MAIN.pdf",
+   "blank": 0.791,
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 18,
+   "file": "tab_1.png",
+   "caption": "Table 1. Summary of electrocatalysts for 2e- ORR toward H2O2 production. Catalyst Active Sites/Structure Selectivity H2O2 Yield Stability Onset Potential Electrolyte Ref. Stable after 11,000 CV cycles (~20 h) ≈ 0.70 V vs. MesoC Defective mesoporous carbon > 70% - RHE 0.1 M KOH 16 Moderately defective Vulcan carbon and C atoms adjacent to > 95% 5600 mg day-1 200 h - 0.1 M KOH 24 D10-vulcan edge defects 8.12 mol g-1 h-1 ~ 99% (alkaline),",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    110.0,
+    558.0,
+    533.0
+   ],
+   "w": 2173,
+   "h": 1763,
+   "dpi": 300,
+   "src": "0929-1. ChemComm_2026_Gan_defective_carbon_ORR_2e4e_selectivity_review_MAIN.pdf",
+   "blank": 0.936,
+   "recrop": "auto crop fell back to the whole of p.18 for BOTH tables (tab_1 and tab_2 were byte-identical, bbox 37.6,63.4,590.2,794.2 incl. running text + vertical watermark) - re-rendered p.18 clip x 36.5-558.0, y 110.0-533.0 (caption rule 112.1 to bottom rule 530.6) at 300 dpi (2026-09-29)"
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 18,
+   "file": "tab_2.png",
+   "caption": "Table 2. Summary of electrocatalysts for 4e- ORR toward energy conversion and storage.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    536.0,
+    558.0,
+    716.0
+   ],
+   "w": 2173,
+   "h": 2563,
+   "dpi": 300,
+   "src": "0929-1. ChemComm_2026_Gan_defective_carbon_ORR_2e4e_selectivity_review_MAIN.pdf",
+   "blank": 0.935,
+   "pages": [
+    18,
+    19
+   ],
+   "recrop": "auto crop was a byte-identical copy of tab_1 (whole p.18) and missed the p.19 continuation - re-rendered as a 2-piece vertical stack: p.18 clip x 36.5-558.0, y 536.0-716.0 (caption rule 538.1 to D-CM row 713.8) + p.19 clip y 65.5-500.5 (repeated header 67.6 to Fesac-PDC bottom rule 498.1), 300 dpi (2026-09-29)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": []
+}
