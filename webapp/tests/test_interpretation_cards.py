@@ -1319,6 +1319,37 @@ def test_s2b_reading_box_ladder_and_thiophosphate_scope(client):
         f"P₂S₇ 칸 범위가 자료({len(thio)} 칸 · LiCoO₂·LiMnO₂)와 다르다"
 
 
+def test_tldr_protection_bullets_do_not_read_gate_pass_as_benefit(client):
+    """⛔음성 — 머리 요약(✅ 말하는 것)의 이득 줄이 게이트 통과를 이득으로 읽히게 두지 않는다 (2026-09-29).
+    잡는 것: '조건이 크게 넓어졌다 — 17/24 통과' 꼴 (통과는 비교 게이트인데 이득의 조건이 넓어진 것으로 읽힘) ·
+      식이 맞는 열의 분모·x = 0.02 실측 범위가 §2b 자료와 다름 · '전량' 에 양극 범위 없음 (LiMnO₂ 는 NdCl₃)."""
+    import csv as _csv
+    h = _report_html(client)
+    yes = h[h.index('<div class="tldr-yes">'):h.index('<div class="tldr-no">')]
+    items = re.findall(r"<li>(.*?)</li>", yes, re.S)
+    gain = [li for li in items if "그 이득은" in li]
+    assert len(gain) == 1, f"이득 줄이 {len(gain)} 개다 — 시험이 헛것을 잰다"
+    g = gain[0]
+    assert "넓어졌다" not in g, "게이트 통과 수를 '조건이 넓어졌다' 로 읽는 문장이 남았다"
+    assert "이득이 확인됐다는 뜻이 아니다" in g, "이득 줄이 게이트 통과와 이득을 가르지 않는다"
+    rows = _prot_rows()
+    _, _, _, _, full = _prot_counts(rows)
+    dev, _ = _prot_deviation(rows, full)
+    assert len([c for c in dev if dev[c] <= 3.11]) == 3
+    assert f"견줄 수 있는 <b>{len(dev)} 중 셋</b>" in g, "식이 맞는 셋의 분모가 이득 줄에 없다"
+    m = _x002_measurable(rows)
+    vals = [float(r["protection_observed"]) for r in m]
+    lo, hi = (f"{round(100 * v):d}".replace("-", "−") for v in (min(vals), max(vals)))
+    assert f"잴 수 있는 {len(m)} 칸에서 <b>{lo}~{hi} %</b>" in g, \
+        f"x = 0.02 범위가 자료({len(m)} 칸 · {lo}~{hi} %)와 다르다"
+    whole = [li for li in items if "<b>전량</b> 인산염" in li]
+    assert len(whole) == 1, f"'전량' 줄이 {len(whole)} 개다"
+    phase = list(_csv.DictReader(open(REPORT.parent / "cei_nd_phase_x002.csv", encoding="utf-8")))
+    nonp = {r["nd_phase"] for r in phase if float(r["voltage_V"]) >= 3.5 and float(r["p_per_nd_k"]) == 0}
+    assert nonp == {"NdCl3"}, f"3.5 V 이상 인산염 아닌 Nd 상이 {nonp} 다 — 시험을 다시 본다"
+    assert "Co·Ni·NMC811 양극" in whole[0] and "LiMnO₂ 는 NdCl₃" in whole[0], "'전량' 에 양극 범위가 없다"
+
+
 def test_resume_block_does_not_carry_retracted_numbers(client):
     """양성 — 새 세션이 **먼저 읽는** kb/open_items.md ⏭ 블록이 화면과 같은 수를 말한다.
 
