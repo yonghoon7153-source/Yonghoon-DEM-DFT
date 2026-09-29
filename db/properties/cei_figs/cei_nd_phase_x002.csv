@@ -1,0 +1,11 @@
+voltage_V,nd_phase,p_per_nd_k,n_cathodes_giving_phase,n_valid_cathodes_at_voltage
+2.5,NdPO4,1.0,4,4
+3.0,NdPO4,1.0,4,4
+3.5,NdCl3,0.0,1,4
+3.5,LiNd(PO3)4,4.0,3,4
+4.0,NdCl3,0.0,1,4
+4.0,Nd(PO3)3,3.0,2,4
+4.0,NdP5O14,5.0,1,4
+4.3,NdCl3,0.0,1,4
+4.3,NdP5O14,5.0,3,4
+4.5,NdP5O14,5.0,3,3

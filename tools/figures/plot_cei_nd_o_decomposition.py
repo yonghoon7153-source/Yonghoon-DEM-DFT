@@ -4,14 +4,19 @@
   (§0 도입 · 접이식 층 가르기 · §6 10/10 결과·예측 실패 기록 · Fig 번호 정리 · Fig. 1 3패널).
   이 파일은 그림·CSV 와 참고 조각(`OUT/sections_new.html`, /tmp)만 만들고 **index.html 을 쓰지
   않는다**. 아래 소관 지도의 "이 파일" 절은 조각을 손으로 끼울 때만 유효하고, 끼우기 전에
-  발행본의 손편집(2026-09-17 이후 전부)을 먼저 대조한다. Fig. 1 은 2026-09-21 부터 (a)(b)(c) 세
+  발행본의 손편집(2026-09-17 이후 전부)을 먼저 대조한다. 분해 그림은 2026-09-21 부터 (a)(b)(c) 세
   패널이다 — 옛 (c) 상대성장 패널은 철회된 해석(Li 장부)이라 뺐다 (아래 주석).
+⭐ **2026-09-29 — 1저자 "si 쪽으로 가는게 좋을듯 · 둘다 해줘"**: x002 판은 세 파일을 낸다.
+  ① `cei_nd_o_decomposition.png` 옛 3 패널 (이력 · 바이트 동일 재현 · **발행본에는 안 걸린다**)
+  ② `cei_nd_o_decomposition_si.png` (a)(b) 두 패널 → 발행 `cei_nd_o_decomposition_x002_si.png` = 발행본 **Fig. S1** (§S1 · id s1 · §8 뒤)
+  ③ `cei_nd_phase.png` + `cei_nd_phase.csv` (c) 한 패널 · k 표기 → 발행 `cei_nd_phase_x002.png/.csv` = 발행본 **Fig. 1** (§2)
+  원고 대응은 `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` (원고 Fig. 2 = 이 ③).
 
 ⛔ **소관 지도 — 발행본(`db/properties/cei_figs/index.html`) 번호 기준**
 
   | 절 | 소스 |
   |---|---|
-  | §1 분해 · §2 왜 고전압에서 Nd | index.html (§2 의 Fig. 2 는 plot_cei_p_host_ladder.py) |
+  | §S1 분해 (id s1 · §8 뒤) · §2 왜 고전압에서 Nd | index.html (§2 의 Fig. 1 은 이 파일 ③ · Fig. 2 는 plot_cei_p_host_ladder.py) |
   | **§3 검증** | **이 파일** (아래 `<h2 id="s3">`) |
   | **§4 전 혼합범위 스캔** | **이 파일** |
   | §5 다른 3가 도펀트 | **본문은 index.html · 그림(Fig 6)만 이 파일** |
@@ -198,85 +203,131 @@ if _miss:
 #   그림은 복사될 때 캡션을 안 데려간다. 패널을 뺀다.
 #   그 비율(×1.42 · ×6.58)은 CSV 의 rel_* 열에 **자료로만** 남는다
 #   (산문에서 "hull 이 만드는 Nd 산물의 양은 ×1.42 뿐" 을 인용할 수 있게).
-fig, (a1, a2, a4) = plt.subplots(1, 3, figsize=(15.6, 4.7))
-if SER["p_nd"]:
-    #: x002 — 이 캠페인이 '유의' 로 부르는 폭(±0.010)을 회색으로 깐다. 그 안의 곡선은 크기를 인용하지 않는다.
-    a1.axhspan(-0.010, 0.010, color="#e5e7eb", zorder=0, lw=0)
-    a1.text(0.03, 0.06, "grey band $\\pm$0.010: not resolved by this method",
-            transform=a1.transAxes, fontsize=8, color=MUT, ha="left")
-for s, col, lab, mk in ((dn, ND, SER["nd_leg"], "o"),
-                        (do, OX, SER["o_leg"], "s"),
-                        (dt, BOTH, SER["both_leg"], "^")):
-    m = [st.mean(s[V]) for V in VS]
-    lo = [min(s[V]) for V in VS]; hi = [max(s[V]) for V in VS]
-    a1.fill_between(VS, lo, hi, color=col, alpha=0.13, lw=0)
-    a1.plot(VS, m, marker=mk, color=col, lw=2.0, ms=6, label=lab)
-a1.plot(VS, [st.mean(dn[V]) + st.mean(do[V]) for V in VS], ls=":", lw=1.8,
-        color=MUT, label="Nd only $+$ O only (sum of parts)")
-if SER["p_nd"]:
-    for s, col, lab, mk in ((pn, ND, "Nd only, P site", "o"),
-                            (pt, BOTH, "Nd + O, P site (target)", "^")):
-        a1.plot(VS, [st.mean(s[V]) for V in VS], marker=mk, color=col, lw=1.6, ms=5,
-                ls="--", mfc="white", label=lab)
-apply_axes(a1, "Voltage (V vs Li/Li$^+$)",
-           "$\\Delta$ reaction energy vs LPSCl$_{1.6}$ (eV/atom)")
-a1.axhline(0, color=MUT, lw=0.8, ls="--")
-a1.legend(frameon=False, fontsize=8.5, loc="upper left")
-a1.text(0.03, 0.62, "higher = less reactive", transform=a1.transAxes,
-        fontsize=8.5, color=MUT, style="italic")
+# ── 2026-09-29 — 패널을 함수로 가른다 (1저자: 분해 (a)(b) 는 원고 SI · (c) 상 그림은 본문) ──
+#   같은 함수로 ① 옛 3 패널 (이력 · 바이트 동일 재현) ② x002 SI 판 (a)(b) ③ x002 본문 판 (c) 를 그린다.
+#   ⛔ 옛 3 패널 PNG 를 덮지 않는다 — 09-28 판과 주간보고가 그 파일을 가리킨다. 새 두 판은 파일명이 다르다.
+#   ⛔ 이 분리가 못 하는 것: 패널 내용은 그대로다 — 새 계산·새 판정이 아니다. (c) 의 k 표기는 P_PER_ND 표에서 온다.
+def _draw_a(a1):
+    if SER["p_nd"]:
+        #: x002 — 이 캠페인이 '유의' 로 부르는 폭(±0.010)을 회색으로 깐다. 그 안의 곡선은 크기를 인용하지 않는다.
+        a1.axhspan(-0.010, 0.010, color="#e5e7eb", zorder=0, lw=0)
+        a1.text(0.03, 0.06, "grey band $\\pm$0.010: not resolved by this method",
+                transform=a1.transAxes, fontsize=8, color=MUT, ha="left")
+    for s, col, lab, mk in ((dn, ND, SER["nd_leg"], "o"),
+                            (do, OX, SER["o_leg"], "s"),
+                            (dt, BOTH, SER["both_leg"], "^")):
+        m = [st.mean(s[V]) for V in VS]
+        lo = [min(s[V]) for V in VS]; hi = [max(s[V]) for V in VS]
+        a1.fill_between(VS, lo, hi, color=col, alpha=0.13, lw=0)
+        a1.plot(VS, m, marker=mk, color=col, lw=2.0, ms=6, label=lab)
+    a1.plot(VS, [st.mean(dn[V]) + st.mean(do[V]) for V in VS], ls=":", lw=1.8,
+            color=MUT, label="Nd only $+$ O only (sum of parts)")
+    if SER["p_nd"]:
+        for s, col, lab, mk in ((pn, ND, "Nd only, P site", "o"),
+                                (pt, BOTH, "Nd + O, P site (target)", "^")):
+            a1.plot(VS, [st.mean(s[V]) for V in VS], marker=mk, color=col, lw=1.6, ms=5,
+                    ls="--", mfc="white", label=lab)
+    apply_axes(a1, "Voltage (V vs Li/Li$^+$)",
+               "$\\Delta$ reaction energy vs LPSCl$_{1.6}$ (eV/atom)")
+    a1.axhline(0, color=MUT, lw=0.8, ls="--")
+    a1.legend(frameon=False, fontsize=8.5, loc="upper left")
+    a1.text(0.03, 0.62, "higher = less reactive", transform=a1.transAxes,
+            fontsize=8.5, color=MUT, style="italic")
 
-rm = [st.mean(res[V]) for V in VS]
-_bd = SER["band"]
-a2.axhspan(-_bd, _bd, color="#fef9c3", zorder=0)
-a2.plot(VS, rm, marker="D", color=INK, lw=2.0, ms=5,
-        label=("Li site" if SER["p_nd"] else None))
-a2.fill_between(VS, [min(res[V]) for V in VS], [max(res[V]) for V in VS],
-                color=INK, alpha=0.12, lw=0)
-if SER["p_nd"]:
-    a2.plot(VS, [st.mean(pres[V]) for V in VS], marker="D", color=INK, lw=1.6, ms=5,
-            ls="--", mfc="white", label="P site")
-    a2.legend(frameon=False, fontsize=8.5, loc="lower right")
-a2.axhline(0, color=MUT, lw=0.8, ls="--")
-apply_axes(a2, "Voltage (V vs Li/Li$^+$)", "Additivity residual (eV/atom)")
-a2.text(0.04, 0.90, SER["band_leg"], transform=a2.transAxes,
-        fontsize=8.5, color="#92400e")
-a2.set_ylim(-1.4 * _bd, 1.4 * _bd)
+
+def _draw_b(a2):
+    rm = [st.mean(res[V]) for V in VS]
+    _bd = SER["band"]
+    a2.axhspan(-_bd, _bd, color="#fef9c3", zorder=0)
+    a2.plot(VS, rm, marker="D", color=INK, lw=2.0, ms=5,
+            label=("Li site" if SER["p_nd"] else None))
+    a2.fill_between(VS, [min(res[V]) for V in VS], [max(res[V]) for V in VS],
+                    color=INK, alpha=0.12, lw=0)
+    if SER["p_nd"]:
+        a2.plot(VS, [st.mean(pres[V]) for V in VS], marker="D", color=INK, lw=1.6, ms=5,
+                ls="--", mfc="white", label="P site")
+        a2.legend(frameon=False, fontsize=8.5, loc="lower right")
+    a2.axhline(0, color=MUT, lw=0.8, ls="--")
+    apply_axes(a2, "Voltage (V vs Li/Li$^+$)", "Additivity residual (eV/atom)")
+    a2.text(0.04, 0.90, SER["band_leg"], transform=a2.transAxes,
+            fontsize=8.5, color="#92400e")
+    a2.set_ylim(-1.4 * _bd, 1.4 * _bd)
 
 # ── (옛 c) 상대 성장 패널 — 2026-09-21 제거. 위 주석 참조. 자료는 CSV rel_* 열. ──
 
+
+def _k_label(f):
+    """본문 판 (c) 의 세로 눈금 — 상 이름 + P/Nd (= 계수 k). 비인산염은 'no P'."""
+    k = P_PER_ND[f]
+    return f"{_TEX_D.get(f, f)}  (k = {k:g})" if k > 0 else f"{_TEX_D.get(f, f)}  (no P)"
+
+
 # ── (d) 그럼 무엇이 바뀌나 — Nd 가 **가는 상**이 축합된다 ──────────────────
-_ORD = sorted(P_PER_ND, key=lambda f: (P_PER_ND[f], f))
-_ypos = {f: i for i, f in enumerate(_ORD)}
-for _i, V in enumerate(VS):
-    for _f, _k in nphase[V].items():
-        a4.scatter(_i, _ypos[_f], s=34 + 48 * _k,
-                   color=ND if P_PER_ND[_f] > 0 else MUT,
-                   alpha=.85, lw=.6, edgecolor="white", zorder=3)
-        a4.annotate(str(_k), (_i, _ypos[_f]), fontsize=7.2, color="white",
-                    ha="center", va="center", zorder=4, fontweight="bold")
-a4.set_xticks(range(len(VS))); a4.set_xticklabels([f"{v:g}" for v in VS])
-a4.set_yticks(range(len(_ORD)))
-a4.set_yticklabels([f"{_TEX_D.get(f, f)}" for f in _ORD], fontsize=8.6)
-a4.set_ylim(-0.7, len(_ORD) - 0.3); a4.set_xlim(-0.6, len(VS) - 0.4)
-a4.grid(axis="y", color="#f1f5f9", lw=1.0, zorder=0)
-apply_axes(a4, "Voltage (V vs Li/Li$^+$)", "")
-a4.set_ylabel("Phase the Nd ends up in\n(ordered by P per Nd)", fontsize=9.2,
-              color=INK)
-a4.annotate("", xy=(-0.52, len(_ORD) - .6), xytext=(-0.52, .4),
-            arrowprops=dict(arrowstyle="->", lw=1.2, color=MUT))
-a4.text(-0.44, len(_ORD) - 1.5, "more condensed", fontsize=8, color=MUT,
-        rotation=90, va="center")
+def _draw_c(a4, k_labels=False):
+    _ORD = sorted(P_PER_ND, key=lambda f: (P_PER_ND[f], f))
+    _ypos = {f: i for i, f in enumerate(_ORD)}
+    for _i, V in enumerate(VS):
+        for _f, _k in nphase[V].items():
+            a4.scatter(_i, _ypos[_f], s=34 + 48 * _k,
+                       color=ND if P_PER_ND[_f] > 0 else MUT,
+                       alpha=.85, lw=.6, edgecolor="white", zorder=3)
+            a4.annotate(str(_k), (_i, _ypos[_f]), fontsize=7.2, color="white",
+                        ha="center", va="center", zorder=4, fontweight="bold")
+    a4.set_xticks(range(len(VS))); a4.set_xticklabels([f"{v:g}" for v in VS])
+    a4.set_yticks(range(len(_ORD)))
+    a4.set_yticklabels([(_k_label(f) if k_labels else f"{_TEX_D.get(f, f)}") for f in _ORD], fontsize=8.6)
+    a4.set_ylim(-0.7, len(_ORD) - 0.3); a4.set_xlim(-0.6, len(VS) - 0.4)
+    a4.grid(axis="y", color="#f1f5f9", lw=1.0, zorder=0)
+    apply_axes(a4, "Voltage (V vs Li/Li$^+$)", "")
+    a4.set_ylabel("Phase the Nd ends up in\n(ordered by P per Nd)", fontsize=9.2,
+                  color=INK)
+    a4.annotate("", xy=(-0.52, len(_ORD) - .6), xytext=(-0.52, .4),
+                arrowprops=dict(arrowstyle="->", lw=1.2, color=MUT))
+    a4.text(-0.44, len(_ORD) - 1.5, "more condensed", fontsize=8, color=MUT,
+            rotation=90, va="center")
+
+
+fig, (a1, a2, a4) = plt.subplots(1, 3, figsize=(15.6, 4.7))
+_draw_a(a1)
+_draw_b(a2)
+_draw_c(a4)
 
 #: 제목에 해석을 싣지 않는다 (2026-09-21). 옛 "(a) Doping helps more as voltage rises" 는
 #:   철회된 읽기(기울기 = Li 장부)였다. 제목은 축이 무엇인지까지만 말한다.
+_TITLE_A = "(a)  $\\Delta$ reaction energy vs voltage (Li inventory not matched)"
+_TITLE_B = "(b)  Additivity residual, Nd + O"
 _ctitle = ("(c)  Phase the Nd ends up in, by voltage" if not SER["p_nd"] else
            "(c)  Phase the Nd ends up in (target, P site, x = 0.02)")
-for _ax, _t in ((a1, "(a)  $\\Delta$ reaction energy vs voltage (Li inventory not matched)"),
-                (a2, "(b)  Additivity residual, Nd + O"),
+for _ax, _t in ((a1, _TITLE_A),
+                (a2, _TITLE_B),
                 (a4, _ctitle)):
     _ax.set_title(_t, fontsize=10, color=INK, pad=8, loc="left")
 
 fig.tight_layout(); fig.savefig(OUT / "cei_nd_o_decomposition.png", dpi=300); plt.close(fig)
+
+if SER["p_nd"]:
+    #: ① SI 판 — 분해 (a)(b) 두 패널 (발행 이름 cei_nd_o_decomposition_x002_si.png · 페이지 Fig. S1)
+    fig, (s1, s2) = plt.subplots(1, 2, figsize=(11.0, 4.7))
+    _draw_a(s1)
+    _draw_b(s2)
+    for _ax, _t in ((s1, _TITLE_A), (s2, _TITLE_B)):
+        _ax.set_title(_t, fontsize=10, color=INK, pad=8, loc="left")
+    fig.tight_layout(); fig.savefig(OUT / "cei_nd_o_decomposition_si.png", dpi=300); plt.close(fig)
+    #: ② 본문 판 — Nd 가 가는 상 (c) 한 패널 · k 표기 (발행 이름 cei_nd_phase_x002.png · 페이지 Fig. 1)
+    fig, c1 = plt.subplots(1, 1, figsize=(6.8, 4.6))
+    _draw_c(c1, k_labels=True)
+    c1.set_title("Phase the Nd ends up in (target composition, P site, x = 0.02)",
+                 fontsize=10, color=INK, pad=8, loc="left")
+    c1.text(0.0, -0.19, "Number in each dot = cathodes (of four) giving that phase.  k = P per Nd.",
+            transform=c1.transAxes, fontsize=8, color=MUT, ha="left")
+    fig.tight_layout(); fig.savefig(OUT / "cei_nd_phase.png", dpi=300); plt.close(fig)
+    with open(OUT / "cei_nd_phase.csv", "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["voltage_V", "nd_phase", "p_per_nd_k", "n_cathodes_giving_phase",
+                    "n_valid_cathodes_at_voltage"])
+        for V in VS:
+            for _f, _k in sorted(nphase[V].items(), key=lambda kv: (P_PER_ND[kv[0]], kv[0])):
+                w.writerow([V, _f, P_PER_ND[_f], _k, len(namt[V])])
 
 if SER["p_nd"]:
     #: x002 — 열 이름에 **조성 라벨을 박는다** (종전 열 이름 'nd_only' 를 다른 조성에 재사용하면

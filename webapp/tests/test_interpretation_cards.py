@@ -233,7 +233,8 @@ def test_local_report_is_actually_served(client):
 
 def test_report_images_are_served_relative_to_it(client):
     """양성 — 그림도 같은 경로에서 온다 (상대 src 가 풀린다)."""
-    for name in ("cei_nd_o_decomposition_x002.png", "cei_nd_o_decomposition.png"):
+    for name in ("cei_nd_o_decomposition_x002.png", "cei_nd_o_decomposition.png",
+                 "cei_nd_o_decomposition_x002_si.png", "cei_nd_phase_x002.png"):
         r = client.get(f"/api/file/db/properties/cei_figs/{name}")
         assert r.status_code == 200 and r.data[:4] == b"\x89PNG", f"{name} 가 안 온다"
 
@@ -419,24 +420,27 @@ def test_collapsed_details_are_expanded_for_print(client):
 
 
 def test_section1_order_is_figure_then_howto_then_definition(client):
-    """⛔음성 — §1 의 읽는 순서를 고정한다 (1저자 지정, 2026-09-17).
+    """⛔음성 — 분해 절(§S1 · id="s1")의 읽는 순서를 고정한다 (1저자 지정, 2026-09-17).
 
-    그림 → "Fig. 1 을 읽는 법" → "세로축의 reaction energy 는 무엇인가".
+    그림 → "Fig. S1 을 읽는 법" → "세로축의 reaction energy 는 무엇인가".
     정의 상자가 앞으로 올라오면 독자가 그림에 닿기 전에 벽을 만난다.
-    셋 다 §1 안에 있어야 한다 — §2 로 밀려나면 그것도 잡는다.
+    셋 다 그 절 안에 있어야 한다 — 절 밖으로 밀려나면 그것도 잡는다.
+    2026-09-29 — 1저자 'si 쪽으로': 이 절은 SI 자리(§8 뒤)로 옮겼고 그림은 Fig. S1 (a)(b) 다.
+    기계 id 는 s1 그대로다 (원장·시험·링크가 끊기지 않게). 끝 표식은 §2 가 아니라 **그 절의 끝**이다.
     """
     h = _report_html(client)
+    s1 = h.index('<section id="s1"')
     marks = {
-        "figure":     h.find('<img src="cei_nd_o_decomposition_x002.png"'),
-        "howto":      h.find("Fig. 1 을 읽는 법"),
-        "definition": h.find("세로축의 <span"),
-        "s2":         h.find('<section id="s2"'),
+        "figure":     h.find('<img src="cei_nd_o_decomposition_x002_si.png"', s1),
+        "howto":      h.find("Fig. S1 을 읽는 법", s1),
+        "definition": h.find("세로축의 <span", s1),
+        "s1_end":     h.find("</section>", s1),
     }
     missing = [k for k, v in marks.items() if v < 0]
-    assert not missing, f"§1 에서 못 찾은 표식: {missing} — 시험이 헛것을 재고 있다"
+    assert not missing, f"§S1 에서 못 찾은 표식: {missing} — 시험이 헛것을 재고 있다"
     order = sorted(marks, key=marks.get)
-    assert order == ["figure", "howto", "definition", "s2"], \
-        f"§1 순서가 바뀌었다: {' → '.join(order)}"
+    assert order == ["figure", "howto", "definition", "s1_end"], \
+        f"§S1 순서가 바뀌었다: {' → '.join(order)}"
 
 
 # ── ③ 기회비용 절의 정직 한정 (2026-09-17 확장) ──────────────────────────────
@@ -827,30 +831,83 @@ def test_figure_numbers_are_unique_and_in_document_order(client):
     assert nums == [str(i) for i in range(1, 9)], nums
 
 
-def test_fig1_is_three_panels_and_caption_carries_no_strikethrough(client):
-    """양성+음성 — 옛 (c) ×6.58 패널이 그림에서 빠졌고, 캡션은 취소선 철회문 없이 선다.
-    철회 표지는 한글 '읽는 법' 상자에 ⛔ 로 있다 (그림은 복사될 때 캡션을 안 데려간다)."""
+def test_fig_s1_decomposition_is_si_two_panels(client):
+    """양성+음성 — 분해 그림은 **SI** 다: Fig. S1 · 두 패널 (a)(b) · SI 자리(§8 뒤)
+    (1저자 2026-09-29 *'ㅇㅇ si 쪽으로 가는게 좋을듯 · 둘다 해줘'* · 원고 틀 카드).
+    옛 3 패널 PNG 는 이력 파일로 남지만 **페이지에는 안 걸린다**. 캡션은 취소선 철회문 없이 서고,
+    철회 표지는 한글 '읽는 법' 상자에 ⛔ 로 있다 (그림은 복사될 때 캡션을 안 데려간다).
+    잡는 것: 옛 3 패널이 다시 걸림 · 절이 본문 자리로 돌아옴 · SI 판이 두 패널이 아님 · 철회 표지·Li 맞춤 범위 빠짐."""
     h = _report_html(client)
-    i = h.index('<img src="cei_nd_o_decomposition_x002.png"')
-    cap = h[i:h.index("</figcaption>", i)]
-    assert 'alt="Three panels' in cap, "alt 가 아직 네 패널이다"
-    assert "x&#8201;=&#8201;0.02" in cap, "Fig. 1 캡션이 x = 0.02 를 말하지 않는다"
+    assert '<img src="cei_nd_o_decomposition_x002.png"' not in h, "옛 3 패널이 페이지에 다시 걸렸다"
+    s1 = _section(h, "s1")
+    head = s1[:s1.index("</h2>")]
+    assert "S1." in head and "보충" in head, f"§S1 제목이 아니다: {head[-120:]}"
+    order = re.findall(r'<section id="(\w+)" class="sec">', h)
+    assert order.index("s8") < order.index("s1") < order.index("s8b"), f"§S1 이 SI 자리(§8 뒤)가 아니다: {order}"
+    i = s1.index('<img src="cei_nd_o_decomposition_x002_si.png"')
+    cap = s1[i:s1.index("</figcaption>", i)]
+    assert 'alt="Two panels' in cap and "Fig. S1." in cap, "SI 그림이 두 패널 Fig. S1 이 아니다"
+    assert "x&#8201;=&#8201;0.02" in cap, "Fig. S1 캡션이 x = 0.02 를 말하지 않는다"
     assert "RETRACTED" not in cap and "<s>" not in cap, "캡션 안에 취소선 철회문이 남아 있다"
     assert "lithium-matched" in cap, "Li 장부 설명이 캡션에서 빠졌다"
-    r = client.get(LOCAL_REPORT.rsplit("/", 1)[0] + "/cei_nd_o_decomposition_x002.png")
+    r = client.get(LOCAL_REPORT.rsplit("/", 1)[0] + "/cei_nd_o_decomposition_x002_si.png")
     import struct
     w, hgt = struct.unpack(">II", r.data[16:24])            # PNG IHDR
-    assert w / hgt > 2.5, f"그림이 1×3 이 아니다 (옛 2×2 는 비 1.38): {w}×{hgt}"
+    assert 1.8 < w / hgt < 2.9, f"SI 그림이 1×2 가 아니다: {w}×{hgt}"
     gen = (REPORT.parents[3] / "tools/figures/plot_cei_nd_o_decomposition.py").read_text("utf-8")
     assert "plt.subplots(1, 3" in gen and re.search(r"^\s*a3\.", gen, re.M) is None, \
         "생성기에 옛 (c) 패널(a3)이 되돌아왔다"
-    j = h.index("Fig. 1 을 읽는 법")
-    box = h[j:h.index("<!-- 방법 박스", j)]
+    assert '"cei_nd_o_decomposition_si.png"' in gen and '"cei_nd_phase.png"' in gen, \
+        "생성기가 SI 판·본문 판을 안 만든다 (화면 파일의 출처가 끊긴다)"
+    j = s1.index("Fig. S1 을 읽는 법")
+    box = s1[j:s1.index("<!-- 방법 박스", j)]
     assert "⛔" in box and "Li 장부" in box, "읽는 법 상자에 철회 표지가 없다"
     lo, hi = _x002_limatched_range()
     assert f"{lo:.1f}".replace("-", "−") in box and f"{hi:.1f}".replace("-", "−") in box, \
         f"읽는 법 상자의 Li 맞춤 범위가 원장({lo} ~ {hi})과 다르다"
 
+
+def test_fig1_is_the_phase_ladder_in_s2_and_matches_the_raw(client):
+    """양성+음성 — 본문 Fig. 1 은 §2 의 **상 사다리**(옛 분해 그림의 (c))다 (1저자 2026-09-29 · 원고 본문 Fig. 2).
+    사슬: 원자료 반응식 → (도구 _rxn_side_terms 로 다시 센) 전압별 Nd 상 = 생성기 CSV = 캡션 문장.
+    잡는 것: 그림이 §2 밖·Fig. 2 뒤로 감 · CSV 가 원자료와 다름 · 캡션이 CSV 와 다른 상을 말함 ·
+      '1 할' 옆에서 '9 할' 이 빠짐 (원장 금지: 'x = 0.02 에서 Nd 가 양극 대신 P 방을 댄다')."""
+    import csv as _csv
+    h = _report_html(client)
+    s2 = _section(h, "s2")
+    i = s2.index('<img src="cei_nd_phase_x002.png"')
+    assert i < s2.index('<img src="cei_p_host_ladder_x002.png"'), "Fig. 1 이 Fig. 2 뒤에 있다"
+    cap = s2[i:s2.index("</figcaption>", i)]
+    assert "Fig. 1. The phase the neodymium ends up in" in cap, "본문 Fig. 1 캡션이 아니다"
+    assert "x&#8201;=&#8201;0.02" in cap and "k&#183;x" in cap and "<s>" not in cap
+    rows = list(_csv.DictReader(open(REPORT.parent / "cei_nd_phase_x002.csv", encoding="utf-8")))
+    assert rows, "CSV 가 비었다 — 시험이 헛것을 재고 있다"
+    got = {}
+    for r in rows:
+        got.setdefault(float(r["voltage_V"]), {})[r["nd_phase"]] = int(r["n_cathodes_giving_phase"])
+    T = _x002_tool()
+    R = json.loads(X002_IFACE.read_text("utf-8"))["results"]
+    want = {}
+    for cat, d in R.items():
+        for k, rxs in d["reactions"].items():
+            if (d.get("endpoint_degenerate") or {}).get(k, {}).get("nd_p_002_asused") is not False:
+                continue
+            rx = (rxs or {}).get("nd_p_002_asused") or ""
+            if "->" not in rx:
+                continue
+            for _n, f, comp in T._rxn_side_terms(rx.split("->", 1)[1]):
+                if comp.get("Nd", 0) > 0:
+                    want.setdefault(float(k), {})
+                    want[float(k)][f] = want[float(k)].get(f, 0) + 1
+    assert want == got, f"CSV 가 원자료 반응식과 다르다: 원자료 {want} · CSV {got}"
+    #: 캡션 문장 ↔ CSV (문장이 말하는 것만)
+    assert set(got[2.5]) == set(got[3.0]) == {"NdPO4"} and got[2.5]["NdPO4"] == 4
+    assert {"LiNd(PO3)4", "NdCl3"} <= set(got[3.5])
+    assert {"Nd(PO3)3", "NdP5O14"} <= set(got[4.0]) and set(got[4.5]) == {"NdP5O14"}
+    assert not any("Nd2(SO4)3" in dd for dd in got.values()), "캡션은 Nd2(SO4)3 줄이 비었다고 말한다"
+    j = s2.index("Fig. 1 을 읽는 법")
+    box = s2[j:s2.index("그 짝을 누가 대느냐다", j)]
+    assert "1 할" in box and "9 할" in box, "1 할 문장에 9 할이 같이 없다"
 
 def test_layer_split_open_sections_are_the_thesis(client):
     """양성 — 접힘 밖(open)은 논지 절이고, 근거·검산·반론 절은 접혀 있되 요지 한 줄이 밖에 있다."""
