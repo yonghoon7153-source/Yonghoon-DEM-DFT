@@ -513,7 +513,8 @@ DESCRIPTOR_FILL_EXPECTED = {           # 2026-09-19 실측.  움직이면 ⑭d �
                'porosity_sphere_pct_RECORD_ONLY': 130},
     'why_partial': {
         'coverage_AM_P_hertz_pct': '30 = mono 설계(단일 AM 상)의 `N_A_PHASE_ABSENT`. '
-                                   '**없는 상**이지 무접촉 0 이 아니다 (DESC-05).',
+                                   '**없는 상**이지 무접촉 0 이 아니다 (DESC-05).  '
+                                   '(설계 CSV 의 등록값 — 인계표는 J20-k (B) 로 설계 상 칸에 전체 값을 싣는다)',
         'coverage_AM_S_hertz_pct': '위와 같은 30 건.',
         'tortuosity_dijkstra_SE': '116 = τ 실패.  ⚠ **원장 `LHS-08` 이 열려 있다** — 그 실패가 '
                                   '물리인지 전극 밴드 규약인지 아직 안 갈렸다.  재측정 뒤 '
@@ -896,6 +897,9 @@ WA_ROW_COLS = (
     ('wa_status',        '웹앱 배치 상태 — done · partial (선택 단계 실패) · failed · REFUSED (같은 프레임 · type_map 관문 거부) — '
                          'done · partial 이 아니면 웹앱 열은 빈칸'),
     ('wa_failed_stages', '실패한 파이프라인 단계 (| 로 이음)'),
+    ('wa_mono_phase_name_webapp', 'mono (2-type) 침대에서 웹앱이 단일 AM 에 붙인 반지름 이름 (AM_P · AM_S — type_map_resolve · r > 4 µm) · '
+                                  '설계 block 의 상과 다르면 상별 웹앱 열의 값을 설계 이름 칸으로 옮겨 실었다 (J20-k (B) · 130 의 5 · 64 의 4) · '
+                                  'bimodal 은 빈칸'),
 )
 WA_QC = (
     ('qc_wa_porosity_minus_harvest_pct', 'porosity', 'porosity_sphere_pct_RECORD_ONLY',
@@ -1014,19 +1018,28 @@ def wa_reviewed(col):
     return wa_review_note(col) is not None
 
 
-#: J20-f (A) (1저자 비준 09-30 "권고대로") — mono (2-type) 침대의 **상별** 웹앱 열은 빈칸 (N/A).  웹앱은 AM 이 한 종류인 덱의 AM 을
-#:   반지름으로 AM_P/AM_S 라 부른다 (`type_map_resolve` · r > 4 µm) — 설계 상과 이름이 어긋나는 침대가 있다 (130 의 5 · 64 의 4 예측).
-#:   수확기 coverage 상별 열과 같은 규약 (mono 는 P · S 둘 다 N_A_PHASE_ABSENT) · 값은 **총량** 열 (area_AM전체_SE_n 등) 이 싣는다.
+#: J20-k (B) (1저자 09-30 — *"인계할때는 중복되더라도 잘 채워서 보내야될듯"* · J20-f (A) 개정) — mono (2-type) 침대의 **상별** 열은
+#:   **설계 상 칸**에 단일 AM 값을 싣는다.  설계 `block` (mono_AM_P → AM_P · mono_AM_S → AM_S) 이 상을 정한다.  웹앱은 AM 이 한 종류인 덱의
+#:   AM 을 반지름으로 AM_P/AM_S 라 부르므로 (`type_map_resolve` · r > 4 µm) 이름이 설계와 다른 침대 (09-30 실측 130 의 5 · 64 의 4 — 전부 설계
+#:   AM_P 인데 r ≤ 4 µm) 는 그 이름의 값을 설계 이름 칸으로 **옮기고** 웹앱 이름을 `wa_mono_phase_name_webapp` 에 남긴다.  설계에 없는 상의
+#:   칸은 빈칸 (N/A · 0 아님).  수확기 열도 같은 규칙 — 수확기는 mono 의 상을 `AM` 하나로 라벨하므로 (`phase_counts.AM` · `coverage_detail.
+#:   counts.AM` · `wall_touch.AM` · `coverage_AM_only` = `coverage_AM_total`) 그 값을 설계 상 칸에 싣는다 (coverage 상별 · n_AM_*_measured
+#:   (`LHS-21`) · cov_*_n_valid · 벽 접촉 비율).  설계 block 과 수확 모양 (n_types · phase_counts · coverage 상태 · AM_only = 전체) 이 어긋나거나
+#:   둘 중 하나를 모르면 **거부** — 조용히 (A) 로 돌아가면 한 표에 두 규약이 섞인다.  (A) 는 09-30 오전 판 (`lhs_handover_20260930.csv` 까지).
 WA_PHASE_COL = re.compile(r'(^|_)AM_[PS](_|$)')
-MONO_PHASE_NOTE = ('mono (2-type) 침대는 빈칸 (N/A · J20-f (A)) — 웹앱이 단일 AM 을 반지름으로 AM_P/AM_S 라 불러 설계 상과 '
-                   '어긋날 수 있다 · 총량 열 (area_AM전체_SE_n 등) 을 쓸 것')
+WA_PHASE_TOKEN = re.compile(r'(?<![A-Za-z0-9])AM_[PS](?![A-Za-z0-9])')     # 이름 안의 상 토큰 전부 (area_AM_S_AM_S_n 은 둘)
+MONO_BLOCKS = {'mono_AM_P': 'AM_P', 'mono_AM_S': 'AM_S'}
+MONO_DESIGN_NOTE = ('mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · '
+                    'mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 '
+                    '옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)')
+MONO_PHASE_NOTE = MONO_DESIGN_NOTE          # (A) 시절 이름 — 호환
 
 
 #: J20-h (1저자 비준 09-30 — *"bimodal 에서 빠진 쌍을 0 으로 채우게 · 시험 먼저"*) — `calc_interface_area` 는 접촉이 0 인 쌍의 키를 만들지 않는다
 #:   (dem_analysis_core.py:131–168 — 덤프에 나온 쌍만 센다) → metrics_flat 빈칸.  두 상이 다 있는 침대에서 그 뜻은 **측정된 0** 이다.
 WA_PAIR_COUNT = re.compile(r'area_(AM_P|AM_S|SE|AM전체)_(AM_P|AM_S|SE)_n')
 PAIR_ZERO_NOTE = ('접촉 0 인 쌍 = 0 — 웹앱 `calc_interface_area` 는 접촉이 없는 쌍의 키를 만들지 않아 빈칸이 되므로, 두 상이 다 있는 침대 '
-                  '(수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · 상이 없거나 mono 상별 칸이면 빈칸 (N/A)')
+                  '(수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · mono 는 설계 상으로 판단 (J20-k (B)) · 상이 없으면 빈칸 (N/A)')
 
 
 def _phase_n(pc, ph):
@@ -1034,6 +1047,65 @@ def _phase_n(pc, ph):
     if ph == 'AM전체':
         return sum(int(pc.get(k, 0) or 0) for k in ('AM', 'AM_P', 'AM_S'))
     return int(pc.get(ph, 0) or 0)
+
+
+def _phase_n_mono(pc, ph, dp):
+    """J20-k (B) — mono 침대 (설계 상 dp) 에서 상 ph 의 입자 수: 설계 상 = 수확 `AM` · 설계에 없는 상 = 0 · 그 밖은 `_phase_n`."""
+    if dp is None:
+        return _phase_n(pc, ph)
+    if ph == dp:
+        return _phase_n(pc, 'AM전체')
+    if ph in ('AM_P', 'AM_S'):
+        return 0
+    return _phase_n(pc, ph)
+
+
+def _phase_swap(col, a, b):
+    """열 이름의 상 토큰 a → b 전부 (mono: 웹앱 반지름 이름 ↔ 설계 상 · area_AM_S_AM_S_n → area_AM_P_AM_P_n)."""
+    return WA_PHASE_TOKEN.sub(lambda m: b if m.group(0) == a else m.group(0), col)
+
+
+def _mono_path(path, dp, op):
+    """J20-k (B) — 수확 JSON 경로의 상 키: 설계 상 → `AM` (수확기 mono 라벨) · 설계에 없는 상 → None (빈칸)."""
+    if any(k == op for k in path):
+        return None
+    return tuple('AM' if k == dp else k for k in path)
+
+
+def _mono_design_phase(r, h, case):
+    """J20-k (B) — 설계행 · 수확 한 건 → (설계 상, 설계에 없는 상) 또는 (None, None) (bimodal).
+
+    설계 `block` 과 수확 모양 (n_types · phase_counts · coverage 상별 상태 · AM_only = 전체) 이 어긋나거나 둘 중 하나를 모르면 `FillRefusal`
+    — 조용히 (A) 로 돌아가지 않는다 (한 표에 두 규약이 섞인다).
+    """
+    blk = r.get('block')
+    if blk not in (None, '') and str(blk).startswith('mono') and blk not in MONO_BLOCKS:
+        raise FillRefusal(f'{case}: 설계 block {blk!r} — 아는 mono 라벨은 {sorted(MONO_BLOCKS)} 뿐이다 (설계 상을 정할 수 없다 · J20-k (B))')
+    dp = MONO_BLOCKS.get(blk)
+    nt = h.get('n_types')
+    if dp is not None and nt is None:
+        raise FillRefusal(f'{case}: 설계 block {blk} 인데 수확 JSON 에 n_types 가 없다 — 수확이 mono 인지 확인할 수 없어 설계 상 칸에 싣지 않는다 '
+                          '(J20-k (B))')
+    h_mono = nt is not None and int(nt) == 2
+    if (dp is not None) != h_mono:
+        raise FillRefusal(f'{case}: 설계 block {blk!r} ↔ 수확 n_types {nt!r} 가 어긋난다 — 설계 · 수확이 다른 침대거나 설계행에 block 이 없다 '
+                          '(J20-k (B) 를 적용할 수 없다)')
+    if dp is None:
+        return None, None
+    pc = h.get('phase_counts')
+    if not isinstance(pc, dict):
+        raise FillRefusal(f'{case}: mono 인데 수확 JSON 에 phase_counts 가 없다 — 단일 AM 입자 수를 모른다 (J20-k (B))')
+    if _phase_n(pc, 'AM') <= 0 or _phase_n(pc, 'AM_P') > 0 or _phase_n(pc, 'AM_S') > 0:
+        raise FillRefusal(f'{case}: mono 인데 phase_counts {pc} 가 수확기 mono 모양 (AM 하나 · AM_P/AM_S 없음) 이 아니다 (J20-k (B))')
+    st = h.get('status') or {}
+    for k in ('coverage_AM_P', 'coverage_AM_S'):
+        if k in st and st[k] != 'N_A_PHASE_ABSENT':
+            raise FillRefusal(f'{case}: mono 인데 수확 status.{k} = {st[k]!r} ≠ N_A_PHASE_ABSENT — 상별 값이 따로 있는 수확은 mono 모양이 아니다 '
+                              '(J20-k (B))')
+    only, tot = h.get('coverage_AM_only_hertz_pct'), h.get('coverage_AM_total_hertz_pct')
+    if only is not None and tot is not None and float(only) != float(tot):
+        raise FillRefusal(f'{case}: mono 인데 coverage_AM_only {only!r} ≠ coverage_AM_total {tot!r} — 단일 AM = 전체 항등식이 깨졌다 (J20-k (B))')
+    return dp, ('AM_S' if dp == 'AM_P' else 'AM_P')
 
 
 def wa_phase_specific(col):
@@ -1118,14 +1190,14 @@ def column_dictionary(cols, webapp=None):
             note = wa_review_note(c)                 # J20-g — 1저자 검토 기록
             if note:
                 meaning += f' · 1저자 검토: {note}'
-            if wa_phase_specific(c):                 # J20-f (A)
-                meaning += ' · ' + MONO_PHASE_NOTE
             if WA_PAIR_COUNT.fullmatch(c):           # J20-h
                 meaning += ' · ' + PAIR_ZERO_NOTE
             d.update(source='webapp', verdict=v, meaning=meaning)
             d['caveat'] = dfn[1] if dfn else (CAVEAT_NAME if '이름 주의' in v else _frac_caveat(c))
         else:
             d.update(source='design', meaning='LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)')
+        if wa_phase_specific(c) and d['source'] != 'design':      # J20-k (B) — 상별 열 전부 (수확 · 웹앱 · QC) 에 mono 규약 표지
+            d['meaning'] += ' · ' + MONO_DESIGN_NOTE
         out.append(d)
     return out
 
@@ -1260,7 +1332,7 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
         wa_coll = [c for c in ok_cols if c in have]
         cols += [n for n, _w in WA_ROW_COLS] + wa_take + [n for n, _a, _b, _w in WA_QC]
     out, rep = [], {'n': 0, 'blank_by_status': collections.Counter(),
-                    'held_back': dict(HANDOVER_HELD_BACK)}
+                    'held_back': dict(HANDOVER_HELD_BACK), 'mono_rows': 0, 'mono_harvest_filled': 0}
     if uv is not None:
         rep['union_extra'] = sorted(set(uv) - {r[key] for r in rows})
     if tw_on:
@@ -1268,22 +1340,34 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
     if wv is not None:
         rep.update(wa_collisions=wa_coll, wa_n_cols=len(wa_take), wa_status_counts=collections.Counter(),
                    wa_porosity_absmax=0.0, wa_reviewed_only=bool(wa_reviewed_only),
-                   wa_unreviewed_dropped=n_census_ok - len(ok_cols), wa_mono_phase_blanked=0, wa_pair_zero_filled=0,
+                   wa_unreviewed_dropped=n_census_ok - len(ok_cols), wa_pair_zero_filled=0,
+                   wa_mono_renamed_cases=0, wa_mono_design_filled=0, wa_mono_absent_blanked=0,
                    wa_cn_identity_checked=0, wa_am_identity_checked=0)
     for r in rows:
         h = hv[r[key]]
         o = {c: r.get(c, '') for c in design_cols}
+        #  J20-k (B) — mono 침대의 설계 상 (block) · 설계에 없는 상.  설계 ↔ 수확 모양이 어긋나면 여기서 거부된다.
+        dp, op = _mono_design_phase(r, h, r[key])
+        if dp is not None:
+            rep['mono_rows'] += 1
         for c in HANDOVER_VALUE_COLS:
-            st = h['status'][DESCRIPTOR_STATUS_KEY[c]]
-            v = h.get(c)
+            #  (B) — mono 의 설계 상 칸 ← 전체 (단일 AM = 전체 · coverage_AM_only = coverage_AM_total 을 위에서 확인했다)
+            src = 'coverage_AM_total_hertz_pct' if (dp is not None and c == f'coverage_{dp}_hertz_pct') else c
+            st = h['status'][DESCRIPTOR_STATUS_KEY[src]]
+            v = h.get(src)
             #  계약 ② — OK 가 아니면 값 칸은 **비운다** (0 이 아니다)
             o[c] = repr(float(v)) if (st == 'OK' and v is not None) else ''
             o[c + '_status'] = st
             if st != 'OK':
                 rep['blank_by_status'][st] += 1
+            elif src != c:
+                rep['mono_harvest_filled'] += 1
         for name, path, _why in HANDOVER_EXTRA:
-            v = _dig(h, path)
+            p = _mono_path(path, dp, op) if dp is not None else path   # (B) — 설계 상 키 → 수확 `AM` · 없는 상 → 빈칸
+            v = None if p is None else _dig(h, p)
             o[name] = '' if v is None else str(v)
+            if v is not None and p != path:
+                rep['mono_harvest_filled'] += 1
         #  계약 ③ — DESC-07 항등식을 **내보내는 표 위에서 다시** 잰다
         e1 = abs(float(h['porosity_sphere_pct_RECORD_ONLY'])
                  - 100.0 * (1.0 - float(h['phi_se']) - float(h['phi_am'])))
@@ -1305,8 +1389,12 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
         if wt_on:
             wt = h.get('wall_touch') or {}
             for name, ph, side, _w in HANDOVER_WALL_TOUCH:
-                v = (wt.get(ph) or {}).get(side)
+                #  J20-k (B) — mono: 설계 상 칸 ← 수확 `AM` · 설계에 없는 상 → 빈칸 · AM · SE 열은 그대로
+                src_ph = ('AM' if ph == dp else (None if ph == op else ph)) if dp is not None else ph
+                v = None if src_ph is None else (wt.get(src_ph) or {}).get(side)
                 o[name] = '' if v is None else repr(float(v))          # 없는 상 = 빈칸 (N/A · 0 이 아니다)
+                if v is not None and src_ph != ph:
+                    rep['mono_harvest_filled'] += 1
         if wv is not None:
             rec = wv['status'][r[key]] or {}
             s = rec.get('status') or 'UNKNOWN'
@@ -1316,26 +1404,46 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
             wr = (wv.get('rows') or {}).get(r[key]) if s in WA_OK_STATUS else None
             if s in WA_OK_STATUS and wr is None:
                 raise FillRefusal(f'{r[key]}: 배치 상태 {s} 인데 metrics_flat 행이 없다')
-            #  J20-f (A) — mono (2-type) 의 상별 열은 빈칸.  mono 인지 모르면 (수확 JSON 에 n_types 없음) 상별 열을 싣지 않고 거부한다
+            #  J20-f 관문 — 상별 열을 실을 때 수확 JSON 에 n_types 가 없으면 거부 (mono 인지 모른다 — 반지름 이름을 그대로 싣지 않는다)
             phase_cols = [c for c in wa_take if wa_phase_specific(c)]
             nt = h.get('n_types')
             if phase_cols and wr is not None and nt is None:
                 raise FillRefusal(f'{r[key]}: 수확 JSON 에 n_types 가 없다 — mono 인지 몰라 상별 웹앱 열 {phase_cols[:3]} 을 '
                                   '실을 수 없다 (J20-f · 반지름 이름을 그대로 싣지 않는다)')
-            mono = nt is not None and int(nt) == 2
+            #  J20-k (B) — mono: 웹앱이 단일 AM 에 붙인 반지름 이름을 접촉 열에서 읽는다 (두 이름이 다 있으면 mono 행이 아니다)
+            wname = None                                                  # 웹앱이 mono 의 AM 에 붙인 이름 (아래 QC 의 wp = porosity 와 다른 변수)
+            o['wa_mono_phase_name_webapp'] = ''
+            if dp is not None and wr is not None:
+                toks = set()
+                for k, v in wr.items():
+                    if v not in (None, '') and wa_group_contact(k) and wa_phase_specific(k):
+                        toks.update(WA_PHASE_TOKEN.findall(k))
+                if len(toks) > 1:
+                    raise FillRefusal(f'{r[key]}: 설계 mono ({r.get("block")}) 인데 웹앱 접촉 열에 AM_P · AM_S 두 이름 다 값이 있다 {sorted(toks)} — '
+                                      'mono 행이 아니거나 다른 침대의 행이다 (J20-k (B))')
+                wname = next(iter(toks)) if toks else None
+                o['wa_mono_phase_name_webapp'] = wname or ''
+                if wname is not None and wname != dp:
+                    rep['wa_mono_renamed_cases'] += 1
             for c in wa_take:
-                v = None if wr is None else wr.get(c)
-                if mono and wa_phase_specific(c):
-                    if v not in (None, ''):
-                        rep['wa_mono_phase_blanked'] += 1
-                    v = None
-                elif v in (None, '') and wr is not None and WA_PAIR_COUNT.fullmatch(c):
-                    #  J20-h — 웹앱 행이 있는데 쌍 키가 없다 = 접촉 0.  두 상이 다 있어야 0 (없으면 N/A 빈칸) · 상을 모르면 거부
+                src, absent = c, False
+                if dp is not None and wa_phase_specific(c):
+                    absent = any(t == op for t in WA_PHASE_TOKEN.findall(c))     # 설계에 없는 상이 낀 열 → 빈칸 (N/A)
+                    if not absent and wname is not None and wname != dp:
+                        src = _phase_swap(c, dp, wname)                          # 설계 이름 칸 ← 웹앱 이름의 값
+                v = None if (wr is None or absent) else wr.get(src)
+                if absent and wr is not None:
+                    rep['wa_mono_absent_blanked'] += 1
+                elif dp is not None and wa_phase_specific(c) and v not in (None, ''):
+                    rep['wa_mono_design_filled'] += 1
+                if v in (None, '') and wr is not None and not absent and WA_PAIR_COUNT.fullmatch(c):
+                    #  J20-h — 웹앱 행이 있는데 쌍 키가 없다 = 접촉 0.  두 상이 다 있어야 0 (없으면 N/A 빈칸) · 상을 모르면 거부 ·
+                    #   mono 는 설계 상으로 판단 (J20-k (B) — 설계 상 = 수확 AM)
                     pc = h.get('phase_counts')
                     if not isinstance(pc, dict):
                         raise FillRefusal(f'{r[key]}: 수확 JSON 에 phase_counts 가 없다 — {c} 의 빈칸이 접촉 0 인지 상이 없는 것인지 '
                                           '가를 수 없다 (J20-h)')
-                    if all(_phase_n(pc, ph) > 0 for ph in WA_PAIR_COUNT.fullmatch(c).groups()):
+                    if all(_phase_n_mono(pc, ph, dp) > 0 for ph in WA_PAIR_COUNT.fullmatch(c).groups()):
                         v = '0'
                         rep['wa_pair_zero_filled'] += 1
                 o[c] = '' if v is None else str(v)
@@ -1386,8 +1494,16 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                 rep['wa_porosity_absmax'] = max(rep['wa_porosity_absmax'], abs(dpor))
                 o['qc_wa_porosity_minus_harvest_pct'] = repr(dpor)
                 for name, wcol, hcol, _w in WA_QC[1:]:
-                    a, b = wr.get(wcol), h.get(hcol)
-                    st_h = (h.get('status') or {}).get(DESCRIPTOR_STATUS_KEY.get(hcol, ''), '')
+                    wc, hc = wcol, hcol
+                    if dp is not None:                                   # J20-k (B) — 설계 상 칸 검산 = 웹앱 <웹앱 이름> − 수확 전체 · 없는 상 빈칸
+                        toks_q = WA_PHASE_TOKEN.findall(name)
+                        if any(t == op for t in toks_q):
+                            continue
+                        if any(t == dp for t in toks_q):
+                            hc = 'coverage_AM_total_hertz_pct'
+                            wc = _phase_swap(wcol, dp, wname) if (wname is not None and wname != dp) else wcol
+                    a, b = wr.get(wc), h.get(hc)
+                    st_h = (h.get('status') or {}).get(DESCRIPTOR_STATUS_KEY.get(hc, ''), '')
                     if a not in (None, '') and b is not None and st_h == 'OK':
                         o[name] = repr(float(a) - float(b))
         out.append(o)
@@ -1710,30 +1826,35 @@ def _selftest():
 
     #  ═══ ⑯ 인계표 계약 (`build_handover`) — 규율 ② 대로 **먼저** 쓴 시험 ═══════════
     def _hrow(case, tau_ok=False, mono=False):
-        """수확 한 건을 최소로 흉내낸다."""
+        """수확 한 건을 최소로 흉내낸다.  mono = 수확기의 2-type 모양 (상 라벨 `AM` 하나 · coverage 상별 둘 다 N_A_PHASE_ABSENT ·
+        `coverage_AM_only` = 전체 — 실측 0925 130/64 JSON 과 같은 모양)."""
         phi_se, phi_am = 0.20, 0.50
         return {
             'case': case, 'timestep': 100, 'plate_z_sim': 0.04, 'plate_z_source': 'mesh_stl',
             'V_box_sim': 1.0e-4, 'area_channel': 'dem_geometric_c_cpl22 …', 'closure_residual': 0.0,
             'phi_se': phi_se, 'phi_am': phi_am,
             'porosity_sphere_pct_RECORD_ONLY': 100.0 * (1 - phi_se - phi_am),
+            'n_types': (2 if mono else 3),
+            'phase_counts': ({'AM': 7, 'SE': 50} if mono else {'AM_P': 5, 'AM_S': 9, 'SE': 50}),
             'coverage_AM_P_hertz_pct': (None if mono else 11.0),
-            'coverage_AM_S_hertz_pct': 22.0,
+            'coverage_AM_S_hertz_pct': (None if mono else 22.0),
+            'coverage_AM_only_hertz_pct': (20.0 if mono else None),
             'coverage_AM_total_hertz_pct': 20.0,
             'tortuosity_dijkstra_SE': (1.5 if tau_ok else None),
             'status': {'phi': 'OK', 'porosity': 'OK',
                        'coverage_AM_P': ('N_A_PHASE_ABSENT' if mono else 'OK'),
-                       'coverage_AM_S': 'OK', 'coverage_AM_total': 'OK',
+                       'coverage_AM_S': ('N_A_PHASE_ABSENT' if mono else 'OK'), 'coverage_AM_total': 'OK',
                        'tortuosity': ('OK' if tau_ok else 'NOT_PERCOLATING')},
             'tau_detail': {'n_sampled': 7, 'n_valid': (7 if tau_ok else 0), 'n_truncated': 0,
                            'tau_convention': 'harvest_v1/…'},
             'coverage_detail': {'n_capped': 0, 'n_free_surface_invalid': 0,
                                 'counts': {'AM_P': {'n_valid': (0 if mono else 5)},
-                                           'AM_S': {'n_valid': 9}}},
+                                           'AM_S': {'n_valid': (0 if mono else 9)},
+                                           'AM': {'n_valid': (7 if mono else 0)}}},
             'raw': {'atom': {'sha256': 'deadbeef'}},
         }
-    _drows = [{'case_id': 'c1', 'd_am_p_um': 5.0, 'am_pct': 80.0},
-              {'case_id': 'c2', 'd_am_p_um': 9.0, 'am_pct': 90.0}]
+    _drows = [{'case_id': 'c1', 'block': 'bimodal', 'd_am_p_um': 5.0, 'am_pct': 80.0},
+              {'case_id': 'c2', 'block': 'mono_AM_P', 'd_am_p_um': 9.0, 'am_pct': 90.0}]
     _harv = [_hrow('c1', tau_ok=True), _hrow('c2', mono=True)]
     _o, _c, _rep = build_handover(_drows, _harv)
     chk('⑯a 행 수 보존 (2)', len(_o) == 2)
@@ -1741,11 +1862,48 @@ def _selftest():
     chk('⑯b τ 값 열이 인계표에 없다', 'tortuosity_dijkstra_SE' not in _c)
     chk('⑯c 대신 τ 진단 열이 있다',
         all(k in _c for k in ('tau_status', 'tau_n_valid', 'tau_convention')))
-    #  ★ 계약 ② — status != OK 는 **빈칸**이고 0 이 아니다
+    #  ★ 계약 ② — status != OK 는 **빈칸**이고 0 이 아니다.  ★ J20-k (B) (1저자 09-30 *"인계할때는 중복되더라도 잘 채워서"* · J20-f (A) 개정):
+    #    mono 는 **설계 상 칸** (block mono_AM_P → AM_P) 에 단일 AM 값 (= 전체 열) 을 싣고, 설계에 없는 상 (AM_S) 의 칸은 빈칸 (N/A · 0 아님).
+    #    수확기 열 전부 같은 규칙 — coverage 상별 · n_AM_*_measured (LHS-21 해소) · cov_*_n_valid.
     _mono = [r for r in _o if r['case_id'] == 'c2'][0]
-    chk('⑯d mono 의 coverage_AM_P 는 빈칸 (0 이 아니다)',
-        _mono['coverage_AM_P_hertz_pct'] == ''
-        and _mono['coverage_AM_P_hertz_pct_status'] == 'N_A_PHASE_ABSENT')
+    chk('⑯d ★ J20-k (B) mono_AM_P — coverage_AM_P 칸 = 전체 값 (status OK) · AM_S 칸 빈칸 (N_A_PHASE_ABSENT · 0 아님) · '
+        'n_AM_P_measured = phase_counts.AM · n_AM_S_measured 빈칸 · cov_AM_P_n_valid = counts.AM · 보고 mono_rows',
+        _mono['coverage_AM_P_hertz_pct'] == repr(20.0) and _mono['coverage_AM_P_hertz_pct_status'] == 'OK'
+        and _mono['coverage_AM_S_hertz_pct'] == '' and _mono['coverage_AM_S_hertz_pct_status'] == 'N_A_PHASE_ABSENT'
+        and _mono['coverage_AM_total_hertz_pct'] == repr(20.0)
+        and _mono['n_AM_P_measured'] == '7' and _mono['n_AM_S_measured'] == '' and _mono['n_SE_measured'] == '50'
+        and _mono['cov_AM_P_n_valid'] == '7' and _mono['cov_AM_S_n_valid'] == ''
+        and _rep.get('mono_rows') == 1)
+    _bim = [r for r in _o if r['case_id'] == 'c1'][0]
+    chk('⑯d1 bimodal 은 그대로 — 상별 값 둘 다 · n_AM_P/S_measured = phase_counts',
+        _bim['coverage_AM_P_hertz_pct'] == repr(11.0) and _bim['coverage_AM_S_hertz_pct'] == repr(22.0)
+        and _bim['n_AM_P_measured'] == '5' and _bim['n_AM_S_measured'] == '9' and _bim['cov_AM_S_n_valid'] == '9')
+    _drows_s = [dict(_drows[0]), dict(_drows[1], block='mono_AM_S')]
+    _mono_s = [r for r in build_handover(_drows_s, _harv)[0] if r['case_id'] == 'c2'][0]
+    chk('⑯d2 mono_AM_S 는 거울 — AM_S 칸에 값 · AM_P 칸 빈칸',
+        _mono_s['coverage_AM_S_hertz_pct'] == repr(20.0) and _mono_s['coverage_AM_S_hertz_pct_status'] == 'OK'
+        and _mono_s['coverage_AM_P_hertz_pct'] == '' and _mono_s['coverage_AM_P_hertz_pct_status'] == 'N_A_PHASE_ABSENT'
+        and _mono_s['n_AM_S_measured'] == '7' and _mono_s['n_AM_P_measured'] == ''
+        and _mono_s['cov_AM_S_n_valid'] == '7' and _mono_s['cov_AM_P_n_valid'] == '')
+    #  ★ (B) 는 설계 block 과 수확 모양이 맞을 때만 — 어긋나거나 모르면 거부 (조용히 (A) 로 돌아가면 한 표에 규약이 섞인다)
+    _neg('⑯d3 설계 block mono_AM_P 인데 수확 n_types 3 이면 거부',
+         lambda: build_handover(_drows, [_hrow('c1', tau_ok=True), dict(_hrow('c2', mono=True), n_types=3)]))
+    _neg('⑯d4 수확 n_types 2 인데 설계 block bimodal 이면 거부',
+         lambda: build_handover([dict(_drows[0]), dict(_drows[1], block='bimodal')], _harv))
+    _neg('⑯d5 수확 n_types 2 인데 설계행에 block 이 없으면 거부 (설계 상을 모른다)',
+         lambda: build_handover([dict(_drows[0]), {k: v for k, v in _drows[1].items() if k != 'block'}], _harv))
+    _neg('⑯d6 mono 인데 수확 coverage_AM_S 상태가 N_A_PHASE_ABSENT 가 아니면 거부 (mono 모양이 아니다)',
+         lambda: build_handover(_drows, [_hrow('c1', tau_ok=True),
+                                         dict(_hrow('c2', mono=True), coverage_AM_S_hertz_pct=22.0,
+                                              status=dict(_hrow('c2', mono=True)['status'], coverage_AM_S='OK'))]))
+    _neg('⑯d7 설계 block mono 인데 수확 JSON 에 n_types 가 없으면 거부',
+         lambda: build_handover(_drows, [_hrow('c1', tau_ok=True), {k: v for k, v in _hrow('c2', mono=True).items() if k != 'n_types'}]))
+    _neg('⑯d8 mono 인데 coverage_AM_only ≠ coverage_AM_total 이면 거부 (단일 AM = 전체 항등식)',
+         lambda: build_handover(_drows, [_hrow('c1', tau_ok=True), dict(_hrow('c2', mono=True), coverage_AM_only_hertz_pct=19.0)]))
+    _neg('⑯d9 mono 인데 phase_counts 에 AM_P 가 있으면 거부 (수확기 mono 라벨은 AM 하나)',
+         lambda: build_handover(_drows, [_hrow('c1', tau_ok=True), dict(_hrow('c2', mono=True), phase_counts={'AM': 4, 'AM_P': 3, 'SE': 50})]))
+    _neg('⑯d10 설계 block 이 모르는 mono 라벨 (mono_AM) 이면 거부',
+         lambda: build_handover([dict(_drows[0]), dict(_drows[1], block='mono_AM')], _harv))
     chk('⑯e 값 칸마다 _status 짝이 있다',
         all(v + '_status' in _c for v in HANDOVER_VALUE_COLS))
     #  ★ 실측 입자수가 설계 추정과 **다른 열**로 들어간다
@@ -2053,9 +2211,10 @@ def _selftest():
     finally:
         shutil.rmtree(_tdw, ignore_errors=True)
 
-    #  ⑳ J20-g · J20-f (A) (1저자 비준 09-30 "권고대로") — 표에는 **1저자와 함수 단위로 같이 확인한 열만** 싣는다 (census ✅ 는 필요조건일 뿐)
-    #   · mono (2-type) 침대의 **상별** 웹앱 열 (AM_P/AM_S 이름이 든 열) 은 빈칸 — 웹앱은 mono 의 AM 을 반지름으로 AM_P/AM_S 라 부르고
-    #   설계 상과 어긋나는 침대가 있다 (130 의 5 · 64 의 4).  값은 총량 열 (area_AM전체_SE_n · area_SE_SE_n) 이 싣는다.
+    #  ⑳ J20-g (1저자 비준 09-30 "권고대로") — 표에는 **1저자와 함수 단위로 같이 확인한 열만** 싣는다 (census ✅ 는 필요조건일 뿐)
+    #   · J20-k (B) (1저자 09-30 · J20-f (A) 개정): mono (2-type) 침대의 **상별** 웹앱 열은 **설계 상 칸** (block) 에 싣는다 — 웹앱은 mono 의
+    #   AM 을 반지름으로 AM_P/AM_S 라 부르고 설계 상과 어긋나는 침대가 있다 (130 의 5 · 64 의 4) → 그 이름의 값을 설계 이름 칸으로 옮기고
+    #   (wa_mono_phase_name_webapp 에 웹앱 이름을 남긴다) 설계에 없는 상의 칸은 빈칸 (N/A).  총량 열 (area_AM전체_SE_n · area_SE_SE_n) 은 그대로.
     _vd3 = dict(_vd, am_am_cn='✅ 쓴다', AM_P_se_cn_mean='✅ 쓴다', AM_S_se_cn_mean='✅ 쓴다', area_SE_SE_n='✅ 쓴다',
                 area_AM_S_SE_n='✅ 쓴다', area_AM_P_SE_n='✅ 쓴다', **{'area_AM전체_SE_n': '✅ 쓴다'},
                 se_se_cn_std='✅ 쓴다', se_se_cn_perc='✅ 쓴다', se_se_cn_eff_area='✅ 쓴다(이름 주의)', se_se_cn_aug='✅ 쓴다',
@@ -2081,7 +2240,17 @@ def _selftest():
                                am_am_mean_area='0.03', am_am_total_area='0.66',
                                **{'area_AM전체_SE_n': '80'})
         return w
-    _hq3 = {'q1': dict(_hqs['q1'], n_types=2), 'q2': dict(_hqs['q2'], n_types=3)}
+    def _mono_h(h, n_am=11, n_se=100):
+        """bimodal 수확 픽스처 → 수확기의 2-type 모양 (상 라벨 AM 하나 · coverage 상별 N_A · AM_only = 전체)."""
+        return dict(h, n_types=2, phase_counts={'AM': n_am, 'SE': n_se},
+                    coverage_AM_P_hertz_pct=None, coverage_AM_S_hertz_pct=None,
+                    coverage_AM_only_hertz_pct=h['coverage_AM_total_hertz_pct'],
+                    status=dict(h['status'], coverage_AM_P='N_A_PHASE_ABSENT', coverage_AM_S='N_A_PHASE_ABSENT'),
+                    coverage_detail=dict(h['coverage_detail'],
+                                         counts={'AM_P': {'n_valid': 0}, 'AM_S': {'n_valid': 0}, 'AM': {'n_valid': n_am}}))
+    _hq3 = {'q1': _mono_h(_hqs['q1']), 'q2': dict(_hqs['q2'], n_types=3)}
+    #  ⑳ 부터 설계행에 block — J20-k (B) 는 설계 상을 block 으로 정한다 (q1 = 설계 mono_AM_P · 웹앱 반지름 이름 AM_S = 이름이 어긋나는 침대)
+    _dq = [{'case_id': 'q1', 'block': 'mono_AM_P'}, {'case_id': 'q2', 'block': 'bimodal'}]
     try:
         _o20, _c20, _r20 = build_handover(_dq, _hq3, webapp=_wa3(), webapp_groups='contact')
         _e20 = ''
@@ -2093,9 +2262,14 @@ def _selftest():
         + (f' — {_e20}' if _e20 else ''),
         not _e20 and all(c in _c20 for c in ('area_SE_SE_n', 'area_AM_S_SE_n', 'area_AM_P_SE_n', 'area_AM전체_SE_n'))
         and not any(c in _c20 for c in ('AM_P_se_cn_mean', 'AM_S_se_cn_mean')))
-    chk('⑳b ★ J20-f (A) — mono (n_types 2) 의 상별 쌍 칸은 빈칸 · 총량 쌍 (area_AM전체_SE_n · area_SE_SE_n) 은 값 · 보고에 셈',
-        _m20.get('area_AM_S_SE_n') == '' and _m20.get('area_AM전체_SE_n') == '40' and _m20.get('area_SE_SE_n') == '900'
-        and _r20.get('wa_mono_phase_blanked') == 1)
+    chk('⑳b ★ J20-k (B) — mono (설계 mono_AM_P · 웹앱 이름 AM_S) 의 상별 쌍 값은 **설계 상 칸** (area_AM_P_SE_n) 으로 · 없는 상 칸 (area_AM_S_SE_n) '
+        '빈칸 · 총량 쌍 그대로 · 웹앱 이름을 wa_mono_phase_name_webapp 에 · 보고 (옮김 1 건 · 채움 1 · 빈칸 1)',
+        _m20.get('area_AM_P_SE_n') == '40' and _m20.get('area_AM_S_SE_n') == ''
+        and _m20.get('area_AM전체_SE_n') == '40' and _m20.get('area_SE_SE_n') == '900'
+        and _m20.get('wa_mono_phase_name_webapp') == 'AM_S' and _b20.get('wa_mono_phase_name_webapp') == ''
+        and _m20.get('block') == 'mono_AM_P'
+        and _r20.get('wa_mono_renamed_cases') == 1 and _r20.get('wa_mono_design_filled') == 1
+        and _r20.get('wa_mono_absent_blanked') == 1 and 'wa_mono_phase_blanked' not in _r20)
     chk('⑳c bimodal (n_types 3) 은 상별 쌍 값 그대로',
         _b20.get('area_AM_P_SE_n') == '30' and _b20.get('area_AM_S_SE_n') == '50' and _b20.get('area_AM전체_SE_n') == '80')
     chk('⑳d 판별 — wa_reviewed (area_<쌍>_n · se_se_cn(_std) · am_am_cn(_std) · am_am_n_contacts — _perc · _eff_area · _aug · am_am 면적 · '
@@ -2114,9 +2288,12 @@ def _selftest():
          lambda: build_handover(_dq, {k: {kk: vv for kk, vv in v.items() if kk != 'n_types'} for k, v in _hqs.items()},
                                 webapp=_wa3(), webapp_groups='contact'))
     _d20 = {d['column']: d for d in column_dictionary(_c20, webapp=_wa3())} if _c20 else {}
-    chk('⑳f 열 사전 — 상별 쌍 열의 뜻에 mono 빈칸 규약 · 검토 기록 (J20-g)',
-        'mono' in _d20.get('area_AM_S_SE_n', {}).get('meaning', '')
-        and 'J20-g' in _d20.get('area_SE_SE_n', {}).get('meaning', ''))
+    chk('⑳f 열 사전 — 상별 쌍 열의 뜻에 mono 설계 상 칸 규약 (J20-k (B)) · 검토 기록 (J20-g) · 총량 열에는 mono 규약 없음',
+        'mono' in _d20.get('area_AM_S_SE_n', {}).get('meaning', '') and 'J20-k' in _d20.get('area_AM_S_SE_n', {}).get('meaning', '')
+        and '설계 상 칸' in _d20.get('area_AM_P_SE_n', {}).get('meaning', '')
+        and 'J20-g' in _d20.get('area_SE_SE_n', {}).get('meaning', '')
+        and '설계 상 칸' not in _d20.get('area_SE_SE_n', {}).get('meaning', '')
+        and '설계 상 칸' not in _d20.get('am_am_cn', {}).get('meaning', ''))
 
     #  ⑳g–l J20-h (1저자 비준 09-30 — *"bimodal 에서 빠진 쌍을 0 으로 채우게 · 시험 먼저"*) — 웹앱 `calc_interface_area` 는 접촉이 0 인
     #   쌍의 키를 **만들지 않는다** → metrics_flat 에서 빈칸.  bimodal 에서 그 뜻은 **측정된 0** 이지 N/A 가 아니다 (09-30 실측: 130 에서
@@ -2140,8 +2317,8 @@ def _selftest():
     chk('⑳g ★ J20-h — bimodal 의 빠진 쌍 개수 = 0 (측정된 0) · 있는 값은 그대로 · 보고에 셈' + (f' — {_e21}' if _e21 else ''),
         _b21.get('area_AM_P_AM_P_n') == '0' and _b21.get('area_AM_S_AM_S_n') == '17'
         and _r21.get('wa_pair_zero_filled') == 1)
-    chk('⑳h mono 는 0 으로 채우지 않는다 — 상별 칸은 J20-f (A) 빈칸 그대로',
-        _m21.get('area_AM_P_AM_P_n') == '' and _m21.get('area_AM_S_AM_S_n') == '' and _m21.get('area_AM전체_SE_n') == '40')
+    chk('⑳h ★ J20-k (B) mono — 웹앱 AM_S_AM_S 개수 (11) 가 설계 상 칸 area_AM_P_AM_P_n 으로 · 없는 상 칸 area_AM_S_AM_S_n 빈칸 · 총량 그대로',
+        _m21.get('area_AM_P_AM_P_n') == '11' and _m21.get('area_AM_S_AM_S_n') == '' and _m21.get('area_AM전체_SE_n') == '40')
     _hq4 = dict(_hq3, q2=dict(_hq3['q2'], phase_counts={'AM_P': 0, 'AM_S': 10, 'SE': 100}))
     _wa4i = _wa4()
     _wa4i['rows']['q2'].pop('area_AM_P_AM_S_n', None)                # AM_P 가 없는 침대 — AM_P 가 낀 쌍도 없다 (J20-j 항등식과 앞뒤를 맞춤)
@@ -2233,6 +2410,80 @@ def _selftest():
         not any(c in _c20 for c in ('am_am_mean_area', 'am_am_total_area'))
         and all('J20-j' in _d20.get(c, {}).get('meaning', '') for c in ('am_am_cn', 'am_am_cn_std', 'am_am_n_contacts'))
         and '총량' in _d20.get('am_am_n_contacts', {}).get('caveat', '') and '벽' in _d20.get('am_am_cn', {}).get('caveat', ''))
+
+    #  ⑳y–af J20-k (B) (1저자 09-30 *"인계할때는 중복되더라도 잘 채워서 보내야될듯"* · J20-f (A) 개정 · 시험 먼저) — mono 의 상별 칸은 설계 상 칸에.
+    #   위 ⑳b · ⑳h 가 "이름이 어긋나는" 침대 (설계 AM_P · 웹앱 AM_S) 를 본다.  여기서는 이름이 같은 침대 · 반례 (웹앱 행에 두 이름 다 값) ·
+    #   QC (웹앱 coverage_<웹앱 이름>_mean − 수확 전체) · 설계 쌍의 접촉 0 (J20-h 는 설계 상으로 판단) · 벽 접촉 비율 상별 · 열 사전 표지.
+    _dq_s = [{'case_id': 'q1', 'block': 'mono_AM_S'}, {'case_id': 'q2', 'block': 'bimodal'}]
+    try:
+        _o26, _c26, _r26 = build_handover(_dq_s, _hq3, webapp=_wa3(), webapp_groups='contact')
+        _m26, _e26 = next((r for r in _o26 if r['case_id'] == 'q1'), {}), ''
+    except Exception as e:                                                # noqa: BLE001
+        _m26, _r26, _e26 = {}, {}, f'{type(e).__name__}: {e}'
+    chk('⑳y 이름이 같은 mono (설계 mono_AM_S · 웹앱 AM_S) — AM_S 칸에 값 · AM_P 칸 빈칸 · 옮김 0 건' + (f' — {_e26}' if _e26 else ''),
+        not _e26 and _m26.get('area_AM_S_SE_n') == '40' and _m26.get('area_AM_P_SE_n') == ''
+        and _m26.get('wa_mono_phase_name_webapp') == 'AM_S' and _r26.get('wa_mono_renamed_cases') == 0
+        and _r26.get('wa_mono_design_filled') == 1 and _r26.get('wa_mono_absent_blanked') == 1
+        and _m26.get('coverage_AM_S_hertz_pct') == repr(17.5) and _m26.get('coverage_AM_P_hertz_pct') == ''
+        and _m26.get('n_AM_S_measured') == '11' and _m26.get('n_AM_P_measured') == '')
+    _wa_both = _wa3()
+    _wa_both['rows']['q1']['area_AM_P_SE_n'] = '3'                        # mono 인데 웹앱 접촉 열에 AM_P · AM_S 둘 다 값 — mono 행이 아니다
+    _neg('⑳z ★ mono 인데 웹앱 행의 접촉 열에 AM_P · AM_S 두 이름 다 값이 있으면 거부 (다른 침대의 행 · 옮길 이름을 못 정한다)',
+         lambda: build_handover(_dq, _hq3, webapp=_wa_both, webapp_groups='contact'))
+    _wa_cov = _wa3()
+    _wa_cov['rows']['q1']['coverage_AM_S_mean'] = '17.5'                  # 웹앱 반지름 이름 AM_S 의 피복 = 수확 전체 17.5 (같은 채널)
+    _wa_cov['rows']['q2'].update(coverage_AM_P_mean='10.5', coverage_AM_S_mean='20.0')
+    try:
+        _o27 = build_handover(_dq, _hq3, webapp=_wa_cov, webapp_groups='contact')[0]
+        _m27 = next((r for r in _o27 if r['case_id'] == 'q1'), {})
+        _b27 = next((r for r in _o27 if r['case_id'] == 'q2'), {})
+        _e27 = ''
+    except Exception as e:                                                # noqa: BLE001
+        _m27, _b27, _e27 = {}, {}, f'{type(e).__name__}: {e}'
+    _ok27 = (not _e27 and _m27.get('qc_wa_cov_AM_P_minus_harvest_pct') == repr(0.0) and _m27.get('qc_wa_cov_AM_S_minus_harvest_pct') == ''
+             and _b27.get('qc_wa_cov_AM_P_minus_harvest_pct') == repr(0.5) and _b27.get('qc_wa_cov_AM_S_minus_harvest_pct') == repr(0.0))
+    chk('⑳aa QC — mono 의 설계 상 칸 검산 = 웹앱 coverage_<웹앱 이름>_mean − 수확 전체 (0.0) · 없는 상 칸 빈칸 · bimodal 은 상별 그대로'
+        + (f' — {_e27}' if _e27 else '')
+        + ('' if _ok27 else f' (실제 q1 {_m27.get("qc_wa_cov_AM_P_minus_harvest_pct")!r} · {_m27.get("qc_wa_cov_AM_S_minus_harvest_pct")!r} '
+                            f'· q2 {_b27.get("qc_wa_cov_AM_P_minus_harvest_pct")!r} · {_b27.get("qc_wa_cov_AM_S_minus_harvest_pct")!r})'),
+        _ok27)
+    _wa_z = _wa4()
+    _wa_z['rows']['q1'].pop('area_AM_S_AM_S_n')                          # mono 인데 AM–AM 접촉 0 → 웹앱 키 없음
+    _wa_z['rows']['q1'].update(am_am_n_contacts='0', am_am_cn='0.0')     # J20-j 항등식에 맞춤
+    try:
+        _o28, _c28, _r28 = build_handover(_dq, _hq3, webapp=_wa_z, webapp_groups='contact')
+        _m28, _e28 = next((r for r in _o28 if r['case_id'] == 'q1'), {}), ''
+    except Exception as e:                                                # noqa: BLE001
+        _m28, _r28, _e28 = {}, {}, f'{type(e).__name__}: {e}'
+    chk('⑳ab J20-h 를 설계 상으로 — mono 의 설계 쌍 area_AM_P_AM_P_n 이 빠지면 0 (AM 이 있으므로) · 없는 상 쌍은 빈칸 · 0 채움 2 (q1 + q2)'
+        + (f' — {_e28}' if _e28 else ''),
+        not _e28 and _m28.get('area_AM_P_AM_P_n') == '0' and _m28.get('area_AM_S_AM_S_n') == ''
+        and _r28.get('wa_pair_zero_filled') == 2)
+    _hwt2 = {'q1': dict(_hq3['q1'], wall_touch=_wt2), 'q2': dict(_hq3['q2'], wall_touch=_wt3)}
+    try:
+        _o29 = build_handover(_dq, _hwt2)[0]
+        _m29, _b29 = (next((r for r in _o29 if r['case_id'] == c), {}) for c in ('q1', 'q2'))
+        _e29 = ''
+    except Exception as e:                                                # noqa: BLE001
+        _m29, _b29, _e29 = {}, {}, f'{type(e).__name__}: {e}'
+    chk('⑳ac 벽 접촉 비율 상별 — mono 의 설계 상 칸 (AM_P) = 수확 AM · 없는 상 (AM_S) 빈칸 · AM 열 그대로 · bimodal 그대로' + (f' — {_e29}' if _e29 else ''),
+        not _e29 and _m29.get('wall_touch_frac_AM_P_floor') == repr(1.0) and _m29.get('wall_touch_frac_AM_S_floor') == ''
+        and _m29.get('wall_touch_frac_AM_floor') == repr(1.0) and _m29.get('wall_touch_frac_SE_floor') == repr(0.5)
+        and _b29.get('wall_touch_frac_AM_P_floor') == repr(0.5) and _b29.get('wall_touch_frac_AM_S_plate') == repr(0.25))
+    _d27 = {d['column']: d for d in column_dictionary(_c20, webapp=_wa3())} if _c20 else {}
+    chk('⑳ad 열 사전 — 상별 열마다 (수확 coverage · n_AM_*_measured · cov_*_n_valid · 웹앱 쌍 · QC) J20-k (B) 표지 · 총량 · 설계 열에는 없음 · '
+        'wa_mono_phase_name_webapp 열이 있고 출처 webapp_batch',
+        all('J20-k' in _d27.get(c, {}).get('meaning', '') and '설계 상 칸' in _d27.get(c, {}).get('meaning', '')
+            for c in ('coverage_AM_P_hertz_pct', 'coverage_AM_S_hertz_pct_status', 'n_AM_P_measured', 'cov_AM_S_n_valid',
+                      'area_AM_P_SE_n', 'qc_wa_cov_AM_P_minus_harvest_pct'))
+        and not any('설계 상 칸' in _d27.get(c, {}).get('meaning', '') for c in ('coverage_AM_total_hertz_pct', 'n_SE_measured', 'block'))
+        and _d27.get('wa_mono_phase_name_webapp', {}).get('source') == 'webapp_batch'
+        and 'J20-k' in _d27.get('wa_mono_phase_name_webapp', {}).get('meaning', ''))
+    chk('⑳ae 보고 — 수확 쪽 (B) 채움 수 (mono_rows 1 · mono_harvest_filled = coverage 1 + n_AM 1 + cov_n_valid 1 = 3)',
+        _r20.get('mono_rows') == 1 and _r20.get('mono_harvest_filled') == 3)
+    _neg('⑳af ★ 설계 block mono 인데 웹앱 상별 열을 실을 때 수확 n_types 가 없으면 거부 (J20-f 관문 그대로)',
+         lambda: build_handover(_dq, {'q1': {k: v for k, v in _hq3['q1'].items() if k != 'n_types'}, 'q2': _hq3['q2']},
+                                webapp=_wa3(), webapp_groups='contact'))
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -2352,9 +2603,12 @@ if __name__ == '__main__':
             print(f'   J20 웹앱 ✅ {_rep["wa_n_cols"]} 열 · 행 상태 {dict(_rep["wa_status_counts"])} · '
                   f'같은 프레임 |Δporosity| 최대 {_rep["wa_porosity_absmax"]:.3e} %p · 이름 충돌 (수확 열 정본) {_rep["wa_collisions"]}')
             print(f'   J20-g 같이 확인한 웹앱 열만 ({len(WA_REVIEWED)} 패턴) — 뺀 census ✅ 열 {_rep["wa_unreviewed_dropped"]} · '
-                  f'J20-f (A) mono 상별 칸 빈칸 {_rep["wa_mono_phase_blanked"]} · J20-h 접촉 0 쌍 = 0 채움 {_rep["wa_pair_zero_filled"]} · '
+                  f'J20-k (B) mono 웹앱 상별 칸: 설계 상 칸 채움 {_rep["wa_mono_design_filled"]} 셀 · 이름 옮김 {_rep["wa_mono_renamed_cases"]} 건 · '
+                  f'없는 상 빈칸 {_rep["wa_mono_absent_blanked"]} 셀 · J20-h 접촉 0 쌍 = 0 채움 {_rep["wa_pair_zero_filled"]} · '
                   f'J20-i se_se_cn = 2·area_SE_SE_n/N_SE 확인 {_rep["wa_cn_identity_checked"]} 행 · '
                   f'J20-j AM–AM 접촉 수 = 쌍 합 · am_am_cn = 2·n/N_AM 확인 {_rep["wa_am_identity_checked"]} 행')
+        print(f'   J20-k (B) mono {_rep["mono_rows"]} 행 — 수확기 상별 칸 (coverage · n_AM_*_measured · cov_*_n_valid · 벽 접촉) 설계 상 칸 채움 '
+              f'{_rep["mono_harvest_filled"]} 셀 (설계에 없는 상은 빈칸)')
         print(f'   빈칸 사유: {dict(_rep["blank_by_status"])}')
         for _k, _v in _rep['held_back'].items():
             print(f'   ⛔ 보류 열 `{_k}` — {_v}')

@@ -772,6 +772,23 @@
   **웹앱과 같은 CLI** (`analyze_contacts_bimodal.py` · `analyze_contacts.py`) 로 돌려 손계산과 대조 — 옛 코드 6/12 (새 키 셋 없음) → 12/12 · 항등식 (전체 평균 × 7 = `area_AM전체_SE_n` 13 ·
   상별 평균 × N = 4 · 9) · mono 전체 분포 = `AM_S_*` 와 같다 (짝수 개 중앙값 1.5 = 가운데 둘의 평균 · 7b 근거).  값은 5번 coverage 배치 (접촉 단계 포함) 재실행 뒤 생긴다 — 커밋된 09-29/30 배치
   원자료에는 없다 (인계표 무변경 · 7c 에서 census 확장 기록과 함께 싣는다).
+- ✅ **7b 구현 (09-30 · 1저자 *"4‴ 안보고 7b로 가도 되는거면 그러자"* · 시험 먼저)** — 생성기 `lhs_design_dataset.py` 의 (B) 규칙:
+  - **판별**: 설계 `block` (`mono_AM_P` → AM_P · `mono_AM_S` → AM_S) 이 설계 상을 정한다 (`_mono_design_phase`).  설계 block 과 수확 모양 (`n_types` 2 ·
+    `phase_counts` = AM 하나 · coverage 상별 둘 다 `N_A_PHASE_ABSENT` · `coverage_AM_only` = `coverage_AM_total`) 이 어긋나거나 둘 중 하나를 모르면 **거부**
+    (조용히 (A) 로 돌아가면 한 표에 두 규약이 섞인다 — 반례 ⑯d3–d10 8 건).
+  - **수확기 열**: 설계 상 칸 ← 수확 `AM` (coverage 상별 ← 전체 · `n_AM_*_measured` ← `phase_counts.AM` (**`LHS-21` 해소**) · `cov_*_n_valid` ← `counts.AM` ·
+    v3 `wall_touch` 상별 ← `AM`) · 설계에 없는 상의 칸은 빈칸 (status `N_A_PHASE_ABSENT` 그대로 · 0 아님).
+  - **웹앱 열**: 웹앱이 단일 AM 에 붙인 반지름 이름을 접촉 열에서 읽어 (두 이름 다 값이면 거부) 설계 이름 칸으로 옮긴다 (`_phase_swap` — `area_AM_S_AM_S_n` →
+    `area_AM_P_AM_P_n` 처럼 토큰 전부) · 새 열 `wa_mono_phase_name_webapp` 에 웹앱 이름을 남긴다 (설계와 다르면 = 옮긴 행) · J20-h 접촉 0 쌍은 설계 상으로 판단 ·
+    QC `qc_wa_cov_<설계 상>_minus_harvest_pct` = 웹앱 `coverage_<웹앱 이름>_mean` − 수확 전체.
+  - **열 사전**: 상별 열 전부 (수확 coverage · `_status` · `n_AM_*_measured` · `cov_*_n_valid` · 벽 접촉 · 웹앱 쌍 · QC) 에 표지 *"mono: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B))"* ·
+    총량 · 설계 열에는 없음.
+  - **시험 먼저**: ⑯d–d10 · ⑳b · ⑳f · ⑳h 개정 + ⑳y–af 새로 — 옛 코드 117/137 (20 건 실패 = 전부 (B) 시험) → 137/137.  ⚠ 구현 중 잡은 것: QC 블록의 기존 변수 `wp`
+    (웹앱 porosity) 가 새 변수를 덮어 QC 가 비었다 → `wname` 으로 분리 (⑳aa 가 잡았다).
+  - **인계표 재생성** (같은 명령 · 재실행 없음): `lhs_handover_20260930.csv` 130×**139** · `lhsx_handover_20260930.csv` 64×**141** (새 열 1 = `wa_mono_phase_name_webapp`) ·
+    **바뀐 옛 칸 = mono 행의 상별 칸만 240 · 128 (bimodal 0)** · 이름 옮김 **5 · 4 건** (130: `118 · 121 · 124 · 125 · 126` · 64: `lhsx_003 · 017 · 048 · 062` — 09-30 §0 예측과 같다) ·
+    설계 상 칸 ↔ 원천 (수확 전체 · `phase_counts.AM` · `counts.AM` · 웹앱 반지름 이름 값) 대조 **46/46 행 차이 0** · QC 웹앱 피복 − 수확 전체 = 0 (|Δ| ≤ 1.4e-14) ·
+    옛 (A) 판은 `912ceea3b` 이력으로 남는다.
 
 ## 인계 판정 (지금)
 
