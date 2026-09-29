@@ -1,0 +1,252 @@
+
+### --allow E   compare/LC_soft_r2_s32452843 → decks/LC_ref_r2_s32452843   (--expect-deck = 재생성 decks/LC_ref_r2_s32452843)
+── docs/data/mixer_highbo_dev_decks_20260930/compare/LC_soft_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20260930/decks/LC_ref_r2_s32452843/in.mixer  (허용목록 E) → PASS
+     AM_P–AM_P            108795 →         108795   ×1
+     AM_P–AM_S            108795 →         108795   ×1
+   ≠ AM_P–SE             10458.2 →        56066.3   ×5.361   (규칙 56066.1)
+     AM_P–WALL           59063.2 →        59063.2   ×1
+     AM_S–AM_S            142562 →         142562   ×1
+   ≠ AM_S–SE             10458.2 →        56066.3   ×5.361   (규칙 56066.1)
+     AM_S–WALL           77394.6 →        77394.6   ×1
+   ≠ SE–SE               10458.2 →        60749.6   ×5.809   (규칙 60749.4)
+   ≠ SE–WALL              5677.6 →        31191.1   ×5.494   (규칙 31191.1)
+     WALL–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+   경우: 경화 ×14 (SE 1e+07 → 1.4e+08)
+→ <재생성 임시 폴더>/dd_0.json
+
+1/1 PASS
+
+### --allow E   compare/LH_soft_r2_s32452843 → decks/LH_ref_r2_s32452843   (--expect-deck = 재생성 decks/LH_ref_r2_s32452843)
+── docs/data/mixer_highbo_dev_decks_20260930/compare/LH_soft_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20260930/decks/LH_ref_r2_s32452843/in.mixer  (허용목록 E) → PASS
+     AM_P–AM_P       3.56348e+06 →    3.56348e+06   ×1
+     AM_P–AM_S       2.71944e+06 →    2.71944e+06   ×1
+   ≠ AM_P–SE             10458.2 →        56066.3   ×5.361   (규칙 56066.1)
+     AM_P–WALL       1.93455e+06 →    1.93455e+06   ×1
+     AM_S–AM_S       2.71944e+06 →    2.71944e+06   ×1
+   ≠ AM_S–SE             10458.2 →        56066.3   ×5.361   (규칙 56066.1)
+     AM_S–WALL       1.47634e+06 →    1.47634e+06   ×1
+   ≠ SE–SE               10458.2 →        60749.6   ×5.809   (규칙 60749.4)
+   ≠ SE–WALL              5677.6 →        31191.1   ×5.494   (규칙 31191.1)
+     WALL–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+   경우: 경화 ×14 (SE 1e+07 → 1.4e+08)
+→ <재생성 임시 폴더>/dd_1.json
+
+1/1 PASS
+
+### --allow E   compare/E0_soft_s32452843 → decks/E0_ref_s32452843   (--expect-deck = 재생성 decks/E0_ref_s32452843)
+── docs/data/mixer_highbo_dev_decks_20260930/compare/E0_soft_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20260930/decks/E0_ref_s32452843/in.mixer  (허용목록 E) → PASS
+     AM_P–AM_P                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_P–AM_S                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_P–SE                   0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_P–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_S–AM_S                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_S–SE                   0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_S–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+     SE–SE                     0 →              0   비 N/A (0 기준 · 차 +0)
+     SE–WALL                   0 →              0   비 N/A (0 기준 · 차 +0)
+     WALL–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+   경우: 경화 ×14 (SE 1e+07 → 1.4e+08)
+→ <재생성 임시 폴더>/dd_2.json
+
+1/1 PASS
+
+### --allow E   compare/E0_soft_s49979687 → decks/E0_ref_s49979687   (--expect-deck = 재생성 decks/E0_ref_s49979687)
+── docs/data/mixer_highbo_dev_decks_20260930/compare/E0_soft_s49979687/in.mixer  →  docs/data/mixer_highbo_dev_decks_20260930/decks/E0_ref_s49979687/in.mixer  (허용목록 E) → PASS
+     AM_P–AM_P                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_P–AM_S                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_P–SE                   0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_P–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_S–AM_S                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_S–SE                   0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_S–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+     SE–SE                     0 →              0   비 N/A (0 기준 · 차 +0)
+     SE–WALL                   0 →              0   비 N/A (0 기준 · 차 +0)
+     WALL–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+   경우: 경화 ×14 (SE 1e+07 → 1.4e+08)
+→ <재생성 임시 폴더>/dd_3.json
+
+1/1 PASS
+
+### --allow E   compare/E0_soft_s67867967 → decks/E0_ref_s67867967   (--expect-deck = 재생성 decks/E0_ref_s67867967)
+── docs/data/mixer_highbo_dev_decks_20260930/compare/E0_soft_s67867967/in.mixer  →  docs/data/mixer_highbo_dev_decks_20260930/decks/E0_ref_s67867967/in.mixer  (허용목록 E) → PASS
+     AM_P–AM_P                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_P–AM_S                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_P–SE                   0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_P–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_S–AM_S                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_S–SE                   0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_S–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+     SE–SE                     0 →              0   비 N/A (0 기준 · 차 +0)
+     SE–WALL                   0 →              0   비 N/A (0 기준 · 차 +0)
+     WALL–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+   경우: 경화 ×14 (SE 1e+07 → 1.4e+08)
+→ <재생성 임시 폴더>/dd_4.json
+
+1/1 PASS
+
+### --allow E   decks/E0_ref_s32452843 → decks/E0_ref2_s32452843   (--expect-deck = 재생성 decks/E0_ref2_s32452843)
+── docs/data/mixer_highbo_dev_decks_20260930/decks/E0_ref_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20260930/decks/E0_ref2_s32452843/in.mixer  (허용목록 E) → PASS
+     AM_P–AM_P                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_P–AM_S                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_P–SE                   0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_P–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_S–AM_S                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_S–SE                   0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_S–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+     SE–SE                     0 →              0   비 N/A (0 기준 · 차 +0)
+     SE–WALL                   0 →              0   비 N/A (0 기준 · 차 +0)
+     WALL–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+   경우: 경화 ×2 (SE 1.4e+08 → 2.8e+08)
+→ <재생성 임시 폴더>/dd_5.json
+
+1/1 PASS
+
+### --allow E   decks/E0_ref_s32452843 → decks/E0_ref_dthalf_s32452843   (--expect-deck = 재생성 decks/E0_ref_dthalf_s32452843)
+── docs/data/mixer_highbo_dev_decks_20260930/decks/E0_ref_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20260930/decks/E0_ref_dthalf_s32452843/in.mixer  (허용목록 E) → PASS
+     AM_P–AM_P                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_P–AM_S                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_P–SE                   0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_P–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_S–AM_S                 0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_S–SE                   0 →              0   비 N/A (0 기준 · 차 +0)
+     AM_S–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+     SE–SE                     0 →              0   비 N/A (0 기준 · 차 +0)
+     SE–WALL                   0 →              0   비 N/A (0 기준 · 차 +0)
+     WALL–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+   경우: dt ×1/2 (영률 같음)
+→ <재생성 임시 폴더>/dd_6.json
+
+1/1 PASS
+
+### --allow E   compare/LC_soft_r2_s32452843 → check_only/LC_ref2_r2_s32452843   (--expect-deck = 재생성 check_only/LC_ref2_r2_s32452843)
+── docs/data/mixer_highbo_dev_decks_20260930/compare/LC_soft_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20260930/check_only/LC_ref2_r2_s32452843/in.mixer  (허용목록 E) → PASS
+     AM_P–AM_P            108795 →         108795   ×1
+     AM_P–AM_S            108795 →         108795   ×1
+   ≠ AM_P–SE             10458.2 →        82420.2   ×7.881   (규칙 82419.9)
+     AM_P–WALL           59063.2 →        59063.2   ×1
+     AM_S–AM_S            142562 →         142562   ×1
+   ≠ AM_S–SE             10458.2 →        82420.2   ×7.881   (규칙 82419.9)
+     AM_S–WALL           77394.6 →        77394.6   ×1
+   ≠ SE–SE               10458.2 →          96434   ×9.221   (규칙 96433.7)
+   ≠ SE–WALL              5677.6 →        46851.1   ×8.252   (규칙 46851)
+     WALL–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+   경우: 경화 ×28 (SE 1e+07 → 2.8e+08)
+→ <재생성 임시 폴더>/dd_7.json
+
+1/1 PASS
+
+### --allow E   compare/LH_soft_r2_s32452843 → check_only/LH_ref2_r2_s32452843   (--expect-deck = 재생성 check_only/LH_ref2_r2_s32452843)
+── docs/data/mixer_highbo_dev_decks_20260930/compare/LH_soft_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20260930/check_only/LH_ref2_r2_s32452843/in.mixer  (허용목록 E) → PASS
+     AM_P–AM_P       3.56348e+06 →    3.56348e+06   ×1
+     AM_P–AM_S       2.71944e+06 →    2.71944e+06   ×1
+   ≠ AM_P–SE             10458.2 →        82420.2   ×7.881   (규칙 82419.9)
+     AM_P–WALL       1.93455e+06 →    1.93455e+06   ×1
+     AM_S–AM_S       2.71944e+06 →    2.71944e+06   ×1
+   ≠ AM_S–SE             10458.2 →        82420.2   ×7.881   (규칙 82419.9)
+     AM_S–WALL       1.47634e+06 →    1.47634e+06   ×1
+   ≠ SE–SE               10458.2 →          96434   ×9.221   (규칙 96433.7)
+   ≠ SE–WALL              5677.6 →        46851.1   ×8.252   (규칙 46851)
+     WALL–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+   경우: 경화 ×28 (SE 1e+07 → 2.8e+08)
+→ <재생성 임시 폴더>/dd_8.json
+
+1/1 PASS
+
+### --allow E   decks/LC_ref_r2_s32452843 → check_only/LC_ref2_r2_s32452843   (--expect-deck = 재생성 check_only/LC_ref2_r2_s32452843)
+── docs/data/mixer_highbo_dev_decks_20260930/decks/LC_ref_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20260930/check_only/LC_ref2_r2_s32452843/in.mixer  (허용목록 E) → PASS
+     AM_P–AM_P            108795 →         108795   ×1
+     AM_P–AM_S            108795 →         108795   ×1
+   ≠ AM_P–SE             56066.3 →        82420.2   ×1.47   (규칙 82420.2)
+     AM_P–WALL           59063.2 →        59063.2   ×1
+     AM_S–AM_S            142562 →         142562   ×1
+   ≠ AM_S–SE             56066.3 →        82420.2   ×1.47   (규칙 82420.2)
+     AM_S–WALL           77394.6 →        77394.6   ×1
+   ≠ SE–SE               60749.6 →          96434   ×1.587   (규칙 96434)
+   ≠ SE–WALL             31191.1 →        46851.1   ×1.502   (규칙 46851)
+     WALL–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+   경우: 경화 ×2 (SE 1.4e+08 → 2.8e+08)
+→ <재생성 임시 폴더>/dd_9.json
+
+1/1 PASS
+
+### --allow EB   compare/LC_soft_r2_s32452843 → decks/LH_ref_r2_s32452843   (--expect-deck = 재생성 decks/LH_ref_r2_s32452843)
+── docs/data/mixer_highbo_dev_decks_20260930/compare/LC_soft_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20260930/decks/LH_ref_r2_s32452843/in.mixer  (허용목록 EB) → PASS
+   ≠ AM_P–AM_P            108795 →    3.56348e+06   ×32.75
+   ≠ AM_P–AM_S            108795 →    2.71944e+06   ×25
+   ≠ AM_P–SE             10458.2 →        56066.3   ×5.361   (규칙 56066.1)
+   ≠ AM_P–WALL           59063.2 →    1.93455e+06   ×32.75
+   ≠ AM_S–AM_S            142562 →    2.71944e+06   ×19.08
+   ≠ AM_S–SE             10458.2 →        56066.3   ×5.361   (규칙 56066.1)
+   ≠ AM_S–WALL           77394.6 →    1.47634e+06   ×19.08
+   ≠ SE–SE               10458.2 →        60749.6   ×5.809   (규칙 60749.4)
+   ≠ SE–WALL              5677.6 →        31191.1   ×5.494   (규칙 31191.1)
+     WALL–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+   경우: 경화 ×14 (SE 1e+07 → 1.4e+08)
+→ <재생성 임시 폴더>/dd_10.json
+
+1/1 PASS
+
+### --allow EB   compare/LC_soft_r2_s32452843 → check_only/LH_ref2_r2_s32452843   (--expect-deck = 재생성 check_only/LH_ref2_r2_s32452843)
+── docs/data/mixer_highbo_dev_decks_20260930/compare/LC_soft_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20260930/check_only/LH_ref2_r2_s32452843/in.mixer  (허용목록 EB) → PASS
+   ≠ AM_P–AM_P            108795 →    3.56348e+06   ×32.75
+   ≠ AM_P–AM_S            108795 →    2.71944e+06   ×25
+   ≠ AM_P–SE             10458.2 →        82420.2   ×7.881   (규칙 82419.9)
+   ≠ AM_P–WALL           59063.2 →    1.93455e+06   ×32.75
+   ≠ AM_S–AM_S            142562 →    2.71944e+06   ×19.08
+   ≠ AM_S–SE             10458.2 →        82420.2   ×7.881   (규칙 82419.9)
+   ≠ AM_S–WALL           77394.6 →    1.47634e+06   ×19.08
+   ≠ SE–SE               10458.2 →          96434   ×9.221   (규칙 96433.7)
+   ≠ SE–WALL              5677.6 →        46851.1   ×8.252   (규칙 46851)
+     WALL–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)
+   경우: 경화 ×28 (SE 1e+07 → 2.8e+08)
+→ <재생성 임시 폴더>/dd_11.json
+
+1/1 PASS
+
+### --allow B   compare/LC_soft_r2_s32452843 → compare/LH_soft_r2_s32452843   (--expect-deck = 재생성 compare/LH_soft_r2_s32452843)
+── docs/data/mixer_highbo_dev_decks_20260930/compare/LC_soft_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20260930/compare/LH_soft_r2_s32452843/in.mixer  (허용목록 B) → PASS
+   ≠ AM_P–AM_P            108795 →    3.56348e+06   ×32.75
+   ≠ AM_P–AM_S            108795 →    2.71944e+06   ×25
+     AM_P–SE             10458.2 →        10458.2   ×1
+   ≠ AM_P–WALL           59063.2 →    1.93455e+06   ×32.75
+   ≠ AM_S–AM_S            142562 →    2.71944e+06   ×19.08
+     AM_S–SE             10458.2 →        10458.2   ×1
+   ≠ AM_S–WALL           77394.6 →    1.47634e+06   ×19.08
+     SE–SE               10458.2 →        10458.2   ×1
+     SE–WALL              5677.6 →         5677.6   ×1
+     WALL–WALL                 0 →              0   ×1
+→ <재생성 임시 폴더>/dd_12.json
+
+1/1 PASS
+
+### --allow B   decks/LC_ref_r2_s32452843 → decks/LH_ref_r2_s32452843   (--expect-deck = 재생성 decks/LH_ref_r2_s32452843)
+── docs/data/mixer_highbo_dev_decks_20260930/decks/LC_ref_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20260930/decks/LH_ref_r2_s32452843/in.mixer  (허용목록 B) → PASS
+   ≠ AM_P–AM_P            108795 →    3.56348e+06   ×32.75
+   ≠ AM_P–AM_S            108795 →    2.71944e+06   ×25
+     AM_P–SE             56066.3 →        56066.3   ×1
+   ≠ AM_P–WALL           59063.2 →    1.93455e+06   ×32.75
+   ≠ AM_S–AM_S            142562 →    2.71944e+06   ×19.08
+     AM_S–SE             56066.3 →        56066.3   ×1
+   ≠ AM_S–WALL           77394.6 →    1.47634e+06   ×19.08
+     SE–SE               60749.6 →        60749.6   ×1
+     SE–WALL             31191.1 →        31191.1   ×1
+     WALL–WALL                 0 →              0   ×1
+→ <재생성 임시 폴더>/dd_13.json
+
+1/1 PASS
+
+### --allow B   check_only/LC_ref2_r2_s32452843 → check_only/LH_ref2_r2_s32452843   (--expect-deck = 재생성 check_only/LH_ref2_r2_s32452843)
+── docs/data/mixer_highbo_dev_decks_20260930/check_only/LC_ref2_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20260930/check_only/LH_ref2_r2_s32452843/in.mixer  (허용목록 B) → PASS
+   ≠ AM_P–AM_P            108795 →    3.56348e+06   ×32.75
+   ≠ AM_P–AM_S            108795 →    2.71944e+06   ×25
+     AM_P–SE             82420.2 →        82420.2   ×1
+   ≠ AM_P–WALL           59063.2 →    1.93455e+06   ×32.75
+   ≠ AM_S–AM_S            142562 →    2.71944e+06   ×19.08
+     AM_S–SE             82420.2 →        82420.2   ×1
+   ≠ AM_S–WALL           77394.6 →    1.47634e+06   ×19.08
+     SE–SE                 96434 →          96434   ×1
+     SE–WALL             46851.1 →        46851.1   ×1
+     WALL–WALL                 0 →              0   ×1
+→ <재생성 임시 폴더>/dd_14.json
+
+1/1 PASS

@@ -1,0 +1,11 @@
+조성 → 개수 (N=100,000)
+   AM_P  φ 0.4545 · d  1.363 mm · n      176
+   AM_S  φ 0.1948 · d  0.606 mm · n      859
+   SE    φ 0.3506 · d  0.151 mm · n   98,965
+
+드럼  R 13.138 mm (지름 26.3 mm) · L 5.255 mm · 부피 3 mL · STL scale 0.0263
+시간  dt 2.21e-07 s · 임계 261 rpm · 75.0 rpm 에서 Fr 0.0827  (밴드 (0.055, 0.086))
+비용  2 바퀴 = 7,220,615 step · 직렬 추정 67.1 h  (실측 처리율 2.99e6 p·step/s)
+강성  SE 영률 ×28 (1e+07 → 2.8e+08 Pa) · hold_bo_pairwise yes · dt_factor 1 → 덱 dt 2.215e-07 s (soft 7.055e-07 s · AM_S → 규칙 2.215e-07 s · SE) · 정착 613,751 ×2 · 회전 7,220,615 · 덤프 36,103 step  (위 비용 줄은 규칙 dt 기준)
+   → docs/data/mixer_highbo_dev_decks_20260930/check_only/LC_ref2_r2_s32452843/in.mixer   [LC] §24 층상 · AM 표면 CED 를 SE 표면에서 JKR 환산 (C1 규약, AM_P Bo_code 0.00109) — "코팅" 의 대리 (R-3)
+⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다
