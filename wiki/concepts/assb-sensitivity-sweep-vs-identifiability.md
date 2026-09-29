@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -266,6 +266,17 @@ evidenceScope: multi-source-primary
 3. **크기 검사가 없다** — `[재현]` 측정 σ_eff 의 옴 강하(가정 두께)는 C/20 2–4 mV · 1C 차 ≤28 mV 로, 1C 전압 간격 0.33–0.92 V · C/20 결손 30 mAh g⁻¹ 의 작은 몫이다. 상관의 크기가 제안된 기구의 크기와 맞는지 보지 않고 귀속했다.
 ⇒ 처방 목록에 한 줄(18).
 
+## ★★ 83호 — 모형 OAT 두 줄(E · σ)을 **서로의 고정값 없이** 따로 흔들고 조합을 설계 지침으로: 결론 셋이 스윕의 결과가 아니라 **모형 구조 · 기준 선택의 귀결**이다
+
+`raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md` (Jiao · … · Xu X. · Liu Y. 2023, *Energy Storage Mater.* 61, 102864 — 순수 모형: 3D 복합 양극 한 번 방전 + 2D 입계 CZM).
+`[인쇄]` "high-adequate ionic conductivity of 5 × 10−4 S cm−1 and soft mechanical property of E=~2 GPa can be proposed as the guideline of SE" — SE E 아홉 값 · σ 열두 값의 두 OAT 줄과 CZM 2 × 2(첫 줄). `identif` · `uniqu` · `sensitiv` · `uncertain` · `valid` 0.
+`[해석]` 이 편에서 첫 줄이 주는 것은 넷이다:
+1. **조합 run 0 · 고정값 미인쇄** — E 스윕의 σ, σ 스윕의 E 가 지면에 없다. "E ≈2 GPa **와** σ 5×10⁻⁴" 는 두 줄을 글로 합친 것이다(서로 이어지지 않은 3D · 2D 두 모형의 결론까지).
+2. **"둔감" 이 구조의 귀결** — E 스윕의 방전 곡선 · EIS 가 겹치는 것은 역학 → 전기화학 결합이 ϕ_mech 하나(`[재현]` 0.6–1.1 mV/100 MPa)이고 CAM\|SE 박리가 가정으로 빠졌기 때문이다 — 스윕이 "영향 없음" 을 보인 것이 아니라 모형이 그 경로를 두지 않았다(처방 12 의 확장 — 둔감의 원인이 짝의 보상이 아니라 식 구조 · 가정에 있다).
+3. **문턱에 무차원 조건이 없다** — "σ 5×10⁻⁴ threshold" 는 전류 미인쇄 · 열두 값 중 여덟 미인쇄. `[재현]` 옴 강하가 RT/F 가 되는 전류 ≈1C(가정) — 문턱은 재료 상수가 아니라 영역 경계(처방 15 ④).
+4. **기준을 바꿔 순위를 뒤집었다** — CZM 파괴 사이클은 두 SE 모두 fine > coarse(1545 > 1409 · 132 > 95)인데, 초록 "postponed by the coarse-primary" 는 총 균열 기준으로 고른 결론이다(처방 17 ②와 같은 모양 — 관측 선택이 결론을 정한다).
+⇒ 처방 목록에 한 줄(19).
+
 ## 우리 쪽 연결
 
 - `degradation-degeneracy/` 는 **"곡선이 맞는다 ≠ 파라미터가 맞다"** 를 합성 truth 로 채점하는 프로젝트다. 26호의 "RMSD 0.11 → 0.06 V + 문헌과 5 % 이내" 는 그 실패 모드를
@@ -294,6 +305,7 @@ evidenceScope: multi-source-primary
 16. (76호) **"A 무늬는 B 원인" 배정을 보면 ① 가를 대상으로 적은 후보를 전부 흔들었는지(76호 `i₀` 0 회) ② 흔든 배수가 문헌값 복귀인지(76호 `D` ×10 = 문헌값) ③ 한 손잡이가 다른 무늬도 움직였는지(비대각 — 76호 S17) ④ 입력 파라미터의 무차원 영역(Wa 등)이 결론을 미리 정하지 않았는지를 적는다.** ④ 가 정했으면 "X 가 한계가 아니다" 는 시험이 아니라 입력이다.
 17. (77호) **모형 ↔ 실험 "good agreement" 를 보면 ① 정규화 척도(완전 용량 · 닻)의 출처 — 실험 최대값이면 그 근처 점은 자동으로 맞는다 ② 관측의 수(충전 · 방전 · 율 · 사이클) ③ 닻에 걸린 점을 뺀 나머지 점 수와 차 ④ 대안 한계(전자 · 수송 · 동역학)를 흔든 시험이 있는지를 적는다.** 77호: ① 실험 최대값 155 ② 첫 방전 하나 ③ 여섯 점 RMS 8.5 mAh g⁻¹ ④ 0 — 그리고 첫 충전에 대면 두 점이 반례다.
 18. (82호) **실험 스윕(한 손잡이 여러 수준)에서 "Y 가 성능을 정한다" 상관을 보면 ① 손잡이가 같이 움직인 양의 목록(공극 · 면적 · 균질도 · 두 σ) ② 경쟁 설명이 다른 예측을 하는 표본이 있는지(비 > 1 등) ③ 측정 방법을 바꿔도 순서가 유지되는지 ④ 제안 기구의 크기 검사(옴 강하 ↔ 관측 간격)를 적는다.** 82호: ① 다섯 ② 0 개 ③ 아니다(AC ↔ DC 로 L ↔ XL 뒤집힘) ④ 없다 — `[재현]` 작은 몫.
+19. (83호) **모형 편이 두 손잡이의 OAT 결과를 "설계 지침" 으로 합쳤으면 ① 각 스윕의 다른 손잡이 고정값 ② 조합 run 유무 ③ "둔감" 한 손잡이가 전기화학에 닿는 경로가 식에 몇 개인지(가정으로 뺀 기구 포함) ④ 문턱의 무차원 조건(전류 · 두께) ⑤ 결론이 쓴 기준(수명 ↔ 총 균열 등)이 자기 다른 기준과 순위가 같은지를 적는다.** 83호: ① 미인쇄 ② 0 ③ 하나(ϕ_mech — CAM\|SE 박리는 가정으로 제외) ④ 전류 미인쇄 ⑤ 다르다(파괴 사이클 fine > coarse ↔ 총 균열 coarse < fine).
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -309,6 +321,7 @@ evidenceScope: multi-source-primary
 - **76호의 원인 배정이 틀렸다고 하지 않는다** — `i₀` 미시험 · ×10 = 문헌값 · S17 비대각까지다. Wa 는 인쇄 파라미터(선형 극한 `R_ct` · 영상 계면 길이 판독 12–15 · τ 정의 두 가지)로 만든 `[재현]` 범위이고, 실제 황화물 계면의 `j₀` 는 이 위키에 없다.
 - **77호의 "ionic percolation being the limiting factor" 가 틀렸다고 하지 않는다** — 대안 한계를 흔든 시험이 없고 관측이 방전 하나라는 것까지다. 첫 충전 반례 둘은 `[도표]` · 조건당 셀 1 위의 검사다.
 - **82호의 "balanced transport" 가 틀렸다고 하지 않는다** — 네 점 표본으로 σ_ion 증가 · 면적 · 공극과 가를 수 없다는 것까지다. 옴 강하 크기 검사는 가정 두께(밀도 · void) 위의 `[재현]` 이고, 반응 분포를 통한 수송 한계는 배제되지 않는다.
+- **83호의 설계 지침(E ≈2 GPa · σ 5×10⁻⁴ · coarse)이 틀렸다고 하지 않는다** — 조합 run · 고정값 · 전류가 없고, 결론 하나는 자기 다른 기준과 순위가 반대라는 것까지다. ϕ_mech 규모와 옴 문턱 전류는 인쇄 밀도 · 단면 분율(화소) · 가정 부피 변화 위의 `[재현]` 이다.
 
 ## 관련
 

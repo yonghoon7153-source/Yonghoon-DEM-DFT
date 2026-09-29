@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -214,6 +214,10 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - **곱의 자리**: SE 입도 한 손잡이가 `ε`(공극 14.1 → 24.3 %)와 κ 를 **같이** 움직인다 — σ_ion,eff 변화 ×1.54(AC) 중 `ε` 몫 `[재현]` ×1.13(0.4123/0.3634) · κ 몫 ×1.36. 전자 쪽은 σ_eff 가 거꾸로 간다(×0.74 AC · ×1.03 DC).
 - ⇒ 처방에 붙는 것(`[해석]`): 같은 편에서 측정 κ 와 모형 κ 가 어긋나면(이온 모형이 ×1.3–1.6 더 굴곡) **모형 입력이 측정인지부터** 본다 — 82호의 격차는 입력 PSD(단분산 큰 SE · fines 0)와 뒤바뀐 분율 표기 위에 있어, 모형 오차로도 미세구조 기구로도 읽을 수 없다.
 
+## ★ 25호가 SI ref 3 으로 가리킨 "굴곡도 후처리 원전" — 굴곡도 0, `σ_eff` 0 (2026-09-29, `assb` 83호)
+
+`raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md` (Jiao · … · Liu Y. 2023, *Energy Storage Mater.* 61, 102864 — 순수 모형: 3D 복합 양극(COMSOL) + 2D 입계 CZM). 25호 digest 후속 표가 이 편을 "DEM 입자 데이터 → 연결성 · 굴곡도 후처리 방법 원전" 으로 매달았는데, 지면에 **굴곡도가 없다** — `tortuos` 0 · `path` 0 · Bruggeman 0 · `σ_eff` 계산 0. SE 는 3D 형상 안에서 이원 농축 용액 수송(`[도표]` 초기 ≈1 mol L⁻¹ · t_Li+ · D_SE 미인쇄)으로 풀렸고, 수송 결론은 σ 스윕의 농도 CoV · 정규화 용량 · 중간 전압으로만 나온다(굴곡도 인자로 요약되지 않음). ⇒ 이 페이지 25호 절의 "기하 τ(경로 길이비)" 는 **원전이 아직 없다** — 25호 SI 의 ref 3 문장을 원문으로 다시 봐야 한다(83호 G1). 수치 표본이 아니므로 표본 번호를 매기지 않는다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - **"굴곡도가 진화하지 않았다" 고 하지 않는다** — `σ_eff` 로 보면 70 % 는 변화 없음, 80 % 는 ≈3 배이고, 그 3 배의 배정이 안 갈린다는 것까지다.
@@ -226,6 +230,7 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - ★ **2026-09-29 (76호)**: **S1 ↔ S2 중 어느 단위가 틀렸는지 확정하지 않는다** — S1 ≈ (0.86–0.97)/R_ion 은 별표 픽셀 판독 · 교점 공식 가정 위의 `[재현]` 이다. 모형 ↔ 측정 κ_eff ×5–9.5 도 밀도 가정 ε 와 2D 영상 ε_SE 위의 산술이고, 모형 τ 의 정의식은 미인쇄다.
 - ★ **2026-09-29 (77호)**: **24호의 "굴곡도 진화" 가 틀렸다고 하지 않는다** — 원전 자리(이 편)에 τ 가 인쇄되지 않았다는 것까지이고, 24호 자신의 σ_eff 대조(24호 digest §4-2d)는 이 편과 무관하다.
 - ★ **2026-09-29 (82호)**: **82호 κ 와 73호 `τ²` 의 "같은 크기" 를 같은 계의 재현으로 쓰지 않는다** — NCM622 ↔ 811 · SE 입도 · 공극(가정 14 % ↔ 밀도 14.1–24.3 %)이 다르다. 규약 재현(8/8)은 인쇄 분율(뒤바뀐 48/52) 위의 우리 산술이고, 등가 Bruggeman 지수도 같은 산술이다.
+- ★ **2026-09-29 (83호)**: **25호의 기하 τ(1.21 ↔ 1.84)가 틀렸다고 하지 않는다** — 25호가 가리킨 원전(83호) 지면에 경로 계산이 없다는 것까지이고, 25호 SI 문장은 다시 보지 못했다.
 
 ## 관련
 

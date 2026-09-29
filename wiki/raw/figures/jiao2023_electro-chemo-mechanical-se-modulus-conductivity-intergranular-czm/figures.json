@@ -1,0 +1,863 @@
+{
+ "slug": "jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-29",
+ "sources": [
+  "acb3c926-45._Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+  "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic diagram of (a) the architecture of solid-state batteries with composite cathode and (b) the electro-chem-mechanical process happens around the interphase between NCM and SE. 2",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    592.2,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 539,
+   "dpi": 300,
+   "src": "acb3c926-45._Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.48,
+   "note": "봤다. 저자 모식 — (a) 셀 구조 (b) 계면 네 과정(Fick · BV · 구성식 · CZM) + 'Carbon additives'(식 · 표 S1 에 탄소 0). 값 0."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Impact of Young’s modulus of SE on composite cathode. (a) Geometrical model with mesh of the composite NCM cathode for simulation. (b) The simulated discharge curves of the composite NCM cathodes embedded in electrolyte with Young’s modulus ranging from 0.1 to 100 GPa. c-k) The distribution of von Mises stress inside composite NCM cathode embedded in the electrolyte with Young’s modulus of c-e) 2 GPa, f-h) 10 GPa and i-k) 100 GPa at different DoD. DoD is the abbreviation of depth of discharge. 3",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    453.4,
+    565.8,
+    702.1
+   ],
+   "w": 2227,
+   "h": 1037,
+   "dpi": 300,
+   "src": "acb3c926-45._Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.736,
+   "note": "봤다. (a) 3D 형상 75 × 75 µm² · SE 30 µm · 양극 75 µm · 'Li anode surface'(면 경계 — 본문 20 µm 영역 없음, D15) (b) E 아홉 값 방전 곡선이 한 선(≈4.28 → 3.0 V · 전류 미인쇄) (c–k) von Mises 색 막대 0–5 GPa — DoD 100 % 세 E 모두 포화."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Concentration field inside the composite NCM cathodes. a-o) Concentration distribution of Li-ion inside composite NCM cathode using SE with the ionic conductivity of a-e) σ=5 × 10−6 S cm−1, f-j) σ=5 × 10−5 S cm−1 and k-o) σ=5 × 10−4 S cm−1 at different DoD. p-r) Variation of concentration distribution of Li-ion inside composite NCM cathode using SE with the ionic conductivity of (p) σ=5 × 10−6 S cm−1, (q) σ=5 × 10−5 S cm−1 and (r) σ=5 × 10−4 S cm−1 at different DoD in X axis. (s) The coefficient of variation of the Li-ion concentration inside composite NCM cathode during the discharge with different ionic conductivities from σ=5 × 10−6 to 5 × 10−2 S cm−1. DoD is the abbreviation of depth of discharge. 4",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    278.3,
+    565.8,
+    692.6
+   ],
+   "w": 2227,
+   "h": 1727,
+   "dpi": 300,
+   "src": "acb3c926-45._Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.68,
+   "note": "봤다. NCM Li 농도(0–50 mol/L = 재현 c_max 49.3) · σ 5e-6 은 'DoD 100 %' 에도 대부분 빔 · (p–r) 끝값 ≈25(x≈0) · 47→24 · ≈47 · (s) CoV 점 수 4·6·8·8·8 · 가로축 숫자 0(D12)."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Concentration field inside the SE part. a-o) Concentration distribution of Li-ion inside SE with the ionic conductivity of a-e) σ=5 × 10−6 S cm−1, f-j) σ=5 × 10−5 S cm−1 and k-o) σ=5 × 10−4 S cm−1 at a series of DoD from 10% to 100%. Variation of concentration distribution of Li-ion in X axis inside SE with the ionic conductivity of (p) σ=5 × 10−6 S cm−1, (q) σ=5 × 10−5 S cm−1 and (r) σ=5 × 10−4 S cm−1 at a series of DoD from 10% to 100%. DoD is the abbreviation of depth of discharge. 5",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    330.3,
+    565.8,
+    701.5
+   ],
+   "w": 2227,
+   "h": 1547,
+   "dpi": 300,
+   "src": "acb3c926-45._Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.577,
+   "note": "봤다(화소 판독). SE 안 Li+ 0–1.2 mol/L · 초기 ≈1.0 · σ ≥5e-4 에서 DoD ≲0.5 동안 x≈8–58 µm 가 0(D7) · 15 판 NCM 면적 분율 0.183–0.188 · 판 e 원 29 · 지름 2.8–9.7 µm · 채움 0.72–0.82 · 겹침 0."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Electrochemical performance of the composite NCM cathodes. a-d) The simulated discharge curves (a), related mid-value voltages (b), the electrochemical impedance spectra (c) and corresponding resistance (d) of the composite NCM cathodes embedded in electrolyte with different ionic conductivities from σ=5 × 10−6 S cm−1 to σ=5 × 10−2 S cm−1. 6",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    462.6,
+    565.7,
+    711.7
+   ],
+   "w": 2227,
+   "h": 1039,
+   "dpi": 300,
+   "src": "acb3c926-45._Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.844,
+   "note": "봤다(화소 판독). (a) 곡선 끝 0.107·0.293·0.621·0.797·나머지 0.95–1.00 (b) 중간 전압 3.204→3.780 V 열두 막대(이름표 막대 1·5·9·12) (d) 정규화 Rct 0.369→0.072 · Rs 0.247→0.018 — 1D 모형(SE 50 µm) 출력(D5)."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Distribution of stress inside NCM secondary particle during cycling. a-i) Visualization of the von Mises stress inside the NCM secondary of Case 1 at (a) 350th, (b) 1050th, and (c) 1409th cycles, Case 2 at (d) 350th, (e) 1050th, and (f) 1545th cycles, Case 3 at (g) 28th, (h) 67th, and (i) 95th cycles, Case 4 at (j) 350th, (k) 1050th, and (l) 1545th cycles. m-n) Distribution of von Mises stress inside Case 1 (m) and Case 2 (n) along the X-axis at Y = 5 μm after different cycles. The slide width is 1.0 μm. Case 1: polycrystalline NCM with coarse primary particle embedded in soft SE; Case 2: polycrystalline NCM with fine primary particle embedded in soft SE; Case 3: polycrystalline NCM with coarse primary particle embedded in rigid SE and Case 4: polycrystalline NCM with fine primary particle embedded in rigid SE. 7",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    377.5,
+    565.8,
+    683.0
+   ],
+   "w": 2227,
+   "h": 1274,
+   "dpi": 300,
+   "src": "acb3c926-45._Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.565,
+   "note": "봤다. CZM 이차 입자 ∅10 µm · von Mises 0–1 GPa · rigid(g·j) 가장 뜨거움 · 범례 'tough electrolyte'(D16) · 캡션 Case 4 '350th · 1050th · 1545th' = Case 2 의 수(D4) · (m) Case 1 ≤≈0.5 GPa (n) Case 2 ≤≈1.2 GPa."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Disintegration of NCM secondary particle during cycling. a-d) Crack of (a) Case 1, (b) Case 2, (c) Case 3 and (d) Case 4 at failure cycles. e-h) Range of crack length inside (e) Case 1, (f) Case 2, (g) Case 3 and (h) Case 4 at different cycles. (i) Total crack of Case 1, Case 2, Case 3 and Case 4 at different cycles. (j) Crack sum of Case 1, Case 2, Case 3 and Case 4 at failure cycle. intuitively that the disintegration degree with rigid SE is greater than that with soft SE. high energy and safe solid-state batteries. To be more detailly, the range of the crack length inside the NCM particles has been summarized at different cycles. As shown in Fig. 7e-h, the range and the length of the crack successively shift to smaller with cycle processing, illustrating that adjacent primary particles gradually lose contact and develop into obvious fractures inside the NCM particles. Moreover",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    470.6
+   ],
+   "w": 2228,
+   "h": 1756,
+   "dpi": 300,
+   "src": "acb3c926-45._Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.754,
+   "note": "봤다. (a–d) fine 둘은 반으로 갈라짐 (e–h) 사이클 축 Case 3 28–95 · Case 4 28–132 (i)(j) 'Total crack (×10^4)' 0.61·2.74·0.75·2.87 ↔ 본문 ×10^3(D3) · 파괴 사이클 fine > coarse(D1)."
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. a1-i5) Concentration distribution of Li-ion inside composited NCM cathode embedded in the electrolyte with Young's modulus from 0.1 GPa to 100 GPa at different depths of discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.3,
+    550.2,
+    700.1
+   ],
+   "w": 2093,
+   "h": 2641,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.796,
+   "note": "봤다 — ⚠ 자동 크롭은 i 행 아래 잘림(캡션 첫 줄 상자와 겹침) → fS1m 으로 봄. E 아홉 행 같은 그림 · 두께 구배 없음."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. The simulated electrochemical impedance spectra (EIS) of the composited NCM cathodes embedded in electrolyte with Young's modulus from 0.1 GPa to 100 GPa at different depths of discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    70.3,
+    550.4,
+    198.5
+   ],
+   "w": 2094,
+   "h": 536,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.973,
+   "note": "봤다. E 아홉 값 모의 EIS 한 선(정규화 Z′ 0.22 → 0.8 반원 · 1.0 수직) · 캡션 'different depths of discharge' 인데 DoD 구분 0 · 역학 없는 1D 모형이라 구성상 겹침."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. The distribution of von Mises stress inside composited NCM cathode electrodes embedded in the electrolyte with Young's modulus of a-b) 2 GPa, c-d) 10 GPa and e-f) 50 GPa at DOD=10% and 25%.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    236.1,
+    550.3,
+    538.5
+   ],
+   "w": 2094,
+   "h": 1261,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.889,
+   "note": "봤다 — ⚠ 과대 영역(위에 S2 캡션 꼬리 'discharge.') + 아래 e·f 행 잘림 → fS3m 으로 봄. E 2·10·50 GPa × DoD 10·25 % 전부 ≈0 GPa."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. a1-f5) The distribution of von Mises stress inside composited NCM cathode electrodes embedded in the electrolyte with Young's modulus of a1-a5) 0.1 GPa, b1-b5) 0.5 GPa, c1-c5) 1 GPa, d1- d5) 4 GPa, e1-e5) 20 GPa and f1-f5) 50 GPa at different depths of discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    70.2,
+    550.3,
+    526.1
+   ],
+   "w": 2093,
+   "h": 1901,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.668,
+   "note": "봤다. E 0.1·0.5·1·4·20·50 × DoD 다섯 — ≤4 GPa 네 행이 DoD 75 % 까지 같고 DoD 100 % 모두 빨강 포화 · 20 GPa 는 DoD 50 % 부터 · 50 GPa 노랑–빨강."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. a-i) Variation of von Mises stress inside composited NCM cathode embedded in the electrolyte with Young's modulus from 0.1 GPa to 100 GPa at different depths of discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    69.6,
+    550.2,
+    400.2
+   ],
+   "w": 2093,
+   "h": 1378,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.892,
+   "note": "봤다 — ⚠ 자동 크롭은 g–i 가로축 이름 잘림 → fS5m 으로 봄. X 단면 von Mises: DoD 100 % 곡선 최고점 ≈6.2 GPa(E 0.1–50) · 6.5(100) · DoD 75 % E≤4 0.3–0.8 … 100 GPa 1.2–3.6."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. a1-i5) The distribution of von Mises stress inside electrolyte with Young's modulus from 0.1 GPa to 100 GPa at different depths of discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    73.3,
+    550.3,
+    725.3
+   ],
+   "w": 2094,
+   "h": 2718,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.47,
+   "note": "봤다. SE 안 von Mises(행 a–i = E 0.1–100 — Fig. 2b 범례 순서로 읽음) — ≤4 GPa ≈0 · 50·100 GPa 입자 사이 SE ≥5 GPa 포화 · 본문 'E>4 GPa … S6e3-e5' 는 e = 4 GPa(D14)."
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 9,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. a-j) Concentration distribution of Li-ion inside composited NCM cathode electrodes embedded in the electrolyte with the ionic conductivity of a-e) σ=5×10-3 S cm-1 and f-j) σ=5×10-2 S cm-1 at different depths of discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    69.7,
+    550.4,
+    245.3
+   ],
+   "w": 2094,
+   "h": 733,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.476,
+   "note": "봤다. σ 5e-3 · 5e-2 3D 농도 — 두 행 같음 · 고름. 크롭 온전."
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. a-j) Concentration distribution of Li-ion inside one slice of the composited NCM cathode electrodes embedded in the electrolyte with the ionic conductivity of a1-a5) σ=5×10-6 S cm-1, b1-b5) σ=5×10-5 S cm-1, c1-c5) σ=5×10-4 S cm-1, d1-d5) σ=5×10-3 S cm-1and e1-e5) σ=5×10-2 S cm-1 at different",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    282.9,
+    550.4,
+    696.1
+   ],
+   "w": 2094,
+   "h": 1723,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.794,
+   "note": "봤다. 단면 NCM 농도 σ 다섯 행 — 5e-6 은 DoD 100 % 에도 왼쪽 몇 원만 · 5e-4–5e-2 세 행 같음. ⚠ 과대 영역(위에 S7 캡션 꼬리 'cm-1 at different depths of discharge.') — 내용 온전."
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. a-c) Relative frequency of concentration distribution of Li-ion inside composited NCM cathode electrodes embedded in the electrolyte with the ionic conductivity of (a) σ=5×10-6 S cm-1, (b) σ=5×10-5 S cm-1 and (c) σ=5×10-4 S cm-1 at different depths of discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    69.7,
+    550.4,
+    214.7
+   ],
+   "w": 2094,
+   "h": 605,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.923,
+   "note": "봤다. NCM 농도 빈도 — 5e-6 은 0–1 mol/L 에 몰림 · 5e-5 넓음(끝 ≈46) · 5e-4 좁은 봉우리(끝 ≈47). ⚠ 과대 영역(위에 S8 캡션 꼬리 'depths of discharge.')."
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 10,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. a-b) Variation of concentration distribution of Li-ion inside composited NCM cathode embedded in the electrolyte with the ionic conductivity of (a) σ=5×10-3 S cm-1 and (c) σ=5×10-2 S cm- 1 at different depths of discharge in X axis. c-d) Relative frequency of concentration distribution of Li- ion inside composited NCM cathode electrodes embedded in the electrolyte with the ionic conductivity of (c) σ=5×10-3 S cm-1and (d) σ=5×10-2 S cm-1 at different depths of discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    314.4,
+    550.3,
+    523.6
+   ],
+   "w": 2093,
+   "h": 872,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.908,
+   "note": "봤다 — ⚠ 자동 크롭은 c·d 가로축 이름 잘림 → fS10m 으로 봄. σ 5e-3 · 5e-2 X 단면 평탄 · 끝 ≈47 mol/L."
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 11,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. a1-e5) Distribution of von Mises stress inside composited NCM cathode embedded in the electrolyte with the ionic conductivity of a1-a5) σ=5×10-6 S cm-1, b1-b5) σ=5×10-5 S cm-1, c1-c5) σ=5×10-4 S cm-1, d1-d5) σ=5×10-3 S cm-1 and e1-e5) σ=5×10-2 S cm-1 at different depths of discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.3,
+    551.3,
+    466.0
+   ],
+   "w": 2097,
+   "h": 1666,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.622,
+   "note": "봤다 — ⚠ 자동 크롭은 e 행 아래 잘림 → fS11m 으로 봄. σ 다섯 × DoD 다섯 3D von Mises — 5e-4–5e-2 세 행 같음(DoD 100 % 포화)."
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 12,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. a-e) The distribution of von Mises stress inside composited NCM cathode embedded in the electrolyte with the ionic conductivity of (a) σ=5×10-6 S cm-1, (b) σ=5×10-5 S cm-1, (c) σ=5×10-4 S cm-1, (d) σ=5×10-3 S cm-1 and (e) σ=5×10-2 S cm-1 at different depths of discharge in X axis.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    71.8,
+    550.4,
+    306.2
+   ],
+   "w": 2094,
+   "h": 977,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.919,
+   "note": "봤다. X 단면 von Mises — DoD 100 % 최대 5e-6 ≈6.2 · 5e-5 ≈13.5(세로축 0–15) · 5e-4 ≈5.8 · 5e-3 · 5e-2 ≈6.1 GPa ↔ 본문 'slightly higher'(D9)."
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 12,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Geometrical model with mesh of the composite NCM cathode for simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.8,
+    386.4,
+    523.5,
+    543.8
+   ],
+   "w": 1871,
+   "h": 656,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.879,
+   "note": "봤다. Fig. 2a 와 같은 형상 + 'y=37.5 µm' 단면 표시(Fig. 4 · S8 · S14 의 자리)."
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 13,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. a-j) Concentration distribution of Li-ion inside electrolyte with the ionic conductivity of a-e) σ=5×10-3 S cm-1 and f-j) σ=5×10-2 S cm-1 at different depths of discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    70.1,
+    550.2,
+    245.2
+   ],
+   "w": 2093,
+   "h": 731,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.459,
+   "note": "봤다. σ 5e-3 · 5e-2 SE 단면 — 5e-4 와 같은 고갈(DoD 10–50 % 가운데 0) → DoD 100 % ≈0.93(D7)."
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 13,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Variation of concentration distribution of Li-ion inside electrolyte with the ionic conductivity of (a) σ=5×10-3 S cm-1 and (b) σ=5×10-2 S cm-1 at different depths of discharge in X axis.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    299.3,
+    556.4,
+    417.0
+   ],
+   "w": 2119,
+   "h": 491,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.928,
+   "note": "봤다 — ⚠ 자동 크롭은 가로축 이름 잘림 → fS15m 으로 봄. 두 σ 모두 x≈10–58 µm 가 0(DoD ≲0.5) · 두 판 동일."
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 13,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. a-b) Mesh model of the NCM cathode particle with (a) coarse and (b) fine primary particle for simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    69.0,
+    489.5,
+    550.4,
+    615.3
+   ],
+   "w": 2007,
+   "h": 525,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.696,
+   "note": "봤다. 2D 이차 입자 격자 — coarse 1차 입자 ≈12–14 · fine ≈35–40(가운데 작은 입자) · 입자 사이 삼각 공극 · 둘레 SE 그림 0."
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 14,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. a-c) Visualization of the von Mises stress inside Case 1 at (a) 600th, (b) 900th, and (c) 1150th cycles, and Case 2 at (d) 800th, (e) 1185th, (f) 1340th, (g) 1432th and (h) 1487th cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    69.2,
+    550.4,
+    229.1
+   ],
+   "w": 2094,
+   "h": 667,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.609,
+   "note": "봤다 — ⚠ 자동 크롭은 d–h 아래 잘림 → fS17m 으로 봄. Case 1 600·900·1150 · Case 2 800–1487 von Mises · 캡션 'a-c)' 가 a–h 를 덮음(D16)."
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 14,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. a-c) Visualization of the von Mises stress inside Case 3 at (a) 45th and (b) 85th cycles, and Case 4 at (c) 34th, (d) 47th, (e) 58th, (f) 78th and (g) 114th cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    324.8,
+    550.4,
+    496.2
+   ],
+   "w": 2094,
+   "h": 715,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.683,
+   "note": "봤다. Case 3 45·85 · Case 4 34–114 von Mises — Case 4 114 에서 반으로 갈라짐 · 캡션 'a-c)' 가 a–g 를 덮음."
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 15,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. Distribution of von Mises stress inside Case 3 (a) and Case 4 (b) along the X-axis at Y=5 μm after different cycles. The slide width is 1.0 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    71.6,
+    550.4,
+    415.6
+   ],
+   "w": 2094,
+   "h": 1434,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.822,
+   "note": "봤다. X 단면 von Mises Case 3(28–95) · Case 4(28·34·47·58·67·78·114·132) — Case 4 마지막 132 사이클(D4)."
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 15,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. Displacement of Case 1 a1-a6), Case 2 b1-b5), Case 3 c1-c8) and Case 4 d1-d8) after different cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    471.1,
+    550.5,
+    713.4
+   ],
+   "w": 2094,
+   "h": 1011,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.452,
+   "note": "봤다 — ⚠ 자동 크롭은 d 행 아래 잘림 → fS20m 으로 봄. 변위 0–0.5 µm · 행 b 5 판 coarse · 행 c 8 판 fine — 캡션 'Case 2 b1–b5 · Case 3 c1–c8' 과 형상 뒤바뀜(D10)."
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 16,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. Statistical density of displacement inside Case 1 (a) and Case 2 (b) along the X-axis after different cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    70.2,
+    550.4,
+    370.2
+   ],
+   "w": 2094,
+   "h": 1251,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.932,
+   "note": "봤다. 변위 빈도 Case 1 · 2 — Case 2 350 사이클이 가장 넓음(0–0.7 µm) · 800–1340 좁음 ↔ 본문 'progressively widens'(D13)."
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 16,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. Statistical density of displacement inside Case 3 (a) and Case 4 (b) along the X-axis after different cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    387.4,
+    550.4,
+    711.0
+   ],
+   "w": 2094,
+   "h": 1349,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.939,
+   "note": "봤다 — ⚠ 과대 영역(위에 S21 캡션 꼬리 'different cycles.') + b 가로축 이름 잘림 → fS22m 으로 봄. Case 3 · 4 변위 빈도도 비단조(D13)."
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 17,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. Crack of Case 1 a1-a6), Case 2 b1-b5), Case 3 c1-c8) and Case 4 d1-d8) after different cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    72.4,
+    550.4,
+    336.8
+   ],
+   "w": 2094,
+   "h": 1103,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.54,
+   "note": "봤다. 균열 — 판 수 a 5 · b 4(coarse) · c 7 · d 7(fine) ↔ 캡션 a1–a6 · b1–b5 · c1–c8 · d1–d8(S20 캡션 복제로 보임 · D10) · 색 막대 'Crack' 0–0.5 단위 0."
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Parameters used in the electro-chemo-mechanical model",
+   "rotated_deg": 0,
+   "bbox": [
+    107.8,
+    224.3,
+    467.5,
+    401.6
+   ],
+   "w": 1499,
+   "h": 740,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "blank": 0.669,
+   "note": "봤다 — ⚠ 자동 표 크롭은 13 행 중 7 행(확산 계수 행에서 끊김) → tS1m 으로 봄. 값은 텍스트 층과 같다."
+  },
+  {
+   "key": "fS1m",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1_manual_p4.png",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    70.3,
+    529.2,
+    712.2
+   ],
+   "w": 1930,
+   "h": 2676,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "manual": true,
+   "note": "수동 크롭 — 자동 fig_S1 이 i 행 아래를 잘라(그림 틀 711.2 pt ↔ 캡션 702.1 pt 겹침) 그림 틀 전체를 300 dpi 렌더 · 겹친 캡션 텍스트 블록만 지움. 봤다: E 아홉 행(a–i) × DoD 다섯 — 아홉 행 같은 그림 · 두께 구배 없음 · DoD 25 % 입자 가장자리 고리."
+  },
+  {
+   "key": "fS3m",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3_manual_p5.png",
+   "rotated_deg": 0,
+   "bbox": [
+    190.6,
+    319.2,
+    404.4,
+    550.8
+   ],
+   "w": 891,
+   "h": 965,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "manual": true,
+   "note": "수동 크롭 — 자동 fig_S3 이 위쪽 과대 · 아래 e·f 행 잘림 → 그림 틀만 300 dpi(겹친 캡션 텍스트 지움). 봤다: E 2·10·50 GPa × DoD 10·25 % 전부 ≈0 GPa · 본문 Fig. 2 는 2·10·100 GPa."
+  },
+  {
+   "key": "fS5m",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5_manual_p7.png",
+   "rotated_deg": 0,
+   "bbox": [
+    52.0,
+    73.6,
+    543.5,
+    412.6
+   ],
+   "w": 2049,
+   "h": 1414,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "manual": true,
+   "note": "수동 크롭 — 자동 fig_S5 가 g–i 가로축 이름을 잘라 그림 틀 전체 300 dpi(겹친 캡션 텍스트 지움). 봤다: DoD 100 % 곡선 최고점 ≈6.2 GPa(x≈33 µm) E 0.1–50 모두 · 100 GPa ≈6.5 · DoD 75 % E≤4 0.3–0.8 · 10 0.5–1.0 · 20 0.7–1.4 · 50 1.2–2.2 · 100 1.2–3.6 GPa."
+  },
+  {
+   "key": "fS10m",
+   "kind": "figure",
+   "label": "S10",
+   "page": 10,
+   "file": "fig_S10_manual_p10.png",
+   "rotated_deg": 0,
+   "bbox": [
+    102.9,
+    318.4,
+    492.4,
+    535.6
+   ],
+   "w": 1624,
+   "h": 906,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "manual": true,
+   "note": "수동 크롭 — 자동 fig_S10 이 c·d 가로축 이름을 잘라 그림 틀 전체 300 dpi. 봤다: σ 5e-3 · 5e-2 X 단면 평탄 · 끝 ≈47 mol/L · 빈도 봉우리 좁음 · Fig. 3r 와 같은 DoD ≈0.2 들쭉날쭉 선."
+  },
+  {
+   "key": "fS11m",
+   "kind": "figure",
+   "label": "S11",
+   "page": 11,
+   "file": "fig_S11_manual_p11.png",
+   "rotated_deg": 0,
+   "bbox": [
+    52.7,
+    70.3,
+    542.1,
+    477.7
+   ],
+   "w": 2040,
+   "h": 1699,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "manual": true,
+   "note": "수동 크롭 — 자동 fig_S11 이 e 행 아래를 잘라 그림 틀 전체 300 dpi. 봤다: σ 다섯 × DoD 다섯 3D von Mises — 5e-6 은 분리막 쪽만 DoD 100 % 빨강 · 5e-5 는 DoD 75–100 % 분리막 쪽 빨강 · 5e-4–5e-2 같음."
+  },
+  {
+   "key": "fS15m",
+   "kind": "figure",
+   "label": "S15",
+   "page": 13,
+   "file": "fig_S15_manual_p13.png",
+   "rotated_deg": 0,
+   "bbox": [
+    126.9,
+    303.3,
+    468.2,
+    429.3
+   ],
+   "w": 1423,
+   "h": 526,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "manual": true,
+   "note": "수동 크롭 — 자동 fig_S15 가 가로축 이름을 잘라 그림 틀 전체 300 dpi. 봤다: 두 σ 모두 x≈10–58 µm SE Li+ 0(DoD ≲0.5) · DoD 1.0 선 ≈0.93–0.98 · 두 판 동일(D7)."
+  },
+  {
+   "key": "fS17m",
+   "kind": "figure",
+   "label": "S17",
+   "page": 14,
+   "file": "fig_S17_manual_p14.png",
+   "rotated_deg": 0,
+   "bbox": [
+    104.3,
+    73.2,
+    490.9,
+    241.5
+   ],
+   "w": 1612,
+   "h": 702,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "manual": true,
+   "note": "수동 크롭 — 자동 fig_S17 이 d–h 아래를 잘라 그림 틀 전체 300 dpi. 봤다: Case 1 (a–c) · Case 2 (d–h) von Mises 0–1 GPa · Case 2 균열 진행."
+  },
+  {
+   "key": "fS20m",
+   "kind": "figure",
+   "label": "S20",
+   "page": 15,
+   "file": "fig_S20_manual_p15.png",
+   "rotated_deg": 0,
+   "bbox": [
+    57.9,
+    475.1,
+    537.2,
+    725.2
+   ],
+   "w": 1998,
+   "h": 1043,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "manual": true,
+   "note": "수동 크롭 — 자동 fig_S20 이 d 행 아래를 잘라 그림 틀 전체 300 dpi. 봤다: 행 a 6 판 coarse · b 5 판 coarse · c 8 판 fine · d 8 판 fine — 캡션과 형상 뒤바뀜(D10) · 변위 0–0.5 µm · c8 · d6–d8 아래 절반 크게 이동."
+  },
+  {
+   "key": "fS22m",
+   "kind": "figure",
+   "label": "S22",
+   "page": 16,
+   "file": "fig_S22_manual_p16.png",
+   "rotated_deg": 0,
+   "bbox": [
+    153.9,
+    430.7,
+    441.3,
+    722.4
+   ],
+   "w": 1198,
+   "h": 1216,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "manual": true,
+   "note": "수동 크롭 — 자동 fig_S22 가 위쪽 과대 · b 가로축 이름 잘림 → 그림 틀만 300 dpi. 봤다: Case 3 28·45·67·85·95 · Case 4 28–132 변위 빈도 — 비단조(D13)."
+  },
+  {
+   "key": "tS1m",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1_manual_p3.png",
+   "rotated_deg": 0,
+   "bbox": [
+    100.0,
+    184.0,
+    495.0,
+    536.0
+   ],
+   "w": 1647,
+   "h": 1468,
+   "dpi": 300,
+   "src": "d88235de-45._Sup_Insight_of_electro-chemo-mechanical_process_inside_integrated_configuration_of_composite_cathode_for_solid-state_batteries.pdf",
+   "manual": true,
+   "note": "수동 크롭(SI 3 쪽 · 300 dpi · 캡션 포함) — 자동 tab_S1 이 13 행 중 7 행만. 봤다: 13 행(NCM 전자 σ 0.0245–3.2 mS/cm · 밀도 4.8 · E 199±12 · G 78±1 · ν 0.25 · 경도 11.2 GPa · D 5.0e-10 cm2/s · 이온 σ 3e-10 S/cm · SE 밀도 1.0 · SE ν 0.25 · F · R · 300 K) · 출처 0/13 · 노란 형광. 값은 텍스트 층과 같다."
+  }
+ ]
+}

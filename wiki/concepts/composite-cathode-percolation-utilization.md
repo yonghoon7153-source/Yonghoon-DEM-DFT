@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -560,6 +560,16 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - ⚠ **모형의 "균질도" 는 입력의 결과다** — 입력 PSD 가 측정이 아니다(S17b: M/L/XL 중앙 ≈20.7 · 30.1 · 64.9 µm · CV 0.21 · 0.11 · 0.046 · fines 0 — span 을 µm 표준편차로 넣음) · S 만 다면체 CAM · 300 nm · (90 µm)³ ↔ 구 · 600 nm · (300 µm)³ · 청소 문턱(고립 CAM < 1000 복셀 → SE)이 3.7 ↔ 7.4 µm — M/L/XL 에서는 CAM 입자 하나 전체가 문턱 아래(보류 (고) 복셀 이산화 물음의 한 표본). 겹침 → CAM 배정은 01호([32])와 같고 정지 기준은 3 %(01호 ≈10⁻⁵ vol%).
 - ⇒ 이 페이지 규율에 붙는 것(`[해석]`): (1) λ · `θ` 지도에 입도를 넣을 때 **가중(부피 · 개수) · fines · 모형 입력 분포**를 같이 적는다 (2) 모형 편의 "균질도 · 병목" 서술은 모형 입력이 측정인지 먼저 본다 (3) 반쪽 셀 XL 양극(≈62 µm)은 SE 입자 한두 개 두께 — 연결을 두께 무관 부피 성질로 읽는 전제(77호 S1b)가 이 체제에서는 시험되지 않았다.
 
+## ★★ 25호가 SI ref 3 으로 가리킨 "DEM 연결성 · 굴곡도 후처리 원전" — 연결성 계산이 없고, 모형 `θ` 는 가정으로 1 이다 (2026-09-29 추가, `assb` 83호)
+
+`raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md` (Jiao · … · Xu X. · Liu Y. 2023, *Energy Storage Mater.* 61, 102864 — 순수 모형: 3D 복합 양극 한 번 방전(COMSOL 5.5 + MATLAB) + 2D 입계 CZM).
+
+- **이 편에 `θ` 의 계산이 없다** — `DEM` 0 · `percolat` 0 · `tortuos` 0 · `connect` 본문 0(SI 1 = CAM\|SE "connection … perfect") · 3D 입자 배치 · 입도 · 분율 생성법 인쇄 0. 25호 digest 후속 표 · 원장이 매단 "DEM 입자 데이터 → 연결성 · 굴곡도 후처리 방법 원전" 은 **지면에 없다**(25호 SI 원문 대조 전 — 25호 PDF 미보유).
+- **모형 `θ ≡ 1`(구성상)** — CAM\|SE 는 SI 가정 "(5) … assumed as perfect and couldn't be damaged" · `[도표·화소]` y = 37.5 µm 단면 NCM 면적 분율 0.183–0.188 · 원 29 개 서로 닿지 않음(지름 2.8–9.7 µm) · 탄소 · 전자 경로 식 0 — 이온은 연속 SE, 전자는 미인쇄 공급으로 모든 입자가 연결된 것으로 취급된다(`[해석]`). 이 페이지의 1호 `θ`(전도 클러스터 부피 분율)가 들어갈 자리가 없다.
+- **"미이용" 은 전부 `η`** — σ 5×10⁻⁶ 에서 "DoD=100%" 에도 NCM 대부분이 비어 있다(`[도표]` 정규화 용량 ≈0.11 · 분리막 쪽 ≲15–20 µm 만 참). 정적 이용률 계수로 읽으면 `θ₀` ≈0.1 로 보일 것이 모형 안에서는 율 한계다(보류 (그) 약 · (두) 약).
+- **입계 "loss of contact"** — 2D CZM 의 1차 입자 사이 균열(파괴 사이클 95–1545 · 총 균열 · 피로 파라미터 0) · SI "손상 > 80 % → σ_ion 0" 은 이차 입자 **안** 고립의 자리를 정의만 하고 용량으로 옮기지 않았다 — 이 페이지의 `θ`(입자 단위 연결)와 다른 층위(입자 안 1차 입자).
+- ⇒ 이 페이지 규율에 붙는 것(`[해석]`): **"방법 원전" 귀속은 연결 판정 · 경로 계산이 지면에 있는지 확인한 뒤에만 옮긴다**(25호 → 83호가 반례) · 모형 편의 "contact" 는 어느 계면인지(CAM\|SE · 입계 · CAM\|CAM) 먼저 적는다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - `θ_AM` 이 접촉 손실의 **올바른** 모형이라고 주장하지 않는다. 원문의 `θ` 는 접촉 저항을
@@ -582,6 +592,7 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - ★ **2026-09-29 (76호)**: **SE 부피 분율 · 문턱 통과 자리를 이 편의 값으로 쓰지 않는다** — 흑연 · LPSCl 밀도는 다른 편의 외부 값이고 공극률은 0 으로 둔 `[재현]` 이다. 영상의 "60 ↔ 80 % 전이" 와 S1 급락(40 → 60 %)의 어긋남은 반정량 판독 위의 긴장이지 어느 쪽이 틀렸다는 판정이 아니다.
 - ★ **2026-09-29 (77호)**: **이 편 DEM `θ` 가 틀렸다고도, 거울 평균장이 맞다고도 하지 않는다** — 첫 충전 상한 위반은 `[도표]` 판독 · 기준 셀 하나 · 조건당 셀 1 위의 검사이고, 거울 평균장은 원전들 어디에도 없는 우리 확장이다. Fig. 7b 가 무엇을 그렸는지도 확정하지 않는다(7a 환산도 두 상 부피분율도 아니라는 것까지).
 - ★ **2026-09-29 (82호)**: **82호의 용량 비를 `θ` 로 쓰지 않는다** — 연결 분율은 계산되지 않았고, C/20 결손의 `θ` · `A_eff` · 첫 사이클 손실 배분은 이 편 자료로 갈리지 않는다. 77호 지도 대입은 λ 정의만 같은 우리 산술이다.
+- ★ **2026-09-29 (83호)**: **25호의 DEM 굴곡도 · 이용률 계산이 틀렸다고 하지 않는다** — 25호가 원전으로 가리킨 83호 지면에 그 방법이 없다는 것까지이고, 25호 SI 의 해당 문장은 다시 보지 못했다. 83호 단면 분율 0.187 은 단면 하나의 화소 판독이다.
 
 ## 관련
 - [[assb-apparent-capacity-decomposition]] — 이 곱에 **셋째 항 `η(i)`** 를 더한다. 반례와 분리 시험.
