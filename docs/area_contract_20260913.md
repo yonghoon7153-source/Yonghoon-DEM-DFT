@@ -1008,3 +1008,29 @@ clamp · `ψ ≤ 1e-4` 의 `Rc = 0` · `b = r_min` · 재료 계수 · 면적 ·
   (REFUTED).  첫 재료계수 시험은 **공통 b · 공통 ψ 를 고정**하고 계수만 바꾼다 — 그 조건에서만
   `min/직렬 ∈ [1, 2)` 를 쓴다 (ψ₁≠ψ₂ 면 성립하지 않는다, 반례 0.855 < 1).  `b₁/b₂` 의 독립
   변경은 **별도 기하 시험**이고 **S3 와 동시에 교정하지 않는다**.
+
+## F. coverage 쪽 Physics **v2** 병기 (2026-09-29 · 1저자 결정 *"권고대로"*)
+
+> 이 절은 **coverage (A_surface) 소비자**만 다룬다 — network (L2 협착 항) 은 legacy 사다리 그대로이고,
+> 위 §2 의 두 소비자 구분과 §5 의 음성 대조 (*coverage (Hertz·Tabor) 불변*) 도 그대로다: legacy 키는 **바이트
+> 그대로**이고 v2 는 **새 키 (`*_physics_v2`)** 로만 나란히 선다.
+
+**규칙** (`scripts/plastic_coverage.py` `film_area_physics_v2` · `PHYSICS_V2_RULE`):
+- δ/R* < `DR_YIELD_ONSET` → A = πR*δ (legacy 탄성 반환과 비트 동일).
+- 그 위 (전이 · 소성) → **A = U = min(A_Tabor, A_volume, A_geom)** — cap 은 **전체 접촉면적**의 한계다.
+  L = max(πR*δ, A_LIGG) > U 이면 **cap 이 이긴다** (U 를 내고 `cap_conflict` 로 센다 — `L1-01`).
+- A_volume = **정확한 전체 lens** (두 반경 · `L1-02`) / (5 nm × 덤프 길이 단위) (`DESC-03` — 상수 자체는 안 바꿨다).
+- 분모 = 4πr² − Σ **v2** AM–AM 면적 (분자와 같은 장부).  접촉 하나라도 거부되면 그 침대의 v2 는 빈칸 + 사유.
+
+**⚠ 귀결 (이 결정의 값)** — v2 면적은 **LIGGGHTS 기하면적보다 작을 수 있고**, 얕은 겹침에서는 **πR*δ 보다도** 작다:
+- 판정문 기하 (동일 반경 r = 0.5 µm · δ/R* = 0.01): A_v2 = 0.4996 πR*δ = 0.2501 A_LIGG (legacy 는 A_LIGG 를 냈다).
+- 얕은 lens 는 5 nm 막보다 얇아 A_volume/πR*δ ≈ δ/h — **δ < 5 nm 인 cap 가지 접촉은 부피 cap 이 Hertz 아래**다.
+- 전이 구간 하단에서는 Tabor 자체가 Hertz 보다 작다 (A_Tabor/πR*δ = 11.19·√(δ/R*) < 1 ⟺ δ/R* < 0.00798).
+- 그래서 **항복 개시에서 면적이 불연속으로 떨어진다** (r = 0.5 µm SE–SE: ×0.0566 — `plastic_coverage.py --selftest` ⑯).
+- 판정문 §3 은 *"조건부 체적 예산으로는 가능하지만 전체 접촉면적 cap 으로는 정당화되지 않는다"* 고 적었다 —
+  v2 는 그 경고를 알고 **저자 결정으로** 전체 면적 한계를 택한 병기판이다 (legacy 를 대체하지 않는다).
+
+**닫히지 않은 것**: 원장 `DESC-03` · `L1-01` · `L1-02` 의 상태는 이 절이 바꾸지 않는다 (v2 는 병기일 뿐) ·
+`L1-03` (모든 상 쌍에 AM–SE E* · SE 경도) 은 v2 에서도 그대로 · v2 의 코퍼스 규모는 **미측정**이다
+(원자료가 있는 기계에서 `coverage_physics_vs_hertzian.py` 를 다시 돌리거나 LHS 배치 `--stop-after coverage`).
+회귀: `scripts/plastic_coverage.py --selftest` ⑪–⑱ · `scripts/coverage_physics_vs_hertzian.py --selftest`.
