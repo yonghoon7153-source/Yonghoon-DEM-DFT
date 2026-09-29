@@ -20,6 +20,10 @@
 usage
   python3 scripts/make_mixer_deck.py --out dem_scripts/mixer_20260919 --n-total 50000
   python3 scripts/make_mixer_deck.py --selftest
+  # ★ 강성 축 (2026-09-30 · 사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3) — SE 영률만 ×F · 쌍별 F₀ 보존 ·
+  #   dt 는 같은 규칙으로 새 E 에서 · [--dt-factor 0.5 = dt 만 ½ · step ×2].  옵션 중립이면 덱은 옛것과 바이트 동일 (ST①)
+  python3 scripts/make_mixer_deck.py --out <dir> --n-total 100000 --cgf 151.4 --arm LC --seed 32452843 --revolutions 2 \
+          --stiffen-se 14 --hold-bo-pairwise [--dt-factor 0.5]        # → <dir>/in.mixer + deck_meta.json (봉인 가능한 메타)
 """
 import argparse
 import math
@@ -306,19 +310,21 @@ CAMPAIGN_HIGHBO = [('LH', sd) for sd in CAMPAIGN_SEEDS]
 REFERENCE = [('E0', sd, 0) for sd in CAMPAIGN_SEEDS]
 
 
-def _assert_ceiling(arm, M, d, ceiling=None):
+def _assert_ceiling(arm, M, d, ceiling=None, E=None):
     """모든 상·벽 쌍의 겹침이 천장 안인지 **단언**한다 (BOND0 폐지 후 유일한 안전장치).
 
     ⚠ 천장 1 % 는 **관례**다 — 실측으로는 δ/r 3.54 % 팔이 멀쩡했고 무너진 팔은 40 % 였다.
       1 % 는 외삽하지 않는 쪽으로 고른 값이다.  이 식은 점착 지배·단일 접촉 극한이므로
       돌린 뒤 `check_contact_validity.py` 로 **반드시** 실측 확인한다.
+    `E` (2026-09-30) — 경화 덱의 행렬은 **그 덱의 영률**로 본다 (기본 = `E_PHASE`, 옛 동작 그대로).
     """
     ceiling = OVL_CEILING if ceiling is None else ceiling
+    E = E_PHASE if E is None else E
     w = len(TYPES)
     for i, t in enumerate(TYPES):
         nu = PHASE_MECH[t][0]
         for j, ced in ((i, M[i][i]), (w, M[i][w])):
-            ov = overlap_for_ced(ced, d[t] / 2.0, nu, E=E_PHASE[t])
+            ov = overlap_for_ced(ced, d[t] / 2.0, nu, E=E[t])
             if ov > ceiling * (1 + 1e-9):
                 raise SystemExit(f'⛔ 팔 {arm}: {t}–{"WALL" if j == w else t} 겹침 {ov*100:.3f} % '
                                  f'> 천장 {ceiling*100:.1f} %.  Bo 를 낮추거나 천장을 논의할 것')
@@ -389,6 +395,103 @@ def ced_matrix(arm, d):
     return M
 
 
+# ══ 강성 축 — SE 만 경화 + 쌍별 F₀ 보존 (2026-09-30) ═══════════════════════════════════════════════════════════════════
+#  사전등록 `docs/reviews/mixer_highbo_stiffness_prereg_20260929.md` §3 (Codex 6 차 HBR6-02 · 7 차 §5 조건부 동의).
+#  ⛔ 왜 `ced_matrix` 를 새 E 로 다시 부르지 않나 — 그것이 **옛 동일상 규칙**이다: 상별 CED 를 `min` 으로 조립하므로 AM–SE 는 SE 의
+#    CED 배수 (×14 에서 5.809) 를 그대로 받고 (E* 는 ×12.41 뿐) SE–벽은 새 대각 ÷ 1.842 로 다시 만들어진다 ⇒ F₀ 가 혼합쌍 ×1.272 ·
+#    벽 ×1.182 로 어긋난다 (셀프테스트 ST⑤ 가 그 결함을 재현한다).  ⇒ **기존 soft 행렬의 각 원소**를 기준으로 쌍마다 따로 역산한다.
+#  ★ 불변량 = 쌍별 **명목 소겹침 점착 힘 척도** F₀ = B³/A² = (9/2)π³R*²CED³/E*²  (A = (4/3)E*√R* · B = 2πR*·CED — 생성기의
+#    점착 지배 · 고립 접촉 근사) ⇒ `CED_new,ij = CED_soft,ij · (E*_new,ij / E*_soft,ij)^(2/3)`.  R* 는 같은 쌍의 전후에서 같아 약분된다.
+#  ⚠ 남기는 차이 (보존 못 함 · 사전등록 §3): 분리 일 U_sep = Bδ₀²/10 ∝ E*^(−2/3) · 접촉시간 · 접선 강성 · 감쇠 · 이력 · AM/SE 영률비
+#    103.7 → 7.407 (×14) · 실제 SJKR 의 구 교차 면적 ≠ 소겹침 선형식 (메시 벽은 area_ratio 도).  F₀ 보존은 **명목 점착력 대 중력의
+#    척도를 유지하며 강성을 바꾸는 민감도 경로**이지 SJKR 동역학 전체의 불변이 아니다.
+def _nu_of(t):
+    return WALL_NU if t == WALL else PHASE_MECH[t][0]
+
+
+def estar_pair(ti, tj, E):
+    """Hertz 유효 영률 E*_ij = [(1−ν_i²)/E_i + (1−ν_j²)/E_j]⁻¹ — 벽은 **선언된 벽 영률 · 포아송비** (무한 강체로 바꾸지 않는다)."""
+    return 1.0 / ((1.0 - _nu_of(ti) ** 2) / E[ti] + (1.0 - _nu_of(tj) ** 2) / E[tj])
+
+
+def rstar_pair(ti, tj, d):
+    """유효 반경 — 입자쌍 r_i·r_j/(r_i+r_j) · 벽 (평면) 은 R* = r_입자."""
+    if ti == WALL:
+        ti, tj = tj, ti
+    ri = d[ti] / 2.0
+    if tj == WALL:
+        return ri
+    rj = d[tj] / 2.0
+    return ri * rj / (ri + rj)
+
+
+def f0_pair(ced, rs, es):
+    """명목 소겹침 점착 힘 척도 F₀ = B³/A² = (9/2)π³R*²CED³/E*² (N).  δ₀ = (B/A)² 에서 F₀ = B·δ₀."""
+    return 4.5 * math.pi ** 3 * rs ** 2 * ced ** 3 / es ** 2
+
+
+def hold_bo_pairwise_matrix(M_soft, E_soft, E_new):
+    """soft 행렬 → 쌍별 F₀ 보존 행렬.  `CED_new,ij = CED_soft,ij · (E*_new,ij / E*_soft,ij)^(2/3)`.
+
+    ★ 원소마다 따로 — 상별 CED 를 다시 `min` 으로 조립하지 않고 SE–벽을 대각에서 다시 만들지 않는다 (HBR6-02).
+    ★ 0 은 정확히 0 (0/0 비 없음) · E* 가 그대로인 쌍 (AM–AM · AM–벽) 은 배수가 정확히 1.0 이라 CED 도 비트 그대로.
+    ⛔ 모양이 (상 수 + 1)² 가 아니거나 · 비대칭 · 비유한 · 음수면 거부 (fail-closed).
+    """
+    names = list(TYPES) + [WALL]
+    n = len(names)
+    if len(M_soft) != n or any(len(r) != n for r in M_soft):
+        raise SystemExit(f'⛔ 쌍별 역산: soft 행렬이 {n}×{n} (상 {TYPES} + 벽) 이 아니다')
+    M = [[0.0] * n for _ in range(n)]
+    for i in range(n):
+        for j in range(i, n):
+            c = M_soft[i][j]
+            if M_soft[j][i] != c:
+                raise SystemExit(f'⛔ 쌍별 역산: soft 행렬이 비대칭이다 ({names[i]},{names[j]})')
+            if not (math.isfinite(c) and c >= 0.0):
+                raise SystemExit(f'⛔ 쌍별 역산: soft CED ({names[i]},{names[j]}) = {c!r} — 유한한 비음수여야 한다')
+            if c == 0.0:
+                continue
+            f = (estar_pair(names[i], names[j], E_new) / estar_pair(names[i], names[j], E_soft)) ** (2.0 / 3.0)
+            M[i][j] = M[j][i] = c * f
+    return M
+
+
+def stiffness_rows(d, M_soft, M_new, E_soft, E_new):
+    """쌍별 표 (머리 주석 · deck_meta.json) — 상 쌍 (i ≤ j, 벽 포함) 마다 R* · E* · CED · F₀ (soft → new) · F₀ 비 (0 이면 None)."""
+    names = list(TYPES) + [WALL]
+    rows = []
+    for i in range(len(names)):
+        for j in range(i, len(names)):
+            ti, tj = names[i], names[j]
+            ww = ti == WALL and tj == WALL
+            rs = None if ww else rstar_pair(ti, tj, d)
+            es_s = None if ww else estar_pair(ti, tj, E_soft)
+            es_n = None if ww else estar_pair(ti, tj, E_new)
+            c_s, c_n = M_soft[i][j], M_new[i][j]
+            f_s = None if ww else f0_pair(c_s, rs, es_s)
+            f_n = None if ww else f0_pair(c_n, rs, es_n)
+            rows.append(dict(pair=f'{ti}–{tj}', i=i + 1, j=j + 1, R_star_m=rs, E_star_soft_Pa=es_s, E_star_Pa=es_n,
+                             CED_soft=c_s, CED=c_n, F0_soft_N=f_s, F0_N=f_n,
+                             F0_ratio=(f_n / f_s) if (f_s and f_n is not None) else None))
+    return rows
+
+
+def _dt_k(dt_factor):
+    """`--dt-factor X` → 정수 k = 1/X.  step 수 · 덤프 간격 step 을 **정확히 k 배** 해야 물리 시간 · 덤프 시각이 안 바뀌므로
+    1/X 가 정수가 아닌 X (0.3 · 2 · 0 · 음수 · NaN) 는 거부한다."""
+    try:
+        X = float(dt_factor)
+    except (TypeError, ValueError):
+        raise SystemExit(f'⛔ --dt-factor {dt_factor!r} — 수가 아니다')
+    if not (math.isfinite(X) and 0.0 < X <= 1.0):
+        raise SystemExit(f'⛔ --dt-factor {dt_factor!r} — (0, 1] 이어야 한다 (dt 를 늘리지 않는다)')
+    k = int(round(1.0 / X))
+    if k < 1 or abs(k * X - 1.0) > 1e-12:
+        raise SystemExit(f'⛔ --dt-factor {X:g} — 1/X = {1.0 / X:.6g} 이 정수가 아니다.  step · 덤프 간격을 정확히 정수배할 수 '
+                         f'없으면 물리 시간 · 덤프 시각이 어긋난다 (예: 0.5 · 0.25)')
+    return k
+
+
 def volume_fractions():
     """활성 상(`TYPES`)만의 부피분율·wt%.  **빠진 상의 질량은 재정규화한다.**
 
@@ -405,13 +508,41 @@ def volume_fractions():
     return {k: v[k] / tot for k in v}, wt
 
 
-def plan(n_total, cgf=200.0, fill=0.30, pack=0.60, drum_r_over_l=2.5):
+def stiffened_e(stiffen_se=1.0):
+    """상별 영률 — **SE 만 ×F** (AM_P · AM_S · 벽 · 섬유 불변).  F = 1 이면 `E_PHASE` 와 같은 float 그대로.
+
+    강성 축 (사전등록 `docs/reviews/mixer_highbo_stiffness_prereg_20260929.md` §3 · 이름 그대로 *"SE-only stiffness sensitivity"*).
+    ⛔ 거부 — F 가 유한한 양수가 아니면 · 경화한 SE 영률이 덱 인쇄 (`youngsModulus … :.4g`) 에 **정확히** 안 들어가면
+      (예: 15.857 → 1.5857e8 이 덱에 1.586e+08 로 찍힌다 = 쌍별 역산에 쓴 E ≠ 실제로 도는 E).  14 · 28 은 정확하다.
+    """
+    try:
+        F = float(stiffen_se)
+    except (TypeError, ValueError):
+        raise SystemExit(f'⛔ --stiffen-se {stiffen_se!r} — 수가 아니다')
+    if not (math.isfinite(F) and F > 0.0):
+        raise SystemExit(f'⛔ --stiffen-se {stiffen_se!r} — 유한한 양수여야 한다')
+    E = dict(E_PHASE)
+    if F != 1.0:
+        E['SE'] = E_PHASE['SE'] * F
+        if float(f"{E['SE']:.4g}") != E['SE']:
+            raise SystemExit(f"⛔ --stiffen-se {F:g} → SE 영률 {E['SE']!r} Pa 가 덱 인쇄 정밀도 (4 유효숫자 → "
+                             f"`{E['SE']:.4g}`) 에 정확히 안 들어간다 — 쓰인 E 와 쌍별 역산에 쓴 E 가 갈린다.  "
+                             f"영률이 4 유효숫자로 끝나는 배수를 고를 것 (예: 14 · 28)")
+    return E
+
+
+def plan(n_total, cgf=200.0, fill=0.30, pack=0.60, drum_r_over_l=2.5, stiffen_se=1.0):
     """조성 → 개수 · 드럼 치수 · 시간스텝.  **순수 함수**라 시험 가능하다.
 
     ★ 지름은 전부 `D_REAL_UM` 에서 나온다 (비율 노브 없음).  옛 `d_se_over_am` ·
       `d_fib_over_am` 인자는 **삭제**했다 — 아무도 넘기지 않으면서 표를 무력화하고
       있었다 (선언 ≠ 사용).  셀프테스트 ㊵ 가 "표 = 사용" 을 강제한다.
+    ★ `stiffen_se` (2026-09-30, 강성 축) — SE 영률만 ×F 로 두고 dt 를 **같은 Rayleigh 규칙**으로 새 E 에서 다시 낸다.
+      치수 · 개수 · 드럼은 E 와 무관하다.  반환에 `E` (상별 영률 · 벽 포함) · `stiffen_se` · `dt_by` (dt 를 정한 상) 를 더한다.
+      ⚠ soft (F = 1) 에서 dt 를 정하는 상은 SE 가 아니라 **AM_S** 다 (캠페인 계획: AM_S 0.7055 µs < SE 1.1719 µs) —
+        그래서 ×14 의 step 배수는 √14 = 3.74 가 아니라 **2.2525** 다 (Codex 7 차 §5-1 산술과 같다).
     """
+    E = stiffened_e(stiffen_se)
     phi, wt = volume_fractions()
     d = {k: D_REAL_UM[k] * 1e-6 * cgf for k in TYPES}        # m
     #  ⚠⚠ LIGGGHTS `particledistribution/discrete` 는 분율을 **mass%** 로 읽는다
@@ -448,7 +579,7 @@ def plan(n_total, cgf=200.0, fill=0.30, pack=0.60, drum_r_over_l=2.5):
     dts = []
     for t in TYPES:
         nu_t, mat = PHASE_MECH[t]
-        G = E_PHASE[t] / (2.0 * (1.0 + nu_t))
+        G = E[t] / (2.0 * (1.0 + nu_t))
         dts.append(0.2 * math.pi * (d[t] / 2) * math.sqrt(DENS[mat] * 1000.0 / G)
                    / (0.1631 * nu_t + 0.8766))
     dt = min(dts)
@@ -456,7 +587,8 @@ def plan(n_total, cgf=200.0, fill=0.30, pack=0.60, drum_r_over_l=2.5):
     return dict(phi=phi, wt=wt, d=d, n=n, n_tpl=n_tpl, n_tpl_total=n_tpl_total,
                 massfrac=massfrac, n_fib=n_fib, nsph=nsph, L_fib=L_fib,
                 v_solid=v_solid, v_drum=v_drum, R=R, L=L, dt=dt,
-                rpm_crit=rpm_crit, cgf=cgf, stl_scale=R / 0.5, n_total=sum(n.values()))
+                rpm_crit=rpm_crit, cgf=cgf, stl_scale=R / 0.5, n_total=sum(n.values()),
+                E=E, stiffen_se=float(stiffen_se), dt_by=TYPES[dts.index(dt)])
 
 
 def chain_volume_factor(nsph, spacing_over_d=0.8):
@@ -533,8 +665,145 @@ def _is_prime(n):
     return True
 
 
+def run_steps(p, rpm, revolutions, settle_s=None, restitution=0.3, dt_factor=1.0):
+    """덱의 시간 계획 — (정착 step · 회전 step · 덤프 간격 · 체크포인트 간격 · 덱에 찍히는 dt 문자열).
+
+    기본 (`dt_factor` 1) = 옛 `deck()` 본문의 식 그대로 (정착 = 유도 정착시간 · 회전 = 바퀴 × 주기 를 `p['dt']` 로 반올림,
+    덤프 간격 = max(1000, 회전 step // 200), dt 는 `:.4g`).  경화 덱 (`plan(…, stiffen_se=F)`) 은 같은 식이 **새 dt** 로 돈다
+    = 물리 시간 (정착 · 회전 · 바퀴 수) 불변, step · 덤프 간격은 새 dt 로 다시 계산.
+    ★ `dt_factor` X = 1/k (2026-09-30, DEV `E0_ref@dt/2`) — **dt 만** 인쇄된 dt 의 정확히 1/k 로 두고 정착 · 회전 · 덤프 간격 step 은
+      기본 계획의 **정확히 k 배** (새로 반올림하지 않는다) ⇒ 물리 시간 · 덤프 시각 · 계획 t₀ 의 물리 시각이 같다.  `run 1` (삽입 한 step) 은
+      배하지 않는다 (삽입 step 이지 물리 구간이 아니다 — 회전 시작 시각이 dt/2 앞당겨질 뿐).  체크포인트 간격은 새 step 으로 같은 규칙.
+    """
+    k = _dt_k(dt_factor)
+    period = 60.0 / rpm
+    if settle_s is None:
+        settle_s = settle_time(2.0 * p['R'], restitution)
+    steps_fill = max(1000, int(round(0.5 * settle_s / p['dt'])))   # 두 번 돈다
+    steps_run = int(round(revolutions * period / p['dt']))
+    dump_every = max(1000, steps_run // 200)
+    if k != 1:
+        steps_fill, steps_run, dump_every = k * steps_fill, k * steps_run, k * dump_every
+    #  ★ 체크포인트 간격 — 잃어도 되는 시간이 기준이다.  실측 21.8 step/s 에서 500,000 스텝
+    #    ≈ 6.4 h 이므로 ~1 h 손실선으로 잡는다.  회전이 없는 기준런(steps_run=0)은 정착만
+    #    도는데 그 전체가 385,336 스텝(≈4.9 h)이라 같은 값이면 한 번도 안 찍힌다 ⇒ 하한을 둔다.
+    restart_every = max(50_000, min(200_000, (steps_run or 2 * steps_fill) // 20))
+    dt_txt = f"{p['dt']:.4g}" if k == 1 else repr(float(f"{p['dt']:.4g}") / k)
+    return dict(k=k, period=period, settle_s=settle_s, steps_fill=steps_fill, steps_run=steps_run,
+                dump_every=dump_every, restart_every=restart_every, dt_txt=dt_txt,
+                dt_c=p['dt'] if k == 1 else float(dt_txt))       # dt_c = 주석용 (기본은 옛 식 p['dt'] 그대로)
+
+
+def ced_for_deck(p, arm, hold_bo_pairwise=False):
+    """덱의 CED 행렬 → (soft 행렬, 덱 행렬, 점착 있음?).
+
+    soft = 현 생성기 `ced_matrix` (기준 영률 `E_PHASE`).  `p` 가 경화 계획 (`stiffen_se` ≠ 1) 이고 점착이 있으면
+    `hold_bo_pairwise=True` 일 때만 쌍별 F₀ 보존 행렬을 쓴다 — **없으면 거부** (옛 동일상 규칙으로 조용히 가지 않게).
+    점착이 전부 0 인 팔 (E0 · L0) 은 F₀ 대상이 없으니 허용한다 (행렬 그대로 0).
+    """
+    M_soft = ced_matrix(arm, p['d'])
+    F = float(p.get('stiffen_se', 1.0))
+    nonzero = any(v != 0.0 for row in M_soft for v in row)
+    if F == 1.0 or not nonzero:
+        return M_soft, M_soft, nonzero
+    if not hold_bo_pairwise:
+        raise SystemExit(f'⛔ 팔 {arm}: --stiffen-se {F:g} 를 --hold-bo-pairwise 없이 줬다 — 점착이 0 이 아닌 팔은 거부한다.  '
+                         f'SE 영률만 올리고 행렬을 그대로 두거나 동일상 규칙 (CED ∝ E^(2/3)) 으로 다시 만들면 혼합쌍 · 벽의 '
+                         f'점착 힘 척도가 어긋난다 (Codex HBR6-02: AM–SE ×1.272 · SE–벽 ×1.182).  사전등록 §3 = --hold-bo-pairwise')
+    E_new = p.get('E', E_PHASE)
+    M_new = hold_bo_pairwise_matrix(M_soft, E_PHASE, E_new)
+    _assert_ceiling(arm, M_new, p['d'], E=E_new)
+    return M_soft, M_new, nonzero
+
+
+def _stiff_header(arm, p, M_soft, M_ced, nonzero, hold_bo_pairwise, dt_factor, st):
+    """경화 · dt 인자 덱의 머리 주석 (기본 덱에는 없다 — 빈 문자열).  ⚠ 줄이 `&` 로 끝나면 LIGGGHTS 가 다음 줄과 잇는다 — 쓰지 않는다."""
+    F = float(p.get('stiffen_se', 1.0))
+    if F == 1.0 and st['k'] == 1:
+        return '', ''
+    E_new = p.get('E', E_PHASE)
+    hold = ('yes' if hold_bo_pairwise else 'no') + ('' if nonzero else ' (전 점착 0 — F0 대상 없음 · 행렬 그대로 0)')
+    L = [f'# ★ 강성 축 (사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3 · Codex 6 차 HBR6-02 · 7 차 §5) — '
+         f'stiffen_se {F:g} · hold_bo_pairwise {hold} · dt_factor {float(dt_factor):g}']
+    if F != 1.0:
+        L.append(f"#   SE 영률만 ×{F:g}: {E_PHASE['SE']:.4g} → {E_new['SE']:.4g} Pa (AM_P · AM_S · 벽 영률 · 전 상 ν 불변 · "
+                 f"AM/SE 영률비 {E_PHASE['AM_P'] / E_PHASE['SE']:.4g} → {E_new['AM_P'] / E_new['SE']:.4g})")
+    dt0 = plan_dt_soft(p)
+    L.append(f"#   dt = 생성기 Rayleigh 규칙 (상별 최소) 을 이 덱의 E 로: {dt0[0]:.4g} s (soft · {dt0[1]}) → {p['dt']:.4g} s "
+             f"({p.get('dt_by', '?')}) · 정착 · 회전 물리 시간 · 바퀴 수 불변 — step · 덤프 간격은 새 dt 로 다시")
+    if st['k'] != 1:
+        L.append(f"#   dt_factor {float(dt_factor):g} — dt 만 정확히 1/{st['k']} ({p['dt']:.4g} → {st['dt_txt']}) · 정착 · 회전 · 덤프 "
+                 f"간격 step 정확히 ×{st['k']} (run 1 삽입 step 은 그대로) ⇒ 물리 시간 · 덤프 시각 · 계획 t0 시각 불변")
+    L.append('#   점착 = 쌍별 명목 소겹침 점착 힘 척도 F0 = B³/A² = (9/2)π³R*²CED³/E*² 보존: CED_new,ij = CED_soft,ij · '
+             '(E*_new,ij/E*_soft,ij)^(2/3)')
+    L.append('#     soft = 현 생성기 행렬 (원소마다 역산 · min 재조립 없음) · E*_ij = [(1−ν_i²)/E_i + (1−ν_j²)/E_j]⁻¹ · '
+             '벽 R* = r_입자 · 선언된 벽 E · ν · 0 은 정확히 0')
+    L.append(f"#   {'쌍':<10s} {'R* (m)':>11s} {'E*_soft':>11s} {'E*':>11s} {'CED_soft':>11s} {'CED':>11s} "
+             f"{'F0_soft (N)':>11s} {'F0 (N)':>11s} {'F0 비':>13s}")
+    g = lambda v: '—' if v is None else f'{v:.6g}'
+    for r_ in stiffness_rows(p['d'], M_soft, M_ced, E_PHASE, E_new):
+        ratio = '—' if r_['F0_ratio'] is None else f"{r_['F0_ratio']:.12f}"
+        L.append(f"#   {r_['pair']:<10s} {g(r_['R_star_m']):>11s} {g(r_['E_star_soft_Pa']):>11s} {g(r_['E_star_Pa']):>11s} "
+                 f"{g(r_['CED_soft']):>11s} {g(r_['CED']):>11s} {g(r_['F0_soft_N']):>11s} {g(r_['F0_N']):>11s} {ratio:>13s}")
+    L.append('#   ⚠ F0 보존 ≠ SJKR 동역학 전체 불변 — 분리 일 U_sep ∝ E*^(−2/3) · 접촉시간 · 접선 강성 · 감쇠 · 이력 · 영률비는 바뀐다 '
+             '(§3 남기는 차이) · 이 표는 생성기 산술이다 — 실행 덱 검산은 scripts/mixer_deck_readback.py')
+    note = (f"\n#   ⚠ 이 덱은 강성 축 덱이다: 위 문장의 영률 · 비는 soft 기준 — 이 덱의 SE 영률 = {E_new['SE']:.4g} (머리 블록 참조)"
+            if F != 1.0 else '')
+    return '\n' + '\n'.join(L), note
+
+
+def plan_dt_soft(p):
+    """soft (기준 E) 에서의 dt 와 그것을 정한 상 — 머리 주석 · 메타용 (같은 Rayleigh 식)."""
+    dts = []
+    for t in TYPES:
+        nu_t, mat = PHASE_MECH[t]
+        G = E_PHASE[t] / (2.0 * (1.0 + nu_t))
+        dts.append(0.2 * math.pi * (p['d'][t] / 2) * math.sqrt(DENS[mat] * 1000.0 / G) / (0.1631 * nu_t + 0.8766))
+    return min(dts), TYPES[dts.index(min(dts))]
+
+
+def deck_meta(p, rpm, revolutions, seed, arm, text, argv=None, settle_s=None, restitution=0.3,
+              hold_bo_pairwise=False, dt_factor=1.0):
+    """경화 · dt 인자 덱의 **봉인 가능한 메타** (CLI 가 `deck_meta.json` 으로 쓴다) — 덱 sha256 · 생성기 sha256 · argv · 선택 옵션 ·
+    상별 E · ν · dt (soft → 규칙 → 덱) · 시간 계획 (step · 물리 시각) · 쌍별 E* · CED · F₀ 표.
+
+    ⚠ 이 표는 **생성기 산술**이다 — 실행 덱의 독립 검산은 `scripts/mixer_deck_readback.py` (덱 텍스트만 읽는다) 가 맡는다.
+    """
+    import hashlib
+    st = run_steps(p, rpm, revolutions, settle_s=settle_s, restitution=restitution, dt_factor=dt_factor)
+    M_soft, M_ced, nonzero = ced_for_deck(p, arm, hold_bo_pairwise)
+    E_new = p.get('E', E_PHASE)
+    names = list(TYPES) + [WALL]
+    dt_deck = float(st['dt_txt'])
+    t0 = (2 * st['steps_fill'] // st['dump_every']) * st['dump_every']
+    dt_soft, by_soft = plan_dt_soft(p)
+    raw = text.encode('utf-8')
+    return dict(
+        schema='mixer_deck_meta/1',
+        registered='docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3 (강성 축) · §2 · §8-2 (DEV) — Codex 6 차 HBR6-02 · 7 차 §5',
+        generator='scripts/make_mixer_deck.py',
+        generator_sha256=hashlib.sha256(open(os.path.abspath(__file__), 'rb').read()).hexdigest(),
+        argv=list(argv or []), deck_file='in.mixer', deck_sha256=hashlib.sha256(raw).hexdigest(), deck_bytes=len(raw),
+        arm=arm, arm_desc=ARMS[arm]['desc'], seed=int(seed), revolutions=revolutions, n_atoms_planned=p['n_total'],
+        cgf=p['cgf'], rpm=rpm, period_s=st['period'],
+        stiffen_se=float(p.get('stiffen_se', 1.0)), hold_bo_pairwise=bool(hold_bo_pairwise), dt_factor=float(dt_factor),
+        cohesion_nonzero=bool(nonzero),
+        types={str(i + 1): t for i, t in enumerate(names)},
+        E_soft_Pa={t: E_PHASE[t] for t in names}, E_Pa={t: E_new[t] for t in names}, nu={t: _nu_of(t) for t in names},
+        radius_m={t: p['d'][t] / 2.0 for t in TYPES},
+        dt=dict(soft_rule_s=dt_soft, soft_set_by=by_soft, rule_s=p['dt'], rule_set_by=p.get('dt_by'),
+                deck_txt=st['dt_txt'], deck_s=dt_deck, k=st['k']),
+        steps=dict(insert=1, fill=st['steps_fill'], run=st['steps_run'], dump_every=st['dump_every'],
+                   restart_every=st['restart_every'], t0_planned=t0, steps_per_rev=st['period'] / dt_deck),
+        physical_s=dict(settle=2 * st['steps_fill'] * dt_deck, rotation=st['steps_run'] * dt_deck,
+                        dump_interval=st['dump_every'] * dt_deck, t0_planned=t0 * dt_deck),
+        pairs=stiffness_rows(p['d'], M_soft, M_ced, E_PHASE, E_new),
+        caveat=('F0 = B³/A² 보존 = 명목 소겹침 점착 힘 척도 (점착 지배 · 고립 접촉 근사) — SJKR 동역학 전체 불변이 아니다 '
+                '(U_sep ∝ E*^(−2/3) · 접촉시간 · 접선 강성 · 감쇠 · 이력 · 영률비 · 실제 SJKR 구 교차 면적 · 메시 area_ratio).'))
+
+
 def deck(p, rpm, revolutions, seed=32452843, arm='E1', settle_s=None, layered=None,
-         restitution=0.3, n_baffles=0, baffle_h=0.10):
+         restitution=0.3, n_baffles=0, baffle_h=0.10, hold_bo_pairwise=False, dt_factor=1.0):
     #  ⚠⚠ LIGGGHTS 의 `fix insert/pack` 시드는 **소수여야 한다**.
     #    합성수를 주면 런이 `random.cpp:93` 에서 **죽는다** — 그런데 죽는 자리가
     #    셋업 뒤라 덤프 디렉터리는 이미 만들어져 있고, 배치로 돌리면 "덤프 0 개" 로만
@@ -545,7 +814,12 @@ def deck(p, rpm, revolutions, seed=32452843, arm='E1', settle_s=None, layered=No
             f'⛔ 삽입 시드 {seed} 는 소수가 아니다 — LIGGGHTS 가 거부한다.\n'
             f'   예: 15485863 · 32452843 · 32452867 · 49979687 · 91648301')
     n, d = p['n'], p['d']
-    period = 60.0 / rpm
+    #  ★ 강성 축 (2026-09-30) — 시간 계획 · CED 행렬 · 머리 블록.  옵션이 중립이면 셋 다 옛 식 그대로 (셀프테스트 ST① 가 바이트 동일 강제).
+    st = run_steps(p, rpm, revolutions, settle_s=settle_s, restitution=restitution, dt_factor=dt_factor)
+    M_soft, M_ced, _nonzero = ced_for_deck(p, arm, hold_bo_pairwise)
+    _stiff_hdr, _stiff_note = _stiff_header(arm, p, M_soft, M_ced, _nonzero, hold_bo_pairwise, dt_factor, st)
+    E_now = p.get('E', E_PHASE)
+    period = st['period']
     #  ★ 배플 — `D10(b)` 전단 축.  **원본 Drum.stl 은 안 건드린다** (별도 메시).
     #  ⚠ `n_baffles = 0` 이면 아래 두 조각이 **빈 문자열**이라 덱이 배플 이전과
     #    글자 그대로 같다 — 배플 없는 팔을 다시 돌릴 필요가 없다 (시험 ㉛ 이 강제).
@@ -558,16 +832,9 @@ def deck(p, rpm, revolutions, seed=32452843, arm='E1', settle_s=None, layered=No
     _baffle_move = ('' if not n_baffles else
                     f'\nfix mvBf all move/mesh mesh Baffle rotate origin 0 0 0 '
                     f'axis 1. 0. 0. period {period:.6g}')
-    #  낙하 높이 = 드럼 지름 (꼭대기에서 바닥까지)
-    if settle_s is None:
-        settle_s = settle_time(2.0 * p['R'], restitution)
-    steps_fill = max(1000, int(round(0.5 * settle_s / p['dt'])))   # 두 번 돈다
-    steps_run = int(round(revolutions * period / p['dt']))
-    dump_every = max(1000, steps_run // 200)
-    #  ★ 체크포인트 간격 — 잃어도 되는 시간이 기준이다.  실측 21.8 step/s 에서 500,000 스텝
-    #    ≈ 6.4 h 이므로 ~1 h 손실선으로 잡는다.  회전이 없는 기준런(steps_run=0)은 정착만
-    #    도는데 그 전체가 385,336 스텝(≈4.9 h)이라 같은 값이면 한 번도 안 찍힌다 ⇒ 하한을 둔다.
-    restart_every = max(50_000, min(200_000, (steps_run or 2 * steps_fill) // 20))
+    #  낙하 높이 = 드럼 지름 (꼭대기에서 바닥까지) · 정착 · 회전 · 덤프 · 체크포인트 간격은 run_steps (옛 식 그대로 옮김)
+    steps_fill, steps_run = st['steps_fill'], st['steps_run']
+    dump_every, restart_every = st['dump_every'], st['restart_every']
     #  ── 삽입 블록 (§24 층상 vs 기존 균일) ─────────────────────────────────
     #  ⚠ 비층상 문자열은 옛 원문과 **바이트 동일**해야 한다 — 셀프테스트 ㉟ 골든 해시.
     if layered is None:
@@ -674,7 +941,7 @@ fix insB all insert/pack seed {seedB} distributiontemplate pddB &
     _nt = len(TYPES) + 1                               # ★ 마지막 타입 = 벽
     _procs = ('processors      1 1 1            # PUBLIC 판 multisphere 는 직렬만 지원' if _fib else
               '# processors — 섬유(multisphere) 없음 ⇒ MPI 가능.  `mpirun -np N` 이면 자동 분할')
-    _E_line = ' '.join(f'{E_PHASE[t]:.4g}' for t in TYPES) + f' {E_PHASE[WALL]:.4g}'
+    _E_line = ' '.join(f'{E_now[t]:.4g}' for t in TYPES) + f' {E_now[WALL]:.4g}'
     _nu_line = ' '.join(f'{PHASE_MECH[t][0]:.2f}' for t in TYPES) + f' {WALL_NU:.2f}'
     box = p['R'] * 1.15
     return f"""# 믹싱 드럼 — 표면에너지 스윕  (생성: scripts/make_mixer_deck.py)
@@ -686,7 +953,7 @@ fix insB all insert/pack seed {seedB} distributiontemplate pddB &
 # CGF = {p['cgf']:.0f}  (소재 AM_P {D_REAL_UM['AM_P']:.0f} µm → 모델 {d['AM_P']*1e3:.2f} mm · SE {D_REAL_UM['SE']:.0f} µm → {d['SE']*1e3:.3f} mm)
 #   ★ 크기 비는 소재 그대로다: d_SE/d_AM_P = {d['SE']/d['AM_P']:.3f}
 # ⛔ 생산 scale=1000 규약을 쓰지 않는다 — 드럼은 중력 구동이라 중력/접촉 비가 깨진다.
-# ⚠ 전단탄성률을 계산비용 때문에 낮췄다 (lischka 와 같은 조작) — 물성으로 인용 금지.
+# ⚠ 전단탄성률을 계산비용 때문에 낮췄다 (lischka 와 같은 조작) — 물성으로 인용 금지.{_stiff_hdr}
 
 atom_style      granular
 atom_modify     map array sort 0 0
@@ -709,7 +976,7 @@ neigh_modify    delay 0
 
 # --- 물성 (1:AM_P 2:AM_S 3:SE 4:VGCF 5:PTFE) ---
 # ⚠ 영률은 ÷135 균일 연화값이다 (AM 1.037e9 · SE 1.0e7 · 벽 1.48e9).  물성으로 인용 금지.
-#   비 104 는 실물(AM 1.4e11 / SE_eff 1.35e9)과 같다.  마지막 열 = 벽.
+#   비 104 는 실물(AM 1.4e11 / SE_eff 1.35e9)과 같다.  마지막 열 = 벽.{_stiff_note}
 fix m1 all property/global youngsModulus peratomtype {_E_line}
 fix m2 all property/global poissonsRatio peratomtype {_nu_line}
 # ★ 마찰 = hare2026 세트 (μ_s {MU_S} · μ_r {MU_R}) — Bo 3.0 앵커를 정의한 조건.  압연 덱과 다른 것은 정합이다.
@@ -721,13 +988,13 @@ fix m5 all property/global coefficientRollingFriction peratomtypepair {_nt} &
 {_mat(_nt, MU_R)}
 # ★ 스윕 축 — 표면에너지 대리 (SJKR, J/m³).  **팔 {arm}: {ARMS[arm]['desc']}**\n# ⚠ 이 블록만 팔마다 다르다.  나머지는 한 글자도 안 바뀐다.
 fix mC all property/global cohesionEnergyDensity peratomtypepair {_nt} &
-{_mat(_nt, ced_matrix(arm, d))}
+{_mat(_nt, M_ced)}
 fix m9 all property/global characteristicVelocity scalar 2.0
 
 # ⚠ cohesion 은 tangential 뒤 · rolling_friction 앞 (순서가 실재하는 제약)
 pair_style      gran model hertz tangential history cohesion sjkr rolling_friction cdt
 pair_coeff      * *
-timestep        {p['dt']:.4g}
+timestep        {st['dt_txt']}
 fix             gravi all gravity 9.81 vector 0.0 0.0 -1.0
 
 # --- 기구 (STL 은 튜토리얼 Mixer 원본을 scale 로 줄여 쓴다) ---
@@ -772,14 +1039,14 @@ run 1
 dump dmp all custom {dump_every} post/mix_*.liggghts id type{' mol' if _fib else ''} x y z vx vy vz fx fy fz radius
 
 # ① 채우고 정착 — ⚠ KE 가 떨어진 뒤에 회전을 시작한다 (정착 전에 돌리면 지표가 뒤집힌다)
-#   정착 {2*steps_fill*p['dt']:.3f} s = 낙하 {2*p['R']*1e3:.1f} mm · e {restitution} 에서
+#   정착 {2*steps_fill*st['dt_c']:.3f} s = 낙하 {2*p['R']*1e3:.1f} mm · e {restitution} 에서
 #   유도한 t_ff·(1+e)/(1−e) 의 {2.0:.0f}배.  ⛔ 상수 20000 step 을 쓰지 않는다.
 #   ⚠ 그래도 잰 뒤 φ(포락) 경고를 확인할 것 — 식은 홑 입자의 튐만 센다.
 run {steps_fill}
 {_unfix_ins}
 run {steps_fill}{_unfix_ins2}
 
-# ★ 정착 끝 상태를 남긴다 — 회전 중 죽어도 정착({2*steps_fill*p['dt']:.3f} s)을 다시 안 돈다
+# ★ 정착 끝 상태를 남긴다 — 회전 중 죽어도 정착({2*steps_fill*st['dt_c']:.3f} s)을 다시 안 돈다
 write_restart restart/settled.bin
 
 # ② 회전 {revolutions} 바퀴 @ {rpm:.0f} rpm  (임계 {p['rpm_crit']:.0f} rpm · Fr {(2*math.pi/period)**2*p['R']/9.81:.3f})
@@ -1221,6 +1488,245 @@ def _selftest():
     chk('㊼d 확장 목록 = LH × 캠페인 시드 3 (본 캠페인 10 런과 분리)',
         CAMPAIGN_HIGHBO == [('LH', _s) for _s in CAMPAIGN_SEEDS] and ARMS['LH'].get('layered')
         and not any(_a == 'LH' for _a, _ in CAMPAIGN))
+
+    #  ══ ST — 강성 축: SE 만 경화 + 쌍별 F₀ 보존 (2026-09-30 · 사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3 ·
+    #     Codex 6 차 HBR6-02 · 7 차 §5 · 9 차 §3/§6) ════════════════════════════════════════════════════════════════════════
+    #  ★ 반례를 먼저 옮겼다 — 옛 생성기에는 쌍별 경로가 없어 ST⑤ (결함 재현) 를 뺀 전부가 FAIL 이었다.
+    #    ST⑤ 가 결함 자체다: 동일상 `CED ∝ E^(2/3)` (SE 영률만 올리고 ced_matrix 를 다시 부르기) 는 min 조립 때문에 혼합쌍이 SE 의
+    #    CED 배수를 그대로 받아 F₀ ×1.272 · SE–벽은 대각 ÷ 1.842 로 다시 만들어져 ×1.182 가 된다.
+    import hashlib as _hs
+    import json as _js
+    import subprocess as _sp
+    import tempfile as _tf
+
+    def _ok(fn):
+        try:
+            return bool(fn())
+        except (Exception, SystemExit):
+            return False
+
+    def _exit_msg(fn):
+        """fn() 이 SystemExit 로 거부하면 그 문구, 아니면 None (다른 예외는 거부가 아니다 → None)."""
+        try:
+            fn()
+        except SystemExit as e:
+            return str(e)
+        except Exception:
+            return None
+        return None
+
+    _NM = list(TYPES) + [WALL]
+    _IX = {t: k for k, t in enumerate(_NM)}
+    _P9 = [('AM_P', 'AM_P'), ('AM_P', 'AM_S'), ('AM_S', 'AM_S'), ('AM_P', 'SE'), ('AM_S', 'SE'), ('SE', 'SE'),
+           ('AM_P', WALL), ('AM_S', WALL), ('SE', WALL)]
+    _Esoft = dict(E_PHASE)
+
+    def _f0x(ced, ti, tj, dd_, E_):
+        """★ 독립 산술 (생성기의 쌍 함수를 부르지 않는다) → (F₀, E*).  F₀ = (9/2)π³R*²CED³/E*² · 벽 R* = r_입자 · 선언된 벽 E · ν."""
+        _nu = lambda t: WALL_NU if t == WALL else PHASE_MECH[t][0]
+        es = 1.0 / ((1.0 - _nu(ti) ** 2) / E_[ti] + (1.0 - _nu(tj) ** 2) / E_[tj])
+        ri = dd_[ti] / 2.0
+        rs = ri if tj == WALL else ri * (dd_[tj] / 2.0) / (ri + dd_[tj] / 2.0)
+        return 4.5 * math.pi ** 3 * rs ** 2 * ced ** 3 / es ** 2, es
+
+    _pc = plan(100000, cgf=151.4)                       # 캠페인 조건 (gen_all.sh 기본 N_TOTAL · CGF)
+    _rpmc = resolve_rpm(_pc['R'])
+    _ints = lambda pat, t: [int(x) for x in _re.findall(pat, t, _re.M)]
+    _one = lambda pat, t: _re.search(pat, t, _re.M).group(1)
+
+    #  ST① 기본값 비트 동일 — 새 옵션을 안 주거나 중립값 (stiffen 1 · dt_factor 1 · hold 끔/켬) 이면 덱이 지금과 같다
+    chk('ST① ★ 새 옵션 중립값 (stiffen_se 1 · hold_bo_pairwise 끔/켬 · dt_factor 1) 이면 덱이 기존과 바이트 동일 '
+        '(골든 팔 일곱 × plan(8000)·2 바퀴 · 캠페인 plan·8 바퀴 · E0 0 바퀴)',
+        _ok(lambda: all(deck(_pp, _rr, _rv, seed=32452843, arm=_a)
+                        == deck(plan(_nn, cgf=_cg, stiffen_se=1.0), _rr, _rv, seed=32452843, arm=_a,
+                                hold_bo_pairwise=_h, dt_factor=1.0)
+                        for (_pp, _nn, _cg, _rr, _rv) in ((_p8, 8000, 200.0, 60, 2), (_pc, 100000, 151.4, _rpmc, 8),
+                                                          (_pc, 100000, 151.4, _rpmc, 0))
+                        for _a in _gold for _h in (False, True))))
+
+    def _pair_ratios(arm, F):
+        pn = plan(100000, cgf=151.4, stiffen_se=F)
+        Ms = ced_matrix(arm, pn['d'])
+        Mn = hold_bo_pairwise_matrix(Ms, _Esoft, pn['E'])
+        rr = {(ti, tj): _f0x(Mn[_IX[ti]][_IX[tj]], ti, tj, pn['d'], pn['E'])[0]
+              / _f0x(Ms[_IX[ti]][_IX[tj]], ti, tj, pn['d'], _Esoft)[0] for ti, tj in _P9}
+        return rr, Ms, Mn
+    _st2 = {(_a, _F): _ok(lambda: len(_pair_ratios(_a, _F)[0]) == 9
+                          and all(abs(v - 1.0) <= 1e-12 for v in _pair_ratios(_a, _F)[0].values()))
+            for _a in ('LC', 'LH', 'LA', 'E1') for _F in (14.0, 28.0)}
+    chk(f'ST② ★ SE ×14 · ×28 에서 9 개 독립 비영 항목 (AM–AM 셋 · AM–SE 둘 · SE–SE · AM–벽 둘 · SE–벽) 의 F₀ 비 = 1 '
+        f'(상대 1e-12 · 독립 산술 · LC · LH · LA · E1) — 실패 {[k for k, v in _st2.items() if not v]}',
+        all(_st2.values()))
+    chk('ST③ 쌍별 행렬: 정확히 대칭 · 벽–벽 = 0 · E0 는 ×14 · ×28 에서도 전 원소 0 (0 은 정확히 0 — 0/0 비 없음)',
+        _ok(lambda: all(all(_M[i][j] == _M[j][i] for i in range(len(_NM)) for j in range(len(_NM)))
+                        and _M[_IX[WALL]][_IX[WALL]] == 0.0
+                        for _a in ('LC', 'LH') for _F in (14.0, 28.0) for _M in (_pair_ratios(_a, _F)[2],))
+            and all(v == 0.0 for _F in (14.0, 28.0)
+                    for row in hold_bo_pairwise_matrix(ced_matrix('E0', _pc['d']), _Esoft,
+                                                       plan(100000, cgf=151.4, stiffen_se=_F)['E'])
+                    for v in row)))
+    #  ST④ Codex 7 차 §5 독립 산술 대조 (E* 배수 · 필요한 CED 배수) — AM–AM · AM–벽 은 E* 불변 ⇒ CED 정확히 불변
+    _CODEX = {14.0: {'AM–SE': (12.412672571, 5.360971926), 'SE–SE': (14.0, 5.808785734), 'SE–벽': (12.876543210, 5.493715853)},
+              28.0: {'AM–SE': (22.123962626, 7.880890212), 'SE–SE': (28.0, 9.220872584), 'SE–벽': (23.704545455, 8.251908834)}}
+    _FAM = {'AM–SE': [('AM_P', 'SE'), ('AM_S', 'SE')], 'SE–SE': [('SE', 'SE')], 'SE–벽': [('SE', WALL)]}
+
+    def _codex_ok(F):
+        pn = plan(100000, cgf=151.4, stiffen_se=F)
+        Ms = ced_matrix('LC', pn['d'])
+        Mn = hold_bo_pairwise_matrix(Ms, _Esoft, pn['E'])
+        good = True
+        for fam, (e_mult, c_mult) in _CODEX[F].items():
+            for ti, tj in _FAM[fam]:
+                i, j = _IX[ti], _IX[tj]
+                es_s, es_n = _f0x(1.0, ti, tj, pn['d'], _Esoft)[1], _f0x(1.0, ti, tj, pn['d'], pn['E'])[1]
+                good &= abs(es_n / es_s / e_mult - 1.0) < 1e-9 and abs(Mn[i][j] / Ms[i][j] / c_mult - 1.0) < 1e-9
+        for ti, tj in (('AM_P', 'AM_P'), ('AM_P', 'AM_S'), ('AM_S', 'AM_S'), ('AM_P', WALL), ('AM_S', WALL)):
+            good &= Mn[_IX[ti]][_IX[tj]] == Ms[_IX[ti]][_IX[tj]]
+        return good
+    chk('ST④ ★ Codex 7 차 §5 독립 산술과 일치 — ×14: E* 배수 AM–SE 12.412672571 · SE–SE 14 · SE–벽 12.876543210 → CED 배수 '
+        '5.360971926 · 5.808785734 · 5.493715853 · ×28: 22.12 · 28 · 23.70 → 7.881 · 9.221 · 8.252 (상대 1e-9) · AM–AM · AM–벽 CED 정확히 불변',
+        _ok(lambda: _codex_ok(14.0) and _codex_ok(28.0)))
+
+    def _old_rule(F):
+        """옛 동일상 규칙 — SE 영률만 ×F 로 바꾸고 ced_matrix 를 다시 부른다 (현 생성기 함수만 쓴다 = 옛 코드에서도 돈다)."""
+        saved = E_PHASE['SE']
+        En = dict(E_PHASE)
+        En['SE'] = saved * F
+        try:
+            E_PHASE['SE'] = saved * F
+            Mo = ced_matrix('LC', _pc['d'])
+        finally:
+            E_PHASE['SE'] = saved
+        Ms = ced_matrix('LC', _pc['d'])
+        rr = {(ti, tj): _f0x(Mo[_IX[ti]][_IX[tj]], ti, tj, _pc['d'], En)[0]
+              / _f0x(Ms[_IX[ti]][_IX[tj]], ti, tj, _pc['d'], _Esoft)[0] for ti, tj in _P9}
+        return rr, Ms, Mo
+    _or, _Ms14, _Mo14 = _old_rule(14.0)
+    chk(f"ST⑤ 반례 (결함 재현 · HBR6-02): 옛 동일상 규칙 (SE 영률만 ×14 → ced_matrix 재호출) 은 혼합쌍 F₀ "
+        f"×{_or[('AM_P', 'SE')]:.9f} · SE–벽 ×{_or[('SE', WALL)]:.9f} (Codex 1.272112360 · 1.182108914) · SE–SE ×1 · "
+        f"SE CED {_Ms14[2][2]:.6f} → {_Mo14[2][2]:.6f} · SE–벽 {_Ms14[2][3]:.6f} → {_Mo14[2][3]:.6f} (Codex 핀)",
+        abs(_or[('AM_P', 'SE')] - 1.272112360) < 1e-8 and abs(_or[('AM_S', 'SE')] - 1.272112360) < 1e-8
+        and abs(_or[('SE', WALL)] - 1.182108914) < 1e-8 and abs(_or[('SE', 'SE')] - 1.0) < 1e-12
+        and all(abs(_or[k] - 1.0) < 1e-12 for k in _P9 if 'SE' not in k)
+        and abs(_Ms14[2][2] - 10458.232424) < 5e-6 and abs(_Mo14[2][2] - 60749.631302) < 5e-6
+        and abs(_Ms14[2][3] - 5677.602066) < 5e-6 and abs(_Mo14[2][3] - 32979.973881) < 5e-6)
+
+    def _st6():
+        p14, p28 = plan(100000, cgf=151.4, stiffen_se=14.0), plan(100000, cgf=151.4, stiffen_se=28.0)
+        d14 = deck(p14, _rpmc, 8, seed=32452843, arm='LC', hold_bo_pairwise=True)
+        d0 = deck(_pc, _rpmc, 8, seed=32452843, arm='LC')
+        e_line = lambda t: _one(r'^fix m1 all property/global youngsModulus peratomtype (.+)$', t).split()
+        nu_line = lambda t: _one(r'^fix m2 all property/global poissonsRatio peratomtype (.+)$', t)
+        e0_, e14 = e_line(d0), e_line(d14)
+        run0, run14 = _ints(r'^run (\d+)$', d0)[-1], _ints(r'^run (\d+)$', d14)[-1]
+        return (e14 == [e0_[0], e0_[1], '1.4e+08', e0_[3]] and e0_[2] == '1e+07' and nu_line(d0) == nu_line(d14)
+                and abs(_pc['dt'] * 1e6 - 0.7055) < 5e-5 and abs(p14['dt'] * 1e6 - 0.3132) < 5e-5
+                and abs(_pc['dt'] / p14['dt'] - 2.2525) < 5e-5 and abs(run14 / run0 - _pc['dt'] / p14['dt']) < 1e-6
+                and p14['dt_by'] == 'SE' and _pc['dt_by'] == 'AM_S' and abs(_pc['dt'] / p28['dt'] - 3.1855) < 5e-5
+                and _one(r'^timestep\s+(\S+)$', d14) == '3.132e-07')
+    chk('ST⑥ SE 영률만 ×14 (AM · 벽 · ν 불변) · dt = 생성기 Rayleigh 최소를 새 E 로 다시 — 0.7055 µs (soft · AM_S 가 정함) → '
+        '0.3132 µs (SE) · step ×2.2525 (Codex §5-1 산술) · ×28 → ×3.1855', _ok(_st6))
+    _m7a = _exit_msg(lambda: deck(plan(8000, stiffen_se=14.0), 60, 2, seed=32452843, arm='LC'))
+    _m7b = _exit_msg(lambda: deck(plan(8000, stiffen_se=14.0), 60, 0, seed=32452843, arm='E0'))
+    chk(f'ST⑦ ★ --stiffen-se 를 --hold-bo-pairwise 없이: 점착 있는 팔 (LC) 은 **거부** · E0 (전 점착 0) 은 허용하고 머리에 기록 '
+        f'({(_m7a or "")[:40]!r})',
+        _m7a is not None and '--hold-bo-pairwise' in _m7a and _m7b is None
+        and _ok(lambda: 'hold_bo_pairwise no' in deck(plan(8000, stiffen_se=14.0), 60, 0, seed=32452843, arm='E0')))
+    _m8 = _exit_msg(lambda: plan(8000, stiffen_se=15.857))
+    chk('ST⑧ ★ SE 영률이 덱 인쇄 정밀도 (4 유효숫자) 에 정확히 안 들어가는 배수 (15.857) 는 거부 — 쓰인 E ≠ 역산에 쓴 E 가 되지 않게 '
+        '· 0 · 음수 · NaN 도 거부',
+        _m8 is not None and '4 유효숫자' in _m8
+        and all(_exit_msg(lambda: plan(8000, stiffen_se=_x)) is not None for _x in (0.0, -14.0, float('nan'), float('inf'))))
+
+    def _st9():
+        pr = plan(100000, cgf=151.4, stiffen_se=14.0)
+        good = True
+        for arm, rv in (('E0', 0), ('LC', 2), ('LH', 8)):
+            ref = deck(pr, _rpmc, rv, seed=32452843, arm=arm, hold_bo_pairwise=True)
+            half = deck(pr, _rpmc, rv, seed=32452843, arm=arm, hold_bo_pairwise=True, dt_factor=0.5)
+            rr, rh = _ints(r'^run (\d+)$', ref), _ints(r'^run (\d+)$', half)
+            dr, dh = int(_one(r'^dump dmp all custom (\d+) ', ref)), int(_one(r'^dump dmp all custom (\d+) ', half))
+            tr, th = _one(r'^timestep\s+(\S+)$', ref), _one(r'^timestep\s+(\S+)$', half)
+            t0r, t0h = (2 * rr[1] // dr) * dr, (2 * rh[1] // dh) * dh
+            rsh = int(_one(r'^restart (\d+) ', half))
+            strip = lambda t: [l for l in t.split('\n') if l.strip() and not l.lstrip().startswith('#')
+                               and not _re.match(r'^(run|timestep|dump|restart) ', l)]
+            good &= (rh[0] == rr[0] == 1 and rh[1:] == [2 * x for x in rr[1:]] and dh == 2 * dr
+                     and float(th) * 2.0 == float(tr) and t0h == 2 * t0r and t0h * float(th) == t0r * float(tr)
+                     and rsh == max(50_000, min(200_000, (rh[-1] or 2 * rh[1]) // 20))
+                     and strip(ref) == strip(half)
+                     and (float(_one(r'period (\S+)', half)) / float(th)) == 2.0 * (float(_one(r'period (\S+)', ref)) / float(tr)))
+        return good and all(_exit_msg(lambda: deck(pr, _rpmc, 0, seed=32452843, arm='E0', hold_bo_pairwise=True,
+                                                   dt_factor=_x)) is not None for _x in (0.3, 2.0, 0.0, -0.5, float('nan')))
+    chk('ST⑨ ★ --dt-factor 0.5: dt 만 정확히 ½ (인쇄된 ref dt 의 절반) · 정착 · 회전 · 덤프 간격 step ×2 (run 1 삽입 step 은 그대로) · '
+        '계획 t₀ step ×2 = 같은 물리 시각 · 바퀴당 step ×2 · E · ν · CED · 나머지 명령 동일 · restart = 생성기 규칙 · '
+        '1/X 가 정수 아닌 값 (0.3 · 2 · 0 · 음수 · NaN) 거부', _ok(_st9))
+
+    def _st10():
+        good = True
+        for F in (14.0, 28.0):
+            pn = plan(100000, cgf=151.4, stiffen_se=F)
+            settle = settle_time(2.0 * pn['R'], 0.3)
+            for arm, rv in (('E0', 0), ('LC', 2), ('LH', 8)):
+                t = deck(pn, _rpmc, rv, seed=32452843, arm=arm, hold_bo_pairwise=True)
+                rr = _ints(r'^run (\d+)$', t)
+                de = int(_one(r'^dump dmp all custom (\d+) ', t))
+                good &= (abs(2 * rr[1] * pn['dt'] - settle) <= pn['dt'] * (1 + 1e-9)
+                         and abs(rr[-1] * pn['dt'] - rv * 60.0 / _rpmc) <= 0.5 * pn['dt'] * (1 + 1e-9)
+                         and de == max(1000, rr[-1] // 200))
+        return good
+    chk('ST⑩ 경화 덱의 물리 시간 불변 (정착 2F·dt = 유도 정착시간 ± 1 step · 회전 = 바퀴 × 주기 ± ½ step) · 덤프 간격 = 생성기 규칙 '
+        '(max(1000, 회전 step // 200)) — ×14 · ×28 × E0 · LC 2 바퀴 · LH 8 바퀴', _ok(_st10))
+
+    def _st11():
+        dflt = deck(_pc, _rpmc, 2, seed=32452843, arm='LC')
+        st = deck(plan(100000, cgf=151.4, stiffen_se=14.0), _rpmc, 2, seed=32452843, arm='LC', hold_bo_pairwise=True)
+        hd = [l for l in st.split('\n') if l.startswith('#   F0 ') or l.startswith('#   F₀ ')]
+        rows = [l for l in st.split('\n') if _re.match(r'^#   (AM_P|AM_S|SE|WALL)–(AM_P|AM_S|SE|WALL) ', l)]
+        return ('# ★ 강성 축' not in dflt and '# ★ 강성 축' in st and 'stiffen_se 14' in st and 'hold_bo_pairwise yes' in st
+                and 'dt_factor 1' in st and len(rows) == 10 and st.count('\n') > dflt.count('\n'))
+    chk('ST⑪ 경화 덱 머리에 stiffen_se · hold_bo_pairwise · dt_factor · 쌍별 E* · CED · F₀ 표 (9 비영 + 벽–벽) — 기본 덱에는 없다', _ok(_st11))
+
+    def _st12():
+        me = os.path.abspath(__file__)
+        base = ['--n-total', '100000', '--cgf', '151.4', '--arm', 'LC', '--seed', '32452843', '--revolutions', '2']
+        with _tf.TemporaryDirectory() as td:
+            a = _sp.run([sys.executable, me, '--out', os.path.join(td, 'a')] + base + ['--stiffen-se', '14', '--hold-bo-pairwise'],
+                        capture_output=True, text=True)
+            b = _sp.run([sys.executable, me, '--out', os.path.join(td, 'b')] + base + ['--stiffen-se', '14'],
+                        capture_output=True, text=True)
+            c = _sp.run([sys.executable, me, '--out', os.path.join(td, 'c')] + base, capture_output=True, text=True)
+            dk_a = open(os.path.join(td, 'a', 'in.mixer'), encoding='utf-8').read()
+            meta = _js.load(open(os.path.join(td, 'a', 'deck_meta.json'), encoding='utf-8'))
+            gen_sha = _hs.sha256(open(me, 'rb').read()).hexdigest()
+            rows = {r_['pair']: r_ for r_ in meta['pairs']}
+            return (a.returncode == 0 and dk_a == deck(plan(100000, cgf=151.4, stiffen_se=14.0), _rpmc, 2, seed=32452843,
+                                                       arm='LC', hold_bo_pairwise=True)
+                    and meta['deck_sha256'] == _hs.sha256(dk_a.encode('utf-8')).hexdigest()
+                    and meta['generator_sha256'] == gen_sha and meta['stiffen_se'] == 14.0 and meta['hold_bo_pairwise'] is True
+                    and meta['dt_factor'] == 1.0 and '--stiffen-se' in meta['argv'] and len(rows) == 10
+                    and all(abs(r_['F0_ratio'] - 1.0) <= 1e-12 for k, r_ in rows.items() if k != 'WALL–WALL')
+                    and rows['WALL–WALL']['CED'] == 0.0
+                    and b.returncode != 0 and '--hold-bo-pairwise' in (b.stderr + b.stdout)
+                    and not os.path.exists(os.path.join(td, 'b', 'in.mixer'))
+                    and c.returncode == 0 and not os.path.exists(os.path.join(td, 'c', 'deck_meta.json'))
+                    and open(os.path.join(td, 'c', 'in.mixer'), encoding='utf-8').read()
+                    == deck(_pc, _rpmc, 2, seed=32452843, arm='LC'))
+    chk('ST⑫ CLI: --stiffen-se 14 --hold-bo-pairwise → in.mixer = deck() + 봉인 가능한 deck_meta.json (덱 sha256 · 생성기 sha256 · argv · '
+        '쌍별 표 F₀ 비 1) · hold 없이 LC 는 rc≠0 이고 덱을 안 쓴다 · 기본 CLI 는 meta 를 안 쓰고 덱이 그대로', _ok(_st12))
+
+    def _st13():
+        allowB = {('AM_P', 'AM_P'), ('AM_P', 'AM_S'), ('AM_S', 'AM_S'), ('AM_P', WALL), ('AM_S', WALL)}
+        good = True
+        for F in (14.0, 28.0):
+            pn = plan(100000, cgf=151.4, stiffen_se=F)
+            MC = hold_bo_pairwise_matrix(ced_matrix('LC', pn['d']), _Esoft, pn['E'])
+            MH = hold_bo_pairwise_matrix(ced_matrix('LH', pn['d']), _Esoft, pn['E'])
+            chg = {tuple(sorted((_NM[i], _NM[j]))) for i in range(len(_NM)) for j in range(len(_NM)) if MH[i][j] != MC[i][j]}
+            good &= chg == allowB and all(MH[_IX[a]][_IX[b]] > MC[_IX[a]][_IX[b]] for a, b in allowB)
+        return good
+    chk('ST⑬ ★ 경화해도 LC↔LH 공동 개입 B 는 그대로 — ×14 · ×28 에서 달라지는 쌍 = 허용 다섯 (AM–AM 셋 · AM–벽 둘) 이고 다섯 다 LH > LC '
+        '· SE 낀 쌍은 LC = LH (정확히)', _ok(_st13))
     print(f'\nmake_mixer_deck selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -1250,11 +1756,22 @@ if __name__ == '__main__':
                     help='점착 팔.  `all` 대신 하나씩 — 디렉터리가 갈린다')
     ap.add_argument('--all-arms', action='store_true',
                     help='--out 아래에 팔마다 하위 디렉터리를 만든다')
+    ap.add_argument('--stiffen-se', type=float, default=1.0,
+                    help='★ 강성 축 (사전등록 mixer_highbo_stiffness_prereg_20260929 §3): SE 영률만 ×F (AM · 벽 · ν 불변) · '
+                         'dt 는 같은 Rayleigh 규칙으로 새 E 에서 다시 · 물리 시간 불변.  1 이면 덱이 옛것과 바이트 동일.  '
+                         '점착이 있는 팔은 --hold-bo-pairwise 가 없으면 거부 (E0 · L0 는 허용하고 머리에 기록)')
+    ap.add_argument('--hold-bo-pairwise', action='store_true',
+                    help='경화할 때 쌍별 명목 점착 힘 척도 F0 = B³/A² 보존: CED_new = CED_soft · (E*_new/E*_soft)^(2/3) '
+                         '(원소마다 · 벽 = 선언된 벽 E · ν · R* = r_입자).  옛 동일상 규칙은 혼합쌍 ×1.272 · SE–벽 ×1.182 로 어긋난다 (HBR6-02)')
+    ap.add_argument('--dt-factor', type=float, default=1.0,
+                    help='dt 만 ×X (X = 1/k — 예: 0.5 = DEV E0_ref@dt/2).  정착 · 회전 · 덤프 간격 step 은 정확히 k 배 = '
+                         '물리 시간 · 덤프 시각 불변.  1/X 가 정수 아니면 거부')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
-    p = plan(a.n_total, cgf=a.cgf)
+    p = plan(a.n_total, cgf=a.cgf, stiffen_se=a.stiffen_se)
+    _stiff = (a.stiffen_se != 1.0 or a.dt_factor != 1.0)
     rpm = resolve_rpm(p['R'], a.fr, a.rpm, a.allow_off_band)
     print(f'조성 → 개수 (N={p["n_total"]:,})')
     for k in TYPES:
@@ -1267,19 +1784,36 @@ if __name__ == '__main__':
     steps = int(round(a.revolutions * (60/rpm) / p['dt']))
     print(f'비용  {a.revolutions} 바퀴 = {steps:,} step · 직렬 추정 '
           f'{p["n_total"]*steps/2.99e6/3600:.1f} h  (실측 처리율 2.99e6 p·step/s)')
+    if _stiff:
+        _st = run_steps(p, rpm, a.revolutions, settle_s=a.settle_s, dt_factor=a.dt_factor)
+        _d0, _b0 = plan_dt_soft(p)
+        print(f'강성  SE 영률 ×{a.stiffen_se:g} ({E_PHASE["SE"]:.4g} → {p["E"]["SE"]:.4g} Pa) · hold_bo_pairwise '
+              f'{"yes" if a.hold_bo_pairwise else "no"} · dt_factor {a.dt_factor:g} → 덱 dt {_st["dt_txt"]} s '
+              f'(soft {_d0:.4g} s · {_b0} → 규칙 {p["dt"]:.4g} s · {p["dt_by"]}) · 정착 {_st["steps_fill"]:,} ×2 · '
+              f'회전 {_st["steps_run"]:,} · 덤프 {_st["dump_every"]:,} step  (위 비용 줄은 규칙 dt 기준)')
     if a.out:
+        arms = sorted(ARMS) if a.all_arms else [a.arm]
+        #  ★ 덱을 **먼저** 다 만든다 — 거부 (합성수 시드 · hold 없는 경화 · 1/X 비정수) 는 디렉터리 · 빈 in.mixer 를 남기기 전에
+        _texts = {arm: deck(p, rpm, a.revolutions, arm=arm, settle_s=a.settle_s, seed=a.seed,
+                            n_baffles=a.baffles, baffle_h=a.baffle_h,
+                            hold_bo_pairwise=a.hold_bo_pairwise, dt_factor=a.dt_factor) for arm in arms}
         os.makedirs(os.path.join(a.out, 'data'), exist_ok=True)
         #  ★ 섬유 파일은 **섬유가 도는 경우에만** 쓴다 (생산 3 상에는 없다)
         _write_fibres(os.path.join(a.out, 'data'), p)
-        arms = sorted(ARMS) if a.all_arms else [a.arm]
         for arm in arms:
             d = os.path.join(a.out, arm) if a.all_arms else a.out
             os.makedirs(os.path.join(d, 'data'), exist_ok=True)
             _write_fibres(os.path.join(d, 'data'), p)
             with open(os.path.join(d, 'in.mixer'), 'w') as f:
-                f.write(deck(p, rpm, a.revolutions, arm=arm,
-                             settle_s=a.settle_s, seed=a.seed,
-                             n_baffles=a.baffles, baffle_h=a.baffle_h))
+                f.write(_texts[arm])
+            if _stiff:
+                #  ★ 봉인 가능한 메타 (경화 · dt 인자 덱만 — 기본 덱은 파일 목록도 옛것 그대로)
+                import json as _json
+                with open(os.path.join(d, 'deck_meta.json'), 'w', encoding='utf-8') as f:
+                    _json.dump(deck_meta(p, rpm, a.revolutions, a.seed, arm, _texts[arm], argv=sys.argv[1:],
+                                         settle_s=a.settle_s, hold_bo_pairwise=a.hold_bo_pairwise,
+                                         dt_factor=a.dt_factor), f, ensure_ascii=False, indent=1)
+                    f.write('\n')
             if a.baffles:
                 import importlib.util as _iu
                 _sp = _iu.spec_from_file_location(
