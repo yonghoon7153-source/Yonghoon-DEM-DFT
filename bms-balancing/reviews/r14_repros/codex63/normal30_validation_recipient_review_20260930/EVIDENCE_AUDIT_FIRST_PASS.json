@@ -1,0 +1,851 @@
+{
+  "scope": "Recipient data/static comparison; target tests/native code never executed",
+  "checks": [
+    {
+      "check": "prior_seal:CODE_MANIFEST.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "current_seal:CODE_MANIFEST.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "nested_candidate:CODE_MANIFEST.json",
+      "passed": true,
+      "detail": [
+        "candidate_snapshot/CODE_MANIFEST.json"
+      ]
+    },
+    {
+      "check": "prior_seal:src/Normal30Candidate.java",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "current_seal:src/Normal30Candidate.java",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "nested_candidate:src/Normal30Candidate.java",
+      "passed": true,
+      "detail": [
+        "candidate_snapshot/src/Normal30Candidate.java"
+      ]
+    },
+    {
+      "check": "prior_seal:src/diagnostic_consumer.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "current_seal:src/diagnostic_consumer.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "nested_candidate:src/diagnostic_consumer.py",
+      "passed": true,
+      "detail": [
+        "candidate_snapshot/src/diagnostic_consumer.py"
+      ]
+    },
+    {
+      "check": "prior_seal:src/candidate_entry.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "current_seal:src/candidate_entry.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "nested_candidate:src/candidate_entry.py",
+      "passed": true,
+      "detail": [
+        "candidate_snapshot/src/candidate_entry.py"
+      ]
+    },
+    {
+      "check": "prior_seal:PARENT_COMMAND.ps1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "current_seal:PARENT_COMMAND.ps1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "nested_candidate:PARENT_COMMAND.ps1",
+      "passed": true,
+      "detail": [
+        "candidate_snapshot/PARENT_COMMAND.ps1"
+      ]
+    },
+    {
+      "check": "prior_seal:CONTRACT.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "current_seal:CONTRACT.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "nested_candidate:CONTRACT.json",
+      "passed": true,
+      "detail": [
+        "candidate_snapshot/CONTRACT.json"
+      ]
+    },
+    {
+      "check": "reused_fixture:records/positive_result.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "fixture_manifest:records/positive_result.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "reused_fixture:records/protected_result.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "fixture_manifest:records/protected_result.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "prior_copy:CASE_MAP.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "prior_copy:DELIVERY_RECEIPT.json",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "check": "prior_copy:PRE_TEST_SEAL.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "prior_copy:records/HOST_Java_compile.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "prior_copy:records/HOST_Java_stub.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "prior_copy:records/HOST_PS51.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "prior_copy:records/HOST_Python.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "prior_copy:records/Java_stub_stdout.txt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "prior_copy:records/PS51_stderr.txt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "prior_copy:records/PYTHON_RESULT.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "prior_copy:tests/JAVA_SOURCE_BINDING.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "prior_copy:tests/run_parent.ps1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "prior_copy:tests/run_python.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "prior_copy:tests/ShapeHarness.java",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "python_47_unique_pass",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "ps_56_unique_pass",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "java_8_unique_pass",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "ps_declared_case_set",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "combined_113_unique",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "combined_17_groups",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "combined_Python",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "combined_PS51",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "combined_java",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "two_static_checks",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "host_rc_Python",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Python_stdout_identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Python_stderr_identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "host_rc_Java_compile",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Java_compile_stdout_identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Java_compile_stderr_identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "host_rc_Java_stub",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Java_stub_stdout_identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Java_stub_stderr_identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "ps_host_rc",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "ps_stdout_identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "ps_stderr_identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "ps_outer_transcript",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "exact_extraction:BSave",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "exact_extraction:BInvoke",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "exact_extraction:GDecision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "exact_extraction:outer_finally",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "java_helper_exact",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "check": "java_tlist_437",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "java_threshold_0_runall1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "initial_li_contract",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "original_byte_identical:src/Normal30Candidate.java",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "original_byte_identical:src/candidate_entry.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "raw_fixture_observation:overall",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "post_budget_recomputed:overall",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "late_overrun_overrides:overall",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "raw_fixture_observation:delivery",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "post_budget_recomputed:delivery",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "late_overrun_overrides:delivery",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "raw_fixture_observation:pre_over",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "post_budget_recomputed:pre_over",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "raw_fixture_observation:body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "post_budget_recomputed:body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "raw_fixture_observation:exact_overall",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "post_budget_recomputed:exact_overall",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "raw_fixture_observation:exact_delivery",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "post_budget_recomputed:exact_delivery",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "raw_fixture_observation:valid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "post_budget_recomputed:valid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "missing_final_return:writer",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "missing_final_return:transcript",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "missing_final_return:last_return",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "native_not_approved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "preservation_records_equal",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "reported_final_binding:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/CODE_MANIFEST.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "reported_final_binding:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/src/Normal30Candidate.java",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "reported_final_binding:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/src/diagnostic_consumer.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "reported_final_binding:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/src/candidate_entry.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "reported_final_binding:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/PARENT_COMMAND.ps1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "reported_final_binding:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/CONTRACT.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "reported_final_binding:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_ps_validation_attempt_03_20260930/tests/run_parent.ps1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "reported_final_binding:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_ps_validation_attempt_03_20260930/CASE_MAP.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "reported_final_binding:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_ps_validation_attempt_03_20260930/COMMAND.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "reported_final_binding:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_ps_validation_attempt_03_20260930/records/positive_result.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "reported_final_binding:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_ps_validation_attempt_03_20260930/records/protected_result.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "reported_final_binding:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_ps_validation_attempt_03_20260930/preparation/manage.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "reported_final_binding:C:/Windows/System32/WindowsPowerShell/v1.0/Modules/Microsoft.PowerShell.Utility/Microsoft.PowerShell.Utility.psd1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "reported_final_binding:C:/Windows/System32/WindowsPowerShell/v1.0/Modules/Microsoft.PowerShell.Utility/Microsoft.PowerShell.Utility.psm1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "reported_final_binding:C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "reported_final_binding:C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "ast_parse:candidate_snapshot/src/diagnostic_consumer.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "ast_parse:candidate_snapshot/src/candidate_entry.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "ast_parse:prior_attempt02/tests/run_python.py",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "passed": 107,
+  "failed": [
+    {
+      "check": "prior_copy:DELIVERY_RECEIPT.json",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "check": "java_helper_exact",
+      "passed": false,
+      "detail": null
+    }
+  ],
+  "functional_counts": {
+    "Python": 47,
+    "Java": 8,
+    "PS51": 56
+  },
+  "static_checks": 2,
+  "finalizer_branches": [
+    {
+      "name": "overall",
+      "pre_within": true,
+      "post_within": false,
+      "post_limited": "INCOMPLETE",
+      "overall": 5100.01,
+      "delivery": 10.010000000000218
+    },
+    {
+      "name": "delivery",
+      "pre_within": true,
+      "post_within": false,
+      "post_limited": "INCOMPLETE",
+      "overall": 400.01,
+      "delivery": 300.01
+    },
+    {
+      "name": "pre_over",
+      "pre_within": false,
+      "post_within": false,
+      "post_limited": "INCOMPLETE",
+      "overall": 5102,
+      "delivery": 12
+    },
+    {
+      "name": "body",
+      "pre_within": true,
+      "post_within": true,
+      "post_limited": "INCOMPLETE",
+      "overall": 101,
+      "delivery": 11
+    },
+    {
+      "name": "exact_overall",
+      "pre_within": true,
+      "post_within": true,
+      "post_limited": "AWAITING_30S_LIMITED_EXTERNAL_ACCEPTANCE",
+      "overall": 5100,
+      "delivery": 10
+    },
+    {
+      "name": "exact_delivery",
+      "pre_within": true,
+      "post_within": true,
+      "post_limited": "AWAITING_30S_LIMITED_EXTERNAL_ACCEPTANCE",
+      "overall": 400,
+      "delivery": 300
+    },
+    {
+      "name": "valid",
+      "pre_within": true,
+      "post_within": true,
+      "post_limited": "AWAITING_30S_LIMITED_EXTERNAL_ACCEPTANCE",
+      "overall": 101,
+      "delivery": 11
+    }
+  ],
+  "candidate_manifest_sha256": "6b9ae2a75a2035d0cc80359f5d83cc3ca5dc5aa744b68255d219ce8a55feb603",
+  "contract_changed_paths": [
+    "/approval_path",
+    "/candidate_java/path",
+    "/commands/batch/2",
+    "/commands/batch/4",
+    "/commands/batch/6",
+    "/commands/batch/10",
+    "/commands/batch/12",
+    "/commands/batch/14",
+    "/commands/compile/2",
+    "/commands/compile/4",
+    "/commands/compile/6",
+    "/commands/compile/7",
+    "/limits/initial_Li_absolute_mol_m2",
+    "/release_path",
+    "/root",
+    "/run_root"
+  ],
+  "sender_preservation_count": 28,
+  "preservation_included": [
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/CODE_MANIFEST.json",
+      "included_matching_bytes": [
+        "candidate_snapshot/CODE_MANIFEST.json",
+        "nested/basis/SOURCE_CODE_MANIFEST.json",
+        "nested/candidate_snapshot/CODE_MANIFEST.json"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/CONTRACT.json",
+      "included_matching_bytes": [
+        "candidate_snapshot/CONTRACT.json",
+        "nested/candidate_snapshot/CONTRACT.json"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/PARENT_COMMAND.ps1",
+      "included_matching_bytes": [
+        "candidate_snapshot/PARENT_COMMAND.ps1",
+        "nested/candidate_snapshot/PARENT_COMMAND.ps1"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/src/Normal30Candidate.java",
+      "included_matching_bytes": [
+        "candidate_snapshot/src/Normal30Candidate.java",
+        "nested/candidate_snapshot/src/Normal30Candidate.java"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/src/diagnostic_consumer.py",
+      "included_matching_bytes": [
+        "candidate_snapshot/src/diagnostic_consumer.py",
+        "nested/candidate_snapshot/src/diagnostic_consumer.py"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/src/candidate_entry.py",
+      "included_matching_bytes": [
+        "candidate_snapshot/src/candidate_entry.py",
+        "nested/candidate_snapshot/src/candidate_entry.py"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_validation_attempt_02_20260928/tests/run_python.py",
+      "included_matching_bytes": [
+        "prior_attempt02/tests/run_python.py",
+        "nested/tests/run_python.py"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_validation_attempt_02_20260928/tests/run_parent.ps1",
+      "included_matching_bytes": [
+        "prior_attempt02/tests/run_parent.ps1",
+        "nested/tests/run_parent.ps1"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_validation_attempt_02_20260928/tests/ShapeHarness.java",
+      "included_matching_bytes": [
+        "prior_attempt02/tests/ShapeHarness.java",
+        "nested/basis/ShapeHarness.java",
+        "nested/tests/ShapeHarness.java"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_validation_attempt_02_20260928/tests/JAVA_SOURCE_BINDING.json",
+      "included_matching_bytes": [
+        "prior_attempt02/tests/JAVA_SOURCE_BINDING.json",
+        "nested/basis/JAVA_SOURCE_BINDING.json",
+        "nested/tests/JAVA_SOURCE_BINDING.json"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_validation_attempt_02_20260928/CASE_MAP.json",
+      "included_matching_bytes": [
+        "prior_attempt02/CASE_MAP.json",
+        "nested/CASE_MAP.json"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_validation_attempt_02_20260928/COMMANDS.json",
+      "included_matching_bytes": [
+        "nested/COMMANDS.json"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_validation_attempt_02_20260928/PACKAGE_MANIFEST.json",
+      "included_matching_bytes": [
+        "nested/PACKAGE_MANIFEST.json"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_validation_attempt_02_20260928/DELIVERY_RECEIPT.json",
+      "included_matching_bytes": [
+        "prior_attempt02/DELIVERY_RECEIPT.json"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_validation_attempt_02_20260928/PRE_TEST_SEAL.json",
+      "included_matching_bytes": [
+        "prior_attempt02/PRE_TEST_SEAL.json",
+        "nested/PRE_TEST_SEAL.json"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_validation_attempt_02_20260928/records/positive_result.json",
+      "included_matching_bytes": [
+        "records/positive_result.json",
+        "nested/records/positive_result.json"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_validation_attempt_02_20260928/records/protected_result.json",
+      "included_matching_bytes": [
+        "records/protected_result.json",
+        "nested/records/protected_result.json"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_validation_attempt_02_20260928/records/PYTHON_RESULT.json",
+      "included_matching_bytes": [
+        "prior_attempt02/records/PYTHON_RESULT.json",
+        "nested/records/PYTHON_RESULT.json"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_validation_attempt_02_20260928/records/HOST_Python.json",
+      "included_matching_bytes": [
+        "prior_attempt02/records/HOST_Python.json",
+        "nested/records/HOST_Python.json"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_validation_attempt_02_20260928/records/HOST_Java_compile.json",
+      "included_matching_bytes": [
+        "prior_attempt02/records/HOST_Java_compile.json",
+        "nested/records/HOST_Java_compile.json"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_validation_attempt_02_20260928/records/HOST_Java_stub.json",
+      "included_matching_bytes": [
+        "prior_attempt02/records/HOST_Java_stub.json",
+        "nested/records/HOST_Java_stub.json"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_validation_attempt_02_20260928/records/HOST_PS51.json",
+      "included_matching_bytes": [
+        "prior_attempt02/records/HOST_PS51.json",
+        "nested/records/HOST_PS51.json"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_validation_attempt_02_20260928/records/PS51_stderr.txt",
+      "included_matching_bytes": [
+        "prior_attempt02/records/PS51_stderr.txt",
+        "nested/records/PS51_stderr.txt"
+      ]
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_validation_attempt_02_20260928/COMSOL63_NORMAL30_ATTEMPT02_PARTIAL_20260928.zip",
+      "included_matching_bytes": [
+        "prior_attempt02/COMSOL63_NORMAL30_ATTEMPT02_PARTIAL_20260928.zip"
+      ]
+    }
+  ],
+  "preservation_not_included": [
+    {
+      "path": "C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      "included_matching_bytes": []
+    },
+    {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/javac.exe",
+      "included_matching_bytes": []
+    },
+    {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/java.exe",
+      "included_matching_bytes": []
+    },
+    {
+      "path": "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
+      "included_matching_bytes": []
+    }
+  ],
+  "limitations": [
+    "No independent native test rerun",
+    "Sender host returns are serialized evidence, not recipient remote observation",
+    "Current delivery receipt and outer closeout return not included in the received archive"
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "scope": "Independent recipient review; no native permission",
+  "files": [
+    {
+      "file": "README_SEND_KO.md",
+      "bytes": 1192,
+      "sha256": "66e4ff42efdcfbd5657bdf73e0370adedff9271b11bde6dee57ba9f0cbe38da1"
+    },
+    {
+      "file": "REVIEW_KO.md",
+      "bytes": 10059,
+      "sha256": "e4b0861443a27b960af91990dad7fa1ac6250f7cb16e99333eff022b69be276e"
+    },
+    {
+      "file": "NEXT_CODEX_REPLY_KO.md",
+      "bytes": 4715,
+      "sha256": "5a7bd5598bf7a6964f77f95d5af5608ca08b192419a71a8d3661fa35601db1a3"
+    },
+    {
+      "file": "CLAUDE_UPDATE_KO.md",
+      "bytes": 2159,
+      "sha256": "67fd76cfcabfac557ffccc7555df43d1c2b1228f00910304c6d1931677b67ac0"
+    },
+    {
+      "file": "DECISION.json",
+      "bytes": 1358,
+      "sha256": "a68f1e3e868cfc42f80bcf80088bae766fd234a08a4fe5f60db741a3f7fcf75f"
+    },
+    {
+      "file": "REVIEWER_NOTES.json",
+      "bytes": 732,
+      "sha256": "04c6ed5d66015d016f69ab015221e028bac64a1314c590a045ccbf4a69d1a0c2"
+    },
+    {
+      "file": "PACKAGE_AUDIT.json",
+      "bytes": 1180,
+      "sha256": "cb2cd35e9952113cbb1ca2e93b002897c902a4a2a1508f83f3873a1badbbc465"
+    },
+    {
+      "file": "EVIDENCE_AUDIT.json",
+      "bytes": 25261,
+      "sha256": "06ef9cf83e329ea4efb0e4761f140187db572ed75881ca794b01216393988f44"
+    },
+    {
+      "file": "EVIDENCE_AUDIT_FIRST_PASS.json",
+      "bytes": 25478,
+      "sha256": "9f6d1a0a9de63af940e92409b0173776a7dec74267f33b0647ae824bd07a9913"
+    },
+    {
+      "file": "SUPPLEMENT_AUDIT.json",
+      "bytes": 1164,
+      "sha256": "efbfa044c2246be663fb67ed791290b83d6a2ad3c2c12497bec880084d207852"
+    },
+    {
+      "file": "INDEPENDENT_SOURCE_DIFF.patch",
+      "bytes": 12761,
+      "sha256": "45d6e1510db333749e3f8963b03cb12d339756357f9a9dcc0d55b0b36e54542e"
+    },
+    {
+      "file": "SOURCE_PRESERVATION.json",
+      "bytes": 667,
+      "sha256": "c8f2756093e8a4dcc64e9b183f6122e26d56e325e2b32aeb7fa133726dd57da9"
+    },
+    {
+      "file": "audit_package.py",
+      "bytes": 2905,
+      "sha256": "01c998a40545a68c81772558c8665ab5533dbd30a75e6d401c0ef8147eaf3a7c"
+    },
+    {
+      "file": "audit_evidence.py",
+      "bytes": 10150,
+      "sha256": "28bf5c806371f96798a2421d91783c72896a75022d1ec7ebcf76e7257e68854b"
+    },
+    {
+      "file": "audit_supplement.py",
+      "bytes": 2712,
+      "sha256": "5ecc9aabedfde28290fcaf39c7de21c3af7ca2b0d3e844d8e828f8ad57525593"
+    },
+    {
+      "file": "package_review.py",
+      "bytes": 2710,
+      "sha256": "055a12d986de617e5a8ce98401984126579c01761d315eec1e1af8b359854f72"
+    }
+  ]
+}

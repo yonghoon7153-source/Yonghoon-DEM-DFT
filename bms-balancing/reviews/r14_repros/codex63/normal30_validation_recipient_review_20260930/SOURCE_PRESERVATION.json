@@ -1,0 +1,17 @@
+{
+  "scope": "Two local received ZIPs only; no remote current inventory claim",
+  "files": [
+    {
+      "path": "C:/Users/Administrator/Downloads/COMSOL63_NORMAL30_LIMITED_VALIDATION_COMPLETE_20260930.zip",
+      "bytes": 322912,
+      "sha256": "0854dbd1db8433c4d22def4984af7b535c36c3e7ab6c65b6b9d013d1ab0f29ea",
+      "unchanged_from_recipient_initial_read": true
+    },
+    {
+      "path": "C:/Users/Administrator/Downloads/COMSOL63_NORMAL30_DELIVERY_SUPPLEMENT_20260930.zip",
+      "bytes": 7597,
+      "sha256": "5f5b4dfe47eec3a4a6d94dac72f08f03716b0de2ab15ea8aff95409d2414ba22",
+      "unchanged_from_recipient_initial_read": true
+    }
+  ]
+}

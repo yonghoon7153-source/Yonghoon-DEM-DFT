@@ -1,0 +1,29 @@
+{
+  "label": "COMSOL63_NORMAL30_LIMITED_VALIDATION_COMPLETE_20260930.zip",
+  "bytes": 322912,
+  "sha256": "0854dbd1db8433c4d22def4984af7b535c36c3e7ab6c65b6b9d013d1ab0f29ea",
+  "entries": 103,
+  "payload_count": 102,
+  "manifest": "PACKAGE_MANIFEST.json",
+  "manifest_sha256": "ff7075a3d0e1a10279b80ffaba29e11520dda0a737529f66d9925d87e4e1c7b8",
+  "exact_set": true,
+  "size_sha_crc": true,
+  "path_case_link_checks": true,
+  "nested_archives": [
+    {
+      "label": "prior_attempt02/COMSOL63_NORMAL30_ATTEMPT02_PARTIAL_20260928.zip",
+      "bytes": 155025,
+      "sha256": "e55bf647cd17b5f8cf429ed0167d32846eb2b47bc4e2e6c52a32a484a53e03ff",
+      "entries": 67,
+      "payload_count": 66,
+      "manifest": "PACKAGE_MANIFEST.json",
+      "manifest_sha256": "d394343bb195e2c8f41095f42b37a43e9f67e63a231f41678530ba0f5d3562fe",
+      "exact_set": true,
+      "size_sha_crc": true,
+      "path_case_link_checks": true
+    }
+  ],
+  "candidate_manifest_sha256": "6b9ae2a75a2035d0cc80359f5d83cc3ca5dc5aa744b68255d219ce8a55feb603",
+  "candidate_files_verified": 5,
+  "source_after_sha256": "0854dbd1db8433c4d22def4984af7b535c36c3e7ab6c65b6b9d013d1ab0f29ea"
+}

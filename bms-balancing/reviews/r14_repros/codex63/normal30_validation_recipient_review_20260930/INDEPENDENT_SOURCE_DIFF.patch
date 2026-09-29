@@ -1,0 +1,126 @@
+--- previous/src/diagnostic_consumer.py
++++ candidate/src/diagnostic_consumer.py
+@@ -183,9 +183,10 @@
+     for key in ('Li_N_mol_m2','Li_P_mol_m2','Li_electrolyte_mol_m2'):
+         current=glob[D(0)][key];reference=base[names[0]][D(0)][key]
+         need(current>0 and reference>0,'INITIAL_LI_COMPONENT_POSITIVE')
+-        delta=abs((current-reference)/reference)
+-        need(delta<=number(c['limits']['relative_Li']),'INITIAL_LI_COMPONENT')
+-        components[key]={'status':'PASS','current':str(current),'baseline':str(reference),'relative_delta':str(delta)}
++        delta=abs(current-reference);limit=number(c['limits']['initial_Li_absolute_mol_m2'])
++        need(limit==D('1e-9'),'INITIAL_LI_LIMIT')
++        need(delta<=limit,'INITIAL_LI_COMPONENT')
++        components[key]={'status':'PASS','current':str(current),'baseline':str(reference),'absolute_delta':str(delta),'unit':'mol/m^2','absolute_limit':'1e-9','relative_delta_reference_only':str(delta/reference)}
+     li=voltage=deltaV=dx=D(0)
+     for t in times:
+         v=glob[t];need(v['ocp_guard']==0,'GLOBAL_OCP_GUARD')
+--- previous/PARENT_COMMAND.ps1
++++ candidate/PARENT_COMMAND.ps1
+@@ -2,7 +2,7 @@
+ param([Parameter(Mandatory=$true)][ValidatePattern('^[0-9a-f]{64}$')][string]$ManifestSha)
+ $ErrorActionPreference='Stop'
+ $bClock=[Diagnostics.Stopwatch]::StartNew()
+-$bRoot='C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928'
++$bRoot='C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928'
+ $bEvidence=Join-Path $bRoot 'future_parent_001'
+ $bPython='C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe'
+ $bOwned=$false
+@@ -104,7 +104,7 @@
+     foreach ($key in $maxima.Keys) { if (-not (GHas $numeric $key) -or -not (GNumber $numeric.$key 0 $maxima[$key])) { return 'INCOMPLETE' } }
+     if (-not (GStruct $numeric.initial_Li_components) -or -not (GStruct $numeric.late_interval)) { return 'INCOMPLETE' }
+     foreach ($key in @('Li_N_mol_m2','Li_P_mol_m2','Li_electrolyte_mol_m2')) {
+-        if (-not (GStruct $numeric.initial_Li_components.$key) -or $numeric.initial_Li_components.$key.status -cne 'PASS' -or -not (GNumber $numeric.initial_Li_components.$key.relative_delta 0 0.000001)) { return 'INCOMPLETE' }
++        if (-not (GStruct $numeric.initial_Li_components.$key) -or $numeric.initial_Li_components.$key.status -cne 'PASS' -or $numeric.initial_Li_components.$key.unit -cne 'mol/m^2' -or $numeric.initial_Li_components.$key.absolute_limit -cne '1e-9' -or -not (GHas $numeric.initial_Li_components.$key 'absolute_delta') -or -not (GNumber $numeric.initial_Li_components.$key.absolute_delta 0 0.000000001)) { return 'INCOMPLETE' }
+     }
+     if ($normal -and ($numeric.late_interval.status -cne 'OBSERVED' -or $numeric.late_interval.count -le 0 -or -not (GNumber $numeric.late_interval.last_time_s 30 30) -or -not (GStruct $numeric.late_interval.metrics))) { return 'INCOMPLETE' }
+     $required=@('guard_binding.csv','axes_runtime_settings.csv','electrolyte_guard.csv','preflight_global.csv','preflight_boundary1.csv','preflight_boundary4.csv','axes_profile_N.csv','axes_profile_P.csv')
+@@ -168,8 +168,17 @@
+             $snapshot=$bClock.Elapsed.TotalSeconds
+             $within=($snapshot -le 5100 -and ($snapshot-$bDeliveryStart) -le 300)
+             if (-not $within -or @($bErrors).Count -ne 0) { $limited='INCOMPLETE' }
+-            BSave 'FINAL_BOUNDARY.json' @{source='USER_VISIBLE_POWERSHELL_PARENT';elapsed_seconds=$snapshot;delivery_elapsed_seconds=($snapshot-$bDeliveryStart);within_limits=$within;errors=$bErrors;transcript=(BRef (Join-Path $bEvidence 'PARENT_TRANSCRIPT.txt'));overall='INCOMPLETE';status='AWAITING_EXTERNAL_ACCEPTANCE';raw_host_rc=$null;host_boundary='SCRIPT_FINAL_RECORD_NOT_PROCESS_EXIT';body_completed_without_error=(@($bErrors).Count -eq 0);limited=$limited;local_decision=$(if (Test-Path -LiteralPath (Join-Path $bEvidence 'PARENT_LOCAL_DECISION.json')) { BRef (Join-Path $bEvidence 'PARENT_LOCAL_DECISION.json') } else { $null })}
+-            [Console]::WriteLine((ConvertTo-Json -Compress -Depth 10 @{kind='USER_PARENT_FINAL_RETURN';limited=$limited;record_errors=$bErrors;within_limits=$within;host_boundary='SCRIPT_FINAL_RECORD_NOT_PROCESS_EXIT';raw_host_rc=$null;boundary=(BRef (Join-Path $bEvidence 'FINAL_BOUNDARY.json'));snapshot_seconds=$bClock.Elapsed.TotalSeconds;overall='INCOMPLETE'}))
++            BSave 'FINAL_BOUNDARY.json' @{source='USER_VISIBLE_POWERSHELL_PARENT';observation_phase='PRE_WRITE';elapsed_seconds=$snapshot;delivery_elapsed_seconds=($snapshot-$bDeliveryStart);within_limits=$within;errors=$bErrors;transcript=(BRef (Join-Path $bEvidence 'PARENT_TRANSCRIPT.txt'));overall='INCOMPLETE';status='AWAITING_EXTERNAL_ACCEPTANCE';raw_host_rc=$null;host_boundary='SCRIPT_FINAL_RECORD_NOT_PROCESS_EXIT';body_completed_without_error=(@($bErrors).Count -eq 0);limited=$limited;local_decision=$(if (Test-Path -LiteralPath (Join-Path $bEvidence 'PARENT_LOCAL_DECISION.json')) { BRef (Join-Path $bEvidence 'PARENT_LOCAL_DECISION.json') } else { $null })}
++            $boundaryRef=BRef (Join-Path $bEvidence 'FINAL_BOUNDARY.json')
++            # One post-write observation after write/read-back/hash; do not rewrite the boundary.
++            $postWrite=$bClock.Elapsed.TotalSeconds
++            $postDelivery=$postWrite-$bDeliveryStart
++            $within=($within -and $postWrite -le 5100 -and $postDelivery -le 300)
++            if (-not $within) {
++                $limited='INCOMPLETE'
++                $bErrors+=@{stage='post_write_budget';error='FINAL_POST_WRITE_BUDGET';pre_write_seconds=$snapshot;post_write_seconds=$postWrite;post_write_delivery_seconds=$postDelivery}
++            }
++            [Console]::WriteLine((ConvertTo-Json -Compress -Depth 10 @{kind='USER_PARENT_FINAL_RETURN';observation_phase='POST_WRITE';limited=$limited;record_errors=$bErrors;within_limits=$within;host_boundary='SCRIPT_FINAL_RECORD_NOT_PROCESS_EXIT';raw_host_rc=$null;boundary=$boundaryRef;pre_write_seconds=$snapshot;snapshot_seconds=$postWrite;delivery_elapsed_seconds=$postDelivery;overall='INCOMPLETE'}))
+         } catch { $limited='INCOMPLETE';[Console]::WriteLine(('FINAL_RECORD_ERROR: '+$_.ToString()));$bErrors+=@{stage='final_record';error=$_.ToString()} }
+     }
+     [Console]::WriteLine('STOP. No rerun, cleanup fallback, policy toggle or additional solve. Preserve this output.')
+--- previous/CONTRACT.json
++++ candidate/CONTRACT.json
+@@ -4,12 +4,12 @@
+   "approved": false,
+   "usable": false,
+   "preparation_only": true,
+-  "root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928",
+-  "run_root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001",
+-  "approval_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_authorizations/normal30_001.json",
+-  "release_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_authorizations/VALIDATION_RELEASE.json",
++  "root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928",
++  "run_root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001",
++  "approval_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_authorizations/normal30_001.json",
++  "release_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_authorizations/VALIDATION_RELEASE.json",
+   "candidate_java": {
+-    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/src/Normal30Candidate.java",
++    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/src/Normal30Candidate.java",
+     "bytes": 74551,
+     "sha256": "6876e774ee7788e6f5e84ba50af3952bbf41af57d541e3bc0c4f8e044c7fb84d"
+   },
+@@ -1096,7 +1096,8 @@
+     "voltage_identity_V": "0.00000001",
+     "coordinate_m": "1e-15",
+     "minimum_consistency_mol_m3": "1e-9",
+-    "near_tie_mol_m3": "1e-9"
++    "near_tie_mol_m3": "1e-9",
++    "initial_Li_absolute_mol_m2": "1e-9"
+   },
+   "budgets_seconds": {
+     "preflight_and_input": 180,
+@@ -1125,29 +1126,29 @@
+     "compile": [
+       "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolcompile.exe",
+       "-prefsdir",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/prefs",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/prefs",
+       "-configuration",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/config_compile",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/config_compile",
+       "-data",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/data_compile",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/Normal30Candidate.java"
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/data_compile",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/Normal30Candidate.java"
+     ],
+     "batch": [
+       "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolbatch.exe",
+       "-prefsdir",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/prefs",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/prefs",
+       "-configuration",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/config_batch",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/config_batch",
+       "-data",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/data_batch",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/data_batch",
+       "-np",
+       "16",
+       "-inputfile",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/Normal30Candidate.class",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/Normal30Candidate.class",
+       "-outputfile",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/result.mph",
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/result.mph",
+       "-batchlog",
+-      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_offline_preparation_20260928/future_run_001/batch.log"
++      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/batch.log"
+     ]
+   },
+   "known_native_evidence_format": "COMSOL6.3 English Information: Stop condition fulfilled at t = ... (description). Other formats fail closed, no fallback parser.",

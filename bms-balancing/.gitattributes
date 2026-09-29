@@ -47,3 +47,5 @@ reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/** -text
 reviews/r14_repros/codex63/normal30_offline_review_20260928/** -text
 # 2026-09-30: MSC 제1저자 인계 발송 전 검토 묶음 (수정 프롬프트 · 정정 메모 · 설치 안내 · 검토 보고 · 인계본 사본) — bytes 그대로
 reviews/msc_handover_review_20260930/** -text
+# 2026-09-30: 정상30초 변경부 한정 검증 독립 수신 검토 묶음 (N30-N1·N2 종결 수용 · 기능111+정적2 수용 · native30 별도 승인 대기) — bytes 그대로
+reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/** -text
