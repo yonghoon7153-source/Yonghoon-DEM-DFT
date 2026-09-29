@@ -449,6 +449,12 @@
   "러너_시험_로컬": "가짜 드라이버·가짜 nvidia-smi·합성 구조 — 양성 (3 런 · dt 줄 3 개) + 음성 드라이버 sha 7 · 구조 8 · out_root 있음 11 · 기준 run_meta 가 본 런과 다름 9 · run_meta 불일치 kill 9 · dt 불일치 9 (빨리 끝나도 · 도는 중 kill) · msd.json 없음 4 · GPU 대기 초과 12 · flock 10 — 전부 기대 종료 코드. 첫 판은 드라이버가 빨리 끝나면 dt 검사를 **조용히 건너뛰었다** (프로세스 생존 조건) → md.log 3 행 이상이면 생사와 무관하게 검사하도록 고침.",
   "기계_사실_편지_CM": "본 런 구조별 기계: seed3·4·5 = gabia A6000 (탄성 pw.x 와 공존 · 예외 (3)) · seed1·2 = kgy RTX 3090 (cascade v6 와 공존 · 공유) · 550 K seed1 = P-2 (kgy · 원시 초기구조 · 겸용 예외) · 600 K = kgy 파일럿 (relax). 같은 드라이버 sha · 같은 UMA 모델 · turbo. 기계가 구조 시드와 겹친다 (분리 불가) — 사실로 싣는다.",
   "gabia_예외_(3)_범위": "결정 D-2026-09-29-gabia-uma-coexist-elastic-li2s-main 의 '나머지 8 런' 중 gabia 에서 도는 것은 1차 4 런뿐이다 (결정문은 비준 상태라 고치지 않는다 — 이 절이 정정 기록). 1차가 끝나면(러너 종료 0) 예외의 남은 범위는 **쓰이지 않고** 소멸한다.",
-  "results_seen": false
+  "results_seen": false,
+  "발사": {
+   "DRY_RUN_2026_09_29_20_56": "전부 OK — 커밋 834e1c244 포함 · 스크립트 sha16 ad75ffc7e09c7d29 (기대와 같음) · 드라이버 sha16 c3e2d358ee53cefa ✅ · 기준 run_meta (600 K 파일럿) = gabia 본 런 설정 · 기준 dt 0.0020 ps/행 · seed1 구조 OK (최단 P–S 2.0373 · PS₄ 12/12 · ρ 1.6212) · seed2 구조 OK (2.0211 · 12/12 · 1.5782) · GPU 7,270 MiB · 계획 3 줄 (T465 s1 · T465 s2 · T550 s2) · 종료 0",
+   "발사": "tmux glkgy · `bash ~/logs/glass_kgy_q_0929.sh` · 20:57 watch 에 T465 seed1 '도는 중' (md.log 비어 있음 — 로드·컴파일 중) · out_root ~/work/runs/lpscl_glass_md_main_2026_09_28/seed<S>/T<T> · 로그 queue_kgy.log · logs/s<S>_T<T>.log",
+   "⏳": "run_meta·dt 확인 줄 (15 분 안) — 오면 이 절에 적는다",
+   "watch": "kgy ~/logs/w_kgy_0929.sh (W1 러너 로그 줄 · W2 li2s 본 런 줄 · W3 빈 md.log '로드 중' + 큐 로그 마지막 줄)"
+  }
  }
 }
