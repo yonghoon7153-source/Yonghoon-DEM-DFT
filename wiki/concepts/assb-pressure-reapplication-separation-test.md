@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
+sources: [raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -394,6 +394,15 @@ Li₂₁Si₅/Si–Li₂₁Si₅ 이중층 음극 ‖ Li₆PS₅Cl ‖ Li₃InCl
 - 되돌림 대신 있는 것: 성형 압력 스윕(S13 — 제조 압력 축 · 500 MPa 균열 사진) · 사이클 중 EIS 세 점(충전 상태 · R 만) · 100 사이클 뒤 단면 SEM(시야 하나) — `P↑` 연산자 0.
 - `[해석]` 코인셀의 스프링은 정하중에 가까운 구속이라(80호) 되돌림을 걸려면 셀을 열어야 한다 — 이 연산자의 가압 분기를 코인셀 표본에 요구할 수 없다는 형식상의 제약 · 대신 "무외압" 셀은 아래 벽(접촉) 쪽의 자연 표본이 되는데, 이 편은 그 하중 값조차 0 이다.
 
+## ★ 88호(Li M. 2025)가 붙인 것 — **정변위가 인쇄된 셀이지만 되돌림 분기는 0 이고, "해체(압력 해제) 뒤 틈을 셀 안 상태로 읽지 말라" 를 저자가 스스로 인쇄한 음극 판 표본이다 — 압력 축은 셀 사이(200 ↔ 460 MPa)와 분말 전처리뿐이다** (2026-09-29)
+
+`raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md` (13호 [35] · 60호 후속 ★★★ · 3차 묶음 파일 49-2).
+
+- 설계 조건 D1–D5 대조: **D1**(사이클 해상 압력 계측) 0 — 사이클 중 변동은 `[인쇄]` [15] "within 2 MPa" 인용뿐 · **D2** 0 · **D3** 0 — 200 MPa 세트는 제조 절 미인쇄(Si-0.3 · Si-1 셀 하나씩) · **D4** 부분 — 제조(SE 380 · 양극 920 · Si 380 MPa) ↔ 운전(460 MPa)을 따로 적고 구속 형식 **정변위**를 `[인쇄]` "the distance between the top and bottom punches was fixed" 로 적었다(운전 = 조립 마지막 압착 명목 · 계측 0) · **D5** 0(EIS 0) → 만족 **D4 하나(부분)**.
+- **되돌림 분기 0**: 같은 셀에서 압력을 내렸다 올리는 조작이 없다 — 압력 축은 **셀 사이**(200 ↔ 460 MPa)와 **분말 전처리**(Si-5 764 · 1070 MPa 압착 — `[인쇄]` "intentionally create cracks")뿐.
+- ★ **해체 뒤 상태 ≠ 셀 안 상태 — 저자 인쇄**: `[인쇄]` "Under a stack pressure of 460 MPa, it was impossible to have a gap as wide as that shown in Figure S20 … inside the battery" — 해체(압력 해제) 뒤 Si \| SE 틈을 운전 중 접촉 상태로 읽지 말라는 문장이 원전 쪽에 있다(같은 문장이 "but crack generation in the electrode/electrolyte interfaces was frequently observed in ASSBs.[14]" 로 이어진다 — 틈의 폭은 부정하고 계면 균열은 인정). 반면 자기 모식(그림 S21)은 정변위 셀에서 탈리튬 때 **셀 안** 계면 틈 h 를 그린다 — `[해석]` 정변위 구속에서는 음극 수축이 계면 압력을 0 으로 보낼 수 있고, 이것이 가압 분기가 겨누는 "가역 접촉 손실" 의 음극 판 기구다(측정 0).
+- `[해석]` 이 연산자로 옮기면: ① 가압 수준 차의 용량 차(무파괴 Si-0.3 `[도표·화소]` 44 ↔ 72 · 59 %)는 **셀 사이 비교**라 D2 · D3 없이 연산자 값이 되지 않는다 ② 전처리 압착(764 · 1070 MPa)이 Si-5 입자에 균열을 만든다(그림 S13) — 가하는 압력을 높일수록 `θ` 말고 **입자 파괴 채널**이 같이 움직일 수 있다는 음극 판 표본이다(분말 전처리이지 셀 재가압이 아니다 · 39호의 공극률 · `R_ct` 동반 이동에 이은 다른 채널 — D5 · R4 쪽).
+
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -411,6 +420,7 @@ Li₂₁Si₅/Si–Li₂₁Si₅ 이중층 음극 ‖ Li₆PS₅Cl ‖ Li₃InCl
 - **종설의 재가압 서술을 이 연산자의 근거로 쓰지 않는다** (2026-09-29, 81호) — 81호 본문의 "LF · HF 불변" 은 자기 재수록 그림과 어긋나고, 4호 원전은 LF 감소를 인쇄한다.
   근거는 원전(4호)의 그림과 원문이다.
 - **86호 코인셀에서 접촉 손실이 압력으로 되돌아온다고도 안 온다고도 하지 않는다** (2026-09-29, 86호) — 되돌림 · 계측 · 구속 형식이 0 인 무외압 표본이고, 성형 3 점은 제조 축이다.
+- **88호의 200 ↔ 460 MPa 용량 차를 이 연산자의 값(가압 분기 회복분)으로 쓰지 않는다** (2026-09-29, 88호) — 같은 셀의 되돌림이 아니라 셀 사이 비교(각 셀 하나 · 200 MPa 세트 제조 절 미인쇄)이고, 해체 뒤 틈은 저자 스스로 셀 안 상태가 아니라고 인쇄했다.
 
 ## 관련
 - [[assb-stack-pressure-operating-window]] — **이 연산자의 사용 조건**: 압력의 2 측 구속과 상한(5호 Doux 2020).
