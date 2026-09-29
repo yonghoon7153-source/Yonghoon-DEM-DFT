@@ -631,6 +631,8 @@
   $P scripts/lhs_webapp_batch.py --cohort docs/data/lhsx_descriptors_20260925/_cohort.tsv --harvest-dir docs/data/lhsx_descriptors_$D --work ~/lhsx_webapp_work --out-dir docs/data/lhsx_webapp_$D
   tar czf ~/lhs_fill_$D.tar.gz docs/data/lhs_descriptors_$D docs/data/lhs_webapp_$D docs/data/lhsx_descriptors_$D docs/data/lhsx_webapp_$D
   ```
+  ⚠ **09-29 밤**: 위 첫 줄의 브랜치 `claude/sdcp-dem-manuscript-si-pqwtv8` 는 **낡았다** — 연장 세션이 stoic-knuth 로 병합됐다 (`docs/handoff_merge_to_stoic_knuth_20260929.md`) ⇒
+  `origin/claude/stoic-knuth-NObVQ` 를 쓴다.  두 배치 스크립트 모두 `--case` (여러 번) 가 있다 (한 건 먼저).
 
 ## J20-d. 64 (lhsx) 인계표 생성 — 저장된 열까지 130 과 같은 생성기로 (1저자 09-29 밤 *"64 도 진행하자"* · ✅ 실행)
 
@@ -645,6 +647,22 @@
   kind = bimodal 48 · mono_AM_P 8 · mono_AM_S 8.
 - 130 과의 열 차이: 64 에만 `lhsx_*` 12 · 130 에만 추정 열 10.  ① ② 열은 둘 다 아직 없다 (웹앱 배치 뒤 · J20-c).
 - 체크리스트 `docs/lhs_handover_checklist_20260929.md` §1 갱신.
+
+## J20-e. φ_SE · φ_AM — **넘기는 두께와 같은 장부로** (J19 ③ 재검토 · 09-29 밤 · 1저자 *"φSE 코드 문제 다시 · 뜻"* · ⬜ 저자 결정)
+
+- **코드 정의**: 수확기 `volumes_and_phi` (`lhs_descriptor_harvest.py:444–507`) — φ_i = Σ(4/3)πr³ (상 i 전부) ÷ (L² × (plate_z − 벽 0)).  겹친 부피를 두 번 세고 벽 밖 cap 도 센다 ·
+  코드 자신이 *"장부값 — 틀 안 점유율이 아니다"* 라고 적는다 (`:494`) — **계산 결함은 아니다**.  웹앱 ③ φ_SE (`network_conductivity.py:1120–1123`) 도 같은 구 부피 합 식.
+  DEM 구는 크기가 안 변하므로 분자 = 레시피 부피 (상수) ⇒ 이 φ 는 **레시피 부피 ÷ DEM 판 간격** 이고, 새로 잰 것은 판 간격 하나다.
+- **결함 = 장부 섞임**: 인계는 porosity = union exact (J19 ①) · 두께 = 질량 보존 H_mc = H (1 − ε_s)/(1 − ε_u) (J19 ②) 로 **M 장부** (겹친 재료가 두께를 늘린다고 보고 재료를 보존) 인데,
+  φ 는 **S 장부** (두께 H · ε_sphere — 겹친 재료가 빈틈을 메운다고 봄) 다 ⇒ φ_SE + φ_AM + ε_union − 1 = 130 중앙 +3.77 %p (1.15–10.17) · 64 중앙 +10.91 %p (6.80–14.22) ·
+  φ 합 > 1 이 130 중 18 · 64 중 60.
+- **J19 ③ 의 "union 판 φ" (09-29 저녁 체크리스트 §6 의 ★ (가)) 도 짝이 안 맞는다 — 철회**: union MC 점유율은 **G 장부** (두께 H 인 DEM 상자 안) 라 union 과는 닫히지만 넘기는 두께 H_mc 와
+  섞으면 적재량 (φ × 두께) 이 레시피와 어긋난다 — AM 130 중앙 +3.2 % (최대 +10.7 %) · 64 중앙 +11.2 % (6.4–14.8 %) · SE −6.9 % · −4.8 % (인계표 · union TSV 에서 계산).
+- **권고 (라) 질량 보존 φ**: φ_i = V_i / (L² · H_mc) = φ_i(구) × H / H_mc — union 과 닫힘 잔차 0 (194/194) · 적재량 = 레시피 · SE/고체 = `se_of_solid_vol` (≤ 3e-16 · `se_rich` 와 같은 값) ·
+  겹침 배분 규칙 불요 · 새 측정 불요.  범위 130 φ_SE 0.079–0.474 · φ_AM 0.422–0.715 · 64 φ_SE 0.476–0.798 · φ_AM 0.143–0.449.
+  한정어 (열 사전): M 장부는 union 을 공극률로 받는 **상한 규약**의 짝이다 (소성 압축에서 밀려난 재료를 빈틈이 아니라 두께로 보낸다 — 실제는 S 와 M 사이).
+- 구현 (비준 뒤 · 반례 먼저): 생성기 열 둘 · 검사 셋 (닫힘 1e-9 · φ_i × H_mc × L² = 구 부피 합 · SE/고체 = `se_of_solid_vol`) · 구 부피 합 φ 와 (가)~(다) MC 부피는 내부 표.
+- 체크리스트 §1 · §6 갱신 (같은 커밋).
 
 ## 인계 판정 (지금)
 
