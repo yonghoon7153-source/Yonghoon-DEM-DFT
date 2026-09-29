@@ -5946,6 +5946,19 @@
    "evidence_tests": [
     "scripts/lhs_perc_audit.py"
    ]
+  },
+  {
+   "id": "LHS-21",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (09-29 · 1저자 질문 \"coverage 는 어떻게 결정된 거야\" 에 답하며 64 인계표 판독)",
+   "opened_in": "docs/lhs_handover_checklist_20260929.md",
+   "title": "mono 케이스 (130 중 30 · 64 중 16) 의 **실측 AM 개수가 인계표에 없다** — 2-type 덱의 상 라벨은 `AM` 하나인데 생성기 HANDOVER_EXTRA 는 `phase_counts.AM_P` · `AM_S` 만 싣는다 ⇒ `n_AM_P_measured` · `n_AM_S_measured` 둘 다 빈칸 (수확 JSON `phase_counts.AM` 에는 있다)",
+   "note": "값의 결함이 아니라 **싣지 않은** 결함 (규율 ⑤ 부류 — 후보를 고르는 목록이 사각지대).  같은 기전으로 mono 의 coverage 는 P · S 둘 다 `N_A_PHASE_ABSENT` 이고 값은 `coverage_AM_total_hertz_pct` 에만 있다 (이것은 정의대로 · 열 사전 문구로 설명).  실측 (09-29): 130 mono 30/30 · 64 mono 16/16 이 둘 다 빈칸 · coverage 전체 열은 전부 있음.  처방: HANDOVER_EXTRA 에 `n_AM_measured` (= phase_counts 의 SE 아닌 상 합 — AM_P + AM_S + AM) 추가 · 반례 먼저 (2-type 수확 픽스처) · 비준 ⓑ (J20-c) 와 함께.  ⬜ 체크리스트 `docs/lhs_handover_checklist_20260929.md` §1 에 표기.",
+   "evidence_tests": [
+    "scripts/lhs_design_dataset.py"
+   ]
   }
  ]
 }

@@ -13,12 +13,16 @@
 | **두께** `thickness_mass_conserving_um` (+ wall gap · envelope 는 내부) | ✅ 저장 | ✅ 저장 (25.0–44.7 µm) | ✅ |
 | **porosity union** `porosity_union_exact_pct` + `se_rich` 표지 | ✅ 저장 | ✅ 저장 (5.43–9.43 % · se_rich 64/64) | ✅ **union 만** |
 | φ_SE · φ_AM (구 부피 합 규약) | ✅ 저장 | ✅ 저장 (φ_SE 0.52–0.92) | ✅ 규약을 열 사전에 표기 |
-| coverage (AM_P · AM_S · 전체 · 이름은 hertz 지만 A_dem_geometric) | ✅ 저장 | ✅ 저장 (mono 는 없는 상 빈칸 16) | ✅ 이름 주의 표기 |
+| coverage (AM_P · AM_S · 전체 · 이름은 hertz 지만 A_dem_geometric) | ✅ 저장 (mono 30 은 P · S 둘 다 빈칸 · 값은 전체 열) | ✅ 저장 (mono 16 도 같음) | ✅ 이름 주의 표기 |
 | τ (굴곡도) | 상태 열만 · 값은 보류 (`LHS-08` 14/130) | ⬜ | ⏸ 벽 기준 τ 판정 뒤 |
 | **① 접촉 위상** — z_SE-SE mean·σ · z_AM-SE · AM_P/AM_S–SE CN · surface-weighted · z_AM-AM · 접촉 수 · 벽 접촉 비율 | ⬜ 계산 전 (감사 ✅ 적격) | ⬜ | ✅ **다음에 저장** |
 | **② 퍼콜레이션** — percolation_pct · n_components · n_large · electronic_*_fraction · se_se_cn_*_perc | ⬜ 계산 전 (감사 ✅ 적격 · 비관통 24 건은 빈칸) | ⬜ | ✅ ① 다음 |
 | ③ φ_SE(웹앱) · ④ 협착 저항 · σ_VM · ⑤ F1 근접쌍 · ⑥ Auerbach · ⑦ A_dem_geometric | 감사 전 | — | ⛔ 감사 끝나기 전엔 안 넘김 |
 | 내부 전용 — sphere-sum porosity 4 종 · 두께 wall gap/envelope/pushback · 경계 QC · sha · 상태 열 | ✅ 저장 | ✅ 저장 (hold NEGATIVE_POROSITY 60 = 구 부피 합의 음수 · union 은 전부 양수) | ✗ 내부 표에만 |
+
+⚠ **mono 케이스 (130 중 30 · 64 중 16)** — 2-type 덱은 AM 이 한 종류라 수확기가 상을 `AM` 으로만 라벨한다 (P · S 는 반지름으로 붙인 이름).  그래서 `coverage_AM_P` · `_AM_S` 가
+**둘 다** `N_A_PHASE_ABSENT` (빈칸, 0 아님) 이고 값은 `coverage_AM_total_hertz_pct` 에 있다.  같은 이유로 `n_AM_P_measured` · `n_AM_S_measured` 가 둘 다 빈칸이라 **실측 AM 개수가 인계표에 안 실린다**
+(수확 JSON `phase_counts.AM` 에는 있다) — 원장 `LHS-21` · 생성기에 `n_AM_measured` 열 추가 (반례 먼저 · 비준 ⓑ 와 함께).
 
 ## 2. 확보할 것 (할 일 · 순서대로)
 
