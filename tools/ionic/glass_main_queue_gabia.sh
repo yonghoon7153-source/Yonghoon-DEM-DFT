@@ -13,7 +13,9 @@
 #   DRY_RUN=1 bash tools/ionic/glass_main_queue_gabia.sh       # 결정·드라이버 sha·구조 판별·계획만 본다
 #   bash tools/ionic/glass_main_queue_gabia.sh                 # tmux 안에서 — 큐를 끝까지, 멈추면 종료 코드로 이유
 #
-# 큐 QUEUE="T:seed ..." (기본 465:5 550:3 550:4 550:5 465:1 465:2 550:1 550:2 — gabia 에 구조가 있는 것 먼저)
+# 큐 QUEUE="T:seed ..." (기본 465:5 550:3 550:4 550:5 465:1 465:2 550:2 — gabia 에 구조가 있는 것 먼저)
+#   ⛔ 550:1 은 **없다** — 550 K seed1 은 파일럿 P-2 가 본 런을 겸한다 (편지 CH · 회신 CH '그대로 가세요').
+#     2026-09-29 에 기본값이 550:1 을 넣은 8 런이었다 (셈 오류 · 실제 남은 본 런 7). 1저자 09-29 저녁: seed1·2 세 런은 kgy.
 #   seed3·4·5 초기구조 = $GABIA_A/seed<S>/final.xyz · seed1·2 = $INIT/seed<S>_final.xyz (kgy 에서 사람이 옮긴다 —
 #   없으면 **그 차례에서 기다린다**. 조용히 건너뛰지 않는다).
 #   구조는 **이름이 아니라 값으로** 가린다 (09-28 이름 함정 두 번 뒤의 규칙): 120 원자 · 단일 프레임 ·
@@ -50,7 +52,8 @@ ROOT=${ROOT:-/data/work/runs/lpscl_glass_md_main_2026_09_28}
 PY=${PY:-/data/apps/miniforge3/envs/uma/bin/python}
 DRV=${DRV:-/data/work/glass_src_2026_09_28/disorder_ensemble_diffusion.py}
 DRV_SHA16=${DRV_SHA16:-c3e2d358ee53cefa}
-QUEUE=${QUEUE:-"465:5 550:3 550:4 550:5 465:1 465:2 550:1 550:2"}
+QUEUE_DEFAULT="465:5 550:3 550:4 550:5 465:1 465:2 550:2"   # 550:1 없음 — 위 머리글
+QUEUE=${QUEUE:-$QUEUE_DEFAULT}
 GABIA_A=${GABIA_A:-/data/work/runs/lpscl_smallcell_gabia/A}
 INIT=${INIT:-$ROOT/init}
 ELW=${ELW:-/data/work/runs/elastic_modelc_2x}
@@ -238,6 +241,7 @@ PY
   printf '%s' '{"label":"lpscl_glass_main_s3_T465","n_atoms":120,"supercell":[1,1,1],"prod_ps":400.0,"equilib_ps":5.0,"fit_window_ps":[2.0,50.0],"save_traj":true,"uma_model":"uma-s-1p1","uma_inference_mode_requested":"turbo","temperatures":[465.0],"seed":3,"v0_xyz":"x"}' > "$T/ref_meta.json"
   printf 'Time[ps]  Etot\n0.0000 -1\n0.0020 -1\n' > "$T/ref_md.log"
   echo 30000 > "$T/base"; : > "$T/apps"
+  ck "⛔음성 기본 큐에 550:1 이 없다 (P-2 겸용 · 09-29 셈 오류 재발 방지)" "$(echo " $QUEUE_DEFAULT " | grep -c ' 550:1 ')" 0
   ck "양성: 두 런 끝까지 (0)"                         "$(run QUEUE='465:5 550:3')" 0
   ck "양성: msd.json 둘 · TSV 둘 done=1"            "$(ls "$T"/root/seed5/T465/d0.00_cfg0/T465/msd.json "$T"/root/seed3/T550/d0.00_cfg0/T550/msd.json 2>/dev/null | wc -l)/$(awk -F'\t' 'NR>1 && $4==1' "$T/root/queue_coexist.tsv" | wc -l)" 2/2
   ck "양성: 라벨 = seed3 판 패턴 치환"              "$(python3 -c "import json;print(json.load(open('$T/root/seed3/T550/run_meta.json'))['label'])")" lpscl_glass_main_s3_T550
