@@ -1,0 +1,343 @@
+{
+ "case": "lhsx_014",
+ "timestep": 2930000,
+ "n_types": 3,
+ "type_map": {
+  "1": "AM_P",
+  "2": "AM_S",
+  "3": "SE"
+ },
+ "phase_counts": {
+  "AM_P": 42,
+  "AM_S": 1897,
+  "SE": 24928
+ },
+ "boundary": "경계 플래그 ('pp', 'pp', 'ff') = 규약",
+ "plate_z_sim": 0.026988,
+ "plate_z_source": "mesh_stl",
+ "phi_se": 0.5900095625725769,
+ "phi_am": 0.4405283058978716,
+ "porosity_sphere_pct_RECORD_ONLY": -3.053786847044848,
+ "closure_residual": 0.0,
+ "z_floor_sim": 0.0,
+ "H_sim": 0.026988,
+ "solid_bot_sim": -0.001126732,
+ "solid_top_sim": 0.027554699999999998,
+ "deck_floor": {
+  "z": 0.0,
+  "wall_type": 3,
+  "fix_id": "zwall_bot",
+  "n_active_walls": 1,
+  "n_zplane_walls": 1,
+  "line": "fix zwall_bot all wall/gran model hooke/hysteresis tangential history rolling_friction cdt primitive type 3 zplane 0.0",
+  "grammar": "static: fix/unfix lifecycle · group=all · 흐름 제어 앞에서만 (HND-02)"
+ },
+ "wall_record": {
+  "floor": {
+   "n_touch": 1277,
+   "n_center_out": 0,
+   "n_fully_out": 0,
+   "n_center_out_by_phase": {},
+   "n_touch_by_phase": {
+    "AM_P": 2,
+    "AM_S": 111,
+    "SE": 1164
+   },
+   "v_out_by_phase": {
+    "AM_P": 6.016965843827598e-09,
+    "AM_S": 1.329134335111539e-07,
+    "SE": 1.9512166086499005e-07
+   },
+   "v_out_sim": 3.3405206021997156e-07,
+   "v_out_pct": 0.4804403661315129,
+   "deepest": {
+    "phase": "AM_S",
+    "r_sim": 0.0014896,
+    "z_sim": 0.000362868,
+    "depth_sim": 0.001126732,
+    "outside_cap_depth_over_r": 0.7563990332975296,
+    "contact_overlap_over_r": 0.7563990332975296,
+    "center_out": false
+   }
+  },
+  "plate": {
+   "n_touch": 1327,
+   "n_center_out": 0,
+   "n_fully_out": 0,
+   "n_center_out_by_phase": {},
+   "n_touch_by_phase": {
+    "AM_P": 5,
+    "AM_S": 113,
+    "SE": 1209
+   },
+   "v_out_by_phase": {
+    "AM_P": 2.5678140012215033e-10,
+    "AM_S": 1.9292320249835335e-09,
+    "SE": 1.9101808828683609e-07
+   },
+   "v_out_sim": 1.932041017119418e-07,
+   "v_out_pct": 0.27787001015192625,
+   "deepest": {
+    "phase": "SE",
+    "r_sim": 0.0007251,
+    "z_sim": 0.0268296,
+    "depth_sim": 0.000566699999999997,
+    "outside_cap_depth_over_r": 0.7815473727761647,
+    "contact_overlap_over_r": 0.7815473727761647,
+    "center_out": false
+   }
+  },
+  "pushback": {
+   "H_sim": 0.027198902464772766,
+   "dH_sim": 0.00021090246477276434,
+   "V_box_sim": 6.799725616193192e-05,
+   "phi_se": 0.5854345812420905,
+   "phi_am": 0.4371124141854629,
+   "porosity_pct_RECORD_ONLY": -2.254699542755345
+  },
+  "clipped": {
+   "W_sim": 5.272561619319134e-07,
+   "W_se_sim": 3.8613974915182613e-07,
+   "W_am_sim": 1.4111641278008719e-07,
+   "phi_se": 0.5842864300818132,
+   "phi_am": 0.4384367628004937,
+   "porosity_pct_RECORD_ONLY": -2.2723192882307064
+  },
+  "convention": "(가) 주 값 = 웹앱 ε_sphere = **명목 구 부피 / 틀 간격 부피** (ΣV 전부 / L²·plate_z, 장부값 — 틀 안 점유율이 아니다) · (나) pushback = 벽 밖 부피를 두께에 더한 등가 산술값 (hard-bottom 예측 아님, HND-01) · (다) clipped = 벽 밖 cap 을 뺀 ROI 값 (아직 합집합 점유율 아님) — 판단 J14 · J18"
+ },
+ "boundary_qc": {
+  "calculation_status": "OK",
+  "n_center_out": 0,
+  "n_fully_out": 0,
+  "boundary_state": "INSIDE",
+  "phi_sum_gt_one": true,
+  "hold_reason_codes": [
+   "NEGATIVE_POROSITY"
+  ],
+  "physical_target_status": "HOLD"
+ },
+ "handover_qc": {
+  "phi_se_spheresum_nominal_gap": 0.5900095625725769,
+  "phi_am_spheresum_nominal_gap": 0.4405283058978716,
+  "porosity_spheresum_nominal_gap_pct": -3.053786847044848,
+  "thickness_wall_gap_um": 26.988000000000003,
+  "thickness_pushback_equiv_um": 27.198902464772765,
+  "thickness_envelope_um": 28.681432,
+  "solid_bottom_um": -1.126732,
+  "solid_top_um": 27.554699999999997,
+  "plate_minus_solid_top_um": -0.5666999999999964,
+  "porosity_pushback_equiv_pct": -2.254699542755345,
+  "phi_se_pushback_equiv": 0.5854345812420905,
+  "phi_am_pushback_equiv": 0.4371124141854629,
+  "phi_se_clipped_spheresum_gap": 0.5842864300818132,
+  "phi_am_clipped_spheresum_gap": 0.4384367628004937,
+  "porosity_clipped_spheresum_gap_pct": -2.2723192882307064,
+  "V_AM_full_um3": 29722.444798929402,
+  "V_SE_full_um3": 39807.94518677178,
+  "V_AM_out_floor_um3": 138.9303993549815,
+  "V_AM_out_plate_um3": 2.1860134251056835,
+  "V_SE_out_floor_um3": 195.12166086499005,
+  "V_SE_out_plate_um3": 191.01808828683608,
+  "n_floor_center_out": 0,
+  "n_floor_fully_out": 0,
+  "n_plate_center_out": 0,
+  "n_plate_fully_out": 0,
+  "floor_out_pct": 0.4804403661315129,
+  "plate_out_pct": 0.27787001015192625,
+  "floor_outside_cap_depth_over_r_max": 0.7563990332975296,
+  "floor_deepest_phase": "AM_S",
+  "floor_deepest_r_um": 1.4896,
+  "floor_deepest_z_um": 0.362868,
+  "floor_deepest_contact_overlap_over_r": 0.7563990332975296,
+  "plate_outside_cap_depth_over_r_max": 0.7815473727761647,
+  "boundary_state": "INSIDE",
+  "calculation_status": "OK",
+  "physical_target_status": "HOLD",
+  "hold_reason_codes": "NEGATIVE_POROSITY",
+  "phi_sum_gt_one": true,
+  "measurement_protocol_id": "harvest_v2_20260925/spheresum_nominal_gap/wall_z0/exact_step_mesh",
+  "boundary_model_id": "floor=primitive_zplane_type3|platen=mesh_stl",
+  "scale_sim_per_um": 0.001,
+  "deck_floor_z_sim": 0.0,
+  "deck_wall_type": 3,
+  "atom_sha256": "33857a67ab1b0db32668930647f8dc887c5b655cdf20c60caf43379748fe99f4",
+  "contact_sha256": "f789a0e9160d49b903cdbdd9c7bca6e5cb6937879a54170150c5b7fd868717cf",
+  "deck_sha256": "0f85a6a022efcd67954121640f46556241e15af717bda5a71ef2b3f712bbc92c",
+  "mesh_sha256": "5249e2c9c2809eee696acdafdb9a114848e2d20a5abc32e42a5ea6156a8a9f2b"
+ },
+ "coverage_AM_P_hertz_pct": 48.459342561309334,
+ "coverage_AM_S_hertz_pct": 47.82395646712887,
+ "coverage_AM_total_hertz_pct": 47.8377193428151,
+ "coverage_AM_only_hertz_pct": null,
+ "tortuosity_dijkstra_SE": 1.4820991228036389,
+ "tortuosity_dijkstra_SE_wall": 1.5062690026206251,
+ "status": {
+  "phi": "OK",
+  "porosity": "OK",
+  "coverage_AM_P": "OK",
+  "coverage_AM_S": "OK",
+  "coverage_AM_total": "OK",
+  "tortuosity": "OK",
+  "tortuosity_wall": "OK"
+ },
+ "tau_detail": {
+  "tau_mean": 1.4820991228036389,
+  "tau_median": 1.4677404631607183,
+  "tau_mean_untruncated": 1.4820991228036389,
+  "n_sampled": 200,
+  "n_valid": 200,
+  "n_truncated": 0,
+  "status": "OK",
+  "tau_convention": "harvest_v1/solid_zrange/rSEmax/no_fallback/same_component",
+  "band_detail": {
+   "n_se": 24928,
+   "z_lo": -0.001126732,
+   "z_hi": 0.027554699999999998,
+   "band_t": 0.0007251,
+   "se_z_lo": -0.000579247,
+   "se_z_hi": 0.027554699999999998,
+   "n_bot": 83,
+   "n_top": 1227,
+   "n_components": 7,
+   "n_span_components": 1,
+   "largest_comp_frac": 0.9997593068035944,
+   "largest_comp_z_span_frac": 0.9809115179465238,
+   "alt_plate_z": 0.026988,
+   "alt_n_top": 1647,
+   "alt_plate_above_solid": false,
+   "alt_note": "진단 전용 (LHS-08) — 위 전극면을 plate_z 로 뒀을 때의 밴드 인원. 보고 τ 는 solid_zrange 규약 그대로이며 이 수는 τ 에 안 들어간다.",
+   "wall_z_floor": 0.0,
+   "wall_n_bot": 1619,
+   "wall_n_top": 1647,
+   "wall_n_span_components": 1,
+   "wall_note": "진단 전용 — 벽 (z = Z_FLOOR) · 플래튼 기준 밴드 인원 (Codex §8-3).  보고 τ 는 solid_zrange 규약 그대로."
+  }
+ },
+ "tau_wall_detail": {
+  "tau_mean": 1.5062690026206251,
+  "tau_median": 1.5141170711317442,
+  "tau_mean_untruncated": 1.5062690026206251,
+  "n_sampled": 200,
+  "n_valid": 200,
+  "n_truncated": 0,
+  "status": "OK",
+  "n_span_components": 1,
+  "tau_convention": "harvest_v3/wall_z0_plate/rSEmax/no_fallback/same_component"
+ },
+ "coverage_detail": {
+  "n_capped": 0,
+  "n_free_surface_invalid": 0,
+  "counts": {
+   "AM_P": {
+    "n_particles": 42,
+    "n_valid": 42
+   },
+   "AM_S": {
+    "n_particles": 1897,
+    "n_valid": 1897
+   },
+   "AM": {
+    "n_particles": 0,
+    "n_valid": 0
+   }
+  },
+  "contact_headers": [
+   "c_cpl[1]",
+   "c_cpl[2]",
+   "c_cpl[3]",
+   "c_cpl[4]",
+   "c_cpl[5]",
+   "c_cpl[6]",
+   "c_cpl[7]",
+   "c_cpl[8]",
+   "c_cpl[9]",
+   "c_cpl[10]",
+   "c_cpl[11]",
+   "c_cpl[12]",
+   "c_cpl[13]",
+   "c_cpl[14]",
+   "c_cpl[15]",
+   "c_cpl[16]",
+   "c_cpl[17]",
+   "c_cpl[18]",
+   "c_cpl[19]",
+   "c_cpl[20]",
+   "c_cpl[21]",
+   "c_cpl[22]",
+   "c_cpl[23]",
+   "c_cpl[24]",
+   "c_cpl[25]",
+   "c_cpl[26]"
+  ]
+ },
+ "V_box_sim": 6.747000000000002e-05,
+ "raw": {
+  "atom": {
+   "path": "atom_2930000.liggghts",
+   "sha256": "33857a67ab1b0db32668930647f8dc887c5b655cdf20c60caf43379748fe99f4"
+  },
+  "contact": {
+   "path": "contact_2930000.liggghts",
+   "sha256": "f789a0e9160d49b903cdbdd9c7bca6e5cb6937879a54170150c5b7fd868717cf"
+  },
+  "mesh": {
+   "path": "mesh_2930000.stl",
+   "sha256": "5249e2c9c2809eee696acdafdb9a114848e2d20a5abc32e42a5ea6156a8a9f2b"
+  },
+  "deck": {
+   "path": "input_lhsx_014.liggghts",
+   "sha256": "0f85a6a022efcd67954121640f46556241e15af717bda5a71ef2b3f712bbc92c"
+  }
+ },
+ "area_channel": "dem_geometric_c_cpl22 — LIGGGHTS 기하 교차 원판 pi(r d - d^2/4); Hertz 탄성 pi R* d 가 **아니다** (동일 반경 비 = 2 - d/(2r))",
+ "wall_touch": {
+  "AM_P": {
+   "n": 42,
+   "n_floor": 2,
+   "n_plate": 5,
+   "floor": 0.047619047619047616,
+   "plate": 0.11904761904761904,
+   "either": 0.16666666666666666
+  },
+  "AM_S": {
+   "n": 1897,
+   "n_floor": 111,
+   "n_plate": 113,
+   "floor": 0.05851344227727991,
+   "plate": 0.0595677385345282,
+   "either": 0.11808118081180811
+  },
+  "SE": {
+   "n": 24928,
+   "n_floor": 1164,
+   "n_plate": 1209,
+   "floor": 0.046694480102695765,
+   "plate": 0.04849967907573813,
+   "either": 0.0951941591784339
+  },
+  "AM": {
+   "n": 1939,
+   "n_floor": 113,
+   "n_plate": 118,
+   "floor": 0.05827746260959257,
+   "plate": 0.060856111397627644,
+   "either": 0.11913357400722022
+  }
+ },
+ "wall_touch_rule": "floor: z - r <= z_floor · plate: z + r >= plate_z (sim units, no tolerance)",
+ "contact_scan": {
+  "n_frames": 1,
+  "n_rows_last": 143646,
+  "n_unique_pairs": 143646,
+  "n_dup_pairs": 0,
+  "n_dup_rows": 0,
+  "n_self_pairs": 0,
+  "n_delta_nonpos": 0,
+  "delta_min": 6.17927e-09,
+  "n_periodic_flag": 5282,
+  "has_delta_col": true,
+  "has_periodic_col": true
+ },
+ "n_atom_frames": 1,
+ "contract": "codex_verdict_lhs_descriptors_20260913 §7 (1~6)"
+}

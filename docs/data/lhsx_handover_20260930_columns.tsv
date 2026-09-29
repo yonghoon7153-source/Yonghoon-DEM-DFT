@@ -1,0 +1,136 @@
+column	source	verdict	meaning	caveat
+case_id	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+block	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+d_am_p_um	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+d_am_s_um	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+ps_frac	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+ps_label	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+d_se_um	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+am_pct	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+rve_um	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+pressure_MPa	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+e_se_gpa	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+d_am_max_um	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+r_AM_P_um	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+r_AM_S_um	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+r_SE_um	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+size_ratio_P_over_S	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+size_ratio_AM_over_SE	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+n_am_p_est	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+n_am_s_est	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+n_se_est	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+n_total_est	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+rve_over_d_am_max	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+lhsx_stratum	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+lhsx_ntype	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+lhsx_kind	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+lhsx_pdd_SE	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+lhsx_w_AM_P	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+lhsx_w_AM_S	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+lhsx_rSE_lo_um	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+lhsx_rSE_truncated	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+lhsx_volfrac	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+lhsx_phi_AM_solid	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+lhsx_lhs_cell	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+lhsx_seed	design		LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)	
+phi_se	harvest		SE 부피분율 — 명목 구 부피 합 / (L² · 플래튼−바닥 간격) (장부값, 겹침 이중계상 포함 · 정본 이름 phi_se_spheresum_nominal_gap) · ⚠ 내부 기록 — union porosity 와 닫히지 않는다 (분모가 인계 두께가 아니다) · 인계용은 phi_se_mass_conserving (J20-e)	
+phi_se_status	harvest		phi_se 의 상태 — OK 가 아니면 값 칸은 빈칸 (0 이 아니다)	
+phi_am	harvest		AM 부피분율 — 같은 규약 · ⚠ 내부 기록 · 인계용은 phi_am_mass_conserving (J20-e)	
+phi_am_status	harvest		phi_am 의 상태 — OK 가 아니면 값 칸은 빈칸 (0 이 아니다)	
+coverage_AM_P_hertz_pct	harvest		AM_P 표면 피복률 (%) — 접촉 면적 c_cpl[22] 합 / 표면적, 입자 평균 · 이름의 hertz 는 물려받은 오해 (A_dem_geometric · L1-04)	A_dem_geometric — LIGGGHTS 기하 교차 원판 π(rδ − δ²/4) 이지 Hertz 탄성 πR*δ 가 아니다 (같은 반경 비 = 2 − δ/2r ≈ 1.99배) · L1-04
+coverage_AM_P_hertz_pct_status	harvest		coverage_AM_P_hertz_pct 의 상태 — OK 가 아니면 값 칸은 빈칸 (0 이 아니다)	
+coverage_AM_S_hertz_pct	harvest		AM_S 표면 피복률 (%) — 같은 채널	A_dem_geometric — LIGGGHTS 기하 교차 원판 π(rδ − δ²/4) 이지 Hertz 탄성 πR*δ 가 아니다 (같은 반경 비 = 2 − δ/2r ≈ 1.99배) · L1-04
+coverage_AM_S_hertz_pct_status	harvest		coverage_AM_S_hertz_pct 의 상태 — OK 가 아니면 값 칸은 빈칸 (0 이 아니다)	
+coverage_AM_total_hertz_pct	harvest		AM 전체 피복률 (%) — 위 둘에서 유도 (독립 타깃 아님)	A_dem_geometric — LIGGGHTS 기하 교차 원판 π(rδ − δ²/4) 이지 Hertz 탄성 πR*δ 가 아니다 (같은 반경 비 = 2 − δ/2r ≈ 1.99배) · L1-04
+coverage_AM_total_hertz_pct_status	harvest		coverage_AM_total_hertz_pct 의 상태 — OK 가 아니면 값 칸은 빈칸 (0 이 아니다)	
+porosity_sphere_pct_RECORD_ONLY	harvest		ε_sphere 공극률 (%) — 1 − phi_se − phi_am (기록 전용 · 물리 공극률은 porosity_union_exact_pct)	
+porosity_sphere_pct_RECORD_ONLY_status	harvest		porosity_sphere_pct_RECORD_ONLY 의 상태 — OK 가 아니면 값 칸은 빈칸 (0 이 아니다)	
+n_AM_P_measured	harvest		실측 입자수 (설계의 n_*_est 는 추정)	
+n_AM_S_measured	harvest		실측 입자수	
+n_SE_measured	harvest		실측 입자수	
+cov_AM_P_n_valid	harvest		피복 평균의 분모	
+cov_AM_S_n_valid	harvest		피복 평균의 분모	
+cov_n_capped	harvest		c_i 가 100 %% 로 잘린 횟수	
+cov_n_free_surf_invalid	harvest		F_i <= 0 분모붕괴 (DESC-05)	
+closure_residual	harvest		phi 닫힘 잔차 (QC)	
+tau_status	harvest		tau 가 왜 없는지	
+tau_n_sampled	harvest		tau 진단	
+tau_n_valid	harvest		tau 진단	
+tau_n_truncated	harvest		tau 진단	
+tau_convention	harvest		tau 규약 문자열	
+plate_z_sim	harvest		플래튼 z (sim)	
+plate_z_source	harvest		플래튼 출처	
+V_box_sim	harvest		상자 부피 (sim)	
+timestep	harvest		읽은 덤프 스텝	
+area_channel	harvest		L1-04 — 피복 면적이 무엇인가	
+atom_sha256	harvest		원자료 추적	
+thickness_wall_gap_um	harvest		주 두께 — 같은 프레임의 플래튼 − 바닥 (z = 0) 간격, sim × 1e3	
+phi_se_spheresum_nominal_gap	harvest		phi_se 의 정본 이름 — 명목 구 부피 / 틀 간격 부피 (장부값, 틀 안 점유율 아님)	
+phi_am_spheresum_nominal_gap	harvest		phi_am 의 정본 이름	
+porosity_spheresum_nominal_gap_pct	harvest		porosity 등록 열의 정본 이름 (독립 타깃 아님)	
+thickness_pushback_equiv_um	harvest		(나) 벽 밖 부피를 두께에 더한 등가값 — hard-bottom 예측 아님 (HND-01)	
+porosity_pushback_equiv_pct	harvest		(나) 등가 porosity	
+phi_se_clipped_spheresum_gap	harvest		(다) 벽 밖 cap 을 뺀 ROI 값	
+phi_am_clipped_spheresum_gap	harvest		(다) ROI 값	
+porosity_clipped_spheresum_gap_pct	harvest		(다) ROI porosity	
+solid_bottom_um	harvest		min(z − r) × 1e3	
+solid_top_um	harvest		max(z + r) × 1e3	
+thickness_envelope_um	harvest		외피 높이 — 극값 하나에 좌우될 수 있다	
+plate_minus_solid_top_um	harvest		플래튼 − 고체 윗면 (같은 step 메시면 작다, LHS-11)	
+V_AM_full_um3	harvest		AM 명목 구 부피 합	
+V_SE_full_um3	harvest		SE 명목 구 부피 합	
+V_AM_out_floor_um3	harvest		AM 바닥 밖 cap 부피	
+V_AM_out_plate_um3	harvest		AM 플래튼 밖 cap 부피	
+V_SE_out_floor_um3	harvest		SE 바닥 밖 cap 부피	
+V_SE_out_plate_um3	harvest		SE 플래튼 밖 cap 부피	
+n_floor_center_out	harvest		중심이 바닥 평면 아래인 입자 수	
+n_floor_fully_out	harvest		통째로 바닥 아래인 입자 수	
+n_plate_center_out	harvest		중심이 플래튼 위인 입자 수	
+n_plate_fully_out	harvest		통째로 플래튼 위인 입자 수	
+floor_out_pct	harvest		바닥 밖 부피 / ΣV (백분율)	
+plate_out_pct	harvest		플래튼 밖 부피 / ΣV (백분율)	
+floor_outside_cap_depth_over_r_max	harvest		가장 깊은 입자의 cap 깊이/r (접촉 겹침 아님)	
+floor_deepest_contact_overlap_over_r	harvest		그 입자의 접촉 겹침/r = (r − |dist|)/r	
+floor_deepest_phase	harvest		가장 깊은 입자의 상	
+floor_deepest_r_um	harvest		그 입자의 반지름	
+floor_deepest_z_um	harvest		그 입자의 중심 z	
+plate_outside_cap_depth_over_r_max	harvest		플래튼 쪽 가장 깊은 입자의 cap 깊이/r	
+boundary_state	harvest		INSIDE | CENTER_CROSSED | FULLY_OUT	
+calculation_status	harvest		계산 상태 (명목 규약값)	
+physical_target_status	harvest		OK | HOLD — 물리적 전극 구조 타깃으로 쓸 수 있는가	
+hold_reason_codes	harvest		BOUNDARY_CENTER_OUT · NEGATIVE_POROSITY (| 로 이음)	
+phi_sum_gt_one	harvest		phi_se + phi_am > 1	
+tau_n_bot	harvest		solid_zrange 아래 밴드의 SE 인원	
+tau_n_top	harvest		solid_zrange 위 밴드의 SE 인원	
+tau_wall_n_bot	harvest		벽 (z = 0) 기준 아래 밴드의 SE 인원 (진단)	
+tau_wall_n_top	harvest		플래튼 기준 위 밴드의 SE 인원 (진단)	
+tau_wall_n_span_components	harvest		벽 밴드 둘을 잇는 SE 성분 수 (진단)	
+measurement_protocol_id	harvest		측정 규약 ID	
+boundary_model_id	harvest		경계 모델 ID (바닥 primitive 의 물성 type · 플래튼 메시)	
+scale_sim_per_um	harvest		sim 단위 / µm	
+deck_floor_z_sim	harvest		덱에서 읽은 활성 바닥 벽 z	
+deck_wall_type	harvest		바닥 벽의 물성 type (LHS: SE)	
+contact_sha256	harvest		원자료 추적	
+deck_sha256	harvest		원자료 추적	
+mesh_sha256	harvest		원자료 추적	
+porosity_union_exact_pct	union		★ 겹침 보정 porosity (정확 union — 상자 [0,Lx)×[0,Ly)×[0,plate_z) 무작위 점 · 세 입자 이상 겹침까지) — 물리 porosity 열 (J19)	
+porosity_union_exact_se_pct	union		위 값의 통계 오차 (1σ, %p)	
+porosity_union_pair_clipped_pct	union		검산 — 웹앱 쌍 렌즈 union − 벽 밖 부피 (세 입자 겹침 무시 · 상한)	
+union_pair_upper_bound_ok	union		쌍 렌즈 ≥ 정확 — False 면 접촉 덤프에 겹친 쌍이 빠졌다 (정확 union 은 원자만 써서 그래도 유효)	
+se_of_solid_vol	union		SE / 고체 (구 부피) — SE-rich 표지의 연속값	
+thickness_mass_conserving_um	union		질량 보존 두께 = 두께 × (1 − ε_sphere)/(1 − ε_union) — union 을 실제 공극률로 받을 때 **같은 고체**의 두께 (DEM 에서 겹친 부피는 사라지므로 union 과 DEM 간격 두께를 둘 다 실제 값으로 받을 수 없다)	
+se_rich	union		SE / 고체 ≥ 0.5 (구 부피 합이 겹침 이중계상으로 퇴화하는 영역 — 문턱은 도구 선택, 연속값 옆 열)	
+phi_se_mass_conserving	union		★ 인계용 SE 부피분율 (J20-e (라) · 1저자 09-29 밤) — 질량 보존 φ = phi_se × (1 − ε_union)/(1 − ε_sphere) = SE 구 부피 / (L² · thickness_mass_conserving_um) = (1 − porosity_union_exact_pct/100) × se_of_solid_vol.  인계 두께 · union porosity 와 **같은 장부**: φ_SE + φ_AM + ε_union = 1 (정확) · φ × 인계 두께 = 레시피 적재량.  유도량 (두께 · 레시피로 정해짐 — 독립 측정 아님) · union 과 같은 상한 규약의 짝 (소성으로 밀려난 재료를 빈틈이 아니라 두께로 보낸다)	
+phi_am_mass_conserving	union		인계용 AM 부피분율 (J20-e (라)) — 같은 규약 = (1 − porosity_union_exact_pct/100) × (1 − se_of_solid_vol)	
+wa_status	webapp_batch		웹앱 배치 상태 — done · partial (선택 단계 실패) · failed · REFUSED (같은 프레임 · type_map 관문 거부) — done · partial 이 아니면 웹앱 열은 빈칸	
+wa_failed_stages	webapp_batch		실패한 파이프라인 단계 (| 로 이음)	
+area_AM_P_AM_P_n	webapp	✅ 쓴다(이름 주의)	AM_P_AM_P 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g · mono (2-type) 침대는 빈칸 (N/A · J20-f (A)) — 웹앱이 단일 AM 을 반지름으로 AM_P/AM_S 라 불러 설계 상과 어긋날 수 있다 · 총량 열 (area_AM전체_SE_n 등) 을 쓸 것	총량 (개수) — 두께 · 입자 수에 비례한다 · 특징으로 쓰려면 입자당 · 부피당으로 나눌 것 · 면적이 아니다 (A_dem_geometric 주의는 해당 없음)
+area_AM_P_AM_S_n	webapp	✅ 쓴다(이름 주의)	AM_P_AM_S 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g · mono (2-type) 침대는 빈칸 (N/A · J20-f (A)) — 웹앱이 단일 AM 을 반지름으로 AM_P/AM_S 라 불러 설계 상과 어긋날 수 있다 · 총량 열 (area_AM전체_SE_n 등) 을 쓸 것	총량 (개수) — 두께 · 입자 수에 비례한다 · 특징으로 쓰려면 입자당 · 부피당으로 나눌 것 · 면적이 아니다 (A_dem_geometric 주의는 해당 없음)
+area_AM_P_SE_n	webapp	✅ 쓴다(이름 주의)	AM_P_SE 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g · mono (2-type) 침대는 빈칸 (N/A · J20-f (A)) — 웹앱이 단일 AM 을 반지름으로 AM_P/AM_S 라 불러 설계 상과 어긋날 수 있다 · 총량 열 (area_AM전체_SE_n 등) 을 쓸 것	총량 (개수) — 두께 · 입자 수에 비례한다 · 특징으로 쓰려면 입자당 · 부피당으로 나눌 것 · 면적이 아니다 (A_dem_geometric 주의는 해당 없음)
+area_AM_S_AM_S_n	webapp	✅ 쓴다(이름 주의)	AM_S_AM_S 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g · mono (2-type) 침대는 빈칸 (N/A · J20-f (A)) — 웹앱이 단일 AM 을 반지름으로 AM_P/AM_S 라 불러 설계 상과 어긋날 수 있다 · 총량 열 (area_AM전체_SE_n 등) 을 쓸 것	총량 (개수) — 두께 · 입자 수에 비례한다 · 특징으로 쓰려면 입자당 · 부피당으로 나눌 것 · 면적이 아니다 (A_dem_geometric 주의는 해당 없음)
+area_AM_S_SE_n	webapp	✅ 쓴다(이름 주의)	AM_S_SE 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g · mono (2-type) 침대는 빈칸 (N/A · J20-f (A)) — 웹앱이 단일 AM 을 반지름으로 AM_P/AM_S 라 불러 설계 상과 어긋날 수 있다 · 총량 열 (area_AM전체_SE_n 등) 을 쓸 것	총량 (개수) — 두께 · 입자 수에 비례한다 · 특징으로 쓰려면 입자당 · 부피당으로 나눌 것 · 면적이 아니다 (A_dem_geometric 주의는 해당 없음)
+area_AM전체_SE_n	webapp	✅ 쓴다(이름 주의)	AM전체_SE 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g	총량 (개수) — 두께 · 입자 수에 비례한다 · 특징으로 쓰려면 입자당 · 부피당으로 나눌 것 · 면적이 아니다 (A_dem_geometric 주의는 해당 없음)
+area_SE_SE_n	webapp	✅ 쓴다(이름 주의)	SE_SE 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g	총량 (개수) — 두께 · 입자 수에 비례한다 · 특징으로 쓰려면 입자당 · 부피당으로 나눌 것 · 면적이 아니다 (A_dem_geometric 주의는 해당 없음)
+qc_wa_porosity_minus_harvest_pct	qc		같은 프레임 관문 — 웹앱 porosity (ε_sphere) − 수확 porosity (%p).  |값| > 0.05 면 인계표 생성 자체를 거부한다	
+qc_wa_cov_AM_P_minus_harvest_pct	qc		검산 — 웹앱 coverage_AM_P_mean − 수확 coverage_AM_P_hertz_pct (%p).  같은 c_cpl[22] 채널 (A_dem_geometric)	
+qc_wa_cov_AM_S_minus_harvest_pct	qc		검산 — 웹앱 coverage_AM_S_mean − 수확 coverage_AM_S_hertz_pct (%p)	
