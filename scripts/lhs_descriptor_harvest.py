@@ -142,8 +142,13 @@ TAU_LO, TAU_HI = 1.0, 20.0
 COL_AREA, COL_D1, COL_D2 = 'c_cpl[22]', 'c_cpl[7]', 'c_cpl[8]'
 #: J20-a (1저자 비준 09-28 밤 "권고하는걸로") — 접촉 덤프 점검용 두 열: 주기 경계 플래그 · 겹침 δ (`parse_liggghts.py` 열 사전과 같은 번호).
 COL_PERIODIC, COL_DELTA = 'c_cpl[9]', 'c_cpl[23]'
-#: J20-a ⓓ — 상별 벽 · 플래튼 **접촉 입자 비율**.  닿음 = 구가 그 면에 겹치거나 맞닿는다 (sim 단위 · 허용오차 없음).
-WALL_TOUCH_RULE = 'floor: z - r <= z_floor · plate: z + r >= plate_z (sim units, no tolerance)'
+#: J20-a ⓓ — 상별 벽 · 플래튼 **접촉 입자 비율**.  닿음 = 구가 그 면과 **겹친다** (겹침 깊이 r − dist > 0 · sim 단위 · 허용오차 없음).
+#: ★ item 4 (09-29 · 1저자 "권고대로") — 규칙은 **하나**다: `_wall_side` (→ `wall_record` · 벽 밖 부피) · `wall_touch_fractions` ·
+#:   벽 분할 피복률이 같은 함수 `_wall_contact` 를 부른다.  옛 문자열 `z - r <= z_floor · z + r >= plate_z` (접선 = 닿음) 은
+#:   `_wall_side` 의 `r − dist > 0` (접선 = 안 닿음) 과 접선 입자에서 갈렸다 (selftest ⑲).  고른 쪽과 이유 = `_wall_contact` 독스트링.
+WALL_TOUCH_RULE = ('floor: r - (z - z_floor) > 0 · plate: r - (plate_z - z) > 0 — overlap depth > 0; tangent (depth = 0) is '
+                   'not touching (sim units, no tolerance) · one implementation `_wall_contact` shared by wall_record, '
+                   'wall_touch and the coverage wall split')
 #: L1-04 — 이 열이 **무엇인지** 매 행에 박는다 (별칭의 `hertz` 는 물려받은 오해다).
 AREA_CHANNEL = ('dem_geometric_c_cpl22 — LIGGGHTS 기하 교차 원판 pi(r d - d^2/4); '
                 'Hertz 탄성 pi R* d 가 **아니다** (동일 반경 비 = 2 - d/(2r))')
@@ -388,16 +393,41 @@ def check_deck_floor(path):
                 grammar='static: fix/unfix lifecycle · group=all · 흐름 제어 앞에서만 (HND-02)')
 
 
+def _wall_dists(z, plate_z, z_floor=Z_FLOOR):
+    """두 벽까지의 **부호 있는** 중심–면 거리 (상자 안쪽 +): (바닥 z − z_floor, 플래튼 plate_z − z).
+
+    item 4 — `volumes_and_phi` (→ `_wall_side`) · `wall_touch_fractions` · 벽 분할 피복률이 **같은 식**으로 거리를 잰다 (식이 둘이면
+    접선 근처에서 부동소수 반올림 경로가 갈려 같은 규칙도 다른 답을 낼 수 있다).
+    """
+    return z - z_floor, plate_z - z
+
+
+def _wall_contact(r, dist):
+    """`WALL_TOUCH_RULE` 의 **유일한 구현** — 한 벽에 대해 (depth, touch, center_out, fully_out, h).
+
+    depth = r − dist (벽 밖 cap 깊이 · 자르지 않은 값) · touch ⟺ depth > 0 · center_out ⟺ dist < 0 · fully_out ⟺ dist < −r ·
+    h = clip(depth, 0, 2r) (벽 밖 cap 높이).  dist = `_wall_dists` 의 부호 있는 거리.
+    ★ item 4 판단 — 접선 (depth = 0, 구가 면에 한 점으로 닿음) 은 **안 닿음**이다:
+      ① 이 규칙을 쓰는 양이 전부 h > 0 에서만 0 이 아니다 — 벽 밖 부피 π h²(3r − h)/3 (`wall_record`) · 벽이 가린 표면 2π r h
+         (벽 제외 피복률).  접선을 닿음으로 세면 가린 것이 0 인 입자가 '닿음' 칸에 들어가 분할과 보정이 어긋난다.
+      ② 09-24 · 09-25 커밋 수확 JSON 의 `wall_record.*.n_touch` · `n_touch_by_phase` 가 이미 이 규칙 (r − dist > 0) 의 값이다 —
+         반대쪽 (<=) 을 고르면 커밋된 키의 뜻이 조용히 바뀐다.  `wall_touch` (옛 `<=`) 는 커밋된 산출물이 없다 (수확 v3 미실행).
+    ⚠ 판정 경계에 허용오차는 없다 (덤프 6 유효숫자 반올림 폭 안의 '거의 접선' 은 어느 쪽으로도 갈릴 수 있다 — 세는 수의 뜻은
+      "그 좌표에서 겹침 깊이가 양수" 까지다).
+    """
+    depth = r - dist
+    return depth, depth > 0, dist < 0, dist < -r, np.clip(depth, 0.0, 2.0 * r)
+
+
 def _wall_side(labels, r, z, dist, vsum):
     """벽 한쪽 (바닥 또는 플래튼) 의 기록.  dist = 중심에서 벽까지의 **부호 있는** 거리 (상자 안쪽이 +).
 
     HND-03 (Codex 09-25): 기하 깊이 (cap depth = r − dist) 와 솔버의 접촉 겹침 (r − |dist|) 은 중심이 평면을 넘으면
     갈린다 — z = −0.98r 이면 cap 깊이 1.98r 이지만 접촉 겹침은 0.02r.  둘 다 따로 적는다 (옛 `overlap_over_r` 는 오도).
     """
-    depth = r - dist                                                   # 벽 밖 cap 깊이 (자르지 않은 값)
-    h = np.clip(depth, 0.0, 2.0 * r)                                   # 벽 밖 cap 높이
+    #  item 4 — 깊이 · 닿음 · 중심 밖 · 통째로 밖 · cap 높이는 `_wall_contact` 하나에서 (옛 식과 같은 식 · 같은 값)
+    depth, touch, center_out, fully_out, h = _wall_contact(r, dist)
     v_out = np.pi * h ** 2 * (3.0 * r - h) / 3.0                       # 구 cap 부피 π h²(3r − h)/3
-    center_out, fully_out, touch = dist < 0, dist < -r, depth > 0
     i = int(np.argmax(depth))
     deepest = None
     if depth[i] > 0:
@@ -424,10 +454,13 @@ def wall_touch_fractions(labels, z, r, plate_z, z_floor=Z_FLOOR):
     가르는 설명 변수다 — 벽 인접 입자를 뺀 CN 은 AM_P 가 두께 2–10 개인 얇은 침대에서 남는 입자가 거의 없어 택하지 않았다.
     규칙 `WALL_TOUCH_RULE`.  3 상 침대는 AM_P · AM_S 에 더해 합친 'AM' 도 낸다 (am_se_cn_mean 과 같은 모집단).
     상이 없으면 키가 없다 (= N/A · 0 이 아니다, DESC-05).
+    ⚠ item 4 (09-29): 옛 판은 `z − r <= z_floor` · `z + r >= plate_z` (접선 = 닿음) 로 `_wall_side` 와 접선에서 갈렸다 — 이제
+      같은 `_wall_contact` (접선 = 안 닿음).  바뀐 것은 **정확히 접선인 입자**뿐이다 (selftest ⑲).
     """
     labels = np.asarray([str(q) for q in labels], dtype=object)
     z, r = np.asarray(z, dtype=np.float64), np.asarray(r, dtype=np.float64)
-    fl, pl = (z - r) <= z_floor, (z + r) >= float(plate_z)
+    d_f, d_p = _wall_dists(z, float(plate_z), z_floor)
+    fl, pl = _wall_contact(r, d_f)[1], _wall_contact(r, d_p)[1]        # item 4 — `_wall_side` 와 같은 함수
     groups = {ph: labels == ph for ph in sorted(set(labels))}
     if 'AM_P' in groups and 'AM_S' in groups:
         groups['AM'] = groups['AM_P'] | groups['AM_S']
@@ -469,8 +502,9 @@ def volumes_and_phi(atoms, labels, box_lo, box_hi, plate_z):
     phi_am = float(v[is_am].sum() / v_box)
     eps = 100.0 * (1.0 - vsum / v_box)
 
-    floor = _wall_side(labels, r, z, z - Z_FLOOR, vsum)
-    plate = _wall_side(labels, r, z, plate_z - z, vsum)
+    dist_f, dist_p = _wall_dists(z, plate_z)                           # item 4 — 같은 식 (z − Z_FLOOR · plate_z − z) 한 곳
+    floor = _wall_side(labels, r, z, dist_f, vsum)
+    plate = _wall_side(labels, r, z, dist_p, vsum)
     w_tot = floor['v_out_sim'] + plate['v_out_sim']
     h_pb = h + w_tot / (lx * ly)
     v_box_pb = lx * ly * h_pb
@@ -1490,6 +1524,41 @@ def selftest():
             and isinstance(r14.get('contact_scan'), dict) and r14.get('n_atom_frames') == 1
             and set((r14.get('status') or {}).keys()) == {'phi', 'porosity', 'coverage_AM_P', 'coverage_AM_S',
                                                            'coverage_AM_total', 'tortuosity', 'tortuosity_wall'})
+
+        # ── ⑲ item 4 (09-29 · 1저자 "권고대로") — 벽 닿음 규칙 **하나** (`_wall_side` ↔ `wall_touch_fractions`) · 접선 반례 먼저 ──
+        #  옛 코드: `_wall_side` (→ wall_record · 벽 밖 부피) 는 겹침 깊이 r − dist > 0 (접선 = 안 닿음), `wall_touch_fractions` 는
+        #  z − r <= z_floor · z + r >= plate_z (접선 = 닿음) ⇒ 바닥에 정확히 맞닿은 입자 (z − r = 0) · 플래튼에 정확히 맞닿은 입자
+        #  (z + r = plate_z) 에서 **같은 침대의 두 기록이 갈린다**.
+        _lab19 = np.asarray(['SE', 'SE', 'AM_P', 'AM_S'], dtype=object)
+        _at19 = dict(z=np.array([1.0, 19.0, 5.0, 0.5]), radius=np.array([1.0, 1.0, 1.0, 1.0]))
+        _v19 = volumes_and_phi(_at19, _lab19, np.zeros(3), np.array([10.0, 10.0, 20.0]), 20.0)
+        _w19 = wall_touch_fractions(_lab19, _at19['z'], _at19['radius'], 20.0)
+        _wf19, _wp19 = _v19['wall_record']['floor'], _v19['wall_record']['plate']
+        chk('⑲ item 4 ★반례: 바닥 접선 SE (z − r = 0) — wall_record 닿음 수 = wall_touch 닿음 수 (한 침대 · 한 규칙)',
+            _wf19['n_touch_by_phase'].get('SE') == _w19['SE']['n_floor'])
+        chk('⑲ item 4 ★반례: 플래튼 접선 SE (z + r = plate_z) — 두 기록이 같다',
+            _wp19['n_touch_by_phase'].get('SE') == _w19['SE']['n_plate'])
+        chk('⑲ item 4: 접선 = **안 닿음** (겹침 깊이 0 · 벽 밖 부피 0 · 가린 면 0) — SE 바닥 0 · 플래튼 0 · 겹친 AM_S (z 0.5) 는 닿음',
+            _w19['SE']['n_floor'] == 0 and _w19['SE']['n_plate'] == 0
+            and _w19['AM_S']['n_floor'] == 1 and _w19['AM_P']['n_floor'] == 0 and _wf19['v_out_by_phase']['SE'] == 0.0)
+        #  무작위 200 침대 — 반 칸 격자 (정확한 접선이 많다) 와 연속값을 번갈아: 상별 · 벽별 닿음 수가 **모든** 침대에서 같아야 한다
+        _rng19 = np.random.default_rng(19)
+        _bad19 = 0
+        for _t in range(200):
+            _n = 40
+            _rr = _rng19.choice([0.5, 1.0, 1.5], _n)
+            _zz = (_rng19.integers(-4, 45, _n) * 0.5) if _t % 2 == 0 else np.round(_rng19.uniform(-2.0, 22.0, _n), 5)
+            _pz = 20.0 if _t % 2 == 0 else float(np.round(_rng19.uniform(15.0, 21.0), 5))
+            _lb = np.asarray(_rng19.choice(['SE', 'AM_P', 'AM_S'], _n), dtype=object)
+            _vv = volumes_and_phi(dict(z=_zz, radius=_rr), _lb, np.zeros(3), np.array([10.0, 10.0, 30.0]), _pz)
+            _ww = wall_touch_fractions(_lb, _zz, _rr, _pz)
+            for _ph in ('SE', 'AM_P', 'AM_S'):
+                if _ph in _ww and (_vv['wall_record']['floor']['n_touch_by_phase'].get(_ph, 0) != _ww[_ph]['n_floor']
+                                   or _vv['wall_record']['plate']['n_touch_by_phase'].get(_ph, 0) != _ww[_ph]['n_plate']):
+                    _bad19 += 1
+        chk(f'⑲ item 4: 무작위 200 침대 (정확한 접선 포함) — 상별 · 벽별 닿음 수가 두 기록에서 전부 같다 (어긋남 {_bad19})', _bad19 == 0)
+        chk('⑲ item 4: 규칙 문자열이 접선 = 안 닿음을 적는다 (옛 `<=` · `>=` 문자열이 아니다)',
+            'tangent' in WALL_TOUCH_RULE and '<=' not in WALL_TOUCH_RULE and '>=' not in WALL_TOUCH_RULE)
 
     print()
     if _FAILS:
