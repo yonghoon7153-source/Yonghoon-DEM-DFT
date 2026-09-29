@@ -1696,9 +1696,53 @@ def test_ga_additivity_line_matches_the_result(client):
     s1 = _nums(_section(h, "s1"))
     for s in ("Li", "P"):
         assert round(V["GA_additivity"][s]["residual"], 6) in s1, (s, "§1 그림 설명에 잔차가 없다")
+    #: §1 사전등록 판정 목록의 GA 줄 (2026-09-29 추가) — 잔차 · 칸 수 · 문턱 · 통과 여부가 판정 파일과 같다
+    li = re.search(r'<li id="s1-ga">(.*?)</li>', _section(h, "s1"), re.S)
+    assert li, "§1 판정 목록에 GA 줄이 없다"
+    lt = li.group(1)
+    for s in ("Li", "P"):
+        g = V["GA_additivity"][s]
+        assert round(g["residual"], 6) in _nums(lt), (s, "§1 GA 줄 잔차", g["residual"])
+        assert f"{s} {g['n_cells']}" in lt, (s, "§1 GA 줄 칸 수", g["n_cells"])
+    assert V["tol"] in _nums(lt), "§1 GA 줄 문턱이 판정 파일과 다르다"
+    assert ("<b>통과</b>" in lt) == passed, "§1 GA 줄의 통과 표기가 판정과 어긋난다"
     if passed:
         assert "보정하지 않으면 두 효과가 그냥 더해진다" not in h, "GA 통과인데 옛 조건 문장이 남았다"
         assert "분해 (Li 미보정)" not in h, "GA 통과인데 목차에 옛 조건 표지가 남았다"
+
+
+#: §1 조성표의 행 순서 = 원자료 라벨 (화면 이름은 사람용이라 라벨로 대조한다)
+_S1_COMP_LABELS = ("modelc", "lpsocl", "o_only_003", "nd_li_002", "ndo_li_002", "nd_p_002", "nd_p_002_asused",
+                   "lim_li_002", "lim_li_002_o", "lim_p_002", "lim_p_002_asused")
+_OX = {"Li": 1, "Nd": 3, "P": 5, "S": -2, "O": -2, "Cl": -1}
+
+
+def test_s1_composition_table_matches_the_raw(client):
+    """⛔음성 — §1 조성표의 조성 · Nd · O · 전하 칸이 원자료 반응식의 전해질 조성에서 **다시 센** 값과 같다.
+
+    왜 (2026-09-29): Li 맞춤 대조 넷(위 Nd 조성에서 Nd 만 뺀 것 · 전하 −0.06 은 설계)을 표에 올렸다.
+      조성을 손으로 옮겨 적으면 한 글자만 틀려도 **다른 대조**가 된다 — x002 · GA 실행 원자료의
+      반응식 좌변(도구 `_ga_formula`)과 대조한다. 전하는 형식 산화수로 다시 센다
+      (Li +1 · Nd +3 · P +5 · S −2 · O −2 · Cl −1) — '0 ✓' 는 0 일 때만 붙는다.
+    """
+    T = _x002_tool()
+    srcs = (json.loads(X002_IFACE.read_text("utf-8"))["results"], json.loads(GA_RAW.read_text("utf-8"))["results"])
+    s1 = _section(_report_html(client), "s1")
+    i = s1.index("<th>이름</th><th>조성</th>")
+    tbl = s1[i:s1.index("</table>", i)]
+    rows = re.findall(r'<tr><td[^>]*>(?:(?!</td>).)*</td><td class="mono">([^<]+)</td>'
+                      r'<td>([^<]+)</td><td>([^<]+)</td><td>([^<]+)</td></tr>', tbl, re.S)
+    assert len(rows) == len(_S1_COMP_LABELS), f"조성 행이 {len(rows)} 개다 — 시험이 헛것을 재고 있다"
+    for (formula, nd, ox, q), lab in zip(rows, _S1_COMP_LABELS):
+        got = T.parse_formula(formula.replace(" ", ""))
+        raw = next((c for c in (T._ga_formula(r, lab) for r in srcs) if c), None)
+        assert raw, f"{lab}: 원자료에서 조성을 못 읽었다"
+        for el in set(got) | set(raw):
+            assert abs(got.get(el, 0) - raw.get(el, 0)) < 1e-6, (lab, formula, el, got, raw)
+        assert float(nd) == got.get("Nd", 0) and float(ox) == got.get("O", 0), (lab, nd, ox, got)
+        charge = sum(_OX[el] * n for el, n in got.items())
+        assert abs(charge - float(q.replace("✓", "").replace("−", "-"))) < 1e-6, (lab, q, charge)
+        assert ("✓" in q) == (abs(charge) < 1e-6), (lab, q, "✓ 는 전하 0 일 때만")
 
 
 
