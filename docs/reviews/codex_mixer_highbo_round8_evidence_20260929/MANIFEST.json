@@ -1,0 +1,56 @@
+{
+  "schema": "review_evidence_manifest/v1",
+  "review": "mixer LH round 8 preregistration",
+  "scope": "No DEM, no production edits, no scheduler or real campaign results.",
+  "files": {
+    "README.md": {
+      "bytes": 2862,
+      "sha256": "c7befa10518e78fbe13db987b0c6f6911473640463e1c5973f21f5bf3573ae8c"
+    },
+    "SOURCES.md": {
+      "bytes": 2377,
+      "sha256": "c943c40608ea756847fd9b33233467d9f73389e816bf1b38f4c6fab311b104fd"
+    },
+    "review.md": {
+      "bytes": 32223,
+      "sha256": "b7d734d2ffc7bc2f79a8bef9b3afb21ede49555f7618e5035df9a8c753d7c488"
+    },
+    "bundle_original.md": {
+      "bytes": 55583,
+      "sha256": "b7caae05802ac9a93c13fed4c83b303eece0a224f432b273d10a5ca1ae57c231"
+    },
+    "bundle_lf.md": {
+      "bytes": 55583,
+      "sha256": "b7caae05802ac9a93c13fed4c83b303eece0a224f432b273d10a5ca1ae57c231"
+    },
+    "prereg_v22_extracted.md": {
+      "bytes": 41124,
+      "sha256": "ab20ef775f3e6bdb660f82f36a15b18a3c7cb0d0f85a6881d840b1b2171dff44"
+    },
+    "audit_round8.py": {
+      "bytes": 8177,
+      "sha256": "bd202113471bec4928182fec91b8d9dd5c3482104ae7ced8d3b1818ded01f500"
+    },
+    "audit_results.json": {
+      "bytes": 11765,
+      "sha256": "dd275472e2946ec2514965932c2fd509d907e197828c9b6436e802c0f78566d2"
+    },
+    "package_evidence.py": {
+      "bytes": 2108,
+      "sha256": "687f9ce6602e65b0b356147acc984e414ce63d36d5ca62dc7fb59de43d2e24a6"
+    },
+    "baseline/make_mixer_deck.py": {
+      "bytes": 87520,
+      "sha256": "2c12184e9d803e1a9fc4d58b5e32d2de0800b11f637797f68e637d3f85507251"
+    },
+    "baseline/measure_mixing_index.py": {
+      "bytes": 60953,
+      "sha256": "9f17569cdca30d4fee43be2f4353a9edc56450fbfb4066bcbe32a4447389cf76"
+    },
+    "baseline/prior_r7_verdict.md": {
+      "bytes": 32601,
+      "sha256": "c8df4a20ea1f9e7a8b2f3420aa322b7827d3985b22756eadb70691a804081cc3"
+    }
+  },
+  "note": "MANIFEST.json excludes itself to avoid a recursive hash."
+}
