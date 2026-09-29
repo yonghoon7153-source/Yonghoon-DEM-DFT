@@ -553,7 +553,8 @@ def to_markdown(rep):
          '|---|---|---:|---:|---:|---|---:|---:|---|']
     for p, d in rep['decks'].items():
         se = d['E'][2] if d['E'] and len(d['E']) > 2 else None
-        L.append(f"| `{d['label']}` | `{d['sha256'][:16]}` | {d['bytes']:,} | {_g(se, '.4g')} | {d['dt_txt']} | "
+        #  ⚠ sha256 앞자리는 **백틱 없이** — docs/ 의 check_doc_refs 가 백틱 안 hex 를 커밋 SHA 로 읽는다 (셀프테스트 ㉑)
+        L.append(f"| `{d['label']}` | {d['sha256'][:16]} | {d['bytes']:,} | {_g(se, '.4g')} | {d['dt_txt']} | "
                  f"{' · '.join(f'{x:,}' for x in d['runs'])} | {_g(d['dump_every'], ',')} | {_g(d['restart_every'], ',')} | "
                  f"{('`' + d['gen_cmd'] + '`') if d['gen_cmd'] else '미기록'} |")
     for T in rep['tables']:
@@ -819,6 +820,17 @@ def _selftest():
                 and '| AM_P–SE |' in mdt and 'F₀' in mdt
                 and b.returncode == 1 and rep_b['verdict'] == 'FAIL'
                 and any(f_.startswith('B ') and 'SE–SE' in f_ for f_ in rep_b['failures'])))
+    #  ㉑ (2026-09-30 D 게이트에서 발견) — markdown 이 docs/ 에 커밋되면 scripts/check_doc_refs.py 가 **백틱 안 7~40 자 hex** 를
+    #     커밋 SHA 로 읽는다 (표 머리에 'sha' 가 있으면 행 전부).  sha256 앞자리를 백틱으로 찍으면 '없는 커밋' 으로 게이트가 막힌다.
+    import importlib.util as _iu
+    _spec = _iu.spec_from_file_location('_cdr', os.path.join(_HERE, 'check_doc_refs.py'))
+    _cdr = _iu.module_from_spec(_spec)
+    _spec.loader.exec_module(_cdr)
+    _md = to_markdown(make_report({'x/in.mixer': read_deck(D['LC_soft'], 'LC_soft'), 'y/in.mixer': read_deck(D['LC_ref'], 'LC_ref')},
+                                  [cmp_('E', 'LC_soft', 'LC_ref'), cmp_('B', 'LC_ref', 'LH_ref')]))
+    _hits = [h for ln in _md.split('\n') for h in _cdr._RE_SHA.findall(ln) if not h.isdigit()]
+    chk(f'㉑ markdown 에 백틱 안 순수 hex (check_doc_refs 의 커밋 SHA 패턴) 가 없다 — sha256 앞자리는 백틱 없이 · 발견 {len(_hits)}',
+        not _hits and '| AM_P–SE |' in _md)
     print(f'\nmixer_deck_readback selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
 
