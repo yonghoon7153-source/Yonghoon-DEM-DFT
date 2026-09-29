@@ -1,0 +1,368 @@
+From 5a0db77794aca9e81d762b152f7f1371f8c079c4 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Tue, 29 Sep 2026 15:49:16 +0000
+Subject: [PATCH 3/7] =?UTF-8?q?LHS=20=EC=88=98=ED=99=95=EA=B8=B0=20item=20?=
+ =?UTF-8?q?2=20=E2=80=94=20=EC=A0=91=EC=B4=89=20=EB=A9=B4=EC=A0=81=20?=
+ =?UTF-8?q?=EB=8C=80=EC=A1=B0=20(c=5Fcpl[22]=20=E2=86=94=20=EC=A0=95?=
+ =?UTF-8?q?=ED=99=95=ED=95=9C=20=EA=B5=90=EC=B0=A8=20=EC=9B=90=ED=8C=90=20?=
+ =?UTF-8?q?=C2=B7=20=EC=A7=84=EB=8B=A8=20=EA=B8=B0=EB=A1=9D=20=C2=B7=20?=
+ =?UTF-8?q?=EA=B1=B0=EB=B6=80=20=EC=97=86=EC=9D=8C)=20(=EB=B0=98=EB=A1=80?=
+ =?UTF-8?q?=20=EB=A8=BC=EC=A0=80)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- 반례 (selftest ㉑ · 옛 코드에서 9 건 실패 = 120/129): AM_S–SE 행 하나의 덤프 면적이 정확한 교차 원판보다 1 % 크다.
+  옛 코드는 c_cpl[22] 를 확인 없이 피복률 분자로 썼고 대조 기록이 없었다.  고친 뒤: 전체 1 행 초과 · 주기 플래그 1 에서
+  1 · 0 에서 0 · 쌍 종류 AM-SE 에서 1 · SE-SE 0 · 최대 상대차 0.01/1.01 (덤프 값 기준) · 피복률 값은 그대로.
+- 새 키 `contact_area_check` (옛 키 뒤에만): 행마다 A_calc = plastic_coverage._intersection_disc_area(r1, r2, δ = c_cpl[23])
+  (재구현 없음 — 규율 ①) 와 c_cpl[22] 의 차를 허용폭 B 와 비교해 **세기만** 한다 — status · n_compared · 고아 · 비유한 행 ·
+  n_values_beyond_6sig (6 유효숫자 전제 점검) · all / by_periodic_flag ('0' · '1' · 필요하면 'other' · 열 없으면
+  'no_flag_column') / by_pair_kind ('AM-SE' · 'AM-AM' · 'SE-SE') 마다 n_rows · rel_diff_max · rel_diff_median ·
+  tol_rel_median · diff_over_tol_max · n_beyond_tol · n_area_dump_zero.  δ 열이 없으면 NO_DELTA_COLUMN.
+- 허용폭 (`AREA_CHECK_TOL_RULE`): 6 유효숫자 %g 토큰의 반올림 반폭 h(v) = 0.5·10^(E−5) (끝 0 이 지워진 토큰도 형식 정밀도로 —
+  SELF-63 의 교훈) 을 r1 · r2 · δ 축마다 재사용 함수로 ±h 한쪽 최댓값으로 전파 + 면적 토큰 반폭 · ×1.001 (2 차 교차항) ·
+  + 32·eps·π·max(r)² (교차원 식의 부동소수 상쇄 바닥).  교차 원판은 세 입력 각각에 단조 (20 만 표본 — 예외는 δ/r < 2e-7 ·
+  반지름비 > 7 의 부동소수 잡음뿐이고 바닥 항이 덮는다).  근거 실측: 반올림만 있는 합성 3000 행 (selftest) · 2 만 행 · 30 만 행
+  (scratch) 모두 0 행 초과 · 최악 차/폭 0.89–0.96 · 상대 폭 중앙 ≈ 5.5e-6 · 최대 ≈ 1.2e-5 — 3e-5 상대 오차와 Hertz 면적
+  (π R* δ) 은 전부 초과.  30 만 행 한 침대 2.3 s.
+- ★ DESC-03 가드 (selftest ⑬) 개정: 옛 검사 "머리 58 줄에 문자열 plastic_coverage 없음" 은 이 import 로 빨간불이 된다 (실측) —
+  그 검사는 ① 머리 밖 (함수 안 지연 import) 을 못 봤고 ② 순수 기하 함수 하나를 가져오는 것도 막았다.  ⇒ 소스 **전체** AST 로
+  보고 허용 이름을 `_intersection_disc_area` 하나로 한정 (`PLASTIC_COVERAGE_ALLOWED`) · 금지 모양 여섯 (Physics 이름 · * ·
+  모듈째 · import_module / __import__ 상수 · 비상수) 을 잡는지 변이 검사 (㉑).  DESC-03 의 뜻 (Physics 피복률 경로를
+  부르지 않는다) 은 그대로 · 더 넓게 본다.
+- selftest 131/131 · 수확기를 가져다 쓰는 selftest 11 개 통과 · CLI 산출 JSON strict 파싱 통과.
+  관문 (check_all.sh 단계 파싱 실행) 69/70 · 실패 0 — bash 로 도는 mixer launcher 1 단계는 워크트리 격리 가드로 미실행.
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft
+(cherry picked from commit 69d7cb6789768fa3447961b412b4c50b7d125e23)
+---
+ scripts/lhs_descriptor_harvest.py | 258 +++++++++++++++++++++++++++++-
+ 1 file changed, 253 insertions(+), 5 deletions(-)
+
+diff --git a/scripts/lhs_descriptor_harvest.py b/scripts/lhs_descriptor_harvest.py
+index a22e2183c..33b803d2f 100755
+--- a/scripts/lhs_descriptor_harvest.py
++++ b/scripts/lhs_descriptor_harvest.py
+@@ -133,6 +133,10 @@ from lhs_perc_extract import (  # noqa: E402
+     AM_LABELS, BedRefusal, REQUIRED_BC, TYPE_MAP,
+     _pairs_within, check_boundary_flags, read_atom_dump,
+ )
++#  item 2 (09-29) — 두 구의 **정확한 교차 원판** 은 이미 있다 (규율 ①: 다시 짜지 않는다).  ⚠ DESC-03 · 계약④: plastic_coverage 에서
++#  쓰는 것은 이 순수 기하 함수 **하나**뿐이다 — Physics 피복률 경로 (film_area_from_overlap · A_volume = V/H_FILM_MIN) 는 부르지
++#  않는다.  selftest ⑬ 이 소스 **전체** AST 로 강제한다 (허용 이름 = `PLASTIC_COVERAGE_ALLOWED`).
++from plastic_coverage import _intersection_disc_area  # noqa: E402
+ 
+ #: 계약 ③ — τ 표본 예산.  legacy 와 같은 수지만 **같은 성분 안에서만** 쓴다.
+ N_TAU_PAIRS = 200
+@@ -149,6 +153,21 @@ COL_PERIODIC, COL_DELTA = 'c_cpl[9]', 'c_cpl[23]'
+ WALL_TOUCH_RULE = ('floor: r - (z - z_floor) > 0 · plate: r - (plate_z - z) > 0 — overlap depth > 0; tangent (depth = 0) is '
+                    'not touching (sim units, no tolerance) · one implementation `_wall_contact` shared by wall_record, '
+                    'wall_touch and the coverage wall split')
++#: DESC-03 · 계약④ (item 2 개정) — 이 도구가 plastic_coverage 에서 가져와도 되는 이름 (순수 기하 · Physics 피복률 경로가 아니다).
++PLASTIC_COVERAGE_ALLOWED = frozenset({'_intersection_disc_area'})
++#: item 2 — 접촉 면적 대조 (진단 기록) 의 유효숫자 전제: LIGGGHTS `dump local` 기본 `%g` = 6 유효숫자 (`lhs_contact_audit.SIGFIG_FLOOR`
++#:   와 같은 값 · WSL 감사 v2 130/130 관측 최대 6).  전제가 틀린 침대는 `n_values_beyond_6sig` 가 0 이 아니다 (그때 허용폭이 헐겁다).
++AREA_CHECK_SIGFIG = 6
++#: 2 차 교차항 여유 (한 축의 기울기가 다른 축 반폭만큼 바뀌는 몫 ≈ 반폭/값 ≈ 1e-5 · B) — 민감도에는 영향이 없다 (B 자체가 ≈ 1e-5 · A).
++AREA_CHECK_MARGIN = 1.001
++AREA_CHECK_TOL_RULE = (
++    '행마다 |A_dump − A_calc| > B 이면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  '
++    'A_calc = plastic_coverage._intersection_disc_area(r1, r2, δ = c_cpl[23]) · '
++    'B = 1.001·[Σ_{x∈r1,r2,δ} max(|A(x+h_x) − A_calc|, |A(x−h_x) − A_calc|) + h(A_dump)] + 32·eps·π·max(r1,r2)² · '
++    'h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 (E = 십진 지수 · 끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  '
++    '교차 원판은 r1 · r2 · δ 각각에 단조라 (해석 · 20 만 표본 확인) 축마다 ±h 한쪽 최댓값이 그 토큰 반올림의 상한 · '
++    '합 = 네 토큰 (r1 · r2 · δ · A) 이 한꺼번에 가장 나쁘게 겹친 경우 · 1.001 = 2 차 교차항 여유 · '
++    '32·eps 항 = 교차원 식의 부동소수 상쇄 바닥 (δ/r < 2e-7 · 반지름비 > 7 에서 1e-6 급 잡음 — 양쪽 계산 몫)')
+ #: L1-04 — 이 열이 **무엇인지** 매 행에 박는다 (별칭의 `hertz` 는 물려받은 오해다).
+ AREA_CHANNEL = ('dem_geometric_c_cpl22 — LIGGGHTS 기하 교차 원판 pi(r d - d^2/4); '
+                 'Hertz 탄성 pi R* d 가 **아니다** (동일 반경 비 = 2 - d/(2r))')
+@@ -274,6 +293,144 @@ def scan_contact_dump(path):
+                 has_delta_col=dl is not None, has_periodic_col=pf is not None)
+ 
+ 
++def _half_unit(v, sig=AREA_CHECK_SIGFIG):
++    """`%g` 로 sig 유효숫자를 적은 토큰의 반올림 반폭 0.5·10^(E − sig + 1) (E = |v| 의 십진 지수) · 0 → 0 (배열).
++
++    `%g` 는 끝의 0 을 지우므로 토큰 자신의 자릿수가 아니라 **형식 정밀도 sig** 로 잰다 (`lhs_contact_audit._half_ulp` 와 같은 규약 —
++    `0.005` 의 반폭은 5e-9 이지 5e-4 가 아니다: 토큰 자릿수로 재면 폭이 10⁵ 배 헐거워진다 = false-green.  감사기 v2 가 `SELF-63`
++    (v1 의 고정 폭이 반올림보다 좁아 거짓 FLAG) 을 고칠 때 적은 반대쪽 함정).
++    """
++    v = np.abs(np.asarray(v, dtype=np.float64))
++    out = np.zeros_like(v)
++    nz = v > 0
++    if nz.any():
++        x = v[nz]
++        e = np.floor(np.log10(x))
++        e = np.where(np.power(10.0, e) > x, e - 1.0, e)            # log10 반올림이 십진 지수를 한 칸 틀리는 경우 (10 의 거듭제곱 근처)
++        e = np.where(np.power(10.0, e + 1.0) <= x, e + 1.0, e)
++        out[nz] = 0.5 * np.power(10.0, e - sig + 1)
++    return out
++
++
++def _n_beyond_sig(v, sig=AREA_CHECK_SIGFIG):
++    """sig 유효숫자로 다시 적어 되읽으면 값이 바뀌는 (유한) 값의 수 — 0 이 아니면 덤프가 sig 보다 정밀하다 (그러면 반폭 h 가 헐겁다)."""
++    fmt = '{:.%dg}' % sig
++    return int(sum(1 for x in np.asarray(v, dtype=np.float64).ravel().tolist()
++                   if np.isfinite(x) and float(fmt.format(x)) != x))
++
++
++def _contact_area_rows(r1, r2, delta, area):
++    """행마다 (A_calc, |A_dump − A_calc|, 허용폭 B) — 규칙 `AREA_CHECK_TOL_RULE`.  A_calc = plastic_coverage 의 교차 원판 (재구현 없음)."""
++    f = _intersection_disc_area
++    r1, r2 = np.asarray(r1, dtype=np.float64), np.asarray(r2, dtype=np.float64)
++    delta, area = np.asarray(delta, dtype=np.float64), np.asarray(area, dtype=np.float64)
++    h1, h2, hd, ha = _half_unit(r1), _half_unit(r2), _half_unit(delta), _half_unit(area)
++    fp = 32.0 * np.finfo(np.float64).eps * np.pi
++    n = int(r1.size)
++    ac, diff, bnd = np.empty(n), np.empty(n), np.empty(n)
++    for i, (a, b, d, A, x1, x2, xd, xa) in enumerate(zip(r1.tolist(), r2.tolist(), delta.tolist(), area.tolist(),
++                                                         h1.tolist(), h2.tolist(), hd.tolist(), ha.tolist())):
++        c = f(a, b, d)
++        s = (max(abs(f(a + x1, b, d) - c), abs(f(a - x1, b, d) - c))
++             + max(abs(f(a, b + x2, d) - c), abs(f(a, b - x2, d) - c))
++             + max(abs(f(a, b, d + xd) - c), abs(f(a, b, d - xd) - c)))
++        ac[i], diff[i], bnd[i] = c, abs(A - c), AREA_CHECK_MARGIN * (s + xa) + fp * max(a, b) ** 2
++    return ac, diff, bnd
++
++
++def contact_area_check(ids, labels, radius, c1, c2, carea, delta, pflag):
++    """item 2 (09-29 · 1저자 "권고대로") — **진단 기록** (거부 없음 · 피복률 값에 안 쓴다).
++
++    덤프 면적 `c_cpl[22]` (피복률의 분자 · 분모에 들어가는 값) 이 두 반지름과 δ = `c_cpl[23]` 로 다시 잰 **정확한 교차 원판**
++    (plastic_coverage 의 `_intersection_disc_area`) 과 토큰 반올림 안에서 같은가 — L1-04 의 "A_LIGG = 기하 교차 원판" 을 행마다
++    확인한다.  허용폭 = `AREA_CHECK_TOL_RULE` (6 유효숫자 `%g` 토큰에서 행마다 전파).  주기 플래그 `c_cpl[9]` 0/1 과 쌍 종류
++    (AM-SE = 분자 · AM-AM = 분모 · SE-SE) 로 가른다.  고아 행 (id 가 원자 프레임에 없다) · 비유한 행은 비교에서 빼고 센다.
++    δ 열이 없으면 대조하지 않고 `NO_DELTA_COLUMN` 으로 적는다.
++    """
++    n = int(len(c1))
++    base = dict(role='진단 기록 — 거부하지 않는다 · 피복률 값에 쓰지 않는다 (item 2)',
++                reference='plastic_coverage._intersection_disc_area(r1, r2, delta = c_cpl[23]) — 두 구의 교차 원판 (L1-04 A_LIGG)',
++                compared_to=COL_AREA, delta_col=COL_DELTA, flag_col=COL_PERIODIC,
++                tolerance_rule=AREA_CHECK_TOL_RULE, sigfig_assumed=AREA_CHECK_SIGFIG, n_rows=n)
++    if delta is None:
++        return dict(base, status='NO_DELTA_COLUMN')
++    labs = np.asarray([str(q) for q in labels], dtype=object)
++    pos = {int(a): k for k, a in enumerate(ids)}
++    ka = np.asarray([pos.get(int(a), -1) for a in c1], dtype=np.int64)
++    kb = np.asarray([pos.get(int(b), -1) for b in c2], dtype=np.int64)
++    ok = (ka >= 0) & (kb >= 0)
++    rad = np.asarray(radius, dtype=np.float64)
++    r1 = np.where(ok, rad[np.maximum(ka, 0)], np.nan)
++    r2 = np.where(ok, rad[np.maximum(kb, 0)], np.nan)
++    dl, ad = np.asarray(delta, dtype=np.float64), np.asarray(carea, dtype=np.float64)
++    fin = ok & np.isfinite(r1) & np.isfinite(r2) & np.isfinite(dl) & np.isfinite(ad)
++    idx = np.flatnonzero(fin)
++    _ac, diff, bnd = _contact_area_rows(r1[idx], r2[idx], dl[idx], ad[idx])
++    A = ad[idx]
++    ratio = diff / np.where(bnd > 0, bnd, np.finfo(np.float64).tiny)
++
++    def _grp(m):
++        k = int(m.sum())
++        p = m & (A > 0)
++        rel, tol = diff[p] / A[p], bnd[p] / A[p]
++        return dict(n_rows=k, n_area_dump_zero=int((m & (A == 0)).sum()),
++                    rel_diff_max=(float(rel.max()) if rel.size else None),
++                    rel_diff_median=(float(np.median(rel)) if rel.size else None),
++                    tol_rel_median=(float(np.median(tol)) if tol.size else None),
++                    diff_over_tol_max=(float(ratio[m].max()) if k else None),
++                    n_beyond_tol=int((m & (diff > bnd)).sum()))
++
++    every = np.ones(idx.size, dtype=bool)
++    if pflag is None:
++        by_flag = {'no_flag_column': _grp(every)}
++    else:
++        pf = np.asarray(pflag, dtype=np.float64)[idx]
++        by_flag = {'0': _grp(pf == 0.0), '1': _grp(pf == 1.0)}
++        oth = ~((pf == 0.0) | (pf == 1.0))
++        if oth.any():
++            by_flag['other'] = _grp(oth)
++    kind = np.asarray(['-'.join(sorted(('AM' if labs[i] in AM_LABELS else str(labs[i]),
++                                        'AM' if labs[j] in AM_LABELS else str(labs[j]))))
++                       for i, j in zip(ka[idx].tolist(), kb[idx].tolist())], dtype=object)
++    by_kind = {kd: _grp(kind == kd) for kd in sorted(set(kind.tolist()))}
++    return dict(base, status=(STATUS_OK if idx.size else 'NO_COMPARABLE_ROWS'), n_compared=int(idx.size),
++                n_orphan_rows_skipped=int((~ok).sum()), n_nonfinite_skipped=int((ok & ~fin).sum()),
++                n_values_beyond_6sig=dict(area=_n_beyond_sig(A), delta=_n_beyond_sig(dl[idx]), radius=_n_beyond_sig(rad)),
++                all=_grp(every), by_periodic_flag=by_flag, by_pair_kind=by_kind)
++
++
++def _plastic_coverage_uses(src):
++    """소스 **전체** AST 에서 plastic_coverage 를 쓰는 곳 — (가져온 이름 집합, 위반 목록).  DESC-03 · 계약④ 의 selftest ⑬ 가드.
++
++    위반 = `PLASTIC_COVERAGE_ALLOWED` 밖 이름 · `*` · 모듈째 import · 동적 import (`import_module` / `__import__` — 인자가 문자열
++    상수가 아니면 무엇을 가져오는지 검증할 수 없어 위반).  item 2 전의 ⑬ 은 "머리 (첫 함수 독스트링 앞) 에 문자열 plastic_coverage
++    가 없다" 였다 — 머리 밖 (함수 안 지연 import) 을 못 봤고, 순수 기하 함수 하나를 가져오는 것도 막았다.
++    """
++    import ast
++    mod = 'plastic_coverage'
++    names, bad = set(), []
++    for node in ast.walk(ast.parse(src)):
++        if isinstance(node, ast.ImportFrom) and (node.module or '').split('.')[-1] == mod:
++            for a in node.names:
++                names.add(a.name)
++                if a.name not in PLASTIC_COVERAGE_ALLOWED:
++                    bad.append(f'from {mod} import {a.name} (줄 {node.lineno})')
++        elif isinstance(node, ast.Import):
++            for a in node.names:
++                if a.name.split('.')[-1] == mod:
++                    bad.append(f'import {a.name} (줄 {node.lineno}) — 모듈째 가져오면 Physics 경로가 열린다')
++        elif isinstance(node, ast.Call):
++            fn = node.func
++            nm = fn.attr if isinstance(fn, ast.Attribute) else (fn.id if isinstance(fn, ast.Name) else None)
++            if nm in ('import_module', '__import__'):
++                arg = node.args[0] if node.args else None
++                if not (isinstance(arg, ast.Constant) and isinstance(arg.value, str)):
++                    bad.append(f'{nm}(<상수 아님>) (줄 {node.lineno}) — 무엇을 가져오는지 검증할 수 없다')
++                elif arg.value.split('.')[-1] == mod:
++                    bad.append(f'{nm}({arg.value!r}) (줄 {node.lineno}) — 동적 import')
++    return names, bad
++
++
+ PLATE_SPAN_TOL = 1e-7      # sim (= 0.1 nm 실물).  평판이면 꼭짓점 z 가 전부 같다 (실측: heckel 메시 6 꼭짓점 동일)
+ 
+ 
+@@ -909,7 +1066,8 @@ def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None
+     phi = volumes_and_phi(atoms, labels, box_lo, box_hi, plate_z)
+ 
+     ids = _atom_ids(atom_path)
+-    c1, c2, carea, cheaders = read_contact_dump(contact_path)
++    #  item 2 — δ · 주기 플래그 열도 같은 마지막 블록에서 (앞 넷은 extra_cols 없이 읽은 것과 같은 배열)
++    c1, c2, carea, cheaders, cextra = read_contact_dump(contact_path, extra_cols=(COL_DELTA, COL_PERIODIC))
+     #  J20-a — 새 키만 더한다 (옛 키 · status 는 그대로: run_lhs_fill_wsl.sh [2] 의 옛 수확 대조가 선다)
+     wall_touch = wall_touch_fractions(labels, atoms['z'], atoms['radius'], plate_z)
+     contact_scan = scan_contact_dump(contact_path)
+@@ -917,6 +1075,9 @@ def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None
+     cov = coverage_hertz(ids, labels, atoms['radius'], c1, c2, carea)
+     #  item 1 — 벽 분할 · 벽 제외 피복률 (새 키만) · 같은 접촉 합 · 같은 벽 규칙 (`_wall_contact`)
+     covw = coverage_wall(ids, labels, atoms['radius'], atoms['z'], c1, c2, carea, plate_z)
++    #  item 2 — 접촉 면적 대조 (진단 기록 · 거부 없음 · 피복률 값 불변)
++    area_check = contact_area_check(ids, labels, atoms['radius'], c1, c2, carea,
++                                    cextra[COL_DELTA], cextra[COL_PERIODIC])
+     #  plate_z 는 **진단 전용**으로만 넘긴다 (LHS-08) — 보고 τ 의 규약은 안 바뀐다.
+     tau = tortuosity_se(atoms, labels, box_lo, box_hi, n_pairs=n_pairs,
+                         plate_z=plate_z)
+@@ -1031,7 +1192,9 @@ def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None
+         coverage_wallexcl_detail=dict(n_capped=wx['n_capped'], n_free_surface_invalid=wx['n_free_surface_invalid'],
+                                       counts=wx['counts'], formula=WALLEXCL_FORMULA, wall_rule=WALL_TOUCH_RULE),
+         #  벽 분할 = 상 (AM_P · AM_S · AM · total) × 벽 (any · floor · plate) × 등급 (interior · touch · center_out · fully_out)
+-        coverage_wall_split=covw['split'])
++        coverage_wall_split=covw['split'],
++        #  ── item 2 — c_cpl[22] ↔ 정확한 교차 원판 (r1 · r2 · δ = c_cpl[23]) 대조 · 주기 플래그 0/1 · 쌍 종류별 (진단 기록) ──
++        contact_area_check=area_check)
+ 
+ 
+ def _atom_ids(path):
+@@ -1382,8 +1545,13 @@ def selftest():
+             'design_performance_corpus' not in src.split('"""')[2])
+         chk('⑬ full_metrics.json 을 읽는 코드가 없다',
+             'full_metrics' not in src.split('"""')[2])
+-        chk('⑬ DESC-03: plastic_coverage 를 부르지 않는다',
+-            'plastic_coverage' not in src.split('"""')[2])
++        #  item 2 (09-29) 개정 — 옛 검사는 "머리 (첫 함수 독스트링 앞 58 줄) 에 문자열 plastic_coverage 가 없다" 였다: ① 머리 밖
++        #  (함수 안 지연 import) 은 못 봤고 ② 순수 기하 `_intersection_disc_area` 하나를 가져오는 것 (item 2 의 요구 · 규율 ①) 도 막았다.
++        #  ⇒ 소스 **전체** AST 로 보고, 허용 이름을 그 하나로 한정한다.  DESC-03 의 뜻 (Physics 피복률 경로를 부르지 않는다) 은 그대로
++        #  — 금지 모양 여섯 (Physics 이름 · * · 모듈째 · 동적 import 상수/비상수) 을 잡는지는 ㉑ 의 변이 검사가 본다.
++        _pcn, _pcb = _plastic_coverage_uses(src)
++        chk(f'⑬ DESC-03: plastic_coverage 에서는 순수 기하 `_intersection_disc_area` 만 (소스 전체 AST · 위반 {_pcb})',
++            _pcn <= PLASTIC_COVERAGE_ALLOWED and not _pcb)
+ 
+         # ── ⑭ LHS-10 (2026-09-24): 분모 바닥 = 벽 z = 0 (웹앱 `V_box = L²·plate_z`) — 덤프 상자 바닥이 아니다 ──
+         rows14 = [(1, 2.0, 2.0, 1.0, 0.5, 1), (2, 5.0, 5.0, 2.0, 0.5, 2), (3, 8.0, 3.0, 3.0, 0.5, 3)]
+@@ -1794,11 +1962,91 @@ def selftest():
+         _NEW_KEYS = ('coverage_AM_P_wallexcl_pct', 'coverage_AM_S_wallexcl_pct', 'coverage_AM_total_wallexcl_pct',
+                      'coverage_AM_only_wallexcl_pct', 'coverage_AM_P_wallexcl_status', 'coverage_AM_S_wallexcl_status',
+                      'coverage_AM_total_wallexcl_status', 'coverage_AM_only_wallexcl_status', 'coverage_wallexcl_detail',
+-                     'coverage_wall_split')
++                     'coverage_wall_split', 'contact_area_check')
+         chk('⑳ item 1: 새 키는 정해진 이름으로 옛 키 **뒤에만** 붙는다 (status · handover_qc 는 늘지 않는다 — WSL [2] 옛 수확 대조)',
+             all(tuple(res.keys())[len(_OLD_KEYS):] == _NEW_KEYS for res in (r4, r20, r20c))
+             and set(r20['status']) == set(r4['status']) and set(r20['handover_qc']) == set(r4['handover_qc']))
+ 
++        # ── ㉑ item 2 (09-29 · 1저자 "권고대로") — 접촉 면적 대조 (진단 기록 · 거부 없음) · 반례 먼저 ──
++        #  ★ 반례: AM_S–SE 행 하나의 덤프 면적이 정확한 교차 원판보다 1 % 크다 (나머지 두 행은 6 유효숫자 반올림만).  옛 코드는
++        #    c_cpl[22] 를 확인 없이 피복률 분자로 썼고 **대조 기록이 없었다**.
++        _cac = globals().get('contact_area_check')
++        _car = globals().get('_contact_area_rows')
++        _ida = globals().get('_intersection_disc_area')
++        _hu = globals().get('_half_unit')
++        _nbs = globals().get('_n_beyond_sig')
++        _pcu = globals().get('_plastic_coverage_uses')
++
++        def _g6(x):
++            return float(f'{x:.6g}')
++        _hd21 = [COL_D1, COL_D2, COL_PERIODIC, COL_AREA, COL_DELTA]
++        _rows21 = [(1, 2.0, 2.0, 5.0, 1.0, 1), (2, 5.0, 5.0, 5.0, 0.8, 2),
++                   (90, 3.0, 2.0, 5.0, 0.5, 3), (91, 6.0, 5.0, 5.0, 0.5, 3), (92, 8.0, 8.0, 5.0, 0.5, 3)]
++        if _ida is not None:
++            _con21 = [(1, 90, 0, _g6(_ida(1.0, 0.5, 0.05)), 0.05),                 # AM_P–SE · 플래그 0 · 반올림만
++                      (90, 92, 1, _g6(_ida(0.5, 0.5, 0.02)), 0.02),                # SE–SE · 플래그 1 · 반올림만
++                      (2, 91, 1, _g6(1.01 * _ida(0.8, 0.5, 0.03)), 0.03)]          # AM_S–SE · 플래그 1 · ★ 1 % 틀림
++        else:
++            _con21 = [(1, 90, 0, 0.1, 0.05), (90, 92, 1, 0.1, 0.02), (2, 91, 1, 0.1, 0.03)]
++        _a21 = _atom_file(tmp, _rows21, name='atom_2100.liggghts', ts=2100)
++        _c21 = _contact_file(tmp, _con21, name='contact_2100.liggghts', ts=2100, headers=_hd21)
++        r21 = harvest(_a21, _c21, 3, 'areacheck', mesh_path=_stl(tmp))
++        _ac21 = r21.get('contact_area_check') or {}
++        _bf21 = _ac21.get('by_periodic_flag') or {}
++        _bk21 = _ac21.get('by_pair_kind') or {}
++        chk('㉑ item 2 ★반례: 1 % 틀린 행 하나가 허용폭 밖으로 세어진다 — 전체 1 · 플래그 1 에서 1 · 플래그 0 에서 0 (status OK · 비교 3 행)',
++            _ac21.get('status') == STATUS_OK and _ac21.get('n_compared') == 3
++            and (_ac21.get('all') or {}).get('n_beyond_tol') == 1
++            and (_bf21.get('1') or {}).get('n_beyond_tol') == 1 and (_bf21.get('1') or {}).get('n_rows') == 2
++            and (_bf21.get('0') or {}).get('n_beyond_tol') == 0 and (_bf21.get('0') or {}).get('n_rows') == 1)
++        chk('㉑ item 2: 쌍 종류로도 갈린다 — AM-SE 2 행 중 1 초과 (피복률 분자) · SE-SE 0 · 최대 상대차 = 0.01/1.01 (덤프 값 기준)',
++            (_bk21.get('AM-SE') or {}).get('n_rows') == 2 and (_bk21.get('AM-SE') or {}).get('n_beyond_tol') == 1
++            and (_bk21.get('SE-SE') or {}).get('n_beyond_tol') == 0
++            and abs(_nz((_ac21.get('all') or {}).get('rel_diff_max')) - 0.01 / 1.01) < 2e-5)
++        chk('㉑ item 2: 진단 기록일 뿐 — 거부하지 않고 피복률은 덤프 면적 그대로 (AM_S = 100 · A22 / 4π·0.8²)',
++            abs(r21['coverage_AM_S_hertz_pct'] - 100.0 * _con21[2][3] / (4.0 * np.pi * 0.8 ** 2)) < 1e-9)
++        chk('㉑ item 2: 교차 원판은 plastic_coverage 의 함수 그대로 (다시 짜지 않았다 — 규율 ①)',
++            _ida is not None and getattr(_ida, '__module__', '') == 'plastic_coverage')
++        chk('㉑ item 2: δ 열이 없는 덤프는 대조하지 않고 NO_DELTA_COLUMN 으로 적는다 (거부 없음)',
++            (r20.get('contact_area_check') or {}).get('status') == 'NO_DELTA_COLUMN')
++        #  허용폭 — 6 유효숫자 `%g` 토큰의 반올림만 있는 합성 3000 행 (반지름 0.4–6 µm · δ/r 1e-7–0.3) 은 **0 행 초과** 여야 하고,
++        #  폭이 헐거우면 안 된다 (상대 폭 중앙 < 1e-5 · 최대 < 2e-5 · 3e-5 상대 오차 · Hertz 면적은 전부 초과)
++        if _car is not None and _ida is not None:
++            _rng21 = np.random.default_rng(21)
++            _n21 = 3000
++            _r1 = _rng21.uniform(0.0004, 0.006, _n21)
++            _r2 = _rng21.uniform(0.0004, 0.006, _n21)
++            _dd = 10.0 ** _rng21.uniform(-7.0, np.log10(0.3), _n21) * np.minimum(_r1, _r2)
++            _At = np.asarray([_ida(a, b, d) for a, b, d in zip(_r1.tolist(), _r2.tolist(), _dd.tolist())])
++            _R1, _R2 = np.asarray([_g6(x) for x in _r1]), np.asarray([_g6(x) for x in _r2])
++            _D, _Ad = np.asarray([_g6(x) for x in _dd]), np.asarray([_g6(x) for x in _At])
++            _ac, _df, _bd = _car(_R1, _R2, _D, _Ad)
++            _, _df3, _bd3 = _car(_R1, _R2, _D, _Ad * (1.0 + 3e-5))
++            _Rs = _R1 * _R2 / (_R1 + _R2)
++            _, _dfh, _bdh = _car(_R1, _R2, _D, np.asarray([_g6(x) for x in np.pi * _Rs * _D]))
++            _tr = _bd / _Ad
++            chk(f'㉑ item 2: 허용폭 — 반올림만 있는 합성 3000 행 초과 {int((_df > _bd).sum())} (0 이어야) · 최악 차/폭 {float((_df / _bd).max()):.3f}',
++                int((_df > _bd).sum()) == 0)
++            chk(f'㉑ item 2: 허용폭은 헐겁지 않다 — 상대 폭 중앙 {float(np.median(_tr)):.2e} < 1e-5 · 최대 {float(_tr.max()):.2e} < 2e-5',
++                float(np.median(_tr)) < 1e-5 and float(_tr.max()) < 2e-5)
++            chk('㉑ item 2: 판별력 — 면적 3e-5 상대 오차 · Hertz 면적 (π R* δ) 은 3000 행 전부 초과',
++                int((_df3 > _bd3).sum()) == _n21 and int((_dfh > _bdh).sum()) == _n21)
++        else:
++            chk('㉑ item 2: 허용폭 함수 `_contact_area_rows` 가 있다', False)
++        chk('㉑ item 2: 반폭 = 0.5·10^(E−5) (%g 끝 0 을 지워도 형식 정밀도 6 으로 — 0.005 → 5e-9 · 0 → 0)',
++            _hu is not None and np.allclose(_hu(np.array([0.005, 0.0304637, 3.34479e-06, 0.0, 1000.0, 0.001, 9.99999e-3])),
++                                            [5e-9, 5e-8, 5e-12, 0.0, 5e-3, 5e-9, 5e-9], rtol=1e-12, atol=0.0))
++        chk('㉑ item 2: 6 유효숫자 전제 점검 — 7 유효숫자 값 (0.1234567) 하나를 센다',
++            _nbs is not None and _nbs(np.array([0.1234567, 0.123457, 3.34479e-06, np.nan])) == 1)
++        #  ⑬ 가드 변이 — Physics 이름 · * · 모듈째 · 동적 import (상수 · 비상수) 여섯 모양을 전부 잡고, 허용 이름 하나는 통과시킨다
++        _bad_src = ('from plastic_coverage import film_area_from_overlap\n', 'from plastic_coverage import *\n',
++                    'import plastic_coverage as P\nP.film_area_from_overlap(1.0, 1.0, 1.0)\n',
++                    'import importlib\nimportlib.import_module("plastic_coverage")\n', '__import__("plastic_coverage")\n',
++                    'import importlib\nm = "x"\nimportlib.import_module(m)\n')
++        chk('㉑ item 2: ⑬ 가드 변이 — 금지 모양 여섯을 전부 위반으로 잡는다 · 허용 이름 하나만 가져오는 소스는 통과',
++            _pcu is not None and all(bool(_pcu(s)[1]) for s in _bad_src)
++            and not _pcu('from plastic_coverage import _intersection_disc_area\n')[1])
++
+     print()
+     if _FAILS:
+         print(f'✗ {len(_FAILS)} 건 실패')
+-- 
+2.43.0
+

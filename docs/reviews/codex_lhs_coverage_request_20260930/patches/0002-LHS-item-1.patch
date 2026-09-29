@@ -1,0 +1,352 @@
+From 6201d86d2934731ace8c163fb4a724148071f04d Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Tue, 29 Sep 2026 15:36:18 +0000
+Subject: [PATCH 2/7] =?UTF-8?q?LHS=20=EC=88=98=ED=99=95=EA=B8=B0=20item=20?=
+ =?UTF-8?q?1=20=E2=80=94=20=EB=B2=BD=20=EB=B6=84=ED=95=A0=20=C2=B7=20?=
+ =?UTF-8?q?=EB=B2=BD=20=EC=A0=9C=EC=99=B8=20=ED=94=BC=EB=B3=B5=EB=A5=A0=20?=
+ =?UTF-8?q?(=EC=83=88=20=ED=82=A4=EB=A7=8C=20=C2=B7=20=EC=98=9B=20?=
+ =?UTF-8?q?=ED=82=A4=20=EB=B0=94=EC=9D=B4=ED=8A=B8=20=EA=B7=B8=EB=8C=80?=
+ =?UTF-8?q?=EB=A1=9C)=20(=EB=B0=98=EB=A1=80=20=EB=A8=BC=EC=A0=80)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- 반례 (selftest ⑳ · 옛 코드에서 12 건 실패 = 108/120): AM_S 두 알 (r 1) 이 같은 AM–SE 면적 π — 하나는 안쪽,
+  하나는 중심이 바닥 z = 0 위.  오늘 식은 둘 다 25 % (바닥 밑 반구 2πr² 도 '덮이지 않은 자유 표면') 인데, 어느 입자가
+  벽에 닿았는지 가르는 기록이 없어 벽 몫의 크기를 잴 수 없었다.  고친 뒤: 분할 touch 1 · interior 1 (오늘 식 둘 다
+  25 %) · 벽 제외 touch 50 % · interior 25 % · AM_S 37.5 %.
+- 새 키 (옛 키 뒤에만 붙는다 · status · handover_qc 는 늘지 않는다 — WSL run_lhs_fill [2] 옛 수확 대조가 그대로 선다):
+  coverage_AM_{P,S,total,only}_wallexcl_pct · 같은 이름의 _status · coverage_wallexcl_detail · coverage_wall_split
+  (상 AM_P · AM_S · AM · total × 벽 any · floor · plate × 등급 interior · touch · center_out · fully_out ×
+  n · n_valid · mean_pct · n_valid_wallexcl · mean_wallexcl_pct · blocked_frac_mean).
+- 벽 제외 분모 = 4πr² − ΣA22(AM–AM) − Σ_벽 2πr·clip(r − dist, 0, 2r) (벽 밖 구면 cap 넓이) · 분모 ≤ 0 은 제외하고 셈 ·
+  전체 = 유효 입자수 가중 (오늘 식과 같은 규칙).  등급 · cap 높이는 item 4 의 `_wall_contact` 하나.
+- 구현: `coverage_hertz` 의 접촉 합 루프 · 요약을 `_coverage_sums` · `_coverage_from_sums` 로 옮겨 (루프 본문 그대로)
+  오늘 식과 벽 제외가 같은 합 · 같은 요약 규칙을 쓴다.  무작위 50 침대에서 옮기기 전 `coverage_hertz` 와 dict 가 같다 (scratch).
+- ★ 옛 키 바이트 그대로 (selftest ⑳ 에 상주): 변경 전 코드 (e72067854) 에서 이 selftest 의 픽스처를 그대로 돌려 잰 황금 해시
+  — 수확 픽스처 8 × 옛 38 키 (item 4 가 일부러 바꾼 wall_touch · wall_touch_rule 은 item 4 뒤 값으로 따로) ·
+  volumes_and_phi 4 · scan_contact_dump 3 — 전부 일치 · 옛 38 키가 같은 순서로 맨 앞.
+- 근사 (독스트링에 적음): 분모에서 빼는 AM–AM 원판과 cap 곡면이 겹칠 수 있고 분자 원판이 cap 안일 수 있다 (교차 계산
+  없음).  바닥 (SE 물성 평면 = 분리막 proxy · LHS-14) 과 플래튼 (SUS · AM 물성) 은 가린 면의 뜻이 달라 분할을 따로 낸다 —
+  벽 제외 값은 바닥이 가린 면을 분자 · 분모 모두에서 뺀 값 (= 전극 안 SE 입자가 덮은 몫) 이다.
+- selftest 120/120 · 수확기를 가져다 쓰는 selftest 11 개 통과 · CLI 산출 JSON strict 파싱 통과.
+  관문 (check_all.sh 단계 파싱 실행) 69/70 · 실패 0 — bash 로 도는 mixer launcher 1 단계는 워크트리 격리 가드로 미실행.
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft
+(cherry picked from commit a2b0b5369a306225c4ce486f3b47e092c2fb611f)
+---
+ scripts/lhs_descriptor_harvest.py | 247 +++++++++++++++++++++++++++++-
+ 1 file changed, 243 insertions(+), 4 deletions(-)
+
+diff --git a/scripts/lhs_descriptor_harvest.py b/scripts/lhs_descriptor_harvest.py
+index 572c98c5c..a22e2183c 100755
+--- a/scripts/lhs_descriptor_harvest.py
++++ b/scripts/lhs_descriptor_harvest.py
+@@ -541,15 +541,30 @@ def volumes_and_phi(atoms, labels, box_lo, box_hi, plate_z):
+                 closure_residual=phi_se + phi_am + eps / 100.0 - 1.0)
+ 
+ 
+-def coverage_hertz(ids, labels, radius, c1, c2, carea):
+-    """계약① — Hertz 피복률.  단위는 면적/면적이라 **scale 에 불변**이다."""
++#: item 1 (09-29 · 1저자 "권고대로") — 벽이 가린 AM 표면을 분모에서 뺀 피복률 (**새 키만** · 오늘 식 `coverage_*_hertz_pct` 는 그대로).
++WALLEXCL_FORMULA = ('c_i = min(100, 100 · ΣA22(AM–SE) / (4πr² − ΣA22(AM–AM) − Σ_{바닥, 플래튼} 2πr·clip(r − dist, 0, 2r))) · '
++                    'dist = 중심–면 부호 거리 (상자 안 +) · 벽이 가린 표면 = 벽 밖 구면 cap 넓이 2πrh (h = cap 높이) · '
++                    '분모 ≤ 0 → 제외하고 셈 · 상 = 유효 입자 평균 · 전체 = 유효 입자수 가중 (오늘 식과 같은 규칙)')
++#: item 1 — 벽 분할 등급 (한 벽 기준 · `_wall_contact`): interior = 안 닿음 · touch = 닿음 (중심은 안) · center_out = 중심이 벽 밖
++#:   (구는 걸침) · fully_out = 통째로 벽 밖.  'any' = 두 벽 중 더 심한 쪽 (interior = 어느 벽에도 안 닿음).
++WALL_CLASSES = ('interior', 'touch', 'center_out', 'fully_out')
++
++
++def _coverage_sums(ids, labels, radius, c1, c2, carea):
++    """피복률의 접촉 합 — (free = 4πr² − Σ(AM–AM 면적), am_se = Σ(AM–SE 면적), 건너뛴 고아 행 수 (한쪽 id 가 원자 프레임에 없다)).
++
++    item 1 — `coverage_hertz` (오늘 식) 와 `coverage_wall` (벽 분할 · 벽 제외) 이 **이 루프 하나**를 쓴다 (행 순서 · 합 순서가
++    같아 부동소수 값까지 같다).  루프 본문은 옛 `coverage_hertz` 그대로 옮겼다.
++    """
+     pos = {int(a): k for k, a in enumerate(ids)}
+     n = len(ids)
+     free = 4.0 * np.pi * radius ** 2
+     am_se = np.zeros(n)
++    n_orphan = 0
+     for a, b, ar in zip(c1, c2, carea):
+         ka, kb = pos.get(int(a)), pos.get(int(b))
+         if ka is None or kb is None:
++            n_orphan += 1
+             continue
+         la, lb = labels[ka], labels[kb]
+         a_am, b_am = la in AM_LABELS, lb in AM_LABELS
+@@ -560,7 +575,22 @@ def coverage_hertz(ids, labels, radius, c1, c2, carea):
+             am_se[ka] += ar
+         elif b_am and la == 'SE':
+             am_se[kb] += ar
++    return free, am_se, n_orphan
++
++
++def coverage_hertz(ids, labels, radius, c1, c2, carea):
++    """계약① — Hertz 피복률.  단위는 면적/면적이라 **scale 에 불변**이다.
+ 
++    (item 1 — 합은 `_coverage_sums`, 요약은 `_coverage_from_sums` 로 나눴다: 벽 분할이 같은 합 · 같은 요약 규칙을 쓰게.
++     값은 그대로 — selftest ⑳ 의 변경 전 황금 해시.)
++    """
++    free, am_se, _n_orphan = _coverage_sums(ids, labels, radius, c1, c2, carea)
++    return _coverage_from_sums(labels, am_se, free)[0]
++
++
++def _coverage_from_sums(labels, am_se, free):
++    """입자별 c_i → 상 평균 · 전체 — 옛 `coverage_hertz` 의 요약 규칙 그대로.  (요약 dict, 입자별 c_i (AM 아님 · 분모 ≤ 0 → NaN))."""
++    n = len(labels)
+     out, n_cap, n_bad = {}, 0, 0
+     per = np.full(n, np.nan)
+     for k in range(n):
+@@ -597,7 +627,69 @@ def coverage_hertz(ids, labels, radius, c1, c2, carea):
+             den += w
+     total = (float(num / den), STATUS_OK) if den > 0 else (None, 'FREE_SURFACE_INVALID')
+     return dict(per_phase=out, total=total, counts=counts,
+-                n_capped=n_cap, n_free_surface_invalid=n_bad)
++                n_capped=n_cap, n_free_surface_invalid=n_bad), per
++
++
++def coverage_wall(ids, labels, radius, z, c1, c2, carea, plate_z, z_floor=Z_FLOOR):
++    """item 1 (09-29 · 1저자 "권고대로") — ① **벽 분할**: AM 입자를 바닥 · 플래튼 기준 `WALL_CLASSES` 로 가르고 등급마다 수 ·
++    오늘 식 평균 · 벽 제외 평균 · 가린 면 비율 ② **벽 제외 피복률**: 분모에서 벽이 가린 구면 cap 2πrh 도 뺀다 (`WALLEXCL_FORMULA`).
++    등급 · h 는 `_wall_contact` (item 4 의 규칙 하나 — `wall_record` · `wall_touch` 와 같은 함수).
++
++    ★ 왜: 오늘 식 분모 4πr² − ΣA(AM–AM) 는 바닥 (z = 0) 밑 · 플래튼 위로 나간 AM 표면도 '덮이지 않은 자유 표면' 으로 센다.  벽 접촉은
++      덤프 (pair/gran/local) 에 없어서 그 몫의 크기가 재어진 적이 없다 — 분할이 그 크기 (벽 등급별 평균 차) 를 잰다.
++    ⚠ 근사 (오늘 식과 같은 층위 · 교차는 계산하지 않는다): 분모에서 빼는 AM–AM 원판과 cap 곡면이 겹칠 수 있다 (벽 밖에서 난 AM–AM
++      접촉이면 두 번 뺀다) · 분자 AM–SE 원판이 cap 안에 있을 수 있다 (벽 밖에 매달린 SE — HND-03).
++    ⚠ 두 벽은 뜻이 다르다 (`LHS-14`): 플래튼 = SUS 플런저 (AM 물성) — 가린 면은 SE 가 못 닿는 면이다.  바닥 = SE 물성 평면 = 분리막 SE
++      의 proxy — 바닥이 가린 면은 표현하려는 전지에서는 '분리막 SE 에 눌린 면' 이다.  이 열은 그 면을 분자 · 분모 **모두에서 뺀** 값
++      (= 전극 안 SE 입자가 덮은 몫) 이고, 그 면을 덮인 것으로 세는 읽기는 내지 않는다 (벽 접촉 면적이 덤프에 없고 h 는 연화된 바닥
++      강성이 정한다).  그래서 분할은 바닥 · 플래튼을 **따로** 낸다.
++    반환: dict(wallexcl = `_coverage_from_sums` 요약 (분모 = 벽 제외), split = 벽 분할 (JSON 용), n_orphan_rows).
++    """
++    radius = np.asarray(radius, dtype=np.float64)
++    free, am_se, n_orphan = _coverage_sums(ids, labels, radius, c1, c2, carea)
++    _today, per0 = _coverage_from_sums(labels, am_se, free)                  # 오늘 식 입자값 (coverage_hertz 와 같은 값)
++    d_f, d_p = _wall_dists(np.asarray(z, dtype=np.float64), float(plate_z), z_floor)
++    cf, cp = _wall_contact(radius, d_f), _wall_contact(radius, d_p)
++    s_f, s_p = 2.0 * np.pi * radius * cf[4], 2.0 * np.pi * radius * cp[4]  # 벽이 가린 구면 cap 넓이 2πrh
++    wx, perw = _coverage_from_sums(labels, am_se, free - s_f - s_p)
++    sphere = 4.0 * np.pi * radius ** 2
++
++    def _sev(c):                                                             # 0 interior · 1 touch · 2 center_out · 3 fully_out
++        return np.where(c[3], 3, np.where(c[2], 2, np.where(c[1], 1, 0)))
++
++    sev_f, sev_p = _sev(cf), _sev(cp)
++    sev_any = np.maximum(sev_f, sev_p)
++    labs = np.asarray([str(q) for q in labels], dtype=object)
++    groups = {ph: labs == ph for ph in ('AM_P', 'AM_S', 'AM') if bool((labs == ph).any())}   # 없는 상 = 키 없음 (N/A)
++    is_am = np.asarray([q in AM_LABELS for q in labs], dtype=bool)
++    if is_am.any():
++        groups['total'] = is_am                                              # 전 AM = 상 평균의 유효 입자수 가중과 같다
++    by_phase = {}
++    for ph, m in groups.items():
++        by_phase[ph] = {}
++        for wall, sev, blk in (('any', sev_any, s_f + s_p), ('floor', sev_f, s_f), ('plate', sev_p, s_p)):
++            row = {}
++            for ci, cname in enumerate(WALL_CLASSES):
++                sel = m & (sev == ci)
++                v0, v1 = per0[sel], perw[sel]
++                v0, v1 = v0[~np.isnan(v0)], v1[~np.isnan(v1)]
++                row[cname] = dict(n=int(sel.sum()), n_valid=int(v0.size),
++                                  mean_pct=(float(v0.mean()) if v0.size else None),
++                                  n_valid_wallexcl=int(v1.size),
++                                  mean_wallexcl_pct=(float(v1.mean()) if v1.size else None),
++                                  blocked_frac_mean=(float((blk[sel] / sphere[sel]).mean()) if sel.any() else None))
++            by_phase[ph][wall] = row
++    split = dict(
++        rule=WALL_TOUCH_RULE, classes=list(WALL_CLASSES),
++        class_rule=('벽마다 dist = 중심–면 부호 거리 (안 +): fully_out = dist < −r · center_out = −r ≤ dist < 0 · '
++                    'touch = dist ≥ 0 이고 r − dist > 0 · interior = r − dist ≤ 0 (접선 포함) · any = 바닥 · 플래튼 중 심한 쪽'),
++        fields=('n = 입자 수 · n_valid / mean_pct = 오늘 식 (분모 4πr² − ΣA(AM–AM)) 의 유효 입자 수 · 평균 · '
++                'n_valid_wallexcl / mean_wallexcl_pct = 벽 제외 (두 벽 cap 을 다 뺀 입자값 — floor · plate 분할도 같은 입자값을 묶는다) · '
++                'blocked_frac_mean = 그 분할의 벽이 가린 면 / 4πr² 평균'),
++        walls=dict(floor='SE 물성 평면 = 분리막 SE proxy (LHS-14) — 가린 면은 표현 전지에서 분리막에 눌린 면',
++                   plate='SUS 플런저 (AM 물성 메시) — 가린 면은 SE 가 못 닿는 면'),
++        z_floor_sim=float(z_floor), plate_z_sim=float(plate_z), by_phase=by_phase)
++    return dict(wallexcl=wx, split=split, n_orphan_rows=n_orphan)
+ 
+ 
+ def _mi_dist(p, q, lx, ly):
+@@ -823,6 +915,8 @@ def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None
+     contact_scan = scan_contact_dump(contact_path)
+     n_atom_frames = count_blocks(atom_path, 'ITEM: TIMESTEP')
+     cov = coverage_hertz(ids, labels, atoms['radius'], c1, c2, carea)
++    #  item 1 — 벽 분할 · 벽 제외 피복률 (새 키만) · 같은 접촉 합 · 같은 벽 규칙 (`_wall_contact`)
++    covw = coverage_wall(ids, labels, atoms['radius'], atoms['z'], c1, c2, carea, plate_z)
+     #  plate_z 는 **진단 전용**으로만 넘긴다 (LHS-08) — 보고 τ 의 규약은 안 바뀐다.
+     tau = tortuosity_se(atoms, labels, box_lo, box_hi, n_pairs=n_pairs,
+                         plate_z=plate_z)
+@@ -845,6 +939,15 @@ def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None
+         cp, sp = None, STATUS_ABSENT
+         cs, ss = None, STATUS_ABSENT
+         ct, st = (ca, sa)
++    wx = covw['wallexcl']                  # item 1 — 벽 제외 피복률 (위와 같은 상 규칙)
++    xp, xps = wx['per_phase']['AM_P']
++    xs, xss = wx['per_phase']['AM_S']
++    xa, xas = wx['per_phase']['AM']
++    xt, xts = wx['total']
++    if n_types == 2:
++        xp, xps = None, STATUS_ABSENT
++        xs, xss = None, STATUS_ABSENT
++        xt, xts = (xa, xas)
+ 
+     wr, bd = phi['wall_record'], phi['boundary']
+     fl, pl, pb, cl = wr['floor'], wr['plate'], wr['pushback'], wr['clipped']
+@@ -918,7 +1021,17 @@ def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None
+         V_box_sim=phi['V_box_sim'], raw=raw, area_channel=AREA_CHANNEL,
+         wall_touch=wall_touch, wall_touch_rule=WALL_TOUCH_RULE,
+         contact_scan=contact_scan, n_atom_frames=int(n_atom_frames),
+-        contract='codex_verdict_lhs_descriptors_20260913 §7 (1~6)')
++        contract='codex_verdict_lhs_descriptors_20260913 §7 (1~6)',
++        #  ── item 1 (09-29 · 1저자 "권고대로") — **새 키만** (옛 키 · status · handover_qc 는 그대로: WSL [2] 옛 수확 대조가 선다) ──
++        #  벽 제외 피복률 = 분모에서 벽이 가린 구면 cap 2πrh 도 뺀 값 (`WALLEXCL_FORMULA`) · 상 규칙 · 상태 코드는 오늘 식과 같다
++        coverage_AM_P_wallexcl_pct=xp, coverage_AM_S_wallexcl_pct=xs,
++        coverage_AM_total_wallexcl_pct=xt, coverage_AM_only_wallexcl_pct=xa,
++        coverage_AM_P_wallexcl_status=xps, coverage_AM_S_wallexcl_status=xss,
++        coverage_AM_total_wallexcl_status=xts, coverage_AM_only_wallexcl_status=xas,
++        coverage_wallexcl_detail=dict(n_capped=wx['n_capped'], n_free_surface_invalid=wx['n_free_surface_invalid'],
++                                      counts=wx['counts'], formula=WALLEXCL_FORMULA, wall_rule=WALL_TOUCH_RULE),
++        #  벽 분할 = 상 (AM_P · AM_S · AM · total) × 벽 (any · floor · plate) × 등급 (interior · touch · center_out · fully_out)
++        coverage_wall_split=covw['split'])
+ 
+ 
+ def _atom_ids(path):
+@@ -1560,6 +1673,132 @@ def selftest():
+         chk('⑲ item 4: 규칙 문자열이 접선 = 안 닿음을 적는다 (옛 `<=` · `>=` 문자열이 아니다)',
+             'tangent' in WALL_TOUCH_RULE and '<=' not in WALL_TOUCH_RULE and '>=' not in WALL_TOUCH_RULE)
+ 
++        # ── ⑳ item 1 (09-29 · 1저자 "권고대로") — 벽 분할 · 벽 제외 피복률 (새 키만 · 옛 키 바이트 그대로) · 반례 먼저 ──
++        def _nz(x):
++            return float('nan') if x is None else x
++        #  ★ 반례: 두 AM_S (r 1) 가 같은 AM–SE 면적 π (= 4πr² 의 25 %) — 하나는 안쪽 (z 5), 하나는 중심이 바닥 z = 0 위.
++        #    오늘 식은 둘 다 25 % (바닥 밑 반구 2πr² 도 '덮이지 않은 자유 표면' 으로 센다) — 벽 분할은 touch 1 ·
++        #    벽 제외는 π / (4π − 2π) = 50 % · AM_S 37.5 %.
++        _rows20 = [(1, 2.0, 2.0, 0.0, 1.0, 2), (2, 5.0, 5.0, 5.0, 1.0, 2),
++                   (90, 2.0, 5.0, 2.0, 0.5, 3), (91, 7.0, 5.0, 5.0, 0.5, 3)]
++        _a20 = _atom_file(tmp, _rows20, name='atom_2000.liggghts', ts=2000)
++        _c20 = _contact_file(tmp, [(1, 90, np.pi), (2, 91, np.pi)], name='contact_2000.liggghts', ts=2000)
++        r20 = harvest(_a20, _c20, 3, 'wallsplit', mesh_path=_stl(tmp))
++        _any20 = (((r20.get('coverage_wall_split') or {}).get('by_phase') or {}).get('AM_S') or {}).get('any') or {}
++        _in20, _to20 = _any20.get('interior') or {}, _any20.get('touch') or {}
++        chk('⑳ item 1: 오늘 식은 그대로 — 두 입자 다 25 % → AM_S 25 % (분모가 바닥 밑 반구도 센다)',
++            abs(r20['coverage_AM_S_hertz_pct'] - 25.0) < 1e-12)
++        chk('⑳ item 1 ★반례: 벽 분할 — touch 1 (오늘 식 25 %) · interior 1 (25 %) · center_out · fully_out 0',
++            _to20.get('n') == 1 and _in20.get('n') == 1 and abs(_nz(_to20.get('mean_pct')) - 25.0) < 1e-12
++            and abs(_nz(_in20.get('mean_pct')) - 25.0) < 1e-12
++            and (_any20.get('center_out') or {}).get('n') == 0 and (_any20.get('fully_out') or {}).get('n') == 0)
++        chk('⑳ item 1 ★반례: 벽 제외 — touch 입자 50 % · interior 25 % · AM_S 37.5 % · 전체 37.5 % (status OK)',
++            abs(_nz(_to20.get('mean_wallexcl_pct')) - 50.0) < 1e-9 and abs(_nz(_in20.get('mean_wallexcl_pct')) - 25.0) < 1e-9
++            and abs(_nz(r20.get('coverage_AM_S_wallexcl_pct')) - 37.5) < 1e-9
++            and abs(_nz(r20.get('coverage_AM_total_wallexcl_pct')) - 37.5) < 1e-9
++            and r20.get('coverage_AM_S_wallexcl_status') == STATUS_OK
++            and r20.get('coverage_AM_total_wallexcl_status') == STATUS_OK)
++        chk('⑳ item 1: 가린 면 비율 — touch 0.5 (반구) · interior 0',
++            abs(_nz(_to20.get('blocked_frac_mean')) - 0.5) < 1e-12 and _in20.get('blocked_frac_mean') == 0.0)
++        #  등급 넷 · 플래튼 · 무효 — AM_P 넷 (r 1): 안쪽 (z 5) · 플래튼 cap (z 19.5 → h 0.5 → 가린 면 π) · 중심 밖 (z −0.5 → h 1.5 → 3π) ·
++        #  통째로 밖 (z −1.5 → h 2 → 4π = 온 구면).  AM–SE 면적 π · π · π/2 · π/10.
++        _rows20b = [(1, 2.0, 2.0, 5.0, 1.0, 1), (2, 5.0, 5.0, 19.5, 1.0, 1), (3, 8.0, 2.0, -0.5, 1.0, 1),
++                    (4, 8.0, 8.0, -1.5, 1.0, 1), (90, 1.0, 5.0, 5.0, 0.5, 3)]
++        _c20b = _contact_file(tmp, [(1, 90, np.pi), (2, 90, np.pi), (3, 90, 0.5 * np.pi), (4, 90, 0.1 * np.pi)],
++                              name='contact_2001.liggghts', ts=2001)
++        r20b = harvest(_atom_file(tmp, _rows20b, name='atom_2001.liggghts', ts=2001), _c20b, 3, 'wallsplit4',
++                       mesh_path=_stl(tmp))
++        _sp20 = ((r20b.get('coverage_wall_split') or {}).get('by_phase') or {}).get('AM_P') or {}
++        _wa, _wf, _wp = _sp20.get('any') or {}, _sp20.get('floor') or {}, _sp20.get('plate') or {}
++        _CL = ('interior', 'touch', 'center_out', 'fully_out')
++        chk('⑳ item 1: 등급 넷 (any = 두 벽 중 심한 쪽) — interior · touch (플래튼) · center_out · fully_out 각 1',
++            [(_wa.get(c) or {}).get('n') for c in _CL] == [1, 1, 1, 1])
++        chk('⑳ item 1: 벽별 — 바닥 interior 2 · center_out 1 · fully_out 1 / 플래튼 interior 3 · touch 1',
++            [(_wf.get(c) or {}).get('n') for c in _CL] == [2, 0, 1, 1]
++            and [(_wp.get(c) or {}).get('n') for c in _CL] == [3, 1, 0, 0])
++        chk('⑳ item 1: 벽 제외 입자값 — 플래튼 cap 33.3 % (π/3π) · 중심 밖 50 % (0.5π/π) · 통째로 밖은 분모 0 → 제외하고 셈',
++            abs(_nz((_wa.get('touch') or {}).get('mean_wallexcl_pct')) - 100.0 / 3.0) < 1e-9
++            and abs(_nz((_wa.get('center_out') or {}).get('mean_wallexcl_pct')) - 50.0) < 1e-9
++            and (_wa.get('fully_out') or {}).get('n_valid_wallexcl') == 0 and (_wa.get('fully_out') or {}).get('n_valid') == 1
++            and (r20b.get('coverage_wallexcl_detail') or {}).get('n_free_surface_invalid') == 1)
++        chk('⑳ item 1: AM_P 벽 제외 = 유효 셋 평균 (25 + 33.3 + 50)/3 · 오늘 식 = 넷 평균 (25 + 25 + 12.5 + 2.5)/4 = 16.25 (그대로)',
++            abs(_nz(r20b.get('coverage_AM_P_wallexcl_pct')) - (25.0 + 100.0 / 3.0 + 50.0) / 3.0) < 1e-9
++            and abs(r20b['coverage_AM_P_hertz_pct'] - 16.25) < 1e-9)
++        chk('⑳ item 1: 가린 면 비율 — 플래튼 cap 0.25 · 중심 밖 0.75 · 통째로 밖 1.0',
++            abs(_nz((_wa.get('touch') or {}).get('blocked_frac_mean')) - 0.25) < 1e-12
++            and abs(_nz((_wa.get('center_out') or {}).get('blocked_frac_mean')) - 0.75) < 1e-12
++            and abs(_nz((_wa.get('fully_out') or {}).get('blocked_frac_mean')) - 1.0) < 1e-12)
++
++        def _reagg(row, n_key, m_key):
++            nv = sum((row.get(c) or {}).get(n_key) or 0 for c in _CL)
++            return (sum(((row.get(c) or {}).get(n_key) or 0) * ((row.get(c) or {}).get(m_key) or 0.0) for c in _CL) / nv
++                    if nv else None)
++        chk('⑳ item 1: 분할을 다시 모으면 상 평균 (오늘 식 · 벽 제외 — any · floor · plate 세 분할 모두)', all(
++            abs(_nz(_reagg(_sp20.get(w) or {}, 'n_valid', 'mean_pct')) - r20b['coverage_AM_P_hertz_pct']) < 1e-9
++            and abs(_nz(_reagg(_sp20.get(w) or {}, 'n_valid_wallexcl', 'mean_wallexcl_pct'))
++                    - _nz(r20b.get('coverage_AM_P_wallexcl_pct'))) < 1e-9
++            for w in ('any', 'floor', 'plate')))
++        #  AM–AM 면적 · 벽 cap 이 함께 빠진다 (함수 직접) — p1: 오늘 0.25π/(4π − 0.5π) · 벽 제외 0.25π/(4π − 0.5π − 2π)
++        _cw = globals().get('coverage_wall')
++        try:
++            _w20 = _cw(np.array([1, 2, 3]), np.asarray(['AM_S', 'AM_S', 'SE'], dtype=object), np.array([1.0, 1.0, 0.5]),
++                       np.array([0.0, 5.0, 5.0]), [1, 1], [2, 3], [0.5 * np.pi, 0.25 * np.pi], 20.0) if _cw else {}
++        except Exception as e:                                              # noqa: BLE001
++            _w20 = {'err': f'{type(e).__name__}: {e}'}
++        _t20 = ((_w20.get('split') or {}).get('by_phase') or {}).get('AM_S', {}).get('any', {}).get('touch') or {}
++        chk('⑳ item 1: AM–AM 면적과 벽 cap 이 분모에서 함께 빠진다 (오늘 0.25/3.5 · 벽 제외 0.25/1.5)',
++            abs(_nz(_t20.get('mean_pct')) - 100.0 * 0.25 / 3.5) < 1e-9
++            and abs(_nz(_t20.get('mean_wallexcl_pct')) - 100.0 * 0.25 / 1.5) < 1e-9)
++        #  2-type 침대 — AM 이 한 상 ('AM'): AM_P · AM_S 는 N/A, 전체 = AM (오늘 식과 같은 규칙)
++        _rows20c = [(1, 2.0, 2.0, 0.0, 1.0, 1), (2, 5.0, 5.0, 5.0, 1.0, 1), (90, 1.0, 5.0, 5.0, 0.5, 2)]
++        r20c = harvest(_atom_file(tmp, _rows20c, name='atom_2002.liggghts', ts=2002),
++                       _contact_file(tmp, [(1, 90, np.pi), (2, 90, np.pi)], name='contact_2002.liggghts', ts=2002),
++                       2, 'wallsplit2', mesh_path=_stl(tmp))
++        chk('⑳ item 1: 2-type — AM_P · AM_S 벽 제외 = N/A (N_A_PHASE_ABSENT) · AM = 전체 = 37.5 % · 분할 상은 AM · total',
++            r20c.get('coverage_AM_P_wallexcl_status') == STATUS_ABSENT and r20c.get('coverage_AM_P_wallexcl_pct') is None
++            and r20c.get('coverage_AM_S_wallexcl_status') == STATUS_ABSENT
++            and abs(_nz(r20c.get('coverage_AM_only_wallexcl_pct')) - 37.5) < 1e-9
++            and abs(_nz(r20c.get('coverage_AM_total_wallexcl_pct')) - 37.5) < 1e-9
++            and set(((r20c.get('coverage_wall_split') or {}).get('by_phase') or {}).keys()) == {'AM', 'total'})
++        #  ★ 옛 키 · 값 바이트 그대로 — 황금 해시는 **변경 전 코드** (item 1–4 전, `e72067854`) 에서 이 selftest 의 픽스처를 그대로
++        #    돌려 잰 값 (옛 키 JSON (sort_keys) 의 sha256 앞 16 자).  `wall_touch` · `wall_touch_rule` 은 item 4 가 **일부러** 바꾼
++        #    두 키라 따로 (item 4 뒤 값) 본다 — item 1–3 은 둘 다 건드리지 않는다.
++        def _gh(o):
++            return hashlib.sha256(json.dumps(o, ensure_ascii=False, sort_keys=True, default=str)
++                                  .encode('utf-8')).hexdigest()[:16]
++        _OLD_KEYS = ('case', 'timestep', 'n_types', 'type_map', 'phase_counts', 'boundary', 'plate_z_sim', 'plate_z_source',
++                     'phi_se', 'phi_am', 'porosity_sphere_pct_RECORD_ONLY', 'closure_residual', 'z_floor_sim', 'H_sim',
++                     'solid_bot_sim', 'solid_top_sim', 'deck_floor', 'wall_record', 'boundary_qc', 'handover_qc',
++                     'coverage_AM_P_hertz_pct', 'coverage_AM_S_hertz_pct', 'coverage_AM_total_hertz_pct',
++                     'coverage_AM_only_hertz_pct', 'tortuosity_dijkstra_SE', 'tortuosity_dijkstra_SE_wall', 'status',
++                     'tau_detail', 'tau_wall_detail', 'coverage_detail', 'V_box_sim', 'raw', 'area_channel', 'wall_touch',
++                     'wall_touch_rule', 'contact_scan', 'n_atom_frames', 'contract')
++        _TOUCH = ('wall_touch', 'wall_touch_rule')
++        _G_PRE = dict(desc01='aa9210f2032bed60', desc02a='ecd0413206a2a2f0', desc02b='58669b2a61312bac',
++                      cov='043c0150cdefb746', scale='9dc041bab9c6614c', absent='7c90d0dd315d5832',
++                      freebad='67fbc1e66a5f4cee', deck='1c153cc04d22e97a')
++        _G_TOUCH = dict(desc01='eb9da009240956c0', desc02a='fd14da7515fc2202', desc02b='a4f7da4a155afe5a',
++                        cov='f2fd1f9e1c492566', scale='f2fd1f9e1c492566', absent='012ff6777b9ea570',
++                        freebad='6cf2b1e6f8f1beea', deck='eb9da009240956c0')
++        _fx20 = dict(desc01=r, desc02a=r2, desc02b=r3, cov=r4, scale=r5, absent=r6, freebad=r7, deck=r14)
++        _gbad = [nm for nm, res in _fx20.items()
++                 if tuple(list(res.keys())[:len(_OLD_KEYS)]) != _OLD_KEYS
++                 or _gh({k: res[k] for k in _OLD_KEYS if k not in _TOUCH}) != _G_PRE[nm]
++                 or _gh({k: res.get(k) for k in _TOUCH}) != _G_TOUCH[nm]]
++        chk(f'⑳ item 1–3 ★옛 키 바이트 그대로: 수확 픽스처 8 — 옛 38 키가 같은 순서로 맨 앞 · 값 해시 = 변경 전 (어긋남 {_gbad})',
++            not _gbad)
++        chk('⑳ item 1–3: volumes_and_phi 픽스처 4 (벽 기록 포함) · scan_contact_dump 픽스처 3 해시 = 변경 전',
++            [_gh(v14), _gh(v14b), _gh(_wc), _gh(v14n)] == ['31438b087c2a236e', '4f0d8e0e2aa67f66', 'ed7aa1fccbadb9c8',
++                                                           '691f36dc3b5b6d1b']
++            and [_gh(_s18), _gh(_s18b), _gh(_s18c)] == ['0795432d89503b95', 'f61e50166dc92e49', 'dc71ae98e4af7ef3'])
++        _NEW_KEYS = ('coverage_AM_P_wallexcl_pct', 'coverage_AM_S_wallexcl_pct', 'coverage_AM_total_wallexcl_pct',
++                     'coverage_AM_only_wallexcl_pct', 'coverage_AM_P_wallexcl_status', 'coverage_AM_S_wallexcl_status',
++                     'coverage_AM_total_wallexcl_status', 'coverage_AM_only_wallexcl_status', 'coverage_wallexcl_detail',
++                     'coverage_wall_split')
++        chk('⑳ item 1: 새 키는 정해진 이름으로 옛 키 **뒤에만** 붙는다 (status · handover_qc 는 늘지 않는다 — WSL [2] 옛 수확 대조)',
++            all(tuple(res.keys())[len(_OLD_KEYS):] == _NEW_KEYS for res in (r4, r20, r20c))
++            and set(r20['status']) == set(r4['status']) and set(r20['handover_qc']) == set(r4['handover_qc']))
++
+     print()
+     if _FAILS:
+         print(f'✗ {len(_FAILS)} 건 실패')
+-- 
+2.43.0
+
