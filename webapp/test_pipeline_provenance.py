@@ -463,8 +463,20 @@ def main():
         #   같고** network · Stage E 는 돌지 않는다.  이 모드의 산출물은 피복 단계 **자체**라 계약이 전체 실행보다 엄하다:
         #   required + 내용 검증 (이번 피복 단계가 full_metrics.json 에 physics v2 판정을 썼는가).  옛 피복 스크립트는
         #   데이터 폴더가 코드 밖이면 "[skip]" 을 찍고 **rc 0 으로 아무것도 안 썼다** — 그것을 done 으로 받지 않는다.
+        def _healthy_cov_v2():
+            """실제 피복 스크립트 (`_PhysicsV2Book.keys`) 가 ok 침대에 쓰는 v2 키 집합을 **타입까지** 맞춘 건전한 레코드 (LHSC-03).
+            ★ fixture-drift 방지 — 가짜 producer 가 status 한 줄만 쓰면 검증기가 엄해질 때 거짓 실패한다 (RC5-01 · RC6-01 과 같은 교훈)."""
+            _d = {k: 1.0 for k in getattr(webapp, 'COVERAGE_V2_OK_KEYS', ())}
+            _d.update({k: {'x': 1} for k in _d if k.startswith(('cap_conflict_n_by', 'A_binding'))})
+            if _d:
+                _d['am_denominator_physics_v2'] = {'n_am': 2, 'n_free_surface_nonpositive': 0, 'n_coverage_clipped_100': 0,
+                                                   'n_radius_invalid': 0}
+                _d['rule_physics_v2'] = 'rule'
+            _d.update({'coverage_status_physics_v2': 'ok', 'coverage_AM_mean_physics_v2': 12.5})
+            return _d
+
         def make_cov_runner(contact_rc=0, cov_writes=True, cov_rc=0):
-            """make_runner + 피복 스크립트 흉내 (full_metrics.json 에 v2 판정 키를 얹는다 — 실제 스크립트와 같은 자리)."""
+            """make_runner + 피복 스크립트 흉내 (full_metrics.json 에 v2 판정 키를 얹는다 — 실제 스크립트와 같은 자리 · 같은 키 집합)."""
             _base = make_runner(contact_rc=contact_rc)
 
             def _r(cmd, **kw):
@@ -475,7 +487,7 @@ def main():
                 if cov_writes:
                     _fm = os.path.join(res_dir, 'full_metrics.json')
                     _d = json.load(open(_fm)) if os.path.exists(_fm) else {}
-                    _d['coverage_status_physics_v2'] = 'ok'
+                    _d.update(_healthy_cov_v2())
                     with open(_fm, 'w') as _f:
                         json.dump(_d, _f)
                 return subprocess.CompletedProcess(cmd, cov_rc, '', '')
@@ -532,6 +544,85 @@ def main():
         _rc, _oc = _run11('standard', '1:AM,3:SE', 'coverage', contact_rc=1)
         chk('T11f) stop_after=coverage 이어도 접촉 분석 실패는 failed · 피복은 돌지 않는다',
             _oc.get('status') == 'failed' and 'coverage_physics_vs_hertzian.py' not in _scripts(_rc))
+
+        # T11g–T11j ★ Codex LHSC-02 (P1) · LHSC-03 (P2) (09-30 · 1저자 비준 "권고대로"): atoms-only 조기 반환 두 곳 (raw atom-only ·
+        #   CSV-only) 이 `stop_after='coverage'` 요청을 **계산 없이 success/done** 으로 끝냈다 (Codex `audit_pipeline.py` `atoms_only`) ·
+        #   `_coverage_v2_written` 은 문자열이면 다 True 였다 (`''` · `'not_run'` · 사유 없는 `'blank: '` · 키 없는 `'ok'`).
+        #   계약: 분석 단계를 명시적으로 요청하면 (stop_after ≠ None) 두 경로 모두 failed — 계산 · 도장 · 러너 호출 없이 · None 은
+        #   viewer 전용 성공 그대로 (양성 대조) · 상태 검증 = 'ok' + 필수 값/진단 키 (None 불가) 또는 비지 않은 'blank: 사유' + 진단 키.
+        _up_csv = os.path.join(tmp, 'uploads', 'case_csv')       # atoms.csv 만 (contacts.csv · contact_*.liggghts 없음)
+        os.makedirs(_up_csv, exist_ok=True)
+        open(os.path.join(_up_csv, 'atoms.csv'), 'w').write('id,type,radius,x,y,z\n1,1,0.001,0,0,0\n')
+        _up_raw = os.path.join(tmp, 'uploads', 'case_raw')       # atom_1.liggghts 만
+        os.makedirs(_up_raw, exist_ok=True)
+        open(os.path.join(_up_raw, 'atom_1.liggghts'), 'w').write('x')
+        _spawned = []
+        _real_sp_run = webapp.subprocess.run
+
+        def _spy_run(cmd, *a, **kw):                             # raw 경로는 _ps 러너가 아니라 subprocess.run 을 직접 부른다
+            _spawned.append(os.path.basename(str(cmd[1])) if len(cmd) > 1 else str(cmd))
+            return subprocess.CompletedProcess(cmd, 0, '', '')
+        webapp.subprocess.run = _spy_run
+        try:
+            _g = {}
+            for _cid in ('case_csv', 'case_raw'):
+                for _stop in ('coverage', 'contact', None):
+                    shutil.rmtree(os.path.join(tmp, 'results', _cid), ignore_errors=True)
+                    _rr = make_cov_runner()
+                    ps._RUNNER = _rr
+                    del _spawned[:]
+                    _kw = {'figures': False, 'auto_db': False}
+                    if _stop:
+                        _kw['stop_after'] = _stop
+                    _o = webapp.run_pipeline(_cid, 'standard', '1:AM,2:SE', 1000, **_kw)
+                    _fm_p = os.path.join(tmp, 'results', _cid, 'full_metrics.json')
+                    _g[(_cid, _stop)] = (_o, os.path.exists(_fm_p), len(_rr.calls), list(_spawned))
+            for _cid, _lbl in (('case_csv', 'CSV-only'), ('case_raw', 'raw atom-only')):
+                for _stop in ('coverage', 'contact'):
+                    _o, _has_fm, _ncall, _sp = _g[(_cid, _stop)]
+                    _expr = _o.get('status') or ('done' if _o.get('success') else 'failed')     # 배치의 상태식 (lhs_webapp_batch)
+                    chk(f'T11g) ★ LHSC-02 {_lbl} + stop_after={_stop}: failed (success False · 배치 상태식 failed · stopped_after 표지) · '
+                        f'계산 · 도장 · 러너 · subprocess 호출 없음 ({_o.get("status")!r} · fm={_has_fm} · 호출 {_ncall} · spawn {_sp})',
+                        _o.get('success') is False and _o.get('status') == 'failed' and _expr == 'failed'
+                        and _o.get('stopped_after') == _stop and not _has_fm and _ncall == 0 and not _sp)
+                _o, _has_fm, _ncall, _sp = _g[(_cid, None)]
+                chk(f'T11h) 양성 대조 {_lbl} + stop_after=None: viewer 전용 성공 그대로 (success · atoms_only · has_contacts false) '
+                    f'({_o.get("success")} · fm={_has_fm})',
+                    _o.get('success') is True and _o.get('atoms_only') is True and _has_fm
+                    and json.load(open(os.path.join(tmp, 'results', _cid, 'full_metrics.json'))).get('has_contacts') is False)
+        finally:
+            webapp.subprocess.run = _real_sp_run
+        # T11i · T11j — `_coverage_v2_written` 의 스키마 계약 (생산자 = coverage_physics_vs_hertzian `keys` · 내부 오류 경로)
+        _vd = os.path.join(tmp, 'results', 'v2_schema')
+        os.makedirs(_vd, exist_ok=True)
+
+        def _v2w(d):
+            with open(os.path.join(_vd, 'full_metrics.json'), 'w') as _f:
+                json.dump(d, _f)
+            return webapp._coverage_v2_written(_vd)
+        _ok_keys = tuple(getattr(webapp, 'COVERAGE_V2_OK_KEYS', ()))
+        _diag_keys = tuple(getattr(webapp, 'COVERAGE_V2_DIAG_KEYS', ()))
+        _healthy = _healthy_cov_v2()                             # T11a–d 의 가짜 producer 와 같은 레코드
+        _blank = {k: None for k in _diag_keys}
+        _blank.update({'coverage_status_physics_v2': 'blank: 1 접촉을 film_area_physics_v2 가 거부했다', 'n_contact_failures_physics_v2': 1})
+        _bad = {lbl: _v2w(d) for lbl, d in (
+            ('빈 dict', {}), ('빈 문자열', {'coverage_status_physics_v2': ''}), ('not_run', {'coverage_status_physics_v2': 'not_run'}),
+            ('ok 만 (값 키 없음)', {'coverage_status_physics_v2': 'ok'}),
+            ('blank 사유 없음', {**_blank, 'coverage_status_physics_v2': 'blank: '}),
+            ('blank 진단 키 없음', {'coverage_status_physics_v2': 'blank: 사유'}),
+            ('ok 인데 면적 None', {**_healthy, 'area_AM전체_SE_total_physics_v2': None}),
+            ('ok 인데 AM 있는데 피복률 없음', {k: v for k, v in _healthy.items() if k != 'coverage_AM_mean_physics_v2'}),
+            ('ok 인데 진단 dict 아님', {**_healthy, 'am_denominator_physics_v2': 3}))}
+        chk(f'T11i) ★ LHSC-03: 빈 문자열 · not_run · 키 없는 ok · 사유 없는 blank · 진단 없는 blank · 값 None 인 ok 는 전부 False '
+            f'({[l for l, v in _bad.items() if v]})', _ok_keys and _diag_keys and not any(_bad.values()))
+        _good = {lbl: _v2w(d) for lbl, d in (
+            ('ok + 필수 값 · 진단 키', _healthy),
+            ('ok · AM 0 개 (피복률 키 없어도 됨)', {**{k: v for k, v in _healthy.items() if k != 'coverage_AM_mean_physics_v2'},
+                                               'am_denominator_physics_v2': {'n_am': 0, 'n_free_surface_nonpositive': 0,
+                                                                             'n_coverage_clipped_100': 0, 'n_radius_invalid': 0}}),
+            ('blank: 사유 + 진단 키', _blank))}
+        chk(f'T11j) LHSC-03 양성 대조: ok + 필수 키 · AM 0 개 ok · 사유 있는 blank + 진단 키 는 True ({[l for l, v in _good.items() if not v]})',
+            all(_good.values()))
     finally:
         ps._RUNNER = prev_runner
         for k, v in prev_env.items():

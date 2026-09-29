@@ -3164,20 +3164,66 @@ def _stopped_after(stages, log, where):
             'failed_stages': [s.get('step') for s in failed_stages], 'stopped_after': where}
 
 
+def _atoms_only_refused(stop_after, why, log):
+    """★ Codex `LHSC-02` (09-30 · P1 · 1저자 비준): 분석 단계를 명시적으로 요청했는데 (`stop_after`) 접촉 파일이 없다 —
+    viewer 전용 atoms-only 조기 반환으로 **success 를 내지 않는다**.  계산 · 도장 · 러너 호출 없이 failed 로 돌려준다
+    (배치 `lhs_webapp_batch` 의 상태식 `status or ('done' if success else 'failed')` 도 failed · 재개 때 다시 돈다).
+    `stop_after=None` (웹앱 viewer) 은 이 함수를 거치지 않는다 — 옛 동작 그대로 (test_pipeline_provenance T11h).
+    """
+    return {'success': False, 'status': 'failed', 'error': why, 'network_run_id': None,
+            'log': list(log) + [{'step': f'Atoms-only refused (stop_after={stop_after})', 'stdout': '',
+                                 'stderr': why, 'rc': 1}],
+            'failed_stages': ['contact files missing'], 'stopped_after': stop_after, 'atoms_only': True}
+
+
+#: `stop_after='coverage'` 의 내용 계약 (★ Codex `LHSC-03` · 09-30) — `coverage_status_physics_v2` 가 'ok' 면 반드시 **값이 있어야**
+#:   하는 v2 키 (None 불가 · `cap_conflict_frac_*` 는 접촉 0 인 침대에서 None 이 정상이라 뺐다), 'blank: <사유>' 면 있어야 하는
+#:   진단 키 (값은 None 가능).  생산자 = `scripts/coverage_physics_vs_hertzian.py` `_PhysicsV2Book.keys` 와 compute_case 의 내부
+#:   오류 경로 — 키를 바꾸면 여기와 test_pipeline_provenance T11i · T11j 를 같이 바꾼다.
+COVERAGE_V2_OK_KEYS = ('area_AM전체_SE_total_physics_v2', 'area_SE_SE_total_physics_v2', 'area_AM전체_AM_total_physics_v2',
+                       'n_contacts_physics_v2', 'n_cap_branch_physics_v2', 'cap_conflict_n_physics_v2',
+                       'cap_conflict_n_by_pair_physics_v2', 'A_binding_counts_total_physics_v2',
+                       'A_binding_counts_AM_SE_physics_v2', 'am_denominator_physics_v2',
+                       'n_contacts_unknown_id_physics_v2', 'n_contact_failures_physics_v2', 'rule_physics_v2',
+                       'h_film_sim_physics_v2')
+COVERAGE_V2_DIAG_KEYS = ('n_contacts_unknown_id_physics_v2', 'n_contact_failures_physics_v2', 'rule_physics_v2',
+                         'am_denominator_physics_v2')
+
+
 def _coverage_v2_written(results_dir):
     """`stop_after='coverage'` 의 내용 계약 — 이번 피복 단계가 이 침대의 physics v2 **판정**을 full_metrics.json 에 썼는가.
 
     접촉 단계는 causal (옛 full_metrics 를 치우고 빈 자리에서 새로 쓴다) 이라, 그 뒤에 `coverage_status_physics_v2` 가 있으면
     이번 피복 단계가 쓴 것이다.  ★ 옛 피복 스크립트는 데이터 폴더가 코드 밖이면 (worktree 런처 · LHS 배치) "[skip]" 을 찍고
     **rc 0 으로 아무것도 안 썼다** — 그것을 done 으로 받지 않는다.
-    ⚠ 값이 'ok' 인지는 보지 않는다 — 'blank: …' 도 이 침대에 대한 v2 의 판정이다 (사유가 행에 남는다).
+    ★ `LHSC-03` (Codex 09-30): 문자열이면 다 받던 첫 판은 `''` · `'not_run'` · 사유 없는 `'blank: '` · 값 키 없는 `'ok'` 도
+    통과시켰다.  이제 = **'ok' + 필수 값 · 진단 키 (None 불가 · AM 이 있으면 유한 피복률)** 또는 **비지 않은 'blank: 사유' + 진단 키**
+    만 판정으로 받는다 (`COVERAGE_V2_OK_KEYS` · `COVERAGE_V2_DIAG_KEYS`).  'blank: …' 도 이 침대에 대한 v2 의 판정이다 (사유가 행에 남는다).
     """
+    import math as _math
     try:
         with open(os.path.join(results_dir, 'full_metrics.json'), encoding='utf-8') as _f:
             _fm = json.load(_f)
     except Exception:                                              # noqa: BLE001 — 못 읽으면 판정 없음 = 실패
         return False
-    return isinstance(_fm, dict) and isinstance(_fm.get('coverage_status_physics_v2'), str)
+    if not isinstance(_fm, dict):
+        return False
+    st = _fm.get('coverage_status_physics_v2')
+    if not isinstance(st, str):
+        return False
+    if st == 'ok':
+        if any(_fm.get(k) is None for k in COVERAGE_V2_OK_KEYS):
+            return False
+        diag = _fm.get('am_denominator_physics_v2')
+        if not isinstance(diag, dict):
+            return False
+        if (diag.get('n_am') or 0) > 0:                             # AM 이 있으면 전체 피복률이 유한 실수여야 한다
+            cov = _fm.get('coverage_AM_mean_physics_v2')
+            return (isinstance(cov, (int, float)) and not isinstance(cov, bool) and _math.isfinite(float(cov)))
+        return True
+    if st.startswith('blank:') and st[len('blank:'):].strip():
+        return all(k in _fm for k in COVERAGE_V2_DIAG_KEYS)
+    return False
 
 
 def _coverage_stage(cmd, results_dir, stop_after):
@@ -3218,6 +3264,9 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
                                     (`_coverage_stage` — rc 0 인데 판정을 안 쓴 실행은 failed).
                        멈추기 전 명령은 전체 실행과 **인자까지 같다** (test_pipeline_provenance T10 · T11).
                        다른 값은 ValueError (조용히 전체를 돌지 않는다).
+                       ★ 접촉 파일이 없는 atoms-only 입력 (raw atom-only · CSV-only) 은 stop_after 가 있으면 **failed**
+                         (`_atoms_only_refused` · Codex `LHSC-02` — 옛 판은 viewer 전용 조기 반환으로 계산 없이 success/done) ·
+                         None 이면 viewer 전용 성공 그대로 (T11g · T11h).
     """
     if stop_after not in PIPELINE_STOP_AFTER:
         raise ValueError(f"stop_after={stop_after!r} — None · 'contact' · 'coverage' 만 허용")
@@ -3261,6 +3310,9 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
             # ATOMS-ONLY mode: if atom_*.liggghts exists but no contacts,
             # parse atoms alone and return — webapp will still serve 3D viewer.
             if atom_files and not contact_files:
+                if stop_after is not None:                         # ★ LHSC-02 — 분석 단계 요청인데 접촉 파일이 없다: viewer 성공 금지
+                    return _atoms_only_refused(stop_after, 'atom_*.liggghts 만 있고 contact_*.liggghts 가 없다 — '
+                                               f'stop_after={stop_after!r} 는 접촉 분석이 필요하다 (atoms-only viewer 모드 아님)', [])
                 log = []
                 cmd = [sys.executable, os.path.join(scripts, 'parse_liggghts.py')]
                 cmd += atom_files + mesh_files + input_files + ['-o', results_dir]
@@ -3285,6 +3337,9 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
             # ATOMS-ONLY CSV mode: user uploaded atoms.csv only (LIGGGHTS dump
             # was deleted). Copy CSV into results_dir so 3D viewer works.
             elif has_pre_atoms_only:
+                if stop_after is not None:                         # ★ LHSC-02 — CSV-only 도 같은 계약 (Codex 반례 `atoms_only`)
+                    return _atoms_only_refused(stop_after, 'atoms.csv 만 있고 contacts.csv · contact_*.liggghts 가 없다 — '
+                                               f'stop_after={stop_after!r} 는 접촉 분석이 필요하다 (atoms-only viewer 모드 아님)', [])
                 import shutil as _sh
                 log = []
                 _sh.copy2(pre_atoms_csv, os.path.join(results_dir, 'atoms.csv'))

@@ -599,8 +599,10 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
         _v2_by_lbl, _v2_am = v2.coverage(id_to_r, id_to_t, am_types, type_map, am_surf)
         v2_keys = v2.keys(_v2_by_lbl, _v2_am, area_conv)
     except Exception as e:                       # noqa: BLE001 — 사유를 status 에 남긴다
+        #  진단 키 넷은 이 경로에서도 낸다 (값 None 가능) — 소비자 `app._coverage_v2_written` (LHSC-03) 의 blank 스키마
         v2_keys = {'coverage_status_physics_v2': f'blank: v2 집계 내부 오류 — {type(e).__name__}: {e}',
-                   'n_contact_failures_physics_v2': v2.n_fail, 'rule_physics_v2': PHYSICS_V2_RULE}
+                   'n_contact_failures_physics_v2': v2.n_fail, 'n_contacts_unknown_id_physics_v2': v2.n_unknown_id,
+                   'am_denominator_physics_v2': None, 'rule_physics_v2': PHYSICS_V2_RULE}
 
     # Update full_metrics.json
     if update_metrics:
