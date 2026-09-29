@@ -2,10 +2,10 @@
 title: "ASSB 복합양극의 굴곡도 인자 — 측정되는 것은 σ_eff 하나이고 ε·τ² 분할은 가정이 정한다"
 description: "In ASSB composite cathodes the tortuosity factor tau^2 = eps x sigma_bulk / sigma_eff is not measured but obtained by dividing a measured effective conductivity by an assumed phase fraction; the only operando-plus-EIS paper in the lineage shows the same measured conductivities giving opposite tau^2 trends under two eps conventions, reads the mismatch between its EIS and model-fitted values as tortuosity evolution, and by its own definition places point-contact loss inside tau^2"
 created: 2026-09-23
-updated: 2026-09-28
+updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -184,6 +184,16 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - **곱의 자리**: 이 편은 `ε/τ` 를 DNS 로 **계산해 입력으로 고정**한다 — 수송 곱을 적합하지 않으니 이 페이지의 `(ε, a)` 평탄 계곡은 생기지 않는다. 대신 검증(73호 네 점)에서 조성 이름표가 10 wt% 씩 밀렸다(75호 D1) — τ 를 조성의 함수로 옮길 때 **조성 기준(Φ ↔ wt%)** 이 사고 자리다.
 - ⇒ 처방에 붙는 것(`[해석]`): DNS · 모형 편의 "τ" 는 ① 인자인지 기하인지(식으로 확인) ② 공극 · 입도 가정 ③ 실측 대조가 있으면 그 조성 기준을 값 옆에 적는다.
 
+## ★★ 열 번째 표본 — 영상 2D 미세구조의 flux `τ`(정의식 미인쇄) · 측정 κ_eff 와 모형 κ_eff 가 ×5–9.5 어긋나고, TLM 두 그림의 단위가 ×10³ 어긋난다 (2026-09-29, `assb` 76호)
+
+`raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md` (Davis · … · Thornton · Dasgupta 2021, *ACS Energy Lett.* 6, 2993 — 흑연 \| Li₆PS₅Cl 복합 음극 · 차단 대칭 셀 TLM · 광학 영상 2D 모형).
+
+- **정의 · 규약**: `[인쇄]` 모형 τ 1.91(원 미세구조) → 1.38(수축부 넓힘 · S14) — "average steady-state flux method"(SI ref 16 Tjaden 2018) · **식 미인쇄**(인자인지 기하인지 · ε 를 어떻게 넣는지 지면에 없다). 모형 κ_eff 는 `κ·ε/τ`(τ 를 인자로) 0.27 또는 `κ·ε/τ²` 0.14 S m⁻¹(`[재현]` ε_SE,2D 0.595 · κ 0.88 S m⁻¹) — τ 규약에 따라 ×2.
+- **측정**: 이온 σ 는 이온 차단 대칭 셀 + TLM(교점 = R_ion/3 · SI refs 4–6 — Höltschi 2020 · Ogihara 2012 · Siroma 2016) — 73호와 같은 계열 · 다른 판. ⚠ **S1 "Conductivity (mS/cm)" ↔ S2 축 "Z (Ω cm)"** — `[재현]` 여섯 패널에서 S1 ≈ (0.86–0.97) × 1/R_ion(S2 축 수치) → 축이 저항률이면 S1 은 S cm⁻¹(벌크의 ×34 — 불가) · 두께 · 면적 환산식 미인쇄(76호 D5).
+- **`[재현]` 측정 ↔ 모형**: S1(40 % · 60 °C) κ_eff **0.029 S m⁻¹** ↔ 모형 0.14–0.27 — **모형 SE 망이 ×5–9.5 잘 통한다**(실측 `ε·κ/κ_eff` ≈20 ↔ 모형 τ 1.91 또는 τ² 3.65). 조성별 `ε·κ/κ_eff` ≈20 · 85–90 · 63–69(40 · 60 · 80 % — 밀도 가정 ε · 73호 τ² 규약과 같은 식으로 읽은 우리 산술).
+- **곱의 자리**: 모형은 κ 를 한 값으로 두고 기하(영상)로 τ 를 넣는다 — S16 "κ ×≈11" 은 수송 곱 전체를 ×11 한 것이고, S14 수축부 넓히기는 τ −28 % 와 함께 계면 모양도 바꿨다(한 손잡이 두 곱 — 57호 줄).
+- ⇒ 처방에 붙는 것(`[해석]`): 한 편이 측정 κ_eff 와 모형 τ 를 다 냈으면 **둘을 같은 규약으로 나란히 적는다** — 76호처럼 모형이 자기 측정에 묶이지 않은 채 "qualitative" 로 남으면 크기(옴 강하)가 과소인 방향이 지면에서 안 보인다. 보충 그림 두 장이 같은 양을 다른 단위로 적었으면 환산식을 찾기 전에 값을 옮기지 않는다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - **"굴곡도가 진화하지 않았다" 고 하지 않는다** — `σ_eff` 로 보면 70 % 는 변화 없음, 80 % 는 ≈3 배이고, 그 3 배의 배정이 안 갈린다는 것까지다.
@@ -193,6 +203,7 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - ★ **2026-09-23 (55호)**: 위 "근거 편수" 줄은 24호 시점의 기록이다 — 그 뒤 29호(측정 ÷ 공칭 `ε`) · 54호(구조 계산) · 55호(두 경로)가 수를 줬다. 55호 EIS 쪽 `ε` ≈0.65 는 **우리 역산**이고 저자 값이 아니다.
 - ★ **2026-09-28 (73호)**: 규약 재현(이온 φ_SE · 전자 φ_CAM)은 **래스터 판독값 위의 우리 산술**이다(9/9 ≤3 %) — 저자가 φ 를 표로 인쇄한 것은 아니다(SI Table SII 미수령). `R_el` 의 ≈76 % 가 접촉 몫이라는 것도 한 조성 · 한 스펙트럼 · 고주파 절편 폐합 가정 위의 `[재현]` 이고, σ_el,0 10 mS cm⁻¹ 이 공극 보정값이라고 단정하지 않는다.
 - ★ **2026-09-28 (75호)**: **DNS τ ↔ 73호 τ² 비(×1.9–5.9)를 같은 계의 모형 오차로 쓰지 않는다** — 입도 · 공극 · SE 가 다르다(방향 대조). 이 편의 τ 는 Fig. S1 래스터 판독 위의 우리 역산(표 S1 밀도 · 공극 5 %)이다 — 저자는 τ 를 표로 인쇄하지 않았다(Fig. 2a 색 지도뿐).
+- ★ **2026-09-29 (76호)**: **S1 ↔ S2 중 어느 단위가 틀렸는지 확정하지 않는다** — S1 ≈ (0.86–0.97)/R_ion 은 별표 픽셀 판독 · 교점 공식 가정 위의 `[재현]` 이다. 모형 ↔ 측정 κ_eff ×5–9.5 도 밀도 가정 ε 와 2D 영상 ε_SE 위의 산술이고, 모형 τ 의 정의식은 미인쇄다.
 
 ## 관련
 

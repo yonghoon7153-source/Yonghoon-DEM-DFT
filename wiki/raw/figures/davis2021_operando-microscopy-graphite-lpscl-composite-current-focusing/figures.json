@@ -1,0 +1,603 @@
+{
+ "slug": "davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-28",
+ "sources": [
+  "38. Rate Limitations in Composite Solid-State Battery Electrodes Revealing Heterogeneity with Operando Microscopy.pdf",
+  "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (A−C) Plan-view (top-down) and (D−F) FIB cross-sectional SEM images of graphite/LPSCl composite electrodes with varying graphite/SE ratios. The dark regions are graphite, and the bright regions are LPSCl. At the end of the rate tests, a ﬁnal cycle was run at C/16. By comparing the ﬁrst and last cycles, it is apparent that permanent capacity loss does not occur during cycling, and therefore the trends shown in Figure 2A are limited by the electrode rate capability. Throughout cycling, a constant C/8 delithiation process was used, which allowed for full delithiation of the electrode. (Further details are given in the Supporting Information, Figures S5 and S6.) prepare cross sections (Figure 1). In the low-graphite-content sample (40% Gr), clear percolation pathways are visible for both the SE and the graphite. However, as the graphite content increases, the interconnectivity of t",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.6,
+    269.6
+   ],
+   "w": 2151,
+   "h": 861,
+   "dpi": 300,
+   "src": "38. Rate Limitations in Composite Solid-State Battery Electrodes Revealing Heterogeneity with Operando Microscopy.pdf",
+   "blank": 0.239,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 원본 래스터 xref 164, 1958 × 810 px). (A–C) 평면 SEM 100 µm · (D–F) FIB 단면 50 µm · 40 · 60 · 80 % Gr — 어두운 = 흑연 · 밝은 = LPSCl(캡션). 수치 0 · 80 % 에서 SE 가 섬으로 흩어진 모습은 본문 서술과 맞다. ⚠ `caption` 칸 끝에 캡션 뒤 본문 문장이 붙었다(캡션 텍스트 과대 — 그림 파일과 무관)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (A) Accessible capacities at increasing lithiation rates for various graphite/SE ratios. Sample loadings are 1.87 mAh/cm2. (B−E) Corresponding lithiation voltage traces for each graphite ratio.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    632.4
+   ],
+   "w": 1051,
+   "h": 2372,
+   "dpi": 300,
+   "src": "38. Rate Limitations in Composite Solid-State Battery Electrodes Revealing Heterogeneity with Operando Microscopy.pdf",
+   "blank": 0.916,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 원본 래스터 xref 188, 996 × 2322 px · 벡터 0). (A) CCCV 리튬화 용량 vs 사이클 1–11(C/16 · C/8 · C/4 · C/2 · 1C 각 2 + 끝 C/16) · (B–E) 리튬화 전압 곡선(1.87 mAh cm⁻²). 표지 픽셀 판독(283.4 px per mAh cm⁻² · ±0.004) — digest §판독. ⚠ 본문 '100 % Gr … even at a C/16 rate … (∼1/6 the theoretical capacity)' 은 이 그림 C/16 CC 끝 ≈1.05 mAh cm⁻²(≈0.56)와 안 맞고 1C(≈0.31 = 0.165)와 맞는다(D1)."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (A) Top-down ex situ images of graphite composite electrodes showing color changes in the graphite phase throughout lithiation. Electrodes were lithiated at C/32 to various SOC. Electrode areal capacities are 1.87 mAh/cm2 with a graphite fraction of 46%. (B) Schematic showing custom cell for operando visualization of composite electrode cross. (C) Zoomed-out view showing Li/graphite half-cell assembled in the visualization platform. lithiation (Figure 5A, Video S1). At low graphite fractions, the interconnected SE domains in the composite electrode act as low-resistance ionic transport channels, which allow for lithiation deep within the electrode. As the rate is increased to C/4 (Figure 5D), a stronger gradient in local SOC develops through the depth of the electrode, with higher concentrations of gold particles near the electrode interface with the bulk SE. Therefore, Li tran",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    498.3
+   ],
+   "w": 2151,
+   "h": 1814,
+   "dpi": 300,
+   "src": "38. Rate Limitations in Composite Solid-State Battery Electrodes Revealing Heterogeneity with Operando Microscopy.pdf",
+   "blank": 0.522,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 원본 래스터 xref 219, 1958 × 1767 px). (A) C/32 ex situ 위에서 본 사진 다섯 + 셀 전압 곡선(46 % Gr · 1.87 mAh cm⁻²) — 표지 판독 ≈0 · 0.76 · 1.00 · 1.44 · 1.91 mAh cm⁻² · 마지막(금색) 사진은 0 V 아래 평탄(≈−8…−13 mV · 1.87 → 1.92 mAh cm⁻²)에서 찍혔다 · (B) 관찰 셀 도식(창 없음 · 대물렌즈가 옆면을 직접 · 위에서 stack pressure) · (C) 저배율 단면(300 µm 막대 — 벌크 SE ≈1 mm). ⚠ `caption` 칸 끝에 캡션 뒤 본문 문장이 붙었다(캡션 텍스트 과대 — 그림 파일과 무관)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (A−F) Time series showing zoomed-in microscope images of 40% Gr composite electrode at diﬀerent states of charge during C/4 lithiation. Full videos for 40−80% Gr are included in the Supporting Information. (G, H) Schematics showing transport limitations due to ion conduction within the SE (G) and Li diﬀusion within the graphite (H). observed in the operando video were observed in the ex situ cross section (Figure S9). constricted, and eventually the percolation threshold is reached. The operando video results indicate that this transition occurs between the 60% and 80% Gr samples, which is generally consistent with models of spherical particles that suggest that the percolation threshold should be around 25− 30%.51 The breakdown of connected transport paths prevents the relatively facile ionic transport through the SE phase, and therefore Li transport becomes dominated by Li di",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    467.8
+   ],
+   "w": 2151,
+   "h": 1687,
+   "dpi": 300,
+   "src": "38. Rate Limitations in Composite Solid-State Battery Electrodes Revealing Heterogeneity with Operando Microscopy.pdf",
+   "blank": 0.24,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 원본 래스터 xref 240, 1958 × 1636 px). 40 % Gr · 4 mAh cm⁻² · C/4 리튬화 SOC 0 · 30 · 60 · 80 · 95 · 100 %(SOC 정의 미인쇄) + 도식 G(SE 이온) · H(흑연 확산). 색 분류 다섯 띠 깊이 분포 판독(반정량 — digest §판독). ⚠ '100 % SOC' 패널: 집전체 쪽 위 15 % 띠의 흑연 분류 픽셀 ≈44–68 % 가 어둡고, 0 % 부터 100 % 까지 색이 그대로인 ≈14 µm 입자 하나(위 가운데) — 본문 'uniform gold color … throughout the electrode' 와 다름(정체 판정 불가)."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Cross section snapshots at C/16 (A−C) and C/4 (D−F) rates, taken after 16 and 4 h of lithiation, respectively. Composite electrodes are shown with various graphite ratios (40%−80% Gr) and an areal capacity of 4 mAh/cm2. Since the total electrode thickness at a constant areal capacity varies with active material percentage, the ﬁeld of view was adjusted such that the entire graphite electrode thickness spans the frame of the image. A parallel ﬁgure with the images resized to uniform scale bars is included in the Supporting Information (Figure S7).",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    316.1
+   ],
+   "w": 2150,
+   "h": 1055,
+   "dpi": 300,
+   "src": "38. Rate Limitations in Composite Solid-State Battery Electrodes Revealing Heterogeneity with Operando Microscopy.pdf",
+   "blank": 0.231,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 원본 래스터 xref 254, 1958 × 1004 px). C/16@16 h(A–C) · C/4@4 h(D–F) × 40 · 60 · 80 % Gr · 4 mAh cm⁻² · 조성마다 배율 다름(40 · 30 · 20 µm 막대). 40 % 의 A · D 는 같은 셀 · 같은 시야(= Fig. 4 시야) — SI: C/16 는 형성 사이클 없는 첫 리튬화(SEI 포함). 색 분류 깊이 분포 판독(반정량)."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. (A−E) Evolution of local Li site fraction in the 40% Gr electrode during C/4 charging at diﬀerent SOCs. (F) Local SE potential in the electrode. We note that only a portion of the simulation domain is shown in this ﬁgure. The complete domain is shown in Figure S13. more sloped as the C-rate is increased. This corresponds with a larger heterogeneity in local SOC throughout the electrode thickness at a higher C-rate. Furthermore, the electrode reaches the CV cutoﬀvoltage sooner as the C-rate is increased. experiments. Details on model equations, associated boundary conditions, model parameters, and the cell geometry used in the model are provided in the Supporting Information. The simulated microstructure was generated based on the images captured from the operando visualization cell for the 40% Gr electrode with a loading of 4 mAh/cm2 (shown in Figure 4). Figure 6A−E shows the s",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    375.2,
+    570.5,
+    615.2
+   ],
+   "w": 2151,
+   "h": 1001,
+   "dpi": 300,
+   "src": "38. Rate Limitations in Composite Solid-State Battery Electrodes Revealing Heterogeneity with Operando Microscopy.pdf",
+   "blank": 0.615,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 원본 래스터 xref 255, 1958 × 950 px). 모의 40 % Gr · C/4 · Li site fraction 0–1 · (F) φ_e 색막대 −36 … −44 mV — (F) 의 시각(SOC) 캡션 · 본문 미인쇄. 'only a portion of the simulation domain' — S13 전체 영역과 같은 모양."
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Electronic and ionic conductivity measurements of graphite composite electrodes with different graphite ratios and temperatures.",
+   "rotated_deg": 0,
+   "bbox": [
+    122.8,
+    343.3,
+    492.1,
+    632.7
+   ],
+   "w": 1540,
+   "h": 1207,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.959,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 원본 래스터 xref 100, 1083 × 856 px). 로그 축 표지 12 개 픽셀 판독(128 px/decade · 한 px ±1.8 %) — 이온 60 °C 0.289 · 0.0466 · 0.0325 · RT 0.0673 · 0.0080 · 0.0059 · 전자 60 °C 1252 · 2329 · 2267 · RT 1084 · 2054 · 2187 mS/cm(40 · 60 · 80 % Gr). 100 % Gr · 0 % Gr 점 없음."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Nyquist plots of graphite composite/LPSCl/graphite composite symmetric cells. The effective Ionic conductivity is fit using a transmission line model as described in the experimental methods.",
+   "rotated_deg": 0,
+   "bbox": [
+    89.9,
+    70.9,
+    525.0,
+    668.2
+   ],
+   "w": 1814,
+   "h": 2490,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.938,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 원본 래스터 xref 106, 1294 × 1806 px). 여섯 Nyquist(RT · 60 °C × 40 · 60 · 80 %) · 별표 R_Bulk · R_ionic/3 · 축 단위 'Ω cm'. ⚠ 별표로 R_ion = 3(Z_int − R_bulk) 을 읽으면 여섯 패널 모두 S1 값 ≈ (0.86–0.97) × 1/R_ion — 'Ω cm' 를 저항률로 두면 S1 은 S cm⁻¹ 여야 한다(두 그림 단위 표기 ×10³ 어긋남 — digest D)."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Li-LPSCl-Li symmetric cell to test for Li filament propagation or void formation.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    256.3,
+    546.0,
+    504.5
+   ],
+   "w": 2000,
+   "h": 1036,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.909,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 원본 래스터 xref 111, 1068 × 546 px; 판독은 300 dpi 크롭). Li|LPSCl|Li 대칭 셀 · 전류 계단 0.2 → 2.0 mA cm⁻²(0.1 간격 · ± 번갈아) — 판독 3.2 mV(0.2) · 13.4 mV(1.0) · 25.2 mV(2.0) · 기울기 ≈12.2 Ω cm²(두 계면 + 분리막 합) · 필라멘트 · 공극 신호 없음(저자 서술과 맞다)."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. (A) Accessible capacity during the CC portion of the lithiation of the 1.87 mAh/cm2 cells from figure 2 in the main text. (B) CCCV lithiation capacities normalized by the mass of the composite electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    105.1,
+    106.5,
+    507.2,
+    615.6
+   ],
+   "w": 1677,
+   "h": 2123,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.922,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 원본 래스터 xref 118, 1352 × 1733 px). (A) CC 몫 용량 · (B) 복합체 질량 규격 용량. ⚠ (B) 값은 (A)(CC) ÷ 복합체 질량(79.6 · 119.4 · 159.1 · 198.9 cm² g⁻¹)과 1–2 % 안에서 맞고 CCCV(Fig. 2A) ÷ 질량과는 안 맞는다(예: 100 % C/16 211.9 ↔ CCCV 이면 281) — 캡션 'CCCV lithiation capacities' 와 어긋남(D)."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. (A) Delithiation capacities for 1.87 mAh/cm2 cells from Figure 2 in the main text. All delithiation cycles were performed at C/8 but are plotted under the C-rate of their corresponding lithiation step. Some coulombic inefficiency is apparent in the early cycles of the 40% and 60% Gr samples due to continued SEI formation. (B) Corresponding voltage traces for each graphite ratio and C-rate. Again, voltage traces are labeled with the c-rate of their corresponding lithiation step. Delithiation voltage traces have also been normalized to lithiation capacity achieved in the lithiation step to allow for a more direct comparison.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    48.8,
+    547.6,
+    612.6
+   ],
+   "w": 2007,
+   "h": 2350,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.93,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 원본 래스터 xref 127). (A) 리튬화(실선) ↔ 탈리튬화 C/8(점선) · (B) 탈리튬 전압 곡선(리튬화 용량 % 규격). 탈리튬은 전부 C/8 — 탈리튬 율 의존 시험은 이 그림에 없다. 40 · 60 % 초기 사이클만 점선이 실선 아래(SEI — 캡션)."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Time series showing zoomed in microscope images of 40% Gr composite electrode at different states of charge during C/4 delithiation.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    54.0,
+    546.6,
+    324.0
+   ],
+   "w": 2003,
+   "h": 1126,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.197,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 원본 래스터 xref 134, 1427 × 797 px). 40 % Gr · C/4 탈리튬 SOC 100 → 0 % — 분리막 쪽이 먼저 붉게 · 어둡게, 0 % 에서 전 영역 어두움(색 분류 금색 0.00) · Fig. 4 의 색 안 바뀐 입자가 같은 자리에 그대로."
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Data from Figure 5 with images resized to have the same scalebar.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    356.2,
+    546.0,
+    697.7
+   ],
+   "w": 2000,
+   "h": 1424,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.438,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 원본 래스터 xref 133, 1376 × 877 px). Fig. 5 를 같은 40 µm 막대(2.5 px/µm)로 — 전극 두께 판독 ≈146–150(40 %) · ≈116–117(60 %) · ≈77–78 µm(80 %)(패널 위끝 = 집전체 가정 · ±5 µm). ⚠ 과대 — 위쪽 흰 여백(내용 없음)."
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Cross section snapshots at 16 hr (C/16 lithiation) and 4 hr (C/4 lithiation) for composite electrodes with various graphite ratios (40%-60% Gr) and an areal capacity of 1.87 mAh/cm2. To normalize the field of view for the different graphite ratios, the magnification is increased as graphite loading increases.",
+   "rotated_deg": 0,
+   "bbox": [
+    129.8,
+    216.8,
+    481.3,
+    485.1
+   ],
+   "w": 1465,
+   "h": 1119,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.194,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 원본 래스터 xref 143, 1038 × 794 px). 1.87 mAh cm⁻² · 40 · 60 % Gr · C/16@16 h · C/4@4 h(패널 A · B · D · E — C · F 없음, 80 % 없음) · 막대 40 · 20 µm. 색 분류 깊이 분포 판독 — 60 % C/16@16 h 는 금색이 분리막 쪽 얇은 띠뿐(본문 'attenuated' 는 정량 0)."
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. A. Schematic showing polishing occurs before lithiation for visualization experiments. B. Schematic showing polishing occurs after lithiation for ex situ imaging. C. Ex Situ cross section of 60% Gr sample after CCCV charging at C/5.6 for 4 hr.",
+   "rotated_deg": 0,
+   "bbox": [
+    125.9,
+    196.4,
+    486.1,
+    520.6
+   ],
+   "w": 1502,
+   "h": 1352,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.499,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 원본 래스터 xref 157). (A) 관찰 셀: 연마 → 리튬화 · (B) ex situ: 리튬화 → 연마 · (C) ex situ 60 % Gr 단면 30 µm — 분리막 쪽 금색 띠 · 위쪽 파랑/보라. ⚠ 캡션 'CCCV charging at C/5.6 for 4 hr' ↔ 본문 · SI 본문 'similar CC-CV protocol · 4 h cutoff'(율 다름 — D)."
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 12,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Schematic of the cell geometry used in the model. Different regions in the schematic are marked with different colors where graphite, SE, Li metal, and the current collector are colored in blue, gray, dark gray, and black, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    69.3,
+    81.5,
+    374.8,
+    457.0
+   ],
+   "w": 1274,
+   "h": 1566,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.804,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 래스터 xref 186 등). 모의 영역: 복합체 150 µm · 벌크 SE 1000 µm · Li 100 µm · 폭 287 µm · 집전체 10 µm · 색 규약 흑연 파랑 · SE 회색 · Li 짙은 회색 · 집전체 검정."
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 14,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. (A) The OCV of graphite as a function of lithium site fraction, 𝑋12. The red circles represent the OCV data provided in Levi et al.10 (B) Li diffusivity in graphite as a function of 𝑋12 at 60°𝐶, obtained from Levi et al.10 The black line represents the spline interpolant used in the model.",
+   "rotated_deg": 0,
+   "bbox": [
+    53.4,
+    211.7,
+    560.6,
+    426.0
+   ],
+   "w": 2114,
+   "h": 894,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.967,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 벡터 그림). 벡터 좌표 판독: OCV(this study, C/64) 0.207 V(X 0.07) · 0.195(0.12) · 0.121(0.25) · 0.100(0.50) · 0.084(0.55) · 0.0838(0.60) · 0.0771(0.90) · Levi OCV 점 6(X 0.07 은 0.25 V — OCV 와 +0.04 V) · (B) Levi D 점 30 · X 0.535–0.841 사이 점 0 · 스플라인 최소 2.17×10⁻¹⁴(X 0.84) · 최대 6.4×10⁻¹²(X 0.04) · X 0.55–0.95 기하 평균 7.7×10⁻¹⁴ m² s⁻¹."
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 15,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Plots for simulated voltage vs. time (black curves) and current vs. time (blue curves) for the 40% Gr electrode at C/16 (‘+’ marker) and C/4 (‘o’ marker) CCCV charging.",
+   "rotated_deg": 0,
+   "bbox": [
+    280.8,
+    195.1,
+    558.8,
+    364.8
+   ],
+   "w": 1160,
+   "h": 709,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.947,
+   "note": "⚠ 잘림 — bbox 위끝 195.1 pt 가 그림 위쪽(0.6–0.8 V · 8–12 A m⁻² 눈금 · 범례 · 오른쪽 축 이름 일부)을 잘랐다 → 수동 fig_S12_manual_si_p15(봤다). 벡터 좌표 판독: C/4 10.02 A m⁻² · CC 끝 3.615 h · C/16 2.51 A m⁻² · CC 끝 17.225 h. ⚠ 캡션 표지('+' = C/16 · 'o' = C/4)는 그림 안 범례 · 자료('+' = C/4 · 'o' = C/16)와 반대(D)."
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 16,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. (A-E) Evolution of local Li site fraction in the 40% Gr electrode during C/4 charging at different SOCs for the complete simulation domain. (F) Local SE potential in the electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    596.9,
+    343.2
+   ],
+   "w": 2213,
+   "h": 1156,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.783,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다 — 래스터 xref 249 등, 1250 × 833 px). 전체 영역 287 × 150 µm · SOC 0 · 30 · 60 · 80 · 100 % · (F) φ_e −36 … −44 mV(시각 미인쇄). 픽셀 판독: 흑연 면적 분율 ≈0.39–0.42 · 계면 길이 ≈12(–15) µm per µm 폭 · 분리막 쪽 0–15 µm 띠 흑연 ≈0.19. ⚠ 과대 — 오른쪽 끝에 여백 띠 글자 조각(내용 무관)."
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 17,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. (A) The original microstructure. (B) the modified microstructure. (C-D) Li site-fraction in the electrode at SOC = 50% and 60%. The result for SOC = 50% is provided to show the clear presence of the SOC gradient of first type. (E) The electrostatic potential of the electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    220.5,
+    508.4,
+    471.2
+   ],
+   "w": 1844,
+   "h": 1046,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.798,
+   "note": "⚠ 잘림 — bbox 위끝 220.5 pt 가 (A) Original microstructure τ = 1.91 · (B) Modified microstructure τ = 1.38 패널과 (C)(D) 제목('Li-site fraction, SOC = 50 % · 60 %')을 잘랐다 → 수동 fig_S14_manual_si_p17(봤다). 이 파일은 (C)(D)(E) — (E) φ_e −36 … −41 mV."
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 18,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. (A-E) Evolution of local Li site fraction in the 40% Gr electrode during C/16 charging at different SOCs. (F) Local SE potential in the electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    166.1,
+    549.0,
+    394.8
+   ],
+   "w": 2013,
+   "h": 954,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.568,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다). 40 % Gr · C/16 · SOC 0–100 % · (F) φ_e −9 … −12 mV(분리막 쪽 −9 는 `[재현]` −9.35 mV 와 맞다)."
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 19,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Simulation results for a 𝜅 value ~11 times higher than the nominal value, conducted to examine the effect of ionic conductivity in SE. (A-E) Evolution of local Li site fraction in the 40% Gr electrode during C/4 charging at different SOCs. (F) Local SE potential in the electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    166.1,
+    549.0,
+    394.4
+   ],
+   "w": 2013,
+   "h": 952,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.564,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다). κ ×≈11 · (F) φ_e −26 … −27 mV(분리막 쪽 `[재현]` −26.3 mV) · 60 % SOC 두께 방향 대비 약함 · 알갱이 속 파랑(둘째 구배)은 그대로."
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 20,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Simulation results for a 𝐷() value 10 times higher than the nominal value, conducted to examine the effect of Li diffusivity in the active material. (A-E) Evolution of local Li site fraction in the 40% Gr electrode during C/4 charging at different SOCs. (F) Local SE potential in the electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    152.4,
+    549.0,
+    380.4
+   ],
+   "w": 2013,
+   "h": 951,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.568,
+   "note": "라벨 ↔ 내용 맞다 · 잘림 0(봤다). D_Gr ×10(= 문헌 D_s — 모형 기본값이 문헌의 1/10) · (F) φ_e −36 … −44 mV(기본과 같은 색막대) · 60 · 80 % SOC 에서 둘째 구배와 함께 두께 방향 대비도 약해짐 — 본문 · SI 는 둘째 구배만 적는다."
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 21,
+   "file": "fig_S18.png",
+   "caption": "Figure S18 A and B show the local SOC in the 80% Gr electrode after 16 hr of C/16 charging and after 4 hr of C/4 charging, respectively. A large SOC gradient can be observed throughout the electrode thickness at both C-rates, and a more severe gradient is formed at the higher C-rate. Thus, the theoretical capacity of the 80% Gr electrode is not fully utilized even during C/16 charging, which causes the electrode to exhibit smaller accessible capacity than the 40% Gr electrode. These results are consistent with the experimental results for the 80% Gr electrode (Figure 5). It should be noted that the diffusion front is curved due to the presence of inactive electrolyte domains within the electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    302.5,
+    580.5,
+    503.1
+   ],
+   "w": 2144,
+   "h": 837,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.71,
+   "note": "⚠ 캡션 오탐 — `caption` 칸이 본문 문장('Figure S18 A and B show the local SOC …')이고 진짜 캡션('Figure S18. Li site-fraction in the 80% Gr electrode at A) 16 hr for C/16 CCCV charging and B) 4 hr for C/4 CCCV charging.')은 '중복(작은 쪽)' 으로 버려졌다. 그림 파일은 맞다(봤다 — 80 % Gr 94.1 × 75 µm · 흰 = SE 섬 · 분리막 쪽에서 굽은 확산 전선)."
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 13,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Parameter values used in the model, along with their sources. A comparison is made with the range of values surveyed from literature, wherever the ranges are given. Parameter Values Units Sources Range of values in literature (if applicable) Intrinsic material properties 2.2 × 104,8 − 7 × 104,. (Figure S11B) 𝐷\" m2/s Literature10 -- Model parameters 𝜅 8.8 × 104, S/m Experiment -- 𝜎12 1 × 106 S/m -- -- 𝜎() 1 × 10. S/m Literature11 -- 𝜎'' 1 × 106 S/m -- -- 𝐷() 1 × 104, × 𝐷\" m2/s -- 1 × 104,9 − 1 × 104: m2/s 12 𝑖*,)!+ 2.32 × 10. A/m2 Literature13 -- /%0 2.78 × 108 mol/m3 -- -- 𝑐() 3 1.1 × 10, A/m2 -- 2 – 28 A/m2 14,15 Since the goal of this model was to obtain qualitative insights into the rate-limiting mechanisms, we did not perform three-electrode measurements11,13 to parameterize the model. Instead, we used the parameters reported in the literature. The parameter values used in ",
+   "rotated_deg": 0,
+   "bbox": [
+    66.8,
+    273.7,
+    548.0,
+    716.1
+   ],
+   "w": 2006,
+   "h": 1844,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.891,
+   "note": "표 온전 · ⚠ 과대(표 아래 본문 한 문단)(봤다). 텍스트 층의 지수가 깨져 표 영역을 220 dpi 로 다시 렌더해 읽었다(값의 정본): D_s 2.2×10⁻¹⁴–7×10⁻¹²(Levi, ref 10) · κ 8.8×10⁻¹ S m⁻¹(Experiment) · σ_Li 10⁶ · σ_Gr 10²(ref 11) · σ_CC 10⁶ S m⁻¹ · D_Gr 10⁻¹ × D_s(범위 10⁻¹⁵–10⁻⁹, ref 12) · i₀,ref 2.32×10² A m⁻²(ref 13) · c_max 2.78×10⁴ mol m⁻³ · i₀′ 1.1×10¹ A m⁻²(범위 2–28, refs 14 · 15)."
+  },
+  {
+   "key": "fS12m",
+   "kind": "figure",
+   "label": "S12",
+   "page": 15,
+   "file": "fig_S12_manual_si_p15.png",
+   "caption": "Figure S12. Plots for simulated voltage vs. time (black curves) and current vs. time (blue curves) for the 40% Gr electrode at C/16 ('+' marker) and C/4 ('o' marker) CCCV charging.",
+   "rotated_deg": 0,
+   "bbox": [
+    283.0,
+    139.0,
+    547.0,
+    365.0
+   ],
+   "w": 1101,
+   "h": 942,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.936,
+   "manual": true,
+   "note": "수동 크롭 — SI 15 쪽 283–547 × 139–365 pt 300 dpi(자동 fS12 가 위쪽을 잘라서). 봤다: 그림 안 범례 '+' = C/4 · 'o' = C/16(캡션과 반대 — D) · 축 0–0.8 V · 0–12 A m⁻² · C/4 10 A m⁻² CC 뒤 CV 로 10 h · C/16 2.5 A m⁻² CC ≈17.2 h 뒤 CV 로 20 h(벡터 판독)."
+  },
+  {
+   "key": "fS14m",
+   "kind": "figure",
+   "label": "S14",
+   "page": 17,
+   "file": "fig_S14_manual_si_p17.png",
+   "caption": "Figure S14. (A) The original microstructure. (B) the modified microstructure. (C-D) Li site-fraction in the electrode at SOC = 50% and 60%. The result for SOC = 50% is provided to show the clear presence of the SOC gradient of first type. (E) The electrostatic potential of the electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    92.0,
+    560.0,
+    470.0
+   ],
+   "w": 2059,
+   "h": 1576,
+   "dpi": 300,
+   "src": "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf",
+   "blank": 0.745,
+   "manual": true,
+   "note": "수동 크롭 — SI 17 쪽 66–560 × 92–470 pt 300 dpi(자동 fS14 가 A · B 와 C · D 제목을 잘라서). 봤다: A 'Original microstructure, τ = 1.91' · B 'Modified microstructure, τ = 1.38' · 점선 원 = 수축부 · A · B 색 규약 미인쇄 — 면적 분율 보라 0.64 · 회색 0.36(A) / 0.66 · 0.34(B) `[도표]` 로 보라 = SE · 회색 = 흑연(S10 의 '흑연 파랑 · SE 회색' 과 다른 색) · (E) φ_e −36 … −41 mV."
+  },
+  {
+   "key": "fTOCm",
+   "kind": "figure",
+   "label": "TOC",
+   "page": 1,
+   "file": "fig_TOC_manual_p1.png",
+   "caption": "Abstract graphic (TOC) — Operando Microscopy · Capacity vs C-rate/% Gr · Electrochemical Model",
+   "rotated_deg": 0,
+   "bbox": [
+    360.0,
+    298.0,
+    567.0,
+    437.0
+   ],
+   "w": 863,
+   "h": 580,
+   "dpi": 300,
+   "src": "38. Rate Limitations in Composite Solid-State Battery Electrodes Revealing Heterogeneity with Operando Microscopy.pdf",
+   "blank": 0.427,
+   "manual": true,
+   "note": "수동 크롭 — 본문 1 쪽 초록 그래픽(원본 래스터 xref 69, 838 × 558 px · 363.3–564.4 × 300.9–434.8 pt). 봤다: 관찰 셀 도식(Li · SE · Gr 과 대물렌즈) · 현미경 사진 한 장(40 µm) · 율 도식('% Gr ↓' · 'C-Rate →' — 축 값 0) · 모형 지도 한 장(40 µm) — 새 값 0. 같은 쪽 xref 70(299 × 397 px)은 학술지 호 표지(August 2021 · Volume 6 · Number 8) · xref 71(290 × 70 px)은 머리 로고 — 크롭 안 함."
+  }
+ ]
+}

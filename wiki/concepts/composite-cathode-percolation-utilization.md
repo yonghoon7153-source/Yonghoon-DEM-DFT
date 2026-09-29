@@ -2,10 +2,10 @@
 title: 복합양극 퍼콜레이션 이용률 (utilization level)
 description: "Bielefeld 2019 utilization level θ = V_c/V_ν as the geometric surrogate for ASSB composite-cathode contact loss, its units, closed forms, and its own irreducible width"
 created: 2026-09-16
-updated: 2026-09-28
+updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -520,6 +520,15 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - 무탄소 셀은 모형에서 **전자 수송 한계**(`R_AM` 219–239 Ω cm² · Fig. 6b)지만, 그것은 σ_AM 1.06×10⁻³ S m⁻¹(SOC 상수)의 옴 강하다 — σ_AM 을 올리면 40 · 60 wt% 는 AM 기준 209.5 · 210.5 mAh g⁻¹ 로 포화(다 씀). 73호 실측 전자 σ 무릎(25–33 vol%)과 같은 층위가 아니다.
 - ⇒ 이 페이지 요지와의 관계(`[해석]`): **모형 편이 "고립" 을 이름으로 부르는 자리와 계산하는 자리가 다르다** — 68호 `Pᵉ`(ASSB 로 옮기면 `ε_p` · LAM_PE 자리)에 해당하는 양을 찾을 때 균질 모형의 σ_eff · ΔSOC 는 대용이 되지 않는다.
 
+## ★★ 흑연 복합 음극의 SE 쪽 퍼콜레이션 — 영상이 가리킨 전이(60 ↔ 80 %)와 측정 이온 σ 급락(40 → 60 %)이 다른 자리이고, 모형의 "inactive electrolyte domains" 는 SE 섬의 이름뿐이다 (2026-09-29 추가, `assb` 76호)
+
+`raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md` (Davis · … · Thornton · Dasgupta 2021, *ACS Energy Lett.* 6, 2993 — 흑연 \| Li₆PS₅Cl · 흑연 40 · 60 · 80 · 100 wt% · 무탄소 · 양극 아님).
+
+- `[인쇄]` "The operando video results indicate that this transition occurs between the 60% and 80% Gr samples, which is generally consistent with models of spherical particles that suggest that the percolation threshold should be around 25−30%"(ref 51 Shante · Kirkpatrick 1971) · "This trend is further corroborated with the ionic conductivity measurements". ⚠ `[도표]` S1 이온 σ 급락은 **40 → 60 %**(60 °C ×1/6.2 · RT ×1/8.4) · 60 → 80 % 는 ×1/1.4(76호 D8 — 긴장이지 모순은 아니다: "decreases significantly as the graphite fraction is increased" 는 참).
+- `[재현]` 밀도 가정(흑연 2.26 · LPSCl 1.64–1.87 g cm⁻³ — 이 위키 다른 편의 외부 값)으로 SE 부피 분율 ≈0.45–0.48(60 %) → 0.23–0.26(80 %) — 25–30 % 문턱을 60 ↔ 80 % 사이에서 지난다. 조성은 wt% 만 인쇄(76호 G14) · 공극률 0.
+- 흑연 쪽은 반대다 — 흑연은 σ_e/σ_ion ≈4×10³–7×10⁴ 의 연속 전자 망으로 다뤄졌고(모형 S18 은 흑연을 연속상으로 둠), 80–100 % 에서는 `[인쇄]` "nearly the entire electrode acts as one large graphite region" — 이온 대신 **흑연 고체 확산**이 두께 방향 구배를 만든다고 배정됐다. `[인쇄]` SI "the diffusion front is curved due to the presence of inactive electrolyte domains within the electrode"(S18) — SE 섬(고립 SE)에 이름은 붙었지만 분율 · 연결 판정은 계산하지 않았다.
+- ⇒ 이 페이지 요지와의 관계(`[해석]`): 1호 `θ_AM`(AM 연결 · 정적 상한)의 **SE 쪽 짝**(`θ_SE` — 고립 SE 섬)이 흑연 음극에서 이름으로만 나온다. 이 편의 미이용(80 · 100 % Gr 의 16–24 %)은 모형이 고립이 아니라 **확산 시간**(연결된 `η`)에 배정했다 — 고립 분율의 측정이 아니다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - `θ_AM` 이 접촉 손실의 **올바른** 모형이라고 주장하지 않는다. 원문의 `θ` 는 접촉 저항을
@@ -539,6 +548,7 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - ★ **2026-09-28 (68호)**: **68호 해석식이 22호 불활성을 "예측한다" 고 하지 않는다** — 한 점씩은 SE 입도를 골라 맞출 수 있을 뿐이고, 세 점의 패턴은 저자 배정 읽기로 재현되지 않는다. 22호 SE 입도 · d₅₀ ↔ Sauter 환산이 지면에 없고, `√P` 가 [31] 의 식인지도 미열람이다.
 - ★ **2026-09-28 (73호)**: **전자 σ 무릎을 `p_c` 의 측정으로 쓰지 않는다** — σ 는 연결 여부와 경로 폭을 함께 품고, 무릎 위치는 두 조성(24.6 ↔ 32.2 vol%) 사이 한 칸이다. 32 vol% 고립 몫 ≲13 % 도 저자 배정(VGCF 쌍) 위의 상한이다.
 - ★ **2026-09-28 (75호)**: **75호 모형에 고립이 없다고 하지 않는다** — DNS 미세구조에는 고립 클러스터가 있을 수 있고(저자 서술), σ_eff 계산이 그 효과를 평균으로 품는다. 주장은 **균질 모형에 고립 분율의 자리가 없어 용량으로 번역되지 않는다**는 것까지다.
+- ★ **2026-09-29 (76호)**: **SE 부피 분율 · 문턱 통과 자리를 이 편의 값으로 쓰지 않는다** — 흑연 · LPSCl 밀도는 다른 편의 외부 값이고 공극률은 0 으로 둔 `[재현]` 이다. 영상의 "60 ↔ 80 % 전이" 와 S1 급락(40 → 60 %)의 어긋남은 반정량 판독 위의 긴장이지 어느 쪽이 틀렸다는 판정이 아니다.
 
 ## 관련
 - [[assb-apparent-capacity-decomposition]] — 이 곱에 **셋째 항 `η(i)`** 를 더한다. 반례와 분리 시험.

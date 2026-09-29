@@ -130,6 +130,14 @@
    "20_direct_diagnosis_degradation_modes_lfp.pdf"
   ]
  },
+ "davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing": {
+  "figures": 25,
+  "generated": "2026-09-28",
+  "pdfs": [
+   "38. Rate Limitations in Composite Solid-State Battery Electrodes Revealing Heterogeneity with Operando Microscopy.pdf",
+   "93f806f3-38._Sup1_Rate_Limitations_in_Composite_Solid-State_Battery_Electrodes_Revealing_Heterogeneity_with_Operando_Microscopy.pdf"
+  ]
+ },
  "debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density": {
   "figures": 24,
   "generated": "2026-09-28",
@@ -392,7 +400,7 @@
   ]
  },
  "naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map": {
-  "figures": 19,
+  "figures": 22,
   "generated": "2026-09-28",
   "pdfs": [
    "07684e78-37._Kinetics_or_transport_whither_goes_the_solid-state_battery_cathode.pdf",

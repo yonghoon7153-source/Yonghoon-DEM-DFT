@@ -2,10 +2,10 @@
 title: "ASSB 모델 논문의 '민감도 분석' — OAT 스윕은 야코비안의 열이고, 겹쳐 보면 비식별 방향이 보인다"
 description: "In the ASSB modelling literature 'sensitivity analysis' means one-at-a-time parameter sweeps of a forward model against design KPIs, not identifiability analysis; when a paper prints both a parameter fit and such sweeps, overlaying the sweep figures exposes parallel or null Jacobian columns, and the first such paper shows a fitted parameter that drifted ten orders of magnitude along a direction its own sweep had found flat"
 created: 2026-09-23
-updated: 2026-09-28
+updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -236,6 +236,16 @@ evidenceScope: multi-source-primary
 그리고 곱 `a_s·k·√c_e`(식 5 · 6 · 10)의 **`a_s` 만** 미세구조로 흔들었다 — 37호(`A_eff` 판은 짝 `k_p` 를 흔들지 않았다)의 균질판이다([[assb-lampe-contact-product-degeneracy]] 쉰여덟 번째 적용).
 ⇒ 처방 목록에 한 줄(15).
 
+## ★★ 76호 — 첫 줄 두 칸(OAT 가상 실험 κ ×≈11 · `D` ×10), **셋째 후보(`i₀`)는 흔들지 않았고 옴 지배는 입력의 귀결** — 그리고 "두 무늬 = 두 원인" 배정이 자기 가상 실험에서 흔들린다
+
+`raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md` (Davis · Goel · … · Thornton · Dasgupta 2021, *ACS Energy Lett.* 6, 2993 — 실험 + 2D 해상 모형 · 흑연 \| Li₆PS₅Cl 복합 음극 · 24호 ref 39).
+`[인쇄]` 서론 "there is a need to decouple the relative contributions of solid-state diffusion within the active material, interfacial kinetics, and electrostatic…" · 모형 "a hypothetical value of Li diffusivity in graphite that is 10 times higher than the actual value. No other model parameter was changed" — **40 % Gr · C/4 한 조건의 OAT 둘 · 출력 = SOC 지도(정성)**. 첫 줄(설계)이다. `sensitiv` 0(SI "air-sensitive" 1) · `identif` 2 = 전부 "identify".
+`[해석]` 이 편에서 첫 줄이 주는 것은 셋이다:
+1. **가를 대상으로 적은 셋 중 하나를 흔들지 않았다** — 계면 동역학(`i₀,ref` 232 A m⁻² — 액체 흑연 편 값 · 환산 미인쇄)은 고정. `[재현]` 인쇄 파라미터의 Wagner 형 비 `Wa = (R_ct/aL)/(L/κ_eff)` ≈0.008–0.1(x 0.5–0.99) — 어느 SOC 에서도 ≪ 1 이라 "옴 · 확산이 한계" 는 **입력에서 이미 정해진 영역**이다. 75호(면적만 흔듦)와 합치면 이 계보의 모형 편 둘 다 "kinetics" 를 계면 속도상수로 시험하지 않았다.
+2. **"×10" 은 문헌값으로 되돌리기다** — `[인쇄]` SI "the diffusivity value used in the model was 1/10th of the literature value"(근거 "graphite grain boundaries" · 출처 0) ↔ 본문 "10 times higher than the actual value". 둘째 무늬(영역 안 구배)의 크기가 근거 없는 인자에 걸린다.
+3. **배정이 일대일이 아니다** — `[도표]` S17(`D` ×10)에서 둘째 무늬와 함께 **두께 방향 대비도** 약해진다(φ_e 강하는 기본과 같음 — 76호 D7). 한 관측 무늬에 두 원인이 기여하는 **배정의 비식별**이고, 곱 축퇴가 아니라 "두 손잡이 → 두 무늬" 사상의 비대각 성분이다. OAT 두 칸으로는 그 비대각을 잴 수 없다.
+⇒ 처방 목록에 한 줄(16).
+
 ## 우리 쪽 연결
 
 - `degradation-degeneracy/` 는 **"곡선이 맞는다 ≠ 파라미터가 맞다"** 를 합성 truth 로 채점하는 프로젝트다. 26호의 "RMSD 0.11 → 0.06 V + 문헌과 5 % 이내" 는 그 실패 모드를
@@ -261,6 +271,7 @@ evidenceScope: multi-source-primary
 13. (49호) **"방법들이 시간 척도를 맞추면 일치한다" 를 보면 ① 일치하는 것이 총량인지 성분인지 ② 시간 ↔ 주파수 대응 규약과 그 대역의 \|Z\| 기울기(분해능) ③ 진폭이 같은지 ④ 적합된 직렬 파라미터가 여기 대역 위쪽 끝의 \|Z\| 와 같은지를 적는다.** 같으면 그 파라미터는 물리 성분이 아니라 대역 끝의 이름이다.
 14. (54호) **"unfeasible · not separable" 을 인쇄한 모델 편이면 ① 가르는 채널이 모델 안에 있는지(절편 · 온도 · 진폭) ② 그 채널이 측정 대역 · 조건 안에 있는지 ③ 교정 단계에서 같은 분할을 입력으로 정하지 않았는지를 적는다.** 54호: ① 있다(고주파 절편) ② 없다(`f_C,B` ≈ 장비 상한) ③ 정했다(`σ⁰` 문헌 윗끝).
 15. (75호) **"X-limited" · 영역 지도를 보면 ① 판정 규칙(스윕 평탄 → 부재 ↔ 저항 크기 → 한계) ② 무엇의 순위 · 문턱인지 ③ 값의 시간 기준 ④ 조건(두께 · 전류 · 방향) ⑤ 저항 정의의 가중(전류 가중 ↔ 두께 단순 평균) ⑥ 동역학 손잡이가 곱의 어느 쪽인지(면적 ↔ `k` · `c_e`)를 적는다.** 그리고 스윕 포화를 "다음 한계로의 전이" 로 읽은 곳에서는 포화값이 **이용 가능 재고의 상한**(AM 기준 용량)에 닿았는지 본다 — 75호 40 · 60 wt% 는 닿았다.
+16. (76호) **"A 무늬는 B 원인" 배정을 보면 ① 가를 대상으로 적은 후보를 전부 흔들었는지(76호 `i₀` 0 회) ② 흔든 배수가 문헌값 복귀인지(76호 `D` ×10 = 문헌값) ③ 한 손잡이가 다른 무늬도 움직였는지(비대각 — 76호 S17) ④ 입력 파라미터의 무차원 영역(Wa 등)이 결론을 미리 정하지 않았는지를 적는다.** ④ 가 정했으면 "X 가 한계가 아니다" 는 시험이 아니라 입력이다.
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -273,6 +284,7 @@ evidenceScope: multi-source-primary
 - **49호의 "대역 끝 흡수" 를 일반 정리로 주장하지 않는다** — 한 셀(평탄한 스펙트럼)에서 두 사례가 맞은 것이다. 가파른 호가 대역 끝에 걸리면 적합 직렬 R 과 끝점 \|Z\| 는 다를 수 있다.
 - **29호 SI 의 dependency 절대값을 재현했다고 하지 않는다** — 순위만 재현했다(표본 배치 · 가중 미기재, OriginPro 정의식은 이 세션에서 원문 미확인). 그리고 **"창 끝 도달률이 dependency 를 정한다" 를 일반 법칙으로 주장하지 않는다** — 식 (2) 한 모형 · 14 셀의 순위 일치다.
 - **75호의 영역 지도가 틀렸다고 하지 않는다** — 기준 미인쇄 · 단순 평균 희석 · 40 · 60 wt% 포화 해석까지다. 함축 `i₀` 흩어짐은 한 θ 균질 BV 로 재현되지 않는다는 `[재현]` 이고, 원인(시간 기준 · 국소화 · θ → 1 소멸)은 가르지 않았다. 용량 축이 복합체 기준이라는 것도 지도 판독 위의 `[재현]` 이다(분모 미정).
+- **76호의 원인 배정이 틀렸다고 하지 않는다** — `i₀` 미시험 · ×10 = 문헌값 · S17 비대각까지다. Wa 는 인쇄 파라미터(선형 극한 `R_ct` · 영상 계면 길이 판독 12–15 · τ 정의 두 가지)로 만든 `[재현]` 범위이고, 실제 황화물 계면의 `j₀` 는 이 위키에 없다.
 
 ## 관련
 
