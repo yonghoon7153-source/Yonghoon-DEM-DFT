@@ -6037,6 +6037,144 @@
    "evidence_tests": [
     "docs/reviews/codex_mixer_highbo_round8_evidence_20260929/audit_round8.py"
    ]
+  },
+  {
+   "id": "LHSC-01",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex LHS 피복률 병합 전 리뷰 (사용자 경유, 2026-09-30) — 고정 핀 2e57dff90 · 대상 = da4670594 + 제출 패치 0001–0007 (패치 sha 7/7 일치 · 8 파일 = 우리 64ae3cba8 과 CRLF 정규화 뒤 바이트 동일) · 합성 입력에 실제 함수 · CLI · run_pipeline 호출 (Windows) · 우리 재현 (Linux · 2e57dff90 + 패치 7 = 검토 트리) 네 감사 스크립트 전부 같은 결과 (_reproduction_*_cand_64ae3cba8.json) · 실 DEM · 130/64 원자료 · 시뮬레이션 없음",
+   "opened_in": "docs/reviews/codex_lhs_coverage_verdict_20260930.md",
+   "title": "[패치 0006 · coverage physics v2] 분모가 무효인 AM (음수 자유 표면 · NaN 반경) 이 피복률 **0.0 · status ok** 로 나온다 — `coverage_physics_vs_hertzian.py:298–307` 의 `free = max(surface − ΣA_v2_AMAM, 0)` 뒤 `free > 0` 이 아니면 `cov = 0.0` · `n_free_surface_nonpositive` 를 세고도 `keys()` 의 무효 사유에 넣지 않는다 · 산출이 유한해 `_all_finite` 도 못 잡는다",
+   "note": "반례 (실제 `compute_case`): ① AM 4 (r 1 µm · 정사면체 변 0.8 µm · AM–AM 여섯 접촉 겹침 1.2 µm · geom 결속) + SE 1 (AM 하나와 0.1 µm 겹침) → n_free_surface_nonpositive 4 · area_AM전체_SE_total_physics_v2 0.79 · coverage_AM_mean_physics_v2 0.0 · status \"ok\".  ② 고립 AM 반경 NaN · 접촉 0 → 접촉별 입력검사를 안 지나고 같은 0.0 · ok.  대조군 ③ 정상 반경 · 접촉 0 = 참 0 (그대로여야 한다).  깊은 겹침은 경계 스트레스 시험 — 코퍼스 발생 주장 아님.  무너지는 문장 = \"v2 는 무효 입력을 정상 숫자로 조용히 대체하지 않는다\".  legacy 값 보존은 무영향.  해제 (판정문 §2 · §7-1): v2 전용으로 포함 입자 전부의 반경 · 표면적을 먼저 검증 · 무효 분모를 0 피복으로 넣지 않기 · 침대 전체 빈칸 또는 명시적 유효 부분집합 통계 중 계약을 정하고 제외 수 · 분모 · 상태를 함께 낸다 · 반례 ① ② 가 ok/0 이 되지 않고 ③ 은 참 0 으로 남는 세 대조를 셀프테스트로.  우리 재현: 세 값 동일.",
+   "evidence_tests": [
+    "docs/reviews/codex_lhs_coverage_evidence_20260930/audit.py",
+    "docs/reviews/codex_lhs_coverage_evidence_20260930/_reproduction_audit_results_cand_64ae3cba8.json"
+   ]
+  },
+  {
+   "id": "LHSC-02",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex LHS 피복률 병합 전 리뷰 (사용자 경유, 2026-09-30) — 고정 핀 2e57dff90 · 대상 = da4670594 + 제출 패치 0001–0007 (패치 sha 7/7 일치 · 8 파일 = 우리 64ae3cba8 과 CRLF 정규화 뒤 바이트 동일) · 합성 입력에 실제 함수 · CLI · run_pipeline 호출 (Windows) · 우리 재현 (Linux · 2e57dff90 + 패치 7 = 검토 트리) 네 감사 스크립트 전부 같은 결과 (_reproduction_*_cand_64ae3cba8.json) · 실 DEM · 130/64 원자료 · 시뮬레이션 없음",
+   "opened_in": "docs/reviews/codex_lhs_coverage_verdict_20260930.md",
+   "title": "[패치 0007 · `run_pipeline(stop_after='coverage')`] atoms-only 조기 반환 두 곳 (`webapp/app.py:3280` raw atom-only · `:3303` CSV-only) 이 명시적으로 요청한 coverage 필수 단계를 계산 없이 우회한다 — 유효한 `atoms.csv` 만 있으면 `{\"success\": true, \"atoms_only\": true}` · full_metrics 는 `has_contacts:false` 뿐 · v2 판정 키도 `stopped_after` 도 없다 · 호출자식 `status or ('done' if success else 'failed')` 은 done",
+   "note": "한정: LHS 배치 입구 `stage_case()` 는 원 contact 파일의 존재 · 해시를 선행 검사하므로 현재 130/64 배치에서 이 입력이 통과했다는 주장은 아니다 — 새 공개 계약 (`stop_after`) 과 옛 viewer-only 조기 반환의 충돌.  정상 `None` 모드의 viewer 기능은 유지.  반례: `run_pipeline(case, 'standard', '1:AM,2:SE', 1000, figures=False, auto_db=False, stop_after='coverage')` → success true.  대조: 옛 v2 도장을 심은 standard · bimodal 은 둘 다 failed (contact 단계 causal stash) = 정상.  해제 (§3 · §7-2): `contact` · `coverage` 같은 분석 단계가 명시적으로 요청되면 두 조기 반환에서 실패 · `None` 은 성공하는 양성 대조 · raw-atom-only 와 CSV-only 둘 다 시험.  우리 재현: 동일.",
+   "evidence_tests": [
+    "docs/reviews/codex_lhs_coverage_evidence_20260930/audit_pipeline.py",
+    "docs/reviews/codex_lhs_coverage_evidence_20260930/_reproduction_pipeline_results_cand_64ae3cba8.json"
+   ]
+  },
+  {
+   "id": "LHSC-03",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex LHS 피복률 병합 전 리뷰 (사용자 경유, 2026-09-30) — 고정 핀 2e57dff90 · 대상 = da4670594 + 제출 패치 0001–0007 (패치 sha 7/7 일치 · 8 파일 = 우리 64ae3cba8 과 CRLF 정규화 뒤 바이트 동일) · 합성 입력에 실제 함수 · CLI · run_pipeline 호출 (Windows) · 우리 재현 (Linux · 2e57dff90 + 패치 7 = 검토 트리) 네 감사 스크립트 전부 같은 결과 (_reproduction_*_cand_64ae3cba8.json) · 실 DEM · 130/64 원자료 · 시뮬레이션 없음",
+   "opened_in": "docs/reviews/codex_lhs_coverage_verdict_20260930.md",
+   "title": "[패치 0007] `_coverage_v2_written` (`webapp/app.py:3180`) 의 내용 검증이 문자열 여부뿐 — `coverage_status_physics_v2` 가 `\"\"` · `\"not_run\"` 이어도 True",
+   "note": "제출 producer 가 지금 그 문자열을 내는 반례는 아니다 — 불완전 writer 검출 공백.  해제: `ok` 또는 사유가 비지 않은 `blank: …` 만 받고, 각각의 필수 값 · 진단 스키마 (`n_contacts_physics_v2` · `am_denominator_physics_v2` 등) 를 검사.  반례 4 (`\"\"` · `not_run` · `ok` · `blank: cause`) 전부 True — 우리 재현 동일.",
+   "evidence_tests": [
+    "docs/reviews/codex_lhs_coverage_evidence_20260930/audit_pipeline.py",
+    "docs/reviews/codex_lhs_coverage_evidence_20260930/_reproduction_pipeline_results_cand_64ae3cba8.json"
+   ]
+  },
+  {
+   "id": "LHSC-04",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex LHS 피복률 병합 전 리뷰 (사용자 경유, 2026-09-30) — 고정 핀 2e57dff90 · 대상 = da4670594 + 제출 패치 0001–0007 (패치 sha 7/7 일치 · 8 파일 = 우리 64ae3cba8 과 CRLF 정규화 뒤 바이트 동일) · 합성 입력에 실제 함수 · CLI · run_pipeline 호출 (Windows) · 우리 재현 (Linux · 2e57dff90 + 패치 7 = 검토 트리) 네 감사 스크립트 전부 같은 결과 (_reproduction_*_cand_64ae3cba8.json) · 실 DEM · 130/64 원자료 · 시뮬레이션 없음",
+   "opened_in": "docs/reviews/codex_lhs_coverage_verdict_20260930.md",
+   "title": "[패치 0003 · 수확기 item 2 면적 대조] 허용폭 `_contact_area_rows` (`lhs_descriptor_harvest.py:361–377`) = 축별로 따로 흔든 변화량의 합 — 포함 경계에서 반지름과 δ 를 **동시에** 움직이면 생기는 교차 원판을 못 잡아 순수 반올림 입력을 FLAG (r1 .002 · r2 .0010000049 · δ .0020000051 → 6 자리 되읽기 A_recalc 0 · diff/tol 1,177,958) · 반대로 깊은 겹침 (r .0005 · δ .000999999) 에서는 허용폭 1.57e-6 이 면적 7.85e-7 보다 커 Hertz 치환도 3e-5 상대오차 치환도 통과",
+   "note": "한정: 두 반례는 포함 경계 · 매우 깊은 겹침 — 130/64 에 그런 접촉이 있다는 증거 아님 · 무작위 15,000 건 (r 1e-4–1e-2 · δ/R* 1e-5–1 · seed 20260930) 은 오탐 0 · 3e-5 누락 0 · 제출 3,000 건 성적을 부정하지 않으나 \"모두\" 로 확장 불가.  진단 기록 전용 (거부 없음 · 피복률 값 무변경) 이라 P1 아님.  해제 (§4-1 · §7-3): 지원 기하 범위를 명시하고 범위 밖을 \"면적 불일치\" 와 구별하거나 공동 반올림 구간을 포괄하는 경계 계산 · 전역 상수를 넓혀 오탐만 없애지 말 것 (판별력 저하).  우리 재현: 수치 동일.",
+   "evidence_tests": [
+    "docs/reviews/codex_lhs_coverage_evidence_20260930/audit.py",
+    "docs/reviews/codex_lhs_coverage_evidence_20260930/_reproduction_audit_results_cand_64ae3cba8.json"
+   ]
+  },
+  {
+   "id": "LHSC-05",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex LHS 피복률 병합 전 리뷰 (사용자 경유, 2026-09-30) — 고정 핀 2e57dff90 · 대상 = da4670594 + 제출 패치 0001–0007 (패치 sha 7/7 일치 · 8 파일 = 우리 64ae3cba8 과 CRLF 정규화 뒤 바이트 동일) · 합성 입력에 실제 함수 · CLI · run_pipeline 호출 (Windows) · 우리 재현 (Linux · 2e57dff90 + 패치 7 = 검토 트리) 네 감사 스크립트 전부 같은 결과 (_reproduction_*_cand_64ae3cba8.json) · 실 DEM · 130/64 원자료 · 시뮬레이션 없음",
+   "opened_in": "docs/reviews/codex_lhs_coverage_verdict_20260930.md",
+   "title": "[패치 0003 · DESC-03 AST 가드] `_plastic_coverage_uses` (`lhs_descriptor_harvest.py:441`) 가 `from scripts import plastic_coverage as pc` (`ImportFrom.module == 'scripts'`) 와 `from importlib import import_module as im; im(\"plastic_coverage\")` (호출 이름이 별칭) 을 `(set(), [])` 로 통과시킨다 — 실제 exec 는 Physics 함수를 호출",
+   "note": "현행 수확기 본문이 이 우회를 쓴다는 뜻은 아니다 — \"여섯 모양을 잡는다\" 시험은 통과하지만 Physics 호출 금지 계약을 보증하지 않는다.  해제 (§4-2): 패키지에서 모듈을 가져오는 형태 + import 별칭 추적 + 두 음성 대조 상주 · 또는 순수 기하 함수를 별도 작은 모듈로 분리해 수확기의 Physics 모듈 의존 자체를 없앤다 · AST 를 완전한 안전 증명으로 부르지 말 것.  우리 재현: 두 입력 모두 names [] · bad [] · actually_called True.",
+   "evidence_tests": [
+    "docs/reviews/codex_lhs_coverage_evidence_20260930/audit.py",
+    "docs/reviews/codex_lhs_coverage_evidence_20260930/_reproduction_audit_results_cand_64ae3cba8.json"
+   ]
+  },
+  {
+   "id": "LHSC-06",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex LHS 피복률 병합 전 리뷰 (사용자 경유, 2026-09-30) — 고정 핀 2e57dff90 · 대상 = da4670594 + 제출 패치 0001–0007 (패치 sha 7/7 일치 · 8 파일 = 우리 64ae3cba8 과 CRLF 정규화 뒤 바이트 동일) · 합성 입력에 실제 함수 · CLI · run_pipeline 호출 (Windows) · 우리 재현 (Linux · 2e57dff90 + 패치 7 = 검토 트리) 네 감사 스크립트 전부 같은 결과 (_reproduction_*_cand_64ae3cba8.json) · 실 DEM · 130/64 원자료 · 시뮬레이션 없음",
+   "opened_in": "docs/reviews/codex_lhs_coverage_verdict_20260930.md",
+   "title": "[패치 0002 · item 1 벽 제외 피복률] `coverage_wall` (`lhs_descriptor_harvest.py:853`) 은 벽 cap 을 **분모에서만** 뺀다 — 분자는 원 AM–SE 합 그대로라 ROI 밖 접촉이 남는다 (AM r 1 z −0.9 · SE r 0.5 z −2.3 · floor 0: 교차 원판 z −1.868 전부 ROI 밖인데 31.63 % · OK) · 독스트링 `:843` \"분자 · 분모 모두에서 뺀 값\" 은 부정확",
+   "note": "병합 가능한 해석 = \"원 AM–SE 면적합 / AM–AM · 두 벽 cap 차감 장부 분모 · 유효 입자 평균\" (분모 보정 proxy) — \"벽 안 SE 가 덮은 순수 면적\" 으로 읽으면 반증.  분모 ≤ 0 입자 제외 뒤 평균의 편향 방향은 어느 쪽도 가능 (제외는 `counts` · `n_free_surface_invalid` · `n_valid_wallexcl` 에 기록되므로 무기록은 아님 · `OK` = 남은 유효 입자의 계산 상태).  두 표의 `mean_wallexcl_pct` 는 각각 한 벽만 교정한 값이 아니라 두 벽을 다 뺀 같은 입자값을 다르게 분류한 평균.  해제: 독스트링 · 열 사전 문구를 \"벽 자체 접촉을 분자에 더하지 않았다\" 로 · 인계 라벨 = 분모 보정 proxy.  우리 재현: 31.626275510204017 동일.",
+   "evidence_tests": [
+    "docs/reviews/codex_lhs_coverage_evidence_20260930/audit.py",
+    "docs/reviews/codex_lhs_coverage_evidence_20260930/_reproduction_audit_results_cand_64ae3cba8.json"
+   ]
+  },
+  {
+   "id": "LHSC-07",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex LHS 피복률 병합 전 리뷰 (사용자 경유, 2026-09-30) — 고정 핀 2e57dff90 · 대상 = da4670594 + 제출 패치 0001–0007 (패치 sha 7/7 일치 · 8 파일 = 우리 64ae3cba8 과 CRLF 정규화 뒤 바이트 동일) · 합성 입력에 실제 함수 · CLI · run_pipeline 호출 (Windows) · 우리 재현 (Linux · 2e57dff90 + 패치 7 = 검토 트리) 네 감사 스크립트 전부 같은 결과 (_reproduction_*_cand_64ae3cba8.json) · 실 DEM · 130/64 원자료 · 시뮬레이션 없음",
+   "opened_in": "docs/reviews/codex_lhs_coverage_verdict_20260930.md",
+   "title": "[coverage CLI · 이번 패치가 만든 것 아님] `coverage_physics_vs_hertzian.py --all` 은 중첩 archive (`archive/category/nested`) 를 재귀 발견한 뒤 basename 만 넘기고 `find_case_dir` 는 깊이 1 만 찾아 `[skip] nested` · rc 0 · v2 미작성 (`:1027` · `:101`) · `--case-dir` 의 손상 full_metrics JSON 도 경고만 내고 rc 0 · 파일 그대로 (`:662`)",
+   "note": "둘 다 기존 CLI 경로 — \"조용한 skip 을 모두 없앴다\" 는 해석은 틀리다 (요청서 Q9).  새 required 파이프라인 (`stop_after='coverage'`) 은 산출 판정 부재를 거부하므로 배치 경로는 다르다.  직접 CLI 사용자에게 rc 0 = 완료 증서라고 안내하지 말 것.  + Q6 고지: 외부 `WEBAPP_*_FOLDER` 배치에서 종전 skip 이 실행으로 바뀌어 v2 · legacy 키가 **둘 다 새로** 쓰인다 (같은 입력의 기존 계산식 변경이 아니라 행위 변경 · `export_master_csv.py:102` 가 새 열을 소비자에게 노출) — \"wall 두 예외 외 어떤 관측도 안 바뀐다\" 는 넓게 쓰면 틀리다.  우리 재현: 셋 동일.",
+   "evidence_tests": [
+    "docs/reviews/codex_lhs_coverage_evidence_20260930/audit_cli.py",
+    "docs/reviews/codex_lhs_coverage_evidence_20260930/_reproduction_cli_results_cand_64ae3cba8.json"
+   ]
+  },
+  {
+   "id": "LHSC-08",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex LHS 피복률 병합 전 리뷰 (사용자 경유, 2026-09-30) — 고정 핀 2e57dff90 · 대상 = da4670594 + 제출 패치 0001–0007 (패치 sha 7/7 일치 · 8 파일 = 우리 64ae3cba8 과 CRLF 정규화 뒤 바이트 동일) · 합성 입력에 실제 함수 · CLI · run_pipeline 호출 (Windows) · 우리 재현 (Linux · 2e57dff90 + 패치 7 = 검토 트리) 네 감사 스크립트 전부 같은 결과 (_reproduction_*_cand_64ae3cba8.json) · 실 DEM · 130/64 원자료 · 시뮬레이션 없음",
+   "opened_in": "docs/reviews/codex_lhs_coverage_verdict_20260930.md",
+   "title": "[패치 0001 · item 4 벽 규칙] 규칙 = **저장 좌표에서 양의 cap 깊이** (`_wall_contact` 하나 · `:592` `:601`) 이지 반올림 전 실제 접촉 분류가 아니다 — 깊이 `r − z + z_wall` 의 불확실폭 (토큰 반올림 반폭 합) 안에 드는 |depth| 수를 상 · 벽별로 보고하지 않는다 · STL 정밀도는 atom dump 의 6 자리 가정을 복제하지 말고 따로 읽어야 한다",
+   "note": "구현 통일은 CONFIRMED (세 소비자가 같은 depth > 0 함수 · τ 슬래브 부등식은 다른 양이라 결함 아님).  분류 하나가 움직이면 그 상의 비율은 1/N_phase · 벽 제외 분모가 0 근처면 피복률 민감도 작다고 보장 못 함.  130/64 원 dump 가 리뷰에 없어 near-tangent 실측 수 · 코퍼스 민감도 미측정 — 5번 재수확 때 상 · 벽별 근접 접선 수를 보고 (추정으로 채우지 않는다).",
+   "evidence_tests": [
+    "docs/reviews/codex_lhs_coverage_evidence_20260930/README.md"
+   ]
+  },
+  {
+   "id": "LHSC-09",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex LHS 피복률 병합 전 리뷰 (사용자 경유, 2026-09-30) — 고정 핀 2e57dff90 · 대상 = da4670594 + 제출 패치 0001–0007 (패치 sha 7/7 일치 · 8 파일 = 우리 64ae3cba8 과 CRLF 정규화 뒤 바이트 동일) · 합성 입력에 실제 함수 · CLI · run_pipeline 호출 (Windows) · 우리 재현 (Linux · 2e57dff90 + 패치 7 = 검토 트리) 네 감사 스크립트 전부 같은 결과 (_reproduction_*_cand_64ae3cba8.json) · 실 DEM · 130/64 원자료 · 시뮬레이션 없음",
+   "opened_in": "docs/reviews/codex_lhs_coverage_verdict_20260930.md",
+   "title": "[패치 0004 · item 3 접촉 문] 중복 ID 쌍 거부 · 고아 기록은 정식 `harvest()` 경로에서만 (`:1115` 뒤) — 공개 저수준 `coverage_hertz()` · `coverage_wall()` 은 gate 를 안 부른다 · 단일 영상 접촉 전제: 주기 길이 L 에서 두 입자가 0.45 L 떨어지고 반경합 0.6 L 이면 같은 ID 쌍의 **서로 다른 영상 접촉 둘** 이 가능 — ID 쌍만으로 합치거나 거부하는 것은 일반 규칙이 아니다",
+   "note": "요청서 전제 정정: 고아 JSON 부재가 아니라 `contact_gate` 에 `n_orphan_rows` · `n_orphan_ids` 가 직렬화된다 (`:1244`) — 현재 정책 = 제외하고 수를 남기는 부분집합 통계 (원자료 완전성 통과 아님).  LIGGGHTS pair/gran/local 문서는 unordered ID 쌍의 전역 유일성을 선언하지 않는다.  해제: 계약에 단일 영상 영역 확인 (각 접촉 반경합 < 최단 주기 길이/2 · raw box · radii 로) 을 넣거나 더 큰 입자로 확장할 때 영상 구분자를 넣는다 · LHS 에 실제 과잉 거부가 났다는 주장 없음 · 130 의 과거 감사 0 건을 64 의 증거로 옮기지 않는다.",
+   "evidence_tests": [
+    "docs/reviews/codex_lhs_coverage_evidence_20260930/README.md"
+   ]
+  },
+  {
+   "id": "LHSC-10",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex LHS 피복률 병합 전 리뷰 (사용자 경유, 2026-09-30) — 고정 핀 2e57dff90 · 대상 = da4670594 + 제출 패치 0001–0007 (패치 sha 7/7 일치 · 8 파일 = 우리 64ae3cba8 과 CRLF 정규화 뒤 바이트 동일) · 합성 입력에 실제 함수 · CLI · run_pipeline 호출 (Windows) · 우리 재현 (Linux · 2e57dff90 + 패치 7 = 검토 트리) 네 감사 스크립트 전부 같은 결과 (_reproduction_*_cand_64ae3cba8.json) · 실 DEM · 130/64 원자료 · 시뮬레이션 없음",
+   "opened_in": "docs/reviews/codex_lhs_coverage_verdict_20260930.md",
+   "title": "[패치 0005 · 0006 · v2 라벨 계약] `film_area_physics_v2` 는 선언한 **불연속 cap-우선 후보 연산자**를 구현 (단위 맞음 · sim/SI 면적비 999999.9999998804) 이지 검증된 물리 피복률이 아니다 — 개시점 (`DR_YIELD_ONSET` 0.00113 · r 0.5 µm · δ 2.83e-10 m) 바로 아래 2.22e-16 → 개시점 1.26e-17 m² (×0.0566 · 94.3 % 하락) · `V_lens/h_min` 을 전체 접촉면적 상한으로 삼는 가정 미증명 · `L > U` 에서 U 선택 = 하한 조건 폐기",
+   "note": "병기판은 감도 비교용 후보 디스크립터로만 · 임의 smoothing 으로 물리성이 생기지 않는다 · 인계 열 채택 · 물성값 변경은 리뷰 요구 아님.  침대 전체 빈칸 (한 접촉 미정 → 합 미정) 은 방어 가능한 fail-closed — 문제는 분모 · 입자 검사에 그 정책이 적용되지 않는 비대칭 (`LHSC-01`).  legacy 핀 (JSON 키 · 값 · 순서 · LF CSV · 반환값) 은 6 변형 × 3 종 동일 — 합성 표본의 보존 증거이지 전 입력의 수학적 동등성 증명은 아님.  문서 · 인계 라벨: v2 = 미검증 후보 · `OK` = 계산 상태 ≠ 물리 적격성 · 실제 reharvest 는 새 디렉터리 · 코퍼스 값 (접선 근처 수 · 무효 분모율 · cap 충돌률 · 제외율) 은 원자료 계산 뒤 보고.",
+   "evidence_tests": [
+    "docs/reviews/codex_lhs_coverage_evidence_20260930/audit.py",
+    "docs/reviews/codex_lhs_coverage_evidence_20260930/_reproduction_audit_results_cand_64ae3cba8.json"
+   ]
   }
  ]
 }

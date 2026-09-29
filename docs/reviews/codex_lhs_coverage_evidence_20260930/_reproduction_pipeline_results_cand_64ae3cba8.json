@@ -1,0 +1,59 @@
+{
+  "stale_standard": {
+    "status": "failed",
+    "failed_stages": [
+      "Coverage Physics vs Hertzian"
+    ],
+    "calls": [
+      "parse_liggghts.py",
+      "analyze_contacts.py",
+      "coverage_physics_vs_hertzian.py"
+    ],
+    "final_metrics": {}
+  },
+  "stale_bimodal": {
+    "status": "failed",
+    "failed_stages": [
+      "Coverage Physics vs Hertzian"
+    ],
+    "calls": [
+      "parse_liggghts.py",
+      "analyze_contacts_bimodal.py",
+      "coverage_physics_vs_hertzian.py"
+    ],
+    "final_metrics": {}
+  },
+  "atoms_only": {
+    "return": {
+      "success": true,
+      "log": [
+        {
+          "step": "Parse (atoms.csv only)",
+          "stdout": "atoms.csv copied from case_dir (no contacts)",
+          "stderr": "",
+          "rc": 0
+        }
+      ],
+      "atoms_only": true
+    },
+    "batch_status_expression": "done",
+    "metrics": {
+      "mode_note": "atoms_only_csv — 3D viewer enabled, contact-based metrics skipped",
+      "has_contacts": false
+    }
+  },
+  "status_schema": {
+    "": true,
+    "not_run": true,
+    "ok": true,
+    "blank: cause": true
+  },
+  "batch_copyshim": {
+    "rc": 0,
+    "tail": [
+      "",
+      "✓ 전부 통과"
+    ],
+    "scope": "symlink operation replaced by byte copy; remaining production functions/test body unchanged"
+  }
+}

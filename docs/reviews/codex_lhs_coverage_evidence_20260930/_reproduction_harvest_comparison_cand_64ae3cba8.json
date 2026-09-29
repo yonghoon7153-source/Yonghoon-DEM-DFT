@@ -1,0 +1,98 @@
+{
+  "selftest_return": 0,
+  "selftest_failures": [],
+  "old_new_calls": 15,
+  "legacy_comparisons": [
+    {
+      "case": "desc01",
+      "old_keys_compared": 36,
+      "mismatch": []
+    },
+    {
+      "case": "desc02a",
+      "old_keys_compared": 36,
+      "mismatch": []
+    },
+    {
+      "case": "desc02b",
+      "old_keys_compared": 36,
+      "mismatch": []
+    },
+    {
+      "case": "cov",
+      "old_keys_compared": 36,
+      "mismatch": []
+    },
+    {
+      "case": "scale",
+      "old_keys_compared": 36,
+      "mismatch": []
+    },
+    {
+      "case": "absent",
+      "old_keys_compared": 36,
+      "mismatch": []
+    },
+    {
+      "case": "freebad",
+      "old_keys_compared": 36,
+      "mismatch": []
+    },
+    {
+      "case": "deck",
+      "old_keys_compared": 36,
+      "mismatch": []
+    },
+    {
+      "case": "wallsplit",
+      "old_keys_compared": 36,
+      "mismatch": []
+    },
+    {
+      "case": "wallsplit4",
+      "old_keys_compared": 36,
+      "mismatch": []
+    },
+    {
+      "case": "wallsplit2",
+      "old_keys_compared": 36,
+      "mismatch": []
+    },
+    {
+      "case": "areacheck",
+      "old_keys_compared": 36,
+      "mismatch": []
+    },
+    {
+      "case": "gate_ok",
+      "old_keys_compared": 36,
+      "mismatch": []
+    },
+    {
+      "case": "gate_orph",
+      "old_keys_compared": 36,
+      "mismatch": []
+    },
+    {
+      "case": "gate_mut",
+      "old_keys_compared": 36,
+      "mismatch": []
+    }
+  ],
+  "LF_fixture_shim": true,
+  "tau_platform_control": {
+    "base": {
+      "tau_mean": 2.0612290410739833,
+      "tau_median": 2.0805329527696066,
+      "n_sampled": 160,
+      "n_valid": 160
+    },
+    "candidate": {
+      "tau_mean": 2.0612290410739833,
+      "tau_median": 2.0805329527696066,
+      "n_sampled": 160,
+      "n_valid": 160
+    },
+    "same": true
+  }
+}

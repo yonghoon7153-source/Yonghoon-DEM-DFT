@@ -1,0 +1,204 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  1) preserve → network solver 호출 0회
+  PASS  2) preserve → Stage E 는 1회 호출
+  PASS  3) preserve → 옛 network 파일이 바이트 그대로
+  PASS  4) preserve → baseline σ 가 옛 값(1.0), 새 solver 값(999) 아님
+  PASS  5) ★ Stage E 가 그 baseline 을 봤다 (1.0×2=2.0)
+  PASS  6) ★ baseline 과 Stage E parent run ID 일치
+  PASS  7) force → network solver 정확히 1회
+  PASS  8) force → 새 baseline(999) 이 반영
+  PASS  9) force → Stage E 가 새 baseline 을 봤다 (999×2)
+  PASS  10) force → 새 run_id 로 갱신 (옛 OLDRUN 아님)
+  PASS  11) ★ rc=0 이어도 기대 산출물이 없으면 실패로 본다
+  PASS  12) ★ 그 실패가 필수 단계라 status=failed (done 이 아니다)
+  PASS  T3a) ★ 실패는 attempt 파일에 남고 active 도장을 덮지 않는다
+  PASS  T3b) ★ 그 상태는 snapshot 자격이 없다 (baseline 부재)
+  PASS  T3c) ★ 도장이 failed 면 baseline 이 있어도 보존 금지
+  PASS  T3d) success 도장 + baseline 이면 보존한다
+  PASS  T3e) 도장 이전 legacy 산출물은 baseline 이 있으면 보존
+  PASS  T1) ★ contact rc=1 → status=failed (done 아님)
+  PASS  T2) 전부 성공하면 done
+  PASS  T2b) ★ contact rc=0 이어도 기대 산출물이 없으면 failed
+  PASS  R1) ★ Stage E rc=0 인데 무산출 → partial (done 금지)
+  PASS  T9a) standard 기본값: 그림 단계 ≥ 2 · 자동 DB 1 회 (웹앱 동작 불변)
+  PASS  T9b) ★ standard figures=False · auto_db=False: 그림 단계 0 · 자동 DB 0 · done
+  PASS  T9c) ★ standard 계산 단계는 순서까지 그대로 (그림을 뺀 스크립트 열이 같다)
+  PASS  T9a) bimodal 기본값: 그림 단계 ≥ 2 · 자동 DB 1 회 (웹앱 동작 불변)
+  PASS  T9b) ★ bimodal figures=False · auto_db=False: 그림 단계 0 · 자동 DB 0 · done
+  PASS  T9c) ★ bimodal 계산 단계는 순서까지 그대로 (그림을 뺀 스크립트 열이 같다)
+  PASS  T10a) ★ standard stop_after=contact: 접촉 분석에서 끝난다 (network · Stage E 없음) · done · stopped_after 표지
+  PASS  T10b) ★ standard 멈춘 실행의 명령 = 전체 실행의 앞부분 (인자까지 같다)
+  PASS  T10a) ★ bimodal stop_after=contact: 접촉 분석에서 끝난다 (network · Stage E 없음) · done · stopped_after 표지
+  PASS  T10b) ★ bimodal 멈춘 실행의 명령 = 전체 실행의 앞부분 (인자까지 같다)
+  PASS  T10c) stop_after 가 None · contact · coverage 가 아니면 ValueError — 조용히 전체를 돌지 않는다 (ValueError)
+  PASS  T10d) stop_after=contact 이어도 접촉 분석 실패는 failed (기존 계약 그대로)
+  PASS  T11a) ★ standard stop_after=coverage: 접촉 → 피복 에서 끝난다 (network · Stage E 없음) · done · stopped_after 표지 (done)
+  PASS  T11b) ★ standard 멈춘 실행의 명령 = 전체 실행의 앞부분 (인자까지 같다)
+  PASS  T11c) ★ standard 피복 rc 0 인데 v2 판정을 안 썼다 → failed (조용한 초록 아님) · 전체 실행의 optional 계약은 그대로 (failed · 전체 done)
+  PASS  T11d) standard 피복 rc 1 → failed (failed)
+  PASS  T11a) ★ bimodal stop_after=coverage: 접촉 → 피복 에서 끝난다 (network · Stage E 없음) · done · stopped_after 표지 (done)
+  PASS  T11b) ★ bimodal 멈춘 실행의 명령 = 전체 실행의 앞부분 (인자까지 같다)
+  PASS  T11c) ★ bimodal 피복 rc 0 인데 v2 판정을 안 썼다 → failed (조용한 초록 아님) · 전체 실행의 optional 계약은 그대로 (failed · 전체 done)
+  PASS  T11d) bimodal 피복 rc 1 → failed (failed)
+  PASS  T11e) None · contact · coverage 밖의 값은 전부 ValueError (조용히 전체를 돌지 않는다) []
+  PASS  T11f) stop_after=coverage 이어도 접촉 분석 실패는 failed · 피복은 돌지 않는다
+  PASS  R5) ★ archive contact rc=1 → error · network solver 0회  (status=error, net=0)
+  [Archive Reanalyze] done (c1)
+  PASS  R6) archive 정상 → done · network solver 1회  (status=done, net=1)
+  PASS  P2) ★ metadata-only touch 는 성공으로 인정되지 않는다
+  PASS  P2b) 옛 baseline 이 바이트 그대로 복구된다
+  PASS  P1) ★ active 도장은 이전 성공 세대(OLDRUN)를 유지한다
+  PASS  P1b) 실패 시도는 분리 파일에 기록된다
+  PASS  P1c) ★ full_metrics 가 success 라고 쓰지 않는다
+  PASS  P3) ★ network 실패 후 Stage E 를 실행하지 않는다
+  PASS  R-PD1) ★ MPa 2.5 가 2500 이 되지 않는다 (got 2.5)
+  PASS  R-PD1) ★ 덱 0.30 → 300 MPa (got 300.0)
+  PASS  R-PD1) ★ sim=0 이 MPa 로 새지 않는다 (got 0.0)
+  PASS  RC4-03) ★ network 성공이 contact 의 network_summary.csv 를 지우지 않는다
+  PASS  RC4-02) ★ 비격리 metadata 도 격리·복원된다 (stage_e_source/온도/검증카드)
+  PASS  RC4-01) ★ Stage E 실패 시 wrapper provenance 도 옛 것을 유지한다
+  PASS  RC4-01b) 옛 보정값도 그대로
+  PASS  RC5-02a) ★ 실패 후보가 새로 만든 관리 키가 남지 않는다 (전수 purge)
+  PASS  RC5-02b) ★ 실패한 Stage E 가 쓴 raw thermal(777) 이 남지 않는다
+  PASS  RC5-03) ★ 새 network 세대가 못 낸 thermal 을 옛 값(111.125)으로 메우지 않는다
+  PASS  RC5-02e) ★ 실패 시도가 active 필드를 차지하지 않고 별도 record 로 간다
+  PASS  RR3-04a) ★ 존재 확인만 하면 무산출 실행이 통과한다 (= 옛 계약의 결함)
+  PASS  RR3-04b) ★ fresh=True 면 같은 상황이 실패한다 (stale 로 잡힌다)
+  PASS  RR3-04c) 실제로 새로 쓰면 통과한다 (fresh 가 거짓 실패를 내지 않는다)
+  PASS  RC6-05a) ★ 부분 쓰기(1/4)가 실패하고 낡은 파일 3개를 지목한다
+  PASS  RC7-03a) ★ 결함 재현: metadata-only touch 가 fresh 를 통과한다 (무산출인데 success)
+  PASS  RC7-03a2) ★ 그런데 내용은 옛 세대 그대로다 (= 거짓 성공의 실체)
+  PASS  RC7-03b) ★ causal 은 같은 touch 실행을 실패로 잡는다 (빈 자리에 아무것도 안 씀)
+  PASS  RC7-03c) ★ 실패해도 옛 성공 세대가 그대로 복구된다 (내용 보존)
+  PASS  RC7-03c2) stash 디렉터리가 남지 않는다
+  PASS  RC7-03d) 실제로 쓰면 causal 이 통과한다 (거짓 실패 없음)
+  PASS  RC7-03e) ★ 결정론적 재실행(byte-identical)도 통과 — fresh 가 못 하던 것
+  PASS  RC7-03f) ★ 부분 쓰기(1/4)는 실패하고, 부분 산출물이 옛 세대로 교체된다
+  PASS  RC7-03g) stash 직후 results 는 비어 있다 (빈 자리 실행 전제)
+  PASS  RC7-03h) ★ 고아 stash 는 삭제가 아니라 복구된다 (마지막 성공 세대 보존)
+  PASS  RC7-03i) ★ 더 새 세대가 있으면 stash 가 그것을 덮지 않는다
+  PASS  RC7-03j) ★ contact 네 경로 전부 causal 배선 (batch·bimodal·standard·archive)
+  PASS  RC7-03k) ★ 'Contact Analysis (batch)' 호출부가 실제로 causal=True 를 넘긴다
+  PASS  RC7-03k) ★ 'Contact Analysis (archive)' 호출부가 실제로 causal=True 를 넘긴다
+  PASS  RC7-03k) ★ 'Bimodal Contact Analysis' 호출부가 실제로 causal=True 를 넘긴다
+  PASS  RC7-03l) ★ contact 경로에 fresh=True 가 남아 있지 않다 (약한 계약 잔존 금지)
+  PASS  RC7-07) ★ 'Bimodal Contact Analysis' 실패 시 즉시 중단한다 (batch·archive 와 같은 계약)
+  PASS  RC7-07) ★ 'Contact Analysis' 실패 시 즉시 중단한다 (batch·archive 와 같은 계약)
+  PASS  RC6-02) ★ H thermal=failed → 게시 차단·옛 세대 보존
+  PASS  RC6-03) ★ Physics 만 failed 여도 차단 (H 성공에 가리지 않는다)
+  PASS  RC6-02c) 둘 다 computed → 정상 게시
+  PASS  RC6-07a) ★ 자식 env 가 UTF-8 로 강제된다
+  PASS  RC6-07b) ★ 부모 decode 도 UTF-8 (자식만 바꾸면 반쪽이다)
+  PASS  RC6-07c) 기존 환경변수를 지우지 않는다 (PATH 등)
+  PASS  RC6-07d) ★ run_stage 가 그 계약을 실제로 넘긴다 (배선)
+  PASS  RC6-07e) ★ Stage E 재솔브 subprocess 도 UTF-8 계약을 건다
+  PASS  RC6-04b-a) ★ purge 도중에도 **active** 는 Stage E 키를 그대로 갖는다
+  PASS  RC6-04b-b) ★ publish 없이 빠져나가도 active 는 옛 세대 그대로 (crash 안전)
+  PASS  RC6-04b-c) publish 하면 새 값이 active 에 원자 교체된다
+  PASS  RC6-04b-d) candidate 는 뒤에 남지 않는다
+  PASS  RC6-04b-e) 오래된 candidate 를 청소한다
+  PASS  RC6-04b-f) ★ app 이 candidate 흐름과 --case-dir 를 실제로 쓴다 (배선)
+  PASS  RC6-04b-g) Stage E 가 --case-dir 를 받는다 (탐색을 건너뛴다)
+  PASS  13) 선택 단계만 실패 → partial
+  PASS  14) 전부 성공 → done
+  PASS  15) atomic_write_json 이 임시파일을 남기지 않는다
+  PASS  16) 도장 없는 옛 산출물 → run_id None (조용히 지어내지 않는다)
+  PASS  24) 완전한 11-키 → 통과
+  PASS  25) ★ garbage_stage_e: null 하나만 → 거부 (옛 계약은 success 였다)
+  PASS  26) ★ 필수 키가 있어도 값이 None 이면 없는 것으로 센다
+  PASS  27) ★ stage_e_source 만 생성 → 거부 (partial)
+  PASS  28) 아무 출력 없음 → 전부 누락
+  PASS  29) 진짜 0 은 유효값이라 통과한다 (None 만 거른다)
+  PASS  37) ★ 솔버 예외 → fail (재실행으로 고쳐야 하는 소프트웨어 실패)
+  PASS  38) ★ 퍼콜 미형성(κ=0) → ok (물리적으로 옳은 답, 실패 아님)
+  PASS  39) 정상 계산 → ok
+  PASS  40) ★ 옛 세대(상태 필드 없음) → unknown, **소급 실패로 만들지 않는다**
+  PASS  41) 모르는 상태값도 unknown (조용히 ok 로 넘기지 않는다)
+  PASS  RC7-02a) ★ electronic 예외 → fail (옛 계약은 thermal 만 봐서 통과였다)
+  PASS  RC7-02b) ★ AM 망 미퍼콜(no_result) 은 electronic 에서 **ok** — 물리적 정답
+  PASS  RC7-02c) ★ AM 자체가 없는 베드(not_applicable) 도 ok (실패 아님)
+  PASS  RC7-02d) ★ SE 미퍼콜(σ_i=0) 은 ionic 에서 ok (CLAUDE.md Tier2 정답 케이스)
+  PASS  RC7-02e) ★ thermal 의 no_result 는 여전히 ok 가 아니다 (전 접촉인데 망이 안 섬)
+  PASS  RC7-02f) 옛 세대(채널 상태 없음)는 채널별로 unknown — 소급 실패 아님
+  PASS  RC7-02g) 알 수 없는 채널 이름은 조용히 통과하지 않는다
+  PASS  RC7-02h) 세 채널 정상 → 게이트 통과
+  PASS  RC7-02i) ★ physics 의 electronic 실패가 게이트에서 잡힌다 (게시 차단)
+  PASS  RC7-02j) ★ ionic 실패도 잡힌다
+  PASS  RC7-02k) ★ solver 가 electronic_status 를 **항상** 남긴다 (배선 확인)
+  PASS  RC7-02l) ★ solver 가 ionic_status 도 남긴다
+  PASS  RC7-02l2) ★ 값 분류가 기존 _sigma_status 를 재사용한다 (파일 안 중복 판정 금지)
+  PASS  RC7-02l2b) ★ NaN/inf 는 미퍼콜이 아니라 failed 로 간다 (첫 구현이 빠뜨렸던 것)
+  PASS  RC7-02l3) ★ solver 쪽에도 실행 가능한 selftest 가 있다 (문자열 검사만이 아니라)
+  PASS  RC7-02m) ★ app 이 세 채널을 판정 단계로 올린다 (배선)
+  PASS  42) ★ solver 가 thermal_status 를 항상 남긴다 (배선 확인)
+  PASS  43) 건전한 레코드는 통과
+  PASS  44) ★ NaN 을 잡는다 (옛 계약은 통과시켰다)
+  PASS  45) ★ inf 도 잡는다
+  PASS  46) ★ stage_e_source="not-a-map" 를 잡는다
+  PASS  47) ★ validation_flags=[] 를 잡는다
+  PASS  48) ★ bool 이 숫자로 통과하지 않는다
+  PASS  49) 빈 method 문자열을 잡는다
+  PASS  50) 진짜 0.0 은 여전히 유효 (valid_zero)
+  PASS  51) ★ null_ok_keys 로 valid_null 계약 충돌이 풀린다
+  PASS  52) ★ Stage E 가 raw thermal 키에 **직접 쓰지 않는다** (이중 소유 종료)
+  PASS  53) ★ 역산값은 별도 estimate 키 + provenance 로 간다
+  PASS  54) ★ 화면이 estimate 를 **유도값이라 표시하고** 쓴다 (배선)
+  PASS  55) ★ STEP3 component 상태 헬퍼가 있다 (thermal 만이 아니었다)
+  PASS  56) STEP3 electronic 채널이 상태를 남긴다
+  PASS  56) STEP3 ionic 채널이 상태를 남긴다
+  PASS  56) STEP3 thermal 채널이 상태를 남긴다
+  PASS  56) STEP3 pore 채널이 상태를 남긴다
+  PASS  56) STEP3 pnm 채널이 상태를 남긴다
+  PASS  57) ★ 바깥 예외도 payload 에 흔적을 남긴다 (옛 코드는 print 뿐)
+  PASS  58) ★ manifest 가 payload 에 실제로 박힌다 (배선)
+  PASS  59) ★ RC6-08 실제 backend 를 기록한다 — cpu·gpu 둘 다 대입된다 (AST)
+  PASS  59b) ★ 선언에 requested·used·fallback_reason 자리가 있다
+  PASS  59c) ★★ CPU 로 풀면 used='cpu' 가 **실제로** 남는다 (소스가 아니라 실행)
+  PASS  59d) ★ 그 팔이 옳은 해를 낸다 (기록만 남기고 안 푸는 것이 아니다)
+  PASS  59e) ★★ GPU 분기를 태우면 used='gpu' 가 남는다 (대입을 None 으로 덮으면 여기서 걸린다)
+  PASS  59f) ★ GPU 팔도 옳은 해를 낸다
+  PASS  59g) ★ 성공한 GPU 팔은 폴백 사유를 남기지 않는다
+    STEP3 GPU solve unavailable (RuntimeError: CUDA out of memory (fake)) → CPU fallback
+  PASS  59h) ★★ GPU 가 죽으면 requested=gpu·used=cpu 로 **어긋남이 보인다**
+  PASS  59i) ★★ 그리고 사유가 남는다 (조용한 폴백 금지)
+  PASS  60) ★ 그 backend 가 manifest 로 흘러간다 (배선)
+  PASS  RC7-01a) ★ 기대 component 집합이 선언돼 있다
+  PASS  RC7-01b) ★ 표시 안 된 기대 component 를 missing 으로 채운다
+  PASS  RC7-01c) ★ missing 이 있으면 complete 가 될 수 없다
+  PASS  RC7-01d) manifest 가 missing·failed 목록을 명시적으로 싣는다
+  PASS  RC7-01e) 전부 complete → complete
+  PASS  RC7-01f) ★ ionic 이 아예 표시되지 않으면 partial (옛 계약은 complete)
+  PASS  RC7-01g) not_solvable 은 정상 — complete 를 막지 않되 complete 도 아니다
+  PASS  RC7-01h) 바깥 예외는 failed 로 승격
+  PASS  RC7-01i) STEP3 자체를 안 돌린 경우는 disabled (missing 으로 오염 금지)
+  PASS  RC7-01j) ★ 쓰기 직전 전수 벨트가 있다
+  PASS  RC7-01j2) ★ 실제 벨트가 NaN·Inf·np.float32 를 전부 null 로 바꾼다
+  PASS  RC7-01j3) ★ 정상값·비-float 은 건드리지 않는다
+  PASS  RC7-01j4) ★ 바꾼 자리를 **경로째** 돌려준다 (조용한 치환 금지)
+  PASS  RC7-01j5) ★ 벨트 뒤엔 allow_nan=False 직렬화가 통과하고 금지 토큰이 없다
+  PASS  RC7-01k) ★ allow_nan=False 로 남아 있으면 조용히 넘어가지 않고 터진다
+  PASS  RC7-01l) ★ 치환을 조용히 하지 않고 경로째 기록한다
+  PASS  RC7-01m) ★ np.float32 도 잡는다 (파이썬 float 서브클래스가 아니다)
+  PASS  RC7-01n) ★ 결함 재현: 기본 json.dump 는 bare NaN 토큰을 쓴다
+  PASS  RC7-05a) ★ component 별로 backend 를 스냅샷한다
+  PASS  RC7-05b) ★ 전역 필드는 하위호환 별칭으로 라벨링됐다
+  PASS  RC7-05c) 스냅샷은 complete 인 component 에만 (미실행에 backend 를 붙이지 않는다)
+  PASS  RC7-06a) ★ 결함 재현: 이름 규칙만으로는 provenance 키가 안 잡힌다
+  PASS  RC7-06b) ★ 이제 Stage E 소유로 잡힌다 (purge/rollback 대상)
+  PASS  RC7-06c) ★ run_one 이 쓰는 18개 키가 전부 Stage E 소유다 (미소유: [])
+  PASS  RC7-06d) 스캐너가 실제로 키를 찾았다 (정규식이 죽어 공허하게 통과하지 않는다)
+  PASS  RC7-06e) 명시 목록이 상수로 노출돼 있다 (다음 사람이 찾을 수 있게)
+  PASS  30) 11-키는 run_one 이 무조건 쓰는 집합과 같다 (개수 고정)
+  PASS  31) ★ webapp 이 subprocess 를 bare python3 로 띄우지 않는다 (F-18, Windows 500)
+  PASS  32) ★ Physics 재솔브 값이 살아 돌아온다 (옛 코드는 항상 None → fallback)
+  PASS  33) Stage E 가 그 모듈을 실제로 쓴다 (인라인 사본이 아니라)
+  PASS  20) ★ PermissionError 2회 뒤 저장된다 (Windows 유실 992/1000 원인)
+  PASS  21) 재시도 대기가 지수 backoff 다 (바쁜대기 아님)
+  PASS  22) ★ 재시도를 다 써도 안 되면 올린다 (조용한 유실 금지)
+  PASS  23) ★ EACCES 아닌 OSError 는 재시도 없이 즉시 올린다
+  PASS  17) 파일 lock 획득
+  PASS  18) ★ lock 미획득 → LockUnavailable (fail-open 아님)
+  PASS  19) require=False 는 진단용으로 False 를 돌려준다
+
+test_pipeline_provenance: 198/198 PASS

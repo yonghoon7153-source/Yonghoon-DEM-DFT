@@ -1,0 +1,148 @@
+lhs_descriptor_harvest — 자기검사 (계약 6개 + P1 반례)
+  ✓ ① DESC-01: τ 실패인데 phi_se 가 나온다
+  ✓ ① DESC-01: phi_am 도 나온다
+  ✓ ① phi 값이 기하 그대로 (V_i/V_B)
+  ✓ ① 공극률 closure 가 항등식
+  ✓ ② DESC-02①: 비관통 → τ = None · NOT_PERCOLATING
+  ✓ ③ DESC-02②: 무경로 쌍이 예산을 안 먹는다 (τ 가 나온다)
+  ✓ ③ 직선 기둥이면 τ ≈ 1
+  ✓ ③ 표본이 전부 유효 (무경로 0건)
+  ✓ ④ P 평균 = 10 %
+  ✓ ④ S 평균 = 90 %
+  ✓ ④ 전체 = 70 % (상평균평균 50 이 아니다)
+  ✓ ⑤ 계약④: scale ×1000 에도 Hertz 피복률 불변
+  ✓ ⑤ φ 도 불변 (무차원)
+  ✓ ⑥ DESC-05: 없는 AM_P → N/A (0 이 아니다)
+  ✓ ⑥ DESC-05: 존재하는데 무접촉 AM_S → 0.0
+  ✓ ⑦ DESC-05: 분모붕괴가 0 으로 안 접힌다
+  ✓ ⑧ DESC-06: atom_100 + contact_200 을 거부 — 거부: TIMESTEP 불일치: atom=100 contact=200.  종류별 최신 파일을 독립 선택하면 다른 프레임이 섞인다 (DES
+  ✓ ⑨ 계약⑤: mesh 도 --plate-z 도 없으면 거부 — 거부: 플래튼 높이는 --mesh 또는 --plate-z 로 **정확히 하나** 주어야 한다.  추정하지 않는다 (DESC-06: 최고 
+  ✓ ⑨ 계약⑤: 둘 다 주면 거부 — 거부: 플래튼 높이는 --mesh 또는 --plate-z 로 **정확히 하나** 주어야 한다.  추정하지 않는다 (DESC-06: 최고 
+  ✓ ⑩ 계약⑤: 선언 밖 type 을 거부 — 거부: 선언(--n-types 2) 밖 type [9] 이 파일에 있다
+  ✓ ⑩ 경계 플래그가 규약과 다르면 거부 — 거부: 경계 플래그 ('pp', 'pp', 'pp') 가 규약 ('pp', 'pp', 'ff') 와 다르다.  규약과 파일이 어긋난 채로
+  ✓ ⑪ 계약④: contact_area 열이 없으면 거부 (규약을 모른 채 안 낸다) — 거부: C:\Users\ADMINI~1\AppData\Local\Temp\tmpzsp6bhwj\contact_960.liggghts: 접
+  ✓ ⑫ PA12-09: TIMESTEP 가드를 퇴행시키면 ⑧ 이 실제로 뚫린다 (대조가 살아있다)
+  ✓ ⑬a P1-HARV-01: τ 가 xy 평행이동에 불변
+  ✓ ⑬a τ 가 minimum-image 해석값과 일치 (1.019803903)
+  ✓ ⑬b L1-04: area_channel 이 출력에 있다
+  ✓ ⑬b L1-04: 그 라벨이 Hertz 가 아님을 명시한다
+  ✓ ⑬b L1-04: A_LIGG/A_Hertz = 2 − δ/(2r) = 1.9875
+  ✓ ⑭ LHS-08 ★재현: ⓐ(밴드 빔) 과 ⓑ(진짜 미관통) 의 status 가 **다르다**
+  ✓ ⑭ LHS-08: ⓐ = ELECTRODE_BAND_EMPTY
+  ✓ ⑭ LHS-08: ⓑ = NOT_PERCOLATING
+  ✓ ⑭ LHS-08: 둘 다 유한 τ 를 내지 않는다 (판정은 그대로 보수적)
+  ✓ ⑭ LHS-08: 진단 블록 band_detail 이 붙는다
+  ✓ ⑭ LHS-08 ⓐ: 위 밴드가 0 명 · 아래는 있다 · 성분은 하나
+  ✓ ⑭ LHS-08 ⓑ: 양 밴드가 차 있고 성분이 둘, 관통 성분 0
+  ✓ ⑭ LHS-08: plate_z 진단은 보고값·규약 문자열을 **안 바꾼다**
+  ✓ ⑭ LHS-08: 규약 문자열이 solid_zrange 그대로다 (규약 판단은 재측정 뒤)
+  ✓ ⑭ LHS-08: 그래도 plate_z 밴드 인원은 따로 적힌다 (규약 판단용)
+  ✓ ⑭ LHS-08 ★가드: 판정이 뒤집히는 침대에서도 plate_z 가 τ 를 안 건드린다
+  ✓ ⑭ LHS-08: 그 침대의 alt_n_top 이 **규약을 바꾸면 몇 명인지**를 적는다
+  ✓ ⑭ LHS-08: 관통 침대는 그대로 OK (진단이 성공을 안 깬다)
+  ✓ ⑬ 계약⑥: design_performance_corpus 를 읽는 코드가 없다
+  ✓ ⑬ full_metrics.json 을 읽는 코드가 없다
+  ✓ ⑬ DESC-03: plastic_coverage 에서는 순수 기하 `_intersection_disc_area` 만 (소스 전체 AST · 위반 [])
+  ✓ ⑭ LHS-10: 상자 바닥이 −1 이어도 분모 높이 = plate_z − 벽 = 5
+  ✓ ⑭ porosity = 1 − ΣV / (L²·plate_z) — 웹앱 calc_porosity 와 같은 식
+  ✓ ⑭ LHS-12: 벽 아래 입자가 있어도 porosity 는 웹앱 식 그대로 (ΣV 전부 · L²·plate_z)
+  ✓ ⑭ 기록: 중심이 벽 아래인 입자 1 · 통째로 벽 아래 1
+  ✓ ⑭ 기록: 벽 아래 부피 = 구 하나 통째 = ΣV 의 1/3
+  ✓ ⑭ (나) 되돌려 놓은 두께 = plate_z + 벽 밖 부피 / 면적
+  ✓ ⑭ (나) porosity = 1 − ΣV / (L²·H′)
+  ✓ ⑭ 바닥 cap 부피 = π h²(3r − h)/3 (h 0.3)
+  ✓ ⑭ 플래튼 cap 도 같은 식
+  ✓ ⑭ 가장 깊은 입자: 상 · cap 깊이/반지름 0.6 (= 이 경우 접촉 겹침과 같다) · 중심은 벽 위
+  ✓ ⑭ 덱: 바닥 zplane 0.0 · 벽 재질 type 1 을 읽는다
+  ✓ ⑭ 덱: 바닥이 0 이 아니면 (zplane −0.01) 거부 — 거부: C:\Users\ADMINI~1\AppData\Local\Temp\tmpzsp6bhwj\in.shift: 활성 바닥 벽이 z = 
+  ✓ ⑭ 덱: 바닥 벽이 없으면 거부 (메시 바닥 등 — 가정을 확인할 수 없다) — 거부: C:\Users\ADMINI~1\AppData\Local\Temp\tmpzsp6bhwj\in.none: 활성 바닥 벽 (`wall
+  ✓ ⑭ 덱: zplane 이 변수면 거부 (못 읽은 값을 0 으로 치지 않는다) — 거부: C:\Users\ADMINI~1\AppData\Local\Temp\tmpzsp6bhwj\in.var: 바닥 벽 zplane 값을 
+  ✓ ⑭ 덱: 주석 줄은 무시 · `&` 로 이어진 줄은 붙여 읽는다
+usage: audit_harvest.py [-h] [--atom ATOM] [--contact CONTACT] [--mesh MESH]
+                        [--plate-z PLATE_Z] [--n-types {2,3}] [--deck DECK]
+                        [--case CASE] [--allow-any-bc] [--n-pairs N_PAIRS]
+                        [--out OUT] [--selftest]
+audit_harvest.py: error: --atom · --contact · --n-types · --deck 는 필수다 (--deck: 바닥 벽 위치를 덱에서 확인한다, LHS-12)
+  ✓ ⑭ CLI: --deck 없이는 돌지 않는다 (바닥 확인 없이 수확하지 않는다) — 거부: 2
+  ✓ ⑭ 산출물에 덱 확인 · 벽 기록 · 덱 sha · 벽 z 가 남는다
+  ✓ ⑮ HND-03: 깊이 필드는 `outside_cap_depth_over_r` — `overlap_over_r` 는 없다 (접촉 겹침과 다른 양)
+  ✓ ⑮ HND-03: 통째로 벽 아래인 입자의 접촉 겹침 = 0 (평면의 접촉 범위 밖)
+  ✓ ⑮ HND-03: 부분 겹침 입자 (z 0.2 · r 0.5) 의 접촉 겹침 = (r − |dist|)/r = 0.6
+  ✓ ⑮ HND-01 (§8-1): 상별 벽 밖 부피 — 14b 바닥 = AM_P 구 하나 통째 · SE 0
+  ✓ ⑮ (다) clipped: porosity = 1 − (ΣV − W)/(L²·plate_z) — 14b 는 구 둘만 남는다
+  ✓ ⑮ (다) clipped: phi_am = (V_AM − W_AM)/V — AM_S 하나만 남는다 (AM_P 는 통째로 밖)
+  ✓ ⑮ HND-03/04 적격성: 중심이 벽 밖인 입자가 있으면 physical_target_status HOLD + BOUNDARY_CENTER_OUT (계산 상태는 OK)
+  ✓ ⑮ 적격성: 전부 안이면 OK (보류 코드 없음)
+  ✓ ⑮ HND-04 적격성: porosity < 0 이면 HOLD + NEGATIVE_POROSITY · phi_sum_gt_one (값은 그대로 낸다)
+  ✓ ⑮ HND-06: 평판이 아닌 STL (z 0 과 2) 은 거부 — 평균 1 을 높이로 받지 않는다 — 거부: C:\Users\ADMINI~1\AppData\Local\Temp\tmpzsp6bhwj\nonplanar.stl: 플래튼 STL 
+  ✓ ⑮ HND-06: 평판 STL 은 span 0 · 꼭짓점 수 · z 평균 기록
+  ✓ ⑮ HND-02: unfix 된 바닥 (활성 벽 없음) 은 거부 — 거부: C:\Users\ADMINI~1\AppData\Local\Temp\tmpzsp6bhwj\in.unfix: 활성 바닥 벽 (`wal
+  ✓ ⑮ HND-02: 재정의된 바닥 (마지막 활성 = 2) 은 거부 — 거부: C:\Users\ADMINI~1\AppData\Local\Temp\tmpzsp6bhwj\in.redef: 활성 바닥 벽이 z = 
+  ✓ ⑮ HND-02: 재정의로 마지막 활성이 0 이면 통과 · 활성 벽 1
+  ✓ ⑮ HND-02: group 이 all 이 아닌 바닥은 거부 (전 상 구속 증거 없음) — 거부: C:\Users\ADMINI~1\AppData\Local\Temp\tmpzsp6bhwj\in.grp: 바닥 벽 `floor` 의 
+  ✓ ⑮ HND-02: include · jump · if · read_restart 가 있으면 "검증 불가" 로 거부 — 거부: C:\Users\ADMINI~1\AppData\Local\Temp\tmpzsp6bhwj\in.inc: `include` 가 있어 
+  ✓ ⑮ HND-02: 기존 산출물 키 유지 (fix_id · wall_type)
+  ✓ ⑮ HND-04: `handover_qc` — 두께 µm (sim × 1e3) · 적격성 · 보류 코드 · 규약 ID · sha 셋
+  ✓ ⑮ HND-01: 등록 열의 명목 alias (`phi_se_spheresum_nominal_gap`) = phi_se 그대로
+  ✓ ⑯ 벽 아래 입자 (z −1.5) 가 solid 아래 밴드를 [−2, −1] 로 끌어내려 SE 가 없다 (BAND_EMPTY 재현)
+  ✓ ⑯ 벽 기준 진단: 바닥 밴드 [0, t] 의 SE ≥ 1 · 플래튼 밴드 인원 · 벽 z 기록
+  ✓ ⑯ 벽 기준 진단: 벽 밴드 둘을 잇는 성분 수 (여기선 1)
+  ✓ ⑯ 보고 τ 규약은 불변 (solid_zrange 문자열 그대로)
+  ✓ ⑰ ★ 벽 τ: 옛 규약이 BAND_EMPTY 인 침대 (벽 아래 AM) 에서 새 규약은 OK · τ = 1 (곧은 기둥)
+  ✓ ⑰ 벽 τ 규약 문자열 = TAU_WALL_CONVENTION (harvest_v3/wall_z0_plate/…)
+  ✓ ⑰ 옛 τ 는 그대로 — status · 값 · 규약 문자열 (solid_zrange)
+  ✓ ⑰ 벽 τ 의 관통 성분 수 = 진단 wall_n_span_components (같은 밴드 정의)
+  ✓ ⑰ 벽 τ 도 진짜 미관통 (두 덩어리) 은 NOT_PERCOLATING · 유한 τ 없음
+  ✓ ⑰ plate_z 가 없으면 벽 τ 를 내지 않는다 (추정하지 않는다)
+  ✗ ⑰ 회귀: 옛 τ (무작위 900 SE) = 옮기기 전 값 그대로 (mean · median · 표본 수)
+  ✓ ⑰ 회귀: 옛 τ (⑬a 사슬) = 1.0198039027185568 그대로
+  ✓ ⑰ 밴드가 같은 침대에서는 벽 τ = 옛 τ (같은 표본 규칙 · 같은 seed)
+  ✓ ⑰ harvest() 산출물: tortuosity_dijkstra_SE_wall · tau_wall_detail · status.tortuosity_wall
+  ✓ ⑱ scan: 프레임 2 · 마지막 블록만 행으로 (1 행) — 수확의 읽기와 같다
+  ✓ ⑱ scan: 중복 무순서 쌍 (2–3 · 3–2) 1 쌍 · 초과 행 1 · δ ≤ 0 행 1 · 주기 플래그 행 1 · δ 최솟값 −0.3
+  ✓ ⑱ scan: δ · 주기 열이 없는 덤프 → 그 칸은 None (거부하지 않는다 · "열 없음" 으로 적는다)
+  ✓ ⑱ 벽 접촉 비율: SE 바닥 1/2 · AM_P 바닥 1 · AM_S 플래튼 1 · 합친 AM 바닥 1/2 · 플래튼 1/2
+  ✓ ⑱ 2-type 침대: AM_P · AM_S 키 없음 (N/A · 0 이 아니다) · AM 은 그대로
+  ✓ ⑱ harvest() 산출물: wall_touch · wall_touch_rule · contact_scan · n_atom_frames (새 키) · status 키는 늘지 않았다
+  ✓ ⑲ item 4 ★반례: 바닥 접선 SE (z − r = 0) — wall_record 닿음 수 = wall_touch 닿음 수 (한 침대 · 한 규칙)
+  ✓ ⑲ item 4 ★반례: 플래튼 접선 SE (z + r = plate_z) — 두 기록이 같다
+  ✓ ⑲ item 4: 접선 = **안 닿음** (겹침 깊이 0 · 벽 밖 부피 0 · 가린 면 0) — SE 바닥 0 · 플래튼 0 · 겹친 AM_S (z 0.5) 는 닿음
+  ✓ ⑲ item 4: 무작위 200 침대 (정확한 접선 포함) — 상별 · 벽별 닿음 수가 두 기록에서 전부 같다 (어긋남 0)
+  ✓ ⑲ item 4: 규칙 문자열이 접선 = 안 닿음을 적는다 (옛 `<=` · `>=` 문자열이 아니다)
+  ✓ ⑳ item 1: 오늘 식은 그대로 — 두 입자 다 25 % → AM_S 25 % (분모가 바닥 밑 반구도 센다)
+  ✓ ⑳ item 1 ★반례: 벽 분할 — touch 1 (오늘 식 25 %) · interior 1 (25 %) · center_out · fully_out 0
+  ✓ ⑳ item 1 ★반례: 벽 제외 — touch 입자 50 % · interior 25 % · AM_S 37.5 % · 전체 37.5 % (status OK)
+  ✓ ⑳ item 1: 가린 면 비율 — touch 0.5 (반구) · interior 0
+  ✓ ⑳ item 1: 등급 넷 (any = 두 벽 중 심한 쪽) — interior · touch (플래튼) · center_out · fully_out 각 1
+  ✓ ⑳ item 1: 벽별 — 바닥 interior 2 · center_out 1 · fully_out 1 / 플래튼 interior 3 · touch 1
+  ✓ ⑳ item 1: 벽 제외 입자값 — 플래튼 cap 33.3 % (π/3π) · 중심 밖 50 % (0.5π/π) · 통째로 밖은 분모 0 → 제외하고 셈
+  ✓ ⑳ item 1: AM_P 벽 제외 = 유효 셋 평균 (25 + 33.3 + 50)/3 · 오늘 식 = 넷 평균 (25 + 25 + 12.5 + 2.5)/4 = 16.25 (그대로)
+  ✓ ⑳ item 1: 가린 면 비율 — 플래튼 cap 0.25 · 중심 밖 0.75 · 통째로 밖 1.0
+  ✓ ⑳ item 1: 분할을 다시 모으면 상 평균 (오늘 식 · 벽 제외 — any · floor · plate 세 분할 모두)
+  ✓ ⑳ item 1: AM–AM 면적과 벽 cap 이 분모에서 함께 빠진다 (오늘 0.25/3.5 · 벽 제외 0.25/1.5)
+  ✓ ⑳ item 1: 2-type — AM_P · AM_S 벽 제외 = N/A (N_A_PHASE_ABSENT) · AM = 전체 = 37.5 % · 분할 상은 AM · total
+  ✓ ⑳ item 1–3 ★옛 키 바이트 그대로: 수확 픽스처 8 — 옛 38 키가 같은 순서로 맨 앞 · 값 해시 = 변경 전 (어긋남 [])
+  ✓ ⑳ item 1–3: volumes_and_phi 픽스처 4 (벽 기록 포함) · scan_contact_dump 픽스처 3 해시 = 변경 전
+  ✓ ⑳ item 1: 새 키는 정해진 이름으로 옛 키 **뒤에만** 붙는다 (status · handover_qc 는 늘지 않는다 — WSL [2] 옛 수확 대조)
+  ✓ ㉑ item 2 ★반례: 1 % 틀린 행 하나가 허용폭 밖으로 세어진다 — 전체 1 · 플래그 1 에서 1 · 플래그 0 에서 0 (status OK · 비교 3 행)
+  ✓ ㉑ item 2: 쌍 종류로도 갈린다 — AM-SE 2 행 중 1 초과 (피복률 분자) · SE-SE 0 · 최대 상대차 = 0.01/1.01 (덤프 값 기준)
+  ✓ ㉑ item 2: 진단 기록일 뿐 — 거부하지 않고 피복률은 덤프 면적 그대로 (AM_S = 100 · A22 / 4π·0.8²)
+  ✓ ㉑ item 2: 교차 원판은 plastic_coverage 의 함수 그대로 (다시 짜지 않았다 — 규율 ①)
+  ✓ ㉑ item 2: δ 열이 없는 덤프는 대조하지 않고 NO_DELTA_COLUMN 으로 적는다 (거부 없음)
+  ✓ ㉑ item 2: 허용폭 — 반올림만 있는 합성 3000 행 초과 0 (0 이어야) · 최악 차/폭 0.894
+  ✓ ㉑ item 2: 허용폭은 헐겁지 않다 — 상대 폭 중앙 5.44e-06 < 1e-5 · 최대 1.17e-05 < 2e-5
+  ✓ ㉑ item 2: 판별력 — 면적 3e-5 상대 오차 · Hertz 면적 (π R* δ) 은 3000 행 전부 초과
+  ✓ ㉑ item 2: 반폭 = 0.5·10^(E−5) (%g 끝 0 을 지워도 형식 정밀도 6 으로 — 0.005 → 5e-9 · 0 → 0)
+  ✓ ㉑ item 2: 6 유효숫자 전제 점검 — 7 유효숫자 값 (0.1234567) 하나를 센다
+  ✓ ㉑ item 2: ⑬ 가드 변이 — 금지 모양 여섯을 전부 위반으로 잡는다 · 허용 이름 하나만 가져오는 소스는 통과
+  ✓ ㉒ item 3: 깨끗한 덤프 — 피복률 25 % · 문 기록 (행 1 · 고아 0 · 중복 0 · 자기쌍 0)
+  ✓ ㉒ item 3 ★반례: 같은 AM–SE 행 두 번 → 거부 (옛 코드: 피복률 25 → 50 %, status OK) — 거부: 접촉 덤프 마지막 블록에 중복 무순서 쌍 1 (초과 행 1) · 자기쌍 0 — 중복은 한 접촉의 면적을 피복률에 두 번 넣고 자기
+  ✓ ㉒ item 3: a–b 와 b–a (무순서 중복) → 거부 — 거부: 접촉 덤프 마지막 블록에 중복 무순서 쌍 1 (초과 행 1) · 자기쌍 0 — 중복은 한 접촉의 면적을 피복률에 두 번 넣고 자기
+  ✓ ㉒ item 3: 자기쌍 (90–90) → 거부 — 거부: 접촉 덤프 마지막 블록에 중복 무순서 쌍 0 (초과 행 0) · 자기쌍 1 — 중복은 한 접촉의 면적을 피복률에 두 번 넣고 자기
+  ✓ ㉒ item 3: 고아 행은 거부하지 않고 **센다** — 행 3 · 고아 행 2 · 없는 id 2 (999 · 777) · 피복률은 고아 없는 덤프와 같다
+  ✓ ㉒ item 3: coverage_hertz 도 건너뛴 고아 행 수를 돌려준다 (문의 수와 같은 정의 · 새 키만)
+  ✓ ㉒ item 3: 중복 정의는 scan_contact_dump 와 하나 (`_pair_dup_counts`) — a–b · b–a 덤프에서 (고유 1 · 중복 쌍 1 · 초과 행 1 · 자기쌍 0)
+  ✓ ㉒ item 3: 변이 대조 — 문을 끄면 같은 행 두 번이 통과해 피복률 50 % (옛 코드의 거동) · 문이 그것을 막고 있다
+
+✗ 1 건 실패
+   - ⑰ 회귀: 옛 τ (무작위 900 SE) = 옮기기 전 값 그대로 (mean · median · 표본 수)

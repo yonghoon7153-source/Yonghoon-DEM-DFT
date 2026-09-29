@@ -1,0 +1,62 @@
+[
+  {
+    "test": "scripts/lhs_descriptor_harvest.py",
+    "returncode": 1,
+    "tail": [
+      "                                 [--n-types {2,3}] [--deck DECK] [--case CASE]",
+      "                                 [--allow-any-bc] [--n-pairs N_PAIRS]",
+      "                                 [--out OUT] [--selftest]",
+      "lhs_descriptor_harvest.py: error: --atom · --contact · --n-types · --deck 는 필수다 (--deck: 바닥 벽 위치를 덱에서 확인한다, LHS-12)"
+    ]
+  },
+  {
+    "test": "scripts/plastic_coverage.py",
+    "returncode": 0,
+    "tail": [
+      "  ✓ ⑰ ★ 정의역 밖 입력 9 가지 → 예외 (조용히 면적을 내지 않는다)   []",
+      "  ✓ ⑰b δ ≤ 0 → 면적 0 · binding none (겹침 없음 = 겹침 모델의 답)   none none ",
+      "  ✓ ⑱ 결속 다섯 가지가 전부 나온다 (elastic · tabor · volume · geom · none)   ['elastic', 'geom', 'none', 'tabor', 'volume']",
+      "plastic_coverage SELFTEST PASS"
+    ]
+  },
+  {
+    "test": "scripts/coverage_physics_vs_hertzian.py",
+    "returncode": 0,
+    "tail": [
+      "  ✓ ⑪ 미리 있던 *_physics_v2 키는 전부 걷고 새로 쓴다 (bogus 없음 · 999 덮임)   bogus=False · AM_P=1.195",
+      "  ✓ ⑫ δ = 0 행 → v2 결속 none 1 · 미지 id 행 1 (세어 둔다)   none=1 · unknown=1",
+      "",
+      "coverage_physics_vs_hertzian SELFTEST PASS"
+    ]
+  },
+  {
+    "test": "scripts/lhs_webapp_batch.py",
+    "returncode": 1,
+    "tail": [
+      "  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs_coverage_review_20260930\\candidate\\scripts\\lhs_webapp_batch.py\", line 422, in _selftest",
+      "    calls[0]['files'] == sorted(['atom_100.liggghts', 'contact_100.liggghts', 'mesh_100.stl',",
+      "    ~~~~~^^^",
+      "IndexError: list index out of range"
+    ]
+  },
+  {
+    "test": "webapp/test_pipeline_provenance.py",
+    "returncode": 0,
+    "tail": [
+      "  PASS  18) ★ lock 미획득 → LockUnavailable (fail-open 아님)",
+      "  PASS  19) require=False 는 진단용으로 False 를 돌려준다",
+      "",
+      "test_pipeline_provenance: 198/198 PASS"
+    ]
+  },
+  {
+    "test": "scripts/lhs_design_dataset.py",
+    "returncode": 0,
+    "tail": [
+      "  PASS  ⑳q 같은 함수의 다른 출력 (se_se_cn_perc · se_se_cn_eff_area · se_se_cn_aug) 은 census ✅ 여도 싣지 않는다 (② · ⑦ · ⑤ 차례)",
+      "  PASS  ⑳r 열 사전 — se_se_cn · se_se_cn_std 의 뜻에 검토 기록 (J20-i) · 정의 (SE 전 입자) · 벽 주의는 그대로",
+      "",
+      "lhs_design_dataset selftest: 113/113 PASS"
+    ]
+  }
+]
