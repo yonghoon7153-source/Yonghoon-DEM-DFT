@@ -1683,6 +1683,12 @@ mark.hl.is-focus, .rail-i.is-focus {
   white-space: nowrap;
 }
 .pg-table th:first-child, .pg-table td:first-child { text-align: left; }
+/* 글이 긴 표 — 칸 안에서 줄을 바꾼다. 수치 표는 위 규칙대로 한 줄 · 오른쪽 정렬이고,
+   글 표는 한 줄로 두면 넓은 화면에서도 오른쪽 칸이 가려진다 */
+.pg-table.is-prose th, .pg-table.is-prose td {
+  white-space: normal; text-align: left; vertical-align: top;
+  word-break: keep-all; overflow-wrap: break-word;
+}
 .pg-table thead th {
   color: var(--ink-3); font-weight: 700; font-size: var(--fs-3xs);
   border-bottom-color: var(--line);
