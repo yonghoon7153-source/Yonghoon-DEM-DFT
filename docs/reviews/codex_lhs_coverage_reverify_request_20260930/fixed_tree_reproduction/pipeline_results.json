@@ -1,0 +1,63 @@
+{
+  "stale_standard": {
+    "status": "failed",
+    "failed_stages": [
+      "Coverage Physics vs Hertzian"
+    ],
+    "calls": [
+      "parse_liggghts.py",
+      "analyze_contacts.py",
+      "coverage_physics_vs_hertzian.py"
+    ],
+    "final_metrics": {}
+  },
+  "stale_bimodal": {
+    "status": "failed",
+    "failed_stages": [
+      "Coverage Physics vs Hertzian"
+    ],
+    "calls": [
+      "parse_liggghts.py",
+      "analyze_contacts_bimodal.py",
+      "coverage_physics_vs_hertzian.py"
+    ],
+    "final_metrics": {}
+  },
+  "atoms_only": {
+    "return": {
+      "success": false,
+      "status": "failed",
+      "error": "atoms.csv 만 있고 contacts.csv · contact_*.liggghts 가 없다 — stop_after='coverage' 는 접촉 분석이 필요하다 (atoms-only viewer 모드 아님)",
+      "network_run_id": null,
+      "log": [
+        {
+          "step": "Atoms-only refused (stop_after=coverage)",
+          "stdout": "",
+          "stderr": "atoms.csv 만 있고 contacts.csv · contact_*.liggghts 가 없다 — stop_after='coverage' 는 접촉 분석이 필요하다 (atoms-only viewer 모드 아님)",
+          "rc": 1
+        }
+      ],
+      "failed_stages": [
+        "contact files missing"
+      ],
+      "stopped_after": "coverage",
+      "atoms_only": true
+    },
+    "batch_status_expression": "failed",
+    "metrics": "NO full_metrics.json written (refused before any stage)"
+  },
+  "status_schema": {
+    "": false,
+    "not_run": false,
+    "ok": false,
+    "blank: cause": false
+  },
+  "batch_copyshim": {
+    "rc": 0,
+    "tail": [
+      "",
+      "✓ 전부 통과"
+    ],
+    "scope": "symlink operation replaced by byte copy; remaining production functions/test body unchanged"
+  }
+}

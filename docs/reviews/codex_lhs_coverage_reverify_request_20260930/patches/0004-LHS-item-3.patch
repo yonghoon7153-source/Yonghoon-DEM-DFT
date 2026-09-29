@@ -1,0 +1,220 @@
+From 0efa7bc36f98517e9dc5c41c0a8e9ddc095d9a43 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Tue, 29 Sep 2026 16:01:36 +0000
+Subject: [PATCH 04/11] =?UTF-8?q?LHS=20=EC=88=98=ED=99=95=EA=B8=B0=20item?=
+ =?UTF-8?q?=203=20=E2=80=94=20=EC=A0=91=EC=B4=89=20=ED=96=89=EC=9D=98=20?=
+ =?UTF-8?q?=EB=AC=B8:=20=EC=A4=91=EB=B3=B5=20=C2=B7=20=EC=9E=90=EA=B8=B0?=
+ =?UTF-8?q?=EC=8C=8D=20=EA=B1=B0=EB=B6=80=20=C2=B7=20=EA=B3=A0=EC=95=84=20?=
+ =?UTF-8?q?=ED=96=89=20=EA=B8=B0=EB=A1=9D=20(=EB=B0=98=EB=A1=80=20?=
+ =?UTF-8?q?=EB=A8=BC=EC=A0=80)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- 반례 (selftest ㉒ · 옛 코드에서 9 건 실패 = 130/139 · scratch 로 옛 코드 실행 재현): 같은 AM–SE 행이 두 번 (a–b 두 번
+  또는 a–b · b–a) 이면 옛 코드는 면적을 두 번 더해 AM_S 피복률 25 → 50 % 를 status OK 로 냈다.  자기쌍 (90–90) 도 받았고,
+  원자 프레임에 없는 id 의 고아 행은 `coverage_hertz` 가 조용히 버렸다 (기록 없음).  `scan_contact_dump` 는 중복을 세기만 했다.
+- 수정: `contact_gate(ids, c1, c2)` — 피복률 · 면적 대조가 실제로 쓰는 마지막 블록 배열에 대해 중복 무순서 쌍 · 자기쌍이면
+  BedRefusal (수확기의 기존 거부 형식 · CLI rc 2 · 배치는 케이스 실패로 적는다) · 고아 행은 셈.  harvest() 는 피복률 계산 전에
+  이 문을 지난다.  새 키 `contact_gate` (옛 키 뒤에만): n_rows · n_unique_pairs · n_orphan_rows · n_orphan_ids · n_dup_pairs ·
+  n_dup_rows · n_self_rows · rule.  `coverage_hertz` 가 돌려주는 dict 에 `n_orphan_rows` (새 키만 · 수확 JSON 에는 싣지 않는다).
+- 중복 정의는 하나: `_pair_dup_counts` 를 `scan_contact_dump` (기록) 와 `contact_gate` (거부) 가 같이 쓴다 (계산은 옛 scan 그대로 —
+  scan 픽스처 황금 해시 불변).
+- 변이 대조 (⑫ 와 같은 방식): 문을 끄면 같은 반례가 실제로 통과해 50 % 가 된다 — 음성대조가 장식이 아니다.
+- 실데이터 영향: 130 은 J20-a ① 감사 v2 (WSL 09-29) 에서 중복 0 · 자기쌍 0 · 고아 0 이라 이 문에 걸리지 않는다.  lhsx 64 는
+  그 감사를 받지 않았다 — 재수확 v3 에서 이 문을 처음 지난다.
+- 옛 키 바이트 그대로 (selftest ⑳ 황금 해시 · scratch 재확인: 수확 픽스처 9 · volumes_and_phi 4 · scan 3 이 변경 전 코드와 같다 —
+  item 1–4 전체에서 바뀐 옛 값은 item 4 의 wall_touch_rule 문자열과 접선 입자의 wall_touch 뿐).
+- selftest 139/139 · 수확기를 가져다 쓰는 selftest 11 개 통과 · CLI 산출 JSON strict 파싱 통과.
+  관문 (check_all.sh 단계 파싱 실행) 69/70 · 실패 0 — bash 로 도는 mixer launcher 1 단계는 워크트리 격리 가드로 미실행.
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft
+(cherry picked from commit 7d8f696fcec2bd16805d7ef68628765bb72868d5)
+---
+ scripts/lhs_descriptor_harvest.py | 118 +++++++++++++++++++++++++++---
+ 1 file changed, 107 insertions(+), 11 deletions(-)
+
+diff --git a/scripts/lhs_descriptor_harvest.py b/scripts/lhs_descriptor_harvest.py
+index 33b803d2f..70b8e51e4 100755
+--- a/scripts/lhs_descriptor_harvest.py
++++ b/scripts/lhs_descriptor_harvest.py
+@@ -266,6 +266,20 @@ def count_blocks(path, marker):
+     return n
+ 
+ 
++def _pair_dup_counts(id1, id2):
++    """무순서 쌍 기준 (고유 쌍 수, 두 번 이상 나온 쌍 수, 초과 행 수, 자기쌍 행 수) — a–b 와 b–a 는 같은 쌍이다.
++
++    item 3 — `scan_contact_dump` (기록) 와 `contact_gate` (거부) 가 **같은 정의 하나**를 쓴다 (계산은 옛 `scan_contact_dump` 그대로).
++    """
++    id1, id2 = np.asarray(id1, dtype=np.int64), np.asarray(id2, dtype=np.int64)
++    n_self = int((id1 == id2).sum())
++    if not id1.size:
++        return 0, 0, 0, n_self
++    a, b = np.minimum(id1, id2), np.maximum(id1, id2)
++    _u, cnt = np.unique(np.stack([a, b], axis=1), axis=0, return_counts=True)
++    return int(_u.shape[0]), int((cnt > 1).sum()), int((cnt - 1).sum()), n_self
++
++
+ def scan_contact_dump(path):
+     """J20-a ⓐ·ⓑ — 접촉 덤프가 "한 프레임 · 쌍마다 한 행" 인지 센다 (수확 값에는 영향 없음 — 수확은 마지막 블록만 읽는다).
+ 
+@@ -278,21 +292,46 @@ def scan_contact_dump(path):
+         raise BedRefusal(f'{path}: `ITEM: ENTRIES` 가 없다 — LIGGGHTS local 덤프가 아니다')
+     id1, id2, _area, headers, ex = read_contact_dump(path, extra_cols=(COL_DELTA, COL_PERIODIC))
+     n = int(id1.size)
+-    a, b = np.minimum(id1, id2), np.maximum(id1, id2)
+-    if n:
+-        _u, cnt = np.unique(np.stack([a, b], axis=1), axis=0, return_counts=True)
+-        n_unique, n_dup_pairs, n_dup_rows = int(_u.shape[0]), int((cnt > 1).sum()), int((cnt - 1).sum())
+-    else:
+-        n_unique = n_dup_pairs = n_dup_rows = 0
++    n_unique, n_dup_pairs, n_dup_rows, n_self = _pair_dup_counts(id1, id2)   # item 3 — `contact_gate` 와 같은 정의 하나
+     dl, pf = ex[COL_DELTA], ex[COL_PERIODIC]
+     return dict(n_frames=int(n_frames), n_rows_last=n, n_unique_pairs=n_unique,
+-                n_dup_pairs=n_dup_pairs, n_dup_rows=n_dup_rows, n_self_pairs=int((id1 == id2).sum()),
++                n_dup_pairs=n_dup_pairs, n_dup_rows=n_dup_rows, n_self_pairs=n_self,
+                 n_delta_nonpos=(None if dl is None else int((dl <= 0.0).sum())),
+                 delta_min=(None if dl is None or not dl.size else float(dl.min())),
+                 n_periodic_flag=(None if pf is None else int((pf != 0.0).sum())),
+                 has_delta_col=dl is not None, has_periodic_col=pf is not None)
+ 
+ 
++#: item 3 — 접촉 행의 문 규칙 (피복률 · 면적 대조가 실제로 쓰는 마지막 블록 배열 그대로).
++CONTACT_GATE_RULE = ('중복 무순서 쌍 (a–b 두 번 · a–b 와 b–a) · 자기쌍 (a–a) → BedRefusal (중복은 한 접촉의 면적이 피복률 분자 · 분모에 '
++                     '두 번 들어가는데 status 는 OK 로 남는다 · 자기쌍은 접촉이 아니다 — AM 이면 그 입자 분모에서 면적이 두 번 빠진다) · '
++                     '고아 행 (id 가 원자 프레임에 없다) → 셈만 (그 행은 전처럼 피복률 · 면적 대조에서 빠진다 — 이제 기록된다)')
++
++
++def contact_gate(ids, c1, c2):
++    """item 3 (09-29 · 1저자 "권고대로") — 피복률에 들어가는 접촉 행의 문 (마지막 블록 · 수확이 실제로 쓰는 배열).
++
++    ① 중복 무순서 쌍 · 자기쌍 → **거부** (`BedRefusal` — 수확기의 기존 거부 형식 · CLI rc 2 · 배치는 케이스 실패로 적는다)
++    ② 고아 행 → **셈** (그 행은 전처럼 피복률 · 면적 대조에서 빠진다).
++    옛 코드는 둘 다 조용했다: `coverage_hertz` 가 고아 행을 `continue` 로 건너뛰었고, 같은 AM–SE 행 두 번은 면적을 두 번 더해 피복률을
++    두 배로 status OK 로 냈다 (selftest ㉒).  `scan_contact_dump` 는 중복을 세기만 했다 (J20-a · 수확 값 무영향).  중복 정의는
++    `scan_contact_dump` 와 같은 `_pair_dup_counts` 하나.
++    ⚠ 130 실측 (J20-a ① 감사 v2 · WSL 09-29): 중복 0 · 자기쌍 0 · 고아 0 ⇒ 이 문은 130 에서 거부하지 않는다.  lhsx 64 는 그 감사를
++      받지 않았다 — 재수확 v3 에서 이 문을 처음 지난다.
++    """
++    c1, c2 = np.asarray(c1, dtype=np.int64), np.asarray(c2, dtype=np.int64)
++    known = np.asarray(ids, dtype=np.int64)
++    in1, in2 = np.isin(c1, known), np.isin(c2, known)
++    n_u, n_dp, n_dr, n_self = _pair_dup_counts(c1, c2)
++    rec = dict(n_rows=int(c1.size), n_unique_pairs=n_u, n_orphan_rows=int((~(in1 & in2)).sum()),
++               n_orphan_ids=int(np.union1d(c1[~in1], c2[~in2]).size),
++               n_dup_pairs=n_dp, n_dup_rows=n_dr, n_self_rows=n_self, rule=CONTACT_GATE_RULE)
++    if n_dr or n_self:
++        raise BedRefusal(f'접촉 덤프 마지막 블록에 중복 무순서 쌍 {n_dp} (초과 행 {n_dr}) · 자기쌍 {n_self} — 중복은 한 접촉의 면적을 '
++                         '피복률에 두 번 넣고 자기쌍은 접촉이 아니다 (item 3).  숫자를 내지 않는다')
++    return rec
++
++
+ def _half_unit(v, sig=AREA_CHECK_SIGFIG):
+     """`%g` 로 sig 유효숫자를 적은 토큰의 반올림 반폭 0.5·10^(E − sig + 1) (E = |v| 의 십진 지수) · 0 → 0 (배열).
+ 
+@@ -740,9 +779,13 @@ def coverage_hertz(ids, labels, radius, c1, c2, carea):
+ 
+     (item 1 — 합은 `_coverage_sums`, 요약은 `_coverage_from_sums` 로 나눴다: 벽 분할이 같은 합 · 같은 요약 규칙을 쓰게.
+      값은 그대로 — selftest ⑳ 의 변경 전 황금 해시.)
++    (item 3 — 건너뛴 고아 행 수를 `n_orphan_rows` 로 돌려준다 (새 키만 · 조용히 버리지 않는다).  중복 · 자기쌍 거부는 `harvest` 의
++     `contact_gate` 가 한다 — 이 함수를 직접 부르는 쪽은 그 문을 따로 거쳐야 한다.)
+     """
+-    free, am_se, _n_orphan = _coverage_sums(ids, labels, radius, c1, c2, carea)
+-    return _coverage_from_sums(labels, am_se, free)[0]
++    free, am_se, n_orphan = _coverage_sums(ids, labels, radius, c1, c2, carea)
++    res = _coverage_from_sums(labels, am_se, free)[0]
++    res['n_orphan_rows'] = n_orphan
++    return res
+ 
+ 
+ def _coverage_from_sums(labels, am_se, free):
+@@ -1068,6 +1111,8 @@ def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None
+     ids = _atom_ids(atom_path)
+     #  item 2 — δ · 주기 플래그 열도 같은 마지막 블록에서 (앞 넷은 extra_cols 없이 읽은 것과 같은 배열)
+     c1, c2, carea, cheaders, cextra = read_contact_dump(contact_path, extra_cols=(COL_DELTA, COL_PERIODIC))
++    #  item 3 — 문: 중복 무순서 쌍 · 자기쌍이면 **여기서 거부** (피복률 · 면적 대조 전 · 숫자를 내지 않는다) · 고아 행은 센다
++    gate = contact_gate(ids, c1, c2)
+     #  J20-a — 새 키만 더한다 (옛 키 · status 는 그대로: run_lhs_fill_wsl.sh [2] 의 옛 수확 대조가 선다)
+     wall_touch = wall_touch_fractions(labels, atoms['z'], atoms['radius'], plate_z)
+     contact_scan = scan_contact_dump(contact_path)
+@@ -1194,7 +1239,9 @@ def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None
+         #  벽 분할 = 상 (AM_P · AM_S · AM · total) × 벽 (any · floor · plate) × 등급 (interior · touch · center_out · fully_out)
+         coverage_wall_split=covw['split'],
+         #  ── item 2 — c_cpl[22] ↔ 정확한 교차 원판 (r1 · r2 · δ = c_cpl[23]) 대조 · 주기 플래그 0/1 · 쌍 종류별 (진단 기록) ──
+-        contact_area_check=area_check)
++        contact_area_check=area_check,
++        #  ── item 3 — 접촉 행의 문 기록 (중복 · 자기쌍이면 이 dict 대신 거부 · 고아 행 수는 여기에) ──
++        contact_gate=gate)
+ 
+ 
+ def _atom_ids(path):
+@@ -1962,7 +2009,7 @@ def selftest():
+         _NEW_KEYS = ('coverage_AM_P_wallexcl_pct', 'coverage_AM_S_wallexcl_pct', 'coverage_AM_total_wallexcl_pct',
+                      'coverage_AM_only_wallexcl_pct', 'coverage_AM_P_wallexcl_status', 'coverage_AM_S_wallexcl_status',
+                      'coverage_AM_total_wallexcl_status', 'coverage_AM_only_wallexcl_status', 'coverage_wallexcl_detail',
+-                     'coverage_wall_split', 'contact_area_check')
++                     'coverage_wall_split', 'contact_area_check', 'contact_gate')
+         chk('⑳ item 1: 새 키는 정해진 이름으로 옛 키 **뒤에만** 붙는다 (status · handover_qc 는 늘지 않는다 — WSL [2] 옛 수확 대조)',
+             all(tuple(res.keys())[len(_OLD_KEYS):] == _NEW_KEYS for res in (r4, r20, r20c))
+             and set(r20['status']) == set(r4['status']) and set(r20['handover_qc']) == set(r4['handover_qc']))
+@@ -2047,6 +2094,55 @@ def selftest():
+             _pcu is not None and all(bool(_pcu(s)[1]) for s in _bad_src)
+             and not _pcu('from plastic_coverage import _intersection_disc_area\n')[1])
+ 
++        # ── ㉒ item 3 (09-29 · 1저자 "권고대로") — 접촉 행의 문: 중복 · 자기쌍 **거부** · 고아 행 **기록** · 반례 먼저 ──
++        #  ★ 반례: 같은 AM–SE 행이 두 번 — 옛 코드는 면적을 두 번 더해 AM_S 피복률 25 → 50 % 를 status OK 로 냈다.
++        _rows22 = [(1, 5.0, 5.0, 5.0, 1.0, 2), (90, 5.0, 5.0, 6.4, 0.5, 3)]
++        _a22 = _atom_file(tmp, _rows22, name='atom_2200.liggghts', ts=2200)
++        _c22 = {nm: _contact_file(tmp, rows, name=f'contact_22{i:02d}.liggghts', ts=2200) for i, (nm, rows) in enumerate((
++            ('ok', [(1, 90, np.pi)]),
++            ('dup', [(1, 90, np.pi), (1, 90, np.pi)]),                 # a–b 두 번
++            ('rev', [(1, 90, np.pi), (90, 1, np.pi)]),                 # a–b 와 b–a
++            ('self', [(1, 90, np.pi), (90, 90, 0.1)]),                 # 자기쌍
++            ('orph', [(1, 90, np.pi), (1, 999, np.pi), (777, 90, 0.2)])))}   # 고아 행 둘 (없는 id 999 · 777)
++        r22 = harvest(_a22, _c22['ok'], 3, 'gate_ok', mesh_path=_stl(tmp))
++        chk('㉒ item 3: 깨끗한 덤프 — 피복률 25 % · 문 기록 (행 1 · 고아 0 · 중복 0 · 자기쌍 0)',
++            abs(r22['coverage_AM_S_hertz_pct'] - 25.0) < 1e-12
++            and (r22.get('contact_gate') or {}).get('n_rows') == 1 and (r22.get('contact_gate') or {}).get('n_orphan_rows') == 0
++            and (r22.get('contact_gate') or {}).get('n_dup_rows') == 0 and (r22.get('contact_gate') or {}).get('n_self_rows') == 0)
++        neg('㉒ item 3 ★반례: 같은 AM–SE 행 두 번 → 거부 (옛 코드: 피복률 25 → 50 %, status OK)',
++            lambda: harvest(_a22, _c22['dup'], 3, 'gate_dup', mesh_path=_stl(tmp)))
++        neg('㉒ item 3: a–b 와 b–a (무순서 중복) → 거부',
++            lambda: harvest(_a22, _c22['rev'], 3, 'gate_rev', mesh_path=_stl(tmp)))
++        neg('㉒ item 3: 자기쌍 (90–90) → 거부',
++            lambda: harvest(_a22, _c22['self'], 3, 'gate_self', mesh_path=_stl(tmp)))
++        r22o = harvest(_a22, _c22['orph'], 3, 'gate_orph', mesh_path=_stl(tmp))
++        _g22 = r22o.get('contact_gate') or {}
++        chk('㉒ item 3: 고아 행은 거부하지 않고 **센다** — 행 3 · 고아 행 2 · 없는 id 2 (999 · 777) · 피복률은 고아 없는 덤프와 같다',
++            _g22.get('n_rows') == 3 and _g22.get('n_orphan_rows') == 2 and _g22.get('n_orphan_ids') == 2
++            and r22o['coverage_AM_S_hertz_pct'] == r22['coverage_AM_S_hertz_pct'])
++        _chz = coverage_hertz(np.array([1, 90]), np.asarray(['AM_S', 'SE'], dtype=object), np.array([1.0, 0.5]),
++                              [1, 1, 777], [90, 999, 90], [np.pi, np.pi, 0.2])
++        chk('㉒ item 3: coverage_hertz 도 건너뛴 고아 행 수를 돌려준다 (문의 수와 같은 정의 · 새 키만)',
++            _chz.get('n_orphan_rows') == 2 == _g22.get('n_orphan_rows'))
++        _pdc = globals().get('_pair_dup_counts')
++        _sd22 = scan_contact_dump(_c22['rev'])
++        chk('㉒ item 3: 중복 정의는 scan_contact_dump 와 하나 (`_pair_dup_counts`) — a–b · b–a 덤프에서 (고유 1 · 중복 쌍 1 · 초과 행 1 · 자기쌍 0)',
++            _pdc is not None and _pdc(np.array([1, 90]), np.array([90, 1]))
++            == (_sd22['n_unique_pairs'], _sd22['n_dup_pairs'], _sd22['n_dup_rows'], _sd22['n_self_pairs']) == (1, 1, 1, 0))
++        #  변이 대조 (⑫ 와 같은 방식) — 문을 무력화하면 반례가 **실제로** 뚫려 피복률이 두 배가 된다 = 음성대조가 살아있다
++        _keep22 = getattr(M, 'contact_gate', None)
++        _mut22 = None
++        if _keep22 is not None:
++            M.contact_gate = lambda ids, a, b: {}
++            try:
++                _mut22 = M.harvest(_a22, _c22['dup'], 3, 'gate_mut', mesh_path=_stl(tmp))
++            except Exception:                                              # noqa: BLE001
++                _mut22 = None
++            finally:
++                M.contact_gate = _keep22
++        chk('㉒ item 3: 변이 대조 — 문을 끄면 같은 행 두 번이 통과해 피복률 50 % (옛 코드의 거동) · 문이 그것을 막고 있다',
++            _mut22 is not None and abs(_mut22['coverage_AM_S_hertz_pct'] - 50.0) < 1e-12)
++
+     print()
+     if _FAILS:
+         print(f'✗ {len(_FAILS)} 건 실패')
+-- 
+2.43.0
+

@@ -1,0 +1,86 @@
+# 검토 worktree (review-coverage-20260930 HEAD 002cc2881 = da4670594 + 패치 0001–0011) · scripts/check_all.sh 재실행 (부하 없이) · 결과 169/170: litdb_promote.py --selftest 만 fast 드라이버 180 s 타임아웃 (이 패치와 무관 · 단독 실행 28 s 통과 = gate_litdb_promote_alone.log)
+── selftest (검사기가 맞나) ──
+  ✓ run_contract          --selftest
+  ✓ check_review_findings   --selftest
+  ✓ check_method_discipline --selftest
+  ✓ sdcp_gain_verdict       --selftest
+  ✓ sdcp_phase_ledger_match --selftest
+  ✓ porosity_filter_axes    --selftest
+  ✓ sr01_stamp_compare     --selftest
+  ✓ mpm_webapp_payload     --selftest-temperature
+  ✓ step3_sigma            --selftest
+  ✓ repair_focus_top       --selftest
+  ✓ webapp_env_audit       --selftest
+  ✓ type_map_resolve       --selftest
+  ✓ type_map_unknown_sweep --selftest
+  ✓ gen_plots  --selftest-descriptions
+  ✓ gen_plots  --selftest-fits
+  ✓ eis_drt_ica            --selftest
+  ✓ se_net_diagnostics     --selftest
+  ✓ grade_engine          --selftest
+  ✓ constriction_deleted  --selftest
+  ✓ gen_plots  --selftest-temp
+  ✓ reduce_arm_payloads     --selftest
+  ✓ bridge_grid_verdict    --selftest
+  ✓ ion_r_verdict          --selftest
+  ✓ plot_cbd_contacts       --selftest
+  ✓ plot_sigma_e_bars       --selftest
+  ✓ colorbar_fit (JS 문법)
+  ✓ colorbar_fit (라벨 폭)
+  ✓ lhs_perc_extract       --selftest
+  ✓ lhs_descriptor_harvest --selftest
+  ✓ lhs_perc_fit           --selftest
+  ✓ hetero_transcript      --selftest
+  ✓ make_heckel_manifest   --selftest
+  ✓ oat_sensitivity        --selftest
+  ✓ build_methods_docx     --selftest
+  ✓ check_cohort_packages  --selftest
+── 리포 실물 (리포가 맞나 — selftest 가 **대신해 주지 않는다**) ──
+  ✓ mutation_sweep (문법 — 배터리 자신이 도는가)
+  ✓ check_review_findings   (원장 + 철회값 스윕)
+  ✓ check_method_discipline (규칙 A~M + claims 원장)
+  ✓ webapp: pipeline_provenance
+  ✓ webapp: predictor_ui
+  ✓ webapp: security_phase_a
+  ✓ webapp: seminar_page
+  ✓ webapp: worklog_page
+  ✓ webapp: mixer_devlog_page
+  ✓ mixer launcher (완주 판정 · 덮어쓰기 가드)
+  ✓ webapp: launcher (포트 선점)
+  ✓ webapp: temp_pressure
+  ✓ webapp: ledger_view
+  ✓ webapp: meta_json_robust
+  ✓ audit_coverage      --selftest
+  ✓ claimed_sha_provenance --selftest
+  ✓ audit_adjudication  --selftest
+  ✓ audit_validation_flags --selftest
+  ✓ constriction_reference --selftest
+  ✓ transport_cap_equivalence --selftest
+  ✓ plastic_coverage    --selftest
+  ✓ review_before_after --selftest
+  ✓ seal_area_cohort   --selftest
+  ✓ measure_rho        --selftest
+  ✓ seal_s3_prerun     --selftest
+  ✓ run_s3_psi         --selftest
+  ✓ check_doc_refs          --selftest
+  ✓ check_cohort_packages  (커밋된 패키지 ↔ 원장)
+  ✓ audit_adjudication   (원시 감사 ↔ 판정 원장)
+  ✓ check_doc_refs         (문서가 가리키는 것이 실재하는가)
+  ✓ lhs_ext_materialize     --selftest
+  ✓ lhs_ext_submit_gate     --selftest
+  ✓ lhs_ext_design (봉인 CSV ↔ 상자 ↔ 해시)
+  ✓ selftest_inventory     (분류·레인·CI 의존)
+  ✗ fast 자기검사 전수     (등재 기반 드라이버)
+        · scripts/constriction_reference.py --selftest  30s (느려졌다 — 등재를 slow 로 옮길 것)
+        ✗ scripts/litdb_promote.py --selftest  rc=124
+        · scripts/mixer_smoke_blind.py --selftest  78s (느려졌다 — 등재를 slow 로 옮길 것)
+        · scripts/step6_surrogate.py --selftest  30s (느려졌다 — 등재를 slow 로 옮길 것)
+        · scripts/trace_deps.py --selftest  26s (느려졌다 — 등재를 slow 로 옮길 것)
+      fast 자기검사 169/170 통과  (196s)
+      
+      ── scripts/litdb_promote.py --selftest  rc=124 ──────────────────────────────
+         180s TIMEOUT
+
+✗ 실패가 있다 — 고치고 다시.  ⚠ 이대로 푸시하면 러너의 fail-closed 게이트가
+  사용자의 GPU 런을 막는다 (규율 검사는 런 시작 전에 걸린다).
+gate rc=1

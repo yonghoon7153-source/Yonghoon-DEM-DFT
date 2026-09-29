@@ -1,0 +1,237 @@
+From aba311054ddd5ef513f9089d8dfc3313096b7150 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Tue, 29 Sep 2026 20:48:45 +0000
+Subject: [PATCH 08/11] =?UTF-8?q?coverage=20physics=20v2=20=E2=80=94=20?=
+ =?UTF-8?q?=EB=B6=84=EB=AA=A8=EA=B0=80=20=EC=84=9C=EC=A7=80=20=EC=95=8A?=
+ =?UTF-8?q?=EB=8A=94=20AM=20(=EB=B0=98=EA=B2=BD=20=EB=B9=84=EC=9C=A0?=
+ =?UTF-8?q?=ED=95=9C=20=C2=B7=20=EC=9E=90=EC=9C=A0=20=ED=91=9C=EB=A9=B4=20?=
+ =?UTF-8?q?=E2=89=A4=200)=20=EC=9D=84=200.0=C2=B7ok=20=EB=A1=9C=20?=
+ =?UTF-8?q?=EB=82=B4=EC=A7=80=20=EC=95=8A=EB=8A=94=EB=8B=A4=20(Codex=20LHS?=
+ =?UTF-8?q?C-01=20P1=20=C2=B7=20=EA=B3=84=EC=95=BD=20(a)=20=C2=B7=20?=
+ =?UTF-8?q?=EB=B0=98=EB=A1=80=20=EB=A8=BC=EC=A0=80)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- `_PhysicsV2Book.coverage`: AM 마다 반경 · 표면적이 유한 양수인지, v2 자유 표면 4πr² − Σ A_v2(AM–AM) > 0 인지 먼저 본다.
+  아니면 피복률로 세지 않고 사유 (첫 사례 · 개수) 를 남긴다 → `keys` 가 침대 v2 를 빈칸으로 둔다.  옛 코드는 그런 AM 을
+  0.0 으로 넣고 status ok 를 냈다 (Codex 반례: 정사면체 AM 4 의 1.2 µm 겹침 · 고립 NaN 반경).
+- `keys`: 빈칸 침대에도 `am_denominator_physics_v2` (n_am · n_free_surface_nonpositive · n_radius_invalid (새 키) · clipped)
+  를 싣는다 — 제외 수 · 분모 진단 · 상태를 함께 낸다 (판정문 §2 최소 해제).  유효 부분집합 통계 (계약 (b)) 는 택하지 않음
+  (1저자 비준 09-30 "권고대로" · (a) 침대 전체 빈칸).
+- 시험 먼저: 픽스처 변형 denom_zero (AM_S 11–13 · δ/R* 2.4 AM–AM 여섯 → 분모 ≤ 0 인 AM 4) · nan_radius (고립 AM 14 반경 NaN) ·
+  isolated_zero (정상 고립 AM = 참 0 양성 대조) → ⑬ ⑭ 옛 코드 실패 (ok · 0.0) · ⑮ 옛 코드 통과 → 수정 뒤 15/15.
+  Codex `audit.py` 를 고친 트리에 다시 돌림: denominator_zero · nan_isolated_radius = blank + 사유 · valid_isolated_zero = ok 0.0 ·
+  legacy 6 변형 × 3 종 동일.  plastic_coverage 27/27 (PHYSICS_V2_RULE 에 분모 계약 문장 추가).
+- 문서: 모듈 docstring · `docs/area_contract_20260913.md` v2 절 · 등재 (15/15).
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft
+---
+ docs/area_contract_20260913.md          |   5 ++
+ docs/reviews/selftest_inventory.tsv     |   2 +-
+ scripts/coverage_physics_vs_hertzian.py | 104 ++++++++++++++++++++----
+ scripts/plastic_coverage.py             |   4 +-
+ 4 files changed, 98 insertions(+), 17 deletions(-)
+
+diff --git a/docs/area_contract_20260913.md b/docs/area_contract_20260913.md
+index 73bbd4700..adcc7ec8c 100644
+--- a/docs/area_contract_20260913.md
++++ b/docs/area_contract_20260913.md
+@@ -1021,6 +1021,11 @@ clamp · `ψ ≤ 1e-4` 의 `Rc = 0` · `b = r_min` · 재료 계수 · 면적 ·
+   L = max(πR*δ, A_LIGG) > U 이면 **cap 이 이긴다** (U 를 내고 `cap_conflict` 로 센다 — `L1-01`).
+ - A_volume = **정확한 전체 lens** (두 반경 · `L1-02`) / (5 nm × 덤프 길이 단위) (`DESC-03` — 상수 자체는 안 바꿨다).
+ - 분모 = 4πr² − Σ **v2** AM–AM 면적 (분자와 같은 장부).  접촉 하나라도 거부되면 그 침대의 v2 는 빈칸 + 사유.
++  ★ 09-30 (Codex `LHSC-01` P1 · 계약 (a) · 1저자 비준 *"권고대로"*): **분모가 서지 않는 AM 도 0 으로 넣지 않는다** — 반경 · 표면적이
++  유한 양수가 아니거나 (NaN 반경 · 접촉 0 인 고립 입자는 접촉별 검사를 안 지난다) 자유 표면 ≤ 0 (이웃 AM 과 깊은 겹침 · 정사면체 AM 4
++  반례) 이면 침대 v2 빈칸 + 사유 · 제외 수 (`n_radius_invalid` · `n_free_surface_nonpositive`) 는 `am_denominator_physics_v2` 에
++  빈칸에도 싣는다.  옛 판은 그 AM 을 **0.0 · ok** 로 냈다 (`coverage_physics_vs_hertzian.py --selftest` ⑬ ⑭ · 양성 대조 ⑮).
++  유효 부분집합 통계 (계약 (b)) 는 택하지 않았다.  legacy 는 그대로 (그런 AM 을 0.0 으로 센다).
+ 
+ **⚠ 귀결 (이 결정의 값)** — v2 면적은 **LIGGGHTS 기하면적보다 작을 수 있고**, 얕은 겹침에서는 **πR*δ 보다도** 작다:
+ - 판정문 기하 (동일 반경 r = 0.5 µm · δ/R* = 0.01): A_v2 = 0.4996 πR*δ = 0.2501 A_LIGG (legacy 는 A_LIGG 를 냈다).
+diff --git a/docs/reviews/selftest_inventory.tsv b/docs/reviews/selftest_inventory.tsv
+index ec7fbbb5b..9152e1677 100644
+--- a/docs/reviews/selftest_inventory.tsv
++++ b/docs/reviews/selftest_inventory.tsv
+@@ -200,4 +200,4 @@ scripts/mixer_smoke_blind.py	--selftest	fast	none	claude	초록 ~33s (실측 ·
+ scripts/mixer_stage_gate.py	--selftest	fast	none	claude	초록 ~1s (실측 · 09-30 10/10 — 강성 축 코드 2 단계 piece 1 · 5: 발사 단계 관문 (launch_highbo.sh dev-e0 · dev-rot · confirm-first · confirm-rest).  리포 정책 v2 (새 policy_id · dev 허용 · 확인 정의만) · 요청 거부 10 (DEV 에 holdout seed · 확인에 DEV 셀 · soft 범위 null/6.0 …) · 정책 모양 · 발사 계획 (프로브 NP 5/10/20 · 확인 6 즉시 + 12 held) · 디스크 추정 (E0 프레임 385 → 867 → 1,227) · 셀 폴더 계약 · E0 진단 PASS 기록 (진짜 생산자 · 반례 9) · 승인 증서 ↔ start_check · confirm-rest 관문 (진짜 생산자 증서 · 반례 8 · release 재시도 · OUT_OF_RANGE 통과) · 등록값 한 벌).  test_launcher.sh DV · CF · CR 이 런처를 실제로 돌린다
+ scripts/lhs_perc_audit.py	--selftest	fast	none	claude	초록 ~1s (실측 · 33 건 · 자기리뷰 9 항 반례 + 요약 낡은 키 ⑭e (SELF-65) 포함) — J20-b ② 퍼콜레이션 묶음 읽기 전용 점검: 웹앱 경계 규칙 단계 (L0/L1/L2 폴백 · 미기록) · bottom∩top 겹침 · n_components/≥10/top_reachable 뜻 · 재현 ↔ 웹앱 정본 (calc_percolation · calc_se_se_cn · build_network · active_fractions) · 수확기 정본 (lhs_perc_extract.percolation · tortuosity_se 벽 밴드) 대조 · 접촉 원천 × 경계 규칙 2×2 귀속 · 덱 바닥 · 프레임 · 고아 행 · 중복/자기쌍 · 선언 수 · 변이 · legacy 09-15 대조 (true/false/1/0) · CLI (SKIPPED/INPUT_ERROR/NO_MESH/rc)
+ scripts/lhsx_design_adapter.py	--selftest	fast	none	claude	초록 <1s (실측 · 14 건 · 반례 6) — J20-c lhsx 64 설계 CSV → 130 인계 스키마 변환: 질량분율 합 · phi_AM 재계산 · mono "P 열 = AM 자리" 규약 · 입자 수 왕복 (lhs_ext_design.n_spheres · 반올림 폭) · 상자 50 µm (union lx_um) · 모르는 kind · CSV 왕복
+-scripts/coverage_physics_vs_hertzian.py	--selftest	fast	none	claude	초록 13/13 · 0.7s (실측, 2026-09-29) — physics v2 병기 (1저자 결정 09-29): ① legacy 바이트 동일 (v2 이전 코드 e72067854 로 같은 합성 침대에서 **실측한** sha256 핀 셋 — full_metrics 의 v2 외 키 · per-AM CSV · 반환값) · ③ DESC-03 (legacy 부피 결속 0.0 % ↔ v2 결속 수 = 접촉별 직접 호출) · ④ L1-01 전파 (충돌 수 · 두 분모 분율 · 상 쌍별) · ⑤ 분모 장부 (native AM–AM 만 바꾸면 legacy 가 움직인다 · v2 는 그대로) · ⑦ 조용한 대체 없음 (NaN δ → 빈칸 + 사유) · ⑧⑨ scale ≠ 1000 · contact_area 열 없음 → 빈칸 · ⑩ WEBAPP_*_FOLDER (옛 코드는 "[skip]" rc 0) · ⑪ 옛 v2 세대 키 걷기.  옛 compute_case 에서 2/13 을 먼저 확인했다.
++scripts/coverage_physics_vs_hertzian.py	--selftest	fast	none	claude	초록 15/15 (⑬–⑮ LHSC-01 분모 무효 · 2026-09-30) · 0.7s (실측, 2026-09-29) — physics v2 병기 (1저자 결정 09-29): ① legacy 바이트 동일 (v2 이전 코드 e72067854 로 같은 합성 침대에서 **실측한** sha256 핀 셋 — full_metrics 의 v2 외 키 · per-AM CSV · 반환값) · ③ DESC-03 (legacy 부피 결속 0.0 % ↔ v2 결속 수 = 접촉별 직접 호출) · ④ L1-01 전파 (충돌 수 · 두 분모 분율 · 상 쌍별) · ⑤ 분모 장부 (native AM–AM 만 바꾸면 legacy 가 움직인다 · v2 는 그대로) · ⑦ 조용한 대체 없음 (NaN δ → 빈칸 + 사유) · ⑧⑨ scale ≠ 1000 · contact_area 열 없음 → 빈칸 · ⑩ WEBAPP_*_FOLDER (옛 코드는 "[skip]" rc 0) · ⑪ 옛 v2 세대 키 걷기.  옛 compute_case 에서 2/13 을 먼저 확인했다.
+diff --git a/scripts/coverage_physics_vs_hertzian.py b/scripts/coverage_physics_vs_hertzian.py
+index 4a35f20fe..9e98cd2b1 100644
+--- a/scripts/coverage_physics_vs_hertzian.py
++++ b/scripts/coverage_physics_vs_hertzian.py
+@@ -27,6 +27,10 @@ v2 는 `plastic_coverage.film_area_physics_v2` 로 접촉마다 다시 계산해
+   • 분모 = 4πr² − Σ **v2** AM–AM 면적 (분자와 같은 장부 — legacy 는 native `c_cpl[22]` 를 뺀다).
+   • 조용한 대체 없음 — 접촉 하나라도 v2 함수가 거부하면 그 침대의 v2 는 **빈칸** + `coverage_status_physics_v2` 에 사유.
+     scale ≠ 1000 (µm = sim×scale 와 SI = sim/scale 가 1000 에서만 같다) · `delta` / `contact_area` 열 없음도 빈칸.
++  • 분모가 서지 않는 AM 도 조용히 0 으로 넣지 않는다 (`LHSC-01` · 계약 (a) · 1저자 비준 09-30 · Codex 반례 = 정사면체 AM 4 의 깊은
++    겹침 · 고립 NaN 반경) — 반경 · 표면적이 유한 양수가 아니거나 v2 자유 표면 4πr² − Σ A_v2(AM–AM) ≤ 0 이면 침대 v2 는 **빈칸** +
++    사유, 제외 수는 `am_denominator_physics_v2` (`n_radius_invalid` · `n_free_surface_nonpositive`) 에 **빈칸에도** 싣는다.
++    정상 반경 · 접촉 0 인 고립 AM 은 참 0 그대로 (`--selftest` ⑬–⑮).  legacy 는 그런 AM 을 0.0 으로 센다 (그대로).
+ ⚠⚠ 귀결 — **v2 면적은 LIGGGHTS 기하면적보다 (얕은 겹침에서는 πR*δ 보다도) 작을 수 있다**: 얕은 lens 는 5 nm 막보다
+   얇아 V_lens/h ≈ πR*δ·(δ/h) 이다.  항복 개시에서 면적이 불연속으로 떨어진다 (r 0.5 µm SE–SE: ×0.0566).
+   모든 상 쌍에 AM–SE E* · SE 경도를 쓰는 것 (`L1-03`) 은 v2 에서도 그대로다.
+@@ -286,27 +290,50 @@ class _PhysicsV2Book:
+             self.am_am[i2] += A
+ 
+     def coverage(self, id_to_r, id_to_t, am_types, type_map, am_surf):
+-        """AM 입자별 v2 피복률 — legacy physics 와 같은 식 · 같은 클립 · 같은 순서, 분모만 **v2** AM–AM."""
++        """AM 입자별 v2 피복률 — legacy physics 와 같은 식 · 같은 클립 · 같은 순서, 분모만 **v2** AM–AM.
++
++        ★ `LHSC-01` (Codex 09-30 · P1 · 계약 (a) · 1저자 비준 "권고대로"): 분모가 서지 않는 AM 은 **피복률로 세지 않는다** —
++        반경 · 표면적이 유한 양수가 아니거나 (NaN 반경 · 접촉 0 이라 접촉별 검사를 안 지나는 입자) v2 자유 표면
++        4πr² − Σ A_v2(AM–AM) 이 0 이하이면 (이웃 AM 과 깊이 겹친 입자) 사유를 남기고, `keys` 가 침대 v2 를 빈칸으로 둔다.
++        제외 수는 진단 (`n_radius_invalid` · `n_free_surface_nonpositive`) 에 빈칸에도 실린다.  옛 코드는 그런 AM 을
++        **0.0** 으로 넣고 status ok 를 냈다 (`--selftest` ⑬ ⑭).  legacy 경로는 그대로다 (0.0 으로 센다).
++        """
+         by_lbl = defaultdict(list)
+-        n_am = n_free0 = n_clip = 0
+-        for aid, _r in id_to_r.items():
++        n_am = n_free0 = n_clip = n_bad = 0
++        first_bad = first_free0 = None
++        for aid, r in id_to_r.items():
+             t = id_to_t.get(aid)
+             if t not in am_types:
+                 continue
+             lbl = type_map.get(t, f'T{t}')
+-            surf = am_surf.get(aid, 0.0)
+-            free = max(surf - self.am_am.get(aid, 0.0), 0.0)
+-            A = self.am_se.get(aid, 0.0)
+             n_am += 1
+-            if free > 0:
+-                raw = A / free * 100
+-                n_clip += int(raw > 100.0)
+-                cov = min(raw, 100.0)
+-            else:
++            try:
++                rr, ss = float(r), float(am_surf.get(aid))
++                ok = math.isfinite(rr) and rr > 0 and math.isfinite(ss) and ss > 0
++            except (TypeError, ValueError):
++                ok = False
++            if not ok:
++                n_bad += 1
++                if first_bad is None:
++                    first_bad = f'id {aid}: r={r!r}'
++                continue
++            am_am = self.am_am.get(aid, 0.0)
++            free = ss - am_am
++            if not (free > 0):
+                 n_free0 += 1
+-                cov = 0.0
+-            by_lbl[lbl].append(cov)
+-        return by_lbl, {'n_am': n_am, 'n_free_surface_nonpositive': n_free0, 'n_coverage_clipped_100': n_clip}
++                if first_free0 is None:
++                    first_free0 = f'id {aid}: 4πr² {ss:.4g} − ΣA_v2(AM–AM) {am_am:.4g} = {free:.4g}'
++                continue
++            raw = self.am_se.get(aid, 0.0) / free * 100
++            n_clip += int(raw > 100.0)
++            by_lbl[lbl].append(min(raw, 100.0))
++        if n_bad:
++            self.reasons.append(f'AM {n_bad} 개의 반경 · 표면적이 유한 양수가 아니다 (첫 사례 {first_bad}) — 분모를 만들 수 없다 (LHSC-01)')
++        if n_free0:
++            self.reasons.append(f'AM {n_free0} 개의 v2 자유 표면 ≤ 0 = 분모 무효 (첫 사례 {first_free0} — 이웃 AM–AM v2 면적 합이 '
++                                f'표면적 이상) (LHSC-01)')
++        return by_lbl, {'n_am': n_am, 'n_free_surface_nonpositive': n_free0, 'n_coverage_clipped_100': n_clip,
++                        'n_radius_invalid': n_bad}
+ 
+     def keys(self, by_lbl, am_diag, area_conv) -> dict:
+         """full_metrics 에 실을 v2 키 — 전부 `*_physics_v2`.  빈칸 침대는 값 키가 None 이고 사유가 status 에 있다."""
+@@ -337,6 +364,7 @@ class _PhysicsV2Book:
+             reasons.append('비유한 v2 산출 (내부 검사)')
+         if reasons:                              # 빈칸 — 부분 합은 싣지 않는다
+             out = {k: None for k in out}
++            out['am_denominator_physics_v2'] = dict(am_diag)   # 제외 수 · 분모 진단 (정수 개수뿐) 은 빈칸에도 싣는다 (LHSC-01 (a))
+         out['n_contacts_unknown_id_physics_v2'] = self.n_unknown_id
+         out['n_contact_failures_physics_v2'] = self.n_fail
+         out['coverage_status_physics_v2'] = 'ok' if not reasons else 'blank: ' + ' · '.join(reasons)
+@@ -727,7 +755,10 @@ def _selftest_fixture(case_dir: Path, *, variant: str = 'base') -> tuple:
+     (elastic · tabor · volume · geom · none) 와 L > U 충돌 두 건 (1–4 · 2–6, 둘 다 AM–SE) 을 낸다.
+     ligg = 기하 교차원판 (LIGGGHTS `contact_area` 규약, `L1-04`).  미지 id 행 (99–3) 하나 · δ = 0 행 (7–8) 하나.
+     variant: base · amam_x2 (AM–AM 의 native 면적만 2 배) · nan_delta (1–5 의 δ = NaN) · scale1 (meta scale 1) ·
+-             no_ligg_col (contact_area 열 없음) · stale_v2 (옛 v2 키를 미리 심는다)
++             no_ligg_col (contact_area 열 없음) · stale_v2 (옛 v2 키를 미리 심는다) ·
++             denom_zero (AM_S 11–13 을 더해 {2, 11, 12, 13} 이 δ/R* 2.4 의 AM–AM 접촉 여섯 — 각 AM 에 geom cap 셋 = 6πr² > 4πr²
++             ⇒ v2 분모 ≤ 0 인 AM 4 · Codex `LHSC-01` 반례 ①) · nan_radius (고립 AM_S 14 의 반경 NaN · 접촉 0 · 반례 ②) ·
++             isolated_zero (고립 AM_S 14 · 정상 반경 · 접촉 0 = 참 피복률 0 의 양성 대조 ③)
+     """
+     import csv as _csv
+     from plastic_coverage import _intersection_disc_area
+@@ -738,6 +769,12 @@ def _selftest_fixture(case_dir: Path, *, variant: str = 'base') -> tuple:
+         radii[i], types[i] = 0.5 * um, 3
+     spec = [(1, 3, 0.2), (1, 4, 0.01), (1, 5, 0.05), (2, 6, 0.004), (2, 7, 0.0005), (2, 8, 0.1),
+             (3, 4, 0.05), (5, 6, 0.3), (9, 10, 0.9), (1, 2, 0.3), (7, 8, 0.0), (99, 3, 0.05)]
++    if variant == 'denom_zero':                  # LHSC-01 ① — 유한 · 정상 입력인데 분모가 무너지는 침대
++        for i in (11, 12, 13):
++            radii[i], types[i] = 1.0 * um, 2
++        spec += [(a, b, 2.4) for a, b in ((2, 11), (2, 12), (2, 13), (11, 12), (11, 13), (12, 13))]
++    elif variant in ('nan_radius', 'isolated_zero'):     # LHSC-01 ② · ③ — 접촉 없는 AM 하나 (반경 NaN / 정상)
++        radii[14], types[14] = (float('nan') if variant == 'nan_radius' else 1.0 * um), 2
+     case_dir.mkdir(parents=True, exist_ok=True)
+     with open(case_dir / 'atoms.csv', 'w', newline='') as fh:
+         w = _csv.writer(fh, lineterminator='\n')
+@@ -978,6 +1015,43 @@ def _selftest() -> int:
+             and fm.get('n_contacts_unknown_id_physics_v2') == 1 == (e or {}).get('unknown'),
+             f"none={(fm.get('A_binding_counts_total_physics_v2') or {}).get('none')} · "
+             f"unknown={fm.get('n_contacts_unknown_id_physics_v2')}")
++
++        # ⑬–⑮ ★ Codex LHSC-01 (09-30 · P1) — 분모가 무효인 AM (v2 자유 표면 ≤ 0 · 반경 비유한) 이 **피복률 0.0 · ok** 로 나왔다.
++        #    계약 (a) (1저자 비준 09-30 "권고대로"): 그런 AM 이 하나라도 있으면 침대 v2 = 빈칸 + 사유, 제외 수 · 분모 진단은 함께 싣는다.
++        #    옛 코드: ⑬ ⑭ 실패 (status ok · 0.0) · ⑮ 통과 (양성 대조 — 고친 뒤에도 참 0 이어야 한다).
++        _cd13, _s13, fm13, _r13 = run('denom_zero')
++        st13 = str(fm13.get('coverage_status_physics_v2'))
++        dg13 = fm13.get('am_denominator_physics_v2') or {}
++        chk('⑬ ★ LHSC-01 ①: 유한 입력인데 v2 분모 ≤ 0 인 AM 4 (geom cap 셋 = 6πr² > 4πr²) → 침대 v2 빈칸 + 사유 (분모) · '
++            '제외 수 (n_free_surface_nonpositive 4 / n_am 5 · 반경 무효 0) 는 빈칸에도 실린다 · legacy 는 계산된다',
++            st13.startswith('blank') and '분모' in st13 and fm13.get('n_contact_failures_physics_v2') == 0
++            and dg13.get('n_am') == 5 and dg13.get('n_free_surface_nonpositive') == 4 and dg13.get('n_radius_invalid') == 0
++            and all(fm13.get(k) is None for k in ('coverage_AM_S_mean_physics_v2', 'coverage_AM_mean_physics_v2',
++                                                  'area_AM전체_SE_total_physics_v2', 'area_AM전체_AM_total_physics_v2'))
++            and isinstance(fm13.get('coverage_AM_S_mean_physics'), float),
++            f'status={st13!r} · diag={dg13} · AM_S v2={fm13.get("coverage_AM_S_mean_physics_v2")!r}')
++        _cd14, _s14, fm14, _r14 = run('nan_radius')
++        st14 = str(fm14.get('coverage_status_physics_v2'))
++        dg14 = fm14.get('am_denominator_physics_v2') or {}
++        chk('⑭ ★ LHSC-01 ②: 고립 AM 의 반경 NaN (접촉 0 이라 접촉별 검사를 안 지난다) → 침대 v2 빈칸 + 사유 (반경) · '
++            'n_radius_invalid 1 · 분모 ≤ 0 은 0 · 값 키 전부 None',
++            st14.startswith('blank') and '반경' in st14 and dg14.get('n_radius_invalid') == 1
++            and dg14.get('n_free_surface_nonpositive') == 0 and dg14.get('n_am') == 3
++            and all(fm14.get(k) is None for k in ('coverage_AM_S_mean_physics_v2', 'coverage_AM_mean_physics_v2',
++                                                  'area_AM전체_SE_total_physics_v2')),
++            f'status={st14!r} · diag={dg14}')
++        _cd15, _s15, fm15, _r15 = run('isolated_zero')
++        st15 = str(fm15.get('coverage_status_physics_v2'))
++        dg15 = fm15.get('am_denominator_physics_v2') or {}
++        e15 = expected_v2(_cd15)
++        chk('⑮ LHSC-01 ③ 양성 대조: 정상 반경 · 접촉 0 인 고립 AM 은 참 피복률 0 — 침대 v2 는 ok 그대로 · AM_S 평균 = (cov₂ + 0)/2 · '
++            '제외 수 0 · n_am 3',
++            st15 == 'ok' and dg15.get('n_am') == 3 and dg15.get('n_free_surface_nonpositive') == 0
++            and dg15.get('n_radius_invalid', 0) == 0 and e15 is not None
++            and fm15.get('coverage_AM_S_mean_physics_v2') == round(float(e15['cov'][2]) / 2.0, 3)
++            and fm15.get('coverage_AM_mean_physics_v2') == round(float(np.mean([e15['cov'][1], e15['cov'][2], 0.0])), 3),
++            f"status={st15!r} · diag={dg15} · AM_S {fm15.get('coverage_AM_S_mean_physics_v2')} vs "
++            f"{e15 and round(float(e15['cov'][2]) / 2.0, 3)}")
+     finally:
+         for k, v in env_keep.items():
+             if v is None:
+diff --git a/scripts/plastic_coverage.py b/scripts/plastic_coverage.py
+index 3b16218a6..5210c058c 100644
+--- a/scripts/plastic_coverage.py
++++ b/scripts/plastic_coverage.py
+@@ -443,7 +443,9 @@ PHYSICS_V2_RULE = (
+     '그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 '
+     '(L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · '
+     'A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · '
+-    '모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다)')
++    '모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · '
++    '피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 '
++    '(LHSC-01 (a) · 2026-09-30)')
+ 
+ 
+ def _v2_real(name: str, v) -> float:
+-- 
+2.43.0
+

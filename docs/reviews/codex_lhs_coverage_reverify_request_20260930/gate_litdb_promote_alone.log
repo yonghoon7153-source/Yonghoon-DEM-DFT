@@ -1,0 +1,4 @@
+## scripts/litdb_promote.py --selftest ALONE in review worktree (limit 600 s) · start 21:37:54
+rc=0 elapsed=28 s
+  (0) 공유 워크트리·브랜치·상태 파일 불가침: OK
+LITDB-PROMOTE SELFTEST PASS
