@@ -29,6 +29,8 @@
 usage
   python3 scripts/check_contact_validity.py <덤프디렉터리> [...] [--label L]          # 옛 빠른 점검 (계약 아님)
   python3 scripts/check_contact_validity.py --contract <런디렉터리> [...] --n-expected 100000 --json out.json
+  python3 scripts/check_contact_validity.py --contract <soft 셀> --soft-range 5.8 [--bins 0] …   # 강성 축 §6 — 상태 (TECH_FAIL · CONTRACT_MET ·
+                                                                                                # CONTRACT_NOT_MET · OUT_OF_RANGE) · 원 1 % · soft 범위
   python3 scripts/check_contact_validity.py --selftest
 """
 import argparse
@@ -157,6 +159,16 @@ STL_REF_DIR = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__fi
 LAUNCH_SCHEMA = 'mixer_highbo_launch_record/1'   # launch_highbo.sh 의 발사 봉인
 PHASE_TOL_FRAC = 0.02            # 데이터로 되읽은 드럼 회전각 vs 덱 예정각 — 면 각도의 2 % (9.23° 면이면 0.18°)
 PHASE_FRAMES = 5                 # 위상을 데이터로 확인할 프레임 수 (창 안에 고르게)
+#: ★ soft 진단 범위 (2026-09-30 · 강성 축 사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md v2.4 §6 · 코드 선행조건 2 단계 piece 3):
+#:   "soft 진단 범위 = 5.8 % … δ_soft/δ_ref = (E_ref/E_soft)^(2/3) = 14^(2/3) = 5.81 ⇒ 등록된 ref 계약 1 % 를 그대로 환산한 값 … 관측량 = §6 의
+#:   1 % 계약과 같은 양 (저장 프레임 최대 · 입자–입자 + 벽 · 상별 · 분모 r_min) · 경계 `x <= 5.8 + 1e-9` · 초과 = OUT_OF_RANGE (원 1 % 는 soft
+#:   에서 어차피 NOT_MET 유지 · q 를 공식 판정에 안 씀 · 같은 조건 재시도로 지우는 TECH 사유 아님 · 팔은 완주 · 값 보존 · 보고 · 짝 블록의 다른
+#:   팔 계속 …)" · "DEV E0_ref 실측 최대 × 5.81 이 5.8 % 를 넘으면 그 사실을 보고하되 **범위를 올리지 않는다**".
+#:   ⛔ CLI `--soft-range` 는 이 값 외를 거부한다 (올리거나 내리지 않는다 · 결과를 보고 고르지 않는다 — Codex 9 차 Q6).
+SOFT_RANGE_PCT = 5.8
+SOFT_RANGE_EPS = 1e-9            # 경계 비교 규약 (부동소수 · % 단위) — 물리 허용치 아님
+#: 스모크 · 관문이 구분해 내보낼 상태 (§6 — "`TECH_FAIL` / `CONTRACT_MET` / `CONTRACT_NOT_MET` / `OUT_OF_RANGE`")
+CONTRACT_STATUSES = ('TECH_FAIL', 'CONTRACT_MET', 'CONTRACT_NOT_MET', 'OUT_OF_RANGE')
 
 
 def read_stl(path):
@@ -782,7 +794,7 @@ def container_from_stl(path, spec):
 
 def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None, walls=True,
                  phase_receipt=None, expect_counts=None, diag_fit=False, progress=False,
-                 launch_record=None, expect_deck=None, stl_ref_dir=None):
+                 launch_record=None, expect_deck=None, stl_ref_dir=None, bins=None, soft_range_pct=None):
     """★ 등록 계약 판정 — 분석 창 **전 프레임** (정착 끝 t₀ = `measure_mixing_index` 와 같은 정의 → 마지막 덤프).
 
       ① 입자–입자 최대 δ/r_min ≤ max_ovl (강체 내부 쌍 제외)
@@ -801,6 +813,11 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
 
     관측량 = **저장 프레임 최대** (snapshot-max).  덤프 사이 (이 덱 32 ms ≫ Hertz 충돌 ≈ 22 µs) 의 peak 는 관측하지 않는다 — D-1.
     verdict = PASS · REJECT (①②③ 위반) · TECH (④ 만).  둘 다면 REJECT.
+
+    ★ 2026-09-30 (강성 축 코드 선행조건 2 단계 piece 3):
+      `bins` — 창을 판독기 bin 들로 제한 (예 (0,) = 사전등록 §4 a′ "bin 0 창 전 프레임") · 그 bin 들의 계획 격자가 **전부** 있어야 한다.
+      `soft_range_pct` — soft 진단 팔 (§6).  None = ref/ref2 (계약 팔).  결과 `status` = contract_status() — 원 1 % 와 soft 범위를
+      **따로** 적고 (Codex 9 차 §7 "하나의 PASS/FAIL 로 두 사실을 덮지 않는다") 하나의 상태로 요약한다.  verdict (1 % 계약) 는 그대로.
     """
     from measure_mixing_index import deck_plan, planned_t0          # t₀ 정의는 판독기 한 곳 (규율 ①)
     deck_path = os.path.join(run_dir, 'in.mixer')
@@ -814,26 +831,46 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
                pp_max=float('-inf'), pp_max_step=None, pp_max_types=None, pp_max_by_pair={},
                wall_max=float('-inf'), wall_max_step=None, wall_max_type=None, wall_max_mesh=None,
                wall_max_by_type={}, wall_lower_max=float('-inf'), wall_basis=None, phase=[], phase_status='not_run', phase_note='',
-               n_frames=0, window=None, notes=[], pos_bound_m=None, static_why=[])
+               n_frames=0, window=None, notes=[], pos_bound_m=None, static_why=[],
+               bins=sorted(int(b_) for b_ in bins) if bins is not None else None,
+               reject_overlap=[], tech_wall_uncertain=[])
+
+    def _done(v_):
+        out['verdict'] = v_
+        out['status'] = contract_status(out, soft_range_pct)
+        return out
     if not fr:
         tech.append('덤프가 없다')
-        out['verdict'] = 'TECH'
-        return out
+        return _done('TECH')
     #  ★ 계획 t₀ (2026-09-28, Codex 3차 HBR3-05) — 정착 끝의 **계획 덤프 step** 이 그대로 있어야 한다.  옛 판은 "있는 것 중
     #    ≤ 2·steps_fill 인 마지막" 을 골라, 없어진 t₀ 를 앞 프레임으로 조용히 대체했다 (판독기와 같은 정의 · 같은 규칙).
     st0 = planned_t0(plan)
     if st0 not in {st for st, _ in fr}:
         tech.append(f'계획 t₀ {st0} (정착 끝 · dump 격자) 프레임이 없다 — 앞 프레임으로 대체하지 않는다 (HBR3-05)')
-        out['verdict'] = 'TECH'
-        return out
+        return _done('TECH')
     win = [(st, p) for st, p in fr if st >= st0]
+    de = plan['dump_every']
+    lat_bins = None
+    if bins is not None:
+        #  ★ 판독기 bin 창 (piece 3 · 사전등록 §4 a′) — bin = ⌊(s − t₀)/바퀴 step + 1e-9⌋ (measure_mixing_index.analyse 의 _bin 과 같은 식) ·
+        #    창 = 그 bin 들 안의 저장 프레임 · 결손 = 그 bin 들의 **계획 격자 전부** 대비 (진행 중인 런의 다음 bin 은 보지 않는다)
+        spr_ = plan['steps_per_rev']
+        want_b = {int(b_) for b_ in bins}
+
+        def _bin(s_):
+            return int(np.floor((s_ - st0) / spr_ + 1e-9))
+        lat_bins = [s_ for s_ in range(st0, plan['steps_total'] + 1, de) if _bin(s_) in want_b]
+        win = [(st, p) for st, p in win if _bin(st) in want_b]
+        if not lat_bins or not win:
+            tech.append(f'bin {sorted(want_b)} 창이 비었다 (계획 격자 {len(lat_bins)} 장 · 있는 프레임 {len(win)} 장) — 판정 불가')
+            return _done('TECH')
     out['window'] = (win[0][0], win[-1][0])
     out['n_frames'] = len(win)
-    #  ④ 창 격자 (HBR2-03) — t₀ 부터 마지막 프레임까지 dump_every 간격의 덤프가 **다** 있어야 한다
-    de = plan['dump_every']
+    out['frames_evaluated'] = [[int(st), p] for st, p in win]       # 이 판정이 본 프레임 (증서가 다시 해시한다 — mixer_smoke_blind contact 블록)
+    #  ④ 창 격자 (HBR2-03) — t₀ 부터 마지막 프레임까지 (bins 면 그 bin 들의 계획 격자 전부) dump_every 간격의 덤프가 **다** 있어야 한다
     present = [st for st, _ in win]
     pset = set(present)
-    missing = [s for s in range(st0, win[-1][0] + 1, de) if s not in pset]
+    missing = [s for s in (lat_bins if lat_bins is not None else range(st0, win[-1][0] + 1, de)) if s not in pset]
     if missing:
         tech.append(f'창 안 덤프 결손 {len(missing)} 개 (step {missing[:6]}{"…" if len(missing) > 6 else ""}) — '
                     '미관측 구간에 통과 증서를 줄 수 없다')
@@ -916,8 +953,7 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
             tech.append(f'step {st}: 덤프 형식 (헤더 · 열 · 값) — {"; ".join(probs[:3])} (그 프레임은 계산에 쓰지 않는다)')
             if k == 0:
                 tech.append('t₀ 프레임이 형식 검사를 못 넘어 보존 기준을 세울 수 없다')
-                out['verdict'] = 'TECH'
-                return out
+                return _done('TECH')
             continue
         D = read_dump(path)
         P = np.c_[D['x'], D['y'], D['z']]
@@ -1023,6 +1059,7 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
         n_over = sum(r_['pp_n_over'] for r_ in out['per_frame'])
         reject.append(f'입자–입자 최대 δ/r_min {out["pp_max"]*100:.3f} % > {max_ovl*100:g} % '
                       f'(step {out["pp_max_step"]} · 타입 {out["pp_max_types"]} · 넘은 접촉 {n_over} 건/창)')
+        out['reject_overlap'].append(reject[-1])
     if spec is not None:
         pf = out['per_frame']
         cap = max(r_['cap_max'] for r_ in pf)
@@ -1049,9 +1086,11 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
             if out['wall_max'] > max_ovl and lo_ > max_ovl:
                 reject.append(f'벽 δ/r 가 위상 불확실성 구간 (± {receipt["eps_wall_deg"]:.3g}°) 의 **어느 각에서도** {lo_*100:.3f} % 이상 '
                               f'> {max_ovl*100:g} % (명백 위반 · 최대 step {out["wall_max_step"]} · 타입 {out["wall_max_type"]} · {out["wall_max_mesh"]})')
+                out['reject_overlap'].append(reject[-1])
             elif out['wall_max'] > max_ovl:
                 tech.append(f'위상 불확실성으로 미식별 — ± {receipt["eps_wall_deg"]:.3g}° 구간 안에서 벽 δ/r {lo_*100:.4f}–{out["wall_max"]*100:.4f} % '
                             f'가 {max_ovl*100:g} % 를 걸친다 (실제 1 % 초과 실측이 아니다 · HBR3-03)')
+                out['tech_wall_uncertain'].append(tech[-1])
             over = False
         elif worst <= max_ovl:
             out['phase_status'] = 'bounded'      # 근거 없어도 어느 회전각이어도 한도 안
@@ -1060,19 +1099,77 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
             out['phase_status'] = 'bounded'      # 근거 없어도 어느 회전각이어도 한도 밖
             out['wall_basis'] = f'회전각-무관 하한 {best*100:.3f} % > {max_ovl*100:g} %'
             reject.append(f'벽 δ/r 가 **어느 회전각이어도** {best*100:.3f} % 이상 > {max_ovl*100:g} %')
+            out['reject_overlap'].append(reject[-1])
         else:
             out['phase_status'], out['wall_basis'] = 'unidentified', '없음'
             tech.append(f'드럼 회전각의 독립 근거가 없고 (재개-위상 영수증 없음 · 정지 벽 아님 · post_mesh/ 덤프는 판정 근거가 아니다 — '
                         f'HBR4-04) 벽 δ/r 가 각에 따라 '
                         f'{best*100:.2f}–{worst*100:.2f} % — 한도 {max_ovl*100:g} % 판정 불가.  '
                         f'예정각으로 잰 {out["wall_max"]*100:.3f} % 는 미검증 (판정에 안 씀)')
+            out['tech_wall_uncertain'].append(tech[-1])
         if over:
             n_over = sum(r_.get('wall_n_over', 0) for r_ in pf)
             reject.append(f'벽 최대 δ/r {out["wall_max"]*100:.3f} % > {max_ovl*100:g} % (step {out["wall_max_step"]} · '
                           f'타입 {out["wall_max_type"]} · {out["wall_max_mesh"]} · 넘은 접촉 {n_over} 건/창 · 근거 {out["phase_status"]})')
+            out['reject_overlap'].append(reject[-1])
     elif walls:
         out['phase_status'] = 'no_walls'
-    out['verdict'] = 'REJECT' if reject else ('TECH' if tech else 'PASS')
+    return _done('REJECT' if reject else ('TECH' if tech else 'PASS'))
+
+
+def contract_status(w, soft_range_pct=None):
+    """check_window 결과 → 상태 dict (2026-09-30 · 강성 축 사전등록 §6 · 코드 선행조건 2 단계 piece 3).
+
+    세 축을 **따로** 적는다 (§6 표 — 기술적 관측 가능 / 원 1 % 물리 적격성 / soft 진단 범위 · Codex 9 차 §7 "하나의 PASS/FAIL 로 두 사실을 덮지 않는다"):
+      technical     'OK' · 'FAIL' — 보존 · 형식 · 계획 프레임 · 창 결손 · 기하 · 출처 (tech 중 벽 위상 불확실만 뺀 것 + 겹침 아닌 기각)
+      original_1pct 'MET' · 'NOT_MET' · None (벽 위상 불확실이 1 % 를 걸친다) — x_lo > 1 % 면 NOT_MET · x_hi ≤ 1 % 면 MET (check_window 와 같은 비교)
+      soft_range    None (ref/ref2 = 계약 팔) · 'WITHIN' · 'OUT_OF_RANGE' · 'UNIDENTIFIED' — 경계 x ≤ 5.8 + 1e-9 (%)
+    x = 저장 프레임 최대 max(입자–입자, 벽) — 벽은 근거별 구간 (static · mesh-dump = 한 값 · receipt = [하한, 상한] · bounded/unidentified =
+    [회전각-무관 하한, 상한]).  status (하나로 요약): TECH_FAIL (기술 실패 · 판정 불가) > OUT_OF_RANGE > CONTRACT_NOT_MET > CONTRACT_MET.
+    ⚠ soft 의 1 % 초과 (CONTRACT_NOT_MET) 는 **기술 실패가 아니다** — 값 보존 · 보고 · 관문은 막지 않는다 (§6).  ref 의 NOT_MET 은 확인 주장 HOLD.
+    """
+    if soft_range_pct is not None and soft_range_pct != SOFT_RANGE_PCT:
+        raise ValueError(f'soft 진단 범위 {soft_range_pct!r} ≠ 등록 {SOFT_RANGE_PCT} % — 올리거나 내리지 않는다 (§6 · Codex 9 차 Q6)')
+    unc = set(w.get('tech_wall_uncertain') or [])
+    ovl = set(w.get('reject_overlap') or [])
+    hard = [t_ for t_ in (w.get('tech') or []) if t_ not in unc] + [r_ for r_ in (w.get('reject') or []) if r_ not in ovl]
+    ninf = float('-inf')
+
+    def _f(v_):
+        return float(v_) if isinstance(v_, (int, float)) and not isinstance(v_, bool) and v_ == v_ else ninf
+    pp = _f(w.get('pp_max'))
+    basis = w.get('phase_status')
+    if basis == 'receipt':
+        lo_w, hi_w = _f(w.get('wall_lower_max')), _f(w.get('wall_max'))
+    elif basis in ('bounded', 'unidentified'):
+        lo_w, hi_w = _f(w.get('wall_bound_best')), _f(w.get('wall_bound_worst'))
+    else:                                                        # static · mesh-dump · no_walls · not_run
+        lo_w = hi_w = _f(w.get('wall_max'))
+    x_lo, x_hi = max(pp, lo_w), max(pp, hi_w)
+    mo = float(w.get('max_ovl', CONTRACT_MAX_OVL))
+    out = dict(schema='mixer_contact_status/1', max_ovl=mo, soft_range_pct=soft_range_pct, soft_range_eps=SOFT_RANGE_EPS,
+               technical='FAIL' if hard else 'OK', why=hard[:6], wall_basis=basis,
+               x_lo_pct=x_lo * 100.0 if x_lo != ninf else None, x_hi_pct=x_hi * 100.0 if x_hi != ninf else None,
+               original_1pct=None, soft_range=None, status='TECH_FAIL')
+    if hard or x_hi == ninf:
+        if x_hi == ninf and not hard:
+            out['why'] = ['관측값이 없다 (창 프레임 없음)']
+            out['technical'] = 'FAIL'
+        return out
+    out['original_1pct'] = 'NOT_MET' if x_lo > mo else ('MET' if x_hi <= mo else None)
+    if soft_range_pct is None:
+        out['status'] = {'MET': 'CONTRACT_MET', 'NOT_MET': 'CONTRACT_NOT_MET'}.get(out['original_1pct'], 'TECH_FAIL')
+        if out['original_1pct'] is None:
+            out['why'] = sorted(unc)[:3] or ['1 % 판정 불가']
+        return out
+    thr = float(soft_range_pct) + SOFT_RANGE_EPS
+    out['soft_range'] = ('OUT_OF_RANGE' if x_lo * 100.0 > thr else ('WITHIN' if x_hi * 100.0 <= thr else 'UNIDENTIFIED'))
+    if out['soft_range'] == 'OUT_OF_RANGE':
+        out['status'] = 'OUT_OF_RANGE'                           # 원 1 % 는 NOT_MET 그대로 (5.8 % > 1 %)
+    elif out['soft_range'] == 'WITHIN' and out['original_1pct'] is not None:
+        out['status'] = 'CONTRACT_MET' if out['original_1pct'] == 'MET' else 'CONTRACT_NOT_MET'
+    else:
+        out['why'] = sorted(unc)[:3] or ['soft 범위 · 1 % 판정 불가 (벽 위상 불확실)']
     return out
 
 
@@ -1090,6 +1187,10 @@ def report_window(rs):
             print(f'{"":22s}   ⚠ TECH {b}')
         for b in m.get('notes', []):
             print(f'{"":22s}   · {b}')
+        st_ = m.get('status') or {}
+        if st_:
+            print(f'{"":22s}   ▸ 상태 {st_.get("status")} · 기술 {st_.get("technical")} · 원 1 % {st_.get("original_1pct")} · '
+                  f'soft 범위 {st_.get("soft_range")} ({st_.get("soft_range_pct")}) · x {st_.get("x_lo_pct")}–{st_.get("x_hi_pct")} %')
     n_bad = sum(m['verdict'] != 'PASS' for m in rs)
     if n_bad:
         print(f'\n⛔ {n_bad} 런이 계약 (최대 겹침 ≤ {CONTRACT_MAX_OVL*100:g} % · 벽 포함 · 상별 보존) 을 통과하지 못했다 — '
@@ -1756,6 +1857,137 @@ def _selftest():
         os.remove(os.path.join(run, 'job_start.json'))
         w = check_window(run, phase_receipt=_receipt1(td, run, name='s_local.json'))
         chk('㉛d (대조) 로컬 봉인은 시작 대조 기록 없이도 그대로 받는다 (틈이 없다)', w['phase_status'] == 'receipt' and w['verdict'] == 'PASS')
+    # ══ ㉜~㉟ 2026-09-30 — 강성 축 코드 선행조건 2 단계 piece 3: bin 창 · 상태 필드 · --soft-range (사전등록 §6 · §4 a′) ══════════════
+    #    ★ 반례를 먼저 옮겼다 — 옛 판: check_window 에 bins · soft_range_pct 가 없다 (TypeError) · contract_status 없음 · CLI --soft-range ·
+    #      --bins 없음 ⇒ ㉜~㉟ 전부 FAIL.
+    G_ = globals()
+
+    def _okx(fn):
+        try:
+            return bool(fn())
+        except Exception as e_:                                       # noqa: BLE001 — 옛 판의 TypeError · NameError 를 FAIL 로
+            print(f'        ({type(e_).__name__}: {str(e_)[:100]})')
+            return False
+
+    def _run_rev(td_, gaps, name='rr'):
+        """1000 step/바퀴 덱 (bin 0 = [2000, 3000) · bin 1 = [3000, 4000)) · 프레임 = {step: 짝 간격}."""
+        run_ = os.path.join(td_, name)
+        os.makedirs(os.path.join(run_, 'post'))
+        _geom(run_)
+        open(os.path.join(run_, 'in.mixer'), 'w').write(_deck(0.001))
+        for st_, g_ in gaps.items():
+            _dump(run_, st_, BASE + _pair(g_))
+        return run_
+    with tempfile.TemporaryDirectory() as td:
+        run = _run_rev(td, {2000: 0.0025, 2500: 0.0025, 3000: 0.00198, 3500: 0.0025})
+        w_all = check_window(run)
+        chk(f'㉜ (대조) 창 전체는 bin 1 의 2 % 를 기각 ({w_all["verdict"]} @ {w_all["pp_max_step"]})',
+            w_all['verdict'] == 'REJECT' and w_all['pp_max_step'] == 3000)
+        r32 = {}
+
+        def _t32():
+            w0 = check_window(run, bins=(0,))
+            w1 = check_window(run, bins=(1,))
+            r32.update(w0=w0['verdict'], w1=w1['verdict'])
+            os.remove(os.path.join(run, 'post', 'mix_2500.liggghts'))
+            wm = check_window(run, bins=(0,))
+            w5 = check_window(run, bins=(5,))
+            _dump(run, 2500, BASE + _pair(0.0025))
+            r32.update(miss=wm['verdict'], empty=w5['verdict'])
+            return (w0['verdict'] == 'PASS' and w0['n_frames'] == 2 and tuple(w0['window']) == (2000, 2500) and w0['bins'] == [0]
+                    and w1['verdict'] == 'REJECT' and w1['pp_max_step'] == 3000
+                    and wm['verdict'] == 'TECH' and any('결손' in t_ for t_ in wm['tech'])
+                    and w5['verdict'] == 'TECH')
+        chk(f'㉜b ★ bins=(0,) = 판독기 bin 0 창만 (§4 a′) — bin 0 (2000 · 2500) PASS · bin 1 은 2 % REJECT · bin 0 격자 결손 (2500 없음) = TECH · '
+            f'빈 bin (5) = TECH {r32}', _okx(_t32))
+
+    #  ㉝ contract_status 표 — ref (계약 팔) · soft (진단 팔 · 5.8 %) × 기술 / 1 % / 범위 (§6 세 축)
+    def _W(**k_):
+        d_ = dict(max_ovl=0.01, tech=[], reject=[], reject_overlap=[], tech_wall_uncertain=[], phase_status='static',
+                  pp_max=0.005, wall_max=0.004)
+        d_.update(k_)
+        return d_
+    PPR = 'pp 기각'
+    U_ = '위상 불확실성으로 미식별 (합성)'
+    TAB = [  # (이름, 입력, soft 범위, 기대 status, 기대 original, 기대 soft)
+        ('ref 0.5 %', _W(), None, 'CONTRACT_MET', 'MET', None),
+        ('ref 2 %', _W(pp_max=0.02, reject=[PPR], reject_overlap=[PPR]), None, 'CONTRACT_NOT_MET', 'NOT_MET', None),
+        ('soft 0.5 %', _W(), 5.8, 'CONTRACT_MET', 'MET', 'WITHIN'),
+        ('soft 5 %', _W(pp_max=0.05, reject=[PPR], reject_overlap=[PPR]), 5.8, 'CONTRACT_NOT_MET', 'NOT_MET', 'WITHIN'),
+        ('soft 경계 5.8 % (= 등록 · 여유 1e-9 안)', _W(pp_max=0.058, reject=[PPR], reject_overlap=[PPR]), 5.8, 'CONTRACT_NOT_MET', 'NOT_MET', 'WITHIN'),
+        ('soft 5.8001 %', _W(pp_max=0.058001, reject=[PPR], reject_overlap=[PPR]), 5.8, 'OUT_OF_RANGE', 'NOT_MET', 'OUT_OF_RANGE'),
+        ('soft 벽 7 % (static)', _W(wall_max=0.07, reject=['벽'], reject_overlap=['벽']), 5.8, 'OUT_OF_RANGE', 'NOT_MET', 'OUT_OF_RANGE'),
+        ('ref 창 결손 (기술)', _W(tech=['창 안 덤프 결손 1 개']), None, 'TECH_FAIL', None, None),
+        ('soft 창 결손 (기술)', _W(pp_max=0.05, tech=['창 안 덤프 결손 1 개'], reject=[PPR], reject_overlap=[PPR]), 5.8, 'TECH_FAIL', None, None),
+        ('soft 보존 실패 (겹침 아닌 기각 = 기술)', _W(reject=['step 2500: 상별 입자 수 {1: 3} ≠ t₀ {1: 4}']), 5.8, 'TECH_FAIL', None, None),
+        ('ref 벽 위상 불확실 (1 % 걸침)', _W(phase_status='receipt', pp_max=0.002, wall_lower_max=0.008, wall_max=0.012, tech=[U_],
+                                        tech_wall_uncertain=[U_]), None, 'TECH_FAIL', None, None),
+        ('soft 벽 위상 불확실 + 입자 5 % (1 % 는 확정 NOT_MET)', _W(phase_status='receipt', pp_max=0.05, wall_lower_max=0.008, wall_max=0.012,
+                                                            tech=[U_], tech_wall_uncertain=[U_], reject=[PPR], reject_overlap=[PPR]),
+         5.8, 'CONTRACT_NOT_MET', 'NOT_MET', 'WITHIN'),
+        ('soft 범위 걸침 (벽 5.5–6.0 %)', _W(phase_status='receipt', pp_max=0.03, wall_lower_max=0.055, wall_max=0.060, reject=[PPR, '벽 명백'],
+                                          reject_overlap=[PPR, '벽 명백']), 5.8, 'TECH_FAIL', 'NOT_MET', 'UNIDENTIFIED'),
+        ('ref unidentified (상·하한 0.4–3 %)', _W(phase_status='unidentified', pp_max=0.002, wall_bound_best=0.004, wall_bound_worst=0.03,
+                                                tech=[U_], tech_wall_uncertain=[U_]), None, 'TECH_FAIL', None, None),
+    ]
+
+    def _t33():
+        cs = G_['contract_status']
+        bad = []
+        for nm_, w_, sr_, st_, og_, so_ in TAB:
+            r_ = cs(w_, sr_)
+            if (r_['status'], r_['original_1pct'], r_['soft_range']) != (st_, og_, so_) or r_['status'] not in G_['CONTRACT_STATUSES']:
+                bad.append(f'{nm_}: {r_["status"]}/{r_["original_1pct"]}/{r_["soft_range"]}')
+        try:
+            cs(_W(), 6.0)
+            bad.append('soft 6.0 을 받았다')
+        except ValueError:
+            pass
+        if bad:
+            print('        ' + ' | '.join(bad))
+        return not bad and G_['SOFT_RANGE_PCT'] == 5.8 and abs(0.01 * 14 ** (2 / 3) * 100 - 5.81) < 0.005
+    chk(f'㉝ ★ 상태 표 (§6 세 축 분리 · {len(TAB)} 행) — ref: MET · NOT_MET · 기술 실패 · 1 % 걸침 = TECH_FAIL / soft (5.8 %): 1 % 초과는 '
+        'CONTRACT_NOT_MET (기술 실패 아님) · 경계 5.8 % 는 WITHIN (여유 1e-9) · 5.8001 % · 벽 7 % = OUT_OF_RANGE · 보존 실패 · 창 결손 = TECH_FAIL · '
+        '벽 위상 불확실이어도 입자 5 % 면 1 % 는 확정 NOT_MET · 범위 걸침 = TECH_FAIL · 등록 밖 범위 (6.0) 거부 · 5.8 = 1 % × 14^(2/3) 반올림',
+        _okx(_t33))
+
+    #  ㉞ 실제 check_window 에 상태가 붙는다 (합성 덱)
+    with tempfile.TemporaryDirectory() as td:
+        def _t34():
+            ok_ = []
+            r2 = _run_rev(td, {2000: 0.0025, 2500: 0.00198}, 'r2')             # bin 0 에 2 %
+            ok_.append(check_window(r2, bins=(0,), soft_range_pct=5.8)['status']['status'] == 'CONTRACT_NOT_MET')
+            ok_.append(check_window(r2, bins=(0,))['status']['status'] == 'CONTRACT_NOT_MET')
+            r7 = _run_rev(td, {2000: 0.0025, 2500: 0.00193}, 'r7')             # bin 0 에 7 %
+            s7 = check_window(r7, bins=(0,), soft_range_pct=5.8)['status']
+            ok_.append(s7['status'] == 'OUT_OF_RANGE' and s7['original_1pct'] == 'NOT_MET' and abs(s7['x_hi_pct'] - 7.0) < 1e-6)
+            r0 = _run_rev(td, {2000: 0.0025, 2500: 0.0025}, 'r0')
+            ok_.append(check_window(r0, bins=(0,), soft_range_pct=5.8)['status']['status'] == 'CONTRACT_MET')
+            os.remove(os.path.join(r0, 'post', 'mix_2500.liggghts'))
+            ok_.append(check_window(r0, bins=(0,), soft_range_pct=5.8)['status']['status'] == 'TECH_FAIL')
+            rl = _run_rev(td, {2000: 0.0025}, 'rl')                             # 입자 하나 잃음 (보존 실패 = 기각이지만 상태는 기술 실패)
+            _dump(rl, 2500, BASE[:3] + _pair(0.0025))
+            wl = check_window(rl, bins=(0,), soft_range_pct=5.8)
+            ok_.append(wl['verdict'] == 'REJECT' and wl['status']['status'] == 'TECH_FAIL' and wl['status']['technical'] == 'FAIL')
+            print(f'        {ok_}')
+            return all(ok_)
+        chk('㉞ ★ check_window 결과에 상태가 붙는다 — bin 0 에 2 % (soft · ref 둘 다 CONTRACT_NOT_MET) · 7 % soft = OUT_OF_RANGE (x_hi 7 %) · '
+            '0.25 % = CONTRACT_MET · bin 0 결손 = TECH_FAIL · 입자 잃음 = 판정 REJECT 이지만 상태는 TECH_FAIL (기술 실패 ≠ 계약 미달)', _okx(_t34))
+
+    #  ㉟ CLI — --soft-range 는 등록값 5.8 만 · --bins · JSON 에 상태
+    with tempfile.TemporaryDirectory() as td:
+        def _t35():
+            import subprocess as _spx
+            r2 = _run_rev(td, {2000: 0.0025, 2500: 0.00198}, 'c2')
+            js = os.path.join(td, 'o.json')
+            me = os.path.abspath(__file__)
+            p1 = _spx.run([sys.executable, me, '--contract', r2, '--bins', '0', '--soft-range', '5.8', '--json', js], capture_output=True, text=True)
+            j1 = _json.load(open(js))[0]
+            p2 = _spx.run([sys.executable, me, '--contract', r2, '--bins', '0', '--soft-range', '6'], capture_output=True, text=True)
+            return (j1['status']['status'] == 'CONTRACT_NOT_MET' and j1['status']['soft_range'] == 'WITHIN' and j1['bins'] == [0]
+                    and '상태 CONTRACT_NOT_MET' in p1.stdout and p2.returncode == 2 and '5.8' in p2.stderr)
+        chk('㉟ CLI: --contract --bins 0 --soft-range 5.8 → JSON · 화면에 상태 (CONTRACT_NOT_MET · WITHIN) · --soft-range 6 → rc 2 (등록 5.8 만 · '
+            '올리지 않는다)', _okx(_t35))
     print(f'\ncheck_contact_validity selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -1779,6 +2011,10 @@ if __name__ == '__main__':
                     help='(--contract) 정지 벽 계약의 기대 덱 (생성기로 다시 만든 등록 덱, 예 E0) — 입력 동일성 (HBR4-07)')
     ap.add_argument('--stl-ref', default=None, help='(--contract) 정지 벽 계약의 캠페인 원본 STL 폴더 (기본 dem_scripts/mixer_20260919)')
     ap.add_argument('--expect-types', default=None, help='(--contract) t₀ 상별 입자 수, 예 "1:36,2:421,3:32832"')
+    ap.add_argument('--soft-range', type=float, default=None,
+                    help=f'(--contract) soft 진단 팔 (강성 축 사전등록 §6) — 등록값 {SOFT_RANGE_PCT} 만 받는다 (올리지 않는다).  결과에 상태 '
+                         f'(TECH_FAIL · CONTRACT_MET · CONTRACT_NOT_MET · OUT_OF_RANGE) · 원 1 %% · soft 범위를 따로 적는다.  없으면 ref/ref2 (계약 팔)')
+    ap.add_argument('--bins', default=None, help='(--contract) 판독기 bin 창만 (예 "0" = 사전등록 §4 a′ bin 0 창) — 그 bin 의 계획 격자 전부 필수')
     ap.add_argument('--diag-fit', action='store_true',
                     help='(--contract) 입자 배치로 회전각을 되읽는 진단을 같이 낸다 (증거 아님 · 판정에 안 씀)')
     ap.add_argument('--json', default=None, help='(--contract) 결과 JSON 경로')
@@ -1794,9 +2030,12 @@ if __name__ == '__main__':
         ec = None
         if a.expect_types:
             ec = {int(k): int(v) for k, v in (x.split(':') for x in a.expect_types.split(','))}
+        if a.soft_range is not None and a.soft_range != SOFT_RANGE_PCT:
+            ap.error(f'--soft-range {a.soft_range:g} — 등록 soft 진단 범위는 {SOFT_RANGE_PCT} % 뿐이다 (§6 · 올리거나 내리지 않는다)')
+        bins_ = [int(x) for x in a.bins.split(',')] if a.bins else None
         rs = [check_window(d, a.n_expected, label=labs[i] if i < len(labs) else None, phase_receipt=a.phase_receipt,
                            expect_counts=ec, diag_fit=a.diag_fit, progress=a.progress, launch_record=a.launch_record,
-                           expect_deck=a.expect_deck, stl_ref_dir=a.stl_ref)
+                           expect_deck=a.expect_deck, stl_ref_dir=a.stl_ref, bins=bins_, soft_range_pct=a.soft_range)
               for i, d in enumerate(a.dirs)]
         if a.json:
             import json

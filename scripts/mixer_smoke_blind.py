@@ -18,6 +18,16 @@
     python3 scripts/mixer_smoke_blind.py <OUT>/LH_s32452843 --ref <OUT>/E0_s32452843 --cert <OUT>/LH_s32452843/smoke_cert.json
     python3 scripts/mixer_smoke_blind.py --selftest
 rc 0 = 증서 씀 (합격 여부는 관문이 판정한다 — 이 래퍼는 판정하지 않는다) · rc 2 = 판독기 거부 (증서 없음 · 사유는 봉인 파일) · rc 1 = 입력 오류.
+
+★ 2026-09-30 — 강성 축 (사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §6 · §8-2 ⑤ · 코드 선행조건 2 단계 piece 3):
+  `--contract` = 강성 축 셀 폴더 (`<E0|LC|LH>_<soft|ref|ref2>[_dthalf][_r<N>]_s<seed>`) 의 **접촉 상태 증서**.
+    회전 팔 (LC · LH): bin 0 스모크 허용목록 (위 그대로) + `contact` 블록 (검사기 check_window 를 bin 0 창으로 · 등록 인자) —
+    E0 팔: `{run, kind 'e0-contract', contact (전 창 = 계획 t₀), completion (log 마지막 thermo step = run 합 — HBR6-03)}` (판독기 없음 · --ref 불요).
+  contact.status = 세 축 분리 (§6 표): 기술 · 원 1 % · soft 범위 → TECH_FAIL / CONTRACT_MET / CONTRACT_NOT_MET / OUT_OF_RANGE.
+    ref/ref2 = 계약 팔 (1 % · 범위 없음) · soft = 진단 팔 (등록 5.8 % = 1 % × 14^(2/3) · 넘으면 OUT_OF_RANGE · **올리지 않는다**).
+  GATE_TABLE = arm × E × 검사 → rest 해제 관문 (셀프테스트 ⑧ 이 36 칸을 고정 — Codex 7 차 HBR7-02 해결 증거).  M 은 여전히 맹검 (허용목록 투영만).
+    python3 scripts/mixer_smoke_blind.py <OUT>/LC_ref_r8_s15485863 --ref <OUT>/E0_ref_s15485863 --cert <증서> --contract [--phase-receipt R]
+    python3 scripts/mixer_smoke_blind.py <OUT>/E0_ref_s15485863 --cert <증서> --contract
 """
 from __future__ import annotations
 
@@ -39,6 +49,9 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import measure_mixing_index as mi     # noqa: E402
+import check_contact_validity as cv   # noqa: E402  (2026-09-30 · piece 3) 접촉 상태
+import mixer_deck_diff as dd          # noqa: E402  셀 이름 · 재생성 덱 (단일 출처)
+from mixer_restart_phase_test import log_completion   # noqa: E402  완주 = 마지막 thermo step = run 합 (HBR6-03 — 배너는 기록만)
 
 REG = dict(r_container=0.013138, cells=16, x_cells=4, n_min=20, axis='x')     # 사전등록 §2-3 · §8 ③ — 관문 REG 와 같다 (바꾸지 않는다)
 ALLOW_TOP = ('run', 'provenance', 'plan', 't0_step')
@@ -46,6 +59,37 @@ ALLOW_SMOKE = ('complete', 'tech_smoke')
 ALLOW_QC = ('pass',)
 #: 결과 대리량으로 취급하는 키 — 투영 · 화면 어디에도 나오면 안 된다 (자기검사 누설 시험)
 RESULT_KEYS = ('M', 'M_final', 'S0', 'SR', 'S0_sq', 'SR_sq', 'rows', 'by_rev', 'flat', 'planned', 'sd', 'M_t')
+#: ★ 강성 축 접촉 상태 증서 (2026-09-30 · piece 3) — 관문 (scripts/mixer_stage_gate.py rest-gate) 이 이 모양만 받는다
+CONTACT_CERT_SCHEMA = 'mixer_contact_cert/1'
+ROT_CERT_KEYS = ALLOW_TOP + ('smoke', 'contact')
+E0_CERT_KIND = 'e0-contract'
+E0_CERT_KEYS = ('run', 'kind', 'contact', 'completion')
+#: ★ arm × E × 검사 → rest 해제 관문 (사전등록 §6 표 · §8-2 ⑤ · Codex 7 차 HBR7-02 "해결 증거: arm×E×검사 종류별 허용/거부표, soft NOT_MET 이
+#:   보존되면서 기술 실패는 거부되는 합성 관문 시험").  E0 · LC · LH 는 **수준**으로만 갈린다 (ref2 = ref · DEV 전용).
+#:   ref (계약 팔): "원 1 % 물리 적격성 — 통과 필수 · 실패면 해당 확인 주장 HOLD" ⇒ CONTRACT_MET 만.
+#:   soft (진단 팔): "평가 · 보고하되 미달이면 NOT_MET 유지" · OUT_OF_RANGE = "같은 조건 재시도로 지우는 TECH 사유 아님 · 팔은 완주 · 값 보존 ·
+#:   보고 · 짝 블록의 다른 팔 계속" ⇒ 기술 실패만 거부 ("기술적으로 관측 가능한가 — 같은 기술 계약 필수").
+GATE_TABLE = {
+    ('ref', 'TECH_FAIL'): False, ('ref', 'CONTRACT_MET'): True, ('ref', 'CONTRACT_NOT_MET'): False, ('ref', 'OUT_OF_RANGE'): False,
+    ('soft', 'TECH_FAIL'): False, ('soft', 'CONTRACT_MET'): True, ('soft', 'CONTRACT_NOT_MET'): True, ('soft', 'OUT_OF_RANGE'): True,
+}
+GATE_WHY = {
+    ('ref', 'TECH_FAIL'): '기술 실패 — 관측량 미정의 (§8-4 같은 seed 새 폴더 한 번 재실행)',
+    ('ref', 'CONTRACT_NOT_MET'): 'ref 원 1 % 미달 — 해당 확인 주장 HOLD (§6)',
+    ('ref', 'OUT_OF_RANGE'): 'ref 에는 soft 범위가 없다 (상태 모순)',
+    ('soft', 'TECH_FAIL'): '기술 실패 — soft 도 같은 기술 계약 필수 (§6)',
+    ('soft', 'CONTRACT_NOT_MET'): 'soft 원 1 % NOT_MET 보존 (계약 밖 진단) — 관문 통과',
+    ('soft', 'OUT_OF_RANGE'): 'soft 진단 범위 5.8 % 초과 — OUT_OF_RANGE 한정어 · 값 보존 · 관문 통과',
+}
+
+
+def gate_decision(level, status):
+    """(수준, 상태) → (관문 허용?, 사유).  모르는 수준 · 상태 = 거부 (fail-closed)."""
+    lv = 'ref' if level in ('ref', 'ref2') else level
+    k = (lv, status)
+    if k not in GATE_TABLE:
+        return False, f'모르는 조합 (수준 {level!r} · 상태 {status!r})'
+    return GATE_TABLE[k], GATE_WHY.get(k, '')
 
 
 def _sha_bytes(b: bytes) -> str:
@@ -150,15 +194,171 @@ def run_blind(run_dir: str, ref_dir: str, cert: str, reg=REG):
     return rc, summary
 
 
+def _vault(dirp, prefix, record):
+    """0600 봉인 파일 (O_EXCL · 폴더 0700) → (경로, sha256)."""
+    dirp = Path(dirp)
+    dirp.mkdir(parents=True, exist_ok=True)
+    os.chmod(dirp, 0o700)
+    ts = datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S.%fZ')
+    for k in range(1000):
+        p = dirp / (f'{prefix}_{ts}.json' if k == 0 else f'{prefix}_{ts}_{k}.json')
+        try:
+            fd = os.open(p, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+            break
+        except FileExistsError:
+            continue
+    else:
+        raise RuntimeError('봉인 파일 이름을 만들 수 없다')
+    with os.fdopen(fd, 'w', encoding='utf-8') as fh:
+        json.dump(record, fh, ensure_ascii=False, indent=1, default=str)
+        fh.write('\n')
+    os.chmod(p, 0o600)
+    return str(p), _sha_file(p)
+
+
+def _blind_log(dirp, entry):
+    p = Path(dirp) / 'blind_log.jsonl'
+    with p.open('a', encoding='utf-8') as fh:
+        fh.write(json.dumps(entry, ensure_ascii=False, default=str) + '\n')
+    os.chmod(p, 0o600)
+
+
+def _run_total(run_dir):
+    import re as _re
+    return sum(int(x) for x in _re.findall(r'^run\s+(\d+)', Path(run_dir, 'in.mixer').read_text(encoding='utf-8'), _re.M))
+
+
+def _expected_counts(c):
+    """생성기 계획의 상별 입자 수 → {타입: 수} (check_window expect_counts — 모체 §2-4 "상별 수 = 계획")."""
+    p = dd._gen.plan(dd.GEN_ARGS['n_total'], cgf=dd.GEN_ARGS['cgf'], stiffen_se=c['stiffen_se'])
+    return {i + 1: int(p['n'][t]) for i, t in enumerate(dd._gen.TYPES)}
+
+
+def contact_eval(run_dir, name, bins=None, phase_receipt=None):
+    """등록 인자로 check_window → (전체 결과, contact 블록).  인자: n_expected 파일 · 계획 상별 수 · **이름에서 재생성한 기대 덱** (정지 벽 계약 ·
+    HBR4-07) · 캠페인 STL · soft 면 등록 범위 5.8 % (ref/ref2 는 없음 = 계약 팔) · (회전 팔) 재개-위상 영수증.
+    contact 블록 = 허용목록: 상태 (세 축) · 판정 · 창 · 벽 근거 · 출처 sha256 (검사기 · 덱 · 발사 봉인 · 기대 덱) · 본 프레임 묶음.  M 과 무관."""
+    c = dd.parse_cell(name)
+    soft = cv.SOFT_RANGE_PCT if c['level'] == 'soft' else None
+    try:
+        ne = int(Path(run_dir, 'n_expected').read_text(encoding='utf-8').strip())
+    except (OSError, ValueError):
+        ne = None
+    exp_text = dd.cell_expected_deck(name)
+    fd, exp = tempfile.mkstemp(suffix='.mixer')
+    try:
+        with os.fdopen(fd, 'w', encoding='utf-8') as fh:
+            fh.write(exp_text)
+        w = cv.check_window(run_dir, ne, expect_counts=_expected_counts(c), phase_receipt=phase_receipt, expect_deck=exp,
+                            stl_ref_dir=cv.STL_REF_DIR, bins=bins, soft_range_pct=soft)
+    finally:
+        os.remove(exp)
+    lrp = Path(run_dir, 'launch_record.json')
+    block = dict(schema=CONTACT_CERT_SCHEMA, run=name, level=c['level'], arm=c['arm'], bins=w.get('bins'), soft_range_pct=soft,
+                 status=copy.deepcopy(w.get('status')), verdict=w.get('verdict'),
+                 window=list(w['window']) if w.get('window') else None, n_frames=w.get('n_frames'), wall_basis=w.get('phase_status'),
+                 checker_sha256=_sha_file(cv.__file__), deck_sha256=_sha_file(Path(run_dir, 'in.mixer')),
+                 launch_record_sha256=_sha_file(lrp) if lrp.is_file() else None, expect_deck_sha256=_sha_bytes(exp_text.encode('utf-8')),
+                 frames=mi.frame_bundle([(int(st), p) for st, p in (w.get('frames_evaluated') or [])]))
+    return w, block
+
+
+def run_contract_cert(run_dir, ref_dir, cert, phase_receipt=None, reg=REG):
+    """--contract (piece 3) — 회전 팔: 판독 (bin 0 스모크) + contact (bin 0 창) · E0 팔: contact (전 창) + 완주.  반환 (rc, 요약).
+    래퍼는 판정하지 않는다 — 상태를 그대로 적고 관문 (GATE_TABLE) 이 판정한다."""
+    run_dir = os.path.normpath(run_dir)
+    name = os.path.basename(run_dir)
+    c = dd.parse_cell(name)
+    vault = Path(run_dir) / '.smoke_blind'
+    buf_out, buf_err = io.StringIO(), io.StringIO()
+    full, w, block, refused = None, None, None, None
+    with contextlib.redirect_stdout(buf_out), contextlib.redirect_stderr(buf_err):
+        try:
+            if c['arm'] != 'E0':
+                full = mi.analyse(run_dir, os.path.normpath(ref_dir), reg['r_container'], cells=reg['cells'], x_cells=reg['x_cells'],
+                                  n_min=reg['n_min'], axis=reg['axis'])
+            w, block = contact_eval(run_dir, name, bins=(0,) if c['arm'] != 'E0' else None, phase_receipt=phase_receipt)
+        except SystemExit as e:
+            refused = dict(kind='SystemExit', message=str(e))
+        except Exception as e:                                          # noqa: BLE001 — 어떤 예외든 화면에 내지 않는다
+            refused = dict(kind=type(e).__name__, message=str(e), traceback=traceback.format_exc())
+    comp = None
+    if c['arm'] == 'E0' and refused is None:
+        tot = _run_total(run_dir)
+        lc = log_completion(os.path.join(run_dir, 'log.lmp'), tot)
+        comp = dict(complete=lc['complete'], basis=lc['basis'], last_thermo_step=lc['last_thermo_step'], run_total=tot,
+                    log_sha256=lc['log_sha256'])
+    fp, fsha = _vault(vault, 'contract_full', dict(schema='mixer_contract_full/1', run=run_dir, ref=ref_dir, reg=dict(reg),
+                                                      reader_sha256=_sha_file(mi.__file__), checker_sha256=_sha_file(cv.__file__),
+                                                      wrapper_sha256=_sha_file(__file__), reader_stdout=buf_out.getvalue(),
+                                                      reader_stderr=buf_err.getvalue(), refused=refused, result=full, contact=w,
+                                                      completion=comp))
+    log = dict(time_utc=datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S.%fZ'), user=getpass.getuser(),
+               host=socket.gethostname(), tool=os.path.realpath(__file__), wrapper_sha256=_sha_file(__file__), mode='contract-cert',
+               full_file=fp, full_sha256=fsha, viewed='projection only' if refused is None else 'refusal code only',
+               projected_fields=None, cert=None, cert_sha256=None)
+    e = None
+    if refused is None:
+        try:
+            if c['arm'] == 'E0':
+                e = dict(run=name, kind=E0_CERT_KIND, contact=block, completion=comp)
+            else:
+                e = project(full)
+                e['contact'] = block
+            leaks = leak_check(e)
+            if leaks:
+                refused = dict(kind='Leak', message=f'투영 안 결과 키 {leaks}')
+        except (KeyError, TypeError) as ex:
+            refused = dict(kind='ProjectionShape', message=f'{type(ex).__name__}: {ex}')
+    if refused is not None:
+        log['refused_kind'] = refused['kind']
+        log['viewed'] = 'refusal code only'
+        _blind_log(vault, log)
+        return 2, dict(full_file=fp, full_sha256=fsha, refused_kind=refused['kind'])
+    body = json.dumps([e], ensure_ascii=False, indent=1) + '\n'
+    Path(cert).parent.mkdir(parents=True, exist_ok=True)
+    tmp = str(cert) + '.tmp'
+    Path(tmp).write_text(body, encoding='utf-8')
+    os.replace(tmp, cert)
+    log.update(projected_fields=sorted(e) + [f'contact.{k}' for k in sorted(block)], cert=os.path.realpath(cert),
+               cert_sha256=_sha_bytes(body.encode('utf-8')))
+    _blind_log(vault, log)
+    return 0, dict(full_file=fp, full_sha256=fsha, cert=str(cert), status=block['status']['status'], kind=e.get('kind', 'rotating'))
+
+
 def main(argv=None):
-    ap = argparse.ArgumentParser(description='bin 0 스모크 M-맹검 래퍼 (Codex 6 차 Q5)')
-    ap.add_argument('run', nargs='?', help='평가 런 폴더 (예 <OUT>/LH_s32452843)')
-    ap.add_argument('--ref', help='E0 기준 런 폴더')
-    ap.add_argument('--cert', help='증서 경로 (관문 rest 의 입력)')
+    ap = argparse.ArgumentParser(description='bin 0 스모크 M-맹검 래퍼 (Codex 6 차 Q5) · 강성 축 접촉 상태 증서 (--contract)')
+    ap.add_argument('run', nargs='?', help='평가 런 폴더 (예 <OUT>/LH_s32452843 · 강성 축 셀 <OUT>/LC_ref_r8_s15485863)')
+    ap.add_argument('--ref', help='E0 기준 런 폴더 (회전 팔)')
+    ap.add_argument('--cert', help='증서 경로 (관문 rest · confirm-rest 의 입력)')
+    ap.add_argument('--contract', action='store_true',
+                    help='강성 축 셀: 접촉 상태 증서 (회전 = bin 0 스모크 + contact · E0 = contact + 완주 · --ref 불요) — 사전등록 §6 · §8-2 ⑤')
+    ap.add_argument('--phase-receipt', default=None, help='(--contract · 회전 팔) 재개-위상 영수증 — 벽 회전각 근거')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
         return selftest()
+    if a.contract:
+        if not (a.run and a.cert):
+            ap.error('--contract 는 <run> --cert <cert> 가 필요하다')
+        try:
+            c_ = dd.parse_cell(os.path.basename(os.path.normpath(a.run)))
+        except ValueError as ex:
+            print(f'⛔ --contract 는 강성 축 셀 폴더만 — {ex}')
+            return 1
+        if c_['arm'] != 'E0' and not a.ref:
+            ap.error('회전 팔은 --ref <같은 seed · 같은 강성 E0> 가 필요하다')
+        for lab, p in (('run', a.run),) + ((('ref', a.ref),) if c_['arm'] != 'E0' else ()):
+            if not os.path.isdir(p):
+                print(f'⛔ {lab} 폴더 없음: {p}')
+                return 1
+        rc, s = run_contract_cert(a.run, a.ref, a.cert, phase_receipt=a.phase_receipt)
+        if rc == 0:
+            print(f"✓ 증서 → {s['cert']} ({s['kind']} · 접촉 상태 {s['status']}) · 전체 결과 봉인 {s['full_file']} (0600 · sha256 "
+                  f"{s['full_sha256'][:12]}…) — M 은 화면에 내지 않았다")
+        else:
+            print(f"⛔ 거부 (사유 코드 {s['refused_kind']}) — 증서 없음.  사유 문구는 봉인 파일 {s['full_file']} 에만 있다")
+        return rc
     if not (a.run and a.ref and a.cert):
         ap.error('<run> --ref <ref> --cert <cert> 가 필요하다')
     for lab, p in (('run', a.run), ('ref', a.ref)):
@@ -272,6 +472,189 @@ def selftest():
         chk('⑦ CLI 서브프로세스: rc 0 · 증서 · 화면에 M 값 · 결과 키 없음',
             p.returncode == 0 and cert2.is_file() and 'M_final' not in p.stdout + p.stderr
             and f"{orig2['M_final']:.4f}"[:5] not in p.stdout + p.stderr)
+
+    # ══ ⑧~⑭ 2026-09-30 — 강성 축 코드 선행조건 2 단계 piece 3: 접촉 상태 증서 (ref/ref2 = 계약 · soft = 진단 5.8 %) · arm × E × 검사 관문표 ═══
+    #    ★ 반례를 먼저 옮겼다 — 옛 래퍼: 상태 필드 · --contract · E0 증서 · 관문표가 없다 (KeyError · argparse) ⇒ ⑧~⑭ 전부 FAIL.
+    G = globals()
+
+    def okx(fn):
+        try:
+            return bool(fn())
+        except Exception as e_:                                                   # noqa: BLE001
+            print(f'        ({type(e_).__name__}: {str(e_)[:120]})')
+            return False
+
+    def _t8():
+        gd, tab = G['gate_decision'], G['GATE_TABLE']
+        want = {('ref', 'TECH_FAIL'): False, ('ref', 'CONTRACT_MET'): True, ('ref', 'CONTRACT_NOT_MET'): False, ('ref', 'OUT_OF_RANGE'): False,
+                ('soft', 'TECH_FAIL'): False, ('soft', 'CONTRACT_MET'): True, ('soft', 'CONTRACT_NOT_MET'): True, ('soft', 'OUT_OF_RANGE'): True}
+        rows, bad = [], []
+        for arm_ in ('E0', 'LC', 'LH'):
+            for lv_ in ('soft', 'ref', 'ref2'):
+                for st_ in ('TECH_FAIL', 'CONTRACT_MET', 'CONTRACT_NOT_MET', 'OUT_OF_RANGE'):
+                    got = gd(lv_, st_)[0]
+                    exp = want[('ref' if lv_ != 'soft' else 'soft', st_)]
+                    rows.append((arm_, lv_, st_, got))
+                    if got != exp:
+                        bad.append((arm_, lv_, st_, got))
+        unk = gd('ref', 'PASS')[0] is False and gd('soft', None)[0] is False and gd('hard', 'CONTRACT_MET')[0] is False
+        print('        arm × E × 검사 → 관문 (✓ 허용 · ✗ 거부):  ' + '  '.join(f'{a}/{l}/{s_[:12]}={"✓" if g else "✗"}' for a, l, s_, g in rows[:12]) + ' …')
+        return not bad and unk and dict(tab) == want and len(rows) == 36
+    chk('⑧ ★ arm × E × 검사 관문표 (§6 · Codex 7 차 HBR7-02 해결 증거 · 36 칸) — ref/ref2 (계약 팔): CONTRACT_MET 만 허용 · soft (진단 팔): '
+        'TECH_FAIL 만 거부 (CONTRACT_NOT_MET · OUT_OF_RANGE 는 값 보존 · 관문 통과) · E0 · LC · LH 는 수준으로만 갈린다 · 모르는 상태 거부', okx(_t8))
+
+    calls = []
+    real_cw = G['cv'].check_window if 'cv' in G else None
+
+    def _fake_cw(status, pp=0.02, extra=None):
+        def f(run_dir, n_expected=None, **kw):
+            calls.append(dict(run=run_dir, n_expected=n_expected, **{k: v for k, v in kw.items() if k != 'expect_deck'},
+                              expect_text=open(kw['expect_deck'], encoding='utf-8').read() if kw.get('expect_deck') else None))
+            post = os.path.join(run_dir, 'post')
+            fr = sorted(mi.frames(post))[:2] if os.path.isdir(post) else []
+            st_ = dict(schema='mixer_contact_status/1', status=status, technical='FAIL' if status == 'TECH_FAIL' else 'OK',
+                       original_1pct=None if status == 'TECH_FAIL' else ('MET' if status == 'CONTRACT_MET' else 'NOT_MET'),
+                       soft_range=kw.get('soft_range_pct') and ('OUT_OF_RANGE' if status == 'OUT_OF_RANGE' else 'WITHIN'),
+                       soft_range_pct=kw.get('soft_range_pct'), x_lo_pct=pp * 100, x_hi_pct=pp * 100, why=[])
+            if extra:
+                st_.update(extra)
+            return dict(verdict='REJECT' if status != 'CONTRACT_MET' else 'PASS', status=st_, bins=sorted(kw['bins']) if kw.get('bins') else None,
+                        window=(fr[0][0], fr[-1][0]) if fr else None, n_frames=len(fr), phase_status='static',
+                        frames_evaluated=[[int(a_), b_] for a_, b_ in fr], tech=[], reject=[])
+        return f
+
+    def _cells(td_):
+        """합성 폴더 (build) 를 강성 축 셀 이름으로 — 회전 LC_soft_r8 / LC_ref_r8 · E0 E0_soft / E0_ref (holdout 첫 seed)."""
+        run_, ref_, cert_, orig_, _inv = build(td_)
+        cert_.unlink()
+        s0 = 15485863
+        tgt = {}
+        for lv_ in ('soft', 'ref'):
+            r_ = td_ / f'LC_{lv_}_r8_s{s0}'
+            e_ = td_ / f'E0_{lv_}_s{s0}'
+            shutil.copytree(run_, r_)
+            shutil.copytree(ref_, e_)
+            tot = sum(int(x) for x in __import__('re').findall(r'^run\s+(\d+)', (e_ / 'in.mixer').read_text(encoding='utf-8'), __import__('re').M))
+            (e_ / 'log.lmp').write_text(f'   Step Atoms KinEng\n{tot - 1:12d} 384 0.0\n{tot:12d} 384 0.0\n', encoding='utf-8')
+            tgt[lv_] = (r_, e_)
+        return tgt, orig_
+
+    def _t9():
+        with tempfile.TemporaryDirectory(prefix='sb_c_') as tmp_:
+            td_ = Path(tmp_)
+            tgt, orig_ = _cells(td_)
+            G['cv'].check_window = _fake_cw('CONTRACT_NOT_MET', pp=0.05)
+            try:
+                calls.clear()
+                out_, err_ = io.StringIO(), io.StringIO()
+                with contextlib.redirect_stdout(out_), contextlib.redirect_stderr(err_):
+                    rc_ = main([str(tgt['soft'][0]), '--ref', str(tgt['soft'][1]), '--cert', str(td_ / 'c_soft.json'), '--contract'])
+                e_ = json.loads((td_ / 'c_soft.json').read_text(encoding='utf-8'))[0]
+                c_ = e_['contact']
+                k_soft = calls[-1]
+                calls.clear()
+                with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                    rc2 = main([str(tgt['ref'][0]), '--ref', str(tgt['ref'][1]), '--cert', str(td_ / 'c_ref.json'), '--contract'])
+                k_ref = calls[-1]
+                e2 = json.loads((td_ / 'c_ref.json').read_text(encoding='utf-8'))[0]
+            finally:
+                G['cv'].check_window = real_cw
+            plan_n = {1: 176, 2: 859, 3: 98965}
+            shown = out_.getvalue() + err_.getvalue()
+            return (rc_ == 0 and rc2 == 0 and sorted(e_) == sorted(G['ROT_CERT_KEYS']) and c_['schema'] == G['CONTACT_CERT_SCHEMA']
+                    and c_['run'] == 'LC_soft_r8_s15485863' and c_['level'] == 'soft' and c_['bins'] == [0] and c_['soft_range_pct'] == 5.8
+                    and c_['status']['status'] == 'CONTRACT_NOT_MET' and not mi.verify_frames(str(tgt['soft'][0] / 'post'), c_['frames'])
+                    and c_['frames']['files'] and leak_check(e_) == []
+                    and k_soft['bins'] == (0,) and k_soft['soft_range_pct'] == 5.8 and k_soft['expect_counts'] == plan_n
+                    and os.path.samefile(k_soft['stl_ref_dir'], G['cv'].STL_REF_DIR)
+                    and k_soft['expect_text'] == G['dd'].cell_expected_deck('LC_soft_r8_s15485863')
+                    and k_ref['soft_range_pct'] is None and e2['contact']['level'] == 'ref' and e2['contact']['soft_range_pct'] is None
+                    and e_['plan'] == orig_['plan'] and e_['provenance']['args'] == REG
+                    and f"{orig_['M_final']:.4f}"[:5] not in shown and 'M_final' not in shown)
+    chk('⑨ ★ --contract 회전 증서 = bin 0 스모크 허용목록 + contact (bins [0] · 상태 · 출처 sha256 · 본 프레임 묶음 — 다시 해시 일치) · soft 는 5.8 % 로 · '
+        'ref 는 범위 없이 (계약 팔) 검사기를 부른다 · 계획 상별 수 · 캠페인 STL · 이름에서 재생성한 기대 덱 · 화면에 M 없음', okx(_t9))
+
+    def _t10():
+        with tempfile.TemporaryDirectory(prefix='sb_e_') as tmp_:
+            td_ = Path(tmp_)
+            tgt, _o = _cells(td_)
+            G['cv'].check_window = _fake_cw('CONTRACT_MET', pp=0.004)
+            try:
+                with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                    rc_ = main([str(tgt['ref'][1]), '--cert', str(td_ / 'e0.json'), '--contract'])
+                e_ = json.loads((td_ / 'e0.json').read_text(encoding='utf-8'))[0]
+                lg = tgt['ref'][1] / 'log.lmp'
+                lg.write_text(lg.read_text(encoding='utf-8').split('\n')[0] + '\n  100 384 0.0\n', encoding='utf-8')   # 짧은 로그 = 미완주
+                with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                    rc2 = main([str(tgt['ref'][1]), '--cert', str(td_ / 'e0b.json'), '--contract'])
+                e2 = json.loads((td_ / 'e0b.json').read_text(encoding='utf-8'))[0]
+            finally:
+                G['cv'].check_window = real_cw
+            return (rc_ == 0 and rc2 == 0 and sorted(e_) == sorted(G['E0_CERT_KEYS']) and e_['kind'] == G['E0_CERT_KIND']
+                    and e_['contact']['status']['status'] == 'CONTRACT_MET' and e_['contact']['bins'] is None
+                    and e_['completion']['complete'] is True and e_['completion']['basis'] == 'last_step'
+                    and e2['completion']['complete'] is False and leak_check(e_) == [])
+    chk('⑩ ★ E0 증서 (--contract · --ref 없이) = contact (전 창 · 상태) + 완주 (log 마지막 thermo step = run 합 · HBR6-03) — 짧은 로그면 complete false '
+        '(래퍼는 판정하지 않는다 · 관문이 거부)', okx(_t10))
+
+    def _t11():
+        with tempfile.TemporaryDirectory(prefix='sb_l_') as tmp_:
+            td_ = Path(tmp_)
+            tgt, _o = _cells(td_)
+            G['cv'].check_window = _fake_cw('CONTRACT_MET', extra={'M_final': 0.4})
+            try:
+                with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                    rc_ = main([str(tgt['soft'][0]), '--ref', str(tgt['soft'][1]), '--cert', str(td_ / 'lk.json'), '--contract'])
+            finally:
+                G['cv'].check_window = real_cw
+            return rc_ == 2 and not (td_ / 'lk.json').exists()
+    chk('⑪ ★ contact 블록 안에 결과 키 (M_final) 가 숨어 오면 Leak 거부 · rc 2 · 증서 없음 (허용목록 투영 = 상태 필드도 같은 누설 검사)', okx(_t11))
+
+    def _t12():
+        with tempfile.TemporaryDirectory(prefix='sb_t_') as tmp_:
+            td_ = Path(tmp_)
+            tgt, _o = _cells(td_)
+            G['cv'].check_window = _fake_cw('TECH_FAIL')
+            try:
+                with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                    rc_ = main([str(tgt['soft'][0]), '--ref', str(tgt['soft'][1]), '--cert', str(td_ / 't.json'), '--contract'])
+                e_ = json.loads((td_ / 't.json').read_text(encoding='utf-8'))[0]
+            finally:
+                G['cv'].check_window = real_cw
+            return (rc_ == 0 and e_['contact']['status']['status'] == 'TECH_FAIL'
+                    and G['gate_decision']('soft', e_['contact']['status']['status'])[0] is False)
+    chk('⑫ 기술 실패 (TECH_FAIL) 도 증서에 그대로 적는다 (래퍼는 판정하지 않는다) — 관문표가 soft 라도 거부한다', okx(_t12))
+
+    def _t13():
+        with tempfile.TemporaryDirectory(prefix='sb_n_') as tmp_:
+            td_ = Path(tmp_)
+            run_, ref_, cert_, _o, _i = build(td_)
+            with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                try:
+                    rc_ = main([str(run_), '--ref', str(ref_), '--cert', str(td_ / 'x.json'), '--contract'])
+                except SystemExit as e_:
+                    rc_ = e_.code
+            return rc_ not in (0, None) and not (td_ / 'x.json').exists()
+    chk('⑬ --contract 는 강성 축 셀 이름 폴더만 (옛 LH_s… · 프로브 이름 거부 — 수준 · soft 범위를 이름에서 정한다)', okx(_t13))
+
+    def _t14():
+        with tempfile.TemporaryDirectory(prefix='sb_x_') as tmp_:
+            td_ = Path(tmp_)
+            tgt, _o = _cells(td_)
+            G['cv'].check_window = _fake_cw('OUT_OF_RANGE', pp=0.07)
+            try:
+                with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                    main([str(tgt['soft'][0]), '--ref', str(tgt['soft'][1]), '--cert', str(td_ / 'o.json'), '--contract'])
+                e_ = json.loads((td_ / 'o.json').read_text(encoding='utf-8'))[0]
+            finally:
+                G['cv'].check_window = real_cw
+            logs = [json.loads(l_) for l_ in (tgt['soft'][0] / '.smoke_blind' / 'blind_log.jsonl').read_text(encoding='utf-8').splitlines()]
+            full_ = [p_ for p_ in (tgt['soft'][0] / '.smoke_blind').glob('contract_full_*.json')]
+            return (e_['contact']['status']['status'] == 'OUT_OF_RANGE' and G['gate_decision']('soft', 'OUT_OF_RANGE')[0] is True
+                    and logs[-1]['mode'] == 'contract-cert' and logs[-1]['viewed'] == 'projection only'
+                    and full_ and all(oct(p_.stat().st_mode)[-3:] == '600' for p_ in full_))
+    chk('⑭ soft OUT_OF_RANGE 는 증서에 그대로 · 관문 통과 (§6 "팔은 완주 · 값 보존 · 짝 블록의 다른 팔 계속") · 전체 결과 (판독기 + 검사기) 는 0600 '
+        '봉인 · 열람 기록 mode contract-cert', okx(_t14))
     print()
     if fails:
         print(f'✗ {len(fails)} 건 실패')
