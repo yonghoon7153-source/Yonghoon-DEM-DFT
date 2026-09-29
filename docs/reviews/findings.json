@@ -5974,6 +5974,19 @@
    ]
   },
   {
+   "id": "LHS-23",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (09-30 · 접촉 ① 넷째 함수 `calc_am_isolation_risk` 코드 검토)",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "09-19 census 가 `am_vulnerable_pct` · `AM_P_vulnerable_pct` · `AM_S_vulnerable_pct` 를 `COND_cov` (\"coverage 문턱 기반 → Hertz 채널 종속\") 로 분류했는데 코드 (`dem_analysis_core.py:732–764`) 는 **SE 접촉이 0–1 개인 AM 의 비율** — 접촉 위상만 센다 (coverage 를 읽지 않고 다른 단계가 덮어쓰지도 않는다) · 웹앱 설명문 (`webapp/app.py:9146`) · 피팅 보고서 (`scripts/generate_fitting_report.py:650`) 도 coverage 처럼 설명",
+   "note": "`LHS-20` 과 같은 부류 (census 오분류 · 방향 보수적 — 빠지는 쪽).  대조 09-30: 전체 = 상별 개수 가중 130/130 · 64/64 · 값 130 0–94.8 % (중앙 0) · 64 0–0.26 %.  1저자 09-30: 고립 비율 3 열은 coverage 묶음이 닫힌 뒤 싣는다 (J20-k 7c · 관문 = 개수 가중 항등식).  처방: census 판정 ✅ 로 승격 기록 + 설명문 두 곳 정정 (접촉 개수 기준).",
+   "evidence_tests": [
+    "scripts/dem_analysis_core.py"
+   ]
+  },
+  {
    "id": "HBR8-01",
    "severity": "P1",
    "title": "v2.2 한 파일에 상반된 실행 정책이 동시에 활성 — \"후행 진단\" (§4-d 시점 · B:192–193 · 205 취소선) 과 \"확인 전 수준 변경\" (B:197–198 \"후보 유지 → GO 뒤 확인\" · \"수준 올려 재봉인\" · B:207 \"넘으면 확인 런 전에 수준을 고친다\") 이 같은 입력 (r₁ .06 · t₁ .01) 에 다른 절차를 지시한다 · 부수: B:7/57 옛 해시 4a9ec223 (241 행 v2.1) ↔ 본문 v2.2 ab20ef77 (245 행) · B:186 \"개발에서 수준 바꾸면 새 holdout\" ↔ B:187 반대 · B:87 \"hold 는 벽시계를 늘리지 않는다\" 가 §8-3 철회 뒤에도 §0 활성 표에 · B:177 D-2 미결 표지 ↔ §10 결정 완료",
