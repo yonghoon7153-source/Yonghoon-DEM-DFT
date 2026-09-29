@@ -302,3 +302,11 @@ gan2026_defective_carbon_orr_selectivity_review	gan_defective_carbon_orr
 #   손작업 2장: tab_1 · tab_2 recrop — 자동 크롭이 두 표를 모두 18쪽 통째(bbox 37.6,63.4,590.2,794.2)로 떨궈 **바이트 동일**이었고 Table 2 의 19쪽 이어짐이 빠졌다.
 #     tab_1 = p.18 y 110.0–533.0 · tab_2 = p.18 y 536.0–716.0 + p.19 y 65.5–500.5 세로 이어붙임 (figures.json `recrop` 사유). 번호 공백(missing_labels) 은 0.
 #   [!] 그래서 '--clean' · '--inbox --run' · '--refresh --apply' 는 손작업 가드에 걸린다. '--force_clean' 을 주면 두 표가 다시 같은 쪽 통째 크롭으로 돌아간다.
+# ── 전기화학 모델 · 입도분포 (LFP 다입자) ────────────────────
+eizenhammer2026_lfp_psd_halfcell_many_particle_fullcell	particle_size_distribution_of_an_lifepo4
+eizenhammer2026_lfp_psd_halfcell_many_particle_fullcell	particle size distribution of an lifepo4
+#   ↑ 2026-09-29 논문 에이전트. 자동 매칭 실측 (`--inbox --inbox_dir` 임시 폴더, 업로드명 + inbox식 공백명 2 파일): 업로드명은 짝 못 찾음,
+#   공백명 '3. Determining the Particle Size …' 은 **inbox #3 앵커로 kim2026_li_argyrodite_sei_reactive_md 에 잘못 붙었다** — 이 두 줄이 그 오탐을 덮는다.
+#   카드 제목이 한국어라 토큰도 안 겹친다. 밑줄·공백 두 형태에 모두 드는 고유 조각이 없어 두 줄 (qin2026 과 같은 사정).
+#   손작업 15장: f1–f11 recrop (워터마크 문자열만 비운 사본에서 렌더 · 잉크 경계) · t1–t3 · tB1 manual_crop (괘선뿐인 표를 도구가 버림 · 'Table B.1:' 라벨 미인식).
+#   [!] '--clean' · '--inbox --run' · '--refresh --apply' 는 손작업 가드에 걸린다. '--force_clean' 을 주면 워터마크 낀 도구 크롭으로 돌아간다.

@@ -385,6 +385,13 @@
    "DFT 먹인 논문/12. Hopping models for ion conduction in noncrystals.pdf"
   ]
  },
+ "eizenhammer2026_lfp_psd_halfcell_many_particle_fullcell": {
+  "figures": 15,
+  "generated": "2026-09-29",
+  "pdfs": [
+   "3d80d2d2-3._Determining_the_Particle_Size_Distribution_of_an_LiFePO4_Electrode_for_Full-Cell_Many-Particle_Modeling.pdf"
+  ]
+ },
  "electromechanical_contact_model_particulate_systems": {
   "figures": 22,
   "generated": "2026-08-05",

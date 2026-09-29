@@ -1,0 +1,136 @@
+"# eizenhammer2026 — stated values vs figure vector paths (pymupdf get_drawings on the Accepted Manuscript, axes calibrated with frame-anchored tick marks). derived(ours) / vector-read are NOT paper values."
+quantity,figure,x,x_unit,value,value_unit,basis,note
+psd_p_model,8a,14,nm,9e-05,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,14,nm,9.2e-05,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,15,nm,0.000239,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,15,nm,0.000241,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,16,nm,0.000555,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,16,nm,0.000558,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,17,nm,0.001149,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,17,nm,0.001154,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,18,nm,0.00216,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,18,nm,0.002167,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,19,nm,0.003739,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,19,nm,0.003751,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,20,nm,0.00602,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,20,nm,0.006033,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,21,nm,0.009102,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,21,nm,0.009121,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,22,nm,0.013019,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,22,nm,0.013041,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,23,nm,0.017736,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,23,nm,0.017764,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,24,nm,0.023137,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,24,nm,0.023163,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,25,nm,0.029042,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,25,nm,0.029073,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,26,nm,0.035217,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,26,nm,0.035244,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,27,nm,0.041406,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,27,nm,0.041435,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,28,nm,0.047345,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,28,nm,0.047377,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,29,nm,0.052794,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,29,nm,0.052816,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,30,nm,0.057546,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,30,nm,0.057567,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,31,nm,0.061446,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,31,nm,0.061458,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,32,nm,0.064389,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,32,nm,0.064397,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,33,nm,0.06633,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,33,nm,0.066332,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,34,nm,0.06727,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,34,nm,0.067267,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,35,nm,0.066892,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,35,nm,0.066874,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,36,nm,0.063453,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,36,nm,0.063418,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,37,nm,0.057389,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,37,nm,0.05735,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,38,nm,0.049679,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,38,nm,0.049629,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,39,nm,0.041304,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,39,nm,0.041261,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,40,nm,0.033087,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,40,nm,0.033039,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,41,nm,0.02561,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,41,nm,0.025573,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,42,nm,0.019203,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,42,nm,0.019168,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,43,nm,0.013982,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,43,nm,0.013958,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,44,nm,0.009908,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,44,nm,0.009886,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,45,nm,0.006846,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,45,nm,0.006833,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,46,nm,0.004621,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,46,nm,0.00461,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,47,nm,0.003052,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,47,nm,0.003045,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,48,nm,0.001976,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,48,nm,0.001971,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,49,nm,0.001255,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,49,nm,0.001252,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,50,nm,0.000784,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,50,nm,0.000782,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,51,nm,0.000481,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,51,nm,0.000481,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,52,nm,0.000291,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,52,nm,0.000291,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,53,nm,0.000174,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,53,nm,0.000174,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,54,nm,0.000102,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,54,nm,0.000103,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,55,nm,6e-05,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,55,nm,6e-05,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_p_model,8a,56,nm,3.4e-05,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_p_vector,8a,56,nm,3.5e-05,1/nm,"vector-read: p29 path #4, axes from frame-anchored ticks",
+psd_sigma_norm_left,8a/App.A,,,0.2478,-,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_sigma_norm_right,8a/App.A,,,0.1245,-,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_mu_left,8a/App.A,,,-0.4926,-,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_mu_right,8a/App.A,,,-0.5385,-,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_w_left,8a/App.A,,,1.4881,-,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_w_right,8a/App.A,,,0.7307,-,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+psd_peak_p,8a,34.48,nm,0.06738,1/nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,vector-read peak 0.06737 at r=34.36 nm
+psd_mean_number,8a,,,32.88,nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,"number-based PDF (App. A); radius, not diameter"
+psd_r10,8a,,,25.3,nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,"number-based PDF (App. A); radius, not diameter"
+psd_r50,8a,,,33.01,nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,"number-based PDF (App. A); radius, not diameter"
+psd_r90,8a,,,40.13,nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,"number-based PDF (App. A); radius, not diameter"
+psd_r01,8a,,,19.87,nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,"number-based PDF (App. A); radius, not diameter"
+psd_r99,8a,,,46.09,nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,"number-based PDF (App. A); radius, not diameter"
+psd_r32_m3_over_m2,8a,,,34.82,nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,"number-based PDF (App. A); radius, not diameter"
+psd_mean_volume_m4_over_m3,8a,,,35.71,nm,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,"number-based PDF (App. A); radius, not diameter"
+r_crit_3Lc,Eq.5/Tab.2,,,16.67,nm,"derived(ours): Delta-mu_gap,j = 0 at r = 3 L_c",
+psd_number_fraction_below_r_crit,8a,16.67,nm,0.00109,-,derived(ours): Eq. A.1-A.4 with stated r_mode 34.48 / sigma_left 15.10 / sigma_right 7.50 / r_ref 60 nm,
+halfcell_rmse_full,8c,0-1,x,13.14,mV,"vector-read: p29 path #144, uniform in x",stated 11.1 mV (p.26); m and resampling basis unstated
+halfcell_max_abs_dev,8c,0.2-0.9,x,1.75,mV,vector-read: p29 path #144,stated '< 1.7 mV outside the boundary regions' (p.28); window not defined
+halfcell_max_abs_dev,8c,0.1-0.9,x,2.42,mV,vector-read: p29 path #144,stated '< 1.7 mV outside the boundary regions' (p.28); window not defined
+overshoot_sim_peak,8b,0.914,x,3.4419,V,vector-read: p29 path #88,
+overshoot_sim_height,8b,0.914,x,0.78,mV,vector-read: peak minus following local minimum,stated only 'comparable' (p.27)
+overshoot_exp_peak,8b,0.953,x,3.4449,V,vector-read: p29 path #89,
+overshoot_exp_height,8b,0.953,x,2.65,mV,vector-read: peak minus following local minimum,stated only 'comparable' (p.27)
+fig1_hysteresis_gap,1,0.8,x,43.7,mV,vector-read: p7 paths #5 (solid) / #4 (dashed),exemplary C/50
+fig1_hysteresis_gap,1,0.5,x,38.7,mV,vector-read: p7 paths #5 (solid) / #4 (dashed),exemplary C/50
+fig1_hysteresis_gap,1,0.2,x,39.3,mV,vector-read: p7 paths #5 (solid) / #4 (dashed),exemplary C/50
+fig3a_left_axis_at_SV0,3a,0,1/nm,1.429,-,vector-read: p13 path #375,axis label Delta-mu_gap/(k_B T); Eq.3 bracket at the plotted Omega 4.50 = 1.429 (half gap); full gap = 2.858
+fig3a_right_axis_Omega_at_SV0,3a,0,1/nm,4.5,-,vector-read: p13 path #376,
+fig3a_line_end_SV,3a,,,0.1802,1/nm,vector-read: p13 path #375,= 1/L_c 0.18 (Table 2)
+fullcell_rmse_error_panel,11b,0.000-1.000,SOC,7.02,mV,"vector-read: p33 path #346, uniform in SOC",C/25 charge; Table 3 = 7.0 mV
+fullcell_rmse_error_panel,11c,0.000-0.989,SOC,7.81,mV,"vector-read: p33 path #385, uniform in SOC",C/25 discharge; Table 3 = 13.0 mV; path clipped at the +70 mV frame -> lower bound
+fullcell_rmse_error_panel,11e,0.000-1.000,SOC,6.2,mV,"vector-read: p33 path #519, uniform in SOC",C/10 charge; Table 3 = 6.2 mV
+fullcell_rmse_error_panel,11f,0.000-0.989,SOC,7.46,mV,"vector-read: p33 path #558, uniform in SOC",C/10 discharge; Table 3 = 12.9 mV; path clipped at the +70 mV frame -> lower bound
+fullcell_rmse_error_panel,11h,0.000-1.000,SOC,11.74,mV,"vector-read: p33 path #691, uniform in SOC",C/2 charge; Table 3 = 7.4 mV
+fullcell_rmse_error_panel,11i,0.000-0.988,SOC,8.64,mV,"vector-read: p33 path #730, uniform in SOC",C/2 discharge; Table 3 = 13.8 mV; path clipped at the +70 mV frame -> lower bound
+fullcell_rmse_main_panel,11a,0.000-1.000,SOC,9.29,mV,vector-read: sim minus exp from the voltage paths (main panel),C/25 charge; Table 3 = 7.0 mV; frame clips U < 2.5 V
+fullcell_offset_main_minus_errorpanel,11b,0.05-0.95,SOC,-5.02,mV,vector-read,C/25 charge; correlation of the two series = 1.000
+fullcell_rmse_main_panel,11a,0.000-1.000,SOC,13.01,mV,vector-read: sim minus exp from the voltage paths (main panel),C/25 discharge; Table 3 = 13.0 mV; frame clips U < 2.5 V
+fullcell_offset_main_minus_errorpanel,11c,0.05-0.95,SOC,4.96,mV,vector-read,C/25 discharge; correlation of the two series = 1.000
+fullcell_rmse_main_panel,11d,0.000-1.000,SOC,8.12,mV,vector-read: sim minus exp from the voltage paths (main panel),C/10 charge; Table 3 = 6.2 mV; frame clips U < 2.5 V
+fullcell_offset_main_minus_errorpanel,11e,0.05-0.95,SOC,-5.02,mV,vector-read,C/10 charge; correlation of the two series = 1.000
+fullcell_rmse_main_panel,11d,0.000-1.000,SOC,12.89,mV,vector-read: sim minus exp from the voltage paths (main panel),C/10 discharge; Table 3 = 12.9 mV; frame clips U < 2.5 V
+fullcell_offset_main_minus_errorpanel,11f,0.05-0.95,SOC,4.96,mV,vector-read,C/10 discharge; correlation of the two series = 1.000
+fullcell_rmse_main_panel,11g,0.000-1.000,SOC,8.31,mV,vector-read: sim minus exp from the voltage paths (main panel),C/2 charge; Table 3 = 7.4 mV; frame clips U < 2.5 V
+fullcell_offset_main_minus_errorpanel,11h,0.05-0.95,SOC,-5.01,mV,vector-read,C/2 charge; correlation of the two series = 1.000
+fullcell_rmse_main_panel,11g,0.000-1.000,SOC,13.25,mV,vector-read: sim minus exp from the voltage paths (main panel),C/2 discharge; Table 3 = 13.8 mV; frame clips U < 2.5 V
+fullcell_offset_main_minus_errorpanel,11i,0.05-0.95,SOC,4.96,mV,vector-read,C/2 discharge; correlation of the two series = 1.000
