@@ -1,0 +1,305 @@
+{
+ "slug": "buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-29",
+ "sources": [
+  "da6ac009-40._Aging_Analysis_of_GraphiteLiNi13Mn13Co13O2_Cells_Using_XRD_PGAA_and_AC_Impedance.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Speciﬁc discharge capacities vs. cycle number for graphite/NMC full-cells operated with different upper cutoff voltage limits (4.2 V, 4.6 V) and at different temperatures (25◦C, 60◦C) in EC/EMC (3/7) with 1 M LiPF6. The cycling was performed at a rate of 1 C for discharge and discharge with a lower cutoff potential of 3.0 V. Cathode loadings are 15.0 ± 0.2 mgNMC/cm2, while anode loadings were 7.4 ± 0.3 mggraphite/cm2 (3.0–4.2 V) and 9.3 ± 0.3 mggraphite/cm2 (3.0–4.6 V) to maintain an areal capacity ratio of graphite/NMC = 1.2. Results are averaged over two cells and the error bars represent the standard deviation between the two cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    60.5,
+    289.0,
+    250.4
+   ],
+   "w": 1081,
+   "h": 793,
+   "dpi": 300,
+   "src": "da6ac009-40._Aging_Analysis_of_GraphiteLiNi13Mn13Co13O2_Cells_Using_XRD_PGAA_and_AC_Impedance.pdf",
+   "blank": 0.85,
+   "note": "봤다(원본 래스터 xref 83 · 1010 × 742 · CMYK JPEG → RGB) + 픽셀 판독(`[도표]`). 비용량 [mAh/g_NMC] vs 사이클 · 세 조건 곡선에 이름표(범례 없음) · 두 셀 평균 ± SD(캡션). `[도표]` 4.6V/25°C: 3 사이클 ≈189 → 150 사이클 ≈100 → 사이클 ≈210–215 최저 ≈44(막대 39–50) → **다시 올라 사이클 ≈228–232 에서 ≈59–68 · 끝 ≈71**(본문 무언급 — 표 I EoL 71.7(232) · 59.9(228)은 이 회복 가지 위의 값) · 4.2V/60°C ≈148 → 299 사이클 ≈85 · 4.2V/25°C ≈139 → ≈133(232 사이클). 캡션 '1 C for discharge and discharge'(D) · 음극 적재 ±0.3 ↔ 실험 절 ±0.2(D). 자동 크롭 여백 과대(내용 온전) · 잘림 0."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. XRD patterns of the fresh NMC electrode and electrodes harvested in the discharged state after the cycling experiment: (a) complete diffractogram; (b) expanded view of the (1 0 8), (1 1 0), and (1 1 3) reﬂections. The ﬁtted lattice parameters are: fresh NMC electrode: a = 2.859 Å, c = 14.241 Å, W = 0.0109; after 4.2V/25◦C cycling: a = 2.854 Å, c = 14.320 Å, W = 0.0102; after 4.2V/60◦C cycling: a = 2.836 Å, c = 14.426 Å, W = 0.0142; after 4.6V/25◦C cycling: a = 2.839 Å, c = 14.448 Å, W = 0.0181. The diffractions from the Al window of the ex situ XRD holder are marked by an asterisk.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    60.2,
+    556.0,
+    409.4
+   ],
+   "w": 1080,
+   "h": 1456,
+   "dpi": 300,
+   "src": "da6ac009-40._Aging_Analysis_of_GraphiteLiNi13Mn13Co13O2_Cells_Using_XRD_PGAA_and_AC_Impedance.pdf",
+   "blank": 0.863,
+   "note": "봤다(xref 82 · 1000 × 1405). (a) 전 회절도 2θ 6–50°(Mo Kα1) — 신품(검정) · 4.2V/25(빨강) · 4.2V/60(초록) · 4.6V/25(파랑) · Al 창 봉우리 * · 새 상 없음. (b) 27.5–31°: (108) · Al(220)* ≈28.58° · (110) · (113) — 노화 전극에서 (108)/(110) 벌어짐 · (113) 고각 이동(본문과 일치; 신품 (110)은 Al 봉우리에 겹침). ⚠ 색 규약이 Fig. 1 · 9 · 11 과 다르다(여기 4.2V/25 빨강 · 4.6V/25 파랑). 캡션 격자값(신품 c 14.241 · 4.6V a 2.839 · c 14.448) ↔ 본문(14.219 · 2.840 · 14.454) 어긋남(D) — 영점 이동이 미지라 그림으로 가를 수 없다. 잘림 0."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Comparison of the X-ray diffraction data and Rietveld reﬁnement of pristine NMC electrodes collected (a) with the in situ XRD cell in Bragg- Brentano geometry and (b) with the ex situ sample holder in transmission geometry. Circles and lines correspond to the observed and calculated intensi- ties, respectively. The difference between the observed and calculated patterns is indicated below each graph. The asterisks mark the diffraction peaks origi- nating from the aluminum window(s).",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    60.7,
+    288.2,
+    451.4
+   ],
+   "w": 1081,
+   "h": 1629,
+   "dpi": 300,
+   "src": "da6ac009-40._Aging_Analysis_of_GraphiteLiNi13Mn13Co13O2_Cells_Using_XRD_PGAA_and_AC_Impedance.pdf",
+   "blank": 0.873,
+   "note": "봤다(xref 100 · 1000 × 1578). 신품 전극 Rietveld 두 기하: (a) in situ 셀(Bragg–Brentano 반사 · 비단색 Mo Kα · 배경 기울어짐 · 차분 최대 ≈+6000 counts 가 Al 봉우리 ≈28.6 · 34° 자리) (b) ex situ 투과(차분 ±≈500 · Al 봉우리 자리). 두 기하의 격자값 · Rwp · esd 인쇄 0 — '신뢰할 만한 격자 상수' 는 서술뿐. 이미지 XMP: Photoshop CS5 Windows · 2015-08-26 · dc:creator 'Stefan Seidlmayer'(나머지 그림은 조판사 EPS 변환 XMP만). 잘림 0."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Charge and discharge curves of Li/Li(1-x)Ni1/3Mn1/3Co1/3O2 recorded in the in situ XRD half-cell operated at a rate of 0.1C between 3.0 and 4.3 V. Spikes indicate the OCV period during which XRD diffraction patterns were collected. The black curves are the very ﬁrst charge and discharge; the red curves are the second charge and discharge. (b), (c), and (d) Fitted lattice parameters a and c in hexagonal space group together with the ratio of c/a as a function of x (in Li1-xNi1/3Mn1/3Co1/3O2) during the ﬁrst two charge/discharge cycles. The linear regression ﬁt between x = 0 and 0.5 gives c/a = 0.3552∗x + 4.9722 with R2 = 0.9952.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    60.3,
+    555.2,
+    574.4
+   ],
+   "w": 1081,
+   "h": 2143,
+   "dpi": 300,
+   "src": "da6ac009-40._Aging_Analysis_of_GraphiteLiNi13Mn13Co13O2_Cells_Using_XRD_PGAA_and_AC_Impedance.pdf",
+   "blank": 0.848,
+   "note": "봤다(xref 101 · 1000 × 2092) + 원본 확대 · 픽셀 판독(`[도표]`). (a) V–x(0.1C · 3.0–4.3 V · 윗축 = x × 278 mAh g⁻¹: 0.1 → '28') · 회색 영역 x 0–≈0.083 · 그림 이름표 '\"ICL\" ~ 0.086 ~ 23.9mAh/gNMC'(본문 0.084 · 23.4 — D) · XRD 휴지 스파이크 ≈Δx 0.054(1 h)마다 · 첫 충전 끝 x ≈0.645 · 둘째 충전 끝 ≈0.648 · 둘째 방전 끝 ≈0.089. (b) a (c) c (d) c/a vs x — 검정 ● 첫 충전 · 검정 ◐ 첫 방전 · 빨강 ● 둘째 충전 · 빨강 ◐ 둘째 방전(범례 없음 — 캡션 '검정 = 첫 · 빨강 = 둘째'). 원형 a 2.8605 · c 14.235 · c/a 4.977. 파란 회귀선 픽셀 적합 0.3549x + 4.9725(x 0.002–0.488) = 인쇄식 · 그림 이름표 'R=0.9952'(캡션 'R2 = 0.9952' — D). 점선 x ≈0.082. c 최대 x ≈0.59(첫 충전 14.565 Å — Li ≈0.41). 둘째 충전 점은 선 아래 0.004–0.017(x 로 0.01–0.05) · 같은 c/a 에서 첫 충전보다 x +0.025…+0.040. x 축 '0.1' 의 '0' 이 점선에 겹쳐 'b.1' 처럼 보인다(렌더 — 내용 무관). 잘림 0."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (a) NMC charge (black symbols) and discharge (red symbols) ca- pacity obtained with incrementally increasing NMC charging times (followed by discharge to 3.0 V) at a rate of 15 mA/gNMC (corresponding to 0.1C if referenced to a conventionally used capacity value of 150 mAh/gNMC): 1 h charge followed by discharge to 3.0 V; then 2 h charge followed by dis- charge to 3.0 V; etc. (b) the corresponding parameter c/a determined at the end of every charge and discharge, respectively; note that the left-most red symbol in (b) refers to the lattice parameter of the pristine, fully lithiated Li1.00NMC.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    60.5,
+    289.0,
+    310.4
+   ],
+   "w": 1081,
+   "h": 1043,
+   "dpi": 300,
+   "src": "da6ac009-40._Aging_Analysis_of_GraphiteLiNi13Mn13Co13O2_Cells_Using_XRD_PGAA_and_AC_Impedance.pdf",
+   "blank": 0.853,
+   "note": "봤다(xref 142 · 1010 × 992) + 픽셀 판독. (a) 충전(○ — 1 · 2 · 3 · 4 · 5 · '10' h → 15 · 30 · 45 · 60 · 75 · **≈157.3**) · 방전(● 3.0 V) · 오른축 x(= 용량/278) · 'Σ \"ICL\" ~ 0.085 ~ 23.6 mAh/g' 이름표. (a) 는 반 칸(0.5 · 1.5 …) · (b) 는 정수 칸에 찍혀 같은 사이클의 가로 위치가 두 패널에서 다르다. `[도표]` 셋째 방전 48.8 > 충전 45('essentially equals' — D) · '10 h' 충전 157.3 ≠ 15 × 10 = 150 → (0.65 − 0.085) × 278 = 157.1 과 같다 — 4.3 V 까지 충전으로 읽힌다(D). (b) c/a: 원형 4.9752 · 방전 끝 4.9865 · 5.0017 · 5.0013 · 5.0010 · 5.0000 · 4.9963 · 충전 끝 4.9924 · 5.0186 · 5.0479 · 5.0761 · 5.0939 · 5.1522 · 회색 점선 5.00. 잘림 0."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Initial charge/discharge cycle of Li/NMC in the in situ XRD half- cell at 0.1C to a positive cutoff potential of 4.3 V, with the discharge being followed by several constant voltage steps: for 12h at 3.0 V, then for 10h at 2.0 V, and ﬁnally for 8h at 1.6 V. (a) cell voltage versus capacity (XRD data collection is marked by dashed circles); (b) corresponding c/a values of the pristine structure of NMC (red symbol) and after the various potential holds following the ﬁrst discharge cycle; (c) in situ XRD patterns in the 0 0 3 and 1 1 3 peak region.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    60.1,
+    288.2,
+    426.4
+   ],
+   "w": 1081,
+   "h": 1527,
+   "dpi": 300,
+   "src": "da6ac009-40._Aging_Analysis_of_GraphiteLiNi13Mn13Co13O2_Cells_Using_XRD_PGAA_and_AC_Impedance.pdf",
+   "blank": 0.856,
+   "note": "봤다(xref 160 · 1010 × 1477) + 원본 확대. (a) V vs 용량 [mAh](절대 — 질량 규격화 없음): 첫 충전 ≈5.04 mAh(4.3 V) · 3.0 V 도달 ≈4.52 · 3.0 V 유지 끝 ≈4.85 · 2.0 V 유지 ≈4.87–4.89 · 1.6 V 유지가 오른틀(≈5.19 mAh)까지 — 통과 전하 ≥ 첫 충전 + 0.15 mAh. XRD 원 표지 다섯(Pristine · Discharged · 3.0V · 2.0V · 1.6V). ⚠ 본문 '(marked by the gray area in Figure 6a)' 의 회색 영역이 이 그림에 없다(D). (b) c/a: 원형 4.9731 · 방전 4.9904 · 3.0 V 뒤 4.9794 · 2.0 V 뒤 4.9778 · 1.6 V 뒤 4.9734 · 점선 4.973. (c) (003) · (113) — 빨간 선 = 원형 위치; **≈7.9–8.0° 작은 봉우리가 원형 포함 다섯 패턴 모두에 같은 크기로 있다**(본문 '∼8° 봉우리가 나타나지 않는다' 는 '새로 생기지 않는다' 로만 선다 — D). 인쇄 in situ 적재(18.4 mg cm⁻² · ∅12 mm → 20.8 mg)로 5.04 mAh 는 242 mAh g⁻¹ — Fig. 4(첫 충전 ≈181)와 안 맞는다(이 셀의 질량 미인쇄 — D). 잘림 0."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Initial charge/discharge cycle at 0.1C of (a) graphite/NMC full-cell with lithium reference electrode (RE) cycled between 3.0 V and 4.2 V (note that the NMC (WE) and the graphite (CE) potential are referenced to the lithium reference electrode potential). (b) Cell potential of a Li/NMC half-cell cycled between 3.0 V and 4.3 V. (c) Cell potential of a Li/graphite half-cell cycled between 0.01 V and 1.5 V. NMC loadings in the full- and the half-cell are 15.45 and 15.29 mgNMC/cm2, respectively; graphite loadings in the full- and the half-cell are 7.26 and 7.37 mgC/cm2, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    60.4,
+    555.2,
+    405.4
+   ],
+   "w": 1081,
+   "h": 1439,
+   "dpi": 300,
+   "src": "da6ac009-40._Aging_Analysis_of_GraphiteLiNi13Mn13Co13O2_Cells_Using_XRD_PGAA_and_AC_Impedance.pdf",
+   "blank": 0.86,
+   "note": "봤다(xref 161 · 1010 × 1388). (a) 흑연/NMC + Li RE: 셀(검정) · NMC(빨강 · V_WE) · 흑연(파랑 · 오른축 V_CE) · '\"1st cycle capacity loss\" = 0.28mAh' (b) Li/NMC '\"ICL\" = 0.27 mAh' (c) Li/graphite '\"SEI loss\" = 0.22 mAh' · 세 패널 점선 ≈0.28 mAh. `[재현]` 캡션 적재 × 면적: NMC 12.13 · 12.01 mg · 흑연 6.90 · 7.00 mg → 반쪽 NMC 첫 충전 ≈175 mAh g⁻¹ · ICL 22.5 · 풀셀 결손 23.1 mAh g⁻¹_NMC · 흑연 첫 리튬화 ≈378 · SEI 31.4 mAh g⁻¹_C. 합 0.49 ↔ 측정 0.28 — '큰 쪽' 규칙; ICL − SEI ≈0.05 mAh 는 형성 뒤 흑연에 남는 가역 Li(`[해석]`). 잘림 0."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Cell voltage vs. speciﬁc capacity of the ﬁrst cycle after formation and last cycle of the cycling test shown in Figure 1 of the aged graphite/NMC cells. Cells were charged (with a CV-step) and discharged at 1C at different temperatures (25◦C, 60◦C) and upper cutoff potentials (4.2 V, 4.6 V).",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    360.3,
+    556.0,
+    713.6
+   ],
+   "w": 1080,
+   "h": 1473,
+   "dpi": 300,
+   "src": "da6ac009-40._Aging_Analysis_of_GraphiteLiNi13Mn13Co13O2_Cells_Using_XRD_PGAA_and_AC_Impedance.pdf",
+   "blank": 0.855,
+   "note": "봤다(xref 196 · 1010 × 1422) + 확대 판독. 형성 뒤 첫 사이클(검정) ↔ 마지막 사이클(빨강) · 1C · CCCV. `[도표]` (a) 4.2V/25: CC 끝 ≈132 → CV 끝 ≈141(형성 뒤) ↔ ≈122 → ≈132(마지막) — CV 몫 ≈9 ↔ ≈10 · 곡선 모양 거의 같다 (b) 4.2V/60: 충전 끝 ≈147 → ≈85 · 마지막 사이클 곡선 기울기가 가파르다(창 이동 모양) · 충 ↔ 방 간격 비슷 (c) 4.6V/25: 형성 뒤 CC ≈175 → CV ≈195 · 방전 끝 ≈8 · 마지막 사이클 CC 가 ≈27 mAh g⁻¹ 에서 4.6 V 에 닿고 CV 로 ≈72 까지(충전의 ≈62 % 가 CV) · 방전 곡선 거의 직선. 잘림 0."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Nyquist plots of the fresh and aged graphite/NMC cells after long- term cycling at different temperatures (25◦C, 60◦C) and upper cutoff potentials (4.2 V, 4.6 V). The inset displays an expanded view in order to depict the com- plete AC impedance spectrum of the 4.6V/25◦C cells. Spectra were collected at 25◦C in the discharged state of the cell after at least 3h of OCV.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    60.4,
+    288.2,
+    311.4
+   ],
+   "w": 1080,
+   "h": 1047,
+   "dpi": 300,
+   "src": "da6ac009-40._Aging_Analysis_of_GraphiteLiNi13Mn13Co13O2_Cells_Using_XRD_PGAA_and_AC_Impedance.pdf",
+   "blank": 0.905,
+   "note": "봤다(xref 227 · 1010 × 996) + 픽셀 판독. Nyquist [Ω·cm²](규격화 면적 미인쇄 — NMC 0.785 ↔ 흑연 0.950 cm²) · 2전극 · 25 °C · 방전 상태 · ≥3 h OCV. 범례 initial(초록) · 4.2V/25(검정) · 4.2V/60(파랑) · 4.6V/25(빨강). `[도표]` 저주파 꼬리 전 극소 Re ≈27(초기) · ≈28(4.2V/60) · ≈44(4.2V/25) · 4.6V/25 는 본판 호 ≈8 → 54(꼭대기 −Im ≈14.7) + 인셋의 둘째 큰 호(꼭대기 ≈70 @ Re ≈150 · 끝 Re ≈235 · −Im ≈44 — 10 mHz 에서도 안 닫힌다). 등가회로 적합 0 · 전극 분해 0. 잘림 0."
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 9,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Concentration of Ni, Mn and Co deposited on harvested aged graphite electrodes determined by PGAA after cycling graphite/NMC cells up to 300 cycles at different temperatures (25◦C, 60◦C) and upper cutoff potentials (4.2 V, 4.6 V).",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    532.3,
+    288.2,
+    713.8
+   ],
+   "w": 1080,
+   "h": 758,
+   "dpi": 300,
+   "src": "da6ac009-40._Aging_Analysis_of_GraphiteLiNi13Mn13Co13O2_Cells_Using_XRD_PGAA_and_AC_Impedance.pdf",
+   "blank": 0.817,
+   "note": "봤다(xref 228 · 1000 × 707 · 회색조 JPEG). 'Metal content relative to Cu [µg/mg]' 막대(Mn · Co · Ni) · 오차 막대(정의 미인쇄). `[도표]` 4.2V/25 0.33 · 0.23 · 0.18 · 4.2V/60 1.94 · 0.08 · 0.29 · 4.6V/25 3.47 · 1.97 · 1.87. `[재현]` Cu 박 ∅11 mm × 10 µm × 8.96 g cm⁻³ = 8.52 mg 를 곱하면 표 II µg 6.3 · 19.7 · 62.2(인쇄 6.2 · 19.3 · 61.2 — ≤2 %). 신품(사이클 전) 흑연 값은 그려지지 않았다(본문 'before and after' — 공백). 잘림 0."
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 10,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Rate performance of fresh and aged electrodes assembled in new half-cells at 25◦C. (a) Li/NMC cells cycled between 3.0 and 4.3 V at 25◦C, plotted is the lithiation capacity and (b) Li/graphite cells cycled between 0.01 and 1.5 V at 25◦C, plotted is the delithiation capacity. Results are averaged over two cells and the error bars represent the standard deviation.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    403.1,
+    289.0,
+    704.6
+   ],
+   "w": 1081,
+   "h": 1257,
+   "dpi": 300,
+   "src": "da6ac009-40._Aging_Analysis_of_GraphiteLiNi13Mn13Co13O2_Cells_Using_XRD_PGAA_and_AC_Impedance.pdf",
+   "blank": 0.828,
+   "note": "봤다(xref 265 · 1000 × 1206) + 픽셀 판독. (a) Li/NMC(캡션: lithiation 용량) (b) Li/graphite(delithiation) · 신품(회색) · 4.2V/25(검정) · 4.2V/60(파랑) · 4.6V/25(빨강) · 두 셀 평균 ± SD. 율 구획 이름표 0.1 · 0.2 · 0.5 · 1C · 2C · 3C · 5C · 10C(8 구획 · 22 사이클) ↔ 본문 율 7 개 × 3 회(C/5 없음 — D). ⚠ `[도표]` 값의 계단(3–5 · 6–8 · 9–11 · 12–14 · 15–17 · 18–20 · 21–22)이 점선 구획(2.5 · 4.5 · 7.5 · 10.5 …)보다 0.2C 뒤로 한 사이클 늦다(D). 신품 1 사이클 NMC ≈172 · 흑연 ≈387 mAh g⁻¹_C(> 372 — 첫 반쪽 사이클 값으로 읽힌다, `[해석]`). 4.6V/25 흑연은 152 → 275 로 사이클 따라 **증가**(2C 까지 — 율 시험이 정상 상태가 아니다). 신품 NMC(회색 — 사이클 2–11 은 아래 표지에 반쯤 가려 가장자리로 읽음) 1 ≈172 · 2 ≈154 · 3–5 ≈153 · 6–8 ≈148 · 9–11 ≈141.5 · 12–14 ≈135 → 0.1 C ↔ 1 C 차 6(구획 첫 점) … 12.5 mAh g⁻¹(값 계단) = x 0.022–0.045(인쇄 1 C 보정 0.025). 잘림 0."
+  },
+  {
+   "key": "tIm",
+   "kind": "table",
+   "label": "I",
+   "page": 8,
+   "file": "tab_I_manual_p8.png",
+   "caption": "Table I. Capacity losses of graphite/NMC cells after extended cycling at 1C (# of cycles is indicated) at different positive cutoff potentials (U) and temperatures (T). The electrochemically determined capacities at Beginning-of-Life (BoL), End-of-Life (EoL), and the thus determined capacity loss (ΔCcycling) are shown. The latter is compared to the capacity losses due to active lithium loss (ΔCactive-Li), obtained from XRD analysis of harvested NMC electrodes via quantification of the c/a-value by ex situ XRD, conversion into x in Li1-xNMC using the in situ XRD calibration curve (Figure 4d), and subtraction of the lithium ion loss due to ICL to yield the ICL-corrected x-value (xICL-corr.); note that x = 1 marks the theoretical capacity of 278 mAh/gNMC.",
+   "rotated_deg": 0,
+   "bbox": [
+    33,
+    62,
+    553,
+    250
+   ],
+   "dpi": 300,
+   "src": "da6ac009-40._Aging_Analysis_of_GraphiteLiNi13Mn13Co13O2_Cells_Using_XRD_PGAA_and_AC_Impedance.pdf",
+   "manual": true,
+   "note": "수동 크롭(8 쪽 전폭 · 300 dpi 렌더 · 텍스트 표) — 자동 추출기는 표 I–III 을 잡지 않았다(누락 셋). 봤다: 조건당 두 셀 · BoL · EoL · ΔC_cycling · 'x from c/a-fit' · x_ICL-corr.(−0.109) · ΔC_active-Li — 텍스트 층 값과 일치(텍스트 층은 머리의 Δ 를 잃는다). `[재현]` BoL − EoL 7.5 · 6.9 · 62.1 · 64.5 · 119.8 · 127.5(인쇄 7.4 · 62.0 · 119.9 — 반올림 차 ±0.1) · 278 × x_ICL-corr. 전부 재현.",
+   "w": 2168,
+   "h": 784
+  },
+  {
+   "key": "tIIm",
+   "kind": "table",
+   "label": "II",
+   "page": 9,
+   "file": "tab_II_manual_p9.png",
+   "caption": "Table II. Amounts of transition metals (TMs) deposited on the graphite electrodes for cells cycled at different positive cutoff potentials and temperatures after the experiments shown in Figure 1. Data are based on PGAA analysis.",
+   "rotated_deg": 0,
+   "bbox": [
+    299,
+    640,
+    553,
+    757
+   ],
+   "dpi": 300,
+   "src": "da6ac009-40._Aging_Analysis_of_GraphiteLiNi13Mn13Co13O2_Cells_Using_XRD_PGAA_and_AC_Impedance.pdf",
+   "manual": true,
+   "note": "수동 크롭(9 쪽 오른 단 아래 · 300 dpi). 봤다: µg 6.2 · 19.3 · 61.2 · µmol 0.11 · 0.35 · 1.07 · mol% 0.08 · 0.26 · 0.77 — 텍스트 층과 일치. `[재현]` mol% 는 인쇄 적재 × ∅10 mm(NMC 11.78 mg = 122.1 µmol)로 0.090 · 0.287 · 0.876 — 인쇄값은 분모 ≈137–139 µmol 에 해당(분모 미인쇄).",
+   "w": 1060,
+   "h": 489
+  },
+  {
+   "key": "tIIIm",
+   "kind": "table",
+   "label": "III",
+   "page": 10,
+   "file": "tab_III_manual_p10.png",
+   "caption": "Table III. First cycle capacity at 0.1 C of aged and fresh NMC electrodes assembled in new half-cells (data in Figure 11a) and comparison to capacity loss found with ex situ XRD measurements (from Table I).",
+   "rotated_deg": 0,
+   "bbox": [
+    299,
+    62,
+    553,
+    246
+   ],
+   "dpi": 300,
+   "src": "da6ac009-40._Aging_Analysis_of_GraphiteLiNi13Mn13Co13O2_Cells_Using_XRD_PGAA_and_AC_Impedance.pdf",
+   "manual": true,
+   "note": "수동 크롭(10 쪽 오른 단 위 · 300 dpi). 봤다: 신품(형성 뒤) 153/153 · 조건당 두 셀 충전 · 방전 · 차 · ex situ XRD Li loss. ⚠ 캡션 '(from Table I)' ↔ XRD 열 10.6 · 10.3 · 64.2 · 67.8 · 60.9 · 65.9 = 표 I ΔC_active-Li + 7.0 = (x − 0.084) × 278 — 0.1 C 기준으로 바꿔 계산했다(인쇄 0 · D).",
+   "w": 1060,
+   "h": 767
+  }
+ ]
+}

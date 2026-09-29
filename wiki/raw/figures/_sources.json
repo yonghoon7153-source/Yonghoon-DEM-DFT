@@ -71,6 +71,13 @@
    "e96ae4fb-27._Identifiability_and_Parameter_Estimation_of_the_Single_Particle_Lithium-Ion_Battery_Model.pdf"
   ]
  },
+ "buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance": {
+  "figures": 11,
+  "generated": "2026-09-29",
+  "pdfs": [
+   "da6ac009-40._Aging_Analysis_of_GraphiteLiNi13Mn13Co13O2_Cells_Using_XRD_PGAA_and_AC_Impedance.pdf"
+  ]
+ },
  "chang2020_embedded-in-reference-electrode-assb-limiting-factors": {
   "figures": 2,
   "generated": "2026-09-22",
@@ -568,7 +575,7 @@
   ]
  },
  "shi2020_particle-size-ratio-cathode-utilization-assb": {
-  "figures": 9,
+  "figures": 13,
   "generated": "2026-09-29",
   "pdfs": [
    "60f0083f-39._High_active_material_loading_in_all_solid_state_battery_electrode_via_particle_size_optimization.pdf",

@@ -2,10 +2,10 @@
 title: 기준전극 기반 half-cell 분해 DMA
 description: "In-situ reference electrode DMA: LAM from DVA feature spacing, LLI from lateral offset — no optimizer, and what it costs"
 created: 2026-09-10
-updated: 2026-09-10
+updated: 2026-09-29
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md]
+sources: [raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -99,9 +99,39 @@ LAM_pos 는 (1)–(2) 를 양극 feature 쌍(NMC C1↔C3)에 그대로 적용한
   half-cell 항만 뺀 적합을 돌리면 값싸게 채울 수 있고, 그것이 곧
   [[fitting-degeneracy]] 의 정량 측정이 된다.
 
+## ★ 구조 채널판 — 사후 XRD 로 방전 끝 양극 Li 재고를 산술로 읽는다 (2026-09-29, `assb` 78호 Buchberger 2015 · 액체 흑연/NMC111)
+
+`raw/papers/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance.md` (Buchberger · Seidlmayer · … · Gasteiger 2015 *J. Electrochem. Soc.* 162, A2737). 기준전극 대신 **해체 양극의 격자**를 관측 채널로 쓰는
+같은 모양의 절차다 — 위 표의 "관측 채널을 늘린다 · 최적화 없음" 줄에 **구조판**으로 붙는다.
+
+```
+ΔC_active-Li = 278 mAh g⁻¹ × [ x(c/a)_aged − x_ref ]        x(c/a) = (c/a − 4.9722)/0.3552   (in situ Li/NMC111 반쪽 교정, x 0–0.5)
+x_ref = 0.109 (1 C — 표 I)  또는  0.084 (0.1 C ICL — 표 III, 인쇄 없이 바뀜)
+```
+
+- `[인쇄]` 흑연/NMC111 Swagelok 풀셀 세 조건 × 두 셀 · 1C/1C · ≤300 사이클 → ΔC_active-Li / ΔC_cycling = 4.2 V · 25 °C 3.6/7.4 · 3.3/6.9 · 4.2 V · 60 °C 57.3/62.0 · 60.9/64.5 · 4.6 V · 25 °C 53.9/119.9 · 58.9/127.5 mAh g⁻¹.
+  교차: 해체 양극 반쪽 첫 사이클(방 − 충) ↔ XRD(0.1 C 기준) 4.2 V 넷에서 −3.8 … +3.4 mAh g⁻¹.
+
+**대가 (이 절차가 참이려면 참이어야 하는 것 — 위 여섯에 대응)**
+
+1. **기준 상태가 규약이다** — LLI 가 없을 때의 방전 끝 x 를 재지 않고 전하로 셌다(0.084 · 0.109). 두 기준이 LLI 를 7.0 mAh g⁻¹ 옮기고, 1 C 보정(도출 미인쇄)을 Fig. 11 로 읽으면 0.106–0.129 — 4.2 V · 25 °C 셀 LLI 가 −2 … +4.6.
+   같은 교정으로 기준 상태를 읽으면 0.051–0.083(격자 ↔ 전하 눈금 섞임). `[해석]` 위 대가 1(feature 화학량 불변)의 구조판 — 영점을 무엇으로 못 박느냐가 값을 정한다.
+2. **방전 끝이 재고 한계여야 한다** — 격자 x 는 양극에 없는 Li 를 센다. 분극 한계 방전(4.6 V 셀 — CV 몫 ≈62 % · EIS ≥235 Ω·cm²)이면 흑연에 남은 Li 가 LLI 로 섞여 **상한**이 된다(`[해석]` — 해체 흑연의 남은 Li 는 안 쟀다).
+3. **형성 저장소** — 형성 결손이 "큰 쪽" 규칙(`[인쇄]` NMC ICL 0.27 · 흑연 SEI 0.22 → 풀셀 0.28 mAh)이라 흑연에 ≈4–5 mAh g⁻¹_NMC(1 C 에서 ≈11–12)의 가역 Li 가 남는다 — LLI 는 이것을 먼저 먹고 그동안 용량도 x 도 안 움직인다(`[재현]` · `[해석]`).
+   ⇒ 같은 셀의 LLI 가 정의에 따라 갈린다 — **A 1 C 용량 유효(3.6) · B 양극 결손 0.1 C 기준(10.6) · C 재고 손실(≈15)** (4.2 V · 25 °C ①, 용량 손실 7.4).
+4. **교정 이송** — 교정은 in situ 반사 · Kα1+2 · 첫 두 사이클, 읽기는 ex situ 투과 · Kα1 · 방전 가지. 원형 대조 인쇄 0 · 가지 · 사이클 몫 x ±0.03 안팎([[nmc-lattice-li-content-calibration]] 78호 절).
+5. **LAM 은 재지 않는다** — 반쪽 0.1 C 용량 저하(4.6 V NMC 44–54 %)를 `[인쇄]` "either a substantial loss of active material or substantially increased impedance" 로 두고, TM 용출(PGAA ≤0.77 mol%)만 지워 저항으로 닫았다 —
+   균열 · 입자 고립 · 절연 표면층의 LAM 은 열려 있다.
+6. **셀 수 · 산포** — 조건당 두 셀(셀별 값) · 교정 셀 1 · 격자 esd · 계수 불확도 0.
+
+**이 위키에서의 적용 (`[해석]`)** — (i) "적합 없는 외부 LLI 근거" 의 **모양**은 여기도 선다: 최적화가 없으니 [[fitting-degeneracy]] 의 골짜기 통로는 없다. 대신 불확실성이 **영점 규약(기준 상태)과 방전 끝 한계 전극**으로 옮겨 간다 —
+위 "축퇴가 사라지는 것이 아니라 불확실성이 이동한다" 의 둘째 표본. (ii) 합성 truth 의 LLI(순환 재고)와 이런 실측 LLI 를 대조할 때는 **정의(A · B · C)와 기준을 값 옆에** 적는다 — 경미 열화에서는 정의 차가 신호보다 크다.
+(iii) "LLI ≈ 용량 손실" 은 방전 끝 재고 한계 + 저장소 소진 뒤에만 선다(60 °C 셀 92–94 % · 25 °C 셀 48–49 %). ⚠ 액체 NMC111 · 한 연구실 · 조건당 두 셀 — 우리 수치(정본 artifact + `degradation-degeneracy/docs/RESULTS*.md`)와 대조하지 않았다.
+
 ## 관련
 - [[fitting-degeneracy]]
 - [[birkl-ocv-degradation-diagnostic]]
 - [[halfcell-window-parametrization-lineage]]
 - [[np-lip-ocv-reparametrization]]
 - [[22p-physics-or-degeneracy]]
+- [[nmc-lattice-li-content-calibration]] — 78호 구조 채널의 교정(격자 → x)과 그 규약
