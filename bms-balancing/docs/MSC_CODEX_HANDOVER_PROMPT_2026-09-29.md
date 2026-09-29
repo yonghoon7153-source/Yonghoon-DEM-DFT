@@ -1,5 +1,9 @@
 # MSC 인계 프롬프트 — 제1저자용 Codex (2026-09-29)
 
+> ⚠ **발송본이 아니다 (2026-09-30 표시).** 발송 전 검토(MSC 문서 §8-3)가 "수정 뒤 발송" 으로 판정했고, 실제로 보낸 것은 검토자 수정본 묶음이다 —
+> 첫 메시지 `bms-balancing/reviews/msc_handover_review_20260930/FIRST_AUTHOR_PROMPT_KO.md` · 정정 메모 `SCIENCE_QUALIFICATIONS_KO.md` · 설치 안내 둘 · 원 인계본.
+> 이 파일은 초안 기록으로만 남긴다. **새 Codex 에 이 파일을 붙이지 않는다.**
+
 > **보내는 쪽 메모 (Codex 에 붙이기 전에 읽는다).**
 >
 > - 아래 `✂ 여기부터` 줄 아래 전부를 새 Codex 의 첫 메시지로 붙인다.

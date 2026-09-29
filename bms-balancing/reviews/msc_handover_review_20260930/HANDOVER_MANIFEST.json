@@ -1,0 +1,41 @@
+{
+  "scope": "Handover review and prompts only; not environment installation or execution evidence",
+  "source_commit": "a32218a7e3cefc9c6d4b1eaa174612ea1ad55d29",
+  "payloads": [
+    {
+      "path": "FIRST_AUTHOR_PROMPT_KO.md",
+      "bytes": 8663,
+      "sha256": "f0349ffa96ae496533558db812fdb0e3d7738933c204e83997fa1e8e4e98eaa5"
+    },
+    {
+      "path": "LOCAL_SETUP_GUIDE_KO.md",
+      "bytes": 8158,
+      "sha256": "192e4ea845efa7801109a05d44977b5c760d26420daf1165eb07e7b002420736"
+    },
+    {
+      "path": "MSC_HANDOVER_DIAGNOSTICS_2026-09-29.md",
+      "bytes": 56094,
+      "sha256": "c3452d27886ef8618e79b9965c2fb25c713d263896ccc6ba32478c9ab5af95e1"
+    },
+    {
+      "path": "README_SEND_KO.md",
+      "bytes": 2704,
+      "sha256": "66f0d7784eacd7b79f70a9b430891e9fc5db73982b99251563d47a31f2000057"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 14229,
+      "sha256": "f0256ddb4e3aa7833bbb4b394b40c2fcf055b81cd839715580de2ca3763bd3b7"
+    },
+    {
+      "path": "SCIENCE_QUALIFICATIONS_KO.md",
+      "bytes": 4377,
+      "sha256": "5f2354768ed28b95db3a22944e43b65449882ca75dc10e3bf74cd1ed81cb167d"
+    },
+    {
+      "path": "SETUP_EXECUTION_PROMPT_KO.md",
+      "bytes": 3802,
+      "sha256": "eac4f8d05de8b23990efddab6ba35a759beeb868b7cb735fef42b0efb6025a14"
+    }
+  ]
+}
