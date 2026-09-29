@@ -1350,6 +1350,104 @@ def test_tldr_protection_bullets_do_not_read_gate_pass_as_benefit(client):
     assert "Co·Ni·NMC811 양극" in whole[0] and "LiMnO₂ 는 NdCl₃" in whole[0], "'전량' 에 양극 범위가 없다"
 
 
+def test_s2b_plain_box_matches_the_raw(client):
+    """양성+음성 — §2b '쉽게 다시 읽기' 상자(1저자 2026-09-29 "쉬운 버전 밑으로")의 수가 원자료와 같다.
+    잡는 것: 쉬운 말로 옮기며 수가 바뀜 — 제외 19/120 · 통과 17/24 · 미정의 5 · k 없음 1 (LiMnO₂ 3.5 V = NdCl₃) ·
+      견줄 11 = 3 + 3 + 5 와 오차 구간 · Mn 바닥 10 % · 저전압 최대 25 % · 고전압 NMC811 멈춤 46–48 % · 예측 71·75 % ·
+      LiMnO₂ 3.0 V 수열 · 예시(10.2 대 10.3) · 게이트 0.05 · 그리고 '보호율 = 양극이 덜 녹는다' 로 읽히게 둠
+      (인산염을 면한 금속의 몫이 대부분 황화물로 간다 — 반응식에서 다시 센다)."""
+    h = _report_html(client)
+    s2b = _section(h, "s2b")
+    i = s2b.index('id="s2b-plain"')
+    box = s2b[i:s2b.index('<div class="box" style="border-left:3px solid var(--nd)">', i)]
+    rows = _prot_rows()
+    n_all, _, n_fail, n_col, full = _prot_counts(rows)
+    dev, nok = _prot_deviation(rows, full)
+    undef = [c for c in full if all(_fnum(r["protection_observed"]) is None
+                                    for r in rows if (r["cathode"], r["voltage_V"]) == c)]
+    good = [c for c in dev if dev[c] <= 3.11]
+    mid = [c for c in dev if 3.11 < dev[c] < 20]
+    worst = [c for c in dev if dev[c] >= 20]
+    assert (len(good), len(mid), len(worst), len(dev), len(undef)) == (3, 3, 5, 11, 5)
+    assert nok == {("LiMnO2", "3.5")}
+    rng = lambda cs: f"{min(dev[c] for c in cs):.0f}–{max(dev[c] for c in cs):.0f} %p"
+    need = [f"<b>{n_all} 경우</b>(양극 4 × 전압 6 × Nd 양 5) 중 <b>{n_fail} 개</b>를 뺐다",
+            f"양극·전압 조합 {n_col} 개 중 Nd 양 다섯 모두 검사를 통과한 것은 <b>{len(full)} 개</b>",
+            f"{len(full)} 개 중 {len(undef)} 개는", "1 개(LiMnO₂ 3.5 V)",
+            f"남은 <b>{len(dev)} 개</b> 중 예측이 잘 맞는 것({max(dev[c] for c in good):.1f} %p 안)이 <b>{len(good)} 개</b>",
+            f"조금 어긋나는 것({rng(mid)})이 {len(mid)} 개", f"크게 어긋나는 것({rng(worst)})이 <b>{len(worst)} 개</b>",
+            "“양극이 덜 녹는다” 가 아니라"]
+    miss = [s for s in need if s not in box]
+    assert not miss, f"쉬운 상자의 수·문장이 자료와 다르다: {miss}"
+    #: 게이트 문턱 — 동결된 사전등록 값
+    g1 = json.loads((REPORT.parents[3] / "db/properties/cei_protection_allcells_result_2026_09_21.json"
+                     ).read_text("utf-8"))["gates_frozen"]["G1_dx_max"]
+    assert f"{g1} 넘게 다른" in box
+    #: 예시 — LiCoO₂ 4.3 V · x = 0.02 의 예측·계산
+    ref = [r for r in rows if r["cathode"] == "LiCoO2" and r["voltage_V"] == "4.3" and _fnum(r["x_Nd"]) == 0.02][0]
+    pred = min(1.0, _fnum(ref["k_observed"]) * 0.02 / 0.98)
+    assert f"예측 {100 * pred:.1f} %, 계산 {100 * float(ref['protection_observed']):.1f} %" in box
+    #: 저전압 NMC811 — Mn 바닥과 Nd 가 가져간 P 의 최대
+    low = [r for r in rows if r["cathode"] == "NMC811" and r["voltage_V"] in ("2.5", "3.0")]
+    floor = {round(float(r["tm_phosphate_share"]), 3) for r in low}
+    assert floor == {0.1}, floor
+    #: ⚠ 두 자리(④ 저전압 · ⑦ 이유)를 각각 문맥으로 묶는다 — '금속의 10 %' 하나만 찾으면 한쪽이 틀려도 통과했다
+    mn = f"{100 * floor.pop():.0f}"
+    assert f"금속의 {mn} % — 딱 Mn 만큼" in box and f"Mn(금속의 {mn} %)" in box, "Mn 바닥 몫이 자료와 다르다"
+    assert f"최대 {100 * max(float(r['P_taken_by_Nd']) for r in low):.0f} %" in box
+    #: 고전압 NMC811 — Nd 10 % 이상에서 보호율이 멈추는 구간 · 15·20 % 의 예측 · 벌어짐
+    hi = [r for r in rows if r["cathode"] == "NMC811" and r["voltage_V"] in ("4.3", "4.5") and _fnum(r["x_Nd"]) >= 0.10]
+    stop = [100 * float(r["protection_observed"]) for r in hi]
+    assert f"{min(stop):.0f}–{max(stop):.0f} % 에서 멈추고" in box, f"멈춤 구간이 자료({min(stop):.1f}–{max(stop):.1f})와 다르다"
+    top = [r for r in hi if _fnum(r["x_Nd"]) >= 0.15]
+    by_x = {}
+    for r in top:        #: 4.3·4.5 V 의 예측이 같은 x 에서 같아야 한 수로 적을 수 있다
+        p = 100 * min(1.0, _fnum(r["k_observed"]) * _fnum(r["x_Nd"]) / (1 - _fnum(r["x_Nd"])))
+        assert abs(by_x.setdefault(_fnum(r["x_Nd"]), p) - p) < 1e-6, (r["voltage_V"], r["x_Nd"])
+    assert sorted(by_x) == [0.15, 0.2], sorted(by_x)
+    assert f"15·20 % 에서 {by_x[0.15]:.0f}·{by_x[0.2]:.0f} %" in box
+    gap = [dev_ for dev_ in (abs(100 * float(r["protection_observed"]) -
+                                  100 * min(1.0, _fnum(r["k_observed"]) * _fnum(r["x_Nd"]) / (1 - _fnum(r["x_Nd"]))))
+                              for r in top)]
+    assert f"{min(gap):.0f}–{max(gap):.0f} %p 벌어진다" in box
+    #: 수열 (LiMnO₂ 3.0 V)
+    seq = [float(r["protection_observed"]) for r in sorted(
+        (r for r in rows if r["cathode"] == "LiMnO2" and r["voltage_V"] == "3.0"), key=lambda r: _fnum(r["x_Nd"]))]
+    assert " → ".join(f"{round(v * 100, 1):g}" for v in seq) + " %" in box
+    #: 인산염을 면한 금속의 행선지 — 반응식에서 다시 센다 (게이트 통과 · 보호율 정의 칸)
+    T = _x002_tool()
+    recs = {}
+    for ln in (REPORT.parents[3] / "db/properties/cei_protection_full.jsonl").read_text("utf-8").splitlines():
+        if ln.strip():
+            r = json.loads(ln)
+            recs[(r["species"], r["cathode"])] = r
+    tms = ("Co", "Ni", "Mn")
+
+    def _where(sp, cat, V):
+        bv = recs[(sp, cat)]["by_voltage"]
+        key = next(k for k in bv if abs(float(k) - V) < 1e-9)
+        lhs, rhs = bv[key]["reaction"].split("->", 1)
+        tl = sum(n * sum(k.get(e, 0) for e in tms) for n, _, k in T._rxn_side_terms(lhs))
+        out = {"P": 0.0, "S": 0.0, "X": 0.0}
+        for n, _, k in T._rxn_side_terms(rhs):
+            tm = sum(k.get(e, 0) for e in tms)
+            if tm > 0:
+                c = "P" if k.get("P", 0) > 0 else ("S" if k.get("S", 0) > 0 and k.get("O", 0) == 0 else "X")
+                out[c] += n * tm / tl
+        return out
+    dP = dS = 0.0
+    cells = [r for r in rows if r["gate_pass"] == "True" and _fnum(r["protection_observed"]) is not None]
+    for r in cells:
+        tag = f"{round(100 * _fnum(r['x_Nd'])):03d}"
+        d = _where(f"ndP{tag}", r["cathode"], _fnum(r["voltage_V"]))
+        c = _where(f"liMatch{tag}", r["cathode"], _fnum(r["voltage_V"]))
+        dP += d["P"] - c["P"]
+        dS += d["S"] - c["S"]
+    assert dP < 0, "도핑 쪽 금속 인산염 몫이 줄지 않았다 — 시험이 헛것을 잰다"
+    assert f"<b>{len(cells)} 경우</b>를 합치면 그 몫의 <b>{100 * dS / -dP:.0f} %</b> 는" in box, \
+        f"황화물 몫이 자료({len(cells)} 경우 · {100 * dS / -dP:.1f} %)와 다르다"
+
+
 def test_resume_block_does_not_carry_retracted_numbers(client):
     """양성 — 새 세션이 **먼저 읽는** kb/open_items.md ⏭ 블록이 화면과 같은 수를 말한다.
 
