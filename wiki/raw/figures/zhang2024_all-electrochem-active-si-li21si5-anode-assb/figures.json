@@ -1,0 +1,434 @@
+{
+ "slug": "zhang2024_all-electrochem-active-si-li21si5-anode-assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-29",
+ "sources": [
+  "48e8e202-50._An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+  "3b8669ad-50._Sup_An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Schematic of the spontaneous reaction to form Li21Si5 alloy and the improved performance of Si/Li21Si5 compared to Si as the anode in ASSBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    500.0,
+    558.8,
+    706.3
+   ],
+   "w": 2177,
+   "h": 861,
+   "dpi": 300,
+   "src": "48e8e202-50._An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": 0.781,
+   "note": "봤다. 추출 경위: 업로드 본문 파일명 '…by_spontaneous_Li_Si_alloying…' 의 '_Si_' 가 도구 SI 판별(SI_TAG 의 (?:^|[_\\-.])e?si(?:[_\\-.0-9]|$))에 걸린다는 것을 원 파일명으로 먼저 확인(88호와 같은 오판)하고, 첫 실행부터 밑줄을 공백으로 바꾼 심볼릭 링크(같은 바이트 · 본문 · SI 둘 다)를 --pdf 로 넘김(도구 무수정) — 본문 그림은 fig_1 … fig_7 · SI 는 fig_S1 … fig_S12 · tab_S1 로 나온 것을 눈으로 확인 · sources · src 는 업로드 원 파일명으로 되돌림. (모식) 원통 셀 둘 — 왼쪽 'LCO/Li₃InCl₆ | SE | Si' · 오른쪽 'LCO/Li₃InCl₆ | SE | Si/Li₂₁Si₅' · 범례 LCO(흰) · Li₃InCl₆(보라) · Li₆PS₅Cl(파랑) · Si(주황) · 'Driving molten lithium: Si → Li@Si → Releasing heat → Li₂₁Si₅' · 'Mixing Si and Li₂₁Si₅ as anode' · 왼쪽 목록 'Low ICE (66.4%)'(= 그림 S9c 55 ℃ 순수 Si · 31.8 mg cm⁻²) · 'High expansion rate (117.9%)' · 오른쪽 'Ultra-high ICE (97.8%)' · 'Ultra-high areal capacity (17.9 mAh cm⁻²)' · 'Low expansion rate (18.8%)'(초록은 18.9 % — digest D). 압력 · 프레임 · 구속 표시 0. 크롭 위 가장자리에 쪽 구분선 한 줄(무해) · 캡션 필드 온전."
+  },
+  {
+   "key": "f2m",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2_manual_p4.png",
+   "caption": "Fig. 2 The mechanism of the spontaneous reaction. (a1–b3) HAADF-STEM images and elemental mapping (a1–3) and HRTEM images (b1–3) of the nano-, submicron- and micron-Si particles, respectively. (c1–3) Optical pictures of the above Si particles after reaction, respectively. (d1–f2) Reaction models between molten Li and nano-Si (d1–2), submicron-Si (e1–2) and micron-Si (f1–2), respectively. (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    47.0,
+    507.5,
+    481.0
+   ],
+   "w": 1749,
+   "h": 1810,
+   "dpi": 300,
+   "src": "48e8e202-50._An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — 본문 p. 4 렌더 300 dpi bbox (88, 47, 507.5, 481) — 내장 JPEG(xref 193 · 1725×1786 · 90.7–504.7 × 49.8–478.3 pt) 전체 · 자동 추출이 그림 2 를 놓침: 캡션 'Fig. 2 The mechanism …' 이 번호 뒤 구분 부호 없이 공백(RSC 양식)이고 다음 낱말 'The' 가 도구 VERBS 정규식('the' · re.I)에 걸려 본문 문장으로 판정 — --why 목록에도 없음(도구 무수정 · 소유자 판단). 봤다: (a1–a3) HAADF-STEM + Si(빨강) · O(초록) 지도 · 20 · 100 · 500 nm 막대 · (b1–b3) HRTEM 2 nm · 점선 SiO₂ 띠 · (c1) 'No reaction' · (c2) 'Reaction stop' · (c3) 'Spontaneous reaction' · 'Li₂₁Si₅' · (d1–f2) 'Uniform SiO₂ layer — Nano-Si (<100 nm)' · 'Irregular SiO₂ layer — Submicron-Si' · 'Jagged SiO₂ layer — Micron-Si' · 'Inability to alloy' · 'Reaction stagnation' · 'Spontaneous reaction'. 산화층 두께 수치 0."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Thermal field regulation of the spontaneous reactions. (a1–a2) Top-view and side-view thermograms of 5 g Si with H = 1.5 cm. (b1–b2) Top-view and side-view thermal images of 5 g Li21Si5 with H = 2 cm. (c1–c2) Thermograms of 5 g Si with H = 0.5 cm. (d1–d2) Thermograms of 5 g Li21Si5 with H = 0.5 cm. (e1–e4) Time-lapsed thermograms of spontaneous reaction with Ttopo180 1C. (f1–f4) Time-lapsed thermograms of spontaneous reaction with Ttop 4 180 1C. (g) and (h) SEM images of Si and Li21Si5. (i) XRD patterns of the products of the above two spontaneous reactions. (j) Flowchart of the preparation of kilogram grade Li21Si5 alloy. (k) Comparison of the advancement of spontaneous alloying method with the published preparation methods.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.7,
+    458.5
+   ],
+   "w": 2177,
+   "h": 1729,
+   "dpi": 300,
+   "src": "48e8e202-50._An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": 0.543,
+   "note": "봤다. (a1–d2) 열화상 위 · 옆 — 색 눈금 27.6–375 ℃ · 12.7–325 ℃ · 180 ℃ 붉은 표지 · 'Si H=1.5 cm' · 'Li₂₁Si₅ H=2 cm' · 둘 다 'H=0.5 cm' · (e1–e4) T₂ < 180 ℃ 판 · ΔG₁ · ΔG₂ 모식 · 5 · 30 · 60 s · (f1–f4) T_Li > T₁ 판 · 5 · 30 · 60 s · (g) Si · (h) Li₂₁Si₅ SEM 2 µm · (i) XRD — T_top < 180 ℃ 에 Si 봉우리 · > 180 ℃ 는 Li₂₁Si₅ 만 · JCPDS #18 0747 · (j) 롤 · 가열 모식 'Heating'(캡션 'kilogram grade' 흐름도 — 지면 시연 최대 20 g) · (k) 여섯 지표 방사 도표(Safety · Low cost · Powder quality · Preparation efficiency · Environmental friendliness · Scale-up potential · Ref. 30–38 · This work — 눈금 · 점수 기준 0). ⚠ 본문 'Fig. 3j proposes six indicators' 는 패널 k(digest D). 캡션 필드의 'Ttopo180 1C' · 'Ttop 4 180 1C' 는 PDF 텍스트 층의 <, > · ℃ 글리프 대응(크롭 온전)."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Design and characterization of Si/Li21Si5 anode for Si/Li21Si5-ASSBs. (a) Preparation process of Si/Li21Si5 solid-state anode. (b)–(d) SEM images of Si, Li21Si5, and Si/Li21Si5 anode surfaces. (e1–e6) In situ TEM observation of Si/Li21Si5 anode during lithiation and de-lithiation.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    380.9,
+    558.8,
+    696.4
+   ],
+   "w": 2177,
+   "h": 1316,
+   "dpi": 300,
+   "src": "48e8e202-50._An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": 0.477,
+   "note": "봤다. (a) 'Stirring' '1:1' Si · Li₂₁Si₅ → 'Cold-pressing' '400 Mpa'(금형 모식) → 적층 'LCO cathode / Li₃InCl₆ / Li₆PS₅Cl / Si/Li₂₁Si₅ anode'(금형 벽 · 판 — 운전 구속 · 운전 압력 표시 0) · (b) Si · (c) Li₂₁Si₅ · (d) Si/Li₂₁Si₅ 색 입힌 SEM(Si 갈색 · Li₂₁Si₅ 보라 · 'Limited self-discharge') · (e1–e6) in situ TEM — 0 · 270 · 420 s 리튬화('Expansion' · 'Interface fusion') · 90 · 360 · 420 s 탈리튬('Shrinkage' · 'Electrochemical sintering' · 'Stabilization of Li₂₁Si₅') · 1 µm 막대. 크롭 위 가장자리 쪽 구분선(무해) · 캡션 필드 온전."
+  },
+  {
+   "key": "f5m",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5_manual_p7.png",
+   "caption": "Fig. 5 The effect of Li21Si5 alloy content on electrochemical characteristics of ASSBs. (a)–(c) First charge–discharge cycle, ICE, and 1C short-cycle curves of the ASSBs with different Li21Si5 mass percentages (0 wt%, 25 wt%, 50 wt%, 75 wt%, 100 wt%). (d) DC polarization of the Si-based electrodes with 0 wt%, 50 wt% and 100 wt% of Li21Si5. (e) Lithium diffusion coefficient of the ASSBs with 0 wt%, 50 wt% and 100 wt% of Li21Si5 calculated from PITT. (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    93.0,
+    449.5,
+    502.5,
+    684.5
+   ],
+   "w": 1707,
+   "h": 981,
+   "dpi": 300,
+   "src": "48e8e202-50._An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — 본문 p. 7 렌더 300 dpi bbox (93, 449.5, 502.5, 684.5) — 내장 JPEG(xref 295 · 1687×959 · 95.3–500.1 × 452.2–682.2 pt) 전체 · 자동 추출 누락(캡션 'Fig. 5 The eﬀect …' — f2m 과 같은 VERBS 'the' 오판). 봤다 + 확대 판독(패널 e 600 dpi — 판독용 · 커밋 안 함): (a) 'LCO 22.9 mg cm⁻² · 0.3 mA cm⁻² · 55 ℃'(본문 · 캡션에 없는 조건 — 그림에만) · 'Lithium metal platform'(100 wt% ≈3.93 V) · 'Polarization reduction' · 'Si de-lithiation platform' · (b) ICE 51.4 · 96.7 · 97.8 · 97.4 · 97.3 % · (c) '3 mA cm⁻², 55 ℃' 10 사이클 — 100 wt% 둘째 사이클 ≈94 → 10 사이클 58.6(62.3 % 의 기준 = 둘째 사이클 · `[재현]` 58.6/0.623 = 94.06) · (d) DC 편극 전류 100 wt% ≈0.34 · 50 wt% ≈0.33 A · 0 wt% ≈0 — 범례 0.34 · 0.26 · 0.002 S cm⁻¹ · (e) D_Li 3.5–4.2 V '(V, vs. Li⁺/Li)' — 50 wt% 2.29 · 1.43 · 1.50 · 1.48 · 1.58 · 1.44 · 1.40 · 1.02 · 0 wt% 0.37 · 0.86 · 0.56 · 0.76 · 0.63 · 0.58 · 0.63 · 0.66 ×10⁻⁶ 'cm² S⁻¹'(±0.03) — 본문 1.47 · 0.58 은 둘 다 4.0 V 점과 판독 폭 안 · 범례 'LCO | SE | …'(SI S11 캡션은 LFP — digest D)."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Electrochemical properties of Si/Li21Si5-ASSBs. (a)–(c) Charge–discharge cycle curves at different current densities for cathode mass loadings of 24.2 mg cm\u00022, 76.4 mg cm\u00022 and 143.7 mg cm\u00022, respectively. (d) Cycle performances of Si/Li21Si5-ASSBs with above cathode mass loadings. (e) Comparison of the areal capacity and ICEs between this work and literature. (f) and (g) Rate capability and long cycle performance of the Si/Li21Si5-ASSBs battery at room and high temperature, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    217.6,
+    558.7,
+    676.5
+   ],
+   "w": 2177,
+   "h": 1913,
+   "dpi": 300,
+   "src": "48e8e202-50._An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": 0.857,
+   "note": "봤다 + 화소 판독(내장 JPEG xref 327 · 1691×1870 — 패널 f · g 축 눈금 라벨 중심으로 보정 · 판독 배열 · 확대 조각은 판독용 · 커밋 안 함). (a) 'LCO 24.2 mg cm⁻² 55 ℃' ICE 97.2 % · 방전 11.5 · 7.6 · 3.8 · 1.9 · 0.5 mA cm⁻²(끝 용량 `[도표]` ≈0.75 · 1.6 · 2.7 · 3.15 · 3.5 mAh cm⁻²) · (b) 76.4 mg cm⁻² ICE 96.9 % · 6.4 · 2.6 · 1.3 · 0.6 mA cm⁻² · (c) 143.7 mg cm⁻² ICE 96.9 % · 같은 넷(6.4 mA cm⁻² 곡선은 원점 곁 `[도표]` ≲0.3 mAh cm⁻² — 본문 'CCD 6.4') · (d) 55 ℃ '1 C 24.2 · 0.5 C 76.4 · 0.1 C 143.7 mg cm⁻²' 50 사이클 · 143.7 셀 사이클 ≈22 · ≈38 계단 회복 · CE ≈60–110 % 요동 · (e) ICE ↔ 면적 용량 문헌(표 S1 · 라벨 'Nat. Energy 2023, 8, 800' ↔ 참고문헌 15 '8, 1–14') · (f) 'LCO 31.8 mg cm⁻² 25 ℃' 0.05 · 0.1 · 0.2 · 0.5 C — 0.5 C 첫 ≈82–85 · '80%' 화살 사이클 ≈188(이상점 무리 곁) · '57.1%' 끝(≈315) · (g) 'LCO 21.1 mg cm⁻² 55 ℃' '0.5 C · 1 C · 3 C · 12 C · 357 C' → 1 C 장기 — 사이클 ≈55–60 에서 ≈121.3 mAh g⁻¹ · 사이클 ≈400 에서 80.1 % 선(97.2) 아래로 · ≈555–600 계단 상승(88.8 → 100.2) · '80.1%' 화살 사이클 ≈609(계단 꼬리) · 1000–1045 ≈81 = 기준 121.3 의 66.9–67.6 %. 캡션 필드 온전."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 ASSBs analysis after cycling. (a)–(c) XPS tests of Si-ASSBs and Si/Li21Si5-ASSBs after 50 cycles. (d) and (e) Cross-section SEM images of Si anode and Si/Li21Si5 anodes before and after lithiation. (f) and (g) Schematic diagram of ionic/electronic transport and volume change of Si/Li21Si5 anode upon cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    265.2,
+    558.7,
+    686.4
+   ],
+   "w": 2177,
+   "h": 1756,
+   "dpi": 300,
+   "src": "48e8e202-50._An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": 0.664,
+   "note": "봤다. (a) Si 2p — Si 음극: Li-Si-O · Si / Li₂₁Si₅/Si: Li-Si-O · (Li-)Si-PS₄³⁻ · Si · Li-Si · (b) Li 1s — Li₆PS₅Cl(주황 점선) · Li₂S(보라 점선) · (c) S 2p PS₄³⁻ · Li₂S(Li₂₁Si₅/Si 쪽 Li₂S ↑) · (d) Si 음극 63.1 → 137.5 µm '17.9 mAh cm⁻²' 'Crack'(20 · 50 µm 막대) · (e) Li₂₁Si₅/Si 56.5 → 67.1 µm '17.9 mAh cm⁻²'(20 µm) · 'Charging' 화살 · (f) 'Charging — Expansion buffer' · (g) 'Discharging — Pre-lithium' · 범례 Li₆PS₅Cl · Si · Li₂₁Si₅ · Li₁₅Si₄. 캡션 'XPS … after 50 cycles' · 단면 SEM 은 '17.9 mAh cm⁻²' 라벨뿐(사이클 수 · 충전 상태 미인쇄). 캡션 필드 온전."
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure 1. Comparison of the stacked densities for various Si powders with different particle sizes.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    67.2,
+    511.1,
+    183.0
+   ],
+   "w": 1780,
+   "h": 483,
+   "dpi": 300,
+   "src": "3b8669ad-50._Sup_An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": 0.728,
+   "note": "봤다. 0.5 g 씩 '50 nm' · '200 nm' · '2 μm' Si 병 — 점선 높이로 쌓임 밀도 비교(수치 0) · `[해석]` 본문 nano · submicron · micron Si 의 이름표 = 이 세 병(micron = '2 μm'). 크롭 바닥 1.3 pt(사진 가장자리) 잘림 — 내용 손실 0 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Figure 2. Effect of Si powder’s stacked density on direction of the spontaneous reaction. (a) Photographs of 1 g Si powder as a flat layer when reacting with molten Li. (b) Photographs of a standing of 20 mm×20 mm×3 mm film when reacting with molten Li.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.2,
+    511.3,
+    179.9
+   ],
+   "w": 1781,
+   "h": 454,
+   "dpi": 300,
+   "src": "3b8669ad-50._Sup_An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": 0.642,
+   "note": "봤다. (a) 'Si powder' 평판 + 'Li' — 화살 셋(반응 전선 확장) · (b) 'Si film' 세움 + 'Li' — 화살 셋(아래 → 위). 시각 · 온도 표기 0. 크롭 온전 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Figure 3. Fragmentation process and structural characterization of the Li21Si5 particles. (a-h) The Li21Si5 synthesis process. (i) TEM image of the Li21Si5 particle. (j) an enlargement of Supplementary Figure 3i. (k) Fourier inverse transformation image of the boxed area in Supplementary Figure 3j.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    68.0,
+    511.3,
+    304.7
+   ],
+   "w": 1781,
+   "h": 987,
+   "dpi": 300,
+   "src": "3b8669ad-50._Sup_An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": 0.376,
+   "note": "봤다. (a) 'Heating → Spontaneous reaction → Li₂₁Si₅ powder' 모식 · (b–h) 사진(g 'Press' — 본문의 평촉 핀셋 누름) · (i) TEM 1 µm · (j) HRTEM 5 nm · 표면 비정질 띠(점선) · (k) '(531)' 'd=0.317 nm'(`[재현·외부 값]` a = 18.710 Å → 0.3163 nm ✅). 20 g 은 본문에만. 크롭 온전 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Figure 4. XRD patterns of the synthesized Li21Si5 powder from 5 g Si powder with different reaction temperatures (250, 300, 350, and 400 ℃) in 60 s.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.8,
+    511.1,
+    245.4
+   ],
+   "w": 1780,
+   "h": 724,
+   "dpi": 300,
+   "src": "3b8669ad-50._Sup_An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": 0.867,
+   "note": "봤다. XRD 250 · 300 · 350 · 400 ℃ — Si (111)(220)(311) 붉은 띠 · Li₂O (111) 파란 띠 · Li₂₁Si₅ (331)(422)(511)(822)(933)(11,5,1)(14,4,2) · 250 ℃ 에 Si (111) 봉우리 · 400 ℃ 에서 사라짐. 크롭 바닥 0.8 pt(여백) 잘림 — 축 라벨 온전 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Figure 5. Cross-section SEM of Si/Li21Si5-ASSB.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.6,
+    431.0,
+    257.9
+   ],
+   "w": 1446,
+   "h": 785,
+   "dpi": 300,
+   "src": "3b8669ad-50._Sup_An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": 0.435,
+   "note": "봤다. 단면 SEM — 'LCO cathode' · 'Li₃InCl₆'(두꺼움) · 'Li₆PS₅Cl' · 'Si/Li₂₁Si₅ anode'(바닥 얇은 층) · 'Cu collector' 화살 · 100 µm 막대 · 붉은 점선 경계 셋. 층 두께 수치 0. 크롭 온전 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Figure 6. XRD pattern of Li3InCl6 and Li6PS5Cl.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    67.4,
+    426.8,
+    252.9
+   ],
+   "w": 1429,
+   "h": 773,
+   "dpi": 300,
+   "src": "3b8669ad-50._Sup_An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": 0.946,
+   "note": "봤다. XRD — 범례 'Cl₆PS₅Cl'(= Li₆PS₅Cl 오기 — digest D) · 'Li₃InCl₆' · 18° 부근 넓은 둔덕(`[해석]` 시료 창 · 기판 추정). 크롭 바닥 1.3 pt(여백) 잘림 — 축 라벨 온전 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Supplementary Figure 7. Ionic conductivity of composite bilayer solid electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.4,
+    440.9,
+    226.7
+   ],
+   "w": 1487,
+   "h": 648,
+   "dpi": 300,
+   "src": "3b8669ad-50._Sup_An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": 0.966,
+   "note": "봤다. Nyquist 'Li₆PS₅Cl-Li₃InCl₆ (0.74×10⁻³ S cm⁻¹)' · Z′ ≈60 에서 반원 → ≈115 Ω 뒤 직선(`[도표]`) · 두께 · 면적 · 온도(본문 55 ℃) 표기 0 — σ 재현 불가. 크롭 온전 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Supplementary Figure 8. XRD pattern of Si/Li21Si5 anode after cold press at 400 Mpa.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    67.1,
+    458.0,
+    179.9
+   ],
+   "w": 1559,
+   "h": 471,
+   "dpi": 300,
+   "src": "3b8669ad-50._Sup_An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": 0.91,
+   "note": "봤다. XRD 15–30° — 아래(파랑) Si · Li₂₁Si₅ 봉우리 · 위(검정) '24 hours at 400 Mpa' → 'Amorphisation'(Li₂₁Si₅ 봉우리 사라짐 · Si 봉우리 약화) — 캡션 'after cold press at 400 Mpa' · 본문 'After standing for 24 h … broadened'(그림은 사라짐 · 24 시간 400 MPa 유지였는지 미인쇄 — digest D). 크롭 온전 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Supplementary Figure 9. The cycle performance of pure Si-ASSBs. a and b were first charge-discharge cycle and different rate cycle curves of Si-ASSBs at room temperature. c and d were first charge-discharge cycle and different rate cycle curves of at high temperature.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.4,
+    67.5,
+    511.3,
+    330.6
+   ],
+   "w": 1784,
+   "h": 1097,
+   "dpi": 300,
+   "src": "3b8669ad-50._Sup_An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": 0.88,
+   "note": "봤다. 순수 Si 셀 'LCO 31.8 mg cm⁻²' — (a) 25 ℃ 'ICE=57.4%'(충전 ≈138 · 방전 ≈79) · (b) 0.05 · 0.2 · 1 C — 1 C ≈25 mAh g⁻¹ · (c) 55 ℃ 'ICE=66.4%'(충전 ≈152 · 방전 ≈101) · (d) 같은 율 — 1 C ≈27. 캡션 'curves of at high temperature'(낱말 빠짐). 크롭 온전 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 11,
+   "file": "fig_S10.png",
+   "caption": "Supplementary Figure 10. EIS spectra of Si/Li21Si5-ASSBs with 0 wt%, 50 wt% and 100 wt% of Li21Si5 powder.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    67.6,
+    502.0,
+    226.7
+   ],
+   "w": 1742,
+   "h": 664,
+   "dpi": 300,
+   "src": "3b8669ad-50._Sup_An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": 0.946,
+   "note": "봤다. Nyquist 0 · 50 · 100 wt% — 50 wt% 절편 ≈40 Ω(본문 Rt 37.6) · 100 wt% ≈42 Ω · 작은 반원 · 0 wt% ≈120 Ω 에서 시작하는 고리 뒤 ≈165 Ω 골 · 적합 · 회로 · 면적 0. 크롭 온전 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 12,
+   "file": "fig_S11.png",
+   "caption": "Supplementary Figure 11. PITT curves of LFP | SE | Si (a), LFP | SE | Si/Li21Si5 (b), and LFP | SE | Li21Si5 (c). The PITT tests were operated at 55 ℃.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    68.9,
+    511.2,
+    273.5
+   ],
+   "w": 1781,
+   "h": 853,
+   "dpi": 300,
+   "src": "3b8669ad-50._Sup_An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": 0.824,
+   "note": "봤다. PITT ln(I)–t 0–900 s · 3.5–4.2 V 여덟 단 · (a)(b)(c) — 캡션 'LFP | SE | Si …' ↔ 본문 · 그림 5e 'LCO | SE | …'(digest D) · 55 ℃. 크롭 온전 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 14,
+   "file": "fig_S12.png",
+   "caption": "Supplementary Figure 12. The long cycles of ultra-high rate of 60 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    68.2,
+    511.1,
+    179.9
+   ],
+   "w": 1780,
+   "h": 466,
+   "dpi": 300,
+   "src": "3b8669ad-50._Sup_An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": 0.824,
+   "note": "봤다. '8.0 mg cm⁻² 55 ℃' · '60 C (12.74 mA cm⁻²)'(본문 12.7) · 첫 한두 점은 더 높고(≈45 `[도표]`) 곧 ≈28–31 → 1000 사이클 ≈16 · '52.9 % capacity retention'(본문 30.8 → 16.3 ✅ 52.92 %) · CE 띠 ≈90–106 %(말기 ≈115 % 까지 — 100 % 초과 점 다수 `[도표]`). 크롭 온전 · 캡션 필드 온전."
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 13,
+   "file": "tab_S1.png",
+   "caption": "Supplementary Table 1 | The dates of face capacity and ICE in the published literature.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.4,
+    67.7,
+    510.9,
+    555.9
+   ],
+   "w": 1778,
+   "h": 2035,
+   "dpi": 300,
+   "src": "3b8669ad-50._Sup_An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries.pdf",
+   "blank": 0.931,
+   "note": "봤다(값은 텍스트 층이 정본 — 같음). Ref.23 0.05/71.00 LFP · Ref.24 3/87.50 LZO@NCM · Ref.14 3/77.92 · 4.5/80.35 · 11.1/84.73 B@NCM · Ref.25 2.5/67.57 LCO · Ref.26 1.9/81.52 Li₂SiOx@S-NMC · Ref.27 2/74.70 NCM · Ref.13 3.3/74.00 Li₂SiOx@S-NMC · Ref.15 1.4/80.00 · 5.7/83.30 · 10.7/82.79 · 17.0/82.93 LATP@NCM · 1.2/90.00 LCO · Ref.28 2.3/84.80 LCO · Ref.29 1.5/71.60 LiNbO₃@NCM · This work 3.5/97.19 · 8.9/96.90 · 17.9/96.85 LCO 2023. 압력 · 온도 · 율 · 선리튬화 열 0(60호 표 S2 와 다름). 제목 'The dates of face capacity'(= data · areal). 크롭 온전 · 캡션 필드 온전."
+  }
+ ]
+}
