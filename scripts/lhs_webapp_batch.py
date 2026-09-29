@@ -21,6 +21,8 @@
   • 네 파일의 sha256 = **수확 JSON 의 `raw.*.sha256`** 과 같아야 한다 — 다르면 그 케이스를 거부한다
     (웹앱 열과 수확기 열이 **같은 침대 · 같은 프레임**이어야 한 행에 둘 수 있다)
   • type_map = 덱 판독 (`type_map_resolve`, 업로드 입구와 같은 게이트) = 수확 JSON 의 type_map
+    (2-type mono 덱만: 수확기의 'AM' ↔ 웹앱의 반지름 이름 AM_P/AM_S 를 같다고 본다 — `fold_single_am` · 1저자 비준 09-30.
+    웹앱에는 덱 판독 map 을 그대로 넘기고, 접은 사실은 status.json 의 `type_map_fold` 에 남는다)
   • ★ J20-a ⓑ (1저자 비준 09-28 밤): atom · contact 파일이 **한 프레임**이고 contact 에 **같은 쌍이 두 행** 없어야 한다 —
     웹앱 파서는 파일 안 모든 프레임을 이어 붙이고 (`parse_liggghts`) CN · 접촉 수는 행마다 +1 이다 (DESC-06 · 합성 2 프레임에서
     CN 정확히 2 배).  점검 결과 (`contact_scan` · `atom_frames`) 는 status.json 에 남는다 (δ ≤ 0 행 수 포함 — 거부는 안 한다)
@@ -157,18 +159,39 @@ def stage_case(case: str, row: dict, hj: dict, uploads: Path, root_from: str, ro
                 names=names, contact_scan=scan, atom_frames=int(n_af))
 
 
+def fold_single_am(got: dict, want: dict) -> bool:
+    """2-type (mono) 덱만: 덱 판독의 AM_P/AM_S 를 'AM' 으로 접으면 수확 JSON 과 같은가.
+
+    수확기는 AM 이 한 상인 침대를 'AM' 으로 적는다 (`lhs_perc_extract.TYPE_MAP[2]` — 상별 P/S 칸 N/A 규약).
+    웹앱 덱 판독은 같은 입자를 반지름으로 AM_P/AM_S 라 부른다 (`type_map_resolve` · r > 4 µm → AM_P).
+    이름만 다르다 — 웹앱의 AM 집합은 '이름에 AM' 이다 (`dem_analysis_core` 714 · 1054).
+    ⚠ 접기는 두 쪽 다 2-type 이고 수확 쪽이 정확히 {AM, SE} 일 때만 — 번호가 뒤바뀌거나 SE 가 없으면 여전히 다르다.
+    """
+    if len(got) != 2 or len(want) != 2 or sorted(want.values()) != ['AM', 'SE']:
+        return False
+    return {k: ('AM' if v in ('AM_P', 'AM_S') else v) for k, v in got.items()} == want
+
+
 def resolve_mode(case_dir: Path, names: dict, hj: dict, A, TMR) -> tuple:
-    """(mode, type_map) — 업로드 입구와 같은 판독 · 수확 JSON 과 대조."""
+    """(mode, type_map, 접음 기록) — 업로드 입구와 같은 판독 · 수확 JSON 과 대조.
+
+    웹앱에 넘기는 map 은 **덱 판독 그대로**다 (접은 이름을 넘기지 않는다 — 업로드 입구와 같은 입력).
+    """
     m, _notes, errs = TMR.resolve_from_files(str(case_dir / names['deck']), str(case_dir / names['atom']))
     if errs or not m:
         raise Refuse(f'type_map 덱 판독 실패: {errs or "빈 map"}')
     want = {str(k): v for k, v in (hj.get('type_map') or {}).items()}
-    if {str(k): v for k, v in m.items()} != want:
-        raise Refuse(f'type_map 덱 판독 {TMR.format_map(m)} ≠ 수확 JSON {want}')
+    got = {str(k): v for k, v in m.items()}
+    fold = ''
+    if got != want:
+        if not fold_single_am(got, want):
+            raise Refuse(f'type_map 덱 판독 {TMR.format_map(m)} ≠ 수확 JSON {want}')
+        fold = (f'2-type: 덱 판독 {TMR.format_map(m)} ≡ 수확 JSON {want} — 단일 AM 상의 이름만 다르다 '
+                '(수확기 = AM · 웹앱 = 반지름 규칙 AM_P/AM_S)')
     mode = A.detect_mode(str(case_dir))
     if (mode == 'bimodal') != (len(m) == 3):
         raise Refuse(f'mode {mode} 이 type 수 {len(m)} 와 맞지 않는다')
-    return mode, TMR.format_map(m)
+    return mode, TMR.format_map(m), fold
 
 
 def write_outputs(out_dir: Path, status: dict, rows: dict) -> None:
@@ -241,9 +264,12 @@ def run_batch(args, deps=None) -> int:
                 raise Refuse('봉인 코호트에 없는 케이스')
             hj = json.loads((hdir / f'{case}.json').read_text(encoding='utf-8'))
             st = stage_case(case, row, hj, work / 'uploads', args.root_from, args.root_to)
-            mode, tm = resolve_mode(st['case_dir'], st['names'], hj, A, TMR)
+            mode, tm, fold = resolve_mode(st['case_dir'], st['names'], hj, A, TMR)
+            if fold:
+                rec['type_map_fold'] = fold
             meta = dict(name=case, created='', mode=mode, type_map=tm, type_map_resolved=tm,
-                        type_map_notes=['lhs_webapp_batch — 덱 판독 = 수확 JSON'], ps_ratio='',
+                        type_map_notes=[f'lhs_webapp_batch — {fold}' if fold else 'lhs_webapp_batch — 덱 판독 = 수확 JSON'],
+                        ps_ratio='',
                         scale=1000, files=sorted(st['names'].values()), status='uploaded')
             (st['case_dir'] / 'meta.json').write_text(json.dumps(meta, ensure_ascii=False, indent=1),
                                                       encoding='utf-8')
@@ -328,9 +354,11 @@ def _selftest() -> int:
         calls = []
 
         class FakeA:
-            @staticmethod
-            def detect_mode(case_dir):
-                return 'bimodal'
+            mode = 'bimodal'
+
+            @classmethod
+            def detect_mode(cls, case_dir):
+                return cls.mode
 
             @staticmethod
             def run_pipeline(case, mode, tm, scale, figures=True, auto_db=True, **kw):
@@ -487,6 +515,38 @@ def _selftest() -> int:
                 rc13 == 2 and len(calls) == n0 + 1)
             rc13b = run_batch(_parse(base_c + ['--force']), deps)                              # out_c = 접촉만 폴더
             chk('⑬b ★ 접촉만 폴더에 전체 실행을 섞으면 거부 (rc 2 · 실행 0)', rc13b == 2 and len(calls) == n0 + 1)
+            # ⑭ 2-type (mono) 덱 (1저자 비준 09-30) — 수확기는 AM 이 한 상인 침대를 'AM' 으로 적고 (lhs_perc_extract.TYPE_MAP[2]
+            #   · 상별 P/S 칸 N/A 규약), 웹앱 덱 판독은 같은 입자를 반지름으로 AM_S/AM_P 라 부른다 (type_map_resolve · r > 4 µm).
+            #   이름만 다르다 — 웹앱의 AM 집합은 '이름에 AM' (dem_analysis_core 714 · 1054).  09-29 WSL 실측: 이 관문이 mono 30 건을 전부 거부했다.
+            (hdir / 'lhs00_900.json').write_text(json.dumps(_hj(type_map={'1': 'AM', '2': 'SE'})), encoding='utf-8')
+            FakeA.mode = 'standard'
+
+            def _run14(m):
+                FakeTMR.m = m
+                n = len(calls)
+                run_batch(_parse(base + ['--force']), deps)
+                return json.loads((out / 'status.json').read_text(encoding='utf-8'))['cases']['lhs00_900'], len(calls) - n
+            r14, k14 = _run14({1: 'AM_S', 2: 'SE'})
+            chk('⑭ ★ 2-type: 수확 {1:AM,2:SE} ↔ 덱 판독 1:AM_S,2:SE → done · 웹앱에는 덱 판독 map 그대로 · 접음 기록',
+                r14.get('status') == 'done' and k14 == 1 and calls[-1]['tm'] == '1:AM_S,2:SE'
+                and bool(r14.get('type_map_fold')))
+            r14b, k14b = _run14({1: 'AM_P', 2: 'SE'})
+            chk('⑭b 2-type: 1:AM_P,2:SE 도 같다 (r > 4 µm) → done',
+                r14b.get('status') == 'done' and k14b == 1 and calls[-1]['tm'] == '1:AM_P,2:SE')
+            r14c, k14c = _run14({1: 'SE', 2: 'AM_S'})
+            chk('⑭c ★ 음성: SE 번호가 뒤바뀌면 거부 (접어도 {1:SE,2:AM} ≠ 수확) · 실행 없음',
+                r14c.get('status') == 'REFUSED' and 'type_map' in r14c.get('why', '') and k14c == 0)
+            r14d, k14d = _run14({1: 'AM_P', 2: 'AM_S'})
+            chk('⑭d ★ 음성: SE 없는 두 AM → 거부 · 실행 없음',
+                r14d.get('status') == 'REFUSED' and k14d == 0)
+            FakeA.mode = 'bimodal'
+            r14e, k14e = _run14({1: 'AM_P', 2: 'AM_S', 3: 'SE'})
+            chk('⑭e ★ 음성: 수확 2-type ↔ 덱 판독 3-type → 거부 (접기는 2-type 끼리만) · 실행 없음',
+                r14e.get('status') == 'REFUSED' and k14e == 0)
+            (hdir / 'lhs00_900.json').write_text(json.dumps(_hj()), encoding='utf-8')
+            r14f, k14f = _run14({1: 'AM_P', 2: 'AM_S', 3: 'SE'})
+            chk('⑭f 3-type 은 그대로 — 같은 이름이면 done · 접음 기록 없음',
+                r14f.get('status') == 'done' and k14f == 1 and not r14f.get('type_map_fold'))
         finally:
             for k, v in env_keep.items():
                 if v is None:

@@ -81,7 +81,7 @@ scripts/lhs_ext_materialize.py	--selftest	fast	both	claude	초록 0.1s (실측)
 scripts/lhs_ext_submit_gate.py	--selftest	fast	both	claude	초록 0.1s (실측)
 scripts/lhs_union_webapp.py	--selftest	fast	none	claude	초록 3.6s (실측) — 웹앱 함수 sphere · 쌍 렌즈 union 손계산 · 정확 union (MC) 4σ · coverage 전수 대조 (주기 x·y) · 세 입자 겹침 상한 · delta 열 어긋남 · 두 프레임 거부 · 내부 공극률 · z 분포 · --scan-root
 scripts/lhs_contact_audit.py	--selftest	fast	none	claude	초록 1.2s (실측) — J20-a ⓐ LHS 접촉 덤프 읽기 전용 점검 v2 (34 건 · 자기리뷰 12 항 반례 포함): 다중 프레임 · 중복 쌍 · δ≤0 · 주기 플래그 ↔ 기하 최소영상 재계수 (쌍 단위) · 반올림 폭 (덤프 유효숫자 실측) 판별 ①②③ · MPI 고스트 플래그 (띠 + 최소 격자) · 상별 벽 접촉 비율 · 웹앱 경로 CN 2 배 실증
-scripts/lhs_webapp_batch.py	--selftest	fast	none	claude	초록 0.2s (실측) — J20 LHS × 웹앱 파이프라인 배치: 같은 프레임 sha · type_map 대조 · 같은 step 메시 · 스테이징 청소 · 재개 · 실패 격리 (가짜 app 주입, 실제 파이프라인은 WSL) · J20-a ⓑ 프레임 ≠ 1 · 중복 행 거부
+scripts/lhs_webapp_batch.py	--selftest	fast	none	claude	초록 0.2s (실측) — J20 LHS × 웹앱 파이프라인 배치: 같은 프레임 sha · type_map 대조 · 같은 step 메시 · 스테이징 청소 · 재개 · 실패 격리 (가짜 app 주입, 실제 파이프라인은 WSL) · J20-a ⓑ 프레임 ≠ 1 · 중복 행 거부 · J20-f 2-type 이름 접기 (수확 AM ↔ 덱 판독 AM_S/AM_P · 음성 넷)
 scripts/lhs_perc_extract.py	--selftest	fast	both	claude	초록 0.8s (실측)
 scripts/lhs_perc_fit.py	--selftest	fast	both	claude	초록 9.5s (실측)
 scripts/litdb_promote.py	--selftest	fast	none	claude	초록 17.9s (실측)

@@ -673,6 +673,29 @@
   ⚠ ① 사전 (WA_DEFINE) 중 넷은 접촉 단계 산출이 **아니다** — `A_binding_AM_SE_n_contacts` · `A_binding_total_n_contacts` (피복 단계 `coverage_physics_vs_hertzian.py`) · `n_am_am_contacts_total` · `_excluded` (`run_network_fracture_aware.py`) ⇒ 이 묶음에서 뺐다 (필요하면 그 단계 묶음에서).
   ✅ **WSL 한 건 대조 통과 (09-29 밤 · 1저자 · `~/dem-audit` @ `e833a498d`)**: `lhs00_000` · `lhsx_001` 둘 다 ① 22 열 **값 다름 0** (전체 실행 `$O/wa*` ↔ 접촉만 `$O/c*` · 문자열 비교) · porosity 같음 (11.8828 · 0.1797 % — 같은 프레임 관문 값) · 시간 **29.3 s** (전체 575.6 s) · **92.4 s** (743.4 s) · 상태 done 2/2.  ⬜ 전 건 = 수확 v3 130 + 64 → 접촉만 배치 130 + 64.
 
+## J20-f. mono (2-type) 덱 — 배치 type_map 관문이 **이름 규약 차이**로 30 + 16 건을 거부 (09-30 · 1저자 비준 · 원장 `SELF-66`)
+
+- **WSL 전 건 실측 (1저자 · `~/dem-audit` @ `4b42179ec`)**: 수확 v3 130/130 OK (`docs/data/lhs_descriptors_20260929/`) → 접촉만 배치 **done 100 · REFUSED 30** = `lhs00_100–129` 전부 (mono 덱 전부) ·
+  사유 `type_map 덱 판독 1:AM_S,2:SE ≠ 수확 JSON {'1': 'AM', '2': 'SE'}` (AM_P 인 것도 같은 꼴) · 한 건 0.0–1.4 s (실행 전 거부 · 잘못 채운 값 0).  lhsx 는 mono 16 건 (`lhsx_003 · 005 · 012 … 060 · 062`) 이 같은 관문에 걸린다.
+- **원인 = 두 코드의 이름 규약**: 수확기는 AM 이 한 상인 침대를 `'AM'` 으로 적는다 (`lhs_perc_extract.TYPE_MAP[2]` — 상별 P/S 칸 N/A 규약) · 웹앱 덱 판독은 같은 입자를
+  **반지름**으로 부른다 (`type_map_resolve.py:134` — 덱이 `r_AM` 하나만 선언하면 r > 4 µm (sim 0.004) → AM_P, 아니면 AM_S · "기존 동작 보존").  배치 관문 (`resolve_mode`) 은 글자 그대로 비교했다.
+- **수정 (반례 먼저 · selftest ⑭–⑭f · 옛 코드 26/28 (⑭ · ⑭b 실패) → 28/28)**: `fold_single_am` — **두 쪽 다 2-type 이고 수확 쪽이 정확히 {AM, SE}** 일 때만 덱 판독의 AM_P/AM_S 를 AM 으로 접어 비교.
+  음성 대조 유지: SE 번호 뒤바뀜 · SE 없는 두 AM · 수확 2-type ↔ 덱 3-type · 3-type 이름 다름 (④) → 전부 거부.  웹앱에는 **덱 판독 map 그대로** 넘긴다 (업로드 입구와 같은 입력) ·
+  접은 사실은 status.json `type_map_fold` · meta `type_map_notes` 에 남는다.
+- **① 총량 열은 이름과 무관**: 웹앱의 AM 집합 = "이름에 AM" (`dem_analysis_core.py:180 · 714 · 816 · 1054`) ⇒ `se_se_cn*` · `am_se_cn_mean` · `am_se_cn_surface_weighted` · `am_am_cn*` · `am_am_n_contacts` 는
+  AM_S 로 부르든 AM_P 로 부르든 같다.
+- ⚠ **상별 ① 열은 이름을 따라간다 (정정 — 같은 날 첫 보고에서 *"① 에는 상별 열이 없다"* 고 잘못 말했다)**: ① 묶음 (`wa_group_contact`) 에는 `AM_P_se_cn_{mean,std,median,max}` ·
+  `AM_S_se_cn_{…}` · `area_<쌍>_n` 이 있다 ⇒ mono 의 값은 **반지름 이름** 칸에 들어간다.  설계 상 (ps_frac) 과 반지름 이름이 **다른** mono:
+  **130 = 5 건** `lhs00_118` (설계 AM_P · r 3.0 µm) · `121` (4.0) · `124` (3.0) · `125` (3.5) · `126` (2.5) — WSL 거부 줄의 덱 판독 이름과 **정확히 일치** ·
+  **64 = 4 건 (예측)** `lhsx_003` (3.17) · `017` (2.80) · `048` (2.72) · `062` (3.80) — 실행 뒤 status.json `type_map` 으로 확인.  나머지 mono (130 의 25 · 64 의 12) 는 이름이 설계와 같다.
+- ⬜ **저자 결정 (인계표 재생성 전 — 실행은 막지 않는다)**: mono 의 상별 ① 열을 어떻게 싣나.
+  (A) **권고** = 인계표의 기존 규약 그대로 — mono 는 상별 P/S 칸 **빈칸 (N/A)** · 총량 열이 값을 싣는다 (수확기 coverage 상별 열이 mono 30 + 16 건에서 이미 이렇다 · 이름 충돌이 원천적으로 없다 ·
+  잃는 것 = mono 의 상별 std · median · max 셋 — ① 에 그 총량 열이 없다 · mean 만 총량 `am_se_cn_mean` 과 같은 값 (같은 입자 집합의 `np.mean` · `dem_analysis_core.py:737–761`)).
+  (B) 설계 상 이름으로 옮겨 싣기 (예: 설계 AM_P 인데 웹앱 AM_S → `AM_P_*` 로) — 정보는 다 남지만 같은 표 안에서 coverage 상별 (N/A) 과 규약이 갈린다.
+  공통: 웹앱이 붙인 이름을 열 하나로 남긴다 (`status.json` `type_map`).
+- ⚠ 뒤 묶음 (② 이후) 에서 AM_P/AM_S **이름이 물리에 쓰이는지** (예: 상별 σ_AM) 는 그 묶음을 돌리기 전에 코드로 확인한다 — 묶음마다 따로 돌리므로 ① 의 선택이 뒤 묶음을 묶지 않는다.
+- WSL 다시 돌리기: 같은 두 배치 명령 · 같은 `--out-dir` — done · partial 은 건너뛰어 **REFUSED 만** 돈다 (`KEEP_STATUS`).
+
 ## 인계 판정 (지금)
 
 **↪ 갱신 09-28 밤 (J20-a)** — ⏸ **일괄 실행 보류**: ✅ 열을 묶음별로 코드 정의부터 감사한 뒤 실행 (① 접촉 위상 1차 감사 = J20-a).
