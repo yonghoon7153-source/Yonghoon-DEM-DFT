@@ -25,6 +25,7 @@ LIGGGHTS contact dump column layout (26 cols, compute cpl with
 """
 
 from __future__ import annotations
+import math
 import numpy as np
 import os, sys, glob, argparse, json
 from collections import defaultdict
@@ -431,6 +432,128 @@ def film_area_from_overlap(delta: float, R_star: float,
     plastic_a2_raw = R_star * R_star * scale
     plastic_a2 = min(plastic_a2_raw * k2, cap_a2)
     return _pack(np.pi * plastic_a2, "plastic", A_ligg=ligg_area)
+
+
+# =============================================================
+#   physics v2 — legacy 'physics' 와 **나란히** (2026-09-29, 1저자 결정 *"권고대로"*)
+# =============================================================
+#: v2 규칙 한 줄 — coverage 산출물 (`rule_physics_v2`) 에 그대로 실린다.
+PHYSICS_V2_RULE = (
+    'physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · '
+    '그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 '
+    '(L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · '
+    'A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · '
+    '모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다)')
+
+
+def _v2_real(name: str, v) -> float:
+    """v2 입력 검사 — 실수 · 유한만 받는다 (bool · 문자열 · None · NaN · inf 는 예외)."""
+    if isinstance(v, bool) or not isinstance(v, (int, float, np.integer, np.floating)):
+        raise TypeError(f'{name}: 실수가 아니다 ({type(v).__name__}: {v!r})')
+    x = float(v)
+    if not math.isfinite(x):
+        raise ValueError(f'{name} 비유한 ({v!r})')
+    return x
+
+
+def film_area_physics_v2(delta, r1, r2, *, length_scale, ligg_area=None):
+    """Physics 접촉면적 **v2** → `(A, components)`.  legacy `film_area_from_overlap(mode='physics')` 는
+    **그대로** 두고 옆에 선다 (코퍼스 physics σ · Stage E · σ_thermal T1 타깃이 legacy 위에 서 있다).
+
+    ★ 왜 새 함수인가 (새 mode 가 아니라): ① 입력이 다르다 — lens 는 **두 반경**이 필요하고 옛 서명의
+      `(R*, R_min)` 역산은 guard (`R* ≥ R_min/2` · 반경비 ≤ 1e6) 를 지나야 한다 (`radii_from_rstar_rmin`) ·
+      길이 단위 `length_scale` 은 **필수 키워드**다 (빠뜨리면 `DESC-03` 을 다시 부른다) ② legacy 함수의
+      코드를 한 줄도 안 건드려야 기본 동작이 **구성상** 비트 동일하다 (selftest ⑨ 의 핀) ③ 뜻이 다르다
+      (하한 max 를 버린다) — 같은 이름 아래 두 계약을 두지 않는다.
+
+    규칙 (1저자 결정 2026-09-29):
+      • `δ ≤ 0` → A = 0, binding `'none'` (겹침 없음 = 겹침 모델의 답).
+      • `δ/R* < DR_YIELD_ONSET` → A = πR*δ (Hertz 탄성, legacy 탄성 반환과 **비트 동일**), binding `'elastic'`.
+      • 그 위 (전이 · 소성) → **A = U = min(A_tabor, A_volume, A_geom)** — cap 은 **전체 접촉면적**의 한계다.
+        L = max(πR*δ, A_LIGG) > U 이면 만족하는 면적이 없다 (`L1-01`) ⇒ **cap 이 이긴다** — U 를 내고
+        `cap_conflict=True` 로 표시한다 (호출자가 센다).  binding = U 를 준 cap (동률은 tabor → volume → geom).
+      • A_tabor = F/H, F = (4/3)E*√R* δ^1.5 (legacy 와 같은 식 · 같은 상수).
+      • A_volume = V_lens / h — **V_lens = 두 구의 정확한 교집합** (`lens_volume(r1, r2, δ)` · `L1-02`),
+        **h = H_FILM_MIN × length_scale** = δ · r 과 **같은 길이 단위**의 5 nm (`DESC-03`; 상수 자체는 안 바꾼다).
+      • A_geom = 2π R_min².
+
+    단위: δ · r1 · r2 는 **1 m = `length_scale` 단위**인 길이 (웹앱 덤프 규약 `scale=1000` ⇒ 덤프 = SI × 1000;
+    SI 입력이면 1.0).  `ligg_area` (LIGGGHTS `contact_area` = 기하 교차원판, `L1-04`) 는 그 단위의 제곱이고
+    **하한 L 의 판정에만** 쓴다 — 면적 값에는 안 들어간다.  반환 면적도 그 단위의 제곱이다.
+    ⇒ 길이 단위를 바꾸면 binding · 충돌은 그대로이고 면적은 정확히 `length_scale²` 배다 (selftest ⑫b·⑫d).
+
+    ⚠⚠ 귀결 (문서에 적으라는 1저자 지시 — 수치는 selftest ⑬b·⑭·⑯ 이 핀으로 문다):
+      ① **A_v2 는 LIGGGHTS 기하면적보다 작을 수 있다** — 그리고 πR*δ (Hertz) 보다도 작을 수 있다.
+         판정문 기하 (r = 0.5 µm 동일 반경 · δ/R* = 0.01 · SI): A_v2 = 0.4996 πR*δ = 0.2501 A_LIGG
+         (legacy 는 A_LIGG 를 냈다).  얕은 lens 는 V_lens ≈ πR*δ² 라 A_volume/πR*δ ≈ δ/h — **δ < 5 nm 인
+         모든 cap 가지 접촉에서 부피 cap 이 Hertz 아래로 내려간다**.
+      ② 전이 구간 하단에서는 A_tabor 자체가 Hertz 보다 작다: A_tabor/πR*δ = (4E*/3πH)√(δ/R*) =
+         11.19·√(δ/R*) < 1  ⟺  δ/R* < 0.00798 (≈ DR_FULLY_PLASTIC).
+      ③ 따라서 **DR_YIELD_ONSET 에서 면적이 불연속으로 떨어진다** — r = 0.5 µm SE–SE 면
+         πR*δ → 0.0566 πR*δ (부피 cap), 크기와 무관한 Tabor 만 보면 → 0.376 πR*δ.
+      ④ 모든 상 쌍 (AM–AM · SE–SE 포함) 에 AM–SE E* · SE 경도를 쓴다 — `L1-03` 은 이 함수로 닫히지 않는다.
+
+    정의역 밖 입력 (실수 아님 · NaN/inf · 반경 ≤ 0 · `length_scale` ≤ 0 · `ligg_area` < 0 ·
+    `δ ≥ r1+r2` · 비유한 결과) 은 **예외**다 — 조용히 면적을 내지 않는다.  호출자가 세고 그 침대의 v2 를
+    빈칸으로 둔다 (`coverage_physics_vs_hertzian.compute_case`).
+
+    components: `rule` · `A_final` · `A_hertzian` · `A_ligg` · `A_tabor` · `A_volume` · `A_geom` ·
+    `A_lower` (L) · `A_upper` (U) · `V_lens` · `h_film` · `binding` · `regime` · `cap_conflict`
+    (cap 가지가 아니면 None).
+    """
+    delta = _v2_real('delta', delta)
+    r1 = _v2_real('r1', r1)
+    r2 = _v2_real('r2', r2)
+    ls = _v2_real('length_scale', length_scale)
+    if r1 <= 0 or r2 <= 0:
+        raise ValueError(f'반경 ≤ 0 (r1={r1!r}, r2={r2!r})')
+    if ls <= 0:
+        raise ValueError(f'length_scale ≤ 0 ({ls!r})')
+    ligg = None
+    if ligg_area is not None:
+        ligg = _v2_real('ligg_area', ligg_area)
+        if ligg < 0:
+            raise ValueError(f'ligg_area < 0 ({ligg!r})')
+    if delta >= r1 + r2:
+        raise ValueError(f'δ ≥ r1+r2 — 중심거리 ≤ 0, 접촉 기하가 아니다 (δ={delta!r}, r1+r2={r1 + r2!r})')
+
+    R_star = (r1 * r2) / (r1 + r2)          # compute_case 와 같은 식 ⇒ 탄성 가지가 legacy 와 비트 동일
+    R_min = min(r1, r2)
+    h_film = H_FILM_MIN * ls                 # 5 nm 를 δ · r 과 같은 단위로 (DESC-03)
+    comp = dict(rule='physics_v2', A_final=0.0, A_hertzian=None, A_ligg=ligg, A_tabor=None,
+                A_volume=None, A_geom=None, A_lower=None, A_upper=None, V_lens=None,
+                h_film=h_film, binding='none', regime='none', cap_conflict=None)
+    if delta <= 0:
+        return 0.0, comp
+
+    A_hertz = np.pi * R_star * delta
+    comp['A_hertzian'] = A_hertz
+    dr = delta / R_star
+    if dr < DR_YIELD_ONSET:
+        comp.update(A_final=A_hertz, binding='elastic', regime='elastic')
+        return A_hertz, comp
+
+    F_real = (4.0 / 3.0) * E_STAR_AM_SE_REAL * np.sqrt(R_star) * (delta ** 1.5)
+    A_tabor = F_real / H_REAL_SE
+    V_lens = lens_volume(r1, r2, delta)       # 정확한 전체 교집합 (L1-02)
+    A_volume = V_lens / h_film
+    A_geom = 2.0 * np.pi * (R_min ** 2)
+    U = min(A_tabor, A_volume, A_geom)
+    if U == A_tabor:
+        binding = 'tabor'
+    elif U == A_volume:
+        binding = 'volume'
+    else:
+        binding = 'geom'
+    L = max(A_hertz, ligg if ligg is not None else 0.0)
+    for _n, _v in (('A_tabor', A_tabor), ('A_volume', A_volume), ('A_geom', A_geom), ('A_lower', L)):
+        if not math.isfinite(_v):
+            raise ValueError(f'{_n} 비유한 ({_v!r}) — δ={delta!r}, r1={r1!r}, r2={r2!r}')
+    comp.update(A_final=float(U), A_tabor=float(A_tabor), A_volume=float(A_volume),
+                A_geom=float(A_geom), A_lower=float(L), A_upper=float(U), V_lens=float(V_lens),
+                binding=binding, regime=('plastic' if dr >= DR_FULLY_PLASTIC else 'transition'),
+                cap_conflict=bool(L > U))
+    return float(U), comp
 
 
 def compute_coverage(atom_path: str, contact_path: str,
@@ -1083,8 +1206,173 @@ def _selftest() -> int:
         f"{c3['V_overlap_legacy']:.6e} → {c3['V_lens_exact']:.6e} "
         f"({c3['V_lens_exact'] / c3['V_overlap_legacy']:.4f}배)")
 
+    ok = _selftest_v2(chk) and ok
+
     print('plastic_coverage SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
+
+
+def _v2_contract_area(delta, r1, r2, ligg, length_scale):
+    """⑪–⑱ 계약 시험의 어댑터 — **coverage 가 쓰는 Physics 면적 경로**를 부른다.
+
+    `film_area_physics_v2` 가 있으면 그것을, 없으면 **옛 생산 경로** (`compute_case` 가 부르는
+    그대로: `film_area_from_overlap(mode='physics')`, `length_scale` 는 읽지 않는다) 를 부른다.
+    ⇒ 같은 계약 시험이 옛 코드에서는 **판정문 숫자로 실패**하고 (반례 먼저), v2 에서 통과한다.
+    """
+    fn = globals().get('film_area_physics_v2')
+    if fn is not None:
+        A, c = fn(delta, r1, r2, ligg_area=ligg, length_scale=length_scale)
+        return dict(src='v2', A=A, binding=c['binding'], conflict=c['cap_conflict'],
+                    V=c['V_lens'], U=c['A_upper'], L=c['A_lower'], A_hertz=c['A_hertzian'])
+    R_star = (r1 * r2) / (r1 + r2)
+    A, _reg, c = film_area_from_overlap(delta, R_star, R_min=min(r1, r2), ligg_area=ligg,
+                                        mode='physics', return_components=True)
+    return dict(src='legacy', A=A, binding=c['binding'], conflict=c['cap_conflict'],
+                V=c['V_overlap_legacy'], U=c['A_upper'], L=c['A_lower'], A_hertz=c['A_hertzian'])
+
+
+def _selftest_v2(chk) -> bool:
+    """physics **v2** 계약 (2026-09-29 1저자 결정 *"권고대로"*) — `DESC-03` · `L1-01` · `L1-02` 를 판정문 숫자로.
+
+    계약: ① cap 은 **전체 접촉면적**의 한계 — 소성/전이 가지에서 A = U = min(Tabor, 부피, 기하),
+    L = max(πR*δ, A_ligg) > U 면 **U 를 내고** 충돌을 기록 ② 부피 = **정확한 전체 lens** (두 반경)
+    ③ 막 두께 = δ · r 과 **같은 길이 단위** (`H_FILM_MIN × length_scale`) ④ 항복 전 = Hertz (legacy 그대로)
+    ⑤ 정의역 밖 입력은 조용히 값을 내지 않고 **예외** (호출자가 세고 침대를 빈칸으로 둔다).
+    """
+    ok = True
+
+    def c2(name, cond, extra=''):
+        nonlocal ok
+        chk(name, cond, extra)
+        ok = ok and bool(cond)
+
+    def _safe(f):
+        try:
+            return f(), None
+        except Exception as e:                       # noqa: BLE001 — 계약 시험: 예외도 결과다
+            return None, f'{type(e).__name__}: {e}'
+
+    print('plastic_coverage physics v2 (DESC-03 · L1-01 · L1-02 — 1저자 결정 2026-09-29)')
+
+    # ⑪ L1-02 — v2 의 부피 = 정확한 전체 lens (판정문: r=0.5 µm · δ=0.0125 µm, legacy 는 그 0.493724 배)
+    r, dlt = 0.5, 0.0125                               # µm 단위 ⇒ length_scale = 1e6 (1 m = 1e6 µm)
+    got, err = _safe(lambda: _v2_contract_area(dlt, r, r, None, 1e6))
+    ex = lens_volume(r, r, dlt)
+    ok11 = (got is not None and got['V'] is not None and abs(got['V'] - ex) <= 1e-12 * ex
+            and abs(legacy_v_overlap(dlt, r / 2.0) / ex - 0.493724) < 1e-6)
+    c2('⑪ ★ L1-02: coverage Physics 경로의 부피 = 정확한 lens (legacy 는 그 0.493724 배)', ok11,
+       (f"[{got['src']}] V={got['V']:.12e} · lens={ex:.12e} · V/lens={got['V'] / ex:.6f}") if got else err)
+
+    # ⑫ DESC-03 — 길이 단위 공변: 같은 기하를 SI(m) 와 덤프 단위(×1000) 로 넣으면 결속이 같고 면적은 정확히 1e6 배.
+    #    판정문 재현 (옛 경로): 덤프 단위 tabor · A/A_H = 2.502607 ↔ SI volume · 1.229167 (결속이 **뒤집힌다**).
+    r_si, dr = 0.5e-6, 0.05
+    Rs_si = r_si / 2.0
+    d_si = dr * Rs_si
+    _Al, _rl, cl_si = film_area_from_overlap(d_si, Rs_si, R_min=r_si, mode='physics', return_components=True)
+    _Ad, _rd, cl_dm = film_area_from_overlap(d_si * 1e3, Rs_si * 1e3, R_min=r_si * 1e3, mode='physics',
+                                             return_components=True)
+    c2('⑫a DESC-03 재현 (옛 경로 — 바꾸지 않았다): 덤프 단위 tabor 2.502607 ↔ SI volume 1.229167',
+       cl_dm['binding'] == 'tabor' and cl_si['binding'] == 'volume'
+       and abs(_Ad / cl_dm['A_hertzian'] - 2.502607) < 5e-7 and abs(_Al / cl_si['A_hertzian'] - 1.229167) < 5e-7,
+       f"dump={cl_dm['binding']} {_Ad / cl_dm['A_hertzian']:.6f} · SI={cl_si['binding']} {_Al / cl_si['A_hertzian']:.6f}")
+    g_si, e1 = _safe(lambda: _v2_contract_area(d_si, r_si, r_si, None, 1.0))
+    g_dm, e2 = _safe(lambda: _v2_contract_area(d_si * 1e3, r_si * 1e3, r_si * 1e3, None, 1e3))
+    c2('⑫b ★ DESC-03: 단위를 바꿔도 결속이 같고 면적은 정확히 (1e3)² 배 — 단위 교정 뒤 volume cap 이 결속한다',
+       g_si is not None and g_dm is not None and g_si['binding'] == g_dm['binding'] == 'volume'
+       and abs(g_dm['A'] / (g_si['A'] * 1e6) - 1.0) < 1e-12,
+       (f"[{g_si['src']}] SI={g_si['binding']} · dump={g_dm['binding']} · "
+        f"A_dump/(A_SI·1e6)={g_dm['A'] / (g_si['A'] * 1e6):.12f}") if (g_si and g_dm) else (e1 or e2))
+    c2('⑫c v2 값 = 정확 lens / 5 nm: A/A_H = (δ/h)(1 − δ/(6r)) = 2.489583 (옛 1.229167 · 2.502607 과 다르다)',
+       g_si is not None and abs(g_si['A'] / g_si['A_hertz'] - 2.5 * (1.0 - 0.025 / 6.0)) < 1e-9,
+       f"{g_si['A'] / g_si['A_hertz']:.9f}" if g_si else e1)
+    #    공변 스윕 — 결속 세 가지 모두에서 (tabor · volume · geom)
+    bad = []
+    for (ra, rb, drr) in ((5.0e-6, 5.0e-6, 0.01), (0.5e-6, 0.5e-6, 0.05), (0.5e-6, 0.5e-6, 0.9),
+                          (0.5e-6, 6.0e-6, 0.03), (3.0e-6, 0.8e-6, 0.2), (0.5e-6, 6.0e-6, 0.004)):
+        Rs_ = ra * rb / (ra + rb)
+        a, ea = _safe(lambda: _v2_contract_area(drr * Rs_, ra, rb, None, 1.0))
+        b, eb = _safe(lambda: _v2_contract_area(drr * Rs_ * 1e3, ra * 1e3, rb * 1e3, None, 1e3))
+        if a is None or b is None or a['binding'] != b['binding'] or abs(b['A'] / (a['A'] * 1e6) - 1.0) > 1e-12:
+            bad.append((ra, rb, drr, (a or {}).get('binding'), (b or {}).get('binding'), ea or eb))
+    c2('⑫d ★ 공변 스윕 6 기하 (소성 · 전이 · 역순 반경 · 깊은 겹침): 결속 · 면적 비 전부 일치', not bad, f'{bad}')
+
+    # ⑬ L1-01 — 하한 > 상한이면 **상한(U)을 낸다** + 충돌 기록 (판정문 기하: SI r=0.5 µm · δ/R*=0.01 · ligg=교차원판)
+    r = 0.5e-6
+    Rs = r / 2.0
+    dlt = 0.01 * Rs
+    lgg = _intersection_disc_area(r, r, dlt)
+    got, err = _safe(lambda: _v2_contract_area(dlt, r, r, lgg, 1.0))
+    c2('⑬ ★ L1-01: L > U 이면 U 를 낸다 (cap = 전체 면적 한계) · cap_conflict=True · 결속 volume',
+       got is not None and got['conflict'] is True and got['A'] == got['U'] and got['A'] < got['L']
+       and got['binding'] == 'volume',
+       (f"[{got['src']}] A/U={got['A'] / got['U']:.6f} · L/U={got['L'] / got['U']:.6f} · "
+        f"binding={got['binding']} · conflict={got['conflict']}") if got else err)
+    c2('⑬b L1-01 값: A/A_H = (δ/h)(1 − δ/(6r)) = 0.4995833 · L/U = 1.9975/0.4995833',
+       got is not None and abs(got['A'] / got['A_hertz'] - 0.5 * (1.0 - 0.0025 / 3.0)) < 1e-9
+       and abs(got['L'] / got['U'] - 1.9975 / (0.5 * (1.0 - 0.0025 / 3.0))) < 1e-9,
+       (f"A/A_H={got['A'] / got['A_hertz']:.9f} · L/U={got['L'] / got['U']:.9f}") if got else err)
+    # ⑭ 귀결 핀 (저자에게 알릴 것): v2 면적은 LIGGGHTS 기하면적보다 — 여기서는 Hertz 면적보다도 — **작을 수 있다**
+    c2('⑭ 귀결: A_v2 < A_LIGG (기하 교차원판) 이고 A_v2 < πR*δ 이기도 하다 (⑬ 의 기하)',
+       got is not None and got['A'] < lgg and got['A'] < got['A_hertz'],
+       (f"A_v2/A_LIGG={got['A'] / lgg:.6f} · A_v2/A_H={got['A'] / got['A_hertz']:.6f}") if got else err)
+
+    # ⑮ 항복 전 = Hertz 탄성 면적 (legacy 'physics' 탄성 반환과 **비트 동일**)
+    bad = []
+    for (ra, rb, drr) in ((0.5e-6, 0.5e-6, 0.001), (2.0e-6, 2.0e-6, 0.0005), (0.5e-6, 6.0e-6, 0.00099)):
+        Rs_ = ra * rb / (ra + rb)
+        a, ea = _safe(lambda: _v2_contract_area(drr * Rs_, ra, rb, None, 1.0))
+        Al, _r0, cl = film_area_from_overlap(drr * Rs_, Rs_, R_min=min(ra, rb), mode='physics', return_components=True)
+        if a is None or a['A'] != Al or a['binding'] != 'elastic' or cl['binding'] != 'elastic':
+            bad.append((ra, rb, drr, (a or {}).get('A'), Al, ea))
+    c2('⑮ δ/R* < DR_YIELD_ONSET: A = πR*δ — legacy physics 탄성 반환과 비트 동일', not bad, f'{bad}')
+
+    # ⑯ 귀결 핀: DR_YIELD_ONSET 에서 면적이 **불연속**으로 떨어진다 (얕은 lens 가 5 nm 막보다 얇다).
+    #    기대값은 닫힌 lens 식이 아니라 **독립 수치적분**으로 만든다 (동어반복 금지).
+    r = 0.5e-6
+    Rs = r / 2.0
+    lo = _safe(lambda: _v2_contract_area(DR_YIELD_ONSET * (1 - 1e-9) * Rs, r, r, None, 1.0))[0]
+    hi = _safe(lambda: _v2_contract_area(DR_YIELD_ONSET * (1 + 1e-9) * Rs, r, r, None, 1.0))[0]
+    d_hi = DR_YIELD_ONSET * (1 + 1e-9) * Rs
+    want = (_lens_volume_quadrature(r, r, d_hi) / H_FILM_MIN) / (np.pi * Rs * d_hi)
+    c2('⑯ 귀결: 항복 개시에서 A 가 πR*δ → V_lens/h 로 떨어진다 (r=0.5 µm SE–SE: 약 0.0566 배 · 독립 적분 대조)',
+       lo is not None and hi is not None and lo['binding'] == 'elastic' and hi['binding'] == 'volume'
+       and abs((hi['A'] / hi['A_hertz']) / want - 1.0) < 1e-6,
+       (f"[{hi['src']}] 위 {hi['A'] / hi['A_hertz']:.6f} · 기대 {want:.6f} · 아래 {lo['A'] / lo['A_hertz']:.6f}")
+       if (lo and hi) else '')
+
+    # ⑰ 정의역 밖은 **예외** (옛 경로는 NaN 을 조용히 면적으로 냈다) · δ ≤ 0 은 면적 0 ('none')
+    raised = []
+    for label, args in (('δ=NaN', (float('nan'), 0.5e-6, 0.5e-6, None, 1.0)),
+                        ('δ=inf', (float('inf'), 0.5e-6, 0.5e-6, None, 1.0)),
+                        ('r1=0', (1e-9, 0.0, 0.5e-6, None, 1.0)),
+                        ('r2=NaN', (1e-9, 0.5e-6, float('nan'), None, 1.0)),
+                        ('ligg<0', (1e-9, 0.5e-6, 0.5e-6, -1e-18, 1.0)),
+                        ('ligg=NaN', (1e-9, 0.5e-6, 0.5e-6, float('nan'), 1.0)),
+                        ('scale=0', (1e-9, 0.5e-6, 0.5e-6, None, 0.0)),
+                        ('scale=NaN', (1e-9, 0.5e-6, 0.5e-6, None, float('nan'))),
+                        ('δ≥r1+r2', (1.0e-6, 0.5e-6, 0.5e-6, None, 1.0))):
+        g, e = _safe(lambda: _v2_contract_area(*args))
+        if e is None:
+            raised.append(f'{label}→{g["A"]!r}({g["src"]})')
+    c2('⑰ ★ 정의역 밖 입력 9 가지 → 예외 (조용히 면적을 내지 않는다)', not raised, f'{raised}')
+    z0, e0 = _safe(lambda: _v2_contract_area(0.0, 0.5e-6, 0.5e-6, 1e-15, 1.0))
+    zn, en = _safe(lambda: _v2_contract_area(-1e-10, 0.5e-6, 0.5e-6, None, 1.0))
+    c2('⑰b δ ≤ 0 → 면적 0 · binding none (겹침 없음 = 겹침 모델의 답)',
+       z0 is not None and zn is not None and z0['A'] == 0.0 == zn['A']
+       and z0['binding'] == 'none' == zn['binding'],
+       f"{(z0 or {}).get('binding')} {(zn or {}).get('binding')} {e0 or ''}{en or ''}")
+
+    # ⑱ 판별력 — 결속 다섯 가지 (elastic · tabor · volume · geom · none) 가 전부 실제로 나온다
+    seen = set()
+    for (ra, rb, drr) in ((0.5e-6, 0.5e-6, 0.0005), (5.0e-6, 5.0e-6, 0.01), (0.5e-6, 0.5e-6, 0.05),
+                          (0.5e-6, 0.5e-6, 0.9), (0.5e-6, 0.5e-6, 0.0)):
+        Rs_ = ra * rb / (ra + rb)
+        g, _e = _safe(lambda: _v2_contract_area(drr * Rs_, ra, rb, None, 1.0))
+        if g is not None:
+            seen.add(g['binding'])
+    c2('⑱ 결속 다섯 가지가 전부 나온다 (elastic · tabor · volume · geom · none)',
+       seen == {'elastic', 'tabor', 'volume', 'geom', 'none'}, f'{sorted(map(str, seen))}')
+    return ok
 
 
 if __name__ == "__main__":
