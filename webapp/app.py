@@ -320,6 +320,8 @@ def doc(rel):
 #   (정본은 artifact + RESULTS*.md — 저장소 CLAUDE.md 하드룰 4). 사본을 두는
 #   이유는 하나다: 파이프라인을 설명하면서 "그래서 답이 뭐였나" 를 말하지 않으면
 #   그림만 남는다. 대신 인용은 금지하고 정본으로 보낸다.
+# (2026-09-29) 결과 수치 밖의 검증층 수치(실행 규모 · 변이 등록부 크기 · 재생 표본)는
+#   원장 `08_REVIEW_RESPONSE.md` 절의 사본이고, 화면에 절 번호를 같이 적는다.
 @app.route("/pipeline")
 def pipeline():
     # 라운드 수는 상수가 아니라 원장에서 센다 (content.latest_gate_round 주석)
