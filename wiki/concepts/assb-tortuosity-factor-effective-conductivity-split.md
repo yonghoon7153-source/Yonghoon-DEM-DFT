@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -229,6 +229,16 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - **옴 강하 크기 검사(82호식)**: 면적 미인쇄 → Ω·cm² 불가 · 비만 — 총 EIS 저항 중 (R1+R2) 몫 large 41 · small 78 · mixed/Si–Cl 52 · mixed/Si–G 51 % · `[재현]` 5 C 분극(그림 3b 왕복 ≈0.7 V − 0.3 C 0.15 V)에서 A·R_dc ≈22 Ω·cm².
 - ⇒ 처방에 붙는 것(`[해석]`): "저 굴곡도" 를 인용하는 편을 만나면 ① 굴곡도 양(τ · τ² · σ_eff)이 인쇄됐는지 ② 아니면 어느 회로 호의 순서인지 ③ 그 회로에 "망" 저항 자리(R1)가 따로 있고 그 값이 어떻게 움직였는지를 적는다 — 85호는 ① 0 ② R2 ③ R1 이 R2 만큼 움직였는데 미논의.
 
+## ★ 열네 번째 표본 — 굴곡도 낱말 8 · 값 0 · 이름 둘("apparent" ↔ "geometric"): 같은 연구실의 설계 종설은 수송 측정 굴곡도가 입계 저항을 품는다고 말로 인쇄하되 정의식 · 인용 · 값을 주지 않고, 접촉 손실 · 공극을 굴곡도 증가로 배정한다 (2026-09-29, `assb` 87호)
+
+`raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md` (Minnmann · … · Janek 2022, *Adv. Energy Mater.* 12, 2201425 — Perspective · 1차 측정 0).
+
+- **정의 · 규약**: `tortuos` 8 · `[인쇄]` "Poorly conducting grain boundaries may further increase the “apparent tortuosity” of the ionic transport (as obtained from chargetransport measurements) beyond the “geometric tortuosity,” which only considers the respective distribution of phases."(인용 0) — `[해석]` 이 페이지의 곱 `κ_eff = κ·ε/τ²` 에서 **κ(입계) 몫이 측정 τ² 에 흡수된다**는 것을 종설이 말로 인쇄한 표본 · 정의식 · 값 · Bruggeman 0 · 그림 2 "low ↔ high tortuosity"(LE ↔ SE · 공극 · 입계) 모식.
+- **배정**: `[인쇄]` §2.2 "interparticle cracking (for PC CAM) and pore formation between the SE and CAM particles, causing contact loss and increased tortuosity.[13,14,48]" — 접촉 손실과 굴곡도 증가를 한 문장의 결과 둘로(측정 0) · SE 입도 ↓ → 굴곡도 ↑[29–33] · 균열 → "increase the electronic tortuosity throughout the composite cathode"(인용 0 — 전자 쪽) · "partial conductivities are suitable descriptors"[29,31,41,49,50](측정 쪽 = 73호 방법).
+- **곱의 자리**: 공극(ε) · 입계(κ) · 경로(τ)가 그림 2 에 한 모식으로 · apparent ↔ geometric 을 가르면서도 [13,14,48] 의 "increased tortuosity" 가 어느 쪽인지 적지 않았다.
+- ⇒ 처방에 붙는 것(`[해석]`): 종설 · 서론의 "increased tortuosity" 는 (1) apparent(수송 측정 — `σ_eff` 역산 · 입계 포함) ↔ geometric(상 분포 — 경로 길이) 어느 쪽인지 (2) 인용 원전이 그 양을 인쇄했는지를 먼저 본다 — 87호는 두 이름을 스스로 가르고도 배정 문장에는 이름을 달지 않았다.
+
+
 ## 이 페이지가 주장하지 않는 것
 
 - **"굴곡도가 진화하지 않았다" 고 하지 않는다** — `σ_eff` 로 보면 70 % 는 변화 없음, 80 % 는 ≈3 배이고, 그 3 배의 배정이 안 갈린다는 것까지다.
@@ -243,6 +253,7 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - ★ **2026-09-29 (82호)**: **82호 κ 와 73호 `τ²` 의 "같은 크기" 를 같은 계의 재현으로 쓰지 않는다** — NCM622 ↔ 811 · SE 입도 · 공극(가정 14 % ↔ 밀도 14.1–24.3 %)이 다르다. 규약 재현(8/8)은 인쇄 분율(뒤바뀐 48/52) 위의 우리 산술이고, 등가 Bruggeman 지수도 같은 산술이다.
 - ★ **2026-09-29 (83호)**: **25호의 기하 τ(1.21 ↔ 1.84)가 틀렸다고 하지 않는다** — 25호가 가리킨 원전(83호) 지면에 경로 계산이 없다는 것까지이고, 25호 SI 문장은 다시 보지 못했다.
 - ★ **2026-09-29 (85호)**: **85호 R1 차(+31 Ω)를 굴곡도로 배정하지 않는다** — 분리막 · 음극 동일성이 가정이고 면적이 없다; "저 굴곡도" 주장이 틀렸다고도 하지 않는다 — 양이 인쇄되지 않았다는 것까지다.
+- ★ **2026-09-29 (87호)**: **"apparent ↔ geometric" 문장을 입계 몫의 크기로 쓰지 않는다** — 값 · 인용 0 인 서술이고, [13,14,48] 원전이 어느 굴곡도를 뜻했는지는 원전 미열람이다.
 
 ## 관련
 

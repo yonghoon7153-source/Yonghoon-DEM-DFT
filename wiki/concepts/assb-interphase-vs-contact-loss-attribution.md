@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/oruemendizabal2023_multiconfiguration-geis-drt-nmc622-lpscl-li-interfaces.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md]
+sources: [raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/oruemendizabal2023_multiconfiguration-geis-drt-nmc622-lpscl-li-interfaces.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -82,6 +82,7 @@ evidenceScope: multi-source-primary
 → **2026-09-28 (64호)**: 같은 연구실의 네 달 뒤 편에서 **노화분**은 여전히 저항형이지만, **가역분**에서는 면적형(4.6 V)이 처음 나타난다 — 계면층 한 이름("redox-active") 아래 두 기구가 컷오프에 따라 번갈아 보인다(전제 위). 그리고 원전 XPS 가 계면층의 주 위치를 **집전체 쪽**에 두어, "계면층 = CAM \| SE 의 `j₀`" 등식 자체가 이 편에서 확인되지 않는다.
 → **2026-09-29 (84호)**: 다른 연구실 · Li 금속 완전지에서 같은 병치가 반복된다 — 한 R3 에 계면층 · 형태 변화를 함께 두고, 노화는 대칭 셀 빼기로 양극에 돌린다. `R`·`C` 입력이 대칭 ↔ 완전지 짝으로 있는데도 상태 이름표가 그림 사이에서 교차해, 같은 두 표가 "계면층" ↔ "접촉 면적" 을 번갈아 가리킨다(전제 위).
 → **2026-09-29 (86호)**: 셋째 연구실(KIST) · 코인셀 코팅 쌍에서 같은 병치가 반복된다 — "concrete contact" 한 이름 아래 XPS(계면층)와 SEM(공극)을 함께 두고, 정량은 Rc 와 GITT 피복률(둘 다 분극 채널)이다. 같은 지면의 첫 충전 등가가 정적 접촉 차를 ≈0 으로 묶어, 코팅이 막은 것은 첫 사이클 안의 화학 · 분극 몫이라는 쪽으로 읽힌다(전제 없이 · CV 몫 · 산포 위).
+→ **2026-09-29 (87호 · 종설)**: 같은 연구실(23 · 64호 계열 — JLU Giessen · KIT BELLA)의 설계 종설이 **두 기구를 문장마다 같은 저항 이름으로** 부른다 — 그림 3b 캡션 접촉 손실 → "increased interface resistances" · §2.3 산화 계면층 → "increased interfacial resistance, thereby impeding charge transfer"[12,49,61] · 그림 3c 점접촉 → "limit electrode kinetics" — 그리고 크기 손잡이 하나가 면적 × 계면층 성장을 함께 움직인다고 인쇄한다([37,49]). 23호 원전(Koerver 2017 *Chem. Mater.*)은 인용 0(참고문헌 전수 grep) · 계면층 쪽은 [12] = 64호 · 계면 반응[6,9,11,12]로만 · 가르는 입력 · 제안 0 — 1차 자료 0 이라 계보 표에 행을 두지 않는다.
 
 ## 무엇을 재면 가를 수 있나 (처방)
 
@@ -114,6 +115,7 @@ evidenceScope: multi-source-primary
 - **64호의 가역 면적형(4.6 V)을 접촉 호흡의 측정으로 주장하지 않는다** (2026-09-28) — τ 비 1.10–1.24 는 전제 · CPE 환산 · 로그 축 판독 위다. 그리고 **집전체 쪽 층이 셀 저항에 기여하지 않는다고 하지 않는다** — Li⁺ 차단 계면이라는 물리에서 그 경로를 묻는 것까지다.
 - **84호 셀의 노화를 계면층으로도 접촉 손실로도 배정하지 않는다** (2026-09-29) — 1단계 판독이 상태 이름표 해석에 따라 뒤집히고(τ ×1.94 ↔ ×0.85), Q · n 미인쇄 · 창 밖 과정 · 셀 하나씩이다. 저자도 두 기구를 한 R3 에 병치했다.
 - **86호 셀의 코팅 효과를 계면층 억제로도 접촉 면적 증가로도 배정하지 않는다** (2026-09-29) — 첫 충전 등가는 정적 고립 차의 상한(CV 몫 · 기생 전하 · 산포)이고, Rc · GITT 피복률은 분극 채널이며 `C` · 대칭 셀 · 온도가 없다. 저자도 두 기구를 "concrete contact" 한 이름 아래 병치했다.
+- **87호(종설)의 저항 어휘를 두 기구 중 어느 쪽의 근거로도 쓰지 않는다** (2026-09-29) — 1차 자료 0 이고, "한 이름 아래 병치" 가 설계 어휘에서도 반복된다는 표본까지다. 실험 편 수(아홉) · `R`·`C` 입력 편 수(다섯)는 그대로다.
 
 ## 관련
 
