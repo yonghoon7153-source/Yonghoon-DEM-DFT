@@ -983,6 +983,40 @@ def wa_group_contact(col):
             or re.fullmatch(r'area_(.+)_n', col) is not None)
 
 
+#: J20-g (1저자 비준 09-30 "권고대로" — *"하나하나씩 쳐내가자"*) — 인계표에는 **1저자와 함수 단위로 같이 확인한 웹앱 열만** 싣는다.
+#:   09-19 census ✅ 는 필요조건일 뿐이다.  함수 검토가 하나 끝날 때마다 (열 패턴, 검토 기록) 을 더한다 — 정본 = 체크리스트
+#:   `docs/lhs_handover_checklist_20260929.md` §5 함수 검토표 · 판정 J20-g.
+WA_REVIEWED = (
+    (r'area_(.+)_n', 'calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g'),
+)
+
+
+def wa_review_note(col):
+    """J20-g — 같이 확인한 열이면 검토 기록, 아니면 None."""
+    for pat, note in WA_REVIEWED:
+        if re.fullmatch(pat, col) is not None:
+            return note
+    return None
+
+
+def wa_reviewed(col):
+    """J20-g — 1저자와 같이 확인한 웹앱 열인가."""
+    return wa_review_note(col) is not None
+
+
+#: J20-f (A) (1저자 비준 09-30 "권고대로") — mono (2-type) 침대의 **상별** 웹앱 열은 빈칸 (N/A).  웹앱은 AM 이 한 종류인 덱의 AM 을
+#:   반지름으로 AM_P/AM_S 라 부른다 (`type_map_resolve` · r > 4 µm) — 설계 상과 이름이 어긋나는 침대가 있다 (130 의 5 · 64 의 4 예측).
+#:   수확기 coverage 상별 열과 같은 규약 (mono 는 P · S 둘 다 N_A_PHASE_ABSENT) · 값은 **총량** 열 (area_AM전체_SE_n 등) 이 싣는다.
+WA_PHASE_COL = re.compile(r'(^|_)AM_[PS](_|$)')
+MONO_PHASE_NOTE = ('mono (2-type) 침대는 빈칸 (N/A · J20-f (A)) — 웹앱이 단일 AM 을 반지름으로 AM_P/AM_S 라 불러 설계 상과 '
+                   '어긋날 수 있다 · 총량 열 (area_AM전체_SE_n 등) 을 쓸 것')
+
+
+def wa_phase_specific(col):
+    """AM_P / AM_S 한 상에 딸린 열인가 (상별 CN · 상별 쌍 개수) — AM전체 · 소문자 am_ 열은 아니다."""
+    return WA_PHASE_COL.search(col) is not None
+
+
 #: J20-a ⓓ (1저자 비준 09-28 밤 "권고하는걸로") — 상별 바닥 벽 · 플래튼 **접촉 입자 비율** (수확 v3 `wall_touch`).  CN 이 벽 · 플래튼
 #:   접촉을 세지 않아 벽에 닿은 입자의 CN 이 낮은 몫을 가르는 설명 변수.  규칙 = 수확기 `WALL_TOUCH_RULE` (z − r ≤ 0 · z + r ≥ plate_z).
 #:   벽 인접 입자를 뺀 CN 은 택하지 않았다 — AM_P 가 두께 2–10 개인 침대에서 남는 입자가 거의 없어 정의가 흔들린다.
@@ -1056,7 +1090,13 @@ def column_dictionary(cols, webapp=None):
             v = webapp['verdict'][c]
             why = webapp.get('why', {}).get(c) or '웹앱 파이프라인 산출 (코퍼스 case_master 와 같은 이름 · 같은 계산)'
             dfn = wa_define(c)                       # J20-a ⓒ — 접촉 위상 열은 정의를 먼저 (판정 근거는 괄호로 남긴다)
-            d.update(source='webapp', verdict=v, meaning=(f'{dfn[0]} (09-19 판정 근거: {why})' if dfn else why))
+            meaning = f'{dfn[0]} (09-19 판정 근거: {why})' if dfn else why
+            note = wa_review_note(c)                 # J20-g — 1저자 검토 기록
+            if note:
+                meaning += f' · 1저자 검토: {note}'
+            if wa_phase_specific(c):                 # J20-f (A)
+                meaning += ' · ' + MONO_PHASE_NOTE
+            d.update(source='webapp', verdict=v, meaning=meaning)
             d['caveat'] = dfn[1] if dfn else (CAVEAT_NAME if '이름 주의' in v else _frac_caveat(c))
         else:
             d.update(source='design', meaning='LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)')
@@ -1123,7 +1163,7 @@ def _dig(h, path):
     return cur
 
 
-def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp_groups=None):
+def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp_groups=None, wa_reviewed_only=True):
     """설계행 + 수확 (+ union) (+ 웹앱) → 인계용 행 리스트.  **순수 함수**(파일을 안 쓴다) 라 시험 가능하다.
 
     union (J19, 선택): `load_union` 산출 dict 또는 행 목록.  주면 설계 케이스 **전부**에 짝이 있어야 하고 (부분 병기 금지),
@@ -1186,6 +1226,9 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
         ok_cols = [c for c, v in (wv.get('verdict') or {}).items() if str(v).startswith('✅')]
         if webapp_groups == 'contact':
             ok_cols = [c for c in ok_cols if wa_group_contact(c)]
+        n_census_ok = len(ok_cols)
+        if wa_reviewed_only:                        # J20-g — 같이 확인한 열만 (CLI 는 항상 이 경로 · False 는 옛 기제 시험 전용)
+            ok_cols = [c for c in ok_cols if wa_reviewed(c)]
         have = set(cols)
         wa_take = [c for c in ok_cols if c not in have and c not in {n for n, _w in WA_ROW_COLS}]
         wa_coll = [c for c in ok_cols if c in have]
@@ -1198,7 +1241,8 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
         rep['tau_wall_status'] = collections.Counter()
     if wv is not None:
         rep.update(wa_collisions=wa_coll, wa_n_cols=len(wa_take), wa_status_counts=collections.Counter(),
-                   wa_porosity_absmax=0.0)
+                   wa_porosity_absmax=0.0, wa_reviewed_only=bool(wa_reviewed_only),
+                   wa_unreviewed_dropped=n_census_ok - len(ok_cols), wa_mono_phase_blanked=0)
     for r in rows:
         h = hv[r[key]]
         o = {c: r.get(c, '') for c in design_cols}
@@ -1245,8 +1289,19 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
             wr = (wv.get('rows') or {}).get(r[key]) if s in WA_OK_STATUS else None
             if s in WA_OK_STATUS and wr is None:
                 raise FillRefusal(f'{r[key]}: 배치 상태 {s} 인데 metrics_flat 행이 없다')
+            #  J20-f (A) — mono (2-type) 의 상별 열은 빈칸.  mono 인지 모르면 (수확 JSON 에 n_types 없음) 상별 열을 싣지 않고 거부한다
+            phase_cols = [c for c in wa_take if wa_phase_specific(c)]
+            nt = h.get('n_types')
+            if phase_cols and wr is not None and nt is None:
+                raise FillRefusal(f'{r[key]}: 수확 JSON 에 n_types 가 없다 — mono 인지 몰라 상별 웹앱 열 {phase_cols[:3]} 을 '
+                                  '실을 수 없다 (J20-f · 반지름 이름을 그대로 싣지 않는다)')
+            mono = nt is not None and int(nt) == 2
             for c in wa_take:
                 v = None if wr is None else wr.get(c)
+                if mono and wa_phase_specific(c):
+                    if v not in (None, ''):
+                        rep['wa_mono_phase_blanked'] += 1
+                    v = None
                 o[c] = '' if v is None else str(v)
             for name, wcol, hcol, _w in WA_QC:
                 o[name] = ''
@@ -1655,6 +1710,7 @@ def _selftest():
         h = _h(case, porosity_sphere_pct_RECORD_ONLY=eps_s, phi_se=0.5, phi_am=0.5 - eps_s / 100.0)
         h['phase_counts'] = {'AM_P': n_p, 'AM_S': n_s, 'SE': n_se}
         h['handover_qc'] = {'thickness_wall_gap_um': th}
+        h['n_types'] = 3                                      # J20-f — 수확 JSON 의 type 수 (bimodal)
         return h
 
     def _u(case, eps_s=11.0, th=34.0, eps_u=14.0, se=0.6, n_se=100, n_am=11, status='OK', ub='True'):
@@ -1798,7 +1854,7 @@ def _selftest():
                 'status': {'q1': {'status': st1, 'failed_stages': []}, 'q2': {'status': st2, 'failed_stages': ['Stage E']}},
                 'rows': {'q1': r1, 'q2': r2}}
     try:
-        _oa, _ca, _ra = build_handover(_dq, _hqs, webapp=_wa(st2='partial'))
+        _oa, _ca, _ra = build_handover(_dq, _hqs, webapp=_wa(st2='partial'), wa_reviewed_only=False)   # 옛 기제 (census ✅ 선별) 시험
         _ea = ''
     except Exception as e:                                                # noqa: BLE001
         _oa, _ca, _ra, _ea = [], [], {}, f'{type(e).__name__}: {e}'
@@ -1815,7 +1871,7 @@ def _selftest():
         and _a2.get('wa_status') == 'partial' and _a2.get('wa_failed_stages') == 'Stage E')
     _neg('⑲i ★ 웹앱 porosity ≠ 수확 porosity (0.05 %p 넘게) → 거부 — 다른 프레임의 웹앱 행을 붙이지 않는다',
          lambda: build_handover(_dq, _hqs, webapp=_wa(q2={'porosity': repr(20.5)})))
-    _oa3, _ca3, _ra3 = build_handover(_dq, _hqs, webapp=_wa(st2='REFUSED'))
+    _oa3, _ca3, _ra3 = build_handover(_dq, _hqs, webapp=_wa(st2='REFUSED'), wa_reviewed_only=False)
     _a3 = next((r for r in _oa3 if r['case_id'] == 'q2'), {})
     chk('⑲j 배치가 거부 · 실패한 행은 웹앱 열이 **빈칸** + wa_status (0 이 아니다) · 보고에 셈',
         _a3.get('wa_status') == 'REFUSED' and _a3.get('se_se_cn') == '' and _ra3.get('wa_status_counts', {}).get('REFUSED') == 1)
@@ -1897,7 +1953,7 @@ def _selftest():
             w['stop_after'] = stop
         return w
     try:
-        _og, _cg, _rg = build_handover(_dq, _hqs, webapp=_wa2('contact'), webapp_groups='contact')
+        _og, _cg, _rg = build_handover(_dq, _hqs, webapp=_wa2('contact'), webapp_groups='contact', wa_reviewed_only=False)
         _eg = ''
     except Exception as e:                                                # noqa: BLE001
         _og, _cg, _rg, _eg = [], [], {}, f'{type(e).__name__}: {e}'
@@ -1925,6 +1981,52 @@ def _selftest():
         chk(f'⑲u load_webapp stop_after ({type(e).__name__}: {e})', False)
     finally:
         shutil.rmtree(_tdw, ignore_errors=True)
+
+    #  ⑳ J20-g · J20-f (A) (1저자 비준 09-30 "권고대로") — 표에는 **1저자와 함수 단위로 같이 확인한 열만** 싣는다 (census ✅ 는 필요조건일 뿐)
+    #   · mono (2-type) 침대의 **상별** 웹앱 열 (AM_P/AM_S 이름이 든 열) 은 빈칸 — 웹앱은 mono 의 AM 을 반지름으로 AM_P/AM_S 라 부르고
+    #   설계 상과 어긋나는 침대가 있다 (130 의 5 · 64 의 4).  값은 총량 열 (area_AM전체_SE_n · area_SE_SE_n) 이 싣는다.
+    _vd3 = dict(_vd, am_am_cn='✅ 쓴다', AM_P_se_cn_mean='✅ 쓴다', AM_S_se_cn_mean='✅ 쓴다', area_SE_SE_n='✅ 쓴다',
+                area_AM_S_SE_n='✅ 쓴다', area_AM_P_SE_n='✅ 쓴다', **{'area_AM전체_SE_n': '✅ 쓴다'})
+
+    def _wa3():
+        w = _wa()
+        w['verdict'] = dict(_vd3)
+        w['why'] = {k: f'why:{k}' for k in _vd3}
+        w['stop_after'] = 'contact'
+        w['rows']['q1'].update(am_am_cn='1.2', AM_S_se_cn_mean='3.0', area_SE_SE_n='900', area_AM_S_SE_n='40',
+                               **{'area_AM전체_SE_n': '40'})                  # q1 = mono (웹앱 반지름 이름 AM_S)
+        w['rows']['q2'].update(am_am_cn='2.2', AM_P_se_cn_mean='7.0', AM_S_se_cn_mean='3.5', area_SE_SE_n='800',
+                               area_AM_P_SE_n='30', area_AM_S_SE_n='50', **{'area_AM전체_SE_n': '80'})
+        return w
+    _hq3 = {'q1': dict(_hqs['q1'], n_types=2), 'q2': dict(_hqs['q2'], n_types=3)}
+    try:
+        _o20, _c20, _r20 = build_handover(_dq, _hq3, webapp=_wa3(), webapp_groups='contact')
+        _e20 = ''
+    except Exception as e:                                                # noqa: BLE001
+        _o20, _c20, _r20, _e20 = [], [], {}, f'{type(e).__name__}: {e}'
+    _m20 = next((r for r in _o20 if r['case_id'] == 'q1'), {})
+    _b20 = next((r for r in _o20 if r['case_id'] == 'q2'), {})
+    chk('⑳a ★ J20-g — 기본은 같이 확인한 열만: 접촉 묶음 중 area_<쌍>_n 만 (se_se_cn · am_am_cn · AM_*_se_cn_* 은 아직 없다)'
+        + (f' — {_e20}' if _e20 else ''),
+        not _e20 and all(c in _c20 for c in ('area_SE_SE_n', 'area_AM_S_SE_n', 'area_AM_P_SE_n', 'area_AM전체_SE_n'))
+        and not any(c in _c20 for c in ('se_se_cn', 'am_am_cn', 'AM_P_se_cn_mean', 'AM_S_se_cn_mean')))
+    chk('⑳b ★ J20-f (A) — mono (n_types 2) 의 상별 쌍 칸은 빈칸 · 총량 쌍 (area_AM전체_SE_n · area_SE_SE_n) 은 값 · 보고에 셈',
+        _m20.get('area_AM_S_SE_n') == '' and _m20.get('area_AM전체_SE_n') == '40' and _m20.get('area_SE_SE_n') == '900'
+        and _r20.get('wa_mono_phase_blanked') == 1)
+    chk('⑳c bimodal (n_types 3) 은 상별 쌍 값 그대로',
+        _b20.get('area_AM_P_SE_n') == '30' and _b20.get('area_AM_S_SE_n') == '50' and _b20.get('area_AM전체_SE_n') == '80')
+    chk('⑳d 판별 — wa_reviewed (area_<쌍>_n 만) · wa_phase_specific (AM_P/AM_S 이름이 든 열 · AM전체 · 소문자 am_ 은 아님)',
+        'wa_reviewed' in globals() and 'wa_phase_specific' in globals()
+        and globals()['wa_reviewed']('area_AM_P_SE_n') and not globals()['wa_reviewed']('se_se_cn')
+        and globals()['wa_phase_specific']('area_AM_S_AM_S_n') and globals()['wa_phase_specific']('AM_P_se_cn_mean')
+        and not globals()['wa_phase_specific']('area_AM전체_SE_n') and not globals()['wa_phase_specific']('am_am_cn'))
+    _neg('⑳e ★ 상별 열을 싣는데 수확 JSON 에 n_types 가 없으면 거부 (mono 인지 모른다 — 반지름 이름을 그대로 싣지 않는다)',
+         lambda: build_handover(_dq, {k: {kk: vv for kk, vv in v.items() if kk != 'n_types'} for k, v in _hqs.items()},
+                                webapp=_wa3(), webapp_groups='contact'))
+    _d20 = {d['column']: d for d in column_dictionary(_c20, webapp=_wa3())} if _c20 else {}
+    chk('⑳f 열 사전 — 상별 쌍 열의 뜻에 mono 빈칸 규약 · 검토 기록 (J20-g)',
+        'mono' in _d20.get('area_AM_S_SE_n', {}).get('meaning', '')
+        and 'J20-g' in _d20.get('area_SE_SE_n', {}).get('meaning', ''))
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -2043,6 +2145,8 @@ if __name__ == '__main__':
         if _wv is not None:
             print(f'   J20 웹앱 ✅ {_rep["wa_n_cols"]} 열 · 행 상태 {dict(_rep["wa_status_counts"])} · '
                   f'같은 프레임 |Δporosity| 최대 {_rep["wa_porosity_absmax"]:.3e} %p · 이름 충돌 (수확 열 정본) {_rep["wa_collisions"]}')
+            print(f'   J20-g 같이 확인한 웹앱 열만 ({len(WA_REVIEWED)} 패턴) — 뺀 census ✅ 열 {_rep["wa_unreviewed_dropped"]} · '
+                  f'J20-f (A) mono 상별 칸 빈칸 {_rep["wa_mono_phase_blanked"]}')
         print(f'   빈칸 사유: {dict(_rep["blank_by_status"])}')
         for _k, _v in _rep['held_back'].items():
             print(f'   ⛔ 보류 열 `{_k}` — {_v}')
