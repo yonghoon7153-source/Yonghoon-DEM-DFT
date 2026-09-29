@@ -40,6 +40,7 @@
         [--root-from <코호트 경로 접두사> --root-to <실제 접두사>]
     python3 scripts/lhs_webapp_batch.py … --case lhs00_000       # 한 건 먼저 (시간 · 산출 확인)
     python3 scripts/lhs_webapp_batch.py … --stop-after contact   # ① 접촉 위상만 (묶음별 · 산출 폴더는 따로)
+    python3 scripts/lhs_webapp_batch.py … --stop-after coverage  # ① + 피복 (legacy Physics + physics v2 · network 없음)
     python3 scripts/lhs_webapp_batch.py --selftest
 
 산출 (`--out-dir`)
@@ -291,6 +292,9 @@ def run_batch(args, deps=None) -> int:
             if (rd / 'full_metrics.json').exists():
                 rows[case] = EM.row_for(rd)
                 rows[case]['case'] = case
+                #  physics v2 판정 (피복 단계) — 'blank: …' 도 done 이지만 사유가 status.json 에서 바로 보이게 한다
+                if rows[case].get('coverage_status_physics_v2') is not None:
+                    rec['coverage_status_physics_v2'] = rows[case]['coverage_status_physics_v2']
             else:
                 rec['status'] = 'failed'
                 rec.setdefault('failed_stages', []).append('full_metrics.json 없음')
@@ -310,6 +314,13 @@ def run_batch(args, deps=None) -> int:
     for r in status['cases'].values():
         counts[r['status']] = counts.get(r['status'], 0) + 1
     print('상태:', counts)
+    v2c = {}
+    for r in status['cases'].values():
+        if r.get('coverage_status_physics_v2') is not None:
+            k = 'ok' if r['coverage_status_physics_v2'] == 'ok' else 'blank'
+            v2c[k] = v2c.get(k, 0) + 1
+    if v2c:
+        print('physics v2 판정:', v2c, '(blank 사유는 status.json · metrics_flat.csv 의 coverage_status_physics_v2)')
     return 0 if not any(k not in KEEP_STATUS for k in counts) else 1
 
 
@@ -367,7 +378,10 @@ def _selftest() -> int:
                                   files=sorted(os.listdir(Path(os.environ['WEBAPP_UPLOAD_FOLDER']) / case))))
                 rd = Path(os.environ['WEBAPP_RESULTS_FOLDER']) / case
                 rd.mkdir(parents=True, exist_ok=True)
-                (rd / 'full_metrics.json').write_text(json.dumps({'se_se_cn': 4.25, 'percolation_pct': 97.0}))
+                _fm = {'se_se_cn': 4.25, 'percolation_pct': 97.0}
+                if kw.get('stop_after') == 'coverage':
+                    _fm['coverage_status_physics_v2'] = 'blank: 시험'
+                (rd / 'full_metrics.json').write_text(json.dumps(_fm))
                 return {'status': 'done', 'success': True, 'failed_stages': [],
                         'log': [{'step': 'Parse', 'rc': 0, 'ok': True}]}
 
@@ -547,6 +561,36 @@ def _selftest() -> int:
             r14f, k14f = _run14({1: 'AM_P', 2: 'AM_S', 3: 'SE'})
             chk('⑭f 3-type 은 그대로 — 같은 이름이면 done · 접음 기록 없음',
                 r14f.get('status') == 'done' and k14f == 1 and not r14f.get('type_map_fold'))
+            # ⑮–⑯ cap (physics) coverage v2 인계 (1저자 09-29 밤 — 새 판 병기 · `stop_after='coverage'` 로 ① + cap coverage 한 번에).
+            #   `--stop-after coverage` 는 웹앱 파이프라인을 접촉 → 피복 단계까지 돌린다 (network · Stage E 없음).  산출 폴더에
+            #   모드를 새기고, 다른 모드 (전체 · 접촉만) 와 어느 방향으로도 섞지 않는다.
+            out_v = tmp / 'out_coverage'
+            base_v = ['--harvest-dir', str(hdir), '--cohort', str(coh), '--work', str(tmp / 'work_v'), '--out-dir', str(out_v)]
+            n1 = len(calls)
+            try:
+                rc15 = run_batch(_parse(base_v + ['--stop-after', 'coverage']), deps)
+            except SystemExit as e:                         # 옛 파서 — choices 에 coverage 가 없다
+                rc15 = f'SystemExit {e.code}'
+            st15 = json.loads((out_v / 'status.json').read_text(encoding='utf-8')) if (out_v / 'status.json').exists() else {}
+            r15 = st15.get('cases', {}).get('lhs00_900') or {}
+            chk('⑮ ★ --stop-after coverage → run_pipeline(stop_after="coverage") · status.json 최상위 · 케이스에 stop_after 기록 · '
+                'v2 판정 (coverage_status_physics_v2) 이 케이스 기록에 보인다',
+                rc15 == 0 and len(calls) == n1 + 1 and calls[-1].get('stop_after') == 'coverage'
+                and st15.get('stop_after') == 'coverage' and r15.get('stop_after') == 'coverage'
+                and r15.get('coverage_status_physics_v2') == 'blank: 시험')
+            _mix = []
+            for _lbl, _argv in (('피복만 폴더 ← 접촉만', base_v + ['--stop-after', 'contact', '--force']),
+                                ('피복만 폴더 ← 전체', base_v + ['--force']),
+                                ('접촉만 폴더 ← 피복만', base_c + ['--stop-after', 'coverage', '--force']),
+                                ('전체 폴더 ← 피복만', base + ['--stop-after', 'coverage', '--force'])):
+                try:
+                    _rc = run_batch(_parse(_argv), deps)
+                except SystemExit as e:
+                    _rc = f'SystemExit {e.code}'
+                if _rc != 2:
+                    _mix.append(f'{_lbl}: rc {_rc}')
+            chk(f'⑯ ★ 피복만 폴더 ↔ 접촉만 · 전체 폴더 — 어느 방향으로 섞어도 거부 (rc 2 · 실행 0)  {_mix or ""}',
+                not _mix and len(calls) == n1 + 1)
         finally:
             for k, v in env_keep.items():
                 if v is None:
@@ -570,8 +614,10 @@ def _parse(argv=None):
     ap.add_argument('--root-from', default='', help='코호트 경로 접두사')
     ap.add_argument('--root-to', default='', help='실제 경로 접두사로 치환')
     ap.add_argument('--force', action='store_true', help='done · partial 도 다시 돌린다')
-    ap.add_argument('--stop-after', choices=['contact'], default=None,
-                    help='웹앱 파이프라인을 이 단계에서 멈춘다 — contact = 접촉 분석까지 (① 접촉 위상 · network · Stage E 없음). '
+    ap.add_argument('--stop-after', choices=['contact', 'coverage'], default=None,
+                    help='웹앱 파이프라인을 이 단계에서 멈춘다 — contact = 접촉 분석까지 (① 접촉 위상 · network · Stage E 없음) · '
+                         'coverage = 접촉 → 피복까지 (① + legacy Physics · physics v2 피복 — `*_physics_v2` 키 · network · '
+                         'Stage E 없음; 피복 단계가 v2 판정을 안 쓰면 그 케이스는 failed). '
                          '산출 폴더에 모드가 새겨지고 다른 모드와 섞으면 거부한다')
     ap.add_argument('--selftest', action='store_true')
     return ap.parse_args(argv)

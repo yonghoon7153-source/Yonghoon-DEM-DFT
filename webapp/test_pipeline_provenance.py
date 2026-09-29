@@ -449,7 +449,7 @@ def main():
             _t10c = 'ValueError'
         except TypeError as _e:
             _t10c = f'TypeError: {_e}'
-        chk(f'T10c) stop_after 가 contact 가 아니면 ValueError — 조용히 전체를 돌지 않는다 ({_t10c})', _t10c == 'ValueError')
+        chk(f'T10c) stop_after 가 None · contact · coverage 가 아니면 ValueError — 조용히 전체를 돌지 않는다 ({_t10c})', _t10c == 'ValueError')
         shutil.rmtree(res_dir, ignore_errors=True)
         ps._RUNNER = make_runner(contact_rc=1)
         try:
@@ -457,6 +457,81 @@ def main():
         except TypeError as _e:
             _o10d = {'status': f'TypeError: {_e}'}
         chk('T10d) stop_after=contact 이어도 접촉 분석 실패는 failed (기존 계약 그대로)', _o10d.get('status') == 'failed')
+
+        # T11 (LHS cap coverage 인계 · 1저자 09-29 밤 *"stop_after='coverage' 로 ① + cap coverage 한 번에"*): stop_after='coverage'
+        #   는 피복 단계 (`coverage_physics_vs_hertzian.py`) 에서 멈춘다 — 그때까지의 명령은 전체 실행의 **앞부분과 인자까지
+        #   같고** network · Stage E 는 돌지 않는다.  이 모드의 산출물은 피복 단계 **자체**라 계약이 전체 실행보다 엄하다:
+        #   required + 내용 검증 (이번 피복 단계가 full_metrics.json 에 physics v2 판정을 썼는가).  옛 피복 스크립트는
+        #   데이터 폴더가 코드 밖이면 "[skip]" 을 찍고 **rc 0 으로 아무것도 안 썼다** — 그것을 done 으로 받지 않는다.
+        def make_cov_runner(contact_rc=0, cov_writes=True, cov_rc=0):
+            """make_runner + 피복 스크립트 흉내 (full_metrics.json 에 v2 판정 키를 얹는다 — 실제 스크립트와 같은 자리)."""
+            _base = make_runner(contact_rc=contact_rc)
+
+            def _r(cmd, **kw):
+                script = os.path.basename(str(cmd[1])) if len(cmd) > 1 else ''
+                if script != 'coverage_physics_vs_hertzian.py':
+                    return _base(cmd, **kw)
+                _base.calls.append(cmd)
+                if cov_writes:
+                    _fm = os.path.join(res_dir, 'full_metrics.json')
+                    _d = json.load(open(_fm)) if os.path.exists(_fm) else {}
+                    _d['coverage_status_physics_v2'] = 'ok'
+                    with open(_fm, 'w') as _f:
+                        json.dump(_d, _f)
+                return subprocess.CompletedProcess(cmd, cov_rc, '', '')
+            _r.calls = _base.calls
+            return _r
+
+        def _run11(mode, tm, stop, **rk):
+            shutil.rmtree(res_dir, ignore_errors=True)
+            _r = make_cov_runner(**rk)
+            ps._RUNNER = _r
+            _kw = {'figures': False, 'auto_db': False}
+            if stop:
+                _kw['stop_after'] = stop
+            try:
+                _o = webapp.run_pipeline('case1', mode, tm, 1000, **_kw)
+            except (TypeError, ValueError) as _e:           # 옛 코드 — 'coverage' 를 모른다
+                _o = {'status': f'{type(_e).__name__}: {_e}'}
+            return _r, _o
+        for _mode, _tm, _cs in (('standard', '1:AM,3:SE', 'analyze_contacts.py'),
+                                ('bimodal', '1:AM_P,2:AM_S,3:SE', 'analyze_contacts_bimodal.py')):
+            _rf, _of = _run11(_mode, _tm, None)
+            _rs, _os11 = _run11(_mode, _tm, 'coverage')
+            _ss = _scripts(_rs)
+            chk(f'T11a) ★ {_mode} stop_after=coverage: 접촉 → 피복 에서 끝난다 (network · Stage E 없음) · done · stopped_after 표지'
+                f' ({_os11.get("status")})',
+                _ss[-2:] == [_cs, 'coverage_physics_vs_hertzian.py'] and 'network_conductivity.py' not in _ss
+                and 'run_network_full_corrections.py' not in _ss
+                and _os11.get('status') == 'done' and _os11.get('stopped_after') == 'coverage')
+            chk(f'T11b) ★ {_mode} 멈춘 실행의 명령 = 전체 실행의 앞부분 (인자까지 같다)',
+                len(_rs.calls) >= 3 and [list(map(str, c)) for c in _rs.calls]
+                == [list(map(str, c)) for c in _rf.calls[:len(_rs.calls)]])
+            _rn, _on = _run11(_mode, _tm, 'coverage', cov_writes=False)
+            _rfn, _ofn = _run11(_mode, _tm, None, cov_writes=False)
+            chk(f'T11c) ★ {_mode} 피복 rc 0 인데 v2 판정을 안 썼다 → failed (조용한 초록 아님) · 전체 실행의 optional 계약은 그대로'
+                f' ({_on.get("status")} · 전체 {_ofn.get("status")})',
+                _on.get('status') == 'failed' and _on.get('stopped_after') == 'coverage'
+                and any('Coverage' in str(s) for s in _on.get('failed_stages', []))
+                and _ofn.get('status') == 'done')
+            _rr, _or = _run11(_mode, _tm, 'coverage', cov_rc=1)
+            chk(f'T11d) {_mode} 피복 rc 1 → failed ({_or.get("status")})',
+                _or.get('status') == 'failed' and _or.get('stopped_after') == 'coverage')
+        _t11e = []
+        for _bad in ('network', 'Coverage', 'coverage ', '', 'stage_e', 0, False):
+            shutil.rmtree(res_dir, ignore_errors=True)
+            ps._RUNNER = make_cov_runner()
+            try:
+                webapp.run_pipeline('case1', 'standard', '1:AM,3:SE', 1000, stop_after=_bad)
+                _t11e.append(f'{_bad!r}: no error')
+            except ValueError:
+                pass
+            except TypeError as _e:
+                _t11e.append(f'{_bad!r}: TypeError {_e}')
+        chk(f'T11e) None · contact · coverage 밖의 값은 전부 ValueError (조용히 전체를 돌지 않는다) {_t11e}', not _t11e)
+        _rc, _oc = _run11('standard', '1:AM,3:SE', 'coverage', contact_rc=1)
+        chk('T11f) stop_after=coverage 이어도 접촉 분석 실패는 failed · 피복은 돌지 않는다',
+            _oc.get('status') == 'failed' and 'coverage_physics_vs_hertzian.py' not in _scripts(_rc))
     finally:
         ps._RUNNER = prev_runner
         for k, v in prev_env.items():

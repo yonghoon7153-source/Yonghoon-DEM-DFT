@@ -1032,5 +1032,8 @@ clamp · `ψ ≤ 1e-4` 의 `Rc = 0` · `b = r_min` · 재료 계수 · 면적 ·
 
 **닫히지 않은 것**: 원장 `DESC-03` · `L1-01` · `L1-02` 의 상태는 이 절이 바꾸지 않는다 (v2 는 병기일 뿐) ·
 `L1-03` (모든 상 쌍에 AM–SE E* · SE 경도) 은 v2 에서도 그대로 · v2 의 코퍼스 규모는 **미측정**이다
-(원자료가 있는 기계에서 `coverage_physics_vs_hertzian.py` 를 다시 돌리거나 LHS 배치 `--stop-after coverage`).
+(원자료가 있는 기계에서 `coverage_physics_vs_hertzian.py` 를 다시 돌리거나 LHS 배치 `--stop-after coverage` —
+웹앱 `run_pipeline(stop_after='coverage')` = 접촉 → 피복에서 멈춤, network · Stage E 없음).  ⚠ 인계표 생성기
+`scripts/lhs_design_dataset.py` 는 아직 `--webapp-groups contact` 만 알아서 `stop_after=coverage` 배치 폴더를
+**거부**한다 (fail-closed) — coverage 묶음 (legacy Physics + `*_physics_v2` 열 · 열 사전) 은 별건이다.
 회귀: `scripts/plastic_coverage.py --selftest` ⑪–⑱ · `scripts/coverage_physics_vs_hertzian.py --selftest`.

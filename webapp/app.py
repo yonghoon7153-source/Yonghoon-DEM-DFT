@@ -3150,11 +3150,49 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
     return stages, prov.get('network_run_id')
 
 
-def _stopped_after_contact(stages, log):
-    """`run_pipeline(stop_after='contact')` 의 반환 — 지금까지의 단계로 상태를 판정한다 (끝의 판정과 같은 `_ps.summarize`)."""
+#: `run_pipeline(stop_after=…)` 이 받는 값 — 이 밖의 값은 ValueError (조용히 전체를 돌지 않는다).
+#:   'contact'  = 접촉 분석까지 (LHS ① 접촉 위상 — 1저자 09-29 밤 "단독적으로 하나씩")
+#:   'coverage' = 접촉 → 피복 (Hertz 명명 · legacy Physics · physics v2) 까지 — network · Stage E 없음
+#:                (1저자 09-29 밤 cap (physics) coverage 새 판 병기 — "① + cap coverage 한 번에")
+PIPELINE_STOP_AFTER = (None, 'contact', 'coverage')
+
+
+def _stopped_after(stages, log, where):
+    """`run_pipeline(stop_after=where)` 의 반환 — 지금까지의 단계로 상태를 판정한다 (끝의 판정과 같은 `_ps.summarize`)."""
     status, failed_stages = _ps.summarize(stages)
     return {'success': status != 'failed', 'status': status, 'log': log, 'network_run_id': None,
-            'failed_stages': [s.get('step') for s in failed_stages], 'stopped_after': 'contact'}
+            'failed_stages': [s.get('step') for s in failed_stages], 'stopped_after': where}
+
+
+def _coverage_v2_written(results_dir):
+    """`stop_after='coverage'` 의 내용 계약 — 이번 피복 단계가 이 침대의 physics v2 **판정**을 full_metrics.json 에 썼는가.
+
+    접촉 단계는 causal (옛 full_metrics 를 치우고 빈 자리에서 새로 쓴다) 이라, 그 뒤에 `coverage_status_physics_v2` 가 있으면
+    이번 피복 단계가 쓴 것이다.  ★ 옛 피복 스크립트는 데이터 폴더가 코드 밖이면 (worktree 런처 · LHS 배치) "[skip]" 을 찍고
+    **rc 0 으로 아무것도 안 썼다** — 그것을 done 으로 받지 않는다.
+    ⚠ 값이 'ok' 인지는 보지 않는다 — 'blank: …' 도 이 침대에 대한 v2 의 판정이다 (사유가 행에 남는다).
+    """
+    try:
+        with open(os.path.join(results_dir, 'full_metrics.json'), encoding='utf-8') as _f:
+            _fm = json.load(_f)
+    except Exception:                                              # noqa: BLE001 — 못 읽으면 판정 없음 = 실패
+        return False
+    return isinstance(_fm, dict) and isinstance(_fm.get('coverage_status_physics_v2'), str)
+
+
+def _coverage_stage(cmd, results_dir, stop_after):
+    """피복 단계 (`coverage_physics_vs_hertzian.py`).  명령은 두 모드에서 **같다** (test_pipeline_provenance T11b).
+
+    전체 실행: optional · 산출물 계약 없음 (옛 계약 그대로).
+    stop_after='coverage': 이 모드의 산출물이 곧 피복 단계라 **required + 내용 검증** (`_coverage_v2_written`) —
+    실패하면 status 가 failed 가 되어 배치가 재개 때 다시 돈다 (partial 은 건너뛴다).
+    """
+    if stop_after == 'coverage':
+        return _ps.run_stage('Coverage Physics vs Hertzian', cmd, required=True,
+                             expects=('full_metrics.json',), results_dir=results_dir,
+                             verify=_coverage_v2_written)
+    return _ps.run_stage('Coverage Physics vs Hertzian', cmd, required=False,
+                         expects=(), results_dir=results_dir)
 
 
 def run_pipeline(case_id, mode, type_map, scale=1000,
@@ -3170,13 +3208,19 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
                        ★ 두 키워드는 LHS 일괄 배치 (`scripts/lhs_webapp_batch.py`, 2026-09-28) 용이다 — 130 건에
                          그림 수백 장과 동시 DB 재구축 130 번은 필요 없다.  기본값 = 웹앱 동작 그대로
                          (test_pipeline_provenance T9: 뺀 것은 그림 · DB 뿐이고 계산 단계 순서가 같다).
-    stop_after       : None (기본 · 전 단계) 또는 'contact' — 접촉 분석 단계 (`analyze_contacts[_bimodal].py`) 가
-                       성공하면 거기서 멈춘다 (network · Stage E · 고급 분석 없음).  ★ LHS 묶음별 채우기
-                       (1저자 2026-09-29 밤 "단독적으로 하나씩") 용 — 멈추기 전 명령은 전체 실행과 **인자까지 같다**
-                       (test_pipeline_provenance T10).  다른 값은 ValueError (조용히 전체를 돌지 않는다).
+    stop_after       : None (기본 · 전 단계) · 'contact' · 'coverage' (`PIPELINE_STOP_AFTER`).
+                       'contact'  — 접촉 분석 단계 (`analyze_contacts[_bimodal].py`) 가 성공하면 거기서 멈춘다
+                                    (network · Stage E · 고급 분석 없음).  ★ LHS 묶음별 채우기
+                                    (1저자 2026-09-29 밤 "단독적으로 하나씩") 용.
+                       'coverage' — 접촉 → 피복 (`coverage_physics_vs_hertzian.py` — legacy Physics + physics v2)
+                                    에서 멈춘다 (network · Stage E 없음).  ★ cap (physics) coverage 새 판 인계
+                                    (1저자 09-29 밤).  이 모드에서는 피복 단계가 **required + 내용 검증**이다
+                                    (`_coverage_stage` — rc 0 인데 판정을 안 쓴 실행은 failed).
+                       멈추기 전 명령은 전체 실행과 **인자까지 같다** (test_pipeline_provenance T10 · T11).
+                       다른 값은 ValueError (조용히 전체를 돌지 않는다).
     """
-    if stop_after not in (None, 'contact'):
-        raise ValueError(f"stop_after={stop_after!r} — None 또는 'contact' 만 허용")
+    if stop_after not in PIPELINE_STOP_AFTER:
+        raise ValueError(f"stop_after={stop_after!r} — None · 'contact' · 'coverage' 만 허용")
     # Clear pyc cache to ensure latest code runs
     import glob as globmod
     scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
@@ -3322,15 +3366,17 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
             return {'error': f'Contact analysis failed: {_st["stderr"][-300:]}',
                     'success': False, 'status': 'failed', 'log': log, 'failed_stages': [_st['step']]}
         if stop_after == 'contact':
-            return _stopped_after_contact(stages, log)
+            return _stopped_after(stages, log, 'contact')
 
         # Step 2b: Dual-mode coverage + AM-SE/SE-SE totals (Hertzian vs Physics).
         # Writes coverage_AM_*_mean_physics, area_AM전체_SE_total_physics,
         # area_SE_SE_total_physics into full_metrics.json + coverage_per_am.csv.
+        # (+ physics v2 `*_physics_v2` 키 — legacy 옆에, 2026-09-29)
         cmd = [sys.executable, os.path.join(scripts, 'coverage_physics_vs_hertzian.py'), case_id]
-        _st = _ps.run_stage('Coverage Physics vs Hertzian', cmd, required=False,
-                            expects=(), results_dir=results_dir)
+        _st = _coverage_stage(cmd, results_dir, stop_after)
         stages.append(_st); log.append(_st)
+        if stop_after == 'coverage':
+            return _stopped_after(stages, log, 'coverage')
 
         # Step 2c-2d: Network baseline (또는 보존 복원) → Stage E.
         #   ★ 한 곳(_network_and_stage_e)에서만 수행한다 — 옛 구조는 bimodal 과 standard 가
@@ -3401,15 +3447,17 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
             return {'error': f'Contact analysis failed: {_st["stderr"][-300:]}',
                     'success': False, 'status': 'failed', 'log': log, 'failed_stages': [_st['step']]}
         if stop_after == 'contact':
-            return _stopped_after_contact(stages, log)
+            return _stopped_after(stages, log, 'contact')
 
         # Dual-mode coverage + AM-SE/SE-SE totals (Hertzian vs Physics).
         # Populates *_mean_physics and area_*_total_physics keys in
         # full_metrics.json + coverage_per_am.csv (COMSOL-ready).
+        # (+ physics v2 `*_physics_v2` 키 — legacy 옆에, 2026-09-29)
         cmd = [sys.executable, os.path.join(scripts, 'coverage_physics_vs_hertzian.py'), case_id]
-        _st = _ps.run_stage('Coverage Physics vs Hertzian', cmd, required=False,
-                            expects=(), results_dir=results_dir)
+        _st = _coverage_stage(cmd, results_dir, stop_after)
         stages.append(_st); log.append(_st)
+        if stop_after == 'coverage':
+            return _stopped_after(stages, log, 'coverage')
 
         # Network baseline (또는 보존 복원) → Stage E — bimodal 과 **같은 함수**를 쓴다.
         _net_stages, _net_run_id = _network_and_stage_e(
