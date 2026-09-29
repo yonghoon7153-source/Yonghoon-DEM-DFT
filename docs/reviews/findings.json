@@ -5950,7 +5950,9 @@
   {
    "id": "LHS-21",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
+   "claimed_fixed_sha": "06b24cdd0",
+   "verification_note": "06b24cdd0 (7b · J20-k (B)): 설계 block 이 정한 상 칸 (n_AM_P_measured 또는 n_AM_S_measured) 에 phase_counts.AM 을 싣는다 · 인계표 130×139 · 64×141 재생성에서 mono 46/46 행 채워짐 (설계 상 칸 ↔ phase_counts.AM 차이 0) · 회귀 = lhs_design_dataset.py --selftest ⑯d · ⑯d2 (옛 코드 실패 → 137/137).  독립 검증자 (Codex) 는 아직.",
    "owner": "claude",
    "found_by": "claude (09-29 · 1저자 질문 \"coverage 는 어떻게 결정된 거야\" 에 답하며 64 인계표 판독)",
    "opened_in": "docs/lhs_handover_checklist_20260929.md",

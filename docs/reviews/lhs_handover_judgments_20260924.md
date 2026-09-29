@@ -701,7 +701,7 @@
 
 - 규칙: 09-19 census ✅ 는 **필요조건**일 뿐이다 — 인계표 생성기 (`lhs_design_dataset.py`) 가 `WA_REVIEWED` (열 패턴 · 검토 기록) 에 든 열만 싣는다 (`build_handover(wa_reviewed_only=True)` 기본 · CLI 는 항상 이 경로 · False 는 옛 기제 시험 전용).
   함수 검토가 하나 끝날 때마다 패턴을 더한다 — 지금 = `area_(.+)_n` (`calc_interface_area` · 09-30 검토 · 수정 불요).  열 사전 뜻에 검토 기록을 붙인다.
-- J20-f (A) 구현: 수확 JSON `n_types` = 2 인 침대는 상별 웹앱 열을 빈칸으로 (보고 `wa_mono_phase_blanked`) · `n_types` 가 없는데 상별 열을 실어야 하면 **거부** (반지름 이름을 그대로 싣지 않는다) · 열 사전에 mono 규약 문구.
+- J20-f (A) 구현: 수확 JSON `n_types` = 2 인 침대는 상별 웹앱 열을 빈칸으로 (보고 `wa_mono_phase_blanked`) · `n_types` 가 없는데 상별 열을 실어야 하면 **거부** (반지름 이름을 그대로 싣지 않는다) · 열 사전에 mono 규약 문구.  ⚠ **09-30 저녁 (B) 로 개정 (J20-k · 7b · `06b24cdd0`)** — 이 줄은 09-30 오전 판 기록이다 · 지금 생성기는 설계 상 칸에 채우고 보고 키도 `wa_mono_design_filled` · `wa_mono_renamed_cases` · `wa_mono_absent_blanked` 로 바뀌었다.
 - 시험 먼저: ⑳a–f (옛 코드 96/101 — 새 5 실패 · ⑳c 는 bimodal 이라 원래 통과) → 101/101.  옛 기제 시험 ⑲f · ⑲j · ⑲q 는 `wa_reviewed_only=False` 로 census · 묶음 선별을 계속 시험한다 · 픽스처 `_hq` 에 `n_types` 3.
 - 함수 검토 순서 (체크리스트 §5): 계면 개수 ✅ → SE–SE CN → AM–AM CN → AM 고립 · 나머지 분석은 그 묶음 차례에.
 - ✅ **적용 (09-30)**: WSL 배치 130/130 · 64/64 done (원자료 `docs/data/lhs_webapp_contact_20260929/` README) → `lhs_handover_20260930.csv` 130×133 · `lhsx_handover_20260930.csv` 64×135 — 새 열 12 (`area_<쌍>_n` 7 · `wa_status` · `wa_failed_stages` · QC 3) · 뺀 census ✅ 접촉 열 15 · mono 상별 칸 빈칸 60 · 32 · 같은 프레임 |Δporosity| ≤ 2.5e-10 %p · 옛 칸 변경 0 · QC coverage |Δ| ≤ 1.4e-14.  수확은 v2 (20260925) 로 불렀다 (v3 새 열 = 벽 τ · 벽 접촉은 같이 확인 전 · 기존 값 v2 = v3).
