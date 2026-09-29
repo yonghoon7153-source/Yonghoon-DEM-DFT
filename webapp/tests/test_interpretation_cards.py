@@ -1255,6 +1255,70 @@ def test_deviation_tiers_match_the_csv(client):
     assert f"나머지 <b>다섯</b>이 <b>25~{max(dev.values()):.0f} %p</b> 어긋난다" in h
 
 
+def _x002_measurable(rows):
+    """x = 0.02 에서 **잴 수 있는 칸** — 게이트 통과 + 보호율 정의 (양쪽 다 TM 인산염이 없는 칸은 빈칸)."""
+    return [r for r in rows if _fnum(r["x_Nd"]) == 0.02 and r["gate_pass"] == "True"
+            and _fnum(r["protection_observed"]) is not None]
+
+
+def test_s2b_lead_separates_gate_pass_from_fit_and_scopes_x002(client):
+    """⛔음성 — §2b 요지 줄(접어도 보이는 한 줄)이 '통과' 를 '식이 맞음' 으로 읽히게 두지 않고,
+    x = 0.02 값을 한 열에서 가져왔다는 것을 밝힌다 (2026-09-29).
+    잡는 것: '17 통과(NMC811 6/6)' 만 식 바로 뒤에 둠 — NMC811 은 식이 3.5 V 한 열에서만 맞는다 ·
+      식이 맞는 셋의 분모(견줄 수 있는 열) 누락 · x = 0.02 의 10.3 % 를 열 없이 씀 (LiCoO₂ 4.3 V 한 열 값) ·
+      x = 0.02 칸 전체 범위·개수가 자료와 다름 · 본문 상자에 같은 한정이 없음."""
+    rows = _prot_rows()
+    _, _, _, _, full = _prot_counts(rows)
+    dev, _ = _prot_deviation(rows, full)
+    good = [c for c in dev if dev[c] <= 3.11]
+    assert len(good) == 3 and len(dev) == 11, (len(good), len(dev))
+    s2b = _section(_report_html(client), "s2b")
+    lead = re.search(r'<span class="sec-one">(.*?)</span></summary>', s2b, re.S).group(1)
+    assert "식이 맞았다는 뜻이 아니다" in lead, "요지가 게이트 통과와 식의 적중을 가르지 않는다"
+    assert f"견줄 수 있는 <b>{len(dev)} 중 셋</b>" in lead, "식이 맞는 셋의 분모가 요지에 없다"
+    ref = [r for r in rows if r["cathode"] == "LiCoO2" and r["voltage_V"] == "4.3" and _fnum(r["x_Nd"]) == 0.02]
+    assert len(ref) == 1
+    assert f"LiCoO₂ 4.3 V 에서 <b>{100 * float(ref[0]['protection_observed']):.1f} %</b>" in lead, \
+        "x = 0.02 값에 열(LiCoO₂ 4.3 V)이 없거나 자료와 다르다"
+    m = _x002_measurable(rows)
+    vals = [float(r["protection_observed"]) for r in m]
+    lo, hi = (f"{round(100 * v):d}".replace("-", "−") for v in (min(vals), max(vals)))
+    assert f"잴 수 있는 x = 0.02 칸 {len(m)} 개 전체로는 <b>{lo}~{hi} %</b>" in lead, \
+        f"요지의 x = 0.02 범위가 자료({len(m)} 칸 · {lo}~{hi} %)와 다르다"
+    box = s2b[s2b.index("는 곡선 어디에 있나"):]
+    assert "<b>LiCoO₂ 4.3 V 한 열</b>" in box and f"x = 0.02 칸 <b>{len(m)} 개</b>" in box \
+        and f"<b>{lo}~{hi} %</b>" in box, "본문 상자에 한 열 한정·전체 범위가 없다"
+    worst = min(m, key=lambda r: float(r["protection_observed"]))
+    assert (worst["cathode"], worst["voltage_V"]) == ("NMC811", "4.5"), (worst["cathode"], worst["voltage_V"])
+    assert max(m, key=lambda r: float(r["delta_x"])) is worst, "음수 칸이 |Δx| 최대 칸이 아니다 — 상자 문장이 틀렸다"
+    assert f"<b>{float(worst['delta_x']):.3f}</b>" in box, "음수 칸의 |Δx| 가 자료와 다르다"
+
+
+def test_s2b_reading_box_ladder_and_thiophosphate_scope(client):
+    """⛔음성 — §2b 읽는 법 상자의 계수 사다리가 §2 Fig. 1 CSV 와 같고, P₂S₇ 칸 범위가 자료와 같다 (2026-09-29).
+    잡는 것: 사다리에서 4.0 V 의 Nd(PO₃)₃(3) 이 빠져 k 가 단조로 읽힘 · 분해 그림 SI 이동 뒤 남은
+      '(c) 는 장식이 아니라 계수다' (지금 (c) 는 Fig. 3 의 비교 게이트다) · P₂S₇ 를 '4.5 V' 한정으로 씀."""
+    import csv as _csv
+    s2b = _section(_report_html(client), "s2b")
+    box = s2b[s2b.index("읽는 법 — 세 패널이 한 사슬이다"):s2b.index("P₂S₇ 칸은")]
+    sub = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
+    phase = list(_csv.DictReader(open(REPORT.parent / "cei_nd_phase_x002.csv", encoding="utf-8")))
+    ks = {r["nd_phase"]: int(float(r["p_per_nd_k"])) for r in phase if float(r["p_per_nd_k"]) > 0}
+    assert ks.get("Nd(PO3)3") == 3 and len(ks) == 4, f"Fig. 1 CSV 의 인산염 사다리가 바뀌었다 — {ks}"
+    for f, k in ks.items():
+        assert f"{f.translate(sub)}({k})" in box, f"읽는 법 사다리에 {f}({k}) 가 없다"
+    assert "(c) 는 장식이 아니라" not in s2b, "SI 이동 전의 '(c)' 참조가 남았다 — 지금 (c) 는 Fig. 3 의 게이트다"
+    assert "§2 Fig. 1 은 장식이 아니라 계수다" in box
+    rows = _prot_rows()
+    thio = [r for r in rows if (r["P_to_thiophosphate"] or "").strip()]
+    assert thio and all("P2S7" in r["P_to_thiophosphate"] for r in thio)
+    assert {r["cathode"] for r in thio} == {"LiCoO2", "LiMnO2"}, sorted({r["cathode"] for r in thio})
+    para = s2b[s2b.index("P₂S₇ 칸은"):]
+    para = para[:para.index("</p>")]
+    assert f"P₂S₇ 가 나오는 <b>{len(thio)} 칸</b>" in para and "LiMnO₂" in para, \
+        f"P₂S₇ 칸 범위가 자료({len(thio)} 칸 · LiCoO₂·LiMnO₂)와 다르다"
+
+
 def test_resume_block_does_not_carry_retracted_numbers(client):
     """양성 — 새 세션이 **먼저 읽는** kb/open_items.md ⏭ 블록이 화면과 같은 수를 말한다.
 
