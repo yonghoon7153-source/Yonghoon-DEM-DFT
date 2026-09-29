@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 151편 · 생성 2026-09-27
+> digest 152편 · 생성 2026-09-29
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -57,7 +57,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zunker2024_mdr_contact_model_partI` | 층(2.75) 발견 — 점착 탄소성 입자의 역학적으로 유도된 접촉모델, Part I: 차원축소법(MDR) — Zunker & Kamrin (J. Mech. Phys. Solids 2024) | contact-mechanics theory (MDR) + FEM(Abaqus) 검증 | 2026-08-25 | — |
 | `zunker2025_dem_large_deformation_compaction` | 실험검증된 대변형 압밀 DEM (Experimentally validated DEM for large deformation powder compaction: mechanically-derived contact model and screening of non-physical contacts) — Zunker, Dunatun | DEM (LAMMPS, MDR 접촉모델 다체 확장) + MPFEM(Abaqus) 검증 + 제약 tableti | 2026-08-25 | — |
 
-## 복합양극 미세구조 · percolation (26편)
+## 복합양극 미세구조 · percolation (27편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -67,6 +67,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `cronk2026_lis_positive_electrode_geometry_fem` | 확률적 voxel 기하 생성(MATLAB) + TauFactor τ + FEM 팽창응력으로 설계한 Li–S 전환형 양극 (LPSCl 촉매전해질) — 11 mAh cm⁻² · 10 MPa anode-free 파우치 — Cronk (Nat. Commun. 2026) | FEM (COMSOL 6.1, 선형탄성+등방 eigenstrain) + 확률적 voxel 기하생성(MATLA | 2026-09-03 | 🖼 50 |
 | `duquesnoy2020_calendering_ml_mesostructure_generator` | 캘린더링(압연)을 "porosity 를 입력으로 받는" 확률적 전극 생성기 + TauFactor + SISSO 로 — 실험 54셀 → 8,800 in-silico 전극 → 해석식 — Duquesnoy (J. Power Sources 2020) | hybrid (exp 54-electrode 다항회귀 → MATLAB voxel 확률생성기 → TauFact | 2026-09-03 | 🖼 12 |
 | `galvezaranda2024_time_dependent_dl_calendering_microstructure` | 압연(calendering) DEM 궤적을 1D-CNN 시간-surrogate 로 대체하다 — 3 프레임 lag → 다음 프레임 3D 복셀 미세구조, NMC111 96 % / CBD 4 %, CD 20–50 % — Galvez-Aranda / Le Dinh / Vijay / Zanotto / Franco (Advanced | DL 시간-surrogate(1D-CNN, TensorFlow/Keras) on DEM 압연 궤적 + Geo | 2026-09-11 | 🖼 13 |
+| `hamann2026_llzo_bilayer_porosity_asr_dendrite_ccd` | Effects of LLZO Microstructure Porosity, LLZO/Li-Metal Interfacial Polarization Resistance, and Applied Areal Current Density on Li-Metal Dendrite Formation in LLZO Bilayer Symmetr | FDM voxel electrochemistry (steady/uniform-state Poisson in  | 2026-09-29 | 🖼 22 |
 | `islam2026_microstructure_resolved_impedance_lpscl_symmetric_cell` | Microstructure-Resolved Impedance Modeling of Solid-State Batteries — Li/Li₆PS₅Cl/Li 대칭셀의 phase-field 소결·SEI 미세구조를 COMSOL 옴익-전도 + Butler–Volmer + C_dl 임피던스 모델로 — Islam, Katsube, Ji | FEM (COMSOL Multiphysics 2D 옴익 전도 + Butler-Volmer + C_dl, 1  | 2026-09-22 | 🖼 11 |
 | `jung2023_single_crystal_ncm_morphology` | 필독 / 우리-랩 — Customizing the Morphology and Microstructure of Single-Crystalline Ni-rich Layered Cathode Materials for All-Solid-State Batteries — Jung et al. (Chem. Eng. J. 2023) | exp (morphology / electrochemistry / mechanical) | 2026-06-26 | 🖼 7 |
 | `ketter2025_resistor_network_models_predict_transport_properties` | Using resistor network models to predict the transport properties of solid-state battery composites — Ketter (Nat. Commun. 2025) · voxel 저항망(RN)으로 NCM83–LPSCl 복합양극의 effective σ_ion | exp (EIS-TLM impedance · DC polarization · LFA thermal diffu | 2026-09-25 | 🖼 31 |
