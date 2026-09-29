@@ -990,10 +990,15 @@ WA_REVIEWED = (
     (r'area_(.+)_n', 'calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g'),
     (r'se_se_cn(_std)?', 'calc_se_se_cn (dem_analysis_core.py:232–344) — 1저자 검토 09-30 · 수정 불요 · 평균 = 2 × area_SE_SE_n / SE '
                          '입자 수 (생성기 관문 · 09-30 실측 130/130 · 64/64 차이 0) · 같은 함수의 _perc · _eff_area · _aug 는 ② · ⑦ · ⑤ 차례 · J20-i'),
+    (r'am_am_(cn(_std)?|n_contacts)', 'calc_am_am_cn (dem_analysis_core.py:347–375) — 1저자 검토 09-30 · 수정 불요 · am_am_n_contacts = AM–AM '
+                                      '쌍 개수 합 · am_am_cn = 2 × am_am_n_contacts / AM 입자 수 (생성기 관문 · 09-30 실측 130/130 · 64/64 차이 0) · '
+                                      'mono 포함 (상별 열 아님) · am_am_mean_area · am_am_total_area 는 ⑦ 차례 · J20-j'),
 )
 #: J20-i — 표에 함께 실린 se_se_cn 과 area_SE_SE_n 의 항등식 (se_se_cn = 2 × area_SE_SE_n / N_SE) 허용 상대차.  metrics_flat 은 repr
 #:   정밀도라 실측 차이는 0 이다 — 부동소수 여유일 뿐 물리 허용치가 아니다.
 WA_CN_IDENTITY_TOL = 1e-9
+#: J20-j — 웹앱 원 행의 AM–AM 쌍 개수 열 (calc_interface_area 는 두 상 이름을 정렬해 잇는다 · 접촉 0 인 쌍은 키가 없다 = 0 · mono 는 반지름 이름 하나)
+WA_AM_AM_PAIR = re.compile(r'area_(AM_P|AM_S)_(AM_P|AM_S)_n')
 
 
 def wa_review_note(col):
@@ -1264,7 +1269,7 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
         rep.update(wa_collisions=wa_coll, wa_n_cols=len(wa_take), wa_status_counts=collections.Counter(),
                    wa_porosity_absmax=0.0, wa_reviewed_only=bool(wa_reviewed_only),
                    wa_unreviewed_dropped=n_census_ok - len(ok_cols), wa_mono_phase_blanked=0, wa_pair_zero_filled=0,
-                   wa_cn_identity_checked=0)
+                   wa_cn_identity_checked=0, wa_am_identity_checked=0)
     for r in rows:
         h = hv[r[key]]
         o = {c: r.get(c, '') for c in design_cols}
@@ -1349,6 +1354,25 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                     raise FillRefusal(f'{r[key]}: se_se_cn {cn_v!r} ≠ 2 × area_SE_SE_n {n_pairs:g} / SE {n_se} = {expect!r} — '
                                       '같은 접촉 집합의 값이 아니다 (J20-i · 다른 프레임 · 다른 접촉 필터)')
                 rep['wa_cn_identity_checked'] += 1
+            #  J20-j — AM–AM: am_am_n_contacts = 웹앱 원 행의 AM–AM 쌍 개수 합 (없는 쌍 = 0 · J20-h 와 같은 뜻) ·
+            #   am_am_cn = 2 × am_am_n_contacts / N_AM (calc_am_am_cn 은 AM 전 입자로 나눈 평균 · 접촉 하나가 두 입자에 하나씩).
+            if 'am_am_n_contacts' in wa_take and o.get('am_am_n_contacts', '') != '':
+                n_pairs_am = float(o['am_am_n_contacts'])
+                s_pairs_am = sum(float(v) for k, v in wr.items() if WA_AM_AM_PAIR.fullmatch(k) and v not in (None, ''))
+                if n_pairs_am != s_pairs_am:
+                    raise FillRefusal(f'{r[key]}: am_am_n_contacts {n_pairs_am:g} ≠ AM–AM 쌍 개수 합 {s_pairs_am:g} — 같은 접촉 집합의 값이 아니다 (J20-j)')
+                if 'am_am_cn' in wa_take and o.get('am_am_cn', '') != '':
+                    pc = h.get('phase_counts')
+                    if not isinstance(pc, dict):
+                        raise FillRefusal(f'{r[key]}: 수확 JSON 에 phase_counts 가 없다 — AM 입자 수를 몰라 am_am_cn = 2 × am_am_n_contacts / '
+                                          'N_AM 을 확인할 수 없다 (J20-j)')
+                    n_am = _phase_n(pc, 'AM전체')
+                    cn_am = float(o['am_am_cn'])
+                    expect_am = 2.0 * n_pairs_am / n_am if n_am > 0 else float('nan')
+                    if not (n_am > 0 and abs(cn_am - expect_am) <= WA_CN_IDENTITY_TOL * max(1.0, abs(expect_am))):
+                        raise FillRefusal(f'{r[key]}: am_am_cn {cn_am!r} ≠ 2 × am_am_n_contacts {n_pairs_am:g} / AM {n_am} = {expect_am!r} — '
+                                          '같은 접촉 집합의 값이 아니다 (J20-j)')
+                rep['wa_am_identity_checked'] += 1
             for name, wcol, hcol, _w in WA_QC:
                 o[name] = ''
             if wr is not None:
@@ -2034,7 +2058,9 @@ def _selftest():
     #   설계 상과 어긋나는 침대가 있다 (130 의 5 · 64 의 4).  값은 총량 열 (area_AM전체_SE_n · area_SE_SE_n) 이 싣는다.
     _vd3 = dict(_vd, am_am_cn='✅ 쓴다', AM_P_se_cn_mean='✅ 쓴다', AM_S_se_cn_mean='✅ 쓴다', area_SE_SE_n='✅ 쓴다',
                 area_AM_S_SE_n='✅ 쓴다', area_AM_P_SE_n='✅ 쓴다', **{'area_AM전체_SE_n': '✅ 쓴다'},
-                se_se_cn_std='✅ 쓴다', se_se_cn_perc='✅ 쓴다', se_se_cn_eff_area='✅ 쓴다(이름 주의)', se_se_cn_aug='✅ 쓴다')
+                se_se_cn_std='✅ 쓴다', se_se_cn_perc='✅ 쓴다', se_se_cn_eff_area='✅ 쓴다(이름 주의)', se_se_cn_aug='✅ 쓴다',
+                am_am_cn_std='✅ 쓴다', am_am_n_contacts='✅ 쓴다', am_am_mean_area='✅ 쓴다(이름 주의)',
+                am_am_total_area='✅ 쓴다(이름 주의)')
 
     def _wa3():
         w = _wa()
@@ -2042,12 +2068,17 @@ def _selftest():
         w['why'] = {k: f'why:{k}' for k in _vd3}
         w['stop_after'] = 'contact'
         #  se_se_cn = 2 × area_SE_SE_n / SE 입자 수 (수확 phase_counts SE 100) — J20-i 항등식에 맞춘 값 · 같은 함수의 나머지 출력도 싣는다
-        w['rows']['q1'].update(am_am_cn='1.2', AM_S_se_cn_mean='3.0', area_SE_SE_n='900', area_AM_S_SE_n='40',
+        #  J20-j — am_am_n_contacts = AM–AM 쌍 개수 합 · am_am_cn = 2 × am_am_n_contacts / AM 입자 수 (11) 에 맞춘 값
+        w['rows']['q1'].update(am_am_cn='2.0', AM_S_se_cn_mean='3.0', area_SE_SE_n='900', area_AM_S_SE_n='40',
                                se_se_cn='18.0', se_se_cn_std='2.5', se_se_cn_perc='18.5', se_se_cn_eff_area='0.07',
-                               se_se_cn_aug='19.0', **{'area_AM전체_SE_n': '40'})   # q1 = mono (웹앱 반지름 이름 AM_S)
-        w['rows']['q2'].update(am_am_cn='2.2', AM_P_se_cn_mean='7.0', AM_S_se_cn_mean='3.5', area_SE_SE_n='800',
+                               se_se_cn_aug='19.0', area_AM_S_AM_S_n='11', am_am_n_contacts='11', am_am_cn_std='1.0',
+                               am_am_mean_area='0.02', am_am_total_area='0.22',
+                               **{'area_AM전체_SE_n': '40'})   # q1 = mono (웹앱 반지름 이름 AM_S)
+        w['rows']['q2'].update(am_am_cn='4.0', AM_P_se_cn_mean='7.0', AM_S_se_cn_mean='3.5', area_SE_SE_n='800',
                                area_AM_P_SE_n='30', area_AM_S_SE_n='50', se_se_cn='16.0', se_se_cn_std='3.0',
                                se_se_cn_perc='16.5', se_se_cn_eff_area='0.06', se_se_cn_aug='17.0',
+                               area_AM_P_AM_S_n='5', area_AM_S_AM_S_n='17', am_am_n_contacts='22', am_am_cn_std='1.5',
+                               am_am_mean_area='0.03', am_am_total_area='0.66',
                                **{'area_AM전체_SE_n': '80'})
         return w
     _hq3 = {'q1': dict(_hqs['q1'], n_types=2), 'q2': dict(_hqs['q2'], n_types=3)}
@@ -2058,22 +2089,25 @@ def _selftest():
         _o20, _c20, _r20, _e20 = [], [], {}, f'{type(e).__name__}: {e}'
     _m20 = next((r for r in _o20 if r['case_id'] == 'q1'), {})
     _b20 = next((r for r in _o20 if r['case_id'] == 'q2'), {})
-    chk('⑳a ★ J20-g — 기본은 같이 확인한 열만: 접촉 묶음 중 area_<쌍>_n (· J20-i 뒤 se_se_cn) — am_am_cn · AM_*_se_cn_* 은 아직 없다'
+    chk('⑳a ★ J20-g — 기본은 같이 확인한 열만: 접촉 묶음 중 area_<쌍>_n (· J20-i se_se_cn · J20-j am_am_*) — AM_*_se_cn_* 은 아직 없다'
         + (f' — {_e20}' if _e20 else ''),
         not _e20 and all(c in _c20 for c in ('area_SE_SE_n', 'area_AM_S_SE_n', 'area_AM_P_SE_n', 'area_AM전체_SE_n'))
-        and not any(c in _c20 for c in ('am_am_cn', 'AM_P_se_cn_mean', 'AM_S_se_cn_mean')))
+        and not any(c in _c20 for c in ('AM_P_se_cn_mean', 'AM_S_se_cn_mean')))
     chk('⑳b ★ J20-f (A) — mono (n_types 2) 의 상별 쌍 칸은 빈칸 · 총량 쌍 (area_AM전체_SE_n · area_SE_SE_n) 은 값 · 보고에 셈',
         _m20.get('area_AM_S_SE_n') == '' and _m20.get('area_AM전체_SE_n') == '40' and _m20.get('area_SE_SE_n') == '900'
         and _r20.get('wa_mono_phase_blanked') == 1)
     chk('⑳c bimodal (n_types 3) 은 상별 쌍 값 그대로',
         _b20.get('area_AM_P_SE_n') == '30' and _b20.get('area_AM_S_SE_n') == '50' and _b20.get('area_AM전체_SE_n') == '80')
-    chk('⑳d 판별 — wa_reviewed (area_<쌍>_n · se_se_cn · se_se_cn_std — 같은 함수의 _perc · _eff_area · _aug 는 아님 · am_am_cn 아님) · '
+    chk('⑳d 판별 — wa_reviewed (area_<쌍>_n · se_se_cn(_std) · am_am_cn(_std) · am_am_n_contacts — _perc · _eff_area · _aug · am_am 면적 · '
+        'AM_*_se_cn_* 은 아님) · '
         'wa_phase_specific (AM_P/AM_S 이름이 든 열 · AM전체 · 소문자 am_ 은 아님)',
         'wa_reviewed' in globals() and 'wa_phase_specific' in globals()
         and globals()['wa_reviewed']('area_AM_P_SE_n') and globals()['wa_reviewed']('se_se_cn')
         and globals()['wa_reviewed']('se_se_cn_std') and not globals()['wa_reviewed']('se_se_cn_perc')
         and not globals()['wa_reviewed']('se_se_cn_eff_area') and not globals()['wa_reviewed']('se_se_cn_aug')
-        and not globals()['wa_reviewed']('am_am_cn')
+        and globals()['wa_reviewed']('am_am_cn') and globals()['wa_reviewed']('am_am_cn_std')
+        and globals()['wa_reviewed']('am_am_n_contacts') and not globals()['wa_reviewed']('am_am_mean_area')
+        and not globals()['wa_reviewed']('am_am_total_area') and not globals()['wa_reviewed']('AM_P_se_cn_mean')
         and globals()['wa_phase_specific']('area_AM_S_AM_S_n') and globals()['wa_phase_specific']('AM_P_se_cn_mean')
         and not globals()['wa_phase_specific']('area_AM전체_SE_n') and not globals()['wa_phase_specific']('am_am_cn'))
     _neg('⑳e ★ 상별 열을 싣는데 수확 JSON 에 n_types 가 없으면 거부 (mono 인지 모른다 — 반지름 이름을 그대로 싣지 않는다)',
@@ -2092,8 +2126,8 @@ def _selftest():
         w = _wa3()
         w['verdict'].update(area_AM_P_AM_P_n='✅ 쓴다', area_AM_S_AM_S_n='✅ 쓴다')
         w['why'] = {k: f'why:{k}' for k in w['verdict']}
-        w['rows']['q1'].update(area_AM_S_AM_S_n='7')             # mono — 반지름 이름 AM_S · AM_P_AM_P 키 없음
-        w['rows']['q2'].update(area_AM_S_AM_S_n='12')            # bimodal — AM_P_AM_P 키 없음 (접촉 0)
+        w['rows']['q1'].update(area_AM_S_AM_S_n='11')            # mono — 반지름 이름 AM_S · AM_P_AM_P 키 없음 (J20-j 값과 같게)
+        w['rows']['q2'].update(area_AM_S_AM_S_n='17')            # bimodal — AM_P_AM_P 키 없음 (접촉 0) · J20-j 합 5 + 17 = 22
         w['status']['q2']['status'] = st2
         return w
     try:
@@ -2104,13 +2138,16 @@ def _selftest():
     _m21 = next((r for r in _o21 if r['case_id'] == 'q1'), {})
     _b21 = next((r for r in _o21 if r['case_id'] == 'q2'), {})
     chk('⑳g ★ J20-h — bimodal 의 빠진 쌍 개수 = 0 (측정된 0) · 있는 값은 그대로 · 보고에 셈' + (f' — {_e21}' if _e21 else ''),
-        _b21.get('area_AM_P_AM_P_n') == '0' and _b21.get('area_AM_S_AM_S_n') == '12'
+        _b21.get('area_AM_P_AM_P_n') == '0' and _b21.get('area_AM_S_AM_S_n') == '17'
         and _r21.get('wa_pair_zero_filled') == 1)
     chk('⑳h mono 는 0 으로 채우지 않는다 — 상별 칸은 J20-f (A) 빈칸 그대로',
         _m21.get('area_AM_P_AM_P_n') == '' and _m21.get('area_AM_S_AM_S_n') == '' and _m21.get('area_AM전체_SE_n') == '40')
     _hq4 = dict(_hq3, q2=dict(_hq3['q2'], phase_counts={'AM_P': 0, 'AM_S': 10, 'SE': 100}))
+    _wa4i = _wa4()
+    _wa4i['rows']['q2'].pop('area_AM_P_AM_S_n', None)                # AM_P 가 없는 침대 — AM_P 가 낀 쌍도 없다 (J20-j 항등식과 앞뒤를 맞춤)
+    _wa4i['rows']['q2'].update(am_am_n_contacts='17', am_am_cn='3.4')  # 2 × 17 / AM 10
     try:
-        _b22 = next((r for r in build_handover(_dq, _hq4, webapp=_wa4(), webapp_groups='contact')[0] if r['case_id'] == 'q2'), {})
+        _b22 = next((r for r in build_handover(_dq, _hq4, webapp=_wa4i, webapp_groups='contact')[0] if r['case_id'] == 'q2'), {})
     except Exception as e:                                                # noqa: BLE001
         _b22 = {'_err': f'{type(e).__name__}: {e}'}
     chk('⑳i 쌍의 상이 없으면 (phase_counts 0) 0 이 아니라 빈칸 (N/A)', _b22.get('area_AM_P_AM_P_n') == '')
@@ -2157,6 +2194,45 @@ def _selftest():
     chk('⑳r 열 사전 — se_se_cn · se_se_cn_std 의 뜻에 검토 기록 (J20-i) · 정의 (SE 전 입자) · 벽 주의는 그대로',
         'J20-i' in _d20.get('se_se_cn', {}).get('meaning', '') and 'J20-i' in _d20.get('se_se_cn_std', {}).get('meaning', '')
         and '전 입자' in _d20.get('se_se_cn', {}).get('meaning', '') and '벽' in _d20.get('se_se_cn', {}).get('caveat', ''))
+
+    #  ⑳s–x J20-j (1저자 09-30 *"6번 진행하자"* — 접촉 ① 셋째 함수 `calc_am_am_cn` · 시험 먼저) — am_am_cn · am_am_cn_std · am_am_n_contacts 세 열
+    #   (상별 열이 아니라 mono 도 값 — J20-f (A) 로 비운 mono 의 AM–AM 개수가 여기서 돌아온다).  am_am_mean_area · am_am_total_area 는 ⑦ 차례.
+    #   관문 둘: am_am_n_contacts = 웹앱 원 행의 AM–AM 쌍 개수 합 (없는 쌍 = 0) · am_am_cn = 2 × am_am_n_contacts / AM 입자 수 (수확 phase_counts)
+    #   — 09-30 실측 130/130 · 64/64 차이 0.  어긋나거나 AM 입자 수를 모르면 거부.
+    chk('⑳s ★ J20-j — am_am_cn · am_am_cn_std · am_am_n_contacts 가 실린다 (mono 포함) · 항등식 검사 수를 보고' + (f' — {_e20}' if _e20 else ''),
+        all(c in _c20 for c in ('am_am_cn', 'am_am_cn_std', 'am_am_n_contacts'))
+        and _m20.get('am_am_cn') == '2.0' and _m20.get('am_am_n_contacts') == '11' and _m20.get('am_am_cn_std') == '1.0'
+        and _b20.get('am_am_cn') == '4.0' and _b20.get('am_am_n_contacts') == '22'
+        and _r20.get('wa_am_identity_checked') == 2)
+    _wa_bn = _wa3()
+    _wa_bn['rows']['q2']['am_am_n_contacts'] = '23'
+    _neg('⑳t ★ am_am_n_contacts ≠ 웹앱 원 행의 AM–AM 쌍 개수 합 (5 + 17 = 22) 이면 거부 (다른 접촉 집합)',
+         lambda: build_handover(_dq, _hq3, webapp=_wa_bn, webapp_groups='contact'))
+    _wa_bc = _wa3()
+    _wa_bc['rows']['q2']['am_am_cn'] = '4.5'
+    _neg('⑳u ★ am_am_cn ≠ 2 × am_am_n_contacts / AM 입자 수 (2 × 22 / 11 = 4.0) 이면 거부',
+         lambda: build_handover(_dq, _hq3, webapp=_wa_bc, webapp_groups='contact'))
+    _wa_np = _wa3()
+    for _k in ('se_se_cn', 'se_se_cn_std'):                             # J20-i 관문을 빼고 J20-j 관문만 보이게
+        _wa_np['verdict'].pop(_k, None)
+    _neg('⑳v ★ am_am_cn 을 싣는데 수확 JSON 에 phase_counts 가 없으면 거부 (AM 입자 수를 몰라 항등식을 못 본다 · J20-i 관문 없이도)',
+         lambda: build_handover(_dq, {k: {kk: vv for kk, vv in v.items() if kk != 'phase_counts'} for k, v in _hq3.items()},
+                                webapp=_wa_np, webapp_groups='contact'))
+    _wa_rf2 = _wa3()
+    _wa_rf2['status']['q2']['status'] = 'REFUSED'
+    _wa_rf2['rows']['q2']['am_am_n_contacts'] = '999'
+    try:
+        _r25 = build_handover(_dq, _hq3, webapp=_wa_rf2, webapp_groups='contact')[2]
+        _e25 = ''
+    except Exception as e:                                                # noqa: BLE001
+        _r25, _e25 = {}, f'{type(e).__name__}: {e}'
+    chk('⑳w 배치가 거부한 행 (REFUSED) 은 AM–AM 항등식도 보지 않는다 (검사 1 건 = q1)' + (f' — {_e25}' if _e25 else ''),
+        not _e25 and _r25.get('wa_am_identity_checked') == 1)
+    chk('⑳x 같은 함수의 면적 열 (am_am_mean_area · am_am_total_area) 은 census ✅ 여도 싣지 않는다 (⑦ 차례) · 열 사전에 J20-j 검토 기록 · '
+        '접촉 수는 총량 주의 · CN 은 벽 주의',
+        not any(c in _c20 for c in ('am_am_mean_area', 'am_am_total_area'))
+        and all('J20-j' in _d20.get(c, {}).get('meaning', '') for c in ('am_am_cn', 'am_am_cn_std', 'am_am_n_contacts'))
+        and '총량' in _d20.get('am_am_n_contacts', {}).get('caveat', '') and '벽' in _d20.get('am_am_cn', {}).get('caveat', ''))
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -2277,7 +2353,8 @@ if __name__ == '__main__':
                   f'같은 프레임 |Δporosity| 최대 {_rep["wa_porosity_absmax"]:.3e} %p · 이름 충돌 (수확 열 정본) {_rep["wa_collisions"]}')
             print(f'   J20-g 같이 확인한 웹앱 열만 ({len(WA_REVIEWED)} 패턴) — 뺀 census ✅ 열 {_rep["wa_unreviewed_dropped"]} · '
                   f'J20-f (A) mono 상별 칸 빈칸 {_rep["wa_mono_phase_blanked"]} · J20-h 접촉 0 쌍 = 0 채움 {_rep["wa_pair_zero_filled"]} · '
-                  f'J20-i se_se_cn = 2·area_SE_SE_n/N_SE 확인 {_rep["wa_cn_identity_checked"]} 행')
+                  f'J20-i se_se_cn = 2·area_SE_SE_n/N_SE 확인 {_rep["wa_cn_identity_checked"]} 행 · '
+                  f'J20-j AM–AM 접촉 수 = 쌍 합 · am_am_cn = 2·n/N_AM 확인 {_rep["wa_am_identity_checked"]} 행')
         print(f'   빈칸 사유: {dict(_rep["blank_by_status"])}')
         for _k, _v in _rep['held_back'].items():
             print(f'   ⛔ 보류 열 `{_k}` — {_v}')

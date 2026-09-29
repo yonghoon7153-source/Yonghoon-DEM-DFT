@@ -732,6 +732,25 @@
 - 주의 (열 사전 그대로 · `CAVEAT_WALL`): 벽 · 플래튼에 닿은 SE 는 그쪽 이웃이 없어 CN 이 낮다 → 얇은 침대일수록 체계적으로 낮다 — 같이 볼 `wall_touch_frac_*` 는
   수확기 item 4 (벽 닿음 규칙) 병합 뒤 싣는다.
 
+## J20-j. 접촉 ① 셋째 함수 — AM–AM CN 세 열 (09-30 · 1저자 *"6번 진행하자 코드 부탁해"*)
+
+- 검토 (`calc_am_am_cn` · `scripts/dem_analysis_core.py:347–375` → `scripts/analyze_contacts.py:452–458`): 두 원자가 모두 AM 종류 (AM_P · AM_S · mono 는 AM)
+  인 접촉 행마다 두 입자에 +1 → AM **전 입자** 평균 (`am_am_cn` · P–S 교차 포함 · 접촉 0 인 AM 포함) · 모집단 표준편차 (`am_am_cn_std`) ·
+  `am_am_n_contacts` = Σ/2 (AM–AM 접촉 총수) ⇒ **코드 수정 불요**.  (AM 이 없으면 `total_area` 키가 빠지는 비대칭이 있으나 `analyze_contacts` 가
+  `n_am > 0` 일 때만 쓰고 LHS 는 전부 AM 이 있다 — 무영향.)
+- 대조 (09-30 · 커밋된 배치 원자료): `am_am_n_contacts` = AM–AM 쌍 개수 합 (`area_AM_P_AM_P_n` + `area_AM_P_AM_S_n` + `area_AM_S_AM_S_n` · 없는 쌍 = 0) ·
+  `am_am_cn` = 2 × `am_am_n_contacts` / AM 입자 수 (수확 `phase_counts`) — **130/130 · 64/64 차이 0**.  값: 130 = 1.719–6.633 (중앙 5.148) ·
+  64 = 0.438–3.970 (중앙 1.934 — SE-rich 라 AM 끼리 덜 닿는다).
+- mono: 세 열 모두 상별 열이 아니다 (소문자 `am_` · J20-f (A) 무관) ⇒ **J20-f (A) 로 비운 mono 의 AM–AM 개수가 `am_am_n_contacts` 로 돌아온다** (130 의 30 · 64 의 16 행).
+- 싣지 않는 것: `am_am_mean_area` · `am_am_total_area` (접촉 면적 — ⑦ A_dem_geometric · L1-04 차례).
+- 구현 (시험 먼저): 생성기 `WA_REVIEWED` 에 `am_am_(cn(_std)?|n_contacts)` · 관문 둘 — ① `am_am_n_contacts` = 웹앱 원 행의 AM–AM 쌍 개수 합
+  (`WA_AM_AM_PAIR`) ② `am_am_cn` = 2 × `am_am_n_contacts` / N_AM (상대 1e-9) — 어긋나거나 `phase_counts` 가 없으면 거부 · REFUSED 행은 보지 않는다 ·
+  보고 `wa_am_identity_checked`.  시험 ⑳s–x (+ ⑳a · ⑳d 개정 · 픽스처 AM–AM 값을 항등식에 맞춤 · ⑳g 기대값 12 → 17 · ⑳i 는 AM_P 0 침대에 AM_P 쌍이 남던
+  앞뒤 안 맞는 재료를 고침): 옛 코드 112/119 (⑳d · s · t · u · v · w · x 실패) → **119/119**.
+- 적용: 두 표 재생성 — `lhs_handover_20260930.csv` 130×138 · `lhsx_handover_20260930.csv` 64×140 (새 열 3 · 옛 칸 변경 0 · 새 칸 = 배치 원값 390/390 · 192/192 ·
+  빈칸 0) · 항등식 확인 130 · 64 행 · 열 사전 3 행.
+- 주의 (열 사전 그대로): CN = 벽 효과 (`CAVEAT_WALL` — 큰 AM_P 는 두께 대비 커서 SE 보다 크다) · `am_am_n_contacts` = 총량 (`CAVEAT_COUNT`).
+
 ## 인계 판정 (지금)
 
 **↪ 갱신 09-28 밤 (J20-a)** — ⏸ **일괄 실행 보류**: ✅ 열을 묶음별로 코드 정의부터 감사한 뒤 실행 (① 접촉 위상 1차 감사 = J20-a).
