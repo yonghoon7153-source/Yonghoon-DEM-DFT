@@ -909,6 +909,28 @@ def test_fig1_is_the_phase_ladder_in_s2_and_matches_the_raw(client):
     box = s2[j:s2.index("그 짝을 누가 대느냐다", j)]
     assert "1 할" in box and "9 할" in box, "1 할 문장에 9 할이 같이 없다"
 
+
+def test_s2_lead_share_and_scope_match_fig1(client):
+    """⛔음성 — §2 요지 줄(접어도 보이는 한 줄)이 Fig. 1 원자료와 같은 몫·양극 범위를 말한다 (2026-09-29).
+    잡는 것: 4 V 이상의 몫을 '1 할' 하나로 씀 (4.0 V 의 LiNiO₂·NMC811 은 Nd(PO₃)₃ 6 %) ·
+      '전량' 을 양극 범위 없이 씀 (LiMnO₂ 는 NdCl₃ 0 %) · 1 할 옆에서 9 할이 빠짐 (원장 금지)."""
+    import csv as _csv
+    s2 = _section(_report_html(client), "s2")
+    m = re.search(r'<span class="sec-one">(.*?)</span></summary>', s2, re.S)
+    lead = re.sub(r"<[^>]+>", "", m.group(1))
+    rows = list(_csv.DictReader(open(REPORT.parent / "cei_nd_phase_x002.csv", encoding="utf-8")))
+    hi = [r for r in rows if float(r["voltage_V"]) >= 4.0]
+    #: k·x 를 % 로 (x = 0.02 → 2k %)
+    share = sorted({round(2 * float(r["p_per_nd_k"])) for r in hi if float(r["p_per_nd_k"]) > 0})
+    assert share == [6, 10], f"원자료의 4 V 이상 몫이 {share} % 다 — 시험을 다시 본다"
+    assert f"{share[0]}–{share[-1]} %" in lead and "최대 1 할" in lead and "4 V 이상" in lead, \
+        f"요지의 몫이 Fig. 1 원자료({share[0]}–{share[-1]} %)와 다르다"
+    zero = {r["nd_phase"] for r in hi if float(r["p_per_nd_k"]) == 0}
+    assert zero == {"NdCl3"}, f"원자료의 0 % 상이 {zero} 다 — 시험을 다시 본다"
+    assert "Co·Ni·NMC811" in lead and "NdCl₃" in lead, "'전량' 에 양극 범위(LiMnO₂ 예외)가 없다"
+    assert "9 할" in lead, "1 할 옆에 9 할이 없다"
+
+
 def test_layer_split_open_sections_are_the_thesis(client):
     """양성 — 접힘 밖(open)은 논지 절이고, 근거·검산·반론 절은 접혀 있되 요지 한 줄이 밖에 있다."""
     h = _report_html(client)
