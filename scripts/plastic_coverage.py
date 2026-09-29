@@ -443,7 +443,9 @@ PHYSICS_V2_RULE = (
     '그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 '
     '(L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · '
     'A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · '
-    '모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다)')
+    '모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · '
+    '피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 '
+    '(LHSC-01 (a) · 2026-09-30)')
 
 
 def _v2_real(name: str, v) -> float:
