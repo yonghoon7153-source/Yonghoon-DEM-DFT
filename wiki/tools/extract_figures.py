@@ -659,10 +659,15 @@ def pdf_roots(inbox_dir=""):
 #   본문이 사라지고 그림 번호가 전부 S1,S2… 로 잘못 붙었다.
 #   그래서 sup/mmc 계열은 느슨하게, **si·esi 는 파일명 구분자(_ - .)로 둘러싸인 때만** 본다
 #   (tz4c02029_si_001.pdf ○ / ", Si," ×).
+# ⚠ 구분자만으로는 부족하다 — 실측(2026-09-29 assb 88호): 세션 업로드는 공백을 밑줄로 바꿔
+#   "…_of_Si_Anode_…" 가 되고 원소 기호가 구분자 규칙을 통과해 **본문이 SI 로** 분류됐다.
+#   그래서 si·esi 는 **대소문자를 구분**해 si · SI · esi · ESI(· Esi · eSI)만 본다 — 원소 기호 표기
+#   **Si**(대문자 S + 소문자 i)는 SI 표시가 아니다. 한계: 제목 전체가 소문자(…_si_anode…)나
+#   대문자면 대소문자로 못 가른다 (selftest 에 고정).
 SI_TAG = re.compile(
     r"(?:(?:^|[^a-z])sup(?:p|pl|porting|plementary|plement|pmat)?(?:[^a-z]|$)"
     r"|(?:^|[^a-z])mmc(?:[^a-z]|$)"
-    r"|(?:^|[_\-.])e?si(?:[_\-.0-9]|$))", re.I)
+    r"|(?:^|[_\-.])(?-i:[eE]?si|[eE]?SI)(?:[_\-.0-9]|$))", re.I)
 STOP = set("""the a an of on in for and or to with by from as at is are was were be been its
 their this that these those we our using via toward towards into over under between among
 new novel high low high- ultra super study investigation effect effects influence role
@@ -1225,6 +1230,30 @@ def selftest():
         _fname_prefix("scheme") != _fname_prefix("figure"))
     chk("음성⑪: 모르는 kind 는 fig 로 떨어진다 (예외로 죽지 않는다)",
         _fname_prefix("plate") == "fig")
+
+    # --- SI 판별 (SI_TAG). 2026-09-29 assb 88호 실측: 세션 업로드는 파일명의 공백을 밑줄로 바꿔
+    #     "…_of_Si_Anode_…" 가 되고, 원소 기호 Si 가 "구분자로 둘러싸인 si" 규칙을 통과해 **본문이
+    #     SI 로** 분류됐다 (본문 그림이 전부 fig_S 번호). 파일 50 본문 "…_Li_Si_alloying…" 도 같다.
+    def is_si(stem):
+        return bool(SI_TAG.search(stem))
+    chk("양성(SI): ACS 형식 tz4c02029_si_001", is_si("tz4c02029_si_001"))
+    chk("양성(SI): 끝의 _SI · -ESI · 숫자 붙은 _esi1",
+        is_si("paper_SI") and is_si("paper-ESI") and is_si("paper_esi1"))
+    chk("양성(SI): Elsevier mmc1 · 업로드 Sup1", is_si("mmc1") and is_si("22._Sup1_Title"))
+    chk("양성(SI): Sup1 + 제목 속 원소 Si (88호 SI 파일)", is_si(
+        "68a738fe-49._Sup1_Stack_Pressure_Enhanced_Size_Threshold_of_Si_Anode_Fracture_in_All_Solid_State_Batteries"))
+    chk("음성⑫: 제목 속 원소 Si 가 밑줄 사이 — 88호 본문", not is_si(
+        "ae0fe451-49._Stack_Pressure_Enhanced_Size_Threshold_of_Si_Anode_Fracture_in_All_Solid_State_Batteries"))
+    chk("음성⑫: 제목 속 원소 Si — 파일 50 본문 (…_Li_Si_alloying…)", not is_si(
+        "48e8e202-50._An_all-electrochem-active_silicon_anode_enabled_by_spontaneous_Li_Si_alloying_for_ultra-high_performance_solid-state_batteries"))
+    chk("음성⑫: 원소 Si 뒤 하이픈 · 숫자 · 파일명 첫머리 (_Si-C · _Si3N4 · Si_)",
+        not any(is_si(s) for s in ("12._Si-C_composite_anode", "coating_of_Si3N4_films",
+                                   "Si_nanowire_anodes_2012")))
+    chk("음성⑬: 2026-08-06 사고 둘 그대로 — ', Si,' · Superionic",
+        not is_si("43. Phase stability of the Li10±1MP2X12 (M = Ge, Si, Sn)")
+        and not is_si("Superionic_conductor"))
+    chk("한계(고정): 전부 소문자 제목의 _si_ 는 SI 로 본다 — 원소 기호와 대소문자로 못 가른다",
+        is_si("fast_si_anode_design"))
 
     with tempfile.TemporaryDirectory() as td:
         root = Path(td)
