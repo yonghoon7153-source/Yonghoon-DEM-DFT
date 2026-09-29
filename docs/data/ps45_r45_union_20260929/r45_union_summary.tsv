@@ -1,0 +1,6 @@
+case	webapp_case_id	webapp_name	P_S	atom_step	AM_P_AM_S_count	porosity_union_exact_pct	porosity_union_exact_se_pct	porosity_union_pair_web_pct	porosity_sphere_web_pct	thickness_um
+ps_10_0_r45	260922_222828_6e4ff6	input_6mAh_real_5_D9	10:0	3640000	403/0	16.8990	0.0187	16.90	15.8247	112.597
+ps_7_3_r45	260925_000559_082983	input_6mAh_real_4_D9	7:3	3220000	280/1376	16.4941	0.0186	16.45	14.9536	111.052
+ps_5_5_r45	260925_000513_123978	input_6mAh_real_3_D9	5:5	2930000	198/2293	17.6696	0.0191	17.66	16.2026	112.436
+ps_3_7_r45	260925_000448_bd85f9	input_6mAh_real_2_D9	3:7	3210000	121/3209	18.6664	0.0195	18.63	17.1575	114.361
+ps_0_10_r45	260925_000001_0bee25	input_6mAh_real_1_D9	0:10	3210000	0/4588	20.5892	0.0202	20.60	19.1619	117.208
