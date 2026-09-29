@@ -3,6 +3,7 @@
 > 1저자 결정 (09-30): *"coverage 관련해서 에이전트 결과를 codex 한테 리뷰를 받으면 좋지 않을까?"* — 에이전트 두 개가 만든 7 커밋을
 > **병합하기 전에** 적대 리뷰를 받는다.  이 요청서는 리뷰 대상 · 주장 · 질문 · 재현 방법만 적는다 (판정은 Codex).  발송 = 1저자.
 > ⚠ 이 7 커밋은 아직 `claude/stoic-knuth-NObVQ` 에 **없다** — 패치로만 전달한다 (§1).  리뷰 뒤 한 항목씩 병합한다.
+> ✅ **1저자 발송 (09-30)** · 고정 스냅샷 = **`2e57dff90`** (이 요청서가 처음 든 커밋 · 패치 7 이 그대로 붙는다 — 확인함).  §4 첫 줄 정정 (아래 · 09-30).
 
 ## 0. 배경 — 왜 지금
 
@@ -69,8 +70,8 @@ legacy 바이트 동일 핀 (e72067854 코드를 합성 침대에 돌린 sha256)
 ## 4. 재현
 
 ```bash
-git fetch origin claude/stoic-knuth-NObVQ && git checkout -b cov-review da4670594
-git am docs/reviews/codex_lhs_coverage_request_20260930/patches/*.patch      # (이 요청서가 든 커밋에서 패치를 꺼내 쓴다)
+git fetch origin claude/stoic-knuth-NObVQ && git checkout -b cov-review 2e57dff90
+git am docs/reviews/codex_lhs_coverage_request_20260930/patches/*.patch
 python3 scripts/lhs_descriptor_harvest.py --selftest
 python3 scripts/plastic_coverage.py --selftest
 python3 scripts/coverage_physics_vs_hertzian.py --selftest
@@ -79,6 +80,9 @@ python3 webapp/test_pipeline_provenance.py
 python3 scripts/lhs_design_dataset.py --selftest
 bash scripts/check_all.sh
 ```
+
+⚠ **정정 (09-30)**: 첫 판은 `git checkout -b cov-review da4670594` 였다 — 그 커밋에는 패치 폴더가 없어 그대로 치면 `git am` 이 실패한다.
+`2e57dff90` = `da4670594` + 문서만 (요청서 · 증거 · prereg · 진행) 이라 패치 7 이 같은 결과로 붙는다 (확인: 7 커밋 · 8 파일 · 검토용 묶음과 같은 diffstat).
 
 ## 5. 우리 재실행 결과 · 병합 충돌
 
