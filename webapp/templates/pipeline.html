@@ -6,6 +6,9 @@
    ⚠ 두 가지 규율
    1. **숫자를 새로 만들지 않는다.** 결과 수치는 docs/RESULTS_PAIRED_FIXED5.md
       의 사본이고, 화면에 그렇게 적고 인용을 금지한다 (하드룰 4).
+      (2026-09-29) `grid_fit_v5` 는 원장이 정한 **지위**(완주·보존 · 진단 전용 ·
+      주장 편입 안 됨)만 적고 그 보고서의 결과 수치는 옮기지 않는다. 실행 사실
+      (조건 수·행 수·라운드·SHA)은 원장 §의 사본이고 절 번호를 붙인다.
    2. **그림은 전부 인라인 SVG** 다. CSP 가 `default-src 'self'` 라 mermaid 같은
       라이브러리를 못 쓰고, 애초에 이 앱은 바깥 자원을 하나도 안 쓴다.
       SVG 는 `currentColor` 와 CSS 변수로 색을 받으므로 다크 모드도 따라온다. #}
@@ -199,7 +202,7 @@
 
 <!-- ══ 3. 파이프라인 ════════════════════════════════════════════════════ -->
 <section class="pipe-sec">
-  <h2 class="pipe-h"><span class="pipe-n">3</span> 파이프라인 — 여섯 단계</h2>
+  <h2 class="pipe-h"><span class="pipe-n">3</span> 파이프라인 — 여섯 단계 <span class="tw-mini">(2026-09-29 갱신)</span></h2>
   <p class="pipe-p">각 단계는 <code>./run.sh --mode &lt;단계&gt;</code> 하나로 돈다.
     아래 상자의 <code class="mono">--mode</code> 이름이 실제 명령이다.</p>
 
@@ -247,7 +250,7 @@
         <rect x="370" y="122" width="146" height="86" rx="10"/>
         <text x="443" y="148" class="dg-t dg-t-b">맞추기</text>
         <text x="443" y="168" class="dg-t dg-mono dg-cmd">--mode fit</text>
-        <text x="443" y="192" class="dg-t dg-small">α·β 4개 · restart 5회 고정</text>
+        <text x="443" y="192" class="dg-t dg-small">α·β 4개 · restart 최대 5회</text>
       </g>
       <path class="dg-arrow" marker-end="url(#ar)" d="M520 165 L546 165"/>
 
@@ -295,7 +298,11 @@
       </g>
     </svg>
     <figcaption>가로로 스크롤된다면 화면이 좁은 것이다 — 그림 안에서만 움직인다.
-      실제 명령과 인자는 <code>degradation-degeneracy/docs/03_ARCHITECTURE.md</code> §2 에 있다.</figcaption>
+      실제 명령과 인자는 <code>degradation-degeneracy/docs/03_ARCHITECTURE.md</code> §2 에 있다.
+      (2026-09-29 갱신) 맞추기 상자의 “restart 5회 고정” 을 “최대 5회” 로 고쳤다 — 기본
+      <code class="mono">--mode fit</code> 은 adaptive 조기 종료가 있어 5 가 실행 횟수가 아니라
+      예산 상한이다 (<code class="mono">docs/22p_gap/STAGE3_CONTRACT.md</code> §1 교란 2).
+      4절의 수치를 낸 paired 실행은 조기 종료를 끄고 5 를 고정했다.</figcaption>
   </figure>
 
   <div class="pipe-note">
@@ -309,7 +316,7 @@
 
 <!-- ══ 4. 지금까지 답한 것 ══════════════════════════════════════════════ -->
 <section class="pipe-sec">
-  <h2 class="pipe-h"><span class="pipe-n">4</span> 지금까지 답한 것</h2>
+  <h2 class="pipe-h"><span class="pipe-n">4</span> 지금까지 답한 것 <span class="tw-mini">(2026-09-29 갱신)</span></h2>
 
   <div class="pipe-cite">
     <b>이 칸의 숫자는 사본이다 — 인용 근거가 아니다.</b> 정본은 artifact 와
@@ -345,11 +352,36 @@
     저항 분포 등)는 여기 없고, 합성 truth 가 LLI 를 양·음극 초기농도에 일률 적용하는
     <b>한 가지 규약</b>에 조건부다. 실제 셀이 더 나쁠지 나을지는 <b>증명되지 않았다</b> —
     복잡성이 정보를 만들 수도, 없앨 수도 있다.</p>
+
+  {# 2026-09-29 갱신 — grid_fit_v5 의 지위는 원장 §102·§103·§104·§106 이 정한다:
+     완주·보존 증거는 수용, 주장 편입은 보류 → no_active_claim(진단 전용) 유지.
+     그래서 이 칸에 그 보고서의 수치를 결론처럼 옮기지 않는다. 보고서 자신의
+     경고(목적함수 비교의 인용 정본은 PAIRED_FIXED5)를 같이 옮긴다. #}
+  <div class="pipe-note">
+    <b>2026-09-26 의 재실행 <code class="mono">grid_fit_v5</code> — 완주 · 보존됨 · 진단 전용,
+    주장에는 편입하지 않았다.</b>
+    <code class="mono">docs/RESULTS.md</code> 가 인용하는 격자(<code class="mono">configs/grid_fine.yaml</code>)와
+    같은 config · 같은 fit protocol 을 현행 코드로 다시 계산한 한정 실행이다. 목적은
+    gate · lifecycle · 보존 계약이 실제 실행에서 끝까지 도는지를 보이는 것이었고, 6절의
+    단계 3 비교가 아니다 (원장 §93 E9-0). 완주했고 (3,069 조건 × 4 목적함수 = 12,276 행 — 74차
+    리뷰어의 독립 확인, 원장 §102), 보존 기록(<code class="mono">LEG_PRESERVATION.yaml</code>)의
+    상태는 <code class="mono">full_bundle · current_validated</code> 로 올라갔다 (원장 §101).
+    그러나 74차의 답은 “완주·보존 증거 수용 · <b>주장 편입·전체 절차 종결 보류</b>” 였다 (원장 §102).
+    그 뒤 이 실행은 <code class="mono">no_active_claim</code>(진단 전용)으로 분류됐다 (원장 §103).
+    76차는 그 진단 전용 제한을 유지했고 active claim · 투영 승격을 주지 않았다 (원장 §106).
+    75차 리뷰어는 이 산출을 “현행 코드로 재계산됨 / 현행 과학 주장 지지 / 수렴 증명” 으로
+    읽지 말라고 적었다 (원장 §104).
+    <b>그래서 위 세 칸의 수치는 바꾸지 않는다.</b> 그 보고서
+    (<code class="mono">docs/RESULTS_grid_fit_v5.md</code>)의 목적함수 비교 값은 위 1번과 다르다.
+    보고서 자신이 그 이유를 적는다 — 그 값은 비대칭 pipeline(adaptive 조기 종료 + warm start
+    연쇄)에서 관측된 값이므로 단독 인용하지 말고, 목적함수 간 비교의 인용 정본은 공정 paired
+    보고서 <code class="mono">docs/RESULTS_PAIRED_FIXED5.md</code> 라는 것이다.
+  </div>
 </section>
 
 <!-- ══ 5. 증거 층 ═══════════════════════════════════════════════════════ -->
 <section class="pipe-sec">
-  <h2 class="pipe-h"><span class="pipe-n">5</span> 왜 이 숫자를 믿어도 되는가 — 증거 층</h2>
+  <h2 class="pipe-h"><span class="pipe-n">5</span> 왜 이 숫자를 믿어도 되는가 — 증거 층 <span class="tw-mini">(2026-09-29 갱신)</span></h2>
   <p class="pipe-p">한 번 돌리는 데 <b>열 시간</b>이 걸린다. 돌린 뒤에 "그 코드가
     이 코드였나" 를 물으면 늦는다. 그래서 실행 전후로 층을 쌓았다.</p>
 
@@ -359,7 +391,7 @@
       <g class="dg-layer l-1">
         <rect x="30" y="14" width="700" height="46" rx="9"/>
         <text x="48" y="34" class="dg-t dg-l dg-t-b">① 코드 identity 봉인</text>
-        <text x="48" y="52" class="dg-t dg-l dg-small">산출물마다 그것을 만든 코드의 digest 를 같이 적는다 — 코드가 바뀌면 산출물이 스스로 무효가 된다</text>
+        <text x="48" y="52" class="dg-t dg-l dg-small">산출물마다 그것을 만든 코드의 digest 를 같이 적는다 — 코드가 바뀌면 새 코드의 결과로 쓸 수 없다 (소급 무효는 아님)</text>
       </g>
       <g class="dg-layer l-2">
         <rect x="30" y="68" width="700" height="46" rx="9"/>
@@ -368,7 +400,7 @@
       </g>
       <g class="dg-layer l-3">
         <rect x="30" y="122" width="700" height="46" rx="9"/>
-        <text x="48" y="142" class="dg-t dg-l dg-t-b">③ 변이 전수 재생 — 170 지점</text>
+        <text x="48" y="142" class="dg-t dg-l dg-t-b">③ 변이 재생</text>
         <text x="48" y="160" class="dg-t dg-l dg-small">검사를 하나씩 고의로 망가뜨려 <tspan class="dg-em">시험이 정말 무는지</tspan> 확인한다. 안 물면 그 검사는 장식이다</text>
       </g>
       <g class="dg-layer l-4">
@@ -379,13 +411,72 @@
     </svg>
     <figcaption>이 층들이 <b>결과를 더 좋게 만들지는 않는다.</b> 결과가 <b>무엇의 결과인지</b>를
       나중에도 말할 수 있게 만든다 — 그것이 인용 가능성의 조건이다.
-      진행 상황은 <a href="/gate">게이트 원장</a>에 있다.</figcaption>
+      진행 상황은 <a href="/gate">게이트 원장</a>에 있다.
+      (2026-09-29 갱신) ① 의 옛 문구 “코드가 바뀌면 산출물이 스스로 무효가 된다” 는 고쳤다 —
+      옛 산출물은 당시 코드의 기록으로 남고 소급 무효화하지 않는다
+      (<code class="mono">docs/22p_gap/STAGE3_CONTRACT.md</code> 머리 · 원장 §103 ⑥).
+      ③ 에 적혀 있던 “170 지점” 은 2026-09-04 의 등록부 크기였다 (원장 §65). 등록부를 12조각으로
+      나눈 마지막 전수 재생은 63차 대응이었고 (원장 §78: 합집합이 등록부 274 를 정확히 덮음),
+      64차부터는 라운드마다 새로 더한 변이를 골라 재생한다 (82차: <code class="mono">-k g81</code>
+      20/20 — 원장 §115). 이 재생은 표본이다 — 70차 종결 조건 E4 에 따라 “전수 독립 replay 완료”
+      라 적지 않는다 (원장 §93).</figcaption>
   </figure>
+
+  {# 2026-09-29 갱신 — 층이 실제 실행에서 끝까지 돈 첫 사례. 원장 §98·§99~§101·§102·§106. #}
+  <div class="pipe-note">
+    <b>이 층들이 실제 실행에서 끝까지 돈 첫 사례.</b> 2026-09-26 의 한정 실행
+    <code class="mono">grid_fit_v5</code> 는 73차의 조건부 GO 아래에서 계획 gate → grid → fit →
+    보존 묶음 → 검증 영수증 → 원장까지 돌았다 (원장 §98 · §101). 계획 gate 를 지나 실행된
+    것은 지금까지 이것 하나다 (원장 §101 의 <code class="mono">gate_backed_executions 1</code>;
+    그 뒤 라운드는 새 연구 실행을 하지 않았다고 적는다 — 원장 §103~§115 의 “하지 않은 것”).
+    그 전의 네 시도는 완주하지 못했다 — 끊긴 원인으로 적었던 메모리 초과·idle·tmux 는
+    가설로 정정됐다 (원장 §99 · §100 · 74차 R2). 그 과정의 한도 밖 재개 호출 1회는 편차로
+    기록됐다 (원장 §102 R1). 그 실행 전후에 드러난 결함은 74~76차가 닫았고, 76차가 전체
+    종결을 판정했다 — 새 실행 GO 는 없다 (원장 §106).
+  </div>
 </section>
 
 <!-- ══ 6. 다음 ══════════════════════════════════════════════════════════ -->
 <section class="pipe-sec">
-  <h2 class="pipe-h"><span class="pipe-n">6</span> 다음 — 관측을 늘리면 갈리는가</h2>
+  <h2 class="pipe-h"><span class="pipe-n">6</span> 다음 — 같은 시작점에서 다시 재기 · 관측을 늘리면 갈리는가 <span class="tw-mini">(2026-09-29 갱신)</span></h2>
+
+  {# 2026-09-29 갱신 — 이 저장소 본 프로젝트의 "다음"(단계 3)을 위에 새로 쓰고,
+     satellite(mode-observability) 서술은 아래 소제목 밑에 그대로 둔다.
+     상태는 원장 §107·§112·§115 의 사본이다. 새 수치는 없다 (실행 GO 없음). #}
+  <h3 class="pipe-sub">이 저장소의 다음 — 33쪽과 34쪽을 같은 시작점에서 다시 잰다 (단계 3)</h3>
+  <p class="pipe-p">맞추기는 조건마다 여러 시작점에서 최적화를 다시 풀고 가장 좋은 해를 고른다.
+    이 시작점을 <b>restart 후보</b>라 한다. 단계 3 계약
+    (<code class="mono">docs/22p_gap/STAGE3_CONTRACT.md</code> v4)은 지금까지의 실행
+    protocol 에서 <b>교란</b> 다섯 가지를 실측했다 (계약 §1). 교란은 비교하려는 차이와
+    다른 원인이 함께 움직여 둘을 가를 수 없게 된 자리다. 예를 들어 noise 층이 다르면 같은
+    물리 조건도 다른 난수 시작점을 받는다 (계약 §4.1). 그러면 noise 를 재려는 비교가
+    시작점의 효과와 섞인다.</p>
+  <p class="pipe-p">단계 3 은 난수 시작점을 <b>미리 봉인한 목록</b>(고정 restart bank)에서 꺼내고,
+    예산을 목적함수마다 따로 적고, 계획한 후보와 실제로 쓴 후보를 따로 기록하는 설계다
+    (계약 §2 · §4). 주 비교량은 새 결과를 보기 전에 하나로 정해 두었다 (계약 §7).
+    그것은 <i>같은 reference · 같은 exact bounds · 같은 p_ini protocol 아래에서, warm 없이 같은 base ·
+    같은 고정 random bank · 같은 후보 수로 33쪽과 34쪽을 짝지어 비교한 차이</i>다.
+    warm 은 앞 목적함수의 해를 뒤 목적함수의 시작점으로 넘기는 것이다.
+    base 는 난수가 아닌 결정론적 첫 시작점이다.</p>
+
+  <div class="pipe-note">
+    <b>지금 어디인가 — 실행 GO 는 없다.</b> 설계를 코드로 옮기는 일은 여섯 칸의 순서로
+    나뉘어 있다 (<code class="mono">docs/22p_gap/GATE78_REQUEST.md</code> §3.2). 원장은 이
+    칸도 “단계” 라 부르고, 계약 이름의 “단계 3” 과는 다른 번호다.
+    <ul class="pg-list">
+      <li><b>단계 1·2</b> — 문서·계약 정정, restart 기록 필드, 깨진 parquet 을 발견으로 기록.
+        80차가 한정 범위로 종결했다 (원장 §112).</li>
+      <li><b>단계 3 라운드 1</b> — 계획 ↔ 실현 기록 분리 · 기록 세대 구분 · warm 공급 결속 ·
+        봉인 bank. 코드는 고쳤고 82차 판정을 기다린다 (2026-09-28 발송, 원장 §115).</li>
+      <li><b>라운드 2 와 그 뒤 (단계 4~6 · pilot)</b> — 각각 사용자의 별도 승인 뒤다.
+        pilot 은 이 설계로 도는 첫 본 계산이다 (원장 §107).</li>
+    </ul>
+    원장 §115 의 “하지 않은 것” 에는 실행 GO 0 · 새 연구 leg(실행 한 단위) 0 · pilot 0 이
+    적혀 있다. 그러므로 이 절에는 아직 새 수치가 없다. 검증층 쪽 기록은
+    <a href="/trust">검증층</a> 6절에 있다.
+  </div>
+
+  <h3 class="pipe-sub">satellite 의 다음 — 관측을 늘리면 갈리는가</h3>
   <p class="pipe-p">위 질문이 "곡선 <b>하나</b>로 되는가" 였다면, 다음 질문은
     <b>"채널을 더 주면 갈리는가"</b> 다. satellite 프로젝트
     <a href="/entity/mode-observability">mode-observability</a> 가 그것을 맡는다.</p>
