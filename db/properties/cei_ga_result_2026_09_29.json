@@ -1,0 +1,119 @@
+{
+  "schema": "estimand_result/v1",
+  "record_kind": "result",
+  "date": "2026-09-29",
+  "citable": false,
+  "system": "cathode_cei",
+  "제목": "Li 맞춤 축 가산성 GA — 두 자리 다 통과: Li 수를 맞춰도 Nd 효과와 O 효과는 그냥 더해진다 (x = 0.02)",
+  "사전등록": "db/properties/cathode_cei_limatched_additivity_prereg_2026_09_29.json",
+  "결정": "D-2026-09-29-cei-limatched-additivity",
+  "원자료": {
+    "interface": {
+      "path": "db/properties/cei_interface_V_ga_2026_09_29.json",
+      "sha256": "bdd69b44fde5fb3ab9a093a3b6805cfb7371904d734e12974f80205e8d4fe59e"
+    },
+    "verdicts": {
+      "path": "db/properties/cei_ga_verdicts_2026_09_29.json",
+      "sha256": "4330ed5b999dabf71abcbeafcec93e8164c7f53a448d200b16cd5dea291c89a5"
+    },
+    "logs": "db/raw/cei_ga_2026_09_29/ (run.log · R1.log · V.log · selftest.log)",
+    "commit": "9227f4ec4 (사용자 · gabia · 2026-09-29)"
+  },
+  "실행": {
+    "기계": "gabia (kserver116-27) · uma env · MP GGA_GGA+U · GPU 안 씀 (시작 시 GPU 42,035/49,140 MiB 는 탄성 + li2s 큐 · 호스트 여유 45,295 MiB)",
+    "시각": "2026-09-29 14:04:55 – 14:08:57 KST (4 분)",
+    "코드": "9b42a8324 (사전등록 커밋 — run.log 첫 줄 START … @ 9b42a8324 로 확인 · 결정 enforcement ②)",
+    "selftest": "gabia 에서 실행 전 selftest PASS",
+    "판정_재현": "판정 파일을 이 기록을 쓰면서 로컬에서 다시 만들었다 — gabia 산출과 완전히 같다(source 필드 제외)."
+  },
+  "1_게이트": {
+    "G0_재현": {
+      "verdict": "REPRODUCED",
+      "max_abs_delta": 0.0,
+      "n_compared": 216,
+      "tol": 0.002,
+      "읽기": "x002 파일과 겹치는 216 칸이 최대 차 0 — 같은 hull 스냅샷. 화면의 x002 수는 그대로 유효하다."
+    },
+    "짝_검사": {
+      "Li": {
+        "ok": true,
+        "problems": []
+      },
+      "P": {
+        "ok": true,
+        "problems": []
+      }
+    },
+    "GA_가산성": {
+      "Li": {
+        "n_cells": 23,
+        "N0_mean": -0.002702,
+        "N1_mean": -0.002699,
+        "residual": 3e-06,
+        "tol": 0.001,
+        "pass": true,
+        "info_R2_same_cells": 6e-06,
+        "info_R_O": -8e-06,
+        "info_n_cells_over_tol": 0,
+        "info_max_abs_cell_residual": 0.00012,
+        "info_by_V": {
+          "2.50": -5e-06,
+          "3.00": -1.3e-05,
+          "3.50": 2e-06,
+          "4.00": 2.7e-05,
+          "4.30": 1e-05,
+          "4.50": -1e-05
+        }
+      },
+      "P": {
+        "n_cells": 22,
+        "N0_mean": -0.002724,
+        "N1_mean": -0.002729,
+        "residual": -5e-06,
+        "tol": 0.001,
+        "pass": true,
+        "info_R2_same_cells": 1e-05,
+        "info_R_O": -5e-06,
+        "info_n_cells_over_tol": 0,
+        "info_max_abs_cell_residual": 3e-05,
+        "info_by_V": {
+          "2.50": -3e-06,
+          "3.00": 2e-06,
+          "3.50": -1.2e-05,
+          "4.00": -7e-06,
+          "4.30": -7e-06,
+          "4.50": -7e-06
+        }
+      }
+    },
+    "읽기": "두 자리 다 Li 를 맞춘 Nd 항이 O 가 있든 없든 같다 — 잔차가 문턱 0.0010 의 1/200 안팎(Li +0.000003 · P −0.000005)이고, 문턱을 넘는 칸이 하나도 없다(칸별 최대 Li 0.00012 · P 0.00003). Li 를 안 맞춘 축의 잔차(R2 +0.000006 · +0.000010)와 크기가 같은 급이다."
+  },
+  "허용_서술_이대로만": [
+    "x = 0.02 에서 Nd 효과와 O 효과는 서로 더해진다 — 무도핑 기준으로 재도, Li 수를 맞춘 무-Nd 대조와 견줘도 같다 (두 자리 · 공통 유효 칸 Li 23 · P 22 · 상호작용 잔차가 사전등록 문턱 0.0010 eV/atom 의 1/200 안팎).",
+    "Li 를 맞춘 Nd 항은 O 를 같이 넣어도 바뀌지 않는다 — Nd 의 몫과 O 의 몫을 따로 적어도 된다 (x = 0.02 · 두 자리).",
+    "EN: At x = 0.02 the Nd and O contributions to the interfacial reaction energy are additive, both relative to the undoped host and against Li-matched Nd-free controls (interaction residual ≈ 1/200 of the pre-registered 0.0010 eV/atom threshold, Li and P sites)."
+  ],
+  "금지_서술": [
+    "⛔ 더해짐을 크기 주장으로 쓰기('합만큼 좋아진다') — x = 0.02 에서 각 효과의 Δ 크기는 유의폭(±0.010) 안이다 (x002 결정 · 부호·가산성만).",
+    "⛔ x = 0.20 으로 옮기기 — Li 맞춤 가산성은 x = 0.02 에서만 쟀다.",
+    "⛔ 전압 기울기 기전의 증거로 쓰기 — 별도 결정(D-2026-09-28-cei-li-ledger-identity · proposed).",
+    "⛔ Nd 점유 자리 · 합성 가능성 · 이온전도도 · 절대 반응에너지 (modelc 기준 Δ 만 · 1저자 인용정책)."
+  ],
+  "이_결과가_말하지_않는_것": [
+    "x = 0.02 밖 농도의 Li 맞춤 가산성",
+    "Nd 의 실제 점유 자리",
+    "속도·두께·연속성·부동태 (0 K hull)",
+    "계면 반응에너지의 절대값"
+  ],
+  "화면": "db/properties/cei_figs/index.html — 사전등록 §3 GA '통과하면' 문안대로 §0b ① 답 · 요지 줄 · 기울기 상자의 조건 문장 · §1 요지 줄과 그림 설명 · 목차 · §9 금지 1 건에서 'Li 를 보정하지 않으면' 조건을 뗀다 (결속 시험 test_ga_additivity_line_matches_the_result).",
+  "닫는_열린_항목": "cei_nd_additivity_scope_2026_09_19.json §4 (Li 를 맞춘 Nd/O 분해 — '서로 더해진다' 를 원고에 쓰기 전 선행 조건) — x = 0.02 에서 닫힌다. x = 0.20 은 열린 채로 둔다.",
+  "status": "proposed",
+  "status_history": [
+    {
+      "at": "2026-09-29",
+      "state": "proposed",
+      "by": "agent",
+      "note": "짝 검사 · G0 · GA 사전등록대로 통과 — 판정 문구·문턱 그대로. 화면 반영은 결정 enforcement ③ 에 따른다. 1저자 확인 시 ratified."
+    }
+  ]
+}

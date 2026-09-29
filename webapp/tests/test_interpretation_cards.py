@@ -1637,6 +1637,53 @@ def test_x010_row_on_the_2x2_matches_the_raw(client):
     assert "0.02 · 0.10 · 0.20 을 잇는 다리다" in h, "머리 문장이 아직 '0.02 와 0.20 을 잇는' 이다"
 
 
+GA_VERD = REPORT.parents[3] / "db/properties/cei_ga_verdicts_2026_09_29.json"
+GA_RES = REPORT.parents[3] / "db/properties/cei_ga_result_2026_09_29.json"
+GA_RAW = REPORT.parents[3] / "db/properties/cei_interface_V_ga_2026_09_29.json"
+
+
+def test_ga_additivity_line_matches_the_result(client):
+    """⛔음성 — 'Li 를 맞춰도 더해진다' 문장이 판정 파일 · 결과 기록 · 원자료와 **값으로** 같고,
+    판정이 두 자리 다 통과일 때만 옛 조건('Li 를 보정하지 않으면')이 떨어진다
+    (2026-09-29 · 1저자 '이건 시뮬레이션 돌릴 수 있는거 있어?' → GA 사전등록 · gabia).
+
+    사슬: ① 원자료 → 도구(ga_verdicts)로 다시 낸 판정 = gabia 판정 파일 ② 결과 기록의 GA 수 = 판정 파일
+    ③ 화면(§0b span#ga-additivity · §1 그림 설명)의 잔차·칸 수·문턱 = 판정 파일
+    ④ 통과면 옛 조건 문장과 목차의 '(Li 미보정)' 이 없다.
+    잡는 것: 판정은 한 값인데 화면이 다른 값을 쓰는 것 · 불통과인데 조건을 떼는 것 · 한 화면만 고치는 것.
+    """
+    tool = _x002_tool()
+    raw = json.loads(GA_RAW.read_text("utf-8"))
+    rv = tool.ga_verdicts(raw["results"], repro=raw.get("reproduce_check"))
+    V = json.loads(GA_VERD.read_text("utf-8"))
+    rec = json.loads(GA_RES.read_text("utf-8"))["1_게이트"]["GA_가산성"]
+    assert set(V["GA_additivity"]) == {"Li", "P"}, "자리가 둘이 아니다 — 시험이 헛것을 재고 있다"
+    for s in ("Li", "P"):
+        g = V["GA_additivity"][s]
+        for k in ("n_cells", "residual", "pass", "tol"):
+            assert rv["GA_additivity"][s][k] == g[k], (s, k, "원자료 재판정", rv["GA_additivity"][s][k], "판정 파일", g[k])
+            assert rec[s][k] == g[k], (s, k, "결과 기록", rec[s][k], "판정 파일", g[k])
+        assert V["design_pairs"][s]["ok"] is True, (s, "짝 검사가 통과하지 않은 판정을 화면에 올렸다")
+    h = _report_html(client)
+    m = re.search(r'<span id="ga-additivity">(.*?)</span>', _section(h, "s0b"), re.S)
+    assert m, "§0b 에 Li 맞춤 가산성 문장이 없다"
+    t = m.group(1)
+    got = _nums(t)
+    passed = all(V["GA_additivity"][s]["pass"] is True for s in ("Li", "P"))
+    for s in ("Li", "P"):
+        g = V["GA_additivity"][s]
+        assert round(g["residual"], 6) in got, (s, "잔차", g["residual"], sorted(got))
+        assert f"{s} {g['n_cells']}" in t, (s, "칸 수", g["n_cells"])
+    assert V["tol"] in got, "문턱이 화면과 다르다"
+    assert ("마찬가지다" in t) == passed, "판정과 화면 문장이 어긋난다"
+    s1 = _nums(_section(h, "s1"))
+    for s in ("Li", "P"):
+        assert round(V["GA_additivity"][s]["residual"], 6) in s1, (s, "§1 그림 설명에 잔차가 없다")
+    if passed:
+        assert "보정하지 않으면 두 효과가 그냥 더해진다" not in h, "GA 통과인데 옛 조건 문장이 남았다"
+        assert "분해 (Li 미보정)" not in h, "GA 통과인데 목차에 옛 조건 표지가 남았다"
+
+
 
 def test_prot_counts_dies_when_the_grid_is_broken():
     """⛔음성 — 시험 쪽 전농도통과 판정도 격자가 깨지면 **세지 않고 죽는다** (2차 리뷰 ①②).
