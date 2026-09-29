@@ -151,6 +151,11 @@ body {
   font-family: var(--sans);
   font-size: 13.5px;
   line-height: 1.5;
+  /* 한국어는 기본값이면 음절 사이 어디서든 줄이 갈려 "얼마인 / 가" 처럼 낱말이
+     쪼개진다 (대칭셀 대시보드 머리말, 랩 제보 2026-09-29).  빈칸에서만 줄을
+     바꾼다.  빈칸 없이 긴 것(파일 이름·회로)은 넘칠 때만 끊는다. */
+  word-break: keep-all;
+  overflow-wrap: break-word;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
