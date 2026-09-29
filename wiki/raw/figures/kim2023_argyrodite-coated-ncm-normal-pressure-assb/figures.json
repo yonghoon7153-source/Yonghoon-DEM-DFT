@@ -1,0 +1,432 @@
+{
+ "slug": "kim2023_argyrodite-coated-ncm-normal-pressure-assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-29",
+ "sources": [
+  "e87beefc-48._An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+  "f000cc26-48._Sup_An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Characterization of SE (Li6PS5Cl) synthesized by using a ball-mill, liquid-phase 1, and liquid-phase 2. (a) XRD patterns and (b) Raman spectra of SEs. SEM images of (c) LPSCl_BM, (d) LPSCl_LP1, and (e) LPSCl_LP2. (f) Particle size distribution of LPSCl particles (obtained via diﬀerent methods). (g) Arrhenius plots of lithium ionic conductivities for LPSCl_BM, LPSCl_LP1 and LPSCl_LP2. Activation energy values are also shown.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    481.0
+   ],
+   "w": 2177,
+   "h": 1820,
+   "dpi": 300,
+   "src": "e87beefc-48._An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.769,
+   "note": "봤다 + (f)(g) 확대. (a) XRD 셋 + PDF# 01-086-5500 · (b) Raman 점선 하나(본문 421 cm⁻¹ ↔ 그림 2b 424 — D5) · (c)(d)(e) 20 µm 눈금 BM 응집 ≈10–20 · LP1 3–6 · LP2 ≤1 µm · (f) PSD 로그 0.5–20 µm 봉우리 ≈1.5 · 3 · 8.5 µm(인쇄 D50 1.44 · 3.01 · 8.24 정합) · (g) σ 로그 vs 1000/T 2.5–3.5 · RT 와 30 °C 점 나란(3.33 · 3.30) · Ea 색 = 범례(BM 0.2498 · LP1 0.2360 · LP2 0.2520) · 화소 판독 LP2 RT 4.60e-3 · 30 °C 4.52e-3 · 110 °C 2.82e-2 → σT 규약 0.247 eV 재현 · ⚠ S4 의 RT/30 °C 저항 비(1.47–1.74)와 안 맞음(D2). 크롭 온전 · 캡션 필드 온전."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Characterization of the cathode active material (NCM523) coated with LPSCl synthesized by BM and LP2. (a) XRD patterns and (b) Raman spectra of NCM523@SEs. SEM images of (c) NCM523_BM, (d) NCM523_LP1, and (e) NCM523_LP2 with the corresponding EDS mapping of Ni, S, O, and P.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    278.6
+   ],
+   "w": 2177,
+   "h": 976,
+   "dpi": 300,
+   "src": "e87beefc-48._An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.496,
+   "note": "봤다. (a) XRD 다섯 패턴(코팅 셋 = bare 패턴 · LPSCl 봉우리 안 보임) · (b) Raman 점선 424 · 418 cm⁻¹(본문 '∼5 cm⁻¹' ↔ 6 · 그림 1b 본문 421 — D5) · (c)(d)(e) 5 µm 눈금 2차 입자 ≈5–8 µm · Ni · S EDS — BM 에 ≈3 µm S 덩어리(부착 LPSCl) · LP1 S 응집 · LP2 S 전면 분산 + 위쪽 응집. 피복 분율 0. 크롭 온전."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Characterization of NCM523_LP2. (a) HAADF-STEM image and (b) line proﬁle of FIB cross-sectioned NCM523_LP2. (c) S 2p and (d) P 2p XPS spectra of LPSCl_BM, Li6PS5Cl_LP2, and NCM523_LP2.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    333.5,
+    298.0,
+    552.7
+   ],
+   "w": 1090,
+   "h": 914,
+   "dpi": 300,
+   "src": "e87beefc-48._An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.711,
+   "note": "봤다 + (b) 확대. (a) HAADF-STEM NCM/LPSCl/Pt · 30 nm 눈금 · (b) 선 프로파일 0–0.4 µm · 음영 'LPSCl' 띠 0.265–0.320 µm ≈55 nm(본문 '≈30 nm' — D6) · S 봉우리 ≈0.29 µm 반높이 ≈35–40 nm · Cl 이 Pt 층 쪽 ≈3–4 % 잔류(미논의) · (c) S 2p NCM523_LP2 에 P₂Sₓ 162.1 · Li₂Sₙ 163.5 추가 · (d) P 2p 133.0 추가. 크롭 온전."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Electrochemical characterization of all-solid-state cells employing bare NCM523 and NCM523_LP2 at 30 °C. (a) 1st charge–discharge voltage proﬁles and (b) cycling performances at 0.1C. (c) Rate capabilities of all-solid-state cells featuring diﬀerent composite cathodes. (d) Discharge–voltage proﬁles at diﬀerent C-rates. (e) Electrochemical impedance spectra of all-solid-state cells after the 1st, 50th, and 100th cycles. (f) Discharge–voltage proﬁles and corresponding polarization plots of cells obtained during the GITT. The polarization curves were plotted by subtracting the closed-circuit voltage (CCV) from the quasi-open-circuit voltage (QOCV) in the transient voltage proﬁles.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    479.5
+   ],
+   "w": 2177,
+   "h": 1813,
+   "dpi": 300,
+   "src": "e87beefc-48._An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.896,
+   "note": "봤다 + (a)(b)(c)(e)(f) 확대. (a) 충전 둘 다 ≈202 mAh g⁻¹ 로 겹침 · 방전 124.5/149.6 · ICE 61.6/74.1 표기 · (b) LP2 150 → ≈140 · bare 124.5 → ≈86 · CE bare 2–10 사이클 ≈93 → 99 % · (c) 율 5 사이클씩 LP2 147·136·118·98→92·146 / bare 138→130·115→113·85→82·49→35·125→120(본문 값은 각 율 첫 값 — D12) · (d) 율별 방전 곡선 · (e) Nyquist 위 bare 축 0–400 · 아래 LP2 축 0–150 Ω(축 다름) · 회로 R_bulk–(Rc‖CPE1)–(Ra‖CPE2)–CPEw · 주파수 표기 0 · (f) GITT 0.5C 60 s/2 h · bare 끝 ≈106 · LP2 ≈132 · ΔV 평탄 ≈0.09–0.10 / 0.04–0.05 V → 끝 ≈0.95 V · QOCV 포락선 겹침 여부 판독 폭 안. 크롭 온전."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Cross sectional SEM images of (a) and (c) composite cathodes prepared with bare NCM523 and (b) and (d) NCM523_LP2 before cycling and after 100 cycles. Red arrows indicate void spaces.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    298.0,
+    230.0
+   ],
+   "w": 1090,
+   "h": 774,
+   "dpi": 300,
+   "src": "e87beefc-48._An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.228,
+   "note": "봤다. 50 µm 눈금 · 시야 하나씩 · (a) bare 신품 화살표 9(공극) · (b) LP2 신품 화살표 0 · (c) bare 100 사이클 화살표 7 · (d) LP2 100 사이클 화살표 0 이지만 오른쪽·왼쪽 아래에 수십 µm 어두운 틈 보임. 분율 0. 크롭 온전."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Characterization of the composite cathode after 100 cycles. (a) S 2p and (b) P 2p XPS spectra of the composite cathode with bare NCM523 and NCM523_LP2.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    44.6,
+    558.8,
+    464.8
+   ],
+   "w": 1091,
+   "h": 1752,
+   "dpi": 300,
+   "src": "e87beefc-48._An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.799,
+   "note": "봤다 + (b) bare 30 min 확대. (a) S 2p 식각 0/15/30 분 — bare 30 분 Li₂Sₙ+P₂Sₓ > PS₄³⁻ · LP2 PS₄³⁻ 우세 · (b) P 2p 축 128–138 eV · POₓ 점선 ≈134.0 eV(본문 '139.9 eV' 축 밖 — D1) · PO₄³⁻+P₂Sₓ ≈133.0 · PS₄³⁻ ≈132.0. 식각 속도 0. 크롭 온전."
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1 1st charge–discharge voltage profile of NCM523 with liquid electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    467.3,
+    316.0
+   ],
+   "w": 1673,
+   "h": 988,
+   "dpi": 300,
+   "src": "f000cc26-48._Sup_An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.958,
+   "note": "봤다 + 확대. 액체셀 NCM523 첫 사이클 · 축 vs Li⁺/Li 2.5–4.5 V · 충전 ≈187 → 4.3 V · 방전 ≈161 → 3.0 V(149.6/0.927 = 161.4 ✅) · 전해질 · 율 미인쇄(G10). 크롭 온전."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2 BET analysis of N2 adsorption–desorption isotherm for NCM523.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    466.9,
+    320.6
+   ],
+   "w": 1671,
+   "h": 1007,
+   "dpi": 300,
+   "src": "f000cc26-48._Sup_An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.96,
+   "note": "봤다. N₂ 흡탈착 등온선 · 최대 ≈1.05 cm³ g⁻¹ · BET 값은 본문(0.762 m² g⁻¹). 크롭 온전."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3 Results of liquid-phase synthesis of Li6PS5Cl precursors in solvent. Digital photographs of (a) without dibutyl ether and (b) with dibutyl ether (during synthesis without stirring).",
+   "rotated_deg": 0,
+   "bbox": [
+    49.9,
+    79.2,
+    529.3,
+    281.2
+   ],
+   "w": 1998,
+   "h": 843,
+   "dpi": 300,
+   "src": "f000cc26-48._Sup_An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.51,
+   "note": "봤다. 분산제 유무 침강 사진 1 h/2 h · 정성. 크롭 온전."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4 Nyquist plots of impedance spectra for (a) LPSCl_BM, (b) LPSCl_LP1, and (c) LPSCl_LP2 with elevating temperature from RT to 110 ℃ at intervals of 20 ℃.",
+   "rotated_deg": 0,
+   "bbox": [
+    41.6,
+    79.2,
+    529.3,
+    222.7
+   ],
+   "w": 2033,
+   "h": 599,
+   "dpi": 300,
+   "src": "f000cc26-48._Sup_An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.92,
+   "note": "봤다 + 세 패널 확대. SE 셋 × RT·30·50·70·90·110 °C Nyquist 축 0–800 Ω · 반원 끝(V 바닥) 화소 판독 BM RT 313 · 30 °C 187 / LP1 424 · 244 / LP2 435 · 296 Ω → RT/30 °C 비 1.67 · 1.74 · 1.47(그림 1g 는 ≈1.0 — D2) · 펠릿 두께 미인쇄(G6 · D3). 크롭 온전."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5 Nyquist plots of impedance spectra for (a) LPSCl_BM, (b) LPSCl_LP1, and (c) LPSCl_LP2 with heat-treatment at 180 ℃.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    496.8,
+    342.7
+   ],
+   "w": 1795,
+   "h": 1099,
+   "dpi": 300,
+   "src": "f000cc26-48._Sup_An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.957,
+   "note": "봤다. 180 °C 열처리 SE 셋 Nyquist · 반원 끝 BM ≈2700 · LP1·LP2 ≈3100 Ω(550 °C 의 ≈9 배). 크롭 온전."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6 Chronoamperometry results of (a) LPSCl_BM, (b) LPSCl_LP1, and (c) LPSCl_LP2 with an applied voltage of 0.1, 0.2, 0.3, 0.4, and 0.5 V. (d) Linear fits.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    82.7,
+    527.5,
+    420.6
+   ],
+   "w": 1924,
+   "h": 1409,
+   "dpi": 300,
+   "src": "f000cc26-48._Sup_An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.916,
+   "note": "봤다 + (d) 확대. CA 0.1–0.5 V 10 분씩 · (d) V–I 점 BM 2.15·2.95·3.8·4.4·5.2 nA · LP1 4.3·5.2·5.7·6.4·7.5 · LP2 5.0·6.2·6.8·7.4·8.35 nA · 기울기 ≈7.6·8.0·8.4 nS · 절편 ≠ 0(미논의) · 인쇄 σₑ 3.93·3.71·3.89e-9 S cm⁻¹ → 두께 역산 1.3–1.5 mm ↔ 이온 2.5–5.7 mm(D3). 크롭 온전."
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7 SEM images of (a) NCM523_BM, (b) NCM523_LP1, and (c) NCM523_LP2 with corresponding EDS mapping of Co, Mn, O, P, and Cl.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.4,
+    450.0,
+    653.4
+   ],
+   "w": 1601,
+   "h": 2393,
+   "dpi": 300,
+   "src": "f000cc26-48._Sup_An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.068,
+   "note": "봤다. 코팅 셋 SEM + EDS Co·Mn·O·P·Cl · BM 에 P·Cl 몰린 ≈3 µm 입자 · LP1·LP2 분산 · 정성. 세로 긴 그림(공백 0.07 = 밀집) · 크롭 온전."
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8 (a) Digital photograph of 10 g base coating process. SEM images of (b) 1 g base and (c) 10 g base of NCM523_LP2 with corresponding EDS mapping of Ni, Co, Mn, O, P, S, and Cl.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.4,
+    523.6,
+    519.6
+   ],
+   "w": 1907,
+   "h": 1836,
+   "dpi": 300,
+   "src": "f000cc26-48._Sup_An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.069,
+   "note": "봤다. (a) 저울 사진 0.5000 g / 9.5000 g(5 : 95 ✅) + 현탁 병 · (b) 1 g base · (c) 10 g base SEM + EDS 7 원소 · 10 µm 눈금 · 정성. 크롭 온전."
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Fig. S9 Ni 2p XPS spectra of NCM523 and NCM523_LP2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    87.9,
+    419.5,
+    431.6
+   ],
+   "w": 1473,
+   "h": 1433,
+   "dpi": 300,
+   "src": "f000cc26-48._Sup_An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.866,
+   "note": "봤다. Ni 2p NCM523_LP2 ↔ NCM523 · Ni²⁺·Ni³⁺·위성 자리 같음 · 정성. 크롭 온전."
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 11,
+   "file": "fig_S10.png",
+   "caption": "Fig. S10 Rietveld refinement results of the XRD patterns of NCM523_LP2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.2,
+    469.1,
+    337.3
+   ],
+   "w": 1680,
+   "h": 1077,
+   "dpi": 300,
+   "src": "f000cc26-48._Sup_An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.925,
+   "note": "봤다. Rietveld · 그림 안 라벨 'NCM523:Li₆PS₅Cl = 95.9:4.1 wt%' ✅ 본문 · Bragg 위치 두 상 · 차 곡선. 크롭 온전."
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 12,
+   "file": "fig_S11.png",
+   "caption": "Fig. S11 1st charge–discharge voltage profiles of all-solid-state cells with composite cathode featuring NCM523, NCM523_LP1, and NCM523_LP2.",
+   "rotated_deg": 0,
+   "bbox": [
+    60.1,
+    79.0,
+    529.3,
+    322.4
+   ],
+   "w": 1956,
+   "h": 1015,
+   "dpi": 300,
+   "src": "f000cc26-48._Sup_An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.952,
+   "note": "봤다 + 확대. 첫 사이클 bare 124.5 · LP1 ≈140 · LP2 ≈150 · 충전 LP1 ≈192 · bare·LP2 ≈202 · 범례 순서 Bare · LP2 · LP1. 크롭 온전."
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 13,
+   "file": "fig_S12.png",
+   "caption": "Fig. S12 Fitted values for impedance spectra of all-solid-state cells with (a) NCM523, and (b) NCM523_LP2 in Fig. 4e.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.2,
+    79.1,
+    529.3,
+    284.7
+   ],
+   "w": 2039,
+   "h": 858,
+   "dpi": 300,
+   "src": "f000cc26-48._Sup_An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.843,
+   "note": "봤다 + (a)(b) 확대. 막대 (a) bare 축 0–200: 1st 22·14.4·≈0.5 / 50th 44·128·19 / 100th 99·179·28 Ω · (b) LP2 축 0–100: 19.3·4.79·1.5 / 43·25.51·4.5 / 52·28.72·8 Ω · 범례 'NCM532_LP2-Ra'(D8) · R_bulk ×4.5/×2.7 미논의(D16). 크롭 온전."
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 14,
+   "file": "fig_S13.png",
+   "caption": "Fig. S13 Electrochemical characterization of all-solid-state cells employing bare NCM523 and NCM523_LP2 with variable fabrication pressure. (a, c) 1st charge–discharge voltage profiles. Cross- sectional SEM images of composite cathode with (b) NCM523, and (d) NCM523_LP2 applying variable fabrication pressure. Red arrows indicate micro cracks in cathode active material.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.2,
+    526.7,
+    281.0
+   ],
+   "w": 1920,
+   "h": 843,
+   "dpi": 300,
+   "src": "f000cc26-48._Sup_An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.511,
+   "note": "봤다 + (a)(c) 확대. (a) bare 300/400/500 MPa 방전 ≈115·≈122–123·≈120 · 충전 ≈162·≈181·≈168 · (c) LP2 500 MPa ≈137 · 나머지 둘 ≈142·≈145(300↔400 배정 불가) · 충전 ≈200–205 겹침 · (b)(d) 단면 SEM 10 µm · 500 MPa 화살표(미세균열) · 라벨 400 ↔ 본문 410 MPa(D4) · LP2 산포 표본(149.6 ↔ 142–145). 크롭 온전."
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 15,
+   "file": "fig_S14.png",
+   "caption": "Fig. S14 Corresponding EDS mapping of S in Fig. 5a and b. Pristine state of composite cathode with (a) NCM523, and (b) NCM523_LP2. Red arrows indicate intimate contacts.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.3,
+    527.4,
+    251.9
+   ],
+   "w": 1923,
+   "h": 720,
+   "dpi": 300,
+   "src": "f000cc26-48._Sup_An_argyrodite_sulfide_coated_NCM_cathode_for_improved_interfacial_contact_in_normal-pressure_operational_all-solid-state_batteries.pdf",
+   "blank": 0.127,
+   "note": "봤다. 신품 S EDS 단면 (a) bare · (b) LP2 띠 모양 S + 화살표 7 · 눈금 0 · 분율 0. 공백 0.13 = 밀집 · 크롭 온전."
+  }
+ ]
+}

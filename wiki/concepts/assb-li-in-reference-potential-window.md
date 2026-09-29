@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/oruemendizabal2023_multiconfiguration-geis-drt-nmc622-lpscl-li-interfaces.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/jung2015_sulfide-assb-bulk-type-issues-challenges-review.md, raw/papers/zaghib1999_lto-negative-electrode-spe-polymer-li-ion.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/dugas2021_engineered-three-electrode-cell-assb-li-in-reference-layer.md, raw/papers/solchenbach2016_gold-wire-micro-reference-electrode-liquid-t-cell.md, raw/papers/schlenker2020_li6ps5cl-li-metal-lifetime-three-electrode.md, raw/papers/hertle2023_micro-reference-electrode-lithiated-gold-wire-assb.md, raw/papers/jin2015_lithium-silicide-anode-electrode-design-assb.md, raw/papers/fukunishi2023_graphite-three-electrode-impedance-cyclability.md, raw/papers/santhosha2019_indium-lithium-electrode-phase-formation-redox-potential.md, raw/papers/nam2018_three-electrode-assb-failure-modes-li-in-depletion.md, raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
+sources: [raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/oruemendizabal2023_multiconfiguration-geis-drt-nmc622-lpscl-li-interfaces.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/jung2015_sulfide-assb-bulk-type-issues-challenges-review.md, raw/papers/zaghib1999_lto-negative-electrode-spe-polymer-li-ion.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/dugas2021_engineered-three-electrode-cell-assb-li-in-reference-layer.md, raw/papers/solchenbach2016_gold-wire-micro-reference-electrode-liquid-t-cell.md, raw/papers/schlenker2020_li6ps5cl-li-metal-lifetime-three-electrode.md, raw/papers/hertle2023_micro-reference-electrode-lithiated-gold-wire-assb.md, raw/papers/jin2015_lithium-silicide-anode-electrode-design-assb.md, raw/papers/fukunishi2023_graphite-three-electrode-impedance-cyclability.md, raw/papers/santhosha2019_indium-lithium-electrode-phase-formation-redox-potential.md, raw/papers/nam2018_three-electrode-assb-failure-modes-li-in-depletion.md, raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -711,6 +711,18 @@ shift less than 3 mV"*. `[추론]` WE·CE 가 **둘 다 2상 평탄에 고정**�
 - `[도표·화소]` 1st ±전류 중점 ≈+0.003–0.006 V(0.62 기준 · 리튬화 −0.033 ↔ 탈리튬 앞 +0.038–0.044) — Li 쪽 스트리핑 ↔ 도금 비대칭이 섞여 **영점 측정이 아니다**.
 - ⇒ 계보: … → 42호 측정 원전을 단 0.62 V 단일 표기 · 상대극 상쇄 가정 인쇄(73호 — 2021) · **같은 0.62 V 로 In 셀 전위를 정규화하고, 상대극 몫을 구성 교체로 떼며, In 완전지를 Li 축에 환산식 없이 싣는 편(84호 — 2023)**. 칸 이동 없음(Q5): 전위 측정 0 · 기준극 0.
 
+### ★ `assb` 86호 (Kim J.T., Shin, Kim A.-Y., Oh, Kim H., Yu, Kim H., Chung, Kim J., Sun Y.-K., Jung H.-G. 2023 *J. Mater. Chem. A*) — **서른세 번째 형태: Li₀.₅In 분말 상대극(100 mg · 190 MPa · 출처 0) · 전압 전부 "vs Li⁺/Li–In" · 환산값 0 — 그리고 "액체셀의 92.7 %" 비교가 창(3.0–4.3 V vs Li ↔ 2.0–3.6 V vs Li–In)과 기준이 다른 두 셀 사이에서 이뤄진다** (25호 ref 17 지목 · 3차 묶음 파일 48)
+
+`raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md`
+(*J. Mater. Chem. A* **11** (2023) 20549, KIST + 한양대; NCM523(LPSCl 코팅) \| Li₆PS₅Cl 150 mg \| Li₀.₅In 분말 100 mg · ∅15 mm · 2032 코인 · 2전극 · 기준극 0 · 30 °C).
+
+- **① 영점 — 0 회.** `0.62` · `0.6 V` 0 · "vs. Li⁺/Li–In" 축(그림 4a · d · f · S11 · S13) · 환산식 0 · 65호(같은 나라 다른 연구실 · Li₀.₅In 분말 · 전부 "vs Li/Li⁺")와 **반대 표기 관례**.
+- **② 창의 대조.** 액체셀(S1 · "vs Li⁺/Li" · `[도표]` 3.0–4.3 V · 방전 ≈161) ↔ ASSB 2.0–3.6 V vs Li–In(0.62 규약이면 2.62–4.22 · 0.600 이면 2.60–4.20 V vs Li) → `[인쇄]` "92.7% of the capacity attained when using a liquid electrolyte" 는 아래 컷오프가 0.38 V · 위가 0.08 V 다른 두 창의 비 · 액체 조건(전해질 · 율) 미인쇄.
+- **③ 재고 · 조성.** `[재현]` Li₀.₅In 100 mg = In 0.845 mmol · Li 11.3 mAh · 첫 충전 4.24 mAh 로 x 0.50 → 0.69(In + LiIn 2상 창 안 — 평탄 조건 "분리막 쪽 LiIn 고갈 없음" 충족) · 재고 ×2.7 → LLI 가 용량에 안 찍히는 셀.
+- **④ 상대극 몫.** 2전극 EIS 의 Ra(저자 "between the anode and solid electrolyte") `[도표]` 0.5 → 28 Ω(bare) · 1.5 → 8 Ω(LP2) — 배정 방법 0 · 작다.
+- ⇒ 계보: … → 구성 교체(84호 — 2023) → **Li₀.₅In 분말 · 환산 0 · 액체 대조 창 불일치 · 65호 관례의 반대 축(86호 — 2023)**. 칸 이동 없음(Q5): 전위 측정 0 · 기준극 0.
+
+
 ## ★★ 평탄이 유지되는 조건 (현재까지의 정리)
 
 > **Li-In 기준 전위가 ±10 mV 안에서 평탄한 것은 다음 넷이 동시에 성립할 때뿐이다.**
@@ -842,6 +854,8 @@ Li 박 뒷면(= 17호 foil) 은 **9 초 · 0.39 µAh cm⁻²**, Li 박 면이 �
 - ★ **2026-09-28 (71호)**: **In 영점이 0.62 V 가 아니라거나 0.600 V 가 맞다고 하지 않는다** — 이 종설이 0.62 를 재인용(Takada 1996 + Jung 2008)으로 싣고, 옮겨 실은 그림 두 장의 축이 0.600 으로 환산돼 있다는 것까지다(0.600 은 우리 픽셀 판독 · ±0.001/±0.005). **LGPS | Li-In 상대극 계면에서 SE 환원이 일어났다고 하지 않는다** — 재인용 명제(LGPS 0.6 V 변화)와 영점을 나란히 놓은 산술까지. **23호가 두 값 중 어느 것을 옮겼는지 · 64호가 이 종설을 의도했는지 추정하지 않는다.** Takada 1996 · Jung 2008 에 무엇이 인쇄돼 있는지는 여전히 미열람이다.
 
 - ★ **2026-09-29 (84호)**: **±전류 중점 +0.003–0.006 V 를 In 영점의 ASSB 측정으로 쓰지 않는다** — 리튬화 ↔ 탈리튬 스텝의 비대칭 동역학(Li 쪽 스트리핑 ↔ 도금)이 섞인 우리 화소 판독이다. **NMC\|SE\|In 곡선이 환산 없이 그려졌다고 단정하지 않는다** — 환산 여부가 미인쇄라는 것까지다. 그리고 **상대극 교체의 같은 감쇠를 저항 몫의 배정으로 쓰지 않는다** — 셀 4 EIS 가 없다.
+
+- ★ **2026-09-29 (86호)**: **86호 창을 2.62–4.22 V vs Li 로 확정하지 않는다** — 0.62 · 0.600 규약 둘 다 우리 가정이고 지면에 환산값이 없다. **Ra 가 In 계면이라고 하지 않는다** — 2전극 배정 선언이다. "92.7 %" 가 틀렸다고도 하지 않는다 — 창이 다르다는 것까지다.
 
 ## 관련
 - [[assb-contact-loss-vs-lampe]] — 닻. 이 페이지는 그 카드의 **Q5** 와 "아직 모르는 것 2"

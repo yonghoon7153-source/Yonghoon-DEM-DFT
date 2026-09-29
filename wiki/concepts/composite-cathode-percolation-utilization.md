@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -581,6 +581,17 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - **부피 분율** `[재현·외부 밀도]`: 70 : 30 wt% → SE 49.9–53.2 vol%(PTFE 4 %) — 82호 47.7 · 73호 42 vol% 점과 같은 띠 · mixed 의 SE 안 small 몫 2/3(실험 절) ↔ 1/3(그림 1b — D3).
 - ⇒ 이 페이지 규율에 붙는 것(`[해석]`): (1) "large + small 혼합" 편은 **CAM 과 SE 중 어느 쪽이 큰지**(λ 의 방향)를 먼저 적는다 — 같은 "계층형" 낱말이 반대 기하를 덮는다 (2) 전자 퍼콜 문턱은 SE 종류 · 분포와 함께 적는다(같은 40 wt% 가 LPSCl1.5 퍼콜 · LGPS 비퍼콜) (3) 0.3 C 용량의 판 무관성은 `θ₀` 차의 상한이지 측정이 아니다.
 
+## ★★ 25호가 ref 17 로 가리킨 "CAM 에 SE 코팅 → 저압 개선" 의 원전 — 코팅 쌍의 정적 `θ₀` 차는 첫 충전 등가로 ≈0 이고, "피복률 ×4.26" 은 `D` 고정 GITT 의 분극 이름표다 (2026-09-29 추가, `assb` 86호)
+
+`raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md` (Kim J.T. … 2023 *J. Mater. Chem. A* 11, 20549 — NCM523 2차 입자 ≈5–8 µm · LPSCl_LP2 D50 1.44 µm ≈30 nm 코팅 · 복합체 NCM523(_LP2) : Li₆PS₅Cl : VGCF 70 : 27 : 3 · 2032 코인 무외압 · 0.1C · 30 °C).
+
+- **`θ` 는 없다** — 연결 분율 계산 · 측정 0(`percolat` 0 · `tortuos` 0). 대신 **코팅 쌍의 첫 충전 등가**: `[재현]` 202.1 ↔ 201.9 mAh g⁻¹(`[도표]` 겹침) → 통째 고립(정적 `θ₀`) 차 상한 ≈0 · 첫 방전 차 25 mAh g⁻¹ · 100 사이클 68.9 ↔ 93.7 % — 정적 차가 아니라 첫 사이클 안 · 사이클 중 몫.
+- **"피복률" 83.9 ↔ 19.7 %** 는 GITT 식 (1) 에 `D`(미인쇄)를 넣은 값 — `θ₀` 로도 면적으로도 옮기지 않는다(곱 축퇴 예순아홉 번째).
+- **부피 분율** `[재현·외부 밀도]`: 70 : 27 : 3 wt% → NCM 48 · SE 47 · VGCF 5 vol%(공극 0 가정) · 코팅 LPSCl(NCM 의 4.1 wt%)은 총 SE 의 ≈10 % · 코팅 셀의 70 wt% 기준 미인쇄(총 SE 27 ↔ 29.9 wt%).
+- **율 되돌림**: bare 0.1C 복귀 `[도표]` 125 / 시작 138(−9 % 미회복 · 20 사이클) ↔ LP2 146 / 147 — 미회복 몫은 정적(`θ` 또는 `LAM_PE` — Li 재고 ×2.7 라 LLI 밖) · 배정 0.
+- ⇒ 이 페이지 규율에 붙는 것(`[해석]`): (1) 코팅 · 공정 쌍은 **첫 충전 등가**를 먼저 검사한다 — 같으면 정적 `θ₀` 차는 ≈0 이고 "접촉 개선" 은 동역학 쪽 이름이다 (2) GITT "피복률" 은 `D` 고정값과 함께만 옮긴다 (3) VGCF 3 wt% 셀은 전자 퍼콜 대조군이 아니다(73 · 85호 무탄소와 다름).
+
+
 ## 이 페이지가 주장하지 않는 것
 
 - `θ_AM` 이 접촉 손실의 **올바른** 모형이라고 주장하지 않는다. 원문의 `θ` 는 접촉 저항을
@@ -605,6 +616,7 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - ★ **2026-09-29 (82호)**: **82호의 용량 비를 `θ` 로 쓰지 않는다** — 연결 분율은 계산되지 않았고, C/20 결손의 `θ` · `A_eff` · 첫 사이클 손실 배분은 이 편 자료로 갈리지 않는다. 77호 지도 대입은 λ 정의만 같은 우리 산술이다.
 - ★ **2026-09-29 (83호)**: **25호의 DEM 굴곡도 · 이용률 계산이 틀렸다고 하지 않는다** — 25호가 원전으로 가리킨 83호 지면에 그 방법이 없다는 것까지이고, 25호 SI 의 해당 문장은 다시 보지 못했다. 83호 단면 분율 0.187 은 단면 하나의 화소 판독이다.
 - ★ **2026-09-29 (85호)**: **85호의 0.3 C 용량 무관성을 `θ₀` 의 측정으로 쓰지 않는다** — 상한(≤10 %)까지이고 셀 하나씩 · 음극이 다른 비교(2a Si–G ↔ 2h Si–Cl)다; 25호 ref 16 귀속은 "주장의 선행 ✅ · 측정 0" 까지다.
+- ★ **2026-09-29 (86호)**: **86호 코팅 쌍의 `θ₀` 차가 0 이라고 단정하지 않는다** — 첫 충전 등가는 CV 몫(종료 조건 미인쇄) · 기생 전하(bare CE 결손) · 셀 산포(3–5 %) 위의 상한이다; "피복률" 을 틀린 값이라고도 하지 않는다 — `D` 가 없어 재현 불가하다는 것까지다.
 
 ## 관련
 - [[assb-apparent-capacity-decomposition]] — 이 곱에 **셋째 항 `η(i)`** 를 더한다. 반례와 분리 시험.

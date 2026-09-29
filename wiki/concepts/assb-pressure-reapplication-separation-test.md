@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
+sources: [raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -386,6 +386,15 @@ Li₂₁Si₅/Si–Li₂₁Si₅ 이중층 음극 ‖ Li₆PS₅Cl ‖ Li₃InCl
   상수가 아니다. **유지 시간** — Zhang X. [8] 모형 4.5 MPa 에서 접촉 영역이 0 → 1 → 5 h 에 넓어진다(61호 절의 "유지 시간" 과 같은 방향 · Li 금속 · 모형). **D1 의 전극 몫** — 62호 두 패널을 떼어 싣고
   LTO 패널을 "LCO + In-Li" 로 적어 상대극 몫(62호 `[재현]` ≈90–95 %)이 전사에서 사라진다.
 
+## ★ 86호(Kim J.T. 2023)가 붙인 것 — **"무외압" 표본 둘째(60호 뒤): 코인셀이라 이 연산자의 가압 분기를 걸 수 없고, 되돌림 · 계측 · 구속 형식이 0 이며, 유일한 압력 축은 성형 3 점(300–500 MPa)이다** (2026-09-29)
+
+`raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md` (25호 ref 17 · 3차 묶음 파일 48).
+
+- 설계 조건 D1–D5 대조: **D1**(사이클 해상 압력 계측) 0 · **D2** 0 · **D3** 0 · **D4**(운전 중 구속 형식 — 정하중 / 정변위) 0(2032 코인 · 스프링 · 스페이서 미인쇄 → 형식 자체가 미상) · **D5**(채널별 신고) 0 → 만족 **0/5**(60호는 D4 하나).
+- 되돌림 대신 있는 것: 성형 압력 스윕(S13 — 제조 압력 축 · 500 MPa 균열 사진) · 사이클 중 EIS 세 점(충전 상태 · R 만) · 100 사이클 뒤 단면 SEM(시야 하나) — `P↑` 연산자 0.
+- `[해석]` 코인셀의 스프링은 정하중에 가까운 구속이라(80호) 되돌림을 걸려면 셀을 열어야 한다 — 이 연산자의 가압 분기를 코인셀 표본에 요구할 수 없다는 형식상의 제약 · 대신 "무외압" 셀은 아래 벽(접촉) 쪽의 자연 표본이 되는데, 이 편은 그 하중 값조차 0 이다.
+
+
 ## 이 페이지가 주장하지 않는 것
 
 - **원문의 식이 아니다.** Shi 2020 은 `ΔQ_mech` 를 정의하지도, 10.4 % 와 60 %p 를
@@ -401,6 +410,7 @@ Li₂₁Si₅/Si–Li₂₁Si₅ 이중층 음극 ‖ Li₆PS₅Cl ‖ Li₃InCl
   사이클 변수가 아니다. 압력 스윕 하에서의 `θ(N)` 은 `assb` **4/4 편이 안 줬다.**
 - **종설의 재가압 서술을 이 연산자의 근거로 쓰지 않는다** (2026-09-29, 81호) — 81호 본문의 "LF · HF 불변" 은 자기 재수록 그림과 어긋나고, 4호 원전은 LF 감소를 인쇄한다.
   근거는 원전(4호)의 그림과 원문이다.
+- **86호 코인셀에서 접촉 손실이 압력으로 되돌아온다고도 안 온다고도 하지 않는다** (2026-09-29, 86호) — 되돌림 · 계측 · 구속 형식이 0 인 무외압 표본이고, 성형 3 점은 제조 축이다.
 
 ## 관련
 - [[assb-stack-pressure-operating-window]] — **이 연산자의 사용 조건**: 압력의 2 측 구속과 상한(5호 Doux 2020).

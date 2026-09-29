@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -288,6 +288,16 @@ evidenceScope: multi-source-primary
 4. **배정 연산자가 구성 차 하나** — large ↔ small 두 구성의 R2 · R3 순서로 "수송 ↔ 접촉" 을 가르고(처방 15 ①), 그 회로의 셋째 저항(R1 — 저자 정의 "연결 전해질 망")이 같은 크기로 움직인 것(`[도표]` 68 ↔ 37 ↔ 27 Ω)은 판정에 들어가지 않았다.
 ⇒ 처방 목록에 한 줄(20).
 
+## ★★ 86호 — 스윕 = 성형 압력 3 점(300–500 MPa) · 운전 0 · 대신 **GITT 식 (1) 의 곱 `D·S²` 를 `D` 고정으로 `S`("피복률")에 배정**한 실험 편: `D` 는 미인쇄이고, 같은 지면의 첫 충전 등가가 정적 면적 차 ≈0 을 주는데 대조하지 않았다
+
+`raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md` (Kim J.T. … 2023 *J. Mater. Chem. A* 11, 20549 — 25호 ref 17 · 3차 묶음 파일 48).
+
+- **첫 줄(설계 스윕)**: 성형 압력 300 / 400 / 500 MPa 첫 사이클(S13) — LP2 `[도표]` ≤5 % 차 · bare 300 MPa −6 % · 500 MPa 미세균열 → `[인쇄]` "the pressure of 410 MPa … seems to be appropriate" 는 bare 쪽 판정(라벨 400 ↔ 본문 410) · 셀 하나씩 · 운전 압력 축 0.
+- **곱의 배정**: `D = (4/πτ)(m V_M/(M S))²(ΔEs/ΔEt)²` — 한 식에 두 미지수(`D` · `S`) · `D` 를 고정(값 · 출처 0)해 `S` 83.9 ↔ 19.7 % · (주) 기준: 무엇(피복률 비) · 시간 기준(GITT 방전 · 펄스 SOC 0) · 조건(0.5C 60 s · 2 h · 30 °C) · 정의(분모 BET?) · 손잡이(`D` 가정 미인쇄) — 85호(온도 기울기로 `ρ` ↔ `A`)의 GITT 판.
+- **자기 데이터 교차**: 첫 충전 `[재현]` 202.1 ↔ 201.9 mAh g⁻¹ → 정적 면적(고립) 차 ≈0 · "×4.26" 은 분극 비 — 교차하지 않았다.
+- **재현 결과**: SE Ea 는 σT 규약으로 ±0.015 eV 재현(85호와 반대 — 규약을 찾으면 맞는 편) · 그러나 S4 ↔ 1g RT 불일치(D2) · σ ↔ σₑ 두께 역산 ×1.7–4.3(D3).
+
+
 ## 우리 쪽 연결
 
 - `degradation-degeneracy/` 는 **"곡선이 맞는다 ≠ 파라미터가 맞다"** 를 합성 truth 로 채점하는 프로젝트다. 26호의 "RMSD 0.11 → 0.06 V + 문헌과 5 % 이내" 는 그 실패 모드를
@@ -318,6 +328,7 @@ evidenceScope: multi-source-primary
 18. (82호) **실험 스윕(한 손잡이 여러 수준)에서 "Y 가 성능을 정한다" 상관을 보면 ① 손잡이가 같이 움직인 양의 목록(공극 · 면적 · 균질도 · 두 σ) ② 경쟁 설명이 다른 예측을 하는 표본이 있는지(비 > 1 등) ③ 측정 방법을 바꿔도 순서가 유지되는지 ④ 제안 기구의 크기 검사(옴 강하 ↔ 관측 간격)를 적는다.** 82호: ① 다섯 ② 0 개 ③ 아니다(AC ↔ DC 로 L ↔ XL 뒤집힘) ④ 없다 — `[재현]` 작은 몫.
 19. (83호) **모형 편이 두 손잡이의 OAT 결과를 "설계 지침" 으로 합쳤으면 ① 각 스윕의 다른 손잡이 고정값 ② 조합 run 유무 ③ "둔감" 한 손잡이가 전기화학에 닿는 경로가 식에 몇 개인지(가정으로 뺀 기구 포함) ④ 문턱의 무차원 조건(전류 · 두께) ⑤ 결론이 쓴 기준(수명 ↔ 총 균열 등)이 자기 다른 기준과 순위가 같은지를 적는다.** 83호: ① 미인쇄 ② 0 ③ 하나(ϕ_mech — CAM\|SE 박리는 가정으로 제외) ④ 전류 미인쇄 ⑤ 다르다(파괴 사이클 fine > coarse ↔ 총 균열 coarse < fine).
 20. (85호) **온도 기울기(Ea)로 곱(R = ρl/A · `j₀·A_eff`)의 한쪽을 배정한 편이면 ① 인쇄 Ea 를 인쇄 표로 재적합(log 밑 · 형식 · 점 수 · 신뢰 낮은 점) ② "Ea ↑ ⇒ ρ ↑" 에 필요한 앞인자 동일 가정의 인쇄 여부 ③ R·C 곱(τ = ρε · 면적 무관)이 같은 방향을 주는지 ④ A 의 독립 관측 유무 ⑤ 배정 차이의 크기 ↔ 적합 폭을 적는다.** 85호: ① 7/8 ln 10 누락 · 1/8 점 뒤바뀜 ② 0 ③ τ ×2.2 같은 방향 ④ 0 ⑤ 7 meV ↔ ≤27 meV.
+21. (86호) **GITT 로 "피복률 · 접촉 면적 · 활성 면적" 을 뽑은 편이면 ① `D` 의 값 · 출처(액체셀 · 문헌 · 같은 지면) ② 펄스 SOC · ΔEs · ΔEt 판독(IR 계단 제외 여부) ③ 기준 면적(BET · 기하)을 찾고 ④ 같은 지면의 첫 충전 상한(코팅 · 공정 쌍의 첫 충전이 같으면 정적 면적 차 ≈0)과 교차한다 — ①–③ 중 하나라도 없으면 그 값은 분극 비의 이름표로 옮긴다(65 · 29 · 86호).**
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -335,6 +346,7 @@ evidenceScope: multi-source-primary
 - **82호의 "balanced transport" 가 틀렸다고 하지 않는다** — 네 점 표본으로 σ_ion 증가 · 면적 · 공극과 가를 수 없다는 것까지다. 옴 강하 크기 검사는 가정 두께(밀도 · void) 위의 `[재현]` 이고, 반응 분포를 통한 수송 한계는 배제되지 않는다.
 - **83호의 설계 지침(E ≈2 GPa · σ 5×10⁻⁴ · coarse)이 틀렸다고 하지 않는다** — 조합 run · 고정값 · 전류가 없고, 결론 하나는 자기 다른 기준과 순위가 반대라는 것까지다. ϕ_mech 규모와 옴 문턱 전류는 인쇄 밀도 · 단면 분율(화소) · 가정 부피 변화 위의 `[재현]` 이다.
 - **85호의 "작은 입자가 ρ 를 올린다" 가 틀렸다고 하지 않는다** — τ 비(×2.2)는 같은 방향이다; 틀린 것은 Ea 산술과 그 위의 정량("37 meV")이고, A 의 독립 관측이 없다는 것까지다.
+- **86호의 "코팅이 접촉을 늘린다" 가 틀렸다고 하지 않는다** — 첫 충전 등가는 정적 고립 차의 상한(CV 몫 · 기생 · 산포 위)이고, 코팅 셀의 분극이 작다는 관측은 단단하다; 걸린 것은 `D` 없는 피복률의 재현 불가와 자기 데이터 미교차다.
 
 ## 관련
 
