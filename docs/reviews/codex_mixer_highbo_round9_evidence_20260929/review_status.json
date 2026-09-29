@@ -1,0 +1,53 @@
+{
+  "schema": "review_status_recommendation/v1",
+  "scope": "document review only; no run authorization; no repository ledger mutation",
+  "prereg_sha256": "e7311197509268b9302708847ac00d19daa68fa4fb09232e74908524cada080c",
+  "new_P1": false,
+  "findings": {
+    "HBR8-01": {
+      "document": "partial",
+      "core_transition": "closed",
+      "remaining": [
+        "P14 prior-screening benefit sentence needs retirement/replacement"
+      ],
+      "new_P1": false
+    },
+    "HBR8-02": {
+      "document_in_v23": "closed",
+      "overall": "partial",
+      "remaining": [
+        "parent notice",
+        "actual emitted-deck comparison"
+      ]
+    },
+    "HBR8-03": {
+      "current_separate_fresh_plan_document": "closed",
+      "unused_prefix_implementation": "not_required_for_current_plan",
+      "remaining": [
+        "actual chosen-deck verification at implementation stage"
+      ]
+    },
+    "HBR8-04": {
+      "scope_disclosure_document": "closed",
+      "overall": "partial",
+      "remaining": [
+        "NP measurements",
+        "integrated cost table",
+        "final schedule decision"
+      ]
+    }
+  },
+  "dev_only_7": {
+    "soft_bound_is_direct_blocker": false,
+    "contains_soft": false,
+    "technical_prerequisites_independently_verified": false,
+    "launch_authorization": false
+  },
+  "confirmation_18": {
+    "launch_status": "HOLD",
+    "soft_range_required_before_launch": true,
+    "code_evidence_not_submitted": true
+  },
+  "note": "Do not convert document closure or reference-model assertions into implementation PASS."
+}
+

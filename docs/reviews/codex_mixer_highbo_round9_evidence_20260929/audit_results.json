@@ -1,0 +1,310 @@
+{
+  "scope": "document bytes/diff and reviewer reference models; no submitted production-code test",
+  "pin": {
+    "bundle_sha256": "9b1e142cfcc67b54f43ba0586b7b5835f1dd87f65000486637814334be43f2c6",
+    "bundle_bytes": 104185,
+    "request": {
+      "sha256": "504c97f5bc5c6e6c64e0fd1e2fe2f1edc0477e4de94705920af49caf504573b8",
+      "bytes": 6883,
+      "lines": 60,
+      "starts_at_bundle_line": 5,
+      "selection": "separator_blanks_excluded_one_final_LF",
+      "candidate_hashes": {
+        "raw_between_markers": "55581fcded38e1f78387250e9f3ce0d67a0dd326ff986915830a832d9c273c99",
+        "separator_blanks_excluded_one_final_LF": "504c97f5bc5c6e6c64e0fd1e2fe2f1edc0477e4de94705920af49caf504573b8"
+      }
+    },
+    "prereg": {
+      "sha256": "e7311197509268b9302708847ac00d19daa68fa4fb09232e74908524cada080c",
+      "bytes": 52370,
+      "lines": 294,
+      "starts_at_bundle_line": 68,
+      "selection": "separator_blanks_excluded_one_final_LF",
+      "candidate_hashes": {
+        "raw_between_markers": "263551e4008cc496cf2d306b5607cce031cd1b4cb3528f9a72787e811a89229f",
+        "separator_blanks_excluded_one_final_LF": "e7311197509268b9302708847ac00d19daa68fa4fb09232e74908524cada080c"
+      }
+    },
+    "claimed_content_commit": "88a58ec02",
+    "remote_commit_independently_verified": false
+  },
+  "diff": {
+    "hunks": [
+      {
+        "old_line": 1,
+        "old_count": 2,
+        "new_line": 1,
+        "new_count": 2
+      },
+      {
+        "old_line": 13,
+        "old_count": 5,
+        "new_line": 13,
+        "new_count": 5
+      },
+      {
+        "old_line": 54,
+        "old_count": 2,
+        "new_line": 54,
+        "new_count": 3
+      },
+      {
+        "old_line": 59,
+        "old_count": 2,
+        "new_line": 60,
+        "new_count": 25
+      },
+      {
+        "old_line": 81,
+        "old_count": 3,
+        "new_line": 105,
+        "new_count": 3
+      },
+      {
+        "old_line": 108,
+        "old_count": 3,
+        "new_line": 132,
+        "new_count": 3
+      },
+      {
+        "old_line": 117,
+        "old_count": 3,
+        "new_line": 141,
+        "new_count": 3
+      },
+      {
+        "old_line": 128,
+        "old_count": 13,
+        "new_line": 152,
+        "new_count": 27
+      },
+      {
+        "old_line": 210,
+        "old_count": 2,
+        "new_line": 248,
+        "new_count": 5
+      },
+      {
+        "old_line": 216,
+        "old_count": 2,
+        "new_line": 257,
+        "new_count": 6
+      },
+      {
+        "old_line": 233,
+        "old_count": 8,
+        "new_line": 278,
+        "new_count": 12
+      }
+    ],
+    "reconstructed_sha256": "e7311197509268b9302708847ac00d19daa68fa4fb09232e74908524cada080c",
+    "matches": true
+  },
+  "unchanged_sections": {
+    "estimands": true,
+    "pairwise_stiffness": true,
+    "error_budget_and_decision": true,
+    "contact_contract": true,
+    "seeds_and_holdout": true,
+    "terminal_policy": true
+  },
+  "development_plan_cells": [
+    [
+      "E0_ref",
+      32452843,
+      "ref"
+    ],
+    [
+      "E0_ref",
+      49979687,
+      "ref"
+    ],
+    [
+      "E0_ref",
+      67867967,
+      "ref"
+    ],
+    [
+      "LC_ref",
+      32452843,
+      "ref"
+    ],
+    [
+      "LH_ref",
+      32452843,
+      "ref"
+    ],
+    [
+      "E0_ref2",
+      32452843,
+      "ref2"
+    ],
+    [
+      "E0_ref_dt_half",
+      32452843,
+      "ref"
+    ]
+  ],
+  "reference_post_states": {
+    "requested_counterexample": {
+      "state": "EXCEEDS",
+      "keep_primary": true,
+      "combined_pass": false,
+      "change_completed_level": false,
+      "known_exceedance": [
+        "r"
+      ]
+    },
+    "within": {
+      "state": "WITHIN",
+      "keep_primary": true,
+      "combined_pass": true,
+      "change_completed_level": false,
+      "known_exceedance": []
+    },
+    "negative_exceedance": {
+      "state": "EXCEEDS",
+      "keep_primary": true,
+      "combined_pass": false,
+      "change_completed_level": false,
+      "known_exceedance": [
+        "r"
+      ]
+    },
+    "r_only": {
+      "state": "INCOMPLETE",
+      "keep_primary": true,
+      "combined_pass": false,
+      "change_completed_level": false,
+      "known_exceedance": []
+    },
+    "known_exceedance_but_incomplete": {
+      "state": "INCOMPLETE",
+      "keep_primary": true,
+      "combined_pass": false,
+      "change_completed_level": false,
+      "known_exceedance": [
+        "r"
+      ]
+    },
+    "nonfinite": {
+      "state": "INCOMPLETE",
+      "keep_primary": true,
+      "combined_pass": false,
+      "change_completed_level": false,
+      "known_exceedance": []
+    },
+    "not_run": {
+      "state": "NOT_RUN",
+      "keep_primary": true,
+      "combined_pass": false,
+      "change_completed_level": false,
+      "known_exceedance": []
+    },
+    "equality": {
+      "state": "WITHIN",
+      "keep_primary": true,
+      "combined_pass": true,
+      "change_completed_level": false,
+      "known_exceedance": []
+    },
+    "inside_numerical_slack": {
+      "state": "WITHIN",
+      "keep_primary": true,
+      "combined_pass": true,
+      "change_completed_level": false,
+      "known_exceedance": []
+    },
+    "outside_numerical_slack": {
+      "state": "EXCEEDS",
+      "keep_primary": true,
+      "combined_pass": false,
+      "change_completed_level": false,
+      "known_exceedance": [
+        "r"
+      ]
+    }
+  },
+  "soft_bound_selection_counterexample": {
+    "observed_holdout_overlap_pct": 6.2,
+    "threshold_chosen_before_pct": 6.0,
+    "threshold_chosen_after_pct": 6.3,
+    "M_was_read": false,
+    "before": "OUT_OF_RANGE",
+    "after": "ADMITTED"
+  },
+  "separate_contract_axes": {
+    "observed_overlap_pct": 5.5,
+    "original_limit_pct": 1.0,
+    "illustrative_diagnostic_limit_pct": 6.0,
+    "original_contract": "NOT_MET",
+    "diagnostic_range": "WITHIN"
+  },
+  "cost_temporal_counterexample": {
+    "confirmation_long_runs_lower_h": 266.0,
+    "deadline_window_h": 240,
+    "optional_post_runs_removed": 6,
+    "confirmation_lower_h_after_removal": 266.0
+  },
+  "residual_lines_for_human_review": {
+    "나쁜 reference 로 확인 18 런을 태우는 것을 막는다": [
+      {
+        "P": 14,
+        "B": 81,
+        "text": "| **D-2** (HBR7-01 · reference 주장 범위 · 09-29 밤) | *\"안돼 주장축소하면 이게 차이점이 없잖아 … 중간이라도 해서 결과를 내는게 좋을거 같은데\"* · *\"우리 믹서 목적은 코팅의 효과를 확실하게 보여주는거야\"* ⇒ **(중간) 개발 seed 한 쌍 선별** (§0-b · §4-d): 확인 18 런의 주장은 (1) 과 같고, 개발 seed 1 에서 refinement 이동 r₁ · t₁ 을 **결과 전에 적은 탈락선**과 함께 잰다 | 저자 목적 = LC (코팅 대리 — ⚠ v2.3 · HBR8-02: AM–AM **및 AM–벽** 점착을 함께 낮춘 조건이고 LC 의 AM–AM 점착도 0 이 아니다 · 모체 §1-3) ↔ LH (고-Bo) 의 contrast d 를 **수치적으로 방어된 형태**로 내는 것.  (1) 만으로는 d_ref 의 강성 · dt 수렴에 대한 수치가 하나도 남지 않는다 — (중간) 은 그 수치를 한 seed 에서 남기고, 나쁜 reference 로 확인 18 런을 태우는 것을 막는다.  ⚠ *\"실제 코팅 효과\"* 문장은 그대로 금지 (모체 · 판정문) — 모델 안의 **공동 점착 개입 B (AM–AM + AM–벽)** 의 효과다 (v2.3 · HBR8-02) |"
+      }
+    ],
+    "큰 오차 탈락 검사": [
+      {
+        "P": 167,
+        "B": 234,
+        "text": "- **성격**: n = 1 · CI 없음 · **자격화가 아니라 큰 오차 탈락 검사** (Codex 7: 한 seed 의 성공은 분포 전체의 자격화가 아니다).  통과해도 확인 주장은 (1) 그대로"
+      }
+    ],
+    "reference 자격화": [
+      {
+        "P": 26,
+        "B": 93,
+        "text": "  (검정력 미보장) · Q4 holdout 겸용 **동의 · 6 차 문구 정정** (겸용 때문에 필요한 별도 코호트 = 0) · Q5 reference 자격화 **반대** · Q6 held 제출 **조건부 동의**"
+      },
+      {
+        "P": 105,
+        "B": 172,
+        "text": "| 개발 | `E0_ref2` (한 단계 더 경화) · `E0_ref@dt/2` | 0 | 기존 1 | reference 자격화 (§4-b · c) — 아래 D-2 런의 **같은 강성 · 같은 dt 정규화** 기준 |"
+      }
+    ],
+    "예: 저장 프레임 최대 ≤ 6 %": [
+      {
+        "P": 217,
+        "B": 284,
+        "text": "관측을 하는 **별도 검증 프로토콜**이라는 개정).  ⬜ soft 의 허용 개발 범위 (예: 저장 프레임 최대 ≤ 6 % 를 넘으면 soft 팔 = OUT_OF_RANGE 로 보고 · q 계산 불능) 와 스모크가 구분해 내보낼 상태"
+      }
+    ]
+  },
+  "assertions": {
+    "passed": 20,
+    "failed": 0,
+    "labels": [
+      "request_extracted.md exact declared SHA256",
+      "prereg_v23_extracted.md exact declared SHA256",
+      "v2.3 has 294 physical lines",
+      "prereg line 1 is bundle line 68",
+      "prior v2.2 pin",
+      "supplied diff applies to independently preserved v2.2",
+      "applying supplied diff reproduces v2.3 byte for byte",
+      "unchanged operative section: estimands",
+      "unchanged operative section: pairwise_stiffness",
+      "unchanged operative section: error_budget_and_decision",
+      "unchanged operative section: contact_contract",
+      "unchanged operative section: seeds_and_holdout",
+      "unchanged operative section: terminal_policy",
+      "listed seven development cells contain no soft role",
+      "r=.06 t=.01 retains old primary; no retroactive reselection",
+      "partial or nonfinite never combined PASS",
+      "numerical threshold examples implement <= .05 + 1e-12",
+      "M-blind alone cannot prevent result-dependent range selection",
+      "diagnostic admissibility does not retroactively change original contract",
+      "dropping optional post runs does not shorten confirmation critical work"
+    ]
+  }
+}

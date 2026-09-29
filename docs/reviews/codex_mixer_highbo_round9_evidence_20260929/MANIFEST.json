@@ -1,0 +1,68 @@
+{
+  "schema": "review_evidence_manifest/v1",
+  "review": "mixer LH round 9 document closure",
+  "scope": "No simulations, production changes, scheduler access or run authorization.",
+  "files": {
+    "README.md": {
+      "bytes": 2576,
+      "sha256": "ddcbc3fc2a58ea4f1ef3fbd89d4514e2c16dfe59bc1abe62d09faa6c38d9b4dd"
+    },
+    "SOURCES.md": {
+      "bytes": 2246,
+      "sha256": "55a22aa0d010cc2131b2e875e8b3d8893830d412cfd8b467b2eaa1d93c82f246"
+    },
+    "review.md": {
+      "bytes": 30777,
+      "sha256": "7b96db77779e8bb9b8d1d70509c35e7ae6098a670188eec1624e22fee67d0252"
+    },
+    "review_status.json": {
+      "bytes": 1563,
+      "sha256": "44488bbd30ef7bfc2fa77d01b251950d386cdaf46f89f3d663b7495b4e39abbb"
+    },
+    "bundle_original.md": {
+      "bytes": 104185,
+      "sha256": "9b1e142cfcc67b54f43ba0586b7b5835f1dd87f65000486637814334be43f2c6"
+    },
+    "bundle_lf.md": {
+      "bytes": 104185,
+      "sha256": "9b1e142cfcc67b54f43ba0586b7b5835f1dd87f65000486637814334be43f2c6"
+    },
+    "request_extracted.md": {
+      "bytes": 6883,
+      "sha256": "504c97f5bc5c6e6c64e0fd1e2fe2f1edc0477e4de94705920af49caf504573b8"
+    },
+    "prereg_v23_extracted.md": {
+      "bytes": 52370,
+      "sha256": "e7311197509268b9302708847ac00d19daa68fa4fb09232e74908524cada080c"
+    },
+    "submitted_v22_to_v23.diff": {
+      "bytes": 29379,
+      "sha256": "18031ab3ceb2625e9d1c432a22837e9fea25ba68a8a006f1bfb1a99c320a2974"
+    },
+    "audit_round9.py": {
+      "bytes": 10189,
+      "sha256": "c6b04d4ab1739fd70f7a9e30906189b94d2438c64b473ccba84727f232f0e29a"
+    },
+    "audit_results.json": {
+      "bytes": 10138,
+      "sha256": "a340ddda35f5a589cf3954fc70882f2abe546b3c2c589b5c944d170b11897aae"
+    },
+    "package_evidence.py": {
+      "bytes": 1963,
+      "sha256": "86872a8a199c253229b66234adf0f3df7431697604b958eb2ae14293dd0e6f7b"
+    },
+    "baseline/prereg_v22.md": {
+      "bytes": 41124,
+      "sha256": "ab20ef775f3e6bdb660f82f36a15b18a3c7cb0d0f85a6881d840b1b2171dff44"
+    },
+    "baseline/prior_r8_verdict.md": {
+      "bytes": 32223,
+      "sha256": "b7d734d2ffc7bc2f79a8bef9b3afb21ede49555f7618e5035df9a8c753d7c488"
+    },
+    "baseline/prior_r8_audit_results.json": {
+      "bytes": 11765,
+      "sha256": "dd275472e2946ec2514965932c2fd509d907e197828c9b6436e802c0f78566d2"
+    }
+  },
+  "note": "MANIFEST.json excludes itself."
+}
