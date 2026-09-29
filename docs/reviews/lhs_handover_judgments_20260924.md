@@ -632,6 +632,20 @@
   tar czf ~/lhs_fill_$D.tar.gz docs/data/lhs_descriptors_$D docs/data/lhs_webapp_$D docs/data/lhsx_descriptors_$D docs/data/lhsx_webapp_$D
   ```
 
+## J20-d. 64 (lhsx) 인계표 생성 — 저장된 열까지 130 과 같은 생성기로 (1저자 09-29 밤 *"64 도 진행하자"* · ✅ 실행)
+
+- 설계 변환 `scripts/lhsx_design_adapter.py` (selftest 14/14 · 반례 6): 질량분율 (`w_AM_P · w_AM_S · pdd_SE` · 합 1 ± 2e-6 = 6 자리 반올림) → `am_pct = 100·(1 − pdd_SE)` ·
+  `ps_frac = w_AM_P/(w_AM_P + w_AM_S)` · mono 는 **P 열 = 일반 AM 자리** (`lhs_ext_materialize` 머리말 · R14) · 입자 수는 `lhs_ext_design.n_spheres` 로 상별 재계산해 CSV 값과 왕복 대조
+  (허용 = 반지름 4 자리 반올림 몫 3·n·5e-5/r + 1 — 실측 lhsx_001 SE 56118 vs 56120) · 압력 300 · E_SE 1.35 · 상자 50 은 템플릿 덱 상속 (`render()` 는 반지름 · 가중 · volfrac · seed · 이름만 치환 ·
+  상자는 union `lx_um` 64/64 = 50 확인).  130 전용 추정 열 10 (loading · thickness_est · phi_*_est · se_percolation_est · sv_inv · rve_min/recommended · thick_over · finite_size_flag) 은
+  하중 기반 규약이 없어 **넣지 않았다** (사유는 스크립트 `OMITTED`) — lhsx 원래 값은 `lhsx_*` 12 열로 같이 싣는다.
+- 산출 `docs/data/lhsx_handover_20260929.csv` **64 행 × 121 열** + `_columns.tsv` — 생성기 계약 전부 통과 (DESC-07 항등식 · union 짝 = 같은 프레임 · 두께 · 입자 수 · union (0, 100)):
+  porosity union exact **5.43–9.43 %** (중앙 6.55) · 두께 mass-conserving 25.0–44.7 µm (wall gap 22.5–41.3) · φ_SE 0.52–0.92 · SE/고체 0.51–0.85 → `se_rich` 64/64 ·
+  구 부피 합 porosity −8.40 … +1.52 % (음수 60 · `hold_reason_codes` NEGATIVE_POROSITY 60 · BOUNDARY_CENTER_OUT 11) — J19 그대로 (규약의 음수이지 결함 아님) · coverage 는 mono 16 건의 없는 상이 빈칸 (N_A_PHASE_ABSENT 32 칸).
+  kind = bimodal 48 · mono_AM_P 8 · mono_AM_S 8.
+- 130 과의 열 차이: 64 에만 `lhsx_*` 12 · 130 에만 추정 열 10.  ① ② 열은 둘 다 아직 없다 (웹앱 배치 뒤 · J20-c).
+- 체크리스트 `docs/lhs_handover_checklist_20260929.md` §1 갱신.
+
 ## 인계 판정 (지금)
 
 **↪ 갱신 09-28 밤 (J20-a)** — ⏸ **일괄 실행 보류**: ✅ 열을 묶음별로 코드 정의부터 감사한 뒤 실행 (① 접촉 위상 1차 감사 = J20-a).

@@ -706,3 +706,5 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
   ⬜ 비준 ⓐ WSL 재수확 v3 + 웹앱 배치 (130 · 64 · [4] 인계표 재생성은 안 돌림) ⓑ 생성기 `--webapp-groups contact` + lhsx 어댑터 (반례 먼저) ⓒ 배포 프로필 (union exact + se_rich · mass-conserving 두께).
 - ✅ **LHS 체크리스트** `docs/lhs_handover_checklist_20260929.md` (1저자 09-29 밤 *"확보할 거 · 넘겨줄 거 표로"*) — 묶음별 130/64 상태 · 할 일 8 · 배포 묶음 제안 · union 만 넘기는 이유 · ① 열 한 줄 설명.
 - ★ **09-29 밤 마감 결정 (v2.2)**: 저자 *"10월 11일까지 데이터 완성 · 더 압축 안 되나"* → 산술 (ref 팔만 ≈ 8–9 일 · 확인 18 런 ≈ 11.5–12 일 · +선별 ≈ 23 일) 보고 → 저자 *"날 별로 차이 안 나면 확인 18 런 해도 되고"* ⇒ **확인 18 런 먼저** (코드 10-01 · Codex GO · 발사 10-02 가정 시 결과 ≈ 10-13~14) · D-2 선별 6 긴 런 **후행** (사후 강건성 검사 · Q7 · ≈ 10-25).  등록 v2.2 · 요청서 갱신 (Q7 추가 · 발송 가능) · 모체 · CLAUDE.md · 원장 HBR7-01.
+- ✅ **64 (lhsx) 인계표 생성** (09-29 밤 · 저자 *"64 도 진행하자"*): `scripts/lhsx_design_adapter.py` (14/14 · 정의는 생성 코드에서 · 입자 수 왕복 · 상자 50 확인) → `docs/data/lhsx_design_adapted_20260929.csv` → 생성기 export →
+  `docs/data/lhsx_handover_20260929.csv` 64×121 (union 5.43–9.43 % · 두께 mass-conserving 25.0–44.7 µm · se_rich 64/64 · hold NEGATIVE_POROSITY 60 = 규약) · J20-d · 체크리스트 갱신.  Codex 8 차 묶음 md (`codex_mixer_highbo_round8_bundle_20260929.md`) 사용자에게 전달.
