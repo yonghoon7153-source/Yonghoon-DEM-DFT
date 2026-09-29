@@ -2,10 +2,10 @@
 title: DRT 봉우리 개수는 데이터가 정하지 않는다 — 상태·조작·장비·정규화의 함수
 description: "The number of resolvable DRT peaks (and hence the order of any equivalent circuit fitted downstream) is not determined by the impedance data alone: it moves with cycle number, with interventions, with the measurement wiring, and with the unreported regularization strength"
 created: 2026-09-22
-updated: 2026-09-22
+updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research, eis]
-sources: [raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md]
+sources: [raw/papers/oruemendizabal2023_multiconfiguration-geis-drt-nmc622-lpscl-li-interfaces.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -277,6 +277,23 @@ RE = 왼쪽 R-LTO, CE = 오른쪽 Li-In). 결과:
   **선형성을 보지 기원을 보지 않는다**(18호의 K–K 잔차와 같은 구조).
   ⇒ **체크리스트 C2 에 "K–K 를 돌렸나" 뿐 아니라 "무엇을 주장하는 데 썼나" 를 같이 본다.**
 
+## ★★★ 여섯 번째 경보 — **창 밖 봉우리가 이름을 얻는다 · 같은 이름표의 τ 띠가 그림마다 움직인다 · γ 정규화 미인쇄** (2026-09-29, `assb` 84호)
+
+`raw/papers/oruemendizabal2023_multiconfiguration-geis-drt-nmc622-lpscl-li-interfaces.md`
+(Orue Mendizabal, Cheddadi, Tron, Beutl, López-Aranguren, *ACS Appl. Energy Mater.* **6** (2023) 11030, CC BY-NC-ND 4.0;
+NMC622 \| Li₆PS₅Cl \| Li 금속 · 네 구성(Li\|Li · Li\|In · NMC\|Li · NMC\|In) · 2전극 · 전류 인가 중 EIS 1 MHz–0.1 Hz · DRTtools · 25호 ref 23).
+
+11호의 추가 경보 (2) 는 측정 하한(0.1 Hz) 밖 봉우리가 **이름 없이** 서 있었고, 19호 P1 은 **고주파 끝 밖**(측정 상한 위 꼭짓점 → `R₁` 외삽)이었다. 84호는 저주파 끝 밖 봉우리에 **이름과 기구를 붙이고, 표에서는 창 안 주파수로 인쇄한다.**
+
+- **창 밖 봉우리.** 저자 자신의 규약(`[인쇄]` "R3 (10−3−10−1 s) and R3\* (1−10 s) … correspond to 2−200 Hz and 20−200 mHz" — f = 1/(2πτ))으로 최저 0.1 Hz 는 **τ_max ≈1.6 s** 다. `[도표·화소]` 완전지 R3\* ≈3.8 s · R4\* ≈9.5 s 는 창 밖이고, DRT τ 축은 10²–10³ s 까지 그려진다. 표 S3 는 R3\* · R4 · R4\* 를 모두 "0.1 – 0.2 Hz"(τ 0.8–1.6 s)로 인쇄 — R4\* 의 그림 자리(≈0.017 Hz)와 ×6–12 어긋난다. `[재현]` 3.41 V 곡선 면적의 ≈18 % 가 창 밖이다.
+- **이름이 창 밖 봉우리에 붙는다.** R4 · R4\* = 공간전하층(`[인쇄]` "we could tentatively ascribe these peaks to a SCL process" — DFT [61] · STEM [62] 인용) · R3\* = 본문 "additional diffusive processes" ↔ 표 S3 "Grain boundary effect". 그리고 SOC 배정이 걸린 방전 끝(<3.5 V)은 드리프트 조건(`[인쇄]` "5−10 times lower than the AC amplitude (at voltages above 3.5 V)") 밖이다.
+- **같은 이름표의 τ 띠가 그림마다 1–2 자릿수 움직인다**(`[도표]`): R2 — 그림 2e ≈1.5–8×10⁻⁵ · 4d ≈2×10⁻⁵–2×10⁻⁴ · S2b ≈10⁻⁴–10⁻³ s · R3 — 2e ≈2×10⁻³–5×10⁻² · 4d 10⁻³–10⁻¹ · 3e ≈10⁻²–10 · S2b ≈1.5×10⁻²–60 s. **이름은 회로 순서를 따르고 τ 는 따르지 않는다** — 위 §"이름표의 불확정성이 이름표 간격보다 크다"(11호 P3 1.3 자릿수)의 한 편 · 여러 그림 판.
+- **γ 정규화 미인쇄.** 축 단위 "Ω·decade⁻¹"(면적 정규화 · 로그 밑 미인쇄) · 오프셋 · 축척("scale 1:2 / 1:3") 캡션 없음. `[재현]` 그림 2e 는 "Ω·cm² per decade" 또는 "Ω per ln τ" 해석에서 같은 상태 적합 합과 맞고, 그림 5c 는 같은 스펙트럼 5a 와 "Ω per decade(면적 정규화 없음)" 해석에서만 맞는다 — **두 그림이 한 정규화로 함께 맞지 않는다** ⇒ 봉우리 **크기**를 그림 사이에서 비교하지 않는다(판독 · 가정 위).
+- **두 전극 CT 가 같은 τ 에 겹친다고 문장으로 인쇄한다.** `[인쇄]` "The signals for both cells are within the same relaxation time for the (RQ)1, (RQ)2, and (RQ)3 processes" — 11호 추가 경보 (1)(P4 음극 · P5 양극 CT 를 ≈10 Hz 에 겹쳐 그림)의 문장판이고, 11호처럼 **설계**(대칭 셀 빼기 · 상대극 교체)로 가른다.
+
+⇒ ★★ `[해석]` 다섯 번째 경보의 층 표에 한 줄을 더하면: **6 · 84호 Orue Mendizabal — 측정 창 밖(저주파) 봉우리와 그림 사이 τ 띠가 이름표를 흔든다.** 체크리스트에 "봉우리 τ 가 τ_max = 1/(2π f_min) 안인가" 를 칸으로 올릴지는 **결정하지 않았다**(84호 digest 새 판단 거리 2).
+⚠ 이 편의 **가장 단단한 배정**은 DRT 모양이 아니라 **전류 방향 연산자**다 — Li\|SE R2 가 한 스텝 안에서 자라고 역전류에서 초깃값 쪽으로 돌아간다(`[도표·화소]` 그림 2c). 개수 · 모양이 흔들려도 이름을 붙이는 다른 채널이 있다는 것이 이 경보의 반대쪽 단서다.
+
 ## 이 위키에서의 적용
 
 ### 1. 진단 — "개수를 쟀는가" 를 묻는 체크리스트
@@ -350,6 +367,18 @@ SI Fig. S2(LPSCl, λ = 8.5×10⁻⁴)는 **날카로운 봉우리 4 개**(≈10�
 **어느 점을 뺐는지는 Fig. 3 의 속 빈 마커로만** 표시된다 (좌표 미인쇄).
 `[해석]` **λ 를 적는 것은 재현의 최소 조건이지 유일성의 근거가 아니다.**
 
+★★ **2026-09-29 추가 — 84호(Orue Mendizabal 2023 *ACS Appl. Energy Mater.*)는 C2 만 명명 수준에서 통과하고, 봉우리 배정을 개수 규칙 대신 구성 교체 · 전류 방향으로 한다.**
+
+| # | 84호 |
+|---|---|
+| C1 | ❌ **0** — `[인쇄]` "DRTtools code based on Tikhonov regularization"(인용 [32] Wan 2015 · [33] Clematis 2021) 한 문장 · λ · 이산화 · 도함수 차수 · τ 격자 0 |
+| C2 | ✅ 명명 — Lin-KK · `[인쇄]` "within the limit of 1%" — 잔차 그림 · 대상 스펙트럼 목록 0 |
+| C3 | ❌ "within the uncertainties of the DRT and EC methods"(수치 0) |
+| C4 | ❌ — 띠를 그림마다 손으로 긋고, R3\* · R4 · R4\* 는 저주파 끝에 더한 이름(위 여섯 번째 경보) |
+| C5 | ❌ 셀 수 미인쇄 |
+
+`[해석]` 개수 대신 **배정 연산자 넷**(구성 차 · 전류 방향 · SOC · 문헌 `C` 대역)이 봉우리에 이름을 붙인다 — 온도(`Ea`)는 0. ⚠ 18호 단서("C2 를 통과하는 것과 그 결과를 옳게 쓰는 것은 다른 일")가 여기도 선다: 진폭 20–50 mV 는 RT/F 와 같은 자릿수이고 `[재현]` AC 전류가 DC(0.08 mA cm⁻²)의 ×0.9–5 다 — Lin-KK 는 인과 · 정상성 검사이지 비선형 검사가 아니다.
+
 ### 2. 우리 폭 측정기가 붙는 자리 — 구체적으로 하나
 
 [[near-optimal-set-width-measurement]] 의 기계는 **"답이 하나로 정해지는가"** 를
@@ -396,6 +425,7 @@ SI Fig. S2(LPSCl, λ = 8.5×10⁻⁴)는 **날카로운 봉우리 4 개**(≈10�
 - ★ **16호의 가법성 파탄이 어느 원인(대역·정규화·3전극 인공물)인지 단정하지 않는다.**
   우리가 확인한 것은 **파탄 자체와 그 크기**(완전지에 없는 봉우리 2 개, 부분 > 전체)까지다.
 - 수치는 전부 **사본**이다. 그림에서 읽은 것은 `[도표]` 이고 판독 오차가 붙는다.
+- ★ **84호의 창 밖 봉우리(R3\* · R4\*)가 인공물이라고 하지 않는다** (2026-09-29) — 측정 창 밖이고 이름 · 주파수 표기가 표 S3 와 그림에서 어긋난다는 것까지다. 공간전하층 · 확산 과정이 없다는 뜻이 아니다. γ 정규화 판독(그림 2e ↔ 5c)은 우리 `[재현]` · 가정 위다.
 
 ## 관련
 - [[assb-contact-loss-vs-lampe]] — 닻. Q4 의 다섯 번째 변신이 기록돼 있다

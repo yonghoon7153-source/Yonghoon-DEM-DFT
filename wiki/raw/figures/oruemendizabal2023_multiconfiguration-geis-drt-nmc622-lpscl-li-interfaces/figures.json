@@ -1,0 +1,325 @@
+{
+ "slug": "oruemendizabal2023_multiconfiguration-geis-drt-nmc622-lpscl-li-interfaces",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-29",
+ "sources": [
+  "65b23467-46._Understanding_interfaces_at_the_positive_and_negative_electrodes_on_sulfide-based_solid-state_batteries.pdf",
+  "cc3e8f93-46._Sup_Understanding_interfaces_at_the_positive_and_negative_electrodes_on_sulfide-based_solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Schematic illustration of Li/SE/Li (cell 1), Li/SE/In (cell 2), NMC/SE/Li (cell 3), and NMC/SE/In (cell 4) cell configurations. (b) Charge/discharge profiles and (c) discharge capacity and CE during the initial cycling of NMC/SE/Li and NMC/SE/In full cells. foil disks were used as a negative electrode. A schematic representation of the full cells is displayed in Figure 1a. large volume changes of the cathode active material upon delithiation,23,27,28 poor percolation within the electron- conductive phase,26 contact loss between the electrolyte and cathode or anode layers,23,29−31 as well as dendrite propagation.21,30 The electrochemical properties of the prepared cells were assessed in airtight in-house-made cells, with stainless steel plungers as current collectors. Stripping−plating tests were carried out on Li/SE/Li cells to investigate the reversibility of lithium depos",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    259.1
+   ],
+   "w": 2151,
+   "h": 854,
+   "dpi": 300,
+   "src": "65b23467-46._Understanding_interfaces_at_the_positive_and_negative_electrodes_on_sulfide-based_solid-state_batteries.pdf",
+   "blank": 0.843,
+   "note": "봤다. (a) 셀 1–4 모식 (b) 두 완전지 1 · 5 · 10 사이클 — 세로축 'vs Li/Li+' 에 NMC/SE/In 도 (환산 미인쇄 — D15) · 첫 충전 끝 Li ≈197 · In ≈192 mAh/g (c) 방전 용량 Li 126.2 → 110.9 · In 122.7 → 107.8 (둘 다 −12.1 %) · CE ≈97–100 %. ⚠ caption 필드 끝에 본문 텍스트가 섞임(2단 조판 · 900 자 상한) — 이미지 온전."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Stripping−plating profile of a Li/SE/Li symmetrical cell at the current corresponding to C/20, (b) evolution of the cell potential, and (c) EIS components calculated with the EC method in accordance with the model presented in (d) equivalent circuit and fitting of the EIS of a Li symmetric cell. (e) DRT spectra calculated for the EIS data at the positive potentials at different amounts of stripped lithium during the 1st, 10th, and 27th cycles. analysis was applied to validate the EIS measurements using the “Lin- KK” software developed by Karlsruhe Institute of Technology (KIT).34 The residuals of the real and imaginary components of the EIS data are within the limit of 1%.35,36 interaction between argyrodite with the high-voltage cathode material.22,23 Further cycling results in a gradual capacity loss of approximately 1.5% per cycle, with a CE remaining within the range of",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    498.4
+   ],
+   "w": 2151,
+   "h": 1851,
+   "dpi": 300,
+   "src": "65b23467-46._Understanding_interfaces_at_the_positive_and_negative_electrodes_on_sulfide-based_solid-state_batteries.pdf",
+   "blank": 0.837,
+   "note": "봤다. (a) Li/SE/Li 0–300 h · 끊김 1080–1400 h (340–1080 h 안 보임) · ≈1370 h 단락 (b) 1 · 10 · 11 · 27 사이클 ±11 → ±15 → ±17–20 mV (c) R0–R3 막대 여섯/사이클 — 합 125–145 (1st) · 157–187 (10–11th) · 210–238 (27th) Ω·cm² (화소 판독) (d) 회로 R0-(RQ)1-(RQ)2-(RQ)3 · 예시 스펙트럼 상태 미표기 · 350 kHz · 40 kHz · 170 Hz · 0.3 Hz (e) DRT 1 · 10 · 27th — 세로 오프셋 미표기 · τ 축 10 s 까지. ⚠ caption 필드 본문 섞임 — 이미지 온전."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Stripping-plating profile, (b, d) Nyquist plots, and (c, e) their corresponding DRT spectra collected in GEIS mode at the end of In lithiation or delithiation steps for a Li/SE/In cell. (f) Proposed scheme for the mechanism of intercalation and deintercalation of Li species into and from the Li−In electrode. (Table S1). However, the oscillations observed for R2 during cycling are not representative of the SEI. Particularly, the rapid drop of R2 between the end of the 10th and the beginning of the 11th cycle indicates sudden drastic change at the interface, which is not consistent with slow processes of formation or dissolution of secondary phases. Therefore, another or additional process seems to be responsible for the trend observed on R2. Recent studies of stripping−plating behavior with a 3-electrode cell revealed a significant increase in the overpotential at the stripp",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    513.7
+   ],
+   "w": 2151,
+   "h": 1915,
+   "dpi": 300,
+   "src": "65b23467-46._Understanding_interfaces_at_the_positive_and_negative_electrodes_on_sulfide-based_solid-state_batteries.pdf",
+   "blank": 0.878,
+   "note": "봤다. (a) Li/SE/In · 'vs Li-In/Li+' (0.62 V 정규화) · 1st 리튬화 ≈−0.033 V · 탈리튬 끝 ≈1.97 V 급등 (b) 리튬화 끝 1st ≈430 · 3rd ≈545 · 5th ≈695 · 7th ≈950 Ω·cm² (c) DRT R1 · R3 띠 — 10^-4–10^-2 s 대역 상승에 R2 표시 없음 (d) 탈리튬 끝 1st ≈1000 · 3rd ≈770 · 5th ≈1650 · 7th ≥2660 — 8th 없음 (본문 '1st and the 8th' — D9) (e) R3 띠 10^-2–10 s (f) LiIn 모식. ⚠ caption 필드 본문 섞임 — 이미지 온전."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Equivalent circuit and example of the fit for a typical EIS spectrum for NMC/SE/Li cell, (b) comparison of fit results for the Li/SE/ Li and NMC/SE/Li cell collected at the 1st discharge, 2nd charge, and 10th charge at the amount of transferred Li of 750 μAh·cm−2, (c) evolution of the fit parameters for NMC/SE/Li cell, (d) DRT spectra for NMC/SE/Li and Li/SE/Li cell on cycling, (e) comparison of the top-views on the NMC layer before and after 10 cycles and the cross-section micrograph of NMC cathode layer after cycling. For the Li/SE/Li cell, the charge and discharge steps correspond to the negative and positive currents in Figure 2a. Li and In metals are known to form up to 7 intermetallic phases and respective solid solutions at room temper- ature.51−54 During electrochemical lithiation of In, the Li content sequentially increases by the formation of the InLi phase that t",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    474.9
+   ],
+   "w": 2151,
+   "h": 1753,
+   "dpi": 300,
+   "src": "65b23467-46._Understanding_interfaces_at_the_positive_and_negative_electrodes_on_sulfide-based_solid-state_batteries.pdf",
+   "blank": 0.741,
+   "note": "봤다. (a) NMC|SE|Li 예시 적합 · 300 kHz · 5.5 kHz · 0.1 Hz (b) '1st discharge · 2nd charge · 10st charge' 막대 — 위 줄 = 4c 10 사이클 · 2c 10 사이클 양전류 9 h, 아래 줄 합 = S3 '1st discharge' 끝 (D1) (c) 1–10 사이클 합 117 → 274 · R3 34.5 → 174.6 (상태 미인쇄) (d) DRT — 윗판 세로 오프셋 ≈180–190 미표기 · R3 ≈1.4e-2 s · R3* ≈3.8 s (측정 창 밖 — D4) (e) SEM 신품 · 10 사이클 뒤 윗면 · 이온 밀링 단면 — 한 시야씩. ⚠ caption 필드 본문 섞임 — 이미지 온전."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (a, b) Evolution of Nyquist plots collected in GEIS mode and (c, d) their corresponding DRT spectra during the 1st cycle of the NMC/ SE/Li cell on the charge and discharge steps and (e) dQ/dV plots calculated for the 1st, 2nd, and 10th charge/discharge steps.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    366.9
+   ],
+   "w": 2151,
+   "h": 1303,
+   "dpi": 300,
+   "src": "65b23467-46._Understanding_interfaces_at_the_positive_and_negative_electrodes_on_sulfide-based_solid-state_batteries.pdf",
+   "blank": 0.837,
+   "note": "봤다. (a)(b) 1st 충 · 방 Nyquist (세로 오프셋) · 3.41 V 곡선 0.1 Hz 에서 Z' ≈228 · Z'' ≈162 로 열림 (c)(d) 전압별 DRT (오프셋 · 'scale 1:2 / 1:3' 방향 미표기) · 3.41 V R4 ≈1105 at τ ≈0.98 s · R4* ≈281 at ≈9.5 s (창 밖) (e) dQ/dV 산화 봉우리 3.709 · 3.768 · 3.820 V · 환원 2nd 3.702 · 10th ≈3.59 V."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Evolution of the EIS fit parameters for the NMC/SE/Li full cell within (a) 1st charge, (b) 1st discharge, and (c) 2nd charge. individual rate-determining steps to the overall degrada- tion.59,60 The evolution of Nyquist plots and corresponding DRT spectra for the full cell during the charge/discharge steps of the first cycle is summarized in Figure 5a−d, while the first charge and discharge curve obtained during the GEIS experiment is shown in Figure S4, and Table S3 lists the possible processes assigned to each component. The evolution of individual resistances R0−R3 during the initial cycles with the state of charge (SoC) of the cell is shown in Figure 6. Similar to what is observed in Figure 4c, the cell displays an increasing resistance during cycling. more pronounced changes in the electrolyte properties or contact area between the cell components. R3 is remarkably large a",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    395.5,
+    561.5,
+    511.9
+   ],
+   "w": 2151,
+   "h": 486,
+   "dpi": 300,
+   "src": "65b23467-46._Understanding_interfaces_at_the_positive_and_negative_electrodes_on_sulfide-based_solid-state_batteries.pdf",
+   "blank": 0.902,
+   "note": "봤다. 1st 충 · 1st 방 · 2nd 충 SOC 막대 — 범례 R0 · R1 · R3 (R2 없음 — D7) · 세로축 끊김 0–700 · 1000–5000 · 화소 판독 (화소 = 5 Ω·cm²): 1st 충 5 % ≈570 · 중간 ≈105–113 · 1st 방 끝 ≈4010 · 2nd 충 중간 ≈150–155. ⚠ caption 필드 본문 섞임 — 이미지 온전."
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. (a, b) Nyquist plots obtained for a Li/SE/Li symmetrical cell in GEIS mode, (c) cross-section SEM micrograph of an as-prepared fractured LSPCl ceramics, (d) digital photo and (e) top-view SEM micrograph of the SE/Li interface after 10 h of stripping and subsequent mechanical removal of Li electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.6,
+    531.8,
+    498.2
+   ],
+   "w": 1941,
+   "h": 1799,
+   "dpi": 300,
+   "src": "cc3e8f93-46._Sup_Understanding_interfaces_at_the_positive_and_negative_electrodes_on_sulfide-based_solid-state_batteries.pdf",
+   "blank": 0.736,
+   "note": "봤다. (a)(b) Li/SE/Li 음 · 양 전류 3 · 6 · 9 h Nyquist (사이클 1 · 10 · 11 · 27) — 범례 색 (a) ↔ (b) 3 h · 6 h 뒤바뀜 (D14) (c) LPSCl 파단면 SEM (d) 박리 Li 사진 (e) 윗면 SEM. ⚠ 과대 영역 — 위에 SI 목차 머리 ('2. Supporting Tables' · 'Supporting Figures') 포함 · 그림 온전."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. (a, c) Nyquist plots and (b, d) their corresponding DRT spectra collected during the 8th cycle on In lithiation or delithiation steps for Li/SE/In cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    531.8,
+    361.3
+   ],
+   "w": 1941,
+   "h": 1231,
+   "dpi": 300,
+   "src": "cc3e8f93-46._Sup_Understanding_interfaces_at_the_positive_and_negative_electrodes_on_sulfide-based_solid-state_batteries.pdf",
+   "blank": 0.856,
+   "note": "봤다. 8th 사이클 Li/SE/In — (a) 리튬화 2 · 4 · 10 h ≈1290–1330 Ω·cm² (b) DRT R1 · R2 · R3 (1.5e-2–60 s) · R3* ≈10 s (c) 탈리튬 2 · 4 · 6 · 8 h ≈1600 · 1750 · 2350 · ≥5900 (열림) (d) 봉우리 ≈1000 → ≈8200 — 본문 '3 orders of magnitude' 는 그림에서 ≤×10 (D9)."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Comparison of Nyquist plots collected for the Li/SE/Li and NMC/SE/Li cells in GEIS mode on the 1st charge, 2nd discharge and 10th discharge steps. The GEIS data were collected at the amount of transferred Li which corresponds to 750 µAh·cm−2 (80 mAh·g−1). For the Li/SE/Li cell, the charge and discharge step correspond to the negative and positive current in Figure 2a.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    531.8,
+    331.9
+   ],
+   "w": 1941,
+   "h": 1108,
+   "dpi": 300,
+   "src": "cc3e8f93-46._Sup_Understanding_interfaces_at_the_positive_and_negative_electrodes_on_sulfide-based_solid-state_batteries.pdf",
+   "blank": 0.942,
+   "note": "봤다. Li/SE/Li ↔ NMC/SE/Li — 그림 안 '1st discharge · 2nd charge · 10th charge' ↔ 캡션 '1st charge, 2nd discharge and 10th discharge' (D2) · 저주파 끝 NMC 226.5 · 193 · 401.5 / Li 143.7 · 141.3 · 163 Ω·cm² · 표지 '300 Hz' (고주파 첫 점 — 4a 는 300 kHz) · '900 Hz' (NMC 10th 큰 호 꼭대기) (D5)."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. First charge and discharge profile curve for the NMC/SE/Li cell obtained in GEIS mode.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    482.3,
+    330.9
+   ],
+   "w": 1735,
+   "h": 1104,
+   "dpi": 300,
+   "src": "cc3e8f93-46._Sup_Understanding_interfaces_at_the_positive_and_negative_electrodes_on_sulfide-based_solid-state_batteries.pdf",
+   "blank": 0.919,
+   "note": "봤다. NMC/SE/Li 첫 충방전 (GEIS 방식) — 충전 ≈196 · 방전 ≈126 mAh/g · 그림 1b 실선과 같은 모양."
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 7,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Comparison of specific capacitance values from different processes in symmetric Li/SE/Li cells Specific capacitance Capacitive process Ref 5×10−10 - 2×10−5 F·cm−1 GB 10−4 - 10−2 F·cm−2 SEI 1 10−4 - 10−1 F·cm−2 Charge transfer 0.03-0.06 F* Bulk",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    90.7,
+    581.9,
+    612.8
+   ],
+   "w": 2146,
+   "h": 2177,
+   "dpi": 300,
+   "src": "cc3e8f93-46._Sup_Understanding_interfaces_at_the_positive_and_negative_electrodes_on_sulfide-based_solid-state_batteries.pdf",
+   "blank": 0.973,
+   "note": "봤다. 문헌 넷 + 이 편의 용량 대역 — 값은 텍스트 층과 같다 · ⚠ 오른쪽 세로 내려받기 띠 포함 (과대 영역, 표 온전)."
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 8,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Specific capacitances of the individual RQ elements for the symmetric Li/SE/Li and full NMC/SE/Li cell. The C1, C2 and C3 values correspond to the (RQ)1, (RQ)2 and (RQ)3 semicircles in Figure 2. 1st discharge 2nd charge 10th charge Component Li/SE/Li NMC/SE/Li Li/SE/Li NMC/SE/Li Li/SE/Li NMC/SE/Li C1, F·cm−1 1.4×10−9 4.1×10−9 1.5×10−9 7.4×10−9 2.0×10−9 5.4×10−9 C2, F·cm−2* 5.4×10−7 2.5×10−4 4.6×10−7 2.5×10−5 5.6×10−7 5.6×10−4 C3, F·cm−2* 1.1×10−3 4.5×10−5 1.0×10−3 6.8×10−5 1.1×10−3 7.0×10−5",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.4,
+    526.6,
+    243.4
+   ],
+   "w": 1916,
+   "h": 735,
+   "dpi": 300,
+   "src": "cc3e8f93-46._Sup_Understanding_interfaces_at_the_positive_and_negative_electrodes_on_sulfide-based_solid-state_batteries.pdf",
+   "blank": 0.922,
+   "note": "봤다. ⚠ 잘림 — 각주 '* Multiplied by 2 for Li/SE/Li' 아래 절반이 잘림 → tab_S2_manual_p8.png. 값은 텍스트 층과 같다."
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 9,
+   "file": "tab_S3.png",
+   "caption": "Table S3. List of different components ascribed to each component in NMC/SE/Li cells obtained in GEIS mode. Individual component Frequency range, (Hz) Suggested process R0 >106 Electrolyte bulk resistance R1 5·103 – 1·106 Grain boundary effect R2 1·103 – 1·103 Void formation at SE/Li interface R3 5 – 50 Charge transfer effect",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.4,
+    581.9,
+    687.5
+   ],
+   "w": 2146,
+   "h": 2585,
+   "dpi": 300,
+   "src": "cc3e8f93-46._Sup_Understanding_interfaces_at_the_positive_and_negative_electrodes_on_sulfide-based_solid-state_batteries.pdf",
+   "blank": 0.947,
+   "note": "봤다. R0–R4* · 저주파 꼬리 배정 · R2 '1·10^3 – 1·10^3' · R3* '0.1 – 0.2 Hz · Grain boundary effect' (D6). ⚠ 과대 영역 — 아래에 SI 참고문헌 (1)(2) 포함 · 표 온전."
+  },
+  {
+   "key": "fTOCm",
+   "kind": "figure",
+   "label": "TOC",
+   "page": 1,
+   "file": "fig_TOC_manual_p1.png",
+   "rotated_deg": 0,
+   "bbox": [
+    316.0,
+    238.1,
+    555.4,
+    349.9
+   ],
+   "w": 999,
+   "h": 466,
+   "dpi": 300,
+   "src": "65b23467-46._Understanding_interfaces_at_the_positive_and_negative_electrodes_on_sulfide-based_solid-state_batteries.pdf",
+   "manual": true,
+   "note": "수동 크롭 (p. 1 · 초록 그래픽 · 캡션 없음 · 300 dpi · bbox = 내장 이미지 자리) — 추출기가 캡션 없는 초록 그래픽을 잡지 않음. 봤다: Li metal | SE | 복합 양극 (Sulfide SE · NMC622 · C65) 모식 · 음극 계면 'Electrochemical reaction / voids → SEI · Dendrites' · 양극 계면 'Electrochemical reaction / voids · CEI formation · NMC cracking' — 값 0."
+  },
+  {
+   "key": "tS2m",
+   "kind": "table",
+   "label": "S2",
+   "page": 8,
+   "file": "tab_S2_manual_p8.png",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.4,
+    526.6,
+    253.0
+   ],
+   "w": 1916,
+   "h": 775,
+   "dpi": 300,
+   "src": "cc3e8f93-46._Sup_Understanding_interfaces_at_the_positive_and_negative_electrodes_on_sulfide-based_solid-state_batteries.pdf",
+   "manual": true,
+   "note": "수동 크롭 (SI p. 8 · 300 dpi · 각주 포함) — 자동 tab_S2 의 각주 잘림 보완. 봤다: C1–C3 × 세 상태 × 두 셀 · '* Multiplied by 2 for Li/SE/Li' — 값은 텍스트 층과 같다."
+  }
+ ]
+}
