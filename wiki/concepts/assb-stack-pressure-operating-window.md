@@ -2,10 +2,10 @@
 title: ASSB 스택 압력의 작동 창 — 아래는 접촉 손실, 위는 단락
 description: "Stack pressure in ASSBs is a two-sided constraint: too low gives interfacial contact loss, too high drives Li creep into electrolyte pores and shorts the cell. Doux 2020 gives the first measured pressure sweeps (P→impedance, P→time-to-short, P→overpotential) and a hard upper bound"
 created: 2026-09-16
-updated: 2026-09-28
+updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -965,6 +965,30 @@ S3: Li₂₁Si₅ 분말 100 → 700 MPa 냉간압착에서 면저항 **4.71 · 
 
 요구치 · 압력 스윕 · 압력 → σ · τ² · 용량 · 운전 중 압력 변화. 창의 값은 움직이지 않았다 — 움직인 것은 운전 압력 계보에 "측정 셀은 힘 센서 + 스프링 ≈40 MPa · 사이클 셀은 값만" 이라는 한 줄이다(보류 (하) ① D4 구속 형식의 약한 근거 — 결정 안 함).
 
+## ★★ 2026-09-29 (`assb` 80호 Okasinski 2020 *PCCP* 22, 21977, **실험 + 모형 · 액체 NCM523/흑연 CR2032 코인셀 여덟 구성 · in situ EDXRD 로 두 전극 경계 측면 주사 · ASSB 아님**) — **스택 하중의 면 분포를 기하로 잰 첫 표본 — 코인셀 ≈0.1–0.2 MPa 에서 바닥 전극 판 휨 δ 3.5–15.8 µm · 원인은 설계(오목 캔 위 단순 지지 스페이서) · 요구치 0**
+
+`raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md` (24호 ref 36 · SI ref 16 지목 · **3차 묶음 파일 42**).
+
+### 1. 요구치 — 인쇄 0
+
+`pressur` 3 회 · `MPa` 2 회(0.14 · 0.185 — 둘 다 코인셀 하중 추정). 요구치 · 문턱 0 ⇒ 띠(0.1–5 MPa) · 확인된 원전 0 **그대로**. (코인셀 하중이 띠 아래 끝과 같은 크기라는 것은 기록만 — 액체셀 값이다.)
+
+### 2. ★★★ 면 분포 — 값 하나가 아니다
+
+- `[인쇄]` 원인: 바닥 캔이 오목(가운데 간극 <15–30 µm · 셀 1 다이얼 게이지 18 µm) · 바닥 스페이서는 가장자리 접촉선에서만 받친 판 · 스프링 하중에 오목하게 휜다 · "The bottom electrode follows this curvature, while the top electrode remains relatively flat; this causes nonuniform compression of the electrode assembly. The porous separator is pinched near the edge and dilated at the cell center".
+- `[인쇄]` 하중 두 추정 0.14 MPa(판 식 · δ ≈10 µm) · 0.185 MPa(스프링 K ≈110 N/mm × Δ 0.27 mm) ↔ `[재현]` 인쇄 식 · 인쇄 값으로 K **92.0 N/mm → 0.157 MPa**(80호 D3) · 스프링 자유 높이는 인쇄 1.4 mm 가 아니라 ≈1.65 mm 에서 "∼16% compression" 과 셀 내부 높이 닫힘이 함께 맞는다(D2).
+- `[인쇄]` 표 1 δ **3.5–15.8 µm**(여덟 구성) — `[재현]` 그림 적합이 δ 와 `±` 까지 재현 · 간극 가장자리 16.5–25.2 ↔ 가운데 23–36 µm · 가운데 대비 15–44 %. ⚠ **절대 압축은 셀 절반에서만** — 가장자리 간극이 분리막 공칭 20 µm 아래인 셀은 4 · 6(16.8 · 16.5 µm)이고 7 · 8 은 공칭 크기(19.6 · 19.8), 셀 1 · 2 · 3 은 20.5–25.2 µm 로 공칭보다 넓다(셀 5 는 표 역산 20.1 ↔ 그림 적합 17.8 로 갈린다).
+- ★★ **구속 형식 대조**(보류 (하) ① 의 액체판) — 같은 바닥(SS 0.5 mm)에서 스프링(유한 강성 — 정하중 쪽) δ 6.1 · 10.8 ↔ 스페이서 넷(강체 적층 — 정변위 쪽) 3.9 · 6.2 µm · 쐐기는 스페이서 쪽이 크다(`[인쇄]` "it was difficult to avoid wedging of the electrodes") · 스페이서 쪽 하중 추정은 인쇄 0.
+- ★ 구성별 판 식 예측(`[재현]`): Al 0.41 mm 스페이서는 판 식 37–44 µm ↔ 측정 15.8 µm(캔 간극에 닿은 쪽 `[해석]`) · 링 심(셀 8)은 판을 가운데 가까이 받쳐 3.5 µm(판 식 밖) · 두꺼운 Al 은 `[인쇄]` "the spring became over compressed".
+
+### 3. ★ 국소 SOC 로 — 측면 `η(r)`
+
+흑연 가장자리 ≈2 mm 띠(면적 50 %)가 ≈0.95C 충전에서 늦고 휴지 수 시간 뒤에도 남는다(다상 — [[assb-apparent-capacity-decomposition]] 80호 절) · 저자 기구 = 가장자리 분리막 공극률 ↓ → 측면 저항 ↑(측정 0 · 모형 Ξ 0.75 가정) · 빠른 충전에서 가장자리 안쪽 고리형 도금(ESI S6 사진 · 모형 그림 10c). `[해석]` ASSB 로 옮기는 것은 크기(코인셀 0.1–0.2 ↔ ASSB 운전 5–62 MPa · ×25–600)가 아니라 **측정 방법**(경계 적합으로 곡률 · 쐐기 · 기울기 분리)과 **사슬 모양**(면 압축 불균일 → 측면 저항 → 측면 `η(r)`)이다 — ASSB 에서는 판 휨 대신 금형 벽 마찰 · 램 기울기 · 펠릿 두께 불균일 · 가장자리 무구속(76호 관찰 면)이 후보다.
+
+### 4. 이 편이 이 페이지에 **안 준 것**
+
+요구치 · 압력 스윕 · 압력 → 용량 · 압력 → 국소 저항 · 분리막 자신의 두께 윤곽 · 반복(구성당 셀 1 · 같은 구성 두 셀 δ ×1.8). 창의 값은 움직이지 않았다 — 움직인 것은 운전 압력을 **값 하나가 아니라 면 분포 · 구속 형식 · 하중 경로로 적어야 한다**는 표본 한 줄이다(보류 (하) 근거 — 결정 안 함).
+
 ## 경고 (전부 원문이 준 한계에서 나온다)
 
 1. **점당 셀 1 개, 오차 막대 0.** 압력–수명 6 점 전부 N=1 이다.
@@ -1011,6 +1035,7 @@ S3: Li₂₁Si₅ 분말 100 → 700 MPa 냉간압착에서 면저항 **4.71 · 
 - **63호의 토크(10 N·m)를 MPa 로 옮기지 않는다** (2026-09-28) — 나사 규격 · 마찰이 인쇄되지 않아 `[재현]` 42–106 MPa 의 띠만 선다. 그리고 **23호의 64 / 70 MPa 를 63호의 값으로 인용하지 않는다** — 23호가 같은 절차를 빌리며 자기 셀에 적은 값이다.
 - **65호 파우치를 무가압 셀로도 가압 셀로도 인용하지 않는다** (2026-09-28) — 사진의 바인더 클립 둘은 정량 0 이고 운전 압력 서술이 없다.
 - **73호의 ≈40 MPa 를 운전 압력 요구치나 창의 표본으로 옮기지 않는다** (2026-09-28) — 측정 · 사이클 조건의 한 값이고 스윕이 없다. 사이클 셀의 구속 형식(정하중 / 정변위)은 인쇄 0 이다.
+- **80호의 코인셀 하중(≈0.1–0.2 MPa)을 창의 표본이나 요구치로 옮기지 않는다** (2026-09-29) — 액체 코인셀의 두 추정(판 식 · 스프링 — 스프링 식은 인쇄 값으로 재현 안 됨)이고, 판 휨 · 간극 수치는 오목 캔 · 단순 지지 스페이서라는 설계의 값이다. 가장자리 분리막 기공 폐쇄가 측면 구배의 원인이라는 것도 저자 배정이다(절대 간극은 셀 절반에서 공칭 이상).
 
 ## 관련
 - [[assb-pressure-reapplication-separation-test]] — `P↑` 분리 연산자. **이 페이지가 그 상한을 준다.**

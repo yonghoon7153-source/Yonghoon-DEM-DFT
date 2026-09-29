@@ -2,10 +2,10 @@
 title: 운전 중 압력 · 두께 신호의 귀속 — 음극 지배, 강성 곱, 기저선 규약
 description: "What an in-operando stack-pressure (or dilatometric height) signal measures in an ASSB: a stiffness-weighted sum of electrode swelling plus a drifting baseline. The prototype (Zhang W. et al. 2017, JMCA 5, 9929) shows the In-anode share is about 90–95 %, the amplitude-to-capacity ratio rises over cycling, and the printed ΔP is baseline-corrected while the ~62 MPa operating pressure appears only on an ESI axis"
 created: 2026-09-28
-updated: 2026-09-28
+updated: 2026-09-29
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade.md, raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md]
+sources: [raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade.md, raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -47,6 +47,8 @@ h(t) = h_base(t) +            Σ_e Δh_e(q)        # 높이 신호(딜라토미�
 차이를 가르지 못한다: 2D 투영 · 입자 수 · 식 부호 미인쇄). 첫 충전 앞머리 Δx ≈0.12–0.18 은 격자를 움직이지 않는다 — 신품 셀 첫 충전의 양극 몫은 그 구간에서 ≈0 이다.
 62호 원형은 LCO(충전 팽창)라 이 비선형의 표본이 아니다.
 ⚠ **2026-09-28 (72호) 주석 — 양극 몫은 조성 · 상한 전압에 더해 연구실 · 사이클로도 흔들린다.** 72호(Ishidzu 2016 *SSI* 288, 176 — 액체 반쪽 · 여섯 조성 · 첫 충전으로 읽힘 · 2.5–4.5 V · 0.05 C)에서 4.5 V 격자 `ΔV/V` 가 Ni 1/3 → 0.7 에 2.24 → 5.76 %(×2.6 · `[도표]` 벡터 좌표)이고, NCM111 부피 변화의 ≈47 % 가 `c` 최대(x ≈0.59) 뒤 Δx 21 % 에 몰린다(`[재현]` dV/dx ≈2.0 → 9.6 Å³ per x). 같은 조성 · 같은 4.5 V 에서 66호 표 S1 보다 +0.4…+1.0 %p(×1.1–1.5) — 격자 층위 안의 이 폭이 69호 층위 몫(입자/격자 ×1.5)과 같은 크기다. ⇒ 두께 · 압력 신호의 양극 몫을 한 교정 곡선의 `dV/dx` 로 추정할 때 조성 · 상한 전압 · 교정 셀(사이클 번호 · 율 · 로트)을 값 옆에 적는다(`[해석]`).
+⚠ **2026-09-29 (80호) 주석 — `P(t)` 는 면 적분(총 하중 ÷ 면적)이고, 국소 압축의 면 분포는 이 식에 없다.** 80호(Okasinski 2020 *PCCP* — 액체 NCM523/흑연 CR2032 · in situ EDXRD 로 두 전극 경계를 측면 주사)에서 비슷한 크기의 코인셀 하중(`[인쇄]` 0.14 · 0.185 MPa · `[재현]` 스프링 셀 1 · 3 · 5 · 8 ≈0.1–0.2 MPa)에서도 바닥 전극 판 휨 δ 가 구성에 따라 3.5–15.8 µm(×4.5)이고 전극 간극이 가장자리 ↔ 가운데 15–44 % 다르다 — 하중 한 값이 같아도 전극 간극 · 분리막 압축의 면 분포는 설계(스페이서 지지 · 캔 모양 · 구속 형식)가 정한다.
+⇒ 압력(두께) 신호를 전극 몫으로 나눌 때 `Σ_e Δh_e` 는 면 평균이고, 측면 `η(r)`(80호 가장자리 띠 = 면적 50 %)로 활성 부피의 Δx 가 측면 불균일하면 "실제로 Δx 를 겪은 활성 부피" 도 측면 가중이다(`[해석]`). 80호 자체에는 운전 중 압력 신호가 없다(표본 표 행 0).
 
 ## 왜 중요한가 — 카드 Q2 · Q1 에서 이 신호를 쓸 때의 함정 다섯
 
@@ -98,6 +100,7 @@ h(t) = h_base(t) +            Σ_e Δh_e(q)        # 높이 신호(딜라토미�
 - **62호의 기저 표류가 압밀이 아니라고 하지 않는다** — 후보를 가를 대조가 없다는 것까지다.
 - **33호 재수록 값 · 9호 힘 시계열을 MPa 눈금에서 62호와 나란히 비교하지 않는다** — 재수록 판독 · 단위 Kg · 기저 미인쇄가 섞여 있다. 표는 **무엇이 인쇄됐는가**의 대조다.
 - **`evidenceScope: multi-source-mixed` · `confidence: low`** — 1차 측정은 62호 · 60호 둘이고 나머지는 재수록 · Perspective 다.
+- **80호 코인셀의 면 분포 수치(δ · 간극)를 운전 압력 신호의 보정 인자로 쓰지 않는다** (2026-09-29) — 액체 코인셀의 판 휨이고 80호에는 운전 중 압력 신호가 없다; 주석은 신호 식의 성질(면 적분)을 적은 것이다.
 
 ## 관련
 - [[assb-contact-loss-vs-lampe]] — 닻. Q2 칸의 압력 센서 항목이 이 페이지의 함정 다섯에 걸린다.

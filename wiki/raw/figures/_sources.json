@@ -326,7 +326,7 @@
   ]
  },
  "li2020_synchrotron-operando-depth-profiling-soc-gradients-thick-nmc811": {
-  "figures": 14,
+  "figures": 17,
   "generated": "2026-09-29",
   "pdfs": [
    "08ae88a5-41._Synchrotron_Operando_Depth_Profiling_Studies_of_State-of-Charge_Gradients_in_Thick_LiNi0.8Mn0.1Co0.1O2_Cathode_Films.pdf",
@@ -473,6 +473,14 @@
   "pdfs": [
    "a19c9e1c-14._All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
    "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf"
+  ]
+ },
+ "okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients": {
+  "figures": 27,
+  "generated": "2026-09-29",
+  "pdfs": [
+   "d0a79f90-42._In_situ_X-ray_spatial_profiling_reveals_uneven_compression_of_electrode_assemblies_and_steep_lateral_gradients_in_lithium-ion_coin_cells.pdf",
+   "71424d55-42._Sup_In_situ_X-ray_spatial_profiling_reveals_uneven_compression_of_electrode_assemblies_and_steep_lateral_gradients_in_lithium-ion_coin_cells.zip/SI Figures Lateral inhomogeneity in Coin Cells Abraham.pptx"
   ]
  },
  "park2021_fictitious-phase-separation-electro-autocatalysis-layered-oxides": {
