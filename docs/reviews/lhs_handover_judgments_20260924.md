@@ -900,6 +900,39 @@
   (리포 원자료만으로 보고서 바이트 동일 재현) · 대조 보고서의 🔴 `dirty` 193/194 = 피복 단계가 추적 파일 요약 CSV 를 덮어쓴 것 (코드 변경 아님 · `LHS-27`).
   ⇒ 다음 = **7c** (AM–SE 배위수 · 고립 비율 · 분포 — 이 폴더의 웹앱 열).
 
+## J20-n. ② 퍼콜레이션 · 벽 τ (Dijkstra) 인계 (10-01 · 1저자 *"퍼콜레이션은 그렇게 가고"* · *"dijkstra tortuosity 벽을 확실하게 닫고 값을 추출해두자 · laplace는 차근차근"* · 시험 먼저)
+
+- **② 퍼콜레이션 7 열** (`--webapp-groups contact,percolation` · 접촉 분석 단계 산출 — 09-29 contact 배치 · 5번 배치 둘 다 130/130 값):
+  `percolation_pct` · `top_reachable_pct` · `n_components` · `n_large_components` · `ionic_active_pct` · `se_se_cn_perc` · `se_se_cn_n_perc`.
+  - **판정 바꿔 싣기** `LHS-20`: `top_reachable_pct` · `ionic_active_pct` = census 🔶 COND_cov → ✅ (SE 그래프 양 · coverage 를 읽지 않는다 · 옛 판정 열 사전 병기).
+  - **안 싣는 것**: `electronic_active_fraction` (census ✅ 지만 **망 단계** 산출 — 접촉 · coverage 배치에 값이 없어 빈칸 = 측정된 N/A 로 읽힌다) ·
+    `se_se_cn_eff_area_perc` (면적 · ⑦ 차례).
+  - **열 사전 F3 한정어** (`LHS-19`): `n_components` 외톨이 포함 (단절 침대는 사실상 외톨이 수) · `n_large_components` 문턱 10 = 출처 없는 코드 상수 ·
+    `percolation_pct` = 밴드 규칙의 그래프 관통 (솔버 전류 관통과 다른 정의 · 0.0 = 진짜 미퍼콜) · `top_reachable_pct` · `ionic_active_pct` 는 위 밴드의 외톨이도 센다 ·
+    `se_se_cn_*perc` 비관통 = 빈칸 (N/A) · 경계 폴백 `LHS-17` · 겹침 `LHS-18` 은 CAVEAT 로.
+  - **관문** (fail-closed · 실측 **130/130 · 64/64**): P1 관통 일관 — `percolation_pct > 0` ⟺ `_perc` 두 열에 값 ⟺ 수확기 벽 밴드 관통
+    (`tau_detail.band_detail.wall_n_span_components > 0` · J20-b F8 독립 재현) · P2 범위 · 순서 (비율 ∈ [0, 100] · 성분 수 정수 · `n_large ≤ n_components` ·
+    `top_reachable ≥ percolation`) · P3 관통 SE 개수 `se_se_cn_n_perc` = `percolation_pct × N_SE / 100` (실측 최대 차 1.5e-11).
+  - ⚠ lhsx 64 는 J20-b 감사기 (`lhs_perc_audit.py` · 폴백 · 겹침 · 재현) 를 **돌리지 않았다** — 관문 P1 (수확기 독립 재현) 64/64 로 대신 · WSL 에서 한 번 돌리면 닫힌다 (몇 분).
+- **벽 τ** (`tortuosity_SE_wall` · `_median` · `_status` · `tau_wall_n_*` · `tau_wall_convention`) — 원천 = **수확 v3** (5번 `docs/data/{lhs,lhsx}_descriptors_cov_1e09f661d/`) ·
+  v2 → v3 로 바꿔도 **옛 칸 변경 0** (130 · 64) · 함께 켜지는 벽 접촉 비율 8 열 (J20-a ⓓ) 도 싣는다.
+  - **함수 검토** (`lhs_descriptor_harvest.tortuosity_se` → `_tau_sample`): SE 그래프 (원자 좌표 기하 접촉 d ≤ r_i + r_j · x·y 주기 — 덤프 접촉과 같은 집합 J20-a) ·
+    벽 밴드 (바닥 z − r ≤ 0 + r_SE,max · 플래튼 z + r ≥ plate_z − r_SE,max) · 두 밴드를 **같은 성분 안에서** 잇는 쌍 전부 중 무작위 200 쌍 (seed 42) ·
+    Dijkstra 최단경로 (가중 = 중심 거리) / 두 끝 중심 |Δz| · [1, 20) 절단 평균 · 중앙값 · 상태 OK · NOT_PERCOLATING (잇는 성분 0) · NO_VALID_SAMPLED_PAIR ·
+    ELECTRODE_BAND_EMPTY · N_A_PHASE_ABSENT.  수정 불요.
+  - **실측**: 130 = OK 106 · NOT_PERCOLATING 24 · τ 1.292 / 1.494 / 4.151 (최소 / 중앙 / 최대) · 절단 0 · 64 = OK 64 · τ 1.262 / 1.365 / 1.600 ·
+    `percolation_pct > 0` ⟺ τ OK **130/130 · 64/64**.
+  - **관문**: T1 관통 성분 수 (정수 · OK ⟹ > 0 · NOT_PERCOLATING ⟹ 0 · 수확 벽 밴드 진단과 같아야) · T2 값 · 표본 (OK ⟹ 평균 · 중앙값 ∈ [1, 20) ·
+    0 < n_valid ≤ n_sampled ≤ 200 · 0 ≤ n_truncated < n_valid) · T3 (② 와 함께 실리면 NOT_PERCOLATING ⟺ percolation_pct 0) · 관문 상수 = 수확기 상수 (selftest ㉓d).
+  - **열 사전**: ⚠ **기하 최단경로 τ — 수송 τ 가 아니다** (협착 · 단면 병목을 보지 않아 1 근처) · COMSOL/EIS 입력 τ 는 τ_Laplace,eff = √(φ_SE·σ_grain/σ_full)
+    (망 단계 · 이 표에 없음 — 1저자 *"laplace는 차근차근"*) · 비관통 = 빈칸 (N/A).
+  - **벽 접촉 비율 문구 정정**: 옛 문구 "z − r ≤ 0 · z + r ≥ plate_z" (접선 포함) 는 수확기 `WALL_TOUCH_RULE` (겹침 깊이 > 0 · 접선 제외) 와 달랐다 → 같은 규칙으로.
+- **시험 먼저**: 생성기 ㉒a–q (②) · ㉓a–l (τ) + ⑲s · ⑳d 갱신 — 옛 코드 (7c 판 `8c18a7558`) 161/189 → 189/189 (τ 구현만 뺀 판 178/189).
+  웹앱 (J20-l): `webapp/test_percolation_labels.py` — SE Cluster 수 · Ionic Active AM 영문 라벨 · 툴팁 넷 (외톨이 · 문턱 10 · 밴드 규칙 ≠ 솔버 · top_reachable ≥
+  percolation (옛 문장은 부등호가 거꾸로) · coverage 무관) · ⚠ 웹앱은 벽 τ 를 계산 · 표시하지 않는다 (웹앱 τ = `calc_tortuosity` 밴드 규약 · `DESC-02` 열림 — 보고).
+- **인계표** (같은 날 판 덮어씀 · 7c 판은 `8c18a7558` 이력): `docs/data/lhs_handover_20261001.csv` 130×**177** · `lhsx_handover_20261001.csv` 64×**179** (+22 = ② 7 + 벽 τ 7 + 벽 접촉 8) · **옛 칸 변경 0** · 관문 G1–G7 · P1–P3 · τ T1–T3 **130/130 · 64/64** · 재생성 바이트 동일 · 명령 = `--harvest docs/data/{lhs,lhsx}_descriptors_cov_1e09f661d --webapp docs/data/{lhs,lhsx}_webapp_coverage_1e09f661d --webapp-groups contact,percolation` (+ union · lhsx `--design docs/data/lhsx_design_adapted_20260929.csv`).
+- ⬜ 남은 것: τ_Laplace (망 단계 배치 · 1저자 *"차근차근"*) · lhsx perc 감사기 1 회 · 배포 보류 해제 (1저자) · ③ 이후 묶음 (σ_VM · F1 · Auerbach · A_dem_geometric).
+
 ## 인계 판정 (지금)
 
 **↪ 갱신 09-28 밤 (J20-a)** — ⏸ **일괄 실행 보류**: ✅ 열을 묶음별로 코드 정의부터 감사한 뒤 실행 (① 접촉 위상 1차 감사 = J20-a).

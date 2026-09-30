@@ -872,17 +872,56 @@ HANDOVER_UNION_DERIVED = (
 TAU_WALL_CONVENTION = 'harvest_v3/wall_z0_plate/rSEmax/no_fallback/same_component'
 HANDOVER_TAU_WALL = (
     ('tortuosity_SE_wall',        'tau_mean',
-     '★ SE τ (벽 규약) — 바닥 벽 (z = 0) 밴드와 플래튼 밴드를 **같은 SE 성분 안에서** 잇는 쌍의 최단경로 길이 / 두께 방향 거리, '
-     '[1, 20) 절단 평균.  status OK 일 때만 값'),
-    ('tortuosity_SE_wall_median', 'tau_median',     '같은 표본의 중앙값 (status OK 일 때만)'),
+     '★ SE τ (벽 규약 · **기하 최단경로**) — 바닥 벽 (z = 0) 밴드와 플래튼 밴드 (밴드 두께 = r_SE,max · 입자 표면 기준) 를 **같은 SE 성분 '
+     '안에서** 잇는 쌍의 SE 중심 경로 최단 길이 (Dijkstra · 가중 = 중심 거리 · x·y 주기) / 두 끝 중심의 z 거리 · 무작위 200 쌍 (seed 42 · '
+     '쌍 평균이라 쌍이 많은 큰 성분 쪽으로 가중) · [1, 20) 절단 평균.  접촉 = 원자 좌표 기하 (d ≤ r_i + r_j) — 덤프 접촉과 같은 집합 (J20-a '
+     '130/130).  status OK 일 때만 값 · 비관통은 빈칸 (N/A · 0 이 아니다).  ⚠ **수송 τ 가 아니다** — 협착 · 단면 병목을 보지 않아 1 근처에 '
+     '모인다 (LHS 1.29–4.15 · lhsx 1.26–1.60) · COMSOL/EIS 입력 τ 는 τ_Laplace,eff = √(φ_SE·σ_grain/σ_full) (망 단계 · 이 표에 없음) · '
+     '관문 T1–T3 (10-01)'),
+    ('tortuosity_SE_wall_median', 'tau_median',     '같은 표본의 중앙값 (status OK 일 때만) · 같은 한정어 (기하 최단경로 · 수송 τ 아님)'),
     ('tortuosity_SE_wall_status', 'status',
-     'OK · NOT_PERCOLATING (벽 밴드 둘을 잇는 SE 성분이 없다 = 미관통) · ELECTRODE_BAND_EMPTY · NO_VALID_SAMPLED_PAIR · N_A_PHASE_ABSENT'),
+     'OK · NOT_PERCOLATING (벽 밴드 둘을 잇는 SE 성분이 없다 = 미관통 — 퍼콜레이션 percolation_pct 0 과 같은 집합 · 관문 T3) · '
+     'ELECTRODE_BAND_EMPTY · NO_VALID_SAMPLED_PAIR · N_A_PHASE_ABSENT'),
     ('tau_wall_n_sampled',        'n_sampled',      '표본 쌍 수 (최대 200)'),
     ('tau_wall_n_valid',          'n_valid',        '경로가 난 표본 수'),
     ('tau_wall_n_truncated',      'n_truncated',    '[1, 20) 밖으로 잘린 수'),
     ('tau_wall_convention',       'tau_convention', '규약 문자열 (harvest_v3/wall_z0_plate/…)'),
 )
 TAU_WALL_VALUE = ('tortuosity_SE_wall', 'tortuosity_SE_wall_median')
+#: 벽 τ 관문 상수 — 수확기 (`lhs_descriptor_harvest.TAU_LO · TAU_HI · N_TAU_PAIRS`) 와 같아야 한다 (selftest ㉓ 가 강제)
+TAU_WALL_LO, TAU_WALL_HI, TAU_WALL_N_PAIRS = 1.0, 20.0, 200
+
+
+def _tau_wall_gates(case, t, h):
+    """벽 τ 관문 (fail-closed · 1저자 10-01 *"dijkstra tortuosity 벽을 확실하게 닫고 값을 추출"*) — 상태 ↔ 값 ↔ 표본 수 ↔ 관통 성분 수가
+    **한 표본**에서 나왔는가.  10-01 실측 130/130 · 64/64 성립.
+
+      T1 관통: n_span_components = 0 이상 정수 · OK ⟹ > 0 · NOT_PERCOLATING ⟹ 0 · 수확 `tau_detail.band_detail.wall_n_span_components` 가
+         있으면 같아야 (같은 성분 · 같은 벽 밴드)
+      T2 값 · 표본: OK ⟹ 평균 · 중앙값 ∈ [1, 20) · 0 < n_valid ≤ n_sampled ≤ 200 · 0 ≤ n_truncated < n_valid
+      (T3 — 웹앱 percolation_pct 가 함께 실리면 NOT_PERCOLATING ⟺ percolation_pct = 0 — `build_handover` 가 행 끝에서 본다)
+    반환 1.  어긋나면 `FillRefusal` (메시지에 'τ T<n>')."""
+    def _int(x):
+        return isinstance(x, int) and not isinstance(x, bool)
+
+    def _num(x):
+        return isinstance(x, (int, float)) and not isinstance(x, bool)
+    st, nsc = t.get('status'), t.get('n_span_components')
+    if not (_int(nsc) and nsc >= 0):
+        raise FillRefusal(f'{case}: 벽 τ n_span_components {nsc!r} 가 0 이상 정수가 아니다 (τ T1)')
+    span = _dig(h, ('tau_detail', 'band_detail', 'wall_n_span_components'))
+    if span is not None and int(span) != nsc:
+        raise FillRefusal(f'{case}: 벽 τ 관통 성분 {nsc} ≠ 수확 벽 밴드 진단 {span} — 같은 성분 · 같은 밴드가 아니다 (τ T1)')
+    if (st == 'OK' and nsc <= 0) or (st == 'NOT_PERCOLATING' and nsc != 0):
+        raise FillRefusal(f'{case}: 벽 τ 상태 {st} 인데 관통 성분 {nsc} (τ T1)')
+    if st == 'OK':
+        v, m = t.get('tau_mean'), t.get('tau_median')
+        if not (_num(v) and _num(m) and TAU_WALL_LO <= v < TAU_WALL_HI and TAU_WALL_LO <= m < TAU_WALL_HI):
+            raise FillRefusal(f'{case}: 벽 τ 평균 {v!r} · 중앙값 {m!r} 이 [1, 20) 밖 (τ T2)')
+        ns_, nv, ntr = t.get('n_sampled'), t.get('n_valid'), t.get('n_truncated')
+        if not (_int(ns_) and _int(nv) and _int(ntr) and 0 < nv <= ns_ <= TAU_WALL_N_PAIRS and 0 <= ntr < nv):
+            raise FillRefusal(f'{case}: 벽 τ 표본 수 n_sampled {ns_!r} · n_valid {nv!r} · n_truncated {ntr!r} 가 규칙 밖 (τ T2)')
+    return 1
 
 #: J20 (1저자 비준 2026-09-28 "✅ 만 이번에" · "채운 뒤 넘김") — 웹앱 파이프라인을 **그대로** 돌린 열 (`scripts/lhs_webapp_batch.py`) 중
 #:   09-19 전수 판정 (`docs/param_audit_report_20260919.md` §2) 이 ✅ 로 판정한 열만 싣는다 ('✅ 쓴다' · '✅ 쓴다(이름 주의)').
@@ -935,6 +974,9 @@ CAVEAT_DERIVED_NUM = ('파생 — (N_P·CN_P + N_S·CN_S)/(N_P + N_S) 항등식:
                       '(독립 타깃 아님 · DESC-07 과 같은 부류)')
 CAVEAT_DERIVED_SW = ('파생 — 상별 반경이 한 값이면 (N_P r_P² CN_P + N_S r_S² CN_S)/(N_P r_P² + N_S r_S²) 항등식 · r² 가중이라 '
                      'AM_P 가 지배 → 벽 효과가 크다')
+CAVEAT_PERC = ('경계 = 바닥 벽 z 0 · 플래튼 plate_z 기준 2·r 밴드 (L0) — LHS 130/130 폴백 0 (J20-b 감사) · 폴백 (L1 · L2) 이 나면 같은 이름이 다른 '
+               '정의가 되는데 기록이 없다 (LHS-17 · 생산 코드에서 열림) · 두께 < 4r 이면 두 밴드 겹침 인공물 (LHS-18 · LHS 기하상 0) · '
+               '수확기 벽 밴드 관통 (tau_wall_n_span_components > 0) 과 같은 집합 (관문 P1)')
 CAVEAT_COUNT = ('총량 (개수) — 두께 · 입자 수에 비례한다 · 특징으로 쓰려면 입자당 · 부피당으로 나눌 것 · 면적이 아니다 '
                 '(A_dem_geometric 주의는 해당 없음)')
 WA_DEFINE = {
@@ -952,6 +994,17 @@ WA_DEFINE = {
     'am_se_cn_std': ('z_AM-SE 의 입자간 표준편차 (모집단) — AM 전 입자 (접촉 0 · 벽 입자 포함) · mono = 단일 상 값 (J20-k 7a)', CAVEAT_WALL),
     'am_se_cn_median': ('z_AM-SE 의 중앙값 — AM 전 입자 (짝수 개면 가운데 둘의 평균 · np.median) · mono = 단일 상 값 (J20-k 7a)', CAVEAT_WALL),
     'am_se_cn_max': ('z_AM-SE 의 최댓값 — AM 전 입자 · = 상별 max 의 최댓값 (J20-k 7a)', CAVEAT_WALL),
+    #  ② 퍼콜레이션 (J20-b · F3 = LHS-19 · 열 이름과 뜻이 다른 곳을 적는다)
+    'percolation_pct': ('SE 관통 비율 (%) — 바닥 밴드 (z ≤ 2r) 와 위 밴드 (z ≥ plate_z − 2r) 에 다 닿는 SE 성분의 SE / 전 SE · 0.0 = 관통 성분 없음 '
+                        '(진짜 미퍼콜 · J20-b) · **밴드 규칙의 그래프 관통** — 솔버 (전류) 관통 · σ 와 다른 정의 (LHS-19)', CAVEAT_PERC),
+    'top_reachable_pct': ('위 밴드에 닿는 SE 성분의 SE / 전 SE (%) — 위 밴드에 앉은 외톨이 SE 도 센다 (LHS-19) · SE 그래프 양 (coverage 무관 — LHS-20)',
+                          CAVEAT_PERC),
+    'n_components': ('SE 접촉 그래프의 성분 수 — 외톨이 SE (크기 1) 포함 → 단절 침대에서는 사실상 외톨이 수 (LHS-06 · LHS-19)', CAVEAT_COUNT),
+    'n_large_components': ('크기 ≥ 10 인 SE 성분 수 — 문턱 10 은 출처 없는 코드 상수 (LHS-19)', CAVEAT_COUNT),
+    'ionic_active_pct': ('이온 활성 AM 비율 (%) — 위 밴드에 닿는 SE 성분 (top-reachable) 의 SE 와 접촉한 AM / 전 AM (calc_ionic_active_am) · 접촉 유무만 '
+                         '본다 (coverage 무관 — LHS-20) · 외톨이 SE 가 위 밴드에 있으면 그것도 센다 (LHS-19)', CAVEAT_PERC),
+    'se_se_cn_perc': ('관통 SE 성분에 속한 SE 만의 평균 SE–SE CN — 관통 성분이 없으면 빈칸 (N/A · 키 자체가 없다 · LHS-19)', CAVEAT_WALL),
+    'se_se_cn_n_perc': ('관통 SE 성분에 속한 SE 개수 — = percolation_pct × N_SE / 100 (생성기 관문 P3) · 관통 없으면 빈칸 (N/A)', CAVEAT_COUNT),
     'A_binding_AM_SE_n_contacts': ('Physics 모듈 (coverage_physics_vs_hertzian) 이 센 AM–SE 접촉 개수 — area_AM전체_SE_n 과 같은 '
                                    '집합인지는 한 건 대조 전', CAVEAT_COUNT),
     'A_binding_total_n_contacts': ('Physics 모듈이 센 전체 접촉 개수 — 같은 집합인지는 한 건 대조 전', CAVEAT_COUNT),
@@ -989,10 +1042,17 @@ WA_GROUP_CONTACT_EXACT = ('se_se_cn', 'se_se_cn_std', 'am_se_cn_mean', 'am_se_cn
                           'am_am_cn', 'am_am_cn_std', 'am_am_n_contacts',
                           #  7c — calc_am_isolation_risk 의 나머지 출력 (같은 접촉 단계 · analyze_contacts.py:452–468)
                           'am_se_cn_std', 'am_se_cn_median', 'am_se_cn_max', 'am_vulnerable_pct')
-WA_GROUPS = ('contact',)
+#: ② 퍼콜레이션 묶음 (J20-b 감사 · 1저자 비준 10-01 *"퍼콜레이션은 그렇게 가고"*) — **접촉 분석 단계**가 full_metrics 에 쓰는 SE 그래프 열
+#:   (`calc_percolation` · `calc_ionic_active_am` · `calc_se_se_cn` 의 관통 부분 · analyze_contacts.py:404–413).  09-29 contact 배치 · 5번 배치 둘 다
+#:   130/130 값.  `electronic_active_fraction` 은 **망 단계** (`active_fractions`) 산출이라 접촉 · coverage 배치에 값이 없다 → 이 묶음에 넣지 않는다
+#:   (census ✅ 여도 빈칸 = 측정된 N/A 로 읽힌다) · `se_se_cn_eff_area_perc` 는 면적 (⑦ 차례).
+WA_GROUP_PERC_EXACT = ('percolation_pct', 'top_reachable_pct', 'n_components', 'n_large_components', 'ionic_active_pct',
+                       'se_se_cn_perc', 'se_se_cn_n_perc')
+WA_GROUPS = ('contact', 'percolation')
 #: 7c — 웹앱 배치 단계 (`lhs_webapp_batch --stop-after`) → 그 배치가 **다 낸** 묶음.  coverage 단계는 접촉 단계를 포함한다 (접촉 분석 → 피복)
 #:   — 5번 배치 (`--stop-after coverage`) 를 contact 묶음으로 받는다.  묶음 제한 없이 (전체) 부르면 여전히 거부 (뒤 단계 열이 빈칸).
-WA_STAGE_GROUPS = {'contact': ('contact',), 'coverage': ('contact',)}
+#:   ② 퍼콜레이션도 접촉 분석 단계 산출이다 (위).
+WA_STAGE_GROUPS = {'contact': ('contact', 'percolation'), 'coverage': ('contact', 'percolation')}
 
 
 def wa_group_contact(col):
@@ -1000,6 +1060,23 @@ def wa_group_contact(col):
     return (col in WA_GROUP_CONTACT_EXACT
             or re.fullmatch(r'(AM_P|AM_S)_(se_cn_(mean|std|median|max)|vulnerable_pct)', col) is not None
             or re.fullmatch(r'area_(.+)_n', col) is not None)
+
+
+def wa_group_perc(col):
+    """② 퍼콜레이션 묶음 (접촉 분석 단계의 SE 그래프 열) 인가."""
+    return col in WA_GROUP_PERC_EXACT
+
+
+WA_GROUP_FN = {'contact': wa_group_contact, 'percolation': wa_group_perc}
+
+
+def wa_groups_norm(g):
+    """--webapp-groups 값 → 묶음 튜플 ('contact,percolation' · 'contact' · 튜플) · None = 묶음 제한 없음."""
+    if g is None:
+        return None
+    if isinstance(g, str):
+        g = [x.strip() for x in g.split(',') if x.strip()]
+    return tuple(g)
 
 
 #: J20-g (1저자 비준 09-30 "권고대로" — *"하나하나씩 쳐내가자"*) — 인계표에는 **1저자와 함수 단위로 같이 확인한 웹앱 열만** 싣는다.
@@ -1016,6 +1093,10 @@ WA_REVIEWED = (
      'calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 '
      'std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · '
      'max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c'),
+    (r'percolation_pct|top_reachable_pct|n_components|n_large_components|ionic_active_pct|se_se_cn_(n_)?perc',
+     'calc_percolation (dem_analysis_core.py:451–) · calc_ionic_active_am (:631–) · calc_se_se_cn 관통 부분 (:320–361) → analyze_contacts.py:404–413 — '
+     'J20-b 감사 (WSL 130/130 CLEAN · 밴드 L0 130/130 · 폴백 0 · 겹침 0 · 재현 = 정본) · 1저자 비준 10-01 · 관문 P1–P3 (관통 일관 + 수확기 '
+     '독립 재현 · 범위 · 관통 SE 개수 = percolation_pct × N_SE) · F3 한정어 (LHS-19) · top_reachable · ionic_active = census 오분류 → ✅ (LHS-20) · J20-b ②'),
 )
 #: 7c (J20-k · 1저자 비준 10-01 *"ㄱㄱ 하자"*) — 09-19 census 판정을 **바꿔 싣는** 열 (열 사전에 옛 판정을 병기한다).  census 에 없는 키
 #:   (7a 새 키) 는 웹앱 배치 머리 (metrics_flat) 에 있을 때만 싣는다 — 옛 배치에 없는 키가 빈칸 = '측정된 N/A' 로 읽히지 않게.
@@ -1023,8 +1104,11 @@ _WA_OVR_VUL = ('✅ 쓴다 (승격 · LHS-23)', 'SE 접촉 0–1 개인 AM 의 �
                '다른 단계가 덮어쓰지도 않는다) · 09-19 census 의 COND_cov ("coverage 문턱 기반") 는 오분류 (LHS-23)')
 _WA_OVR_7A = ('✅ 쓴다 (새 키 · J20-k 7a)', 'AM 전 입자 AM–SE CN 분포 — 7a (09-30) 에 웹앱이 내보내기 시작한 키 · 09-19 census 에 없다 · '
               '상별 통계와 같은 counts · 같은 함수 (calc_am_isolation_risk)')
+_WA_OVR_PERC = ('✅ 쓴다 (승격 · LHS-20)', 'SE 그래프 양 — calc_percolation 의 위 밴드 성분 · calc_ionic_active_am 의 AM–SE 접촉 유무 × '
+                'top-reachable SE (coverage 값을 읽지 않는다) · 09-19 census 의 COND_cov 는 오분류 (LHS-20 · 1저자 비준 10-01)')
 WA_VERDICT_OVERRIDE = {'am_vulnerable_pct': _WA_OVR_VUL, 'AM_P_vulnerable_pct': _WA_OVR_VUL, 'AM_S_vulnerable_pct': _WA_OVR_VUL,
-                       'am_se_cn_std': _WA_OVR_7A, 'am_se_cn_median': _WA_OVR_7A, 'am_se_cn_max': _WA_OVR_7A}
+                       'am_se_cn_std': _WA_OVR_7A, 'am_se_cn_median': _WA_OVR_7A, 'am_se_cn_max': _WA_OVR_7A,
+                       'top_reachable_pct': _WA_OVR_PERC, 'ionic_active_pct': _WA_OVR_PERC}
 
 
 def wa_verdicts(wv):
@@ -1160,12 +1244,14 @@ def wa_phase_specific(col):
 
 
 #: J20-a ⓓ (1저자 비준 09-28 밤 "권고하는걸로") — 상별 바닥 벽 · 플래튼 **접촉 입자 비율** (수확 v3 `wall_touch`).  CN 이 벽 · 플래튼
-#:   접촉을 세지 않아 벽에 닿은 입자의 CN 이 낮은 몫을 가르는 설명 변수.  규칙 = 수확기 `WALL_TOUCH_RULE` (z − r ≤ 0 · z + r ≥ plate_z).
+#:   접촉을 세지 않아 벽에 닿은 입자의 CN 이 낮은 몫을 가르는 설명 변수.  규칙 = 수확기 `WALL_TOUCH_RULE` (겹침 깊이 > 0 — z − r < 0 ·
+#:   z + r > plate_z · 접선 = 0 은 안 셈 · 10-01 문구 정정: 옛 문구 "≤ · ≥" 는 수확기 규칙과 달랐다).
 #:   벽 인접 입자를 뺀 CN 은 택하지 않았다 — AM_P 가 두께 2–10 개인 침대에서 남는 입자가 거의 없어 정의가 흔들린다.
 WALL_TOUCH_PHASES = ('SE', 'AM_P', 'AM_S', 'AM')
 HANDOVER_WALL_TOUCH = tuple(
     (f'wall_touch_frac_{ph}_{side}', ph, side,
-     f'{ph} 입자 중 ' + ('바닥 벽 (z − r ≤ 0)' if side == 'floor' else '플래튼 (z + r ≥ plate_z)') + ' 에 닿은 비율 (0–1) · '
+     f'{ph} 입자 중 ' + ('바닥 벽 (z − r < 0)' if side == 'floor' else '플래튼 (z + r > plate_z)')
+     + ' 에 닿은 비율 (0–1) · 닿음 = 겹침 깊이 > 0 (접선은 안 셈 · 수확기 WALL_TOUCH_RULE) · '
      + ('AM = AM_P + AM_S 합친 모집단 (am_se_cn_mean 과 같은 분모) · ' if ph == 'AM' else '') + '상이 없으면 빈칸 (N/A)')
     for ph in WALL_TOUCH_PHASES for side in ('floor', 'plate'))
 
@@ -1400,6 +1486,52 @@ def _wa_amse_gates(case, o, take, h, dp, drow):
     return 1
 
 
+def _wa_perc_gates(case, o, take, h):
+    """② 관문 (fail-closed) — 표에 실린 퍼콜레이션 값이 한 SE 그래프에서 나왔고 수확기가 독립으로 재현하는가.  09-29 J20-b 감사 130/130 CLEAN ·
+    10-01 실측 130/130 · 64/64 성립.
+
+      P1 관통 일관: percolation_pct > 0 ⟺ se_se_cn_perc · se_se_cn_n_perc 에 값 ⟺ 수확기 벽 밴드 관통 (`tau_detail.band_detail.wall_n_span_components`
+         > 0 · J20-b F8 독립 재현 — SE 단분산이면 두 밴드 규칙이 같은 집합)
+      P2 범위 · 순서: 비율 셋 ∈ [0, 100] · 성분 수 정수 ≥ 0 · n_large ≤ n_components · top_reachable ≥ percolation (관통 SE 는 위 밴드에 닿는다)
+      P3 관통 SE 개수 = percolation_pct × N_SE / 100 (수확 phase_counts)
+    반환 1 (검사함).  어긋나면 `FillRefusal` (메시지에 '② P<n>')."""
+    def num(c):
+        v = o.get(c, '')
+        return None if v in (None, '') else float(v)
+    for c in ('percolation_pct', 'top_reachable_pct', 'ionic_active_pct'):             # P2
+        if c in take and num(c) is not None and not (0.0 <= num(c) <= 100.0):
+            raise FillRefusal(f'{case}: {c} {num(c)!r} ∉ [0, 100] (② P2)')
+    for c in ('n_components', 'n_large_components'):
+        if c in take and num(c) is not None and (num(c) < 0 or num(c) != int(num(c))):
+            raise FillRefusal(f'{case}: {c} {num(c)!r} 이 0 이상 정수가 아니다 (② P2)')
+    if 'n_components' in take and 'n_large_components' in take and None not in (num('n_components'), num('n_large_components')) \
+            and num('n_large_components') > num('n_components'):
+        raise FillRefusal(f'{case}: n_large_components {num("n_large_components")!r} > n_components {num("n_components")!r} (② P2)')
+    pp = num('percolation_pct') if 'percolation_pct' in take else None
+    if pp is not None and 'top_reachable_pct' in take and num('top_reachable_pct') is not None \
+            and num('top_reachable_pct') < pp - WA_CN_IDENTITY_TOL * max(1.0, pp):
+        raise FillRefusal(f'{case}: top_reachable_pct {num("top_reachable_pct")!r} < percolation_pct {pp!r} — 관통 SE 는 위 밴드에 닿는다 (② P2)')
+    if pp is None:
+        return 1
+    perc = pp > 0.0
+    for c in ('se_se_cn_perc', 'se_se_cn_n_perc'):                                      # P1
+        if c in take and (num(c) is not None) != perc:
+            raise FillRefusal(f'{case}: percolation_pct {pp!r} 인데 {c} = {o.get(c)!r} — 관통 여부와 값 유무가 어긋난다 (② P1)')
+    span = _dig(h, ('tau_detail', 'band_detail', 'wall_n_span_components'))
+    if span is None:
+        raise FillRefusal(f'{case}: 수확 JSON 에 tau_detail.band_detail.wall_n_span_components 가 없다 — 관통을 독립으로 재현할 수 없다 (② P1)')
+    if (int(span) > 0) != perc:
+        raise FillRefusal(f'{case}: 웹앱 percolation_pct {pp!r} ↔ 수확기 벽 밴드 관통 성분 {span} — 독립 재현이 어긋난다 (② P1 · J20-b F8)')
+    if 'se_se_cn_n_perc' in take and perc:                                               # P3
+        pc = h.get('phase_counts')
+        if not isinstance(pc, dict):
+            raise FillRefusal(f'{case}: 수확 JSON 에 phase_counts 가 없다 — 관통 SE 개수를 확인할 수 없다 (② P3)')
+        exp3 = pp * _phase_n(pc, 'SE') / 100.0
+        if abs(num('se_se_cn_n_perc') - exp3) > WA_COUNT_INT_TOL:
+            raise FillRefusal(f'{case}: se_se_cn_n_perc {num("se_se_cn_n_perc")!r} ≠ percolation_pct × N_SE / 100 = {exp3!r} (② P3)')
+    return 1
+
+
 def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp_groups=None, wa_reviewed_only=True):
     """설계행 + 수확 (+ union) (+ 웹앱) → 인계용 행 리스트.  **순수 함수**(파일을 안 쓴다) 라 시험 가능하다.
 
@@ -1450,20 +1582,21 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
     if wt_on:
         cols += [n for n, _p, _s, _w in HANDOVER_WALL_TOUCH]
     wv, wa_take = webapp, []
-    if webapp_groups is not None and webapp_groups not in WA_GROUPS:
-        raise FillRefusal(f'webapp_groups {webapp_groups!r} — 아는 묶음은 {WA_GROUPS} 뿐이다 (① 접촉 위상 = contact)')
+    _gs = wa_groups_norm(webapp_groups)
+    if _gs is not None and (not _gs or any(g not in WA_GROUPS for g in _gs)):
+        raise FillRefusal(f'webapp_groups {webapp_groups!r} — 아는 묶음은 {WA_GROUPS} 뿐이다 (① 접촉 위상 = contact · ② = percolation)')
     if wv is not None:
         #  묶음별 — 접촉 단계만 돈 배치는 그 묶음으로만 부른다 (뒤 단계 열이 빈칸 = 측정된 N/A 로 읽히지 않게)
         _sa = wv.get('stop_after')
-        if _sa and webapp_groups not in WA_STAGE_GROUPS.get(_sa, (_sa,)):
+        if _sa and (_gs is None or any(g not in WA_STAGE_GROUPS.get(_sa, (_sa,)) for g in _gs)):
             raise FillRefusal(f'웹앱 배치가 stop_after={_sa!r} 로 돌았다 — webapp_groups={webapp_groups!r} 로는 싣지 않는다 '
-                              f'(그 배치가 다 낸 묶음만: --webapp-groups {"|".join(WA_STAGE_GROUPS.get(_sa, (_sa,)))})')
+                              f'(그 배치가 다 낸 묶음만: --webapp-groups {",".join(WA_STAGE_GROUPS.get(_sa, (_sa,)))} 의 부분집합)')
         miss_w = [r[key] for r in rows if r[key] not in (wv.get('status') or {})]
         if miss_w:
             raise FillRefusal(f'웹앱 배치가 시도하지 않은 설계행 {len(miss_w)} 건: {miss_w[:5]} — 배치 미완 (재개로 채울 것)')
         ok_cols = [c for c, v in wa_verdicts(wv)[0].items() if str(v).startswith('✅')]     # 7c — 판정 바꿔 싣기 포함
-        if webapp_groups == 'contact':
-            ok_cols = [c for c in ok_cols if wa_group_contact(c)]
+        if _gs is not None:
+            ok_cols = [c for c in ok_cols if any(WA_GROUP_FN[g](c) for g in _gs)]
         n_census_ok = len(ok_cols)
         if wa_reviewed_only:                        # J20-g — 같이 확인한 열만 (CLI 는 항상 이 경로 · False 는 옛 기제 시험 전용)
             ok_cols = [c for c in ok_cols if wa_reviewed(c)]
@@ -1477,12 +1610,13 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
         rep['union_extra'] = sorted(set(uv) - {r[key] for r in rows})
     if tw_on:
         rep['tau_wall_status'] = collections.Counter()
+        rep['tau_wall_checked'] = rep['tau_perc_crosschecked'] = 0
     if wv is not None:
         rep.update(wa_collisions=wa_coll, wa_n_cols=len(wa_take), wa_status_counts=collections.Counter(),
                    wa_porosity_absmax=0.0, wa_reviewed_only=bool(wa_reviewed_only),
                    wa_unreviewed_dropped=n_census_ok - len(ok_cols), wa_pair_zero_filled=0,
                    wa_mono_renamed_cases=0, wa_mono_design_filled=0, wa_mono_absent_blanked=0,
-                   wa_cn_identity_checked=0, wa_am_identity_checked=0, wa_amse_identity_checked=0)
+                   wa_cn_identity_checked=0, wa_am_identity_checked=0, wa_amse_identity_checked=0, wa_perc_checked=0)
     for r in rows:
         h = hv[r[key]]
         o = {c: r.get(c, '') for c in design_cols}
@@ -1526,6 +1660,7 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                 else:
                     o[name] = '' if v is None else str(v)
             rep['tau_wall_status'][t.get('status')] += 1
+            rep['tau_wall_checked'] += _tau_wall_gates(r[key], t, h)          # T1 · T2
         if wt_on:
             wt = h.get('wall_touch') or {}
             for name, ph, side, _w in HANDOVER_WALL_TOUCH:
@@ -1624,6 +1759,9 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
             #  7c — AM–SE CN · 고립 (G1–G7 · 상 있음/없음): 표에 실린 값들이 calc_am_isolation_risk 의 counts 하나에서 나왔는가
             if wr is not None and any(WA_AMSE_COL.fullmatch(c) for c in wa_take):
                 rep['wa_amse_identity_checked'] += _wa_amse_gates(r[key], o, wa_take, h, dp, r)
+            #  ② — 퍼콜레이션 (P1 관통 일관 + 수확기 독립 재현 · P2 범위 · P3 관통 SE 개수)
+            if wr is not None and any(wa_group_perc(c) for c in wa_take):
+                rep['wa_perc_checked'] += _wa_perc_gates(r[key], o, wa_take, h)
             for name, wcol, hcol, _w in WA_QC:
                 o[name] = ''
             if wr is not None:
@@ -1649,6 +1787,12 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                     st_h = (h.get('status') or {}).get(DESCRIPTOR_STATUS_KEY.get(hc, ''), '')
                     if a not in (None, '') and b is not None and st_h == 'OK':
                         o[name] = repr(float(a) - float(b))
+        #  τ T3 — 벽 τ 와 ② 퍼콜레이션이 함께 실리면 비관통 판정이 같아야 한다 (수확기 벽 밴드 ↔ 웹앱 밴드 규칙 · SE 단분산이면 같은 집합 · J20-b F8)
+        if tw_on and o.get('percolation_pct', '') not in ('', None):
+            if (o.get('tortuosity_SE_wall_status') == 'NOT_PERCOLATING') != (float(o['percolation_pct']) == 0.0):
+                raise FillRefusal(f'{r[key]}: 벽 τ 상태 {o.get("tortuosity_SE_wall_status")} ↔ 웹앱 percolation_pct {o["percolation_pct"]} — '
+                                  '관통 판정이 어긋난다 (τ T3)')
+            rep['tau_perc_crosschecked'] += 1
         out.append(o)
         rep['n'] += 1
     return out, cols, rep
@@ -2336,7 +2480,8 @@ def _selftest():
                                        'A_binding_total_n_contacts', 'n_am_am_contacts_total')))
     _neg('⑲r ★ 접촉 단계만 돈 배치 (stop_after=contact) 를 묶음 제한 없이 부르면 거부 — 뒤 단계 열이 빈칸 = N/A 로 읽힌다',
          lambda: build_handover(_dq, _hqs, webapp=_wa2('contact')))
-    _neg('⑲s 모르는 묶음 이름은 거부', lambda: build_handover(_dq, _hqs, webapp=_wa2(), webapp_groups='percolation'))
+    _neg('⑲s 모르는 묶음 이름은 거부 (② 뒤 percolation 은 아는 묶음 — fracture 로)',
+         lambda: build_handover(_dq, _hqs, webapp=_wa2(), webapp_groups='fracture'))
     _g1 = next((r for r in _og if r['case_id'] == 'q1'), {})
     chk('⑲t 같은 프레임 관문은 그대로 — 웹앱 porosity (접촉 단계 산출) − 수확 porosity 가 QC 열에 (여기선 0)',
         _g1.get('qc_wa_porosity_minus_harvest_pct') == repr(0.0) and _g1.get('am_am_cn') == '1.2')
@@ -2423,7 +2568,7 @@ def _selftest():
         'wa_phase_specific (AM_P/AM_S 이름이 든 열 · AM전체 · 소문자 am_ 은 아님)',
         'wa_reviewed' in globals() and 'wa_phase_specific' in globals()
         and globals()['wa_reviewed']('area_AM_P_SE_n') and globals()['wa_reviewed']('se_se_cn')
-        and globals()['wa_reviewed']('se_se_cn_std') and not globals()['wa_reviewed']('se_se_cn_perc')
+        and globals()['wa_reviewed']('se_se_cn_std') and globals()['wa_reviewed']('se_se_cn_perc')     # ② 뒤 (J20-b) 검토됨
         and not globals()['wa_reviewed']('se_se_cn_eff_area') and not globals()['wa_reviewed']('se_se_cn_aug')
         and globals()['wa_reviewed']('am_am_cn') and globals()['wa_reviewed']('am_am_cn_std')
         and globals()['wa_reviewed']('am_am_n_contacts') and not globals()['wa_reviewed']('am_am_mean_area')
@@ -2777,6 +2922,143 @@ def _selftest():
         all('7c' in _dm7b.get(c, {}).get('meaning', '') for c in _cols7)
         and '설계 상 칸' in _dm7b.get('AM_P_vulnerable_pct', {}).get('meaning', '')
         and '설계 상 칸' not in _dm7b.get('am_vulnerable_pct', {}).get('meaning', ''))
+    #  ═══ ㉒ ② 퍼콜레이션 (J20-b 감사 · 1저자 비준 10-01 *"퍼콜레이션은 그렇게 가고"* · LHS-19 · LHS-20) ═════════════════════════════════
+    #   접촉 분석 단계가 내는 SE 그래프 열 7 개를 percolation 묶음으로 싣는다 (`--webapp-groups contact,percolation`) · top_reachable · ionic_active 의
+    #   census 🔶 COND_cov 는 오분류 (LHS-20) → ✅ · electronic_active_fraction (망 단계) · se_se_cn_eff_area_perc (면적 · ⑦) 는 census ✅ 여도 안 싣는다 ·
+    #   관문 P1 (관통 일관 + 수확기 독립 재현 — J20-b F8) · P2 (범위 · 순서) · P3 (관통 SE 개수 = percolation_pct × N_SE / 100).
+    def _wa8():
+        w = _wa7()
+        w['verdict'].update(percolation_pct='✅ 쓴다', n_components='✅ 쓴다', n_large_components='✅ 쓴다', se_se_cn_perc='✅ 쓴다',
+                            se_se_cn_n_perc='✅ 쓴다', top_reachable_pct='🔶 채널 종속', ionic_active_pct='🔶 채널 종속',
+                            electronic_active_fraction='✅ 쓴다', se_se_cn_eff_area_perc='✅ 쓴다(이름 주의)')
+        w['why'] = {k: f'why:{k}' for k in w['verdict']}
+        w['rows']['q1'].update(percolation_pct='37.0', top_reachable_pct='40.0', n_components='12', n_large_components='2',
+                               ionic_active_pct=repr(900 / 11), se_se_cn_perc='5.5', se_se_cn_n_perc='37', se_se_cn_eff_area_perc='0.05')
+        w['rows']['q2'].update(percolation_pct='0.0', top_reachable_pct='15.0', n_components='30', n_large_components='3',
+                               ionic_active_pct='45.0')                     # 관통 없음 — _perc 키 자체가 없다 (웹앱 그대로)
+        for _k in ('se_se_cn_perc', 'se_se_cn_eff_area_perc', 'se_se_cn_n_perc'):   # _wa3 의 J20-i 시험용 값 — 비관통 침대에는 없다
+            w['rows']['q2'].pop(_k, None)
+        return w
+
+    def _hq8(span1=2, span2=0):
+        return {'q1': dict(_hq3['q1'], tau_detail={'band_detail': {'wall_n_span_components': span1}}),
+                'q2': dict(_hq3['q2'], tau_detail={'band_detail': {'wall_n_span_components': span2}})}
+
+    def _b8(w=None, hv=None, groups='contact,percolation'):
+        return build_handover(_dq7, hv or _hq8(), webapp=w or _wa8(), webapp_groups=groups)
+    try:
+        _o8, _c8, _r8 = _b8()
+        _e8 = ''
+    except Exception as e:                                                # noqa: BLE001
+        _o8, _c8, _r8, _e8 = [], [], {}, f'{type(e).__name__}: {e}'
+    _m8 = next((r for r in _o8 if r['case_id'] == 'q1'), {})
+    _p8 = next((r for r in _o8 if r['case_id'] == 'q2'), {})
+    _pc8 = ('percolation_pct', 'top_reachable_pct', 'n_components', 'n_large_components', 'ionic_active_pct', 'se_se_cn_perc', 'se_se_cn_n_perc')
+    chk('㉒a ★ ② — contact,percolation 묶음: 퍼콜레이션 7 열 + ① 열 · 망 단계 electronic_active_fraction · 면적 se_se_cn_eff_area_perc 는 안 싣는다 · '
+        '관문 검사 2 행' + (f' — {_e8}' if _e8 else ''),
+        not _e8 and all(c in _c8 for c in _pc8) and 'am_se_cn_mean' in _c8
+        and 'electronic_active_fraction' not in _c8 and 'se_se_cn_eff_area_perc' not in _c8 and _r8.get('wa_perc_checked') == 2)
+    chk('㉒b 값 — 관통 침대 (q1) 는 _perc 값 · 비관통 (q2) 은 percolation_pct 0.0 · _perc 빈칸 (N/A) · 나머지 그대로',
+        _m8.get('percolation_pct') == '37.0' and _m8.get('se_se_cn_n_perc') == '37' and _m8.get('se_se_cn_perc') == '5.5'
+        and _p8.get('percolation_pct') == '0.0' and _p8.get('se_se_cn_perc') == '' and _p8.get('se_se_cn_n_perc') == ''
+        and _p8.get('n_components') == '30' and _m8.get('ionic_active_pct') == repr(900 / 11))
+    try:
+        _c8c = _b8(groups='contact')[1]
+    except Exception as e:                                                # noqa: BLE001
+        _c8c = [f'ERR {type(e).__name__}: {e}']
+    chk('㉒c contact 묶음만이면 퍼콜레이션 열은 없다 (묶음 거르기)', 'am_se_cn_mean' in _c8c and not any(c in _c8c for c in _pc8))
+    _dm8 = {d['column']: d for d in column_dictionary(_c8, webapp=_wa8())} if _c8 else {}
+    _g8 = lambda c, k: (_dm8.get(c) or {}).get(k, '')                     # noqa: E731
+    chk('㉒d ★ LHS-20 — top_reachable · ionic_active 를 ✅ 로 승격 · 옛 판정 병기 · F3 한정어 (외톨이 · 문턱 10 · 0.0 = 미퍼콜 · 솔버 관통과 다름 · N/A)',
+        all(_g8(c, 'verdict').startswith('✅') and 'LHS-20' in _g8(c, 'verdict') and '🔶' in _g8(c, 'meaning')
+            for c in ('top_reachable_pct', 'ionic_active_pct'))
+        and '외톨이' in _g8('n_components', 'meaning') and '10' in _g8('n_large_components', 'meaning')
+        and '0.0' in _g8('percolation_pct', 'meaning') and '솔버' in _g8('percolation_pct', 'meaning')
+        and 'N/A' in _g8('se_se_cn_perc', 'meaning') and '외톨이' in _g8('top_reachable_pct', 'meaning')
+        and 'coverage' in _g8('ionic_active_pct', 'meaning') and 'J20-b' in _g8('percolation_pct', 'meaning')
+        and 'LHS-17' in _g8('percolation_pct', 'caveat'))
+    _neg('㉒e 모르는 묶음 이름이 섞이면 거부 (contact,fracture)', lambda: _b8(groups='contact,fracture'))
+
+    def _bad8(q, **kv):
+        w = _wa8()
+        w['rows'][q].update(kv)
+        return lambda: _b8(w=w)
+    _neg7('㉒f ★ P1 — 비관통 (percolation_pct 0) 인데 se_se_cn_perc 에 값이 있으면 거부', _bad8('q2', se_se_cn_perc='4.0'), '② P1')
+    _neg7('㉒g ★ P1 — 관통인데 se_se_cn_n_perc 가 비면 거부', _bad8('q1', se_se_cn_n_perc=''), '② P1')
+    _neg7('㉒h ★ P1 — 웹앱 관통 ↔ 수확기 벽 밴드 관통 (0 성분) 이 어긋나면 거부 (J20-b F8 독립 재현)', lambda: _b8(hv=_hq8(span1=0)), '② P1')
+    _neg7('㉒i ★ P1 — 웹앱 비관통 ↔ 수확기 관통 (1 성분) 이 어긋나면 거부', lambda: _b8(hv=_hq8(span2=1)), '② P1')
+    _neg7('㉒j ★ P1 — 수확 JSON 에 벽 밴드 관통 진단이 없으면 거부 (독립 재현을 볼 수 없다)', lambda: _b8(hv=dict(_hq8(), q2=_hq3['q2'])), '② P1')
+    _neg7('㉒k ★ P2 — 비율이 [0, 100] 밖이면 거부 (ionic_active_pct 101)', _bad8('q2', ionic_active_pct='101.0'), '② P2')
+    _neg7('㉒l ★ P2 — n_large_components > n_components 이면 거부', _bad8('q2', n_large_components='31'), '② P2')
+    _neg7('㉒m ★ P2 — top_reachable_pct < percolation_pct 이면 거부 (관통 SE 는 위 밴드에 닿는다)', _bad8('q1', top_reachable_pct='30.0'), '② P2')
+    _neg7('㉒n ★ P2 — 성분 수가 정수가 아니면 거부', _bad8('q2', n_components='30.5'), '② P2')
+    _neg7('㉒o ★ P3 — 관통 SE 개수 ≠ percolation_pct × N_SE / 100 (38 ≠ 37) 이면 거부', _bad8('q1', se_se_cn_n_perc='38'), '② P3')
+    _w8r = _wa8()
+    _w8r['status']['q2']['status'] = 'REFUSED'
+    _w8r['rows']['q2']['se_se_cn_perc'] = '9.9'
+    try:
+        _r8r = _b8(w=_w8r)[2]
+        _e8r = ''
+    except Exception as e:                                                # noqa: BLE001
+        _r8r, _e8r = {}, f'{type(e).__name__}: {e}'
+    chk('㉒p 배치가 거부한 행 (REFUSED) 은 값을 싣지 않으므로 관문도 보지 않는다 (검사 1 행)' + (f' — {_e8r}' if _e8r else ''),
+        not _e8r and _r8r.get('wa_perc_checked') == 1)
+    chk('㉒q 열 사전 — 퍼콜레이션 열에 검토 기록 (J20-b ② · 관문 P1–P3) · 출처 webapp',
+        all('J20-b ②' in _g8(c, 'meaning') and _g8(c, 'source') == 'webapp' for c in _pc8))
+    #  ═══ ㉓ 벽 τ 닫기 (1저자 10-01 *"dijkstra tortuosity 벽을 확실하게 닫고 값을 추출"* · J20 · 수확 v3 원천) ═════════════════════════════
+    #   관문 T1 (관통 성분 수 — 상태 · 수확 벽 밴드 진단과 같아야) · T2 (값 [1, 20) · 표본 수 규칙) · T3 (② 퍼콜레이션과 비관통 판정 같아야) ·
+    #   열 사전 = 기하 최단경로 · 수송 τ 아님 (COMSOL 입력은 τ_Laplace,eff) · 벽 접촉 비율 = 겹침 깊이 > 0 (접선 제외 — 수확기 규칙과 같은 문구).
+    def _tw9(status='OK', span=2, mean=1.45, med=1.4, ns_=200, nv=200, ntr=0):
+        ok_ = status == 'OK'
+        return {'tau_mean': (mean if ok_ else None), 'tau_median': (med if ok_ else None), 'tau_mean_untruncated': (mean if ok_ else None),
+                'status': status, 'n_sampled': (ns_ if ok_ else 0), 'n_valid': (nv if ok_ else 0), 'n_truncated': ntr,
+                'n_span_components': span, 'tau_convention': TAU_WALL_CONVENTION}
+
+    def _hq9(t1=None, t2=None, wt=True):
+        hv = _hq8()
+        hv['q1'] = dict(hv['q1'], tau_wall_detail=t1 or _tw9('OK', 2))
+        hv['q2'] = dict(hv['q2'], tau_wall_detail=t2 or _tw9('NOT_PERCOLATING', 0))
+        if wt:
+            hv['q1']['wall_touch'] = {'SE': {'floor': 0.25, 'plate': 0.125}, 'AM': {'floor': 0.5, 'plate': 0.0}}
+            hv['q2']['wall_touch'] = {'SE': {'floor': 0.5, 'plate': 0.0}, 'AM_P': {'floor': 1.0, 'plate': 0.0},
+                                      'AM_S': {'floor': 0.0, 'plate': 0.2}, 'AM': {'floor': 1 / 11, 'plate': 2 / 11}}
+        return hv
+    try:
+        _o9, _c9, _r9 = _b8(hv=_hq9())
+        _e9 = ''
+    except Exception as e:                                                # noqa: BLE001
+        _o9, _c9, _r9, _e9 = [], [], {}, f'{type(e).__name__}: {e}'
+    _m9 = next((r for r in _o9 if r['case_id'] == 'q1'), {})
+    _p9 = next((r for r in _o9 if r['case_id'] == 'q2'), {})
+    chk('㉓a ★ 벽 τ — 관통 침대는 값 · 비관통은 빈칸 (N/A) · 관문 T1–T2 2 행 · T3 (↔ 퍼콜레이션) 2 행' + (f' — {_e9}' if _e9 else ''),
+        not _e9 and _m9.get('tortuosity_SE_wall') == repr(1.45) and _p9.get('tortuosity_SE_wall') == ''
+        and _p9.get('tortuosity_SE_wall_status') == 'NOT_PERCOLATING'
+        and _r9.get('tau_wall_checked') == 2 and _r9.get('tau_perc_crosschecked') == 2)
+    _dm9 = {d['column']: d for d in column_dictionary(_c9, webapp=_wa8())} if _c9 else {}
+    _tm = (_dm9.get('tortuosity_SE_wall') or {}).get('meaning', '')
+    _wm = (_dm9.get('wall_touch_frac_SE_floor') or {}).get('meaning', '')
+    chk('㉓b ★ 열 사전 — 벽 τ = 기하 최단경로 · 수송 τ 아님 (COMSOL 입력 = τ_Laplace,eff) · 비관통 N/A · 표본 200 쌍',
+        '기하 최단경로' in _tm and 'COMSOL' in _tm and 'τ_Laplace' in _tm and 'N/A' in _tm and '200 쌍' in _tm)
+    chk('㉓c ★ 벽 접촉 비율 문구 = 수확기 규칙 (겹침 깊이 > 0 · 접선은 안 셈) — 옛 "≤ 0 · ≥ plate_z" 없음',
+        '겹침 깊이 > 0' in _wm and '접선' in _wm and '≤ 0' not in _wm and 'z − r < 0' in _wm)
+    try:
+        import lhs_descriptor_harvest as _LDH9
+        _same9 = (_LDH9.TAU_LO, _LDH9.TAU_HI, _LDH9.N_TAU_PAIRS) == (TAU_WALL_LO, TAU_WALL_HI, TAU_WALL_N_PAIRS) \
+            and 'tangent' in _LDH9.WALL_TOUCH_RULE and '> 0' in _LDH9.WALL_TOUCH_RULE
+    except Exception as e:                                                # noqa: BLE001
+        _same9 = False
+    chk('㉓d 관문 상수 = 수확기 (TAU_LO · TAU_HI · N_TAU_PAIRS) · 수확기 규칙이 접선 제외 · 한쪽만 바뀌면 걸린다', _same9)
+    _neg7('㉓e ★ T1 — 상태 OK 인데 관통 성분 0 이면 거부', lambda: _b8(hv=_hq9(t1=_tw9('OK', 0))), 'τ T1')
+    _neg7('㉓f ★ T1 — NOT_PERCOLATING 인데 관통 성분 1 이면 거부', lambda: _b8(hv=_hq9(t2=_tw9('NOT_PERCOLATING', 1))), 'τ T1')
+    _neg7('㉓g ★ T1 — 벽 τ 관통 성분 (3) ≠ 수확 벽 밴드 진단 (2) 이면 거부', lambda: _b8(hv=_hq9(t1=_tw9('OK', 3))), 'τ T1')
+    _neg7('㉓h ★ T2 — OK 인데 τ 평균이 [1, 20) 밖 (25) 이면 거부', lambda: _b8(hv=_hq9(t1=_tw9('OK', 2, mean=25.0))), 'τ T2')
+    _neg7('㉓i ★ T2 — n_valid > n_sampled 이면 거부', lambda: _b8(hv=_hq9(t1=_tw9('OK', 2, ns_=150, nv=180))), 'τ T2')
+    _neg7('㉓j ★ T2 — 잘린 수 = 경로 수 (남은 표본 0) 인데 OK 면 거부', lambda: _b8(hv=_hq9(t1=_tw9('OK', 2, nv=200, ntr=200))), 'τ T2')
+    _w9 = _wa8()
+    _w9['rows']['q2'].update(percolation_pct='12.0', se_se_cn_perc='5.0', se_se_cn_n_perc='12')
+    _neg7('㉓k ★ T3 — 벽 τ 비관통인데 웹앱 percolation_pct > 0 이면 거부 (수확기 벽 밴드 진단도 0 이라 P1 이 먼저면 P1)',
+          lambda: _b8(w=_w9, hv=_hq9(t2=_tw9('NOT_PERCOLATING', 0))), '② P1')
+    _neg7('㉓l ★ n_span_components 가 정수가 아니면 거부', lambda: _b8(hv=_hq9(t1=_tw9('OK', 2.0))), 'τ T1')
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -2816,9 +3098,9 @@ if __name__ == '__main__':
     ap.add_argument('--webapp', default='', metavar='DIR',
                     help='(--export-handover) J20 웹앱 배치 산출 (scripts/lhs_webapp_batch.py 의 --out-dir) — 전수 판정 ✅ 열을 싣는다.  '
                          '설계행 전부를 배치가 시도했어야 하고 웹앱 porosity = 수확 porosity (같은 프레임) 여야 한다')
-    ap.add_argument('--webapp-groups', default=None, choices=['contact'],
-                    help='(--export-handover --webapp) 웹앱 열을 이 묶음만 싣는다 — contact = ① 접촉 위상 (접촉 분석 단계 산출). '
-                         '`lhs_webapp_batch --stop-after contact` 산출은 이것 없이는 거부된다')
+    ap.add_argument('--webapp-groups', default=None, metavar='G[,G]',
+                    help='(--export-handover --webapp) 웹앱 열을 이 묶음만 싣는다 (쉼표로 여럿) — contact = ① 접촉 위상 · percolation = ② '
+                         '퍼콜레이션 (둘 다 접촉 분석 단계 산출).  `lhs_webapp_batch --stop-after contact|coverage` 산출은 이것 없이는 거부된다')
     ap.add_argument('--census', default='', metavar='TSV',
                     help=f'(--webapp) 전수 판정 census (기본 {DEFAULT_CENSUS_TSV})')
     ap.add_argument('--selftest', action='store_true')
@@ -2900,7 +3182,10 @@ if __name__ == '__main__':
                   f'없는 상 빈칸 {_rep["wa_mono_absent_blanked"]} 셀 · J20-h 접촉 0 쌍 = 0 채움 {_rep["wa_pair_zero_filled"]} · '
                   f'J20-i se_se_cn = 2·area_SE_SE_n/N_SE 확인 {_rep["wa_cn_identity_checked"]} 행 · '
                   f'J20-j AM–AM 접촉 수 = 쌍 합 · am_am_cn = 2·n/N_AM 확인 {_rep["wa_am_identity_checked"]} 행 · '
-                  f'7c AM–SE CN · 고립 관문 G1–G7 확인 {_rep["wa_amse_identity_checked"]} 행')
+                  f'7c AM–SE CN · 고립 관문 G1–G7 확인 {_rep["wa_amse_identity_checked"]} 행 · '
+                  f'② 퍼콜레이션 관문 P1–P3 확인 {_rep["wa_perc_checked"]} 행')
+        if 'tau_wall_checked' in _rep:
+            print(f'   벽 τ 관문 T1–T2 확인 {_rep["tau_wall_checked"]} 행 · T3 (↔ 퍼콜레이션) {_rep["tau_perc_crosschecked"]} 행')
         print(f'   J20-k (B) mono {_rep["mono_rows"]} 행 — 수확기 상별 칸 (coverage · n_AM_*_measured · cov_*_n_valid · 벽 접촉) 설계 상 칸 채움 '
               f'{_rep["mono_harvest_filled"]} 셀 (설계에 없는 상은 빈칸)')
         print(f'   빈칸 사유: {dict(_rep["blank_by_status"])}')

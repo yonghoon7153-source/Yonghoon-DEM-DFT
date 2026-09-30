@@ -2062,7 +2062,7 @@ _PAPER_LABEL_MAP = {
     # Connectivity
     'SE-SE CN mean':               'SE-SE coordination number ⟨z_SE-SE⟩',
     'SE-SE CN std':                'SE-SE coordination number σ(z_SE-SE)',
-    'SE Cluster 수':               'SE percolating clusters (n≥10 / total)',
+    'SE Cluster 수':               'SE clusters, n≥10 / all (isolated SE count as clusters)',   # 전체 성분 · 외톨이 포함 (LHS-19 · ②)
     'SE Percolation(%)':           'SE percolation, top↔bottom (%)',
     'Top Reachable(%)':            'Separator-side SE connectivity, f_SE^sep (%)',
     # Tortuosity
@@ -2080,7 +2080,7 @@ _PAPER_LABEL_MAP = {
     '  ├ AM_S-SE CN mean':         '  ├ AM_S-SE coordination number ⟨z_AM_S-SE⟩',
     '  └ AM-SE CN (surface-weighted)':
         '  └ AM-SE coordination number (surface-area weighted)',
-    'Ionic Active AM(%)':          'Ionically-active AM, SE-touching (%)',
+    'Ionic Active AM(%)':          'Ionically-active AM, touching top-reachable SE (%)',   # 위 띠 SE 와의 접촉 (LHS-20 · ②)
     'AM Vulnerable(%)':            'Ionically-vulnerable AM, 0–1 SE contacts (%)',   # 접촉 개수 기준 · coverage 아님 (LHS-23 · 7c)
     '  ├ AM_P Vulnerable(%)':      '  ├ AM_P ionically-vulnerable (%)',
     '  └ AM_S Vulnerable(%)':      '  └ AM_S ionically-vulnerable (%)',
