@@ -122,3 +122,49 @@
 
 **RUN_SCOPE:** `src/io.py` · `src/fitting.py` · `tools/preserve.py` (design_wire 불변). 새 production 파일·helper 파일 0 (`realized_from_fits` · `_stage3_rederive` 는 `src/io.py` 안).
 **그대로인 것:** 표 A·B·C 의 모든 거부 규칙 (보강만) · legacy/prep 경로 바이트 · `_restart_ok` · 골든 31 · p_ini 명시 거부 · adaptive False 만 · reference grid 만.
+
+## §10 82차 잔여 보완 — 시작 전 고정 표 (2026-09-30 · 사용자 승인 "승인 — 지금 착수" · 원장 §116 끝)
+
+> 코드 변경 **전**에 적는다 (§1–§9 문장 불변). 범위: G82-N1 · N2 · N3 만 · 같은 4 파일 (`src/fitting.py` · `src/io.py` · `tools/design_wire.py` · `tools/preserve.py`) · 새 production 파일 0 · fitting 수치 알고리즘 · ID 도메인 · 골든 · 정상 bank 바이트 불변 (§10-2 의 골든 sha 로 고정). 시험 `tests/test_gate82_residuals.py`.
+
+### 10-1. G82-N1 — 관측 roster 의 출처와 소비 경로
+
+| 항목 | 고정 |
+|---|---|
+| noise realization 의 출처 | **봉인 입력 curves 스냅샷** `run_dir/_inputs/<digest12>_curves.parquet` — full sha256 이 계획 `inputs.curves_sha256` 와 같아야 쓴다. fits 행에는 관측 seed 가 없으므로 fits 에서 추론하지 않는다 · task 의 optimizer seed 와 관측 noise seed (`curves.seed`) 를 섞지 않는다 |
+| 공유 함수 (정의 하나) | `src.io.observed_roster(fits_df, curves_df, *, design, planned_env) -> (entries, problems)` — (a) fits 의 모든 cond_id 가 봉인 curves 에 있다 (b) 각 fits 행의 truth 열 `lli · lam_pe · lam_ne · lam_pe_type · lam_ne_type · noise` 가 그 cond_id 의 봉인 curves 값과 같다 (c) 관측 cond_id 마다 `objective_order` 의 objective 가 정확히 한 행씩 · 다른 objective 없음 (d) entries = `DW.roster_from_conditions(봉인 curves 의 관측 cond_id 조건, design, 계획 roster 의 family · treatment · replicate)` |
+| writer | `write_execution_record` 가 `roster_observed_sha256` 를 **위 함수로 fits + 실행이 읽은 curves 에서 계산** (시작 전 SHA 복사 폐지). problems 가 있으면 기록을 쓰지 않고 오류 |
+| validator | 새 검사 **`관측_roster_재구성`** (sig 6): 스냅샷 ↔ 계획 curves sha · problems 0 · 재구성 sha == 계획 `roster.roster_sha256` · == record `roster_observed_sha256` · 관측 수 == 계획 `n_obs`. 기존 `실현_재계산` 의 record ↔ 계획 비교는 그대로 둔다 |
+| 회귀 (봉인 · record 해시를 일관 갱신한 자료) | 양성: 같은 pair_group 두 noise 실현 · 음성: 한 objective 행의 noise 변경 · 두 실현의 noise 교차 · record 의 roster SHA 를 같은 n_obs 의 다른 유효 roster 로 · 봉인 스냅샷 부재 · writer 거부 |
+
+### 10-2. G82-N2 — 지원 bank profile (하나)
+
+| 필드 | 지원값 (정확 문자열 · 별칭 없음) | 구현 근거 |
+|---|---|---|
+| generator | `pcg64` | `np.random.PCG64` (`design_wire.unit_cube_bank`) |
+| version | `v6.0` | seed preimage `bank-seed/v1` 의 `bank_version` |
+| seed_derivation | `H(pair_group_id, bank_version)` | `_bank_seed` = `digest({"schema": "bank-seed/v1", pair_group_id, bank_version})[:16]` |
+| dtype · endian | `float64` · `little` | `bank_bytes` = `<f8` C-order |
+| space | `unit_cube` | `uniform(0, 1)` |
+
+- 공유 함수 `DW.check_bank_profile(design_bank=None, envelope_bank=None) -> list[str]` — 주어진 블록의 각 필드가 위 표와 같고, 둘 다 주어지면 generator · version 이 서로 같다.
+- 호출: `preserve.check_envelope_v4` (envelope 의 generator · version) · `_prepare_stage3` (설계 + envelope — 시작 전) · validator `_stage3_rederive` (run_spec 의 설계 + 계획 envelope).
+- `design_wire.check_design` 의 선언 문법 검사 (넓은 문자열) 는 **그대로** — 설계 선언 reader 와 골든 경로를 좁히지 않고, 이 라운드의 실행 · 검증 경로에서 지원 profile 로 거부한다.
+- 골든 고정 (변경 전 실측 · `design_wire` 현행): fixture 설계 (`p22_grid_primary_v6` · PARAM_NAMES · pcg64/v6.0) · COORDS `0.17/0.13/0.13` 의 pair_group `c6fc40f168f0af29…` · `unit_cube_bank(pg, "v6.0", 8, 4)` sha256 **`c3009d16773fe211abfc54a6e48d731dcfa8cbef17867d9190a2b39e139a9894`**.
+
+### 10-3. G82-N3 — 선언 세대 연결
+
+| 선언 | v6 실행 · 검증 경로의 값 |
+|---|---|
+| `run_spec.sig_version` | 6 |
+| `planned_envelope.protocol_generation` | `v6` (`DW.STAGE3_PROTOCOL_GENERATION`) |
+| `execution_record.protocol_generation` | `v6` |
+| fits 행 `record_generation` | 전부 `v6` |
+
+- `_prepare_stage3`: 계획 `protocol_generation != "v6"` → 시작 거부 (선언 충돌).
+- validator 새 검사 **`세대_연결`** (sig 6): 네 선언이 모두 위 값.
+- `check_envelope_v4` · `check_execution_record` 의 세대 **문법** 검사와 역사적 v3/v4 계획 reader · legacy/prep reader 는 그대로 (소급 금지).
+
+### 10-4. 순서 · 영수증
+
+RED (`tests/test_gate82_residuals.py`, 무관 예외는 RED 증거로 세지 않는다) → GREEN (4 파일) → 이웃 회귀 → 변이 `-g82` → 2차 영수증 (`02a776a7a0a3f4ba`) 을 `history/` 로 보존 · 커밋 → clean 커밋에서 새 세대 영수증 1 회 + `LEG_PRESERVATION.yaml` 앵커 같은 커밋 → 전체 회귀 · strict smoke · docs-lint → 원장 §117 · GATE83. 4 파일 밖이 필요하면 멈추고 묻는다.
