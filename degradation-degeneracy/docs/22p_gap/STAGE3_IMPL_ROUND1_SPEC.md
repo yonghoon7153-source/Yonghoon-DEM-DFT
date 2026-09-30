@@ -168,3 +168,50 @@
 ### 10-4. 순서 · 영수증
 
 RED (`tests/test_gate82_residuals.py`, 무관 예외는 RED 증거로 세지 않는다) → GREEN (4 파일) → 이웃 회귀 → 변이 `-g82` → 2차 영수증 (`02a776a7a0a3f4ba`) 을 `history/` 로 보존 · 커밋 → clean 커밋에서 새 세대 영수증 1 회 + `LEG_PRESERVATION.yaml` 앵커 같은 커밋 → 전체 회귀 · strict smoke · docs-lint → 원장 §117 · GATE83. 4 파일 밖이 필요하면 멈추고 묻는다.
+
+## §11 라운드 2a 시작 전 고정 표 — 84차 정정 반영 (2026-09-30 · 코드 변경 전 · 구현은 사용자 별도 승인 뒤)
+
+> §1–§10 불변. 84차 회신 (원장 §120) 의 G84-N1 · N3 · N4 (2a) 를 여기 고정하고, G84-N2 (2b) 는 §11-5 에 **2b 착수 전 조건**으로만 적는다 — 2a 범위를 넓히지 않는다. 좌표는 `ea2af59e` (= 현재 RUN_SCOPE) 실측.
+
+### 11-1. 범위 (2a)
+
+| 항목 | 내용 |
+|---|---|
+| 항목 | R2-b (계획 결속 + 시작 전 경계) · R2-e (dead 정의) · R2-f (계약 §1 v6 열) · R2-g (`finite` · `converged` + `execution-record/v2`) |
+| 생산 파일 상한 | `src/fitting.py` · `src/io.py` · `tools/design_wire.py` · `tools/preserve.py` (넷 다 고쳐야 한다는 뜻 아님) · 밖이 필요하면 멈추고 묻는다 |
+| 함께 | `tests/test_gate84_round2a.py` (RED 먼저) · `docs/22p_gap/mutation_replay.py` (`-g84`) · 계약 §1 열 · 현행 영수증 (`7187bd31740514d4`) history 보존 → 기존 두 leg 영수증 **1 회** → 전체 회귀 · smoke → GATE85 |
+| 하지 않음 | 2b (spec/index/CLI · `run.sh` · `scripts/`) · p_ini 구현 · 세대표 등록 · 새 연구 leg · 실행 GO |
+
+### 11-2. G84-N1 — base-config digest 의 길이 계약 (R2-b)
+
+| 사실 | `src/fitting.py` `_config_closure_digest` :903–925 는 extends closure 전체 (논리 상대경로 + 파일 SHA-256) 를 해시한 뒤 **hex16** 으로 자른다 → `live_fit_axis` · v5 승인 spec `base_config_digest` 의 값. `tools/preserve.py:3250` 의 planned-leg/v4 `inputs.base_config_digest` 는 **hex64 또는 null** 만 허용. 직접 비교하면 정상 non-null 계획도 거부된다 |
+|---|---|
+| 고정 | preimage (closure 범위 · 정렬 · 논리 경로 정규화) 는 **하나** — 그 preimage 의 **전체 SHA-256 (hex64)** 를 v6 계획 · run_spec · validator 가 쓰고, v5 승인 축은 기존 hex16 을 그대로 (같은 preimage 의 prefix — v5 spec digest 불변). 16자 padding · 16자 재해시 · leaf `base_config_sha` 대체 금지. 비교 대상은 실행이 실제로 읽는 **staged** closure. 실행이 base-config 를 읽는 v6 경로에서 `null` 은 거부 |
+| 회귀 | 양성 non-null · parent 만 변경 · leaf 만 변경 · null · 잘린 16자 · 같은 논리 입력의 다른 staging 위치 — 시작 전 경로 (11-3) 와 validator 경로 각각 · 이유별 |
+
+### 11-3. G84-N3 — 시작 전 거부의 위치 (R2-b)
+
+| 사실 | `_run_fit_locked` 에서 halfcell 분기의 `_fit_one(...)` (:1955) 이 `_prepare_stage3(...)` 호출 (:1970) 보다 **앞**이다. 검사를 `_prepare_stage3` 안에만 두면 "첫 수치 작업 전 거부" 가 halfcell 경로에서 성립하지 않는다 (정적 호출 순서 — 우회 실측 아님) |
+|---|---|
+| 고정 | v6 문맥의 (a) unsupported reference / p_ini 거부 (b) 계획 `source_digest` == 실행 `source_digest()` (c) 계획 `inputs.base_config_digest` == staged closure hex64 (11-2) (d) `inputs.reference` == 실행 reference — 를 **staging 뒤 · 첫 fitting/worker dispatch 앞의 공통 경계** 에서 검사한다 (halfcell `_fit_one` 보다 앞). 기존 lock · 승인 순서 · legacy halfcell 동작 불변. CLI 만 검사하고 직접 `run_fit` 호출이 빠지는 구조 금지 |
+| 회귀 | 유효 v6 양성은 정해진 준비 지점까지 도달 · 잘못된 reference/source/config 는 `_fit_one` · worker sentinel **도달 0** 으로 이유별 거부 (inert sentinel 로 측정 · native 계산 0) · legacy halfcell 골든 불변 |
+| 구분 | 이것은 R2-b 배선 보완이지 p_ini 지원 구현이 아니다 (R2-d 정책 "거부 유지 = 코드 0" 과 별개). R2-f 의 "v6 원점 fitting 없음" 문장은 이 경계가 근거 |
+
+### 11-4. G84-N4 — 계수 정의 · schema 분기 (R2-g)
+
+| 계수 | 정의 (objective 별 · fits 행의 `restarts_json` 원소 기준) |
+|---|---|
+| `returned` | 기존 그대로 — 원소 수 합 (`src/io.py:1549`) · 행 수도 round 수도 아님 |
+| `finite` | 원소의 저장 `J` 가 유한한 수 (parameter 유효성은 기존 validator 규칙이 따로) |
+| `converged` | 원소의 legacy `converged` 가 명시적으로 `true` 인 수 — 80차 정정의 "마지막 유한 fun round 의 success" · **정상 종료 수가 아니다** (유한 성공 뒤 nonfinite 종료도 `finite` · `converged` 둘 다에 들어갈 수 있다 · `native_last.success` · `native_best.success` · `outer` 와 분리 · primary complete-pair 판정으로 승격 금지) |
+| 불변식 | `0 ≤ finite, converged ≤ returned` · 둘 사이 포함 관계는 가정하지 않음 · 누락/타입 오류를 0/false 로 바꿔 통과시키지 않음 · 비유한 J 의 기존 산출 거부 완화 없음 |
+
+schema: `execution-record/v2` = v1 닫힌 키 + `realized.by_objective.*.{finite, converged}`. **writer 와 재계산 consumer 모두 schema 로 분기** — v1 은 원문 그대로 읽고 (`src/io.py:1879–1887` 의 `by_objective` 전체 비교는 v1 키 집합으로) 새 계수를 소급 기록하지 않는다 · v2 에서 키를 지운 자료는 v1 로 내려가지 않는다 (거부). 회귀: v1 원문 양성 · v2 양성 · v2 필수 키 누락 · 혼합 · 타입 위조 · 재봉인한 계수 위조 · finite 성공 뒤 nonfinite 종료 · 첫 round nonfinite.
+
+### 11-5. G84-N2 — 2b 착수 전 조건 (2a 밖 · 기록만)
+
+`leg_run_spec` (`tools/preserve.py:6468`, `leg_spec_version: 2`) 의 닫힌 `LEG_SPEC_FIT_KEYS` 에 `stage3: null` 을 넣으면 v5 sealed spec 의 canonical 바이트 · digest 가 바뀐다 → **v5 spec 에 새 키를 넣지 않는다.** v6 승인 spec 은 명시적 버전 분기 (`leg_spec_version: 3` 또는 별도 schema) 로 stage3 축을 필수화 · v6 문맥에서 키 부재의 legacy fallback 거부 · 표시용 view 의 null 과 봉인 preimage 구분. 닫힘 = v5 spec/claim digest 골든 불변 + v6 stage3 누락 · 다른 계획/설계/roster/edge 시작 전 거부. CLI 후보 표기 `./run.sh --mode fit --stage3-plan <leg_id> …` (정확 argv · 충돌 규칙은 2b 전).
+
+### 11-6. 84차 비차단 문구 정정 (반영 완료)
+
+R2-a "production 진입점이 없다" → 내부 전달 호출 (`src/fitting.py:1508` · `:1586`) 은 있으므로 "외부 production 진입점에서 v6 문맥을 구성해 전달하지 않는다" · R2-f "줄번호 불변" → "legacy 의미 불변 · 이동한 인용 좌표 갱신 가능" · CLI `run.sh fit` → `./run.sh --mode fit`. `GATE84_REQUEST.md` 에 취소선.

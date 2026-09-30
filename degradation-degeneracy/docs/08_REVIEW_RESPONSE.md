@@ -8635,3 +8635,24 @@ docstring 변경도 RUN_SCOPE 규칙대로 digest 를 움직인다: `c78d7969ef4
 **요청 요지:** §1 일곱 항목의 코드 사실 · 제안 · 닫힘 조건 — 특히 (R2-a) production 진입점이 없고 (`stage3=` 호출은 시험뿐) 승인 spec `LEG_SPEC_FIT_KEYS` 에 stage3 축이 없음 · (R2-b) `_prepare_stage3` 는 curves sha 만 실행과 대조하고 계획 `source_digest` · `base_config_digest` · `reference` 는 실행 값과 대조하지 않음 · (R2-c) 라운드 1 · 2 validator 세대는 연구 다리가 없어 세대표에 등록하지 않음 · (R2-d) p_ini 거부 유지 제안 · (R2-e) `src/fitting.py:350` dead 정의 삭제 · (R2-f) 계약 §1 교란 표에 v6 경로 상태 열 · (R2-g) `returned` 불변 + `finite` · `converged` 별도 계수 (`execution-record/v2`). §2 묶음: B1 (R2-e · f · g) + B2 (R2-b) = 라운드 2a · B3 (R2-a · 승인 4 파일 밖 `run.sh`/`scripts/` · 원장 스키마) = 라운드 2b. §3 고정 결정 4 (p_ini 정책 · 세대 이름 `v6` · 진입점 `run.sh fit --stage3-plan` · record v2).
 
 **다음:** 84차 회신 대기 → §120 접수 → 구현은 사용자 별도 승인 뒤.
+
+## §120 84차 접수 — **2a/2b 분리 수용 · 사전 고정 수정 조건부 적합 (G84-N1 · N2 · N3 P1 · N4 P2)** · 83차 종결 유지 · 구현 착수 아님 · 실행 GO 아님
+
+**발송 기록:** 요청문 커밋 = 발송 HEAD **`7fed4594c74b16f4a53402699eb2a8427805cdf5`** (docs-lint 358 passed · 0:27:33). 코드 `ea2af59e` · digest `7187bd31740514d4` (검토자 58 파일 독립 재계산 일치).
+
+**패키지:** `docs/22p_gap/gate84_review/` — zip 1,223,965 B · sha256 `f9ba5ffa…308d` · `codex/` PACKAGE_MANIFEST files 88 · sha256 `7642307d…` · 규칙 먼저 `e6cb32fb` → 풀기 `73218086` → blob **88/88** · zip 일치. 검토자 스크립트 실행 · import 0.
+
+**판정 (`REVIEW_KO.md` · `CLAUDE_REPLY.md` 사본):** 2a = R2-e · f · g + b / 2b = R2-a · c 분리 수용 · 구현 전 정정 4 · 네 결정 (p_ini 거부 유지 · 세대 `v6` 하나 · 기존 `run.sh` 흐름 통합 · record v2) 조건부 수용 · 76차 · 83차 종결 유지 · 검토 = 고정 커밋 읽기 · 해시 · AST · 텍스트 (수신 실행 0).
+
+| # | 우선 · 묶음 | 발견 (검토자) | 우리 확인 (코드) | 고정 (§11) |
+|---|---|---|---|---|
+| **G84-N1** | P1 · 2a | `_config_closure_digest` 는 hex16 · planned-leg/v4 `inputs.base_config_digest` 는 hex64/null → 직접 비교 불가 | `src/fitting.py:903–925` (`hexdigest()[:16]`) · `tools/preserve.py:3250` (`_is_hex64`) 확인 | 같은 preimage 의 hex64 를 v6 에 · v5 hex16 유지 · padding/재해시/leaf 대체 금지 · staged closure 대조 · v6 null 거부 (§11-2) |
+| **G84-N2** | P1 · **2b** | v5 spec 에 `stage3: null` 추가 → canonical 바이트 · digest 변화 | `leg_run_spec` :6468 `leg_spec_version: 2` · 닫힌 `LEG_SPEC_FIT_KEYS` 확인 | v5 키 불변 · v6 spec 별도 버전 분기 · legacy fallback 거부 — **2b 착수 전 조건, 2a 로 끌어오지 않음** (§11-5) |
+| **G84-N3** | P1 · 2a | halfcell `_fit_one` (:1955) 이 `_prepare_stage3` 호출 (:1970) 보다 먼저 → helper 안 검사만으로는 "시작 전 거부" 부족 | 순서 확인 (1955 < 1970) | v6 거부 · source/config/reference 결속을 staging 뒤 · 첫 수치 작업 앞 공통 경계에 · inert sentinel 도달 0 · legacy 불변 (§11-3) |
+| **G84-N4** | P2 · 2a | `returned` = objective 별 `restarts_json` 원소 수 합 · `finite`/`converged` 정의와 v1/v2 읽기 분기 고정 필요 | `src/io.py:1549` (`returned += len(rs)`) · `:1879–1887` 공통 재계산 비교 확인 | `finite` = 저장 J 유한 수 · `converged` = legacy true 수 (정상 종료 아님) · `0 ≤ … ≤ returned` · writer/consumer schema 분기 · v1 원문 · v2 키 누락 하향 거부 (§11-4) |
+
+**비차단 문구 정정 (반영 — 취소선):** R2-a "production 진입점이 없다" → 내부 전달 (`:1508` · `:1586`) 은 있으므로 "외부 진입점에서 v6 문맥을 구성해 전달하지 않는다" · R2-f "줄번호 불변" → "legacy 의미 불변 · 이동 좌표 갱신 가능" · CLI `run.sh fit` → `./run.sh --mode fit --stage3-plan <leg_id> …` 후보 (정확 argv · 충돌 규칙은 2b 전). 검토자 자체 검사기 오류 1 (Markdown 강조 위치 가정) 은 `evidence/REVIEWER_AUDIT_ATTEMPT01*` — 제출 코드 오류 아님.
+
+**우리 판단:** 네 건 모두 수용 — 반론 없음. N1 은 "기존 정의 재사용" 이라 쓰면서 길이를 확인하지 않은 우리 오류 · N3 는 `_prepare_stage3` 가 유일한 시작 전 경계라고 전제한 오류 (halfcell 분기를 안 봤다) · N4 는 정의를 이름만 적고 집계 단위 · schema 분기를 비워 둔 것 · N2 는 2b 설계에서 "null 명시" 가 digest 를 움직인다는 점을 놓친 것.
+
+**다음:** 고정 표 §11 (이 절과 같은 커밋) → **사용자에게 2a 제한 구현 승인 요청** (4 파일 상한 · RED 먼저 · 변이 · 현행 영수증 history 보존 + 기존 두 leg 1 회 · 전체 회귀 · smoke · GATE85). 2b · p_ini 구현 · 세대표 등록 · 새 연구 leg · 실행 GO 는 이 승인 밖.
