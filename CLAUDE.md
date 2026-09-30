@@ -275,6 +275,8 @@
   보고 답하지 않기). 어느 그림인지는 그 폴더의 figures.json caption 으로 찾고, 없으면
   `tools/litdb/extract_figures.py --inbox` 로 먼저 만든다. **본 그림/안 본 그림을 구분해 말한다.**
   그림에서만 읽은 값은 `figure-read ≈` 표기. 표(tab_*.png)는 PDF 텍스트가 더 정확하다.
+  · 그림 PNG 는 **글자 검색 대상이 아니다** (`.rgignore` · §컨텍스트 절약) — 어느 그림인지는 `figures.json` caption 을
+    검색해서 찾고, PNG 는 경로로 Read 하거나 Glob 으로 목록을 본다 (둘 다 영향 없음).
 
 ## 화면(webapp)·claim 결속 규율 (2026-09-08 도입 · 2026-09-09 문서화)
 
@@ -392,6 +394,13 @@
   대신 상태줄(`tools/claude/statusline.py`)이 사용률을 상시 표시 — 70%↑ 에서 손으로 `/compact`.
 - 읽기는 **부분 읽기 우선**: 큰 파일은 offset/limit, 검색은 head_limit.
   `kb/index.md`(25 KB)·`kb/open_items.md`(72 KB)는 **통째로 읽지 말고 grep**.
+- **레포 전체 글자 검색은 `.rgignore` 가 PNG 를 뺀다** (2026-09-30 · 사용자 요청). 실측: 레포 전체 rg
+  **56.3 s → 0.1 s**, 결과 같음(7 파일). 원인은 `litdb/figures` 의 그림 PNG 5,074 장(2.4 GB)이었다 —
+  Grep 도구의 20 s 제한에 걸려 **시간 초과가 나고** 폴더를 좁혀 다시 찾게 만들었다(같은 날 두 번).
+  · 영향은 **ripgrep 글자 검색에만** 있다 — 파일 이름 찾기(Glob)·경로 Read·git·ls 는 그대로다(임시 파일로 확인).
+  · ⚠ `grep -r` 은 `.rgignore` 를 **안 읽는다** — 레포 전체는 rg·Grep 로 찾거나 `--exclude='*.png'` 를 준다.
+  · 새 대용량 바이너리가 생겨 다시 느려지면 **재서** `.rgignore` 에 더한다 (재지 않고 넣지 않는다).
+  · ⚠ 레포 크기 (09-30): 작업 폴더 3.2 GB 중 `litdb/figures` 2.4 GB · `.git` 6.2 GB · 코드·기록(kb 31 · db 87 · tools 23 MB)은 작다.
 - **방금 쓴 파일을 다시 읽지 않는다.** 만든 파일 내용을 답변에 다시 붙여넣지 않는다.
 - 긴 출력은 파일로 떨군 뒤 grep (`… > /tmp/x.log` → 필요한 줄만).
 - 세션을 새로 여는 것보다 **이어가는 게 싸다**(프롬프트 캐시). 정리는 `/clear` 말고 `/compact` —
