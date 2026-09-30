@@ -229,11 +229,21 @@ elif _c != _a:
 #     `raw/` 는 면제 (논문 수치·세션 원문이 다른 값을 legitimately 담는다).
 CANON_PAGE = BASE / 'entities' / 'li2s-assb-reference-cell.md'
 COMP_RE = re.compile(r'(?<![\d.:])(\d{1,3})\s*:\s*(\d{1,3})\s*:\s*(\d{1,3})(?![\d.:])')
-CAP_RE = re.compile(r'(\d{3,4})\s*[\u2013-]\s*(\d{3,4})\s*mAh')
+#     용량 범위는 **기준(basis)까지 함께** 읽는다. 2026-09-30: 기준을 안 보는 첫 판이
+#     `143–159 mAh g⁻¹(composite)` 를 "목표가 바뀌었다" 로 오탐했다 — 그건 목표의 drift 가 아니라
+#     복합양극 기준 환산값이다. 하드룰 5 가 기준 표기를 의무화하므로, `(S)`·`(composite)` 처럼
+#     **다른 정규화가 명시된** 값은 환산으로 보고 면제한다. 기준이 없거나 목표와 같은 기준
+#     (`(Li2S)`·`(기준 미확인)`)인 값만 정본과 대조한다 — 그게 사본 drift 가 생기는 자리다.
+CAP_RE = re.compile(r'(\d{3,4})\s*[\u2013-]\s*(\d{3,4})\s*mAh(?:\s*g⁻¹)?\s*(\([^)]{1,12}\))?')
+DERIVED_BASIS = ('(S)', '(composite)')
 
 def _consts(txt):
-    return ({':'.join(m) for m in COMP_RE.findall(txt)},
-            {'-'.join(m) for m in CAP_RE.findall(txt)})
+    caps = set()
+    for a, b, basis in CAP_RE.findall(txt):
+        if (basis or '').strip() in DERIVED_BASIS:
+            continue                      # 환산값 — 정본과 다른 분모다
+        caps.add(f'{a}-{b}')
+    return ({':'.join(m) for m in COMP_RE.findall(txt)}, caps)
 
 if not CANON_PAGE.exists():
     errors.append(f'canonical-copy: 정본 페이지가 없다: {CANON_PAGE.name}')

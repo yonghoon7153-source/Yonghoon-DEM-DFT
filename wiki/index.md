@@ -45,4 +45,12 @@
 
 ## Raw 논문 (참고 — 색인 카운트에 포함하지 않음)
 
-- `raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md` — Kim et al., Carbon Energy 5 (2023) e308. Li2S/Gr/CNT compact 양극, 흑연 full cell 800 사이클, 직접 전환. 그림 19장 (본문 8 + SI 11).
+이 절은 `raw/papers/` 의 digest 목록이다. **액체계/고체계**를 갈라 적는다 — 옮길 수 있는 것과
+없는 것이 여기서 갈리기 때문이다 (단위·전압창·passivation 화학).
+
+**액체 전해질 계**
+- `raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md` — Kim et al., *Carbon Energy* 5 (2023) e308. Li2S/Gr/CNT compact 양극(75:25, 1 GPa), 흑연 full cell 800 사이클, 첫 충전 직접 전환(LiPs 없음). 그림 19장 (본문 8 + SI 11).
+
+**전고체 계 (ASSB)**
+- `raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md` — Huang et al., *J. Energy Chem.* 118 (2026) 352. **S8** 양극 + 고엔트로피 황화물 6 wt%. LPSCl·Li–In·상온. 탄소만일 때 S 이용률 39 % → 첨가제로 76 %. DC 분극으로 복합체 σ_e⁻·σ_Li⁺ 분리 측정. 그림 24장 (본문 5 + SI 19).
+- `raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md` — Zhang et al., *Adv. Energy Mater.* (2026). **anode-free** + 반응형 나노결정–비정질 Li2S + **Na 집전체**, 운전 스택압 0/1/4 MPa. pristine Li2S 첫 방전 ≈270 vs 처리 971 mAh g⁻¹(Li2S). 그림 21장 (본문 6 + SI 15, 21/21 판독).
