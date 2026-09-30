@@ -8715,3 +8715,55 @@ xfail node 이름의 출처는 제출자 설명으로 남긴다 (모듈 재실�
 탐침은 시작 전 거부의 증거이지 사후 구성원 검증의 수정이 아니다. **다음:** G85-N1 한정 보완은 사용자 별도 승인 뒤.
 2b · p_ini 구현 · 새 연구 leg · 실행 GO 미승인. 85차 **본 회신 패키지**는 이 세션에 아직 전달되지 않아 보존하지 못했다
 (G85-N1 원문 정의는 본 패키지 수신 뒤 대조).
+
+## §123 85차 회신 접수 — `PARTIAL_ACCEPTANCE_ROUND2A_NOT_CLOSED` · **G85-N1 P1** · 비차단 C1 · C2 기록 정정
+
+**패키지:** `docs/22p_gap/gate85_review/` (`GATE85_REVIEW_20261001.zip` 2,605,255 B · SHA-256
+`4236aaedef001a9b42cd968b671fe36f3eddf555e0cf9cb456e8df51b749747b` · codex/ payload 135 · 전부 manifest 일치 · manifest
+`ac20173d…` · 규칙 `cd732544` → 보존 `fd672e17`). 검토자 스크립트 실행 · import 0. 검토자 쪽 실행: 수신 코드 · pytest ·
+변이 · 복원 · 영수증 재생성 · COMSOL **0** · 자체 바이트/AST/산술 확인 165 건 (제품 기능 시험 아님). 발신 보고의
+2039 passed · smoke rc 0 · 변이 kill 수는 `SENDER_REPORTED_NOT_REEXECUTED`.
+
+| 항목 | 판정 |
+|---|---|
+| G84-N1 | **부분 수용** — hex64 (같은 preimage · v5 prefix) · 시작 전 null/불일치 거부만. 사후 구성원 검증은 G85-N1 |
+| G84-N3 · G84-N4 · R2-e · R2-f | 수용 |
+| 새 세대 영수증 | 한정 수용 — 역사 두 leg 의 식별 · core 텍스트 대조 범위. paired stamp dirty=false · grid dirty=true 를 **그대로** 둔다 (clean 시작 보고와 둘째 기록 시점 stamp 를 섞지 않는다) · v6 구성원 검사의 증명으로 확대하지 않음 |
+| 2a 종결 | **보류** (P1 1 건) · 2b · p_ini 구현 · 새 연구 leg · 실행 GO 미승인 · 76차 · 라운드 1 종결 · grid_fit_v5 진단 전용 유지 |
+
+**G85-N1 (P1) — 사후 closure 구성원 목록의 독립 결속 누락.** `src/io.py:1955–1974` `base_config_결속` 은
+`run_spec.stage3.base_config_closure_keys` 를 정답 목록으로 받아 그 키들의 스냅샷만 다시 해시한다. 목록이
+`run_spec.base_config` 의 실제 `extends` 연쇄 전체인지 재구성하지 않는다. 그래서 스냅샷 · 입력 봉인은 그대로 두고
+키 목록에서 부모를 빼고 계획 · run_spec 두 digest 를 leaf-only 값으로 **함께** 바꾸면 두 동등 비교가 성립한다
+(검토자 `CLOSURE_COUNTERMODEL.json` — 정상 · 부모 누락 · leaf 누락 · 불필요 구성원 · 중복 5 모형 · 국소 판정식
+산술이며 전체 validator 재현 아님). **우리 §6-f 의 "위조하면 재계산 값이 달라져 실패" 는 두 digest 를 고정한
+변이에만 맞았다** — 자기일관 위조 경계에서는 틀린 답이었다. n1_04 는 목록을 그대로 둔 채 digest 만 `f*64` 로
+바꿔 이 빈틈을 겨냥하지 않았다.
+
+**G85-C1 (비차단 · 기록 정정) — 과거 시험 증인 공백의 영향.** 요청문 §6-e · e2 · e3 · e5 와 §7 Q3 제안의 "영향
+없음" 을 다음으로 **정정한다**: *생산 · 수치 오류는 확인되지 않았으나, 일부 기간의 시험 증인에 공백이 있었고
+현재 수정과 보고된 재생으로 해당 증인을 보강했다.* 기간 · node:
+
+| 신고 | 공백 기간 | node / 변이 |
+|---|---|---|
+| e | 81차 dispatch 판 (79차 dead 정의를 가림) → 2a | 변이 `absent-restart-fields-are-unrecorded-g79` (g79_06 시험 자체는 살아 있는 reader 를 시험) |
+| e2 | 74차 `ebfb853d` → `3eab51f9` | `test_an_issuer_refuses_while_a_freeze_is_half_committed` · `…_froze_meanwhile` · 변이 `freeze-linearizes-its-start` · `admission-rechecks-the-cohort-at-commit` |
+| e3 | 70차 E5 · E3 → `28d0effe` | 59차 M3 (`a_short_write_never_publishes_a_partial_record`) · M8 (`a_bundle_member_symlink_can_not_smuggle_bytes_from_outside`) |
+| e5 | 65차 `63989c82` → `f89b1401` | `test_an_incomplete_receipt_is_refused_by_the_reader` (증인이 환경 의존) |
+
+61차 두 시험의 둘째 층 치환은 **그 완전성 reader 의 단위 증인 격리**로만 수용됐다 (customization 통합 검증 아님).
+변이 근거 표기: **`28d0effe` 등록부 전체 344/345 + g61 한정 확인** — "최종 커밋 전체 345/345" 로 합치지 않는다.
+g61 한정 확인의 실제 기록은 §122 대로 첫 호출 `28d0effe` dirty · 절단, clean 무필터 `b49c24fa` 이다 (본 회신의
+"f89 단독 확인" 은 코드 계보 요약). 신규 g84 변이 12 의 preimage 한 번씩은 검토자 정적 확인이며 kill 12/12 의 독립
+재현이 아니다.
+
+**G85-C2 (비차단 · 기록 정정) — n4_02 설명의 범위.** 요청문 §1 G84-N4 행의 n4_02 "비유한 J → finite 제외 ·
+`converged=False` + 정상 종료 → converged 제외" 는 **합성 NaN / legacy-flag 계수 재대조**다. 실제 legacy 의 "유한
+성공 다음 nonfinite round" 는 이전 best 의 유한 J 를 반환하면서 ok=True · outer=nonfinite 가 공존할 수 있으므로
+(80차 회귀가 다루는 경로) n4_02 의 합성 행을 그 실제 경로의 반환 모습이라고 부르지 않는다. 마지막 assertion 도
+`실현_재계산` 한 항목의 PASS 이지 전체 validator PASS 가 아니다. 시험 docstring 은 G85-N1 라운드에서 같은 범위로
+좁힌다 (tests/ · RUN_SCOPE 밖).
+
+**다음 (사용자 별도 승인 필요):** G85-N1 한정 보완 — 고정 표 초안은 채팅 승인 질문에 적었다. RUN_SCOPE (`src/io.py`)
+가 바뀌므로 source_digest · 두 leg 영수증의 validator identity 가 움직인다 (history 보존 뒤 1 회 재생성 — 2a 와 같은
+절차). 2b 는 섞지 않는다.
