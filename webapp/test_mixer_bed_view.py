@@ -345,6 +345,9 @@ def main():
     chk('⑰b GIF 인코더는 페이지 안에 있다 (외부 GIF 라이브러리 · 워커 없음) · 내보낸 그림에 보기 전용 표지를 붙인다',
         'function encodeGif(' in html and 'function lzwBlocks(' in html and 'gif.js' not in html and 'new Worker' not in html
         and '보기 전용 — 판정은 3D 칸 M 으로만 · 원 = 실제 반경' in html)
+    chk('⑰c 3D: 메시를 프레임 사이에 재사용하고 (InstancedMesh.dispose 로 GPU 버퍼를 푼다) · WebGL 컨텍스트가 끊기면 복구 / 재생성한다',
+        'mesh.count = cnt' in html and 'o.dispose()' in html and 'webglcontextlost' in html and 'webglcontextrestored' in html
+        and 'function rebuild3(' in html)
     shutil.rmtree(tmp, ignore_errors=True)
     shutil.rmtree(pdir, ignore_errors=True)
     print(f'\ntest_mixer_bed_view: {_ok}/{_ok + len(_fail)} PASS' + (f'   FAILED: {_fail}' if _fail else ''))

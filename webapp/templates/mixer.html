@@ -440,7 +440,8 @@ function mxTab(t){
     setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
   }
   function grab3d(scale) {                       // WebGL 캔버스를 배율로 다시 그려 바로 복사 (drawing buffer 가 지워지기 전에)
-    var T = S.three, pr = T.renderer.getPixelRatio();
+    var T = S.three, pr = T.renderer.getPixelRatio(), sz = new T.THREE.Vector2(); T.renderer.getSize(sz);
+    scale = Math.min(scale, 4096 / Math.max(sz.x, sz.y, 1));
     T.renderer.setPixelRatio(scale); T.renderer.render(T.scene, T.cam);
     var src = T.renderer.domElement, c = document.createElement('canvas'); c.width = src.width; c.height = src.height;
     var x = c.getContext('2d'); x.fillStyle = '#fbfbf8'; x.fillRect(0, 0, c.width, c.height); x.drawImage(src, 0, 0);
@@ -588,7 +589,16 @@ function mxTab(t){
       scene.add(new THREE.AmbientLight(0xffffff, 0.55));
       var dl = new THREE.DirectionalLight(0xffffff, 0.95); dl.position.set(1, 0.6, 0.8); cam.add(dl); scene.add(cam);
       var ctl = new OC(cam, ren.domElement);
-      S.three = { THREE: THREE, renderer: ren, scene: scene, cam: cam, controls: ctl, group: null, key: null };
+      S.three = { THREE: THREE, renderer: ren, scene: scene, cam: cam, controls: ctl, group: null, key: null, meshes: {}, geo: null };
+      ren.domElement.addEventListener('webglcontextlost', function (e) {
+        e.preventDefault(); msg('3D 표시가 끊겼다 (그래픽 메모리 · 드라이버) — 다시 그리는 중…', 'warn');
+        clearTimeout(S.lostTimer); S.lostTimer = setTimeout(rebuild3, 3000);
+      });
+      ren.domElement.addEventListener('webglcontextrestored', function () {
+        clearTimeout(S.lostTimer); var T = S.three; if (!T) return;
+        T.group = null; T.meshes = {}; T.geo = null; msg('');
+        if (S.data && view() === '3d') render3d();
+      });
       ctl.addEventListener('change', function () { ren.render(scene, cam); });
       window.addEventListener('resize', function () { if (view() === '3d') resize3(); else if (S.data) draw2d(); });
       return S.three;
@@ -599,6 +609,12 @@ function mxTab(t){
     });
   }
 
+  function rebuild3() {                          // 컨텍스트가 돌아오지 않으면 렌더러 · 캔버스를 새로 (시점은 다시 드럼 축 방향)
+    var T = S.three; if (!T) return;
+    try { T.renderer.dispose(); } catch (e) {}
+    T.renderer.domElement.remove(); S.three = null; msg('');
+    if (S.data && view() === '3d') render3d();
+  }
   function resize3() {
     var T = S.three; if (!T) return;
     var W = Math.max(280, Math.min($('bed3d').parentElement.clientWidth - 24, 1000, (window.innerHeight - 140) / 0.72)), H = Math.round(W * 0.72);
@@ -615,40 +631,67 @@ function mxTab(t){
     T.controls.target.set(cx, cy, cz); T.controls.update();
   }
 
+  function clear3(T) {                           // 그룹 · 메시 · 선을 GPU 에서 푼다 (InstancedMesh 는 dispose() 로 instanceMatrix 버퍼까지)
+    if (!T.group) return;
+    T.scene.remove(T.group);
+    T.group.traverse(function (o) {
+      if (o.isInstancedMesh) { o.material.dispose(); o.dispose(); }
+      else if (o.isLine) { o.geometry.dispose(); o.material.dispose(); }
+    });
+    T.group = null; T.meshes = {};
+  }
+  function drumLines(THREE, drum) {
+    var g = new THREE.Group(), R = drum.R, xa = drum.x_min, xb = drum.x_max;
+    var lm = new THREE.LineBasicMaterial({ color: 0x444444, transparent: true, opacity: 0.55 });
+    [xa, xb].forEach(function (xx) {
+      var pts = []; for (var k = 0; k <= 96; k++) { var th = 2 * Math.PI * k / 96; pts.push(new THREE.Vector3(xx, R * Math.cos(th), R * Math.sin(th))); }
+      g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lm.clone()));
+    });
+    for (var k = 0; k < 8; k++) {
+      var th = 2 * Math.PI * k / 8;
+      g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(xa, R * Math.cos(th), R * Math.sin(th)),
+                                                                    new THREE.Vector3(xb, R * Math.cos(th), R * Math.sin(th))]), lm.clone()));
+    }
+    lm.dispose();
+    return g;
+  }
   function render3d() {
     return ensure3().then(function (T) {
       if (!T || !S.data) return;
-      var THREE = T.THREE, d = S.data, j = d.meta;
-      if (T.group) { T.scene.remove(T.group); T.group.traverse(function (o) { if (o.geometry) o.geometry.dispose(); if (o.material) o.material.dispose(); }); }
-      var g = new THREE.Group(), geo = new THREE.IcosahedronGeometry(1, d.n > 150000 ? 0 : 1);
+      var THREE = T.THREE, d = S.data, j = d.meta, key = j.root + '|' + j.run;
+      //  ★ 메시는 프레임 사이에 **재사용**한다 — 옛 판은 프레임마다 InstancedMesh 를 새로 만들고 dispose() 하지 않아 instanceMatrix
+      //    GPU 버퍼 (10 만 × 64 B) 가 프레임마다 쌓였다 → 자동 재생 중 WebGL 컨텍스트가 끊겨 3D 가 빈 화면이 됐다 (1저자 09-30 밤)
+      if (T.key !== key || !T.group) {
+        clear3(T); T.group = new THREE.Group(); T.meshes = {}; T.scene.add(T.group);
+        if (j.drum) T.group.add(drumLines(THREE, j.drum));
+        if (T.key !== key) { fit3(T, j); T.key = key; }
+      }
+      if (!T.geo) T.geo = new THREE.IcosahedronGeometry(1, d.n > 150000 ? 0 : 1);
+      var seen = {};
       Object.keys(j.types_present).forEach(function (k) {
         var t = +k, tp = j.types_present[k], cnt = 0, i;
         for (i = 0; i < d.n; i++) if (d.t[i] === t) cnt++;
-        if (!cnt) return;
-        var mesh = new THREE.InstancedMesh(geo, new THREE.MeshLambertMaterial({ color: tp.color }), cnt), a = mesh.instanceMatrix.array, n = 0;
+        seen[k] = true;
+        var mesh = T.meshes[k];
+        if (mesh && (mesh.userData.cap < cnt || mesh.userData.color !== tp.color)) {
+          T.group.remove(mesh); mesh.material.dispose(); mesh.dispose(); mesh = null;
+        }
+        if (!mesh) {
+          mesh = new THREE.InstancedMesh(T.geo, new THREE.MeshLambertMaterial({ color: tp.color }), Math.max(cnt, 1));
+          mesh.userData.cap = Math.max(cnt, 1); mesh.userData.color = tp.color; mesh.frustumCulled = false;
+          T.group.add(mesh); T.meshes[k] = mesh;
+        }
+        var a = mesh.instanceMatrix.array, n = 0;
         for (i = 0; i < d.n; i++) {
           if (d.t[i] !== t) continue;
           var o = 16 * n++, r = d.r[i];
-          a[o] = r; a[o + 5] = r; a[o + 10] = r; a[o + 12] = d.x[i]; a[o + 13] = d.y[i]; a[o + 14] = d.z[i]; a[o + 15] = 1;
+          a[o] = r; a[o + 1] = 0; a[o + 2] = 0; a[o + 3] = 0; a[o + 4] = 0; a[o + 5] = r; a[o + 6] = 0; a[o + 7] = 0;
+          a[o + 8] = 0; a[o + 9] = 0; a[o + 10] = r; a[o + 11] = 0; a[o + 12] = d.x[i]; a[o + 13] = d.y[i]; a[o + 14] = d.z[i]; a[o + 15] = 1;
         }
-        mesh.instanceMatrix.needsUpdate = true; mesh.frustumCulled = false; mesh.visible = !S.hidden[tp.name];
-        g.add(mesh);
+        mesh.count = cnt; mesh.instanceMatrix.needsUpdate = true;
+        mesh.visible = cnt > 0 && !S.hidden[tp.name];
       });
-      if (j.drum) {
-        var R = j.drum.R, xa = j.drum.x_min, xb = j.drum.x_max, lm = new THREE.LineBasicMaterial({ color: 0x444444, transparent: true, opacity: 0.55 });
-        [xa, xb].forEach(function (xx) {
-          var pts = []; for (var k = 0; k <= 96; k++) { var th = 2 * Math.PI * k / 96; pts.push(new THREE.Vector3(xx, R * Math.cos(th), R * Math.sin(th))); }
-          g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lm));
-        });
-        for (var k = 0; k < 8; k++) {
-          var th = 2 * Math.PI * k / 8;
-          g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(xa, R * Math.cos(th), R * Math.sin(th)),
-                                                                        new THREE.Vector3(xb, R * Math.cos(th), R * Math.sin(th))]), lm));
-        }
-      }
-      T.scene.add(g); T.group = g;
-      var key = j.root + '|' + j.run;
-      if (T.key !== key) { fit3(T, j); T.key = key; }
+      Object.keys(T.meshes).forEach(function (k) { if (!seen[k]) T.meshes[k].visible = false; });   // 이 프레임에 없는 상
       resize3();
     });
   }
