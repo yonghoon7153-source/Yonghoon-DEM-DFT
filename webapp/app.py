@@ -3188,6 +3188,92 @@ COVERAGE_V2_OK_KEYS = ('area_AM전체_SE_total_physics_v2', 'area_SE_SE_total_ph
                        'h_film_sim_physics_v2')
 COVERAGE_V2_DIAG_KEYS = ('n_contacts_unknown_id_physics_v2', 'n_contact_failures_physics_v2', 'rule_physics_v2',
                          'am_denominator_physics_v2')
+#: LHSC-03 R2 (Codex 09-30 밤) — 값 검사의 분류 (생산자 = `coverage_physics_vs_hertzian._PhysicsV2Book.keys`)
+COVERAGE_V2_AREA_KEYS = ('area_AM전체_SE_total_physics_v2', 'area_SE_SE_total_physics_v2', 'area_AM전체_AM_total_physics_v2')
+COVERAGE_V2_COUNT_DICT_KEYS = ('cap_conflict_n_by_pair_physics_v2', 'A_binding_counts_total_physics_v2',
+                               'A_binding_counts_AM_SE_physics_v2')
+COVERAGE_V2_DENOM_KEYS = ('n_am', 'n_free_surface_nonpositive', 'n_coverage_clipped_100', 'n_radius_invalid')
+#: blank 판정에서 값이 있어도 되는 키 (진단 · 규약) — 그 밖의 `*_physics_v2` 는 None (또는 없음) 이어야 한다 (물리 값 잔재 금지)
+COVERAGE_V2_BLANK_ALLOWED = ('coverage_status_physics_v2', 'rule_physics_v2', 'h_film_sim_physics_v2', 'am_denominator_physics_v2',
+                             'n_contacts_unknown_id_physics_v2', 'n_contact_failures_physics_v2')
+
+
+def _v2_int(v, lo=0):
+    """명시적 정수 (bool 제외 · 실수 1.0 · NaN · 문자열 아님) 이고 lo 이상."""
+    return isinstance(v, int) and not isinstance(v, bool) and v >= lo
+
+
+def _v2_num(v):
+    """유한 실수 (bool · 문자열 · NaN · ±inf 아님)."""
+    import math as _math
+    return isinstance(v, (int, float)) and not isinstance(v, bool) and _math.isfinite(float(v))
+
+
+def _v2_denom_ok(diag, ok):
+    """`am_denominator_physics_v2` — n_am 은 **명시적** 비음수 정수 (누락을 0 으로 채우지 않는다 · LHSC-03 R2).
+    ok: 네 개수가 다 있고 무효 분모 둘 = 0 · 클립 수 ≤ n_am.  blank: None (생산자 내부 오류 경로) 또는 있는 개수가 정수 · ≤ n_am."""
+    if diag is None:
+        return not ok
+    if not isinstance(diag, dict) or not _v2_int(diag.get('n_am')):
+        return False
+    if not all(_v2_int(diag[k]) for k in COVERAGE_V2_DENOM_KEYS if k in diag):
+        return False
+    n_am = diag['n_am']
+    if ok:
+        return (all(k in diag for k in COVERAGE_V2_DENOM_KEYS) and diag['n_free_surface_nonpositive'] == 0
+                and diag['n_radius_invalid'] == 0 and diag['n_coverage_clipped_100'] <= n_am)
+    return all(diag.get(k, 0) <= n_am for k in COVERAGE_V2_DENOM_KEYS[1:])
+
+
+def _v2_ok_record(fm):
+    """status 'ok' 레코드의 값 계약 (LHSC-03 R2) — 계산을 복제하지 않고 **타입 · 범위 · 공존**만 본다."""
+    if any(fm.get(k) is None for k in COVERAGE_V2_OK_KEYS):
+        return False
+    diag = fm.get('am_denominator_physics_v2')
+    if not _v2_denom_ok(diag, ok=True):
+        return False
+    if not all(_v2_num(fm[k]) and float(fm[k]) >= 0.0 for k in COVERAGE_V2_AREA_KEYS):
+        return False
+    n, ncap, nconf = (fm.get('n_contacts_physics_v2'), fm.get('n_cap_branch_physics_v2'), fm.get('cap_conflict_n_physics_v2'))
+    if not (_v2_int(n) and _v2_int(ncap) and _v2_int(nconf) and ncap <= n and nconf <= ncap):
+        return False
+    if not (_v2_int(fm.get('n_contacts_unknown_id_physics_v2')) and fm.get('n_contact_failures_physics_v2') == 0
+            and _v2_int(fm.get('n_contact_failures_physics_v2'))):       # 접촉 실패와 ok 는 공존하지 않는다
+        return False
+    for k in COVERAGE_V2_COUNT_DICT_KEYS:
+        d = fm.get(k)
+        if not (isinstance(d, dict) and all(_v2_int(v) for v in d.values())):
+            return False
+    for k in ('cap_conflict_frac_physics_v2', 'cap_conflict_frac_cap_branch_physics_v2'):
+        if k in fm and fm[k] is not None and not (_v2_num(fm[k]) and 0.0 <= float(fm[k]) <= 1.0):
+            return False
+    if not (isinstance(fm.get('rule_physics_v2'), str) and fm['rule_physics_v2'].strip()):
+        return False
+    if not (_v2_num(fm.get('h_film_sim_physics_v2')) and float(fm['h_film_sim_physics_v2']) > 0.0):
+        return False
+    cov = {k: v for k, v in fm.items() if k.startswith('coverage_') and k.endswith('_physics_v2')
+           and k != 'coverage_status_physics_v2'}
+    if not all(v is not None and _v2_num(v) and 0.0 <= float(v) <= 100.0 for v in cov.values()):
+        return False
+    if diag['n_am'] > 0:                                           # AM 이 있으면 전체 피복률이 있어야 한다
+        return 'coverage_AM_mean_physics_v2' in cov
+    return not cov                                                 # AM 0 개 = 피복률 키 없음 (연산 완료 · 적용 대상 없음)
+
+
+def _v2_blank_record(fm):
+    """status 'blank: 사유' 레코드 — 사유 · 진단 키가 있고 물리 값 잔재가 없다 (LHSC-03 R2).  진단 일부 None 은 생산자 내부 오류
+    경로 (`coverage_physics_vs_hertzian` 의 except) 라 그대로 받는다."""
+    if not all(k in fm for k in COVERAGE_V2_DIAG_KEYS):
+        return False
+    for k in ('n_contacts_unknown_id_physics_v2', 'n_contact_failures_physics_v2'):
+        if fm[k] is not None and not _v2_int(fm[k]):
+            return False
+    if not _v2_denom_ok(fm['am_denominator_physics_v2'], ok=False):
+        return False
+    _rule = fm['rule_physics_v2']                                   # 규약 문자열 — 진단이라 None 도 받는다 (값이 있으면 문자열)
+    if _rule is not None and not (isinstance(_rule, str) and _rule.strip()):
+        return False
+    return all(v is None for k, v in fm.items() if k.endswith('_physics_v2') and k not in COVERAGE_V2_BLANK_ALLOWED)
 
 
 def _coverage_v2_written(results_dir):
@@ -3197,10 +3283,11 @@ def _coverage_v2_written(results_dir):
     이번 피복 단계가 쓴 것이다.  ★ 옛 피복 스크립트는 데이터 폴더가 코드 밖이면 (worktree 런처 · LHS 배치) "[skip]" 을 찍고
     **rc 0 으로 아무것도 안 썼다** — 그것을 done 으로 받지 않는다.
     ★ `LHSC-03` (Codex 09-30): 문자열이면 다 받던 첫 판은 `''` · `'not_run'` · 사유 없는 `'blank: '` · 값 키 없는 `'ok'` 도
-    통과시켰다.  이제 = **'ok' + 필수 값 · 진단 키 (None 불가 · AM 이 있으면 유한 피복률)** 또는 **비지 않은 'blank: 사유' + 진단 키**
-    만 판정으로 받는다 (`COVERAGE_V2_OK_KEYS` · `COVERAGE_V2_DIAG_KEYS`).  'blank: …' 도 이 침대에 대한 v2 의 판정이다 (사유가 행에 남는다).
+    통과시켰다.  ★★ `LHSC-03` R2 (Codex 09-30 밤): 둘째 판은 n_am 누락을 0 으로 읽고 (`(diag.get('n_am') or 0) > 0`) 값은 None 만
+    봐서, 실제 생산자 출력에서 출발한 변이 10 종 (n_am 삭제 · 음수 · NaN · 면적 NaN · 문자열 · 음수 · 피복률 음수 · ok 인데 무효 분모 ·
+    ok 인데 접촉 실패 · blank 인데 양수 값) 을 다 받았다 — 둘은 필수 단계까지 done.  이제 = `_v2_ok_record` (타입 · 범위 · 공존) 또는
+    `_v2_blank_record` (사유 · 진단 · 잔재 없음).  'blank: …' 도 이 침대에 대한 v2 의 판정이다 (사유가 행에 남는다).
     """
-    import math as _math
     try:
         with open(os.path.join(results_dir, 'full_metrics.json'), encoding='utf-8') as _f:
             _fm = json.load(_f)
@@ -3212,17 +3299,9 @@ def _coverage_v2_written(results_dir):
     if not isinstance(st, str):
         return False
     if st == 'ok':
-        if any(_fm.get(k) is None for k in COVERAGE_V2_OK_KEYS):
-            return False
-        diag = _fm.get('am_denominator_physics_v2')
-        if not isinstance(diag, dict):
-            return False
-        if (diag.get('n_am') or 0) > 0:                             # AM 이 있으면 전체 피복률이 유한 실수여야 한다
-            cov = _fm.get('coverage_AM_mean_physics_v2')
-            return (isinstance(cov, (int, float)) and not isinstance(cov, bool) and _math.isfinite(float(cov)))
-        return True
+        return _v2_ok_record(_fm)
     if st.startswith('blank:') and st[len('blank:'):].strip():
-        return all(k in _fm for k in COVERAGE_V2_DIAG_KEYS)
+        return _v2_blank_record(_fm)
     return False
 
 

@@ -472,6 +472,11 @@ def main():
                 _d['am_denominator_physics_v2'] = {'n_am': 2, 'n_free_surface_nonpositive': 0, 'n_coverage_clipped_100': 0,
                                                    'n_radius_invalid': 0}
                 _d['rule_physics_v2'] = 'rule'
+                #  LHSC-03 R2 (09-30 밤): 옛 레코드는 개수 키를 1.0 (실수) · 접촉 실패 1 로 적었다 — 생산자는 개수를 정수로 ·
+                #  ok 에서는 접촉 실패 0 · cap 충돌 ≤ cap 가지 ≤ 접촉 · 막 두께 > 0 으로 쓴다 (엄격해진 검증기가 옛 레코드를 거부한다)
+                _d.update({'n_contacts_physics_v2': 3, 'n_cap_branch_physics_v2': 1, 'cap_conflict_n_physics_v2': 0,
+                           'n_contacts_unknown_id_physics_v2': 0, 'n_contact_failures_physics_v2': 0,
+                           'h_film_sim_physics_v2': 5e-6})
             _d.update({'coverage_status_physics_v2': 'ok', 'coverage_AM_mean_physics_v2': 12.5})
             return _d
 
@@ -623,6 +628,89 @@ def main():
             ('blank: 사유 + 진단 키', _blank))}
         chk(f'T11j) LHSC-03 양성 대조: ok + 필수 키 · AM 0 개 ok · 사유 있는 blank + 진단 키 는 True ({[l for l, v in _good.items() if not v]})',
             all(_good.values()))
+
+        # T11k · T11l · T11m ★ Codex LHSC-03 R2 (09-30 밤 재검증 · P2 · 1저자 비준 09-30 낮 "비준이야") — 반례 먼저
+        #   R2: 검증기가 n_am 누락을 0 으로 읽고 (`(diag.get('n_am') or 0) > 0`) 값은 None 만 봐서, **실제 생산자 출력**에서 출발한 변이
+        #   10 종이 전부 받아들여졌다 (n_am 삭제 · 면적 NaN 은 필수 단계까지 done).  계약: n_am = 명시적 비음수 정수 (bool 제외) ·
+        #   ok = 면적 유한 ≥ 0 · 피복률 유한 [0, 100] · 개수 정수 · 범위 · 무효 분모 · 접촉 실패와 공존 불가 · blank = 사유 · 진단 +
+        #   물리 값 잔재 없음 (진단 일부 None 은 내부 오류 경로라 그대로 받는다).
+        #   양성 대조 = 가짜 레코드가 아니라 **실제 생산자** (`coverage_physics_vs_hertzian.compute_case`) 의 출력 8 종.
+        import contextlib as _ctx
+        import copy as _copy
+        import io as _io
+        from pathlib import Path as _P
+        _scr = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'scripts')
+        if _scr not in sys.path:
+            sys.path.insert(0, _scr)
+        import coverage_physics_vs_hertzian as _cv
+        _root = _P(tmp) / 'lhsc03r2'
+        _prod = {}
+        for _var in ('base', 'isolated_zero', 'denom_zero', 'nan_radius', 'nan_delta', 'scale1', 'no_ligg_col', 'se_only'):
+            _d, _tm, _sc = _cv._selftest_fixture(_root / _var, variant=('base' if _var == 'se_only' else _var))
+            if _var == 'se_only':                              # SE 둘 · 접촉 0 (Codex 양성 대조 그대로)
+                (_d / 'atoms.csv').write_text('id,type,radius,x,y,z\n1,3,0.001,0,0,0\n2,3,0.001,0,0,0.003\n')
+                (_d / 'contacts.csv').write_text('id1,id2,delta,contact_area\n')
+            with _ctx.redirect_stdout(_io.StringIO()):
+                _cv.compute_case(_var, _d, _tm, scale=_sc)
+            _prod[_var] = (str(_d), json.loads((_d / 'full_metrics.json').read_text()))
+        _pos = {k: webapp._coverage_v2_written(v[0]) for k, v in _prod.items()}
+        chk(f'T11k) LHSC-03 R2 양성 대조: 실제 생산자 출력 8 종 (정상 · 고립 AM 0 % · 무효 분모 · NaN 반경 · δ NaN · scale 1 · 면적 열 없음 · '
+            f'SE-only) 은 전부 판정으로 받는다 — 거부 {[k for k, v in _pos.items() if not v]} · 상태 '
+            f'{ {k: str(v[1].get("coverage_status_physics_v2"))[:12] for k, v in _prod.items()} }', all(_pos.values()))
+        _hl = _prod['base'][1]
+
+        def _mut(name):                                        # Codex audit_delta.py schema_mutations 그대로 (정상 생산자 출력에서)
+            x = _copy.deepcopy(_hl)
+            if name.endswith('no_coverage') or name == 'missing_n_am_and_coverage':
+                for k in list(x):
+                    if k.startswith('coverage_AM') and k.endswith('_physics_v2'):
+                        del x[k]
+            if name == 'missing_n_am_and_coverage':
+                del x['am_denominator_physics_v2']['n_am']
+            elif name == 'negative_n_am_and_no_coverage':
+                x['am_denominator_physics_v2']['n_am'] = -1
+            elif name == 'nan_n_am_and_no_coverage':
+                x['am_denominator_physics_v2']['n_am'] = float('nan')
+            elif name == 'ok_but_invalid_denom_count':
+                x['am_denominator_physics_v2']['n_free_surface_nonpositive'] = 1
+            elif name == 'area_nan':
+                x['area_AM전체_SE_total_physics_v2'] = float('nan')
+            elif name == 'area_string':
+                x['area_AM전체_SE_total_physics_v2'] = 'broken'
+            elif name == 'area_negative':
+                x['area_AM전체_SE_total_physics_v2'] = -1.0
+            elif name == 'coverage_negative':
+                x['coverage_AM_mean_physics_v2'] = -1.0
+            elif name == 'ok_but_contact_failures':
+                x['n_contact_failures_physics_v2'] = 1
+            elif name == 'blank_with_positive_values':
+                x['coverage_status_physics_v2'] = 'blank: undefined denominator'
+            return x
+        _muts = ('missing_n_am_and_coverage', 'negative_n_am_and_no_coverage', 'nan_n_am_and_no_coverage',
+                 'ok_but_invalid_denom_count', 'area_nan', 'area_string', 'area_negative', 'coverage_negative',
+                 'ok_but_contact_failures', 'blank_with_positive_values')
+        _neg = {n: _v2w(_mut(n)) for n in _muts}
+        chk(f'T11l) ★ LHSC-03 R2: Codex 변이 10 종 (n_am 누락 · 음수 · NaN · ok 인데 무효 분모 · 면적 NaN · 문자열 · 음수 · 피복률 음수 · '
+            f'ok 인데 접촉 실패 · blank 인데 양수 값) 은 전부 거부 — 받아들인 것 {[n for n, v in _neg.items() if v]}',
+            not any(_neg.values()))
+        _stg = {}
+        _prev_rr = ps._RUNNER
+        try:
+            for _n in ('missing_n_am_and_coverage', 'area_nan'):
+                _sd = os.path.join(tmp, 'results', f'r2_{_n}')
+                os.makedirs(_sd, exist_ok=True)
+
+                def _malformed(cmd, _x=_mut(_n), _p=_sd, **kw):     # 계산 subprocess 만 대역 — 변이 파일을 쓰고 rc 0
+                    with open(os.path.join(_p, 'full_metrics.json'), 'w') as _f:
+                        json.dump(_x, _f)
+                    return subprocess.CompletedProcess(cmd, 0, 'synthetic malformed producer', '')
+                ps._RUNNER = _malformed
+                _st = webapp._coverage_stage([sys.executable, 'coverage_physics_vs_hertzian.py', _n], _sd, 'coverage')
+                _stg[_n] = (_st.get('ok'), ps.summarize([_st])[0])
+        finally:
+            ps._RUNNER = _prev_rr
+        chk(f'T11m) ★ LHSC-03 R2: 필수 단계 재현 (실제 _coverage_stage · summarize · 계산만 대역) — n_am 누락 · 면적 NaN 은 failed '
+            f'(옛: ok · done) {_stg}', all(v[0] is False and v[1] == 'failed' for v in _stg.values()) and len(_stg) == 2)
     finally:
         ps._RUNNER = prev_runner
         for k, v in prev_env.items():
