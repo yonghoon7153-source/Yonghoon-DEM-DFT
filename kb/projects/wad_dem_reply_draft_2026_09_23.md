@@ -552,7 +552,7 @@ SE|SE 4층 PBE 대조에서 조성 상쇄와 PS₄ 연결 보존을 확인했습
 > SE 쌍 (LPSCl | Ag · LPSCl | C) 보류는 그대로입니다.
 > 지금 추가로 부탁드릴 계산은 없습니다.
 >
-> 근거: 트랙 문서 docs/adhesion_agc_interlayer_20260923.md §3 · §5-8 · docs/dft_reply7_adhesion_20260928.md §3 (짝 원칙 ①–④) · docs/dft_reply8_adhesion_20260930.md §2 (검산)
+> 근거: 트랙 문서 docs/adhesion_agc_interlayer_20260923.md §3 · §5-8 · docs/dft_reply7_adhesion_20260928.md §3 (짝 원칙 ①–④) · docs/dft_reply8_adhesion_20260930.md §2 (검산) <!-- lint-skip-path: DEM 리포 경로 (이 repo 아님) -->
 
 **우리 읽기 (09-30)** — 인계 성립. **열린 질문 0 · 새 요청 없음.**
 - 검산 (그쪽 산술 셋 + 짝 판정 — 우리 결과 기록과 대조, 다 맞다): 0.37 − 0.332 = 0.038 ✓ · 3체 0.332 − 0.076 = 0.256 ≈ 0.257 ✓ (우리 값 0.2567 = 2체 − registry 가중 ΔATM 0.0755 · 반올림 차) · 0.449 / 0.303 = 1.482 ✓ · 거리 2체 0.038 · 3체 0.37 − 0.257 = 0.113 · 차 0.075 > PAIR_TIE 0.01 ✓ · 표의 Ag–C 3체 0.366 · 0.373 = 우리 회신 8 §3 그대로.
