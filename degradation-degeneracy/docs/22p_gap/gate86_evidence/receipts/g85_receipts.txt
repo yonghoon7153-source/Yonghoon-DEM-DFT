@@ -1,0 +1,4 @@
+START c2f376484fb1b0eb016161625f0f76eb6e9e8045 status=0 2026-09-30T19:06:16Z
+✅ paired_fixed5_v4: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml · 검사 35건 · 산출 2건 · core_sha adf0ce1fff69f7b3
+✅ grid_fit_v5: docs/22p_gap/receipts/grid_fit_v5.validate.yaml · 검사 34건 · 산출 2건 · core_sha 01bd53eb85b6c1cf
+rc=0 2026-09-30T19:07:37Z

@@ -1,0 +1,8 @@
+START_HEAD=b4876b0b2098c9e87630fc715b44ab65336b73a2 status=0 2026-09-30T22:30:30Z
+17 passed in 4.06s
+sandbox: /tmp/mutation_replay_dmejr4ad/degradation-degeneracy
+물었다        closure-derivation-refuses-escaping-paths-g85 node 1 · -k g85_m05
+scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1
+실행한 변이 1건이 전부 기대 node 를 call 단계에서 물었다
+replay rc=0
+END_HEAD=b4876b0b2098c9e87630fc715b44ab65336b73a2 status=0 2026-09-30T22:30:51Z

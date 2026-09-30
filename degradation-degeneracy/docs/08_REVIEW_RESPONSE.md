@@ -8771,3 +8771,31 @@ g61 한정 확인의 실제 기록은 §122 대로 첫 호출 `28d0effe` dirty �
 **사용자 승인 (2026-09-30):** 위 G85-N1 한정 보완 (생산 파일 `src/io.py` 하나 · RED 먼저 · 변이 · 영수증 history + 1 회 ·
 전체 회귀 · smoke · 등록부 전체 변이 재생 · GATE86 · 2b · p_ini · 새 연구 leg · 실행 GO 제외) → **"ㄱㄱ"** (승인). 고정 표는
 `STAGE3_IMPL_ROUND1_SPEC.md` §12 (이 커밋 · 코드 변경 전).
+
+## §124 86차 요청 — G85-N1 한정 보완 결과 (사후 closure 구성원 결속 · 2a 종결 판정 재요청 · 2b 아님 · 실행 GO 아님) · 판정 대상 `b4876b0b`
+
+**요청문:** `docs/22p_gap/GATE86_REQUEST.md` · 원문 로그 `docs/22p_gap/gate86_evidence/`. **판정 대상 코드
+`b4876b0b2098c9e87630fc715b44ab65336b73a2`** — RUN_SCOPE 를 바꾼 커밋은 `19bf1c15` (GREEN · `src/io.py` +77/−2) 하나 ·
+`source_digest ba51cd20caa10b7b → f1f4378f46610f08`. 사슬: 승인 · 고정 표 §12 `b9bc46c1` → RED `9255377a` (7 node · 5 failed /
+2 passed) → GREEN `19bf1c15` → 변이 `3dc20c2d` (-g85 7 · 7/7) → 영수증 history `c2f37648` → 새 세대 + 앵커 `0be169b1` →
+증인 정정 `b4876b0b`.
+
+**무엇을 했나:** `base_config_closure_members` (봉인 스냅샷에서 `run_spec.base_config` 부터 `extends` 독립 유도 · 순환 / 밖 경로 /
+봉인 없는 부모 / 스냅샷 없음 / YAML · mapping / extends 비문자열 / 깊이 32 실패 · live fallback 없음) · `base_config_결속` 이
+기록 목록의 중복 · 누락 · 추가를 이름으로 거부하고 closure 는 유도 집합으로. 검사 이름 · 수 불변.
+
+**RED 실측 (85차 모형을 넘어):** 실제 leaf → parent 실행 (`configs/grid_coarse.yaml` → `base.yaml`) 에 스냅샷 · 봉인 불변 ·
+목록 + 두 digest + 계획 사슬 + **run_signature · 행 run_sig · fits 봉인**까지 맞춘 위조 넷 (부모 누락 · leaf 누락 · 추가 · 중복) 이
+패치 전 **validator 전체 실패 목록 `[]`** 로 통과했다. 첫 RED 시도는 서명을 안 맞춰 `run_signature_재계산` 에 걸렸다 — 84차 n1_04
+도 서명을 안 맞춘 위조였다. 패치 뒤 넷 다 실패 목록 정확히 `[base_config_결속]`.
+
+**최종 실측:** clean `0be169b1` 한 러너 순차 — 전체 pytest 1 failed (G67-T1-b 증인 형식 · §6-g) · 2045 passed · 1 xfailed ·
+smoke rc 0 (184 s) · **등록부 전체 변이 재생 352/352** (안 물었다 0 · 실행오류 0 · 신고 11 · 처음으로 전부) · preimage 정확히 한 번.
+증인 정정 `b4876b0b` → gate67 17 passed · 해당 변이 단독 rc 0. 요청문 커밋의 전체 pytest + smoke 는 발송문.
+
+**자기 신고 (요청문 §6):** a 85차 §6-f 답이 틀렸음 (자기일관 위조가 validator 전체 통과) · **b 탐침이 운영 등록부 최상위
+`_exec_class/` 에 untracked 기록 1 개를 남겼다** (pytest 밖 production `run_fit` · 커밋 전 발견 · 사본 보존 뒤 삭제 · 절차 정정:
+production 진입점 탐침은 pytest 안이나 `git archive` 사본에서만) · c 도달하지 않는 fail-closed 분기 유지 · d 키 목록 기록 유지 ·
+e `load_config` 이름 fallback 미재현 · f m05 이유 대조 좁힘 · g 증인 형식 위반 → 정정.
+
+**묻는 것:** Q1 G85-N1 닫힘 · Q2 2a 종결 · Q3 §6-b 영향 · c · d · e · Q4 새 세대 영수증. **묻지 않는 것:** 2b · p_ini · 실행 GO · 새 연구 leg.

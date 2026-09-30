@@ -1,0 +1,100 @@
+
+[1m── 0. 완방상태 준비 — solver recipe 봉인·거부 (F82b) ──[0m
+2026-09-30 20:11:00,548 WARNING __main__:   vs 원본 하드코딩 ne_primary: 36.7 -> 36.6 (차이 0.1%) — 하드코딩은 사용하지 않음
+2026-09-30 20:11:00,548 WARNING __main__:   vs 원본 하드코딩 ne_secondary: 3446.3 -> 3446.1 (차이 0.0%) — 하드코딩은 사용하지 않음
+2026-09-30 20:11:00,548 WARNING __main__:   vs 원본 하드코딩 pe: 58439.9 -> 58439.9 (차이 0.0%) — 하드코딩은 사용하지 않음
+   ✅ baseline --force (재계산 + baseline_hash·solver 봉인)
+   ✅ 다른 solver 로 계산된 캐시 거부 (F82b)
+
+[1m── 1. PyBaMM 합성 격자 (producer artifact) ──[0m
+· 실행 전 gate 면제 — 모든 경로가 smoke namespace 안이다 (정규 격리)
+grid:   0%|          | 0/6 [00:00<?, ?cond/s]grid: 100%|██████████| 6/6 [00:09<00:00,  1.58s/cond]grid: 100%|██████████| 6/6 [00:09<00:00,  1.58s/cond]
+{
+  "n_ok": 6,
+  "n_failed": 2,
+  "n_curves_total": 6,
+  "elapsed_s": 9.509697236999273,
+  "out_dir": "results/_smoke/curves"
+}
+   ✅ 곡선 생성
+   ✅ curves_manifest.yaml (F70 producer 기록)
+   ✅ producer 독립 검증 (F74): 통과 (실패라벨 재검 포함)
+   ✅ 다른 config 의 resume 혼합 차단 (F74)
+
+[1m── 2. half-cell 캐시 없음 → 안내하며 멈추는가 (F63) ──[0m
+   ✅ 안내와 함께 중단 (조용한 캐시 생성 없음)
+
+[1m── 3. half-cell 기준 준비 (봉인 가능한 별도 단계) ──[0m
+   ✅ 캐시 + recipe meta 생성
+   ✅ recipe meta 사이드카 (F64)
+   ✅ halfcell --verify (재생성 대조)
+   ✅ stale meta → validator 거부 (['runtime_identity', '코드_identity'])
+2026-09-30 20:11:36,627 WARNING __main__: half-cell 캐시가 다른 runtime 에서 계산됨 (차이 ['pybamm']) — 미스로 취급해 재계산: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/.cache/halfcell/a8e262f7d6aa4beb_ocp_b5009f515fb8.json
+   ✅ stale 캐시 → 미스로 재계산되어 meta 갱신 (12차 발견 4 자기치유)
+   ✅ --force --verify (운영 명령)
+
+[1m── 4. 같은 곡선을 두 기준으로 fitting ──[0m
+   ✅ Case 2 (grid 기준)
+   ✅ Case 1 (half-cell 기준)
+
+[1m── 5. provenance — 두 산출물 모두 인용 가능한가 ──[0m
+   ✅ results/_smoke/grid_fit: 통과
+   ✅ results/_smoke/halfcell_fit: 통과
+
+[1m── 6. 공정 paired 실행 — 33p/34p 쌍 (F66/F81) ──[0m
+   ✅ 6조건 × 2목적함수, 조건별 (index,source) 집합 동일, 전부 3 restart·유한
+   ✅ paired 채점
+   ✅ paired 목적함수 비교
+   ✅ paired 보고서 생성 (n_restarts=3, pairwise 메타 키 포함)
+
+[1m── 7. 채점 · 비교 · 보고서 ──[0m
+   ✅ 채점
+   ✅ 목적함수 비교
+   ✅ 기준 곡선 비교
+   ✅ weight sweep (run.sh wrapper, w∈{0,1})
+   ✅ sweep 기록: tol·method·adaptive·digest 봉인, optimized 는 run 디렉터리에
+   ✅ sweep 끝점 ↔ 본 실행 일치 (check_sweep_consistency)
+   ✅ 인용 금지 배너 없음 — 전 구간 provenance 통과
+   ✅ 파생 변조 → 재계산 렌더 + stale 배너 (F77)
+
+[1m── 7b. 같은 논리 실행의 resume → 보고서 갱신 (62차 순서 e2e) ──[0m
+   ✅ resume (production 진입점)
+   ✅ completed journal 이 하나 — run_sig 가 resume 에서 안 바뀜 (62차 P0-5)
+   ✅ resume 뒤 lock 정리 (62차 P0-3)
+   ✅ resume 뒤 봉인이 2 member 를 정확히 담고 승격 판정을 지난다 (62차 P0-1)
+   ✅ resume 뒤 보고서 갱신 — 배너 없음
+
+[1m── 8. Hessian — 분리배치 곡선 해석 · 채점 산출물 불변 ──[0m
+   ✅ 분리배치 Hessian (봉인 _inputs 곡선 자동 해석, 18차 A)
+   ✅ Hessian 이 degeneracy_summary.yaml 을 건드리지 않음 (18차 B)
+   ✅ Hessian sidecar 기록
+   ✅ score → hessian → report 순서에 stale 없음 (18차 C)
+
+[1m── 8b. 굳은 기록 scan — handle 경로 · staging 경로 · 없는 임시 경로 (62차 γ′) ──[0m
+   ✅ 굳은 기록 58개: handle 경로·staging 경로·없는 경로 없음 (62차 γ′)
+
+[1m── 9. 보관 → 격리 복원 → 검증 → 재채점 ──[0m
+   ✅ bundle (halfcell)
+   ✅ bundle (grid + nested sweep)
+   ✅ check
+   ✅ check (nested)
+   ✅ 격리 root 복원
+   ✅ 격리 복원 (grid+sweep)
+   ✅ 격리 복원 검증[results/_smoke/halfcell_fit]: 통과
+   ✅ 격리 복원 검증[results/_smoke/grid_fit]: 통과
+   ✅ 격리 복원 검증[results/_smoke/grid_fit/wsweep]: 통과
+   ✅ 복원본 재채점: 정본 확인, digest c0072817a4c7
+   ✅ 없는 보관 대상 → nonzero 종료 (F89)
+   ✅ 보관 음성 테스트가 tracked artifacts/ 를 건드리지 않음
+   ✅ archive wrapper 정상 승격
+   ✅ artifact_index: 승격분만·kind·64자리·봉인 곡선 digest 일치 (12차 발견 5)
+   ✅ 실패한 재보관이 기존 묶음을 보존 (11차 발견 6)
+   ✅ 계획 index 일관 · 계획 밖 다리는 거부 (46차 P0-11)
+   ✅ run.sh 에 실행 전 gate 가 배선돼 있다 (46차 P0-11)
+   ✅ smoke namespace 밖 · 계획에 없는 다리는 실행 전에 거부된다 (46차 P0-11)
+
+[1m✅ pipeline smoke 통과[0m
+[33m⚠ 실행 전 계획 gate 는 배선됐다 (46차 P0-11). 남은 것은 실물
+   provider 어댑터 — 지금 보존 회귀는 hermetic fake 로만 돈다.
+   새 leg 를 돌리려면 `LEG_PRESERVATION.yaml` 의 `planned:` 에 먼저
+   적고, 실물 보관 경로는 사람이 따로 확인할 것.[0m
