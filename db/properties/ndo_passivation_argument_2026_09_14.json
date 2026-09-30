@@ -232,6 +232,12 @@
       "at": "2026-09-19",
       "state": "proposed",
       "note": "§8 신설 — 치환 자리가 계면 구동력의 부호를 바꾼다 (비준된 결정 D-2026-09-19-cei-site-vs-concentration). 허용 2 · 금지 3 · 미결 2 추가."
+    },
+    {
+      "at": "2026-09-30",
+      "state": "proposed",
+      "by": "agent",
+      "note": "PDOS 셀 정정 — n5fu 는 P 자리 x = 0.40 · 66 원자(Li 자리 x = 0.20 셀이 아니다). 원문은 두고 ⛔_2026_09_30 키로 정정."
     }
   ],
   "5_★_lpsocl_단독O_가_더_깨끗한_사례다_2026_09_16": {
@@ -340,5 +346,12 @@
     "판정_지위": "위 부호·전압 판정은 2026-09-19 에 1저자가 비준했다 (결정 D-2026-09-19-cei-site-vs-concentration · active). 사전등록 문턱은 값을 보기 전에 박았고 결과를 보고 고치지 않았다.",
     "출처": "db/properties/cei_site_concentration_result_2026_09_19.json · 원자료 cei_interface_V_2026_09_19.json (옛 6 조성 재현 대조 최대 차 0.000000 eV/atom) · x = 0.10 행: db/properties/cei_x010_result_2026_09_28.json ★_표_x010_행_공통기준 (원자료 cei_interface_V_x010_2026_09_28.json · 09-19 네 값 재현 차 ≤ 0.00001)"
   },
-  "⭐_2026_09_29_항등식_비준": "1저자가 D-2026-09-28-cei-li-ledger-identity 를 비준했다 (09-29 · '권고하는걸로 해줘'). 기울기 설명의 '검증 전' 두 곳을 '항등식(유도·확인)' 으로 바꿨다 — 사전등록 예측의 실패 기록과 'Nd 화학의 효과로 읽지 않는다' 금지는 남긴다. 보고서(cei_figs/index.html)와 같은 날 같은 문구."
+  "⭐_2026_09_29_항등식_비준": "1저자가 D-2026-09-28-cei-li-ledger-identity 를 비준했다 (09-29 · '권고하는걸로 해줘'). 기울기 설명의 '검증 전' 두 곳을 '항등식(유도·확인)' 으로 바꿨다 — 사전등록 예측의 실패 기록과 'Nd 화학의 효과로 읽지 않는다' 금지는 남긴다. 보고서(cei_figs/index.html)와 같은 날 같은 문구.",
+  "⛔_2026_09_30_정정_PDOS_셀은_P_자리다": {
+    "무엇이_틀렸나": "§8 의 '이 카드의 모든 계산은 Nd 가 Li 자리에 들어간 셀(Li4.8Nd0.2…)에서 나왔다' · 허용 서술의 '갭·PDOS·ESW 서술은 전부 Nd 가 Li 자리에 있는 셀' · 금지 서술의 '구조가 필요한 계산은 P 자리 쪽에 아예 없다' · 미결의 'BVSE·PDOS·갭이 전부 Li 자리 셀 위에 있다' 는 **PDOS 와 그 판독 갭에 대해 틀렸다**. 원문은 이력이라 지우지 않고 여기서 정정한다.",
+    "실제": "§1 PDOS(pdos_band_edge_composition_2026_09_14 · label ndo_lpscl16_n5fu)의 셀은 Rietveld 유래 **n5fu = Cl8Li31Nd2O3P3S19 · 66 원자**이고 Nd 가 **부모 P 자리(4b)** 에 있다 — P 자리 x = 2/5 = **0.40** · O 0.6/f.u. (db/structures/ndo_lpscl16_rietveld_2026_09_07/SUMMARY.json · ndo_lpscl16_o_motif_estimand_2026_09_09.json). 1저자 목표 조성(P 자리 x = 0.02 · O 0.03)과 **같은 자리 · 같은 O/Nd 비 1.5** 이고 농도만 20 배다. Li 자리 x = 0.20 셀(Li48Nd2P10O3S41Cl16 · 120 원자 · modelc_nd_doped_DFTrelax)은 BVSE(와 PP-swap ICOHP)의 셀이고, ESW(§A hull)는 그 **조성**을 쓴다(구조 불필요).",
+    "그래서": "PDOS·판독 갭 서술의 옮김 금지는 '**x = 0.02 로 그대로 옮기지 않는다(농도 20 배)**' 와 '**Li 자리로 옮기지 않는다**' 다 — 'P 자리로 옮기지 않는다' 가 아니다. ESW·Nd/O 분해·계면 구동력은 여전히 조성 hull 계산이라 이 정정과 무관하다.",
+    "같은_혼동이_남은_봉인_기록": "cathode_cei_x002_amendment_2026_09_28.json (1_무엇을_바꾸나.x_0.20_은_어디에_남나 ③ '셀이 Li48Nd2P10O3S41Cl16') · cei_x002_result_2026_09_28.json 금지 줄('PDOS·BVSE … 셀이 x = 0.20') — 봉인이라 고치지 않고 이 카드와 화면(db/properties/cei_figs/index.html §0·§0b·§9)에서 정정한다. 화면은 webapp 시험 test_s0_labels_the_pdos_with_the_cell_it_came_from 이 원장(구조 SUMMARY)에서 유도한 이름표와 대조한다.",
+    "발견": "2026-09-30 CEI 화면 감사 — §0 PDOS 이름표를 원장과 대조하다 발견. 09-28 판 시험이 틀린 이름표('x = 0.20 셀' · '120 원자')를 지키고 있었다."
+  }
 }

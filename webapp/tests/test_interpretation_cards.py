@@ -833,7 +833,7 @@ def test_figure_numbers_are_unique_and_in_document_order(client):
 
 def test_fig_s1_decomposition_is_si_two_panels(client):
     """양성+음성 — 분해 그림은 **SI** 다: Fig. S1 · 두 패널 (a)(b) · SI 자리(§8 뒤)
-    (1저자 2026-09-29 *'ㅇㅇ si 쪽으로 가는게 좋을듯 · 둘다 해줘'* · 원고 틀 카드).
+    (사용자 2026-09-29 *'ㅇㅇ si 쪽으로 가는게 좋을듯 · 둘다 해줘'* · 원고 틀 카드).
     옛 3 패널 PNG 는 이력 파일로 남지만 **페이지에는 안 걸린다**. 캡션은 취소선 철회문 없이 서고,
     철회 표지는 한글 '읽는 법' 상자에 ⛔ 로 있다 (그림은 복사될 때 캡션을 안 데려간다).
     잡는 것: 옛 3 패널이 다시 걸림 · 절이 본문 자리로 돌아옴 · SI 판이 두 패널이 아님 · 철회 표지·Li 맞춤 범위 빠짐."""
@@ -868,7 +868,7 @@ def test_fig_s1_decomposition_is_si_two_panels(client):
 
 
 def test_fig1_is_the_phase_ladder_in_s2_and_matches_the_raw(client):
-    """양성+음성 — 본문 Fig. 1 은 §2 의 **상 사다리**(옛 분해 그림의 (c))다 (1저자 2026-09-29 · 원고 본문 Fig. 2).
+    """양성+음성 — 본문 Fig. 1 은 §2 의 **상 사다리**(옛 분해 그림의 (c))다 (사용자 2026-09-29 · 원고 본문 Fig. 2).
     사슬: 원자료 반응식 → (도구 _rxn_side_terms 로 다시 센) 전압별 Nd 상 = 생성기 CSV = 캡션 문장.
     잡는 것: 그림이 §2 밖·Fig. 2 뒤로 감 · CSV 가 원자료와 다름 · 캡션이 CSV 와 다른 상을 말함 ·
       '1 할' 옆에서 '9 할' 이 빠짐 (원장 금지: 'x = 0.02 에서 Nd 가 양극 대신 P 방을 댄다')."""
@@ -1351,7 +1351,7 @@ def test_tldr_protection_bullets_do_not_read_gate_pass_as_benefit(client):
 
 
 def test_s2b_plain_box_matches_the_raw(client):
-    """양성+음성 — §2b '쉽게 다시 읽기' 상자(1저자 2026-09-29 "쉬운 버전 밑으로")의 수가 원자료와 같다.
+    """양성+음성 — §2b '쉽게 다시 읽기' 상자(사용자 2026-09-29 "쉬운 버전 밑으로")의 수가 원자료와 같다.
     잡는 것: 쉬운 말로 옮기며 수가 바뀜 — 제외 19/120 · 통과 17/24 · 미정의 5 · k 없음 1 (LiMnO₂ 3.5 V = NdCl₃) ·
       견줄 11 = 3 + 3 + 5 와 오차 구간 · Mn 바닥 10 % · 저전압 최대 25 % · 고전압 NMC811 멈춤 46–48 % · 예측 71·75 % ·
       LiMnO₂ 3.0 V 수열 · 예시(10.2 대 10.3) · 게이트 0.05 · 그리고 '보호율 = 양극이 덜 녹는다' 로 읽히게 둠
@@ -1505,7 +1505,7 @@ def test_s3_reactions_loops_and_schematic_match_the_records(client):
 
 def test_protection_is_not_read_as_cathode_sparing(client):
     """⛔음성 — 보호율을 '양극을 아낀다 · 덜 빠진다 · 코팅처럼' 으로 쓰는 문장이 화면에 다시 생기면 잡는다
-    (1저자 2026-09-29 "고치자"). 인산염을 면한 금속은 반응에서 빠지지 않고 대부분 황화물이 된다.
+    (사용자 2026-09-29 "고치자"). 인산염을 면한 금속은 반응에서 빠지지 않고 대부분 황화물이 된다.
     잡는 것: 제목·머리 요약·§0·§2b·Fig. 3 캡션의 옛 표현 되살림 · §9 금지 항목과 캡션·원고 틀 카드의
     72 칸·94 % 가 반응식 재계수와 다름. §9 안의 금지 문장만 검사에서 뺀다.
     ⚠ 따옴표 안을 빼지 않는다 — 첫 판은 “ ” 안을 지웠는데, 옛 표현 “아껴진 양극 TM” 자체가 따옴표 안이라
@@ -1750,16 +1750,36 @@ def test_s0_separates_thermodynamic_window_from_measured_CV(client):
     assert "ndo_passivation_argument_2026_09_14" in s0, "해석 카드 포인터가 없다"
 
 
-def test_s0_scopes_the_pdos_to_the_x020_cell(client):
-    """⛔음성 — x = 0.20 셀의 PDOS 가 x = 0.02 이야기로 조용히 번지면 잡는다 (2026-09-28 판).
+def test_s0_labels_the_pdos_with_the_cell_it_came_from(client):
+    """⛔음성 — PDOS 이름표가 원장의 셀과 다르면 잡는다 (2026-09-30 정정).
 
-    ESW 는 x = 0.02 두 자리로 다시 쟀고 onset 이 그대로였다. PDOS 만 x = 0.20 Li 자리 셀이다 —
-    구조가 필요한 계산이라 x = 0.02 셀(약 618 원자)로 못 옮겼다. 그 이름표가 §0 에 있어야 한다.
+    09-28 판은 PDOS 를 'Li 자리 x = 0.20 셀(Nd 2 · P 10 · 120 원자)' 로 적었고, 이 시험의 옛 판이
+    그 틀린 이름표를 **지켰다**. 원장(pdos_band_edge_composition_2026_09_14)의 PDOS 는 ndo_lpscl16_n5fu 다 —
+    Rietveld 유래 Cl8Li31Nd2O3P3S19 · 66 원자 · Nd 가 부모 P 자리(4b)라 P 자리 x = 2/5 = 0.40.
+    120 원자 Li 자리 x = 0.20 셀(modelc_nd_doped_DFTrelax)은 **BVSE 의 셀**이다.
+    이름표는 손으로 적지 않고 원장(구조 SUMMARY)에서 유도한 값과 대조한다.
     """
-    s0 = _section(_report_html(client), "s0")
-    assert "x = 0.20 셀" in s0 and "618 원자" in s0, "PDOS 가 x = 0.20 셀이라는 이름표가 없다"
-    assert "추론이지 계산이 아니다" in s0, "'x 가 작으면 Nd 몫이 작을 것' 이 추론이라는 한정이 없다"
-    assert "P 자리" in s0 and "부호가 반대" in s0, "PDOS 를 P 자리로 못 옮기는 이유가 없다"
+    import json
+    pdos = json.loads((ROOT / "db/properties/pdos_band_edge_composition_2026_09_14.json")
+                      .read_text(encoding="utf-8"))
+    assert "ndo_lpscl16_n5fu" in {e["label"] for e in pdos}, "PDOS 원장의 셀 이름이 바뀌었다 — 이름표를 다시 본다"
+    summ = json.loads((ROOT / "db/structures/ndo_lpscl16_rietveld_2026_09_07/SUMMARY.json")
+                      .read_text(encoding="utf-8"))
+    cell = next(c for c in summ if c["name"].startswith("ndo_lpscl16_n5fu"))
+    cnt = {el: int(n) for el, n in re.findall(r"([A-Z][a-z]?)(\d+)", cell["formula"])}
+    x_p = cnt["Nd"] / (cnt["Nd"] + cnt["P"])
+    h = _report_html(client)
+    s0 = _section(h, "s0")
+    assert "n5fu" in s0 and f"{cell['nat']} 원자" in s0, "§0 PDOS 에 원장의 셀(n5fu · 원자 수)이 안 적혔다"
+    assert f"P 자리 x = {x_p:.2f}" in s0, f"§0 PDOS 에 'P 자리 x = {x_p:.2f}' 가 없다"
+    assert "618 원자" in s0 and "추론이지 계산이 아니다" in s0, "x = 0.02 로 못 옮기는 이유·추론 한정이 없다"
+    assert "부호가 반대" in s0, "자리 사이로 옮기지 않는 이유(계면 구동력 부호)가 없다"
+    s9 = _section(h, "s9")
+    assert "n5fu" in s9 and f"{cell['nat']} 원자" in s9, "§9 PDOS 금지 항목에 셀 이름표가 없다"
+    for bad in ("PDOS 는 x = 0.20 셀", "PDOS(x = 0.20 셀)", "n5fu · x = 0.20 셀",
+                "Nd 가 Li 자리에 있는 x = 0.20 셀", "Nd 2 개 · P 10 개 · 120 원자",
+                "이완한 결정구조는 Li 자리 x = 0.20 셀 하나뿐"):
+        assert bad not in h, f"옛 PDOS 이름표가 남았다: {bad}"
 
 
 # ── x = 0.02 전환 (2026-09-28) ─────────────────────────────────────────────────
@@ -1907,7 +1927,7 @@ def test_x002_kink_and_dopant_axes_match_the_record(client):
 def test_x002_g4_closure_matches_the_ledger(client):
     """⛔음성 — G4 마감 상태가 원장 · 결과 기록 · 화면에서 같다 (1저자 2026-09-28 'ㅇㅇ 그렇게 해줘').
 
-    G4 는 적힌 그대로 위반 9 이고, 원인(반응식 계수 반올림)이 규명돼 1저자가 그대로 닫았다.
+    G4 는 적힌 그대로 위반 9 이고, 원인(반응식 계수 반올림)이 규명돼 사용자가 그대로 닫았다.
     잡는 것 셋: ① 원장은 닫혔는데 화면에 '확인 대기' 가 남는 것 ② 화면이 G4 를 '통과' 로
     격상하는 것 ③ 결과 기록에서 '위반 9' 이력이 지워지는 것.
     """
@@ -2141,3 +2161,121 @@ def test_resume_block_checker_catches_unbolded_retracted_claim():
     assert _resume_block_violations("아무 말도 없다", 3.0991)
     #: 같은 뜻의 다른 표기(세 개뿐)는 위반이 아니다 — 스냅숏이 아니라 주장 검사다
     assert _resume_block_violations("식이 ≤3.1 %p 로 맞는 열은 세 개뿐", 3.0991) == []
+
+
+# ── 2026-09-30 §6–§9 감사 정정 결속 ─────────────────────────────────────────────
+_CEI_FIGS = ROOT / "db/properties/cei_figs"
+
+
+def _family_order_by_voltage(csv_path, family):
+    """CSV → {V: (spread_min, spread_max, 네 양극 순서가 같은가)} — 계열 안에서만 본다."""
+    import csv
+    by = {}
+    for r in csv.DictReader(open(csv_path, encoding="utf-8")):
+        vals = {c: float(r[c]) for c in family if r.get(c) not in ("", None)}
+        by.setdefault(float(r["voltage_V"]), []).append(vals)
+    out = {}
+    for V, cells in sorted(by.items()):
+        spreads = [max(v.values()) - min(v.values()) for v in cells]
+        orders = {tuple(sorted(v, key=v.get)) for v in cells}
+        out[V] = (min(spreads), max(spreads), len(orders) == 1)
+    return out
+
+
+def test_s8_family_spread_and_swaps_match_the_csv(client):
+    """양성+음성 — §8 캡션·읽는 법의 '계열 폭 · 순서가 바뀌는 전압' 이 CSV 에서 다시 센 값과 같다.
+
+    09-30 전 문구는 '다섯이 0.01 안 · 3.5/4.3/4.5 V 에서 뒤바뀜' 이었는데, 다섯으로 세면 뒤바뀜은
+    3.5 V 뿐이고 폭은 4.5 V 에서 0.038 이다. 4.3·4.5 V 뒤바뀜은 LPSOCl₁.₆ 까지 **여섯**을 셀 때만 나온다.
+    """
+    fam = ["modelc", "lpsocl", "o_only_003", "nd_li_002", "ndo_li_002", "nd_p_002_asused"]
+    st = _family_order_by_voltage(_CEI_FIGS / "cei_reaction_energy_by_cathode_x002.csv", fam)
+    swaps = [V for V, (_, _, same) in st.items() if not same]
+    keep = [V for V, (_, _, same) in st.items() if same]
+    lo, hi = min(a for a, _, _ in st.values()), max(b for _, b, _ in st.values())
+    assert swaps == [3.5, 4.3, 4.5] and keep == [2.5, 3.0, 4.0], (swaps, keep)
+    assert round(lo, 2) == 0.01 and round(hi, 2) == 0.04, (lo, hi)
+    s8 = _section(_report_html(client), "s8")
+    assert "The six LPSCl<sub>1.6</sub>-derived compositions" in s8 and "0.01&#8211;0.04" in s8
+    assert "3.5, 4.3 and 4.5&#8201;V" in s8 and "2.5 · 3.0 · 4.0 V" in s8
+    for bad in ("The five LPSCl<sub>1.6</sub>-family", "within about 0.01&#8201;eV/atom",
+                "계열 다섯이 서로 0.01", "옛 판에서는 여섯 조성의 순서가 네 양극에서 같았다"):
+        assert bad not in s8, f"§8 옛 문구: {bad}"
+    #: x = 0.20 옛 판 괄호 — 거기서도 4.0 V 이상에서만 같았다
+    old = _family_order_by_voltage(_CEI_FIGS / "cei_reaction_energy_by_cathode.csv",
+                                   ["modelc", "lpsocl", "o_only_03", "nd_only", "modelc_nd"])
+    assert [V for V, (_, _, same) in old.items() if same] == [4.0, 4.3, 4.5]
+    assert "4.0 V 이상에서 여섯 조성의 순서가 네 양극에서 같았다" in s8
+
+
+def test_s7_tm_phosphate_rows_name_the_cathodes_that_make_them(client):
+    """양성+음성 — §7 표의 무도핑 TM 인산염 행이 적은 양극이 P 수용상 원장(modelc)과 같다.
+
+    09-30 전에는 NiP₄O₁₁ 을 '@LiNiO₂', MnP₄O₁₁ 을 '@LiMnO₂' 로 적었다 — 무도핑 LPSCl₁.₆ 에서
+    NiP₄O₁₁ 은 NMC811 4.5 V 에만, MnP₄O₁₁ 은 NMC811 에만 나온다.
+    """
+    import csv
+    where = {}
+    for r in csv.DictReader(open(ROOT / "db/properties/cei_p_host_ladder_x002_2026_09_28.csv",
+                                 encoding="utf-8")):
+        if r["electrolyte"] == "modelc":
+            where.setdefault(r["p_host_formula"], set()).add(r["cathode"])
+    s7 = _section(_report_html(client), "s7")
+    sub = str.maketrans("₀₁₂₃₄₅₆₇₈₉", "0123456789")
+    rows = re.findall(r'<tr><td class="mono">(.*?)</td><td>TM phosphate \(무도핑 @([^)]*)\)</td>', s7)
+    assert len(rows) == 5, rows
+    for cell, label in rows:
+        formula = re.sub(r"</?sub>", "", cell)
+        named = {c.translate(sub) for c in re.split(r"[·\s]+", label) if c.startswith(("Li", "NMC"))}
+        assert named == where[formula], (formula, named, where[formula])
+
+
+def test_mp_howto_snippets_cover_the_three_queries_and_import_os(client):
+    """양성+음성 — 방법 절 'MP 에서 직접 뽑는 법' 이 페이지의 MP 숫자 세 종류(계면 반응·전압창·참조 갭)를
+    다 덮고, os.environ 을 쓰는 블록마다 import os 가 먼저 있다 (09-30 전 스니펫은 NameError 로 죽었다)."""
+    h = _report_html(client)
+    i = h.index("MP 에서 직접 뽑는 법")
+    box = h[i:h.index("</details>", i)]
+    blocks = re.findall(r'white-space:pre">(.*?)</p>', box, re.S)
+    assert len(blocks) == 3, len(blocks)
+    for b in blocks:
+        if "os.environ" in b:
+            assert "import os" in b and b.index("import os") < b.index("os.environ"), b[:80]
+    assert "GrandPotentialInterfacialReactivity" in blocks[0]
+    assert "get_element_profile" in blocks[1] and "Li5.44Nd0.02P0.98S4.37Cl1.6O0.03" in blocks[1]
+    assert "summary.search" in blocks[2] and "symmetry" in blocks[2]
+    #: 전압창 판독 규칙이 원장 값과 같다 — 산화 onset 은 첫 음수 계단, 환원은 n_Li = 0 계단
+    esw = json.loads((ROOT / "db/properties/cei_esw_Li_x002_2026_09_28.json").read_text("utf-8"))["results"]
+    ref = esw["comp1"]["mu_Li_ref_eV"]
+    v_ox = round(ref - esw["nd_p_002_asused"]["release_onset_mu_eV"], 2)
+    v_red = round(ref - esw["nd_p_002_asused"]["neutral_mu_eV"], 3)
+    assert (v_ox, v_red) == (1.92, 1.717), (v_ox, v_red)
+    assert "n_Li</span> = 0 계단의 V(1.717)" in box and "(2.14 · Nd 조성 1.92)" in box
+
+
+def test_the_0p22V_is_not_quoted_as_a_hard_number_outside_s0(client):
+    """⛔음성 — §0 이 '0.22 V 를 정량으로 인용하지 않는다' 고 하는데 머리·§9 가 '0.22 V 좁힌다' 로 쓰면 잡는다."""
+    h = _report_html(client)
+    hits = [m.start() for m in re.finditer(r"0\.22 V\s*(?:</?b>\s*)*좁힌다", h)]
+    assert hits == [], [h[max(0, k - 60):k + 30] for k in hits]
+    assert "0.22 V 는 hull 오차" in _section(h, "s9")
+
+
+def test_s8b_classification_matches_the_card_and_s6_source_holds_the_value(client):
+    """양성+음성 — §8b 분류가 원고 틀 카드와 같다(⑥ 은 '지우지 않는다 · 본문에 싣는다' = 인정 · 범위 축소는 ⑤ 하나)
+    그리고 ⑥ 의 원자료로 댄 파일에 −0.147 이 실제로 있다 (09-30 전에는 값이 없는 파일을 댔다)."""
+    h = _report_html(client)
+    i = h.index('<section id="s8b"')
+    s8b = h[i:h.index("</section>", i)]
+    assert "다섯 인정 · 하나 범위 축소 · 둘 축이 다름" in s8b
+    assert "다섯은 인정하고(①④⑥⑦⑧), 하나는 범위를 좁히고(⑤)" in s8b
+    card = (ROOT / "kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md").read_text("utf-8")
+    six = card[card.index("**⑥"):card.index("**⑦")]
+    assert "지우지 않는다" in six and "범위를 좁혀" not in six, "카드의 ⑥ 이 범위 축소로 바뀌었다 — 분류를 다시 본다"
+    m = re.search(r"⑥ Nd₂\(SO₄\)₃.*?원자료 · (.*?)</p>", s8b, re.S)
+    srcs = re.findall(r"<code>db/properties/([^<]+?\.json)</code>", m.group(1))
+    assert srcs and any("0.147" in (ROOT / "db/properties" / f).read_text("utf-8") for f in srcs), srcs
+    assert "cei_dopant_decomposition_result_2026_09_16.json" not in m.group(1)
+    #: ⑧ 의 10.3 % 는 LiCoO₂ 4.3 V 한 열이다
+    e = s8b[s8b.index("⑧ x = 0.02"):]
+    assert "LiCoO₂ 4.3 V 에서 <b>10.3 %</b>" in e and "−3~12 %" in e and "황화물" in e
