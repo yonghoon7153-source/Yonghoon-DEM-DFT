@@ -437,6 +437,57 @@ def plot_porosity(all_data, names, ax=None):
     return ax
 
 
+def _metric_points(all_data, key):
+    """[(케이스 번호, 값)] — 값이 없거나 숫자가 아닌 케이스는 **빠진다** (_get 처럼 0 으로 채우지 않는다 ·
+    옛 케이스에 없는 porosity_union 이 0 % 로 그려지지 않게 — 웹앱 ②-b · LHS-24 (g))."""
+    pts = []
+    for i, d in enumerate(all_data):
+        v = d.get(key)
+        try:
+            v = float(v)
+        except (TypeError, ValueError):
+            continue
+        if v == v and abs(v) != float('inf'):
+            pts.append((i, v))
+    return pts
+
+
+def _plot_metric_line(all_data, names, key, ylabel, title, ax=None):
+    standalone = ax is None
+    if standalone:
+        fig, ax = plt.subplots(figsize=FIG_SINGLE)
+    pts = _metric_points(all_data, key)
+    if pts:
+        xs, ys = zip(*pts)
+        ax.plot(xs, ys, marker="s", markersize=9, color=BLACK, linewidth=1.5,
+                markerfacecolor=BLACK, markeredgecolor=BLACK, zorder=3)
+        pad = max((max(ys) - min(ys)) * 0.15, 0.5)
+        ax.set_ylim(min(ys) - pad, max(ys) + pad)
+    else:
+        ax.text(0.5, 0.5, f"{key}: 값이 있는 케이스 없음 (재분석 전 케이스)", transform=ax.transAxes,
+                ha="center", va="center", fontsize=10, color="#888")
+    _apply_style(ax, ylabel, names)
+    ax.set_title(title, fontsize=13, fontweight="bold", pad=10)
+    if standalone:
+        return _save(fig, "", "")
+    return ax
+
+
+def plot_porosity_union(all_data, names, ax=None):
+    return _plot_metric_line(all_data, names, "porosity_union", "ε_union pair-lens (%)",
+                             "Porosity ε_union (pair-lens)", ax)
+
+
+def plot_porosity_union_exact(all_data, names, ax=None):
+    return _plot_metric_line(all_data, names, "porosity_union_exact_pct", "ε_union exact, Monte Carlo (%)",
+                             "Porosity ε_union exact (MC · handover)", ax)
+
+
+def plot_overlap_fraction(all_data, names, ax=None):
+    return _plot_metric_line(all_data, names, "overlap_fraction_pct", "Overlap (%)",
+                             "Overlap fraction (pair-lens)", ax)
+
+
 def plot_am_se_interface(all_data, names, ax=None):
     standalone = ax is None
     if standalone:
@@ -3484,6 +3535,27 @@ PLOT_REGISTRY = {
         "title": "Porosity",
         "description": "AM_P 비율 증가에 따른 기공률 변화.\n7:3 부근에서 최저 (bimodal packing 효과).\nV\u2011shape 경향이면 최적 조성 존재.",
         "origin_tip": "Line+Symbol → X: P:S Configuration, Y: Porosity(%).\nSymbol: Square (size 10), Color: Black.\nLine: B-Spline, Width 1.5.\nY축 범위: 자동 ± 1%p 여유.",
+    },
+    "porosity_union": {
+        "func": plot_porosity_union,
+        "file": "porosity_union.png",
+        "title": "Porosity ε_union (pair-lens)",
+        "description": "ε_union 쌍 렌즈 = (1 − (Σ V_구 − Σ V_렌즈) / V_상자) × 100.\n겹친 쌍마다 렌즈 부피를 되돌린다 · 세 입자 겹침 · 벽 밖 부피는 빼지 않는다\n→ 정확 union 보다 낮게 나온다 (LHS 194/194 · 중앙 0.64 %p).\n인계 porosity_union_exact_pct 와 다른 양 · 값이 없는 (재분석 전) 케이스는 점을 찍지 않는다.",
+        "origin_tip": "Line+Symbol → X: Configuration, Y: ε_union (%).\nPorosity (ε_sphere) 그림과 나란히 본다.",
+    },
+    "porosity_union_exact_pct": {
+        "func": plot_porosity_union_exact,
+        "file": "porosity_union_exact.png",
+        "title": "Porosity ε_union exact (Monte Carlo)",
+        "description": "정확 union = 상자 안 무작위 점 4×10⁶ 개 중 어느 구에도 들지 않는 비율 (x · y 주기 · 세 입자 겹침까지 정확 · 벽 밖 부피 제외).\nLHS 인계표 porosity_union_exact_pct 와 같은 계산 (통계 오차 ≈ 0.014 %p).\n값이 없는 (③ 이전 · 재분석 전) 케이스는 점을 찍지 않는다.",
+        "origin_tip": "Line+Symbol → X: Configuration, Y: ε_union exact (%).",
+    },
+    "overlap_fraction_pct": {
+        "func": plot_overlap_fraction,
+        "file": "overlap_fraction.png",
+        "title": "Overlap fraction (pair-lens)",
+        "description": "Overlap = Σ V_렌즈 / Σ V_구 × 100 — DEM 입자 겹침 비율.\nε_union − ε_sphere 의 원천 (ε_u = ε_s + 겹침·(1 − ε_s)).\n값이 없는 (재분석 전) 케이스는 점을 찍지 않는다.",
+        "origin_tip": "Line+Symbol → X: Configuration, Y: Overlap (%).",
     },
     "am_se_interface": {
         "func": plot_am_se_interface,

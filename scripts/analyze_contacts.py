@@ -380,6 +380,11 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
         'porosity_spheresum': results.get('porosity_spheresum', results['porosity']),
         'porosity_union': results.get('porosity_union'),
         'overlap_fraction_pct': results.get('overlap_fraction_pct'),
+        # 정확 union (몬테카를로 · 같은 판 · 상자 · 벽 밖 제외) · 질량 보존 두께 · φ — 인계표와 같은 규약 (웹앱 ③ · J20-l · J20-e (라))
+        **{k: (results.get('union_exact') or {}).get(k) for k in (
+            'porosity_union_exact_pct', 'porosity_union_exact_se_pct', 'union_exact_mc_n', 'union_exact_mc_seed',
+            'union_exact_status', 'wall_overhang_over_Vbox_pct', 'porosity_union_pair_clipped_pct', 'union_pair_upper_bound_ok',
+            'se_of_solid_vol', 'thickness_mass_conserving_um', 'phi_se_mass_conserving', 'phi_am_mass_conserving')},
         'thickness_um': results['thickness_um'],
         'plate_z_source': results['plate_z_source'],
         'ps_ratio': ps_ratio,

@@ -178,6 +178,7 @@
         <label class="plot-checkbox" title="Sphere-sum porosity (production calibration anchor)"><input type="checkbox" value="porosity" checked> Porosity</label>
         <label class="plot-checkbox" title="ε_union 쌍 렌즈 — 겹친 쌍마다 렌즈 부피를 되돌림 · 벽 밖 부피 미제거 (정확 union 보다 낮게 나온다 · 인계 porosity_union_exact_pct 와 다른 양)"><input type="checkbox" value="porosity_union"> Porosity (union 쌍 렌즈)</label>
         <label class="plot-checkbox" title="V_lens / V_sphere_sum × 100; plastic deformation indicator (Cronau floor 5–10%)"><input type="checkbox" value="overlap_fraction_pct"> Overlap %</label>
+        <label class="plot-checkbox" title="ε_union 정확 (몬테카를로 · 세 입자 겹침 · 벽 밖 부피 제외) — 인계 porosity_union_exact_pct 와 같은 계산 · 값 없는 (③ 이전) 케이스는 점을 안 찍는다"><input type="checkbox" value="porosity_union_exact_pct"> Porosity (union 정확 · MC)</label>
         <label class="plot-checkbox"><input type="checkbox" value="am_se_interface" checked> AM-SE 계면적</label>
       </div>
       <div class="plot-row">
@@ -1407,12 +1408,17 @@ const COL_TIPS = {
   'Porosity': '수식: ε_sphere = (1 − Σ(4/3·π·r³) / (L_x·L_y·판 간격)) × 100\n\n구 부피 합 — 생산 · 보정 앵커 규약.  겹친 부피를 두 번 세므로 SE 가 많은 침대에서는 음수도 된다.\n옆 열 Porosity (union) 과 나란히 본다.  LHS 인계표의 물리 공극률은 몬테카를로 정확 union (porosity_union_exact_pct).\n낮을수록 입자가 촘촘하게 충전된 것.',
   'Porosity (union)': '수식: ε_union = (1 − (Σ V_구 − Σ V_렌즈) / V_상자) × 100 — 쌍 렌즈\n\n겹친 쌍마다 렌즈 부피를 한 번 되돌린다.  세 입자 겹침과 벽 밖 (바닥 아래 · 판 위) 구 부피는 빼지 않는다.\n→ LHS 194/194 건에서 정확 union 보다 낮았다 (중앙 0.64 %p · lhsx 0.75 %p).\n인계 porosity_union_exact_pct 와 다른 양 · 상한도 하한도 아니다.',
   'Overlap fraction': '수식: Σ V_렌즈 / Σ V_구 × 100 (쌍 렌즈)\n\nDEM 구가 서로 파고든 부피 비율.  ε_union − ε_sphere = overlap × (1 − ε_sphere/100).\n강체 구 DEM 에서 소성 흐름의 대리 — 입자 모양 변화를 잰 값이 아니다.',
+  'Porosity (union exact)': '수식: ε_exact = 상자 안 무작위 점 중 어느 구에도 들지 않는 비율 × 100 (몬테카를로 · 기본 4×10⁶ 점 · x·y 주기)\n\n세 입자 겹침까지 정확 · 벽 밖 (바닥 아래 · 판 위) 부피는 고체가 아니다.\nLHS 인계표 porosity_union_exact_pct 와 같은 계산 (통계 오차 ≈ 0.014 %p).\n쌍 렌즈 union (옆 열) 은 벽 밖 부피를 안 빼서 이보다 낮다.\n낮을수록 촘촘한 충전.',
+  '두께 (질량 보존)': '수식: T_mc = 판 간격 × (1 − ε_sphere/100) / (1 − ε_exact/100)\n\nDEM 에서 겹친 부피는 사라진다 — 정확 union 을 실제 공극률로 받으면서 재료 부피를 보존하면 두께가 이만큼이어야 한다.\n인계표 thickness_mass_conserving_um 과 같은 식 (J20-e (라)) · 판 간격 (두께 열) 과 다른 양.',
+  'φ_SE (질량 보존)': '수식: φ_SE,mc = (1 − ε_exact/100) × Σ_SE V_구 / Σ V_구\n\n인계표 phi_se_mass_conserving 과 같은 식 (J20-e (라)) — φ_SE + φ_AM + ε_exact = 1 (같은 장부).',
+  'φ_AM (질량 보존)': '수식: φ_AM,mc = (1 − ε_exact/100) × Σ_AM V_구 / Σ V_구\n\n인계표 phi_am_mass_conserving 과 같은 식 (J20-e (라)).',
+  'AM-AM CN std': '수식: σ(CN_i) — 모집단 σ · 모든 AM (접촉 0 포함)\n\nAM–AM 배위수 분포의 폭 (J20-j 세 열 중 하나).\n그룹 강조: 낮을수록 좋음 (좁은 분포) — 웹앱 ②-b.',
   '두께': '수식: T = 판 z × scale (바닥 z = 0 기준)\n\n판 간격 = 가압이 끝난 프레임의 플래튼 위치 (mesh_info.json 판 메시 · 없으면 최고 입자 중심 z 로 추정).\n입자 윗면 포락선이 아니다.  인계표의 질량 보존 두께 (thickness_mass_conserving_um) 와 다른 양.\n두꺼울수록 용량↑, 하지만 이온 이동 거리↑ → rate 특성↓.',
   'AM-SE Total': '수식: Σ c_cpl[22] (AM–SE 접촉 덤프 행마다)\n\nLIGGGHTS 기하 교차 원판 면적 (Hertz 계열 — 이름만 Hertz · 작은 겹침에서 Hertz πR*δ 의 약 2 배 · AREA-08 legacy).\n이 면적에서 리튬이온이 AM↔SE를 넘나드는 전하이동 반응이 발생.\n넓을수록 저항↓.',
   'SE-SE Total': '수식: Σ c_cpl[22] (SE–SE 접촉 덤프 행마다)\n\nLIGGGHTS 기하 교차 원판 면적 (Hertz 계열 · AREA-08 legacy).\n이온이 SE 네트워크를 통해 이동하는 통로의 총 단면적.\n넓을수록 이온 전도 저항↓.',
   'SE-SE CN': '수식: CN_i = SE_i 의 SE 이웃 수, CN = mean(CN_i) (모든 SE — 접촉 0 포함)\n\n접촉 = 입자–입자 덤프의 SE–SE 행 (벽 · 플래튼 안 셈).\nSE 입자 하나가 평균 몇 개의 다른 SE와 접촉하는지.\n⚠ "CN ≥ 4 면 안정 percolation" 같은 문턱은 관례 · 전거 없음 (GAP3-40).',
-  'SE-SE CN std': '수식: σ(CN_i) — 모집단 σ (np.std · ddof 0) · 모든 SE\n\nSE–SE 배위수 분포의 폭.  같은 접촉 정의 (입자–입자만 · 벽 안 셈).\n⚠ 그룹 강조 (최고값) 는 아직 "높을수록 좋음" 으로 칠한다 — 웹앱 ② 에서 고칠 예정.',
-  'φ_AM': '수식: φ_AM = 1 − φ_SE − ε_sphere/100 = Σ_AM(4/3·π·r³) / (L_x·L_y·판 간격)\n\n구 부피 합 규약 (겹친 부피 이중계상 · union 과 안 닫힘).\n인계표의 φ 는 (라) 질량 보존 열 (phi_*_mass_conserving · J20-e).\n⚠ 지금은 굴곡도 τ 가 없으면 비어 있다 (웹앱 ② 예정).',
+  'SE-SE CN std': '수식: σ(CN_i) — 모집단 σ (np.std · ddof 0) · 모든 SE\n\nSE–SE 배위수 분포의 폭.  같은 접촉 정의 (입자–입자만 · 벽 안 셈).\n그룹 강조 (최고값): 낮을수록 좋음 (좁은 분포) — 웹앱 ②-b.',
+  'φ_AM': '수식: φ_AM = 1 − φ_SE − ε_sphere/100 = Σ_AM(4/3·π·r³) / (L_x·L_y·판 간격)\n\n구 부피 합 규약 (겹친 부피 이중계상 · union 과 안 닫힘).\n인계표의 φ 는 (라) 질량 보존 열 (phi_*_mass_conserving · J20-e).\nτ 가 없어도 나온다 (웹앱 ②-a · DESC-01).',
   'AM-AM CN': '수식: CN_i = AM_i 의 AM 이웃 수, CN = mean(CN_i) (모든 AM — 접촉 0 포함)\n\n접촉 = 입자–입자 덤프의 AM–AM 행 (벽 제외).  인계표 AM–AM CN 세 열 중 하나 (J20-j).\n전자 전도 경로의 다양성.',
   'AM-AM Mean Area': '수식: mean(c_cpl[22]) over AM–AM 접촉 (μm²)\n\nAM–AM 개별 접촉의 평균 기하 교차 원판 면적 (Hertz 계열 · AREA-08 legacy).',
   'AM-AM N contacts': '수식: Σ_i CN_i / 2 = AM–AM 접촉 덤프 행 수 (쌍마다 한 번 · 벽 제외)\n\n인계표 AM–AM CN 세 열 중 하나 (J20-j).\n⚠ 지금 full_metrics.json 에 문자열로 저장돼 숫자 비교 · 그림에서 빠질 수 있다 (웹앱 ② 에서 정수로).',
@@ -1435,7 +1441,7 @@ const COL_TIPS = {
   'Bottleneck': '수식: mean(각 경로의 min(A_i))\n\n각 경로에서 가장 좁은 접촉점의 평균.\n호스에서 가장 좁은 부분이 수압을 결정하듯\n이 값이 작으면 전체 전도 성능↓.',
   'AM-SE CN': '수식: AM당 접촉하는 SE 수의 평균\n\nAM이 평균 몇 개의 SE와 연결되어 있는지.\n높을수록 이온 공급 경로가 다양 → 안정적.\nCN≥3이면 접촉 1~2개 끊겨도 활성 유지.',
   'Vulnerable': '수식: (SE 0개 + SE 1개 접촉 AM) / 전체 AM × 100\n\nSE와 접촉이 없거나 1개뿐인 취약 AM 비율.\n이 AM들은 접촉 하나 끊기면 즉시 dead.\n낮을수록 안정적.',
-  'φ_SE': '수식: φ_SE = Σ_SE(4/3·π·r³) / (L_x·L_y·판 간격)\n\n구 부피 합 규약 (겹친 부피 이중계상 · union 과 안 닫힘).\n인계표의 φ 는 (라) 질량 보존 열 (phi_*_mass_conserving · J20-e).\n⚠ 지금은 굴곡도 τ 가 없으면 비어 있다 (웹앱 ② 예정).\nφ_SE↑ → 이온 전도 유리, but AM↓ → 에너지 밀도↓.',
+  'φ_SE': '수식: φ_SE = Σ_SE(4/3·π·r³) / (L_x·L_y·판 간격)\n\n구 부피 합 규약 (겹친 부피 이중계상 · union 과 안 닫힘).\n인계표의 φ 는 (라) 질량 보존 열 (phi_*_mass_conserving · J20-e).\nτ 가 없어도 나온다 (웹앱 ②-a · DESC-01).\nφ_SE↑ → 이온 전도 유리, but AM↓ → 에너지 밀도↓.',
   'σ_brug/σ_grain': '수식: σ_brug/σ_grain = φ_SE × f_perc / τ²\n(σ_grain = 3.0 mS/cm @25 °C — 프로젝트 값 · Cronau 2021 SI 그림 S2c µC 펠릿 평탄의 하단 · SELF-51)\n\n접촉 저항(constriction) 무시 → Network Solver 대비 3~10× 과대추정.\n실제 σ_ionic은 Network Solver 결과 참조.',
   'Fn AM-AM': '수식: Fn = √(fn_x² + fn_y² + fn_z²)\n\nAM-AM 접촉의 법선 접촉력 평균(μN).\n대립자끼리 하중을 직접 전달 → 가장 큰 값.\nforce chain의 주 경로.',
   'Fn AM-SE': 'AM-SE 접촉의 법선 접촉력 평균(μN).\nAM에서 SE로 전달되는 하중.',

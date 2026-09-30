@@ -20,6 +20,8 @@
           {% if metrics.porosity is defined %}<span class="badge" title="ε_sphere = (1 − Σ(4/3·π·r³) / (L_x·L_y·판 간격)) × 100 — 구 부피를 단순 합산한 생산 · 보정 앵커 규약.  겹친 부피를 두 번 세므로 SE 가 많은 침대에서는 음수도 된다.  옆의 ε_union (쌍 렌즈) 과 나란히 본다.  LHS 인계표의 물리 공극률은 몬테카를로 정확 union (porosity_union_exact_pct) 이다.  낮을수록 잘 다져진 상태.">Porosity ε_sphere: {{ "%.1f"|format(metrics.porosity_spheresum if metrics.porosity_spheresum is defined and metrics.porosity_spheresum is not none else metrics.porosity) }}%</span>{% endif %}
           {% if metrics.porosity_union is defined and metrics.porosity_union is not none %}<span class="badge" title="쌍 렌즈 union = (1 − (Σ V_구 − Σ V_렌즈) / V_상자) × 100 — 겹친 쌍마다 렌즈 부피를 한 번 되돌린다.  세 입자 겹침과 벽 밖 (바닥 z 0 아래 · 판 위) 으로 나간 구 부피는 빼지 않는다 → LHS 194/194 건에서 몬테카를로 정확 union 보다 낮았다 (중앙 0.64 %p · lhsx 0.75 %p · docs/data/lhs_union_20260927/).  인계표 porosity_union_exact_pct 와 다른 양이고 상한도 하한도 아니다.">ε_union 쌍 렌즈: {{ "%.1f"|format(metrics.porosity_union) }}%</span>{% endif %}
           {% if metrics.overlap_fraction_pct is defined and metrics.overlap_fraction_pct is not none %}<span class="badge" title="Overlap fraction = Σ V_lens / V_sphere_sum × 100. DEM 입자 겹침 비율 = 소성변형(plastic deformation) 정량지표. Cronau 380 MPa 문헌 floor 5-10% 범위가 정상. >10%면 과압축 의심.">overlap: {{ "%.2f"|format(metrics.overlap_fraction_pct) }}%</span>{% endif %}
+          {% if metrics.porosity_union_exact_pct is defined and metrics.porosity_union_exact_pct is not none %}<span class="badge" title="정확 union = 상자 [0,Lx)×[0,Ly)×[0,판 간격) 안 무작위 점 (기본 4×10⁶ 개) 중 어느 구에도 들지 않는 비율 (x · y 주기).  세 입자 이상 겹침까지 정확하고, 벽 밖 (바닥 아래 · 판 위) 으로 나간 구 부피는 고체로 세지 않는다 — LHS 인계표 porosity_union_exact_pct 와 같은 계산 (lhs_union_webapp.coverage · 웹앱 ③).  ± = 이항 통계 1σ.  옆의 쌍 렌즈 union 은 벽 밖 부피를 안 빼서 이보다 낮게 나온다.">ε_union 정확 (MC): {{ "%.2f"|format(metrics.porosity_union_exact_pct) }}{% if metrics.porosity_union_exact_se_pct is defined and metrics.porosity_union_exact_se_pct is not none %} ± {{ "%.2f"|format(metrics.porosity_union_exact_se_pct) }}{% endif %}%</span>{% endif %}
+          {% if metrics.thickness_mass_conserving_um is defined and metrics.thickness_mass_conserving_um is not none %}<span class="badge" title="질량 보존 두께 = 판 간격 × (1 − ε_sphere)/(1 − ε_정확) — DEM 에서 겹친 부피는 사라지므로, 정확 union 을 실제 공극률로 받으면서 재료 부피를 보존하면 두께가 이만큼이어야 한다 (인계표 thickness_mass_conserving_um 과 같은 식 · J20-e (라)).  판 간격 (두께 배지) 과 다른 양.">두께 질량 보존: {{ "%.2f"|format(metrics.thickness_mass_conserving_um) }} μm</span>{% endif %}
           {% if metrics.thickness_um is defined %}{% set _pzs = metrics.plate_z_source if metrics.plate_z_source is defined else none %}{% if _pzs == 'estimated_center' %}<span class="badge badge-warning" title="판 간격 추정 — mesh_info.json 이 없어 판 z 를 최고 입자 중심 z 로 대체했다 (그 입자 반지름만큼 얇게 나오고 퍼콜레이션 윗면도 이 값을 쓴다 · plate_z_source = estimated_center).  실측 단위 μm.">두께 ⚠ 추정 (판 간격): {{ "%.1f"|format(metrics.thickness_um) }}μm</span>{% else %}<span class="badge" title="두께 = 판 간격 = 판 z − 바닥 z (0) — 가압이 끝난 프레임의 플래튼 위치 (dem_analysis_core.get_plate_z · 입자 윗면 포락선이 아니다).  출처: {{ 'mesh_info.json 판 메시 (plate_z_source = mesh)' if _pzs == 'mesh' else '미기록 (옛 분석)' }}.  인계표의 질량 보존 두께 (thickness_mass_conserving_um) 와 다른 양.  실측 단위 μm.">두께 (판 간격): {{ "%.1f"|format(metrics.thickness_um) }}μm</span>{% endif %}{% endif %}
           {% if metrics.percolation_pct is defined %}<span class="badge" title="SE Percolation: 전극 상↔하단을 연결하는 SE 클러스터에 속한 SE 비율(%). 100%에 가까울수록 이온 전도 네트워크가 끊김 없이 형성됨.">Percolation: {{ "%.1f"|format(metrics.percolation_pct) }}%</span>{% endif %}
           {% if metrics.ionic_active_pct is defined %}<span class="badge badge-{{ 'standard' if metrics.ionic_active_pct >= 95 else 'bimodal' }}" title="Ionic Active AM 비율: 상단까지 도달 가능한 SE 클러스터와 접촉하는 AM 입자의 비율(%). 이온 공급이 닿지 않으면 그 AM은 전기화학적으로 dead.">Ionic Active: {{ "%.1f"|format(metrics.ionic_active_pct) }}%</span>{% endif %}
@@ -1708,7 +1710,7 @@ const METRIC_TIPS = {
     title: 'Porosity ε_union — 쌍 렌즈 (벽 밖 부피 미제거)',
     formula: 'ε_union = (1 − (Σ V_구 − Σ V_렌즈) / (L_x·L_y·z_판)) × 100\nV_렌즈 = 겹친 쌍마다 두 구의 교차 렌즈 부피 (접촉 덤프 δ) · 쌍마다 한 번',
     desc: 'ε_sphere 에서 겹친 부피를 쌍 단위로 되돌린 값입니다 (dem_analysis_core.calc_porosity_dual · 파이프라인 2e 단계).  세 입자 이상 겹친 곳은 되돌리지 않고 (공극을 키우는 쪽), 벽 밖 (바닥 z 0 아래 · 판 위) 으로 나간 구 부피도 빼지 않습니다 (공극을 줄이는 쪽).  그래서 인계표의 몬테카를로 정확 union (porosity_union_exact_pct) 과 다른 양이고, 실측으로 그보다 낮게 나옵니다 — LHS 130 중앙 0.64 %p (범위 0.19–3.43 %p) · lhsx 64 중앙 0.75 %p · 194/194 건 (docs/data/lhs_union_20260927/).  벽 밖 부피까지 빼면 정확 union 과 차 중앙 0.001 %p.',
-    meaning: '상한도 하한도 아닙니다 (두 미보정이 반대 방향이고 이 코퍼스에서는 벽 쪽이 이긴다).  ε_sphere 와 나란히 보는 값 — 강등 없음 (1저자 09-30).  정확 union 은 웹앱 ③ 에서 파이프라인 단계로 들어올 예정입니다.'
+    meaning: '상한도 하한도 아닙니다 (두 미보정이 반대 방향이고 이 코퍼스에서는 벽 쪽이 이긴다).  ε_sphere 와 나란히 보는 값 — 강등 없음 (1저자 09-30).  정확 union (몬테카를로 · 인계 규약) 은 분석 단계에서 같이 계산돼 바로 아래 행에 나옵니다 (웹앱 ③).'
   },
   'Overlap fraction — pair-lens volume / sphere volume (%)': {
     title: 'Overlap fraction — 쌍 렌즈 부피 ÷ 구 부피 합',
@@ -2911,7 +2913,8 @@ document.querySelectorAll('tr.grade-row[data-grade-tip]').forEach(tr => {
         `<span style='color:#9ca3af'>basis:</span> ${ax.basis || ''}<br>` +
         `<span style='color:#9ca3af'>meaning:</span> ${ax.meaning || ''}`;
     return `<tr class="grade-row" data-grade-tip="${escapeAttr(tip)}">
-        <td class="metric-label">${ax.label}</td>
+        <td class="metric-label">${ax.label}${ax.fallback_note
+            ? ` <span title="${escapeAttr(ax.fallback_note)}" style="color:#f59e0b;font-size:.8em">⚠대체</span>` : ''}</td>
         <td>${valStr}</td>
         <td>${gradeHtml}</td></tr>`;
   }

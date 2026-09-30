@@ -1331,6 +1331,35 @@ def _resolve_value(axis: dict, metrics: dict) -> float | None:
         return None
 
 
+def _resolve_source(axis: dict, metrics: dict) -> str | None:
+    """_resolve_value 가 **실제로 읽은 키** (같은 분기 순서) — 대체 표지용 (웹앱 ②-b · LHS-24 (f)).
+    None = 읽은 값 없음 · '__' 파생 축은 자기 키."""
+    key = axis.get('key')
+    if not key or key.startswith('__'):
+        return key
+    if key in _SIGMA_E_KEYS and metrics.get('_sigma_e_override_mScm') is not None:
+        return '_sigma_e_override_mScm'
+    if metrics.get(key) is not None:
+        return key
+    fb = axis.get('fallback_key')
+    if fb and metrics.get(fb) is not None:
+        return fb
+    return None
+
+
+def _fallback_note(axis: dict, src: str | None) -> str | None:
+    """대체 키로 값을 채웠으면 표지 문구 — physics → Hertz 계열이면 그렇게 부른다 (두 값 ≈ 2.7 배 ·
+    같은 라벨로 조용히 섞이던 것).  대체가 없으면 None."""
+    key = axis.get('key')
+    fb = axis.get('fallback_key')
+    if not (key and fb and src == fb and src != key):
+        return None
+    if '_physics' in key and '_physics' not in fb:
+        return (f'⚠ Hertz 계열 대체 — {key} 없음 → {fb} (LIGGGHTS c_cpl[22] 기하 교차 원판 · '
+                f'physics 값의 약 1/2.7) · 문턱은 physics 기준이라 등급이 낮게 나올 수 있다')
+    return f'⚠ 대체 — {key} 없음 → {fb}'
+
+
 # Derived axes whose VALUE is already exposed elsewhere (viewer_aux-derived
 # raw keys in the plot param pool) — skip to avoid duplicate parameters.
 _AXIS_VALUE_SKIP = {'__cut_fraction', '__bn_below_frac', '__bn_median_norm'}
@@ -1397,8 +1426,21 @@ def axis_values(metrics: dict, se_aux: dict | None = None,
 
 def _grade_axis(axis: dict, metrics: dict,
                  corpus_rows: list[dict]) -> dict:
+    """Return scored row for one axis: value, score, grade, basis text.
+    대체 키로 값을 채웠으면 fallback_note 를 basis 앞에도 붙인다 (툴팁 · 보고서가 basis 를 보여 준다 ·
+    웹앱 ②-b · LHS-24 (f)).  값 · 점수 계산은 그대로."""
+    out = _grade_axis_core(axis, metrics, corpus_rows)
+    if out.get('fallback_note'):
+        out['basis'] = f"{out['fallback_note']} · {out['basis']}"
+    return out
+
+
+def _grade_axis_core(axis: dict, metrics: dict,
+                     corpus_rows: list[dict]) -> dict:
     """Return scored row for one axis: value, score, grade, basis text."""
     value = _resolve_value(axis, metrics)
+    src = _resolve_source(axis, metrics)
+    note = _fallback_note(axis, src) if value is not None else None
     out = {
         'label':     axis['label'],
         'category':  axis['category'],
@@ -1410,6 +1452,8 @@ def _grade_axis(axis: dict, metrics: dict,
         'score':     None,
         'grade':     '—',
         'basis':     'no data',
+        'source_key': src if value is not None else None,
+        'fallback_note': note,
     }
     if value is None:
         return out

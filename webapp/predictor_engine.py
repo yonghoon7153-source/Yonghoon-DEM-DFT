@@ -170,6 +170,15 @@ CORE_TARGETS = [
     'hop_area', 'f_perc', 'thickness', 'porosity', 'am_cn', 'sigma_ion',
     'coverage'
 ]
+def _fm_auto_target_ok(key, value):
+    """full_metrics 키를 자동 타깃으로 받을지 — 숫자여야 하고, physics v2 (`*_physics_v2`) 는 **미검증 후보**라 받지 않는다
+    (1저자 비준 09-30 밤 J20-l (나) · LHSC-10 — 등급 · ML 제외 · 웹앱 ③).  ⚠ 자동 타깃은 빠진 값을 0 으로 채운다 —
+    새 키가 케이스 절반을 넘으면 옛 케이스가 가짜 0 이 된다 (원장 PRED-01)."""
+    if str(key).endswith('_physics_v2'):
+        return False
+    return _metric_number(value) is not None
+
+
 # Additional targets auto-discovered from full_metrics.json
 # Will be populated dynamically during data loading
 MICRO_TARGETS = list(CORE_TARGETS)  # starts with core, expands in train_models()
@@ -341,11 +350,11 @@ def load_training_data(results_folder, archive_folder):
             # ⚠ 아래 자동 타깃은 빠진 값을 0 으로 채운다 (`r.get(fk, 0)`) — 옛 케이스의 숫자 문자열 ('412' · numpy int 가
             #   json default=str 로 저장된 것) 을 버리면 새 케이스만 값이 있고 옛 케이스는 가짜 0 이 된다 → 숫자로 읽는다 (LHS-24 (a))
             for mk, mv in m.items():
-                if mk not in skip_keys and _metric_number(mv) is not None:
+                if mk not in skip_keys and _fm_auto_target_ok(mk, mv):
                     safe_key = f'fm_{mk}'  # prefix to avoid collision
                     rows[-1][safe_key] = _metric_number(mv)
             rows[-1]['_all_fm_keys'] = [f'fm_{k}' for k, v in m.items()
-                                         if k not in skip_keys and _metric_number(v) is not None]
+                                         if k not in skip_keys and _fm_auto_target_ok(k, v)]
 
     # Deduplicate
     seen = set()

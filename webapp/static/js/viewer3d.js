@@ -2734,8 +2734,17 @@ function applyViewMode(state, mode) {
     // Inline ColorBrewer gradient bar with percentile-anchored labels
     const stops = [0, 0.25, 0.5, 0.75, 1.0]
       .map(v => '#' + rdylgnColor(v).toString(16).padStart(6,'0'));
+    // 읽은 열 표지 (웹앱 ②-b · LHS-24 (f)) — physics 열이 없어 Hertz 계열로 대체되면 범례에 적는다
+    //   (두 값 ≈ 2.7 배 · 같은 범례로 조용히 섞이던 것).  aux.coverage_per_am_source = viewer3d_data.coverage_map_column
+    const covSrc = aux.coverage_per_am_source;
+    const covSrcLine = covSrc === 'coverage_hertzian_pct'
+      ? '<div style="color:#f59e0b;font-size:11px;margin-top:2px">⚠ Hertz 계열 대체 — physics 열 없음 · '
+        + 'LIGGGHTS c_cpl[22] 기하 교차 원판 (physics 값의 약 1/2.7)</div>'
+      : covSrc === 'coverage_physics_pct'
+      ? '<div style="color:#9ca3af;font-size:11px;margin-top:2px">값: Physics v1 (Tabor · 부피 · 기하 cap)</div>'
+      : '';
     setLegend(state,
-      `<b>AM Coverage — SE / surface area (%)</b>
+      `<b>AM Coverage — SE / surface area (%)</b>${covSrcLine}
        <div style="margin:6px 0 2px 0;height:10px;border-radius:3px;
          background:linear-gradient(90deg,${stops.join(',')})"></div>
        <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af">

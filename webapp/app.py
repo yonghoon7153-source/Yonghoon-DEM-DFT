@@ -2227,7 +2227,8 @@ def inject_dual_porosity_rows(tables, metrics):
         return
     eps_u = metrics.get('porosity_union')
     ov = metrics.get('overlap_fraction_pct')
-    if eps_u is None and ov is None:
+    eps_x = metrics.get('porosity_union_exact_pct')                  # ③ 정확 union (MC · 같은 판 · 상자 · 벽 밖 제외)
+    if eps_u is None and ov is None and eps_x is None:
         return
     ncol = len(tables['network_summary'].get('columns') or []) or 4
     for i, row in enumerate(data):
@@ -2241,10 +2242,45 @@ def inject_dual_porosity_rows(tables, metrics):
             if ov is not None:
                 o = f'{ov:.2f}'
                 ins.append([prefix + 'Overlap fraction — pair-lens volume / sphere volume (%)', o, o, '0%'])
+            if eps_x is not None:
+                se = metrics.get('porosity_union_exact_se_pct')
+                x = f'{eps_x:.2f}' + (f' ± {se:.2f}' if isinstance(se, (int, float)) else '')
+                ins.append([prefix + 'Porosity ε_union exact — Monte Carlo, wall overhang removed · handover convention (%)',
+                            x, x, '0%'])
+            for _k, _lab, _fmt in (('thickness_mass_conserving_um', 'Thickness mass-conserving — plate gap × (1−ε_sphere)/(1−ε_exact) (μm)', '{:.2f}'),
+                                   ('phi_se_mass_conserving', 'φ_SE mass-conserving — (1−ε_exact) × SE/solid', '{:.4f}'),
+                                   ('phi_am_mass_conserving', 'φ_AM mass-conserving — (1−ε_exact) × AM/solid', '{:.4f}')):
+                _v = metrics.get(_k)
+                if isinstance(_v, (int, float)):
+                    ins.append([prefix + _lab, _fmt.format(_v), _fmt.format(_v), '0%'])
             ins = [r[:ncol] + [''] * (ncol - len(r)) for r in ins]
             for k, nr in enumerate(ins):
                 data.insert(i + 1 + k, nr)
             break
+
+
+def inject_physics_v2_rows(tables, metrics):
+    """physics v2 피복률 (`coverage_*_mean_physics_v2`) 을 망 요약 끝에 **후보 · 미검증** 표지와 함께 붙인다 —
+    1저자 비준 09-30 밤 J20-l (나) · LHSC-10 (미검증 후보 · 등급 · ML 제외 · 웹앱 ③).  값이 하나도 없으면 아무것도 안 한다.
+    값은 Physics 열에만 (Hertz 열은 '—') — v1 과 같은 줄에 섞지 않는다."""
+    if 'network_summary' not in tables:
+        return
+    data = tables['network_summary'].get('data')
+    if not isinstance(data, list):
+        return
+    rows = []
+    for key, lab in (('coverage_AM_mean_physics_v2', 'Coverage AM'),
+                     ('coverage_AM_P_mean_physics_v2', 'Coverage AM_P'),
+                     ('coverage_AM_S_mean_physics_v2', 'Coverage AM_S')):
+        v = metrics.get(key)
+        if isinstance(v, (int, float)) and not isinstance(v, bool):
+            rows.append([f'  {lab} physics v2 — 후보 · 미검증 (%)', '—', f'{v:.1f}', ''])
+    if not rows:
+        return
+    ncol = len(tables['network_summary'].get('columns') or []) or 4
+    hdr = ['── Physics v2 — 후보 · 미검증 (LHSC-10 · 등급 · ML 제외) ──']
+    for r in [hdr] + rows:
+        data.append(r[:ncol] + [''] * (ncol - len(r)))
 
 
 def transform_network_summary_4col(tables, metrics, meta):
@@ -3827,6 +3863,7 @@ def _generate_ai_analysis(all_metrics, case_names, title, notes):
         ('P:S', 'ps_ratio'), ('Porosity ε_sphere(%)', 'porosity'),
         ('Porosity ε_union pair-lens(%)', 'porosity_union'),
         ('Overlap pair-lens(%)', 'overlap_fraction_pct'),
+        ('Porosity ε_union exact MC(%)', 'porosity_union_exact_pct'),
         ('Thickness plate gap(μm)', 'thickness_um'),
         ('AM-SE Total(μm²)', 'area_AM전체_SE_total'),
         ('SE-SE Total(μm²)', 'area_SE_SE_total'),
@@ -3864,7 +3901,7 @@ def _generate_ai_analysis(all_metrics, case_names, title, notes):
 
 {data_table}
 
-정의: Porosity ε_sphere = 구 부피 합 (겹친 부피 이중계상 · 생산 규약) · ε_union pair-lens = 쌍 렌즈만 되돌림 (벽 밖 부피 미제거 → 정확 union 보다 낮게 나옴) · Thickness = 판 간격 · AM-SE/SE-SE 면적과 Coverage = LIGGGHTS c_cpl[22] 기하 교차 원판 (Hertz 계열 · 이름만 Hertz · legacy 지표).
+정의: Porosity ε_sphere = 구 부피 합 (겹친 부피 이중계상 · 생산 규약) · ε_union pair-lens = 쌍 렌즈만 되돌림 (벽 밖 부피 미제거 → 정확 union 보다 낮게 나옴) · ε_union exact MC = 몬테카를로 정확 union (세 입자 겹침 · 벽 밖 부피까지 · 인계 규약) · Thickness = 판 간격 · AM-SE/SE-SE 면적과 Coverage = LIGGGHTS c_cpl[22] 기하 교차 원판 (Hertz 계열 · 이름만 Hertz · legacy 지표).
 
 ## 분석 원칙 (반드시 준수)
 
@@ -6511,6 +6548,7 @@ def _load_case_tables(results_dir, meta):
     normalize_network_summary_layout(tables, metrics)
     apply_paper_labels(tables)
     inject_dual_porosity_rows(tables, metrics)
+    inject_physics_v2_rows(tables, metrics)
     # ── Phantom σ_e / κ suppression (v7 — unconditional, AFTER label rename) ──
     # v6 placed inside normalize's Hertz+Phys merge if-block, which doesn't
     # run for already-merged cases.  Now called from the route handler so
@@ -6609,6 +6647,92 @@ def single(case_id):
                          trust_card=_build_trust_card(metrics),
                          lv=_page_lv('single'))
 
+# ── 그룹 비교 표 (/group) — 열 정의 · 최고값 강조 (웹앱 ②-b · LHS-24 (e) · J20-l) ──────────────
+# (label, unit, key, category).  카테고리 순서는 σ_ionic/σ_e 생산 폼의 입력 순서를 따른다:
+#   조성 → 구조 → SE 계면 (이온) → AM 계면 (전자, Stage 15) → 전송 (Stage E, 세 채널) → 접촉역학 → 응력.
+#   전송 칸은 Stage E 값 (phantom 거름) — 생산 적합의 타깃.
+GROUP_DISPLAY_KEYS = [
+    ('P:S', '', 'ps_ratio', '조성/구조'),
+    ('φ_AM', '', 'phi_am', '조성/구조'),
+    ('φ_SE', '', 'phi_se', '조성/구조'),
+    ('Porosity', '(%)', 'porosity', '조성/구조'),
+    ('Porosity (union)', '(%)', 'porosity_union', '조성/구조'),
+    ('Overlap fraction', '(%)', 'overlap_fraction_pct', '조성/구조'),
+    ('Porosity (union exact)', '(%)', 'porosity_union_exact_pct', '조성/구조'),        # ③ 정확 union (MC · 인계 규약)
+    ('두께', '(μm)', 'thickness_um', '조성/구조'),
+    ('두께 (질량 보존)', '(μm)', 'thickness_mass_conserving_um', '조성/구조'),         # ③ J20-e (라)
+    ('φ_SE (질량 보존)', '', 'phi_se_mass_conserving', '조성/구조'),
+    ('φ_AM (질량 보존)', '', 'phi_am_mass_conserving', '조성/구조'),
+    # ── SE 계면/네트워크 (σ_ionic form inputs) ──
+    ('SE-SE CN', '', 'se_se_cn', 'SE 네트워크'),
+    ('SE-SE CN std', '', 'se_se_cn_std', 'SE 네트워크'),
+    ('SE-SE Total', '(μm²)', 'area_SE_SE_total', 'SE 네트워크'),
+    ('Coverage P', '(%)', 'coverage_AM_P_mean', 'SE 네트워크'),
+    ('Coverage S', '(%)', 'coverage_AM_S_mean', 'SE 네트워크'),
+    ('Percolation', '(%)', 'percolation_pct', 'SE 네트워크'),
+    ('Tortuosity', '', 'tortuosity_mean', 'SE 네트워크'),
+    ('Hop Area', '(μm²)', 'path_hop_area_mean', 'SE 네트워크'),
+    ('Bottleneck', '(μm²)', 'path_hop_area_min_mean', 'SE 네트워크'),
+    # ── AM 네트워크 (σ_e Stage 15 form inputs) ──
+    ('AM-AM CN', '', 'am_am_cn', 'AM 네트워크'),
+    ('AM-AM CN std', '', 'am_am_cn_std', 'AM 네트워크'),          # J20-j · ②-b (e)
+    ('AM-AM Mean Area', '(μm²)', 'am_am_mean_area', 'AM 네트워크'),
+    ('AM-AM N contacts', '', 'am_am_n_contacts', 'AM 네트워크'),
+    ('AM-SE CN', '', 'am_se_cn_mean', 'AM 네트워크'),
+    ('AM Vulnerable', '(%)', 'am_vulnerable_pct', 'AM 네트워크'),
+    ('Ionic Active', '(%)', 'ionic_active_pct', 'AM 네트워크'),
+    # ── Transport (Stage E — production form targets) ──
+    ('σ_ionic (Stage E)', '(mS/cm)', '_sigma_i_stage_e_display', '전송 (Stage E)'),
+    ('σ_electronic (Stage E)', '(mS/cm)', '_sigma_e_stage_e_display', '전송 (Stage E)'),
+    ('σ_thermal (Stage E)', '(mS/cm)', '_sigma_k_stage_e_display', '전송 (Stage E)'),
+    ('R_brug', '(×)', 'R_brug_over_full', '전송 (Stage E)'),
+    ('Constriction', '(%)', '_constriction_pct', '전송 (Stage E)'),
+    # ── 접촉력 (force chain) ──
+    ('Fn AM-AM', '(μN)', 'fn_AM_P_AM_P_mean', '접촉력'),
+    ('Fn AM-SE', '(μN)', 'fn_AM_P_SE_mean', '접촉력'),
+    ('Fn SE-SE', '(μN)', 'fn_SE_SE_mean', '접촉력'),
+    ('CP mean', '(MPa)', 'contact_pressure_mean', '접촉력'),
+    ('CP max', '(MPa)', 'contact_pressure_max', '접촉력'),
+    # ── 응력 분포 ──
+    ('Stress CV', '(%)', 'stress_cv', '응력'),
+    ('σ_AM_P/σ_mean', '', 'stress_ratio_AM_P', '응력'),
+    ('σ_AM_S/σ_mean', '', 'stress_ratio_AM_S', '응력'),
+    ('σ_SE/σ_mean', '', 'stress_ratio_SE', '응력'),
+]
+
+# 낮을수록 좋은 열 — **표의 열 이름과 같은 철자** (test_closed_param_groupview E2 가 강제).
+#   옛 집합은 porosity union · overlap · CN std 가 없었고 'Vulnerable' 은 열 'AM Vulnerable' 과 철자가 달라
+#   조용히 '높을수록 좋음' 으로 강조됐다 · 표에 없는 이름 (τ std · GB Density · SE Cluster) 은 뺐다.
+GROUP_LOWER_BETTER = {
+    'Porosity', 'Porosity (union)', 'Porosity (union exact)', 'Overlap fraction', '두께', '두께 (질량 보존)',
+    'SE-SE CN std', 'AM-AM CN std', 'Tortuosity', 'AM Vulnerable',
+    'R_brug', 'Constriction', 'CP mean', 'CP max', 'Stress CV',
+}
+
+
+def _group_best_marks(group_rows, display_keys, lower_better=None):
+    """그룹 안에서 열마다 최고값 행 → {(label, 행 번호)}.  숫자로 못 읽는 칸 ('-') 은 후보가 아니고,
+    모든 값이 같으면 강조하지 않는다.  낮을수록 좋음 = GROUP_LOWER_BETTER (그 밖은 높을수록 좋음)."""
+    lower_better = GROUP_LOWER_BETTER if lower_better is None else lower_better
+    marks = set()
+    for label, _unit, _key in display_keys:
+        if label in ('P:S', '케이스'):
+            continue
+        vals = []
+        for ri, r in enumerate(group_rows):
+            try:
+                vals.append((ri, float(str(r.get(label, '-')).replace('e', 'E').strip())))
+            except (ValueError, TypeError):
+                pass
+        if not vals:
+            continue
+        lo = min(vals, key=lambda x: x[1]); hi = max(vals, key=lambda x: x[1])
+        if lo[1] == hi[1]:
+            continue
+        marks.add((label, (lo if label in lower_better else hi)[0]))
+    return marks
+
+
 @app.route('/group', methods=['GET', 'POST'])
 def group():
     """Group comparison page."""
@@ -6630,50 +6754,7 @@ def group():
         #   (electronic, Stage 15) → transport (Stage E, all 3 channels) →
         #   contact mechanics → stress.  Each transport channel shows the
         #   Stage E value (phantom-filtered) — what the production fit targets.
-        display_keys_raw = [
-            # ── 조성/구조 ──
-            ('P:S', '', 'ps_ratio', '조성/구조'),
-            ('φ_AM', '', 'phi_am', '조성/구조'),
-            ('φ_SE', '', 'phi_se', '조성/구조'),
-            ('Porosity', '(%)', 'porosity', '조성/구조'),
-            ('Porosity (union)', '(%)', 'porosity_union', '조성/구조'),
-            ('Overlap fraction', '(%)', 'overlap_fraction_pct', '조성/구조'),
-            ('두께', '(μm)', 'thickness_um', '조성/구조'),
-            # ── SE 계면/네트워크 (σ_ionic form inputs) ──
-            ('SE-SE CN', '', 'se_se_cn', 'SE 네트워크'),
-            ('SE-SE CN std', '', 'se_se_cn_std', 'SE 네트워크'),
-            ('SE-SE Total', '(μm²)', 'area_SE_SE_total', 'SE 네트워크'),
-            ('Coverage P', '(%)', 'coverage_AM_P_mean', 'SE 네트워크'),
-            ('Coverage S', '(%)', 'coverage_AM_S_mean', 'SE 네트워크'),
-            ('Percolation', '(%)', 'percolation_pct', 'SE 네트워크'),
-            ('Tortuosity', '', 'tortuosity_mean', 'SE 네트워크'),
-            ('Hop Area', '(μm²)', 'path_hop_area_mean', 'SE 네트워크'),
-            ('Bottleneck', '(μm²)', 'path_hop_area_min_mean', 'SE 네트워크'),
-            # ── AM 네트워크 (σ_e Stage 15 form inputs) ──
-            ('AM-AM CN', '', 'am_am_cn', 'AM 네트워크'),
-            ('AM-AM Mean Area', '(μm²)', 'am_am_mean_area', 'AM 네트워크'),
-            ('AM-AM N contacts', '', 'am_am_n_contacts', 'AM 네트워크'),
-            ('AM-SE CN', '', 'am_se_cn_mean', 'AM 네트워크'),
-            ('AM Vulnerable', '(%)', 'am_vulnerable_pct', 'AM 네트워크'),
-            ('Ionic Active', '(%)', 'ionic_active_pct', 'AM 네트워크'),
-            # ── Transport (Stage E — production form targets) ──
-            ('σ_ionic (Stage E)', '(mS/cm)', '_sigma_i_stage_e_display', '전송 (Stage E)'),
-            ('σ_electronic (Stage E)', '(mS/cm)', '_sigma_e_stage_e_display', '전송 (Stage E)'),
-            ('σ_thermal (Stage E)', '(mS/cm)', '_sigma_k_stage_e_display', '전송 (Stage E)'),
-            ('R_brug', '(×)', 'R_brug_over_full', '전송 (Stage E)'),
-            ('Constriction', '(%)', '_constriction_pct', '전송 (Stage E)'),
-            # ── 접촉력 (force chain) ──
-            ('Fn AM-AM', '(μN)', 'fn_AM_P_AM_P_mean', '접촉력'),
-            ('Fn AM-SE', '(μN)', 'fn_AM_P_SE_mean', '접촉력'),
-            ('Fn SE-SE', '(μN)', 'fn_SE_SE_mean', '접촉력'),
-            ('CP mean', '(MPa)', 'contact_pressure_mean', '접촉력'),
-            ('CP max', '(MPa)', 'contact_pressure_max', '접촉력'),
-            # ── 응력 분포 ──
-            ('Stress CV', '(%)', 'stress_cv', '응력'),
-            ('σ_AM_P/σ_mean', '', 'stress_ratio_AM_P', '응력'),
-            ('σ_AM_S/σ_mean', '', 'stress_ratio_AM_S', '응력'),
-            ('σ_SE/σ_mean', '', 'stress_ratio_SE', '응력'),
-        ]
+        display_keys_raw = GROUP_DISPLAY_KEYS
         display_keys = [(l, u, k) for l, u, k, _ in display_keys_raw]
         # Track category boundaries for column separators
         col_categories = [''] + [cat for _, _, _, cat in display_keys_raw]
@@ -6791,36 +6872,10 @@ def group():
                         if row_idx < len(rows):
                             group_rows.append(rows[row_idx])
                             row_idx += 1
-                    # Mark best values per column
-                    # lower_better: Porosity, 두께, Tortuosity, τ std, Stress CV, GB Density, Vulnerable, CP mean, CP max
-                    # higher_better: everything else (except P:S, 케이스 which are labels)
-                    lower_better = {'Porosity', '두께', 'Tortuosity', 'τ std', 'Stress CV',
-                                    'GB Density', 'Vulnerable', 'CP mean', 'CP max', 'SE Cluster',
-                                    'R_brug', 'Constriction'}
-                    skip_cols = {'P:S', '케이스'}
-                    best_marks = {}  # col -> best row index
-                    for label, unit, key in display_keys:
-                        if label in skip_cols:
-                            continue
-                        vals = []
-                        for ri, r in enumerate(group_rows):
-                            v = r.get(label, '-')
-                            try:
-                                vals.append((ri, float(str(v).replace('e', 'E').strip())))
-                            except (ValueError, TypeError):
-                                pass
-                        if vals:
-                            if label in lower_better:
-                                best_val = min(vals, key=lambda x: x[1])
-                                worst_val = max(vals, key=lambda x: x[1])
-                            else:
-                                best_val = max(vals, key=lambda x: x[1])
-                                worst_val = min(vals, key=lambda x: x[1])
-                            # Skip if all same value
-                            if best_val[1] != worst_val[1]:
-                                best_marks[(label, best_val[0])] = True
+                    # Mark best values per column (GROUP_LOWER_BETTER · _group_best_marks — ②-b (e))
+                    best_marks = _group_best_marks(group_rows, display_keys)
                     for ri, r in enumerate(group_rows):
-                        r['__best__'] = {label for (label, idx), _ in best_marks.items() if idx == ri}
+                        r['__best__'] = {label for (label, idx) in best_marks if idx == ri}
 
                     tables.append({'name': gname, 'rows': group_rows, 'color': ['#6c8cff','#ff6b6b','#51cf66','#ffd43b'][gi % 4]})
                 comparison_data = {
@@ -7196,6 +7251,7 @@ def group_report():
         ('P:S', 'ps_ratio'), ('Porosity ε_sphere(%)', 'porosity'),
         ('Porosity ε_union pair-lens(%)', 'porosity_union'),
         ('Overlap pair-lens(%)', 'overlap_fraction_pct'),
+        ('Porosity ε_union exact MC(%)', 'porosity_union_exact_pct'),
         ('Thickness plate gap(μm)', 'thickness_um'),
         ('AM-SE Total(μm²)', 'area_AM전체_SE_total'),
         ('SE-SE Total(μm²)', 'area_SE_SE_total'),
@@ -8296,7 +8352,7 @@ def serve_3d_data(case_id):
         'se_states': {}, 'tabor_stats': {}, 'all_se_ids_count': 0,
         'se_engagement': {},
         'cluster_meta': {}, 'cluster_id_per_se': {},
-        'coverage_per_am': {},
+        'coverage_per_am': {}, 'coverage_per_am_source': None,
         # Phase A1/A3/A4 — per-particle fracture aggregates + stress chain
         'particle_max_fpc': {}, 'particle_worst_stage': {},
         'particle_n_brittle': {}, 'particle_worst_partner_brittle': {},
@@ -8316,7 +8372,7 @@ def serve_3d_data(case_id):
             _sys.path.insert(0, _scripts_dir)
         from viewer3d_data import (
             aggregate_particle_metrics, classify_clusters,
-            build_cluster_id_map, build_coverage_map,
+            build_cluster_id_map, build_coverage_map, coverage_map_column,
             compute_se_network_diagnostics,
         )
         # Build atoms_by_id from atoms.csv we already loaded.
@@ -8456,6 +8512,9 @@ def serve_3d_data(case_id):
                                      build_cluster_id_map(clusters).items()}
         aux['coverage_per_am']   = {str(k): v for k, v in build_coverage_map(
             os.path.join(results_dir, 'coverage_per_am.csv')).items()}
+        # 뷰어 범례가 읽은 열을 표지 (physics 없음 → Hertz 계열 대체 · ②-b (f))
+        aux['coverage_per_am_source'] = coverage_map_column(
+            os.path.join(results_dir, 'coverage_per_am.csv'))
     except Exception as _e:
         # Aux data is best-effort — don't break the viewer if it fails.
         import traceback
@@ -9213,6 +9272,15 @@ def serve_report(case_id):
                  f'{metrics["porosity_union"]:.1f}% |')
     if metrics.get('overlap_fraction_pct') is not None:
         L.append(f'| Overlap fraction (쌍 렌즈 부피 ÷ 구 부피 합) | {metrics["overlap_fraction_pct"]:.2f}% |')
+    if metrics.get('porosity_union_exact_pct') is not None:
+        _se = metrics.get('porosity_union_exact_se_pct')
+        L.append(f'| Porosity ε_union 정확 (몬테카를로 · 벽 밖 제외 · 인계 규약) | '
+                 f'{metrics["porosity_union_exact_pct"]:.2f}%' + (f' ± {_se:.2f}' if isinstance(_se, (int, float)) else '') + ' |')
+    if metrics.get('thickness_mass_conserving_um') is not None:
+        L.append(f'| 두께 질량 보존 (판 간격 × (1−ε_sphere)/(1−ε_정확)) | {metrics["thickness_mass_conserving_um"]:.2f} μm |')
+    if metrics.get('phi_se_mass_conserving') is not None and metrics.get('phi_am_mass_conserving') is not None:
+        L.append(f'| φ_SE · φ_AM 질량 보존 ((1−ε_정확) × 부피 몫) | {metrics["phi_se_mass_conserving"]:.4f} · '
+                 f'{metrics["phi_am_mass_conserving"]:.4f} |')
     if metrics.get('thickness_um') is not None:
         _pzs = {'mesh': '판 메시 mesh_info.json',
                 'estimated_center': '⚠ mesh 없음 — 최고 입자 중심 z 로 추정'}.get(
@@ -9400,6 +9468,11 @@ _GRADE_PLAIN = {
         '세 입자가 겹친 곳과 벽 밖으로 삐져나간 부피는 빼지 않아서, 몬테카를로로 잰 정확한 union '
         '(인계표 porosity_union_exact_pct) 보다 조금 낮게 나와요 (LHS 194 건 전부 · 중앙 0.6 %p). '
         'Sphere-sum 보다는 늘 큽니다 (겹친 만큼 빈공간이 더 보이니까요). sphere-sum 과 나란히 보는 값이에요.',
+    'porosity_union_exact_pct': '빈 공간 비율의 "정확한" 버전이에요. 상자 안에 점 400 만 개를 뿌려서 어느 입자에도 '
+        '안 들어간 점의 비율을 셉니다 — 셋 이상 겹친 곳도 맞게 세고, 바닥 · 판 밖으로 삐져나간 입자 부피는 고체로 치지 않아요. '
+        'LHS 인계표 (porosity_union_exact_pct) 와 같은 계산이고, 점 수 때문에 생기는 오차는 ±0.01 %p 정도예요.',
+    'thickness_mass_conserving_um': 'DEM 에서 겹친 부피는 사라져요. 정확한 빈 공간 비율을 실제 값으로 받으면서 재료 양을 '
+        '보존하려면 두께가 조금 늘어나야 해요 — 판 간격 × (1 − ε_sphere) / (1 − ε_정확). 인계표 두께 열과 같은 식이에요.',
     'overlap_fraction_pct': '입자들이 서로 얼마나 겹쳤는지(소성변형 정도)를 백분율로 나타낸 값이에요. '
         '380 MPa 압력에서 SE 입자는 문헌상 5-10% 정도 소성변형하는데, 그 범위 안이면 정상. '
         '10% 넘으면 과압축 의심.',
@@ -10612,7 +10685,7 @@ def serve_archive_3d_data(folder):
         'se_states': {}, 'tabor_stats': {}, 'all_se_ids_count': 0,
         'se_engagement': {},
         'cluster_meta': {}, 'cluster_id_per_se': {},
-        'coverage_per_am': {},
+        'coverage_per_am': {}, 'coverage_per_am_source': None,
         # Phase A1/A3/A4 — per-particle fracture aggregates + stress chain
         'particle_max_fpc': {}, 'particle_worst_stage': {},
         'particle_n_brittle': {}, 'particle_worst_partner_brittle': {},
@@ -10632,7 +10705,7 @@ def serve_archive_3d_data(folder):
             _sys.path.insert(0, _scripts_dir)
         from viewer3d_data import (
             aggregate_particle_metrics, classify_clusters,
-            build_cluster_id_map, build_coverage_map,
+            build_cluster_id_map, build_coverage_map, coverage_map_column,
             compute_se_network_diagnostics,
         )
         atoms_by_id = {int(r['id']): {
@@ -10738,6 +10811,9 @@ def serve_archive_3d_data(folder):
                                      build_cluster_id_map(clusters).items()}
         aux['coverage_per_am']   = {str(k): v for k, v in build_coverage_map(
             os.path.join(target, 'coverage_per_am.csv')).items()}
+        # 뷰어 범례가 읽은 열을 표지 (physics 없음 → Hertz 계열 대체 · ②-b (f))
+        aux['coverage_per_am_source'] = coverage_map_column(
+            os.path.join(target, 'coverage_per_am.csv'))
     except Exception as _e:
         import traceback
         print(f'  [3d-data aux/archive] FAILED: '

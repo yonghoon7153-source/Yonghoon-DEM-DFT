@@ -109,6 +109,65 @@ def calc_porosity_dual(atoms, contacts, plate_z, box_xy=0.05, box_y=None):
     }
 
 
+UNION_MC_N_DEFAULT = 4_000_000     # 정확 union 몬테카를로 점 수 — 통계 오차 ≈ 0.014 %p (LHS 인계와 같다) · env DEM_UNION_MC_N 으로 바꿈 (0 = 끔)
+
+
+def calc_porosity_union_exact(atoms, plate_z, box_xy=0.05, box_y=None, mc_n=None, seed=None):
+    """정확 union 공극률 (%) — 웹앱 ③ (1저자 비준 09-30 밤 · J20-l).
+
+    상자 [0,Lx)×[0,Ly)×[0,plate_z) 안 무작위 점이 어느 구에도 들지 않는 비율 (x · y 주기 · z 비주기).  세 입자 이상 겹침까지
+    정확하고, 벽 밖 (바닥 z < 0 · 판 위) 으로 나간 구 부피는 고체로 세지 않는다 — LHS 인계표 `porosity_union_exact_pct` 와
+    **같은 계산** (`lhs_union_webapp.coverage` 를 그대로 쓴다 · docs/data/lhs_union_20260927/).  쌍 렌즈 union
+    (calc_porosity_dual) 은 벽 밖 부피를 안 빼서 이 값보다 낮게 나온다 (SELF-72).
+    x · y 원점은 값에 영향이 없다 (주기 · 점과 구를 같은 식으로 접는다).  반경 종류가 너무 많으면 (다분산) 건너뛴다.
+    반환: porosity_union_exact_pct · porosity_union_exact_se_pct (이항 통계 1σ) · union_exact_mc_n · union_exact_mc_seed ·
+          union_exact_status ('OK' · 'off' · 'no_input' · 'skipped: …') · wall_overhang_over_Vbox_pct (벽 밖 구 부피 / 상자)."""
+    import zlib
+    lx = float(box_xy)
+    ly = float(box_y if box_y else box_xy)
+    if mc_n is None:
+        try:
+            mc_n = int(os.environ.get('DEM_UNION_MC_N', UNION_MC_N_DEFAULT))
+        except ValueError:
+            mc_n = UNION_MC_N_DEFAULT
+    out = {'porosity_union_exact_pct': None, 'porosity_union_exact_se_pct': None,
+           'union_exact_mc_n': int(mc_n), 'union_exact_mc_seed': None, 'union_exact_status': None,
+           'wall_overhang_over_Vbox_pct': None}
+    if mc_n <= 0:
+        out['union_exact_status'] = 'off'
+        return out
+    if not atoms or not (plate_z > 0 and lx > 0 and ly > 0):
+        out['union_exact_status'] = 'no_input'
+        return out
+    import lhs_union_webapp as _U
+    ids = sorted(atoms)
+    X = np.array([[atoms[i]['x'], atoms[i]['y'], atoms[i]['z']] for i in ids], dtype=float)
+    R = np.array([atoms[i]['radius'] for i in ids], dtype=float)
+    notSE = np.zeros(len(ids), dtype=bool)          # 공극은 상과 무관 — 한 무리로 센다
+    if seed is None:
+        seed = zlib.crc32(f'{len(ids)}:{plate_z:.9g}:{lx:.9g}:{ly:.9g}:{float(R.sum()):.9g}'.encode())
+    rng = np.random.default_rng(seed)
+    n_void = done = 0
+    try:
+        while done < mc_n:
+            m = min(_U.MC_CHUNK, mc_n - done)
+            Q = rng.random((m, 3)) * np.array([lx, ly, plate_z])
+            cs, ca = _U.coverage(X, R, notSE, 0.0, lx, 0.0, ly, Q)
+            n_void += int((~cs & ~ca).sum())
+            done += m
+    except ValueError as e:                          # 반경 종류 > MAX_RADIUS_GROUPS
+        out['union_exact_status'] = f'skipped: {e}'
+        return out
+    p = n_void / mc_n
+    z = X[:, 2]
+    v_out = float(np.where(z - R < 0, _U._cap(R, R - z), 0.0).sum()
+                  + np.where(z + R > plate_z, _U._cap(R, z + R - plate_z), 0.0).sum())
+    out.update(porosity_union_exact_pct=100.0 * p, porosity_union_exact_se_pct=100.0 * float(np.sqrt(p * (1 - p) / mc_n)),
+               union_exact_mc_seed=int(seed), union_exact_status='OK',
+               wall_overhang_over_Vbox_pct=100.0 * v_out / (lx * ly * plate_z))
+    return out
+
+
 def get_plate_z(results_dir, atoms, scale):
     """Get plate_z from mesh_info.json, or estimate from atoms.
     Fallback: max of particle CENTERS (no +radius). Adding the radius on top
@@ -1094,6 +1153,29 @@ def run_full_analysis(atoms_raw, contacts_raw, type_map, scale, results_dir, box
     porosity_union = poro_dual['porosity_union']
     overlap_fraction_pct = poro_dual['overlap_fraction_pct']
     print(f"  Porosity: {porosity:.2f}% (sphere-sum)  |  union {porosity_union:.2f}%  |  overlap {overlap_fraction_pct:.2f}%")
+    # 1b. 정확 union (몬테카를로 · 같은 판 · 같은 상자) + 질량 보존 두께 · φ (J20-e (라) · 웹앱 ③ · J20-l).
+    #     질량 보존 두께 = 판 간격 × (1 − ε_sphere)/(1 − ε_exact) — DEM 겹침으로 사라진 부피를 되돌렸을 때의 두께.
+    #     φ_i 질량 보존 = (1 − ε_exact) × V_i / ΣV_구  → φ_SE + φ_AM + ε_exact = 1 (같은 장부 · 겹침 배분 규칙 불요).
+    union_exact = calc_porosity_union_exact(atoms_raw, plate_z, box_x, box_y)
+    _v_se = sum(4 / 3 * np.pi * a['radius'] ** 3 for a in atoms_raw.values() if a['type'] in se_types)
+    _v_sum = float(poro_dual['V_sphere_sum_sim'])
+    union_exact['se_of_solid_vol'] = (_v_se / _v_sum) if _v_sum > 0 else None
+    _eu = union_exact.get('porosity_union_exact_pct')
+    if _eu is not None and _eu < 100.0:
+        _k = 1.0 - _eu / 100.0
+        union_exact['thickness_mass_conserving_um'] = thickness_um * (1.0 - porosity / 100.0) / _k
+        if union_exact['se_of_solid_vol'] is not None:
+            union_exact['phi_se_mass_conserving'] = _k * union_exact['se_of_solid_vol']
+            union_exact['phi_am_mass_conserving'] = _k * (1.0 - union_exact['se_of_solid_vol'])
+        # QC — 쌍 렌즈 union 에서 벽 밖 부피까지 빼면 정확 union 의 상한 (Bonferroni) · 4σ 넘게 아래면 접촉 덤프에 겹친 쌍이 빠진 것
+        _pair_clip = porosity_union + union_exact['wall_overhang_over_Vbox_pct']
+        union_exact['porosity_union_pair_clipped_pct'] = _pair_clip
+        union_exact['union_pair_upper_bound_ok'] = bool(_pair_clip >= _eu - 4.0 * union_exact['porosity_union_exact_se_pct'])
+        print(f"  Porosity union exact (MC {union_exact['union_exact_mc_n']:,}): {_eu:.3f} ± "
+              f"{union_exact['porosity_union_exact_se_pct']:.3f}%  |  thickness mass-conserving "
+              f"{union_exact['thickness_mass_conserving_um']:.2f} μm")
+    else:
+        print(f"  Porosity union exact: — ({union_exact.get('union_exact_status')})")
 
     # 2. Interface Area
     iface = calc_interface_area(atoms_raw, contacts_raw, type_map, scale)
@@ -1197,6 +1279,7 @@ def run_full_analysis(atoms_raw, contacts_raw, type_map, scale, results_dir, box
         'porosity_spheresum': porosity,
         'porosity_union': porosity_union,
         'overlap_fraction_pct': overlap_fraction_pct,
+        'union_exact': union_exact,
         'interface': iface,
         'coverage': cov,
         'se_se_cn': cn,

@@ -157,12 +157,13 @@
       "role": "보조 GPU 런",
       "ssh_alias": "kgy",
       "workdir": "~/Yonghoon-DEM-DFT",
-      "python": "conda env 'mpm' (python 3.11) — base 는 3.13이라 taichi 불가",
+      "python": "conda env 'ti310' — 검증된 MPM 환경 (vgcf_e_sensitivity · phase_a_replication prereg 에 기록) · 'mpm' env 는 numpy 가 없다 (FAM 시도 1 · 10-01)",
       "quirks": [
         "glibc < 2.32 → taichi 1.7.4 import 실패(GLIBC_2.32); 1.6.0 은 py≤3.11 wheel만 → conda py3.11 필수",
-        "먼저: conda create -y -n mpm python=3.11 && conda activate mpm → 그 다음 setup 스크립트"
+        "먼저: conda create -y -n mpm python=3.11 && conda activate mpm → 그 다음 setup 스크립트",
+        "FAM 봉인 런 (10-01): 'mpm' env python 에 numpy 없음 → ti310 절대 경로 python 으로 실행 · setsid 로 띄운 런은 PGID ≠ $! → 멈출 때 pkill -TERM -f <OUT 이름>"
       ],
-      "activate_prefix": "conda activate mpm && "
+      "activate_prefix": "conda activate ti310 && "
     },
     "wsl": {
       "role": "webapp(dem-web:5002) · 데이터 보관 · 결과 회수",

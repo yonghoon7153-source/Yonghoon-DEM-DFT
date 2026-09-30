@@ -1999,7 +1999,7 @@
   {
    "id": "DESC-01",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
@@ -2009,7 +2009,9 @@
     "scripts/dem_analysis_core.py",
     "scripts/analyze_contacts.py",
     "webapp/test_closed_param_values.py"
-   ]
+   ],
+   "claimed_fixed_sha": "f3cb141ae",
+   "verification_note": "f3cb141ae (웹앱 ②-a · 시험 먼저 — webapp/test_closed_param_values.py 옛 코드 12/28 → 28/28): calc_effective_conductivity 가 τ 가 없어도 phi_se 를 내고 (tau · sigma_ratio = None) analyze_contacts 가 phi_se · phi_am 을 τ 조건 밖에서 싣는다 — σ_Bruggeman 두 행만 τ 조건 · 시험 [C] 절 (SE–SE 접촉 0 → 관통 없음 침대에서 φ 두 키 존재)"
   },
   {
    "id": "DESC-02",
@@ -6421,9 +6423,23 @@
    "found_by": "claude (09-30 밤 · J20-l 첫 웹앱 감사 · 1저자 비준 순서 ① → ② → ③ 의 ②)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "웹앱 ② 값 · 경로 결함 묶음 — (a) am_am_n_contacts 가 full_metrics.json 에 문자열 (numpy int64 → json default=str · analyze_contacts) 이라 숫자 선택기 · 예측기 · 그룹 강조에서 조용히 빠진다 · (b) 접촉 0 인 상 쌍은 접촉 요약에 행이 없다 (인계표 J20-h = 0) · (c) τ 가 없으면 φ_SE · φ_AM 자체를 안 낸다 (calc_effective_conductivity 가 τ 없으면 None) · (d) 배치 · 아카이브 재분석 경로가 porosity_union · overlap 을 다시 안 만들어 사라진다 · (e) 그룹 최고값 강조의 lower_better 에 porosity union · overlap · CN std 누락 · (f) 등급 엔진 · 3D 뷰어의 physics → hertz 조용한 대체가 같은 라벨 (두 값 ≈ 2.7 배) · (g) 그룹 그림 porosity_union · overlap 체크박스 → [SKIP] Unknown",
-   "note": "① (표시 · SELF-73) 과 달리 값이나 경로를 바꾼다 — 비준 순서대로 ① 다음 묶음.  각 항목 시험 먼저 (옛 코드 실패 확인) · 인계표 · 수확기와 같은 정의로.  ⚠ (c) 는 '문턱 없는 φ' 를 내는 것이지 새 φ 정의가 아니다 (인계 φ = (라) 질량 보존 · ③).  ↪ 09-30 밤 ②-a 구현 (a)(b)(c)(d)(h) — webapp/test_closed_param_values.py 옛 코드 12/28 → 28/28 (J20-l) · claimed_fixed 는 커밋 SHA 와 함께 다음 커밋 · (e)(f)(g) = ②-b 남음 · (h) 는 착수 뒤 추가 (비정사각 상자 — 코퍼스 영향 0).",
+   "note": "① (표시 · SELF-73) 과 달리 값이나 경로를 바꾼다 — 비준 순서대로 ① 다음 묶음.  각 항목 시험 먼저 (옛 코드 실패 확인) · 인계표 · 수확기와 같은 정의로.  ⚠ (c) 는 '문턱 없는 φ' 를 내는 것이지 새 φ 정의가 아니다 (인계 φ = (라) 질량 보존 · ③).  ↪ 09-30 밤 ②-a 구현 (a)(b)(c)(d)(h) — webapp/test_closed_param_values.py 옛 코드 12/28 → 28/28 (J20-l) · claimed_fixed 는 커밋 SHA 와 함께 다음 커밋 · (e)(f)(g) = ②-b 남음 · (h) 는 착수 뒤 추가 (비정사각 상자 — 코퍼스 영향 0).  ↪ 10-01 ②-b 구현 (e)(f)(g) — webapp/test_closed_param_groupview.py 옛 코드 3 PASS · 13 FAIL → 38/38: (e) 그룹 표 열 · 낮을수록 좋음 집합을 모듈 수준 GROUP_DISPLAY_KEYS · GROUP_LOWER_BETTER 로 (표 열 이름과 같은 철자 강제 · 'Vulnerable' ↔ 열 'AM Vulnerable' 철자 어긋남으로 거꾸로 강조되던 것도 잡음 · 표에 없는 이름 셋 제거 · AM–AM CN std 열 추가) · (f) 등급 엔진 source_key · fallback_note (physics → Hertz 계열 대체면 'Hertz 계열 대체' 표지 · basis 앞에도) · 3D 뷰어 범례가 coverage_map_column 으로 읽은 열 표지 · (g) 그룹 그림 porosity_union · overlap_fraction_pct 등록 (값 없는 케이스는 0 으로 안 그림) — claimed_fixed 는 ②-b 커밋 SHA 와 함께 다음 커밋.",
    "evidence_tests": [
-    "webapp/test_closed_param_values.py"
+    "webapp/test_closed_param_values.py",
+    "webapp/test_closed_param_groupview.py"
+   ]
+  },
+  {
+   "id": "PRED-01",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (10-01 · 웹앱 ③ — v2 후보 표지를 달다가 예측기 자동 타깃 경로를 읽음)",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "예측기 자동 타깃 (predictor_engine · full_metrics 숫자 키 전부) 이 빠진 값을 0 으로 채운다 — 새 키가 케이스 절반을 넘는 순간 옛 케이스가 가짜 0 타깃이 된다 · physics v2 (*_physics_v2 · 미검증 후보) 도 자동 타깃이 되고 있었다",
+   "note": "`load_training_data` 가 `r.get(fk, 0)` 으로 채우고, 자동 타깃은 non_zero ≥ 50 % · std > 0 이면 들어간다 — 코퍼스 절반 이상이 새 키를 가지면 나머지 (재분석 전 케이스) 는 0 으로 학습된다.  ② ·③ 에서 늘어난 키 (porosity_union · 정확 union · 질량 보존 두께 · φ) 도 같은 길.  ↪ 10-01 웹앱 ③: `_fm_auto_target_ok` 가 `*_physics_v2` 를 뺀다 (J20-l (나) · 시험 V4–V6) — 0 채움 자체는 **열림** (처방 후보: 자동 타깃은 값이 있는 행만으로 학습 · 타깃별 마스크).",
+   "evidence_tests": [
+    "webapp/test_closed_param_exact_union.py"
    ]
   }
  ]

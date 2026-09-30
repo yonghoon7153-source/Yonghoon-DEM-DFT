@@ -819,7 +819,25 @@
   ⚠ **(d) 보고 정정** — 착수 전 보고의 *"2e 는 다른 판 · 상자 규칙이라 처방 뒤 화면 ε_union 이 조금 바뀔 수 있다"* 는 **틀렸다**: 2e 는 원 공극률에 고정해
   ε_u = ε_s + 겹침 · (1 − ε_s) 로 쓰므로 판 · 상자 규칙이 최종값에 들어가지 않는다 → 분석기 값 = 2e 값 (시험 D2 · 1e-9) · 기존 케이스 값 변화 0.
   웹앱: 접촉 요약 툴팁 (0 행 · '—' · N/A · 옛 케이스는 재분석해야 0 행) · φ_SE 툴팁 (τ 없어도 나온다) · 파이프라인 변경이라 WSL 5번 봉인 (1e09f661d) 이후 세대.
-- ⬜ **웹앱 ②-b** (e 그룹 강조 lower_better · AM–AM CN std 열 · f 등급 · 뷰어 Hertz 대체 표지 · g 그룹 그림 union · overlap) · ⬜ **③ (정확 union MC 단계 → `porosity_union_exact_pct` · `thickness_mass_conserving_um` · `phi_*_mass_conserving` · v2 후보 열)**.
+- ✅ **웹앱 ②-b (10-01 · 표시 · 경로 — 시험 먼저 `webapp/test_closed_param_groupview.py` 옛 코드 3 PASS · 13 FAIL → 38/38 · 값 · 점수 계산 불변)**:
+  (e) 그룹 비교 표의 열 정의 · '낮을수록 좋음' 집합을 모듈 수준 `GROUP_DISPLAY_KEYS` · `GROUP_LOWER_BETTER` · `_group_best_marks` 로 옮기고 **표 열 이름과 같은 철자**를 시험이 강제 —
+  porosity union · overlap · SE–SE CN std · **AM–AM CN std (새 열 · J20-j)** 를 넣음 · ⚠ 감사 중 새로 잡은 것: 옛 집합의 `'Vulnerable'` 이 표 열 `'AM Vulnerable'` 과 철자가 달라
+  AM Vulnerable 이 **거꾸로 (높을수록 좋음) 강조**되고 있었다 · 표에 없는 이름 (τ std · GB Density · SE Cluster) 제거 ·
+  (f) 등급 엔진 `_grade_axis` 가 `source_key` · `fallback_note` 를 낸다 — physics 키가 없어 Hertz 계열 (c_cpl[22]) 대체 키로 채우면 *'⚠ Hertz 계열 대체 … 문턱은 physics 기준'* ,
+  physics → physics 대체 (B3 없음) 는 *'⚠ 대체'* 로 · basis (툴팁 · 보고서) 앞에도 · 등급 표 라벨 옆 `⚠대체` · 3D 뷰어 피복 범례가 `viewer3d_data.coverage_map_column` 으로
+  읽은 열을 표시 (physics 열 없으면 *'⚠ Hertz 계열 대체'*) · (g) 그룹 그림 `porosity_union` · `overlap_fraction_pct` 등록 (옛: `[SKIP] Unknown`) — 값이 없는 (재분석 전) 케이스는
+  0 으로 그리지 않고 빠진다 · 모든 그림 체크박스 값 ⊆ 그림 목록을 시험이 강제 (누락은 이 둘뿐이었다).
+- ✅ **웹앱 ③ (10-01 · 시험 먼저 `webapp/test_closed_param_exact_union.py` 옛 코드 3 PASS · 15 FAIL (W5 는 조인 뒤 실패 쪽) → 36/36)** — 분석 단계 (analyze_contacts → `dem_analysis_core.run_full_analysis`) 가
+  ε_sphere 와 **같은 판 · 같은 상자**로 `calc_porosity_union_exact` 를 돌린다 = 상자 [0,Lx)×[0,Ly)×[0,판) 무작위 점 (기본 4×10⁶ · env `DEM_UNION_MC_N` · 0 = 끔) ·
+  x · y 주기 · 세 입자 겹침까지 정확 · 벽 밖 부피 제외 — **인계표와 같은 계산** (`lhs_union_webapp.coverage` 를 그대로 import · 복제 없음) · 3.3 만 입자 침대 ≈ 10 s.
+  full_metrics 새 키: `porosity_union_exact_pct` · `_se_pct` (1σ) · `union_exact_mc_n` · `_mc_seed` · `union_exact_status` · `wall_overhang_over_Vbox_pct` ·
+  `porosity_union_pair_clipped_pct` · `union_pair_upper_bound_ok` (쌍 렌즈 + 벽 밖 제거 ≥ 정확 − 4σ — 어기면 접촉 덤프에 겹친 쌍이 빠진 것) · `se_of_solid_vol` ·
+  `thickness_mass_conserving_um` = 판 간격 × (1 − ε_sphere)/(1 − ε_exact) · `phi_{se,am}_mass_conserving` = (1 − ε_exact) × 부피 몫 (J20-e (라) · 닫힘 = 1).
+  해석해 시험: 겹친 두 구 · 바닥을 뚫은 구 · 주기 경계 · 같은 자리 세 구 (쌍 렌즈가 틀리는 곳) · 비정사각 상자 — 4σ 안.  분석기에 있으므로 재분석 경로에서도 남는다.
+  웹앱: 케이스 배지 (정확 union ± 1σ · 두께 질량 보존) · 망 요약 행 넷 · 그룹 표 열 넷 (정확 union · 질량 보존 두께 = 낮을수록 좋음) · 그룹 그림 · MD 보고서 · 쉬운 설명 · AI 표 정의 ·
+  **physics v2 = 후보 · 미검증** (`inject_physics_v2_rows` — 망 요약 끝에 표지 붙은 절 · Physics 열에만) · 예측기 자동 타깃에서 `*_physics_v2` 제외 (`_fm_auto_target_ok` ·
+  ⚠ 감사 중 발견: v2 가 이미 자동 타깃 후보였고, 자동 타깃은 빠진 값을 0 으로 채운다 = 원장 `PRED-01` 열림) · 등급 축엔 원래 v2 없음 (시험 V7).
+  ⚠ 파이프라인 (분석기) 변경 = 5번 봉인 (1e09f661d) 이후 세대 · 옛 케이스는 재분석해야 값이 생긴다 (그 전엔 배지 · 행 · 열이 비고, 그림은 점을 안 찍는다).
 
 ## 인계 판정 (지금)
 

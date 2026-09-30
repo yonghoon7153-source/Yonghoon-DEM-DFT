@@ -730,6 +730,27 @@ def compute_se_network_diagnostics(contacts,
 
 # ── Per-AM coverage map (μm² SE / μm² total surface) ─────────────────────
 
+def coverage_map_column(coverage_per_am_csv_path) -> str | None:
+    """build_coverage_map 이 **실제로 읽는 열** — 'coverage_physics_pct' (Physics v1) · 'coverage_hertzian_pct'
+    (physics 열이 없을 때의 Hertz 계열 대체 = LIGGGHTS c_cpl[22] 기하 교차 원판) · None (파일 · 열 없음).
+    3D 뷰어 범례가 대체를 표지하도록 (웹앱 ②-b · LHS-24 (f) — 두 값 ≈ 2.7 배가 같은 범례로 섞이던 것)."""
+    import os
+    if not (coverage_per_am_csv_path and os.path.exists(coverage_per_am_csv_path)):
+        return None
+    try:
+        import csv
+        with open(coverage_per_am_csv_path, newline='') as fh:
+            header = next(csv.reader(fh), [])
+    except Exception:
+        return None
+    if 'am_id' not in header:
+        return None
+    for col in ('coverage_physics_pct', 'coverage_hertzian_pct'):
+        if col in header:
+            return col
+    return None
+
+
 def build_coverage_map(coverage_per_am_csv_path) -> dict[int, float]:
     """Read coverage_per_am.csv (created by coverage_physics_vs_hertzian).
     Returns {am_id: coverage_pct (0-100)} using the *physics* column when
