@@ -281,6 +281,83 @@ def relax(model_dir, out, calc_kind="uma", device="cuda", d3_kind="auto", fmax=0
     return rec, (0 if (converged and not chk["flags"]) else 2)
 
 
+EV_A2_TO_J_M2 = 16.02176634          # eV/Å² → J/m²
+D3BJ_PBE_SDFTD3 = {"s6": 1.0, "s8": 0.7875, "a1": 0.4289, "a2": 4.4407, "alp": 14.0}   # cc_graphite.D3BJ_PBE 와 같다 (ATM 열)
+HARTREE_EV, BOHR_A = 27.211386245988, 0.529177210903
+G3_TOL_J_M2 = 0.01                   # SE 쌍 카드 4 G3 (10 → 12 Å)
+
+
+def _atm_delta(b, f):
+    """같은 기하에서 E_D3(s9=1) − E_D3(s9=0) 의 끝점 차 (eV) — WAD-CC atm_column 과 같은 방법 · 없으면 None."""
+    try:
+        from dftd3.interface import DispersionModel, RationalDampingParam
+    except ImportError:
+        return None
+
+    def e_d3(at, s9):
+        mdl = DispersionModel(at.get_atomic_numbers(), at.get_positions() / BOHR_A, at.cell.array / BOHR_A, periodic=np.array([True, True, True]))
+        return mdl.get_dispersion(RationalDampingParam(s9=s9, **D3BJ_PBE_SDFTD3), grad=False)["energy"] * HARTREE_EV
+    return (e_d3(f, 1.0) - e_d3(f, 0.0)) - (e_d3(b, 1.0) - e_d3(b, 0.0))
+
+
+def w_endpoints(model_dir, relax_dir, gaps=(10.0, 12.0), calc_kind="uma", device="cuda", d3_kind="auto", vram_cap_mib=None,
+                gpu_kill_total_mib=None, gpu_start_max_mib=None, gpu_wait_s=3600, out_dir=None):
+    """SE 쌍 카드 §2: 이완된 결합 기하 → make_endpoints(gap) 로 bound′·far → E = E_UMA + E_D3(2체) → W = ΔE/A (J/m²) · ATM 열 · G3.
+
+    ① 모델 폴더의 meta·bound sha (load_model) ② relax_meta 의 init_sha256 = 이 모델 · relaxed_sha256 = 파일 (다른 모델의 이완본·손댄 좌표 거부)
+    ③ 끝점은 **이완본에서** 새로 만든다 (빌더의 초기 far 를 쓰지 않는다) ④ 계산기 pbc 3축 (이완과 같은 관례).
+    ⛔ 못 하는 것: DFT 가 아니다 · registry 평균·헤드라인·라벨은 결과 기록 몫 · 이완이 미수렴이면 값을 내되 '미수렴' 을 같이 적는다 (G1 판정은 기록에서).
+    """
+    from ase.io import read
+    init, meta, sub_el, ads_el, fixed, lateral, init_sha = load_model(model_dir)
+    rp = os.path.join(relax_dir, "relaxed.extxyz"); mp = os.path.join(relax_dir, "relax_meta.json")
+    if not (os.path.isfile(rp) and os.path.isfile(mp)):
+        raise SlabError(f"이완 산출물이 없다 — {relax_dir} (relaxed.extxyz · relax_meta.json)")
+    rm = json.load(open(mp, encoding="utf-8"))
+    if rm.get("init_sha256") != init_sha:
+        raise SlabError(f"relax_meta 의 init_sha256 가 이 모델과 다르다 — 다른 모델의 이완본? ({str(rm.get('init_sha256'))[:16]} ≠ {init_sha[:16]})")
+    if rm.get("relaxed_sha256") != _sha(rp):
+        raise SlabError("relaxed.extxyz sha256 가 relax_meta 와 다르다 (손댄 좌표?)")
+    if calc_kind == "uma" and d3_kind == "none":
+        raise SlabError("UMA 본 계산에서 --d3 none 은 허용되지 않는다 (카드: UMA+D3)")
+    relaxed = read(rp); relaxed.set_pbc((True, True, False))
+    is_ads = np.array([s in ads_el for s in relaxed.get_chemical_symbols()])
+    out_dir = out_dir or relax_dir
+    guard = {"vram_cap_MiB": vram_cap_mib, "gpu_kill_total_MiB": gpu_kill_total_mib, "gpu_start_max_MiB": gpu_start_max_mib}
+    if gpu_start_max_mib is not None:
+        g = gpu_start_gate(gpu_start_max_mib, gpu_wait_s); guard["start_gate"] = g
+        if not g["ok"]:
+            raise SlabError(f"시작 문턱: {g['reason']}")
+    if gpu_kill_total_mib is not None:
+        start_gpu_watchdog(gpu_kill_total_mib, out_dir); guard["watchdog"] = "on"
+    calc, cinfo = make_calc(calc_kind, device, d3_kind, vram_cap_mib)
+    A = float(np.linalg.norm(np.cross(relaxed.cell.array[0], relaxed.cell.array[1])))
+    rows = {}
+    for gap in gaps:
+        b, f, em = __import__("build_aprime_interfaces").make_endpoints(relaxed, is_ads, float(gap))
+        e = {}
+        for k, at in (("bound", b), ("far", f)):
+            x = at.copy(); x.set_pbc((True, True, True)); x.calc = calc
+            e[k] = float(x.get_potential_energy())
+        datm = _atm_delta(b.copy(), f.copy())
+        rows[f"{float(gap):g}"] = {"E_bound_eV": e["bound"], "E_far_eV": e["far"], "W_2body_J_m2": (e["far"] - e["bound"]) / A * EV_A2_TO_J_M2,
+                                  "dW_ATM_J_m2": None if datm is None else datm / A * EV_A2_TO_J_M2,
+                                  "ATM_status": "simple-dftd3 · E(s9=1) − E(s9=0) · 3D 주기" if datm is not None else "simple-dftd3 python 없음 — ATM 미계산 (0 아님)",
+                                  "endpoint": em}
+    keys = list(rows)
+    g3 = None
+    if len(keys) >= 2:
+        dW = abs(rows[keys[-1]]["W_2body_J_m2"] - rows[keys[0]]["W_2body_J_m2"])
+        g3 = {"from_to_A": [keys[0], keys[-1]], "abs_dW_J_m2": dW, "tol_J_m2": G3_TOL_J_M2, "status": "PASS" if dW <= G3_TOL_J_M2 else "FAIL",
+              "⚠": "카드 G3 판정 대상 = P1·P2 의 S 바깥 A — 나머지는 정보"}
+    rec = {"schema": "wad_uma_w/v1", "model": meta.get("model"), "term": meta.get("term"), "registry": meta.get("registry"), "model_dir": os.path.abspath(model_dir),
+           "relax_dir": os.path.abspath(relax_dir), "init_sha256": init_sha, "relaxed_sha256": rm.get("relaxed_sha256"), "n_atoms": len(relaxed),
+           "n_ads": int(is_ads.sum()), "area_A2": A, "relax": {k: rm.get(k) for k in ("converged_fmax", "steps_taken", "fmax_free_final_eV_A", "interface_check_flags", "disp_max_A")},
+           "gaps": rows, "G3": g3, "gpu_guard": guard, "calculator": cinfo,
+           "definition": "W_sep = [E(far) − E(bound′)]/A · E = E_UMA(default · omat) + E_D3(BJ 2체) · 끝점 = 이완 결합 기하에서 make_endpoints(gap) · 계면 1 개"}
+    return rec
+
+
 def _selftest():
     import tempfile, subprocess
     sys.path.insert(0, HERE)
@@ -387,6 +464,37 @@ def _selftest():
                     os.environ.pop(k, None)
                 else:
                     os.environ[k] = v
+        # ── W 단계 (--w_from · SE 쌍 카드 §2) — EMT 로 흐름만 · 음성: 다른 모델의 이완본 · 손댄 이완 좌표 · UMA+d3 none ──
+        wr = w_endpoints(md, os.path.join(md, "relax"), gaps=(8.0, 10.0), calc_kind="emt", d3_kind="none")
+        ck("W 단계: 끝점 둘 (8·10 Å) · W 유한 · 넓이 > 0 · G3 계산됨 · far 간격 ≥ gap", set(wr["gaps"]) == {"8", "10"} and all(np.isfinite(v["W_2body_J_m2"]) for v in wr["gaps"].values())
+           and wr["area_A2"] > 0 and wr["G3"] is not None and wr["gaps"]["10"]["endpoint"]["far_gap_direct_image_A"][0] >= 10 - 1e-6, {k: v["W_2body_J_m2"] for k, v in wr["gaps"].items()})
+        ck("W 단계: W = (E_far − E_bound)/A × 16.0218 (부호·단위 검산)", all(abs(v["W_2body_J_m2"] - (v["E_far_eV"] - v["E_bound_eV"]) / wr["area_A2"] * 16.02176634) < 1e-9
+           for v in wr["gaps"].values()))
+        ck("W 단계: ATM 은 계산되거나 '미계산 (0 아님)' — 0 으로 채우지 않는다", all((v["dW_ATM_J_m2"] is not None) or ("미계산" in v["ATM_status"]) for v in wr["gaps"].values()))
+        try:
+            w_endpoints(md, os.path.join(md, "g6"), gaps=(8.0,), calc_kind="emt", d3_kind="none")          # g6 = 같은 모델 · 정상 이완본 (위 감시 시험)
+            m_ok = True
+        except SlabError:
+            m_ok = False
+        ck("W 단계: 같은 모델의 다른 이완 폴더(g6)도 받는다", m_ok)
+        B.write_models(os.path.join(T, "V2b"), {"hollow_fcc": B.build_v2(d0=2.0)["hollow_fcc"]})
+        try:
+            w_endpoints(os.path.join(T, "V2b", "hollow_fcc"), os.path.join(md, "relax"), gaps=(8.0,), calc_kind="emt", d3_kind="none"); bad = False
+        except SlabError as e:
+            bad = "다른 모델" in str(e)
+        ck("⛔음성 W 단계: 다른 모델의 이완본을 주면 거부 (init_sha256 불일치)", bad)
+        rp = os.path.join(md, "relax", "relaxed.extxyz"); keep = open(rp).read(); open(rp, "w").write(keep + "\n")
+        try:
+            w_endpoints(md, os.path.join(md, "relax"), gaps=(8.0,), calc_kind="emt", d3_kind="none"); bad = False
+        except SlabError as e:
+            bad = "손댄" in str(e)
+        ck("⛔음성 W 단계: 이완 좌표를 손대면 거부 (relaxed_sha256 불일치)", bad)
+        open(rp, "w").write(keep)
+        try:
+            w_endpoints(md, os.path.join(md, "relax"), gaps=(8.0,), calc_kind="uma", d3_kind="none"); bad = False
+        except SlabError as e:
+            bad = "d3" in str(e).lower()
+        ck("⛔음성 W 단계: UMA + --d3 none → 거부", bad)
         # ── P1 · P2 (SE 쌍 전체 계면) 도 이 도구가 받는다 — 사전 점검만 (계산 0) ──
         for kind, term in (("P1", "s_outer"), ("P2", "li_outer")):
             B.write_models(os.path.join(T, kind), {"A": B.build_full(kind, term)["A"]})
@@ -418,6 +526,9 @@ def main():
     ap.add_argument("--gpu_start_max_mib", type=int, default=None, help="GPU 합계가 이 값 이하일 때만 시작 (못 읽으면 시작 안 함)")
     ap.add_argument("--gpu_wait_s", type=int, default=3600, help="시작 문턱 대기 상한 (넘으면 종료 4)")
     ap.add_argument("--mem_probe", action="store_true", help="힘 한 번 계산하고 최대 메모리만 기록 (이완 없음)")
+    ap.add_argument("--w_from", metavar="MODEL_DIR", help="W 단계 (SE 쌍 카드 §2): 이 모델의 이완본(--relax_dir)에서 끝점을 만들어 W_UMA+D3 · ATM · G3 → --out")
+    ap.add_argument("--relax_dir", help="--w_from 과 함께: relaxed.extxyz · relax_meta.json 이 있는 폴더")
+    ap.add_argument("--gaps", type=float, nargs="+", default=[10.0, 12.0], help="--w_from 끝점 간격 (Å) · 기본 10 12 (G3)")
     ap.add_argument("--d3_energy", metavar="STRUCT", help="S3 전 예외 ② D3 결박 검사용: 이 구조의 외부 D3 에너지만 찍는다 (eV · Ry · 구현·버전)")
     ap.add_argument("--energies", metavar="STRUCT", nargs="+", help="S4 집계용: 구조들의 **UMA 단일점 에너지(D3 없음 · default 모드 · 3축 pbc)** 를 JSON 으로 (개정 1: D3 항은 QE 출력에서). --out 에 쓴다")
     a = ap.parse_args()
@@ -454,6 +565,18 @@ def main():
         if a.out:
             open(a.out, "w", encoding="utf-8").write(txt + "\n"); print(f"-> {a.out}")
         print(txt if not a.out else json.dumps({k: v["E_UMA_eV"] for k, v in rows.items()}, ensure_ascii=False))
+        return 0
+    if a.w_from:
+        if not (a.relax_dir and a.out):
+            ap.error("--w_from 에는 --relax_dir · --out 이 필요하다")
+        rec = w_endpoints(a.w_from, a.relax_dir, a.gaps, a.calc, a.device, a.d3, a.vram_cap_mib, a.gpu_kill_total_mib, a.gpu_start_max_mib, a.gpu_wait_s,
+                          out_dir=os.path.dirname(os.path.abspath(a.out)))
+        os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
+        open(a.out, "w", encoding="utf-8").write(json.dumps(rec, ensure_ascii=False, indent=1, default=float) + "\n")
+        g = rec["gaps"]; k0 = next(iter(g))
+        print(f"W {rec['model']} {rec['term']} {rec['registry']} · 수렴 {rec['relax']['converged_fmax']} · 깃발 {len(rec['relax']['interface_check_flags'] or [])} · "
+              + " · ".join(f"{k} Å W2 {v['W_2body_J_m2']:.4f}" + ("" if v['dW_ATM_J_m2'] is None else f" ATM {v['dW_ATM_J_m2']:+.4f}") for k, v in g.items())
+              + (f" · G3 |ΔW| {rec['G3']['abs_dW_J_m2']:.4f} {rec['G3']['status']}" if rec["G3"] else "") + f" → {a.out}")
         return 0
     if not a.model_dir:
         ap.error("--model_dir 이 필요하다")
