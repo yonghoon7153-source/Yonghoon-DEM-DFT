@@ -353,6 +353,79 @@ def build_v5(term, a_ag=A_AG_PBE_D3, d0=2.8, gap=8.0, ag_layers=3, vacuum_tmp=16
     return out
 
 
+D_GRAPHITE = 3.35       # 흑연 층간 초기값 (cc_graphite.D_INIT 와 같다 · 이완이 정한다)
+
+
+def graphite_rect_slab(a_c, nx=4, ny=7, layers=3, d=D_GRAPHITE):
+    """흑연 AB(ABA…) 직사각 슬랩 — 셀 (nx·a, ny·√3a) · 층당 4·nx·ny 원자 · 첫 층이 z=0.
+
+    직사각 단위 (a, √3a) 의 C 4 개 = 분수좌표 (0,0) (½,⅙) (½,½) (0,⅔) — 최근접 a/√3 · 배위 3.
+    B 층은 결합 벡터 (½,⅙) 만큼 민다 (Bernal AB).
+    """
+    from ase import Atoms
+    base = np.array([[0.0, 0.0], [0.5, 1.0 / 6.0], [0.5, 0.5], [0.0, 2.0 / 3.0]])
+    shift = np.array([0.5, 1.0 / 6.0])
+    A = np.array([a_c, 0.0]); Bv = np.array([0.0, np.sqrt(3.0) * a_c])
+    pos = []
+    for L in range(layers):
+        off = shift if L % 2 == 1 else np.zeros(2)
+        for i in range(nx):
+            for j in range(ny):
+                for f in base:
+                    fr = (f + off) % 1.0
+                    xy = (fr[0] + i) * A + (fr[1] + j) * Bv
+                    pos.append([xy[0], xy[1], L * d])
+    cell = [[nx * a_c, 0, 0], [0, ny * np.sqrt(3.0) * a_c, 0], [0, 0, (layers - 1) * d + 10.0]]
+    return Atoms("C" * len(pos), positions=pos, cell=cell, pbc=(True, True, False))
+
+
+def build_full(kind, term, a_ag=A_AG_PBE_D3, a_c=A_C_PBE_D3, d0=None, gap=10.0, ag_layers=4, c_layers=3):
+    """P1 (LPSCl|Ag(111)) · P2 (LPSCl|흑연(0001)) **전체 계면** — SE 쌍 UMA+D3 예측 카드 (wad_se_pairs_uma_prediction_card_2026_10_01).
+
+    · SE = 정본 4층 대칭 슬랩 (V100 PBE 이완 좌표 · V3·V4 와 같은 기판) — P1 1×2 · P2 1×3
+    · 흡착층을 SE 에 맞춘다 (결정 7): P1 Ag(111) 2√3×7 × ag_layers · P2 흑연 AB 4×7√3 × c_layers
+    · registry A·B = registry_select (초기 구조 · V5 와 같은 배치 — 흡착층 첫 층의 최소 ID 원자를 A 위 / A–B 중점 위)
+    · 마스크 = SE far_half 만 (흡착층 자유 · V5 와 같다 — interface_check 가 흡착층 고정을 깃발로 본다) · 측방 제약 없음
+    · 끝점 = make_endpoints (기본 gap 10 Å — WAD-CC 교훈)
+    ⛔ 못 하는 것: 이완·에너지 없음 · 변형률 3 % 넘으면 거부만 한다.
+    """
+    from ase import Atoms
+    if kind not in ("P1", "P2"):
+        raise SlabError(f"build_full: 모르는 계면 {kind} (P1 · P2)")
+    sub0, sp = se_slab_from_relaxed(term)
+    rep = (1, 2, 1) if kind == "P1" else (1, 3, 1)
+    sub = sub0.repeat(rep)
+    reg = registry_select(sub, sp, sgn=1.0)
+    Cse = sub.cell.array
+    if kind == "P1":
+        ads, el, d0 = ag111_rect_slab(a_ag, 7, 4, ag_layers), "Ag", (2.8 if d0 is None else d0)
+        what, n_layers = f"P1 Ag(111) 2√3×7 × {ag_layers} on SE 1×2", ag_layers
+    else:
+        ads, el, d0 = graphite_rect_slab(a_c, 4, 7, c_layers), "C", (3.2 if d0 is None else d0)
+        what, n_layers = f"P2 흑연 AB 4×7√3 × {c_layers} on SE 1×3", c_layers
+    Ca = ads.cell.array
+    eps = [100 * (Cse[0, 0] / Ca[0, 0] - 1), 100 * (Cse[1, 1] / Ca[1, 1] - 1)]
+    _strain_guard(eps, what)
+    x = ads.get_positions().copy(); x[:, 0] *= Cse[0, 0] / Ca[0, 0]; x[:, 1] *= Cse[1, 1] / Ca[1, 1]
+    bottom = np.where(x[:, 2] < x[:, 2].min() + 0.3)[0]; anchor = int(bottom.min())
+    out = {}
+    for name, xy in (("A", reg["A_xy_A"]), ("B", reg["midpoint_xy_A"])):
+        y = x.copy(); y[:, :2] += np.array(xy) - y[anchor, :2]
+        y[:, 2] += (sub.get_positions()[:, 2].max() + d0) - y[:, 2].min()
+        bound = sub + Atoms(el * len(y), positions=y)
+        bound.set_cell(Cse); bound.set_pbc((True, True, False))
+        is_ads = np.array([s == el for s in bound.get_chemical_symbols()])
+        b, f, em = make_endpoints(bound, is_ads, gap)
+        fixed = S.fixed_mask_policy(b, ads_elements=(el,))
+        chk = S.interface_check(b, f, ads_elements=(el,), fixed_idx=fixed)
+        out[name] = {"bound": b, "far": f, "meta": {"model": kind, "term": term, "registry": name, "registry_rule": reg, "se_layers": 4, "se_lateral": list(rep[:2]),
+                                                    "se_source": sub0.info.get("source"), "se_source_sha256": sub0.info.get("source_sha256"),
+                                                    "n_se": int((~is_ads).sum()), "n_ads": int(is_ads.sum()), "ads_element": el, "ads_layers": n_layers,
+                                                    "ads_strain_pct_x_y": [round(e, 3) for e in eps], "anchor_ads_index_in_layer": anchor, "fixed_idx": fixed, "lateral_fixed_idx": [],
+                                                    "d0_A": d0, "endpoints": em, "interface_check_flags": chk["flags"]}}
+    return out
+
+
 def write_models(out_dir, models):
     from ase.io import write
     os.makedirs(out_dir, exist_ok=True)
@@ -471,6 +544,41 @@ def _selftest():
     # ⑩ 결정성: 두 번 빌드 → 같은 좌표
     b1 = build_v34("V3", "s_outer")["B"]["bound"].get_positions(); b2 = build_v34("V3", "s_outer")["B"]["bound"].get_positions()
     ck("결정성: 같은 입력 → 같은 좌표 (V3 B)", np.allclose(b1, b2))
+    # ⑪ 흑연 직사각 슬랩 (P2 부품): 최근접 a/√3 · 층 안 배위 3 · AB (둘째 층 절반은 첫 층 원자 위)
+    g = graphite_rect_slab(A_C_PBE_D3, 4, 7, 3)
+    from ase.geometry import get_distances
+    p0 = g.get_positions()[g.get_positions()[:, 2] < 0.1]
+    _, Dg = get_distances(p0, p0, cell=g.cell, pbc=(True, True, False))
+    np.fill_diagonal(Dg, 99.0)
+    ck("흑연 직사각: 층당 112 · 3 층 336 · 최근접 a/√3 · 배위 3", len(g) == 336 and len(p0) == 112 and abs(Dg.min() - A_C_PBE_D3 / np.sqrt(3)) < 1e-6
+       and int(((Dg < 1.6).sum(axis=1) == 3).all()) == 1, (len(g), len(p0), round(float(Dg.min()), 4)))
+    p1 = g.get_positions()[(g.get_positions()[:, 2] > 3.0) & (g.get_positions()[:, 2] < 3.5)]
+    _, Dab = get_distances(p1, p0, cell=g.cell, pbc=(True, True, False))
+    over = int((Dab.min(axis=1) < 3.35 + 1e-3).sum())
+    ck("흑연 직사각: AB — 둘째 층 절반(56)만 첫 층 원자 바로 위", over == 56, over)
+    # ⑫ P1 · P2 전체 계면 (SE 쌍 UMA 카드)
+    p1m = build_full("P1", "s_outer"); m = p1m["A"]["meta"]
+    ck("P1: SE 4층 1×2 (220) + Ag 4층 112 · 변형률 +0.85/−0.19 % · 깃발 0", m["n_se"] == 220 and m["n_ads"] == 112 and abs(m["ads_strain_pct_x_y"][0] - 0.848) < 0.01
+       and abs(m["ads_strain_pct_x_y"][1] + 0.186) < 0.01 and not m["interface_check_flags"], (m["n_se"], m["n_ads"], m["ads_strain_pct_x_y"], m["interface_check_flags"]))
+    ck("P1: 마스크 = SE 만 (흡착층 자유) · 측방 없음 · far 간격 ≥ 10 Å", all(i < 220 for i in m["fixed_idx"]) and 0 < len(m["fixed_idx"]) < 220 and m["lateral_fixed_idx"] == []
+       and min(m["endpoints"]["far_gap_direct_image_A"]) >= 10.0 - 1e-6, (len(m["fixed_idx"]), m["endpoints"]["far_gap_direct_image_A"]))
+    ia = [i for i, s in enumerate(p1m["A"]["bound"].get_chemical_symbols()) if s == "Ag"]; ib = [i for i, s in enumerate(p1m["B"]["bound"].get_chemical_symbols()) if s == "Ag"]
+    ck("P1: registry A·B 의 흡착층 면내 위치가 다르다", not np.allclose(p1m["A"]["bound"].get_positions()[ia, :2], p1m["B"]["bound"].get_positions()[ib, :2]))
+    p2m = build_full("P2", "li_outer"); m2 = p2m["B"]["meta"]
+    ck("P2: SE 4층 1×3 (294) + 흑연 3층 336 · 변형률 +1.94/+0.89 % · 깃발 0", m2["n_se"] == 294 and m2["n_ads"] == 336 and abs(m2["ads_strain_pct_x_y"][0] - 1.935) < 0.02
+       and abs(m2["ads_strain_pct_x_y"][1] - 0.890) < 0.02 and not m2["interface_check_flags"], (m2["n_se"], m2["n_ads"], m2["ads_strain_pct_x_y"], m2["interface_check_flags"]))
+    try:
+        build_full("P2", "s_outer", a_c=2.35); bad = False
+    except SlabError as e:
+        bad = "변형률" in str(e)
+    ck("⛔음성 P2: 흑연 격자 2.35 → 변형률 > 3 % → 거부", bad)
+    try:
+        build_full("P3", "s_outer"); bad = False
+    except SlabError as e:
+        bad = "모르는 계면" in str(e)
+    ck("⛔음성 build_full: 모르는 계면 이름 → 거부", bad)
+    q1 = build_full("P1", "li_outer")["A"]["bound"].get_positions(); q2 = build_full("P1", "li_outer")["A"]["bound"].get_positions()
+    ck("결정성: P1 li_outer A 두 번 → 같은 좌표", np.allclose(q1, q2))
     print(f"{'✅' if n_bad == 0 else '⛔'} build_aprime_interfaces selftest {n_ok}/{n_ok + n_bad} 통과")
     return 0 if n_bad == 0 else 1
 
@@ -478,12 +586,12 @@ def _selftest():
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--selftest", action="store_true")
-    ap.add_argument("--build", choices=["V2", "V3", "V4", "V5"])
+    ap.add_argument("--build", choices=["V2", "V3", "V4", "V5", "P1", "P2"])
     ap.add_argument("--term", choices=["s_outer", "li_outer"], default="s_outer")
     ap.add_argument("--out")
     ap.add_argument("--a_ag", type=float, default=A_AG_PBE_D3)
     ap.add_argument("--a_c", type=float, default=A_C_PBE_D3)
-    ap.add_argument("--gap", type=float, default=8.0)
+    ap.add_argument("--gap", type=float, default=None, help="끝점 간격 (Å) — 기본 V2–V5 8 · P1·P2 10 (SE 쌍 카드)")
     ap.add_argument("--registry", metavar="STRUCT", help="임의 구조에 규칙만 적용해 JSON 출력")
     ap.add_argument("--species", default="S")
     a = ap.parse_args()
@@ -496,15 +604,19 @@ def main():
     if a.build:
         if not a.out:
             ap.error("--out 이 필요하다")
+        gap = a.gap if a.gap is not None else (10.0 if a.build in ("P1", "P2") else 8.0)
         if a.build == "V2":
-            models = build_v2(a.a_ag, a.a_c, gap=a.gap)
+            models = build_v2(a.a_ag, a.a_c, gap=gap)
         elif a.build in ("V3", "V4"):
-            models = build_v34(a.build, a.term, gap=a.gap)
+            models = build_v34(a.build, a.term, gap=gap)
+        elif a.build == "V5":
+            models = build_v5(a.term, a.a_ag, gap=gap)
         else:
-            models = build_v5(a.term, a.a_ag, gap=a.gap)
+            models = build_full(a.build, a.term, a.a_ag, a.a_c, gap=gap)
         man = write_models(a.out, models)
         for k, v in man["models"].items():
-            print(f"✓ {a.build}/{k}: 원자 {v.get('n_sub', v.get('n_se', v.get('n_Ag')))}+{v.get('n_ads', v.get('n_C', v.get('n_Ag')))} · c {v['endpoints']['c_A']} Å · far 간격 {v['endpoints']['far_gap_direct_image_A']} · 깃발 {v['interface_check_flags']}")
+            n1 = v.get("n_sub", v.get("n_se", v.get("n_Ag"))); n2 = v.get("n_ads", v.get("n_C", v.get("n_Ag")))
+            print(f"✓ {a.build}/{k}: 원자 {n1}+{n2} · c {v['endpoints']['c_A']} Å · far 간격 {v['endpoints']['far_gap_direct_image_A']} · 깃발 {v['interface_check_flags']}")
         print(f"→ {a.out}/manifest.json")
         return 0
     ap.error("--selftest · --build · --registry 중 하나")
