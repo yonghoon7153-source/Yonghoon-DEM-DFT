@@ -4987,6 +4987,12 @@
      "at": "2026-09-27",
      "state": "proposed",
      "note": "편지 CH 발송 (사용자 · 다섯 시드 P 배위 통계 · seed5 셈 정정 · Q-CH-1 폭 규칙 · Q-CH-2 본 런 400 K · Q-CH-3 P–S–S 문구 수정안) — 550 K 겸용 예외 = 카드 저자 확정 · 외부 1저자 회신 대기 · 여전히 proposed (규칙 문구 3 건은 외부 1저자 몫)"
+    },
+    {
+     "at": "2026-09-30",
+     "state": "proposed",
+     "by": "외부 1저자 (회신 CN)",
+     "note": "캠페인이 갈래1 로 닫혔다 (회신 CN). 이 개정의 항목(400 K 800 ps · seed5 포함 판 주 결과 · MTO 주 등)은 회신 CD · CH · CL · CN 에서 모두 확인된 채 판독에 쓰였다. 비준(active 전환)은 카드 저자(사용자) 몫."
     }
    ],
    "ratification": {
@@ -5317,6 +5323,12 @@
      "state": "proposed",
      "by": "외부 1저자 (회신 CL · 부분)",
      "note": "변경 1 두 문턱 해석 **확인** (가까운 쪽 거리 = 양쪽 모두 2σ 밖) · 변경 6 문턱 **2 배 확정** + 카드 단서 '출처는 400 K 두 런이며 초기구조가 섞여 있다' · Q-CL-3·4 는 결과와 같이 · 네 시드 전수는 발송 전 권장. 여전히 proposed — 나머지 항목(Q-CL-3·4)이 남았다. 트랙 = li2s (사용자 ≠ 1저자)."
+    },
+    {
+     "at": "2026-09-30",
+     "state": "proposed",
+     "by": "외부 1저자 (회신 CN)",
+     "note": "Q-CL-3 (P–S–S 문구) · Q-CL-4 (두 보존율 — (가)(나) 채택 · (다) 기각) 확정 → 이 개정의 **미결 없음**. 이 개정 규칙(2σ · 600 K 편입 · 465 K 조기확인 · MTO 주)으로 본 런을 판독했고 갈래1 로 닫혔다. 비준(active 전환)은 카드 저자(사용자) 몫."
     }
    ]
   },
@@ -5991,6 +6003,55 @@
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
     "비준_근거": "사용자 2026-09-30 — '줄인 판으로 비준 (Recommended)' (회신 CM P0-2 범위로 줄인 개정안 · commit 은 그 문안이 들어간 커밋)."
    }
+  },
+  {
+   "id": "D-2026-09-30-lpscl-smallcell-glass-closed",
+   "schema_version": 2,
+   "kind": "closure",
+   "scope": null,
+   "slot": "lpscl_smallcell_glass_md_closure",
+   "applies_to": {
+    "systems": [
+     "lpscl_amorphous"
+    ]
+   },
+   "title": "소셀 유리 평형 MD — 닫는다: 카드 §4 갈래1 (N_pass 1/15) · 이 유리의 Li 수송 계수와 활성화 에너지를 보고하지 않는다 (외부 1저자 회신 CN 확정)",
+   "statement": "카드 D-2026-09-21-lpscl-smallcell-glass-md (+ 개정 CC · CH) 를 **갈래1 로 닫는다**. 본 런 465/550 K × 5 시드 · 400 ps 에서 C1 11/11 · C2 (MTO · 사다리 끝 σ · 2σ) 통과 465 K 0/5 · 550 K 1/5 → N_pass **1/15** (400 K 제외 시 1/10, 600 K 포함 시 2/11 — 어느 분모로도 갈래1) · 두 온도를 모두 통과한 시드 0. 허용 주문장(회신 CN 확정 · 마지막 문장 좁힘): *'이 프로토콜(465/550 K · 400 ps · 5 시드)로는 사전등록 게이트를 만족하는 확산영역 데이터를 얻지 못했다. 따라서 이 유리의 Li 수송 계수와 활성화 에너지를 보고하지 않는다.'* 허용·금지·기록 전부는 마감 기록.",
+   "rationale": "닫힘 조건(갈래1)과 판독 규칙이 결과 전에 박혀 있었고 규칙을 기계적으로 적용했다 — 외부 1저자 *'결과가 아니라 규칙이 결론을 냈습니다. 확정합니다.'* 판독 스크립트의 σ 오류는 본 런 값을 보기 전에 원장에 먼저 적고(7e1b37095) 재판정했으며, 갈래는 어느 σ · 어느 분모로도 같다. 갈래1 금지(prod 연장 · 문턱 완화 · 점 제외)를 지켰다.",
+   "decision_state": "proposed",
+   "record_kind": "closure",
+   "results_seen": true,
+   "card": "db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json",
+   "record": "db/properties/lpscl_smallcell_glass_md_amendment_ch_2026_09_28.json",
+   "amends": [
+    "D-2026-09-21-lpscl-smallcell-glass-md"
+   ],
+   "depends_on": [
+    "D-2026-09-21-lpscl-smallcell-glass-md",
+    "D-2026-09-26-lpscl-smallcell-glass-amend-cc",
+    "D-2026-09-28-lpscl-smallcell-glass-amend-ch"
+   ],
+   "review": "kb/reviews/li2s1a_CN_reply_li2s_main_readout_2026_09_30.md",
+   "evidence": [
+    "kb/reviews/li2s1a_CN_reply_li2s_main_readout_2026_09_30.md",
+    "db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json",
+    "db/properties/lpscl_smallcell_glass_md_amendment_ch_2026_09_28.json"
+   ],
+   "reopen_criteria": [
+    "⛔ 이 카드는 재개하지 않는다 — 카드 §4 갈래1 '새 선언이다' · §7 재개 사유가 아닌 것(prod 연장 · 600 K 이상 · 셀 160 원자 초과).",
+    "온도 · 길이를 다시 잡는 설계는 **새 카드**다 (결과 전 게이트 · 외부 1저자 규칙). 출발 사실은 마감 기록 §5."
+   ],
+   "enforcement": "① 마감 기록 §2 허용 서술 ①–⑩ 밖으로 쓰지 않는다 — 특히 옛 문장 '이 프로토콜로는 이 유리의 Li 수송이 측정되지 않는다' 와 '이 온도에서 확산하지 않는다' 금지 ② 이 캠페인의 D · σ · Ea 값을 어떤 형태로도 싣지 않는다 ③ 'PS₄ 보존율' 대신 'P 의 4 배위 유지' ④ 화면 /li2s 요약 절이 닫힘 상태를 싣는다 (webapp/tests/test_li2s.py).",
+   "proposed_by": "claude-session-2026-09-30",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-09-30",
+     "state": "proposed",
+     "by": "외부 1저자 (회신 CN)",
+     "note": "갈래1 확정 · 주문장 마지막 문장 좁힘 · 주 표기 1/15 · Ea 적합 단위 질문 소멸 · P–S–S 문구 확정 · (가)(나) 채택 (다) 기각 · 550 K 문턱 부근 · STO–MTO 폭 기록. 판정은 외부 1저자가 확정했다 — 원장 active 전환(ratification)은 카드 저자(사용자) 몫. 트랙 = li2s (사용자 ≠ 1저자)."
+    }
+   ]
   }
  ]
 }

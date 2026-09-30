@@ -779,3 +779,67 @@ def test_brief_carries_no_transport_values_or_internal_jargon(client):
     for word in ("게이트", "원장", "회신", "갈래", "보고량", "대조 잡", "정체 온전", "감김", "감긴다",
                  "G-B", "estimand", "canary"):
         assert word not in text, f"내부 은어 '{word}' 가 요약 절에 있다 — 필드 용어로"
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# 캠페인 닫힘 (2026-09-30 · 외부 1저자 회신 CN — 갈래1 확정) — 요약 절이 닫힘을 싣는다
+# ═══════════════════════════════════════════════════════════════════════════
+GLASS_CLOSED = "lpscl_smallcell_glass_md_closed_2026_09_30.json"
+_CLOSED_SLOTS = ("npass_n", "npass_den", "npass10_n", "npass10_den", "npass11_n", "npass11_den",
+                 "c1_n", "c1_den", "c2_465_pass", "c2_550_pass", "c2_550_bnd", "c2_runs",
+                 "beta_600", "p90_exc", "p90_win")
+
+
+def test_brief_carries_the_closure_and_its_numbers_come_from_the_closing_record(client):
+    """양성 — 닫힘 문장(회신 CN 이 좁힌 뜻)이 화면에 있고, 닫힘 숫자는 마감 기록에서 온다."""
+    br = D.li2s_brief()
+    assert not br["unread"], br["unread"]
+    closed = D._load_json(D.DB / "properties" / GLASS_CLOSED)
+    assert closed, "마감 기록을 못 읽었다"
+    np_ = closed["1_확정"]["N_pass"]
+    assert (br["values"]["npass_n"], br["values"]["npass_den"]) == (str(np_["통과"]), str(np_["분모_카드"]))
+    assert br["values"]["c2_550_bnd"] == str(closed["1_확정"]["C2_MTO_보수σ_2σ"]["550K"]["경계"])
+    import html as _html_mod
+    seg = _html_mod.unescape(_brief_html(client))       # 화면은 따옴표를 &#39; 로 이스케이프한다
+    assert "미리 정한 확산 구간 기준을 만족하는 데이터를 얻지 못했다" in seg
+    assert "Li 수송 계수와 활성화에너지는 내지 않는다" in seg
+    assert f"{np_['통과']}/{np_['분모_카드']}" in seg, "주 표기(1/15)가 화면에 없다"
+    assert "이 온도에서 확산하지 않는다' 로 읽으면 틀린다" in seg, "550 K 문턱 부근 읽기 경고가 없다"
+
+
+def test_brief_has_no_stale_campaign_status():
+    """⛔음성 — 닫힌 뒤에 '진행 중' · '다시 확인 중' · 옛 넓은 문장이 요약 기록에 남지 않는다."""
+    import json as _json
+    body = _json.dumps(_json.loads((D.DB / "properties" / BRIEF).read_text(encoding="utf-8")), ensure_ascii=False)
+    for stale in ("진행 중 (465 K 본 계산 시작 대기)", "진행 중 — 본 계산", "600 K 는 조건을 걸고 다시 확인 중",
+                  "550 K 는 확산 구간 (예비 · 구조 1개)", "본 계산 후: 기준 통과 런 수",
+                  "이 유리의 Li 수송이 측정되지 않는다", "'이 방법으로 측정 불가' · IQR"):
+        assert stale not in body, f"낡은 문구가 요약 기록에 남아 있다: {stale!r}"
+
+
+def test_brief_closure_numbers_follow_the_closing_record(client):
+    """⛔음성 — 마감 기록을 바꾸면 요약 절이 따라 바뀐다 (요약이 닫힘 숫자를 품으면 잡힌다)."""
+    real = D._load_json
+
+    def fake(p):
+        d = real(p)
+        if d and Path(p).name == GLASS_CLOSED:
+            d = _deep(d)
+            d["1_확정"]["N_pass"]["통과"] = 7
+            d["1_확정"]["C2_MTO_보수σ_2σ"]["550K"]["경계"] = 3
+        return d
+
+    with patch.object(D, "_load_json", side_effect=fake):
+        seg = _brief_html(client)
+    assert "7/15" in seg and "1/15" not in seg, "마감 기록을 바꿨는데 주 표기가 안 바뀐다"
+    assert "3개는 기준선에 바로 붙어" in seg and "4개는 기준선에 바로 붙어" not in seg
+
+
+def test_brief_closure_record_missing_is_dash_and_announced(client):
+    """⛔음성 — 마감 기록이 없으면 닫힘 숫자는 `—` 이고 이름이 경고에 뜬다 (0 이 아니다)."""
+    real = D._load_json
+    with patch.object(D, "_load_json", side_effect=lambda p: None if Path(p).name == GLASS_CLOSED else real(p)):
+        br = D.li2s_brief()
+        seg = _brief_html(client)
+    assert set(_CLOSED_SLOTS) <= set(br["unread"]), set(_CLOSED_SLOTS) - set(br["unread"])
+    assert "—/—" in seg and "원 기록에서 못 읽은 값이 있다" in seg

@@ -211,6 +211,67 @@
         "T_set_K"
       ],
       "nd": 0
+    },
+    "npass_n": {
+      "file": "db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json",
+      "path": "1_확정.N_pass.통과"
+    },
+    "npass_den": {
+      "file": "db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json",
+      "path": "1_확정.N_pass.분모_카드"
+    },
+    "npass10_n": {
+      "file": "db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json",
+      "path": "1_확정.N_pass.400K_제외_통과"
+    },
+    "npass10_den": {
+      "file": "db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json",
+      "path": "1_확정.N_pass.400K_제외_분모"
+    },
+    "npass11_n": {
+      "file": "db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json",
+      "path": "1_확정.N_pass.600K_포함_통과"
+    },
+    "npass11_den": {
+      "file": "db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json",
+      "path": "1_확정.N_pass.600K_포함_분모"
+    },
+    "c1_n": {
+      "file": "db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json",
+      "path": "1_확정.C1_창끝_MSD_3A2.통과"
+    },
+    "c1_den": {
+      "file": "db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json",
+      "path": "1_확정.C1_창끝_MSD_3A2.런"
+    },
+    "c2_465_pass": {
+      "file": "db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json",
+      "path": "1_확정.C2_MTO_보수σ_2σ.465K.통과"
+    },
+    "c2_550_pass": {
+      "file": "db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json",
+      "path": "1_확정.C2_MTO_보수σ_2σ.550K.통과"
+    },
+    "c2_550_bnd": {
+      "file": "db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json",
+      "path": "1_확정.C2_MTO_보수σ_2σ.550K.경계"
+    },
+    "c2_runs": {
+      "file": "db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json",
+      "path": "1_확정.C2_MTO_보수σ_2σ.550K.런"
+    },
+    "beta_600": {
+      "file": "db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json",
+      "path": "1_확정.600K_파일럿.beta_MTO",
+      "nd": 3
+    },
+    "p90_exc": {
+      "file": "db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json",
+      "path": "1_확정.600K_파일럿.p90sq_초과_창"
+    },
+    "p90_win": {
+      "file": "db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json",
+      "path": "1_확정.600K_파일럿.p90sq_창"
     }
   },
   "blocks": [
@@ -261,7 +322,12 @@
     {
       "date": "09-28",
       "did": "600 K 예비 계산 · S 이탈 사건 추적",
-      "result": "진행 중 (465 K 본 계산 시작 대기)"
+      "result": "600 K 는 미리 정한 기준을 통과 (09-29) · S 이탈 내력 확정"
+    },
+    {
+      "date": "09-28 – 30",
+      "did": "본 계산 465 · 550 K × 구조 5개 · 판독",
+      "result": "기준 통과 {npass_n}/{npass_den} 런 → 미리 정한 분기대로 닫음 · Li 수송 계수와 활성화에너지는 내지 않음"
     }
   ],
   "figures": [
@@ -283,12 +349,12 @@
     {
       "file": "docs/figures/li2s_deck_2026_09_28/f4_temperature_window.png",
       "title": "MD 온도를 400 · 465 · 550 K 로 잡은 이유",
-      "caption": "아래 한계: 이 냉각 속도에서 원자 재배열이 멈추는 온도 Tg ≈ 400–450 K (실험 유리전이온도와 다름). 위 한계: 약 575 K 부터 5 ps 안에 Li 가 상자 절반(6.99 Å)을 넘어 작은 주기 셀에서는 변위를 제대로 셀 수 없다 — 설계에서 600 K 이상 제외 (600 K 는 조건을 걸고 다시 확인 중). 담금질(비평형) 중 진단값이지 확산계수가 아니다."
+      "caption": "아래 한계: 이 냉각 속도에서 원자 재배열이 멈추는 온도 Tg ≈ 400–450 K (실험 유리전이온도와 다름). 위 한계: 약 575 K 부터 5 ps 안에 Li 가 상자 절반(6.99 Å)을 넘어 작은 주기 셀에서는 변위를 제대로 셀 수 없다 — 설계에서 600 K 이상 제외. 600 K 는 뒤에 조건을 걸고 구조 1개로 다시 돌려 기준을 통과했다 — 5 ps 안에 움직인 거리의 상위 10 % 가 상자 절반을 넘은 구간이 50 ps 구간 {p90_win}개 중 {p90_exc}개라 기록해 두었고, 본 계산이 닫혀 쓰이지는 않았다. 담금질(비평형) 중 진단값이지 확산계수가 아니다."
     },
     {
       "file": "docs/figures/li2s_deck_2026_09_28/f5_pilot_beta.png",
-      "title": "예비 계산: 550 K 는 확산 구간, 400 K 는 측정 불가",
-      "caption": "구조 1 하나로 예비 계산 3개. MSD 지수 β = d ln MSD / d ln t (창 2–50 ps)가 0.8–1.2 안이어야 확산 구간이다. 550 K: β = {beta_550} (띠 안). 400 K: {beta_400}, 800 ps 로 늘려도 {beta_400_800} (띠 한참 아래) → 결과 전에 정해 둔 문장 그대로 '이 방법으로 400 K 는 측정되지 않는다'. 두 400 K 런은 MD 난수 시드가 같고 출발 구조만 다르다 — 둘의 차이를 구조 간 산포로 읽지 않는다. 잠정 · 내부 진단값."
+      "title": "예비 계산 (구조 1개): 550 K 는 띠 안, 400 K 는 측정 불가",
+      "caption": "구조 1 하나로 예비 계산 3개. MSD 지수 β = d ln MSD / d ln t (창 2–50 ps)가 0.8–1.2 안이어야 확산 구간이다. 550 K: β = {beta_550} (띠 안). 400 K: {beta_400}, 800 ps 로 늘려도 {beta_400_800} (띠 한참 아래) → 결과 전에 정해 둔 문장 그대로 '이 방법으로 400 K 는 측정되지 않는다'. 두 400 K 런은 MD 난수 시드가 같고 출발 구조만 다르다 — 둘의 차이를 구조 간 산포로 읽지 않는다. 잠정 · 내부 진단값. ⚠ 본 계산 (구조 {c2_runs}개)에서 550 K 는 {c2_550_pass}개만 띠 안으로 판정되고 {c2_550_bnd}개는 띠 경계에 바로 붙어 구분이 안 됐다."
     },
     {
       "file": "docs/figures/li2s_deck_2026_09_28/f6_pcoord_stages.png",
@@ -307,25 +373,26 @@
     }
   ],
   "measurement": {
-    "보고하는_양": "① 확산 구간 기준(C1: 50 ps 에서 MSD ≥ 3 Å² · C2: β 가 0.8–1.2)을 통과한 런 수 ② 활성화에너지 Ea 의 구조 간 산포(중앙값 · IQR) ③ 465 K 에서 D 의 구조 간 산포",
+    "보고하는_양": "① 확산 구간 기준(C1: 50 ps 에서 MSD ≥ 3 Å² · C2: β 가 0.8–1.2)을 통과한 런 수 ② 활성화에너지 Ea 의 구조 간 산포(중앙값 · IQR) ③ 465 K 에서 D 의 구조 간 산포 → ② ③ 은 기준 미달로 내지 않았다 (09-30)",
     "오차": "독립 구조 5개의 IQR — 구조를 합쳐 하나의 MSD 로 만들지 않는다",
-    "미리_정한_분기": "예비 계산 탈락 → 멈추고 보고 · 통과 9 런 미만 → '이 방법으로 측정 불가' · IQR(Ea) > 0.10 eV → 구조별 나열 · ≤ 0.10 eV → 비교 기준 계 단계로",
-    "보고하지_않는_것": "D · 이온전도도 · Ea 의 절대값 — 같은 조건의 비교 기준 계가 아직 없다"
+    "미리_정한_분기": "예비 계산 탈락 → 멈추고 보고 · 통과 9 런 미만 → 기준을 만족하는 확산 구간 데이터가 없다 · 수송 계수와 활성화에너지를 내지 않는다 (✅ 09-30 이 분기로 닫힘) · IQR(Ea) > 0.10 eV → 구조별 나열 · ≤ 0.10 eV → 비교 기준 계 단계로",
+    "보고하지_않는_것": "D · 이온전도도 · Ea — 기준 미달로 이 계산에서는 내지 않는다 (절대값은 같은 조건의 비교 기준 계가 없어 원래도 안 쓴다)"
   },
   "now_next": [
-    "끝 — 600 K 예비 계산 (구조 1, 0 K 이완 구조에서 출발). 결과 전에 정한 규칙대로 C1 · C2 를 통과해 세 번째 온도로 넣는다 (Ea 값을 보고 정하지 않았다 · 셀이 감기는 정도는 수치로 같이 적는다)",
-    "끝 — 465 K 구조 3 · 4 조기 확인: 두 구조의 D(2–50 ps) 차이가 2배 안이라 절차대로 계속",
-    "진행 중 — 본 계산 465 · 550 K × 구조 5개 (구조 3 · 4 · 5 먼저, 구조 1 · 2 는 다음 배치) → 통과 런 수 · Ea 와 D 의 구조 간 산포 판정 (온도 셋)",
-    "그 다음 (미착수) — 같은 온도의 결정질 기준 계 계산을 붙여야 '얼마나 빠른가' 를 상대 비교로 말할 수 있다"
+    "끝 — 본 계산 판독 (09-30): 50 ps 에 MSD ≥ 3 Å² 는 {c1_n}/{c1_den} 런이라 Li 는 움직였다. β 기준은 465 K {c2_465_pass}/{c2_runs} · 550 K {c2_550_pass}/{c2_runs} 통과 → 두 기준을 다 넘은 런 {npass_n}/{npass_den} (400 K 를 빼면 {npass10_n}/{npass10_den}, 600 K 를 더하면 {npass11_n}/{npass11_den} — 어느 쪽으로 세어도 '9 런 미만')",
+    "끝 — 공동연구 제1저자(외부)가 미리 정한 분기를 확정했다 (09-30). 이 방법(465/550 K · 400 ps · 구조 5개)으로는 미리 정한 확산 구간 기준을 만족하는 데이터를 얻지 못했다. 따라서 이 유리의 Li 수송 계수와 활성화에너지는 내지 않는다.",
+    "사실로 남긴다 — 550 K 는 구조 {c2_runs}개 중 {c2_550_pass}개만 기준을 넘고 {c2_550_bnd}개는 기준선에 바로 붙어 구분이 안 된다. 600 K (구조 1개)는 뚜렷이 통과했다 (β {beta_600}). 그래서 '이 유리는 이 온도에서 확산하지 않는다' 로 읽으면 틀린다 (제1저자 읽기: 550 K 는 확산 구간 경계에 걸쳐 있고 400 ps 로는 가를 해상도가 모자란 모습).",
+    "닫음 — 비교 기준 계 단계는 열지 않는다. 온도 · 길이를 다시 잡는 설계는 처음부터 새로 정한다."
   ],
   "can": [
     "기계학습 포텐셜이 이 120원자 유리에서 DFT 힘을 RMSE {force_rmse} eV/Å 로 재현",
-    "이 방법으로 400 K 는 측정 불가, 550 K 는 확산 구간 (예비 · 구조 1개)",
+    "이 방법(465/550 K · 400 ps)으로는 두 온도를 모두 확산 구간 기준으로 통과한 구조가 없었다 (400 K 는 800 ps 로도 측정 불가 · 550 K 는 기준선 부근 · 600 K 구조 1개는 통과)",
     "담금질 중 P–S 결합 끊김과 S 의 소속 교환이 흔함 (구조 5개)",
-    "본 계산 후: 기준 통과 런 수와 구조 간 산포"
+    "같은 방법으로 만든 유리 구조가 시드마다 상당히 다르다 — 원래 S 4개를 그대로 가진 P 가 구조마다 {keep4} (12개 중)"
   ],
   "cannot": [
-    "Li 확산계수 · 이온전도도 · 활성화에너지의 절대값",
+    "Li 확산계수 · 이온전도도 · 활성화에너지 — 기준을 못 넘어 이 계산에서는 내지 않는다 (절대값은 원래도 쓰지 않는다)",
+    "'이 유리는 465 · 550 K 에서 확산하지 않는다' — 기준을 못 넘은 것이지 Li 가 안 움직인 것이 아니다",
     "상온(300 K) 전도도 — Tg 를 가로지르는 외삽",
     "결정질 LPSCl · 400원자 모델 · 다른 계와의 비교",
     "'이 상이 볼밀링에서 실제로 생긴다 / 셀 성능을 살린다'",
@@ -374,5 +441,7 @@
     "그림_생성기": "tools/figures/fig_li2s_deck_2026_09_28.py (--selftest)",
     "그림_원자료_CSV": "db/properties/li2s_deck_2026_09_28_*.csv · f6 은 db/properties/li2s_p_coord_frames_origin_2026_09_27.csv",
     "문헌": "litdb/papers/cronk2026_lis_cathode_interphase_chemistry.md"
-  }
+  },
+  "updated": "2026-09-30",
+  "✅_갱신_2026_09_30": "캠페인 닫힘(공동연구 제1저자 확정 · 회신 CN) 반영 — timeline · now_next · can · cannot · measurement · 그림 4 · 5 설명. 새 숫자는 마감 기록 `lpscl_smallcell_glass_md_closed_2026_09_30.json` 자리표시로만 (sources 15 개 추가)."
 }
