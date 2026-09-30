@@ -175,6 +175,9 @@ _NET = [
     ('  ├ AM_S-SE CN mean', ('AM_S_se_cn_mean',), 2),
     ('  └ AM-SE CN (surface-weighted)', ('am_se_cn_surface_weighted',), 2),
     ('Ionic Active AM(%)', ('ionic_active_pct',), 1),
+    ('Ionic Isolated AM(%)', ('am_ionic_isolated_pct',), 1),          # v1.1 ① = 100 − 활성 (옛 세대는 app.py 가 유도)
+    ('  ├ Isolated: SE not linked(%)', ('ionic_dead_pct',), 1),        # v1.1 ② 분해
+    ('  └ Isolated: no SE contact(%)', ('ionic_no_se_pct',), 1),
     ('AM Vulnerable(%)', ('am_vulnerable_pct',), 1),
     ('  ├ AM_P Vulnerable(%)', ('AM_P_vulnerable_pct',), 1),
     ('  └ AM_S Vulnerable(%)', ('AM_S_vulnerable_pct',), 1),

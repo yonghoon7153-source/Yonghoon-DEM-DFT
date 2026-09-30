@@ -34,6 +34,7 @@ import collections
 import csv
 import hashlib
 import json
+import math
 import pathlib
 import re
 import sys
@@ -888,6 +889,63 @@ HANDOVER_TAU_WALL = (
     ('tau_wall_convention',       'tau_convention', '규약 문자열 (harvest_v3/wall_z0_plate/…)'),
 )
 TAU_WALL_VALUE = ('tortuosity_SE_wall', 'tortuosity_SE_wall_median')
+#: v1.1 ③ (1저자 비준 10-01 *"비준이야"* · J20-o) — 가장 큰 SE 덩어리 (수확 v3 `tau_detail.band_detail` · 벽 τ 와 같은 SE 그래프 ·
+#:   `lhs_descriptor_harvest.tortuosity_se`).  비관통 24 침대의 "관통에 얼마나 가까웠나" 연속 디스크립터 — 관통 침대에도 값이 있다 (≈ 1).
+#:   수확기 원값의 분모는 **전 입자 (AM 포함) z 범위** 라 바닥 아래로 샌 입자에 끌린다 (벽 간격보다 3–20 % 큼 · LHS 중앙 7 %) →
+#:   기록된 z_lo · z_hi · plate_z 로 벽 간격 기준 값을 **정확히** 환산한다 (수확기 재실행 없음).
+HANDOVER_SE_CLUSTER = (
+    ('se_largest_comp_frac',
+     '★ 가장 큰 SE 덩어리 (SE 수 기준 가장 큰 연결 성분 · 원자 좌표 기하 접촉 d ≤ r_i + r_j · x·y 주기 — 벽 τ 와 같은 그래프) 에 든 SE 의 '
+     '비율 (0–1) = 그 성분의 SE 수 / 전 SE (v1.1 ③ · 1저자 비준 10-01) · 관통 침대는 1 근처 (LHS 중앙 0.997) · 비관통 침대 0.002–0.91 · '
+     '관문 C1 (× N_SE = 정수 개수 · N_SE = 수확 phase_counts)'),
+    ('se_largest_comp_wall_span_frac',
+     '★ 그 덩어리의 두께 방향 폭 / 벽 간격 (v1.1 ③) — 폭 = 덩어리 SE 의 max(z + r) − min(z − r) (입자 표면 기준) · 벽 간격 = 플래튼 plate_z − '
+     '바닥 z 0 · 수확 기록값으로 정확히 환산 (= 수확 원값 × 전 입자 z 범위 / 벽 간격 · 재실행 없음) · 표면이 벽 · 플래튼과 겹쳐 1 을 넘을 수 '
+     '있다 (관통 침대 LHS 1.01–1.05 · lhsx 1.02–1.06) · 비관통 침대 0.11–0.96 · ⚠ SE 수로 **가장 큰** 덩어리의 폭 — 가장 멀리 뻗은 덩어리가 '
+     '아닐 수 있다 · 관문 C3 (플래튼 = 수확 plate_z_sim · 바닥 = z_floor_sim)'),
+    ('se_largest_comp_env_span_frac',
+     '참고 (내부) — 수확기 원값 largest_comp_z_span_frac: 같은 폭 / **전 입자 (AM 포함) z 범위** max(z + r) − min(z − r) · ⚠ 분모가 바닥 '
+     '아래로 샌 입자 · 벽과 겹친 입자에 끌려 벽 간격보다 3–20 % 크다 (LHS 중앙 7 %) → 침대마다 다르게 작아진다 · 인계는 '
+     'se_largest_comp_wall_span_frac 을 쓴다 · 관문 C2 (≤ 1 — 덩어리 ⊂ 전 입자)'),
+)
+
+
+def _se_cluster_cols(case, h):
+    """v1.1 ③ 값 + 관문 (fail-closed) — 수확 `tau_detail.band_detail` 의 가장 큰 SE 덩어리 기록이 **이 침대의 SE · 이 판**의 것인가.
+
+      C1 SE 수: band n_se = 수확 phase_counts SE (정수 > 0) · 0 < 비율 ≤ 1 · 비율 × n_se = 정수 개수
+      C2 z 폭: 0 < 전 입자 z 범위 대비 폭 ≤ 1 (덩어리 ⊂ 전 입자) · z_hi > z_lo
+      C3 벽 간격: band 플래튼 = 수확 plate_z_sim · 바닥 = z_floor_sim (있으면) · 플래튼 > 바닥
+    반환 {열: 값 문자열}.  어긋나면 `FillRefusal` (메시지에 'v1.1 C<n>')."""
+    def _int(x):
+        return isinstance(x, int) and not isinstance(x, bool)
+
+    def _num(x):
+        return isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x)
+    b = _dig(h, ('tau_detail', 'band_detail')) or {}
+    pc = h.get('phase_counts')
+    if not isinstance(pc, dict):
+        raise FillRefusal(f'{case}: 수확 JSON 에 phase_counts 가 없다 — SE 수를 몰라 가장 큰 SE 덩어리를 확인할 수 없다 (v1.1 C1)')
+    n_se, fr, zs = b.get('n_se'), b.get('largest_comp_frac'), b.get('largest_comp_z_span_frac')
+    if not (_int(n_se) and n_se > 0 and n_se == _phase_n(pc, 'SE')):
+        raise FillRefusal(f'{case}: 덩어리 기록의 SE 수 {n_se!r} ≠ 수확 phase_counts SE {_phase_n(pc, "SE")} — 다른 침대 · 다른 SE 집합이다 (v1.1 C1)')
+    if not (_num(fr) and 0.0 < fr <= 1.0):
+        raise FillRefusal(f'{case}: largest_comp_frac {fr!r} ∉ (0, 1] (v1.1 C1)')
+    x = fr * n_se
+    if abs(x - round(x)) > WA_COUNT_INT_TOL:
+        raise FillRefusal(f'{case}: largest_comp_frac {fr!r} × SE {n_se} = {x!r} 이 정수 개수가 아니다 (v1.1 C1)')
+    zlo, zhi, pz, fl = b.get('z_lo'), b.get('z_hi'), b.get('alt_plate_z'), b.get('wall_z_floor')
+    if not (_num(zs) and 0.0 < zs <= 1.0 + 1e-12):
+        raise FillRefusal(f'{case}: largest_comp_z_span_frac {zs!r} ∉ (0, 1] — 덩어리는 전 입자의 부분집합이다 (v1.1 C2)')
+    if not (_num(zlo) and _num(zhi) and zhi > zlo):
+        raise FillRefusal(f'{case}: 전 입자 z 범위 z_lo {zlo!r} · z_hi {zhi!r} 가 없거나 뒤집혔다 (v1.1 C2)')
+    zf = h.get('z_floor_sim')
+    if not (_num(pz) and pz == h.get('plate_z_sim') and _num(fl) and (zf is None or fl == zf) and pz > fl):
+        raise FillRefusal(f'{case}: 덩어리 기록의 벽 간격 (플래튼 {pz!r} · 바닥 {fl!r}) ≠ 수확 plate_z_sim {h.get("plate_z_sim")!r} · '
+                          f'z_floor_sim {zf!r} — 다른 판이다 (v1.1 C3)')
+    return {'se_largest_comp_frac': repr(float(fr)),
+            'se_largest_comp_wall_span_frac': repr(zs * (zhi - zlo) / (pz - fl)),
+            'se_largest_comp_env_span_frac': repr(float(zs))}
 #: 벽 τ 관문 상수 — 수확기 (`lhs_descriptor_harvest.TAU_LO · TAU_HI · N_TAU_PAIRS`) 와 같아야 한다 (selftest ㉓ 가 강제)
 TAU_WALL_LO, TAU_WALL_HI, TAU_WALL_N_PAIRS = 1.0, 20.0, 200
 
@@ -1005,6 +1063,11 @@ WA_DEFINE = {
     'ionic_active_pct': ('이온 활성 AM 비율 (%) — 위 밴드 (분리막 쪽) 에 닿는 SE 성분 (top-reachable) 의 SE 와 접촉한 AM / 전 AM (calc_ionic_active_am) · '
                          '**100 − 이 값 = 경로 기준 고립 AM** (SE 무접촉 + 닿은 SE 가 위로 안 이어짐) · 접촉 유무만 '
                          '본다 (coverage 무관 — LHS-20) · 외톨이 SE 가 위 밴드에 있으면 그것도 센다 (LHS-19)', CAVEAT_PERC),
+    #  v1.1 ② (1저자 비준 10-01) — 경로 기준 고립 (= 100 − ionic_active_pct) 의 분해
+    'ionic_dead_pct': ('경로 기준 고립 중 **단절** 비율 (%) (v1.1 ②) — SE 와 닿았지만 닿은 SE 가 전부 위 밴드 (분리막 쪽) 로 안 이어지는 AM / 전 AM '
+                       '(calc_ionic_active_am 의 dead) · SE 망이 끊긴 문제 (접촉을 늘려도 안 풀린다)', CAVEAT_PERC),
+    'ionic_no_se_pct': ('경로 기준 고립 중 **무접촉** 비율 (%) (v1.1 ②) — SE 접촉 0 인 AM / 전 AM (calc_ionic_active_am 의 no_se) · 고립 위험 '
+                        '(SE 접촉 0–1 개) 의 부분집합 (관문 D5) · 계면 형성 문제', CAVEAT_WALL),
     'se_se_cn_perc': ('관통 SE 성분에 속한 SE 만의 평균 SE–SE CN — 관통 성분이 없으면 빈칸 (N/A · 키 자체가 없다 · LHS-19)', CAVEAT_WALL),
     'se_se_cn_n_perc': ('관통 SE 성분에 속한 SE 개수 — = percolation_pct × N_SE / 100 (생성기 관문 P3) · 관통 없으면 빈칸 (N/A)', CAVEAT_COUNT),
     'A_binding_AM_SE_n_contacts': ('Physics 모듈 (coverage_physics_vs_hertzian) 이 센 AM–SE 접촉 개수 — area_AM전체_SE_n 과 같은 '
@@ -1029,6 +1092,12 @@ def wa_define(col):
     if m:
         return (f'{m.group(1)} 고립 **위험** 비율 (%) (취약) — SE 접촉이 0–1 개인 {m.group(1)} 의 비율 · 접촉 개수 기준 (coverage 문턱이 아니다 — '
                 'LHS-23 · 경로 기준 고립은 ionic_active_pct 쪽) · 상이 없으면 빈칸 (N/A)', CAVEAT_WALL)
+    m = WA_IONIC_PHASE_RE.fullmatch(col)
+    if m:
+        ph, s_ = m.groups()
+        ko = {'active': '이온 활성 (위 밴드에 닿는 SE 와 접촉)', 'dead': '단절 (SE 와 닿았지만 위 밴드로 안 이어짐)', 'no_se': '무접촉 (SE 접촉 0)'}[s_]
+        return (f'{ph} 의 {ko} 비율 (%) (v1.1 ②) — {ph} 전 입자 기준 · 활성 + 단절 + 무접촉 = 100 (관문 D2) · 상이 없으면 빈칸 (N/A)',
+                CAVEAT_PERC if s_ != 'no_se' else CAVEAT_WALL)
     m = re.fullmatch(r'area_(.+)_n', col)
     if m:
         return (f'{m.group(1)} 접촉 개수 (쌍 종류별 덤프 행 수)', CAVEAT_COUNT)
@@ -1050,6 +1119,22 @@ WA_GROUP_CONTACT_EXACT = ('se_se_cn', 'se_se_cn_std', 'am_se_cn_mean', 'am_se_cn
 #:   (census ✅ 여도 빈칸 = 측정된 N/A 로 읽힌다) · `se_se_cn_eff_area_perc` 는 면적 (⑦ 차례).
 WA_GROUP_PERC_EXACT = ('percolation_pct', 'top_reachable_pct', 'n_components', 'n_large_components', 'ionic_active_pct',
                        'se_se_cn_perc', 'se_se_cn_n_perc')
+#: v1.1 ② (1저자 비준 10-01) — 경로 기준 고립의 분해: 웹앱 v1.1 이 내보내기 시작한 키 (calc_ionic_active_am 의 dead · no_se · 상별 셋) ·
+#:   접촉 분석 단계 산출 · 09-19 census 밖 → 배치 머리에 있을 때만 싣는다 (5번 배치에는 없다 = 열도 없다).
+WA_IONIC_DEC_KEYS = (('ionic_dead_pct', 'ionic_no_se_pct')
+                     + tuple(f'{ph}_ionic_{s_}_pct' for ph in ('AM_P', 'AM_S') for s_ in ('active', 'dead', 'no_se')))
+WA_IONIC_PHASE_RE = re.compile(r'(AM_P|AM_S)_ionic_(active|dead|no_se)_pct')
+#: v1.1 ① (1저자 비준 10-01) — 생성기가 **유도**하는 웹앱 열 (재실행 없음).  웹앱 v1.1 도 같은 이름 · 같은 식으로 낸다 — 있으면 같아야 (D1).
+WA_DERIVED = (
+    ('am_ionic_isolated_pct',
+     '★ 경로 기준 고립 AM 비율 (%) (v1.1 ① · 1저자 비준 10-01) = 100 − ionic_active_pct — 이온이 분리막 쪽 (위 밴드) 에서 닿을 수 없는 AM: '
+     'SE 무접촉 + 닿은 SE 가 top-reachable 이 아님 (calc_ionic_active_am · 접촉 그래프 · coverage 무관) · ⚠ 고립 위험 (am_vulnerable_pct · '
+     'SE 접촉 0–1 개 · 접촉 개수) 과 다른 양 — 접촉이 둘 이상이어도 그 SE 가 끊긴 덩어리면 고립, 하나뿐이어도 이어져 있으면 활성 (예: lhs00_083 '
+     '고립 위험 0.1 % · 경로 고립 89 %) · 분해 = ionic_dead_pct + ionic_no_se_pct (v1.1 ② 배치부터) · 생성기가 ionic_active_pct 에서 유도 · '
+     '관문 v1.1 D1–D5'),
+)
+#: 비율 합 = 100 의 부동소수 여유 (%p) — 물리 허용치가 아니다 (개수 / N × 100 의 반올림만)
+WA_PCT_SUM_TOL = 1e-7
 WA_GROUPS = ('contact', 'percolation')
 #: 7c — 웹앱 배치 단계 (`lhs_webapp_batch --stop-after`) → 그 배치가 **다 낸** 묶음.  coverage 단계는 접촉 단계를 포함한다 (접촉 분석 → 피복)
 #:   — 5번 배치 (`--stop-after coverage`) 를 contact 묶음으로 받는다.  묶음 제한 없이 (전체) 부르면 여전히 거부 (뒤 단계 열이 빈칸).
@@ -1065,8 +1150,8 @@ def wa_group_contact(col):
 
 
 def wa_group_perc(col):
-    """② 퍼콜레이션 묶음 (접촉 분석 단계의 SE 그래프 열) 인가."""
-    return col in WA_GROUP_PERC_EXACT
+    """② 퍼콜레이션 묶음 (접촉 분석 단계의 SE 그래프 열) 인가 — v1.1 ② 분해 키 포함."""
+    return col in WA_GROUP_PERC_EXACT or col in WA_IONIC_DEC_KEYS
 
 
 WA_GROUP_FN = {'contact': wa_group_contact, 'percolation': wa_group_perc}
@@ -1099,6 +1184,10 @@ WA_REVIEWED = (
      'calc_percolation (dem_analysis_core.py:451–) · calc_ionic_active_am (:631–) · calc_se_se_cn 관통 부분 (:320–361) → analyze_contacts.py:404–413 — '
      'J20-b 감사 (WSL 130/130 CLEAN · 밴드 L0 130/130 · 폴백 0 · 겹침 0 · 재현 = 정본) · 1저자 비준 10-01 · 관문 P1–P3 (관통 일관 + 수확기 '
      '독립 재현 · 범위 · 관통 SE 개수 = percolation_pct × N_SE) · F3 한정어 (LHS-19) · top_reachable · ionic_active = census 오분류 → ✅ (LHS-20) · J20-b ②'),
+    (r'ionic_(dead|no_se)_pct|(AM_P|AM_S)_ionic_(active|dead|no_se)_pct',
+     'calc_ionic_active_am (dem_analysis_core.py:631–) → analyze_contacts — v1.1 ② (1저자 비준 10-01): 계산하고 버리던 단절 · 무접촉 내보내기 + '
+     '상별 단절 · 무접촉 계산 추가 (시험 먼저 · analyze_contacts --selftest ⑬–⑱) · 관문 v1.1 D1–D5 (합 100 · 상별 합 100 · 정수 개수 · 상별 개수 '
+     '합 = 전체 · 무접촉 ≤ 고립 위험)'),
 )
 #: 7c (J20-k · 1저자 비준 10-01 *"ㄱㄱ 하자"*) — 09-19 census 판정을 **바꿔 싣는** 열 (열 사전에 옛 판정을 병기한다).  census 에 없는 키
 #:   (7a 새 키) 는 웹앱 배치 머리 (metrics_flat) 에 있을 때만 싣는다 — 옛 배치에 없는 키가 빈칸 = '측정된 N/A' 로 읽히지 않게.
@@ -1108,9 +1197,12 @@ _WA_OVR_7A = ('✅ 쓴다 (새 키 · J20-k 7a)', 'AM 전 입자 AM–SE CN 분�
               '상별 통계와 같은 counts · 같은 함수 (calc_am_isolation_risk)')
 _WA_OVR_PERC = ('✅ 쓴다 (승격 · LHS-20)', 'SE 그래프 양 — calc_percolation 의 위 밴드 성분 · calc_ionic_active_am 의 AM–SE 접촉 유무 × '
                 'top-reachable SE (coverage 값을 읽지 않는다) · 09-19 census 의 COND_cov 는 오분류 (LHS-20 · 1저자 비준 10-01)')
+_WA_OVR_DEC = ('✅ 쓴다 (새 키 · v1.1 ②)', '경로 기준 고립의 분해 — 웹앱 v1.1 (10-01) 이 내보내기 시작한 키 · calc_ionic_active_am 이 계산하고 '
+               '버리던 단절 · 무접촉 (상별 단절 · 무접촉은 이번에 계산 추가) · 활성 · 단절 · 무접촉 세 집합 하나에서 · 09-19 census 에 없다')
 WA_VERDICT_OVERRIDE = {'am_vulnerable_pct': _WA_OVR_VUL, 'AM_P_vulnerable_pct': _WA_OVR_VUL, 'AM_S_vulnerable_pct': _WA_OVR_VUL,
                        'am_se_cn_std': _WA_OVR_7A, 'am_se_cn_median': _WA_OVR_7A, 'am_se_cn_max': _WA_OVR_7A,
-                       'top_reachable_pct': _WA_OVR_PERC, 'ionic_active_pct': _WA_OVR_PERC}
+                       'top_reachable_pct': _WA_OVR_PERC, 'ionic_active_pct': _WA_OVR_PERC,
+                       **{k: _WA_OVR_DEC for k in WA_IONIC_DEC_KEYS}}
 
 
 def wa_verdicts(wv):
@@ -1295,6 +1387,8 @@ def column_dictionary(cols, webapp=None):
     union.update({n: w for n, w in HANDOVER_UNION_DERIVED})
     tauw = {n: w for n, _k, w in HANDOVER_TAU_WALL}
     tauw.update({n: w for n, _p, _s, w in HANDOVER_WALL_TOUCH})
+    tauw.update({n: w for n, w in HANDOVER_SE_CLUSTER})                          # v1.1 ③
+    derived = dict(WA_DERIVED)                                                   # v1.1 ①
     warow = dict(WA_ROW_COLS)
     qc = {n: w for n, _a, _b, w in WA_QC}
     wverd, wwhy = wa_verdicts(webapp) if webapp is not None else ({}, {})      # 7c — 판정 바꿔 싣기 (LHS-23 · 7a) 를 표와 같게
@@ -1313,6 +1407,8 @@ def column_dictionary(cols, webapp=None):
             d.update(source='union', meaning=union[c])
         elif c in tauw:
             d.update(source='harvest_v3', meaning=tauw[c])
+        elif c in derived:
+            d.update(source='webapp_derived', verdict='✅ 쓴다 (유도 · v1.1 ①)', meaning=derived[c], caveat=CAVEAT_PERC)
         elif c in warow:
             d.update(source='webapp_batch', meaning=warow[c])
         elif c in qc:
@@ -1534,6 +1630,62 @@ def _wa_perc_gates(case, o, take, h):
     return 1
 
 
+def _wa_ionic_gates(case, o, take, h, dp):
+    """v1.1 ①② 관문 (fail-closed) — 이온 활성 · 경로 기준 고립 · 분해가 calc_ionic_active_am 의 **세 집합 하나**에서 나왔는가.
+
+      상 있음/없음 — 상 (수확 phase_counts · mono 는 설계 상) 이 있으면 실린 상별 분해 열은 값이 있어야 · 없으면 빈칸이어야
+      D1 전체 활성 + 단절 + 무접촉 = 100 · D2 상별 같은 합 = 100
+      D3 비율 × 입자 수 / 100 = 정수 개수 (활성은 분해 키가 없는 옛 배치에서도 — ① 의 원천)
+      D4 상별 개수 합 = 전체 개수 (활성 · 단절 · 무접촉 각각)
+      D5 무접촉 개수 ≤ 고립 위험 개수 (SE 접촉 0 ⊂ 0–1 개 — 7c 와 같은 접촉 집합 · 전체 · 상별)
+    반환 1.  어긋나면 `FillRefusal` (메시지에 'v1.1 D<n>' · 'v1.1 상 있음/없음')."""
+    pc = h.get('phase_counts')
+    if not isinstance(pc, dict):
+        raise FillRefusal(f'{case}: 수확 JSON 에 phase_counts 가 없다 — AM 입자 수를 몰라 이온 활성 · 고립 관문을 볼 수 없다 (v1.1 D3)')
+    n = {ph: _phase_n_mono(pc, ph, dp) for ph in ('AM_P', 'AM_S')}
+    n_am = _phase_n(pc, 'AM전체')
+    present = [ph for ph in ('AM_P', 'AM_S') if n[ph] > 0]
+
+    def num(c):
+        v = o.get(c, '') if c in take else ''
+        return None if v in (None, '') else float(v)
+    for c in take:                                                    # 상 있음/없음
+        m = WA_IONIC_PHASE_RE.fullmatch(c)
+        if not m:
+            continue
+        has = o.get(c, '') not in (None, '')
+        if n[m.group(1)] > 0 and not has:
+            raise FillRefusal(f'{case}: {m.group(1)} 입자 {n[m.group(1)]} 개인데 {c} 가 빈칸 — 상이 있는데 값이 없다 (v1.1 상 있음)')
+        if n[m.group(1)] == 0 and has:
+            raise FillRefusal(f'{case}: {m.group(1)} 가 없는 침대인데 {c} = {o[c]} — 다른 침대의 값이다 (v1.1 상 없음)')
+    trio = {'전체': [num(f'ionic_{s_}_pct') for s_ in ('active', 'dead', 'no_se')]}
+    trio.update({ph: [num(f'{ph}_ionic_{s_}_pct') for s_ in ('active', 'dead', 'no_se')] for ph in present})
+    if None not in trio['전체'] and abs(sum(trio['전체']) - 100.0) > WA_PCT_SUM_TOL:        # D1
+        raise FillRefusal(f'{case}: 활성 + 단절 + 무접촉 = {sum(trio["전체"])!r} ≠ 100 — 같은 세 집합이 아니다 (v1.1 D1)')
+    for ph in present:                                                # D2
+        if None not in trio[ph] and abs(sum(trio[ph]) - 100.0) > WA_PCT_SUM_TOL:
+            raise FillRefusal(f'{case}: {ph} 활성 + 단절 + 무접촉 = {sum(trio[ph])!r} ≠ 100 (v1.1 D2)')
+    cnt = {}
+    for lab, N in [('전체', n_am)] + [(ph, n[ph]) for ph in present]:  # D3
+        for s_, v in zip(('active', 'dead', 'no_se'), trio[lab]):
+            if v is None:
+                continue
+            x = v * N / 100.0
+            if abs(x - round(x)) > WA_COUNT_INT_TOL:
+                raise FillRefusal(f'{case}: {lab} {s_} 비율 {v!r} × 입자 수 {N} / 100 = {x!r} 이 정수 개수가 아니다 (v1.1 D3)')
+            cnt[(lab, s_)] = round(x)
+    for s_ in ('active', 'dead', 'no_se'):                             # D4
+        if present and ('전체', s_) in cnt and all((ph, s_) in cnt for ph in present) \
+                and cnt[('전체', s_)] != sum(cnt[(ph, s_)] for ph in present):
+            raise FillRefusal(f'{case}: {s_} 개수 전체 {cnt[("전체", s_)]} ≠ 상별 합 {sum(cnt[(ph, s_)] for ph in present)} (v1.1 D4)')
+    for lab, vcol, N in [('전체', 'am_vulnerable_pct', n_am)] + [(ph, f'{ph}_vulnerable_pct', n[ph]) for ph in present]:   # D5
+        vv = num(vcol)
+        if (lab, 'no_se') in cnt and vv is not None and cnt[(lab, 'no_se')] > round(vv * N / 100.0):
+            raise FillRefusal(f'{case}: {lab} 무접촉 {cnt[(lab, "no_se")]} 개 > 고립 위험 {round(vv * N / 100.0)} 개 — SE 접촉 0 은 0–1 개의 '
+                              '부분집합이다 (v1.1 D5)')
+    return 1
+
+
 def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp_groups=None, wa_reviewed_only=True):
     """설계행 + 수확 (+ union) (+ 웹앱) → 인계용 행 리스트.  **순수 함수**(파일을 안 쓴다) 라 시험 가능하다.
 
@@ -1583,6 +1735,14 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
     wt_on = bool(_wt_has) and all(_wt_has)
     if wt_on:
         cols += [n for n, _p, _s, _w in HANDOVER_WALL_TOUCH]
+    #  v1.1 ③ — 가장 큰 SE 덩어리: 전부 있거나 전부 없어야 한다 (키 유무 = 수확 세대 · 값이 None 이면 관문 C1 이 거부)
+    _sc_has = [('largest_comp_frac' in (_dig(hv[r[key]], ('tau_detail', 'band_detail')) or {})) for r in rows]
+    if any(_sc_has) and not all(_sc_has):
+        _no = [r[key] for r, h_ in zip(rows, _sc_has) if not h_]
+        raise FillRefusal(f'가장 큰 SE 덩어리 기록 (largest_comp_*) 이 {sum(_sc_has)}/{len(rows)} 수확에만 있다 — 수확 세대가 섞였다 (없는 행 {_no[:5]})')
+    sc_on = bool(_sc_has) and all(_sc_has)
+    if sc_on:
+        cols += [n for n, _w in HANDOVER_SE_CLUSTER]
     wv, wa_take = webapp, []
     _gs = wa_groups_norm(webapp_groups)
     if _gs is not None and (not _gs or any(g not in WA_GROUPS for g in _gs)):
@@ -1605,7 +1765,8 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
         have = set(cols)
         wa_take = [c for c in ok_cols if c not in have and c not in {n for n, _w in WA_ROW_COLS}]
         wa_coll = [c for c in ok_cols if c in have]
-        cols += [n for n, _w in WA_ROW_COLS] + wa_take + [n for n, _a, _b, _w in WA_QC]
+        wa_iso_on = 'ionic_active_pct' in wa_take                   # v1.1 ① — 활성 열이 실리면 경로 기준 고립 (유도) 도 싣는다
+        cols += [n for n, _w in WA_ROW_COLS] + wa_take + ([n for n, _w in WA_DERIVED] if wa_iso_on else []) + [n for n, _a, _b, _w in WA_QC]
     out, rep = [], {'n': 0, 'blank_by_status': collections.Counter(),
                     'held_back': dict(HANDOVER_HELD_BACK), 'mono_rows': 0, 'mono_harvest_filled': 0}
     if uv is not None:
@@ -1613,12 +1774,15 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
     if tw_on:
         rep['tau_wall_status'] = collections.Counter()
         rep['tau_wall_checked'] = rep['tau_perc_crosschecked'] = 0
+    if sc_on:
+        rep['se_cluster_checked'] = 0
     if wv is not None:
         rep.update(wa_collisions=wa_coll, wa_n_cols=len(wa_take), wa_status_counts=collections.Counter(),
                    wa_porosity_absmax=0.0, wa_reviewed_only=bool(wa_reviewed_only),
                    wa_unreviewed_dropped=n_census_ok - len(ok_cols), wa_pair_zero_filled=0,
                    wa_mono_renamed_cases=0, wa_mono_design_filled=0, wa_mono_absent_blanked=0,
-                   wa_cn_identity_checked=0, wa_am_identity_checked=0, wa_amse_identity_checked=0, wa_perc_checked=0)
+                   wa_cn_identity_checked=0, wa_am_identity_checked=0, wa_amse_identity_checked=0, wa_perc_checked=0,
+                   wa_ionic_checked=0)
     for r in rows:
         h = hv[r[key]]
         o = {c: r.get(c, '') for c in design_cols}
@@ -1672,6 +1836,9 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                 o[name] = '' if v is None else repr(float(v))          # 없는 상 = 빈칸 (N/A · 0 이 아니다)
                 if v is not None and src_ph != ph:
                     rep['mono_harvest_filled'] += 1
+        if sc_on:                                                     # v1.1 ③ — C1–C3
+            o.update(_se_cluster_cols(r[key], h))
+            rep['se_cluster_checked'] += 1
         if wv is not None:
             rec = wv['status'][r[key]] or {}
             s = rec.get('status') or 'UNKNOWN'
@@ -1764,6 +1931,15 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
             #  ② — 퍼콜레이션 (P1 관통 일관 + 수확기 독립 재현 · P2 범위 · P3 관통 SE 개수)
             if wr is not None and any(wa_group_perc(c) for c in wa_take):
                 rep['wa_perc_checked'] += _wa_perc_gates(r[key], o, wa_take, h)
+            #  v1.1 ① — 경로 기준 고립 = 100 − 활성 (유도) · 웹앱 v1.1 이 같은 이름을 내면 같아야 · ①② 관문 D1–D5
+            if wa_iso_on:
+                a_ = o.get('ionic_active_pct', '')
+                o['am_ionic_isolated_pct'] = repr(100.0 - float(a_)) if a_ not in ('', None) else ''
+                w_iso = wr.get('am_ionic_isolated_pct') if wr is not None else None
+                if w_iso not in (None, '') and a_ not in ('', None) and abs(float(w_iso) - (100.0 - float(a_))) > WA_PCT_SUM_TOL:
+                    raise FillRefusal(f'{r[key]}: 웹앱 am_ionic_isolated_pct {w_iso} ≠ 100 − ionic_active_pct {a_} (v1.1 D1)')
+                if wr is not None:
+                    rep['wa_ionic_checked'] += _wa_ionic_gates(r[key], o, wa_take, h, dp)
             for name, wcol, hcol, _w in WA_QC:
                 o[name] = ''
             if wr is not None:
@@ -2937,7 +3113,7 @@ def _selftest():
         w['rows']['q1'].update(percolation_pct='37.0', top_reachable_pct='40.0', n_components='12', n_large_components='2',
                                ionic_active_pct=repr(900 / 11), se_se_cn_perc='5.5', se_se_cn_n_perc='37', se_se_cn_eff_area_perc='0.05')
         w['rows']['q2'].update(percolation_pct='0.0', top_reachable_pct='15.0', n_components='30', n_large_components='3',
-                               ionic_active_pct='45.0')                     # 관통 없음 — _perc 키 자체가 없다 (웹앱 그대로)
+                               ionic_active_pct=repr(500 / 11))             # 관통 없음 — _perc 키 자체가 없다 (웹앱 그대로) · 5/11 (v1.1 D3 정수 개수)
         for _k in ('se_se_cn_perc', 'se_se_cn_eff_area_perc', 'se_se_cn_n_perc'):   # _wa3 의 J20-i 시험용 값 — 비관통 침대에는 없다
             w['rows']['q2'].pop(_k, None)
         return w
@@ -3061,6 +3237,94 @@ def _selftest():
     _neg7('㉓k ★ T3 — 벽 τ 비관통인데 웹앱 percolation_pct > 0 이면 거부 (수확기 벽 밴드 진단도 0 이라 P1 이 먼저면 P1)',
           lambda: _b8(w=_w9, hv=_hq9(t2=_tw9('NOT_PERCOLATING', 0))), '② P1')
     _neg7('㉓l ★ n_span_components 가 정수가 아니면 거부', lambda: _b8(hv=_hq9(t1=_tw9('OK', 2.0))), 'τ T1')
+    #  ═══ ㉔ v1.1 ①②③ (1저자 비준 10-01 *"비준이야"* · J20-o) ════════════════════════════════════════════════════════════════════════════
+    #   ① am_ionic_isolated_pct = 100 − ionic_active_pct — 경로 기준 고립 (이온이 못 가는 AM) · 생성기 유도 (재실행 없음) · 고립 위험 (vulnerable) 과 다른 양
+    #   ② 분해 — 웹앱 v1.1 이 새로 내보내는 키 (단절 · 무접촉 · 상별 셋) · 배치 머리에 있을 때만 · 관문 D1–D5 (합 100 · 상별 합 100 · 정수 개수 ·
+    #      상별 개수 합 = 전체 · 무접촉 ≤ 고립 위험) · mono 는 설계 상 칸
+    #   ③ 가장 큰 SE 덩어리 — SE 비율 · z 폭 (벽 간격 기준 = 기록 z 폭 × 전 입자 z 범위 / 벽 간격 · 정확 환산 · 재실행 없음) · 관문 C1–C3
+    def _wa10(dec=True):
+        w = _wa8()
+        if dec:
+            w['rows']['q1'].update(ionic_dead_pct=repr(100 / 11), ionic_no_se_pct=repr(100 / 11), AM_S_ionic_active_pct=repr(900 / 11),
+                                   AM_S_ionic_dead_pct=repr(100 / 11), AM_S_ionic_no_se_pct=repr(100 / 11))
+            w['rows']['q2'].update(ionic_dead_pct=repr(600 / 11), ionic_no_se_pct='0.0',
+                                   AM_P_ionic_active_pct='100.0', AM_P_ionic_dead_pct='0.0', AM_P_ionic_no_se_pct='0.0',
+                                   AM_S_ionic_active_pct='40.0', AM_S_ionic_dead_pct='60.0', AM_S_ionic_no_se_pct='0.0')
+        return w
+
+    def _bd10(n_se=100, frac=0.37, zs=0.95, zlo=-0.5, zhi=40.5, pz=40.0, fl=0.0):
+        return {'n_se': n_se, 'largest_comp_frac': frac, 'largest_comp_z_span_frac': zs, 'z_lo': zlo, 'z_hi': zhi,
+                'alt_plate_z': pz, 'wall_z_floor': fl}
+
+    def _hq10(b1=None, b2=None):
+        hv = _hq9()
+        for q, b, span in (('q1', b1 or _bd10(), 2), ('q2', b2 or _bd10(frac=0.25, zs=0.5), 0)):
+            hv[q] = dict(hv[q], plate_z_sim=40.0, z_floor_sim=0.0, tau_detail={'band_detail': dict(b, wall_n_span_components=span)})
+        return hv
+
+    def _b10(w=None, hv=None):
+        return build_handover(_dq7, hv or _hq10(), webapp=w or _wa10(), webapp_groups='contact,percolation')
+    try:
+        _o10, _c10, _r10 = _b10()
+        _e10 = ''
+    except Exception as e:                                                # noqa: BLE001
+        _o10, _c10, _r10, _e10 = [], [], {}, f'{type(e).__name__}: {e}'
+    _m10 = next((r for r in _o10 if r['case_id'] == 'q1'), {})
+    _p10 = next((r for r in _o10 if r['case_id'] == 'q2'), {})
+    chk('㉔a ★ ① am_ionic_isolated_pct = 100 − ionic_active_pct (q1 · q2) · 활성 열 뒤 · 활성 열이 실리면 늘 (재실행 없음)' + (f' — {_e10}' if _e10 else ''),
+        not _e10 and _m10.get('am_ionic_isolated_pct') == repr(100.0 - 900 / 11) and _p10.get('am_ionic_isolated_pct') == repr(100.0 - 500 / 11)
+        and 'ionic_active_pct' in _c10 and _c10.index('am_ionic_isolated_pct') > _c10.index('ionic_active_pct'))
+    _dec10 = ('ionic_dead_pct', 'ionic_no_se_pct') + tuple(f'{ph}_ionic_{s_}_pct' for ph in ('AM_P', 'AM_S') for s_ in ('active', 'dead', 'no_se'))
+    try:
+        _c10o = _b10(w=_wa10(dec=False))[1]
+    except Exception as e:                                                # noqa: BLE001
+        _c10o = [f'ERR {type(e).__name__}: {e}']
+    chk('㉔b ② 분해 키가 배치 머리에 없으면 (5번 배치 세대) 분해 열도 없다 · ① 은 그대로 (활성에서 유도)',
+        'am_ionic_isolated_pct' in _c10o and not any(c in _c10o for c in _dec10))
+    chk('㉔c ★ ② 새 배치 — 분해 열 8 개 · mono (설계 AM_P · 웹앱 이름 AM_S) 는 설계 상 칸 · 없는 상 칸 빈칸 · 관문 D 2 행',
+        all(c in _c10 for c in _dec10) and _m10.get('AM_P_ionic_dead_pct') == repr(100 / 11) and _m10.get('AM_S_ionic_dead_pct') == ''
+        and _m10.get('ionic_no_se_pct') == repr(100 / 11) and _p10.get('AM_S_ionic_active_pct') == '40.0' and _p10.get('ionic_no_se_pct') == '0.0'
+        and _r10.get('wa_ionic_checked') == 2)
+    _dm10 = {d['column']: d for d in column_dictionary(_c10, webapp=_wa10())} if _c10 else {}
+    _g10 = lambda c, k: (_dm10.get(c) or {}).get(k, '')                   # noqa: E731
+    chk('㉔d ★ 열 사전 — ① 경로 기준 고립 = 100 − ionic_active_pct · 고립 위험 (vulnerable) 과 다른 양 · ② 단절 · 무접촉 정의 · 새 키 판정 (v1.1 ②)',
+        '경로 기준 고립' in _g10('am_ionic_isolated_pct', 'meaning') and '100 − ionic_active_pct' in _g10('am_ionic_isolated_pct', 'meaning')
+        and '고립 위험' in _g10('am_ionic_isolated_pct', 'meaning') and 'v1.1 ①' in _g10('am_ionic_isolated_pct', 'meaning')
+        and '닿았지만' in _g10('ionic_dead_pct', 'meaning') and 'SE 접촉 0' in _g10('ionic_no_se_pct', 'meaning')
+        and 'v1.1 ②' in _g10('ionic_dead_pct', 'verdict') and _g10('ionic_dead_pct', 'source') == 'webapp'
+        and 'v1.1 ②' in _g10('AM_P_ionic_active_pct', 'verdict') and '설계 상 칸' in _g10('AM_P_ionic_active_pct', 'meaning'))
+
+    def _bad10(q, **kv):
+        w = _wa10()
+        w['rows'][q].update(kv)
+        return lambda: _b10(w=w)
+    _neg7('㉔e ★ D1 — 활성 + 단절 + 무접촉 ≠ 100 이면 거부', _bad10('q2', ionic_no_se_pct=repr(100 / 11)), 'v1.1 D1')
+    _neg7('㉔f ★ D2 — 상별 활성 + 단절 + 무접촉 ≠ 100 이면 거부 (AM_S 40 + 50 + 0)', _bad10('q2', AM_S_ionic_dead_pct='50.0'), 'v1.1 D2')
+    _neg7('㉔g ★ D3 — 비율 × 입자 수 / 100 이 정수 개수가 아니면 거부 (활성 45 % × 11 = 4.95)',
+          _bad10('q2', ionic_active_pct='45.0', ionic_dead_pct='55.0'), 'v1.1 D3')
+    _neg7('㉔h ★ D4 — 상별 개수 합 ≠ 전체 개수 (AM_P 1 + AM_S 3 ≠ 활성 5) 이면 거부',
+          _bad10('q2', AM_S_ionic_active_pct='30.0', AM_S_ionic_dead_pct='70.0'), 'v1.1 D4')
+    _neg7('㉔i ★ D5 — 무접촉 개수 (2) > 고립 위험 개수 (1 — SE 접촉 0 ⊂ 0–1 개) 이면 거부',
+          _bad10('q2', ionic_dead_pct=repr(400 / 11), ionic_no_se_pct=repr(200 / 11), AM_S_ionic_dead_pct='40.0', AM_S_ionic_no_se_pct='20.0'),
+          'v1.1 D5')
+    _neg7('㉔j ★ 상 있음 — 상이 있는데 상별 분해가 비면 거부 (bimodal AM_P 단절 빈칸)', _bad10('q2', AM_P_ionic_dead_pct=''), 'v1.1 상 있음')
+    _w10k = _wa10(dec=False)
+    _w10k['rows']['q2']['ionic_active_pct'] = '45.0'
+    _neg7('㉔k ★ D3 — 분해 키가 없는 옛 배치에서도 활성 비율 × AM 수 / 100 이 정수 개수가 아니면 거부 (①의 원천)',
+          lambda: _b10(w=_w10k), 'v1.1 D3')
+    chk('㉔l ★ ③ 가장 큰 SE 덩어리 — SE 비율 · 벽 간격 대비 z 폭 (= 기록 z 폭 × 전 입자 z 범위 / 벽 간격) · 전 입자 z 범위 대비 원값 · 관문 C 2 행',
+        _m10.get('se_largest_comp_frac') == repr(0.37) and _m10.get('se_largest_comp_wall_span_frac') == repr(0.95 * 41.0 / 40.0)
+        and _p10.get('se_largest_comp_env_span_frac') == repr(0.5) and _p10.get('se_largest_comp_wall_span_frac') == repr(0.5 * 41.0 / 40.0)
+        and _r10.get('se_cluster_checked') == 2)
+    chk('㉔m ★ 열 사전 — ③ 분모 (벽 간격 · 전 입자 z 범위 — 바닥 아래로 샌 입자) · 가장 큰 = SE 수 기준 · 1 을 넘을 수 있음 · v1.1 ③ · 출처 harvest_v3',
+        '벽 간격' in _g10('se_largest_comp_wall_span_frac', 'meaning') and '1 을 넘' in _g10('se_largest_comp_wall_span_frac', 'meaning')
+        and '전 입자' in _g10('se_largest_comp_env_span_frac', 'meaning') and 'SE 수' in _g10('se_largest_comp_frac', 'meaning')
+        and 'v1.1 ③' in _g10('se_largest_comp_frac', 'meaning') and _g10('se_largest_comp_frac', 'source') == 'harvest_v3')
+    _neg7('㉔n ★ C1 — 덩어리 SE 비율 × SE 수 가 정수가 아니면 거부 (0.375 × 100)', lambda: _b10(hv=_hq10(b1=_bd10(frac=0.375))), 'v1.1 C1')
+    _neg7('㉔o ★ C1 — band SE 수 ≠ 수확 phase_counts SE 이면 거부', lambda: _b10(hv=_hq10(b1=_bd10(n_se=99))), 'v1.1 C1')
+    _neg7('㉔p ★ C2 — 전 입자 z 범위 대비 z 폭 > 1 이면 거부 (덩어리 ⊂ 전 입자)', lambda: _b10(hv=_hq10(b1=_bd10(zs=1.2))), 'v1.1 C2')
+    _neg7('㉔q ★ C3 — 벽 간격의 플래튼 ≠ 수확 plate_z_sim 이면 거부 (다른 판)', lambda: _b10(hv=_hq10(b1=_bd10(pz=39.0))), 'v1.1 C3')
+    _neg7('㉔r ★ ③ 수확 세대 혼합 — 일부 행만 덩어리 기록이 있으면 거부', lambda: _b10(hv=dict(_hq10(), q2=_hq9()['q2'])), '덩어리')
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -3188,6 +3452,10 @@ if __name__ == '__main__':
                   f'② 퍼콜레이션 관문 P1–P3 확인 {_rep["wa_perc_checked"]} 행')
         if 'tau_wall_checked' in _rep:
             print(f'   벽 τ 관문 T1–T2 확인 {_rep["tau_wall_checked"]} 행 · T3 (↔ 퍼콜레이션) {_rep["tau_perc_crosschecked"]} 행')
+        if _rep.get('wa_ionic_checked'):
+            print(f'   v1.1 ①② 이온 활성 · 경로 기준 고립 관문 D1–D5 확인 {_rep["wa_ionic_checked"]} 행')
+        if 'se_cluster_checked' in _rep:
+            print(f'   v1.1 ③ 가장 큰 SE 덩어리 관문 C1–C3 확인 {_rep["se_cluster_checked"]} 행')
         print(f'   J20-k (B) mono {_rep["mono_rows"]} 행 — 수확기 상별 칸 (coverage · n_AM_*_measured · cov_*_n_valid · 벽 접촉) 설계 상 칸 채움 '
               f'{_rep["mono_harvest_filled"]} 셀 (설계에 없는 상은 빈칸)')
         print(f'   빈칸 사유: {dict(_rep["blank_by_status"])}')

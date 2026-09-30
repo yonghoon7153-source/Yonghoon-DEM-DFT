@@ -1910,6 +1910,24 @@ const METRIC_TIPS = {
     desc: '고체전해질(SE)의 평균 Von Mises 응력을 전체 평균 응력으로 나눈 비율입니다.',
     meaning: 'SE는 AM보다 기계적 강도가 낮은 경우가 많습니다. SE 응력비가 1에 가까우면 고르게 분담하는 것이고, 높으면 SE에 과도한 하중이 걸려 분해/열화 위험이 있습니다.'
   },
+  'Ionic Isolated AM(%)': {
+    title: 'Ionic Isolated AM (경로 기준 고립 AM 비율 · v1.1)',
+    formula: 'Ionic Isolated = 100 − Ionic Active = 단절 + 무접촉\n(단절 = SE 는 닿았지만 그 SE 가 위 띠로 안 이어짐 · 무접촉 = SE 접촉 0)',
+    desc: '이온이 분리막 쪽 (위 띠) 에서 실제로 닿을 수 없는 활물질 비율 — 경로 기준 고립입니다 (calc_ionic_active_am · 접촉 그래프). 닿았는지만 본다 — coverage (덮인 넓이) 와 무관.',
+    meaning: '⚠ 고립 위험 (AM Vulnerable · SE 접촉 0–1 개) 과 다른 양이다: 접촉이 둘 이상이어도 그 SE 가 끊긴 덩어리면 고립이고, 하나뿐이어도 이어져 있으면 활성이다. SE 망이 끊긴 침대에서 크게 벌어진다 (인계 v1.1 ① · 1저자 비준 10-01).'
+  },
+  '  ├ Isolated: SE not linked(%)': {
+    title: '고립 — 단절 (SE 는 닿았지만 분리막 쪽으로 안 이어짐)',
+    formula: '단절 = (SE 와 닿았지만 닿은 SE 가 전부 top-reachable 이 아닌 AM 수 / 전체 AM 수) × 100',
+    desc: 'SE 와 닿았지만 그 SE 들이 위 띠 (분리막 쪽) 로 이어진 덩어리에 속하지 않는 AM 의 비율 (인계 v1.1 ② · calc_ionic_active_am 의 dead).',
+    meaning: 'SE 망의 연결 문제 — SE 가 끊긴 섬에 갇힌 AM. 접촉을 늘리는 것만으로는 안 풀린다.'
+  },
+  '  └ Isolated: no SE contact(%)': {
+    title: '고립 — 무접촉 (SE 접촉 0)',
+    formula: '무접촉 = (SE 접촉 0 인 AM 수 / 전체 AM 수) × 100',
+    desc: 'SE 접촉 0 인 AM 의 비율 (인계 v1.1 ② · calc_ionic_active_am 의 no_se) — 고립 위험 (접촉 0–1 개) 의 부분집합.',
+    meaning: 'SE 와 전혀 안 닿은 AM — 계면 형성 문제. 단절과 원인이 다르다.'
+  },
   'AM Vulnerable(%)': {
     title: 'AM Vulnerable (취약 AM 비율)',
     formula: 'Vulnerable = (SE 0개 접촉 AM + SE 1개 접촉 AM) / 전체 AM × 100',
@@ -2594,6 +2612,9 @@ const PAPER_TO_ORIG = {
   'Effective path conductance Σ(A/ℓ) (μm²)': 'Path Conductance(μm²)',
   'AM-SE coordination number ⟨z_AM-SE⟩': 'AM-SE CN mean',
   'Ionically-active AM, touching top-reachable SE (%)': 'Ionic Active AM(%)',
+  'Ionically-isolated AM, path-based = 100 − active (%)': 'Ionic Isolated AM(%)',
+  '  ├ isolated — touches SE, none linked to the separator side (%)': '  ├ Isolated: SE not linked(%)',
+  '  └ isolated — no SE contact (%)': '  └ Isolated: no SE contact(%)',
   'SE volume fraction φ_SE — sphere volume / plate gap': 'SE Volume Fraction',
   'σ_Bruggeman — EMT estimate (mS/cm)': 'σ_Bruggeman (mS/cm)',
   'Bruggeman coefficient, σ_Bruggeman / σ_grain': 'σ_brug/σ_grain (Bruggeman)',

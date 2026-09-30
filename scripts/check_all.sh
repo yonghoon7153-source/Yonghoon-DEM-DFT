@@ -166,6 +166,8 @@ run 'webapp: closed_param_exact_union' python3 webapp/test_closed_param_exact_un
 run 'webapp: coverage_handover_scope' python3 webapp/test_coverage_handover_scope.py
 run 'webapp: am_isolation_labels'    python3 webapp/test_am_isolation_labels.py
 run 'webapp: percolation_labels'     python3 webapp/test_percolation_labels.py
+#  ★ 2026-10-01 (LHS 인계 v1.1 ①② · J20-l) — 경로 기준 고립 = 100 − 활성 · 분해 (단절 · 무접촉) · 고립 위험 (접촉 0–1 개) 과 다른 양
+run 'webapp: ionic_isolation_labels' python3 webapp/test_ionic_isolation_labels.py
 #  ★ 2026-09-30 — /mixer 침대 보기 (보기 전용) — 경로 탈출 · 맹검 잠금 (정책 fail-closed) · 덤프 관문 · 단면 경계 · 쓰기 없음 (반례 41)
 run 'webapp: mixer_bed_view'      python3 webapp/test_mixer_bed_view.py
 #  ★ 2026-09-22 — 믹서 런처·생성기 회귀 (LIGGGHTS 없이 가짜 실행파일로).  같은 날 사고 둘을 재현해 막는다:

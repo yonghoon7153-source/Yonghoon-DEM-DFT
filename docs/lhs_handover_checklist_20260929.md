@@ -108,6 +108,8 @@
 | ② `percolation_pct` · `top_reachable_pct` · `n_components` · `n_large_components` · `ionic_active_pct` · `se_se_cn_perc` · `se_se_cn_n_perc` | `calc_percolation` · `calc_ionic_active_am` · `calc_se_se_cn` 관통 부분 → `analyze_contacts.py:404–413` | ✅ J20-b 감사 (09-29 · 130/130 CLEAN) · ✅ **10-01 실림** (J20-n) | 관문 P1 (관통 일관 + 수확기 독립 재현) · P2 (범위 · 순서) · P3 (관통 SE 개수) 130/130 · 64/64 · F3 한정어 (`LHS-19`) · `top_reachable` · `ionic_active` census 오분류 → ✅ (`LHS-20`) · `electronic_active_fraction` (망 단계) · `se_se_cn_eff_area_perc` (면적 ⑦) 은 안 싣는다 · ⚠ lhsx 64 감사기 미실행 (P1 로 대신) |
 | 벽 τ `tortuosity_SE_wall` · `_median` · `_status` · `tau_wall_n_*` (+ 벽 접촉 비율 8) | `lhs_descriptor_harvest.tortuosity_se` → `_tau_sample` (수확 v3) | ✅ **10-01** 검토 · 수정 불요 · 실림 (J20-n) | 기하 최단경로 (Dijkstra · 200 쌍 · [1, 20)) — **수송 τ 아님** (COMSOL 입력 = τ_Laplace,eff · 망 단계 · 나중) · 130 OK 106 · 비관통 24 (N/A) · τ 1.29–4.15 · 64 OK 64 · 1.26–1.60 · 관문 T1–T3 · 벽 접촉 문구 = 수확기 규칙 (겹침 깊이 > 0 · 접선 제외) |
 
+| v1.1 ① `am_ionic_isolated_pct` · ② `ionic_dead_pct` · `ionic_no_se_pct` · `{AM_P,AM_S}_ionic_{active,dead,no_se}_pct` · ③ `se_largest_comp_frac` · `se_largest_comp_wall_span_frac` (+ 원값 `_env_span_frac`) | ① 생성기 유도 (100 − `ionic_active_pct`) · ② `calc_ionic_active_am` → `analyze_contacts` (v1.1 내보내기) · ③ `lhs_descriptor_harvest.tortuosity_se:1293–1322` (수확 v3 band_detail) | ✅ **10-01** 비준 · ①③ 실림 · ② 코드 ✅ · ⬜ WSL 접촉 단계 재실행 (J20-p) | ① = 경로 기준 고립 (≠ 고립 위험 · 관문 D3) · ② 관문 D1–D5 · ③ 원값 분모 = 전 입자 z 범위 → 벽 간격 기준 정확 환산 · 관문 C1–C3 |
+
 ## 6. φ_SE · φ_AM · coverage 점검 (2026-09-29 밤 · 1저자 요청 *"코드 다시 설명 · 실제로 넘길 수 있는 parameter 인지"*)
 
 **어디서 오나**: 세 열 모두 **수확기** `scripts/lhs_descriptor_harvest.py` 의 값이다 (웹앱 열 아님 — J20-a 의 ①–⑦ 감사 묶음은 웹앱 열이고, 이름이 겹치는

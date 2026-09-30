@@ -672,6 +672,9 @@ def calc_ionic_active_am(atoms, contacts, perc_result, se_types, am_types, type_
         sub = {aid for aid in am_ids if atoms[aid]['type'] in tids}
         sub_active = sub & ionic_active
         result[f'{lbl}_active_pct'] = len(sub_active) / len(sub) * 100 if sub else 0
+        #  v1.1 ② (1저자 비준 10-01) — 상별 분해도 같은 세 집합에서 (활성 + 단절 + 무접촉 = 100).  옛 코드는 상별 active 만 셌다.
+        result[f'{lbl}_dead_pct'] = len(sub & ionic_dead) / len(sub) * 100 if sub else 0
+        result[f'{lbl}_no_se_pct'] = len(sub & no_se) / len(sub) * 100 if sub else 0
 
     return result
 

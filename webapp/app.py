@@ -1809,6 +1809,22 @@ def normalize_network_summary_layout(tables, metrics):
         if _find_row(child_label) is None:
             _insert_after('AM Vulnerable(%)', [child_label, '—', '—', '0%'])
 
+    # v1.1 ①② (1저자 비준 10-01 · J20-l) — 경로 기준 고립 = 100 − 활성 · 그 분해.  옛 세대 CSV 는 줄이 없다:
+    #   부모는 metrics 의 am_ionic_isolated_pct (없으면 100 − ionic_active_pct) · 분해 두 줄은 키가 있을 때만 값, 없으면 — (0 으로 안 채움)
+    if _find_row('Ionic Isolated AM(%)') is None and _find_row('Ionic Active AM(%)') is not None:
+        _iso = metrics.get('am_ionic_isolated_pct') if metrics else None
+        if not isinstance(_iso, (int, float)):
+            _act = metrics.get('ionic_active_pct') if metrics else None
+            _iso = (100.0 - _act) if isinstance(_act, (int, float)) else None
+        _v = f'{_iso:.1f}' if isinstance(_iso, (int, float)) else '—'
+        _insert_after('Ionic Active AM(%)', ['Ionic Isolated AM(%)', _v, _v, '0%'])
+    for child_label, _key in (('  ├ Isolated: SE not linked(%)', 'ionic_dead_pct'),
+                              ('  └ Isolated: no SE contact(%)', 'ionic_no_se_pct')):
+        if _find_row(child_label) is None and _find_row('Ionic Isolated AM(%)') is not None:
+            _x = metrics.get(_key) if metrics else None
+            _v = f'{_x:.1f}' if isinstance(_x, (int, float)) else '—'
+            _insert_after('Ionic Isolated AM(%)', [child_label, _v, _v, '0%'])
+
     # Coverage AM_P / AM_S — always emit even when particle type absent
     if _find_row('Coverage AM_P(%)') is None:
         _insert_after('SE-SE Total(μm²)',
@@ -1908,7 +1924,9 @@ def normalize_network_summary_layout(tables, metrics):
         'AM-SE CN mean',
         '├ AM_P-SE CN mean', '├ AM_S-SE CN mean',
         '└ AM-SE CN (surface-weighted)',
-        'Ionic Active AM(%)', 'AM Vulnerable(%)',
+        'Ionic Active AM(%)',
+        'Ionic Isolated AM(%)', '├ Isolated: SE not linked(%)', '└ Isolated: no SE contact(%)',   # v1.1 ①②
+        'AM Vulnerable(%)',
         '├ AM_P Vulnerable(%)', '└ AM_S Vulnerable(%)',
         # 이온전도 (Bruggeman EMT)
         'SE Volume Fraction', 'σ_Bruggeman (mS/cm)',
@@ -2081,6 +2099,10 @@ _PAPER_LABEL_MAP = {
     '  └ AM-SE CN (surface-weighted)':
         '  └ AM-SE coordination number (surface-area weighted)',
     'Ionic Active AM(%)':          'Ionically-active AM, touching top-reachable SE (%)',   # 위 띠 SE 와의 접촉 (LHS-20 · ②)
+    #  v1.1 ①② (1저자 비준 10-01) — 경로 기준 고립 = 100 − 활성 = 단절 + 무접촉 · 고립 위험 (AM Vulnerable · 접촉 0–1 개) 과 다른 양
+    'Ionic Isolated AM(%)':        'Ionically-isolated AM, path-based = 100 − active (%)',
+    '  ├ Isolated: SE not linked(%)': '  ├ isolated — touches SE, none linked to the separator side (%)',
+    '  └ Isolated: no SE contact(%)': '  └ isolated — no SE contact (%)',
     'AM Vulnerable(%)':            'Ionically-vulnerable AM, 0–1 SE contacts (%)',   # 접촉 개수 기준 · coverage 아님 (LHS-23 · 7c)
     '  ├ AM_P Vulnerable(%)':      '  ├ AM_P ionically-vulnerable (%)',
     '  └ AM_S Vulnerable(%)':      '  └ AM_S ionically-vulnerable (%)',
@@ -6681,6 +6703,9 @@ GROUP_DISPLAY_KEYS = [
     ('AM-SE CN', '', 'am_se_cn_mean', 'AM 네트워크'),
     ('AM Vulnerable', '(%)', 'am_vulnerable_pct', 'AM 네트워크'),
     ('Ionic Active', '(%)', 'ionic_active_pct', 'AM 네트워크'),
+    ('Ionic Isolated (path)', '(%)', 'am_ionic_isolated_pct', 'AM 네트워크'),      # v1.1 ① = 100 − 활성 (옛 세대는 로드 때 유도)
+    ('Isolated: SE not linked', '(%)', 'ionic_dead_pct', 'AM 네트워크'),          # v1.1 ② 분해 (옛 세대 = 빈칸)
+    ('Isolated: no SE', '(%)', 'ionic_no_se_pct', 'AM 네트워크'),
     # ── Transport (Stage E — production form targets) ──
     ('σ_ionic (Stage E)', '(mS/cm)', '_sigma_i_stage_e_display', '전송 (Stage E)'),
     ('σ_electronic (Stage E)', '(mS/cm)', '_sigma_e_stage_e_display', '전송 (Stage E)'),
@@ -6706,6 +6731,7 @@ GROUP_DISPLAY_KEYS = [
 GROUP_LOWER_BETTER = {
     'Porosity', 'Porosity (union)', 'Porosity (union exact)', 'Overlap fraction', '두께', '두께 (질량 보존)',
     'SE-SE CN std', 'AM-AM CN std', 'Tortuosity', 'AM Vulnerable',
+    'Ionic Isolated (path)', 'Isolated: SE not linked', 'Isolated: no SE',
     'R_brug', 'Constriction', 'CP mean', 'CP max', 'Stress CV',
 }
 
@@ -6784,6 +6810,10 @@ def group():
                     metrics = json.load(f)
             else:
                 continue
+
+            # v1.1 ① — 경로 기준 고립 (옛 세대는 키가 없다 → 100 − 활성 · 분해 두 열은 비워 둔다 = 측정 안 함)
+            if metrics.get('am_ionic_isolated_pct') is None and isinstance(metrics.get('ionic_active_pct'), (int, float)):
+                metrics['am_ionic_isolated_pct'] = 100.0 - metrics['ionic_active_pct']
 
             # Derived: constriction percentage
             bf = metrics.get('bulk_resistance_fraction')
@@ -9290,6 +9320,14 @@ def serve_report(case_id):
         L.append(f'| SE Percolation | {metrics["percolation_pct"]:.1f}% |')
     if metrics.get('ionic_active_pct') is not None:
         L.append(f'| Ionic Active AM | {metrics["ionic_active_pct"]:.1f}% |')
+        _iso = metrics.get('am_ionic_isolated_pct')
+        if not isinstance(_iso, (int, float)):
+            _iso = 100.0 - metrics['ionic_active_pct']
+        L.append(f'| Ionically-isolated AM (path-based, = 100 − active · ≠ vulnerable) | {_iso:.1f}% (am_ionic_isolated_pct) |')
+        for _k, _lab in (('ionic_dead_pct', '├ isolated — touches SE, none linked to the separator side'),
+                         ('ionic_no_se_pct', '└ isolated — no SE contact')):
+            if isinstance(metrics.get(_k), (int, float)):
+                L.append(f'| {_lab} | {metrics[_k]:.1f}% ({_k}) |')
     if metrics.get('e_se_eff_gpa') is not None:
         L.append(f'| E_SE_eff | {metrics["e_se_eff_gpa"]:.2f} GPa (bulk LPSCl: 24 GPa) |')
     if metrics.get('target_pressure_mpa') is not None:
@@ -9511,7 +9549,8 @@ _GRADE_PLAIN = {
     'am_se_cn_mean': '활물질 입자 하나가 평균 몇 개의 고체전해질과 닿아있는지예요. 많을수록 이온 공급 '
         '통로가 여러 개라 안정적입니다.',
     'ionic_active_pct': '이온이 실제로 도달할 수 있는 활물질의 비율이에요. 100%면 모든 활물질이 작동하고, '
-        '낮으면 이온이 못 가는 "죽은 활물질"이 생겨 용량을 못 씁니다.',
+        '낮으면 이온이 못 가는 "죽은 활물질"이 생겨 용량을 못 씁니다. 이온이 못 가는 활물질 (경로 기준 고립) 은 100 − 이 값이에요 — '
+        '닿은 개수 (0–1 군데) 로 보는 "고립 위험" 과는 다른 양입니다.',
     '__vulnerable_pct': '고체전해질과 닿은 곳이 0–1 군데뿐인 활물질 비율이에요. 닿은 곳이 하나면 그 하나만 끊겨도 '
         '이온이 못 가서, 충·방전을 반복하면 먼저 죽을 수 있어요. 덮인 넓이가 아니라 닿은 개수로 셉니다. 적을수록 좋습니다.',
     '__am_percolation_pct': '활물질끼리 서로 닿아 전자가 위→아래로 통하는 비율이에요. 낮으면 도전재(탄소)를 '

@@ -257,6 +257,10 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
             rows.append({'지표': '  ├ AM_S-SE CN mean', '값': round(am_risk['AM_S_se_cn_mean'], 2)})
             rows.append({'지표': '  └ AM-SE CN (surface-weighted)', '값': round(am_risk['am_se_cn_surface_weighted'], 2)})
     rows.append({'지표': 'Ionic Active AM(%)', '값': round(ionic['active_pct'], 1)})
+    #  v1.1 ①② — 경로 기준 고립 = 100 − 활성 · 그 분해 (단절 = SE 는 닿았지만 위 띠로 안 이어짐 · 무접촉 = SE 접촉 0)
+    rows.append({'지표': 'Ionic Isolated AM(%)', '값': round(100.0 - ionic['active_pct'], 1)})
+    rows.append({'지표': '  ├ Isolated: SE not linked(%)', '값': round(ionic['dead_pct'], 1)})
+    rows.append({'지표': '  └ Isolated: no SE contact(%)', '값': round(ionic['no_se_pct'], 1)})
     if am_risk:
         rows.append({'지표': 'AM Vulnerable(%)', '값': round(am_risk['vulnerable_pct'], 1)})
         if 'AM_P_vulnerable_pct' in am_risk and 'AM_S_vulnerable_pct' in am_risk:
@@ -411,6 +415,16 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
         'tortuosity_use_median': tau.get('use_median', False),
         'tortuosity_recommended': tau.get('recommended', tau['mean']),
         'ionic_active_pct': ionic['active_pct'],
+        #  v1.1 ② (1저자 비준 10-01 · LHS 인계) — 경로 기준 고립 (= 100 − 활성) 의 분해.  calc_ionic_active_am 이 계산만 하고 버리던 값:
+        #   단절 = SE 는 닿았지만 그 SE 가 위 띠 (분리막 쪽) 로 안 이어짐 · 무접촉 = SE 접촉 0.  활성 + 단절 + 무접촉 = 100 (전체 · 상별).
+        'ionic_dead_pct': ionic['dead_pct'],
+        'ionic_no_se_pct': ionic['no_se_pct'],
+        #  v1.1 ① — 경로 기준 고립 (이온이 분리막 쪽에서 닿을 수 없는 AM) = 100 − 활성 = 단절 + 무접촉.  인계표 열과 같은 이름.
+        #   ≠ am_vulnerable_pct (고립 **위험** = SE 접촉 0–1 개 · calc_am_isolation_risk) — 접촉 둘 이상인데 고립일 수도, 하나뿐인데 활성일 수도 있다.
+        'am_ionic_isolated_pct': 100.0 - ionic['active_pct'],
+        **{f'{lbl}_ionic_{s}_pct': ionic[f'{lbl}_{s}_pct']
+           for lbl in sorted({v for v in type_map.values() if 'AM' in v})
+           for s in ('active', 'dead', 'no_se') if f'{lbl}_{s}_pct' in ionic},
     }
 
     # GB density and path conductance from cluster paths (exact per-hop contact area)
@@ -1046,6 +1060,63 @@ def _selftest():
         got1 = {k for k in m1 if ISO_KEY.fullmatch(k)}
         chk(f'⑫ mono AM 고립 키 집합 = 계약 {len(want1)} (전체 6 · AM_S 6)',
             got1 == want1, f'빠짐 {sorted(want1 - got1)} · 더 {sorted(got1 - want1)}')
+
+        # ── v1.1 ② (1저자 비준 10-01) — 경로 기준 고립의 분해: 이온 활성 · 단절 (SE 는 닿았지만 위 띠로 안 이어짐) · SE 무접촉 ──
+        #   calc_ionic_active_am 은 셋을 다 세고 active 만 내보냈다 (단절 · 무접촉은 계산 뒤 버림 · 상별은 active 만 계산).
+        #   AM 을 SE 사슬 (위 띠까지 이어진 SE 101–120) 에 직접 잇는 행 (extra) 으로 활성을 만든다 — 사슬에 안 닿은 SE 는 외톨이 (단절).
+        IONIC_KEY = re.compile(r'ionic_(active|dead|no_se)_pct|AM_[PS]_ionic_(active|dead|no_se)_pct')
+        k3i = {1: 0, 2: 2, 3: 0, 4: 0, 5: 0, 6: 1, 7: 0}            # 외톨이 SE 수 (사슬 SE 와 닿는 수는 extra 로 따로)
+        pr3i, m3i = run_bed(tmp, 'ionic3', 'analyze_contacts_bimodal.py', '1:AM_P,2:AM_S,3:SE', 3, am3,
+                            [(a, k, False) for a, k in k3i.items()],
+                            extra=[(1, 110), (4, 115), (7, 105), (106, 7)])   # 활성 = AM 1 (AM_P) · 4 · 7 (AM_S) · 7 은 뒤집힌 행 하나 포함
+        #   손 계산: 활성 {1, 4, 7} · 단절 {2 (외톨이 2), 6 (외톨이 1)} · 무접촉 {3, 5} → 전체 3/7 · 2/7 · 2/7 ·
+        #   AM_P {1 활성 · 2 단절 · 3 무접촉} = 1/3 씩 · AM_S {4 · 7 활성 · 6 단절 · 5 무접촉} = 2/4 · 1/4 · 1/4 ·
+        #   고립 위험 (SE 접촉 0–1 개) = {1 (사슬 하나 — 활성인데 위험) · 3 · 4 · 5 · 6} = 5/7 ≠ 경로 고립 {2 · 3 · 5 · 6} = 4/7 (2 는 접촉 2 개인데 고립)
+        chk('⑬ ★ v1.1 ② 3 상 — ionic_dead_pct 200/7 · ionic_no_se_pct 200/7 를 내보낸다 · 옛 ionic_active_pct 300/7 그대로 · 셋의 합 = 100',
+            pr3i.returncode == 0 and same(m3i.get('ionic_active_pct'), 300 / 7) and same(m3i.get('ionic_dead_pct'), 200 / 7)
+            and same(m3i.get('ionic_no_se_pct'), 200 / 7)
+            and same(sum(m3i.get(f'ionic_{s}_pct', float('nan')) for s in ('active', 'dead', 'no_se')), 100.0),
+            (pr3i.stderr or '')[-400:] if pr3i.returncode else str({k: m3i.get(k) for k in sorted(m3i) if IONIC_KEY.fullmatch(k)}))
+        want_ip = dict(active=100 / 3, dead=100 / 3, no_se=100 / 3)
+        want_is = dict(active=50.0, dead=25.0, no_se=25.0)
+        chk('⑭ ★ v1.1 ② 상별 — AM_P (활성 · 단절 · 무접촉 = 1/3 씩) · AM_S (2/4 · 1/4 · 1/4) · 상마다 합 = 100',
+            all(same(m3i.get(f'AM_P_ionic_{s}_pct'), v) for s, v in want_ip.items())
+            and all(same(m3i.get(f'AM_S_ionic_{s}_pct'), v) for s, v in want_is.items()),
+            str({k: m3i.get(k) for k in sorted(m3i) if k.startswith(('AM_P_ionic', 'AM_S_ionic'))}))
+        k1i = {1: 0, 2: 1, 3: 0, 4: 0}
+        pr1i, m1i = run_bed(tmp, 'ionic1', 'analyze_contacts.py', '1:AM_S,2:SE', 2, am1,
+                            [(a, k, False) for a, k in k1i.items()], extra=[(1, 112)])   # 활성 1 · 단절 2 · 무접촉 3 · 4
+        chk('⑮ ★ v1.1 ② mono (1:AM_S,2:SE) — 전체 = AM_S = 25 · 25 · 50 · AM_P 분해 키 없음',
+            pr1i.returncode == 0 and all(same(m1i.get(f'ionic_{s}_pct'), v) and same(m1i.get(f'AM_S_ionic_{s}_pct'), v)
+                                         for s, v in (('active', 25.0), ('dead', 25.0), ('no_se', 50.0)))
+            and not any(k.startswith('AM_P_ionic') for k in m1i),
+            (pr1i.stderr or '')[-400:] if pr1i.returncode else str({k: m1i.get(k) for k in sorted(m1i) if IONIC_KEY.fullmatch(k)}))
+        want_i3 = {f'ionic_{s}_pct' for s in ('active', 'dead', 'no_se')} | \
+            {f'{ph}_ionic_{s}_pct' for ph in ('AM_P', 'AM_S') for s in ('active', 'dead', 'no_se')}
+        want_i1 = {f'ionic_{s}_pct' for s in ('active', 'dead', 'no_se')} | {f'AM_S_ionic_{s}_pct' for s in ('active', 'dead', 'no_se')}
+        got_i3 = {k for k in m3i if IONIC_KEY.fullmatch(k)}
+        got_i1 = {k for k in m1i if IONIC_KEY.fullmatch(k)}
+        chk(f'⑯ ★ v1.1 ② 분해 키 집합 = 계약 (3 상 {len(want_i3)} · mono {len(want_i1)}) — 빠지거나 더 붙으면 실패 · 값은 숫자 (문자열 아님)',
+            got_i3 == want_i3 and got_i1 == want_i1
+            and all(isinstance(m3i[k], (int, float)) and not isinstance(m3i[k], bool) for k in got_i3),
+            f'3 상 빠짐 {sorted(want_i3 - got_i3)} · 더 {sorted(got_i3 - want_i3)} · mono 빠짐 {sorted(want_i1 - got_i1)}')
+        chk('⑰ ★ v1.1 ① 경로 기준 고립 am_ionic_isolated_pct = 100 − ionic_active_pct = 단절 + 무접촉 (3 상 400/7 · mono 75) — '
+            '인계표와 같은 이름 · 고립 위험 (am_vulnerable_pct · SE 접촉 0–1 개 = 3 상 500/7 · mono 100) 과 다른 양',
+            same(m3i.get('am_ionic_isolated_pct'), 400 / 7) and same(m1i.get('am_ionic_isolated_pct'), 75.0)
+            and same(m3i.get('am_ionic_isolated_pct', 0), m3i.get('ionic_dead_pct', 0) + m3i.get('ionic_no_se_pct', 0))
+            and same(m3i.get('am_vulnerable_pct'), 500 / 7) and same(m1i.get('am_vulnerable_pct'), 100.0),
+            f"{m3i.get('am_ionic_isolated_pct')} · {m1i.get('am_ionic_isolated_pct')} · 취약 {m3i.get('am_vulnerable_pct')}")
+        rows3 = {}
+        try:
+            with open(os.path.join(tmp, 'ionic3', 'out', 'network_summary.csv'), encoding='utf-8-sig') as fh:
+                import csv as _csv
+                rows3 = {r['지표']: r['값'] for r in _csv.DictReader(fh)}
+        except (OSError, KeyError):
+            rows3 = {}
+        chk('⑱ ★ v1.1 ①② 케이스 표 (network_summary.csv) — 활성 바로 뒤에 "Ionic Isolated AM(%)" · 그 아래 단절 · 무접촉 두 줄 (값 = 57.1 · 28.6 · 28.6)',
+            rows3.get('Ionic Isolated AM(%)') in ('57.1', 57.1) and rows3.get('  ├ Isolated: SE not linked(%)') in ('28.6', 28.6)
+            and rows3.get('  └ Isolated: no SE contact(%)') in ('28.6', 28.6),
+            str({k: v for k, v in rows3.items() if 'Ionic' in k or 'Isolated' in k}))
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
     print(f'\n{n_chk[0] - len(fails)}/{n_chk[0]}  ' + ('✓ 전부 통과' if not fails else f'✗ {len(fails)} 건 실패'))
