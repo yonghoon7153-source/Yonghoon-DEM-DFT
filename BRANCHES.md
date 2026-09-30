@@ -255,7 +255,7 @@ git push -u origin claude/14-gate-code-review-9qkx05
 ### 이 절은 복귀 커밋에서 결과를 덧붙인다
 
 복귀 SHA · "고유 커밋 0" 실측(`git log origin/claude/gate80-standby-9a26dd5f ^HEAD` 빈 출력) · 대피 중 한 일 요약을 그때 적는다.
-지금은 **분기·등록만** 했고 아직 아무 작업도 얹지 않았다.
+~~지금은 **분기·등록만** 했고 아직 아무 작업도 얹지 않았다.~~ → 2026-09-30 복귀 결과는 이 파일 끝 절.
 
 ### 복귀 때 인식할 것 — 대피 중 누적 (덧붙이기)
 
@@ -265,3 +265,31 @@ git push -u origin claude/14-gate-code-review-9qkx05
 |---|---|---|---|---|
 | 2026-09-30 | `wiki/tools/extract_figures.py` SI 판별 수정 — 파일명 속 원소 기호 "Si" 를 SI 표시로 오판하던 것 (assb 88호 발견 · 사용자 결정). 동작 변화: si · esi 가지만 대소문자 구분 (원소 표기 Si 제외) · 새 규칙은 옛 규칙의 부분집합 · 과거 추출 PDF 이름 169 개 중 판정 변화 1 (88호 본문 — 링크 우회로 이미 올바르게 추출 · 피해 0) · `--selftest` 37/37 | `f26ac712f` | 밖 (digest · 영수증 무관) | 할 일 없음 — ff 로 그대로 따라간다 |
 | 2026-09-30 | `wiki/tools/extract_figures.py` 캡션 판정 수정 — 구두점 없는 RSC · Springer 캡션 ("Fig. 2 The …" · "Fig. 7 In situ …") 을 본문으로 버리던 동사 목록 `VERBS` 삭제 (assb 89호 발견 · 사용자 결정). 동작 변화: 구분 부호가 없으면 첫 글자 대소문자로만 판정 · 3차 묶음 PDF 55 개 dry 재추출 560 → 566 (추가 6 = 89호 2 · 5 · 80호 2 · 4 · 6 · 64호 7 — 모두 이미 수동 크롭 있음) · 제거 0 · 위치 변화 0 · `--selftest` 45/45 | `f1e448e74` | 밖 (digest · 영수증 무관) | 할 일 없음 — ff 로 그대로 따라간다 · 기존 그림 폴더는 다시 만들지 않았다 |
+
+### 2026-09-30 — 복귀 결과 (본진 ← 서브 fast-forward)
+
+| 항목 | 값 |
+|---|---|
+| 방식 | 원격 fast-forward push `git push origin 87f960e1e3a42245e0c7496d149ba633ddba8d13:refs/heads/claude/14-gate-code-review-9qkx05` — 체크아웃 · 병합 · 재작성 없음. 이어서 이 정리 커밋 1 개 (CLAUDE.md 임시 세 줄 삭제 · 이 절) |
+| 복귀 SHA | 본진 `9a26dd5f31ca6fae45d5a55f5c59e33408371984` → **`87f960e1e3a42245e0c7496d149ba633ddba8d13`** (서브 HEAD) |
+| 사전 검사 | FF_OK · 서브 고유 커밋 123 · merge 0 · 게이트 82 대상 `c82231c4…` 포함 |
+| 고유 커밋 0 | `git log origin/claude/gate80-standby-9a26dd5f ^origin/claude/14-gate-code-review-9qkx05` 빈 출력 2026-09-30T03:48:07Z |
+| CLAUDE.md | 임시 세 줄 삭제 뒤 blob `632750b33d4d85b213a76f4912d7c193b2a0b611` = 분기 전과 같음 |
+| 서브 | 지우지 않는다 · 새 커밋을 얹지 않는다 (`claude/bms-alpha-beta-verify` 와 같은 처리) |
+| 게이트 82 | 요청 대상 커밋 `c82231c49460f79bb5474185648594b3a6c9fc02` 는 이제 본진의 조상 — 요청문의 SHA 그대로 유효 · 회신은 본진에서 처리 |
+| 실행자 | 본진 Claude Code 세션 (클라우드 컨테이너, 2026-09-28 대피 프롬프트를 쓴 세션) · 2026-09-30 · 정리 커밋은 임시 클론 대신 clean 한 본진 checkout (미커밋 0 · 로컬 전용 커밋 0 확인 뒤 `pull --ff-only`) 에서 두 파일만 |
+
+**대피 중 한 일 요약** (2026-09-28 ~ 09-30 · 123 커밋 · 커밋이 건드린 경로 기준 분류):
+
+| 영역 | 커밋 | 범위 | 내용 |
+|---|---:|---|---|
+| 게이트 80–82 (`degradation-degeneracy`) | 21 | `bf6fa29e8`..`de5b34bf5` | 80 · 81차 리뷰 패키지 원문 보존 · 81차 요청 · 단계 3 라운드 1 (G81-N1·N2·N3) RED → GREEN — RUN_SCOPE 4 파일 · 영수증 이력 보존과 재생성 · 82차 발송 전 자체 점검 (변이 EXPECT) · 82차 요청 (실행 GO 아님) |
+| COMSOL 기록 · 검토 묶음 보존 | 13 | `5b7e81db7`..`87f960e1e` | `bms-balancing/docs/COMSOL_REBUILD_SPEC.md` §26–§34 · 1198 발동 · 정상 30 s 한정 수용 · 60 s 준비 수용 · Claude 장기 해석 정정 R1–R7 · 검토 묶음 bytes 보존 — 실행 승인 없음 |
+| ASSB 논문 digest (`wiki/`) | 32 | `bd493a628`..`c8b6643d5` | 3차 묶음 파일 21–50 · 49-2 → 59–89호 |
+| ASSB 원장 · 인수인계 노트 | 37 | `ad27b7998`..`e49704f13` | `ASSB_WANTED_PAPERS.md` §1 · §3-b (판단 거리 101 행 · 결정 4 · 미결 97) · `ASSB_TRANSFER_NOTE.md` §6-3 |
+| MSC 인계 | 7 | `bb5f2357b`..`cb4ab689c` | 제1저자용 인계 프롬프트 · 발송 전 검토 · 발송 기록 |
+| webapp | 4 | `42264d0a6`..`ef18bd146` | /trust · /pipeline · /microshort · /bms (2026-09-29 스냅샷) |
+| wiki 그림 도구 수정 | 2 | `f26ac712f` · `f1e448e74` | 위 "복귀 때 인식할 것" 표의 두 행 — RUN_SCOPE 밖 · 할 일 없음 |
+| 기타 | 7 | — | 보존 규칙 (`.gitattributes -text`) 3 · 위키 lint/정정 2 · 대피 등록 1 · `.claude` paper-curator 설정 1 |
+
+**본진에서 이어 갈 것:** 게이트 82 회신 대기 (`degradation-degeneracy/docs/22p_gap/GATE82_REQUEST.md` · `docs/08_REVIEW_RESPONSE.md` §115) · COMSOL 60 s 변경부 12 군 46 사례 검증 — 사용자 승인 대기 (명세 §33–§34) · ASSB §3-b 미결 97 건과 후속 논문 요청 후보 — 사용자 판단 대기 · webapp /bms · /microshort 스냅샷 갱신 여부 — 사용자 판단.

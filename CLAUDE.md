@@ -23,9 +23,6 @@
    |---|---|---|
    | `claude/14-gate-code-review-9qkx05` | `degradation-degeneracy/` · `bms-balancing/` · `webapp/` · `wiki/` · 루트 문서 | 게이트 리뷰 루프 + α·β 검증 하네스 + COMSOL 재구축 (전부 여기서) |
 
-   임시 대피 (2026-09-28): 서브 `claude/gate80-standby-9a26dd5f` 가 `9a26dd5f` 에서 분기. 본진 동결.
-   복귀는 본진 ← 서브 ff-only. 소유 경로 동일.
-
    **2026-09-15 사용자 결정: 서브 브랜치 `claude/bms-alpha-beta-verify` 를
    본진이 흡수했다.** 브랜치를 갈라 두지 않는다 — `bms-balancing/` 도 본진이
    직접 고친다. 서브의 이력은 전부 본진에 들어와 있고(merge `cf9bad4`, 그 뒤
