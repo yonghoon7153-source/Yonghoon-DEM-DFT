@@ -1,0 +1,388 @@
+{
+  "scope": "Received byte identities / recorded execution observations; not current remote machine measurements.",
+  "status": "PASS",
+  "checks": [
+    {
+      "check": "source map one-to-one",
+      "pass": true
+    },
+    {
+      "check": "accepted candidate manifest identity",
+      "pass": true
+    },
+    {
+      "check": "candidate five source hashes match manifest",
+      "pass": true
+    },
+    {
+      "check": "all five sources byte-identical to previous independently reviewed validation package",
+      "pass": true
+    },
+    {
+      "check": "staged compile Java identical to candidate",
+      "pass": true
+    },
+    {
+      "check": "class file identity matches compile artifact seal",
+      "pass": true
+    },
+    {
+      "check": "all 16 external source dependencies and 6 baseline CSVs bound to actual included files",
+      "pass": true
+    },
+    {
+      "check": "inactive original contract preserved; separate manifest-bound one-shot approval",
+      "pass": true
+    },
+    {
+      "check": "approval binds exact commands/budgets/user record/release",
+      "pass": true
+    },
+    {
+      "check": "approval no retry/no policy relaxation and explicitly accepts policy/startup limits",
+      "pass": true
+    },
+    {
+      "check": "17 references present; seven core validation results match received prior copies",
+      "pass": true
+    },
+    {
+      "check": "native state has one compile/one batch, no error and same initial time/run/manifest",
+      "pass": true
+    },
+    {
+      "check": "compile reserved argv/cwd exact contract",
+      "pass": true
+    },
+    {
+      "check": "compile continuous event file numbering",
+      "pass": true
+    },
+    {
+      "check": "compile root->assignment->resume once, diagnostic last, no termination event",
+      "pass": true
+    },
+    {
+      "check": "compile suspended creation and assignment before resume same root lifetime",
+      "pass": true
+    },
+    {
+      "check": "compile terminal event / return / native state identical",
+      "pass": true
+    },
+    {
+      "check": "compile exit0 and owned process cleanup",
+      "pass": true
+    },
+    {
+      "check": "batch reserved argv/cwd exact contract",
+      "pass": true
+    },
+    {
+      "check": "batch continuous event file numbering",
+      "pass": true
+    },
+    {
+      "check": "batch root->assignment->resume once, diagnostic last, no termination event",
+      "pass": true
+    },
+    {
+      "check": "batch suspended creation and assignment before resume same root lifetime",
+      "pass": true
+    },
+    {
+      "check": "batch terminal event / return / native state identical",
+      "pass": true
+    },
+    {
+      "check": "batch exit0 and owned process cleanup",
+      "pass": true
+    },
+    {
+      "check": "compile completed before batch reservation",
+      "pass": true
+    },
+    {
+      "check": "compile+batch within 3600s and cleanup within120s",
+      "pass": true
+    },
+    {
+      "check": "two fresh challenges before compile, same run, non-elevated console records",
+      "pass": true
+    },
+    {
+      "check": "policy before matches approved hash, enforce on and limited, all16 security values",
+      "pass": true
+    },
+    {
+      "check": "source-bound native state records baseline/source and default/private-policy preservation",
+      "pass": true
+    },
+    {
+      "check": "analysis reports limited normal completion, retains overall/normal gate and policy limit",
+      "pass": true
+    },
+    {
+      "check": "reported arithmetic matches recipient: maximum_voltage_delta_V",
+      "pass": true
+    },
+    {
+      "check": "reported arithmetic matches recipient: maximum_surface_delta",
+      "pass": true
+    },
+    {
+      "check": "reported arithmetic matches recipient: maximum_Li_relative_drift",
+      "pass": true
+    },
+    {
+      "check": "reported arithmetic matches recipient: maximum_voltage_identity_V",
+      "pass": true
+    },
+    {
+      "check": "all 35 analysis table seals match actual CSVs",
+      "pass": true
+    },
+    {
+      "check": "parent start binds exact authorization/release and manifest",
+      "pass": true
+    },
+    {
+      "check": "native parent returned real child rc0, no invocation error",
+      "pass": true
+    },
+    {
+      "check": "analysis parent returned real child rc0, no invocation error",
+      "pass": true
+    },
+    {
+      "check": "parent ordering and analysis900 budget",
+      "pass": true
+    },
+    {
+      "check": "parent local decision binds actual child returns",
+      "pass": true
+    },
+    {
+      "check": "final pre-write boundary hashes transcript/local decision",
+      "pass": true
+    },
+    {
+      "check": "post-write exact boundary bytes + monotonic order +5100/300 budget + no fake outer rc",
+      "pass": true
+    },
+    {
+      "check": "user pasted terminal contains exactly same post-write object",
+      "pass": true
+    },
+    {
+      "check": "last STOP is literal unconditional no-rerun notice and prompt follows",
+      "pass": true
+    },
+    {
+      "check": "packaging preservation all3188 before entries same in after3197",
+      "pass": true
+    },
+    {
+      "check": "all mapped included files match after observation identities",
+      "pass": true
+    },
+    {
+      "check": "packaging rc0 and stdout matches independently received main ZIP",
+      "pass": true
+    },
+    {
+      "check": "generation receipt still recipient null",
+      "pass": true
+    }
+  ],
+  "source_manifest_sha256": "6b9ae2a75a2035d0cc80359f5d83cc3ca5dc5aa744b68255d219ce8a55feb603",
+  "prior_candidate_reuse": [
+    {
+      "file": "src/Normal30Candidate.java",
+      "previous_identical_copies": 1
+    },
+    {
+      "file": "src/diagnostic_consumer.py",
+      "previous_identical_copies": 1
+    },
+    {
+      "file": "src/candidate_entry.py",
+      "previous_identical_copies": 1
+    },
+    {
+      "file": "PARENT_COMMAND.ps1",
+      "previous_identical_copies": 1
+    },
+    {
+      "file": "CONTRACT.json",
+      "previous_identical_copies": 1
+    }
+  ],
+  "historical_validation_references": [
+    {
+      "file": "COMBINED_CASE_RESULTS.json",
+      "bytes": 17953,
+      "sha256": "c98a8dccbeedaf6cdf4964ab364eab853ee487ffc23d1798cf12b8e1e2cd226a",
+      "matched_prior_or_current_copy": true
+    },
+    {
+      "file": "N1_N2_EVIDENCE_MAP.json",
+      "bytes": 20735,
+      "sha256": "69052738266b87419b4265dc1c240f5e92e3abea02cd585e72b8658df58ee836",
+      "matched_prior_or_current_copy": true
+    },
+    {
+      "file": "PARENT_EXTRACTION_BINDING.json",
+      "bytes": 1331,
+      "sha256": "7be0e842e9ba3dd89191592056d5837c310752392ff6d26fa6dbf2ca494c91e0",
+      "matched_prior_or_current_copy": true
+    },
+    {
+      "file": "FINAL_SOURCE_BINDING.json",
+      "bytes": 9889,
+      "sha256": "ed325fb9bbf6f609af178e7a4ce7e50d3b66ff04a7ccd55c6eba8ad20ef91018",
+      "matched_prior_or_current_copy": true
+    },
+    {
+      "file": "STATIC_J03_DATA_CHECKS.json",
+      "bytes": 1184,
+      "sha256": "5aefdacdfa6cef6e84d835c56f9308af7174268d93afa7866117767a6cc62f7a",
+      "matched_prior_or_current_copy": true
+    },
+    {
+      "file": "PS_RESULT.json",
+      "bytes": 42277,
+      "sha256": "0f1eb49aa5979773c67683a1b5bbe4edb822d05de1e78e4fea9fd776dde75378",
+      "matched_prior_or_current_copy": true
+    },
+    {
+      "file": "HOST_PS51.json",
+      "bytes": 1319,
+      "sha256": "1c7d68e0baf267c9a28b761e651aa23844976c6f5dacfe8dac046d04fef4b8d0",
+      "matched_prior_or_current_copy": true
+    },
+    {
+      "file": "COMSOL63_NORMAL30_LIMITED_VALIDATION_COMPLETE_20260930.zip",
+      "bytes": 322912,
+      "sha256": "0854dbd1db8433c4d22def4984af7b535c36c3e7ab6c65b6b9d013d1ab0f29ea",
+      "matched_prior_or_current_copy": true
+    },
+    {
+      "file": "REVIEW_INTAKE.json",
+      "bytes": 1808,
+      "sha256": "f8c67b1f2defd96b66d7ca68b167e67d5641d635c8051e2a9bed2d632be0ff66",
+      "matched_prior_or_current_copy": false
+    },
+    {
+      "file": "DECISION.json",
+      "bytes": 1358,
+      "sha256": "a68f1e3e868cfc42f80bcf80088bae766fd234a08a4fe5f60db741a3f7fcf75f",
+      "matched_prior_or_current_copy": true
+    },
+    {
+      "file": "NEXT_CODEX_REPLY_KO.md",
+      "bytes": 4715,
+      "sha256": "5a7bd5598bf7a6964f77f95d5af5608ca08b192419a71a8d3661fa35601db1a3",
+      "matched_prior_or_current_copy": true
+    },
+    {
+      "file": "ROUTE_AND_POLICY_KO.md",
+      "bytes": 2852,
+      "sha256": "ecc20d6d532dab4e8e87e265abac29c5d90c591b53c8d3967380aa5996361d70",
+      "matched_prior_or_current_copy": false
+    },
+    {
+      "file": "POLICY_OBSERVATION.json",
+      "bytes": 2430,
+      "sha256": "7f86a80fa6d157cbf5e70095c4abff2d5818e3ec08a4d904e207d81c2002fe84",
+      "matched_prior_or_current_copy": false
+    },
+    {
+      "file": "START_ROUTE_OBSERVATION.json",
+      "bytes": 2044,
+      "sha256": "73bb070dc40e88fb14e7e7f9672eb280d162461eb22eb43ad8b9baa515ebea89",
+      "matched_prior_or_current_copy": false
+    },
+    {
+      "file": "CURRENT_IDENTITIES.json",
+      "bytes": 19488,
+      "sha256": "8d42532b4c5da53149a6a51a43ffa2814bf1b75e906e460377fc3cf63b73455d",
+      "matched_prior_or_current_copy": false
+    },
+    {
+      "file": "FINAL_NATIVE30_APPROVAL_REQUEST_KO.md",
+      "bytes": 3817,
+      "sha256": "0663a1dcea8dc979254e1df7b38455e4bb9c710727f027e22fcbe925c0745ba0",
+      "matched_prior_or_current_copy": false
+    },
+    {
+      "file": "COMSOL63_NORMAL30_VALIDATION_RECIPIENT_REVIEW_20260930.zip",
+      "bytes": 31118,
+      "sha256": "fb8c09fa79a6f965c070ef3abb94df63716d5adacc5bcdc125b25c7f4f514363",
+      "matched_prior_or_current_copy": true
+    }
+  ],
+  "event_summary": {
+    "compile": {
+      "events": 75,
+      "counts": {
+        "root": 1,
+        "assignment": 1,
+        "resume": 1,
+        "poll": 71,
+        "diagnostic": 1
+      },
+      "elapsed_seconds": 35.75,
+      "cleanup_seconds": 0.01500000013038516
+    },
+    "batch": {
+      "events": 3015,
+      "counts": {
+        "root": 1,
+        "assignment": 1,
+        "resume": 1,
+        "poll": 3011,
+        "diagnostic": 1
+      },
+      "elapsed_seconds": 1534.3289999999106,
+      "cleanup_seconds": 0.01600000006146729
+    }
+  },
+  "packaging_preservation_before": 3188,
+  "packaging_preservation_after": 3197,
+  "included_files_directly_matched_to_after_records": 3192,
+  "before_entries_not_in_source_map": [
+    {
+      "path": "C:\\Program Files\\COMSOL\\COMSOL63\\Multiphysics\\bin\\win64\\comsolcompile.exe",
+      "bytes": 962024,
+      "sha256": "a44b59db1a60d9b7dcac193ed8d6f1e8f9c0c18d5850eb872d24242ad95f497f"
+    },
+    {
+      "path": "C:\\Program Files\\COMSOL\\COMSOL63\\Multiphysics\\bin\\win64\\comsolbatch.exe",
+      "bytes": 962024,
+      "sha256": "f4e74547dcb229db269f552f7535e78b3c7c24d77d25ef8242915051ce4b7bc2"
+    },
+    {
+      "path": "C:\\Users\\BML\\.comsol\\v63\\comsol.prefs",
+      "bytes": 22252,
+      "sha256": "064d190077d7533f9fff22b61460d377cb53fb314e5c0f32a0bd02e3fa28b651"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\normal30_limited_validation_R1_20260928\\future_run_001\\result_Model.mph",
+      "bytes": 1584874018,
+      "sha256": "47f672d2fe5cdea2883aec1752ed99cb94640015e8caa9354f47be5f319d33aa"
+    }
+  ],
+  "parent_postwrite_seconds": 1653.1990879,
+  "parent_delivery_seconds": 1.2833557000001292,
+  "native_compile_plus_batch_seconds": 1570.0789999999106,
+  "packaging_elapsed_snapshot_seconds": 73.76500000013039,
+  "packaging_rc_source": "Sender tool-return object subsequently serialized; not the native-run parent exit.",
+  "policy_scope": "Source-bound checks and state PASS; no raw prefs in package, no independent remote after read.",
+  "human_origin_scope": "Console response observed; direct human entry requires separate user statement, not authenticated",
+  "postwrite_source": "USER_SUPPLIED_PASTED_TERMINAL_NOT_TOOL_RETURN_OR_OS_AUDIT",
+  "original_overall": "INCOMPLETE",
+  "original_normal_gate": "INCOMPLETE",
+  "effective_policy": "UNVERIFIED",
+  "new_execution_approved": false
+}

@@ -1,0 +1,24 @@
+[
+  {
+    "file": "COMSOL63_NORMAL30_NATIVE_RESULT_20260930.zip",
+    "bytes": 82070565,
+    "sha256": "7fcc82d4816037a837ec7fd9513592a8993228cc3c401279c9aff958b0f6204d",
+    "payloads": 3193,
+    "entries": 3194,
+    "uncompressed_bytes": 288112792,
+    "manifest_sha256": "7dd449f7601412f6ed7ce2bdf2e96a66348496645757b1dbdc89e422e1b18061",
+    "size_sha_crc_exact_set_path_case_link": true,
+    "input_unchanged": true
+  },
+  {
+    "file": "NORMAL30_DELIVERY_SUPPLEMENT_20260930.zip",
+    "bytes": 20940,
+    "sha256": "062fb10ae36e1d587128f6138d3192ab2d4982c94f2e304b5765851e9ce5f765",
+    "payloads": 3,
+    "entries": 4,
+    "uncompressed_bytes": 951208,
+    "manifest_sha256": "b603ea3ebd7f677963a7717a77dd140045f79d2b6b0dc128c0cff4d21c5c9cda",
+    "size_sha_crc_exact_set_path_case_link": true,
+    "input_unchanged": true
+  }
+]

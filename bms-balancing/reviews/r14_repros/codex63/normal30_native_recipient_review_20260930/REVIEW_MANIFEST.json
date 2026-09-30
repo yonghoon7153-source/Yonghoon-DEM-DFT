@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "scope": "recipient review only, no native authorization",
+  "payloads": [
+    {
+      "file": "REVIEW_KO.md",
+      "bytes": 12704,
+      "sha256": "9d46d1f9952c72921c719368c899a8f2ebcbb8f556a15bdb5c536bc59293281d"
+    },
+    {
+      "file": "NEXT_CODEX_REPLY_KO.md",
+      "bytes": 6334,
+      "sha256": "2b4a1d8775c3561b7e468fe161c24793166e4997e316c482336d90f506533584"
+    },
+    {
+      "file": "CLAUDE_UPDATE_KO.md",
+      "bytes": 3044,
+      "sha256": "fe375c8e89ed2bc0da6a4e10a45d505661df7ed8771994d191883b0ef295e51b"
+    },
+    {
+      "file": "DECISION.json",
+      "bytes": 1495,
+      "sha256": "cede2f3cd5be3e3dac9e6c2ba8ab4f027cc280889d9405aadfb228e9bfe017e1"
+    },
+    {
+      "file": "README_SEND_KO.md",
+      "bytes": 1390,
+      "sha256": "326245342493fc29b23516c5018eec0469647e0c05a037eb7182a2369be21544"
+    },
+    {
+      "file": "ARCHIVE_AUDIT.json",
+      "bytes": 860,
+      "sha256": "d6873b448f62e4c2bf139175b56d6c0c75dd81abf9166ead851b103916cd3b18"
+    },
+    {
+      "file": "NUMERIC_AUDIT.json",
+      "bytes": 15541,
+      "sha256": "4923bd88dbaf2554d434f1751a8aeaea9f39cf4ba9fe42aa39c2d5f3567b707b"
+    },
+    {
+      "file": "RECORDS_AUDIT.json",
+      "bytes": 12454,
+      "sha256": "2a0444c06bbec3d023d1782faa63f4cef8b2b77305101cd3f8b028869ec48056"
+    },
+    {
+      "file": "RECIPIENT_AUDIT_NOTE.md",
+      "bytes": 2068,
+      "sha256": "75586d60c0f0b00f17a00ed3394f92d259b61ad7b57352ca2de6845f67433a18"
+    },
+    {
+      "file": "audit_archives.py",
+      "bytes": 2247,
+      "sha256": "e0985a2d133d560fe103382ba9c11dff278bffd2f57711fb0d44f2ffb2015f6f"
+    },
+    {
+      "file": "audit_numeric.py",
+      "bytes": 13038,
+      "sha256": "aacd7f756a0ff4b6781968f6e0a76ff4ea4fb90f352df19ddb78da2b136bb6dd"
+    },
+    {
+      "file": "audit_records.py",
+      "bytes": 14630,
+      "sha256": "2e3a7a8547fe5263198b383f07ea292d095a0d9d20e687ad5890e215a0b1e269"
+    },
+    {
+      "file": "seal_review.py",
+      "bytes": 3783,
+      "sha256": "17edd5137c1506b60973eb3adf8072488b2a91f444df0c2481d20bde819d867e"
+    },
+    {
+      "file": "SOURCE_PRESERVATION.json",
+      "bytes": 463,
+      "sha256": "b0d13b9dbb778d810d89c03a0fb1358008ec0f5c3795e0d71dfa43f3441ec30d"
+    },
+    {
+      "file": "FINAL_SOURCE_CHECK.json",
+      "bytes": 182,
+      "sha256": "6cd709ecfd85d18b1484bc99f62868122c0772ff92aa84c37b6b3164e3049f8f"
+    }
+  ]
+}
