@@ -112,7 +112,7 @@ evidenceScope: multi-source-primary
 | CK | 2026-09-27 | `codex_CK_prompt_wad_aprime_v5_vasp_outsourcing_v6_2026_09_27.md` | `codex_CK_reply_wad_aprime_v5_vasp_outsourcing_v6_2026_09_27.md` | 발송 완료 · 회신 수령 2026-09-27 **GO** (`codex_CK_reply_…` · 준비본 v6 기술 검토 · 새 P0/P1 없음 · P2 정리 2 → 개정 v6.1) → 1저자 비준 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'outsourcing', 'v5', 'v6', 'vasp', 'wad'] |
 | CH | 2026-09-27 | `li2s1a_CH_prompt_li2s_cd_reply_pilot800_2026_09_27.md` | `li2s1a_CH_reply_li2s_cd_reply_pilot800_2026_09_28.md` | 발송됨 (사용자 · 2026-09-27 · 발송판 = 다섯 시드 결과 반영판 a67b39634 의 '보내는 글' 로 본다) · ✅ 회신 수령 2026-09-28 (`li2s1a_CH_reply_…` · Q-CH-1 2σ · Q-CH-2 465·550 유지 + 600 K 사전등록 · Q-CH-3 수정안 수용 + S54 내력 요청) → 답장 CL 초안 · 550 K 겸용 선택은 발송으로 카드 저자 확정 | 같은 라벨 · 주제 토큰 일치 ['cd', 'li2s', 'pilot800', 'reply']; 판정 인용 3회 |
 | CL | 2026-09-28 | `li2s1a_CL_prompt_li2s_ch_reply_s54_census_2026_09_28.md` | `li2s1a_CL_reply_li2s_ch_reply_s54_census_2026_09_28.md` | 발송됨 (초안 판 · 빈 칸 둘 — 사용자 · 2026-09-28) · ✅ 회신 수령 2026-09-28 (부분 · `li2s1a_CL_reply_…` — Q-CL-1 확정 · Q-CL-2 확정 + 출처 단서 · Q-CL-3·4 는 결과와 같이) → 답장은 600 K · 465 K 조기확인 · 네 시드 전수와 함께 | 같은 라벨 · 주제 토큰 일치 ['census', 'ch', 'li2s', 'reply', 's54'] |
-| CM | 2026-09-30 | `codex_CM_prompt_cei_nd_handoff_2026_09_30.md` | — | 발송 대기 — 사용자가 Codex 에 인계 zip 과 같이 보낸다 (회신 → 수정 → 실험 쪽 1저자에게 송부) | — |
+| CM | 2026-09-30 | `codex_CM_prompt_cei_nd_handoff_2026_09_30.md` | `codex_CM_reply_cei_nd_handoff_2026_09_30.md` | 발송됨 (사용자 · 2026-09-30 · 인계 zip 첨부) · ✅ 회신 수령 2026-09-30 (`codex_CM_reply_cei_nd_handoff_2026_09_30.md` · NO-GO · P0 7 · P1 6) → 이행 → 실험 쪽 1저자에게 송부 | 같은 라벨 · 주제 토큰 일치 ['cei', 'handoff', 'nd'] |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 

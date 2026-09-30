@@ -64,8 +64,10 @@ SY_SECTIONS = ["Thesis", "Counter-arguments", "Gap"]
 #:   `.cif` 에서 잘려 "깨진 경로" error. 뒤에 `.단어` 가 이어지면 확장자가 아니라 **이름 중간**이다
 #:   ⇒ `(?!\.\w)` 도 단다. 목록에 없는 꼬리 확장자(.gz · .bak · .BROKEN_…)는 검사 대상이 아니게 된다.
 #:   문장 끝 마침표(`db/x.json.`)는 뒤가 단어가 아니라 그대로 잡힌다 — selftest_paths 가 둘 다 본다.
+#: ⚠ 2026-09-30 세 번째: URL 속 `public-docs/blob/main/…/identifiers.md` 의 `docs/…` 를 잡아
+#:   "깨진 경로" error (회신 CM 원문 · 고칠 수 없는 인용). 하이픈 뒤는 **단어 중간**이다 ⇒ 앞보기에 `-` 도 넣는다.
 PATH_RE = re.compile(
-    r"(?<![\w/])((?:db|tools|kb|docs|litdb|webapp|runs)/[\w][\w./-]*"
+    r"(?<![\w/-])((?:db|tools|kb|docs|litdb|webapp|runs)/[\w][\w./-]*"
     r"\.(?:py|jsonl|json|md|csv|sh|vasp|xyz|cif|png|txt|yaml|yml|tsv|in|UPF|upf))(?![\w])(?!\.\w)")
 #: 스킵: 글롭·플레이스홀더가 섞인 토큰
 SKIP_TOKEN = re.compile(r"[*{}<>]")
@@ -843,6 +845,9 @@ def selftest_paths(pat=None):
         # ⛔ 음성: 이름 중간의 `.cif` 에서 자르면 안 된다 (2026-09-23 선례)
         ("`db/structures/l_52atoms.cif.BROKEN_PS4_dissociated`", []),
         ("db/x.json.gz", []),
+        # ⛔ 음성: URL 속 하이픈 이름의 `docs/` 는 이 repo 경로가 아니다 (2026-09-30 선례 · 회신 CM)
+        ("https://github.com/materialsproject/public-docs/blob/main/data-production/identifiers.md", []),
+        ("- db/x.json", ["db/x.json"]),                       # 목록 표시 `- ` 뒤는 그대로 잡는다
     ]
     for text, want in cases:
         got = pat.findall(text)
