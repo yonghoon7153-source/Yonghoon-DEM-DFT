@@ -133,15 +133,23 @@ def test_a_bundle_member_symlink_can_not_smuggle_bytes_from_outside(tmp_path, mo
     # ★ 60차 P0-8 이후 index 는 **묶음 안**에 있어야 한다. 밖에 두면 이 시험이
     #   재는 것(link 를 따라가는가)이 아니라 index 위치 검사가 먼저 걸려서,
     #   변이를 심어도 같은 이유로 빨개진다 — 즉 아무것도 안 재게 된다.
-    idx = bundle / "index.json"
-    idx.write_text("{}\n", encoding="utf-8")
+    # ★ 85차 자체 발견 — 70차 E3 부터 구성원을 열거하지 않는 index (`{}`) 는 그 이유로 먼저 거부된다. 그래서
+    #   이 시험은 74차~84차 사이 link 를 따라가는지가 아니라 index 형식을 재고 있었다 (전체 변이 재생:
+    #   `bundle-members-are-not-followed-g59` 생존 · 실측 `bad` = "payload index 를 해석할 수 없다 … (dict 비어
+    #   있음)"). 공격자가 하듯 index 는 **정상 production 형식**으로, link 도 밖의 바이트 sha 로 열거한다 —
+    #   그러면 남는 거부 이유는 "link 를 따라가지 않는다" 뿐이다.
     import hashlib
+    import yaml
+    idx = bundle / "payload_sha256.yaml"
+    members = {"real.txt": hashlib.sha256(b"in-repo\n").hexdigest(),
+               "link.bin": hashlib.sha256(b"x" * 4096).hexdigest()}
+    idx.write_text(yaml.safe_dump(members, sort_keys=True), encoding="utf-8")
     ev = {
         "bundle_uri": "bundle",
-        # link 를 파일로 세면 real.txt · link.bin · index.json = 3 이다
+        # link 를 파일로 세면 real.txt · link.bin · payload_sha256.yaml = 3 이다
         "bundle_files": 3,
-        "payload_bytes": len("in-repo\n") + 4096 + len("{}\n"),
-        "payload_index": "bundle/index.json",
+        "payload_bytes": len("in-repo\n") + 4096 + idx.stat().st_size,
+        "payload_index": "bundle/payload_sha256.yaml",
         "payload_index_sha256": hashlib.sha256(idx.read_bytes()).hexdigest(),
     }
     bad = P._verify_declared_bundle(ev, repo_root=root)

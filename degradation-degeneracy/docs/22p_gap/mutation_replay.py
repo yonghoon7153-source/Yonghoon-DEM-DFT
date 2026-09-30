@@ -3034,8 +3034,11 @@ EXPECT: dict = {
             "tests/test_exec_class_capability_59.py::test_a_short_write_never_publishes_a_partial_record",
         ],
         "witness": {
+            # ★ 85차 — 70차 E5 typed reader 가 생긴 뒤 이 변이는 read-back 을 지워도 `raises(PreserveError)` 가 그 reader 의
+            #   거부로 채워져 살아남았다 (전체 재생 자체 발견). 시험이 거부 **이유**(read-back) 와 final 이름 부재를 직접
+            #   재도록 좁혔고, 변이 아래서는 이유 대조가 먼저 빨개진다 — 증인은 그 reader 의 거부문 고정 접두.
             "tests/test_exec_class_capability_59.py::test_a_short_write_never_publishes_a_partial_record":
-                "tools.preserve.PreserveError: [promote] 내용",
+                "AssertionError: [promote] 실행 class 등록 레코드를 읽을 수 없다",
         }
     },
     "exec-class-retry-reseals-durability-g59": {

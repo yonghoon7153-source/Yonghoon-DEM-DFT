@@ -200,8 +200,16 @@ def test_a_short_write_never_publishes_a_partial_record(tmp_path, monkeypatch):
         P.os.write(fd, data[:1])                     # loop 없이 한 바이트만
 
     monkeypatch.setattr(P, "_write_all", _truncated)
-    with pytest.raises(P.PreserveError):
+    with pytest.raises(P.PreserveError) as ei:
         P.commit_run_outputs(cap, [out])
+    # ★ 85차 자체 발견 — 70차 E5 의 typed reader (`_read_exec_class_at`) 가 생긴 뒤로는 read-back 을 지워도
+    #   **게시된 부분 레코드**를 그 reader 가 "등록부의 손상" 으로 거부해 `raises(PreserveError)` 가 채워졌다
+    #   (전체 변이 재생: `exec-class-record-is-read-back-g59` 생존 · 실측 메시지 "실행 class 등록 레코드를 읽을 수
+    #   없다 … 등록부의 손상이지 미등록이 아니다"). 이 시험의 주장은 "final 이름에 부분 바이트가 공개되면
+    #   안 된다" 이므로 두 가지를 직접 잰다: 거부 **이유**가 read-back 이고, final 이름이 **없다**.
+    assert "다시 읽었더니" in str(ei.value), str(ei.value)
+    published = sorted(P.exec_class_root_for_ledger(led).rglob("*.json"))
+    assert published == [], f"부분 레코드가 final 이름으로 공개됐다: {published}"
     # `monkeypatch.undo()` 는 이 시험의 **모든** patch 를 되돌린다 — smoke
     # namespace 까지 되돌아가면 아래 재시도가 canonical 이 된다. 겨눈 것 하나만
     # 되돌린다.
