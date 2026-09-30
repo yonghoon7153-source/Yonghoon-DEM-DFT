@@ -3177,7 +3177,7 @@ def _atoms_only_refused(stop_after, why, log):
 
 
 #: `stop_after='coverage'` 의 내용 계약 (★ Codex `LHSC-03` · 09-30) — `coverage_status_physics_v2` 가 'ok' 면 반드시 **값이 있어야**
-#:   하는 v2 키 (None 불가 · `cap_conflict_frac_*` 는 접촉 0 인 침대에서 None 이 정상이라 뺐다), 'blank: <사유>' 면 있어야 하는
+#:   하는 v2 키 (None 불가 · `cap_conflict_frac_*` 는 접촉 0 인 침대에서 None 이 정상이라 여기서 빼고 `_v2_frac_ok` 가 분모와 함께 본다 · R3), 'blank: <사유>' 면 있어야 하는
 #:   진단 키 (값은 None 가능).  생산자 = `scripts/coverage_physics_vs_hertzian.py` `_PhysicsV2Book.keys` 와 compute_case 의 내부
 #:   오류 경로 — 키를 바꾸면 여기와 test_pipeline_provenance T11i · T11j 를 같이 바꾼다.
 COVERAGE_V2_OK_KEYS = ('area_AM전체_SE_total_physics_v2', 'area_SE_SE_total_physics_v2', 'area_AM전체_AM_total_physics_v2',
@@ -3193,6 +3193,11 @@ COVERAGE_V2_AREA_KEYS = ('area_AM전체_SE_total_physics_v2', 'area_SE_SE_total_
 COVERAGE_V2_COUNT_DICT_KEYS = ('cap_conflict_n_by_pair_physics_v2', 'A_binding_counts_total_physics_v2',
                                'A_binding_counts_AM_SE_physics_v2')
 COVERAGE_V2_DENOM_KEYS = ('n_am', 'n_free_surface_nonpositive', 'n_coverage_clipped_100', 'n_radius_invalid')
+#: LHSC-03 R3 (Codex 재검증 2 · 09-30 밤 · 1저자 비준) — 개수 dict 의 필수 분류 집합 · 분율 반올림 규약 = 생산자 `_PhysicsV2Book.PAIRS` ·
+#:   `BINDINGS` · `round(n_conf / n, 6)` 와 같아야 한다 (test_pipeline_provenance T11p 가 생산자 상수와 대조한다 — 여기만 바꾸면 거짓 실패).
+COVERAGE_V2_PAIR_KEYS = ('AM_SE', 'SE_SE', 'AM_AM', 'other')
+COVERAGE_V2_BINDING_KEYS = ('elastic', 'tabor', 'volume', 'geom', 'none')
+COVERAGE_V2_FRAC_ROUND = 6
 #: blank 판정에서 값이 있어도 되는 키 (진단 · 규약) — 그 밖의 `*_physics_v2` 는 None (또는 없음) 이어야 한다 (물리 값 잔재 금지)
 COVERAGE_V2_BLANK_ALLOWED = ('coverage_status_physics_v2', 'rule_physics_v2', 'h_film_sim_physics_v2', 'am_denominator_physics_v2',
                              'n_contacts_unknown_id_physics_v2', 'n_contact_failures_physics_v2')
@@ -3204,9 +3209,26 @@ def _v2_int(v, lo=0):
 
 
 def _v2_num(v):
-    """유한 실수 (bool · 문자열 · NaN · ±inf 아님)."""
+    """유한 실수 (bool · 문자열 · NaN · ±inf 아님).  10**400 같은 큰 정수는 예외 없이 False (LHSC-03 R3)."""
     import math as _math
-    return isinstance(v, (int, float)) and not isinstance(v, bool) and _math.isfinite(float(v))
+    if isinstance(v, bool) or not isinstance(v, (int, float)):
+        return False
+    try:
+        return _math.isfinite(float(v))
+    except OverflowError:
+        return False
+
+
+def _v2_count_dict(d, keys):
+    """개수 원장 — 생산자의 분류 집합과 **정확히** 같은 키 · 값은 명시적 비음수 정수 (빈 dict · 모르는 분류 · 실수 개수는 거부 · LHSC-03 R3)."""
+    return isinstance(d, dict) and set(d) == set(keys) and all(_v2_int(v) for v in d.values())
+
+
+def _v2_frac_ok(v, num, den):
+    """분율 = 생산자 규약 `round(num / den, 6)` (분모 0 이면 None 만) — 값 · 분모의 공존을 본다 (재계산이 아니라 장부 대조 · LHSC-03 R3)."""
+    if den == 0:
+        return v is None
+    return _v2_num(v) and float(v) == round(num / den, COVERAGE_V2_FRAC_ROUND)
 
 
 def _v2_denom_ok(diag, ok):
@@ -3240,13 +3262,27 @@ def _v2_ok_record(fm):
     if not (_v2_int(fm.get('n_contacts_unknown_id_physics_v2')) and fm.get('n_contact_failures_physics_v2') == 0
             and _v2_int(fm.get('n_contact_failures_physics_v2'))):       # 접촉 실패와 ok 는 공존하지 않는다
         return False
-    for k in COVERAGE_V2_COUNT_DICT_KEYS:
-        d = fm.get(k)
-        if not (isinstance(d, dict) and all(_v2_int(v) for v in d.values())):
+    #  LHSC-03 R3 — 개수 원장 · 분율 · 집계 항등식 (물성 · 피복식 재계산이 아니다 — 생산자 장부의 **구조**만 본다)
+    pairs = fm.get('cap_conflict_n_by_pair_physics_v2')
+    bt, bam = fm.get('A_binding_counts_total_physics_v2'), fm.get('A_binding_counts_AM_SE_physics_v2')
+    if not (_v2_count_dict(pairs, COVERAGE_V2_PAIR_KEYS) and _v2_count_dict(bt, COVERAGE_V2_BINDING_KEYS)
+            and _v2_count_dict(bam, COVERAGE_V2_BINDING_KEYS)):
+        return False
+    if sum(pairs.values()) != nconf or sum(bt.values()) != n or any(bam[b] > bt[b] for b in COVERAGE_V2_BINDING_KEYS):
+        return False                                               # Σ 쌍별 충돌 = nconf · Σ 결속 = n · AM–SE 결속 ≤ 총 결속 (분류마다)
+    for k, den in (('cap_conflict_frac_physics_v2', n), ('cap_conflict_frac_cap_branch_physics_v2', ncap)):
+        if k not in fm or not _v2_frac_ok(fm[k], nconf, den):       # 키 필수 · 분모 > 0 이면 round(비, 6) · 분모 0 이면 None
             return False
-    for k in ('cap_conflict_frac_physics_v2', 'cap_conflict_frac_cap_branch_physics_v2'):
-        if k in fm and fm[k] is not None and not (_v2_num(fm[k]) and 0.0 <= float(fm[k]) <= 1.0):
-            return False
+    a_amse, a_sese, a_amam = (float(fm[k]) for k in COVERAGE_V2_AREA_KEYS)
+    n_amse = sum(bam.values())
+    if n == 0 and (a_amse > 0.0 or a_sese > 0.0 or a_amam > 0.0):
+        return False                                               # 접촉 0 인데 양수 총 면적
+    if a_amse > 0.0 and n_amse == 0:
+        return False                                               # AM–SE 면적은 AM–SE 접촉에서만 쌓인다
+    if n_amse + int(a_sese > 0.0) + int(a_amam > 0.0) > n:
+        return False                                               # 쌍 종류는 서로소 — 양수 면적마다 그 종류의 접촉이 하나는 있어야
+    if diag['n_am'] == 0 and (a_amse > 0.0 or a_amam > 0.0 or n_amse > 0 or pairs['AM_SE'] > 0 or pairs['AM_AM'] > 0):
+        return False                                               # AM 이 없으면 AM 이 낀 면적 · 결속 · 충돌이 있을 수 없다 (SE-only 의 정상 0 과 구별)
     if not (isinstance(fm.get('rule_physics_v2'), str) and fm['rule_physics_v2'].strip()):
         return False
     if not (_v2_num(fm.get('h_film_sim_physics_v2')) and float(fm['h_film_sim_physics_v2']) > 0.0):
@@ -3272,6 +3308,9 @@ def _v2_blank_record(fm):
         return False
     _rule = fm['rule_physics_v2']                                   # 규약 문자열 — 진단이라 None 도 받는다 (값이 있으면 문자열)
     if _rule is not None and not (isinstance(_rule, str) and _rule.strip()):
+        return False
+    _hf = fm.get('h_film_sim_physics_v2')                          # 막 두께 — 내부 오류 경로는 키가 없고 · 있으면 None 또는 유한 양수 (R3 · P3)
+    if _hf is not None and not (_v2_num(_hf) and float(_hf) > 0.0):
         return False
     return all(v is None for k, v in fm.items() if k.endswith('_physics_v2') and k not in COVERAGE_V2_BLANK_ALLOWED)
 

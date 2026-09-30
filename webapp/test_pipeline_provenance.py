@@ -467,14 +467,21 @@ def main():
             """실제 피복 스크립트 (`_PhysicsV2Book.keys`) 가 ok 침대에 쓰는 v2 키 집합을 **타입까지** 맞춘 건전한 레코드 (LHSC-03).
             ★ fixture-drift 방지 — 가짜 producer 가 status 한 줄만 쓰면 검증기가 엄해질 때 거짓 실패한다 (RC5-01 · RC6-01 과 같은 교훈)."""
             _d = {k: 1.0 for k in getattr(webapp, 'COVERAGE_V2_OK_KEYS', ())}
-            _d.update({k: {'x': 1} for k in _d if k.startswith(('cap_conflict_n_by', 'A_binding'))})
+            #  LHSC-03 R3 (09-30 밤 재검증 2): 개수 dict 는 생산자의 분류 집합 · 총합 항등식 (Σ pair = nconf · Σ binding = n · AM–SE ≤ 총) 에
+            #  맞게 · 분율 키 둘은 존재 + round(개수 비, 6) — 옛 레코드 ({'x': 1} · 분율 없음) 는 엄격해진 검증기가 거부한다
+            _pairs = tuple(getattr(webapp, 'COVERAGE_V2_PAIR_KEYS', ('AM_SE', 'SE_SE', 'AM_AM', 'other')))
+            _binds = tuple(getattr(webapp, 'COVERAGE_V2_BINDING_KEYS', ('elastic', 'tabor', 'volume', 'geom', 'none')))
+            _d.update({'cap_conflict_n_by_pair_physics_v2': {q: 0 for q in _pairs},
+                       'A_binding_counts_total_physics_v2': {b: (4 if b == _binds[0] else 0) for b in _binds},
+                       'A_binding_counts_AM_SE_physics_v2': {b: (2 if b == _binds[0] else 0) for b in _binds},
+                       'cap_conflict_frac_physics_v2': 0.0, 'cap_conflict_frac_cap_branch_physics_v2': 0.0})
             if _d:
                 _d['am_denominator_physics_v2'] = {'n_am': 2, 'n_free_surface_nonpositive': 0, 'n_coverage_clipped_100': 0,
                                                    'n_radius_invalid': 0}
                 _d['rule_physics_v2'] = 'rule'
                 #  LHSC-03 R2 (09-30 밤): 옛 레코드는 개수 키를 1.0 (실수) · 접촉 실패 1 로 적었다 — 생산자는 개수를 정수로 ·
                 #  ok 에서는 접촉 실패 0 · cap 충돌 ≤ cap 가지 ≤ 접촉 · 막 두께 > 0 으로 쓴다 (엄격해진 검증기가 옛 레코드를 거부한다)
-                _d.update({'n_contacts_physics_v2': 3, 'n_cap_branch_physics_v2': 1, 'cap_conflict_n_physics_v2': 0,
+                _d.update({'n_contacts_physics_v2': 4, 'n_cap_branch_physics_v2': 1, 'cap_conflict_n_physics_v2': 0,
                            'n_contacts_unknown_id_physics_v2': 0, 'n_contact_failures_physics_v2': 0,
                            'h_film_sim_physics_v2': 5e-6})
             _d.update({'coverage_status_physics_v2': 'ok', 'coverage_AM_mean_physics_v2': 12.5})
@@ -622,9 +629,11 @@ def main():
             f'({[l for l, v in _bad.items() if v]})', _ok_keys and _diag_keys and not any(_bad.values()))
         _good = {lbl: _v2w(d) for lbl, d in (
             ('ok + 필수 값 · 진단 키', _healthy),
-            ('ok · AM 0 개 (피복률 키 없어도 됨)', {**{k: v for k, v in _healthy.items() if k != 'coverage_AM_mean_physics_v2'},
-                                               'am_denominator_physics_v2': {'n_am': 0, 'n_free_surface_nonpositive': 0,
-                                                                             'n_coverage_clipped_100': 0, 'n_radius_invalid': 0}}),
+            ('ok · AM 0 개 (피복률 키 없어도 됨 · AM 이 낀 면적 · 결속 · 충돌 0)',
+             {**{k: v for k, v in _healthy.items() if k != 'coverage_AM_mean_physics_v2'},
+              'am_denominator_physics_v2': {'n_am': 0, 'n_free_surface_nonpositive': 0, 'n_coverage_clipped_100': 0, 'n_radius_invalid': 0},
+              'area_AM전체_SE_total_physics_v2': 0.0, 'area_AM전체_AM_total_physics_v2': 0.0,
+              'A_binding_counts_AM_SE_physics_v2': {b: 0 for b in _healthy['A_binding_counts_AM_SE_physics_v2']}}),
             ('blank: 사유 + 진단 키', _blank))}
         chk(f'T11j) LHSC-03 양성 대조: ok + 필수 키 · AM 0 개 ok · 사유 있는 blank + 진단 키 는 True ({[l for l, v in _good.items() if not v]})',
             all(_good.values()))
@@ -711,6 +720,90 @@ def main():
             ps._RUNNER = _prev_rr
         chk(f'T11m) ★ LHSC-03 R2: 필수 단계 재현 (실제 _coverage_stage · summarize · 계산만 대역) — n_am 누락 · 면적 NaN 은 failed '
             f'(옛: ok · done) {_stg}', all(v[0] is False and v[1] == 'failed' for v in _stg.values()) and len(_stg) == 2)
+
+        # T11n · T11o · T11p ★ Codex LHSC-03 R3 (09-30 밤 재검증 2 · P2 · 1저자 비준 09-30 밤 "비준이야") — 반례 먼저
+        #   R3: 분율은 "키가 있고 None 이 아닐 때만" 범위를 보고 개수 dict 는 값 `all` 만 봐서 (빈 dict 참) — 분모가 양수인 분율의 누락 / None ·
+        #   빈 개수 원장 · 집계 모순 (elastic 1,000,000 · nconf 0 인데 분율 1) · SE-only (n_am 0) 에 AM–SE 면적 123 이 accepted (셋은 필수 단계
+        #   done).  계약 (Codex 최소 해제): 분율 키 필수 · 분모 > 0 이면 유한값 = round(개수 비, 6) (생산자 규약) · 분모 0 이면 None · 개수 dict 는
+        #   필수 분류 집합 (PAIRS · BINDINGS) + 총합 항등식 (Σ pair = nconf · Σ binding = n · AM–SE[b] ≤ 총[b]) · 접촉 0 → 면적 0 · AM–SE 면적 > 0
+        #   → AM–SE 결속 ≥ 1 · n_amse + [SE–SE > 0] + [AM–AM > 0] ≤ n · n_am 0 → AM 이 낀 면적 · 결속 · 충돌 0 · blank h_film = None 또는
+        #   유한 양수 · 10^400 면적은 예외 없이 거부.  결손을 0 으로 채우지 않는다.  물성 · 피복식 재계산이 아니라 스키마 완전성 · 집계 항등식이다.
+        _se_only = _prod['se_only'][1]
+        _blank_src = _prod['scale1'][1]                            # 실제 blank (scale ≠ 1000 · h_film None)
+
+        def _mut3(name):
+            x = _copy.deepcopy(_se_only if name == 'n_am_zero_positive_area' else (_blank_src if name.startswith('blank_') else _hl))
+            if name == 'missing_fractions':
+                del x['cap_conflict_frac_physics_v2']; del x['cap_conflict_frac_cap_branch_physics_v2']
+            elif name == 'none_fractions':
+                x['cap_conflict_frac_physics_v2'] = None; x['cap_conflict_frac_cap_branch_physics_v2'] = None
+            elif name == 'wrong_fractions':
+                x['cap_conflict_n_physics_v2'] = 0; x['cap_conflict_frac_physics_v2'] = 1.0
+            elif name == 'empty_count_dicts':
+                for k in webapp.COVERAGE_V2_COUNT_DICT_KEYS:
+                    x[k] = {}
+            elif name == 'unknown_binding_keys':
+                x['A_binding_counts_total_physics_v2'] = {'not_a_branch': x['n_contacts_physics_v2']}
+            elif name == 'contradictory_count_totals':
+                x['A_binding_counts_total_physics_v2']['elastic'] = 10 ** 6
+            elif name == 'n_am_zero_positive_area':
+                x['area_AM전체_SE_total_physics_v2'] = 123.0
+            elif name == 'zero_contacts_positive_area':
+                x['n_contacts_physics_v2'] = x['n_cap_branch_physics_v2'] = x['cap_conflict_n_physics_v2'] = 0
+            elif name == 'blank_bad_film':
+                x['h_film_sim_physics_v2'] = 'broken'
+            elif name == 'blank_none_rule':
+                x['rule_physics_v2'] = None
+            elif name == 'blank_missing_film':
+                del x['h_film_sim_physics_v2']
+            elif name == 'huge_integer_area':
+                x['area_AM전체_SE_total_physics_v2'] = 10 ** 400
+            elif name == 'am_se_binding_exceeds_total':
+                x['A_binding_counts_AM_SE_physics_v2'] = {k: v + 1 for k, v in x['A_binding_counts_AM_SE_physics_v2'].items()}
+            elif name == 'conf_pair_sum_mismatch':
+                x['cap_conflict_n_by_pair_physics_v2']['other'] += 1
+            elif name == 'amse_area_without_amse_contacts':
+                x['A_binding_counts_AM_SE_physics_v2'] = {k: 0 for k in x['A_binding_counts_AM_SE_physics_v2']}
+            return x
+        _rej = ('missing_fractions', 'none_fractions', 'wrong_fractions', 'empty_count_dicts', 'unknown_binding_keys',
+                'contradictory_count_totals', 'n_am_zero_positive_area', 'zero_contacts_positive_area', 'blank_bad_film',
+                'huge_integer_area', 'am_se_binding_exceeds_total', 'conf_pair_sum_mismatch', 'amse_area_without_amse_contacts')
+        _acc = ('blank_none_rule', 'blank_missing_film')          # Codex 동의: blank 의 rule None · 내부 오류 경로의 h_film 부재는 정상
+
+        def _v2w_safe(d):
+            try:
+                return _v2w(d)
+            except Exception as _e:                                # noqa: BLE001 — 예외도 실패다 (거부는 False 로만)
+                return f'raised {type(_e).__name__}'
+        _r3 = {n: _v2w_safe(_mut3(n)) for n in _rej + _acc}
+        chk(f'T11n) ★ LHSC-03 R3: 변이 13 종 (분율 누락 · None · 틀린 분율 · 빈 개수 dict · 모르는 분류 · 총합 모순 · SE-only 에 AM 면적 · 접촉 0 인데 '
+            f'면적 · blank h_film 문자열 · 10^400 면적 · AM–SE 결속 > 총 · 충돌 쌍 합 ≠ nconf · AM–SE 면적인데 결속 0) 은 전부 거부 (예외 없이) · '
+            f'양성 2 (blank rule None · 내부 오류 경로 h_film 없음) 은 받는다 — 어긋남 '
+            f'{[n for n in _rej if _r3[n] is not False] + [n for n in _acc if _r3[n] is not True]}',
+            all(_r3[n] is False for n in _rej) and all(_r3[n] is True for n in _acc))
+        _stg3 = {}
+        _prev_rr = ps._RUNNER
+        try:
+            for _n in ('none_fractions', 'empty_count_dicts', 'n_am_zero_positive_area', 'huge_integer_area'):
+                _sd = os.path.join(tmp, 'results', f'r3_{_n}')
+                os.makedirs(_sd, exist_ok=True)
+
+                def _malformed3(cmd, _x=_mut3(_n), _p=_sd, **kw):   # 계산 subprocess 만 대역 — 변이 파일을 쓰고 rc 0
+                    with open(os.path.join(_p, 'full_metrics.json'), 'w') as _f:
+                        json.dump(_x, _f)
+                    return subprocess.CompletedProcess(cmd, 0, 'synthetic malformed producer', '')
+                ps._RUNNER = _malformed3
+                _st = webapp._coverage_stage([sys.executable, 'coverage_physics_vs_hertzian.py', _n], _sd, 'coverage')
+                _stg3[_n] = (_st.get('ok'), ps.summarize([_st])[0])
+        finally:
+            ps._RUNNER = _prev_rr
+        chk(f'T11o) ★ LHSC-03 R3: 필수 단계 재현 — 분율 None · 빈 개수 dict · SE-only 에 AM 면적 · 10^400 면적 은 failed (옛: 앞 셋이 done) {_stg3}',
+            all(v[0] is False and v[1] == 'failed' for v in _stg3.values()) and len(_stg3) == 4)
+        chk('T11p) LHSC-03 R3 계약 고정: 검증기의 분류 집합 · 반올림 자릿수가 생산자 (_PhysicsV2Book.PAIRS · BINDINGS · round(…, 6)) 와 같다 · '
+            '양성 8 종은 엄격해진 뒤에도 전부 받는다',
+            tuple(getattr(webapp, 'COVERAGE_V2_PAIR_KEYS', ())) == tuple(_cv._PhysicsV2Book.PAIRS)
+            and tuple(getattr(webapp, 'COVERAGE_V2_BINDING_KEYS', ())) == tuple(_cv._PhysicsV2Book.BINDINGS)
+            and getattr(webapp, 'COVERAGE_V2_FRAC_ROUND', None) == 6 and all(webapp._coverage_v2_written(v[0]) for v in _prod.values()))
     finally:
         ps._RUNNER = prev_runner
         for k, v in prev_env.items():
