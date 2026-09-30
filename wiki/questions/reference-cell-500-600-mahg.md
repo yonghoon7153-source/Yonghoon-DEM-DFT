@@ -5,12 +5,12 @@ created: 2026-09-11
 updated: 2026-09-30
 type: research-question
 tags: [li2s, assb, activation, composite-cathode, units]
-sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md]
+sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
 claimType: empirical
-evidenceScope: multi-source-mixed
+evidenceScope: multi-source-primary
 status: active
 feedsInto: "[[li2s-assb-reference-cell]] 의 실험 설계 · [[anode-free-li2s-assb]] 의 Li 재고 상한"
 ---
@@ -31,12 +31,21 @@ feedsInto: "[[li2s-assb-reference-cell]] 의 실험 설계 · [[anode-free-li2s-
 
 - **H1 (활성화 제한)**: 첫 충전에서 Li2S 의 일부만 활성화되고, 활성화 안 된 몫은 뒤 사이클에서
   깨어나지 않는다 → 이후 용량 = 첫 충전 용량의 함수. [[li2s-activation-first-charge]].
-- **H2 (퍼콜레이션 제한)**: AB 단일 탄소가 접촉 또는 두께 방향 네트워크 중 하나를 못 채우거나,
-  탄소·SE 가 서로를 밀어내 삼상 계면이 부족 → [[carbon-dimensionality-electron-network]].
+- **H2 (퍼콜레이션 제한)** — 2026-09-30 에 **둘로 쪼갰다.** 고체계 논문 5편이 들어오면서 "전자냐
+  이온이냐" 를 섞어 두면 판정이 안 된다는 게 드러났다.
+  - **H2a (전자 네트워크)**: AB 단일 탄소가 접촉 또는 두께 방향 경로 중 하나를 못 채운다
+    → [[carbon-dimensionality-electron-network]]. **2026-09-30 크게 약화** (아래 Evidence Against).
+  - **H2b (이온 네트워크 / SE 부피)**: LPSCl 이 Li2S 표면까지 못 닿거나 SE 부피분율이 모자라다.
+    **2026-09-30 거의 배제** — Wang 2023 기준으로 우리는 이미 SE 48–52 vol% 다.
+  - 남는 것은 **삼상 계면의 "질"**(활물질–황화물 계면 친화)이지 전자·이온의 "양" 이 아니다.
 - **H3 (입자 제한)**: pristine Li2S 의 입자 크기·결정성이 커서 표면적이 부족; 나노화 정도가
-  혼합 경로에 따라 다름.
+  혼합 경로에 따라 다름. **단 "작을수록 좋다" 는 아니다** (아래 Cronk 2026).
 - **H4 (단위 착시)**: 목표 500–600 이 `(S)` 기준인데 우리는 `(Li2S)` 기준으로 재고 있거나 그
-  반대 → [[capacity-normalization-li2s-vs-sulfur]].
+  반대 → [[capacity-normalization-li2s-vs-sulfur]]. **2026-09-30 확장**: 분모가 넷이고,
+  **SE 자체가 용량을 낸다**는 항이 추가됐다.
+- **H5 (기계적 제한) — 2026-09-30 신설.** 첫 충전에서 Li2S 가 크게 **수축**하면서 균열이 생겨
+  전자·이온 접촉을 잃는다. 즉 "활성화가 안 된" 것이 아니라 "활성화하면서 스스로 접촉을 끊는" 것.
+  그리고 셀의 **구속 방식**(스프링=정압 vs 볼트=정용적)이 그 손실을 좌우한다.
 
 ## Evidence For
 
@@ -84,6 +93,53 @@ H1–H4 를 각각 고체계 실측으로 받친다.
   수직선 ≈1166 · Fig. S12 의 1 C = 3.26 mA cm⁻² / 2.81 mg cm⁻² = 1160 mA g⁻¹)로 `(Li2S)` 로
   확정했다 — 그 근거째로 인용해야 한다.
 
+### 2026-09-30 (2) — digest 8편 기준 재정리
+
+**★ 가장 중요한 변화: pristine 상용 Li2S 의 첫 방전값이 `disputed` 다.**
+앞 절에서 내가 "pristine Li2S 는 고체계에서 첫 방전 300 언저리" 라고 잠정 결론했다. **철회한다.**
+세 논문이 **4배로 갈린다**:
+
+| 논문 | pristine Li2S 첫 방전 | 충전 컷오프 | 셀 |
+|---|---|---|---|
+| Zhang 2026 | `[도표]` **≈270** mAh g⁻¹(Li2S) | **3.0 V vs Li/Li⁺** | LPSCBr · MWCNT 10 wt% |
+| **Cronk 2026** | `[인쇄]` **723** (이론의 62 %) | 미확인 (SI 미확보) | **LPSCl · AB 20 wt% — 우리와 같은 조성** |
+| Lee 2026 (충전선행) | `[인쇄]` **1095.9** | **3.62 V vs Li/Li⁺** | LPSCl · MWCNT 20 wt% |
+
+Lee 2026 digest 가 이 충돌을 날카롭게 정리한다 — **병목은 "활성화가 덜 된다" 가 아니라
+"활성화 완료 전위 > SE 산화 전위" 다.** Zhang 은 SE 를 지키려 3.0 V 에서 끊어 활성화를 못
+끝냈고(그들 자신의 pristine LSV 피크가 3.05 V 인데 컷오프가 3.0 V 다), Lee 는 3.62 V 로 끝내되
+**이론용량 초과**(101–107 %)라는 대가를 냈다. **두 논문은 같은 벽의 양쪽 면이고 우리 목표
+500–600 은 그 사이 어딘가다.** → H1 을 전위 창의 문제로 재정의한다.
+
+가장 믿을 기준선은 **Cronk 723** 이다 — 우리와 조성·SE·탄소가 같고, 이론 대비 62 % 로
+초과 용량 문제가 없다. 단 그 값의 출처가 SI Fig. S9(미확보)이므로 `[인쇄]` 본문 한 문장이 전부다.
+
+- **[2026-09-30] H1 — 혼합 에너지가 활성화를 정한다 (Cronk 2026).** 같은 조성·같은 SE·같은 AB 에서
+  혼합 경로만 바꿔 첫 방전이 `[인쇄]` **one-step ≈1500 ≫ multi-step ≈610 ≫ hand-mix ≈200**
+  mAh g⁻¹(S). Li2S 계에서는 **hand-mix 는 사이클 자체가 안 된다.** 기전: 밀링이 활물질 표면에
+  **황 과잉 thiophosphate(Li3PS4+n) interphase** 를 만들고 그것이 리독스 매개체로 작동한다
+  (`[인쇄]` "Li2S 산화 활성화 전위 2.4 V, 촉매·kinetic promoter 없이"). → **활성화를 돕는 세 번째
+  방식**이다: Zhang 의 LiI, Huang 의 HES, 그리고 **Cronk 의 "매개체를 밀링으로 미리 만든다"**
+  — 이쪽만 **무게 대가가 0** 이다.
+- **[2026-09-30] H5 — 기계적 근거 둘 (Cronk 2026 · Qu 2025).**
+  - Cronk: Li2S 전극이 탈리튬화에서 **45 → 26 µm (−42 %)** 수축하고 **주상 균열**이 생긴다(cryo-FIB).
+  - Qu: **Li2S 양극 첫 충전 한 번에 −10 µm** = 총 수축 19 µm 의 **53 %**. 그리고 **구속 방식이
+    성능을 가른다** — 정압(스프링 7 MPa) vs 정용적(볼트)에서 100 사이클 용량 유지 **63 % vs 50 %**,
+    Ohmic **+50 %**. 정용적은 7 → 약 6 MPa 로 **압력을 잃는다**.
+  → 우리 첫 충전 손실의 일부가 **활성화 실패가 아니라 수축 균열에 의한 접촉 상실**일 수 있다.
+  우리 셀의 구속 방식(볼트인가 스프링인가)을 기록조차 안 하고 있다 — 이게 미결 변수다.
+- **[2026-09-30] H4 — 분모가 넷이고 SE 가 용량을 낸다.** Cronk 는 사이클 값을
+  `mAh g⁻¹(active = 활물질 + catholyte)` 라는 **네 번째 기준**으로 정규화한다. 더 중요한 것은
+  **이론용량 초과 용량이 4편에서 나온다** — Cronk 첫 사이클 CE `[인쇄]` **129 %**, Lee Li2S 셀
+  101–107 %, Yu 60 °C **124 %**, Zhang 첫 충전 114 %. 전부 **황화물 SE 자신의 리독스**가 섞인
+  것이다. → **규율: 이론값을 넘는 용량을 보면 SE redox 를 먼저 의심한다.**
+  Cronk 가 그 측정법까지 준다 — **LPSCl + AB (80:20) 대조셀** + dQ/dV 4영역 + XANES LCF.
+  그 셀의 기여가 `[인쇄]` 환원 115 / 산화 355 mAh g⁻¹ 였다.
+- **[2026-09-30] H3 — 나노화가 항상 답이 아니다 (Cronk 2026).** 첫 방전은 입자가 작을수록 좋지만
+  (bulk 1500 < micron 1615 < sub-micron 1694 mAh g⁻¹(S)) **C/2 500 사이클 유지는 뒤집힌다 —
+  micron(0.5–5 µm) 81 % > sub-micron(0.25–0.5 µm) 61 %**, bulk 는 급사. 우리 H3 를
+  "작게 만들면 된다" 로 읽으면 안 된다. 단 이 논문도 기전 논증은 약하다(digest §13-2).
+
 ## Evidence Against
 
 - **[2026-09-30] H2 에 대한 부분 반증 (Zhang 2026).** 탄소가 **MWCNT 10 wt% 뿐**인데 971
@@ -93,16 +149,41 @@ H1–H4 를 각각 고체계 실측으로 받친다.
 - **[2026-09-30] H1 에 대해 Huang 2026 은 근거를 주지 않는다** (반증도 지지도 아님). S8 출발이라
   첫 스텝이 방전이고, Li2S 첫 충전 과전압·컷오프·활성화량에 대해 **한 글자도 없다**. 이 공백을
   기록해 두는 것이 다음 논문 탐색의 방향이다 — **Li2S 출발 ASSB 논문**이 더 필요하다.
-- H3 에 대한 반증은 아직 없다.
+- **[2026-09-30] H2a 에 대한 강한 반증 — "σ_e 가 클수록 좋다" 가 기각된다 (Yu 2024 + Huang 2026).**
+  Yu 2024 는 복합체 전자 전도도를 **200배 낮추고도**(5.7×10⁻² → 2.9×10⁻⁴ S cm⁻¹) 첫 충전 Li2S
+  이용률을 51 → 91 % 로 올렸다. Huang 2026 은 **14배 올려서**(1.71 → 23.80 mS cm⁻¹) S 이용률을
+  39 → 76 % 로 올렸다. **방향이 정반대인데 개선 크기는 비슷하다.** 두 논문에서 같은 방향으로
+  움직인 양은 **σ_Li⁺** 와 **활물질–황화물 계면 친화**뿐이다.
+  → 우리 처방의 표적은 전자 전도도가 아니다. (주의: 두 논문 모두 DC 분극 시료의 정체가 불명이라
+  **절대값 비교는 금지**, 논문 내부 비(ratio)만 쓴다.)
+- **[2026-09-30] H2b 에 대한 반증 — 우리는 SE 부피 부족 영역에 없다 (Wang 2023).**
+  Wang 2023 은 SE 부피분율을 **35.4 vol%** 까지 올린 것이 ICE 31 → 100 % 의 원인이라 주장한다.
+  그런데 `[재현]` **우리 30:50:20 은 이미 SE 48–52 vol%** 다 (ρ(LPSCl) 1.64–1.90 가정).
+  이 논문 기준으로 **13–16 %p 여유**가 있다. Cronk 의 토르투오시티 모델도 같은 방향 —
+  활물질 30 wt% 에서 τ ≈ 2–3.4 로 아직 완만하고 50 wt% 를 넘어야 급등한다.
+- **[2026-09-30] H3 에 대한 반증 (Cronk 2026)** — sub-micron 이 micron 보다 **나쁘다**(위 참조).
+- H1 에 대한 반증은 아직 없다. 오히려 5편이 모두 같은 방향(첫 충전이 상한을 정한다)을 가리킨다.
 
 ## 답하는 방법 (설계)
 
-1. **H4 먼저** — 비용 0. 목표 값의 출처 논문을 가져와 분모를 확인한다.
+0. **★ 2026-09-30 우선순위 변경 — H4 를 실측으로 끝낸다.** `LPSCl + AB (80:20) 대조셀 1개`
+   를 돌린다 (Cronk 2026 의 방법). 우리 SE 가 내는 용량을 빼지 않으면 "Li2S 이용률" 이라는 말
+   자체가 성립하지 않는다 — 이론 초과 용량이 4편에서 나왔다. **셀 하나로 분모 논쟁이 끝난다.**
+1. **H4 문헌 쪽** — 비용 0. 목표 값의 출처 논문을 가져와 분모를 확인한다.
 2. **H1** — 우리 셀에서 Fig. S1 재현: 첫 충전을 25/50/75/100 % 로 끊고 이후 방전을 본다.
    층이 유지되면 H1; 뒤 사이클에서 따라 올라오면 활성화가 아니라 **동역학**(H2/H3) 이다.
-3. **H2** — 탄소+SE 만의 펠릿 전자 전도도(두께 방향) 와 AB→AB+CNT(소량) 치환 비교.
+3. **H2a** — **DC 분극**으로 우리 펠릿의 σ_e⁻·σ_Li⁺ 를 따로 잰다 (Huang 2026 §10.4 · Yu 2024;
+   원 출처 Kwok 2023 *EES* 16, 610 — Yu 논문의 공저자다). AB 10/20/30 wt% 로 반복.
+   **셀 조립 없이** 전자가 모자란지 남는지가 나온다. 인가 전압과 두께를 반드시 기록한다.
 4. **H3** — 혼합 경로별 Li2S 입도·XRD 를 [[mixing-equipment-ball-mill-thinky]] 양식으로 기록하고
-   활성화량과 대응.
+   활성화량과 대응. **밀링 시간 스윕(30 min/1 h/2 h/4 h)** 이 가장 값싸다 (Cronk: one-step
+   500 rpm 1 h · BPR 1:30; 단 **LPSCl 단독 10 h 밀링은 전도도가 30배 떨어진다**).
+5. **H1 (신규 설계)** — **충전 컷오프 스윕**: 3.0 / 3.3 / 3.6 V vs Li/Li⁺. Zhang(3.0, 활성화 미완)
+   과 Lee(3.62, 초과 용량) 의 충돌을 우리 셀에서 직접 가른다. 각 컷오프에서 첫 충전량과 이후
+   방전을 보고, 0번의 대조셀로 SE 기여를 뺀다.
+6. **H5 (신규 설계)** — 비용 거의 0: **첫 충전 전후 셀 높이를 다이얼 게이지로 한 번** 잰다
+   (Qu 2025 의 −10 µm 은 LVDT 없이도 보인다). 그리고 **구속 방식을 노트에 기록**한다 —
+   볼트 구속이면 정용적이므로 10 사이클 후 재조임 + 전후 EIS 를 본다.
 
 ## Status Log
 - [2026-09-11] active — 카드 개설. 근거는 Kim 2023(액체계) 하나와 사용자 진술뿐. 다음: ASSB
@@ -115,3 +196,12 @@ H1–H4 를 각각 고체계 실측으로 받친다.
   (b) **첫 충전을 25/50/75/100 % 로 끊는 Fig. S1 재현** — H1. 우리가 pristine 을 쓰므로
   Zhang 2026 의 ≈270 이 우리 기준선 후보다.
   여전히 미해결: **Li2S 출발 ASSB 논문**이 더 필요하고(H1), LPSCl 산화 창 수치가 없다.
+- [2026-09-30] active — **ASSB digest 8편 기준 전면 재정리.** 카드 구조가 바뀌었다:
+  **H2 를 H2a(전자)/H2b(이온)로 분할**하고 둘 다 약화·배제 방향의 반증을 받았다. **H5(기계적
+  제한) 신설.** H1 은 "활성화가 덜 된다" 에서 **"활성화 완료 전위 > SE 산화 전위"** 로 날카로워졌다.
+  **pristine Li2S 첫 방전값은 `disputed`** — 270 / 723 / 1095.9 로 4배 갈리고, 앞 절의 "300 언저리"
+  결론을 철회했다. 가장 믿을 기준선은 우리와 조성이 같은 **Cronk 723**(이론 62 %).
+  다음 실험 순서가 뒤집혔다: **0번 LPSCl+AB 대조셀(분모 확정)** → H2a DC 분극 → H1 컷오프 스윕
+  → H5 셀 높이·구속 방식. 앞의 둘은 셀을 거의 안 쓴다.
+  아직 없는 것: LPSCl **산화 개시 전위의 실측 근거**(Wang 2023 이 Li–In = 0.62 V vs Li/Li⁺ 의
+  출처는 줬지만 LSV 곡선은 SI 에 있고 미확보다). 이게 H1 판정의 마지막 조각이다.
