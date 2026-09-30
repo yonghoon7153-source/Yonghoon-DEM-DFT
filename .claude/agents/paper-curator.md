@@ -33,9 +33,20 @@ re-read the PDF to answer "그 논문에서 그 값이 뭐였지", and so the we
 
 ## Procedure
 
+0. **스크래치 파일은 네 전용 디렉토리에 쓴다 (★ 2026-09-30 사고로 신설)**
+   `<scratchpad>/<slug>/` 를 만들고 그 안에만 쓴다. `body.md` · `fm.yaml` · `final.md` 같은
+   **일반 이름을 스크래치패드 루트에 쓰지 마라.**
+   왜: 2026-09-30 에 논문 에이전트 5개를 병렬로 돌렸는데 전부 같은 스크래치패드에 같은 일반
+   이름을 썼다. 한 에이전트의 `body.md` 가 다른 에이전트 것으로 덮였고, 그 결과
+   `yu2024_….md` 가 **Yu frontmatter + Wang 본문**으로 봉인됐다. 두 파일 각자는
+   declared == actual 이라 sha256 봉인 검사를 그대로 통과했다 — 봉인은 "본문이 나중에 바뀌지
+   않았음" 만 보증하고 "올바른 본문인지" 는 보지 않는다.
+   이제 `wiki/tools/lint.py` 의 검사 19(raw 본문 sha256 중복)·20(frontmatter 의 doi 가 본문에
+   있는지)이 이 부류를 잡지만, **애초에 섞이지 않게 하는 것이 1차 방어다.**
+
 1. **Read** — `.venv/bin/python` 으로 pymupdf 텍스트 덤프(`page.get_text()`) + 필요하면 페이지 PNG.
-   첫 패스는 초록·결론·실험, 둘째 패스는 결과·SI. 텍스트를 스크래치패드에 저장해 두고 인용은
-   거기서 복사한다 (기억으로 옮기지 않는다).
+   첫 패스는 초록·결론·실험, 둘째 패스는 결과·SI. 텍스트를 **네 전용 스크래치 디렉토리**에
+   저장해 두고 인용은 거기서 복사한다 (기억으로 옮기지 않는다).
 
 2. **Extract with emphasis on OUR axes (★)** — 이 위키가 논문에서 찾는 것:
    - **셀 계**: 액체 / 준고체 / ASSB(어떤 SE — LPSCl·LGPS·LPS glass…), 음극(Li / Li–In / 흑연 / Si /
@@ -72,8 +83,11 @@ re-read the PDF to answer "그 논문에서 그 값이 뭐였지", and so the we
    가져갈 것` → `## 그림 판독 기록`.
    - `compare:` 키는 `wiki/SCHEMA.md` 특칙의 목록대로. **없는 값은 키를 빼거나 비운다** (물음표 금지).
    - sha256 은 frontmatter 뒤 본문(앞 빈 줄 제거)의 해시:
-     `h = hashlib.sha256(body.lstrip("\n").encode()).hexdigest()` — 본문을 스크래치에 쓰고 스크립트로
-     봉인해 한 번에 Write, lint 방식으로 재검증.
+     `h = hashlib.sha256(body.lstrip("\n").encode()).hexdigest()` — 본문을 **네 전용 스크래치
+     디렉토리**에 쓰고 스크립트로 봉인해 한 번에 Write, lint 방식으로 재검증.
+   - **Write 직후 본문 첫 300자를 출력해 눈으로 확인한다** — 이 논문의 고유어(활물질·SE·첨가제
+     이름)가 나오고 **다른 논문의 고유어가 나오지 않아야** 한다. 위 0번 사고는 이 한 줄로 잡혔을
+     것이다. 그다음 `python3 wiki/tools/lint.py` 로 검사 19·20 까지 통과시킨다.
    - `[해석]` 표시 없는 문장은 전부 원문이 실제로 말한 것이어야 한다. 원문 내부의 수치 불일치는
      `[재현]` 으로 계산해 공백표에 적는다.
 

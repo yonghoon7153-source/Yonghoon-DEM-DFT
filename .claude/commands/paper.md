@@ -16,4 +16,5 @@ description: 논문 에이전트 — PDF(+SI)를 sha256 봉인 digest + 그림 �
 7. **Commit** `ingest(wiki): …` → push (루트 CLAUDE.md 하드룰 1 브랜치). PR 없음.
 
 금지: raw 수정, 모델 식별자 기재, 단위 없는 비용량, 물음표로 채운 `compare:` 값, 검증 없는 "끝났다".
+**여러 편을 병렬로 돌릴 때**: 각 에이전트에 `<scratchpad>/<slug>/` 전용 디렉토리를 쓰라고 지시한다 (2026-09-30 사고 — 공용 스크래치의 `body.md` 충돌로 digest 하나가 다른 논문 본문으로 봉인됐다). 그리고 `index.md`·`log.md`·컴파일·커밋은 **부모가** 한다 — 동시 편집 경합을 피한다.
 세미나 논문이면 끝에 `/seminar <slug>` 를 제안한다.
