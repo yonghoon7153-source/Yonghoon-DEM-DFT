@@ -3307,6 +3307,14 @@ def _v2_ok_record(fm):
             return False                                           # AM–SE 접촉 (결속) 0 → 분자 0 → 평균 · std · 클립 0 (총 면적 반올림으로 역추론하지 않는다)
         if float(cov['coverage_AM_mean_physics_v2']) + tol < 100.0 * n_clip / n_am:
             return False                                           # 클립 입자는 100 — 입자 수 가중 평균 ≥ 100·n_clip/n_am (n_clip = n_am 이면 100)
+        #  LHSC-03-R5 (Codex 재검증 4) — 전체 클립 끝점: n_clip = n_am 이면 생산자가 저장한 모든 AM 값이 **정확히 100** (raw > 100 → min(raw, 100))
+        #  이라 비어 있지 않은 어떤 부분집합 (상) 도 평균 100 · population std 0 이다.  존재하는 키만 본다 (없는 상의 키를 요구하지 않는다) ·
+        #  부분 클립 (n_clip < n_am) 의 std 는 제한하지 않는다 (일반 분산 상한이 아니다) · 반올림 계약 = 생산자 셋째 자리 (tol 0.0005).
+        if n_clip == n_am:
+            if any(abs(float(v) - 100.0) > tol for k, v in cov.items() if k.endswith('_mean_physics_v2')):
+                return False                                       # 존재하는 상별 · 전체 평균 = 100
+            if any(float(v) > tol for k, v in cov.items() if k.endswith('_std_physics_v2')):
+                return False                                       # 존재하는 상별 std = 0
         return True
     return not cov                                                 # AM 0 개 = 피복률 키 없음 (연산 완료 · 적용 대상 없음)
 

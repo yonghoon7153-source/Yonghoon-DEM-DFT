@@ -871,6 +871,83 @@ def main():
             ps._RUNNER = _prev_rr
         chk(f'T11r) ★ LHSC-03-R4: 필수 단계 재현 — 장부 모순 4 종은 failed (옛: done) {_stg4}',
             all(v[0] is False and v[1] == 'failed' for v in _stg4.values()) and len(_stg4) == 4)
+
+        # T11s · T11t ★ Codex LHSC-03-R5 (09-30 밤 재검증 4 · P2) — 반례 먼저
+        #   R5: 전체 클립 (n_clip = n_am > 0) 인데 상별 평균 0 % · 상별 std 40 %p 가 검증기 True · 필수 단계 done.  생산자는 raw > 100 을 세고
+        #   min(raw, 100) 을 저장하므로 (coverage_physics_vs_hertzian.py) n_clip = n_am 이면 저장된 모든 AM 값이 **정확히 100** — 비어 있지 않은
+        #   어떤 부분집합 (상) 도 평균 100 · population std 0.  계약 (Codex 최소 해제 그대로): n_clip = n_am > 0 → **존재하는** 상별 · 전체 평균 = 100 ·
+        #   존재하는 상별 std = 0 (생산자 반올림 셋째 자리 = 0.0005 안).  없는 상의 키를 요구하지 않고 · 부분 클립의 std 는 제한하지 않는다 (일반 분산
+        #   상한이 아니다).  정상 대조 = **실제 생산자**로 만든 0 접촉 · 부분 클립 · 전체 클립 (Codex audit_r5 의 접촉 자료 그대로 — 판독기 시험용이지
+        #   DEM 평형 침대가 아니다) + 한 상뿐인 전체 클립 + std 가 있는 부분 클립.
+        import math as _math
+
+        def _produce5(name, counts):
+            d = _root / f'r5_{name}'
+            d.mkdir(parents=True, exist_ok=True)
+            (d / 'full_metrics.json').write_text(json.dumps({'case_id': name}))
+            rows = [(1, 1, .001, 0.0, 0.0, 0.0), (2, 2, .001, .01, 0.0, 0.0)]
+            cons = []
+            for am, n in enumerate(counts, 1):
+                for j in range(n):
+                    sid = len(rows) + 1
+                    ang = 2 * _math.pi * j / max(n, 1)
+                    rows.append((sid, 3, .001, (am - 1) * .01 + .001 * _math.cos(ang), .001 * _math.sin(ang), 0.0))
+                    cons.append((am, sid, .001, _math.pi * (.001 ** 2 - (.001 / 2) ** 2)))
+            (d / 'atoms.csv').write_text('id,type,radius,x,y,z\n' + ''.join(','.join(repr(v) for v in r) + '\n' for r in rows))
+            (d / 'contacts.csv').write_text('id1,id2,delta,contact_area\n' + ''.join(','.join(repr(v) for v in c) + '\n' for c in cons))
+            with _ctx.redirect_stdout(_io.StringIO()):
+                _cv.compute_case(name, d, {1: 'AM_P', 2: 'AM_S', 3: 'SE'}, scale=1000)
+            return str(d), json.loads((d / 'full_metrics.json').read_text())
+        _pr5 = {n: _produce5(n, c) for n, c in (('zero', (0, 0)), ('partial_clip', (4, 1)), ('full_clip', (4, 4)))}
+        _f5, _p5 = _pr5['full_clip'][1], _pr5['partial_clip'][1]
+
+        def _mut5(name):
+            x = _copy.deepcopy(_p5 if name.startswith('partial') else _f5)
+            if name == 'all_clipped_but_phase_mean_zero':          # Codex 변이 ①
+                x['coverage_AM_P_mean_physics_v2'] = 0.0
+            elif name == 'all_clipped_but_phase_std_40':           # Codex 변이 ②
+                x['coverage_AM_S_std_physics_v2'] = 40.0
+            elif name == 'all_clipped_but_phase_mean_99p999':      # 반올림 계약 밖 (셋째 자리 한 눈금)
+                x['coverage_AM_S_mean_physics_v2'] = 99.999
+            elif name == 'all_clipped_but_total_mean_99':          # 옛 R4 하한이 이미 막는 것 — 회귀
+                x['coverage_AM_mean_physics_v2'] = 99.0
+            elif name == 'full_clip_one_phase_only_ok':            # 정상: AM_S 상이 없는 침대 (그 상의 키 없음 · n_am 1) — 없는 상의 키를 요구하지 않는다
+                for k in [k for k in x if k.startswith('coverage_AM_S_')]:
+                    del x[k]
+                x['am_denominator_physics_v2'].update(n_am=1, n_coverage_clipped_100=1)
+            elif name == 'partial_clip_std_20_ok':                 # 정상: 부분 클립의 상별 std 는 제한하지 않는다
+                x['coverage_AM_S_std_physics_v2'] = 20.0
+            return x
+        _rej5 = ('all_clipped_but_phase_mean_zero', 'all_clipped_but_phase_std_40', 'all_clipped_but_phase_mean_99p999', 'all_clipped_but_total_mean_99')
+        _acc5 = ('full_clip_one_phase_only_ok', 'partial_clip_std_20_ok')
+        _r5 = {n: _v2w_safe(_mut5(n)) for n in _rej5 + _acc5}
+        _pos5 = {n: webapp._coverage_v2_written(v[0]) for n, v in _pr5.items()}
+        _pos5.update({n: _r5[n] for n in _acc5})
+        _full_ok5 = (_f5.get('am_denominator_physics_v2', {}).get('n_coverage_clipped_100') == 2 == _f5.get('am_denominator_physics_v2', {}).get('n_am')
+                     and all(_f5.get(f'coverage_{lb}_mean_physics_v2') == 100.0 and _f5.get(f'coverage_{lb}_std_physics_v2') == 0.0 for lb in ('AM_P', 'AM_S'))
+                     and _p5.get('am_denominator_physics_v2', {}).get('n_coverage_clipped_100') == 1)
+        chk(f'T11s) ★ LHSC-03-R5: 전체 클립 (n_clip = n_am) 인데 상별 평균 0 % · 상별 std 40 %p · 상별 평균 99.999 (반올림 계약 밖) · 전체 99 % 는 '
+            f'거부 · 실제 생산자 0 접촉 · 부분 클립 · 전체 클립 (AM 둘 다 100 · std 0) · 한 상뿐인 전체 클립 · std 20 부분 클립은 받는다 — 어긋남 '
+            f'{[n for n in _rej5 if _r5[n] is not False] + [n for n, v in _pos5.items() if v is not True]} · 생산자 전체 클립 확인 {_full_ok5}',
+            all(_r5[n] is False for n in _rej5) and all(v is True for v in _pos5.values()) and _full_ok5)
+        _stg5 = {}
+        _prev_rr5 = ps._RUNNER
+        try:
+            for _n in _rej5[:2]:
+                _sd = os.path.join(tmp, 'results', f'r5_{_n}')
+                os.makedirs(_sd, exist_ok=True)
+
+                def _malformed5(cmd, _x=_mut5(_n), _p=_sd, **kw):   # 계산 subprocess 만 대역 — 변이 파일을 쓰고 rc 0
+                    with open(os.path.join(_p, 'full_metrics.json'), 'w') as _f:
+                        json.dump(_x, _f)
+                    return subprocess.CompletedProcess(cmd, 0, 'synthetic malformed producer', '')
+                ps._RUNNER = _malformed5
+                _st = webapp._coverage_stage([sys.executable, 'coverage_physics_vs_hertzian.py', _n], _sd, 'coverage')
+                _stg5[_n] = (_st.get('ok'), ps.summarize([_st])[0])
+        finally:
+            ps._RUNNER = _prev_rr5
+        chk(f'T11t) ★ LHSC-03-R5: 필수 단계 재현 — Codex 변이 둘 (상별 평균 0 · 상별 std 40) 은 failed (옛: done) {_stg5}',
+            all(v[0] is False and v[1] == 'failed' for v in _stg5.values()) and len(_stg5) == 2)
     finally:
         ps._RUNNER = prev_runner
         for k, v in prev_env.items():
