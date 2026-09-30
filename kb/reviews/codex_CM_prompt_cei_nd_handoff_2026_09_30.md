@@ -3,7 +3,7 @@ title: "리뷰 CM 프롬프트 — CEI (Nd 계면) 외부 송부 전 리뷰: 정
 date: 2026-09-30
 updated: 2026-09-30
 tags: [review, codex, cei, nd, handoff, onboarding, prompt, mp-hull, band-gap, pre-send]
-status: 발송됨 (사용자 · 2026-09-30 · 인계 zip 첨부) · ✅ 회신 수령 2026-09-30 (`codex_CM_reply_cei_nd_handoff_2026_09_30.md` · NO-GO · P0 7 · P1 6) → 이행 → 실험 쪽 1저자에게 송부
+status: 발송됨 (사용자 · 2026-09-30 · 인계 zip 첨부) · ✅ 회신 수령 2026-09-30 (`codex_CM_reply_cei_nd_handoff_2026_09_30.md` · NO-GO · P0 7 · P1 6) → ✅ 이행 완료 (a0e2c9efb · 비준 d181c35a9 · ab62caedc) · 송부판 v3 (같은 비공개 링크) · 인계 zip v2 (sha256 186ed897…d6ce · 이메일 가린 파생본) → 사용자가 실험 쪽 1저자에게 송부
 confidence: medium
 verificationStatus: unverified
 explored: false
