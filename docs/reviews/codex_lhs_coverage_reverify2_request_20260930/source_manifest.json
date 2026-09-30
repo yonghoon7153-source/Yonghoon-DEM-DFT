@@ -1,0 +1,18 @@
+{
+ "schema": "codex_request_manifest/1",
+ "note": "LHSC-03 · 04 R2 수정 (검토 브랜치 review-coverage-20260930 · 로컬 전용) — 패치 적용 기준 = base (앞 요청서 11 패치를 적용한 트리 = 002cc2881)",
+ "base_commit": "002cc288119f520a818fcb50a3f73ec87fb06e70",
+ "tip_commit": "ca0471d19a5a9d914c6a31006a001d515267f3be",
+ "patches": {
+  "0012-LHS-item-2-Codex-LHSC-04-R2-P2.patch": {
+   "sha256": "f582bd0bb12766a1471908ea8a615879f52d94ed4d9fb79320c73d07b7c2eddf",
+   "bytes": 42080,
+   "diff_body_sha256": "6658c99905606b6d4c0108a6339febec5a5a471a1ccf160446cffe7bd80a762e"
+  },
+  "0013-run_pipeline-coverage-v2-Codex-LHSC-03-R2-P2.patch": {
+   "sha256": "c8dd2ddcb0fc48fa1e2bc11301ca20382a5bcc25ef02415fe75cce8f8d747539",
+   "bytes": 18702,
+   "diff_body_sha256": "7db84bacbca154266d363d309ef56e7e63ee03d7962f09a570bd0542ecaf64dd"
+  }
+ }
+}

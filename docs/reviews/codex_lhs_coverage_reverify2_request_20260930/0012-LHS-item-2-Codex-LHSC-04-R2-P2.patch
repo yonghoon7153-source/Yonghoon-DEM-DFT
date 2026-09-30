@@ -1,0 +1,461 @@
+From f2c15ceacd4196f3c06e320e0bc869dba1e2241d Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Wed, 30 Sep 2026 01:27:20 +0000
+Subject: [PATCH 12/13] =?UTF-8?q?LHS=20=EC=88=98=ED=99=95=EA=B8=B0=20item?=
+ =?UTF-8?q?=202=20=E2=80=94=20=EC=A0=91=EC=B4=89=20=EB=A9=B4=EC=A0=81=20?=
+ =?UTF-8?q?=EB=8C=80=EC=A1=B0=EB=A5=BC=20=EB=B0=98=EC=98=AC=EB=A6=BC=20?=
+ =?UTF-8?q?=EC=83=81=EC=9E=90=20=ED=8F=AC=EA=B4=84=20=EA=B5=AC=EA=B0=84?=
+ =?UTF-8?q?=EC=9C=BC=EB=A1=9C=20(Codex=20LHSC-04=20R2=20=C2=B7=20P2=20?=
+ =?UTF-8?q?=C2=B7=20=EB=B0=98=EB=A1=80=20=EB=A8=BC=EC=A0=80)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- 반례 먼저 (옛 코드 3 실패): Codex audit_delta in_domain_rounding_false_alarm — 옛 지원 범위 안에서 정상 %.6g 반올림만 한 네 토큰
+  (r1 r2 → 한 토큰 0.00123456 · δ 0.00246909 · A 4.27727e-6) 이 초과 1 (축별 탐침 합 B 가 공동 반올림을 못 덮음 · diff/B 1.332) ·
+  포괄 구간 함수 · 규칙 문자열의 틀린 서술 ("단조" · "불연속" · 축별 합).
+- 수정: 허용폭 = 반올림 상자 위 A 의 포괄 구간 [lo, hi] — 덤프 토큰 구간 [A ± h(A)] 이 만나지 않을 때만 초과.
+  같은 식의 인수형 π·δ(2r1−δ)(2r2−δ)(2r1+2r2−δ)/(4d²) (상쇄 없음) 의 인수마다 선형 구간 → ① A ≡ 0 상자 ·
+  ② ln A 편도함수 세 구간이 0 을 안 포함하면 두 꼭짓점 = 정확한 최소 · 최대 · ③ 아니면 인수 곱 ∩ 덧셈형 항별 구간 ∩ π·min(r)² ·
+  ④ 상자가 포함 경계 · d = 0 · δ = 0 에 걸치면 하한 0 · 생산자 부동소수 바닥 32·eps·π·max(r)² 바깥으로.
+  범위 분류 (_in_domain_rows · n_boundary_excluded · AREA_CHECK_MARGIN) 는 없앴다 — 모든 비교 행을 시험하고 n_tested ·
+  n_lower_bound_zero · n_wide_enclosure (> 1 % 폭) · n_power_1pct 를 따로 적는다.
+- 시험: Codex 반례 초과 0 · 구간 [2.6601e-6, 4.7883e-6] (손 계산과 같은 자리) · 여섯 영역 600 상자 × 32 점 포괄 (벗어남 0) ·
+  반올림만 3000 행 초과 0 · 실효 상대 반폭 중앙 5.43e-6 · 최대 1.16e-5 · 3e-5 · Hertz 치환 3000/3000 검출 · 옛 ㉑′ 두 경계 행은
+  하한 0 으로 시험 (초과 0).  scratch 스트레스 12,000 상자 × 64 점 벗어남 0 (corner 5783 · zero 3217 · boundary 1848 · interval 1152).
+- lens_geometry: 독스트링 정정 (δ 에 단조 아님 · d² = |r1² − r2²| 극대 π·min(r)² · 포함 경계 연속 · 동일 반경 d → 0 퇴화만 어긋남 ·
+  0 ≤ A ≤ π·min(r)²) · ④ 이름을 "동일 반경" 으로 좁힘 · ⑥ Codex 비단조 반례 · ⑦ 연속 · 퇴화 — selftest PASS.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft
+---
+ docs/reviews/selftest_inventory.tsv |   2 +-
+ scripts/lens_geometry.py            |  18 +-
+ scripts/lhs_descriptor_harvest.py   | 297 +++++++++++++++++++++-------
+ 3 files changed, 238 insertions(+), 79 deletions(-)
+
+diff --git a/docs/reviews/selftest_inventory.tsv b/docs/reviews/selftest_inventory.tsv
+index 93882c73b..aaca37aa4 100644
+--- a/docs/reviews/selftest_inventory.tsv
++++ b/docs/reviews/selftest_inventory.tsv
+@@ -74,7 +74,7 @@ scripts/holm_exponent_from_field.py	--selftest	fast	none	claude	초록 0.6s (실
+ scripts/ion_r_verdict.py	--selftest	fast	check_all	claude	초록 0.2s (실측)
+ scripts/lens_geometry.py	--selftest	fast	none	claude	초록 5/5 · 0.1s (실측 2026-09-30) — 두 구의 교차 원판 순수 기하 (Codex LHSC-05 계약 (a) 로 plastic_coverage 에서 분리 · 그쪽 `_intersection_disc_area` 는 별칭 = 같은 객체 · 수확기 item 2 는 여기서만 가져온다) — 동일 반경 항등식 · Hertz 비 2 − δ/(2r) · 포함/미접촉 → 0 · 대칭 · 단조 · math.pi == np.pi
+ scripts/lhs_design_dataset.py	--selftest	fast	none	claude	초록 1.5s (실측) · ⑳ J20-g 확인된 열만 · J20-f (A) mono 상별 빈칸 · ⑳g–l J20-h 접촉 0 쌍 = 0 · ⑳m–r J20-i SE–SE CN 두 열 + 항등식 관문 (113 건)
+-scripts/lhs_descriptor_harvest.py	--selftest	fast	both	claude	초록 0.7s (실측) — 계약 6개 + P1 반례 + 변이대조 · ㉑′ LHSC-04 지원 범위 (포함 경계 행 = n_boundary_excluded) · LHSC-05 가드 (패키지 경유 · 별칭 동적 import · plastic_coverage 사용 0) 2026-09-30
++scripts/lhs_descriptor_harvest.py	--selftest	fast	both	claude	초록 0.7s (실측) — 계약 6개 + P1 반례 + 변이대조 · ㉑″ LHSC-04 R2 반올림 상자 포괄 구간 (Codex 공동 반올림 반례 초과 0 · 여섯 영역 포괄성 · 하한 0 · 폭 넓은 행 · 범위 분류 없앰) · LHSC-05 가드 (패키지 경유 · 별칭 동적 import · plastic_coverage 사용 0) 2026-09-30
+ scripts/lhs_harvest_batch.py	--selftest	fast	none	claude	초록 0.0s (실측) — 봉인 TSV 짝 사용 · mesh 근거 기록 · 누락은 사유와 함께 선다 (LHS-02) · ★ 수확기 없으면 **dry-run 도** 선다 (리허설 false-green 차단)
+ scripts/lhs_phi_crosscheck.py	--selftest	fast	none	claude	초록 <1s (실측) — 수확기 ↔ 웹앱 porosity 교차검사: 두 코드 함수를 같은 덤프에 호출 · LHS-10 바닥 재현 · 음성 대조 (바닥 = 벽) · 플래튼 − 고체 윗면 (LHS-11)
+ scripts/lhs_ext_design.py	--selftest	fast	both	claude	초록 0.7s (실측)
+diff --git a/scripts/lens_geometry.py b/scripts/lens_geometry.py
+index f576685e7..53a20c315 100644
+--- a/scripts/lens_geometry.py
++++ b/scripts/lens_geometry.py
+@@ -22,7 +22,11 @@ def intersection_disc_area(r1, r2, delta):
+     ★ 동일 반경 검산: `A = π δ(4r − δ)/4`, 얕은 극한에서 Hertz(`πR*δ`)의 **2배**
+       (`A_LIGG/A_Hertz = 2 − δ/(2r)` = `L1-04` 의 형태).
+     포함 (`d ≤ |r₁ − r₂|` · 한 구가 다른 구 안) 이면 a² ≤ 0 → 0.  δ ≤ 0 (안 닿음) · d ≤ 0 도 0.
+-    ⚠ 포함 경계 근처에서는 r₁ − r₂ 에 불연속 · 비단조 — 반올림 전파 허용폭이 서지 않는다 (`lhs_descriptor_harvest._in_domain_rows`).
++    기하 (★ 정정 09-30 · Codex `LHSC-04` R2 — 옛 서술 "포함 경계 근처에서 r₁ − r₂ 에 불연속 · 비단조 · 허용폭이 서지 않는다" 는 틀렸다):
++      · δ 에 **단조가 아니다** — 인수형 `a² = δ(2r₁−δ)(2r₂−δ)(2r₁+2r₂−δ)/(4d²)` 에서 A 는 δ = 0 의 0 에서 `d² = |r₁² − r₂²|` 의
++        극대 `π·min(r₁, r₂)²` 까지 올랐다가 포함 경계 `d = |r₁ − r₂|` 에서 0 으로 내려간다 (반지름이 같으면 δ ∈ (0, 2r) 에서 단조 증가).
++      · 포함 경계에서는 **연속** (a² → 0).  어긋나는 곳은 동일 반경 · d → 0 퇴화뿐 — 식의 극한은 `π r²` 인데 코드는 d ≤ 0 → 0.
++      · 유한 상한은 늘 있다: `0 ≤ A ≤ π·min(r₁, r₂)²`.  반올림 상자 위 포괄 구간 = `lhs_descriptor_harvest._area_enclosure`.
+     """
+     d = r1 + r2 - delta
+     if d <= 0 or delta <= 0:
+@@ -46,9 +50,19 @@ def _selftest() -> int:
+     chk('③ 포함 (한 구가 다른 구 안 · d ≤ |r1 − r2|) → 0 · 안 닿음 (δ ≤ 0) → 0',
+         intersection_disc_area(2.0, 1.0, 2.0) == 0.0 and intersection_disc_area(2.0, 1.0, 2.5) == 0.0
+         and intersection_disc_area(1.0, 1.0, 0.0) == 0.0 and intersection_disc_area(1.0, 1.0, -0.1) == 0.0)
+-    chk('④ 반경 대칭 · δ 에 단조 증가 (경계 밖)',
++    chk('④ 반경 대칭 · **동일 반경**에서 δ ∈ (0, 2r) 단조 증가 (다른 반경은 아래 ⑥ — 단조가 아니다)',
+         intersection_disc_area(2.0, 0.5, 0.05) == intersection_disc_area(0.5, 2.0, 0.05)
+         and intersection_disc_area(1.0, 1.0, 0.1) < intersection_disc_area(1.0, 1.0, 0.2) < intersection_disc_area(1.0, 1.0, 0.5))
++    #  ⑥ ⑦ — Codex LHSC-04 R2 (09-30): 옛 독스트링의 "단조 · 포함 경계 불연속" 이 틀렸음을 식으로 고정한다
++    _r1, _r2 = 0.002, 0.001
++    _dx = math.sqrt(_r1 * _r1 - _r2 * _r2)                       # 극값 d² = |r1² − r2²|
++    chk('⑥ 다른 반경은 δ 에 단조가 아니다 — r1 .002 · r2 .001: δ .00160 → .00161 에서 A 감소 (Codex 반례) · 극대 d² = |r1² − r2²| 에서 '
++        'π·min(r)² (상대 1e-9)',
++        intersection_disc_area(_r1, _r2, 0.00160) > intersection_disc_area(_r1, _r2, 0.00161)
++        and abs(intersection_disc_area(_r1, _r2, _r1 + _r2 - _dx) - math.pi * _r2 * _r2) < 1e-9 * math.pi * _r2 * _r2)
++    chk('⑦ 포함 경계 d → |r1 − r2|⁺ 에서 A → 0 (연속 · r1 2 · r2 1) · 동일 반경 d → 0⁺ 은 A → π r² 인데 d ≤ 0 은 0 (이 퇴화에서만 어긋남)',
++        intersection_disc_area(2.0, 1.0, 2.0 - 1e-9) < 1e-7 and intersection_disc_area(2.0, 1.0, 2.0 - 1e-6) < 1e-4
++        and abs(intersection_disc_area(1.0, 1.0, 2.0 - 1e-9) - math.pi) < 1e-6 and intersection_disc_area(1.0, 1.0, 2.0) == 0.0)
+     try:
+         import numpy as _np
+         chk('⑤ math.pi == np.pi — 옮기기 전 (np.pi) 과 같은 부동소수 결과', math.pi == _np.pi
+diff --git a/scripts/lhs_descriptor_harvest.py b/scripts/lhs_descriptor_harvest.py
+index 37ffa841d..1e29dfb98 100755
+--- a/scripts/lhs_descriptor_harvest.py
++++ b/scripts/lhs_descriptor_harvest.py
+@@ -160,19 +160,24 @@ PLASTIC_COVERAGE_ALLOWED = frozenset()
+ #: item 2 — 접촉 면적 대조 (진단 기록) 의 유효숫자 전제: LIGGGHTS `dump local` 기본 `%g` = 6 유효숫자 (`lhs_contact_audit.SIGFIG_FLOOR`
+ #:   와 같은 값 · WSL 감사 v2 130/130 관측 최대 6).  전제가 틀린 침대는 `n_values_beyond_6sig` 가 0 이 아니다 (그때 허용폭이 헐겁다).
+ AREA_CHECK_SIGFIG = 6
+-#: 2 차 교차항 여유 (한 축의 기울기가 다른 축 반폭만큼 바뀌는 몫 ≈ 반폭/값 ≈ 1e-5 · B) — 민감도에는 영향이 없다 (B 자체가 ≈ 1e-5 · A).
+-AREA_CHECK_MARGIN = 1.001
++#: LHSC-04 R2 (Codex 09-30 밤 · 1저자 비준 09-30 낮) — 포괄 구간이 넓은 행 = 검출력이 약한 행: (hi − lo) > 이 비율 × A_dump.
++#:   1 % 치환을 못 잡는 행이라는 뜻 (셈만 · 판정은 그대로 한다).
++AREA_CHECK_WIDE_REL = 1e-2
+ AREA_CHECK_TOL_RULE = (
+-    '행마다 |A_dump − A_calc| > B 이면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  '
+-    '지원 범위 (LHSC-04 · 09-30) = d − |r1 − r2| > 2h(r1) + 2h(r2) + h(δ) (d = r1 + r2 − δ · 포함 경계 = 한 구가 다른 구 안 · d → 0 의 '
+-    '깊은 겹침도 같은 경계): 그 밖의 행은 면적이 r1 − r2 에 불연속 · 비단조라 축별 탐침 상한이 서지 않으므로 초과가 아니라 '
+-    'containment_boundary (n_boundary_excluded) 로 따로 센다 — 범위 밖 행의 불일치 · 치환은 이 진단이 판정하지 않는다.  '
+-    'A_calc = lens_geometry.intersection_disc_area(r1, r2, δ = c_cpl[23]) · '
+-    'B = 1.001·[Σ_{x∈r1,r2,δ} max(|A(x+h_x) − A_calc|, |A(x−h_x) − A_calc|) + h(A_dump)] + 32·eps·π·max(r1,r2)² · '
+-    'h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 (E = 십진 지수 · 끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  '
+-    '교차 원판은 r1 · r2 · δ 각각에 단조라 (해석 · 20 만 표본 확인) 축마다 ±h 한쪽 최댓값이 그 토큰 반올림의 상한 · '
+-    '합 = 네 토큰 (r1 · r2 · δ · A) 이 한꺼번에 가장 나쁘게 겹친 경우 · 1.001 = 2 차 교차항 여유 · '
+-    '32·eps 항 = 교차원 식의 부동소수 상쇄 바닥 (δ/r < 2e-7 · 반지름비 > 7 에서 1e-6 급 잡음 — 양쪽 계산 몫)')
++    '행마다 덤프 토큰 구간 [A_dump ± h(A_dump)] 이 반올림 상자 {r1 ± h(r1)} × {r2 ± h(r2)} × {δ ± h(δ)} 위 교차 원판 A 의 '
++    '포괄 구간 [lo, hi] 와 만나지 않으면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  '
++    'A = lens_geometry.intersection_disc_area 와 같은 식의 인수형 π·δ(2r1−δ)(2r2−δ)(2r1+2r2−δ)/(4d²) (d = r1 + r2 − δ · 상쇄 없음).  '
++    '포괄 구간 (LHSC-04 R2 · 09-30): 인수마다 선형 구간 (끝점 + 부동소수 바깥 여유) → ① 상자가 δ ≤ 0 · d ≤ 0 · 한 구가 다른 구 안 '
++    '(2r_i − δ ≤ 0) 에 통째로 있으면 A ≡ 0 · ② 네 인수가 상자 전체에서 양수이고 ln A 의 편도함수 세 구간 (인수 역수의 합) 이 0 을 '
++    '포함하지 않으면 두 꼭짓점 값이 정확한 최소 · 최대 (각 인수의 형성 오차만큼 상대 여유) · ③ 아니면 인수 구간의 곱 ∩ 덧셈형 '
++    '항별 구간 π/4·[2(r1²+r2²) − d² − (r1²−r2²)²/d²] ∩ 기하 상한 π·min(r1, r2)² · ④ 인수가 상자 안에서 부호를 바꾸면 (포함 경계 · '
++    'd → 0 · δ → 0 이 상자 안) 하한 0 (n_lower_bound_zero) · 상한 = 덧셈형 항별 상한 ∩ 기하 상한.  마지막에 생산자 (LIGGGHTS) '
++    '계산의 부동소수 바닥 32·eps·π·max(r1, r2)² 를 바깥으로 더한다.  h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 '
++    '(E = 십진 지수 · 끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  기하: A 는 δ 에 따라 0 에서 d² = |r1² − r2²| 의 극대 '
++    'π·min(r1, r2)² 까지 올랐다가 포함 경계 d = |r1 − r2| 에서 다시 0 으로 **연속**해서 내려간다 (동일 반경 d → 0 퇴화만 식의 극한 π r² '
++    '과 코드의 d ≤ 0 → 0 이 어긋난다).  보고: n_tested (이 규칙을 적용한 행 = 비교 행 전부) · n_beyond_tol · '
++    'n_lower_bound_zero (하한 0 — 너무 작은 면적은 못 잡는다) · n_wide_enclosure ((hi − lo) > AREA_CHECK_WIDE_REL·A_dump — 1 % 치환을 '
++    '못 잡는다) · n_power_1pct (둘 다 아닌 행 = 1 % 치환을 잡을 수 있는 행).')
+ #: L1-04 — 이 열이 **무엇인지** 매 행에 박는다 (별칭의 `hertz` 는 물려받은 오해다).
+ AREA_CHANNEL = ('dem_geometric_c_cpl22 — LIGGGHTS 기하 교차 원판 pi(r d - d^2/4); '
+                 'Hertz 탄성 pi R* d 가 **아니다** (동일 반경 비 = 2 - d/(2r))')
+@@ -363,38 +368,111 @@ def _n_beyond_sig(v, sig=AREA_CHECK_SIGFIG):
+                    if np.isfinite(x) and float(fmt.format(x)) != x))
+ 
+ 
+-def _in_domain_rows(r1, r2, delta, sig=AREA_CHECK_SIGFIG):
+-    """LHSC-04 (Codex 09-30) — 행마다 허용폭 규칙이 서는 **지원 범위** 인가: 중심거리 d = r1 + r2 − δ 가 포함 경계 |r1 − r2| 에서
+-    토큰 반올림 폭 2h(r1) + 2h(r2) + h(δ) 보다 멀리 있다 (h = `_half_unit`).  경계 근처 — 한 구가 다른 구 안에 들어가기 직전, 그리고
+-    d → 0 의 깊은 겹침 (같은 경계) — 에서는 면적이 r1 − r2 에 불연속 · 비단조라 축별 탐침의 합이 상한이 아니다 (Codex 반례: 반올림만으로
+-    되읽은 토큰이 경계를 넘어 A_calc = 0 · 깊은 겹침에서 B > A 라 치환을 못 잡음).  그 행은 `contact_area_check` 가 초과가 아니라
+-    `n_boundary_excluded` 로 따로 센다 (전역 상수 `AREA_CHECK_MARGIN` 은 그대로).  범위 안 성적 (합성 3000 · 15,000 행 0/0) 은
+-    범위 안의 성적이다 — 전역 보증이 아니다.
+-    """
+-    r1, r2, delta = (np.asarray(v, dtype=np.float64) for v in (r1, r2, delta))
+-    gap = (r1 + r2 - delta) - np.abs(r1 - r2)
+-    margin = 2.0 * _half_unit(r1, sig) + 2.0 * _half_unit(r2, sig) + _half_unit(delta, sig)
+-    return gap > margin
++_EPS = float(np.finfo(np.float64).eps)
+ 
+ 
+-def _contact_area_rows(r1, r2, delta, area):
+-    """행마다 (A_calc, |A_dump − A_calc|, 허용폭 B) — 규칙 `AREA_CHECK_TOL_RULE`.  A_calc = lens_geometry 의 교차 원판 (재구현 없음).
+-    ⚠ 범위 판정은 하지 않는다 — `contact_area_check` 가 `_in_domain_rows` 로 경계 행을 가른다 (LHSC-04)."""
+-    f = _intersection_disc_area
+-    r1, r2 = np.asarray(r1, dtype=np.float64), np.asarray(r2, dtype=np.float64)
+-    delta, area = np.asarray(delta, dtype=np.float64), np.asarray(area, dtype=np.float64)
+-    h1, h2, hd, ha = _half_unit(r1), _half_unit(r2), _half_unit(delta), _half_unit(area)
+-    fp = 32.0 * np.finfo(np.float64).eps * np.pi
++def _iv_lin(parts):
++    """Σ c·[lo, hi] (서로 독립인 구간의 선형 결합) — 정확한 끝점 + 부동소수 바깥 여유 (곱 · 합 반올림 몫)."""
++    lo = hi = mag = 0.0
++    for c, a, b in parts:
++        x, y = c * a, c * b
++        lo += min(x, y)
++        hi += max(x, y)
++        mag += max(abs(x), abs(y))
++    pad = 4.0 * _EPS * mag
++    return lo - pad, hi + pad
++
++
++def _lens_factored(a, b, dl):
++    """교차 원판 A = π·δ(2r1−δ)(2r2−δ)(2r1+2r2−δ) / (4(r1+r2−δ)²) — `lens_geometry` 의 덧셈형 a² 와 **같은 식**의 인수분해.
++
++    4d²a² = 4d²r1² − (d² − r2² + r1²)² = (r1+r2−d)(r2−r1+d)(r1−r2+d)(r1+r2+d) 이고 d = r1 + r2 − δ 를 넣으면 위 네 인수가 된다
++    (상쇄 없음 — 얕은 접촉에서도 상대 오차가 작다).  부분 겹침 (네 인수 · d 가 양수) 에서만 부른다."""
++    d = a + b - dl
++    return float(np.pi * dl * (2.0 * a - dl) * (2.0 * b - dl) * (2.0 * a + 2.0 * b - dl) / (4.0 * d * d))
++
++
++def _area_enclosure(r1, r2, delta, sig=AREA_CHECK_SIGFIG):
++    """LHSC-04 R2 (Codex 09-30 밤) — 행마다 6 유효숫자 토큰의 **반올림 상자** 위 교차 원판 A 의 포괄 구간 (lo, hi) · 하한 0 표지 · 방법.
++
++    규칙 = `AREA_CHECK_TOL_RULE` ①–④.  옛 판 (축별 탐침의 합 B) 은 "A 가 각 입력에 단조" 라는 틀린 가정 위에 있었고, 다른 두 반지름이
++    한 토큰으로 합쳐지는 **공동** 반올림을 덮지 못했다 (Codex 반례 diff/B 1.332).  여기서는 상자 전체를 감싼다 — 꼭짓점 두 개가 정확한
++    최소 · 최대인 것은 ln A 의 편도함수 세 구간이 0 을 포함하지 않을 때뿐이고 (인수 역수의 합으로 상자 위에서 잰다), 그렇지 않으면
++    구간 곱 · 덧셈형 항별 구간 · 기하 상한의 교집합으로 **넓게** 감싼다 (넓다는 것은 `n_wide_enclosure` 로 따로 센다).
++    반환: lo · hi (배열) · lb0 (하한 0 = 상자가 포함 경계 · d = 0 · δ = 0 에 걸침) · how ('zero' · 'corner' · 'interval' · 'boundary')."""
++    r1, r2, delta = (np.asarray(v, dtype=np.float64).ravel() for v in (r1, r2, delta))
++    h1, h2, hd = _half_unit(r1, sig), _half_unit(r2, sig), _half_unit(delta, sig)
+     n = int(r1.size)
+-    ac, diff, bnd = np.empty(n), np.empty(n), np.empty(n)
+-    for i, (a, b, d, A, x1, x2, xd, xa) in enumerate(zip(r1.tolist(), r2.tolist(), delta.tolist(), area.tolist(),
+-                                                         h1.tolist(), h2.tolist(), hd.tolist(), ha.tolist())):
+-        c = f(a, b, d)
+-        s = (max(abs(f(a + x1, b, d) - c), abs(f(a - x1, b, d) - c))
+-             + max(abs(f(a, b + x2, d) - c), abs(f(a, b - x2, d) - c))
+-             + max(abs(f(a, b, d + xd) - c), abs(f(a, b, d - xd) - c)))
+-        ac[i], diff[i], bnd[i] = c, abs(A - c), AREA_CHECK_MARGIN * (s + xa) + fp * max(a, b) ** 2
+-    return ac, diff, bnd
++    lo, hi = np.zeros(n), np.zeros(n)
++    lb0 = np.zeros(n, dtype=bool)
++    how = np.empty(n, dtype=object)
++    for i in range(n):
++        a, b, dl = float(r1[i]), float(r2[i]), float(delta[i])
++        #  상자 끝점 (바깥으로 2 eps — 끝점 자체의 뺄셈 반올림)
++        A0, A1 = _iv_lin([(1.0, a - float(h1[i]), a - float(h1[i]))])[0], _iv_lin([(1.0, a + float(h1[i]), a + float(h1[i]))])[1]
++        B0, B1 = _iv_lin([(1.0, b - float(h2[i]), b - float(h2[i]))])[0], _iv_lin([(1.0, b + float(h2[i]), b + float(h2[i]))])[1]
++        D0, D1 = _iv_lin([(1.0, dl - float(hd[i]), dl - float(hd[i]))])[0], _iv_lin([(1.0, dl + float(hd[i]), dl + float(hd[i]))])[1]
++        A0, B0 = max(A0, 0.0), max(B0, 0.0)
++        f1 = _iv_lin([(2.0, A0, A1), (-1.0, D0, D1)])                 # 2r1 − δ
++        f2 = _iv_lin([(2.0, B0, B1), (-1.0, D0, D1)])                 # 2r2 − δ
++        f3 = _iv_lin([(2.0, A0, A1), (2.0, B0, B1), (-1.0, D0, D1)])  # 2r1 + 2r2 − δ
++        dd = _iv_lin([(1.0, A0, A1), (1.0, B0, B1), (-1.0, D0, D1)])  # d = r1 + r2 − δ
++        cap = np.pi * min(A1, B1) ** 2 * (1.0 + 4.0 * _EPS)           # 0 ≤ A ≤ π·min(r1, r2)² (교차원 반지름 ≤ 작은 구의 반지름)
++        fp = 32.0 * _EPS * np.pi * max(A1, B1) ** 2                   # 생산자 (덧셈형) 계산의 부동소수 상쇄 바닥
++        if D1 <= 0.0 or dd[1] <= 0.0 or f1[1] <= 0.0 or f2[1] <= 0.0:
++            lo[i], hi[i], how[i] = 0.0, fp, 'zero'                    # ① 상자 전체가 안 닿음 · d ≤ 0 · 포함 → A ≡ 0
++            continue
++        #  덧셈형 항별 상한 (d > 0 인 점에서 성립 — ③ · ④ 공통)
++        t1 = (2.0 * (A0 * A0 + B0 * B0), 2.0 * (A1 * A1 + B1 * B1))
++        u = (A0 * A0 - B1 * B1, A1 * A1 - B0 * B0)
++        nlo = 0.0 if u[0] <= 0.0 <= u[1] else min(u[0] * u[0], u[1] * u[1])
++        nhi = max(u[0] * u[0], u[1] * u[1])
++        dlo_pos = max(dd[0], 0.0)
++        add_hi = np.pi * (t1[1] - dlo_pos * dlo_pos - nlo / (dd[1] * dd[1])) / 4.0 + 8.0 * _EPS * np.pi * t1[1]
++        if D0 > 0.0 and f1[0] > 0.0 and f2[0] > 0.0 and dd[0] > 0.0:
++            #  ② · ③ 부분 겹침 내부 — ln A 편도함수 구간 (인수 역수의 합) 이 0 을 포함하지 않으면 꼭짓점 두 개가 정확한 최소 · 최대
++            inv = {k: (1.0 / v[1], 1.0 / v[0]) for k, v in (('d', (D0, D1)), ('1', f1), ('2', f2), ('3', f3), ('D', dd))}
++            gr1 = _iv_lin([(2.0, *inv['1']), (2.0, *inv['3']), (-2.0, *inv['D'])])
++            gr2 = _iv_lin([(2.0, *inv['2']), (2.0, *inv['3']), (-2.0, *inv['D'])])
++            gdl = _iv_lin([(1.0, *inv['d']), (-1.0, *inv['1']), (-1.0, *inv['2']), (-1.0, *inv['3']), (2.0, *inv['D'])])
++            if all(g[0] > 0.0 or g[1] < 0.0 for g in (gr1, gr2, gdl)):
++                up = [(A1 if gr1[0] > 0.0 else A0), (B1 if gr2[0] > 0.0 else B0), (D1 if gdl[0] > 0.0 else D0)]
++                dn = [(A0 if gr1[0] > 0.0 else A1), (B0 if gr2[0] > 0.0 else B1), (D0 if gdl[0] > 0.0 else D1)]
++
++                def _rel(x, y, z):                                    # 인수형 한 점 계산의 상대 오차 상한 (인수 형성 · 곱 · 나눗셈)
++                    dz = x + y - z
++                    return _EPS * (8.0 + (2 * x + abs(z)) / (2 * x - z) + (2 * y + abs(z)) / (2 * y - z)
++                                   + (2 * x + 2 * y + abs(z)) / (2 * x + 2 * y - z) + 2.0 * (x + y + abs(z)) / dz)
++                lo[i] = _lens_factored(*dn) * (1.0 - 2.0 * _rel(*dn)) - fp
++                hi[i] = _lens_factored(*up) * (1.0 + 2.0 * _rel(*up)) + fp
++                how[i] = 'corner'
++                continue
++            #  ③ 인수 구간 곱 ∩ 덧셈형 항별 구간 ∩ 기하 상한
++            p_lo = np.pi * D0 * f1[0] * f2[0] * f3[0] / (4.0 * dd[1] * dd[1]) * (1.0 - 16.0 * _EPS)
++            p_hi = np.pi * D1 * f1[1] * f2[1] * f3[1] / (4.0 * dd[0] * dd[0]) * (1.0 + 16.0 * _EPS)
++            t3hi = nhi / (dd[0] * dd[0])
++            add_lo = (np.pi * (t1[0] - dd[1] * dd[1] - t3hi) / 4.0
++                      - 8.0 * _EPS * np.pi * (t1[1] + dd[1] * dd[1] + t3hi))
++            lo[i] = max(p_lo, add_lo, 0.0) - fp
++            hi[i] = min(p_hi, add_hi, cap) + fp
++            how[i] = 'interval'
++            continue
++        #  ④ 인수가 상자 안에서 부호를 바꾼다 (포함 경계 · d → 0 · δ → 0 이 상자 안) — 그 점에서 A = 0 이 되므로 하한 0
++        lo[i], hi[i], lb0[i], how[i] = 0.0, min(add_hi, cap) + fp, True, 'boundary'
++    return np.maximum(lo, 0.0), hi, lb0, how
++
++
++def _contact_area_rows(r1, r2, delta, area):
++    """행마다 (A_calc, lo, hi, lb0, 초과 여부) — 규칙 `AREA_CHECK_TOL_RULE`.  A_calc = lens_geometry 의 교차 원판 (점 값 · 기술 통계용 ·
++    재구현 없음) · 초과 = 덤프 토큰 구간 [A ± h(A)] 이 포괄 구간 [lo, hi] 와 만나지 않는다 (LHSC-04 R2)."""
++    r1, r2 = np.asarray(r1, dtype=np.float64).ravel(), np.asarray(r2, dtype=np.float64).ravel()
++    delta, area = np.asarray(delta, dtype=np.float64).ravel(), np.asarray(area, dtype=np.float64).ravel()
++    ac = np.asarray([_intersection_disc_area(a, b, d) for a, b, d in zip(r1.tolist(), r2.tolist(), delta.tolist())],
++                    dtype=np.float64).reshape(r1.shape)
++    lo, hi, lb0, _how = _area_enclosure(r1, r2, delta)
++    ha = _half_unit(area)
++    beyond = (area - ha > hi) | (area + ha < lo)
++    return ac, lo, hi, lb0, beyond
+ 
+ 
+ def contact_area_check(ids, labels, radius, c1, c2, carea, delta, pflag):
+@@ -402,7 +480,7 @@ def contact_area_check(ids, labels, radius, c1, c2, carea, delta, pflag):
+ 
+     덤프 면적 `c_cpl[22]` (피복률의 분자 · 분모에 들어가는 값) 이 두 반지름과 δ = `c_cpl[23]` 로 다시 잰 **정확한 교차 원판**
+     (plastic_coverage 의 `_intersection_disc_area`) 과 토큰 반올림 안에서 같은가 — L1-04 의 "A_LIGG = 기하 교차 원판" 을 행마다
+-    확인한다.  허용폭 = `AREA_CHECK_TOL_RULE` (6 유효숫자 `%g` 토큰에서 행마다 전파).  주기 플래그 `c_cpl[9]` 0/1 과 쌍 종류
++    확인한다.  허용폭 = `AREA_CHECK_TOL_RULE` (6 유효숫자 `%g` 토큰의 반올림 상자 위 포괄 구간 · LHSC-04 R2).  주기 플래그 `c_cpl[9]` 0/1 과 쌍 종류
+     (AM-SE = 분자 · AM-AM = 분모 · SE-SE) 로 가른다.  고아 행 (id 가 원자 프레임에 없다) · 비유한 행은 비교에서 빼고 센다.
+     δ 열이 없으면 대조하지 않고 `NO_DELTA_COLUMN` 으로 적는다.
+     """
+@@ -424,23 +502,26 @@ def contact_area_check(ids, labels, radius, c1, c2, carea, delta, pflag):
+     dl, ad = np.asarray(delta, dtype=np.float64), np.asarray(carea, dtype=np.float64)
+     fin = ok & np.isfinite(r1) & np.isfinite(r2) & np.isfinite(dl) & np.isfinite(ad)
+     idx = np.flatnonzero(fin)
+-    _ac, diff, bnd = _contact_area_rows(r1[idx], r2[idx], dl[idx], ad[idx])
++    ac, elo, ehi, lb0, beyond = _contact_area_rows(r1[idx], r2[idx], dl[idx], ad[idx])
+     A = ad[idx]
+-    ratio = diff / np.where(bnd > 0, bnd, np.finfo(np.float64).tiny)
+-    dom = _in_domain_rows(r1[idx], r2[idx], dl[idx])            # LHSC-04 — 포함 경계 행은 초과 · 상대차 통계에서 뺀다 (따로 센다)
++    diff = np.abs(A - ac)
++    #  LHSC-04 R2 — 범위로 빼는 행은 없다: 모든 비교 행을 포괄 구간으로 **시험**하고, 검출력이 약한 행 (하한 0 · 폭 넓음) 은 따로 센다
++    wide = (A > 0) & ((ehi - elo) > AREA_CHECK_WIDE_REL * A)
++    gap = np.maximum.reduce([elo - (A + _half_unit(A)), (A - _half_unit(A)) - ehi, np.zeros_like(A)])
+ 
+     def _grp(m):
+         k = int(m.sum())
+-        md = m & dom
+-        p = md & (A > 0)
+-        rel, tol = diff[p] / A[p], bnd[p] / A[p]
+-        return dict(n_rows=k, n_area_dump_zero=int((m & (A == 0)).sum()),
+-                    n_boundary_excluded=int((m & ~dom).sum()),
++        p = m & (A > 0)
++        rel, wid = diff[p] / A[p], (ehi[p] - elo[p]) / A[p]
++        bx = m & beyond & (A > 0)
++        return dict(n_rows=k, n_tested=k, n_area_dump_zero=int((m & (A == 0)).sum()),
++                    n_beyond_tol=int((m & beyond).sum()),
++                    n_lower_bound_zero=int((m & lb0).sum()), n_wide_enclosure=int((m & wide).sum()),
++                    n_power_1pct=int((m & ~lb0 & ~wide & (A > 0)).sum()),
+                     rel_diff_max=(float(rel.max()) if rel.size else None),
+                     rel_diff_median=(float(np.median(rel)) if rel.size else None),
+-                    tol_rel_median=(float(np.median(tol)) if tol.size else None),
+-                    diff_over_tol_max=(float(ratio[md].max()) if md.any() else None),
+-                    n_beyond_tol=int((md & (diff > bnd)).sum()))
++                    enclosure_rel_width_median=(float(np.median(wid)) if wid.size else None),
++                    excess_rel_max=(float((gap[bx] / A[bx]).max()) if bx.any() else None))
+ 
+     every = np.ones(idx.size, dtype=bool)
+     if pflag is None:
+@@ -2114,17 +2195,16 @@ def selftest():
+             _At = np.asarray([_ida(a, b, d) for a, b, d in zip(_r1.tolist(), _r2.tolist(), _dd.tolist())])
+             _R1, _R2 = np.asarray([_g6(x) for x in _r1]), np.asarray([_g6(x) for x in _r2])
+             _D, _Ad = np.asarray([_g6(x) for x in _dd]), np.asarray([_g6(x) for x in _At])
+-            _ac, _df, _bd = _car(_R1, _R2, _D, _Ad)
+-            _, _df3, _bd3 = _car(_R1, _R2, _D, _Ad * (1.0 + 3e-5))
++            _ac, _lo21, _hi21, _lb21, _bz = _car(_R1, _R2, _D, _Ad)
++            _bz3 = _car(_R1, _R2, _D, _Ad * (1.0 + 3e-5))[4]
+             _Rs = _R1 * _R2 / (_R1 + _R2)
+-            _, _dfh, _bdh = _car(_R1, _R2, _D, np.asarray([_g6(x) for x in np.pi * _Rs * _D]))
+-            _tr = _bd / _Ad
+-            chk(f'㉑ item 2: 허용폭 — 반올림만 있는 합성 3000 행 초과 {int((_df > _bd).sum())} (0 이어야) · 최악 차/폭 {float((_df / _bd).max()):.3f}',
+-                int((_df > _bd).sum()) == 0)
+-            chk(f'㉑ item 2: 허용폭은 헐겁지 않다 — 상대 폭 중앙 {float(np.median(_tr)):.2e} < 1e-5 · 최대 {float(_tr.max()):.2e} < 2e-5',
++            _bzh = _car(_R1, _R2, _D, np.asarray([_g6(x) for x in np.pi * _Rs * _D]))[4]
++            _tr = ((_hi21 - _lo21) / 2.0 + _hu(_Ad)) / _Ad             # 실효 상대 반폭 = 포괄 반폭 + 덤프 토큰 반폭 (옛 B/A 와 같은 뜻)
++            chk(f'㉑ item 2: 허용폭 — 반올림만 있는 합성 3000 행 초과 {int(_bz.sum())} (0 이어야)', int(_bz.sum()) == 0)
++            chk(f'㉑ item 2: 허용폭은 헐겁지 않다 — 실효 상대 반폭 중앙 {float(np.median(_tr)):.2e} < 1e-5 · 최대 {float(_tr.max()):.2e} < 2e-5',
+                 float(np.median(_tr)) < 1e-5 and float(_tr.max()) < 2e-5)
+             chk('㉑ item 2: 판별력 — 면적 3e-5 상대 오차 · Hertz 면적 (π R* δ) 은 3000 행 전부 초과',
+-                int((_df3 > _bd3).sum()) == _n21 and int((_dfh > _bdh).sum()) == _n21)
++                int(_bz3.sum()) == _n21 and int(_bzh.sum()) == _n21)
+         else:
+             chk('㉑ item 2: 허용폭 함수 `_contact_area_rows` 가 있다', False)
+         chk('㉑ item 2: 반폭 = 0.5·10^(E−5) (%g 끝 0 을 지워도 형식 정밀도 6 으로 — 0.005 → 5e-9 · 0 → 0)',
+@@ -2145,6 +2225,7 @@ def selftest():
+         #    토큰 반올림 폭 안) 에서 순수 반올림 입력을 초과로 셌고 (Codex: 되읽은 토큰이 경계를 넘어 A_calc = 0 · diff/tol 1.18e6),
+         #    d → 0 (같은 경계 · 깊은 겹침) 에서는 B 가 면적보다 커 Hertz · 3e-5 치환도 못 잡았다.  계약: 그런 행은 "면적 불일치" 가 아니라
+         #    **지원 범위 밖 (containment_boundary)** 으로 따로 센다 (초과 수에서 뺀다 · 전역 상수 AREA_CHECK_MARGIN 은 그대로).
++        #  ⚠ R2 (09-30 밤) 에서 이 계약은 **바뀌었다** — 범위로 빼지 않고 반올림 상자 포괄 구간으로 시험한다 (아래 ㉑″ · 판정은 개정된 값).
+         #  LHSC-05: 옛 가드가 `from scripts import plastic_coverage as pc` (module == 'scripts') · `from importlib import import_module as
+         #    im; im("plastic_coverage")` (호출 이름이 별칭) 을 통과시켰다.  계약 (a): 순수 기하 `_intersection_disc_area` 는 별도 모듈
+         #    `lens_geometry` 로 — 수확기는 plastic_coverage 를 **어떤 모양으로도** 가져오지 않는다 (허용 이름 없음) · 가드는 패키지 경유 ·
+@@ -2163,22 +2244,22 @@ def selftest():
+         r21b = harvest(_a21b, _c21b, 3, 'areaboundary', mesh_path=_stl(tmp))
+         _ac21b = r21b.get('contact_area_check') or {}
+         _all21b, _bk21b = (_ac21b.get('all') or {}), (_ac21b.get('by_pair_kind') or {})
+-        chk('㉑′ ★ LHSC-04: 포함 경계 두 행 (반올림 오탐 · 깊은 겹침) 은 초과가 아니라 범위 밖으로 센다 — 전체: 비교 3 · 초과 1 (범위 안 1 % 행) · '
+-            '범위 밖 2 · AM-SE (초과 1 · 범위 밖 1) · SE-SE (초과 0 · 범위 밖 1)',
+-            _ac21b.get('status') == STATUS_OK and _ac21b.get('n_compared') == 3 and _all21b.get('n_beyond_tol') == 1
+-            and _all21b.get('n_boundary_excluded') == 2
+-            and (_bk21b.get('AM-SE') or {}).get('n_beyond_tol') == 1 and (_bk21b.get('AM-SE') or {}).get('n_boundary_excluded') == 1
+-            and (_bk21b.get('SE-SE') or {}).get('n_beyond_tol') == 0 and (_bk21b.get('SE-SE') or {}).get('n_boundary_excluded') == 1)
+-        chk('㉑′ LHSC-04: 지원 범위 규칙 = d − |r1 − r2| > 2h(r1) + 2h(r2) + h(δ) — 반올림 오탐 행 · 깊은 겹침 행은 밖, 범위 안 행은 안 · '
+-            '규칙 문자열에 적혀 있다',
+-            _idr is not None and list(_idr(np.array([2.0, 0.5, 2.0]), np.array([1.0, 0.5, 0.5]), np.array([2.00001, 0.999999, 0.05])))
+-            == [False, False, True] and 'containment' in str(_ac21b.get('tolerance_rule')))
+-        if _car is not None and _ida is not None and _idr is not None:
+-            chk(f'㉑′ LHSC-04: 무작위 3000 행 성적 (초과 0) 은 **범위 안**의 성적 — 범위 밖 행 {int((~_idr(_R1, _R2, _D)).sum())} (0 이어야) · '
+-                f'전역 보증으로 쓰지 않는다',
+-                int((~_idr(_R1, _R2, _D)).sum()) == 0)
++        chk('㉑′ ★ LHSC-04 (R2 에서 개정 — 범위로 빼지 않고 하한 0 으로 시험): 포함 경계 두 행 (반올림 · 깊은 겹침 Hertz 치환) 은 초과 0 · '
++            '전체: 비교 3 · 시험 3 · 초과 1 (1 % 행) · 하한 0 두 행 · AM-SE (초과 1 · 하한 0 1) · SE-SE (초과 0 · 하한 0 1)',
++            _ac21b.get('status') == STATUS_OK and _ac21b.get('n_compared') == 3 and _all21b.get('n_tested') == 3
++            and _all21b.get('n_beyond_tol') == 1 and _all21b.get('n_lower_bound_zero') == 2
++            and (_bk21b.get('AM-SE') or {}).get('n_beyond_tol') == 1 and (_bk21b.get('AM-SE') or {}).get('n_lower_bound_zero') == 1
++            and (_bk21b.get('SE-SE') or {}).get('n_beyond_tol') == 0 and (_bk21b.get('SE-SE') or {}).get('n_lower_bound_zero') == 1
++            and 'n_boundary_excluded' not in _all21b)
++        chk('㉑′ LHSC-04 R2: 옛 범위 분류 함수 `_in_domain_rows` 는 없다 (범위 밖으로 빼던 행도 이제 포괄 구간으로 시험한다)', _idr is None)
++        _aenc21 = globals().get('_area_enclosure')
++        if _car is not None and _ida is not None and _aenc21 is not None:
++            _how21 = _aenc21(_R1, _R2, _D)[3]
++            chk(f'㉑′ LHSC-04 R2: 합성 3000 행 (δ/r 1e-7–0.3) 은 전부 꼭짓점 방법 (편도함수 부호 일정 → 정확한 최소 · 최대) · '
++                f'방법별 {dict(zip(*np.unique(_how21.astype(str), return_counts=True)))}',
++                bool(np.all(_how21.astype(str) == 'corner')))
+         else:
+-            chk('㉑′ LHSC-04: 범위 판정 함수 `_in_domain_rows` 가 있다', False)
++            chk('㉑′ LHSC-04 R2: 포괄 구간 함수가 있다', False)
+         _bypass = ('from scripts import plastic_coverage as pc\npc.film_area_from_overlap(.1, .5)\n',
+                    'from importlib import import_module as im\npc = im("plastic_coverage")\n',
+                    'import importlib as il\nil.import_module("plastic_coverage")\n',
+@@ -2191,6 +2272,70 @@ def selftest():
+         chk('㉑′ LHSC-05 (a): 교차 원판은 순수 기하 모듈 `lens_geometry` 의 함수 — 수확기 소스에 plastic_coverage 사용 0 (소스 전체 AST)',
+             _ida is not None and getattr(_ida, '__module__', '') == 'lens_geometry' and not _pcn and not _pcb)
+ 
++        # ── ㉑″ ★ Codex LHSC-04 R2 (09-30 밤 재검증 · P2 · 1저자 비준 09-30 낮 "비준이야") — 반례 먼저 ──
++        #  R2 반례 (Codex `audit_delta.py` in_domain_rounding_false_alarm): 옛 지원 범위 **안** (gap 3.0e-8 > margin 2.5e-8) 에서 네 값을
++        #    정상 `%.6g` 로 적기만 했는데 초과 1 — 축별 탐침 합 B 는 **공동** 반올림 (다른 두 반지름이 한 토큰으로 합쳐짐 · (r1²−r2²)²/d²
++        #    항) 을 덮지 못한다 (diff/B 1.332).  "각 입력에 단조" · "포함 경계에서 불연속" · "구간 상한이 서지 않는다" 도 틀렸다.
++        #  계약: 허용폭 = 반올림 상자 (x ± h(x)) 위 A 의 **포괄 구간** — 덤프 토큰 구간 [A ± h(A)] 이 그것과 만나지 않을 때만 초과.
++        #    범위로 빼지 않는다 (상자가 δ ≤ 0 · d ≤ 0 · 포함에 닿으면 하한 0 으로 시험) · 시험 · 하한 0 · 폭 넓은 행 수를 따로 적는다.
++        _aenc = globals().get('_area_enclosure')
++        _cx = (0.0012345649, 0.0012345551, 0.00246909)                      # Codex 반례의 참 입력 (sim)
++        _cxA = _ida(*_cx) if _ida is not None else float('nan')
++        _cxr = (_cac([1, 2], ['AM_P', 'SE'], [_g6(_cx[0]), _g6(_cx[1])], [1], [2], [_g6(_cxA)], [_g6(_cx[2])], [0])
++                if _cac is not None else {})
++        _cxa = _cxr.get('all') or {}
++        chk(f'㉑″ ★ LHSC-04 R2: Codex 반례 (두 반지름 → 한 토큰 0.00123456 · δ 0.00246909 · A {_g6(_cxA):.6g} = 정상 반올림) 는 '
++            f'초과 0 · 시험 1 · 폭 넓은 행 1 (깊은 겹침 — 검출력이 약하다고 적는다) · 판정 {_cxa.get("n_beyond_tol")!r}',
++            _cxa.get('n_beyond_tol') == 0 and _cxa.get('n_tested') == 1 and _cxa.get('n_wide_enclosure') == 1)
++        if _aenc is not None and _ida is not None and _hu is not None:
++            #  포괄성: 여섯 영역 (보통 · 깊은 겹침 · 포함 경계 근처 · 거의 같은 반경 d → 0 · 극값 d² ≈ |r1² − r2²| 근처 · δ ≈ 0) 의
++            #  토큰 상자마다 꼭짓점 8 + 내부 24 점에서 잰 A (lens_geometry) 가 전부 [lo, hi] 안
++            _rg = np.random.default_rng(2104)
++            _bx = []
++            for _k in range(600):
++                _a, _b = _rg.uniform(4e-4, 6e-3), _rg.uniform(4e-4, 6e-3)
++                _kd = _k % 6
++                if _kd == 0:
++                    _dl = 10.0 ** _rg.uniform(-7.0, np.log10(0.3)) * min(_a, _b)
++                elif _kd == 1:
++                    _dl = _a + _b - 10.0 ** _rg.uniform(-9.0, -5.0)
++                elif _kd == 2:
++                    _dl = _a + _b - abs(_a - _b) * (1.0 + _rg.choice([-1.0, 1.0]) * 10.0 ** _rg.uniform(-7.0, -2.0))
++                elif _kd == 3:
++                    _b = _a * (1.0 + 10.0 ** _rg.uniform(-8.0, -5.0))
++                    _dl = _a + _b - 10.0 ** _rg.uniform(-9.0, -6.0)
++                elif _kd == 4:
++                    _dl = _a + _b - np.sqrt(abs(_a * _a - _b * _b)) * (1.0 + _rg.choice([-1.0, 1.0]) * 10.0 ** _rg.uniform(-6.0, -2.0))
++                else:
++                    _dl = _rg.uniform(-1e-7, 1e-7)
++                _bx.append((_g6(_a), _g6(_b), _g6(_dl)))
++            _B1, _B2, _BD = (np.asarray(c, dtype=np.float64) for c in zip(*_bx))
++            _enc = _aenc(_B1, _B2, _BD)
++            _lo, _hi = _enc[0], _enc[1]
++            _h1b, _h2b, _hdb = _hu(_B1), _hu(_B2), _hu(_BD)
++            _pts = [np.array(s, dtype=np.float64) for s in ((1, 1, 1), (1, 1, -1), (1, -1, 1), (1, -1, -1),
++                                                           (-1, 1, 1), (-1, 1, -1), (-1, -1, 1), (-1, -1, -1))]
++            _pts += [_rg.uniform(-1.0, 1.0, 3) for _ in range(24)]
++            _viol = []
++            for _i in range(_B1.size):
++                for _s in _pts:
++                    _A = _ida(_B1[_i] + _s[0] * _h1b[_i], _B2[_i] + _s[1] * _h2b[_i], _BD[_i] + _s[2] * _hdb[_i])
++                    if not (_lo[_i] <= _A <= _hi[_i]):
++                        _viol.append((_i % 6, _i))
++            chk(f'㉑″ LHSC-04 R2: 포괄 구간은 토큰 상자 안의 모든 점을 담는다 — 여섯 영역 × 100 상자 × 32 점 · 벗어남 {len(_viol)} '
++                f'(영역별 {sorted(set(v[0] for v in _viol))})', not _viol)
++            #  Codex 가 적은 구간 (손 계산 ≈ [2.66e-6, 4.79e-6]) 과 같은 자리 — 덤프 값 4.27727e-6 을 담고 기하 상한 π·min(r)² 을 넘지 않는다
++            _e1 = _aenc(np.array([_g6(_cx[0])]), np.array([_g6(_cx[1])]), np.array([_g6(_cx[2])]))
++            chk(f'㉑″ LHSC-04 R2: Codex 반례의 포괄 구간 [{float(_e1[0][0]):.4e}, {float(_e1[1][0]):.4e}] ∋ 4.27727e-6 · 하한 > 2.6e-6 · '
++                f'상한 ≤ π·(r+h)² (0 ≤ A ≤ π·min(r1, r2)² — 유한 상한은 늘 있다)',
++                float(_e1[0][0]) > 2.6e-6 and float(_e1[0][0]) <= 4.27727e-6 <= float(_e1[1][0])
++                and float(_e1[1][0]) <= np.pi * (_g6(_cx[0]) + 5e-9) ** 2 * (1 + 1e-12))
++        else:
++            chk('㉑″ LHSC-04 R2: 포괄 구간 함수 `_area_enclosure` 가 있다', False)
++        chk('㉑″ LHSC-04 R2: 규칙 문자열에 틀린 서술 ("단조" · "불연속" · 축별 탐침 합) 이 없고 포괄 구간 · 하한 0 · 폭 넓은 행을 적는다',
++            '단조' not in AREA_CHECK_TOL_RULE and '불연속' not in AREA_CHECK_TOL_RULE and 'Σ_{x∈r1,r2,δ}' not in AREA_CHECK_TOL_RULE
++            and '포괄' in AREA_CHECK_TOL_RULE and 'n_lower_bound_zero' in AREA_CHECK_TOL_RULE and 'n_wide_enclosure' in AREA_CHECK_TOL_RULE)
++
+         # ── ㉒ item 3 (09-29 · 1저자 "권고대로") — 접촉 행의 문: 중복 · 자기쌍 **거부** · 고아 행 **기록** · 반례 먼저 ──
+         #  ★ 반례: 같은 AM–SE 행이 두 번 — 옛 코드는 면적을 두 번 더해 AM_S 피복률 25 → 50 % 를 status OK 로 냈다.
+         _rows22 = [(1, 5.0, 5.0, 5.0, 1.0, 2), (90, 5.0, 5.0, 6.4, 0.5, 3)]
+-- 
+2.43.0
+
