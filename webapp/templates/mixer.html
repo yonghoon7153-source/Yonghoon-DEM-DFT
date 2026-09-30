@@ -482,12 +482,12 @@ function mxTab(t){
     res[p++] = 0;
     return res.subarray(0, p);
   }
-  function encodeGif(frames, w, h, delay) {
+  //  프레임을 받는 즉시 압축한다 (원본 RGBA 를 쌓지 않는다 — 옛 판은 전부 쌓았다가 한 번에 압축해 150 장 상한이 필요했다 · 1저자 09-30 밤)
+  //  팔레트 = 첫 프레임의 5 비트 히스토그램 상위 256 색 (상 색 · 배경 · 드럼 선 · 캡션이 첫 프레임에 다 있다) · 이후 프레임은 같은 LUT 로
+  function gifBegin(f0, w, h) {
     var cnt = new Uint32Array(32768), sr = new Float64Array(32768), sg = new Float64Array(32768), sb = new Float64Array(32768);
-    [frames[0], frames[frames.length >> 1], frames[frames.length - 1]].forEach(function (f) {
-      for (var p = 0; p < f.length; p += 4) { var b = ((f[p] >> 3) << 10) | ((f[p + 1] >> 3) << 5) | (f[p + 2] >> 3); cnt[b]++; sr[b] += f[p]; sg[b] += f[p + 1]; sb[b] += f[p + 2]; }
-    });
-    var bins = []; for (var b = 0; b < 32768; b++) if (cnt[b]) bins.push(b);
+    for (var p = 0; p < f0.length; p += 4) { var b = ((f0[p] >> 3) << 10) | ((f0[p + 1] >> 3) << 5) | (f0[p + 2] >> 3); cnt[b]++; sr[b] += f0[p]; sg[b] += f0[p + 1]; sb[b] += f0[p + 2]; }
+    var bins = []; for (var b1 = 0; b1 < 32768; b1++) if (cnt[b1]) bins.push(b1);
     bins.sort(function (a, c) { return cnt[c] - cnt[a]; }); bins = bins.slice(0, 256);
     var pal = new Uint8Array(768), np = bins.length;
     bins.forEach(function (bb, i) { pal[3 * i] = Math.round(sr[bb] / cnt[bb]); pal[3 * i + 1] = Math.round(sg[bb] / cnt[bb]); pal[3 * i + 2] = Math.round(sb[bb] / cnt[bb]); });
@@ -498,17 +498,17 @@ function mxTab(t){
       lut[b2] = best;
     }
     var ns = 'NETSCAPE2.0'.split('').map(function (ch) { return ch.charCodeAt(0); });
-    var chunks = [new Uint8Array([0x47, 0x49, 0x46, 0x38, 0x39, 0x61, w & 255, w >> 8, h & 255, h >> 8, 0xF7, 0, 0]), pal,
-                  new Uint8Array([0x21, 0xFF, 0x0B].concat(ns, [0x03, 0x01, 0, 0, 0]))];
-    frames.forEach(function (f) {
-      var ix = new Uint8Array(w * h);
-      for (var p = 0, q = 0; p < f.length; p += 4, q++) ix[q] = lut[((f[p] >> 3) << 10) | ((f[p + 1] >> 3) << 5) | (f[p + 2] >> 3)];
-      chunks.push(new Uint8Array([0x21, 0xF9, 0x04, 0x04, delay & 255, delay >> 8, 0, 0]),
-                  new Uint8Array([0x2C, 0, 0, 0, 0, w & 255, w >> 8, h & 255, h >> 8, 0]), lzwBlocks(ix, 8));
-    });
-    chunks.push(new Uint8Array([0x3B]));
-    return chunks;
+    return { w: w, h: h, lut: lut, n: 0, chunks: [new Uint8Array([0x47, 0x49, 0x46, 0x38, 0x39, 0x61, w & 255, w >> 8, h & 255, h >> 8, 0xF7, 0, 0]), pal,
+                                                  new Uint8Array([0x21, 0xFF, 0x0B].concat(ns, [0x03, 0x01, 0, 0, 0]))] };
   }
+  function gifAdd(g, f, delay) {
+    var ix = new Uint8Array(g.w * g.h), lut = g.lut;
+    for (var p = 0, q = 0; p < f.length; p += 4, q++) ix[q] = lut[((f[p] >> 3) << 10) | ((f[p + 1] >> 3) << 5) | (f[p + 2] >> 3)];
+    g.chunks.push(new Uint8Array([0x21, 0xF9, 0x04, 0x04, delay & 255, delay >> 8, 0, 0]),
+                  new Uint8Array([0x2C, 0, 0, 0, 0, g.w & 255, g.w >> 8, g.h & 255, g.h >> 8, 0]), lzwBlocks(ix, 8));
+    g.n++;
+  }
+  function gifEnd(g) { g.chunks.push(new Uint8Array([0x3B])); return g.chunks; }
   function captureFrame(G) {
     var src;
     if (view() === '3d') { var T = S.three; T.renderer.render(T.scene, T.cam); src = T.renderer.domElement; }
@@ -525,9 +525,9 @@ function mxTab(t){
     var stride = +$('bedGifStride').value, i0 = $('bedGifRange').value === 'cur' ? +$('bedFrame').value : 0, idx = [];
     for (var i = i0; i < R.steps.length; i += stride) idx.push(i);
     if (idx[idx.length - 1] !== R.steps.length - 1) idx.push(R.steps.length - 1);
-    if (idx.length > 150) { exmsg('프레임이 ' + idx.length + ' 장 — 150 장 이하가 되게 간격을 늘려 주세요', 'err'); return; }
+    if (idx.length > 1000) { exmsg('프레임이 ' + idx.length + ' 장 — 1000 장 이하가 되게 간격을 늘려 주세요', 'err'); return; }
     if (view() === '3d' && !S.three) { exmsg('3D 가 아직 없다', 'err'); return; }
-    var G = 640, frames = [], w = 0, h = 0, k = 0, keep = +$('bedFrame').value;
+    var G = 640, gif = null, w = 0, h = 0, k = 0, keep = +$('bedFrame').value, delay = Math.max(2, Math.round(+$('bedSpeed').value / 10));
     S.gif = { cancel: false }; $('bedGif').textContent = '■ GIF 멈춤';
     function done(note, kind) { S.gif = null; $('bedGif').textContent = '⬇ GIF'; exmsg(note, kind); }
     function next() {
@@ -538,16 +538,16 @@ function mxTab(t){
         var c = captureFrame(G);
         if (k === 0) { w = c.width; h = c.height; }
         if (c.width !== w || c.height !== h) { var c2 = document.createElement('canvas'); c2.width = w; c2.height = h; c2.getContext('2d').drawImage(c, 0, 0, w, h); c = c2; }
-        frames.push(c.getContext('2d').getImageData(0, 0, w, h).data); k++; next();
+        var rgba = c.getContext('2d').getImageData(0, 0, w, h).data;
+        if (!gif) gif = gifBegin(rgba, w, h);
+        gifAdd(gif, rgba, delay); k++; next();
       }, function () { done('GIF 중단 — 프레임을 못 읽음', 'err'); });
     }
     function finish() {
-      exmsg('GIF 인코딩 중… (' + frames.length + ' 프레임)');
-      setTimeout(function () {
-        var chunks = encodeGif(frames, w, h, Math.max(2, Math.round(+$('bedSpeed').value / 10))), blob = new Blob(chunks, { type: 'image/gif' });
-        download(blob, 'mixer_' + R.run + '_' + view() + '_f' + (idx[0] + 1) + '-' + (idx[idx.length - 1] + 1) + '_every' + stride + '.gif');
-        done('GIF ' + frames.length + ' 프레임 · ' + w + ' × ' + h + ' px · ' + (blob.size / 1e6).toFixed(1) + ' MB');
-      }, 30);
+      if (!gif) return done('GIF 프레임이 없다', 'err');
+      var blob = new Blob(gifEnd(gif), { type: 'image/gif' });
+      download(blob, 'mixer_' + R.run + '_' + view() + '_f' + (idx[0] + 1) + '-' + (idx[idx.length - 1] + 1) + '_every' + stride + '.gif');
+      done('GIF ' + gif.n + ' 프레임 · ' + w + ' × ' + h + ' px · ' + (blob.size / 1e6).toFixed(1) + ' MB');
     }
     next();
   }

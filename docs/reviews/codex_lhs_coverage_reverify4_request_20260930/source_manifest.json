@@ -1,0 +1,37 @@
+{
+ "schema": "reverify4_source_manifest/1",
+ "base": "220b1426ea39eae13f077e9f0585388f3eb61d08 (= 재검증 3 의 tip · Codex 후보 10 파일과 LF 정규화 뒤 동일)",
+ "tip": "9ab4bc3203e64930f860ec805ae9fb09fdb898f5",
+ "commits": [
+  "9ab4bc3203e64930f860ec805ae9fb09fdb898f5 run_pipeline — coverage v2 검증기: 피복률 · 장부 공존 불변식 넷 (Codex LHSC-03-R4 · 반례 먼저)",
+  "19c5738568367722ef174bcbf4ee4ed32cb38a0a LHS 수확기 item 2 — pin = 소스 · 식 자기 신고 (설치 빌드 인증 늘 False) · 로컬 재해시 · 지원 수치영역 (Codex LHSC-04-R4-PIN · R4-DOMAIN · 반례 먼저)"
+ ],
+ "patches": {
+  "0016-LHS-item-2-pin-False-Codex-LHSC-04-R4-PIN-R4-DOMAIN.patch": {
+   "bytes": 23624,
+   "sha256": "6592d70ccb06f9717ca9f2a7dfba81d5d7280538c64795df1f89427a86cab622"
+  },
+  "0017-run_pipeline-coverage-v2-Codex-LHSC-03-R4.patch": {
+   "bytes": 11316,
+   "sha256": "45b2f714068f6f0f855ad1a99c6bcee5ec02f81a925bdc437c90aa5a0c1c0111"
+  }
+ },
+ "changed_files_after_apply": {
+  "scripts/lhs_descriptor_harvest.py": {
+   "bytes": 211283,
+   "sha256": "9aca55190a6d6381aaf3580f87240d48de04d628909fa318f7093aa220911ec5",
+   "git_blob": "585fd17497e0211ec47e195d034d7e8e523ef961"
+  },
+  "webapp/app.py": {
+   "bytes": 594015,
+   "sha256": "3e9154e99e42f29e43284777c8447b5e7e0577c7ed7716a7f3eb8fafc9db8efe",
+   "git_blob": "8c0658ce1f4f41e5fbeb15ccc450c56a6e4ca94d"
+  },
+  "webapp/test_pipeline_provenance.py": {
+   "bytes": 123149,
+   "sha256": "837a8ece5ecc74f058f3bc59a3827caa27c93dcd3e39167041afdb4b324a3a05",
+   "git_blob": "7fc6f750062dabb518a4af5c79e3159033029d89"
+  }
+ },
+ "note": "해시는 이 파일을 만든 순간 실제로 계산한 값 · 줄끝 LF · git format-patch (base 위에 0016 → 0017)"
+}

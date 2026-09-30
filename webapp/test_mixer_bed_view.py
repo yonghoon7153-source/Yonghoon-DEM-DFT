@@ -343,7 +343,8 @@ def main():
     chk('⑰ 자동 재생 · 고화질 PNG · GIF 버튼이 있다',
         all(f'id="{i}"' in html for i in ('bedPlay', 'bedSpeed', 'bedLoop', 'bedPng', 'bedPngScale', 'bedGif', 'bedGifStride', 'bedGifRange')))
     chk('⑰b GIF 인코더는 페이지 안에 있다 (외부 GIF 라이브러리 · 워커 없음) · 내보낸 그림에 보기 전용 표지를 붙인다',
-        'function encodeGif(' in html and 'function lzwBlocks(' in html and 'gif.js' not in html and 'new Worker' not in html
+        'function gifBegin(' in html and 'function gifAdd(' in html and 'function lzwBlocks(' in html and 'gif.js' not in html
+        and 'new Worker' not in html and 'idx.length > 1000' in html and '150 장 이하' not in html
         and '보기 전용 — 판정은 3D 칸 M 으로만 · 원 = 실제 반경' in html)
     chk('⑰c 3D: 메시를 프레임 사이에 재사용하고 (InstancedMesh.dispose 로 GPU 버퍼를 푼다) · WebGL 컨텍스트가 끊기면 복구 / 재생성한다',
         'mesh.count = cnt' in html and 'o.dispose()' in html and 'webglcontextlost' in html and 'webglcontextrestored' in html
