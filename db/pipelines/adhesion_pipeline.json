@@ -138,6 +138,20 @@
    ]
   },
   {
+   "id": "CC",
+   "title": "graphite | graphite (C|C) — 덴카–덴카 · 덴카–VGCF · VGCF–VGCF",
+   "role": "DEM — C–C 접촉 (조성 확정: LPSCl | Ag–C (Ag + 덴카블랙) | VGCF) · 흑연 대조 (Wang 2015)",
+   "cell": "1×1 육방 · S33 6층 3|3 (12 원자) · M41 4층 + 그래핀 1 (10 원자) · S44 · M61 두께 · V2a 변형",
+   "machine": "V100 pw.x GPU",
+   "state": "done",
+   "state_text": "사전등록 게이트 전부 통과 · DEM 입력값 1저자 결정 대기",
+   "records": [
+    "db/properties/wad_cc_graphite_prereg_2026_09_28.json",
+    "db/properties/wad_cc_graphite_result_2026_09_30.json",
+    "db/raw/wad_cc_graphite_2026_09_28/cc_collect_repo_atm_2026_09_30.json"
+   ]
+  },
+  {
    "id": "P3",
    "title": "LiAg 합금 · 결함 흑연 (선택)",
    "role": "DEM 선택 항목",
@@ -543,6 +557,342 @@
    "records": [
     "db/inputs/wad_aprime_s3v2_2026_09_26/qe/jobs.json"
    ]
+  },
+  {
+   "id": "wad_cc_graphite_v100_2026_09_28",
+   "system": "CC",
+   "machine": "V100 (Tesla V100-PCIE-32GB) · QE 7.4.1 GPU · tmux wadcc · run_v100.sh · 코드 @61e41bc67",
+   "check": "selftest 52/52 (V100) · 1단계 9 이완 → 2단계 입력 생성 → 2단계 44 SCF · 레포에서 --verify_stage2 ✅ (pw.in sha 44 같음) · --collect --atm (V100 집계와 차이 0)",
+   "started": "2026-09-28 22:42",
+   "jobs": [
+    {
+     "dir": "CC_S33_AB_relax",
+     "state": "done",
+     "wall_s": 9442,
+     "peak_vram_mib": 15160
+    },
+    {
+     "dir": "CC_S33_SP_relax",
+     "state": "done",
+     "wall_s": 9011,
+     "peak_vram_mib": 15864
+    },
+    {
+     "dir": "CC_S33_AA_relax",
+     "state": "done",
+     "wall_s": 31851,
+     "peak_vram_mib": 15864
+    },
+    {
+     "dir": "CC_M41_AB_relax",
+     "state": "done",
+     "wall_s": 11086,
+     "peak_vram_mib": 14040
+    },
+    {
+     "dir": "CC_M41_SP_relax",
+     "state": "done",
+     "wall_s": 9428,
+     "peak_vram_mib": 14142
+    },
+    {
+     "dir": "CC_M41_AA_relax",
+     "state": "done",
+     "wall_s": 21002,
+     "peak_vram_mib": 17022
+    },
+    {
+     "dir": "CC_S44_AB_relax",
+     "state": "done",
+     "wall_s": 16352,
+     "peak_vram_mib": 17020
+    },
+    {
+     "dir": "CC_M61_AB_relax",
+     "state": "done",
+     "wall_s": 9723,
+     "peak_vram_mib": 14814
+    },
+    {
+     "dir": "CC_M41_AB_V2a_relax",
+     "state": "done",
+     "wall_s": 7190,
+     "peak_vram_mib": 17118
+    },
+    {
+     "dir": "CC_S33_AB_dft_bound",
+     "state": "done",
+     "wall_s": 7640,
+     "peak_vram_mib": 17112
+    },
+    {
+     "dir": "CC_S33_AB_dft_far",
+     "state": "done",
+     "wall_s": 6911,
+     "peak_vram_mib": 14336
+    },
+    {
+     "dir": "CC_S33_AB_far8",
+     "state": "done",
+     "wall_s": 8642,
+     "peak_vram_mib": 15288
+    },
+    {
+     "dir": "CC_S33_AB_Ed_m03",
+     "state": "done",
+     "wall_s": 8567,
+     "peak_vram_mib": 14200
+    },
+    {
+     "dir": "CC_S33_AB_Ed_p03",
+     "state": "done",
+     "wall_s": 570,
+     "peak_vram_mib": 1356
+    },
+    {
+     "dir": "CC_S33_AB_Ed_p06",
+     "state": "done",
+     "wall_s": 425,
+     "peak_vram_mib": 1356
+    },
+    {
+     "dir": "CC_S33_AB_G3_c2_bound",
+     "state": "done",
+     "wall_s": 684,
+     "peak_vram_mib": 1400
+    },
+    {
+     "dir": "CC_S33_AB_G3_c2_far_i",
+     "state": "done",
+     "wall_s": 283,
+     "peak_vram_mib": 1400
+    },
+    {
+     "dir": "CC_S33_AB_G3_c2_far_ii",
+     "state": "done",
+     "wall_s": 154,
+     "peak_vram_mib": 1400
+    },
+    {
+     "dir": "CC_S33_AB_G4_e70_bound",
+     "state": "done",
+     "wall_s": 393,
+     "peak_vram_mib": 1638
+    },
+    {
+     "dir": "CC_S33_AB_G4_k24_bound",
+     "state": "done",
+     "wall_s": 513,
+     "peak_vram_mib": 1360
+    },
+    {
+     "dir": "CC_S33_AB_G4_s05_bound",
+     "state": "done",
+     "wall_s": 343,
+     "peak_vram_mib": 1356
+    },
+    {
+     "dir": "CC_S33_AB_G4_e70_far",
+     "state": "done",
+     "wall_s": 217,
+     "peak_vram_mib": 1638
+    },
+    {
+     "dir": "CC_S33_AB_G4_k24_far",
+     "state": "done",
+     "wall_s": 266,
+     "peak_vram_mib": 1360
+    },
+    {
+     "dir": "CC_S33_AB_G4_s05_far",
+     "state": "done",
+     "wall_s": 130,
+     "peak_vram_mib": 1356
+    },
+    {
+     "dir": "CC_S33_SP_dft_bound",
+     "state": "done",
+     "wall_s": 249,
+     "peak_vram_mib": 1356
+    },
+    {
+     "dir": "CC_S33_SP_dft_far",
+     "state": "done",
+     "wall_s": 156,
+     "peak_vram_mib": 1356
+    },
+    {
+     "dir": "CC_S33_AA_dft_bound",
+     "state": "done",
+     "wall_s": 479,
+     "peak_vram_mib": 1352
+    },
+    {
+     "dir": "CC_S33_AA_dft_far",
+     "state": "done",
+     "wall_s": 197,
+     "peak_vram_mib": 1352
+    },
+    {
+     "dir": "CC_M41_AB_dft_bound",
+     "state": "done",
+     "wall_s": 360,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_AB_dft_far",
+     "state": "done",
+     "wall_s": 680,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_AB_far8",
+     "state": "done",
+     "wall_s": 248,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_AB_Ed_m03",
+     "state": "done",
+     "wall_s": 208,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_AB_Ed_p03",
+     "state": "done",
+     "wall_s": 255,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_AB_Ed_p06",
+     "state": "done",
+     "wall_s": 301,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_AB_G3_c2_bound",
+     "state": "done",
+     "wall_s": 177,
+     "peak_vram_mib": 1350
+    },
+    {
+     "dir": "CC_M41_AB_G3_c2_far_i",
+     "state": "done",
+     "wall_s": 667,
+     "peak_vram_mib": 1350
+    },
+    {
+     "dir": "CC_M41_AB_G3_c2_far_ii",
+     "state": "done",
+     "wall_s": 255,
+     "peak_vram_mib": 1350
+    },
+    {
+     "dir": "CC_M41_AB_G4_e70_bound",
+     "state": "done",
+     "wall_s": 194,
+     "peak_vram_mib": 1548
+    },
+    {
+     "dir": "CC_M41_AB_G4_k24_bound",
+     "state": "done",
+     "wall_s": 274,
+     "peak_vram_mib": 1324
+    },
+    {
+     "dir": "CC_M41_AB_G4_s05_bound",
+     "state": "done",
+     "wall_s": 434,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_AB_G4_e70_far",
+     "state": "done",
+     "wall_s": 407,
+     "peak_vram_mib": 1548
+    },
+    {
+     "dir": "CC_M41_AB_G4_k24_far",
+     "state": "done",
+     "wall_s": 248,
+     "peak_vram_mib": 1324
+    },
+    {
+     "dir": "CC_M41_AB_G4_s05_far",
+     "state": "done",
+     "wall_s": 190,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_SP_dft_bound",
+     "state": "done",
+     "wall_s": 245,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_SP_dft_far",
+     "state": "done",
+     "wall_s": 270,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_AA_dft_bound",
+     "state": "done",
+     "wall_s": 167,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_M41_AA_dft_far",
+     "state": "done",
+     "wall_s": 217,
+     "peak_vram_mib": 1322
+    },
+    {
+     "dir": "CC_S44_AB_dft_bound",
+     "state": "done",
+     "wall_s": 494,
+     "peak_vram_mib": 1534
+    },
+    {
+     "dir": "CC_S44_AB_dft_far",
+     "state": "done",
+     "wall_s": 285,
+     "peak_vram_mib": 1534
+    },
+    {
+     "dir": "CC_M61_AB_dft_bound",
+     "state": "done",
+     "wall_s": 334,
+     "peak_vram_mib": 1464
+    },
+    {
+     "dir": "CC_M61_AB_dft_far",
+     "state": "done",
+     "wall_s": 578,
+     "peak_vram_mib": 1464
+    },
+    {
+     "dir": "CC_M41_AB_V2a_dft_bound",
+     "state": "done",
+     "wall_s": 294,
+     "peak_vram_mib": 1330
+    },
+    {
+     "dir": "CC_M41_AB_V2a_dft_far",
+     "state": "done",
+     "wall_s": 281,
+     "peak_vram_mib": 1330
+    }
+   ],
+   "vram_total_mib": 32768,
+   "verdict": "✅ **사전등록 게이트 전부 통과** — G0 9/9 · 흑연 대조 S33_AB IN_BAND · G3 · G4 · 두께 PASS (라벨 없음). 짝 규칙 ② = **2체** (ATM 열은 민감도). 값·헤드라인은 결과 기록 `db/properties/wad_cc_graphite_result_2026_09_30.json` — DEM 입력값은 1저자 결정 대기.",
+   "records": [
+    "db/properties/wad_cc_graphite_result_2026_09_30.json",
+    "db/raw/wad_cc_graphite_2026_09_28/cc_collect_repo_atm_2026_09_30.json",
+    "db/raw/wad_cc_graphite_2026_09_28/verify_stage2_repo_2026_09_30.txt",
+    "tools/wad/cc_graphite.py"
+   ],
+   "vram_note": "VRAM 은 jobs_run.tsv 의 peak_total_MiB (V100 전용 · 다른 잡 없음)"
   }
  ],
  "reviews": [
@@ -1016,6 +1366,11 @@
    "date": "2026-09-30",
    "stage": "dft",
    "text": "V5 VASP 패키지 v6 **외주 발송** (1저자 '이거 외주 보냈엉') — 업로드 사본 sha256 5b7cad0b… = 보관 zip. 개정 3 v6.1 비준 → 결정 D-2026-09-27-wad-aprime-v5-vasp-route active (⚠ 비준 기록이 발송 뒤 · 발송을 비준으로 기록 · 빌더 selftest 194/194). 다음: 업체 파일럿 2 잡 반송 → --check → --seal_pp → 16 잡."
+  },
+  {
+   "date": "2026-09-30",
+   "stage": "dft",
+   "text": "**WAD-CC 흑연 C|C 결과 (V100 · 53 잡 rc 0)** — 사전등록 게이트 전부 통과 (G0 9/9 · 흑연 대조 S33_AB 0.350 J/m² IN_BAND [0.31, 0.47] · G3 · G4 · 두께 PASS). 헤드라인 C–C W_inc(S33, 2성) 0.332 J/m² [0.298, 0.350] · PBE+D3(BJ) 2체 조건부 · 이상 기저면 — 실험 0.37 ± 0.01 과 나란히. 짝 규칙 ② = 2체 (|W_inc − 0.37| 2체 0.038 · +ATM 0.113). 회수: V100 → kgy → worktree 커밋 e0bcbfa44 · --verify_stage2 ✅ · 레포 집계 = V100 집계. 다음: 1저자 DEM 입력값 (a)/(b)/(c) → DEM 회신 8 → 점착 DFT 마감. 결과 기록 `db/properties/wad_cc_graphite_result_2026_09_30.json`."
   }
  ],
  "related_decisions": [

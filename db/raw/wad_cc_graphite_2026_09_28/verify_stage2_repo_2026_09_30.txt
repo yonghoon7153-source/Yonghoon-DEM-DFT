@@ -1,0 +1,10 @@
+{
+ "jobs_same": true,
+ "pw_in_sha_mismatch": [],
+ "disk_vs_manifest_mismatch": [],
+ "structure_geometry_mismatch": [],
+ "status_same": true,
+ "code_sha_same_info": false,
+ "pass": true
+}
+✅ 같다
