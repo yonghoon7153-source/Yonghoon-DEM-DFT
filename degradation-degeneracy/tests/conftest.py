@@ -220,6 +220,8 @@ _GATED_ENTRYPOINT_MODULES = frozenset({
     "test_gate82_residuals", "tests.test_gate82_residuals",
     # ★ 84차 — 라운드 2a (hex64 closure 결속 · 시작 전 공통 경계 · record v2) 를 production `run_fit()` 으로 잰다.
     "test_gate84_round2a", "tests.test_gate84_round2a",
+    # ★ 85차 — G85-N1 사후 closure 구성원 결속을 production `run_fit()` 산출 (leaf → parent) 으로 잰다.
+    "test_gate85_closure_members", "tests.test_gate85_closure_members",
 })
 
 
