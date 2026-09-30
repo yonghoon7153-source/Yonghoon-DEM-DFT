@@ -1,0 +1,22 @@
+[Taichi] version 1.7.4, llvm 15.0.4, commit b4b956fd, linux, python 3.10.12
+  [mpm] --gpu-mem 28.0 > usable VRAM (total 32GB, free 31GB) → capping to 27.2GB
+[Taichi] Starting on arch=cuda
+  scaffold: 3330 fixed AM + 158763 real SE spheres → 11,764,691 SE cells (REAL positions, no targeting) (94,117,528 pts)
+  seed density: AM 53.5% / SE 27.6% / void 18.9%  (SE/solid 34.0%)  ρ_bulk≈3.12 g/cm³  bed 114.7µm
+  ⚠ [platen] --platen-mach 0.03 → step 0.004912 box/frame. WALL0→WALL_MIN 전 구간 하강에 최대 438 프레임이 필요한데 --frames 는 400 입니다.
+            (--platen-mach 는 --compact-to 0.25·vmax · servo 0.12·vmax · 제하 0.05·vmax 의 단위도 함께 줄입니다.)
+  [platen] v=0.1535 box/t.u.  V/c_P=0.030  V/c_S=0.21  step=0.00491 box/frame  (--platen-mach)   ⚠ 준정적 한계(V/c_P≤0.01) 초과 — --allow-fast-platen 로 승인됨 (결과에 기록)
+3D MPM  grid=288×288×643  pts=94117528  arch=cuda  scaffold (3330 fixed AM + SE se_dump REAL positions)  E_SE=1.53 σy=0.3 ν_SE=0.49 K_SE=25.50GPa  target=0.3 GPa  readout=wallP  xy=periodic
+  frame   0 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.000 | SEfl=0.0000 fAMcut=nan top%=nan)  porosity= 20.74%  wall_z=2.206  thickness=117.44µm
+  frame  20 [descend]  wallP= 0.0000 GPa (wallP=0.0000 σzz_vol=0.0000 AMr=+0.0000 f_AM_mpm=0.600 | SEfl=0.0000 fAMcut=1.000 top%=100)  porosity= 19.42%  wall_z=2.174  thickness=115.51µm
+  frame  40 [descend]  wallP= 0.0733 GPa (wallP=0.0733 σzz_vol=0.0050 AMr=+0.0768 f_AM_mpm=0.512 | SEfl=0.0000 fAMcut=1.000 top%=100 PINNED)  porosity= 18.47%  wall_z=2.150  thickness=114.17µm
+  frame  60 [descend]  wallP= 0.5938 GPa (wallP=0.5938 σzz_vol=0.0359 AMr=+0.5953 f_AM_mpm=0.501 | SEfl=0.0000 fAMcut=1.000 top%=100)  porosity= 17.51%  wall_z=2.125  thickness=112.84µm
+  frame  80 [descend]  wallP= 0.8283 GPa (wallP=0.8283 σzz_vol=0.0540 AMr=+0.8286 f_AM_mpm=0.500 | SEfl=0.0000 fAMcut=1.000 top%=100)  porosity= 16.52%  wall_z=2.100  thickness=111.50µm
+  frame 100 [descend]  wallP= 1.2160 GPa (wallP=1.2160 σzz_vol=0.0713 AMr=+1.2172 f_AM_mpm=0.500 | SEfl=0.0000 fAMcut=1.000 top%=100)  porosity= 15.51%  wall_z=2.076  thickness=110.17µm
+  frame 120 [servo]  wallP= 0.6378 GPa (wallP=0.6378 σzz_vol=0.0658 AMr=+0.6362 f_AM_mpm=0.499 | SEfl=0.0001 fAMcut=1.000 top%=100 PINNED)  porosity= 15.31%  wall_z=2.072  thickness=109.90µm
+  frame 140 [servo]  wallP= 0.6369 GPa (wallP=0.6369 σzz_vol=0.0658 AMr=+0.6352 f_AM_mpm=0.499 | SEfl=0.0001 fAMcut=1.000 top%=100 PINNED)  porosity= 15.31%  wall_z=2.072  thickness=109.90µm
+  ✓ held at target, relaxed (LIGGGHTS protocol)
+FINAL  wallP=0.6368 GPa  porosity(settled)=15.31%  porosity@target=15.31%  thickness=109.90µm   [MPM, scaffold, scaffold 3330AM se_dump(real), n_grid=288, pts=94117528, E_SE=1.53 ν_SE=0.49 K_SE=25.5GPa, readout=wallP, xy=periodic]
+  coverage AM_P by SE =  35.8%   (443,695/1,237,646 surface voxels)
+  coverage AM_S by SE =  34.4%   (2,212,677/6,436,094 surface voxels)
+  saved metrics → xfer_eq288r45_kit_ps_3_7_r45_g288_e1531.json  (68 fields)

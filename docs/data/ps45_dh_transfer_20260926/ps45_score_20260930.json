@@ -1,0 +1,115 @@
+{
+ "schema": "dh_transfer_score_v1",
+ "verdict": "PARTIAL",
+ "band_sd_mult": 2.0,
+ "band_ln": 0.15342915482715933,
+ "resid_sd_frozen": 0.07671457741357966,
+ "frozen": {
+  "a": -0.6831716211345115,
+  "b": -0.5753266994530273,
+  "r2": 0.9259895149425387,
+  "resid_sd": 0.07671457741357966,
+  "n_grid": 288,
+  "phi": 0.75,
+  "mach": 0.03,
+  "n": 5
+ },
+ "n_beds": 5,
+ "n_scored": 5,
+ "n_out": 1,
+ "n_hold": 0,
+ "max_abs_resid": 0.17336252914321207,
+ "mean_resid": 0.08785871199714212,
+ "low_res_kits": [
+  "kit_ps_0_10_r45",
+  "kit_ps_3_7_r45"
+ ],
+ "dx_um": 0.18871527777777777,
+ "min_cells": 3.5,
+ "rows": [
+  {
+   "kit": "kit_ps_0_10_r45",
+   "d_h_um": 0.48060156931124676,
+   "sigma_meas": 0.915524991641818,
+   "method": "interp",
+   "phi": 0.75,
+   "mach": 0.03,
+   "sigma_pred": 0.7698033810473354,
+   "cells": 2.546701968015438,
+   "low_res": true,
+   "resid": 0.17336252914321207,
+   "within": false,
+   "status": "out"
+  },
+  {
+   "kit": "kit_ps_3_7_r45",
+   "d_h_um": 0.5770000272576116,
+   "sigma_meas": 0.6882816705070592,
+   "method": "interp",
+   "phi": 0.75,
+   "mach": 0.03,
+   "sigma_pred": 0.692953757605854,
+   "cells": 3.0575162437937835,
+   "low_res": true,
+   "resid": -0.006765110165186581,
+   "within": true,
+   "status": "in"
+  },
+  {
+   "kit": "kit_ps_5_5_r45",
+   "d_h_um": 0.6691448874053282,
+   "sigma_meas": 0.7155318618205022,
+   "method": "interp",
+   "phi": 0.75,
+   "mach": 0.03,
+   "sigma_pred": 0.6363341673192593,
+   "cells": 3.545790755708087,
+   "low_res": false,
+   "resid": 0.11730228318279992,
+   "within": true,
+   "status": "in"
+  },
+  {
+   "kit": "kit_ps_7_3_r45",
+   "d_h_um": 0.7893373505956286,
+   "sigma_meas": 0.6104098667109055,
+   "method": "interp",
+   "phi": 0.75,
+   "mach": 0.03,
+   "sigma_pred": 0.578641893365982,
+   "cells": 4.182689180709127,
+   "low_res": false,
+   "resid": 0.0534468495436701,
+   "within": true,
+   "status": "in"
+  },
+  {
+   "kit": "kit_ps_10_0_r45",
+   "d_h_um": 1.0807081320820868,
+   "sigma_meas": 0.5347908944435754,
+   "method": "interp",
+   "phi": 0.75,
+   "mach": 0.03,
+   "sigma_pred": 0.4829575737198211,
+   "cells": 5.726659467150709,
+   "low_res": false,
+   "resid": 0.10194700828121517,
+   "within": true,
+   "status": "in"
+  }
+ ],
+ "inputs": {
+  "frozen": "/home/ubuntu/dem-score/docs/data/dh_frozen_288_phi075_20260926.json",
+  "dir": "/home/ubuntu/Yonghoon-DEM-DFT/se_curve",
+  "kits": [
+   "kit_ps_0_10_r45",
+   "kit_ps_3_7_r45",
+   "kit_ps_5_5_r45",
+   "kit_ps_7_3_r45",
+   "kit_ps_10_0_r45"
+  ],
+  "n_grid": 288,
+  "mach": 0.03,
+  "phi": 0.75
+ }
+}

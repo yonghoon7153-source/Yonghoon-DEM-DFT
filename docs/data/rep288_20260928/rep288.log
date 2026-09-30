@@ -1,0 +1,21 @@
+nohup: ignoring input
+[Taichi] version 1.7.4, llvm 15.0.4, commit b4b956fd, linux, python 3.10.12
+★ 준정적 한계 초과 (mach 0.03 > 0.01) — --allow-fast-platen 으로 승인하고 진행한다.
+  이 배치의 결과는 **상대 비교 전용**이다 (결과 JSON 의 quasistatic_violation=true).
+  절대값이 필요하면: --mach 0.01 (런타임 ~3x)
+venv: /home/ubuntu/Yonghoon-DEM-DFT/scripts/activate_dem.sh  ·  python: /home/ubuntu/runyourai/1/Yonghoon-DEM-DFT/venv/bin/python3
+설정: n_grid 288 · sub 160 · mach 0.03 · gpu-mem 28 · φ 0.72
+── 실행 이력 ────────────────────────────────────────────────
+   repo HEAD : 93a8b2d27
+   mpm3d     : md5 866c8ed1  ·  준정적 게이트 있음
+   QSFLAG    : --allow-fast-platen   ← ★ 배치 시작 시점에 고정 (중간 pull 시 어긋남)
+─────────────────────────────────────────────────────────────
+⚠ kit_ps_10_0: 겹침 미보정 (metrics 부재) — ε 목표가 ~1%p 밀린다
+### kit_ps_10_0  ε: 11.81  (1 점)  09:05:18
+=== rep288_kit_ps_10_0_g288_e1181  09:05:18
+  EXIT=0  wall=10382s
+⚠ kit_ps_7_3: 겹침 미보정 (metrics 부재) — ε 목표가 ~1%p 밀린다
+### kit_ps_7_3  ε: 11.73  (1 점)  11:58:33
+=== rep288_kit_ps_7_3_g288_e1173  11:58:33
+  EXIT=0  wall=9395s
+BATCH DONE 14:35:09  (이 n_grid 의 json 총 2 개, rc=0)

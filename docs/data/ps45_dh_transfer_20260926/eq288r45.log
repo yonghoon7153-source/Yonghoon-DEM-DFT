@@ -1,0 +1,55 @@
+nohup: ignoring input
+rep288 종료 2026-09-28T14:35:37+09:00
+[Taichi] version 1.7.4, llvm 15.0.4, commit b4b956fd, linux, python 3.10.12
+★ 준정적 한계 초과 (mach 0.03 > 0.01) — --allow-fast-platen 으로 승인하고 진행한다.
+  이 배치의 결과는 **상대 비교 전용**이다 (결과 JSON 의 quasistatic_violation=true).
+  절대값이 필요하면: --mach 0.01 (런타임 ~3x)
+venv: /home/ubuntu/Yonghoon-DEM-DFT/scripts/activate_dem.sh  ·  python: /home/ubuntu/runyourai/1/Yonghoon-DEM-DFT/venv/bin/python3
+설정: n_grid 288 · sub 160 · mach 0.03 · gpu-mem 28 · φ 0.66,0.72,0.81
+── 실행 이력 ────────────────────────────────────────────────
+   repo HEAD : 93a8b2d27
+   mpm3d     : md5 866c8ed1  ·  준정적 게이트 있음
+   QSFLAG    : --allow-fast-platen   ← ★ 배치 시작 시점에 고정 (중간 pull 시 어긋남)
+─────────────────────────────────────────────────────────────
+⚠ kit_ps_0_10_r45: 겹침 미보정 (metrics 부재) — ε 목표가 ~1%p 밀린다
+### kit_ps_0_10_r45  ε: 15.31 12.01 7.61  (3 점)  14:36:08
+=== eq288r45_kit_ps_0_10_r45_g288_e1531  14:36:08
+  EXIT=0  wall=11230s
+=== eq288r45_kit_ps_0_10_r45_g288_e1201  17:43:19
+  EXIT=0  wall=12208s
+=== eq288r45_kit_ps_0_10_r45_g288_e761  21:06:50
+  EXIT=0  wall=15121s
+⚠ kit_ps_3_7_r45: 겹침 미보정 (metrics 부재) — ε 목표가 ~1%p 밀린다
+### kit_ps_3_7_r45  ε: 15.31 12.01 7.61  (3 점)  01:19:06
+=== eq288r45_kit_ps_3_7_r45_g288_e1531  01:19:06
+  EXIT=0  wall=12359s
+=== eq288r45_kit_ps_3_7_r45_g288_e1201  04:45:06
+  EXIT=0  wall=13546s
+=== eq288r45_kit_ps_3_7_r45_g288_e761  08:30:53
+  EXIT=0  wall=15002s
+⚠ kit_ps_5_5_r45: 겹침 미보정 (metrics 부재) — ε 목표가 ~1%p 밀린다
+### kit_ps_5_5_r45  ε: 15.38 12.07 7.65  (3 점)  12:41:08
+=== eq288r45_kit_ps_5_5_r45_g288_e1538  12:41:08
+  EXIT=0  wall=11056s
+=== eq288r45_kit_ps_5_5_r45_g288_e1207  15:45:25
+  EXIT=0  wall=12689s
+=== eq288r45_kit_ps_5_5_r45_g288_e765  19:16:56
+  EXIT=0  wall=14208s
+⚠ kit_ps_7_3_r45: 겹침 미보정 (metrics 부재) — ε 목표가 ~1%p 밀린다
+### kit_ps_7_3_r45  ε: 15.35 12.04 7.63  (3 점)  23:14:07
+=== eq288r45_kit_ps_7_3_r45_g288_e1535  23:14:07
+  EXIT=0  wall=8667s
+=== eq288r45_kit_ps_7_3_r45_g288_e1204  01:38:35
+  EXIT=0  wall=11648s
+=== eq288r45_kit_ps_7_3_r45_g288_e763  04:52:44
+  EXIT=0  wall=13010s
+⚠ kit_ps_10_0_r45: 겹침 미보정 (metrics 부재) — ε 목표가 ~1%p 밀린다
+### kit_ps_10_0_r45  ε: 15.31 12.00 7.60  (3 점)  08:29:47
+=== eq288r45_kit_ps_10_0_r45_g288_e1531  08:29:47
+  EXIT=0  wall=9715s
+=== eq288r45_kit_ps_10_0_r45_g288_e1200  11:11:43
+  EXIT=0  wall=12076s
+=== eq288r45_kit_ps_10_0_r45_g288_e760  14:33:00
+  EXIT=0  wall=13440s
+BATCH DONE 18:17:01  (이 n_grid 의 json 총 31 개, rc=0)
+BATCH_RC=0 2026-09-30T18:17:01+09:00
