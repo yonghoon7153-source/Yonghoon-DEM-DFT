@@ -1,0 +1,550 @@
+{
+  "denominator_zero": {
+    "area_AM전체_SE_total_physics_v2": null,
+    "area_SE_SE_total_physics_v2": null,
+    "area_AM전체_AM_total_physics_v2": null,
+    "n_contacts_physics_v2": null,
+    "n_cap_branch_physics_v2": null,
+    "cap_conflict_n_physics_v2": null,
+    "cap_conflict_frac_physics_v2": null,
+    "cap_conflict_frac_cap_branch_physics_v2": null,
+    "cap_conflict_n_by_pair_physics_v2": null,
+    "A_binding_counts_total_physics_v2": null,
+    "A_binding_counts_AM_SE_physics_v2": null,
+    "am_denominator_physics_v2": {
+      "n_am": 4,
+      "n_free_surface_nonpositive": 4,
+      "n_coverage_clipped_100": 0,
+      "n_radius_invalid": 0
+    },
+    "n_contacts_unknown_id_physics_v2": 0,
+    "n_contact_failures_physics_v2": 0,
+    "coverage_status_physics_v2": "blank: AM 4 개의 v2 자유 표면 ≤ 0 = 분모 무효 (첫 사례 id 1: 4πr² 1.257e-05 − ΣA_v2(AM–AM) 1.885e-05 = -6.283e-06 — 이웃 AM–AM v2 면적 합이 표면적 이상) (LHSC-01)",
+    "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+    "h_film_sim_physics_v2": 5e-06
+  },
+  "nan_isolated_radius": {
+    "area_AM전체_SE_total_physics_v2": null,
+    "area_SE_SE_total_physics_v2": null,
+    "area_AM전체_AM_total_physics_v2": null,
+    "n_contacts_physics_v2": null,
+    "n_cap_branch_physics_v2": null,
+    "cap_conflict_n_physics_v2": null,
+    "cap_conflict_frac_physics_v2": null,
+    "cap_conflict_frac_cap_branch_physics_v2": null,
+    "cap_conflict_n_by_pair_physics_v2": null,
+    "A_binding_counts_total_physics_v2": null,
+    "A_binding_counts_AM_SE_physics_v2": null,
+    "am_denominator_physics_v2": {
+      "n_am": 1,
+      "n_free_surface_nonpositive": 0,
+      "n_coverage_clipped_100": 0,
+      "n_radius_invalid": 1
+    },
+    "n_contacts_unknown_id_physics_v2": 0,
+    "n_contact_failures_physics_v2": 0,
+    "coverage_status_physics_v2": "blank: AM 1 개의 반경 · 표면적이 유한 양수가 아니다 (첫 사례 id 1: r=nan) — 분모를 만들 수 없다 (LHSC-01)",
+    "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+    "h_film_sim_physics_v2": 5e-06
+  },
+  "valid_isolated_zero": {
+    "coverage_AM_mean_physics_v2": 0.0,
+    "coverage_AM_std_physics_v2": 0.0,
+    "area_AM전체_SE_total_physics_v2": 0.0,
+    "area_SE_SE_total_physics_v2": 0.0,
+    "area_AM전체_AM_total_physics_v2": 0.0,
+    "n_contacts_physics_v2": 0,
+    "n_cap_branch_physics_v2": 0,
+    "cap_conflict_n_physics_v2": 0,
+    "cap_conflict_frac_physics_v2": null,
+    "cap_conflict_frac_cap_branch_physics_v2": null,
+    "cap_conflict_n_by_pair_physics_v2": {
+      "AM_SE": 0,
+      "SE_SE": 0,
+      "AM_AM": 0,
+      "other": 0
+    },
+    "A_binding_counts_total_physics_v2": {
+      "elastic": 0,
+      "tabor": 0,
+      "volume": 0,
+      "geom": 0,
+      "none": 0
+    },
+    "A_binding_counts_AM_SE_physics_v2": {
+      "elastic": 0,
+      "tabor": 0,
+      "volume": 0,
+      "geom": 0,
+      "none": 0
+    },
+    "am_denominator_physics_v2": {
+      "n_am": 1,
+      "n_free_surface_nonpositive": 0,
+      "n_coverage_clipped_100": 0,
+      "n_radius_invalid": 0
+    },
+    "n_contacts_unknown_id_physics_v2": 0,
+    "n_contact_failures_physics_v2": 0,
+    "coverage_status_physics_v2": "ok",
+    "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+    "h_film_sim_physics_v2": 5e-06
+  },
+  "legacy_comparison": {
+    "base": {
+      "same": true,
+      "old": {
+        "full_metrics": "a2f0d685d1e1bcf5099289f85535338a181f069702cde916a559a0c13c933d08",
+        "per_am_csv": "3c27b2a79117eba0785a3c33d8d0bfe4728ddd6006aeb3a6a83d79f25056efa9",
+        "summary": "6624d46ed2ce5c9470f086d6f83b633dc9561ec0d0c9df012ade0c299a659ef1"
+      },
+      "new": {
+        "full_metrics": "a2f0d685d1e1bcf5099289f85535338a181f069702cde916a559a0c13c933d08",
+        "per_am_csv": "3c27b2a79117eba0785a3c33d8d0bfe4728ddd6006aeb3a6a83d79f25056efa9",
+        "summary": "6624d46ed2ce5c9470f086d6f83b633dc9561ec0d0c9df012ade0c299a659ef1"
+      }
+    },
+    "amam_x2": {
+      "same": true,
+      "old": {
+        "full_metrics": "23034c6aa1b0730f8ba85a9031147c90e4636ff3fcf1e00c210438f4311a5f51",
+        "per_am_csv": "0ee4f63c1b19bc4a7b54439cbcaaaf9c26f1e8d921b5e8b04ebbe83046cdb4f9",
+        "summary": "818c1f86ca63fbe461ff48c2f6dc40bfb8ff1ec844d6924ba971511d326a6f9a"
+      },
+      "new": {
+        "full_metrics": "23034c6aa1b0730f8ba85a9031147c90e4636ff3fcf1e00c210438f4311a5f51",
+        "per_am_csv": "0ee4f63c1b19bc4a7b54439cbcaaaf9c26f1e8d921b5e8b04ebbe83046cdb4f9",
+        "summary": "818c1f86ca63fbe461ff48c2f6dc40bfb8ff1ec844d6924ba971511d326a6f9a"
+      }
+    },
+    "nan_delta": {
+      "same": true,
+      "old": {
+        "full_metrics": "c92df45e93eb360c89a264792d93fc1c2930673da02c67b0965cad99136b043c",
+        "per_am_csv": "07b84117743cd4c811ee8f7861c62e5e1865172047fb2857580e6e254087b485",
+        "summary": "8be0bb7836d08752fc1aabc428708c03e55fa4949e71cf639d11c315fd9b288d"
+      },
+      "new": {
+        "full_metrics": "c92df45e93eb360c89a264792d93fc1c2930673da02c67b0965cad99136b043c",
+        "per_am_csv": "07b84117743cd4c811ee8f7861c62e5e1865172047fb2857580e6e254087b485",
+        "summary": "8be0bb7836d08752fc1aabc428708c03e55fa4949e71cf639d11c315fd9b288d"
+      }
+    },
+    "scale1": {
+      "same": true,
+      "old": {
+        "full_metrics": "2bf7169a982b7ec1cca9190a39e430e6433753ee8b43e3ee1ebb0546e5b68a72",
+        "per_am_csv": "483acfd9bd4909b9d3bb24cd0257b44986d4f85fa661a42fd0bbfc34d16d7157",
+        "summary": "6624d46ed2ce5c9470f086d6f83b633dc9561ec0d0c9df012ade0c299a659ef1"
+      },
+      "new": {
+        "full_metrics": "2bf7169a982b7ec1cca9190a39e430e6433753ee8b43e3ee1ebb0546e5b68a72",
+        "per_am_csv": "483acfd9bd4909b9d3bb24cd0257b44986d4f85fa661a42fd0bbfc34d16d7157",
+        "summary": "6624d46ed2ce5c9470f086d6f83b633dc9561ec0d0c9df012ade0c299a659ef1"
+      }
+    },
+    "no_ligg_col": {
+      "same": true,
+      "old": {
+        "full_metrics": "a116b596e0d3c55a521a6a0b2de8e720727041e530aa779c2d76fe4f4a205679",
+        "per_am_csv": "dadf5205b7690b6cc3ea66a205053385ffa8fed81135db965eba500e41abc7ce",
+        "summary": "fd288caba06bc208516970cc6a1f22c348503b5179b86e149d3633a298e95d51"
+      },
+      "new": {
+        "full_metrics": "a116b596e0d3c55a521a6a0b2de8e720727041e530aa779c2d76fe4f4a205679",
+        "per_am_csv": "dadf5205b7690b6cc3ea66a205053385ffa8fed81135db965eba500e41abc7ce",
+        "summary": "fd288caba06bc208516970cc6a1f22c348503b5179b86e149d3633a298e95d51"
+      }
+    },
+    "stale_v2": {
+      "same": true,
+      "old": {
+        "full_metrics": "a2f0d685d1e1bcf5099289f85535338a181f069702cde916a559a0c13c933d08",
+        "per_am_csv": "3c27b2a79117eba0785a3c33d8d0bfe4728ddd6006aeb3a6a83d79f25056efa9",
+        "summary": "6624d46ed2ce5c9470f086d6f83b633dc9561ec0d0c9df012ade0c299a659ef1"
+      },
+      "new": {
+        "full_metrics": "a2f0d685d1e1bcf5099289f85535338a181f069702cde916a559a0c13c933d08",
+        "per_am_csv": "3c27b2a79117eba0785a3c33d8d0bfe4728ddd6006aeb3a6a83d79f25056efa9",
+        "summary": "6624d46ed2ce5c9470f086d6f83b633dc9561ec0d0c9df012ade0c299a659ef1"
+      }
+    }
+  },
+  "wall_outside_numerator": {
+    "disc_area": 0.19871374960652743,
+    "contact_plane_z": -1.8678571428571429,
+    "expected_in_ROI_pct": 0.0,
+    "actual": {
+      "per_phase": {
+        "AM_P": [
+          null,
+          "N_A_PHASE_ABSENT"
+        ],
+        "AM_S": [
+          null,
+          "N_A_PHASE_ABSENT"
+        ],
+        "AM": [
+          31.626275510204017,
+          "OK"
+        ]
+      },
+      "total": [
+        31.626275510204017,
+        "OK"
+      ],
+      "counts": {
+        "AM_P": {
+          "n_particles": 0,
+          "n_valid": 0
+        },
+        "AM_S": {
+          "n_particles": 0,
+          "n_valid": 0
+        },
+        "AM": {
+          "n_particles": 1,
+          "n_valid": 1
+        }
+      },
+      "n_capped": 0,
+      "n_free_surface_invalid": 0
+    }
+  },
+  "wall_invalid_exclusion": {
+    "wallexcl": {
+      "per_phase": {
+        "AM_P": [
+          null,
+          "N_A_PHASE_ABSENT"
+        ],
+        "AM_S": [
+          null,
+          "N_A_PHASE_ABSENT"
+        ],
+        "AM": [
+          0.0,
+          "OK"
+        ]
+      },
+      "total": [
+        0.0,
+        "OK"
+      ],
+      "counts": {
+        "AM_P": {
+          "n_particles": 0,
+          "n_valid": 0
+        },
+        "AM_S": {
+          "n_particles": 0,
+          "n_valid": 0
+        },
+        "AM": {
+          "n_particles": 2,
+          "n_valid": 1
+        }
+      },
+      "n_capped": 0,
+      "n_free_surface_invalid": 1
+    },
+    "split": {
+      "rule": "floor: r - (z - z_floor) > 0 · plate: r - (plate_z - z) > 0 — overlap depth > 0; tangent (depth = 0) is not touching (sim units, no tolerance) · one implementation `_wall_contact` shared by wall_record, wall_touch and the coverage wall split",
+      "classes": [
+        "interior",
+        "touch",
+        "center_out",
+        "fully_out"
+      ],
+      "class_rule": "벽마다 dist = 중심–면 부호 거리 (안 +): fully_out = dist < −r · center_out = −r ≤ dist < 0 · touch = dist ≥ 0 이고 r − dist > 0 · interior = r − dist ≤ 0 (접선 포함) · any = 바닥 · 플래튼 중 심한 쪽",
+      "fields": "n = 입자 수 · n_valid / mean_pct = 오늘 식 (분모 4πr² − ΣA(AM–AM)) 의 유효 입자 수 · 평균 · n_valid_wallexcl / mean_wallexcl_pct = 벽 제외 (두 벽 cap 을 다 뺀 입자값 — floor · plate 분할도 같은 입자값을 묶는다) · blocked_frac_mean = 그 분할의 벽이 가린 면 / 4πr² 평균",
+      "walls": {
+        "floor": "SE 물성 평면 = 분리막 SE proxy (LHS-14) — 가린 면은 표현 전지에서 분리막에 눌린 면",
+        "plate": "SUS 플런저 (AM 물성 메시) — 가린 면은 SE 가 못 닿는 면"
+      },
+      "z_floor_sim": 0.0,
+      "plate_z_sim": 10.0,
+      "by_phase": {
+        "AM": {
+          "any": {
+            "interior": {
+              "n": 1,
+              "n_valid": 1,
+              "mean_pct": 0.0,
+              "n_valid_wallexcl": 1,
+              "mean_wallexcl_pct": 0.0,
+              "blocked_frac_mean": 0.0
+            },
+            "touch": {
+              "n": 0,
+              "n_valid": 0,
+              "mean_pct": null,
+              "n_valid_wallexcl": 0,
+              "mean_wallexcl_pct": null,
+              "blocked_frac_mean": null
+            },
+            "center_out": {
+              "n": 0,
+              "n_valid": 0,
+              "mean_pct": null,
+              "n_valid_wallexcl": 0,
+              "mean_wallexcl_pct": null,
+              "blocked_frac_mean": null
+            },
+            "fully_out": {
+              "n": 1,
+              "n_valid": 1,
+              "mean_pct": 25.0,
+              "n_valid_wallexcl": 0,
+              "mean_wallexcl_pct": null,
+              "blocked_frac_mean": 1.0
+            }
+          },
+          "floor": {
+            "interior": {
+              "n": 1,
+              "n_valid": 1,
+              "mean_pct": 0.0,
+              "n_valid_wallexcl": 1,
+              "mean_wallexcl_pct": 0.0,
+              "blocked_frac_mean": 0.0
+            },
+            "touch": {
+              "n": 0,
+              "n_valid": 0,
+              "mean_pct": null,
+              "n_valid_wallexcl": 0,
+              "mean_wallexcl_pct": null,
+              "blocked_frac_mean": null
+            },
+            "center_out": {
+              "n": 0,
+              "n_valid": 0,
+              "mean_pct": null,
+              "n_valid_wallexcl": 0,
+              "mean_wallexcl_pct": null,
+              "blocked_frac_mean": null
+            },
+            "fully_out": {
+              "n": 1,
+              "n_valid": 1,
+              "mean_pct": 25.0,
+              "n_valid_wallexcl": 0,
+              "mean_wallexcl_pct": null,
+              "blocked_frac_mean": 1.0
+            }
+          },
+          "plate": {
+            "interior": {
+              "n": 2,
+              "n_valid": 2,
+              "mean_pct": 12.5,
+              "n_valid_wallexcl": 1,
+              "mean_wallexcl_pct": 0.0,
+              "blocked_frac_mean": 0.0
+            },
+            "touch": {
+              "n": 0,
+              "n_valid": 0,
+              "mean_pct": null,
+              "n_valid_wallexcl": 0,
+              "mean_wallexcl_pct": null,
+              "blocked_frac_mean": null
+            },
+            "center_out": {
+              "n": 0,
+              "n_valid": 0,
+              "mean_pct": null,
+              "n_valid_wallexcl": 0,
+              "mean_wallexcl_pct": null,
+              "blocked_frac_mean": null
+            },
+            "fully_out": {
+              "n": 0,
+              "n_valid": 0,
+              "mean_pct": null,
+              "n_valid_wallexcl": 0,
+              "mean_wallexcl_pct": null,
+              "blocked_frac_mean": null
+            }
+          }
+        },
+        "total": {
+          "any": {
+            "interior": {
+              "n": 1,
+              "n_valid": 1,
+              "mean_pct": 0.0,
+              "n_valid_wallexcl": 1,
+              "mean_wallexcl_pct": 0.0,
+              "blocked_frac_mean": 0.0
+            },
+            "touch": {
+              "n": 0,
+              "n_valid": 0,
+              "mean_pct": null,
+              "n_valid_wallexcl": 0,
+              "mean_wallexcl_pct": null,
+              "blocked_frac_mean": null
+            },
+            "center_out": {
+              "n": 0,
+              "n_valid": 0,
+              "mean_pct": null,
+              "n_valid_wallexcl": 0,
+              "mean_wallexcl_pct": null,
+              "blocked_frac_mean": null
+            },
+            "fully_out": {
+              "n": 1,
+              "n_valid": 1,
+              "mean_pct": 25.0,
+              "n_valid_wallexcl": 0,
+              "mean_wallexcl_pct": null,
+              "blocked_frac_mean": 1.0
+            }
+          },
+          "floor": {
+            "interior": {
+              "n": 1,
+              "n_valid": 1,
+              "mean_pct": 0.0,
+              "n_valid_wallexcl": 1,
+              "mean_wallexcl_pct": 0.0,
+              "blocked_frac_mean": 0.0
+            },
+            "touch": {
+              "n": 0,
+              "n_valid": 0,
+              "mean_pct": null,
+              "n_valid_wallexcl": 0,
+              "mean_wallexcl_pct": null,
+              "blocked_frac_mean": null
+            },
+            "center_out": {
+              "n": 0,
+              "n_valid": 0,
+              "mean_pct": null,
+              "n_valid_wallexcl": 0,
+              "mean_wallexcl_pct": null,
+              "blocked_frac_mean": null
+            },
+            "fully_out": {
+              "n": 1,
+              "n_valid": 1,
+              "mean_pct": 25.0,
+              "n_valid_wallexcl": 0,
+              "mean_wallexcl_pct": null,
+              "blocked_frac_mean": 1.0
+            }
+          },
+          "plate": {
+            "interior": {
+              "n": 2,
+              "n_valid": 2,
+              "mean_pct": 12.5,
+              "n_valid_wallexcl": 1,
+              "mean_wallexcl_pct": 0.0,
+              "blocked_frac_mean": 0.0
+            },
+            "touch": {
+              "n": 0,
+              "n_valid": 0,
+              "mean_pct": null,
+              "n_valid_wallexcl": 0,
+              "mean_wallexcl_pct": null,
+              "blocked_frac_mean": null
+            },
+            "center_out": {
+              "n": 0,
+              "n_valid": 0,
+              "mean_pct": null,
+              "n_valid_wallexcl": 0,
+              "mean_wallexcl_pct": null,
+              "blocked_frac_mean": null
+            },
+            "fully_out": {
+              "n": 0,
+              "n_valid": 0,
+              "mean_pct": null,
+              "n_valid_wallexcl": 0,
+              "mean_wallexcl_pct": null,
+              "blocked_frac_mean": null
+            }
+          }
+        }
+      }
+    },
+    "n_orphan_rows": 0
+  },
+  "rounding_sweep": {
+    "seed": 20260930,
+    "n": 15000,
+    "false_alarms": 0,
+    "3e-5_missed": 0,
+    "first_miss": null
+  },
+  "hertz_miss": {
+    "r1": 0.0005,
+    "r2": 0.0005,
+    "delta": 0.000999999,
+    "hertz_dump": 7.85397e-07,
+    "calc": 7.85398163396663e-07,
+    "diff": 1.16339666307759e-12,
+    "tol": 1.5723676220916433e-06,
+    "caught": false,
+    "domain": "deep overlap, not evidence of corpus incidence"
+  },
+  "3e-5_miss_deep": {
+    "dump": 7.85422e-07,
+    "diff": 2.3836603336977228e-11,
+    "tol": 1.5723676220916433e-06,
+    "caught": false
+  },
+  "rounding_only_false_alarm": {
+    "true_r1_r2_delta": [
+      0.002,
+      0.0010000049,
+      0.0020000051
+    ],
+    "true_area": 5.90620349109427e-11,
+    "rounded_r1_r2_delta_area": [
+      0.002,
+      0.001,
+      0.00200001,
+      5.9062e-11
+    ],
+    "recalc_area": 0.0,
+    "diff": 5.9062e-11,
+    "tol": 5.0139289433549014e-17,
+    "diff_over_tol": 1177958.4566765053,
+    "caught": true,
+    "domain": "near containment boundary, no claim of observed corpus incidence"
+  },
+  "ast_guard": {
+    "from scripts import plastic_coverage as pc\npc.film_area_from_overlap(.1,.5)": {
+      "names": [],
+      "bad": [
+        "from scripts import plastic_coverage (줄 1) — 패키지 경유 모듈째 import"
+      ],
+      "actually_called": true
+    },
+    "from importlib import import_module as im\npc = im(\"plastic_coverage\")\npc.film_area_from_overlap(.1,.5)": {
+      "names": [],
+      "bad": [
+        "im('plastic_coverage') (줄 2) — 동적 import"
+      ],
+      "actually_called": true
+    }
+  },
+  "yield_jump": {
+    "onset": 0.0011314801509618464,
+    "delta_m": 2.828700377404616e-10,
+    "below_m2": 2.221656081215254e-16,
+    "at_m2": 1.2567613678604604e-17,
+    "ratio": 0.05656867318424044,
+    "sim_over_SI": 999999.9999998804,
+    "binding": "volume",
+    "conflict": true
+  }
+}

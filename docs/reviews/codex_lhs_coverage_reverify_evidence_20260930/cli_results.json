@@ -1,0 +1,20 @@
+{
+  "nested_archive_all": {
+    "rc": 0,
+    "stdout": "Processing 1 case(s) ...\n  [skip] nested: no atoms.csv/contacts.csv\n",
+    "stderr": "",
+    "v2_written": false
+  },
+  "external_case_id": {
+    "rc": 0,
+    "stdout": "Processing 1 case(s) ...\n\n=== external  (external) ===\n  → C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs_coverage_reverify_evidence_20260930\\cli_fixtures\\results\\external\\coverage_per_am.csv  (2 AM particles)\n  [path phys] hop_mean=0.1367  bottleneck=0.1367  g_path=0.136744\n  → C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs_coverage_reverify_evidence_20260930\\cli_fixtures\\results\\external\\full_metrics.json  (updated physics keys)\n    physics_v2: ok · AM-SE total 0.69 µm² · cap_conflict 2/9 (cap 가지) · 거부 0\n    AM-SE total: H=0.3  P=0.7  Δ=+118.4%\n    SE-SE total: H=0.4  P=2.0  Δ=+338.1%\n  external                           AM_P   H= 0.51%  P= 1.16%  Δ=+130.44%  n=1\n  external                           AM_S   H= 0.61%  P= 1.07%  Δ=+76.24%  n=1\n\n→ docs\\figures\\physics_regime\\coverage_hertz_vs_physics_summary.csv  (2 rows)\n\n=== Summary (Δ coverage % : physics vs hertzian) ===\n  AM_P   n_cases=  1  Δ median=+130.44%  mean=+130.44%  max=130.44%\n  AM_S   n_cases=  1  Δ median=+76.24%  mean=+76.24%  max= 76.24%\n\nVERDICT: Across all AM types and cases, coverage in Physics mode differs from Hertzian by mean Δ = +103.34%.\n",
+    "stderr": "",
+    "v2_written": true
+  },
+  "bad_json_case_dir": {
+    "rc": 0,
+    "stdout": "\n=== bad_json  (C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs_coverage_reverify_evidence_20260930\\cli_fixtures\\results\\bad_json) ===\n  → C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs_coverage_reverify_evidence_20260930\\cli_fixtures\\results\\bad_json\\coverage_per_am.csv  (2 AM particles)\n  [path phys] hop_mean=0.1367  bottleneck=0.1367  g_path=0.136744\n  [warn] failed to update full_metrics.json: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n  AM_P   H= 0.51%  P= 1.16%  Δ=+130.44%  n=1\n  AM_S   H= 0.61%  P= 1.07%  Δ=+76.24%  n=1\n",
+    "stderr": "",
+    "final_metrics_text": "{not json"
+  }
+}

@@ -1,0 +1,447 @@
+{
+  "actual_producer_controls": {
+    "healthy": true,
+    "denom_zero": {
+      "accepted": true,
+      "status": "blank: AM 4 개의 v2 자유 표면 ≤ 0 = 분모 무효 (첫 사례 id 2: 4πr² 1.257e-05 − ΣA_v2(AM–AM) 2.142e-05 = -8.851e-06 — 이웃 AM–AM v2 면적 합이 표면적 이상) (LHSC-01)",
+      "diag": {
+        "n_am": 5,
+        "n_free_surface_nonpositive": 4,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      },
+      "cov": null,
+      "area": null
+    },
+    "nan_radius": {
+      "accepted": true,
+      "status": "blank: AM 1 개의 반경 · 표면적이 유한 양수가 아니다 (첫 사례 id 14: r=nan) — 분모를 만들 수 없다 (LHSC-01)",
+      "diag": {
+        "n_am": 3,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 1
+      },
+      "cov": null,
+      "area": null
+    },
+    "isolated_zero": {
+      "accepted": true,
+      "status": "ok",
+      "diag": {
+        "n_am": 3,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      },
+      "cov": 0.812,
+      "area": 0.69
+    },
+    "nan_delta": {
+      "accepted": true,
+      "status": "blank: 1 접촉을 film_area_physics_v2 가 거부했다 — 첫 사례 1–5: ValueError: delta 비유한 (nan)",
+      "diag": {
+        "n_am": 2,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      },
+      "cov": null,
+      "area": null
+    },
+    "scale1": {
+      "accepted": true,
+      "status": "blank: scale=1 ≠ 1000 — 이 코드의 두 길이 규약 (µm = sim×scale · SI = sim/scale) 이 1000 에서만 같아 5 nm 막을 덤프 단위로 옮길 수 없다",
+      "diag": {
+        "n_am": 2,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      },
+      "cov": null,
+      "area": null
+    },
+    "no_ligg_col": {
+      "accepted": true,
+      "status": "blank: contacts.csv 에 contact_area 열이 없다",
+      "diag": {
+        "n_am": 2,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      },
+      "cov": null,
+      "area": null
+    },
+    "se_only": {
+      "accepted": true,
+      "status": "ok",
+      "diag": {
+        "n_am": 0,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      },
+      "has_cov": false,
+      "area": 0.0
+    }
+  },
+  "schema_mutations": {
+    "missing_n_am_and_coverage": {
+      "accepted": true,
+      "required_stage_ok": true,
+      "pipeline_status": "done"
+    },
+    "negative_n_am_and_no_coverage": {
+      "accepted": true
+    },
+    "nan_n_am_and_no_coverage": {
+      "accepted": true
+    },
+    "ok_but_invalid_denom_count": {
+      "accepted": true
+    },
+    "area_nan": {
+      "accepted": true,
+      "required_stage_ok": true,
+      "pipeline_status": "done"
+    },
+    "area_string": {
+      "accepted": true
+    },
+    "area_negative": {
+      "accepted": true
+    },
+    "coverage_negative": {
+      "accepted": true
+    },
+    "ok_but_contact_failures": {
+      "accepted": true
+    },
+    "blank_with_positive_values": {
+      "accepted": true
+    }
+  },
+  "in_domain_rounding_false_alarm": {
+    "true_r1_r2_delta": [
+      0.0012345649,
+      0.0012345551,
+      0.00246909
+    ],
+    "true_area": 4.27726549199114e-06,
+    "tokens": [
+      0.00123456,
+      0.00123456,
+      0.00246909,
+      4.27727e-06
+    ],
+    "in_domain": true,
+    "gap": 2.9999999999821836e-08,
+    "margin": 2.5e-08,
+    "recalc": 4.78822197968105e-06,
+    "diff": 5.109519796810495e-07,
+    "tolerance": 3.834830916160681e-07,
+    "diff_over_tol": 1.3323976750260462,
+    "contact_area_check": {
+      "role": "진단 기록 — 거부하지 않는다 · 피복률 값에 쓰지 않는다 (item 2)",
+      "reference": "lens_geometry.intersection_disc_area(r1, r2, delta = c_cpl[23]) — 두 구의 교차 원판 (L1-04 A_LIGG)",
+      "compared_to": "c_cpl[22]",
+      "delta_col": "c_cpl[23]",
+      "flag_col": "c_cpl[9]",
+      "tolerance_rule": "행마다 |A_dump − A_calc| > B 이면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  지원 범위 (LHSC-04 · 09-30) = d − |r1 − r2| > 2h(r1) + 2h(r2) + h(δ) (d = r1 + r2 − δ · 포함 경계 = 한 구가 다른 구 안 · d → 0 의 깊은 겹침도 같은 경계): 그 밖의 행은 면적이 r1 − r2 에 불연속 · 비단조라 축별 탐침 상한이 서지 않으므로 초과가 아니라 containment_boundary (n_boundary_excluded) 로 따로 센다 — 범위 밖 행의 불일치 · 치환은 이 진단이 판정하지 않는다.  A_calc = lens_geometry.intersection_disc_area(r1, r2, δ = c_cpl[23]) · B = 1.001·[Σ_{x∈r1,r2,δ} max(|A(x+h_x) − A_calc|, |A(x−h_x) − A_calc|) + h(A_dump)] + 32·eps·π·max(r1,r2)² · h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 (E = 십진 지수 · 끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  교차 원판은 r1 · r2 · δ 각각에 단조라 (해석 · 20 만 표본 확인) 축마다 ±h 한쪽 최댓값이 그 토큰 반올림의 상한 · 합 = 네 토큰 (r1 · r2 · δ · A) 이 한꺼번에 가장 나쁘게 겹친 경우 · 1.001 = 2 차 교차항 여유 · 32·eps 항 = 교차원 식의 부동소수 상쇄 바닥 (δ/r < 2e-7 · 반지름비 > 7 에서 1e-6 급 잡음 — 양쪽 계산 몫)",
+      "sigfig_assumed": 6,
+      "n_rows": 1,
+      "status": "OK",
+      "n_compared": 1,
+      "n_orphan_rows_skipped": 0,
+      "n_nonfinite_skipped": 0,
+      "n_values_beyond_6sig": {
+        "area": 0,
+        "delta": 0,
+        "radius": 0
+      },
+      "all": {
+        "n_rows": 1,
+        "n_area_dump_zero": 0,
+        "n_boundary_excluded": 0,
+        "rel_diff_max": 0.11945749968579245,
+        "rel_diff_median": 0.11945749968579245,
+        "tol_rel_median": 0.08965604032854323,
+        "diff_over_tol_max": 1.3323976750260462,
+        "n_beyond_tol": 1
+      },
+      "by_periodic_flag": {
+        "0": {
+          "n_rows": 1,
+          "n_area_dump_zero": 0,
+          "n_boundary_excluded": 0,
+          "rel_diff_max": 0.11945749968579245,
+          "rel_diff_median": 0.11945749968579245,
+          "tol_rel_median": 0.08965604032854323,
+          "diff_over_tol_max": 1.3323976750260462,
+          "n_beyond_tol": 1
+        },
+        "1": {
+          "n_rows": 0,
+          "n_area_dump_zero": 0,
+          "n_boundary_excluded": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "tol_rel_median": null,
+          "diff_over_tol_max": null,
+          "n_beyond_tol": 0
+        }
+      },
+      "by_pair_kind": {
+        "AM-SE": {
+          "n_rows": 1,
+          "n_area_dump_zero": 0,
+          "n_boundary_excluded": 0,
+          "rel_diff_max": 0.11945749968579245,
+          "rel_diff_median": 0.11945749968579245,
+          "tol_rel_median": 0.08965604032854323,
+          "diff_over_tol_max": 1.3323976750260462,
+          "n_beyond_tol": 1
+        }
+      }
+    },
+    "decimal60_area": "0.00000427726549198264141530053115935633287468282023083507967835589",
+    "decimal60_6sig_token": "0.00000427727"
+  },
+  "old_examples_at_production_entry": {
+    "rounding": {
+      "role": "진단 기록 — 거부하지 않는다 · 피복률 값에 쓰지 않는다 (item 2)",
+      "reference": "lens_geometry.intersection_disc_area(r1, r2, delta = c_cpl[23]) — 두 구의 교차 원판 (L1-04 A_LIGG)",
+      "compared_to": "c_cpl[22]",
+      "delta_col": "c_cpl[23]",
+      "flag_col": "c_cpl[9]",
+      "tolerance_rule": "행마다 |A_dump − A_calc| > B 이면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  지원 범위 (LHSC-04 · 09-30) = d − |r1 − r2| > 2h(r1) + 2h(r2) + h(δ) (d = r1 + r2 − δ · 포함 경계 = 한 구가 다른 구 안 · d → 0 의 깊은 겹침도 같은 경계): 그 밖의 행은 면적이 r1 − r2 에 불연속 · 비단조라 축별 탐침 상한이 서지 않으므로 초과가 아니라 containment_boundary (n_boundary_excluded) 로 따로 센다 — 범위 밖 행의 불일치 · 치환은 이 진단이 판정하지 않는다.  A_calc = lens_geometry.intersection_disc_area(r1, r2, δ = c_cpl[23]) · B = 1.001·[Σ_{x∈r1,r2,δ} max(|A(x+h_x) − A_calc|, |A(x−h_x) − A_calc|) + h(A_dump)] + 32·eps·π·max(r1,r2)² · h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 (E = 십진 지수 · 끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  교차 원판은 r1 · r2 · δ 각각에 단조라 (해석 · 20 만 표본 확인) 축마다 ±h 한쪽 최댓값이 그 토큰 반올림의 상한 · 합 = 네 토큰 (r1 · r2 · δ · A) 이 한꺼번에 가장 나쁘게 겹친 경우 · 1.001 = 2 차 교차항 여유 · 32·eps 항 = 교차원 식의 부동소수 상쇄 바닥 (δ/r < 2e-7 · 반지름비 > 7 에서 1e-6 급 잡음 — 양쪽 계산 몫)",
+      "sigfig_assumed": 6,
+      "n_rows": 1,
+      "status": "OK",
+      "n_compared": 1,
+      "n_orphan_rows_skipped": 0,
+      "n_nonfinite_skipped": 0,
+      "n_values_beyond_6sig": {
+        "area": 0,
+        "delta": 0,
+        "radius": 0
+      },
+      "all": {
+        "n_rows": 1,
+        "n_area_dump_zero": 0,
+        "n_boundary_excluded": 1,
+        "rel_diff_max": null,
+        "rel_diff_median": null,
+        "tol_rel_median": null,
+        "diff_over_tol_max": null,
+        "n_beyond_tol": 0
+      },
+      "by_periodic_flag": {
+        "0": {
+          "n_rows": 1,
+          "n_area_dump_zero": 0,
+          "n_boundary_excluded": 1,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "tol_rel_median": null,
+          "diff_over_tol_max": null,
+          "n_beyond_tol": 0
+        },
+        "1": {
+          "n_rows": 0,
+          "n_area_dump_zero": 0,
+          "n_boundary_excluded": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "tol_rel_median": null,
+          "diff_over_tol_max": null,
+          "n_beyond_tol": 0
+        }
+      },
+      "by_pair_kind": {
+        "AM-SE": {
+          "n_rows": 1,
+          "n_area_dump_zero": 0,
+          "n_boundary_excluded": 1,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "tol_rel_median": null,
+          "diff_over_tol_max": null,
+          "n_beyond_tol": 0
+        }
+      }
+    },
+    "hertz_deep": {
+      "role": "진단 기록 — 거부하지 않는다 · 피복률 값에 쓰지 않는다 (item 2)",
+      "reference": "lens_geometry.intersection_disc_area(r1, r2, delta = c_cpl[23]) — 두 구의 교차 원판 (L1-04 A_LIGG)",
+      "compared_to": "c_cpl[22]",
+      "delta_col": "c_cpl[23]",
+      "flag_col": "c_cpl[9]",
+      "tolerance_rule": "행마다 |A_dump − A_calc| > B 이면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  지원 범위 (LHSC-04 · 09-30) = d − |r1 − r2| > 2h(r1) + 2h(r2) + h(δ) (d = r1 + r2 − δ · 포함 경계 = 한 구가 다른 구 안 · d → 0 의 깊은 겹침도 같은 경계): 그 밖의 행은 면적이 r1 − r2 에 불연속 · 비단조라 축별 탐침 상한이 서지 않으므로 초과가 아니라 containment_boundary (n_boundary_excluded) 로 따로 센다 — 범위 밖 행의 불일치 · 치환은 이 진단이 판정하지 않는다.  A_calc = lens_geometry.intersection_disc_area(r1, r2, δ = c_cpl[23]) · B = 1.001·[Σ_{x∈r1,r2,δ} max(|A(x+h_x) − A_calc|, |A(x−h_x) − A_calc|) + h(A_dump)] + 32·eps·π·max(r1,r2)² · h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 (E = 십진 지수 · 끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  교차 원판은 r1 · r2 · δ 각각에 단조라 (해석 · 20 만 표본 확인) 축마다 ±h 한쪽 최댓값이 그 토큰 반올림의 상한 · 합 = 네 토큰 (r1 · r2 · δ · A) 이 한꺼번에 가장 나쁘게 겹친 경우 · 1.001 = 2 차 교차항 여유 · 32·eps 항 = 교차원 식의 부동소수 상쇄 바닥 (δ/r < 2e-7 · 반지름비 > 7 에서 1e-6 급 잡음 — 양쪽 계산 몫)",
+      "sigfig_assumed": 6,
+      "n_rows": 1,
+      "status": "OK",
+      "n_compared": 1,
+      "n_orphan_rows_skipped": 0,
+      "n_nonfinite_skipped": 0,
+      "n_values_beyond_6sig": {
+        "area": 0,
+        "delta": 0,
+        "radius": 0
+      },
+      "all": {
+        "n_rows": 1,
+        "n_area_dump_zero": 0,
+        "n_boundary_excluded": 1,
+        "rel_diff_max": null,
+        "rel_diff_median": null,
+        "tol_rel_median": null,
+        "diff_over_tol_max": null,
+        "n_beyond_tol": 0
+      },
+      "by_periodic_flag": {
+        "0": {
+          "n_rows": 1,
+          "n_area_dump_zero": 0,
+          "n_boundary_excluded": 1,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "tol_rel_median": null,
+          "diff_over_tol_max": null,
+          "n_beyond_tol": 0
+        },
+        "1": {
+          "n_rows": 0,
+          "n_area_dump_zero": 0,
+          "n_boundary_excluded": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "tol_rel_median": null,
+          "diff_over_tol_max": null,
+          "n_beyond_tol": 0
+        }
+      },
+      "by_pair_kind": {
+        "AM-SE": {
+          "n_rows": 1,
+          "n_area_dump_zero": 0,
+          "n_boundary_excluded": 1,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "tol_rel_median": null,
+          "diff_over_tol_max": null,
+          "n_beyond_tol": 0
+        }
+      }
+    },
+    "3e-5_deep": {
+      "role": "진단 기록 — 거부하지 않는다 · 피복률 값에 쓰지 않는다 (item 2)",
+      "reference": "lens_geometry.intersection_disc_area(r1, r2, delta = c_cpl[23]) — 두 구의 교차 원판 (L1-04 A_LIGG)",
+      "compared_to": "c_cpl[22]",
+      "delta_col": "c_cpl[23]",
+      "flag_col": "c_cpl[9]",
+      "tolerance_rule": "행마다 |A_dump − A_calc| > B 이면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  지원 범위 (LHSC-04 · 09-30) = d − |r1 − r2| > 2h(r1) + 2h(r2) + h(δ) (d = r1 + r2 − δ · 포함 경계 = 한 구가 다른 구 안 · d → 0 의 깊은 겹침도 같은 경계): 그 밖의 행은 면적이 r1 − r2 에 불연속 · 비단조라 축별 탐침 상한이 서지 않으므로 초과가 아니라 containment_boundary (n_boundary_excluded) 로 따로 센다 — 범위 밖 행의 불일치 · 치환은 이 진단이 판정하지 않는다.  A_calc = lens_geometry.intersection_disc_area(r1, r2, δ = c_cpl[23]) · B = 1.001·[Σ_{x∈r1,r2,δ} max(|A(x+h_x) − A_calc|, |A(x−h_x) − A_calc|) + h(A_dump)] + 32·eps·π·max(r1,r2)² · h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 (E = 십진 지수 · 끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  교차 원판은 r1 · r2 · δ 각각에 단조라 (해석 · 20 만 표본 확인) 축마다 ±h 한쪽 최댓값이 그 토큰 반올림의 상한 · 합 = 네 토큰 (r1 · r2 · δ · A) 이 한꺼번에 가장 나쁘게 겹친 경우 · 1.001 = 2 차 교차항 여유 · 32·eps 항 = 교차원 식의 부동소수 상쇄 바닥 (δ/r < 2e-7 · 반지름비 > 7 에서 1e-6 급 잡음 — 양쪽 계산 몫)",
+      "sigfig_assumed": 6,
+      "n_rows": 1,
+      "status": "OK",
+      "n_compared": 1,
+      "n_orphan_rows_skipped": 0,
+      "n_nonfinite_skipped": 0,
+      "n_values_beyond_6sig": {
+        "area": 0,
+        "delta": 0,
+        "radius": 0
+      },
+      "all": {
+        "n_rows": 1,
+        "n_area_dump_zero": 0,
+        "n_boundary_excluded": 1,
+        "rel_diff_max": null,
+        "rel_diff_median": null,
+        "tol_rel_median": null,
+        "diff_over_tol_max": null,
+        "n_beyond_tol": 0
+      },
+      "by_periodic_flag": {
+        "0": {
+          "n_rows": 1,
+          "n_area_dump_zero": 0,
+          "n_boundary_excluded": 1,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "tol_rel_median": null,
+          "diff_over_tol_max": null,
+          "n_beyond_tol": 0
+        },
+        "1": {
+          "n_rows": 0,
+          "n_area_dump_zero": 0,
+          "n_boundary_excluded": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "tol_rel_median": null,
+          "diff_over_tol_max": null,
+          "n_beyond_tol": 0
+        }
+      },
+      "by_pair_kind": {
+        "AM-SE": {
+          "n_rows": 1,
+          "n_area_dump_zero": 0,
+          "n_boundary_excluded": 1,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "tol_rel_median": null,
+          "diff_over_tol_max": null,
+          "n_beyond_tol": 0
+        }
+      }
+    }
+  },
+  "noncontact_boundary_controls": {
+    "zero_delta_zero_area": {
+      "n_rows": 1,
+      "n_area_dump_zero": 1,
+      "n_boundary_excluded": 0,
+      "rel_diff_max": null,
+      "rel_diff_median": null,
+      "tol_rel_median": null,
+      "diff_over_tol_max": 0.0,
+      "n_beyond_tol": 0
+    },
+    "negative_delta_zero_area": {
+      "n_rows": 1,
+      "n_area_dump_zero": 1,
+      "n_boundary_excluded": 0,
+      "rel_diff_max": null,
+      "rel_diff_median": null,
+      "tol_rel_median": null,
+      "diff_over_tol_max": 0.0,
+      "n_beyond_tol": 0
+    },
+    "zero_delta_positive_area": {
+      "n_rows": 1,
+      "n_area_dump_zero": 0,
+      "n_boundary_excluded": 0,
+      "rel_diff_max": 1.0,
+      "rel_diff_median": 1.0,
+      "tol_rel_median": 5.005000022322358e-06,
+      "diff_over_tol_max": 199800.19890908862,
+      "n_beyond_tol": 1
+    }
+  },
+  "interior_geometry_nonmonotonic": {
+    "r1": 0.002,
+    "r2": 0.001,
+    "delta": 0.0016,
+    "area": 2.708181095665975e-06,
+    "more_overlap_area": 2.6780161091390217e-06,
+    "in_domain": true
+  },
+  "clean_harvester_import": {
+    "rc": 0,
+    "stdout": "False",
+    "stderr": ""
+  }
+}

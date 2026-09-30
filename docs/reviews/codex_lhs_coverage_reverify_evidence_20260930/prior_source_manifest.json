@@ -1,0 +1,117 @@
+{
+  "snapshot": "2e57dff90e7eebead7a446478f97e2c414176c28",
+  "base": "da4670594",
+  "patches": [
+    {
+      "file": "0001-LHS-item-4-_wall_side-wall_touch_fractions.patch",
+      "sha256": "dc61395bf06863f75facdf19eb28a4a6d0d48948a181cf3f17a37e3c1d60e418",
+      "applied": true
+    },
+    {
+      "file": "0002-LHS-item-1.patch",
+      "sha256": "b09c32a30cd4728af6a652b09fe2449fa238207141312f4df4c44cd5b50be10e",
+      "applied": true
+    },
+    {
+      "file": "0003-LHS-item-2-c_cpl-22.patch",
+      "sha256": "5b076f3d7bcd46b72ed118a3498f1c2aec531fbabe949269a7c41e41e55df856",
+      "applied": true
+    },
+    {
+      "file": "0004-LHS-item-3.patch",
+      "sha256": "6a9117cb355367294c996b5f2f03a64a5f9b506636dea7528bb31840073fd0e1",
+      "applied": true
+    },
+    {
+      "file": "0005-physics-v2-film_area_physics_v2-legacy-cap-lens.patch",
+      "sha256": "1743f1250c2a9b970f6f1bd768d20deca8d5df40b79a18d5a3be6e8e0e6e8f0a",
+      "applied": true
+    },
+    {
+      "file": "0006-coverage-physics-v2-_physics_v2-v2-AM-AM-WEBAPP_-_FO.patch",
+      "sha256": "2f03842946e9364377d1eb68abe50e5dc1b58f833b2c7c5ff0ba94e6f6909be2",
+      "applied": true
+    },
+    {
+      "file": "0007-run_pipeline-stop_after-coverage-stop-after-coverage.patch",
+      "sha256": "f518d02dfa2431d1d122f453e3ef405fa465a05c5fc428bd79dfaaac8ee9a426",
+      "applied": true
+    }
+  ],
+  "base_targets": [
+    {
+      "path": "docs/area_contract_20260913.md",
+      "same_at_pin_and_base": true,
+      "sha256": "1e087fe9b1d8a3e8568f137322d01caf8044a585cf2c64f1c34928a940ff4701"
+    },
+    {
+      "path": "docs/reviews/selftest_inventory.tsv",
+      "same_at_pin_and_base": true,
+      "sha256": "5e1b519842aa58c3a2a2cb6b80d9a66ee22f57c2cb742b84d6948513ba360d31"
+    },
+    {
+      "path": "scripts/coverage_physics_vs_hertzian.py",
+      "same_at_pin_and_base": true,
+      "sha256": "9e25fa2ac323bc999ba3a304d1e66797f32eda14b51401d8c24091def5972a01"
+    },
+    {
+      "path": "scripts/lhs_descriptor_harvest.py",
+      "same_at_pin_and_base": true,
+      "sha256": "c4d4679879883ce8e388757dbffd17479e692b5b56bb2f327ba3751cbcaae20f"
+    },
+    {
+      "path": "scripts/lhs_webapp_batch.py",
+      "same_at_pin_and_base": true,
+      "sha256": "0af6b098cabd9e40551a4fccb23e069bf411842fc09094c4f12d1f6fbb83ccde"
+    },
+    {
+      "path": "scripts/plastic_coverage.py",
+      "same_at_pin_and_base": true,
+      "sha256": "9d0cac80081f6f264cf1cf1756e41325d359c643514e3da405fbb7af310af236"
+    },
+    {
+      "path": "webapp/app.py",
+      "same_at_pin_and_base": true,
+      "sha256": "d1d38e4f78b6976fd6c7af99a1a97c4b709bfe2a270b8fcefe3ad54dca563a44"
+    },
+    {
+      "path": "webapp/test_pipeline_provenance.py",
+      "same_at_pin_and_base": true,
+      "sha256": "85a916af4b3ee6bf79f9e9948127da11848701a15692e089733e827072dd8adc"
+    }
+  ],
+  "candidate_targets": [
+    {
+      "path": "docs/area_contract_20260913.md",
+      "sha256": "5b0d201f6e4fe1b4bb96b27220b26000e31b98c3bfb91edbfcf865570ddc90db"
+    },
+    {
+      "path": "docs/reviews/selftest_inventory.tsv",
+      "sha256": "654c7e4f16040c5b377bfaa22f4dc1a496f6bb02ce3213ea2d0fc5a10b1048ed"
+    },
+    {
+      "path": "scripts/coverage_physics_vs_hertzian.py",
+      "sha256": "bb79c22c4ff7cbbabe7ac977e74dd792cf4c44b90b694d228c25009bec2ac793"
+    },
+    {
+      "path": "scripts/lhs_descriptor_harvest.py",
+      "sha256": "1022cffecd73a8be21d3f88a9884a935e21476d424e697006acae1de4356cb64"
+    },
+    {
+      "path": "scripts/lhs_webapp_batch.py",
+      "sha256": "6ba11f5a590ae92e58712897c1799e71dc4acc84aa9d0f3aa5956487ab2ed7ee"
+    },
+    {
+      "path": "scripts/plastic_coverage.py",
+      "sha256": "66bb056720980f9f9d54a0c2d48da68d155e05f97b7aac04a76c23d2883c6070"
+    },
+    {
+      "path": "webapp/app.py",
+      "sha256": "553d1b22006ebff6955782b11fe7fd52d8c1f79d940741d68f8c4094ef2bfbe3"
+    },
+    {
+      "path": "webapp/test_pipeline_provenance.py",
+      "sha256": "2e268535c5e3ddb232633691b26787e1be725a0df582e8ad233c186cf1c10e78"
+    }
+  ]
+}

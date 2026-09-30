@@ -1,0 +1,110 @@
+{
+  "snapshot": "ac484ba5cda082caffe2c3c408de86cbd760befc",
+  "base": "da4670594",
+  "prior_snapshot": "2e57dff90e7eebead7a446478f97e2c414176c28",
+  "patches": [
+    {
+      "name": "0001-LHS-item-4-_wall_side-wall_touch_fractions.patch",
+      "sha256": "34fd30b3e5183eeca5de4a2be65a4ce670d0f4d48c99244af963af85dd7f8bad",
+      "first_review_sha256": "dc61395bf06863f75facdf19eb28a4a6d0d48948a181cf3f17a37e3c1d60e418",
+      "byte_identical": false,
+      "diff_body_identical": true
+    },
+    {
+      "name": "0002-LHS-item-1.patch",
+      "sha256": "dc113c6ca23000f0ab88b451bf932f746a784ba58f40a625764f86db4513aebb",
+      "first_review_sha256": "b09c32a30cd4728af6a652b09fe2449fa238207141312f4df4c44cd5b50be10e",
+      "byte_identical": false,
+      "diff_body_identical": true
+    },
+    {
+      "name": "0003-LHS-item-2-c_cpl-22.patch",
+      "sha256": "955047fd8d89f129fa73cc82fbe05832558265ed7ee808857d6084be45b4a9c2",
+      "first_review_sha256": "5b076f3d7bcd46b72ed118a3498f1c2aec531fbabe949269a7c41e41e55df856",
+      "byte_identical": false,
+      "diff_body_identical": true
+    },
+    {
+      "name": "0004-LHS-item-3.patch",
+      "sha256": "5962dc874d487a7fbd2e1ead4fb2d7634159e53c0f6a7432decd520fa646fd03",
+      "first_review_sha256": "6a9117cb355367294c996b5f2f03a64a5f9b506636dea7528bb31840073fd0e1",
+      "byte_identical": false,
+      "diff_body_identical": true
+    },
+    {
+      "name": "0005-physics-v2-film_area_physics_v2-legacy-cap-lens.patch",
+      "sha256": "1221d9eb828413cdd53bbb4ad808aa48629b07cd084b57d8ca81d1537a1d95bd",
+      "first_review_sha256": "1743f1250c2a9b970f6f1bd768d20deca8d5df40b79a18d5a3be6e8e0e6e8f0a",
+      "byte_identical": false,
+      "diff_body_identical": true
+    },
+    {
+      "name": "0006-coverage-physics-v2-_physics_v2-v2-AM-AM-WEBAPP_-_FO.patch",
+      "sha256": "5b1ad6b392b9b38ed68e3213002b6b28f3dff03965a081a27ac26f895eb0bf92",
+      "first_review_sha256": "2f03842946e9364377d1eb68abe50e5dc1b58f833b2c7c5ff0ba94e6f6909be2",
+      "byte_identical": false,
+      "diff_body_identical": true
+    },
+    {
+      "name": "0007-run_pipeline-stop_after-coverage-stop-after-coverage.patch",
+      "sha256": "3f5e8f56169387558076fbfcf19cb0f83c39d07f7d72397ceebb071bea2320fb",
+      "first_review_sha256": "f518d02dfa2431d1d122f453e3ef405fa465a05c5fc428bd79dfaaac8ee9a426",
+      "byte_identical": false,
+      "diff_body_identical": true
+    },
+    {
+      "name": "0008-coverage-physics-v2-AM-0-0.0-ok-Codex-LHSC-01-P1-a.patch",
+      "sha256": "b648694ee8f72f3ccbd2bf62ab36565e2be30518fe3996e074571e1471f8f564"
+    },
+    {
+      "name": "0009-run_pipeline-stop_after-atoms-only-failed-coverage-v.patch",
+      "sha256": "600f973e06e62274ae0857aa8c65995b26be5bfa013bda7d47650503e9fef50e"
+    },
+    {
+      "name": "0010-LHS-item-2-AST-lens_geometry-Codex-LHSC-04-05-P2.patch",
+      "sha256": "13d14d9cdfda817560013d3ed5c56afff5628f0fdedd73fe89fd37cb5428220c"
+    },
+    {
+      "name": "0011-LHS-item-1-proxy-AM-SE-Codex-LHSC-06-P3.patch",
+      "sha256": "a92118dad6d1a8c655e386798f29da82cc0251e67b07a59e6f838b9cd193d17b"
+    }
+  ],
+  "candidate_targets": [
+    {
+      "path": "docs/area_contract_20260913.md",
+      "sha256": "b8adc273b3f2a2b53ef152aa88c2ba31a81d4cc3564ac9523bd141a30a0bf90f"
+    },
+    {
+      "path": "docs/reviews/selftest_inventory.tsv",
+      "sha256": "6059f0ec969ba3adfbe1c9a2a63bd285b3c7bea3493a631629c0ca3e38f2850f"
+    },
+    {
+      "path": "scripts/coverage_physics_vs_hertzian.py",
+      "sha256": "9fc669cdd987e5cc519fe78c4236a4507621f1f92accbff02062819a4d890614"
+    },
+    {
+      "path": "scripts/lens_geometry.py",
+      "sha256": "dead39b1d39239a218c5dadbedcbda4c9e78d0bcf60a6b86cb33e5142cf69fa0"
+    },
+    {
+      "path": "scripts/lhs_descriptor_harvest.py",
+      "sha256": "a64897af640ae10e57b1fe87bd2c027a6a7714c73ace4d78ee8b1249a88cd6ba"
+    },
+    {
+      "path": "scripts/lhs_webapp_batch.py",
+      "sha256": "6ba11f5a590ae92e58712897c1799e71dc4acc84aa9d0f3aa5956487ab2ed7ee"
+    },
+    {
+      "path": "scripts/plastic_coverage.py",
+      "sha256": "7f9be36f391ca06bbde209504d415c9f135a6f71bc469631b55321caf75b538f"
+    },
+    {
+      "path": "webapp/app.py",
+      "sha256": "2d3353f9661d2056b7199b1e0bfe472613070ea661c3801a18a4d0ea6ea79bb4"
+    },
+    {
+      "path": "webapp/test_pipeline_provenance.py",
+      "sha256": "c513808faa2ba988904443b7ab6b4cea2cd9f2203ec5b93738da74cd0a5c66b4"
+    }
+  ]
+}
