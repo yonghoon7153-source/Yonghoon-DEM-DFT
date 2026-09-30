@@ -7,6 +7,7 @@
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
 ## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 291건)
+- 2026-10-01 · `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청 · 회신 4 발송 완료 (09-25) · DEM 4차 회신 수령 (09-…
 - 2026-09-30 · `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md` — SDCP vs PTFE 흡착에너지 (C-12 v41) — 숫자의 지위 · PTFE 크기 검증 · 세미나 대응 · 닫힘 (2026-09-30 · 2단계 보류) — 값은 citable:…
 - 2026-09-30 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-30 · `kb/reviews/codex_CM_prompt_cei_nd_handoff_2026_09_30.md` — 리뷰 CM 프롬프트 — CEI (Nd 계면) 외부 송부 전 리뷰: 정본 페이지 · 송부판 · 인계 카드 · 1저자 읽기 지침서 · AI 프롬프트 · 발송됨 (사용자 · 2026-09-30 · 인계 zip 첨부) · ✅…
@@ -26,7 +27,6 @@
 - 2026-09-28 · `kb/reviews/li2s1a_CL_reply_li2s_ch_reply_s54_census_2026_09_28.md` — 회신 CL — 외부 1저자 (li2s 소셀 유리 MD): 초안 CL 수령 · Q-CL-2 먼저 답 (465 K '2 배' 확정 + 출처 단서) · Q-CL-1 확정 (가까운 쪽 문턱 · 양쪽 2σ) · Q-CL-3·4 는 결과와 같이 · 네 시드 전수는 발송 전 권장 · 수령 (2026-09-28 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-09-28 · `kb/reports/weekly_2026_09_27.md` — 주간 정리 2026-09-21 ~ 09-27 (주간보고 초안) · 완료 (2026-09-28 · 다음 주 문서는 새 파일)
 - 2026-09-28 · `kb/projects/handoff_2026_09_28_evacuation.md` — 대피 인계 — 2026-09-28 (friendly 세션 컨텍스트 소진 → 서브 브랜치 임시 작업) · 진행
-- 2026-09-27 · `kb/reviews/codex_CE_prompt_wad_aprime_v5_vasp_outsourcing_2026_09_27.md` — 리뷰 CE 프롬프트 — A′ V5 (LPSCl|Ag(111) 작은 주기 계면) VASP 외주 패키지 준비본: QE→VASP 대응 · INCAR · 쌍극자 · D3 · 반송 검사 · G3 경계선 예측 · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -448,7 +448,7 @@
 - `kb/projects/symposium_2026_competitive_analysis.md` — 전지기술 심포지엄 2026 — 경쟁 좌표 분석 (이상욱 / 문장혁)
 - `kb/projects/wad_dem_reply_4_send_2026_09_25.md` — DEM 회신 4 — 발송본 (부탁 1 잔류 응력 PBE/PBE+D3 · 부탁 2 수용 · 한 기하 뜻 확인 요청 · Ag 격자상수·변형률)  (2026-09-25 · 발송본 — 1저자 발송 (2026-09-25) · 아래 구분선 이후를…)
 - `kb/projects/wad_dem_reply_5_send_2026_09_26.md` — wad_dem_reply_5_send_2026_09_26
-- `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청  (2026-09-26 · 회신 4 발송 완료 (09-25) · DEM 4차 회신 수령 (09-…)
+- `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청  (2026-10-01 · 회신 4 발송 완료 (09-25) · DEM 4차 회신 수령 (09-…)
 - `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` — LPSCl | Ag–C | VGCF 점착일(W_ad) — 계획 v4 (Codex BX 뒤 파이프라인 재편 · v3 = Fable · Codex BV 반영) · 보고량 카드 초안  (2026-09-25 · 계획 v4 — SE|SE 4층 대조 끝(경보 v2 유지 · Codex…)
 - `kb/projects/zn_alzib_dft_md_contribution_2026_09_03.md` — Zn ALZIB 세미나(2026-09-02) — 우리가 DFT/MD 로 기여할 수 있는 지점  (2026-09-27 · 진행)
 
