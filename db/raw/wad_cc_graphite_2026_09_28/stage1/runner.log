@@ -1,0 +1,58 @@
+[2026-09-28 22:39:42] ════ run_sese_gpu · IN=/home/ubuntu/wad4l/db/inputs/wad_cc_graphite_2026_09_28/stage1/qe · RUN=/home/ubuntu/runs/wad_cc_graphite_2026_09_28/stage1 · JOBS=[CC_S33_AB_relax CC_S33_SP_relax CC_S33_AA_relax CC_M41_AB_relax CC_M41_SP_relax CC_M41_AA_relax CC_S44_AB_relax CC_M61_AB_relax CC_M41_AB_V2a_relax]
+[2026-09-28 22:39:42] 공존 근거: V100 1저자 승인 2026-09-28 · MPM 옆 C|C ≤3 GB · START<24000 MiB · KILL>31000 MiB · 표본 2s · UMA 공존 허용=1 · 허용 PID=[제한 없음]
+[2026-09-28 22:39:42] ⚠ 공존 근거가 결정 ID 가 아니다 ('V100 1저자 승인 2026-09-28 · MPM 옆 C|C ≤3 GB') — 원장으로 확인하지 못한다. 사람이 확인한 근거일 때만 쓴다
+[2026-09-28 22:39:42] ⚠ UMA 공존을 켰는데 ONLY_PIDS 가 비었다 — 공존 조건을 PID 로 걸지 못한다 (새 GPU 잡이 떠도 시작한다)
+[2026-09-28 22:39:48] 랭크 NP=1 · GPU 1 장 · pseudo=/home/ubuntu/wad4l/pseudo_kgy (PSEUDO_DIR 로 교체)
+[2026-09-28 22:39:49] PP C.pbe-n-kjpaw_psl.1.0.0.UPF sha256 9900d1efd50b9848 · 기준과 같음 ✓
+[2026-09-28 22:39:49] 디스크 871G 남음 (7% 사용)
+[2026-09-28 22:39:49] GPU 사용 중: PID 319770 · 12852 MiB · 
+[2026-09-28 22:39:49] GPU 합계 사용량 지금 12856 MiB · 호스트 MemAvailable 106091 MiB (시작 문턱 16384 · 중단 4096)
+[2026-09-28 22:39:49] DRY_RUN — 점검만 하고 끝낸다
+[2026-09-28 22:42:35] ════ run_sese_gpu · IN=/home/ubuntu/wad4l/db/inputs/wad_cc_graphite_2026_09_28/stage1/qe · RUN=/home/ubuntu/runs/wad_cc_graphite_2026_09_28/stage1 · JOBS=[CC_S33_AB_relax CC_S33_SP_relax CC_S33_AA_relax CC_M41_AB_relax CC_M41_SP_relax CC_M41_AA_relax CC_S44_AB_relax CC_M61_AB_relax CC_M41_AB_V2a_relax]
+[2026-09-28 22:42:35] 공존 근거: V100 1저자 승인 2026-09-28 · MPM 옆 C|C ≤3 GB · START<24000 MiB · KILL>31000 MiB · 표본 2s · UMA 공존 허용=1 · 허용 PID=[제한 없음]
+[2026-09-28 22:42:35] ⚠ 공존 근거가 결정 ID 가 아니다 ('V100 1저자 승인 2026-09-28 · MPM 옆 C|C ≤3 GB') — 원장으로 확인하지 못한다. 사람이 확인한 근거일 때만 쓴다
+[2026-09-28 22:42:35] ⚠ UMA 공존을 켰는데 ONLY_PIDS 가 비었다 — 공존 조건을 PID 로 걸지 못한다 (새 GPU 잡이 떠도 시작한다)
+[2026-09-28 22:42:43] 랭크 NP=1 · GPU 1 장 · pseudo=/home/ubuntu/wad4l/pseudo_kgy (PSEUDO_DIR 로 교체)
+[2026-09-28 22:42:44] PP C.pbe-n-kjpaw_psl.1.0.0.UPF sha256 9900d1efd50b9848 · 기준과 같음 ✓
+[2026-09-28 22:42:44] 디스크 871G 남음 (7% 사용)
+[2026-09-28 22:42:44] GPU 사용 중: PID 319770 · 12852 MiB · 
+[2026-09-28 22:42:44] GPU 합계 사용량 지금 12856 MiB · 호스트 MemAvailable 105561 MiB (시작 문턱 16384 · 중단 4096)
+[qe_gpu] MPI 를 바이너리에서 읽었다: /home/ubuntu/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so.40
+[qe_gpu]   prefix=/home/ubuntu/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi · mpirun=/home/ubuntu/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
+[2026-09-28 22:42:45] ▶ CC_S33_AB_relax (relax) 시작 · GPU 합계 12856 MiB · 호스트 여유 105471 MiB
+[2026-09-28 22:42:45]    래퍼(mpirun) PID 1698666 · pw.x PID 1698679
+[2026-09-28 22:43:16]    ⚠ nvidia-smi 목록에 우리 pw.x(1698679) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-29 01:20:07] ■ CC_S33_AB_relax rc=0 완료=1 벽시계 9442s · 피크 합계 15160 MiB · 자기 — MiB · 호스트 최저 99238 MiB · 중단=0
+[2026-09-29 01:20:11] ▶ CC_S33_SP_relax (relax) 시작 · GPU 합계 472 MiB · 호스트 여유 108885 MiB
+[2026-09-29 01:20:12]    래퍼(mpirun) PID 1783706 · pw.x PID 1783728
+[2026-09-29 01:20:42]    ⚠ nvidia-smi 목록에 우리 pw.x(1783728) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-29 03:50:22] ■ CC_S33_SP_relax rc=0 완료=1 벽시계 9011s · 피크 합계 15864 MiB · 자기 — MiB · 호스트 최저 98797 MiB · 중단=0
+[2026-09-29 03:50:26] ▶ CC_S33_AA_relax (relax) 시작 · GPU 합계 12824 MiB · 호스트 여유 104209 MiB
+[2026-09-29 03:50:27]    래퍼(mpirun) PID 1867218 · pw.x PID 1867240
+[2026-09-29 03:50:57]    ⚠ nvidia-smi 목록에 우리 pw.x(1867240) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-29 12:41:17] ■ CC_S33_AA_relax rc=0 완료=1 벽시계 31851s · 피크 합계 15864 MiB · 자기 — MiB · 호스트 최저 97919 MiB · 중단=0
+[2026-09-29 12:41:21] ▶ CC_M41_AB_relax (relax) 시작 · GPU 합계 0 MiB · 호스트 여유 119292 MiB
+[2026-09-29 12:41:23]    래퍼(mpirun) PID 2162940 · pw.x PID 2162958
+[2026-09-29 12:41:53]    ⚠ nvidia-smi 목록에 우리 pw.x(2162958) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-29 15:46:07] ■ CC_M41_AB_relax rc=0 완료=1 벽시계 11086s · 피크 합계 14040 MiB · 자기 — MiB · 호스트 최저 108939 MiB · 중단=0
+[2026-09-29 15:46:11] ▶ CC_M41_SP_relax (relax) 시작 · GPU 합계 472 MiB · 호스트 여유 118899 MiB
+[2026-09-29 15:46:12]    래퍼(mpirun) PID 2265958 · pw.x PID 2265980
+[2026-09-29 15:46:42]    ⚠ nvidia-smi 목록에 우리 pw.x(2265980) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-29 18:23:19] ■ CC_M41_SP_relax rc=0 완료=1 벽시계 9428s · 피크 합계 14142 MiB · 자기 — MiB · 호스트 최저 113959 MiB · 중단=0
+[2026-09-29 18:23:23] ▶ CC_M41_AA_relax (relax) 시작 · GPU 합계 12824 MiB · 호스트 여유 115157 MiB
+[2026-09-29 18:23:24]    래퍼(mpirun) PID 2352703 · pw.x PID 2352725
+[2026-09-29 18:23:55]    ⚠ nvidia-smi 목록에 우리 pw.x(2352725) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-30 00:13:25] ■ CC_M41_AA_relax rc=0 완료=1 벽시계 21002s · 피크 합계 17022 MiB · 자기 — MiB · 호스트 최저 109032 MiB · 중단=0
+[2026-09-30 00:13:29] ▶ CC_S44_AB_relax (relax) 시작 · GPU 합계 12824 MiB · 호스트 여유 115102 MiB
+[2026-09-30 00:13:30]    래퍼(mpirun) PID 2547357 · pw.x PID 2547375
+[2026-09-30 00:14:00]    ⚠ nvidia-smi 목록에 우리 pw.x(2547375) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-30 04:46:01] ■ CC_S44_AB_relax rc=0 완료=1 벽시계 16352s · 피크 합계 17020 MiB · 자기 — MiB · 호스트 최저 108926 MiB · 중단=0
+[2026-09-30 04:46:05] ▶ CC_M61_AB_relax (relax) 시작 · GPU 합계 12824 MiB · 호스트 여유 115168 MiB
+[2026-09-30 04:46:06]    래퍼(mpirun) PID 2699134 · pw.x PID 2699156
+[2026-09-30 04:46:36]    ⚠ nvidia-smi 목록에 우리 pw.x(2699156) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-30 07:28:08] ■ CC_M61_AB_relax rc=0 완료=1 벽시계 9723s · 피크 합계 14814 MiB · 자기 — MiB · 호스트 최저 108417 MiB · 중단=0
+[2026-09-30 07:28:12] ▶ CC_M41_AB_V2a_relax (relax) 시작 · GPU 합계 12824 MiB · 호스트 여유 115191 MiB
+[2026-09-30 07:28:13]    래퍼(mpirun) PID 2789484 · pw.x PID 2789502
+[2026-09-30 07:28:43]    ⚠ nvidia-smi 목록에 우리 pw.x(2789502) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-09-30 09:28:02] ■ CC_M41_AB_V2a_relax rc=0 완료=1 벽시계 7190s · 피크 합계 17118 MiB · 자기 — MiB · 호스트 최저 109081 MiB · 중단=0
+[2026-09-30 09:28:02] ✅ 전부 완료 — 집계: python3 tools/wad/se_sym_slab.py --collect /home/ubuntu/runs/wad_cc_graphite_2026_09_28/stage1 --qe_in /home/ubuntu/wad4l/db/inputs/wad_cc_graphite_2026_09_28/stage1/qe

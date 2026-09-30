@@ -1,0 +1,2154 @@
+{
+ "schema": "cc_graphite_stage2/v1",
+ "date": "2026-09-30",
+ "prereg": "db/properties/wad_cc_graphite_prereg_2026_09_28.json",
+ "code_sha256": {
+  "tools/wad/cc_graphite.py": "ef9a36975d03037c9913be6e20bcc2be1070638a214650c7907d3a278226eafc",
+  "tools/wad/build_aprime_interfaces.py": "85c7338c63266674d43403c6d6d0a73e6712433d884e9ef0221d3d80b93f29f7",
+  "tools/wad/build_aprime_s3.py": "b0e4d0e4b9435f230de478dc5d9da315796114d6dda7852fa61db4661b2b5726",
+  "tools/wad/collect_aprime_s4.py": "77612de773304868ae1845705a61edfd3650489225f7d6d2e7b94b143e3e5747",
+  "tools/wad/se_sym_slab.py": "7ec9e7b6c6538662d4c311a13b8af2f99c3103392e4722ac03724c371f23d3a1"
+ },
+ "stage1_manifest_sha256": "1cabb6394046983c00a06e7e9684a0f16cf3d261a20cb1ec661d5fa904efec45",
+ "relax_raw": "/home/ubuntu/runs/wad_cc_graphite_2026_09_28/stage1",
+ "status": {
+  "CC_S33_AB": "OK",
+  "CC_S33_SP": "OK",
+  "CC_S33_AA": "OK",
+  "CC_M41_AB": "OK",
+  "CC_M41_SP": "OK",
+  "CC_M41_AA": "OK",
+  "CC_S44_AB": "OK",
+  "CC_M61_AB": "OK",
+  "CC_M41_AB_V2a": "OK"
+ },
+ "n_ok": 9,
+ "n_incomplete": 0,
+ "models": {
+  "CC_S33_AB": {
+   "relax_pw_out_sha256": "14cb0574bd1c5eb075a4704bd27a0722af0a52530c5401e784009894648ef067",
+   "max_dxy_A": 2.1999999599842113e-09,
+   "stack_relaxed": {
+    "n_layers": 6,
+    "atoms_per_layer": [
+     2,
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "layer_z_A": [
+     0.5,
+     3.85,
+     7.2,
+     10.55,
+     13.9,
+     17.25
+    ],
+    "spacings_A": [
+     3.35,
+     3.35,
+     3.35,
+     3.35,
+     3.35
+    ],
+    "flatness_A": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "interface": "AB",
+    "internal": [
+     "AB",
+     "AB",
+     "AB",
+     "AB"
+    ]
+   },
+   "flags": [],
+   "geometry": "S33",
+   "registry": "AB",
+   "lattice": "base",
+   "a_A": 2.46604,
+   "n_sub_layers": 3,
+   "n_top_layers": 3,
+   "n_C_contact_layer": 2,
+   "G3_dip_region_A": [
+    30.9,
+    31.9
+   ],
+   "d0_A": 3.35,
+   "endpoints": {
+    "c_A": 34.4,
+    "delta_A": 6.65,
+    "d0_A": 3.35,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     3.35,
+     17.65
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.84012,
+     "eopreg": 0.02907,
+     "region_A": [
+      28.9,
+      29.9
+     ],
+     "clearance_A": {
+      "to_top_atom": 5.0,
+      "to_substrate_bottom_image": 5.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   }
+  },
+  "CC_S33_SP": {
+   "relax_pw_out_sha256": "40fe038da035e65b873a112864f611f14c5dacdb67e43fc0817c2de67851aa16",
+   "max_dxy_A": 4.500000039264762e-09,
+   "stack_relaxed": {
+    "n_layers": 6,
+    "atoms_per_layer": [
+     2,
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "layer_z_A": [
+     0.5,
+     3.85,
+     7.2,
+     10.55,
+     13.9,
+     17.25
+    ],
+    "spacings_A": [
+     3.35,
+     3.35,
+     3.35,
+     3.35,
+     3.35
+    ],
+    "flatness_A": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "interface": "SP",
+    "internal": [
+     "AB",
+     "AB",
+     "AB",
+     "AB"
+    ]
+   },
+   "flags": [],
+   "geometry": "S33",
+   "registry": "SP",
+   "lattice": "base",
+   "a_A": 2.46604,
+   "n_sub_layers": 3,
+   "n_top_layers": 3,
+   "n_C_contact_layer": 2,
+   "d0_A": 3.35,
+   "endpoints": {
+    "c_A": 34.4,
+    "delta_A": 6.65,
+    "d0_A": 3.35,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     3.35,
+     17.65
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.84012,
+     "eopreg": 0.02907,
+     "region_A": [
+      28.9,
+      29.9
+     ],
+     "clearance_A": {
+      "to_top_atom": 5.0,
+      "to_substrate_bottom_image": 5.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   }
+  },
+  "CC_S33_AA": {
+   "relax_pw_out_sha256": "16faf7945c8ca07589d993c33da4195461e78f292218af80fa5cfe05ed9c4ce5",
+   "max_dxy_A": 2.1999999599842113e-09,
+   "stack_relaxed": {
+    "n_layers": 6,
+    "atoms_per_layer": [
+     2,
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "layer_z_A": [
+     0.5,
+     3.8502,
+     7.1428,
+     10.6066,
+     13.9004,
+     17.259
+    ],
+    "spacings_A": [
+     3.3502,
+     3.2925,
+     3.4638,
+     3.2938,
+     3.3586
+    ],
+    "flatness_A": [
+     0.0,
+     0.0,
+     0.0006,
+     0.0006,
+     0.0,
+     0.0007
+    ],
+    "interface": "AA",
+    "internal": [
+     "AB",
+     "AB",
+     "AB",
+     "AB"
+    ]
+   },
+   "flags": [],
+   "geometry": "S33",
+   "registry": "AA",
+   "lattice": "base",
+   "a_A": 2.46604,
+   "n_sub_layers": 3,
+   "n_top_layers": 3,
+   "n_C_contact_layer": 2,
+   "d0_A": 3.4632,
+   "endpoints": {
+    "c_A": 34.2961,
+    "delta_A": 6.5368,
+    "d0_A": 3.4632,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     3.4632,
+     17.5368
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.83963,
+     "eopreg": 0.02916,
+     "region_A": [
+      28.796,
+      29.796
+     ],
+     "clearance_A": {
+      "to_top_atom": 5.0,
+      "to_substrate_bottom_image": 5.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   }
+  },
+  "CC_M41_AB": {
+   "relax_pw_out_sha256": "3e0d011c92049c75980ea89617aa1f8792d8d016bc56c0a527d58b5d09e666ae",
+   "max_dxy_A": 2.1999999599842113e-09,
+   "stack_relaxed": {
+    "n_layers": 5,
+    "atoms_per_layer": [
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "layer_z_A": [
+     0.5,
+     3.85,
+     7.2,
+     10.55,
+     13.9
+    ],
+    "spacings_A": [
+     3.35,
+     3.35,
+     3.35,
+     3.35
+    ],
+    "flatness_A": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "interface": "AB",
+    "internal": [
+     "AB",
+     "AB",
+     "AB"
+    ]
+   },
+   "flags": [],
+   "geometry": "M41",
+   "registry": "AB",
+   "lattice": "base",
+   "a_A": 2.46604,
+   "n_sub_layers": 4,
+   "n_top_layers": 1,
+   "n_C_contact_layer": 2,
+   "G3_dip_region_A": [
+    27.55,
+    28.55
+   ],
+   "d0_A": 3.35,
+   "endpoints": {
+    "c_A": 31.05,
+    "delta_A": 6.65,
+    "d0_A": 3.35,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     3.35,
+     17.65
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.82287,
+     "eopreg": 0.03221,
+     "region_A": [
+      25.55,
+      26.55
+     ],
+     "clearance_A": {
+      "to_top_atom": 5.0,
+      "to_substrate_bottom_image": 5.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   }
+  },
+  "CC_M41_SP": {
+   "relax_pw_out_sha256": "9853320b92e32acf092a839b971c5ea94cf71ea717b2ec8202a55e341b8384cd",
+   "max_dxy_A": 4.500000039264762e-09,
+   "stack_relaxed": {
+    "n_layers": 5,
+    "atoms_per_layer": [
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "layer_z_A": [
+     0.5,
+     3.85,
+     7.2,
+     10.55,
+     13.9
+    ],
+    "spacings_A": [
+     3.35,
+     3.35,
+     3.35,
+     3.35
+    ],
+    "flatness_A": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "interface": "SP",
+    "internal": [
+     "AB",
+     "AB",
+     "AB"
+    ]
+   },
+   "flags": [],
+   "geometry": "M41",
+   "registry": "SP",
+   "lattice": "base",
+   "a_A": 2.46604,
+   "n_sub_layers": 4,
+   "n_top_layers": 1,
+   "n_C_contact_layer": 2,
+   "d0_A": 3.35,
+   "endpoints": {
+    "c_A": 31.05,
+    "delta_A": 6.65,
+    "d0_A": 3.35,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     3.35,
+     17.65
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.82287,
+     "eopreg": 0.03221,
+     "region_A": [
+      25.55,
+      26.55
+     ],
+     "clearance_A": {
+      "to_top_atom": 5.0,
+      "to_substrate_bottom_image": 5.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   }
+  },
+  "CC_M41_AA": {
+   "relax_pw_out_sha256": "de83531b2680be8639d3753c02d740d9c1fcfa76238e5be3c2ddf07408eb6fd7",
+   "max_dxy_A": 2.1999999599842113e-09,
+   "stack_relaxed": {
+    "n_layers": 5,
+    "atoms_per_layer": [
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "layer_z_A": [
+     0.5,
+     3.8541,
+     7.1966,
+     10.4725,
+     13.9891
+    ],
+    "spacings_A": [
+     3.3541,
+     3.3426,
+     3.2759,
+     3.5166
+    ],
+    "flatness_A": [
+     0.0,
+     0.0001,
+     0.0002,
+     0.0007,
+     0.0001
+    ],
+    "interface": "AA",
+    "internal": [
+     "AB",
+     "AB",
+     "AB"
+    ]
+   },
+   "flags": [],
+   "geometry": "M41",
+   "registry": "AA",
+   "lattice": "base",
+   "a_A": 2.46604,
+   "n_sub_layers": 4,
+   "n_top_layers": 1,
+   "n_C_contact_layer": 2,
+   "d0_A": 3.5162,
+   "endpoints": {
+    "c_A": 30.973,
+    "delta_A": 6.4838,
+    "d0_A": 3.5162,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     3.5162,
+     17.4838
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.82243,
+     "eopreg": 0.03229,
+     "region_A": [
+      25.473,
+      26.473
+     ],
+     "clearance_A": {
+      "to_top_atom": 5.0,
+      "to_substrate_bottom_image": 5.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   }
+  },
+  "CC_S44_AB": {
+   "relax_pw_out_sha256": "6a281bf70674265e1391cf28c117f3d4e610395cc7141b8b5702eec3c2264f99",
+   "max_dxy_A": 2.1999999599842113e-09,
+   "stack_relaxed": {
+    "n_layers": 8,
+    "atoms_per_layer": [
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "layer_z_A": [
+     0.5,
+     3.85,
+     7.2,
+     10.55,
+     13.9,
+     17.25,
+     20.6,
+     23.95
+    ],
+    "spacings_A": [
+     3.35,
+     3.35,
+     3.35,
+     3.35,
+     3.35,
+     3.35,
+     3.35
+    ],
+    "flatness_A": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "interface": "AB",
+    "internal": [
+     "AB",
+     "AB",
+     "AB",
+     "AB",
+     "AB",
+     "AB"
+    ]
+   },
+   "flags": [],
+   "geometry": "S44",
+   "registry": "AB",
+   "lattice": "base",
+   "a_A": 2.46604,
+   "n_sub_layers": 4,
+   "n_top_layers": 4,
+   "n_C_contact_layer": 2,
+   "d0_A": 3.35,
+   "endpoints": {
+    "c_A": 41.1,
+    "delta_A": 6.65,
+    "d0_A": 3.35,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     3.35,
+     17.65
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.86618,
+     "eopreg": 0.02433,
+     "region_A": [
+      35.6,
+      36.6
+     ],
+     "clearance_A": {
+      "to_top_atom": 5.0,
+      "to_substrate_bottom_image": 5.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   }
+  },
+  "CC_M61_AB": {
+   "relax_pw_out_sha256": "48aed4b422ab0a01c1af88124d9dbbd5ba8c771c9ffe67c1953ba783f4980208",
+   "max_dxy_A": 2.1999999599842113e-09,
+   "stack_relaxed": {
+    "n_layers": 7,
+    "atoms_per_layer": [
+     2,
+     2,
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "layer_z_A": [
+     0.5,
+     3.85,
+     7.2,
+     10.55,
+     13.9,
+     17.25,
+     20.6
+    ],
+    "spacings_A": [
+     3.35,
+     3.35,
+     3.35,
+     3.35,
+     3.35,
+     3.35
+    ],
+    "flatness_A": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "interface": "AB",
+    "internal": [
+     "AB",
+     "AB",
+     "AB",
+     "AB",
+     "AB"
+    ]
+   },
+   "flags": [],
+   "geometry": "M61",
+   "registry": "AB",
+   "lattice": "base",
+   "a_A": 2.46604,
+   "n_sub_layers": 6,
+   "n_top_layers": 1,
+   "n_C_contact_layer": 2,
+   "d0_A": 3.35,
+   "endpoints": {
+    "c_A": 37.75,
+    "delta_A": 6.65,
+    "d0_A": 3.35,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     3.35,
+     17.65
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.8543,
+     "eopreg": 0.02649,
+     "region_A": [
+      32.25,
+      33.25
+     ],
+     "clearance_A": {
+      "to_top_atom": 5.0,
+      "to_substrate_bottom_image": 5.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   }
+  },
+  "CC_M41_AB_V2a": {
+   "relax_pw_out_sha256": "14cd219948d024d99e5aaad5010b2cc275a455cfc21517985b3a85e2f5ff821c",
+   "max_dxy_A": 1.3000001075624823e-09,
+   "stack_relaxed": {
+    "n_layers": 5,
+    "atoms_per_layer": [
+     2,
+     2,
+     2,
+     2,
+     2
+    ],
+    "layer_z_A": [
+     0.5,
+     3.85,
+     7.2,
+     10.55,
+     13.9
+    ],
+    "spacings_A": [
+     3.35,
+     3.35,
+     3.35,
+     3.35
+    ],
+    "flatness_A": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "interface": "AB",
+    "internal": [
+     "AB",
+     "AB",
+     "AB"
+    ]
+   },
+   "flags": [],
+   "geometry": "M41",
+   "registry": "AB",
+   "lattice": "V2a",
+   "a_A": 2.49263138,
+   "n_sub_layers": 4,
+   "n_top_layers": 1,
+   "n_C_contact_layer": 2,
+   "d0_A": 3.35,
+   "endpoints": {
+    "c_A": 31.05,
+    "delta_A": 6.65,
+    "d0_A": 3.35,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     3.35,
+     17.65
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.82287,
+     "eopreg": 0.03221,
+     "region_A": [
+      25.55,
+      26.55
+     ],
+     "clearance_A": {
+      "to_top_atom": 5.0,
+      "to_substrate_bottom_image": 5.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   }
+  }
+ },
+ "structures_sha256": {
+  "CC_S33_AB_dft_bound": "7a99b38526a6f79776246ef64b16e6d767b9d9f8113321795373c13046b3ce75",
+  "CC_S33_AB_dft_far": "7ee94b4f8c072f834a03ac64f74f7521a6ff8e9004fd58f5ec2671dbb3e8a165",
+  "CC_S33_AB_far8": "4432def7c627336f4588e6ea71dd1a4617466f718de00fc9b5c532224a03a5be",
+  "CC_S33_AB_Ed_m03": "4c09fb57b9bb6bcf9254b049f7976757017b7a1731d67836ab067626c681b49c",
+  "CC_S33_AB_Ed_p03": "0a3598ac2a241346f3680f77434b2d685a9dba12e7f631cad92bcebd0ff2ec67",
+  "CC_S33_AB_Ed_p06": "7bbba24c1fbb1f72b0e910ad75298febb895c77c532a36b47f76c1cdc151688c",
+  "CC_S33_AB_G3_c2_bound": "fbecd00939d613cc8163b1ec023b20ba17e686884675831bba57bd9e5257ba47",
+  "CC_S33_AB_G3_c2_far_i": "e0bec7fbf8508290cba24c6bf6049f95e7af44f007c7188341a02b31d6ea9b74",
+  "CC_S33_AB_G3_c2_far_ii": "bd74f918d6b30a325ded73fc6004ddd93daa686a65cda29edcd6cec2f656d3df",
+  "CC_S33_SP_dft_bound": "94fa0c6fd97bb590eaa83eb595dea1ce608686e79b529e9b29ef3762d1e404e4",
+  "CC_S33_SP_dft_far": "969743557944168eada18d29e86efeb38f74657964cad925f9716d4380a43650",
+  "CC_S33_AA_dft_bound": "a1c392fe2127b077494b1aa536d44f66ae88b677d52a908543d39e53f1cab2d6",
+  "CC_S33_AA_dft_far": "46d664e057bd251feebd852553f8bbc223cac71568589057a269a73b74fcda29",
+  "CC_M41_AB_dft_bound": "d10c292a95b43aba7eb8f33f07ea4c3da73791ab30c0da67b94c0ba16c611509",
+  "CC_M41_AB_dft_far": "d2b09df17a8a3904f674eedfcd2d5d62646d099ac024a258eeca2b18799ca1f5",
+  "CC_M41_AB_far8": "79b2dff86926433e64a33f59729bc1433ff49c5a9d624e66cf84c61b8a563fb4",
+  "CC_M41_AB_Ed_m03": "b07483f1e4d7ab5b347426d8917680664781ef42d88ae85b2510e5d2d9eb54b2",
+  "CC_M41_AB_Ed_p03": "5bcfc1d19f3ac23932b0ef359987679ac0ab6cb08f19f3472d526a4bd837748e",
+  "CC_M41_AB_Ed_p06": "282d5c2d1f579543fe7f0ab0aa720b9449ffb7acde309cd4831cf89bfe48a092",
+  "CC_M41_AB_G3_c2_bound": "1033f0805fcfdf86fa1b78d77c9063a083bc8de4b8494d03ed84105e4af68dd5",
+  "CC_M41_AB_G3_c2_far_i": "c19bdc28128c4772158b5cfd2f93889bd86c07a38c816397e32f762326721f95",
+  "CC_M41_AB_G3_c2_far_ii": "b8b41f16befd4ff7f874d408bb29e87c53fe70ccbf62e268f5ee0325b8d1c298",
+  "CC_M41_SP_dft_bound": "d47354d9108c270aa6aa01d620f1d2c44598a1c643f240bfa30f0017c927c323",
+  "CC_M41_SP_dft_far": "de75f1ce49e4a55ad24c10832993acac9eb2d00a20e05a5a24ceb648a8d8658d",
+  "CC_M41_AA_dft_bound": "4d721a5c92a8a33002e75d45ab902588243aa108165d25123d3ee9f2c292bed3",
+  "CC_M41_AA_dft_far": "4a50cddeeee02f6330159e94755e5d6e5c41d48c1209843c3fe4ea17ce1dcc45",
+  "CC_S44_AB_dft_bound": "9e5d6e6e2a66231a1758c0239b98490034f9e30585502ae6edc08183e4da7718",
+  "CC_S44_AB_dft_far": "8d878e2a5aa9e464bfdb48b0da639392d7093a7806a30e41be8accbb9636828b",
+  "CC_M61_AB_dft_bound": "13ef60e40b30d1e0946b379cae986c7a6c06ca2fe4592a060e5d9babb6617737",
+  "CC_M61_AB_dft_far": "711071e3fa4fb73e2af8a4a8167a9a89128f5f00291452b3792018d1e7a82823",
+  "CC_M41_AB_V2a_dft_bound": "f14b15820da6440cec72864ba16868baf72ad411a5b20caf06969a6d82f4b563",
+  "CC_M41_AB_V2a_dft_far": "f65ad2b6ddef2f82f6b646b805fe877cf3b2da489ca798b9aab37831198de4ac"
+ },
+ "jobs": [
+  {
+   "dir": "CC_S33_AB_dft_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "CC_S33_AB",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "af59e4ed9108676b330200723593723e39fbc3109fb01e82af17a0488936f471",
+   "structure": "CC_S33_AB_dft_bound",
+   "tags": {
+    "structure": "CC_S33_AB_dft_bound",
+    "endpoint": "bound",
+    "d0_A": 3.35
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_AB_dft_far",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "CC_S33_AB",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "314689c246d02c38f0a7ae5bf5be301bd83d24cecfbaeb947dc1b9c268c8f87e",
+   "structure": "CC_S33_AB_dft_far",
+   "tags": {
+    "structure": "CC_S33_AB_dft_far",
+    "endpoint": "far",
+    "gap_A": 10.0
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_AB_far8",
+   "kind": "info",
+   "calc": "scf",
+   "model": "CC_S33_AB",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "16e92f1d4e30faeb44ab0f99df5b993fa715330d14a65a79c4a6611f1f48d2da",
+   "structure": "CC_S33_AB_far8",
+   "tags": {
+    "structure": "CC_S33_AB_far8",
+    "info": "직접 8 Å (같은 셀) — 8→10 꼬리 · V2 +0.0136 과 비교"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_AB_Ed_m03",
+   "kind": "ed",
+   "calc": "scf",
+   "model": "CC_S33_AB",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "80ea1b7646a2c3cf3889894d58002327b8145c4115cf32424e433afba0329c81",
+   "structure": "CC_S33_AB_Ed_m03",
+   "tags": {
+    "structure": "CC_S33_AB_Ed_m03",
+    "E(d)": "d0-0.3"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_AB_Ed_p03",
+   "kind": "ed",
+   "calc": "scf",
+   "model": "CC_S33_AB",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "08b7f23d3d1d8a90b6b1e497b4b0fd0d6665279449cd81d6f45c7f46750934bd",
+   "structure": "CC_S33_AB_Ed_p03",
+   "tags": {
+    "structure": "CC_S33_AB_Ed_p03",
+    "E(d)": "d0+0.3"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_AB_Ed_p06",
+   "kind": "ed",
+   "calc": "scf",
+   "model": "CC_S33_AB",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "91f183746a1fbb465d861177b8e621a9083f8d323989f8e248813ec06caa3169",
+   "structure": "CC_S33_AB_Ed_p06",
+   "tags": {
+    "structure": "CC_S33_AB_Ed_p06",
+    "E(d)": "d0+0.6"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_AB_G3_c2_bound",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "CC_S33_AB",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.8489,
+    "eopreg": 0.02747
+   },
+   "pw_in_sha256": "7490adbd84077be156ca44fe7bacd2e720e70eafad278d7b5b734840d70984db",
+   "structure": "CC_S33_AB_G3_c2_bound",
+   "tags": {
+    "structure": "CC_S33_AB_G3_c2_bound",
+    "G3": "G3_c2_bound"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_AB_G3_c2_far_i",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "CC_S33_AB",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.8489,
+    "eopreg": 0.02747
+   },
+   "pw_in_sha256": "3f892a7c5115734980e095fb1901db6c9ce1ed849e8ec7d288e72095388f5fb8",
+   "structure": "CC_S33_AB_G3_c2_far_i",
+   "tags": {
+    "structure": "CC_S33_AB_G3_c2_far_i",
+    "G3": "G3_c2_far_i"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_AB_G3_c2_far_ii",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "CC_S33_AB",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.8489,
+    "eopreg": 0.02747
+   },
+   "pw_in_sha256": "8e98f5109811e75bbaf1f4ae07e1c466a7cbe699c8f56f0d66452fc7367d1bb3",
+   "structure": "CC_S33_AB_G3_c2_far_ii",
+   "tags": {
+    "structure": "CC_S33_AB_G3_c2_far_ii",
+    "G3": "G3_c2_far_ii"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_AB_G4_e70_bound",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "CC_S33_AB",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 70.0,
+   "ecutrho": 700.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "f74c2305b10c5869b4dba7d5202183778bf194783f6f90e1c47909caf98e613b",
+   "structure": "CC_S33_AB_dft_bound",
+   "tags": {
+    "structure": "CC_S33_AB_dft_bound",
+    "G4": "e70_bound"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_AB_G4_k24_bound",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "CC_S33_AB",
+   "nat": 12,
+   "kpts": [
+    24,
+    24,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "a1bdfa7a6be8198370556151902022f4849c33440021335b6be25344cb636c66",
+   "structure": "CC_S33_AB_dft_bound",
+   "tags": {
+    "structure": "CC_S33_AB_dft_bound",
+    "G4": "k24_bound"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_AB_G4_s05_bound",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "CC_S33_AB",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.005,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "909fa65901170fcc5c839371a7d91d7f33d9aef65b61f746b32c63a34b545c27",
+   "structure": "CC_S33_AB_dft_bound",
+   "tags": {
+    "structure": "CC_S33_AB_dft_bound",
+    "G4": "s05_bound"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_AB_G4_e70_far",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "CC_S33_AB",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 70.0,
+   "ecutrho": 700.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "d8f03349d904a81045bb7294478b509d1d1e04f613a65e77f9f9c72a5ec82a3b",
+   "structure": "CC_S33_AB_dft_far",
+   "tags": {
+    "structure": "CC_S33_AB_dft_far",
+    "G4": "e70_far"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_AB_G4_k24_far",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "CC_S33_AB",
+   "nat": 12,
+   "kpts": [
+    24,
+    24,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "b980648c35a7e28022d6546b23881ba0ad1616f9c1bdbaf9e9a547d8741dfd43",
+   "structure": "CC_S33_AB_dft_far",
+   "tags": {
+    "structure": "CC_S33_AB_dft_far",
+    "G4": "k24_far"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_AB_G4_s05_far",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "CC_S33_AB",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.005,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "f28e12f38be9cfa671e82272c8a761f76eb9f09fab30acc36bafe47c75716845",
+   "structure": "CC_S33_AB_dft_far",
+   "tags": {
+    "structure": "CC_S33_AB_dft_far",
+    "G4": "s05_far"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_SP_dft_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "CC_S33_SP",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "d1388087ae176ed273138fb3651892f7e81a9294146e83ae006b07109e826f3c",
+   "structure": "CC_S33_SP_dft_bound",
+   "tags": {
+    "structure": "CC_S33_SP_dft_bound",
+    "endpoint": "bound",
+    "d0_A": 3.35
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_SP_dft_far",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "CC_S33_SP",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84012,
+    "eopreg": 0.02907
+   },
+   "pw_in_sha256": "2d601a993f7e479e47cedb4eee6b93e8ef2eb4d316c597d99434cc1b9726e9f8",
+   "structure": "CC_S33_SP_dft_far",
+   "tags": {
+    "structure": "CC_S33_SP_dft_far",
+    "endpoint": "far",
+    "gap_A": 10.0
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_AA_dft_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "CC_S33_AA",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.83963,
+    "eopreg": 0.02916
+   },
+   "pw_in_sha256": "ee13b30351e751f4379ca7f1c7549965f0419bdb1d753c82080896509b301e8d",
+   "structure": "CC_S33_AA_dft_bound",
+   "tags": {
+    "structure": "CC_S33_AA_dft_bound",
+    "endpoint": "bound",
+    "d0_A": 3.4632
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S33_AA_dft_far",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "CC_S33_AA",
+   "nat": 12,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.83963,
+    "eopreg": 0.02916
+   },
+   "pw_in_sha256": "845bb01ba071a452f0cd62e5c2fe4ce7681b86298dbc125cf56b4762195d77ad",
+   "structure": "CC_S33_AA_dft_far",
+   "tags": {
+    "structure": "CC_S33_AA_dft_far",
+    "endpoint": "far",
+    "gap_A": 10.0
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_dft_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "CC_M41_AB",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "8ab88a2d14c8d92d25245756896ff7335c9078ae20d6335a773789acb077f685",
+   "structure": "CC_M41_AB_dft_bound",
+   "tags": {
+    "structure": "CC_M41_AB_dft_bound",
+    "endpoint": "bound",
+    "d0_A": 3.35
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_dft_far",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "CC_M41_AB",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "faa23fd68afbec85be351d84c850bceeb2e0a9fb3014ff4f7fc180df35987989",
+   "structure": "CC_M41_AB_dft_far",
+   "tags": {
+    "structure": "CC_M41_AB_dft_far",
+    "endpoint": "far",
+    "gap_A": 10.0
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_far8",
+   "kind": "info",
+   "calc": "scf",
+   "model": "CC_M41_AB",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "a6ecd95b89bb43417f9c1e546a1808c25c773105ca009a6480596dca161f1ca2",
+   "structure": "CC_M41_AB_far8",
+   "tags": {
+    "structure": "CC_M41_AB_far8",
+    "info": "직접 8 Å (같은 셀) — 8→10 꼬리 · V2 +0.0136 과 비교"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_Ed_m03",
+   "kind": "ed",
+   "calc": "scf",
+   "model": "CC_M41_AB",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "b108b569306dfcad0ee0f7ee9a5af280fddb56145193c84ce049f9525bea8dda",
+   "structure": "CC_M41_AB_Ed_m03",
+   "tags": {
+    "structure": "CC_M41_AB_Ed_m03",
+    "E(d)": "d0-0.3"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_Ed_p03",
+   "kind": "ed",
+   "calc": "scf",
+   "model": "CC_M41_AB",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "c8b06f8c8449bea2e9efbcf1def4c9bd020e06e4f132169973bf2367d4cf5d21",
+   "structure": "CC_M41_AB_Ed_p03",
+   "tags": {
+    "structure": "CC_M41_AB_Ed_p03",
+    "E(d)": "d0+0.3"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_Ed_p06",
+   "kind": "ed",
+   "calc": "scf",
+   "model": "CC_M41_AB",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "721715d23ec5a13ab1b93c78fe4dbb77fa113d6338f6675fe4f6132e1e92ede1",
+   "structure": "CC_M41_AB_Ed_p06",
+   "tags": {
+    "structure": "CC_M41_AB_Ed_p06",
+    "E(d)": "d0+0.6"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_G3_c2_bound",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "CC_M41_AB",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.83359,
+    "eopreg": 0.03026
+   },
+   "pw_in_sha256": "46405e95ab8077b36fb6bd6eced82926095df2d428860058480c278875662b3e",
+   "structure": "CC_M41_AB_G3_c2_bound",
+   "tags": {
+    "structure": "CC_M41_AB_G3_c2_bound",
+    "G3": "G3_c2_bound"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_G3_c2_far_i",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "CC_M41_AB",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.83359,
+    "eopreg": 0.03026
+   },
+   "pw_in_sha256": "afff986aa03c53fb8baa6b6a5d4b67b7ddf72860ffd9f9b2059d939bbcd1618f",
+   "structure": "CC_M41_AB_G3_c2_far_i",
+   "tags": {
+    "structure": "CC_M41_AB_G3_c2_far_i",
+    "G3": "G3_c2_far_i"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_G3_c2_far_ii",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "CC_M41_AB",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.83359,
+    "eopreg": 0.03026
+   },
+   "pw_in_sha256": "417a0f02b7cae7c21e27ab5e394c6510de6ffc2eed75392d7d2712f3084c5ed1",
+   "structure": "CC_M41_AB_G3_c2_far_ii",
+   "tags": {
+    "structure": "CC_M41_AB_G3_c2_far_ii",
+    "G3": "G3_c2_far_ii"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_G4_e70_bound",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "CC_M41_AB",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 70.0,
+   "ecutrho": 700.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "fa1a45781cfc55da41bb47f30d8032f16b60c0d2287f32ba0d7b1e91bb7a4d23",
+   "structure": "CC_M41_AB_dft_bound",
+   "tags": {
+    "structure": "CC_M41_AB_dft_bound",
+    "G4": "e70_bound"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_G4_k24_bound",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "CC_M41_AB",
+   "nat": 10,
+   "kpts": [
+    24,
+    24,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "fa9205b35838d83a515cabd21bc759eed341eea88becf1201813995ec9159772",
+   "structure": "CC_M41_AB_dft_bound",
+   "tags": {
+    "structure": "CC_M41_AB_dft_bound",
+    "G4": "k24_bound"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_G4_s05_bound",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "CC_M41_AB",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.005,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "845f85c98abeee8611bf1f70db7cd529687c5455e85b5b489ca08968f9830432",
+   "structure": "CC_M41_AB_dft_bound",
+   "tags": {
+    "structure": "CC_M41_AB_dft_bound",
+    "G4": "s05_bound"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_G4_e70_far",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "CC_M41_AB",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 70.0,
+   "ecutrho": 700.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "3e3a6a8525e07354907d255a52ba824f525674d760caf46eb32db19a79dcc1f1",
+   "structure": "CC_M41_AB_dft_far",
+   "tags": {
+    "structure": "CC_M41_AB_dft_far",
+    "G4": "e70_far"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_G4_k24_far",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "CC_M41_AB",
+   "nat": 10,
+   "kpts": [
+    24,
+    24,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "84962ae1027a776d5b0aafdae6e06aec2961c7963266336849ccc32eb5c3a70d",
+   "structure": "CC_M41_AB_dft_far",
+   "tags": {
+    "structure": "CC_M41_AB_dft_far",
+    "G4": "k24_far"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_G4_s05_far",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "CC_M41_AB",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.005,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "5208402f10e577f0ccd11aad50a5209a6f0e6a42d183e2b81ba358aa2d57f01a",
+   "structure": "CC_M41_AB_dft_far",
+   "tags": {
+    "structure": "CC_M41_AB_dft_far",
+    "G4": "s05_far"
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_SP_dft_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "CC_M41_SP",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "3089733d5d39b7324bd6641b18f3fbb02514bd13918d91922625add67ea09a87",
+   "structure": "CC_M41_SP_dft_bound",
+   "tags": {
+    "structure": "CC_M41_SP_dft_bound",
+    "endpoint": "bound",
+    "d0_A": 3.35
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_SP_dft_far",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "CC_M41_SP",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "3c5d012710164bccf4f1420877c4c0b47820bfbdfa51a049c12283014d95ae8f",
+   "structure": "CC_M41_SP_dft_far",
+   "tags": {
+    "structure": "CC_M41_SP_dft_far",
+    "endpoint": "far",
+    "gap_A": 10.0
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AA_dft_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "CC_M41_AA",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82243,
+    "eopreg": 0.03229
+   },
+   "pw_in_sha256": "c4f158ca986048b15138df4eecac053297579714532f71bcc28962bee3e41b50",
+   "structure": "CC_M41_AA_dft_bound",
+   "tags": {
+    "structure": "CC_M41_AA_dft_bound",
+    "endpoint": "bound",
+    "d0_A": 3.5162
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AA_dft_far",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "CC_M41_AA",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82243,
+    "eopreg": 0.03229
+   },
+   "pw_in_sha256": "cc085451a8b3530d02829cb7d21ee8d3b0bb33e059954f4507c1d29c9c97552a",
+   "structure": "CC_M41_AA_dft_far",
+   "tags": {
+    "structure": "CC_M41_AA_dft_far",
+    "endpoint": "far",
+    "gap_A": 10.0
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S44_AB_dft_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "CC_S44_AB",
+   "nat": 16,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.86618,
+    "eopreg": 0.02433
+   },
+   "pw_in_sha256": "8a25faf3b823fa0e7de7384b9d8d9b77789ffb285ad84c18a6f1a5c677b1d8a9",
+   "structure": "CC_S44_AB_dft_bound",
+   "tags": {
+    "structure": "CC_S44_AB_dft_bound",
+    "endpoint": "bound",
+    "d0_A": 3.35
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_S44_AB_dft_far",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "CC_S44_AB",
+   "nat": 16,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.86618,
+    "eopreg": 0.02433
+   },
+   "pw_in_sha256": "12fe14892887351ea1ea6d16ed997bf18363235bfdbe15a56c0329995770c61c",
+   "structure": "CC_S44_AB_dft_far",
+   "tags": {
+    "structure": "CC_S44_AB_dft_far",
+    "endpoint": "far",
+    "gap_A": 10.0
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M61_AB_dft_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "CC_M61_AB",
+   "nat": 14,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.8543,
+    "eopreg": 0.02649
+   },
+   "pw_in_sha256": "bc4992a7b048d9f0517a6901e9ac775e8d99c95188f4c17d7d71a9c6a6f11d8b",
+   "structure": "CC_M61_AB_dft_bound",
+   "tags": {
+    "structure": "CC_M61_AB_dft_bound",
+    "endpoint": "bound",
+    "d0_A": 3.35
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M61_AB_dft_far",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "CC_M61_AB",
+   "nat": 14,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.8543,
+    "eopreg": 0.02649
+   },
+   "pw_in_sha256": "67e4d5910d4a8d0c08f4f4bd2a072db435d72ec33ecb5d271e9e38a84a23c55e",
+   "structure": "CC_M61_AB_dft_far",
+   "tags": {
+    "structure": "CC_M61_AB_dft_far",
+    "endpoint": "far",
+    "gap_A": 10.0
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_V2a_dft_bound",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "CC_M41_AB_V2a",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "ac05271daf661e59b3816a1f9bc9beb04be18cf6e9825d6f8fb3fe4e752f4783",
+   "structure": "CC_M41_AB_V2a_dft_bound",
+   "tags": {
+    "structure": "CC_M41_AB_V2a_dft_bound",
+    "endpoint": "bound",
+    "d0_A": 3.35
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  },
+  {
+   "dir": "CC_M41_AB_V2a_dft_far",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "CC_M41_AB_V2a",
+   "nat": 10,
+   "kpts": [
+    18,
+    18,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.82287,
+    "eopreg": 0.03221
+   },
+   "pw_in_sha256": "603a7c65eeca79119ab49628dcae707f8c06525e6e709f7fb90d4e9f38e343d1",
+   "structure": "CC_M41_AB_V2a_dft_far",
+   "tags": {
+    "structure": "CC_M41_AB_V2a_dft_far",
+    "endpoint": "far",
+    "gap_A": 10.0
+   },
+   "machine": "V100 (run_sese_gpu.sh · V2 와 같은 pw.x 912d8c8f)"
+  }
+ ]
+}

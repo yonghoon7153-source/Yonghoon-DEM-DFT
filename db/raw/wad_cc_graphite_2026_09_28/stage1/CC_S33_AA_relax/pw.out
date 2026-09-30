@@ -1,0 +1,5347 @@
+
+     Program PWSCF v.7.4.1 starts on 29Sep2026 at  3:50:26 
+
+     This program is part of the open-source Quantum ESPRESSO suite
+     for quantum simulation of materials; please cite
+         "P. Giannozzi et al., J. Phys.:Condens. Matter 21 395502 (2009);
+         "P. Giannozzi et al., J. Phys.:Condens. Matter 29 465901 (2017);
+         "P. Giannozzi et al., J. Chem. Phys. 152 154105 (2020);
+          URL http://www.quantum-espresso.org", 
+     in publications or presentations arising from this work. More details at
+     http://www.quantum-espresso.org/quote
+
+     Parallel version (MPI & OpenMP), running on      16 processor cores
+     Number of MPI processes:                 1
+     Threads/MPI process:                    16
+
+     MPI processes distributed on     1 nodes
+     30252 MiB available memory on the printing compute node when the environment starts
+ 
+     Reading input from pw.in
+
+     Current dimensions of program PWSCF are:
+     Max number of different atomic species (ntypx) = 10
+     Max number of k-points (npk) =  40000
+     Max angular momentum in pseudopotentials (lmaxx) =  4
+     Presently no symmetry can be used with electric field
+
+     file C.pbe-n-kjpaw_psl.1.0.0.UPF: wavefunction(s)  2S 2P renormalized
+ 
+     Subspace diagonalization in iterative solution of the eigenvalue problem:
+     a serial algorithm will be used
+
+ 
+     G-vector sticks info
+     --------------------
+     sticks:   dense  smooth     PW     G-vecs:    dense   smooth      PW
+     Sum         769     313    109               244635    62135   12655
+ 
+     Using Slab Decomposition
+ 
+
+
+     bravais-lattice index     =            0
+     lattice parameter (alat)  =       4.6601  a.u.
+     unit-cell volume          =    1222.6043 (a.u.)^3
+     number of atoms/cell      =           12
+     number of atomic types    =            1
+     number of electrons       =        48.00
+     number of Kohn-Sham states=           29
+     kinetic-energy cutoff     =      52.0000  Ry
+     charge density cutoff     =     520.0000  Ry
+     scf convergence threshold =      1.0E-08
+     mixing beta               =       0.3000
+     number of iterations used =            8  local-TF  mixing
+     energy convergence thresh.=      1.0E-05
+     force convergence thresh. =      1.0E-03
+     Exchange-correlation= SLA  PW   PBX  PBC
+                           (   1   4   3   4   0   0   0)
+     nstep                     =          200
+
+
+     GPU acceleration is ACTIVE.  1 visible GPUs per MPI rank
+
+
+     celldm(1)=   4.660140  celldm(2)=   0.000000  celldm(3)=   0.000000
+     celldm(4)=   0.000000  celldm(5)=   0.000000  celldm(6)=   0.000000
+
+     crystal axes: (cart. coord. in units of alat)
+               a(1) = (   1.000000   0.000000   0.000000 )  
+               a(2) = (   0.500000   0.866025   0.000000 )  
+               a(3) = (   0.000000   0.000000  13.949490 )  
+
+     reciprocal axes: (cart. coord. in units 2 pi/alat)
+               b(1) = (  1.000000 -0.577350  0.000000 )  
+               b(2) = (  0.000000  1.154701  0.000000 )  
+               b(3) = (  0.000000  0.000000  0.071687 )  
+
+
+     PseudoPot. # 1 for C  read from file:
+     /home/ubuntu/wad4l/pseudo_kgy/C.pbe-n-kjpaw_psl.1.0.0.UPF
+     MD5 check sum: 5d2aebdfa2cae82b50a7e79e9516da0f
+     Pseudo is Projector augmented-wave + core cor, Zval =  4.0
+     Generated using "atomic" code by A. Dal Corso  v.5.1
+     Shape of augmentation charge: PSQ
+     Using radial grid of 1073 points,  4 beta functions with: 
+                l(1) =   0
+                l(2) =   0
+                l(3) =   1
+                l(4) =   1
+     Q(r) pseudized with 0 coefficients 
+
+
+     atomic species   valence    mass     pseudopotential
+     C                 4.00    12.01100     C ( 1.00)
+
+     No symmetry found
+
+
+
+   Cartesian axes
+
+     site n.     atom                  positions (alat units)
+         1        C      tau(   1) = (   0.0000000   0.0000000   0.2027542  )
+         2        C      tau(   2) = (   0.5000000   0.2886751   0.2027542  )
+         3        C      tau(   3) = (   0.5000000   0.2886751   1.5612074  )
+         4        C      tau(   4) = (   1.0000000   0.5773503   1.5612074  )
+         5        C      tau(   5) = (   0.0000000   0.0000000   2.9196607  )
+         6        C      tau(   6) = (   0.5000000   0.2886751   2.9196607  )
+         7        C      tau(   7) = (   0.0000000   0.0000000   4.2781139  )
+         8        C      tau(   8) = (   0.5000000   0.2886751   4.2781139  )
+         9        C      tau(   9) = (   1.0000000   0.5773503   5.6365671  )
+        10        C      tau(  10) = (   0.0000000   0.0000000   5.6365671  )
+        11        C      tau(  11) = (   0.0000000   0.0000000   6.9950204  )
+        12        C      tau(  12) = (   0.5000000   0.2886751   6.9950204  )
+
+     --------------------------------------------
+     DFT-D3 Dispersion Correction (no 3-body):
+     --------------------------------------------
+       Reference C6 values for interpolation: 
+
+         atom   Coordination number   C6
+         C          0.000            98.23
+         C          0.987            86.49
+         C          1.998            58.72
+         C          2.999            51.56
+         C          3.984            36.41
+
+       Values used:
+
+         atom   Coordination number  R0_AB[au]  C6      C8
+         C          3.314            2.750     48.28   1396.35
+         C          3.315            2.750     48.28   1396.23
+         C          3.322            2.750     48.13   1391.86
+         C          3.321            2.750     48.13   1392.11
+         C          3.322            2.750     48.12   1391.65
+         C          3.322            2.750     48.11   1391.53
+         C          3.322            2.750     48.11   1391.53
+         C          3.322            2.750     48.12   1391.65
+         C          3.321            2.750     48.13   1392.11
+         C          3.322            2.750     48.13   1391.86
+         C          3.315            2.750     48.28   1396.23
+         C          3.314            2.750     48.28   1396.35
+
+         Molecular C6 ( Ry / a.u.^6 ) =      6937.12
+
+
+     number of k points=   164  Marzari-Vanderbilt smearing, width (Ry)=  0.0100
+
+     Number of k-points >= 100: set verbosity='high' to print them.
+
+     Dense  grid:   244635 G-vectors     FFT dimensions: (  36,  36, 480)
+
+     Smooth grid:    62135 G-vectors     FFT dimensions: (  24,  24, 300)
+
+     Estimated max dynamical RAM per process >     447.64 MB
+
+     Check: negative core charge=   -0.000003
+
+     Initial potential from superposition of free atoms
+
+     starting charge      47.9995, renormalised to      48.0000
+
+     negative rho (up, down):  9.465E-05 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+     Starting wfcs are   48 randomized atomic wfcs
+     Checking if some PAW data can be deallocated... 
+
+     total cpu time spent up to now is       98.6 secs
+
+     Self-consistent Calculation
+
+     iteration #  1     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.00E-02,  avg # of iterations =  2.2
+
+     negative rho (up, down):  2.586E-07 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0325 Ry au,         -0.0825 Debye
+        Dipole field         -0.0003 Ry au, 
+ 
+        Potential amp.        0.0421 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is      331.0 secs
+
+     total energy              =    -221.74877861 Ry
+     estimated scf accuracy    <       1.06995846 Ry
+
+     iteration #  2     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.23E-03,  avg # of iterations =  1.0
+
+     negative rho (up, down):  7.444E-08 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.1903 Ry au,         -0.4836 Debye
+        Dipole field         -0.0020 Ry au, 
+ 
+        Potential amp.        0.2469 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is      507.1 secs
+
+     total energy              =    -221.32565632 Ry
+     estimated scf accuracy    <       0.73121451 Ry
+
+     iteration #  3     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.52E-03,  avg # of iterations =  2.8
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.1816 Ry au,         -0.4615 Debye
+        Dipole field         -0.0019 Ry au, 
+ 
+        Potential amp.        0.2356 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is      757.6 secs
+
+     total energy              =    -221.45379514 Ry
+     estimated scf accuracy    <       0.09930963 Ry
+
+     iteration #  4     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.07E-04,  avg # of iterations =  3.1
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.3608 Ry au,         -0.9172 Debye
+        Dipole field         -0.0037 Ry au, 
+ 
+        Potential amp.        0.4682 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     1008.3 secs
+
+     total energy              =    -221.45677032 Ry
+     estimated scf accuracy    <       0.08844885 Ry
+
+     iteration #  5     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.84E-04,  avg # of iterations =  6.2
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.3162 Ry au,         -0.8038 Debye
+        Dipole field         -0.0033 Ry au, 
+ 
+        Potential amp.        0.4103 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     1357.5 secs
+
+     total energy              =    -221.44979351 Ry
+     estimated scf accuracy    <       0.41944452 Ry
+
+     iteration #  6     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.84E-04,  avg # of iterations =  1.0
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.3202 Ry au,         -0.8139 Debye
+        Dipole field         -0.0033 Ry au, 
+ 
+        Potential amp.        0.4154 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     1531.1 secs
+
+     total energy              =    -221.45131631 Ry
+     estimated scf accuracy    <       0.33926854 Ry
+
+     iteration #  7     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.84E-04,  avg # of iterations =  1.0
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.3361 Ry au,         -0.8542 Debye
+        Dipole field         -0.0035 Ry au, 
+ 
+        Potential amp.        0.4360 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     1704.7 secs
+
+     total energy              =    -221.45046439 Ry
+     estimated scf accuracy    <       0.33735934 Ry
+
+     iteration #  8     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.84E-04,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.227E-08 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.3451 Ry au,         -0.8772 Debye
+        Dipole field         -0.0035 Ry au, 
+ 
+        Potential amp.        0.4478 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     1878.2 secs
+
+     total energy              =    -221.44460978 Ry
+     estimated scf accuracy    <       0.31984772 Ry
+
+     iteration #  9     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.84E-04,  avg # of iterations =  1.2
+
+     negative rho (up, down):  6.451E-05 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.2532 Ry au,         -0.6434 Debye
+        Dipole field         -0.0026 Ry au, 
+ 
+        Potential amp.        0.3285 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     2060.1 secs
+
+     total energy              =    -221.43722999 Ry
+     estimated scf accuracy    <       0.17987364 Ry
+
+     iteration # 10     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.84E-04,  avg # of iterations =  2.8
+
+     negative rho (up, down):  2.805E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.2238 Ry au,         -0.5687 Debye
+        Dipole field         -0.0023 Ry au, 
+ 
+        Potential amp.        0.2903 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     2295.4 secs
+
+     total energy              =    -221.43988449 Ry
+     estimated scf accuracy    <       0.00855403 Ry
+
+     iteration # 11     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     ethr =  1.78E-05,  avg # of iterations =  5.7
+
+     negative rho (up, down):  1.436E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.2006 Ry au,         -0.5098 Debye
+        Dipole field         -0.0021 Ry au, 
+ 
+        Potential amp.        0.2602 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     2629.9 secs
+
+     total energy              =    -221.44033755 Ry
+     estimated scf accuracy    <       0.00430707 Ry
+
+     iteration # 12     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  8.97E-06,  avg # of iterations =  6.8
+
+     negative rho (up, down):  9.304E-07 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.1835 Ry au,         -0.4663 Debye
+        Dipole field         -0.0019 Ry au, 
+ 
+        Potential amp.        0.2380 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     2998.3 secs
+
+     total energy              =    -221.43961813 Ry
+     estimated scf accuracy    <       0.00547830 Ry
+
+     iteration # 13     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  8.97E-06,  avg # of iterations =  4.6
+
+     negative rho (up, down):  1.591E-06 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.1815 Ry au,         -0.4614 Debye
+        Dipole field         -0.0019 Ry au, 
+ 
+        Potential amp.        0.2355 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3254.9 secs
+
+     total energy              =    -221.43988787 Ry
+     estimated scf accuracy    <       0.00391528 Ry
+
+     iteration # 14     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  8.16E-06,  avg # of iterations =  1.0
+
+     negative rho (up, down):  9.422E-07 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.1744 Ry au,         -0.4433 Debye
+        Dipole field         -0.0018 Ry au, 
+ 
+        Potential amp.        0.2263 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3259.3 secs
+
+     total energy              =    -221.43979057 Ry
+     estimated scf accuracy    <       0.00401224 Ry
+
+     iteration # 15     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  8.16E-06,  avg # of iterations =  1.0
+
+     negative rho (up, down):  6.524E-06 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.1637 Ry au,         -0.4161 Debye
+        Dipole field         -0.0017 Ry au, 
+ 
+        Potential amp.        0.2124 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3263.7 secs
+
+     total energy              =    -221.43956029 Ry
+     estimated scf accuracy    <       0.00387614 Ry
+
+     iteration # 16     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  8.08E-06,  avg # of iterations =  8.2
+
+     negative rho (up, down):  5.810E-06 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.1488 Ry au,         -0.3782 Debye
+        Dipole field         -0.0015 Ry au, 
+ 
+        Potential amp.        0.1931 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3271.0 secs
+
+     total energy              =    -221.43944740 Ry
+     estimated scf accuracy    <       0.00587402 Ry
+
+     iteration # 17     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  8.08E-06,  avg # of iterations =  2.1
+
+     negative rho (up, down):  3.888E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.1172 Ry au,         -0.2978 Debye
+        Dipole field         -0.0012 Ry au, 
+ 
+        Potential amp.        0.1520 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3275.8 secs
+
+     total energy              =    -221.43893803 Ry
+     estimated scf accuracy    <       0.00531968 Ry
+
+     iteration # 18     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  8.08E-06,  avg # of iterations =  6.7
+
+     negative rho (up, down):  2.692E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0888 Ry au,         -0.2257 Debye
+        Dipole field         -0.0009 Ry au, 
+ 
+        Potential amp.        0.1152 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3282.6 secs
+
+     total energy              =    -221.43817067 Ry
+     estimated scf accuracy    <       0.00650946 Ry
+
+     iteration # 19     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  8.08E-06,  avg # of iterations =  5.6
+
+     negative rho (up, down):  3.122E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0833 Ry au,         -0.2116 Debye
+        Dipole field         -0.0009 Ry au, 
+ 
+        Potential amp.        0.1080 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3288.9 secs
+
+     total energy              =    -221.43849547 Ry
+     estimated scf accuracy    <       0.00173994 Ry
+
+     iteration # 20     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.62E-06,  avg # of iterations =  3.5
+
+     negative rho (up, down):  4.290E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0795 Ry au,         -0.2021 Debye
+        Dipole field         -0.0008 Ry au, 
+ 
+        Potential amp.        0.1032 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3294.4 secs
+
+     total energy              =    -221.43855178 Ry
+     estimated scf accuracy    <       0.00155366 Ry
+
+     iteration # 21     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.24E-06,  avg # of iterations =  6.7
+
+     negative rho (up, down):  3.206E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0406 Ry au,         -0.1033 Debye
+        Dipole field         -0.0004 Ry au, 
+ 
+        Potential amp.        0.0527 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3301.1 secs
+
+     total energy              =    -221.43833157 Ry
+     estimated scf accuracy    <       0.00197437 Ry
+
+     iteration # 22     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.24E-06,  avg # of iterations =  4.1
+
+     negative rho (up, down):  5.625E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0557 Ry au,         -0.1416 Debye
+        Dipole field         -0.0006 Ry au, 
+ 
+        Potential amp.        0.0723 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3307.0 secs
+
+     total energy              =    -221.43843287 Ry
+     estimated scf accuracy    <       0.00122523 Ry
+
+     iteration # 23     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     c_bands:  1 eigenvalues not converged
+     ethr =  2.55E-06,  avg # of iterations =  4.3
+
+     negative rho (up, down):  4.742E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0595 Ry au,         -0.1512 Debye
+        Dipole field         -0.0006 Ry au, 
+ 
+        Potential amp.        0.0772 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3312.8 secs
+
+     total energy              =    -221.43858832 Ry
+     estimated scf accuracy    <       0.00151037 Ry
+
+     iteration # 24     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.55E-06,  avg # of iterations =  5.2
+
+     negative rho (up, down):  4.137E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0333 Ry au,         -0.0845 Debye
+        Dipole field         -0.0003 Ry au, 
+ 
+        Potential amp.        0.0431 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3318.9 secs
+
+     total energy              =    -221.43841428 Ry
+     estimated scf accuracy    <       0.00146232 Ry
+
+     iteration # 25     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.55E-06,  avg # of iterations =  4.7
+
+     negative rho (up, down):  5.110E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0278 Ry au,         -0.0707 Debye
+        Dipole field         -0.0003 Ry au, 
+ 
+        Potential amp.        0.0361 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3324.9 secs
+
+     total energy              =    -221.43845560 Ry
+     estimated scf accuracy    <       0.00130853 Ry
+
+     iteration # 26     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.55E-06,  avg # of iterations =  3.0
+
+     negative rho (up, down):  3.057E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0409 Ry au,         -0.1039 Debye
+        Dipole field         -0.0004 Ry au, 
+ 
+        Potential amp.        0.0531 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3330.1 secs
+
+     total energy              =    -221.43834800 Ry
+     estimated scf accuracy    <       0.00130710 Ry
+
+     iteration # 27     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     ethr =  2.55E-06,  avg # of iterations =  5.6
+
+     negative rho (up, down):  4.903E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0018 Ry au,          0.0045 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0023 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3336.5 secs
+
+     total energy              =    -221.43838888 Ry
+     estimated scf accuracy    <       0.00119751 Ry
+
+     iteration # 28     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     ethr =  2.49E-06,  avg # of iterations =  5.6
+
+     negative rho (up, down):  5.274E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0066 Ry au,         -0.0167 Debye
+        Dipole field         -0.0001 Ry au, 
+ 
+        Potential amp.        0.0085 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3343.0 secs
+
+     total energy              =    -221.43842469 Ry
+     estimated scf accuracy    <       0.00128514 Ry
+
+     iteration # 29     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.49E-06,  avg # of iterations =  3.4
+
+     negative rho (up, down):  5.074E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0176 Ry au,         -0.0447 Debye
+        Dipole field         -0.0002 Ry au, 
+ 
+        Potential amp.        0.0228 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3348.2 secs
+
+     total energy              =    -221.43846852 Ry
+     estimated scf accuracy    <       0.00146787 Ry
+
+     iteration # 30     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.49E-06,  avg # of iterations =  3.5
+
+     negative rho (up, down):  2.966E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0060 Ry au,          0.0153 Debye
+        Dipole field          0.0001 Ry au, 
+ 
+        Potential amp.       -0.0078 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3353.5 secs
+
+     total energy              =    -221.43824831 Ry
+     estimated scf accuracy    <       0.00151525 Ry
+
+     iteration # 31     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     ethr =  2.49E-06,  avg # of iterations =  6.5
+
+     negative rho (up, down):  2.773E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0117 Ry au,          0.0296 Debye
+        Dipole field          0.0001 Ry au, 
+ 
+        Potential amp.       -0.0151 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3360.3 secs
+
+     total energy              =    -221.43823540 Ry
+     estimated scf accuracy    <       0.00104104 Ry
+
+     iteration # 32     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     ethr =  2.17E-06,  avg # of iterations =  3.6
+
+     negative rho (up, down):  4.190E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0246 Ry au,          0.0625 Debye
+        Dipole field          0.0003 Ry au, 
+ 
+        Potential amp.       -0.0319 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3365.8 secs
+
+     total energy              =    -221.43822035 Ry
+     estimated scf accuracy    <       0.00084679 Ry
+
+     iteration # 33     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     ethr =  1.76E-06,  avg # of iterations =  8.5
+
+     negative rho (up, down):  5.766E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0313 Ry au,          0.0795 Debye
+        Dipole field          0.0003 Ry au, 
+ 
+        Potential amp.       -0.0406 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3373.5 secs
+
+     total energy              =    -221.43826323 Ry
+     estimated scf accuracy    <       0.00047279 Ry
+
+     iteration # 34     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  9.85E-07,  avg # of iterations =  3.6
+
+     negative rho (up, down):  4.689E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0245 Ry au,          0.0623 Debye
+        Dipole field          0.0003 Ry au, 
+ 
+        Potential amp.       -0.0318 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3379.4 secs
+
+     total energy              =    -221.43816784 Ry
+     estimated scf accuracy    <       0.00060246 Ry
+
+     iteration # 35     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     ethr =  9.85E-07,  avg # of iterations =  7.3
+
+     negative rho (up, down):  3.361E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0121 Ry au,          0.0308 Debye
+        Dipole field          0.0001 Ry au, 
+ 
+        Potential amp.       -0.0157 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     3745.1 secs
+
+     total energy              =    -221.43809706 Ry
+     estimated scf accuracy    <       0.00143156 Ry
+
+     iteration # 36     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     c_bands:  1 eigenvalues not converged
+     c_bands:  2 eigenvalues not converged
+     c_bands:  2 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  2 eigenvalues not converged
+     ethr =  9.85E-07,  avg # of iterations =  7.2
+
+     negative rho (up, down):  2.738E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0073 Ry au,          0.0185 Debye
+        Dipole field          0.0001 Ry au, 
+ 
+        Potential amp.       -0.0095 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     4129.9 secs
+
+     total energy              =    -221.43816960 Ry
+     estimated scf accuracy    <       0.00043523 Ry
+
+     iteration # 37     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  9.07E-07,  avg # of iterations =  2.5
+
+     negative rho (up, down):  1.743E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0017 Ry au,          0.0042 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0022 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     4356.6 secs
+
+     total energy              =    -221.43810612 Ry
+     estimated scf accuracy    <       0.00056790 Ry
+
+     iteration # 38     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     ethr =  9.07E-07,  avg # of iterations =  2.9
+
+     negative rho (up, down):  1.526E-03 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0031 Ry au,          0.0080 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0041 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     4600.5 secs
+
+     total energy              =    -221.43811803 Ry
+     estimated scf accuracy    <       0.00006501 Ry
+
+     iteration # 39     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.35E-07,  avg # of iterations =  1.9
+
+     negative rho (up, down):  3.020E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0021 Ry au,          0.0053 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0027 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     4807.7 secs
+
+     total energy              =    -221.43809281 Ry
+     estimated scf accuracy    <       0.00008879 Ry
+
+     iteration # 40     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     ethr =  1.35E-07,  avg # of iterations =  5.8
+
+     negative rho (up, down):  4.098E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0015 Ry au,          0.0037 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0019 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     5145.1 secs
+
+     total energy              =    -221.43809483 Ry
+     estimated scf accuracy    <       0.00005416 Ry
+
+     iteration # 41     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.13E-07,  avg # of iterations =  3.3
+
+     negative rho (up, down):  4.515E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0009 Ry au,          0.0022 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0011 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     5400.7 secs
+
+     total energy              =    -221.43809383 Ry
+     estimated scf accuracy    <       0.00001195 Ry
+
+     iteration # 42     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.49E-08,  avg # of iterations =  2.2
+
+     negative rho (up, down):  3.275E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0011 Ry au,          0.0029 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0015 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     5618.4 secs
+
+     total energy              =    -221.43809149 Ry
+     estimated scf accuracy    <       0.00000682 Ry
+
+     iteration # 43     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.42E-08,  avg # of iterations =  1.7
+
+     negative rho (up, down):  1.371E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0001 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     5819.7 secs
+
+     total energy              =    -221.43809048 Ry
+     estimated scf accuracy    <       0.00000510 Ry
+
+     iteration # 44     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.06E-08,  avg # of iterations =  3.1
+
+     negative rho (up, down):  9.447E-05 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0004 Ry au,         -0.0010 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0005 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     6068.4 secs
+
+     total energy              =    -221.43809082 Ry
+     estimated scf accuracy    <       0.00000292 Ry
+
+     iteration # 45     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  6.08E-09,  avg # of iterations =  2.0
+
+     negative rho (up, down):  8.584E-05 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0001 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     6282.1 secs
+
+     total energy              =    -221.43809110 Ry
+     estimated scf accuracy    <       0.00000277 Ry
+
+     iteration # 46     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  5.78E-09,  avg # of iterations =  3.2
+
+     negative rho (up, down):  1.079E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0001 Ry au,          0.0002 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     6533.0 secs
+
+     total energy              =    -221.43809124 Ry
+     estimated scf accuracy    <       0.00000101 Ry
+
+     iteration # 47     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.10E-09,  avg # of iterations =  1.3
+
+     negative rho (up, down):  1.256E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0001 Ry au,         -0.0002 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     6722.3 secs
+
+     total energy              =    -221.43809120 Ry
+     estimated scf accuracy    <       0.00000028 Ry
+
+     iteration # 48     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  5.84E-10,  avg # of iterations =  1.8
+
+     negative rho (up, down):  1.234E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0001 Ry au,         -0.0003 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     6927.5 secs
+
+     total energy              =    -221.43809121 Ry
+     estimated scf accuracy    <       0.00000032 Ry
+
+     iteration # 49     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  5.84E-10,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.169E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0001 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     7104.7 secs
+
+     total energy              =    -221.43809121 Ry
+     estimated scf accuracy    <       0.00000015 Ry
+
+     iteration # 50     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.09E-10,  avg # of iterations =  1.2
+
+     negative rho (up, down):  1.220E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0001 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     7286.4 secs
+
+     total energy              =    -221.43809121 Ry
+     estimated scf accuracy    <       0.00000003 Ry
+
+     iteration # 51     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  6.29E-11,  avg # of iterations =  1.8
+
+     negative rho (up, down):  1.251E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     7493.6 secs
+
+     total energy              =    -221.43809121 Ry
+     estimated scf accuracy    <       0.00000001 Ry
+
+     iteration # 52     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.91E-11,  avg # of iterations =  1.2
+
+     negative rho (up, down):  1.237E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0001 Ry au,          0.0002 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     7671.1 secs
+
+     End of self-consistent calculation
+
+     Number of k-points >= 100: set verbosity='high' to print the bands.
+
+     the Fermi energy is     2.3336 ev
+
+!    total energy              =    -221.43809120 Ry
+     total all-electron energy =      -914.607265 Ry
+     estimated scf accuracy    <          9.8E-09 Ry
+     smearing contrib. (-TS)   =      -0.00004335 Ry
+     internal energy E=F+TS    =    -221.43804785 Ry
+
+     The total energy is F=E-TS. E is the sum of the following terms:
+     one-electron contribution =   -3008.27893758 Ry
+     hartree contribution      =    1521.06516768 Ry
+     xc contribution           =     -55.68174310 Ry
+     ewald contribution        =    1395.58757905 Ry
+     DFT-D3 Dispersion         =      -0.12705520 Ry
+     electric field correction =       0.00000000 Ry
+     one-center paw contrib.   =     -74.00305870 Ry
+
+     convergence has been achieved in  52 iterations
+
+     negative rho (up, down):  1.237E-04 0.000E+00
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -0.00000002    0.00000001   -0.00057608
+     atom    2 type  1   force =     0.00000001    0.00000000    0.00011493
+     atom    3 type  1   force =     0.00000000   -0.00000000   -0.00001263
+     atom    4 type  1   force =    -0.00000001    0.00000001    0.00011777
+     atom    5 type  1   force =    -0.00000000    0.00000001   -0.00140752
+     atom    6 type  1   force =     0.00000002   -0.00000001   -0.00190576
+     atom    7 type  1   force =    -0.00000002   -0.00000000    0.00188940
+     atom    8 type  1   force =     0.00000002   -0.00000002    0.00138963
+     atom    9 type  1   force =     0.00000001   -0.00000002   -0.00010655
+     atom   10 type  1   force =    -0.00000001    0.00000002    0.00002270
+     atom   11 type  1   force =    -0.00000001    0.00000001   -0.00010912
+     atom   12 type  1   force =     0.00000000    0.00000001    0.00058322
+
+     Total force =     0.003390     Total SCF correction =     0.000267
+
+     BFGS Geometry Optimization
+     Energy error            =      1.1E-05 Ry
+     Gradient error          =      1.9E-03 Ry/Bohr
+
+     number of scf cycles    =   1
+     number of bfgs steps    =   0
+
+     energy             new  =    -221.4380912007 Ry
+
+     new trust radius        =       0.0019057600 bohr
+     new conv_thr            =       0.0000000100 Ry
+
+
+ATOMIC_POSITIONS (angstrom)
+C                0.0000000000        0.0000000000        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        3.8499933189    0   0   1
+C                2.4660400000        1.4237688578        3.8500623197    0   0   1
+C                0.0000000000        0.0000000000        7.1992551721    0   0   1
+C                1.2330200000        0.7118844289        7.1989915153    0   0   1
+C                0.0000000000        0.0000000000       10.5509998288    0   0   1
+C                1.2330200000        0.7118844289       10.5507353613    0   0   1
+C                2.4660400000        1.4237688578       13.8999436166    0   0   1
+C                0.0000000000        0.0000000000       13.9000120121    0   0   1
+C                0.0000000000        0.0000000000       17.2499422583    0   0   1
+C                1.2330200000        0.7118844289       17.2503086293    0   0   1
+
+
+
+     Writing config-only to output data dir ./tmp/CC_S33_AA_relax.save/ :
+     XML data file
+     NEW-OLD atomic charge density approx. for the potential
+
+     Check: negative core charge=   -0.000003
+
+     negative rho (up, down):  1.238E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0001 Ry au,          0.0002 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     7762.6 secs
+
+     Self-consistent Calculation
+
+     iteration #  1     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.00E-06,  avg # of iterations =  2.0
+
+     Threshold (ethr) on eigenvalues was too large:
+     Diagonalizing with lowered threshold
+
+     Davidson diagonalization with overlap
+     ethr =  4.17E-09,  avg # of iterations =  3.9
+
+     negative rho (up, down):  1.237E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0001 Ry au,          0.0002 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     8251.7 secs
+
+     total energy              =    -221.43810278 Ry
+     estimated scf accuracy    <       0.00000272 Ry
+
+     iteration #  2     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  5.67E-09,  avg # of iterations =  1.1
+
+     negative rho (up, down):  1.234E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0001 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     8431.3 secs
+
+     total energy              =    -221.43810219 Ry
+     estimated scf accuracy    <       0.00000171 Ry
+
+     iteration #  3     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.57E-09,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.232E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     8648.8 secs
+
+     total energy              =    -221.43810244 Ry
+     estimated scf accuracy    <       0.00000019 Ry
+
+     iteration #  4     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.90E-10,  avg # of iterations =  1.4
+
+     negative rho (up, down):  1.227E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0001 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     8840.4 secs
+
+     total energy              =    -221.43810243 Ry
+     estimated scf accuracy    <       0.00000013 Ry
+
+     iteration #  5     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.70E-10,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.227E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0001 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     9050.9 secs
+
+     total energy              =    -221.43810244 Ry
+     estimated scf accuracy    <       0.00000002 Ry
+
+     iteration #  6     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.53E-11,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.227E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0001 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     9261.9 secs
+
+     total energy              =    -221.43810244 Ry
+     estimated scf accuracy    <       0.00000001 Ry
+
+     iteration #  7     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.65E-11,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.238E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0001 Ry au,          0.0004 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0002 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     9432.9 secs
+
+     End of self-consistent calculation
+
+     Number of k-points >= 100: set verbosity='high' to print the bands.
+
+     the Fermi energy is     2.3334 ev
+
+!    total energy              =    -221.43810243 Ry
+     total all-electron energy =      -914.607276 Ry
+     estimated scf accuracy    <          6.9E-09 Ry
+     smearing contrib. (-TS)   =      -0.00004333 Ry
+     internal energy E=F+TS    =    -221.43805910 Ry
+
+     The total energy is F=E-TS. E is the sum of the following terms:
+     one-electron contribution =   -3008.13249359 Ry
+     hartree contribution      =    1520.99332874 Ry
+     xc contribution           =     -55.68174232 Ry
+     ewald contribution        =    1395.51296259 Ry
+     DFT-D3 Dispersion         =      -0.12705421 Ry
+     electric field correction =       0.00000000 Ry
+     one-center paw contrib.   =     -74.00306031 Ry
+
+     convergence has been achieved in   7 iterations
+
+     negative rho (up, down):  1.238E-04 0.000E+00
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =     0.00000000    0.00000000   -0.00057507
+     atom    2 type  1   force =     0.00000000   -0.00000000    0.00011512
+     atom    3 type  1   force =    -0.00000000    0.00000000    0.00002673
+     atom    4 type  1   force =    -0.00000000   -0.00000000    0.00006450
+     atom    5 type  1   force =     0.00000000    0.00000000   -0.00154313
+     atom    6 type  1   force =     0.00000000    0.00000000   -0.00169935
+     atom    7 type  1   force =    -0.00000000   -0.00000000    0.00168105
+     atom    8 type  1   force =    -0.00000000    0.00000000    0.00152490
+     atom    9 type  1   force =    -0.00000000    0.00000000   -0.00005383
+     atom   10 type  1   force =    -0.00000000   -0.00000000   -0.00001438
+     atom   11 type  1   force =    -0.00000000   -0.00000000    0.00012997
+     atom   12 type  1   force =    -0.00000000   -0.00000000    0.00034348
+
+     Total force =     0.003250     Total SCF correction =     0.000316
+     Energy error            =      1.1E-05 Ry
+     Gradient error          =      1.7E-03 Ry/Bohr
+
+     number of scf cycles    =   2
+     number of bfgs steps    =   1
+
+     energy             old  =    -221.4380912007 Ry
+     energy             new  =    -221.4381024280 Ry
+
+     CASE: energy            _new < energy            _old
+
+
+     WARNING: bfgs curvature condition failed, Theta= 0.843
+     new trust radius        =       0.0020963360 bohr
+     new conv_thr            =       0.0000000001 Ry
+
+
+ATOMIC_POSITIONS (angstrom)
+C                0.0000000000        0.0000000000        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        3.8499979150    0   0   1
+C                2.4660400000        1.4237688578        3.8501181325    0   0   1
+C                0.0000000000        0.0000000000        7.1983452827    0   0   1
+C                1.2330200000        0.7118844289        7.1978821820    0   0   1
+C                0.0000000000        0.0000000000       10.5520984723    0   0   1
+C                1.2330200000        0.7118844289       10.5516341213    0   0   1
+C                2.4660400000        1.4237688578       13.8998945444    0   0   1
+C                0.0000000000        0.0000000000       13.9000143398    0   0   1
+C                0.0000000000        0.0000000000       17.2499502065    0   0   1
+C                1.2330200000        0.7118844289       17.2505925973    0   0   1
+
+
+
+     Writing config-only to output data dir ./tmp/CC_S33_AA_relax.save/ :
+     XML data file
+     NEW-OLD atomic charge density approx. for the potential
+
+     Check: negative core charge=   -0.000003
+
+     negative rho (up, down):  1.239E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0001 Ry au,          0.0004 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0002 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is     9524.5 secs
+
+     Self-consistent Calculation
+
+     iteration #  1     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.00E-06,  avg # of iterations =  2.0
+
+     Threshold (ethr) on eigenvalues was too large:
+     Diagonalizing with lowered threshold
+
+     Davidson diagonalization with overlap
+     ethr =  5.33E-09,  avg # of iterations =  3.9
+
+     negative rho (up, down):  1.240E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0001 Ry au,          0.0004 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0002 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    10011.3 secs
+
+     total energy              =    -221.43811525 Ry
+     estimated scf accuracy    <       0.00000358 Ry
+
+     iteration #  2     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  7.46E-09,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.245E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0001 Ry au,          0.0003 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0002 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    10188.6 secs
+
+     total energy              =    -221.43811441 Ry
+     estimated scf accuracy    <       0.00000217 Ry
+
+     iteration #  3     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  4.51E-09,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.249E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0001 Ry au,          0.0003 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    10407.5 secs
+
+     total energy              =    -221.43811476 Ry
+     estimated scf accuracy    <       0.00000009 Ry
+
+     iteration #  4     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.84E-10,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.256E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0001 Ry au,          0.0002 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    10623.3 secs
+
+     total energy              =    -221.43811475 Ry
+     estimated scf accuracy    <       0.00000008 Ry
+
+     iteration #  5     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.68E-10,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.256E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    10835.9 secs
+
+     total energy              =    -221.43811476 Ry
+     estimated scf accuracy    <       0.00000002 Ry
+
+     iteration #  6     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.68E-11,  avg # of iterations =  1.3
+
+     negative rho (up, down):  1.255E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    11025.3 secs
+
+     total energy              =    -221.43811476 Ry
+     estimated scf accuracy    <       0.00000001 Ry
+
+     iteration #  7     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.11E-11,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.249E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    11202.8 secs
+
+     total energy              =    -221.43811476 Ry
+     estimated scf accuracy    <       0.00000001 Ry
+
+     iteration #  8     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.11E-11,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.249E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    11418.8 secs
+
+     total energy              =    -221.43811476 Ry
+     estimated scf accuracy    <       0.00000001 Ry
+
+     iteration #  9     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.11E-11,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.247E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    11596.5 secs
+
+     total energy              =    -221.43811476 Ry
+     estimated scf accuracy    <       0.00000001 Ry
+
+     iteration # 10     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.11E-11,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.237E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0001 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    11774.0 secs
+
+     total energy              =    -221.43811476 Ry
+     estimated scf accuracy    <       0.00000002 Ry
+
+     iteration # 11     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.11E-11,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.238E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0001 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    11985.7 secs
+
+     total energy              =    -221.43811476 Ry
+     estimated scf accuracy    <       0.00000002 Ry
+
+     iteration # 12     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.11E-11,  avg # of iterations =  1.1
+
+     negative rho (up, down):  1.239E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    12167.7 secs
+
+     total energy              =    -221.43811476 Ry
+     estimated scf accuracy    <          9.6E-09 Ry
+
+     iteration # 13     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.99E-11,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.239E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    12344.5 secs
+
+     total energy              =    -221.43811476 Ry
+     estimated scf accuracy    <          2.4E-09 Ry
+
+     iteration # 14     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  5.00E-12,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.239E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    12522.0 secs
+
+     total energy              =    -221.43811476 Ry
+     estimated scf accuracy    <          1.9E-09 Ry
+
+     iteration # 15     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.86E-12,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.239E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    12699.1 secs
+
+     total energy              =    -221.43811476 Ry
+     estimated scf accuracy    <          1.3E-09 Ry
+
+     iteration # 16     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.64E-12,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.239E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    12875.5 secs
+
+     total energy              =    -221.43811476 Ry
+     estimated scf accuracy    <          1.3E-09 Ry
+
+     iteration # 17     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.64E-12,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.241E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    13050.8 secs
+
+     total energy              =    -221.43811476 Ry
+     estimated scf accuracy    <          1.1E-09 Ry
+
+     iteration # 18     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.33E-12,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.241E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    13274.4 secs
+
+     total energy              =    -221.43811476 Ry
+     estimated scf accuracy    <          3.8E-10 Ry
+
+     iteration # 19     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  7.90E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.242E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    13451.6 secs
+
+     total energy              =    -221.43811476 Ry
+     estimated scf accuracy    <          4.2E-10 Ry
+
+     iteration # 20     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  7.90E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.241E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    13629.2 secs
+
+     total energy              =    -221.43811476 Ry
+     estimated scf accuracy    <          4.8E-10 Ry
+
+     iteration # 21     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  7.90E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.241E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    13805.9 secs
+
+     total energy              =    -221.43811476 Ry
+     estimated scf accuracy    <          2.5E-10 Ry
+
+     iteration # 22     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  5.25E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.241E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    13983.2 secs
+
+     total energy              =    -221.43811476 Ry
+     estimated scf accuracy    <          1.8E-10 Ry
+
+     iteration # 23     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.70E-13,  avg # of iterations =  1.2
+
+     negative rho (up, down):  1.239E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    14159.5 secs
+
+     End of self-consistent calculation
+
+     Number of k-points >= 100: set verbosity='high' to print the bands.
+
+     the Fermi energy is     2.3334 ev
+
+!    total energy              =    -221.43811476 Ry
+     total all-electron energy =      -914.607289 Ry
+     estimated scf accuracy    <          9.3E-11 Ry
+     smearing contrib. (-TS)   =      -0.00004312 Ry
+     internal energy E=F+TS    =    -221.43807164 Ry
+
+     The total energy is F=E-TS. E is the sum of the following terms:
+     one-electron contribution =   -3007.95773366 Ry
+     hartree contribution      =    1520.90505647 Ry
+     xc contribution           =     -55.68172191 Ry
+     ewald contribution        =    1395.42644064 Ry
+     DFT-D3 Dispersion         =      -0.12705309 Ry
+     electric field correction =       0.00000000 Ry
+     one-center paw contrib.   =     -74.00306009 Ry
+
+     convergence has been achieved in  23 iterations
+
+     negative rho (up, down):  1.239E-04 0.000E+00
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -0.00000000    0.00000000   -0.00057466
+     atom    2 type  1   force =     0.00000000   -0.00000000    0.00011552
+     atom    3 type  1   force =    -0.00000000   -0.00000000    0.00005443
+     atom    4 type  1   force =     0.00000000   -0.00000000    0.00002224
+     atom    5 type  1   force =     0.00000000    0.00000000   -0.00164697
+     atom    6 type  1   force =     0.00000000   -0.00000000   -0.00154427
+     atom    7 type  1   force =    -0.00000000    0.00000000    0.00152579
+     atom    8 type  1   force =    -0.00000000    0.00000000    0.00162935
+     atom    9 type  1   force =    -0.00000000    0.00000000   -0.00001185
+     atom   10 type  1   force =    -0.00000000   -0.00000000   -0.00004258
+     atom   11 type  1   force =     0.00000000    0.00000000    0.00030996
+     atom   12 type  1   force =    -0.00000000   -0.00000000    0.00016303
+
+     Total force =     0.003195     Total SCF correction =     0.000028
+     Energy error            =      1.2E-05 Ry
+     Gradient error          =      1.6E-03 Ry/Bohr
+
+     number of scf cycles    =   3
+     number of bfgs steps    =   2
+
+     energy             old  =    -221.4381024280 Ry
+     energy             new  =    -221.4381147581 Ry
+
+     CASE: energy            _new < energy            _old
+
+     new trust radius        =       0.0031445039 bohr
+     new conv_thr            =       0.0000000001 Ry
+
+
+ATOMIC_POSITIONS (angstrom)
+C                0.0000000000        0.0000000000        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        3.8500205908    0   0   1
+C                2.4660400000        1.4237688578        3.8501822464    0   0   1
+C                0.0000000000        0.0000000000        7.1968501935    0   0   1
+C                1.2330200000        0.7118844289        7.1962181822    0   0   1
+C                0.0000000000        0.0000000000       10.5537456183    0   0   1
+C                1.2330200000        0.7118844289       10.5531120648    0   0   1
+C                2.4660400000        1.4237688578       13.8998409274    0   0   1
+C                0.0000000000        0.0000000000       13.9000021024    0   0   1
+C                0.0000000000        0.0000000000       17.2500641155    0   0   1
+C                1.2330200000        0.7118844289       17.2509392799    0   0   1
+
+
+
+     Writing config-only to output data dir ./tmp/CC_S33_AA_relax.save/ :
+     XML data file
+     NEW-OLD atomic charge density approx. for the potential
+
+     Check: negative core charge=   -0.000003
+
+     negative rho (up, down):  1.240E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    14251.7 secs
+
+     Self-consistent Calculation
+
+     iteration #  1     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.00E-06,  avg # of iterations =  2.0
+
+     Threshold (ethr) on eigenvalues was too large:
+     Diagonalizing with lowered threshold
+
+     Davidson diagonalization with overlap
+     ethr =  1.04E-08,  avg # of iterations =  3.9
+
+     negative rho (up, down):  1.240E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    14736.5 secs
+
+     total energy              =    -221.43813441 Ry
+     estimated scf accuracy    <       0.00000726 Ry
+
+     iteration #  2     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.51E-08,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.238E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    14912.8 secs
+
+     total energy              =    -221.43813266 Ry
+     estimated scf accuracy    <       0.00000421 Ry
+
+     iteration #  3     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  8.77E-09,  avg # of iterations =  2.1
+
+     negative rho (up, down):  1.238E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    15132.2 secs
+
+     total energy              =    -221.43813337 Ry
+     estimated scf accuracy    <       0.00000002 Ry
+
+     iteration #  4     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.86E-11,  avg # of iterations =  4.0
+
+     negative rho (up, down):  1.238E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    15430.7 secs
+
+     total energy              =    -221.43813338 Ry
+     estimated scf accuracy    <          6.7E-09 Ry
+
+     iteration #  5     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.40E-11,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.238E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    15608.0 secs
+
+     total energy              =    -221.43813338 Ry
+     estimated scf accuracy    <          4.7E-09 Ry
+
+     iteration #  6     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  9.81E-12,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.238E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0001 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    15823.3 secs
+
+     total energy              =    -221.43813338 Ry
+     estimated scf accuracy    <          3.9E-09 Ry
+
+     iteration #  7     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  8.15E-12,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.237E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0001 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16035.3 secs
+
+     total energy              =    -221.43813338 Ry
+     estimated scf accuracy    <          1.4E-09 Ry
+
+     iteration #  8     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.01E-12,  avg # of iterations =  1.6
+
+     negative rho (up, down):  1.237E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16234.1 secs
+
+     total energy              =    -221.43813338 Ry
+     estimated scf accuracy    <          7.9E-10 Ry
+
+     iteration #  9     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.64E-12,  avg # of iterations =  1.6
+
+     negative rho (up, down):  1.238E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16432.8 secs
+
+     total energy              =    -221.43813338 Ry
+     estimated scf accuracy    <          3.1E-10 Ry
+
+     iteration # 10     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  6.41E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.238E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16610.6 secs
+
+     total energy              =    -221.43813338 Ry
+     estimated scf accuracy    <          2.4E-10 Ry
+
+     iteration # 11     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  5.03E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.237E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16787.8 secs
+
+     total energy              =    -221.43813338 Ry
+     estimated scf accuracy    <          2.3E-10 Ry
+
+     iteration # 12     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  4.79E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.238E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16800.9 secs
+
+     total energy              =    -221.43813338 Ry
+     estimated scf accuracy    <          1.9E-10 Ry
+
+     iteration # 13     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.97E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.238E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16805.4 secs
+
+     total energy              =    -221.43813338 Ry
+     estimated scf accuracy    <          2.1E-10 Ry
+
+     iteration # 14     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.97E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.239E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16809.8 secs
+
+     total energy              =    -221.43813338 Ry
+     estimated scf accuracy    <          1.9E-10 Ry
+
+     iteration # 15     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.97E-13,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.241E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16814.8 secs
+
+     total energy              =    -221.43813338 Ry
+     estimated scf accuracy    <          1.3E-10 Ry
+
+     iteration # 16     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.61E-13,  avg # of iterations =  2.2
+
+     negative rho (up, down):  1.241E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16820.0 secs
+
+     End of self-consistent calculation
+
+     Number of k-points >= 100: set verbosity='high' to print the bands.
+
+     the Fermi energy is     2.3332 ev
+
+!    total energy              =    -221.43813338 Ry
+     total all-electron energy =      -914.607307 Ry
+     estimated scf accuracy    <          6.9E-11 Ry
+     smearing contrib. (-TS)   =      -0.00004296 Ry
+     internal energy E=F+TS    =    -221.43809041 Ry
+
+     The total energy is F=E-TS. E is the sum of the following terms:
+     one-electron contribution =   -3007.68558881 Ry
+     hartree contribution      =    1520.76919776 Ry
+     xc contribution           =     -55.68169469 Ry
+     ewald contribution        =    1395.29010660 Ry
+     DFT-D3 Dispersion         =      -0.12705136 Ry
+     electric field correction =       0.00000000 Ry
+     one-center paw contrib.   =     -74.00305991 Ry
+
+     convergence has been achieved in  16 iterations
+
+     negative rho (up, down):  1.241E-04 0.000E+00
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -0.00000000    0.00000000   -0.00057397
+     atom    2 type  1   force =    -0.00000000   -0.00000000    0.00011592
+     atom    3 type  1   force =     0.00000000    0.00000000    0.00007188
+     atom    4 type  1   force =     0.00000000   -0.00000000   -0.00001871
+     atom    5 type  1   force =     0.00000000    0.00000000   -0.00170455
+     atom    6 type  1   force =    -0.00000000   -0.00000000   -0.00138455
+     atom    7 type  1   force =    -0.00000000    0.00000000    0.00136522
+     atom    8 type  1   force =     0.00000000   -0.00000000    0.00168651
+     atom    9 type  1   force =    -0.00000000    0.00000000    0.00003096
+     atom   10 type  1   force =    -0.00000000   -0.00000000   -0.00005781
+     atom   11 type  1   force =    -0.00000000    0.00000000    0.00046026
+     atom   12 type  1   force =    -0.00000000   -0.00000000    0.00000884
+
+     Total force =     0.003123     Total SCF correction =     0.000020
+     Energy error            =      1.9E-05 Ry
+     Gradient error          =      1.7E-03 Ry/Bohr
+
+     number of scf cycles    =   4
+     number of bfgs steps    =   3
+
+     energy             old  =    -221.4381147581 Ry
+     energy             new  =    -221.4381333768 Ry
+
+     CASE: energy            _new < energy            _old
+
+     new trust radius        =       0.0047167559 bohr
+     new conv_thr            =       0.0000000002 Ry
+
+
+ATOMIC_POSITIONS (angstrom)
+C                0.0000000000        0.0000000000        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        3.8500637601    0   0   1
+C                2.4660400000        1.4237688578        3.8502585379    0   0   1
+C                0.0000000000        0.0000000000        7.1945000586    0   0   1
+C                1.2330200000        0.7118844289        7.1937221825    0   0   1
+C                0.0000000000        0.0000000000       10.5562148459    0   0   1
+C                1.2330200000        0.7118844289       10.5554351260    0   0   1
+C                2.4660400000        1.4237688578       13.8997824681    0   0   1
+C                0.0000000000        0.0000000000       13.8999768618    0   0   1
+C                0.0000000000        0.0000000000       17.2503219819    0   0   1
+C                1.2330200000        0.7118844289       17.2513950974    0   0   1
+
+
+
+     Writing config-only to output data dir ./tmp/CC_S33_AA_relax.save/ :
+     XML data file
+     NEW-OLD atomic charge density approx. for the potential
+
+     Check: negative core charge=   -0.000003
+
+     negative rho (up, down):  1.243E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16822.8 secs
+
+     Self-consistent Calculation
+
+     iteration #  1     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.00E-06,  avg # of iterations =  2.1
+
+     Threshold (ethr) on eigenvalues was too large:
+     Diagonalizing with lowered threshold
+
+     Davidson diagonalization with overlap
+     ethr =  2.55E-08,  avg # of iterations =  3.7
+
+     negative rho (up, down):  1.242E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16832.4 secs
+
+     total energy              =    -221.43816318 Ry
+     estimated scf accuracy    <       0.00001717 Ry
+
+     iteration #  2     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.58E-08,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.241E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16836.6 secs
+
+     total energy              =    -221.43815901 Ry
+     estimated scf accuracy    <       0.00000998 Ry
+
+     iteration #  3     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.08E-08,  avg # of iterations =  2.1
+
+     negative rho (up, down):  1.241E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16841.7 secs
+
+     total energy              =    -221.43816070 Ry
+     estimated scf accuracy    <       0.00000003 Ry
+
+     iteration #  4     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  7.23E-11,  avg # of iterations =  4.0
+
+     negative rho (up, down):  1.241E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16848.0 secs
+
+     total energy              =    -221.43816073 Ry
+     estimated scf accuracy    <          6.4E-09 Ry
+
+     iteration #  5     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.34E-11,  avg # of iterations =  1.8
+
+     negative rho (up, down):  1.241E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16852.8 secs
+
+     total energy              =    -221.43816073 Ry
+     estimated scf accuracy    <          2.6E-09 Ry
+
+     iteration #  6     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  5.48E-12,  avg # of iterations =  2.2
+
+     negative rho (up, down):  1.242E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16858.0 secs
+
+     total energy              =    -221.43816073 Ry
+     estimated scf accuracy    <          7.9E-10 Ry
+
+     iteration #  7     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.66E-12,  avg # of iterations =  1.7
+
+     negative rho (up, down):  1.242E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16862.8 secs
+
+     total energy              =    -221.43816073 Ry
+     estimated scf accuracy    <          4.3E-10 Ry
+
+     iteration #  8     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  9.03E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.242E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16867.2 secs
+
+     total energy              =    -221.43816073 Ry
+     estimated scf accuracy    <          4.3E-10 Ry
+
+     iteration #  9     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  8.96E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.242E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16871.6 secs
+
+     total energy              =    -221.43816073 Ry
+     estimated scf accuracy    <          4.0E-10 Ry
+
+     iteration # 10     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  8.34E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.241E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16876.1 secs
+
+     total energy              =    -221.43816073 Ry
+     estimated scf accuracy    <          4.0E-10 Ry
+
+     iteration # 11     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  8.34E-13,  avg # of iterations =  1.9
+
+     negative rho (up, down):  1.241E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16880.8 secs
+
+     total energy              =    -221.43816073 Ry
+     estimated scf accuracy    <          2.0E-10 Ry
+
+     iteration # 12     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  4.10E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.243E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16885.1 secs
+
+     End of self-consistent calculation
+
+     Number of k-points >= 100: set verbosity='high' to print the bands.
+
+     the Fermi energy is     2.3329 ev
+
+!    total energy              =    -221.43816073 Ry
+     total all-electron energy =      -914.607335 Ry
+     estimated scf accuracy    <          1.1E-10 Ry
+     smearing contrib. (-TS)   =      -0.00004274 Ry
+     internal energy E=F+TS    =    -221.43811799 Ry
+
+     The total energy is F=E-TS. E is the sum of the following terms:
+     one-electron contribution =   -3007.26394363 Ry
+     hartree contribution      =    1520.55848012 Ry
+     xc contribution           =     -55.68165491 Ry
+     ewald contribution        =    1395.07910885 Ry
+     DFT-D3 Dispersion         =      -0.12704877 Ry
+     electric field correction =       0.00000000 Ry
+     one-center paw contrib.   =     -74.00305966 Ry
+
+     convergence has been achieved in  12 iterations
+
+     negative rho (up, down):  1.243E-04 0.000E+00
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =     0.00000000    0.00000000   -0.00057312
+     atom    2 type  1   force =     0.00000000   -0.00000000    0.00011616
+     atom    3 type  1   force =     0.00000000    0.00000000    0.00007855
+     atom    4 type  1   force =     0.00000000   -0.00000000   -0.00006185
+     atom    5 type  1   force =    -0.00000000    0.00000000   -0.00172031
+     atom    6 type  1   force =     0.00000000   -0.00000000   -0.00121483
+     atom    7 type  1   force =    -0.00000000    0.00000000    0.00119454
+     atom    8 type  1   force =     0.00000000   -0.00000000    0.00170163
+     atom    9 type  1   force =     0.00000000    0.00000000    0.00007681
+     atom   10 type  1   force =    -0.00000000   -0.00000000   -0.00006210
+     atom   11 type  1   force =    -0.00000000    0.00000000    0.00058789
+     atom   12 type  1   force =    -0.00000000   -0.00000000   -0.00012336
+
+     Total force =     0.003023     Total SCF correction =     0.000021
+     Energy error            =      2.7E-05 Ry
+     Gradient error          =      1.7E-03 Ry/Bohr
+
+     number of scf cycles    =   5
+     number of bfgs steps    =   4
+
+     energy             old  =    -221.4381333768 Ry
+     energy             new  =    -221.4381607264 Ry
+
+     CASE: energy            _new < energy            _old
+
+     new trust radius        =       0.0070751338 bohr
+     new conv_thr            =       0.0000000002 Ry
+
+
+ATOMIC_POSITIONS (angstrom)
+C                0.0000000000        0.0000000000        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        3.8501308989    0   0   1
+C                2.4660400000        1.4237688578        3.8503487542    0   0   1
+C                0.0000000000        0.0000000000        7.1908764923    0   0   1
+C                1.2330200000        0.7118844289        7.1899781829    0   0   1
+C                0.0000000000        0.0000000000       10.5599168299    0   0   1
+C                1.2330200000        0.7118844289       10.5590163160    0   0   1
+C                2.4660400000        1.4237688578       13.8997220013    0   0   1
+C                0.0000000000        0.0000000000       13.8999392744    0   0   1
+C                0.0000000000        0.0000000000       17.2507918888    0   0   1
+C                1.2330200000        0.7118844289       17.2520235904    0   0   1
+
+
+
+     Writing config-only to output data dir ./tmp/CC_S33_AA_relax.save/ :
+     XML data file
+     NEW-OLD atomic charge density approx. for the potential
+
+     Check: negative core charge=   -0.000003
+
+     negative rho (up, down):  1.246E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16887.8 secs
+
+     Self-consistent Calculation
+
+     iteration #  1     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.00E-06,  avg # of iterations =  3.0
+
+     Threshold (ethr) on eigenvalues was too large:
+     Diagonalizing with lowered threshold
+
+     Davidson diagonalization with overlap
+     ethr =  7.03E-08,  avg # of iterations =  2.4
+
+     negative rho (up, down):  1.245E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16897.1 secs
+
+     total energy              =    -221.43820536 Ry
+     estimated scf accuracy    <       0.00003898 Ry
+
+     iteration #  2     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  8.12E-08,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.244E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16901.5 secs
+
+     total energy              =    -221.43819562 Ry
+     estimated scf accuracy    <       0.00002296 Ry
+
+     iteration #  3     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  4.78E-08,  avg # of iterations =  2.1
+
+     negative rho (up, down):  1.243E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16906.6 secs
+
+     total energy              =    -221.43819962 Ry
+     estimated scf accuracy    <       0.00000013 Ry
+
+     iteration #  4     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.68E-10,  avg # of iterations =  4.0
+
+     negative rho (up, down):  1.243E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16912.7 secs
+
+     total energy              =    -221.43819968 Ry
+     estimated scf accuracy    <       0.00000005 Ry
+
+     iteration #  5     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  9.56E-11,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.243E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16917.6 secs
+
+     total energy              =    -221.43819968 Ry
+     estimated scf accuracy    <          4.6E-09 Ry
+
+     iteration #  6     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  9.57E-12,  avg # of iterations =  3.2
+
+     negative rho (up, down):  1.243E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16923.1 secs
+
+     total energy              =    -221.43819968 Ry
+     estimated scf accuracy    <          1.8E-09 Ry
+
+     iteration #  7     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.83E-12,  avg # of iterations =  1.6
+
+     negative rho (up, down):  1.243E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16927.9 secs
+
+     total energy              =    -221.43819968 Ry
+     estimated scf accuracy    <          8.6E-10 Ry
+
+     iteration #  8     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.79E-12,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.244E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16932.4 secs
+
+     total energy              =    -221.43819968 Ry
+     estimated scf accuracy    <          8.5E-10 Ry
+
+     iteration #  9     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.78E-12,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.244E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    16939.1 secs
+
+     total energy              =    -221.43819968 Ry
+     estimated scf accuracy    <          6.7E-10 Ry
+
+     iteration # 10     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.40E-12,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.245E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    17101.9 secs
+
+     total energy              =    -221.43819968 Ry
+     estimated scf accuracy    <          5.7E-10 Ry
+
+     iteration # 11     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.19E-12,  avg # of iterations =  1.8
+
+     negative rho (up, down):  1.245E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    17307.9 secs
+
+     total energy              =    -221.43819968 Ry
+     estimated scf accuracy    <          2.5E-10 Ry
+
+     iteration # 12     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  5.24E-13,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.247E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    17512.0 secs
+
+     End of self-consistent calculation
+
+     Number of k-points >= 100: set verbosity='high' to print the bands.
+
+     the Fermi energy is     2.3325 ev
+
+!    total energy              =    -221.43819968 Ry
+     total all-electron energy =      -914.607374 Ry
+     estimated scf accuracy    <          6.5E-11 Ry
+     smearing contrib. (-TS)   =      -0.00004247 Ry
+     internal energy E=F+TS    =    -221.43815721 Ry
+
+     The total energy is F=E-TS. E is the sum of the following terms:
+     one-electron contribution =   -3006.61661500 Ry
+     hartree contribution      =    1520.23497086 Ry
+     xc contribution           =     -55.68159923 Ry
+     ewald contribution        =    1394.75519050 Ry
+     DFT-D3 Dispersion         =      -0.12704498 Ry
+     electric field correction =       0.00000000 Ry
+     one-center paw contrib.   =     -74.00305935 Ry
+
+     convergence has been achieved in  12 iterations
+
+     negative rho (up, down):  1.247E-04 0.000E+00
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -0.00000000    0.00000000   -0.00057234
+     atom    2 type  1   force =    -0.00000000   -0.00000000    0.00011609
+     atom    3 type  1   force =    -0.00000000    0.00000000    0.00007025
+     atom    4 type  1   force =     0.00000000   -0.00000000   -0.00011022
+     atom    5 type  1   force =    -0.00000000    0.00000000   -0.00167771
+     atom    6 type  1   force =     0.00000000   -0.00000000   -0.00102264
+     atom    7 type  1   force =    -0.00000000   -0.00000000    0.00100213
+     atom    8 type  1   force =     0.00000000   -0.00000000    0.00165911
+     atom    9 type  1   force =     0.00000000    0.00000000    0.00012891
+     atom   10 type  1   force =     0.00000000   -0.00000000   -0.00005048
+     atom   11 type  1   force =    -0.00000000    0.00000000    0.00068862
+     atom   12 type  1   force =    -0.00000000   -0.00000000   -0.00023175
+
+     Total force =     0.002860     Total SCF correction =     0.000025
+     Energy error            =      3.9E-05 Ry
+     Gradient error          =      1.7E-03 Ry/Bohr
+
+     number of scf cycles    =   6
+     number of bfgs steps    =   5
+
+     energy             old  =    -221.4381607264 Ry
+     energy             new  =    -221.4381996838 Ry
+
+     CASE: energy            _new < energy            _old
+
+     new trust radius        =       0.0106127008 bohr
+     new conv_thr            =       0.0000000002 Ry
+
+
+ATOMIC_POSITIONS (angstrom)
+C                0.0000000000        0.0000000000        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        3.8502238254    0   0   1
+C                2.4660400000        1.4237688578        3.8504504573    0   0   1
+C                0.0000000000        0.0000000000        7.1853457675    0   0   1
+C                1.2330200000        0.7118844289        7.1843621835    0   0   1
+C                0.0000000000        0.0000000000       10.5654679832    0   0   1
+C                1.2330200000        0.7118844289       10.5644818065    0   0   1
+C                2.4660400000        1.4237688578       13.8996693852    0   0   1
+C                0.0000000000        0.0000000000       13.8998947448    0   0   1
+C                0.0000000000        0.0000000000       17.2515822730    0   0   1
+C                1.2330200000        0.7118844289       17.2529180009    0   0   1
+
+
+
+     Writing config-only to output data dir ./tmp/CC_S33_AA_relax.save/ :
+     XML data file
+     NEW-OLD atomic charge density approx. for the potential
+
+     Check: negative core charge=   -0.000003
+
+     negative rho (up, down):  1.251E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    17604.2 secs
+
+     Self-consistent Calculation
+
+     iteration #  1     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.00E-06,  avg # of iterations =  3.6
+
+     negative rho (up, down):  1.248E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    17886.6 secs
+
+     total energy              =    -221.43826510 Ry
+     estimated scf accuracy    <       0.00008354 Ry
+
+     iteration #  2     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.74E-07,  avg # of iterations =  1.5
+
+     negative rho (up, down):  1.250E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    18078.7 secs
+
+     total energy              =    -221.43824159 Ry
+     estimated scf accuracy    <       0.00005281 Ry
+
+     iteration #  3     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.10E-07,  avg # of iterations =  2.3
+
+     negative rho (up, down):  1.246E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    18308.0 secs
+
+     total energy              =    -221.43825235 Ry
+     estimated scf accuracy    <       0.00000173 Ry
+
+     iteration #  4     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.60E-09,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.245E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    18529.0 secs
+
+     total energy              =    -221.43825272 Ry
+     estimated scf accuracy    <       0.00000009 Ry
+
+     iteration #  5     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.88E-10,  avg # of iterations =  3.1
+
+     negative rho (up, down):  1.245E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    18779.9 secs
+
+     total energy              =    -221.43825272 Ry
+     estimated scf accuracy    <       0.00000005 Ry
+
+     iteration #  6     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.01E-10,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.246E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    18998.8 secs
+
+     total energy              =    -221.43825273 Ry
+     estimated scf accuracy    <          6.9E-09 Ry
+
+     iteration #  7     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.43E-11,  avg # of iterations =  2.4
+
+     negative rho (up, down):  1.248E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    19229.1 secs
+
+     total energy              =    -221.43825273 Ry
+     estimated scf accuracy    <          4.6E-09 Ry
+
+     iteration #  8     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  9.62E-12,  avg # of iterations =  1.9
+
+     negative rho (up, down):  1.249E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    19438.8 secs
+
+     total energy              =    -221.43825273 Ry
+     estimated scf accuracy    <          4.0E-09 Ry
+
+     iteration #  9     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  8.25E-12,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.248E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    19615.9 secs
+
+     total energy              =    -221.43825273 Ry
+     estimated scf accuracy    <          2.1E-09 Ry
+
+     iteration # 10     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  4.37E-12,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.248E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    19793.6 secs
+
+     total energy              =    -221.43825273 Ry
+     estimated scf accuracy    <          1.2E-09 Ry
+
+     iteration # 11     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.53E-12,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.249E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    20006.9 secs
+
+     total energy              =    -221.43825273 Ry
+     estimated scf accuracy    <          3.3E-10 Ry
+
+     iteration # 12     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  6.86E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.249E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    20184.9 secs
+
+     total energy              =    -221.43825273 Ry
+     estimated scf accuracy    <          3.2E-10 Ry
+
+     iteration # 13     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  6.69E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.249E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    20362.9 secs
+
+     total energy              =    -221.43825273 Ry
+     estimated scf accuracy    <          2.7E-10 Ry
+
+     iteration # 14     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  5.55E-13,  avg # of iterations =  1.6
+
+     negative rho (up, down):  1.248E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    20559.6 secs
+
+     total energy              =    -221.43825273 Ry
+     estimated scf accuracy    <          2.0E-10 Ry
+
+     iteration # 15     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  4.17E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.249E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    20737.0 secs
+
+     total energy              =    -221.43825273 Ry
+     estimated scf accuracy    <          2.0E-10 Ry
+
+     iteration # 16     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  4.15E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.249E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    20914.8 secs
+
+     total energy              =    -221.43825273 Ry
+     estimated scf accuracy    <          1.8E-10 Ry
+
+     iteration # 17     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.75E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.252E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0001 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    21085.0 secs
+
+     End of self-consistent calculation
+
+     Number of k-points >= 100: set verbosity='high' to print the bands.
+
+     the Fermi energy is     2.3319 ev
+
+!    total energy              =    -221.43825273 Ry
+     total all-electron energy =      -914.607427 Ry
+     estimated scf accuracy    <          1.6E-10 Ry
+     smearing contrib. (-TS)   =      -0.00004224 Ry
+     internal energy E=F+TS    =    -221.43821049 Ry
+
+     The total energy is F=E-TS. E is the sum of the following terms:
+     one-electron contribution =   -3005.62705557 Ry
+     hartree contribution      =    1519.74055168 Ry
+     xc contribution           =     -55.68152641 Ry
+     ewald contribution        =    1394.25991859 Ry
+     DFT-D3 Dispersion         =      -0.12703963 Ry
+     electric field correction =       0.00000000 Ry
+     one-center paw contrib.   =     -74.00305914 Ry
+
+     convergence has been achieved in  17 iterations
+
+     negative rho (up, down):  1.252E-04 0.000E+00
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =     0.00000000    0.00000000   -0.00057176
+     atom    2 type  1   force =     0.00000000   -0.00000000    0.00011513
+     atom    3 type  1   force =    -0.00000000    0.00000000    0.00003979
+     atom    4 type  1   force =    -0.00000000   -0.00000000   -0.00016706
+     atom    5 type  1   force =    -0.00000000    0.00000000   -0.00155527
+     atom    6 type  1   force =    -0.00000000   -0.00000000   -0.00080079
+     atom    7 type  1   force =     0.00000000    0.00000000    0.00078253
+     atom    8 type  1   force =     0.00000000   -0.00000000    0.00153929
+     atom    9 type  1   force =     0.00000000    0.00000000    0.00018997
+     atom   10 type  1   force =    -0.00000000   -0.00000000   -0.00001650
+     atom   11 type  1   force =    -0.00000000    0.00000000    0.00075218
+     atom   12 type  1   force =     0.00000000   -0.00000000   -0.00030751
+
+     Total force =     0.002602     Total SCF correction =     0.000037
+     Energy error            =      5.3E-05 Ry
+     Gradient error          =      1.6E-03 Ry/Bohr
+
+     number of scf cycles    =   7
+     number of bfgs steps    =   6
+
+     energy             old  =    -221.4381996838 Ry
+     energy             new  =    -221.4382527254 Ry
+
+     CASE: energy            _new < energy            _old
+
+     new trust radius        =       0.0159190512 bohr
+     new conv_thr            =       0.0000000002 Ry
+
+
+ATOMIC_POSITIONS (angstrom)
+C                0.0000000000        0.0000000000        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        3.8503374114    0   0   1
+C                2.4660400000        1.4237688578        3.8505512196    0   0   1
+C                0.0000000000        0.0000000000        7.1769537696    0   0   1
+C                1.2330200000        0.7118844289        7.1759381844    0   0   1
+C                0.0000000000        0.0000000000       10.5737941465    0   0   1
+C                1.2330200000        0.7118844289       10.5727757212    0   0   1
+C                2.4660400000        1.4237688578       13.8996484660    0   0   1
+C                0.0000000000        0.0000000000       13.8998592997    0   0   1
+C                0.0000000000        0.0000000000       17.2528622418    0   0   1
+C                1.2330200000        0.7118844289       17.2542188566    0   0   1
+
+
+
+     Writing config-only to output data dir ./tmp/CC_S33_AA_relax.save/ :
+     XML data file
+     NEW-OLD atomic charge density approx. for the potential
+
+     Check: negative core charge=   -0.000003
+
+     negative rho (up, down):  1.256E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0001 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    21176.8 secs
+
+     Self-consistent Calculation
+
+     iteration #  1     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.00E-06,  avg # of iterations =  4.7
+
+     negative rho (up, down):  1.253E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    21510.4 secs
+
+     total energy              =    -221.43834865 Ry
+     estimated scf accuracy    <       0.00020510 Ry
+
+     iteration #  2     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  4.27E-07,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.259E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    21688.2 secs
+
+     total energy              =    -221.43829733 Ry
+     estimated scf accuracy    <       0.00012128 Ry
+
+     iteration #  3     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.53E-07,  avg # of iterations =  2.1
+
+     negative rho (up, down):  1.252E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    21910.7 secs
+
+     total energy              =    -221.43831925 Ry
+     estimated scf accuracy    <       0.00000078 Ry
+
+     iteration #  4     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.63E-09,  avg # of iterations =  3.9
+
+     negative rho (up, down):  1.251E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    22209.3 secs
+
+     total energy              =    -221.43831968 Ry
+     estimated scf accuracy    <       0.00000010 Ry
+
+     iteration #  5     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.99E-10,  avg # of iterations =  1.3
+
+     negative rho (up, down):  1.251E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    22399.2 secs
+
+     total energy              =    -221.43831966 Ry
+     estimated scf accuracy    <       0.00000006 Ry
+
+     iteration #  6     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.35E-10,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.253E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    22618.7 secs
+
+     total energy              =    -221.43831967 Ry
+     estimated scf accuracy    <          7.4E-09 Ry
+
+     iteration #  7     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.55E-11,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.253E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    22832.0 secs
+
+     total energy              =    -221.43831967 Ry
+     estimated scf accuracy    <          2.5E-09 Ry
+
+     iteration #  8     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  5.23E-12,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.255E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    23010.2 secs
+
+     total energy              =    -221.43831967 Ry
+     estimated scf accuracy    <          2.3E-09 Ry
+
+     iteration #  9     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  4.74E-12,  avg # of iterations =  2.1
+
+     negative rho (up, down):  1.255E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    23230.5 secs
+
+     total energy              =    -221.43831967 Ry
+     estimated scf accuracy    <          9.2E-10 Ry
+
+     iteration # 10     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.92E-12,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.255E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    23408.1 secs
+
+     total energy              =    -221.43831967 Ry
+     estimated scf accuracy    <          6.6E-10 Ry
+
+     iteration # 11     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.38E-12,  avg # of iterations =  2.1
+
+     negative rho (up, down):  1.255E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    23644.1 secs
+
+     total energy              =    -221.43831967 Ry
+     estimated scf accuracy    <          2.9E-10 Ry
+
+     iteration # 12     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  5.94E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.255E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    23823.0 secs
+
+     total energy              =    -221.43831967 Ry
+     estimated scf accuracy    <          1.7E-10 Ry
+
+     iteration # 13     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.48E-13,  avg # of iterations =  1.6
+
+     negative rho (up, down):  1.258E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    24015.6 secs
+
+     End of self-consistent calculation
+
+     Number of k-points >= 100: set verbosity='high' to print the bands.
+
+     the Fermi energy is     2.3312 ev
+
+!    total energy              =    -221.43831967 Ry
+     total all-electron energy =      -914.607494 Ry
+     estimated scf accuracy    <          8.7E-11 Ry
+     smearing contrib. (-TS)   =      -0.00004227 Ry
+     internal energy E=F+TS    =    -221.43827740 Ry
+
+     The total energy is F=E-TS. E is the sum of the following terms:
+     one-electron contribution =   -3004.11644173 Ry
+     hartree contribution      =    1518.98546274 Ry
+     xc contribution           =     -55.68144166 Ry
+     ewald contribution        =    1393.50423518 Ry
+     DFT-D3 Dispersion         =      -0.12703262 Ry
+     electric field correction =       0.00000000 Ry
+     one-center paw contrib.   =     -74.00305930 Ry
+
+     convergence has been achieved in  13 iterations
+
+     negative rho (up, down):  1.258E-04 0.000E+00
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =     0.00000000    0.00000000   -0.00057239
+     atom    2 type  1   force =     0.00000000   -0.00000000    0.00011219
+     atom    3 type  1   force =    -0.00000000    0.00000000   -0.00002469
+     atom    4 type  1   force =     0.00000000   -0.00000000   -0.00023807
+     atom    5 type  1   force =    -0.00000000    0.00000000   -0.00131034
+     atom    6 type  1   force =     0.00000000   -0.00000000   -0.00053279
+     atom    7 type  1   force =    -0.00000000    0.00000000    0.00052238
+     atom    8 type  1   force =    -0.00000000   -0.00000000    0.00130269
+     atom    9 type  1   force =     0.00000000    0.00000000    0.00026488
+     atom   10 type  1   force =    -0.00000000   -0.00000000    0.00005151
+     atom   11 type  1   force =     0.00000000    0.00000000    0.00075866
+     atom   12 type  1   force =    -0.00000000   -0.00000000   -0.00033402
+
+     Total force =     0.002188     Total SCF correction =     0.000030
+     Energy error            =      6.7E-05 Ry
+     Gradient error          =      1.3E-03 Ry/Bohr
+
+     number of scf cycles    =   8
+     number of bfgs steps    =   7
+
+     energy             old  =    -221.4382527254 Ry
+     energy             new  =    -221.4383196719 Ry
+
+     CASE: energy            _new < energy            _old
+
+     new trust radius        =       0.0238785767 bohr
+     new conv_thr            =       0.0000000001 Ry
+
+
+ATOMIC_POSITIONS (angstrom)
+C                0.0000000000        0.0000000000        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        3.8504436254    0   0   1
+C                2.4660400000        1.4237688578        3.8506084952    0   0   1
+C                0.0000000000        0.0000000000        7.1643177710    0   0   1
+C                1.2330200000        0.7118844289        7.1633606600    0   0   1
+C                0.0000000000        0.0000000000       10.5862292686    0   0   1
+C                1.2330200000        0.7118844289       10.5852696691    0   0   1
+C                2.4660400000        1.4237688578       13.8997195279    0   0   1
+C                0.0000000000        0.0000000000       13.8998784326    0   0   1
+C                0.0000000000        0.0000000000       17.2548935938    0   0   1
+C                1.2330200000        0.7118844289       17.2561308011    0   0   1
+
+
+
+     Writing config-only to output data dir ./tmp/CC_S33_AA_relax.save/ :
+     XML data file
+     NEW-OLD atomic charge density approx. for the potential
+
+     Check: negative core charge=   -0.000003
+
+     negative rho (up, down):  1.261E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    24108.4 secs
+
+     Self-consistent Calculation
+
+     iteration #  1     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.00E-06,  avg # of iterations =  5.0
+
+     negative rho (up, down):  1.256E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    24457.4 secs
+
+     total energy              =    -221.43845707 Ry
+     estimated scf accuracy    <       0.00046453 Ry
+
+     iteration #  2     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  9.68E-07,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.271E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    24635.5 secs
+
+     total energy              =    -221.43834231 Ry
+     estimated scf accuracy    <       0.00027261 Ry
+
+     iteration #  3     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  5.68E-07,  avg # of iterations =  2.1
+
+     negative rho (up, down):  1.255E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    24858.0 secs
+
+     total energy              =    -221.43839017 Ry
+     estimated scf accuracy    <       0.00000134 Ry
+
+     iteration #  4     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.79E-09,  avg # of iterations =  4.0
+
+     negative rho (up, down):  1.253E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    25159.9 secs
+
+     total energy              =    -221.43839090 Ry
+     estimated scf accuracy    <       0.00000031 Ry
+
+     iteration #  5     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  6.46E-10,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.253E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    25374.9 secs
+
+     total energy              =    -221.43839092 Ry
+     estimated scf accuracy    <       0.00000005 Ry
+
+     iteration #  6     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.07E-10,  avg # of iterations =  2.7
+
+     negative rho (up, down):  1.255E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    25618.2 secs
+
+     total energy              =    -221.43839093 Ry
+     estimated scf accuracy    <       0.00000001 Ry
+
+     iteration #  7     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.22E-11,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.255E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    25836.1 secs
+
+     total energy              =    -221.43839094 Ry
+     estimated scf accuracy    <          3.2E-09 Ry
+
+     iteration #  8     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  6.64E-12,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.257E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    26015.2 secs
+
+     total energy              =    -221.43839094 Ry
+     estimated scf accuracy    <          2.5E-09 Ry
+
+     iteration #  9     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  5.28E-12,  avg # of iterations =  2.2
+
+     negative rho (up, down):  1.257E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    26255.1 secs
+
+     total energy              =    -221.43839094 Ry
+     estimated scf accuracy    <          1.5E-09 Ry
+
+     iteration # 10     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.23E-12,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.257E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    26433.4 secs
+
+     total energy              =    -221.43839094 Ry
+     estimated scf accuracy    <          9.2E-10 Ry
+
+     iteration # 11     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.91E-12,  avg # of iterations =  2.4
+
+     negative rho (up, down):  1.258E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    26675.2 secs
+
+     total energy              =    -221.43839094 Ry
+     estimated scf accuracy    <          3.1E-10 Ry
+
+     iteration # 12     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  6.52E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.258E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    26855.3 secs
+
+     total energy              =    -221.43839094 Ry
+     estimated scf accuracy    <          1.7E-10 Ry
+
+     iteration # 13     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.59E-13,  avg # of iterations =  1.9
+
+     negative rho (up, down):  1.263E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    27058.2 secs
+
+     End of self-consistent calculation
+
+     Number of k-points >= 100: set verbosity='high' to print the bands.
+
+     the Fermi energy is     2.3304 ev
+
+!    total energy              =    -221.43839094 Ry
+     total all-electron energy =      -914.607565 Ry
+     estimated scf accuracy    <          5.1E-11 Ry
+     smearing contrib. (-TS)   =      -0.00004319 Ry
+     internal energy E=F+TS    =    -221.43834775 Ry
+
+     The total energy is F=E-TS. E is the sum of the following terms:
+     one-electron contribution =   -3001.81974690 Ry
+     hartree contribution      =    1517.83729838 Ry
+     xc contribution           =     -55.68136855 Ry
+     ewald contribution        =    1392.35555390 Ry
+     DFT-D3 Dispersion         =      -0.12702416 Ry
+     electric field correction =       0.00000000 Ry
+     one-center paw contrib.   =     -74.00306041 Ry
+
+     convergence has been achieved in  13 iterations
+
+     negative rho (up, down):  1.263E-04 0.000E+00
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =     0.00000000    0.00000000   -0.00057483
+     atom    2 type  1   force =     0.00000000   -0.00000000    0.00010604
+     atom    3 type  1   force =    -0.00000000    0.00000000   -0.00014336
+     atom    4 type  1   force =    -0.00000000   -0.00000000   -0.00032888
+     atom    5 type  1   force =    -0.00000000   -0.00000000   -0.00088465
+     atom    6 type  1   force =     0.00000000   -0.00000000   -0.00021427
+     atom    7 type  1   force =     0.00000000    0.00000000    0.00021805
+     atom    8 type  1   force =    -0.00000000    0.00000000    0.00089275
+     atom    9 type  1   force =    -0.00000000    0.00000000    0.00036008
+     atom   10 type  1   force =     0.00000000   -0.00000000    0.00017455
+     atom   11 type  1   force =    -0.00000000    0.00000000    0.00066991
+     atom   12 type  1   force =     0.00000000   -0.00000000   -0.00027540
+
+     Total force =     0.001577     Total SCF correction =     0.000018
+     Energy error            =      7.1E-05 Ry
+     Gradient error          =      8.9E-04 Ry/Bohr
+
+     number of scf cycles    =   9
+     number of bfgs steps    =   8
+
+     energy             old  =    -221.4383196719 Ry
+     energy             new  =    -221.4383909388 Ry
+
+     CASE: energy            _new < energy            _old
+
+     new trust radius        =       0.0358178651 bohr
+     new conv_thr            =            1.0E-10 Ry
+
+
+ATOMIC_POSITIONS (angstrom)
+C                0.0000000000        0.0000000000        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        3.8504252999    0   0   1
+C                2.4660400000        1.4237688578        3.8504752254    0   0   1
+C                0.0000000000        0.0000000000        7.1453637730    0   0   1
+C                1.2330200000        0.7118844289        7.1446372763    0   0   1
+C                0.0000000000        0.0000000000       10.6047533388    0   0   1
+C                1.2330200000        0.7118844289       10.6040279285    0   0   1
+C                2.4660400000        1.4237688578       13.9000635792    0   0   1
+C                0.0000000000        0.0000000000       13.9001028550    0   0   1
+C                0.0000000000        0.0000000000       17.2581203628    0   0   1
+C                1.2330200000        0.7118844289       17.2589727037    0   0   1
+
+
+
+     Writing config-only to output data dir ./tmp/CC_S33_AA_relax.save/ :
+     XML data file
+     NEW-OLD atomic charge density approx. for the potential
+
+     Check: negative core charge=   -0.000003
+
+     negative rho (up, down):  1.257E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    27150.0 secs
+
+     Self-consistent Calculation
+
+     iteration #  1     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.00E-06,  avg # of iterations =  5.9
+
+     negative rho (up, down):  1.249E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    27532.4 secs
+
+     total energy              =    -221.43858445 Ry
+     estimated scf accuracy    <       0.00104275 Ry
+
+     iteration #  2     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.17E-06,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.283E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0001 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    27710.2 secs
+
+     total energy              =    -221.43833338 Ry
+     estimated scf accuracy    <       0.00060384 Ry
+
+     iteration #  3     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.26E-06,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.248E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0001 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    27930.3 secs
+
+     total energy              =    -221.43843404 Ry
+     estimated scf accuracy    <       0.00000195 Ry
+
+     iteration #  4     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  4.05E-09,  avg # of iterations =  4.3
+
+     negative rho (up, down):  1.242E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    28248.2 secs
+
+     total energy              =    -221.43843549 Ry
+     estimated scf accuracy    <       0.00000046 Ry
+
+     iteration #  5     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  9.60E-10,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.243E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole               -0.0000 Ry au,         -0.0000 Debye
+        Dipole field         -0.0000 Ry au, 
+ 
+        Potential amp.        0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    28464.1 secs
+
+     total energy              =    -221.43843554 Ry
+     estimated scf accuracy    <       0.00000008 Ry
+
+     iteration #  6     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.67E-10,  avg # of iterations =  2.4
+
+     negative rho (up, down):  1.247E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    28698.4 secs
+
+     total energy              =    -221.43843555 Ry
+     estimated scf accuracy    <       0.00000002 Ry
+
+     iteration #  7     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  5.19E-11,  avg # of iterations =  2.1
+
+     negative rho (up, down):  1.248E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    28922.8 secs
+
+     total energy              =    -221.43843556 Ry
+     estimated scf accuracy    <       0.00000001 Ry
+
+     iteration #  8     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.63E-11,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.250E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0000 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    29135.6 secs
+
+     total energy              =    -221.43843556 Ry
+     estimated scf accuracy    <          3.4E-09 Ry
+
+     iteration #  9     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  7.12E-12,  avg # of iterations =  1.1
+
+     negative rho (up, down):  1.250E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    29316.0 secs
+
+     total energy              =    -221.43843556 Ry
+     estimated scf accuracy    <          2.6E-09 Ry
+
+     iteration # 10     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  5.36E-12,  avg # of iterations =  1.1
+
+     negative rho (up, down):  1.250E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    29498.6 secs
+
+     total energy              =    -221.43843556 Ry
+     estimated scf accuracy    <          2.4E-09 Ry
+
+     iteration # 11     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  5.09E-12,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.249E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    29677.2 secs
+
+     total energy              =    -221.43843556 Ry
+     estimated scf accuracy    <          2.4E-09 Ry
+
+     iteration # 12     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  4.91E-12,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.251E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    29854.8 secs
+
+     total energy              =    -221.43843556 Ry
+     estimated scf accuracy    <          2.5E-09 Ry
+
+     iteration # 13     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  4.91E-12,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.253E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    30033.8 secs
+
+     total energy              =    -221.43843556 Ry
+     estimated scf accuracy    <          2.0E-09 Ry
+
+     iteration # 14     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  4.23E-12,  avg # of iterations =  1.1
+
+     negative rho (up, down):  1.262E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0001 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    30214.4 secs
+
+     total energy              =    -221.43843556 Ry
+     estimated scf accuracy    <          1.5E-09 Ry
+
+     iteration # 15     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.13E-12,  avg # of iterations =  2.2
+
+     negative rho (up, down):  1.263E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    30438.2 secs
+
+     total energy              =    -221.43843556 Ry
+     estimated scf accuracy    <          1.6E-10 Ry
+
+     iteration # 16     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.36E-13,  avg # of iterations =  1.7
+
+     negative rho (up, down):  1.262E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    30638.4 secs
+
+     total energy              =    -221.43843556 Ry
+     estimated scf accuracy    <          1.1E-10 Ry
+
+     iteration # 17     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.39E-13,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.259E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0001 Ry au,          0.0002 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    30849.9 secs
+
+     End of self-consistent calculation
+
+     Number of k-points >= 100: set verbosity='high' to print the bands.
+
+     the Fermi energy is     2.3300 ev
+
+!    total energy              =    -221.43843556 Ry
+     total all-electron energy =      -914.607609 Ry
+     estimated scf accuracy    <          4.7E-11 Ry
+     smearing contrib. (-TS)   =      -0.00004627 Ry
+     internal energy E=F+TS    =    -221.43838929 Ry
+
+     The total energy is F=E-TS. E is the sum of the following terms:
+     one-electron contribution =   -2998.30590685 Ry
+     hartree contribution      =    1516.08028095 Ry
+     xc contribution           =     -55.68136894 Ry
+     ewald contribution        =    1390.59868510 Ry
+     DFT-D3 Dispersion         =      -0.12701648 Ry
+     electric field correction =       0.00000000 Ry
+     one-center paw contrib.   =     -74.00306307 Ry
+
+     convergence has been achieved in  17 iterations
+
+     negative rho (up, down):  1.259E-04 0.000E+00
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =     0.00000000   -0.00000000   -0.00057526
+     atom    2 type  1   force =     0.00000000   -0.00000000    0.00009858
+     atom    3 type  1   force =     0.00000000   -0.00000000   -0.00034765
+     atom    4 type  1   force =     0.00000000   -0.00000000   -0.00043953
+     atom    5 type  1   force =    -0.00000000    0.00000000   -0.00019347
+     atom    6 type  1   force =    -0.00000000   -0.00000000    0.00012563
+     atom    7 type  1   force =    -0.00000000    0.00000000   -0.00011645
+     atom    8 type  1   force =    -0.00000000   -0.00000000    0.00020431
+     atom    9 type  1   force =    -0.00000000    0.00000000    0.00048631
+     atom   10 type  1   force =    -0.00000000   -0.00000000    0.00039470
+     atom   11 type  1   force =    -0.00000000    0.00000000    0.00040945
+     atom   12 type  1   force =    -0.00000000    0.00000000   -0.00004661
+
+     Total force =     0.000992     Total SCF correction =     0.000019
+     Energy error            =      4.5E-05 Ry
+     Gradient error          =      4.9E-04 Ry/Bohr
+
+     number of scf cycles    =  10
+     number of bfgs steps    =   9
+
+     energy             old  =    -221.4383909388 Ry
+     energy             new  =    -221.4384355627 Ry
+
+     CASE: energy            _new < energy            _old
+
+     new trust radius        =       0.0043224544 bohr
+     new conv_thr            =            1.0E-10 Ry
+
+
+ATOMIC_POSITIONS (angstrom)
+C                0.0000000000        0.0000000000        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        3.8502199035    0   0   1
+C                2.4660400000        1.4237688578        3.8502313003    0   0   1
+C                0.0000000000        0.0000000000        7.1430764286    0   0   1
+C                1.2330200000        0.7118844289        7.1424579465    0   0   1
+C                0.0000000000        0.0000000000       10.6069144168    0   0   1
+C                1.2330200000        0.7118844289       10.6062979551    0   0   1
+C                2.4660400000        1.4237688578       13.9003581199    0   0   1
+C                0.0000000000        0.0000000000       13.9003583447    0   0   1
+C                0.0000000000        0.0000000000       17.2586579333    0   0   1
+C                1.2330200000        0.7118844289       17.2593463596    0   0   1
+
+
+
+     Writing config-only to output data dir ./tmp/CC_S33_AA_relax.save/ :
+     XML data file
+     NEW-OLD atomic charge density approx. for the potential
+
+     Check: negative core charge=   -0.000003
+
+     negative rho (up, down):  1.257E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0001 Ry au,          0.0002 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    30942.8 secs
+
+     Self-consistent Calculation
+
+     iteration #  1     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.00E-06,  avg # of iterations =  2.0
+
+     Threshold (ethr) on eigenvalues was too large:
+     Diagonalizing with lowered threshold
+
+     Davidson diagonalization with overlap
+     ethr =  2.12E-08,  avg # of iterations =  3.9
+
+     negative rho (up, down):  1.256E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0001 Ry au,          0.0002 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    31435.9 secs
+
+     total energy              =    -221.43843913 Ry
+     estimated scf accuracy    <       0.00001488 Ry
+
+     iteration #  2     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.10E-08,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.253E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0001 Ry au,          0.0002 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    31614.3 secs
+
+     total energy              =    -221.43843550 Ry
+     estimated scf accuracy    <       0.00000866 Ry
+
+     iteration #  3     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.80E-08,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.253E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0001 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    31808.6 secs
+
+     total energy              =    -221.43843697 Ry
+     estimated scf accuracy    <       0.00000004 Ry
+
+     iteration #  4     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  7.41E-11,  avg # of iterations =  4.1
+
+     negative rho (up, down):  1.254E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    31814.8 secs
+
+     total energy              =    -221.43843699 Ry
+     estimated scf accuracy    <          9.0E-09 Ry
+
+     iteration #  5     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.88E-11,  avg # of iterations =  1.7
+
+     negative rho (up, down):  1.254E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    31819.4 secs
+
+     total energy              =    -221.43843699 Ry
+     estimated scf accuracy    <          3.3E-09 Ry
+
+     iteration #  6     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  6.77E-12,  avg # of iterations =  2.2
+
+     negative rho (up, down):  1.254E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    31824.4 secs
+
+     total energy              =    -221.43843699 Ry
+     estimated scf accuracy    <          5.9E-10 Ry
+
+     iteration #  7     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  1.22E-12,  avg # of iterations =  2.0
+
+     negative rho (up, down):  1.254E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    31829.4 secs
+
+     total energy              =    -221.43843699 Ry
+     estimated scf accuracy    <          2.0E-10 Ry
+
+     iteration #  8     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  4.10E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.255E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    31833.9 secs
+
+     total energy              =    -221.43843699 Ry
+     estimated scf accuracy    <          1.8E-10 Ry
+
+     iteration #  9     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  3.74E-13,  avg # of iterations =  1.1
+
+     negative rho (up, down):  1.255E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0000 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0000 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    31838.3 secs
+
+     total energy              =    -221.43843699 Ry
+     estimated scf accuracy    <          1.0E-10 Ry
+
+     iteration # 10     ecut=    52.00 Ry     beta= 0.30
+     Davidson diagonalization with overlap
+     ethr =  2.16E-13,  avg # of iterations =  1.0
+
+     negative rho (up, down):  1.257E-04 0.000E+00
+ 
+     Adding external electric field
+
+     Computed dipole along edir(3) : 
+        Dipole                0.0001 Ry au,          0.0001 Debye
+        Dipole field          0.0000 Ry au, 
+ 
+        Potential amp.       -0.0001 Ry
+        Total length         63.1168 bohr
+ 
+
+     total cpu time spent up to now is    31842.8 secs
+
+     End of self-consistent calculation
+
+     Number of k-points >= 100: set verbosity='high' to print the bands.
+
+     the Fermi energy is     2.3299 ev
+
+!    total energy              =    -221.43843699 Ry
+     total all-electron energy =      -914.607611 Ry
+     estimated scf accuracy    <          8.9E-11 Ry
+     smearing contrib. (-TS)   =      -0.00004673 Ry
+     internal energy E=F+TS    =    -221.43839026 Ry
+
+     The total energy is F=E-TS. E is the sum of the following terms:
+     one-electron contribution =   -2997.76746752 Ry
+     hartree contribution      =    1515.81111449 Ry
+     xc contribution           =     -55.68137482 Ry
+     ewald contribution        =    1390.32941606 Ry
+     DFT-D3 Dispersion         =      -0.12701505 Ry
+     electric field correction =       0.00000000 Ry
+     one-center paw contrib.   =     -74.00306342 Ry
+
+     convergence has been achieved in  10 iterations
+
+     negative rho (up, down):  1.257E-04 0.000E+00
+
+     Forces acting on atoms (cartesian axes, Ry/au):
+
+     atom    1 type  1   force =    -0.00000000    0.00000000   -0.00057648
+     atom    2 type  1   force =    -0.00000000   -0.00000000    0.00009689
+     atom    3 type  1   force =    -0.00000000    0.00000000   -0.00038550
+     atom    4 type  1   force =    -0.00000000   -0.00000000   -0.00043284
+     atom    5 type  1   force =     0.00000000    0.00000000   -0.00006525
+     atom    6 type  1   force =     0.00000000   -0.00000000    0.00010734
+     atom    7 type  1   force =    -0.00000000    0.00000000   -0.00009855
+     atom    8 type  1   force =    -0.00000000   -0.00000000    0.00007430
+     atom    9 type  1   force =     0.00000000    0.00000000    0.00048283
+     atom   10 type  1   force =    -0.00000000   -0.00000000    0.00043527
+     atom   11 type  1   force =    -0.00000000    0.00000000    0.00030271
+     atom   12 type  1   force =    -0.00000000   -0.00000000    0.00005929
+
+     Total force =     0.000941     Total SCF correction =     0.000030
+     Energy error            =      1.4E-06 Ry
+     Gradient error          =      4.8E-04 Ry/Bohr
+
+     bfgs converged in  11 scf cycles and  10 bfgs steps
+     (criteria: energy <  1.0E-05 Ry, force <  1.0E-03 Ry/Bohr)
+
+     End of BFGS Geometry Optimization
+
+     Final energy             =    -221.4384369879 Ry
+
+     File ./tmp/CC_S33_AA_relax.bfgs deleted, as requested
+Begin final coordinates
+
+ATOMIC_POSITIONS (angstrom)
+C                0.0000000000        0.0000000000        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        0.5000000000    0   0   0
+C                1.2330200000        0.7118844289        3.8502199035    0   0   1
+C                2.4660400000        1.4237688578        3.8502313003    0   0   1
+C                0.0000000000        0.0000000000        7.1430764286    0   0   1
+C                1.2330200000        0.7118844289        7.1424579465    0   0   1
+C                0.0000000000        0.0000000000       10.6069144168    0   0   1
+C                1.2330200000        0.7118844289       10.6062979551    0   0   1
+C                2.4660400000        1.4237688578       13.9003581199    0   0   1
+C                0.0000000000        0.0000000000       13.9003583447    0   0   1
+C                0.0000000000        0.0000000000       17.2586579333    0   0   1
+C                1.2330200000        0.7118844289       17.2593463596    0   0   1
+End final coordinates
+
+
+
+     Writing all to output data dir ./tmp/CC_S33_AA_relax.save/ :
+     XML data file, charge density, pseudopotentials, collected wavefunctions
+ 
+     init_run     :    100.11s CPU     98.44s WALL (       1 calls)
+     electrons    :  31157.96s CPU  31002.32s WALL (      11 calls)
+     update_pot   :    106.21s CPU     90.95s WALL (      10 calls)
+     forces       :    363.18s CPU    363.63s WALL (      11 calls)
+     force_dftd3  :      0.48s CPU      0.31s WALL (      11 calls)
+
+     Called by init_run:
+     wfcinit      :     85.08s CPU     85.48s WALL (       1 calls)
+     potinit      :     13.52s CPU     11.51s WALL (       1 calls)
+     hinit0       :      0.76s CPU      0.68s WALL (       1 calls)
+
+     Called by electrons:
+     c_bands      :  22059.30s CPU  22140.73s WALL (     198 calls)
+     sum_band     :   6428.53s CPU   6456.55s WALL (     198 calls)
+     v_of_rho     :     54.91s CPU     46.47s WALL (     203 calls)
+     newd         :     51.68s CPU     52.05s WALL (     203 calls)
+                                       52.05s GPU  (     203 calls)
+     PAW_pot      :   1930.22s CPU   1655.42s WALL (     213 calls)
+     mix_rho      :    814.62s CPU    815.56s WALL (     198 calls)
+     energy_dftd3 :      0.05s CPU      0.05s WALL (      11 calls)
+
+     Called by c_bands:
+     init_us_2    :   3704.35s CPU   3737.54s WALL (   68552 calls)
+     cegterg      :  18077.82s CPU  18089.33s WALL (   32472 calls)
+
+     Called by *egterg:
+     cdiaghg      :    901.08s CPU    903.47s WALL (  105035 calls)
+                                      742.77s GPU  (  105035 calls)
+     h_psi        :   8931.13s CPU   9104.34s WALL (  107823 calls)
+                                     8939.84s GPU  (  107823 calls)
+     s_psi        :   4149.44s CPU   4150.74s WALL (  107823 calls)
+     g_psi        :      0.46s CPU    113.40s WALL (   75187 calls)
+                                        2.13s GPU  (   75187 calls)
+
+     Called by h_psi:
+     h_psi:calbec :      4.27s CPU    174.07s WALL (  107823 calls)
+                                        7.90s GPU  (  107823 calls)
+     vloc_psi     :   5411.31s CPU   5582.42s WALL (  107823 calls)
+                                     5416.44s GPU  (  107823 calls)
+     add_vuspsi   :   2510.91s CPU   2681.60s WALL (  107823 calls)
+                                     2514.88s GPU  (  107823 calls)
+
+     General routines
+     calbec       :      5.46s CPU      5.57s WALL (  149151 calls)
+     fft          :      2.99s CPU      7.52s WALL (    2754 calls)
+                                        0.35s GPU  (    2551 calls)
+     ffts         :      1.00s CPU     36.81s WALL (   21912 calls)
+                                        0.87s GPU  (   21709 calls)
+     fftw         :      6.68s CPU    826.40s WALL (  419286 calls)
+                                      155.99s GPU  (  419286 calls)
+     interpolate  :      4.16s CPU      4.23s WALL (     203 calls)
+     davcio       :     73.12s CPU    105.38s WALL (  104000 calls)
+ 
+     Parallel routines
+ 
+     PWSCF        :      8h53m CPU      8h50m WALL
+
+ 
+   This run was terminated on:  12:41:16  29Sep2026            
+
+=------------------------------------------------------------------------------=
+   JOB DONE.
+=------------------------------------------------------------------------------=
