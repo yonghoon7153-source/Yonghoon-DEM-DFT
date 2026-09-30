@@ -1,0 +1,94 @@
+{
+  "scope": "Reviewer-owned SHA/set arithmetic only. Models the local closure predicate, NOT full validate_provenance, fitting, restore or native execution. Full artifact reseal/validator reproduction was not run.",
+  "files": {
+    "configs/base.yaml": {
+      "utf8": "physics: fixed\n",
+      "sha256": "dfbb444a3c2c4eb420b2718972c87f2b13df7638e3304d4d8b61331d67471ff5"
+    },
+    "configs/leaf.yaml": {
+      "utf8": "extends: base.yaml\nnote: leaf\n",
+      "sha256": "f5e3999f2e34bdbec944e694ad7e477f685d1ab40cd5ac499ac5e88b22c8b786"
+    },
+    "configs/unrelated.yaml": {
+      "utf8": "note: not a parent\n",
+      "sha256": "5e10a7f80206893c371846faceeb4a4a62b052fd70b463da0e2814c22e29962e"
+    }
+  },
+  "actual_root": "configs/leaf.yaml",
+  "independently_defined_dependency_members": [
+    "configs/base.yaml",
+    "configs/leaf.yaml"
+  ],
+  "cases": [
+    {
+      "name": "positive",
+      "submitted_keys": [
+        "configs/base.yaml",
+        "configs/leaf.yaml"
+      ],
+      "calculated": "e1807355803e2601cb1a4e6aaa9b7654050346f19b8c0c8c7727a61b30ad45e9",
+      "declared_plan": "e1807355803e2601cb1a4e6aaa9b7654050346f19b8c0c8c7727a61b30ad45e9",
+      "declared_run": "e1807355803e2601cb1a4e6aaa9b7654050346f19b8c0c8c7727a61b30ad45e9",
+      "all_selected_snapshots_unchanged": true,
+      "both_digest_equalities_hold": true,
+      "exact_unique_dependency_members": true,
+      "actual_full_closure": "e1807355803e2601cb1a4e6aaa9b7654050346f19b8c0c8c7727a61b30ad45e9"
+    },
+    {
+      "name": "parent_omitted",
+      "submitted_keys": [
+        "configs/leaf.yaml"
+      ],
+      "calculated": "f3ea52b77269db81c8f2ce4bf956b85a1b5b9ed61fb962a70b6f68d52f9a5b93",
+      "declared_plan": "f3ea52b77269db81c8f2ce4bf956b85a1b5b9ed61fb962a70b6f68d52f9a5b93",
+      "declared_run": "f3ea52b77269db81c8f2ce4bf956b85a1b5b9ed61fb962a70b6f68d52f9a5b93",
+      "all_selected_snapshots_unchanged": true,
+      "both_digest_equalities_hold": true,
+      "exact_unique_dependency_members": false,
+      "actual_full_closure": "e1807355803e2601cb1a4e6aaa9b7654050346f19b8c0c8c7727a61b30ad45e9"
+    },
+    {
+      "name": "leaf_omitted",
+      "submitted_keys": [
+        "configs/base.yaml"
+      ],
+      "calculated": "a667a00196ded2700b91d6e2bfc26c582a3be61e401cc172e7513142bfb1bb62",
+      "declared_plan": "a667a00196ded2700b91d6e2bfc26c582a3be61e401cc172e7513142bfb1bb62",
+      "declared_run": "a667a00196ded2700b91d6e2bfc26c582a3be61e401cc172e7513142bfb1bb62",
+      "all_selected_snapshots_unchanged": true,
+      "both_digest_equalities_hold": true,
+      "exact_unique_dependency_members": false,
+      "actual_full_closure": "e1807355803e2601cb1a4e6aaa9b7654050346f19b8c0c8c7727a61b30ad45e9"
+    },
+    {
+      "name": "extra_member",
+      "submitted_keys": [
+        "configs/base.yaml",
+        "configs/leaf.yaml",
+        "configs/unrelated.yaml"
+      ],
+      "calculated": "f13d6aba46ed2093149102ac58c5b85630fc9f0d723baf9b61563d9af6c25061",
+      "declared_plan": "f13d6aba46ed2093149102ac58c5b85630fc9f0d723baf9b61563d9af6c25061",
+      "declared_run": "f13d6aba46ed2093149102ac58c5b85630fc9f0d723baf9b61563d9af6c25061",
+      "all_selected_snapshots_unchanged": true,
+      "both_digest_equalities_hold": true,
+      "exact_unique_dependency_members": false,
+      "actual_full_closure": "e1807355803e2601cb1a4e6aaa9b7654050346f19b8c0c8c7727a61b30ad45e9"
+    },
+    {
+      "name": "duplicate_member",
+      "submitted_keys": [
+        "configs/base.yaml",
+        "configs/leaf.yaml",
+        "configs/base.yaml"
+      ],
+      "calculated": "e1807355803e2601cb1a4e6aaa9b7654050346f19b8c0c8c7727a61b30ad45e9",
+      "declared_plan": "e1807355803e2601cb1a4e6aaa9b7654050346f19b8c0c8c7727a61b30ad45e9",
+      "declared_run": "e1807355803e2601cb1a4e6aaa9b7654050346f19b8c0c8c7727a61b30ad45e9",
+      "all_selected_snapshots_unchanged": true,
+      "both_digest_equalities_hold": true,
+      "exact_unique_dependency_members": false,
+      "actual_full_closure": "e1807355803e2601cb1a4e6aaa9b7654050346f19b8c0c8c7727a61b30ad45e9"
+    }
+  ]
+}

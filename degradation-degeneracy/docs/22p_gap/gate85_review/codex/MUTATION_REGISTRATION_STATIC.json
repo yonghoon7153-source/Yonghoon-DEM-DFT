@@ -1,0 +1,77 @@
+{
+  "scope": "AST/literal and text occurrence only. No mutations applied or replayed; kill counts remain sender-reported.",
+  "mutations": [
+    {
+      "name": "v6-plan-closure-must-match-the-staged-closure-g84",
+      "file": "src/fitting.py",
+      "preimage_count": 1,
+      "registration_line": 2037
+    },
+    {
+      "name": "the-validator-rebuilds-the-closure-from-snapshots-g84",
+      "file": "src/io.py",
+      "preimage_count": 1,
+      "registration_line": 2041
+    },
+    {
+      "name": "preflight-refuses-non-grid-reference-before-self-fit-g84",
+      "file": "src/fitting.py",
+      "preimage_count": 1,
+      "registration_line": 2045
+    },
+    {
+      "name": "preflight-binds-the-plan-source-digest-g84",
+      "file": "src/fitting.py",
+      "preimage_count": 1,
+      "registration_line": 2049
+    },
+    {
+      "name": "preflight-binds-the-plan-reference-g84",
+      "file": "src/fitting.py",
+      "preimage_count": 1,
+      "registration_line": 2053
+    },
+    {
+      "name": "the-preflight-runs-before-the-halfcell-self-fit-g84",
+      "file": "src/fitting.py",
+      "preimage_count": 1,
+      "registration_line": 2057
+    },
+    {
+      "name": "v2-finite-counts-only-finite-J-g84",
+      "file": "src/io.py",
+      "preimage_count": 1,
+      "registration_line": 2062
+    },
+    {
+      "name": "v2-converged-counts-the-legacy-true-flag-g84",
+      "file": "src/io.py",
+      "preimage_count": 1,
+      "registration_line": 2066
+    },
+    {
+      "name": "v2-counts-are-bounded-by-returned-g84",
+      "file": "tools/preserve.py",
+      "preimage_count": 1,
+      "registration_line": 2070
+    },
+    {
+      "name": "record-schema-dispatch-is-closed-g84",
+      "file": "tools/preserve.py",
+      "preimage_count": 1,
+      "registration_line": 2074
+    },
+    {
+      "name": "v2-missing-counts-do-not-fall-back-to-v1-g84",
+      "file": "tools/preserve.py",
+      "preimage_count": 1,
+      "registration_line": 2078
+    },
+    {
+      "name": "realized-from-fits-dispatches-on-schema-g84",
+      "file": "src/io.py",
+      "preimage_count": 1,
+      "registration_line": 2082
+    }
+  ]
+}

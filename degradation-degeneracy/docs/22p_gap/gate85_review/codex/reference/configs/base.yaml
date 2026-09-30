@@ -1,0 +1,122 @@
+# =============================================================================
+#  base.yaml — 물리 baseline
+#
+#  ⚠ 이 파일의 수치는 reference/degrade_mode_sim_original.py 와 1:1 대조 완료본이다.
+#    임의 변경 금지. 변경 시 physics(...) 커밋 + CHANGELOG.md 기록 필수.
+# =============================================================================
+
+model:
+  type: DFN
+  # 원본: {"particle phases": ("2", "1")}
+  #   음극 2상 (Primary=Graphite, Secondary=Si), 양극 1상
+  particle_phases: ["2", "1"]
+  # 원본: {"open-circuit potential": (("single", "current sigmoid"), "single")}
+  #   Si의 충·방전 OCP 히스테리시스를 current sigmoid로 처리
+  open_circuit_potential:
+    negative: ["single", "current sigmoid"]
+    positive: "single"
+
+parameter_set: Chen2020_composite
+
+cell:
+  upper_voltage_cutoff: 4.2      # 원본 param.update 일치
+  lower_voltage_cutoff: 2.5
+  # 전극 두께는 손대지 않음 → Chen2020_composite 기본값 사용
+  #   (Neg CC 1.2e-05, Neg 8.52e-05, Pos 7.56e-05, Pos CC 1.6e-05 m)
+
+# -----------------------------------------------------------------------------
+#  완충(charged) 상태 baseline — 원본 initialization() 와 1:1 대조
+# -----------------------------------------------------------------------------
+baseline:
+  ne_primary_init_conc:   27700.0    # Primary: Initial concentration in negative electrode
+  ne_primary_max_conc:    28700.0    # Primary: Maximum concentration in negative electrode
+  ne_secondary_init_conc: 276610.0   # Secondary: Initial concentration in negative electrode
+  ne_secondary_max_conc:  278000.0   # Secondary: Maximum concentration in negative electrode
+  pe_init_conc:           17038.0    # Initial concentration in positive electrode
+  pe_max_conc:            63104.0    # 원본 print문의 y = c_pe/63104 에서 역산
+  ne_porosity:            0.25       # Negative electrode porosity
+  ne_primary_vf:          0.735      # Primary: NE active material volume fraction   (Graphite)
+  ne_secondary_vf:        0.015      # Secondary: NE active material volume fraction (Si)
+  pe_porosity:            0.335      # Positive electrode porosity
+  pe_vf:                  0.665      # Positive electrode active material volume fraction
+
+# -----------------------------------------------------------------------------
+#  완방(discharged) 상태 — ★ 하드코딩 금지
+#
+#  원본 코드에는 36.7 / 3446.3 / 58439.9 이 하드코딩되어 있었으나,
+#  코드 내 경고 주석에 "예전 baseline 기준이라 부정확, 다시 뽑아야 함"이라 명시.
+#  (주석의 값 428 / 82591 / 62877 과도 불일치)
+#  → 매 실행 시 방전 시뮬레이션으로 산출하고, baseline 해시로 캐시한다.
+# -----------------------------------------------------------------------------
+discharged_state:
+  auto_regenerate: true
+  cache: true
+  cache_dir: .cache/discharged_state
+  protocol:
+    - "Discharge at 0.05C until 2.5V"
+    - "Discharge at 2.5 V until 0.02 C"
+  # 산출값은 캐시에 저장됨. 아래는 참고용(원본 값) — 사용 금지
+  _original_hardcoded_do_not_use:
+    ne_primary:   36.7
+    ne_secondary: 3446.3
+    pe:           58439.9
+
+# -----------------------------------------------------------------------------
+#  프로토콜 — 원본 experiment / experiment2
+# -----------------------------------------------------------------------------
+protocol:
+  c_rate: 0.05
+  rest_minutes: 10
+
+  # 원본 `experiment`
+  discharge_first:
+    - "Discharge at 0.05 C until 2.5 V"
+    - "Rest for 10 minutes"
+    - "Charge at 0.05 C until 4.2 V"
+    - "Rest for 10 minutes"
+    - "Discharge at 0.05 C until 2.5 V"
+
+  # 원본 `experiment2`
+  charge_first:
+    - "Charge at 0.05 C until 4.2 V"
+    - "Rest for 10 minutes"
+    - "Discharge at 0.05 C until 2.5 V"
+
+# -----------------------------------------------------------------------------
+#  모드 ↔ 프로토콜 매핑 — 원본 그대로. 변경 금지.
+#  (조합 격자에서는 charge_first로 통일하되 manifest에 기록할 것)
+#
+#  ⚠ lam_pe_de는 문서 초안에 charge_first로 잘못 기재되어 있었으나,
+#    원본 코드 L174는 run_sweep(experiment, ...) = discharge_first를 사용한다.
+#    (update_fn도 완충 기준 17038/(1-i) — discharge_first와 정합)
+#    원본 코드가 기준이므로 discharge_first로 정정. (physics 커밋 참조)
+# -----------------------------------------------------------------------------
+mode_protocol:
+  reference:  discharge_first
+  lli:        discharge_first
+  lam_ne_li:  discharge_first
+  lam_ne_de:  charge_first
+  lam_pe_li:  charge_first
+  lam_pe_de:  discharge_first
+
+grid_protocol_override: charge_first   # 조합 실행 시 통일할 프로토콜
+
+# -----------------------------------------------------------------------------
+solver:
+  type: idaklu
+  fallback: casadi
+  rtol: 1.0e-6
+  atol: 1.0e-6
+  casadi_mode: safe
+
+postprocess:
+  n_trim: 3          # 원본: cutoff 근처 solver 튐 방지용 끝단 절단
+  n_interp: 300      # 원본: x_cell_norm = np.linspace(0, 1, 300)
+
+# -----------------------------------------------------------------------------
+#  안전 가드 — 조합 적용 시 물리적으로 불가능한 값 방지
+# -----------------------------------------------------------------------------
+guards:
+  max_mode_value: 0.9        # i → 1 에서 /(1-i) 발산 방지
+  max_porosity: 0.95         # porosity + vf·i ≤ 1 검증
+  min_vf: 1.0e-4

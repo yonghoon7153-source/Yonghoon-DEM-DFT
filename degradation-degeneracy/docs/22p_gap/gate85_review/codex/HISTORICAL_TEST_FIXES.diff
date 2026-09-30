@@ -1,0 +1,129 @@
+--- pre54/tests/test_docs_lint.py
++++ b49c24fabe94be7a5986bdc54de2d4278c4ebf65/tests/test_docs_lint.py
+@@ -10893,7 +10893,11 @@
+ #: ★ 54차 P0-1 — 동결과 발급이 **같은 원장**을 보는지 시험하려면 원장에
+ #:   cohort 와 계획된 다리가 함께 있어야 한다.
+ _RUN_SPEC_GX = {"leg_id": "L", "mode": "fit", "objective": "pocv_dvdq",
+-                "n_restarts": 3, "reference": "grid"}
++                "n_restarts": 3, "reference": "grid",
++                # ★ 85차 자체 발견 — 74차 G74-1 부터 발급자는 `run_spec.grid.discharged_cache_sha256` 가 고정 hex64 가
++                #   아니면 그 이유로 거부한다 (`_assert_prospective_plan_is_startable`). 이 54차 spec 은 grid 축이
++                #   없어서 cohort 검사에 닿기 전에 거부됐다 — 아래 YAML 원문과 같은 값.
++                "grid": {"discharged_cache_sha256": "0" * 64}}
+ 
+ 
+ def _spec_digest_gx(spec: dict) -> str:
+@@ -10931,6 +10935,11 @@
+         f"  cohort_id: {cohort_id}\n"
+         "  status: planned\n"
+         "  authorization_kind: prospective\n"
++        # ★ 85차 자체 발견 — 74차 G74-3 부터 발급자는 계획에 `claim_scope` 가 없으면 **그 이유로** 먼저 거부한다
++        #   (`_assert_prospective_plan_is_startable`). 이 54차 fixture 는 그 키가 없어서, 이 원장을 쓰는 발급
++        #   시험 (half-committed · froze-meanwhile) 이 74차 이후 cohort 검사에 닿지 못한 채 통과하고 있었다 —
++        #   전체 변이 재생에서 `freeze-linearizes-its-start` 가 살아남아 드러났다. 74차 fixture 와 같은 값.
++        "  claim_scope: active_claims\n"
+         '  authorized_source_digest: "0123456789abcdef"\n'
+         f'  run_spec_digest: "{_spec_digest_gx(_RUN_SPEC_GX)}"\n'
+         "  run_spec:\n"
+@@ -10939,6 +10948,8 @@
+         "    objective: pocv_dvdq\n"
+         "    n_restarts: 3\n"
+         "    reference: grid\n"
++        "    grid:\n"
++        f'      discharged_cache_sha256: "{"0" * 64}"\n'
+         "  recorded_on: '2026-09-01'\n"
+         "  근거: 시험용 — 계획\n"
+         "legs: []\n")
+@@ -11051,7 +11062,11 @@
+     tok = rp.REPO / "_attempts" / "L.token"
+     with pytest.raises(P.PreserveError) as ei:
+         P.open_leg_run("L", _RUN_SPEC_GX, "0123456789abcdef", ledger=led)
+-    assert "active" in str(ei.value) or "동결" in str(ei.value), str(ei.value)
++    # ★ 85차 — 거부 **이유**가 cohort 상태 검사여야 한다 (`_claim_planned_leg` 의 "… active 가 아니다 ('freezing')" 또는
++    #   commit 시점 `_assert_cohort_admits` 의 "지금 active 가 아니다"). 예전 `"active" in str(...)` 은 74차 이후
++    #   claim_scope 거부문의 `['active_claims', …]` 에도 걸려 다른 이유의 거부를 통과시켰다 (변이
++    #   `freeze-linearizes-its-start` 생존). claim_scope 거부문에는 "active 가 아니다" 가 없다.
++    assert "active 가 아니다" in str(ei.value), str(ei.value)
+     doc = yaml.safe_load(led.read_text(encoding="utf-8"))
+     plan = next(e for e in doc["planned"] if e["leg_id"] == "L")["status"]
+     assert plan == "planned", "반쯤 얼린 cohort 에서 실행권이 열렸다"
+--- pre59exec/tests/test_exec_class_capability_59.py
++++ b49c24fabe94be7a5986bdc54de2d4278c4ebf65/tests/test_exec_class_capability_59.py
+@@ -200,8 +200,16 @@
+         P.os.write(fd, data[:1])                     # loop 없이 한 바이트만
+ 
+     monkeypatch.setattr(P, "_write_all", _truncated)
+-    with pytest.raises(P.PreserveError):
++    with pytest.raises(P.PreserveError) as ei:
+         P.commit_run_outputs(cap, [out])
++    # ★ 85차 자체 발견 — 70차 E5 의 typed reader (`_read_exec_class_at`) 가 생긴 뒤로는 read-back 을 지워도
++    #   **게시된 부분 레코드**를 그 reader 가 "등록부의 손상" 으로 거부해 `raises(PreserveError)` 가 채워졌다
++    #   (전체 변이 재생: `exec-class-record-is-read-back-g59` 생존 · 실측 메시지 "실행 class 등록 레코드를 읽을 수
++    #   없다 … 등록부의 손상이지 미등록이 아니다"). 이 시험의 주장은 "final 이름에 부분 바이트가 공개되면
++    #   안 된다" 이므로 두 가지를 직접 잰다: 거부 **이유**가 read-back 이고, final 이름이 **없다**.
++    assert "다시 읽었더니" in str(ei.value), str(ei.value)
++    published = sorted(P.exec_class_root_for_ledger(led).rglob("*.json"))
++    assert published == [], f"부분 레코드가 final 이름으로 공개됐다: {published}"
+     # `monkeypatch.undo()` 는 이 시험의 **모든** patch 를 되돌린다 — smoke
+     # namespace 까지 되돌아가면 아래 재시도가 canonical 이 된다. 겨눈 것 하나만
+     # 되돌린다.
+--- pre59handle/tests/test_handle_carry_59.py
++++ b49c24fabe94be7a5986bdc54de2d4278c4ebf65/tests/test_handle_carry_59.py
+@@ -133,15 +133,23 @@
+     # ★ 60차 P0-8 이후 index 는 **묶음 안**에 있어야 한다. 밖에 두면 이 시험이
+     #   재는 것(link 를 따라가는가)이 아니라 index 위치 검사가 먼저 걸려서,
+     #   변이를 심어도 같은 이유로 빨개진다 — 즉 아무것도 안 재게 된다.
+-    idx = bundle / "index.json"
+-    idx.write_text("{}\n", encoding="utf-8")
++    # ★ 85차 자체 발견 — 70차 E3 부터 구성원을 열거하지 않는 index (`{}`) 는 그 이유로 먼저 거부된다. 그래서
++    #   이 시험은 74차~84차 사이 link 를 따라가는지가 아니라 index 형식을 재고 있었다 (전체 변이 재생:
++    #   `bundle-members-are-not-followed-g59` 생존 · 실측 `bad` = "payload index 를 해석할 수 없다 … (dict 비어
++    #   있음)"). 공격자가 하듯 index 는 **정상 production 형식**으로, link 도 밖의 바이트 sha 로 열거한다 —
++    #   그러면 남는 거부 이유는 "link 를 따라가지 않는다" 뿐이다.
+     import hashlib
++    import yaml
++    idx = bundle / "payload_sha256.yaml"
++    members = {"real.txt": hashlib.sha256(b"in-repo\n").hexdigest(),
++               "link.bin": hashlib.sha256(b"x" * 4096).hexdigest()}
++    idx.write_text(yaml.safe_dump(members, sort_keys=True), encoding="utf-8")
+     ev = {
+         "bundle_uri": "bundle",
+-        # link 를 파일로 세면 real.txt · link.bin · index.json = 3 이다
++        # link 를 파일로 세면 real.txt · link.bin · payload_sha256.yaml = 3 이다
+         "bundle_files": 3,
+-        "payload_bytes": len("in-repo\n") + 4096 + len("{}\n"),
+-        "payload_index": "bundle/index.json",
++        "payload_bytes": len("in-repo\n") + 4096 + idx.stat().st_size,
++        "payload_index": "bundle/payload_sha256.yaml",
+         "payload_index_sha256": hashlib.sha256(idx.read_bytes()).hexdigest(),
+     }
+     bad = P._verify_declared_bundle(ev, repo_root=root)
+--- pre61/tests/test_evidence_receipt_61.py
++++ b49c24fabe94be7a5986bdc54de2d4278c4ebf65/tests/test_evidence_receipt_61.py
+@@ -201,6 +201,13 @@
+     bad = full_receipt()
+     bad["startup"]["startup_history"] = {"status": "failed", "reason": "시험"}
+     monkeypatch.setattr(mr, "_observed_receipt", lambda: bad)
++    # ★ 85차 자체 발견 ⑤ — 65차 N1a 의 둘째 층 (`_assert_customization_matches_parent`) 은 startup **이력**을
++    #   읽는다. 이력이 `failed` 인 이 영수증은 완전성 reader 를 지워도 그 층이 (환경의 sitecustomize 에 따라)
++    #   먼저 거부해, 변이 `incomplete_receipt_is_refused-g61` 의 증인이 환경마다 달라졌다 (전체 재생 실측:
++    #   'customization 이 부모가 본 것과 양립하지 않는다'). 이 시험이 재는 층은 완전성 reader 하나이므로
++    #   둘째 층을 이 시험 안에서만 끈다 — 그 층은 자기 시험(`test_evidence_receipt_61` 의 customization
++    #   시험들 · 65차 · 67차)이 따로 잰다.
++    monkeypatch.setattr(mr, "_assert_customization_matches_parent", lambda *a, **k: None)
+     with pytest.raises(mr._ReplayError) as ei:
+         mr._execution_receipt()
+     assert "불완전" in str(ei.value) or "실패" in str(ei.value), str(ei.value)
+@@ -243,5 +250,12 @@
+     mr = _mr()
+     bad = full_receipt(packages={"status": "failed", "reason": "시험"})
+     monkeypatch.setattr(mr, "_observed_receipt", lambda: bad)
++    # ★ 85차 자체 발견 ⑤ — 65차 N1a 의 둘째 층 (`_assert_customization_matches_parent`) 은 startup **이력**을
++    #   읽는다. 이력이 `failed` 인 이 영수증은 완전성 reader 를 지워도 그 층이 (환경의 sitecustomize 에 따라)
++    #   먼저 거부해, 변이 `incomplete_receipt_is_refused-g61` 의 증인이 환경마다 달라졌다 (전체 재생 실측:
++    #   'customization 이 부모가 본 것과 양립하지 않는다'). 이 시험이 재는 층은 완전성 reader 하나이므로
++    #   둘째 층을 이 시험 안에서만 끈다 — 그 층은 자기 시험(`test_evidence_receipt_61` 의 customization
++    #   시험들 · 65차 · 67차)이 따로 잰다.
++    monkeypatch.setattr(mr, "_assert_customization_matches_parent", lambda *a, **k: None)
+     with pytest.raises(mr._ReplayError):
+         mr._execution_receipt()

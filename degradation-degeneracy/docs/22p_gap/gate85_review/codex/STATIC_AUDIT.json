@@ -1,0 +1,672 @@
+{
+  "pass": true,
+  "checks": [
+    {
+      "check": "Git blob docs__08_REVIEW_RESPONSE.md.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD docs/08_REVIEW_RESPONSE.md",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate84_review__codex__DECISION.json.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD docs/22p_gap/gate84_review/codex/DECISION.json",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate84_review__codex__PACKAGE_MANIFEST.json.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD docs/22p_gap/gate84_review/codex/PACKAGE_MANIFEST.json",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__GATE85_REQUEST.md.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD docs/22p_gap/GATE85_REQUEST.md",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__LEG_PRESERVATION.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD docs/22p_gap/LEG_PRESERVATION.yaml",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__mutation_replay.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD docs/22p_gap/mutation_replay.py",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__receipts__grid_fit_v5.validate.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD docs/22p_gap/receipts/grid_fit_v5.validate.yaml",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__receipts__history__grid_fit_v5.validate.7187bd31740514d4.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD docs/22p_gap/receipts/history/grid_fit_v5.validate.7187bd31740514d4.yaml",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__receipts__history__paired_fixed5_v4.validate.7187bd31740514d4.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD docs/22p_gap/receipts/history/paired_fixed5_v4.validate.7187bd31740514d4.yaml",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__receipts__paired_fixed5_v4.validate.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__STAGE3_CONTRACT.md.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD docs/22p_gap/STAGE3_CONTRACT.md",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__STAGE3_IMPL_ROUND1_SPEC.md.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md",
+      "pass": true
+    },
+    {
+      "check": "Git blob pre54.json",
+      "pass": true
+    },
+    {
+      "check": "Git blob pre59exec.json",
+      "pass": true
+    },
+    {
+      "check": "Git blob pre59handle.json",
+      "pass": true
+    },
+    {
+      "check": "Git blob pre61.json",
+      "pass": true
+    },
+    {
+      "check": "Git blob receiptcode.json",
+      "pass": true
+    },
+    {
+      "check": "Git blob src__fitting.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD src/fitting.py",
+      "pass": true
+    },
+    {
+      "check": "Git blob src__io.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD src/io.py",
+      "pass": true
+    },
+    {
+      "check": "Git blob tests__test_docs_lint.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD tests/test_docs_lint.py",
+      "pass": true
+    },
+    {
+      "check": "Git blob tests__test_evidence_receipt_61.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD tests/test_evidence_receipt_61.py",
+      "pass": true
+    },
+    {
+      "check": "Git blob tests__test_exec_class_capability_59.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD tests/test_exec_class_capability_59.py",
+      "pass": true
+    },
+    {
+      "check": "Git blob tests__test_gate81_stage3_wire.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD tests/test_gate81_stage3_wire.py",
+      "pass": true
+    },
+    {
+      "check": "Git blob tests__test_gate84_round2a.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD tests/test_gate84_round2a.py",
+      "pass": true
+    },
+    {
+      "check": "Git blob tests__test_handle_carry_59.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD tests/test_handle_carry_59.py",
+      "pass": true
+    },
+    {
+      "check": "Git blob tools__preserve.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned HEAD tools/preserve.py",
+      "pass": true
+    },
+    {
+      "check": "Flat complete directory src",
+      "pass": true
+    },
+    {
+      "check": "Reconstructed Git tree src",
+      "pass": true
+    },
+    {
+      "check": "Flat complete directory tools",
+      "pass": true
+    },
+    {
+      "check": "Reconstructed Git tree tools",
+      "pass": true
+    },
+    {
+      "check": "Flat complete directory configs",
+      "pass": true
+    },
+    {
+      "check": "Reconstructed Git tree configs",
+      "pass": true
+    },
+    {
+      "check": "Flat complete directory scripts",
+      "pass": true
+    },
+    {
+      "check": "Reconstructed Git tree scripts",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/base.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/grid_22p.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/grid_22p_dense.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/grid_22p_fine.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/grid_22p_seed.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/grid_coarse.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/grid_fine.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/objectives.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/objectives_optimized.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/sweep1d.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob requirements-gpu.txt",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob requirements.txt",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob run.sh",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/archive_results.sh",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/bg.sh",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/check_run.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/diagnose_objective.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/recompute_lli.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/setup_env.sh",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/smoke_e2e.sh",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/verify_env.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/watch_fit.sh",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/watch_grid.sh",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/__init__.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/baseline.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/config.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/curves.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/fitting.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/grid.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/halfcell.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/hessian.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/inventory.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/io.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/model.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/modes.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/objective.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/protocol.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/runner.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/scoring.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/sweep.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/weight_sweep.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/analyze_22p_gap.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/archive_bundle.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/check_derived_fresh.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/check_sweep_consistency.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/compare_cases.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/compare_objectives.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/design_golden.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/design_wire.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/diagnose_pini_transition.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/gen_design_golden.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/index_yaml.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/interactive_ab.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/make_results.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/plot_grid_summary.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/plot_map.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/plot_sweep1d.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/preserve.py",
+      "pass": true
+    },
+    {
+      "check": "Exact RUN_SCOPE 58 files",
+      "pass": true
+    },
+    {
+      "check": "Exactly three changed production files",
+      "pass": true
+    },
+    {
+      "check": "Independent source_digest",
+      "pass": true
+    },
+    {
+      "check": "Target ancestry",
+      "pass": true
+    },
+    {
+      "check": "Target to HEAD RUN_SCOPE diff zero",
+      "pass": true
+    },
+    {
+      "check": "GREEN to target RUN_SCOPE diff zero",
+      "pass": true
+    },
+    {
+      "check": "GREEN change counts",
+      "pass": true
+    },
+    {
+      "check": "Prior Gate84 embedded identity PACKAGE_MANIFEST.json",
+      "pass": true
+    },
+    {
+      "check": "Prior Gate84 embedded identity DECISION.json",
+      "pass": true
+    },
+    {
+      "check": "One active normalize definition",
+      "pass": true
+    },
+    {
+      "check": "Unchanged active AST _minimize_until_stable",
+      "pass": true
+    },
+    {
+      "check": "Unchanged active AST _fit_one",
+      "pass": true
+    },
+    {
+      "check": "Unchanged active AST normalize_restart_record",
+      "pass": true
+    },
+    {
+      "check": "Preflight lexical order before halfcell fit",
+      "pass": true
+    },
+    {
+      "check": "Legacy branch skips preflight",
+      "pass": true
+    },
+    {
+      "check": "Hex16 prefix of full closure",
+      "pass": true
+    },
+    {
+      "check": "Preflight source/config/reference controls",
+      "pass": true
+    },
+    {
+      "check": "v2 finite/count separated",
+      "pass": true
+    },
+    {
+      "check": "Closure branch chooses submitted keys",
+      "pass": true
+    },
+    {
+      "check": "Closure branch does not reconstruct dependency graph",
+      "pass": true
+    },
+    {
+      "check": "16 submitted new test nodes",
+      "pass": true
+    },
+    {
+      "check": "g84 static preimage v6-plan-closure-must-match-the-staged-closure-g84",
+      "pass": true
+    },
+    {
+      "check": "g84 static preimage the-validator-rebuilds-the-closure-from-snapshots-g84",
+      "pass": true
+    },
+    {
+      "check": "g84 static preimage preflight-refuses-non-grid-reference-before-self-fit-g84",
+      "pass": true
+    },
+    {
+      "check": "g84 static preimage preflight-binds-the-plan-source-digest-g84",
+      "pass": true
+    },
+    {
+      "check": "g84 static preimage preflight-binds-the-plan-reference-g84",
+      "pass": true
+    },
+    {
+      "check": "g84 static preimage the-preflight-runs-before-the-halfcell-self-fit-g84",
+      "pass": true
+    },
+    {
+      "check": "g84 static preimage v2-finite-counts-only-finite-J-g84",
+      "pass": true
+    },
+    {
+      "check": "g84 static preimage v2-converged-counts-the-legacy-true-flag-g84",
+      "pass": true
+    },
+    {
+      "check": "g84 static preimage v2-counts-are-bounded-by-returned-g84",
+      "pass": true
+    },
+    {
+      "check": "g84 static preimage record-schema-dispatch-is-closed-g84",
+      "pass": true
+    },
+    {
+      "check": "g84 static preimage v2-missing-counts-do-not-fall-back-to-v1-g84",
+      "pass": true
+    },
+    {
+      "check": "g84 static preimage realized-from-fits-dispatches-on-schema-g84",
+      "pass": true
+    },
+    {
+      "check": "Twelve new mutation definitions inspected",
+      "pass": true
+    },
+    {
+      "check": "Model: omitted parent differs but submitted equalities hold",
+      "pass": true
+    },
+    {
+      "check": "Exact historical receipt paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "Receipt invariant core text paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "One receipt scalar paired_fixed5_v4/validator_source_digest",
+      "pass": true
+    },
+    {
+      "check": "Receipt new validator paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "One receipt scalar paired_fixed5_v4/n_checks",
+      "pass": true
+    },
+    {
+      "check": "Receipt n_checks paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "One receipt scalar paired_fixed5_v4/core_sha256",
+      "pass": true
+    },
+    {
+      "check": "Current receipt core linked from ledger paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "Exact historical receipt grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "Receipt invariant core text grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "One receipt scalar grid_fit_v5/validator_source_digest",
+      "pass": true
+    },
+    {
+      "check": "Receipt new validator grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "One receipt scalar grid_fit_v5/n_checks",
+      "pass": true
+    },
+    {
+      "check": "Receipt n_checks grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "One receipt scalar grid_fit_v5/core_sha256",
+      "pass": true
+    },
+    {
+      "check": "Current receipt core linked from ledger grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "Prior Gate84 selected files unchanged",
+      "pass": true
+    }
+  ],
+  "source_digest": "ba51cd20caa10b7b",
+  "received_program_executions": 0,
+  "project_tests": 0,
+  "mutations": 0,
+  "restore": 0,
+  "COMSOL": 0,
+  "limitation": "PASS refers to reviewer byte/AST/data checks, not Round2a acceptance or runtime behavior."
+}

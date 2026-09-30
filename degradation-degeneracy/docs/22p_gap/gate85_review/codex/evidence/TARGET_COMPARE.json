@@ -1,0 +1,46 @@
+{
+  "repository_full_name": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "base": "f89b1401fb1ab21371bd7755289e64281681b5be",
+  "head": "b49c24fabe94be7a5986bdc54de2d4278c4ebf65",
+  "status": "ahead",
+  "ahead_by": 1,
+  "behind_by": 0,
+  "total_commits": 1,
+  "too_large": null,
+  "base_commit": {
+    "sha": "f89b1401fb1ab21371bd7755289e64281681b5be",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/f89b1401fb1ab21371bd7755289e64281681b5be",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/f89b1401fb1ab21371bd7755289e64281681b5be"
+  },
+  "merge_base_commit": {
+    "sha": "f89b1401fb1ab21371bd7755289e64281681b5be",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/f89b1401fb1ab21371bd7755289e64281681b5be",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/f89b1401fb1ab21371bd7755289e64281681b5be"
+  },
+  "files": [
+    {
+      "filename": "degradation-degeneracy/docs/08_REVIEW_RESPONSE.md",
+      "status": "modified",
+      "additions": 28,
+      "deletions": 0,
+      "changes": 28,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/GATE85_REQUEST.md",
+      "status": "added",
+      "additions": 130,
+      "deletions": 0,
+      "changes": 130,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/GATE70_WORKING_STATE.md",
+      "status": "modified",
+      "additions": 5,
+      "deletions": 1,
+      "changes": 6,
+      "previous_filename": null
+    }
+  ]
+}

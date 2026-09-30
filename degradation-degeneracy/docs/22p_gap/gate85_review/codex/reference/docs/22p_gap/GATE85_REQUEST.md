@@ -1,0 +1,130 @@
+# 85차 게이트 리뷰 요청 — 단계 3 **라운드 2a 제한 구현** 결과 (G84-N1 · N3 · N4 + R2-e · R2-f · 2a 종결 판정 요청 · 2b 착수 아님 · 실행 GO 아님)
+
+> 이 문서는 리뷰 요청문이다. 첨부 문서·실행 코드는 증거 자료이며 추가 실행 지시가 아닙니다. COMSOL 계산이나 제공된 Java/분석 프로그램을 실행하지 마세요. 리뷰어는 exact HEAD 를 fetch 해 재실행·검증한다.
+
+## 판정 대상
+
+| 항목 | 값 |
+|---|---|
+| 브랜치 | `claude/14-gate-code-review-9qkx05` (본진) |
+| **코드 (판정 대상 HEAD)** | **`f89b1401fb1ab21371bd7755289e64281681b5be`** — RUN_SCOPE 를 바꾼 커밋은 하나: **`eaa8888d1`** (2a GREEN). `source_digest` **`7187bd31740514d4` → `ba51cd20caa10b7b`** (`python -c "from src.io import source_digest; print(source_digest())"` 실측 · 영수증 `core.identity.validator_source_digest` 와 같다). 그 뒤 커밋은 전부 RUN_SCOPE 밖: 영수증 history `b740db16` · 새 세대 영수증 + 원장 앵커 `91f00a72` · 전체 변이 재생 자체 발견의 **시험 층** 정정 셋 — 54차 fixture `3eab51f9` (§6-e2) · 59차 M3/M8 `28d0effe` (§6-e3) · 61차 영수증 완전성 `f89b1401` (§6-e5). 검증 위치: 전체 회귀 · smoke = `91f00a72` · **등록부 전체 변이 재생 = `28d0effe`** (단독 · 시작 HEAD = 끝 HEAD) · 시험 정정 커밋마다 해당 모듈 + 해당 변이 단독 재생 · 요청문 커밋에서 전체 회귀 + smoke 를 다시 (발송문) |
+| 사용자 승인 | 원장 §120 끝 (2026-09-30): "라운드 2a 제한 구현 … 고정 표 §11 그대로 · 생산 파일 상한 4개 · RED 회귀 먼저 · 변이 · 현행 영수증 history 보존 뒤 기존 두 leg 영수증 1회 · 전체 회귀·smoke · GATE85" → **"승인 — 지금 착수"** (기록 커밋 `2bceaf9e`, 코드 변경 전) |
+| 시작 전 고정 표 | `docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md` **§11** (`fec847bd`, 코드 변경 전 — §1–§10 불변) — 84차 정정 4 반영 (11-2 hex64 · 11-3 시작 전 위치 · 11-4 계수/schema · 11-5 는 2b 조건) |
+| RED | `d81fdc01` — `tests/test_gate84_round2a.py` 15 node, 패치 전 **15 failed** — 이유 분류 §3 (무관 예외 11 · 실제 결함 4 + 패치 전 코드 탐침 5 건 `scratchpad/g84_probe_real_reasons.txt`) |
+| GREEN | `eaa8888d` — gate84 **16 passed** (RED 15 + 변이 생존자에서 추가한 n3_04) · gate84 + gate82 + gate81 + gate79 + design_wire **124 passed** (n3_04 전) · 등록부 규칙 시험 (gate67 · evidence_layer_58 · producer_closure_58 · promotion_seal_62 · scope_model_62) + 위 다섯 = 첫 실행 **3 failed / 189 passed** → 변이 자리 재정박 (§6-e) 뒤 evidence_layer_58 + gate79 + gate82 **42 passed** |
+| 영수증 | 현행 (`7187bd31740514d4`) 보존 `b740db16` (`history/<leg>.validate.7187bd31740514d4.yaml`) → **새 세대 `91f00a72`** (clean `b740db16` 에서 1 회 · 원장 앵커 같은 커밋) — §5 |
+| 변이 | `-g84` **12** — 첫 관측 11/12 (생존 1 → 회귀 n3_04 추가 → 12/12) · 기존 2 건 재정박 (§6-e) · 최종 재생은 **등록부 전체** (`-k` 없이) — §4 |
+| 84차 패키지 원본 | `docs/22p_gap/gate84_review/` (zip `f9ba5ffa…` 1,223,965 B · `codex/` 88 · blob 88/88 · 규칙 `e6cb32fb` → 풀기 `73218086`) · 접수 원장 §120 |
+
+## §0 묻는 것 / 묻지 않는 것
+
+| 묻는 것 | 묻지 않는 것 |
+|---|---|
+| §1 표가 G84-N1 · N3 · N4 와 R2-e · R2-f 를 **고정 표 §11 대로 코드로** 닫았는가 · 84차 정정 4 (hex64 · 시작 전 위치 · 계수/schema 분기 · v5 spec 불변) 이 지켜졌는가 | 실행 GO · 새 연구 leg · floor · pilot · 단계 4–6 · 12-P canary |
+| 라운드 **2a 종결 판정** | 라운드 2b 착수 (R2-a 실물 v6 leg gate — spec 버전 분기 · 계획 index v4 · CLI · R2-c 세대표) — 종결되어도 별도 사용자 승인 · G84-N2 는 2b 착수 전 조건 (§11-5) 으로 **이번에 손대지 않았다** |
+| §5 새 세대 영수증 수용 · §6 자기 신고 판정 (특히 §6-e 변이 등록부 자체 발견) | class/투영 게시 · 복원 (영수증용 격리 복원 제외) · p_ini 구현 |
+
+## §1 반영 표 (발견 → 고정 표 → 코드 자리 → 시험 → 변이)
+
+줄번호는 `91f00a72` 실측 (`eaa8888d` … `f89b1401` 와 RUN_SCOPE 동일).
+
+| 발견 | 고정 (§11) | 코드 자리 | 시험 (`tests/test_gate84_round2a.py`) | 변이 (`-g84`) |
+|---|---|---|---|---|
+| **G84-N1** hex16 ↔ hex64 | preimage 하나 · v6 는 그 전체 SHA-256 (hex64) · v5 hex16 그대로 (같은 preimage 의 prefix) · padding/재해시/leaf 대체 금지 · v6 null 거부 · staged closure 와 대조 · validator 는 스냅샷에서 재계산 | `src/fitting.py` `_config_closure_parts` :901 (`{논리 경로: sha256(bytes)}` over `config_dependencies`) · `closure_sha256_from_parts` :919 (정렬 · `key=sha` 줄 · `\n` 결합 · sha256 hex64) · `config_closure_sha256` :926 (hex64) · `_config_closure_digest` :885 = **같은 함수의 `[:16]`** (v5 값 불변 — n1_00 · gate70–75 영수증 가족 통과) · `_stage3_preflight` :1288 (계획 `inputs.base_config_digest` non-null · == staged closure hex64 · 아니면 시작 거부) · run_spec.stage3 에 `base_config_closure_sha256` · `base_config_closure_keys` (`src/io.py` `_STAGE3_SPEC_KEYS` :1522) · validator 새 검사 **`base_config_결속`** :1974 (`_inputs/<sealed[:12]>_<name>` 스냅샷에서 closure 재계산 → run_spec · 계획 둘과 대조 · 스냅샷 없음 → 실패) | n1_00 (양성 · hex16 == hex64[:16] · parent 변경 · leaf 변경 각각 다른 값) · n1_01 (null → 시작 거부 · `_fit_one` 도달 0) · n1_02 (hex16 · 패딩 hex64 → 거부) · n1_03 (부모 바꾼 뒤 봉인한 계획 → 진짜 closure 위에서 거부) · n1_04 (validator: run_spec 값 위조 → `base_config_결속` 실패 · 정상 통과) | `v6-plan-closure-must-match-the-staged-closure-g84` · `the-validator-rebuilds-the-closure-from-snapshots-g84` |
+| **G84-N3** 시작 전 거부의 위치 | v6 거부 · source/config/reference 결속을 staging 뒤 · **첫 수치 작업 앞** 공통 경계에 · inert sentinel 도달 0 · legacy 불변 | `src/fitting.py` `_stage3_preflight` :1288 — `_run_fit_locked` 에서 `_pf = _stage3_preflight(...) if stage3 is not None else None` :1982 가 `if reference == "halfcell":` :1985 (원점 self-fit `_fit_one` :2015) **앞**. 검사 순서: envelope v4 → protocol v6 → `reference == "grid"` → 계획 `inputs.reference == reference` → 계획 `source_digest == 실행 source_digest` → closure hex64. 반환 `{closure, keys}` 를 `_prepare_stage3(..., preflight=)` :1333 이 spec_block 에 합친다. legacy (stage3 None) 경로는 preflight 를 부르지 않는다 | n3_00 (다른 source_digest 계획 → `_fit_one` 도달 0) · n3_01 (halfcell reference + v6 문맥 → self-fit 앞 거부 · fits 미생성) · n3_02 (계획 reference ≠ 실행) · **n3_04** (계획 자체가 halfcell 을 주장 — reference 대조로는 못 막고 `reference != "grid"` 거부만 남는 경우 · 변이 생존자에서 추가) · n3_03 (양성: 유효 v6 는 `_prepare_stage3` 까지 도달 · legacy halfcell 은 예전처럼 self-fit) | `preflight-refuses-non-grid-reference-before-self-fit-g84` · `preflight-binds-the-plan-source-digest-g84` · `preflight-binds-the-plan-reference-g84` · `the-preflight-runs-before-the-halfcell-self-fit-g84` (경계 호출 자체를 지움 · 3 node) |
+| **G84-N4** 계수 정의 · schema 분기 | `returned` 불변 (objective 별 `restarts_json` 원소 수 합) · `finite` = 저장 J 유한 수 · `converged` = legacy True 수 (정상 종료 아님) · `0 ≤ finite, converged ≤ returned` · writer/consumer schema 분기 · v1 원문 · v2 키 누락 하향 거부 | `src/io.py` `_RECORD_SCHEMAS` :1531 · `realized_from_fits(..., schema="execution-record/v1")` :1534 (모르는 schema → ValueError · v2 만 두 계수 · `finite` 는 `math.isfinite` 의 숫자형 J (bool 제외) · `converged` 는 `is True`) · `_stage3_checks` :1803 (record schema 로 재계산 분기 · 모르는 schema → `execution_record` 실패) · `src/fitting.py` `write_execution_record` :1454 (`"schema": "execution-record/v2"`) · `tools/preserve.py` `_REALIZED_OBJ_KEYS_V2` :3066 · `_RECORD_SCHEMA_KEYS` :3067 · `check_execution_record` :3287 (schema 로 닫힌 키 집합 선택 :3301 · 모르는 schema 거부 · v2 범위 검사 · v1 에 v2 키가 있으면 "닫혀 있지 않다" · v2 에 키 누락도 같은 이유) | n4_00 (writer v2 · 행에서 다시 센 값과 일치) · n4_01 (v1 원문 읽기 · v1 에 v2 계수 섞임 거부 · v2 키 누락 거부 · 모르는 schema 거부) · n4_02 (비유한 J → finite 제외 · `converged=False` + 정상 종료 → converged 제외) · n4_03 (타입 · `finite > returned` 위조 거부) · n4_04 (`realized_from_fits` schema 분기 · v1 모양 불변) | `v2-finite-counts-only-finite-J-g84` · `v2-converged-counts-the-legacy-true-flag-g84` · `v2-counts-are-bounded-by-returned-g84` · `record-schema-dispatch-is-closed-g84` · `v2-missing-counts-do-not-fall-back-to-v1-g84` · `realized-from-fits-dispatches-on-schema-g84` |
+| **R2-e** dead 정의 | 79차 `normalize_restart_record(r)` (81차 dispatch 판에 가려짐) 삭제 · 역사적 3 세대 읽기 불변 | `src/fitting.py:350` 주석 한 줄 + 삭제 (−18) · dispatch 판 `normalize_restart_record` :395 의 `# noqa: F811` 제거 · `declared=None` 가지가 역사적 읽기 담당 | e_00 (모듈에 정의 하나 · g79_06 의 세 결과 그대로) | (변이 없음 — 삭제는 변이 대상이 아니다) · 다만 §6-e: 이 삭제가 79차 변이의 죽은 자리를 드러냈다 |
+| **R2-f** 계약 §1 v6 열 | 교란 표에 "v6 경로 (sig 6) 의 상태" 열 · legacy 문장 불변 · 이동 좌표 갱신 | `docs/22p_gap/STAGE3_CONTRACT.md` §1 표 (1 해소 — 원점 fitting 없음 + N3 경계 · 2 해소 — adaptive=False · 예산 계획 · 3 해소 — bank seed 물리 좌표 · 4 계획으로 명시 — candidate_mode · 5 해소 — 봉인 provider map) · 인용 `1955→2015` · `1910→1965` · `743-767→725-749` (R2-e −18 · preflight 삽입) · 갱신 기록 한 줄 | `tests/test_docs_lint.py::test_stage3_contract_cites_live_code_facts` 통과 | — |
+
+## §2 최소 diff (승인 상한 4 파일 중 3)
+
+`git diff --stat 7d291fbc..eaa8888d -- src tools configs scripts run.sh requirements*.txt`:
+
+```
+ src/fitting.py    | 124 +++++++++++++++++++++++--------
+ src/io.py         |  63 +++++++++++++++-
+ tools/preserve.py |  20 ++++-
+ 3 files changed, 167 insertions(+), 40 deletions(-)
+```
+
+`tools/design_wire.py` 는 손대지 않았다. 삭제 40 줄 전수 (`git diff -U0 … | grep '^-'`): dead 정의 본문 20 (R2-e) · `# noqa: F811` 줄 1 (재작성) · `_config_closure_digest` 본문 4 (→ `closure_sha256_from_parts(_config_closure_parts(...))[:16]` — 같은 preimage · 같은 값) · `_prepare_stage3` 시그니처/docstring 2 (`preflight=None` 추가) · spec_block 닫는 줄 1 (`**(preflight or {})`) · `write_execution_record` docstring/호출/schema 3 (v1 → v2) · `_prepare_stage3` 호출 1 (`preflight=_pf`) · import 1 (`closure_sha256_from_parts` 추가) · `realized_from_fits` 시그니처/반환/호출 3 (`schema=`) · preserve `check_execution_record` 의 schema 고정 비교 2 · 키 집합 비교 2. 새 production 파일 0 · fitting 수치 알고리즘 · ID 도메인 · bank/candidate 골든 불변 (gate79 골든 · gate81 w03 · gate82 n2_00b). sig 5 경로 불변 — `base_config_결속` 은 `_stage3_checks` (sig 6) 안에만 있어 두 leg 영수증의 검사 수가 그대로다 (§5). `_config_closure_digest` 의 hex16 값은 불변 (n1_00 + 영수증 가족 gate70–75 가 재생성 뒤 통과).
+
+RUN_SCOPE 밖 동반 변경: `tests/test_gate84_round2a.py` (신규 16 node) · `tests/conftest.py` +2 (gated 등록) · `tests/test_gate81_stage3_wire.py` (fixture 4 곳 — §6-b) · `docs/22p_gap/mutation_replay.py` (변이 12 + EXPECT 12 · 기존 2 재정박) · `docs/22p_gap/STAGE3_CONTRACT.md` §1 열 · 영수증 2 + history 2 · `LEG_PRESERVATION.yaml` (앵커 2 값 × 2 leg) · 전체 재생 자체 발견의 시험 정정: `tests/test_docs_lint.py` (54차 fixture 2 키 · 이유 대조 — `3eab51f9`) · `tests/test_exec_class_capability_59.py` · `tests/test_handle_carry_59.py` + EXPECT 증인 1 (`28d0effe`) · `tests/test_evidence_receipt_61.py` (customization 층 격리 — `f89b1401`).
+
+## §3 RED 이유 분류 (82차 §7-4 · §8-i 기준)
+
+| node | 패치 전 실패 | 분류 |
+|---|---|---|
+| n1_01 | `AssertionError: _fit_one 에 도달했다 — 시작 전 경계가 수치 작업 뒤에 있다` — null `base_config_digest` 계획으로 fitting 이 **시작해 끝났다** | **실제 결함** |
+| n4_01 | `["schema: 'execution-record/v2'"]` — v2 가 없어 소비자가 모른다 | 실제 결함 (부재) |
+| n4_03 | `schema … 키가 닫혀 있지 않다` — v2 계수 위조를 "v2 를 모른다" 이유로만 거부 | 실제 결함 (부재 — 정의 · 범위 검사 없음) |
+| e_00 | `dead 정의가 남아 있다` | 실제 결함 (R2-e) |
+| n1_00 · n1_02 · n1_03 · n1_04 · n3_00 · n3_01 · n3_02 · n3_03 · n4_00 · n4_02 · n4_04 | `AttributeError: module 'src.fitting' has no attribute 'config_closure_sha256'` (fixture 가 새 함수로 hex64 계획을 만든다) | **무관 예외 — RED 증거로 세지 않는다 (11 node)**. 대신 패치 전 코드 탐침 (아래) |
+| 패치 전 탐침 (`scratchpad/g84_probe_real_reasons.txt`, 시험 밖 · `d81fdc01` 코드 · hex64 는 sha256 직접 계산) | 5 경우 전부 `STARTED_AND_FINISHED fits=True`: n1_02 패딩 hex64 · n1_03 다른 부모의 hex64 · n3_00 다른 source_digest · n3_02 계획 reference=halfcell · n1_01 null | **실제 결함 5** — 84차 R2-b "계획 결속 없음" 의 실측 |
+
+n3_04 는 RED 세트에 없었다 — GREEN 뒤 변이 생존자 (`preflight-refuses-non-grid-reference-before-self-fit-g84` rc 0) 에서 나온 회귀로, 실코드에서는 처음부터 통과하고 RED 목격은 변이 rc 0 → rc 1 이다 (§6-d).
+
+## §4 시험 · 변이 결과
+
+| 단계 | 결과 |
+|---|---|
+| RED (`d81fdc01`) | 15 node — 15 failed (`scratchpad/red_gate84_initial.txt`) |
+| GREEN 첫 실행 | 4 failed — 전부 fixture (§6-b) → 정정 → gate84 + gate82 + gate81 + gate79 + design_wire **124 passed** (100.40 s) |
+| 계약 인용 lint | `test_stage3_contract_cites_live_code_facts` + gate84 16 → **16 passed** |
+| 변이 첫 관측 (`--emit-expect -k g84`, 작업 트리) | **11/12** rc 1 · 생존 1 (`preflight-refuses-non-grid-reference-before-self-fit-g84` — n3_01 의 계획은 `inputs.reference="grid"` 라 reference 대조가 대신 막았다) → n3_04 추가 → **12/12** · `--check-preimages -k g84` "정확히 한 번" |
+| 변이 재생 EXPECT (`-k g84`) | **12/12** "실행한 변이 12건이 전부 기대 node 를 call 단계에서 물었다" (rc 0) |
+| 등록부 규칙 시험 첫 실행 | evidence_layer_58 **3 failed** "정상 조각이 거부됐다" ← `check_preimages()` 가 기존 변이 2 건의 자리 불성립 (`absent-restart-fields-are-unrecorded-g79` preimage 0회 · `the-v6-path-refuses-another-plan-generation-g82` preimage 2회) → §6-e 재정박 → 두 변이 각각 재생 rc 1 · 증인 불변 → evidence_layer_58 + gate79 + gate82 **42 passed** (1012.93 s) |
+| 전체 회귀 · smoke (clean `91f00a72`) | 시작 HEAD = 끝 HEAD = `91f00a72d9a4fc7788214adc54543a5e2d805b5a` · 시작/끝 status 0 · 2026-09-30T12:17:04Z → 13:17:50Z: 전체 pytest (tests/ — docs-lint 358 포함) **0 failed · 2039 passed · 1 xfailed** (3416.78 s = 56:56 · rc 0) · strict smoke **rc 0** (220 s · 작은 grid/fit/score/restore 계산, 연구용 새 실행 0). xfailed 1 = `test_gate63_defensive.py::test_staging_an_input_outside_the_repo_is_still_unsupported` (선언된 예상 실패 — 83차와 같음). 같은 러너의 뒤 단계 전체 재생은 병행 재생과 겹쳐 중단시켰다 (rc 143 — §6-e4) |
+| **등록부 전체 변이 재생** (clean `28d0effe`, 단독 · `-k` 없음) | 시작 HEAD = 끝 HEAD = `28d0effeddc1ce8ed9dedeeabe189fd45eeb4595` · 시작/끝 status 0 · 2026-09-30T13:59:05Z → 16:24:03Z: scenario_total 356 · executable 345 · declared 11 · site_total 394 · site_executable 383 · ran 345 → **344 물었다** · 예외 1 = `incomplete_receipt_is_refused-g61` (빨개졌지만 선언 증인과 다른 이유 — §6-e5 → `f89b1401` 로 정정 뒤 단독 재생 rc 0) · 신고 11 은 등록부 선언 그대로 · `--check-preimages` "모든 변이 지점이 정확히 한 번 나타난다" |
+| 시험 정정 커밋의 단독 확인 | `3eab51f9`: docs_lint 해당 5 node passed · `freeze-linearizes-its-start` · `admission-rechecks-the-cohort-at-commit` 단독 재생 각각 rc 0 · `28d0effe`: exec_class_capability_59 + handle_carry_59 14 passed · 변이 심은 사본에서 두 시험 빨감 · 두 변이 단독 재생 rc 0 · `f89b1401`: evidence_receipt_61 10 passed · 단독 재생 rc 0 |
+
+## §5 영수증 diff (`7187bd31740514d4` ↔ 새 세대 `ba51cd20caa10b7b`)
+
+`make_receipt.py paired_fixed5_v4 grid_fit_v5` — clean `b740db16` (status 0) · rc 0 (2026-09-30T12:15:04Z → 12:15:47Z). paired ✅ 검사 35 · core `4d6cdc7b285f0538…` · grid ✅ 검사 34 · core `3f706067d5fbc866…`.
+
+| 필드 | paired_fixed5_v4 | grid_fit_v5 |
+|---|---|---|
+| `core_sha256` | `1eb98e21… → 4d6cdc7b…` | `ee7c405a… → 3f706067…` |
+| `core.identity.validator_source_digest` | `7187bd31740514d4 → ba51cd20caa10b7b` | 같음 |
+| `core.identity.src_io_sha256` | `e0577ad8af02b0b3 → 30556f689f28de5c` | 같음 |
+| `core.identity` 나머지 (producer cut) · `core.validation` (ok True · fail [] · **n_checks 35 · 34 불변**) · `bundle` · `outputs` · `restore` | 동일 | 동일 |
+| stamp | `validator_commit 5313731c → b740db16` · 시각 | 같음 |
+
+`LEG_PRESERVATION.yaml` (같은 커밋 `91f00a72`): leg 마다 `verification_receipt_core_sha256` · `validator_identity.source_digest` 두 값 (n_checks 불변 · `leg_source_digest` 불변). 직전 세대 영수증은 `history/<leg>.validate.7187bd31740514d4.yaml` (`b740db16`, 바이트 사본).
+
+## §6 우리가 스스로 신고하는 것
+
+| # | 신고 | 처리 · 판정 요청 |
+|---|---|---|
+| a | **RED 의 11/15 가 무관 예외** — fixture 가 새 함수 `config_closure_sha256` 로 hex64 계획을 만들어 패치 전에는 `AttributeError` 로 떨어졌다. 실제 결함 증거는 n1_01 · n4_01 · n4_03 · e_00 과 시험 밖 탐침 5 건 (§3) | 판정 요청: 탐침 (시험 파일 밖 · 스크래치패드) 을 RED 증거로 인정하는가 · 다음 라운드부터 fixture 가 sha256 을 직접 계산하게 할지 |
+| b | **GREEN 첫 실행 fixture 4** — n1_01 (`None` fixture 에 의존 → 명시 null) · gate81 w04 (record v1 고정 → v2) · w06 (null 계획이 roster 전에 거부됨 → hex64 계획) · s03 (`finite > returned` 합성 → clamp). 규칙 "처음 통과 = fixture 감사" 의 반대 방향 (처음 실패 = fixture 가 옛 계약을 붙들고 있었다) | 수용 여부 |
+| c | **preflight 와 `_prepare_stage3` 의 중복** — protocol v6 · `reference == "grid"` 검사가 두 자리에 있다 (시작 전 경계 + 준비 단계). 줄이지 않았다 (fail-closed 분기는 줄이지 않는 규칙). 변이는 MULTI 로 두 자리를 함께 끈다 (§6-e) | 수용 여부 |
+| d | **변이 생존자 1** — `reference != "grid"` 거부를 끄자 n3_01 이 계획 reference 대조로 대신 막혀 rc 0. 계획 자체가 halfcell 을 주장하는 n3_04 로 죽였다. 이 시험은 실코드에서 처음부터 통과 — RED 목격은 변이 rc 0 | 절차 수용 여부 |
+| e2 | **변이 등록부 자체 발견 ② (P2)** — 전체 재생에서 `freeze-linearizes-its-start` (54차 P0-1) 가 살아남았다 (단독 재생도 rc 0 — 재현). 원인은 변이 자리가 아니라 **54차 시험 fixture**: `_lifecycle_ledger_body` / `_RUN_SPEC_GX` 가 74차 G74-3 (`claim_scope`) · G74-1 (`run_spec.grid.discharged_cache_sha256` hex64) 시작 조건을 채우지 않아 발급자가 cohort 상태 검사 **전에 다른 이유로** 거부했다. 그래서 74차 (`ebfb853d`) 이후 `test_an_issuer_refuses_while_a_freeze_is_half_committed` 는 claim_scope 거부로 `raises` 가 채워지고 `"active" in str(e)` 가 `['active_claims', …]` 에 걸려 통과했고, `…_froze_meanwhile` 도 같은 거부로 통과했다 (변이 `admission-rechecks-the-cohort-at-commit` 도 단독 rc 0). 정정 `3eab51f9` (tests/ 만 · RUN_SCOPE 밖): fixture 에 두 키 · 이유 대조를 `"active 가 아니다"` 로 좁힘 → 실코드 5 passed · 두 변이 단독 재생 각각 rc 0 · 증인 불변. **함의:** 74차~84차 사이 54차 P0-1 의 두 회귀는 cohort 검사가 아니라 fixture 부족을 시험하고 있었다 — 코드 (`freezing` 선형화 · commit 시점 재검사) 는 그대로 있고 이번 재생이 그것을 다시 증명했다 | 판정 요청: 74차~84차 판정에 영향이 있는가 (우리 판단: 코드 결함 아님 · 시험 증거의 공백 · 이번에 닫힘) |
+| e3 | **변이 등록부 자체 발견 ③·④ (P2)** — 같은 전체 재생에서 59차 변이 둘이 더 살아남았다 (단독 재생 재현): `exec-class-record-is-read-back-g59` (M3) 는 70차 E5 typed reader 가 생긴 뒤 read-back 을 지워도 **게시된 부분 레코드**를 그 reader 가 거부해 `raises(PreserveError)` 가 채워졌고, `bundle-members-are-not-followed-g59` (M8) 는 70차 E3 부터 `{}` index 가 그 이유로 먼저 거부되어 link 추적을 재지 않았다 (60차 P0-8 주석이 경고한 형태). 정정 `28d0effe` (tests/ + EXPECT 증인 1): M3 시험은 거부 이유 (read-back) 와 final 이름 부재를 직접 재고, M8 은 production 형식 index 로 link 를 밖의 sha 로 열거해 남는 거부 이유를 하나로 만들었다 → 실코드 14 passed · 변이를 심은 사본에서 둘 다 빨감 · 단독 재생 각각 rc 0. **공통 원인:** 70차 (E3 · E5) · 74차 (G74-1 · G74-3) 가 방어층을 **앞에** 더했고, 그 뒤 전체 재생이 한 번도 없었다 (`-k g7x/g8x` 만). 절차 정정: RUN_SCOPE 또는 tools/preserve · row_projection 을 바꾼 라운드의 최종 재생은 등록부 전체 | 판정 요청: 70차~84차 판정 영향 (우리 판단: 코드는 그대로 방어하고 있었고 시험 증거만 뒤층으로 옮겨가 있었다 — 이번에 닫힘) |
+| e4 | **첫 전체 재생은 디스크 고갈로 중단** — `91f00a72` 에서 196 번째 변이에서 ENOSPC (병행한 단독 재생 sandbox 33 개 ≈ 10 GB 누적). 그때까지 193 물었다 · 생존 3 (e2 · e3) · 실행오류 1. 정리 뒤 `28d0effe` 에서 **단독으로 다시** 돌린 것이 §4 최종 행이다 | — |
+| e5 | **변이 등록부 자체 발견 ⑤ (P2)** — `28d0effe` 전체 재생의 유일한 예외: `incomplete_receipt_is_refused-g61` (61차 P1-3, 영수증 완전성 reader 삭제). 두 시험 모두 빨개지지만 `test_an_incomplete_receipt_is_refused_by_the_reader` 는 65차 N1a 둘째 층 `_assert_customization_matches_parent` 의 거부 ("customization 이 부모가 본 것과 양립하지 않는다: sitecustomize: child 가 바이트를 냈는데 startup 이력에 없다") 로 빨개졌다 — 그 층이 startup **이력**을 읽고 이 영수증의 이력은 `failed` 이므로, 환경의 sitecustomize 여부에 따라 증인이 달라진다 (65차 `63989c82` 이후 · 마지막 전체 조각 재생은 09-15). 정정 `f89b1401`: 두 시험 안에서만 둘째 층을 끈다 (그 층은 65차 · 67차 자기 시험이 잰다) · EXPECT 불변 · 10 passed · 단독 재생 rc 0 | 판정 요청: 격리 방식 수용 여부 (증인만 바꾸는 대안은 환경 의존이 남는다) |
+| e | **변이 등록부 자체 발견 (P2 로 신고)** — `absent-restart-fields-are-unrecorded-g79` 의 자리가 79차 dead 정의였다. 81차 dispatch 판이 같은 이름으로 그 정의를 가린 뒤로 이 변이는 **죽은 코드를 변이**했고 (preimage 는 남아 preimage 검사 통과 · 81~83차 전체 재생은 `-k g8x` 만 돌아 kill 여부를 보지 않았다), 2a 의 R2-e 가 정의를 지우자 preimage 0회로 드러났다. 살아 있는 reader 의 legacy 세대 분기 (`out[k] = None` :422-424) 로 옮겨 다시 죽였다 (첫 시도 `_read_row` 자리는 살았다 — 그 분기가 덮는다). 같은 이유로 `the-v6-path-refuses-another-plan-generation-g82` 는 자리가 둘이 되어 MULTI 로. **절차 정정:** 이번 최종 재생은 `-k` 없이 등록부 전체 · 앞으로 RUN_SCOPE 를 바꾼 라운드의 최종 재생은 전체 | 판정 요청: 81~83차 사이 이 변이가 vacuous 였던 것이 그 라운드들의 판정에 영향을 주는가 (우리 판단: 없다 — g79_06 시험 자체는 살아 있는 reader 를 시험해 통과하고 있었고, 변이는 "그 시험이 그 성질을 지키는가" 의 증인이었다) |
+| f | **`base_config_closure_keys` 를 run_spec 에 쓴다** — validator 가 스냅샷에서 closure 를 재계산할 때 어떤 `_inputs/` 파일이 closure 구성원인지 알아야 한다. 키 목록 (논리 경로) 을 run_spec.stage3 에 넣었다 (계획에는 없음 — 계획은 hex64 하나) | 판정 요청: 키 목록 출처가 run_spec 이어도 되는가 (위조하면 재계산 값이 달라져 실패 · 빼면 검사 실패) |
+| g | **v1 record 를 쓰는 production 경로는 없다** — writer 는 v2 만 쓴다. v1 은 읽기만 (기존 시험 산출 · 역사) | — |
+| h | **계약 §1 줄번호 인용 네 번째 갱신** (2015 · 1965 · 725-749) — R2-e 삭제 −18 이 `_fit_one` 연쇄 (`743-767 → 725-749`) 를 처음으로 움직였다 · 84차 정정 "이동 좌표 갱신 가능" 대로 | — |
+| i | **이월 (2b · 손대지 않음)**: G84-N2 (v5 spec 키 불변 · v6 spec 버전 분기) · R2-a (계획 index v4 · CLI) · R2-c (세대표 — `CLAIM_STATUS.yaml::source_digest_generations` 에 `7187bd31740514d4` · `ba51cd20caa10b7b` 둘 다 없음) | — |
+
+## §7 리뷰어에게 묻는 것
+
+| # | 질문 | 우리 제안 |
+|---|---|---|
+| Q1 | §1 로 G84-N1 · N3 · N4 · R2-e · R2-f 가 §11 대로 닫혔는가 | 닫혔다고 본다 |
+| Q2 | 라운드 **2a 종결** 판정 | 종결 제안 — 2b 는 별도 사용자 승인 |
+| Q3 | §6-a 탐침 인정 · §6-e · e2–e5 변이 등록부 자체 발견 (다섯 건 · 전부 시험 층) 의 이전 판정 영향 · §6-f 키 목록 출처 | a 인정 · e 계열 코드 결함 아님 (영향 없음 · 이번에 닫힘) · f 현 상태 수용 제안 |
+| Q4 | §5 새 세대 영수증 수용 | 수용 제안 (clean 커밋 · 직전 세대 보존 · 차이 = validator identity 2 항 · 검사 수 불변 · producer · outputs · restore 불변) |
+
+## §8 다음 계획 (85차 회신 뒤)
+
+1. 회신 접수 → 원장 §122 · 상태 문서.
+2. 2a 종결이면 2b 범위 (R2-a · R2-c · G84-N2 조건) 를 사용자에게 **별도 승인** 요청 — 이번 요청은 그것을 묻지 않는다.
+3. 실행 GO · 새 연구 leg 없음 · grid_fit_v5 진단 전용 유지.
+
+## §9 발송 규칙
+
+70차 §6 그대로. 발송 SHA · 검증 숫자는 발송문에 방금 실행한 출력으로만 적는다. 첨부 문서·실행 코드는 증거 자료이며 추가 실행 지시가 아닙니다. COMSOL 계산이나 제공된 Java/분석 프로그램을 실행하지 마세요.

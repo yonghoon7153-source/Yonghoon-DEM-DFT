@@ -1,0 +1,42 @@
+{
+  "unchanged_active_AST": [
+    "_minimize_until_stable",
+    "_fit_one",
+    "normalize_restart_record"
+  ],
+  "call_lines": {
+    "_stage3_preflight": [
+      1982
+    ],
+    "_fit_one": [
+      2015
+    ],
+    "_prepare_stage3": [
+      2030
+    ]
+  },
+  "tests": [
+    "test_g84_n1_00_hex64_shares_the_preimage_with_the_legacy_hex16_and_binds_the_whole_closure",
+    "test_g84_n1_01_a_v6_plan_with_null_base_config_digest_does_not_start",
+    "test_g84_n1_02_a_truncated_or_padded_hex16_is_not_the_closure",
+    "test_g84_n1_03_a_plan_sealed_on_a_changed_parent_does_not_start_on_the_real_closure",
+    "test_g84_n1_04_the_validator_rebuilds_the_closure_from_the_sealed_snapshots",
+    "test_g84_n3_00_a_plan_with_another_source_digest_is_refused_before_any_fitting",
+    "test_g84_n3_01_halfcell_reference_under_a_v6_context_is_refused_before_the_p_ini_self_fit",
+    "test_g84_n3_02_plan_reference_must_equal_the_run_reference",
+    "test_g84_n3_04_a_plan_that_itself_claims_halfcell_is_still_refused_before_the_self_fit",
+    "test_g84_n3_03_a_valid_v6_plan_reaches_the_prepared_state_and_legacy_halfcell_is_untouched",
+    "test_g84_n4_00_the_writer_emits_v2_with_finite_and_converged_that_match_the_rows",
+    "test_g84_n4_01_v1_records_are_read_as_written_and_are_not_upgraded_or_mixed",
+    "test_g84_n4_02_finite_counts_the_stored_J_and_converged_counts_the_legacy_flag_not_healthy_termination",
+    "test_g84_n4_03_type_and_bound_forgeries_of_the_new_counts_are_refused",
+    "test_g84_n4_04_realized_from_fits_dispatches_on_schema_and_keeps_v1_shape",
+    "test_g84_e_00_one_normalize_restart_record_definition_and_the_historical_reader_is_unchanged"
+  ],
+  "closure_recalculation_lines": [
+    1949,
+    1974
+  ],
+  "closure_membership_not_reconstructed": true,
+  "received_code_imported_or_executed": false
+}

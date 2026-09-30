@@ -1,0 +1,21 @@
+{
+  "receipts": [
+    {
+      "leg": "paired_fixed5_v4",
+      "declared_core_sha256": "4d6cdc7b285f0538c33baa2d7ae9a131ebd782cfa6351f53e13438e19939fa64",
+      "receipt_sha256": "4135fb4059e1fb65625892969488df87ad2d9369a2e538d8bb45a2a20b4dce8e",
+      "n_checks": 35,
+      "stamp_text": "  _주의: 기록용. core 재생성 대조에서 제외된다.\n  validator_commit: b740db1616e17118ec764648204cf90474b0ffcd\n  validator_tree_dirty: false\n  generated_at_utc: '2026-09-30T12:15:04Z'\n  runtime:\n    python: 3.11.15\n    platform: Linux-6.18.44-fc-v50-x86_64-with-glibc2.39\n",
+      "core_text_unchanged_except_validator_identity": true
+    },
+    {
+      "leg": "grid_fit_v5",
+      "declared_core_sha256": "3f706067d5fbc8663310faadfb05301a35222d91d0de5f1a436e8b87f66b363f",
+      "receipt_sha256": "57d56cea693eb028e48b2e47374399db87416b730f7f53f679c9fbebf1ec53bf",
+      "n_checks": 34,
+      "stamp_text": "  _주의: 기록용. core 재생성 대조에서 제외된다.\n  validator_commit: b740db1616e17118ec764648204cf90474b0ffcd\n  validator_tree_dirty: true\n  generated_at_utc: '2026-09-30T12:15:47Z'\n  runtime:\n    python: 3.11.15\n    platform: Linux-6.18.44-fc-v50-x86_64-with-glibc2.39\n",
+      "core_text_unchanged_except_validator_identity": true
+    }
+  ],
+  "scope": "Existing exact receipt bytes, text core and ledger anchor comparison only; YAML core canonical hash not independently regenerated. No bundle restore, validation or receipt regeneration. Dirty stamp is preserved and is not replaced by clean-start claim."
+}
