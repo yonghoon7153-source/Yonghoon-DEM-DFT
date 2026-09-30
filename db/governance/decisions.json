@@ -5797,6 +5797,73 @@
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
     "비준_근거": "1저자 2026-09-29 — 'gabia에 다 명령어로 줘봐용' (제안한 설계 그대로 실행 승인)."
    }
+  },
+  {
+   "id": "D-2026-09-30-sdcp-c12-close-hold-stage2",
+   "schema_version": 2,
+   "kind": "closure",
+   "scope": "sdcp.c12.v42.stage2_hold.closure_2026_09_30",
+   "slot": "sdcp_c12_campaign_closure",
+   "applies_to": {
+    "systems": [
+     "sdcp_neutral",
+     "ptfe_c10"
+    ],
+    "tasks": [
+     "fragment_contrast"
+    ],
+    "methods": [
+     "vasp-544__pbe-u62__mlip-geom-sp"
+    ],
+    "use_cases": [
+     "closure"
+    ]
+   },
+   "title": "C-12 SDCP/PTFE — 1단계로 닫음 · 2단계(7잡 · 자세·자기 배열 민감도) 보류 · 게이트 밖 D -0.164 eV (citable false)",
+   "statement": "v42 1단계 12잡이 끝나 우리 쪽 재검증을 통과했다 (보낸 파일 130 바이트 동일 · 무결성 129/0/0 · vacconv Δ_vac −0.6 meV). b00·pm1 한 자세에서 게이트 밖 E_ads PTFE -0.791 · SDCP -0.955 · D -0.164 eV (진공 +4 Å 에 D 0.6 meV · 기체 스핀 대조 ≤ 0.04 meV). 여기서 닫는다 — 2단계 7잡은 **보류**하고 수행측에 v42 작업 폴더 보존을 요청한다. 값은 citable false 그대로다 (분석기 rc 3).",
+   "rationale": "2단계는 D 를 바꾸지 않는다 (net4·대안 자세는 민감도 병기용 · 프로토콜). 인용 자격을 막는 셋(POTCAR 사후 신원 · 0.01 eV · 외부 앵커)은 2단계로 안 풀린다. 이 값은 이번 revision 에 쓰지 않았다. 번들이 동결돼 있어 리뷰 지적이 나오면 `run_staged.sh 2` 한 줄로 3~10일 안에 답할 수 있다 — 지금 10일을 쓸 이유가 없다 (1저자).",
+   "decision_state": "active",
+   "record_kind": "closure",
+   "results_seen": true,
+   "card": "db/properties/sdcp_c12_closed_2026_09_30.json",
+   "record": "db/properties/sdcp_c12_v42_stage1_2026_09_30.json",
+   "amends": [
+    "D-2026-08-30-sdcp-c12-path"
+   ],
+   "depends_on": [
+    "D-2026-08-30-sdcp-c12-path",
+    "D-2026-09-04-sdcp-c12-absolute-eads"
+   ],
+   "evidence": [
+    "db/properties/sdcp_c12_v42_stage1_2026_09_30.json",
+    "db/properties/sdcp_c12_closed_2026_09_30.json",
+    "db/properties/sdcp_c12_v42_stage1_raw/STAGE1_PASS.json"
+   ],
+   "reopen_criteria": [
+    "리뷰에서 다른 흡착 자세·자기 상태 지적 → 수행측 `bash run_staged.sh 2` (v42 동결 · 새 번들 없음)",
+    "1저자가 이 값을 원고·SI 에 인용하기로 정함 → 2단계 + POTCAR 확인 + 외부 기준을 한 묶음으로",
+    "리뷰에서 ENCUT·POTCAR 수렴 지적 → POTCAR 확인 스크립트 · ENCUT 은 새 번들(v43) + 검토",
+    "⛔ 그 밖의 이유로 열지 않는다."
+   ],
+   "enforcement": "① 닫힘 기록의 허용 서술 밖으로 쓰지 않는다 — '한 자세·한 자기 배열 · 민감도 미측정 · citable false' 를 떼지 않는다 ② ddE_lowE 로 부르지 않는다 ③ 원고·SI·슬라이드에 싣지 않는다 (HZ-sdcp-c12-eads-ungated-hold).",
+   "proposed_by": "claude-session-2026-09-30",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-30",
+     "state": "active",
+     "note": "1저자 결정 '그럼 관련해서 sdcp는 이렇게 닫아줘' · '외주업자한테 위에 말로 부탁할게용'. 트랙 = C-12 → 1저자 = 사용자."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-30T03:05:28Z",
+    "commit": "318eec27ce29ca9bc76986338605409a62534aa4",
+    "decision_digest": "sha256:cff47bcd7d4244ddd79b01c0470829c2e59c065bbbc514d9b518e32e157a9f39",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
   }
  ]
 }

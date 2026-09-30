@@ -626,6 +626,22 @@
    "binding_scope": "partial",
    "binding_scope_why": "이 값들은 레지스트리 claim 이 아니다 (원장 파일 자체 + kb 결과 문서 kb/results/interface_axes_90_2026_08_19.md · kb/reviews/litdb_dopant_sota_2026_09_09.md 의 문장). 덮을 claim 이 없어 id 로 이름만 댄다.",
    "found": "2026-09-23 · Li₂S 문헌 대조용 Explore 조사 중 발견 (Li₂S 가 mp-1125 로 남아 있었다) → 메인이 전체 352종을 실측"
+  },
+  {
+   "file": "db/properties/sdcp_c12_v42_stage1_2026_09_30.json",
+   "level": "HOLD",
+   "what": "C-12 SDCP/PTFE 게이트 밖 E_ads · 차 D (b00·pm1 한 자세 · PTFE -0.791 · SDCP -0.955 · D -0.164 eV) — v41 기록 db/properties/sdcp_c12_v41_eads_ungated_2026_09_21.json 의 같은 값 포함",
+   "why": "분석기 rc 3 (완주 · 인용 불가): POTCAR 사후 신원 · ENCUT·축간 0.01 eV · 외부 앵커 없음. 자세·자기 배열 민감도(2단계 7잡)는 보류됐다 (닫힘 기록 sdcp_c12_closed_2026_09_30.json)",
+   "fix": "재개 조건 2 — 1저자가 인용하기로 정하면 2단계 + POTCAR 확인 + 외부 기준을 한 묶음으로. 그 전에는 닫힘 기록의 허용 서술 한 문장만 (원고·SI·슬라이드 제외)",
+   "id": "HZ-sdcp-c12-eads-ungated-hold",
+   "binding_scope": "partial",
+   "binding_scope_why": "C-12 값은 canonical_registry 에 등록 0건이다 — `claim` 을 걸 자리가 없다. 화면은 id 로 이름만 댄다.",
+   "added": "2026-09-30",
+   "decision": "D-2026-09-30-sdcp-c12-close-hold-stage2",
+   "관련": [
+    "db/properties/sdcp_c12_v41_eads_ungated_2026_09_21.json",
+    "db/properties/sdcp_c12_closed_2026_09_30.json"
+   ]
   }
  ],
  "_history": [
