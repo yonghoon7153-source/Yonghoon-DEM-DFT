@@ -140,7 +140,7 @@
   · ✅ **2026-10-01 탄성 strain_23_m 을 EXIT 로 약 1 시간 세웠다가 재개했다** (`D-2026-10-01-gabia-elastic-pause-wad-uma` · 사용자 *"23_m 을 잠깐 stop했다가 하자"* · 이번 한 번으로 끝남):
     02:27 러너 bash 만 STOP (T) → 감시 `stop23m.sh` 가 BFGS 스텝 끝에서 EXIT → 그동안 W_ad SE 쌍 UMA 8+8 (≈ 49 분 · li2s MD 옆 · 시작 문턱 12,000 · 감시 45,500 발동 0) →
     03:28 얼린 러너 `kill -9` → 새 러너 tmux `el_mc2x_1001` (`stopped` + .bfgs → restart · 새 출력에 *Atomic positions and unit cell read from directory* ·
-    *initial density is read from file* · *Starting wfcs from file* 확인). 같은 정지가 다시 필요하면 **새 결정**을 받는다.
+    *initial density is read from file* · *Starting wfcs from file* 확인 · 첫 SCF 뒤 `number of bfgs steps = 20` — 19 에서 섰으니 이력 승계 ✓). 같은 정지가 다시 필요하면 **새 결정**을 받는다.
     ⚠ 새 출력의 `반복 N회` (watch) 는 **새 파일의 SCF 반복 수**라 이어서 도는지 알려 주지 않는다 — 위 세 줄과 첫 SCF 뒤 `number of bfgs steps` 로 가른다.
   · ⚠ **지금 살아 있는 예외는 1건 — 범위가 좁다** (`D-2026-09-30-gabia-uma-coexist-elastic-li2s-v2` · 사용자 09-30 *"옛 예외와 같은 조건"*):
     li2s 유리 MD **v2 카드(잠정) 첫 묶음의 gabia 몫 5 런만** (600 K seed2·4·5 · 400 ps · 550 K seed1·3 · 800 ps · `--seed` 1000 + 시드) ·

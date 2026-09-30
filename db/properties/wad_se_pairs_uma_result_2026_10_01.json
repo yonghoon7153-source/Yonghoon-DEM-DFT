@@ -20,7 +20,7 @@
   "코드": "빌더 46e604512 · 이완 7ca3cfc57 (gabia worktree wt_wad_se_1001) · W d84299f3c (wt_wad_w_1001) — 두 커밋 사이 relax() 는 같다 (d84299f3c 는 추가만: +123 줄 · W 단계·CLI·selftest) · 집계 --collect (이 기록과 같은 커밋)",
   "시간": "프로브 02:27:50 · 이완 큐 02:27:50 → 02:55:25 (8 모델 · 42–485 s) · W 단계 02:55:37 → 03:16:22 — 합계 약 49 분 GPU (카드 상한 30 GPU-h)",
   "메모리": "이완 최대 예약 2.4–7.4 GB (P2 S 바깥 7,416 MiB) · 프로브 P2 S 바깥 A 4,300 MiB · 시작 문턱 합계 2,052 ≤ 12,000 · 감시(합계 > 45,500) 발동 0 · gpu_guard/gate_refused 파일 0",
-  "탄성_정지_창": "strain_23_m EXIT 통제 정지 02:27:17 (BFGS 19 경계 · .bfgs 3,932,165 B) → W 끝 03:16:22 → 얼린 러너 정리 → 새 러너 03:28:04 (restart · 'Atomic positions and unit cell read from directory' · 'initial density is read from file' · 'Starting wfcs from file' 확인) · 결정 D-2026-10-01-gabia-elastic-pause-wad-uma 의 범위 그대로 끝남"
+  "탄성_정지_창": "strain_23_m EXIT 통제 정지 02:27:17 (BFGS 19 경계 · .bfgs 3,932,165 B) → W 끝 03:16:22 → 얼린 러너 정리 → 새 러너 03:28:04 (restart · 'Atomic positions and unit cell read from directory' · 'initial density is read from file' · 'Starting wfcs from file' 확인) · 결정 D-2026-10-01-gabia-elastic-pause-wad-uma 의 범위 그대로 끝남 · 첫 SCF 뒤 number of bfgs steps = 20 (이력 승계 ✓)"
  },
  "검증_레포": {
   "SHA256SUMS": "80/80 ✓ (sha256sum -c)",
@@ -367,6 +367,6 @@
  "다음": [
   "DEM 회신 9 초안 — `kb/projects/wad_dem_reply_draft_2026_09_23.md` §회신 9 (헤드라인 표 + 라벨 네 문장 + V5 비교 계획 · 사용자 검토·발송 대기 · 밖으로 보내지 않았다)",
   "외주 V5 가 오면 ①·② (카드 1b) — 새 결과 기록",
-  "탄성 modelc_2x strain_23_m 재개 확인: 첫 SCF 뒤 'number of bfgs steps' ≈ 19–20 (BFGS 이력 승계)"
+  "✅ 탄성 modelc_2x strain_23_m 재개 확인 (10-01) — 새 출력 첫 SCF 뒤 'number of bfgs steps = 20' (19 에서 섰다 → 이력 승계 · 처음부터면 0)"
  ]
 }
