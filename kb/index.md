@@ -1,20 +1,21 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-30 · managed-files: 489
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-30 · managed-files: 490
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 286건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 287건)
 - 2026-09-30 · `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md` — SDCP vs PTFE 흡착에너지 (C-12 v41) — 숫자의 지위 · PTFE 크기 검증 · 세미나 대응 · 닫힘 (2026-09-30 · 2단계 보류) — 값은 citable:…
+- 2026-09-30 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
+- 2026-09-30 · `kb/reviews/codex_CM_prompt_cei_nd_handoff_2026_09_30.md` — 리뷰 CM 프롬프트 — CEI (Nd 계면) 외부 송부 전 리뷰: 정본 페이지 · 송부판 · 인계 카드 · 1저자 읽기 지침서 · AI 프롬프트 · 발송 대기 — 사용자가 Codex 에 인계 zip 과 같이 보낸다 (…
 - 2026-09-30 · `kb/projects/cei_explainer_prompt_2026_09_30.md` — CEI 설명·인계 AI 프롬프트 — 처음 보는 대학원생 눈높이 우선 (2026-09-30) · 발송 대기 — 인계 묶음(zip)에 들어간다
 - 2026-09-30 · `kb/projects/cei_reading_guide_2026_09_30.md` — CEI 페이지 읽기 지침서 — 1저자·처음 보는 대학원생용 (2026-09-30) · 발송 대기 — 인계 묶음(zip)에 들어간다
 - 2026-09-30 · `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30) · 발송 대기 — 사용자가 zip 으로 전달한다
 - 2026-09-29 · `kb/projects/handoff_2026_09_29_return_to_origin.md` — origin 복귀·통합 카드 — claude/evac-2026-09-28 → claude/friendly-meitner-lldvar (2026-09-29) · 발송 대기 — 사용자가 §0 프롬프트를 origin 세션에 붙여 넣는다
 - 2026-09-29 · `kb/projects/merge_request_2026_09_28.md` — 머지 요청 (최종) — 대피 브랜치 claude/evac-2026-09-28 → claude/friendly-meitner-lldvar · 최종 — 09-29 01:4x KST 실측 (fast-forward …
 - 2026-09-29 · `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 을 "고전압 양극 계면 열화 억제" 로 · 확정 — 사용자 승인 2026-09-29 "ㅇㅇ si 쪽으로 가는게 …
-- 2026-09-28 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-28 · `kb/reviews/li2s1a_CH_prompt_li2s_cd_reply_pilot800_2026_09_27.md` — CH 프롬프트 — li2s 소셀 유리 MD: 회신 CD 반영 · 파일럿 400 K 800 ps 결과 (C2·C1 미통과 → 400 K 측정 안 됨) · 카드 개정 v2 · 다섯 시드 P 배위 통계 (새 항목 1) · 결정·확인 요청 셋 (외부 1저자에게) · 발송됨 (사용자 · 2026-09-27 · 발송판 = 다섯 시드 결과…
 - 2026-09-28 · `kb/reviews/li2s1a_CH_reply_li2s_cd_reply_pilot800_2026_09_28.md` — 회신 CH — 외부 1저자 (li2s 소셀 유리 MD): 편지 CH 판정 (Q-CH-1 2σ 로 상향 · Q-CH-2 600 K pre-register · Q-CH-3 수정안 수용 + S54 내력·seed4 일시 · 새 항목 둘 — 400 K 두 런 D 2.2 배 · 시드 간 P 이탈 산포) · 수령 (2026-09-28 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-09-28 · `kb/reviews/li2s1a_CL_prompt_li2s_ch_reply_s54_census_2026_09_28.md` — CL 프롬프트 — li2s 소셀 유리 MD: 회신 CH 이행 · S54 내력 (전건) · 새 발견 둘 (교환망 · 두 보존율) · 600 K 파일럿 (초기구조 정정 공개) · 확인 요청 넷 (외부 1저자에게) · 발송됨 (초안 판 · 빈 칸 둘 — 사용자 · 2026-09-28) …
@@ -26,7 +27,6 @@
 - 2026-09-27 · `kb/reviews/codex_CF_prompt_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` — 리뷰 CF 프롬프트 — A′ V5 VASP 외주 준비본 v2 재리뷰 (CE NO-GO 대응: P0 4 · P1 5 · 3b′ · 3c · PP/버전 · D3 예산) · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…
 - 2026-09-27 · `kb/reviews/codex_CF_reply_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` — 리뷰 CF 회신 — A′ V5 VASP 외주 준비본 v2: NO-GO (P0 3 · P1 3 · D3 예산 조건부 찬성 · 3b′/3c 찬성) · 수령 (1저자 붙여넣기 · 원문 그대로) → 대응 v3 커밋 c8d7…
 - 2026-09-27 · `kb/reviews/codex_CG_prompt_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md` — 리뷰 CG 프롬프트 — A′ V5 VASP 외주 준비본 v3 재리뷰 (CF NO-GO 대응: 증거 먼저 · 등록부 필수 · G4 D3 동일성 · 마지막 레코드 · 실물 Edisp · 포장 실패) · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…
-- 2026-09-27 · `kb/reviews/codex_CG_reply_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md` — 리뷰 CG 회신 — A′ V5 VASP 외주 준비본 v3: NO-GO (P1 3 · 새 P0 없음 · S3 찬성 · S4 조건부 찬성 · S5 찬성 · 선택 권고 3) · 수령 (1저자 붙여넣기 · 원문 그대로) → 대응 v4 → 재리뷰 CI
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -212,9 +212,9 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (183)
+## reviews/ (184)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
-- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-28 · 자동생성)
+- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-30 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
 - `kb/reviews/cascade_preflight_audit_2026_09_09.md` — cascade_preflight_audit_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트  (2026-08-29 · 발송 완료 — 회신 AA 접수, 후속은 codex_AB_prompt_…)
@@ -316,6 +316,7 @@
 - `kb/reviews/codex_CJ_reply_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md` — 리뷰 CJ 회신 — A′ V5 VASP 외주 준비본 v5: NO-GO (CI 재현 3 경로 해제 · 같은 P1 의 관리 파일 목록 쓰기 경로 1 · S1–S6 · 권고 3: sha 파이프 · 정리 실패 · 반송 문구)  (2026-09-27 · 수령 (1저자 붙여넣기 + zip 첨부 · 원문 그대로) → 대응 v…)
 - `kb/reviews/codex_CK_prompt_wad_aprime_v5_vasp_outsourcing_v6_2026_09_27.md` — 리뷰 CK 프롬프트 — A′ V5 VASP 외주 준비본 v6 재리뷰 (CJ NO-GO 대응: 관리 파일 목록 쓰기마다 검사 + 목록 내용 검증 · sha 명령/형식 분리 · 정리 실패 ⚠ · 발송 조건 · 지원 환경)  (2026-09-27 · 발송 완료 · 회신 수령 2026-09-27 **GO** (`code…)
 - `kb/reviews/codex_CK_reply_wad_aprime_v5_vasp_outsourcing_v6_2026_09_27.md` — 리뷰 CK 회신 — A′ V5 VASP 외주 준비본 v6: GO (CJ 해제조건 충족 · 새 P0/P1 없음 · S1–S5 판정 · P2 정리 2 — 기술 검토 GO · 실행 승인 아님)  (2026-09-27 · 수령 (1저자 붙여넣기 + zip 첨부 · 원문 그대로) — **GO…)
+- `kb/reviews/codex_CM_prompt_cei_nd_handoff_2026_09_30.md` — 리뷰 CM 프롬프트 — CEI (Nd 계면) 외부 송부 전 리뷰: 정본 페이지 · 송부판 · 인계 카드 · 1저자 읽기 지침서 · AI 프롬프트  (2026-09-30 · 발송 대기 — 사용자가 Codex 에 인계 zip 과 같이 보낸다 (…)
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료)  (2026-08-20 · v2.1 — codex 2라운드 종료 (manifest 지적 철회 ·…)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))
