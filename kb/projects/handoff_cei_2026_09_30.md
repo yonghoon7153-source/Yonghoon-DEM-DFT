@@ -42,6 +42,10 @@ Nd(+O) 를 넣은 황화물 고체전해질 LPSCl₁.₆ 이 **고전압 양극�
 | 원고 틀 (논지 · 그림 순서 · 반론 8 개) | `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — **1저자 검토 전** |
 | 그림 생성기 · 계산 도구 | `tools/figures/plot_cei_*.py` · `tools/oxidation/interface_reactivity_v2.py` · `esw_grand_potential.py` |
 | 이전 인계 카드 (09-16 시작 당시) | `kb/projects/handoff_2026_09_16_cathode_cei.md` |
+| CEI 결정 · 인용위험 발췌 | zip 최상위 `04_CEI_결정_인용위험_발췌.json` — 원장 두 파일에서 **CEI 몫만** 뽑은 사본 (기준 커밋 · 원장 해시 포함 · 이메일은 역할 식별자로 가림) |
+
+⚠ 봉인된 사전등록 기록 4 개(`cathode_cei_decomposition_estimand_2026_09_16.json` 등)는 zip 안에서 **송부용 파생본**이에요 — 비준자 칸의 이메일만 역할 식별자로 바꿨어요.
+그래서 내용 해시가 원본과 달라요. **봉인 검증은 저장소의 원본**으로 해요 (원본·파생본 해시와 바꾼 자리는 zip 의 `REDACTIONS.md` · `MANIFEST.sha256`).
 
 ## 2. 결론과 근거 (이대로만 말해요)
 
@@ -112,7 +116,7 @@ Nd(+O) 를 넣은 황화물 고체전해질 LPSCl₁.₆ 이 **고전압 양극�
 인용위험(`db/properties/citation_hazards.json`) 중 CEI 에 걸리는 것: `HZ-cei-gap-ndp5o14-unreproduced`(CONDITIONAL — 위 열린 일 1) ·
 `HZ-esw-reduction-limit-label` · `HZ-esw-reduction-limit-facet-convention`(CONDITIONAL) · `HZ-dualcompat-op-single-axis-retracted`(SUPERSEDED) ·
 `HZ-dualcompat-open-endpoint-degenerate`(BLOCKED) · `HZ-dualcompat-n4-permutation-p`(CONDITIONAL) · `HZ-nd-gap-mp-summoned`(CONDITIONAL).
-두 원장 파일 자체는 다른 트랙 기록이 섞여 있어 zip 에는 안 넣었어요 — 필요하면 사용자에게 받으세요.
+두 원장 파일 자체는 다른 트랙 기록이 섞여 있어 zip 에는 안 넣었어요. 대신 이 표와 아래 인용위험의 **CEI 몫 발췌**(`04_CEI_결정_인용위험_발췌.json`)를 zip 최상위에 넣었어요 — 원본이 필요하면 사용자에게 받으세요.
 
 ## 5. 재현하는 법
 
