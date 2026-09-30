@@ -7,12 +7,18 @@ FAM 사전등록 `docs/reviews/fam_platen_prereg_20260812.md` §12-2 의 기준 
 sha256                                                            크기          파일
 734fa173e9c752e61a22ac5b4d24293445f23a581dd04c7103cbfba4af5c0e28  6,199 B       input_real_14.liggghts     (여기 있음)
 8cbb6dd073ba7c3d972d5bdaf8c76025dad22c80660e1f4a5fae363ef063d7bc  355 B         mesh_2060000.stl           (여기 있음)
-079c85f15bb3ee8713101de58bb25c0ccb394583d42fa47ac0262fdee75907c5  4,459,321 B   atom_2060000.liggghts      (⬜ 미커밋 — 해시만)
-a609ba940781d4540953fee3eb8d43c0232d02d3a845f0c8e5469baf3d064235  28,489,113 B  contact_2060000.liggghts   (⬜ 미커밋 — 해시만)
+079c85f15bb3ee8713101de58bb25c0ccb394583d42fa47ac0262fdee75907c5  4,459,321 B   atom_2060000.liggghts      (✅ 10-01 · atom_2060000.liggghts.gz)
+a609ba940781d4540953fee3eb8d43c0232d02d3a845f0c8e5469baf3d064235  28,489,113 B  contact_2060000.liggghts   (✅ 10-01 · contact_2060000.liggghts.gz)
 ```
 
-- 덱 · 메시는 작아서 넣었다.  atom · contact 덤프는 리포 선례 (추적 파일 최대 ≈ 2.5 MB) 보다 커서 **넣을지 1저자가 정한다** — 넣으면
-  §12-2 의 f_AM 두 규약 (contact `pair/gran/local` → (a) · atom `c_strs[3]` → (b)) 을 리포 안에서 잴 수 있다.
+- 덱 · 메시는 작아서 넣었다.  ~~atom · contact 덤프는 리포 선례 (추적 파일 최대 ≈ 2.5 MB) 보다 커서 **넣을지 1저자가 정한다**~~ →
+  ✅ **10-01 넣었다** (1저자 *"real_14 dem 은 너한테 엄청 먹여줬었어 … 이제좀 저장좀 해놓지"* — 같은 파일을 여러 번 다시 첨부해야 했다) ·
+  `gzip -9 -n` (1.5 MB · 9.7 MB) · 10-01 재첨부 바이트 = 09-28 첨부 바이트 (sha256 위 표와 같음) · §12-2 의 f_AM 두 규약
+  (contact `pair/gran/local` → (a) · atom `c_strs[3]` → (b)) 을 이제 리포 안에서 잰다.
+  ```
+  gunzip -c atom_2060000.liggghts.gz | sha256sum      # 079c85f1…07c5
+  gunzip -c contact_2060000.liggghts.gz | sha256sum   # a609ba94…4235
+  ```
 - `.gitattributes` = 이 폴더의 줄끝 변환 금지 (해시가 클론 설정에 따라 갈리지 않게).
 - ⬜ **원본 위치** (기계 · 경로 · 같은 폴더의 덤프 목록) 는 1저자 확인 대기.  이 README 는 **첨부된 바이트**의 해시와 내용만 증명한다.
   웹앱 케이스 폴더 (`webapp/uploads/260601_122725_63b338`) 에는 `meta.json` 만 남아 있었다 (09-28 1저자 탐색 출력).
