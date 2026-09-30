@@ -5975,6 +5975,19 @@
    ]
   },
   {
+   "id": "SELF-68",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "1저자 kgy 실행 (09-30 · 런 뒤 스크립트가 v015 에서 ⛔ 다름으로 멈춤) · claude 원인 확인",
+   "opened_in": "docs/reviews/phase_a_replication_vgcf100_prereg_20260926.md",
+   "title": "Phase A 재현 런 뒤 스크립트 첫 판이 러너 영수증과 `.sh` 영수증의 `receipt_digest` 가 같아야 한다고 가정했다 — digest 는 `arms` 까지 해시하는데 러너는 킷당 ARMS (8), `.sh` 영수증은 격자 전체 (32) 를 적어 32 팔 격자에서는 원리적으로 같아질 수 없다 (확인하지 않은 가정을 지시문에 씀)",
+   "note": "fail-closed 로 멈춤 · 덮인 산출물 없음.  둘째 함정도 같이 확인: `.sh` 영수증은 러너가 선언하지 않은 축 (σ_VGCF 78.5398 · 이온 σ · ptfe_block 등) 을 기본값으로 채우므로 전 축 비교도 거짓 불일치.  정정 = 러너가 선언한 축만 대조 (run_contract 의 계약 규칙) + 팔 수 = 러너 arms × 킷 수 · 과거 실물로 시험 (다른 런 쌍은 ptfe_stamp 하나만 걸림 · 맞춘 쌍 통과).  CLAUDE.md 재개 체크리스트의 \"확인하지 않은 추정을 지시문에 쓰지 않는다\" 와 같은 부류 — 지시문의 판정 조건은 과거 실물로 먼저 돌려 본다.",
+   "evidence_tests": [
+    "docs/reviews/phase_a_rep100_postrun_20260930.sh"
+   ]
+  },
+  {
    "id": "LHS-21",
    "severity": "P3",
    "status": "claimed_fixed",
