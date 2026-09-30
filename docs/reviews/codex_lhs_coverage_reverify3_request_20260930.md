@@ -82,3 +82,18 @@
 ## §7 파일
 
 `docs/reviews/codex_lhs_coverage_reverify3_request_20260930/` — 패치 0014 · 0015 · `source_manifest.json` · `selftests_220b1426e.log` · `fixed_tree_reproduction/` (schema · producer · geometry 결과 · `audit_power_r3.py` + 결과 · 로그) · `SHA256SUMS` · `README.md`.
+
+## §8 덧붙임 (09-30 밤 · 요청서 커밋 뒤) — 설치 빌드 pin 확보
+
+§6 첫 한정 ("설치 빌드는 아직 핀 안 됨") 은 **해소**됐다 — `docs/data/liggghts_add_pair_pin.json` (이 묶음에도 사본).
+- 두 기계 (WSL DESKTOP-IK8J81H `~/src/LIGGGHTS-PUBLIC` · lmp_serial · lmp_auto / ibb-master `/lustre/home/yonghoon/LIGGGHTS-PUBLIC` · lmp_mpi) 의
+  `src/compute_pair_gran_local.cpp` sha256 = **`71c4d3b511be5df504888819079d55daa3e3816ea9ad7c4e0d81c30b548dbae9`** (1저자 셸 출력) · 두 트리 git HEAD
+  `3d5c00f20519e6bb6eb6756f51f1ad36564e649d` · 공개 LIGGGHTS-PUBLIC 그 커밋 사본과 master 사본 (09-30 받음) 도 **같은 sha256**.
+- 그 사본의 `add_pair` (555–558 · 573 행) = 수확기 `PRODUCER_AREA_MODEL`: `del = x[i] − x[j]` · `rsq = vectorMag3DSquared(del)` (세 제곱의 합) ·
+  `r = sqrt(rsq)` · `contactArea = − M_PI/4 * (…4 인수…)/rsq` · δ 열 = `radi+radj-vectorMag3D(del)` (= (r1 + r2) − r).  852 행 (M_PI) 은 `add_wall_2` 의
+  벽 접촉 면적이라 쌍 덤프 (`c_cpl`) 와 무관.  검토 브랜치의 `producer_pin()` 이 이 파일을 `pinned: True` 로 읽는다 (확인함).
+- 남은 한정 (pin 파일 `limits`): 바이너리 해시 · 빌드 로그 · 컴파일 플래그는 대조하지 않았다 (오차 상한은 FMA 축약 · 인수 안 재결합 · 역수 곱에
+  견디게 잡았다 — §5 Q1) · 두 기계의 `vector_liggghts.h` 는 해시하지 않았다 · LHS 130 · 64 를 돌린 ibb 바이너리 경로는 대조하지 않았다.
+- §5 Q5 에 더하는 질문: 이 pin (소스 sha 3 곳 일치 + 식 대조 + 한정 명시) 이 R3a 의 "실제 생산 빌드의 식 · 컴파일 규약 핀" 요구를 채우는가,
+  컴파일 플래그까지 요구하는가.
+

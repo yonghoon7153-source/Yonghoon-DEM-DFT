@@ -9,6 +9,7 @@
 | `source_manifest.json` | base `ca0471d19` → tip `220b1426e` · 패치 바이트 · sha256 · 적용 후 3 파일 sha256 · git blob (만든 순간 계산) |
 | `selftests_220b1426e.log` | 고친 트리의 셀프테스트 6 (rc 전부 0 · 수확기 160 · 파이프라인 212) |
 | `fixed_tree_reproduction/` | Codex 재검증 2 스크립트를 **무변경**으로 고친 트리에 실행한 결과 (schema · producer · geometry) · 원본 `audit_power.py` 의 KeyError (의도된 키 제거) · 같은 탐색의 새 키 판 `audit_power_r3.py` + 결과 |
+| `liggghts_add_pair_pin.json` | 설치 빌드 add_pair 소스 pin 사본 (정본 `docs/data/liggghts_add_pair_pin.json` · 요청서 §8) |
 | `SHA256SUMS` | 이 폴더 전체 (이 README · SHA256SUMS 제외) |
 
 적용: 재검증 2 의 후보 사본 (= `ca0471d19` · Codex 후보 10 파일과 CRLF 정규화 뒤 동일) 위에 0014 → 0015 순서로 `git am` (또는 `git apply`).

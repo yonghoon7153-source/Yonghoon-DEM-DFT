@@ -1,0 +1,47 @@
+{
+ "schema": "liggghts_add_pair_pin/1",
+ "what": "LHS 수확기 item 2 (접촉 면적 대조) 의 생산자 산술 모델 PRODUCER_AREA_MODEL 이 가정하는 LIGGGHTS compute pair/gran/local add_pair 를 설치 빌드 소스로 핀한다 (Codex LHSC-04 R3a 해제 항목 · scripts/lhs_descriptor_harvest.py producer_pin 이 읽는다).",
+ "source_file": "src/compute_pair_gran_local.cpp (LIGGGHTS-PUBLIC 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)",
+ "sha256": "71c4d3b511be5df504888819079d55daa3e3816ea9ad7c4e0d81c30b548dbae9",
+ "host": "wsl DESKTOP-IK8J81H · ibb-master (두 기계 같은 sha256)",
+ "date": "2026-09-30",
+ "build": "WSL lmp_serial · lmp_auto (~/src/LIGGGHTS-PUBLIC/src) · ibb lmp_mpi (/lustre/home/yonghoon/LIGGGHTS-PUBLIC/src) — 소스 트리 git HEAD 3d5c00f (두 기계) · 바이너리 해시 · 컴파일 플래그는 대조하지 않았다",
+ "formula_confirmed": true,
+ "hosts": [
+  {"host": "wsl DESKTOP-IK8J81H",
+   "path": "/home/yonghoon71/src/LIGGGHTS-PUBLIC/src/compute_pair_gran_local.cpp",
+   "sha256": "71c4d3b511be5df504888819079d55daa3e3816ea9ad7c4e0d81c30b548dbae9",
+   "git_head": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+   "binaries": ["/home/yonghoon71/src/LIGGGHTS-PUBLIC/src/lmp_serial", "/home/yonghoon71/src/LIGGGHTS-PUBLIC/src/lmp_auto"],
+   "reported": "1저자 셸 출력 2026-09-30 (sha256sum · grep -n M_PI · git log -1)"},
+  {"host": "ibb-master",
+   "path": "/lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/compute_pair_gran_local.cpp",
+   "sha256": "71c4d3b511be5df504888819079d55daa3e3816ea9ad7c4e0d81c30b548dbae9",
+   "git_head": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+   "binaries": ["/lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi (launch_highbo.sh LMP)"],
+   "reported": "1저자 셸 출력 2026-09-30 (sha256sum · grep -n M_PI · git log -1)"}
+ ],
+ "upstream": {
+  "repo": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC",
+  "commit": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+  "file_sha256_at_commit": "71c4d3b511be5df504888819079d55daa3e3816ea9ad7c4e0d81c30b548dbae9",
+  "master_file_sha256_2026-09-30": "71c4d3b511be5df504888819079d55daa3e3816ea9ad7c4e0d81c30b548dbae9",
+  "fetched": "2026-09-30 claude 컨테이너 raw.githubusercontent.com (28,048 B) — 두 기계 보고값 · 커밋 사본 · master 사본 셋 다 같은 sha256"
+ },
+ "formula_lines": {
+  "compute_pair_gran_local.cpp:555": "vectorSubtract3D(atom->x[i],atom->x[j],del);",
+  "compute_pair_gran_local.cpp:556": "rsq = vectorMag3DSquared(del);",
+  "compute_pair_gran_local.cpp:557": "r = sqrt(rsq);",
+  "compute_pair_gran_local.cpp:558": "contactArea = - M_PI/4 * ( (r-radi-radj)*(r+radi-radj)*(r-radi+radj)*(r+radi+radj) )/rsq;   (areaflag — 면적 열)",
+  "compute_pair_gran_local.cpp:573": "array[ipair][n++] = radi+radj-vectorMag3D(del);   (deltaflag — delta 열 · superquadric 아님)",
+  "compute_pair_gran_local.cpp:852": "add_wall_2 의 벽 접촉 면적 (radius² − rsq)·π — 쌍 덤프 (c_cpl) 와 무관",
+  "vector_liggghts.h:71-79": "vectorMag3D = ::sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2]) · vectorMag3DSquared = v[0]*v[0]+v[1]*v[1]+v[2]*v[2] (공개 3d5c00f 사본 sha256 499b2789bb402f2da9cb6524bde040c2e1dcaaa6224e74941c17ffe86d388b85 — 두 기계의 이 파일은 해시하지 않았다)"
+ },
+ "confirmed_by": "claude 2026-09-30 — 공개 3d5c00f 사본 (sha256 = 두 기계 보고값) 의 add_pair 를 읽고 수확기 PRODUCER_AREA_MODEL (A = −π/4·Π(인수)/rsq · r = sqrt(rsq) · rsq = 세 제곱의 합 · δ = (r1 + r2) − r) 과 대조 — 같은 식 · 같은 평가 순서",
+ "limits": [
+  "바이너리가 이 소스로 빌드됐다는 것 (빌드 뒤 소스 변경 없음) 은 가정이다 — 바이너리 해시 · 빌드 로그를 대조하지 않았다.",
+  "컴파일 플래그 (-O · -march · -ffp-contract · -ffast-math) 는 확인하지 않았다.  오차 상한 E 는 FMA 축약 (반올림 수가 줄어든다) · 인수 안 재결합 (부분합 ≤ S) · 역수 곱 (나눗셈 대신 반올림 1 회 추가 — 13·eps 여유 안) 에 견딘다 — 그 밖의 변환은 핀 대상이 아니다.",
+  "vector_liggghts.h 는 두 기계에서 해시하지 않았다 (git HEAD 가 같다는 것만 확인 · 작업 트리 변경 여부 미확인).",
+  "LHS 130 · 64 (ibb ~/dem_test/lhs) 를 실제로 돌린 바이너리 경로는 이 핀이 대조하지 않았다 — ibb 의 LIGGGHTS 트리가 하나라는 가정."
+ ]
+}
