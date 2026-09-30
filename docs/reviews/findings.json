@@ -6418,7 +6418,7 @@
   {
    "id": "LHS-24",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (09-30 밤 · J20-l 첫 웹앱 감사 · 1저자 비준 순서 ① → ② → ③ 의 ②)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
@@ -6427,7 +6427,9 @@
    "evidence_tests": [
     "webapp/test_closed_param_values.py",
     "webapp/test_closed_param_groupview.py"
-   ]
+   ],
+   "claimed_fixed_sha": "90c6c9670",
+   "verification_note": "f3cb141ae (②-a · (a)(b)(c)(d)(h) · webapp/test_closed_param_values.py 12/28 → 28/28) + 90c6c9670 (②-b · (e)(f)(g) · webapp/test_closed_param_groupview.py 3 PASS · 13 FAIL → 38/38): 그룹 표 낮을수록 좋음 = 열 이름 철자 강제 (옛 'Vulnerable' 철자 어긋남 포함) · AM–AM CN std 열 · 등급 · 3D 뷰어 physics → Hertz 대체 표지 · 그룹 그림 union · overlap 등록 · 게이트 76 ✓"
   },
   {
    "id": "PRED-01",

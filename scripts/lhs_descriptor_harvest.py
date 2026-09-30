@@ -1232,6 +1232,20 @@ def _mi_dist(p, q, lx, ly):
     return float(np.linalg.norm(d))
 
 
+def _ulp_close(a, b, n=4):
+    """a 가 b 의 ULP n 개 안인가 — 다른 기계에서 적은 고정값과의 회귀 비교용 (마지막 자리가 numpy 버전 · 합산 순서마다
+    다를 수 있다 · τ ⑰: WSL numpy 2.5.2 · Codex 2.3.5 에서 1 ULP).  None · NaN · inf 는 거부.  같은 실행 안의 같은 계산끼리는
+    이것을 쓰지 않는다 (그건 비트까지 같아야 한다)."""
+    try:
+        a = float(a)
+        b = float(b)
+    except (TypeError, ValueError):
+        return False
+    if not (math.isfinite(a) and math.isfinite(b)):
+        return False
+    return abs(a - b) <= n * math.ulp(b)
+
+
 def tortuosity_se(atoms, labels, box_lo, box_hi, n_pairs=N_TAU_PAIRS, seed=42,
                   plate_z=None):
     """계약③ — fallback source 승격 **없음**, 쌍은 **같은 성분 안에서만**.
@@ -2129,10 +2143,19 @@ def selftest():
         _rr = [(float(x), float(y), float(z), 0.6, 'SE')
                for x, y, z in _rng7.uniform([0, 0, 0.3], [10, 10, 19.7], size=(900, 3))]
         _tr = tortuosity_se(*_bed(_rr), _lo8, _hi8, plate_z=20.0)
-        chk('⑰ 회귀: 옛 τ (무작위 900 SE) = 옮기기 전 값 그대로 (mean · median · 표본 수)',
-            _tr['status'] == STATUS_OK and _tr['tau_mean'] == 2.0612290410739833
-            and _tr['tau_median'] == 2.0805329527696066 and _tr['n_sampled'] == 160 and _tr['n_valid'] == 160)
-        chk('⑰ 회귀: 옛 τ (⑬a 사슬) = 1.0198039027185568 그대로', _t1 == 1.0198039027185568)
+        #  ★ 10-01 — 고정값 (다른 기계에서 적은 수) 과의 비교는 마지막 자리가 환경마다 다를 수 있다 (numpy 버전 ·
+        #    합산 순서).  WSL numpy 2.5.2 · Codex Windows 2.3.5 에서 median 이 **1 ULP** 달라 이 회귀가 실패했다 (계산 결함 아님).
+        #    반례: 그 기계의 값 (고정값의 1 ULP 이웃) 을 받아야 하고, 100 ULP 떨어진 값은 거부해야 한다.
+        _pin_med = 2.0805329527696066
+        _wsl_med = math.nextafter(_pin_med, math.inf)
+        chk('⑰u 1 ULP 이웃 (WSL numpy 2.5.2 의 median) 을 같은 값으로 받는다', _ulp_close(_wsl_med, _pin_med))
+        chk('⑰u 100 ULP 떨어진 값은 거부한다 (회귀를 놓치지 않는다)',
+            not _ulp_close(_pin_med + 100 * math.ulp(_pin_med), _pin_med))
+        chk('⑰u 값이 없으면 (None · NaN) 거부', not _ulp_close(None, _pin_med) and not _ulp_close(float('nan'), _pin_med))
+        chk('⑰ 회귀: 옛 τ (무작위 900 SE) = 옮기기 전 값 (mean · median = 고정값의 4 ULP 안 · 표본 수 정확)',
+            _tr['status'] == STATUS_OK and _ulp_close(_tr['tau_mean'], 2.0612290410739833)
+            and _ulp_close(_tr['tau_median'], 2.0805329527696066) and _tr['n_sampled'] == 160 and _tr['n_valid'] == 160)
+        chk('⑰ 회귀: 옛 τ (⑬a 사슬) = 1.0198039027185568 (4 ULP 안)', _ulp_close(_t1, 1.0198039027185568))
         #  두 규약의 밴드가 **같은** 침대 (맨 아래 입자가 바닥에 · 맨 위 입자가 플래튼에 닿는다) 에서는 같은 표본 규칙이므로 τ 가 같아야 한다
         _tc = tortuosity_se(*_chain(_xs), _lo, _hi, plate_z=5.55)
         chk('⑰ 밴드가 같은 침대에서는 벽 τ = 옛 τ (같은 표본 규칙 · 같은 seed)',

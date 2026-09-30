@@ -324,6 +324,8 @@
 - 벽 τ (`lhs_descriptor_harvest.py`, 규약 `harvest_v3/wall_z0_plate/rSEmax/no_fallback/same_component`): 밴드만 바닥 벽 (z = 0) · 플래튼이고
   표본 규칙 · seed 는 옛 τ 와 **같은 함수** (`_tau_sample`).  selftest ⑰ — 벽 아래 AM 이 옛 밴드를 비우는 침대에서 새 τ = 1 (곧은 기둥) · 진짜 미관통은
   NOT_PERCOLATING · 두 밴드가 같은 침대에서 두 τ 동일 · **옛 τ 는 옮기기 전 값 그대로** (무작위 900 SE 2.0612290410739833 · 사슬 1.0198039027185568).
+  ↪ 10-01: 고정값 (다른 기계에서 적은 수) 과의 비교는 **4 ULP 안** (`_ulp_close`) — WSL numpy 2.5.2 · Codex Windows 2.3.5 에서 median 이 1 ULP 달라
+  이 회귀가 실패했다 (계산 결함 아님 · 환경).  반례 ⑰u 먼저 (1 ULP 이웃 수용 · 100 ULP 거부 · None/NaN 거부) · 같은 실행 안의 같은 계산끼리 (벽 τ = 옛 τ) 는 그대로 비트 동일.
   진단 (0925 수확): 벽 밴드를 잇는 SE 성분이 있는 침대 **106/130** (옛 규약 τ OK 는 14).
 - 인계표 생성기 (`lhs_design_dataset.py --export-handover … --webapp DIR`): ✅ 열만 (🔶 σ · fallback · 웹앱 τ · MPM · Stage E · 🔧 Physics 제외) ·
   이름 충돌 (`phi_se` · `phi_am` · `plate_z_source`) 은 **수확 열이 정본** · 행마다 `wa_status` (done · partial · failed · REFUSED — 아니면 웹앱 열 빈칸) ·
