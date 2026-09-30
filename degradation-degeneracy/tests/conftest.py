@@ -218,6 +218,8 @@ _GATED_ENTRYPOINT_MODULES = frozenset({
     "test_gate81_stage3_wire", "tests.test_gate81_stage3_wire",
     # ★ 82차 — 잔여 G82-N1·N2·N3 (관측 roster 재구성 · bank profile · 세대 연결) 을 production `run_fit()` 으로 잰다.
     "test_gate82_residuals", "tests.test_gate82_residuals",
+    # ★ 84차 — 라운드 2a (hex64 closure 결속 · 시작 전 공통 경계 · record v2) 를 production `run_fit()` 으로 잰다.
+    "test_gate84_round2a", "tests.test_gate84_round2a",
 })
 
 
