@@ -1,0 +1,39 @@
+{
+  "date": "2026-09-30",
+  "scope": "Independent read-only recipient review of normal60 limited validation and Claude v3",
+  "decision": "LIMITED_VALIDATION_ACCEPTED_NATIVE60_REQUIRES_SEPARATE_USER_APPROVAL",
+  "blocking_findings": [],
+  "candidate_manifest_sha256": "82e556243b29b10ae65b95dcdff7f854734b6f1cfffc1881327cab1939ebe5c8",
+  "accepted_functional_evidence": {
+    "logical_groups": 12,
+    "cases": 46,
+    "python": 27,
+    "java_extracted_helper": 4,
+    "powershell51_extracted_function": 15,
+    "recipient_test_reruns": 0,
+    "COMSOL_API_compatibility_proven": false,
+    "real_60s_numerical_result": false
+  },
+  "profile_cache_scope": "Two original validations and sixteen exact validated byte-prefix reuses in the harness, not production changes",
+  "delivery": {
+    "main_zip_integrity": "PASS",
+    "supplement_zip_integrity": "PASS",
+    "main_packaging_return_chunk": "cdf1a1",
+    "main_packaging_rc": 0,
+    "post_receipt_overall_seconds": 520.4379999998491,
+    "pre_supplement_closeout_snapshot_seconds": 558.7659999998286,
+    "supplement_final_host_return": "NOT_SUPPLIED_NOT_INFERRED",
+    "nonblocking_boundary_note": true
+  },
+  "claude_v3": {
+    "R1_through_R7": "ACCEPTED_WITHIN_INTERPRETATION_SCOPE",
+    "nonblocking_edits": ["Define J units and concentration normalization", "Do not make OCP replacement a prerequisite for experimental comparison"],
+    "new_tolerances_or_execution_authority": false
+  },
+  "approved": false,
+  "native60_approved": false,
+  "overall_normal_gate": "INCOMPLETE",
+  "internal_effective_policy": "UNVERIFIED",
+  "long_horizon_approved": false,
+  "next": "Read-only current sealed input/policy/path check, exact user approval, then at most one fixed fresh 0-to-60s diagnostic"
+}

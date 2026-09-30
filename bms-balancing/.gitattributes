@@ -55,3 +55,5 @@ reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/** -text
 reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/** -text
 # 2026-09-30: Claude 정상30초·장기 해석 회신 v2 독립 검토 묶음 (방향 · 핵심 산술 수용 + 해석 정정 R1–R7 · 실행 승인 아님) — bytes 그대로
 reviews/r14_repros/codex63/claude_normal30_long_horizon_review_20260930/** -text
+# 2026-09-30: 정상 60 s 변경부 12군 46사례 한정 검증 + Claude 회신 v3 독립 수신 검토 묶음 (한정 검증 수용 · R1–R7 수용 · 보충 2 · native60 별도 승인 대기) — bytes 그대로
+reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/** -text

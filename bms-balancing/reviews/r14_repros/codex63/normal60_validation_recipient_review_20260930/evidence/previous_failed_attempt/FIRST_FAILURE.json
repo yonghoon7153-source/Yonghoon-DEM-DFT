@@ -1,0 +1,32 @@
+{
+  "first_failure": {
+    "stage": "python",
+    "command": {
+      "argv": [
+        "C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "-I",
+        "-S",
+        "-B",
+        "-X",
+        "utf8",
+        "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\normal60_limited_validation_20260930\\tests\\run_python.py"
+      ],
+      "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_limited_validation_20260930",
+      "timeout_seconds": 120
+    },
+    "native_COMSOL": false,
+    "status": "FAIL",
+    "rc": null,
+    "timeout": true,
+    "error": "Command '['C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe', '-I', '-S', '-B', '-X', 'utf8', 'C:\\\\Users\\\\BML\\\\Documents\\\\Codex\\\\2026-09-13\\\\files-mentioned-by-the-user-comsol63\\\\outputs\\\\normal60_limited_validation_20260930\\\\tests\\\\run_python.py']' timed out after 120.0 seconds",
+    "elapsed_seconds": 120.07799999997951,
+    "overall_seconds": 570.2987269998994,
+    "budget_violation": true
+  },
+  "not_run_stages": [
+    "compile",
+    "jvm",
+    "powershell"
+  ],
+  "retry_authorized": false
+}

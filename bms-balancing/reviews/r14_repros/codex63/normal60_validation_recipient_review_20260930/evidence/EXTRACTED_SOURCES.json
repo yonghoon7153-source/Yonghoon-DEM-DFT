@@ -1,0 +1,20 @@
+{
+  "Java_method": "    static void checkShape(String tag,double[][] values,int count) {\n        if(values==null||values.length!=count||count==0||values[0]==null||values[0].length==0)throw new IllegalStateException(\"SHAPE:\"+tag);\n        int n=values[0].length;\n        for(double[] row:values){if(row==null||row.length!=n)throw new IllegalStateException(\"RAGGED:\"+tag);for(double v:row)if(!Double.isFinite(v))throw new IllegalStateException(\"NONFINITE:\"+tag);}\n        if(values[0][0]!=0.0)throw new IllegalStateException(\"TIME_ORIGIN:\"+tag);\n        for(int i=0;i<n;i++)if(values[0][i]<0||values[0][i]>60||(i>0&&values[0][i]<=values[0][i-1]))throw new IllegalStateException(\"TIME_ORDER:\"+tag);\n        if(TIMES==null)TIMES=values[0].clone();else if(!Arrays.equals(values[0],TIMES))throw new IllegalStateException(\"EXACT_TIMES:\"+tag);\n    }",
+  "Java_method_utf8_lf_sha256": "2e3b3eb0b3c0f617a857c5aba8f7d02eb7e8623e4cc5e64573bb92675186cfd2",
+  "Java_source": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/src/Normal60Candidate.java",
+    "bytes": 75991,
+    "sha256": "04e2e390bf56e7f95515f5e9225714e5b9c5a067e5b96049ce7c8bba1444b4ae"
+  },
+  "PowerShell_function": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_validation_attempt_02_20260930/tests/GDecision.txt",
+    "bytes": 10798,
+    "sha256": "3c0aaf453915de7d48c66669f0914b75844280b3384dc22ab3ac752cd1ce64ad"
+  },
+  "PowerShell_source": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/PARENT_COMMAND.ps1",
+    "bytes": 19179,
+    "sha256": "4b9e22ce8996168261fc010b55a570468bff9ba2ddd20fc950b03f27dec2fda3"
+  },
+  "scope": "Exact method/function extraction, no whole native model compile or parent body execution"
+}

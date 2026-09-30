@@ -1,0 +1,24 @@
+[
+  {
+    "file": "COMSOL63_NORMAL60_LIMITED_VALIDATION_COMPLETE_20260930.zip",
+    "bytes": 24730232,
+    "sha256": "3f5562319a85d34e79a1d5b601a2f505bc8356cf01d3f3489013627e15ab78c2",
+    "payloads": 250,
+    "entries": 251,
+    "manifest": "PACKAGE_MANIFEST.json",
+    "manifest_sha256": "4d694d297fd7625d390ab4d50d9ed7b3289b17adf80f51d23549c3bc8696b5e4",
+    "exact_set_size_sha_crc_paths_case_link": "PASS",
+    "original_zip_unchanged": true
+  },
+  {
+    "file": "NORMAL60_VALIDATION_DELIVERY_SUPPLEMENT_20260930.zip",
+    "bytes": 3453,
+    "sha256": "6bc24c4b80d46a18e69aa5fb4b538d082e36797cb3c44c1d7af13ba513919741",
+    "payloads": 4,
+    "entries": 5,
+    "manifest": "MANIFEST.json",
+    "manifest_sha256": "76289cbf90c28b74d4f5f5aa31b52b8194ea22c68924838594a3ebf9606991c3",
+    "exact_set_size_sha_crc_paths_case_link": "PASS",
+    "original_zip_unchanged": true
+  }
+]

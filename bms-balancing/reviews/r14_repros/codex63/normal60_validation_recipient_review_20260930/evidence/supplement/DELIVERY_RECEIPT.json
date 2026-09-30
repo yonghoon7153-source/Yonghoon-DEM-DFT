@@ -1,0 +1,17 @@
+{
+  "zip": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_validation_attempt_02_20260930/COMSOL63_NORMAL60_LIMITED_VALIDATION_COMPLETE_20260930.zip",
+    "bytes": 24730232,
+    "sha256": "3f5562319a85d34e79a1d5b601a2f505bc8356cf01d3f3489013627e15ab78c2"
+  },
+  "payload_count": 250,
+  "verified": true,
+  "recipient": null,
+  "package_script_snapshot_seconds": 16.0,
+  "overall_snapshot_seconds": 520.2659999998286,
+  "within_package_300": true,
+  "within_overall_1380": true,
+  "time_scope": "Before receipt write and tool return; post-write closeout supplied separately",
+  "test_status": "LIMITED_OFFLINE_VALIDATION_PASS",
+  "created_utc": "2026-09-30T03:30:24.547735+00:00"
+}

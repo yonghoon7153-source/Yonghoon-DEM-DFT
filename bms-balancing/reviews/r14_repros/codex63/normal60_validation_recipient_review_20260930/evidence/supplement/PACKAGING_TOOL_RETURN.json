@@ -1,0 +1,17 @@
+{
+  "source": "Actual packaging tool objects serialized afterward; polling wall time is not packaging duration",
+  "launch": {
+    "chunk_id": "a14d06",
+    "wall_time_seconds": 10.0137297,
+    "session_id": 81191,
+    "original_token_count": 0,
+    "output": ""
+  },
+  "completion": {
+    "chunk_id": "cdf1a1",
+    "wall_time_seconds": 0.0000192,
+    "exit_code": 0,
+    "original_token_count": 129,
+    "output": "{\"status\": \"VALIDATION_EVIDENCE_PACKAGED\", \"zip\": {\"path\": \"C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_validation_attempt_02_20260930/COMSOL63_NORMAL60_LIMITED_VALIDATION_COMPLETE_20260930.zip\", \"bytes\": 24730232, \"sha256\": \"3f5562319a85d34e79a1d5b601a2f505bc8356cf01d3f3489013627e15ab78c2\"}, \"payloads\": 250, \"post_receipt_overall_seconds\": 520.4379999998491, \"post_receipt_package_seconds\": 16.17200000002049, \"within_limits\": true, \"native_approved\": false}\r\n"
+  }
+}

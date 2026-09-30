@@ -1,0 +1,14 @@
+{
+  "source": "User supplied review text in current conversation; no independent scientific recalculation in this validation",
+  "zip_identity": {
+    "path": "C:/Users/BML/Desktop/CLAUDE_NORMAL30_LONG_HORIZON_RECIPIENT_REVIEW_20260930.zip",
+    "bytes": 36496,
+    "sha256": "503e10c56e0602149f55ce5c7b423eb5ba47c42853b80249bf38861a70c634c0"
+  },
+  "corrections": [
+    "P30 same-coordinate surface-average quasisteady ratio about64–89%, not60–102%.",
+    "Uniform equilibrium OCP upper bound4.185561543V does not establish impossibility of all rest after finite-current CV.",
+    "Approx194s is no-margin cost extrapolation, not safe runtime cap."
+  ],
+  "action": "Retained as separate interpretation note; no changes to normal60 candidate, tolerances or budgets. Long-term step/storage/OCP design remains separate; not started."
+}

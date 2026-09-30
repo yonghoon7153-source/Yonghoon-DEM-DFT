@@ -1,0 +1,21 @@
+{
+  "scope": "Supersedes old CASE_FIXTURE_SEAL wording for PY01 reader behavior only; case mutations/expected states unchanged",
+  "python_harness": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_validation_attempt_02_20260930/tests/run_python.py",
+    "bytes": 16777,
+    "sha256": "5c62665b584afa6e57e0ef004e784ffae416e3035842be10ba18039aa41d7059"
+  },
+  "original_reader_on_cache_miss": true,
+  "cache_hit_requires": [
+    "whole CSV exact byte prefix",
+    "same ordered time prefix",
+    "same domain and coordinates and tolerance",
+    "241 complete rows per stored time",
+    "previous successful actual profile validation"
+  ],
+  "entry_loader": "Actual source-buffer loader and hash check retained, then harness-only reader adapter installed",
+  "cache_hit_is_not_reparse": true,
+  "per_case_create_new_checkpoint": true,
+  "cases": 46,
+  "production_source_changes": 0
+}

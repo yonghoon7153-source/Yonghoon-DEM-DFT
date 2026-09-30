@@ -1,0 +1,30 @@
+{
+  "approved": false,
+  "usable": false,
+  "run_id": "normal60_candidate_001",
+  "manifest_sha256": "82e556243b29b10ae65b95dcdff7f854734b6f1cfffc1881327cab1939ebe5c8",
+  "proposal": {
+    "fresh_time_seconds": [
+      0,
+      60
+    ],
+    "threshold_mol_m3": 0,
+    "compile_max": 1,
+    "batch_max": 1,
+    "solve_max": 1,
+    "retry": 0,
+    "policy_changes": 0,
+    "requested_cores": 16,
+    "free_disk_GiB": 20,
+    "RAM": "observe only; no new threshold",
+    "budgets_seconds": {
+      "preflight_input": 180,
+      "compile_batch": 3600,
+      "cleanup": 120,
+      "analysis": 900,
+      "delivery": 300,
+      "parent_overall": 5100
+    }
+  },
+  "condition": "Independent acceptance of this validation, current sealed source/policy/path checks, and separate explicit user native60 approval. No actual authorization/release/runtime/token created."
+}

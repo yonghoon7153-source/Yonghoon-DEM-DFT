@@ -1,0 +1,21 @@
+{
+  "overall_snapshot_seconds": 558.7659999998286,
+  "within_overall_1380": true,
+  "main_zip": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_validation_attempt_02_20260930/COMSOL63_NORMAL60_LIMITED_VALIDATION_COMPLETE_20260930.zip",
+    "bytes": 24730232,
+    "sha256": "3f5562319a85d34e79a1d5b601a2f505bc8356cf01d3f3489013627e15ab78c2"
+  },
+  "receipt": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_validation_attempt_02_20260930/DELIVERY_RECEIPT.json",
+    "bytes": 742,
+    "sha256": "1a22ab153f49d2da15e4150d04c7b372fd43333c22c7584c3357600e9c84e8d0"
+  },
+  "tool_return": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_validation_attempt_02_20260930/PACKAGING_TOOL_RETURN.json",
+    "bytes": 965,
+    "sha256": "4ee75f4bfefc4818729ca6b2cf50398047b57e2466d4283c81eef30b66630f75"
+  },
+  "native_approved": false,
+  "time_scope": "After main package tool completion, before supplement ZIP write and this tool return; not final OS exit audit"
+}

@@ -1,0 +1,472 @@
+{
+  "logical_groups": 12,
+  "cases": 46,
+  "rows": [
+    {
+      "id": "PY01-01",
+      "status": "PASS",
+      "expected": {
+        "id": "PY01-01",
+        "fixture": "60 s complete, both reference sets valid, all axes pass",
+        "expected_reason_or_state": "NORMAL_60S_DIAGNOSTIC_COMPLETE; entry rc0; overall INCOMPLETE",
+        "expected_stage": "full existing analysis entry with inert log/table source"
+      }
+    },
+    {
+      "id": "PY01-02",
+      "status": "PASS",
+      "expected": {
+        "id": "PY01-02",
+        "fixture": "Electrolyte guard crosses at 25 s, coherent native stop",
+        "expected_reason_or_state": "PROTECTED_STOP_60S_INCOMPLETE; entry rc1; late NOT_REACHED",
+        "expected_stage": "termination + both safe-prefix comparisons"
+      }
+    },
+    {
+      "id": "PY01-03",
+      "status": "PASS",
+      "expected": {
+        "id": "PY01-03",
+        "fixture": "Electrolyte guard crosses at 45 s, coherent native stop",
+        "expected_reason_or_state": "PROTECTED_STOP_60S_INCOMPLETE; entry rc1; late OBSERVED",
+        "expected_stage": "termination + late interval"
+      }
+    },
+    {
+      "id": "PY02-01",
+      "status": "PASS",
+      "expected": {
+        "id": "PY02-01",
+        "fixture": "No guard, last time30",
+        "expected_reason_or_state": "DID_NOT_REACH_60; incomplete schema",
+        "expected_stage": "termination"
+      }
+    },
+    {
+      "id": "PY02-02",
+      "status": "PASS",
+      "expected": {
+        "id": "PY02-02",
+        "fixture": "Stored time60.1",
+        "expected_reason_or_state": "GUARD_TIME_RANGE",
+        "expected_stage": "termination"
+      }
+    },
+    {
+      "id": "PY02-03",
+      "status": "PASS",
+      "expected": {
+        "id": "PY02-03",
+        "fixture": "Threshold1198 remains",
+        "expected_reason_or_state": "NORMAL_THRESHOLD or THRESHOLD according to fixture field",
+        "expected_stage": "termination"
+      }
+    },
+    {
+      "id": "PY02-04",
+      "status": "PASS",
+      "expected": {
+        "id": "PY02-04",
+        "fixture": "Correct 60 times but NORMAL30 producer marker",
+        "expected_reason_or_state": "PRODUCER_OUTPUT_FAILURE",
+        "expected_stage": "native termination"
+      }
+    },
+    {
+      "id": "PY03-01",
+      "status": "PASS",
+      "expected": {
+        "id": "PY03-01",
+        "fixture": "737 requests; preserved437 prefix; both coverage outputs",
+        "expected_reason_or_state": "PASS; full intersection distinct from comparison subset",
+        "expected_stage": "runtime/coverage"
+      }
+    },
+    {
+      "id": "PY03-02",
+      "status": "PASS",
+      "expected": {
+        "id": "PY03-02",
+        "fixture": "Remove late strict request30.1",
+        "expected_reason_or_state": "STRICT_REQUEST_TIME_MISSING",
+        "expected_stage": "coverage"
+      }
+    },
+    {
+      "id": "PY03-03",
+      "status": "PASS",
+      "expected": {
+        "id": "PY03-03",
+        "fixture": "Remove target request12",
+        "expected_reason_or_state": "STRICT_REQUEST_TIME_MISSING",
+        "expected_stage": "primary 0-30 coverage"
+      }
+    },
+    {
+      "id": "PY03-04",
+      "status": "PASS",
+      "expected": {
+        "id": "PY03-04",
+        "fixture": "Remove B020 request0.5",
+        "expected_reason_or_state": "STRICT_REQUEST_TIME_MISSING",
+        "expected_stage": "secondary 0-5 coverage"
+      }
+    },
+    {
+      "id": "PY03-05",
+      "status": "PASS",
+      "expected": {
+        "id": "PY03-05",
+        "fixture": "Empty common set",
+        "expected_reason_or_state": "EMPTY_OR_ZERO_ONLY_COMMON or earlier missing-prefix failure; never PASS",
+        "expected_stage": "coverage"
+      }
+    },
+    {
+      "id": "PY03-06",
+      "status": "PASS",
+      "expected": {
+        "id": "PY03-06",
+        "fixture": "Only common t0",
+        "expected_reason_or_state": "EMPTY_OR_ZERO_ONLY_COMMON or earlier missing-prefix failure; never PASS",
+        "expected_stage": "coverage"
+      }
+    },
+    {
+      "id": "PY04-01",
+      "status": "PASS",
+      "expected": {
+        "id": "PY04-01",
+        "fixture": "B020 voltage exactly1mV/current30 primary within tolerance",
+        "expected_reason_or_state": "PASS, secondary maximum0.001",
+        "expected_stage": "secondary comparison"
+      }
+    },
+    {
+      "id": "PY04-02",
+      "status": "PASS",
+      "expected": {
+        "id": "PY04-02",
+        "fixture": "B020 voltage above1mV only",
+        "expected_reason_or_state": "B020_SAMPLE_TOLERANCE",
+        "expected_stage": "secondary comparison"
+      }
+    },
+    {
+      "id": "PY04-03",
+      "status": "PASS",
+      "expected": {
+        "id": "PY04-03",
+        "fixture": "B020 surface above1e-4 only",
+        "expected_reason_or_state": "B020_SAMPLE_TOLERANCE",
+        "expected_stage": "secondary profile"
+      }
+    },
+    {
+      "id": "PY04-04",
+      "status": "PASS",
+      "expected": {
+        "id": "PY04-04",
+        "fixture": "B020 three timed tables have differing time sets",
+        "expected_reason_or_state": "B020_TIME_SET",
+        "expected_stage": "secondary baseline"
+      }
+    },
+    {
+      "id": "PY05-01",
+      "status": "PASS",
+      "expected": {
+        "id": "PY05-01",
+        "fixture": "Primary30 difference at t20 exactly1mV",
+        "expected_reason_or_state": "PASS maximum0.001",
+        "expected_stage": "primary comparison"
+      }
+    },
+    {
+      "id": "PY05-02",
+      "status": "PASS",
+      "expected": {
+        "id": "PY05-02",
+        "fixture": "Primary30 difference at t20 above1mV; B020 within",
+        "expected_reason_or_state": "SAMPLE_TOLERANCE",
+        "expected_stage": "primary comparison"
+      }
+    },
+    {
+      "id": "PY05-03",
+      "status": "PASS",
+      "expected": {
+        "id": "PY05-03",
+        "fixture": "Primary30 surface at t20 above1e-4",
+        "expected_reason_or_state": "SAMPLE_TOLERANCE",
+        "expected_stage": "primary profile"
+      }
+    },
+    {
+      "id": "PY05-04",
+      "status": "PASS",
+      "expected": {
+        "id": "PY05-04",
+        "fixture": "Primary baseline guard times differ from primary global times",
+        "expected_reason_or_state": "BASELINE_GUARD_TIME_SET",
+        "expected_stage": "electrolyte observation"
+      }
+    },
+    {
+      "id": "PY06-01",
+      "status": "PASS",
+      "expected": {
+        "id": "PY06-01",
+        "fixture": "Normal60 states after30",
+        "expected_reason_or_state": "OBSERVED first>30 last60; not >5 window",
+        "expected_stage": "late summary"
+      }
+    },
+    {
+      "id": "PY06-02",
+      "status": "PASS",
+      "expected": {
+        "id": "PY06-02",
+        "fixture": "Protection before/equal30",
+        "expected_reason_or_state": "NOT_REACHED count0 for late interval",
+        "expected_stage": "late summary"
+      }
+    },
+    {
+      "id": "PY06-03",
+      "status": "PASS",
+      "expected": {
+        "id": "PY06-03",
+        "fixture": "Finite primary electrolyte curve difference within all existing guard constraints",
+        "expected_reason_or_state": "OBSERVED numerical delta; acceptance_tolerance null; no invented tolerance",
+        "expected_stage": "electrolyte observation"
+      }
+    },
+    {
+      "id": "PY07-01",
+      "status": "PASS",
+      "expected": {
+        "id": "PY07-01",
+        "fixture": "Manifest-bound inert native60 approval and release",
+        "expected_reason_or_state": "permission accepted only in fixture; no execute call",
+        "expected_stage": "authorization field"
+      }
+    },
+    {
+      "id": "PY07-02",
+      "status": "PASS",
+      "expected": {
+        "id": "PY07-02",
+        "fixture": "Only old native30_one_shot true",
+        "expected_reason_or_state": "SEPARATE_NATIVE_APPROVAL",
+        "expected_stage": "authorization field"
+      }
+    },
+    {
+      "id": "PY07-03",
+      "status": "PASS",
+      "expected": {
+        "id": "PY07-03",
+        "fixture": "Old normal30 run or manifest in inert approval",
+        "expected_reason_or_state": "AUTHORIZATION_IDENTITY",
+        "expected_stage": "authorization binding"
+      }
+    },
+    {
+      "id": "J01-01",
+      "status": "PASS",
+      "expected": {
+        "id": "J01-01",
+        "fixture": "Valid shape from0 through60",
+        "expected_reason_or_state": "no exception",
+        "expected_stage": "checkShape time limit"
+      }
+    },
+    {
+      "id": "J01-02",
+      "status": "PASS",
+      "expected": {
+        "id": "J01-02",
+        "fixture": "60.1 endpoint",
+        "expected_reason_or_state": "TIME_ORDER",
+        "expected_stage": "checkShape time limit"
+      }
+    },
+    {
+      "id": "J01-03",
+      "status": "PASS",
+      "expected": {
+        "id": "J01-03",
+        "fixture": "Second table time vector different from first",
+        "expected_reason_or_state": "EXACT_TIMES",
+        "expected_stage": "checkShape shared TIMES"
+      }
+    },
+    {
+      "id": "J01-04",
+      "status": "PASS",
+      "expected": {
+        "id": "J01-04",
+        "fixture": "737 requested vector incl preserved prefix through60",
+        "expected_reason_or_state": "no exception; literal tlist statically bound to CONTRACT",
+        "expected_stage": "helper plus static literal binding"
+      }
+    },
+    {
+      "id": "PS01-01",
+      "status": "PASS",
+      "expected": {
+        "id": "PS01-01",
+        "fixture": "PY01 normal60 output native0/analysis0",
+        "expected_reason_or_state": "AWAITING_60S_LIMITED_EXTERNAL_ACCEPTANCE",
+        "expected_stage": "parent decision"
+      }
+    },
+    {
+      "id": "PS01-02",
+      "status": "PASS",
+      "expected": {
+        "id": "PS01-02",
+        "fixture": "PY01 protective output native0/analysis1",
+        "expected_reason_or_state": "PROTECTED_STOP_60S_INCOMPLETE",
+        "expected_stage": "parent decision"
+      }
+    },
+    {
+      "id": "PS01-03",
+      "status": "PASS",
+      "expected": {
+        "id": "PS01-03",
+        "fixture": "Old NORMAL_30S result fixture",
+        "expected_reason_or_state": "INCOMPLETE",
+        "expected_stage": "parent result name"
+      }
+    },
+    {
+      "id": "PS02-01",
+      "status": "PASS",
+      "expected": {
+        "id": "PS02-01",
+        "fixture": "Old437 runtime request count",
+        "expected_reason_or_state": "INCOMPLETE",
+        "expected_stage": "runtime count"
+      }
+    },
+    {
+      "id": "PS02-02",
+      "status": "PASS",
+      "expected": {
+        "id": "PS02-02",
+        "fixture": "Primary expected requests187 instead of437",
+        "expected_reason_or_state": "INCOMPLETE",
+        "expected_stage": "primary coverage"
+      }
+    },
+    {
+      "id": "PS02-03",
+      "status": "PASS",
+      "expected": {
+        "id": "PS02-03",
+        "fixture": "Primary common last5 instead of30",
+        "expected_reason_or_state": "INCOMPLETE",
+        "expected_stage": "primary coverage"
+      }
+    },
+    {
+      "id": "PS02-04",
+      "status": "PASS",
+      "expected": {
+        "id": "PS02-04",
+        "fixture": "Normal marked with final30",
+        "expected_reason_or_state": "INCOMPLETE",
+        "expected_stage": "normal60 final time"
+      }
+    },
+    {
+      "id": "PS02-05",
+      "status": "PASS",
+      "expected": {
+        "id": "PS02-05",
+        "fixture": "Normal marked with final60.1",
+        "expected_reason_or_state": "INCOMPLETE",
+        "expected_stage": "60 upper bound"
+      }
+    },
+    {
+      "id": "PS03-01",
+      "status": "PASS",
+      "expected": {
+        "id": "PS03-01",
+        "fixture": "b020_comparison missing",
+        "expected_reason_or_state": "INCOMPLETE",
+        "expected_stage": "secondary schema"
+      }
+    },
+    {
+      "id": "PS03-02",
+      "status": "PASS",
+      "expected": {
+        "id": "PS03-02",
+        "fixture": "Secondary missing requested time but status PASS",
+        "expected_reason_or_state": "INCOMPLETE",
+        "expected_stage": "secondary coverage"
+      }
+    },
+    {
+      "id": "PS03-03",
+      "status": "PASS",
+      "expected": {
+        "id": "PS03-03",
+        "fixture": "Secondary voltage NaN but status PASS",
+        "expected_reason_or_state": "INCOMPLETE",
+        "expected_stage": "secondary finite value"
+      }
+    },
+    {
+      "id": "PS03-04",
+      "status": "PASS",
+      "expected": {
+        "id": "PS03-04",
+        "fixture": "Secondary surface exceeds1e-4 but status PASS",
+        "expected_reason_or_state": "INCOMPLETE",
+        "expected_stage": "secondary tolerance"
+      }
+    },
+    {
+      "id": "PS04-01",
+      "status": "PASS",
+      "expected": {
+        "id": "PS04-01",
+        "fixture": "Normal60 late interval ends30",
+        "expected_reason_or_state": "INCOMPLETE",
+        "expected_stage": "late endpoint"
+      }
+    },
+    {
+      "id": "PS04-02",
+      "status": "PASS",
+      "expected": {
+        "id": "PS04-02",
+        "fixture": "Normal60 result carries old manifest/run",
+        "expected_reason_or_state": "INCOMPLETE",
+        "expected_stage": "source identity"
+      }
+    },
+    {
+      "id": "PS04-03",
+      "status": "PASS",
+      "expected": {
+        "id": "PS04-03",
+        "fixture": "Normal60 fixture but analysisrc1/successfalse",
+        "expected_reason_or_state": "INCOMPLETE",
+        "expected_stage": "child return"
+      }
+    }
+  ],
+  "cache_modes": {
+    "ORIGINAL_PROFILE_VALIDATOR": 2,
+    "EXACT_VALIDATED_PREFIX_REUSE": 16
+  },
+  "ps_extraction_exact_raw_utf8": true,
+  "scope": "Data reconciliation of already-completed test outputs, not extra test execution"
+}

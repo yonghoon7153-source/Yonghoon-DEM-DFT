@@ -1,0 +1,121 @@
+{
+  "status": "LIMITED_OFFLINE_VALIDATION_PASS",
+  "logical_groups": 12,
+  "cases": 46,
+  "counts": {
+    "Python": 27,
+    "Java_helper": 4,
+    "PowerShell51": 15
+  },
+  "stages": {
+    "python": {
+      "stage": "python",
+      "command": {
+        "argv": [
+          "C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+          "-I",
+          "-S",
+          "-B",
+          "-X",
+          "utf8",
+          "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\normal60_validation_attempt_02_20260930\\tests\\run_python.py"
+        ],
+        "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_validation_attempt_02_20260930",
+        "timeout_seconds": 120
+      },
+      "native_COMSOL": false,
+      "status": "PASS",
+      "rc": 0,
+      "timeout": false,
+      "elapsed_seconds": 79.70299999997951,
+      "overall_seconds": 123.76599999982864,
+      "cases": 27
+    },
+    "compile": {
+      "stage": "compile",
+      "command": {
+        "argv": [
+          "C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/javac.exe",
+          "-proc:none",
+          "-d",
+          "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\normal60_validation_attempt_02_20260930\\classes",
+          "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\normal60_validation_attempt_02_20260930\\tests\\ShapeHarness.java"
+        ],
+        "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_validation_attempt_02_20260930",
+        "timeout_seconds": 90
+      },
+      "native_COMSOL": false,
+      "status": "PASS",
+      "rc": 0,
+      "timeout": false,
+      "elapsed_seconds": 2.125,
+      "overall_seconds": 149.0779999999795
+    },
+    "jvm": {
+      "stage": "jvm",
+      "command": {
+        "argv": [
+          "C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/java.exe",
+          "-cp",
+          "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\normal60_validation_attempt_02_20260930\\classes",
+          "ShapeHarness"
+        ],
+        "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_validation_attempt_02_20260930",
+        "timeout_seconds": 60
+      },
+      "native_COMSOL": false,
+      "status": "PASS",
+      "rc": 0,
+      "timeout": false,
+      "elapsed_seconds": 0.4220000000204891,
+      "overall_seconds": 164.6569999998901,
+      "cases": 4
+    },
+    "powershell": {
+      "stage": "powershell",
+      "command": {
+        "argv": [
+          "C:/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe",
+          "-NoLogo",
+          "-NoProfile",
+          "-File",
+          "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\normal60_validation_attempt_02_20260930\\tests\\run_parent.ps1"
+        ],
+        "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_validation_attempt_02_20260930",
+        "timeout_seconds": 90
+      },
+      "native_COMSOL": false,
+      "status": "PASS",
+      "rc": 0,
+      "timeout": false,
+      "elapsed_seconds": 11.921999999787658,
+      "overall_seconds": 189.04699999978766,
+      "cases": 15
+    }
+  },
+  "source_seal_unchanged": true,
+  "future_paths_absent": [
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_authorizations/normal60_001.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_authorizations/VALIDATION_RELEASE.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_parent_001",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_authorizations/USER_DECISION.json"
+  ],
+  "previous_attempt_failure": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_limited_validation_20260930/FIRST_FAILURE.json",
+    "bytes": 1286,
+    "sha256": "71a066220530be20eed1e72c6ab361e8871de535ff3314557c455eecae1134e3"
+  },
+  "native_COMSOL_compile_batch_solve": 0,
+  "helper_compile_attempts": 1,
+  "helper_JVM_sessions": 1,
+  "python_test_sessions": 1,
+  "powershell_fixture_sessions": 1,
+  "retry_within_this_attempt": 0,
+  "approved": false,
+  "usable": false,
+  "overall": "INCOMPLETE",
+  "normal_gate": "INCOMPLETE",
+  "effective_policy": "UNVERIFIED",
+  "scope": "Accepted native60 execution is still required separately; this result is offline fixture validation only."
+}

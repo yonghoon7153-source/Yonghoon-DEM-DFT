@@ -1,0 +1,975 @@
+{
+  "scope": "Recipient byte/JSON and static source audit; no received code, tests, Java, COMSOL or native60 executed",
+  "status": "PASS",
+  "data_checks_not_functional_tests": 178,
+  "failed_checks": [],
+  "checks": [
+    {
+      "check": "candidate_manifest_fixed",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "manifest_payload:src/Normal60Candidate.java",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "prior_candidate_exact_bytes:src/Normal60Candidate.java",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "manifest_payload:src/diagnostic_consumer.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "prior_candidate_exact_bytes:src/diagnostic_consumer.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "manifest_payload:src/candidate_entry.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "prior_candidate_exact_bytes:src/candidate_entry.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "manifest_payload:PARENT_COMMAND.ps1",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "prior_candidate_exact_bytes:PARENT_COMMAND.ps1",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "manifest_payload:CONTRACT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "prior_candidate_exact_bytes:CONTRACT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "prior_candidate_exact_bytes:CODE_MANIFEST.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "prior_candidate_exact_bytes:LIMITED_VALIDATION_PLAN.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "manifest_inactive",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_post_seal_exact_list",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_test_seal_payload:candidate\\src\\Normal60Candidate.java",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_test_seal_payload:candidate\\src\\diagnostic_consumer.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_test_seal_payload:candidate\\src\\candidate_entry.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_test_seal_payload:candidate\\PARENT_COMMAND.ps1",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_test_seal_payload:candidate\\CONTRACT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_test_seal_payload:candidate\\CODE_MANIFEST.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_test_seal_payload:candidate\\LIMITED_VALIDATION_PLAN.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_test_seal_payload:tests\\GDecision.txt",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_test_seal_payload:tests\\run_parent.ps1",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_test_seal_payload:tests\\run_python.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_test_seal_payload:tests\\ShapeHarness.java",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_test_seal_payload:CASE_FIXTURE_SEAL.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_test_seal_payload:EXTRACTED_SOURCES.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_test_seal_payload:ENGINE_IDENTITIES.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_test_seal_payload:COMMANDS.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_test_seal_payload:START.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_test_seal_payload:HARNESS_CACHE_BINDING.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_test_seal_payload:run_one_stage.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "pre_test_seal_payload:seal_harness.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "46_unique_cases_exact_set",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "12_logical_groups",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "all_reported_case_status_pass",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "summary_case_set_and_count",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "engine_case_counts",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "final_declared_counts",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_bound_candidate",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY01-01",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY01-02",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY01-03",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY02-01",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY02-02",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY02-03",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY02-04",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY03-01",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY03-02",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY03-03",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY03-04",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY03-05",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY03-06",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY04-01",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY04-02",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY04-03",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY04-04",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY05-01",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY05-02",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY05-03",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY05-04",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY06-01",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY06-02",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY06-03",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY07-01",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY07-02",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "python_checkpoint:PY07-03",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "java_method_source_and_harness",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "java_method_lf_digest",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "powershell_exact_extraction",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "powershell_actual_engine51",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "java_helper_engine11",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "helper_class_header55",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "time_request_counts",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "native_future_inactive",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_current_identity:profile_cache_001.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_reader_identity:profile_cache_001.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_complete_row_boundary:profile_cache_001.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_current_identity:profile_cache_002.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_reader_identity:profile_cache_002.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_complete_row_boundary:profile_cache_002.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_earlier_source_and_exact_prefix:profile_cache_002.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_current_identity:profile_cache_003.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_reader_identity:profile_cache_003.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_complete_row_boundary:profile_cache_003.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_earlier_source_and_exact_prefix:profile_cache_003.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_current_identity:profile_cache_004.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_reader_identity:profile_cache_004.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_complete_row_boundary:profile_cache_004.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_current_identity:profile_cache_005.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_reader_identity:profile_cache_005.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_complete_row_boundary:profile_cache_005.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_earlier_source_and_exact_prefix:profile_cache_005.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_current_identity:profile_cache_006.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_reader_identity:profile_cache_006.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_complete_row_boundary:profile_cache_006.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_earlier_source_and_exact_prefix:profile_cache_006.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_current_identity:profile_cache_007.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_reader_identity:profile_cache_007.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_complete_row_boundary:profile_cache_007.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_earlier_source_and_exact_prefix:profile_cache_007.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_current_identity:profile_cache_008.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_reader_identity:profile_cache_008.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_complete_row_boundary:profile_cache_008.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_earlier_source_and_exact_prefix:profile_cache_008.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_current_identity:profile_cache_009.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_reader_identity:profile_cache_009.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_complete_row_boundary:profile_cache_009.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_earlier_source_and_exact_prefix:profile_cache_009.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_current_identity:profile_cache_010.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_reader_identity:profile_cache_010.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_complete_row_boundary:profile_cache_010.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_earlier_source_and_exact_prefix:profile_cache_010.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_current_identity:profile_cache_011.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_reader_identity:profile_cache_011.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_complete_row_boundary:profile_cache_011.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_earlier_source_and_exact_prefix:profile_cache_011.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_current_identity:profile_cache_012.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_reader_identity:profile_cache_012.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_complete_row_boundary:profile_cache_012.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_earlier_source_and_exact_prefix:profile_cache_012.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_current_identity:profile_cache_013.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_reader_identity:profile_cache_013.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_complete_row_boundary:profile_cache_013.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_earlier_source_and_exact_prefix:profile_cache_013.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_current_identity:profile_cache_014.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_reader_identity:profile_cache_014.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_complete_row_boundary:profile_cache_014.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_earlier_source_and_exact_prefix:profile_cache_014.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_current_identity:profile_cache_015.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_reader_identity:profile_cache_015.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_complete_row_boundary:profile_cache_015.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_earlier_source_and_exact_prefix:profile_cache_015.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_current_identity:profile_cache_016.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_reader_identity:profile_cache_016.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_complete_row_boundary:profile_cache_016.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_earlier_source_and_exact_prefix:profile_cache_016.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_current_identity:profile_cache_017.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_reader_identity:profile_cache_017.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_complete_row_boundary:profile_cache_017.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_earlier_source_and_exact_prefix:profile_cache_017.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_current_identity:profile_cache_018.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_reader_identity:profile_cache_018.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_complete_row_boundary:profile_cache_018.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_earlier_source_and_exact_prefix:profile_cache_018.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "18_cache_records_bound_result",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "cache_scope_counts",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "entry_output_identity:1",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "entry_output_consumed_copy:1",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "entry_rc:1",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "entry_output_identity:2",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "entry_output_consumed_copy:2",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "entry_rc:2",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "entry_output_identity:3",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "entry_output_consumed_copy:3",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "entry_rc:3",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "stage_binding:python",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "stage_exit_budget_order:python",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "stage_stderr_empty:python",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "stage_binding:compile",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "stage_exit_budget_order:compile",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "stage_stderr_empty:compile",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "stage_binding:jvm",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "stage_exit_budget_order:jvm",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "stage_stderr_empty:jvm",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "stage_binding:powershell",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "stage_exit_budget_order:powershell",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "stage_stderr_empty:powershell",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "first_failure_unchanged_pin",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "first_failure_timeout_retained",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "main_zip_finish_identity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "closeout_linked_receipt_and_return",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "main_packaging_rc_budget",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "closeout_snapshot_order_budget",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "closeout_boundary_explicit",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "delivery_receipt_generation_unmodified",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "review_inputs_preserved",
+      "pass": true,
+      "detail": null
+    }
+  ],
+  "inputs": {
+    "C:\\Users\\Administrator\\Downloads\\COMSOL63_NORMAL60_LIMITED_VALIDATION_COMPLETE_20260930.zip": {
+      "bytes": 24730232,
+      "sha256": "3f5562319a85d34e79a1d5b601a2f505bc8356cf01d3f3489013627e15ab78c2"
+    },
+    "C:\\Users\\Administrator\\Downloads\\NORMAL60_VALIDATION_DELIVERY_SUPPLEMENT_20260930.zip": {
+      "bytes": 3453,
+      "sha256": "6bc24c4b80d46a18e69aa5fb4b538d082e36797cb3c44c1d7af13ba513919741"
+    },
+    "C:\\Users\\Administrator\\Desktop\\CLAUDE_REPLY_NORMAL30_LONG_HORIZON_KO_v3.md": {
+      "bytes": 23522,
+      "sha256": "db0a3c811f63c96dfb401bb1a36a320fa32cffd8ba68ddea23889ba02422e17f"
+    }
+  },
+  "candidate_manifest_sha256": "82e556243b29b10ae65b95dcdff7f854734b6f1cfffc1881327cab1939ebe5c8",
+  "pretest_seal_included_files_verified": 19,
+  "sender_engine_file_identity_claims_not_independently_remeasured": [
+    {
+      "path": "C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      "bytes": 107312,
+      "sha256": "b7a12c3af0b4db44191eec14ea095eba731b7328917f570806183093d19ddca2"
+    },
+    {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/javac.exe",
+      "bytes": 20712,
+      "sha256": "c60a376855051d615b0c7cf2712573a19ed4e02b905c9d1a274ff990dac85659"
+    },
+    {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/java/win64/jre/bin/java.exe",
+      "bytes": 46824,
+      "sha256": "e8228b02b882a4aa1a2333ede4a341b15e761cd897433d2661f2b96d7ad4952b"
+    },
+    {
+      "path": "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
+      "bytes": 495616,
+      "sha256": "8bb6fa8c283b4d92120b1ef249a9b311b0f804d4cabbe9981159976c8be76a5e"
+    }
+  ],
+  "engine_stages": [
+    {
+      "phase": "python",
+      "elapsed_seconds": 79.70299999997951,
+      "host_chunk": "5c8b72",
+      "host_rc": 0
+    },
+    {
+      "phase": "compile",
+      "elapsed_seconds": 2.125,
+      "host_chunk": "85a6da",
+      "host_rc": 0
+    },
+    {
+      "phase": "jvm",
+      "elapsed_seconds": 0.4220000000204891,
+      "host_chunk": "834f98",
+      "host_rc": 0
+    },
+    {
+      "phase": "powershell",
+      "elapsed_seconds": 11.921999999787658,
+      "host_chunk": "1c7487",
+      "host_rc": 0
+    }
+  ],
+  "profile_cache_modes": {
+    "ORIGINAL_PROFILE_VALIDATOR": 2,
+    "EXACT_VALIDATED_PREFIX_REUSE": 16
+  },
+  "functional_results_scope": "27 Python / 4 extracted Java helper / 15 extracted PowerShell5.1 function cases. No new recipient functional test.",
+  "delivery_boundary": {
+    "main_post_receipt_overall_s": 520.4379999998491,
+    "main_package_s": 16.17200000002049,
+    "closeout_snapshot_s": 558.7659999998286,
+    "supplement_final_host_return_supplied": false,
+    "note": "After main package tool completion, before supplement ZIP write and this tool return; not final OS exit audit"
+  },
+  "native60_approved": false
+}
