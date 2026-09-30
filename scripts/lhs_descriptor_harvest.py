@@ -177,11 +177,17 @@ PRODUCER_AREA_MODEL = dict(
                  '— m_k = 인수 (δ, 2r1−δ, 2r2−δ, 2r1+2r2−δ) 의 상자 최대 절댓값 · Δ_k = eps·(3·S + m_k) (sqrt 뒤 두 뺄셈의 인수 형성 절대오차 · '
                  'S = r + r1 + r2 = 2r1+2r2−δ 의 상자 최대) · 13·eps ≥ 곱 3 · rsq 5 · 나눗셈 1 · π/4 2 (단위 반올림 u = eps/2 로 세면 11u) · '
                  'eps = 2^-52 · d_min ≤ 0 이면 E 가 서지 않아 미인증 (n_producer_uncertified).  실증 = --selftest ㉑‴ (공개 식 binary64 '
-                 '4000 점 · 여섯 영역 · Decimal 60 자리) — 설치 빌드의 실행이 아니다.'),
+                 '4000 점 · 여섯 영역 · Decimal 60 자리) — 설치 빌드의 실행이 아니다.  13·eps 는 곱 · π/4 · 나눗셈 · rsq 반올림에 분모의 1/(1−γ₅) 팽창 '
+                 '(γ₅ ≈ 5u) 을 1 차로 덮는 여유다 (1/rsq ≤ 1/d_min² 를 반올림된 rsq 의 독립 부등식으로 쓰지 않는다).  지원 수치영역 = 중간 연산이 정상 '
+                 'binary64 (네 인수 곱 1e-280–1e280 · d_min 1e-140–1e140 · 반올림 round-to-nearest) — 밖이면 미인증 (LHSC-04-R4-DOMAIN · 1e-100 반경 '
+                 '언더플로 반례).  구형 입자 경로만 (superquadric 은 다른 가지).'),
 )
 PRODUCER_PIN_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'docs', 'data',
                                  'liggghts_add_pair_pin.json')
 PRODUCER_PIN_ENV = 'LHS_PRODUCER_PIN_FILE'
+#: LHSC-04-R4-DOMAIN — 생산자 오차 상한이 서는 지원 수치영역 (네 인수 곱 · 중심거리 하한) — 밖이면 미인증
+PRODUCER_DOMAIN = (1e-280, 1e280)
+PRODUCER_DOMAIN_D = (1e-140, 1e140)
 PRODUCER_PIN_SCHEMA = 'liggghts_add_pair_pin/1'
 AREA_CHECK_TOL_RULE = (
     '행마다 덤프 토큰 구간 [A_dump ± h(A_dump)] 이 허용 구간 [lo − E, hi + E] 와 만나지 않으면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  '
@@ -192,11 +198,13 @@ AREA_CHECK_TOL_RULE = (
     '정확한 최소 · 최대 (각 인수의 형성 오차만큼 상대 여유) · ③ 아니면 인수 구간의 곱 ∩ 덧셈형 항별 구간 π/4·[2(r1²+r2²) − d² − (r1²−r2²)²/d²] ∩ '
     '기하 상한 π·min(r1, r2)² · ④ 인수가 상자 안에서 부호를 바꾸면 (포함 경계 · d → 0 · δ → 0 이 상자 안) 하한 0 (boundary 가지) · 상한 = 덧셈형 '
     '항별 상한 ∩ 기하 상한.  [lo, hi] 에는 기준 평가 여유 16·eps·π·max(r1, r2)² (부동소수 덧셈형 원판으로 대조할 때의 상쇄 오차 · 생산자 여유 아님) 만 바깥으로 더한다.  E = 생산자 (PRODUCER_AREA_MODEL) 산술의 상자 절대 오차 상한 (LHSC-04 R3a — 옛 고정 "생산자 바닥" 여유는 없앴다): '
-    'd_min ≤ 0 이면 E 가 서지 않아 **미인증** (n_producer_uncertified · 시험 · 초과에서 뺀다) · 음수 A_dump 는 정의역 밖 생산값 '
+    'd_min ≤ 0 이거나 지원 수치영역 (중간 곱이 정상 binary64 범위 — PRODUCER_DOMAIN) 밖이면 E 가 서지 않아 **미인증** (n_producer_uncertified · '
+    '시험 · 초과에서 뺀다) · 음수 A_dump 는 정의역 밖 생산값 '
     '(n_area_dump_negative · 초과 아님 · 시험에서 뺀다).  h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 (E = 십진 지수 · '
     '끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  기하: A 는 δ 에 따라 0 에서 d² = |r1² − r2²| 의 극대 π·min(r1, r2)² 까지 올랐다가 포함 경계 '
     'd = |r1 − r2| 에서 다시 0 으로 **연속**해서 내려간다 (동일 반경 d → 0 퇴화만 식의 극한 π r² 과 코드의 d ≤ 0 → 0 이 어긋난다).  '
-    '보고: n_tested (인증 · 비음수 행) · n_beyond_tol · n_producer_uncertified · n_area_dump_negative · n_area_dump_zero · '
+    '보고: n_tested (이 산술 모델로 비교한 인증 · 비음수 행 — 정밀 비교 통과 · 설치 빌드 인증과 동의어가 아니다) · n_beyond_tol · '
+    'n_producer_uncertified · n_area_dump_negative · n_area_dump_zero · '
     'n_lower_bound_zero (실제 lo == 0 — 너무 작은 면적은 못 잡는다) · n_boundary_branch (④ 가지 수) · n_wide_enclosure ((hi − lo) > '
     'AREA_CHECK_WIDE_REL·lo · lo > 0 · 기술량) · n_detect_1pct = 검출 보증 (LHSC-04 R3b): 참 면적이 [lo, hi] 어디에 있어도 ±1 % 치환의 '
     '토큰 구간이 허용 구간과 분리 — 1.01·(lo − E) − 2h₊ > hi + E ∧ 0.99·(hi + E) + 2h₋ < lo − E (h± = 그 크기 범위의 출력 반올림 반폭 최대 · '
@@ -517,6 +525,11 @@ def _producer_abs_error(dl, f1, f2, f3, dd):
     if not dmin > 0.0:
         return float('inf')
     m = [max(abs(float(v[0])), abs(float(v[1]))) for v in (dl, f1, f2, f3)]
+    #  LHSC-04-R4-DOMAIN (Codex 재검증 3 · P3): 지원 수치영역 = 중간 곱이 binary64 정상 범위 — 밖이면 곱 · E 가 언더플로 / 넘침해 상한이 서지
+    #  않는다 (r = 1e-100 반례).  LHS 단위 (r ~ 1e-4–1e-2 · δ ≥ 1e-12) 는 한참 안이다.
+    pm = m[0] * m[1] * m[2] * m[3]
+    if not (PRODUCER_DOMAIN[0] < pm < PRODUCER_DOMAIN[1] and PRODUCER_DOMAIN_D[0] < dmin < PRODUCER_DOMAIN_D[1]):
+        return float('inf')
     S = m[3]
     dlt = [_EPS * (3.0 * S + mk) for mk in m]
     err = 0.0                                                          # Σ_{T ≠ ∅} Π_{k∈T} Δ_k Π_{k∉T} m_k (상쇄 없음)
@@ -551,29 +564,65 @@ def producer_area_binary64(radi, radj, dx):
 
 
 def producer_pin(path=None):
-    """설치된 생산자 (LIGGGHTS 빌드) 의 add_pair 소스 핀 → {pinned, pin, reason, file}.
+    """생산자 (LIGGGHTS 빌드) add_pair 소스의 **자기 신고** → {claim_present, claim, claim_reason, source_hash_verified_locally,
+    verify_note, installed_build_pinned (늘 False), installed_reason, file}.
 
-    파일 = `path` · 환경변수 `LHS_PRODUCER_PIN_FILE` · 기본 `docs/data/liggghts_add_pair_pin.json` 순.  형식 (`liggghts_add_pair_pin/1`):
-    source_file (빌드 소스의 compute_pair_gran_local.cpp 경로) · sha256 (64 hex) · host · date · build · formula_confirmed (사람이 add_pair
-    본문이 `PRODUCER_AREA_MODEL['formula']` 와 같음을 확인했다는 뜻 · true 여야 핀).  없거나 깨지면 pinned False + 사유 — 결과
-    (`contact_area_check`.producer_model) 에 그대로 실린다 (짐작하지 않는다 · 규율 ④)."""
+    ★ LHSC-04-R4-PIN (Codex 재검증 3 · 1저자 비준): 옛 판은 JSON 형식만 보고 installed_build_pinned=True 를 냈다 (없는 소스 · 0×64 해시 ·
+    build 없음에도).  이제 세 층을 나눈다 —
+      ① 자기 신고 (claim_present): schema · source_file · sha256 (64 hex) · host · date (YYYY-MM-DD) · build · formula_confirmed=true 가 다 있다.
+         사람이 적은 주장일 뿐이다 (1저자 셸 출력 + 공개 사본 대조 수준).
+      ② 로컬 대조 (source_hash_verified_locally): 이 기계에 있는 source 경로 (hosts[].path · 절대 경로 source_file) 를 **다시 해시**해 신고
+         sha 와 비교 — 전부 일치 True · 하나라도 불일치 False · 로컬에 하나도 없음 None (다른 기계의 소스는 여기서 확인할 수 없다).
+      ③ 설치 빌드 인증 (installed_build_pinned): 실행파일 sha · 실제 컴파일 명령 · 그 실행파일로 dump 를 만든 실행 영수증이 연결돼야 한다 —
+         그 증거를 받는 경로가 없으므로 **늘 False** (사유 문자열).  결과는 "공개 식 가정하의 진단" 으로 한정된다.
+    파일 = `path` · 환경변수 `LHS_PRODUCER_PIN_FILE` · 기본 `docs/data/liggghts_add_pair_pin.json` 순."""
     file = path or os.environ.get(PRODUCER_PIN_ENV) or PRODUCER_PIN_FILE
+    inst = ('설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — '
+            '결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)')
+    out = dict(claim_present=False, claim=None, claim_reason='', source_hash_verified_locally=None, verify_note='',
+               installed_build_pinned=False, installed_reason=inst, file=file)
     try:
         with open(file, encoding='utf-8') as fh:
             raw = json.load(fh)
     except (OSError, ValueError) as e:
-        return dict(pinned=False, pin=None, file=file, reason=f'pin 파일 없음 또는 못 읽음 ({type(e).__name__}) — 설치 빌드 add_pair 미인증')
+        out['claim_reason'] = f'pin 파일 없음 또는 못 읽음 ({type(e).__name__})'
+        return out
+    bad = []
     if not isinstance(raw, dict) or raw.get('schema') != PRODUCER_PIN_SCHEMA:
-        return dict(pinned=False, pin=None, file=file, reason=f'pin schema 가 {PRODUCER_PIN_SCHEMA} 가 아니다')
-    sha = raw.get('sha256')
-    if not (isinstance(sha, str) and re.fullmatch(r'[0-9a-f]{64}', sha)):
-        return dict(pinned=False, pin=None, file=file, reason='pin sha256 이 64 hex 가 아니다')
-    if not (isinstance(raw.get('source_file'), str) and raw['source_file'].strip()):
-        return dict(pinned=False, pin=None, file=file, reason='pin source_file 이 비었다')
+        bad.append(f'schema ≠ {PRODUCER_PIN_SCHEMA}')
+        raw = raw if isinstance(raw, dict) else {}
+    if not (isinstance(raw.get('sha256'), str) and re.fullmatch(r'[0-9a-f]{64}', raw['sha256'])):
+        bad.append('sha256 이 64 hex 가 아니다')
+    for k in ('source_file', 'host', 'build'):
+        if not (isinstance(raw.get(k), str) and raw[k].strip()):
+            bad.append(f'{k} 가 비었다')
+    if not (isinstance(raw.get('date'), str) and re.fullmatch(r'\d{4}-\d{2}-\d{2}', raw['date'])):
+        bad.append('date 가 YYYY-MM-DD 가 아니다')
     if raw.get('formula_confirmed') is not True:
-        return dict(pinned=False, pin=None, file=file, reason='formula_confirmed 가 true 가 아니다 (add_pair 본문 대조를 사람이 확인해야 핀)')
-    pin = {k: raw.get(k) for k in ('source_file', 'sha256', 'host', 'date', 'build')}
-    return dict(pinned=True, pin=pin, file=file, reason='')
+        bad.append('formula_confirmed 가 true 가 아니다 (add_pair 본문 대조를 사람이 확인해야 한다)')
+    if bad:
+        out['claim_reason'] = ' · '.join(bad)
+        return out
+    out['claim_present'] = True
+    out['claim'] = {k: raw.get(k) for k in ('source_file', 'sha256', 'host', 'date', 'build')}
+    cands = [(h_.get('path'), h_.get('sha256') or raw['sha256']) for h_ in (raw.get('hosts') or []) if isinstance(h_, dict)]
+    if os.path.isabs(raw['source_file']):
+        cands.append((raw['source_file'], raw['sha256']))
+    seen = []
+    for pth, sha in cands:
+        if isinstance(pth, str) and os.path.isfile(pth):
+            try:
+                with open(pth, 'rb') as fh:
+                    got = hashlib.sha256(fh.read()).hexdigest()
+            except OSError:
+                continue
+            seen.append((pth, got == sha))
+    if seen:
+        out['source_hash_verified_locally'] = all(ok for _, ok in seen)
+        out['verify_note'] = ' · '.join(f"{p_}: {'일치' if ok else '불일치'}" for p_, ok in seen)
+    else:
+        out['verify_note'] = '신고한 source 경로가 이 기계에 없다 — 로컬 대조 불가 (다른 기계의 소스)'
+    return out
 
 
 def _contact_area_rows(r1, r2, delta, area):
@@ -616,8 +665,10 @@ def contact_area_check(ids, labels, radius, c1, c2, carea, delta, pflag):
                 reference='lens_geometry.intersection_disc_area(r1, r2, delta = c_cpl[23]) — 두 구의 교차 원판 (L1-04 A_LIGG)',
                 compared_to=COL_AREA, delta_col=COL_DELTA, flag_col=COL_PERIODIC,
                 tolerance_rule=AREA_CHECK_TOL_RULE, sigfig_assumed=AREA_CHECK_SIGFIG, n_rows=n,
-                producer_model=dict(PRODUCER_AREA_MODEL, installed_build_pinned=_pin['pinned'], pin=_pin['pin'],
-                                    pin_reason=_pin['reason'], pin_file=_pin['file']))
+                producer_model=dict(PRODUCER_AREA_MODEL, source_claim_present=_pin['claim_present'], source_claim=_pin['claim'],
+                                    source_claim_reason=_pin['claim_reason'],
+                                    source_hash_verified_locally=_pin['source_hash_verified_locally'], source_verify_note=_pin['verify_note'],
+                                    installed_build_pinned=False, installed_build_reason=_pin['installed_reason'], pin_file=_pin['file']))
     if delta is None:
         return dict(base, status='NO_DELTA_COLUMN')
     labs = np.asarray([str(q) for q in labels], dtype=object)
@@ -2621,10 +2672,11 @@ def selftest():
                 if _env_prev is not None:
                     os.environ['LHS_PRODUCER_PIN_FILE'] = _env_prev
             _pm = _r_env.get('producer_model') or {}
-            chk('㉑‴ R3a: pin 파일 — 없음 → pinned False + 사유 · 형식 맞음 → True + sha 회신 · sha 형식 깨짐 → False + 사유 · 결과의 '
-                'producer_model 에 식 · 출처 · 오차 상한 문장 · pinned 가 실린다',
-                _pin0.get('pinned') is False and _pin0.get('reason') and _pin1.get('pinned') is True
-                and (_pin1.get('pin') or {}).get('sha256') == 'ab' * 32 and _pin2.get('pinned') is False and _pin2.get('reason')
+            chk('㉑‴ R3a (R4 에서 개정): pin 파일 — 없음 → 자기 신고 없음 + 사유 · 형식 맞음 → 자기 신고 있음 (설치 빌드 인증은 **False**) · '
+                'sha 형식 깨짐 → 자기 신고 없음 · 결과의 producer_model 에 식 · 출처 · 오차 상한 · installed_build_pinned False',
+                _pin0.get('claim_present') is False and _pin0.get('claim_reason') and _pin1.get('claim_present') is True
+                and (_pin1.get('claim') or {}).get('sha256') == 'ab' * 32 and _pin1.get('installed_build_pinned') is False
+                and _pin2.get('claim_present') is False and _pin2.get('claim_reason')
                 and _pm.get('installed_build_pinned') is False and all(k in _pm for k in ('formula', 'source', 'error_bound'))
                 and isinstance(_pam, dict) and 'add_pair' in _pam.get('source', ''))
         else:
@@ -2632,6 +2684,71 @@ def selftest():
         chk('㉑‴ R3a · R3b: 규칙 문자열 — 생산자 오차 모델 · 미인증 · 음수 면적 · 검출 보증 (n_detect_1pct) 을 적고 n_power_1pct · 고정 32·eps 는 없다',
             'n_producer_uncertified' in AREA_CHECK_TOL_RULE and 'n_detect_1pct' in AREA_CHECK_TOL_RULE and 'n_area_dump_negative' in AREA_CHECK_TOL_RULE
             and 'n_boundary_branch' in AREA_CHECK_TOL_RULE and 'n_power_1pct' not in AREA_CHECK_TOL_RULE and '32·eps' not in AREA_CHECK_TOL_RULE)
+
+        # ── ㉑⁗ ★ Codex LHSC-04-R4-PIN · R4-DOMAIN (09-30 밤 재검증 3 · 1저자 비준 "다 비준") — 반례 먼저 ──
+        #  R4-PIN: producer_pin 이 JSON 형식만 보고 installed_build_pinned=True — 없는 소스 · 0×64 해시 · build 없음 / add_pair 없는 파일에도.
+        #  계약: pin 파일은 **소스 · 식 자기 신고** (claim_present) 일 뿐 — 설치 빌드 인증 (installed_build_pinned) 은 실행파일 sha · 컴파일 명령 ·
+        #    dump 생산 실행 영수증이 없으면 **늘 False** · 자기 신고의 로컬 대조 (이 기계에 있는 source 경로를 다시 해시) 는 따로
+        #    (source_hash_verified_locally: True · False · None = 로컬에 없음).  host · date (YYYY-MM-DD) · build 가 비면 자기 신고도 아니다.
+        #  R4-DOMAIN: r = 1e-100 에서 네 인수 곱 · E 가 언더플로 → |오차| > E (d_min > 0 인데) — 지원 수치영역 (중간 곱 정상 범위) 밖은 미인증.
+        if _ppin is not None:
+            import json as _js4, hashlib as _hl4
+            _d4 = os.path.join(tmp, 'pin4'); os.makedirs(_d4, exist_ok=True)
+
+            def _pinw(obj, name):
+                _f4 = os.path.join(_d4, name)
+                with open(_f4, 'w', encoding='utf-8') as _fh:
+                    _js4.dump(obj, _fh)
+                return _ppin(_f4)
+            _src_ok = os.path.join(_d4, 'cpgl.cpp')
+            with open(_src_ok, 'w', encoding='utf-8') as _fh:
+                _fh.write('/* add_pair */\n')
+            _sha_ok = _hl4.sha256(open(_src_ok, 'rb').read()).hexdigest()
+            _wrong = os.path.join(_d4, 'wrong.cpp')
+            with open(_wrong, 'w', encoding='utf-8') as _fh:
+                _fh.write('/* deliberately no add_pair function */\n')
+            _base4 = dict(schema='liggghts_add_pair_pin/1', formula_confirmed=True, host='wsl', date='2026-09-30', build='lmp_serial')
+            _r4 = {
+                'codex_missing': _pinw(dict(schema='liggghts_add_pair_pin/1', source_file=os.path.join(_d4, 'nonexistent.cpp'),
+                                            sha256='0' * 64, formula_confirmed=True), 'a.json'),
+                'codex_wrong': _pinw(dict(schema='liggghts_add_pair_pin/1', source_file=_wrong, sha256='0' * 64, formula_confirmed=True,
+                                          host='unknown', date='not-a-date', build='unknown'), 'b.json'),
+                'claim_mismatch': _pinw(dict(_base4, source_file=_wrong, sha256='0' * 64), 'c.json'),
+                'claim_match': _pinw(dict(_base4, source_file=_src_ok, sha256=_sha_ok), 'd.json'),
+                'claim_remote': _pinw(dict(_base4, source_file='/no/such/host/path/cpgl.cpp', sha256='ab' * 32), 'e.json')}
+            chk('㉑⁗ ★ R4-PIN: Codex 반례 둘 (없는 소스 · 0×64 · host/date/build 없음 / add_pair 없는 파일 · 날짜 아님) 은 자기 신고도 아니고 '
+                '설치 빌드 인증은 False',
+                all(_r4[k].get('claim_present') is False and _r4[k].get('installed_build_pinned') is False for k in ('codex_missing', 'codex_wrong')))
+            chk('㉑⁗ ★ R4-PIN: 형식 맞는 자기 신고 — 로컬 파일 해시 불일치 → verified False · 일치 → True · 로컬에 없음 → None · '
+                '셋 다 installed_build_pinned **False** (사유 문자열)',
+                _r4['claim_mismatch'].get('claim_present') is True and _r4['claim_mismatch'].get('source_hash_verified_locally') is False
+                and _r4['claim_match'].get('source_hash_verified_locally') is True and _r4['claim_remote'].get('source_hash_verified_locally') is None
+                and all(_r4[k].get('installed_build_pinned') is False and _r4[k].get('installed_reason') for k in _r4))
+            _env4 = os.environ.pop('LHS_PRODUCER_PIN_FILE', None)
+            try:
+                os.environ['LHS_PRODUCER_PIN_FILE'] = os.path.join(_d4, 'd.json')
+                _pm4 = ((_cac([1, 2], ['AM_P', 'SE'], [2.0, 0.5], [1], [2], [_g6(_ida(2.0, 0.5, 0.05))], [0.05], [0])
+                         if (_cac is not None and _ida is not None) else {}).get('producer_model') or {})
+            finally:
+                os.environ.pop('LHS_PRODUCER_PIN_FILE', None)
+                if _env4 is not None:
+                    os.environ['LHS_PRODUCER_PIN_FILE'] = _env4
+            chk('㉑⁗ R4-PIN: 결과 producer_model — 자기 신고 · 로컬 대조가 참이어도 installed_build_pinned False · 이름이 자기 신고 수준 '
+                '(source_claim_present · source_hash_verified_locally)',
+                _pm4.get('installed_build_pinned') is False and _pm4.get('source_claim_present') is True
+                and _pm4.get('source_hash_verified_locally') is True and 'pinned' not in _pm4)
+        else:
+            chk('㉑⁗ R4-PIN: producer_pin 함수가 있다', False)
+        if _pae is not None and _peb is not None:
+            _Ed, _Ud = _peb(np.array([1e-100]), np.array([1e-100]), np.array([1e-100 + 1e-100 - 1.9e-100]), sig=None)
+            _dom = _cac1(1e-100, 1e-100, 1e-100 + 1e-100 - 1.9e-100, 0.0)
+            chk('㉑⁗ ★ R4-DOMAIN: r = 1e-100 · d 1.9e-100 (Codex — 인수 곱 · E 언더플로) 는 미인증 (지원 수치영역 밖) · 초과 0',
+                bool(_Ud[0]) and _dom.get('n_producer_uncertified') == 1 and _dom.get('n_beyond_tol') == 0)
+            chk('㉑⁗ R4-DOMAIN: 규칙 문자열 · 오차 모델에 지원 수치영역 (중간 곱 정상 범위) 과 n_tested 의 뜻 (인증 · 설치 빌드와 동의어 아님) 을 적는다',
+                '지원 수치영역' in AREA_CHECK_TOL_RULE and '지원 수치영역' in (_pam or {}).get('error_bound', '')
+                and '동의어가 아니다' in AREA_CHECK_TOL_RULE)
+        else:
+            chk('㉑⁗ R4-DOMAIN: 오차 상한 함수가 있다', False)
 
         # ── ㉒ item 3 (09-29 · 1저자 "권고대로") — 접촉 행의 문: 중복 · 자기쌍 **거부** · 고아 행 **기록** · 반례 먼저 ──
         #  ★ 반례: 같은 AM–SE 행이 두 번 — 옛 코드는 면적을 두 번 더해 AM_S 피복률 25 → 50 % 를 status OK 로 냈다.
