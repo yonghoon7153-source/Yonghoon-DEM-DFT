@@ -816,6 +816,8 @@ GAP_RESULT = REPORT.parents[3] / "db/properties/cei_gap_results_2026_09_19.json"
 HAZARDS = REPORT.parents[3] / "db/properties/citation_hazards.json"
 ESW = REPORT.parents[3] / "db/properties/cei_esw_Li_2026_09_16.json"
 _NDP_HZ = "HZ-cei-gap-ndp5o14-unreproduced"
+#: 2026-09-30 개정 비준(D-2026-09-30-cei-ndp5o14-reference-mismatch) — 표식에 참조 불일치를 같이 싣는다 (결정 statement ②)
+_NDP_MARK = '<span class="claim-mark">[미재현 · 참조 불일치]</span>'
 
 
 def _section(h, sid):
@@ -955,7 +957,7 @@ def test_s6_gap_table_is_10_of_10_and_matches_the_record(client):
     assert abs(nd["gap_eV"] - 5.393) < 1e-6 and "⛔" in nd, "원장의 NdP5O14 행이 바뀌었다 — 시험이 헛것을 재고 있다"
     rows = re.findall(r'<tr data-claim="%s">(.*?)</tr>' % _NDP_HZ, sec, re.S)
     assert len(rows) == 1 and "5.393" in rows[0], "미재현 값이 자기 id 요소 안에 없다"
-    assert '<span class="claim-mark">[미재현]</span>' in rows[0], "표식이 텍스트 노드가 아니다"
+    assert _NDP_MARK in rows[0], "표식이 텍스트 노드가 아니다"
     assert "0.053" in sec and "10/10" in sec
 
 
@@ -983,7 +985,7 @@ def test_ndp5o14_hazard_registered_bound_and_ledger_valid(client):
     assert C.validate_hazards() == [], C.validate_hazards()
     h = _report_html(client)
     assert h.count(f'data-claim="{_NDP_HZ}"') >= 2, "표 행과 예측 카드 둘 다 결속돼야 한다"
-    assert h.count('<span class="claim-mark">[미재현]</span>') >= 2
+    assert h.count(_NDP_MARK) >= 2
     assert _NDP_HZ in _section(h, "s9")
 
 
@@ -2343,6 +2345,10 @@ def test_ndp5o14_reference_mismatch_is_recorded_and_state_consistent(client):
     else:
         assert "비준 대기" not in h, "개정이 비준됐는데 화면이 아직 ‘비준 대기’ 다"
         assert "원인 미확정" not in json.dumps(hz, ensure_ascii=False), "개정이 비준됐는데 원장 조건이 옛 문구다"
+        assert hz["level"] == "CONDITIONAL" and "보조 비교" in hz["fix"] and "r2SCAN" in hz["why"], "비준된 조건 문구가 원장에 없다"
+        assert _NDP_MARK in s6 and "active" in s6, "화면 표식·상태가 비준 뒤 모양이 아니다"
+        rat = dec[0].get("ratification") or {}
+        assert rat.get("state") == "ratified" and rat.get("role") == "scientific_owner", rat
 
 
 # ── 회신 CM (2026-09-30 · 외부 인계본 리뷰 NO-GO) — P0 을 되살리지 못하게 묶는다 ──────────────
