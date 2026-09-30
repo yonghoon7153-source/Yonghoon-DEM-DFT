@@ -1,0 +1,600 @@
+{
+  "schema": "independent_review_package/1",
+  "verdict": "HOLD",
+  "input_zip": {
+    "path": "C:\\Users\\Administrator\\Downloads\\codex_lhs_coverage_reverify2_20260930.zip",
+    "bytes": 30334,
+    "sha256": "8761667a740c0962502c12db5605fd1c7b43d1ab1110267de1df13051275b235"
+  },
+  "source_unchanged_after_tests": true,
+  "prior_candidate_unchanged": true,
+  "validated_report_links": 16,
+  "python": "3.12.14",
+  "files": [
+    {
+      "path": "docs/reviews/codex_lhs_coverage_reverify2_verdict_20260930.md",
+      "bytes": 19442,
+      "sha256": "f95319582336a0fb5ea40c902b3eb36b87ea5460582a5bd6f1ad58c8d0c6470d"
+    },
+    {
+      "path": "docs/reviews/codex_lhs_coverage_reverify_verdict_20260930.md",
+      "bytes": 21660,
+      "sha256": "90d6aa4e16a44c9f3e5d675a933fab317434bf7a85c963c5432e797c52c4d09e"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/candidate/AGENTS.md",
+      "bytes": 2822,
+      "sha256": "38b8708ba8a50c8a08819c7c4138763bce02b6dc6c5b8112f4c8aa386fb17ec3"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/candidate/docs/reviews/selftest_inventory.tsv",
+      "bytes": 50916,
+      "sha256": "60baa67ce10ebefee38b6f05098240844b60888a8024b568f0f0fd249fc6a644"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/candidate/scripts/coverage_physics_vs_hertzian.py",
+      "bytes": 67336,
+      "sha256": "9fc669cdd987e5cc519fe78c4236a4507621f1f92accbff02062819a4d890614"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/candidate/scripts/lens_geometry.py",
+      "bytes": 5987,
+      "sha256": "627e4026dff27bce6c70ecbfff2f6258784410554883487960dfa9b3195a464b"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/candidate/scripts/lhs_descriptor_harvest.py",
+      "bytes": 177400,
+      "sha256": "fa6222e212d0f75cd8f0c94f73ed369ef70880d6ebebd724524f3282869e067a"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/candidate/scripts/lhs_webapp_batch.py",
+      "bytes": 41694,
+      "sha256": "6ba11f5a590ae92e58712897c1799e71dc4acc84aa9d0f3aa5956487ab2ed7ee"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/candidate/scripts/plastic_coverage.py",
+      "bytes": 78048,
+      "sha256": "7f9be36f391ca06bbde209504d415c9f135a6f71bc469631b55321caf75b538f"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/candidate/webapp/app.py",
+      "bytes": 600827,
+      "sha256": "40e34cc6d834c6835cb076c3eb86b7d9af863288cb2b0ff2ff56fbb54353c1e2"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/candidate/webapp/pipeline_service.py",
+      "bytes": 49033,
+      "sha256": "aad2508c4221d583a91159f3b661ae94d74f9c91e30cb22356ef311c35c9cf21"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/candidate/webapp/test_pipeline_provenance.py",
+      "bytes": 111664,
+      "sha256": "2998d76e19c0379a71ee680738dfc958da2aa6fe237c4e85d90e141f3e95b8c4"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/audit_geometry.py",
+      "bytes": 5019,
+      "sha256": "ee4faf7fb8b49850b20f0b9108c9a13765499a7b0695b667b94ac51d8dc524e2"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/audit_power.py",
+      "bytes": 2198,
+      "sha256": "44603ca2f75bb9342001382742a653e76e50433ce3f212f1cc675459f617c988"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/audit_producer.py",
+      "bytes": 2055,
+      "sha256": "5956014bde3121a270d193fb474c776a35075880e057d15b20333766c30492a9"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/audit_regression.py",
+      "bytes": 2802,
+      "sha256": "a09f2bc3aa9349c27c478d8f46332819765e1abcebd370fed7596f1af4405454"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/audit_schema.py",
+      "bytes": 6415,
+      "sha256": "09228df3a2c2be46f07191d26ed5d11cdd139f9df57a413fec92b9f0fe9866d8"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/batch_copy_control.log",
+      "bytes": 5088,
+      "sha256": "df5f7cd597ad7fb9afe82e475a4aeda4a9ac1a9e2701d509095c421e1afaa308"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/coverage_physics_vs_hertzian.log",
+      "bytes": 3912,
+      "sha256": "eceb8740acee69b2d3524a23993ecef1f4e5d7afc926ed84b3904a99b17000da"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/geometry_results.json",
+      "bytes": 47898,
+      "sha256": "32d9dbc95be9ef837486c5eaaea233fddddebb18978b04d86d5dedb4311059bc"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/harvest_LF_control.log",
+      "bytes": 17632,
+      "sha256": "73317dd46ac9e9b697600ae51be7bcca56789b4f47d9d256fae2a17815f6ca8e"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/lens_geometry.log",
+      "bytes": 921,
+      "sha256": "1f40d37a1894762e38bbd82b19938efb7a0d75c0a16d2f61e6ee6c486f8f0735"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/lhs_descriptor_harvest.log",
+      "bytes": 18003,
+      "sha256": "83461343ece2787355dea00f563107400ee8c8e3c85fbbbb00d035272bff7138"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/lhs_webapp_batch.log",
+      "bytes": 1390,
+      "sha256": "7ce53e8fe4587130a1471f2de872202a8b9c2948b7bffa65c8ef2cd8c36fb690"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/package_review.py",
+      "bytes": 3662,
+      "sha256": "079873b39dc4473d796fcb1785ea307082db113f1682e0dcab05dd918638643d"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/plastic_coverage.log",
+      "bytes": 3719,
+      "sha256": "de722311f2cdb56131cb4ead86c8404eb8a0e89d55f4a763fed76b1a5df2cc03"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/power_results.json",
+      "bytes": 9666,
+      "sha256": "8d359edf15b9442081032a705a739c451f64a03cba9d4b341861602232748cb7"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/producer_results.json",
+      "bytes": 24969,
+      "sha256": "4696efea0beeea98f21ce9a5876a83fce7356da1d9b7d8497ee1b64bd767a985"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/README.md",
+      "bytes": 4090,
+      "sha256": "3c2004ba2bdc8aabe4ca29e3aaa034a1029c7125f394291aebedc1cb1e0a9298"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/regression_results.json",
+      "bytes": 2405,
+      "sha256": "0fe67155f5bb0d086ee0ea5c18d557e92e5edfafa8b5317a943caa54ae2351c3"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/run_selftests.py",
+      "bytes": 1257,
+      "sha256": "eff806c756de71798c8aef75315001002bf7d46b7d84ca580dfd00a6be7ff909"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/base/atoms.csv",
+      "bytes": 250,
+      "sha256": "ad0cc3b3919927dae6a000814a496cac19b1eafd94d2a7175afc6b20fc808c2d"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/base/contacts.csv",
+      "bytes": 524,
+      "sha256": "667e245401ee2c209e17eb38b3083e5765ab8d3e2d9ad221fbd5b5f86c649e52"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/base/coverage_per_am.csv",
+      "bytes": 392,
+      "sha256": "34bc220d5996d6f9b256666f6b31e8339e00dae562ee71be8ae4fc79c5690733"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/base/full_metrics.json",
+      "bytes": 3862,
+      "sha256": "c69ea18fcb92fdcff529b8d6aff9c37c3d91f541c2799cc43d3abf3cbcc81ccb"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/base/meta.json",
+      "bytes": 65,
+      "sha256": "1208af9135dc778e8e2d5930fe934f2cbc73dc8099a963fd7097b266517f5133"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/base/se_clusters.json",
+      "bytes": 81,
+      "sha256": "0cbaf4d518845213ebad2fddd23fbd263a4488143482c14fc022e71f08a54947"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/denom_zero/atoms.csv",
+      "bytes": 319,
+      "sha256": "9fad67099f0394f6e6d844204bd7c3cdb4601fe16da8f08c0db28dfd72457adb"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/denom_zero/contacts.csv",
+      "bytes": 737,
+      "sha256": "b8170c73c1a4cec7aa045e2341b2a23e9e0de99e1204d64ba9da2483202993b4"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/denom_zero/coverage_per_am.csv",
+      "bytes": 571,
+      "sha256": "f3dd00f02b5bbfa1291f954d04999f1bb0c97f629f902fd835d4a4692b9dbdf1"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/denom_zero/full_metrics.json",
+      "bytes": 3838,
+      "sha256": "c7875e6f68c6018a255e5417b43ed6733668317bea2bea15e801f5bf2d41f248"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/denom_zero/meta.json",
+      "bytes": 71,
+      "sha256": "c35c29e3bfb3b219aa043ffa3ccab9cd6cce6dc86a6366d7845a086f97c8b788"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/denom_zero/se_clusters.json",
+      "bytes": 81,
+      "sha256": "0cbaf4d518845213ebad2fddd23fbd263a4488143482c14fc022e71f08a54947"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/isolated_zero/atoms.csv",
+      "bytes": 273,
+      "sha256": "6fa60039eab38091f9997ae34226007d68fd9c0603fa2fca4fd0d8e78e6747ba"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/isolated_zero/contacts.csv",
+      "bytes": 524,
+      "sha256": "667e245401ee2c209e17eb38b3083e5765ab8d3e2d9ad221fbd5b5f86c649e52"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/isolated_zero/coverage_per_am.csv",
+      "bytes": 451,
+      "sha256": "34b4f09bfc187be1c33768814de633ff9c6b808098c4630bb0c3fcbbd2f4e2cd"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/isolated_zero/full_metrics.json",
+      "bytes": 3869,
+      "sha256": "c1f89cff6dde8fecf0f886531fbdaa98caea7779c9da0018a6d53a23c9880eab"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/isolated_zero/meta.json",
+      "bytes": 74,
+      "sha256": "29d4601438da0bd32d70bdff0bc409e4d735cead783dec865d38256f8d03bc7d"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/isolated_zero/se_clusters.json",
+      "bytes": 81,
+      "sha256": "0cbaf4d518845213ebad2fddd23fbd263a4488143482c14fc022e71f08a54947"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/area_nan/full_metrics.json",
+      "bytes": 3474,
+      "sha256": "246d0846a95245b4677b2fbfe93253e8d3649b3f4b760eab75c1fbda109a6e6a"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/area_negative/full_metrics.json",
+      "bytes": 3475,
+      "sha256": "af7384a5df7c514b248df10dda54e8902999dccaea393fb7da4d7500841c4760"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/area_string/full_metrics.json",
+      "bytes": 3479,
+      "sha256": "b83319e00deaa27291bf9e9df785421a23bab18e0a116d23028e3f4827748cc9"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/blank_bad_film/full_metrics.json",
+      "bytes": 3388,
+      "sha256": "f79e5dd4516050b51ef40c7ccc52b4fe8c711b48a5d70e27a73bc5191135c119"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/blank_missing_film/full_metrics.json",
+      "bytes": 3350,
+      "sha256": "82010b95ce9c783eb19a557cbb63f3a2924cfd2d21d4bd69ac12727404360ce4"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/blank_none_rule/full_metrics.json",
+      "bytes": 2716,
+      "sha256": "5c8ebc5287dec6258c403472d7f2c47376ce03ab2f4897592453016a6a87f707"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/blank_with_positive_values/full_metrics.json",
+      "bytes": 3501,
+      "sha256": "93300ea07507cf5fc24b2e6afaa54d8f8abf14be53955fa366984176c155622c"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/contradictory_count_totals/full_metrics.json",
+      "bytes": 3481,
+      "sha256": "01be0e59317a75d53811848a9fed887a2f14eeb8ce3d455a64990dd70b11058f"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/coverage_negative/full_metrics.json",
+      "bytes": 3474,
+      "sha256": "4b96e9e1d80f9f2814afcc5ebdfc3b22b7f8d81824436ce8beafeee8bf077910"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/empty_count_dicts/full_metrics.json",
+      "bytes": 3226,
+      "sha256": "7b4ab46ab55d2e8a2eb661244aa9676bd145ee7a9acbcecaa58c6d151ca907b8"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/huge_integer_area/full_metrics.json",
+      "bytes": 3872,
+      "sha256": "5b2d3c19d99b166fa467b32103ee353db9f2d0373f653838cdface7e68d5941d"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/missing_fractions/full_metrics.json",
+      "bytes": 3374,
+      "sha256": "627f038825351328c23b55640d28e2c53ada6adbc9d1d99dbe7adb426aad96aa"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/missing_n_am_and_coverage/full_metrics.json",
+      "bytes": 3252,
+      "sha256": "87f7167800035eea61c8e08fbcd09ca2b5a8f48884fb53f1a2a2218c16971425"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/n_am_zero_positive_area/full_metrics.json",
+      "bytes": 1907,
+      "sha256": "e9d189306db00323ea5cc7c0b7b84e7a643dad8e73851ff02a2b0510b1c40dc7"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/nan_n_am_and_no_coverage/full_metrics.json",
+      "bytes": 3270,
+      "sha256": "16384879833e61cd4bf0804d6d774704f336a554b45d249bbedbc8904dd15fc5"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/negative_n_am_and_no_coverage/full_metrics.json",
+      "bytes": 3269,
+      "sha256": "711b1e8bc22fc2f5c9073c4fce5f4a15f0f098856038d55545123ab40c60b5c2"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/none_fractions/full_metrics.json",
+      "bytes": 3467,
+      "sha256": "48453605a0262c699d921452162c35a85c4848b8c6e04dddd77f43c0b2ae3bfa"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/ok_but_contact_failures/full_metrics.json",
+      "bytes": 3475,
+      "sha256": "d24cf0b66f77538216124ff5f2108200df13996ec3c796ea5019a1f41121984b"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/ok_but_invalid_denom_count/full_metrics.json",
+      "bytes": 3475,
+      "sha256": "21f392313585f734039746fd6add7ffce92b95fb15c8ed9f7711048a011ccaec"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/unknown_binding_keys/full_metrics.json",
+      "bytes": 3414,
+      "sha256": "b836212280c905a295a7efeea94a9d1474fa35fa57b5976e88baf171ebec9ab4"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/wrong_fractions/full_metrics.json",
+      "bytes": 3470,
+      "sha256": "f43e4961b9602e55ceda37d939540815b76f8b51767c5bfe5a5d45f6d0f7b625"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/mutations/zero_contacts_positive_area/full_metrics.json",
+      "bytes": 3474,
+      "sha256": "33ac5b1b8d9dec50c23cf33b2e4ff7387556e0fb1ba7a51e0198418d6a1cdd52"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/nan_delta/atoms.csv",
+      "bytes": 250,
+      "sha256": "ad0cc3b3919927dae6a000814a496cac19b1eafd94d2a7175afc6b20fc808c2d"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/nan_delta/contacts.csv",
+      "bytes": 505,
+      "sha256": "f7e1a8f4638d6e45062470db2be049d25023425e968f5a0f3b3a443d4ec90c75"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/nan_delta/coverage_per_am.csv",
+      "bytes": 392,
+      "sha256": "bcb2685e6896a027fb28f0fd27e8a8b2f74f24799b5ae2bb8c7853a7cb4ed9d2"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/nan_delta/full_metrics.json",
+      "bytes": 3778,
+      "sha256": "85c4803fa500ef60b47e19ca9ffeebaa3074afe88ca4023bd4468e29c0a82c82"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/nan_delta/meta.json",
+      "bytes": 70,
+      "sha256": "f7427b262fb4222f4c79f5f8579db6300b1fa485626d5427a9d091cf824beb63"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/nan_delta/se_clusters.json",
+      "bytes": 81,
+      "sha256": "0cbaf4d518845213ebad2fddd23fbd263a4488143482c14fc022e71f08a54947"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/nan_radius/atoms.csv",
+      "bytes": 271,
+      "sha256": "2efe4320d8672d2a3c786f6f5bad10884f3f4b67a5c2900be24589a2a3eff5a4"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/nan_radius/contacts.csv",
+      "bytes": 524,
+      "sha256": "667e245401ee2c209e17eb38b3083e5765ab8d3e2d9ad221fbd5b5f86c649e52"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/nan_radius/coverage_per_am.csv",
+      "bytes": 436,
+      "sha256": "8bd81b84048262c476c5ecb661fd8a4bb29acb2b894e4781dccf7ff97ad9dfa7"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/nan_radius/full_metrics.json",
+      "bytes": 3845,
+      "sha256": "c7061a4ffa4493d029a1783191f5bae323503fe9d4824e7607385cf2aa96e0d7"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/nan_radius/meta.json",
+      "bytes": 71,
+      "sha256": "dc8fa8575a44b637ca15c479858521e6c3524bb78b809e6c95750e2237004bf6"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/nan_radius/se_clusters.json",
+      "bytes": 81,
+      "sha256": "0cbaf4d518845213ebad2fddd23fbd263a4488143482c14fc022e71f08a54947"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/no_ligg_col/atoms.csv",
+      "bytes": 250,
+      "sha256": "ad0cc3b3919927dae6a000814a496cac19b1eafd94d2a7175afc6b20fc808c2d"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/no_ligg_col/contacts.csv",
+      "bytes": 260,
+      "sha256": "97a9b79f88936a7ce9af1f6335a0de33f6a7bd67e94583b3f3446ff3f192c9d0"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/no_ligg_col/coverage_per_am.csv",
+      "bytes": 377,
+      "sha256": "5eda29bdb179764c25b4ba5c0667c323dbd69c0c37752af02d36cfdc67802707"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/no_ligg_col/full_metrics.json",
+      "bytes": 3580,
+      "sha256": "ab99ce9adb741a85889728259acbb5c290b759f5b1d843cf60a86f357201b294"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/no_ligg_col/meta.json",
+      "bytes": 72,
+      "sha256": "a597ae4c1d342796e9e745ff905834254fc3e15ce787b51586f60c845de1464f"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/no_ligg_col/se_clusters.json",
+      "bytes": 81,
+      "sha256": "0cbaf4d518845213ebad2fddd23fbd263a4488143482c14fc022e71f08a54947"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/scale1/atoms.csv",
+      "bytes": 250,
+      "sha256": "ad0cc3b3919927dae6a000814a496cac19b1eafd94d2a7175afc6b20fc808c2d"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/scale1/contacts.csv",
+      "bytes": 524,
+      "sha256": "667e245401ee2c209e17eb38b3083e5765ab8d3e2d9ad221fbd5b5f86c649e52"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/scale1/coverage_per_am.csv",
+      "bytes": 374,
+      "sha256": "c4ea068054e2005288f5fcda53ac75e700507c9c1bf803bf0cb1341bbdaf9036"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/scale1/full_metrics.json",
+      "bytes": 3870,
+      "sha256": "473e5f6a8adc4657350aae727b6934b1d673d322d21c4b436c19255aeb9c1192"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/scale1/meta.json",
+      "bytes": 64,
+      "sha256": "16813a808edbc18c2b97eb69d9f7eab429696b7133c7e9399f63617b21083fba"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/scale1/se_clusters.json",
+      "bytes": 81,
+      "sha256": "0cbaf4d518845213ebad2fddd23fbd263a4488143482c14fc022e71f08a54947"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/se_only/atoms.csv",
+      "bytes": 62,
+      "sha256": "78dbeaf426da86f314eb59dc134f16b02ac05c11970f058018699e7825e8a0d5"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/se_only/contacts.csv",
+      "bytes": 28,
+      "sha256": "3df18dfb5de3ad493400a7f719eba22c728af10e074c86d16c7bcca48e48607f"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/se_only/full_metrics.json",
+      "bytes": 2286,
+      "sha256": "0d642a7a24f366716c5f7546db57221c7f32c4c0bb5598878ca1b6a966068a64"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/se_only/meta.json",
+      "bytes": 68,
+      "sha256": "b1af82d0a3b41babf18e605c0f3476dbb51512515d980d9a5ee60ec9675276db"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_fixtures/se_only/se_clusters.json",
+      "bytes": 81,
+      "sha256": "0cbaf4d518845213ebad2fddd23fbd263a4488143482c14fc022e71f08a54947"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/schema_results.json",
+      "bytes": 54087,
+      "sha256": "651b569b427b9f2900568b74c9223b3e2d658fca729e1b463ee2a97065680bab"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/selftests.json",
+      "bytes": 4347,
+      "sha256": "b3e0953c3fb2cf016728c8f16f1df52278cefd3651066b8566d2db7c7cb6fe14"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/evidence/test_pipeline_provenance.log",
+      "bytes": 19383,
+      "sha256": "511b1af4cb044b9d3abc00132d39a3ffdbce69a22fd2d3e04d2f485a66696f24"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/prepare.py",
+      "bytes": 3026,
+      "sha256": "5fae309c6c82c19c16173bf6f9742149dc547253f89fc0ce614635819112dfe0"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/source_manifest.json",
+      "bytes": 7816,
+      "sha256": "dbd208f7634f7e0fd7b3c8519777dff4cb7b231b7c583f6af5c04858bc00332d"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/submitted/codex_lhs_coverage_reverify2_request_20260930/0012-LHS-item-2-Codex-LHSC-04-R2-P2.patch",
+      "bytes": 42080,
+      "sha256": "f582bd0bb12766a1471908ea8a615879f52d94ed4d9fb79320c73d07b7c2eddf"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/submitted/codex_lhs_coverage_reverify2_request_20260930/0013-run_pipeline-coverage-v2-Codex-LHSC-03-R2-P2.patch",
+      "bytes": 18702,
+      "sha256": "c8dd2ddcb0fc48fa1e2bc11301ca20382a5bcc25ef02415fe75cce8f8d747539"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/submitted/codex_lhs_coverage_reverify2_request_20260930/_reproduction_r2_wtcov_ca0471d19.json",
+      "bytes": 4634,
+      "sha256": "43c26552498fc4994e61daea3f2ab1f253799ef31c00508c1d72fc0974c054d5"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/submitted/codex_lhs_coverage_reverify2_request_20260930/README.md",
+      "bytes": 1374,
+      "sha256": "6b66395550766bcf738616cb6e5c6e8695c09e5cade49eae8e7f1bf46890b128"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/submitted/codex_lhs_coverage_reverify2_request_20260930/selftests_ca0471d19.log",
+      "bytes": 735,
+      "sha256": "7c27a150249b08b5d9b849e1f835121b5cdf90c84290eb5555adc3b78978b958"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/submitted/codex_lhs_coverage_reverify2_request_20260930/SHA256SUMS",
+      "bytes": 705,
+      "sha256": "9ad572f767e45253f176faf075747dd1ebbed934b68fda8b89a2d486dbf9e0b0"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/submitted/codex_lhs_coverage_reverify2_request_20260930/source_manifest.json",
+      "bytes": 867,
+      "sha256": "d8853eca5993de751dbd3e557e9912d6a87a943e9a4b1c91e5a2e465c3ba354b"
+    },
+    {
+      "path": "lhs_coverage_reverify2_20260930/submitted/codex_lhs_coverage_reverify2_request_20260930.md",
+      "bytes": 9770,
+      "sha256": "2848c3f6ad32f4a398ceb84ac01495a1a1ff591111a8bf55ddf9454e4ba3c6a1"
+    },
+    {
+      "path": "lhs_coverage_reverify_20260930/source_manifest.json",
+      "bytes": 4529,
+      "sha256": "bb139ba40c0cf824bd8918c0bebf2ac8a38e55cf4d3b3ef22201cb89abb42746"
+    },
+    {
+      "path": "lhs_coverage_reverify_evidence_20260930/prior_audit_results.json",
+      "bytes": 19851,
+      "sha256": "dce5f95708bf48e70d7f9c28427aaa313526c034d26f4a65f97bd598f6875756"
+    },
+    {
+      "path": "lhs_coverage_review_20260930/baseline/scripts/lhs_descriptor_harvest.py",
+      "bytes": 97285,
+      "sha256": "c4d4679879883ce8e388757dbffd17479e692b5b56bb2f327ba3751cbcaae20f"
+    }
+  ],
+  "limitations": [
+    "Partial source bundle, not a complete executable repository",
+    "No DEM/native LIGGGHTS/remote jobs/production batch",
+    "Official producer expression scalar evaluation is not an installed-build execution"
+  ]
+}

@@ -1,0 +1,1185 @@
+{
+  "positive_controls": {
+    "base": {
+      "accepted": true,
+      "status": "ok",
+      "diag": {
+        "n_am": 2,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      }
+    },
+    "denom_zero": {
+      "accepted": true,
+      "status": "blank: AM 4 개의 v2 자유 표면 ≤ 0 = 분모 무효 (첫 사례 id 2: 4πr² 1.257e-05 − ΣA_v2(AM–AM) 2.142e-05 = -8.851e-06 — 이웃 AM–AM v2 면적 합이 표면적 이상) (LHSC-01)",
+      "diag": {
+        "n_am": 5,
+        "n_free_surface_nonpositive": 4,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      }
+    },
+    "nan_radius": {
+      "accepted": true,
+      "status": "blank: AM 1 개의 반경 · 표면적이 유한 양수가 아니다 (첫 사례 id 14: r=nan) — 분모를 만들 수 없다 (LHSC-01)",
+      "diag": {
+        "n_am": 3,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 1
+      }
+    },
+    "isolated_zero": {
+      "accepted": true,
+      "status": "ok",
+      "diag": {
+        "n_am": 3,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      }
+    },
+    "nan_delta": {
+      "accepted": true,
+      "status": "blank: 1 접촉을 film_area_physics_v2 가 거부했다 — 첫 사례 1–5: ValueError: delta 비유한 (nan)",
+      "diag": {
+        "n_am": 2,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      }
+    },
+    "scale1": {
+      "accepted": true,
+      "status": "blank: scale=1 ≠ 1000 — 이 코드의 두 길이 규약 (µm = sim×scale · SI = sim/scale) 이 1000 에서만 같아 5 nm 막을 덤프 단위로 옮길 수 없다",
+      "diag": {
+        "n_am": 2,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      }
+    },
+    "no_ligg_col": {
+      "accepted": true,
+      "status": "blank: contacts.csv 에 contact_area 열이 없다",
+      "diag": {
+        "n_am": 2,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      }
+    },
+    "se_only": {
+      "accepted": true,
+      "status": "ok",
+      "diag": {
+        "n_am": 0,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      }
+    }
+  },
+  "old_mutations": {
+    "missing_n_am_and_coverage": {
+      "accepted": false,
+      "v2_record": {
+        "area_AM전체_SE_total_physics_v2": 0.69,
+        "area_SE_SE_total_physics_v2": 1.96,
+        "area_AM전체_AM_total_physics_v2": 2.57,
+        "n_contacts_physics_v2": 11,
+        "n_cap_branch_physics_v2": 9,
+        "cap_conflict_n_physics_v2": 2,
+        "cap_conflict_frac_physics_v2": 0.181818,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.222222,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 2,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 1,
+          "tabor": 5,
+          "volume": 3,
+          "geom": 1,
+          "none": 1
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 1,
+          "tabor": 3,
+          "volume": 2,
+          "geom": 0,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      },
+      "stage": {
+        "step": "Coverage Physics vs Hertzian",
+        "stdout": "synthetic record mutation; producer execution substituted",
+        "stderr": "",
+        "rc": 0,
+        "ok": false,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": true
+      },
+      "pipeline_status": "failed",
+      "failed_stages": [
+        {
+          "step": "Coverage Physics vs Hertzian",
+          "stdout": "synthetic record mutation; producer execution substituted",
+          "stderr": "",
+          "rc": 0,
+          "ok": false,
+          "required": true,
+          "missing_outputs": [],
+          "stale_outputs": [],
+          "verify_failed": true
+        }
+      ]
+    },
+    "negative_n_am_and_no_coverage": {
+      "accepted": false,
+      "v2_record": {
+        "area_AM전체_SE_total_physics_v2": 0.69,
+        "area_SE_SE_total_physics_v2": 1.96,
+        "area_AM전체_AM_total_physics_v2": 2.57,
+        "n_contacts_physics_v2": 11,
+        "n_cap_branch_physics_v2": 9,
+        "cap_conflict_n_physics_v2": 2,
+        "cap_conflict_frac_physics_v2": 0.181818,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.222222,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 2,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 1,
+          "tabor": 5,
+          "volume": 3,
+          "geom": 1,
+          "none": 1
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 1,
+          "tabor": 3,
+          "volume": 2,
+          "geom": 0,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": -1,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    },
+    "nan_n_am_and_no_coverage": {
+      "accepted": false,
+      "v2_record": {
+        "area_AM전체_SE_total_physics_v2": 0.69,
+        "area_SE_SE_total_physics_v2": 1.96,
+        "area_AM전체_AM_total_physics_v2": 2.57,
+        "n_contacts_physics_v2": 11,
+        "n_cap_branch_physics_v2": 9,
+        "cap_conflict_n_physics_v2": 2,
+        "cap_conflict_frac_physics_v2": 0.181818,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.222222,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 2,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 1,
+          "tabor": 5,
+          "volume": 3,
+          "geom": 1,
+          "none": 1
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 1,
+          "tabor": 3,
+          "volume": 2,
+          "geom": 0,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": NaN,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    },
+    "ok_but_invalid_denom_count": {
+      "accepted": false,
+      "v2_record": {
+        "coverage_AM_P_mean_physics_v2": 1.195,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 1.241,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 1.218,
+        "area_AM전체_SE_total_physics_v2": 0.69,
+        "area_SE_SE_total_physics_v2": 1.96,
+        "area_AM전체_AM_total_physics_v2": 2.57,
+        "n_contacts_physics_v2": 11,
+        "n_cap_branch_physics_v2": 9,
+        "cap_conflict_n_physics_v2": 2,
+        "cap_conflict_frac_physics_v2": 0.181818,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.222222,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 2,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 1,
+          "tabor": 5,
+          "volume": 3,
+          "geom": 1,
+          "none": 1
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 1,
+          "tabor": 3,
+          "volume": 2,
+          "geom": 0,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 1,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    },
+    "area_nan": {
+      "accepted": false,
+      "v2_record": {
+        "coverage_AM_P_mean_physics_v2": 1.195,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 1.241,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 1.218,
+        "area_AM전체_SE_total_physics_v2": NaN,
+        "area_SE_SE_total_physics_v2": 1.96,
+        "area_AM전체_AM_total_physics_v2": 2.57,
+        "n_contacts_physics_v2": 11,
+        "n_cap_branch_physics_v2": 9,
+        "cap_conflict_n_physics_v2": 2,
+        "cap_conflict_frac_physics_v2": 0.181818,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.222222,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 2,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 1,
+          "tabor": 5,
+          "volume": 3,
+          "geom": 1,
+          "none": 1
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 1,
+          "tabor": 3,
+          "volume": 2,
+          "geom": 0,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      },
+      "stage": {
+        "step": "Coverage Physics vs Hertzian",
+        "stdout": "synthetic record mutation; producer execution substituted",
+        "stderr": "",
+        "rc": 0,
+        "ok": false,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": true
+      },
+      "pipeline_status": "failed",
+      "failed_stages": [
+        {
+          "step": "Coverage Physics vs Hertzian",
+          "stdout": "synthetic record mutation; producer execution substituted",
+          "stderr": "",
+          "rc": 0,
+          "ok": false,
+          "required": true,
+          "missing_outputs": [],
+          "stale_outputs": [],
+          "verify_failed": true
+        }
+      ]
+    },
+    "area_string": {
+      "accepted": false,
+      "v2_record": {
+        "coverage_AM_P_mean_physics_v2": 1.195,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 1.241,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 1.218,
+        "area_AM전체_SE_total_physics_v2": "broken",
+        "area_SE_SE_total_physics_v2": 1.96,
+        "area_AM전체_AM_total_physics_v2": 2.57,
+        "n_contacts_physics_v2": 11,
+        "n_cap_branch_physics_v2": 9,
+        "cap_conflict_n_physics_v2": 2,
+        "cap_conflict_frac_physics_v2": 0.181818,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.222222,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 2,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 1,
+          "tabor": 5,
+          "volume": 3,
+          "geom": 1,
+          "none": 1
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 1,
+          "tabor": 3,
+          "volume": 2,
+          "geom": 0,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    },
+    "area_negative": {
+      "accepted": false,
+      "v2_record": {
+        "coverage_AM_P_mean_physics_v2": 1.195,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 1.241,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 1.218,
+        "area_AM전체_SE_total_physics_v2": -1.0,
+        "area_SE_SE_total_physics_v2": 1.96,
+        "area_AM전체_AM_total_physics_v2": 2.57,
+        "n_contacts_physics_v2": 11,
+        "n_cap_branch_physics_v2": 9,
+        "cap_conflict_n_physics_v2": 2,
+        "cap_conflict_frac_physics_v2": 0.181818,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.222222,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 2,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 1,
+          "tabor": 5,
+          "volume": 3,
+          "geom": 1,
+          "none": 1
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 1,
+          "tabor": 3,
+          "volume": 2,
+          "geom": 0,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    },
+    "coverage_negative": {
+      "accepted": false,
+      "v2_record": {
+        "coverage_AM_P_mean_physics_v2": 1.195,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 1.241,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": -1.0,
+        "area_AM전체_SE_total_physics_v2": 0.69,
+        "area_SE_SE_total_physics_v2": 1.96,
+        "area_AM전체_AM_total_physics_v2": 2.57,
+        "n_contacts_physics_v2": 11,
+        "n_cap_branch_physics_v2": 9,
+        "cap_conflict_n_physics_v2": 2,
+        "cap_conflict_frac_physics_v2": 0.181818,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.222222,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 2,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 1,
+          "tabor": 5,
+          "volume": 3,
+          "geom": 1,
+          "none": 1
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 1,
+          "tabor": 3,
+          "volume": 2,
+          "geom": 0,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    },
+    "ok_but_contact_failures": {
+      "accepted": false,
+      "v2_record": {
+        "coverage_AM_P_mean_physics_v2": 1.195,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 1.241,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 1.218,
+        "area_AM전체_SE_total_physics_v2": 0.69,
+        "area_SE_SE_total_physics_v2": 1.96,
+        "area_AM전체_AM_total_physics_v2": 2.57,
+        "n_contacts_physics_v2": 11,
+        "n_cap_branch_physics_v2": 9,
+        "cap_conflict_n_physics_v2": 2,
+        "cap_conflict_frac_physics_v2": 0.181818,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.222222,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 2,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 1,
+          "tabor": 5,
+          "volume": 3,
+          "geom": 1,
+          "none": 1
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 1,
+          "tabor": 3,
+          "volume": 2,
+          "geom": 0,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 1,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    },
+    "blank_with_positive_values": {
+      "accepted": false,
+      "v2_record": {
+        "coverage_AM_P_mean_physics_v2": 1.195,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 1.241,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 1.218,
+        "area_AM전체_SE_total_physics_v2": 0.69,
+        "area_SE_SE_total_physics_v2": 1.96,
+        "area_AM전체_AM_total_physics_v2": 2.57,
+        "n_contacts_physics_v2": 11,
+        "n_cap_branch_physics_v2": 9,
+        "cap_conflict_n_physics_v2": 2,
+        "cap_conflict_frac_physics_v2": 0.181818,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.222222,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 2,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 1,
+          "tabor": 5,
+          "volume": 3,
+          "geom": 1,
+          "none": 1
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 1,
+          "tabor": 3,
+          "volume": 2,
+          "geom": 0,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "blank: undefined denominator",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    }
+  },
+  "additional_mutations": {
+    "missing_fractions": {
+      "accepted": true,
+      "v2_record": {
+        "coverage_AM_P_mean_physics_v2": 1.195,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 1.241,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 1.218,
+        "area_AM전체_SE_total_physics_v2": 0.69,
+        "area_SE_SE_total_physics_v2": 1.96,
+        "area_AM전체_AM_total_physics_v2": 2.57,
+        "n_contacts_physics_v2": 11,
+        "n_cap_branch_physics_v2": 9,
+        "cap_conflict_n_physics_v2": 2,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 2,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 1,
+          "tabor": 5,
+          "volume": 3,
+          "geom": 1,
+          "none": 1
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 1,
+          "tabor": 3,
+          "volume": 2,
+          "geom": 0,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    },
+    "none_fractions": {
+      "accepted": true,
+      "v2_record": {
+        "coverage_AM_P_mean_physics_v2": 1.195,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 1.241,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 1.218,
+        "area_AM전체_SE_total_physics_v2": 0.69,
+        "area_SE_SE_total_physics_v2": 1.96,
+        "area_AM전체_AM_total_physics_v2": 2.57,
+        "n_contacts_physics_v2": 11,
+        "n_cap_branch_physics_v2": 9,
+        "cap_conflict_n_physics_v2": 2,
+        "cap_conflict_frac_physics_v2": null,
+        "cap_conflict_frac_cap_branch_physics_v2": null,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 2,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 1,
+          "tabor": 5,
+          "volume": 3,
+          "geom": 1,
+          "none": 1
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 1,
+          "tabor": 3,
+          "volume": 2,
+          "geom": 0,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      },
+      "stage": {
+        "step": "Coverage Physics vs Hertzian",
+        "stdout": "synthetic record mutation; producer execution substituted",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      },
+      "pipeline_status": "done",
+      "failed_stages": []
+    },
+    "wrong_fractions": {
+      "accepted": true,
+      "v2_record": {
+        "coverage_AM_P_mean_physics_v2": 1.195,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 1.241,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 1.218,
+        "area_AM전체_SE_total_physics_v2": 0.69,
+        "area_SE_SE_total_physics_v2": 1.96,
+        "area_AM전체_AM_total_physics_v2": 2.57,
+        "n_contacts_physics_v2": 11,
+        "n_cap_branch_physics_v2": 9,
+        "cap_conflict_n_physics_v2": 0,
+        "cap_conflict_frac_physics_v2": 1.0,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.222222,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 2,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 1,
+          "tabor": 5,
+          "volume": 3,
+          "geom": 1,
+          "none": 1
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 1,
+          "tabor": 3,
+          "volume": 2,
+          "geom": 0,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    },
+    "empty_count_dicts": {
+      "accepted": true,
+      "v2_record": {
+        "coverage_AM_P_mean_physics_v2": 1.195,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 1.241,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 1.218,
+        "area_AM전체_SE_total_physics_v2": 0.69,
+        "area_SE_SE_total_physics_v2": 1.96,
+        "area_AM전체_AM_total_physics_v2": 2.57,
+        "n_contacts_physics_v2": 11,
+        "n_cap_branch_physics_v2": 9,
+        "cap_conflict_n_physics_v2": 2,
+        "cap_conflict_frac_physics_v2": 0.181818,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.222222,
+        "cap_conflict_n_by_pair_physics_v2": {},
+        "A_binding_counts_total_physics_v2": {},
+        "A_binding_counts_AM_SE_physics_v2": {},
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      },
+      "stage": {
+        "step": "Coverage Physics vs Hertzian",
+        "stdout": "synthetic record mutation; producer execution substituted",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      },
+      "pipeline_status": "done",
+      "failed_stages": []
+    },
+    "unknown_binding_keys": {
+      "accepted": true,
+      "v2_record": {
+        "coverage_AM_P_mean_physics_v2": 1.195,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 1.241,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 1.218,
+        "area_AM전체_SE_total_physics_v2": 0.69,
+        "area_SE_SE_total_physics_v2": 1.96,
+        "area_AM전체_AM_total_physics_v2": 2.57,
+        "n_contacts_physics_v2": 11,
+        "n_cap_branch_physics_v2": 9,
+        "cap_conflict_n_physics_v2": 2,
+        "cap_conflict_frac_physics_v2": 0.181818,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.222222,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 2,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "not_a_branch": 11
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 1,
+          "tabor": 3,
+          "volume": 2,
+          "geom": 0,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    },
+    "contradictory_count_totals": {
+      "accepted": true,
+      "v2_record": {
+        "coverage_AM_P_mean_physics_v2": 1.195,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 1.241,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 1.218,
+        "area_AM전체_SE_total_physics_v2": 0.69,
+        "area_SE_SE_total_physics_v2": 1.96,
+        "area_AM전체_AM_total_physics_v2": 2.57,
+        "n_contacts_physics_v2": 11,
+        "n_cap_branch_physics_v2": 9,
+        "cap_conflict_n_physics_v2": 2,
+        "cap_conflict_frac_physics_v2": 0.181818,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.222222,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 2,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 1000000,
+          "tabor": 5,
+          "volume": 3,
+          "geom": 1,
+          "none": 1
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 1,
+          "tabor": 3,
+          "volume": 2,
+          "geom": 0,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    },
+    "n_am_zero_positive_area": {
+      "accepted": true,
+      "v2_record": {
+        "area_AM전체_SE_total_physics_v2": 123.0,
+        "area_SE_SE_total_physics_v2": 0.0,
+        "area_AM전체_AM_total_physics_v2": 0.0,
+        "n_contacts_physics_v2": 0,
+        "n_cap_branch_physics_v2": 0,
+        "cap_conflict_n_physics_v2": 0,
+        "cap_conflict_frac_physics_v2": null,
+        "cap_conflict_frac_cap_branch_physics_v2": null,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 0,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 0,
+          "tabor": 0,
+          "volume": 0,
+          "geom": 0,
+          "none": 0
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 0,
+          "tabor": 0,
+          "volume": 0,
+          "geom": 0,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 0,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 0,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      },
+      "stage": {
+        "step": "Coverage Physics vs Hertzian",
+        "stdout": "synthetic record mutation; producer execution substituted",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      },
+      "pipeline_status": "done",
+      "failed_stages": []
+    },
+    "zero_contacts_positive_area": {
+      "accepted": true,
+      "v2_record": {
+        "coverage_AM_P_mean_physics_v2": 1.195,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 1.241,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 1.218,
+        "area_AM전체_SE_total_physics_v2": 0.69,
+        "area_SE_SE_total_physics_v2": 1.96,
+        "area_AM전체_AM_total_physics_v2": 2.57,
+        "n_contacts_physics_v2": 0,
+        "n_cap_branch_physics_v2": 0,
+        "cap_conflict_n_physics_v2": 0,
+        "cap_conflict_frac_physics_v2": 0.181818,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.222222,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 2,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 1,
+          "tabor": 5,
+          "volume": 3,
+          "geom": 1,
+          "none": 1
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 1,
+          "tabor": 3,
+          "volume": 2,
+          "geom": 0,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    },
+    "blank_bad_film": {
+      "accepted": true,
+      "v2_record": {
+        "coverage_AM_P_mean_physics_v2": null,
+        "coverage_AM_P_std_physics_v2": null,
+        "coverage_AM_S_mean_physics_v2": null,
+        "coverage_AM_S_std_physics_v2": null,
+        "coverage_AM_mean_physics_v2": null,
+        "area_AM전체_SE_total_physics_v2": null,
+        "area_SE_SE_total_physics_v2": null,
+        "area_AM전체_AM_total_physics_v2": null,
+        "n_contacts_physics_v2": null,
+        "n_cap_branch_physics_v2": null,
+        "cap_conflict_n_physics_v2": null,
+        "cap_conflict_frac_physics_v2": null,
+        "cap_conflict_frac_cap_branch_physics_v2": null,
+        "cap_conflict_n_by_pair_physics_v2": null,
+        "A_binding_counts_total_physics_v2": null,
+        "A_binding_counts_AM_SE_physics_v2": null,
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "blank: scale=1 ≠ 1000 — 이 코드의 두 길이 규약 (µm = sim×scale · SI = sim/scale) 이 1000 에서만 같아 5 nm 막을 덤프 단위로 옮길 수 없다",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": "broken"
+      }
+    },
+    "blank_none_rule": {
+      "accepted": true,
+      "v2_record": {
+        "coverage_AM_P_mean_physics_v2": null,
+        "coverage_AM_P_std_physics_v2": null,
+        "coverage_AM_S_mean_physics_v2": null,
+        "coverage_AM_S_std_physics_v2": null,
+        "coverage_AM_mean_physics_v2": null,
+        "area_AM전체_SE_total_physics_v2": null,
+        "area_SE_SE_total_physics_v2": null,
+        "area_AM전체_AM_total_physics_v2": null,
+        "n_contacts_physics_v2": null,
+        "n_cap_branch_physics_v2": null,
+        "cap_conflict_n_physics_v2": null,
+        "cap_conflict_frac_physics_v2": null,
+        "cap_conflict_frac_cap_branch_physics_v2": null,
+        "cap_conflict_n_by_pair_physics_v2": null,
+        "A_binding_counts_total_physics_v2": null,
+        "A_binding_counts_AM_SE_physics_v2": null,
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "blank: scale=1 ≠ 1000 — 이 코드의 두 길이 규약 (µm = sim×scale · SI = sim/scale) 이 1000 에서만 같아 5 nm 막을 덤프 단위로 옮길 수 없다",
+        "rule_physics_v2": null,
+        "h_film_sim_physics_v2": null
+      }
+    },
+    "blank_missing_film": {
+      "accepted": true,
+      "v2_record": {
+        "coverage_AM_P_mean_physics_v2": null,
+        "coverage_AM_P_std_physics_v2": null,
+        "coverage_AM_S_mean_physics_v2": null,
+        "coverage_AM_S_std_physics_v2": null,
+        "coverage_AM_mean_physics_v2": null,
+        "area_AM전체_SE_total_physics_v2": null,
+        "area_SE_SE_total_physics_v2": null,
+        "area_AM전체_AM_total_physics_v2": null,
+        "n_contacts_physics_v2": null,
+        "n_cap_branch_physics_v2": null,
+        "cap_conflict_n_physics_v2": null,
+        "cap_conflict_frac_physics_v2": null,
+        "cap_conflict_frac_cap_branch_physics_v2": null,
+        "cap_conflict_n_by_pair_physics_v2": null,
+        "A_binding_counts_total_physics_v2": null,
+        "A_binding_counts_AM_SE_physics_v2": null,
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "blank: scale=1 ≠ 1000 — 이 코드의 두 길이 규약 (µm = sim×scale · SI = sim/scale) 이 1000 에서만 같아 5 nm 막을 덤프 단위로 옮길 수 없다",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)"
+      }
+    },
+    "huge_integer_area": {
+      "raised": "OverflowError",
+      "message": "int too large to convert to float",
+      "v2_record": {
+        "coverage_AM_P_mean_physics_v2": 1.195,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 1.241,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 1.218,
+        "area_AM전체_SE_total_physics_v2": 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+        "area_SE_SE_total_physics_v2": 1.96,
+        "area_AM전체_AM_total_physics_v2": 2.57,
+        "n_contacts_physics_v2": 11,
+        "n_cap_branch_physics_v2": 9,
+        "cap_conflict_n_physics_v2": 2,
+        "cap_conflict_frac_physics_v2": 0.181818,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.222222,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 2,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 1,
+          "tabor": 5,
+          "volume": 3,
+          "geom": 1,
+          "none": 1
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 1,
+          "tabor": 3,
+          "volume": 2,
+          "geom": 0,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 1,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      },
+      "stage": {
+        "step": "Coverage Physics vs Hertzian",
+        "stdout": "synthetic record mutation; producer execution substituted",
+        "stderr": "",
+        "rc": 0,
+        "ok": false,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": true
+      },
+      "pipeline_status": "failed",
+      "failed_stages": [
+        {
+          "step": "Coverage Physics vs Hertzian",
+          "stdout": "synthetic record mutation; producer execution substituted",
+          "stderr": "",
+          "rc": 0,
+          "ok": false,
+          "required": true,
+          "missing_outputs": [],
+          "stale_outputs": [],
+          "verify_failed": true
+        }
+      ]
+    }
+  }
+}

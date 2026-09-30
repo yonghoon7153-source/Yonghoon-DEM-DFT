@@ -1,0 +1,492 @@
+{
+  "normal": {
+    "radii_sim": [
+      0.001,
+      0.001
+    ],
+    "center_distance_sim": 0.0019,
+    "producer_expression_area": 3.0630528372500486e-07,
+    "producer_delta": 0.00010000000000000005,
+    "tokens": [
+      0.001,
+      0.001,
+      0.0001,
+      3.06305e-07
+    ],
+    "local_reconstruction": 3.0630528372500465e-07,
+    "cap_exact_equal_radius": 3.1415926535897933e-06,
+    "enclosure": {
+      "lo": 3.0630222067980047e-07,
+      "hi": 3.0630834678552446e-07,
+      "lb": false,
+      "how": "corner"
+    },
+    "diagnostic": {
+      "role": "진단 기록 — 거부하지 않는다 · 피복률 값에 쓰지 않는다 (item 2)",
+      "reference": "lens_geometry.intersection_disc_area(r1, r2, delta = c_cpl[23]) — 두 구의 교차 원판 (L1-04 A_LIGG)",
+      "compared_to": "c_cpl[22]",
+      "delta_col": "c_cpl[23]",
+      "flag_col": "c_cpl[9]",
+      "tolerance_rule": "행마다 덤프 토큰 구간 [A_dump ± h(A_dump)] 이 반올림 상자 {r1 ± h(r1)} × {r2 ± h(r2)} × {δ ± h(δ)} 위 교차 원판 A 의 포괄 구간 [lo, hi] 와 만나지 않으면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  A = lens_geometry.intersection_disc_area 와 같은 식의 인수형 π·δ(2r1−δ)(2r2−δ)(2r1+2r2−δ)/(4d²) (d = r1 + r2 − δ · 상쇄 없음).  포괄 구간 (LHSC-04 R2 · 09-30): 인수마다 선형 구간 (끝점 + 부동소수 바깥 여유) → ① 상자가 δ ≤ 0 · d ≤ 0 · 한 구가 다른 구 안 (2r_i − δ ≤ 0) 에 통째로 있으면 A ≡ 0 · ② 네 인수가 상자 전체에서 양수이고 ln A 의 편도함수 세 구간 (인수 역수의 합) 이 0 을 포함하지 않으면 두 꼭짓점 값이 정확한 최소 · 최대 (각 인수의 형성 오차만큼 상대 여유) · ③ 아니면 인수 구간의 곱 ∩ 덧셈형 항별 구간 π/4·[2(r1²+r2²) − d² − (r1²−r2²)²/d²] ∩ 기하 상한 π·min(r1, r2)² · ④ 인수가 상자 안에서 부호를 바꾸면 (포함 경계 · d → 0 · δ → 0 이 상자 안) 하한 0 (n_lower_bound_zero) · 상한 = 덧셈형 항별 상한 ∩ 기하 상한.  마지막에 생산자 (LIGGGHTS) 계산의 부동소수 바닥 32·eps·π·max(r1, r2)² 를 바깥으로 더한다.  h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 (E = 십진 지수 · 끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  기하: A 는 δ 에 따라 0 에서 d² = |r1² − r2²| 의 극대 π·min(r1, r2)² 까지 올랐다가 포함 경계 d = |r1 − r2| 에서 다시 0 으로 **연속**해서 내려간다 (동일 반경 d → 0 퇴화만 식의 극한 π r² 과 코드의 d ≤ 0 → 0 이 어긋난다).  보고: n_tested (이 규칙을 적용한 행 = 비교 행 전부) · n_beyond_tol · n_lower_bound_zero (하한 0 — 너무 작은 면적은 못 잡는다) · n_wide_enclosure ((hi − lo) > AREA_CHECK_WIDE_REL·A_dump — 1 % 치환을 못 잡는다) · n_power_1pct (둘 다 아닌 행 = 1 % 치환을 잡을 수 있는 행).",
+      "sigfig_assumed": 6,
+      "n_rows": 1,
+      "status": "OK",
+      "n_compared": 1,
+      "n_orphan_rows_skipped": 0,
+      "n_nonfinite_skipped": 0,
+      "n_values_beyond_6sig": {
+        "area": 0,
+        "delta": 0,
+        "radius": 0
+      },
+      "all": {
+        "n_rows": 1,
+        "n_tested": 1,
+        "n_area_dump_zero": 0,
+        "n_beyond_tol": 0,
+        "n_lower_bound_zero": 0,
+        "n_wide_enclosure": 0,
+        "n_power_1pct": 1,
+        "rel_diff_max": 9.26282641932197e-07,
+        "rel_diff_median": 9.26282641932197e-07,
+        "enclosure_rel_width_median": 2.000001868723302e-05,
+        "excess_rel_max": null
+      },
+      "by_periodic_flag": {
+        "0": {
+          "n_rows": 1,
+          "n_tested": 1,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_lower_bound_zero": 0,
+          "n_wide_enclosure": 0,
+          "n_power_1pct": 1,
+          "rel_diff_max": 9.26282641932197e-07,
+          "rel_diff_median": 9.26282641932197e-07,
+          "enclosure_rel_width_median": 2.000001868723302e-05,
+          "excess_rel_max": null
+        },
+        "1": {
+          "n_rows": 0,
+          "n_tested": 0,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_lower_bound_zero": 0,
+          "n_wide_enclosure": 0,
+          "n_power_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "excess_rel_max": null
+        }
+      },
+      "by_pair_kind": {
+        "AM-SE": {
+          "n_rows": 1,
+          "n_tested": 1,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_lower_bound_zero": 0,
+          "n_wide_enclosure": 0,
+          "n_power_1pct": 1,
+          "rel_diff_max": 9.26282641932197e-07,
+          "rel_diff_median": 9.26282641932197e-07,
+          "enclosure_rel_width_median": 2.000001868723302e-05,
+          "excess_rel_max": null
+        }
+      }
+    }
+  },
+  "equal_deep_1e-12": {
+    "radii_sim": [
+      0.001,
+      0.001
+    ],
+    "center_distance_sim": 1e-15,
+    "producer_expression_area": 3.142020451916476e-06,
+    "producer_delta": 0.001999999999999,
+    "tokens": [
+      0.001,
+      0.001,
+      0.002,
+      3.14202e-06
+    ],
+    "local_reconstruction": 3.141592653589793e-06,
+    "cap_exact_equal_radius": 3.1415926535897933e-06,
+    "enclosure": {
+      "lo": 0.0,
+      "hi": 3.1416240695948997e-06,
+      "lb": true,
+      "how": "boundary"
+    },
+    "diagnostic": {
+      "role": "진단 기록 — 거부하지 않는다 · 피복률 값에 쓰지 않는다 (item 2)",
+      "reference": "lens_geometry.intersection_disc_area(r1, r2, delta = c_cpl[23]) — 두 구의 교차 원판 (L1-04 A_LIGG)",
+      "compared_to": "c_cpl[22]",
+      "delta_col": "c_cpl[23]",
+      "flag_col": "c_cpl[9]",
+      "tolerance_rule": "행마다 덤프 토큰 구간 [A_dump ± h(A_dump)] 이 반올림 상자 {r1 ± h(r1)} × {r2 ± h(r2)} × {δ ± h(δ)} 위 교차 원판 A 의 포괄 구간 [lo, hi] 와 만나지 않으면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  A = lens_geometry.intersection_disc_area 와 같은 식의 인수형 π·δ(2r1−δ)(2r2−δ)(2r1+2r2−δ)/(4d²) (d = r1 + r2 − δ · 상쇄 없음).  포괄 구간 (LHSC-04 R2 · 09-30): 인수마다 선형 구간 (끝점 + 부동소수 바깥 여유) → ① 상자가 δ ≤ 0 · d ≤ 0 · 한 구가 다른 구 안 (2r_i − δ ≤ 0) 에 통째로 있으면 A ≡ 0 · ② 네 인수가 상자 전체에서 양수이고 ln A 의 편도함수 세 구간 (인수 역수의 합) 이 0 을 포함하지 않으면 두 꼭짓점 값이 정확한 최소 · 최대 (각 인수의 형성 오차만큼 상대 여유) · ③ 아니면 인수 구간의 곱 ∩ 덧셈형 항별 구간 π/4·[2(r1²+r2²) − d² − (r1²−r2²)²/d²] ∩ 기하 상한 π·min(r1, r2)² · ④ 인수가 상자 안에서 부호를 바꾸면 (포함 경계 · d → 0 · δ → 0 이 상자 안) 하한 0 (n_lower_bound_zero) · 상한 = 덧셈형 항별 상한 ∩ 기하 상한.  마지막에 생산자 (LIGGGHTS) 계산의 부동소수 바닥 32·eps·π·max(r1, r2)² 를 바깥으로 더한다.  h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 (E = 십진 지수 · 끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  기하: A 는 δ 에 따라 0 에서 d² = |r1² − r2²| 의 극대 π·min(r1, r2)² 까지 올랐다가 포함 경계 d = |r1 − r2| 에서 다시 0 으로 **연속**해서 내려간다 (동일 반경 d → 0 퇴화만 식의 극한 π r² 과 코드의 d ≤ 0 → 0 이 어긋난다).  보고: n_tested (이 규칙을 적용한 행 = 비교 행 전부) · n_beyond_tol · n_lower_bound_zero (하한 0 — 너무 작은 면적은 못 잡는다) · n_wide_enclosure ((hi − lo) > AREA_CHECK_WIDE_REL·A_dump — 1 % 치환을 못 잡는다) · n_power_1pct (둘 다 아닌 행 = 1 % 치환을 잡을 수 있는 행).",
+      "sigfig_assumed": 6,
+      "n_rows": 1,
+      "status": "OK",
+      "n_compared": 1,
+      "n_orphan_rows_skipped": 0,
+      "n_nonfinite_skipped": 0,
+      "n_values_beyond_6sig": {
+        "area": 0,
+        "delta": 0,
+        "radius": 0
+      },
+      "all": {
+        "n_rows": 1,
+        "n_tested": 1,
+        "n_area_dump_zero": 0,
+        "n_beyond_tol": 1,
+        "n_lower_bound_zero": 1,
+        "n_wide_enclosure": 1,
+        "n_power_1pct": 0,
+        "rel_diff_max": 1.0,
+        "rel_diff_median": 1.0,
+        "enclosure_rel_width_median": 0.9998739885789715,
+        "excess_rel_max": 0.00012442008806444086
+      },
+      "by_periodic_flag": {
+        "0": {
+          "n_rows": 1,
+          "n_tested": 1,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 1,
+          "n_lower_bound_zero": 1,
+          "n_wide_enclosure": 1,
+          "n_power_1pct": 0,
+          "rel_diff_max": 1.0,
+          "rel_diff_median": 1.0,
+          "enclosure_rel_width_median": 0.9998739885789715,
+          "excess_rel_max": 0.00012442008806444086
+        },
+        "1": {
+          "n_rows": 0,
+          "n_tested": 0,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_lower_bound_zero": 0,
+          "n_wide_enclosure": 0,
+          "n_power_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "excess_rel_max": null
+        }
+      },
+      "by_pair_kind": {
+        "AM-SE": {
+          "n_rows": 1,
+          "n_tested": 1,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 1,
+          "n_lower_bound_zero": 1,
+          "n_wide_enclosure": 1,
+          "n_power_1pct": 0,
+          "rel_diff_max": 1.0,
+          "rel_diff_median": 1.0,
+          "enclosure_rel_width_median": 0.9998739885789715,
+          "excess_rel_max": 0.00012442008806444086
+        }
+      }
+    }
+  },
+  "equal_deep_1e-13": {
+    "radii_sim": [
+      0.001,
+      0.001
+    ],
+    "center_distance_sim": 1e-16,
+    "producer_expression_area": 3.13929595999868e-06,
+    "producer_delta": 0.0019999999999999,
+    "tokens": [
+      0.001,
+      0.001,
+      0.002,
+      3.1393e-06
+    ],
+    "local_reconstruction": 3.1415926535897938e-06,
+    "cap_exact_equal_radius": 3.1415926535897933e-06,
+    "enclosure": {
+      "lo": 0.0,
+      "hi": 3.1416240695948997e-06,
+      "lb": true,
+      "how": "boundary"
+    },
+    "diagnostic": {
+      "role": "진단 기록 — 거부하지 않는다 · 피복률 값에 쓰지 않는다 (item 2)",
+      "reference": "lens_geometry.intersection_disc_area(r1, r2, delta = c_cpl[23]) — 두 구의 교차 원판 (L1-04 A_LIGG)",
+      "compared_to": "c_cpl[22]",
+      "delta_col": "c_cpl[23]",
+      "flag_col": "c_cpl[9]",
+      "tolerance_rule": "행마다 덤프 토큰 구간 [A_dump ± h(A_dump)] 이 반올림 상자 {r1 ± h(r1)} × {r2 ± h(r2)} × {δ ± h(δ)} 위 교차 원판 A 의 포괄 구간 [lo, hi] 와 만나지 않으면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  A = lens_geometry.intersection_disc_area 와 같은 식의 인수형 π·δ(2r1−δ)(2r2−δ)(2r1+2r2−δ)/(4d²) (d = r1 + r2 − δ · 상쇄 없음).  포괄 구간 (LHSC-04 R2 · 09-30): 인수마다 선형 구간 (끝점 + 부동소수 바깥 여유) → ① 상자가 δ ≤ 0 · d ≤ 0 · 한 구가 다른 구 안 (2r_i − δ ≤ 0) 에 통째로 있으면 A ≡ 0 · ② 네 인수가 상자 전체에서 양수이고 ln A 의 편도함수 세 구간 (인수 역수의 합) 이 0 을 포함하지 않으면 두 꼭짓점 값이 정확한 최소 · 최대 (각 인수의 형성 오차만큼 상대 여유) · ③ 아니면 인수 구간의 곱 ∩ 덧셈형 항별 구간 π/4·[2(r1²+r2²) − d² − (r1²−r2²)²/d²] ∩ 기하 상한 π·min(r1, r2)² · ④ 인수가 상자 안에서 부호를 바꾸면 (포함 경계 · d → 0 · δ → 0 이 상자 안) 하한 0 (n_lower_bound_zero) · 상한 = 덧셈형 항별 상한 ∩ 기하 상한.  마지막에 생산자 (LIGGGHTS) 계산의 부동소수 바닥 32·eps·π·max(r1, r2)² 를 바깥으로 더한다.  h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 (E = 십진 지수 · 끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  기하: A 는 δ 에 따라 0 에서 d² = |r1² − r2²| 의 극대 π·min(r1, r2)² 까지 올랐다가 포함 경계 d = |r1 − r2| 에서 다시 0 으로 **연속**해서 내려간다 (동일 반경 d → 0 퇴화만 식의 극한 π r² 과 코드의 d ≤ 0 → 0 이 어긋난다).  보고: n_tested (이 규칙을 적용한 행 = 비교 행 전부) · n_beyond_tol · n_lower_bound_zero (하한 0 — 너무 작은 면적은 못 잡는다) · n_wide_enclosure ((hi − lo) > AREA_CHECK_WIDE_REL·A_dump — 1 % 치환을 못 잡는다) · n_power_1pct (둘 다 아닌 행 = 1 % 치환을 잡을 수 있는 행).",
+      "sigfig_assumed": 6,
+      "n_rows": 1,
+      "status": "OK",
+      "n_compared": 1,
+      "n_orphan_rows_skipped": 0,
+      "n_nonfinite_skipped": 0,
+      "n_values_beyond_6sig": {
+        "area": 0,
+        "delta": 0,
+        "radius": 0
+      },
+      "all": {
+        "n_rows": 1,
+        "n_tested": 1,
+        "n_area_dump_zero": 0,
+        "n_beyond_tol": 0,
+        "n_lower_bound_zero": 1,
+        "n_wide_enclosure": 1,
+        "n_power_1pct": 0,
+        "rel_diff_max": 1.0,
+        "rel_diff_median": 1.0,
+        "enclosure_rel_width_median": 1.0007403145908003,
+        "excess_rel_max": null
+      },
+      "by_periodic_flag": {
+        "0": {
+          "n_rows": 1,
+          "n_tested": 1,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_lower_bound_zero": 1,
+          "n_wide_enclosure": 1,
+          "n_power_1pct": 0,
+          "rel_diff_max": 1.0,
+          "rel_diff_median": 1.0,
+          "enclosure_rel_width_median": 1.0007403145908003,
+          "excess_rel_max": null
+        },
+        "1": {
+          "n_rows": 0,
+          "n_tested": 0,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_lower_bound_zero": 0,
+          "n_wide_enclosure": 0,
+          "n_power_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "excess_rel_max": null
+        }
+      },
+      "by_pair_kind": {
+        "AM-SE": {
+          "n_rows": 1,
+          "n_tested": 1,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_lower_bound_zero": 1,
+          "n_wide_enclosure": 1,
+          "n_power_1pct": 0,
+          "rel_diff_max": 1.0,
+          "rel_diff_median": 1.0,
+          "enclosure_rel_width_median": 1.0007403145908003,
+          "excess_rel_max": null
+        }
+      }
+    }
+  },
+  "contained": {
+    "radii_sim": [
+      0.002,
+      0.001
+    ],
+    "center_distance_sim": 0.0009,
+    "producer_expression_area": -1.5088371383490986e-06,
+    "producer_delta": 0.0021000000000000003,
+    "tokens": [
+      0.002,
+      0.001,
+      0.0021,
+      -1.50884e-06
+    ],
+    "local_reconstruction": 0.0,
+    "cap_exact_equal_radius": null,
+    "enclosure": {
+      "lo": 0.0,
+      "hi": 8.928987999674694e-20,
+      "lb": false,
+      "how": "zero"
+    },
+    "diagnostic": {
+      "role": "진단 기록 — 거부하지 않는다 · 피복률 값에 쓰지 않는다 (item 2)",
+      "reference": "lens_geometry.intersection_disc_area(r1, r2, delta = c_cpl[23]) — 두 구의 교차 원판 (L1-04 A_LIGG)",
+      "compared_to": "c_cpl[22]",
+      "delta_col": "c_cpl[23]",
+      "flag_col": "c_cpl[9]",
+      "tolerance_rule": "행마다 덤프 토큰 구간 [A_dump ± h(A_dump)] 이 반올림 상자 {r1 ± h(r1)} × {r2 ± h(r2)} × {δ ± h(δ)} 위 교차 원판 A 의 포괄 구간 [lo, hi] 와 만나지 않으면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  A = lens_geometry.intersection_disc_area 와 같은 식의 인수형 π·δ(2r1−δ)(2r2−δ)(2r1+2r2−δ)/(4d²) (d = r1 + r2 − δ · 상쇄 없음).  포괄 구간 (LHSC-04 R2 · 09-30): 인수마다 선형 구간 (끝점 + 부동소수 바깥 여유) → ① 상자가 δ ≤ 0 · d ≤ 0 · 한 구가 다른 구 안 (2r_i − δ ≤ 0) 에 통째로 있으면 A ≡ 0 · ② 네 인수가 상자 전체에서 양수이고 ln A 의 편도함수 세 구간 (인수 역수의 합) 이 0 을 포함하지 않으면 두 꼭짓점 값이 정확한 최소 · 최대 (각 인수의 형성 오차만큼 상대 여유) · ③ 아니면 인수 구간의 곱 ∩ 덧셈형 항별 구간 π/4·[2(r1²+r2²) − d² − (r1²−r2²)²/d²] ∩ 기하 상한 π·min(r1, r2)² · ④ 인수가 상자 안에서 부호를 바꾸면 (포함 경계 · d → 0 · δ → 0 이 상자 안) 하한 0 (n_lower_bound_zero) · 상한 = 덧셈형 항별 상한 ∩ 기하 상한.  마지막에 생산자 (LIGGGHTS) 계산의 부동소수 바닥 32·eps·π·max(r1, r2)² 를 바깥으로 더한다.  h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 (E = 십진 지수 · 끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  기하: A 는 δ 에 따라 0 에서 d² = |r1² − r2²| 의 극대 π·min(r1, r2)² 까지 올랐다가 포함 경계 d = |r1 − r2| 에서 다시 0 으로 **연속**해서 내려간다 (동일 반경 d → 0 퇴화만 식의 극한 π r² 과 코드의 d ≤ 0 → 0 이 어긋난다).  보고: n_tested (이 규칙을 적용한 행 = 비교 행 전부) · n_beyond_tol · n_lower_bound_zero (하한 0 — 너무 작은 면적은 못 잡는다) · n_wide_enclosure ((hi − lo) > AREA_CHECK_WIDE_REL·A_dump — 1 % 치환을 못 잡는다) · n_power_1pct (둘 다 아닌 행 = 1 % 치환을 잡을 수 있는 행).",
+      "sigfig_assumed": 6,
+      "n_rows": 1,
+      "status": "OK",
+      "n_compared": 1,
+      "n_orphan_rows_skipped": 0,
+      "n_nonfinite_skipped": 0,
+      "n_values_beyond_6sig": {
+        "area": 0,
+        "delta": 0,
+        "radius": 0
+      },
+      "all": {
+        "n_rows": 1,
+        "n_tested": 1,
+        "n_area_dump_zero": 0,
+        "n_beyond_tol": 1,
+        "n_lower_bound_zero": 0,
+        "n_wide_enclosure": 0,
+        "n_power_1pct": 0,
+        "rel_diff_max": null,
+        "rel_diff_median": null,
+        "enclosure_rel_width_median": null,
+        "excess_rel_max": null
+      },
+      "by_periodic_flag": {
+        "0": {
+          "n_rows": 1,
+          "n_tested": 1,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 1,
+          "n_lower_bound_zero": 0,
+          "n_wide_enclosure": 0,
+          "n_power_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "excess_rel_max": null
+        },
+        "1": {
+          "n_rows": 0,
+          "n_tested": 0,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_lower_bound_zero": 0,
+          "n_wide_enclosure": 0,
+          "n_power_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "excess_rel_max": null
+        }
+      },
+      "by_pair_kind": {
+        "AM-SE": {
+          "n_rows": 1,
+          "n_tested": 1,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 1,
+          "n_lower_bound_zero": 0,
+          "n_wide_enclosure": 0,
+          "n_power_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "excess_rel_max": null
+        }
+      }
+    }
+  },
+  "no_contact": {
+    "radii_sim": [
+      0.001,
+      0.001
+    ],
+    "center_distance_sim": 0.0021,
+    "producer_expression_area": -3.2201324699295325e-07,
+    "producer_delta": -9.999999999999983e-05,
+    "tokens": [
+      0.001,
+      0.001,
+      -0.0001,
+      -3.22013e-07
+    ],
+    "local_reconstruction": 0.0,
+    "cap_exact_equal_radius": 3.1415926535897933e-06,
+    "enclosure": {
+      "lo": 0.0,
+      "hi": 2.2322581611397214e-20,
+      "lb": false,
+      "how": "zero"
+    },
+    "diagnostic": {
+      "role": "진단 기록 — 거부하지 않는다 · 피복률 값에 쓰지 않는다 (item 2)",
+      "reference": "lens_geometry.intersection_disc_area(r1, r2, delta = c_cpl[23]) — 두 구의 교차 원판 (L1-04 A_LIGG)",
+      "compared_to": "c_cpl[22]",
+      "delta_col": "c_cpl[23]",
+      "flag_col": "c_cpl[9]",
+      "tolerance_rule": "행마다 덤프 토큰 구간 [A_dump ± h(A_dump)] 이 반올림 상자 {r1 ± h(r1)} × {r2 ± h(r2)} × {δ ± h(δ)} 위 교차 원판 A 의 포괄 구간 [lo, hi] 와 만나지 않으면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  A = lens_geometry.intersection_disc_area 와 같은 식의 인수형 π·δ(2r1−δ)(2r2−δ)(2r1+2r2−δ)/(4d²) (d = r1 + r2 − δ · 상쇄 없음).  포괄 구간 (LHSC-04 R2 · 09-30): 인수마다 선형 구간 (끝점 + 부동소수 바깥 여유) → ① 상자가 δ ≤ 0 · d ≤ 0 · 한 구가 다른 구 안 (2r_i − δ ≤ 0) 에 통째로 있으면 A ≡ 0 · ② 네 인수가 상자 전체에서 양수이고 ln A 의 편도함수 세 구간 (인수 역수의 합) 이 0 을 포함하지 않으면 두 꼭짓점 값이 정확한 최소 · 최대 (각 인수의 형성 오차만큼 상대 여유) · ③ 아니면 인수 구간의 곱 ∩ 덧셈형 항별 구간 π/4·[2(r1²+r2²) − d² − (r1²−r2²)²/d²] ∩ 기하 상한 π·min(r1, r2)² · ④ 인수가 상자 안에서 부호를 바꾸면 (포함 경계 · d → 0 · δ → 0 이 상자 안) 하한 0 (n_lower_bound_zero) · 상한 = 덧셈형 항별 상한 ∩ 기하 상한.  마지막에 생산자 (LIGGGHTS) 계산의 부동소수 바닥 32·eps·π·max(r1, r2)² 를 바깥으로 더한다.  h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 (E = 십진 지수 · 끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  기하: A 는 δ 에 따라 0 에서 d² = |r1² − r2²| 의 극대 π·min(r1, r2)² 까지 올랐다가 포함 경계 d = |r1 − r2| 에서 다시 0 으로 **연속**해서 내려간다 (동일 반경 d → 0 퇴화만 식의 극한 π r² 과 코드의 d ≤ 0 → 0 이 어긋난다).  보고: n_tested (이 규칙을 적용한 행 = 비교 행 전부) · n_beyond_tol · n_lower_bound_zero (하한 0 — 너무 작은 면적은 못 잡는다) · n_wide_enclosure ((hi − lo) > AREA_CHECK_WIDE_REL·A_dump — 1 % 치환을 못 잡는다) · n_power_1pct (둘 다 아닌 행 = 1 % 치환을 잡을 수 있는 행).",
+      "sigfig_assumed": 6,
+      "n_rows": 1,
+      "status": "OK",
+      "n_compared": 1,
+      "n_orphan_rows_skipped": 0,
+      "n_nonfinite_skipped": 0,
+      "n_values_beyond_6sig": {
+        "area": 0,
+        "delta": 0,
+        "radius": 0
+      },
+      "all": {
+        "n_rows": 1,
+        "n_tested": 1,
+        "n_area_dump_zero": 0,
+        "n_beyond_tol": 1,
+        "n_lower_bound_zero": 0,
+        "n_wide_enclosure": 0,
+        "n_power_1pct": 0,
+        "rel_diff_max": null,
+        "rel_diff_median": null,
+        "enclosure_rel_width_median": null,
+        "excess_rel_max": null
+      },
+      "by_periodic_flag": {
+        "0": {
+          "n_rows": 1,
+          "n_tested": 1,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 1,
+          "n_lower_bound_zero": 0,
+          "n_wide_enclosure": 0,
+          "n_power_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "excess_rel_max": null
+        },
+        "1": {
+          "n_rows": 0,
+          "n_tested": 0,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_lower_bound_zero": 0,
+          "n_wide_enclosure": 0,
+          "n_power_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "excess_rel_max": null
+        }
+      },
+      "by_pair_kind": {
+        "AM-SE": {
+          "n_rows": 1,
+          "n_tested": 1,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 1,
+          "n_lower_bound_zero": 0,
+          "n_wide_enclosure": 0,
+          "n_power_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "excess_rel_max": null
+        }
+      }
+    }
+  }
+}

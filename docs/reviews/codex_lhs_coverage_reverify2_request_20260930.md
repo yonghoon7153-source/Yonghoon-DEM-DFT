@@ -1,5 +1,7 @@
 # Codex 재검증 2 요청 — LHS 피복률 · LHSC-03 R2 · LHSC-04 R2 수정 (2026-09-30)
 
+> **판정 (09-30 밤) = HOLD · 새 P1 없음 · P2 R3 셋** — `docs/reviews/codex_lhs_coverage_reverify2_verdict_20260930.md` (증거 `codex_lhs_coverage_reverify2_evidence_20260930/` · 우리 트리 재현 전부 일치).  옛 변이 10 종 · 공동 반올림 오탐은 해제 · 남은 것 = LHSC-03 R3 (분율 누락 / None · 빈 개수 원장 · 집계 모순) · LHSC-04 R3a (생산자 부동소수 오차 전역 보증 반례) · R3b (`n_power_1pct` 표지 반례).  이 요청서의 §5 Q2 답 ("고정 여유가 생산자 오차를 덮는다") 은 **철회** — 생산 식은 덧셈형이 아니라 거리 인수 곱 / rsq 형이고 동심 근접에서 초과가 난다.
+
 > 대상 판정: `docs/reviews/codex_lhs_coverage_reverify_verdict_20260930.md` (HOLD · P1 두 건 닫힘 · 새 P1 없음 · 잔여 P2 둘).
 > 1저자 비준 09-30 낮 (*"비준이야 ㅇㅇ"*) → 반례를 셀프테스트로 먼저 옮겨 옛 코드에서 실패를 확인한 뒤 고쳤다.  발송 = 1저자.
 > 묶음 = `docs/reviews/codex_lhs_coverage_reverify2_request_20260930/` (패치 2 · manifest · 재현 JSON · 셀프테스트 로그 · SHA256SUMS).
