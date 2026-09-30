@@ -201,6 +201,13 @@ def test_an_incomplete_receipt_is_refused_by_the_reader(tmp_path, monkeypatch):
     bad = full_receipt()
     bad["startup"]["startup_history"] = {"status": "failed", "reason": "시험"}
     monkeypatch.setattr(mr, "_observed_receipt", lambda: bad)
+    # ★ 85차 자체 발견 ⑤ — 65차 N1a 의 둘째 층 (`_assert_customization_matches_parent`) 은 startup **이력**을
+    #   읽는다. 이력이 `failed` 인 이 영수증은 완전성 reader 를 지워도 그 층이 (환경의 sitecustomize 에 따라)
+    #   먼저 거부해, 변이 `incomplete_receipt_is_refused-g61` 의 증인이 환경마다 달라졌다 (전체 재생 실측:
+    #   'customization 이 부모가 본 것과 양립하지 않는다'). 이 시험이 재는 층은 완전성 reader 하나이므로
+    #   둘째 층을 이 시험 안에서만 끈다 — 그 층은 자기 시험(`test_evidence_receipt_61` 의 customization
+    #   시험들 · 65차 · 67차)이 따로 잰다.
+    monkeypatch.setattr(mr, "_assert_customization_matches_parent", lambda *a, **k: None)
     with pytest.raises(mr._ReplayError) as ei:
         mr._execution_receipt()
     assert "불완전" in str(ei.value) or "실패" in str(ei.value), str(ei.value)
@@ -243,5 +250,12 @@ def test_a_failed_package_listing_is_also_refused(monkeypatch):
     mr = _mr()
     bad = full_receipt(packages={"status": "failed", "reason": "시험"})
     monkeypatch.setattr(mr, "_observed_receipt", lambda: bad)
+    # ★ 85차 자체 발견 ⑤ — 65차 N1a 의 둘째 층 (`_assert_customization_matches_parent`) 은 startup **이력**을
+    #   읽는다. 이력이 `failed` 인 이 영수증은 완전성 reader 를 지워도 그 층이 (환경의 sitecustomize 에 따라)
+    #   먼저 거부해, 변이 `incomplete_receipt_is_refused-g61` 의 증인이 환경마다 달라졌다 (전체 재생 실측:
+    #   'customization 이 부모가 본 것과 양립하지 않는다'). 이 시험이 재는 층은 완전성 reader 하나이므로
+    #   둘째 층을 이 시험 안에서만 끈다 — 그 층은 자기 시험(`test_evidence_receipt_61` 의 customization
+    #   시험들 · 65차 · 67차)이 따로 잰다.
+    monkeypatch.setattr(mr, "_assert_customization_matches_parent", lambda *a, **k: None)
     with pytest.raises(mr._ReplayError):
         mr._execution_receipt()
