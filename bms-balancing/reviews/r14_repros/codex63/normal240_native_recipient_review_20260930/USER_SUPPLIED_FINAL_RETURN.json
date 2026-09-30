@@ -1,0 +1,10 @@
+{
+  "source": "Current user message transcribed by recipient reviewer. Not independently observed sender tool output or a copy of an original sender file. Existing evidence was not changed.",
+  "completion": {
+    "chunk_id": "5d1af4",
+    "wall_time_seconds": 1.0677871,
+    "exit_code": 0,
+    "original_token_count": 81,
+    "output": "{\"status\": \"SUPPLEMENT_VERIFIED\", \"supplement\": {\"file\": \"NORMAL240_NATIVE_DELIVERY_SUPPLEMENT_20260930.zip\", \"bytes\": 41791, \"sha256\": \"b45ec184ddfc6f54153a0f6a06e88d638035d11ebf1b183982cf3636e16d3bd0\"}, \"elapsed_seconds\": 0.1559999999590218, \"scope\": \"After supplement readback, before tool return\", \"recipient\": null}\r\n"
+  }
+}

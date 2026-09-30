@@ -1,0 +1,194 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "check": "eguard inferred",
+      "pass": true
+    },
+    {
+      "check": "eguard configured",
+      "pass": true
+    },
+    {
+      "check": "eguard evaluated",
+      "pass": true
+    },
+    {
+      "check": "nglobal configured",
+      "pass": true
+    },
+    {
+      "check": "nglobal evaluated",
+      "pass": true
+    },
+    {
+      "check": "point1 configured",
+      "pass": true
+    },
+    {
+      "check": "point1 evaluated",
+      "pass": true
+    },
+    {
+      "check": "point4 configured",
+      "pass": true
+    },
+    {
+      "check": "point4 evaluated",
+      "pass": true
+    },
+    {
+      "check": "MinLinece configured",
+      "pass": true
+    },
+    {
+      "check": "MinLinece evaluated",
+      "pass": true
+    },
+    {
+      "check": "MaxLinece configured",
+      "pass": true
+    },
+    {
+      "check": "MaxLinece evaluated",
+      "pass": true
+    },
+    {
+      "check": "profiletimes configured",
+      "pass": true
+    },
+    {
+      "check": "profiletimes evaluated",
+      "pass": true
+    },
+    {
+      "check": "profileN configured",
+      "pass": true
+    },
+    {
+      "check": "profileN evaluated",
+      "pass": true
+    },
+    {
+      "check": "profileP configured",
+      "pass": true
+    },
+    {
+      "check": "profileP evaluated",
+      "pass": true
+    },
+    {
+      "check": "AXES_PHYSICAL_MESH_DOMAIN=1|numelem=120",
+      "pass": true
+    },
+    {
+      "check": "AXES_PHYSICAL_MESH_DOMAIN=2|numelem=60",
+      "pass": true
+    },
+    {
+      "check": "AXES_PHYSICAL_MESH_DOMAIN=3|numelem=120",
+      "pass": true
+    },
+    {
+      "check": "AXES_PARTICLE=pce1|Nel=320|Nord=1|Distribution=CubicRoot",
+      "pass": true
+    },
+    {
+      "check": "AXES_PARTICLE=pce2|Nel=320|Nord=1|Distribution=CubicRoot",
+      "pass": true
+    },
+    {
+      "check": "AXES_ACTUAL_MESH=mesh1|edges=300|vertices=301",
+      "pass": true
+    },
+    {
+      "check": "PREFLIGHT_SOLVE_BEGIN=0..240 seconds; NO full protocol or sweep",
+      "pass": true
+    },
+    {
+      "check": "ELECTROLYTE_THRESHOLD_EXPRESSION=0[mol/m^3]",
+      "pass": true
+    },
+    {
+      "check": "ELECTROLYTE_THRESHOLD_SI=0.0",
+      "pass": true
+    },
+    {
+      "check": "one textual runAll call",
+      "pass": true
+    },
+    {
+      "check": "STOP is parent no-rerun instruction",
+      "pass": true
+    },
+    {
+      "check": "MinLine and guard have same time set",
+      "pass": true
+    },
+    {
+      "check": "MinLine matches coupling minimum within1e-9",
+      "pass": true
+    },
+    {
+      "check": "post-return provenance explicitly subsequent transcription",
+      "pass": true
+    },
+    {
+      "check": "parent transcript does not claim to reconstruct truncated analyzer output",
+      "pass": true
+    },
+    {
+      "check": "post-return binds final boundary",
+      "pass": true
+    },
+    {
+      "check": "post-write follows pre-write",
+      "pass": true
+    },
+    {
+      "check": "final budgets and recording errors",
+      "pass": true
+    },
+    {
+      "check": "NoExit does not invent process rc",
+      "pass": true
+    },
+    {
+      "check": "supplied final supplement return rc0",
+      "pass": true
+    },
+    {
+      "check": "final return supplement raw identity",
+      "pass": true
+    },
+    {
+      "check": "generation recipient stays null",
+      "pass": true
+    },
+    {
+      "check": "final snapshot is before tool return",
+      "pass": true
+    },
+    {
+      "check": "main package return rc and identity",
+      "pass": true
+    },
+    {
+      "check": "main package native counts",
+      "pass": true
+    },
+    {
+      "check": "package return creates no next approval",
+      "pass": true
+    }
+  ],
+  "check_count": 45,
+  "scope": "Independent recipient data checks, not functional tests or new native execution.",
+  "minline_coupling_max_delta_mol_m3": "5E-13",
+  "final_return_provenance": "Current user message transcribed by reviewer; sender host call not independently observed.",
+  "parent_boundary": "User-console script final record, null outer PowerShell process rc; post-write user transcription.",
+  "final_return_call_wall_seconds": 1.0677871,
+  "final_return_snapshot_seconds": 0.1559999999590218,
+  "native_post_write_seconds": 4269.8650108,
+  "separate_collection_post_receipt_seconds": 184.71900000004098
+}
