@@ -11,6 +11,13 @@
   ④ 끝나면 `interface_check(init, relaxed)` → interface_check.json (깃발이 있으면 rc 2 · 파일은 남긴다)
   ⑤ relax_meta.json 에 결박값 기록: fairchem.core · torch · ase 버전 · 체크포인트 경로+sha256 · 추론 모드(default) · D3 구현·매개변수 · 스텝·벽시계 · 수렴.
 
+GPU 공유 안전장치 (2026-10-01 · SE 쌍 UMA 카드 · gabia 에서 li2s MD 옆):
+  --gpu_start_max_mib M  : GPU 합계 ≤ M 이 될 때까지 기다렸다 시작 (못 읽으면 시작 안 함 · --gpu_wait_s 넘으면 종료 4)
+  --gpu_kill_total_mib K : 감시 스레드 — 합계 > K 면 **이 프로세스만** 끝낸다 (종료 3 · gpu_guard.json · 세 번 연속 못 읽어도)
+  --vram_cap_mib C       : torch.cuda.set_per_process_memory_fraction — 넘으면 이 프로세스가 OOM (CUDA 컨텍스트는 상한 밖)
+  --mem_probe            : 힘 한 번만 계산하고 최대 메모리를 mem_probe.json 에 (이완·에너지 기록 없음)
+  ⚠ 감시는 표본(기본 2 s)이다 — 표본 간격보다 빠른 급등은 못 막는다. 남의 잡(li2s·탄성)을 멈추거나 늦추지 않는다.
+
 ⛔ 못 하는 것: W 를 내지 않는다 (에너지는 원출력 로그에만 — 결과표·W·후보 선택·게이트 조정에 쓰지 않는다 · 카드 v5 S3 전 예외 규칙) ·
   turbo 모드는 받지 않는다 (카드 결박 = default) · 3체 D3 를 켜지 않는다 · 셀을 풀지 않는다.
 """
@@ -19,7 +26,9 @@ import glob
 import hashlib
 import json
 import os
+import subprocess
 import sys
+import threading
 import time
 
 import numpy as np
@@ -30,11 +39,83 @@ import se_sym_slab as S  # noqa: E402
 
 SlabError = S.SlabError
 D3_PARAMS = {"functional": "PBE", "damping": "BJ", "s6": 1.0, "s8": 0.7875, "a1": 0.4289, "a2": 4.4407, "three_body": False}
-ROLES = {"V2": (("Ag",), ("C",)), "V3": (S.SE_ELEMENTS, ("Ag",)), "V4": (S.SE_ELEMENTS, ("C", "H")), "V5": (S.SE_ELEMENTS, ("Ag",))}
+ROLES = {"V2": (("Ag",), ("C",)), "V3": (S.SE_ELEMENTS, ("Ag",)), "V4": (S.SE_ELEMENTS, ("C", "H")), "V5": (S.SE_ELEMENTS, ("Ag",)),
+         "P1": (S.SE_ELEMENTS, ("Ag",)), "P2": (S.SE_ELEMENTS, ("C",))}      # P1·P2 = SE 쌍 전체 계면 (build_full)
 
 
 def _sha(p):
     return hashlib.sha256(open(p, "rb").read()).hexdigest()
+
+
+def _gpu_total_mib():
+    """GPU 0 사용량 합계 (MiB) · 못 읽으면 None. 시험에서는 WAD_NVSMI 가 명령을 바꾼다."""
+    cmd = os.environ.get("WAD_NVSMI", "nvidia-smi")
+    try:
+        r = subprocess.run([cmd, "--query-gpu=memory.used", "--format=csv,noheader,nounits", "-i", "0"],
+                           capture_output=True, text=True, timeout=20)
+        return int(r.stdout.strip().splitlines()[0].strip())
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def gpu_start_gate(start_max, wait_s, poll=None):
+    """합계 ≤ start_max 가 될 때까지 기다린다 → {ok, last_MiB, waited_s, reason}. 못 읽으면 시작하지 않는다 (fail-closed)."""
+    poll = float(os.environ.get("WAD_GUARD_POLL", "30")) if poll is None else poll
+    t0 = time.time()
+    while True:
+        u = _gpu_total_mib()
+        w = round(time.time() - t0, 1)
+        if u is None:
+            return {"ok": False, "last_MiB": None, "waited_s": w, "reason": "nvidia-smi 를 못 읽었다 — 시작하지 않는다 (fail-closed)"}
+        if u <= start_max:
+            return {"ok": True, "last_MiB": u, "waited_s": w, "reason": f"합계 {u} ≤ {start_max}"}
+        if time.time() - t0 >= wait_s:
+            return {"ok": False, "last_MiB": u, "waited_s": w, "reason": f"합계 {u} > {start_max} 가 {wait_s}s 계속 — 시작하지 않는다"}
+        print(f"  대기 — GPU 합계 {u} > {start_max} MiB", flush=True)
+        time.sleep(poll)
+
+
+def start_gpu_watchdog(kill_total, out_dir, sample=None):
+    """감시 스레드 — 합계 > kill_total 이면 **이 프로세스만** 끝낸다 (os._exit(3) · gpu_guard.json). 세 번 연속 못 읽어도 끝낸다."""
+    sample = float(os.environ.get("WAD_GUARD_SAMPLE", "2")) if sample is None else sample
+
+    def _abort(reason, u):
+        try:
+            os.makedirs(out_dir, exist_ok=True)
+            json.dump({"killed_by": "gpu_watchdog", "reason": reason, "total_MiB": u, "kill_total_MiB": kill_total,
+                       "at": time.strftime("%Y-%m-%d %H:%M:%S")}, open(os.path.join(out_dir, "gpu_guard.json"), "w", encoding="utf-8"),
+                      ensure_ascii=False, indent=1)
+        finally:
+            print(f"⛔ GPU 감시: {reason} — 이 프로세스만 멈춘다 (종료 3)", flush=True)
+            os._exit(3)
+
+    def loop():
+        miss = 0
+        while True:
+            u = _gpu_total_mib()
+            if u is None:
+                miss += 1
+                if miss >= 3:
+                    _abort("nvidia-smi 를 세 번 연속 못 읽었다 (fail-closed)", None)
+            else:
+                miss = 0
+                if u > kill_total:
+                    _abort(f"GPU 합계 {u} > {kill_total} MiB", u)
+            time.sleep(sample)
+
+    th = threading.Thread(target=loop, daemon=True)
+    th.start()
+    return th
+
+
+def _peak_mem():
+    try:
+        import torch
+        if torch.cuda.is_available():
+            return {"max_reserved_MiB": round(torch.cuda.max_memory_reserved() / 2 ** 20), "max_allocated_MiB": round(torch.cuda.max_memory_allocated() / 2 ** 20)}
+    except Exception:  # noqa: BLE001
+        pass
+    return None
 
 
 def load_model(model_dir):
@@ -49,7 +130,7 @@ def load_model(model_dir):
     init.set_pbc((True, True, False))
     model = meta.get("model")
     if model not in ROLES:
-        raise SlabError(f"meta.model = {model!r} — V2·V3·V4·V5 중 하나여야 한다")
+        raise SlabError(f"meta.model = {model!r} — {'·'.join(ROLES)} 중 하나여야 한다")
     sub_el, ads_el = ROLES[model]
     fixed = meta.get("fixed_idx")
     lateral = meta.get("lateral_fixed_idx", [])
@@ -66,16 +147,24 @@ def preflight(init, sub_el, ads_el, fixed, lateral):
     return r
 
 
-def make_calc(kind, device, d3_kind):
+def make_calc(kind, device, d3_kind, vram_cap_mib=None):
     info = {"calc": kind, "device": device}
     if kind == "emt":
         from ase.calculators.emt import EMT
         base = EMT(); info["emt"] = "ase EMT (시험용 · 물리 아님)"
+        if vram_cap_mib:
+            info["vram_cap"] = "해당 없음 (EMT)"
     elif kind == "uma":
         import fairchem.core as fc
         from fairchem.core import pretrained_mlip
         from fairchem.core.calculate.ase_calculator import FAIRChemCalculator
         import torch
+        if vram_cap_mib and str(device).startswith("cuda") and torch.cuda.is_available():
+            tot = torch.cuda.get_device_properties(0).total_memory / 2 ** 20
+            frac = min(1.0, float(vram_cap_mib) / tot)
+            torch.cuda.set_per_process_memory_fraction(frac, 0)
+            info["vram_cap"] = {"cap_MiB": vram_cap_mib, "device_total_MiB": round(tot), "fraction": round(frac, 4),
+                                "⚠": "CUDA 컨텍스트(수백 MiB)는 이 상한 밖이다"}
         pu = pretrained_mlip.get_predict_unit("uma-s-1p1", device=device, inference_settings="default")
         base = FAIRChemCalculator(pu, task_name="omat")
         info.update({"fairchem.core": getattr(fc, "__version__", "?"), "torch": torch.__version__, "cuda": torch.version.cuda,
@@ -115,7 +204,8 @@ def make_calc(kind, device, d3_kind):
     return SumCalculator([base, d3]), info
 
 
-def relax(model_dir, out, calc_kind="uma", device="cuda", d3_kind="auto", fmax=0.02, steps=3000, optimizer="fire", preflight_only=False):
+def relax(model_dir, out, calc_kind="uma", device="cuda", d3_kind="auto", fmax=0.02, steps=3000, optimizer="fire", preflight_only=False,
+          vram_cap_mib=None, gpu_kill_total_mib=None, gpu_start_max_mib=None, gpu_wait_s=3600, mem_probe=False):
     from ase.constraints import FixAtoms, FixedLine
     from ase.io import write
     import ase
@@ -140,10 +230,29 @@ def relax(model_dir, out, calc_kind="uma", device="cuda", d3_kind="auto", fmax=0
     if lateral:
         cons.append(FixedLine(indices=list(lateral), direction=[0, 0, 1]))
     atoms.set_constraint(cons)
-    calc, cinfo = make_calc(calc_kind, device, d3_kind)
+    guard = {"vram_cap_MiB": vram_cap_mib, "gpu_kill_total_MiB": gpu_kill_total_mib, "gpu_start_max_MiB": gpu_start_max_mib}
+    if gpu_start_max_mib is not None:
+        g = gpu_start_gate(gpu_start_max_mib, gpu_wait_s)
+        guard["start_gate"] = g
+        if not g["ok"]:
+            rec["gpu_guard"] = guard
+            json.dump(rec, open(os.path.join(out, "gate_refused.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=float)
+            print(f"⛔ 시작 문턱: {g['reason']}", flush=True)
+            return rec, 4
+    if gpu_kill_total_mib is not None:
+        start_gpu_watchdog(gpu_kill_total_mib, out)
+        guard["watchdog"] = f"on (합계 > {gpu_kill_total_mib} MiB 면 이 프로세스만 종료 3)"
+    rec["gpu_guard"] = guard
+    calc, cinfo = make_calc(calc_kind, device, d3_kind, vram_cap_mib)
     atoms.calc = calc
     rec["calculator"] = cinfo
     t0 = time.time()
+    if mem_probe:
+        atoms.get_forces()
+        rec["mem_probe"] = {"peak": _peak_mem(), "gpu_total_after_MiB": _gpu_total_mib(), "n_atoms": len(atoms), "wall_s": round(time.time() - t0, 1),
+                            "⛔": "힘 한 번 — 이완·에너지 기록 없음 (메모리만 잰다)"}
+        json.dump(rec, open(os.path.join(out, "mem_probe.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=float)
+        return rec, 0
     e0 = float(atoms.get_potential_energy())
     Opt = {"fire": __import__("ase.optimize", fromlist=["FIRE"]).FIRE, "bfgs": __import__("ase.optimize", fromlist=["BFGS"]).BFGS}[optimizer]
     opt = Opt(atoms, logfile=os.path.join(out, "opt.log"), trajectory=os.path.join(out, "opt.traj"))
@@ -163,6 +272,7 @@ def relax(model_dir, out, calc_kind="uma", device="cuda", d3_kind="auto", fmax=0
     write(rp, atoms)
     chk = S.interface_check(init, atoms, ads_elements=ads_el, substrate_elements=sub_el, fixed_idx=fixed, lateral_fixed_idx=lateral)
     json.dump(chk, open(os.path.join(out, "interface_check.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=float)
+    rec["peak_mem"] = _peak_mem()
     rec.update({"calculator_pbc": [True, True, True], "calculator_pbc_why": "UMA 는 균일 pbc 만 받는다 · z 영상 간격 ≥ 8 Å > UMA 컷오프 6 Å · QE 와 같은 3축 관례",
                 "steps_taken": int(opt.get_number_of_steps()), "converged_fmax": converged, "fmax_free_final_eV_A": round(fmax_free, 5), "wall_s": round(wall, 1),
                 "relaxed_sha256": _sha(rp), "disp_max_A": chk["disp_max_A"], "disp_rms_A": chk["disp_rms_A"], "interface_check_flags": chk["flags"],
@@ -237,6 +347,55 @@ def _selftest():
         # ⛔ 음성 ⑤ CLI 에 turbo 없음
         r = subprocess.run([sys.executable, __file__, "--model_dir", md, "--mode", "turbo"], capture_output=True, text=True)
         ck("⛔음성: CLI --mode turbo → 인자 오류 (default 만)", r.returncode != 0)
+        # ── GPU 공유 안전장치 (2026-10-01) — 가짜 nvidia-smi 가 파일의 숫자를 찍는다 ──
+        gv = os.path.join(T, "gpuval"); fake = os.path.join(T, "fake-nvidia-smi")
+        open(fake, "w").write(f"#!/bin/sh\ncat {gv}\n"); os.chmod(fake, 0o755)
+        env0 = {k: os.environ.get(k) for k in ("WAD_NVSMI", "WAD_GUARD_POLL", "WAD_GUARD_SAMPLE")}
+        os.environ.update({"WAD_NVSMI": fake, "WAD_GUARD_POLL": "0.1", "WAD_GUARD_SAMPLE": "0.1"})
+        try:
+            open(gv, "w").write("3000\n")
+            rec, rc = relax(md, os.path.join(md, "g1"), calc_kind="emt", d3_kind="none", fmax=0.05, steps=5, gpu_start_max_mib=12000, gpu_wait_s=2)
+            ck("시작 문턱: 합계 3000 ≤ 12000 → 바로 시작 (이완 산출물 있음)", rec["gpu_guard"]["start_gate"]["ok"] and os.path.isfile(os.path.join(md, "g1", "relaxed.extxyz")), rec.get("gpu_guard"))
+            open(gv, "w").write("43000\n")
+            rec, rc = relax(md, os.path.join(md, "g2"), calc_kind="emt", d3_kind="none", fmax=0.05, steps=5, gpu_start_max_mib=12000, gpu_wait_s=1)
+            ck("⛔음성 시작 문턱: 합계 43000 > 12000 가 대기 상한 넘게 → 종료 4 · 이완 안 함", rc == 4 and os.path.isfile(os.path.join(md, "g2", "gate_refused.json"))
+               and not os.path.exists(os.path.join(md, "g2", "relaxed.extxyz")), (rc, rec.get("gpu_guard")))
+            os.environ["WAD_NVSMI"] = os.path.join(T, "없는-nvidia-smi")
+            rec, rc = relax(md, os.path.join(md, "g3"), calc_kind="emt", d3_kind="none", fmax=0.05, steps=5, gpu_start_max_mib=12000, gpu_wait_s=1)
+            ck("⛔음성 시작 문턱: nvidia-smi 를 못 읽으면 시작하지 않는다 (fail-closed · 종료 4)", rc == 4 and "못 읽었다" in rec["gpu_guard"]["start_gate"]["reason"], rec.get("gpu_guard"))
+            os.environ["WAD_NVSMI"] = fake
+            open(gv, "w").write("43000\n")
+            import threading as _th
+            _th.Timer(0.5, lambda: open(gv, "w").write("3000\n")).start()
+            rec, rc = relax(md, os.path.join(md, "g4"), calc_kind="emt", d3_kind="none", fmax=0.05, steps=5, gpu_start_max_mib=12000, gpu_wait_s=10)
+            ck("시작 문턱: 43000 → 0.5 s 뒤 3000 이면 기다렸다가 시작", rec["gpu_guard"]["start_gate"]["ok"] and rec["gpu_guard"]["start_gate"]["waited_s"] >= 0.3, rec["gpu_guard"]["start_gate"])
+            envs = dict(os.environ)
+            open(gv, "w").write("47000\n")
+            r = subprocess.run([sys.executable, __file__, "--model_dir", md, "--out", os.path.join(md, "g5"), "--calc", "emt", "--d3", "none",
+                                "--steps", "200000", "--fmax", "1e-9", "--gpu_kill_total_mib", "45500"], capture_output=True, text=True, env=envs, timeout=120)
+            ck("⛔음성 감시: 합계 47000 > 45500 → 이 프로세스만 종료 3 · gpu_guard.json", r.returncode == 3 and os.path.isfile(os.path.join(md, "g5", "gpu_guard.json")), (r.returncode, r.stdout[-200:]))
+            open(gv, "w").write("3000\n")
+            r = subprocess.run([sys.executable, __file__, "--model_dir", md, "--out", os.path.join(md, "g6"), "--calc", "emt", "--d3", "none",
+                                "--steps", "30", "--fmax", "0.05", "--gpu_kill_total_mib", "45500"], capture_output=True, text=True, env=envs, timeout=120)
+            ck("감시: 합계 3000 이면 끝까지 돈다 (종료 3 아님 · gpu_guard.json 없음)", r.returncode in (0, 2) and not os.path.exists(os.path.join(md, "g6", "gpu_guard.json")), (r.returncode, r.stdout[-200:]))
+            rec, rc = relax(md, os.path.join(md, "g7"), calc_kind="emt", d3_kind="none", mem_probe=True, vram_cap_mib=1800)
+            ck("mem_probe: 힘 한 번 · mem_probe.json · 이완 산출물 없음 · EMT 는 상한 '해당 없음'", rc == 0 and os.path.isfile(os.path.join(md, "g7", "mem_probe.json"))
+               and not os.path.exists(os.path.join(md, "g7", "relaxed.extxyz")) and rec["calculator"].get("vram_cap") == "해당 없음 (EMT)", rec.get("calculator"))
+        finally:
+            for k, v in env0.items():
+                if v is None:
+                    os.environ.pop(k, None)
+                else:
+                    os.environ[k] = v
+        # ── P1 · P2 (SE 쌍 전체 계면) 도 이 도구가 받는다 — 사전 점검만 (계산 0) ──
+        for kind, term in (("P1", "s_outer"), ("P2", "li_outer")):
+            B.write_models(os.path.join(T, kind), {"A": B.build_full(kind, term)["A"]})
+            try:
+                recp, rcp = relax(os.path.join(T, kind, "A"), os.path.join(T, kind, "A", "pre"), calc_kind="emt", d3_kind="none", preflight_only=True)
+                okp = rcp == 0 and recp["preflight"]["mask_matches_policy"] and not recp["preflight"]["flags"]; infop = recp.get("preflight")
+            except SlabError as e:
+                okp, infop = False, str(e)
+            ck(f"{kind} {term}: 사전 점검 통과 (마스크 = 정책 · 깃발 0)", okp, infop)
     print(f"{'✅' if n_bad == 0 else '⛔'} relax_uma_d3 selftest {n_ok}/{n_ok + n_bad} 통과")
     return 0 if n_bad == 0 else 1
 
@@ -254,6 +413,11 @@ def main():
     ap.add_argument("--steps", type=int, default=3000)
     ap.add_argument("--optimizer", choices=["fire", "bfgs"], default="fire")
     ap.add_argument("--preflight_only", action="store_true")
+    ap.add_argument("--vram_cap_mib", type=float, default=None, help="이 프로세스 GPU 메모리 상한 (torch · 컨텍스트 제외)")
+    ap.add_argument("--gpu_kill_total_mib", type=int, default=None, help="GPU 합계가 이 값을 넘으면 이 프로세스만 종료 3")
+    ap.add_argument("--gpu_start_max_mib", type=int, default=None, help="GPU 합계가 이 값 이하일 때만 시작 (못 읽으면 시작 안 함)")
+    ap.add_argument("--gpu_wait_s", type=int, default=3600, help="시작 문턱 대기 상한 (넘으면 종료 4)")
+    ap.add_argument("--mem_probe", action="store_true", help="힘 한 번 계산하고 최대 메모리만 기록 (이완 없음)")
     ap.add_argument("--d3_energy", metavar="STRUCT", help="S3 전 예외 ② D3 결박 검사용: 이 구조의 외부 D3 에너지만 찍는다 (eV · Ry · 구현·버전)")
     ap.add_argument("--energies", metavar="STRUCT", nargs="+", help="S4 집계용: 구조들의 **UMA 단일점 에너지(D3 없음 · default 모드 · 3축 pbc)** 를 JSON 으로 (개정 1: D3 항은 QE 출력에서). --out 에 쓴다")
     a = ap.parse_args()
@@ -294,7 +458,8 @@ def main():
     if not a.model_dir:
         ap.error("--model_dir 이 필요하다")
     out = a.out or os.path.join(a.model_dir, "relax")
-    rec, rc = relax(a.model_dir, out, a.calc, a.device, a.d3, a.fmax, a.steps, a.optimizer, a.preflight_only)
+    rec, rc = relax(a.model_dir, out, a.calc, a.device, a.d3, a.fmax, a.steps, a.optimizer, a.preflight_only,
+                    a.vram_cap_mib, a.gpu_kill_total_mib, a.gpu_start_max_mib, a.gpu_wait_s, a.mem_probe)
     print(json.dumps({k: rec[k] for k in rec if k not in ("calculator",)}, ensure_ascii=False, indent=1, default=float))
     if "calculator" in rec:
         print("계산기:", json.dumps(rec["calculator"], ensure_ascii=False, default=float)[:600])

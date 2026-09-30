@@ -6387,10 +6387,10 @@
      "dem_handoff"
     ]
    },
-   "title": "SE 쌍 전체 계면 UMA+D3 예측 카드 (초안) — P1 LPSCl|Ag(111) 4층 · P2 LPSCl|흑연 3층 · 두 종결 × registry A·B · 끝점 ≥ 10 Å · V5 와 같은 표본 비교",
-   "statement": "결정 D-2026-10-01-wad-se-pairs-uma-prediction-to-dem 의 절차. 보고량 = 종결별 W_sep^UMA+D3 (2체 헤드라인 · registry A·B 평균 · [min, max] · ATM 별도 열) · 기하 = 정본 4층 SE (1×2 / 1×3) + Ag(111) 4층 / 흑연 3층 (SE 에 맞춤) · 이완 UMA default + D3(BJ) · fmax 0.02 · 마스크 far_half · 끝점 ≥ 10 Å · 게이트 G1 이완 · G2 구조 · G3 끝점 10→12 Å · 외주 V5 가 오면 ① G5 (같은 좌표 UMA vs VASP) ② 작은 ↔ 전체 UMA 크기 효과를 나란히 싣는다 (합쳐 오차막대로 만들지 않는다).",
+   "title": "SE 쌍 전체 계면 UMA+D3 예측 카드 (봉인) — P1 LPSCl|Ag(111) 4층 · P2 LPSCl|흑연 3층 · 두 종결 × registry A·B · 끝점 ≥ 10 Å · V5 와 같은 표본 비교",
+   "statement": "결정 D-2026-10-01-wad-se-pairs-uma-prediction-to-dem 의 절차. 보고량 = 종결별 W_sep^UMA+D3 (2체 헤드라인 · registry A·B 평균 · [min, max] · ATM 별도 열) · 기하 = 정본 4층 SE (1×2 / 1×3) + Ag(111) 4층 / 흑연 3층 (SE 에 맞춤) · 이완 UMA default + D3(BJ) · fmax 0.02 · 마스크 SE far_half 만 (흡착층 자유 · V5 와 같다) · 끝점 ≥ 10 Å · 게이트 G1 이완 · G2 구조 · G3 끝점 10→12 Å · 외주 V5 가 오면 ① G5 (같은 좌표 UMA vs VASP) ② 작은 ↔ 전체 UMA 크기 효과를 나란히 싣는다 (합쳐 오차막대로 만들지 않는다).",
    "rationale": "A′ 카드의 결박값(S1)·빌더·registry 규칙·라벨을 그대로 물려받고, WAD-CC 의 끝점 교훈(≥ 10 Å)과 ATM 열 방식을 따른다. 사용자 '이거랑 vasp 계산이랑 같이 비교해보면 좋을듯'.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand_card",
    "results_seen": false,
    "card": "db/properties/wad_se_pairs_uma_prediction_card_2026_10_01.json",
@@ -6402,17 +6402,98 @@
    "supersedes": [],
    "reopen_criteria": "카드 봉인(1저자 비준) 전에는 계산하지 않는다 · 빌더 확장 selftest·돌연변이 통과 전에는 계산하지 않는다 · 결과를 본 뒤 registry·끝점·마스크를 바꾸지 않는다.",
    "proposed_by": "claude-session-2026-09-30",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-10-01",
      "state": "proposed",
      "by": "agent",
      "note": "절차 카드 초안 — 1저자(사용자) 비준 대기."
+    },
+    {
+     "at": "2026-10-01",
+     "state": "active",
+     "by": "1저자(사용자)",
+     "note": "사용자 '비준이고' — 봉인 전 정정 1: 초안의 흡착층 절반 고정은 interface_check 규칙과 충돌 → SE far_half 만 (결과 전). 기계 = gabia GPU (탄성 23_m 정지 중 · 결정 D-2026-10-01-gabia-elastic-pause-wad-uma)."
     }
    ],
    "ratification": {
-    "state": "proposed"
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-30T17:24:10Z",
+    "commit": "46e6045121d3ac43a43a17bab7e4ef0a881a3013",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "'비준이고 그냥 gabia에서 해도 될듯 한데 uma 정도니까 ㅇㅇ' (2026-10-01 · 이 세션)",
+    "decision_digest": "sha256:15ef269307806c563191a453d9d92302f1f8977fb81a7b15b4ba57389851c47e"
+   }
+  },
+  {
+   "id": "D-2026-10-01-gabia-elastic-pause-wad-uma",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "ops.gabia.gpu.concurrency",
+   "slot": "gabia_gpu_elastic_pause_wad_uma",
+   "applies_to": {
+    "systems": [
+     "modelc_2x_elastic",
+     "lpscl_ag111_interface",
+     "lpscl_graphite_interface",
+     "lpscl_smallcell_glass"
+    ],
+    "tasks": [
+     "elastic_modelc_2x_strain_23_m_pause",
+     "wad_p1_p2_full_interface_uma_prediction"
+    ],
+    "methods": [
+     "qe_gpu_relax",
+     "uma_d3"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "gabia — 탄성 modelc_2x strain_23_m 을 EXIT 로 잠깐 세우고, 그동안 W_ad SE 쌍 UMA 를 li2s MD 옆 GPU 에서 한 번에 하나씩 · 끝나면 탄성 재개 (BFGS 이력 승계)",
+   "statement": "① 탄성 러너 bash (PID 1967071 · 창 셸 1967070 의 자식) 를 kill -STOP 으로 얼리고 (T 확인), 감시 /root/logs/stop23m.sh 가 BFGS 스텝 끝(new trust radius +1)에서 strain_23_m.EXIT 를 놓아 pw.x 가 저장하고 서게 한다 (EXIT 파일은 감시가 지운다). ② 탄성이 꺼진 동안 W_ad SE 쌍 UMA (카드 D-2026-10-01-wad-se-pairs-uma-card) 를 gabia GPU 에서 **한 번에 하나씩** 돌린다 — li2s v2 MD (예외 (4) 그대로) 와 같이. relax_uma_d3 안전장치: 시작 문턱 GPU 합계 ≤ 12,000 MiB (탄성이 꺼졌는지) · 감시 합계 > 45,500 MiB 면 **우리 UMA 만** 종료 3 (li2s 러너 가드 46,000 보다 먼저) · 메모리 상한 16,000 MiB. ③ W_ad UMA 가 도는 동안 탄성을 재개하지 않는다 (GPU pw.x + UMA 둘 = 셋 동시 금지). ④ 재개 = 얼린 러너를 정리하고 새 러너로 다시 띄운다 — strain_23_m 은 `stopped` + tmp_strain_23_m/strain_23_m.bfgs 가 있어 restart_mode='restart' (BFGS 이력 승계 · 09-27 23_p 와 같은 경로). ⑤ 09-11 2차 개정 (D-2026-09-11-elastic-conv-threshold) 의 '중단' 은 경합으로 인한 비정상 종료다 — EXIT 통제 정지 + 이력 승계는 해당 안 됨 (1저자 09-29 해석 · 23_p 선례).",
+   "rationale": "사용자가 SE 쌍 UMA 를 gabia GPU 에서 하라고 했다 ('gabia gpu하라고'). 탄성(41.4 GB) + li2s(2 GB) 옆에 UMA 를 더하면 합계가 li2s 러너 가드 46,000 을 넘어 li2s MD 가 죽거나 탄성이 OOM 날 수 있어서, 사용자가 '23_m 을 잠깐 stop했다가 하자' 로 정했다. 탄성 러너는 한 점이 stopped 로 끝나면 바로 다음 점을 띄우므로 러너를 먼저 얼린다 (CLAUDE.md tmux STOP 규칙: 창 셸이 아니라 러너 bash 만). 트랙 = gabia 운용 · 탄성 (우리) → 1저자 = 사용자.",
+   "decision_state": "active",
+   "record_kind": "scope_declaration",
+   "results_seen": false,
+   "card": "db/properties/wad_se_pairs_uma_prediction_card_2026_10_01.json",
+   "record": "/root/logs/stop23m.sh · /root/logs/stop23m.log (gabia)",
+   "depends_on": [
+    "D-2026-09-11-elastic-conv-threshold",
+    "D-2026-09-30-gabia-uma-coexist-elastic-li2s-v2",
+    "D-2026-10-01-wad-se-pairs-uma-card"
+   ],
+   "amends": [],
+   "supersedes": [],
+   "evidence": [
+    "gabia 블록 ⑧ (2026-10-01 · 사용자 붙여넣기): 창 셸 1967070 → 러너 1967071 → mpirun 2706838/2706846 → pw.x 2706850 · 23_m BFGS 18 · trust radius 줄 19 · .bfgs 3,932,165 B @01:20",
+    "gabia 블록 ⑨: 1967071 T+ · 1967070 Ss+ · 감시 02:19:09 대기 (trust radius 19 · BFGS 18)",
+    "kb/open_items.md 09-27 23_p EXIT 선례 (BFGS 67 끝 → EXIT → 5 s 뒤 저장·정지 · 'Program stopped by user request')"
+   ],
+   "reopen_criteria": "W_ad UMA 안전장치(종료 3·4)가 발동하면 그 잡만 멈추고 사람이 본다 · 탄성 재개는 W_ad UMA 가 다 끝난 뒤 · 러너가 풀려(T 아님) 다음 점이 떴으면 W_ad UMA 는 시작 문턱(12,000)에서 기다린다 — 그 경우 이 결정은 쓰이지 않고 끝난다.",
+   "enforcement": "감시 스크립트가 러너가 T 가 아니면 EXIT 을 놓지 않는다 · relax_uma_d3 시작 문턱·감시·상한 · 한 번에 하나 (큐 스크립트 직렬).",
+   "proposed_by": "claude-session-2026-09-30",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-01",
+     "state": "active",
+     "by": "1저자(사용자)",
+     "note": "'gabia gpu하라고' · 'strain 23_m 을 잠깐 stop했다가 하자'."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-30T17:24:10Z",
+    "commit": "46e6045121d3ac43a43a17bab7e4ef0a881a3013",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "'strain 23_m 을 잠깐 stop했다가 하자 그럼' · 'gabia gpu하라고' (2026-10-01 · 이 세션)",
+    "decision_digest": "sha256:67bee427021d2c45f95e0ce4aa8b5c605e0b1cf03223366f9d82798794fe6434"
    }
   }
  ]

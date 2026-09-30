@@ -3,7 +3,7 @@
  "kind": "estimand",
  "record_kind": "prospective",
  "date": "2026-10-01",
- "status": "초안 — 1저자(사용자) 비준 전 · 계산 전 (results_seen false)",
+ "status": "봉인 — 1저자(사용자) 비준 2026-10-01 · 계산 전 (results_seen false)",
  "results_seen": false,
  "citable": false,
  "track": "점착 W_ad — 1저자 = 사용자 (통지할 제3자 없음 · DEM 은 협업 상대)",
@@ -26,7 +26,7 @@
   "P1": "SE = 정본 4층 대칭 슬랩 (V100 PBE 이완 좌표 · `se_slab_from_relaxed` · V3·V4 와 같은 기판) 1×2 + Ag(111) **4층** 2√3×7 (112 Ag) — 흡착층을 SE 에 맞춤 (결정 7 · PBE+D3 격자 · 변형 +0.848 / −0.186 %). 원자 수 ≈ 332 (S 바깥) / 308 (Li·PS₄ 바깥).",
   "P2": "SE 4층 1×3 + 흑연 **3층** AB 4×7√3 (336 C · 변형 +1.936 / +0.890 %). 원자 수 ≈ 666 / 630. 흑연 두께는 WAD-CC (3|3) 와 같게.",
   "registry": "A·B = `build_aprime_interfaces.registry_select` 결정적 규칙 (초기 구조 · 표면 종 S / Li) — V3·V4·V5 와 같은 규칙. 흡착층 첫 층의 기준 원자를 A 원자 위 / A–B 중점 위에 둔다 (V5 와 같은 방식).",
-  "이완": "UMA uma-s-1p1 · omat · **default 모드** (A′ S1 결박) + D3(BJ) 2체 PBE 매개변수 · `tools/wad/relax_uma_d3.py` · FIRE · fmax 0.02 eV/Å · 3000 스텝 · 셀 고정 · 마스크: SE `fixed_mask_policy(far_half)` + 흡착층의 계면 반대쪽 절반 (Ag 위 2층 · 흑연 맨 위 1층) · 측방 제약 없음 (V5 와 같게 — registry 가 합쳐지면 기록하고 하나로 적는다).",
+  "이완": "UMA uma-s-1p1 · omat · **default 모드** (A′ S1 결박) + D3(BJ) 2체 PBE 매개변수 · `tools/wad/relax_uma_d3.py` · FIRE · fmax 0.02 eV/Å · 3000 스텝 · 셀 고정 · 마스크 = SE `fixed_mask_policy(far_half)` **만** · 흡착층 자유 · 측방 제약 없음 (V5 와 같다 — registry 가 합쳐지면 기록하고 하나로 적는다).",
   "끝점": "far = 결합 기하에서 흡착층을 +z 강체 이동 · 직접 간격 ≥ **10 Å** · 영상 간격 ≥ 10 Å (`make_endpoints` · gap 10 — WAD-CC 교훈: 8 Å 는 V2 에서 끝점 검사 미통과). bound·far 같은 셀.",
   "에너지": "두 끝점의 UMA 단일점 + D3(BJ) 2체 · W = [E(far) − E(bound)] / A · A = 면내 셀 넓이 · 계면 1 개. ATM = simple-dftd3 (s9 1 vs 0) 같은 기하 (WAD-CC `atm_column` 방식).",
   "V5_비교_외주가_오면": {
@@ -34,7 +34,10 @@
    "②_모델_크기_효과": "W^UMA+D3 (V5 작은 모델 · SE 2층 · Ag 3층) vs W^UMA+D3 (P1 · SE 4층 · Ag 4층) — 같은 종결·registry. 정보로 적는다 (문턱 없음 · |Δ| > 0.10 J/m² 면 '크기 민감' 라벨).",
    "③_합쳐_읽기": "①은 '같은 작은 모델에서 UMA 가 DFT 를 얼마나 맞히나', ②는 '모델을 키우면 UMA 값이 얼마나 바뀌나' — 둘을 나란히 DEM 에 붙인다 (합쳐서 오차막대로 만들지 않는다).",
    "탄소": "②만 가능 — P2′ (SE 2층 1×3 + 흑연 1층) UMA 는 선택 (1저자) · 외주 없음."
-  }
+  },
+  "⚠_봉인_전_정정_1": "비준 발화('비준이고') 뒤 · 봉인 전에 하나 고쳤다: 초안의 '흡착층의 계면 반대쪽 절반 (Ag 위 2층 · 흑연 맨 위 1층) 고정' 은 A′ 도구 규칙과 충돌한다 — `se_sym_slab.interface_check` 는 흡착층 원자가 고정 목록에 있으면 깃발(= G2 INCOMPLETE)로 본다. ⇒ V5 와 같은 'SE far_half 만' 으로 바꿨다. 덤: V5 ↔ P1 크기 효과 비교에서 마스크 정책 차이라는 교란이 없어진다. 결과를 보기 전의 정정이다.",
+  "초기_간격_d0": "P1 2.8 Å (V5 와 같다) · P2 3.2 Å (흑연–S/Li 분산 거리 근처에서 시작 · 이완이 정한다)",
+  "빌더": "`tools/wad/build_aprime_interfaces.py --build P1|P2 --term s_outer|li_outer` (커밋 46e604512 · selftest 35/35 · 돌연변이 4/4)"
  },
  "1c_답하지_않는_것": [
   "전체 계면의 DFT 값",
@@ -59,13 +62,14 @@
  "5_보고_규칙": "종결별 헤드라인 (registry 평균 · [min, max]) · 2체 · ATM 열 따로 · 라벨 1a 전부 · 숫자는 결과 기록 `db/properties/wad_se_pairs_uma_result_<날짜>.json` 에서만.",
  "6_기계_비용": {
   "무엇": "UMA 만 (DFT 없음) — 이완 8 (P1 2×2 · P2 2×2) + 단일점 16 + G3 4 + ATM.",
-  "어디": "V100 (32 GB · 비어 있음) 에서 UMA 가 되는지 먼저 본다 (09-21 env 깨짐 → 09-24 컨테이너 재생성). 안 되면 li2s v2 가 끝난 뒤 gabia 또는 kgy (지금 gabia 예외는 li2s 5 런만 허용 · 탄성 옆 다른 UMA 금지).",
+  "어디": "**gabia GPU** (사용자 'gabia gpu하라고') — 탄성 modelc_2x strain_23_m 을 BFGS 스텝 끝에서 EXIT 통제 정지한 동안 (사용자 'strain 23_m 을 잠깐 stop했다가 하자' · 결정 D-2026-10-01-gabia-elastic-pause-wad-uma) li2s MD 옆에서 한 번에 하나씩. relax_uma_d3 안전장치: --gpu_start_max_mib 12000 (탄성이 꺼졌는지) · --gpu_kill_total_mib 45500 (li2s 러너 가드 46,000 보다 먼저 우리만 멈춤) · --vram_cap_mib 16000. 끝나면 탄성 재개 (새 러너 · BFGS 이력 승계).",
   "추정_⚠": "P1 332 · P2 666 원자 · default 모드 — 이완 하나에 수십 분–수 시간 (첫 이완 실측으로 갈아 끼운다) · 상한 30 GPU-h."
  },
  "7_선행": [
-  "빌더 확장 `build_aprime_interfaces.py --build P1|P2` (4층 SE · Ag 4층 · 흑연 3층 · gap 10 · selftest 음성 포함 · 돌연변이)",
-  "V100 UMA 환경 확인 (fairchem import · 체크포인트 sha · D3 구현)",
-  "이 카드 1저자 비준 → 결정 active"
+  "✅ 빌더 확장 (46e604512)",
+  "✅ relax_uma_d3 안전장치 (--gpu_start_max_mib · --gpu_kill_total_mib · --vram_cap_mib · --mem_probe · P1/P2 · selftest 19/19 · 돌연변이 4/4)",
+  "✅ 1저자 비준 (2026-10-01)",
+  "탄성 23_m EXIT 통제 정지 확인 (감시 /root/logs/stop23m.log)"
  ],
  "출처": [
   "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json (1a · 1b · 5 · S1 결박)",
@@ -79,6 +83,12 @@
    "state": "draft",
    "by": "agent",
    "note": "결정 D-2026-10-01-wad-se-pairs-uma-prediction-to-dem 의 절차 카드 초안. 사용자 '이거랑 vasp 계산이랑 같이 비교해보면 좋을듯' → §1b V5_비교 ①② · '시간은 오래걸릴거' → 서두르지 않음."
+  },
+  {
+   "at": "2026-10-01",
+   "state": "sealed",
+   "by": "1저자(사용자)",
+   "note": "사용자 '비준이고 그냥 gabia에서 해도 될듯' → (gabia GPU 가 탄성+li2s 로 메모리·가드에 걸린다는 설명 뒤) 'gabia gpu하라고' · 'strain 23_m 을 잠깐 stop했다가 하자'. 봉인 전 정정 1 (마스크)."
   }
  ]
 }
