@@ -61,17 +61,17 @@ for k in range(n_max):
 
 ## 1. 실측된 교란 — 이제 다섯 가지
 
-> **줄번호 갱신 (79차, 2026-09-27):** 아래 `src/fitting.py` 인용 줄은 단계 2 한정 구현(restart 행 로깅 필드 추가, `3dc269d8`)으로 코드가 아래로 밀려 1421→1487 · 1376→1442 · 392-406→457-471 로 옮겼고, 80차(G79-N1 docstring 정정)로 다시 1491 · 1446 · 461-475 가 됐다. 단계 3 라운드 1 (`20ab9655` · `f3de7e02`) 로 1935 → 1940 · 1890 → 1895 · 736-760 → 743-767 (GATE82 §8-b), 82차 잔여 보완 (`7d291fbc`) 으로 1955 · 1910 (743-767 불변 — 추가 줄은 모두 그 아래). 교란 자체는 그대로다 (단계 3 미구현) — `test_stage3_contract_cites_live_code_facts` 가 그것을 확인한다.
+> **줄번호 갱신 (79차, 2026-09-27):** 아래 `src/fitting.py` 인용 줄은 단계 2 한정 구현(restart 행 로깅 필드 추가, `3dc269d8`)으로 코드가 아래로 밀려 1421→1487 · 1376→1442 · 392-406→457-471 로 옮겼고, 80차(G79-N1 docstring 정정)로 다시 1491 · 1446 · 461-475 가 됐다. 단계 3 라운드 1 (`20ab9655` · `f3de7e02`) 로 1935 → 1940 · 1890 → 1895 · 736-760 → 743-767 (GATE82 §8-b), 82차 잔여 보완 (`7d291fbc`) 으로 1955 · 1910 (743-767 불변 — 추가 줄은 모두 그 아래). 라운드 2a (84차 R2-e dead 정의 삭제 −18 줄 · R2-b 시작 전 경계 추가) 로 2015 · 1965 · 725-749 — legacy **의미** 불변 (84차 비차단 정정: 이동한 좌표는 갱신한다). 교란 자체는 그대로다 (단계 3 미구현) — `test_stage3_contract_cites_live_code_facts` 가 그것을 확인한다.
 
 전부 코드·투영에서 확인한 것이지 가정이 아니다.
 
-| # | 교란 | 근거 |
-|---|---|---|
-| 1 | `warm_start` 하나가 **원점과 조건 fitting 을 동시에** 바꾼다 | `src/fitting.py:1955` 가 조건 task 를 그대로 물려받는다. 404 half-cell `p_ini(34p)` `[1.509716,…] → [1.518503,…]` |
-| 2 | `--n-restarts` 는 실행 횟수가 아니라 **예산 상한** | adaptive 조기 종료. 2회 종료 행 223 → 238 |
-| 3 | **noise 층을 바꾸면 restart 난수가 통째로 갈린다** | `cond_id = sha1(asdict(Condition))[:12]` 가 `noise`·`seed` 포함 (`src/grid.py:99`) → `task["seed"] = int(sha1(cond_id)[:8],16)` (`src/fitting.py:1910`) |
-| 4 | **warm 은 slot 을 교체한다** (§0) | 투영 `restart_sources` |
-| 5 | **예산을 바꾸면 warm 후보 자체가 바뀐다** | 연쇄 구조 (`src/fitting.py:743-767`) — 33p 예산 ↑ → 33p 해 변화 → 34p 가 받는 warm 좌표 변화. 22차 발견 2 |
+| # | 교란 | 근거 | v6 경로 (sig 6) 의 상태 — 84차 R2-f · 2a `{GREEN}` |
+|---|---|---|---|
+| 1 | `warm_start` 하나가 **원점과 조건 fitting 을 동시에** 바꾼다 | `src/fitting.py:2015` 가 조건 task 를 그대로 물려받는다. 404 half-cell `p_ini(34p)` `[1.509716,…] → [1.518503,…]` | **해소 (v6 원점 fitting 없음)** — v6 는 reference `grid` · condition stage 만; `_stage3_preflight` (`src/fitting.py:1288`) 가 halfcell/p_ini 를 원점 self-fit **앞**에서 거부 (G84-N3 · `test_gate84_round2a.py::n3_01`). legacy 경로는 그대로 |
+| 2 | `--n-restarts` 는 실행 횟수가 아니라 **예산 상한** | adaptive 조기 종료. 2회 종료 행 223 → 238 | **해소** — v6 는 `adaptive=False` 만 · objective 별 예산 = 계획 `budget_by_objective` (`restart_예산_완주`, F12). legacy 그대로 |
+| 3 | **noise 층을 바꾸면 restart 난수가 통째로 갈린다** | `cond_id = sha1(asdict(Condition))[:12]` 가 `noise`·`seed` 포함 (`src/grid.py:99`) → `task["seed"] = int(sha1(cond_id)[:8],16)` (`src/fitting.py:1965`) | **해소 (v6)** — bank seed 는 `H(pair_group_id, bank_version)` (`tools/design_wire.py` `_bank_seed`) · pair_group 은 물리 좌표만 (noise · seed 제외) → 같은 좌표의 두 noise 실현이 **같은 bank** (`test_gate81_stage3_wire.py::s07` · `test_gate82_residuals.py::n1_00`). legacy 의 `task["seed"]` 유도는 그대로 |
+| 4 | **warm 은 slot 을 교체한다** (§0) | 투영 `restart_sources` | **계획으로 명시** — `candidate_mode` (`legacy_slot_replace` / `equal_start_count_base_retained`) 가 계획 envelope 에 · 실현 `counts_by_source` 를 record 가 센다. legacy 그대로 |
+| 5 | **예산을 바꾸면 warm 후보 자체가 바뀐다** | 연쇄 구조 (`src/fitting.py:725-749`) — 33p 예산 ↑ → 33p 해 변화 → 34p 가 받는 warm 좌표 변화. 22차 발견 2 | **해소 (v6)** — warm 은 in-process 연쇄가 아니라 **봉인 provider map** (`solution-map/v1`, provider run 에서 재생성 · edge sha 대조 · `provider_x0`) 에서만 · 예산은 objective 별 독립 (G81-N3 · F5 · F6). legacy 연쇄는 그대로 |
 
 5번이 v1 의 "중첩 보장" 을 부분적으로 무효화한다. 중첩은 **random bank 접두사
 에만** 성립하고, 34p 의 **전체 후보집합**은 앞 목적함수 해가 바뀌면 중첩되지

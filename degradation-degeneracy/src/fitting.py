@@ -347,26 +347,8 @@ def fit(objective, init, lb, ub, n_restarts: int = 1, seed: int = 0,
 _RESTART_NEW_KEYS = ("converged", "n_eval", "termination_status")
 
 
-def normalize_restart_record(r) -> dict:
-    """restart 기록 하나를 세대와 무관하게 같은 모양으로 읽는다 (79차 — 역사적 reader).
-
-    · 옛 튜플 `[p, J]`            → `record_generation = "legacy_pair"`, i·source·warm 은 None
-    · 옛 dict (`p·J·i·source·warm`) → `"legacy_dict"`
-    · 79차 이후 dict               → `"v6_prep_logging"`
-    새 키(`converged`·`n_eval`·`termination_status`)가 없으면 값은 **None(미기록)** 이다 — False/0 으로 채우지
-    않는다. 옛 세대의 실제 관측값처럼 읽으면 안 되기 때문이다 (78차 회신 구현 경계 4).
-    """
-    if isinstance(r, dict):
-        gen = "v6_prep_logging" if all(k in r for k in _RESTART_NEW_KEYS) else "legacy_dict"
-        return {"record_generation": gen,
-                "p": r.get("p"), "J": r.get("J"), "i": r.get("i"), "source": r.get("source"),
-                "warm": r.get("warm"),
-                "converged": r.get("converged") if gen == "v6_prep_logging" else None,
-                "n_eval": r.get("n_eval") if gen == "v6_prep_logging" else None,
-                "termination_status": r.get("termination_status") if gen == "v6_prep_logging" else None}
-    p, J = r
-    return {"record_generation": "legacy_pair", "p": list(p), "J": J, "i": None, "source": None, "warm": None,
-            "converged": None, "n_eval": None, "termination_status": None}
+# (84차 R2-e — 79차의 역사적 `normalize_restart_record(r)` 정의는 81차 dispatch 판에 가려진 dead 정의였다 → 삭제.
+#  역사적 3 세대 읽기는 아래 dispatch 판의 `declared=None` 가지가 그대로 담당한다.)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -410,7 +392,7 @@ def _read_row(r) -> dict:
     return out
 
 
-def normalize_restart_record(r, declared: str | None = None) -> dict:      # noqa: F811 — 81차 dispatch 판
+def normalize_restart_record(r, declared: str | None = None) -> dict:
     """restart 기록 하나를 **선언된 세대 문맥**에 대조해 읽는다 (★ 81차 G81-N2; 79차 역사적 reader 를 대체).
 
     · `declared=None` (역사적 호출 그대로): 2-튜플 → `legacy_pair` · 5 키 이하 dict → `legacy_dict` ·
@@ -911,6 +893,17 @@ def _config_closure_digest(path, repo_root=None) -> str:
     키는 저장소 기준 상대경로로 정규화한다 — 같은 파일을 두 표기로 넘겨도 같은
     preimage 여야 한다.
     """
+    # ★ 84차 G84-N1 — v5 승인 축은 **hex16 그대로** (spec digest 불변). v6 계획 · run_spec · validator 는 같은
+    #   preimage 의 전체 SHA-256 (`config_closure_sha256`) 을 쓴다 — 16자 padding · 16자 재해시 · leaf 대체가 아니다.
+    return closure_sha256_from_parts(_config_closure_parts(path, repo_root))[:16]
+
+
+def _config_closure_parts(path, repo_root=None) -> dict:
+    """closure preimage 의 재료 — `{저장소 상대 키: 파일 SHA-256 hex}` (extends 연쇄 전체 · 84차 G84-N1).
+
+    validator 는 같은 dict 를 **봉인 스냅샷 바이트**에서 다시 만들어 `closure_sha256_from_parts` 로 대조한다
+    (`src.io._stage3_checks` 의 `base_config_결속`). 정의는 여기 하나다.
+    """
     import hashlib as _h
 
     from src.config import config_dependencies
@@ -920,10 +913,19 @@ def _config_closure_digest(path, repo_root=None) -> str:
     if not deps:
         from tools.preserve import PreserveError
         raise PreserveError("plan", f"승인 축이 가리키는 config 연쇄가 비었다: {path}")
-    body = "\n".join(
-        f"{_ck(d, repo_root)}={_h.sha256(_P_read_bytes(d)).hexdigest()}"
-        for d in sorted(deps, key=lambda x: _ck(x, repo_root)))
-    return _h.sha256(body.encode("utf-8")).hexdigest()[:16]
+    return {_ck(d, repo_root): _h.sha256(_P_read_bytes(d)).hexdigest() for d in deps}
+
+
+def closure_sha256_from_parts(parts: dict) -> str:
+    """`{키: sha256hex}` → closure 의 전체 SHA-256 (hex64). 키 정렬 · `key=sha` 줄 · `\\n` 결합 — 51차 P0-A2 의 preimage."""
+    import hashlib as _h
+    body = "\n".join(f"{k}={parts[k]}" for k in sorted(parts))
+    return _h.sha256(body.encode("utf-8")).hexdigest()
+
+
+def config_closure_sha256(path, repo_root=None) -> str:
+    """★ 84차 G84-N1 — extends closure 전체의 **hex64** (v6 계획 `inputs.base_config_digest` · run_spec · validator 의 값)."""
+    return closure_sha256_from_parts(_config_closure_parts(path, repo_root))
 
 
 def _P_read_bytes(path) -> bytes:
@@ -1283,9 +1285,57 @@ def _assert_fit_authorized(live_fit: dict, out_dir, leg: str | None = None,
                                                  ledger=None)
 
 
+def _stage3_preflight(stage3: dict, *, reference: str, base_config, stage_root, run_source_digest: str) -> dict:
+    """★ 84차 G84-N3 — v6 문맥의 **시작 전 공통 경계** (고정 표 §11-3).
+
+    `_prepare_stage3` 는 `_run_fit_locked` 안에서 halfcell 분기의 원점 self-fit (`_fit_one`) **뒤**에 불린다. 그래서 v6
+    거부와 계획 결속을 여기로 끌어올려, staging 뒤 · **첫 수치 작업 앞** 에서 검사한다 (CLI 만이 아니라 `run_fit` 직접
+    호출도 같은 경계를 지난다). 검사: 계획 envelope 유효 (v4) · 선언 세대 v6 · reference 는 grid 만 (p_ini/halfcell
+    거부 — R2-d 정책) · 계획 `inputs.reference` == 실행 reference · 계획 `source_digest` == 실행 `source_digest()` ·
+    계획 `inputs.base_config_digest` (hex64 · null 거부) == 실행이 읽는 **staged closure** 의 hex64 (G84-N1 · §11-2).
+    반환: `{"base_config_closure_sha256", "base_config_closure_keys"}` — run_spec.stage3 에 실려 validator 가
+    봉인 스냅샷에서 다시 만든다. legacy (stage3=None) 는 이 함수를 지나지 않는다.
+    """
+    from tools import design_wire as DW
+    from src.io import canonical_input_key as _ck
+    from tools.preserve import check_planned_envelope
+    if not isinstance(stage3, dict) or set(stage3) != {"planned", "design", "provider_runs"}:
+        raise ValueError("stage3 는 {planned, design, provider_runs} 를 가진 dict 여야 한다")
+    env = stage3["planned"].envelope()
+    bad = check_planned_envelope(env)
+    if bad or env.get("schema") != "planned-leg/v4":
+        raise ValueError("stage3.planned 가 유효한 planned-leg/v4 가 아니다: " + "; ".join(bad[:3]))
+    if env["protocol_generation"] != DW.STAGE3_PROTOCOL_GENERATION:
+        raise ValueError(f"계획 protocol_generation {env['protocol_generation']!r} ≠ v6 경로의 "
+                         f"{DW.STAGE3_PROTOCOL_GENERATION!r} — sig_version 6 · 행 v6 와 선언 충돌, 시작하지 않는다")
+    if reference != "grid":
+        raise ValueError(f"v6 경로는 reference='grid' 만 받는다 (받은 것 {reference!r} — p_ini/halfcell 원점 self-fit 은 "
+                         f"명시 거부, R2-d) — 첫 수치 작업 전 거부")
+    inp = env["inputs"]
+    if inp.get("reference") != reference:
+        raise ValueError(f"계획 inputs.reference {inp.get('reference')!r} ≠ 실행 reference {reference!r} — 시작하지 않는다")
+    if env["source_digest"] != run_source_digest:
+        raise ValueError(f"계획 source_digest {env['source_digest']!r} ≠ 실행 코드 source_digest {run_source_digest!r} "
+                         f"— 다른 코드로 세운 계획, 시작하지 않는다")
+    bc = base_config or "configs/base.yaml"
+    parts = _config_closure_parts(bc, stage_root)
+    got = closure_sha256_from_parts(parts)
+    want = inp.get("base_config_digest")
+    if want is None:
+        raise ValueError("계획 inputs.base_config_digest 가 null 이다 — v6 실행은 base-config closure 를 읽으므로 "
+                         "null 은 우회가 아니라 거부다 (§11-2)")
+    if want != got:
+        raise ValueError(f"계획 inputs.base_config_digest {str(want)[:16]}… ≠ 실행이 읽는 staged closure 의 hex64 "
+                         f"{got[:16]}… (extends 연쇄 전체 · 같은 preimage) — 시작하지 않는다")
+    return {"base_config_closure_sha256": got, "base_config_closure_keys": sorted(parts)}
+
+
 def _prepare_stage3(stage3: dict, tasks: list, df, objectives: dict, bounds: dict, reference: str,
-                    adaptive: bool, warm_start: bool, in_dir, out_dir) -> dict:
-    """★ 81차 — v6 실행 전 대조 (표 A·C·§5). 어긋나면 시작하지 않는다."""
+                    adaptive: bool, warm_start: bool, in_dir, out_dir, preflight: dict | None = None) -> dict:
+    """★ 81차 — v6 실행 전 대조 (표 A·C·§5). 어긋나면 시작하지 않는다.
+
+    ★ 84차 — 시작 전 **공통 경계**는 `_stage3_preflight` (halfcell 원점 self-fit 보다 앞) 다. 여기의 같은 검사는
+      심층 방어로 남긴다. `preflight` 는 그 결과 (closure hex64 · 키) 로 run_spec.stage3 에 싣는다."""
     from src.grid import Condition
     from tools import design_wire as DW
     from tools.preserve import check_planned_envelope
@@ -1395,16 +1445,20 @@ def _prepare_stage3(stage3: dict, tasks: list, df, objectives: dict, bounds: dic
                   "candidate_mode": st["candidate_mode"], "budget_by_objective": st["budget_by_objective"],
                   "warm_provider_map": st["warm_provider_map"],
                   "provider_edges_sha256": hashlib.sha256(json.dumps(env["provider_edges"], sort_keys=True).encode()).hexdigest(),
-                  "roster_sha256": r_sha, "arm": st["arm"], "stage": st["stage"]}
+                  "roster_sha256": r_sha, "arm": st["arm"], "stage": st["stage"],
+                  # ★ 84차 G84-N1 — validator 가 봉인 스냅샷에서 closure 를 다시 만들 재료 (키) 와 실행이 잰 hex64
+                  **(preflight or {})}
     return {"planned_env": env, "roster_sha256": r_sha, "n_obs": len(roster), "spec_block": spec_block}
 
 
 def write_execution_record(out_dir, fits, *, planned_env: dict, objective_order: list,
                            curves_df, design: dict) -> dict:
-    """★ 81차 G81-N1 — 실현 기록 `execution-record/v1` + 후보 map `candidate-map/v1` 을 run_dir 에 쓴다.
+    """★ 81차 G81-N1 — 실현 기록 `execution-record/v2` + 후보 map `candidate-map/v1` 을 run_dir 에 쓴다.
 
     실현 count 는 fits 행(`restarts_json` · `restart_errors_json`)에서 **세어서** 적는다 — 계획 count 를 복사하지
     않는다. 계획은 `planned_id` 로 참조만.
+    ★ 84차 G84-N4 — v2 는 objective 마다 `finite` (저장 J 유한 수) · `converged` (legacy true 수) 를 더한다. 둘은
+      정상 종료 판정이 아니다 (§11-4). v1 기록은 읽기 그대로 (consumer 가 schema 로 분기) — 새로 쓰는 것은 v2 뿐.
     """
     from src.io import observed_roster, realized_from_fits
     from tools.design_wire import roster_sha256 as _roster_sha256
@@ -1417,7 +1471,8 @@ def write_execution_record(out_dir, fits, *, planned_env: dict, objective_order:
         raise RuntimeError("관측 roster 를 fits 에서 재구성할 수 없다 — execution record 를 쓰지 않는다: "
                            + "; ".join(ros_bad[:3]))
     # ★ 82차 전 자체 점검 F3 — count 는 validator 와 **같은 정의**(`src.io.realized_from_fits`)로 센다
-    real = realized_from_fits(fits, planned_env=planned_env, objective_order=list(objective_order))
+    real = realized_from_fits(fits, planned_env=planned_env, objective_order=list(objective_order),
+                              schema="execution-record/v2")
     entries: list = []
     for obj in objective_order:
         for v in fits[fits["objective"] == obj]["candidate_map_json"]:
@@ -1425,7 +1480,7 @@ def write_execution_record(out_dir, fits, *, planned_env: dict, objective_order:
     entries.sort(key=lambda m: (m["cond_id"], m["objective"], m["i"]))
     cmap = {"schema": "candidate-map/v1", "entries": entries}
     (out_dir / "candidate_map.json").write_bytes(canonical_bytes(cmap))
-    rec = {"schema": "execution-record/v1", "leg_id": planned_env["leg_id"],
+    rec = {"schema": "execution-record/v2", "leg_id": planned_env["leg_id"],
            "planned_id": digest(planned_env), "source_digest": planned_env["source_digest"],
            "protocol_generation": planned_env["protocol_generation"],
            "realized": {"by_objective": real["by_objective"], "candidate_map_sha256": digest(entries),
@@ -1922,6 +1977,11 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     if limit:
         tasks = tasks[:limit]
 
+    # ★ 84차 G84-N3 — v6 시작 전 **공통 경계**: 아래 halfcell 원점 self-fit (`_fit_one`) 과 worker dispatch 보다 앞.
+    #   staging 은 끝났고 (스냅샷 `df` · staged base_config) 수치 작업은 아직 없다. 어긋나면 여기서 끝난다.
+    _pf = _stage3_preflight(stage3, reference=reference, base_config=base_config, stage_root=stage_root,
+                            run_source_digest=_src0) if stage3 is not None else None
+
     if reference == "halfcell":
         # ★ ini 정규화용: 기준 셀 자신을 먼저 fitting해 α_ini·β_ini를 얻는다.
         # 리뷰 F2: max(r)로 고르면 reference의 noise 변형 3개가 r=1.0 동률이라
@@ -1968,7 +2028,7 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     # ★ 81차 — v6 후보 경로: 계획 envelope · 설계 · roster · bounds · provider map 을 **실행 전에** 대조하고
     #   조건마다 봉인 bank 를 붙인다. 하나라도 어긋나면 시작하지 않는다 (RUN 밖 승인 파일 등은 만들지 않는다).
     _s3 = _prepare_stage3(stage3, tasks, df, objectives, bounds, reference, adaptive,
-                          warm_start, in_dir, out_dir) if stage3 is not None else None
+                          warm_start, in_dir, out_dir, preflight=_pf) if stage3 is not None else None
 
     from src.io import chunk_files, load_completed, mark_completed, merge_chunks, save_chunk
 

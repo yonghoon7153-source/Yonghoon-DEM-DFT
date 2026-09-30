@@ -1877,8 +1877,15 @@ MUTANTS = [
      '        pass\n    return None\n',
      "g79_05"),
     ("absent-restart-fields-are-unrecorded-g79", FITTING,                 # 역사적 reader: None, False 아님
-     '                "converged": r.get("converged") if gen == "v6_prep_logging" else None,\n',
-     '                "converged": r.get("converged", False),\n',
+     # ★ 84차 2a 자체 발견 — 이 변이의 원자리는 79차 `normalize_restart_record(r)` 정의였는데, 81차 dispatch 판이 같은
+     #   이름으로 그 정의를 가린 뒤로는 **죽은 코드의 변이**였다 (preimage 는 남아 있어 preimage 검사는 통과 · 전체 재생은
+     #   81~83차에 `-k g8x` 만 돌았다). 2a 가 dead 정의를 지우자 preimage 0회로 드러났다. 살아 있는 reader 의 같은 성질
+     #   (없는 필드 = None, False 아님) 자리로 옮긴다.
+     #   (첫 시도 `_read_row` 의 `out[k] = r[k]` 자리는 살았다 — 아래 세대 분기가 legacy 를 다시 None 으로 덮는다.
+     #   성질을 **결정**하는 층은 그 분기다.)
+     '        for k in _RESTART_NEW_KEYS + ("candidate_id", "bank_index"):\n            out[k] = None\n',
+     '        for k in _RESTART_NEW_KEYS + ("candidate_id", "bank_index"):\n'
+     '            out[k] = False if out[k] is None else out[k]  # 변이: 없는 필드를 False 로 채운다 (79차 반례)\n',
      "g79_06"),
     ("legacy-ok-is-the-last-finite-round-g79", FITTING,                    # G79-N1: ok 를 break 앞에서 갱신하면 의미가 바뀐다
      '        if not np.isfinite(res.fun):\n            outer = "nonfinite"\n            break\n',
@@ -2013,10 +2020,7 @@ MUTANTS = [
      '    bad += DW.check_bank_profile(design.get("bank") if isinstance(design, dict) else None, env.get("bank"))\n',
      '    bad += []  # 변이: validator 의 bank profile 대조를 지운다\n',
      "g82_n2_04"),
-    ("the-v6-path-refuses-another-plan-generation-g82", FITTING,           # N3: 시작 전 선언 충돌
-     '    if env["protocol_generation"] != DW.STAGE3_PROTOCOL_GENERATION:\n',
-     '    if False:  # 변이: 계획 세대 대조를 끈다\n',
-     "g82_n3_01"),
+    # (`the-v6-path-refuses-another-plan-generation-g82` 는 84차 2a 에서 자리가 둘이 되어 MULTI 로 옮겼다 — 아래)
     ("the-validator-links-the-plan-generation-g82", IO,                    # N3: validator 계획 세대
      '    if (env or {}).get("protocol_generation") != _PG6:\n',
      '    if False:  # 변이: 계획 세대 연결을 끈다\n',
@@ -2029,6 +2033,56 @@ MUTANTS = [
      '    if _gens is not None and _gens != {"v6"}:\n',
      '    if False:  # 변이: 행 세대 연결을 끈다\n',
      "g82_n3_02"),
+    # ── 라운드 2a — 84차 G84-N1 · N3 · N4 (고정 표 STAGE3_IMPL_ROUND1_SPEC §11) ── 이름 끝 `-g84`
+    ("v6-plan-closure-must-match-the-staged-closure-g84", FITTING,         # N1: 시작 전 hex64 대조
+     '    if want != got:\n        raise ValueError(f"계획 inputs.base_config_digest {str(want)[:16]}',
+     '    if False:\n        raise ValueError(f"계획 inputs.base_config_digest {str(want)[:16]}',
+     "g84_n1_02 or g84_n1_03"),
+    ("the-validator-rebuilds-the-closure-from-snapshots-g84", IO,          # N1: 스냅샷 재계산 대조 (한 자리)
+     '                if got != val:\n                    bc_bad.append(f"스냅샷에서 다시 만든 closure',
+     '                if False:\n                    bc_bad.append(f"스냅샷에서 다시 만든 closure',
+     "g84_n1_04"),
+    ("preflight-refuses-non-grid-reference-before-self-fit-g84", FITTING,  # N3: halfcell/p_ini 를 self-fit 앞에서
+     '    if reference != "grid":\n        raise ValueError(f"v6 경로는 reference=\'grid\' 만 받는다',
+     '    if False:\n        raise ValueError(f"v6 경로는 reference=\'grid\' 만 받는다',
+     "g84_n3_04"),   # n3_01 은 reference 대조가 대신 막아 생존 → 계획이 halfcell 을 주장하는 n3_04 가 죽인다
+    ("preflight-binds-the-plan-source-digest-g84", FITTING,                # N3/R2-b: 계획 source ↔ 실행
+     '    if env["source_digest"] != run_source_digest:\n',
+     '    if False:  # 변이: 계획 source_digest 대조를 끈다\n',
+     "g84_n3_00"),
+    ("preflight-binds-the-plan-reference-g84", FITTING,                    # N3/R2-b: 계획 reference ↔ 실행
+     '    if inp.get("reference") != reference:\n',
+     '    if False:  # 변이: 계획 reference 대조를 끈다\n',
+     "g84_n3_02"),
+    ("the-preflight-runs-before-the-halfcell-self-fit-g84", FITTING,       # N3: 공통 경계 자체를 지운다
+     '    _pf = _stage3_preflight(stage3, reference=reference, base_config=base_config, stage_root=stage_root,\n'
+     '                            run_source_digest=_src0) if stage3 is not None else None\n',
+     '    _pf = None  # 변이: 시작 전 공통 경계를 지운다 (_prepare_stage3 만 남는다)\n',
+     "g84_n3_01 or g84_n3_00 or g84_n1_02"),
+    ("v2-finite-counts-only-finite-J-g84", IO,                             # N4: finite 정의
+     '                    if isinstance(_J, (int, float)) and not isinstance(_J, bool) and math.isfinite(float(_J)):\n',
+     '                    if True:  # 변이: 비유한 J 도 finite 로 센다\n',
+     "g84_n4_02"),
+    ("v2-converged-counts-the-legacy-true-flag-g84", IO,                   # N4: converged 정의
+     '                    if e.get("converged") is True:\n',
+     '                    if True:  # 변이: converged 가 아니어도 센다\n',
+     "g84_n4_02"),
+    ("v2-counts-are-bounded-by-returned-g84", PRESERVE,                    # N4: 0 ≤ finite, converged ≤ returned
+     '                    if not _nonneg_int(r[k]) or r[k] > r["returned"]:\n',
+     '                    if False:  # 변이: 계수의 타입·범위 검사를 끈다\n',
+     "g84_n4_03"),
+    ("record-schema-dispatch-is-closed-g84", PRESERVE,                     # N4: 모르는 schema 거부
+     '    _obj_keys = _RECORD_SCHEMA_KEYS.get(rec["schema"])\n',
+     '    _obj_keys = _RECORD_SCHEMA_KEYS.get(rec["schema"], _REALIZED_OBJ_KEYS_V2)  # 변이: 모르는 schema 를 v2 로 읽는다\n',
+     "g84_n4_01"),
+    ("v2-missing-counts-do-not-fall-back-to-v1-g84", PRESERVE,             # N4: v2 키 누락 → v1 하향 금지
+     '_RECORD_SCHEMA_KEYS = {"execution-record/v1": _REALIZED_OBJ_KEYS, "execution-record/v2": _REALIZED_OBJ_KEYS_V2}\n',
+     '_RECORD_SCHEMA_KEYS = {"execution-record/v1": _REALIZED_OBJ_KEYS, "execution-record/v2": _REALIZED_OBJ_KEYS}  # 변이: v2 를 v1 키로\n',
+     "g84_n4_01"),
+    ("realized-from-fits-dispatches-on-schema-g84", IO,                    # N4: v1 요청에 v2 계수 소급 금지
+     '    _v2 = schema == "execution-record/v2"\n',
+     '    _v2 = True  # 변이: v1 요청에도 v2 계수를 만든다\n',
+     "g84_n4_04"),
 ]
 
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
@@ -2459,6 +2513,19 @@ MULTI = [
          'for k in NAMES if k in os.environ}}',
          '            \u0022env\u0022: {}}'),
      ], "evidence_binds_the_execution_environment"),
+    # ★ 84차 2a (G84-N3) — 계획 세대 대조가 **두 자리**가 됐다: `_stage3_preflight` (시작 전 공통 경계 · halfcell
+    #   self-fit 앞) 와 `_prepare_stage3` (82차 원자리). grid 경로에서는 둘 다 첫 수치 작업 앞이라 하나만 끄면 다른
+    #   하나가 막는다 (실측: 단일 자리 preimage 가 2회 → 등록부 불성립). 성질 하나 = 두 자리 함께.
+    ("the-v6-path-refuses-another-plan-generation-g82", FITTING, [
+        ('        raise ValueError("stage3.planned 가 유효한 planned-leg/v4 가 아니다: " + "; ".join(bad[:3]))\n'
+         '    if env["protocol_generation"] != DW.STAGE3_PROTOCOL_GENERATION:\n',
+         '        raise ValueError("stage3.planned 가 유효한 planned-leg/v4 가 아니다: " + "; ".join(bad[:3]))\n'
+         '    if False:  # 변이: 시작 전 경계의 계획 세대 대조를 끈다\n'),
+        ('    # ★ 82차 G82-N3 — 이 경로는 sig_version 6 · 행 v6 를 쓴다. 계획이 다른 세대를 선언하면 선언 충돌이다.\n'
+         '    if env["protocol_generation"] != DW.STAGE3_PROTOCOL_GENERATION:\n',
+         '    # ★ 82차 G82-N3 — 이 경로는 sig_version 6 · 행 v6 를 쓴다. 계획이 다른 세대를 선언하면 선언 충돌이다.\n'
+         '    if False:  # 변이: 준비 단계의 계획 세대 대조를 끈다\n'),
+     ], "g82_n3_01"),
 ]
 
 #: **관측되지 않는다고 신고하는** 항목. 왜 안 보이는지와 그래도 왜 남기는지를
@@ -6121,6 +6188,124 @@ EXPECT: dict = {
         "witness": {
             "tests/test_gate82_residuals.py::test_g82_n3_02_the_validator_refuses_plan_and_record_that_agree_on_v5_under_sig6":
                 "AssertionError: 통과",
+        }
+    },
+    # ── 라운드 2a (84차 G84-N1 · N3 · N4) — `--emit-expect -k g84` 관측값. 증인은 고정 접두만 (pytest 의 `...` 축약 부분은 잘랐다)
+    "v6-plan-closure-must-match-the-staged-closure-g84": {
+        "fail": [
+            "tests/test_gate84_round2a.py::test_g84_n1_02_a_truncated_or_padded_hex16_is_not_the_closure",
+            "tests/test_gate84_round2a.py::test_g84_n1_03_a_plan_sealed_on_a_changed_parent_does_not_start_on_the_real_closure",
+        ],
+        "witness": {
+            "tests/test_gate84_round2a.py::test_g84_n1_02_a_truncated_or_padded_hex16_is_not_the_closure":
+                "AssertionError: _fit_one 에 도달했다 — 시작 전 경계가 수치 작업 뒤에 있다",
+            "tests/test_gate84_round2a.py::test_g84_n1_03_a_plan_sealed_on_a_changed_parent_does_not_start_on_the_real_closure":
+                "AssertionError: _fit_one 에 도달했다 — 시작 전 경계가 수치 작업 뒤에 있다",
+        }
+    },
+    "the-validator-rebuilds-the-closure-from-snapshots-g84": {
+        "fail": [
+            "tests/test_gate84_round2a.py::test_g84_n1_04_the_validator_rebuilds_the_closure_from_the_sealed_snapshots",
+        ],
+        "witness": {
+            "tests/test_gate84_round2a.py::test_g84_n1_04_the_validator_rebuilds_the_closure_from_the_sealed_snapshots":
+                "AssertionError: ['run_signature_재계산']",
+        }
+    },
+    "preflight-refuses-non-grid-reference-before-self-fit-g84": {
+        "fail": [
+            "tests/test_gate84_round2a.py::test_g84_n3_04_a_plan_that_itself_claims_halfcell_is_still_refused_before_the_self_fit",
+        ],
+        "witness": {
+            "tests/test_gate84_round2a.py::test_g84_n3_04_a_plan_that_itself_claims_halfcell_is_still_refused_before_the_self_fit":
+                "AssertionError: _fit_one 에 도달했다 — 시작 전 경계가 수치 작업 뒤에 있다",
+        }
+    },
+    "preflight-binds-the-plan-source-digest-g84": {
+        "fail": [
+            "tests/test_gate84_round2a.py::test_g84_n3_00_a_plan_with_another_source_digest_is_refused_before_any_fitting",
+        ],
+        "witness": {
+            "tests/test_gate84_round2a.py::test_g84_n3_00_a_plan_with_another_source_digest_is_refused_before_any_fitting":
+                "AssertionError: _fit_one 에 도달했다 — 시작 전 경계가 수치 작업 뒤에 있다",
+        }
+    },
+    "preflight-binds-the-plan-reference-g84": {
+        "fail": [
+            "tests/test_gate84_round2a.py::test_g84_n3_02_plan_reference_must_equal_the_run_reference",
+        ],
+        "witness": {
+            "tests/test_gate84_round2a.py::test_g84_n3_02_plan_reference_must_equal_the_run_reference":
+                "AssertionError: _fit_one 에 도달했다 — 시작 전 경계가 수치 작업 뒤에 있다",
+        }
+    },
+    "the-preflight-runs-before-the-halfcell-self-fit-g84": {
+        "fail": [
+            "tests/test_gate84_round2a.py::test_g84_n1_02_a_truncated_or_padded_hex16_is_not_the_closure",
+            "tests/test_gate84_round2a.py::test_g84_n3_00_a_plan_with_another_source_digest_is_refused_before_any_fitting",
+            "tests/test_gate84_round2a.py::test_g84_n3_01_halfcell_reference_under_a_v6_context_is_refused_before_the_p_ini_self_fit",
+        ],
+        "witness": {
+            "tests/test_gate84_round2a.py::test_g84_n1_02_a_truncated_or_padded_hex16_is_not_the_closure":
+                "AssertionError: _fit_one 에 도달했다 — 시작 전 경계가 수치 작업 뒤에 있다",
+            "tests/test_gate84_round2a.py::test_g84_n3_00_a_plan_with_another_source_digest_is_refused_before_any_fitting":
+                "AssertionError: _fit_one 에 도달했다 — 시작 전 경계가 수치 작업 뒤에 있다",
+            "tests/test_gate84_round2a.py::test_g84_n3_01_halfcell_reference_under_a_v6_context_is_refused_before_the_p_ini_self_fit":
+                "AssertionError: _fit_one 에 도달했다 — 시작 전 경계가 수치 작업 뒤에 있다",
+        }
+    },
+    "v2-finite-counts-only-finite-J-g84": {
+        "fail": [
+            "tests/test_gate84_round2a.py::test_g84_n4_02_finite_counts_the_stored_J_and_converged_counts_the_legacy_flag_not_healthy_termination",
+        ],
+        "witness": {
+            "tests/test_gate84_round2a.py::test_g84_n4_02_finite_counts_the_stored_J_and_converged_counts_the_legacy_flag_not_healthy_termination":
+                "AssertionError: 실패 — realized.by_objective 가 fits 행에서 다시 센 값과 다르다",
+        }
+    },
+    "v2-converged-counts-the-legacy-true-flag-g84": {
+        "fail": [
+            "tests/test_gate84_round2a.py::test_g84_n4_02_finite_counts_the_stored_J_and_converged_counts_the_legacy_flag_not_healthy_termination",
+        ],
+        "witness": {
+            "tests/test_gate84_round2a.py::test_g84_n4_02_finite_counts_the_stored_J_and_converged_counts_the_legacy_flag_not_healthy_termination":
+                "AssertionError: 실패 — realized.by_objective 가 fits 행에서 다시 센 값과 다르다",
+        }
+    },
+    "v2-counts-are-bounded-by-returned-g84": {
+        "fail": [
+            "tests/test_gate84_round2a.py::test_g84_n4_03_type_and_bound_forgeries_of_the_new_counts_are_refused",
+        ],
+        "witness": {
+            "tests/test_gate84_round2a.py::test_g84_n4_03_type_and_bound_forgeries_of_the_new_counts_are_refused":
+                "AssertionError: 위조가 통과했다",
+        }
+    },
+    "record-schema-dispatch-is-closed-g84": {
+        "fail": [
+            "tests/test_gate84_round2a.py::test_g84_n4_01_v1_records_are_read_as_written_and_are_not_upgraded_or_mixed",
+        ],
+        "witness": {
+            "tests/test_gate84_round2a.py::test_g84_n4_01_v1_records_are_read_as_written_and_are_not_upgraded_or_mixed":
+                "AssertionError: assert []",
+        }
+    },
+    "v2-missing-counts-do-not-fall-back-to-v1-g84": {
+        "fail": [
+            "tests/test_gate84_round2a.py::test_g84_n4_01_v1_records_are_read_as_written_and_are_not_upgraded_or_mixed",
+        ],
+        "witness": {
+            "tests/test_gate84_round2a.py::test_g84_n4_01_v1_records_are_read_as_written_and_are_not_upgraded_or_mixed":
+                "AssertionError: []",
+        }
+    },
+    "realized-from-fits-dispatches-on-schema-g84": {
+        "fail": [
+            "tests/test_gate84_round2a.py::test_g84_n4_04_realized_from_fits_dispatches_on_schema_and_keeps_v1_shape",
+        ],
+        "witness": {
+            "tests/test_gate84_round2a.py::test_g84_n4_04_realized_from_fits_dispatches_on_schema_and_keeps_v1_shape":
+                "AssertionError: assert {'attempted'",
         }
     },
 }

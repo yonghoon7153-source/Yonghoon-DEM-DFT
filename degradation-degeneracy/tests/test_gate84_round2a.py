@@ -105,7 +105,8 @@ def test_g84_n1_01_a_v6_plan_with_null_base_config_digest_does_not_start(tmp_pat
     from tests.test_fitting import _tiny_curves
     in_dir = _tiny_curves(tmp_path / "in")
     calls = _sentinel(monkeypatch)
-    ctx = G81._v6_context(in_dir)                      # 라운드 1 fixture — base_config_digest None
+    ctx = _hex64_plan_ctx(in_dir)
+    ctx = _with_plan(ctx, inputs={**ctx["planned"].inputs, "base_config_digest": None})   # 라운드 1 fixture 의 모양
     with pytest.raises(ValueError, match="base_config_digest"):
         _run(tmp_path, "o", ctx, in_dir)
     assert calls == [] and not (tmp_path / "o" / "fits.parquet").exists()
@@ -205,6 +206,28 @@ def test_g84_n3_02_plan_reference_must_equal_the_run_reference(tmp_path, monkeyp
     with pytest.raises(ValueError, match="reference"):
         _run(tmp_path, "o", ctx, in_dir)
     assert calls == []
+
+
+def test_g84_n3_04_a_plan_that_itself_claims_halfcell_is_still_refused_before_the_self_fit(tmp_path, monkeypatch):
+    """★ 변이 생존자에서 나온 회귀 — `preflight-refuses-non-grid-reference-before-self-fit-g84` 가 n3_01 로는 안 죽었다
+    (n3_01 의 계획은 `inputs.reference="grid"` 라서 reference 대조가 대신 막았다). 계획 **자체가** halfcell 을
+    주장하면 (`inputs.reference="halfcell"` · 실행 reference halfcell) 두 값이 같아서 대조로는 못 막고, 오직
+    `reference != "grid"` 거부만 남는다 — 그 거부가 원점 self-fit **앞**에 있어야 한다. RED 목격: 변이 rc 0 (이 시험
+    추가 전) → rc 1."""
+    import src.halfcell as H
+    from tests.test_fitting import _fake_halfcell_cache, _obj_cfg_min, _tiny_curves
+    cache = _fake_halfcell_cache(tmp_path)
+    monkeypatch.setattr(H, "halfcell_cache_path", lambda cfg, cache_dir=None, method="ocp", **kw: cache)
+    in_dir = _tiny_curves(tmp_path / "in")
+    ctx = _hex64_plan_ctx(in_dir)
+    ctx = _with_plan(ctx, inputs={**ctx["planned"].inputs, "reference": "halfcell"})
+    calls = _sentinel(monkeypatch)
+    with pytest.raises(ValueError, match="reference='grid'"):
+        F.run_fit(in_dir, tmp_path / "o", _obj_cfg_min(), G81._OBJ_W,
+                  {"init": [1.05, -0.05, 1.4, -0.4], "lb": [0.5, -1.5, 0.5, -1.5], "ub": [3.0, 1.0, 3.0, 1.0]},
+                  "halfcell", 2, nproc=1, reference="halfcell", adaptive=False, warm_start=False, stage3=ctx)
+    assert calls == [], f"원점 self-fit 에 도달했다: {calls}"
+    assert not (tmp_path / "o" / "fits.parquet").exists()
 
 
 def test_g84_n3_03_a_valid_v6_plan_reaches_the_prepared_state_and_legacy_halfcell_is_untouched(tmp_path, monkeypatch):

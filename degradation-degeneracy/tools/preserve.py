@@ -3061,6 +3061,10 @@ _REALIZED_KEYS = frozenset({"by_objective", "candidate_map_sha256", "n_candidate
                             "roster_observed_sha256", "n_obs_observed", "provider_consumed"})
 _REALIZED_OBJ_KEYS = frozenset({"attempted", "returned", "failed", "not_attempted",
                                 "counts_by_source", "random_bank_prefix_len"})
+#: ★ 84차 G84-N4 — `execution-record/v2` 의 objective 별 실현 키 = v1 + `finite` (저장 J 유한 수) + `converged`
+#:   (legacy true 수). v1 은 v1 키 집합 그대로 (닫힌 집합 — v1 에 v2 키가 있으면 거부 · v2 에 없으면 v1 로 내려가지 않음).
+_REALIZED_OBJ_KEYS_V2 = _REALIZED_OBJ_KEYS | {"finite", "converged"}
+_RECORD_SCHEMA_KEYS = {"execution-record/v1": _REALIZED_OBJ_KEYS, "execution-record/v2": _REALIZED_OBJ_KEYS_V2}
 _SOURCE_KEYS = frozenset({"base_init", "warm", "random"})
 
 #: planned envelope 의 **값 domain** (★ 30차 P1-2)
@@ -3293,8 +3297,10 @@ def check_execution_record(rec, planned_env) -> list[str]:
     if set(rec) != _RECORD_KEYS:
         return [f"execution record 키 집합이 닫혀 있지 않다: {sorted(set(rec) ^ _RECORD_KEYS)}"]
     bad = []
-    if rec["schema"] != "execution-record/v1":
-        bad.append(f"schema: {rec['schema']!r}")
+    # ★ 84차 G84-N4 — schema 로 분기 (v1 · v2). 모르는 schema 는 여기서 끝.
+    _obj_keys = _RECORD_SCHEMA_KEYS.get(rec["schema"])
+    if _obj_keys is None:
+        return [f"schema: {rec['schema']!r} (지원 {sorted(_RECORD_SCHEMA_KEYS)})"]
     if rec["record_digest"] != digest({k: v for k, v in rec.items() if k != "record_digest"}):
         bad.append("record_digest 가 자기 내용과 다르다")
     envbad = check_planned_envelope(planned_env)
@@ -3317,13 +3323,19 @@ def check_execution_record(rec, planned_env) -> list[str]:
         bad.append("realized.by_objective 의 objective 집합이 계획과 다르다")
     else:
         for obj, r in bo.items():
-            if not isinstance(r, dict) or set(r) != _REALIZED_OBJ_KEYS:
-                bad.append(f"{obj}: realized 항목 키가 닫혀 있지 않다")
+            if not isinstance(r, dict) or set(r) != _obj_keys:
+                bad.append(f"{obj}: realized 항목 키가 {rec['schema']} 의 닫힌 집합이 아니다")
                 continue
             ints = {k: r[k] for k in ("attempted", "returned", "failed", "not_attempted", "random_bank_prefix_len")}
             if not all(_nonneg_int(v) for v in ints.values()):
                 bad.append(f"{obj}: 실현 count 가 음이 아닌 정수가 아니다: {ints!r}")
                 continue
+            if "finite" in _obj_keys:
+                # ★ 84차 G84-N4 — `0 ≤ finite, converged ≤ returned` · 둘 사이 포함 관계는 가정하지 않는다 ·
+                #   누락/타입 오류를 0/False 로 바꾸지 않는다 (닫힌 키 검사가 누락을, 여기가 타입·범위를 잡는다)
+                for k in ("finite", "converged"):
+                    if not _nonneg_int(r[k]) or r[k] > r["returned"]:
+                        bad.append(f"{obj}: {k} {r[k]!r} 가 0..returned({r['returned']}) 의 정수가 아니다")
             if r["attempted"] != r["returned"] + r["failed"]:
                 bad.append(f"{obj}: attempted {r['attempted']} ≠ returned {r['returned']} + failed {r['failed']}")
             # 계획 count 는 **조건 하나**의 후보 구성이고 실현 count 는 다리 전체(조건 × 후보)의 합이다 —

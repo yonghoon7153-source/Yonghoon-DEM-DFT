@@ -616,7 +616,9 @@ def _v6_context(in_dir: Path, *, design=None, budget=2, arm="G_A", warm_map=None
                           source_digest=IO.source_digest(),
                           inputs={"reference": "grid",
                                   "curves_sha256": hashlib.sha256((in_dir / "curves.parquet").read_bytes()).hexdigest(),
-                                  "base_config_digest": None})
+                                  # ★ 84차 G84-N1 — v6 실행은 base-config closure 를 읽으므로 계획도 그 hex64 를 갖는다
+                                  #   (라운드 1 fixture 의 None 은 §11-2 로 거부된다)
+                                  "base_config_digest": F.config_closure_sha256("configs/base.yaml")})
     return {"planned": planned, "design": design, "provider_runs": dict(provider_runs or {})}
 
 
@@ -641,7 +643,8 @@ def test_g81_w04_run_fit_with_stage3_context_writes_sig6_run_spec_execution_reco
         rows = json.loads(rs)
         assert rows and all(IO._restart_ok_v6(e) for e in rows), rows
     rec = json.loads((out / "execution_record.json").read_text(encoding="utf-8"))
-    assert rec["schema"] == "execution-record/v1" and rec["planned_id"] == ctx["planned"].planned_id()
+    # ★ 84차 G84-N4 — writer 는 v2 를 쓴다 (v1 은 읽기 그대로 · `test_gate84_round2a.py::n4_01`)
+    assert rec["schema"] == "execution-record/v2" and rec["planned_id"] == ctx["planned"].planned_id()
     assert PV.check_execution_record(rec, ctx["planned"].envelope()) == []
     cmap = json.loads((out / "candidate_map.json").read_text(encoding="utf-8"))
     assert PV.digest(cmap["entries"]) == rec["realized"]["candidate_map_sha256"]
@@ -688,7 +691,8 @@ def test_g81_w06_stage3_run_refuses_a_roster_that_does_not_match_the_curves_and_
     wrong = _planned_v4(roster=_roster_entries(), stages=_stages(budget=2), source_digest=IO.source_digest(),
                         inputs={"reference": "grid",
                                 "curves_sha256": hashlib.sha256((in_dir / "curves.parquet").read_bytes()).hexdigest(),
-                                "base_config_digest": None})
+                                # 84차 — null 은 시작 전 경계가 먼저 거부하므로 (§11-2) roster 축을 재려면 실제 closure
+                                "base_config_digest": F.config_closure_sha256("configs/base.yaml")})
     with pytest.raises((ValueError, RuntimeError), match="roster"):
         F.run_fit(in_dir, out, _obj_cfg_min(), {OBJS[0]: {"w_pocv": 1.0}, OBJS[1]: {"w_pocv": 1.0, "_warm": False}},
                   _BOUNDS_MIN, "expanded", 2, nproc=1, adaptive=False, warm_start=False,
@@ -849,6 +853,8 @@ def test_g81_s03_the_validator_recounts_realized_counts_from_the_rows(tmp_path):
     rec = json.loads((out / "execution_record.json").read_text(encoding="utf-8"))
     r = rec["realized"]["by_objective"][OBJS[0]]
     r["attempted"] -= 1; r["returned"] -= 1; r["not_attempted"] += 1; r["counts_by_source"]["random"] -= 1
+    # 84차 v2 — 계획 범위 안 조작을 유지하려면 새 계수도 `≤ returned` 안에 둔다 (범위 검사는 계획 대조의 일부)
+    r["finite"] = min(r["finite"], r["returned"]); r["converged"] = min(r["converged"], r["returned"])
     rec["record_digest"] = PV.digest({k: v for k, v in rec.items() if k != "record_digest"})
     (out / "execution_record.json").write_bytes(PV.canonical_bytes(rec))
     assert PV.check_execution_record(rec, ctx["planned"].envelope()) == [], "계획 대조만으로는 이 조작이 보이지 않는다"

@@ -12,6 +12,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import math
 import os
 import platform
 import subprocess
@@ -1522,16 +1523,30 @@ _STAGE3_SPEC_KEYS = ("planned_id", "planned_envelope", "pairing_design_sha256", 
                      "bank_version", "exact_bounds_sha256", "candidate_mode", "budget_by_objective",
                      "warm_provider_map", "provider_edges_sha256", "roster_sha256", "arm", "stage",
                      # ★ 82차 전 자체 점검 F2 — validator 가 후보를 다시 유도하려면 설계 본체가 run_dir 안에 있어야 한다
-                     "pairing_design")
+                     "pairing_design",
+                     # ★ 84차 G84-N1 — 실행이 잰 staged closure hex64 와 그 재료 키 (validator 가 봉인 스냅샷에서 재계산)
+                     "base_config_closure_sha256", "base_config_closure_keys")
+
+#: ★ 84차 G84-N4 — execution record 의 schema 별 실현 계수 (writer · consumer 가 이 표로 **분기**한다 · §11-4)
+_RECORD_SCHEMAS = ("execution-record/v1", "execution-record/v2")
 
 
-def realized_from_fits(fits_df, *, planned_env: dict, objective_order: list) -> dict:
+def realized_from_fits(fits_df, *, planned_env: dict, objective_order: list,
+                       schema: str = "execution-record/v1") -> dict:
     """★ 82차 전 자체 점검 F3 — 실현 count 를 **fits 행에서** 센다.
 
     writer(`src.fitting.write_execution_record`)와 validator(`_stage3_checks` 의 `실현_재계산`)가 **같은 정의**를 쓴다 —
     두 곳에 따로 구현하면 약한 쪽이 실효 규칙이 된다. 예외로 실패한 후보는 공정 모드가 실행을 멈추므로(F86) 완주한
     산출의 failed 는 `restart_errors_json` 에서만 온다. 계획 count 는 조건당, 실현은 다리 전체 합이다.
+
+    ★ 84차 G84-N4 — `schema` 로 분기한다: v1 은 닫힌 v1 키만 (새 계수를 소급하지 않는다) · v2 는 objective 마다
+      `finite` = 원소의 저장 `J` 가 유한한 수 · `converged` = 원소의 legacy `converged` 가 명시적으로 True 인 수
+      (80차 정정의 "마지막 유한 fun round 의 success" — **정상 종료 수가 아니다**; 유한 성공 뒤 nonfinite 종료도 둘
+      다에 든다). `returned` 는 그대로 원소 수 합. 모르는 schema 는 거부.
     """
+    if schema not in _RECORD_SCHEMAS:
+        raise ValueError(f"execution record schema 를 모른다: {schema!r} (지원 {list(_RECORD_SCHEMAS)})")
+    _v2 = schema == "execution-record/v2"
     pc = planned_env["planned_counts"]
     n_plan = int(planned_env["roster"]["n_obs"])
     has_err = "restart_errors_json" in fits_df.columns
@@ -1541,6 +1556,7 @@ def realized_from_fits(fits_df, *, planned_env: dict, objective_order: list) -> 
     for obj in objective_order:
         sub = fits_df[fits_df["objective"] == obj]
         returned = failed = prefix = 0
+        n_finite = n_conv = 0
         cs = {"base_init": 0, "warm": 0, "random": 0}
         for _, row in sub.iterrows():
             rs = json.loads(row["restarts_json"])
@@ -1549,6 +1565,12 @@ def realized_from_fits(fits_df, *, planned_env: dict, objective_order: list) -> 
             returned += len(rs)
             failed += len(errs)
             for e in rs:
+                if _v2:
+                    _J = e.get("J")
+                    if isinstance(_J, (int, float)) and not isinstance(_J, bool) and math.isfinite(float(_J)):
+                        n_finite += 1
+                    if e.get("converged") is True:
+                        n_conv += 1
                 cs[e["source"]] += 1
                 if e["source"] == "random":
                     prefix = max(prefix, int(e["bank_index"]) + 1)
@@ -1559,7 +1581,8 @@ def realized_from_fits(fits_df, *, planned_env: dict, objective_order: list) -> 
         total = sum(pc[obj].values()) * n_plan
         by_obj[obj] = {"attempted": attempted, "returned": returned, "failed": failed,
                        "not_attempted": max(0, total - attempted), "counts_by_source": cs,
-                       "random_bank_prefix_len": prefix}
+                       "random_bank_prefix_len": prefix,
+                       **({"finite": n_finite, "converged": n_conv} if _v2 else {})}
     return {"by_objective": by_obj,
             "n_obs_observed": int(fits_df["cond_id"].nunique()) if len(fits_df) else 0,
             "provider_consumed": [{"consumer_objective": c, "provider_objective": p, "n_conditions": n}
@@ -1811,6 +1834,11 @@ def _stage3_checks(run_dir, spec0: dict) -> dict:
     if rec is None:
         out["execution_record"] = (False, "execution_record.json 이 없거나 읽을 수 없다 (v6 는 실현 기록이 필수)")
         return out
+    # ★ 84차 G84-N4 — consumer 도 schema 로 분기한다 (v1 원문 그대로 · v2 계수 · 모르는 schema 는 실패)
+    _rec_schema = rec.get("schema") if isinstance(rec, dict) else None
+    if _rec_schema not in _RECORD_SCHEMAS:
+        out["execution_record"] = (False, f"execution record schema 를 모른다: {_rec_schema!r}")
+        return out
     rbad = check_execution_record(rec, env) if not ebad else ["계획이 유효하지 않아 대조 불가"]
     out["execution_record"] = (not rbad, "execution_record 가 계획과 맞지 않는다: " + "; ".join(rbad[:3]))
     # ★ 82차 G82-N3 — 계획 ↔ record 문자열 일치만으로는 둘이 **함께** v5 인 산출을 못 본다. sig 6 · 계획 · record ·
@@ -1878,7 +1906,8 @@ def _stage3_checks(run_dir, spec0: dict) -> dict:
                               f"{budget_bad[:3]}")
     rc_bad: list = []
     try:
-        exp = realized_from_fits(fits_df, planned_env=env, objective_order=list(env["objective_order"]))
+        exp = realized_from_fits(fits_df, planned_env=env, objective_order=list(env["objective_order"]),
+                                 schema=_rec_schema)
     except Exception as e:  # noqa: BLE001
         exp = None
         rc_bad.append(f"fits 행에서 실현 count 를 셀 수 없다: {type(e).__name__}: {e}")
@@ -1917,6 +1946,32 @@ def _stage3_checks(run_dir, spec0: dict) -> dict:
                 ro_bad.append(f"record 의 roster_observed_sha256 {str(rz.get('roster_observed_sha256'))[:16]} 가 "
                               f"출력에서 재구성한 roster {r_sha[:16]} 와 다르다")
     out["관측_roster_재구성"] = (not ro_bad, "; ".join(ro_bad[:3]))
+    # ★ 84차 G84-N1 — base-config closure 를 **봉인 스냅샷 바이트**에서 다시 만든다. run_spec 의 hex64 · 계획의
+    #   `inputs.base_config_digest` 는 둘 다 기록이라 함께 바꾸면 서로 맞는다 — 스냅샷 재계산만이 잡는다. 재료 키는
+    #   run_spec.stage3.base_config_closure_keys · 각 키의 봉인 digest 는 run_spec.sealed_inputs · 바이트는
+    #   `_inputs/<digest12>_<name>` (F72 스냅샷). 정의는 `src.fitting.closure_sha256_from_parts` 하나.
+    from src.fitting import closure_sha256_from_parts
+    bc_bad: list = []
+    keys = s3.get("base_config_closure_keys")
+    sealed = spec0.get("sealed_inputs") or {}
+    if not isinstance(keys, list) or not keys or not all(isinstance(k, str) and k for k in keys):
+        bc_bad.append("run_spec.stage3.base_config_closure_keys 가 비어 있거나 목록이 아니다")
+    else:
+        parts: dict = {}
+        for k in keys:
+            dig = sealed.get(k)
+            snap = run_dir / "_inputs" / f"{str(dig)[:12]}_{Path(k).name}" if dig else None
+            if snap is None or not snap.is_file():
+                bc_bad.append(f"{Path(k).name}: 봉인 스냅샷이 없다 (closure 를 다시 만들 수 없다)")
+                continue
+            parts[k] = hashlib.sha256(snap.read_bytes()).hexdigest()
+        if not bc_bad:
+            got = closure_sha256_from_parts(parts)
+            for where, val in (("run_spec.stage3.base_config_closure_sha256", s3.get("base_config_closure_sha256")),
+                               ("계획 inputs.base_config_digest", (env.get("inputs") or {}).get("base_config_digest"))):
+                if got != val:
+                    bc_bad.append(f"스냅샷에서 다시 만든 closure {got[:16]} ≠ {where} {str(val)[:16]}")
+    out["base_config_결속"] = (not bc_bad, "; ".join(bc_bad[:3]))
     return out
 
 
