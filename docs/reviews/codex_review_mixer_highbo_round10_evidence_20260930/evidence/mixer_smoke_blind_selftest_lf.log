@@ -1,0 +1,43 @@
+  ✓ ① 정상: rc 0 · 증서 = 허용목록 정확히 (run · provenance · plan · t0_step · smoke{complete · tech_smoke · qc_repr{pass}})
+  ✓ ①b 투영 값 = 판독기 값 그대로 (plan · t0_step · provenance 편집 없음)
+  ✓ ①c ★ 화면 (stdout · stderr) 에 판독기 출력 · 결과 키 · M 값이 없다
+  ✗ ①d 증서에 결과 키 없음 (leak_check) · 전체 결과는 봉인 파일 (0600) 에 · 열람 기록 1 줄 (projection only · 증서 sha)
+  ✓ ①e 봉인 파일에는 전체 결과 (M_final · S0 · SR · rows …) 가 있다 = "계산했지만 보지 않았다" (판독기 화면 출력도 같은 파일에 갇힌다)
+  ✓ ① 관문 (launch_highbo.sh rest 블록) 이 이 증서로 rc 0
+  ✓ ② 기술 실패 (bin 0 복제): 래퍼는 판정하지 않고 rc 0 · 증서 complete=false → 관문 rc 1
+  ✓ ③ ★ 판독기 거부 (E0 t₀ 둘): rc 2 · 증서 없음 · 화면에는 사유 코드 (SystemExit) 만 — 거부 문구 (숫자) 는 봉인 파일에
+  ✓ ④ ★ 허용 키 (tech_smoke) 안에 결과 키가 숨어 오면 Leak 거부 · rc 2 · 증서 없음
+  ✓ ⑤ 판독기 결과에 허용 키가 없으면 ProjectionShape 거부 · rc 2
+  ✓ ⑥ 판독기 예외/거부: rc 2 · 화면에 Traceback 없음 · 사유 코드만
+  ✓ ⑦ CLI 서브프로세스: rc 0 · 증서 · 화면에 M 값 · 결과 키 없음
+        arm × E × 검사 → 관문 (✓ 허용 · ✗ 거부):  E0/soft/TECH_FAIL=✗  E0/soft/CONTRACT_MET=✓  E0/soft/CONTRACT_NOT=✓  E0/soft/OUT_OF_RANGE=✓  E0/ref/TECH_FAIL=✗  E0/ref/CONTRACT_MET=✓  E0/ref/CONTRACT_NOT=✗  E0/ref/OUT_OF_RANGE=✗  E0/ref2/TECH_FAIL=✗  E0/ref2/CONTRACT_MET=✓  E0/ref2/CONTRACT_NOT=✗  E0/ref2/OUT_OF_RANGE=✗ …
+  ✓ ⑧ ★ arm × E × 검사 관문표 (§6 · Codex 7 차 HBR7-02 해결 증거 · 36 칸) — ref/ref2 (계약 팔): CONTRACT_MET 만 허용 · soft (진단 팔): TECH_FAIL 만 거부 (CONTRACT_NOT_MET · OUT_OF_RANGE 는 값 보존 · 관문 통과) · E0 · LC · LH 는 수준으로만 갈린다 · 모르는 상태 거부
+  ✓ ⑨ ★ --contract 회전 증서 = bin 0 스모크 허용목록 + contact (bins [0] · 상태 · 출처 sha256 · 본 프레임 묶음 — 다시 해시 일치) · soft 는 5.8 % 로 · ref 는 범위 없이 (계약 팔) 검사기를 부른다 · 계획 상별 수 · 캠페인 STL · 이름에서 재생성한 기대 덱 · 화면에 M 없음
+        lc/np20: {1: 20, 2: 20, 3: 0} np 20 · lc/local: {1: 1, 2: 1, 3: 0} np 1 · lc/bad: None np None · lc/none: {1: 1, 2: 1, 3: 0} np 1 · e0/np20: {1: 40, 2: 40, 3: 40} np 20 · e0/local: {1: 2, 2: 2, 3: 2} np 1 · e0/bad: None np None · e0/none: {1: 2, 2: 2, 3: 2} np 1
+  ✓ ⑨b ★ SELF-70: 래퍼가 검사기에 상별 허용폭을 넘긴다 — 이름에서 재생성한 덱의 삽입 묶음 × 발사 봉인 NP (LC 층상 NP 20 → AM ±20 · SE 정확 · E0 균일 → ±40) · 봉인 없음 · 로컬 = NP 1 (±2) · NP 형식 깨짐 = 허용폭 없음 (정확 일치 · fail-closed)
+  ✓ ⑩ ★ E0 증서 (--contract · --ref 없이) = contact (전 창 · 상태) + 완주 (log 마지막 thermo step = run 합 · HBR6-03) — 짧은 로그면 complete false (래퍼는 판정하지 않는다 · 관문이 거부)
+  ✓ ⑪ ★ contact 블록 안에 결과 키 (M_final) 가 숨어 오면 Leak 거부 · rc 2 · 증서 없음 (허용목록 투영 = 상태 필드도 같은 누설 검사)
+  ✓ ⑫ 기술 실패 (TECH_FAIL) 도 증서에 그대로 적는다 (래퍼는 판정하지 않는다) — 관문표가 soft 라도 거부한다
+  ✓ ⑬ --contract 는 강성 축 셀 이름 폴더만 (옛 LH_s… · 프로브 이름 거부 — 수준 · soft 범위를 이름에서 정한다)
+  ✗ ⑭ soft OUT_OF_RANGE 는 증서에 그대로 · 관문 통과 (§6 "팔은 완주 · 값 보존 · 짝 블록의 다른 팔 계속") · 전체 결과 (판독기 + 검사기) 는 0600 봉인 · 열람 기록 mode contract-cert
+        rc:✓ · outcome:✓ · keys:✓ · shape:✓ · stats:✓ · soft:✓ · no_leak:✓ · vault:✗ · frames:✓ · claim:✓ · log:✓ · who:✓ · final_separate:✓
+  ✗ ⑮ ★ 중간 판정 (정상 · MET) — rc 0 · 기록 = 허용목록 정확히 (§5-a: 세 d_s 부호 · Δ3 · SE3 · u 항 · 충족 + d_soft · q 요약) · 값 = 독립 산술 · 화면 · 기록에 seed 별 d · 런별 M · q 값 없음 · 전체 결과는 0600 봉인 · 누가/언제/입력 sha256 (프레임 묶음 = 지금 폴더) · claim + 18 표지 · 최종 (bin 7) 판독 경로는 그대로 (analyse 전후 같음)
+        first:✓ · second:✓ · copied_runs:✓ · claim_deleted:✓
+  ✓ ⑯ ★ 두 번째 중간 판정 거부 (§5-a "두 번째 중간 판정은 없다") — 같은 OUT 재실행 rc 4 · 새 봉인 없음 · 기록 불변 · 화면에 값 없음 / 런 폴더를 새 OUT 으로 복사해도 · OUT 의 claim · 기록을 지워도 런 표지로 거부
+  ✓ ⑰ ★ 판독기가 연 파일 = 12 런의 계획 t₀ + bin 3 격자 + 같은 강성 · seed E0 계획 t₀ **정확히** (bin 0–2 · 4 는 쓰레기인데 결과 MET — 열었다면 값이 없다)
+        refused:✓ · later_ok:✓
+  ✓ ⑱ 12 런 중 하나가 아직 4 바퀴 전 (bin 3 결손) → rc 3 · M 미계산 · 소진 아님 (claim · 표지 · 기록 없음) — 다 지난 뒤에는 볼 수 있다
+        none:✓ · bin7_only:✓ · missing_seed:✓ · negative:✓ · nan:✓ · schema:✓ · no_items:✓ · no_registered:✓ · not_consumed:✓
+  ✓ ⑲ ★ ε 등록 fail-closed (§5 "ε_s 의 항목과 값은 결과 전 … 배정" · ⬜ §10) — 없음 · bin 7 만 (옮겨 쓰지 않는다) · seed 빠짐 · 음수 · NaN · 스키마 · 항목 없음 · 등록 위치 없음 → rc 3 · 0 으로 채우지 않는다 · 소진 아님
+        ref_notmet:✓ · e0ref_tech:✓ · ref_floor:✓ · soft_pass:✓
+  ✓ ⑳ ★ M-맹검 적격 (접촉 창 bin 0–3 · 바닥 8×8×2) — ref 팔 · E0_ref 가 CONTRACT_MET 아니거나 ref 바닥 미달이면 조기 확정 불가 → rc 3 · M 미계산 · 소진 아님 / soft 의 OUT_OF_RANGE · 바닥 미달은 막지 않고 soft 요약의 한정어로 (§6 · §8-4)
+  ✓ ⑳b 충족 못 함 (한 seed 음수) — rc 0 · NOT_MET · 다음 = 8 바퀴까지 · §5 최종 그대로 · 이 값은 최종과 함께 보고 · 그 뒤 두 번째 판정 거부
+        tech:✓ · qc:✓ · interrupt:✓
+  ✓ ㉑ ★ 판독 적격 실패 (봉인 뒤) — ref 런 bin 3 프레임 형식 실패 = INELIGIBLE · 값 없음 / D-2 부피 누락 QC 미달 = INELIGIBLE (값은 보고 · 판정선 충족이어도 조기 확정 아님) / claim 뒤 중단 (BaseException) = TECH 기록 (claim → look 로그) · 셋 다 소진 · 다음 = 8 바퀴
+        no_manifest:✓ · partial:✓ · deck:✓ · reseal:✓ · not_consumed:✓
+  ✓ ㉒ 캠페인 동일성 (confirm manifest · 발사 봉인 · 덱) — manifest 없음 · 불완전 · 봉인 뒤 덱 수정 · 다시 봉인 → rc 3 · 소진 아님
+  ✓ ㉓ 투영 검사기 (interim_projection_problems) — 정상 기록은 문제 0 · seed 별 값 · 런별 M_bin · 허용 밖 최상위 키 · 요약 안 seed 별 목록 · 결과 키 (rows) 가 들어오면 잡는다 / 투영기가 스스로 어기면 (런별 입력에 M_bin) 값 · 런별 입력을 비운 TECH 기록만 쓴다 (기록 자체는 검사 통과 · 새지 않는다)
+
+✗ 3 건 실패
+
+STDERR

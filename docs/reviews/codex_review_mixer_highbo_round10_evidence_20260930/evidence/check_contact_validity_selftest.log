@@ -1,0 +1,95 @@
+  PASS  ① 겹침 δ/r 을 정확히 낸다 (설계 10 %)
+  PASS  ② 10 % 는 기각이 아니다 (경고 영역)
+  PASS  ③ 통과(δ/r 180 %)를 **기각**한다
+  PASS  ④ 안 닿으면 접촉 0 · 기각 없음
+  PASS  ⑤ 원자 손실을 기각한다 (98 % 잃음)
+  PASS  ⑥ 변이: 겹침을 **작은 쪽 반경**으로 잰다 (50 %, 큰 쪽이면 5 %)
+  PASS  ⑦ 강체 내부 쌍(40 %)을 빼고 잰다 (남은 최대 5 %)
+  PASS  ⑦b 변이: mol = −1 끼리는 **같은 강체가 아니다** (평범한 구를 지우지 않는다)
+  PASS  ⑧ 재현: 옛 check() 는 가운데 프레임의 2 % 겹침을 **못 본다** (마지막 프레임만 · 기각선 50 %)
+  PASS  ⑧b ★ 계약 판정은 분석 창 전 프레임을 보고 2 % 를 기각한다 (최대 2.00 % @ step 2500)
+  PASS  ⑨ 겹침 없는 창은 통과한다 (판정 PASS · 위상 확인 bounded)
+  PASS  ⑩ ★ 독립 기하 없이는 회전된 면의 2 % 도 기각 못 한다 — 상·하한 [-58, 112] % 가 1 % 를 양쪽에서 걸친다 ⇒ TECH (예정각 값 2.00 % 는 미검증 · 판정에 안 씀)
+  PASS  ⑩c (HBR4-04 · 나) mesh 덤프가 있어도 판정 근거로 쓰지 않는다 — 회전된 드럼 면의 참 2 % 는 PASS 로 새지 않고 TECH (unidentified · 예정각 값 2.00 % 는 미검증) · notes 에 사유
+  PASS  ⑩b 변이: 위상 0 으로 두면 같은 2 % 가 -158.6 % 로 보인다 (위상을 스텝에서 계산해야 하는 이유)
+  PASS  ⑪ 끝판에 2 % 박힌 입자를 기각한다 (벽 최대 2.00 % · Front)
+  PASS  ⑫ ★ 창 안에서 입자를 잃거나 상이 바뀌면 기각한다 (step 2500: 상별 입자 수 {1: 3, 2: 1, 3: 1} ≠ t₀ {1: 3, 2: 1, 3: 2}; step 3000: 상별 입자 수 {1: 3, 2)
+  PASS  ⑫c ★ SELF-70: t₀ 상별 = 계획 ± (템플릿−1)·NP · 묶음 총수 정확 — 흔들림 ±1 통과 · 허용 0 · 큰 결손 · 묶음 총수 어긋남 거부 · 실제 E0 덱 NP 20 → ±40 · LC 덱 → AM ±20 · SE 정확 · DEV7 실측 둘 통과 · 못 읽음 · NP 무효 · 비구형 템플릿 = None (정확 일치) — 어긋남 []
+  PASS  ⑬ 면을 따라 깔린 침대 (0.1 %) 는 근거 없이는 unidentified (상·하한 -58–112 %) — 되읽기 진단은 각을 맞히지만 (차 -0.0002°) 판정에 쓰지 않는다
+  PASS  ⑬b 영수증이 있으면 같은 침대가 예정각으로 판정된다 (receipt · 벽 최대 0.100 % → PASS)
+  PASS  ⑬c 변이: 덱 주기 ≠ 영수증 주기 → 영수증 기각 (TECH) · 진단은 mismatch 를 적는다 — fitting 으로 구제하지 않는다
+  PASS  ⑬d 기본 (--diag-fit 없음) 은 되읽기를 아예 안 돌린다 (phase = [])
+  PASS  ⑬c 회전각 미확인 · 각에 따라 δ/r -29–142 % (참 0.5 %) ⇒ TECH (통과로 새지 않는다)
+  PASS  ⑭ 타입쌍별 격자 검색이 전수 검색과 같은 접촉 집합을 낸다 (321 쌍)
+  PASS  ⑮ ★ HBR2-01 재현→수정: 참 벽 겹침 2 % 가 예정각에서는 -159 % (안 닿음) 로 보인다 — 증거 없이는 PASS 를 주지 않는다 (TECH · unidentified · 상한 2.0 %)
+  PASS  ⑮b 예정각과 반 면각 어긋난 mesh 덤프는 쓰지 않는다 — 참 2 % 는 PASS 로 새지 않고 TECH (TECH · unidentified)
+  PASS  ⑮c mesh 덤프가 창의 일부 프레임에만 있으면 쓰지 않는다 (TECH)
+  PASS  ⑯ 참 위상 = 예정 · 0.5 %: 어느 회전각이어도 ≤ 1 % 라 PASS (bounded · 상한 0.50 %)
+  PASS  ⑯b 재개-위상 영수증이 있으면 예정각 (±오차) 으로 잰다 (receipt · 벽 최대 0.500 %)
+  PASS  ⑯c 영수증의 주기가 덱과 다르면 영수증을 쓰지 않는다 (TECH — 상·하한 값은 남긴다)
+  PASS  ⑰ ★ HBR2-08: id 별 type/radius 가 t₀ 와 다르면 기각한다 (step 2500: id 별 type/radius 가 t₀ 와 다르다 (type 2 개 · radius 1 개) — 상별 수와 id 집합이 같아)
+  PASS  ⑱ ★ HBR2-03: 창 안 덤프가 빠지면 TECH (창 안 덤프 결손 1 개 (step [2500]) — 미관측 구간에 통과 증서를 줄 수 없다)
+  PASS  ⑱b 관측량 표지 = 저장 프레임 최대 (덤프 사이 peak 미관측, D-1)
+  PASS  ⑲ 헤더 step 이 파일명과 다른 덤프 (복제) 는 TECH
+  PASS  ㉑ 봉인된 v1 영수증 (주기 · dt · 축 · 운동 서명 · 배너 · 범위 일치) 은 받는다 (receipt · PASS)
+  PASS  ㉑b 봉인 · 스키마 없는 옛 (v0) 영수증은 거부 → 영수증 없이 판정 (bounded · tech 에 이유)
+  PASS  ㉑c 변이 — binary_sha256 null → 영수증 거부
+  PASS  ㉑c 변이 — SHA 형식 아님 → 영수증 거부
+  PASS  ㉑c 변이 — dt 2 배 → 영수증 거부
+  PASS  ㉑c 변이 — 축 0 벡터 → 영수증 거부
+  PASS  ㉑c 변이 — 주기 NaN → 영수증 거부
+  PASS  ㉑c 변이 — passed = "false" 문자열 → 영수증 거부
+  PASS  ㉑c 변이 — 각 오차 > 등록 ε → 영수증 거부
+  PASS  ㉑c 변이 — 운동 서명 다름 → 영수증 거부
+  PASS  ㉑c 변이 — 창 step 을 안 잰 영수증 (짧은 시험) → 영수증 거부
+  PASS  ㉑c 변이 — 각 경계 < 각 오차 → 영수증 거부
+  PASS  ㉑c 변이 — 봉인 SHA ≠ 영수증 SHA → 영수증 거부
+  PASS  ㉑c 변이 — B 실행 비정상 종료 → 영수증 거부
+  PASS  ㉑d 변이 — 런 log.lmp 배너 ≠ 영수증 배너 (다른 빌드) → 영수증 거부
+  PASS  ㉒ ★ HBR3-03 재현→수정: 구간 내부 최대 1.00034 % (세 점 0.99989 %) 를 PASS 로 넘기지 않는다 — 위상 불확실성으로 미식별 (TECH · 상한 1.00035 %)
+  PASS  ㉒b ε 구간 어디서든 1 % 를 넘으면 (하한 1.998 %) REJECT — 위상과 무관한 명백 위반
+  PASS  ㉓ ★ HBR3-04: 끝판 없는 (Drum 만) mesh 덤프로 끝판 2 % 를 놓치지 않는다 — 덤프는 근거가 아니고 (HBR4-04) 끝판 겹침은 회전과 무관해 상·하한으로 REJECT (REJECT · bounded)
+  PASS  ㉓e mesh_dump_container 자체는 끝판 없는 덤프를 여전히 거부한다 (면 연결 검증 (가) 를 세울 때의 바탕)
+  PASS  ㉓b 끝판 하나 빠진 mesh 덤프도 근거가 아니다 → 끝판 2 % 는 상·하한으로 REJECT
+  PASS  ㉓c 예정각과 5° 어긋난 (다른 시각/런) 전체 mesh 덤프도 근거가 아니다 → 상·하한으로 REJECT
+  PASS  ㉓d 완전한 mesh 덤프도 근거가 아니지만 (HBR4-04) 끝판 2 % 는 회전과 무관해 상·하한으로 REJECT (bounded · 2.00 % · Front)
+  PASS  ㉔ ★ HBR3-06 재현→수정: t₀ 뒤 프레임의 id 열 부재 · 헤더 부재 · 소수 type 을 통과시키지 않는다 (TECH · step 2500: 덤프 형식 (헤더 · 열 · 값) — 필수 열 없음 ['id'] (그 프레임은 계산에 쓰지 않는다); step 3000: 덤프 형식 (헤더 ·)
+  PASS  ㉕ 계획 t₀ (2000) 프레임이 없으면 TECH — 1500 으로 대체하지 않는다 (계획 t₀ 2000 (정착 끝 · dump 격자) 프레임이 없다 — 앞 프레임으로 대체하지 않는다 (HBR3-05))
+  PASS  ㉖ (대조) 완전한 영수증 + 발사 봉인 → 받는다 (receipt · PASS)
+  PASS  ㉖b ★ HBR4-01 재현→수정: 봉인 파일 목록이 빈 객체 (empty_seal_lists_receipt) → 영수증 거부
+  PASS  ㉖b ★ HBR4-01 재현→수정: 덤프 해시 목록이 빈 (dumps_n 0) → 영수증 거부
+  PASS  ㉖b ★ HBR4-01 재현→수정: A↔B 차가 비유한 (nan_B_receipt) → 영수증 거부
+  PASS  ㉗ ★ HBR4-02 재현→수정: 영수증 바이너리 ≠ 판정할 런의 발사 봉인 lmp_sha256 (배너는 같다) → 영수증 거부 (binary_mismatch_accepted)
+  PASS  ㉗b 판정할 런에 발사 봉인이 없으면 (실행 당시 바이너리 미상) 영수증을 잇지 않는다 — 지금 파일을 해시해 채우지 않는다
+  PASS  ㉗c ★ HBR4-02 재현→수정: 회전 시작 2001 로 잰 영수증을 시작 3001 덱에 쓰지 않는다 (운동 서명 · step 부분집합은 같다 — rotation_start_mismatch_accepted)
+  PASS  ㉗d 재개된 런 (in.resume) 은 이 영수증으로 잇지 않는다 — 런별 상태 확인 (3차 Q5) 은 이 영수증이 아니다
+  PASS  ㉘ ★ HBR4-03 재현→수정: 원 STL 로 0.95 % 인 끝판 겹침을 위치 경계 139 nm 를 빼고 PASS 로 넘기지 않는다 (translation_receipt · TECH · 상한 1.0193 %)
+  PASS  ㉘b (대조) 위치 경계 0 이면 같은 0.95 % 는 PASS — 경계가 판정을 무조건 막는 것이 아니다
+  PASS  ㉙ ★ HBR4-04 재현→수정: Front 를 [중심·테두리·중심] 으로 퇴화시킨 mesh 덤프로 끝판 2 % 를 놓치지 않는다 (degenerate_front_false_pass · REJECT · bounded)
+  PASS  ㉚ ★ HBR4-07 재현→수정: 회전 0 · fresh · 원 STL · 기대 덱 = 정적 벽 (θ = 0) → 꼭짓점 옆 0.5 % 를 PASS (E0_static_contract · PASS · static · 0.500 %)
+  PASS  ㉚b 정적 벽에서 2 % 는 REJECT (REJECT · static)
+  PASS  ㉚c 음성 대조 — STL 이 캠페인 원본과 다르다 → 정적 계약 불성립 (static 아님 · TECH)
+  PASS  ㉚c 음성 대조 — 덱이 기대 덱과 다르다 → 정적 계약 불성립 (static 아님 · TECH)
+  PASS  ㉚c 음성 대조 — 재개 흔적 (in.resume) → 정적 계약 불성립 (static 아님 · TECH)
+  PASS  ㉚d 기대 덱 (--expect-deck) 없이는 입력 동일성을 세우지 못해 정적 계약을 주지 않는다
+  PASS  ㉛ ★ SLURM 봉인인데 시작 대조 기록 (job_start.json) 이 없으면 영수증을 잇지 않는다 (대기열 틈 — 실행된 바이너리 미상)
+  PASS  ㉛b (대조) 시작 대조 기록이 봉인과 맞으면 받는다 (receipt · PASS)
+  PASS  ㉛c 시작 대조 기록의 바이너리 가 봉인과 다르면 영수증을 잇지 않는다
+  PASS  ㉛c 시작 대조 기록의 실행된 러너 가 봉인과 다르면 영수증을 잇지 않는다
+  PASS  ㉛c 시작 대조 기록의 시작 대조기 가 봉인과 다르면 영수증을 잇지 않는다
+  PASS  ㉛c 시작 대조 기록의 ntasks 가 봉인과 다르면 영수증을 잇지 않는다
+  PASS  ㉛c 시작 대조 기록의 봉인 sha256 가 봉인과 다르면 영수증을 잇지 않는다
+  PASS  ㉛c 시작 대조 기록의 ok (문자열 "true") 가 봉인과 다르면 영수증을 잇지 않는다
+  PASS  ㉛c 시작 대조 기록의 스키마 가 봉인과 다르면 영수증을 잇지 않는다
+  PASS  ㉛d (대조) 로컬 봉인은 시작 대조 기록 없이도 그대로 받는다 (틈이 없다)
+  PASS  ㉜ (대조) 창 전체는 bin 1 의 2 % 를 기각 (REJECT @ 3000)
+  PASS  ㉜b ★ bins=(0,) = 판독기 bin 0 창만 (§4 a′) — bin 0 (2000 · 2500) PASS · bin 1 은 2 % REJECT · bin 0 격자 결손 (2500 없음) = TECH · 빈 bin (5) = TECH {}
+        SOFT_RANGE_PCT 7.37 · 등록 배수 ×20 → 1 % × F^(2/3) = 7.37
+  PASS  ㉝ ★ 상태 표 (§6 세 축 분리 · 14 행) — ref: MET · NOT_MET · 기술 실패 · 1 % 걸침 = TECH_FAIL / soft (등록 범위): 1 % 초과는 CONTRACT_NOT_MET (기술 실패 아님) · 경계 = 등록 은 WITHIN (여유 1e-9) · 등록 + 1e-4 %p · 벽 등록 + 1 %p = OUT_OF_RANGE · 보존 실패 · 창 결손 = TECH_FAIL · 벽 위상 불확실이어도 입자 5 % 면 1 % 는 확정 NOT_MET · 범위 걸침 = TECH_FAIL · 등록 밖 (6.0) · 옛 등록 (5.8) 거부 · ★ v2.6: 등록 = 1 % × 20^(2/3) = 7.37 (STIFF_LEVELS ref ×20 에서 유도)
+        [True, True, True, True, True, True, True]
+  PASS  ㉞ ★ check_window 결과에 상태가 붙는다 — bin 0 에 2 % (soft · ref 둘 다 CONTRACT_NOT_MET) · 7 % soft = WITHIN (v2.6 · 7.37) · 10 % = OUT_OF_RANGE · 0.25 % = CONTRACT_MET · bin 0 결손 = TECH_FAIL · 입자 잃음 = 판정 REJECT 이지만 상태는 TECH_FAIL (기술 실패 ≠ 계약 미달)
+  PASS  ㉟ CLI: --contract --bins 0 --soft-range <등록> → JSON · 화면에 상태 (CONTRACT_NOT_MET · WITHIN) · --soft-range 5.8 (옛 등록) → rc 2 (등록값만 · 올리지 않는다)
+
+check_contact_validity selftest: 89/89 PASS
+
+STDERR

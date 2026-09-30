@@ -1,0 +1,16 @@
+  ✓ S① 리포 정책 = v2 · 새 policy_id (옛 Q8 first/rest id 재사용 안 함 §8-2 ④) · dev-e0 · dev-rot 허용 · confirm-first/rest 는 정의만 (Codex GO 전 거부) · 옛 first · rest 는 허용 그대로
+  ✓ S② ★ 요청 거부 (Codex 9 차 §6-2) — dev-e0 에 holdout seed · dev-rot 에 확인 셀 · confirm-first 에 DEV 셀 · soft 범위 null · 6.0 · 프로브 NP 추가 · release 빠짐 · requires 없음 · 시간 형식 · v1 정책의 새 단계 → 10/10 거부 (문구가 원인을 짚는다)
+  ✓ S③ 정책 파일 모양 — 스키마 · 비객체 · v1 에 새 단계 · 빈 policy_id · 중복 단계 · 파일 없음 → 거부 (fail-closed)
+  ✓ S④ 발사 계획 — dev-e0 = NP 프로브 셋 (5 · 10 · 20 · 1 h · 처리량만) 먼저 + E0 다섯 (환경 NP) · dev-rot 둘 · confirm-first = 첫 seed 6 즉시 + 나머지 12 held (한 NP · 한 시간) · confirm-rest 는 발사 계획 없음 (release 만)
+  ✓ S⑤ ★ 디스크 추정 (piece 5 · v2.6) — E0 프레임 soft 385 → ×20 1,037 → ×40 1,467 · dt/2 1,037 (덤프 간격 1000 고정 규칙 · 옛 ×14 867 · ×28 1,227) · 한 줄 최악 폭 = id 6 + type 2 + 실수 10 × 12 (%g) + 구분자 · E0_ref 한 런 ≈ 14.5 GB (필요 × 1.10 ≤ df 가용이어야 발사)
+  ✓ S⑥ 셀 폴더 계약 (README §6) — 재생성 덱 · 캠페인 STL · n_expected 100000 · r_container 0.013138 · 경화 셀 deck_meta → 문제 0 · STL · n · r · meta 하나씩 어긋나면 문제 · jobid 있으면 fresh 아님 · 폴더 없음
+        np:1 · str_true:1 · runs:1 · tools:1 · log:1 · seal:2 · b_report:True · c_report:True · dev7_shape:True · ref2_notmet_report:True · ref2_tech:True · b_missing:1 · a:1 · fail_verdict:3
+  ✓ S⑦ ★ E0 진단 PASS 기록 (dev-rot 관문) — 진짜 생산자가 쓴 PASS 기록은 이어진다 · 반례 전부 거부: 다른 NP (블록 통일) · pass 가 "true" 문자열 · runs 빠짐 · 도구 sha 다름 · 기록 뒤 log 변경 · 봉인 stage ≠ dev-e0 · a (1 % 초과) · ref2 기술 실패 · b 보고 필드 누락 → 거부 / ★ v2.6: b (ref2 > ref) · c (S_R² 2 %) · DEV7 모양 (b · c 동시) · ref2 1 % 초과는 **보고 전용** (pass false · role report 로 기록 · PASS)
+  ✓ S⑧ ★ 승인 증서 ↔ 시작 대조 (§8-2 ⑤ "실제 시작 직전 … 유효 승인 증서를 다시 대조") — 이 모듈이 쓴 승인을 start_check 가 받는다 · 승인 뒤 증서 변경 · 다시 봉인 · 승인 없음 (수동 release) · 봉인 approval · requires 모양 틀림 → 거부 · 두 파일의 스키마 문자열이 같다
+        retry_ok:✓ · stale:✓ · other:✓ · e0_missing:✓ · soft_tech:✓ · ref_notmet:✓ · released:✓ · file_changed:✓ · partial:✓ · oor_pass:✓ · approval_diff:✓
+  ✓ S⑨ ★ confirm-rest 관문 (§8-2 ⑤ 해제 증거 반례) — 정상: 진짜 생산자 증서 6 → 승인 12 · start_check 가 받는다 · release 재시도 (승인 같으면 그대로) / 반례 거부: 오래된 증서 (다시 봉인) · 다른 seed 증서 · E0 누락 · soft TECH_FAIL · ref CONTRACT_NOT_MET · 관문 없이 풀린 held · 대기 중 덱 변경 · manifest 불완전 (제출 일부 실패) / soft OUT_OF_RANGE 는 통과 · 이미 있는 승인과 다르면 덮지 않는다
+  ✓ S⑩ 등록값 한 벌 — soft 범위 5.8 (검사기 = 관문) · 판독 규약 (관문 = 맹검 래퍼 = 옛 rest 관문 REG) · 봉인 · 승인 스키마 (관문 = 시작 대조기) · n_expected · r_container
+
+mixer_stage_gate selftest: 10/10 PASS
+
+STDERR

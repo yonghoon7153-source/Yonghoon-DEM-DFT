@@ -1,0 +1,134 @@
+[
+  {
+    "path": "AGENTS.md",
+    "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+    "git_blob": "2829b46196a08ffae439ddbdc20dc093cde511c4"
+  },
+  {
+    "path": "scripts/mixer_stage_gate.py",
+    "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+    "git_blob": "40549c9207b65b380aa39f0333a5286ccc8472b3"
+  },
+  {
+    "path": "scripts/make_mixer_deck.py",
+    "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+    "git_blob": "e396aaea6b053330abcb5caeeb736d68fd0a8609"
+  },
+  {
+    "path": "scripts/check_contact_validity.py",
+    "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+    "git_blob": "4aa35fb4ab9c735676d021b3feb40346a053234d"
+  },
+  {
+    "path": "scripts/mixer_deck_diff.py",
+    "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+    "git_blob": "dddadc5722a214da363942999e96e5fc42de1d55"
+  },
+  {
+    "path": "scripts/mixer_deck_readback.py",
+    "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+    "git_blob": "9ff15e0edf6cb61722393d7374c9bfc920d6c445"
+  },
+  {
+    "path": "scripts/mixer_smoke_blind.py",
+    "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+    "git_blob": "bb3127c215cb3021135ec973eb8962d5884d2eec"
+  },
+  {
+    "path": "scripts/measure_mixing_index.py",
+    "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+    "git_blob": "7b45bc5862ab81840e82109d1fd9790264183e45"
+  },
+  {
+    "path": "scripts/measure_bed_aspect.py",
+    "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+    "git_blob": "9daca2e7b8eca82d49c0c7b26efc56ae8d94c321"
+  },
+  {
+    "path": "scripts/make_mixer_resume.py",
+    "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+    "git_blob": "7909d7fb4afee8e9e2b7c31b012854eadeb1db8d"
+  },
+  {
+    "path": "scripts/mixer_restart_phase_test.py",
+    "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+    "git_blob": "d11ee0702ea26d33847dc9ab8187ac96e31a6f2b"
+  },
+  {
+    "path": "scripts/check_doc_refs.py",
+    "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+    "git_blob": "9ca62a434b7e1591d294417ade241eea884938fe"
+  },
+  {
+    "path": "scripts/mixer_gate_reader_diff.py",
+    "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+    "git_blob": "cc6c94e9e44cf3acecbb8d9e2271f5af9a747981"
+  },
+  {
+    "path": "dem_scripts/mixer_20260919/Drum.stl",
+    "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+    "git_blob": "7e3b6b153d86e103752ddf93e2ed583f945414c6"
+  },
+  {
+    "path": "dem_scripts/mixer_20260919/Front.stl",
+    "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+    "git_blob": "e77c287028084d2a229762f8f9cbe4ba0a8aeca0"
+  },
+  {
+    "path": "dem_scripts/mixer_20260919/Back.stl",
+    "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+    "git_blob": "726a7f1e0771e3755eac937b82dad7293fe9ddcf"
+  },
+  {
+    "path": "dem_scripts/mixer_20260921/launch_highbo.sh",
+    "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+    "git_blob": "5e4ba0506597e7e0eee6c1c1b7b341971fafbf65"
+  },
+  {
+    "path": "dem_scripts/mixer_20260921/launch_policy.json",
+    "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+    "git_blob": "abac09c2801194cf63c5af3e53a53023d8673826"
+  },
+  {
+    "path": "dem_scripts/mixer_20260921/start_check.py",
+    "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+    "git_blob": "958c52adf804c531e05a2ad3eb3b386c7bc53730"
+  },
+  {
+    "path": "upstream/src/fix_insert.cpp",
+    "repo": "CFDEMproject/LIGGGHTS-PUBLIC",
+    "ref": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+    "git_blob": "21e0b92007df263588032bc3ae4d0ce3532496fb"
+  },
+  {
+    "path": "upstream/src/fix_insert_pack.cpp",
+    "repo": "CFDEMproject/LIGGGHTS-PUBLIC",
+    "ref": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+    "git_blob": "224a132824a0024b403c3b972b70c6712f1793bf"
+  },
+  {
+    "path": "upstream/src/fix_particledistribution_discrete.cpp",
+    "repo": "CFDEMproject/LIGGGHTS-PUBLIC",
+    "ref": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+    "git_blob": "d161bf47c2a566e97273e71e13a8bb9dcf3e0b60"
+  }
+]

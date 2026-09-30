@@ -1,0 +1,1344 @@
+{
+  "source_pins": [
+    {
+      "path": "AGENTS.md",
+      "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+      "git_blob": "2829b46196a08ffae439ddbdc20dc093cde511c4",
+      "observed_blob": "2829b46196a08ffae439ddbdc20dc093cde511c4",
+      "matches": true
+    },
+    {
+      "path": "scripts/mixer_stage_gate.py",
+      "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+      "git_blob": "40549c9207b65b380aa39f0333a5286ccc8472b3",
+      "observed_blob": "40549c9207b65b380aa39f0333a5286ccc8472b3",
+      "matches": true
+    },
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+      "git_blob": "e396aaea6b053330abcb5caeeb736d68fd0a8609",
+      "observed_blob": "e396aaea6b053330abcb5caeeb736d68fd0a8609",
+      "matches": true
+    },
+    {
+      "path": "scripts/check_contact_validity.py",
+      "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+      "git_blob": "4aa35fb4ab9c735676d021b3feb40346a053234d",
+      "observed_blob": "4aa35fb4ab9c735676d021b3feb40346a053234d",
+      "matches": true
+    },
+    {
+      "path": "scripts/mixer_deck_diff.py",
+      "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+      "git_blob": "dddadc5722a214da363942999e96e5fc42de1d55",
+      "observed_blob": "dddadc5722a214da363942999e96e5fc42de1d55",
+      "matches": true
+    },
+    {
+      "path": "scripts/mixer_deck_readback.py",
+      "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+      "git_blob": "9ff15e0edf6cb61722393d7374c9bfc920d6c445",
+      "observed_blob": "9ff15e0edf6cb61722393d7374c9bfc920d6c445",
+      "matches": true
+    },
+    {
+      "path": "scripts/mixer_smoke_blind.py",
+      "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+      "git_blob": "bb3127c215cb3021135ec973eb8962d5884d2eec",
+      "observed_blob": "bb3127c215cb3021135ec973eb8962d5884d2eec",
+      "matches": true
+    },
+    {
+      "path": "scripts/measure_mixing_index.py",
+      "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+      "git_blob": "7b45bc5862ab81840e82109d1fd9790264183e45",
+      "observed_blob": "7b45bc5862ab81840e82109d1fd9790264183e45",
+      "matches": true
+    },
+    {
+      "path": "scripts/measure_bed_aspect.py",
+      "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+      "git_blob": "9daca2e7b8eca82d49c0c7b26efc56ae8d94c321",
+      "observed_blob": "9daca2e7b8eca82d49c0c7b26efc56ae8d94c321",
+      "matches": true
+    },
+    {
+      "path": "scripts/make_mixer_resume.py",
+      "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+      "git_blob": "7909d7fb4afee8e9e2b7c31b012854eadeb1db8d",
+      "observed_blob": "7909d7fb4afee8e9e2b7c31b012854eadeb1db8d",
+      "matches": true
+    },
+    {
+      "path": "scripts/mixer_restart_phase_test.py",
+      "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+      "git_blob": "d11ee0702ea26d33847dc9ab8187ac96e31a6f2b",
+      "observed_blob": "d11ee0702ea26d33847dc9ab8187ac96e31a6f2b",
+      "matches": true
+    },
+    {
+      "path": "scripts/check_doc_refs.py",
+      "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+      "git_blob": "9ca62a434b7e1591d294417ade241eea884938fe",
+      "observed_blob": "9ca62a434b7e1591d294417ade241eea884938fe",
+      "matches": true
+    },
+    {
+      "path": "scripts/mixer_gate_reader_diff.py",
+      "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+      "git_blob": "cc6c94e9e44cf3acecbb8d9e2271f5af9a747981",
+      "observed_blob": "cc6c94e9e44cf3acecbb8d9e2271f5af9a747981",
+      "matches": true
+    },
+    {
+      "path": "dem_scripts/mixer_20260919/Drum.stl",
+      "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+      "git_blob": "7e3b6b153d86e103752ddf93e2ed583f945414c6",
+      "observed_blob": "7e3b6b153d86e103752ddf93e2ed583f945414c6",
+      "matches": true
+    },
+    {
+      "path": "dem_scripts/mixer_20260919/Front.stl",
+      "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+      "git_blob": "e77c287028084d2a229762f8f9cbe4ba0a8aeca0",
+      "observed_blob": "e77c287028084d2a229762f8f9cbe4ba0a8aeca0",
+      "matches": true
+    },
+    {
+      "path": "dem_scripts/mixer_20260919/Back.stl",
+      "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+      "git_blob": "726a7f1e0771e3755eac937b82dad7293fe9ddcf",
+      "observed_blob": "726a7f1e0771e3755eac937b82dad7293fe9ddcf",
+      "matches": true
+    },
+    {
+      "path": "dem_scripts/mixer_20260921/launch_highbo.sh",
+      "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+      "git_blob": "5e4ba0506597e7e0eee6c1c1b7b341971fafbf65",
+      "observed_blob": "5e4ba0506597e7e0eee6c1c1b7b341971fafbf65",
+      "matches": true
+    },
+    {
+      "path": "dem_scripts/mixer_20260921/launch_policy.json",
+      "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+      "git_blob": "abac09c2801194cf63c5af3e53a53023d8673826",
+      "observed_blob": "abac09c2801194cf63c5af3e53a53023d8673826",
+      "matches": true
+    },
+    {
+      "path": "dem_scripts/mixer_20260921/start_check.py",
+      "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "ref": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+      "git_blob": "958c52adf804c531e05a2ad3eb3b386c7bc53730",
+      "observed_blob": "958c52adf804c531e05a2ad3eb3b386c7bc53730",
+      "matches": true
+    },
+    {
+      "path": "upstream/src/fix_insert.cpp",
+      "repo": "CFDEMproject/LIGGGHTS-PUBLIC",
+      "ref": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+      "git_blob": "21e0b92007df263588032bc3ae4d0ce3532496fb",
+      "observed_blob": "21e0b92007df263588032bc3ae4d0ce3532496fb",
+      "matches": true
+    },
+    {
+      "path": "upstream/src/fix_insert_pack.cpp",
+      "repo": "CFDEMproject/LIGGGHTS-PUBLIC",
+      "ref": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+      "git_blob": "224a132824a0024b403c3b972b70c6712f1793bf",
+      "observed_blob": "224a132824a0024b403c3b972b70c6712f1793bf",
+      "matches": true
+    },
+    {
+      "path": "upstream/src/fix_particledistribution_discrete.cpp",
+      "repo": "CFDEMproject/LIGGGHTS-PUBLIC",
+      "ref": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+      "git_blob": "d161bf47c2a566e97273e71e13a8bb9dcf3e0b60",
+      "observed_blob": "d161bf47c2a566e97273e71e13a8bb9dcf3e0b60",
+      "matches": true
+    }
+  ],
+  "bundle_hashes": [
+    {
+      "path": "check_only/LC_ref2_r2_s32452843/deck_meta.json",
+      "matches": true
+    },
+    {
+      "path": "check_only/LC_ref2_r2_s32452843/gen.log",
+      "matches": true
+    },
+    {
+      "path": "check_only/LC_ref2_r2_s32452843/gen_cmd.txt",
+      "matches": true
+    },
+    {
+      "path": "check_only/LC_ref2_r2_s32452843/in.mixer",
+      "matches": true
+    },
+    {
+      "path": "check_only/LH_ref2_r2_s32452843/deck_meta.json",
+      "matches": true
+    },
+    {
+      "path": "check_only/LH_ref2_r2_s32452843/gen.log",
+      "matches": true
+    },
+    {
+      "path": "check_only/LH_ref2_r2_s32452843/gen_cmd.txt",
+      "matches": true
+    },
+    {
+      "path": "check_only/LH_ref2_r2_s32452843/in.mixer",
+      "matches": true
+    },
+    {
+      "path": "compare/E0_soft_s32452843/gen.log",
+      "matches": true
+    },
+    {
+      "path": "compare/E0_soft_s32452843/gen_cmd.txt",
+      "matches": true
+    },
+    {
+      "path": "compare/E0_soft_s32452843/in.mixer",
+      "matches": true
+    },
+    {
+      "path": "compare/E0_soft_s49979687/gen.log",
+      "matches": true
+    },
+    {
+      "path": "compare/E0_soft_s49979687/gen_cmd.txt",
+      "matches": true
+    },
+    {
+      "path": "compare/E0_soft_s49979687/in.mixer",
+      "matches": true
+    },
+    {
+      "path": "compare/E0_soft_s67867967/gen.log",
+      "matches": true
+    },
+    {
+      "path": "compare/E0_soft_s67867967/gen_cmd.txt",
+      "matches": true
+    },
+    {
+      "path": "compare/E0_soft_s67867967/in.mixer",
+      "matches": true
+    },
+    {
+      "path": "compare/LC_soft_r2_s32452843/gen.log",
+      "matches": true
+    },
+    {
+      "path": "compare/LC_soft_r2_s32452843/gen_cmd.txt",
+      "matches": true
+    },
+    {
+      "path": "compare/LC_soft_r2_s32452843/in.mixer",
+      "matches": true
+    },
+    {
+      "path": "compare/LH_soft_r2_s32452843/gen.log",
+      "matches": true
+    },
+    {
+      "path": "compare/LH_soft_r2_s32452843/gen_cmd.txt",
+      "matches": true
+    },
+    {
+      "path": "compare/LH_soft_r2_s32452843/in.mixer",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref2_s32452843/deck_meta.json",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref2_s32452843/gen.log",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref2_s32452843/gen_cmd.txt",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref2_s32452843/in.mixer",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref_dthalf_s32452843/deck_meta.json",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref_dthalf_s32452843/gen.log",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref_dthalf_s32452843/gen_cmd.txt",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref_dthalf_s32452843/in.mixer",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref_s32452843/deck_meta.json",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref_s32452843/gen.log",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref_s32452843/gen_cmd.txt",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref_s32452843/in.mixer",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref_s49979687/deck_meta.json",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref_s49979687/gen.log",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref_s49979687/gen_cmd.txt",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref_s49979687/in.mixer",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref_s67867967/deck_meta.json",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref_s67867967/gen.log",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref_s67867967/gen_cmd.txt",
+      "matches": true
+    },
+    {
+      "path": "decks/E0_ref_s67867967/in.mixer",
+      "matches": true
+    },
+    {
+      "path": "decks/LC_ref_r2_s32452843/deck_meta.json",
+      "matches": true
+    },
+    {
+      "path": "decks/LC_ref_r2_s32452843/gen.log",
+      "matches": true
+    },
+    {
+      "path": "decks/LC_ref_r2_s32452843/gen_cmd.txt",
+      "matches": true
+    },
+    {
+      "path": "decks/LC_ref_r2_s32452843/in.mixer",
+      "matches": true
+    },
+    {
+      "path": "decks/LH_ref_r2_s32452843/deck_meta.json",
+      "matches": true
+    },
+    {
+      "path": "decks/LH_ref_r2_s32452843/gen.log",
+      "matches": true
+    },
+    {
+      "path": "decks/LH_ref_r2_s32452843/gen_cmd.txt",
+      "matches": true
+    },
+    {
+      "path": "decks/LH_ref_r2_s32452843/in.mixer",
+      "matches": true
+    },
+    {
+      "path": "readback.json",
+      "matches": true
+    },
+    {
+      "path": "readback.md",
+      "matches": true
+    },
+    {
+      "path": "deck_diff.json",
+      "matches": true
+    },
+    {
+      "path": "deck_diff.txt",
+      "matches": true
+    }
+  ],
+  "deck_count": 14,
+  "pair_ratios": {
+    "LC_20": [
+      {
+        "pair": "1-1",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 108795.0,
+        "ced_new": 108795.0,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "1-2",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 108795.0,
+        "ced_new": 108795.0,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "1-3",
+        "estar_ratio": 16.850606009706762,
+        "ced_ratio_expected": 6.572698074852891,
+        "ced_soft": 10458.2,
+        "ced_new": 68738.8,
+        "ced_ratio_printed": 6.572718058556922,
+        "f0_ratio": 1.000009121260962
+      },
+      {
+        "pair": "1-4",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 59063.2,
+        "ced_new": 59063.2,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "2-2",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 142562.0,
+        "ced_new": 142562.0,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "2-3",
+        "estar_ratio": 16.850606009706762,
+        "ced_ratio_expected": 6.572698074852891,
+        "ced_soft": 10458.2,
+        "ced_new": 68738.8,
+        "ced_ratio_printed": 6.572718058556922,
+        "f0_ratio": 1.000009121260962
+      },
+      {
+        "pair": "2-4",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 77394.6,
+        "ced_new": 77394.6,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "3-3",
+        "estar_ratio": 20.0,
+        "ced_ratio_expected": 7.368062997280773,
+        "ced_soft": 10458.2,
+        "ced_new": 77056.9,
+        "ced_ratio_printed": 7.36808437398405,
+        "f0_ratio": 1.0000087038202456
+      },
+      {
+        "pair": "3-4",
+        "estar_ratio": 17.73809523809524,
+        "ced_ratio_expected": 6.801499256184236,
+        "ced_soft": 5677.6,
+        "ced_new": 38616.2,
+        "ced_ratio_printed": 6.801500634070734,
+        "f0_ratio": 1.000000607757227
+      },
+      {
+        "pair": "4-4",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 0.0,
+        "ced_new": 0.0,
+        "ced_ratio_printed": null,
+        "f0_ratio": null
+      }
+    ],
+    "LC_40": [
+      {
+        "pair": "1-1",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 108795.0,
+        "ced_new": 108795.0,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "1-2",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 108795.0,
+        "ced_new": 108795.0,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "1-3",
+        "estar_ratio": 28.909279804651657,
+        "ced_ratio_expected": 9.419434887295113,
+        "ced_soft": 10458.2,
+        "ced_new": 98510.6,
+        "ced_ratio_printed": 9.41946032778107,
+        "f0_ratio": 1.0000081025735528
+      },
+      {
+        "pair": "1-4",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 59063.2,
+        "ced_new": 59063.2,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "2-2",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 142562.0,
+        "ced_new": 142562.0,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "2-3",
+        "estar_ratio": 28.909279804651657,
+        "ced_ratio_expected": 9.419434887295113,
+        "ced_soft": 10458.2,
+        "ced_new": 98510.6,
+        "ced_ratio_printed": 9.41946032778107,
+        "f0_ratio": 1.0000081025735528
+      },
+      {
+        "pair": "2-4",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 77394.6,
+        "ced_new": 77394.6,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "3-3",
+        "estar_ratio": 40.0,
+        "ced_ratio_expected": 11.696070952851462,
+        "ced_soft": 10458.2,
+        "ced_new": 122320.0,
+        "ced_ratio_printed": 11.69608536841904,
+        "f0_ratio": 1.000003697545629
+      },
+      {
+        "pair": "3-4",
+        "estar_ratio": 31.70212765957447,
+        "ced_ratio_expected": 10.01672168342477,
+        "ced_soft": 5677.6,
+        "ced_new": 56871.0,
+        "ced_ratio_printed": 10.016732422150204,
+        "f0_ratio": 1.000003216242984
+      },
+      {
+        "pair": "4-4",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 0.0,
+        "ced_new": 0.0,
+        "ced_ratio_printed": null,
+        "f0_ratio": null
+      }
+    ],
+    "LH_20": [
+      {
+        "pair": "1-1",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 3563480.0,
+        "ced_new": 3563480.0,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "1-2",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 2719440.0,
+        "ced_new": 2719440.0,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "1-3",
+        "estar_ratio": 16.850606009706762,
+        "ced_ratio_expected": 6.572698074852891,
+        "ced_soft": 10458.2,
+        "ced_new": 68738.8,
+        "ced_ratio_printed": 6.572718058556922,
+        "f0_ratio": 1.000009121260962
+      },
+      {
+        "pair": "1-4",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 1934550.0,
+        "ced_new": 1934550.0,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "2-2",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 2719440.0,
+        "ced_new": 2719440.0,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "2-3",
+        "estar_ratio": 16.850606009706762,
+        "ced_ratio_expected": 6.572698074852891,
+        "ced_soft": 10458.2,
+        "ced_new": 68738.8,
+        "ced_ratio_printed": 6.572718058556922,
+        "f0_ratio": 1.000009121260962
+      },
+      {
+        "pair": "2-4",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 1476340.0,
+        "ced_new": 1476340.0,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "3-3",
+        "estar_ratio": 20.0,
+        "ced_ratio_expected": 7.368062997280773,
+        "ced_soft": 10458.2,
+        "ced_new": 77056.9,
+        "ced_ratio_printed": 7.36808437398405,
+        "f0_ratio": 1.0000087038202456
+      },
+      {
+        "pair": "3-4",
+        "estar_ratio": 17.73809523809524,
+        "ced_ratio_expected": 6.801499256184236,
+        "ced_soft": 5677.6,
+        "ced_new": 38616.2,
+        "ced_ratio_printed": 6.801500634070734,
+        "f0_ratio": 1.000000607757227
+      },
+      {
+        "pair": "4-4",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 0.0,
+        "ced_new": 0.0,
+        "ced_ratio_printed": null,
+        "f0_ratio": null
+      }
+    ],
+    "LH_40": [
+      {
+        "pair": "1-1",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 3563480.0,
+        "ced_new": 3563480.0,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "1-2",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 2719440.0,
+        "ced_new": 2719440.0,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "1-3",
+        "estar_ratio": 28.909279804651657,
+        "ced_ratio_expected": 9.419434887295113,
+        "ced_soft": 10458.2,
+        "ced_new": 98510.6,
+        "ced_ratio_printed": 9.41946032778107,
+        "f0_ratio": 1.0000081025735528
+      },
+      {
+        "pair": "1-4",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 1934550.0,
+        "ced_new": 1934550.0,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "2-2",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 2719440.0,
+        "ced_new": 2719440.0,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "2-3",
+        "estar_ratio": 28.909279804651657,
+        "ced_ratio_expected": 9.419434887295113,
+        "ced_soft": 10458.2,
+        "ced_new": 98510.6,
+        "ced_ratio_printed": 9.41946032778107,
+        "f0_ratio": 1.0000081025735528
+      },
+      {
+        "pair": "2-4",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 1476340.0,
+        "ced_new": 1476340.0,
+        "ced_ratio_printed": 1.0,
+        "f0_ratio": 1.0
+      },
+      {
+        "pair": "3-3",
+        "estar_ratio": 40.0,
+        "ced_ratio_expected": 11.696070952851462,
+        "ced_soft": 10458.2,
+        "ced_new": 122320.0,
+        "ced_ratio_printed": 11.69608536841904,
+        "f0_ratio": 1.000003697545629
+      },
+      {
+        "pair": "3-4",
+        "estar_ratio": 31.70212765957447,
+        "ced_ratio_expected": 10.01672168342477,
+        "ced_soft": 5677.6,
+        "ced_new": 56871.0,
+        "ced_ratio_printed": 10.016732422150204,
+        "f0_ratio": 1.000003216242984
+      },
+      {
+        "pair": "4-4",
+        "estar_ratio": 1.0,
+        "ced_ratio_expected": 1.0,
+        "ced_soft": 0.0,
+        "ced_new": 0.0,
+        "ced_ratio_printed": null,
+        "f0_ratio": null
+      }
+    ]
+  },
+  "b_changed_pairs": {
+    "soft": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "ref": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "ref2": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        2,
+        4
+      ]
+    ]
+  },
+  "e0_zero": {
+    "E0_ref_s67867967": true,
+    "E0_ref_dthalf_s32452843": true,
+    "E0_ref_s49979687": true,
+    "E0_ref2_s32452843": true,
+    "E0_ref_s32452843": true,
+    "E0_soft_s67867967": true,
+    "E0_soft_s32452843": true,
+    "E0_soft_s49979687": true
+  },
+  "regenerated_deck_text_matches": {
+    "LH_ref2_r2_s32452843": true,
+    "LC_ref2_r2_s32452843": true,
+    "LC_ref_r2_s32452843": true,
+    "E0_ref_s67867967": true,
+    "E0_ref_dthalf_s32452843": true,
+    "E0_ref_s49979687": true,
+    "LH_ref_r2_s32452843": true,
+    "E0_ref2_s32452843": true,
+    "E0_ref_s32452843": true,
+    "LC_soft_r2_s32452843": true,
+    "E0_soft_s67867967": true,
+    "E0_soft_s32452843": true,
+    "LH_soft_r2_s32452843": true,
+    "E0_soft_s49979687": true
+  },
+  "readback_tables_rerun": [
+    {
+      "kind": "E",
+      "old": "LC_soft_r2_s32452843",
+      "new": "LC_ref_r2_s32452843",
+      "verdict": "PASS",
+      "failures": []
+    },
+    {
+      "kind": "E",
+      "old": "LH_soft_r2_s32452843",
+      "new": "LH_ref_r2_s32452843",
+      "verdict": "PASS",
+      "failures": []
+    },
+    {
+      "kind": "E",
+      "old": "LC_soft_r2_s32452843",
+      "new": "LC_ref2_r2_s32452843",
+      "verdict": "PASS",
+      "failures": []
+    },
+    {
+      "kind": "E",
+      "old": "LH_soft_r2_s32452843",
+      "new": "LH_ref2_r2_s32452843",
+      "verdict": "PASS",
+      "failures": []
+    },
+    {
+      "kind": "E",
+      "old": "LC_ref_r2_s32452843",
+      "new": "LC_ref2_r2_s32452843",
+      "verdict": "PASS",
+      "failures": []
+    },
+    {
+      "kind": "E0",
+      "old": "E0_soft_s32452843",
+      "new": "E0_ref_s32452843",
+      "verdict": "PASS",
+      "failures": []
+    },
+    {
+      "kind": "E0",
+      "old": "E0_soft_s49979687",
+      "new": "E0_ref_s49979687",
+      "verdict": "PASS",
+      "failures": []
+    },
+    {
+      "kind": "E0",
+      "old": "E0_soft_s67867967",
+      "new": "E0_ref_s67867967",
+      "verdict": "PASS",
+      "failures": []
+    },
+    {
+      "kind": "E0",
+      "old": "E0_ref_s32452843",
+      "new": "E0_ref2_s32452843",
+      "verdict": "PASS",
+      "failures": []
+    },
+    {
+      "kind": "DT",
+      "old": "E0_ref_s32452843",
+      "new": "E0_ref_dthalf_s32452843",
+      "verdict": "PASS",
+      "failures": []
+    },
+    {
+      "kind": "B",
+      "old": "LC_soft_r2_s32452843",
+      "new": "LH_soft_r2_s32452843",
+      "verdict": "PASS",
+      "failures": []
+    },
+    {
+      "kind": "B",
+      "old": "LC_ref_r2_s32452843",
+      "new": "LH_ref_r2_s32452843",
+      "verdict": "PASS",
+      "failures": []
+    },
+    {
+      "kind": "B",
+      "old": "LC_ref2_r2_s32452843",
+      "new": "LH_ref2_r2_s32452843",
+      "verdict": "PASS",
+      "failures": []
+    }
+  ],
+  "reported_max_forecast_conditional": {
+    "naive_SESE_1_018": 0.8025642396041137,
+    "SEwall_1_018": 0.822260288217577,
+    "AMSE_1_014": 0.8270615006784015,
+    "runtime_rayleigh_assumption": 1.1952286093343936,
+    "not_observed": true
+  },
+  "variance_claim": {
+    "iid_normal_1024_RSE": 0.044215768828538185,
+    "two_independent_variances_relative_SD_first_order": 0.06253053994807224,
+    "ten_percent_over_difference_SD": 1.5992185591719477
+  },
+  "owner_switch_counterexample": {
+    "before": [
+      0.715,
+      0.701
+    ],
+    "after": [
+      0.594,
+      0.734
+    ],
+    "AM_P_SE_growth_pct": 4.707560627674745,
+    "logic": "If every component maximum decreases, max cannot increase; owner switching alone is not sufficient."
+  },
+  "sr2_counterexample": {
+    "s0": 0.2,
+    "slc": 0.17,
+    "slh": 0.18,
+    "sr_before": 0.15,
+    "sr_after": 0.165,
+    "sr_relative_change": 0.10000000000000009,
+    "contrast_before": 0.19999999999999957,
+    "contrast_after": 0.28571428571428514,
+    "shift": 0.08571428571428558
+  },
+  "mpi_expected_from_printed_deck": {
+    "number_fractions": [
+      0.0017597849133886765,
+      0.008590730715484636,
+      0.9896494843711267
+    ],
+    "ideal_counts": [
+      175.97849133886766,
+      859.0730715484636,
+      98964.94843711266
+    ]
+  },
+  "mpi_NP20_exact_plan_possible": {
+    "local_floor": [
+      8,
+      42,
+      4948
+    ],
+    "local_gap": 2,
+    "aggregate_extra": [
+      16,
+      19,
+      5
+    ],
+    "all_remainders_positive": true,
+    "target": [
+      176,
+      859,
+      98965
+    ]
+  },
+  "mpi_NP1_not_unique": {
+    "floor": [
+      175,
+      859,
+      98964
+    ],
+    "gap": 2
+  },
+  "upstream_source_blobs": {
+    "fix_insert.cpp": "21e0b92007df263588032bc3ae4d0ce3532496fb",
+    "fix_insert_pack.cpp": "224a132824a0024b403c3b972b70c6712f1793bf",
+    "fix_particledistribution_discrete.cpp": "d161bf47c2a566e97273e71e13a8bb9dcf3e0b60"
+  },
+  "count_tolerances": {
+    "1": [
+      {
+        "1": 2,
+        "2": 2,
+        "3": 2
+      },
+      [
+        [
+          [
+            1,
+            2,
+            3
+          ],
+          100000
+        ]
+      ],
+      ""
+    ],
+    "20": [
+      {
+        "1": 40,
+        "2": 40,
+        "3": 40
+      },
+      [
+        [
+          [
+            1,
+            2,
+            3
+          ],
+          100000
+        ]
+      ],
+      ""
+    ],
+    "0": [
+      null,
+      null,
+      "NP 0 가 양의 정수가 아니다"
+    ],
+    "True": [
+      null,
+      null,
+      "NP True 가 양의 정수가 아니다"
+    ]
+  },
+  "lc_count_tolerance": [
+    {
+      "1": 20,
+      "2": 20,
+      "3": 0
+    },
+    [
+      [
+        [
+          1,
+          2
+        ],
+        1035
+      ],
+      [
+        [
+          3
+        ],
+        98965
+      ]
+    ],
+    ""
+  ],
+  "soft_AMAM_2pct": {
+    "schema": "mixer_contact_status/1",
+    "max_ovl": 0.01,
+    "soft_range_pct": 7.37,
+    "soft_range_eps": 1e-09,
+    "technical": "OK",
+    "why": [],
+    "wall_basis": "static",
+    "x_lo_pct": 2.0,
+    "x_hi_pct": 2.0,
+    "original_1pct": "NOT_MET",
+    "soft_range": "WITHIN",
+    "status": "CONTRACT_NOT_MET"
+  },
+  "finite_cloud_undefined_variance": {
+    "used": 1,
+    "s2": null,
+    "is_nan": true
+  },
+  "e0_diag_real_producer_boundary": {
+    "finite_baseline": {
+      "rc": 0,
+      "verdict": "PASS",
+      "checks": {
+        "complete": {
+          "pass": true,
+          "role": "gate"
+        },
+        "technical": {
+          "np_values": [
+            "20"
+          ],
+          "pass": true,
+          "role": "gate"
+        },
+        "a": {
+          "status": {
+            "E0_ref_s32452843": "CONTRACT_MET",
+            "E0_ref_s49979687": "CONTRACT_MET",
+            "E0_ref_s67867967": "CONTRACT_MET"
+          },
+          "pass": true,
+          "role": "gate"
+        },
+        "b": {
+          "x_ref2_pct": 0.8,
+          "x_ref_pct": 0.8,
+          "pass": true,
+          "role": "report"
+        },
+        "c": {
+          "dmax_pp": 0.0,
+          "sr2_rel": 0.0,
+          "pass": true,
+          "role": "report"
+        }
+      },
+      "verify_errors": []
+    },
+    "c_threshold_fail": {
+      "rc": 0,
+      "verdict": "PASS",
+      "checks": {
+        "complete": {
+          "pass": true,
+          "role": "gate"
+        },
+        "technical": {
+          "np_values": [
+            "20"
+          ],
+          "pass": true,
+          "role": "gate"
+        },
+        "a": {
+          "status": {
+            "E0_ref_s32452843": "CONTRACT_MET",
+            "E0_ref_s49979687": "CONTRACT_MET",
+            "E0_ref_s67867967": "CONTRACT_MET"
+          },
+          "pass": true,
+          "role": "gate"
+        },
+        "b": {
+          "x_ref2_pct": 0.8,
+          "x_ref_pct": 0.8,
+          "pass": true,
+          "role": "report"
+        },
+        "c": {
+          "dmax_pp": 0.0,
+          "sr2_rel": 0.09999999999999991,
+          "pass": false,
+          "role": "report"
+        }
+      },
+      "verify_errors": []
+    },
+    "undefined_reference": {
+      "rc": 0,
+      "verdict": "PASS",
+      "checks": {
+        "complete": {
+          "pass": true,
+          "role": "gate"
+        },
+        "technical": {
+          "np_values": [
+            "20"
+          ],
+          "pass": true,
+          "role": "gate"
+        },
+        "a": {
+          "status": {
+            "E0_ref_s32452843": "CONTRACT_MET",
+            "E0_ref_s49979687": "CONTRACT_MET",
+            "E0_ref_s67867967": "CONTRACT_MET"
+          },
+          "pass": true,
+          "role": "gate"
+        },
+        "b": {
+          "x_ref2_pct": 0.8,
+          "x_ref_pct": 0.8,
+          "pass": true,
+          "role": "report"
+        },
+        "c": {
+          "dmax_pp": 0.0,
+          "sr2_rel": null,
+          "pass": false,
+          "role": "report"
+        }
+      },
+      "verify_errors": []
+    },
+    "undefined_dthalf": {
+      "rc": 0,
+      "verdict": "PASS",
+      "checks": {
+        "complete": {
+          "pass": true,
+          "role": "gate"
+        },
+        "technical": {
+          "np_values": [
+            "20"
+          ],
+          "pass": true,
+          "role": "gate"
+        },
+        "a": {
+          "status": {
+            "E0_ref_s32452843": "CONTRACT_MET",
+            "E0_ref_s49979687": "CONTRACT_MET",
+            "E0_ref_s67867967": "CONTRACT_MET"
+          },
+          "pass": true,
+          "role": "gate"
+        },
+        "b": {
+          "x_ref2_pct": 0.8,
+          "x_ref_pct": 0.8,
+          "pass": true,
+          "role": "report"
+        },
+        "c": {
+          "dmax_pp": 0.0,
+          "sr2_rel": null,
+          "pass": false,
+          "role": "report"
+        }
+      },
+      "verify_errors": []
+    }
+  },
+  "report_values_removed_verifier": [],
+  "selftests": {
+    "make_mixer_deck": {
+      "rc": 0,
+      "tail": [
+        "  PASS  ST⑬ ★ 경화해도 LC↔LH 공동 개입 B 는 그대로 — ×14 · ×28 에서 달라지는 쌍 = 허용 다섯 (AM–AM 셋 · AM–벽 둘) 이고 다섯 다 LH > LC · SE 낀 쌍은 LC = LH (정확히)",
+        "  PASS  ST⑭ ★ 주석 = 실측 — \"dt 를 SE 가 정한다\" 옛 주석 둘이 없고, 고친 주석의 숫자 (soft 캠페인 AM_S 0.7055 µs < SE 1.1719 µs · A안 전 (전 상 1e7 · SE 가 정함) 대비 step ×1.661) 를 독립 산술로 다시 낸 값과 인쇄 자릿수까지 같다 · ×14 는 SE 가 정한다",
+        "",
+        "make_mixer_deck selftest: 103/103 PASS"
+      ]
+    },
+    "mixer_deck_diff": {
+      "rc": 1,
+      "tail": [
+        "  PASS  ㊶ 등록 코호트 가드 — DEV 코호트는 DEV seed 만 (holdout 금지 · soft 없음) · 확인 코호트는 holdout seed 만 · 정확히 3 × 6 · ref2/dthalf 없음 · 회전 8 바퀴 — 코호트에 holdout 셀을 넣거나 DEV 셀을 확인에 넣으면 거부 (ValueError)",
+        "  PASS  ㊷ --cohort 에 모르는 이름 · --cohort 와 --ref-arm/--allow 혼용 → rc 2",
+        "",
+        "mixer_deck_diff selftest: 42/43 PASS   FAILED: ['㊵ ★ --cohort confirm (holdout 3 seed × 6 셀 = 18 · 생성기로 만든 덱 + deck_meta) → PASS · 쌍 18 (seed 마다 B 둘 · E 셋 · EB 하나) · 반례: DEV 덱 (LC_ref_r2_s32452843) 을 확인 셀 폴더에 · soft 덱을 ref 이름에 → FAIL']"
+      ]
+    },
+    "mixer_deck_readback": {
+      "rc": 0,
+      "tail": [
+        "  PASS  ⑰ CLI: PASS 면 rc 0 · JSON (도구 sha256 · 버전 · 허용오차 · 덱 sha256 · 생성 명령 (gen_cmd.txt) · 타입 사전 · 표) · markdown 표 · FAIL 이 섞이면 rc 1 이고 실패 항 목록이 남는다",
+        "  PASS  ㉑ markdown 에 백틱 안 순수 hex (check_doc_refs 의 커밋 SHA 패턴) 가 없다 — sha256 앞자리는 백틱 없이 · 발견 0",
+        "",
+        "mixer_deck_readback selftest: 21/21 PASS"
+      ]
+    },
+    "check_contact_validity": {
+      "rc": 0,
+      "tail": [
+        "  PASS  ㉞ ★ check_window 결과에 상태가 붙는다 — bin 0 에 2 % (soft · ref 둘 다 CONTRACT_NOT_MET) · 7 % soft = WITHIN (v2.6 · 7.37) · 10 % = OUT_OF_RANGE · 0.25 % = CONTRACT_MET · bin 0 결손 = TECH_FAIL · 입자 잃음 = 판정 REJECT 이지만 상태는 TECH_FAIL (기술 실패 ≠ 계약 미달)",
+        "  PASS  ㉟ CLI: --contract --bins 0 --soft-range <등록> → JSON · 화면에 상태 (CONTRACT_NOT_MET · WITHIN) · --soft-range 5.8 (옛 등록) → rc 2 (등록값만 · 올리지 않는다)",
+        "",
+        "check_contact_validity selftest: 89/89 PASS"
+      ]
+    },
+    "mixer_smoke_blind": {
+      "rc": 1,
+      "tail": [
+        "        (FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\ADMINI~1\\\\AppData\\\\Local\\\\Temp\\\\sb_id_jv7o7u6p\\\\OUT\\\\interim_record.jso)",
+        "  ✗ ㉓ 투영 검사기 (interim_projection_problems) — 정상 기록은 문제 0 · seed 별 값 · 런별 M_bin · 허용 밖 최상위 키 · 요약 안 seed 별 목록 · 결과 키 (rows) 가 들어오면 잡는다 / 투영기가 스스로 어기면 (런별 입력에 M_bin) 값 · 런별 입력을 비운 TECH 기록만 쓴다 (기록 자체는 검사 통과 · 새지 않는다)",
+        "",
+        "✗ 10 건 실패"
+      ]
+    },
+    "mixer_stage_gate": {
+      "rc": 1,
+      "tail": [
+        "  ✗ S⑨ ★ confirm-rest 관문 (§8-2 ⑤ 해제 증거 반례) — 정상: 진짜 생산자 증서 6 → 승인 12 · start_check 가 받는다 · release 재시도 (승인 같으면 그대로) / 반례 거부: 오래된 증서 (다시 봉인) · 다른 seed 증서 · E0 누락 · soft TECH_FAIL · ref CONTRACT_NOT_MET · 관문 없이 풀린 held · 대기 중 덱 변경 · manifest 불완전 (제출 일부 실패) / soft OUT_OF_RANGE 는 통과 · 이미 있는 승인과 다르면 덮지 않는다",
+        "  ✓ S⑩ 등록값 한 벌 — soft 범위 5.8 (검사기 = 관문) · 판독 규약 (관문 = 맹검 래퍼 = 옛 rest 관문 REG) · 봉인 · 승인 스키마 (관문 = 시작 대조기) · n_expected · r_container",
+        "",
+        "mixer_stage_gate selftest: 8/10 — ✗ 2 건 실패"
+      ]
+    }
+  }
+}

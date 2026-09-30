@@ -1,0 +1,25 @@
+  PASS  ① 표 E LC soft → ×14: PASS · 9 비영 항 F₀ 비 = 1 (허용 3e-05) · 벽–벽 0 · Codex ×14 배수 대조 PASS (실패 [])
+  PASS  ② 표 E LH soft → ×14 · LC/LH soft → ×28 (Codex ×28 대조) · LC ×14 → ×28 (배수 2 — Codex 대조 N/A) 모두 PASS
+  PASS  ③ 표 E0 soft → ×14 · ×14 → ×28 · soft → ×28: 두 덱 모두 전 점착 0 (정확히 · 행 10 개 · 명시 검사) · 물리 시간 · 덤프/체크포인트 규칙 PASS
+  PASS  ④ 표 DT E0 ×14 → dt/2 · LC ×14 → dt/2: E · ν · CED 동일 · dt 정확히 ½ · step · 덤프 ×2 · 계획 t₀ 물리 시각 동일 → PASS
+  PASS  ⑤ 표 B soft · ×14 · ×28: LC↔LH 다섯 쌍 (AM–AM 셋 · AM–벽 둘) 만 증가 · 나머지 전부 정확히 같다 · 벽–벽 0 → PASS
+  PASS  ⑥ 반례 혼합쌍 하나 (AM_P–SE 를 옛 규칙 ×14^(2/3)) → FAIL · 그 쌍만 짚는다 ['AM_P–SE'] · F₀ 비 1.2721 (Codex 1.272)
+  PASS  ⑦ 반례 SE–벽만 (새 SE 대각 ÷ 1.842 로 다시) → FAIL · SE–WALL 만 ['SE–WALL'] · F₀ 비 1.1821 (Codex 1.182)
+  PASS  ⑧ 반례 타입 순서 — 템플릿 atom_type 1↔2 (표 E · 표 B) · 영률 줄의 AM_S ↔ SE 자리 바꿈 → 셋 다 FAIL (타입 사전 · 영률 대조)
+  PASS  ⑨ 반례 0 행렬 변조 — E0 ×14 의 SE–SE = 1000 (새 쪽 · 옛 쪽) · LC ×14 의 벽–벽 = 1 → 셋 다 FAIL
+  PASS  ⑩ 반례 덤프 간격 변조 — LC ×14 +1 step (규칙 밖) · E0 dt/2 가 2 배가 아님 · E0 ×14 를 2 배로 → 셋 다 FAIL
+  PASS  ⑪ 반례 비대칭 (AM_P–SE 한쪽 칸만 ×1.001) → FAIL (대칭 검사)
+  PASS  ⑫ 반례 표 B — LH SE–SE +0.1 (몰래 변경) · AM_P–AM_P = LC (개입 누락) · AM_S–벽 ÷2 (방향 반대) · 중력 9.80 (명령) → 넷 다 FAIL [['SE–SE'], ['AM_P–AM_P'], ['AM_S–WALL'], []]
+  PASS  ⑬ 반례 표 E — AM_P 영률 변경 · SE ν 변경 · neighbor 변경 (허용 밖 명령) · step 을 새 dt 로 다시 안 셈 (soft step 그대로) → 넷 다 FAIL
+  PASS  ⑭ 반례 표 DT — 정착 step +1 (정수배 아님) · dt 1.567e-07 (정확히 ½ 아님) · soft → ×14 를 DT 로 (k 비정수 · 영률 다름) → 셋 다 FAIL
+  PASS  ⑮ 같은 덱 둘을 표 E 로 → FAIL (SE 영률이 같다 = E 비교가 아니다 — 빈 비교를 PASS 로 내지 않는다)
+  PASS  ⑱ ★ 반례 — SE ×14 인데 dt · step · 덤프 · 체크포인트를 soft 그대로 (LC · E0): 물리 시간 · 규칙 · 쌍별 CED 는 다 맞아도 **Rayleigh dt 대조 하나로** FAIL (적분 불안정 덱) [1, 1]
+  PASS  ⑲ 표 B 는 dt/2 짝 (LC ×14 dt/2 ↔ LH ×14 dt/2) 도 PASS — dt = Rayleigh 규칙의 정확히 1/k (k 정수) 는 허용 · k 를 적는다
+  PASS  ⑳ Rayleigh 사본 = 생성기 plan() 의 dt (F 1 · 14 · 28 × CGF 151.4 · 200 — 덱에 찍힌 반지름 · 밀도 · E · ν 에서 다시 낸 값 · 허용 rayleigh_rel) — 식이 갈리면 여기서 드러난다
+  PASS  ⑯ 되읽기 = 덱 텍스트: sha256 · 타입 사전 (1 AM_P · 2 AM_S · 3 SE · 4 WALL — 밀도 · 반지름 · 템플릿 시드 · 메시 타입) · E · ν · dt · run · 덤프 · 체크포인트
+  PASS  ⑰ CLI: PASS 면 rc 0 · JSON (도구 sha256 · 버전 · 허용오차 · 덱 sha256 · 생성 명령 (gen_cmd.txt) · 타입 사전 · 표) · markdown 표 · FAIL 이 섞이면 rc 1 이고 실패 항 목록이 남는다
+  PASS  ㉑ markdown 에 백틱 안 순수 hex (check_doc_refs 의 커밋 SHA 패턴) 가 없다 — sha256 앞자리는 백틱 없이 · 발견 0
+
+mixer_deck_readback selftest: 21/21 PASS
+
+STDERR

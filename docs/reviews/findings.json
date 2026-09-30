@@ -6303,16 +6303,21 @@
   {
    "id": "SELF-70",
    "severity": "P2",
-   "status": "open",
+   "status": "verified",
    "owner": "claude",
    "found_by": "claude (09-30 밤 · ibb DEV7 E0 진단 봉인 파일 사유 문자열 투영 (1저자 실행 · blind_log 기록) + 공개 LIGGGHTS 3d5c00f 소스 판독)",
    "opened_in": "docs/reviews/mixer_highbo_stiffness_prereg_20260929.md",
    "title": "접촉 검사기 (`check_window` · `mixer_smoke_blind.e0_diag`) 의 \"t₀ 상별 입자 수 = 생성기 계획\" 불변식은 직렬 삽입 가정이다 — LIGGGHTS `fix insert/pack` 은 MPI 랭크마다 템플릿 수를 따로 절삭·분배하므로 (fix_insert.cpp distribute_ninsert_this 829–906 · fix_particledistribution_discrete.cpp randomize_list 398–460 · exact_number=1 기본) 총수는 정확하고 상별 수는 랭크 수만큼 흔들린다.  ibb NP 20 의 DEV E0 다섯이 전부 이 한 사유로 TECH_FAIL (170/854/98976 · 173/850/98977 vs 계획 176/859/98965 · 총 100,000 = 계획) — WSL lmp_serial (NP 1) 09-28 E0 셋은 계획과 정확히 같았다",
-   "note": "판정 결함이 아니라 등록·검사기 결함 (09-23 바닥 검사 Popoviciu 천장과 같은 부류 — NP 20 에서는 어떤 런도 이 검사를 통과할 수 없다 · 확인 18 런도 NP20).  같은 seed 의 ref · ref2 · dt/2 는 상별 수가 서로 같다 (pdd 시드 32452867 이 셀 공통 · 삽입 시드는 랭크 분배만 흔든다) ⇒ b · c 비교는 이 결함과 무관.  수정안 (비준 대기 · 반례 먼저): 총수 = 계획 정확 · 창 안 상별 · id · type/radius 보존 정확 (그대로) · 상별 수 = 계획 ± (템플릿 수 − 1)·NP (소스 상한: 랭크마다 절삭 −1 ~ 빈자리 +(템플릿−1)) · NP 는 발사 봉인 launch_record.slurm.np (없으면 1 = 정확) · 실현 조성 (wt%) 편차를 상태에 보고.  §8-4 재시도 1 회는 해당 없음 (같은 NP 재실행 = 같은 분배).  a (seed 67867967 x_hi 1.018 % > 1 %) · b · c 는 값으로 깨진 것이라 이 수정으로 바뀌지 않는다.  status 는 수정 커밋이 HEAD 조상이 된 뒤 claimed_fixed. ▶ 09-30 밤 수정 (1저자 비준 *\"권고하는걸로\"* · 반례 먼저): `check_contact_validity.count_tolerance` (덱 텍스트 · NP → 상별 허용폭 (T−1)·NP · 삽입 묶음 총수 · 못 읽으면 None = 정확 일치) · `check_window(count_tol · group_totals)` = 상 집합 · 허용폭 · 묶음 총수 · `count_check` 보고 · `mixer_smoke_blind._launch_np` (발사 봉인 slurm.np · 없음 = 1 · 형식 깨짐 = None) — 셀프테스트 ⑫c (옛 코드 88/89 → 89/89 · DEV7 실측 둘 통과 · 큰 결손 · 묶음 총수 어긋남 거부) · ⑨b (래퍼 허용폭 전달 · 옛 코드 ✗) · 등록 v2.6 ④.  status 는 수정 커밋이 HEAD 조상이 된 뒤 claimed_fixed.",
+   "note": "판정 결함이 아니라 등록·검사기 결함 (09-23 바닥 검사 Popoviciu 천장과 같은 부류 — NP 20 에서는 어떤 런도 이 검사를 통과할 수 없다 · 확인 18 런도 NP20).  같은 seed 의 ref · ref2 · dt/2 는 상별 수가 서로 같다 (pdd 시드 32452867 이 셀 공통 · 삽입 시드는 랭크 분배만 흔든다) ⇒ b · c 비교는 이 결함과 무관.  수정안 (비준 대기 · 반례 먼저): 총수 = 계획 정확 · 창 안 상별 · id · type/radius 보존 정확 (그대로) · 상별 수 = 계획 ± (템플릿 수 − 1)·NP (소스 상한: 랭크마다 절삭 −1 ~ 빈자리 +(템플릿−1)) · NP 는 발사 봉인 launch_record.slurm.np (없으면 1 = 정확) · 실현 조성 (wt%) 편차를 상태에 보고.  §8-4 재시도 1 회는 해당 없음 (같은 NP 재실행 = 같은 분배).  a (seed 67867967 x_hi 1.018 % > 1 %) · b · c 는 값으로 깨진 것이라 이 수정으로 바뀌지 않는다.  status 는 수정 커밋이 HEAD 조상이 된 뒤 claimed_fixed. ▶ 09-30 밤 수정 (1저자 비준 *\"권고하는걸로\"* · 반례 먼저): `check_contact_validity.count_tolerance` (덱 텍스트 · NP → 상별 허용폭 (T−1)·NP · 삽입 묶음 총수 · 못 읽으면 None = 정확 일치) · `check_window(count_tol · group_totals)` = 상 집합 · 허용폭 · 묶음 총수 · `count_check` 보고 · `mixer_smoke_blind._launch_np` (발사 봉인 slurm.np · 없음 = 1 · 형식 깨짐 = None) — 셀프테스트 ⑫c (옛 코드 88/89 → 89/89 · DEV7 실측 둘 통과 · 큰 결손 · 묶음 총수 어긋남 거부) · ⑨b (래퍼 허용폭 전달 · 옛 코드 ✗) · 등록 v2.6 ④.  status 는 수정 커밋이 HEAD 조상이 된 뒤 claimed_fixed.  ✅ Codex 10 차 Q4 (09-30 밤): **현재 생성 덱에 한정 동의** — 공개 3d5c00f `fix_insert.cpp:829–909` · `fix_particledistribution_discrete.cpp:150–159 · 425–450` (잔여 = 나머지 가중치 복원추출 → 한 타입이 여러 개 받을 수 있다) · `count_tolerance` 반환 E0 NP20 ±40 · 층상 AM ±20 · SE 0 · 묶음 총수 · 이후 보존 검사 유지.  한정: 단회 삽입 · plain PDD · 구형 템플릿 · 정확 분배 모드 · 봉인 NP 와 일치 · 반복 삽입 / 다른 분포면 이식 금지 · 대칭 하한은 실제 가능 조합의 충분조건 아님 (\"정확히 설명\" 아님 → \"변동 허용 + gross 결손 · 총수 · 시간 보존 검사\").  ⚠ 이 항목 본문의 \"NP 20 에서는 어떤 런도 통과할 수 없다\" 는 **철회** (HBR10-03 · NP20 정확 일치도 알고리즘상 가능).",
    "evidence_tests": [
     "scripts/check_contact_validity.py",
-    "scripts/mixer_smoke_blind.py"
-   ]
+    "scripts/mixer_smoke_blind.py",
+    "docs/reviews/codex_review_mixer_highbo_round10_evidence_20260930/audit_round10.py"
+   ],
+   "claimed_fixed_sha": "8e8474a68",
+   "verified_sha": "8e8474a68",
+   "verified_by": "codex",
+   "verified_in": "docs/reviews/codex_review_mixer_highbo_round10_20260930.md"
   },
   {
    "id": "SELF-71",
@@ -6322,10 +6327,53 @@
    "found_by": "claude (09-30 밤 · DEV7 ×14 E0 다섯 실측 투영 (1저자 ibb · M 미열람) 판독)",
    "opened_in": "docs/reviews/mixer_highbo_stiffness_prereg_20260929.md",
    "title": "강성 축 사전등록 §4 b (ref2 최대 겹침 ≤ ref + 1e-9 %) · c (dt/2 에서 최대 겹침 변화 ≤ 0.1 %p · S_R² 변화 ≤ 1 %) 는 스냅샷 최대 · 단일 실현의 잡음보다 좁은 통과선이라 어떤 후보도 통과할 수 없다 — b 는 최대의 주인 교체 (ref AM_S–SE 0.715 → ref2 AM_P–SE 0.734 · 다른 SE 쌍은 예측대로 감소) 로 +0.0026 %p · c 는 dt/2 가 궤적을 바꿔 두 실현을 비교 (|Δx_hi| 0.24 %p · |ΔS_R²|/S_R² 10 % vs 1024 칸 분산의 실현 SD ≈ 4 %)",
-   "note": "등록 결함 (SELF-70 · 09-23 Popoviciu 천장과 같은 부류) — 통과선 값은 손대지 않는다.  1저자 결정 09-30 밤 (권고대로): b · c = **보고 전용** (값 · pass 기록 · dev-rot 관문 = complete · technical · a 만) · 등록 v2.6 ③ · `mixer_stage_gate.E0_DIAG_ROLE` · `mixer_smoke_blind.e0_diag` verdict · `verify_e0_record` (ref2 · dt/2 는 기술적으로 관측 가능하면 됨) — 반례 먼저 S⑦ (옛 코드 DEV7 모양 FAIL → PASS · 보고 필드 누락 거부 · ref2 기술 실패 거부).  Codex 10 차 질의 (관문 역할 변경이 등록 취지에 맞는지).  status 는 수정 커밋 뒤 claimed_fixed · Codex 검토 뒤 verified.",
+   "note": "등록 결함 (SELF-70 · 09-23 Popoviciu 천장과 같은 부류) — 통과선 값은 손대지 않는다.  1저자 결정 09-30 밤 (권고대로): b · c = **보고 전용** (값 · pass 기록 · dev-rot 관문 = complete · technical · a 만) · 등록 v2.6 ③ · `mixer_stage_gate.E0_DIAG_ROLE` · `mixer_smoke_blind.e0_diag` verdict · `verify_e0_record` (ref2 · dt/2 는 기술적으로 관측 가능하면 됨) — 반례 먼저 S⑦ (옛 코드 DEV7 모양 FAIL → PASS · 보고 필드 누락 거부 · ref2 기술 실패 거부).  Codex 10 차 질의 (관문 역할 변경이 등록 취지에 맞는지).  status 는 수정 커밋 뒤 claimed_fixed · Codex 검토 뒤 verified.  ▶ Codex 10 차 Q1 (09-30 밤) = **조건부 동의 · 구현 부분**: 개발 단계의 명시적 설계 변경으로 수용 — 단 \"잡음이라 어떤 후보도 통과 못 함\" 은 입증 안 됨 (HBR10-03 · 이 항목 제목의 같은 문장 포함) · 보고 전용이 측정 유효성까지 뺐다 (HBR10-01).  열림 유지 — HBR10-01 · 03 해제와 함께.",
    "evidence_tests": [
     "scripts/mixer_stage_gate.py",
     "scripts/mixer_smoke_blind.py"
+   ]
+  },
+  {
+   "id": "HBR10-01",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 10 차 독립 리뷰 (사용자 경유, 2026-09-30 밤) — 입력 zip sha256 397ea3a1… · 고정 커밋 8e8474a68 · 제출 사전등록 353 행 · 덱 14 · SHA256SUMS 55/55 · 소스 22 blob 대조 · 판정 = 새 P1 없음 · P2 셋 · 확인 18 런 HOLD · 우리 재현 (Linux · audit_round10.py 무변경) 판정값 829 잎 동일 (다른 것 = 우리가 안 돌린 Windows 줄바꿈 흉내 selftest 절뿐) · DEM/MPI/SLURM 실행 없음 · DEV7 원자료 없음 (보고값 조건부)",
+   "opened_in": "docs/reviews/codex_review_mixer_highbo_round10_20260930.md",
+   "title": "b · c 보고 전용 전환이 **측정 유효성**까지 관문에서 뺐다 — 기준 S_R² NaN · dt/2 S_R² NaN 에도 생산 verdict PASS (c.sr2_rel null) · 정상 증서의 b · c 를 `{pass:false, role:\"report\"}` 만 남겨도 소비자 오류 0 (`mixer_smoke_blind.e0_diag` :406–445 · `mixer_stage_gate.verify_e0_record` :324–332 — 검증기는 b · c 에 bool · role 만 요구)",
+   "note": "유한 10 % 실패 (0.010 → 0.011) 가 진행을 막지 않는 것은 새 정책의 의도다 — 결함은 **값이 없는데도 관측 가능 · PASS** 인 것.  실제 `cell_stats()` 도 사용 칸 1 이면 NaN 을 낸다 (Codex 별도 실행 — 10 만 입자 · 1 % 계약을 동시에 통과한다는 주장은 아님).  실제 DEV 가 이것으로 통과했다는 증거는 없다 (경계 단위 시험 · 접촉 · S_R² 취득만 대역).  최소 수정 (Codex §1): measurement_valid 와 threshold_pass 분리 · 필요한 x 값 · S_R² · 사용 칸 · 단위 · 출처 = 유한 · 유효 · 값 · 필수 키 누락 · 타입 변조 = TECH / 미측정 · SR² = 0 은 NaN 과 다르다 (상대 변화 분모 0 = 별도 사전 규약 또는 판정 불능 명시) · 소비자도 필수 값과 값 ↔ 상태 일치 검사.  해결 증거 = 양성 · 유한 10 % 실패 허용 유지 + NaN · 필드 제거 · 타입 변조 거부 회귀.  ⛔ 현재 PASS 영수증으로 dev-rot 을 열기 전에 고칠 것 (Codex §5).",
+   "evidence_tests": [
+    "docs/reviews/codex_review_mixer_highbo_round10_evidence_20260930/audit_round10.py",
+    "scripts/mixer_smoke_blind.py",
+    "scripts/mixer_stage_gate.py"
+   ]
+  },
+  {
+   "id": "HBR10-02",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 10 차 독립 리뷰 (사용자 경유, 2026-09-30 밤) — 입력 zip sha256 397ea3a1… · 고정 커밋 8e8474a68 · 제출 사전등록 353 행 · 덱 14 · SHA256SUMS 55/55 · 소스 22 blob 대조 · 판정 = 새 P1 없음 · P2 셋 · 확인 18 런 HOLD · 우리 재현 (Linux · audit_round10.py 무변경) 판정값 829 잎 동일 (다른 것 = 우리가 안 돌린 Windows 줄바꿈 흉내 selftest 절뿐) · DEM/MPI/SLURM 실행 없음 · DEV7 원자료 없음 (보고값 조건부)",
+   "opened_in": "docs/reviews/codex_review_mixer_highbo_round10_20260930.md",
+   "title": "soft 진단 범위 7.37 % 가 타입쌍을 보지 않고 **전체 최대 하나**에 적용된다 — 사전등록 :245 \"AM–AM 쌍은 E 불변이라 1 % 그대로\" 가 구현되지 않았다 (`check_contact_validity.contract_status` :1212–1242 · pp_max 0.02 % · 1-1 · soft_range 7.37 → original_1pct NOT_MET · soft_range WITHIN)",
+   "note": "×20 soft ↔ ref 고정 하중 환산 배수 = AM–AM · AM–벽 1 · AM–SE 6.572698075 · SE–SE 7.368062997 · SE–벽 6.801499256 (이 넷도 접촉망 변화의 오차 상한이 아님).  선택지 (저자 결정 · 확인 soft 자료를 보기 전 · 확인 봉인 전 고정): (가) 쌍별 환산 계약 — 타입쌍 축으로 평가 · 안 변한 AM–AM / AM–벽은 1 % 유지 회귀 · 벽 타입별 값 · (나) 전체 soft 진단을 하나의 7.37 % 운영 범위로 — \"가장 큰 환산 배수로 정한 넓은 진단 정책값\" 으로 명시 · AM–AM 1 % 문구 정정 · 범위가 E_ref 증가를 따라 무제한 커지지 않게 고정.  7.37 % 를 물리적으로 안전한 겹침으로 인증한 것이 아니다.  ref 주 효과의 1 % 검사 · F₀ 보존은 무너지지 않는다.",
+   "evidence_tests": [
+    "docs/reviews/codex_review_mixer_highbo_round10_evidence_20260930/audit_round10.py",
+    "scripts/check_contact_validity.py"
+   ]
+  },
+  {
+   "id": "HBR10-03",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex 10 차 독립 리뷰 (사용자 경유, 2026-09-30 밤) — 입력 zip sha256 397ea3a1… · 고정 커밋 8e8474a68 · 제출 사전등록 353 행 · 덱 14 · SHA256SUMS 55/55 · 소스 22 blob 대조 · 판정 = 새 P1 없음 · P2 셋 · 확인 18 런 HOLD · 우리 재현 (Linux · audit_round10.py 무변경) 판정값 829 잎 동일 (다른 것 = 우리가 안 돌린 Windows 줄바꿈 흉내 selftest 절뿐) · DEM/MPI/SLURM 실행 없음 · DEV7 원자료 없음 (보고값 조건부)",
+   "opened_in": "docs/reviews/codex_review_mixer_highbo_round10_20260930.md",
+   "title": "\"b · c 실패 = 순수 잡음 · 기존 문턱은 어떤 후보도 못 넘는다\" 는 결론이 입증되지 않았다 (사전등록 :58 · :155–156 · 진행 파일 09-30 밤) — AM_P–SE 0.701 → 0.734 % (+4.7076 %) 증가는 최대의 주인 교체로 설명되지 않고 · \"1024 칸이면 SD ≈ 4 %\" 는 독립 정규 가정 (실제 칸은 종속 · n_min 선택) · 정규화 변화는 공동 E0 로 상쇄되지 않는다 (산술 반례 SR² 0.150 → 0.165 에 d 0.200 → 0.286) · 같은 부류로 \"NP1 은 정확 / NP20 은 어떤 런도 불통과\" 도 철회 (NP20 알고리즘 반례 rank floor 8/42/4948 · 빈자리 16/19/5 → 176/859/98965)",
+   "note": "보고 전용 전환 자체 · ×20 후보 · Q3 산술은 무너지지 않는다.  해제 = 문서 diff: \"잡음 확정 · 모든 후보 불가능\" → \"한 쌍에서 원인을 분해할 수 없는 총 민감도 관측\" · 개발 후 관문 변경 이력 명시 (권고 문안: ×14 개발 자료에서 종전 a · b · c 를 충족 못 함 → 확인 자료 생성 전에 b · c 수치 실패를 중단 사유에서 무조건 보고 항목으로 변경 · 종전 실패를 PASS 로 소급 해석하지 않는다) · \"≤ b_E 수치오차 인증 · 수렴 reference · dt 영향 없음\" 문장 계속 금지 · b_E 를 면책금으로 쓰지 않는다 · 새 물리 런 불요.  같은 커밋에서 정리할 문서 잔여 (Codex §5): §2 후행 팔 ×28 · §4-d E14/28 · §10 soft 5.8 · policy.note 5.8 → 역사 표지 + 활성은 ×20/×40 · 7.37 · §4 b · c 의 DEV 예외 · §6 ref/ref2 \"통과 필수\" 예외 범위.",
+   "evidence_tests": [
+    "docs/reviews/codex_review_mixer_highbo_round10_evidence_20260930/audit_round10.py",
+    "docs/reviews/mixer_highbo_stiffness_prereg_20260929.md"
    ]
   }
  ]

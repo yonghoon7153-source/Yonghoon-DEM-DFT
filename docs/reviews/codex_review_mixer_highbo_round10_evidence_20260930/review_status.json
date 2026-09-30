@@ -1,0 +1,34 @@
+{
+  "scope": "v2.6 round 10 Q1-Q4; no simulation or remote execution",
+  "source_commit": "8e8474a68fa71216f3d4890b46a6cddb6380db66",
+  "input_zip_sha256": "397ea3a16ab56e1947707502e99a8253bc5ad6e9e240ac81d92c32cdd3ad00aa",
+  "Q1": "CONDITIONAL; report-only policy allowed; measurement-validity gate incomplete",
+  "Q2": "ACCEPT AS DEVELOPMENT CANDIDATE ONLY; no measured safety margin",
+  "Q3": "CONFIRMED within printed precision",
+  "Q4": "ACCEPT within current single-insertion deck and source assumptions",
+  "new_P1": 0,
+  "findings": [
+    {
+      "id": "HBR10-01",
+      "priority": "P2",
+      "status": "open",
+      "conclusion": "Missing/nonfinite report measurements accepted by producer/consumer boundary"
+    },
+    {
+      "id": "HBR10-02",
+      "priority": "P2",
+      "status": "open",
+      "conclusion": "Global soft range does not implement documented unchanged AM-pair range"
+    },
+    {
+      "id": "HBR10-03",
+      "priority": "P2",
+      "status": "open",
+      "conclusion": "Noise-only explanation and all-candidates-impossible claim not established"
+    }
+  ],
+  "confirmation_18": "HOLD; no production approval",
+  "raw_DEV7_measurements_independently_reproduced": false,
+  "production_files_modified": false,
+  "simulation_or_remote_jobs_executed": false
+}
