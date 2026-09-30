@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-30",
+  "subject": "CLAUDE_REPLY_NORMAL30_LONG_HORIZON_KO_v2.md",
+  "decision": "DIRECTION_AND_CORE_ARITHMETIC_SUPPORTED_WITH_INTERPRETATION_CORRECTIONS",
+  "prior_normal30_acceptance_reopened": false,
+  "normal60_preparation_reopened": false,
+  "next_existing_stage": "normal60_limited_validation_12_groups_46_cases_separate_authorization",
+  "native60_approved_by_this_review": false,
+  "long_horizon_approved": false,
+  "new_COMSOL_JVM_solver_calls": 0,
+  "supplied_code_or_test_execution": 0,
+  "reviewer_arithmetic_script_runs": 1,
+  "selected_local_source_files_unchanged": 16,
+  "corrections": [
+    "R1: use co-located particle average and surface; P30 observed steady-gap fraction 63.75-88.73%, not 60-102%",
+    "R2: equilibrium OCP ceiling does not by itself prove all finite-current CV/post-cutoff rest paths exceed table domain",
+    "R3: adaptive step identity/roundoff agreement and past MinLine differences are observations, not guaranteed future thresholds",
+    "R4: constant average-composition slopes require current-model inventory and Faradaic-current assumptions",
+    "R5: 6.27mV per 1e-4 N composition is supported locally with other voltage terms fixed, not a global conversion",
+    "R6: one-mode and cost extrapolations are scenarios; 193.655s budget intercept has zero safety margin",
+    "R7: reuse prior numerical evidence within scope, not as blanket future mesh exemption or finite-sigma comparison acceptance"
+  ],
+  "preserved_limits": ["normal_and_overall_gate_INCOMPLETE", "internal_effective_policy_UNVERIFIED", "OCP_extrapolation_forbidden", "prior_failed_pending_and_receipts_unchanged", "TIME_CAPS_raw_difference_unresolved"],
+  "external_messages_sent": 0
+}

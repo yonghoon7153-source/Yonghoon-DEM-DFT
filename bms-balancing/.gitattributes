@@ -53,3 +53,5 @@ reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/** -tex
 reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/** -text
 # 2026-09-30: 정상 fresh 0→60 s 오프라인 준비본 독립 수신 검토 묶음 (준비본 수용 · 변경부 12군 46사례 검증 가능 범위 · 실행 미승인) — bytes 그대로
 reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/** -text
+# 2026-09-30: Claude 정상30초·장기 해석 회신 v2 독립 검토 묶음 (방향 · 핵심 산술 수용 + 해석 정정 R1–R7 · 실행 승인 아님) — bytes 그대로
+reviews/r14_repros/codex63/claude_normal30_long_horizon_review_20260930/** -text

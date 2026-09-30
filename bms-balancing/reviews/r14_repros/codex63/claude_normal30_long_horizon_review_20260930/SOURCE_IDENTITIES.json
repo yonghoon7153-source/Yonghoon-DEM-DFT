@@ -1,0 +1,168 @@
+{
+  "scope": "Selected local received files only; no current remote system/MPH/prefs verification.",
+  "before": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\CLAUDE_REPLY_NORMAL30_LONG_HORIZON_KO_v2.md",
+      "bytes": 18377,
+      "sha256": "223519ef225c200db2fa65b4b068fe1557ea9c563c64d2aa63c1ed8f395435c8"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\candidate\\src\\Normal30Candidate.java",
+      "bytes": 74551,
+      "sha256": "6876e774ee7788e6f5e84ba50af3952bbf41af57d541e3bc0c4f8e044c7fb84d"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\NUMERIC_AUDIT.json",
+      "bytes": 15541,
+      "sha256": "4923bd88dbaf2554d434f1751a8aeaea9f39cf4ba9fe42aa39c2d5f3567b707b"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\REVIEW_KO.md",
+      "bytes": 12704,
+      "sha256": "9d46d1f9952c72921c719368c899a8f2ebcbb8f556a15bdb5c536bc59293281d"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\batch_RETURN.json",
+      "bytes": 768,
+      "sha256": "a991dc46b6eab4650ae9c8a2bce6c18a17b4fdeee313e0fbf0f8fa2fa91390e4"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\compile_RETURN.json",
+      "bytes": 727,
+      "sha256": "f8aa3d483eca9bff47135f6161b9f822f3fb25aeedc4f68ca589a1c73542734f"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\OUTPUT_MPH_IDENTITY.json",
+      "bytes": 268,
+      "sha256": "5a4c4167e7a88133d647ef2cb5c5d8c290232f3270a2620a51b8f0a545d20135"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\tables\\preflight_global.csv",
+      "bytes": 349868,
+      "sha256": "6938300d35e4033c3c778899421ff34a99d4159cfb7849a66b83af657c9bab6e"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\tables\\preflight_boundary1.csv",
+      "bytes": 306277,
+      "sha256": "e90696d2b4108d06303bd4553b6018ac86390ffb491754352ee44234123599f8"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\tables\\preflight_boundary4.csv",
+      "bytes": 317502,
+      "sha256": "6da66095982941e79f1673a93f417351e7c3e206888daef55d7af6c6829fde56"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\tables\\preflight_MinLine_ce.csv",
+      "bytes": 42915,
+      "sha256": "1ead03d85224e4344df8268eb9fdfe553d4081057f0af87bf4fcf09a1ffbb5cb"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\tables\\preflight_MaxLine_ce.csv",
+      "bytes": 42909,
+      "sha256": "d43fe48ac5cf5b192b669fbddd337252777ab6e4dbff8335a5ecbd0dc8ad9f5a"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\tables\\electrolyte_guard.csv",
+      "bytes": 149679,
+      "sha256": "39c79d130761e2311f4548dc714d27b80a97a05e47ae80ad4439a95d4d04aa1d"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\tables\\axes_profile_N.csv",
+      "bytes": 45311498,
+      "sha256": "6a2a4dc7c214088c95cbfcf11e3ffaa7f282ec1173a0ac389ecb55e936b98c7c"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\tables\\axes_profile_P.csv",
+      "bytes": 43879490,
+      "sha256": "e3c30e5c59a0c1a7c7389b37f4f2afaefefcb6f6c641df4b337576ae1309d5e7"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\tables\\axes_runtime_settings.csv",
+      "bytes": 2789,
+      "sha256": "b8467b4649811b24747753176e917e7cf232d7f07620fe98e481875e29ea7195"
+    }
+  ],
+  "after": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\CLAUDE_REPLY_NORMAL30_LONG_HORIZON_KO_v2.md",
+      "bytes": 18377,
+      "sha256": "223519ef225c200db2fa65b4b068fe1557ea9c563c64d2aa63c1ed8f395435c8"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\candidate\\src\\Normal30Candidate.java",
+      "bytes": 74551,
+      "sha256": "6876e774ee7788e6f5e84ba50af3952bbf41af57d541e3bc0c4f8e044c7fb84d"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\NUMERIC_AUDIT.json",
+      "bytes": 15541,
+      "sha256": "4923bd88dbaf2554d434f1751a8aeaea9f39cf4ba9fe42aa39c2d5f3567b707b"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\REVIEW_KO.md",
+      "bytes": 12704,
+      "sha256": "9d46d1f9952c72921c719368c899a8f2ebcbb8f556a15bdb5c536bc59293281d"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\batch_RETURN.json",
+      "bytes": 768,
+      "sha256": "a991dc46b6eab4650ae9c8a2bce6c18a17b4fdeee313e0fbf0f8fa2fa91390e4"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\compile_RETURN.json",
+      "bytes": 727,
+      "sha256": "f8aa3d483eca9bff47135f6161b9f822f3fb25aeedc4f68ca589a1c73542734f"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\OUTPUT_MPH_IDENTITY.json",
+      "bytes": 268,
+      "sha256": "5a4c4167e7a88133d647ef2cb5c5d8c290232f3270a2620a51b8f0a545d20135"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\tables\\preflight_global.csv",
+      "bytes": 349868,
+      "sha256": "6938300d35e4033c3c778899421ff34a99d4159cfb7849a66b83af657c9bab6e"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\tables\\preflight_boundary1.csv",
+      "bytes": 306277,
+      "sha256": "e90696d2b4108d06303bd4553b6018ac86390ffb491754352ee44234123599f8"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\tables\\preflight_boundary4.csv",
+      "bytes": 317502,
+      "sha256": "6da66095982941e79f1673a93f417351e7c3e206888daef55d7af6c6829fde56"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\tables\\preflight_MinLine_ce.csv",
+      "bytes": 42915,
+      "sha256": "1ead03d85224e4344df8268eb9fdfe553d4081057f0af87bf4fcf09a1ffbb5cb"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\tables\\preflight_MaxLine_ce.csv",
+      "bytes": 42909,
+      "sha256": "d43fe48ac5cf5b192b669fbddd337252777ab6e4dbff8335a5ecbd0dc8ad9f5a"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\tables\\electrolyte_guard.csv",
+      "bytes": 149679,
+      "sha256": "39c79d130761e2311f4548dc714d27b80a97a05e47ae80ad4439a95d4d04aa1d"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\tables\\axes_profile_N.csv",
+      "bytes": 45311498,
+      "sha256": "6a2a4dc7c214088c95cbfcf11e3ffaa7f282ec1173a0ac389ecb55e936b98c7c"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\tables\\axes_profile_P.csv",
+      "bytes": 43879490,
+      "sha256": "e3c30e5c59a0c1a7c7389b37f4f2afaefefcb6f6c641df4b337576ae1309d5e7"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal30_native_review_20260930\\received\\run\\tables\\axes_runtime_settings.csv",
+      "bytes": 2789,
+      "sha256": "b8467b4649811b24747753176e917e7cf232d7f07620fe98e481875e29ea7195"
+    }
+  ],
+  "unchanged": true
+}

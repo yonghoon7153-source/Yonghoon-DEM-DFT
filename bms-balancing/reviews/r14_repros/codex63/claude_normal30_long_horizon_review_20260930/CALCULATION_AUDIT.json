@@ -1,0 +1,339 @@
+{
+  "scope": "Independent read-only arithmetic and analytical series; no new COMSOL/model solve or supplied code execution.",
+  "prior_csv_hash_binding": [
+    {
+      "file": "preflight_global.csv",
+      "matches_prior_embedded_csv_identity": true
+    },
+    {
+      "file": "preflight_boundary1.csv",
+      "matches_prior_embedded_csv_identity": true
+    },
+    {
+      "file": "preflight_boundary4.csv",
+      "matches_prior_embedded_csv_identity": true
+    },
+    {
+      "file": "preflight_MinLine_ce.csv",
+      "matches_prior_embedded_csv_identity": true
+    },
+    {
+      "file": "preflight_MaxLine_ce.csv",
+      "matches_prior_embedded_csv_identity": true
+    },
+    {
+      "file": "electrolyte_guard.csv",
+      "matches_prior_embedded_csv_identity": true
+    },
+    {
+      "file": "axes_profile_N.csv",
+      "matches_prior_embedded_csv_identity": true
+    },
+    {
+      "file": "axes_profile_P.csv",
+      "matches_prior_embedded_csv_identity": true
+    },
+    {
+      "file": "axes_runtime_settings.csv",
+      "matches_prior_embedded_csv_identity": true
+    }
+  ],
+  "charge": {
+    "model_parameters_checked": {
+      "L_el": "52[um]",
+      "L_sep": "25[um]",
+      "L_pos": "44[um]",
+      "epss_el_0": "0.63122",
+      "epss_pos_0": "0.58803",
+      "LAM_NE": "0.0257219788",
+      "LAM_PE": "0.0296398242",
+      "cs_Gr_max": "31507[mol/m^3]",
+      "cs_NCM_max": "50707.7[mol/m^3]",
+      "F_ref": "96485.33212[C/mol]",
+      "rp_Gr": "7.5[um]",
+      "rp_NCM": "10[um]",
+      "D_g": "7.1e-15[m^2/s]",
+      "D_NCM": "1e-13[m^2/s]",
+      "C_rate": "0.1",
+      "sigma_short": "1e-20[S/m]"
+    },
+    "Q_areal_Ah_m2": "25.035995286543439039412266666666666666666666666667",
+    "i_app_A_m2": "2.5035995286543439039412266666666666666666666666667",
+    "active_capacity_mol_m2": {
+      "N": "1.007567273516778470496",
+      "P": "1.2730897943100402775512"
+    },
+    "rates_per_s": {
+      "N": "0.000025753099876484395401721562559479541652317691054838",
+      "P": "-0.000020381893518530130281731392729913574198206267501872"
+    },
+    "exchange_ratio_N_over_P": "-1.2635283298419281228749506944427269322933581714876",
+    "conditional_60s_average": {
+      "N": "0.013265867483104113724103293753568772499139061463290",
+      "P": "0.92284097308329819218309611643620518554810762394989"
+    },
+    "max_average_departure_from_constant_current_formula": {
+      "N": "6.68071986205164687678438624956953073164514E-12",
+      "P": "5.28680390845194178189740722594618802505616E-12"
+    },
+    "assumptions": "Fixed active inventories and csmax, constant Faradaic transfer, negligible leak, no side reaction/double-layer current. Not model independent."
+  },
+  "sphere": {
+    "N": {
+      "radius_m": 7.5e-06,
+      "D_m2_s": 7.1e-15,
+      "first_root": 4.493409457909063,
+      "slow_mode_tau_s": 392.38481113381596,
+      "steady_surface_average_gap": 0.013601989371382604,
+      "t95_s": 901.2595468135819,
+      "fractions": {
+        "5": 0.1354848172373616,
+        "10": 0.1879944777591932,
+        "20": 0.2587196206096801,
+        "30": 0.3102261122610531,
+        "60": 0.41788229897902496,
+        "300": 0.7509801723811476,
+        "900": 0.9498380493613884,
+        "1200": 0.9767164130978785
+      },
+      "series_128_vs_256_max_difference": 0.0,
+      "local_sample_gap_ranges": {
+        "0": {
+          "count": 241,
+          "min": "5.62726765E-10",
+          "max": "5.85185734E-10",
+          "min_fraction_steady": 4.137091638844594e-08,
+          "max_fraction_steady": 4.3022069641605486e-08
+        },
+        "5": {
+          "count": 241,
+          "min": "0.001836019281857422",
+          "max": "0.001859302716344687",
+          "min_fraction_steady": 0.13498167302793562,
+          "max_fraction_steady": 0.13669343987700044
+        },
+        "10": {
+          "count": 241,
+          "min": "0.002549183748320940",
+          "max": "0.002578062316328462",
+          "min_fraction_steady": 0.18741256728844383,
+          "max_fraction_steady": 0.18953568084330957
+        },
+        "20": {
+          "count": 241,
+          "min": "0.003508494426377750",
+          "max": "0.003548041740066670",
+          "min_fraction_steady": 0.25793980061176314,
+          "max_fraction_steady": 0.2608472660279708
+        },
+        "30": {
+          "count": 241,
+          "min": "0.004205882294545461",
+          "max": "0.004255749370696802",
+          "min_fraction_steady": 0.30921082054322657,
+          "max_fraction_steady": 0.3128769810429735
+        }
+      }
+    },
+    "P": {
+      "radius_m": 1e-05,
+      "D_m2_s": 1e-13,
+      "first_root": 4.493409457909063,
+      "slow_mode_tau_s": 49.52768282755722,
+      "steady_surface_average_gap": 0.0013587929012353422,
+      "t95_s": 113.75898279780324,
+      "fractions": {
+        "5": 0.3503373557186543,
+        "10": 0.4682167709960472,
+        "20": 0.609615317932821,
+        "30": 0.6992583469806963,
+        "60": 0.8477881370857078,
+        "300": 0.9988406022240947,
+        "900": 0.9999999936467169,
+        "1200": 0.9999999999851276
+      },
+      "series_128_vs_256_max_difference": 0.0,
+      "local_sample_gap_ranges": {
+        "0": {
+          "count": 241,
+          "min": "3.946146E-10",
+          "max": "6.054807E-10",
+          "min_fraction_steady": 2.904155590165635e-07,
+          "max_fraction_steady": 4.4560190110614295e-07
+        },
+        "5": {
+          "count": 241,
+          "min": "0.0004209468538962",
+          "max": "0.0006296242470657",
+          "min_fraction_steady": 0.3097947108153844,
+          "max_fraction_steady": 0.4633702799692868
+        },
+        "10": {
+          "count": 241,
+          "min": "0.0005679688399821",
+          "max": "0.0008330021209438",
+          "min_fraction_steady": 0.41799514809485167,
+          "max_fraction_steady": 0.6130456820803809
+        },
+        "20": {
+          "count": 241,
+          "min": "0.0007493996590103",
+          "max": "0.0010666806052196",
+          "min_fraction_steady": 0.5515186739119594,
+          "max_fraction_steady": 0.7850207373396129
+        },
+        "30": {
+          "count": 241,
+          "min": "0.0008661726630213",
+          "max": "0.0012057061168391",
+          "min_fraction_steady": 0.6374574537693138,
+          "max_fraction_steady": 0.8873361906313583
+        }
+      }
+    }
+  },
+  "voltage_20_to_30": {
+    "dV_V": "0.060067932155399",
+    "delta_xN_boundary1": "0.00095406751860351",
+    "trajectory_dV_over_dxN_V": "62.959833538114553923438870876290966062896231073010",
+    "N_OCP_secant_V_per_x": "-62.697326405882352385867455464095500160255665153338",
+    "components_V": {
+      "minus_N_Eeq": "0.0598174826271345",
+      "P_Eeq": "0.000180952243268",
+      "eta_difference": "-0.001131850618321771",
+      "phi_l_difference": "0.0012013479033189"
+    },
+    "sum_residual_V": "-6.29E-16"
+  },
+  "OCP_fixed_stock_check": {
+    "linear_table_check_against_1237_boundary_Eeq_max_residual_V": {
+      "N": "4.282626361294117647058823529411765E-16",
+      "P": "8.011499699583540103648099495370216E-16"
+    },
+    "temperature_K": "298.15",
+    "P_dUdT_source_unit": "mV/K; converted to V/K before applying 0.15K",
+    "fixed_stock_piecewise_linear_knots_checked": 184,
+    "equilibrium_max_V": "4.1855615431443982691982075998269356018446661212716",
+    "at_xP": "0.2228930343076256",
+    "at_xN": "0.89766991754062986417990213172971258769909373391407",
+    "gap_to_4p25V": "0.0644384568556017308017924001730643981553338787284",
+    "initial_equilibrium_voltage_V": "2.1653333265327480337754287261345651034851857638122",
+    "P_average_limit_constant_current_seconds": "34401.654181409458650709425168539325842696629213482",
+    "P_quasisteady_surface_lead_seconds": "66.666666666666666666666666666666666666666666666667",
+    "scope": "Uniform equilibrium compositions, fixed stock, existing source linear OCP tables at 298.15K. Does not prove finite-current CV trajectory or post-cutoff rest exceeds table range."
+  },
+  "electrolyte_one_mode_scenarios": [
+    {
+      "equal_spaced_fit_times_s": [
+        0,
+        10,
+        20
+      ],
+      "tau_s": 98.0911526312336,
+      "span_infinity_mol_m3": 245.33983988995166,
+      "predicted_span_60": 112.25745252739443,
+      "predicted_span_300": 233.81776733482195,
+      "fraction_infinity_at_30": 0.2622773716891031,
+      "fraction_infinity_at_60": 0.4575590029640031,
+      "held_30s_minimum_share": 0.5079180573891081,
+      "predicted_ce60_min": 1142.9824127848358,
+      "predicted_ce60_max": 1255.2398653122302,
+      "predicted_ce_infinity_min": 1075.387465122941,
+      "not_a_tolerance_or_guarantee": true
+    },
+    {
+      "equal_spaced_fit_times_s": [
+        10,
+        20,
+        30
+      ],
+      "tau_s": 85.13670271912694,
+      "span_infinity_mol_m3": 217.5491024795295,
+      "predicted_span_60": 109.84551000069868,
+      "predicted_span_300": 211.12287778359752,
+      "fraction_infinity_at_30": 0.2957819069054385,
+      "fraction_infinity_at_60": 0.5049228369537158,
+      "held_30s_minimum_share": 0.5079180573891081,
+      "predicted_ce60_min": 1144.2074819475292,
+      "predicted_ce60_max": 1254.052991948228,
+      "predicted_ce_infinity_min": 1089.5028824818535,
+      "not_a_tolerance_or_guarantee": true
+    }
+  ],
+  "cost_scenarios": {
+    "anchor_stored_states": 1237,
+    "time_intervals": 1236,
+    "solver_log_seconds_rounded": 670,
+    "batch_seconds": 1534.3289999999106,
+    "compile_seconds": 35.75,
+    "MPH_bytes_reported_not_received": 1584874018,
+    "scenario": [
+      {
+        "physical_end_s": 60,
+        "stored_states_assuming_extra_10_per_s": 1537,
+        "batch_s": 1906.4378924816997,
+        "MPH_decimal_GB": 1.9692412010234437
+      },
+      {
+        "physical_end_s": 120,
+        "stored_states_assuming_extra_10_per_s": 2137,
+        "batch_s": 2650.655677445278,
+        "MPH_decimal_GB": 2.7379755670703316
+      },
+      {
+        "physical_end_s": 194,
+        "stored_states_assuming_extra_10_per_s": 2877,
+        "batch_s": 3568.524278900358,
+        "MPH_decimal_GB": 3.686081285194826
+      },
+      {
+        "physical_end_s": 300,
+        "stored_states_assuming_extra_10_per_s": 3937,
+        "batch_s": 4883.309032336013,
+        "MPH_decimal_GB": 5.044178665210994
+      },
+      {
+        "physical_end_s": 1200,
+        "stored_states_assuming_extra_10_per_s": 12937,
+        "batch_s": 16046.575806789688,
+        "MPH_decimal_GB": 16.575194155914307
+      },
+      {
+        "physical_end_s": 2400,
+        "stored_states_assuming_extra_10_per_s": 24937,
+        "batch_s": 30930.93150606125,
+        "MPH_decimal_GB": 31.949881476852063
+      }
+    ],
+    "zero_margin_budget_3600s_end_time": 193.65540096030622,
+    "rest_12h_only_scenario": {
+      "states": 432000,
+      "solver_days": 2.7081649151172194,
+      "MPH_decimal_TB": 0.5534887435537592
+    }
+  },
+  "leak_order_of_magnitude": [
+    {
+      "sigma_S_m": "4.2E-7",
+      "assumed_separator_solid_drop_V": "4.2",
+      "j_A_m2": "0.07056",
+      "reference_capacity_percent_per_h": "0.28183421187143773160986337455666555584409247461478",
+      "constant_4p2V_12h_percent": "3.3820105424572527793183604946799866701291096953774"
+    },
+    {
+      "sigma_S_m": "0.00000141",
+      "assumed_separator_solid_drop_V": "4.2",
+      "j_A_m2": "0.23688",
+      "reference_capacity_percent_per_h": "0.94615771128268381326168418601166293747659616477819",
+      "constant_4p2V_12h_percent": "11.353892535392205759140210232139955249719153977338"
+    },
+    {
+      "sigma_S_m": "0.00000423",
+      "assumed_separator_solid_drop_V": "4.2",
+      "j_A_m2": "0.71064",
+      "reference_capacity_percent_per_h": "2.8384731338480514397850525580349888124297884943346",
+      "constant_4p2V_12h_percent": "34.061677606176617277420630696419865749157461932015"
+    }
+  ],
+  "safety": "All scenario values are diagnostic estimates, not new execution tolerances or approval."
+}
