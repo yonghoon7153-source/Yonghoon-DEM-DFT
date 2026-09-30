@@ -1,0 +1,165 @@
+{
+ "schema": "wad_uma_w/v1",
+ "model": "P1",
+ "term": "s_outer",
+ "registry": "A",
+ "model_dir": "/data/work/runs/wad_se_pairs_uma_2026_10_01/models/P1_s_outer/A",
+ "relax_dir": "/data/work/runs/wad_se_pairs_uma_2026_10_01/relax/P1_s_outer/A",
+ "init_sha256": "f074a32a7ffcbff6ae549006198f3c898e7f0d940ebac37206e62966f55fc3ef",
+ "relaxed_sha256": "faef47f0086188af4a96d7734089ef1848b35e6c18b831b86a77db7d40f84490",
+ "n_atoms": 332,
+ "n_ads": 112,
+ "area_A2": 202.20989648748122,
+ "relax": {
+  "converged_fmax": true,
+  "steps_taken": 123,
+  "fmax_free_final_eV_A": 0.01494,
+  "interface_check_flags": [],
+  "disp_max_A": 1.214
+ },
+ "gaps": {
+  "10": {
+   "E_bound_eV": -1296.856299692621,
+   "E_far_eV": -1285.6373884744523,
+   "W_2body_J_m2": 0.8889118547065297,
+   "dW_ATM_J_m2": -0.09003207208730417,
+   "ATM_status": "simple-dftd3 · E(s9=1) − E(s9=0) · 3D 주기",
+   "endpoint": {
+    "c_A": 48.2188,
+    "delta_A": 7.8781,
+    "d0_A": 2.1219,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     2.1219,
+     18.8781
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.88594,
+     "eopreg": 0.02074,
+     "region_A": [
+      42.719,
+      43.719
+     ],
+     "clearance_A": {
+      "to_top_atom": 5.0,
+      "to_substrate_bottom_image": 5.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   }
+  },
+  "12": {
+   "E_bound_eV": -1296.8470736692263,
+   "E_far_eV": -1285.5237350360064,
+   "W_2body_J_m2": 0.8971859880328665,
+   "dW_ATM_J_m2": -0.09329015335276397,
+   "ATM_status": "simple-dftd3 · E(s9=1) − E(s9=0) · 3D 주기",
+   "endpoint": {
+    "c_A": 52.2188,
+    "delta_A": 9.8781,
+    "d0_A": 2.1219,
+    "gap_rule_A": 12.0,
+    "bound_gap_direct_image_A": [
+     2.1219,
+     22.8781
+    ],
+    "far_gap_direct_image_A": [
+     12.0,
+     13.0
+    ],
+    "dipfield": {
+     "tefield": true,
+     "dipfield": true,
+     "edir": 3,
+     "eamp": 0.0,
+     "emaxpos": 0.87552,
+     "eopreg": 0.01915,
+     "region_A": [
+      45.719,
+      46.719
+     ],
+     "clearance_A": {
+      "to_top_atom": 6.0,
+      "to_substrate_bottom_image": 6.0
+     },
+     "min_clear_rule_A": 4.0,
+     "width_A": 1.0,
+     "empty_in_both_endpoints": true,
+     "rule": "개정 2 (2026-09-26): 집합의 진공 중앙 · 양쪽 핵 ≥ 4 Å · 폭 1 Å · 집합(bound·far·G3 변형) 이 같은 구간 — dip_region 이 여유를 검사"
+    }
+   }
+  }
+ },
+ "G3": {
+  "from_to_A": [
+   "10",
+   "12"
+  ],
+  "abs_dW_J_m2": 0.008274133326336863,
+  "tol_J_m2": 0.01,
+  "status": "PASS",
+  "⚠": "카드 G3 판정 대상 = P1·P2 의 S 바깥 A — 나머지는 정보"
+ },
+ "gpu_guard": {
+  "vram_cap_MiB": 16000.0,
+  "gpu_kill_total_MiB": 45500,
+  "gpu_start_max_MiB": 12000,
+  "start_gate": {
+   "ok": true,
+   "last_MiB": 2052,
+   "waited_s": 0.0,
+   "reason": "합계 2052 ≤ 12000"
+  },
+  "watchdog": "on"
+ },
+ "calculator": {
+  "calc": "uma",
+  "device": "cuda",
+  "vram_cap": {
+   "cap_MiB": 16000.0,
+   "device_total_MiB": 48539,
+   "fraction": 0.3296,
+   "⚠": "CUDA 컨텍스트(수백 MiB)는 이 상한 밖이다"
+  },
+  "fairchem.core": "2.19.0",
+  "torch": "2.8.0+cu128",
+  "cuda": "12.8",
+  "model": "uma-s-1p1",
+  "task": "omat",
+  "inference_settings": "default",
+  "checkpoint": [
+   {
+    "path": "/root/.cache/fairchem/models--facebook--UMA/snapshots/be2896459a03fcde05e20d2fcefd11f450601fce/checkpoints/uma-s-1p1.pt",
+    "sha256": "07068e9c76702ca173d13155095f2117c1b327ec228557e64cd2709c777b824a",
+    "MB": 1119
+   }
+  ],
+  "d3": {
+   "impl": "simple-dftd3 (python)",
+   "version": "1.6.0",
+   "method": "PBE",
+   "damping": "d3bj (2체)",
+   "params_expected": {
+    "functional": "PBE",
+    "damping": "BJ",
+    "s6": 1.0,
+    "s8": 0.7875,
+    "a1": 0.4289,
+    "a2": 4.4407,
+    "three_body": false
+   }
+  }
+ },
+ "definition": "W_sep = [E(far) − E(bound′)]/A · E = E_UMA(default · omat) + E_D3(BJ 2체) · 끝점 = 이완 결합 기하에서 make_endpoints(gap) · 계면 1 개"
+}
