@@ -1,0 +1,71 @@
+{
+ "slug": "wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-30",
+ "sources": [
+  "9ada0d4c-High_capacity_ASSLSBs_with_low_density_SE.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Physicochemical properties of the Li3PS4-2LiBH4 solid-state electrolyte. a Schematic illustration showing that the sufﬁciency of Li+ pathways increases upon increasing SE volume content (from left to right) in the sulfur cathode. b Dependence of speciﬁc energy at battery level and sulfur content at cathode level on the density of SE. The estimation was performed by assuming ﬁxed volume ratios of cathode (or battery) components. The weight of the sulfur cathode, SE membrane, Li anode, and current collectors was considered for calculating the speciﬁc energy of Li-S ASSBs. c Comparison of density among LPB, non-aqueous liquid electrolyte solutions, polymer electrolytes, and inorganic SEs. LE: non-",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    350.7,
+    323.5,
+    557.7
+   ],
+   "w": 1208,
+   "h": 863,
+   "dpi": 300,
+   "src": "9ada0d4c-High_capacity_ASSLSBs_with_low_density_SE.pdf",
+   "blank": 0.958
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Morphological, structural, and compositional characterization of LPB. a SEM, b STEM, and c SAED images of LPB powders. d XRD patterns, e Raman spectra, and f 31P MAS NMR of LPB. g 7Li MAS NMR of LPB, LPS, and LiBH4. A",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    59.0,
+    542.4,
+    445.8
+   ],
+   "w": 2121,
+   "h": 1613,
+   "dpi": 300,
+   "src": "9ada0d4c-High_capacity_ASSLSBs_with_low_density_SE.pdf",
+   "blank": 0.767
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Battery testing of Li-In|LPB|S-C-SE all-solid-state cells. a Schematic illustration of the Swagelok cell and the conﬁguration of Li-S ASSBs. b Galvanostatic discharge-charge curves of S-C-LPB, S-C-LPS, and S-C-LGPS cathodes upon 167.5 mA g−1 at 60 °C. c Differential capacity vs. voltage (dQ/dV) curves. d Comparison of initial Coulombic efﬁciency (ICE, charge capacity/discharge capacity) and volume ratios of SE and carbon in different cathodes. The error bar represents the standard deviation of average ICE. e Rate performance of different sulfur cathodes and f corresponding voltage proﬁles of S-C-LPB cathode at",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    387.6,
+    363.1,
+    456.8
+   ],
+   "w": 1373,
+   "h": 289,
+   "dpi": 300,
+   "src": "9ada0d4c-High_capacity_ASSLSBs_with_low_density_SE.pdf",
+   "blank": 0.926
+  }
+ ]
+}

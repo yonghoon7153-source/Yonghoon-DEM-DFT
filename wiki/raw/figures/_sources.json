@@ -1,4 +1,11 @@
 {
+ "cronk2026_highly-utilized-practical-li-s-positive-electrode-assb": {
+  "figures": 7,
+  "generated": "2026-09-30",
+  "pdfs": [
+   "0aa1b3d5-A_highly_utilized_and_practical_Li-S_cathode_enabled_in_ASSBs.pdf"
+  ]
+ },
  "huang2026_high-entropy-sulfides-kinetic-accelerators-assb": {
   "figures": 24,
   "generated": "2026-09-11",
@@ -13,6 +20,34 @@
   "pdfs": [
    "main.pdf",
    "cey2308sup0002supporting_information_1.docx"
+  ]
+ },
+ "lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb": {
+  "figures": 6,
+  "generated": "2026-09-30",
+  "pdfs": [
+   "0eafdb13-decoupled_sulfur_redox_pathways.pdf"
+  ]
+ },
+ "qu2025_volume-changes-li-s-solid-state-battery-components-cycling": {
+  "figures": 8,
+  "generated": "2026-09-30",
+  "pdfs": [
+   "08d276a4-deciphering_volume_changes_in_ASSLSB_components_during_cycling.pdf"
+  ]
+ },
+ "wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte": {
+  "figures": 3,
+  "generated": "2026-09-30",
+  "pdfs": [
+   "9ada0d4c-High_capacity_ASSLSBs_with_low_density_SE.pdf"
+  ]
+ },
+ "yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s": {
+  "figures": 7,
+  "generated": "2026-09-30",
+  "pdfs": [
+   "57b2dc3d-CuS_N_doped_C_host.pdf"
   ]
  },
  "zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector": {

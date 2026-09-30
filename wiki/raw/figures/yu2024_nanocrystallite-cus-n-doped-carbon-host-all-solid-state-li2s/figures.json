@@ -1,0 +1,151 @@
+{
+ "slug": "yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-30",
+ "sources": [
+  "57b2dc3d-CuS_N_doped_C_host.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) Schematic illustration of the preparation of Cu-SNC b) XRD pattern of CuS-NC c) SEM image of CuS-NC; d) TEM image of CuS-NC; e) HRTEM images of CuSNC; f) N 1s and g) C 1s XPS spectra of CuS-NC; h) HAADF-STEM and corresponding EDS maps of C, N, S, and Cu.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.4,
+    552.8,
+    449.7
+   ],
+   "w": 2118,
+   "h": 1581,
+   "dpi": 300,
+   "src": "57b2dc3d-CuS_N_doped_C_host.pdf",
+   "blank": 0.561
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) CV proﬁles for initial Li2S activation at a scan rate of 0.1 mV s−1 b) corresponding Tafel plots of CuSNC/Li2S and NC/Li2S cathodes; c) Initial galvanostatic charge proﬁles for Li2S activation in CuSNC/Li2S and NC/Li2S cathodes; d) Optimized geometries of Li2S adsorbed on pyrrolic N-doped carbon and e) CuS and corresponding adsorption energy; f) Table of calculated bond distances of Li–S in Li2S, pyrrolic N-doped carbon/Li2S, and CuS/Li2S; g) Li2S conversion pathway on pyrrolic N-doped carbon and h) CuS; i) activation energy barriers to Li2S conversion on CuS and pyrrolic N-doped carbon. The lithium, sulfur, copper, nitrogen, and carbon atoms are shown by green, yellow, blue, purple, and brown spheres, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.4,
+    550.0,
+    418.0
+   ],
+   "w": 2118,
+   "h": 1449,
+   "dpi": 300,
+   "src": "57b2dc3d-CuS_N_doped_C_host.pdf",
+   "blank": 0.775
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) CV sweep at a scan rate of 0.1 mV s−1 after the activation cycle for CuS-NC/Li2S and NC/Li2S cathodes with active mass loading of Li2S of 2.0 mg cm−2; b) Corresponding Tafel plots of the reduction process for S →Li2S; c) Initial discharge proﬁles at current densities of 0.1, 0.5, and 1 mA cm−2 for CuS-NC/Li2S and NC/Li2S cathodes; we note that ≈10% additional capacity is contributed from CuS on discharge (compared to charge, see Fig 2c). d) 10th charge/discharge proﬁles for CuS-NC/Li2S and NC/Li2S cathodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.5,
+    552.9,
+    366.0
+   ],
+   "w": 2118,
+   "h": 1232,
+   "dpi": 300,
+   "src": "57b2dc3d-CuS_N_doped_C_host.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. a) XRD patterns of the pristine, charged, and discharged CuS-NC/Li2S cathode; b) Cu 2p XPS spectra of the pristine, charged, and discharged CuS-NC/Li2S cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.8,
+    550.0,
+    513.7
+   ],
+   "w": 2118,
+   "h": 1847,
+   "dpi": 300,
+   "src": "57b2dc3d-CuS_N_doped_C_host.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. DC polarization measurements with electron blocking symmetric cells for a) CuS-NC/Li2S, b) NC/Li2S. Migration energy barrier for Li diﬀusion on c) CuS and d) pyrrolic N-doped carbon. The insets are the DFT-calculated Li+ diﬀusion pathway on CuS and pyrrolic N-doped carbon. The lithium, sulfur, copper, nitrogen, and carbon atoms are shown by green, yellow, blue, purple, and brown spheres, respectively. e) Schematic of the mechanism of redox reactions with NC/Li2S and i) CuS-NC/Li2S.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.9,
+    552.9,
+    450.7
+   ],
+   "w": 2118,
+   "h": 1584,
+   "dpi": 300,
+   "src": "57b2dc3d-CuS_N_doped_C_host.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. a) Long-term cycling performance and coulombic eﬃciency of CuS-NC/Li2S and NC/Li2S cathodes at a current density of 0.3 mA cm−2 and b) 1 mA cm−2 at room temperature with a Li2S mass loading of 2 mg cm−2. Slight ﬂuctuations are due to temperature variations; c) Rate performance of CuS-NC/Li2S and NC/Li2S cathodes; d) Long-term cycling performance and coulombic eﬃciency of CuS-NC/Li2S at a current density of 0.3 mA cm−2 at room temperature with a Li2S mass loading of 4 mg cm−2 and e) 10 mg cm−2; f) Long-term cycling performance and coulombic eﬃciency of CuS-NC/Li2S at a current density of 0.3 mA cm−2 at 60 °C with a Li2S mass loading of 4 mg cm−2.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.7,
+    550.0,
+    484.0
+   ],
+   "w": 2118,
+   "h": 1723,
+   "dpi": 300,
+   "src": "57b2dc3d-CuS_N_doped_C_host.pdf",
+   "blank": 0.867
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Comparison of electrochemical performance for CuS-NC/Li2S with other Li2S-based cathodes from the literature in the past 5 years.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.4,
+    297.8,
+    262.7
+   ],
+   "w": 1055,
+   "h": 802,
+   "dpi": 300,
+   "src": "57b2dc3d-CuS_N_doped_C_host.pdf",
+   "blank": 0.889
+  }
+ ]
+}

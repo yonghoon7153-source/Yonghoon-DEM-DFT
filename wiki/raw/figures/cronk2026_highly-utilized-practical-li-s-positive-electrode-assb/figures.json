@@ -1,0 +1,154 @@
+{
+ "slug": "cronk2026_highly-utilized-practical-li-s-positive-electrode-assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-30",
+ "sources": [
+  "0aa1b3d5-A_highly_utilized_and_practical_Li-S_cathode_enabled_in_ASSBs.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | All-solid-state battery using engineered Li-S conversion positive electrodes. Key features required to enable high speciﬁc energy ASSBs, improving both utilization and cycle life under practical operating conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    556.2,
+    257.1
+   ],
+   "w": 2178,
+   "h": 894,
+   "dpi": 300,
+   "src": "0aa1b3d5-A_highly_utilized_and_practical_Li-S_cathode_enabled_in_ASSBs.pdf",
+   "blank": 0.692
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Characterizing sulfur positive electrodes after synthesis. a First cycle voltage proﬁles of the investigated positive electrode preparation methods in Li-In half cells operating with a rate of 80 mA g−1. Cells were evaluated at room tem- perature: 25 °C ± 1 °C. b X-ray diffraction (XRD) spectra of the prepared sulfur positive electrodes. c Raman spectroscopy and (d) X-ray absorption spectroscopy",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    408.6,
+    339.7
+   ],
+   "w": 1563,
+   "h": 1238,
+   "dpi": 300,
+   "src": "0aa1b3d5-A_highly_utilized_and_practical_Li-S_cathode_enabled_in_ASSBs.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | LPSCl redox activity and capacity contribution. Voltage proﬁles of Li-In || LPSCl half cells evaluated under (a) sulfur voltage limits. b Cyclic voltammetry of sulfur and LPSCl positive electrode composites with a Li-In negative electrode. The active mass of the sulfur positive electrode is 2.5 mg cm−2, which consists of both sulfur and LPSCl. The active mass for the LPSCl positive electrode is 3 mg cm−2. c dQ/dV curves of the 1st and (d) 3rd cycle for cells with decreasing sulfur wt% within",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    44.6,
+    561.6,
+    390.0
+   ],
+   "w": 2200,
+   "h": 1440,
+   "dpi": 300,
+   "src": "0aa1b3d5-A_highly_utilized_and_practical_Li-S_cathode_enabled_in_ASSBs.pdf",
+   "blank": 0.942,
+   "note": "bbox widened by curator to include right-column panels (auto-crop kept left column only)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Probing electrochemical reversibility. a Nyquist plots of in-situ EIS measurements of cells with the sulfur positive electrode and Li-In negative elec- trode during the ﬁrst formation cycle. b XRD and (c) TGA of high loading (7.6 mg cm-2) sulfur positive electrodes at the pristine, discharged, and charged states, performed in a nitrogen environment. Quantiﬁed sulfur masses are listed in",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    47.9,
+    561.6,
+    380.0
+   ],
+   "w": 2200,
+   "h": 1385,
+   "dpi": 300,
+   "src": "0aa1b3d5-A_highly_utilized_and_practical_Li-S_cathode_enabled_in_ASSBs.pdf",
+   "blank": 0.913,
+   "note": "bbox widened by curator to include right-column panels (auto-crop kept left column only)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Modeling sulfur positive electrodes microstructures with electro- chemical validation in Li-In half cells. a Geometrically modeled sulfur positive electrodes for bulk, micron, and sub-micron sulfur particles. b Speciﬁc active sur- face area and (c) ionic transport tortuosity as a function of AM content (%) and particle size. d First cycle voltage proﬁles of positive electrode composites with various particles sizes e Long-term cycling stability at C/2 (800 mA g-1) with dis- charge capacity being normalized by the active mass (sulfur and LPSCl). f Nyquist",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.7,
+    540.7,
+    481.9
+   ],
+   "w": 2113,
+   "h": 1831,
+   "dpi": 300,
+   "src": "0aa1b3d5-A_highly_utilized_and_practical_Li-S_cathode_enabled_in_ASSBs.pdf",
+   "blank": 0.821
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 | Quantifying positive electrode and cell level volume changes. Cryo-FIB images of the (a) micron sulfur and (b) Li2S positive electrode composite at various states of charge. c Operando pressure monitoring and voltage proﬁle of LCO and Sulfur paired with a lithiated silicon negative electrode and (d) LCO and Li2S paired",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    516.4,
+    515.1
+   ],
+   "w": 2012,
+   "h": 1969,
+   "dpi": 300,
+   "src": "0aa1b3d5-A_highly_utilized_and_practical_Li-S_cathode_enabled_in_ASSBs.pdf",
+   "blank": 0.63
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 11,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 | High loading sulfur and Li2S electrochemical performance with gravi- metric energy density outlook. a Schematic of the sulfur positive electrode half- cell architecture in pellet cells using a Li-In negative electrode. b First cycle voltage proﬁles of cells with increasing areal capacity. Areal capacity was determined by using the average discharge and charge capacity divided by the cell area of 0.785 cm2. Sulfur mass loadings of 1.2 mgS cm-2, 2.7 mgS cm-2, and 7 mgS cm-2 were used for 2 mAh cm-2, 5.5 mAh cm-2, and 10 mAh cm-2, respectively. c Long term cycling stability at the 11 mAh cm-2 level evaluated at 25 °C. d Schematic of the dry process sulfur positive electrode paired with a lithiated silicon negative electrode in pellet cells. e Rate performance at the 5.5 mAh cm-2 level. f Cycling stability at the 7.4 mAh cm-2 level at C/5 (0.32 A g-1). N/P ratio: 2. Testing temperat",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.7,
+    561.6,
+    490.0
+   ],
+   "w": 2200,
+   "h": 1865,
+   "dpi": 300,
+   "src": "0aa1b3d5-A_highly_utilized_and_practical_Li-S_cathode_enabled_in_ASSBs.pdf",
+   "blank": 0.812,
+   "note": "bbox widened by curator to include right-column panels (auto-crop kept left column only)"
+  }
+ ]
+}

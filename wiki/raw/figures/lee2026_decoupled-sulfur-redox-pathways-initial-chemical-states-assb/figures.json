@@ -1,0 +1,131 @@
+{
+ "slug": "lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-30",
+ "sources": [
+  "0eafdb13-decoupled_sulfur_redox_pathways.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Electrochemical performance comparison of conventional LSB and ASSLSBs. Discharge/charge voltage profiles of (a) conventional LSB, (d) S8-ASSLSB, and (g) Li2S-ASSLSB at 0.05C (formation cycles). Cycling performance of (b) conventional LSB, (e) S8-ASSLSB, and (h) Li2S-ASSLSB at 0.1C after two formation cycles at 0.05C. (c) Schematic illustration of the S8 redox mechanism in conventional LSBs. Cyclic voltammograms of (f) S8- and (i) Li2S-ASSLSB at 50 μV s−1. Conventional LSB consists of S8 cathode, liquid electrolyte (1 M LiTFSI in DOL/DME = 1:1 (v/v)), and Li metal anode. S8- and Li2S-ASSLSBs consist of S8 or Li2S cathode, LPSCl solid-state electrolyte, and Li–In alloy anode. two formation cycles, the capacity decreased to 1371 mAh g−1 in the third cycle (Fig. S7a). A small voltage oscillation was also observed at the end of the charging curve, likely associated with interfacial i",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.5,
+    566.0,
+    485.0
+   ],
+   "w": 2228,
+   "h": 1815,
+   "dpi": 300,
+   "src": "0eafdb13-decoupled_sulfur_redox_pathways.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Structural evolution of Li2S and LPSCl in ASSLSBs during cycling. Discharge/charge voltage profiles of (a) S8-ASSLSB and (d) Li2S-ASSLSB at 0.05C. In situ XRD patterns of (b) S8-ASSLSB and (e) Li2S-ASSLSB corresponding to the (111) peak of Li2S. In situ XRD patterns of (c) S8-ASSLSB and (f) Li2S- ASSLSB corresponding to the (311) peak of LPSCl. and reducing the strong diffraction contributions from LPSCl. These results support that S8 undergoes a conversion reaction to form Li2S and possibly intermediate LiPSs during discharge. In contrast to the S8-ASSLSB, no distinct broad features in the 26.3◦–27.7◦range were observed during cycling in the Li2S-ASSLSB (Fig. 2d, e). This suggests that long-chain LiPSs are not formed under these conditions. Moreover, a relatively weak Li2S (111) peak in the initial state can be attributed to partial oxidation of Li2S during com­ posite cathode p",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    50.3,
+    566.0,
+    310.0
+   ],
+   "w": 1107,
+   "h": 1083,
+   "dpi": 300,
+   "src": "0eafdb13-decoupled_sulfur_redox_pathways.pdf",
+   "blank": 0.595
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Structural evolution of S8 and Li2S in ASSLSBs using Li metal an­ odes during cycling. Discharge/charge voltage profiles of (a) S8/Li-ASSLSB and (d) Li2S/Li-ASSLSB at 0.05C. In situ XRD patterns of (b) S8/Li-ASSLSB and (e) Li2S/Li-ASSLSB corresponding to the (222) peak of S8. In situ XRD patterns of (c) S8/Li-ASSLSB and (f) Li2S/Li-ASSLSB corresponding to the (111) peak of Li2S.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.7,
+    296.8,
+    309.0
+   ],
+   "w": 1106,
+   "h": 1081,
+   "dpi": 300,
+   "src": "0eafdb13-decoupled_sulfur_redox_pathways.pdf",
+   "blank": 0.602
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Sulfur chemical states in pristine materials and composite cathodes. (a) XPS spectra of pristine materials including the cathode active materials (S8 and Li2S) and the solid-state electrolyte (LPSCl). XPS spectra of (b) S8-composite cathode and (c) Li2S-composite cathode at the initial, discharged (0.1 V), and charged (3.0 V after discharge to 0.1 V) states. The discharge/charge tests were conducted at 0.05C. The apparent overlap of smaller features within broader peaks arises from the intrinsic doublet structure of the S 2p spectrum rather than overfitting. discharge proceeds, particularly above 0.4 V. This evolution is consis­ tent with the electrochemical results showing that most discharge ca­ pacity was delivered above 0.4 V (Fig. 1d). Upon subsequent charging, these features diminished, while new features associated with sulfur species emerged and intensified with increasin",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.4,
+    566.0,
+    389.0
+   ],
+   "w": 2228,
+   "h": 1411,
+   "dpi": 300,
+   "src": "0eafdb13-decoupled_sulfur_redox_pathways.pdf",
+   "blank": 0.856
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Sulfur electronic structure in composite cathodes. S K-edge XANES spectra of (a) S8-composite cathode and (b) Li2S-composite cathode at the initial, discharged (1.2, 0.4, and 0.1 V), and charged (1.9 and 3.0 V after discharge to 0.1 V) states. Yellow and light blue dashed lines in a and b indicate the spectra of pristine S8 and Li2S, respectively. Spectra with similar colors represent the same electrochemical state. The discharge/charge tests were conducted at 0.05C. formation of crystalline S8. Furthermore, quantitative analysis based on the electrochemical capacity was conducted to substantiate the presence of pre-existing S2–4 in the Li2S-composite cathode. In the discharge-first protocol, the first discharge capacity was 502.5 mAh g−1 (Fig. 1g). Considering the theo­ retical capacity of sulfur species (1672 mAh g−1 based on Sn), this value corresponds to the reduction of appr",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.1,
+    566.0,
+    355.0
+   ],
+   "w": 2228,
+   "h": 1272,
+   "dpi": 300,
+   "src": "0eafdb13-decoupled_sulfur_redox_pathways.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Proposed redox reaction pathways for ASSLSBs. Initial discharge/ charge voltage profiles of (a) S8-ASSLSB and (b) Li2S-ASSLSB, together with representative reaction products formed at each redox step.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    402.8,
+    296.8,
+    691.7
+   ],
+   "w": 1106,
+   "h": 1205,
+   "dpi": 300,
+   "src": "0eafdb13-decoupled_sulfur_redox_pathways.pdf",
+   "blank": 0.934
+  }
+ ]
+}
