@@ -179,7 +179,7 @@ def test_g85_m05_member_derivation_refuses_cycles_unsealed_or_missing_parents_es
 
     cases = {
         "순환": ({"configs/a.yaml": "extends: b.yaml\n", "configs/b.yaml": "extends: a.yaml\n"}, {}, "configs/a.yaml"),
-        "봉인": ({"configs/p.yaml": "a: 1\n", "configs/l.yaml": "extends: p.yaml\n"},
+        "봉인 목록": ({"configs/p.yaml": "a: 1\n", "configs/l.yaml": "extends: p.yaml\n"},
                  {"unsealed": ("configs/p.yaml",)}, "configs/l.yaml"),
         "스냅샷": ({"configs/p.yaml": "a: 1\n", "configs/l.yaml": "extends: p.yaml\n"},
                    {"unsnapped": ("configs/p.yaml",)}, "configs/l.yaml"),

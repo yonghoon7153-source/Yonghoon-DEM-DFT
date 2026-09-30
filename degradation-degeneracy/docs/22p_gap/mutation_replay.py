@@ -2083,6 +2083,35 @@ MUTANTS = [
      '    _v2 = schema == "execution-record/v2"\n',
      '    _v2 = True  # 변이: v1 요청에도 v2 계수를 만든다\n',
      "g84_n4_04"),
+    # ── 85차 G85-N1 — 사후 closure 구성원 결속 (고정 표 STAGE3_IMPL_ROUND1_SPEC §12) ── 이름 끝 `-g85`
+    ("closure-members-are-derived-not-trusted-g85", IO,                    # N1: 유도를 지우고 기록 목록을 정답으로
+     '        members, m_bad = base_config_closure_members(spec0.get("base_config"), sealed, run_dir / "_inputs")\n',
+     '        members, m_bad = sorted(set(keys)), []  # 변이: 기록된 키 목록을 정답으로 믿는다\n',
+     "g85_m01 or g85_m02 or g85_m03"),
+    ("closure-missing-members-are-refused-g85", IO,                        # N1: 누락 거부
+     '            if missing:\n                bc_bad.append(f"closure 키에 실제 extends 구성원이 빠졌다',
+     '            if False:\n                bc_bad.append(f"closure 키에 실제 extends 구성원이 빠졌다',
+     "g85_m01 or g85_m02"),
+    ("closure-extra-members-are-refused-g85", IO,                          # N1: 추가 거부
+     '            if extra:\n                bc_bad.append(f"closure 키에 extends 구성원이 아닌 키가 있다',
+     '            if False:\n                bc_bad.append(f"closure 키에 extends 구성원이 아닌 키가 있다',
+     "g85_m03"),
+    ("closure-member-keys-are-unique-g85", IO,                             # N1: 중복 거부
+     '        if dup:\n            bc_bad.append(f"closure 키가 중복됐다',
+     '        if False:\n            bc_bad.append(f"closure 키가 중복됐다',
+     "g85_m04"),
+    ("closure-derivation-refuses-cycles-g85", IO,                          # 유도: 순환
+     '        if norm in order:\n',
+     '        if False:  # 변이: extends 순환 검사를 끈다\n',
+     "g85_m05"),
+    ("closure-derivation-refuses-unsealed-parents-g85", IO,                # 유도: 봉인 목록에 없는 부모
+     '        if not dig:\n            problems.append(f"{role}{norm}: 봉인 목록',
+     '        if False:\n            problems.append(f"{role}{norm}: 봉인 목록',
+     "g85_m05"),
+    ("closure-derivation-refuses-escaping-paths-g85", IO,                  # 유도: 저장소 밖 경로
+     '        if posixpath.isabs(norm) or norm == ".." or norm.startswith("../"):\n',
+     '        if False:  # 변이: 저장소 밖 경로 검사를 끈다\n',
+     "g85_m05"),
 ]
 
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
@@ -6309,6 +6338,78 @@ EXPECT: dict = {
         "witness": {
             "tests/test_gate84_round2a.py::test_g84_n4_04_realized_from_fits_dispatches_on_schema_and_keeps_v1_shape":
                 "AssertionError: assert {'attempted'",
+        }
+    },
+    "closure-members-are-derived-not-trusted-g85": {
+        "fail": [
+            "tests/test_gate85_closure_members.py::test_g85_m01_dropping_the_parent_and_forging_both_digests_is_refused_by_the_member_check",
+            "tests/test_gate85_closure_members.py::test_g85_m02_dropping_the_leaf_and_forging_both_digests_is_refused_by_the_member_check",
+            "tests/test_gate85_closure_members.py::test_g85_m03_an_extra_sealed_member_with_forged_digests_is_refused_by_the_member_check",
+        ],
+        "witness": {
+            "tests/test_gate85_closure_members.py::test_g85_m01_dropping_the_parent_and_forging_both_digests_is_refused_by_the_member_check":
+                'AssertionError: 자기일관 위조가 base_config_결속 를 통과했다: 통과',
+            "tests/test_gate85_closure_members.py::test_g85_m02_dropping_the_leaf_and_forging_both_digests_is_refused_by_the_member_check":
+                'AssertionError: 자기일관 위조가 base_config_결속 를 통과했다: 통과',
+            "tests/test_gate85_closure_members.py::test_g85_m03_an_extra_sealed_member_with_forged_digests_is_refused_by_the_member_check":
+                'AssertionError: 자기일관 위조가 base_config_결속 를 통과했다: 통과',
+        }
+    },
+    "closure-missing-members-are-refused-g85": {
+        "fail": [
+            "tests/test_gate85_closure_members.py::test_g85_m01_dropping_the_parent_and_forging_both_digests_is_refused_by_the_member_check",
+            "tests/test_gate85_closure_members.py::test_g85_m02_dropping_the_leaf_and_forging_both_digests_is_refused_by_the_member_check",
+        ],
+        "witness": {
+            "tests/test_gate85_closure_members.py::test_g85_m01_dropping_the_parent_and_forging_both_digests_is_refused_by_the_member_check":
+                "AssertionError: 이유에 'configs/base.yaml' 가 없다: 실패 — 스냅샷에서 다시 만든 closure",
+            "tests/test_gate85_closure_members.py::test_g85_m02_dropping_the_leaf_and_forging_both_digests_is_refused_by_the_member_check":
+                "AssertionError: 이유에 'configs/grid_coarse.yaml' 가 없다: 실패 — 스냅샷에서 다시 만든 closure",
+        }
+    },
+    "closure-extra-members-are-refused-g85": {
+        "fail": [
+            "tests/test_gate85_closure_members.py::test_g85_m03_an_extra_sealed_member_with_forged_digests_is_refused_by_the_member_check",
+        ],
+        "witness": {
+            "tests/test_gate85_closure_members.py::test_g85_m03_an_extra_sealed_member_with_forged_digests_is_refused_by_the_member_check":
+                "AssertionError: 이유에 'curves_manifest.yaml' 가 없다: 실패 — 스냅샷에서 다시 만든 closure",
+        }
+    },
+    "closure-member-keys-are-unique-g85": {
+        "fail": [
+            "tests/test_gate85_closure_members.py::test_g85_m04_a_duplicated_member_key_is_refused_even_with_the_true_digests",
+        ],
+        "witness": {
+            "tests/test_gate85_closure_members.py::test_g85_m04_a_duplicated_member_key_is_refused_even_with_the_true_digests":
+                'AssertionError: 자기일관 위조가 base_config_결속 를 통과했다: 통과',
+        }
+    },
+    "closure-derivation-refuses-cycles-g85": {
+        "fail": [
+            "tests/test_gate85_closure_members.py::test_g85_m05_member_derivation_refuses_cycles_unsealed_or_missing_parents_escapes_and_bad_extends",
+        ],
+        "witness": {
+            "tests/test_gate85_closure_members.py::test_g85_m05_member_derivation_refuses_cycles_unsealed_or_missing_parents_escapes_and_bad_extends":
+                "AssertionError: 순환: 이유가 다르다 — ['extends 깊이가 32 를 넘는다']",
+        }
+    },
+    "closure-derivation-refuses-unsealed-parents-g85": {
+        "fail": [
+            "tests/test_gate85_closure_members.py::test_g85_m05_member_derivation_refuses_cycles_unsealed_or_missing_parents_escapes_and_bad_extends",
+        ],
+        "witness": {
+            "tests/test_gate85_closure_members.py::test_g85_m05_member_derivation_refuses_cycles_unsealed_or_missing_parents_escapes_and_bad_extends":
+                "AssertionError: 봉인 목록: 이유가 다르다 — ['configs/p.yaml: 봉인 스냅샷이 없다']",
+        }
+    },
+    "closure-derivation-refuses-escaping-paths-g85": {
+        "fail": [
+            "tests/test_gate85_closure_members.py::test_g85_m05_member_derivation_refuses_cycles_unsealed_or_missing_parents_escapes_and_bad_extends",
+        ],
+        "witness": {
+            "tests/test_gate85_closure_members.py::test_g85_m05_member_derivation_refuses_cycles_unsealed_or_missing_parents_escapes_and_bad_extends":
+                "AssertionError: 밖: 이유가 다르다 — ['../outside.yaml: 봉인 목록",
         }
     },
 }
