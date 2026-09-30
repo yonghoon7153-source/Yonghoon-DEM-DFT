@@ -1237,7 +1237,7 @@
    "② STO–MTO 폭이 온도에 따라 커진다 (600 K 0.39 · 550 K P-2 0.05) — 해석 없이 사실로. 판정은 안 바뀐다."
   ],
   "사소한_것_확인": "c·m 숫자 문턱 부재 공개 · 미분류 둘을 억지로 분류하지 않음 · s5 창 목록 갈림 · 기계–시드 겹침 공개 · 도구 β 표시 결함 확인 · 600 K p90 초과분과 '편입이 쓰일 곳이 없어졌다' 서술 — 전부 그대로 남긴다.",
-  "이행": "마감 기록 `db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json` (허용 ①–⑩ · 금지 · 기록 · 재개 안 함) · 결정 `D-2026-09-30-lpscl-smallcell-glass-closed` (proposed — 비준은 사용자) · NEB 마감 §7 ②·④ 기록 · /li2s 요약 절 갱신 · CLAUDE.md 갱신.",
+  "이행": "마감 기록 `db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json` (허용 ①–⑩ · 금지 · 기록 · 재개 안 함) · 결정 `D-2026-09-30-lpscl-smallcell-glass-closed` (✅ 사용자 비준 09-30 · active — 개정 CC · CH 도 active) · NEB 마감 §7 ②·④ 기록 · /li2s 요약 절 갱신 · CLAUDE.md 갱신.",
   "results_seen": true
  }
 }

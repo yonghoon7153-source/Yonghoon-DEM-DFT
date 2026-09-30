@@ -147,7 +147,7 @@
  },
  "6_Phase_B": "열지 않는다 — 카드 §7: Phase B(대조 잡)는 갈래2·3 에서만 별도 카드로 연다.",
  "7_NEB_마감_기록": "카드 §7 대로 NEB 마감 기록 `lpscl_smallcell_neb_closed_2026_09_19.json` §7 ②(다른 궤적·다른 창) · ④(다른 담금질률·다중 시드) 에 이 라운드를 적었다 — 소진 선언이 아니라 기록이다.",
- "8_비준": "⏸ 결정 `D-2026-09-30-lpscl-smallcell-glass-closed` (proposed). 판정은 외부 1저자 회신 CN 이 확정했다. 원장 active 전환(ratification)은 카드 저자(사용자) 몫이다.",
+ "8_비준": "✅ **사용자 비준 2026-09-30** (AskUserQuestion '셋 다 비준') — 결정 `D-2026-09-30-lpscl-smallcell-glass-closed` active (decision_digest sha256:c0935bee361ee590…) · 개정 `D-2026-09-26-…-amend-cc` · `D-2026-09-28-…-amend-ch` 도 active. 판정은 외부 1저자 회신 CN 이 확정했고, 비준은 원장 active 전환이다.",
  "출처": {
   "회신": "kb/reviews/li2s1a_CN_reply_li2s_main_readout_2026_09_30.md",
   "편지": "kb/reviews/li2s1a_CN_prompt_li2s_main_readout_2026_09_30.md",
@@ -161,6 +161,11 @@
    "at": "2026-09-30",
    "state": "closed_pending_ratification",
    "note": "외부 1저자 회신 CN — 갈래1 확정 · 주문장 마지막 문장 좁힘 · 주 표기 1/15 · Ea 적합 단위 질문 소멸 · P–S–S 문구 확정 · (가)(나) 채택 (다) 기각 · 마감 전 덧붙일 것 둘(550 K 문턱 부근 · STO–MTO 폭). 원장 비준은 사용자 몫."
+  },
+  {
+   "at": "2026-09-30",
+   "state": "closed",
+   "note": "사용자 비준 — 마감 결정 + 개정 CC · CH active (원장 검사 digest 결속 ✅)."
   }
  ]
 }
