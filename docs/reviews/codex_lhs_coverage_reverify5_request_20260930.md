@@ -1,5 +1,7 @@
 # Codex 재검증 5 요청 — LHS 피복률 · LHSC-03-R5 (P2) · LHSC-04-R5-PIN-TYPE (P3) 수정 (2026-09-30 밤)
 
+> ✅ **판정 도착 (09-30 밤) = GO** — `docs/reviews/codex_lhs_coverage_reverify5_verdict_20260930.md` · 증거 `docs/reviews/codex_lhs_coverage_reverify5_evidence_20260930/` (Q1 LHSC-03-R5 닫힘 · Q2 PIN-TYPE 닫힘 · Q3 DOMAIN 비차단 열림 = `LHSC-11` · Q4 병합 순서 동의).  ✅ **병합 (같은 밤)** — 0001 → 0019 cherry-pick (`15ecbbc9a` … `9514b851a`) · 검증 바이트 대조 · Codex 스크립트 병합 트리 재현 = `docs/reviews/codex_lhs_coverage_reverify5_evidence_20260930/_README_reproduction.md`.
+
 > 대상 판정: `docs/reviews/codex_lhs_coverage_reverify4_verdict_20260930.md` (HOLD · 새 P1 없음 · 이전 P2 둘 닫힘 · 새 P2 한 계열 LHSC-03-R5 · P3 둘).  수정 = **Codex 최소 해제 그대로** (저자 선택지 없음 · 1저자 *"codex lhs 관련 대응하자"*) · 반례를 셀프테스트로 먼저 옮겨 옛 코드에서 실패 확인.  실제 병합 · 재수확 · DEM 은 하지 않았다.
 
 ## §0 핀 (전부 실제 계산 값 — `codex_lhs_coverage_reverify5_request_20260930/source_manifest.json`)

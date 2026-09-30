@@ -1,0 +1,410 @@
+{
+  "input_zip": {
+    "path": "C:\\Users\\Administrator\\Downloads\\codex_lhs_coverage_reverify5_20260930.zip",
+    "bytes": 57408,
+    "sha256": "41cc620d72334dc253c8da1df724c0bf0bca46405cfd724fb1bcd7847de5cc73"
+  },
+  "submitted_checks": [
+    {
+      "path": "docs\\reviews\\codex_lhs_coverage_reverify5_request_20260930\\0018-run_pipeline-coverage-v2-n_clip-n_am-100-std-0-Codex.patch",
+      "sha256": "d68c6bbd708674e32f02385a216fd88f4a68eecf40e105057931079736e8c3eb"
+    },
+    {
+      "path": "docs\\reviews\\codex_lhs_coverage_reverify5_request_20260930\\0019-lhs_descriptor_harvest-producer_pin-hosts-Codex-LHSC.patch",
+      "sha256": "ae8ed175b771c1f80316db722bd3434a591066d924e2da1df053cd141233b1c7"
+    },
+    {
+      "path": "docs\\reviews\\codex_lhs_coverage_reverify5_request_20260930\\fixed_tree_reproduction\\audit_r5_fixed.stdout",
+      "sha256": "4c3162f853c739e9499f10fdd22bf7a606bcbab0932d20c994ceae709b5fce3e"
+    },
+    {
+      "path": "docs\\reviews\\codex_lhs_coverage_reverify5_request_20260930\\fixed_tree_reproduction\\numeric_domain_results.json",
+      "sha256": "00eee25a1cea8895bc9084ef55cf4e05f7ae1a2bf2359cfc10f4eb6b053b9680"
+    },
+    {
+      "path": "docs\\reviews\\codex_lhs_coverage_reverify5_request_20260930\\fixed_tree_reproduction\\producer_results.json",
+      "sha256": "244c6304343b2e620d5dee9f66447c7faee228949d3db01be8d01e489b6b57a2"
+    },
+    {
+      "path": "docs\\reviews\\codex_lhs_coverage_reverify5_request_20260930\\fixed_tree_reproduction\\r4_results.json",
+      "sha256": "1c563fef07fecbf8262e84719a80106dd235bb0f35efb3ea56b129050069e1d0"
+    },
+    {
+      "path": "docs\\reviews\\codex_lhs_coverage_reverify5_request_20260930\\fixed_tree_reproduction\\r5_results.json",
+      "sha256": "036ffe6c4a292b6edc30b710b278ba86bfabdd0dd4102cdfedbb5b035c1615ad"
+    },
+    {
+      "path": "docs\\reviews\\codex_lhs_coverage_reverify5_request_20260930\\fixed_tree_reproduction\\r5_results_before_fix_9ab4bc320.json",
+      "sha256": "253a3e3cee91890dbd1858e87c907e77a1d2f554913ad1d8816a03a9ea504280"
+    },
+    {
+      "path": "docs\\reviews\\codex_lhs_coverage_reverify5_request_20260930\\fixed_tree_reproduction\\schema_results.json",
+      "sha256": "e5e578cf1405ed42d4f5a88f2f70293bf6670a750d068b77a754341325c06d08"
+    },
+    {
+      "path": "docs\\reviews\\codex_lhs_coverage_reverify5_request_20260930\\selftests_6e4ef6925.log",
+      "sha256": "12657128b67d4c6832f40a496f71ff32e1cf314bb7d6e193e303a9ddaf9f4bd8"
+    },
+    {
+      "path": "docs\\reviews\\codex_lhs_coverage_reverify5_request_20260930\\source_manifest.json",
+      "sha256": "1e6259ab37f0dc97a654ea3df20e43a40a38afda221d98f1bc3c1c0bf3a40a9d"
+    }
+  ],
+  "declared_base": "9ab4bc3203e64930f860ec805ae9fb09fdb898f5 (= 재검증 4 의 tip · Codex 후보 10 파일과 LF 정규화 뒤 동일)",
+  "declared_tip": "6e4ef69256a075c5cf5cee337bf30a465cf125d4",
+  "actual_base": {
+    "input_zip": {
+      "path": "C:\\Users\\Administrator\\Downloads\\codex_lhs_coverage_reverify4_20260930.zip",
+      "bytes": 51865,
+      "sha256": "9d35be5dd6f8fb90adf010d0c4521f9968b12fe2d44db6a0d0f213c560a139ae"
+    },
+    "submitted_checks": [
+      {
+        "path": "docs\\reviews\\codex_lhs_coverage_reverify4_request_20260930\\0016-LHS-item-2-pin-False-Codex-LHSC-04-R4-PIN-R4-DOMAIN.patch",
+        "sha256": "6592d70ccb06f9717ca9f2a7dfba81d5d7280538c64795df1f89427a86cab622"
+      },
+      {
+        "path": "docs\\reviews\\codex_lhs_coverage_reverify4_request_20260930\\0017-run_pipeline-coverage-v2-Codex-LHSC-03-R4.patch",
+        "sha256": "45b2f714068f6f0f855ad1a99c6bcee5ec02f81a925bdc437c90aa5a0c1c0111"
+      },
+      {
+        "path": "docs\\reviews\\codex_lhs_coverage_reverify4_request_20260930\\fixed_tree_reproduction\\numeric_domain_results.json",
+        "sha256": "00eee25a1cea8895bc9084ef55cf4e05f7ae1a2bf2359cfc10f4eb6b053b9680"
+      },
+      {
+        "path": "docs\\reviews\\codex_lhs_coverage_reverify4_request_20260930\\fixed_tree_reproduction\\producer_results.json",
+        "sha256": "7a0cf25f441052e0b3c45a743b9ecce84ae53aa334a497dcffdb50262a905911"
+      },
+      {
+        "path": "docs\\reviews\\codex_lhs_coverage_reverify4_request_20260930\\fixed_tree_reproduction\\r4_results.json",
+        "sha256": "a2fb5d5fe34e6d5a44b292fd924f2cde17d2ea68a2179529899b81b4126a0b47"
+      },
+      {
+        "path": "docs\\reviews\\codex_lhs_coverage_reverify4_request_20260930\\fixed_tree_reproduction\\schema_results.json",
+        "sha256": "e5e578cf1405ed42d4f5a88f2f70293bf6670a750d068b77a754341325c06d08"
+      },
+      {
+        "path": "docs\\reviews\\codex_lhs_coverage_reverify4_request_20260930\\selftests_9ab4bc320.log",
+        "sha256": "f97a5cf61e92ab72a0fa67aaea1453e353310f6bdb8775546e529a09eb824df8"
+      },
+      {
+        "path": "docs\\reviews\\codex_lhs_coverage_reverify4_request_20260930\\source_manifest.json",
+        "sha256": "361ee3586e5871a63d37c72ddf9ccc72786105c499c70136c68f643b4221fe99"
+      }
+    ],
+    "declared_base": "220b1426ea39eae13f077e9f0585388f3eb61d08 (= 재검증 3 의 tip · Codex 후보 10 파일과 LF 정규화 뒤 동일)",
+    "declared_tip": "9ab4bc3203e64930f860ec805ae9fb09fdb898f5",
+    "actual_base": {
+      "input_zip": {
+        "path": "C:\\Users\\Administrator\\Downloads\\codex_lhs_coverage_reverify3_20260930.zip",
+        "bytes": 77108,
+        "sha256": "10addd2049cc17504c0f9ae5fde66eaa6ca9adec0e4d2fba066ac367b50d5382"
+      },
+      "submitted_checks": [
+        {
+          "path": "docs\\reviews\\codex_lhs_coverage_reverify3_request_20260930\\0014-LHS-item-2-Codex-LHSC-04-R3a-R3b-P3.patch",
+          "sha256": "eb2e325b005fab29a539432e62ba3bd168a4956884f2245afd4b9e2f7ecb41be"
+        },
+        {
+          "path": "docs\\reviews\\codex_lhs_coverage_reverify3_request_20260930\\0015-run_pipeline-coverage-v2-Codex-LHSC-03-R3-P2-P3.patch",
+          "sha256": "54b329a2efe72f8858e14fc4d8a14b6a1c1fedcc2db4cecabd16188de70381fd"
+        },
+        {
+          "path": "docs\\reviews\\codex_lhs_coverage_reverify3_request_20260930\\fixed_tree_reproduction\\audit_power_original_keyerror.out",
+          "sha256": "4e84aaea53eab1d86df04ac068cdda544da0cffa0e4bd35818c783cd6402841a"
+        },
+        {
+          "path": "docs\\reviews\\codex_lhs_coverage_reverify3_request_20260930\\fixed_tree_reproduction\\audit_power_r3.py",
+          "sha256": "810bf4c1332afa3a1c40eed87eced25b7b89ce050456db2ed4e217b1a91022ac"
+        },
+        {
+          "path": "docs\\reviews\\codex_lhs_coverage_reverify3_request_20260930\\fixed_tree_reproduction\\geometry.out",
+          "sha256": "65a5cef9321e0a0b38690413d09dd883a3532fffaeea3270cb95d8c6f7af1964"
+        },
+        {
+          "path": "docs\\reviews\\codex_lhs_coverage_reverify3_request_20260930\\fixed_tree_reproduction\\geometry_results.json",
+          "sha256": "fb60ba47084d7e7a511b3a3c714c74b660103d9545bed8b2830426d3a14bb3f2"
+        },
+        {
+          "path": "docs\\reviews\\codex_lhs_coverage_reverify3_request_20260930\\fixed_tree_reproduction\\power_results_r3.json",
+          "sha256": "ad2023a7e7049ecb418560d7ffc9dbc767950d49975298b3df367f72c80caff2"
+        },
+        {
+          "path": "docs\\reviews\\codex_lhs_coverage_reverify3_request_20260930\\fixed_tree_reproduction\\producer.out",
+          "sha256": "19b85b09046a61fdfba1df84fdbbdf90f52775dc8272e8cd3bff13a59469a782"
+        },
+        {
+          "path": "docs\\reviews\\codex_lhs_coverage_reverify3_request_20260930\\fixed_tree_reproduction\\producer_results.json",
+          "sha256": "f055d320169fb6b4feb64e7d02bb17254d645b23fde50c1b6f6279c07b20a0c2"
+        },
+        {
+          "path": "docs\\reviews\\codex_lhs_coverage_reverify3_request_20260930\\fixed_tree_reproduction\\schema.out",
+          "sha256": "006599fe9683e5f9c47852bee43b211d5cc16f1c6d507e7963e1c10dfb2d902f"
+        },
+        {
+          "path": "docs\\reviews\\codex_lhs_coverage_reverify3_request_20260930\\fixed_tree_reproduction\\schema_results.json",
+          "sha256": "e5e578cf1405ed42d4f5a88f2f70293bf6670a750d068b77a754341325c06d08"
+        },
+        {
+          "path": "docs\\reviews\\codex_lhs_coverage_reverify3_request_20260930\\selftests_220b1426e.log",
+          "sha256": "80bb55febedf1472cfbed3e2569d3c1b603c2336f8ac6a8ce3e5e8ea324fd5a0"
+        },
+        {
+          "path": "docs\\reviews\\codex_lhs_coverage_reverify3_request_20260930\\source_manifest.json",
+          "sha256": "7e0d7d476cd2a31929424edaef92b8aa238a61fb3e06e9340041534149985eae"
+        }
+      ],
+      "declared_base": "ca0471d19a5a9d914c6a31006a001d515267f3be (= 재검증 2 의 tip · Codex 후보 10 파일과 CRLF 정규화 뒤 동일)",
+      "declared_tip": "220b1426ea39eae13f077e9f0585388f3eb61d08",
+      "actual_base": {
+        "input_zip": {
+          "path": "C:\\Users\\Administrator\\Downloads\\codex_lhs_coverage_reverify2_20260930.zip",
+          "bytes": 30334,
+          "sha256": "8761667a740c0962502c12db5605fd1c7b43d1ab1110267de1df13051275b235"
+        },
+        "submitted_checks": [
+          {
+            "path": "codex_lhs_coverage_reverify2_request_20260930\\0012-LHS-item-2-Codex-LHSC-04-R2-P2.patch",
+            "sha256": "f582bd0bb12766a1471908ea8a615879f52d94ed4d9fb79320c73d07b7c2eddf"
+          },
+          {
+            "path": "codex_lhs_coverage_reverify2_request_20260930\\0013-run_pipeline-coverage-v2-Codex-LHSC-03-R2-P2.patch",
+            "sha256": "c8dd2ddcb0fc48fa1e2bc11301ca20382a5bcc25ef02415fe75cce8f8d747539"
+          },
+          {
+            "path": "codex_lhs_coverage_reverify2_request_20260930\\source_manifest.json",
+            "sha256": "d8853eca5993de751dbd3e557e9912d6a87a943e9a4b1c91e5a2e465c3ba354b"
+          },
+          {
+            "path": "codex_lhs_coverage_reverify2_request_20260930\\_reproduction_r2_wtcov_ca0471d19.json",
+            "sha256": "43c26552498fc4994e61daea3f2ab1f253799ef31c00508c1d72fc0974c054d5"
+          },
+          {
+            "path": "codex_lhs_coverage_reverify2_request_20260930\\selftests_ca0471d19.log",
+            "sha256": "7c27a150249b08b5d9b849e1f835121b5cdf90c84290eb5555adc3b78978b958"
+          },
+          {
+            "path": "codex_lhs_coverage_reverify2_request_20260930\\README.md",
+            "sha256": "6b66395550766bcf738616cb6e5c6e8695c09e5cade49eae8e7f1bf46890b128"
+          },
+          {
+            "path": "codex_lhs_coverage_reverify2_request_20260930.md",
+            "sha256": "2848c3f6ad32f4a398ceb84ac01495a1a1ff591111a8bf55ddf9454e4ba3c6a1"
+          }
+        ],
+        "declared_base": "002cc288119f520a818fcb50a3f73ec87fb06e70",
+        "declared_tip": "ca0471d19a5a9d914c6a31006a001d515267f3be",
+        "actual_base": {
+          "snapshot": "ac484ba5cda082caffe2c3c408de86cbd760befc",
+          "base": "da4670594",
+          "prior_snapshot": "2e57dff90e7eebead7a446478f97e2c414176c28",
+          "patches": [
+            {
+              "name": "0001-LHS-item-4-_wall_side-wall_touch_fractions.patch",
+              "sha256": "34fd30b3e5183eeca5de4a2be65a4ce670d0f4d48c99244af963af85dd7f8bad",
+              "first_review_sha256": "dc61395bf06863f75facdf19eb28a4a6d0d48948a181cf3f17a37e3c1d60e418",
+              "byte_identical": false,
+              "diff_body_identical": true
+            },
+            {
+              "name": "0002-LHS-item-1.patch",
+              "sha256": "dc113c6ca23000f0ab88b451bf932f746a784ba58f40a625764f86db4513aebb",
+              "first_review_sha256": "b09c32a30cd4728af6a652b09fe2449fa238207141312f4df4c44cd5b50be10e",
+              "byte_identical": false,
+              "diff_body_identical": true
+            },
+            {
+              "name": "0003-LHS-item-2-c_cpl-22.patch",
+              "sha256": "955047fd8d89f129fa73cc82fbe05832558265ed7ee808857d6084be45b4a9c2",
+              "first_review_sha256": "5b076f3d7bcd46b72ed118a3498f1c2aec531fbabe949269a7c41e41e55df856",
+              "byte_identical": false,
+              "diff_body_identical": true
+            },
+            {
+              "name": "0004-LHS-item-3.patch",
+              "sha256": "5962dc874d487a7fbd2e1ead4fb2d7634159e53c0f6a7432decd520fa646fd03",
+              "first_review_sha256": "6a9117cb355367294c996b5f2f03a64a5f9b506636dea7528bb31840073fd0e1",
+              "byte_identical": false,
+              "diff_body_identical": true
+            },
+            {
+              "name": "0005-physics-v2-film_area_physics_v2-legacy-cap-lens.patch",
+              "sha256": "1221d9eb828413cdd53bbb4ad808aa48629b07cd084b57d8ca81d1537a1d95bd",
+              "first_review_sha256": "1743f1250c2a9b970f6f1bd768d20deca8d5df40b79a18d5a3be6e8e0e6e8f0a",
+              "byte_identical": false,
+              "diff_body_identical": true
+            },
+            {
+              "name": "0006-coverage-physics-v2-_physics_v2-v2-AM-AM-WEBAPP_-_FO.patch",
+              "sha256": "5b1ad6b392b9b38ed68e3213002b6b28f3dff03965a081a27ac26f895eb0bf92",
+              "first_review_sha256": "2f03842946e9364377d1eb68abe50e5dc1b58f833b2c7c5ff0ba94e6f6909be2",
+              "byte_identical": false,
+              "diff_body_identical": true
+            },
+            {
+              "name": "0007-run_pipeline-stop_after-coverage-stop-after-coverage.patch",
+              "sha256": "3f5e8f56169387558076fbfcf19cb0f83c39d07f7d72397ceebb071bea2320fb",
+              "first_review_sha256": "f518d02dfa2431d1d122f453e3ef405fa465a05c5fc428bd79dfaaac8ee9a426",
+              "byte_identical": false,
+              "diff_body_identical": true
+            },
+            {
+              "name": "0008-coverage-physics-v2-AM-0-0.0-ok-Codex-LHSC-01-P1-a.patch",
+              "sha256": "b648694ee8f72f3ccbd2bf62ab36565e2be30518fe3996e074571e1471f8f564"
+            },
+            {
+              "name": "0009-run_pipeline-stop_after-atoms-only-failed-coverage-v.patch",
+              "sha256": "600f973e06e62274ae0857aa8c65995b26be5bfa013bda7d47650503e9fef50e"
+            },
+            {
+              "name": "0010-LHS-item-2-AST-lens_geometry-Codex-LHSC-04-05-P2.patch",
+              "sha256": "13d14d9cdfda817560013d3ed5c56afff5628f0fdedd73fe89fd37cb5428220c"
+            },
+            {
+              "name": "0011-LHS-item-1-proxy-AM-SE-Codex-LHSC-06-P3.patch",
+              "sha256": "a92118dad6d1a8c655e386798f29da82cc0251e67b07a59e6f838b9cd193d17b"
+            }
+          ],
+          "candidate_targets": [
+            {
+              "path": "docs/area_contract_20260913.md",
+              "sha256": "b8adc273b3f2a2b53ef152aa88c2ba31a81d4cc3564ac9523bd141a30a0bf90f"
+            },
+            {
+              "path": "docs/reviews/selftest_inventory.tsv",
+              "sha256": "6059f0ec969ba3adfbe1c9a2a63bd285b3c7bea3493a631629c0ca3e38f2850f"
+            },
+            {
+              "path": "scripts/coverage_physics_vs_hertzian.py",
+              "sha256": "9fc669cdd987e5cc519fe78c4236a4507621f1f92accbff02062819a4d890614"
+            },
+            {
+              "path": "scripts/lens_geometry.py",
+              "sha256": "dead39b1d39239a218c5dadbedcbda4c9e78d0bcf60a6b86cb33e5142cf69fa0"
+            },
+            {
+              "path": "scripts/lhs_descriptor_harvest.py",
+              "sha256": "a64897af640ae10e57b1fe87bd2c027a6a7714c73ace4d78ee8b1249a88cd6ba"
+            },
+            {
+              "path": "scripts/lhs_webapp_batch.py",
+              "sha256": "6ba11f5a590ae92e58712897c1799e71dc4acc84aa9d0f3aa5956487ab2ed7ee"
+            },
+            {
+              "path": "scripts/plastic_coverage.py",
+              "sha256": "7f9be36f391ca06bbde209504d415c9f135a6f71bc469631b55321caf75b538f"
+            },
+            {
+              "path": "webapp/app.py",
+              "sha256": "2d3353f9661d2056b7199b1e0bfe472613070ea661c3801a18a4d0ea6ea79bb4"
+            },
+            {
+              "path": "webapp/test_pipeline_provenance.py",
+              "sha256": "c513808faa2ba988904443b7ab6b4cea2cd9f2203ec5b93738da74cd0a5c66b4"
+            }
+          ]
+        },
+        "candidate_targets": [
+          {
+            "path": "docs/reviews/selftest_inventory.tsv",
+            "before_sha256": "6059f0ec969ba3adfbe1c9a2a63bd285b3c7bea3493a631629c0ca3e38f2850f",
+            "sha256": "60baa67ce10ebefee38b6f05098240844b60888a8024b568f0f0fd249fc6a644"
+          },
+          {
+            "path": "scripts/lens_geometry.py",
+            "before_sha256": "dead39b1d39239a218c5dadbedcbda4c9e78d0bcf60a6b86cb33e5142cf69fa0",
+            "sha256": "627e4026dff27bce6c70ecbfff2f6258784410554883487960dfa9b3195a464b"
+          },
+          {
+            "path": "scripts/lhs_descriptor_harvest.py",
+            "before_sha256": "a64897af640ae10e57b1fe87bd2c027a6a7714c73ace4d78ee8b1249a88cd6ba",
+            "sha256": "fa6222e212d0f75cd8f0c94f73ed369ef70880d6ebebd724524f3282869e067a"
+          },
+          {
+            "path": "webapp/app.py",
+            "before_sha256": "2d3353f9661d2056b7199b1e0bfe472613070ea661c3801a18a4d0ea6ea79bb4",
+            "sha256": "40e34cc6d834c6835cb076c3eb86b7d9af863288cb2b0ff2ff56fbb54353c1e2"
+          },
+          {
+            "path": "webapp/test_pipeline_provenance.py",
+            "before_sha256": "c513808faa2ba988904443b7ab6b4cea2cd9f2203ec5b93738da74cd0a5c66b4",
+            "sha256": "2998d76e19c0379a71ee680738dfc958da2aa6fe237c4e85d90e141f3e95b8c4"
+          }
+        ],
+        "method": "Verified prior candidate hashes; git apply --check then apply in non-Git source copy only"
+      },
+      "candidate_targets": [
+        {
+          "path": "scripts/lhs_descriptor_harvest.py",
+          "before_sha256": "fa6222e212d0f75cd8f0c94f73ed369ef70880d6ebebd724524f3282869e067a",
+          "sha256": "e0b9f93b3b59d020f58369ebca01ce33b29c067df8e831735ec163a3544b40a0",
+          "lf_sha256": "d501985e915030a9a0bdf96551c3dd48e5c0613fd65e14053bd4e52c4b256909",
+          "git_blob": "d4fdf3c28728f715531ef9a01181c8b950abab35"
+        },
+        {
+          "path": "webapp/app.py",
+          "before_sha256": "40e34cc6d834c6835cb076c3eb86b7d9af863288cb2b0ff2ff56fbb54353c1e2",
+          "sha256": "b03cff955b67f8f69ac52113b18f426e8e01b1d1f29b9f1835d8fa66ec3149bf",
+          "lf_sha256": "9fac9a9f5c622c17b71341534dd25564bdb9603a978f92479374d23a44a0df32",
+          "git_blob": "3885e17dc870e1c7f58b04ec647351cd704f1cf9"
+        },
+        {
+          "path": "webapp/test_pipeline_provenance.py",
+          "before_sha256": "2998d76e19c0379a71ee680738dfc958da2aa6fe237c4e85d90e141f3e95b8c4",
+          "sha256": "5b101e28c0782911415a4e9a59eb42f2b45a5f6c734fe9490cf82d05a08423c1",
+          "lf_sha256": "932c3790c2cfbf25af33a4d5ff969cec82d5ae0bd23a1e4fb4681e6b897a3053",
+          "git_blob": "3666b66cdedbd365cb9d10e4abbaeec152df3f0e"
+        }
+      ],
+      "method": "Verified prior candidate hashes; git apply --check then apply in isolated non-Git copy; all 3 LF target bytes/SHA256/Git blobs match"
+    },
+    "candidate_targets": [
+      {
+        "path": "scripts/lhs_descriptor_harvest.py",
+        "before_sha256": "e0b9f93b3b59d020f58369ebca01ce33b29c067df8e831735ec163a3544b40a0",
+        "sha256": "6cc039d12351ee893da2e3264ea13cb289bac41db71823df2c4309f6ab9ae617",
+        "lf_sha256": "9aca55190a6d6381aaf3580f87240d48de04d628909fa318f7093aa220911ec5",
+        "git_blob": "585fd17497e0211ec47e195d034d7e8e523ef961"
+      },
+      {
+        "path": "webapp/app.py",
+        "before_sha256": "b03cff955b67f8f69ac52113b18f426e8e01b1d1f29b9f1835d8fa66ec3149bf",
+        "sha256": "e90ea682e9d50ffb5bf6a0ae9ac60fab5b5205271d5b5606669ea83fa32533aa",
+        "lf_sha256": "3e9154e99e42f29e43284777c8447b5e7e0577c7ed7716a7f3eb8fafc9db8efe",
+        "git_blob": "8c0658ce1f4f41e5fbeb15ccc450c56a6e4ca94d"
+      },
+      {
+        "path": "webapp/test_pipeline_provenance.py",
+        "before_sha256": "5b101e28c0782911415a4e9a59eb42f2b45a5f6c734fe9490cf82d05a08423c1",
+        "sha256": "506eec5c81f771b9d4e199cc40f6390ad2448ffe4f02056fdaed9fcf4483f37a",
+        "lf_sha256": "837a8ece5ecc74f058f3bc59a3827caa27c93dcd3e39167041afdb4b324a3a05",
+        "git_blob": "7fc6f750062dabb518a4af5c79e3159033029d89"
+      }
+    ],
+    "method": "Verified prior candidate hashes; git apply --check then apply in isolated non-Git copy; all 3 LF target bytes/SHA256/Git blobs match"
+  },
+  "candidate_targets": [
+    {
+      "path": "scripts/lhs_descriptor_harvest.py",
+      "before_sha256": "6cc039d12351ee893da2e3264ea13cb289bac41db71823df2c4309f6ab9ae617",
+      "sha256": "abd3b09354188102aec8ba58b53f8e0f9529f7d71ed6e63ee31bf61d907010dc",
+      "lf_sha256": "89479ff7e68f824681a183fbbbe6710f4fa1afff07a3d5d6dd83db5c60ce5e65",
+      "git_blob": "ce0fdf141529b8d3dfe174efbcfba5ca704c303a"
+    },
+    {
+      "path": "webapp/app.py",
+      "before_sha256": "e90ea682e9d50ffb5bf6a0ae9ac60fab5b5205271d5b5606669ea83fa32533aa",
+      "sha256": "f7801a314d8e4edfc1de63f318e5b304d16bd1367ea1b54d33dc01bb455a4cf0",
+      "lf_sha256": "fa4b76d78cb8e75204351a9274ae52cfd941cf10ae124680e99ecf4fd58ffffd",
+      "git_blob": "26a13ca8aa2d91b4886011bbee17de5b644e5ede"
+    },
+    {
+      "path": "webapp/test_pipeline_provenance.py",
+      "before_sha256": "506eec5c81f771b9d4e199cc40f6390ad2448ffe4f02056fdaed9fcf4483f37a",
+      "sha256": "852b1980e74f4be0fb2f1e57221e8876bb0e062dc64c73bd5d5da98174cba59a",
+      "lf_sha256": "37fe73f8fcb3ae8244309e0177ce86fc8df03a6faaa447c83313a96ada55adc4",
+      "git_blob": "5fbaee0faa1ec335659c48d0ff2b2c7ff8d08f62"
+    }
+  ],
+  "method": "Verified prior candidate hashes; git apply --check then apply in isolated non-Git copy; all 3 LF target bytes/SHA256/Git blobs match"
+}

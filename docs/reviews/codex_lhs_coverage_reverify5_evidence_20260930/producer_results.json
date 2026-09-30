@@ -1,0 +1,657 @@
+{
+  "normal": {
+    "radii_sim": [
+      0.001,
+      0.001
+    ],
+    "center_distance_sim": 0.0019,
+    "producer_expression_area": 3.0630528372500486e-07,
+    "producer_delta": 0.00010000000000000005,
+    "tokens": [
+      0.001,
+      0.001,
+      0.0001,
+      3.06305e-07
+    ],
+    "local_reconstruction": 3.0630528372500465e-07,
+    "cap_exact_equal_radius": 3.1415926535897933e-06,
+    "enclosure": {
+      "lo": 3.063022206798035e-07,
+      "hi": 3.063083467855215e-07,
+      "lb": false,
+      "how": "corner"
+    },
+    "diagnostic": {
+      "role": "진단 기록 — 거부하지 않는다 · 피복률 값에 쓰지 않는다 (item 2)",
+      "reference": "lens_geometry.intersection_disc_area(r1, r2, delta = c_cpl[23]) — 두 구의 교차 원판 (L1-04 A_LIGG)",
+      "compared_to": "c_cpl[22]",
+      "delta_col": "c_cpl[23]",
+      "flag_col": "c_cpl[9]",
+      "tolerance_rule": "행마다 덤프 토큰 구간 [A_dump ± h(A_dump)] 이 허용 구간 [lo − E, hi + E] 와 만나지 않으면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  [lo, hi] = 반올림 상자 {r1 ± h(r1)} × {r2 ± h(r2)} × {δ ± (h(δ) + Δδ)} (Δδ = eps·(3S + |δ|) = 생산자 δ 형성 오차 — 상자가 정확한 δ 를 담게) 위 교차 원판 A 의 포괄 구간 (LHSC-04 R2): A = lens_geometry.intersection_disc_area 와 같은 식의 인수형 π·δ(2r1−δ)(2r2−δ)(2r1+2r2−δ)/(4d²) (d = r1 + r2 − δ · 상쇄 없음) · ① 상자가 δ ≤ 0 · d ≤ 0 · 한 구가 다른 구 안 (2r_i − δ ≤ 0) 에 통째로 있으면 A ≡ 0 · ② 네 인수가 상자 전체에서 양수이고 ln A 의 편도함수 세 구간 (인수 역수의 합) 이 0 을 포함하지 않으면 두 꼭짓점 값이 정확한 최소 · 최대 (각 인수의 형성 오차만큼 상대 여유) · ③ 아니면 인수 구간의 곱 ∩ 덧셈형 항별 구간 π/4·[2(r1²+r2²) − d² − (r1²−r2²)²/d²] ∩ 기하 상한 π·min(r1, r2)² · ④ 인수가 상자 안에서 부호를 바꾸면 (포함 경계 · d → 0 · δ → 0 이 상자 안) 하한 0 (boundary 가지) · 상한 = 덧셈형 항별 상한 ∩ 기하 상한.  [lo, hi] 에는 기준 평가 여유 16·eps·π·max(r1, r2)² (부동소수 덧셈형 원판으로 대조할 때의 상쇄 오차 · 생산자 여유 아님) 만 바깥으로 더한다.  E = 생산자 (PRODUCER_AREA_MODEL) 산술의 상자 절대 오차 상한 (LHSC-04 R3a — 옛 고정 \"생산자 바닥\" 여유는 없앴다): d_min ≤ 0 이거나 지원 수치영역 (중간 곱이 정상 binary64 범위 — PRODUCER_DOMAIN) 밖이면 E 가 서지 않아 **미인증** (n_producer_uncertified · 시험 · 초과에서 뺀다) · 음수 A_dump 는 정의역 밖 생산값 (n_area_dump_negative · 초과 아님 · 시험에서 뺀다).  h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 (E = 십진 지수 · 끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  기하: A 는 δ 에 따라 0 에서 d² = |r1² − r2²| 의 극대 π·min(r1, r2)² 까지 올랐다가 포함 경계 d = |r1 − r2| 에서 다시 0 으로 **연속**해서 내려간다 (동일 반경 d → 0 퇴화만 식의 극한 π r² 과 코드의 d ≤ 0 → 0 이 어긋난다).  보고: n_tested (이 산술 모델로 비교한 인증 · 비음수 행 — 정밀 비교 통과 · 설치 빌드 인증과 동의어가 아니다) · n_beyond_tol · n_producer_uncertified · n_area_dump_negative · n_area_dump_zero · n_lower_bound_zero (실제 lo == 0 — 너무 작은 면적은 못 잡는다) · n_boundary_branch (④ 가지 수) · n_wide_enclosure ((hi − lo) > AREA_CHECK_WIDE_REL·lo · lo > 0 · 기술량) · n_detect_1pct = 검출 보증 (LHSC-04 R3b): 참 면적이 [lo, hi] 어디에 있어도 ±1 % 치환의 토큰 구간이 허용 구간과 분리 — 1.01·(lo − E) − 2h₊ > hi + E ∧ 0.99·(hi + E) + 2h₋ < lo − E (h± = 그 크기 범위의 출력 반올림 반폭 최대 · 인증 행 · lo − E > 0) — A_dump 와 무관 (치환해도 분류가 안 바뀐다).",
+      "sigfig_assumed": 6,
+      "n_rows": 1,
+      "producer_model": {
+        "formula": "A = -π/4 · (r−r1−r2)(r+r1−r2)(r−r1+r2)(r+r1+r2) / rsq,  r = sqrt(rsq) (rsq = dx²+dy²+dz²),  δ = r1 + r2 − r  (binary64 · 음수 · 0 을 자르지 않는다 · C++ 괄호 · 좌결합 순서 그대로 = producer_area_binary64)",
+        "source": "LIGGGHTS-PUBLIC master src/compute_pair_gran_local.cpp add_pair (Codex 열람 2026-09-30) — 설치 빌드와 같은 소스인지는 pin 파일 (docs/data/liggghts_add_pair_pin.json · 환경변수 LHS_PRODUCER_PIN_FILE) 의 sha256 · formula_confirmed 로만 인증",
+        "error_bound": "상자 (토큰 반올림 상자 + 생산자 δ 형성 오차 Δδ) 전체에서 |A_p − A_e| ≤ E = (π/4)/d_min² · [Π_k(m_k + Δ_k)·(1 + 13·eps) − Π_k m_k]  — m_k = 인수 (δ, 2r1−δ, 2r2−δ, 2r1+2r2−δ) 의 상자 최대 절댓값 · Δ_k = eps·(3·S + m_k) (sqrt 뒤 두 뺄셈의 인수 형성 절대오차 · S = r + r1 + r2 = 2r1+2r2−δ 의 상자 최대) · 13·eps ≥ 곱 3 · rsq 5 · 나눗셈 1 · π/4 2 (단위 반올림 u = eps/2 로 세면 11u) · eps = 2^-52 · d_min ≤ 0 이면 E 가 서지 않아 미인증 (n_producer_uncertified).  실증 = --selftest ㉑‴ (공개 식 binary64 4000 점 · 여섯 영역 · Decimal 60 자리) — 설치 빌드의 실행이 아니다.  13·eps 는 곱 · π/4 · 나눗셈 · rsq 반올림에 분모의 1/(1−γ₅) 팽창 (γ₅ ≈ 5u) 을 1 차로 덮는 여유다 (1/rsq ≤ 1/d_min² 를 반올림된 rsq 의 독립 부등식으로 쓰지 않는다).  지원 수치영역 = 중간 연산이 정상 binary64 (네 인수 곱 1e-280–1e280 · d_min 1e-140–1e140 · 반올림 round-to-nearest) — 밖이면 미인증 (LHSC-04-R4-DOMAIN · 1e-100 반경 언더플로 반례).  구형 입자 경로만 (superquadric 은 다른 가지).",
+        "source_claim_present": false,
+        "source_claim": null,
+        "source_claim_reason": "pin 파일 없음 또는 못 읽음 (FileNotFoundError)",
+        "source_hash_verified_locally": null,
+        "source_verify_note": "",
+        "installed_build_pinned": false,
+        "installed_build_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+        "pin_file": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs_coverage_reverify5_20260930\\candidate\\docs\\data\\liggghts_add_pair_pin.json"
+      },
+      "status": "OK",
+      "n_compared": 1,
+      "n_orphan_rows_skipped": 0,
+      "n_nonfinite_skipped": 0,
+      "n_values_beyond_6sig": {
+        "area": 0,
+        "delta": 0,
+        "radius": 0
+      },
+      "all": {
+        "n_rows": 1,
+        "n_tested": 1,
+        "n_area_dump_zero": 0,
+        "n_beyond_tol": 0,
+        "n_producer_uncertified": 0,
+        "n_area_dump_negative": 0,
+        "n_lower_bound_zero": 0,
+        "n_boundary_branch": 0,
+        "n_wide_enclosure": 0,
+        "n_detect_1pct": 1,
+        "rel_diff_max": 9.26282641932197e-07,
+        "rel_diff_median": 9.26282641932197e-07,
+        "enclosure_rel_width_median": 2.0000200143552778e-05,
+        "producer_bound_rel_median": 3.315617592727079e-14,
+        "producer_bound_rel_max": 3.315617592727079e-14,
+        "excess_rel_max": null
+      },
+      "by_periodic_flag": {
+        "0": {
+          "n_rows": 1,
+          "n_tested": 1,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_producer_uncertified": 0,
+          "n_area_dump_negative": 0,
+          "n_lower_bound_zero": 0,
+          "n_boundary_branch": 0,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 1,
+          "rel_diff_max": 9.26282641932197e-07,
+          "rel_diff_median": 9.26282641932197e-07,
+          "enclosure_rel_width_median": 2.0000200143552778e-05,
+          "producer_bound_rel_median": 3.315617592727079e-14,
+          "producer_bound_rel_max": 3.315617592727079e-14,
+          "excess_rel_max": null
+        },
+        "1": {
+          "n_rows": 0,
+          "n_tested": 0,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_producer_uncertified": 0,
+          "n_area_dump_negative": 0,
+          "n_lower_bound_zero": 0,
+          "n_boundary_branch": 0,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "producer_bound_rel_median": null,
+          "producer_bound_rel_max": null,
+          "excess_rel_max": null
+        }
+      },
+      "by_pair_kind": {
+        "AM-SE": {
+          "n_rows": 1,
+          "n_tested": 1,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_producer_uncertified": 0,
+          "n_area_dump_negative": 0,
+          "n_lower_bound_zero": 0,
+          "n_boundary_branch": 0,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 1,
+          "rel_diff_max": 9.26282641932197e-07,
+          "rel_diff_median": 9.26282641932197e-07,
+          "enclosure_rel_width_median": 2.0000200143552778e-05,
+          "producer_bound_rel_median": 3.315617592727079e-14,
+          "producer_bound_rel_max": 3.315617592727079e-14,
+          "excess_rel_max": null
+        }
+      }
+    }
+  },
+  "equal_deep_1e-12": {
+    "radii_sim": [
+      0.001,
+      0.001
+    ],
+    "center_distance_sim": 1e-15,
+    "producer_expression_area": 3.142020451916476e-06,
+    "producer_delta": 0.001999999999999,
+    "tokens": [
+      0.001,
+      0.001,
+      0.002,
+      3.14202e-06
+    ],
+    "local_reconstruction": 3.141592653589793e-06,
+    "cap_exact_equal_radius": 3.1415926535897933e-06,
+    "enclosure": {
+      "lo": 0.0,
+      "hi": 3.1416240695948883e-06,
+      "lb": true,
+      "how": "boundary"
+    },
+    "diagnostic": {
+      "role": "진단 기록 — 거부하지 않는다 · 피복률 값에 쓰지 않는다 (item 2)",
+      "reference": "lens_geometry.intersection_disc_area(r1, r2, delta = c_cpl[23]) — 두 구의 교차 원판 (L1-04 A_LIGG)",
+      "compared_to": "c_cpl[22]",
+      "delta_col": "c_cpl[23]",
+      "flag_col": "c_cpl[9]",
+      "tolerance_rule": "행마다 덤프 토큰 구간 [A_dump ± h(A_dump)] 이 허용 구간 [lo − E, hi + E] 와 만나지 않으면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  [lo, hi] = 반올림 상자 {r1 ± h(r1)} × {r2 ± h(r2)} × {δ ± (h(δ) + Δδ)} (Δδ = eps·(3S + |δ|) = 생산자 δ 형성 오차 — 상자가 정확한 δ 를 담게) 위 교차 원판 A 의 포괄 구간 (LHSC-04 R2): A = lens_geometry.intersection_disc_area 와 같은 식의 인수형 π·δ(2r1−δ)(2r2−δ)(2r1+2r2−δ)/(4d²) (d = r1 + r2 − δ · 상쇄 없음) · ① 상자가 δ ≤ 0 · d ≤ 0 · 한 구가 다른 구 안 (2r_i − δ ≤ 0) 에 통째로 있으면 A ≡ 0 · ② 네 인수가 상자 전체에서 양수이고 ln A 의 편도함수 세 구간 (인수 역수의 합) 이 0 을 포함하지 않으면 두 꼭짓점 값이 정확한 최소 · 최대 (각 인수의 형성 오차만큼 상대 여유) · ③ 아니면 인수 구간의 곱 ∩ 덧셈형 항별 구간 π/4·[2(r1²+r2²) − d² − (r1²−r2²)²/d²] ∩ 기하 상한 π·min(r1, r2)² · ④ 인수가 상자 안에서 부호를 바꾸면 (포함 경계 · d → 0 · δ → 0 이 상자 안) 하한 0 (boundary 가지) · 상한 = 덧셈형 항별 상한 ∩ 기하 상한.  [lo, hi] 에는 기준 평가 여유 16·eps·π·max(r1, r2)² (부동소수 덧셈형 원판으로 대조할 때의 상쇄 오차 · 생산자 여유 아님) 만 바깥으로 더한다.  E = 생산자 (PRODUCER_AREA_MODEL) 산술의 상자 절대 오차 상한 (LHSC-04 R3a — 옛 고정 \"생산자 바닥\" 여유는 없앴다): d_min ≤ 0 이거나 지원 수치영역 (중간 곱이 정상 binary64 범위 — PRODUCER_DOMAIN) 밖이면 E 가 서지 않아 **미인증** (n_producer_uncertified · 시험 · 초과에서 뺀다) · 음수 A_dump 는 정의역 밖 생산값 (n_area_dump_negative · 초과 아님 · 시험에서 뺀다).  h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 (E = 십진 지수 · 끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  기하: A 는 δ 에 따라 0 에서 d² = |r1² − r2²| 의 극대 π·min(r1, r2)² 까지 올랐다가 포함 경계 d = |r1 − r2| 에서 다시 0 으로 **연속**해서 내려간다 (동일 반경 d → 0 퇴화만 식의 극한 π r² 과 코드의 d ≤ 0 → 0 이 어긋난다).  보고: n_tested (이 산술 모델로 비교한 인증 · 비음수 행 — 정밀 비교 통과 · 설치 빌드 인증과 동의어가 아니다) · n_beyond_tol · n_producer_uncertified · n_area_dump_negative · n_area_dump_zero · n_lower_bound_zero (실제 lo == 0 — 너무 작은 면적은 못 잡는다) · n_boundary_branch (④ 가지 수) · n_wide_enclosure ((hi − lo) > AREA_CHECK_WIDE_REL·lo · lo > 0 · 기술량) · n_detect_1pct = 검출 보증 (LHSC-04 R3b): 참 면적이 [lo, hi] 어디에 있어도 ±1 % 치환의 토큰 구간이 허용 구간과 분리 — 1.01·(lo − E) − 2h₊ > hi + E ∧ 0.99·(hi + E) + 2h₋ < lo − E (h± = 그 크기 범위의 출력 반올림 반폭 최대 · 인증 행 · lo − E > 0) — A_dump 와 무관 (치환해도 분류가 안 바뀐다).",
+      "sigfig_assumed": 6,
+      "n_rows": 1,
+      "producer_model": {
+        "formula": "A = -π/4 · (r−r1−r2)(r+r1−r2)(r−r1+r2)(r+r1+r2) / rsq,  r = sqrt(rsq) (rsq = dx²+dy²+dz²),  δ = r1 + r2 − r  (binary64 · 음수 · 0 을 자르지 않는다 · C++ 괄호 · 좌결합 순서 그대로 = producer_area_binary64)",
+        "source": "LIGGGHTS-PUBLIC master src/compute_pair_gran_local.cpp add_pair (Codex 열람 2026-09-30) — 설치 빌드와 같은 소스인지는 pin 파일 (docs/data/liggghts_add_pair_pin.json · 환경변수 LHS_PRODUCER_PIN_FILE) 의 sha256 · formula_confirmed 로만 인증",
+        "error_bound": "상자 (토큰 반올림 상자 + 생산자 δ 형성 오차 Δδ) 전체에서 |A_p − A_e| ≤ E = (π/4)/d_min² · [Π_k(m_k + Δ_k)·(1 + 13·eps) − Π_k m_k]  — m_k = 인수 (δ, 2r1−δ, 2r2−δ, 2r1+2r2−δ) 의 상자 최대 절댓값 · Δ_k = eps·(3·S + m_k) (sqrt 뒤 두 뺄셈의 인수 형성 절대오차 · S = r + r1 + r2 = 2r1+2r2−δ 의 상자 최대) · 13·eps ≥ 곱 3 · rsq 5 · 나눗셈 1 · π/4 2 (단위 반올림 u = eps/2 로 세면 11u) · eps = 2^-52 · d_min ≤ 0 이면 E 가 서지 않아 미인증 (n_producer_uncertified).  실증 = --selftest ㉑‴ (공개 식 binary64 4000 점 · 여섯 영역 · Decimal 60 자리) — 설치 빌드의 실행이 아니다.  13·eps 는 곱 · π/4 · 나눗셈 · rsq 반올림에 분모의 1/(1−γ₅) 팽창 (γ₅ ≈ 5u) 을 1 차로 덮는 여유다 (1/rsq ≤ 1/d_min² 를 반올림된 rsq 의 독립 부등식으로 쓰지 않는다).  지원 수치영역 = 중간 연산이 정상 binary64 (네 인수 곱 1e-280–1e280 · d_min 1e-140–1e140 · 반올림 round-to-nearest) — 밖이면 미인증 (LHSC-04-R4-DOMAIN · 1e-100 반경 언더플로 반례).  구형 입자 경로만 (superquadric 은 다른 가지).",
+        "source_claim_present": false,
+        "source_claim": null,
+        "source_claim_reason": "pin 파일 없음 또는 못 읽음 (FileNotFoundError)",
+        "source_hash_verified_locally": null,
+        "source_verify_note": "",
+        "installed_build_pinned": false,
+        "installed_build_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+        "pin_file": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs_coverage_reverify5_20260930\\candidate\\docs\\data\\liggghts_add_pair_pin.json"
+      },
+      "status": "OK",
+      "n_compared": 1,
+      "n_orphan_rows_skipped": 0,
+      "n_nonfinite_skipped": 0,
+      "n_values_beyond_6sig": {
+        "area": 0,
+        "delta": 0,
+        "radius": 0
+      },
+      "all": {
+        "n_rows": 1,
+        "n_tested": 0,
+        "n_area_dump_zero": 0,
+        "n_beyond_tol": 0,
+        "n_producer_uncertified": 1,
+        "n_area_dump_negative": 0,
+        "n_lower_bound_zero": 1,
+        "n_boundary_branch": 1,
+        "n_wide_enclosure": 0,
+        "n_detect_1pct": 0,
+        "rel_diff_max": 1.0,
+        "rel_diff_median": 1.0,
+        "enclosure_rel_width_median": null,
+        "producer_bound_rel_median": null,
+        "producer_bound_rel_max": null,
+        "excess_rel_max": null
+      },
+      "by_periodic_flag": {
+        "0": {
+          "n_rows": 1,
+          "n_tested": 0,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_producer_uncertified": 1,
+          "n_area_dump_negative": 0,
+          "n_lower_bound_zero": 1,
+          "n_boundary_branch": 1,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 0,
+          "rel_diff_max": 1.0,
+          "rel_diff_median": 1.0,
+          "enclosure_rel_width_median": null,
+          "producer_bound_rel_median": null,
+          "producer_bound_rel_max": null,
+          "excess_rel_max": null
+        },
+        "1": {
+          "n_rows": 0,
+          "n_tested": 0,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_producer_uncertified": 0,
+          "n_area_dump_negative": 0,
+          "n_lower_bound_zero": 0,
+          "n_boundary_branch": 0,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "producer_bound_rel_median": null,
+          "producer_bound_rel_max": null,
+          "excess_rel_max": null
+        }
+      },
+      "by_pair_kind": {
+        "AM-SE": {
+          "n_rows": 1,
+          "n_tested": 0,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_producer_uncertified": 1,
+          "n_area_dump_negative": 0,
+          "n_lower_bound_zero": 1,
+          "n_boundary_branch": 1,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 0,
+          "rel_diff_max": 1.0,
+          "rel_diff_median": 1.0,
+          "enclosure_rel_width_median": null,
+          "producer_bound_rel_median": null,
+          "producer_bound_rel_max": null,
+          "excess_rel_max": null
+        }
+      }
+    }
+  },
+  "equal_deep_1e-13": {
+    "radii_sim": [
+      0.001,
+      0.001
+    ],
+    "center_distance_sim": 1e-16,
+    "producer_expression_area": 3.13929595999868e-06,
+    "producer_delta": 0.0019999999999999,
+    "tokens": [
+      0.001,
+      0.001,
+      0.002,
+      3.1393e-06
+    ],
+    "local_reconstruction": 3.1415926535897938e-06,
+    "cap_exact_equal_radius": 3.1415926535897933e-06,
+    "enclosure": {
+      "lo": 0.0,
+      "hi": 3.1416240695948883e-06,
+      "lb": true,
+      "how": "boundary"
+    },
+    "diagnostic": {
+      "role": "진단 기록 — 거부하지 않는다 · 피복률 값에 쓰지 않는다 (item 2)",
+      "reference": "lens_geometry.intersection_disc_area(r1, r2, delta = c_cpl[23]) — 두 구의 교차 원판 (L1-04 A_LIGG)",
+      "compared_to": "c_cpl[22]",
+      "delta_col": "c_cpl[23]",
+      "flag_col": "c_cpl[9]",
+      "tolerance_rule": "행마다 덤프 토큰 구간 [A_dump ± h(A_dump)] 이 허용 구간 [lo − E, hi + E] 와 만나지 않으면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  [lo, hi] = 반올림 상자 {r1 ± h(r1)} × {r2 ± h(r2)} × {δ ± (h(δ) + Δδ)} (Δδ = eps·(3S + |δ|) = 생산자 δ 형성 오차 — 상자가 정확한 δ 를 담게) 위 교차 원판 A 의 포괄 구간 (LHSC-04 R2): A = lens_geometry.intersection_disc_area 와 같은 식의 인수형 π·δ(2r1−δ)(2r2−δ)(2r1+2r2−δ)/(4d²) (d = r1 + r2 − δ · 상쇄 없음) · ① 상자가 δ ≤ 0 · d ≤ 0 · 한 구가 다른 구 안 (2r_i − δ ≤ 0) 에 통째로 있으면 A ≡ 0 · ② 네 인수가 상자 전체에서 양수이고 ln A 의 편도함수 세 구간 (인수 역수의 합) 이 0 을 포함하지 않으면 두 꼭짓점 값이 정확한 최소 · 최대 (각 인수의 형성 오차만큼 상대 여유) · ③ 아니면 인수 구간의 곱 ∩ 덧셈형 항별 구간 π/4·[2(r1²+r2²) − d² − (r1²−r2²)²/d²] ∩ 기하 상한 π·min(r1, r2)² · ④ 인수가 상자 안에서 부호를 바꾸면 (포함 경계 · d → 0 · δ → 0 이 상자 안) 하한 0 (boundary 가지) · 상한 = 덧셈형 항별 상한 ∩ 기하 상한.  [lo, hi] 에는 기준 평가 여유 16·eps·π·max(r1, r2)² (부동소수 덧셈형 원판으로 대조할 때의 상쇄 오차 · 생산자 여유 아님) 만 바깥으로 더한다.  E = 생산자 (PRODUCER_AREA_MODEL) 산술의 상자 절대 오차 상한 (LHSC-04 R3a — 옛 고정 \"생산자 바닥\" 여유는 없앴다): d_min ≤ 0 이거나 지원 수치영역 (중간 곱이 정상 binary64 범위 — PRODUCER_DOMAIN) 밖이면 E 가 서지 않아 **미인증** (n_producer_uncertified · 시험 · 초과에서 뺀다) · 음수 A_dump 는 정의역 밖 생산값 (n_area_dump_negative · 초과 아님 · 시험에서 뺀다).  h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 (E = 십진 지수 · 끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  기하: A 는 δ 에 따라 0 에서 d² = |r1² − r2²| 의 극대 π·min(r1, r2)² 까지 올랐다가 포함 경계 d = |r1 − r2| 에서 다시 0 으로 **연속**해서 내려간다 (동일 반경 d → 0 퇴화만 식의 극한 π r² 과 코드의 d ≤ 0 → 0 이 어긋난다).  보고: n_tested (이 산술 모델로 비교한 인증 · 비음수 행 — 정밀 비교 통과 · 설치 빌드 인증과 동의어가 아니다) · n_beyond_tol · n_producer_uncertified · n_area_dump_negative · n_area_dump_zero · n_lower_bound_zero (실제 lo == 0 — 너무 작은 면적은 못 잡는다) · n_boundary_branch (④ 가지 수) · n_wide_enclosure ((hi − lo) > AREA_CHECK_WIDE_REL·lo · lo > 0 · 기술량) · n_detect_1pct = 검출 보증 (LHSC-04 R3b): 참 면적이 [lo, hi] 어디에 있어도 ±1 % 치환의 토큰 구간이 허용 구간과 분리 — 1.01·(lo − E) − 2h₊ > hi + E ∧ 0.99·(hi + E) + 2h₋ < lo − E (h± = 그 크기 범위의 출력 반올림 반폭 최대 · 인증 행 · lo − E > 0) — A_dump 와 무관 (치환해도 분류가 안 바뀐다).",
+      "sigfig_assumed": 6,
+      "n_rows": 1,
+      "producer_model": {
+        "formula": "A = -π/4 · (r−r1−r2)(r+r1−r2)(r−r1+r2)(r+r1+r2) / rsq,  r = sqrt(rsq) (rsq = dx²+dy²+dz²),  δ = r1 + r2 − r  (binary64 · 음수 · 0 을 자르지 않는다 · C++ 괄호 · 좌결합 순서 그대로 = producer_area_binary64)",
+        "source": "LIGGGHTS-PUBLIC master src/compute_pair_gran_local.cpp add_pair (Codex 열람 2026-09-30) — 설치 빌드와 같은 소스인지는 pin 파일 (docs/data/liggghts_add_pair_pin.json · 환경변수 LHS_PRODUCER_PIN_FILE) 의 sha256 · formula_confirmed 로만 인증",
+        "error_bound": "상자 (토큰 반올림 상자 + 생산자 δ 형성 오차 Δδ) 전체에서 |A_p − A_e| ≤ E = (π/4)/d_min² · [Π_k(m_k + Δ_k)·(1 + 13·eps) − Π_k m_k]  — m_k = 인수 (δ, 2r1−δ, 2r2−δ, 2r1+2r2−δ) 의 상자 최대 절댓값 · Δ_k = eps·(3·S + m_k) (sqrt 뒤 두 뺄셈의 인수 형성 절대오차 · S = r + r1 + r2 = 2r1+2r2−δ 의 상자 최대) · 13·eps ≥ 곱 3 · rsq 5 · 나눗셈 1 · π/4 2 (단위 반올림 u = eps/2 로 세면 11u) · eps = 2^-52 · d_min ≤ 0 이면 E 가 서지 않아 미인증 (n_producer_uncertified).  실증 = --selftest ㉑‴ (공개 식 binary64 4000 점 · 여섯 영역 · Decimal 60 자리) — 설치 빌드의 실행이 아니다.  13·eps 는 곱 · π/4 · 나눗셈 · rsq 반올림에 분모의 1/(1−γ₅) 팽창 (γ₅ ≈ 5u) 을 1 차로 덮는 여유다 (1/rsq ≤ 1/d_min² 를 반올림된 rsq 의 독립 부등식으로 쓰지 않는다).  지원 수치영역 = 중간 연산이 정상 binary64 (네 인수 곱 1e-280–1e280 · d_min 1e-140–1e140 · 반올림 round-to-nearest) — 밖이면 미인증 (LHSC-04-R4-DOMAIN · 1e-100 반경 언더플로 반례).  구형 입자 경로만 (superquadric 은 다른 가지).",
+        "source_claim_present": false,
+        "source_claim": null,
+        "source_claim_reason": "pin 파일 없음 또는 못 읽음 (FileNotFoundError)",
+        "source_hash_verified_locally": null,
+        "source_verify_note": "",
+        "installed_build_pinned": false,
+        "installed_build_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+        "pin_file": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs_coverage_reverify5_20260930\\candidate\\docs\\data\\liggghts_add_pair_pin.json"
+      },
+      "status": "OK",
+      "n_compared": 1,
+      "n_orphan_rows_skipped": 0,
+      "n_nonfinite_skipped": 0,
+      "n_values_beyond_6sig": {
+        "area": 0,
+        "delta": 0,
+        "radius": 0
+      },
+      "all": {
+        "n_rows": 1,
+        "n_tested": 0,
+        "n_area_dump_zero": 0,
+        "n_beyond_tol": 0,
+        "n_producer_uncertified": 1,
+        "n_area_dump_negative": 0,
+        "n_lower_bound_zero": 1,
+        "n_boundary_branch": 1,
+        "n_wide_enclosure": 0,
+        "n_detect_1pct": 0,
+        "rel_diff_max": 1.0,
+        "rel_diff_median": 1.0,
+        "enclosure_rel_width_median": null,
+        "producer_bound_rel_median": null,
+        "producer_bound_rel_max": null,
+        "excess_rel_max": null
+      },
+      "by_periodic_flag": {
+        "0": {
+          "n_rows": 1,
+          "n_tested": 0,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_producer_uncertified": 1,
+          "n_area_dump_negative": 0,
+          "n_lower_bound_zero": 1,
+          "n_boundary_branch": 1,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 0,
+          "rel_diff_max": 1.0,
+          "rel_diff_median": 1.0,
+          "enclosure_rel_width_median": null,
+          "producer_bound_rel_median": null,
+          "producer_bound_rel_max": null,
+          "excess_rel_max": null
+        },
+        "1": {
+          "n_rows": 0,
+          "n_tested": 0,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_producer_uncertified": 0,
+          "n_area_dump_negative": 0,
+          "n_lower_bound_zero": 0,
+          "n_boundary_branch": 0,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "producer_bound_rel_median": null,
+          "producer_bound_rel_max": null,
+          "excess_rel_max": null
+        }
+      },
+      "by_pair_kind": {
+        "AM-SE": {
+          "n_rows": 1,
+          "n_tested": 0,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_producer_uncertified": 1,
+          "n_area_dump_negative": 0,
+          "n_lower_bound_zero": 1,
+          "n_boundary_branch": 1,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 0,
+          "rel_diff_max": 1.0,
+          "rel_diff_median": 1.0,
+          "enclosure_rel_width_median": null,
+          "producer_bound_rel_median": null,
+          "producer_bound_rel_max": null,
+          "excess_rel_max": null
+        }
+      }
+    }
+  },
+  "contained": {
+    "radii_sim": [
+      0.002,
+      0.001
+    ],
+    "center_distance_sim": 0.0009,
+    "producer_expression_area": -1.5088371383490986e-06,
+    "producer_delta": 0.0021000000000000003,
+    "tokens": [
+      0.002,
+      0.001,
+      0.0021,
+      -1.50884e-06
+    ],
+    "local_reconstruction": 0.0,
+    "cap_exact_equal_radius": null,
+    "enclosure": {
+      "lo": 0.0,
+      "hi": 4.464493999837347e-20,
+      "lb": false,
+      "how": "zero"
+    },
+    "diagnostic": {
+      "role": "진단 기록 — 거부하지 않는다 · 피복률 값에 쓰지 않는다 (item 2)",
+      "reference": "lens_geometry.intersection_disc_area(r1, r2, delta = c_cpl[23]) — 두 구의 교차 원판 (L1-04 A_LIGG)",
+      "compared_to": "c_cpl[22]",
+      "delta_col": "c_cpl[23]",
+      "flag_col": "c_cpl[9]",
+      "tolerance_rule": "행마다 덤프 토큰 구간 [A_dump ± h(A_dump)] 이 허용 구간 [lo − E, hi + E] 와 만나지 않으면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  [lo, hi] = 반올림 상자 {r1 ± h(r1)} × {r2 ± h(r2)} × {δ ± (h(δ) + Δδ)} (Δδ = eps·(3S + |δ|) = 생산자 δ 형성 오차 — 상자가 정확한 δ 를 담게) 위 교차 원판 A 의 포괄 구간 (LHSC-04 R2): A = lens_geometry.intersection_disc_area 와 같은 식의 인수형 π·δ(2r1−δ)(2r2−δ)(2r1+2r2−δ)/(4d²) (d = r1 + r2 − δ · 상쇄 없음) · ① 상자가 δ ≤ 0 · d ≤ 0 · 한 구가 다른 구 안 (2r_i − δ ≤ 0) 에 통째로 있으면 A ≡ 0 · ② 네 인수가 상자 전체에서 양수이고 ln A 의 편도함수 세 구간 (인수 역수의 합) 이 0 을 포함하지 않으면 두 꼭짓점 값이 정확한 최소 · 최대 (각 인수의 형성 오차만큼 상대 여유) · ③ 아니면 인수 구간의 곱 ∩ 덧셈형 항별 구간 π/4·[2(r1²+r2²) − d² − (r1²−r2²)²/d²] ∩ 기하 상한 π·min(r1, r2)² · ④ 인수가 상자 안에서 부호를 바꾸면 (포함 경계 · d → 0 · δ → 0 이 상자 안) 하한 0 (boundary 가지) · 상한 = 덧셈형 항별 상한 ∩ 기하 상한.  [lo, hi] 에는 기준 평가 여유 16·eps·π·max(r1, r2)² (부동소수 덧셈형 원판으로 대조할 때의 상쇄 오차 · 생산자 여유 아님) 만 바깥으로 더한다.  E = 생산자 (PRODUCER_AREA_MODEL) 산술의 상자 절대 오차 상한 (LHSC-04 R3a — 옛 고정 \"생산자 바닥\" 여유는 없앴다): d_min ≤ 0 이거나 지원 수치영역 (중간 곱이 정상 binary64 범위 — PRODUCER_DOMAIN) 밖이면 E 가 서지 않아 **미인증** (n_producer_uncertified · 시험 · 초과에서 뺀다) · 음수 A_dump 는 정의역 밖 생산값 (n_area_dump_negative · 초과 아님 · 시험에서 뺀다).  h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 (E = 십진 지수 · 끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  기하: A 는 δ 에 따라 0 에서 d² = |r1² − r2²| 의 극대 π·min(r1, r2)² 까지 올랐다가 포함 경계 d = |r1 − r2| 에서 다시 0 으로 **연속**해서 내려간다 (동일 반경 d → 0 퇴화만 식의 극한 π r² 과 코드의 d ≤ 0 → 0 이 어긋난다).  보고: n_tested (이 산술 모델로 비교한 인증 · 비음수 행 — 정밀 비교 통과 · 설치 빌드 인증과 동의어가 아니다) · n_beyond_tol · n_producer_uncertified · n_area_dump_negative · n_area_dump_zero · n_lower_bound_zero (실제 lo == 0 — 너무 작은 면적은 못 잡는다) · n_boundary_branch (④ 가지 수) · n_wide_enclosure ((hi − lo) > AREA_CHECK_WIDE_REL·lo · lo > 0 · 기술량) · n_detect_1pct = 검출 보증 (LHSC-04 R3b): 참 면적이 [lo, hi] 어디에 있어도 ±1 % 치환의 토큰 구간이 허용 구간과 분리 — 1.01·(lo − E) − 2h₊ > hi + E ∧ 0.99·(hi + E) + 2h₋ < lo − E (h± = 그 크기 범위의 출력 반올림 반폭 최대 · 인증 행 · lo − E > 0) — A_dump 와 무관 (치환해도 분류가 안 바뀐다).",
+      "sigfig_assumed": 6,
+      "n_rows": 1,
+      "producer_model": {
+        "formula": "A = -π/4 · (r−r1−r2)(r+r1−r2)(r−r1+r2)(r+r1+r2) / rsq,  r = sqrt(rsq) (rsq = dx²+dy²+dz²),  δ = r1 + r2 − r  (binary64 · 음수 · 0 을 자르지 않는다 · C++ 괄호 · 좌결합 순서 그대로 = producer_area_binary64)",
+        "source": "LIGGGHTS-PUBLIC master src/compute_pair_gran_local.cpp add_pair (Codex 열람 2026-09-30) — 설치 빌드와 같은 소스인지는 pin 파일 (docs/data/liggghts_add_pair_pin.json · 환경변수 LHS_PRODUCER_PIN_FILE) 의 sha256 · formula_confirmed 로만 인증",
+        "error_bound": "상자 (토큰 반올림 상자 + 생산자 δ 형성 오차 Δδ) 전체에서 |A_p − A_e| ≤ E = (π/4)/d_min² · [Π_k(m_k + Δ_k)·(1 + 13·eps) − Π_k m_k]  — m_k = 인수 (δ, 2r1−δ, 2r2−δ, 2r1+2r2−δ) 의 상자 최대 절댓값 · Δ_k = eps·(3·S + m_k) (sqrt 뒤 두 뺄셈의 인수 형성 절대오차 · S = r + r1 + r2 = 2r1+2r2−δ 의 상자 최대) · 13·eps ≥ 곱 3 · rsq 5 · 나눗셈 1 · π/4 2 (단위 반올림 u = eps/2 로 세면 11u) · eps = 2^-52 · d_min ≤ 0 이면 E 가 서지 않아 미인증 (n_producer_uncertified).  실증 = --selftest ㉑‴ (공개 식 binary64 4000 점 · 여섯 영역 · Decimal 60 자리) — 설치 빌드의 실행이 아니다.  13·eps 는 곱 · π/4 · 나눗셈 · rsq 반올림에 분모의 1/(1−γ₅) 팽창 (γ₅ ≈ 5u) 을 1 차로 덮는 여유다 (1/rsq ≤ 1/d_min² 를 반올림된 rsq 의 독립 부등식으로 쓰지 않는다).  지원 수치영역 = 중간 연산이 정상 binary64 (네 인수 곱 1e-280–1e280 · d_min 1e-140–1e140 · 반올림 round-to-nearest) — 밖이면 미인증 (LHSC-04-R4-DOMAIN · 1e-100 반경 언더플로 반례).  구형 입자 경로만 (superquadric 은 다른 가지).",
+        "source_claim_present": false,
+        "source_claim": null,
+        "source_claim_reason": "pin 파일 없음 또는 못 읽음 (FileNotFoundError)",
+        "source_hash_verified_locally": null,
+        "source_verify_note": "",
+        "installed_build_pinned": false,
+        "installed_build_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+        "pin_file": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs_coverage_reverify5_20260930\\candidate\\docs\\data\\liggghts_add_pair_pin.json"
+      },
+      "status": "OK",
+      "n_compared": 1,
+      "n_orphan_rows_skipped": 0,
+      "n_nonfinite_skipped": 0,
+      "n_values_beyond_6sig": {
+        "area": 0,
+        "delta": 0,
+        "radius": 0
+      },
+      "all": {
+        "n_rows": 1,
+        "n_tested": 0,
+        "n_area_dump_zero": 0,
+        "n_beyond_tol": 0,
+        "n_producer_uncertified": 0,
+        "n_area_dump_negative": 1,
+        "n_lower_bound_zero": 1,
+        "n_boundary_branch": 0,
+        "n_wide_enclosure": 0,
+        "n_detect_1pct": 0,
+        "rel_diff_max": null,
+        "rel_diff_median": null,
+        "enclosure_rel_width_median": null,
+        "producer_bound_rel_median": null,
+        "producer_bound_rel_max": null,
+        "excess_rel_max": null
+      },
+      "by_periodic_flag": {
+        "0": {
+          "n_rows": 1,
+          "n_tested": 0,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_producer_uncertified": 0,
+          "n_area_dump_negative": 1,
+          "n_lower_bound_zero": 1,
+          "n_boundary_branch": 0,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "producer_bound_rel_median": null,
+          "producer_bound_rel_max": null,
+          "excess_rel_max": null
+        },
+        "1": {
+          "n_rows": 0,
+          "n_tested": 0,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_producer_uncertified": 0,
+          "n_area_dump_negative": 0,
+          "n_lower_bound_zero": 0,
+          "n_boundary_branch": 0,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "producer_bound_rel_median": null,
+          "producer_bound_rel_max": null,
+          "excess_rel_max": null
+        }
+      },
+      "by_pair_kind": {
+        "AM-SE": {
+          "n_rows": 1,
+          "n_tested": 0,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_producer_uncertified": 0,
+          "n_area_dump_negative": 1,
+          "n_lower_bound_zero": 1,
+          "n_boundary_branch": 0,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "producer_bound_rel_median": null,
+          "producer_bound_rel_max": null,
+          "excess_rel_max": null
+        }
+      }
+    }
+  },
+  "no_contact": {
+    "radii_sim": [
+      0.001,
+      0.001
+    ],
+    "center_distance_sim": 0.0021,
+    "producer_expression_area": -3.2201324699295325e-07,
+    "producer_delta": -9.999999999999983e-05,
+    "tokens": [
+      0.001,
+      0.001,
+      -0.0001,
+      -3.22013e-07
+    ],
+    "local_reconstruction": 0.0,
+    "cap_exact_equal_radius": 3.1415926535897933e-06,
+    "enclosure": {
+      "lo": 0.0,
+      "hi": 1.1161290805698607e-20,
+      "lb": false,
+      "how": "zero"
+    },
+    "diagnostic": {
+      "role": "진단 기록 — 거부하지 않는다 · 피복률 값에 쓰지 않는다 (item 2)",
+      "reference": "lens_geometry.intersection_disc_area(r1, r2, delta = c_cpl[23]) — 두 구의 교차 원판 (L1-04 A_LIGG)",
+      "compared_to": "c_cpl[22]",
+      "delta_col": "c_cpl[23]",
+      "flag_col": "c_cpl[9]",
+      "tolerance_rule": "행마다 덤프 토큰 구간 [A_dump ± h(A_dump)] 이 허용 구간 [lo − E, hi + E] 와 만나지 않으면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  [lo, hi] = 반올림 상자 {r1 ± h(r1)} × {r2 ± h(r2)} × {δ ± (h(δ) + Δδ)} (Δδ = eps·(3S + |δ|) = 생산자 δ 형성 오차 — 상자가 정확한 δ 를 담게) 위 교차 원판 A 의 포괄 구간 (LHSC-04 R2): A = lens_geometry.intersection_disc_area 와 같은 식의 인수형 π·δ(2r1−δ)(2r2−δ)(2r1+2r2−δ)/(4d²) (d = r1 + r2 − δ · 상쇄 없음) · ① 상자가 δ ≤ 0 · d ≤ 0 · 한 구가 다른 구 안 (2r_i − δ ≤ 0) 에 통째로 있으면 A ≡ 0 · ② 네 인수가 상자 전체에서 양수이고 ln A 의 편도함수 세 구간 (인수 역수의 합) 이 0 을 포함하지 않으면 두 꼭짓점 값이 정확한 최소 · 최대 (각 인수의 형성 오차만큼 상대 여유) · ③ 아니면 인수 구간의 곱 ∩ 덧셈형 항별 구간 π/4·[2(r1²+r2²) − d² − (r1²−r2²)²/d²] ∩ 기하 상한 π·min(r1, r2)² · ④ 인수가 상자 안에서 부호를 바꾸면 (포함 경계 · d → 0 · δ → 0 이 상자 안) 하한 0 (boundary 가지) · 상한 = 덧셈형 항별 상한 ∩ 기하 상한.  [lo, hi] 에는 기준 평가 여유 16·eps·π·max(r1, r2)² (부동소수 덧셈형 원판으로 대조할 때의 상쇄 오차 · 생산자 여유 아님) 만 바깥으로 더한다.  E = 생산자 (PRODUCER_AREA_MODEL) 산술의 상자 절대 오차 상한 (LHSC-04 R3a — 옛 고정 \"생산자 바닥\" 여유는 없앴다): d_min ≤ 0 이거나 지원 수치영역 (중간 곱이 정상 binary64 범위 — PRODUCER_DOMAIN) 밖이면 E 가 서지 않아 **미인증** (n_producer_uncertified · 시험 · 초과에서 뺀다) · 음수 A_dump 는 정의역 밖 생산값 (n_area_dump_negative · 초과 아님 · 시험에서 뺀다).  h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 (E = 십진 지수 · 끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  기하: A 는 δ 에 따라 0 에서 d² = |r1² − r2²| 의 극대 π·min(r1, r2)² 까지 올랐다가 포함 경계 d = |r1 − r2| 에서 다시 0 으로 **연속**해서 내려간다 (동일 반경 d → 0 퇴화만 식의 극한 π r² 과 코드의 d ≤ 0 → 0 이 어긋난다).  보고: n_tested (이 산술 모델로 비교한 인증 · 비음수 행 — 정밀 비교 통과 · 설치 빌드 인증과 동의어가 아니다) · n_beyond_tol · n_producer_uncertified · n_area_dump_negative · n_area_dump_zero · n_lower_bound_zero (실제 lo == 0 — 너무 작은 면적은 못 잡는다) · n_boundary_branch (④ 가지 수) · n_wide_enclosure ((hi − lo) > AREA_CHECK_WIDE_REL·lo · lo > 0 · 기술량) · n_detect_1pct = 검출 보증 (LHSC-04 R3b): 참 면적이 [lo, hi] 어디에 있어도 ±1 % 치환의 토큰 구간이 허용 구간과 분리 — 1.01·(lo − E) − 2h₊ > hi + E ∧ 0.99·(hi + E) + 2h₋ < lo − E (h± = 그 크기 범위의 출력 반올림 반폭 최대 · 인증 행 · lo − E > 0) — A_dump 와 무관 (치환해도 분류가 안 바뀐다).",
+      "sigfig_assumed": 6,
+      "n_rows": 1,
+      "producer_model": {
+        "formula": "A = -π/4 · (r−r1−r2)(r+r1−r2)(r−r1+r2)(r+r1+r2) / rsq,  r = sqrt(rsq) (rsq = dx²+dy²+dz²),  δ = r1 + r2 − r  (binary64 · 음수 · 0 을 자르지 않는다 · C++ 괄호 · 좌결합 순서 그대로 = producer_area_binary64)",
+        "source": "LIGGGHTS-PUBLIC master src/compute_pair_gran_local.cpp add_pair (Codex 열람 2026-09-30) — 설치 빌드와 같은 소스인지는 pin 파일 (docs/data/liggghts_add_pair_pin.json · 환경변수 LHS_PRODUCER_PIN_FILE) 의 sha256 · formula_confirmed 로만 인증",
+        "error_bound": "상자 (토큰 반올림 상자 + 생산자 δ 형성 오차 Δδ) 전체에서 |A_p − A_e| ≤ E = (π/4)/d_min² · [Π_k(m_k + Δ_k)·(1 + 13·eps) − Π_k m_k]  — m_k = 인수 (δ, 2r1−δ, 2r2−δ, 2r1+2r2−δ) 의 상자 최대 절댓값 · Δ_k = eps·(3·S + m_k) (sqrt 뒤 두 뺄셈의 인수 형성 절대오차 · S = r + r1 + r2 = 2r1+2r2−δ 의 상자 최대) · 13·eps ≥ 곱 3 · rsq 5 · 나눗셈 1 · π/4 2 (단위 반올림 u = eps/2 로 세면 11u) · eps = 2^-52 · d_min ≤ 0 이면 E 가 서지 않아 미인증 (n_producer_uncertified).  실증 = --selftest ㉑‴ (공개 식 binary64 4000 점 · 여섯 영역 · Decimal 60 자리) — 설치 빌드의 실행이 아니다.  13·eps 는 곱 · π/4 · 나눗셈 · rsq 반올림에 분모의 1/(1−γ₅) 팽창 (γ₅ ≈ 5u) 을 1 차로 덮는 여유다 (1/rsq ≤ 1/d_min² 를 반올림된 rsq 의 독립 부등식으로 쓰지 않는다).  지원 수치영역 = 중간 연산이 정상 binary64 (네 인수 곱 1e-280–1e280 · d_min 1e-140–1e140 · 반올림 round-to-nearest) — 밖이면 미인증 (LHSC-04-R4-DOMAIN · 1e-100 반경 언더플로 반례).  구형 입자 경로만 (superquadric 은 다른 가지).",
+        "source_claim_present": false,
+        "source_claim": null,
+        "source_claim_reason": "pin 파일 없음 또는 못 읽음 (FileNotFoundError)",
+        "source_hash_verified_locally": null,
+        "source_verify_note": "",
+        "installed_build_pinned": false,
+        "installed_build_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+        "pin_file": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs_coverage_reverify5_20260930\\candidate\\docs\\data\\liggghts_add_pair_pin.json"
+      },
+      "status": "OK",
+      "n_compared": 1,
+      "n_orphan_rows_skipped": 0,
+      "n_nonfinite_skipped": 0,
+      "n_values_beyond_6sig": {
+        "area": 0,
+        "delta": 0,
+        "radius": 0
+      },
+      "all": {
+        "n_rows": 1,
+        "n_tested": 0,
+        "n_area_dump_zero": 0,
+        "n_beyond_tol": 0,
+        "n_producer_uncertified": 0,
+        "n_area_dump_negative": 1,
+        "n_lower_bound_zero": 1,
+        "n_boundary_branch": 0,
+        "n_wide_enclosure": 0,
+        "n_detect_1pct": 0,
+        "rel_diff_max": null,
+        "rel_diff_median": null,
+        "enclosure_rel_width_median": null,
+        "producer_bound_rel_median": null,
+        "producer_bound_rel_max": null,
+        "excess_rel_max": null
+      },
+      "by_periodic_flag": {
+        "0": {
+          "n_rows": 1,
+          "n_tested": 0,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_producer_uncertified": 0,
+          "n_area_dump_negative": 1,
+          "n_lower_bound_zero": 1,
+          "n_boundary_branch": 0,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "producer_bound_rel_median": null,
+          "producer_bound_rel_max": null,
+          "excess_rel_max": null
+        },
+        "1": {
+          "n_rows": 0,
+          "n_tested": 0,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_producer_uncertified": 0,
+          "n_area_dump_negative": 0,
+          "n_lower_bound_zero": 0,
+          "n_boundary_branch": 0,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "producer_bound_rel_median": null,
+          "producer_bound_rel_max": null,
+          "excess_rel_max": null
+        }
+      },
+      "by_pair_kind": {
+        "AM-SE": {
+          "n_rows": 1,
+          "n_tested": 0,
+          "n_area_dump_zero": 0,
+          "n_beyond_tol": 0,
+          "n_producer_uncertified": 0,
+          "n_area_dump_negative": 1,
+          "n_lower_bound_zero": 1,
+          "n_boundary_branch": 0,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "producer_bound_rel_median": null,
+          "producer_bound_rel_max": null,
+          "excess_rel_max": null
+        }
+      }
+    }
+  }
+}
