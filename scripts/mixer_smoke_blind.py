@@ -51,6 +51,7 @@ import getpass
 import hashlib
 import io
 import json
+import math
 import os
 import socket
 import sys
@@ -372,7 +373,7 @@ def e0_diag(out, record, reg=REG):
     x = 저장 프레임 최대 (입자–입자 · 벽) — contact_eval (검사기 check_window · 정지 벽 계약 · 이름에서 재생성한 기대 덱).
     ★ v2.6 (09-30 밤 · 1저자 비준 "권고하는걸로") — **verdict = 관문 검사 (complete · technical · a) 만** · b · c 는 값 · pass 를 그대로 기록하는
       보고 전용 (sg.E0_DIAG_ROLE · 통과선 불변).  옛 판 (v2.5 까지) 은 c 의 등록 지위가 '진단' 인데도 fail-closed 로 넣었다 (보고의 모호점) —
-      DEV7 (×14) 에서 b 는 스냅샷 최대의 주인 교체 (+0.0026 %p) 로, c 는 dt/2 가 궤적을 바꿔 두 실현을 비교해 깨졌다.
+      DEV7 (×14) 에서 b · c 가 깨졌다 (b +0.0026 %p · c |Δx| 0.24 %p · S_R² 10 %) — ⚠ v2.7 (HBR10-03): 잡음이라는 입증은 없다 · 한 쌍에서 원인 분해 불가.
       상별 입자 수는 SELF-70 허용폭 (계획 ± (템플릿−1)·NP) · 실현 조성은 runs[].contact.count_check 에 보고.
       M 은 계산하지 않는다 (E0 뿐) · S_R² 원값은 봉인 파일에만 (기록 = 상대 변화).
     soft 일관성 (§6: "DEV E0_ref 실측 최대 × F_ref^(2/3) 이 등록 범위를 넘으면 그 사실을 보고하되 범위를 올리지 않는다") 은 **보고만**."""
@@ -406,7 +407,7 @@ def e0_diag(out, record, reg=REG):
             for n in ('E0_ref_s32452843', 'E0_ref_dthalf_s32452843'):
                 st0, p0, cs = mi.e0_t0_stats(os.path.join(out, n), reg['r_container'], cells=reg['cells'], x_cells=reg['x_cells'],
                                              n_min=reg['n_min'], axis=reg['axis'])
-                sr2[n] = dict(t0_step=st0, frame=os.path.basename(p0), s2=cs['s2'])
+                sr2[n] = dict(t0_step=st0, frame=os.path.basename(p0), s2=cs['s2'], used=cs.get('used'))
         except SystemExit as e:
             refused = dict(kind='SystemExit', message=str(e))
         except Exception as e:                                          # noqa: BLE001
@@ -417,21 +418,36 @@ def e0_diag(out, record, reg=REG):
         xh = {n: runs[n]['contact']['x_hi_pct'] for n in dd.DEV_E0}
         nps = {runs[n]['np'] for n in dd.DEV_E0}
         one_np = len(nps) == 1 and isinstance(next(iter(nps)), int) and not isinstance(next(iter(nps)), bool)
+        #  ★ HBR10-01 (Codex 10 차 · 1저자 비준 09-30 밤) — b · c 는 **보고 전용**이지만 **측정은 유효해야** 한다: 측정 유효 (measurement_valid) 와
+        #    문턱 통과 (pass) 를 나눈다.  필요한 값 (x · S_R² · 사용 칸) 이 유한 · 유효하지 않으면 technical 실패 (TECH/미측정 — 관문이 막는다) ·
+        #    유한한 문턱 실패는 그대로 보고 (진행 허용 · v2.6 정책) · S_R² 0 은 NaN 과 다르다 — 상대 변화의 분모 0 = 판정 불능 (sr2_rel_status 에 명시).
+        def _fin(v_):
+            return isinstance(v_, (int, float)) and not isinstance(v_, bool) and math.isfinite(v_)
+        r2, r1 = xh['E0_ref2_s32452843'], xh['E0_ref_s32452843']
+        b_valid = _fin(r2) and _fin(r1)
+        checks['b'] = dict(pass_=(st['E0_ref2_s32452843'] == 'CONTRACT_MET' and b_valid and r2 <= r1 + rg['eps_pct']),
+                           measurement_valid=b_valid, x_ref2_pct=r2, x_ref_pct=r1)
+        dh = xh['E0_ref_dthalf_s32452843']
+        s_a, s_b = sr2['E0_ref_s32452843']['s2'], sr2['E0_ref_dthalf_s32452843']['s2']
+        u_a, u_b = sr2['E0_ref_s32452843'].get('used'), sr2['E0_ref_dthalf_s32452843'].get('used')
+        c_valid = (_fin(dh) and _fin(r1) and _fin(s_a) and _fin(s_b) and s_a >= 0 and s_b >= 0
+                   and all(isinstance(u_, int) and not isinstance(u_, bool) and u_ >= 2 for u_ in (u_a, u_b)))
+        dmax = abs(dh - r1) if c_valid else None
+        if not c_valid:
+            rel, rel_st = None, 'unmeasured'
+        elif s_a > 0:
+            rel, rel_st = abs(s_b - s_a) / s_a, 'ok'
+        else:
+            rel, rel_st = None, 'denominator_zero'                  # 기준 S_R² = 0 — 상대 변화 정의 안 됨 (판정 불능 · 측정은 유효)
+        checks['c'] = dict(pass_=(st['E0_ref_dthalf_s32452843'] == 'CONTRACT_MET' and c_valid and rel is not None
+                                  and dmax <= rg['c_dmax_pp'] + rg['eps_pct'] and rel <= rg['c_sr2_rel'] + rg['eps_rel']),
+                           measurement_valid=c_valid, dmax_pp=dmax, sr2_rel=rel, sr2_rel_status=rel_st, sr2_used=[u_a, u_b])
         checks['complete'] = dict(pass_=all(runs[n]['complete'] is True for n in dd.DEV_E0))
         checks['technical'] = dict(pass_=(all(st[n] not in (None, 'TECH_FAIL') for n in dd.DEV_E0)
-                                          and all(runs[n]['stage'] == 'dev-e0' for n in dd.DEV_E0) and one_np),
-                                   np_values=sorted(str(x) for x in nps))
+                                          and all(runs[n]['stage'] == 'dev-e0' for n in dd.DEV_E0) and one_np and b_valid and c_valid),
+                                   np_values=sorted(str(x) for x in nps), measurement_valid=dict(b=b_valid, c=c_valid))
         checks['a'] = dict(pass_=all(st[n] == 'CONTRACT_MET' for n in dd.DEV_E0[:3]), status={n: st[n] for n in dd.DEV_E0[:3]})
-        r2, r1 = xh['E0_ref2_s32452843'], xh['E0_ref_s32452843']
-        checks['b'] = dict(pass_=(st['E0_ref2_s32452843'] == 'CONTRACT_MET' and r2 is not None and r1 is not None and r2 <= r1 + rg['eps_pct']),
-                           x_ref2_pct=r2, x_ref_pct=r1)
-        dh = xh['E0_ref_dthalf_s32452843']
-        dmax = abs(dh - r1) if (dh is not None and r1 is not None) else None
-        s_a, s_b = sr2['E0_ref_s32452843']['s2'], sr2['E0_ref_dthalf_s32452843']['s2']
-        rel = abs(s_b - s_a) / s_a if (isinstance(s_a, float) and s_a > 0 and s_a == s_a and s_b == s_b) else None
-        checks['c'] = dict(pass_=(st['E0_ref_dthalf_s32452843'] == 'CONTRACT_MET' and dmax is not None and rel is not None
-                                  and dmax <= rg['c_dmax_pp'] + rg['eps_pct'] and rel <= rg['c_sr2_rel'] + rg['eps_rel']),
-                           dmax_pp=dmax, sr2_rel=rel)
+        checks = {k_: checks[k_] for k_ in ('complete', 'technical', 'a', 'b', 'c')}
         for k_, v in checks.items():
             v['pass'] = bool(v.pop('pass_'))
             v['role'] = sg.E0_DIAG_ROLE[k_]
@@ -441,7 +457,7 @@ def e0_diag(out, record, reg=REG):
                                                      stdout=buf_out.getvalue(), stderr=buf_err.getvalue(), refused=refused))
     #  ★ v2.6 (09-30 밤 · 1저자 비준) — verdict = 관문 검사 (complete · technical · a) 만.  b · c 는 값 · pass 를 그대로 기록하는 **보고 전용**
     #    (통과선 불변 · 등록 §4 표 v2.6 · Codex 10 차 질의).  근거 = DEV7 (×14) 실측: b 는 스냅샷 최대의 주인이 바뀌어 +0.0026 %p 로 깨졌고
-    #    (쌍별로는 예측대로 줄었다) · c 는 dt/2 가 궤적을 바꿔 두 실현을 비교한다 (0.1 %p · 1 % 문턱은 실현 잡음보다 좁다).
+    #    (다른 SE 쌍은 줄었다) · c 는 dt/2 가 궤적을 바꾼다.  ⚠ v2.7 (HBR10-03): "문턱이 실현 잡음보다 좁다" 는 입증되지 않았다 (한 쌍 · 원인 분해 불가).
     verdict = 'PASS' if (refused is None and checks and all(v['pass'] for v in checks.values() if v['role'] == 'gate')) else 'FAIL'
     k14 = dd.STIFF_LEVELS['ref'] ** (2.0 / 3.0)                     # 등록 E_ref 배수의 Hertz 환산 (v2.6 ×20 → 7.37)
     rec = dict(schema=sg.E0_DIAG_SCHEMA, verdict=verdict, time_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),

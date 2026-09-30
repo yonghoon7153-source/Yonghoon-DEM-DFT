@@ -167,6 +167,15 @@ PHASE_FRAMES = 5                 # 위상을 데이터로 확인할 프레임 �
 #:   ⛔ CLI `--soft-range` 는 이 값 외를 거부한다 (올리거나 내리지 않는다 · 결과를 보고 고르지 않는다 — Codex 9 차 Q6).
 SOFT_RANGE_PCT = 7.37            # ★ v2.6 (09-30 밤 · 1저자 비준 "권고하는걸로") = 1 % × 20^(2/3) 둘째 자리 (E_ref ×14 → ×20 · 옛 5.8 은 거부)
 SOFT_RANGE_EPS = 1e-9            # 경계 비교 규약 (부동소수 · % 단위) — 물리 허용치 아님
+#: ★ HBR10-02 (가) (Codex 10 차 · 1저자 비준 09-30 밤 "권고대로") — soft 진단 범위는 **타입쌍마다** 1 % × 고정 하중 환산 배수
+#:   (E*_ref/E*_soft)^(2/3) 다 (×20 · `mixer_deck_readback.CODEX[20.0]` 의 CED 배수 = Codex 10 차 Q3 독립 검산 · selftest ㉝ 가 표와 일치를 강제).
+#:   AM–AM · AM–벽 은 SE 강성과 무관해 **1 % 그대로** (등록 §6 "AM–AM 쌍은 E 불변이라 1 % 그대로" — 옛 판은 타입쌍을 안 보고 전체 최대 하나에
+#:   7.37 을 적용했다 · Codex 반례 AM–AM 2 % → WITHIN).  SOFT_RANGE_PCT 7.37 = 이 한계들의 최댓값 (SE–SE 7.368) 의 둘째 자리 — CLI · 관문이
+#:   받는 등록값 (올리거나 내리지 않는다) 이고, 판정 자체는 쌍별이다.  ⚠ 이 배수는 접촉망 변화의 오차 상한이 아니다 (진단 범위의 정의 ·
+#:   물리적으로 안전한 겹침 인증 아님).  타입 번호 = make_mixer_deck.TYPES (AM_P · AM_S · SE) — 그 밖의 타입은 한계가 없어 판정 불가.
+SOFT_TYPE_CLASS = {1: 'AM', 2: 'AM', 3: 'SE'}
+SOFT_PAIR_FACTOR = {('AM', 'AM'): 1.0, ('AM', 'SE'): 6.572698075, ('SE', 'SE'): 7.368062997}
+SOFT_WALL_FACTOR = {'AM': 1.0, 'SE': 6.801499256}
 #: 스모크 · 관문이 구분해 내보낼 상태 (§6 — "`TECH_FAIL` / `CONTRACT_MET` / `CONTRACT_NOT_MET` / `OUT_OF_RANGE`")
 CONTRACT_STATUSES = ('TECH_FAIL', 'CONTRACT_MET', 'CONTRACT_NOT_MET', 'OUT_OF_RANGE')
 
@@ -883,7 +892,7 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
                dump_every=plan['dump_every'], dump_interval_s=plan['dump_every'] * plan['dt'],
                pp_max=float('-inf'), pp_max_step=None, pp_max_types=None, pp_max_by_pair={},
                wall_max=float('-inf'), wall_max_step=None, wall_max_type=None, wall_max_mesh=None,
-               wall_max_by_type={}, wall_lower_max=float('-inf'), wall_basis=None, phase=[], phase_status='not_run', phase_note='',
+               wall_max_by_type={}, wall_lower_by_type={}, wall_lower_max=float('-inf'), wall_basis=None, phase=[], phase_status='not_run', phase_note='',
                n_frames=0, window=None, notes=[], pos_bound_m=None, static_why=[],
                bins=sorted(int(b_) for b_ in bins) if bins is not None else None,
                reject_overlap=[], tech_wall_uncertain=[])
@@ -1116,6 +1125,7 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
             for t_ in np.unique(ty):
                 key = str(int(t_))
                 out['wall_max_by_type'][key] = max(out['wall_max_by_type'].get(key, float('-inf')), float(wr[ty == t_].max()))
+                out['wall_lower_by_type'][key] = max(out['wall_lower_by_type'].get(key, float('-inf')), float(wl[ty == t_].max()))
             j = int(np.argmax(wr))
             wmesh = owner[int(wk[j])]
             if wr[j] > out['wall_max']:
@@ -1234,8 +1244,7 @@ def contract_status(w, soft_range_pct=None):
         if out['original_1pct'] is None:
             out['why'] = sorted(unc)[:3] or ['1 % 판정 불가']
         return out
-    thr = float(soft_range_pct) + SOFT_RANGE_EPS
-    out['soft_range'] = ('OUT_OF_RANGE' if x_lo * 100.0 > thr else ('WITHIN' if x_hi * 100.0 <= thr else 'UNIDENTIFIED'))
+    out['soft_range_by_pair'], out['soft_range'] = _soft_by_pair(w, basis, mo, lo_w, hi_w)
     if out['soft_range'] == 'OUT_OF_RANGE':
         out['status'] = 'OUT_OF_RANGE'                           # 원 1 % 는 NOT_MET 그대로 (등록 범위 > 1 %)
     elif out['soft_range'] == 'WITHIN' and out['original_1pct'] is not None:
@@ -1243,6 +1252,55 @@ def contract_status(w, soft_range_pct=None):
     else:
         out['why'] = sorted(unc)[:3] or ['soft 범위 · 1 % 판정 불가 (벽 위상 불확실)']
     return out
+
+
+def _soft_by_pair(w, basis, mo, lo_w, hi_w):
+    """★ HBR10-02 (가) — soft 진단 범위를 **타입쌍 · 벽 타입마다** 1 % × 환산 배수로 판정 → (항목별 dict, 종합).
+    항목 = 입자–입자 'pp:a-b' (저장 프레임 최대 · 정확값) · 벽 'wall:t' (static · mesh-dump = 한 값 · receipt = [타입별 하한, 상한] ·
+    bounded · unidentified = 타입별 구간이 없어 전역 [하한, 상한] 을 모든 벽 타입에 건다).  한계가 없는 타입 (SOFT_TYPE_CLASS 밖) · 쌍별 자료 없음 =
+    UNIDENTIFIED (판정 불가 — 조용히 전체 최대로 되돌리지 않는다).  종합 = 하나라도 OUT → OUT_OF_RANGE · 아니면 하나라도 미정 → UNIDENTIFIED · 전부 안 → WITHIN."""
+    items = {}
+
+    def _num(v_):
+        return float(v_) if isinstance(v_, (int, float)) and not isinstance(v_, bool) and v_ == v_ and v_ != float('-inf') else None
+
+    def _put(name, cls, fac, lo_, hi_):
+        if fac is None or lo_ is None or hi_ is None:
+            items[name] = dict(cls=cls, x_lo_pct=None if lo_ is None else lo_ * 100.0, x_hi_pct=None if hi_ is None else hi_ * 100.0,
+                               limit_pct=None, state='UNIDENTIFIED')
+            return
+        lim = 100.0 * mo * fac
+        st_ = 'OUT_OF_RANGE' if lo_ * 100.0 > lim + SOFT_RANGE_EPS else ('WITHIN' if hi_ * 100.0 <= lim + SOFT_RANGE_EPS else 'UNIDENTIFIED')
+        items[name] = dict(cls=cls, x_lo_pct=lo_ * 100.0, x_hi_pct=hi_ * 100.0, limit_pct=lim, state=st_)
+    for key, v in sorted((w.get('pp_max_by_pair') or {}).items()):
+        x = _num(v)
+        try:
+            a_, b_ = (int(t_) for t_ in str(key).split('-'))
+        except ValueError:
+            a_ = b_ = None
+        ca, cb = SOFT_TYPE_CLASS.get(a_), SOFT_TYPE_CLASS.get(b_)
+        pair = tuple(sorted((ca, cb))) if ca and cb else None
+        _put(f'pp:{key}', '-'.join(pair) if pair else None, SOFT_PAIR_FACTOR.get(pair) if pair else None, x, x)
+    ups, lows = (w.get('wall_max_by_type') or {}), (w.get('wall_lower_by_type') or {})
+    for key, v in sorted(ups.items()):
+        try:
+            cls = SOFT_TYPE_CLASS.get(int(key))
+        except ValueError:
+            cls = None
+        up = _num(v)
+        if basis in ('bounded', 'unidentified'):
+            lo_, hi_ = _num(lo_w), _num(hi_w)
+        elif basis == 'receipt':
+            lo_, hi_ = _num(lows.get(key)), up
+        else:
+            lo_, hi_ = up, up
+        _put(f'wall:{key}', f'{cls}-wall' if cls else None, SOFT_WALL_FACTOR.get(cls) if cls else None, lo_, hi_)
+    states = [it['state'] for it in items.values()]
+    if not items:
+        return items, 'UNIDENTIFIED'
+    if 'OUT_OF_RANGE' in states:
+        return items, 'OUT_OF_RANGE'
+    return items, ('UNIDENTIFIED' if 'UNIDENTIFIED' in states else 'WITHIN')
 
 
 def report_window(rs):
@@ -2024,18 +2082,42 @@ def _selftest():
         d_ = dict(max_ovl=0.01, tech=[], reject=[], reject_overlap=[], tech_wall_uncertain=[], phase_status='static',
                   pp_max=0.005, wall_max=0.004)
         d_.update(k_)
+        #  ★ HBR10-02 — 실제 check_window 는 쌍별 · 타입별 최대를 늘 채운다.  주지 않으면 SE–SE · SE 벽 (옛 표의 뜻) 으로 채운다
+        if 'pp_max_by_pair' not in k_:
+            d_['pp_max_by_pair'] = {'3-3': d_['pp_max']}
+        if 'wall_max_by_type' not in k_:
+            _up = d_['wall_bound_worst'] if d_['phase_status'] in ('bounded', 'unidentified') and 'wall_bound_worst' in d_ else d_['wall_max']
+            d_['wall_max_by_type'] = {'3': _up}
+        if 'wall_lower_by_type' not in k_ and d_['phase_status'] == 'receipt':
+            d_['wall_lower_by_type'] = {'3': d_.get('wall_lower_max', d_['wall_max'])}
         return d_
     PPR = 'pp 기각'
     U_ = '위상 불확실성으로 미식별 (합성)'
     SR = G_['SOFT_RANGE_PCT']                                      # 등록 soft 진단 범위 (v2.6: 1 % × 20^(2/3) = 7.37) — 표는 이 값 기준 (숫자를 박지 않는다)
+    #  ★ HBR10-02 (가) (1저자 09-30 밤) — soft 는 **쌍별** 한계 = 1 % × (E*_ref/E*_soft)^(2/3) · SE–SE 7.368 · AM–SE 6.573 · SE–벽 6.801 · AM–AM · AM–벽 1
+    LSS = 100 * G_['CONTRACT_MAX_OVL'] * G_['SOFT_PAIR_FACTOR'][('SE', 'SE')]
+    LSW = 100 * G_['CONTRACT_MAX_OVL'] * G_['SOFT_WALL_FACTOR']['SE']
     TAB = [  # (이름, 입력, soft 범위, 기대 status, 기대 original, 기대 soft)
         ('ref 0.5 %', _W(), None, 'CONTRACT_MET', 'MET', None),
         ('ref 2 %', _W(pp_max=0.02, reject=[PPR], reject_overlap=[PPR]), None, 'CONTRACT_NOT_MET', 'NOT_MET', None),
         ('soft 0.5 %', _W(), SR, 'CONTRACT_MET', 'MET', 'WITHIN'),
         ('soft 5 %', _W(pp_max=0.05, reject=[PPR], reject_overlap=[PPR]), SR, 'CONTRACT_NOT_MET', 'NOT_MET', 'WITHIN'),
-        ('soft 경계 = 등록 (여유 1e-9 안)', _W(pp_max=SR / 100, reject=[PPR], reject_overlap=[PPR]), SR, 'CONTRACT_NOT_MET', 'NOT_MET', 'WITHIN'),
-        ('soft 등록 + 1e-4 %p', _W(pp_max=SR / 100 + 1e-6, reject=[PPR], reject_overlap=[PPR]), SR, 'OUT_OF_RANGE', 'NOT_MET', 'OUT_OF_RANGE'),
-        ('soft 벽 등록 + 1 %p (static)', _W(wall_max=SR / 100 + 0.01, reject=['벽'], reject_overlap=['벽']), SR, 'OUT_OF_RANGE', 'NOT_MET', 'OUT_OF_RANGE'),
+        ('soft 경계 = SE–SE 한계 (여유 1e-9 안)', _W(pp_max=LSS / 100, reject=[PPR], reject_overlap=[PPR]), SR, 'CONTRACT_NOT_MET', 'NOT_MET', 'WITHIN'),
+        ('soft SE–SE 한계 + 1e-4 %p', _W(pp_max=LSS / 100 + 1e-6, reject=[PPR], reject_overlap=[PPR]), SR, 'OUT_OF_RANGE', 'NOT_MET', 'OUT_OF_RANGE'),
+        ('soft SE 벽 한계 + 1 %p (static)', _W(wall_max=LSW / 100 + 0.01, reject=['벽'], reject_overlap=['벽']), SR, 'OUT_OF_RANGE', 'NOT_MET', 'OUT_OF_RANGE'),
+        #  ★ HBR10-02 반례 (Codex 10 차 — 옛 코드는 타입쌍을 안 보고 전체 최대 하나에 7.37 을 적용해 AM–AM 2 % 를 WITHIN 으로 냈다)
+        ('soft AM–AM 2 % (쌍별 1 %)', _W(pp_max=0.02, pp_max_by_pair={'1-1': 0.02}, wall_max_by_type={'1': 0.004}, reject=[PPR], reject_overlap=[PPR]),
+         SR, 'OUT_OF_RANGE', 'NOT_MET', 'OUT_OF_RANGE'),
+        ('soft AM_P–SE 7 % (한계 6.573)', _W(pp_max=0.07, pp_max_by_pair={'1-3': 0.07, '3-3': 0.01}, reject=[PPR], reject_overlap=[PPR]),
+         SR, 'OUT_OF_RANGE', 'NOT_MET', 'OUT_OF_RANGE'),
+        ('soft AM_S–SE 6.5 % (한계 6.573 안)', _W(pp_max=0.065, pp_max_by_pair={'2-3': 0.065, '1-2': 0.005}, reject=[PPR], reject_overlap=[PPR]),
+         SR, 'CONTRACT_NOT_MET', 'NOT_MET', 'WITHIN'),
+        ('soft SE–SE 7.3 % (한계 7.368 안)', _W(pp_max=0.073, reject=[PPR], reject_overlap=[PPR]), SR, 'CONTRACT_NOT_MET', 'NOT_MET', 'WITHIN'),
+        ('soft SE 벽 6.9 % (한계 6.801)', _W(wall_max=0.069, reject=['벽'], reject_overlap=['벽']), SR, 'OUT_OF_RANGE', 'NOT_MET', 'OUT_OF_RANGE'),
+        ('soft AM 벽 1.5 % (한계 1 %)', _W(wall_max=0.015, wall_max_by_type={'1': 0.015, '3': 0.004}, reject=['벽'], reject_overlap=['벽']),
+         SR, 'OUT_OF_RANGE', 'NOT_MET', 'OUT_OF_RANGE'),
+        ('soft 모르는 타입 4-4 (쌍별 한계 없음 → 판정 불가)', _W(pp_max_by_pair={'4-4': 0.005}), SR, 'TECH_FAIL', 'MET', 'UNIDENTIFIED'),
+        ('soft 쌍별 자료 없음 → 판정 불가', _W(pp_max_by_pair={}, wall_max_by_type={}), SR, 'TECH_FAIL', 'MET', 'UNIDENTIFIED'),
         ('ref 창 결손 (기술)', _W(tech=['창 안 덤프 결손 1 개']), None, 'TECH_FAIL', None, None),
         ('soft 창 결손 (기술)', _W(pp_max=0.05, tech=['창 안 덤프 결손 1 개'], reject=[PPR], reject_overlap=[PPR]), SR, 'TECH_FAIL', None, None),
         ('soft 보존 실패 (겹침 아닌 기각 = 기술)', _W(reject=['step 2500: 상별 입자 수 {1: 3} ≠ t₀ {1: 4}']), SR, 'TECH_FAIL', None, None),
@@ -2044,7 +2126,7 @@ def _selftest():
         ('soft 벽 위상 불확실 + 입자 5 % (1 % 는 확정 NOT_MET)', _W(phase_status='receipt', pp_max=0.05, wall_lower_max=0.008, wall_max=0.012,
                                                             tech=[U_], tech_wall_uncertain=[U_], reject=[PPR], reject_overlap=[PPR]),
          SR, 'CONTRACT_NOT_MET', 'NOT_MET', 'WITHIN'),
-        ('soft 범위 걸침 (벽 등록 −0.3 ~ +0.2 %p)', _W(phase_status='receipt', pp_max=0.03, wall_lower_max=SR / 100 - 0.003, wall_max=SR / 100 + 0.002,
+        ('soft 범위 걸침 (SE 벽 한계 −0.3 ~ +0.2 %p)', _W(phase_status='receipt', pp_max=0.03, wall_lower_max=LSW / 100 - 0.003, wall_max=LSW / 100 + 0.002,
                                                   reject=[PPR, '벽 명백'], reject_overlap=[PPR, '벽 명백']), SR, 'TECH_FAIL', 'NOT_MET', 'UNIDENTIFIED'),
         ('ref unidentified (상·하한 0.4–3 %)', _W(phase_status='unidentified', pp_max=0.002, wall_bound_best=0.004, wall_bound_worst=0.03,
                                                 tech=[U_], tech_wall_uncertain=[U_]), None, 'TECH_FAIL', None, None),
@@ -2068,7 +2150,15 @@ def _selftest():
         if bad:
             print('        ' + ' | '.join(bad))
         print(f'        SOFT_RANGE_PCT {SR} · 등록 배수 ×{_dd33.STIFF_LEVELS["ref"]:g} → 1 % × F^(2/3) = {derived}')
-        return not bad and SR == derived == 7.37 and _dd33.STIFF_LEVELS['ref'] == 20.0
+        import mixer_deck_readback as _rb33
+        cx = _rb33.CODEX[_dd33.STIFF_LEVELS['ref']]
+        fac_ok = (abs(G_['SOFT_PAIR_FACTOR'][('SE', 'SE')] - cx[('SE', 'SE')][1]) < 1e-9
+                  and abs(G_['SOFT_PAIR_FACTOR'][('AM', 'SE')] - cx[('AM_P', 'SE')][1]) < 1e-9
+                  and abs(G_['SOFT_WALL_FACTOR']['SE'] - cx[('SE', 'WALL')][1]) < 1e-9
+                  and G_['SOFT_PAIR_FACTOR'][('AM', 'AM')] == G_['SOFT_WALL_FACTOR']['AM'] == 1.0
+                  and round(max(G_['SOFT_PAIR_FACTOR'].values()), 2) == SR)
+        print(f'        쌍별 배수 = CODEX[×{_dd33.STIFF_LEVELS["ref"]:g}] CED 배수 {fac_ok} · 한계 SE–SE {LSS:.6f} · SE 벽 {LSW:.6f} %')
+        return not bad and SR == derived == 7.37 and _dd33.STIFF_LEVELS['ref'] == 20.0 and fac_ok
     chk(f'㉝ ★ 상태 표 (§6 세 축 분리 · {len(TAB)} 행) — ref: MET · NOT_MET · 기술 실패 · 1 % 걸침 = TECH_FAIL / soft (등록 범위): 1 % 초과는 '
         'CONTRACT_NOT_MET (기술 실패 아님) · 경계 = 등록 은 WITHIN (여유 1e-9) · 등록 + 1e-4 %p · 벽 등록 + 1 %p = OUT_OF_RANGE · 보존 실패 · 창 결손 = TECH_FAIL · '
         '벽 위상 불확실이어도 입자 5 % 면 1 % 는 확정 NOT_MET · 범위 걸침 = TECH_FAIL · 등록 밖 (6.0) · 옛 등록 (5.8) 거부 · '
@@ -2079,12 +2169,14 @@ def _selftest():
     with tempfile.TemporaryDirectory() as td:
         def _t34():
             ok_ = []
-            r2 = _run_rev(td, {2000: 0.0025, 2500: 0.00198}, 'r2')             # bin 0 에 2 %
-            ok_.append(check_window(r2, bins=(0,), soft_range_pct=SOFT_RANGE_PCT)['status']['status'] == 'CONTRACT_NOT_MET')
+            r2 = _run_rev(td, {2000: 0.0025, 2500: 0.00198}, 'r2')             # bin 0 에 2 % — 합성 쌍 = AM–AM (타입 1)
+            ok_.append(check_window(r2, bins=(0,), soft_range_pct=SOFT_RANGE_PCT)['status']['status'] == 'OUT_OF_RANGE')   # HBR10-02: AM–AM soft 도 1 %
             ok_.append(check_window(r2, bins=(0,))['status']['status'] == 'CONTRACT_NOT_MET')
-            r7 = _run_rev(td, {2000: 0.0025, 2500: 0.00193}, 'r7')             # bin 0 에 7 % — v2.6 범위 (7.37) 안
+            r7 = _run_rev(td, {2000: 0.0025, 2500: 0.00193}, 'r7')             # bin 0 에 7 % — 합성 쌍 = AM–AM (타입 1)
             s7 = check_window(r7, bins=(0,), soft_range_pct=SOFT_RANGE_PCT)['status']
-            ok_.append(s7['status'] == 'CONTRACT_NOT_MET' and s7['soft_range'] == 'WITHIN' and abs(s7['x_hi_pct'] - 7.0) < 1e-6)
+            #  ★ HBR10-02 (가) — AM–AM 은 E 불변이라 soft 에서도 1 % ⇒ 7 % 는 OUT_OF_RANGE (옛 판: 전체 7.37 에 WITHIN)
+            ok_.append(s7['status'] == 'OUT_OF_RANGE' and s7['soft_range'] == 'OUT_OF_RANGE' and abs(s7['x_hi_pct'] - 7.0) < 1e-6
+                       and (s7.get('soft_range_by_pair') or {}).get('pp:1-1', {}).get('limit_pct') == 1.0)
             r10 = _run_rev(td, {2000: 0.0025, 2500: 0.00190}, 'r10')           # bin 0 에 10 % — 범위 밖
             s10 = check_window(r10, bins=(0,), soft_range_pct=SOFT_RANGE_PCT)['status']
             ok_.append(s10['status'] == 'OUT_OF_RANGE' and s10['original_1pct'] == 'NOT_MET' and abs(s10['x_hi_pct'] - 10.0) < 1e-6)
@@ -2098,7 +2190,7 @@ def _selftest():
             ok_.append(wl['verdict'] == 'REJECT' and wl['status']['status'] == 'TECH_FAIL' and wl['status']['technical'] == 'FAIL')
             print(f'        {ok_}')
             return all(ok_)
-        chk('㉞ ★ check_window 결과에 상태가 붙는다 — bin 0 에 2 % (soft · ref 둘 다 CONTRACT_NOT_MET) · 7 % soft = WITHIN (v2.6 · 7.37) · 10 % = OUT_OF_RANGE · '
+        chk('㉞ ★ check_window 결과에 상태가 붙는다 — bin 0 에 AM–AM 2 % (ref = CONTRACT_NOT_MET · soft = OUT_OF_RANGE — HBR10-02 쌍별 1 %) · 7 % AM–AM soft = OUT_OF_RANGE · 10 % = OUT_OF_RANGE · '
             '0.25 % = CONTRACT_MET · bin 0 결손 = TECH_FAIL · 입자 잃음 = 판정 REJECT 이지만 상태는 TECH_FAIL (기술 실패 ≠ 계약 미달)', _okx(_t34))
 
     #  ㉟ CLI — --soft-range 는 등록값만 · --bins · JSON 에 상태
@@ -2111,9 +2203,11 @@ def _selftest():
             p1 = _spx.run([sys.executable, me, '--contract', r2, '--bins', '0', '--soft-range', f'{SOFT_RANGE_PCT:g}', '--json', js], capture_output=True, text=True)
             j1 = _json.load(open(js))[0]
             p2 = _spx.run([sys.executable, me, '--contract', r2, '--bins', '0', '--soft-range', '5.8'], capture_output=True, text=True)   # 옛 등록 거부
-            return (j1['status']['status'] == 'CONTRACT_NOT_MET' and j1['status']['soft_range'] == 'WITHIN' and j1['bins'] == [0]
-                    and '상태 CONTRACT_NOT_MET' in p1.stdout and p2.returncode == 2 and f'{SOFT_RANGE_PCT:g}' in p2.stderr)
-        chk('㉟ CLI: --contract --bins 0 --soft-range <등록> → JSON · 화면에 상태 (CONTRACT_NOT_MET · WITHIN) · --soft-range 5.8 (옛 등록) → rc 2 (등록값만 · '
+            #  ★ HBR10-02 — 합성 쌍은 AM–AM 2 % → soft 에서도 1 % 한계 ⇒ OUT_OF_RANGE · 쌍별 항목이 JSON 에 실린다
+            return (j1['status']['status'] == 'OUT_OF_RANGE' and j1['status']['soft_range'] == 'OUT_OF_RANGE' and j1['bins'] == [0]
+                    and (j1['status'].get('soft_range_by_pair') or {}).get('pp:1-1', {}).get('state') == 'OUT_OF_RANGE'
+                    and '상태 OUT_OF_RANGE' in p1.stdout and p2.returncode == 2 and f'{SOFT_RANGE_PCT:g}' in p2.stderr)
+        chk('㉟ CLI: --contract --bins 0 --soft-range <등록> → JSON · 화면에 상태 (AM–AM 2 % = OUT_OF_RANGE · 쌍별 항목) · --soft-range 5.8 (옛 등록) → rc 2 (등록값만 · '
             '올리지 않는다)', _okx(_t35))
     print(f'\ncheck_contact_validity selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))

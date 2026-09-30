@@ -71,7 +71,8 @@ RESTART_BYTES_PER_ATOM = 400                              # 체크포인트 a.bi
 E0_DIAG_SCHEMA = 'mixer_dev_e0_diag/1'
 E0_DIAG_REG = dict(max_ovl=0.01, c_dmax_pp=0.1, c_sr2_rel=0.01, eps_pct=1e-9, eps_rel=1e-12)   # §4 a · b · c 통과선 (등록)
 #: ★ v2.6 (09-30 밤 · 1저자 비준 "권고하는걸로") — 검사의 역할.  gate = verdict · dev-rot 관문에 들어감 · report = 값 · pass 를 기록만 (통과선은 그대로).
-#:   b · c 가 보고 전용인 근거 = DEV7 (×14) 실측: b 는 스냅샷 최대의 **주인 교체** (+0.0026 %p) 로 깨졌고 · c 는 dt/2 가 궤적을 바꿔 두 실현을 비교한다.
+#:   b · c 가 보고 전용인 근거 = DEV7 (×14) 에서 종전 기준을 충족하지 못했고 확인 자료 전에 수치 실패를 보고 항목으로 바꿨다 (v2.6) — ⚠ v2.7 (HBR10-03):
+#:   "잡음 · 어떤 후보도 불가능" 은 입증 안 됨 · 한 쌍에서 원인 분해 불가.  ★ v2.7 (HBR10-01): 보고 검사도 **측정 유효는 관문** (technical).
 E0_DIAG_ROLE = dict(complete='gate', technical='gate', a='gate', b='report', c='report')
 MANIFEST_SCHEMA = 'mixer_confirm_manifest/1'
 APPROVAL_SCHEMA = 'mixer_highbo_release_approval/1'
@@ -302,6 +303,58 @@ def e0_record_tools():
                                                                ('deckdiff', 'mixer_deck_diff.py'))}
 
 
+def _e0_report_problems(rec, ch):
+    """★ HBR10-01 (Codex 10 차 · 1저자 비준 09-30 밤) — 보고 검사 (b · c) 도 **측정 값**이 있어야 하고 값 ↔ 상태 ↔ 런 x 가 서로 맞아야 한다 → 문제 목록.
+    옛 판은 b · c 에 {pass: bool, role} 모양만 요구해, 값이 전부 빠진 기록 · S_R² NaN 의 기록 · 타입이 바뀐 기록이 dev-rot 관문을 지났다.
+    b: measurement_valid true · x_ref2_pct · x_ref_pct 유한 수 = 런 E0_ref2 · E0_ref 의 contact.x_hi_pct · pass = (E0_ref2 CONTRACT_MET ∧ x_ref2 ≤ x_ref + eps).
+    c: measurement_valid true · dmax_pp 유한 = |x(dt/2) − x(ref)| · sr2_used = 두 정수 ≥ 2 · sr2_rel_status ∈ {ok (sr2_rel 유한 ≥ 0) · denominator_zero
+    (sr2_rel null — 기준 S_R² 0 · 판정 불능)} · pass = (E0_ref_dthalf CONTRACT_MET ∧ ok ∧ dmax ≤ c_dmax_pp + eps ∧ rel ≤ c_sr2_rel + eps_rel).
+    technical.measurement_valid = {b, c} 와 일치."""
+    pr = []
+
+    def _fin(v_):
+        return isinstance(v_, (int, float)) and not isinstance(v_, bool) and math.isfinite(v_)
+    runs = rec.get('runs') if isinstance(rec.get('runs'), dict) else {}
+
+    def _x(n):
+        c_ = (runs.get(n) or {}).get('contact') or {}
+        return c_.get('x_hi_pct'), c_.get('status')
+    b, c = ch.get('b'), ch.get('c')
+    rg = E0_DIAG_REG
+    if isinstance(b, dict):
+        x2, x1 = b.get('x_ref2_pct'), b.get('x_ref_pct')
+        (rx2, st2), (rx1, _st1) = _x('E0_ref2_s32452843'), _x('E0_ref_s32452843')
+        if b.get('measurement_valid') is not True:
+            pr.append(f'E0 진단 checks.b.measurement_valid ≠ true (측정 불능 · 누락 = TECH — HBR10-01 · {b.get("measurement_valid")!r})')
+        elif not (_fin(x2) and _fin(x1)):
+            pr.append(f'E0 진단 checks.b 의 x 값이 유한한 수가 아니다 (x_ref2 {x2!r} · x_ref {x1!r} — HBR10-01)')
+        elif not (_fin(rx2) and _fin(rx1) and abs(x2 - rx2) <= 1e-12 and abs(x1 - rx1) <= 1e-12):
+            pr.append(f'E0 진단 checks.b 의 x 가 런 기록과 다르다 (x_ref2 {x2} ↔ 런 {rx2} · x_ref {x1} ↔ 런 {rx1})')
+        elif b.get('pass') is not (st2 == 'CONTRACT_MET' and x2 <= x1 + rg['eps_pct']):
+            pr.append(f'E0 진단 checks.b.pass {b.get("pass")!r} 가 값에서 다시 잰 판정과 다르다 (x_ref2 {x2} · x_ref {x1} · ref2 상태 {st2})')
+    if isinstance(c, dict):
+        dm, rel, rst, used = c.get('dmax_pp'), c.get('sr2_rel'), c.get('sr2_rel_status'), c.get('sr2_used')
+        (rxd, std_), (rx1, _st1) = _x('E0_ref_dthalf_s32452843'), _x('E0_ref_s32452843')
+        if c.get('measurement_valid') is not True:
+            pr.append(f'E0 진단 checks.c.measurement_valid ≠ true (측정 불능 · 누락 = TECH — HBR10-01 · {c.get("measurement_valid")!r})')
+        elif not _fin(dm) or not (_fin(rxd) and _fin(rx1) and abs(dm - abs(rxd - rx1)) <= 1e-12):
+            pr.append(f'E0 진단 checks.c.dmax_pp {dm!r} 가 유한하지 않거나 런 x 차 |{rxd} − {rx1}| 와 다르다 (HBR10-01)')
+        elif not (isinstance(used, list) and len(used) == 2
+                  and all(isinstance(u_, int) and not isinstance(u_, bool) and u_ >= 2 for u_ in used)):
+            pr.append(f'E0 진단 checks.c.sr2_used {used!r} ≠ 정수 둘 ≥ 2 (S_R² 사용 칸 — HBR10-01)')
+        elif rst not in ('ok', 'denominator_zero') or (rst == 'ok' and not (_fin(rel) and rel >= 0)) or (rst == 'denominator_zero' and rel is not None):
+            pr.append(f'E0 진단 checks.c 의 S_R² 상대 변화 {rel!r} · 상태 {rst!r} 가 규약 밖 (ok = 유한 ≥ 0 · denominator_zero = null — HBR10-01)')
+        elif c.get('pass') is not (std_ == 'CONTRACT_MET' and rst == 'ok' and dm <= rg['c_dmax_pp'] + rg['eps_pct']
+                                   and rel <= rg['c_sr2_rel'] + rg['eps_rel']):
+            pr.append(f'E0 진단 checks.c.pass {c.get("pass")!r} 가 값에서 다시 잰 판정과 다르다 (dmax {dm} · rel {rel} · dt/2 상태 {std_})')
+    t_ = ch.get('technical')
+    if isinstance(t_, dict) and isinstance(b, dict) and isinstance(c, dict):
+        mv = t_.get('measurement_valid')
+        if mv != dict(b=b.get('measurement_valid'), c=c.get('measurement_valid')):
+            pr.append(f'E0 진단 checks.technical.measurement_valid {mv!r} ≠ b · c 의 measurement_valid (HBR10-01)')
+    return pr
+
+
 def verify_e0_record(out, path, np_now):
     """dev-rot 이 여는 조건 = **봉인된 E0 진단 PASS 기록** (mixer_smoke_blind.py --e0-diag 이 쓴다) 이 지금 폴더와 이어진다 → 문제 목록.
 
@@ -329,6 +382,7 @@ def verify_e0_record(out, path, np_now):
                       f'{json.dumps(v, ensure_ascii=False)[:80]})')
         elif role == 'gate' and v['pass'] is not True:
             pr.append(f'E0 진단 checks.{k}.pass ≠ true (관문 검사 · {json.dumps(v, ensure_ascii=False)[:80]})')
+    pr += _e0_report_problems(rec, ch)
     if rec.get('registered') != E0_DIAG_REG:
         pr.append(f'E0 진단 registered {rec.get("registered")!r} ≠ 등록 {E0_DIAG_REG}')
     if rec.get('reader') != READER_REG:
@@ -990,7 +1044,7 @@ def _fx_certs(out, certdir, status=None, names=None):
         sb.mi.analyse, sb.cv.check_window = real_a, real_c
 
 
-def _fx_e0_record(out, record, x_pct=None, s2=None, status=None):
+def _fx_e0_record(out, record, x_pct=None, s2=None, status=None, used=None):
     """DEV E0 다섯의 진단 기록을 **진짜 생산자** (mixer_smoke_blind.e0_diag) 로 — 검사기 · S_R² 만 대역 (status = 이름 → 상태 덮어쓰기)."""
     import contextlib
     import io
@@ -998,14 +1052,14 @@ def _fx_e0_record(out, record, x_pct=None, s2=None, status=None):
     real_c, real_s = sb.cv.check_window, sb.mi.e0_t0_stats
     xs, st_over = dict(x_pct or {}), dict(status or {})
     sb.cv.check_window = _fx_fake_cw(lambda n: st_over.get(n) or ('CONTRACT_MET' if xs.get(n, 0.8) <= 1.0 else 'CONTRACT_NOT_MET'), x_pct=xs)
-    s2v = dict(s2 or {})
+    s2v, usedv = dict(s2 or {}), dict(used or {})
 
     def fake_s(ref_dir, r_container, **kw):
         import measure_mixing_index as mi
         n = os.path.basename(os.path.normpath(ref_dir))
         pl = mi.deck_plan(os.path.join(ref_dir, 'in.mixer'))
         t0 = mi.planned_t0(pl)
-        return t0, os.path.join(ref_dir, 'post', f'mix_{t0}.liggghts'), dict(s2=s2v.get(n, 0.0100))
+        return t0, os.path.join(ref_dir, 'post', f'mix_{t0}.liggghts'), dict(s2=s2v.get(n, 0.0100), used=usedv.get(n, 1024))
     sb.mi.e0_t0_stats = fake_s
     try:
         with contextlib.redirect_stdout(io.StringIO()):
@@ -1246,6 +1300,42 @@ def selftest():
             j5['checks'].pop('b')
             open(rp + '.l', 'w').write(json.dumps(j5))
             res['b_missing'] = verify_e0_record(td, rp + '.l', 20)                            # 보고 필드가 빠진 기록 = 불완전 → 거부
+            #  ★ HBR10-01 (Codex 10 차 · 1저자 비준 09-30 밤) — 보고 전용이어도 **측정은 유효해야** 한다 (반례 먼저 · 옛 판: 아래 전부 PASS / 소비자 오류 0).
+            #    측정 불능 (S_R² NaN · 사용 칸 < 2 · x 없음) = technical 실패 (TECH/미측정) · 유한한 문턱 실패는 계속 보고만 · S_R² 0 은 NaN 과 다르다 (판정 불능 명시).
+            def _fail_rec(rc_, rec_):
+                return (rc_ != 0 and rec_.get('verdict') == 'FAIL' and rec_['checks']['technical']['pass'] is False
+                        and rec_['checks']['c'].get('measurement_valid') is False)
+            rcn1, recn1 = _fx_e0_record(td, rp + '.m', s2={'E0_ref_s32452843': float('nan')})
+            res['c_nan_base'] = _fail_rec(rcn1, recn1) and verify_e0_record(td, rp + '.m', 20) != []
+            rcn2, recn2 = _fx_e0_record(td, rp + '.n', s2={'E0_ref_dthalf_s32452843': float('nan')})
+            res['c_nan_dthalf'] = _fail_rec(rcn2, recn2) and verify_e0_record(td, rp + '.n', 20) != []
+            rcn3, recn3 = _fx_e0_record(td, rp + '.o', used={'E0_ref_dthalf_s32452843': 1})         # 사용 칸 1 = 분산 없음
+            res['c_used1'] = _fail_rec(rcn3, recn3) and verify_e0_record(td, rp + '.o', 20) != []
+            rcz, recz = _fx_e0_record(td, rp + '.p', s2={'E0_ref_s32452843': 0.0, 'E0_ref_dthalf_s32452843': 0.0})
+            cz = recz['checks']['c']
+            res['c_zero_base'] = (rcz == 0 and recz.get('verdict') == 'PASS' and cz.get('measurement_valid') is True
+                                  and cz.get('sr2_rel') is None and cz.get('sr2_rel_status') == 'denominator_zero' and cz['pass'] is False
+                                  and verify_e0_record(td, rp + '.p', 20) == [])
+            j6 = copy.deepcopy(j)
+            j6['checks']['b'] = dict(pass_=False, role='report')
+            j6['checks']['c'] = dict(pass_=False, role='report')
+            j6['checks']['b']['pass'] = j6['checks']['b'].pop('pass_')
+            j6['checks']['c']['pass'] = j6['checks']['c'].pop('pass_')
+            open(rp + '.q', 'w').write(json.dumps(j6))
+            res['bc_stripped'] = verify_e0_record(td, rp + '.q', 20) != []                    # 값 없는 보고 = 거부
+            j7 = copy.deepcopy(j)
+            j7['checks']['c']['sr2_rel'] = str(j7['checks']['c'].get('sr2_rel'))
+            open(rp + '.r', 'w').write(json.dumps(j7))
+            res['c_type_mut'] = verify_e0_record(td, rp + '.r', 20) != []                     # 타입 변조 = 거부
+            j8 = copy.deepcopy(j)
+            j8['checks']['b']['x_ref2_pct'] = float(j8['checks']['b']['x_ref_pct']) + 0.5      # 값은 실패인데 pass 는 true 그대로
+            open(rp + '.s', 'w').write(json.dumps(j8))
+            res['b_value_mismatch'] = verify_e0_record(td, rp + '.s', 20) != []               # 값 ↔ pass · 런 x 불일치 = 거부
+            j9 = copy.deepcopy(j)
+            j9['checks']['c']['measurement_valid'] = True
+            j9['checks']['c']['sr2_rel'] = None                                               # 유효라면서 값이 없다
+            open(rp + '.t', 'w').write(json.dumps(j9))
+            res['c_forged_valid'] = verify_e0_record(td, rp + '.t', 20) != []
             rc4, rec4 = _fx_e0_record(td, rp + '.h', x_pct={'E0_ref_s49979687': 1.2})                                # a: 1 % 초과
             res['a'] = [] if rc4 == 0 else ['a 실패'] if rec4['checks']['a']['pass'] is False else []
             res['fail_verdict'] = verify_e0_record(td, rp + '.h', 20)
