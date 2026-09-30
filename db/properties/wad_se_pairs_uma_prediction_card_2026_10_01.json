@@ -1,0 +1,84 @@
+{
+ "schema": "prereg_card/estimand/v1",
+ "kind": "estimand",
+ "record_kind": "prospective",
+ "date": "2026-10-01",
+ "status": "초안 — 1저자(사용자) 비준 전 · 계산 전 (results_seen false)",
+ "results_seen": false,
+ "citable": false,
+ "track": "점착 W_ad — 1저자 = 사용자 (통지할 제3자 없음 · DEM 은 협업 상대)",
+ "decision": "D-2026-10-01-wad-se-pairs-uma-prediction-to-dem (active · 방향) · 이 카드 = D-2026-10-01-wad-se-pairs-uma-card (proposed · 절차)",
+ "제목": "SE 쌍 전체 계면 UMA+D3 예측 — P1 LPSCl|Ag(111) · P2 LPSCl|흑연(0001) · 두 종결 × registry A·B · DEM 민감도 시나리오용 · 외주 V5 와 같은 표본 비교",
+ "0_왜": {
+  "DEM": "DEM 은 SE 쌍 w 가 없어 질문 ①(LPSCl ↔ Ag–C 박리)을 못 한다 (5차 합의 보류 · 8차 그대로). 우리 쪽에서 준 것은 Ag–C (0.435 · 0.449) 와 C–C (0.332 · 실험 0.37) 뿐이다.",
+  "막힌_이유": "전체 계면 평면파 DFT 는 GPU 한 장(48 GB)에 안 들어간다 · 작은 모델 DFT 검증(G5)은 외주 V5 (은만) · 전체 계면 UMA 예측은 A′ 카드에서 '내부 전용' 으로 두고 **계산된 적이 없다**.",
+  "경로": "A′ 카드 §5 갈래0 — '넘기려면 1저자 별도 결정 + 라벨' → 결정 D-2026-10-01-wad-se-pairs-uma-prediction-to-dem (사용자 'UMA 예측 계산 → 라벨 달아 넘김')."
+ },
+ "1_무엇을_원하는가": "각 계면(P1 · P2) × 종결(S 바깥 · Li·PS₄ 바깥) × registry(A · B) 에 대해, UMA+D3 로 이완한 결합 기하를 강체 분리한 **고정기하 분리일 W_sep^UMA+D3 (J/m²)** — 2체 D3 가 헤드라인 · ATM 3체는 별도 열. 종결별 헤드라인 = registry A·B 의 평균 (둘 다 나열 · 범위 [min, max]). ⛔ '검증된 값' · 'DFT 값' 이 아니다 — 방법은 UMA+D3 다.",
+ "1a_허용_문구": {
+  "항상": "「P1·P2 전체 계면 값은 미검증 UMA+D3 예측이다. DEM 에서는 모델·기판 제약·검증 범위를 표시한 민감도 시나리오로만 사용하며, 그 결과 범위는 신뢰구간이나 물리적 상·하한이 아니다.」 (A′ 카드 1a 그대로)",
+  "방법_짝": "「SE 쌍은 UMA+D3, C–C · Ag–C 는 PBE+D3(BJ) DFT — 서로의 비는 방법이 섞인 비다.」 (DEM 짝 원칙 ③)",
+  "탄소": "「LPSCl|흑연 값은 DFT 로 확인할 경로가 없다 (작은 모델 외주 없음).」",
+  "V5_뒤_P1_만": "G5 PASS 면 A′ 1a 의 P1′ 문장 · FAIL/INCOMPLETE 면 「해당 표본에서 미재현/미완료」 라벨 (A′ 갈래2)",
+  "기판_라벨": "지정 comp1 셀 · 입방 고정 면내 · 잔류 응력 조건 · 고정 마스크 (A′ 라벨_항상)"
+ },
+ "1b_설계_선언_결과_보기_전": {
+  "P1": "SE = 정본 4층 대칭 슬랩 (V100 PBE 이완 좌표 · `se_slab_from_relaxed` · V3·V4 와 같은 기판) 1×2 + Ag(111) **4층** 2√3×7 (112 Ag) — 흡착층을 SE 에 맞춤 (결정 7 · PBE+D3 격자 · 변형 +0.848 / −0.186 %). 원자 수 ≈ 332 (S 바깥) / 308 (Li·PS₄ 바깥).",
+  "P2": "SE 4층 1×3 + 흑연 **3층** AB 4×7√3 (336 C · 변형 +1.936 / +0.890 %). 원자 수 ≈ 666 / 630. 흑연 두께는 WAD-CC (3|3) 와 같게.",
+  "registry": "A·B = `build_aprime_interfaces.registry_select` 결정적 규칙 (초기 구조 · 표면 종 S / Li) — V3·V4·V5 와 같은 규칙. 흡착층 첫 층의 기준 원자를 A 원자 위 / A–B 중점 위에 둔다 (V5 와 같은 방식).",
+  "이완": "UMA uma-s-1p1 · omat · **default 모드** (A′ S1 결박) + D3(BJ) 2체 PBE 매개변수 · `tools/wad/relax_uma_d3.py` · FIRE · fmax 0.02 eV/Å · 3000 스텝 · 셀 고정 · 마스크: SE `fixed_mask_policy(far_half)` + 흡착층의 계면 반대쪽 절반 (Ag 위 2층 · 흑연 맨 위 1층) · 측방 제약 없음 (V5 와 같게 — registry 가 합쳐지면 기록하고 하나로 적는다).",
+  "끝점": "far = 결합 기하에서 흡착층을 +z 강체 이동 · 직접 간격 ≥ **10 Å** · 영상 간격 ≥ 10 Å (`make_endpoints` · gap 10 — WAD-CC 교훈: 8 Å 는 V2 에서 끝점 검사 미통과). bound·far 같은 셀.",
+  "에너지": "두 끝점의 UMA 단일점 + D3(BJ) 2체 · W = [E(far) − E(bound)] / A · A = 면내 셀 넓이 · 계면 1 개. ATM = simple-dftd3 (s9 1 vs 0) 같은 기하 (WAD-CC `atm_column` 방식).",
+  "V5_비교_외주가_오면": {
+   "①_방법_오차_G5": "외주 VASP 가 계산한 S3v2 봉인 V5 구조 (5 표본) 와 **같은 좌표**의 UMA+D3 에너지로 ΔW = W_UMA+D3 − W_VASP — A′ G5 문턱 그대로 (표본 |ΔW| ≤ 0.10 · 종결 평균 ≤ 0.05 J/m²).",
+   "②_모델_크기_효과": "W^UMA+D3 (V5 작은 모델 · SE 2층 · Ag 3층) vs W^UMA+D3 (P1 · SE 4층 · Ag 4층) — 같은 종결·registry. 정보로 적는다 (문턱 없음 · |Δ| > 0.10 J/m² 면 '크기 민감' 라벨).",
+   "③_합쳐_읽기": "①은 '같은 작은 모델에서 UMA 가 DFT 를 얼마나 맞히나', ②는 '모델을 키우면 UMA 값이 얼마나 바뀌나' — 둘을 나란히 DEM 에 붙인다 (합쳐서 오차막대로 만들지 않는다).",
+   "탄소": "②만 가능 — P2′ (SE 2층 1×3 + 흑연 1층) UMA 는 선택 (1저자) · 외주 없음."
+  }
+ },
+ "1c_답하지_않는_것": [
+  "전체 계면의 DFT 값",
+  "검증된 정확도 (G5 는 작은 모델 한정)",
+  "실험 점착일",
+  "무정형·결함·산화 표면",
+  "리튬화된 Ag (LiAg)",
+  "종결 사이의 실제 면적 비 (DEM 몫 · A′ 갈래1 조건)"
+ ],
+ "2_식": "W_sep = [E(A+B, far) − E(A+B, bound)] / A (J/m² = eV/Å² × 16.0218) · E = E_UMA + E_D3(2체) · ATM 열 = ΔE_ATM 을 같은 식으로.",
+ "3_잘_정의되는가": {
+  "다중_상태": "종결 2 × registry 2 — 선택 규칙을 결과 전에 박았다 (registry 평균 헤드라인 · 전부 나열). 종결은 합치지 않는다 (면적가중은 DEM).",
+  "금속_계면": "Ag 는 금속 — UMA omat 은 PBE 급 · 전하 이동을 명시적으로 다루지 않는다. 그래서 이 값은 G5 (VASP) 로만 확인한다.",
+  "흑연": "분산 지배 (V4 벤젠: PBE 단독 비결합) — D3 모형 의존이 크다. ATM 열을 같이 싣는다."
+ },
+ "4_게이트_결과_보기_전": {
+  "G1_이완": "fmax ≤ 0.02 eV/Å 를 3000 스텝 안에 · 못 하면 그 표본 INCOMPLETE (세고 제외 · 교체 없음).",
+  "G2_구조": "`se_sym_slab.py --interface_check` — PS₄ 온전 · 비혼합 1.5 Å · 마스크 실제 적용 · 몸체 결합 ±15 % → 깃발 = INCOMPLETE.",
+  "G3_끝점": "대표 표본 (P1 · P2 각 S 바깥 A) 에서 10 → 12 Å |ΔW| ≤ 0.01 J/m² · 넘으면 헤드라인은 10 Å 그대로 두고 '끝점 미수렴 (+ΔW)' 라벨.",
+  "registry_합쳐짐": "이완 뒤 흡착층 면내 이동으로 A·B 의 최종 registry 가 0.2 Å 안으로 모이면 '합쳐짐' 으로 적고 하나로 보고."
+ },
+ "5_보고_규칙": "종결별 헤드라인 (registry 평균 · [min, max]) · 2체 · ATM 열 따로 · 라벨 1a 전부 · 숫자는 결과 기록 `db/properties/wad_se_pairs_uma_result_<날짜>.json` 에서만.",
+ "6_기계_비용": {
+  "무엇": "UMA 만 (DFT 없음) — 이완 8 (P1 2×2 · P2 2×2) + 단일점 16 + G3 4 + ATM.",
+  "어디": "V100 (32 GB · 비어 있음) 에서 UMA 가 되는지 먼저 본다 (09-21 env 깨짐 → 09-24 컨테이너 재생성). 안 되면 li2s v2 가 끝난 뒤 gabia 또는 kgy (지금 gabia 예외는 li2s 5 런만 허용 · 탄성 옆 다른 UMA 금지).",
+  "추정_⚠": "P1 332 · P2 666 원자 · default 모드 — 이완 하나에 수십 분–수 시간 (첫 이완 실측으로 갈아 끼운다) · 상한 30 GPU-h."
+ },
+ "7_선행": [
+  "빌더 확장 `build_aprime_interfaces.py --build P1|P2` (4층 SE · Ag 4층 · 흑연 3층 · gap 10 · selftest 음성 포함 · 돌연변이)",
+  "V100 UMA 환경 확인 (fairchem import · 체크포인트 sha · D3 구현)",
+  "이 카드 1저자 비준 → 결정 active"
+ ],
+ "출처": [
+  "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json (1a · 1b · 5 · S1 결박)",
+  "db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json (V5 · G5)",
+  "db/properties/wad_cc_graphite_prereg_2026_09_28.json (끝점 ≥ 10 Å · ATM 열)",
+  "tools/wad/build_aprime_interfaces.py · relax_uma_d3.py · se_sym_slab.py"
+ ],
+ "status_history": [
+  {
+   "at": "2026-10-01",
+   "state": "draft",
+   "by": "agent",
+   "note": "결정 D-2026-10-01-wad-se-pairs-uma-prediction-to-dem 의 절차 카드 초안. 사용자 '이거랑 vasp 계산이랑 같이 비교해보면 좋을듯' → §1b V5_비교 ①② · '시간은 오래걸릴거' → 서두르지 않음."
+  }
+ ]
+}

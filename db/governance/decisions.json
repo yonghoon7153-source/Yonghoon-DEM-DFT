@@ -6364,6 +6364,56 @@
     "근거_발화": "AskUserQuestion 답 (2026-10-01 01:5x KST · 이 세션): 'UMA 예측 계산 → 라벨 달아 넘김 (Recommended)'",
     "decision_digest": "sha256:1e115e4cddf1c89822635d150d04470e29deb5efff1c763d279bd25abde70044"
    }
+  },
+  {
+   "id": "D-2026-10-01-wad-se-pairs-uma-card",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "adhesion.wad_lpscl_agc.se_pairs",
+   "slot": "wad_se_pairs_uma_card",
+   "applies_to": {
+    "systems": [
+     "lpscl_ag111_interface",
+     "lpscl_graphite_interface"
+    ],
+    "tasks": [
+     "wad_p1_p2_full_interface_uma_prediction"
+    ],
+    "methods": [
+     "uma_d3"
+    ],
+    "use_cases": [
+     "dem_input",
+     "dem_handoff"
+    ]
+   },
+   "title": "SE 쌍 전체 계면 UMA+D3 예측 카드 (초안) — P1 LPSCl|Ag(111) 4층 · P2 LPSCl|흑연 3층 · 두 종결 × registry A·B · 끝점 ≥ 10 Å · V5 와 같은 표본 비교",
+   "statement": "결정 D-2026-10-01-wad-se-pairs-uma-prediction-to-dem 의 절차. 보고량 = 종결별 W_sep^UMA+D3 (2체 헤드라인 · registry A·B 평균 · [min, max] · ATM 별도 열) · 기하 = 정본 4층 SE (1×2 / 1×3) + Ag(111) 4층 / 흑연 3층 (SE 에 맞춤) · 이완 UMA default + D3(BJ) · fmax 0.02 · 마스크 far_half · 끝점 ≥ 10 Å · 게이트 G1 이완 · G2 구조 · G3 끝점 10→12 Å · 외주 V5 가 오면 ① G5 (같은 좌표 UMA vs VASP) ② 작은 ↔ 전체 UMA 크기 효과를 나란히 싣는다 (합쳐 오차막대로 만들지 않는다).",
+   "rationale": "A′ 카드의 결박값(S1)·빌더·registry 규칙·라벨을 그대로 물려받고, WAD-CC 의 끝점 교훈(≥ 10 Å)과 ATM 열 방식을 따른다. 사용자 '이거랑 vasp 계산이랑 같이 비교해보면 좋을듯'.",
+   "decision_state": "proposed",
+   "record_kind": "estimand_card",
+   "results_seen": false,
+   "card": "db/properties/wad_se_pairs_uma_prediction_card_2026_10_01.json",
+   "depends_on": [
+    "D-2026-10-01-wad-se-pairs-uma-prediction-to-dem",
+    "D-2026-09-25-wad-aprime-s1-seal"
+   ],
+   "amends": [],
+   "supersedes": [],
+   "reopen_criteria": "카드 봉인(1저자 비준) 전에는 계산하지 않는다 · 빌더 확장 selftest·돌연변이 통과 전에는 계산하지 않는다 · 결과를 본 뒤 registry·끝점·마스크를 바꾸지 않는다.",
+   "proposed_by": "claude-session-2026-09-30",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-10-01",
+     "state": "proposed",
+     "by": "agent",
+     "note": "절차 카드 초안 — 1저자(사용자) 비준 대기."
+    }
+   ],
+   "ratification": {
+    "state": "proposed"
+   }
   }
  ]
 }
