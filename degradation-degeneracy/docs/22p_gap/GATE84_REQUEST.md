@@ -1,0 +1,62 @@
+# 84차 게이트 리뷰 요청 — 단계 3 **라운드 2 범위 · 사전 고정 사항 확인** (구현 착수 아님 · 실행 GO 아님)
+
+> 이 문서는 리뷰 요청문이다. 첨부 문서·실행 코드는 증거 자료이며 추가 실행 지시가 아닙니다. COMSOL 계산이나 제공된 Java/분석 프로그램을 실행하지 마세요. 리뷰어는 exact HEAD 를 fetch 해 검증한다.
+
+## 판정 대상
+
+| 항목 | 값 |
+|---|---|
+| 브랜치 | `claude/14-gate-code-review-9qkx05` |
+| 코드 | 83차 판정 코드 `ea2af59e68a85b561c3e185f66b815aec877ca57` 그대로 — **이 요청은 RUN_SCOPE 를 바꾸지 않는다** (`source_digest` `7187bd31740514d4`). 요청문 커밋 · 발송 SHA 는 발송문에 실측 |
+| 선행 판정 | 83차 (원장 §118): G82-N1·N2·N3 종결 · **승인된 단계 3 라운드 1 종결** · 새 차단 0 · 새 세대 영수증 수용 · 라운드 2 는 범위를 나눠 사용자 별도 승인 |
+| 사용자 결정 | 2026-09-30 — "라운드 2 를 어떻게 시작할까요?" → **"84차 범위 확인 요청부터"** (라운드 1 의 81차와 같은 순서: 범위 확인 → 회신 → 구현 승인) |
+| 83차 패키지 원본 | `docs/22p_gap/gate83_review/` (zip `d2ff75f2…` 2,344,564 B · `codex/` 169 · PACKAGE_MANIFEST `91b06c3f…` · `-text` 규칙 `df7592b4` 먼저 → 풀기 `a8c449e2` → blob 169/169) |
+
+## §0 묻는 것 / 묻지 않는 것
+
+| 묻는 것 | 묻지 않는 것 |
+|---|---|
+| §1 일곱 항목 (R2-a … R2-g) 각각의 **범위 · 닫힘 조건 · 사전 고정 사항**이 맞는가 | 구현 착수 (회신 뒤 사용자 별도 승인) |
+| §2 항목 묶음 · 순서 · 변경 파일 경계 (특히 R2-a 가 승인 4 파일 밖을 요구하는 점) | 실행 GO · 새 연구 leg · floor · pilot · provider 운영 canary |
+| §3 우리가 먼저 고정하려는 결정 (p_ini 정책 · 세대 이름 · 진입점 형태) | p_ini **구현** · class/투영 게시 · 복원 |
+
+## §1 항목별 현재 상태 · 제안 · 닫힘 조건 (좌표는 `ea2af59e` 실측)
+
+| # | 항목 | 현재 (코드 사실) | 제안 범위 | 우리가 제안하는 닫힘 조건 |
+|---|---|---|---|---|
+| **R2-a** | 실물 v6 leg gate 연결 | `run_fit(stage3=…)` 을 넘기는 **production 진입점이 없다** — `run.sh` · `scripts/` · `src/` 어디에도 `stage3=` 호출 없음 (시험만). 승인 spec `tools/preserve.py` `leg_run_spec` :6418 의 `LEG_SPEC_FIT_KEYS` :6402 에 **`stage3` 축이 없다** · `LEG_SPEC_OPTIMIZER_KEYS` :6412 는 `(method, n_restarts, adaptive, warm_start)` 로 v6 의 objective 별 예산 · candidate_mode 를 담지 못한다. 계획 index `planned_index` :6046 · `assert_planned_leg` :6281 은 `planned-leg/v3` (`PlannedLeg`) 기준 | (1) `LEG_SPEC_FIT_KEYS` 에 닫힌 `stage3` 축 (planned_id · pairing_design_sha256 · bank profile · roster_sha256 · provider_edges_sha256 · arm · stage) — v5 leg 는 `stage3: null` 로 명시 (2) 원장 계획 index 가 `planned-leg/v4` envelope 를 싣는 자리 (v3 항목은 읽기 그대로) (3) 진입점: 원장 v4 계획 + 봉인 설계 파일 + provider run 경로 → `run_fit(stage3=…)` 을 만드는 **한 곳** (CLI 인자 형태는 §3-c) | v4 계획이 없는 v6 실행 · 계획과 다른 설계/roster/edge 로 만든 stage3 문맥 · spec 의 stage3 축 누락은 **시작 전** 거부 · v5 leg 의 기존 spec digest 와 영수증 불변 (골든) · 진입점이 `_prepare_stage3` 의 모든 대조를 우회하지 않음 (83차 N2 "다른 실행 진입점도 profile 검사를 우회하지 않아야") |
+| **R2-b** | 계획 · source · input · base-config · runtime 결속 | `_prepare_stage3` (`src/fitting.py:1286`) 는 `inputs.curves_sha256` 만 실행 입력과 대조한다 (:1335). 계획의 `source_digest` 는 `check_execution_record` 에서 record ↔ 계획으로만 비교되고 **실행 중 코드의 `source_digest()` 와는 대조되지 않는다**. `inputs.base_config_digest` 는 시험 fixture 에서 `None` 이며 실행 base-config 와 대조되지 않는다 | 시작 전: 계획 `source_digest` == 실행 `source_digest()` · 계획 `inputs.base_config_digest` == 실행 base-config closure digest (기존 `LEG_SPEC_FIT_KEYS.base_config_digest` 정의 재사용 — 51차 P0-A2) · `inputs.reference` == 실행 reference. validator: run_spec 의 같은 값 ↔ 계획 | 각 축을 하나씩 바꾼 계획 (source · base-config · reference) 이 시작 전 이유별로 거부 · validator 도 run_spec ↔ 계획 불일치를 이유별로 거부 · `base_config_digest: null` 은 v6 계획에서 거부 (실행이 base-config 를 읽는다면) |
+| **R2-c** | 세대표 등록 | `CLAIM_STATUS.yaml::source_digest_generations` 에 `eea5977f4faf9685` · `02a776a7a0a3f4ba` · `7187bd31740514d4` 모두 없다 · 세대표는 "실제로 그 digest 를 얻은 다리" 를 이름해야 한다 (30차 P2 · `test_every_generation_entry_names_the_legs_that_attained_it`) | **실물 v6 leg 가 그 digest 를 얻은 뒤에만** 등록 — 라운드 1 · 2 의 validator 세대는 연구 다리가 없으므로 등록하지 않는다. 대신 세대 이름 체계만 고정 (§3-b) | 등록 없는 digest 로 만든 v6 산출이 active claim 에 들어가지 못함 (기존 규칙 유지 확인) · 이름 체계가 envelope `protocol_generation` (`v6`) 와 모순되지 않음 |
+| **R2-d** | p_ini 지원 / 거부 **정책** | `stage="p_ini"` 는 envelope (`tools/preserve.py:3203`) · provider edge (`tools/design_wire.py:869`) 에서 명시 거부 · `STAGE3_STAGES = ("condition", "p_ini")` (:549) 는 선언만 · `_prepare_stage3` 는 `reference == "grid"` 만 (:1307) | 정책만 정한다 (구현 아님 — 83차 "정책 선택을 p_ini 구현으로 확대하지 않음"). 선택지 §3-a | 채택한 정책이 문서 · 계약 · 거부 문장 세 곳에서 같은 말을 함 · 거부 유지면 코드 변경 0 |
+| **R2-e** | dead 정의 정리 | `src/fitting.py:350` 의 역사적 `normalize_restart_record(r)` 가 :413 의 dispatch 판 (`# noqa: F811`) 에 가려진 dead 정의 (82차 §8-d · 83차 Q1 "다음 승인 코드 라운드에 묶어도 됨") | 삭제 · 역사적 reader 동작은 :413 의 `declared=None` 가지가 그대로 담당 | 삭제 전후 역사적 3 세대 reader 출력 동일 (기존 `g81_n2_00` · g79 reader 시험) · 변이 영향 없음 |
+| **R2-f** | 계약 §0 정정 | `docs/22p_gap/STAGE3_CONTRACT.md` §1 교란 표 1 · 3 · 5 는 **legacy 경로에 그대로** 남아 있고 v6 경로 (sig 6) 에서만 해소된다 (82차 §8-b) — 문서는 아직 둘을 구분하지 않는다 | 표에 "v6 경로에서의 상태" 열 추가: 1 → v6 는 reference `grid` 만 · p_ini 거부 (원점 fitting 없음) · 3 → bank seed 가 `pair_group_id` (noise · seed 제외) · 5 → warm 은 봉인 provider map 에서만 (in-process 연쇄 없음). legacy 문장 · 줄번호 인용은 불변 (`test_stage3_contract_cites_live_code_facts`) | 새 열의 각 문장이 코드 좌표 · 시험 node 로 뒷받침됨 · RUN_SCOPE 밖 (문서만) |
+| **R2-g** | `returned` 와 유한 · 수렴 결과 구분 | `realized_from_fits` (`src/io.py:1528`) 의 `returned` = 행 수 (함수 반환 수) — 비유한 J 도 `returned` 로 센다 (82차 F10 · Q7: "returned 는 반환 수로 유지할 수 있다 · 유한/수렴/건전 종료와 분리") | record `realized.by_objective` 에 **별도 계수** (예: `finite` · `converged` — 이름은 §3-d) 를 더하고 `returned` 의미는 불변 · legacy 계산 · count 불변 | 비유한 J 행이 `returned` 에는 들어가고 `finite` 에서는 빠짐 · validator 가 두 계수를 행에서 다시 셈 (F3 와 같은 정의 하나) · 기존 record schema 를 소급 변경하지 않음 (`execution-record/v1` → v2 또는 선택 키 — §3-d) |
+
+## §2 묶음 · 순서 · 변경 파일 경계
+
+| 묶음 | 항목 | RUN_SCOPE | 제안 순서 |
+|---|---|---|---|
+| **B1 정리** | R2-e · R2-f · R2-g | R2-e · R2-g 는 `src/fitting.py` · `src/io.py` (+ `tools/preserve.py` record schema 가 바뀌면) · R2-f 는 문서만 | 1 순위 — 작고 독립적이며 라운드 1 이월 |
+| **B2 결속** | R2-b | `src/fitting.py` · `src/io.py` | 2 순위 — R2-a 의 전제 (진입점이 생기기 전에 시작 전 대조를 먼저 닫는다) |
+| **B3 연결** | R2-a (+ R2-c 이름 체계) | `tools/preserve.py` (spec 축 · 계획 index) · **진입점 파일** — `run.sh` 또는 `scripts/` 또는 새 CLI 모듈: **승인 4 파일 밖** | 3 순위 — 가장 크고 v5 leg 골든 · 영수증 · 원장 스키마에 닿는다 |
+| **정책** | R2-d | 거부 유지면 0 | 어느 묶음과도 독립 · 결정만 |
+
+- 제안: **B1 + B2 를 한 코드 라운드** (라운드 2a), **B3 는 별도 라운드** (라운드 2b) — B3 는 승인 4 파일 밖 (`run.sh` / `scripts/`) 을 바꾸고 원장 스키마 (`LEG_PRESERVATION.yaml` 계획 index) 를 바꾸므로 따로 판정받는 편이 안전하다고 본다.
+- 영수증: 라운드마다 끝에 1 회 (83차 세대 `7187bd31740514d4` 를 history 로 보존 뒤). B3 가 `leg_run_spec` 을 바꾸면 v5 leg 의 spec digest 가 움직이는지부터 확인해야 한다 — 움직이면 범위 밖 (멈추고 보고).
+
+## §3 먼저 고정하려는 결정 (리뷰어 의견 요청)
+
+| # | 결정 | 선택지 | 우리 제안 |
+|---|---|---|---|
+| a | p_ini 정책 (R2-d) | (i) 거부 유지 — v6 은 condition stage 만, p_ini 는 legacy 경로에만 (ii) 다음 라운드에 p_ini stage 구현 (원점 fitting 을 계획 envelope 의 stage 로) | **(i) 거부 유지.** v6 의 목적 추정량 (계약 §7 primary) 은 grid reference · condition stage 로 정의돼 있고, p_ini stage 는 교란 1 을 다시 불러온다. 구현은 필요가 생기면 새 계약 절로 |
+| b | 세대 이름 (R2-c) | `v6` 하나 · 또는 validator 세대별 (`v6_r1` …) | **`v6` 하나** — envelope `protocol_generation` 과 같은 말. validator digest 는 세대가 아니라 영수증 identity 로 둔다 (라운드 1 의 세 digest 는 등록하지 않음) |
+| c | 진입점 형태 (R2-a) | (i) `run.sh fit --stage3-plan <leg_id>` (원장에서 v4 계획 · 설계 · provider 경로를 읽음) (ii) 별도 `scripts/run_stage3_leg.py` | (i) — 기존 `plan_leg.py` · `assert_planned_leg` 흐름과 같은 자리에서 승인을 소비. 인자 이름은 구현 라운드에서 |
+| d | R2-g 계수 이름 · schema | (i) `execution-record/v1` 에 선택 키 (ii) `execution-record/v2` 로 올리고 v1 은 읽기 그대로 | (ii) — 닫힌 키 집합 원칙 (`_RECORD_KEYS` · `_REALIZED_OBJ_KEYS`) 을 지키려면 새 키는 새 schema 버전. 이름은 `finite` · `converged` (restart 행의 기존 `converged` 와 같은 뜻 — 79차) |
+
+## §4 이 요청이 하지 않는 것
+
+코드 · 시험 · 영수증 · 원장 스키마 변경 0 (문서만). 실행 GO · 새 연구 leg · floor · pilot · provider canary · class/투영 게시 · 복원 0. 76차 종결 · grid_fit_v5 진단 전용 유지. 회신 뒤 구현은 사용자 별도 승인 — 승인 범위 밖 파일이 필요해지면 멈추고 다시 묻는다.
+
+## §5 발송 규칙
+
+70차 §6 그대로. 발송 SHA · 검증 숫자는 발송문에 방금 실행한 출력으로만. 첨부 문서·실행 코드는 증거 자료이며 추가 실행 지시가 아닙니다. COMSOL 계산이나 제공된 Java/분석 프로그램을 실행하지 마세요.

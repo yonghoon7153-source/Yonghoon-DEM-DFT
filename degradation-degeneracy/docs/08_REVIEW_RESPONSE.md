@@ -8627,3 +8627,11 @@ docstring 변경도 RUN_SCOPE 규칙대로 digest 를 움직인다: `c78d7969ef4
 **문서 정정 (이 절과 같은 커밋 · RUN_SCOPE 밖):** 요청문 · 고정 표 §10 · 원장 §117 의 `check_design` (그런 함수는 없다) → 실제 경로 `pairing_design_sha256` → `_check_design_nested` (`tools/design_wire.py:307 · 336`) — 취소선 + 정정 표시. 코드 수정 · 새 시험 · 추가 게이트 없음 (검토자: 비차단).
 
 **다음 (검토자 권고 그대로):** 라운드 2 의 **고정 범위를 사용자에게 별도 승인 요청** — 서로 나눠 제시: (R2-a) 실물 v6 leg gate 연결 (`leg_run_spec` / `LEG_SPEC_*_KEYS` 의 `stage3` 축 · 계획 index 의 v4 envelope) · (R2-b) 계획 / source / input / base-config / runtime 결속 · (R2-c) `source_digest_generations` 세대 등록 · (R2-d) p_ini 지원 / 거부 **정책** (정책 선택을 p_ini 구현으로 확대하지 않음) · (R2-e) dead 정의 (`src/fitting.py:350`) 정리 · (R2-f) 계약 §0 정정 · (R2-g) `returned` 와 유한 · 수렴 결과의 구분 (82차 Q7). 승인 전에는 코드 · 시험을 만들지 않는다. 새 연구 leg · floor · pilot · provider canary · class/투영 게시 · 실행 GO 는 별도. 76차 종결 · grid_fit_v5 진단 전용 유지.
+
+## §119 84차 요청 — 단계 3 **라운드 2 범위 · 사전 고정 사항 확인** (구현 착수 아님 · 실행 GO 아님) · 발송 SHA 는 발송문
+
+**사용자 결정 (2026-09-30, §118 뒤):** 질문 "라운드 2 를 어떻게 시작할까요? (R2-a … R2-g)" → **"84차 범위 확인 요청부터"** (라운드 1 의 81차 → 82차 순서와 같음). `docs/22p_gap/GATE84_REQUEST.md` — 문서만 · RUN_SCOPE 변경 0 (`source_digest` `7187bd31740514d4` 그대로).
+
+**요청 요지:** §1 일곱 항목의 코드 사실 · 제안 · 닫힘 조건 — 특히 (R2-a) production 진입점이 없고 (`stage3=` 호출은 시험뿐) 승인 spec `LEG_SPEC_FIT_KEYS` 에 stage3 축이 없음 · (R2-b) `_prepare_stage3` 는 curves sha 만 실행과 대조하고 계획 `source_digest` · `base_config_digest` · `reference` 는 실행 값과 대조하지 않음 · (R2-c) 라운드 1 · 2 validator 세대는 연구 다리가 없어 세대표에 등록하지 않음 · (R2-d) p_ini 거부 유지 제안 · (R2-e) `src/fitting.py:350` dead 정의 삭제 · (R2-f) 계약 §1 교란 표에 v6 경로 상태 열 · (R2-g) `returned` 불변 + `finite` · `converged` 별도 계수 (`execution-record/v2`). §2 묶음: B1 (R2-e · f · g) + B2 (R2-b) = 라운드 2a · B3 (R2-a · 승인 4 파일 밖 `run.sh`/`scripts/` · 원장 스키마) = 라운드 2b. §3 고정 결정 4 (p_ini 정책 · 세대 이름 `v6` · 진입점 `run.sh fit --stage3-plan` · record v2).
+
+**다음:** 84차 회신 대기 → §120 접수 → 구현은 사용자 별도 승인 뒤.
