@@ -7,7 +7,7 @@ updated: 2026-09-30
 track: li2s / lpscl_smallcell_glass
 channel: li2s1a
 kind: prompt
-status: 초안 (발송 전 · 사용자 검토) — 회신 CL 의 "결과 나오면 채워서 다시 주세요" 에 대한 답장
+status: 발송됨 (사용자 · 2026-09-30 · 초안 그대로) — 회신 CL 의 "결과 나오면 채워서 다시 주세요" 에 대한 답장 · 회신 대기 · §6-3 에서 알린 도구 표시 결함은 발송 뒤 고침 (새 sha16 c1f8f9b467149c91)
 confidence: medium
 verificationStatus: verified
 verifiedAt: 2026-09-30

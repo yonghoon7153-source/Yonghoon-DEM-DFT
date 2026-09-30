@@ -57,10 +57,12 @@ def _covers(t, hi):
       라벨은 50–200** 이 붙었다. MTO 는 최대 lag 를 T/2 로 자르므로 200 ps 생산런의
       최대 lag 가 100 ps 다 — 즉 이건 예외가 아니라 **200 ps 런의 기본 상황**이었다.
       못 잰 것은 통과가 아니다 (이 파일 1502행 주석의 같은 원칙).
+    ⚠ 2026-09-30 — numpy 배열도 받는다. `loglog_slope` 가 이 검사를 쓰게 되면서 부트스트랩이
+      ndarray 로 부른다 (`not t` 는 원소가 둘 이상인 ndarray 에서 ValueError 로 죽는다).
     """
-    if not t:
+    if t is None or len(t) == 0:
         return False
-    tmax = max(t)
+    tmax = float(t.max()) if hasattr(t, "max") else max(t)
     if tmax >= hi:
         return True
     if len(t) < 2:
@@ -584,6 +586,47 @@ def _boundary_verdict(ref, sigma, ref_curve):
             "⛔_폐기된_규칙": "회신 CC 의 절대폭 σ > 0.005 (회신 CH 가 오적용으로 판정)"}
 
 
+def c2_verdicts(b_sto, b_mto, curve, sigma_plateau=None, plateau_block=None):
+    """C2 (β 0.8–1.2) 판정 한 벌 — 회신 CD · CH · CL 규칙 그대로. → dict
+
+    · **주 추정자 = MTO** (회신 CD Q-CC-1 *"MTO로 정합니다"*). STO 는 **병기**(같은 σ).
+      MTO 가 없으면 STO 를 주로 쓰고 `main_curve` 에 그렇게 적는다.
+    · **σ = 사다리 끝값** (회신 CD 조건 ① · 회신 CH *"plateau가 없는 사다리의 끝값이 참값보다 작을 수
+      있으니"*). 사다리 1–32 원점은 b_min 50 ps 에 못 미치므로(회신 CD 조건 ②) **모든 σ 는 하한**이고,
+      plateau 규칙으로 고른 b 의 σ 는 `ref_plateau_sigma` 에 **참고**로만 둔다.
+    · 사다리가 없으면(고정 블록만) 보수값이 없다 — 그 σ 로 낸 판정은 `sigma_kind` 에 "보수값 아님" 으로 적는다.
+
+    ⛔ 2026-09-30 이전: `--beta_boot` 가 경계 줄을 **STO 가 있으면 STO 로**, σ 는 **plateau b 의 값**으로
+      찍었다 — 두 규칙과 다 달랐다. li2s 본 런 판독 블록(③′)이 그 σ 를 그대로 옮겨 썼고, 본 런 값을
+      보기 전에 잡았다 (원장 `⚠_판독블록_σ_정정_2026_09_30_본런_결과_전`). 판정이 갈린 런 3/11.
+
+    ⛔ 이 함수가 못 하는 것: σ 가 참값인지 모른다(하한 — 그래서 2σ) · b_min 에 닿는 사다리를 만들지
+      못한다(원점 간격 × b ≥ 50 ps 면 블록 수가 너무 적다) · 판정을 확정하지 않는다(사람이 한다).
+    """
+    cur = sorted(curve or [], key=lambda p: p[0])
+    if cur:
+        b_end, sigma = cur[-1]
+        kind = f"보수 — 사다리 끝 b = {b_end} (하한)"
+    elif sigma_plateau:
+        sigma = sigma_plateau
+        kind = f"고정 블록 b = {plateau_block} — 사다리 없음 · 보수값 아님 (참고)"
+    else:
+        return {"status": "σ 없음 — 판정하지 않는다"}
+    if b_mto is not None:
+        main_lab, main_b, other_lab, other_b = "MTO", b_mto, "STO", b_sto
+    else:
+        main_lab, main_b, other_lab, other_b = "STO", b_sto, None, None
+    out = {"rule": "주 = MTO (회신 CD) · σ = 사다리 끝 (회신 CD ① · CH) · 2σ · 가까운 쪽 문턱 (회신 CL)",
+           "sigma": sigma, "sigma_kind": kind, "main_curve": main_lab,
+           "main": _boundary_verdict(main_b, sigma, main_lab) if main_b is not None else None,
+           "listed": _boundary_verdict(other_b, sigma, other_lab) if other_b is not None else None}
+    if cur and sigma_plateau and main_b is not None:
+        out["ref_plateau_sigma"] = {"block": plateau_block, "sigma": sigma_plateau,
+                                    "main": _boundary_verdict(main_b, sigma_plateau, main_lab),
+                                    "⚠": "참고 — 규칙이 아니다 (plateau b 는 b_min 아래)"}
+    return out
+
+
 def choose_block_plateau(curve, tol=BLOCK_PLATEAU_TOL, run=BLOCK_PLATEAU_RUN, n_boot=None):
     """σ(b) 곡선에서 **plateau 에 드는 최소 b** 를 고른다 (회신 BU · 결과 보기 전 확정).
 
@@ -832,7 +875,16 @@ def framework_alarm(json_path, save_fs=None):
 
 
 def loglog_slope(t, y, lo, hi):
-    """[lo,hi] ps 구간의 log-log 기울기. 점이 3개 미만이면 None."""
+    """[lo,hi] ps 구간의 log-log 기울기. 점이 3개 미만이거나 **곡선이 hi 에 못 닿으면** None.
+
+    ⛔ 2026-09-30 — `_covers` 검사가 **여기만 빠져 있었다** (회신 S 08-29 는 `lin_fit` · `d_incremental`
+      에만 넣었다). MTO 곡선은 lag T/2 에서 끝나므로 400 ps 런은 200 ps 까지다 — 창 스캔의
+      `100-300!` 칸이 **100–200 을 재 놓고** 라벨은 100-300 으로 찍혔다 (li2s 본 런 11 런 전부
+      100-200 칸과 같은 숫자). 같은 칸의 c · m · D_inc 는 '—' 로 비어 있어서, '같은 창을 두 번
+      찍은 것' 이 β 칸 한 줄에만 숨었다 (회신 F P0 와 같은 계열). 탐색용 칸이라 판정엔 안 쓰였다.
+    """
+    if not _covers(t, hi):
+        return None
     pts = [(math.log(a), math.log(b)) for a, b in zip(t, y)
            if lo <= a <= hi and a > 0 and b > 0]
     if len(pts) < 3:
@@ -2033,6 +2085,48 @@ def selftest():
         _died = "0 으로 나누지 않는다" in str(_ex)
     chk(_died, "[⛔음성] σ = 0 이면 경계 판정을 하지 않고 죽는다")
 
+    # ── C2 판정 한 벌 (회신 CD·CH·CL · 2026-09-30) — 주 = MTO · σ = 사다리 끝 ────────
+    #   실측 사다리 = li2s 600 K 파일럿 (원장 ✅_600K_파일럿_판독_결과_2026_09_29)
+    _lad600 = [(1, 0.0027), (2, 0.00376), (3, 0.00465), (4, 0.00527), (6, 0.00642),
+               (8, 0.00734), (12, 0.00898), (16, 0.01021), (24, 0.01196), (32, 0.014)]
+    _c6 = c2_verdicts(0.5331, 0.9233, _lad600, sigma_plateau=0.00898, plateau_block=12)
+    chk(_c6["main_curve"] == "MTO" and abs(_c6["sigma"] - 0.014) < 1e-12
+        and abs(_c6["main"]["n_sigma"] - 8.81) < 0.01 and _c6["main"]["ch_2sigma_verdict"] == "통과",
+        f"[양성] 600 K: 주 = MTO · σ = 사다리 끝 0.014 → {_c6['main']['n_sigma']:.2f}σ 통과 (원장 8.81σ)")
+    chk(_c6["listed"]["ref_curve"] == "STO" and _c6["listed"]["ch_2sigma_verdict"] == "미통과"
+        and abs(_c6["ref_plateau_sigma"]["main"]["n_sigma"] - 13.73) < 0.01,
+        "[양성] STO 는 병기 (미통과) · plateau σ 판정(13.73σ)은 참고 칸에만 있다")
+    #   ⛔음성 — 판정이 갈린 실측 두 런 (li2s 본 런 09-30). 옛 판정 줄(STO 우선 · plateau σ)이면 둘 다 '통과' 였다.
+    _c33 = c2_verdicts(0.8734, 0.8286, [(8, 0.00792), (32, 0.01442)], sigma_plateau=0.00792, plateau_block=8)
+    chk(_c33["main"]["ch_2sigma_verdict"] == "경계 · 구분 불가" and abs(_c33["main"]["n_sigma"] - 1.98) < 0.01
+        and _c33["ref_plateau_sigma"]["main"]["ch_2sigma_verdict"] == "통과",
+        "[⛔음성] 550 K s3: 사다리 끝 σ 로 1.98σ **경계** — plateau σ(3.61σ 통과)로 판정하면 안 된다")
+    _c44 = c2_verdicts(1.0756, 0.7556, [(12, 0.01747), (32, 0.02796)], sigma_plateau=0.01747, plateau_block=12)
+    chk(_c44["main_curve"] == "MTO" and _c44["main"]["ch_2sigma_verdict"] == "경계 · 구분 불가"
+        and _c44["listed"]["ch_2sigma_verdict"] == "통과",
+        "[⛔음성] 465 K s4: STO 1.0756 이 통과여도 **주는 MTO** (0.7556 · 1.59σ 경계) — STO 로 판정하면 안 된다")
+    _cS = c2_verdicts(0.81, None, _lad600)
+    chk(_cS["main_curve"] == "STO" and _cS["listed"] is None,
+        "[음성] MTO 가 없으면 STO 가 주이고 그렇게 적는다 (조용히 바꾸지 않는다)")
+    _cF = c2_verdicts(0.8286, 0.9, None, sigma_plateau=0.01, plateau_block=12)
+    chk("보수값 아님" in _cF["sigma_kind"] and "ref_plateau_sigma" not in _cF,
+        "[음성] 사다리 없이 고정 블록이면 σ 를 '보수값 아님' 으로 적는다")
+    chk(c2_verdicts(0.9, 0.9, None).get("status", "").startswith("σ 없음"),
+        "[음성] σ 가 없으면 판정하지 않는다")
+
+    # ── loglog_slope 곡선 도달 검사 (2026-09-30 · li2s 창 스캔의 '100-300!' 칸) ─────────
+    _tc = [i * 0.1 for i in range(1, 2001)]                     # MTO 처럼 lag 200 ps 에서 끝난다
+    _yc = [1.0 + 0.6 * x for x in _tc]
+    chk(loglog_slope(_tc, _yc, 100, 300) is None,
+        "[⛔음성] 곡선이 200 ps 에서 끝나면 창 100-300 의 β 는 None (100–200 을 재 놓고 라벨만 붙이지 않는다)")
+    chk(loglog_slope(_tc, _yc, 100, 200) is not None and loglog_slope(_tc, _yc, 2, 50) is not None,
+        "[양성] 곡선이 닿는 창(100-200 · 2-50)은 그대로 잰다")
+    import numpy as _npc
+    chk(loglog_slope(_npc.asarray(_tc), _npc.asarray(_yc), 100, 300) is None
+        and abs(loglog_slope(_npc.asarray(_tc), _npc.asarray(_yc), 2, 50)
+                - loglog_slope(_tc, _yc, 2, 50)) < 1e-12,
+        "[음성] numpy 배열도 같은 규칙 (부트스트랩 경로) — ndarray 에서 죽지 않는다")
+
     chk(run_verdict(_t, _y1)[0] == HOLD and run_verdict(_t, _y2)[0] == CITABLE,
         "[재현 BQ-6 ①] 절편 27 Å² 만 다른 두 곡선에서 run_verdict 가 hold ↔ citable 로 갈린다 (MSD 대용값 1.1 → 4.1)")
     chk(_e1[0] == _e2[0] and _e1[2]["msd_magnitude_alarm"] != _e2[2]["msd_magnitude_alarm"],
@@ -2913,7 +3007,8 @@ def main():
     ap.add_argument("--beta_boot", metavar="JSON",
                     help="한 런의 **β 시간원점 블록 부트스트랩** (회신 CC Q8-①). traj.xyz 에서 공통원점 행렬을 만들어 "
                          "창 [--window] 의 log-log 기울기 β 의 σ 를 잰다. --block_scan 으로 b 를 plateau 규칙으로 고르고, "
-                         "STO(카드 곡선)·MTO(정본) β 점추정을 같이 찍는다. 판정은 하지 않는다.")
+                         "STO(카드 곡선)·MTO(정본) β 점추정을 같이 찍는다. C2 판정 줄 = 주 MTO · σ 사다리 끝(보수) · 2σ "
+                         "(회신 CD·CH·CL · `c2_verdicts`) — plateau b 의 σ 는 참고. 확정은 사람이 한다.")
     ap.add_argument("--block_scan", metavar="1,2,4,8",
                     help="--ea_boot 와 함께: 블록 사다리에서 σ(Ea) plateau 를 찾아 b 를 고른다. "
                          "⛔ plateau 가 없으면 **b 를 고르지 않고 판정을 보류한다**(종료코드 2).")
@@ -2972,11 +3067,12 @@ def main():
         b_sto = loglog_slope(t_s, y_s, lo, hi) if (t_s and y_s) else None
         t_m, y_m = _curve(d, mto=True, path=jp, rebuild=False)
         b_mto = loglog_slope(t_m, y_m, lo, hi) if (t_m and y_m) else None
+        _bmat = loglog_slope(po['t_ps'], po['msd_per_origin'].mean(axis=0), lo, hi)
         print(f"β 부트스트랩 · {jp.parent.name} · 창 [{lo:g}, {hi:g}] ps · 원점 {po['n_origin']} · lag {len(po['t_ps'])} · "
               f"save_fs {sf_v:g} fs ({sf_src or '캠페인 기본 가정'}){'  ⚠ **가정값**' if sf_assumed else ''}")
         print(f"   β 점추정 — STO(카드 곡선 msd_Li_A2): {b_sto if b_sto is None else f'{b_sto:.4f}'} · "
               f"MTO(정본 msd_Li_A2_mto): {b_mto if b_mto is None else f'{b_mto:.4f}'} · "
-              f"공통원점 행렬 평균: {loglog_slope(po['t_ps'], po['msd_per_origin'].mean(axis=0), lo, hi):.4f}")
+              f"공통원점 행렬 평균: {'— (곡선이 창 끝에 못 닿는다)' if _bmat is None else f'{_bmat:.4f}'}")
         blk = a.rsd_block
         scan = None
         if a.block_scan:
@@ -2997,30 +3093,54 @@ def main():
                "reading": "σ 는 공통원점 행렬(MTO 추정자)의 런 내부 표준편차. 카드의 β* 가 STO(단일 원점)면 그 산포는 이보다 "
                           "작지 않으므로 σ 는 **하한**이다. ⛔ 회신 CC 의 절대폭 규칙(σ > 0.005)은 **폐기**됐다 — 회신 CH: "
                           "'0.005 는 β 0.805 하나를 두고 쓴 말이라 절대폭으로 굳으면 안 되고, 15σ 떨어진 400 K 에도 같은 "
-                          "라벨을 찍는 것은 명백한 오적용'. 지금 규칙은 **|β − 문턱| 을 σ 로 나눈 거리**다. 판정은 도구가 하지 않는다."}
+                          "라벨을 찍는 것은 명백한 오적용'. 지금 규칙은 **|β − 문턱| 을 σ 로 나눈 거리**다. "
+                          "판정 줄(`c2_verdicts`)은 규칙을 기계적으로 적용한 것이고 확정은 사람이 한다.",
+               "⚠_폐기된_키": "boundary_vs_0.8 (2026-09-30 전 판 — STO 우선 · plateau b 의 σ) → c2_verdicts "
+                             "(주 = MTO · σ = 사다리 끝 · 회신 CD·CH·CL)"}
+
+        def _print_c2(c2):
+            mv = c2.get("main")
+            if not mv:
+                print(f"  C2 판정 없음 — {c2.get('status', 'β 점추정이 없다')}")
+                return
+            print(f"  ★ C2 주 판정 ({c2['main_curve']} · 회신 CD·CH·CL) — β {mv['beta_ref']:.4f} · σ {c2['sigma']:.5f} "
+                  f"({c2['sigma_kind']}) · 가까운 문턱 {mv['nearest_threshold']} 까지 {mv['distance_to_nearest']:+.4f} "
+                  f"= {mv['n_sigma']:.2f}σ · 구간({C2_LO}–{C2_HI}) {'안' if mv['in_window'] else '밖'} → "
+                  f"**{mv['ch_2sigma_verdict']}**")
+            lv = c2.get("listed")
+            if lv:
+                print(f"    병기 {lv['ref_curve']} {lv['beta_ref']:.4f} · 같은 σ · {lv['nearest_threshold']} 까지 "
+                      f"{lv['distance_to_nearest']:+.4f} = {lv['n_sigma']:.2f}σ → {lv['ch_2sigma_verdict']} "
+                      f"(판정에 안 씀 · 회신 CD)")
+            rp = c2.get("ref_plateau_sigma")
+            if rp:
+                print(f"    참고 — plateau b = {rp['block']} 의 σ {rp['sigma']:.5f} 로는 {c2['main_curve']} "
+                      f"{rp['main']['n_sigma']:.2f}σ → {rp['main']['ch_2sigma_verdict']} (규칙 아님 · b_min 아래)")
+
         if blk is None:
             print("\n⛔ **블록 길이를 고르지 않는다** ⇒ σ(β) 는 '못 구했다' 로 적는다 (회신 BU 규칙). 아무 b 나 골라 숫자를 만들지 않는다.")
             res["status"] = "판정보류_블록_plateau_없음"
+            if scan and scan.get("curve"):
+                c2 = c2_verdicts(b_sto, b_mto, scan["curve"])
+                c2["⚠_plateau_없음"] = ("사다리 끝 보수값으로 낸 판정이다 — 회신 CD 조건 ②(사다리가 전부 b_min 아래라 모든 σ 는 "
+                                        "하한 · 보고는 끝값)에 따른 **우리 읽기**이고 외부 1저자 확인 전이다 (li2s 원장 2026-09-30). "
+                                        "종료 코드는 2 로 둔다.")
+                res["c2_verdicts"] = c2
+                print("  (참고 — plateau 가 없어도 사다리 끝 보수값은 있다 · 우리 읽기 · 외부 1저자 확인 전)")
+                _print_c2(c2)
             if a.out:
                 pathlib.Path(a.out).write_text(json.dumps(res, ensure_ascii=False, indent=1) + "\n"); print(f"-> {a.out}")
             return 2
         bb = block_bootstrap_beta(po["msd_per_origin"], po["t_ps"], lo, hi, blk, a.n_boot, seed=0)
         if bb is None:
-            raise SystemExit("⛔ 부트스트랩 실패 — 창에 점이 모자라거나 곡선이 0 이하다.")
+            raise SystemExit("⛔ 부트스트랩 실패 — 창에 점이 모자라거나 곡선이 0 이하거나 창 끝에 못 닿는다.")
         res["beta_boot"] = bb
-        ref = b_sto if b_sto is not None else b_mto
-        if ref is not None:
-            res["boundary_vs_0.8"] = _boundary_verdict(ref, bb["sigma_beta"],
-                                                       "STO" if b_sto is not None else "MTO")
+        c2 = c2_verdicts(b_sto, b_mto, scan["curve"] if scan else None,
+                         sigma_plateau=bb["sigma_beta"], plateau_block=bb["block"])
+        res["c2_verdicts"] = c2
         print(f"\n  β̂(행렬) = {bb['beta_matrix_mean']:.4f}   σ(β) = {bb['sigma_beta']:.5f}   [68 % {bb['lo68']:.4f}, {bb['hi68']:.4f}]"
               f"   block {bb['block']} · 재표본 {bb['n_boot_used']}/{bb['n_boot']} · 원점 {bb['n_origin']}")
-        if ref is not None:
-            bv = res["boundary_vs_0.8"]
-            _d = bv["distance_to_nearest"]
-            _n = bv["n_sigma"]
-            print(f"  카드 β*({bv['ref_curve']}) {ref:.4f} · 가까운 문턱 {bv['nearest_threshold']} 까지 {_d:+.4f} · "
-                  f"σ 의 **{_n:.2f} 배** · 구간({C2_LO}–{C2_HI}) {'안' if bv['in_window'] else '밖'} → "
-                  f"회신 CH 2σ 규칙: **{bv['ch_2sigma_verdict']}**")
+        _print_c2(c2)
         if a.out:
             pathlib.Path(a.out).write_text(json.dumps(res, ensure_ascii=False, indent=1) + "\n"); print(f"-> {a.out}")
         return 0

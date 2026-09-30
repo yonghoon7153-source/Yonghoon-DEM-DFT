@@ -11,7 +11,7 @@
 - 2026-09-30 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-30 · `kb/reviews/codex_CM_prompt_cei_nd_handoff_2026_09_30.md` — 리뷰 CM 프롬프트 — CEI (Nd 계면) 외부 송부 전 리뷰: 정본 페이지 · 송부판 · 인계 카드 · 1저자 읽기 지침서 · AI 프롬프트 · 발송됨 (사용자 · 2026-09-30 · 인계 zip 첨부) · ✅…
 - 2026-09-30 · `kb/reviews/codex_CM_reply_cei_nd_handoff_2026_09_30.md` — 회신 CM — CEI (Nd 계면) 외부 인계본 리뷰: NO-GO (P0 7 · P1 6) — 수치·무결성은 대체로 맞음 · 요약·교육 문구가 계산 범위를 넘음 · Fig. 2 재현 명령이 이력 파일을 덮음 · 수령 (2026-09-30 · 사용자 붙여넣기) — 회신 원문 · 고…
-- 2026-09-30 · `kb/reviews/li2s1a_CN_prompt_li2s_main_readout_2026_09_30.md` — CN 프롬프트 — li2s 소셀 유리 MD: CL 채움판 (600 K 파일럿 · 본 런 착수) + 본 런 판독 (C1 11/11 · C2 465 K 0/5 · 550 K 1/5) · 갈래1 확인 요청 · C2 미통과 원인 · 다섯 시드 전수 (Q-CL-3·4) (외부 1저자에게) · 초안 (발송 전 · 사용자 검토) — 회신 CL 의 "결과 나오면 채…
+- 2026-09-30 · `kb/reviews/li2s1a_CN_prompt_li2s_main_readout_2026_09_30.md` — CN 프롬프트 — li2s 소셀 유리 MD: CL 채움판 (600 K 파일럿 · 본 런 착수) + 본 런 판독 (C1 11/11 · C2 465 K 0/5 · 550 K 1/5) · 갈래1 확인 요청 · C2 미통과 원인 · 다섯 시드 전수 (Q-CL-3·4) (외부 1저자에게) · 발송됨 (사용자 · 2026-09-30 · 초안 그대로) — 회신 C…
 - 2026-09-30 · `kb/projects/cei_explainer_prompt_2026_09_30.md` — CEI 설명·인계 AI 프롬프트 — 처음 보는 대학원생 눈높이 우선 (2026-09-30) · 발송 대기 — 인계 묶음(zip)에 들어간다
 - 2026-09-30 · `kb/projects/cei_reading_guide_2026_09_30.md` — CEI 페이지 읽기 지침서 — 1저자·처음 보는 대학원생용 (2026-09-30) · 발송 대기 — 인계 묶음(zip)에 들어간다
 - 2026-09-30 · `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30) · 발송 대기 — 외부 리뷰 회신 CM(NO-GO) 이행판 · 사용자가 …
@@ -386,7 +386,7 @@
 - `kb/reviews/li2s1a_CH_reply_li2s_cd_reply_pilot800_2026_09_28.md` — 회신 CH — 외부 1저자 (li2s 소셀 유리 MD): 편지 CH 판정 (Q-CH-1 2σ 로 상향 · Q-CH-2 600 K pre-register · Q-CH-3 수정안 수용 + S54 내력·seed4 일시 · 새 항목 둘 — 400 K 두 런 D 2.2 배 · 시드 간 P 이탈 산포)  (2026-09-28 · 수령 (2026-09-28 · 사용자 붙여넣기) — 회신 원문 · 고…)
 - `kb/reviews/li2s1a_CL_prompt_li2s_ch_reply_s54_census_2026_09_28.md` — CL 프롬프트 — li2s 소셀 유리 MD: 회신 CH 이행 · S54 내력 (전건) · 새 발견 둘 (교환망 · 두 보존율) · 600 K 파일럿 (초기구조 정정 공개) · 확인 요청 넷 (외부 1저자에게)  (2026-09-28 · 발송됨 (초안 판 · 빈 칸 둘 — 사용자 · 2026-09-28) …)
 - `kb/reviews/li2s1a_CL_reply_li2s_ch_reply_s54_census_2026_09_28.md` — 회신 CL — 외부 1저자 (li2s 소셀 유리 MD): 초안 CL 수령 · Q-CL-2 먼저 답 (465 K '2 배' 확정 + 출처 단서) · Q-CL-1 확정 (가까운 쪽 문턱 · 양쪽 2σ) · Q-CL-3·4 는 결과와 같이 · 네 시드 전수는 발송 전 권장  (2026-09-28 · 수령 (2026-09-28 · 사용자 붙여넣기) — 회신 원문 · 고…)
-- `kb/reviews/li2s1a_CN_prompt_li2s_main_readout_2026_09_30.md` — CN 프롬프트 — li2s 소셀 유리 MD: CL 채움판 (600 K 파일럿 · 본 런 착수) + 본 런 판독 (C1 11/11 · C2 465 K 0/5 · 550 K 1/5) · 갈래1 확인 요청 · C2 미통과 원인 · 다섯 시드 전수 (Q-CL-3·4) (외부 1저자에게)  (2026-09-30 · 초안 (발송 전 · 사용자 검토) — 회신 CL 의 "결과 나오면 채…)
+- `kb/reviews/li2s1a_CN_prompt_li2s_main_readout_2026_09_30.md` — CN 프롬프트 — li2s 소셀 유리 MD: CL 채움판 (600 K 파일럿 · 본 런 착수) + 본 런 판독 (C1 11/11 · C2 465 K 0/5 · 550 K 1/5) · 갈래1 확인 요청 · C2 미통과 원인 · 다섯 시드 전수 (Q-CL-3·4) (외부 1저자에게)  (2026-09-30 · 발송됨 (사용자 · 2026-09-30 · 초안 그대로) — 회신 C…)
 - `kb/reviews/litdb_dopant_sota_2026_09_09.md` — litdb_dopant_sota_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/section3_review_candidates.md` — 📋 §3 리뷰 코멘트 후보 — 소거법 작업용 (ECER-D-26-00097)
 - `kb/reviews/section3_review_comments_compressed.md` — Comments on Section 3 (Intrinsic Stability of Sulfide SEs) — 압축판 v2
