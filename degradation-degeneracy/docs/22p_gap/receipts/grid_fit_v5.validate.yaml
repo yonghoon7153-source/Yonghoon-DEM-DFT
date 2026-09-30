@@ -1,7 +1,7 @@
 schema_version: 2
 _주의: 이 파일은 손으로 쓰지 않는다. `python3 docs/22p_gap/make_receipt.py <leg>` 가 만들고 `--check` 가 **core 바이트 동일**
   재생성을 확인한다.
-core_sha256: ee7c405a1495eff06af6d6187b2e936d7ca345a3bf8833118e77e23aba6f14ea
+core_sha256: 3f706067d5fbc8663310faadfb05301a35222d91d0de5f1a436e8b87f66b363f
 core:
   leg_id: grid_fit_v5
   bundle:
@@ -60,8 +60,8 @@ core:
       필수_입력_존재: 통과
       행별_서명: 통과
   identity:
-    validator_source_digest: 7187bd31740514d4
-    src_io_sha256: e0577ad8af02b0b3
+    validator_source_digest: ba51cd20caa10b7b
+    src_io_sha256: 30556f689f28de5c
     src_scoring_sha256: 69e69cb046f4b4ae
     archive_bundle_sha256: 5f7fc3c89dfe5dba
     make_receipt_sha256: 9c8cf71af310de03
@@ -92,9 +92,9 @@ core:
   outputs_agree: true
 stamp:
   _주의: 기록용. core 재생성 대조에서 제외된다.
-  validator_commit: 5313731cfdbaa870e4e2419e6e147246c4d17e55
+  validator_commit: b740db1616e17118ec764648204cf90474b0ffcd
   validator_tree_dirty: true
-  generated_at_utc: '2026-09-30T06:14:55Z'
+  generated_at_utc: '2026-09-30T12:15:47Z'
   runtime:
     python: 3.11.15
     platform: Linux-6.18.44-fc-v50-x86_64-with-glibc2.39
