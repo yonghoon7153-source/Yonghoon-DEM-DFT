@@ -1,0 +1,139 @@
+"""Reviewer-owned byte/AST inspection. Never imports or runs received code."""
+import ast
+import hashlib
+import json
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+OLD = HERE.parent / 'gate83_review_20260930'
+E = HERE / 'evidence'
+REF = HERE / 'reference'
+TARGET = 'ea2af59e68a85b561c3e185f66b815aec877ca57'
+HEAD = '7fed4594c74b16f4a53402699eb2a8427805cdf5'
+checks = []
+
+def read(p):
+    return json.loads(p.read_text(encoding='utf-8'))
+
+def sha(b):
+    return hashlib.sha256(b).hexdigest()
+
+def gitsha(kind, b):
+    return hashlib.sha1(kind.encode()+b' '+str(len(b)).encode()+b'\0'+b).hexdigest()
+
+def check(name, ok):
+    checks.append({'check': name, 'pass': bool(ok)})
+    if not ok:
+        raise AssertionError(name)
+
+def copy_bytes(p, b):
+    p.parent.mkdir(parents=True, exist_ok=True)
+    if p.exists() and p.read_bytes() != b:
+        raise ValueError('Reference collision: '+str(p))
+    p.write_bytes(b)
+
+def dump(name, value):
+    (HERE/name).write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+prior_before = {p.relative_to(OLD).as_posix(): sha(p.read_bytes()) for p in OLD.rglob('*') if p.is_file()}
+remote_map = {
+    'REQUEST_REMOTE.json':'docs/22p_gap/GATE84_REQUEST.md',
+    'STAGE3_IMPL_ROUND1_SPEC.md.json':'docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md',
+    '08_REVIEW_RESPONSE.md.json':'docs/08_REVIEW_RESPONSE.md',
+    'CLAIM_STATUS.yaml.json':'docs/22p_gap/CLAIM_STATUS.yaml',
+    'PRIOR_MANIFEST_REMOTE.json':'prior/PACKAGE_MANIFEST.json',
+    'PRIOR_DECISION_REMOTE.json':'prior/DECISION.json',
+}
+references = []
+for name, rel in remote_map.items():
+    d=read(E/name); b=d['content'].encode('utf-8')
+    check('Git blob '+rel, gitsha('blob',b)==d['sha'])
+    check('Pinned request HEAD '+rel, '/'+HEAD+'/' in d['display_url'])
+    copy_bytes(REF/rel,b)
+    references.append({'path':rel,'bytes':len(b),'sha256':sha(b),'git_blob_sha1':d['sha'],'url':d['display_url']})
+
+inventory=read(OLD/'evidence/SCOPE_TREE_INVENTORY.json')
+head_entries={x['name']:x for x in read(E/'HEAD_DIRECTORY.json')['entries']}
+check('Prior source target',inventory['target']==TARGET)
+tree_inventory={}
+for t in inventory['trees']:
+    check('Complete recursive tree '+t['dir'],t['truncated'] is False)
+    check('Unchanged HEAD tree '+t['dir'],head_entries[t['dir']]['sha']==t['sha'])
+    directories={'':t['sha']}
+    directories.update({x['path']:x['sha'] for x in t['tree'] if x['type']=='tree'})
+    for directory, expected in directories.items():
+        entries=[x for x in t['tree'] if str(Path(x['path']).parent).replace('\\','/')== (directory or '.')]
+        entries.sort(key=lambda x:(x['path'].rsplit('/',1)[-1]+('/' if x['type']=='tree' else '')).encode())
+        body=b''.join((x['mode'].lstrip('0')+' '+x['path'].rsplit('/',1)[-1]).encode()+b'\0'+bytes.fromhex(x['sha']) for x in entries)
+        check('Reconstructed Git tree '+t['dir']+'/'+directory,gitsha('tree',body)==expected)
+    tree_inventory.update({t['dir']+'/'+x['path']:x['sha'] for x in t['tree'] if x['type']=='blob'})
+for x in inventory['root_files']:
+    check('Unchanged root scope file '+x['name'],head_entries[x['name']]['sha']==x['sha'])
+    tree_inventory[x['name']]=x['sha']
+
+scope={}
+for p in sorted((OLD/'evidence/target_scope').glob('*.json')):
+    d=read(p); rel=d['path'].removeprefix('degradation-degeneracy/'); b=d['content'].encode('utf-8')
+    check('Target blob and current tree '+rel,gitsha('blob',b)==d['sha']==tree_inventory[rel])
+    check('Prior source copy '+rel,(OLD/'reference'/rel).read_bytes()==b)
+    scope[rel]=b
+    copy_bytes(REF/rel,b)
+check('Exact 58-file scope inventory',set(scope)==set(tree_inventory) and len(scope)==58)
+h=hashlib.sha256()
+for rel,b in sorted(scope.items()):
+    h.update(rel.encode()); h.update(b)
+check('Current source_digest',h.hexdigest()[:16]=='7187bd31740514d4')
+copy_bytes(E/'SCOPE_TREE_INVENTORY_REUSED.json',(OLD/'evidence/SCOPE_TREE_INVENTORY.json').read_bytes())
+comp=read(E/'TARGET_TO_SEND_HEAD.json')
+check('Target ancestor',comp['merge_base_commit']['sha']==TARGET and comp['behind_by']==0)
+
+for name in ['PACKAGE_MANIFEST.json','DECISION.json']:
+    check('Prior remote/local bytes '+name,(REF/'prior'/name).read_bytes()==(OLD/name).read_bytes())
+prior_zip=OLD/'GATE83_REVIEW_20260930.zip'
+check('Prior ZIP identity',prior_zip.stat().st_size==2344564 and sha(prior_zip.read_bytes()).startswith('d2ff75f2'))
+
+# Reuse selected already-identified documentation/test bytes for citation, not execution.
+extras=['docs/22p_gap/STAGE3_CONTRACT.md','tests/test_gate79_stage3_logging.py']
+old_manifest=read(OLD/'PACKAGE_MANIFEST.json')
+for rel in extras:
+    source=OLD/'reference'/rel
+    if source.exists():
+        copy_bytes(REF/rel,source.read_bytes())
+
+fitting=scope['src/fitting.py'].decode('utf-8')
+preserve=scope['tools/preserve.py'].decode('utf-8')
+io=scope['src/io.py'].decode('utf-8')
+trees={k:ast.parse(v) for k,v in [('fitting',fitting),('preserve',preserve),('io',io)]}
+def function(module,name):
+    return next(n for n in trees[module].body if isinstance(n,ast.FunctionDef) and n.name==name)
+def body(module,name):
+    src={'fitting':fitting,'preserve':preserve,'io':io}[module]
+    n=function(module,name)
+    return '\n'.join(src.splitlines()[n.lineno-1:n.end_lineno])
+check('N1 existing closure truncates hex16','hexdigest()[:16]' in body('fitting','_config_closure_digest'))
+check('N1 planned closure requires hex64','not _is_hex64(inp["base_config_digest"])' in body('preserve','check_envelope_v4'))
+check('N1 actual closure used by legacy axis','_config_closure_digest(' in body('fitting','live_fit_axis'))
+check('N2 all fit keys enter sealed spec','"fit": {k: fit[k] for k in LEG_SPEC_FIT_KEYS}' in body('preserve','leg_run_spec'))
+check('N2 no stage3 in old fit key set',not any(isinstance(n,ast.Constant) and n.value=='stage3' for a in trees['preserve'].body if isinstance(a,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='LEG_SPEC_FIT_KEYS' for t in a.targets) for n in ast.walk(a.value)))
+check('N3 late grid refusal','if reference != "grid"' in body('fitting','_prepare_stage3'))
+locked=function('fitting','_run_fit_locked')
+calls={name:sorted(n.lineno for n in ast.walk(locked) if isinstance(n,ast.Call) and isinstance(n.func,ast.Name) and n.func.id==name) for name in ['_fit_one','_prepare_stage3']}
+check('N3 halfcell self-fit call lexically before v6 prepare',calls['_fit_one'][0]<calls['_prepare_stage3'][0])
+check('N4 returned counts restart entries','returned += len(rs)' in body('io','realized_from_fits'))
+check('N4 old schema exact v1','rec["schema"] != "execution-record/v1"' in body('preserve','check_execution_record'))
+check('N4 final finite-round legacy semantics','마지막 **유한** fun round' in body('fitting','_minimize_until_stable'))
+check('CLI current mode option','--mode <MODE>' in scope['run.sh'].decode('utf-8'))
+
+facts={
+ 'N1':{'existing_closure_hex_length':16,'planned_v4_nonnull_closure_hex_length':64,'functions':['_config_closure_digest','live_fit_axis','check_envelope_v4']},
+ 'N2':{'legacy_spec_version':2,'legacy_fit_keys_include_stage3':False,'new_null_key_changes_canonical_preimage':True},
+ 'N3':{'call_lines_in_run_fit_locked':calls,'meaning':'Static call/branch inspection, not an executed bypass or proof every caller reaches self-fit'},
+ 'N4':{'returned_unit':'sum of restart entries by objective, not fits rows or optimizer rounds','v1_schema_dispatch_required':True},
+}
+dump('IDENTITY_AUDIT.json',{'target':TARGET,'request_head':HEAD,'source_digest':h.hexdigest()[:16],'scope_files':len(scope),'unchanged_scope_basis':'Equal four recursive Git tree roots plus run/requirements blobs; recursive tree hashes and 58 blob bytes independently reconstructed','remote_references':references,'scope':[{'path':rel,'bytes':len(b),'sha256':sha(b),'git_blob_sha1':gitsha('blob',b)} for rel,b in sorted(scope.items())],'prior_review_zip':{'bytes':prior_zip.stat().st_size,'sha256':sha(prior_zip.read_bytes())}})
+dump('STATIC_FACTS.json',facts)
+prior_after={p.relative_to(OLD).as_posix():sha(p.read_bytes()) for p in OLD.rglob('*') if p.is_file()}
+check('Prior Gate83 local folder unchanged',prior_before==prior_after)
+dump('SELECTED_PRESERVATION.json',{'scope':'Local prior Gate83 review folder only; not remote machine/global history','files':len(prior_before),'before':prior_before,'after_equal':prior_before==prior_after})
+dump('STATIC_AUDIT.json',{'mode':'Reviewer-owned byte/hash/AST inspection only','production_imports_or_calls':0,'received_tests_run':0,'COMSOL_calls':0,'checks':checks,'pass':all(x['pass'] for x in checks),'note':'These are static/data checks, not project regression tests.'})
+print(json.dumps({'status':'STATIC_REVIEW_AUDIT_PASS','checks':len(checks),'source_digest':h.hexdigest()[:16],'scope_files':len(scope),'prior_files_unchanged':len(prior_before),'received_code_executions':0}))

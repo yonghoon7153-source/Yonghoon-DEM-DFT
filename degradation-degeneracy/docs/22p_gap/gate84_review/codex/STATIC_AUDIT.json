@@ -1,0 +1,666 @@
+{
+  "mode": "Reviewer-owned byte/hash/AST inspection only",
+  "production_imports_or_calls": 0,
+  "received_tests_run": 0,
+  "COMSOL_calls": 0,
+  "checks": [
+    {
+      "check": "Git blob docs/22p_gap/GATE84_REQUEST.md",
+      "pass": true
+    },
+    {
+      "check": "Pinned request HEAD docs/22p_gap/GATE84_REQUEST.md",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md",
+      "pass": true
+    },
+    {
+      "check": "Pinned request HEAD docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs/08_REVIEW_RESPONSE.md",
+      "pass": true
+    },
+    {
+      "check": "Pinned request HEAD docs/08_REVIEW_RESPONSE.md",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs/22p_gap/CLAIM_STATUS.yaml",
+      "pass": true
+    },
+    {
+      "check": "Pinned request HEAD docs/22p_gap/CLAIM_STATUS.yaml",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs/22p_gap/STAGE3_CONTRACT.md",
+      "pass": true
+    },
+    {
+      "check": "Pinned request HEAD docs/22p_gap/STAGE3_CONTRACT.md",
+      "pass": true
+    },
+    {
+      "check": "Git blob prior/PACKAGE_MANIFEST.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned request HEAD prior/PACKAGE_MANIFEST.json",
+      "pass": true
+    },
+    {
+      "check": "Git blob prior/DECISION.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned request HEAD prior/DECISION.json",
+      "pass": true
+    },
+    {
+      "check": "Prior source target",
+      "pass": true
+    },
+    {
+      "check": "Complete recursive tree src",
+      "pass": true
+    },
+    {
+      "check": "Unchanged HEAD tree src",
+      "pass": true
+    },
+    {
+      "check": "Reconstructed Git tree src/",
+      "pass": true
+    },
+    {
+      "check": "Complete recursive tree tools",
+      "pass": true
+    },
+    {
+      "check": "Unchanged HEAD tree tools",
+      "pass": true
+    },
+    {
+      "check": "Reconstructed Git tree tools/",
+      "pass": true
+    },
+    {
+      "check": "Complete recursive tree configs",
+      "pass": true
+    },
+    {
+      "check": "Unchanged HEAD tree configs",
+      "pass": true
+    },
+    {
+      "check": "Reconstructed Git tree configs/",
+      "pass": true
+    },
+    {
+      "check": "Complete recursive tree scripts",
+      "pass": true
+    },
+    {
+      "check": "Unchanged HEAD tree scripts",
+      "pass": true
+    },
+    {
+      "check": "Reconstructed Git tree scripts/",
+      "pass": true
+    },
+    {
+      "check": "Unchanged root scope file requirements-gpu.txt",
+      "pass": true
+    },
+    {
+      "check": "Unchanged root scope file requirements.txt",
+      "pass": true
+    },
+    {
+      "check": "Unchanged root scope file run.sh",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree configs/base.yaml",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy configs/base.yaml",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree configs/grid_22p.yaml",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy configs/grid_22p.yaml",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree configs/grid_22p_dense.yaml",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy configs/grid_22p_dense.yaml",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree configs/grid_22p_fine.yaml",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy configs/grid_22p_fine.yaml",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree configs/grid_22p_seed.yaml",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy configs/grid_22p_seed.yaml",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree configs/grid_coarse.yaml",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy configs/grid_coarse.yaml",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree configs/grid_fine.yaml",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy configs/grid_fine.yaml",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree configs/objectives.yaml",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy configs/objectives.yaml",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree configs/objectives_optimized.yaml",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy configs/objectives_optimized.yaml",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree configs/sweep1d.yaml",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy configs/sweep1d.yaml",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree requirements-gpu.txt",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy requirements-gpu.txt",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree requirements.txt",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy requirements.txt",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree run.sh",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy run.sh",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree scripts/archive_results.sh",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy scripts/archive_results.sh",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree scripts/bg.sh",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy scripts/bg.sh",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree scripts/check_run.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy scripts/check_run.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree scripts/diagnose_objective.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy scripts/diagnose_objective.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree scripts/recompute_lli.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy scripts/recompute_lli.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree scripts/setup_env.sh",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy scripts/setup_env.sh",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree scripts/smoke_e2e.sh",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy scripts/smoke_e2e.sh",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree scripts/verify_env.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy scripts/verify_env.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree scripts/watch_fit.sh",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy scripts/watch_fit.sh",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree scripts/watch_grid.sh",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy scripts/watch_grid.sh",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree src/__init__.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy src/__init__.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree src/baseline.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy src/baseline.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree src/config.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy src/config.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree src/curves.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy src/curves.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree src/fitting.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy src/fitting.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree src/grid.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy src/grid.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree src/halfcell.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy src/halfcell.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree src/hessian.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy src/hessian.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree src/inventory.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy src/inventory.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree src/io.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy src/io.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree src/model.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy src/model.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree src/modes.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy src/modes.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree src/objective.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy src/objective.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree src/protocol.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy src/protocol.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree src/runner.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy src/runner.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree src/scoring.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy src/scoring.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree src/sweep.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy src/sweep.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree src/weight_sweep.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy src/weight_sweep.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree tools/analyze_22p_gap.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy tools/analyze_22p_gap.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree tools/archive_bundle.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy tools/archive_bundle.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree tools/check_derived_fresh.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy tools/check_derived_fresh.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree tools/check_sweep_consistency.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy tools/check_sweep_consistency.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree tools/compare_cases.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy tools/compare_cases.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree tools/compare_objectives.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy tools/compare_objectives.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree tools/design_golden.yaml",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy tools/design_golden.yaml",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree tools/design_wire.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy tools/design_wire.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree tools/diagnose_pini_transition.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy tools/diagnose_pini_transition.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree tools/gen_design_golden.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy tools/gen_design_golden.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree tools/index_yaml.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy tools/index_yaml.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree tools/interactive_ab.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy tools/interactive_ab.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree tools/make_results.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy tools/make_results.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree tools/plot_grid_summary.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy tools/plot_grid_summary.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree tools/plot_map.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy tools/plot_map.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree tools/plot_sweep1d.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy tools/plot_sweep1d.py",
+      "pass": true
+    },
+    {
+      "check": "Target blob and current tree tools/preserve.py",
+      "pass": true
+    },
+    {
+      "check": "Prior source copy tools/preserve.py",
+      "pass": true
+    },
+    {
+      "check": "Exact 58-file scope inventory",
+      "pass": true
+    },
+    {
+      "check": "Current source_digest",
+      "pass": true
+    },
+    {
+      "check": "Target ancestor",
+      "pass": true
+    },
+    {
+      "check": "Prior remote/local bytes PACKAGE_MANIFEST.json",
+      "pass": true
+    },
+    {
+      "check": "Prior remote/local bytes DECISION.json",
+      "pass": true
+    },
+    {
+      "check": "Prior ZIP identity",
+      "pass": true
+    },
+    {
+      "check": "N1 existing closure truncates hex16",
+      "pass": true
+    },
+    {
+      "check": "N1 planned closure requires hex64",
+      "pass": true
+    },
+    {
+      "check": "N1 actual closure used by legacy axis",
+      "pass": true
+    },
+    {
+      "check": "N2 all fit keys enter sealed spec",
+      "pass": true
+    },
+    {
+      "check": "N2 no stage3 in old fit key set",
+      "pass": true
+    },
+    {
+      "check": "N3 late grid refusal",
+      "pass": true
+    },
+    {
+      "check": "N3 halfcell self-fit call lexically before v6 prepare",
+      "pass": true
+    },
+    {
+      "check": "N4 returned counts restart entries",
+      "pass": true
+    },
+    {
+      "check": "N4 old schema exact v1",
+      "pass": true
+    },
+    {
+      "check": "N4 final finite-round legacy semantics",
+      "pass": true
+    },
+    {
+      "check": "CLI current mode option",
+      "pass": true
+    },
+    {
+      "check": "Prior Gate83 local folder unchanged",
+      "pass": true
+    }
+  ],
+  "pass": true,
+  "note": "These are static/data checks, not project regression tests."
+}

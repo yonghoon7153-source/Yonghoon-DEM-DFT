@@ -1,0 +1,8 @@
+{
+  "provenance": "Reviewer-owned final static audit tool response transcribed after return; not a project regression result",
+  "chunk_id": "34c9c2",
+  "exit_code": 0,
+  "wall_time_seconds": 0.8378762,
+  "audit_stdout_line": "{\"status\": \"STATIC_REVIEW_AUDIT_PASS\", \"checks\": 164, \"source_digest\": \"7187bd31740514d4\", \"scope_files\": 58, \"prior_files_unchanged\": 172, \"received_code_executions\": 0}",
+  "scope_note": "The same shell invocation also displayed source/document excerpts; this record retains the audit result line and outer metadata, not a claim to be the entire raw stdout."
+}

@@ -1,0 +1,11 @@
+{
+  "provenance": "Reviewer own tool-result transcription, not submitted project test output",
+  "chunk_id": "6ad7e2",
+  "exit_code": 1,
+  "wall_time_seconds": 0.6385935,
+  "error": "AssertionError: N4 final finite-round legacy semantics",
+  "cause": "Reviewer's literal search incorrectly assumed Markdown emphasis placement. Actual docstring has 마지막 유한 `fun` round; source already states the correct semantics.",
+  "production_code_changed": false,
+  "received_program_executed": false,
+  "correction": "Only reviewer-owned literal assertion fixed; original audit source retained as REVIEWER_AUDIT_ATTEMPT01.py.txt."
+}

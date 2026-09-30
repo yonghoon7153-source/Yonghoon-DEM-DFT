@@ -1,0 +1,31 @@
+{
+  "N1": {
+    "existing_closure_hex_length": 16,
+    "planned_v4_nonnull_closure_hex_length": 64,
+    "functions": [
+      "_config_closure_digest",
+      "live_fit_axis",
+      "check_envelope_v4"
+    ]
+  },
+  "N2": {
+    "legacy_spec_version": 2,
+    "legacy_fit_keys_include_stage3": false,
+    "new_null_key_changes_canonical_preimage": true
+  },
+  "N3": {
+    "call_lines_in_run_fit_locked": {
+      "_fit_one": [
+        1955
+      ],
+      "_prepare_stage3": [
+        1970
+      ]
+    },
+    "meaning": "Static call/branch inspection, not an executed bypass or proof every caller reaches self-fit"
+  },
+  "N4": {
+    "returned_unit": "sum of restart entries by objective, not fits rows or optimizer rounds",
+    "v1_schema_dispatch_required": true
+  }
+}
