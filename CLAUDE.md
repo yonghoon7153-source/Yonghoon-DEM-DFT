@@ -137,9 +137,11 @@
     **CPU 줄**: LOBSTER SCF/nscf 등 `qe-7.4.1-cpu` 빌드.
     ⇒ **CPU pw.x 와 UMA 는 공존한다**(2026-09-22 실측: LOBSTER 8랭크 CPU 799 %·RSS 39.6 GB 가
       UMA 담금질 시작 전후로 **불변**). 금지는 **GPU pw.x ↔ UMA** 에만 걸린다.
-  · ⏸ **2026-10-01 탄성 strain_23_m 을 EXIT 로 잠깐 세웠다** (`D-2026-10-01-gabia-elastic-pause-wad-uma` · 사용자 *"23_m 을 잠깐 stop했다가 하자"*):
-    러너 bash 1967071 을 STOP (T) · 감시 `/root/logs/stop23m.sh` 가 BFGS 스텝 끝에서 EXIT → 그동안 **W_ad SE 쌍 UMA 만** gabia GPU (li2s MD 옆 · 한 번에 하나 ·
-    시작 문턱 합계 ≤ 12,000 · 합계 > 45,500 면 우리 UMA 만 종료 3). ⛔ W_ad UMA 가 도는 동안 탄성 재개 금지 · 재개 = 새 러너 (strain_23_m `stopped` + .bfgs → BFGS 이력 승계).
+  · ✅ **2026-10-01 탄성 strain_23_m 을 EXIT 로 약 1 시간 세웠다가 재개했다** (`D-2026-10-01-gabia-elastic-pause-wad-uma` · 사용자 *"23_m 을 잠깐 stop했다가 하자"* · 이번 한 번으로 끝남):
+    02:27 러너 bash 만 STOP (T) → 감시 `stop23m.sh` 가 BFGS 스텝 끝에서 EXIT → 그동안 W_ad SE 쌍 UMA 8+8 (≈ 49 분 · li2s MD 옆 · 시작 문턱 12,000 · 감시 45,500 발동 0) →
+    03:28 얼린 러너 `kill -9` → 새 러너 tmux `el_mc2x_1001` (`stopped` + .bfgs → restart · 새 출력에 *Atomic positions and unit cell read from directory* ·
+    *initial density is read from file* · *Starting wfcs from file* 확인). 같은 정지가 다시 필요하면 **새 결정**을 받는다.
+    ⚠ 새 출력의 `반복 N회` (watch) 는 **새 파일의 SCF 반복 수**라 이어서 도는지 알려 주지 않는다 — 위 세 줄과 첫 SCF 뒤 `number of bfgs steps` 로 가른다.
   · ⚠ **지금 살아 있는 예외는 1건 — 범위가 좁다** (`D-2026-09-30-gabia-uma-coexist-elastic-li2s-v2` · 사용자 09-30 *"옛 예외와 같은 조건"*):
     li2s 유리 MD **v2 카드(잠정) 첫 묶음의 gabia 몫 5 런만** (600 K seed2·4·5 · 400 ps · 550 K seed1·3 · 800 ps · `--seed` 1000 + 시드) ·
     조건·가드·러너는 아래 옛 예외(3)와 **같다** (러너 `EXCEPTION_ID` 기본값 = v2). 5 런이 끝나거나 탄성이 끝나면 소멸한다.

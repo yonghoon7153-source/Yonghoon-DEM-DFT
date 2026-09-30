@@ -4,6 +4,8 @@
     python3 tools/wad/relax_uma_d3.py --model_dir <S2/V3_s_outer/A> [--out <dir>] [--device cuda] [--d3 auto] [--fmax 0.02] [--steps 3000]
     python3 tools/wad/relax_uma_d3.py --model_dir <…> --preflight_only        # 마스크·sha·정책 검사만 (계산 0)
     python3 tools/wad/relax_uma_d3.py --selftest                                # EMT 로 제약 역학·기록·음성 경로
+    python3 tools/wad/relax_uma_d3.py --w_from <모델> --relax_dir <이완> --out <w.json>   # SE 쌍 카드 §2: 이완본 → 끝점 10·12 Å → W_UMA+D3 · ATM · G3
+    python3 tools/wad/relax_uma_d3.py --collect <run_dir> --out <collect.json>            # SE 쌍 카드 §4·§5: sha 사슬 · G1 · G2 · G3 · registry 합쳐짐 · 헤드라인
 
 입력 = 빌더(`build_aprime_interfaces.py`)가 만든 폴더: bound.extxyz + meta.json (fixed_idx · lateral_fixed_idx · registry · sha256).
   ① 파일 sha 가 meta 와 같아야 한다 (손댄 좌표 거부) ② 시작 전 `se_sym_slab.interface_check(init, init, …)` 로 마스크가 정책 집합과 같은지 본다
@@ -18,7 +20,7 @@ GPU 공유 안전장치 (2026-10-01 · SE 쌍 UMA 카드 · gabia 에서 li2s MD
   --mem_probe            : 힘 한 번만 계산하고 최대 메모리를 mem_probe.json 에 (이완·에너지 기록 없음)
   ⚠ 감시는 표본(기본 2 s)이다 — 표본 간격보다 빠른 급등은 못 막는다. 남의 잡(li2s·탄성)을 멈추거나 늦추지 않는다.
 
-⛔ 못 하는 것: W 를 내지 않는다 (에너지는 원출력 로그에만 — 결과표·W·후보 선택·게이트 조정에 쓰지 않는다 · 카드 v5 S3 전 예외 규칙) ·
+⛔ 못 하는 것: **이완 모드는** W 를 내지 않는다 (W 는 --w_from · 이완 에너지는 원출력 로그에만 — 결과표·W·후보 선택·게이트 조정에 쓰지 않는다 · 카드 v5 S3 전 예외 규칙) ·
   turbo 모드는 받지 않는다 (카드 결박 = default) · 3체 D3 를 켜지 않는다 · 셀을 풀지 않는다.
 """
 import argparse
@@ -306,7 +308,7 @@ def w_endpoints(model_dir, relax_dir, gaps=(10.0, 12.0), calc_kind="uma", device
 
     ① 모델 폴더의 meta·bound sha (load_model) ② relax_meta 의 init_sha256 = 이 모델 · relaxed_sha256 = 파일 (다른 모델의 이완본·손댄 좌표 거부)
     ③ 끝점은 **이완본에서** 새로 만든다 (빌더의 초기 far 를 쓰지 않는다) ④ 계산기 pbc 3축 (이완과 같은 관례).
-    ⛔ 못 하는 것: DFT 가 아니다 · registry 평균·헤드라인·라벨은 결과 기록 몫 · 이완이 미수렴이면 값을 내되 '미수렴' 을 같이 적는다 (G1 판정은 기록에서).
+    ⛔ 못 하는 것: DFT 가 아니다 · registry 평균·헤드라인은 --collect · 라벨 문장은 결과 기록 몫 · 이완이 미수렴이면 값을 내되 '미수렴' 을 같이 적는다 (G1 판정은 기록에서).
     """
     from ase.io import read
     init, meta, sub_el, ads_el, fixed, lateral, init_sha = load_model(model_dir)
@@ -356,6 +358,107 @@ def w_endpoints(model_dir, relax_dir, gaps=(10.0, 12.0), calc_kind="uma", device
            "gaps": rows, "G3": g3, "gpu_guard": guard, "calculator": cinfo,
            "definition": "W_sep = [E(far) − E(bound′)]/A · E = E_UMA(default · omat) + E_D3(BJ 2체) · 끝점 = 이완 결합 기하에서 make_endpoints(gap) · 계면 1 개"}
     return rec
+
+
+G3_REPS = {"P1": ("s_outer", "A"), "P2": ("s_outer", "A")}      # SE 쌍 카드 §4 G3 판정 대상 (나머지는 정보)
+
+
+def collect(run_dir, fmax_target=0.02, max_steps=3000):
+    """SE 쌍 카드 §4·§5 집계 — run_dir/models/<계_종결>/<A|B>/ · relax/<계_종결>/<A|B>/ · w/<계_종결>_<A|B>.json 에서
+    무결성 (sha 사슬: bound · meta · relax_meta · W / relaxed · relax_meta · W) · G1 (fmax ≤ 0.02 · 스텝 ≤ 3000) · G2 (깃발 0) ·
+    G3 (대표 = P1·P2 S 바깥 A · 10 → 12 Å |ΔW| ≤ 0.01) · registry 합쳐짐 (이완 뒤 접촉층 거리 < 0.2 Å · build_aprime_interfaces.registry_distance) ·
+    종결별 헤드라인 (유효 registry 의 평균 · [min, max] · 2체 · ATM 열 따로 · 12 Å 는 정보).
+    ⛔ 못 하는 것: 라벨 문장·DEM 문구를 만들지 않는다 (결과 기록 몫) · G5 (V5 VASP 비교) 는 외주가 와야 한다 ·
+      INCOMPLETE 를 다른 표본으로 바꾸지 않는다 (세고 뺀다) · 빠진 파일·끊긴 sha 는 건너뛰지 않고 거부한다.
+    """
+    import build_aprime_interfaces as B
+    from ase.io import read
+    samples = {}
+    for mp in sorted(glob.glob(os.path.join(run_dir, "models", "*", "*", "meta.json"))):
+        mdir = os.path.dirname(mp)
+        key, reg = os.path.basename(os.path.dirname(mdir)), os.path.basename(mdir)
+        meta = json.load(open(mp, encoding="utf-8"))
+        kind, term = meta.get("model"), meta.get("term")
+        if kind not in G3_REPS or key != f"{kind}_{term}" or reg != meta.get("registry"):
+            raise SlabError(f"collect: 폴더 이름과 meta 가 다르다 — {mdir} (model {kind} · term {term} · registry {meta.get('registry')})")
+        rdir = os.path.join(run_dir, "relax", key, reg)
+        wp = os.path.join(run_dir, "w", f"{key}_{reg}.json")
+        paths = {"bound": os.path.join(mdir, "bound.extxyz"), "relaxed": os.path.join(rdir, "relaxed.extxyz"), "relax_meta": os.path.join(rdir, "relax_meta.json"), "w": wp}
+        for p in paths.values():
+            if not os.path.isfile(p):
+                raise SlabError(f"collect: 없다 — {p} (빠진 표본을 조용히 건너뛰지 않는다)")
+        rm = json.load(open(paths["relax_meta"], encoding="utf-8"))
+        w = json.load(open(wp, encoding="utf-8"))
+        s_init, s_rel = _sha(paths["bound"]), _sha(paths["relaxed"])
+        if not (s_init == meta["sha256"]["bound"] == rm.get("init_sha256") == w.get("init_sha256")):
+            raise SlabError(f"collect: {key}/{reg} 초기 sha 사슬이 끊겼다 (bound · meta · relax_meta · W)")
+        if not (s_rel == rm.get("relaxed_sha256") == w.get("relaxed_sha256")):
+            raise SlabError(f"collect: {key}/{reg} 이완본 sha 사슬이 끊겼다 (relaxed · relax_meta · W)")
+        f = rm.get("fmax_free_final_eV_A")               # 0.0 도 유효하다 — `or` 로 채우지 않는다
+        n = rm.get("steps_taken")
+        g1 = bool(rm.get("converged_fmax")) and f is not None and f <= fmax_target and n is not None and n <= max_steps
+        flags = rm.get("interface_check_flags")
+        g2 = flags == []                                   # None (기록 없음) 은 통과가 아니다
+        g = w.get("gaps", {})
+        if "10" not in g:
+            raise SlabError(f"collect: {key}/{reg} W 에 10 Å 끝점이 없다 (헤드라인 간격)")
+        g12 = g.get("12", {})
+        samples[(kind, term, reg)] = {
+            "model": kind, "term": term, "registry": reg, "G1": g1, "G2": g2, "valid": bool(g1 and g2),
+            "steps": n, "fmax_final_eV_A": f, "interface_check_flags": flags,
+            "W2_10_J_m2": g["10"]["W_2body_J_m2"], "dW_ATM_10_J_m2": g["10"].get("dW_ATM_J_m2"),
+            "W2_12_J_m2": g12.get("W_2body_J_m2"), "dW_ATM_12_J_m2": g12.get("dW_ATM_J_m2"),
+            "G3_abs_dW_J_m2": (w.get("G3") or {}).get("abs_dW_J_m2"),
+            "E_bound_10_eV": g["10"].get("E_bound_eV"), "E_far_10_eV": g["10"].get("E_far_eV"), "area_A2": w.get("area_A2"),
+            "n_atoms": w.get("n_atoms"), "n_ads": w.get("n_ads"), "wall_s": rm.get("wall_s"), "peak_mem": rm.get("peak_mem"),
+            "sha256": {"bound": s_init, "relaxed": s_rel}, "_paths": paths, "_ads": meta.get("ads_element")}
+    if not samples:
+        raise SlabError(f"collect: {run_dir}/models 아래에 P1·P2 모델이 없다")
+    g3 = {}
+    for kind, (t, r) in G3_REPS.items():
+        if not any(k[0] == kind for k in samples):
+            continue
+        s = samples.get((kind, t, r))
+        if s is None or not s["valid"] or s["G3_abs_dW_J_m2"] is None:
+            g3[kind] = {"sample": f"{kind}_{t}_{r}", "status": "INCOMPLETE", "why": "대표 표본이 없거나 G1·G2 미통과이거나 12 Å 끝점이 없다"}
+        else:
+            ok = s["G3_abs_dW_J_m2"] <= G3_TOL_J_M2
+            g3[kind] = {"sample": f"{kind}_{t}_{r}", "abs_dW_J_m2": s["G3_abs_dW_J_m2"], "tol_J_m2": G3_TOL_J_M2, "status": "PASS" if ok else "FAIL",
+                        "label": None if ok else f"끝점 미수렴 (+{s['G3_abs_dW_J_m2']:.3f} J/m² · 10 → 12 Å) — 헤드라인은 10 Å 그대로"}
+    reg_out, head = {}, {}
+    for kind, term in sorted({(k[0], k[1]) for k in samples}):
+        a, b = samples.get((kind, term, "A")), samples.get((kind, term, "B"))
+        rd = None
+        if a and b:
+            rd = B.registry_distance(kind, read(a["_paths"]["bound"]), read(b["_paths"]["bound"]), read(a["_paths"]["relaxed"]), read(b["_paths"]["relaxed"]), a["_ads"])
+            reg_out[f"{kind}_{term}"] = rd
+        val = [s for s in (a, b) if s and s["valid"]]
+        inc = [s["registry"] for s in (a, b) if s and not s["valid"]]
+        h = {"n_registry_valid": len(val), "INCOMPLETE": inc, "G3_label": (g3.get(kind) or {}).get("label")}
+        if val:
+            w10 = [s["W2_10_J_m2"] for s in val]
+            atm = [s["dW_ATM_10_J_m2"] for s in val]
+            w12 = [s["W2_12_J_m2"] for s in val]
+            h.update({"W2_10_mean_J_m2": float(np.mean(w10)), "W2_10_min_max_J_m2": [float(min(w10)), float(max(w10))],
+                      "dW_ATM_10_mean_J_m2": None if any(x is None for x in atm) else float(np.mean(atm)),
+                      "W2_12_mean_J_m2_info": None if any(x is None for x in w12) else float(np.mean(w12)),
+                      "by_registry_W2_10_J_m2": {s["registry"]: s["W2_10_J_m2"] for s in val}})
+        merged = bool(rd and rd["merged"] and len(val) == 2)
+        h["registry_merged"] = merged
+        h["n_registry_distinct"] = 1 if merged else len(val)
+        h["note"] = ("합쳐짐 — 이완 뒤 두 registry 가 같은 자리 (카드 §4: 하나로 보고)" if merged else
+                     ("registry 하나만 유효 (INCOMPLETE " + ",".join(inc) + ")" if len(val) == 1 else
+                      ("유효 표본 없음" if not val else "두 registry 따로 — 평균 · [min, max]")))
+        head[f"{kind}_{term}"] = h
+    out_s = []
+    for k in sorted(samples):
+        s = {kk: vv for kk, vv in samples[k].items() if not kk.startswith("_")}
+        out_s.append(s)
+    return {"schema": "wad_se_pairs_collect/v1", "run_dir": os.path.relpath(os.path.abspath(run_dir), S.REPO) if os.path.abspath(run_dir).startswith(S.REPO + os.sep) else os.path.abspath(run_dir), "n_samples": len(samples),
+            "G1_pass": sum(s["G1"] for s in samples.values()), "G2_pass": sum(s["G2"] for s in samples.values()),
+            "G3": g3, "registry": reg_out, "headline_by_term": head, "samples": out_s,
+            "rules": {"fmax_eV_A": fmax_target, "max_steps": max_steps, "G3_tol_J_m2": G3_TOL_J_M2, "G3_reps": {k: "_".join(v) for k, v in G3_REPS.items()},
+                      "merge_tol_A": B.MERGE_TOL_A, "headline": "종결별 · 유효 registry 평균 · [min, max] · 2체 D3 · 10 Å · ATM 열 따로 (카드 §1·§5)"}}
 
 
 def _selftest():
@@ -504,6 +607,68 @@ def _selftest():
             except SlabError as e:
                 okp, infop = False, str(e)
             ck(f"{kind} {term}: 사전 점검 통과 (마스크 = 정책 · 깃발 0)", okp, infop)
+        # ── --collect (SE 쌍 카드 §4·§5 집계) — 가짜 이완·W 로 논리만 · 음성: fmax · 깃발 · G3 · sha · 빠진 W · 합쳐짐 ──
+        import shutil
+        from ase.io import write as awrite
+        RD = os.path.join(T, "run")
+        pm = B.build_full("P2", "s_outer")
+        B.write_models(os.path.join(RD, "models", "P2_s_outer"), {"A": pm["A"], "B": pm["B"]})
+
+        def fake(reg, w10, g3v=0.005, fmx=0.015, flg=(), relaxed=None):
+            md_ = os.path.join(RD, "models", "P2_s_outer", reg); rd_ = os.path.join(RD, "relax", "P2_s_outer", reg); os.makedirs(rd_, exist_ok=True)
+            rp_ = os.path.join(rd_, "relaxed.extxyz")
+            if relaxed is None:
+                shutil.copy(os.path.join(md_, "bound.extxyz"), rp_)
+            else:
+                awrite(rp_, relaxed)
+            si, sr = _sha(os.path.join(md_, "bound.extxyz")), _sha(rp_)
+            json.dump({"init_sha256": si, "relaxed_sha256": sr, "converged_fmax": fmx <= 0.02, "steps_taken": 10, "fmax_free_final_eV_A": fmx,
+                       "interface_check_flags": list(flg), "wall_s": 1.0}, open(os.path.join(rd_, "relax_meta.json"), "w"))
+            os.makedirs(os.path.join(RD, "w"), exist_ok=True)
+            json.dump({"init_sha256": si, "relaxed_sha256": sr, "area_A2": 300.0,
+                       "gaps": {"10": {"W_2body_J_m2": w10, "dW_ATM_J_m2": -0.04, "E_bound_eV": -1.0, "E_far_eV": 0.0}, "12": {"W_2body_J_m2": w10 + g3v, "dW_ATM_J_m2": -0.041}},
+                       "G3": {"abs_dW_J_m2": g3v}}, open(os.path.join(RD, "w", f"P2_s_outer_{reg}.json"), "w"))
+        fake("A", 0.21); fake("B", 0.22)
+        c = collect(RD); h = c["headline_by_term"]["P2_s_outer"]
+        ck("collect: G1·G2 2/2 · G3 PASS · registry 따로 (1.31 Å) · 평균 0.215 · [0.21, 0.22] · ATM −0.04",
+           c["G1_pass"] == 2 and c["G2_pass"] == 2 and c["G3"]["P2"]["status"] == "PASS" and not h["registry_merged"] and h["n_registry_distinct"] == 2
+           and abs(h["W2_10_mean_J_m2"] - 0.215) < 1e-12 and h["W2_10_min_max_J_m2"] == [0.21, 0.22] and abs(h["dW_ATM_10_mean_J_m2"] + 0.04) < 1e-12
+           and abs(c["registry"]["P2_s_outer"]["final_A"] - 1.307) < 0.01, (h, c["G3"]))
+        ck("collect: P1 표본이 없으면 P1 G3 는 안 나온다 (없는 대표를 PASS 로 쓰지 않는다)", "P1" not in c["G3"], c["G3"])
+        fake("B", 0.22, fmx=0.0)
+        ck("collect: fmax 0.0 은 유효 (`or` 함정 아님) → G1 통과", collect(RD)["G1_pass"] == 2)
+        fake("B", 0.22, fmx=0.03)
+        h = collect(RD)["headline_by_term"]["P2_s_outer"]
+        ck("⛔음성 collect: B fmax 0.03 → INCOMPLETE · 헤드라인 = A 하나 · 교체 없음", h["INCOMPLETE"] == ["B"] and h["n_registry_valid"] == 1 and h["W2_10_mean_J_m2"] == 0.21, h)
+        fake("B", 0.22, flg=("PS4_broken",))
+        h = collect(RD)["headline_by_term"]["P2_s_outer"]
+        ck("⛔음성 collect: B 깃발 → INCOMPLETE (G2)", h["INCOMPLETE"] == ["B"] and h["n_registry_valid"] == 1, h)
+        fake("B", 0.22); fake("A", 0.21, g3v=0.02)
+        c = collect(RD); h = c["headline_by_term"]["P2_s_outer"]
+        ck("⛔음성 collect: 대표 G3 0.02 > 0.01 → FAIL · 라벨 '끝점 미수렴' · 헤드라인은 10 Å 그대로",
+           c["G3"]["P2"]["status"] == "FAIL" and "끝점 미수렴" in (h["G3_label"] or "") and abs(h["W2_10_mean_J_m2"] - 0.215) < 1e-12, c["G3"])
+        fake("A", 0.21)
+        bas = B.ads_lattice("P2", pm["A"]["bound"].cell.array); y = pm["A"]["bound"].copy(); py_ = y.get_positions()
+        mk = np.array([q == "C" for q in y.get_chemical_symbols()]); py_[mk, :2] += bas[0]; y.set_positions(py_)
+        fake("B", 0.21, relaxed=y)
+        h = collect(RD)["headline_by_term"]["P2_s_outer"]
+        ck("collect: B 이완본이 A 와 같은 자리 (격자 이동) → 합쳐짐 · 서로 다른 registry 1 개", h["registry_merged"] and h["n_registry_distinct"] == 1, h)
+        fake("B", 0.22)
+        rp = os.path.join(RD, "relax", "P2_s_outer", "B", "relaxed.extxyz"); keep = open(rp).read(); open(rp, "w").write(keep + "\n")
+        try:
+            collect(RD); bad = False
+        except SlabError as e:
+            bad = "sha 사슬" in str(e)
+        ck("⛔음성 collect: 이완본을 손대면 거부 (sha 사슬)", bad)
+        open(rp, "w").write(keep)
+        wb = os.path.join(RD, "w", "P2_s_outer_B.json"); os.rename(wb, wb + ".x")
+        try:
+            collect(RD); bad = False
+        except SlabError as e:
+            bad = "없다" in str(e)
+        ck("⛔음성 collect: W 기록이 빠지면 건너뛰지 않고 거부", bad)
+        os.rename(wb + ".x", wb)
+        ck("collect: 복구 뒤 다시 통과", collect(RD)["G1_pass"] == 2)
     print(f"{'✅' if n_bad == 0 else '⛔'} relax_uma_d3 selftest {n_ok}/{n_ok + n_bad} 통과")
     return 0 if n_bad == 0 else 1
 
@@ -529,11 +694,29 @@ def main():
     ap.add_argument("--w_from", metavar="MODEL_DIR", help="W 단계 (SE 쌍 카드 §2): 이 모델의 이완본(--relax_dir)에서 끝점을 만들어 W_UMA+D3 · ATM · G3 → --out")
     ap.add_argument("--relax_dir", help="--w_from 과 함께: relaxed.extxyz · relax_meta.json 이 있는 폴더")
     ap.add_argument("--gaps", type=float, nargs="+", default=[10.0, 12.0], help="--w_from 끝점 간격 (Å) · 기본 10 12 (G3)")
+    ap.add_argument("--collect", metavar="RUN_DIR", help="SE 쌍 카드 §4·§5 집계: RUN_DIR/{models,relax,w} → sha 사슬 · G1 · G2 · G3 · registry 합쳐짐 · 종결별 헤드라인 (→ --out JSON)")
     ap.add_argument("--d3_energy", metavar="STRUCT", help="S3 전 예외 ② D3 결박 검사용: 이 구조의 외부 D3 에너지만 찍는다 (eV · Ry · 구현·버전)")
     ap.add_argument("--energies", metavar="STRUCT", nargs="+", help="S4 집계용: 구조들의 **UMA 단일점 에너지(D3 없음 · default 모드 · 3축 pbc)** 를 JSON 으로 (개정 1: D3 항은 QE 출력에서). --out 에 쓴다")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
+    if a.collect:
+        rec = collect(a.collect)
+        if a.out:
+            os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
+            open(a.out, "w", encoding="utf-8").write(json.dumps(rec, ensure_ascii=False, indent=1, default=float) + "\n")
+        fmt = lambda v, d=4: "—" if v is None else f"{v:.{d}f}"
+        print(f"collect: 표본 {rec['n_samples']} · G1 {rec['G1_pass']}/{rec['n_samples']} · G2 {rec['G2_pass']}/{rec['n_samples']} · G3 "
+              + " · ".join(f"{k} {v['status']}" for k, v in rec["G3"].items()))
+        for k, h in rec["headline_by_term"].items():
+            r = rec["registry"].get(k, {})
+            mm = h.get("W2_10_min_max_J_m2") or [None, None]
+            print(f"  {k}: W2(10 Å) {fmt(h.get('W2_10_mean_J_m2'))} [{fmt(mm[0])}, {fmt(mm[1])}] · ATM {fmt(h.get('dW_ATM_10_mean_J_m2'))} · "
+                  f"registry {r.get('init_A', '—')} → {r.get('final_A', '—')} Å ({'합쳐짐' if h['registry_merged'] else '따로'}) · 유효 {h['n_registry_valid']}"
+                  + (f" · INCOMPLETE {h['INCOMPLETE']}" if h["INCOMPLETE"] else "") + (f" · {h['G3_label']}" if h.get("G3_label") else ""))
+        if a.out:
+            print(f"→ {a.out}")
+        return 0
     if a.d3_energy:
         from ase.io import read
         at = read(a.d3_energy); at.set_pbc((True, True, True))   # QE 와 같은 3축 주기 (결박 검사는 같은 관례여야 한다)

@@ -426,6 +426,93 @@ def build_full(kind, term, a_ag=A_AG_PBE_D3, a_c=A_C_PBE_D3, d0=None, gap=10.0, 
     return out
 
 
+# ─────────────── registry 거리 (SE 쌍 카드 §4 '합쳐짐' — 이완 뒤 A·B 가 같은 자리로 모였나) ───────────────
+MERGE_TOL_A = 0.2       # SE 쌍 카드 §4 registry_합쳐짐 — 결과 전 문턱
+
+
+def ads_lattice(kind, cell):
+    """P1·P2 흡착층의 면내 브라베 격자 기저 (행 = 벡터 · 셀에서 유도해 변형률이 들어가 있다).
+    P1 Ag(111) 2√3×7 (fcc111 직교를 축 교환): (0, a) · (√3a/2, a/2) — a = Ly/7 · √3a/2 = Lx/4.
+    P2 흑연 AB 4×7√3: (a, 0) · (a/2, √3a/2) — a = Lx/4 · √3a = Ly/7. 층 적층 (ABC · AB) 도 같은 격자다."""
+    C = np.asarray(cell, float)
+    Lx, Ly = C[0, 0], C[1, 1]
+    if kind == "P1":
+        return np.array([[0.0, Ly / 7.0], [Lx / 4.0, Ly / 14.0]])
+    if kind == "P2":
+        return np.array([[Lx / 4.0, 0.0], [Lx / 8.0, Ly / 14.0]])
+    raise SlabError(f"ads_lattice: 모르는 계면 {kind} (P1 · P2)")
+
+
+def lattice_reduce(v, basis):
+    """면내 벡터 v 를 격자 basis (행 2 개 · 줄인 기저) 의 가장 짧은 대표로."""
+    v = np.asarray(v, float)[:2]
+    b = np.asarray(basis, float)
+    f = np.floor(np.linalg.solve(b.T, v))
+    cands = [v - (f[0] + i) * b[0] - (f[1] + j) * b[1] for i in (-1, 0, 1, 2) for j in (-1, 0, 1, 2)]
+    return min(cands, key=lambda w: float(np.hypot(w[0], w[1])))
+
+
+def layer_maps_onto(x, t, cell):
+    """층 x (N×3) 를 면내 t 만큼 옮겼을 때 각 원자에서 가장 가까운 원래 원자까지 거리의 최댓값 (Å · 주기 xy) — 0 이면 t 는 이 층의 격자 이동."""
+    M = np.asarray(cell, float)[:2, :2]
+    F = np.linalg.solve(M.T, x[:, :2].T).T
+    G = np.linalg.solve(M.T, (x[:, :2] + np.asarray(t, float)[:2]).T).T
+    worst = 0.0
+    for g in G:
+        d = F - g
+        d -= np.round(d)
+        dd = d @ M
+        worst = max(worst, float(np.hypot(dd[:, 0], dd[:, 1]).min()))
+    return worst
+
+
+def _mean_shift(xa, xb, basis):
+    """같은 순서의 두 층의 면내 상대 이동 (격자로 줄임) · 원자별 퍼짐 (강체 이동에서 얼마나 벗어났나 · Å)."""
+    d = xb[:, :2] - xa[:, :2]
+    r0 = lattice_reduce(d[0], basis)
+    e = np.array([lattice_reduce(di - r0, basis) for di in d])
+    return lattice_reduce(r0 + e.mean(axis=0), basis), float(np.linalg.norm(e - e.mean(axis=0), axis=1).max())
+
+
+def registry_distance(kind, bound_a, bound_b, relaxed_a, relaxed_b, ads_el, contact_tol=0.5, merge_tol=MERGE_TOL_A):
+    """SE 쌍 카드 §4 'registry 합쳐짐' 판정량 — registry A·B 의 흡착층 **접촉층**(첫 층) 면내 상대 위치를 흡착층 격자로 줄인 길이 (Å).
+
+    초기(빌더 bound) 와 이완 뒤(relaxed) 를 둘 다 내고, 이완 뒤 < merge_tol 이면 merged = True (카드: '합쳐짐' 으로 적고 하나로 보고).
+    넷은 원자 수·순서·원소가 같아야 한다 (빌더가 같은 순서로 만든다). 격자 기저는 초기 접촉층에 대고 검사한다
+    (b1·b2 로 옮기면 제자리 < 1e-3 Å · b1/2 로 옮기면 > 0.3 Å — 아니면 거부: 조용히 틀린 격자를 막는다).
+    ⛔ 못 하는 것: SE 쪽 재배열·접촉층 내부 변형은 판정에 안 쓴다 (퍼짐만 보고) · P1·P2 만 안다 · 에너지는 모른다.
+    """
+    syms = {tuple(a.get_chemical_symbols()) for a in (bound_a, bound_b, relaxed_a, relaxed_b)}
+    if len(syms) != 1:
+        raise SlabError("registry_distance: 네 구조의 원자 수·순서·원소가 다르다 — 같은 빌더 출력의 A·B 와 그 이완본만 받는다")
+    sym = np.array(next(iter(syms)))
+    ads = np.where(sym == ads_el)[0]
+    if not len(ads):
+        raise SlabError(f"registry_distance: 흡착 원소 {ads_el} 이 없다")
+    x0a = bound_a.get_positions()
+    z = x0a[ads, 2]
+    contact = ads[z < z.min() + contact_tol]
+    cell = bound_a.cell.array
+    basis = ads_lattice(kind, cell)
+    lat = {"b1": layer_maps_onto(x0a[contact], basis[0], cell), "b2": layer_maps_onto(x0a[contact], basis[1], cell),
+           "half_b1": layer_maps_onto(x0a[contact], 0.5 * basis[0], cell)}
+    if max(lat["b1"], lat["b2"]) > 1e-3 or lat["half_b1"] < 0.3:
+        raise SlabError(f"registry_distance: {kind} 격자 기저가 이 접촉층의 격자가 아니다 ({lat}) — 판정 안 함")
+    d_init, s_init = _mean_shift(x0a[contact], bound_b.get_positions()[contact], basis)
+    d_fin, s_fin = _mean_shift(relaxed_a.get_positions()[contact], relaxed_b.get_positions()[contact], basis)
+    sc = np.array([cell[0, :2], cell[1, :2]])
+    drift = {}
+    for k, b0, b1 in (("A", bound_a, relaxed_a), ("B", bound_b, relaxed_b)):
+        dv = (b1.get_positions()[contact] - b0.get_positions()[contact])[:, :2]
+        drift[k] = [round(float(t), 4) for t in np.mean([lattice_reduce(v, sc) for v in dv], axis=0)]
+    fin = float(np.hypot(d_fin[0], d_fin[1]))
+    return {"kind": kind, "ads_element": ads_el, "n_contact": int(len(contact)), "contact_tol_A": contact_tol,
+            "lattice_basis_A": np.round(basis, 5).tolist(), "lattice_check_A": {k: round(v, 5) for k, v in lat.items()},
+            "init_A": round(float(np.hypot(d_init[0], d_init[1])), 4), "final_A": round(fin, 4), "final_vec_A": [round(float(t), 4) for t in d_fin],
+            "spread_init_A": round(s_init, 4), "spread_final_A": round(s_fin, 4), "drift_contact_xy_A": drift,
+            "merge_tol_A": merge_tol, "merged": bool(fin < merge_tol)}
+
+
 def write_models(out_dir, models):
     from ase.io import write
     os.makedirs(out_dir, exist_ok=True)
@@ -579,6 +666,39 @@ def _selftest():
     ck("⛔음성 build_full: 모르는 계면 이름 → 거부", bad)
     q1 = build_full("P1", "li_outer")["A"]["bound"].get_positions(); q2 = build_full("P1", "li_outer")["A"]["bound"].get_positions()
     ck("결정성: P1 li_outer A 두 번 → 같은 좌표", np.allclose(q1, q2))
+    # ⑬ registry 거리 (SE 쌍 카드 §4 '합쳐짐' · 0.2 Å)
+    A2, B2 = p2m["A"]["bound"], p2m["B"]["bound"]
+    bas = ads_lattice("P2", A2.cell.array)
+
+    def moved(at, t, el):
+        y = at.copy(); p = y.get_positions(); mk = np.array([q == el for q in y.get_chemical_symbols()]); p[mk, :2] += np.asarray(t, float)[:2]
+        y.set_positions(p); return y
+    rd = registry_distance("P2", A2, B2, A2, B2, "C")
+    ck("registry 거리 P2: 이완본 자리에 초기를 주면 초기 = 이완 · 1.31 Å · 합쳐짐 아님 · 접촉층 112",
+       abs(rd["init_A"] - rd["final_A"]) < 1e-9 and abs(rd["init_A"] - 1.307) < 0.01 and not rd["merged"] and rd["n_contact"] == 112, rd)
+    rg = p2m["A"]["meta"]["registry_rule"]
+    s_mid = np.array(rg["midpoint_xy_A"]) - np.array(rg["A_xy_A"])
+    ck("registry 거리 P2: 빌더 이동 (중점 − A) 을 격자로 줄인 길이와 같다", abs(rd["init_A"] - float(np.hypot(*lattice_reduce(s_mid, bas)))) < 1e-3, rd["init_A"])
+    rd2 = registry_distance("P2", A2, B2, A2, moved(A2, bas[0] + bas[1], "C"), "C")
+    ck("registry 거리: B 이완본 = A 를 격자 벡터만큼 민 것 → 0 · 합쳐짐", rd2["final_A"] < 1e-6 and rd2["merged"], rd2["final_A"])
+    rd3 = registry_distance("P2", A2, B2, A2, moved(A2, 0.5 * bas[0], "C"), "C")
+    ck("⛔음성 registry 거리: 반 격자 이동은 합쳐짐 아님 (> 0.3 Å)", rd3["final_A"] > 0.3 and not rd3["merged"], rd3["final_A"])
+    rd4 = registry_distance("P2", A2, B2, A2, moved(A2, [0.15, 0.0], "C"), "C")
+    ck("registry 거리: 0.15 Å 이동 → 0.15 · 합쳐짐 (문턱 0.2 미만)", abs(rd4["final_A"] - 0.15) < 1e-6 and rd4["merged"], rd4["final_A"])
+    rd4b = registry_distance("P2", A2, B2, A2, moved(A2, [0.25, 0.0], "C"), "C")
+    ck("⛔음성 registry 거리: 0.25 Å 이동 → 합쳐짐 아님 (문턱 0.2 이상)", abs(rd4b["final_A"] - 0.25) < 1e-6 and not rd4b["merged"], rd4b["final_A"])
+    try:
+        registry_distance("P1", A2, B2, A2, B2, "C"); bad = False
+    except SlabError as e:
+        bad = "격자 기저" in str(e)
+    ck("⛔음성 registry 거리: 흑연에 Ag(111) 격자 → 거부 (조용히 틀린 격자 차단)", bad)
+    try:
+        registry_distance("P2", A2, p1m["A"]["bound"], A2, B2, "C"); bad = False
+    except SlabError as e:
+        bad = "원자 수" in str(e)
+    ck("⛔음성 registry 거리: 다른 모델을 섞으면 거부", bad)
+    rd5 = registry_distance("P1", p1m["A"]["bound"], p1m["B"]["bound"], p1m["A"]["bound"], p1m["B"]["bound"], "Ag")
+    ck("registry 거리 P1: 초기 1.08 Å · 접촉층 28 · 격자 검사 통과", abs(rd5["init_A"] - 1.077) < 0.01 and rd5["n_contact"] == 28, rd5)
     print(f"{'✅' if n_bad == 0 else '⛔'} build_aprime_interfaces selftest {n_ok}/{n_ok + n_bad} 통과")
     return 0 if n_bad == 0 else 1
 

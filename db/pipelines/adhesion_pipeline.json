@@ -105,12 +105,14 @@
    "id": "P1a",
    "title": "LPSCl | Ag(111)",
    "role": "DEM P1 · SE 종결 두 가지 (S 바깥 · Li·PS₄ 바깥 — 대칭 슬랩 결정)",
-   "cell": "후보: SE 1×2 + Ag(111) 직사각 (Ag 층수 미정 — 원자 수는 가정값)",
-   "machine": "—",
-   "state": "todo",
-   "state_text": "전체 계면 UMA+D3 예측 → DEM (라벨 · 1저자 결정 D-2026-10-01-wad-se-pairs-uma-prediction-to-dem) — 카드 작성 전 · 계산 전",
+   "cell": "SE 4층 1×2 + Ag(111) 4층 2√3×7 (112 Ag · 332/308 원자)",
+   "machine": "gabia A6000 (UMA · 탄성 23_m 잠깐 정지 동안)",
+   "state": "done",
+   "state_text": "전체 계면 **UMA+D3 예측** 끝 (10-01 · 카드 봉인 뒤 계산) — 게이트 G1·G2·G3 통과 · registry 합쳐짐 없음 · 값은 결과 기록에서만 · G5 (외주 V5 · VASP) 대기 · DEM 회신 9 초안 (사용자 검토·발송 대기)",
    "records": [
-    "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md"
+    "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md",
+    "db/properties/wad_se_pairs_uma_prediction_card_2026_10_01.json",
+    "db/properties/wad_se_pairs_uma_result_2026_10_01.json"
    ]
   },
   {
@@ -129,12 +131,14 @@
    "id": "P2",
    "title": "LPSCl | graphite(0001)",
    "role": "P1 과 **같은 우선순위** (결정 p2 · DEM 요청 수용) · 같은 SE 슬랩 · 흑연 먼저",
-   "cell": "후보: SE 1×3 + 흑연 직사각 (흑연 층수 미정 — 원자 수는 가정값)",
-   "machine": "—",
-   "state": "todo",
-   "state_text": "전체 계면 UMA+D3 예측 → DEM (라벨 · 1저자 결정 D-2026-10-01-wad-se-pairs-uma-prediction-to-dem) — 카드 작성 전 · 계산 전",
+   "cell": "SE 4층 1×3 + 흑연 AB 3층 4×7√3 (336 C · 666/630 원자)",
+   "machine": "gabia A6000 (UMA · 탄성 23_m 잠깐 정지 동안)",
+   "state": "done",
+   "state_text": "전체 계면 **UMA+D3 예측** 끝 (10-01 · 카드 봉인 뒤 계산) — 게이트 G1·G2·G3 통과 · registry 합쳐짐 없음 · 값은 결과 기록에서만 · DFT 확인 경로 없음 (라벨) · DEM 회신 9 초안 (사용자 검토·발송 대기)",
    "records": [
-    "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md"
+    "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md",
+    "db/properties/wad_se_pairs_uma_prediction_card_2026_10_01.json",
+    "db/properties/wad_se_pairs_uma_result_2026_10_01.json"
    ]
   },
   {
@@ -893,6 +897,55 @@
     "tools/wad/cc_graphite.py"
    ],
    "vram_note": "VRAM 은 jobs_run.tsv 의 peak_total_MiB (V100 전용 · 다른 잡 없음)"
+  },
+  {
+   "id": "wad_se_pairs_uma_gabia_2026_10_01",
+   "system": "P1a · P2",
+   "machine": "gabia A6000 48 GB · UMA uma-s-1p1 omat default + D3(BJ) 2체 · li2s v2 MD 옆 한 번에 하나 · 이완 코드 @7ca3cfc57 · W @d84299f3c",
+   "check": "프로브 1 → 이완 8 (rc 0) → W 8 (끝점 10·12 Å · ATM) → 레포에서 `relax_uma_d3.py --collect` (sha 사슬 8/8 · SHA256SUMS 80/80)",
+   "started": "2026-10-01 02:27",
+   "jobs": [
+    {
+     "dir": "P1_s_outer/A",
+     "state": "done"
+    },
+    {
+     "dir": "P1_s_outer/B",
+     "state": "done"
+    },
+    {
+     "dir": "P1_li_outer/A",
+     "state": "done"
+    },
+    {
+     "dir": "P1_li_outer/B",
+     "state": "done"
+    },
+    {
+     "dir": "P2_s_outer/A",
+     "state": "done"
+    },
+    {
+     "dir": "P2_s_outer/B",
+     "state": "done"
+    },
+    {
+     "dir": "P2_li_outer/A",
+     "state": "done"
+    },
+    {
+     "dir": "P2_li_outer/B",
+     "state": "done"
+    }
+   ],
+   "vram_total_mib": 48539,
+   "verdict": "✅ **카드 게이트 전부 통과** — G1 8/8 · G2 8/8 · G3 대표 2/2 · registry 합쳐짐 0/4 (흑연 두 registry 는 따로 남았지만 값 차가 아주 작다 — 결과 기록 📎). 값·헤드라인·라벨은 결과 기록 `db/properties/wad_se_pairs_uma_result_2026_10_01.json` 에서만.",
+   "records": [
+    "db/properties/wad_se_pairs_uma_result_2026_10_01.json",
+    "db/raw/wad_se_pairs_uma_2026_10_01/collect_repo_2026_10_01.json",
+    "db/raw/wad_se_pairs_uma_2026_10_01/SHA256SUMS"
+   ],
+   "vram_note": "VRAM 은 relax_meta 의 peak_mem.max_reserved (우리 UMA 만 · li2s MD 2 GB 는 따로)"
   }
  ],
  "reviews": [
@@ -1058,8 +1111,8 @@
    "state": "V2 계산 ✅ · DEM 전달 ✅ (회신 7 · 8)"
   },
   {
-   "text": "DEM 5차 회신 (V2 두 값·라벨 수령 · SE 쌍 보류 · 소모델 질문) → 회신 6 (프로브 3 변형 불합격 · 없음) 발송 ✅ → **DEM 6차 확인 수령 (09-26 밤 · 열린 질문 0)**: SE 쌍 보류 유지 · Ag–C 값으로 질문 ② 기하 · C–C 는 DEM 문헌 카드 · 벤젠 조각 참고 대기. ⏭ 남은 인계 = V4_s_outer_A 9 잡 (gabia · 탄성 뒤 GPU 시험) 결과(eV/조각 · 참고) → ✅ 회신 7 (벤젠 참고 · 3체 열) → DEM 7차 (짝 원칙 ①–④) → 회신 8 (C–C 0.332 · 둘 다 시나리오 · 짝 ② = 2체) → **DEM 8차 수령 (09-30 · 열린 질문 0 · 새 요청 없음 · DEM 박리 시험은 질문 ② 기하부터 · SE 쌍 보류 그대로)**",
-   "state": "인계 끝 · 새 요청 없음 (DEM 8차 · 09-30)"
+   "text": "DEM 5차 회신 (V2 두 값·라벨 수령 · SE 쌍 보류 · 소모델 질문) → 회신 6 (프로브 3 변형 불합격 · 없음) 발송 ✅ → **DEM 6차 확인 수령 (09-26 밤 · 열린 질문 0)**: SE 쌍 보류 유지 · Ag–C 값으로 질문 ② 기하 · C–C 는 DEM 문헌 카드 · 벤젠 조각 참고 대기. ⏭ 남은 인계 = V4_s_outer_A 9 잡 (gabia · 탄성 뒤 GPU 시험) 결과(eV/조각 · 참고) → ✅ 회신 7 (벤젠 참고 · 3체 열) → DEM 7차 (짝 원칙 ①–④) → 회신 8 (C–C 0.332 · 둘 다 시나리오 · 짝 ② = 2체) → **DEM 8차 수령 (09-30 · 열린 질문 0 · 새 요청 없음 · DEM 박리 시험은 질문 ② 기하부터 · SE 쌍 보류 그대로)** → **10-01 SE 쌍 전체 계면 UMA+D3 예측** (1저자 결정 · 카드 봉인 → gabia 계산 → 게이트 통과 · 결과 기록) → **회신 9 초안** (라벨 네 문장 · 방법 섞인 비 · 탄소 DFT 경로 없음 · V5 비교 계획 · 사용자 검토·발송 대기)",
+   "state": "회신 9 초안 (SE 쌍 예측 · 발송 대기)"
   },
   {
    "state": "외주 발송 (09-30) · 파일럿 2 잡 반송 대기",
@@ -1386,6 +1439,11 @@
    "date": "2026-10-01",
    "stage": "dem",
    "text": "**SE 쌍 (LPSCl–Ag · LPSCl–C) 을 DEM 에 준다 (1저자 결정 D-2026-10-01-wad-se-pairs-uma-prediction-to-dem)** — 전체 계면 UMA+D3 예측 (P1 두 종결 · P2) 을 결과 전 카드로 계산해 '미검증 UMA+D3 예측 · 민감도 시나리오' 라벨로 넘긴다 · 외주 V5 (VASP) 가 오면 같은 표본에서 UMA 비교 (G5) + 작은 모델 ↔ 전체 계면 UMA 차 · 탄소는 DFT 검증 경로 없음 라벨. ⚠ 전체 계면 UMA 예측은 지금까지 계산된 적이 없다 ('내부 전용' 으로 미룸). 사용자: 'DEM도 개발하고 해야되니까 시간은 오래걸릴거' — 카드 먼저."
+  },
+  {
+   "date": "2026-10-01",
+   "stage": "dft",
+   "text": "**SE 쌍 전체 계면 UMA+D3 예측 끝** (gabia · 탄성 strain_23_m 을 EXIT 로 약 1 시간 세운 동안 · 이완 8 + W 8 ≈ 49 분) — 카드 게이트 G1 8/8 · G2 8/8 · G3 대표 2/2 · registry 합쳐짐 0/4. 흑연 쪽 A·B 값이 거의 같아 같은 모델을 두 번 잰 건 아닌지 확인했다: sha 가 다르고 이완 뒤에도 1.31 Å 떨어져 있다 — 이 모형에서 흑연 면이 옆으로 거의 평평하다. 원자료 80c398511 (사용자 · gabia) · 집계 `relax_uma_d3.py --collect` (새 · selftest 36/36 · 돌연변이 6/6) · registry 거리 `build_aprime_interfaces.registry_distance` (새 · 44/44 · 4/4). 값·라벨은 결과 기록에서만. 탄성은 03:28 새 러너로 재개 (파일에서 기하·밀도·wfc 읽음 확인)."
   }
  ],
  "related_decisions": [
