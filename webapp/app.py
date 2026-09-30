@@ -3198,6 +3198,8 @@ COVERAGE_V2_DENOM_KEYS = ('n_am', 'n_free_surface_nonpositive', 'n_coverage_clip
 COVERAGE_V2_PAIR_KEYS = ('AM_SE', 'SE_SE', 'AM_AM', 'other')
 COVERAGE_V2_BINDING_KEYS = ('elastic', 'tabor', 'volume', 'geom', 'none')
 COVERAGE_V2_FRAC_ROUND = 6
+#: LHSC-03-R4 (Codex 재검증 3 · 1저자 비준) — 피복률은 round(…, 3) 로 실린다 (생산자 `keys`) → 비교 여유 = 반올림 반폭
+COVERAGE_V2_COV_TOL = 0.0005
 #: blank 판정에서 값이 있어도 되는 키 (진단 · 규약) — 그 밖의 `*_physics_v2` 는 None (또는 없음) 이어야 한다 (물리 값 잔재 금지)
 COVERAGE_V2_BLANK_ALLOWED = ('coverage_status_physics_v2', 'rule_physics_v2', 'h_film_sim_physics_v2', 'am_denominator_physics_v2',
                              'n_contacts_unknown_id_physics_v2', 'n_contact_failures_physics_v2')
@@ -3291,8 +3293,21 @@ def _v2_ok_record(fm):
            and k != 'coverage_status_physics_v2'}
     if not all(v is not None and _v2_num(v) and 0.0 <= float(v) <= 100.0 for v in cov.values()):
         return False
-    if diag['n_am'] > 0:                                           # AM 이 있으면 전체 피복률이 있어야 한다
-        return 'coverage_AM_mean_physics_v2' in cov
+    #  LHSC-03-R4 — 피복률 · 장부 공존 (Codex 최소 해제 그대로 · 피복식 재계산이 아니다)
+    if ncap != bt['tabor'] + bt['volume'] + bt['geom']:
+        return False                                               # cap 가지 = binding tabor · volume · geom (elastic · none 은 cap 가지가 아니다)
+    tol = COVERAGE_V2_COV_TOL
+    if any(float(v) > 50.0 + tol for k, v in cov.items() if k.endswith('_std_physics_v2')):
+        return False                                               # [0, 100] 값의 population std 는 최대 50 %p
+    n_am, n_clip = diag['n_am'], diag['n_coverage_clipped_100']
+    if n_am > 0:                                                   # AM 이 있으면 전체 피복률이 있어야 한다
+        if 'coverage_AM_mean_physics_v2' not in cov:
+            return False
+        if n_amse == 0 and (n_clip != 0 or any(float(v) != 0.0 for v in cov.values())):
+            return False                                           # AM–SE 접촉 (결속) 0 → 분자 0 → 평균 · std · 클립 0 (총 면적 반올림으로 역추론하지 않는다)
+        if float(cov['coverage_AM_mean_physics_v2']) + tol < 100.0 * n_clip / n_am:
+            return False                                           # 클립 입자는 100 — 입자 수 가중 평균 ≥ 100·n_clip/n_am (n_clip = n_am 이면 100)
+        return True
     return not cov                                                 # AM 0 개 = 피복률 키 없음 (연산 완료 · 적용 대상 없음)
 
 

@@ -472,7 +472,8 @@ def main():
             _pairs = tuple(getattr(webapp, 'COVERAGE_V2_PAIR_KEYS', ('AM_SE', 'SE_SE', 'AM_AM', 'other')))
             _binds = tuple(getattr(webapp, 'COVERAGE_V2_BINDING_KEYS', ('elastic', 'tabor', 'volume', 'geom', 'none')))
             _d.update({'cap_conflict_n_by_pair_physics_v2': {q: 0 for q in _pairs},
-                       'A_binding_counts_total_physics_v2': {b: (4 if b == _binds[0] else 0) for b in _binds},
+                       #  LHSC-03-R4: cap 가지 수 (n_cap 1) = binding tabor + volume + geom — 옛 판 (elastic 4 · cap 1) 은 모순이었다
+                       'A_binding_counts_total_physics_v2': {b: {'elastic': 3, 'tabor': 1}.get(b, 0) for b in _binds},
                        'A_binding_counts_AM_SE_physics_v2': {b: (2 if b == _binds[0] else 0) for b in _binds},
                        'cap_conflict_frac_physics_v2': 0.0, 'cap_conflict_frac_cap_branch_physics_v2': 0.0})
             if _d:
@@ -804,6 +805,72 @@ def main():
             tuple(getattr(webapp, 'COVERAGE_V2_PAIR_KEYS', ())) == tuple(_cv._PhysicsV2Book.PAIRS)
             and tuple(getattr(webapp, 'COVERAGE_V2_BINDING_KEYS', ())) == tuple(_cv._PhysicsV2Book.BINDINGS)
             and getattr(webapp, 'COVERAGE_V2_FRAC_ROUND', None) == 6 and all(webapp._coverage_v2_written(v[0]) for v in _prod.values()))
+
+        # T11q · T11r ★ Codex LHSC-03-R4 (09-30 밤 재검증 3 · P2 · 1저자 비준 "다 비준") — 반례 먼저
+        #   R4: 피복률 · 장부 공존 — 접촉 0 인데 평균 50 % · n_clip = n_am 인데 평균 1.218 % · population std 75 %p · n_cap 에 elastic/none 포함 이
+        #   전부 검증기 True · 필수 단계 done.  계약 (Codex 최소 해제): AM–SE 결속 0 → 피복률 평균 · std · 클립 0 (총 면적 반올림으로 역추론하지
+        #   않는다) · mean_AM ≥ 100·n_clip/n_am (평균 반올림 0.0005 %p) · std ≤ 50 %p (population · [0, 100]) · n_cap = binding tabor + volume + geom.
+        #   정상 대조 = 실제 생산자 0 접촉 AM (접촉 행 비움) · SE-only · 부분 / 전체 클립 (생산자 규약대로 만든 레코드).
+        _dz = _root / 'zero_am_contacts'
+        _d0, _tm0, _sc0 = _cv._selftest_fixture(_dz, variant='base')
+        (_d0 / 'contacts.csv').write_text('id1,id2,delta,contact_area\n')
+        with _ctx.redirect_stdout(_io.StringIO()):
+            _cv.compute_case('zero_am_contacts', _d0, _tm0, scale=_sc0)
+        _zero = json.loads((_d0 / 'full_metrics.json').read_text())
+
+        def _mut4(name):
+            x = _copy.deepcopy(_zero if name == 'zero_contacts_positive_coverage' else _hl)
+            if name == 'zero_contacts_positive_coverage':
+                for k in list(x):
+                    if k.startswith('coverage_') and k.endswith('_mean_physics_v2'):
+                        x[k] = 50.0
+            elif name == 'all_am_clipped_but_mean_not_100':
+                x['am_denominator_physics_v2']['n_coverage_clipped_100'] = x['am_denominator_physics_v2']['n_am']
+            elif name == 'impossible_population_std_75':
+                for k in list(x):
+                    if k.startswith('coverage_') and k.endswith('_std_physics_v2'):
+                        x[k] = 75.0
+            elif name == 'cap_branch_count_includes_elastic_and_none':
+                x['n_cap_branch_physics_v2'] = x['n_contacts_physics_v2']
+                x['cap_conflict_frac_cap_branch_physics_v2'] = round(x['cap_conflict_n_physics_v2'] / x['n_cap_branch_physics_v2'], 6)
+            elif name in ('partial_clip_ok', 'full_clip_ok'):         # 생산자 규약대로: AM 둘 · 상마다 한 입자 (std 0)
+                full = name == 'full_clip_ok'
+                x['am_denominator_physics_v2']['n_coverage_clipped_100'] = 2 if full else 1
+                labs = sorted(k[len('coverage_'):-len('_mean_physics_v2')] for k in x
+                              if k.startswith('coverage_') and k.endswith('_mean_physics_v2') and k != 'coverage_AM_mean_physics_v2')
+                vals = [100.0, 100.0] if full else [100.0, 40.0]
+                for lb, v in zip(labs, vals):
+                    x[f'coverage_{lb}_mean_physics_v2'] = v
+                    x[f'coverage_{lb}_std_physics_v2'] = 0.0
+                x['coverage_AM_mean_physics_v2'] = round(sum(vals) / 2, 3)
+            return x
+        _rej4 = ('zero_contacts_positive_coverage', 'all_am_clipped_but_mean_not_100', 'impossible_population_std_75',
+                 'cap_branch_count_includes_elastic_and_none')
+        _r4 = {n: _v2w_safe(_mut4(n)) for n in _rej4 + ('partial_clip_ok', 'full_clip_ok')}
+        _pos4 = {'zero_am_contacts': webapp._coverage_v2_written(str(_d0)), 'se_only': webapp._coverage_v2_written(_prod['se_only'][0]),
+                 'base': webapp._coverage_v2_written(_prod['base'][0]), 'partial_clip_ok': _r4['partial_clip_ok'], 'full_clip_ok': _r4['full_clip_ok']}
+        chk(f'T11q) ★ LHSC-03-R4: Codex 장부 모순 4 종 (접촉 0 인데 피복률 50 % · 전 AM 클립인데 평균 1.2 % · std 75 %p · cap 수에 elastic/none) 은 '
+            f'거부 · 정상 5 (실제 생산자 0 접촉 AM · SE-only · 정상 · 부분 클립 · 전체 클립) 는 받는다 — 어긋남 '
+            f'{[n for n in _rej4 if _r4[n] is not False] + [n for n, v in _pos4.items() if v is not True]}',
+            all(_r4[n] is False for n in _rej4) and all(v is True for v in _pos4.values()) and _zero.get('n_contacts_physics_v2') == 0)
+        _stg4 = {}
+        _prev_rr = ps._RUNNER
+        try:
+            for _n in _rej4:
+                _sd = os.path.join(tmp, 'results', f'r4_{_n}')
+                os.makedirs(_sd, exist_ok=True)
+
+                def _malformed4(cmd, _x=_mut4(_n), _p=_sd, **kw):   # 계산 subprocess 만 대역 — 변이 파일을 쓰고 rc 0
+                    with open(os.path.join(_p, 'full_metrics.json'), 'w') as _f:
+                        json.dump(_x, _f)
+                    return subprocess.CompletedProcess(cmd, 0, 'synthetic malformed producer', '')
+                ps._RUNNER = _malformed4
+                _st = webapp._coverage_stage([sys.executable, 'coverage_physics_vs_hertzian.py', _n], _sd, 'coverage')
+                _stg4[_n] = (_st.get('ok'), ps.summarize([_st])[0])
+        finally:
+            ps._RUNNER = _prev_rr
+        chk(f'T11r) ★ LHSC-03-R4: 필수 단계 재현 — 장부 모순 4 종은 failed (옛: done) {_stg4}',
+            all(v[0] is False and v[1] == 'failed' for v in _stg4.values()) and len(_stg4) == 4)
     finally:
         ps._RUNNER = prev_runner
         for k, v in prev_env.items():
