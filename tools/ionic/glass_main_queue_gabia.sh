@@ -13,7 +13,14 @@
 #   DRY_RUN=1 bash tools/ionic/glass_main_queue_gabia.sh       # 결정·드라이버 sha·구조 판별·계획만 본다
 #   bash tools/ionic/glass_main_queue_gabia.sh                 # tmux 안에서 — 큐를 끝까지, 멈추면 종료 코드로 이유
 #
-# 큐 QUEUE="T:seed ..." (기본 465:5 550:3 550:4 550:5 465:1 465:2 550:2 — gabia 에 구조가 있는 것 먼저)
+# v2 카드 (2026-09-30 · lpscl_smallcell_glass_md_v2_estimand_2026_09_30.json · 잠정) 에서 더한 것 — 옛 동작은 기본값 그대로다:
+#   · 큐 항목 `T:seed:prod` — prod(ps) 를 런마다 준다 (없으면 PROD_DEFAULT=400). run_meta 의 prod_ps 가 그 값이어야 한다.
+#   · VSEED_OFFSET (기본 0) — 드라이버 --seed = VSEED_OFFSET + seed. 드라이버의 MD 난수 = --seed + T 라서 (드라이버 :580)
+#     옛 런(--seed = 구조 시드) 과 같은 난수열을 피하려면 v2 는 1000 을 준다. run_meta 의 seed 가 그 값이어야 한다.
+#   · LABEL_PREFIX (기본 없음 → 옛 라벨 규칙) — 주면 라벨 = <prefix>_s<seed>_T<T>.
+#   · EXCEPTION_ID 기본값 = v2 예외. 옛 예외(09-29)는 09-30 에 소멸·대체됐다 — 옛 ID 로는 결정 검사에서 멈춘다 (6).
+#
+# 큐 QUEUE="T:seed[:prod] ..." (기본 465:5 550:3 550:4 550:5 465:1 465:2 550:2 — 09-29 본 런 · gabia 에 구조가 있는 것 먼저)
 #   ⛔ 550:1 은 **없다** — 550 K seed1 은 파일럿 P-2 가 본 런을 겸한다 (편지 CH · 회신 CH '그대로 가세요').
 #     2026-09-29 에 기본값이 550:1 을 넣은 8 런이었다 (셈 오류 · 실제 남은 본 런 7). 1저자 09-29 저녁: seed1·2 세 런은 kgy.
 #   seed3·4·5 초기구조 = $GABIA_A/seed<S>/final.xyz · seed1·2 = $INIT/seed<S>_final.xyz (kgy 에서 사람이 옮긴다 —
@@ -38,6 +45,7 @@
 # 종료 코드: 0 큐 끝 · 2 가드 ①–③ (예외 닫힘) · 3 우리 MD CUDA OOM (예외 닫힘) · 4 우리 MD 가 msd.json 없이 끝남
 #            · 5 가드 ④ 탄성 GPU 오류 (예외 닫힘 · 사람이 탄성 쪽을 본다) · 6 결정 비활성 · 7 드라이버 sha 불일치
 #            · 8 구조 판별 실패 · 9 설정 불일치 (run_meta · dt) · 10 이미 실행 중 (flock — 큐를 둘 띄우지 않는다)
+#            · 13 큐 항목 형식 오류 (T:seed[:prod] · 숫자 아님 · 칸 넷 이상) — 띄우기 전에 멈춘다
 #
 # 이 러너가 **못 하는 것**
 #   · 표본 간격(2 s)보다 빠른 VRAM 급등을 막지 못한다 — 탄성 pw.x 가 스스로 OOM 날 수 있다
@@ -62,7 +70,8 @@ REF_MDLOG=${REF_MDLOG:-$ROOT/seed3/T465/d0.00_cfg0/T465/md.log}
 OURCAP=${OURCAP:-3500}; TOTALCAP=${TOTALCAP:-46000}; START_MAX=${START_MAX:-42500}
 HOSTFLOOR=${HOSTFLOOR:-8192}; SAMPLE=${SAMPLE:-2}; WARM=${WARM:-300}; POLL=${POLL:-60}
 META_WAIT=${META_WAIT:-900}; STRUCT_WAIT=${STRUCT_WAIT:-600}; KILL_GRACE=${KILL_GRACE:-10}
-EXCEPTION_ID=${EXCEPTION_ID:-D-2026-09-29-gabia-uma-coexist-elastic-li2s-main}
+EXCEPTION_ID=${EXCEPTION_ID:-D-2026-09-30-gabia-uma-coexist-elastic-li2s-v2}
+PROD_DEFAULT=${PROD_DEFAULT:-400}; VSEED_OFFSET=${VSEED_OFFSET:-0}; LABEL_PREFIX=${LABEL_PREFIX:-}
 REPO=${REPO:-$(cd "$(dirname "$(realpath "$0")")/../.." 2>/dev/null && pwd)}
 
 # seed → "최단P–S PS₄개수 ρ" (relax 판 기록값). REC_<S> 로 덮을 수 있다 (selftest 용).
@@ -70,6 +79,13 @@ rec_of(){ local v="REC_$1"; [ -n "${!v:-}" ] && { echo "${!v}"; return; }
   case "$1" in 1) echo "2.037 12 1.6212";; 2) echo "2.021 12 1.5782";; 3) echo "2.0055 12 1.5933";;
                4) echo "2.0324 12 1.591";; 5) echo "2.030 11 1.6181";; *) echo "";; esac; }
 struct_of(){ case "$1" in 3|4|5) echo "$GABIA_A/seed$1/final.xyz";; *) echo "$INIT/seed$1_final.xyz";; esac; }
+# 큐 항목 → QT QS QP (prod 가 없으면 PROD_DEFAULT) · QV (드라이버 --seed). 형식이 틀리면 1.
+parse_q(){ local r n; QT=${1%%:*}; r=${1#*:}; QS=${r%%:*}; QP=$PROD_DEFAULT
+  n=$(printf '%s' "$1" | tr -cd ':' | wc -c)
+  [ "$n" = 1 ] || [ "$n" = 2 ] || return 1
+  [ "$n" = 2 ] && QP=${r#*:}
+  [[ "$QT" =~ ^[0-9]+$ ]] && [[ "$QS" =~ ^[0-9]+$ ]] && [[ "$QP" =~ ^[0-9]+([.][0-9]+)?$ ]] || return 1
+  QV=$((VSEED_OFFSET + QS)); return 0; }
 
 ts(){ date '+%F %T'; }
 say(){ echo "[$(ts)] $*"; }
@@ -123,24 +139,32 @@ sys.exit(0 if ok else 1)
 PY
 }
 
-check_meta(){  # $1 새 run_meta · $2 T · $3 seed · $4 xyz → 0 = 기준(seed3 T465)과 같은 설정
-  python3 - "$REF_META" "$1" "$2" "$3" "$4" <<'PY'
+check_meta(){  # $1 새 run_meta · $2 T · $3 드라이버 seed · $4 xyz · $5 prod → 0 = 기준(seed3 T465)과 같은 설정
+  python3 - "$REF_META" "$1" "$2" "$3" "$4" "${5:-$PROD_DEFAULT}" <<'PY'
 import json, sys
 ref = json.load(open(sys.argv[1])); new = json.load(open(sys.argv[2]))
-T, S, X = float(sys.argv[3]), int(sys.argv[4]), sys.argv[5]
-keys = ("n_atoms", "supercell", "prod_ps", "equilib_ps", "fit_window_ps", "save_traj", "uma_model",
+T, S, X, P = float(sys.argv[3]), int(sys.argv[4]), sys.argv[5], float(sys.argv[6])
+# prod_ps 는 기준과 비교하지 않고 큐가 준 값과 비교한다 (v2: 550 K 800 ps · 600 K 400 ps)
+keys = ("n_atoms", "supercell", "equilib_ps", "fit_window_ps", "save_traj", "uma_model",
         "uma_inference_mode_requested")
 bad = [f"{k} {ref.get(k)!r}→{new.get(k)!r}" for k in keys if ref.get(k) != new.get(k)]
+try:
+    p_ok = float(new.get("prod_ps")) == P
+except (TypeError, ValueError):
+    p_ok = False
+if not p_ok: bad.append(f"prod_ps {new.get('prod_ps')!r} ≠ 큐 {P:g}")
 if [float(t) for t in new.get("temperatures", [])] != [T]: bad.append(f"temperatures {new.get('temperatures')!r}")
-if new.get("seed") != S: bad.append(f"seed {new.get('seed')!r}")
+if new.get("seed") != S: bad.append(f"seed {new.get('seed')!r} ≠ {S}")
 if new.get("v0_xyz") != X: bad.append(f"v0_xyz {new.get('v0_xyz')!r}")
-print("OK run_meta = seed3 T465 판과 같다 (T·seed·v0 만 다름)" if not bad else "FAIL run_meta 다름: " + " · ".join(bad))
+print(f"OK run_meta = seed3 T465 판과 같다 (T·seed·v0·prod 만 다름 · prod {P:g} · seed {S})" if not bad
+      else "FAIL run_meta 다름: " + " · ".join(bad))
 sys.exit(1 if bad else 0)
 PY
 }
 dt_of(){ awk 'NR==2{a=$1} NR==3{printf "%.4f", $1-a; exit}' "$1" 2>/dev/null; }   # MDLogger: 1 행 머리 · 매 스텝
 
-label_of(){ local L3; L3=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1])).get('label',''))" "$REF_META" 2>/dev/null)
+label_of(){ [ -n "$LABEL_PREFIX" ] && { echo "${LABEL_PREFIX}_s$1_T$2"; return; }
+  local L3; L3=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1])).get('label',''))" "$REF_META" 2>/dev/null)
   case "$L3" in *s3*) L3=${L3/s3/s$1};; *) echo "lpscl_glass_main_s$1_T$2"; return;; esac
   case "$L3" in *465*) L3=${L3/465/$2};; esac; echo "$L3"; }
 
@@ -180,7 +204,8 @@ a = ap.parse_args(); E = os.environ; T = float(a.temperatures[0])
 with open(E["FAKE_APPS"], "a") as fh: fh.write(f"{os.getpid()}, {E.get('FAKE_OURS', '2000')}\n")
 os.makedirs(a.out_root, exist_ok=True)
 json.dump({"label": a.label, "n_atoms": 120, "supercell": [1, 1, 1], "v0_xyz": a.v0_xyz, "temperatures": [T],
-           "prod_ps": 200.0 if E.get("FAKE_META_BAD") else 400.0, "equilib_ps": 5.0, "seed": a.seed,
+           "prod_ps": 200.0 if E.get("FAKE_META_BAD") else float(E.get("FAKE_PROD", a.prod_ps)), "equilib_ps": 5.0,
+           "seed": int(E.get("FAKE_SEED", a.seed)),
            "fit_window_ps": [2.0, 50.0], "save_traj": True, "uma_model": "uma-s-1p1",
            "uma_inference_mode_requested": "turbo"}, open(os.path.join(a.out_root, "run_meta.json"), "w"))
 d = os.path.join(a.out_root, "d0.00_cfg0", f"T{int(T)}"); os.makedirs(d, exist_ok=True)
@@ -300,7 +325,20 @@ PY
   ck "⛔음성 큐가 이미 돌면 (lock) → 10"             "$(run QUEUE='465:5')" 10
   wait
   ck "DRY_RUN 은 띄우지 않는다 (0 · 새 폴더 0)"      "$(run QUEUE='700:5' DRY_RUN=1)/$(ls -d "$T"/root/seed5/T700 2>/dev/null | wc -l)" 0/0
-  rm -rf "$T"; [ "$f" = 0 ] && echo "selftest ✅ (음성 17 포함)" || echo "selftest ⛔"; exit "$f"
+  # ── v2 (2026-09-30): T:seed:prod · VSEED_OFFSET · LABEL_PREFIX ──
+  ck "옛 동작: prod 없는 항목은 400 · --seed = 구조 시드" \
+     "$(python3 -c "import json;m=json.load(open('$T/root/seed5/T465/run_meta.json'));print(m['prod_ps'],m['seed'])")" "400.0 5"
+  ck "v2 양성: 800:5:800 · 오프셋 1000 · 접두 라벨 → 끝까지 (0)" \
+     "$(run QUEUE='800:5:800' VSEED_OFFSET=1000 LABEL_PREFIX=lpscl_glass_v2 FAKE_SLEEP=1)" 0
+  ck "v2 양성: run_meta prod 800 · seed 1005 · 라벨 접두" \
+     "$(python3 -c "import json;m=json.load(open('$T/root/seed5/T800/run_meta.json'));print(m['prod_ps'],m['seed'],m['label'])")" \
+     "800.0 1005 lpscl_glass_v2_s5_T800"
+  ck "⛔음성 prod 기대 800 · run_meta 400 → 9"        "$(run QUEUE='810:5:800' FAKE_PROD=400 FAKE_SLEEP=30)" 9
+  ck "⛔음성 seed 기대 1005 · run_meta 5 → 9"          "$(run QUEUE='820:5' VSEED_OFFSET=1000 FAKE_SEED=5 FAKE_SLEEP=30)" 9
+  ck "⛔음성 큐 형식 — 칸 넷 (600:5:800:1) → 13"      "$(run QUEUE='600:5:800:1')" 13
+  ck "⛔음성 큐 형식 — 숫자 아님 (600:x) → 13"         "$(run QUEUE='600:x')" 13
+  ck "⛔음성 큐 형식 — 콜론 없음 (600) → 13"           "$(run QUEUE='600')" 13
+  rm -rf "$T"; [ "$f" = 0 ] && echo "selftest ✅ (음성 22 포함)" || echo "selftest ⛔"; exit "$f"
 fi
 
 # ── 본 실행 ────────────────────────────────────────────────────────────────────
@@ -311,12 +349,13 @@ s=$(sha256sum "$DRV" 2>/dev/null | cut -c1-16)
 [ -s "$REF_META" ] || { say "⛔ 기준 run_meta 없음 ($REF_META) — 설정을 대조할 수 없다"; exit 9; }
 say "결정 active ✓ · 드라이버 sha16 $s ✓ · 기준 설정 $REF_META · 가드 합계 $TOTALCAP · 우리 $OURCAP · host $HOSTFLOOR MiB"
 for q in $QUEUE; do
-  T=${q%%:*}; S=${q##*:}; X=$(struct_of "$S"); R=$(rec_of "$S")
+  parse_q "$q" || { say "⛔ 큐 항목 형식 오류 '$q' (T:seed[:prod] · 숫자) — 시작하지 않는다"; exit 13; }
+  T=$QT; S=$QS; X=$(struct_of "$S"); R=$(rec_of "$S")
   [ -n "$R" ] || { say "⛔ seed$S 기록값 없음 — 시작하지 않는다"; exit 8; }
   if [ -s "$ROOT/seed$S/T$T/d0.00_cfg0/T$T/msd.json" ]; then st="끝남 (건너뜀)"
   elif [ -s "$X" ]; then st=$(check_struct "$X" "$R") || { say "⛔ T$T seed$S 구조 판별 실패 — $st · $X"; exit 8; }
   else st="구조 없음 — 그 차례에서 기다린다"; fi
-  say "  계획 T$T seed$S · $X · $st"
+  say "  계획 T$T seed$S · prod $QP ps · 드라이버 --seed $QV · 라벨 $(label_of "$S" "$T") · $X · $st"
 done
 if [ -n "${DRY_RUN:-}" ]; then say "⇢ DRY_RUN — 띄우지 않았다 · GPU $(gpu_total) MiB · host $(host_mib) MiB"; exit 0; fi
 # 중복 실행 가드 — pgrep 은 자기 자신·watch 를 센다(CLAUDE.md) · flock 은 프로세스가 죽으면 풀린다.
@@ -327,7 +366,8 @@ flock -n 9 || { say "⛔ 큐가 이미 돌고 있다 (lock $ROOT/.queue_coexist.
 mkdir -p "$ROOT/queue_logs"; TSV=$ROOT/queue_coexist.tsv
 [ -f "$TSV" ] || printf "T\tseed\trc\tdone\twall_s\tpeak_total_MiB\tpeak_ours_MiB\tkilled\tstart\thost_min_MiB\n" > "$TSV"
 for q in $QUEUE; do
-  T=${q%%:*}; S=${q##*:}; OUT=$ROOT/seed$S/T$T; D=$OUT/d0.00_cfg0/T$T; X=$(struct_of "$S")
+  parse_q "$q" || { say "⛔ 큐 항목 형식 오류 '$q'"; exit 13; }
+  T=$QT; S=$QS; PR=$QP; VS=$QV; OUT=$ROOT/seed$S/T$T; D=$OUT/d0.00_cfg0/T$T; X=$(struct_of "$S")
   [ -s "$D/msd.json" ] && { say "⏭ T$T seed$S 이미 끝 — 건너뜀"; continue; }
   if [ -e "$OUT" ]; then B="${OUT}_aborted_$(date +%m%d_%H%M%S)"; mv "$OUT" "$B"; say "↪ 중단 흔적 → $B (보존 · 다시 돈다)"; fi
   n=0; while [ ! -s "$X" ]; do
@@ -339,9 +379,9 @@ for q in $QUEUE; do
     [ $((n % 10)) = 0 ] && say "대기 — GPU ${u:-?}/$START_MAX MiB · host $h/$((HOSTFLOOR + 4096)) MiB"; n=$((n+1)); sleep "$POLL"; done
   L=$ROOT/queue_logs/s${S}_T${T}.log; el_mark
   "$PY" "$DRV" --v0_xyz "$X" --supercell 1 1 1 --label "$(label_of "$S" "$T")" --out_root "$OUT" \
-      --disorder_levels 0 --n_configs 1 --temperatures "$T" --equilib_ps 5 --prod_ps 400 --timestep_fs 2 \
-      --friction 0.02 --fit_window_ps 2 50 --save_traj --seed "$S" --turbo --device cuda > "$L" 2>&1 &
-  PID=$!; t0=$(date +%s); start=$(ts); say "▶ T$T seed$S PID $PID · 시작 전 GPU $u MiB · 로그 $L"
+      --disorder_levels 0 --n_configs 1 --temperatures "$T" --equilib_ps 5 --prod_ps "$PR" --timestep_fs 2 \
+      --friction 0.02 --fit_window_ps 2 50 --save_traj --seed "$VS" --turbo --device cuda > "$L" 2>&1 &
+  PID=$!; t0=$(date +%s); start=$(ts); say "▶ T$T seed$S PID $PID · prod $PR ps · --seed $VS · 시작 전 GPU $u MiB · 로그 $L"
   peak=0; pko=0; hmin=999999; killed=""; kcode=0; meta_ok=""; dt_ok=""; last=-999
   while kill -0 "$PID" 2>/dev/null; do
     u=$(gpu_total); o=$(gpu_tree "$PID"); h=$(host_mib); el=$(( $(date +%s) - t0 ))
@@ -352,7 +392,7 @@ for q in $QUEUE; do
     elif [ $((el - last)) -ge "$POLL" ]; then last=$el
       if el_gpu_error; then killed="④ 탄성 출력에 GPU 메모리 오류 ($EL_F)"; kcode=5
       elif [ -z "$meta_ok" ] && [ -s "$OUT/run_meta.json" ]; then
-        m=$(check_meta "$OUT/run_meta.json" "$T" "$S" "$X") && { meta_ok=1; say "  $m"; } || { killed="설정 — $m"; kcode=9; }
+        m=$(check_meta "$OUT/run_meta.json" "$T" "$VS" "$X" "$PR") && { meta_ok=1; say "  $m"; } || { killed="설정 — $m"; kcode=9; }
       elif [ -z "$meta_ok" ] && [ "$el" -gt "$META_WAIT" ]; then killed="설정 — run_meta.json 이 ${META_WAIT}s 안에 안 생김"; kcode=9
       elif [ -z "$dt_ok" ] && [ -n "$(dt_of "$D/md.log")" ]; then
         a=$(dt_of "$REF_MDLOG"); b=$(dt_of "$D/md.log")
@@ -365,7 +405,7 @@ for q in $QUEUE; do
   wait "$PID" 2>/dev/null; rc=$?; wall=$(( $(date +%s) - t0 )); dn=0; [ -s "$D/msd.json" ] && dn=1
   printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" "$T" "$S" "$rc" "$dn" "$wall" "$peak" "$pko" "${killed:-}" "$start" "$hmin" >> "$TSV"
   if [ -z "$killed" ] && [ "$dn" = 1 ]; then   # 런이 첫 점검보다 빨리 끝났으면 여기서 대조한다
-    [ -z "$meta_ok" ] && { m=$(check_meta "$OUT/run_meta.json" "$T" "$S" "$X") || { say "⛔ 설정 — $m"; exit 9; }; say "  $m"; }
+    [ -z "$meta_ok" ] && { m=$(check_meta "$OUT/run_meta.json" "$T" "$VS" "$X" "$PR") || { say "⛔ 설정 — $m"; exit 9; }; say "  $m"; }
     [ -z "$dt_ok" ] && { a=$(dt_of "$REF_MDLOG"); b=$(dt_of "$D/md.log"); [ "$a" = "$b" ] || { say "⛔ 설정 — dt $b ≠ seed3 $a ps/행"; exit 9; }; }
   fi
   if [ -n "$killed" ]; then

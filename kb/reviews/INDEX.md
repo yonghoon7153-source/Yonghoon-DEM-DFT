@@ -114,6 +114,7 @@ evidenceScope: multi-source-primary
 | CL | 2026-09-28 | `li2s1a_CL_prompt_li2s_ch_reply_s54_census_2026_09_28.md` | `li2s1a_CL_reply_li2s_ch_reply_s54_census_2026_09_28.md` | 발송됨 (초안 판 · 빈 칸 둘 — 사용자 · 2026-09-28) · ✅ 회신 수령 2026-09-28 (부분 · `li2s1a_CL_reply_…` — Q-CL-1 확정 · Q-CL-2 확정 + 출처 단서 · Q-CL-3·4 는 결과와 같이) → 답장은 600 K · 465 K 조기확인 · 네 시드 전수와 함께 | 같은 라벨 · 주제 토큰 일치 ['census', 'ch', 'li2s', 'reply', 's54'] |
 | CM | 2026-09-30 | `codex_CM_prompt_cei_nd_handoff_2026_09_30.md` | `codex_CM_reply_cei_nd_handoff_2026_09_30.md` | 발송됨 (사용자 · 2026-09-30 · 인계 zip 첨부) · ✅ 회신 수령 2026-09-30 (`codex_CM_reply_cei_nd_handoff_2026_09_30.md` · NO-GO · P0 7 · P1 6) → ✅ 이행 완료 (a0e2c9efb · 비준 d181c35a9 · ab62caedc) · 송부판 v3 (같은 비공개 링크) · 인계 zip v2 (sha256 186ed897…d6ce · 이메일 가린 파생본) → 사용자가 실험 쪽 1저자에게 송부 | 같은 라벨 · 주제 토큰 일치 ['cei', 'handoff', 'nd']; 판정 인용 18회 |
 | CN | 2026-09-30 | `li2s1a_CN_prompt_li2s_main_readout_2026_09_30.md` | `li2s1a_CN_reply_li2s_main_readout_2026_09_30.md` | 발송됨 (사용자 · 2026-09-30 · 초안 그대로) · ✅ 회신 CN 수령 2026-09-30 (`li2s1a_CN_reply_…` — 갈래1 확정 · 문구 좁힘 · 1/15 · Ea 질문 소멸 · Q-CL-3·4 확정) → 마감 기록 `lpscl_smallcell_glass_md_closed_2026_09_30.json` · §6-3 도구 결함은 발송 뒤 고침 (sha16 c1f8f9b467149c91) | 같은 라벨 · 주제 토큰 일치 ['li2s', 'main', 'readout']; 판정 인용 1회 |
+| CO | 2026-09-30 | `li2s1a_CO_prompt_li2s_glass_v2_card_2026_09_30.md` | — | 초안 (2026-09-30) — 사용자 검토 · 발송 대기 | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
