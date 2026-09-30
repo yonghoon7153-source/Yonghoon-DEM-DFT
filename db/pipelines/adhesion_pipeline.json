@@ -1,7 +1,7 @@
 {
  "schema": "adhesion_pipeline/1",
  "title": "점착 파이프라인 — DFT → DEM (→ COMSOL)",
- "updated": "2026-09-30",
+ "updated": "2026-10-01",
  "purpose": "Ag–C 인터레이어·SE 계면의 점착일(W)을 DFT 에서 재서 DEM(JKR 접촉)으로 넘기는 흐름을 **한 곳에 누적**한다. 새 사실은 `log` 에 한 줄씩 덧붙이고, 상태가 바뀌면 해당 항목만 고친다.",
  "⛔_이_원장이_하지_않는_것": [
   "판정 전 물리값(W·γ)은 싣지 않는다 — 결과는 판정이 끝난 뒤 기록 파일에 따로 남기고 여기서는 경로만 건다 (인용 방지).",
@@ -108,7 +108,7 @@
    "cell": "후보: SE 1×2 + Ag(111) 직사각 (Ag 층수 미정 — 원자 수는 가정값)",
    "machine": "—",
    "state": "todo",
-   "state_text": "입력 전 — 격자 정합 규칙(결정 필요 7) 봉인 뒤",
+   "state_text": "전체 계면 UMA+D3 예측 → DEM (라벨 · 1저자 결정 D-2026-10-01-wad-se-pairs-uma-prediction-to-dem) — 카드 작성 전 · 계산 전",
    "records": [
     "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md"
    ]
@@ -132,7 +132,7 @@
    "cell": "후보: SE 1×3 + 흑연 직사각 (흑연 층수 미정 — 원자 수는 가정값)",
    "machine": "—",
    "state": "todo",
-   "state_text": "입력 전 — 격자 정합 규칙 봉인 뒤",
+   "state_text": "전체 계면 UMA+D3 예측 → DEM (라벨 · 1저자 결정 D-2026-10-01-wad-se-pairs-uma-prediction-to-dem) — 카드 작성 전 · 계산 전",
    "records": [
     "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md"
    ]
@@ -1381,6 +1381,11 @@
    "date": "2026-09-30",
    "stage": "dem",
    "text": "**DEM 회신 8 발송 (1저자 · 초안 그대로) · DEM 8차 회신 수령** — C–C 0.332 를 세 쌍 공통 값 · 라벨 그대로 · 짝 ② = 2체 동의 · 세 시나리오 표 (DFT · 실험 · 민감도 3체) · 새 요청 없음 · 열린 질문 0 · SE 쌍 보류 그대로 · DEM 박리 시험 0 건 (질문 ② 기하부터). 산술 검산 일치. 원문 kb/projects/wad_dem_reply_draft_2026_09_23.md §DEM 8차 회신."
+  },
+  {
+   "date": "2026-10-01",
+   "stage": "dem",
+   "text": "**SE 쌍 (LPSCl–Ag · LPSCl–C) 을 DEM 에 준다 (1저자 결정 D-2026-10-01-wad-se-pairs-uma-prediction-to-dem)** — 전체 계면 UMA+D3 예측 (P1 두 종결 · P2) 을 결과 전 카드로 계산해 '미검증 UMA+D3 예측 · 민감도 시나리오' 라벨로 넘긴다 · 외주 V5 (VASP) 가 오면 같은 표본에서 UMA 비교 (G5) + 작은 모델 ↔ 전체 계면 UMA 차 · 탄소는 DFT 검증 경로 없음 라벨. ⚠ 전체 계면 UMA 예측은 지금까지 계산된 적이 없다 ('내부 전용' 으로 미룸). 사용자: 'DEM도 개발하고 해야되니까 시간은 오래걸릴거' — 카드 먼저."
   }
  ],
  "related_decisions": [

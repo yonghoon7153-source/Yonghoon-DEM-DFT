@@ -6300,6 +6300,70 @@
     "근거_발화": "AskUserQuestion 답 (2026-09-30 · 이 세션): '옛 예외와 같은 조건 (Recommended)' — 앞선 발화 '이거 gabia, kgy에서 더하자 ㅇㅇ'",
     "decision_digest": "sha256:e5334c560276a356357f14199900244dba4729f3fca5a9f3b744d4d27ad52564"
    }
+  },
+  {
+   "id": "D-2026-10-01-wad-se-pairs-uma-prediction-to-dem",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "adhesion.wad_lpscl_agc.se_pairs",
+   "slot": "wad_se_pairs_dem_delivery",
+   "applies_to": {
+    "systems": [
+     "lpscl_ag111_interface",
+     "lpscl_graphite_interface"
+    ],
+    "tasks": [
+     "wad_p1_p2_full_interface_uma_prediction"
+    ],
+    "methods": [
+     "uma_d3"
+    ],
+    "use_cases": [
+     "dem_input",
+     "dem_handoff"
+    ]
+   },
+   "title": "DEM 에 SE 쌍(LPSCl–Ag · LPSCl–C) 입력을 준다 — 전체 계면 UMA+D3 예측 · '미검증 예측 · 민감도 시나리오' 라벨 · 외주 V5(VASP)가 오면 같은 표본에서 비교",
+   "statement": "A′ 카드 §5 갈래0 의 '전체 계면 UMA 예측을 넘기려면 1저자 별도 결정 + 라벨' 에 해당하는 1저자 결정이다. ① P1 (LPSCl|Ag(111) · 두 종결) · P2 (LPSCl|흑연(0001)) 전체 계면의 UMA+D3 예측을 **계산 전에 보고량 카드로 봉인한 절차**로 계산한다 (카드 = 다음 단계 · 결과 전). ② DEM 에 라벨과 함께 넘긴다 — A′ 카드 1a 그대로: 「P1·P2 전체 계면 값은 미검증 UMA+D3 예측이다. DEM 에서는 모델·기판 제약·검증 범위를 표시한 민감도 시나리오로만 사용하며, 그 결과 범위는 신뢰구간이나 물리적 상·하한이 아니다.」 + 방법 라벨 (UMA+D3 — C–C·Ag–C 의 DFT 값과는 '방법이 섞인 비' · 짝 원칙 ③). ③ 외주 V5 (VASP PBE+D3(BJ) · P1′ 2층 모델 · 5 표본) 가 돌아오면 같은 표본에서 UMA 와 비교하고 (G5 · 카드 그대로), UMA 작은 모델 ↔ UMA 전체 계면의 차(모델 크기 효과)를 같이 적어 DEM 에 덧붙인다. ④ 탄소(P2)는 DFT 검증 경로가 없다는 라벨을 단다 (P2′ 외주 추가는 이 결정 밖). ⑤ A′ 카드 갈래1 조건 — DEM 이 면적가중 적용 가정(같은 초기 기판·고정 마스크 · 계면 쪽 최종 기하 상이)을 확인한 뒤 숫자를 쓴다.",
+   "rationale": "DEM 은 SE 쌍 값이 없어 질문 ①(LPSCl ↔ Ag–C 박리)을 못 한다 (DEM 5차 합의로 보류 · 8차도 그대로). 전체 계면 DFT 는 우리 GPU 한 장(48 GB)에 안 들어가고, 작은 모델 DFT 검증은 외주 V5 (은만) 다 — 전체 계면 UMA 예측은 '내부 전용' 으로 미뤄 두어 **아직 계산된 적이 없다**. 사용자: 'adhesion 관련해서는 다 이렇게 애매하게 넘겨버리면 DEM에서는 도대체 어떤 값을 쓰라는거야' · 'vasp 외주 아니었음 아무것도 못썼겠네' → AskUserQuestion 'UMA 예측 계산 → 라벨 달아 넘김 (Recommended)' · '이거랑 vasp 계산이랑 같이 비교해보면 좋을듯' · '어차피 DEM도 개발하고 해야되니까 시간은 오래걸릴거' (서두르지 않고 카드 먼저). ⚠ 에이전트 정정: A′ 카드가 이 길을 열어 두었는데 선택지로 분명히 올리지 않고 '보류' 로만 넘겼다.",
+   "decision_state": "active",
+   "record_kind": "scope_declaration",
+   "results_seen": false,
+   "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json (§1a 전체_계면_항상 · §5 갈래0·1) — 전체 계면 예측 카드는 다음 단계 (결과 전 봉인)",
+   "record": "db/pipelines/adhesion_pipeline.json",
+   "depends_on": [
+    "D-2026-09-25-wad-aprime-s1-seal",
+    "D-2026-09-27-wad-aprime-v5-vasp-route"
+   ],
+   "amends": [],
+   "supersedes": [],
+   "evidence": [
+    "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json §1a · §5",
+    "kb/projects/wad_dem_reply_draft_2026_09_23.md §DEM 5차 회신 (SE 쌍 보류) · §DEM 8차 회신",
+    "kb/projects/wad_dem_reply_draft_2026_09_23.md §회신 6 (48 GB 안의 SE 소모델 없음)"
+   ],
+   "reopen_criteria": "카드가 결과 전에 봉인되기 전에는 계산하지 않는다 · DEM 전달은 라벨 없이 하지 않는다 · V5 G5 가 FAIL·INCOMPLETE 면 은 쪽 값에 '해당 표본에서 미재현/미완료' 라벨을 붙여 DEM 에 알린다 (A′ 갈래2) · 탄소 검증 경로(P2′)를 새로 열려면 새 결정.",
+   "enforcement": "DEM 회신에 라벨 문장을 그대로 싣는다 · 숫자는 결과 기록에서만 가져온다 · 헤드라인에 '검증된' · 'DFT' 를 붙이지 않는다.",
+   "proposed_by": "claude-session-2026-09-30",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-01",
+     "state": "active",
+     "by": "1저자(사용자)",
+     "note": "트랙 = 점착 W_ad → 1저자 = 사용자 (통지할 제3자 없음 · DEM 은 협업 상대). AskUserQuestion 답 'UMA 예측 계산 → 라벨 달아 넘김 (Recommended)' + 덧붙임 '이거랑 vasp 계산이랑 같이 비교해보면 좋을듯' · '어차피 DEM도 개발하고 해야되니까 시간은 오래걸릴거'."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-30T16:51:04Z",
+    "commit": "6824cd27c70b82e376a5d6e4c54f51c278b207ef",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "AskUserQuestion 답 (2026-10-01 01:5x KST · 이 세션): 'UMA 예측 계산 → 라벨 달아 넘김 (Recommended)'",
+    "decision_digest": "sha256:1e115e4cddf1c89822635d150d04470e29deb5efff1c763d279bd25abde70044"
+   }
   }
  ]
 }

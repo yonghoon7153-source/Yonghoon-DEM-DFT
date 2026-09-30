@@ -1,0 +1,37 @@
+{
+ "schema": "run_log/v1",
+ "record_kind": "run_log",
+ "date": "2026-10-01",
+ "track": "li2s — 외부 1저자 (사실 기록 · 사용자 = 실행)",
+ "card": "db/properties/lpscl_smallcell_glass_md_v2_estimand_2026_09_30.json",
+ "decision": "D-2026-09-30-lpscl-smallcell-glass-md-v2 (proposed · 잠정)",
+ "results_seen": false,
+ "citable": false,
+ "⛔": "결과(β·D·MSD)는 회신 CO 전까지 보지 않는다 — 이 기록은 발사·설정 대조 사실만 적는다.",
+ "코드": {
+  "커밋": "6824cd27c",
+  "gabia_러너": "tools/ionic/glass_main_queue_gabia.sh sha16 5861deb9c05e1c7b (worktree /data/work/wt_li2s_v2_0930 · selftest 음성 22 ✅ gabia 실측)",
+  "kgy_러너": "db/raw/lpscl_glass_md_v2_2026_09_30/glass_kgy_q_v2.sh sha16 3aef029aced0de77 (worktree ~/li2s_v2_src · selftest 음성 13 ✅ kgy 실측)",
+  "드라이버": "disorder_ensemble_diffusion.py sha16 c3e2d358ee53cefa (두 기계 · DRY_RUN 확인)"
+ },
+ "구조_옮김": {
+  "kgy→gabia seed1·2": "rsync → /data/work/runs/lpscl_glass_md_v2_2026_09_30/init/ · `rsync -a -c --dry-run -i` 빈 출력 · sha16 앞 8 f7d95f98 · 7050760e (양쪽 같음)",
+  "gabia→kgy seed3·4·5": "rsync → ~/work/runs/lpscl_glass_md_v2_2026_09_30/init/ · sha 앞 8 58aac606 · 6555e1cb · 7425e1a9 (gabia 원본과 같음)",
+  "값_판별": "두 기계 DRY_RUN 에서 5 구조 전부 OK (최단 P–S ±0.003 · PS₄ · ρ ±0.001 · seed5 PS₄ 11/12 기록대로)"
+ },
+ "gabia": {
+  "tmux": "glassv2",
+  "큐": "600:2:400 550:1:800 600:4:400 550:3:800 600:5:400 · VSEED_OFFSET 1000 · LABEL_PREFIX lpscl_glass_v2 · 예외 D-2026-09-30-gabia-uma-coexist-elastic-li2s-v2",
+  "로그": "/data/work/runs/lpscl_glass_md_v2_2026_09_30/queue_gabia.log · queue_logs/ · queue_coexist.tsv",
+  "첫_런": "T600 seed2 · PID 159407 · 2026-10-01 01:43:00 KST · --seed 1002 · run_meta OK 01:44:02 · dt 0.0020 ps/행 OK 01:45:02",
+  "GPU": "시작 전 41,394 MiB (탄성 pw.x 2706850 strain_23_m · BFGS 18) → 발사 뒤 43,015 MiB (탄성 41,376 + 우리 1,616) · 가드 46,000 · host 47.5 GB"
+ },
+ "kgy": {
+  "tmux": "li2sv2",
+  "큐": "600:1:400 550:2:800 600:3:400 550:4:800 550:5:800 (러너 기본값) · DRV = ~/li2s_v2_src 판",
+  "로그": "~/work/runs/lpscl_glass_md_v2_2026_09_30/queue_kgy.log · logs/",
+  "첫_런": "T600 seed1 · PID 241103 · 2026-10-01 01:46:05 KST · --seed 1001 · run_meta OK 01:46:10 · dt 0.0020 ps/행 OK 01:46:50",
+  "GPU": "시작 전 9,433 MiB (cascade v6 · 마스터 372656 살아 있음) → 발사 뒤 11,420 MiB · 100 %"
+ },
+ "⚠_운영": "붙여넣기가 위쪽에서 잘려 kgy 블록 ②·②′ 의 앞부분이 안 보였다 — 확인할 줄을 블록 맨 아래로 옮겨 다시 찍었다 (추측하지 않음)."
+}
