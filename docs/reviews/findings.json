@@ -6283,7 +6283,7 @@
    "found_by": "Codex LHS 피복률 병합 전 리뷰 (사용자 경유, 2026-09-30) — 고정 핀 2e57dff90 · 대상 = da4670594 + 제출 패치 0001–0007 (패치 sha 7/7 일치 · 8 파일 = 우리 64ae3cba8 과 CRLF 정규화 뒤 바이트 동일) · 합성 입력에 실제 함수 · CLI · run_pipeline 호출 (Windows) · 우리 재현 (Linux · 2e57dff90 + 패치 7 = 검토 트리) 네 감사 스크립트 전부 같은 결과 (_reproduction_*_cand_64ae3cba8.json) · 실 DEM · 130/64 원자료 · 시뮬레이션 없음",
    "opened_in": "docs/reviews/codex_lhs_coverage_verdict_20260930.md",
    "title": "[패치 0005 · 0006 · v2 라벨 계약] `film_area_physics_v2` 는 선언한 **불연속 cap-우선 후보 연산자**를 구현 (단위 맞음 · sim/SI 면적비 999999.9999998804) 이지 검증된 물리 피복률이 아니다 — 개시점 (`DR_YIELD_ONSET` 0.00113 · r 0.5 µm · δ 2.83e-10 m) 바로 아래 2.22e-16 → 개시점 1.26e-17 m² (×0.0566 · 94.3 % 하락) · `V_lens/h_min` 을 전체 접촉면적 상한으로 삼는 가정 미증명 · `L > U` 에서 U 선택 = 하한 조건 폐기",
-   "note": "병기판은 감도 비교용 후보 디스크립터로만 · 임의 smoothing 으로 물리성이 생기지 않는다 · 인계 열 채택 · 물성값 변경은 리뷰 요구 아님.  침대 전체 빈칸 (한 접촉 미정 → 합 미정) 은 방어 가능한 fail-closed — 문제는 분모 · 입자 검사에 그 정책이 적용되지 않는 비대칭 (`LHSC-01`).  legacy 핀 (JSON 키 · 값 · 순서 · LF CSV · 반환값) 은 6 변형 × 3 종 동일 — 합성 표본의 보존 증거이지 전 입력의 수학적 동등성 증명은 아님.  문서 · 인계 라벨: v2 = 미검증 후보 · `OK` = 계산 상태 ≠ 물리 적격성 · 실제 reharvest 는 새 디렉터리 · 코퍼스 값 (접선 근처 수 · 무효 분모율 · cap 충돌률 · 제외율) 은 원자료 계산 뒤 보고.  ▶ 09-30 밤 병합 뒤 **열림 · 라벨 계약 + 5번 보고**: v2 = 미검증 후보 연산자 (물리 피복률 아님) · `OK` = 계산 상태 · 5번 배치 뒤 코퍼스 값 (무효 분모율 · cap 충돌률 · 제외율 · 근접 접선 수) 보고 · 인계 여부는 그 뒤 1저자와 함수 검토.  ↪ 10-01 J20-m: 5번 코퍼스 값 — 무효 분모 AM 0.0059 % (LHS 70/1,184,824) · 0.0022 % (lhsx 3/135,354) · 빈칸 침대 17/130 · 1/64 · AM 100 % 클립 22.41 % · 97.04 % · cap 충돌률 (÷ 접촉 · ok 침대) 중앙 0.048 · 0.018 · 인계 여부 = 인계 안 함 (포화 · 분모 붕괴 · LHS-25).  근접 접선 수는 5번 원자료 커밋 때.  status 그대로 (남은 보고 한 항목).",
+   "note": "병기판은 감도 비교용 후보 디스크립터로만 · 임의 smoothing 으로 물리성이 생기지 않는다 · 인계 열 채택 · 물성값 변경은 리뷰 요구 아님.  침대 전체 빈칸 (한 접촉 미정 → 합 미정) 은 방어 가능한 fail-closed — 문제는 분모 · 입자 검사에 그 정책이 적용되지 않는 비대칭 (`LHSC-01`).  legacy 핀 (JSON 키 · 값 · 순서 · LF CSV · 반환값) 은 6 변형 × 3 종 동일 — 합성 표본의 보존 증거이지 전 입력의 수학적 동등성 증명은 아님.  문서 · 인계 라벨: v2 = 미검증 후보 · `OK` = 계산 상태 ≠ 물리 적격성 · 실제 reharvest 는 새 디렉터리 · 코퍼스 값 (접선 근처 수 · 무효 분모율 · cap 충돌률 · 제외율) 은 원자료 계산 뒤 보고.  ▶ 09-30 밤 병합 뒤 **열림 · 라벨 계약 + 5번 보고**: v2 = 미검증 후보 연산자 (물리 피복률 아님) · `OK` = 계산 상태 · 5번 배치 뒤 코퍼스 값 (무효 분모율 · cap 충돌률 · 제외율 · 근접 접선 수) 보고 · 인계 여부는 그 뒤 1저자와 함수 검토.  ↪ 10-01 J20-m: 5번 코퍼스 값 — 무효 분모 AM 0.0059 % (LHS 70/1,184,824) · 0.0022 % (lhsx 3/135,354) · 빈칸 침대 17/130 · 1/64 · AM 100 % 클립 22.41 % · 97.04 % · cap 충돌률 (÷ 접촉 · ok 침대) 중앙 0.048 · 0.018 · 인계 여부 = 인계 안 함 (포화 · 분모 붕괴 · LHS-25).  근접 접선 수는 5번 원자료 커밋 때.  status 그대로 (남은 보고 한 항목).  ↪ 10-01 5번 원자료 커밋: docs/data/{lhs,lhsx}_{descriptors_cov,webapp_coverage}_1e09f661d/ (README · tar sha256 e7d649f5… · 대조 보고서 docs/reviews/lhs_coverage_batch5_comparison_20261001.md §4-4 = 코퍼스 값 전부) · 남은 한 항목 = 근접 접선 · onset 근처 접촉 수 (산출물에 없음 — 원 덤프에서 세야 함).",
    "evidence_tests": [
     "docs/reviews/codex_lhs_coverage_evidence_20260930/audit.py",
     "docs/reviews/codex_lhs_coverage_evidence_20260930/_reproduction_audit_results_cand_64ae3cba8.json"
@@ -6470,7 +6470,7 @@
   {
    "id": "SELF-74",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "1저자 (10-01 · \"이런 경우가 세상에 어딨어\")",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
@@ -6478,7 +6478,29 @@
    "note": "Codex 반례 (정사면체 AM 4 의 깊은 겹침) 의 합성 기하를 실제 침대의 원인으로 옮겨 적은 것 — 판정문의 반례 서술을 실데이터 설명으로 쓰기 전에 원자료 (수확기 coverage_detail.n_free_surface_invalid) 를 봤어야 했다.  '설계대로의 동작' 은 빈칸 규칙에만 맞고, 빈칸을 만드는 값은 모형 결손이다.  수정: 주석 정정 + 시험 K1 · K2 (webapp/test_coverage_handover_scope.py) · J20-m 기록.  claimed_fixed 는 커밋 SHA 와 함께 다음 커밋.",
    "evidence_tests": [
     "webapp/test_coverage_handover_scope.py"
-   ]
+   ],
+   "claimed_fixed_sha": "06e8c01e2",
+   "verification_note": "06e8c01e2 (J20-m): coverage_physics_vs_hertzian.py LHSC-01 주석에서 \"이웃 AM 과 깊이 겹친 입자\" 삭제 · 실제 원인 (기하면적 0/1,320,178 · v2 면적 식 · LHS-25) 기록 · 시험 K1 · K2 (webapp/test_coverage_handover_scope.py 16/16) · J20-m 에 잘못된 설명과 정정."
+  },
+  {
+   "id": "LHS-27",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (09-30 · 5번 배치 대조 서브에이전트 §5-1 '193/194 dirty' → 1저자 WSL git status · git diff = 추적 파일 하나 → 코드 확인)",
+   "opened_in": "docs/reviews/lhs_coverage_batch5_comparison_20261001.md",
+   "title": "피복 단계 scripts/coverage_physics_vs_hertzian.py 가 요약 CSV 를 실행 위치 기준 경로 (Path('docs/figures/physics_regime')/coverage_hertz_vs_physics_summary.csv) 에 매 호출 덮어쓴다 — 리포 루트에서 도는 웹앱 파이프라인 · LHS 배치가 추적 파일을 바꿔 run 의 dirty=true 를 만든다 (5번 193/194 케이스) · 여러 케이스를 돌면 마지막 케이스 요약만 남는다",
+   "note": "코드 변경이 아닌데 코드 출처 표지 (dirty) 가 켜져 '깨끗한 봉인 커밋에서 돌았다' 는 증명을 스스로 무너뜨린다 — 5번은 기존 키 · 공통 열 비트 동일로 완화됐다 (보고서 §2).  처방 후보 (비준 대상): 요약 CSV 를 케이스 출력 폴더 · 명시적 --summary-out 으로 옮기거나 --all 일 때만 쓰기 · 추적 파일에서 빼기.  배치 쪽 dirty 판정에서 이 파일만 예외로 두는 것은 권하지 않는다 (가림)."
+  },
+  {
+   "id": "MIX-11",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (10-01 · J20-m 커밋 전 게이트 첫 실행)",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "scripts/mixer_smoke_blind.py --selftest 가 게이트의 'fast 자기검사 전수' (등재 기반 병렬 드라이버) 안에서 한 번 rc=1 로 실패 (170/171) — 단독 실행 rc 0 · 게이트 재실행 전부 통과 = 병렬 실행에서만 나는 간헐 실패로 추정 · 실패한 검사 줄은 드라이버가 출력 꼬리만 보여 확인 못 함",
+   "note": "러너의 fail-closed 게이트도 같은 검사를 돈다 — 간헐 실패가 사용자의 GPU 런을 막을 수 있다 (CLAUDE.md 규율 ⑤ 의 '규율 검사는 런 시작 전에 걸린다').  원인 미조사 (후보: 공유 임시 경로 · 시계 · 0600 봉인 파일 이름 충돌).  다음: 드라이버가 실패 시 전체 출력을 남기게 하고 병렬 반복 실행으로 재현."
   }
  ]
 }
