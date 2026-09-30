@@ -8767,3 +8767,7 @@ g61 한정 확인의 실제 기록은 §122 대로 첫 호출 `28d0effe` dirty �
 **다음 (사용자 별도 승인 필요):** G85-N1 한정 보완 — 고정 표 초안은 채팅 승인 질문에 적었다. RUN_SCOPE (`src/io.py`)
 가 바뀌므로 source_digest · 두 leg 영수증의 validator identity 가 움직인다 (history 보존 뒤 1 회 재생성 — 2a 와 같은
 절차). 2b 는 섞지 않는다.
+
+**사용자 승인 (2026-09-30):** 위 G85-N1 한정 보완 (생산 파일 `src/io.py` 하나 · RED 먼저 · 변이 · 영수증 history + 1 회 ·
+전체 회귀 · smoke · 등록부 전체 변이 재생 · GATE86 · 2b · p_ini · 새 연구 leg · 실행 GO 제외) → **"ㄱㄱ"** (승인). 고정 표는
+`STAGE3_IMPL_ROUND1_SPEC.md` §12 (이 커밋 · 코드 변경 전).

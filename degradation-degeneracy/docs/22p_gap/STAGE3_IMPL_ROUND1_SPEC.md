@@ -215,3 +215,40 @@ schema: `execution-record/v2` = v1 닫힌 키 + `realized.by_objective.*.{finite
 ### 11-6. 84차 비차단 문구 정정 (반영 완료)
 
 R2-a "production 진입점이 없다" → 내부 전달 호출 (`src/fitting.py:1508` · `:1586`) 은 있으므로 "외부 production 진입점에서 v6 문맥을 구성해 전달하지 않는다" · R2-f "줄번호 불변" → "legacy 의미 불변 · 이동한 인용 좌표 갱신 가능" · CLI `run.sh fit` → `./run.sh --mode fit`. `GATE84_REQUEST.md` 에 취소선.
+
+## 12. 85차 G85-N1 한정 보완 — 사후 closure **구성원** 결속 (코드 변경 전 고정 · 2026-09-30 · 사용자 승인 원장 §123 끝)
+
+### 12-1. 범위
+
+| 항목 | 내용 |
+|---|---|
+| 항목 | G85-N1 (P1) 하나 — `src/io.py` `base_config_결속` 이 검사 대상 `run_spec.stage3.base_config_closure_keys` 를 정답 목록으로 쓴다 |
+| 생산 파일 상한 | `src/io.py` **하나** · 밖이 필요하면 멈추고 묻는다 |
+| 함께 | `tests/test_gate85_closure_members.py` (RED 먼저) · `docs/22p_gap/mutation_replay.py` (`-g85`) · n4_02 docstring 범위 정리 (85차 C2 · tests 만) · 현행 영수증 (`ba51cd20caa10b7b`) history 보존 → 기존 두 leg 영수증 1 회 · 전체 회귀 · smoke · **등록부 전체 변이 재생** · GATE86 |
+| 하지 않음 | 새 hash 형식 · v5 preimage/값 변경 · 시작 전 경로 (`_stage3_preflight`) 변경 · N4 · 2b (spec/index/CLI · 세대표 · G84-N2) · p_ini 구현 · 새 연구 leg · 실행 GO · live 파일 fallback |
+
+### 12-2. 고정 — 구성원 집합의 독립 유도
+
+| # | 규칙 |
+|---|---|
+| a | 출발점은 **`run_spec.base_config`** (시작 때 적은 root 의 논리 키 · 이미 run_spec 에 있음) — 검사 대상 키 목록이 아니다 |
+| b | root 부터 각 구성원의 **봉인 스냅샷 바이트** (`_inputs/<sealed[:12]>_<name>`) 를 YAML 로 읽고 `extends` 를 `load_config` 와 같은 규칙 (`Path(key).parent / extends`) 으로 따라간다 · 논리 키는 posix 정규화 |
+| c | 따라간 각 키는 `run_spec.sealed_inputs` 에 있어야 하고 스냅샷 파일이 있어야 한다 · 없으면 실패 (**현재 디스크의 다른 config 로 대체하지 않는다**) |
+| d | 실패: 순환 · 저장소 밖으로 나가는 경로 (`..` 로 시작 · 절대) · YAML 해석 불가 · `extends` 가 문자열이 아님 · 깊이 상한 초과 |
+| e | 제출 목록 대조: **정확 · 유일** — 중복 키 있으면 실패 · 집합이 유도 집합과 다르면 실패 (누락 · 추가 각각 이름을 적는다) |
+| f | closure 는 **유도 집합**의 스냅샷 바이트로 만든다 (정의는 그대로 `src.fitting.closure_sha256_from_parts`) → run_spec hex64 · 계획 digest 와 대조 (기존 두 비교 유지) |
+| g | 검사 이름 `base_config_결속` 유지 (영수증 검사 수 불변 — sig 6 전용 · v5 두 leg 에는 영향 없음) |
+
+### 12-3. 회귀 (RED 먼저 · 자기일관 위조는 **이 검사 하나만** 빨개져야 한다)
+
+| node | 내용 |
+|---|---|
+| m00 양성 | 실제 leaf → parent (`configs/grid_coarse.yaml` → `configs/base.yaml`) v6 실행 · `base_config_결속` 통과 · 다른 실패 0 |
+| m01 부모 누락 | 스냅샷 · 봉인 불변 · 키에서 parent 제거 · 계획 · run_spec digest 를 leaf-only closure 로 **함께** · 계획 사슬 (planned_id · record) 재정합 → 실패 목록이 정확히 `[base_config_결속]` · 이유에 누락 키 |
+| m02 leaf 누락 | 같은 방식 · parent-only |
+| m03 추가 구성원 | 봉인 · 스냅샷이 있는 무관 입력을 키에 더하고 digest 를 함께 |
+| m04 중복 | 키 목록에 leaf 두 번 (digest 는 진짜 값 그대로 — 지금은 dict 가 합쳐 통과) |
+| m05 유도 단위 | 합성 스냅샷 디렉터리에서: 순환 · 봉인 안 된 부모 · 스냅샷 없는 부모 · 저장소 밖 경로 · `extends` 비문자열 → 각각 이유별 실패 |
+| m06 재배치 양성 | 산출 디렉터리를 다른 자리로 복사해도 `base_config_결속` 통과 (논리 키 · 스냅샷만 씀) |
+
+RED 에서 "통과" 로 실패하는 node 가 실제 결함 증거다 (m01–m04). 새 helper 부재로 떨어지는 node (m05) 는 무관 예외로 따로 센다 (84차 §6-a 교훈).
