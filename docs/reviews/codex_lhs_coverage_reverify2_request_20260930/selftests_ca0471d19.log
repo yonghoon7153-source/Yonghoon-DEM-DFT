@@ -1,0 +1,6 @@
+== scripts/lhs_descriptor_harvest.py rc=0 · 149 통과 줄 · 0 실패 줄 · 끝: ✓ 전부 통과   ⚠ 이 통과는 **계약이 도구에 박혔다**는 뜻이지 실�
+== scripts/lens_geometry.py rc=0 · 7 통과 줄 · 0 실패 줄 · 끝: lens_geometry SELFTEST PASS
+== scripts/plastic_coverage.py rc=0 · 28 통과 줄 · 0 실패 줄 · 끝: plastic_coverage SELFTEST PASS
+== scripts/coverage_physics_vs_hertzian.py rc=0 · 16 통과 줄 · 0 실패 줄 · 끝: coverage_physics_vs_hertzian SELFTEST PASS
+== scripts/lhs_webapp_batch.py rc=0 · 30 통과 줄 · 0 실패 줄 · 끝: ✓ 전부 통과
+== webapp/test_pipeline_provenance.py rc=0 · 209 통과 줄 · 0 실패 줄 · 끝: test_pipeline_provenance: 209/209 PASS

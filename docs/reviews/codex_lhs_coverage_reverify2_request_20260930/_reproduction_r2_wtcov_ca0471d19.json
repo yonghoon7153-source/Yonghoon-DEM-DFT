@@ -1,0 +1,190 @@
+{
+ "tree": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/wt_cov",
+ "head": "ca0471d19a5a9d914c6a31006a001d515267f3be",
+ "actual_producer_controls": {
+  "base": {
+   "accepted": true,
+   "status": "ok"
+  },
+  "isolated_zero": {
+   "accepted": true,
+   "status": "ok"
+  },
+  "denom_zero": {
+   "accepted": true,
+   "status": "blank: AM 4 개의 v2 자유 표면 ≤ 0 = 분모 무효 (첫 사례 id 2: 4πr² 1.257e-"
+  },
+  "nan_radius": {
+   "accepted": true,
+   "status": "blank: AM 1 개의 반경 · 표면적이 유한 양수가 아니다 (첫 사례 id 14: r=nan) — 분모"
+  },
+  "nan_delta": {
+   "accepted": true,
+   "status": "blank: 1 접촉을 film_area_physics_v2 가 거부했다 — 첫 사례 1–5: ValueEr"
+  },
+  "scale1": {
+   "accepted": true,
+   "status": "blank: scale=1 ≠ 1000 — 이 코드의 두 길이 규약 (µm = sim×scale · SI ="
+  },
+  "no_ligg_col": {
+   "accepted": true,
+   "status": "blank: contacts.csv 에 contact_area 열이 없다"
+  },
+  "se_only": {
+   "accepted": true,
+   "status": "ok"
+  }
+ },
+ "schema_mutations": {
+  "missing_n_am_and_coverage": {
+   "accepted": false,
+   "required_stage_ok": false,
+   "pipeline_status": "failed"
+  },
+  "negative_n_am_and_no_coverage": {
+   "accepted": false
+  },
+  "nan_n_am_and_no_coverage": {
+   "accepted": false
+  },
+  "ok_but_invalid_denom_count": {
+   "accepted": false
+  },
+  "area_nan": {
+   "accepted": false,
+   "required_stage_ok": false,
+   "pipeline_status": "failed"
+  },
+  "area_string": {
+   "accepted": false
+  },
+  "area_negative": {
+   "accepted": false
+  },
+  "coverage_negative": {
+   "accepted": false
+  },
+  "ok_but_contact_failures": {
+   "accepted": false
+  },
+  "blank_with_positive_values": {
+   "accepted": false
+  }
+ },
+ "in_domain_rounding_false_alarm": {
+  "tokens": [
+   0.00123456,
+   0.00123456,
+   0.00246909,
+   4.27727e-06
+  ],
+  "enclosure": [
+   2.660084532696906e-06,
+   4.7882607651360736e-06
+  ],
+  "method": "interval",
+  "contact_area_check": {
+   "n_rows": 1,
+   "n_tested": 1,
+   "n_area_dump_zero": 0,
+   "n_beyond_tol": 0,
+   "n_lower_bound_zero": 0,
+   "n_wide_enclosure": 1,
+   "n_power_1pct": 0,
+   "rel_diff_max": 0.11945749968579245,
+   "rel_diff_median": 0.11945749968579245,
+   "enclosure_rel_width_median": 0.4975548030494141,
+   "excess_rel_max": null
+  }
+ },
+ "old_examples_at_production_entry": {
+  "rounding": {
+   "n_rows": 1,
+   "n_tested": 1,
+   "n_area_dump_zero": 0,
+   "n_beyond_tol": 0,
+   "n_lower_bound_zero": 1,
+   "n_wide_enclosure": 1,
+   "n_power_1pct": 0,
+   "rel_diff_max": 1.0,
+   "rel_diff_median": 1.0,
+   "enclosure_rel_width_median": 5.053134661756271,
+   "excess_rel_max": null
+  },
+  "hertz_deep": {
+   "n_rows": 1,
+   "n_tested": 1,
+   "n_area_dump_zero": 0,
+   "n_beyond_tol": 0,
+   "n_lower_bound_zero": 1,
+   "n_wide_enclosure": 1,
+   "n_power_1pct": 0,
+   "rel_diff_max": 1.481284831846302e-06,
+   "rel_diff_median": 1.481284831846302e-06,
+   "enclosure_rel_width_median": 1.000003481289804,
+   "excess_rel_max": null
+  },
+  "3e-5_deep": {
+   "n_rows": 1,
+   "n_tested": 1,
+   "n_area_dump_zero": 0,
+   "n_beyond_tol": 1,
+   "n_lower_bound_zero": 1,
+   "n_wide_enclosure": 1,
+   "n_power_1pct": 0,
+   "rel_diff_max": 3.0348784904137174e-05,
+   "rel_diff_median": 3.0348784904137174e-05,
+   "enclosure_rel_width_median": 0.9999716511564078,
+   "excess_rel_max": 2.7712243140430927e-05
+  }
+ },
+ "noncontact_boundary_controls": {
+  "zero_delta_zero_area": {
+   "n_rows": 1,
+   "n_tested": 1,
+   "n_area_dump_zero": 1,
+   "n_beyond_tol": 0,
+   "n_lower_bound_zero": 0,
+   "n_wide_enclosure": 0,
+   "n_power_1pct": 0,
+   "rel_diff_max": null,
+   "rel_diff_median": null,
+   "enclosure_rel_width_median": null,
+   "excess_rel_max": null
+  },
+  "negative_delta_zero_area": {
+   "n_rows": 1,
+   "n_tested": 1,
+   "n_area_dump_zero": 1,
+   "n_beyond_tol": 0,
+   "n_lower_bound_zero": 0,
+   "n_wide_enclosure": 0,
+   "n_power_1pct": 0,
+   "rel_diff_max": null,
+   "rel_diff_median": null,
+   "enclosure_rel_width_median": null,
+   "excess_rel_max": null
+  },
+  "zero_delta_positive_area": {
+   "n_rows": 1,
+   "n_tested": 1,
+   "n_area_dump_zero": 0,
+   "n_beyond_tol": 1,
+   "n_lower_bound_zero": 0,
+   "n_wide_enclosure": 0,
+   "n_power_1pct": 1,
+   "rel_diff_max": 1.0,
+   "rel_diff_median": 1.0,
+   "enclosure_rel_width_median": 2.2322581611397215e-14,
+   "excess_rel_max": 0.9999949999999779
+  }
+ },
+ "interior_geometry_nonmonotonic": {
+  "area_delta_0.00160": 2.708181095665975e-06,
+  "area_delta_0.00161": 2.6780161091390217e-06
+ },
+ "clean_harvester_import": {
+  "rc": 0,
+  "plastic_coverage_loaded": "False"
+ }
+}
