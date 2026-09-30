@@ -965,7 +965,10 @@ def test_s6_prediction_failure_is_recorded_and_threshold_not_moved(client):
     sec = _section(_report_html(client), "s6")
     assert "6.33 ~ 6.46" in sec, "등록 예측이 지워졌다 — 사후해석이 된다"
     assert "예측이 틀렸다" in sec and "문턱을 옮기지 않는다" in sec
-    assert "부피 가설은 반증됐다" in sec and "9.42" in sec
+    # 2026-09-30 회신 CM P0-2: 옛 판은 "부피 가설은 반증됐다" 를 **있어야 한다**고 묶었다 — 그 문장이 과잉이었다
+    #   (P₂O₅ 의 팽창 무감도는 다른 물질이라 NdP₅O₁₄ 의 부피 민감도를 반증하지 않는다). 관측(9.42)은 남기고 결론만 낮춘다.
+    assert "부피 가설은 반증됐다" not in sec, "§6 이 다시 부피 가설을 '반증' 으로 단정한다 (회신 CM P0-2)"
+    assert "배제되지도 않았다" in sec and "9.42" in sec
     assert "축합될수록 갭이 넓어진다" in sec and "쓰지 않는다" in sec
     assert "10/10 재현" not in sec and "10 종 재현" not in sec and "10 종 전부 재현" not in sec
 
@@ -1014,7 +1017,10 @@ def test_s0_onset_table_matches_the_esw_record(client):
         assert float(cells[1]) == red, (lab, cells, "교환 0 첫 경계", red)
         assert float(cells[1]) != esw[lab]["reduction_limit_V"], (lab, "계통 오류 값이 표에 남았다")
     assert "1.92" in s0 and "좁힌다" in s0 and "Banik" in s0
-    assert "고전압 양극 계면 열화 억제" in h[:h.index('<ul class="toc">')], "부제가 아직 '안정성 개선' 이다"
+    _head = h[:h.index('<ul class="toc">')]
+    #: 2026-09-30 회신 CM P0-1 — 부제는 '열화 억제' 가 아니라 '산물의 재분배' 다 (계산이 판정하지 않은 층을 부제에 올리지 않는다)
+    assert "고전압 계면 분해 산물의 재분배" in _head, "부제가 '산물의 재분배' 가 아니다"
+    assert "고전압 양극 계면 열화 억제" not in _head, "부제가 다시 '열화 억제' 를 주장한다 (회신 CM P0-1)"
 
 
 # ── 보호율 게이트의 분모 (2026-09-21) ───────────────────────────────────────
@@ -1416,7 +1422,9 @@ def test_s2b_plain_box_matches_the_raw(client):
     assert " → ".join(f"{round(v * 100, 1):g}" for v in seq) + " %" in box
     #: 인산염을 면한 금속의 행선지 — 반응식에서 다시 센다 (게이트 통과 · 보호율 정의 칸)
     n_cells, sul = _tm_escape_to_sulfide(rows)
-    assert f"<b>{n_cells} 경우</b>를 합치면 그 몫의 <b>{sul:.0f} %</b> 는" in box, \
+    #: 2026-09-30 회신 CM P1-1 — '그 몫의 94 % 는 황화물' 은 한 조건의 전환율처럼 읽힌다 → 합산 비로 적고 범위를 붙인다
+    assert (f"<b>{n_cells} 경우</b>를 합치면, 정규화된 TM 인산염 감소분의 합에 대한 TM 황화물(CoS₂·NiS₂ 등) 증가분의 합의 비가 "
+            f"<b>약 {sul:.0f} %</b>" in box and "합산 비" in box), \
         f"황화물 몫이 자료({n_cells} 경우 · {sul:.1f} %)와 다르다"
 
 
@@ -1524,13 +1532,16 @@ def test_protection_is_not_read_as_cathode_sparing(client):
     n, sul = _tm_escape_to_sulfide(_prot_rows())
     item = [li for li in re.findall(r"<li>(.*?)</li>", s9, re.S) if "보호율을 “양극이 덜 녹는다" in li]
     assert len(item) == 1, "§9 에 보호율 뜻 금지 항목이 없다"
-    assert f"<b>{n} 칸</b>을 합치면 그 몫의 <b>{sul:.0f} %</b> 가 황화물" in item[0], "§9 항목의 수가 반응식과 다르다"
+    assert (f"<b>{n} 칸</b>을 합치면, 정규화된 TM 인산염 감소분의 합에 대한 TM 황화물(CoS₂·NiS₂ 등) 증가분의 합의 비가 "
+            f"<b>약 {sul:.0f} %</b>" in item[0] and "합산 비" in item[0]), "§9 항목의 수가 반응식과 다르거나 합산 범위가 빠졌다 (회신 CM P1-1)"
     i = s2b.index("<figcaption><b>Fig. 3.")
     cap = s2b[i:s2b.index("</figcaption>", i)]
     assert "keeps out of phosphate products" in cap
-    assert f"summed over the {n} cells that pass the gates and have a defined value, {sul:.0f}&#8201;% of it forms sulfides" in cap
+    assert (f"summed over the {n} cells that pass the gates and have a defined value, the sulfide gain (CoS<sub>2</sub>, NiS<sub>2</sub> and others) "
+            f"is about {sul:.0f}&#8201;% of the phosphate loss" in cap and "pooled ratio" in cap)
     card = (REPORT.parents[3] / "kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md").read_text("utf-8")
-    assert f"{n} 칸 합계로 그 몫의 **{sul:.0f} % 가 황화물**" in card, "원고 틀 카드의 보강이 반응식과 다르다"
+    assert (f"{n} 칸에서 정규화된 TM 인산염 감소분의 합에 대한 TM 황화물 증가분의 합의 비가 **약 {sul:.0f} %**" in card
+            and "합산 비" in card), "원고 틀 카드의 보강이 반응식과 다르다"
 
 
 def test_resume_block_does_not_carry_retracted_numbers(client):
@@ -2317,9 +2328,235 @@ def test_ndp5o14_reference_mismatch_is_recorded_and_state_consistent(client):
     s6 = _section(h, "s6")
     assert "r2SCAN" in s6 and "5.390" in s6 and "+0.003" in s6 and "mp-4736" in s6
     assert "지금 결론 — 원인 미확정" not in s6, "§6 결론이 옛 ‘원인 미확정’ 그대로다"
+    #: 2026-09-30 회신 CM P0-2 — '참조 불일치 확인' 을 '같은 구조 재현 · 원인 확정' 으로 키우지 않는다.
+    #:   기본 StructureMatcher(scale=True)의 유사 판정 + 다른 엔트리 하나와의 +0.003 은 **보조 비교**다.
+    for bad in ("모두 같은 구조", "우리 계산이 틀린 것이 아니라", "부피 가설은 반증됐다", "MP 값도 PBE 계산이므로",
+                "같은 구조의 GGA 참조", "같은 구조 GGA 참조", "원인 확인 (09-30"):
+        assert bad not in h, f"NdP₅O₁₄ 과잉 문구가 화면에 되살아났다: {bad!r} (회신 CM P0-2)"
+    assert "보조 비교" in s6 and "scale = True" in s6 and "원인 분해" in s6
+    assert "보조 비교" in rec["★_한_줄"] and "원인 분해는 아니다" in rec["status"]
+    assert "같은 골격의 대칭 표기 차이다" not in rec["2_사실"]["구조_대조"]["뜻"], "기록의 '뜻' 이 옛 단정 그대로다"
+    assert "⭐_2026_09_30_원인_확인" not in hz, "인용위험 노트 이름이 옛 '원인 확인' 이다"
     if dec[0]["decision_state"] == "proposed":
-        assert hz["level"] == "CONDITIONAL" and "⭐_2026_09_30_원인_확인" in hz
+        assert hz["level"] == "CONDITIONAL" and "보조 비교" in hz["⭐_2026_09_30_참조_불일치_확인"]
         assert "비준 대기" in s6 and "비준 대기" in _section(h, "s9")
     else:
         assert "비준 대기" not in h, "개정이 비준됐는데 화면이 아직 ‘비준 대기’ 다"
         assert "원인 미확정" not in json.dumps(hz, ensure_ascii=False), "개정이 비준됐는데 원장 조건이 옛 문구다"
+
+
+# ── 회신 CM (2026-09-30 · 외부 인계본 리뷰 NO-GO) — P0 을 되살리지 못하게 묶는다 ──────────────
+#   CM P2-5: "P0-3 의 산물 이름, P0-6 의 조건 한정, P0-7 의 역사 파일 불변을 실제 깨뜨렸을 때 시험이 실패하는지 확인한다.
+#   스타일 문구의 전면 하드코딩은 필요 없다." ⇒ 값은 원자료에서 다시 세고, 막는 것은 **되살아나면 안 되는 옛 단정 문장**뿐이다.
+#   ⚠ 이 시험들이 못 하는 것: 새로 쓴 문장이 과잉인지는 판정하지 못한다 — 옛 문장의 되살림과 조건 누락만 잡는다.
+_HANDOFF_DOCS = [ROOT / "kb/projects/handoff_cei_2026_09_30.md",
+                 ROOT / "kb/projects/cei_reading_guide_2026_09_30.md",
+                 ROOT / "kb/projects/cei_explainer_prompt_2026_09_30.md",
+                 ROOT / "kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md"]
+_ESW_X002 = ROOT / "db/properties/cei_esw_Li_x002_2026_09_28.json"
+_IFACE_X002 = ROOT / "db/properties/cei_interface_V_x002_2026_09_28.json"
+
+
+def _html_blocks(h):
+    """화면 → 블록(p · li · td · figcaption · 요지 줄 …) 단위 **텍스트** 목록. 조건은 같은 블록 안에 있어야 한다."""
+    h = re.sub(r"<!--.*?-->", "", h, flags=re.S)
+    h = re.sub(r"</?(p|li|td|th|tr|figcaption|summary|h[1-4]|div|ul|ol|table|section|details)\b[^>]*>", "\n\n", h)
+    h = h.replace('<span class="sec-one">', "\n\n")
+    txt = re.sub(r"<[^>]+>", "", h)
+    return [re.sub(r"\s+", " ", b).strip() for b in re.split(r"\n\s*\n", txt) if b.strip()]
+
+
+def _md_blocks(text):
+    """마크다운 → 항목 단위(표 행 하나 · 목록 항목 하나 + 들여쓴 이음줄 · 문단 하나)."""
+    out, cur = [], []
+
+    def flush():
+        if cur:
+            out.append(" ".join(cur))
+            cur.clear()
+    for line in text.splitlines():
+        s = line.strip()
+        if not s or s.startswith(("```", "#")):
+            flush()
+            continue
+        if s.startswith("|"):
+            flush()
+            out.append(s)
+            continue
+        if re.match(r"^([-*>]|\d+\.)\s", s) and not line.startswith("  "):
+            flush()
+        cur.append(s)
+    flush()
+    return out
+
+
+def _surfaces(client):
+    s = {"화면": _html_blocks(_report_html(client))}
+    for p in _HANDOFF_DOCS:
+        s[p.name] = _md_blocks(p.read_text("utf-8"))
+    return s
+
+
+def test_cm_p03_nd_sulfide_is_named_by_the_reaction_it_comes_from(client):
+    """⛔음성+양성 — 회신 CM P0-3: Nd₂S₃ 를 산화 산물로 읽지 않는다.
+    ① 원자료부터: Nd 계 조성의 **중성** 조합에 Nd2S3, **산화 개시** 조합에 Nd10S19 (아니면 이 시험이 헛것을 잰다).
+    ② 모든 표면(화면 · 인계 문서 넷): ‘산화 쪽 Nd₂S₃’ 옛 단정이 없고, Nd₂S₃ 의 0.76 eV 를 말하는 블록은 ‘중성’ 을 같이 적는다.
+    ③ §0 반응식 상자의 1저자 조성 산화 산물 = 원자료의 상."""
+    esw = json.loads(_ESW_X002.read_text("utf-8"))["results"]
+    for lab in ("nd_p_002_asused", "ndo_li_002"):
+        assert "Nd2S3" in esw[lab]["neutral_rxn"] and "Nd2S3" not in esw[lab]["oxidation_onset_rxn"], lab
+        assert "Nd10S19" in esw[lab]["oxidation_onset_rxn"], lab
+    seen = 0
+    for name, blocks in _surfaces(client).items():
+        for b in blocks:
+            flat = b.replace("Nd2S3", "Nd₂S₃")
+            assert not re.search(r"산화 쪽\s*Nd₂S₃|산화 쪽 Nd 산물은 부동태가 아니다", flat), f"{name}: {flat[:180]}"
+            if "0.76" in flat and "Nd₂S₃" in flat:
+                seen += 1
+                assert "중성" in flat, f"{name}: Nd₂S₃ 0.76 eV 를 말하면서 ‘중성’ 조합이라고 안 적었다 — {flat[:180]}"
+    assert seen >= 4, f"Nd₂S₃ 0.76 eV 를 말하는 블록이 {seen} 개뿐이다 — 시험이 표면을 못 읽고 있다"
+    rx = [l for l in _section(_report_html(client), "s0").splitlines() if l.startswith("1저자 조성")]
+    assert len(rx) == 1 and "Nd₁₀S₁₉" in rx[0] and "Nd₂S₃" not in rx[0], rx
+
+
+def _x002_site_cells(keys, target):
+    """x = 0.02 판정 칸(끝점 제외 · base 와 keys 모두 값 있음)의 (전압, Δ) — 화면 생성기 delta_common 과 같은 칸."""
+    D = json.loads(_IFACE_X002.read_text("utf-8"))["results"]
+    out = []
+    for c in D:
+        for V in ("2.50", "3.00", "3.50", "4.00", "4.30", "4.50"):
+            r = D[c]["by_voltage"][V]
+            dg = (D[c].get("endpoint_degenerate") or {}).get(V) or {}
+            if all(r.get(k) is not None and dg.get(k) is False for k in ("modelc", *keys)):
+                out.append((V, r[target] - r["modelc"]))
+    return out
+
+
+def test_cm_p05_x002_sign_is_reported_not_resolved(client):
+    """양성+⛔음성 — 회신 CM P0-5: x = 0.02 의 계산된 부호는 보고하되 해소된 ‘덜/더 반응’ 으로 쓰지 않는다.
+    칸별 부호 수를 원자료에서 다시 세어 화면(머리 · §S1 · §9)의 문장과 맞추고, 옛 단정 문장의 되살림을 막는다."""
+    li = _x002_site_cells(("nd_li_002", "o_only_003", "ndo_li_002"), "ndo_li_002")
+    pp = _x002_site_cells(("nd_p_002", "o_only_003", "nd_p_002_asused"), "nd_p_002_asused")
+    li_pos, p_neg = sum(d > 0 for _, d in li), sum(d < 0 for _, d in pp)
+    p_pos_v = sorted({V for V, d in pp if d > 0})
+    assert li_pos == len(li) and p_pos_v == ["2.50"], (li_pos, len(li), p_pos_v)
+    n_pos_25 = sum(1 for V, d in pp if d > 0)
+    phrase = f"Li 자리 {len(li)} 칸 전부 + · P 자리 {len(pp)} 칸 중 {p_neg} 칸 −"
+    kor = {1: "한", 2: "두", 3: "세", 4: "네", 5: "다섯"}[n_pos_25]
+    h = _report_html(client)
+    assert h.count(phrase) >= 3, f"칸별 부호 ‘{phrase}’ 가 화면 세 곳(머리 · §S1 · §9)에 원자료대로 없다"
+    assert f"2.5 V {kor} 칸은 +" in h
+    retired = ("어느 방향인지</b>(Li 자리는 덜 반응 · P 자리는 더 반응)", "Li 자리 +(덜 반응) · P 자리 −(더 반응)",
+               "계면 반응의 부호가 반대다(Li 자리 덜 반응 · P 자리 더 반응)", "크기는 인용하지 않고 부호만",
+               "Li 자리는 덜 반응, P 자리는 더 반응", "약간 더 반응하는 쪽", "+ = 덜 반응 (좋은 쪽)",
+               "x = 0.02 의 크기는 부호만")
+    texts = {"화면": h, **{p.name: p.read_text("utf-8") for p in _HANDOFF_DOCS}}
+    for name, t in texts.items():
+        for bad in retired:
+            assert bad not in t, f"{name}: 옛 단정 ‘{bad}’ 가 되살아났다 (회신 CM P0-5)"
+
+
+_P_SCOPE = ("고전압", "4 V 이상", "4.3 V", "LiCoO₂ 4.3", "LiCoO2 4.3", "그 열", "그 조건")
+
+
+def _p_share(rx):
+    """최소 꺾임 반응식 우변 → {칸: P 몫} (Nd 인산염 · TM 인산염 · Li 인산염 · 기타)."""
+    T = _x002_tool()
+    tot, out = 0.0, {}
+    for n, f, k in T._rxn_side_terms(rx.split("->", 1)[1]):
+        p = n * k.get("P", 0)
+        if not p:
+            continue
+        cls = ("Nd" if k.get("Nd") else "TM" if any(k.get(e) for e in ("Co", "Ni", "Mn")) and k.get("O")
+               else "Li" if k.get("Li") and k.get("O") else "other")
+        out[cls] = out.get(cls, 0) + p
+        tot += p
+    return {c: v / tot for c, v in out.items()}
+
+
+def test_cm_p06_the_10_90_split_is_scoped_to_its_condition(client):
+    """양성+⛔음성 — 회신 CM P0-6: ‘P 1 할 : 9 할(Nd 인산염 : TM 인산염)’ 은 고전압 Co·Ni·NMC811 의 배분이다.
+    ① 원자료에서 P 행선지를 다시 센다 — LiCoO₂ 4.3 V 는 Nd ≈ 10 % · TM ≈ 90 %, LiCoO₂ 2.5 V 는 Li 인산염이 과반
+       (조건을 떼면 틀린다는 것을 시험이 먼저 확인한다).
+    ② 모든 표면에서 ‘9 할’ 을 말하는 블록은 **같은 블록 안에** 조건(고전압 · 4 V 이상 · 4.3 V · 그 열/조건)을 단다."""
+    R = json.loads(_IFACE_X002.read_text("utf-8"))["results"]["LiCoO2"]["reactions"]
+    hi, lo = _p_share(R["4.30"]["nd_p_002_asused"]), _p_share(R["2.50"]["nd_p_002_asused"])
+    assert abs(hi.get("Nd", 0) - 0.10) < 0.01 and abs(hi.get("TM", 0) - 0.90) < 0.01, hi
+    assert lo.get("Li", 0) > 0.5 and lo.get("TM", 0) == 0, lo
+    #: ⚠ 블록이 아니라 **문장** 단위다 — 첫 판은 블록 단위였는데, 여러 줄 목록 항목에서 다른 줄의 ‘4.3 V’ 가
+    #:   조건으로 세져서 조건을 뗀 문장을 못 잡았다 (깨기 확인에서 드러남 · 2026-09-30).
+    n = 0
+    for name, blocks in _surfaces(client).items():
+        for b in blocks:
+            for sent in re.split(r"(?<=[.!?])\s+", b.replace("Fig. ", "Fig\u00a0")):
+                if "9 할" in sent:
+                    n += 1
+                    assert any(t in sent for t in _P_SCOPE), f"{name}: ‘9 할’ 을 조건 없이 말한다 (회신 CM P0-6) — {sent[:200]}"
+    assert n >= 12, f"‘9 할’ 문장이 {n} 개뿐이다 — 시험이 표면을 못 읽고 있다"
+
+
+def _sha(p):
+    import hashlib
+    return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+
+
+def test_cm_p07_fig2_repro_does_not_touch_history(tmp_path):
+    """⛔음성+양성 — 회신 CM P0-7: 인계 카드의 그림 재현 명령이 x = 0.20 이력 그림을 덮지 않는다.
+    ① 카드의 Fig. 2 명령은 --out 이 있고, 그 폴더는 게시 폴더가 아니다.
+    ② --out 을 뺀 옛 명령(x = 0.02 레코드 · 기본 폴더)은 **멈추고** 이력 PNG·CSV 해시가 그대로다 — Fig. 1 생성기도 같다.
+    ③ 카드 명령을 별도 폴더로 돌리면 게시본 x002 CSV 와 바이트가 같다 (어느 파일이 Fig. 2 에 대응하는지 확인)."""
+    import shlex
+    import subprocess
+    figs = ROOT / "db/properties/cei_figs"
+    hist = [figs / "cei_p_host_ladder.png", figs / "cei_p_host_ladder_fig.csv",
+            figs / "cei_x_scan_panels.png", figs / "cei_x_scan_panels.csv"]
+    before = {p.name: _sha(p) for p in hist}
+    card = (ROOT / "kb/projects/handoff_cei_2026_09_30.md").read_text("utf-8")
+    cmd = [c for c in re.findall(r"`(python3 tools/figures/plot_cei_p_host_ladder\.py[^`]*)`", card)]
+    assert len(cmd) == 1, cmd
+    argv = shlex.split(cmd[0])
+    assert "--out" in argv, "카드의 Fig. 2 명령에 --out 이 없다 — 문서대로 치면 이력 그림을 덮는다"
+    out = argv[argv.index("--out") + 1]
+    assert (ROOT / out).resolve() != figs.resolve(), out
+    old = [a for a in argv if a != "--out" and a != out]
+    r = subprocess.run([sys.executable] + old[1:], cwd=ROOT, capture_output=True, text=True, timeout=300)
+    assert r.returncode != 0 and "이력 그림" in (r.stderr + r.stdout), (r.returncode, r.stderr[-300:])
+    r = subprocess.run([sys.executable, "tools/figures/plot_cei_nd_o_decomposition.py", "--series", "x002",
+                        "--out", str(figs)], cwd=ROOT, capture_output=True, text=True, timeout=300)
+    assert r.returncode != 0 and "이력 그림" in (r.stderr + r.stdout), (r.returncode, r.stderr[-300:])
+    assert {p.name: _sha(p) for p in hist} == before, "이력 그림 해시가 바뀌었다 — 재현 명령이 덮어썼다"
+    new = argv[1:argv.index("--out")] + ["--out", str(tmp_path)] + argv[argv.index("--out") + 2:]
+    r = subprocess.run([sys.executable] + new, cwd=ROOT, capture_output=True, text=True, timeout=300)
+    assert r.returncode == 0, r.stderr[-400:]
+    assert (tmp_path / "cei_p_host_ladder_fig.csv").read_bytes() == (figs / "cei_p_host_ladder_fig_x002.csv").read_bytes(), \
+        "카드 명령의 산출 CSV 가 게시본 x002 와 다르다 — 어느 파일이 Fig. 2 인지 흐려진다"
+    assert {p.name: _sha(p) for p in hist} == before
+
+
+def test_cm_retired_handoff_phrasings_do_not_return(client):
+    """⛔음성 — 회신 CM P0-1 · P0-2 · P0-4 · P1-5 · P1-6 의 옛 단정 문장이 화면·인계 문서에 되살아나지 않는다.
+    (역사 기록은 취소선·‘정정/철회’ 로 남긴다 — 그래서 옛 문장을 **그대로** 되풀이한 꼴만 막는다.)"""
+    texts = {"화면": _report_html(client), **{p.name: p.read_text("utf-8") for p in _HANDOFF_DOCS}}
+    retired = {
+        "P0-1": ('"양극 계면 열화 억제" 로 써요', "②를 받친다", "Nd 치환을 통한 <b>고전압 양극 계면 열화 억제</b>"),
+        "P0-2": ("원인 확인됨", "모두 같은 구조", "우리 계산이 틀린 것이 아니라", "부피 가설은 반증됐다", "MP 값도 PBE 계산이므로"),
+        "P0-4": ("Li 가 양극 쪽으로 빠져나간다", "Li 가 양극으로 빠져나간", "“Li 를 이만큼 뺐을 때”", '"Li 를 이만큼 뺐을 때'),
+        "P1-5": ("충돌하면 카드가 이긴다", "페이지와 자료가 다르면 원자료가 맞다"),
+        "P1-6": ("618 원자라", "약 618 원자</b>이고", "(약 618 원자)은 못", "목표 조성 셀(약 618 원자)"),
+    }
+    for name, t in texts.items():
+        for tag, phrases in retired.items():
+            for bad in phrases:
+                assert bad not in t, f"{name}: 회신 CM {tag} 의 옛 문장 ‘{bad}’ 가 되살아났다"
+    # 1244 = 목표 조성 Li5.44Nd0.02P0.98S4.37O0.03Cl1.6 의 최소 정수 점유 (100 식단위) — 산수로 다시 센다
+    from fractions import Fraction
+    comp = {"Li": "5.44", "Nd": "0.02", "P": "0.98", "S": "4.37", "O": "0.03", "Cl": "1.6"}
+    n = 1
+    while any((Fraction(v) * n).denominator != 1 for v in comp.values()):
+        n += 1
+    atoms = int(sum(Fraction(v) * n for v in comp.values()))
+    assert (n, atoms) == (100, 1244), (n, atoms)
+    for name in ("화면", "handoff_cei_2026_09_30.md", "cei_reading_guide_2026_09_30.md", "cei_explainer_prompt_2026_09_30.md"):
+        assert f"{atoms} 원자" in texts[name], f"{name}: 목표 조성 셀 원자 수({atoms})가 없다"
+    assert "손편집 정본" in texts["handoff_cei_2026_09_30.md"] and "sections_new.html" in texts["handoff_cei_2026_09_30.md"], \
+        "인계 카드에 '생성기 조각은 정본을 대체하지 않는다' 안내가 없다 (회신 CM §4)"

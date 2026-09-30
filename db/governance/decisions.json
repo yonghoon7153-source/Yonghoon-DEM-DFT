@@ -5898,8 +5898,8 @@
      "citation_condition"
     ]
    },
-   "title": "NdP5O14 갭 '−0.943 eV 미재현' — 원인은 참조 계산 종류 불일치 (MP Pmna 6.336 = r2SCAN · 같은 구조 GGA 참조 5.390 대비 +0.003 eV)",
-   "statement": "§6 에서 NdP5O14 의 우리 PBE 갭 5.393 eV 를 비교한 MP 참조 6.336 eV(Pmna mp-560681 = mp-aaabfxkr)는 task mp-2743338 = **r2SCAN Structure Optimization** 에서 나온 값이다. 같은 화합물의 다른 엔트리 P2_1/c mp-4736 의 GGA 밴드 갭(task mp-717219 = GGA NSCF Line)은 5.390 eV 이고, StructureMatcher(기본 허용오차)로 우리 시작·이완 구조가 두 엔트리와 모두 일치한다. ⇒ 우리 값은 같은 근사(GGA) 참조 대비 **+0.003 eV** 로 재현된다. 비준하면: ① 인용위험 HZ-cei-gap-ndp5o14-unreproduced 의 조건을 '−0.943 eV 미재현(원인 미확정)' 에서 'MP Pmna 6.336 은 r2SCAN 값 · 같은 구조 GGA 참조 5.390 대비 +0.003 eV' 로 바꾼다 ② 화면의 [미재현] 표식과 결속 시험을 같이 바꾼다 ③ 사전등록 예측(6.33–6.46)이 틀렸다는 기록과 등록된 9 종 집계는 그대로 둔다(원인만 덧붙인다).",
+   "title": "NdP5O14 갭 '−0.943 eV 미재현' — 비교한 MP 참조가 r2SCAN 값이라 같은 근사 비교가 아니었다 (참조 불일치 확인 · 원인 분해 아님 · 유사 구조 GGA 참조 대비 +0.003 은 보조 비교)",
+   "statement": "§6 에서 NdP5O14 의 우리 PBE 갭 5.393 eV 를 비교한 MP 참조 6.336 eV(Pmna mp-560681 = mp-aaabfxkr)는 task mp-2743338 = **r2SCAN Structure Optimization** 에서 나온 값이다 — 같은 근사끼리의 비교가 아니었다(참조 불일치 확인). 같은 화합물의 다른 엔트리 P2_1/c mp-4736 의 GGA 밴드 갭(task mp-717219 = GGA NSCF Line)은 5.390 eV 이고 우리 값과 +0.003 eV 다. ⚠ 이 +0.003 은 **보조 비교**다 — 기본 StructureMatcher(scale=True)의 유사 판정은 같은 셀·좌표·전자구조를 보증하지 않으므로 동일 구조·동일 조건의 재현이 아니고, −0.943 차의 원인 분해도 아니며, 부피 기여도 배제하지 않는다. 비준하면: ① 인용위험 HZ-cei-gap-ndp5o14-unreproduced 의 조건을 '−0.943 eV 미재현(원인 미확정)' 에서 '−0.943 eV 미재현 — 비교 참조가 r2SCAN 이라 같은 근사 비교가 아니었음 확인 · 유사 구조 GGA 참조 대비 +0.003(보조 비교 · 원인 분해 아님)' 으로 바꾼다 ② 화면의 [미재현] 표식과 결속 시험을 같이 바꾼다 ③ 사전등록 예측(6.33–6.46)이 틀렸다는 기록 · 등록된 9 종 집계 · level CONDITIONAL 은 그대로 둔다(참조 불일치 사실만 덧붙인다).",
    "decision_state": "proposed",
    "results_seen": true,
    "exploratory": false,
@@ -5924,12 +5924,13 @@
      "value": {
       "gap_PBE_fixed_occ_eV": 5.393,
       "diff_vs_GGA_ref_eV": 0.003,
-      "diff_vs_r2SCAN_ref_eV": -0.943
+      "diff_vs_r2SCAN_ref_eV": -0.943,
+      "diff_vs_GGA_ref_is": "보조 비교 (다른 엔트리 · 다른 task · 동일 조건 재현 아님)"
      }
     },
     {
      "kind": "structure_match",
-     "value": "StructureMatcher 기본 허용오차 — 우리 시작·이완 구조 ↔ mp-4736 True · mp-560681 True · 이완 구조 sg P222_1(0.01)/Pmna(0.1)"
+     "value": "StructureMatcher 기본 허용오차 — 우리 시작·이완 구조 ↔ mp-4736 True · mp-560681 True · 이완 구조 sg P222_1(0.01)/Pmna(0.1) · ⚠ 기본 matcher 는 scale=True — 유사 판정이지 동일 셀·조건 보증이 아니다 (회신 CM P0-2)"
     },
     {
      "kind": "id_decoding",
@@ -5944,6 +5945,7 @@
    ],
    "reopen_criteria": [
     "MP 가 mp-4736 의 GGA 밴드 계산을 다시 돌려 값이 바뀌면 다시 본다",
+    "같은 구조·같은 근사(GGA)의 참조(MP 셀 고정 재계산 · Pmna 엔트리의 GGA 밴드 계산 등)가 생기면 원인 분해를 다시 본다",
     "우리 구조가 두 엔트리와 다른 골격이라는 증거(더 엄격한 허용오차의 불일치 등)가 나오면 다시 연다",
     "⛔ '다른 참조를 하나 더 찾았다' 는 재개 사유가 아니다"
    ],
@@ -5965,9 +5967,14 @@
      "at": "2026-09-30",
      "state": "proposed",
      "note": "비준 주체 = 사용자 · Codex 리뷰 CM 회신을 보고 비준한다 (사용자 '회신 보고 비준할겡')."
+    },
+    {
+     "at": "2026-09-30",
+     "state": "proposed",
+     "note": "외부 리뷰 회신 CM P0-2 로 범위 축소 — '원인 확인 · 같은 구조 GGA 참조로 재현' → '참조 불일치 확인 · +0.003 은 보조 비교 · 원인 분해·부피 배제 안 함'. CM §7-4: proposed 그대로 인계해도 된다(비준은 송부의 필수조건이 아니다). 비준 주체는 그대로 사용자."
     }
    ],
-   "_note": "결과를 본 뒤의 원인 확인이다(results_seen=true). 등록된 예측·문턱·집계는 건드리지 않는다 — 인용 조건만 바꾸는 개정안이다."
+   "_note": "결과를 본 뒤의 참조 확인이다(results_seen=true). 등록된 예측·문턱·집계·level 은 건드리지 않는다 — 인용 조건 문구만 바꾸는 개정안이다. 09-30 회신 CM 으로 '원인 확인' 에서 '참조 불일치 확인' 으로 범위를 줄였다."
   }
  ]
 }

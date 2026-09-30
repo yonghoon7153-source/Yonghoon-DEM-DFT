@@ -33,6 +33,15 @@ tools/figures/plot_cei_nd_o_decomposition.py 가 §2–§7 그림을 다 만들�
   · 속도·수송은 없다 — 전부 0 K 열역학이다.
 
   python3 tools/figures/plot_cei_p_host_ladder.py [--selftest]
+
+⛔ 2026-09-30 (회신 CM P0-7) — **출력 파일 이름이 레코드를 모른다.** 옛 코드는 어떤 `--rec` 를 줘도
+   `cei_p_host_ladder.png` · `cei_p_host_ladder_fig.csv` 로 썼다. 인계 카드의 x = 0.02 재현 명령에 `--out` 이
+   없어서, 문서대로 치면 **x = 0.20 이력 그림 두 개를 x = 0.02 자료로 조용히 덮었다** (rc = 0 · 화면이 읽는
+   `_x002` 는 그대로). ⇒ 기본 레코드가 아닌데 **기본 폴더에 일반 이름**으로 쓰려 하면 **멈춘다**.
+   재현은 `--out <별도 폴더>` 로 하고 게시 파일과 대조한다 (09-30 실측: 게시본 x002 PNG·CSV 와 바이트 동일).
+   게시 파일을 새로 쓸 때만 `--suffix _x002` 로 **이름을 명시**한다.
+     python3 tools/figures/plot_cei_p_host_ladder.py --rec db/properties/cei_p_host_ladder_x002_2026_09_28.json \
+         --nd_bearing ndo_li_002,nd_p_002_asused --out review_output/fig2_x002
 """
 import csv
 import json
@@ -170,6 +179,25 @@ def stack(pts, V, nd_side):
     return {k: sum(p["klass"] == k for p in sel) / n for k, _ in CLASSES}
 
 
+def history_overwrite_refusal(rec, out_dir, suffix=""):
+    """이 조합이 **이력 그림을 덮는가** → 멈출 사유(문자열) · 괜찮으면 None.
+
+    기본 레코드(x = 0.20 판)가 아닌 레코드를 기본 폴더(`db/properties/cei_figs`)에 **꼬리 없는 일반 이름**으로
+    쓰면 `cei_p_host_ladder.png` · `_fig.csv` (x = 0.20 이력)를 다른 자료로 덮는다 (회신 CM P0-7).
+    ⛔ 이 검사가 못 하는 것: `--suffix` 를 주면 **그 이름의 게시 파일은 덮는다** — 그건 명시한 반영이라 막지 않는다.
+       폴더 비교는 실제 경로(resolve)로 한다 — 상대경로·끝 슬래시에 속지 않는다.
+    """
+    if suffix:
+        return None
+    if Path(rec).resolve() == REC.resolve():
+        return None
+    if Path(out_dir).resolve() != OUT.resolve():
+        return None
+    return (f"⛔ 기본 레코드가 아닌 {Path(rec).name} 를 기본 폴더에 일반 이름으로 쓰려 한다 — "
+            f"x = 0.20 이력 그림 cei_p_host_ladder.png · cei_p_host_ladder_fig.csv 를 덮는다. "
+            f"재현은 --out <별도 폴더> 로 하고, 게시 파일을 새로 쓸 때만 --suffix _x002 처럼 이름을 명시한다 (회신 CM P0-7)")
+
+
 def _selftest():
     ok = True
     def chk(c, m):
@@ -205,6 +233,18 @@ def _selftest():
     chk(stack(_pts, 3.5, False) == {},
         "[음성] 점이 없는 칸은 빈 스택이다 (막대를 지어내지 않는다)")
 
+    _x002 = ROOT / "db/properties/cei_p_host_ladder_x002_2026_09_28.json"
+    chk(history_overwrite_refusal(_x002, OUT) is not None,
+        "[음성] x = 0.02 레코드를 기본 폴더에 일반 이름으로 쓰면 **멈춘다** (이력 그림을 덮지 않는다 · CM P0-7)")
+    chk(history_overwrite_refusal(_x002, str(OUT) + "/") is not None,
+        "[음성] 끝 슬래시를 붙여도 같은 폴더로 알아본다")
+    chk(history_overwrite_refusal(_x002, ROOT / "review_output/fig2_x002") is None,
+        "별도 폴더로 재현하면 통과")
+    chk(history_overwrite_refusal(_x002, OUT, "_x002") is None,
+        "게시 파일을 새로 쓸 때는 --suffix 로 이름을 명시하면 통과")
+    chk(history_overwrite_refusal(REC, OUT) is None,
+        "기본 레코드(x = 0.20)를 기본 폴더에 — 이력 그림 자신을 다시 그리는 것은 통과")
+
     if REC.exists():
         _, pts = load()
         chk(all(rung(pts, a) >= rung(pts, b) for a, b in zip(VS, VS[1:])),
@@ -236,7 +276,12 @@ def main():
     ap.add_argument("--rec", default=str(REC))
     ap.add_argument("--nd_bearing", default=",".join(sorted(ND_BEARING)))
     ap.add_argument("--out", default=str(OUT))
+    ap.add_argument("--suffix", default="",
+                    help="출력 파일 이름 꼬리 (예: _x002) — 게시 파일을 새로 쓸 때만 준다")
     a = ap.parse_args()
+    _why = history_overwrite_refusal(a.rec, a.out, a.suffix)
+    if _why:
+        raise SystemExit(_why)
     ND_BEARING = set(x for x in a.nd_bearing.split(",") if x)
     out_dir = Path(a.out); out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -328,10 +373,10 @@ def main():
                frameon=False, fontsize=7.6, loc="lower right")
 
     fig.tight_layout()
-    png = out_dir / "cei_p_host_ladder.png"
+    png = out_dir / f"cei_p_host_ladder{a.suffix}.png"
     fig.savefig(png, dpi=300); plt.close(fig)
 
-    csv_path = out_dir / "cei_p_host_ladder_fig.csv"
+    csv_path = out_dir / f"cei_p_host_ladder_fig{a.suffix}.csv"
     with open(csv_path, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["panel", "voltage_V", "electrolyte", "cathode", "p_host_formula",

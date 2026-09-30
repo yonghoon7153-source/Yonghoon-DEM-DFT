@@ -593,7 +593,7 @@
    "level": "CONDITIONAL",
    "added": "2026-09-21",
    "what": "NdP5O14 fixed-occ nscf 갭 **5.393 eV** (rows[9] · tag NdP5O14_mp-aaabfxkr)",
-   "why": "MP(mp-560681, Pmna) 6.336 대비 **−0.943 eV (−14.9 %)** 미재현. 나머지 9 종은 |Δ| ≤ 0.120 eV. 구조(Pmna)·설정(nbnd 332 · k 5×5×4)·수렴(P −0.35 kbar)은 정상이고 부피 가설(+3.66 %)은 P₂O₅(+9.42 % 팽창 · 갭 −0.016)가 반증 — **원인 미확정**",
+   "why": "MP(mp-560681, Pmna) 6.336 대비 **−0.943 eV (−14.9 %)** 미재현. 나머지 9 종은 |Δ| ≤ 0.120 eV. 구조(Pmna)·설정(nbnd 332 · k 5×5×4)·수렴(P −0.35 kbar)은 정상이고 부피 가설(+3.66 %)은 P₂O₅(+9.42 % 팽창 · 갭 −0.016)로 받쳐지지 않았으나 배제되지도 않았다 [09-30 정정: 옛 문구 '반증' — 회신 CM P0-2 · 다른 물질의 민감도를 옮길 전제가 없다] — **원인 미확정**",
    "fix": "'−0.943 eV 미재현(원인 미확정)' 단서와 함께만 인용한다. 이 값으로 '축합될수록 갭이 넓어진다' 를 말하지 않는다 — 우리 값은 NdPO4 5.799 → Nd(PO3)3 5.497 → NdP5O14 5.393 으로 내려간다. 허용: '판별종 10 종 전부 갭 열림 (2.26–5.99 eV, PBE)'. 남은 확인은 MP 참조값 쪽 조회(어느 엔트리·범함수의 6.336 인가)이지 재계산이 아니다",
    "id": "HZ-cei-gap-ndp5o14-unreproduced",
    "binding_scope": "partial",
@@ -605,7 +605,7 @@
      "축합될수록 갭이 넓어진다": "3 파일 — 보고서 §6 카드는 이미 data-claim 결속, §9 항목과 kb 두 문서는 미결속"
     }
    },
-   "⭐_2026_09_30_원인_확인": "원인 확인 — 비교한 MP 참조 6.336 eV(Pmna mp-560681 = mp-aaabfxkr)는 task mp-2743338 = r2SCAN Structure Optimization 의 갭이다. 같은 구조(StructureMatcher 일치)의 GGA 참조 P2_1/c mp-4736 (task mp-717219 = GGA NSCF Line)은 5.390 eV 이고 우리 5.393 eV 와 +0.003 eV 다. 기록 db/properties/cei_gap_ndp5o14_reference_check_2026_09_30.json · 개정안 D-2026-09-30-cei-ndp5o14-reference-mismatch (proposed). ⚠ 비준 전까지 이 항목의 level·조건은 그대로다 — 인용할 때는 두 참조를 같이 적는다: 'MP r2SCAN 참조 대비 −0.943 · 같은 구조 GGA 참조 대비 +0.003'."
+   "⭐_2026_09_30_참조_불일치_확인": "참조 불일치 확인 — 비교한 MP 참조 6.336 eV(Pmna mp-560681 = mp-aaabfxkr)는 task mp-2743338 = r2SCAN Structure Optimization 의 갭이라 같은 근사 비교가 아니었다. 기본 StructureMatcher 로 유사 판정된 다른 엔트리 P2_1/c mp-4736 (task mp-717219 = GGA NSCF Line)의 GGA 갭 5.390 eV 와 우리 5.393 eV 의 차는 +0.003 eV 지만 보조 비교다 — 동일 구조·조건 재현도 원인 분해도 아니고, 부피 기여도 배제하지 않는다. 기록 db/properties/cei_gap_ndp5o14_reference_check_2026_09_30.json · 개정안 D-2026-09-30-cei-ndp5o14-reference-mismatch (proposed). ⚠ 비준 전까지 이 항목의 level·조건은 그대로다 — 인용할 때는 두 참조를 같이 적는다: 'MP r2SCAN 참조 대비 −0.943 · 유사 구조 GGA 참조 대비 +0.003(보조 비교)'. (09-30 회신 CM P0-2 로 이름·범위 정정 — 처음엔 '원인 확인 · 같은 구조 GGA 참조' 로 적었다.)"
   },
   {
    "file": "db/properties/nd_icohp.json",

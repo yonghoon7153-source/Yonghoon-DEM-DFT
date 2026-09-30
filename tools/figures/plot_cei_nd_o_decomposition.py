@@ -91,6 +91,14 @@ for _k in ("iface", "dop_glob"):
         SER[_k] = getattr(_A, _k)
 if _A.out:
     SER["out"] = Path(_A.out)
+#: ⛔ 2026-09-30 (회신 CM P0-7 과 같은 부류) — 출력 이름에 **계열 꼬리가 없다**(`cei_x_scan_panels.png` 등).
+#:   x002 를 게시 폴더 `db/properties/cei_figs` 에 쓰면 **같은 일반 이름의 x = 0.20 이력 그림을 덮는다**
+#:   (게시본 x002 는 `_x002` 꼬리로 따로 있다). ⇒ 멈춘다. 재현은 `--out <별도 폴더>` 로 하고 게시본과 대조한다
+#:   (09-30 실측: x002 산출 12 파일이 게시본 `_x002` 와 바이트 동일). 게시 반영은 대조 뒤 이름을 붙여 손으로 한다.
+_PUB = (Path(__file__).resolve().parents[2] / "db/properties/cei_figs").resolve()
+if _A.series != "x020" and Path(SER["out"]).resolve() == _PUB:
+    raise SystemExit(f"⛔ --series {_A.series} 를 게시 폴더 {_PUB.name}/ 에 쓰려 한다 — 이름에 계열 꼬리가 없어 "
+                     f"x = 0.20 이력 그림을 덮는다. --out <별도 폴더> 로 재현하고 게시본(_x002)과 대조한다 (회신 CM P0-7)")
 OUT = SER["out"]; OUT.mkdir(parents=True, exist_ok=True)
 D = json.load(open(SER["iface"]))
 VS = [2.5, 3.0, 3.5, 4.0, 4.3, 4.5]

@@ -13,10 +13,10 @@
 - 2026-09-30 · `kb/reviews/codex_CM_reply_cei_nd_handoff_2026_09_30.md` — 회신 CM — CEI (Nd 계면) 외부 인계본 리뷰: NO-GO (P0 7 · P1 6) — 수치·무결성은 대체로 맞음 · 요약·교육 문구가 계산 범위를 넘음 · Fig. 2 재현 명령이 이력 파일을 덮음 · 수령 (2026-09-30 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-09-30 · `kb/projects/cei_explainer_prompt_2026_09_30.md` — CEI 설명·인계 AI 프롬프트 — 처음 보는 대학원생 눈높이 우선 (2026-09-30) · 발송 대기 — 인계 묶음(zip)에 들어간다
 - 2026-09-30 · `kb/projects/cei_reading_guide_2026_09_30.md` — CEI 페이지 읽기 지침서 — 1저자·처음 보는 대학원생용 (2026-09-30) · 발송 대기 — 인계 묶음(zip)에 들어간다
-- 2026-09-30 · `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30) · 발송 대기 — 사용자가 zip 으로 전달한다
+- 2026-09-30 · `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30) · 발송 대기 — 외부 리뷰 회신 CM(NO-GO) 이행판 · 사용자가 …
+- 2026-09-30 · `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 대신 "고전압 계면 분해 산물의 재분배" 로 (09-30 · 외부 리뷰 회신 CM — 종전 "양극 계면 열화 억제" 철회) · 확정 — 사용자 승인 2026-09-29 "ㅇㅇ si 쪽으로 가는게 …
 - 2026-09-29 · `kb/projects/handoff_2026_09_29_return_to_origin.md` — origin 복귀·통합 카드 — claude/evac-2026-09-28 → claude/friendly-meitner-lldvar (2026-09-29) · 발송 대기 — 사용자가 §0 프롬프트를 origin 세션에 붙여 넣는다
 - 2026-09-29 · `kb/projects/merge_request_2026_09_28.md` — 머지 요청 (최종) — 대피 브랜치 claude/evac-2026-09-28 → claude/friendly-meitner-lldvar · 최종 — 09-29 01:4x KST 실측 (fast-forward …
-- 2026-09-29 · `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 을 "고전압 양극 계면 열화 억제" 로 · 확정 — 사용자 승인 2026-09-29 "ㅇㅇ si 쪽으로 가는게 …
 - 2026-09-28 · `kb/reviews/li2s1a_CH_prompt_li2s_cd_reply_pilot800_2026_09_27.md` — CH 프롬프트 — li2s 소셀 유리 MD: 회신 CD 반영 · 파일럿 400 K 800 ps 결과 (C2·C1 미통과 → 400 K 측정 안 됨) · 카드 개정 v2 · 다섯 시드 P 배위 통계 (새 항목 1) · 결정·확인 요청 셋 (외부 1저자에게) · 발송됨 (사용자 · 2026-09-27 · 발송판 = 다섯 시드 결과…
 - 2026-09-28 · `kb/reviews/li2s1a_CH_reply_li2s_cd_reply_pilot800_2026_09_28.md` — 회신 CH — 외부 1저자 (li2s 소셀 유리 MD): 편지 CH 판정 (Q-CH-1 2σ 로 상향 · Q-CH-2 600 K pre-register · Q-CH-3 수정안 수용 + S54 내력·seed4 일시 · 새 항목 둘 — 400 K 두 런 D 2.2 배 · 시드 간 P 이탈 산포) · 수령 (2026-09-28 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-09-28 · `kb/reviews/li2s1a_CL_prompt_li2s_ch_reply_s54_census_2026_09_28.md` — CL 프롬프트 — li2s 소셀 유리 MD: 회신 CH 이행 · S54 내력 (전건) · 새 발견 둘 (교환망 · 두 보존율) · 600 K 파일럿 (초기구조 정정 공개) · 확인 요청 넷 (외부 1저자에게) · 발송됨 (초안 판 · 빈 칸 둘 — 사용자 · 2026-09-28) …
@@ -426,7 +426,7 @@
 - `kb/projects/handoff_2026_09_16_cathode_cei.md` — 인수인계 — 2026-09-16 세션 (양극 CEI §A–§E · 도펀트 스크리닝 · dual compatibility)  (2026-09-16 · 진행)
 - `kb/projects/handoff_2026_09_28_evacuation.md` — 대피 인계 — 2026-09-28 (friendly 세션 컨텍스트 소진 → 서브 브랜치 임시 작업)  (2026-09-28 · 진행)
 - `kb/projects/handoff_2026_09_29_return_to_origin.md` — origin 복귀·통합 카드 — claude/evac-2026-09-28 → claude/friendly-meitner-lldvar (2026-09-29)  (2026-09-29 · 발송 대기 — 사용자가 §0 프롬프트를 origin 세션에 붙여 넣는다)
-- `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30)  (2026-09-30 · 발송 대기 — 사용자가 zip 으로 전달한다)
+- `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30)  (2026-09-30 · 발송 대기 — 외부 리뷰 회신 CM(NO-GO) 이행판 · 사용자가 …)
 - `kb/projects/li2s_glass_external_first_author_followup_pilot800_2026_09_27.md` — li2s 소셀 유리 MD — 파일럿 400 K · 800 ps 결과 후속 보고 (외부 1저자에게) · C2·C1 미통과 → '이 프로토콜로 400 K 는 측정되지 않는다' · 본 15런 400 K 처리 결정 요청  (2026-09-27 · 흡수됨 (미발송) — 회신 CD 가 먼저 와서 통합 편지 CH `kb…)
 - `kb/projects/li2s_glass_external_first_author_letter_2026_09_25.md` — li2s 소셀 유리 MD — 외부 1저자에게 보내는 보고 · 질문 (파일럿 결과 · 갈래0 멈춤 · 게이트 A 두 판 · Q1–Q8)  (2026-09-25 · 초안 — 사용자(실행자) 검토 뒤 외부 1저자에게 발송 · 판정은 외…)
 - `kb/projects/li2s_glass_external_first_author_report_2026_09_26.md` — li2s 소셀 유리 MD — 회신 CC 이행 보고 (외부 1저자에게) · B 실측 3 건 · 카드 개정 초안 확인 요청 · 400 K prod 800 ps 채택 제안  (2026-09-26 · 초안 — 사용자(실행자 · 카드 저자) 검토 뒤 외부 1저자에게 발송…)
@@ -466,7 +466,7 @@
 ## syntheses/ (9)
 - `kb/syntheses/binder_adsorption_charge_state_2026_08_29.md` — 음이온성 바인더의 흡착에너지 — ICEP 의 (−H) 는 탈양성자가 아니라 H 이동이었다  (2026-08-29 · 판독 완료 — ICEP 본문 + SI, Kang 본문 + SI 모두 확보)
 - `kb/syntheses/cathode_coating_computational_lineage.md` — 양극 코팅 계산 계보 — Wolverton → Ceder → Mo 라인과 우리 LPSCl 산화축의 관계  (2026-09-12 · 진행)
-- `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 을 "고전압 양극 계면 열화 억제" 로  (2026-09-29 · 확정 — 사용자 승인 2026-09-29 "ㅇㅇ si 쪽으로 가는게 …)
+- `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 대신 "고전압 계면 분해 산물의 재분배" 로 (09-30 · 외부 리뷰 회신 CM — 종전 "양극 계면 열화 억제" 철회)  (2026-09-30 · 확정 — 사용자 승인 2026-09-29 "ㅇㅇ si 쪽으로 가는게 …)
 - `kb/syntheses/li3n_barrier_revision_defense_2026_08_12.md` — Li3N(001) 장벽 — 리비전 방어 카드 (AF-ASSB 원고 v5)  (2026-08-13 · 확정 — 2026-08-12: 0.118 로 통일 · 궤적 패널 제외…)
 - `kb/syntheses/md_sampling_variance_defense_2026_08_25.md` — 왜 3시드·200 ps·β 게이트인가 — 짧은 단일 런은 산포를 없애지 않고 가린다  (2026-08-25 · 방어논지)
 - `kb/syntheses/nd_doping_two_axis_verdict.md` — Nd₂O₃ 도핑 — 열역학 창과 전자구조가 **같은 방향으로** 진다  (2026-08-12 · 진행)
