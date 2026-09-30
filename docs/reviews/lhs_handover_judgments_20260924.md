@@ -798,6 +798,18 @@
   나눠 보이기 + 이미 닫힌 여섯 — porosity union (인계 = `porosity_union_exact_pct` · MC 정확 union) · 두께 (`thickness_mass_conserving_um`) ·
   φ_SE · φ_AM ((라) `phi_*_mass_conserving`) · 계면 개수 (`area_<쌍>_n` · J20-g · h) · SE–SE CN (J20-i) · AM–AM CN (J20-j).
 - 감사 결과 · 수정안은 판정 기록을 이 절에 덧붙인다 (⬜ 보고 → 비준).
+- ✅ **비준 09-30 밤 (1저자)**: 순서 = HBR10-01 · 03 → **웹앱 ① (표시만)** → ② (값 · 경로) → ③ (정확 union · v2 후보) · (가) 두 공극률을 나란히 (ε_sphere 생산 규약 + ε_union · 강등 없음) ·
+  (나) v2 는 ③ 에서 "후보 · 미검증" 표지로 (등급 · ML 제외).
+- ✅ **웹앱 ① (09-30 밤 · 시험 먼저 — `webapp/test_closed_param_labels.py` 옛 코드 4 PASS · 47 FAIL → 55/55)** — 계산 불변 · 이름 · 한정어만:
+  네트워크 표 열 머리 **Hertz 계열 (LIGGGHTS c_cpl[22] 기하 교차 원판)** · **Physics 계열 v1 (Tabor · 부피 · 기하 cap)** (절 머리 셋 포함) ·
+  공극률 두 줄 **ε_sphere (구 부피 합 · 생산 규약)** + **ε_union 쌍 렌즈 (벽 밖 미제거)** · 두께 = **판 간격** + 배지에 `plate_z_source` (판 메시 / ⚠ 최고 입자 중심 추정) ·
+  φ_SE = 구 부피 합 ÷ 판 간격 · **AM–AM CN std 행** (J20-j 세 열 중 화면에 없던 것) · coverage 툴팁 = 입자별 `min(100, 100·ΣA(AM–SE)/(4πr² − ΣA(AM–AM)))` 평균 (두 열 = 분자 면적만 다름) ·
+  면적 툴팁 = c_cpl[22] (옛 "Hertz 접촉역학 기반" 삭제) · SE–SE · AM–AM CN = 입자–입자 덤프만 (벽 안 셈) · 모집단 σ ·
+  접촉 요약 · 배위수 탭 = 탭 문맥 툴팁 (옛 판은 접촉 요약 AM–AM 행에 **파괴 severe % 툴팁**을 붙였다) · 라벨 → 툴팁 역맵 전수 (SELF-51 개명 때 끊긴 σ_ionic SE 크기 인자 행 복구) ·
+  그룹 비교 열 툴팁 12 · MD 보고서 · 그룹 보고서 · AI 분석 표 · 인용 철회 둘 (coverage 툴팁의 "Minnmann 2021 40–65 %" — 인용 뿌리 감사 E7 · MI-5) · σ_grain "grain interior" → 펠릿 (SELF-51).
+  ⚠ **감사 중 정정** — 웹앱 ε_union 은 **공극 상한이 아니다**: 벽 밖 부피를 안 빼서 `docs/data/lhs_union_20260927/` 194/194 건에서 정확 union 보다 낮다
+  (중앙 −0.64 %p · 범위 −3.43 … −0.19 · lhsx −0.75 %p · 벽 밖까지 빼면 차 중앙 0.001 %p).  `lhs_union_webapp.py` docstring 의 "① = 공극 상한" 도 틀렸다 → `SELF-72`.
+- ⬜ **웹앱 ② (값 · 경로 — `LHS-24`)** · ⬜ **③ (정확 union MC 단계 → `porosity_union_exact_pct` · `thickness_mass_conserving_um` · `phi_*_mass_conserving` · v2 후보 열)**.
 
 ## 인계 판정 (지금)
 

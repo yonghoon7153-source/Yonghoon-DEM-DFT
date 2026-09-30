@@ -86,7 +86,7 @@ scripts/lhs_contact_audit.py	--selftest	fast	none	claude	초록 1.2s (실측) �
 scripts/lhs_webapp_batch.py	--selftest	fast	none	claude	초록 0.2s (실측) — J20 LHS × 웹앱 파이프라인 배치: 같은 프레임 sha · type_map 대조 · 같은 step 메시 · 스테이징 청소 · 재개 · 실패 격리 (가짜 app 주입, 실제 파이프라인은 WSL) · J20-a ⓑ 프레임 ≠ 1 · 중복 행 거부 · J20-f 2-type 이름 접기 (수확 AM ↔ 덱 판독 AM_S/AM_P · 음성 넷)
 scripts/lhs_perc_extract.py	--selftest	fast	both	claude	초록 0.8s (실측)
 scripts/lhs_perc_fit.py	--selftest	fast	both	claude	초록 9.5s (실측)
-scripts/litdb_promote.py	--selftest	fast	none	claude	초록 17.9s (실측)
+scripts/litdb_promote.py	--selftest	slow	none	claude	초록이지만 205 s (09-30 실측 · 단독 PASS) — 정본 litdb 브랜치 워크트리 2.7 GB (논문 350 편) 를 새로 꺼내 fast 제한 180 s 를 넘는다 · 옛 실측 17.9 s (게이트 권고 "slow 로 옮길 것")
 scripts/litdb_sync.py	--selftest	fast	none	claude	초록 2.0s (실측)
 scripts/make_heckel_manifest.py	--selftest	fast	check_all	claude	초록 0.1s (실측)
 scripts/make_pressure_sweep_decks.py	--selftest	fast	none	claude	초록 0.1s (실측)

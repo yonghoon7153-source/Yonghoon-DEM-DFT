@@ -2019,12 +2019,15 @@ _PAPER_SECTION_MAP = {
         '── 활성도 (Electrochemically-active surface) ──',
     '── 이온전도 ──':
         '── 이온 전도 (Ionic conductivity — Bruggeman EMT estimate) ──',
+    #  ★ 09-30 (웹앱 ① · J20-l) — "Hertzian" 은 이름만이다: 그 열의 면적은 LIGGGHTS 가 덤프하는
+    #    기하 교차 원판 c_cpl[22] (parse_liggghts L1-04 · 작은 겹침에서 Hertz πR*δ 의 약 2 배 ·
+    #    docs/area_contract_20260913.md) 이고 검증된 수송 면적이 아니다 (AREA-08).  두 계열로 부른다.
     '── Network Solver (Hertzian DEM-native) ──':
-        '── 네트워크 솔버 · Hertzian (Network solver — DEM native contact area) ──',
+        '── 네트워크 솔버 · Hertz 계열 (Network solver — LIGGGHTS c_cpl[22] intersection-disc area) ──',
     '── Network Solver (DEM-native vs Tabor+volume physics) ──':
-        '── 네트워크 솔버 · Hertzian vs Physics (Network solver — DEM native vs Tabor + volume) ──',
+        '── 네트워크 솔버 · Hertz 계열 vs Physics 계열 (Network solver — c_cpl[22] disc area vs Tabor + volume caps) ──',
     '── Physics (Plastic film, Tabor+volume) ──':
-        '── 네트워크 솔버 · Physics (Network solver — Tabor plastic film + volume conservation) ──',
+        '── 네트워크 솔버 · Physics 계열 v1 (Network solver — Tabor plastic film + volume conservation) ──',
     '── τ 비교 (Dijkstra vs Laplace, COMSOL input = τ_Lap_eff) ──':
         '── 굴곡도 비교 (Tortuosity — Dijkstra vs Laplacian; COMSOL/EIS input = τ_Laplace,eff) ──',
     '── Tier 1 patches (post-Auerbach refinements) ──':
@@ -2041,8 +2044,11 @@ _PAPER_SECTION_MAP = {
 
 _PAPER_LABEL_MAP = {
     # Structure
-    'Porosity(%)':                 'Porosity ε (%)',
-    '전극두께(μm)':                 'Electrode thickness T (μm)',
+    #  ★ 09-30 (웹앱 ① · J20-l) — 정의를 라벨에: ε_sphere = 구 부피 합 (생산 · 보정 앵커 규약 ·
+    #    겹친 부피 이중계상) · 두께 = 판 간격 (get_plate_z — 입자 윗면 포락선이 아니다).
+    #    ⚠ 라벨을 바꾸면 single.html PAPER_TO_ORIG 역맵도 같이 (test_closed_param_labels T1 이 전수 강제).
+    'Porosity(%)':                 'Porosity ε_sphere — sphere-volume sum, production (%)',
+    '전극두께(μm)':                 'Electrode thickness T — plate gap (μm)',
     # Interface
     'AM-SE Total(μm²)':            'Total AM-SE contact area, A_AM-SE (μm²)',
     'SE-SE Total(μm²)':            'Total SE-SE contact area, A_SE-SE (μm²)',
@@ -2079,7 +2085,7 @@ _PAPER_LABEL_MAP = {
     '  ├ AM_P Vulnerable(%)':      '  ├ AM_P ionically-vulnerable (%)',
     '  └ AM_S Vulnerable(%)':      '  └ AM_S ionically-vulnerable (%)',
     # Bruggeman EMT
-    'SE Volume Fraction':          'SE volume fraction, φ_SE',
+    'SE Volume Fraction':          'SE volume fraction φ_SE — sphere volume / plate gap',
     'σ_Bruggeman (mS/cm)':         'σ_Bruggeman — EMT estimate (mS/cm)',
     'σ_brug/σ_grain (Bruggeman)':  'Bruggeman coefficient, σ_Bruggeman / σ_grain',
     # Network solver — Hertzian
@@ -2131,6 +2137,7 @@ _PAPER_LABEL_MAP = {
         'F1 near-contact pairs (gap < 10 nm)',
     # AM-AM mechanics
     'AM-AM CN mean':               'AM-AM coordination number ⟨z_AM-AM⟩',
+    'AM-AM CN std':                'AM-AM coordination number σ(z_AM-AM)',
     'AM-AM 접촉 수':                'AM-AM contact count',
     '접촉 반경(µm)':                'Mean Hertzian contact radius, ⟨a⟩ (μm)',
     '침투 깊이 δ(µm)':              'Mean overlap depth, ⟨δ⟩ (μm)',
@@ -2204,7 +2211,14 @@ def inject_dual_porosity_rows(tables, metrics):
     independent → both columns carry the same value, Δ = 0%.  No-op until the
     dual-porosity fields exist (run recompute_porosity_dual.py or re-analyze).
     Called LAST (after apply_paper_labels) so layout/relabel passes do not move
-    the rows; matches the renamed 'Porosity ε (%)' label via startswith."""
+    the rows; matches the renamed 'Porosity ε_sphere …' label via startswith.
+
+    ★ 09-30 (웹앱 ① · J20-l) — 이 ε_union 은 **쌍 렌즈** union 이다 (calc_porosity_dual:
+      겹친 쌍마다 렌즈 부피를 한 번 뺀다 · 세 입자 겹침 · 벽 밖 (z < 0 · 판 위) 구 부피는
+      그대로).  LHS 인계표의 몬테카를로 정확 union (porosity_union_exact_pct) 과 **다른 양**이고
+      실측으로 그보다 낮다 — 194/194 건 · 중앙 −0.64 %p (130) · −0.75 %p (lhsx 64)
+      (docs/data/lhs_union_20260927/ · 벽 밖을 빼면 차 중앙 0.001 %p).  그래서 라벨에
+      "overlap-corrected · literature" 도 "상한" 도 쓰지 않는다.  ε_sphere 와 나란히 (강등 없음)."""
     if 'network_summary' not in tables:
         return
     data = tables['network_summary'].get('data')
@@ -2222,10 +2236,10 @@ def inject_dual_porosity_rows(tables, metrics):
             ins = []
             if eps_u is not None:
                 u = f'{eps_u:.1f}'
-                ins.append([prefix + 'Porosity ε_union (overlap-corrected, %)', u, u, '0%'])
+                ins.append([prefix + 'Porosity ε_union — pair-lens, wall overhang not removed (%)', u, u, '0%'])
             if ov is not None:
                 o = f'{ov:.2f}'
-                ins.append([prefix + 'Overlap fraction (plastic deformation, %)', o, o, '0%'])
+                ins.append([prefix + 'Overlap fraction — pair-lens volume / sphere volume (%)', o, o, '0%'])
             ins = [r[:ncol] + [''] * (ncol - len(r)) for r in ins]
             for k, nr in enumerate(ins):
                 data.insert(i + 1 + k, nr)
@@ -2242,7 +2256,10 @@ def transform_network_summary_4col(tables, metrics, meta):
     tbl = tables['network_summary']
 
     # Step 1: expand existing rows to 4 cols (default Physics = Hertzian, Δ = 0%)
-    tbl['columns'] = ['지표 (Metric)', 'Hertzian (DEM native)', 'Physics (Tabor + volume)', 'Δ (%)']
+    #  ★ 09-30 (웹앱 ① · J20-l) — 두 열 = 두 면적 계열.  "Hertzian" 은 이름만이다 (c_cpl[22] 기하
+    #    교차 원판 · AREA-08 legacy).  physics v2 (*_physics_v2) 는 미검증 후보라 여기에 없다 (LHSC-10 · ③).
+    tbl['columns'] = ['지표 (Metric)', 'Hertz 계열 (LIGGGHTS c_cpl[22] 기하 교차 원판)',
+                      'Physics 계열 v1 (Tabor · 부피 · 기하 cap)', 'Δ (%)']
     def _is_section_header(label):
         if not isinstance(label, str):
             return False
@@ -2707,6 +2724,9 @@ def transform_network_summary_4col(tables, metrics, meta):
         am_rows = [['── AM-AM 접촉 역학 ──', '', '', '']]
         if metrics.get('am_am_cn') is not None:
             am_rows.append(_same_row('AM-AM CN mean', round(metrics['am_am_cn'], 2)))
+        #  ★ 09-30 (웹앱 ① · J20-j) — 인계표 AM–AM CN 세 열 중 std 만 화면에 없었다 (모집단 σ · calc_am_am_cn)
+        if metrics.get('am_am_cn_std') is not None:
+            am_rows.append(_same_row('AM-AM CN std', round(metrics['am_am_cn_std'], 2)))
         if metrics.get('am_am_n_contacts') is not None:
             am_rows.append(_same_row('AM-AM 접촉 수', metrics['am_am_n_contacts']))
         if metrics.get('am_am_mean_contact_radius') is not None:
@@ -3801,11 +3821,12 @@ def _generate_ai_analysis(all_metrics, case_names, title, notes):
 
     # Build data summary for Claude
     import pandas as pd
+    #  ★ 09-30 (웹앱 ① · J20-l) — 화면과 같은 한정어 (AI 가 쌍 렌즈 union 을 문헌 union 으로 읽지 않게)
     display_keys = [
-        ('P:S', 'ps_ratio'), ('Porosity(%)', 'porosity'),
-        ('Porosity union(%)', 'porosity_union'),
-        ('Overlap(%)', 'overlap_fraction_pct'),
-        ('Thickness(μm)', 'thickness_um'),
+        ('P:S', 'ps_ratio'), ('Porosity ε_sphere(%)', 'porosity'),
+        ('Porosity ε_union pair-lens(%)', 'porosity_union'),
+        ('Overlap pair-lens(%)', 'overlap_fraction_pct'),
+        ('Thickness plate gap(μm)', 'thickness_um'),
         ('AM-SE Total(μm²)', 'area_AM전체_SE_total'),
         ('SE-SE Total(μm²)', 'area_SE_SE_total'),
         ('SE-SE N', 'area_SE_SE_n'),
@@ -3817,8 +3838,8 @@ def _generate_ai_analysis(all_metrics, case_names, title, notes):
         ('Top Reachable(%)', 'top_reachable_pct'),
         ('Tortuosity', 'tortuosity_mean'),
         ('Ionic Active AM(%)', 'ionic_active_pct'),
-        ('Coverage AM_P(%)', 'coverage_AM_P_mean'),
-        ('Coverage AM_S(%)', 'coverage_AM_S_mean'),
+        ('Coverage AM_P Hertz-family(%)', 'coverage_AM_P_mean'),
+        ('Coverage AM_S Hertz-family(%)', 'coverage_AM_S_mean'),
     ]
     rows = []
     for i, name in enumerate(case_names):
@@ -3841,6 +3862,8 @@ def _generate_ai_analysis(all_metrics, case_names, title, notes):
 ## 데이터
 
 {data_table}
+
+정의: Porosity ε_sphere = 구 부피 합 (겹친 부피 이중계상 · 생산 규약) · ε_union pair-lens = 쌍 렌즈만 되돌림 (벽 밖 부피 미제거 → 정확 union 보다 낮게 나옴) · Thickness = 판 간격 · AM-SE/SE-SE 면적과 Coverage = LIGGGHTS c_cpl[22] 기하 교차 원판 (Hertz 계열 · 이름만 Hertz · legacy 지표).
 
 ## 분석 원칙 (반드시 준수)
 
@@ -7166,11 +7189,12 @@ def group_report():
     L.append('## 1. System Overview\n')
     import pandas as pd
     overview_rows = []
+    #  ★ 09-30 (웹앱 ① · J20-l) — 화면 · 단일 보고서와 같은 한정어
     display_keys = [
-        ('P:S', 'ps_ratio'), ('Porosity(%)', 'porosity'),
-        ('Porosity union(%)', 'porosity_union'),
-        ('Overlap(%)', 'overlap_fraction_pct'),
-        ('Thickness(μm)', 'thickness_um'),
+        ('P:S', 'ps_ratio'), ('Porosity ε_sphere(%)', 'porosity'),
+        ('Porosity ε_union pair-lens(%)', 'porosity_union'),
+        ('Overlap pair-lens(%)', 'overlap_fraction_pct'),
+        ('Thickness plate gap(μm)', 'thickness_um'),
         ('AM-SE Total(μm²)', 'area_AM전체_SE_total'),
         ('SE-SE Total(μm²)', 'area_SE_SE_total'),
         ('SE-SE CN', 'se_se_cn'), ('SE-SE CN std', 'se_se_cn_std'), ('SE Cluster', 'n_components'),
@@ -9179,14 +9203,19 @@ def serve_report(case_id):
     if input_params.get('box_x') is not None and input_params.get('box_y') is not None:
         L.append(f'| RVE 단면적 | {input_params["box_x"]*scale:.0f}×'
                  f'{input_params["box_y"]*scale:.0f} μm |')
+    #  ★ 09-30 (웹앱 ① · J20-l) — 화면 배지 · 네트워크 표와 같은 이름 · 한정어
     if metrics.get('porosity') is not None:
-        L.append(f'| Porosity (sphere-sum, production) | {metrics["porosity"]:.1f}% |')
+        L.append(f'| Porosity ε_sphere (구 부피 합 · 생산 규약) | {metrics["porosity"]:.1f}% |')
     if metrics.get('porosity_union') is not None:
-        L.append(f'| Porosity (union, overlap-corrected) | {metrics["porosity_union"]:.1f}% |')
+        L.append(f'| Porosity ε_union (쌍 렌즈 · 벽 밖 미제거 — 인계 정확 union 과 다른 양) | '
+                 f'{metrics["porosity_union"]:.1f}% |')
     if metrics.get('overlap_fraction_pct') is not None:
-        L.append(f'| Overlap fraction (plastic deformation) | {metrics["overlap_fraction_pct"]:.2f}% |')
+        L.append(f'| Overlap fraction (쌍 렌즈 부피 ÷ 구 부피 합) | {metrics["overlap_fraction_pct"]:.2f}% |')
     if metrics.get('thickness_um') is not None:
-        L.append(f'| 두께 (가압 후) | {metrics["thickness_um"]:.1f} μm |')
+        _pzs = {'mesh': '판 메시 mesh_info.json',
+                'estimated_center': '⚠ mesh 없음 — 최고 입자 중심 z 로 추정'}.get(
+                    metrics.get('plate_z_source'), '출처 미기록')
+        L.append(f'| 두께 (판 간격 · {_pzs}) | {metrics["thickness_um"]:.1f} μm |')
     if metrics.get('percolation_pct') is not None:
         L.append(f'| SE Percolation | {metrics["percolation_pct"]:.1f}% |')
     if metrics.get('ionic_active_pct') is not None:
@@ -9364,9 +9393,11 @@ _GRADE_PLAIN = {
     'porosity': '전극 안의 빈 공간 비율이에요 (sphere-sum 방식, production calibration anchor). '
         '빈틈이 너무 많으면 이온·전자가 지날 길이 끊기고, 너무 빽빽하면 충·방전 때 부풀다 깨질 수 있어요. '
         '그래서 적당한 값(약 13%)이 가장 좋습니다.',
-    'porosity_union': '같은 빈 공간 비율인데, 입자끼리 겹친 부피(overlap)를 빼고 계산한 버전이에요 (문헌 비교용). '
-        'Sphere-sum보다 항상 살짝 큽니다 — 겹친 만큼 빈공간이 더 보이니까요. 보조 지표이고, '
-        'production form은 sphere-sum 값을 씁니다.',
+    #  ★ 09-30 (웹앱 ① · SELF-72) — 옛 문구 "문헌 비교용" 은 틀렸다 (쌍 렌즈 · 벽 밖 미제거 → 정확 union 보다 낮다)
+    'porosity_union': '같은 빈 공간 비율인데, 겹친 쌍마다 렌즈 부피를 한 번 되돌린 "쌍 렌즈" 버전이에요. '
+        '세 입자가 겹친 곳과 벽 밖으로 삐져나간 부피는 빼지 않아서, 몬테카를로로 잰 정확한 union '
+        '(인계표 porosity_union_exact_pct) 보다 조금 낮게 나와요 (LHS 194 건 전부 · 중앙 0.6 %p). '
+        'Sphere-sum 보다는 늘 큽니다 (겹친 만큼 빈공간이 더 보이니까요). sphere-sum 과 나란히 보는 값이에요.',
     'overlap_fraction_pct': '입자들이 서로 얼마나 겹쳤는지(소성변형 정도)를 백분율로 나타낸 값이에요. '
         '380 MPa 압력에서 SE 입자는 문헌상 5-10% 정도 소성변형하는데, 그 범위 안이면 정상. '
         '10% 넘으면 과압축 의심.',

@@ -6,7 +6,9 @@
 
 케이스마다 세 가지 union 을 낸다:
   ① 웹앱 그대로 — scripts/dem_analysis_core.calc_porosity (sphere) · calc_porosity_dual (쌍 렌즈 union · 겹침 %).
-     원자 · 접촉 파싱도 웹앱 파서 (scripts/parse_liggghts).  ⚠ 쌍 렌즈만 뺀다 (세 입자 겹침을 되돌리지 않음) ⇒ 공극 **상한**.
+     원자 · 접촉 파싱도 웹앱 파서 (scripts/parse_liggghts).  ⚠ 쌍 렌즈만 뺀다 (세 입자 겹침을 되돌리지 않음 — 공극을 키우는 쪽)
+     그리고 벽 밖 부피를 안 뺀다 (공극을 줄이는 쪽) ⇒ ① 은 상한이 **아니다** — 실측 194/194 건 ① < ③ (중앙 −0.64 %p · lhsx −0.75 %p ·
+     docs/data/lhs_union_20260927/).  상한은 ② 다 (`SELF-72` · 09-30 정정 — 옛 판은 ① 을 "공극 상한" 이라 적었다).
   ② ① 에서 벽 밖 부피 (바닥 z < 0 · 플래튼 위) 를 뺀 값 (clipped).
   ③ **정확한 union** — 상자 안 [0,Lx)×[0,Ly)×[0,plate_z) 에 무작위 점 N 개를 뿌려 어느 구에도 안 든 비율 (x · y 주기).
      세 입자 이상 겹침까지 정확하다 (통계 오차만 — 열 `mc_void_se_pct`).  같은 점으로 SE 만 · AM 만 · 둘 다 덮인 부피도 낸다
