@@ -10893,7 +10893,11 @@ def test_a_live_claim_in_another_cohort_does_not_block_this_freeze(tmp_path):
 #: ★ 54차 P0-1 — 동결과 발급이 **같은 원장**을 보는지 시험하려면 원장에
 #:   cohort 와 계획된 다리가 함께 있어야 한다.
 _RUN_SPEC_GX = {"leg_id": "L", "mode": "fit", "objective": "pocv_dvdq",
-                "n_restarts": 3, "reference": "grid"}
+                "n_restarts": 3, "reference": "grid",
+                # ★ 85차 자체 발견 — 74차 G74-1 부터 발급자는 `run_spec.grid.discharged_cache_sha256` 가 고정 hex64 가
+                #   아니면 그 이유로 거부한다 (`_assert_prospective_plan_is_startable`). 이 54차 spec 은 grid 축이
+                #   없어서 cohort 검사에 닿기 전에 거부됐다 — 아래 YAML 원문과 같은 값.
+                "grid": {"discharged_cache_sha256": "0" * 64}}
 
 
 def _spec_digest_gx(spec: dict) -> str:
@@ -10931,6 +10935,11 @@ def _lifecycle_ledger_body(cohort_id: str, subdir: str) -> str:
         f"  cohort_id: {cohort_id}\n"
         "  status: planned\n"
         "  authorization_kind: prospective\n"
+        # ★ 85차 자체 발견 — 74차 G74-3 부터 발급자는 계획에 `claim_scope` 가 없으면 **그 이유로** 먼저 거부한다
+        #   (`_assert_prospective_plan_is_startable`). 이 54차 fixture 는 그 키가 없어서, 이 원장을 쓰는 발급
+        #   시험 (half-committed · froze-meanwhile) 이 74차 이후 cohort 검사에 닿지 못한 채 통과하고 있었다 —
+        #   전체 변이 재생에서 `freeze-linearizes-its-start` 가 살아남아 드러났다. 74차 fixture 와 같은 값.
+        "  claim_scope: active_claims\n"
         '  authorized_source_digest: "0123456789abcdef"\n'
         f'  run_spec_digest: "{_spec_digest_gx(_RUN_SPEC_GX)}"\n'
         "  run_spec:\n"
@@ -10939,6 +10948,8 @@ def _lifecycle_ledger_body(cohort_id: str, subdir: str) -> str:
         "    objective: pocv_dvdq\n"
         "    n_restarts: 3\n"
         "    reference: grid\n"
+        "    grid:\n"
+        f'      discharged_cache_sha256: "{"0" * 64}"\n'
         "  recorded_on: '2026-09-01'\n"
         "  근거: 시험용 — 계획\n"
         "legs: []\n")
@@ -11051,7 +11062,11 @@ def test_an_issuer_refuses_while_a_freeze_is_half_committed(tmp_path):
     tok = rp.REPO / "_attempts" / "L.token"
     with pytest.raises(P.PreserveError) as ei:
         P.open_leg_run("L", _RUN_SPEC_GX, "0123456789abcdef", ledger=led)
-    assert "active" in str(ei.value) or "동결" in str(ei.value), str(ei.value)
+    # ★ 85차 — 거부 **이유**가 cohort 상태 검사여야 한다 (`_claim_planned_leg` 의 "… active 가 아니다 ('freezing')" 또는
+    #   commit 시점 `_assert_cohort_admits` 의 "지금 active 가 아니다"). 예전 `"active" in str(...)` 은 74차 이후
+    #   claim_scope 거부문의 `['active_claims', …]` 에도 걸려 다른 이유의 거부를 통과시켰다 (변이
+    #   `freeze-linearizes-its-start` 생존). claim_scope 거부문에는 "active 가 아니다" 가 없다.
+    assert "active 가 아니다" in str(ei.value), str(ei.value)
     doc = yaml.safe_load(led.read_text(encoding="utf-8"))
     plan = next(e for e in doc["planned"] if e["leg_id"] == "L")["status"]
     assert plan == "planned", "반쯤 얼린 cohort 에서 실행권이 열렸다"
