@@ -6409,7 +6409,7 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_gate85_closure_members.py::test_g85_m05_member_derivation_refuses_cycles_unsealed_or_missing_parents_escapes_and_bad_extends":
-                "AssertionError: 밖: 이유가 다르다 — ['../outside.yaml: 봉인 목록",
+                "AssertionError: 밖: 이유가 다르다 — ['../outside.yaml: 봉인 목록 (run_spec.sealed_inputs) 에 없다']",
         }
     },
 }
