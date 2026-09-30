@@ -1459,6 +1459,50 @@ def _tm_escape_to_sulfide(rows):
     return len(cells), 100 * dS / -dP
 
 
+def test_s3_reactions_loops_and_schematic_match_the_records(client):
+    """⛔음성 — §3 의 균형반응 10 개 표 · 검산 고리 · 밀려난 Li 세 행선지 · 모식도가 원자료와 같다 (2026-09-29).
+    잡는 것: 표의 반응식·ΔE 가 cei_formation 과 다름 · 고리(③−④ = ⑤−⑥ = ①)가 안 닫힘 · Li₂S 경로(⑦) 누락 ·
+      교차점 1.67 이 ②·⑨ 와 다름 · 모식도가 '무도핑의 대안은 P₂S₇ 뿐' 으로 되돌아감 (§2: 4 V 이상은 양극 전이금속
+      인산염이 주 경로이고 P₂S₇ 는 LiMnO₂ 4.3 V 에서만 같이 나온다 — P 수용상 원자료에서 다시 센다)."""
+    s3 = _section(_report_html(client), "s3")
+    R = list(json.loads((REPORT.parents[3] / "db/properties/cei_formation_2026_09_16.json")
+                        .read_text("utf-8"))["reactions"].values())
+    assert len(R) == 10 and all(r.get("ok") for r in R), "원자료의 반응이 10 개가 아니다 — 시험을 다시 본다"
+    E = [r["E_eV_per_P"] for r in R]
+    marks = "①②③④⑤⑥⑦⑧⑨⑩"
+    for m, r, e in zip(marks, R, E):
+        row = re.search(r"<tr><td>%s</td><td[^>]*>(.*?)</td><td[^>]*>(.*?)</td>" % m, s3)
+        assert row, f"§3 표에 {m} 행이 없다"
+        assert row.group(1) == r["reaction"], f"{m} 반응식이 원자료와 다르다: {row.group(1)!r}"
+        assert row.group(2) == f"{e:+.4f}", f"{m} ΔE {row.group(2)} vs 원자료 {e:+.4f}"
+    loop = {round(E[2] - E[3], 4), round(E[4] - E[5], 4), round(E[0], 4)}
+    assert len(loop) == 1, f"검산 고리가 안 닫힌다: {loop}"
+    assert f"③−④ = ⑤−⑥ = ① = {E[0]:+.4f}" in s3
+    #: 교차점 — ②(Li/P 1) 와 ⑨(Li/P 2) 사이 선형 보간
+    cross = 1 + abs(E[1]) / (abs(E[1]) + E[8])
+    lead = re.search(r'<span class="sec-one">(.*?)</span></summary>', s3, re.S).group(1)
+    assert f"Li/P ≲ {cross:.2f}" in lead, f"요지의 교차점이 ②·⑨ 보간({cross:.4f})과 다르다"
+    #: 밀려난 Li 세 행선지 — Li₂O(①) · Li₂S(⑦) 는 지고 LiCl(⑧) 만 이긴다
+    assert E[0] > 0 and E[6] > 0 and E[7] < 0
+    rx = s3[s3.index("버려지는 Li 가 어디로 가느냐"):s3.index("살아남은 절반")]
+    for m_i, dest in ((0, "Li₂O 로"), (6, "Li₂S 로"), (7, "LiCl 로")):
+        assert dest in rx and f"ΔE = {E[m_i]:+.4f} eV/P" in rx, f"{dest} 줄의 값이 원자료({E[m_i]:+.4f})와 다르다"
+    assert "Li₂O · Li₂S 로 가면 진다" in lead, "요지에 Li₂S 로 가도 진다는 한정이 없다"
+    #: 모식도 — 무도핑의 고전압 주 경로는 양극 전이금속 인산염 (P 수용상 원자료로 다시 센다)
+    lad = json.loads((REPORT.parents[3] / "db/properties/cei_p_host_ladder_x002_2026_09_28.json").read_text("utf-8"))
+    hi = [r for r in lad["rows"] if r["electrolyte"] == "modelc" and r["voltage_V"] >= 4.0]
+    tm = ("Co", "Ni", "Mn")
+    assert hi and all(any(any(e in h["formula"] for e in tm) and "P" in h["formula"] and h["anion"] == "P-O"
+                              for h in r["p_hosts"]) for r in hi), "원자료: 4 V 이상 무도핑에 전이금속 인산염 없는 칸이 있다"
+    p2s7 = sorted({(r["cathode"], r["voltage_V"]) for r in lad["rows"] if r["electrolyte"] == "modelc"
+                   and any(h["formula"] == "P2S7" for h in r["p_hosts"])})
+    assert p2s7 == [("LiMnO2", 4.3)], f"원자료: 무도핑 P₂S₇ 칸이 {p2s7} 다 — 모식도 문장을 다시 본다"
+    fig = s3[s3.index("① 충전하면"):s3.index("Fig. 4 를 읽는 법")]
+    assert "대안이 P₂S₇ 뿐" not in fig and "양극 전이금속 인산염" in fig, "모식도가 무도핑 대안을 P₂S₇ 로 적는다"
+    assert "4 V 이상 네 양극 전부" in fig and "LiMnO₂ 4.3 V 에서만" in fig
+    assert "<b>하나 더</b>" in fig, "읽는 법이 Nd 를 '유일한 Li 안 드는 방' 으로 읽게 둔다"
+
+
 def test_protection_is_not_read_as_cathode_sparing(client):
     """⛔음성 — 보호율을 '양극을 아낀다 · 덜 빠진다 · 코팅처럼' 으로 쓰는 문장이 화면에 다시 생기면 잡는다
     (1저자 2026-09-29 "고치자"). 인산염을 면한 금속은 반응에서 빠지지 않고 대부분 황화물이 된다.

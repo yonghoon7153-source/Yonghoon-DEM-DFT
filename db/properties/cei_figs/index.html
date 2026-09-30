@@ -1048,13 +1048,33 @@ x = 0.02 칸 중 가장 크다(다음이 0.005 · 게이트 0.05 안) — 분모
 </section>
 <section id="s3" class="sec">
 <details class="secfold">
-<summary><h2 class="sec-h">3. 검증 — 그리고 가설의 절반이 틀렸다</h2><span class="serbadge">조성 무관 · 반응 단위</span><span class="sec-one">균형반응 10 개 — 검산 고리 둘이 닫히고, <b>가설의 절반이 틀렸다</b>(+1.5035 eV/P 양수). Nd 가 이기는 조건은 <b>Li/P ≲ 1.67</b> 또는 밀려난 Li 가 LiCl 로 갈 때 — 사다리 자체는 Xiao 2019 선행</span></summary>
+<summary><h2 class="sec-h">3. 검증 — 그리고 가설의 절반이 틀렸다</h2><span class="serbadge">조성 무관 · 반응 단위</span><span class="sec-one">균형반응 10 개 — 검산 고리 둘이 소수 4 자리까지 닫히고, <b>가설의 절반이 틀렸다</b>: "NdPO₄ 가 Li₃PO₄ 보다 깊은 P 싱크" 는 +1.5035 eV/P 로 양수다. Nd 가 이기는 조건은 <b>Li/P ≲ 1.67</b> 이거나 밀려난 Li 가 <b>LiCl</b> 로 갈 때다(Li₂O · Li₂S 로 가면 진다) — 사다리 순서(ortho &lt; pyro &lt; meta)는 Xiao 2019 가 먼저 냈다</span></summary>
 <div class="secbody">
 
 <p>§2 의 가설을 재려고 같은 hull 에서 <strong>균형반응 10 개</strong>를 돌렸다
 (<code>ComputedReaction</code>, 계수는 도구가 잡는다). <b>순수 상끼리의 반응이라 전해질 조성(Nd 함량 x)이 들어가지 않는다</b> —
 x = 0.02 로 옮겨도 이 절의 수는 한 자리도 안 바뀐다. 검산 고리 둘이 닫힌다 —
-<span class="mono">③−④ = ⑤−⑥ = ① = +1.5035</span>, 소수 4 자리까지.</p>
+<span class="mono">③−④ = ⑤−⑥ = ① = +1.5035</span>, 소수 4 자리까지.
+<b>뜻</b>: P 를 어디서 가져오든(P₂S₇ 든 Li₃PS₄ 든) "NdPO₄ 를 만들기 − Li₃PO₄ 를 만들기" 의 차는 같아야 한다(헤스 법칙).
+두 출발점에서 그 차가 ① 과 소수 4 자리까지 같게 나왔다 — 에너지 표가 서로 모순이 없다는 검산이다.</p>
+
+<div class="tblwrap">
+<table>
+<thead><tr><th>#</th><th>균형반응 (P 하나 기준)</th><th>ΔE (eV/P)</th><th>이 절에서 쓰는 곳</th></tr></thead>
+<tbody>
+<tr><td>①</td><td class="mono" style="text-align:left;font-size:.74rem">Li3PO4 + 0.5 Nd2O3 -> NdPO4 + 1.5 Li2O</td><td>+1.5035</td><td>철회 · 사다리 · 고리</td></tr>
+<tr><td>②</td><td class="mono" style="text-align:left;font-size:.74rem">LiPO3 + 0.5 Nd2O3 -> NdPO4 + 0.5 Li2O</td><td class="nd">-0.8239</td><td>사다리</td></tr>
+<tr><td>③</td><td class="mono" style="text-align:left;font-size:.74rem">0.5 P2S7 + 0.5 Nd2O3 + 2.5 Li2O -> NdPO4 + 2.5 Li2S + S</td><td class="nd">-4.7595</td><td>고리 · P₂S₇</td></tr>
+<tr><td>④</td><td class="mono" style="text-align:left;font-size:.74rem">0.5 P2S7 + 4 Li2O -> Li3PO4 + 2.5 Li2S + S</td><td class="nd">-6.2630</td><td>고리 · P₂S₇</td></tr>
+<tr><td>⑤</td><td class="mono" style="text-align:left;font-size:.74rem">Li3PS4 + 0.5 Nd2O3 + 2.5 Li2O -> NdPO4 + 4 Li2S</td><td class="nd">-4.3704</td><td>고리</td></tr>
+<tr><td>⑥</td><td class="mono" style="text-align:left;font-size:.74rem">Li3PS4 + 4 Li2O -> Li3PO4 + 4 Li2S</td><td class="nd">-5.8739</td><td>고리</td></tr>
+<tr><td>⑦</td><td class="mono" style="text-align:left;font-size:.74rem">0.5 Nd2S3 + Li3PO4 -> NdPO4 + 1.5 Li2S</td><td>+0.4627</td><td>밀려난 Li → Li₂S</td></tr>
+<tr><td>⑧</td><td class="mono" style="text-align:left;font-size:.74rem">NdCl3 + Li3PO4 -> NdPO4 + 3 LiCl</td><td class="nd">-0.5029</td><td>밀려난 Li → LiCl</td></tr>
+<tr><td>⑨</td><td class="mono" style="text-align:left;font-size:.74rem">0.5 Li4P2O7 + 0.5 Nd2O3 -> NdPO4 + Li2O</td><td>+0.4030</td><td>사다리</td></tr>
+<tr><td>⑩</td><td class="mono" style="text-align:left;font-size:.74rem">0.25 LiNd(PO3)4 + 0.375 Nd2O3 -> NdPO4 + 0.125 Li2O</td><td class="nd">-1.2156</td><td>사다리 (기울기 제외)</td></tr>
+</tbody></table>
+</div>
+<p style="margin:0 0 12px;font-size:.86rem;color:var(--mut)">번호는 원자료 <code>cei_formation_2026_09_16.json</code> 의 <code>reactions</code> 순서다. 음수면 적힌 방향(왼쪽 → 오른쪽)이 이롭다.</p>
 
 <div class="card warn">
 <p style="margin:0"><strong>⛔ 철회</strong> — "NdPO₄ 가 Li₃PO₄ 보다 깊은 P 싱크다" 는
@@ -1120,29 +1140,32 @@ Li 가 희소해지고, 그때는 "3 개짜리" 를 살 수 없다. 그래서 Nd
         &nbsp;<b>Li 를 한 개도 안 쓴다</b><br>
         <span style="color:var(--mut)">Li₃PO₄ 보다 얕지만 값이 안 오른다</span></div>
       <div style="margin-top:8px;font-size:.84rem;color:var(--nd);font-weight:600">
-        ✓ <b>Nd 가 있을 때만 열리는 방</b></div>
+        ✓ 양극 금속 대신 <b>전해질 속 Nd</b> 가 대는 방</div>
     </div>
 
     <div style="flex:1 1 200px;border:1px solid var(--line);border-radius:10px;padding:11px 12px">
-      <div class="mono" style="font-weight:600;color:var(--ox)">P₂S₇</div>
-      <div style="font-size:.84rem;color:var(--mut);margin:2px 0 7px">Li/P = <b>0</b></div>
+      <div class="mono" style="font-weight:600;color:var(--ox)">CoP₄O₁₁ · Ni(PO₃)₂ …</div>
+      <div style="font-size:.84rem;color:var(--mut);margin:2px 0 7px">양극 전이금속 인산염 · Li/P = <b>0</b></div>
       <div style="font-size:.86rem;line-height:1.5">
         <span style="color:var(--mut)">(Li 안 씀)</span>
-        &nbsp;이 집합에서 <b>제일 얕다</b><br>
-        <span class="mono" style="color:var(--mut)">-0.5120 eV/atom</span></div>
+        &nbsp;대신 <b>양극의 금속</b>을 끌어온다<br>
+        <span style="color:var(--mut)">Nd 가 없을 때 4 V 이상의 주 경로 (§2)</span></div>
       <div style="margin-top:8px;font-size:.84rem;color:var(--ox);font-weight:600">
-        ⛔ 여기로 가면 나쁘다</div>
+        ✗ 양극 금속이 인산염으로 끌려간다</div>
     </div>
 
   </div>
 
   <div style="margin-top:12px;padding-top:11px;border-top:1px dashed var(--line);
               font-size:.89rem;line-height:1.6">
-    <b>Nd 가 없으면</b> — 고전압에서 Li₃PO₄ 가 비싸지는데 대안이 P₂S₇ 뿐이다 →
-    <b style="color:var(--ox)">4.3 V 부터 P₂S₇ 가 올라온다</b> (§2).<br>
-    <b>Nd 가 있으면</b> — NdPO₄ 라는 <b>Li 안 드는 방</b>이 있다 →
-    <b style="color:var(--nd)">P₂S₇ 로 가는 P 가 준다 — 다만 Nd 가 충분할 때만</b> (§2).
-    x = 0.20 에서는 LiMnO₂ 4.3 V 의 P₂S₇ 가 사라졌지만, <b>x = 0.02 에서는 줄지 않는다</b>
+    <b>Nd 가 없으면</b> — 고전압에서 Li₃PO₄ 가 비싸지면 P 는 <b>양극 전이금속 인산염</b>으로 간다
+    (4 V 이상 네 양극 전부 · §2) — <b style="color:var(--ox)">Li 대신 양극 금속을 끌어오는 방</b>이다.<br>
+    <b>Nd 가 있으면</b> — NdPO₄ 계열이라는 <b>Li 안 드는 방이 하나 더</b> 생긴다 →
+    <b style="color:var(--nd)">P 의 일부(x = 0.02 에서 최대 1 할)가 양극 금속 대신 전해질 속 Nd 와 짝을 짓는다</b> (§2 Fig. 1).
+    차이는 Li 안 드는 방이 생기느냐가 아니라 <b>그 방을 누가 대느냐</b>다.<br>
+    <b>P₂S₇</b>(이 집합에서 제일 얕은 P 싱크 · <span class="mono">-0.5120 eV/atom</span>)는 옆길이다 —
+    무도핑에서는 LiMnO₂ 4.3 V 에서만 전이금속 인산염과 같이 나온다.
+    x = 0.20 에서는 그 칸의 P₂S₇ 가 사라졌지만, <b>x = 0.02 에서는 줄지 않는다</b>
     (그 칸 P 의 0.92 가 티오인산염 · 무도핑 0.87) — Nd 가 적은 데다 LiMnO₂ 에서는 Nd 가 NdCl₃ 로 간다.<br>
     <span class="no">⛔ 2026-09-18 정정</span> — 원문은 <s>전 구간에서 P₂S₇ 가 0 이다</s> 였고
     <b>반증됐다</b>. x(Nd) = 0.10 · 0.15 · <b>4.5 V</b> 에서 Nd 가 받고 남은 P 가 P₂S₇ 로 간다
@@ -1152,7 +1175,7 @@ Li 가 희소해지고, 그때는 "3 개짜리" 를 살 수 없다. 그래서 Nd
 
 </div>
 <div class="figexp" style="margin:10px 0 0"><div class="figexp-h">모식도를 읽는 법</div><p style="margin:0"><b>모식도.</b> Nd 는 <b>더 좋은 인산염을 만드는 것이 아니라</b>, Li 가 이미 빠져서
-비싸진 상황에서 P 가 갈 수 있는 <b>Li 안 드는 방</b>을 하나 열어 준다.
+비싸진 상황에서 P 가 갈 수 있는 <b>Li 안 드는 방</b>을 <b>하나 더</b> 열어 준다 — 무도핑에서는 그 방을 양극의 전이금속이 댄다.
 부호가 뒤집히는 지점이 <b>Li/P &#8776; 1.67</b> 다 (아래 표·Fig. 4a).
 &#8203;
 <span style="color:var(--mut)">⚠ 오독 주의 둘 — (1) 여기서 쓰는 Li 는 <b>계면에서 새 상을
@@ -1226,7 +1249,9 @@ Ceder 그룹이 코팅 후보 10 만 종을 훑어 <b>산화한계가 Li 원자�
 <strong>Li 를 안 쓰고 인산염을 만드는 경로를 연다</strong>. Li₃PO₄ 는 P 하나당 Li 3 개를
 먹고 NdPO₄ 는 <strong>0 개</strong>다. 고전압에서 Li 가 양극으로 빠져나가면 Li 가 희소해지고,
 그때 경쟁은 Li₃PO₄ 대 NdPO₄ 가 아니라 <strong>LiPO₃ 대 NdPO₄</strong> 가 된다 —
-거기선 Nd 가 -0.8239 eV/P 로 이긴다.</p>
+거기선 Nd 가 -0.8239 eV/P 로 이긴다. 4 V 이상에서는 Li 인산염이 아예 없어지고 상대가
+<strong>양극 전이금속 인산염</strong>이 되는데, 거기서도 교환 부호는 음수다
+(<a href="#s2">§2</a> Fig. 2 · 여섯 값끼리 순위는 못 매긴다).</p>
 <p style="margin:10px 0 0">O 효과가 전압에 <b>평평한 것</b>(인산염을 <em>가능</em>하게만 함)은
 이 그림과 맞는다 — ΔN<sub>Li</sub> = 0 이라 Li 장부가 안 섞인 축이다.
 <span class="no">⛔</span> <b>Nd 쪽 곡선의 전압 기울기(옛 “6.6 배”)는 이 그림의 증거로 쓰지 않는다</b> —
@@ -1236,14 +1261,18 @@ Ceder 그룹이 코팅 후보 10 만 종을 훑어 <b>산화한계가 Li 원자�
 
 <h3>버려지는 Li 가 어디로 가느냐도 부호를 바꾼다</h3>
 
-<p>P 쪽이 똑같고 <strong>밀려난 Li 3 개의 행선지만</strong> 다른 두 반응:</p>
+<p>P 쪽이 똑같고 <strong>밀려난 Li 3 개의 행선지만</strong> 다른 세 반응
+(Nd 가 오는 곳도 같은 음이온끼리 바뀐다 — Nd₂O₃ · Nd₂S₃ · NdCl₃ · 위 표 ① ⑦ ⑧):</p>
 
 <div class="rx">Li₂O 로   Li3PO4 + 0.5 Nd2O3 -> NdPO4 + 1.5 Li2O
           ΔE = +1.5035 eV/P   <span style="color:#6b7280">(Nd 진다)</span>
+Li₂S 로   0.5 Nd2S3 + Li3PO4 -> NdPO4 + 1.5 Li2S
+          ΔE = +0.4627 eV/P   <span style="color:#6b7280">(Nd 진다)</span>
 LiCl 로   NdCl3 + Li3PO4 -> NdPO4 + 3 LiCl
           ΔE = -0.5029 eV/P   <span style="color:#6d28d9;font-weight:600">(Nd 이긴다)</span></div>
 
-<p>2.01 eV/P 차이가 통째로 Li₂O 대 LiCl 이다.
+<p>2.01 eV/P 차이가 통째로 Li₂O 대 LiCl 이다. 황화물 전해질이라 흔한 행선지인 <b>Li₂S 로 가도 +0.46 으로 진다</b> —
+이 반응들 안에서 Nd 가 이기는 것은 <b>밀려난 Li 를 Cl 이 받아 줄 때</b>뿐이다.
 아지로다이트에는 f.u. 당 Cl 이 1.6 개 있고, hull 이 고른 계면 산물에 NdPO₄ 와 LiCl 이 실제로 같이 나온다
 (1저자 조성 · LiCoO₂ · 3.0 V: <span class="mono">0.006475 NdPO₄ + 0.518 LiCl</span> ·
 <code>cei_interface_V_x002_2026_09_28.json</code>) — <strong>작동하는 채널은 LiCl 쪽</strong>이다.
