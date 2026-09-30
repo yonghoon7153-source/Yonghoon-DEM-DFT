@@ -157,6 +157,8 @@ run 'webapp: security_phase_a'    python3 webapp/test_security_phase_a.py
 run 'webapp: seminar_page'        python3 webapp/test_seminar_page.py
 run 'webapp: worklog_page'        python3 webapp/test_worklog_page.py
 run 'webapp: mixer_devlog_page'   python3 webapp/test_mixer_devlog_page.py
+#  ★ 2026-09-30 — /mixer 침대 보기 (보기 전용) — 경로 탈출 · 맹검 잠금 (정책 fail-closed) · 덤프 관문 · 단면 경계 · 쓰기 없음 (반례 41)
+run 'webapp: mixer_bed_view'      python3 webapp/test_mixer_bed_view.py
 #  ★ 2026-09-22 — 믹서 런처·생성기 회귀 (LIGGGHTS 없이 가짜 실행파일로).  같은 날 사고 둘을 재현해 막는다:
 #    배너 없는 완주 런을 "죽음" 으로 읽고 재발사(E0_s49979687) · 실행 중 덱 제자리 덮어쓰기(E0_s32452843).
 run 'mixer launcher (완주 판정 · 덮어쓰기 가드)' bash dem_scripts/mixer_20260921/test_launcher.sh

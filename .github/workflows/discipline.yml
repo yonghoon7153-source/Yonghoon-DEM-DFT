@@ -199,6 +199,9 @@ jobs:
       - name: 웹앱 — 작업일지(worklog) 페이지
         run: python webapp/test_worklog_page.py
 
+      - name: 웹앱 — 믹서 침대 보기 (경로 탈출 · 맹검 잠금 · 덤프 관문 · 단면)
+        run: python webapp/test_mixer_bed_view.py
+
       - name: 웹앱 — 런처 포트 선점 (거짓 초록 회귀)
         run: python scripts/test_webapp_launcher.py
 

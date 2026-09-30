@@ -15,6 +15,7 @@
 # 환경변수로 경로를 바꿀 수 있다 (기본값은 이 랩 WSL 규약):
 #   DEM_WEB_DATA=~/Yonghoon-DEM-DFT   데이터(uploads/results/archive/mpm_lab)와 venv 가 있는 곳
 #   DEM_WEB_VENV=<venv 경로>          비우면 DATA/venv → CODE/venv 순으로 찾는다
+#   WEBAPP_MIXER_RUNS=<루트[:루트…]>  /mixer 침대 보기가 읽을 믹서 런 루트 (비우면 DATA · CODE 의 dem_scripts/mixer_20260921/runs 중 있는 것)
 set -uo pipefail
 
 PORT="${PORT:-5002}"
@@ -25,7 +26,7 @@ for a in "$@"; do
     --bg) BG=1;;
     --no-pull) PULL=0;;
     --stop) STOP=1;;
-    -h|--help) sed -n '1,23p' "$0"; exit 0;;
+    -h|--help) sed -n '1,24p' "$0"; exit 0;;
     *) echo "알 수 없는 인자: $a  (--open · --bg · --no-pull · --stop)"; exit 2;;
   esac
 done
@@ -173,6 +174,17 @@ for pair in "UPLOAD:uploads" "RESULTS:results" "ARCHIVE:archive" "MPM_LAB:mpm_la
   mkdir -p "$DATA/webapp/$dir"
   export "WEBAPP_${key}_FOLDER=$DATA/webapp/$dir"
 done
+#  믹서 침대 보기 (/mixer · 보기 전용 · 2026-09-30) — 런 루트.  준 값이 있으면 그대로, 없으면 데이터 → 코드 순으로 있는 것만.
+#  (런은 보통 데이터 클론에서 돌고 웹앱은 코드 worktree 에서 뜨므로, 이 배선이 없으면 목록이 빈다)
+if [ -z "${WEBAPP_MIXER_RUNS:-}" ]; then
+  _mr=""
+  for _c in "$DATA/dem_scripts/mixer_20260921/runs" "$CODE/dem_scripts/mixer_20260921/runs"; do
+    [ -d "$_c" ] || continue
+    case ":$_mr:" in *":$_c:"*) ;; *) _mr="${_mr:+$_mr:}$_c";; esac
+  done
+  [ -n "$_mr" ] && export WEBAPP_MIXER_RUNS="$_mr"
+fi
+echo "[dem] 믹서 런 루트: ${WEBAPP_MIXER_RUNS:-(없음 — /mixer 침대 보기 목록이 빈다 · WEBAPP_MIXER_RUNS=<경로> 로 지정)}"
 _n=$(find "$DATA/webapp/results" -maxdepth 1 -mindepth 1 -type d 2>/dev/null | wc -l)
 echo "[dem] 데이터 배선 완료 — results 케이스 ${_n}건"
 #  ★★ 2026-08-25 — **백업 나이를 매번 보여준다.**  윈도우 재설치로 WSL 안의 케이스 169건을

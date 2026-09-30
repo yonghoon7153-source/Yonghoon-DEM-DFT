@@ -1,0 +1,12 @@
+{
+ "schema": "mixer_view_policy/1",
+ "what": "/mixer 침대 보기 탭이 열어 주는 런 이름 (정규식 · fullmatch).  여기에 없는 런은 잠긴다 (fail-closed) — 고-Bo · 강성 축 확인 런처럼 M-맹검으로 등록된 런을 화면이 깨지 않게.",
+ "how_to_open": "판정 · 열람 기록이 생긴 뒤에만, 그 기록의 경로를 basis 에 적고 since 에 날짜를 적어 항목을 더한다 (커밋 = 기록).  basis · since 가 비거나 파일이 깨지면 전부 잠긴다.",
+ "allow": [
+  {
+   "pattern": "(E0|L0|LA|LB[1-3]|LC)_s[0-9]+",
+   "basis": "층상 본 캠페인 (docs/reviews/mixer_layered_prereg_20260921.md) §2 주 판정 기록 2026-09-30 — docs/data/mixer_final10_20260930/verdict_20260930.json (10 런 8 바퀴 M 열람 끝 · E0 겹침 계약 09-28 열람 끝)",
+   "since": "2026-09-30"
+  }
+ ]
+}

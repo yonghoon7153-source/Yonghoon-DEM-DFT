@@ -4468,8 +4468,25 @@ def _mixer_devlog_entries():
 
 @app.route('/mixer')
 def mixer_devlog():
-    """믹서 개발 이력 — 버전 누적, 쉬운/자세한 토글."""
+    """믹서 개발 이력 — 버전 누적, 쉬운/자세한 토글 + "침대 보기" 탭 (덤프 원자료 보기 전용)."""
     return render_template('mixer.html', active='mixer', entries=_mixer_devlog_entries())
+
+
+#  "침대 보기" 탭 (1저자 비준 2026-09-30) — 보기 전용 · 판정은 3D 칸 M 으로만.  경로 · 맹검 잠금 · 덤프 관문은
+#  webapp/mixer_bed.py 한 곳에 있다 (회귀 webapp/test_mixer_bed_view.py).  읽기만 하고 subprocess 는 없다.
+@app.route('/api/mixer/runs')
+def api_mixer_runs():
+    import mixer_bed
+    return jsonify(mixer_bed.list_runs())
+
+
+@app.route('/api/mixer/frame')
+def api_mixer_frame():
+    import mixer_bed
+    try:
+        return jsonify(mixer_bed.frame_payload(request.args))
+    except mixer_bed.Refuse as e:
+        return jsonify(e.payload()), e.status
 
 
 @app.route('/litdb')

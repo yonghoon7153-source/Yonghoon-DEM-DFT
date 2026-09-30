@@ -32,10 +32,47 @@
   .mx-wrap[data-mode="easy"] .detail { display:none; }
   .mx-wrap[data-mode="detail"] .easy { display:none; }
   .mx-note { font-size:12.5px; opacity:.75; }
+  .mx-tabs { display:inline-flex; gap:6px; margin:4px 0 14px; }
+  .mx-tabs button { border:1px solid rgba(127,127,127,.4); background:transparent; color:inherit; padding:7px 16px;
+                    border-radius:10px; cursor:pointer; font-weight:600; font-size:13px; }
+  .mx-tabs button.on { background:var(--accent,#4C8DF6); color:#fff; border-color:transparent; }
+  .mx-wrap[data-tab="log"] #pane-bed { display:none; }
+  .mx-wrap[data-tab="bed"] #pane-log { display:none; }
+  .mx-wrap[data-tab="bed"] { max-width:1280px; }
+  .bed-flag { margin:0 0 12px; padding:10px 14px; border-radius:10px; border:1px solid rgba(251,191,36,.55);
+              background:rgba(251,191,36,.12); font-size:13.5px; line-height:1.55; }
+  .bed-flag b { color:var(--yellow,#fbbf24); }
+  .bed-grid { display:grid; grid-template-columns:minmax(260px,320px) 1fr; gap:14px; align-items:start; }
+  @media (max-width:900px) { .bed-grid { grid-template-columns:1fr; } }
+  .bed-ctl { padding:14px 16px; font-size:13px; display:flex; flex-direction:column; gap:10px; }
+  .bed-ctl label.blk { display:flex; flex-direction:column; gap:4px; font-weight:600; }
+  .bed-ctl input[type=range] { width:100%; }
+  .bed-row { display:flex; align-items:center; gap:8px; }
+  .bed-row span { flex:1; font:600 12px/1.4 'JetBrains Mono',monospace; }
+  .bed-views label { margin-right:10px; cursor:pointer; }
+  .bed-ph { display:flex; align-items:center; gap:7px; cursor:pointer; }
+  .bed-ph i { width:13px; height:13px; border-radius:50%; display:inline-block; border:1px solid rgba(0,0,0,.35); }
+  .bed-stage { padding:10px; background:#fbfbf8; border-radius:12px; min-height:320px; position:relative; }
+  .bed-stage canvas { display:block; margin:0 auto; }
+  #pane-bed [hidden] { display:none !important; }   /* 위 display:block 이 hidden 속성을 이기지 않게 */
+  #bed3d canvas { display:block; margin:0 auto; border-radius:8px; }
+  .bed-msg { color:#333; font-size:13px; padding:4px 2px; min-height:1.2em; }
+  .bed-msg.err { color:#b91c1c; font-weight:600; }
+  .bed-msg.warn { color:#92400e; font-weight:600; }
+  .bed-warn { color:var(--yellow,#fbbf24); font-size:12px; }
+  #bedRunInfo, #bedLocked, #bedStat { overflow-wrap:anywhere; }
+  .bed-lock { font-size:12px; opacity:.85; margin:3px 0; }
+  .bed-legend { color:#444; font-size:12px; margin-top:6px; text-align:center; }
 </style>
 
-<div class="mx-wrap" id="mx" data-mode="easy">
-  <h1>&#x1F300; 믹서 개발 이력</h1>
+<div class="mx-wrap" id="mx" data-mode="easy" data-tab="log">
+  <h1>&#x1F300; 믹서</h1>
+  <div class="mx-tabs" role="tablist">
+    <button class="on" data-t="log" onclick="mxTab('log')">개발 이력</button>
+    <button data-t="bed" onclick="mxTab('bed')">침대 보기</button>
+  </div>
+
+  <section id="pane-log">
   <div class="mx-top">
     <p class="mx-note" style="margin:0;max-width:640px">
       건식 믹싱 DEM(드럼 · 5상 · 응집력(Bo) 사다리 · 층상 투입 혼합도)이 어떻게 발전했는지 <b>버전 누적</b>으로 본다.
@@ -68,6 +105,48 @@
   {% else %}
   <div class="card">아직 버전이 없다. <code>docs/mixer_devlog/v01_YYYYMMDD.md</code> 를 추가하면 여기 뜬다.</div>
   {% endif %}
+  </section>
+
+  <section id="pane-bed">
+    <div class="bed-flag">
+      <b>⚠ 보기 전용 — 판정은 3D 칸 M 으로만.</b>
+      런 폴더의 덤프 (<code>post/mix_&lt;step&gt;.liggghts</code>) 를 그대로 그린다 — 새 계산 없음 · 혼합 지표와 겹침은 계산하지 않는다.
+      얇은 단면 · 전체 투영은 눈으로 보는 도구이고 판정 근거가 아니다.
+      M-맹검으로 등록된 런 (고-Bo · 강성 축 확인 런 등) 은 <b>잠겨 있다</b> — 판정 · 열람 기록의 근거와 함께
+      <code>webapp/mixer_view_policy.json</code> 에 올려야 열린다.
+    </div>
+    <div class="bed-grid">
+      <div class="card bed-ctl">
+        <label class="blk">런 <select id="bedRuns" class="input"></select></label>
+        <div id="bedRunInfo"></div>
+        <label class="blk">프레임 (시간) <input type="range" id="bedFrame" min="0" max="0" value="0"></label>
+        <div class="bed-row"><button class="btn btn-secondary btn-sm" id="bedPrev" type="button">◀</button>
+          <span id="bedFrameLab">—</span>
+          <button class="btn btn-secondary btn-sm" id="bedNext" type="button">▶</button></div>
+        <div class="bed-views">
+          <label><input type="radio" name="bedView" value="3d" checked> 3D</label>
+          <label><input type="radio" name="bedView" value="slab"> 얇은 단면</label>
+          <label><input type="radio" name="bedView" value="proj"> 전체 투영</label>
+        </div>
+        <div id="bedSlabBox">
+          <label class="blk">드럼 축 위치 x₀ <input type="range" id="bedX0" min="0" max="1000" value="500"></label>
+          <label class="blk">조각 두께 t <input type="range" id="bedT" min="0" max="1000" value="500"></label>
+          <div class="mx-note" id="bedSlabLab"></div>
+          <label id="bed3dSlabRow"><input type="checkbox" id="bed3dSlab"> 3D 에도 이 조각만</label>
+        </div>
+        <div id="bedPhases"></div>
+        <div class="mx-note" id="bedStat"></div>
+        <button class="btn btn-secondary btn-sm" id="bedReset" type="button">3D 시점 초기화 (드럼 축 방향)</button>
+        <details><summary id="bedLockSum">잠긴 런 · 루트 · 정책</summary><div id="bedLocked"></div></details>
+      </div>
+      <div class="card bed-stage">
+        <div class="bed-msg" id="bedMsg"></div>
+        <div id="bed3d"></div>
+        <canvas id="bed2d" hidden></canvas>
+        <div class="bed-legend" id="bedLegend"></div>
+      </div>
+    </div>
+  </section>
 </div>
 
 <script>
@@ -77,5 +156,332 @@ function mxMode(m){
   try{localStorage.setItem('mx-mode',m);}catch(e){}
 }
 try{var s=localStorage.getItem('mx-mode'); if(s==='detail'){mxMode('detail');}}catch(e){}
+//  탭 — "침대 보기" 는 열 때 처음으로 런 목록을 읽는다 (개발 이력만 보는 사람에게 덤프를 읽히지 않는다)
+function mxTab(t){
+  var w=document.getElementById('mx'); w.setAttribute('data-tab',t);
+  document.querySelectorAll('.mx-tabs button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-t')===t);});
+  try{history.replaceState(null,'',t==='bed'?'#bed':location.pathname);}catch(e){}
+  if(t==='bed'&&window.bedInit){window.bedInit();}
+}
+</script>
+{% endblock %}
+
+{% block scripts %}
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script>
+{% raw %}
+/*  믹서 침대 보기 — 보기 전용 · 판정은 3D 칸 M 으로만 (webapp/mixer_bed.py 가 서버 쪽 관문).
+    ★ 원의 크기 = 실제 반경 (점 크기를 키우지 않는다 — viz_mixer_bed 와 같은 원칙: 키우면 φ 를 눈으로 잘못 읽는다).
+    ★ 2D 는 드럼 축 (x) 방향으로 본 (y, z) 평면 — y 오른쪽 · z 위 (viz_mixer_bed · measure_bed_aspect --axis x 와 같다).
+    ★ 서버에서 온 문자열은 전부 textContent 로만 넣는다 (innerHTML 금지).
+    ★ three.js 는 3D 를 처음 열 때만 불러온다 — CDN 이 막혀도 단면 · 투영은 된다.  */
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var nf = new Intl.NumberFormat('ko-KR');
+  var S = { init: false, runs: [], cur: null, seq: 0, data: null, hidden: {}, timer: null, xr: null, three: null };
+
+  function msg(text, kind) { var el = $('bedMsg'); el.textContent = text || ''; el.className = 'bed-msg' + (kind ? ' ' + kind : ''); }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function mm(v) { return (v * 1e3).toFixed(2) + ' mm'; }
+  function view() { var r = document.querySelector('input[name=bedView]:checked'); return r ? r.value : '3d'; }
+
+  // ── 런 목록 ──
+  function loadRuns() {
+    msg('런 목록을 읽는 중…');
+    fetch('/api/mixer/runs').then(function (r) { return r.json(); }).then(function (j) {
+      S.runs = j.runs || [];
+      var sel = $('bedRuns'); sel.replaceChildren();
+      var box = $('bedLocked'); box.replaceChildren();
+      (j.roots || []).forEach(function (rt) {
+        box.appendChild(el('div', 'mx-note', '루트 ' + rt.i + ': ' + rt.path + (rt.exists ? '' : '  (없음)')));
+        var og = document.createElement('optgroup'); og.label = '루트 ' + rt.i + ' · ' + rt.path;
+        S.runs.forEach(function (x) {
+          if (x.root !== rt.i || !x.allowed) return;
+          var o = el('option', null, x.run + '  (' + x.n_frames + ' 프레임)'); o.value = x.root + '|' + x.run; og.appendChild(o);
+        });
+        if (og.children.length) sel.appendChild(og);
+      });
+      var locked = S.runs.filter(function (x) { return !x.allowed; });
+      locked.forEach(function (x) { box.appendChild(el('div', 'bed-lock', '🔒 루트 ' + x.root + ' · ' + x.run + ' — ' + x.reason)); });
+      var p = j.policy || {};
+      box.appendChild(el('div', 'mx-note', p.ok
+        ? '정책 ' + p.file + ': ' + (p.allow || []).map(function (a) { return a.pattern + ' (' + a.since + ')'; }).join(' · ')
+        : '정책 문제 — ' + p.reason));
+      $('bedLockSum').textContent = '잠긴 런 ' + locked.length + ' · 루트 · 정책';
+      if (!sel.options.length) { msg('열 수 있는 런이 없다 — 아래 "잠긴 런 · 루트 · 정책" 에서 루트 경로 (WEBAPP_MIXER_RUNS) 와 정책을 확인', 'warn'); return; }
+      var last = null; try { last = localStorage.getItem('mx-bed-run'); } catch (e) {}
+      if (last && Array.prototype.some.call(sel.options, function (o) { return o.value === last; })) sel.value = last;
+      msg(''); onRun();
+    }).catch(function (e) { msg('런 목록을 못 읽음: ' + e, 'err'); });
+  }
+
+  function curRun() {
+    var v = $('bedRuns').value, i = v.indexOf('|');
+    if (i < 0) return null;
+    var root = +v.slice(0, i), run = v.slice(i + 1);
+    return S.runs.find(function (x) { return x.root === root && x.run === run; }) || null;
+  }
+
+  function runInfo(R) {
+    var dk = R.deck || {}, box = $('bedRunInfo'); box.replaceChildren();
+    var parts = ['프레임 ' + R.n_frames];
+    if (dk.drum) parts.push('드럼 R ' + mm(dk.drum.R) + ' · 길이 ' + mm(dk.drum.x_max - dk.drum.x_min));
+    if (dk.dt) parts.push('dt ' + dk.dt.toExponential(3) + ' s');
+    if (dk.period) parts.push('주기 ' + dk.period.toPrecision(4) + ' s');
+    box.appendChild(el('div', null, parts.join(' · ')));
+    box.appendChild(el('div', 'mx-note', '열린 근거: ' + (R.basis || '')));
+    (dk.notes || []).forEach(function (n) { box.appendChild(el('div', 'bed-warn', '⚠ ' + n)); });
+  }
+
+  function onRun() {
+    var R = curRun(); S.cur = R; if (!R) return;
+    try { localStorage.setItem('mx-bed-run', $('bedRuns').value); } catch (e) {}
+    var fr = $('bedFrame'); fr.max = Math.max(0, R.steps.length - 1); fr.value = fr.max;
+    S.xr = null;
+    var dk = R.deck || {};
+    if (dk.drum) setXRange(dk.drum.x_min, dk.drum.x_max);
+    runInfo(R);
+    if (!R.steps.length) { msg('이 런에는 프레임이 없다', 'warn'); return; }
+    schedule(0);
+  }
+
+  // ── 조각 슬라이더 (정수 0–1000 ↔ 미터) ──
+  function setXRange(a, b) {
+    S.xr = [a, b];
+    $('bedX0').value = 500;
+    var tmin = (b - a) / 200, tmax = b - a, t0 = (b - a) / 4;
+    $('bedT').value = Math.round(1000 * Math.sqrt((t0 - tmin) / (tmax - tmin)));
+    slabLab();
+  }
+  function x0val() { var a = S.xr[0], b = S.xr[1]; return a + (b - a) * (+$('bedX0').value) / 1000; }
+  function tval() { var a = S.xr[0], b = S.xr[1], u = (+$('bedT').value) / 1000; return (b - a) / 200 + ((b - a) - (b - a) / 200) * u * u; }
+  function slabLab() {
+    if (!S.xr) { $('bedSlabLab').textContent = ''; return; }
+    $('bedSlabLab').textContent = 'x₀ = ' + mm(x0val()) + ' · t = ' + mm(tval()) + '  (드럼 x ∈ [' + mm(S.xr[0]) + ', ' + mm(S.xr[1]) + '])';
+  }
+
+  function frameLab(R, i) {
+    var s = R.steps[i], dk = R.deck || {}, t = 'step ' + nf.format(s);
+    if (dk.dt) t += ' · t ' + (s * dk.dt).toFixed(3) + ' s';
+    if (dk.rot_start_step != null && dk.dt && dk.period)
+      t += s >= dk.rot_start_step ? ' · ' + ((s - dk.rot_start_step) * dk.dt / dk.period).toFixed(2) + ' 바퀴' : ' · 정착 구간';
+    return t + '  (' + (i + 1) + '/' + R.steps.length + ')';
+  }
+
+  function schedule(ms) { clearTimeout(S.timer); S.timer = setTimeout(loadFrame, ms); }
+
+  function b64bytes(s) { var bin = atob(s), u = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; }
+
+  function loadFrame() {
+    var R = S.cur; if (!R || !R.steps.length) return;
+    var i = +$('bedFrame').value, v = view();
+    $('bedFrameLab').textContent = frameLab(R, i);
+    $('bedSlabBox').hidden = (v === 'proj');
+    $('bed3dSlabRow').hidden = (v !== '3d');
+    var q = new URLSearchParams({ root: R.root, run: R.run, step: R.steps[i], view: v });
+    var slabOn = (v === 'slab') || (v === '3d' && $('bed3dSlab').checked);
+    if (slabOn && !S.xr) {                       // 드럼 치수가 없으면 먼저 전체를 읽어 x 범위를 잡는다
+      q.set('view', 'proj'); S.needX = true;
+    } else if (slabOn) { q.set('x0', x0val()); q.set('t', tval()); }
+    var seq = ++S.seq;
+    msg('프레임을 읽는 중…');
+    var status = 0;
+    fetch('/api/mixer/frame?' + q.toString()).then(function (r) { status = r.status; return r.json(); }).then(function (j) {
+      if (seq !== S.seq) return;                  // 늦게 온 옛 응답은 버린다
+      if (!j.ok) {
+        msg('거부 (' + status + ') — ' + j.error + ((j.problems || []).length ? ' — ' + j.problems.join(' · ') : ''), 'err');
+        clearStage(); return;
+      }
+      if (S.needX && j.bounds && j.bounds.x) { S.needX = false; setXRange(j.bounds.x[0] - (j.r_max || 0), j.bounds.x[1] + (j.r_max || 0)); schedule(0); return; }
+      var d = { meta: j, n: j.n_shown, x: new Float32Array(b64bytes(j.data.x).buffer), y: new Float32Array(b64bytes(j.data.y).buffer),
+                z: new Float32Array(b64bytes(j.data.z).buffer), r: new Float32Array(b64bytes(j.data.r).buffer), t: b64bytes(j.data.type) };
+      S.data = d; msg(''); phaseBoxes(j); stat(j); draw();
+    }).catch(function (e) { if (seq === S.seq) msg('프레임을 못 읽음: ' + e, 'err'); });
+  }
+
+  function stat(j) {
+    var off = Object.keys(j.types_present).filter(function (k) { return S.hidden[j.types_present[k].name]; });
+    var vis = j.n_shown - off.reduce(function (a, k) { return a + j.types_present[k].n_shown; }, 0);
+    var t = '그린 입자 ' + nf.format(vis) + ' / 프레임 ' + nf.format(j.n_total);
+    if (off.length) t += ' · 끈 상: ' + off.map(function (k) { return j.types_present[k].name; }).join(', ');
+    if (j.selection) t += ' · 조각 ' + nf.format(j.n_shown) + ' 개 — ' + j.selection.rule;
+    if (!j.types_named) t += ' · ⚠ 상 이름을 덱에서 못 읽어 번호로만 표시';
+    $('bedStat').textContent = t;
+  }
+
+  function phaseBoxes(j) {
+    var box = $('bedPhases'); box.replaceChildren();
+    Object.keys(j.types_present).forEach(function (k) {
+      var tp = j.types_present[k], lab = el('label', 'bed-ph'), cb = document.createElement('input'), sw = el('i');
+      cb.type = 'checkbox'; cb.checked = !S.hidden[tp.name];
+      cb.addEventListener('change', function () { S.hidden[tp.name] = !cb.checked; stat(j); draw(); });
+      sw.style.background = tp.color;
+      lab.appendChild(cb); lab.appendChild(sw);
+      lab.appendChild(el('span', null, tp.name + '  ' + nf.format(tp.n_shown) + ' / ' + nf.format(tp.n_total)));
+      box.appendChild(lab);
+    });
+  }
+
+  function clearStage() {
+    var cv = $('bed2d'); cv.getContext('2d').clearRect(0, 0, cv.width, cv.height);
+    if (S.three && S.three.group) { S.three.scene.remove(S.three.group); S.three.group = null; S.three.renderer.render(S.three.scene, S.three.cam); }
+  }
+
+  function draw() {
+    if (!S.data) return;
+    var is3 = view() === '3d';
+    $('bed3d').hidden = !is3; $('bed2d').hidden = is3;
+    $('bedLegend').textContent = is3
+      ? '3D · 드래그 = 회전 · 휠 = 확대 · 우클릭 드래그 = 이동 · 처음 시점 = 드럼 축 (x) 방향 (y 오른쪽 · z 위)'
+      : '드럼 축 (x) 방향으로 본 (y, z) 평면 · y 오른쪽 · z 위 · 원 = 실제 반경 · 큰 입자부터 그림 (작은 입자가 위)';
+    if (is3) render3d(); else draw2d();
+  }
+
+  // ── 2D (얇은 단면 · 전체 투영) ──
+  function typeOrder(d) {                        // 큰 것부터 (viz_mixer_bed 와 같은 순서 규칙)
+    var acc = {};
+    for (var i = 0; i < d.n; i++) { var t = d.t[i]; (acc[t] = acc[t] || []).push(d.r[i]); }
+    return Object.keys(acc).map(function (t) {
+      var a = acc[t].sort(function (p, q) { return p - q; }); return [+t, a[a.length >> 1]];
+    }).sort(function (p, q) { return q[1] - p[1]; }).map(function (p) { return p[0]; });
+  }
+
+  function draw2d() {
+    var cv = $('bed2d'), d = S.data, j = d.meta, dpr = window.devicePixelRatio || 1;
+    var W = Math.max(280, Math.min(cv.parentElement.clientWidth - 24, 860, window.innerHeight - 140));   // 화면 높이 안에
+    cv.style.width = W + 'px'; cv.style.height = W + 'px'; cv.width = Math.round(W * dpr); cv.height = Math.round(W * dpr);
+    var ctx = cv.getContext('2d'); ctx.clearRect(0, 0, cv.width, cv.height);
+    var yc = 0, zc = 0, half;
+    if (j.drum) half = 1.08 * j.drum.R;
+    else {
+      var by = j.bounds.y, bz = j.bounds.z; yc = (by[0] + by[1]) / 2; zc = (bz[0] + bz[1]) / 2;
+      half = 0.54 * Math.max(by[1] - by[0], bz[1] - bz[0]) + (j.r_max || 0);
+    }
+    var s = cv.width / (2 * half), cx = cv.width / 2, cy = cv.height / 2, TAU = 2 * Math.PI;
+    ctx.globalAlpha = 0.9;
+    typeOrder(d).forEach(function (t) {
+      var tp = j.types_present[String(t)]; if (!tp || S.hidden[tp.name]) return;
+      ctx.fillStyle = tp.color; ctx.beginPath();
+      for (var i = 0; i < d.n; i++) {
+        if (d.t[i] !== t) continue;
+        var px = cx + (d.y[i] - yc) * s, py = cy - (d.z[i] - zc) * s, rp = d.r[i] * s;
+        ctx.moveTo(px + rp, py); ctx.arc(px, py, rp, 0, TAU);
+      }
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    if (j.drum) { ctx.strokeStyle = '#333'; ctx.lineWidth = 1.2 * dpr; ctx.beginPath(); ctx.arc(cx, cy, j.drum.R * s, 0, TAU); ctx.stroke(); }
+    if (j.selection && S.xr) {                   // 조각 위치 (왼쪽 위 막대: 드럼 x 범위 중 조각)
+      var bx = 14 * dpr, byy = 14 * dpr, bw = 150 * dpr, bh = 8 * dpr, a = S.xr[0], b = S.xr[1];
+      var lo = (j.selection.x0 - j.selection.t / 2 - a) / (b - a), hi = (j.selection.x0 + j.selection.t / 2 - a) / (b - a);
+      ctx.fillStyle = 'rgba(0,0,0,.12)'; ctx.fillRect(bx, byy, bw, bh);
+      ctx.fillStyle = '#d97706'; ctx.fillRect(bx + bw * Math.max(0, lo), byy, bw * (Math.min(1, hi) - Math.max(0, lo)), bh);
+      ctx.fillStyle = '#333'; ctx.font = (11 * dpr) + 'px sans-serif'; ctx.fillText('x (드럼 축) 중 조각', bx, byy + bh + 13 * dpr);
+    }
+  }
+
+  // ── 3D ──
+  function ensure3() {
+    if (S.three) return Promise.resolve(S.three);
+    if (S.threeFail) return Promise.resolve(null);
+    return Promise.all([import('three'), import('three/addons/controls/OrbitControls.js')]).then(function (m) {
+      var THREE = m[0], OC = m[1].OrbitControls, box = $('bed3d');
+      var ren = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      ren.setPixelRatio(window.devicePixelRatio || 1); box.appendChild(ren.domElement);
+      var scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(35, 4 / 3, 1e-4, 10);
+      cam.up.set(0, 0, 1);
+      scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+      var dl = new THREE.DirectionalLight(0xffffff, 0.95); dl.position.set(1, 0.6, 0.8); cam.add(dl); scene.add(cam);
+      var ctl = new OC(cam, ren.domElement);
+      S.three = { THREE: THREE, renderer: ren, scene: scene, cam: cam, controls: ctl, group: null, key: null };
+      ctl.addEventListener('change', function () { ren.render(scene, cam); });
+      window.addEventListener('resize', function () { if (view() === '3d') resize3(); else if (S.data) draw2d(); });
+      return S.three;
+    }).catch(function (e) {
+      S.threeFail = true;
+      msg('3D 라이브러리 (three.js CDN) 를 못 불러왔다 — 얇은 단면 · 전체 투영은 된다.  (' + e + ')', 'err');
+      return null;
+    });
+  }
+
+  function resize3() {
+    var T = S.three; if (!T) return;
+    var W = Math.max(280, Math.min($('bed3d').parentElement.clientWidth - 24, 1000, (window.innerHeight - 140) / 0.72)), H = Math.round(W * 0.72);
+    T.renderer.setSize(W, H); T.cam.aspect = W / H; T.cam.updateProjectionMatrix(); T.renderer.render(T.scene, T.cam);
+  }
+
+  function fit3(T, j) {
+    var cx = 0, cy = 0, cz = 0, R;
+    if (j.drum) { cx = (j.drum.x_min + j.drum.x_max) / 2; R = j.drum.R; }
+    else { var b = j.bounds; cx = (b.x[0] + b.x[1]) / 2; cy = (b.y[0] + b.y[1]) / 2; cz = (b.z[0] + b.z[1]) / 2;
+           R = 0.5 * Math.max(b.y[1] - b.y[0], b.z[1] - b.z[0]) + (j.r_max || 0); }
+    var dist = 3.4 * R;
+    T.cam.position.set(cx + dist, cy, cz); T.cam.near = dist / 200; T.cam.far = dist * 20; T.cam.updateProjectionMatrix();
+    T.controls.target.set(cx, cy, cz); T.controls.update();
+  }
+
+  function render3d() {
+    ensure3().then(function (T) {
+      if (!T || !S.data) return;
+      var THREE = T.THREE, d = S.data, j = d.meta;
+      if (T.group) { T.scene.remove(T.group); T.group.traverse(function (o) { if (o.geometry) o.geometry.dispose(); if (o.material) o.material.dispose(); }); }
+      var g = new THREE.Group(), geo = new THREE.IcosahedronGeometry(1, d.n > 150000 ? 0 : 1);
+      Object.keys(j.types_present).forEach(function (k) {
+        var t = +k, tp = j.types_present[k], cnt = 0, i;
+        for (i = 0; i < d.n; i++) if (d.t[i] === t) cnt++;
+        if (!cnt) return;
+        var mesh = new THREE.InstancedMesh(geo, new THREE.MeshLambertMaterial({ color: tp.color }), cnt), a = mesh.instanceMatrix.array, n = 0;
+        for (i = 0; i < d.n; i++) {
+          if (d.t[i] !== t) continue;
+          var o = 16 * n++, r = d.r[i];
+          a[o] = r; a[o + 5] = r; a[o + 10] = r; a[o + 12] = d.x[i]; a[o + 13] = d.y[i]; a[o + 14] = d.z[i]; a[o + 15] = 1;
+        }
+        mesh.instanceMatrix.needsUpdate = true; mesh.frustumCulled = false; mesh.visible = !S.hidden[tp.name];
+        g.add(mesh);
+      });
+      if (j.drum) {
+        var R = j.drum.R, xa = j.drum.x_min, xb = j.drum.x_max, lm = new THREE.LineBasicMaterial({ color: 0x444444, transparent: true, opacity: 0.55 });
+        [xa, xb].forEach(function (xx) {
+          var pts = []; for (var k = 0; k <= 96; k++) { var th = 2 * Math.PI * k / 96; pts.push(new THREE.Vector3(xx, R * Math.cos(th), R * Math.sin(th))); }
+          g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lm));
+        });
+        for (var k = 0; k < 8; k++) {
+          var th = 2 * Math.PI * k / 8;
+          g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(xa, R * Math.cos(th), R * Math.sin(th)),
+                                                                        new THREE.Vector3(xb, R * Math.cos(th), R * Math.sin(th))]), lm));
+        }
+      }
+      T.scene.add(g); T.group = g;
+      var key = j.root + '|' + j.run;
+      if (T.key !== key) { fit3(T, j); T.key = key; }
+      resize3();
+    });
+  }
+
+  // ── 연결 ──
+  window.bedInit = function () {
+    if (S.init) return; S.init = true;
+    $('bedRuns').addEventListener('change', onRun);
+    $('bedFrame').addEventListener('input', function () { if (S.cur) $('bedFrameLab').textContent = frameLab(S.cur, +$('bedFrame').value); schedule(160); });
+    $('bedPrev').addEventListener('click', function () { var f = $('bedFrame'); if (+f.value > 0) { f.value = +f.value - 1; schedule(0); } });
+    $('bedNext').addEventListener('click', function () { var f = $('bedFrame'); if (+f.value < +f.max) { f.value = +f.value + 1; schedule(0); } });
+    document.querySelectorAll('input[name=bedView]').forEach(function (r) { r.addEventListener('change', function () { schedule(0); }); });
+    $('bedX0').addEventListener('input', function () { slabLab(); schedule(160); });
+    $('bedT').addEventListener('input', function () { slabLab(); schedule(160); });
+    $('bed3dSlab').addEventListener('change', function () { schedule(0); });
+    $('bedReset').addEventListener('click', function () { if (S.three && S.data) { fit3(S.three, S.data.meta); S.three.renderer.render(S.three.scene, S.three.cam); } });
+    loadRuns();
+  };
+  if (location.hash === '#bed') mxTab('bed');
+})();
+{% endraw %}
 </script>
 {% endblock %}
