@@ -6283,7 +6283,7 @@
    "found_by": "Codex LHS 피복률 병합 전 리뷰 (사용자 경유, 2026-09-30) — 고정 핀 2e57dff90 · 대상 = da4670594 + 제출 패치 0001–0007 (패치 sha 7/7 일치 · 8 파일 = 우리 64ae3cba8 과 CRLF 정규화 뒤 바이트 동일) · 합성 입력에 실제 함수 · CLI · run_pipeline 호출 (Windows) · 우리 재현 (Linux · 2e57dff90 + 패치 7 = 검토 트리) 네 감사 스크립트 전부 같은 결과 (_reproduction_*_cand_64ae3cba8.json) · 실 DEM · 130/64 원자료 · 시뮬레이션 없음",
    "opened_in": "docs/reviews/codex_lhs_coverage_verdict_20260930.md",
    "title": "[패치 0005 · 0006 · v2 라벨 계약] `film_area_physics_v2` 는 선언한 **불연속 cap-우선 후보 연산자**를 구현 (단위 맞음 · sim/SI 면적비 999999.9999998804) 이지 검증된 물리 피복률이 아니다 — 개시점 (`DR_YIELD_ONSET` 0.00113 · r 0.5 µm · δ 2.83e-10 m) 바로 아래 2.22e-16 → 개시점 1.26e-17 m² (×0.0566 · 94.3 % 하락) · `V_lens/h_min` 을 전체 접촉면적 상한으로 삼는 가정 미증명 · `L > U` 에서 U 선택 = 하한 조건 폐기",
-   "note": "병기판은 감도 비교용 후보 디스크립터로만 · 임의 smoothing 으로 물리성이 생기지 않는다 · 인계 열 채택 · 물성값 변경은 리뷰 요구 아님.  침대 전체 빈칸 (한 접촉 미정 → 합 미정) 은 방어 가능한 fail-closed — 문제는 분모 · 입자 검사에 그 정책이 적용되지 않는 비대칭 (`LHSC-01`).  legacy 핀 (JSON 키 · 값 · 순서 · LF CSV · 반환값) 은 6 변형 × 3 종 동일 — 합성 표본의 보존 증거이지 전 입력의 수학적 동등성 증명은 아님.  문서 · 인계 라벨: v2 = 미검증 후보 · `OK` = 계산 상태 ≠ 물리 적격성 · 실제 reharvest 는 새 디렉터리 · 코퍼스 값 (접선 근처 수 · 무효 분모율 · cap 충돌률 · 제외율) 은 원자료 계산 뒤 보고.  ▶ 09-30 밤 병합 뒤 **열림 · 라벨 계약 + 5번 보고**: v2 = 미검증 후보 연산자 (물리 피복률 아님) · `OK` = 계산 상태 · 5번 배치 뒤 코퍼스 값 (무효 분모율 · cap 충돌률 · 제외율 · 근접 접선 수) 보고 · 인계 여부는 그 뒤 1저자와 함수 검토.",
+   "note": "병기판은 감도 비교용 후보 디스크립터로만 · 임의 smoothing 으로 물리성이 생기지 않는다 · 인계 열 채택 · 물성값 변경은 리뷰 요구 아님.  침대 전체 빈칸 (한 접촉 미정 → 합 미정) 은 방어 가능한 fail-closed — 문제는 분모 · 입자 검사에 그 정책이 적용되지 않는 비대칭 (`LHSC-01`).  legacy 핀 (JSON 키 · 값 · 순서 · LF CSV · 반환값) 은 6 변형 × 3 종 동일 — 합성 표본의 보존 증거이지 전 입력의 수학적 동등성 증명은 아님.  문서 · 인계 라벨: v2 = 미검증 후보 · `OK` = 계산 상태 ≠ 물리 적격성 · 실제 reharvest 는 새 디렉터리 · 코퍼스 값 (접선 근처 수 · 무효 분모율 · cap 충돌률 · 제외율) 은 원자료 계산 뒤 보고.  ▶ 09-30 밤 병합 뒤 **열림 · 라벨 계약 + 5번 보고**: v2 = 미검증 후보 연산자 (물리 피복률 아님) · `OK` = 계산 상태 · 5번 배치 뒤 코퍼스 값 (무효 분모율 · cap 충돌률 · 제외율 · 근접 접선 수) 보고 · 인계 여부는 그 뒤 1저자와 함수 검토.  ↪ 10-01 J20-m: 5번 코퍼스 값 — 무효 분모 AM 0.0059 % (LHS 70/1,184,824) · 0.0022 % (lhsx 3/135,354) · 빈칸 침대 17/130 · 1/64 · AM 100 % 클립 22.41 % · 97.04 % · cap 충돌률 (÷ 접촉 · ok 침대) 중앙 0.048 · 0.018 · 인계 여부 = 인계 안 함 (포화 · 분모 붕괴 · LHS-25).  근접 접선 수는 5번 원자료 커밋 때.  status 그대로 (남은 보고 한 항목).",
    "evidence_tests": [
     "docs/reviews/codex_lhs_coverage_evidence_20260930/audit.py",
     "docs/reviews/codex_lhs_coverage_evidence_20260930/_reproduction_audit_results_cand_64ae3cba8.json"
@@ -6442,6 +6442,42 @@
    "note": "`load_training_data` 가 `r.get(fk, 0)` 으로 채우고, 자동 타깃은 non_zero ≥ 50 % · std > 0 이면 들어간다 — 코퍼스 절반 이상이 새 키를 가지면 나머지 (재분석 전 케이스) 는 0 으로 학습된다.  ② ·③ 에서 늘어난 키 (porosity_union · 정확 union · 질량 보존 두께 · φ) 도 같은 길.  ↪ 10-01 웹앱 ③: `_fm_auto_target_ok` 가 `*_physics_v2` 를 뺀다 (J20-l (나) · 시험 V4–V6) — 0 채움 자체는 **열림** (처방 후보: 자동 타깃은 값이 있는 행만으로 학습 · 타깃별 마스크).",
    "evidence_tests": [
     "webapp/test_closed_param_exact_union.py"
+   ]
+  },
+  {
+   "id": "LHS-25",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "1저자 (10-01 · \"이런 경우가 세상에 어딨어\" — v2 빈칸 설명을 되물음) → claude 원자료 대조 (5번 배치 · 수확기 JSON + 웹앱 metrics_flat) + 합리성 검사 서브에이전트",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "physics 피복률 (v1 · v2) 은 접촉마다 추정한 소성 면적 (Tabor F/H · SE 경도 0.85 GPa — 기하 원판의 약 3 배) 을 표면 한도 없이 더한다 — 접촉 조각끼리 겹치는 부분을 빼는 규칙이 없어 SE 가 많은 침대에서 100 % 에 포화하고 (5번 배치 v1 침대 평균 ≥ 99 % LHS 29/130 · lhsx 62/64 · v2 AM 클립 22.41 % · 97.04 % · lhsx v2 AM_P 55/55 = 100.000 상수열), 같은 원인이 v2 의 AM–AM 쪽 (SE 경도 · L1-03 · 접촉 하나가 작은 쪽 표면 절반 2πr² 까지) 에서 분모 ≤ 0 을 만든다 (18 침대 빈칸 · 73 AM — 같은 AM · 같은 접촉을 c_cpl[22] 기하면적으로 세면 1,320,178 개 중 0)",
+   "note": "계산 결함 아님 (경계 · 항등식 · 순서 · 두 구현 대조 전부 정상 — docs/reviews/lhs_coverage_reasonableness_20261001.md) · 모형 구조의 결손.  legacy 부피 cap 은 194 침대 어디서도 안 잡는다 (DESC-03 과 정합).  ✅ 결정 J20-m (1저자 10-01 \"그렇게 하자\"): LHS · lhsx 인계 coverage = 기하면적 열만 · physics v1 · v2 · rough 제외 · 웹앱 표지 (webapp/test_coverage_handover_scope.py 옛 코드 3 PASS · 13 FAIL → 16/16).  ⬜ 열림: ① σ_ionic T1 의 면적 선택 (CLAUDE.md 기록 cov_Hertz · Spearman 0.697 vs 0.476) 은 코드 함수 검토 전 — 1저자 \"이걸로 닫지 말고 아직 · 코드를 아직 안 뜯어봤으니까\" ② 망 전도도 physics 채널 · σ_thermal T1 타깃 · 등급 physics 피복 축에 주는 영향 미확인 (등급 축은 SE 많은 케이스에서 판별력이 없을 가능성) ③ 처방 (표면 예산 · 접촉 조각 겹침 공제 등) 은 설계 전 — 비준 대상.",
+   "evidence_tests": [
+    "webapp/test_coverage_handover_scope.py"
+   ]
+  },
+  {
+   "id": "LHS-26",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "합리성 검사 서브에이전트 (10-01 · 5번 배치 · 1저자 요청 \"coverage 로 나온 값들이 다 합리적인 값인지 확인해봐\")",
+   "opened_in": "docs/reviews/lhs_coverage_reasonableness_20261001.md",
+   "title": "rough 피복률 (B3 · coverage_*_physics_rough) 의 모양 인자가 설계 상이 아니라 웹앱 반지름 이름을 따른다 — mono_AM_P 인데 반지름 규칙 (r > 4 µm → AM_P) 때문에 AM_S 로 불린 9 침대 (lhs00_118 · 121 · 124 · 125 · 126 · lhsx_003 · 017 · 048 · 062) 는 SF 1.10 (단결정), 나머지 mono_AM_P 는 1.40 (다결정) — 같은 설계 칸 안에 두 규약이 섞인다",
+   "note": "lhs00_124 · 126 에서 1.40 이었다면 약 +28 % 상대 차 (추정 — 보고서 §6) · lhsx 4 침대는 전부 포화라 수치 영향 0 · bimodal 은 덱 판독 이름 = 설계 상이라 해당 없음 · J20-f · 7b (웹앱 이름 ↔ 설계 이름) 와 같은 뿌리.  rough 는 인계 열이 아니다 (J20-m) — 영향 = 웹앱 표시 · 등급 축 coverage_AM_mean_physics_rough.  SF 값 자체 (1.40 · 1.10) 도 가정값.  처방 (모양 인자를 설계 상 · 반지름 규칙 중 어디에 걸지) = 비준 대상."
+  },
+  {
+   "id": "SELF-74",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "1저자 (10-01 · \"이런 경우가 세상에 어딨어\")",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "v2 분모 무효 (LHSC-01) 를 원자료 확인 없이 '이웃 AM 과 아주 깊이 겹친 입자' · '오류가 아니라 설계대로의 동작' 으로 설명했다 (1저자 보고 + coverage_physics_vs_hertzian.py 의 LHSC-01 주석) — 실제 원인은 v2 면적 식 (접촉별 추정 면적 합에 표면 한도 없음 · LHS-25): 같은 AM · 같은 접촉을 기하면적으로 세면 분모 ≤ 0 이 1,320,178 개 중 0",
+   "note": "Codex 반례 (정사면체 AM 4 의 깊은 겹침) 의 합성 기하를 실제 침대의 원인으로 옮겨 적은 것 — 판정문의 반례 서술을 실데이터 설명으로 쓰기 전에 원자료 (수확기 coverage_detail.n_free_surface_invalid) 를 봤어야 했다.  '설계대로의 동작' 은 빈칸 규칙에만 맞고, 빈칸을 만드는 값은 모형 결손이다.  수정: 주석 정정 + 시험 K1 · K2 (webapp/test_coverage_handover_scope.py) · J20-m 기록.  claimed_fixed 는 커밋 SHA 와 함께 다음 커밋.",
+   "evidence_tests": [
+    "webapp/test_coverage_handover_scope.py"
    ]
   }
  ]

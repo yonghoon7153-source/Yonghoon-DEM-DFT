@@ -1739,20 +1739,38 @@ const METRIC_TIPS = {
   'Coverage AM_P(%)': {
     title: 'Coverage AM_P (대립자 피복률)',
     formula: 'cov_i = min(100, 100·ΣA(AM_i–SE) / (4πr² − ΣA(AM–AM)_i))   — AM_P 입자마다\ncov_AM_P = 입자 평균  (자유 표면 4πr² − ΣA(AM–AM) ≤ 0 인 입자는 0 으로 셈)',
-    desc: '같은 식에 면적만 다른 두 열: Hertz 계열 = 분자 A 가 c_cpl[22] 기하 교차 원판 (legacy · AREA-08) · Physics 계열 = 분자만 소성 보정 v1 면적 (분모의 AM–AM 은 두 열 모두 c_cpl[22]).  대입경 활물질(AM_P) 표면이 고체전해질(SE)에 의해 덮인 비율(%)입니다.  (physics v2 후보 연산자는 미검증이라 아직 표시하지 않는다 — LHSC-10.)',
+    desc: '같은 식에 면적만 다른 두 열: Hertz 계열 = 분자 A 가 c_cpl[22] 기하 교차 원판 (legacy · AREA-08) · Physics 계열 = 분자만 소성 보정 v1 면적 (분모의 AM–AM 은 두 열 모두 c_cpl[22]).  대입경 활물질(AM_P) 표면이 고체전해질(SE)에 의해 덮인 비율(%)입니다.  ⚠ Physics 계열은 접촉마다 추정한 소성 면적 (기하 원판의 약 3 배) 을 표면 한도 없이 더해 SE 가 많은 침대에서 100 % 에 포화한다 — 5번 배치 (LHS 130 · lhsx 64) 에서 침대 평균 ≥ 99 % 가 LHS 29 · lhsx 62 곳 (기하면적 열은 0 곳 · 100 % 로 잘린 AM 0 개).  그래서 LHS 인계 디스크립터에는 Hertz 계열 (기하면적) 열만 넘긴다 (J20-m · LHS-25).  physics v2 후보는 망 요약 끝 별도 절에 표지와 함께 나온다 (미검증 · 등급 · ML 제외 · LHSC-10).',
     meaning: '피복률이 높을수록 AM 표면 전체에서 고르게 전하이동 반응이 일어날 수 있습니다. 피복률이 낮으면 AM의 일부 표면만 반응하여 국부 과전압이 발생하고 열화가 가속됩니다.'
   },
   'Coverage AM_S(%)': {
     title: 'Coverage AM_S (소립자 피복률)',
     formula: 'cov_i = min(100, 100·ΣA(AM_i–SE) / (4πr² − ΣA(AM–AM)_i))   — AM_S 입자마다\ncov_AM_S = 입자 평균  (자유 표면 4πr² − ΣA(AM–AM) ≤ 0 인 입자는 0 으로 셈)',
-    desc: '같은 식에 면적만 다른 두 열: Hertz 계열 = c_cpl[22] 기하 교차 원판 · Physics 계열 = 분자만 소성 보정 v1 면적.  소입경 활물질(AM_S) 표면이 고체전해질(SE)에 의해 덮인 비율(%)입니다.',
+    desc: '같은 식에 면적만 다른 두 열: Hertz 계열 = c_cpl[22] 기하 교차 원판 · Physics 계열 = 분자만 소성 보정 v1 면적.  소입경 활물질(AM_S) 표면이 고체전해질(SE)에 의해 덮인 비율(%)입니다.  ⚠ Physics 계열은 접촉별 추정 면적을 표면 한도 없이 더해 SE 가 많은 침대에서 100 % 에 포화한다 — LHS 인계 디스크립터는 Hertz 계열 (기하면적) 열만 (J20-m · LHS-25).',
     meaning: '소립자는 비표면적이 크므로 피복률이 낮아지기 쉽습니다. 소립자의 역할은 대립자 사이 빈 공간을 채워 에너지 밀도를 높이는 것이지만, 피복률이 너무 낮으면 ionic inactive가 됩니다.'
   },
   'Coverage AM(%)': {
     title: 'Coverage AM (단일 AM 상 피복률 — mono 케이스)',
     formula: 'cov_i = min(100, 100·ΣA(AM_i–SE) / (4πr² − ΣA(AM–AM)_i))   — AM 입자마다\ncov_AM = 입자 평균  (자유 표면 4πr² − ΣA(AM–AM) ≤ 0 인 입자는 0 으로 셈)',
-    desc: 'AM 상이 하나뿐인 케이스 (P:S 10:0 · 0:10 — 덱의 상 이름이 AM) 의 피복률입니다 — AM_P · AM_S 의 가중평균이 아닙니다.  같은 식에 면적만 다른 두 열: Hertz 계열 = c_cpl[22] 기하 교차 원판 · Physics 계열 = 분자만 소성 보정 v1 면적.',
+    desc: 'AM 상이 하나뿐인 케이스 (P:S 10:0 · 0:10 — 덱의 상 이름이 AM) 의 피복률입니다 — AM_P · AM_S 의 가중평균이 아닙니다.  같은 식에 면적만 다른 두 열: Hertz 계열 = c_cpl[22] 기하 교차 원판 · Physics 계열 = 분자만 소성 보정 v1 면적.  ⚠ Physics 계열은 접촉별 추정 면적을 표면 한도 없이 더해 SE 가 많은 침대에서 100 % 에 포화한다 — LHS 인계 디스크립터는 Hertz 계열 (기하면적) 열만 (J20-m · LHS-25).',
     meaning: '⚠ 옛 문구 "Minnmann 2021 실험 40–65 % 와 일치" 는 철회 — 인용 뿌리 감사 E7 · MI-5 (docs/reviews/citation_root_audit_20260925/: 그 논문 카드에 coverage 측정이 없다).  모양 인자 보정판 (B3) 은 Tier-1 절의 별도 행.'
+  },
+  'Coverage AM physics v2 — 후보 · 미검증 (%)': {
+    title: 'Coverage AM physics v2 — 후보 · 미검증 (단일 · 전체)',
+    formula: 'cov_i = min(100, 100·ΣA_v2(AM_i–SE) / (4πr² − ΣA_v2(AM–AM)_i))   — 입자 평균\nA_v2 = δ/R* < 0.00113 이면 πR*δ · 그 위 min(Tabor F/H, 정확 lens 부피 / 5 nm, 2πR_min²)  (plastic_coverage.film_area_physics_v2)\n분모 ≤ 0 인 AM 이 하나라도 있으면 그 침대의 v2 전체가 빈칸 + 사유 (LHSC-01)',
+    desc: '미검증 후보 연산자입니다 (LHSC-10) — 등급 · ML (예측기 자동 타깃) 에서 제외.  ⚠ 분모 무효: AM–AM 접촉에도 SE 경도를 써서 (L1-03) 접촉 하나가 작은 쪽 입자 표면의 절반 (2πr²) 까지 잡히므로, 작은 AM 은 AM–AM 면적 합이 자기 표면을 넘어 분모 ≤ 0 이 됩니다 — 5번 배치 18 침대 빈칸 (같은 AM 을 기하면적으로 세면 1,320,178 개 중 0).  ⚠ 포화: AM 의 22.4 % (LHS) · 97.0 % (lhsx) 가 100 % 에서 잘립니다.  두 현상은 같은 원인 — 접촉별 추정 면적의 합에 표면 한도가 없다 (LHS-25).  LHS 인계 디스크립터가 아닙니다 (J20-m).',
+    meaning: '실제 피복률이 아니라 후보 식의 산출입니다 — v1 과의 감도 비교용으로만 봅니다.'
+  },
+  'Coverage AM_P physics v2 — 후보 · 미검증 (%)': {
+    title: 'Coverage AM_P physics v2 — 후보 · 미검증 (대입자)',
+    formula: 'cov_i = min(100, 100·ΣA_v2(AM_i–SE) / (4πr² − ΣA_v2(AM–AM)_i))   — 입자 평균\nA_v2 = δ/R* < 0.00113 이면 πR*δ · 그 위 min(Tabor F/H, 정확 lens 부피 / 5 nm, 2πR_min²)  (plastic_coverage.film_area_physics_v2)\n분모 ≤ 0 인 AM 이 하나라도 있으면 그 침대의 v2 전체가 빈칸 + 사유 (LHSC-01)',
+    desc: '미검증 후보 연산자입니다 (LHSC-10) — 등급 · ML (예측기 자동 타깃) 에서 제외.  ⚠ 분모 무효: AM–AM 접촉에도 SE 경도를 써서 (L1-03) 접촉 하나가 작은 쪽 입자 표면의 절반 (2πr²) 까지 잡히므로, 작은 AM 은 AM–AM 면적 합이 자기 표면을 넘어 분모 ≤ 0 이 됩니다 — 5번 배치 18 침대 빈칸 (같은 AM 을 기하면적으로 세면 1,320,178 개 중 0).  ⚠ 포화: AM 의 22.4 % (LHS) · 97.0 % (lhsx) 가 100 % 에서 잘립니다.  두 현상은 같은 원인 — 접촉별 추정 면적의 합에 표면 한도가 없다 (LHS-25).  LHS 인계 디스크립터가 아닙니다 (J20-m).',
+    meaning: '실제 피복률이 아니라 후보 식의 산출입니다 — v1 과의 감도 비교용으로만 봅니다.'
+  },
+  'Coverage AM_S physics v2 — 후보 · 미검증 (%)': {
+    title: 'Coverage AM_S physics v2 — 후보 · 미검증 (소입자)',
+    formula: 'cov_i = min(100, 100·ΣA_v2(AM_i–SE) / (4πr² − ΣA_v2(AM–AM)_i))   — 입자 평균\nA_v2 = δ/R* < 0.00113 이면 πR*δ · 그 위 min(Tabor F/H, 정확 lens 부피 / 5 nm, 2πR_min²)  (plastic_coverage.film_area_physics_v2)\n분모 ≤ 0 인 AM 이 하나라도 있으면 그 침대의 v2 전체가 빈칸 + 사유 (LHSC-01)',
+    desc: '미검증 후보 연산자입니다 (LHSC-10) — 등급 · ML (예측기 자동 타깃) 에서 제외.  ⚠ 분모 무효: AM–AM 접촉에도 SE 경도를 써서 (L1-03) 접촉 하나가 작은 쪽 입자 표면의 절반 (2πr²) 까지 잡히므로, 작은 AM 은 AM–AM 면적 합이 자기 표면을 넘어 분모 ≤ 0 이 됩니다 — 5번 배치 18 침대 빈칸 (같은 AM 을 기하면적으로 세면 1,320,178 개 중 0).  ⚠ 포화: AM 의 22.4 % (LHS) · 97.0 % (lhsx) 가 100 % 에서 잘립니다.  두 현상은 같은 원인 — 접촉별 추정 면적의 합에 표면 한도가 없다 (LHS-25).  LHS 인계 디스크립터가 아닙니다 (J20-m).',
+    meaning: '실제 피복률이 아니라 후보 식의 산출입니다 — v1 과의 감도 비교용으로만 봅니다.'
   },
   'Binding % — AM-SE (H/L/T/V/G)': {
     title: 'Binding regime % — AM-SE (5-case selection)',

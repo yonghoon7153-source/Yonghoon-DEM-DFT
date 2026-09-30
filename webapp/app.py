@@ -2278,7 +2278,7 @@ def inject_physics_v2_rows(tables, metrics):
     if not rows:
         return
     ncol = len(tables['network_summary'].get('columns') or []) or 4
-    hdr = ['── Physics v2 — 후보 · 미검증 (LHSC-10 · 등급 · ML 제외) ──']
+    hdr = ['── Physics v2 — 후보 · 미검증 · 포화 · 인계 제외 (LHSC-10 · LHS-25 · J20-m · 등급 · ML 제외) ──']
     for r in [hdr] + rows:
         data.append(r[:ncol] + [''] * (ncol - len(r)))
 
@@ -9501,10 +9501,12 @@ _GRADE_PLAIN = {
     'path_hop_area_mean_physics': '이온이 길을 한 칸씩 건널 때 거치는 접촉면의 평균 넓이예요. '
         '넓을수록 한 번에 더 많이 흘러서 좋습니다.',
     'coverage_AM_P_mean_physics': '큰 활물질 입자(AM_P) 표면 중 고체전해질이 닿아있는 비율이에요. '
-        '많이 닿아야 그 부분에서 이온을 주고받습니다. 60% 이상 권장.',
+        '많이 닿아야 그 부분에서 이온을 주고받습니다. 60% 이상 권장. '
+        '다만 접촉마다 추정한 면적을 표면 한도 없이 더한 값이라, SE 가 많은 전극에서는 100 % 에 붙어(포화) 서로 구분이 안 돼요.',
     'coverage_AM_S_mean_physics': '작은 활물질 입자(AM_S) 표면이 고체전해질에 덮인 비율이에요. '
-        '작은 입자는 더 고르게 덮일수록 좋습니다.',
-    'coverage_AM_mean_physics_rough': '입자의 찌그러진 모양까지 반영해 계산한 "가장 믿을 만한" 전체 덮임 '
+        '작은 입자는 더 고르게 덮일수록 좋습니다. '
+        '다만 SE 가 많은 전극에서는 100 % 에 붙어(포화) 서로 구분이 안 돼요.',
+    'coverage_AM_mean_physics_rough': '입자 모양 인자(다결정 1.40 · 단결정 1.10 — 가정값)로 표면적을 키워 다시 계산한 전체 덮임 '
         '비율이에요. 활물질이 이온과 만나는 면적이 얼마나 되는지를 봅니다.',
     'am_se_cn_mean': '활물질 입자 하나가 평균 몇 개의 고체전해질과 닿아있는지예요. 많을수록 이온 공급 '
         '통로가 여러 개라 안정적입니다.',
