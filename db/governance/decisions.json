@@ -6092,6 +6092,68 @@
     "commit": "edbb37b5dc8da6bcd0a30d0d2d381d3dc14e7f27",
     "decision_digest": "sha256:c0935bee361ee59071cd04b12a7a0b429cb4b2b37935493a5d310e02b46700e7"
    }
+  },
+  {
+   "id": "D-2026-09-30-wad-cc-dem-input-both-scenarios",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "adhesion.wad_lpscl_agc.cc_graphite",
+   "slot": "wad_cc_dem_input",
+   "applies_to": {
+    "systems": [
+     "graphite"
+    ],
+    "tasks": [
+     "wad_cc_graphite"
+    ],
+    "methods": [
+     "qe_pbe_d3bj"
+    ],
+    "use_cases": [
+     "dem_input",
+     "dem_handoff"
+    ]
+   },
+   "title": "DEM 에 넘길 C–C 접착 입력 = (c) 둘 다 시나리오 — DFT W_inc(S33, 2성) 0.332 J/m² · 실험 0.37 ± 0.01 (짝 원칙 ①–④)",
+   "statement": "WAD-CC 카드 §6 'DEM_입력값' 의 1저자 결정 = **(c) 둘 다 시나리오**. ① 시나리오 DFT — C–C W_inc(S33, 2성) 0.332 J/m² [W_AA 0.298, W_AB 0.350] · PBE+D3(BJ) 2체 조건부 · 이상 기저면 · 게이트 전부 통과 — Ag–C 도 같은 DFT 2체라 두 접촉의 비가 한 방법 안에서 나온다 (짝 원칙 ①). ② 시나리오 실험 — 0.37 ± 0.01 J/m² (Wang 2015 · 비정합 직접 측정) — Ag–C 와의 비는 '방법이 섞인 비' 라벨 (짝 원칙 ③). 기본 D3 열 = 2체 (짝 원칙 ② · 흑연 대조 판정) · ATM 열은 민감도 열. 두 시나리오에서 '어느 접촉이 먼저 떨어지나' 가 뒤집히면 '모델 안에서 판별 불가 (점착 입력에 좌우)' 로 보고한다 (짝 원칙 ④ · DEM 몫).",
+   "rationale": "DEM 7차 회신이 같은 제안을 했다 ('둘 다 시나리오 — 그쪽 DFT (Ag–C 와 같은 방법) 와 실험 0.37 (방법과 독립인 직접 측정)'). 짝 원칙 ①–④ 가 결과 전(09-28)에 비준돼 있어 두 시나리오의 짝·라벨·판별 불가 보고 규칙이 이미 정해져 있다. DFT 가 실험보다 0.038 낮은 것은 정보이지 판정이 아니다.",
+   "decision_state": "active",
+   "record_kind": "retrospective",
+   "results_seen": true,
+   "results_seen_note": "WAD-CC 53 잡 결과 열람 뒤 결정 (카드가 결과 뒤 1저자 결정으로 남겨 둔 항목)",
+   "card": "db/properties/wad_cc_graphite_prereg_2026_09_28.json",
+   "record": "db/properties/wad_cc_graphite_result_2026_09_30.json",
+   "depends_on": [
+    "D-2026-09-28-wad-cc-graphite"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "db/properties/wad_cc_graphite_result_2026_09_30.json",
+    "db/raw/wad_cc_graphite_2026_09_28/cc_collect_repo_atm_2026_09_30.json",
+    "kb/projects/wad_dem_reply_draft_2026_09_23.md"
+   ],
+   "reopen_criteria": [
+    "DEM 이 한 시나리오만 요구하면 그때 1저자가 다시 고른다 (값 · 라벨 불변)",
+    "C–C 계산이 바뀌면 (새 카드 · 새 게이트) — 이 결정의 DFT 시나리오 값도 바뀐다"
+   ],
+   "enforcement": "DEM 회신 8 이 두 시나리오를 라벨(2체 조건부 · 이상 기저면 · 세 registry 평균 추정 · 방법이 섞인 비)과 함께 싣는다. ATM 열을 헤드라인으로 쓰지 않는다.",
+   "proposed_by": "claude-session-2026-09-30",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-30",
+     "state": "active",
+     "note": "1저자(사용자) 선택 — AskUserQuestion '(c) 둘 다 시나리오'. 트랙 = 점착 W_ad (1저자 = 사용자)."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-30T14:27:21Z",
+    "commit": "f0c9680c1d92ccd5072abc3000e7bad0756e8425",
+    "decision_digest": "sha256:a5a4a505c3f5eacc8775a9c2033eb5e5036bc733131d9a7f6950a2bdf17efe19"
+   }
   }
  ]
 }

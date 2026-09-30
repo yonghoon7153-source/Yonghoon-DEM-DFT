@@ -144,7 +144,7 @@
    "cell": "1×1 육방 · S33 6층 3|3 (12 원자) · M41 4층 + 그래핀 1 (10 원자) · S44 · M61 두께 · V2a 변형",
    "machine": "V100 pw.x GPU",
    "state": "done",
-   "state_text": "사전등록 게이트 전부 통과 · DEM 입력값 1저자 결정 대기",
+   "state_text": "사전등록 게이트 전부 통과 · DEM 입력 (c) 둘 다 시나리오 (1저자 09-30) · 회신 8 초안",
    "records": [
     "db/properties/wad_cc_graphite_prereg_2026_09_28.json",
     "db/properties/wad_cc_graphite_result_2026_09_30.json",
@@ -1371,6 +1371,11 @@
    "date": "2026-09-30",
    "stage": "dft",
    "text": "**WAD-CC 흑연 C|C 결과 (V100 · 53 잡 rc 0)** — 사전등록 게이트 전부 통과 (G0 9/9 · 흑연 대조 S33_AB 0.350 J/m² IN_BAND [0.31, 0.47] · G3 · G4 · 두께 PASS). 헤드라인 C–C W_inc(S33, 2성) 0.332 J/m² [0.298, 0.350] · PBE+D3(BJ) 2체 조건부 · 이상 기저면 — 실험 0.37 ± 0.01 과 나란히. 짝 규칙 ② = 2체 (|W_inc − 0.37| 2체 0.038 · +ATM 0.113). 회수: V100 → kgy → worktree 커밋 e0bcbfa44 · --verify_stage2 ✅ · 레포 집계 = V100 집계. 다음: 1저자 DEM 입력값 (a)/(b)/(c) → DEM 회신 8 → 점착 DFT 마감. 결과 기록 `db/properties/wad_cc_graphite_result_2026_09_30.json`."
+  },
+  {
+   "date": "2026-09-30",
+   "stage": "dem",
+   "text": "**C–C DEM 입력 = (c) 둘 다 시나리오** (1저자 · 결정 D-2026-09-30-wad-cc-dem-input-both-scenarios) — DFT W_inc(S33) 0.332 J/m² (Ag–C 와 같은 방법 · 짝 원칙 ①) · 실험 0.37 ± 0.01 (방법이 섞인 비 라벨 · ③) · 기본 D3 열 2체 (②) · 뒤집히면 판별 불가 (④ · DEM 몫). 회신 8 초안."
   }
  ],
  "related_decisions": [
