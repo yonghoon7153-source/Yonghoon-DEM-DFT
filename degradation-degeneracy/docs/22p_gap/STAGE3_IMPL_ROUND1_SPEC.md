@@ -149,7 +149,7 @@
 
 - 공유 함수 `DW.check_bank_profile(design_bank=None, envelope_bank=None) -> list[str]` — 주어진 블록의 각 필드가 위 표와 같고, 둘 다 주어지면 generator · version 이 서로 같다.
 - 호출: `preserve.check_envelope_v4` (envelope 의 generator · version) · `_prepare_stage3` (설계 + envelope — 시작 전) · validator `_stage3_rederive` (run_spec 의 설계 + 계획 envelope).
-- `design_wire.check_design` 의 선언 문법 검사 (넓은 문자열) 는 **그대로** — 설계 선언 reader 와 골든 경로를 좁히지 않고, 이 라운드의 실행 · 검증 경로에서 지원 profile 로 거부한다.
+- ~~`design_wire.check_design`~~ `pairing_design_sha256` → `_check_design_nested` 의 선언 문법 검사 (넓은 문자열) 는 **그대로** — 설계 선언 reader 와 골든 경로를 좁히지 않고, 이 라운드의 실행 · 검증 경로에서 지원 profile 로 거부한다. (**83차 정정:** 실제 경로는 `pairing_design_sha256` → `_check_design_nested` — `check_design` 이라는 함수는 없다)
 - 골든 고정 (변경 전 실측 · `design_wire` 현행): fixture 설계 (`p22_grid_primary_v6` · PARAM_NAMES · pcg64/v6.0) · COORDS `0.17/0.13/0.13` 의 pair_group `c6fc40f168f0af29…` · `unit_cube_bank(pg, "v6.0", 8, 4)` sha256 **`c3009d16773fe211abfc54a6e48d731dcfa8cbef17867d9190a2b39e139a9894`**.
 
 ### 10-3. G82-N3 — 선언 세대 연결

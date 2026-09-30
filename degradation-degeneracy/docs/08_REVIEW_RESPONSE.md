@@ -8595,14 +8595,35 @@ docstring 변경도 RUN_SCOPE 규칙대로 digest 를 움직인다: `c78d7969ef4
 
 **G82-N1:** 공유 함수 `src.io.observed_roster` (봉인 curves 스냅샷 — 계획 `inputs.curves_sha256` 와 바이트 동일 — 의 cond_id 별 truth · noise · seed ↔ fits 행 정확 비교 · objective 쌍 완전성 · `roster_from_conditions` 재구성) 를 writer (`write_execution_record` — 인자 `roster_sha256` 폐지 · 계산 · 불일치면 기록 안 씀) 와 validator 새 검사 `관측_roster_재구성` (스냅샷 없음 → 실패 · 재구성 sha ↔ 계획 · record · n_obs) 가 쓴다. 시험 n1_00–05 (음성은 `fits_seal` 을 다시 맞춘 위조 — `출력봉인_재계산` 통과를 시험 안에서 확인). 변이 4.
 
-**G82-N2:** `design_wire.STAGE3_BANK_PROFILE` (pcg64 · `H(pair_group_id, bank_version)` · float64 · little · unit_cube) · `STAGE3_BANK_VERSIONS = ("v6.0",)` · `check_bank_profile` (별칭 없음) 을 envelope 봉인 (`check_envelope_v4`) · 시작 전 (`_prepare_stage3`) · validator (`_stage3_rederive`) 셋에서. `check_design` 선언 문법은 그대로 (요청문 §6-c). 골든 bank sha `c3009d16…` 불변 (n2_00b). 시험 n2_00–04 (9 node). 변이 4.
+**G82-N2:** `design_wire.STAGE3_BANK_PROFILE` (pcg64 · `H(pair_group_id, bank_version)` · float64 · little · unit_cube) · `STAGE3_BANK_VERSIONS = ("v6.0",)` · `check_bank_profile` (별칭 없음) 을 envelope 봉인 (`check_envelope_v4`) · 시작 전 (`_prepare_stage3`) · validator (`_stage3_rederive`) 셋에서. ~~`check_design`~~ `pairing_design_sha256` → `_check_design_nested` 선언 문법은 그대로 (요청문 §6-c). 골든 bank sha `c3009d16…` 불변 (n2_00b). 시험 n2_00–04 (9 node). 변이 4. (**83차 정정:** 실제 경로는 `pairing_design_sha256` → `_check_design_nested` — `check_design` 이라는 함수는 없다)
 
 **G82-N3:** `design_wire.STAGE3_PROTOCOL_GENERATION = "v6"` — `_prepare_stage3` 시작 거부 · validator 새 검사 `세대_연결` (sig 6 · 계획 · record · 행 `record_generation`). 세대 문법 검사 · 역사적 reader 불변 · v4 envelope 문법도 좁히지 않음 (요청문 §6-e). 시험 n3_00–02. 변이 4 (계획 · record 대조는 서로를 가려 시험이 두 이유 문장을 각각 본다).
 
 **실측 (clean `ea2af59e` · 시작 HEAD = 끝 HEAD · status 0 · 2026-09-30T06:18:27Z → 07:26:04Z):** 전체 pytest 0 failed · 2023 passed · 1 xfailed (58:45) · strict smoke rc 0 (191 s) · 변이 재생 `-k g82` 12/12 · `--check-preimages -k g82` 통과. 이웃 회귀 (`7d291fbc`, 영수증 전) 644 passed · 17 failed — 전부 영수증 identity 가족 → 새 세대 뒤 통과.
 
-**스스로 신고 (요청문 §6):** (a) N1 출처 = 봉인 스냅샷 (fits 에 seed 열을 쓰지 않음) (b) 행 대조는 정확 비교 (c) `check_design` 불변 (d) envelope 검사가 봉인 단계에서 거부 → n2_03 (b) 는 stub 계획 (e) v4 envelope 세대 문법 불변 (f) 등록부 규칙 시험 첫 실행 3 failed (증인 끝 공백) (g) writer 인자 폐지 (h) 계약 §1 줄번호 세 번째 갱신 (i) 이월 — Q1 dead 정의 · Q7 비유한 J · 라운드 2.
+**스스로 신고 (요청문 §6):** (a) N1 출처 = 봉인 스냅샷 (fits 에 seed 열을 쓰지 않음) (b) 행 대조는 정확 비교 (c) ~~`check_design`~~ `pairing_design_sha256` → `_check_design_nested` 불변 (d) envelope 검사가 봉인 단계에서 거부 → n2_03 (b) 는 stub 계획 (e) v4 envelope 세대 문법 불변 (f) 등록부 규칙 시험 첫 실행 3 failed (증인 끝 공백) (g) writer 인자 폐지 (h) 계약 §1 줄번호 세 번째 갱신 (i) 이월 — Q1 dead 정의 · Q7 비유한 J · 라운드 2.
 
 **하지 않은 것:** 실행 GO 0 · 새 연구 leg 0 · 라운드 2 (실물 leg 배선 · 세대표 등록 · p_ini · dead 정의 · 계약 §0) 0 · class/투영 게시 0.
 
 **다음:** `docs/22p_gap/GATE83_REQUEST.md` 발송 (SHA 는 발송문) → 83차 회신 대기. 라운드 1 종결이어도 라운드 2 는 사용자 별도 승인 뒤.
+
+## §118 83차 접수 — **G82-N1 · N2 · N3 종결 수용 · 승인된 단계 3 라운드 1 종결 · 새 차단 0 · 새 세대 영수증 수용** · 실행 GO 아님 · 라운드 2 착수 승인 아님 · 단계 3 전체 완료 아님
+
+**발송 기록:** 요청문 커밋 = 발송 HEAD **`78e1f518024d0a9c4d00ee7f6784fa8949554325`** (docs-lint 358 passed · 0:28:20 · 시작 HEAD = 끝 HEAD). 판정 대상 `ea2af59e`.
+
+**패키지:** `docs/22p_gap/gate83_review/` — zip `GATE83_REVIEW_20260930.zip` 2,344,564 B · sha256 `d2ff75f2…71cd4` · `codex/` `PACKAGE_MANIFEST.json` (files 169 · sha256 `91b06c3f…`) · 규칙 먼저 `df7592b4` → 풀기 `a8c449e2` → 커밋 blob **169/169** · zip blob 일치. 검토자 스크립트 (`package_review.py` · `static_audit.py`) 실행 · import 0.
+
+**판정 (`REVIEW_KO.md` · `CLAUDE_REPLY.md` 사본):** 검토 방식 = 고정 소스 · AST · 정적 반례/검사 연결 · 영수증 데이터 대조 (받은 모듈 import · pytest · 변이 · smoke · COMSOL · 복원 · 영수증 생성 0 — 2023 passed · smoke rc 0 · 12/12 · docs-lint 358 은 발신 관측으로 기록). RUN_SCOPE 재귀 tree 네 개 + 루트 파일에서 58 파일 재구성 · digest `7187bd31740514d4` 독립 재계산 · 이전 발송 → RED RUN_SCOPE 변경 0 · RED → GREEN 한 커밋에서 승인 4 파일 · GREEN → 판정 변경 0 · 판정 → 발송 문서 3 파일 · 고정 표 §10 (`dfdd91a9`) 바이트 = 최종.
+
+| 질문 | 답 |
+|---|---|
+| Q1 N1 · N2 · N3 | **세 건 모두 종결 수용** |
+| Q2 라운드 1 | 승인된 라운드 1 범위 **종결** — 단계 3 전체 완료는 아님 |
+| Q3 §6-a 봉인 입력 출처 · §6-c 넓은 선언 reader · §6-e v4 세대 문법 | 현 분리 방식 수용 — "문법상 읽을 수 있는 설계" 와 "이번 실행 경로가 지원하는 설계" 는 다른 조건 · envelope 형식 버전 v4 와 프로토콜 세대 v6 는 같은 번호 체계가 아님 · 향후 다른 실행 진입점도 profile 검사를 우회하지 않아야 한다 |
+| Q4 새 세대 영수증 | 해당 validator 세대의 기록으로 수용 (history 의 2차본 = 이전 수신 원본 바이트 · src_io_sha256 = 실제 io.py 앞 16 · 검사 35/34 · 안정 core 부분 동일) — 같은 코드에서 재생성 불필요 · grid dirty=true 보존 · sig 6 연구 leg 완주 증거로 확대 금지 |
+
+**설명 정밀화 (검토자 · 비차단):** (i) n2_03 (b) 의 stub 은 `PlannedLegV4` 생성만 우회하고 `_prepare_stage3` 의 `check_planned_envelope` 는 우회하지 않는다 — (b) 하나로 뒤쪽 profile 분기 도달을 말하지 않는다 · 그 분기는 (a) 와 변이 `the-consumer-checks-the-profile-before-start-g82` 가 담당. (ii) RED 18 failed 를 18 개 독립 결함 재현으로 세지 않는다 — 무관 예외 7 제외 · 이미 다른 검사에 걸리던 사례 · 검사 부재와 실제 위조 수용 반례 (n1_01 · 02) 를 구분. (iii) 12/12 는 AST · preimage 로 연결만 확인 (수신 재생 아님).
+
+**문서 정정 (이 절과 같은 커밋 · RUN_SCOPE 밖):** 요청문 · 고정 표 §10 · 원장 §117 의 `check_design` (그런 함수는 없다) → 실제 경로 `pairing_design_sha256` → `_check_design_nested` (`tools/design_wire.py:307 · 336`) — 취소선 + 정정 표시. 코드 수정 · 새 시험 · 추가 게이트 없음 (검토자: 비차단).
+
+**다음 (검토자 권고 그대로):** 라운드 2 의 **고정 범위를 사용자에게 별도 승인 요청** — 서로 나눠 제시: (R2-a) 실물 v6 leg gate 연결 (`leg_run_spec` / `LEG_SPEC_*_KEYS` 의 `stage3` 축 · 계획 index 의 v4 envelope) · (R2-b) 계획 / source / input / base-config / runtime 결속 · (R2-c) `source_digest_generations` 세대 등록 · (R2-d) p_ini 지원 / 거부 **정책** (정책 선택을 p_ini 구현으로 확대하지 않음) · (R2-e) dead 정의 (`src/fitting.py:350`) 정리 · (R2-f) 계약 §0 정정 · (R2-g) `returned` 와 유한 · 수렴 결과의 구분 (82차 Q7). 승인 전에는 코드 · 시험을 만들지 않는다. 새 연구 leg · floor · pilot · provider canary · class/투영 게시 · 실행 GO 는 별도. 76차 종결 · grid_fit_v5 진단 전용 유지.
