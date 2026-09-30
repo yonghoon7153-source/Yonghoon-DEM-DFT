@@ -1,0 +1,16 @@
+{
+  "zip": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/COMSOL63_NORMAL60_OFFLINE_PREPARATION_20260930.zip",
+    "bytes": 230422,
+    "sha256": "f30ee83575461600582004d74f0a607b5e2df1b719b9101f1297217114597ca3"
+  },
+  "candidate_manifest_sha256": "82e556243b29b10ae65b95dcdff7f854734b6f1cfffc1881327cab1939ebe5c8",
+  "payload_count": 42,
+  "zip_readback_verified": true,
+  "selected_originals_unchanged": true,
+  "recipient": null,
+  "native_or_test_execution": 0,
+  "packaging_snapshot_seconds": 2.3899999998975545,
+  "time_scope": "finalization script only, not entire preparation wall time or native budget; snapshot before receipt write and tool return",
+  "created_utc": "2026-09-30T01:43:04.279577+00:00"
+}

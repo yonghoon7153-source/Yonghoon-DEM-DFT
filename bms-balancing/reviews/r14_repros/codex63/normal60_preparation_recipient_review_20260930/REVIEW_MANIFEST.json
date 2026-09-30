@@ -1,0 +1,200 @@
+{
+  "scope": "Recipient review and inert reference copies, not execution instructions",
+  "files": [
+    {
+      "file": "REVIEW_KO.md",
+      "bytes": 8786,
+      "sha256": "8f86d0a686ce5f07b925bd0b0e40561b01d821a63cbf77dcbbbbcd15f361109f"
+    },
+    {
+      "file": "NEXT_CODEX_REPLY_KO.md",
+      "bytes": 3842,
+      "sha256": "daa7c613b25f39e97d39810644bac4d2d49bdc3bd93cafe97fc49e87e564bf48"
+    },
+    {
+      "file": "CLAUDE_UPDATE_KO.md",
+      "bytes": 1853,
+      "sha256": "27a03650670f8e33e28ad40b56cabd1bf8d32c5a2f6e85be3a9a269cccfd8524"
+    },
+    {
+      "file": "DECISION.json",
+      "bytes": 1587,
+      "sha256": "bc418cd2e0b94f52451b80b060f9749398b7faa96f664d6a377a004c88643625"
+    },
+    {
+      "file": "RECIPIENT_AUDIT_NOTE.md",
+      "bytes": 1704,
+      "sha256": "1c1f85d7ccc0ab6b8a592ebfe6fed6a2c39dc03fedd58ec6401dd31e518d8c80"
+    },
+    {
+      "file": "ARCHIVE_AUDIT.json",
+      "bytes": 894,
+      "sha256": "611dba7bb18fd953be22fd02817fa49b7425687b1f15b6df415c5627be20d75d"
+    },
+    {
+      "file": "STATIC_DATA_AUDIT.json",
+      "bytes": 15487,
+      "sha256": "caa49d2faaa50a56a94e0434a823e3527816d65dfa9c4ea079e4274cfca81b81"
+    },
+    {
+      "file": "INPUT_ZIPS_PRESERVATION.json",
+      "bytes": 404,
+      "sha256": "2d874332a2d368bad3e270a4e4b74dc31da165d7abeb496ed207c260fe10b028"
+    },
+    {
+      "file": "audit_package.py",
+      "bytes": 2247,
+      "sha256": "80cd4e69841b053886acd7eb703ba640efdf015f9818d5a0b5045ae1848f6448"
+    },
+    {
+      "file": "audit_static.py",
+      "bytes": 10492,
+      "sha256": "a3adc42fa421a0e1de2126ec3da23b88169be4d08613553c544eee58909d902b"
+    },
+    {
+      "file": "seal_review.py",
+      "bytes": 3648,
+      "sha256": "39f9845242c2468f02ef78094f3fbcb80803bf67b1461a32a47a0bfad0f0a466"
+    },
+    {
+      "file": "reference/CODE_MANIFEST.json",
+      "bytes": 1043,
+      "sha256": "82e556243b29b10ae65b95dcdff7f854734b6f1cfffc1881327cab1939ebe5c8"
+    },
+    {
+      "file": "reference/CONTRACT.json",
+      "bytes": 45974,
+      "sha256": "09aaa32adb1170ae8883b97cee43cb9a5fbd7fa2ef0b63eb6998028526c21d86"
+    },
+    {
+      "file": "reference/LITERAL_CHANGE_MAP.json",
+      "bytes": 13098,
+      "sha256": "faebf5acead50998465ad28636d8eda84f2cd6d7e6c2c246940d90e463af57e9"
+    },
+    {
+      "file": "reference/COMMAND_MAP.json",
+      "bytes": 6018,
+      "sha256": "7dc6d7f66cc039f9a26a5e6e231b0468d39b6eebad4a5463319173c6ff157229"
+    },
+    {
+      "file": "reference/LIMITED_VALIDATION_PLAN.json",
+      "bytes": 13472,
+      "sha256": "429980de342e547ce88c4ba14018ecad5811fc0aac08b47fe6afd617a8c976d9"
+    },
+    {
+      "file": "reference/VALIDATION_REQUEST_KO.md",
+      "bytes": 3313,
+      "sha256": "2a9d8fb9ba48e4d0dd84f003c4c0367152757a8ab5c7c2bef03305748ea28842"
+    },
+    {
+      "file": "reference/BASELINE_IDENTITIES.json",
+      "bytes": 4069,
+      "sha256": "a4f96601c12205d96adde03293da0c7556337ffa009c560f13b5ee4dbc97268c"
+    },
+    {
+      "file": "reference/PREPARATION_KO.md",
+      "bytes": 5637,
+      "sha256": "665e5aabf3a622381bded736540624591ffd2b0f682790eb47b3395d7680764b"
+    },
+    {
+      "file": "reference/CHANGE_BOUNDARIES.json",
+      "bytes": 544,
+      "sha256": "ea0300ed3383d2ba1f89fae657d0ebbb55e324bf98737f08fb72f3dff4e9a44e"
+    },
+    {
+      "file": "reference/NATIVE_APPROVAL_FIELD_SPEC.json",
+      "bytes": 4104,
+      "sha256": "693d72133bc63f2748f1b97c60b1222f97daa34470fb2c50d1f92cd0422167b0"
+    },
+    {
+      "file": "reference/NATIVE60_APPROVAL_DRAFT_KO.md",
+      "bytes": 3330,
+      "sha256": "0a5a8efc3febf85c8ebab10fd31201ba2a4a1fe4de622a56a9cc0979828df333"
+    },
+    {
+      "file": "reference/RESOURCE_BUDGET_KO.md",
+      "bytes": 2523,
+      "sha256": "62a4ef9e2746ee0629ba717a84c1b07ae993c02d5e8d547e993cba2aaaa9fae6"
+    },
+    {
+      "file": "reference/PRESERVATION_BEFORE.json",
+      "bytes": 10711,
+      "sha256": "784cfb3ab30e116bf29dc8d622fe56e5a7455033326eadcdf8af9608b9bd50f3"
+    },
+    {
+      "file": "reference/PRESERVATION_AFTER.json",
+      "bytes": 10711,
+      "sha256": "784cfb3ab30e116bf29dc8d622fe56e5a7455033326eadcdf8af9608b9bd50f3"
+    },
+    {
+      "file": "reference/STATIC_AUDIT.json",
+      "bytes": 10454,
+      "sha256": "88e65fc7963b332ebf9d6c8afce5860c64e84bd67130721cc68eeb7fd0c6c87d"
+    },
+    {
+      "file": "reference/FINAL_STATIC_BINDING.json",
+      "bytes": 12416,
+      "sha256": "532f266c51efe79ad6c461974d105976304ef418a1d4c5ae7afd458addea4f8b"
+    },
+    {
+      "file": "reference/PARENT_COMMAND.ps1",
+      "bytes": 19179,
+      "sha256": "4b9e22ce8996168261fc010b55a570468bff9ba2ddd20fc950b03f27dec2fda3"
+    },
+    {
+      "file": "reference/src/Normal60Candidate.java",
+      "bytes": 75991,
+      "sha256": "04e2e390bf56e7f95515f5e9225714e5b9c5a067e5b96049ce7c8bba1444b4ae"
+    },
+    {
+      "file": "reference/src/candidate_entry.py",
+      "bytes": 13992,
+      "sha256": "b867e5fafd793a3c506f04c9701e8591f0a965d534aa14454d0463619a489325"
+    },
+    {
+      "file": "reference/src/diagnostic_consumer.py",
+      "bytes": 20353,
+      "sha256": "e7ef5b18cf04804a16be84b09cb64f8b4bd7bc196c0c8762aad002ac643a210c"
+    },
+    {
+      "file": "reference/basis/source30/CODE_MANIFEST.json",
+      "bytes": 1080,
+      "sha256": "6b9ae2a75a2035d0cc80359f5d83cc3ca5dc5aa744b68255d219ce8a55feb603"
+    },
+    {
+      "file": "reference/basis/source30/CONTRACT.json",
+      "bytes": 36643,
+      "sha256": "878bfe8e1623c71bcabe434fd8ebc9373b51ff37adc5756f9c22e6df342035ed"
+    },
+    {
+      "file": "reference/basis/source30/PARENT_COMMAND.ps1",
+      "bytes": 17419,
+      "sha256": "4c10d8fe0a31d88640e40af90f90af3cdcd4543376bdf843667073dd1383842c"
+    },
+    {
+      "file": "reference/basis/source30/src/Normal30Candidate.java",
+      "bytes": 74551,
+      "sha256": "6876e774ee7788e6f5e84ba50af3952bbf41af57d541e3bc0c4f8e044c7fb84d"
+    },
+    {
+      "file": "reference/basis/source30/src/candidate_entry.py",
+      "bytes": 13992,
+      "sha256": "0e5ea1d87810bea26002f7e68e8a042080f91cb65733dac628aa56f1d85b50f4"
+    },
+    {
+      "file": "reference/basis/source30/src/diagnostic_consumer.py",
+      "bytes": 18880,
+      "sha256": "9bd7f771f63df17ef0139a260317edff043f01a2d37c8f36bc55d2fd1b15b959"
+    },
+    {
+      "file": "reference/delivery/DELIVERY_RECEIPT.json",
+      "bytes": 806,
+      "sha256": "c36e5e4f75b9be8a8aa13a399ee5fbe12be48a1422d02d14fa83f49716e6d9f7"
+    },
+    {
+      "file": "reference/delivery/PACKAGING_TOOL_RETURN.json",
+      "bytes": 810,
+      "sha256": "603fb7456bf6466b237632d1f8361b70c2242123d3d98e2ec91bec45663de72c"
+    }
+  ]
+}

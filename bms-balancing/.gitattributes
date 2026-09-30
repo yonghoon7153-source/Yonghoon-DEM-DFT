@@ -51,3 +51,5 @@ reviews/msc_handover_review_20260930/** -text
 reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/** -text
 # 2026-09-30: 정상 fresh 0→30 s native 결과 독립 수신 검토 묶음 (NORMAL_30S_DIAGNOSTIC_ACCEPTED · 재실행 불필요 · 다음 60 s 준비 권고, 미승인) — bytes 그대로
 reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/** -text
+# 2026-09-30: 정상 fresh 0→60 s 오프라인 준비본 독립 수신 검토 묶음 (준비본 수용 · 변경부 12군 46사례 검증 가능 범위 · 실행 미승인) — bytes 그대로
+reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/** -text

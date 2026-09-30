@@ -1,0 +1,274 @@
+{
+  "kind": "SOURCE_TEXT_JSON_HASH_DIFF_ONLY",
+  "checks": [
+    {
+      "check": "review exact set",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "review safe unique paths",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "review no symlinks",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "review CRC",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "review:REVIEW_KO.md",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "review:NEXT_CODEX_REPLY_KO.md",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "review:CLAUDE_UPDATE_KO.md",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "review:DECISION.json",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "review:README_SEND_KO.md",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "review:ARCHIVE_AUDIT.json",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "review:NUMERIC_AUDIT.json",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "review:RECORDS_AUDIT.json",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "review:RECIPIENT_AUDIT_NOTE.md",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "review:audit_archives.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "review:audit_numeric.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "review:audit_records.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "review:seal_review.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "review:SOURCE_PRESERVATION.json",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "review:FINAL_SOURCE_CHECK.json",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "accepted fixed manifest",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/src/Normal30Candidate.java",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/src/diagnostic_consumer.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/src/candidate_entry.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/PARENT_COMMAND.ps1",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/CONTRACT.json",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/StoredSolutionRecoveryA.java",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/CODE_MANIFEST.json",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/contract.json",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/gate/c2_entry.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/gate/C2_CONTRACT.json",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/gate/C2_CODE_MANIFEST.json",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/analyzer.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/class_artifacts.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/evidence_metrics.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/execution_records.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/expected_solver.json",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/launcher.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/numerical_contract.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/policy_binding.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/status_reader.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/winjob.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/electrolyte_guard.csv",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/preflight_global.csv",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/preflight_boundary1.csv",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/preflight_boundary4.csv",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/axes_profile_N.csv",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/axes_profile_P.csv",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "737 exact increasing prefix",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "reverse complete bytes:src/Normal30Candidate.java",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "Java allowed literals reversed to entire original",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "Java one runAll no loadCopy",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "reverse complete bytes:src/candidate_entry.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "reverse complete bytes:src/diagnostic_consumer.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "reverse complete bytes:PARENT_COMMAND.ps1",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/tables/electrolyte_guard.csv",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/tables/preflight_global.csv",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/tables/preflight_boundary1.csv",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/tables/preflight_boundary4.csv",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/tables/axes_profile_N.csv",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "pin:C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/tables/axes_profile_P.csv",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "entry literal inverse entire bytes",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "BSave byte unchanged",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "BInvoke byte unchanged",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "final budget recording byte unchanged",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "limits/physics/coordinates/budgets unchanged",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "fresh future paths absent",
+      "status": "STATIC_MATCH"
+    }
+  ],
+  "candidate_imports": 0,
+  "candidate_parse_compile_tests": 0,
+  "JVM_COMSOL_gate_calls": 0,
+  "native_compatibility": "UNTESTED",
+  "candidate_manifest_sha256": "82e556243b29b10ae65b95dcdff7f854734b6f1cfffc1881327cab1939ebe5c8"
+}

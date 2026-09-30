@@ -1,0 +1,197 @@
+[
+  {
+    "path": "C:/Users/BML/Desktop/COMSOL63_NORMAL30_NATIVE_RECIPIENT_REVIEW_20260930.zip",
+    "bytes": 38757,
+    "sha256": "3b1f58594a6968bda4c55efc3fb2119dfe914c5c5f549933f4fd573df2683140"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/CODE_MANIFEST.json",
+    "bytes": 1080,
+    "sha256": "6b9ae2a75a2035d0cc80359f5d83cc3ca5dc5aa744b68255d219ce8a55feb603"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/src/Normal30Candidate.java",
+    "bytes": 74551,
+    "sha256": "6876e774ee7788e6f5e84ba50af3952bbf41af57d541e3bc0c4f8e044c7fb84d"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/src/diagnostic_consumer.py",
+    "bytes": 18880,
+    "sha256": "9bd7f771f63df17ef0139a260317edff043f01a2d37c8f36bc55d2fd1b15b959"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/src/candidate_entry.py",
+    "bytes": 13992,
+    "sha256": "0e5ea1d87810bea26002f7e68e8a042080f91cb65733dac628aa56f1d85b50f4"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/PARENT_COMMAND.ps1",
+    "bytes": 17419,
+    "sha256": "4c10d8fe0a31d88640e40af90f90af3cdcd4543376bdf843667073dd1383842c"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/CONTRACT.json",
+    "bytes": 36643,
+    "sha256": "878bfe8e1623c71bcabe434fd8ebc9373b51ff37adc5756f9c22e6df342035ed"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/DIAGNOSTIC_RESULT.json",
+    "bytes": 172971,
+    "sha256": "bd812bd2c668ba81c3d84af2cc40f2fcc3cf28af41f59f984f8b434b8555a500"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/NATIVE_STATE.json",
+    "bytes": 1966,
+    "sha256": "90416d7edfc49e9a1295f39a9b6d4538410d5f3c1f2a6d941df021a962472073"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/OUTPUT_MPH_IDENTITY.json",
+    "bytes": 268,
+    "sha256": "5a4c4167e7a88133d647ef2cb5c5d8c290232f3270a2620a51b8f0a545d20135"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/RESOURCES.json",
+    "bytes": 69,
+    "sha256": "eabc1278972516356fcfdc8bf1c66f3b8faf68e77295e7b7d43f793e650bf55b"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/StoredSolutionRecoveryA.java",
+    "bytes": 80311,
+    "sha256": "d1b707d264d2f2b54c0caee51ce5b30bda8b45bad8f069012e0777f2fbdaabff"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/CODE_MANIFEST.json",
+    "bytes": 2121,
+    "sha256": "c46e68c64cc6a7d7d79938ce53aaef3df6edb2f9b7bddffd17bce949d89215bd"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/contract.json",
+    "bytes": 99222,
+    "sha256": "f6f824ca27102d64d942fb99feeb8b22b64bb3df90c1500e47f7b17e4de5e501"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/gate/c2_entry.py",
+    "bytes": 26769,
+    "sha256": "02c7c0e29d541eee336a081abec4cb8eef7c64ba32466b5cb305499bee8aa3d4"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/gate/C2_CONTRACT.json",
+    "bytes": 3851,
+    "sha256": "5376cf78dfc98a07fcd852943e482b43ee03b79d79fe99b0d39e9f2fe39bea1b"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/gate/C2_CODE_MANIFEST.json",
+    "bytes": 603,
+    "sha256": "23cbd50ee2d0fda4d352578c1a54eb723e27733fe03de7bee7787e456bd894cc"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/analyzer.py",
+    "bytes": 30707,
+    "sha256": "d475bc0e7e51d432689ad4b9da3f38582d8ee75f8228e55db473ea2b21624db0"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/class_artifacts.py",
+    "bytes": 7442,
+    "sha256": "78576d19dc8758ffc642ea7e692adf4144bfb64067fa0bf9ab5aa0d8b4ea0069"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/evidence_metrics.py",
+    "bytes": 3960,
+    "sha256": "1eea84cf2524b9839ff910ea2a09c950d5b121dca210a2ab5f21a366d957f026"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/execution_records.py",
+    "bytes": 11109,
+    "sha256": "b4b9ea1626a8bb9756d6c6e5e935241ca33c7d39a6725878d172a894382dc3c4"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/expected_solver.json",
+    "bytes": 113985,
+    "sha256": "5bf4082faa3d83b482cb6bd61e24793a0d171c8bb72fcb84ca4a9565b6d16f92"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/launcher.py",
+    "bytes": 27041,
+    "sha256": "32c9f3a68eee088069901a35a9a75d9ea8b7534b7ba32f5b726ee7863120d8fe"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/numerical_contract.py",
+    "bytes": 7145,
+    "sha256": "5b678d3a101ebdffb2b4f946063640e73183a86757f35d02484da3f35078f886"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/policy_binding.py",
+    "bytes": 13209,
+    "sha256": "b2a1d3620ad2786a44c9b700f89d927370544fc4b6b7b985d88c258dd8d6f88f"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/status_reader.py",
+    "bytes": 2491,
+    "sha256": "d5f62d2dce22201d73a544706d503ba83501e4c8b3d0dc06ca56d6c3dce45258"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src/winjob.py",
+    "bytes": 15851,
+    "sha256": "2f0bb76d1ff11b12402f79e15f03d6d3fa281644fa9db8c218f1f2213819fc65"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/electrolyte_guard.csv",
+    "bytes": 121274,
+    "sha256": "7d66d1e84c923d9350346a7b242a6533a6d946b27c6697ef8fc570a69e40dd6c"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/preflight_global.csv",
+    "bytes": 281081,
+    "sha256": "9b5c2c1c2e5db846e1e0a3155c1ef0bdc1bb3b8e9f4978ece82efe52b89d52b2"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/preflight_boundary1.csv",
+    "bytes": 246248,
+    "sha256": "34d1d27d4c346faab34ae220adfe252bcac208786c58214f89988c7587a51ce4"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/preflight_boundary4.csv",
+    "bytes": 255038,
+    "sha256": "4d5d3bd263abfca99acf5f2a83ebb11833c3f338b09f8ac5bdbaae9354ab4d30"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/axes_profile_N.csv",
+    "bytes": 36588850,
+    "sha256": "a69d0a8dabfac8cc855e242590857210a254040d8abfbb8f64ca552acc96caf2"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/axes_profile_P.csv",
+    "bytes": 35440077,
+    "sha256": "5c24850c9c52fadd3dc3dc07c88bb95ee4f7746f5d159a041dcfe2656e0b1115"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/tables/electrolyte_guard.csv",
+    "bytes": 149679,
+    "sha256": "39c79d130761e2311f4548dc714d27b80a97a05e47ae80ad4439a95d4d04aa1d"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/tables/preflight_global.csv",
+    "bytes": 349868,
+    "sha256": "6938300d35e4033c3c778899421ff34a99d4159cfb7849a66b83af657c9bab6e"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/tables/preflight_boundary1.csv",
+    "bytes": 306277,
+    "sha256": "e90696d2b4108d06303bd4553b6018ac86390ffb491754352ee44234123599f8"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/tables/preflight_boundary4.csv",
+    "bytes": 317502,
+    "sha256": "6da66095982941e79f1673a93f417351e7c3e206888daef55d7af6c6829fde56"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/tables/axes_profile_N.csv",
+    "bytes": 45311498,
+    "sha256": "6a2a4dc7c214088c95cbfcf11e3ffaa7f282ec1173a0ac389ecb55e936b98c7c"
+  },
+  {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/tables/axes_profile_P.csv",
+    "bytes": 43879490,
+    "sha256": "e3c30e5c59a0c1a7c7389b37f4f2afaefefcb6f6c641df4b337576ae1309d5e7"
+  }
+]

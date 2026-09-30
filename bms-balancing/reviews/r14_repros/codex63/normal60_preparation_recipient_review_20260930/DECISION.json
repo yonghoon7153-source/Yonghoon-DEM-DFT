@@ -1,0 +1,38 @@
+{
+  "review_date": "2026-09-30",
+  "scope": "normal60 offline preparation and proposed changed-branch validation",
+  "candidate_manifest_sha256": "82e556243b29b10ae65b95dcdff7f854734b6f1cfffc1881327cab1939ebe5c8",
+  "run_id": "normal60_candidate_001",
+  "offline_preparation": "ACCEPTED",
+  "limited_validation_plan": "SUITABLE_WITH_PRETEST_FIXTURE_AND_ENGINE_SEAL",
+  "blocking_findings": [],
+  "proposed_validation": {
+    "logical_groups": 12,
+    "cases": 46,
+    "python_cases": 27,
+    "COMSOL_free_java_helper_cases": 4,
+    "powershell_51_cases": 15,
+    "overall_budget_seconds": 1380,
+    "executed_by_recipient": 0,
+    "user_authorization_required": true,
+    "pretest_clarifications": [
+      "Seal exact target-source, harness, engine, fixture and invocation identities before testing.",
+      "Fix PY02-03 field-specific reason and PY03-05/06 actual first rejection reason before running; unrelated exceptions are not PASS."
+    ]
+  },
+  "recipient_static_and_data_checks": 124,
+  "recipient_source_basis_files_directly_matched": 5,
+  "recipient_source_basis_manifest_directly_matched": true,
+  "recipient_baseline_files_sha_matched_to_prior_receipt": 12,
+  "numeric_analysis_repeated": false,
+  "remote_selected_39_preservation": "SENDER_RECORD_CONSISTENCY_ONLY",
+  "functional_validation": "NOT_RUN",
+  "native60_approved": false,
+  "COMSOL_calls": 0,
+  "received_code_import_or_execution": 0,
+  "approval_release_runtime_token_created": false,
+  "overall": "INCOMPLETE",
+  "normal_gate": "INCOMPLETE",
+  "effective_policy": "UNVERIFIED",
+  "long_term_run": "ON_HOLD"
+}

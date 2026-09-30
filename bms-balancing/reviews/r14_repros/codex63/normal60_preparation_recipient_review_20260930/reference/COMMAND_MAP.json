@@ -1,0 +1,100 @@
+{
+  "manifest_sha256": "82e556243b29b10ae65b95dcdff7f854734b6f1cfffc1881327cab1939ebe5c8",
+  "parent": {
+    "executable": "C:/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe",
+    "argv": [
+      "-NoLogo",
+      "-NoProfile",
+      "-NoExit",
+      "-File",
+      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/PARENT_COMMAND.ps1",
+      "-ManifestSha",
+      "82e556243b29b10ae65b95dcdff7f854734b6f1cfffc1881327cab1939ebe5c8"
+    ],
+    "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src",
+    "source": "USER_VISIBLE_POWERSHELL_PARENT",
+    "currently_usable": false,
+    "completion_boundary": {
+      "accepted_proposal": "SCRIPT_FINAL_RECORD_AND_USER_OBSERVED_PROMPT_RETURN",
+      "outer_powershell_exit_code": null,
+      "reason": "-NoExit keeps process alive; do not invent raw host rc. Child native and analyzer rc are captured separately."
+    }
+  },
+  "execute": {
+    "executable": "C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+    "argv": [
+      "-I",
+      "-S",
+      "-B",
+      "-X",
+      "utf8",
+      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/src/candidate_entry.py",
+      "execute",
+      "--approval",
+      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_authorizations/normal60_001.json",
+      "--manifest-sha",
+      "82e556243b29b10ae65b95dcdff7f854734b6f1cfffc1881327cab1939ebe5c8"
+    ],
+    "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src"
+  },
+  "analyze": {
+    "executable": "C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+    "argv": [
+      "-I",
+      "-S",
+      "-B",
+      "-X",
+      "utf8",
+      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/src/candidate_entry.py",
+      "analyze",
+      "--approval",
+      "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_authorizations/normal60_001.json",
+      "--manifest-sha",
+      "82e556243b29b10ae65b95dcdff7f854734b6f1cfffc1881327cab1939ebe5c8"
+    ],
+    "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/src"
+  },
+  "native": {
+    "compile": {
+      "argv": [
+        "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolcompile.exe",
+        "-prefsdir",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/prefs",
+        "-configuration",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/config_compile",
+        "-data",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/data_compile",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/Normal60Candidate.java"
+      ],
+      "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001"
+    },
+    "batch": {
+      "argv": [
+        "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolbatch.exe",
+        "-prefsdir",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/prefs",
+        "-configuration",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/config_batch",
+        "-data",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/data_batch",
+        "-np",
+        "16",
+        "-inputfile",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/Normal60Candidate.class",
+        "-outputfile",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/result.mph",
+        "-batchlog",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/batch.log"
+      ],
+      "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001"
+    }
+  },
+  "not_created_paths": [
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_authorizations/normal60_001.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_authorizations/VALIDATION_RELEASE.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_parent_001",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_authorizations/USER_DECISION.json"
+  ],
+  "gate": "Existing fresh same-process C2 input; no check-only re-diagnosis; no current execution."
+}

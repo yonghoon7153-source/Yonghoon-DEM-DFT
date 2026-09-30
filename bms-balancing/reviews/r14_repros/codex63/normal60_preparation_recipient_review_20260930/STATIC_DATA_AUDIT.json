@@ -1,0 +1,668 @@
+{
+  "scope": "Independent static and byte/data comparisons, not candidate functional tests. No received import/execution.",
+  "status": "PASS",
+  "candidate_manifest_sha256": "82e556243b29b10ae65b95dcdff7f854734b6f1cfffc1881327cab1939ebe5c8",
+  "checks": [
+    {
+      "name": "manifest:src/Normal60Candidate.java",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:src/diagnostic_consumer.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:src/candidate_entry.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:PARENT_COMMAND.ps1",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:CONTRACT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "old-source:src/Normal30Candidate.java",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "old-source:src/diagnostic_consumer.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "old-source:src/candidate_entry.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "old-source:PARENT_COMMAND.ps1",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "old-source:CONTRACT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "old-manifest-direct-prior",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "previous-manifest-pin",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/Normal30Candidate.java:0",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/Normal30Candidate.java:1",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/Normal30Candidate.java:2",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/Normal30Candidate.java:3",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/Normal30Candidate.java:4",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/Normal30Candidate.java:5",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/Normal30Candidate.java:6",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "forward-complete-byte-map:src/Normal60Candidate.java",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "reverse-complete-byte-map:src/Normal60Candidate.java",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/candidate_entry.py:0",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/candidate_entry.py:1",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/candidate_entry.py:2",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/candidate_entry.py:3",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "forward-complete-byte-map:src/candidate_entry.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "reverse-complete-byte-map:src/candidate_entry.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/diagnostic_consumer.py:0",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/diagnostic_consumer.py:1",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/diagnostic_consumer.py:2",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/diagnostic_consumer.py:3",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/diagnostic_consumer.py:4",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/diagnostic_consumer.py:5",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/diagnostic_consumer.py:6",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/diagnostic_consumer.py:7",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/diagnostic_consumer.py:8",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/diagnostic_consumer.py:9",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/diagnostic_consumer.py:10",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/diagnostic_consumer.py:11",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/diagnostic_consumer.py:12",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/diagnostic_consumer.py:13",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/diagnostic_consumer.py:14",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:src/diagnostic_consumer.py:15",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "forward-complete-byte-map:src/diagnostic_consumer.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "reverse-complete-byte-map:src/diagnostic_consumer.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:PARENT_COMMAND.ps1:0",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:PARENT_COMMAND.ps1:1",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:PARENT_COMMAND.ps1:2",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:PARENT_COMMAND.ps1:3",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:PARENT_COMMAND.ps1:4",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:PARENT_COMMAND.ps1:5",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:PARENT_COMMAND.ps1:6",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:PARENT_COMMAND.ps1:7",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:PARENT_COMMAND.ps1:8",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "literal-count:PARENT_COMMAND.ps1:9",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "forward-complete-byte-map:PARENT_COMMAND.ps1",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "reverse-complete-byte-map:PARENT_COMMAND.ps1",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "Java-seven-declared-literal-substitutions",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "Java-tlist-map-is-extension-only",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "contract-changed-fields-exact",
+      "pass": true,
+      "detail": [
+        "approval_path",
+        "b020_requested_times_s",
+        "baseline_files",
+        "baseline_requested_times_s",
+        "candidate_java",
+        "commands",
+        "comparison_end_s",
+        "future_native_blockers",
+        "maximum_physical_s",
+        "policy",
+        "release_path",
+        "requested_times_s",
+        "root",
+        "run_id",
+        "run_root"
+      ]
+    },
+    {
+      "name": "inactive-flags",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "contract-state",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "737-time-construction",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "primary437-secondary187",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "java-tlist-contract-binding",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged-physical-comparison-contract",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged-external-16-pins",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "policy-changes-only-narrative",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-prior-bytes:normal30:electrolyte_guard.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-contract:electrolyte_guard.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-prior-bytes:normal30:preflight_global.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-contract:preflight_global.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-prior-bytes:normal30:preflight_boundary1.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-contract:preflight_boundary1.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-prior-bytes:normal30:preflight_boundary4.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-contract:preflight_boundary4.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-prior-bytes:normal30:axes_profile_N.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-contract:axes_profile_N.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-prior-bytes:normal30:axes_profile_P.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-contract:axes_profile_P.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-prior-bytes:b020:electrolyte_guard.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-contract:B020_electrolyte_guard.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged-B020-pin:electrolyte_guard.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-prior-bytes:b020:preflight_global.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-contract:B020_preflight_global.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged-B020-pin:preflight_global.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-prior-bytes:b020:preflight_boundary1.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-contract:B020_preflight_boundary1.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged-B020-pin:preflight_boundary1.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-prior-bytes:b020:preflight_boundary4.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-contract:B020_preflight_boundary4.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged-B020-pin:preflight_boundary4.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-prior-bytes:b020:axes_profile_N.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-contract:B020_axes_profile_N.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged-B020-pin:axes_profile_N.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-prior-bytes:b020:axes_profile_P.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline-contract:B020_axes_profile_P.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged-B020-pin:axes_profile_P.csv",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "manifest-consumer:LIMITED_VALIDATION_PLAN.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "manifest-consumer:FINAL_STATIC_BINDING.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "manifest-consumer:STATIC_AUDIT.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "manifest-consumer:COMMAND_MAP.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "manifest-consumer:NATIVE_APPROVAL_FIELD_SPEC.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "native-command-map:compile",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "native-command-change-only-root-class:compile",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "native-command-map:batch",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "native-command-change-only-root-class:batch",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "entry-command-binding:execute",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "entry-command-binding:analyze",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "parent-command-binding",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "approval-field-budget-binding",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "candidate-java-pin",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "entry-changed-functions",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "consumer-changed-functions",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "parent-BSave-BInvoke-byte-identical",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "parent-after-GDecision-only-purpose-field",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "12groups46cases-distinct",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "validation-budget-sum",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "preimport-inert-and-no-retry",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "sender39-preservation-record-consistency",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "sender66-static-not-functional",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "sender-final15-static",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "packaging-return-source-bound",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no-real-runtime-in-archive",
+      "pass": true,
+      "detail": null
+    }
+  ],
+  "check_count": 124,
+  "function_ast_changes": {
+    "src/candidate_entry.py": [
+      "analyze",
+      "execute",
+      "permission"
+    ],
+    "src/diagnostic_consumer.py": [
+      "analyze",
+      "coverage",
+      "guard_evidence",
+      "late_summary",
+      "native_stop",
+      "numeric"
+    ]
+  },
+  "proposed_cases_by_engine": {
+    "Python": 27,
+    "COMSOL-free Java helper": 4,
+    "Windows PowerShell5.1": 15
+  },
+  "remote_preservation_scope": "39 sender-record entries; not direct remote verification.",
+  "candidate_functions_executed": 0,
+  "COMSOL_calls": 0,
+  "native_approval": false
+}

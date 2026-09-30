@@ -1,0 +1,67 @@
+{
+  "document_kind": "FIELD_SPECIFICATION_NOT_AUTHORIZATION",
+  "approved": false,
+  "usable": false,
+  "run_id": "normal60_candidate_001",
+  "code_manifest_sha256": "82e556243b29b10ae65b95dcdff7f854734b6f1cfffc1881327cab1939ebe5c8",
+  "future_approval_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_authorizations/normal60_001.json",
+  "future_release_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_authorizations/VALIDATION_RELEASE.json",
+  "activation_requires": [
+    "separate accepted changed-branch validation bound to unchanged manifest",
+    "actual user native60 decision",
+    "current approved default prefs identity",
+    "current permission/path review using accepted route; no policy change"
+  ],
+  "required_future_fields": {
+    "approved": "boolean true only after actual user authorization",
+    "native60_one_shot": "boolean true only for separately approved one native60 attempt",
+    "allow_policy_changes": false,
+    "effective_policy_unverified_accepted": "explicit user decision",
+    "commands": {
+      "compile": [
+        "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolcompile.exe",
+        "-prefsdir",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/prefs",
+        "-configuration",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/config_compile",
+        "-data",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/data_compile",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/Normal60Candidate.java"
+      ],
+      "batch": [
+        "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolbatch.exe",
+        "-prefsdir",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/prefs",
+        "-configuration",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/config_batch",
+        "-data",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/data_batch",
+        "-np",
+        "16",
+        "-inputfile",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/Normal60Candidate.class",
+        "-outputfile",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/result.mph",
+        "-batchlog",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal60_offline_preparation_20260930/future_run_001/batch.log"
+      ]
+    },
+    "budgets_seconds": {
+      "preflight_and_input": 180,
+      "compile_batch": 3600,
+      "process_cleanup_total": 120,
+      "analysis": 900,
+      "delivery": 300,
+      "overall": 5100
+    },
+    "user_decision": "exact existing original statement record path/bytes/SHA, not created now",
+    "validation_release": "path/bytes/SHA of separate accepted release, not created now",
+    "default_prefs_identity": "path/bytes/SHA of exact current user-approved file; not guessed"
+  },
+  "future_release_required": {
+    "changed_branch_validation": "PASS only from actual accepted test results",
+    "native_permission_route_reviewed": "explicit assessment, not native-success guarantee",
+    "manifest_bytes_unchanged_since_validation": true,
+    "validation_evidence": "nonempty pinned source/engine/result records"
+  }
+}

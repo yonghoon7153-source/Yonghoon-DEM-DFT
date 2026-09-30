@@ -1,0 +1,68 @@
+{
+  "normal30": {
+    "electrolyte_guard.csv": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/tables/electrolyte_guard.csv",
+      "bytes": 149679,
+      "sha256": "39c79d130761e2311f4548dc714d27b80a97a05e47ae80ad4439a95d4d04aa1d"
+    },
+    "preflight_global.csv": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/tables/preflight_global.csv",
+      "bytes": 349868,
+      "sha256": "6938300d35e4033c3c778899421ff34a99d4159cfb7849a66b83af657c9bab6e"
+    },
+    "preflight_boundary1.csv": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/tables/preflight_boundary1.csv",
+      "bytes": 306277,
+      "sha256": "e90696d2b4108d06303bd4553b6018ac86390ffb491754352ee44234123599f8"
+    },
+    "preflight_boundary4.csv": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/tables/preflight_boundary4.csv",
+      "bytes": 317502,
+      "sha256": "6da66095982941e79f1673a93f417351e7c3e206888daef55d7af6c6829fde56"
+    },
+    "axes_profile_N.csv": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/tables/axes_profile_N.csv",
+      "bytes": 45311498,
+      "sha256": "6a2a4dc7c214088c95cbfcf11e3ffaa7f282ec1173a0ac389ecb55e936b98c7c"
+    },
+    "axes_profile_P.csv": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal30_limited_validation_R1_20260928/future_run_001/tables/axes_profile_P.csv",
+      "bytes": 43879490,
+      "sha256": "e3c30e5c59a0c1a7c7389b37f4f2afaefefcb6f6c641df4b337576ae1309d5e7"
+    }
+  },
+  "b020": {
+    "electrolyte_guard.csv": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/electrolyte_guard.csv",
+      "bytes": 121274,
+      "sha256": "7d66d1e84c923d9350346a7b242a6533a6d946b27c6697ef8fc570a69e40dd6c"
+    },
+    "preflight_global.csv": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/preflight_global.csv",
+      "bytes": 281081,
+      "sha256": "9b5c2c1c2e5db846e1e0a3155c1ef0bdc1bb3b8e9f4978ece82efe52b89d52b2"
+    },
+    "preflight_boundary1.csv": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/preflight_boundary1.csv",
+      "bytes": 246248,
+      "sha256": "34d1d27d4c346faab34ae220adfe252bcac208786c58214f89988c7587a51ce4"
+    },
+    "preflight_boundary4.csv": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/preflight_boundary4.csv",
+      "bytes": 255038,
+      "sha256": "4d5d3bd263abfca99acf5f2a83ebb11833c3f338b09f8ac5bdbaae9354ab4d30"
+    },
+    "axes_profile_N.csv": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/axes_profile_N.csv",
+      "bytes": 36588850,
+      "sha256": "a69d0a8dabfac8cc855e242590857210a254040d8abfbb8f64ca552acc96caf2"
+    },
+    "axes_profile_P.csv": {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/b020_profile_unit_stages_20260927/runtime/b020/output/axes_profile_P.csv",
+      "bytes": 35440077,
+      "sha256": "5c24850c9c52fadd3dc3dc07c88bb95ee4f7746f5d159a041dcfe2656e0b1115"
+    }
+  },
+  "copied_csv_count": 0,
+  "claims": "Only current bytes pinned; no analyzer/numeric recomputation in this preparation."
+}
