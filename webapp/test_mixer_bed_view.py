@@ -339,6 +339,12 @@ def main():
     chk('⑯b 화면이 겹침 · 혼합 지표를 계산한다는 문구가 없다 (보기 전용 표지와 함께 "계산하지 않는다")',
         '계산하지 않는다' in html)
 
+    # ── ⑰ 재생 · 고화질 PNG · GIF (1저자 요청 09-30 밤) — 화면 쪽 계약만 (동작은 브라우저 시험) ──
+    chk('⑰ 자동 재생 · 고화질 PNG · GIF 버튼이 있다',
+        all(f'id="{i}"' in html for i in ('bedPlay', 'bedSpeed', 'bedLoop', 'bedPng', 'bedPngScale', 'bedGif', 'bedGifStride', 'bedGifRange')))
+    chk('⑰b GIF 인코더는 페이지 안에 있다 (외부 GIF 라이브러리 · 워커 없음) · 내보낸 그림에 보기 전용 표지를 붙인다',
+        'function encodeGif(' in html and 'function lzwBlocks(' in html and 'gif.js' not in html and 'new Worker' not in html
+        and '보기 전용 — 판정은 3D 칸 M 으로만 · 원 = 실제 반경' in html)
     shutil.rmtree(tmp, ignore_errors=True)
     shutil.rmtree(pdir, ignore_errors=True)
     print(f'\ntest_mixer_bed_view: {_ok}/{_ok + len(_fail)} PASS' + (f'   FAILED: {_fail}' if _fail else ''))
