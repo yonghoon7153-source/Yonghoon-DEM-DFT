@@ -22,7 +22,11 @@ def intersection_disc_area(r1, r2, delta):
     ★ 동일 반경 검산: `A = π δ(4r − δ)/4`, 얕은 극한에서 Hertz(`πR*δ`)의 **2배**
       (`A_LIGG/A_Hertz = 2 − δ/(2r)` = `L1-04` 의 형태).
     포함 (`d ≤ |r₁ − r₂|` · 한 구가 다른 구 안) 이면 a² ≤ 0 → 0.  δ ≤ 0 (안 닿음) · d ≤ 0 도 0.
-    ⚠ 포함 경계 근처에서는 r₁ − r₂ 에 불연속 · 비단조 — 반올림 전파 허용폭이 서지 않는다 (`lhs_descriptor_harvest._in_domain_rows`).
+    기하 (★ 정정 09-30 · Codex `LHSC-04` R2 — 옛 서술 "포함 경계 근처에서 r₁ − r₂ 에 불연속 · 비단조 · 허용폭이 서지 않는다" 는 틀렸다):
+      · δ 에 **단조가 아니다** — 인수형 `a² = δ(2r₁−δ)(2r₂−δ)(2r₁+2r₂−δ)/(4d²)` 에서 A 는 δ = 0 의 0 에서 `d² = |r₁² − r₂²|` 의
+        극대 `π·min(r₁, r₂)²` 까지 올랐다가 포함 경계 `d = |r₁ − r₂|` 에서 0 으로 내려간다 (반지름이 같으면 δ ∈ (0, 2r) 에서 단조 증가).
+      · 포함 경계에서는 **연속** (a² → 0).  어긋나는 곳은 동일 반경 · d → 0 퇴화뿐 — 식의 극한은 `π r²` 인데 코드는 d ≤ 0 → 0.
+      · 유한 상한은 늘 있다: `0 ≤ A ≤ π·min(r₁, r₂)²`.  반올림 상자 위 포괄 구간 = `lhs_descriptor_harvest._area_enclosure`.
     """
     d = r1 + r2 - delta
     if d <= 0 or delta <= 0:
@@ -46,9 +50,19 @@ def _selftest() -> int:
     chk('③ 포함 (한 구가 다른 구 안 · d ≤ |r1 − r2|) → 0 · 안 닿음 (δ ≤ 0) → 0',
         intersection_disc_area(2.0, 1.0, 2.0) == 0.0 and intersection_disc_area(2.0, 1.0, 2.5) == 0.0
         and intersection_disc_area(1.0, 1.0, 0.0) == 0.0 and intersection_disc_area(1.0, 1.0, -0.1) == 0.0)
-    chk('④ 반경 대칭 · δ 에 단조 증가 (경계 밖)',
+    chk('④ 반경 대칭 · **동일 반경**에서 δ ∈ (0, 2r) 단조 증가 (다른 반경은 아래 ⑥ — 단조가 아니다)',
         intersection_disc_area(2.0, 0.5, 0.05) == intersection_disc_area(0.5, 2.0, 0.05)
         and intersection_disc_area(1.0, 1.0, 0.1) < intersection_disc_area(1.0, 1.0, 0.2) < intersection_disc_area(1.0, 1.0, 0.5))
+    #  ⑥ ⑦ — Codex LHSC-04 R2 (09-30): 옛 독스트링의 "단조 · 포함 경계 불연속" 이 틀렸음을 식으로 고정한다
+    _r1, _r2 = 0.002, 0.001
+    _dx = math.sqrt(_r1 * _r1 - _r2 * _r2)                       # 극값 d² = |r1² − r2²|
+    chk('⑥ 다른 반경은 δ 에 단조가 아니다 — r1 .002 · r2 .001: δ .00160 → .00161 에서 A 감소 (Codex 반례) · 극대 d² = |r1² − r2²| 에서 '
+        'π·min(r)² (상대 1e-9)',
+        intersection_disc_area(_r1, _r2, 0.00160) > intersection_disc_area(_r1, _r2, 0.00161)
+        and abs(intersection_disc_area(_r1, _r2, _r1 + _r2 - _dx) - math.pi * _r2 * _r2) < 1e-9 * math.pi * _r2 * _r2)
+    chk('⑦ 포함 경계 d → |r1 − r2|⁺ 에서 A → 0 (연속 · r1 2 · r2 1) · 동일 반경 d → 0⁺ 은 A → π r² 인데 d ≤ 0 은 0 (이 퇴화에서만 어긋남)',
+        intersection_disc_area(2.0, 1.0, 2.0 - 1e-9) < 1e-7 and intersection_disc_area(2.0, 1.0, 2.0 - 1e-6) < 1e-4
+        and abs(intersection_disc_area(1.0, 1.0, 2.0 - 1e-9) - math.pi) < 1e-6 and intersection_disc_area(1.0, 1.0, 2.0) == 0.0)
     try:
         import numpy as _np
         chk('⑤ math.pi == np.pi — 옮기기 전 (np.pi) 과 같은 부동소수 결과', math.pi == _np.pi
