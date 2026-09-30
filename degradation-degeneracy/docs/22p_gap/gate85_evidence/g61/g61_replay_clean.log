@@ -1,0 +1,30 @@
+START_HEAD=b49c24fabe94be7a5986bdc54de2d4278c4ebf65 status=0 2026-09-30T17:41:12Z
+sandbox: /tmp/mutation_replay_a2theypj/degradation-degeneracy
+
+물었다        incomplete_receipt_is_refused-g61 node 2 · -k an_incomplete_receipt_is_refused_by_the_reader or a_failed_package_listing_is_also_refused
+
+scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1
+실행한 변이 1건이 전부 기대 node 를 call 단계에서 물었다
+replay rc=0
+sandbox: /tmp/mutation_replay_ud3efxa1/degradation-degeneracy
+
+물었다        incomplete_receipt_is_refused-g61 node 2 · -k an_incomplete_receipt_is_refused_by_the_reader or a_failed_package_listing_is_also_refused
+
+=== 관측한 EXPECT (그대로 붙여 넣어라) ===
+{
+    "incomplete_receipt_is_refused-g61": {
+        "fail": [
+            "tests/test_evidence_receipt_61.py::test_a_failed_package_listing_is_also_refused",
+            "tests/test_evidence_receipt_61.py::test_an_incomplete_receipt_is_refused_by_the_reader"
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_61.py::test_a_failed_package_listing_is_also_refused": "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_61.py::test_an_incomplete_receipt_is_refused_by_the_reader": "Failed: DID NOT RAISE _ReplayError"
+        }
+    }
+}
+
+scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1
+실행한 변이 1건이 전부 기대 node 를 call 단계에서 물었다
+emit-expect rc=0
+END_HEAD=b49c24fabe94be7a5986bdc54de2d4278c4ebf65 status=0 2026-09-30T17:42:09Z

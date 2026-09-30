@@ -1,0 +1,12 @@
+START_HEAD=91f00a72d9a4fc7788214adc54543a5e2d805b5a status=0 2026-09-30T12:17:04Z
+2039 passed, 1 xfailed in 3416.78s (0:56:56)
+pytest rc=0 2026-09-30T13:14:03Z
+   provider 어댑터 — 지금 보존 회귀는 hermetic fake 로만 돈다.
+   새 leg 를 돌리려면 `LEG_PRESERVATION.yaml` 의 `planned:` 에 먼저
+   적고, 실물 보관 경로는 사람이 따로 확인할 것.[0m
+smoke rc=0 220s
+Terminated
+replay rc=143
+sandbox: /tmp/mutation_replay_96oujqht/degradation-degeneracy
+
+END_HEAD=91f00a72d9a4fc7788214adc54543a5e2d805b5a status=0 2026-09-30T13:17:50Z

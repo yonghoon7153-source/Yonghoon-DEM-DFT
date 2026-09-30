@@ -1,0 +1,25 @@
+START_HEAD=28d0effeddc1ce8ed9dedeeabe189fd45eeb4595 status=0 2026-09-30T15:40:36Z
+sandbox: /tmp/mutation_replay_pie_q8ov/degradation-degeneracy
+
+★ 안 물었다    incomplete_receipt_is_refused-g61 node 2 · -k an_incomplete_receipt_is_refused_by_the_reader or a_failed_package_listing_is_also_refused
+
+=== 관측한 EXPECT (그대로 붙여 넣어라) ===
+{
+    "incomplete_receipt_is_refused-g61": {
+        "fail": [
+            "tests/test_evidence_receipt_61.py::test_a_failed_package_listing_is_also_refused",
+            "tests/test_evidence_receipt_61.py::test_an_incomplete_receipt_is_refused_by_the_reader"
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_61.py::test_a_failed_package_listing_is_also_refused": "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_61.py::test_an_incomplete_receipt_is_refused_by_the_reader": "AssertionError: 환경 영수증의 customization 이 부모가 본 것과 양립하지 않는다: sitecustomize: child 가 바이트를 냈는데 startup 이력에 없다 — startup 코드가 자기 파일을 세탁했거나 검색 순서가 어긋났다. 못 믿는 영수증으로 증거를 만들지 않는다 (62차 자체 리뷰 F1 · 65차 N1a)"
+        }
+    }
+}
+
+scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1
+
+=== 문제 ===
+incomplete_receipt_is_refused-g61: tests/test_evidence_receipt_61.py::test_an_incomplete_receipt_is_refused_by_the_reader 이 빨개졌지만 **선언한 이유**가 아니다 — 증인 'Failed: DID NOT RAISE _ReplayError' 이 실패 메시지에 없다 ('AssertionError: 환경 영수증의 customization 이 부모가 본 것과 양립하지 않는다: sitecustomize: child 가 바이트를 냈는데 startup 이력에 없다 — startup 코드가 자기 파일을 세탁했거나 검색 순서가 어긋났다. 못 믿는 영수증으로 증거를 만들지 않는다 (62차 자체 리뷰 F1 · 65차 N1a)')
+rc=1
+END_HEAD=28d0effeddc1ce8ed9dedeeabe189fd45eeb4595 2026-09-30T15:40:56Z
