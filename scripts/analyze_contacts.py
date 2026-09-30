@@ -17,6 +17,7 @@ from collections import defaultdict
 sys.path.insert(0, os.path.dirname(__file__))
 from dem_analysis_core import run_full_analysis
 import type_map_resolve as _tmr
+from metrics_json import json_default as _json_default   # numpy → 파이썬 숫자 (옛 default=str 은 '412' 문자열 — LHS-24 (a))
 
 
 def load_atoms_raw(csv_path):
@@ -92,7 +93,8 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
             continue
         rows.append({
             '접촉유형': ct, '접촉수': v['n_contacts'],
-            '접촉면적_mean(μm²)': round(v['mean_area'], 4),
+            # 접촉 0 인 쌍 (두 상 다 있음 — 측정된 0) 의 평균 면적은 정의되지 않는다 → '—' (LHS-24 (b))
+            '접촉면적_mean(μm²)': round(v['mean_area'], 4) if v['mean_area'] is not None else '—',
             '접촉면적_total(μm²)': round(v['total_area'], 2),
         })
         if ct != 'AM전체-SE':
@@ -264,9 +266,11 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
     if eff_cond:
         rows.append({'지표': '── 이온전도 ──', '값': ''})
         rows.append({'지표': 'SE Volume Fraction', '값': round(eff_cond['phi_se'], 3)})
-        sigma_brug_mScm = round(3.0 * eff_cond['sigma_ratio'], 4)
-        rows.append({'지표': 'σ_Bruggeman (mS/cm)', '값': sigma_brug_mScm})
-        rows.append({'지표': 'σ_brug/σ_grain (Bruggeman)', '값': round(eff_cond['sigma_ratio'], 4)})
+        # τ 가 없으면 (관통 SE 없음) σ 비는 정의되지 않는다 — φ 행만 남긴다 (DESC-01 · LHS-24 (c))
+        if eff_cond.get('sigma_ratio') is not None:
+            sigma_brug_mScm = round(3.0 * eff_cond['sigma_ratio'], 4)
+            rows.append({'지표': 'σ_Bruggeman (mS/cm)', '값': sigma_brug_mScm})
+            rows.append({'지표': 'σ_brug/σ_grain (Bruggeman)', '값': round(eff_cond['sigma_ratio'], 4)})
     # ── Network Solver (자동 추가) ──
     # These values come from network_conductivity.py merge → full_metrics.json
     # Read from full_metrics if already computed
@@ -369,6 +373,13 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
     # Full metrics JSON
     metrics = {
         'porosity': results['porosity'],
+        # 쌍 렌즈 union · 겹침 비율 — ε_sphere 와 **같은 판 · 같은 상자** 로 이미 계산돼 있던 값 (dem_analysis_core.calc_porosity_dual).
+        #   옛 판은 저장하지 않아 파이프라인 2e (recompute_porosity_dual) 만 채웠고, 2e 가 없는 재분석 경로
+        #   (batch_rerun_physics · archive_reanalyze · stop_after contact/coverage) 에서는 사라졌다 (LHS-24 (d)).
+        #   ⚠ 이 union 은 벽 밖 부피를 빼지 않아 정확 union 보다 **낮다** — 상한이 아니다 (SELF-72).
+        'porosity_spheresum': results.get('porosity_spheresum', results['porosity']),
+        'porosity_union': results.get('porosity_union'),
+        'overlap_fraction_pct': results.get('overlap_fraction_pct'),
         'thickness_um': results['thickness_um'],
         'plate_z_source': results['plate_z_source'],
         'ps_ratio': ps_ratio,
@@ -406,7 +417,8 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
         safe = ct.replace('-', '_')
         metrics[f'area_{safe}_total'] = v['total_area']
         metrics[f'area_{safe}_n'] = v['n_contacts']
-        metrics[f'area_{safe}_mean'] = v['mean_area']
+        if v['mean_area'] is not None:                  # 접촉 0 쌍은 평균이 없다 — 키를 쓰지 않는다 (LHS-24 (b))
+            metrics[f'area_{safe}_mean'] = v['mean_area']
     for lbl, v in results['coverage'].items():
         metrics[f'coverage_{lbl}_mean'] = v['mean']
         metrics[f'coverage_{lbl}_std'] = v['std']
@@ -451,7 +463,9 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
                 metrics[key] = am_risk[key]
     eff_cond = results.get('effective_conductivity')
     if eff_cond:
-        metrics['sigma_ratio'] = eff_cond['sigma_ratio']
+        # φ 는 τ 와 무관한 기하량 — τ 가 없어도 싣는다 (DESC-01 · LHS-24 (c)) · σ 비는 τ 가 있을 때만
+        if eff_cond.get('sigma_ratio') is not None:
+            metrics['sigma_ratio'] = eff_cond['sigma_ratio']
         metrics['phi_se'] = eff_cond['phi_se']
         metrics['phi_am'] = 1.0 - eff_cond['phi_se'] - results['porosity'] / 100.0
     am_am_cn = results.get('am_am_cn')
@@ -548,7 +562,7 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
             print(f"  ⚠ [{w['severity']}] {w['msg']}")
 
     with open(os.path.join(output_dir, 'full_metrics.json'), 'w') as f:
-        json.dump(metrics, f, indent=2, default=str)
+        json.dump(metrics, f, indent=2, default=_json_default)
 
     # Save percolation sets for 3D viewer
     perc = results['percolation']
@@ -718,7 +732,7 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
                     existing = json.load(f)
                 existing.update(metrics_update)
                 with open(metrics_path, 'w') as f:
-                    json.dump(existing, f, indent=2, default=str)
+                    json.dump(existing, f, indent=2, default=_json_default)
 
             # Update network_summary.csv placeholders with actual values
             ns_path = os.path.join(output_dir, 'network_summary.csv')

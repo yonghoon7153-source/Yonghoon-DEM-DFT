@@ -61,10 +61,9 @@ def read_atoms(atoms_path):
                         ybounds = lines[i+2].split()
                         x_lo, x_hi = float(xbounds[0]), float(xbounds[1])
                         y_lo, y_hi = float(ybounds[0]), float(ybounds[1])
-                        # Use mean of x/y range for box_xy (square box assumed)
-                        box_xy_x = x_hi - x_lo
-                        box_xy_y = y_hi - y_lo
-                        box_xy = (box_xy_x + box_xy_y) / 2.0  # average
+                        # x · y 를 따로 돌려준다 (2026-09-30 · LHS-24 (h) — 옛 판은 두 변의 평균을 한 변으로 써서
+                        #   비정사각 상자의 넓이를 틀렸다 · 코퍼스는 전부 정사각형이라 값 영향 0)
+                        box_xy = (x_hi - x_lo, y_hi - y_lo)
                     except (ValueError, IndexError):
                         pass
                 if line.startswith('ITEM: ATOMS'):
@@ -128,12 +127,12 @@ def read_contacts(contacts_path):
     return contacts
 
 
-def compute_dual(atoms, contacts, plate_z, box_xy=0.05):
-    """Return (porosity_spheresum, porosity_union, overlap_pct) all in %."""
+def compute_dual(atoms, contacts, plate_z, box_xy=0.05, box_y=None):
+    """Return (porosity_spheresum, porosity_union, overlap_pct) all in %.  box_y 가 없으면 정사각형 (box_xy²)."""
     if not atoms:
         return None, None, None
     V_sphere_sum = sum(4/3 * np.pi * a['radius']**3 for a in atoms.values())
-    V_box = box_xy * box_xy * plate_z
+    V_box = box_xy * (box_y if box_y else box_xy) * plate_z
     eps_sphere = (1 - V_sphere_sum / V_box) * 100 if V_box > 0 else None
 
     V_lens_total = 0.0
@@ -325,9 +324,11 @@ def main():
                 })
                 continue
 
-            # Use box_xy from atoms dump (more accurate per-case), fallback to 0.05
-            box_xy_use = box_xy_from_dump if box_xy_from_dump and box_xy_from_dump > 0 else 0.05
-            eps_s, eps_u, ov_pct = compute_dual(atoms, contacts, plate_z, box_xy=box_xy_use)
+            # Use box x · y from atoms dump (more accurate per-case), fallback to 0.05 × 0.05
+            bx_use, by_use = (box_xy_from_dump if box_xy_from_dump and min(box_xy_from_dump) > 0
+                              else (0.05, 0.05))
+            box_xy_use = bx_use
+            eps_s, eps_u, ov_pct = compute_dual(atoms, contacts, plate_z, box_xy=bx_use, box_y=by_use)
             # Anchor to the ORIGINAL analysis porosity (correct RVE) + the box-FREE
             # overlap.  compute_dual's box is GUESSED from the dump bounds and can
             # mis-grab the RVE on some cases (notably thick 'real' campaigns) ->
@@ -350,6 +351,7 @@ def main():
                 'status': status,
                 'plate_z_um': plate_z * 1000,
                 'box_xy_mm': box_xy_use * 1000,
+                'box_y_mm': by_use * 1000,
                 'N_atoms': len(atoms),
                 'N_contacts': len(contacts) if contacts else 0,
                 'porosity_old': old_poro,
@@ -377,7 +379,7 @@ def main():
 
     # Write CSV summary
     if cases_data:
-        keys = ['name', 'status', 'plate_z_um', 'box_xy_mm', 'N_atoms', 'N_contacts',
+        keys = ['name', 'status', 'plate_z_um', 'box_xy_mm', 'box_y_mm', 'N_atoms', 'N_contacts',
                 'porosity_old', 'porosity_spheresum', 'porosity_union',
                 'overlap_pct', 'delta_old_vs_new', 'delta_union_vs_sphere']
         with open(args.csv_out, 'w', newline='') as f:

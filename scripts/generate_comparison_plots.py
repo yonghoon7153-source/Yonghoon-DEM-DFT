@@ -27,6 +27,7 @@ _THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 if _THIS_DIR not in sys.path:
     sys.path.insert(0, _THIS_DIR)
 import se_material  # single source of truth for σ_grain (SE_SG) + its temperature convention
+from metrics_json import metric_number  # 옛 full_metrics 의 숫자 문자열 ('412') 도 숫자로 (LHS-24 (a))
 
 
 def _register_cjk_fallback():
@@ -4164,10 +4165,9 @@ def _merged_params(d):
     for k, v in d.items():
         if k.startswith('_'):
             continue
-        if isinstance(v, bool):
-            continue
-        if isinstance(v, (int, float)):
-            out[k] = float(v)
+        x = metric_number(v)        # bool 제외 · 옛 숫자 문자열 포함 (numpy int 가 '412' 로 저장된 케이스)
+        if x is not None:
+            out[k] = x
     src = d.get('_source_path')
     if src:
         aux_path = os.path.join(os.path.dirname(src), 'viewer_aux.json')

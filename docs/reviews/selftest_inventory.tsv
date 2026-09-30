@@ -29,6 +29,7 @@ scripts/additives.py	--selftest-dispersion	fast	none	claude	초록 1.5s (실측)
 scripts/additives.py	--selftest-sheath	fast	none	claude	초록 0.9s (실측)
 scripts/am_load_balance_jam.py	--selftest	fast	none	claude	초록 0.4s (실측)
 scripts/analyze_contacts.py	--selftest	fast	none	claude	초록 12/12 · 1.5s (실측 2026-09-30) — 웹앱 접촉 분석 단계의 AM 고립 (AM–SE 배위수) 키 계약: 3 상 · mono 작은 침대를 **웹앱과 같은 CLI** (`analyze_contacts_bimodal.py` · `analyze_contacts.py`) 로 돌려 full_metrics.json 을 손계산과 대조.  ★ LHS 인계 7a (J20-k (C)): AM 전 입자의 `am_se_cn_std` · `am_se_cn_median` · `am_se_cn_max` — 옛 코드는 std 를 버리고 median · max 는 상별로만 냈다 (옛 코드 6/12 → 12/12) · 옛 키 (전체 3 · 상별 6×2) 는 그대로 · 항등식 (평균 × N = 쌍 개수) · mono 전체 = 그 한 상 (7b 근거)
+scripts/metrics_json.py	--selftest	fast	none	claude	초록 3/3 · 0.1s (실측 2026-09-30) — full_metrics.json 숫자 규약 한 곳: 쓰기 `json_default` (numpy int · bool_ · float · 배열 → 파이썬 값 · 그 밖은 옛 동작 str) · 읽기 `metric_number` (옛 케이스의 숫자 문자열 '412' → 숫자 · '7:3' · 'True' · 'nan' · 이름 → None).  계기 = 웹앱 ② LHS-24 (a): analyze_contacts 의 `default=str` 로 am_am_n_contacts 가 문자열이 되어 그룹 선택기 · 그룹 그림 · 예측기 (빠진 값을 0 으로 채움) 에서 조용히 빠졌다.  회귀 시험은 `webapp/test_closed_param_values.py` (check_all)
 scripts/analyze_se_curve_transfer.py	--selftest	fast	none	claude	초록 0.2s (실측)
 scripts/audit_validation_flags.py	--selftest	fast	both	claude	초록 0.1s (실측) — L4-03 Codex 4 픽스처 + 양성 대조
 scripts/b1_chem_fade.py	--selftest	fast	none	claude	초록 0.0s (실측)

@@ -24,6 +24,7 @@ _SCRIPTS_DIR = str(Path(__file__).resolve().parent.parent / 'scripts')
 if _SCRIPTS_DIR not in sys.path:
     sys.path.insert(0, _SCRIPTS_DIR)
 import se_material
+from metrics_json import metric_number as _metric_number   # 옛 숫자 문자열 ('412') 도 숫자 (LHS-24 (a))
 
 #: ★ 탄소 σ_e 앵커도 **한 군데**에서 읽는다 (결함 AUD-02).  전에는 여기에 두 번째 사본이
 #:   있었고 그 값이 리포에 없는 논문을 인용하며 실측과 51배 어긋났다.
@@ -337,12 +338,14 @@ def load_training_data(results_folder, archive_folder):
                         'sigma_full_mScm', 'electronic_sigma_full_mScm', 'thermal_sigma_full_mScm',
                         'sigma_ratio', 'sigma_full', 'coverage_AM_P_mean', 'coverage_AM_S_mean',
                         'coverage_AM_mean', 'ps_ratio'}
+            # ⚠ 아래 자동 타깃은 빠진 값을 0 으로 채운다 (`r.get(fk, 0)`) — 옛 케이스의 숫자 문자열 ('412' · numpy int 가
+            #   json default=str 로 저장된 것) 을 버리면 새 케이스만 값이 있고 옛 케이스는 가짜 0 이 된다 → 숫자로 읽는다 (LHS-24 (a))
             for mk, mv in m.items():
-                if mk not in skip_keys and isinstance(mv, (int, float)) and not isinstance(mv, bool):
+                if mk not in skip_keys and _metric_number(mv) is not None:
                     safe_key = f'fm_{mk}'  # prefix to avoid collision
-                    rows[-1][safe_key] = float(mv)
+                    rows[-1][safe_key] = _metric_number(mv)
             rows[-1]['_all_fm_keys'] = [f'fm_{k}' for k, v in m.items()
-                                         if k not in skip_keys and isinstance(v, (int, float)) and not isinstance(v, bool)]
+                                         if k not in skip_keys and _metric_number(v) is not None]
 
     # Deduplicate
     seen = set()

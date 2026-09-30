@@ -809,7 +809,17 @@
   그룹 비교 열 툴팁 12 · MD 보고서 · 그룹 보고서 · AI 분석 표 · 인용 철회 둘 (coverage 툴팁의 "Minnmann 2021 40–65 %" — 인용 뿌리 감사 E7 · MI-5) · σ_grain "grain interior" → 펠릿 (SELF-51).
   ⚠ **감사 중 정정** — 웹앱 ε_union 은 **공극 상한이 아니다**: 벽 밖 부피를 안 빼서 `docs/data/lhs_union_20260927/` 194/194 건에서 정확 union 보다 낮다
   (중앙 −0.64 %p · 범위 −3.43 … −0.19 · lhsx −0.75 %p · 벽 밖까지 빼면 차 중앙 0.001 %p).  `lhs_union_webapp.py` docstring 의 "① = 공극 상한" 도 틀렸다 → `SELF-72`.
-- ⬜ **웹앱 ② (값 · 경로 — `LHS-24`)** · ⬜ **③ (정확 union MC 단계 → `porosity_union_exact_pct` · `thickness_mass_conserving_um` · `phi_*_mass_conserving` · v2 후보 열)**.
+- ✅ **웹앱 ②-a (09-30 밤 · 파이프라인 값 — 시험 먼저 `webapp/test_closed_param_values.py` 옛 코드 12/28 → 28/28 · 합성 침대 다섯을 웹앱과 같은 CLI 로)**:
+  (a) `full_metrics.json` 의 numpy 값이 `default=str` 로 문자열 (`am_am_n_contacts` '412') 이던 것 → 쓰기 `metrics_json.json_default` (int · bool · float) ·
+  읽기 `metric_number` 로 옛 케이스의 숫자 문자열도 숫자 (그룹 선택기 · 그룹 그림 · **예측기** — 예측기 자동 타깃은 빠진 값을 0 으로 채워 옛 케이스가 가짜 0 이 될 뻔했다) ·
+  (b) 두 상이 침대에 다 있는데 접촉 0 인 쌍 = **측정된 0** (`area_<쌍>_n` 0 · `_total` 0 · `_mean` 없음 · 접촉 요약 행 · 평균 '—') · 상이 없으면 쌍 없음 (J20-h 와 같은 규칙) ·
+  (c) τ 가 없어도 `phi_se` · `phi_am` (σ_Bruggeman 두 행만 τ 조건 · 원장 `DESC-01`) · (d) 분석기가 `porosity_union` · `overlap_fraction_pct` · `porosity_spheresum` 을
+  **직접** 저장 — 재분석 경로 (batch_rerun_physics · archive_reanalyze · stop_after contact/coverage) 에서도 남는다 ·
+  (h) 비정사각 상자 = x · y (`calc_porosity(_dual)` · `recompute_porosity_dual.compute_dual`) — 코퍼스 163/163 정사각형이라 값 영향 0.
+  ⚠ **(d) 보고 정정** — 착수 전 보고의 *"2e 는 다른 판 · 상자 규칙이라 처방 뒤 화면 ε_union 이 조금 바뀔 수 있다"* 는 **틀렸다**: 2e 는 원 공극률에 고정해
+  ε_u = ε_s + 겹침 · (1 − ε_s) 로 쓰므로 판 · 상자 규칙이 최종값에 들어가지 않는다 → 분석기 값 = 2e 값 (시험 D2 · 1e-9) · 기존 케이스 값 변화 0.
+  웹앱: 접촉 요약 툴팁 (0 행 · '—' · N/A · 옛 케이스는 재분석해야 0 행) · φ_SE 툴팁 (τ 없어도 나온다) · 파이프라인 변경이라 WSL 5번 봉인 (1e09f661d) 이후 세대.
+- ⬜ **웹앱 ②-b** (e 그룹 강조 lower_better · AM–AM CN std 열 · f 등급 · 뷰어 Hertz 대체 표지 · g 그룹 그림 union · overlap) · ⬜ **③ (정확 union MC 단계 → `porosity_union_exact_pct` · `thickness_mass_conserving_um` · `phi_*_mass_conserving` · v2 후보 열)**.
 
 ## 인계 판정 (지금)
 

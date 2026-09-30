@@ -2110,7 +2110,7 @@ const METRIC_TIPS = {
   'SE Volume Fraction': {
     title: 'SE Volume Fraction φ_SE (구 부피 합 ÷ 판 간격)',
     formula: 'φ_SE = Σ_SE(4/3·π·r³) / (L_x·L_y·z_판)',
-    desc: 'SE 구 부피 합을 전극 부피 (가로 × 세로 × 판 간격) 로 나눈 값입니다 (dem_analysis_core.calc_effective_conductivity).  ε_sphere 와 같은 구 부피 합 규약이라 겹친 부피를 두 번 세고 union 기준과 닫히지 않습니다.  LHS 인계표의 φ 는 (라) 질량 보존 두 열 (phi_*_mass_conserving = φ_sphere × T / T_mc) 입니다 (J20-e).  ⚠ 지금은 굴곡도 τ 가 없으면 이 행이 계산되지 않는다 (웹앱 ② 에서 고칠 예정).',
+    desc: 'SE 구 부피 합을 전극 부피 (가로 × 세로 × 판 간격) 로 나눈 값입니다 (dem_analysis_core.calc_effective_conductivity).  ε_sphere 와 같은 구 부피 합 규약이라 겹친 부피를 두 번 세고 union 기준과 닫히지 않습니다.  LHS 인계표의 φ 는 (라) 질량 보존 두 열 (phi_*_mass_conserving = φ_sphere × T / T_mc) 입니다 (J20-e).  굴곡도 τ 가 없어도 (관통 SE 없음) 이 값은 나온다 — 기하량이기 때문이다 · σ_Bruggeman 두 행만 τ 가 있을 때 나온다 (2026-09-30 웹앱 ② · 원장 DESC-01 — 그 전에 분석한 케이스는 재분석해야 나온다).',
     meaning: 'SE 부피 분율이 높을수록 이온 전도 네트워크 형성에 유리하지만, 그만큼 AM 비율이 줄어 에너지 밀도가 떨어집니다. 최적의 trade-off를 찾는 것이 핵심입니다.'
   },
   'Contact Pressure mean(MPa)': {
@@ -2674,7 +2674,7 @@ function tabTip(tab, key) {
     return {
       title: '접촉 요약 — ' + kk + ' 쌍',
       formula: '접촉수 = 입자–입자 접촉 덤프에서 이 상 쌍의 행 수 (쌍마다 한 번 · 벽 · 플래튼 제외)\n접촉면적 = Σ c_cpl[22] (LIGGGHTS 기하 교차 원판 · Hertz 계열) — mean = total / 접촉수',
-      desc: '덤프에 이 쌍이 한 번도 없으면 이 표에 행이 없습니다 (= 0 개 · 인계표는 0 으로 싣는다 — J20-h).  AM전체-SE = AM_P-SE + AM_S-SE (bimodal 에서만 나온다).',
+      desc: '두 상이 침대에 다 있는데 덤프에 이 쌍이 한 번도 없으면 접촉수 0 (측정된 0) 행이 나오고 평균 칸은 — 입니다 (0 개의 평균은 정의되지 않는다 · 인계표 J20-h 와 같은 규칙).  상이 침대에 없으면 (예: P:S 10:0 의 AM_S) 그 쌍의 행은 없습니다 (N/A).  ⚠ 2026-09-30 (웹앱 ②) 전에 분석한 케이스에는 0 행이 없습니다 — 재분석하면 나옵니다.  AM전체-SE = AM_P-SE + AM_S-SE (bimodal 에서만 나온다).',
       meaning: '계면 개수 (인계표 area_<쌍>_n · J20-g) 와 같은 정의입니다.  취성 파괴 탭의 같은 이름 행 (severe % · P_c) 과는 다른 양입니다.'
     };
   }

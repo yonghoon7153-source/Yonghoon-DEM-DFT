@@ -32,19 +32,19 @@ SHAPE_FACTOR = {
 
 # ─── Porosity & Thickness ──────────────────────────────────────────────────
 
-def calc_porosity(atoms, plate_z, box_xy=0.05):
+def calc_porosity(atoms, plate_z, box_xy=0.05, box_y=None):
     """
     Porosity = 1 - V_solid / V_box (sphere-sum convention, current production)
     V_box uses mesh plate_z (= actual electrode thickness).
-    All in sim units.
+    All in sim units.  box_y 가 없으면 정사각형 (box_xy²) — 2026-09-30 LHS-24 (h).
     """
     V_solid = sum(4/3 * np.pi * a['radius']**3 for a in atoms.values())
-    V_box = box_xy * box_xy * plate_z
+    V_box = box_xy * (box_y if box_y else box_xy) * plate_z
     porosity = (1 - V_solid / V_box) * 100
     return porosity
 
 
-def calc_porosity_dual(atoms, contacts, plate_z, box_xy=0.05):
+def calc_porosity_dual(atoms, contacts, plate_z, box_xy=0.05, box_y=None):
     """Multiple porosity definitions for full diagnostic (Stage 2026-06-03).
 
     Returns dict with:
@@ -61,9 +61,10 @@ def calc_porosity_dual(atoms, contacts, plate_z, box_xy=0.05):
       - Plastic compaction extent via overlap fraction
       - Both stored alongside legacy 'porosity' field for backward compat.
     """
-    # Sphere-sum (legacy)
+    # Sphere-sum (legacy).  상자 = box_xy × box_y × plate_z (box_y 없으면 정사각형 — 2026-09-30 LHS-24 (h):
+    #   옛 판은 run_full_analysis 가 box_x 하나만 넘겨 비정사각 상자에서 넓이를 x² 로 틀렸다 · 코퍼스는 전부 정사각형)
     V_sphere_sum = sum(4/3 * np.pi * a['radius']**3 for a in atoms.values())
-    V_box = box_xy * box_xy * plate_z
+    V_box = box_xy * (box_y if box_y else box_xy) * plate_z
     eps_spheresum = (1 - V_sphere_sum / V_box) * 100
 
     # Lens volume from contacts (overlap-corrected union)
@@ -152,6 +153,17 @@ def calc_interface_area(atoms, contacts, type_map, scale):
             'n_contacts': cc[ct],
             'mean_area': (ca[ct] / cc[ct]) * area_conv if cc[ct] > 0 else 0,
         }
+
+    # 두 상이 침대에 다 있는데 접촉이 0 인 쌍 = **측정된 0** (2026-09-30 · LHS-24 (b) · 인계표 J20-h 와 같은 규칙).
+    #   옛 판은 키를 만들지 않아 표에서 행이 사라졌다 (bimodal 의 AM_P–AM_P 가 AM_P 3–16 알 침대에서 빈칸).
+    #   평균 면적은 접촉 0 개에서 정의되지 않으므로 None — 저장 쪽이 키를 빼고 표에 '—' 를 쓴다.
+    #   상이 침대에 없으면 (10:0 의 AM_S 처럼 선언만) 그 쌍은 만들지 않는다 (N/A).
+    present = sorted({type_map[a['type']] for a in atoms.values() if a['type'] in type_map})
+    for i, p1 in enumerate(present):
+        for p2 in present[i:]:
+            ct = '-'.join(sorted([p1, p2]))
+            if ct not in result:
+                result[ct] = {'total_area': 0.0, 'n_contacts': 0, 'mean_area': None}
 
     # AM_total-SE
     am_se_total = sum(v['total_area'] for k, v in result.items()
@@ -369,7 +381,7 @@ def calc_am_am_cn(atoms, contacts, am_types, scale=1000.0):
         'mean': float(np.mean(values)),
         'std': float(np.std(values)),
         'n_am': len(am_ids),
-        'n_contacts': sum(values) // 2,
+        'n_contacts': int(values.sum()) // 2,     # 파이썬 int (numpy int64 는 json default=str 로 '412' 가 됐다 — LHS-24 (a))
         'mean_area': float(np.mean(am_am_areas)) * area_conv if am_am_areas else 0,
         'total_area': float(np.sum(am_am_areas)) * area_conv if am_am_areas else 0,
     }
@@ -942,13 +954,20 @@ def calc_effective_conductivity(atoms, perc_result, porosity, tortuosity_result,
     v_se = sum(4/3 * np.pi * atoms[aid]['radius']**3 for aid in se_ids)
     phi_se = v_se / v_electrode if v_electrode > 0 else 0
 
+    # Connected SE fraction (percolating)
+    perc_pct = perc_result.get('percolation_pct', 0) / 100
+
     # Use recommended τ (median if high dispersion, else mean)
     tau = tortuosity_result.get('recommended', tortuosity_result.get('mean'))
     if not tau or tau <= 0:
-        return None
-
-    # Connected SE fraction (percolating)
-    perc_pct = perc_result.get('percolation_pct', 0) / 100
+        # τ 가 없어도 φ_SE 는 기하량이다 — 옛 판은 여기서 None 을 돌려 phi_se · phi_am 까지 사라졌다
+        #   (원장 DESC-01 · LHS-24 (c) · 2026-09-30).  σ 비는 τ 없이 정의되지 않으므로 None (지어내지 않는다).
+        return {
+            'phi_se': float(phi_se),
+            'tau': None,
+            'perc_fraction': float(perc_pct),
+            'sigma_ratio': None,
+        }
 
     # Effective conductivity ratio
     sigma_ratio = phi_se * perc_pct / (tau ** 2)
@@ -1061,7 +1080,6 @@ def run_full_analysis(atoms_raw, contacts_raw, type_map, scale, results_dir, box
     box_x, box_y = _get_box_xy(results_dir)
     if box_xy is not None:
         box_x = box_y = box_xy
-    box_xy_val = box_x  # for functions that take single box_xy
 
     # Get plate_z
     plate_z, pz_source = get_plate_z(results_dir, atoms_raw, scale)
@@ -1071,7 +1089,7 @@ def run_full_analysis(atoms_raw, contacts_raw, type_map, scale, results_dir, box
 
     # 1. Porosity — sphere-sum (production calibration anchor) + union (overlap-corrected,
     # literature-comparable) + overlap_fraction (plastic deformation indicator).
-    poro_dual = calc_porosity_dual(atoms_raw, contacts_raw, plate_z, box_xy_val)
+    poro_dual = calc_porosity_dual(atoms_raw, contacts_raw, plate_z, box_x, box_y)
     porosity = poro_dual['porosity_spheresum']       # back-compat: 'porosity' key stays sphere-sum
     porosity_union = poro_dual['porosity_union']
     overlap_fraction_pct = poro_dual['overlap_fraction_pct']
@@ -1152,8 +1170,10 @@ def run_full_analysis(atoms_raw, contacts_raw, type_map, scale, results_dir, box
 
     # 13. Effective Ionic Conductivity
     eff_cond = calc_effective_conductivity(atoms_raw, perc, porosity, tau, type_map, plate_z, box_x=box_x, box_y=box_y)
-    if eff_cond:
+    if eff_cond and eff_cond.get('sigma_ratio') is not None:
         print(f"  σ_eff/σ_bulk: {eff_cond['sigma_ratio']:.4f} (φ_SE={eff_cond['phi_se']:.3f}, τ={eff_cond['tau']:.2f})")
+    elif eff_cond:
+        print(f"  σ_eff/σ_bulk: N/A (τ 없음) · φ_SE={eff_cond['phi_se']:.3f}")
 
     # 14. Brittle fracture stages (Auerbach + Lawn 1998) — auto-DB
     fracture = {}

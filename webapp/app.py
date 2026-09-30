@@ -2206,10 +2206,11 @@ def apply_paper_labels(tables):
 
 def inject_dual_porosity_rows(tables, metrics):
     """Insert ε_union + overlap rows directly under the Porosity row of the
-    network_summary structure section.  Values from recompute_porosity_dual.py
-    (porosity_union, overlap_fraction_pct).  Porosity is contact-model-
-    independent → both columns carry the same value, Δ = 0%.  No-op until the
-    dual-porosity fields exist (run recompute_porosity_dual.py or re-analyze).
+    network_summary structure section.  Values = porosity_union, overlap_fraction_pct —
+    ★ 2026-09-30 (웹앱 ② · LHS-24 (d)) analyze_contacts 가 ε_sphere 와 같은 판 · 상자로 **직접** 저장한다
+    (옛 케이스는 파이프라인 2e = recompute_porosity_dual.py 가 채운 값 — 원 공극률 고정식이라 같은 값).
+    Porosity is contact-model-independent → both columns carry the same value, Δ = 0%.  No-op until the
+    dual-porosity fields exist (re-analyze, or run recompute_porosity_dual.py for old cases).
     Called LAST (after apply_paper_labels) so layout/relabel passes do not move
     the rows; matches the renamed 'Porosity ε_sphere …' label via startswith.
 
@@ -7066,9 +7067,10 @@ def group_param_options():
                     d = json.load(f)
             except (OSError, ValueError):
                 d = {}
+            from metrics_json import metric_number as _metric_number
             for k, v in d.items():
-                if (not k.startswith('_') and isinstance(v, (int, float))
-                        and not isinstance(v, bool)):
+                # 옛 케이스의 숫자 문자열 ('412' — numpy int 가 json default=str 로 저장된 것) 도 숫자 (LHS-24 (a))
+                if not k.startswith('_') and _metric_number(v) is not None:
                     keys.add(k)
         aux = os.path.join(case_path, 'viewer_aux.json')
         if os.path.exists(aux):

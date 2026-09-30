@@ -2007,7 +2007,8 @@
    "note": "(Codex 판정문 라벨: **P1-DESC-01**)\n`dem_analysis_core.py:938` 이 `phi_se = v_se / v_electrode` 를 **이미 계산해 놓고**, `:941-943` 에서 `tau` 가 없거나 `<= 0` 이면 `return None` 한다.  `analyze_contacts.py:430-434` 는 `if eff_cond:` 안에서만 `phi_se` 와 `phi_am = 1 - phi_se - porosity/100` 을 쓰므로 **두 φ 키가 통째로 사라진다** — 공극률은 정상 저장되는데도.  `webapp/pipeline_service.py` 의 `NET_MERGE_KEYS` 에 `phi` 를 포함하는 키가 **하나도 없어**(전수 확인) 후속 merge 도 복구하지 않는다.\n★ 이 리포에서 독립 확인 완료 (판정문 부록).  Codex 는 합성 dump 로 rc=0 · 공극률 99.9664896784 % 저장 · `phi_se`/`phi_am` 키 부재를 재현했다.\n⚠ 결과: **완전행 필터로 학습 코퍼스를 만들면 연결성이 약한 침대가 구조 타깃째 탈락**한다 = 결측이 물리와 상관된다.\n처방: φ 는 전도도·τ 성공과 **무관하게** 원 dump 기하에서 계산 (수확 계약 2번).",
    "evidence_tests": [
     "scripts/dem_analysis_core.py",
-    "scripts/analyze_contacts.py"
+    "scripts/analyze_contacts.py",
+    "webapp/test_closed_param_values.py"
    ]
   },
   {
@@ -6385,7 +6386,7 @@
   {
    "id": "SELF-72",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (09-30 밤 · 웹앱 ① 툴팁을 쓰다가 docs/data/lhs_union_20260927/ 194 건으로 대조)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
@@ -6393,12 +6394,14 @@
    "note": "값의 결함이 아니라 **이름 · 한정어** 결함.  세 입자 겹침 미보정 (공극 ↑) 과 벽 밖 미제거 (공극 ↓) 가 반대 방향이라 원리상 상한도 하한도 아니고, 이 코퍼스에서는 벽 쪽이 이긴다.  같은 날 내 계획서 초안도 \"공극 상한\" 이라 적었다 (커밋 전 발견).  수정 (웹앱 ① 같은 커밋): 라벨 'Porosity ε_union — pair-lens, wall overhang not removed (%)' · 배지 · 툴팁 · 그룹 툴팁 · MD · AI 표 · 등급 설명 _GRADE_PLAIN · docstring ① 정정.  ⚠ dem_analysis_core.py:52 · 103 · recompute_porosity_dual.py:7 주석의 \"overlap-corrected, literature\" 는 5번 봉인 (1e09f661d) 코드라 이번에 안 건드렸다 — ③ (정확 union 파이프라인 단계) 에서 같이 고친다.  status 는 다음 커밋에서 claimed_fixed.",
    "evidence_tests": [
     "webapp/test_closed_param_labels.py"
-   ]
+   ],
+   "claimed_fixed_sha": "a9f310769",
+   "verification_note": "a9f310769 (웹앱 ① · 시험 먼저 — webapp/test_closed_param_labels.py 옛 코드 4 PASS · 47 FAIL → 55/55): 라벨 'Porosity ε_union — pair-lens, wall overhang not removed (%)' · 툴팁 · 등급 설명 (_GRADE_PLAIN) · lhs_union_webapp.py docstring (① 은 상한 아님) 정정 · 값 불변."
   },
   {
    "id": "SELF-73",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (09-30 밤 · J20-l 첫 웹앱 감사 — 1저자 \"닫힌 parameter 들도 잘 webapp 에 반영됐는지 확인\")",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
@@ -6406,7 +6409,9 @@
    "note": "계산 결함 아님 (값 불변).  시험 먼저 — webapp/test_closed_param_labels.py 가 옛 코드에서 4 PASS · 47 FAIL (인프라 4 건만 통과) → 수정 뒤 55/55 · check_all 등록.  라벨 → 툴팁 역맵은 이제 _PAPER_LABEL_MAP 전수 대조 (T1) 라 다음 개명에서 끊기면 게이트가 잡는다.  ② 값 · 경로 결함 (LHS-24) · ③ (정확 union · v2) 는 별도.  status 는 다음 커밋에서 claimed_fixed.",
    "evidence_tests": [
     "webapp/test_closed_param_labels.py"
-   ]
+   ],
+   "claimed_fixed_sha": "a9f310769",
+   "verification_note": "a9f310769 (웹앱 ① · 같은 시험 55/55): 열 머리 Hertz 계열 (c_cpl[22] 기하 교차 원판) · Physics 계열 v1 · coverage 입자별 식 · 두께 = 판 간격 + plate_z_source 배지 · AM–AM CN std 행 · 탭 문맥 툴팁 (접촉 요약 행의 파괴 severe % 오매칭 제거) · 라벨 → 툴팁 역맵 전수."
   },
   {
    "id": "LHS-24",
@@ -6416,7 +6421,10 @@
    "found_by": "claude (09-30 밤 · J20-l 첫 웹앱 감사 · 1저자 비준 순서 ① → ② → ③ 의 ②)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "웹앱 ② 값 · 경로 결함 묶음 — (a) am_am_n_contacts 가 full_metrics.json 에 문자열 (numpy int64 → json default=str · analyze_contacts) 이라 숫자 선택기 · 예측기 · 그룹 강조에서 조용히 빠진다 · (b) 접촉 0 인 상 쌍은 접촉 요약에 행이 없다 (인계표 J20-h = 0) · (c) τ 가 없으면 φ_SE · φ_AM 자체를 안 낸다 (calc_effective_conductivity 가 τ 없으면 None) · (d) 배치 · 아카이브 재분석 경로가 porosity_union · overlap 을 다시 안 만들어 사라진다 · (e) 그룹 최고값 강조의 lower_better 에 porosity union · overlap · CN std 누락 · (f) 등급 엔진 · 3D 뷰어의 physics → hertz 조용한 대체가 같은 라벨 (두 값 ≈ 2.7 배) · (g) 그룹 그림 porosity_union · overlap 체크박스 → [SKIP] Unknown",
-   "note": "① (표시 · SELF-73) 과 달리 값이나 경로를 바꾼다 — 비준 순서대로 ① 다음 묶음.  각 항목 시험 먼저 (옛 코드 실패 확인) · 인계표 · 수확기와 같은 정의로.  ⚠ (c) 는 '문턱 없는 φ' 를 내는 것이지 새 φ 정의가 아니다 (인계 φ = (라) 질량 보존 · ③)."
+   "note": "① (표시 · SELF-73) 과 달리 값이나 경로를 바꾼다 — 비준 순서대로 ① 다음 묶음.  각 항목 시험 먼저 (옛 코드 실패 확인) · 인계표 · 수확기와 같은 정의로.  ⚠ (c) 는 '문턱 없는 φ' 를 내는 것이지 새 φ 정의가 아니다 (인계 φ = (라) 질량 보존 · ③).  ↪ 09-30 밤 ②-a 구현 (a)(b)(c)(d)(h) — webapp/test_closed_param_values.py 옛 코드 12/28 → 28/28 (J20-l) · claimed_fixed 는 커밋 SHA 와 함께 다음 커밋 · (e)(f)(g) = ②-b 남음 · (h) 는 착수 뒤 추가 (비정사각 상자 — 코퍼스 영향 0).",
+   "evidence_tests": [
+    "webapp/test_closed_param_values.py"
+   ]
   }
  ]
 }
