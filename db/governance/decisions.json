@@ -5875,6 +5875,94 @@
     "decision_digest": "sha256:cff47bcd7d4244ddd79b01c0470829c2e59c065bbbc514d9b518e32e157a9f39",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
+  },
+  {
+   "id": "D-2026-09-30-cei-ndp5o14-reference-mismatch",
+   "schema_version": 2,
+   "kind": "metric",
+   "scope": "cei.gap.ndp5o14_reference",
+   "slot": "gap_reproduction_reference_functional",
+   "applies_to": {
+    "systems": [
+     "NdP5O14"
+    ],
+    "tasks": [
+     "fixed_occupation_nscf_gap"
+    ],
+    "methods": [
+     "QE PBE fixed-occ nscf",
+     "MP summary band_gap"
+    ],
+    "use_cases": [
+     "gap_reproduction_check",
+     "citation_condition"
+    ]
+   },
+   "title": "NdP5O14 갭 '−0.943 eV 미재현' — 원인은 참조 계산 종류 불일치 (MP Pmna 6.336 = r2SCAN · 같은 구조 GGA 참조 5.390 대비 +0.003 eV)",
+   "statement": "§6 에서 NdP5O14 의 우리 PBE 갭 5.393 eV 를 비교한 MP 참조 6.336 eV(Pmna mp-560681 = mp-aaabfxkr)는 task mp-2743338 = **r2SCAN Structure Optimization** 에서 나온 값이다. 같은 화합물의 다른 엔트리 P2_1/c mp-4736 의 GGA 밴드 갭(task mp-717219 = GGA NSCF Line)은 5.390 eV 이고, StructureMatcher(기본 허용오차)로 우리 시작·이완 구조가 두 엔트리와 모두 일치한다. ⇒ 우리 값은 같은 근사(GGA) 참조 대비 **+0.003 eV** 로 재현된다. 비준하면: ① 인용위험 HZ-cei-gap-ndp5o14-unreproduced 의 조건을 '−0.943 eV 미재현(원인 미확정)' 에서 'MP Pmna 6.336 은 r2SCAN 값 · 같은 구조 GGA 참조 5.390 대비 +0.003 eV' 로 바꾼다 ② 화면의 [미재현] 표식과 결속 시험을 같이 바꾼다 ③ 사전등록 예측(6.33–6.46)이 틀렸다는 기록과 등록된 9 종 집계는 그대로 둔다(원인만 덧붙인다).",
+   "decision_state": "proposed",
+   "results_seen": true,
+   "exploratory": false,
+   "evidence": [
+    {
+     "kind": "mp_entries",
+     "value": {
+      "mp-4736": {
+       "sg": "P2_1/c",
+       "gap": 5.39,
+       "es_task": "mp-717219 (GGA NSCF Line)"
+      },
+      "mp-560681": {
+       "sg": "Pmna",
+       "gap": 6.336,
+       "es_task": "mp-2743338 (r2SCAN Structure Optimization)"
+      }
+     }
+    },
+    {
+     "kind": "ours",
+     "value": {
+      "gap_PBE_fixed_occ_eV": 5.393,
+      "diff_vs_GGA_ref_eV": 0.003,
+      "diff_vs_r2SCAN_ref_eV": -0.943
+     }
+    },
+    {
+     "kind": "structure_match",
+     "value": "StructureMatcher 기본 허용오차 — 우리 시작·이완 구조 ↔ mp-4736 True · mp-560681 True · 이완 구조 sg P222_1(0.01)/Pmna(0.1)"
+    },
+    {
+     "kind": "id_decoding",
+     "value": "새 ID = 옛 번호 26 진(a=0) · 검산 짝 aaabfxkr→560681 · aaacqxxk→1211324"
+    }
+   ],
+   "method_ref": "사용자 gabia 조회 2 건 (mp_api · use_document_model=False) · 이 세션 2026-09-30",
+   "record": "db/properties/cei_gap_ndp5o14_reference_check_2026_09_30.json",
+   "surface": "db/properties/cei_figs/index.html#s6",
+   "depends_on": [
+    "D-2026-09-16-cathode-cei-gap-target"
+   ],
+   "reopen_criteria": [
+    "MP 가 mp-4736 의 GGA 밴드 계산을 다시 돌려 값이 바뀌면 다시 본다",
+    "우리 구조가 두 엔트리와 다른 골격이라는 증거(더 엄격한 허용오차의 불일치 등)가 나오면 다시 연다",
+    "⛔ '다른 참조를 하나 더 찾았다' 는 재개 사유가 아니다"
+   ],
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-09-30"
+    }
+   ],
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-09-30",
+     "state": "proposed",
+     "note": "사용자 MP 조회(2 건)로 원인 확인. 트랙 = CEI → 비준은 사용자 또는 1저자(실험 쪽) — 인계 중이라 누가 비준할지 먼저 정한다."
+    }
+   ],
+   "_note": "결과를 본 뒤의 원인 확인이다(results_seen=true). 등록된 예측·문턱·집계는 건드리지 않는다 — 인용 조건만 바꾸는 개정안이다."
   }
  ]
 }

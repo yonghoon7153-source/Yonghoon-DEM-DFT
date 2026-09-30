@@ -223,7 +223,7 @@ MP GGA/GGA+U hull, Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries (09-19 실행과 240 칸
           ⚠ x = 0.02 에서는 그 차이가 <b>유의폭(±0.010 eV/atom) 안</b>이라 크기는 인용하지 않는다</li>
       <li>hull 이 고르는 <b>판별종 10 종을 우리 DFT 로 직접 쟀다 — 10/10 갭이 열려 있다</b> (2.26–5.99 eV, PBE).
           x = 0.02 에서도 hull 이 고르는 판별종은 <b>같은 10 종</b>이다.
-          9 종은 MP 와 ±0.12 eV 안에서 재현, <b>NdP₅O₁₄ 1 종은 −0.94 eV 미재현</b>(원인 미확정, 그래도 5.39 eV 절연체)</li>
+          9 종은 MP 와 ±0.12 eV 안에서 재현. <b>NdP₅O₁₄</b> 는 표적으로 쓴 MP 값(6.336)이 <b>r2SCAN</b> 계산이라 −0.94 eV 로 보였고, 같은 구조의 GGA 참조(5.390)와는 <b>+0.003 eV</b> 다(09-30 확인 · 인용 조건 개정 비준 대기 · 어느 쪽이든 5.39 eV 절연체)</li>
     </ul></div>
     <div class="tldr-no"><div class="tldr-lbl">⛔ 말하지 않는 것 <span class="mono">— 전체 34 개는 <a href="#s9">§9</a></span></div><ul>
       <li><b>“Nd 가 산화 안정성·전압창을 넓힌다”</b> — 우리 데이터에 <b>그 증거가 없다</b>. 오히려 2.14 V → <b>1.92 V</b> 로 <b>좁아지는 쪽</b>이다(0.22 V 는 hull 오차 크기라 정량으로 인용하지 않는다 · §0).
@@ -1573,7 +1573,7 @@ Ga(−0.0757)는 <b>0.6591 로 구분된다.</b> 이어 붙이면 구분되는 �
 </section>
 <section id="s6" class="sec">
 <details class="secfold" open>
-<summary><h2 class="sec-h">6. 갭 — 판별종 10 종을 우리 DFT 로 쟀다 (목록은 결과 전에 박았다)</h2><span class="serbadge">조성 무관 · 상 자체</span><span class="sec-one"><b>10/10 완주</b>(2026-09-21 · x = 0.02 에서도 같은 10 종) — 9 종 MP 재현(평균 +0.053 eV · 순위는 근접쌍 둘만 뒤바뀜) · <b>NdP₅O₁₄ 1 종 −0.943 eV 미재현</b>(원인 미확정). 10 종 전부 갭 열림 2.26–5.99 eV(PBE). 등록 예측(6.33–6.46)은 <b>틀렸다</b> — 문턱은 안 옮긴다</span></summary>
+<summary><h2 class="sec-h">6. 갭 — 판별종 10 종을 우리 DFT 로 쟀다 (목록은 결과 전에 박았다)</h2><span class="serbadge">조성 무관 · 상 자체</span><span class="sec-one"><b>10/10 완주</b>(2026-09-21 · x = 0.02 에서도 같은 10 종) — 9 종 MP 재현(평균 +0.053 eV · 순위는 근접쌍 둘만 뒤바뀜) · <b>NdP₅O₁₄ 1 종 −0.943 eV</b> — 비교한 MP 값이 r2SCAN 이었다(같은 구조 GGA 참조와 +0.003 · 09-30 · 인용 조건 개정 비준 대기). 10 종 전부 갭 열림 2.26–5.99 eV(PBE). 등록 예측(6.33–6.46)은 <b>틀렸다</b> — 문턱은 안 옮긴다</span></summary>
 <div class="secbody">
 
 <div class="card" style="margin:0 0 14px;border-left:3px solid var(--ok)">
@@ -1670,7 +1670,7 @@ Ga(−0.0757)는 <b>0.6591 로 구분된다.</b> 이어 붙이면 구분되는 �
 <tr><td>Nd(PO3)3</td><td class='mono'>C222_1</td><td class='mono'>5.487</td><td class='mono'>5.497</td><td class='mono'>+0.010 (+0.2%)</td><td><span style='color:#6b7280;font-size:.86em'>↔ Nd₂(SO₄)₃ 와 근접쌍 — 순서 주장 안 함</span></td></tr>
 <tr><td>NdPO4</td><td class='mono'>P2_1/c</td><td class='mono'>5.679</td><td class='mono'>5.799</td><td class='mono'>+0.120 (+2.1%)</td><td></td></tr>
 <tr><td>LiNd(PO3)4</td><td class='mono'>C2/c</td><td class='mono'>5.979</td><td class='mono'>5.993</td><td class='mono'>+0.014 (+0.2%)</td><td></td></tr>
-<tr data-claim="HZ-cei-gap-ndp5o14-unreproduced"><td>NdP5O14</td><td class='mono'>Pmna</td><td class='mono'>6.336</td><td class='mono'><b>5.393</b> <span class="claim-mark">[미재현]</span></td><td class='mono' style='color:#be123c;font-weight:700'>-0.943 (-14.9%)</td><td><span style='color:#be123c;font-weight:700'>⛔ 미재현 — 원인 미확정</span> <span style='color:#6b7280;font-size:.86em'>— 구조 Pmna 확인(spglib) · nscf fixed-occ, nbnd 332, k 5×5×4(기약 51) · vc-relax 수렴 P −0.35 kbar · 부피 가설(+3.66 %)은 P₂O₅(+9.42 % 팽창, 갭 −0.016)가 반증. 인용할 때 이 단서를 뗄 수 없다 — 아래 카드</span></td></tr>
+<tr data-claim="HZ-cei-gap-ndp5o14-unreproduced"><td>NdP5O14</td><td class='mono'>Pmna</td><td class='mono'>6.336</td><td class='mono'><b>5.393</b> <span class="claim-mark">[미재현]</span></td><td class='mono' style='color:#be123c;font-weight:700'>-0.943 (-14.9%)</td><td><span style='color:#be123c;font-weight:700'>⚠ 비교한 MP 값 6.336 은 r2SCAN 구조최적화의 갭 (09-30 확인)</span> <span style='color:#6b7280;font-size:.86em'>— 같은 구조의 GGA 참조 mp-4736 5.390 대비 +0.003 eV · 인용 조건 개정 비준 대기 · 구조 Pmna 확인(spglib) · nscf fixed-occ, nbnd 332, k 5×5×4(기약 51) · vc-relax 수렴 P −0.35 kbar · 부피 가설(+3.66 %)은 P₂O₅(+9.42 % 팽창, 갭 −0.016)가 반증. 인용할 때 이 단서를 뗄 수 없다 — 아래 카드</span></td></tr>
 </tbody></table>
 </div>
 <p style="margin-top:10px"><strong>10/10 완주 (2026-09-21).</strong>
@@ -1679,8 +1679,8 @@ Ga(−0.0757)는 <b>0.6591 로 구분된다.</b> 이어 붙이면 구분되는 �
 (Nd₃PO₇↔NdCl₃ · Nd₂(SO₄)₃↔Nd(PO₃)₃)은 <strong>MP 간격이 0.016 / 0.054 eV</strong> 로
 우리 offset(0.053)보다 작거나 비슷하다 — <strong>분해하지 못하는 근접쌍</strong>이지 순위를
 틀린 것이 아니다. <u>이 두 쌍의 상대 순서는 주장하지 않는다.</u>
-<strong>NdP₅O₁₄ 1 종은 −0.943 eV (−14.9 %) 로 재현되지 않았다</strong> — 평균 offset 은 이 종을
-빼고 낸다(섞으면 재현율이 아니라 혼합값이 된다). 원인은 아래 카드에 있다.
+<strong>NdP₅O₁₄ 1 종은 −0.943 eV (−14.9 %) 로 재현되지 않은 것으로 보였다</strong> — 09-30 조회로, 비교한 MP 값이 <b>r2SCAN</b> 계산이었다는 것이 확인됐다(같은 구조의 GGA 참조와는 +0.003 eV · 아래 카드).
+등록된 집계(평균 offset)는 이 종을 뺀 9 종 그대로 둔다(섞으면 재현율이 아니라 혼합값이 된다).
 <b>10 종 전부 갭이 열려 있다 — 2.26 (NdPS₄) ~ 5.99 (LiNd(PO₃)₄) eV.</b></p>
 <p class="muted" style="font-size:.86em">⚠ MP 값도 PBE 계산이므로 <strong>같은 근사끼리</strong>의
 비교다. 그래서 위 '차' 열은 <strong>방법이 재현되는지 보는 눈금</strong>이지 정확도가 아니다 —
@@ -1718,7 +1718,7 @@ Ga(−0.0757)는 <b>0.6591 로 구분된다.</b> 이어 붙이면 구분되는 �
 넣어 둔 것이 그래서 판별용이다 — 좁은 갭 결말이 <b>가능했는데</b> hull 이 거길 안 갔다는
 것을 말할 수 있어야 하니까.</p>
 <p class="plain">우리 값으로 다시 봐도 병목은 같다 — NdCl₃ <b>4.337 eV</b>(우리) vs 4.300(MP).
-NdP₅O₁₄ 는 <span data-claim="HZ-cei-gap-ndp5o14-unreproduced">우리 값 <b>5.393</b> <span class="claim-mark">[−0.943 eV 미재현 · 원인 미확정]</span></span> 이라도 병목이 아니다.</p>
+NdP₅O₁₄ 는 <span data-claim="HZ-cei-gap-ndp5o14-unreproduced">우리 값 <b>5.393</b> <span class="claim-mark">[r2SCAN 참조 대비 −0.943 · GGA 참조 대비 +0.003]</span></span> 이라도 병목이 아니다.</p>
 
 <h3>⭐ NdP₅O₁₄ — 결과를 보기 전에 <b>예측을 등록했고, 예측이 틀렸다</b> (등록 2026-09-19 · 결과 2026-09-21)</h3>
 <div class="card warn" style="margin:10px 0" data-claim="HZ-cei-gap-ndp5o14-unreproduced">
@@ -1733,13 +1733,18 @@ vc-relax 는 bfgs 수렴, 최종 P −0.35 kbar 로 10 종과 같은 프로토�
 <b>P₂O₅ 는 +9.42 % 팽창하고도 갭이 −0.016 eV 로 맞았다</b>. 10 종의 ΔV(−1.76 ~ +9.42 %)와 Δ갭 사이에 상관이 없다.
 그래서 제안했던 MP 셀 고정 재측정은 <b>던지기 전에 취소</b>했다. (처음 든 “층상 인산염의 층간 팽창” 설명도
 축별 팽창이 +0.84 / +1.28 / +1.49 % 로 거의 균일해서 서지 않는다.)</p>
-<p style="margin:0 0 8px"><b>지금 결론 — 원인 미확정.</b> 이 값을 쓸 때는 “−0.943 eV 미재현(원인 미확정)” 을 같이 적는다.
-반대로 “우리 계산이 틀렸다” 고도 단정하지 않는다 — 구조·설정·수렴이 다 정상이고 부피 가설은 반증됐다.
-남은 것은 MP 참조값 쪽 확인(어느 엔트리·어느 범함수의 6.336 인가)이고, 그건 계산이 아니라 조회다.</p>
+<p style="margin:0 0 8px"><b>지금 결론 — 원인 확인 (09-30 MP 조회).</b> 비교한 6.336 은 <b>r2SCAN 구조최적화</b>(task mp-2743338)의 갭이다.
+MP 에는 같은 화합물이 한 엔트리 더 있다 — P2₁/c <code>mp-4736</code>, GGA 밴드 계산(task mp-717219) 갭 <b>5.390</b>.
+StructureMatcher(기본 허용오차)로 우리 시작·이완 구조가 두 엔트리와 <b>모두 같은 구조</b>로 판정된다(이완 구조 공간군 P222₁ · 느슨하게 Pmna).
+⇒ 같은 근사(GGA)끼리 보면 우리 5.393 은 <b>+0.003 eV</b> 로 재현된다. 우리 계산이 틀린 것이 아니라 <b>참조의 계산 종류가 달랐다</b>.
+⚠ 인용 조건(원장 <code>HZ-cei-gap-ndp5o14-unreproduced</code>)의 개정은 <b>비준 대기</b>다(<code>D-2026-09-30-cei-ndp5o14-reference-mismatch</code> · proposed) —
+그때까지는 두 참조를 같이 적는다: “MP r2SCAN 참조 대비 −0.943 · 같은 구조 GGA 참조 대비 +0.003”.
+예측이 틀렸다는 기록은 그대로 둔다 — 예측의 기준값이 r2SCAN 이었다.
+<span style="color:var(--mut);font-size:.9em">(task 번호 짝: MP 새 ID 는 옛 번호의 26 진 표기다 — aaagacfa = 2743338 · aaacxsnz = 1330731 · aaabouzj = 717219. 알려진 짝 둘로 검산했다.)</span></p>
 <p class="meta" style="margin:0"><b>논지에 미치는 영향 — 없다.</b> 5.393 eV 도 넓은 갭 절연체다. §6 이 묻는 것은
 “판별종이 전자를 흘리나” 이고 그 답은 10/10 절연체로 같다. 다만 “축합될수록 갭이 넓어진다” 는 사다리 문장은
 <b>처음부터 서지 않는다</b> — 우리 값은 NdPO₄ 5.80 → Nd(PO₃)₃ 5.50 → NdP₅O₁₄ 5.39 로 오히려 <b>내려가고</b>, MP 값으로도 NdPO₄ 5.68 → Nd(PO₃)₃ 5.49 에서 이미 내려간다. 그 문장은 쓰지 않는다.
- 원자료 · <code>db/properties/cei_gap_results_2026_09_19.json</code> (<code>⛔_NdP5O14_미재현</code>) ·
+ 원자료 · <code>db/properties/cei_gap_results_2026_09_19.json</code> (<code>⛔_NdP5O14_미재현</code>) · 원인 조회 <code>db/properties/cei_gap_ndp5o14_reference_check_2026_09_30.json</code> ·
  gabia <code>/data/work/runs/cei_gap/NdP5O14_mp-aaabfxkr/</code></p>
 </div>
 
@@ -2358,7 +2363,9 @@ for d in sorted(docs, key=lambda d: d.energy_above_hull):
     print(d.material_id, d.symmetry.symbol,
           f"E_hull={d.energy_above_hull:.3f}", f"gap={d.band_gap:.3f} eV")</p>
 <p style="margin:8px 0 0;font-size:.84rem;color:var(--mut)">조성이 같아도 다형체가 여럿이다 — 우리 계산과 <b>같은 공간군</b>의 줄을 표적으로 쓴다
-(P₂O₅ 는 바닥상 Pnma 4.853 이 아니라 Fdd2 5.202). ⚠ MP 갭도 PBE 라 “같은 근사끼리” 재현을 보는 눈금이지 실험값이 아니다.</p>
+(P₂O₅ 는 바닥상 Pnma 4.853 이 아니라 Fdd2 5.202). ⚠ 그리고 그 줄의 갭이 <b>어느 계산(GGA/r2SCAN)</b>에서 왔는지 확인한다 — NdP₅O₁₄ Pmna 의 6.336 은 r2SCAN 이었다(§6).
+계산 종류는 <span class="mono">mpr.materials.tasks.search(task_ids=["mp-…"], fields=["calc_type"])</span> 로 본다(요약 문서의 <span class="mono">origins</span> 에 task 번호가 있다 ·
+문서 모델 오류가 나면 <span class="mono">MPRester(key, use_document_model=False)</span>). MP 갭(GGA)은 우리 PBE 와 “같은 근사끼리” 재현을 보는 눈금이지 실험값이 아니다.</p>
 </details>
 
 <div style="margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);
@@ -2547,8 +2554,10 @@ Li 를 맞춘 무-Nd 대조군에서 Nd 항은 음수다(4.5 V: LiCoO₂ <b>−5
 <li><span class="no">⛔</span> <b>“Li 를 안 쓰는 인산염 경로” 를 우리 발견으로 쓰기</b> — Xiao 2019 (Joule) 가
 산화한계 ↔ Li 분율 음의 상관과 ortho &lt; pyro &lt; meta 사다리를 먼저 냈다(§3). 우리 것은 <b>독립 확인 + 재는 양</b>(M³⁺←Li
 교환에너지 · 교차점 Li/P ≈ 1.67) + <b>경로</b>(코팅이 아니라 SE 도펀트가 제자리에서)다.</li>
-<li><span class="no">⛔</span> <span data-claim="HZ-cei-gap-ndp5o14-unreproduced"><b>NdP₅O₁₄ 갭 5.393 eV 를 “−0.943 eV 미재현(원인 미확정)” 단서 없이 인용하기</b> <span class="claim-mark">[미재현]</span></span> —
-그리고 이 값으로 “축합될수록 갭이 넓어진다” 를 말하기. 우리 값은 NdPO₄ 5.80 → Nd(PO₃)₃ 5.50 → NdP₅O₁₄ 5.39 로 <b>내려간다</b>.
+<li><span class="no">⛔</span> <span data-claim="HZ-cei-gap-ndp5o14-unreproduced"><b>NdP₅O₁₄ 갭 5.393 eV 를 참조 조건 없이 인용하기</b> <span class="claim-mark">[미재현]</span></span> —
+원장 조건은 아직 “−0.943 eV 미재현(원인 미확정)” 이고, 09-30 조회로 원인(비교한 MP 값이 r2SCAN)이 확인돼 개정이 비준 대기다.
+그때까지는 “MP r2SCAN 참조 대비 −0.943 · 같은 구조 GGA 참조 대비 +0.003” 을 같이 적는다.
+그리고 이 값으로 “축합될수록 갭이 넓어진다” 를 말하기 — 우리 값은 NdPO₄ 5.80 → Nd(PO₃)₃ 5.50 → NdP₅O₁₄ 5.39 로 <b>내려간다</b>(GGA 참조로도 5.68 → 5.49 → 5.39).
 쓸 수 있는 것은 “10 종 전부 절연체” 까지다 (<code>HZ-cei-gap-ndp5o14-unreproduced</code>).</li>
 <li><span class="no">⛔</span> <b>“x = 0.02 에서 Nd 가 양극 대신 P 방을 댄다”</b> — <b>1 할만</b> 댄다(NdP₅O₁₄ · 5x).
 나머지 <b>9 할은 Nd 가 있어도 양극 TM 인산염</b>이다(LiCoO₂ 4.3 V: 10 % 대 90 % · 두 자리 같음). x = 0.20 에서 “전부” 로 보인 것은
@@ -2624,7 +2633,7 @@ Li 맞춤 가산성 GA — 사전등록 <code>cathode_cei_limatched_additivity_p
 <code>cei_formation_2026_09_16.json</code> ·
 <code>cei_esw_Li_2026_09_16.json</code> · <code>cei_esw_O_2026_09_16.json</code> ·
 <code>dual_compat_closed_2026_09_16.jsonl</code><br>
-갭 <code>db/properties/cei_gap_results_2026_09_19.json</code> (10/10 · citable · NdP₅O₁₄ 는 <code>HZ-cei-gap-ndp5o14-unreproduced</code> 단서와 함께만) ·
+갭 <code>db/properties/cei_gap_results_2026_09_19.json</code> (10/10 · citable · NdP₅O₁₄ 는 <code>HZ-cei-gap-ndp5o14-unreproduced</code> 단서와 함께만) · 원인 조회 <code>cei_gap_ndp5o14_reference_check_2026_09_30.json</code> (09-30 · 비교한 MP 값이 r2SCAN · 개정 <code>D-2026-09-30-cei-ndp5o14-reference-mismatch</code> 비준 대기) ·
 문헌·자가반증 감사 <code>cei_nd_novelty_audit_2026_09_18.json</code><br>
 아직 인용하지 않는다 — 1저자·리뷰 검토 전이다.
 </footer>

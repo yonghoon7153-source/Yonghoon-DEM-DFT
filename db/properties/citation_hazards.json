@@ -604,7 +604,8 @@
     "phrases": {
      "축합될수록 갭이 넓어진다": "3 파일 — 보고서 §6 카드는 이미 data-claim 결속, §9 항목과 kb 두 문서는 미결속"
     }
-   }
+   },
+   "⭐_2026_09_30_원인_확인": "원인 확인 — 비교한 MP 참조 6.336 eV(Pmna mp-560681 = mp-aaabfxkr)는 task mp-2743338 = r2SCAN Structure Optimization 의 갭이다. 같은 구조(StructureMatcher 일치)의 GGA 참조 P2_1/c mp-4736 (task mp-717219 = GGA NSCF Line)은 5.390 eV 이고 우리 5.393 eV 와 +0.003 eV 다. 기록 db/properties/cei_gap_ndp5o14_reference_check_2026_09_30.json · 개정안 D-2026-09-30-cei-ndp5o14-reference-mismatch (proposed). ⚠ 비준 전까지 이 항목의 level·조건은 그대로다 — 인용할 때는 두 참조를 같이 적는다: 'MP r2SCAN 참조 대비 −0.943 · 같은 구조 GGA 참조 대비 +0.003'."
   },
   {
    "file": "db/properties/nd_icohp.json",

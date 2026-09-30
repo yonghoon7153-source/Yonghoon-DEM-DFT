@@ -2279,3 +2279,47 @@ def test_s8b_classification_matches_the_card_and_s6_source_holds_the_value(clien
     #: ⑧ 의 10.3 % 는 LiCoO₂ 4.3 V 한 열이다
     e = s8b[s8b.index("⑧ x = 0.02"):]
     assert "LiCoO₂ 4.3 V 에서 <b>10.3 %</b>" in e and "−3~12 %" in e and "황화물" in e
+
+
+def _mp_new_id_to_int(s):
+    """MP 새 ID(8 자 소문자)는 옛 정수 번호의 26 진 표기다 (a=0). 알려진 짝으로 시험에서 검산한다."""
+    v = 0
+    for ch in s:
+        v = v * 26 + (ord(ch) - 97)
+    return v
+
+
+def test_ndp5o14_reference_mismatch_is_recorded_and_state_consistent(client):
+    """양성+음성 — NdP₅O₁₄ ‘미재현’ 원인(비교한 MP 값이 r2SCAN)이 기록·화면·원장에서 같은 상태로 보인다 (2026-09-30).
+
+    ① task 번호 짝은 새 ID 해독으로 확정한다 — 해독 규칙을 알려진 짝 둘(560681 · 1211324)로 먼저 검산.
+    ② 개정 결정이 proposed 인 동안: 인용위험은 CONDITIONAL 그대로 · 화면은 ‘비준 대기’ 를 적는다.
+       active 로 바뀌면 화면의 ‘비준 대기’ 와 원장의 ‘원인 미확정’ 조건이 같이 바뀌어야 한다 (한쪽만 바뀌면 빨간불).
+    """
+    assert _mp_new_id_to_int("aaabfxkr") == 560681 and _mp_new_id_to_int("aaacqxxk") == 1211324
+    rec = json.loads((ROOT / "db/properties/cei_gap_ndp5o14_reference_check_2026_09_30.json").read_text("utf-8"))
+    kinds = rec["2_사실"]["task_계산_종류"]
+    decoded = {f"mp-{_mp_new_id_to_int(k.split('(새 ID ')[1].rstrip(')'))}": v for k, v in kinds.items()}
+    assert decoded["mp-2743338"] == "r2SCAN Structure Optimization"
+    assert decoded["mp-717219"] == "GGA NSCF Line"
+    for k in kinds:  # 기록의 옛 번호와 해독한 번호가 같은 줄에 있다
+        assert k.split(" ")[0] == f"mp-{_mp_new_id_to_int(k.split('(새 ID ')[1].rstrip(')'))}", k
+    ents = {e["material_id"].split(" ")[0]: e for e in rec["2_사실"]["MP_엔트리"]}
+    assert ents["mp-560681"]["origins"]["electronic_structure"] == "mp-2743338"
+    assert ents["mp-4736"]["origins"]["electronic_structure"] == "mp-717219"
+    gga, ours = ents["mp-4736"]["band_gap_from_ES_doc"], 5.393
+    assert abs(round(ours - gga, 3) - 0.003) < 1e-9, (ours, gga)
+    dec = [x for x in json.loads((ROOT / "db/governance/decisions.json").read_text("utf-8"))["decisions"]
+           if x["id"] == "D-2026-09-30-cei-ndp5o14-reference-mismatch"]
+    assert len(dec) == 1
+    hz = [x for x in json.loads(HAZARDS.read_text("utf-8"))["hazards"] if x["id"] == _NDP_HZ][0]
+    h = _report_html(client)
+    s6 = _section(h, "s6")
+    assert "r2SCAN" in s6 and "5.390" in s6 and "+0.003" in s6 and "mp-4736" in s6
+    assert "지금 결론 — 원인 미확정" not in s6, "§6 결론이 옛 ‘원인 미확정’ 그대로다"
+    if dec[0]["decision_state"] == "proposed":
+        assert hz["level"] == "CONDITIONAL" and "⭐_2026_09_30_원인_확인" in hz
+        assert "비준 대기" in s6 and "비준 대기" in _section(h, "s9")
+    else:
+        assert "비준 대기" not in h, "개정이 비준됐는데 화면이 아직 ‘비준 대기’ 다"
+        assert "원인 미확정" not in json.dumps(hz, ensure_ascii=False), "개정이 비준됐는데 원장 조건이 옛 문구다"

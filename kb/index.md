@@ -1,15 +1,19 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-29 · managed-files: 486
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-30 · managed-files: 489
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 283건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 286건)
+- 2026-09-30 · `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md` — SDCP vs PTFE 흡착에너지 (C-12 v41) — 숫자의 지위 · PTFE 크기 검증 · 세미나 대응 · 닫힘 (2026-09-30 · 2단계 보류) — 값은 citable:…
+- 2026-09-30 · `kb/projects/cei_explainer_prompt_2026_09_30.md` — CEI 설명·인계 AI 프롬프트 — 처음 보는 대학원생 눈높이 우선 (2026-09-30) · 발송 대기 — 인계 묶음(zip)에 들어간다
+- 2026-09-30 · `kb/projects/cei_reading_guide_2026_09_30.md` — CEI 페이지 읽기 지침서 — 1저자·처음 보는 대학원생용 (2026-09-30) · 발송 대기 — 인계 묶음(zip)에 들어간다
+- 2026-09-30 · `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30) · 발송 대기 — 사용자가 zip 으로 전달한다
 - 2026-09-29 · `kb/projects/handoff_2026_09_29_return_to_origin.md` — origin 복귀·통합 카드 — claude/evac-2026-09-28 → claude/friendly-meitner-lldvar (2026-09-29) · 발송 대기 — 사용자가 §0 프롬프트를 origin 세션에 붙여 넣는다
 - 2026-09-29 · `kb/projects/merge_request_2026_09_28.md` — 머지 요청 (최종) — 대피 브랜치 claude/evac-2026-09-28 → claude/friendly-meitner-lldvar · 최종 — 09-29 01:4x KST 실측 (fast-forward …
-- 2026-09-29 · `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 을 "고전압 양극 계면 열화 억제" 로 · 확정 — 1저자(사용자 · CEI 트랙) 2026-09-29 "ㅇㅇ …
+- 2026-09-29 · `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 을 "고전압 양극 계면 열화 억제" 로 · 확정 — 사용자 승인 2026-09-29 "ㅇㅇ si 쪽으로 가는게 …
 - 2026-09-28 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-28 · `kb/reviews/li2s1a_CH_prompt_li2s_cd_reply_pilot800_2026_09_27.md` — CH 프롬프트 — li2s 소셀 유리 MD: 회신 CD 반영 · 파일럿 400 K 800 ps 결과 (C2·C1 미통과 → 400 K 측정 안 됨) · 카드 개정 v2 · 다섯 시드 P 배위 통계 (새 항목 1) · 결정·확인 요청 셋 (외부 1저자에게) · 발송됨 (사용자 · 2026-09-27 · 발송판 = 다섯 시드 결과…
 - 2026-09-28 · `kb/reviews/li2s1a_CH_reply_li2s_cd_reply_pilot800_2026_09_28.md` — 회신 CH — 외부 1저자 (li2s 소셀 유리 MD): 편지 CH 판정 (Q-CH-1 2σ 로 상향 · Q-CH-2 600 K pre-register · Q-CH-3 수정안 수용 + S54 내력·seed4 일시 · 새 항목 둘 — 400 K 두 런 D 2.2 배 · 시드 간 P 이탈 산포) · 수령 (2026-09-28 · 사용자 붙여넣기) — 회신 원문 · 고…
@@ -23,10 +27,6 @@
 - 2026-09-27 · `kb/reviews/codex_CF_reply_wad_aprime_v5_vasp_outsourcing_v2_2026_09_27.md` — 리뷰 CF 회신 — A′ V5 VASP 외주 준비본 v2: NO-GO (P0 3 · P1 3 · D3 예산 조건부 찬성 · 3b′/3c 찬성) · 수령 (1저자 붙여넣기 · 원문 그대로) → 대응 v3 커밋 c8d7…
 - 2026-09-27 · `kb/reviews/codex_CG_prompt_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md` — 리뷰 CG 프롬프트 — A′ V5 VASP 외주 준비본 v3 재리뷰 (CF NO-GO 대응: 증거 먼저 · 등록부 필수 · G4 D3 동일성 · 마지막 레코드 · 실물 Edisp · 포장 실패) · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…
 - 2026-09-27 · `kb/reviews/codex_CG_reply_wad_aprime_v5_vasp_outsourcing_v3_2026_09_27.md` — 리뷰 CG 회신 — A′ V5 VASP 외주 준비본 v3: NO-GO (P1 3 · 새 P0 없음 · S3 찬성 · S4 조건부 찬성 · S5 찬성 · 선택 권고 3) · 수령 (1저자 붙여넣기 · 원문 그대로) → 대응 v4 → 재리뷰 CI
-- 2026-09-27 · `kb/reviews/codex_CI_prompt_wad_aprime_v5_vasp_outsourcing_v4_2026_09_27.md` — 리뷰 CI 프롬프트 — A′ V5 VASP 외주 준비본 v4 재리뷰 (CG NO-GO 대응: 반송 허용 목록 · 봉인 파일럿 결속 · TITEL 접두 규칙 · 권고 3) · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…
-- 2026-09-27 · `kb/reviews/codex_CI_reply_wad_aprime_v5_vasp_outsourcing_v4_2026_09_27.md` — 리뷰 CI 회신 — A′ V5 VASP 외주 준비본 v4: NO-GO (CG P1 3 해제 · 새 P1 1 = 포장 단계 오류를 성공으로 승격 · S1–S6 찬성 · 정리 권고 3) · 수령 (1저자 붙여넣기 + zip 첨부 · 원문 그대로) → 대응 v…
-- 2026-09-27 · `kb/reviews/codex_CJ_prompt_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md` — 리뷰 CJ 프롬프트 — A′ V5 VASP 외주 준비본 v5 재리뷰 (CI NO-GO 대응: 포장 단계별 성공 확인 · TITEL_TRUNCATED · 정리 권고 3) · 발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`c…
-- 2026-09-27 · `kb/reviews/codex_CJ_reply_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md` — 리뷰 CJ 회신 — A′ V5 VASP 외주 준비본 v5: NO-GO (CI 재현 3 경로 해제 · 같은 P1 의 관리 파일 목록 쓰기 경로 1 · S1–S6 · 권고 3: sha 파이프 · 정리 실패 · 반송 문구) · 수령 (1저자 붙여넣기 + zip 첨부 · 원문 그대로) → 대응 v…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -192,7 +192,7 @@
 - `kb/results/screen_volume_vs_energy_2026_08_18.md` — 부피로 떨어뜨린 100개가 "에너지로는 멀쩡한" 진짜 이유 — 조성 섞임이지 구조가 아니다  (2026-08-19 · 확정)
 - `kb/results/sdcp_linio2_binding_report.md` — SDCP Binder Anchoring on LiNiO₂ (104)  (2026-08-11 · 역사 문서 — 계면 결합값 전면 재계산 대상 (2026-08-03 슬…)
 - `kb/results/sdcp_master_summary_2026_07_16.md` — SDCP 종합 정리 — 오비탈 · 작용기 · DFT (마스터)  (2026-07-16 · phaseB-5of5-DONE_verdict-PENDING-v2 (d…)
-- `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md` — SDCP vs PTFE 흡착에너지 (C-12 v41) — 숫자의 지위 · PTFE 크기 검증 · 세미나 대응  (2026-09-23 · 진단 정리 — 값은 citable:false (사전등록 게이트 미통과…)
+- `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md` — SDCP vs PTFE 흡착에너지 (C-12 v41) — 숫자의 지위 · PTFE 크기 검증 · 세미나 대응  (2026-09-30 · 닫힘 (2026-09-30 · 2단계 보류) — 값은 citable:…)
 - `kb/results/sdcp_ptfe_site_screen_summary_2026_08_11.md` — 자리 선호 스크리닝 — UMA 로 무엇을 봤고, 왜 값이 안 나왔고, VASP 에 무엇을 넘겼나  (2026-08-11 · UMA 단계 완료 · DFT+U 인계 준비 완료)
 - `kb/results/sdcp_slab_plateau_broken_2026_08_03.md` — SDCP 슬랩 plateau 를 깼다 — 원인은 계가 아니라 Broyden 이력 (2026-08-03)
 - `kb/results/sdcp_wave1_citable_2026_08_25.md` — SDCP wave1 인용 확정본 — 논문에 쓰는 값 한 장 (basin 일치분)  (2026-08-25 · 인용확정)
@@ -405,7 +405,7 @@
 - `kb/reports/weekly_2026_09_20.md` — 주간 정리 2026-09-14 ~ 09-20 (주간보고 초안)  (2026-09-20 · 완료 (2026-09-20 · 다음 주 문서는 새 파일))
 - `kb/reports/weekly_2026_09_27.md` — 주간 정리 2026-09-21 ~ 09-27 (주간보고 초안)  (2026-09-28 · 완료 (2026-09-28 · 다음 주 문서는 새 파일))
 
-## projects/ (37)
+## projects/ (40)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
 - `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
@@ -413,6 +413,8 @@
 - `kb/projects/cascade_pipeline_fixes_2026_08_19.md` — cascade 파이프라인 수정 목록 — codex 교차리뷰용 (2026-08-19 전수 정독 산물)  (2026-08-19 · 진행 — 진단 확정, 수정 미착수 (내일 codex 교차리뷰 예정))
 - `kb/projects/cascade_rebuild_log_2026_09.md` — cascade 재건 일지 — 2026-09 (누적)  (2026-09-19 · open)
 - `kb/projects/cascade_v23_review_2026_07_11.md` — Cascade v23 전체 리뷰 — 의도 지도 · 빠진 것 점검 · 후보군 구축 (2026-07-11)
+- `kb/projects/cei_explainer_prompt_2026_09_30.md` — CEI 설명·인계 AI 프롬프트 — 처음 보는 대학원생 눈높이 우선 (2026-09-30)  (2026-09-30 · 발송 대기 — 인계 묶음(zip)에 들어간다)
+- `kb/projects/cei_reading_guide_2026_09_30.md` — CEI 페이지 읽기 지침서 — 1저자·처음 보는 대학원생용 (2026-09-30)  (2026-09-30 · 발송 대기 — 인계 묶음(zip)에 들어간다)
 - `kb/projects/collab_rietveld_request_2026_07.md` — 협업자 Rietveld 데이터 요청 문안 + stable phase 사용현황 정리 — 2026-07-28
 - `kb/projects/decision_registry_design_2026_08_20.md` — 결정 레지스트리 설계 v2.1 — codex 3차 P0 반영 (MVP core 4결정)  (2026-08-20 · 설계 v2.1 — codex 3차 P0 3건 닫음 (구현 착수 대상 …)
 - `kb/projects/digital_twin_roadmap.md` — 디지털 트윈 + ML Screening 프로젝트 로드맵
@@ -422,6 +424,7 @@
 - `kb/projects/handoff_2026_09_16_cathode_cei.md` — 인수인계 — 2026-09-16 세션 (양극 CEI §A–§E · 도펀트 스크리닝 · dual compatibility)  (2026-09-16 · 진행)
 - `kb/projects/handoff_2026_09_28_evacuation.md` — 대피 인계 — 2026-09-28 (friendly 세션 컨텍스트 소진 → 서브 브랜치 임시 작업)  (2026-09-28 · 진행)
 - `kb/projects/handoff_2026_09_29_return_to_origin.md` — origin 복귀·통합 카드 — claude/evac-2026-09-28 → claude/friendly-meitner-lldvar (2026-09-29)  (2026-09-29 · 발송 대기 — 사용자가 §0 프롬프트를 origin 세션에 붙여 넣는다)
+- `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30)  (2026-09-30 · 발송 대기 — 사용자가 zip 으로 전달한다)
 - `kb/projects/li2s_glass_external_first_author_followup_pilot800_2026_09_27.md` — li2s 소셀 유리 MD — 파일럿 400 K · 800 ps 결과 후속 보고 (외부 1저자에게) · C2·C1 미통과 → '이 프로토콜로 400 K 는 측정되지 않는다' · 본 15런 400 K 처리 결정 요청  (2026-09-27 · 흡수됨 (미발송) — 회신 CD 가 먼저 와서 통합 편지 CH `kb…)
 - `kb/projects/li2s_glass_external_first_author_letter_2026_09_25.md` — li2s 소셀 유리 MD — 외부 1저자에게 보내는 보고 · 질문 (파일럿 결과 · 갈래0 멈춤 · 게이트 A 두 판 · Q1–Q8)  (2026-09-25 · 초안 — 사용자(실행자) 검토 뒤 외부 1저자에게 발송 · 판정은 외…)
 - `kb/projects/li2s_glass_external_first_author_report_2026_09_26.md` — li2s 소셀 유리 MD — 회신 CC 이행 보고 (외부 1저자에게) · B 실측 3 건 · 카드 개정 초안 확인 요청 · 400 K prod 800 ps 채택 제안  (2026-09-26 · 초안 — 사용자(실행자 · 카드 저자) 검토 뒤 외부 1저자에게 발송…)
@@ -461,7 +464,7 @@
 ## syntheses/ (9)
 - `kb/syntheses/binder_adsorption_charge_state_2026_08_29.md` — 음이온성 바인더의 흡착에너지 — ICEP 의 (−H) 는 탈양성자가 아니라 H 이동이었다  (2026-08-29 · 판독 완료 — ICEP 본문 + SI, Kang 본문 + SI 모두 확보)
 - `kb/syntheses/cathode_coating_computational_lineage.md` — 양극 코팅 계산 계보 — Wolverton → Ceder → Mo 라인과 우리 LPSCl 산화축의 관계  (2026-09-12 · 진행)
-- `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 을 "고전압 양극 계면 열화 억제" 로  (2026-09-29 · 확정 — 1저자(사용자 · CEI 트랙) 2026-09-29 "ㅇㅇ …)
+- `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 을 "고전압 양극 계면 열화 억제" 로  (2026-09-29 · 확정 — 사용자 승인 2026-09-29 "ㅇㅇ si 쪽으로 가는게 …)
 - `kb/syntheses/li3n_barrier_revision_defense_2026_08_12.md` — Li3N(001) 장벽 — 리비전 방어 카드 (AF-ASSB 원고 v5)  (2026-08-13 · 확정 — 2026-08-12: 0.118 로 통일 · 궤적 패널 제외…)
 - `kb/syntheses/md_sampling_variance_defense_2026_08_25.md` — 왜 3시드·200 ps·β 게이트인가 — 짧은 단일 런은 산포를 없애지 않고 가린다  (2026-08-25 · 방어논지)
 - `kb/syntheses/nd_doping_two_axis_verdict.md` — Nd₂O₃ 도핑 — 열역학 창과 전자구조가 **같은 방향으로** 진다  (2026-08-12 · 진행)
