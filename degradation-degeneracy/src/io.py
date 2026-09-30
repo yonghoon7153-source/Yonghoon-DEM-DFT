@@ -1566,6 +1566,74 @@ def realized_from_fits(fits_df, *, planned_env: dict, objective_order: list) -> 
                                   for (c, p), n in sorted(consumed.items())]}
 
 
+_ROSTER_TRUTH_FLOAT = ("lli", "lam_pe", "lam_ne", "noise")
+_ROSTER_TRUTH_STR = ("lam_pe_type", "lam_ne_type")
+
+
+def observed_roster(fits_df, curves_df, *, design: dict, planned_env: dict) -> tuple:
+    """★ 82차 G82-N1 — 관측 roster 를 **출력 행**에서 재구성한다 (고정 표 §10-1).
+
+    fits 행에는 관측 seed(noise realization) 가 없다 — 그래서 cond_id 를 **봉인 입력 curves** 에 연결해 그 조건의
+    값을 가져온다 (fits 에서 추론하지 않는다 · task 의 optimizer seed 와 섞지 않는다). 행이 봉인 입력과 같은지
+    (truth 열 · noise), 관측 cond_id 마다 objective 가 정확히 한 행씩인지를 먼저 본다. writer
+    (`src.fitting.write_execution_record`) 와 validator (`_stage3_checks` 의 `관측_roster_재구성`) 가 이 **한 정의**를 쓴다.
+
+    반환 `(entries, problems)` — problems 가 있으면 entries 는 None.
+    """
+    from src.grid import Condition
+    from tools import design_wire as DW
+    problems: list = []
+    order = list(planned_env["objective_order"])
+    need = ("cond_id",) + _ROSTER_TRUTH_FLOAT + _ROSTER_TRUTH_STR
+    miss_c = [c for c in need + ("seed",) if c not in curves_df.columns]
+    miss_f = [c for c in need + ("objective",) if c not in fits_df.columns]
+    if miss_c or miss_f:
+        return None, [f"관측 roster 재구성에 필요한 열이 없다: curves {miss_c} · fits {miss_f}"]
+    sealed: dict = {}
+    for cid, g in curves_df.groupby("cond_id", sort=True):
+        r0 = g.iloc[0]
+        sealed[str(cid)] = {**{k: float(r0[k]) for k in _ROSTER_TRUTH_FLOAT},
+                            **{k: str(r0[k]) for k in _ROSTER_TRUTH_STR}, "seed": int(r0["seed"])}
+    per_cond: dict = {}
+    for _, row in fits_df.iterrows():
+        cid, obj = str(row["cond_id"]), str(row["objective"])
+        s = sealed.get(cid)
+        if s is None:
+            problems.append(f"{cid[:10]}: fits 의 cond_id 가 봉인 입력 curves 에 없다")
+            continue
+        for k in _ROSTER_TRUTH_FLOAT + _ROSTER_TRUTH_STR:
+            got = float(row[k]) if k in _ROSTER_TRUTH_FLOAT else str(row[k])
+            if got != s[k]:
+                problems.append(f"{cid[:10]}/{obj}: 행의 {k} {got!r} ≠ 봉인 입력 {s[k]!r}")
+        per_cond.setdefault(cid, []).append(obj)
+    for cid, objs in sorted(per_cond.items()):
+        if sorted(objs) != sorted(order):
+            problems.append(f"{cid[:10]}: objective 행 {sorted(objs)} ≠ 계획 {sorted(order)} (관측 쌍 불완전 · 중복)")
+    if problems:
+        return None, problems
+    ros = planned_env["roster"]
+    conds = [Condition(sealed[c]["lli"], sealed[c]["lam_pe"], sealed[c]["lam_ne"], sealed[c]["lam_pe_type"],
+                       sealed[c]["lam_ne_type"], sealed[c]["noise"], sealed[c]["seed"]) for c in sorted(per_cond)]
+    try:
+        entries = DW.roster_from_conditions(conds, design=design, comparison_family_id=ros["comparison_family_id"],
+                                            treatment_id=ros["treatment_id"], replicate_id=ros["replicate_id"])
+    except Exception as e:  # noqa: BLE001 — roster 가 되지 못하면 그 자체가 결함이다
+        return None, [f"관측 조건이 roster 가 되지 못한다: {type(e).__name__}: {e}"]
+    got_ids = {e["cond_id"] for e in entries}
+    if got_ids != set(per_cond):
+        return None, [f"재구성한 roster 의 cond_id 가 관측 행과 다르다 ({len(got_ids)} ≠ {len(per_cond)})"]
+    return entries, []
+
+
+def _sealed_curves_snapshot(run_dir, planned_env: dict):
+    """봉인 curves 스냅샷 (`_inputs/<digest12>_curves.parquet`) 중 계획 `inputs.curves_sha256` 과 바이트가 같은 것."""
+    want = (planned_env.get("inputs") or {}).get("curves_sha256")
+    for p in sorted((Path(run_dir) / "_inputs").glob("*_curves.parquet")):
+        if want and hashlib.sha256(p.read_bytes()).hexdigest() == want:
+            return p
+    return None
+
+
 def _stage3_rederive(run_dir, spec0: dict, s3: dict, env: dict, ents: list, fits_df) -> tuple:
     """★ 82차 전 자체 점검 F2·F12 — 후보를 **다시 유도**한다 (81차 §6 "64hex 존재만으로 통과 금지").
 
@@ -1587,6 +1655,9 @@ def _stage3_rederive(run_dir, spec0: dict, s3: dict, env: dict, ents: list, fits
         places = int(design["coordinate"]["decimal_places"])
     except Exception as e:  # noqa: BLE001 — 설계를 못 읽으면 재유도가 불가능하다 (그 자체가 실패)
         return [f"run_spec.stage3.pairing_design 을 읽지 못한다: {type(e).__name__}: {e}"], budget_bad
+    # ★ 82차 G82-N2 — 재유도는 고정 구현(PCG64 · float64 · little · bank-seed/v1)으로 계산한다. 그러니 writer 와 재유도가
+    #   일치해도 "선언대로 생성했는가" 는 드러나지 않는다 — 선언을 지원 profile 과 따로 대조한다.
+    bad += DW.check_bank_profile(design.get("bank") if isinstance(design, dict) else None, env.get("bank"))
     if not (d_sha == s3["pairing_design_sha256"] == env["pairing_design_sha256"]):
         bad.append("pairing_design 의 digest 가 run_spec·계획과 다르다")
     if pos != env["parameter_order_sha256"] or list(design["parameter_order"]) != list(PARAM_NAMES):
@@ -1742,6 +1813,25 @@ def _stage3_checks(run_dir, spec0: dict) -> dict:
         return out
     rbad = check_execution_record(rec, env) if not ebad else ["계획이 유효하지 않아 대조 불가"]
     out["execution_record"] = (not rbad, "execution_record 가 계획과 맞지 않는다: " + "; ".join(rbad[:3]))
+    # ★ 82차 G82-N3 — 계획 ↔ record 문자열 일치만으로는 둘이 **함께** v5 인 산출을 못 본다. sig 6 · 계획 · record ·
+    #   행 네 선언을 v6 경로의 지원 세대에 묶는다 (세대 문법 검사 · 역사적 reader 는 그대로).
+    from tools.design_wire import STAGE3_PROTOCOL_GENERATION as _PG6
+    g_bad: list = []
+    if spec0.get("sig_version") != 6:
+        g_bad.append(f"sig_version {spec0.get('sig_version')!r} ≠ 6")
+    if (env or {}).get("protocol_generation") != _PG6:
+        g_bad.append(f"계획 protocol_generation {(env or {}).get('protocol_generation')!r} ≠ {_PG6!r}")
+    if rec.get("protocol_generation") != _PG6:
+        g_bad.append(f"record protocol_generation {rec.get('protocol_generation')!r} ≠ {_PG6!r}")
+    _fp_g = run_dir / "fits.parquet"
+    try:
+        _gens = set(pd.read_parquet(_fp_g, columns=["record_generation"])["record_generation"])
+    except Exception as e:  # noqa: BLE001 — 열이 없거나 못 읽으면 행 세대를 확인할 수 없다 (그 자체가 실패)
+        _gens = None
+        g_bad.append(f"fits 행 record_generation 을 읽지 못한다: {type(e).__name__}")
+    if _gens is not None and _gens != {"v6"}:
+        g_bad.append(f"fits 행 record_generation {sorted(map(str, _gens))} ≠ {{'v6'}}")
+    out["세대_연결"] = (not g_bad, "선언 세대 충돌: " + "; ".join(g_bad[:4]))
     cm_p = run_dir / "candidate_map.json"
     ids_map: set = set()
     ents: list = []
@@ -1779,6 +1869,7 @@ def _stage3_checks(run_dir, spec0: dict) -> dict:
         out["후보_재유도"] = (False, "fits 또는 candidate_map 을 읽지 못해 후보를 다시 유도할 수 없다")
         out["실현_재계산"] = (False, "fits 또는 candidate_map 을 읽지 못해 실현 count 를 다시 셀 수 없다")
         out["restart_예산_완주"] = (False, "fits 또는 candidate_map 을 읽지 못했다")
+        out["관측_roster_재구성"] = (False, "fits 또는 candidate_map 을 읽지 못해 관측 roster 를 재구성할 수 없다")
         return out
     rd_bad, budget_bad = _stage3_rederive(run_dir, spec0, s3, env, ents, fits_df)
     out["후보_재유도"] = (not rd_bad, "; ".join(rd_bad[:3]))
@@ -1801,6 +1892,31 @@ def _stage3_checks(run_dir, spec0: dict) -> dict:
     if rz.get("roster_observed_sha256") != env["roster"]["roster_sha256"]:
         rc_bad.append("realized.roster_observed_sha256 가 계획 roster 와 다르다")
     out["실현_재계산"] = (not rc_bad, "; ".join(rc_bad[:3]))
+    # ★ 82차 G82-N1 — 관측 roster 를 **출력**에서 재구성한다. 위 비교는 record ↔ 계획 (둘 다 기록) 이라 fits 행의
+    #   noise 를 바꾸고 봉인만 다시 맞춘 산출을 못 본다. 봉인 curves 스냅샷(계획 curves sha 결속)에서 cond_id 의 관측
+    #   조건을 가져와 행과 대조 → roster 재구성 → 계획 · record 양쪽과 비교.
+    ro_bad: list = []
+    snap = _sealed_curves_snapshot(run_dir, env)
+    if snap is None:
+        ro_bad.append("봉인 curves 스냅샷(_inputs/*_curves.parquet)이 없거나 계획 inputs.curves_sha256 와 다르다 — "
+                      "관측 noise realization 의 출처가 없다 (fits 에서 추론하지 않는다)")
+    else:
+        try:
+            ents_r, probs = observed_roster(fits_df, pd.read_parquet(snap), design=s3.get("pairing_design"),
+                                            planned_env=env)
+        except Exception as e:  # noqa: BLE001
+            ents_r, probs = None, [f"관측 roster 재구성 실패: {type(e).__name__}: {e}"]
+        ro_bad += probs
+        if ents_r is not None:
+            from tools.design_wire import roster_sha256 as _rsha
+            r_sha = _rsha(ents_r)
+            if r_sha != env["roster"]["roster_sha256"] or len(ents_r) != env["roster"]["n_obs"]:
+                ro_bad.append(f"출력에서 재구성한 roster ({len(ents_r)} 관측, {r_sha[:16]}) 가 계획 roster "
+                              f"({env['roster']['n_obs']}, {env['roster']['roster_sha256'][:16]}) 와 다르다")
+            if rz.get("roster_observed_sha256") != r_sha:
+                ro_bad.append(f"record 의 roster_observed_sha256 {str(rz.get('roster_observed_sha256'))[:16]} 가 "
+                              f"출력에서 재구성한 roster {r_sha[:16]} 와 다르다")
+    out["관측_roster_재구성"] = (not ro_bad, "; ".join(ro_bad[:3]))
     return out
 
 

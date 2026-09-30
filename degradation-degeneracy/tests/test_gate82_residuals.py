@@ -300,7 +300,10 @@ def test_g82_n3_02_the_validator_refuses_plan_and_record_that_agree_on_v5_under_
     assert PV.check_execution_record(rec, man["run_spec"]["stage3"]["planned_envelope"]) == [], \
         "계획 ↔ record 문자열 일치만으로는 이 충돌이 보이지 않는다"
     v = IO.validate_provenance(out)
-    assert "세대_연결" in v["fail"] and "protocol_generation" in v["checks"]["세대_연결"], v["checks"].get("세대_연결")
+    assert "세대_연결" in v["fail"], v["fail"]
+    #   두 이유를 각각 본다 — 계획 대조와 record 대조는 서로를 가린다 (하나만 지워도 다른 하나가 같은 검사를 떨어뜨린다)
+    assert "계획 protocol_generation" in v["checks"]["세대_연결"], v["checks"]["세대_연결"]
+    assert "record protocol_generation" in v["checks"]["세대_연결"], v["checks"]["세대_연결"]
     restore()
     fits = pd.read_parquet(out / "fits.parquet")
     fits.loc[fits.index[0], "record_generation"] = "v5"

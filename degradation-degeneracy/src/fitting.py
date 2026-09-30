@@ -1296,6 +1296,10 @@ def _prepare_stage3(stage3: dict, tasks: list, df, objectives: dict, bounds: dic
     bad = check_planned_envelope(env)
     if bad or env.get("schema") != "planned-leg/v4":
         raise ValueError("stage3.planned 가 유효한 planned-leg/v4 가 아니다: " + "; ".join(bad[:3]))
+    # ★ 82차 G82-N3 — 이 경로는 sig_version 6 · 행 v6 를 쓴다. 계획이 다른 세대를 선언하면 선언 충돌이다.
+    if env["protocol_generation"] != DW.STAGE3_PROTOCOL_GENERATION:
+        raise ValueError(f"계획 protocol_generation {env['protocol_generation']!r} ≠ v6 경로의 "
+                         f"{DW.STAGE3_PROTOCOL_GENERATION!r} — sig_version 6 · 행 v6 와 선언 충돌, 시작하지 않는다")
     if adaptive:
         raise ValueError("stage3 경로는 adaptive=False 만 받는다 (계약 v6 arm)")
     if warm_start:
@@ -1309,6 +1313,10 @@ def _prepare_stage3(stage3: dict, tasks: list, df, objectives: dict, bounds: dic
         raise ValueError("stage3.design 의 digest 가 계획의 pairing_design_sha256 와 다르다")
     if DW.parameter_order_sha256(design["parameter_order"]) != env["parameter_order_sha256"]:
         raise ValueError("design 의 parameter_order 가 계획과 다르다")
+    # ★ 82차 G82-N2 — 설계 · envelope 의 bank 선언이 실제 생성 구현(PCG64 · float64 · little · bank-seed/v1)과 같아야 한다
+    _bp = DW.check_bank_profile(design.get("bank"), env["bank"])
+    if _bp:
+        raise ValueError("; ".join(_bp[:3]) + " — 선언대로 생성할 수 없다, 시작하지 않는다")
     # ★ 82차 전 자체 점검 F11 — 설계의 parameter_order 는 **optimizer 벡터** 순서다 (bounds · bank n_params · solution map
     #   열과 같은 것). 좌표 이름 목록을 넣으면 hash 는 통과하지만 map 이 이름이 같은 truth 열을 읽을 수 있다.
     if list(design["parameter_order"]) != list(PARAM_NAMES):
@@ -1392,15 +1400,22 @@ def _prepare_stage3(stage3: dict, tasks: list, df, objectives: dict, bounds: dic
 
 
 def write_execution_record(out_dir, fits, *, planned_env: dict, objective_order: list,
-                           roster_sha256: str) -> dict:
+                           curves_df, design: dict) -> dict:
     """★ 81차 G81-N1 — 실현 기록 `execution-record/v1` + 후보 map `candidate-map/v1` 을 run_dir 에 쓴다.
 
     실현 count 는 fits 행(`restarts_json` · `restart_errors_json`)에서 **세어서** 적는다 — 계획 count 를 복사하지
     않는다. 계획은 `planned_id` 로 참조만.
     """
-    from src.io import realized_from_fits
+    from src.io import observed_roster, realized_from_fits
+    from tools.design_wire import roster_sha256 as _roster_sha256
     from tools.preserve import canonical_bytes, digest
     out_dir = Path(out_dir)
+    # ★ 82차 G82-N1 — 관측 roster 는 validator 와 **같은 정의**(`src.io.observed_roster`)로 fits 행 + 실행이 읽은 봉인
+    #   curves 에서 재구성한다 (시작 전 SHA 복사 폐지). 행이 봉인 입력과 다르면 기록을 쓰지 않는다.
+    ros, ros_bad = observed_roster(fits, curves_df, design=design, planned_env=planned_env)
+    if ros_bad:
+        raise RuntimeError("관측 roster 를 fits 에서 재구성할 수 없다 — execution record 를 쓰지 않는다: "
+                           + "; ".join(ros_bad[:3]))
     # ★ 82차 전 자체 점검 F3 — count 는 validator 와 **같은 정의**(`src.io.realized_from_fits`)로 센다
     real = realized_from_fits(fits, planned_env=planned_env, objective_order=list(objective_order))
     entries: list = []
@@ -1414,7 +1429,7 @@ def write_execution_record(out_dir, fits, *, planned_env: dict, objective_order:
            "planned_id": digest(planned_env), "source_digest": planned_env["source_digest"],
            "protocol_generation": planned_env["protocol_generation"],
            "realized": {"by_objective": real["by_objective"], "candidate_map_sha256": digest(entries),
-                        "n_candidates": len(entries), "roster_observed_sha256": roster_sha256,
+                        "n_candidates": len(entries), "roster_observed_sha256": _roster_sha256(ros),
                         "n_obs_observed": real["n_obs_observed"],
                         "provider_consumed": real["provider_consumed"]}}
     rec["record_digest"] = digest(rec)
@@ -2151,9 +2166,10 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
 
     if _s3 is not None:
         # ★ 81차 G81-N1 — 실현값은 **별도 record** 에. 계획(planned_id)은 참조만 한다.
+        #   ★ 82차 G82-N1 — roster 는 시작 전 SHA 를 옮기지 않고 fits + 봉인 스냅샷 curves(`df`)에서 재구성한다.
         write_execution_record(out_dir, fits, planned_env=_s3["planned_env"],
                                objective_order=list(objectives),
-                               roster_sha256=_s3["roster_sha256"])
+                               curves_df=df, design=stage3["design"])
 
     # F30: config_hash를 비워 두면 어떤 목적함수 정의로 돌았는지 남지 않는다.
     #   실제 obj_cfg 내용을 해시해 박고, 입력 curves와 config 파일의 SHA도 남긴다.

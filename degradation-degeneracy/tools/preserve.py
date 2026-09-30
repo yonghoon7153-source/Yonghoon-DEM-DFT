@@ -3229,6 +3229,10 @@ def check_envelope_v4(env) -> list[str]:
     else:
         if not (_nonempty_str(bank["generator"]) and _nonempty_str(bank["version"])):
             bad.append("bank.generator/version 이 비었다")
+        else:
+            # ★ 82차 G82-N2 — 비어 있지 않은 문자열이면 통과였다 (philox 선언에도 PCG64 가 호출된다). 구현 profile 과 대조.
+            from tools.design_wire import check_bank_profile
+            bad += check_bank_profile(envelope_bank=bank)
         if not _pos_int(bank["length"]) or not _pos_int(bank["n_params"]):
             bad.append("bank.length/n_params 가 양의 정수가 아니다")
         elif bank["length"] < max(c["random"] for c in want.values()):

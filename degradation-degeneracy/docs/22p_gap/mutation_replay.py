@@ -1980,6 +1980,55 @@ MUTANTS = [
      '            if bi in seen_idx:\n                raise ValueError(f"candidates[{k}]: bank_index {bi} 중복")\n',
      '            if False:\n                raise ValueError(f"candidates[{k}]: bank_index {bi} 중복")\n',
      "g81_w02"),
+    # ── 82차 잔여 G82-N1·N2·N3 (고정 표 STAGE3_IMPL_ROUND1_SPEC §10) ── 이름 끝 `-g82`
+    ("observed-roster-compares-rows-to-the-sealed-inputs-g82", IO,         # N1: 행 truth · noise ↔ 봉인 curves
+     '            if got != s[k]:\n',
+     '            if False:  # 변이: 행 ↔ 봉인 입력 대조를 끈다\n',
+     "g82_n1_01 or g82_n1_02 or g82_n1_05"),
+    ("record-roster-is-compared-to-the-rebuilt-roster-g82", IO,            # N1: record ↔ 출력 재구성 roster
+     '            if rz.get("roster_observed_sha256") != r_sha:\n',
+     '            if False:  # 변이: record 와 재구성 roster 대조를 끈다\n',
+     "g82_n1_03"),
+    ("a-missing-sealed-snapshot-is-a-failure-g82", IO,                     # N1: 출처 없음 → 실패 (추론 금지)
+     '        ro_bad.append("봉인 curves 스냅샷',
+     '        (lambda *_: None)("봉인 curves 스냅샷',
+     "g82_n1_04"),
+    ("the-writer-refuses-rows-that-disagree-with-the-inputs-g82", FITTING,  # N1: writer 도 같은 정의로 거부
+     '    if ros_bad:\n        raise RuntimeError("관측 roster 를',
+     '    if False:\n        raise RuntimeError("관측 roster 를',
+     "g82_n1_05"),
+    ("unsupported-profile-values-are-refused-g82", DW,                     # N2: 필드 ↔ 구현 profile
+     '            elif got != STAGE3_BANK_PROFILE[f]:\n',
+     '            elif False:  # 변이: profile 필드 대조를 끈다\n',
+     "g82_n2_01"),
+    ("the-envelope-bank-is-checked-against-the-profile-g82", PRESERVE,     # N2: 계획 봉인 (PlannedLegV4 · check_planned_envelope)
+     '            bad += check_bank_profile(envelope_bank=bank)\n',
+     '            pass  # 변이: envelope bank profile 대조를 지운다\n',
+     "g82_n2_02 or g82_n2_04"),
+    ("the-consumer-checks-the-profile-before-start-g82", FITTING,          # N2: 시작 전 소비자
+     '    if _bp:\n        raise ValueError("; ".join(_bp[:3])',
+     '    if False:\n        raise ValueError("; ".join(_bp[:3])',
+     "g82_n2_03"),
+    ("the-validator-checks-the-profile-g82", IO,                           # N2: validator 재유도
+     '    bad += DW.check_bank_profile(design.get("bank") if isinstance(design, dict) else None, env.get("bank"))\n',
+     '    bad += []  # 변이: validator 의 bank profile 대조를 지운다\n',
+     "g82_n2_04"),
+    ("the-v6-path-refuses-another-plan-generation-g82", FITTING,           # N3: 시작 전 선언 충돌
+     '    if env["protocol_generation"] != DW.STAGE3_PROTOCOL_GENERATION:\n',
+     '    if False:  # 변이: 계획 세대 대조를 끈다\n',
+     "g82_n3_01"),
+    ("the-validator-links-the-plan-generation-g82", IO,                    # N3: validator 계획 세대
+     '    if (env or {}).get("protocol_generation") != _PG6:\n',
+     '    if False:  # 변이: 계획 세대 연결을 끈다\n',
+     "g82_n3_02"),
+    ("the-validator-links-the-record-generation-g82", IO,                  # N3: validator record 세대
+     '    if rec.get("protocol_generation") != _PG6:\n',
+     '    if False:  # 변이: record 세대 연결을 끈다\n',
+     "g82_n3_02"),
+    ("the-validator-links-the-row-generations-g82", IO,                    # N3: validator 행 세대
+     '    if _gens is not None and _gens != {"v6"}:\n',
+     '    if False:  # 변이: 행 세대 연결을 끈다\n',
+     "g82_n3_02"),
 ]
 
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면

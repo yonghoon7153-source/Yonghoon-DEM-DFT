@@ -555,6 +555,46 @@ PROVIDER_EDGE_KEYS = frozenset({
     "provider_artifact_sha256", "solution_map_sha256", "provider_protocol_sha256"})
 _RESTART_SOURCES_ORDERED = ("base_init", "warm", "random")
 
+# ★ 82차 G82-N3 — v6 실행·검증 경로가 지원하는 선언 세대. sig_version 6 ↔ 계획·record `protocol_generation`
+#   ↔ 행 `record_generation` 이 모두 이 값이어야 한다 (고정 표 §10-3). 세대 **문법** 검사는 그대로 둔다.
+STAGE3_PROTOCOL_GENERATION = "v6"
+
+# ★ 82차 G82-N2 — 이번 라운드가 **실제로 구현한** bank profile 하나 (고정 표 §10-2). `unit_cube_bank` 는 PCG64 ·
+#   `_bank_seed`(bank-seed/v1) · uniform[0,1) · `bank_bytes`(<f8 C-order) 로 고정이다. 선언이 이것과 다르면 "선언대로
+#   생성했다" 가 거짓이 되므로 거부한다 — 다른 generator 를 새로 구현하지 않고 · 별칭도 두지 않는다.
+STAGE3_BANK_PROFILE = {"generator": "pcg64", "seed_derivation": "H(pair_group_id, bank_version)",
+                       "dtype": "float64", "endian": "little", "space": "unit_cube"}
+STAGE3_BANK_VERSIONS = ("v6.0",)
+
+
+def check_bank_profile(design_bank=None, envelope_bank=None) -> list[str]:
+    """설계 · 계획 envelope 의 bank 선언이 지원 profile 과 같은가 (★ 82차 G82-N2).
+
+    둘 다 주면 generator · version 이 서로 같아야 한다. 주어진 블록만 본다 — 호출자가 어느 쪽을 가졌는지에 따라
+    (envelope 봉인 · 시작 전 소비자 · validator) 같은 규칙을 쓴다. 반환: 문제 목록 (빈 목록 = 지원).
+    """
+    bad: list[str] = []
+    blocks = [("설계", design_bank, tuple(STAGE3_BANK_PROFILE) + ("version",)),
+              ("envelope", envelope_bank, ("generator", "version"))]
+    for name, blk, fields in blocks:
+        if blk is None:
+            continue
+        if not isinstance(blk, dict):
+            bad.append(f"bank profile: {name} bank 블록이 dict 가 아니다: {type(blk).__name__}")
+            continue
+        for f in fields:
+            got = blk.get(f)
+            if f == "version":
+                if got not in STAGE3_BANK_VERSIONS:
+                    bad.append(f"bank profile: {name} version {got!r} 은 지원 {list(STAGE3_BANK_VERSIONS)} 가 아니다")
+            elif got != STAGE3_BANK_PROFILE[f]:
+                bad.append(f"bank profile: {name} {f} {got!r} ≠ 구현 {STAGE3_BANK_PROFILE[f]!r}")
+    if isinstance(design_bank, dict) and isinstance(envelope_bank, dict):
+        for f in ("generator", "version"):
+            if design_bank.get(f) != envelope_bank.get(f):
+                bad.append(f"bank profile: 설계 {f} {design_bank.get(f)!r} ≠ envelope {envelope_bank.get(f)!r}")
+    return bad
+
 
 def _pos_int(v) -> bool:
     return isinstance(v, int) and not isinstance(v, bool) and v > 0
