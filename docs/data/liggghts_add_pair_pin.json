@@ -8,18 +8,27 @@
  "build": "WSL lmp_serial · lmp_auto (~/src/LIGGGHTS-PUBLIC/src) · ibb lmp_mpi (/lustre/home/yonghoon/LIGGGHTS-PUBLIC/src) — 소스 트리 git HEAD 3d5c00f (두 기계) · 바이너리 해시 · 컴파일 플래그는 대조하지 않았다",
  "formula_confirmed": true,
  "hosts": [
-  {"host": "wsl DESKTOP-IK8J81H",
+  {
+   "host": "wsl DESKTOP-IK8J81H",
    "path": "/home/yonghoon71/src/LIGGGHTS-PUBLIC/src/compute_pair_gran_local.cpp",
    "sha256": "71c4d3b511be5df504888819079d55daa3e3816ea9ad7c4e0d81c30b548dbae9",
    "git_head": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
-   "binaries": ["/home/yonghoon71/src/LIGGGHTS-PUBLIC/src/lmp_serial", "/home/yonghoon71/src/LIGGGHTS-PUBLIC/src/lmp_auto"],
-   "reported": "1저자 셸 출력 2026-09-30 (sha256sum · grep -n M_PI · git log -1)"},
-  {"host": "ibb-master",
+   "binaries": [
+    "/home/yonghoon71/src/LIGGGHTS-PUBLIC/src/lmp_serial",
+    "/home/yonghoon71/src/LIGGGHTS-PUBLIC/src/lmp_auto"
+   ],
+   "reported": "1저자 셸 출력 2026-09-30 (sha256sum · grep -n M_PI · git log -1)"
+  },
+  {
+   "host": "ibb-master",
    "path": "/lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/compute_pair_gran_local.cpp",
    "sha256": "71c4d3b511be5df504888819079d55daa3e3816ea9ad7c4e0d81c30b548dbae9",
    "git_head": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
-   "binaries": ["/lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi (launch_highbo.sh LMP)"],
-   "reported": "1저자 셸 출력 2026-09-30 (sha256sum · grep -n M_PI · git log -1)"}
+   "binaries": [
+    "/lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi (launch_highbo.sh LMP)"
+   ],
+   "reported": "1저자 셸 출력 2026-09-30 (sha256sum · grep -n M_PI · git log -1)"
+  }
  ],
  "upstream": {
   "repo": "https://github.com/CFDEMproject/LIGGGHTS-PUBLIC",
@@ -43,5 +52,6 @@
   "컴파일 플래그 (-O · -march · -ffp-contract · -ffast-math) 는 확인하지 않았다.  오차 상한 E 는 FMA 축약 (반올림 수가 줄어든다) · 인수 안 재결합 (부분합 ≤ S) · 역수 곱 (나눗셈 대신 반올림 1 회 추가 — 13·eps 여유 안) 에 견딘다 — 그 밖의 변환은 핀 대상이 아니다.",
   "vector_liggghts.h 는 두 기계에서 해시하지 않았다 (git HEAD 가 같다는 것만 확인 · 작업 트리 변경 여부 미확인).",
   "LHS 130 · 64 (ibb ~/dem_test/lhs) 를 실제로 돌린 바이너리 경로는 이 핀이 대조하지 않았다 — ibb 의 LIGGGHTS 트리가 하나라는 가정."
- ]
+ ],
+ "status_note": "Codex 재검증 3 (09-30 밤 · LHSC-04-R4-PIN): 이 파일은 **소스 · 식 자기 신고** (1저자 셸 출력 + 공개 사본 대조) 수준이다 — 설치 빌드 인증이 아니다 (실행파일 sha · 컴파일 명령 · 그 실행파일로 dump 를 만든 실행 영수증이 없다).  검토 브랜치 producer_pin 이 이것을 installed_build_pinned=True 로 올리는 것은 결함 (R4 수정 대상)."
 }

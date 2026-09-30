@@ -1,5 +1,7 @@
 # Codex 재검증 3 요청 — LHS 피복률 · LHSC-03 R3 · LHSC-04 R3a · R3b · P3 수정 (2026-09-30 밤)
 
+> **판정 (09-30 밤) = HOLD 유지 · 새 P1 없음 · P2 둘 + P3 하나** — `docs/reviews/codex_lhs_coverage_reverify3_verdict_20260930.md` (증거 `codex_lhs_coverage_reverify3_evidence_20260930/` · 우리 트리 재현 차이 0).  R3 반례 · R3a · R3b (조건부) 닫힘 · 새 `LHSC-03-R4` (피복률 · 장부 공존) · `LHSC-04-R4-PIN`.  ⚠ **§8 의 "§6 첫 한정 해소" 는 철회** — pin 파일은 소스 · 식 자기 신고이고 설치 빌드 인증이 아니다 (실행파일 sha · 컴파일 명령 · dump 생산 영수증 없음).
+
 > 대상 판정: `docs/reviews/codex_lhs_coverage_reverify2_verdict_20260930.md` (HOLD · 새 P1 없음 · P2 R3 셋 + P3 둘).  이 요청서는 그 잔여 전부에 대한
 > 수정 (1저자 비준 09-30 밤 *"비준이야"* · 반례를 셀프테스트로 먼저) 과 Codex 스크립트의 고친 트리 재실행 결과다.  실제 병합 · 재수확 · DEM 은 하지 않았다.
 

@@ -1,0 +1,48 @@
+{
+  "seed": 309302026,
+  "points": 17926,
+  "regions": {
+    "0": 3000,
+    "1": 3000,
+    "2": 3000,
+    "3": 3000,
+    "4": 3000,
+    "5": 2926
+  },
+  "pointwise_E_violations": [],
+  "worst_point": {
+    "r1": 0.05947174789064915,
+    "r2": 16.83076144181909,
+    "x": [
+      -34.85881539197758,
+      10.565755818711192,
+      -30.285611376961363
+    ],
+    "y": [
+      -32.14264899480976,
+      7.600746803205981,
+      -13.821388053857754
+    ],
+    "producer_area": -0.03195083697155673,
+    "decimal90_area": "-0.0319508369715531741846333591236216240523852699371107149073121995146151173890962475224043025",
+    "error": "3.5530660206472878017005549274093536607694676878004853848826109037524775956975E-15",
+    "E": 1.667257720539189e-14,
+    "error_over_E": 0.21310838611670851
+  },
+  "token_certified_nonnegative": 8170,
+  "token_false_beyond": 0,
+  "token_uncertified": 2363,
+  "token_negative": 7393,
+  "detect_1pct": 5928,
+  "power": {
+    "1.01": {
+      "detection_misses": 0,
+      "classification_changes": 0
+    },
+    "0.99": {
+      "detection_misses": 0,
+      "classification_changes": 0
+    }
+  },
+  "limitation": "Finite synthetic CPU sample; normal range, not installed native binary or global proof"
+}

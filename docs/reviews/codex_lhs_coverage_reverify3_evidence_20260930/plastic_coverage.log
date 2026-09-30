@@ -1,0 +1,31 @@
+plastic_coverage (L1-01 · L1-02)
+  ✓ ① L1-02 얕은 겹침: legacy = 정확 lens 의 0.493724배 (판정문)   +0.000060336578 vs +0.000122207136 = 0.493724
+  ✓ ② L1-02 깊은 겹침: legacy < 0 인데 정확 lens > 0 (판정문)   -0.094509578995 vs +0.484361592352
+  ✓ ③ 동일 반경 폐형: lens_volume = πδ²(6r−δ)/12
+  ✓ ④ 독립 수치적분과 일치 (비대칭 반경 5쌍, 상대차 < 1e-5)   최대 상대차 2.094e-11
+  ✓ ⑤ 내포(d ≤ |r₁−r₂|): 작은 구 부피 그대로   4.188790204786
+  ✓ ⑥ (R*, R_min) → (r₁, r₂) 왕복   (0.5, 6.000000000000004)
+  ✓ ⑥b R_min ≤ R* 는 기하 불가 ⇒ None
+  ✓ ⑥c R* < R_min/2 도 기하 불가 ⇒ None (Codex: (.1,.5) 가 (.5,.125) 를 돌려줬다)
+  ✓ ⑥d 지원 반경비 밖(> 1e6)은 None (반경비 5e14 에서 lens 1.553배 어긋남 — 보증 밖)
+  ✓ ⑦ L1-01: 하한 > 상한인데 값이 나온다 — 비 1.784757 / 8.016722 (판정문)   binding=liggghts conflict=True 1.784757 / 8.016722
+  ✓ ⑧ 대조: 깊은 겹침에서는 cap_conflict = False (검사가 공허하지 않다)   binding=tabor
+  ✓ ⑨ 기본 동작 불변: A_final 이 계측 추가 전 값과 같다   []
+  ✓ ⑨b 핀이 결속 여섯 가지를 **전부** 덮는다 (덮지 않는 결속은 ⑨ 가 안 본 자리다)   ['elastic', 'geom', 'hertzian', 'liggghts', 'tabor', 'volume']
+  ✓ ⑩ 판별력: V_lens_exact 가 legacy 와 실제로 다르다 (약 2배)   6.033658e-23 → 1.222071e-22 (2.0254배)
+plastic_coverage physics v2 (DESC-03 · L1-01 · L1-02 — 1저자 결정 2026-09-29)
+  ✓ ⑪ ★ L1-02: coverage Physics 경로의 부피 = 정확한 lens (legacy 는 그 0.493724 배)   [v2] V=1.222071361016e-04 · lens=1.222071361016e-04 · V/lens=1.000000
+  ✓ ⑫a DESC-03 재현 (옛 경로 — 바꾸지 않았다): 덤프 단위 tabor 2.502607 ↔ SI volume 1.229167   dump=tabor 2.502607 · SI=volume 1.229167
+  ✓ ⑫b ★ DESC-03: 단위를 바꿔도 결속이 같고 면적은 정확히 (1e3)² 배 — 단위 교정 뒤 volume cap 이 결속한다   [v2] SI=volume · dump=volume · A_dump/(A_SI·1e6)=1.000000000000
+  ✓ ⑫c v2 값 = 정확 lens / 5 nm: A/A_H = (δ/h)(1 − δ/(6r)) = 2.489583 (옛 1.229167 · 2.502607 과 다르다)   2.489583333
+  ✓ ⑫d ★ 공변 스윕 6 기하 (소성 · 전이 · 역순 반경 · 깊은 겹침): 결속 · 면적 비 전부 일치   []
+  ✓ ⑬ ★ L1-01: L > U 이면 U 를 낸다 (cap = 전체 면적 한계) · cap_conflict=True · 결속 volume   [v2] A/U=1.000000 · L/U=3.998332 · binding=volume · conflict=True
+  ✓ ⑬b L1-01 값: A/A_H = (δ/h)(1 − δ/(6r)) = 0.4995833 · L/U = 1.9975/0.4995833   A/A_H=0.499583333 · L/U=3.998331943
+  ✓ ⑭ 귀결: A_v2 < A_LIGG (기하 교차원판) 이고 A_v2 < πR*δ 이기도 하다 (⑬ 의 기하)   A_v2/A_LIGG=0.250104 · A_v2/A_H=0.499583
+  ✓ ⑮ δ/R* < DR_YIELD_ONSET: A = πR*δ — legacy physics 탄성 반환과 비트 동일   []
+  ✓ ⑯ 귀결: 항복 개시에서 A 가 πR*δ → V_lens/h 로 떨어진다 (r=0.5 µm SE–SE: 약 0.0566 배 · 독립 적분 대조)   [v2] 위 0.056569 · 기대 0.056569 · 아래 1.000000
+  ✓ ⑰ ★ 정의역 밖 입력 9 가지 → 예외 (조용히 면적을 내지 않는다)   []
+  ✓ ⑰b δ ≤ 0 → 면적 0 · binding none (겹침 없음 = 겹침 모델의 답)   none none 
+  ✓ ⑱ 결속 다섯 가지가 전부 나온다 (elastic · tabor · volume · geom · none)   ['elastic', 'geom', 'none', 'tabor', 'volume']
+  ✓ ⑲ _intersection_disc_area 는 lens_geometry.intersection_disc_area 와 같은 객체 (별칭 · 한 구현 · LHSC-05 (a))
+plastic_coverage SELFTEST PASS

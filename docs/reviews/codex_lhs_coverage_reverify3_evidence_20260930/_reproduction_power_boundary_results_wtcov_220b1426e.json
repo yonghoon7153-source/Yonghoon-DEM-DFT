@@ -1,0 +1,8 @@
+{
+  "seed": 9312026,
+  "intervals": 500000,
+  "detect_intervals": 263988,
+  "mutated_values_checked": 1980567,
+  "misses": [],
+  "limitation": "Tests the sufficient-condition inequality for synthetic intervals, not new physical geometry or proof of every input"
+}
