@@ -5964,27 +5964,43 @@
   {
    "id": "SELF-67",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "Codex 재검증 09-30 (반입 정정 · P3) · claude 확인 (파일 sha 7/7 다름 · diff --git 이후 본문 sha 7/7 같음)",
    "opened_in": "docs/reviews/codex_lhs_coverage_reverify_verdict_20260930.md",
    "title": "재검증 요청서 (`ac484ba5c`) 와 그 커밋 메시지가 \"0001–0007 은 앞 제출본과 바이트 동일 · sha 7/7 같다 · Codex 도 7/7 일치 확인\" 이라 적었는데 거짓 — `git format-patch` 를 11 개로 다시 뽑아 머리 번호 ([PATCH n/7] → [PATCH nn/11]) · 제목 줄 접기가 바뀌어 파일 sha 7/7 이 모두 다르다 (코드 본문은 7/7 동일)",
-   "note": "확인하지 않고 쓴 동일성 주장 (규율 ④ 부류 — \"Codex 도 7/7 일치 확인\" 은 첫 판정이 첫 제출본에 대해 한 말을 다른 파일로 옮긴 것).  코드 영향 없음 (Codex: 이전 GO 를 재심할 코드 변경 없음).  같은 요청서 §4 명령은 실행 checkout (요청서 커밋) 과 패치 적용 기준 (da4670594) 을 한 줄에 섞었고, 메시지의 \"§4 해시\" 는 실제 해시가 없었다.  정정 = 요청서 §0 문구 (이 커밋) · 다음 요청서는 반입 핀과 패치 기준을 따로 적고 핀을 메시지에 명시 · \"바이트 동일\" 은 sha 를 실제로 비교한 뒤에만.  커밋 메시지는 고칠 수 없어 이 항목이 정정 기록이다.  status 는 정정 커밋이 HEAD 조상이 된 뒤 claimed_fixed.",
+   "note": "확인하지 않고 쓴 동일성 주장 (규율 ④ 부류 — \"Codex 도 7/7 일치 확인\" 은 첫 판정이 첫 제출본에 대해 한 말을 다른 파일로 옮긴 것).  코드 영향 없음 (Codex: 이전 GO 를 재심할 코드 변경 없음).  같은 요청서 §4 명령은 실행 checkout (요청서 커밋) 과 패치 적용 기준 (da4670594) 을 한 줄에 섞었고, 메시지의 \"§4 해시\" 는 실제 해시가 없었다.  정정 = 요청서 §0 문구 (이 커밋) · 다음 요청서는 반입 핀과 패치 기준을 따로 적고 핀을 메시지에 명시 · \"바이트 동일\" 은 sha 를 실제로 비교한 뒤에만.  커밋 메시지는 고칠 수 없어 이 항목이 정정 기록이다.  status 는 정정 커밋이 HEAD 조상이 된 뒤 claimed_fixed — 09-30 `9eaaa186a` (요청서 §0 정정) 로 전환.",
    "evidence_tests": [
     "docs/reviews/codex_lhs_coverage_reverify_evidence_20260930/source_manifest.json"
-   ]
+   ],
+   "claimed_fixed_sha": "9eaaa186a"
   },
   {
    "id": "SELF-68",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "1저자 kgy 실행 (09-30 · 런 뒤 스크립트가 v015 에서 ⛔ 다름으로 멈춤) · claude 원인 확인",
    "opened_in": "docs/reviews/phase_a_replication_vgcf100_prereg_20260926.md",
    "title": "Phase A 재현 런 뒤 스크립트 첫 판이 러너 영수증과 `.sh` 영수증의 `receipt_digest` 가 같아야 한다고 가정했다 — digest 는 `arms` 까지 해시하는데 러너는 킷당 ARMS (8), `.sh` 영수증은 격자 전체 (32) 를 적어 32 팔 격자에서는 원리적으로 같아질 수 없다 (확인하지 않은 가정을 지시문에 씀)",
-   "note": "fail-closed 로 멈춤 · 덮인 산출물 없음.  둘째 함정도 같이 확인: `.sh` 영수증은 러너가 선언하지 않은 축 (σ_VGCF 78.5398 · 이온 σ · ptfe_block 등) 을 기본값으로 채우므로 전 축 비교도 거짓 불일치.  정정 = 러너가 선언한 축만 대조 (run_contract 의 계약 규칙) + 팔 수 = 러너 arms × 킷 수 · 과거 실물로 시험 (다른 런 쌍은 ptfe_stamp 하나만 걸림 · 맞춘 쌍 통과).  CLAUDE.md 재개 체크리스트의 \"확인하지 않은 추정을 지시문에 쓰지 않는다\" 와 같은 부류 — 지시문의 판정 조건은 과거 실물로 먼저 돌려 본다.",
+   "note": "fail-closed 로 멈춤 · 덮인 산출물 없음.  둘째 함정도 같이 확인: `.sh` 영수증은 러너가 선언하지 않은 축 (σ_VGCF 78.5398 · 이온 σ · ptfe_block 등) 을 기본값으로 채우므로 전 축 비교도 거짓 불일치.  정정 = 러너가 선언한 축만 대조 (run_contract 의 계약 규칙) + 팔 수 = 러너 arms × 킷 수 · 과거 실물로 시험 (다른 런 쌍은 ptfe_stamp 하나만 걸림 · 맞춘 쌍 통과).  CLAUDE.md 재개 체크리스트의 \"확인하지 않은 추정을 지시문에 쓰지 않는다\" 와 같은 부류 — 지시문의 판정 조건은 과거 실물로 먼저 돌려 본다.  ✅ 09-30 1저자 kgy 재실행 = 다섯 OUTDIR 모두 \"러너 선언 축 11 개 중 차이 0 · 팔 = 러너 8 (킷당) × 킷 수 = .sh\" 로 통과 → 끝 줄 \"완료\" (로그 `docs/data/phase_a_rep100_20260930/pa100/postrun_20260930.log`) · 판정은 §9.",
    "evidence_tests": [
-    "docs/reviews/phase_a_rep100_postrun_20260930.sh"
+    "docs/reviews/phase_a_rep100_postrun_20260930.sh",
+    "docs/data/phase_a_rep100_20260930/pa100/postrun_20260930.log"
+   ],
+   "claimed_fixed_sha": "32ed38d5b"
+  },
+  {
+   "id": "SELF-69",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (09-30 · kgy 런 뒤 출력 판독 — 같은 짝이 킷별 줄 1.514 · 전체 줄 1.526 으로 찍힘)",
+   "opened_in": "docs/reviews/phase_a_replication_vgcf100_prereg_20260926.md",
+   "title": "짝 비교기 `phase_a_pair_e_arms.py` 의 화면 표시 단위가 줄마다 달랐다 — 킷별 줄 (평균 · 최대) 과 전체 평균은 100·ln(σ_a/σ_b) 에 \"%\" 를 붙여 찍고 전체 최대만 % 변화 100·(e^|ln|−1) 로 찍어, 같은 극단 짝이 1.514 와 1.526 으로 보였다 · 판정 이름이 질문 2 어휘 하나뿐이라 질문 3 (기계 대조) 결과가 \"h0_secondary_input\" 으로 나왔다 (사전등록 §4 어휘는 \"띠 안\")",
+   "note": "판정 (|ln| 을 ln(1+띠/100) 과 비교 · 등록 그대로) · JSON 행 값 (d_ln · d_pct) · 옛 키 (max_abs_d_ln · max_abs_d_pct · mean_d_ln) 은 무관 — 표시만.  수정 = 모든 줄을 % 변화로 · 극단 짝 (|ln| 최대 = 판정이 보는 짝) 을 origin · 부호째 · 판정 줄에 띠 뜻 (\"= 띠 밖 짝 N\" · \"= 모든 짝이 ±x % 띠 안\") · JSON 에 `extreme` · `mean_d_pct` · 킷별 `extreme_d_pct` · `extreme_origin` · `mean_d_pct` 를 더함 (옛 키 그대로).  반례 먼저: 한 짝 +1.5 % 픽스처로 킷별 · 전체 줄의 값 · 평균 % · 극단 짝 표기 · 판정 뜻 · JSON 키 (음수 극단 포함) 5 건 → 옛 코드 14/19 → 수정 19/19.  kgy 가 만든 pair JSON 두 개 (`docs/data/phase_a_rep100_20260930/pa100/pair_*.json`) 는 옛 판 그대로 보존 (새 키 없음 — 행 값으로 같은 것을 다시 낸다).  status 는 수정 커밋이 HEAD 조상이 된 뒤 claimed_fixed.",
+   "evidence_tests": [
+    "scripts/phase_a_pair_e_arms.py"
    ]
   },
   {

@@ -1,0 +1,136 @@
+repo HEAD e49847e5317d3db58a9477f2990324d4cd06b4c8 · 변경 파일 0
+phaseA_v015_20260927: sh 32 ·  32 vox_um=0.15 
+phaseA_qc_v015_20260927: sh 8 ·  8 vox_um=0.15 
+phaseA_v020_20260927: sh 32 ·  32 vox_um=0.20 
+phaseA_v025_20260927: sh 32 ·  32 vox_um=0.25 
+phaseA_v015_20260927: sh 32 ·  32 vox_um=0.15 
+영수증 → /home/kgy/pa100/phaseA_v015_20260927/sh_receipt/run_receipt.json
+  vox_um               0.15
+  ptfe_stamp           'centerline'
+  fibre_stamp          'segment'
+  bridge_um            0.24
+  arms                 32
+  code_sha             'e49847e5'
+  receipt_digest       '3fb482a95ae4'
+  derived_sh_sha256    '35a051bcaedee1d4'
+  origins              8 개
+  영수증 대조 — 러너 선언 축 11 개 중 차이 0 · 팔 = 러너 8 (킷당) × 4 킷 = .sh 32 → 같음
+    (.sh 만 적은 축 — 대조 안 함: ptfe_block_scope='se', ptfe_block_um=0.0, sdcp_bridge_um=0.0, sigma_ion_sdcp_S_cm=0.001, sigma_ion_se_ref_S_cm=0.003, sigma_ptfe_S_cm=0.0, sigma_vgcf_S_cm=78.5398 )
+영수증 → /home/kgy/pa100/phaseA_qc_v015_20260927/sh_receipt/run_receipt.json
+  vox_um               0.15
+  ptfe_stamp           'centerline'
+  fibre_stamp          'segment'
+  bridge_um            0.24
+  arms                 8
+  code_sha             'e49847e5'
+  receipt_digest       '0278164d4e9c'
+  derived_sh_sha256    'cfe8eb009ac1ebb6'
+  origins              8 개
+  영수증 대조 — 러너 선언 축 11 개 중 차이 0 · 팔 = 러너 8 (킷당) × 1 킷 = .sh 8 → 같음
+    (.sh 만 적은 축 — 대조 안 함: ptfe_block_scope='se', ptfe_block_um=0.0, sdcp_bridge_um=0.0, sigma_ion_sdcp_S_cm=0.001, sigma_ion_se_ref_S_cm=0.003, sigma_ptfe_S_cm=0.0, sigma_vgcf_S_cm=78.5398 )
+영수증 → /home/kgy/pa100/phaseA_v020_20260927/sh_receipt/run_receipt.json
+  vox_um               0.2
+  ptfe_stamp           'centerline'
+  fibre_stamp          'segment'
+  bridge_um            0.24
+  arms                 32
+  code_sha             'e49847e5'
+  receipt_digest       'f7ed632c1762'
+  derived_sh_sha256    'c57c363d7530f946'
+  origins              8 개
+  영수증 대조 — 러너 선언 축 11 개 중 차이 0 · 팔 = 러너 8 (킷당) × 4 킷 = .sh 32 → 같음
+    (.sh 만 적은 축 — 대조 안 함: ptfe_block_scope='se', ptfe_block_um=0.0, sdcp_bridge_um=0.0, sigma_ion_sdcp_S_cm=0.001, sigma_ion_se_ref_S_cm=0.003, sigma_ptfe_S_cm=0.0, sigma_vgcf_S_cm=44.1786 )
+영수증 → /home/kgy/pa100/phaseA_v025_20260927/sh_receipt/run_receipt.json
+  vox_um               0.25
+  ptfe_stamp           'centerline'
+  fibre_stamp          'segment'
+  bridge_um            0.24
+  arms                 32
+  code_sha             'e49847e5'
+  receipt_digest       '44e232b19604'
+  derived_sh_sha256    '3eb6eecdc617001a'
+  origins              8 개
+  영수증 대조 — 러너 선언 축 11 개 중 차이 0 · 팔 = 러너 8 (킷당) × 4 킷 = .sh 32 → 같음
+    (.sh 만 적은 축 — 대조 안 함: ptfe_block_scope='se', ptfe_block_um=0.0, sdcp_bridge_um=0.0, sigma_ion_sdcp_S_cm=0.001, sigma_ion_se_ref_S_cm=0.003, sigma_ptfe_S_cm=0.0, sigma_vgcf_S_cm=28.2743 )
+영수증 → /home/kgy/pa010/phaseA_v015_20260927/sh_receipt/run_receipt.json
+  vox_um               0.15
+  ptfe_stamp           'centerline'
+  fibre_stamp          'segment'
+  bridge_um            0.24
+  arms                 32
+  code_sha             'e49847e5'
+  receipt_digest       '3fb482a95ae4'
+  derived_sh_sha256    '034d9fe6f95327d5'
+  origins              8 개
+  영수증 대조 — 러너 선언 축 11 개 중 차이 0 · 팔 = 러너 8 (킷당) × 4 킷 = .sh 32 → 같음
+    (.sh 만 적은 축 — 대조 안 함: ptfe_block_scope='se', ptfe_block_um=0.0, sdcp_bridge_um=0.0, sigma_ion_sdcp_S_cm=0.001, sigma_ion_se_ref_S_cm=0.003, sigma_ptfe_S_cm=0.0, sigma_vgcf_S_cm=78.5398 )
+== /home/kgy/pa100/step3_v015.log
+[p2] vox 0.15 · 브리지 0.24 µm 고정 · 섬유 segment · 8 팔 · out /home/kgy/pa100/phaseA_v015_20260927
+  ABORT/FAILED/Traceback 0 · SKIP 0 · 피크 줄 32
+== /home/kgy/pa100/step3_qc.log
+[p2] vox 0.15 · 브리지 0.24 µm 고정 · 섬유 segment · 8 팔 · out /home/kgy/pa100/phaseA_qc_v015_20260927
+  ABORT/FAILED/Traceback 0 · SKIP 0 · 피크 줄 8
+== /home/kgy/pa100/step3_v020.log
+[p2] vox 0.20 · 브리지 0.24 µm 고정 · 섬유 segment · 8 팔 · out /home/kgy/pa100/phaseA_v020_20260927
+  ABORT/FAILED/Traceback 0 · SKIP 0 · 피크 줄 32
+== /home/kgy/pa100/step3_v025.log
+[p2] vox 0.25 · 브리지 0.24 µm 고정 · 섬유 segment · 8 팔 · out /home/kgy/pa100/phaseA_v025_20260927
+  ABORT/FAILED/Traceback 0 · SKIP 0 · 피크 줄 32
+== /home/kgy/pa010/step3_v015.log
+[p2] vox 0.15 · 브리지 0.24 µm 고정 · 섬유 segment · 8 팔 · out /home/kgy/pa010/phaseA_v015_20260927
+  ABORT/FAILED/Traceback 0 · SKIP 0 · 피크 줄 32
+✓ 팔 32 개 → /home/kgy/pa100/phaseA_v015_20260927_arms
+  VGCF 1 wt%  n=8  σ_e 0.00211571 … 0.00214355 S/cm
+  VGCF 2 wt%  n=8  σ_e 0.0151068 … 0.0155577 S/cm
+  VGCF 3 wt%  n=8  σ_e 0.0592443 … 0.0600841 S/cm
+  VGCF 4 wt%  n=8  σ_e 0.130564 … 0.131583 S/cm
+  ★ 판정: python3 scripts/phase_a_order_verdict.py --dir /home/kgy/pa100/phaseA_v015_20260927_arms/arms
+✓ 팔 32 개 → /home/kgy/pa100/phaseA_v020_20260927_arms
+  VGCF 1 wt%  n=8  σ_e 0.00324467 … 0.00334444 S/cm
+  VGCF 2 wt%  n=8  σ_e 0.0264965 … 0.0274361 S/cm
+  VGCF 3 wt%  n=8  σ_e 0.0892255 … 0.0909311 S/cm
+  VGCF 4 wt%  n=8  σ_e 0.187123 … 0.190206 S/cm
+  ★ 판정: python3 scripts/phase_a_order_verdict.py --dir /home/kgy/pa100/phaseA_v020_20260927_arms/arms
+✓ 팔 32 개 → /home/kgy/pa100/phaseA_v025_20260927_arms
+  VGCF 1 wt%  n=8  σ_e 0.00470554 … 0.00475867 S/cm
+  VGCF 2 wt%  n=8  σ_e 0.0399874 … 0.0409938 S/cm
+  VGCF 3 wt%  n=8  σ_e 0.125505 … 0.128797 S/cm
+  VGCF 4 wt%  n=8  σ_e 0.260497 … 0.263779 S/cm
+  ★ 판정: python3 scripts/phase_a_order_verdict.py --dir /home/kgy/pa100/phaseA_v025_20260927_arms/arms
+✓ 팔 32 개 → /home/kgy/pa010/phaseA_v015_20260927_arms
+  VGCF 1 wt%  n=8  σ_e 0.00209948 … 0.00214689 S/cm
+  VGCF 2 wt%  n=8  σ_e 0.0150545 … 0.0155636 S/cm
+  VGCF 3 wt%  n=8  σ_e 0.0589612 … 0.0599098 S/cm
+  VGCF 4 wt%  n=8  σ_e 0.130445 … 0.131555 S/cm
+  ★ 판정: python3 scripts/phase_a_order_verdict.py --dir /home/kgy/pa010/phaseA_v015_20260927_arms/arms
+✓ 팔 8 개 → /home/kgy/pa100/phaseA_qc_v015_20260927_arms
+  VGCF 1 wt%  n=8  σ_e 0.00211571 … 0.00214355 S/cm
+  ★ 판정: python3 scripts/phase_a_order_verdict.py --dir /home/kgy/pa100/phaseA_qc_v015_20260927_arms/arms
+판정 폴더 팔 104 (기대 104)
+팔 104  (primary 96 · secondary 0 · QC 8)
+δ_num = 0.04 %  (사전등록 상수 — CLI 로 바꿀 수 없다)
+
+  판정 **ORDER-ROBUST**
+  비교 72쌍 · 위반 0건
+  최악 팔: vox 0.25 · origin 1 · 3.0→4.0 wt% → +103.6599 %
+  (기술 보고 전용) 증분 최소 +103.6599 % · 최대 +771.1828 %
+  replay 최악 0.00000 % (통과)
+
+  → /home/kgy/pa100/verdict_G100.json
+══ 짝 비교 E100 / E010 — 띠 ±1.0 % · 짝 32 / 등록 32 ══
+   wt  1.0: n  8 · mean d +0.363 % · max |d| 1.053 %
+   wt  2.0: n  8 · mean d +0.284 % · max |d| 1.514 %
+   wt  3.0: n  8 · mean d +0.345 % · max |d| 0.583 %
+   wt  4.0: n  8 · mean d +0.039 % · max |d| 0.235 %
+   전체: max |d| 1.526 % · mean +0.258 % · 띠 밖 2
+   ⇒ h1_e_matters
+   → /home/kgy/pa100/pair_E100_E010.json
+══ 짝 비교 E010_kgy / E010_v100_0921 — 띠 ±0.5 % · 짝 32 / 등록 32 ══
+   wt  1.0: n  8 · mean d +0.014 % · max |d| 0.110 %
+   wt  2.0: n  8 · mean d +0.054 % · max |d| 0.261 %
+   wt  3.0: n  8 · mean d +0.003 % · max |d| 0.085 %
+   wt  4.0: n  8 · mean d -0.005 % · max |d| 0.031 %
+   전체: max |d| 0.261 % · mean +0.017 % · 띠 밖 0
+   ⇒ h0_secondary_input
+   → /home/kgy/pa100/pair_E010_vs_0921.json
+완료 — 다음: tgz 묶기

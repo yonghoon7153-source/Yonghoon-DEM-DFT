@@ -62,11 +62,19 @@ def pair_arms(arms_a, arms_b, band_pct, expect_pairs=None, label_a='A', label_b=
         hold.append('짝이 없다')
     per_wt = {}
     for r in rows:
-        g = per_wt.setdefault(str(r['vgcf_wt']), {'n': 0, 'max_abs_d_ln': 0.0, 'sum_d_ln': 0.0})
-        g['n'] += 1; g['sum_d_ln'] += r['d_ln']; g['max_abs_d_ln'] = max(g['max_abs_d_ln'], abs(r['d_ln']))
+        g = per_wt.setdefault(str(r['vgcf_wt']), {'n': 0, 'max_abs_d_ln': 0.0, 'sum_d_ln': 0.0,
+                                                  'extreme_d_ln': 0.0, 'extreme_origin': None})
+        g['n'] += 1; g['sum_d_ln'] += r['d_ln']
+        if g['extreme_origin'] is None or abs(r['d_ln']) > g['max_abs_d_ln']:
+            g['max_abs_d_ln'] = abs(r['d_ln']); g['extreme_d_ln'] = r['d_ln']; g['extreme_origin'] = r['origin']
     for g in per_wt.values():
         g['mean_d_ln'] = g['sum_d_ln'] / g['n']; del g['sum_d_ln']
+        #  SELF-69: 사람이 읽는 값은 전부 % 변화 100·(σ_a/σ_b − 1) — 평균은 ln 평균의 % 변화 (기하 평균 비)
+        g['mean_d_pct'] = 100.0 * math.expm1(g['mean_d_ln'])
+        g['extreme_d_pct'] = 100.0 * math.expm1(g['extreme_d_ln'])
     max_abs = max((abs(r['d_ln']) for r in rows), default=None)
+    ext = max(rows, key=lambda r: abs(r['d_ln'])) if rows else None
+    mean_ln = (sum(r['d_ln'] for r in rows) / len(rows)) if rows else None
     if hold:
         verdict = 'HOLD'
     else:
@@ -76,7 +84,11 @@ def pair_arms(arms_a, arms_b, band_pct, expect_pairs=None, label_a='A', label_b=
         'label_a': label_a, 'label_b': label_b, 'band_pct': float(band_pct), 'band_ln': band,
         'n_pairs': len(common), 'expect_pairs': expect_pairs, 'n_only_a': len(only_a), 'n_only_b': len(only_b),
         'max_abs_d_ln': max_abs, 'max_abs_d_pct': (100.0 * (math.exp(max_abs) - 1.0) if max_abs is not None else None),
-        'mean_d_ln': (sum(r['d_ln'] for r in rows) / len(rows) if rows else None),
+        'mean_d_ln': mean_ln,
+        #  SELF-69: 극단 짝 (|ln| 최대 — 판정이 보는 그 짝) 을 부호 있는 % 변화로 · 평균도 % 변화로
+        'extreme': ({'vgcf_wt': ext['vgcf_wt'], 'vox': ext['vox'], 'origin': ext['origin'], 'd_ln': ext['d_ln'],
+                     'd_pct': ext['d_pct']} if ext is not None else None),
+        'mean_d_pct': (100.0 * math.expm1(mean_ln) if mean_ln is not None else None),
         'n_outside': sum(1 for r in rows if not r['within']),
         'per_wt': per_wt, 'rows': rows,
         'only_a': [list(k) for k in only_a], 'only_b': [list(k) for k in only_b],
@@ -102,11 +114,20 @@ def main(argv=None):
     res['inputs'] = {'a': os.path.abspath(a.a), 'b': os.path.abspath(a.b)}
     print(f"══ 짝 비교 {a.label_a} / {a.label_b} — 띠 ±{a.band_pct} % · 짝 {res['n_pairs']}"
           f"{' / 등록 %d' % a.expect_pairs if a.expect_pairs is not None else ''} ══")
+    #  SELF-69: 모든 줄 = % 변화 100·(σ_a/σ_b − 1).  판정은 |ln(σ_a/σ_b)| ≤ ln(1 + 띠/100) (등록 그대로 — 표시와 별개)
+    print(f"   (표시 = % 변화 100·(σ_a/σ_b − 1) · 판정 = |ln(σ_a/σ_b)| ≤ ln(1 + {a.band_pct}/100) · 극단 = |ln| 최대 짝)")
     for w, g in sorted(res['per_wt'].items(), key=lambda kv: float(kv[0])):
-        print(f"   wt {w:>4}: n {g['n']:2d} · mean d {g['mean_d_ln'] * 100:+.3f} % · max |d| {g['max_abs_d_ln'] * 100:.3f} %")
-    if res['max_abs_d_ln'] is not None:
-        print(f"   전체: max |d| {res['max_abs_d_pct']:.3f} % · mean {res['mean_d_ln'] * 100:+.3f} % · 띠 밖 {res['n_outside']}")
-    print(f"   ⇒ {res['verdict']}" + (f"  ({'; '.join(res['hold_reasons'])})" if res['hold_reasons'] else ''))
+        print(f"   wt {w:>4}: n {g['n']:2d} · 평균 {g['mean_d_pct']:+.3f} % · 최대 |변화| {abs(g['extreme_d_pct']):.3f} %"
+              f" (o{g['extreme_origin']} {g['extreme_d_pct']:+.3f} %)")
+    if res['extreme'] is not None:
+        e = res['extreme']
+        print(f"   전체: 최대 |변화| {abs(e['d_pct']):.3f} % (wt {e['vgcf_wt']} o{e['origin']} {e['d_pct']:+.3f} %)"
+              f" · 평균 {res['mean_d_pct']:+.3f} % · 띠 밖 {res['n_outside']}")
+    #  판정 어휘는 등록 그대로 두고 띠 뜻을 붙인다 (같은 도구를 기계 대조에 쓸 때 사전등록 §4 의 "띠 안 / 띠 밖" 이 이것이다)
+    meaning = {'h0_secondary_input': f'= 모든 짝이 ±{a.band_pct} % 띠 안',
+               'h1_e_matters': f"= 띠 밖 짝 {res['n_outside']}"}.get(res['verdict'])
+    print(f"   ⇒ {res['verdict']}" + (f" ({meaning})" if meaning else '')
+          + (f"  ({'; '.join(res['hold_reasons'])})" if res['hold_reasons'] else ''))
     if a.out:
         with open(a.out, 'w', encoding='utf-8') as f:
             json.dump(res, f, ensure_ascii=False, indent=1)
@@ -169,6 +190,58 @@ def _selftest():
     v20 = [dict(a, vox=0.20) for a in base]
     chk('vox 가 다른 집합 → HOLD (짝 0)', pair_arms(v20, base, 1.0)['verdict'] == 'HOLD')
     chk('판정 어휘', all(x['verdict'] in VERDICTS for x in (r, r2, r3, r4)))
+    # 10 ★ SELF-69 (09-30 kgy 실측): 화면 표시 단위가 줄마다 달랐다 — 킷별 줄은 100·ln(비) 를 "%" 로,
+    #    전체 줄은 % 변화로 찍어 **같은 짝**이 1.514 와 1.526 으로 보였다.  판정 (ln 비교) 은 무관.
+    #    ⇒ 모든 줄 = % 변화 100·(σ_a/σ_b − 1) · 극단 짝 (|ln| 최대) 을 부호째 · 판정 어휘에 띠 뜻을 붙인다.
+    import contextlib
+    import io
+    import types
+
+    def _printed(arms_a, arms_b, band='1.0'):
+        fake = types.ModuleType('phase_a_order_verdict')
+        fake.load_arms = lambda p: {'A': arms_a, 'B': arms_b}[p]
+        old = sys.modules.get('phase_a_order_verdict')
+        sys.modules['phase_a_order_verdict'] = fake
+        buf = io.StringIO()
+        try:
+            with contextlib.redirect_stdout(buf):
+                main(['--a', 'A', '--b', 'B', '--band-pct', band, '--expect-pairs', '32'])
+        finally:
+            if old is None:
+                sys.modules.pop('phase_a_order_verdict', None)
+            else:
+                sys.modules['phase_a_order_verdict'] = old
+        return buf.getvalue()
+
+    def _num_after(line, tag):
+        import re
+        m = re.search(re.escape(tag) + r'\s*([+-]?\d+\.\d+)', line)
+        return float(m.group(1)) if m else None
+
+    out1 = _printed(one, base)
+    lw2 = next((ln for ln in out1.splitlines() if ln.strip().startswith('wt  2.0')), '')
+    lall = next((ln for ln in out1.splitlines() if ln.strip().startswith('전체')), '')
+    chk('SELF-69: 킷별 줄과 전체 줄이 같은 극단 짝을 같은 단위 (% 변화 1.500) 로 찍는다',
+        _num_after(lw2, '최대 |변화|') == 1.5 and _num_after(lall, '최대 |변화|') == 1.5)
+    chk('SELF-69: 평균도 % 변화 — 한 짝 +1.5 % / 8 짝이면 100·(1.015^(1/8) − 1) = 0.186 · 32 짝이면 0.047',
+        _num_after(lw2, '평균') == 0.186 and _num_after(lall, '평균') == 0.047)
+    chk('SELF-69: 극단 짝의 origin 과 부호를 적는다 (o3 +1.500 %)', '(o3 +1.500 %)' in lw2 and 'wt 2.0 o3 +1.500 %' in lall)
+    chk('SELF-69: 판정 줄에 띠 뜻 — h1 은 "띠 밖 짝 1" · h0 는 "모든 짝이 ±1.0 % 띠 안"',
+        '⇒ h1_e_matters (= 띠 밖 짝 1)' in out1
+        and '⇒ h0_secondary_input (= 모든 짝이 ±1.0 % 띠 안)' in _printed(up05, base))
+    dn = [dict(a, sigma_e=a['sigma_e'] / 1.02) for a in base]
+    r_dn = pair_arms(dn, base, 1.0, 32)
+
+    def _json_keys_ok():
+        try:
+            return (abs(r3['extreme']['d_pct'] - 1.5) < 1e-9 and r3['extreme']['origin'] == 3 and r3['extreme']['vgcf_wt'] == 2.0
+                    and abs(r3['per_wt']['2.0']['extreme_d_pct'] - 1.5) < 1e-9 and r3['per_wt']['2.0']['extreme_origin'] == 3
+                    and abs(r3['per_wt']['2.0']['mean_d_pct'] - 100.0 * (1.015 ** 0.125 - 1.0)) < 1e-9
+                    and abs(r_dn['extreme']['d_pct'] - 100.0 * (1 / 1.02 - 1.0)) < 1e-9 and r_dn['extreme']['d_pct'] < 0
+                    and 'max_abs_d_pct' in r3 and 'max_abs_d_ln' in r3['per_wt']['2.0'])
+        except (KeyError, TypeError):
+            return False
+    chk('SELF-69: JSON 에 극단 짝 (부호 있는 % 변화) · 킷별 평균 % 를 더한다 — 옛 키는 그대로', _json_keys_ok())
     print(f"selftest: {ok}/{ok + len(fail)} PASS" + (f"   FAILED: {fail}" if fail else ''))
     return 0 if not fail else 1
 
