@@ -1,0 +1,760 @@
+{
+ "schema": "continuation/v1",
+ "at_utc": "2026-09-24T11:31:21Z",
+ "stage": "1",
+ "from": {
+  "path": "/home/kgy/projects/sdcp_c12_v41_2026_09_11/sdcp_c12_v41",
+  "bundle_label": "sdcp_c12_v41",
+  "manifest_sha256": "fd5e4488cc097af9fc840f020b4f917a248c13ee80188df699e02fa67d180366",
+  "zip_sha256_txt": "76d76d50e4daeb5fff2dbcb73ef7e1e9e7826ba41fce4422955a13bcb9a8ef56",
+  "seal_sha256": "93425f7f49f2047fe89c929164c728de0caf337fe7f38805485f289ea39addd0",
+  "seal_sealed_at_utc": "2026-09-12T04:54:08Z"
+ },
+ "this": {
+  "bundle_label": "sdcp_c12_v42",
+  "manifest_sha256": "a2e3e820a276757389862ae7bf0bd273fd7362a35e1368d5b74c5937c7eb17e7",
+  "zip_sha256_txt": "9a3976b8b13a7a6e7505dcdba6bdfceb3c2ba1ebfe8eb81764c42fd159f89014",
+  "seal_sealed_at_utc": "2026-09-24T11:30:56Z"
+ },
+ "seal_fields_equal": [
+  "source_sha256",
+  "vasp_executable_sha256",
+  "launcher_kind",
+  "launcher_sha256"
+ ],
+ "imported": [
+  {
+   "job": "prospective/ptfe_c10__b00__afm2424_pm1",
+   "phases": [
+    "static"
+   ],
+   "inputs_verified_identical": [
+    "prospective/ptfe_c10__b00__afm2424_pm1/POSCAR",
+    "prospective/ptfe_c10__b00__afm2424_pm1/POTCAR_ASSEMBLE.sh",
+    "prospective/ptfe_c10__b00__afm2424_pm1/job.json",
+    "prospective/ptfe_c10__b00__afm2424_pm1/run_job.sh",
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/INCAR",
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/KPOINTS"
+   ],
+   "assembled_potcar_sha256": "c7979420bb62ffe4e91a80046635fe9b70f5b9545b32f73dfc26d7340f6a8343",
+   "files": {
+    "prospective/ptfe_c10__b00__afm2424_pm1/EXECUTABLE_RECEIPT.tsv": {
+     "sha256": "63a1f164cc40c92588c7070b8a7d0ddc83aca47954bb2b3627b89d512c851ef2",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/_placement.tsv": {
+     "sha256": "9777c7c0a9e93757885f75880dd6da7859e5b306c83aef93278717edef0d4925",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/CHG": {
+     "sha256": "de79f533df2195ea83714ad135e551222304696b1c3a83043cb877418fa501a5",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/CHGCAR": {
+     "sha256": "b527c6bbcf8dd07d95eef9b65c81ec3188235b8522061cdf600af876572d0cdb",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/CONTCAR": {
+     "sha256": "fa9e0ebad28cda4a2106045c6ba9da7599d71b5703950823399731aad5f42798",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/DOSCAR": {
+     "sha256": "b926301e97ffb1103a3b64e4b4794bc00390286579f9096fe987f2aea07a4ad2",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/EIGENVAL": {
+     "sha256": "584d1774aa34ac0dac881d6305110b39d582bedb9dee7713c9e2094242b50f6a",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/IBZKPT": {
+     "sha256": "93f1be00b61a4dc7c54cdd6d8c03fa79d43e215c7371c8476b38efbade2a6cb1",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/INCAR": {
+     "sha256": "f9fc63a2b1407156544e90bda2546f2153509670ce54418ba288876938749a14",
+     "action": "already_identical"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/KPOINTS": {
+     "sha256": "07be29af896b425b78415bc331f2c9d18749a0cf754852dd5b6a3fe2ad5ce8b0",
+     "action": "already_identical"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/OSZICAR": {
+     "sha256": "5f4285d9f969da440fc74dc7099db62ff56a62a4d67422d2257f3b9057114131",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/OUTCAR": {
+     "sha256": "0205e2243d94e0f8524d399ed4d33d6b40d9508d3e297a9f4b28d003b9dfa5dc",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/PCDAT": {
+     "sha256": "0acfb778e384843bc6c81c15cca77a27f445df6f8a64b9ac4c9f2f4894c73100",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/POSCAR": {
+     "sha256": "4daf62fd8cf1e3c9aeee1293ca8ce36885aa8783de5951df645177b815fe594a",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/POTCAR": {
+     "sha256": "c7979420bb62ffe4e91a80046635fe9b70f5b9545b32f73dfc26d7340f6a8343",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/PROCAR": {
+     "sha256": "032838fcc05c29445cb60885cd2bbe0c2a879b00c223e94e7a4b4386871fc606",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/REPORT": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/WAVECAR": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/XDATCAR": {
+     "sha256": "b91784e62c74ce018282b209a36ef9bcc0dfd191e9d04310ee10e8cf7a43b56c",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/vasp.out": {
+     "sha256": "84016a48caee69fa9d53b5f385086cf3b0e6e1fe9fad1c5d068826dd37d4379f",
+     "action": "hardlink"
+    },
+    "prospective/ptfe_c10__b00__afm2424_pm1/static/vasprun.xml": {
+     "sha256": "3f8120798a69de5d7b457d6e4da2822b9e163e7c915562041144702d4cbe4be0",
+     "action": "hardlink"
+    }
+   }
+  },
+  {
+   "job": "prospective/sdcp_neutral__b00__afm2424_pm1",
+   "phases": [
+    "static"
+   ],
+   "inputs_verified_identical": [
+    "prospective/sdcp_neutral__b00__afm2424_pm1/POSCAR",
+    "prospective/sdcp_neutral__b00__afm2424_pm1/POTCAR_ASSEMBLE.sh",
+    "prospective/sdcp_neutral__b00__afm2424_pm1/job.json",
+    "prospective/sdcp_neutral__b00__afm2424_pm1/run_job.sh",
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/INCAR",
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/KPOINTS"
+   ],
+   "assembled_potcar_sha256": "9121bfad71c756ed688948df7b70040ddcdc1e484b8b803315b845a7bf37bfcc",
+   "files": {
+    "prospective/sdcp_neutral__b00__afm2424_pm1/EXECUTABLE_RECEIPT.tsv": {
+     "sha256": "d965d7a500ebbae701d449f5d667d79dc566db5b287f8fad126b1e278ab97af0",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/_placement.tsv": {
+     "sha256": "c262f82d4be816c6158cf4a94877cf40ef0e2d9397bc6b775d3f3e3ccc96ec62",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/CHG": {
+     "sha256": "049097a3e377770c81ebdfa671d82e9187b7c7105d16839356f20889310e8f85",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/CHGCAR": {
+     "sha256": "4890bc55bb84503e1636bc1d6de2164d17eff6f4bb538e1732e0620f91c81006",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/CONTCAR": {
+     "sha256": "69b60c44c84d4fabb0c3ed7be8beff5f0fd63e5e0e520d8f802688d217dd9db8",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/DOSCAR": {
+     "sha256": "ba9493dad6e27d8fd2bb1a121ae39d84bd210584501e7589bb35d5b539cdd27f",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/EIGENVAL": {
+     "sha256": "20ec08e8d9403fae88a8cc90a0989040c32e01b968915189e95cef3d672d64bf",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/IBZKPT": {
+     "sha256": "93f1be00b61a4dc7c54cdd6d8c03fa79d43e215c7371c8476b38efbade2a6cb1",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/INCAR": {
+     "sha256": "a83650c276dce85e5caa570537a439cab1e557254fad3ee8f37174e29f005a7a",
+     "action": "already_identical"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/KPOINTS": {
+     "sha256": "07be29af896b425b78415bc331f2c9d18749a0cf754852dd5b6a3fe2ad5ce8b0",
+     "action": "already_identical"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/OSZICAR": {
+     "sha256": "9efe4d999cd3142c4a0497c12d59f3189098d6ddc0b449e628a4a57a62fa230a",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/OUTCAR": {
+     "sha256": "c0d87977cf9a3f28d66ad82da07c522fdc793b2db3425355a9013ac3101ca4a6",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/PCDAT": {
+     "sha256": "4dc0e876d8d41cdd5a8704e497b3c3817eed86f8b22553f674f3bf1dd2fc3dca",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/POSCAR": {
+     "sha256": "4780e416a2d803dc81c681fd71d82d2f53783c5197a85715061f721c3dd42676",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/POTCAR": {
+     "sha256": "9121bfad71c756ed688948df7b70040ddcdc1e484b8b803315b845a7bf37bfcc",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/PROCAR": {
+     "sha256": "c69b4e4e6a8cd30e858e8d9aaa32751f67a1b23f674f928289fbc5c583fb7422",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/REPORT": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/WAVECAR": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/XDATCAR": {
+     "sha256": "cf080aa40081673c96c536894c43e84aecd1960dcefb7b9e3e3420a4fc700cb5",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/vasp.out": {
+     "sha256": "3dca24ae5b6c2ac99dea71eeec55f150a270849c8d594113b9447d38d92ddbf7",
+     "action": "hardlink"
+    },
+    "prospective/sdcp_neutral__b00__afm2424_pm1/static/vasprun.xml": {
+     "sha256": "b6ba5ae3674789667b24488734d11dc9828105ee1cbfa66a42c0babc5f0de20e",
+     "action": "hardlink"
+    }
+   }
+  },
+  {
+   "job": "refs/clean_slab__afm2424_pm1",
+   "phases": [
+    "static"
+   ],
+   "inputs_verified_identical": [
+    "refs/clean_slab__afm2424_pm1/POSCAR",
+    "refs/clean_slab__afm2424_pm1/POTCAR_ASSEMBLE.sh",
+    "refs/clean_slab__afm2424_pm1/job.json",
+    "refs/clean_slab__afm2424_pm1/run_job.sh",
+    "refs/clean_slab__afm2424_pm1/static/INCAR",
+    "refs/clean_slab__afm2424_pm1/static/KPOINTS"
+   ],
+   "assembled_potcar_sha256": "380f5170a4f98caa60f8a259249e9de0812bd687259d23e870e4f937b7fbd751",
+   "files": {
+    "refs/clean_slab__afm2424_pm1/EXECUTABLE_RECEIPT.tsv": {
+     "sha256": "46eee904d7ed6bdda34bbe7b0efa5e44c8eec8c83ddffb47035d53b111cd781f",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/_placement.tsv": {
+     "sha256": "16ab186b31c552924ffbb0a48e3f52327bd08c72721d47cad9319a670f4e9893",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/CHG": {
+     "sha256": "6bd2eb81b7949d397dd1543c54878273b3358ac7d94f01d5e0974f0a6370503b",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/CHGCAR": {
+     "sha256": "e4f6956d6b96b695cabd634afe12cdfa24b4239e2c524f27036e033a432dedc0",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/CONTCAR": {
+     "sha256": "34fa5160f9b56243fe0ac20b010d4ca632fd1162d2e5415a93e8cbd07e3fe11a",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/DOSCAR": {
+     "sha256": "5c2c176e295e9e2537e6fcb510503da62ca08924c03509a6cb06aef4976649f6",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/EIGENVAL": {
+     "sha256": "d7d4f9916b1ee25fe20e7763030edcb1b4632ecf506b2f117a23cc9c789e34ca",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/IBZKPT": {
+     "sha256": "93f1be00b61a4dc7c54cdd6d8c03fa79d43e215c7371c8476b38efbade2a6cb1",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/INCAR": {
+     "sha256": "86909daeeaa42f19bb21f886aedac1f0dee02c7d3697a6a1219dabeed6d7ad6f",
+     "action": "already_identical"
+    },
+    "refs/clean_slab__afm2424_pm1/static/KPOINTS": {
+     "sha256": "07be29af896b425b78415bc331f2c9d18749a0cf754852dd5b6a3fe2ad5ce8b0",
+     "action": "already_identical"
+    },
+    "refs/clean_slab__afm2424_pm1/static/OSZICAR": {
+     "sha256": "292441a61c037fc551aa2101e917dd9dab3a9c4b40be3c585664cbb02e081c5f",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/OUTCAR": {
+     "sha256": "147c496a76136202f0cfd7678a88e3e4ccfe22d9bb9fe31de303507573732668",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/PCDAT": {
+     "sha256": "e233de9ab2be36a2197e9afa6f6f3eaaac79a18eba978f0c3d8dda2e962287dc",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/POSCAR": {
+     "sha256": "a57ab2f03a2f50073308039cc337c6d0652ae41483d47f1eccaaadceb9aa3220",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/POTCAR": {
+     "sha256": "380f5170a4f98caa60f8a259249e9de0812bd687259d23e870e4f937b7fbd751",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/PROCAR": {
+     "sha256": "634226fa1d531a81577fbdff5002a626362ee7ade1d0f12e196dfd0a3983f75d",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/REPORT": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/WAVECAR": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/XDATCAR": {
+     "sha256": "097364bb779d6dd08337eaa20990b2377ff9467adc21f7eb1c3ac5484189bae7",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/vasp.out": {
+     "sha256": "3ef5a52d3e449b3e2aec42d879a32101e18e27e518253e3d2f357e03c2dc9f4b",
+     "action": "hardlink"
+    },
+    "refs/clean_slab__afm2424_pm1/static/vasprun.xml": {
+     "sha256": "fd863e77bf2296ec15964833f318f85cb412492616462db24d0400dc8b45847f",
+     "action": "hardlink"
+    }
+   }
+  },
+  {
+   "job": "refs/mol__ptfe_c10__box20",
+   "phases": [
+    "static"
+   ],
+   "inputs_verified_identical": [
+    "refs/mol__ptfe_c10__box20/POSCAR",
+    "refs/mol__ptfe_c10__box20/POTCAR_ASSEMBLE.sh",
+    "refs/mol__ptfe_c10__box20/job.json",
+    "refs/mol__ptfe_c10__box20/run_job.sh",
+    "refs/mol__ptfe_c10__box20/static/INCAR",
+    "refs/mol__ptfe_c10__box20/static/KPOINTS"
+   ],
+   "assembled_potcar_sha256": "e33939e9a2c61a14e270b51445ff991aea49c0e3583aec71681e5b9ab286c925",
+   "files": {
+    "refs/mol__ptfe_c10__box20/EXECUTABLE_RECEIPT.tsv": {
+     "sha256": "d6bc1723d5da9b4cf6cde39f850808586610462ba1f4836460af2f5feb0ae6ee",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/_placement.tsv": {
+     "sha256": "ac76548ea6cce3f6e420fa428c3578e8f82a6da3c06e76dab2cceee51647d415",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/CHG": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/CHGCAR": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/CONTCAR": {
+     "sha256": "6a3af11c105fdf68bbf3141890b61dc8b79bf77667908c7363532f95cce63094",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/DOSCAR": {
+     "sha256": "e63d939074bdb4279d1b9ae6f9485b4894bd55fdec8f3bba094f9244b378c13e",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/EIGENVAL": {
+     "sha256": "7782cc4b53b64f4ae31921d95cc30e24577c55725170736ba8d096145a80a78f",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/IBZKPT": {
+     "sha256": "131674551398b1970945e3a80a0ea83307aaaec7f1c262139de054d17dcfeb0b",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/INCAR": {
+     "sha256": "bff127233eebcc787f08826034976a73fbd9dccfff9efae10a47e739dd9a7be0",
+     "action": "already_identical"
+    },
+    "refs/mol__ptfe_c10__box20/static/KPOINTS": {
+     "sha256": "bdec60142201489590abb7d0a574d57faf763ca24fa9bcc2da6c819162e16ba2",
+     "action": "already_identical"
+    },
+    "refs/mol__ptfe_c10__box20/static/OSZICAR": {
+     "sha256": "35960caca731ebf0417d064d31dbe2a12381ffdb3e1a960ca80c04c3fb0c10db",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/OUTCAR": {
+     "sha256": "8da6728e27fe4a08e58cdbed02dc57eef1570ed50c430a78b392e8c98550ac50",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/PCDAT": {
+     "sha256": "01a22ab1baf5c0118621b002a1a282fcc5d05633d8128baa825cca469a6bf5ce",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/POSCAR": {
+     "sha256": "35f44354ab9da8f713f672879e73b59bf00920c23edbdb47868038fd67907800",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/POTCAR": {
+     "sha256": "e33939e9a2c61a14e270b51445ff991aea49c0e3583aec71681e5b9ab286c925",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/PROCAR": {
+     "sha256": "009ddd9718e2e0af5a500f4a6128e5d54167c4a89310d027e68f307c6818b411",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/REPORT": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/WAVECAR": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/XDATCAR": {
+     "sha256": "c1e4c800a003816d9cf589e34e9e888db3ff07211ba4218bc6a75fa2471075a1",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/vasp.out": {
+     "sha256": "93fe0a6309be9f94520c26a5230c741aa67fdfe48e961311d0f8c5c27e2954d9",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box20/static/vasprun.xml": {
+     "sha256": "9bd4899a8e4c079aaa387fb1f728722809edd097ba67efb42aee72543c2007da",
+     "action": "hardlink"
+    }
+   }
+  },
+  {
+   "job": "refs/mol__ptfe_c10__box24",
+   "phases": [
+    "static"
+   ],
+   "inputs_verified_identical": [
+    "refs/mol__ptfe_c10__box24/POSCAR",
+    "refs/mol__ptfe_c10__box24/POTCAR_ASSEMBLE.sh",
+    "refs/mol__ptfe_c10__box24/job.json",
+    "refs/mol__ptfe_c10__box24/run_job.sh",
+    "refs/mol__ptfe_c10__box24/static/INCAR",
+    "refs/mol__ptfe_c10__box24/static/KPOINTS"
+   ],
+   "assembled_potcar_sha256": "e33939e9a2c61a14e270b51445ff991aea49c0e3583aec71681e5b9ab286c925",
+   "files": {
+    "refs/mol__ptfe_c10__box24/EXECUTABLE_RECEIPT.tsv": {
+     "sha256": "239e1e8d11314a082fc4ab1ca8f0705b96ed9aee98b94e47a55ce6689cb2152c",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/_placement.tsv": {
+     "sha256": "53cf2da9029e7aff8c2c16b77e561703fd036181f0de26758e469483399cee39",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/CHG": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/CHGCAR": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/CONTCAR": {
+     "sha256": "5732d92d8ae31c9e1976fa53d3973a6cf56315923b376410041526e4fbffa704",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/DOSCAR": {
+     "sha256": "6a512744dbf41e9e364066687e8f2e76eafd3fe71421e981c7d8e94aa57b799b",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/EIGENVAL": {
+     "sha256": "b16433807a3eb283d35186d909a006cefdb6a3a975d6141cf8c957c0bb2f6f89",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/IBZKPT": {
+     "sha256": "131674551398b1970945e3a80a0ea83307aaaec7f1c262139de054d17dcfeb0b",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/INCAR": {
+     "sha256": "e8f41ba857884530abbd961cf39235656e9dc4a0ced6cf43616cbece958be785",
+     "action": "already_identical"
+    },
+    "refs/mol__ptfe_c10__box24/static/KPOINTS": {
+     "sha256": "bdec60142201489590abb7d0a574d57faf763ca24fa9bcc2da6c819162e16ba2",
+     "action": "already_identical"
+    },
+    "refs/mol__ptfe_c10__box24/static/OSZICAR": {
+     "sha256": "a0a3d8b20c2acbce712b36eeafc8d26546b746244f38c0879d9e5502e7447cfa",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/OUTCAR": {
+     "sha256": "33f1e85484cb51cd3329b319ef487ad20b088a21f1648b57a0c8e27bde52419a",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/PCDAT": {
+     "sha256": "8b279c798941a1657d3637475c742d1084e24de5aba36978f721792ec1e38453",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/POSCAR": {
+     "sha256": "12b8a3dab446569f5bbf1ea874c60875f694e7054808eb5c7bea216a64f3ad4d",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/POTCAR": {
+     "sha256": "e33939e9a2c61a14e270b51445ff991aea49c0e3583aec71681e5b9ab286c925",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/PROCAR": {
+     "sha256": "6e04356be72963321802567966859d5eb74e3bf9e15b6005cdbebdb9e753c239",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/REPORT": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/WAVECAR": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/XDATCAR": {
+     "sha256": "ef3c1a263811968e1c083d70b650d36f5fdb700626ba58ae80bd8217c76926e4",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/vasp.out": {
+     "sha256": "9f359c9204ef402ce3ab9da4f5720b336d4c34bdc41ffbfe5bce5b30640f5f67",
+     "action": "hardlink"
+    },
+    "refs/mol__ptfe_c10__box24/static/vasprun.xml": {
+     "sha256": "8a947c6e286a28b94c1e44ef5b582320f9a2caabf6cb10ebd57a797a95bf51d8",
+     "action": "hardlink"
+    }
+   }
+  },
+  {
+   "job": "refs/mol__sdcp_neutral__box20",
+   "phases": [
+    "static"
+   ],
+   "inputs_verified_identical": [
+    "refs/mol__sdcp_neutral__box20/POSCAR",
+    "refs/mol__sdcp_neutral__box20/POTCAR_ASSEMBLE.sh",
+    "refs/mol__sdcp_neutral__box20/job.json",
+    "refs/mol__sdcp_neutral__box20/run_job.sh",
+    "refs/mol__sdcp_neutral__box20/static/INCAR",
+    "refs/mol__sdcp_neutral__box20/static/KPOINTS"
+   ],
+   "assembled_potcar_sha256": "d5484980820ab6f319aaf584436460673bbf419a8756955f29add4492dac08c2",
+   "files": {
+    "refs/mol__sdcp_neutral__box20/EXECUTABLE_RECEIPT.tsv": {
+     "sha256": "669d6d4307d1f2bb0180a1335557ddeed77d0e2058d4a0a6486254df49fa207a",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/_placement.tsv": {
+     "sha256": "c2fef7b2aaa323e76f9625d81fb2181327f9f35e77806a18d2b09946f123816a",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/CHG": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/CHGCAR": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/CONTCAR": {
+     "sha256": "950b975121c732d9ba600296defef55d6b4777f4bf53ba98f6629890367ec11d",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/DOSCAR": {
+     "sha256": "204a8ffca1e65ab912c16a49f854797aafc221ce52c9c05111d7bccd5c084957",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/EIGENVAL": {
+     "sha256": "9953ff0b305f5a06871397d4bf6262bb0270146d67ee0a2f9da62eea48d4fba8",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/IBZKPT": {
+     "sha256": "131674551398b1970945e3a80a0ea83307aaaec7f1c262139de054d17dcfeb0b",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/INCAR": {
+     "sha256": "44ae72d3355c7a0215ac8cc1eac9387e5b447b3885ea2f3c8423ad9dc51fd6f5",
+     "action": "already_identical"
+    },
+    "refs/mol__sdcp_neutral__box20/static/KPOINTS": {
+     "sha256": "bdec60142201489590abb7d0a574d57faf763ca24fa9bcc2da6c819162e16ba2",
+     "action": "already_identical"
+    },
+    "refs/mol__sdcp_neutral__box20/static/OSZICAR": {
+     "sha256": "76c022edfb2bc98d647e2fa8c9e14f4168aba2a423469891f9f46118600a7dc4",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/OUTCAR": {
+     "sha256": "3776e821e34104ff7a9d1130cedb5fb30d0b3c3255c348529f192b0636caaecf",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/PCDAT": {
+     "sha256": "9f5df542f9bbdbfe96805dceb197eefc2621847ca2f11eb12c46a394e01bc5d3",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/POSCAR": {
+     "sha256": "a46ece2e77bb37661825c234bc9057f84765df683afae1244d3550c1e06d293b",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/POTCAR": {
+     "sha256": "d5484980820ab6f319aaf584436460673bbf419a8756955f29add4492dac08c2",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/PROCAR": {
+     "sha256": "4361b487d8755382e2aa8f1632f7d9c96c0da7558286bc367bae00ad37bcab7d",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/REPORT": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/WAVECAR": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/XDATCAR": {
+     "sha256": "939c886f54c96c42ca84bb3a86e6063e732f5ec9310a7aeaaa257b743a18309a",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/vasp.out": {
+     "sha256": "4d561e90ce92a33d2c08bb536485bb2dc9e42b5d6130ea88280a141c0242f08a",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box20/static/vasprun.xml": {
+     "sha256": "6aa3dcf9aa7626ee790af97ac2e6b06171f84100a7ede115353fc6b65153e760",
+     "action": "hardlink"
+    }
+   }
+  },
+  {
+   "job": "refs/mol__sdcp_neutral__box24",
+   "phases": [
+    "static"
+   ],
+   "inputs_verified_identical": [
+    "refs/mol__sdcp_neutral__box24/POSCAR",
+    "refs/mol__sdcp_neutral__box24/POTCAR_ASSEMBLE.sh",
+    "refs/mol__sdcp_neutral__box24/job.json",
+    "refs/mol__sdcp_neutral__box24/run_job.sh",
+    "refs/mol__sdcp_neutral__box24/static/INCAR",
+    "refs/mol__sdcp_neutral__box24/static/KPOINTS"
+   ],
+   "assembled_potcar_sha256": "d5484980820ab6f319aaf584436460673bbf419a8756955f29add4492dac08c2",
+   "files": {
+    "refs/mol__sdcp_neutral__box24/EXECUTABLE_RECEIPT.tsv": {
+     "sha256": "185cf84fcbeded1ed03d318e795643d3d004b3cf0fa08e7a7b92c25a37d535b3",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/_placement.tsv": {
+     "sha256": "6d851a7a149ba90554bbc71da2140528f058553463489a049da7c3cd54668279",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/CHG": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/CHGCAR": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/CONTCAR": {
+     "sha256": "b9feb14159407558385b8425c023a9793049ae0c95bee69f56d2d6d0cec601c8",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/DOSCAR": {
+     "sha256": "2c259bc06037109a09248af78fcda7071f00459fc2d8859792ccfd8e37371633",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/EIGENVAL": {
+     "sha256": "0b0c4bd2d2a7495575da51c8cd424f2964cbe9ac9d3d01f2a21c61c6f450a8b7",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/IBZKPT": {
+     "sha256": "131674551398b1970945e3a80a0ea83307aaaec7f1c262139de054d17dcfeb0b",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/INCAR": {
+     "sha256": "00c52dc7ead75189a4fce4ab96ce6f6fefe36f348b57b458979f316cc8694db1",
+     "action": "already_identical"
+    },
+    "refs/mol__sdcp_neutral__box24/static/KPOINTS": {
+     "sha256": "bdec60142201489590abb7d0a574d57faf763ca24fa9bcc2da6c819162e16ba2",
+     "action": "already_identical"
+    },
+    "refs/mol__sdcp_neutral__box24/static/OSZICAR": {
+     "sha256": "7c7f88e732070c3a54a896a7c1baf8dc0c187be6b5a864d285ca03d5e7b5c3fb",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/OUTCAR": {
+     "sha256": "eb61f0283f4903e3bf40fa5d3518da087395e3ccda914deaa3cac670778bc75e",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/PCDAT": {
+     "sha256": "7acc59fa00544da8b521c17509dbc1c1356e7fd17f90d39d1ebd651bf05878d5",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/POSCAR": {
+     "sha256": "2ac2034757f4dc3e32ce7b842fc0f5441a099ca5fc04ef02c736981dc1f51d2f",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/POTCAR": {
+     "sha256": "d5484980820ab6f319aaf584436460673bbf419a8756955f29add4492dac08c2",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/PROCAR": {
+     "sha256": "a62f890f2830d9e804d581b6b01d382eaa6c47be9d6693ff4914ab3b94b14bd1",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/REPORT": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/WAVECAR": {
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/XDATCAR": {
+     "sha256": "b345f6e9445da35cbfb92372dfcd80a286d75b7fef3c78b7d24a116d310b93d8",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/vasp.out": {
+     "sha256": "7fe41c4ce22c875af1fba89eea9cd233d59a44377b4d7eb0f83ce42e126ca844",
+     "action": "hardlink"
+    },
+    "refs/mol__sdcp_neutral__box24/static/vasprun.xml": {
+     "sha256": "99409b281a335671a603b7fb61094ec68fbc8c4a426118a229ea64e7ea747e7f",
+     "action": "hardlink"
+    }
+   }
+  }
+ ],
+ "not_imported": [
+  {
+   "job": "refs/mol__ptfe_c10__box24__nzmag",
+   "why": "static/OUTCAR 가 없다 (0스텝 찌꺼기 · qdel 잔재)"
+  },
+  {
+   "job": "refs/mol__sdcp_neutral__box24__nzmag",
+   "why": "static/OUTCAR 가 없다 (0스텝 찌꺼기 · qdel 잔재)"
+  },
+  {
+   "job": "vacconv/clean_slab__afm2424_pm1__c2",
+   "why": "static/OUTCAR 가 없다 (0스텝 찌꺼기 · qdel 잔재)"
+  },
+  {
+   "job": "vacconv/ptfe_c10__b00__afm2424_pm1__c2",
+   "why": "static/OUTCAR 가 없다 (0스텝 찌꺼기 · qdel 잔재)"
+  },
+  {
+   "job": "vacconv/sdcp_neutral__b00__afm2424_pm1__c2",
+   "why": "static/OUTCAR 가 없다 (0스텝 찌꺼기 · qdel 잔재)"
+  }
+ ],
+ "⛔_이_기록이_보증하지_않는_것": [
+  "이전 extraction 의 정직성 (옮겨 온 receipt·OUTCAR 는 남의 기계가 쓴 파일 — 분석기가 반송 뒤 봉인과 대조한다)",
+  "옮겨 온 결과의 물리적 타당성 (SCF 수렴·자기상태는 분석기 게이트의 몫)"
+ ]
+}

@@ -1,9 +1,9 @@
 ---
 title: SDCP vs PTFE 흡착에너지 (C-12 v41) — 숫자의 지위 · PTFE 크기 검증 · 세미나 대응
 date: 2026-09-23
-updated: 2026-09-23
+updated: 2026-09-30
 tags: [sdcp, ptfe, adsorption, c12, dispersion, d3, linio2, seminar]
-status: 진단 정리 — 값은 citable:false (사전등록 게이트 미통과) · v42 회신 대기
+status: 진단 정리 — 값은 citable:false · v42 1단계 완료(09-30 · 게이트 셋 중 둘 닫힘) · 2단계 1저자 판단 대기
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -18,6 +18,12 @@ evidenceScope: multi-source-mixed
 > **숫자의 정본은 `db/properties/sdcp_c12_v41_eads_ungated_2026_09_21.json`** (§2 결과 · §3 D3 분해 ·
 > §9 PTFE 크기 검증)이다. 이 문서는 사람이 읽는 요약이고, **충돌하면 원장이 이긴다.**
 > 원장이 바뀌면 이 문서도 같이 본다.
+
+> ⭐ **2026-09-30 v42 1단계 완료 회신** (기록 `db/properties/sdcp_c12_v42_stage1_2026_09_30.json`) —
+> 진공을 36.66 → 40.66 Å 로 늘려도 D 는 **−0.164 → −0.165 eV** (0.6 meV), 기체 분자는 비영 자화 시작에서도
+> 닫힌껍질로 돌아와 스핀 대조 ≤ 0.04 meV. 사전등록 게이트 셋 중 **진공 · 기체 스핀 둘이 닫혔다**. 셋째(다른 자세·자기 분기)는
+> 2단계 7잡이고 진행 여부는 1저자 판단 대기다. ⚠ 값은 **여전히 citable:false** — 분석기가 막는 셋(POTCAR 사후 신원 · ENCUT
+> 0.01 eV · 외부 앵커)은 2단계로도 안 풀린다. 아래 v41 본문은 그대로 유효하다 (c1 값이 같다).
 
 ## 0. 한 줄 요약
 

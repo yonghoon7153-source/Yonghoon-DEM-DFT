@@ -1,0 +1,310 @@
+{
+ "schema": "sdcp_c12_v42_stage1/v1",
+ "생성": "2026-09-30",
+ "트랙": "C-12 SDCP/PTFE 흡착 (1저자 = 사용자)",
+ "무엇인가": "번들 sdcp_c12_v42 1단계 완료 회신 — 수행측 mirae · 12/12 잡 · STAGE1_PASS (2026-09-30 09:25 KST · rc 0) · 원본 HANDOFF 는 이 폴더에 그대로",
+ "1저자_2026_09_30": "\"sdcp 관련해서 revision 용도 끝났어\" — 이 회신 zip 과 함께. 2단계(7잡) 진행 여부는 아직 안 정했다 (아래 §5)",
+ "0_지위": {
+  "citable": false,
+  "분석기_판정": "우리 쪽 재실행 종료코드 3 = '완주했으나 인용 불가 (탐색용)' · manuscript_citable = False",
+  "막는_것_셋": [
+   "potcar_identity_policy.manuscript_citable != true (mode='post_hoc') — 승인된 PAW dataset 인지 확인되지 않았다",
+   "overall_citable_at_0.01eV != true — ENCUT·축간 상호작용을 안 쟀다",
+   "potcar_identity.allowed_claim='bundle_conditional_only' — 외부 앵커가 없다"
+  ],
+  "⚠_2단계로_안_풀리는_것": "위 셋은 POTCAR 신원(사후 확인 · 외부 앵커 없음)과 ENCUT·축간 상호작용 0.01 eV 수준 검사다. 2단계 7잡(다른 자세·자기 분기)은 이 셋을 풀지 않는다 — 2단계를 돌려도 manuscript_citable 은 그대로 false 다",
+  "e_ads_분석기": "분석기는 사전등록 잡 풀이 다 모이기 전에는 E_ads 를 만들지 않는다 (RESULTS.e_ads = {}). 아래 §2 값은 v41 게이트 밖 기록(sdcp_c12_v41_eads_ungated_2026_09_21.json)과 같은 방식의 **게이트 밖** 값이다"
+ },
+ "1_무결성_내가_확인한_것": {
+  "보낸_번들과_대조": "회신 안에 보낸 v42 파일 130 개 전부 있고 전부 바이트 동일 (분석기·governance·INCAR·POSCAR 포함)",
+  "해시": {
+   "zip_sha256": "9a3976b8b13a7a6e7505dcdba6bdfceb3c2ba1ebfe8eb81764c42fd159f89014",
+   "manifest_sha256_16": "a2e3e820a2767573",
+   "IDENTITY_v42_대조": "zip · MANIFEST 둘 다 일치"
+  },
+  "승계_7잡": "OSZICAR · CONTCAR · INCAR · vasp.out 바이트 동일, OUTCAR 는 풀어서 동일 — repo 의 sdcp_c12_v41_partial_raw 와 같은 계산이다 (그래서 여기엔 새 5잡만 넣었다)",
+  "분석기_재실행": "번들 analyze_results.py (sha 동일) 를 회신 복사본에 돌림 → 무결성 검사 129 · 변경 0 · 없음 0 · 잡 게이트 12/19 (7 = 2단계 NOT_RUN) · stage gate vacconv ok (Δ_vac −0.6 meV · 문턱 5)",
+  "수행측_RESULTS_와_차이": {
+   "다른_키": [
+    "warnings",
+    "required_missing_sensitivity",
+    "sensitivity_status"
+   ],
+   "수행측": "complete",
+   "우리": "incomplete (7건)",
+   "원인": "범위다 — 러너가 1단계 판정 모드(`vacconv` 게이트)로 분석기를 부르면 2단계 잡을 안 센다 (analyze_results.py: '1단계 판정에서는 2단계 잡을 안 센다'). 캠페인 전체로는 민감도 7건 미완이 맞다",
+   "민감도_미완_7": [
+    "prospective/ptfe_c10__b00__afm2424_net4 [static]",
+    "prospective/ptfe_c10__b52__afm2424_pm1 [static]",
+    "prospective/ptfe_c10__b52__afm2424_net4 [static]",
+    "prospective/sdcp_neutral__b00__afm2424_net4 [static]",
+    "prospective/sdcp_neutral__b12__afm2424_pm1 [static]",
+    "prospective/sdcp_neutral__b12__afm2424_net4 [static]",
+    "refs/clean_slab__afm2424_net4 [static]"
+   ]
+  }
+ },
+ "2_게이트_밖_값": {
+  "정의": "E_ads = E(복합체) − E(깨끗한 슬랩) − E(기체 분자 box24) · D = E_ads(SDCP) − E_ads(PTFE) · c1 = 진공 36.66 Å (v41 잡) · c2 = 40.66 Å (v42 vacconv)",
+  "값": {
+   "sigma0_정본": {
+    "c1": {
+     "E_ads_PTFE_eV": -0.79074,
+     "E_ads_SDCP_eV": -0.95483,
+     "D_eV": -0.16409
+    },
+    "c2": {
+     "E_ads_PTFE_eV": -0.78989,
+     "E_ads_SDCP_eV": -0.95461,
+     "D_eV": -0.16472
+    },
+    "c2_minus_c1_meV": {
+     "E_ads_PTFE": 0.85,
+     "E_ads_SDCP": 0.22,
+     "D": -0.63
+    },
+    "기체_스핀대조_nzmag_minus_부모_meV": {
+     "PTFE": 0.038,
+     "SDCP": 0.001
+    },
+    "기체상자_box20_minus_box24_meV": {
+     "PTFE": 0.131,
+     "SDCP": 0.218
+    }
+   },
+   "TOTEN_F_참고": {
+    "c1": {
+     "E_ads_PTFE_eV": -0.79076,
+     "E_ads_SDCP_eV": -0.96021,
+     "D_eV": -0.16945
+    },
+    "c2": {
+     "E_ads_PTFE_eV": -0.78983,
+     "E_ads_SDCP_eV": -0.96018,
+     "D_eV": -0.17035
+    },
+    "c2_minus_c1_meV": {
+     "E_ads_PTFE": 0.93,
+     "E_ads_SDCP": 0.03,
+     "D": -0.9
+    },
+    "기체_스핀대조_nzmag_minus_부모_meV": {
+     "PTFE": 0.04,
+     "SDCP": 0.0
+    },
+    "기체상자_box20_minus_box24_meV": {
+     "PTFE": 0.13,
+     "SDCP": 0.22
+    }
+   }
+  },
+  "읽는_법": "c1 값은 v41 게이트 밖 기록과 같다 (−0.791 / −0.955 / −0.164). 진공을 4 Å 늘려도 D 는 1 meV 안에서 그대로고, 기체 분자는 비영 시작에서도 닫힌껍질로 돌아와 스핀 대조가 0.04 meV 안이다 — 사전등록 게이트 셋 중 둘(진공 · 기체 스핀)이 여기서 닫혔다. 셋째(다른 자세·자기 분기)는 2단계다",
+  "⛔": "citable false — 원고·SI·슬라이드에 싣지 않는다 (§0). 쓸 때는 v41 기록처럼 'Preliminary · 게이트 밖' 을 단다"
+ },
+ "3_자화": {
+  "OSZICAR_마지막_mag_muB": {
+   "slab_c1": 0.0001,
+   "ptfe_c1": 0.0004,
+   "sdcp_c1": 0.0801,
+   "mptfe24": -0.0,
+   "mptfe20": 0.0,
+   "msdcp24": -0.0,
+   "msdcp20": 0.0,
+   "slab_c2": 0.0001,
+   "ptfe_c2": -0.0,
+   "sdcp_c2": 0.0097,
+   "mptfe24nz": -0.0,
+   "msdcp24nz": -0.0
+  },
+  "읽는_법": "SDCP 복합체 잔류 모멘트 0.080 (c1) → 0.010 (c2) μB — 작지만 0 은 아니다. 기체 분자는 nzmag 시작에서도 0 으로 붕괴 → 닫힌껍질 일중항이 바닥"
+ },
+ "4_잡별": {
+  "slab_c1": {
+   "잡": "refs/clean_slab__afm2424_pm1",
+   "출처": "v41 승계",
+   "전자스텝": 95,
+   "E0_sigma0_eV": -944.94760445,
+   "TOTEN_F_eV": -944.94774
+  },
+  "ptfe_c1": {
+   "잡": "prospective/ptfe_c10__b00__afm2424_pm1",
+   "출처": "v41 승계",
+   "전자스텝": 95,
+   "E0_sigma0_eV": -1123.59334184,
+   "TOTEN_F_eV": -1123.5935
+  },
+  "sdcp_c1": {
+   "잡": "prospective/sdcp_neutral__b00__afm2424_pm1",
+   "출처": "v41 승계",
+   "전자스텝": 106,
+   "E0_sigma0_eV": -1151.29228248,
+   "TOTEN_F_eV": -1151.2978
+  },
+  "mptfe24": {
+   "잡": "refs/mol__ptfe_c10__box24",
+   "출처": "v41 승계",
+   "전자스텝": 42,
+   "E0_sigma0_eV": -177.85499666,
+   "TOTEN_F_eV": -177.855
+  },
+  "mptfe20": {
+   "잡": "refs/mol__ptfe_c10__box20",
+   "출처": "v41 승계",
+   "전자스텝": 38,
+   "E0_sigma0_eV": -177.85486528,
+   "TOTEN_F_eV": -177.85487
+  },
+  "msdcp24": {
+   "잡": "refs/mol__sdcp_neutral__box24",
+   "출처": "v41 승계",
+   "전자스텝": 63,
+   "E0_sigma0_eV": -205.38984936,
+   "TOTEN_F_eV": -205.38985
+  },
+  "msdcp20": {
+   "잡": "refs/mol__sdcp_neutral__box20",
+   "출처": "v41 승계",
+   "전자스텝": 57,
+   "E0_sigma0_eV": -205.38963155,
+   "TOTEN_F_eV": -205.38963
+  },
+  "slab_c2": {
+   "잡": "vacconv/clean_slab__afm2424_pm1__c2",
+   "출처": "v42 새 잡",
+   "전자스텝": 100,
+   "E0_sigma0_eV": -944.94772651,
+   "TOTEN_F_eV": -944.94787
+  },
+  "ptfe_c2": {
+   "잡": "vacconv/ptfe_c10__b00__afm2424_pm1__c2",
+   "출처": "v42 새 잡",
+   "전자스텝": 76,
+   "E0_sigma0_eV": -1123.59261041,
+   "TOTEN_F_eV": -1123.5927
+  },
+  "sdcp_c2": {
+   "잡": "vacconv/sdcp_neutral__b00__afm2424_pm1__c2",
+   "출처": "v42 새 잡",
+   "전자스텝": 131,
+   "E0_sigma0_eV": -1151.29218257,
+   "TOTEN_F_eV": -1151.2979
+  },
+  "mptfe24nz": {
+   "잡": "refs/mol__ptfe_c10__box24__nzmag",
+   "출처": "v42 새 잡",
+   "전자스텝": 35,
+   "E0_sigma0_eV": -177.85495874,
+   "TOTEN_F_eV": -177.85496
+  },
+  "msdcp24nz": {
+   "잡": "refs/mol__sdcp_neutral__box24__nzmag",
+   "출처": "v42 새 잡",
+   "전자스텝": 62,
+   "E0_sigma0_eV": -205.38984795,
+   "TOTEN_F_eV": -205.38985
+  }
+ },
+ "5_남은_것_1저자_판단": {
+  "2단계_7잡": "다른 자세(b52 · b12)와 net4 자기 분기 — 수행측 견적 1노드 64랭크 직렬 9~10일 · 4노드/잡 3~4일. 1저자 판정을 받은 뒤 시작하겠다고 했다",
+  "⚠": "'revision 용도 끝' 이 2단계를 안 한다는 뜻인지는 기록 시점에 확인 전이다. 안 한다면 마감 규율대로 닫힘 기록(확정값 · 허용 서술 · 금지 서술 · 재개 조건)을 먼저 박고 닫는다 — SDCP 는 조건 없이 두 번 닫았다가 두 번 물렸다"
+ },
+ "6_수행측_운영_사실": {
+  "장비": "mirae SGE 64core.q 노드 1 · Xeon Gold 6530×2 64코어 · RAM 503 GB · h_rt 무제한",
+  "잡": "SGE 125185 · 2026-09-24 20:30 → 09-30 09:25 KST (133 h 연속)",
+  "maxvmem_GB": 294,
+  "VASP": "5.4.4.18Apr17-6-g9f103f2a35",
+  "POTCAR": "potpaw_PBE.54 · attestation 없음 (post_hoc)",
+  "s_per_전자스텝": "슬랩급 c1 1098–1261 · c2 1216–2084 · 기체 30–60",
+  "v41_extraction": "수행측이 그대로 보존 중"
+ },
+ "7_보관": {
+  "폴더": "db/properties/sdcp_c12_v42_stage1_raw",
+  "넣은_것": "새 5잡 (vacconv 3 · nzmag 2) 입력·출력 + HANDOFF · RESULTS(수행측) · STAGE1_PASS · CONTINUATION · PLACEMENT_PROBE · ZIP_SHA256 · RUN_LOG + 우리 재실행 RESULTS·로그",
+  "안_넣은_것": "승계 7잡 (repo 의 sdcp_c12_v41_partial_raw 와 동일) · 2단계 7잡 폴더 (입력뿐 · 보낸 번들과 동일) · XDATCAR·PCDAT·IBZKPT·REPORT (v41 보관 관례와 같게)",
+  "업로드_zip_sha256": "36105d584ccde79766064b0c7a1cf7d10d3634a496b5a5b982d293ad20fbbeab",
+  "내부_tgz_sha256": "0c1ebcd564719a2293565217916bb31e8cde072911bd469b0226d65d30c8a22a"
+ },
+ "files_sha256_16": {
+  "ANALYZE_rerun_ours.log": "910a2919d2f8320c",
+  "CONTINUATION.json": "b3f35a60e2e11726",
+  "HANDOFF_c12_stage1_complete.md": "e4ec24150bf889e6",
+  "PLACEMENT_PROBE.json": "dbf295e3398ee642",
+  "RESULTS.json": "e9259a2d99dd3ac5",
+  "RESULTS.rerun_ours.json": "a0a24daa03a5a856",
+  "RUN_LOG_stage1.log": "3f7500d39946ec76",
+  "STAGE1_PASS.json": "e492aa35591d9c67",
+  "ZIP_SHA256.txt": "9093c9c05a72c9f7",
+  "refs/mol__ptfe_c10__box24__nzmag/EXECUTABLE_RECEIPT.tsv": "ea8c5d8c9bd0a43e",
+  "refs/mol__ptfe_c10__box24__nzmag/POSCAR": "12b8a3dab446569f",
+  "refs/mol__ptfe_c10__box24__nzmag/POTCAR_ASSEMBLE.sh": "0e7c398c05e144bf",
+  "refs/mol__ptfe_c10__box24__nzmag/POTCAR_PROVENANCE.json": "b7a40f3c3038eb3f",
+  "refs/mol__ptfe_c10__box24__nzmag/_placement.tsv": "0d2d8228d2e71dbb",
+  "refs/mol__ptfe_c10__box24__nzmag/job.json": "648e2b2c83ffd782",
+  "refs/mol__ptfe_c10__box24__nzmag/run_job.sh": "33db42ccf85b0500",
+  "refs/mol__ptfe_c10__box24__nzmag/static/CONTCAR": "5732d92d8ae31c9e",
+  "refs/mol__ptfe_c10__box24__nzmag/static/INCAR": "0722c9c80e01d705",
+  "refs/mol__ptfe_c10__box24__nzmag/static/KPOINTS": "bdec601422014895",
+  "refs/mol__ptfe_c10__box24__nzmag/static/OSZICAR": "e3652515b4a6cb5c",
+  "refs/mol__ptfe_c10__box24__nzmag/static/OUTCAR.gz": "2a25e3862d9d648f",
+  "refs/mol__ptfe_c10__box24__nzmag/static/POSCAR": "12b8a3dab446569f",
+  "refs/mol__ptfe_c10__box24__nzmag/static/vasp.out": "b76ff760d9e220d0",
+  "refs/mol__sdcp_neutral__box24__nzmag/EXECUTABLE_RECEIPT.tsv": "dce44a6714998b1e",
+  "refs/mol__sdcp_neutral__box24__nzmag/POSCAR": "2ac2034757f4dc3e",
+  "refs/mol__sdcp_neutral__box24__nzmag/POTCAR_ASSEMBLE.sh": "a0b86deefefca3a8",
+  "refs/mol__sdcp_neutral__box24__nzmag/POTCAR_PROVENANCE.json": "b0ba9a14280f6889",
+  "refs/mol__sdcp_neutral__box24__nzmag/_placement.tsv": "f133328878ac9742",
+  "refs/mol__sdcp_neutral__box24__nzmag/job.json": "39fed48620276a4f",
+  "refs/mol__sdcp_neutral__box24__nzmag/run_job.sh": "33db42ccf85b0500",
+  "refs/mol__sdcp_neutral__box24__nzmag/static/CONTCAR": "b9feb14159407558",
+  "refs/mol__sdcp_neutral__box24__nzmag/static/INCAR": "53ad05d3213d3c07",
+  "refs/mol__sdcp_neutral__box24__nzmag/static/KPOINTS": "bdec601422014895",
+  "refs/mol__sdcp_neutral__box24__nzmag/static/OSZICAR": "a9dc85f42e379934",
+  "refs/mol__sdcp_neutral__box24__nzmag/static/OUTCAR.gz": "7ee79c77edc958e6",
+  "refs/mol__sdcp_neutral__box24__nzmag/static/POSCAR": "2ac2034757f4dc3e",
+  "refs/mol__sdcp_neutral__box24__nzmag/static/vasp.out": "9a96fe9c2c6dc4a3",
+  "vacconv/clean_slab__afm2424_pm1__c2/EXECUTABLE_RECEIPT.tsv": "ed5ee0051f646582",
+  "vacconv/clean_slab__afm2424_pm1__c2/POSCAR": "cbd6fe3e0d9d0102",
+  "vacconv/clean_slab__afm2424_pm1__c2/POTCAR_ASSEMBLE.sh": "058ef8a9eaeec3e7",
+  "vacconv/clean_slab__afm2424_pm1__c2/POTCAR_PROVENANCE.json": "5fec66c2a6d28635",
+  "vacconv/clean_slab__afm2424_pm1__c2/_placement.tsv": "9bb65bfd9e1a7f30",
+  "vacconv/clean_slab__afm2424_pm1__c2/job.json": "8f9b49c0d876f440",
+  "vacconv/clean_slab__afm2424_pm1__c2/run_job.sh": "33db42ccf85b0500",
+  "vacconv/clean_slab__afm2424_pm1__c2/static/CONTCAR": "c13af277a219623d",
+  "vacconv/clean_slab__afm2424_pm1__c2/static/INCAR": "4f3e5675f323f5ff",
+  "vacconv/clean_slab__afm2424_pm1__c2/static/KPOINTS": "07be29af896b425b",
+  "vacconv/clean_slab__afm2424_pm1__c2/static/OSZICAR": "5625699882ce98a9",
+  "vacconv/clean_slab__afm2424_pm1__c2/static/OUTCAR.gz": "e999713e5c5b6045",
+  "vacconv/clean_slab__afm2424_pm1__c2/static/POSCAR": "cbd6fe3e0d9d0102",
+  "vacconv/clean_slab__afm2424_pm1__c2/static/vasp.out": "7eb2f7a599bfec4f",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/EXECUTABLE_RECEIPT.tsv": "ed955f16f458e845",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/POSCAR": "171cf6d478192244",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/POTCAR_ASSEMBLE.sh": "aceecec42ecac315",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/POTCAR_PROVENANCE.json": "137a3bd5504d24e0",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/_placement.tsv": "753a9c392e69ae20",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/job.json": "96270b986a842c11",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/run_job.sh": "33db42ccf85b0500",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/static/CONTCAR": "5db93c3c65cab6b8",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/static/INCAR": "b67979009b0d3d30",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/static/KPOINTS": "07be29af896b425b",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/static/OSZICAR": "de5ca43e1eccd61a",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/static/OUTCAR.gz": "c0fb048b1175d274",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/static/POSCAR": "171cf6d478192244",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2/static/vasp.out": "19918c42e18c5de7",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/EXECUTABLE_RECEIPT.tsv": "973591c5424a55a6",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/POSCAR": "9dd45929bd6d13f6",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/POTCAR_ASSEMBLE.sh": "02769a79783112f4",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/POTCAR_PROVENANCE.json": "1aa07153878ff783",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/_placement.tsv": "9cc775427a22b602",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/job.json": "64044f9a95bb27f0",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/run_job.sh": "33db42ccf85b0500",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/static/CONTCAR": "4978034f971310cc",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/static/INCAR": "e434e33061455aa8",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/static/KPOINTS": "07be29af896b425b",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/static/OSZICAR": "1b22f7ca270aa3b5",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/static/OUTCAR.gz": "8f38fa51f4f7b84e",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/static/POSCAR": "9dd45929bd6d13f6",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2/static/vasp.out": "5e3cebb8ccefcc00"
+ },
+ "번들_repo_commit": "91bdffb35 (v42 산출물 커밋 · kb/open_items ⏭-NOW-r)",
+ "status": "proposed — 결과 기록 · 1저자 판단(2단계) 전"
+}
