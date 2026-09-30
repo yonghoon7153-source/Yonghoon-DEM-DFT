@@ -16,16 +16,16 @@
    "caption": "Fig. 1 | Physicochemical properties of the Li3PS4-2LiBH4 solid-state electrolyte. a Schematic illustration showing that the sufﬁciency of Li+ pathways increases upon increasing SE volume content (from left to right) in the sulfur cathode. b Dependence of speciﬁc energy at battery level and sulfur content at cathode level on the density of SE. The estimation was performed by assuming ﬁxed volume ratios of cathode (or battery) components. The weight of the sulfur cathode, SE membrane, Li anode, and current collectors was considered for calculating the speciﬁc energy of Li-S ASSBs. c Comparison of density among LPB, non-aqueous liquid electrolyte solutions, polymer electrolytes, and inorganic SEs. LE: non-",
    "rotated_deg": 0,
    "bbox": [
-    33.7,
-    350.7,
-    323.5,
-    557.7
+    36.0,
+    55.0,
+    562.0,
+    560.0
    ],
-   "w": 1208,
-   "h": 863,
+   "w": 2192,
+   "h": 2105,
    "dpi": 300,
    "src": "9ada0d4c-High_capacity_ASSLSBs_with_low_density_SE.pdf",
-   "blank": 0.958
+   "note": "추출기가 좌측 컬럼만 잘라 캡션 블록 좌표 기준으로 재크롭 (2026-09-30)"
   },
   {
    "key": "f2",
@@ -56,16 +56,36 @@
    "caption": "Fig. 3 | Battery testing of Li-In|LPB|S-C-SE all-solid-state cells. a Schematic illustration of the Swagelok cell and the conﬁguration of Li-S ASSBs. b Galvanostatic discharge-charge curves of S-C-LPB, S-C-LPS, and S-C-LGPS cathodes upon 167.5 mA g−1 at 60 °C. c Differential capacity vs. voltage (dQ/dV) curves. d Comparison of initial Coulombic efﬁciency (ICE, charge capacity/discharge capacity) and volume ratios of SE and carbon in different cathodes. The error bar represents the standard deviation of average ICE. e Rate performance of different sulfur cathodes and f corresponding voltage proﬁles of S-C-LPB cathode at",
    "rotated_deg": 0,
    "bbox": [
-    33.7,
-    387.6,
-    363.1,
-    456.8
+    36.0,
+    52.0,
+    560.0,
+    458.0
    ],
-   "w": 1373,
-   "h": 289,
+   "w": 2184,
+   "h": 1693,
    "dpi": 300,
    "src": "9ada0d4c-High_capacity_ASSLSBs_with_low_density_SE.pdf",
-   "blank": 0.926
+   "note": "추출기가 캡션 바로 위 289px 띠만 잘라 재크롭 (2026-09-30)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Physicochemical and electrochemical characterizations of the S-based positive electrode. a XRD patterns of S-C-LPS and S-C-LPB cathode powders. b SEM images of S-C-LPS and S-C-LPB cathode powders. c–f Ex-situ SEM and EDS mapping images of c pristine S-C-LPS cathode, d pristine S-C-LPB cathode, e lithiated S-C-LPS cathode, and f lithiated S-C-LPB cathode. g Schematic illustration",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    52.0,
+    560.0,
+    520.0
+   ],
+   "w": 2184,
+   "h": 1951,
+   "dpi": 300,
+   "src": "9ada0d4c-High_capacity_ASSLSBs_with_low_density_SE.pdf",
+   "note": "추출기가 놓쳐 캡션 블록 좌표 기준으로 추가 (2026-09-30)"
   }
  ]
 }

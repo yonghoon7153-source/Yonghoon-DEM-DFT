@@ -1,29 +1,29 @@
 ---
-title: "Yu et al. 2024 — A Nanocrystallite CuS/Nitrogen-Doped Carbon Host Improves Redox Kinetics in All-Solid-State Li2S Batteries (Adv. Energy Mater. 14, 2400845)"
-description: "N-도핑 다공성 탄소에 CuS 나노결정(29 wt%)을 박은 호스트에 nano-Li2S 를 담아 Li5.5PS4.5Cl1.5 · Li–In 전고체셀을 돌린 논문 — 첫 충전 Li2S 이용률 51 %(CuS 없는 대조) → 91 %, 10 mg cm⁻² 에서 9.6 mAh cm⁻². 전자 전도도를 200배 낮추고도 개선됐다는 것이 이 논문의 축이다. Methods 가 전부 SI 에 있고 이번 수집은 SI 미확보"
-source_url: local-upload/57b2dc3d-CuS_N_doped_C_host.pdf
-doi: 10.1002/aenm.202400845
+title: "Wang et al. 2023 — Realizing high-capacity all-solid-state lithium-sulfur batteries using a low-density inorganic solid-state electrolyte (Nat. Commun. 14, 1895)"
+description: "액상(THF) 합성 Li3PS4–2LiBH4 glass-ceramic SE(밀도 1.491 g cm⁻³, 일차입자 ~500 nm, 6.0 mS cm⁻¹ @25 °C)로 60 wt% 황 양극의 SE 부피분율을 35.4 vol%까지 올려 1144.6 mAh g⁻¹(S)·800 사이클을 낸 논문 — 활물질이 S8 이고 SI 미확보이며, 우리 30:50:20 은 이미 SE 48–52 vol%[재현]라 이 논문의 병목에 해당하지 않는다"
+source_url: local-upload/9ada0d4c-High_capacity_ASSLSBs_with_low_density_SE.pdf
+doi: 10.1038/s41467-023-37564-z
 ingested: 2026-09-30
 sha256: f703bd069bc8b8748ef6a1aa18df931ba4aa4f73252a0d1e8a25e2d2e3afd9c4
-tags: [li2s, assb, sulfide-electrolyte, composite-cathode, activation, carbon, li-in]
+tags: [assb, sulfide-electrolyte, composite-cathode, mixing-process, li-in, units]
 compare:
-  system: "ASSB (all-solid-state Li2S), 상온 + 60 °C"
-  electrolyte: "Li5.5PS4.5Cl1.5 argyrodite (자기 그룹 재료, 'almost 10 mS cm⁻¹ at RT' 라고만 인용) — 두께·질량 미기재"
-  cathode: "nano-Li2S + CuS-NC 호스트(CuS 29 wt% in host) + SE. 조성비·바인더·도전재 미기재(Methods 가 SI 에만 있고 SI 미확보). [재현] 이론용량 역산으로 Li2S : CuS-NC ≈ 50:50 ~ 33:67"
-  li2s_source: "'nano-Li2S' — 공급사·입도·합성법 미기재"
-  mixing: "'mixing nano-Li2S with CuS-NC' + 'pressed into a pellet' 이 전부 — 장비·rpm·시간·BPR·분위기·성형 압력 전부 미기재. 호스트는 NaCl 주형 + 동결건조(−50 °C) + N2/H2 800 °C 탄화 + 수세 + 황화 [도표, Fig. 1a]"
-  loading_mg_cm2: "2 / 4 / 10 (Li2S 기준)"
-  anode: "Li–In 합금 (조성·두께 미기재). anode-free 실험은 없다"
-  first_charge: "0.1 mA cm⁻², 컷오프 ≈2.5 V vs Li–In [도표]. CuSNC 2.1 mAh cm⁻² = Li2S 이용률 91 %; 대조 NC 1.2 mAh cm⁻² = 51 % [재현]"
-  first_discharge_mAh_gS: "1648 [재현] (2.3 mAh cm⁻² ÷ 2 mg cm⁻², 0.1 mA cm⁻²) — 이 중 ≈10 % 는 CuS→Cu₂₋ₓS 환원 몫이라 Li2S 단독은 ≈1483"
-  first_discharge_mAh_gLi2S: "1150 [재현] (CuS 몫 제외 시 ≈1035). 대조 NC/Li2S 는 650"
-  cycle_capacity_mAh_gS: "1075 @ 0.3 mA cm⁻² 100th (2 mg) · 609 @ 1 mA cm⁻² 500th (2 mg) · 888 @ 0.3 mA cm⁻² 30th (10 mg) [전부 재현]"
-  cycle_capacity_mAh_gLi2S: "750 @ 0.3 mA cm⁻² 100th (2 mg) · 425 @ 1 mA cm⁻² 500th · 620 @ 30th (10 mg) [전부 재현]"
-  areal_mAh_cm2: "1.6 → 1.5 (2 mg, 0.3 mA cm⁻², 100 cyc, 최대 1.8) · 1.1 → ≈0.85 (2 mg, 1 mA cm⁻², 500 cyc, 최대 1.3) · 6.7 → ≈6.2 (10 mg, 30 cyc, 최대 9.0) · 첫 방전 최대 9.6 (10 mg)"
-  cycles: "100 (93.8 %, CE 99.5 %) · 500 (77 %, 0.05 %/cyc — 단 최대 대비 65 %) · 80 (4 mg, 본문 '안정' 이나 최대 대비 58 %) · 30 (10 mg, 92 % — 최대 대비 69 %) · 130 (60 °C, 85 % — 최대 대비 76 %)"
-  temperature_C: "room temperature (수치 미기재) · 60"
-  mechanism: "CuS 의 Li2S 흡착(DFT −3.2 vs −2.1 eV) + Li2S→LiS 장벽 0.4 vs 0.9 eV + Li⁺ 이동 장벽 0.3 vs 1.5 eV = '전기촉매' 주장. 실측은 CV 활성화 피크 2.14 vs 2.41 V vs Li–In, Tafel 84 vs 151 mV dec⁻¹(산화) / 278 vs 356(환원), DC 분극 σ_Li 6.4 vs 3.5 ×10⁻⁵ S cm⁻¹, σ_e 2.9×10⁻⁴ vs 5.7×10⁻² S cm⁻¹(200배 낮음). ex situ XRD/XPS/XANES 로 CuS↔Cu₂₋ₓS 가역(Cu 금속 아님), 용량의 ≈10 % 기여"
-  our_axis: "우리와 셀 계가 가장 가깝다(Cl-rich argyrodite + Li–In + 상온 + 펠릿). 첫 충전 이용률 51→91 % 는 H1 의 고체계 직접 근거이고, σ_e 를 200배 낮추고도 개선됐다는 것은 Huang 2026(σ_e 14배 상승)과 합쳐 'σ_e 가 클수록 좋다'를 기각한다. 단 pristine Li2S 대조군이 없고(개선폭을 우리 기준선과 못 잇는다), 혼합·압력 조건이 전무하며, 첫 CE 110–113 %(CuS 가 음극 Li 을 먹는다)는 anode-free 에 그대로 손실이다. 60 °C 데이터는 이론 초과라 쓰면 안 된다"
+  system: "Li–S ASSB (Swagelok, 60 °C, 대기 중, 운전 스택압 50–60 MPa)"
+  electrolyte: "Li3PS4–2LiBH4 (LPB) glass-ceramic argyrodite — THF 액상 합성, 밀도 1.491 g cm⁻³, 일차입자 ~500 nm, σ25 = 6.0 mS cm⁻¹(열간가압, 상대밀도 91.5 %) / 3.8(냉간압축, 86.0 %), Ea 0.216 eV; 분리층 80 mg @100 MPa ≈ 600 µm ≈ 102 mg cm⁻² [재현]. 대조군 SE: β-Li3PS4(≈1.81 g cm⁻³ [도표]) · LGPS(≈2.04 [도표])"
+  cathode: "S : KB : LPB = 50 : 10 : 24 (w/w/w) = 59.5 : 11.9 : 28.6 wt% [재현] = 53.1 : 11.6 : 35.4 vol% [재현]; 바인더 없음, 성형 294 MPa 3 min"
+  li2s_source: "해당 없음 — 활물질은 Li2S 가 아니라 원소황 S8 (Sigma ≥99.0 %)을 KB(Ketjenblack EC-600JD)에 160 °C 10 h melt-diffusion"
+  mixing: "two-step — ① S+KB 160 °C 10 h 융합(복합체 황 83.3 wt%) → ② SE 와 건식 planetary BM 350 rpm 10 h, 45 mL ZrO2 jar (FRITSCH PULVERISETTE 7 premium line), Ar; 볼 재질·지름·개수·BPR 미기재"
+  loading_mg_cm2: "2.0–3.0 (S, 기본) · 2.57 (800 사이클) · 4.2/4.6 (GITT) · ~6 (SI Fig. 20, SI 미확보)"
+  anode: "Li–In — Li 박 3–4 mg (0.6 mm chip) + In 박 ⌀10 mm × 0.127 mm, 100 MPa 1 min. 논문 인쇄: ~0.62 V vs Li/Li⁺"
+  first_charge: "해당 없음 — S8 양극이라 방전부터 시작. 전압창 0.5–2.5 V vs Li–In/Li⁺ = 1.12–3.12 V vs Li/Li⁺ [재현]"
+  first_discharge_mAh_gS: "1047.5 @167.5 mA g⁻¹ (ICE 100.2 %) · 율속시험 최고 1144.6"
+  first_discharge_mAh_gLi2S: "731.2 [재현] · 798.9 [재현]"
+  cycle_capacity_mAh_gS: "1004.6 (초기) → 1068.1 (20 cyc, 최대) → 778.9 (800 cyc) @837.5 mA g⁻¹ CCCV. 이 중 황 기여는 >82 % [인쇄] → 최악 638.7 [재현]"
+  cycle_capacity_mAh_gLi2S: "701.2 → 745.5 → 543.7 [재현] (황 기여 하한 적용 시 445.8 [재현])"
+  areal_mAh_cm2: "2.58 초기 → 2.00 (800 cyc) [재현] @2.57 mg(S) cm⁻² · 2.86 [재현] @2.5 mg · 6.0 [재현] @~6 mg(S) cm⁻²"
+  cycles: "800 @0.5 C, 유지 77.5 % (최대값 기준이면 72.9 % [재현]), 감쇠 0.028 %/cyc, CE ≈100.0–100.2 % 전 구간 [도표]"
+  temperature_C: 60
+  mechanism: "SE 부피분율 부족 → 조성 불균일 → 불활성 bulky sulfur → 이온 경로 차단 → 낮은 황 이용률. 저밀도 SE 가 같은 wt% 에서 부피분율을 올려 해결한다는 주장. 근거: ICE vs SE vol% 3점 상관(Fig. 3d), 양극 분말 XRD 의 결정질 황 유무(Fig. 4a), 전극 EDS 균일도(Fig. 4c–f), GITT 과전압(방전 η_max 0.42 vs 0.74 V). 밀도·입도·전도도 변수는 분리되지 않았다"
+  our_axis: "우리 Li2S:LPSCl:AB = 30:50:20 의 SE 50 wt% 자리 — 부피로는 48–52 vol% [재현, 외부 밀도 입력]로 이 논문의 '충분' 기준 35.4 vol% 를 크게 넘는다. 가져갈 것은 (i) wt%→vol% 부피 회계, (ii) GITT η(OCV) 비교법, (iii) Li–In ≈0.62 V vs Li/Li⁺ 의 인쇄 근거. 못 가져갈 것은 LPB 합성·melt-diffusion·활성화 프로토콜(S8 계)"
 ---
 
 # 수집 목적

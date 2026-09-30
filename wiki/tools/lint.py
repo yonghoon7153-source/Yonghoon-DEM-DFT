@@ -24,6 +24,10 @@ Checks (SCHEMA.md conventions):
  17. Parity Contract — CLAUDE.md and AGENTS.md carry the same Essential Rules
  18. canonical-copy — research constants (cathode ratio, target capacity) copied
      into webapp templates/index must match the reference-cell entity page
+ 19. no two raw files share the same body sha256 (2026-09-30: a parallel paper-agent
+     run sealed one digest with another paper's body; each file's own hash matched)
+ 20. a digest's frontmatter `doi` must also appear in its body (same failure, caught
+     from a single file)
 
 The kit's study-path coverage check was dropped on 2026-08-20: it only ran when
 `guides/llm-wiki-study-path.md` existed, and this is a project wiki, not a
@@ -153,6 +157,7 @@ if mc and int(mc.group(1)) != len(pages):
     errors.append(f'index.md: claims {mc.group(1)} pages, actual {len(pages)}')
 
 raws = glob.glob(str(BASE / 'raw/**/*.md'), recursive=True)
+raw_bodies, raw_fm = {}, {}
 for f in raws:
     t = pathlib.Path(f).read_text(encoding='utf-8')
     m = re.match(r'^---\n(.*?)\n---\n(.*)$', t, re.S)
@@ -164,6 +169,28 @@ for f in raws:
     if fm.get('sha256') != h:
         errors.append(f'{pathlib.Path(f).name}: sha256 mismatch '
                       f'(declared {str(fm.get("sha256"))[:12]}…, actual {h[:12]}…)')
+    raw_bodies.setdefault(h, []).append(pathlib.Path(f).name)
+    raw_fm[pathlib.Path(f).name] = (fm, m.group(2))
+
+# 19. 같은 본문이 두 raw 파일에 들어 있으면 하나는 내용이 잘못 들어간 것이다.
+#     2026-09-30 사고: 논문 에이전트 5개를 병렬로 돌렸는데 `yu2024_…` 가 **Yu frontmatter +
+#     Wang 본문**으로 봉인됐다. 두 파일 각자는 sha256 이 declared 와 일치해서 검사 7을
+#     통과했다 — 봉인은 "본문이 바뀌지 않았음" 만 보증하고 "올바른 본문인지" 는 안 본다.
+#     이 검사가 그 구멍을 막는다. 본문 해시가 겹치는 순간 죽는다.
+for h, names in sorted(raw_bodies.items()):
+    if len(names) > 1:
+        errors.append(f'raw 본문 중복: {" · ".join(sorted(names))} 의 본문이 동일하다 '
+                      f'(sha256 {h[:12]}…) — 하나는 다른 논문의 내용이 들어갔다')
+
+# 20. digest 의 frontmatter `doi` 가 본문에도 인용되어야 한다. frontmatter 만 갈아 끼우고
+#     본문이 다른 논문인 사고(위 19번)를 **한 파일만 봐도** 잡는 검사다. 2026-09-30 실측:
+#     이 위키의 digest 7편 모두 서지 절에 자기 DOI 를 적는다 — 관례를 검사로 굳힌다.
+#     `doi` 키가 없는 raw(전사·기사 등)는 면제.
+for name, (fm, body) in sorted(raw_fm.items()):
+    doi = (fm.get('doi') or '').strip().rstrip('.')
+    if doi and doi not in body:
+        errors.append(f'{name}: frontmatter 의 doi `{doi}` 가 본문에 없다 — '
+                      f'frontmatter 와 본문이 다른 논문일 수 있다 (2026-09-30 사고 참조)')
 
 # 15. branch names are not wiki content — the rule lives in the root CLAUDE.md.
 #     Hardcoding it here drifts silently: on 2026-08-20 five wiki files (and
