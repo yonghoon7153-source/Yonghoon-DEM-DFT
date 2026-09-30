@@ -34,4 +34,14 @@ gunzip -c contact_v4_1710000.liggghts.gz | sha256sum   # 18014070…1b4d
 | 판 메시 z | 0.0191455 (평평한 면) | mesh_v4_1710000.stl |
 
 - ⬜ **마지막 덤프인가** (PHASE 4 100,000 step 의 끝인가 중간인가) 와 **원본 위치** 는 1저자 확인 대기 — 같은 폴더의 덤프 목록으로 정해진다.
-- ⬜ corner 의 t_DEM · f 추출 = §12-3 계약대로 (다음 커밋).  파일명의 `v4` 는 첨부 때 붙은 이름 (덱의 덤프 이름은 `post_case15/{atom,contact,mesh}_*`).
+- ✅ t_DEM · f 추출 = §12-5-7 (f276f6d15) · ✅ 스캐폴드 · argv 봉인 = §12-5-8 (아래 두 CSV).  파일명의 `v4` 는 첨부 때 붙은 이름 (덱의 덤프 이름은 `post_case15/{atom,contact,mesh}_*`).
+
+## MPM 스캐폴드 (§12-5-8 · 10-01)
+
+| 파일 | 행 | sha256 앞 16 | 만든 방법 |
+|---|---|---|---|
+| `case15_am_scaffold.csv` | 104 (전부 AM_P · r 6 µm) | 80e5f9242dc82d8d | `scripts/mpm_input_from_case.py` (blob 9d53b981e2ad) · `--type-map "1:AM_P,2:SE"` · 입력 = 이 폴더 atom 덤프 → atoms.csv (id,type,x,y,z,radius) · box 0.1 |
+| `case15_se_scaffold.csv` | 65,866 (SE · r 0.5 µm · 형 열 = 덤프 형 2 — MPM `--se-dump` 은 형 열을 안 쓴다) | 6fd7526f172baadd | 같은 명령 |
+
+- 도구 검증: 같은 명령으로 real_14 덤프 (`atom_2060000`) 에서 만든 스캐폴드가 커밋된 `docs/data/real14_{am,se}_scaffold.csv` 와
+  **행 집합이 글자까지 같다** (457 · 32,832 행) ⇒ real_14 스캐폴드와 같은 생성기.

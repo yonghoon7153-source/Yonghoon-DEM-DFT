@@ -779,3 +779,26 @@ R2 (2 런, 256/384) → f_AM 측정 (GPU 불요) → R3-v2 (2 런) → corner (3
 
 - ⬜ corner 런 argv · 스캐폴드 CSV (case15 덤프 → AM · SE scaffold) 는 별도 봉인 (결과 0 건 상태에서) — 이 목록의 값 · 규칙은 그때 바꾸지 않는다.
 - ★ 열람 이력 (§12-3): 이 corner 의 06-26 결과 (폐기된 f 로 돈 것) 는 이미 알려져 있었다 — 결과 문장에 병기한다.
+
+#### 12-5-8. ✅ corner 스캐폴드 · argv 봉인 (2026-10-01 · 1저자 *"봉인해"* · **R3 · corner 결과 0 건**)
+
+- 스캐폴드 = `docs/data/case15_corner_20261001/case15_{am,se}_scaffold.csv` (AM 104 · SE 65,866 · sha256 = 그 README) —
+  `scripts/mpm_input_from_case.py` (blob 9d53b981e2ad) 로 커밋된 case15 덤프에서.  같은 도구 · 같은 명령이 real_14 스캐폴드 두 파일을
+  **글자까지 같게** 재현한다 (457 · 32,832 행) ⇒ real_14 팔과 같은 생성기.
+- **argv** = §12-5-5 의 `$COMMON` (**한 글자도 같게** · `--frames 400` · `--periodic` 없음) + 아래.  세 팔은 `--am-load-frac` 값과 출력 이름만 다르다:
+  ```bash
+  $PY -u scripts/mpm3d_compaction.py --am-scaffold docs/data/case15_corner_20261001/case15_am_scaffold.csv \
+    --se-dump docs/data/case15_corner_20261001/case15_se_scaffold.csv --lateral-box 0.1 --n-grid 768 $COMMON \
+    --am-load-frac <f> --save-metrics <OUT>/fam_corner_f<태그>.json > <OUT>/fam_corner_f<태그>.log 2>&1
+  #   f = 0 (태그 0) · 0.8240 (태그 a) · 0.9007 (태그 b)  — §12-5-7 값
+  ```
+- `--lateral-box 0.1` = case15 상자 (덤프 머리 `0 0.1`) · real_14 는 기본값 0.05.
+- `--n-grid 768` = **해상도 맞춤** — MPM 은 옆 상자를 격자 폭 0.92 에 맞추므로 격자 간격 = 상자 / (0.92 · n_grid).
+  real_14 팔 (0.05 · 384) 과 같은 간격 (≈ 0.1415 µm · SE 반지름 ≈ 3.5 칸) 은 0.1 · 768 이다.  384 면 간격이 두 배
+  (SE 반지름 ≈ 1.8 칸) 라 채널 해상도 규칙 (`d_h/dx ≳ 3.5`) 에서 멀어진다.  점 수 ≈ real_14 f 팔의 **2 배** (SE 부피 65,866 / 32,832).
+- 기계 = kgy · 순서 = real_14 f 두 팔 (④ ⑤) 뒤에 corner `f = 0` → `f_(a)` → `f_(b)` (한 GPU 에서 차례로).
+- 메모리 부족 · 노드 장애 = `EXECUTION_FAILED` (§12-4 · 같은 argv 로 1 회 재시도 · **384 승격 없음**) — 결과에 *"kgy 24 GB"* 한정.
+- 판정 = §12-5-7 의 corner 봉인 목록 (t_DEM 19.1455 µm · 창 [18.571135, 19.719865] · primary b · 네 칸 · 순서 예측) — 그대로.
+- ★ 분류: real_14 R3 결과 **전** 봉인 (§12-3 FAMV2-07) · 06-26 corner 결과 (폐기된 f) 열람 이력 병기.
+- ⚠ 기록 (결과 전): `docs/mpm_scaffold_reliability_and_am_freeze.md` 는 이 케이스를 *"AM:SE 87:13"* 으로 적었는데 덱 끝 문구는
+  *"85:15"* 다 — 판정 입력이 아니므로 값은 바꾸지 않고 불일치만 적는다 (⬜ 1저자 확인).
