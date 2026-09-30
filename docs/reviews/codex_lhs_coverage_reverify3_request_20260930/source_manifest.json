@@ -1,0 +1,37 @@
+{
+ "schema": "reverify3_source_manifest/1",
+ "base": "ca0471d19a5a9d914c6a31006a001d515267f3be (= 재검증 2 의 tip · Codex 후보 10 파일과 CRLF 정규화 뒤 동일)",
+ "tip": "220b1426ea39eae13f077e9f0585388f3eb61d08",
+ "commits": [
+  "220b1426ea39eae13f077e9f0585388f3eb61d08 run_pipeline — coverage v2 검증기: 분율 · 개수 원장 · 집계 항등식 (Codex LHSC-03 R3 · P2 · P3 · 반례 먼저)",
+  "044220b1aecc42e6ca31f126b7d3f1fe5a5d2ffa LHS 수확기 item 2 — 생산자 산술 오차 모델 · 미인증 상태 · 검출 보증 (Codex LHSC-04 R3a · R3b · P3 · 반례 먼저)"
+ ],
+ "patches": {
+  "0014-LHS-item-2-Codex-LHSC-04-R3a-R3b-P3.patch": {
+   "bytes": 49891,
+   "sha256": "eb2e325b005fab29a539432e62ba3bd168a4956884f2245afd4b9e2f7ecb41be"
+  },
+  "0015-run_pipeline-coverage-v2-Codex-LHSC-03-R3-P2-P3.patch": {
+   "bytes": 20911,
+   "sha256": "54b329a2efe72f8858e14fc4d8a14b6a1c1fedcc2db4cecabd16188de70381fd"
+  }
+ },
+ "changed_files_after_apply": {
+  "scripts/lhs_descriptor_harvest.py": {
+   "bytes": 201238,
+   "sha256": "d501985e915030a9a0bdf96551c3dd48e5c0613fd65e14053bd4e52c4b256909",
+   "git_blob": "d4fdf3c28728f715531ef9a01181c8b950abab35"
+  },
+  "webapp/app.py": {
+   "bytes": 592619,
+   "sha256": "9fac9a9f5c622c17b71341534dd25564bdb9603a978f92479374d23a44a0df32",
+   "git_blob": "3885e17dc870e1c7f58b04ec647351cd704f1cf9"
+  },
+  "webapp/test_pipeline_provenance.py": {
+   "bytes": 117808,
+   "sha256": "932c3790c2cfbf25af33a4d5ff969cec82d5ae0bd23a1e4fb4681e6b897a3053",
+   "git_blob": "3666b66cdedbd365cb9d10e4abbaeec152df3f0e"
+  }
+ },
+ "note": "해시는 이 파일을 만든 순간 실제로 계산한 값 (SELF-67 재발 방지) · 줄끝 LF · 패치는 git format-patch (base 위에 git am 또는 git apply 순서대로)"
+}

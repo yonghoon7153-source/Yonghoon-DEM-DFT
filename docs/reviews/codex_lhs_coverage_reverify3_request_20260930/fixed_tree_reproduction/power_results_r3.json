@@ -1,0 +1,53 @@
+{
+  "codex_431_box": {
+    "tokens": [
+      0.00348428,
+      0.00164629,
+      0.00328959
+    ],
+    "correct_token": {
+      "n_rows": 1,
+      "n_tested": 1,
+      "n_area_dump_zero": 0,
+      "n_beyond_tol": 0,
+      "n_producer_uncertified": 0,
+      "n_area_dump_negative": 0,
+      "n_lower_bound_zero": 0,
+      "n_boundary_branch": 0,
+      "n_wide_enclosure": 1,
+      "n_detect_1pct": 0,
+      "rel_diff_max": 0.005032014156896041,
+      "rel_diff_median": 0.005032014156896041,
+      "enclosure_rel_width_median": 0.010068693174168494,
+      "producer_bound_rel_median": 1.568223741744257e-12,
+      "producer_bound_rel_max": 1.568223741744257e-12,
+      "excess_rel_max": null
+    },
+    "mutant_token": {
+      "n_rows": 1,
+      "n_tested": 1,
+      "n_area_dump_zero": 0,
+      "n_beyond_tol": 0,
+      "n_producer_uncertified": 0,
+      "n_area_dump_negative": 0,
+      "n_lower_bound_zero": 0,
+      "n_boundary_branch": 0,
+      "n_wide_enclosure": 1,
+      "n_detect_1pct": 0,
+      "rel_diff_max": 0.004919221309034869,
+      "rel_diff_median": 0.004919221309034869,
+      "enclosure_rel_width_median": 0.010068693174168494,
+      "producer_bound_rel_median": 1.568223741744257e-12,
+      "producer_bound_rel_max": 1.568223741744257e-12,
+      "excess_rel_max": null
+    }
+  },
+  "search": {
+    "seed": 4813,
+    "iterations": 50000,
+    "boxes_with_positive_lo": 50000,
+    "guaranteed_rows": 32853,
+    "guaranteed_but_missed": 0,
+    "counterexample": null
+  }
+}

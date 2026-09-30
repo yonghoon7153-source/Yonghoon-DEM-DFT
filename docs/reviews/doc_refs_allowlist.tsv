@@ -54,3 +54,4 @@ scratchpad/cronau2021_SI.txt	generated	(세션 작업공간)	감사 A 가 읽은
 scratchpad/pb/pb/pybamm/input/parameters/lithium_ion/Chen2020.py	generated	(세션 작업공간)	감사 B 가 본 PyBaMM 소스 사본 — 일회성, 커밋 대상 아님 (감사 B 는 이것을 정본 카드로 치지 않고 B 등급까지만 썼다)
 docs/figures/physics_regime/literature_brittle_reference.csv	generated	python3 scripts/build_literature_reference.py	웹앱 문헌표 CSV — 생성물 (감사 C 가 그 source 열을 판정).  ⚠ 생성 시 gitignore 확인
 scripts/lens_geometry.py	absent	-	검토 브랜치 review-coverage-20260930 의 패치 0010 (Codex LHSC-05 (a) · 순수 기하 분리) 이 만드는 새 파일 — Codex 재검증 GO 뒤 병합되면 실재 · 그때 이 행을 지운다 (2026-09-30 재검증 요청서 · 진행 문서가 가리킨다)
+docs/data/liggghts_add_pair_pin.json	absent	-	설치 빌드 (WSL lmp_serial · ibb lmp_mpi) 의 compute_pair_gran_local.cpp sha256 + add_pair 본문 대조를 사용자가 준 뒤 만든다 (LHSC-04 R3a · codex_lhs_coverage_reverify3_request_20260930.md §6) · 없으면 수확기 producer_pin 이 pinned False + 사유를 결과에 적는다 (짐작하지 않는다)

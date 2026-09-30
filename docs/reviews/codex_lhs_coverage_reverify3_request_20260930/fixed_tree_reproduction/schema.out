@@ -1,0 +1,240 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+{
+  "positive_controls": {
+    "base": {
+      "accepted": true,
+      "status": "ok",
+      "diag": {
+        "n_am": 2,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      }
+    },
+    "denom_zero": {
+      "accepted": true,
+      "status": "blank: AM 4 개의 v2 자유 표면 ≤ 0 = 분모 무효 (첫 사례 id 2: 4πr² 1.257e-05 − ΣA_v2(AM–AM) 2.142e-05 = -8.851e-06 — 이웃 AM–AM v2 면적 합이 표면적 이상) (LHSC-01)",
+      "diag": {
+        "n_am": 5,
+        "n_free_surface_nonpositive": 4,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      }
+    },
+    "nan_radius": {
+      "accepted": true,
+      "status": "blank: AM 1 개의 반경 · 표면적이 유한 양수가 아니다 (첫 사례 id 14: r=nan) — 분모를 만들 수 없다 (LHSC-01)",
+      "diag": {
+        "n_am": 3,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 1
+      }
+    },
+    "isolated_zero": {
+      "accepted": true,
+      "status": "ok",
+      "diag": {
+        "n_am": 3,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      }
+    },
+    "nan_delta": {
+      "accepted": true,
+      "status": "blank: 1 접촉을 film_area_physics_v2 가 거부했다 — 첫 사례 1–5: ValueError: delta 비유한 (nan)",
+      "diag": {
+        "n_am": 2,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      }
+    },
+    "scale1": {
+      "accepted": true,
+      "status": "blank: scale=1 ≠ 1000 — 이 코드의 두 길이 규약 (µm = sim×scale · SI = sim/scale) 이 1000 에서만 같아 5 nm 막을 덤프 단위로 옮길 수 없다",
+      "diag": {
+        "n_am": 2,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      }
+    },
+    "no_ligg_col": {
+      "accepted": true,
+      "status": "blank: contacts.csv 에 contact_area 열이 없다",
+      "diag": {
+        "n_am": 2,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      }
+    },
+    "se_only": {
+      "accepted": true,
+      "status": "ok",
+      "diag": {
+        "n_am": 0,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      }
+    }
+  },
+  "old_mutations": {
+    "missing_n_am_and_coverage": {
+      "accepted": false,
+      "pipeline_status": "failed",
+      "failed_stages": [
+        {
+          "step": "Coverage Physics vs Hertzian",
+          "stdout": "synthetic record mutation; producer execution substituted",
+          "stderr": "",
+          "rc": 0,
+          "ok": false,
+          "required": true,
+          "missing_outputs": [],
+          "stale_outputs": [],
+          "verify_failed": true
+        }
+      ]
+    },
+    "negative_n_am_and_no_coverage": {
+      "accepted": false
+    },
+    "nan_n_am_and_no_coverage": {
+      "accepted": false
+    },
+    "ok_but_invalid_denom_count": {
+      "accepted": false
+    },
+    "area_nan": {
+      "accepted": false,
+      "pipeline_status": "failed",
+      "failed_stages": [
+        {
+          "step": "Coverage Physics vs Hertzian",
+          "stdout": "synthetic record mutation; producer execution substituted",
+          "stderr": "",
+          "rc": 0,
+          "ok": false,
+          "required": true,
+          "missing_outputs": [],
+          "stale_outputs": [],
+          "verify_failed": true
+        }
+      ]
+    },
+    "area_string": {
+      "accepted": false
+    },
+    "area_negative": {
+      "accepted": false
+    },
+    "coverage_negative": {
+      "accepted": false
+    },
+    "ok_but_contact_failures": {
+      "accepted": false
+    },
+    "blank_with_positive_values": {
+      "accepted": false
+    }
+  },
+  "additional_mutations": {
+    "missing_fractions": {
+      "accepted": false
+    },
+    "none_fractions": {
+      "accepted": false,
+      "pipeline_status": "failed",
+      "failed_stages": [
+        {
+          "step": "Coverage Physics vs Hertzian",
+          "stdout": "synthetic record mutation; producer execution substituted",
+          "stderr": "",
+          "rc": 0,
+          "ok": false,
+          "required": true,
+          "missing_outputs": [],
+          "stale_outputs": [],
+          "verify_failed": true
+        }
+      ]
+    },
+    "wrong_fractions": {
+      "accepted": false
+    },
+    "empty_count_dicts": {
+      "accepted": false,
+      "pipeline_status": "failed",
+      "failed_stages": [
+        {
+          "step": "Coverage Physics vs Hertzian",
+          "stdout": "synthetic record mutation; producer execution substituted",
+          "stderr": "",
+          "rc": 0,
+          "ok": false,
+          "required": true,
+          "missing_outputs": [],
+          "stale_outputs": [],
+          "verify_failed": true
+        }
+      ]
+    },
+    "unknown_binding_keys": {
+      "accepted": false
+    },
+    "contradictory_count_totals": {
+      "accepted": false
+    },
+    "n_am_zero_positive_area": {
+      "accepted": false,
+      "pipeline_status": "failed",
+      "failed_stages": [
+        {
+          "step": "Coverage Physics vs Hertzian",
+          "stdout": "synthetic record mutation; producer execution substituted",
+          "stderr": "",
+          "rc": 0,
+          "ok": false,
+          "required": true,
+          "missing_outputs": [],
+          "stale_outputs": [],
+          "verify_failed": true
+        }
+      ]
+    },
+    "zero_contacts_positive_area": {
+      "accepted": false
+    },
+    "blank_bad_film": {
+      "accepted": false
+    },
+    "blank_none_rule": {
+      "accepted": true
+    },
+    "blank_missing_film": {
+      "accepted": true
+    },
+    "huge_integer_area": {
+      "accepted": false,
+      "pipeline_status": "failed",
+      "failed_stages": [
+        {
+          "step": "Coverage Physics vs Hertzian",
+          "stdout": "synthetic record mutation; producer execution substituted",
+          "stderr": "",
+          "rc": 0,
+          "ok": false,
+          "required": true,
+          "missing_outputs": [],
+          "stale_outputs": [],
+          "verify_failed": true
+        }
+      ]
+    }
+  }
+}

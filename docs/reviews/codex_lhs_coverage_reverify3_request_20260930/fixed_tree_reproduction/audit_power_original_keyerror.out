@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx3r/evidence/audit_power.py", line 26, in <module>
+    if original['all']['n_beyond_tol']==0 and mutated['all']['n_beyond_tol']==0 and mutated['all']['n_power_1pct']==1:
+                                                                                    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+KeyError: 'n_power_1pct'
