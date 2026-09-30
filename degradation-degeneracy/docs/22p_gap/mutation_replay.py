@@ -5995,6 +5995,134 @@ EXPECT: dict = {
                 "Failed: DID NOT RAISE ValueError",
         }
     },
+    # ── 82차 잔여 G82-N1·N2·N3 — `--emit-expect -k g82` 관측 (GREEN 7d291fbc). 증인은 고정 이유 접두어만
+    #   (조건 ID · 값 꼬리는 담지 않는다 — G67-T1-b).
+    "observed-roster-compares-rows-to-the-sealed-inputs-g82": {
+        "fail": [
+            "tests/test_gate82_residuals.py::test_g82_n1_01_one_objective_row_with_a_changed_noise_is_refused_after_a_consistent_reseal",
+            "tests/test_gate82_residuals.py::test_g82_n1_02_crossed_noise_realizations_are_refused_after_a_consistent_reseal",
+            "tests/test_gate82_residuals.py::test_g82_n1_05_the_writer_computes_the_observed_roster_and_refuses_rows_that_disagree_with_the_inputs",
+        ],
+        "witness": {
+            "tests/test_gate82_residuals.py::test_g82_n1_01_one_objective_row_with_a_changed_noise_is_refused_after_a_consistent_reseal":
+                "AssertionError: []",
+            "tests/test_gate82_residuals.py::test_g82_n1_02_crossed_noise_realizations_are_refused_after_a_consistent_reseal":
+                "AssertionError: []",
+            "tests/test_gate82_residuals.py::test_g82_n1_05_the_writer_computes_the_observed_roster_and_refuses_rows_that_disagree_with_the_inputs":
+                "Failed: DID NOT RAISE any of (ValueError, RuntimeError)",
+        }
+    },
+    "record-roster-is-compared-to-the-rebuilt-roster-g82": {
+        "fail": [
+            "tests/test_gate82_residuals.py::test_g82_n1_03_a_record_roster_of_the_same_size_but_another_observation_set_is_refused",
+        ],
+        "witness": {
+            "tests/test_gate82_residuals.py::test_g82_n1_03_a_record_roster_of_the_same_size_but_another_observation_set_is_refused":
+                "AssertionError: ['실현_재계산']",
+        }
+    },
+    "a-missing-sealed-snapshot-is-a-failure-g82": {
+        "fail": [
+            "tests/test_gate82_residuals.py::test_g82_n1_04_without_the_sealed_curves_snapshot_the_roster_cannot_be_rebuilt",
+        ],
+        "witness": {
+            "tests/test_gate82_residuals.py::test_g82_n1_04_without_the_sealed_curves_snapshot_the_roster_cannot_be_rebuilt":
+                "AssertionError: ['입력_스냅샷']",
+        }
+    },
+    "the-writer-refuses-rows-that-disagree-with-the-inputs-g82": {
+        "fail": [
+            "tests/test_gate82_residuals.py::test_g82_n1_05_the_writer_computes_the_observed_roster_and_refuses_rows_that_disagree_with_the_inputs",
+        ],
+        "witness": {
+            "tests/test_gate82_residuals.py::test_g82_n1_05_the_writer_computes_the_observed_roster_and_refuses_rows_that_disagree_with_the_inputs":
+                "AssertionError: Regex pattern did not match.",
+        }
+    },
+    "unsupported-profile-values-are-refused-g82": {
+        "fail": [
+            "tests/test_gate82_residuals.py::test_g82_n2_01_an_unsupported_design_declaration_is_refused_by_the_checker[dtype-float32]",
+            "tests/test_gate82_residuals.py::test_g82_n2_01_an_unsupported_design_declaration_is_refused_by_the_checker[endian-big]",
+            "tests/test_gate82_residuals.py::test_g82_n2_01_an_unsupported_design_declaration_is_refused_by_the_checker[generator-philox]",
+            "tests/test_gate82_residuals.py::test_g82_n2_01_an_unsupported_design_declaration_is_refused_by_the_checker[seed_derivation-H(cond_id)]",
+        ],
+        "witness": {
+            "tests/test_gate82_residuals.py::test_g82_n2_01_an_unsupported_design_declaration_is_refused_by_the_checker[dtype-float32]":
+                "AssertionError: []",
+            "tests/test_gate82_residuals.py::test_g82_n2_01_an_unsupported_design_declaration_is_refused_by_the_checker[endian-big]":
+                "AssertionError: []",
+            "tests/test_gate82_residuals.py::test_g82_n2_01_an_unsupported_design_declaration_is_refused_by_the_checker[generator-philox]":
+                "AssertionError: []",
+            "tests/test_gate82_residuals.py::test_g82_n2_01_an_unsupported_design_declaration_is_refused_by_the_checker[seed_derivation-H(cond_id)]":
+                "AssertionError: []",
+        }
+    },
+    "the-envelope-bank-is-checked-against-the-profile-g82": {
+        "fail": [
+            "tests/test_gate82_residuals.py::test_g82_n2_02_an_envelope_declaring_another_generator_is_refused_before_it_is_sealed",
+            "tests/test_gate82_residuals.py::test_g82_n2_04_the_validator_refuses_a_forged_design_or_envelope_profile",
+        ],
+        "witness": {
+            "tests/test_gate82_residuals.py::test_g82_n2_02_an_envelope_declaring_another_generator_is_refused_before_it_is_sealed":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate82_residuals.py::test_g82_n2_04_the_validator_refuses_a_forged_design_or_envelope_profile":
+                "AssertionError: 통과",
+        }
+    },
+    "the-consumer-checks-the-profile-before-start-g82": {
+        "fail": [
+            "tests/test_gate82_residuals.py::test_g82_n2_03_the_consumer_refuses_to_start_on_a_design_envelope_profile_mismatch",
+        ],
+        "witness": {
+            "tests/test_gate82_residuals.py::test_g82_n2_03_the_consumer_refuses_to_start_on_a_design_envelope_profile_mismatch":
+                "Failed: DID NOT RAISE ValueError",
+        }
+    },
+    "the-validator-checks-the-profile-g82": {
+        "fail": [
+            "tests/test_gate82_residuals.py::test_g82_n2_04_the_validator_refuses_a_forged_design_or_envelope_profile",
+        ],
+        "witness": {
+            "tests/test_gate82_residuals.py::test_g82_n2_04_the_validator_refuses_a_forged_design_or_envelope_profile":
+                "AssertionError: 실패 — ",
+        }
+    },
+    "the-v6-path-refuses-another-plan-generation-g82": {
+        "fail": [
+            "tests/test_gate82_residuals.py::test_g82_n3_01_a_plan_declaring_v5_does_not_start_the_v6_path",
+        ],
+        "witness": {
+            "tests/test_gate82_residuals.py::test_g82_n3_01_a_plan_declaring_v5_does_not_start_the_v6_path":
+                "Failed: DID NOT RAISE ValueError",
+        }
+    },
+    "the-validator-links-the-plan-generation-g82": {
+        "fail": [
+            "tests/test_gate82_residuals.py::test_g82_n3_02_the_validator_refuses_plan_and_record_that_agree_on_v5_under_sig6",
+        ],
+        "witness": {
+            "tests/test_gate82_residuals.py::test_g82_n3_02_the_validator_refuses_plan_and_record_that_agree_on_v5_under_sig6":
+                "AssertionError: 실패 — 선언 세대 충돌: record protocol_generation ",
+        }
+    },
+    "the-validator-links-the-record-generation-g82": {
+        "fail": [
+            "tests/test_gate82_residuals.py::test_g82_n3_02_the_validator_refuses_plan_and_record_that_agree_on_v5_under_sig6",
+        ],
+        "witness": {
+            "tests/test_gate82_residuals.py::test_g82_n3_02_the_validator_refuses_plan_and_record_that_agree_on_v5_under_sig6":
+                "AssertionError: 실패 — 선언 세대 충돌: 계획 protocol_generation ",
+        }
+    },
+    "the-validator-links-the-row-generations-g82": {
+        "fail": [
+            "tests/test_gate82_residuals.py::test_g82_n3_02_the_validator_refuses_plan_and_record_that_agree_on_v5_under_sig6",
+        ],
+        "witness": {
+            "tests/test_gate82_residuals.py::test_g82_n3_02_the_validator_refuses_plan_and_record_that_agree_on_v5_under_sig6":
+                "AssertionError: 통과",
+        }
+    },
 }
 
 
