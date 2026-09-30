@@ -6084,7 +6084,7 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_gate82_residuals.py::test_g82_n2_04_the_validator_refuses_a_forged_design_or_envelope_profile":
-                "AssertionError: 실패 — ",
+                "AssertionError: 실패 —",
         }
     },
     "the-v6-path-refuses-another-plan-generation-g82": {
@@ -6102,7 +6102,7 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_gate82_residuals.py::test_g82_n3_02_the_validator_refuses_plan_and_record_that_agree_on_v5_under_sig6":
-                "AssertionError: 실패 — 선언 세대 충돌: record protocol_generation ",
+                "AssertionError: 실패 — 선언 세대 충돌: record protocol_generation",
         }
     },
     "the-validator-links-the-record-generation-g82": {
@@ -6111,7 +6111,7 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_gate82_residuals.py::test_g82_n3_02_the_validator_refuses_plan_and_record_that_agree_on_v5_under_sig6":
-                "AssertionError: 실패 — 선언 세대 충돌: 계획 protocol_generation ",
+                "AssertionError: 실패 — 선언 세대 충돌: 계획 protocol_generation",
         }
     },
     "the-validator-links-the-row-generations-g82": {
