@@ -1,0 +1,8 @@
+{
+  "scope": "Current read-only comparison against prior known package identity; not a whole-workspace preservation assertion",
+  "file": "GATE82_REVIEW_20260930.zip",
+  "bytes": 1036284,
+  "sha256": "6445eb4afec4d87d8c00f163f1e69162b531d550fc5f28e140c7e29e8edf0e08",
+  "matches_prior_identity": true,
+  "prior_package_modified": false
+}

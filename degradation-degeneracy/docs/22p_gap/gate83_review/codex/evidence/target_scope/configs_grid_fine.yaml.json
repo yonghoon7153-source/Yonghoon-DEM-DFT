@@ -1,0 +1,9 @@
+{
+  "content": "# 본 실행 격자 — step 0.02\n# 조건 수: 11 × 11 × 11 × noise 3 = 3,993\n#   (lam_type을 both로 하면 ×4 = 15,972)\nextends: base.yaml\n\ngrid:\n  lli:    {start: 0.0, stop: 0.20, step: 0.02}    # 11개\n  lam_pe: {start: 0.0, stop: 0.20, step: 0.02, type: de}\n  lam_ne: {start: 0.0, stop: 0.20, step: 0.02, type: de}\n  noise:  [0.0, 0.001, 0.005]                     # V, gaussian\n  noise_seed: 42\n\nrun:\n  chunk_size: 200\n  save_full_timeseries: false\n",
+  "encoding": "utf-8",
+  "sha": "fdd160112bd8d3ee1c517d33e05b7bb4231d5ff5",
+  "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/ea2af59e68a85b561c3e185f66b815aec877ca57/degradation-degeneracy/configs/grid_fine.yaml",
+  "display_title": "grid_fine.yaml",
+  "path": "degradation-degeneracy/configs/grid_fine.yaml",
+  "ref": "ea2af59e68a85b561c3e185f66b815aec877ca57"
+}

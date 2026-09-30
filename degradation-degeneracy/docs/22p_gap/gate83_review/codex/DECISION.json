@@ -1,0 +1,35 @@
+{
+  "gate": 83,
+  "date_kst": "2026-09-30",
+  "review_mode": "READ_ONLY_SOURCE_AST_AND_RECEIPT_DATA_REVIEW",
+  "decision": "ROUND1_CLOSURE_ACCEPTED",
+  "code_target": "ea2af59e68a85b561c3e185f66b815aec877ca57",
+  "request_and_send_head": "78e1f518024d0a9c4d00ee7f6784fa8949554325",
+  "source_digest_independently_recomputed": "7187bd31740514d4",
+  "run_scope_files": 58,
+  "closures": {
+    "G82-N1": "ACCEPTED",
+    "G82-N2": "ACCEPTED",
+    "G82-N3": "ACCEPTED"
+  },
+  "new_blocking_findings": [],
+  "questions": {
+    "Q1": "ALL_THREE_CLOSED",
+    "Q2": "APPROVED_ROUND1_SCOPE_CLOSED_NOT_ALL_STAGE3",
+    "Q3": "ACCEPT_SEALED_INPUT_SOURCE_AND_SEPARATE_SYNTAX_VS_EXECUTION_SUPPORT",
+    "Q4": "ACCEPT_NEW_VALIDATOR_RECEIPTS_WITH_HISTORY_AND_DIRTY_SCOPE_PRESERVED"
+  },
+  "nonblocking_document_correction": "check_design is shorthand; actual reader path is pairing_design_sha256 -> _check_design_nested. No code change or new gate required for this naming correction.",
+  "sender_reported_tests": {"passed":2023,"xfailed":1,"smoke_rc":0,"mutations_detected":12,"provenance":"Sender reports at pinned target, not rerun by reviewer"},
+  "supplied_code_executed": false,
+  "repository_tests_run": 0,
+  "mutation_replays_run": 0,
+  "receipt_canonicalizer_or_restore_runs": 0,
+  "new_research_calculations": 0,
+  "execution_go": false,
+  "round2_authorized": false,
+  "class_or_projection_changes_authorized": false,
+  "gate76_closure": "UNCHANGED",
+  "grid_fit_v5_role": "DIAGNOSTIC_ONLY_UNCHANGED",
+  "next": "Record receipt of review and request separate user approval for a fixed round2 scope; no implementation by this review."
+}

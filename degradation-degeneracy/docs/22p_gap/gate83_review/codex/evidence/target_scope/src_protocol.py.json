@@ -1,0 +1,9 @@
+{
+  "content": "\"\"\"protocol.py — 원본 experiment / experiment2 → charge_first / discharge_first.\n\n★ 모드↔프로토콜 매핑은 원본 코드 기준으로 보존한다 (02_CODE_AUDIT.md 3절-4).\n원본 run_sweep 호출 (reference/degrade_mode_sim_original.py):\n    reference  : experiment   (discharge_first)  L129\n    lli        : experiment   (discharge_first)  L134\n    lam_pe_de  : experiment   (discharge_first)  L174  ← docs 표와 달리 원본은 discharge_first\n    lam_ne_de  : experiment2  (charge_first)     L184\n    lam_pe_li  : experiment2  (charge_first)     L197\n    lam_ne_li  : experiment   (discharge_first)  L209\n\"\"\"\n\nfrom __future__ import annotations\n\nMODES = [\"reference\", \"lli\", \"lam_ne_li\", \"lam_ne_de\", \"lam_pe_li\", \"lam_pe_de\"]\n\n\ndef protocol_steps(cfg: dict, name: str) -> list[str]:\n    \"\"\"'charge_first' | 'discharge_first' → experiment 스텝 리스트.\"\"\"\n    steps = cfg[\"protocol\"].get(name)\n    if steps is None:\n        raise KeyError(f\"protocol.{name} 이 config에 없음\")\n    return list(steps)\n\n\ndef protocol_name_for_mode(cfg: dict, mode: str) -> str:\n    \"\"\"모드 이름 → 프로토콜 이름. 원본 매핑을 config(mode_protocol)에서 읽는다.\"\"\"\n    mapping = cfg[\"mode_protocol\"]\n    if mode not in mapping:\n        raise KeyError(f\"mode_protocol에 정의되지 않은 모드: {mode}\")\n    return mapping[mode]\n\n\ndef build_experiment(cfg: dict, protocol_name: str):\n    \"\"\"pybamm.Experiment 생성.\"\"\"\n    import pybamm\n\n    return pybamm.Experiment(protocol_steps(cfg, protocol_name))\n",
+  "encoding": "utf-8",
+  "sha": "350eb61d81b9d7bb512dc725d0f5448184be5825",
+  "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/ea2af59e68a85b561c3e185f66b815aec877ca57/degradation-degeneracy/src/protocol.py",
+  "display_title": "protocol.py",
+  "path": "degradation-degeneracy/src/protocol.py",
+  "ref": "ea2af59e68a85b561c3e185f66b815aec877ca57"
+}

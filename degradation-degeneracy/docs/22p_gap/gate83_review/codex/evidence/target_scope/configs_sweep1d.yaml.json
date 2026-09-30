@@ -1,0 +1,9 @@
+{
+  "content": "# 32p 재현용 — 원본과 동일한 1D sweep\n# 각 모드를 하나씩만 적용. 모드별 프로토콜 매핑 준수.\nextends: base.yaml\n\nsweep1d:\n  values: [0, 0.1, 0.2, 0.3]      # 원본과 동일\n  modes:\n    - reference\n    - lli\n    - lam_ne_li\n    - lam_ne_de\n    - lam_pe_li\n    - lam_pe_de\n\nplot:\n  layout: [2, 3]                  # 32p 와 동일한 2×3\n  normalize_capacity: true\n  show_fullcell: true\n",
+  "encoding": "utf-8",
+  "sha": "a2efadfa629ff6fded6ec23c3f8ed031378f6fdc",
+  "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/ea2af59e68a85b561c3e185f66b815aec877ca57/degradation-degeneracy/configs/sweep1d.yaml",
+  "display_title": "sweep1d.yaml",
+  "path": "degradation-degeneracy/configs/sweep1d.yaml",
+  "ref": "ea2af59e68a85b561c3e185f66b815aec877ca57"
+}

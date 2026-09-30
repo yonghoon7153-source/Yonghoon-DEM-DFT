@@ -1,0 +1,58 @@
+{
+  "status": "PASS",
+  "receipts": [
+    {
+      "leg": "paired_fixed5_v4",
+      "prior_bytes": 3803,
+      "prior_sha256": "e2f6853151bd124b46c070c5bc85795bb27273b099cf6d83a7b1d81346052451",
+      "history_bytes_equal": true,
+      "new_bytes": 3803,
+      "new_sha256": "4155c2c1f91167428b2e3c27e45a97d62f72387fe0768cc22cbe7332e8392b73",
+      "old_core_sha256": "acbe879119fe866a0154fc09867a71ddf22a0172d94701c1644577e11a6dc848",
+      "new_core_sha256": "1eb98e213edb9f8b8112adf595a72f9bc8f06e212656397848f43d9244b3e049",
+      "old_validator": "02a776a7a0a3f4ba",
+      "new_validator": "7187bd31740514d4",
+      "checks": 35,
+      "stamp_tree_dirty": "false",
+      "changed_fields": [
+        "core_sha256",
+        "core.identity.validator_source_digest",
+        "core.identity.src_io_sha256",
+        "stamp"
+      ],
+      "method": "Text comparison with three explicit changing keys and stamp separated. No receipt canonicalizer or restore execution."
+    },
+    {
+      "leg": "grid_fit_v5",
+      "prior_bytes": 3738,
+      "prior_sha256": "ec1dc5fb9027187c77bce21bf98df0ed8d06a6135f3bdfb315b53f7febb46f02",
+      "history_bytes_equal": true,
+      "new_bytes": 3738,
+      "new_sha256": "b0b2c1e127f3f6808cf55627aae10b179050e5f91f19577ef0de84c2d06f9bb8",
+      "old_core_sha256": "e7f3a62472e53b3016ac0a66bbac76cf363caf281c76a5b1219801e50457d8db",
+      "new_core_sha256": "ee7c405a1495eff06af6d6187b2e936d7ca345a3bf8833118e77e23aba6f14ea",
+      "old_validator": "02a776a7a0a3f4ba",
+      "new_validator": "7187bd31740514d4",
+      "checks": 34,
+      "stamp_tree_dirty": "true",
+      "changed_fields": [
+        "core_sha256",
+        "core.identity.validator_source_digest",
+        "core.identity.src_io_sha256",
+        "stamp"
+      ],
+      "method": "Text comparison with three explicit changing keys and stamp separated. No receipt canonicalizer or restore execution."
+    }
+  ],
+  "ledger_edits": [
+    "-    verification_receipt_core_sha256: acbe879119fe866a0154fc09867a71ddf22a0172d94701c1644577e11a6dc848\n",
+    "+    verification_receipt_core_sha256: 1eb98e213edb9f8b8112adf595a72f9bc8f06e212656397848f43d9244b3e049\n",
+    "-      source_digest: 02a776a7a0a3f4ba\n",
+    "+      source_digest: 7187bd31740514d4\n",
+    "-    verification_receipt_core_sha256: e7f3a62472e53b3016ac0a66bbac76cf363caf281c76a5b1219801e50457d8db\n",
+    "+    verification_receipt_core_sha256: ee7c405a1495eff06af6d6187b2e936d7ca345a3bf8833118e77e23aba6f14ea\n",
+    "-      source_digest: 02a776a7a0a3f4ba\n",
+    "+      source_digest: 7187bd31740514d4\n"
+  ],
+  "canonicalizer_or_restore_runs": 0
+}

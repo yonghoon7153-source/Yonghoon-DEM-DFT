@@ -1,0 +1,934 @@
+{
+  "repository_full_name": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "base": "8f54427c9eb4a6d335bba65685a4c28dc24064d8",
+  "head": "6bc46caf",
+  "status": "ahead",
+  "ahead_by": 5,
+  "behind_by": 0,
+  "total_commits": 5,
+  "too_large": null,
+  "base_commit": {
+    "sha": "8f54427c9eb4a6d335bba65685a4c28dc24064d8",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/8f54427c9eb4a6d335bba65685a4c28dc24064d8",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/8f54427c9eb4a6d335bba65685a4c28dc24064d8"
+  },
+  "merge_base_commit": {
+    "sha": "8f54427c9eb4a6d335bba65685a4c28dc24064d8",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/8f54427c9eb4a6d335bba65685a4c28dc24064d8",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/8f54427c9eb4a6d335bba65685a4c28dc24064d8"
+  },
+  "files": [
+    {
+      "filename": "degradation-degeneracy/.gitattributes",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/08_REVIEW_RESPONSE.md",
+      "status": "modified",
+      "additions": 24,
+      "deletions": 0,
+      "changes": 24,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/GATE82_REQUEST.md",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 2,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md",
+      "status": "modified",
+      "additions": 46,
+      "deletions": 0,
+      "changes": 46,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/GATE82_REVIEW_20260930.zip",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/CLAUDE_REPLY.md",
+      "status": "added",
+      "additions": 19,
+      "deletions": 0,
+      "changes": 19,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/DECISION.json",
+      "status": "added",
+      "additions": 82,
+      "deletions": 0,
+      "changes": 82,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/IDENTITY_AUDIT.json",
+      "status": "added",
+      "additions": 450,
+      "deletions": 0,
+      "changes": 450,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/NEXT_SCOPE_DRAFT.md",
+      "status": "added",
+      "additions": 30,
+      "deletions": 0,
+      "changes": 30,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/PACKAGE_MANIFEST.json",
+      "status": "added",
+      "additions": 530,
+      "deletions": 0,
+      "changes": 530,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/PRIOR_SOURCE_PRESERVATION.json",
+      "status": "added",
+      "additions": 353,
+      "deletions": 0,
+      "changes": 353,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/RECEIPT_DATA_AUDIT.json",
+      "status": "added",
+      "additions": 53,
+      "deletions": 0,
+      "changes": 53,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/REVIEW_KO.md",
+      "status": "added",
+      "additions": 107,
+      "deletions": 0,
+      "changes": 107,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/STATIC_CASE_SPECIFICATIONS.json",
+      "status": "added",
+      "additions": 56,
+      "deletions": 0,
+      "changes": 56,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/STATIC_DATA_FLOW.json",
+      "status": "added",
+      "additions": 363,
+      "deletions": 0,
+      "changes": 363,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/OLD_TO_TARGET.json",
+      "status": "added",
+      "additions": 2431,
+      "deletions": 0,
+      "changes": 2431,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/REQUEST_RESPONSE.json",
+      "status": "added",
+      "additions": 7,
+      "deletions": 0,
+      "changes": 7,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/REVIEW_AUDIT_FIRST_ERROR.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/STATIC_AUDIT_TOOL_RETURN.json",
+      "status": "added",
+      "additions": 19,
+      "deletions": 0,
+      "changes": 19,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/TARGET_TO_SEND_HEAD.json",
+      "status": "added",
+      "additions": 2431,
+      "deletions": 0,
+      "changes": 2431,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/file_docs_22p_gap_LEG_PRESERVATION.yaml.json",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/file_docs_22p_gap_STAGE3_IMPL_ROUND1_SPEC.md.json",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/file_docs_22p_gap_mutation_replay.py.json",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/file_docs_22p_gap_receipts_grid_fit_v5.validate.yaml.json",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/file_docs_22p_gap_receipts_history_grid_fit_v5.validate.eda3feb8f4536511.yaml.json",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/file_docs_22p_gap_receipts_history_grid_fit_v5.validate.eea5977f4faf9685.yaml.json",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/file_docs_22p_gap_receipts_history_paired_fixed5_v4.validate.eda3feb8f4536511.yaml.json",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/file_docs_22p_gap_receipts_history_paired_fixed5_v4.validate.eea5977f4faf9685.yaml.json",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/file_docs_22p_gap_receipts_paired_fixed5_v4.validate.yaml.json",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/file_src_fitting.py.json",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/file_src_io.py.json",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/file_tests_test_gate81_stage3_wire.py.json",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/file_tools_design_wire.py.json",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/file_tools_preserve.py.json",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/configs__base.yaml.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/configs__grid_22p.yaml.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/configs__grid_22p_dense.yaml.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/configs__grid_22p_fine.yaml.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/configs__grid_22p_seed.yaml.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/configs__grid_coarse.yaml.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/configs__grid_fine.yaml.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/configs__objectives.yaml.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/configs__objectives_optimized.yaml.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/configs__sweep1d.yaml.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/requirements-gpu.txt.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/requirements.txt.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/run.sh.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/scripts__archive_results.sh.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/scripts__bg.sh.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/scripts__check_run.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/scripts__diagnose_objective.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/scripts__recompute_lli.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/scripts__setup_env.sh.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/scripts__smoke_e2e.sh.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/scripts__verify_env.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/scripts__watch_fit.sh.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/scripts__watch_grid.sh.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/src____init__.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/src__baseline.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/src__config.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/src__curves.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/src__fitting.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/src__grid.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/src__halfcell.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/src__hessian.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/src__inventory.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/src__io.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/src__model.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/src__modes.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/src__objective.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/src__protocol.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/src__runner.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/src__scoring.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/src__sweep.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/src__weight_sweep.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/tools__analyze_22p_gap.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/tools__archive_bundle.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/tools__check_derived_fresh.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/tools__check_sweep_consistency.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/tools__compare_cases.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/tools__compare_objectives.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/tools__design_golden.yaml.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/tools__design_wire.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/tools__diagnose_pini_transition.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/tools__gen_design_golden.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/tools__index_yaml.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/tools__interactive_ab.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/tools__make_results.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/tools__plot_grid_summary.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/tools__plot_map.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/tools__plot_sweep1d.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/evidence/send_scope/tools__preserve.py.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/package_review.py",
+      "status": "added",
+      "additions": 50,
+      "deletions": 0,
+      "changes": 50,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/prior/GATE81_REVIEW_KO.md",
+      "status": "added",
+      "additions": 139,
+      "deletions": 0,
+      "changes": 139,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/prior/GATE81_SOURCE_BEFORE.json",
+      "status": "added",
+      "additions": 270,
+      "deletions": 0,
+      "changes": 270,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/reference/GATE82_REQUEST.md",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/reference/docs/22p_gap/LEG_PRESERVATION.yaml",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/reference/docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/reference/docs/22p_gap/mutation_replay.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/reference/docs/22p_gap/receipts/grid_fit_v5.validate.yaml",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/reference/docs/22p_gap/receipts/history/grid_fit_v5.validate.eda3feb8f4536511.yaml",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/reference/docs/22p_gap/receipts/history/grid_fit_v5.validate.eea5977f4faf9685.yaml",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/reference/docs/22p_gap/receipts/history/paired_fixed5_v4.validate.eda3feb8f4536511.yaml",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/reference/docs/22p_gap/receipts/history/paired_fixed5_v4.validate.eea5977f4faf9685.yaml",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/reference/docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/reference/src/fitting.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/reference/src/io.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/reference/tests/test_gate81_stage3_wire.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/reference/tools/design_wire.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/reference/tools/preserve.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate82_review/codex/static_review_audit.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/GATE70_WORKING_STATE.md",
+      "status": "modified",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/tests/conftest.py",
+      "status": "modified",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/tests/test_gate82_residuals.py",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    }
+  ]
+}

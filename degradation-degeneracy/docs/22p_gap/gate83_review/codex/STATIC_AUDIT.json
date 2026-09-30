@@ -1,0 +1,1250 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "check": "remote Git blob docs_08_REVIEW_RESPONSE.md.json",
+      "pass": true
+    },
+    {
+      "check": "one inert reference path docs_08_REVIEW_RESPONSE.md.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob docs_22p_gap_GATE83_REQUEST.md.json",
+      "pass": true
+    },
+    {
+      "check": "one inert reference path docs_22p_gap_GATE83_REQUEST.md.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob docs_22p_gap_LEG_PRESERVATION.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "one inert reference path docs_22p_gap_LEG_PRESERVATION.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob docs_22p_gap_mutation_replay.py.json",
+      "pass": true
+    },
+    {
+      "check": "one inert reference path docs_22p_gap_mutation_replay.py.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob docs_22p_gap_receipts_grid_fit_v5.validate.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "one inert reference path docs_22p_gap_receipts_grid_fit_v5.validate.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob docs_22p_gap_receipts_history_grid_fit_v5.validate.02a776a7a0a3f4ba.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "one inert reference path docs_22p_gap_receipts_history_grid_fit_v5.validate.02a776a7a0a3f4ba.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob docs_22p_gap_receipts_history_paired_fixed5_v4.validate.02a776a7a0a3f4ba.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "one inert reference path docs_22p_gap_receipts_history_paired_fixed5_v4.validate.02a776a7a0a3f4ba.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob docs_22p_gap_receipts_paired_fixed5_v4.validate.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "one inert reference path docs_22p_gap_receipts_paired_fixed5_v4.validate.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob docs_22p_gap_STAGE3_CONTRACT.md.json",
+      "pass": true
+    },
+    {
+      "check": "one inert reference path docs_22p_gap_STAGE3_CONTRACT.md.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob docs_22p_gap_STAGE3_IMPL_ROUND1_SPEC.md.json",
+      "pass": true
+    },
+    {
+      "check": "one inert reference path docs_22p_gap_STAGE3_IMPL_ROUND1_SPEC.md.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob PRIOR_MANIFEST_REMOTE.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob PRIOR_REVIEW_REMOTE.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob RED_TEST_SOURCE.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob SPEC_BEFORE_CODE.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob src_fitting.py.json",
+      "pass": true
+    },
+    {
+      "check": "one inert reference path src_fitting.py.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob src_io.py.json",
+      "pass": true
+    },
+    {
+      "check": "one inert reference path src_io.py.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob tests_conftest.py.json",
+      "pass": true
+    },
+    {
+      "check": "one inert reference path tests_conftest.py.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob tests_test_gate81_stage3_wire.py.json",
+      "pass": true
+    },
+    {
+      "check": "one inert reference path tests_test_gate81_stage3_wire.py.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob tests_test_gate82_residuals.py.json",
+      "pass": true
+    },
+    {
+      "check": "one inert reference path tests_test_gate82_residuals.py.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob tools_design_wire.py.json",
+      "pass": true
+    },
+    {
+      "check": "one inert reference path tools_design_wire.py.json",
+      "pass": true
+    },
+    {
+      "check": "remote Git blob tools_preserve.py.json",
+      "pass": true
+    },
+    {
+      "check": "one inert reference path tools_preserve.py.json",
+      "pass": true
+    },
+    {
+      "check": "scope blob configs/base.yaml",
+      "pass": true
+    },
+    {
+      "check": "scope blob configs/grid_22p.yaml",
+      "pass": true
+    },
+    {
+      "check": "scope blob configs/grid_22p_dense.yaml",
+      "pass": true
+    },
+    {
+      "check": "scope blob configs/grid_22p_fine.yaml",
+      "pass": true
+    },
+    {
+      "check": "scope blob configs/grid_22p_seed.yaml",
+      "pass": true
+    },
+    {
+      "check": "scope blob configs/grid_coarse.yaml",
+      "pass": true
+    },
+    {
+      "check": "scope blob configs/grid_fine.yaml",
+      "pass": true
+    },
+    {
+      "check": "scope blob configs/objectives.yaml",
+      "pass": true
+    },
+    {
+      "check": "scope blob configs/objectives_optimized.yaml",
+      "pass": true
+    },
+    {
+      "check": "scope blob configs/sweep1d.yaml",
+      "pass": true
+    },
+    {
+      "check": "scope blob requirements-gpu.txt",
+      "pass": true
+    },
+    {
+      "check": "scope blob requirements.txt",
+      "pass": true
+    },
+    {
+      "check": "scope blob run.sh",
+      "pass": true
+    },
+    {
+      "check": "scope blob scripts/archive_results.sh",
+      "pass": true
+    },
+    {
+      "check": "scope blob scripts/bg.sh",
+      "pass": true
+    },
+    {
+      "check": "scope blob scripts/check_run.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob scripts/diagnose_objective.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob scripts/recompute_lli.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob scripts/setup_env.sh",
+      "pass": true
+    },
+    {
+      "check": "scope blob scripts/smoke_e2e.sh",
+      "pass": true
+    },
+    {
+      "check": "scope blob scripts/verify_env.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob scripts/watch_fit.sh",
+      "pass": true
+    },
+    {
+      "check": "scope blob scripts/watch_grid.sh",
+      "pass": true
+    },
+    {
+      "check": "scope blob src/__init__.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob src/baseline.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob src/config.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob src/curves.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob src/fitting.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob src/grid.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob src/halfcell.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob src/hessian.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob src/inventory.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob src/io.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob src/model.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob src/modes.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob src/objective.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob src/protocol.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob src/runner.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob src/scoring.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob src/sweep.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob src/weight_sweep.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob tools/analyze_22p_gap.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob tools/archive_bundle.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob tools/check_derived_fresh.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob tools/check_sweep_consistency.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob tools/compare_cases.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob tools/compare_objectives.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob tools/design_golden.yaml",
+      "pass": true
+    },
+    {
+      "check": "scope blob tools/design_wire.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob tools/diagnose_pini_transition.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob tools/gen_design_golden.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob tools/index_yaml.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob tools/interactive_ab.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob tools/make_results.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob tools/plot_grid_summary.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob tools/plot_map.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob tools/plot_sweep1d.py",
+      "pass": true
+    },
+    {
+      "check": "scope blob tools/preserve.py",
+      "pass": true
+    },
+    {
+      "check": "all four recursive scope trees untruncated",
+      "pass": true
+    },
+    {
+      "check": "scope inventory exact58",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding configs/base.yaml",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding configs/grid_22p.yaml",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding configs/grid_22p_dense.yaml",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding configs/grid_22p_fine.yaml",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding configs/grid_22p_seed.yaml",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding configs/grid_coarse.yaml",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding configs/grid_fine.yaml",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding configs/objectives.yaml",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding configs/objectives_optimized.yaml",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding configs/sweep1d.yaml",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding requirements-gpu.txt",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding requirements.txt",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding run.sh",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding scripts/archive_results.sh",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding scripts/bg.sh",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding scripts/check_run.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding scripts/diagnose_objective.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding scripts/recompute_lli.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding scripts/setup_env.sh",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding scripts/smoke_e2e.sh",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding scripts/verify_env.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding scripts/watch_fit.sh",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding scripts/watch_grid.sh",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding src/__init__.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding src/baseline.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding src/config.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding src/curves.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding src/fitting.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding src/grid.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding src/halfcell.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding src/hessian.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding src/inventory.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding src/io.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding src/model.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding src/modes.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding src/objective.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding src/protocol.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding src/runner.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding src/scoring.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding src/sweep.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding src/weight_sweep.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding tools/analyze_22p_gap.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding tools/archive_bundle.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding tools/check_derived_fresh.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding tools/check_sweep_consistency.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding tools/compare_cases.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding tools/compare_objectives.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding tools/design_golden.yaml",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding tools/design_wire.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding tools/diagnose_pini_transition.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding tools/gen_design_golden.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding tools/index_yaml.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding tools/interactive_ab.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding tools/make_results.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding tools/plot_grid_summary.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding tools/plot_map.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding tools/plot_sweep1d.py",
+      "pass": true
+    },
+    {
+      "check": "tree blob binding tools/preserve.py",
+      "pass": true
+    },
+    {
+      "check": "source digest recomputed",
+      "pass": true
+    },
+    {
+      "check": "only four known production files changed",
+      "pass": true
+    },
+    {
+      "check": "target ancestor of request head",
+      "pass": true
+    },
+    {
+      "check": "target to send only three docs",
+      "pass": true
+    },
+    {
+      "check": "comparison complete-sized and no scope change PRIOR_TO_RED",
+      "pass": true
+    },
+    {
+      "check": "comparison complete-sized and no scope change GREEN_TO_TARGET",
+      "pass": true
+    },
+    {
+      "check": "one GREEN commit four production paths",
+      "pass": true
+    },
+    {
+      "check": "fitting changes only preparation writer callsite",
+      "pass": true
+    },
+    {
+      "check": "io changes only roster and stage3 checks",
+      "pass": true
+    },
+    {
+      "check": "profile helper only new design function",
+      "pass": true
+    },
+    {
+      "check": "preserve only envelope profile validation",
+      "pass": true
+    },
+    {
+      "check": "unchanged function fit",
+      "pass": true
+    },
+    {
+      "check": "unchanged function _minimize_until_stable",
+      "pass": true
+    },
+    {
+      "check": "unchanged function _fit_candidates",
+      "pass": true
+    },
+    {
+      "check": "unchanged function normalize_restart_record",
+      "pass": true
+    },
+    {
+      "check": "unchanged function make_solution_map",
+      "pass": true
+    },
+    {
+      "check": "unchanged function provider_x0",
+      "pass": true
+    },
+    {
+      "check": "unchanged function _check_design_nested",
+      "pass": true
+    },
+    {
+      "check": "unchanged function pairing_design_sha256",
+      "pass": true
+    },
+    {
+      "check": "unchanged function _bank_seed",
+      "pass": true
+    },
+    {
+      "check": "unchanged function unit_cube_bank",
+      "pass": true
+    },
+    {
+      "check": "unchanged function bank_bytes",
+      "pass": true
+    },
+    {
+      "check": "unchanged function pair_group_id",
+      "pass": true
+    },
+    {
+      "check": "unchanged function bank_id",
+      "pass": true
+    },
+    {
+      "check": "unchanged function candidate_id",
+      "pass": true
+    },
+    {
+      "check": "unchanged function roster_from_conditions",
+      "pass": true
+    },
+    {
+      "check": "unchanged function check_envelope",
+      "pass": true
+    },
+    {
+      "check": "unchanged function check_execution_record",
+      "pass": true
+    },
+    {
+      "check": "unchanged function run_transaction",
+      "pass": true
+    },
+    {
+      "check": "unchanged function realized_from_fits",
+      "pass": true
+    },
+    {
+      "check": "unchanged function _restart_ok",
+      "pass": true
+    },
+    {
+      "check": "unchanged function _restart_ok_v6",
+      "pass": true
+    },
+    {
+      "check": "spec fixed before code unchanged",
+      "pass": true
+    },
+    {
+      "check": "received prior report equals local prior report",
+      "pass": true
+    },
+    {
+      "check": "received prior manifest equals original manifest",
+      "pass": true
+    },
+    {
+      "check": "19 statically declared test nodes",
+      "pass": true
+    },
+    {
+      "check": "single static preimage observed-roster-compares-rows-to-the-sealed-inputs-g82",
+      "pass": true
+    },
+    {
+      "check": "single static preimage record-roster-is-compared-to-the-rebuilt-roster-g82",
+      "pass": true
+    },
+    {
+      "check": "single static preimage a-missing-sealed-snapshot-is-a-failure-g82",
+      "pass": true
+    },
+    {
+      "check": "single static preimage the-writer-refuses-rows-that-disagree-with-the-inputs-g82",
+      "pass": true
+    },
+    {
+      "check": "single static preimage unsupported-profile-values-are-refused-g82",
+      "pass": true
+    },
+    {
+      "check": "single static preimage the-envelope-bank-is-checked-against-the-profile-g82",
+      "pass": true
+    },
+    {
+      "check": "single static preimage the-consumer-checks-the-profile-before-start-g82",
+      "pass": true
+    },
+    {
+      "check": "single static preimage the-validator-checks-the-profile-g82",
+      "pass": true
+    },
+    {
+      "check": "single static preimage the-v6-path-refuses-another-plan-generation-g82",
+      "pass": true
+    },
+    {
+      "check": "single static preimage the-validator-links-the-plan-generation-g82",
+      "pass": true
+    },
+    {
+      "check": "single static preimage the-validator-links-the-record-generation-g82",
+      "pass": true
+    },
+    {
+      "check": "single static preimage the-validator-links-the-row-generations-g82",
+      "pass": true
+    },
+    {
+      "check": "12 registered mutations and expectations",
+      "pass": true
+    },
+    {
+      "check": "old receipt byte-preserved paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "receipt stable core text paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "receipt validator identity paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "unchanged receipt check count paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "ledger current receipt core paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "ledger current validator digest paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "old receipt byte-preserved grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "receipt stable core text grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "receipt validator identity grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "unchanged receipt check count grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "ledger current receipt core grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "ledger current validator digest grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "ledger changes only 2 fields for2legs",
+      "pass": true
+    }
+  ],
+  "function_changes": {
+    "src/fitting.py": {
+      "added": [],
+      "removed": [],
+      "modified": [
+        "_prepare_stage3",
+        "_run_fit_locked",
+        "write_execution_record"
+      ]
+    },
+    "src/io.py": {
+      "added": [
+        "_sealed_curves_snapshot",
+        "observed_roster"
+      ],
+      "removed": [],
+      "modified": [
+        "_stage3_checks",
+        "_stage3_rederive"
+      ]
+    },
+    "tools/design_wire.py": {
+      "added": [
+        "check_bank_profile"
+      ],
+      "removed": [],
+      "modified": []
+    },
+    "tools/preserve.py": {
+      "added": [],
+      "removed": [],
+      "modified": [
+        "check_envelope_v4"
+      ]
+    }
+  },
+  "unchanged_selected_functions": [
+    "src/fitting.py::fit",
+    "src/fitting.py::_minimize_until_stable",
+    "src/fitting.py::_fit_candidates",
+    "src/fitting.py::normalize_restart_record",
+    "src/fitting.py::make_solution_map",
+    "src/fitting.py::provider_x0",
+    "tools/design_wire.py::_check_design_nested",
+    "tools/design_wire.py::pairing_design_sha256",
+    "tools/design_wire.py::_bank_seed",
+    "tools/design_wire.py::unit_cube_bank",
+    "tools/design_wire.py::bank_bytes",
+    "tools/design_wire.py::pair_group_id",
+    "tools/design_wire.py::bank_id",
+    "tools/design_wire.py::candidate_id",
+    "tools/design_wire.py::roster_from_conditions",
+    "tools/preserve.py::check_envelope",
+    "tools/preserve.py::check_execution_record",
+    "tools/preserve.py::run_transaction",
+    "src/io.py::realized_from_fits",
+    "src/io.py::_restart_ok",
+    "src/io.py::_restart_ok_v6"
+  ],
+  "test_nodes": [
+    {
+      "function": "test_g82_n1_00_two_noise_realizations_rebuild_the_planned_roster_from_outputs",
+      "line": 87,
+      "declared_nodes": 1,
+      "assertions": 4
+    },
+    {
+      "function": "test_g82_n1_01_one_objective_row_with_a_changed_noise_is_refused_after_a_consistent_reseal",
+      "line": 103,
+      "declared_nodes": 1,
+      "assertions": 3
+    },
+    {
+      "function": "test_g82_n1_02_crossed_noise_realizations_are_refused_after_a_consistent_reseal",
+      "line": 119,
+      "declared_nodes": 1,
+      "assertions": 3
+    },
+    {
+      "function": "test_g82_n1_03_a_record_roster_of_the_same_size_but_another_observation_set_is_refused",
+      "line": 136,
+      "declared_nodes": 1,
+      "assertions": 3
+    },
+    {
+      "function": "test_g82_n1_04_without_the_sealed_curves_snapshot_the_roster_cannot_be_rebuilt",
+      "line": 153,
+      "declared_nodes": 1,
+      "assertions": 3
+    },
+    {
+      "function": "test_g82_n1_05_the_writer_computes_the_observed_roster_and_refuses_rows_that_disagree_with_the_inputs",
+      "line": 165,
+      "declared_nodes": 1,
+      "assertions": 2
+    },
+    {
+      "function": "test_g82_n2_00_the_supported_profile_passes_and_names_the_implementation",
+      "line": 191,
+      "declared_nodes": 1,
+      "assertions": 3
+    },
+    {
+      "function": "test_g82_n2_00b_normal_bank_bytes_are_unchanged",
+      "line": 200,
+      "declared_nodes": 1,
+      "assertions": 2
+    },
+    {
+      "function": "test_g82_n2_01_an_unsupported_design_declaration_is_refused_by_the_checker",
+      "line": 209,
+      "declared_nodes": 5,
+      "assertions": 1
+    },
+    {
+      "function": "test_g82_n2_02_an_envelope_declaring_another_generator_is_refused_before_it_is_sealed",
+      "line": 216,
+      "declared_nodes": 1,
+      "assertions": 1
+    },
+    {
+      "function": "test_g82_n2_03_the_consumer_refuses_to_start_on_a_design_envelope_profile_mismatch",
+      "line": 230,
+      "declared_nodes": 1,
+      "assertions": 2
+    },
+    {
+      "function": "test_g82_n2_04_the_validator_refuses_a_forged_design_or_envelope_profile",
+      "line": 247,
+      "declared_nodes": 1,
+      "assertions": 3
+    },
+    {
+      "function": "test_g82_n3_00_a_v6_run_links_sig_plan_record_and_row_generations",
+      "line": 269,
+      "declared_nodes": 1,
+      "assertions": 2
+    },
+    {
+      "function": "test_g82_n3_01_a_plan_declaring_v5_does_not_start_the_v6_path",
+      "line": 279,
+      "declared_nodes": 1,
+      "assertions": 1
+    },
+    {
+      "function": "test_g82_n3_02_the_validator_refuses_plan_and_record_that_agree_on_v5_under_sig6",
+      "line": 290,
+      "declared_nodes": 1,
+      "assertions": 5
+    }
+  ],
+  "test_node_count": 19,
+  "mutations": [
+    {
+      "id": "observed-roster-compares-rows-to-the-sealed-inputs-g82",
+      "path": "src/io.py",
+      "registration_line": 1984,
+      "preimage_count": 1,
+      "selector": "g82_n1_01 or g82_n1_02 or g82_n1_05",
+      "preimage": "            if got != s[k]:\n",
+      "replacement": "            if False:  # 변이: 행 ↔ 봉인 입력 대조를 끈다\n"
+    },
+    {
+      "id": "record-roster-is-compared-to-the-rebuilt-roster-g82",
+      "path": "src/io.py",
+      "registration_line": 1988,
+      "preimage_count": 1,
+      "selector": "g82_n1_03",
+      "preimage": "            if rz.get(\"roster_observed_sha256\") != r_sha:\n",
+      "replacement": "            if False:  # 변이: record 와 재구성 roster 대조를 끈다\n"
+    },
+    {
+      "id": "a-missing-sealed-snapshot-is-a-failure-g82",
+      "path": "src/io.py",
+      "registration_line": 1992,
+      "preimage_count": 1,
+      "selector": "g82_n1_04",
+      "preimage": "        ro_bad.append(\"봉인 curves 스냅샷",
+      "replacement": "        (lambda *_: None)(\"봉인 curves 스냅샷"
+    },
+    {
+      "id": "the-writer-refuses-rows-that-disagree-with-the-inputs-g82",
+      "path": "src/fitting.py",
+      "registration_line": 1996,
+      "preimage_count": 1,
+      "selector": "g82_n1_05",
+      "preimage": "    if ros_bad:\n        raise RuntimeError(\"관측 roster 를",
+      "replacement": "    if False:\n        raise RuntimeError(\"관측 roster 를"
+    },
+    {
+      "id": "unsupported-profile-values-are-refused-g82",
+      "path": "tools/design_wire.py",
+      "registration_line": 2000,
+      "preimage_count": 1,
+      "selector": "g82_n2_01",
+      "preimage": "            elif got != STAGE3_BANK_PROFILE[f]:\n",
+      "replacement": "            elif False:  # 변이: profile 필드 대조를 끈다\n"
+    },
+    {
+      "id": "the-envelope-bank-is-checked-against-the-profile-g82",
+      "path": "tools/preserve.py",
+      "registration_line": 2004,
+      "preimage_count": 1,
+      "selector": "g82_n2_02 or g82_n2_04",
+      "preimage": "            bad += check_bank_profile(envelope_bank=bank)\n",
+      "replacement": "            pass  # 변이: envelope bank profile 대조를 지운다\n"
+    },
+    {
+      "id": "the-consumer-checks-the-profile-before-start-g82",
+      "path": "src/fitting.py",
+      "registration_line": 2008,
+      "preimage_count": 1,
+      "selector": "g82_n2_03",
+      "preimage": "    if _bp:\n        raise ValueError(\"; \".join(_bp[:3])",
+      "replacement": "    if False:\n        raise ValueError(\"; \".join(_bp[:3])"
+    },
+    {
+      "id": "the-validator-checks-the-profile-g82",
+      "path": "src/io.py",
+      "registration_line": 2012,
+      "preimage_count": 1,
+      "selector": "g82_n2_04",
+      "preimage": "    bad += DW.check_bank_profile(design.get(\"bank\") if isinstance(design, dict) else None, env.get(\"bank\"))\n",
+      "replacement": "    bad += []  # 변이: validator 의 bank profile 대조를 지운다\n"
+    },
+    {
+      "id": "the-v6-path-refuses-another-plan-generation-g82",
+      "path": "src/fitting.py",
+      "registration_line": 2016,
+      "preimage_count": 1,
+      "selector": "g82_n3_01",
+      "preimage": "    if env[\"protocol_generation\"] != DW.STAGE3_PROTOCOL_GENERATION:\n",
+      "replacement": "    if False:  # 변이: 계획 세대 대조를 끈다\n"
+    },
+    {
+      "id": "the-validator-links-the-plan-generation-g82",
+      "path": "src/io.py",
+      "registration_line": 2020,
+      "preimage_count": 1,
+      "selector": "g82_n3_02",
+      "preimage": "    if (env or {}).get(\"protocol_generation\") != _PG6:\n",
+      "replacement": "    if False:  # 변이: 계획 세대 연결을 끈다\n"
+    },
+    {
+      "id": "the-validator-links-the-record-generation-g82",
+      "path": "src/io.py",
+      "registration_line": 2024,
+      "preimage_count": 1,
+      "selector": "g82_n3_02",
+      "preimage": "    if rec.get(\"protocol_generation\") != _PG6:\n",
+      "replacement": "    if False:  # 변이: record 세대 연결을 끈다\n"
+    },
+    {
+      "id": "the-validator-links-the-row-generations-g82",
+      "path": "src/io.py",
+      "registration_line": 2028,
+      "preimage_count": 1,
+      "selector": "g82_n3_02",
+      "preimage": "    if _gens is not None and _gens != {\"v6\"}:\n",
+      "replacement": "    if False:  # 변이: 행 세대 연결을 끈다\n"
+    }
+  ],
+  "sender_recorded_expectations": {
+    "observed-roster-compares-rows-to-the-sealed-inputs-g82": {
+      "fail": [
+        "tests/test_gate82_residuals.py::test_g82_n1_01_one_objective_row_with_a_changed_noise_is_refused_after_a_consistent_reseal",
+        "tests/test_gate82_residuals.py::test_g82_n1_02_crossed_noise_realizations_are_refused_after_a_consistent_reseal",
+        "tests/test_gate82_residuals.py::test_g82_n1_05_the_writer_computes_the_observed_roster_and_refuses_rows_that_disagree_with_the_inputs"
+      ],
+      "witness": {
+        "tests/test_gate82_residuals.py::test_g82_n1_01_one_objective_row_with_a_changed_noise_is_refused_after_a_consistent_reseal": "AssertionError: []",
+        "tests/test_gate82_residuals.py::test_g82_n1_02_crossed_noise_realizations_are_refused_after_a_consistent_reseal": "AssertionError: []",
+        "tests/test_gate82_residuals.py::test_g82_n1_05_the_writer_computes_the_observed_roster_and_refuses_rows_that_disagree_with_the_inputs": "Failed: DID NOT RAISE any of (ValueError, RuntimeError)"
+      }
+    },
+    "record-roster-is-compared-to-the-rebuilt-roster-g82": {
+      "fail": [
+        "tests/test_gate82_residuals.py::test_g82_n1_03_a_record_roster_of_the_same_size_but_another_observation_set_is_refused"
+      ],
+      "witness": {
+        "tests/test_gate82_residuals.py::test_g82_n1_03_a_record_roster_of_the_same_size_but_another_observation_set_is_refused": "AssertionError: ['실현_재계산']"
+      }
+    },
+    "a-missing-sealed-snapshot-is-a-failure-g82": {
+      "fail": [
+        "tests/test_gate82_residuals.py::test_g82_n1_04_without_the_sealed_curves_snapshot_the_roster_cannot_be_rebuilt"
+      ],
+      "witness": {
+        "tests/test_gate82_residuals.py::test_g82_n1_04_without_the_sealed_curves_snapshot_the_roster_cannot_be_rebuilt": "AssertionError: ['입력_스냅샷']"
+      }
+    },
+    "the-writer-refuses-rows-that-disagree-with-the-inputs-g82": {
+      "fail": [
+        "tests/test_gate82_residuals.py::test_g82_n1_05_the_writer_computes_the_observed_roster_and_refuses_rows_that_disagree_with_the_inputs"
+      ],
+      "witness": {
+        "tests/test_gate82_residuals.py::test_g82_n1_05_the_writer_computes_the_observed_roster_and_refuses_rows_that_disagree_with_the_inputs": "AssertionError: Regex pattern did not match."
+      }
+    },
+    "unsupported-profile-values-are-refused-g82": {
+      "fail": [
+        "tests/test_gate82_residuals.py::test_g82_n2_01_an_unsupported_design_declaration_is_refused_by_the_checker[dtype-float32]",
+        "tests/test_gate82_residuals.py::test_g82_n2_01_an_unsupported_design_declaration_is_refused_by_the_checker[endian-big]",
+        "tests/test_gate82_residuals.py::test_g82_n2_01_an_unsupported_design_declaration_is_refused_by_the_checker[generator-philox]",
+        "tests/test_gate82_residuals.py::test_g82_n2_01_an_unsupported_design_declaration_is_refused_by_the_checker[seed_derivation-H(cond_id)]"
+      ],
+      "witness": {
+        "tests/test_gate82_residuals.py::test_g82_n2_01_an_unsupported_design_declaration_is_refused_by_the_checker[dtype-float32]": "AssertionError: []",
+        "tests/test_gate82_residuals.py::test_g82_n2_01_an_unsupported_design_declaration_is_refused_by_the_checker[endian-big]": "AssertionError: []",
+        "tests/test_gate82_residuals.py::test_g82_n2_01_an_unsupported_design_declaration_is_refused_by_the_checker[generator-philox]": "AssertionError: []",
+        "tests/test_gate82_residuals.py::test_g82_n2_01_an_unsupported_design_declaration_is_refused_by_the_checker[seed_derivation-H(cond_id)]": "AssertionError: []"
+      }
+    },
+    "the-envelope-bank-is-checked-against-the-profile-g82": {
+      "fail": [
+        "tests/test_gate82_residuals.py::test_g82_n2_02_an_envelope_declaring_another_generator_is_refused_before_it_is_sealed",
+        "tests/test_gate82_residuals.py::test_g82_n2_04_the_validator_refuses_a_forged_design_or_envelope_profile"
+      ],
+      "witness": {
+        "tests/test_gate82_residuals.py::test_g82_n2_02_an_envelope_declaring_another_generator_is_refused_before_it_is_sealed": "Failed: DID NOT RAISE PreserveError",
+        "tests/test_gate82_residuals.py::test_g82_n2_04_the_validator_refuses_a_forged_design_or_envelope_profile": "AssertionError: 통과"
+      }
+    },
+    "the-consumer-checks-the-profile-before-start-g82": {
+      "fail": [
+        "tests/test_gate82_residuals.py::test_g82_n2_03_the_consumer_refuses_to_start_on_a_design_envelope_profile_mismatch"
+      ],
+      "witness": {
+        "tests/test_gate82_residuals.py::test_g82_n2_03_the_consumer_refuses_to_start_on_a_design_envelope_profile_mismatch": "Failed: DID NOT RAISE ValueError"
+      }
+    },
+    "the-validator-checks-the-profile-g82": {
+      "fail": [
+        "tests/test_gate82_residuals.py::test_g82_n2_04_the_validator_refuses_a_forged_design_or_envelope_profile"
+      ],
+      "witness": {
+        "tests/test_gate82_residuals.py::test_g82_n2_04_the_validator_refuses_a_forged_design_or_envelope_profile": "AssertionError: 실패 —"
+      }
+    },
+    "the-v6-path-refuses-another-plan-generation-g82": {
+      "fail": [
+        "tests/test_gate82_residuals.py::test_g82_n3_01_a_plan_declaring_v5_does_not_start_the_v6_path"
+      ],
+      "witness": {
+        "tests/test_gate82_residuals.py::test_g82_n3_01_a_plan_declaring_v5_does_not_start_the_v6_path": "Failed: DID NOT RAISE ValueError"
+      }
+    },
+    "the-validator-links-the-plan-generation-g82": {
+      "fail": [
+        "tests/test_gate82_residuals.py::test_g82_n3_02_the_validator_refuses_plan_and_record_that_agree_on_v5_under_sig6"
+      ],
+      "witness": {
+        "tests/test_gate82_residuals.py::test_g82_n3_02_the_validator_refuses_plan_and_record_that_agree_on_v5_under_sig6": "AssertionError: 실패 — 선언 세대 충돌: record protocol_generation"
+      }
+    },
+    "the-validator-links-the-record-generation-g82": {
+      "fail": [
+        "tests/test_gate82_residuals.py::test_g82_n3_02_the_validator_refuses_plan_and_record_that_agree_on_v5_under_sig6"
+      ],
+      "witness": {
+        "tests/test_gate82_residuals.py::test_g82_n3_02_the_validator_refuses_plan_and_record_that_agree_on_v5_under_sig6": "AssertionError: 실패 — 선언 세대 충돌: 계획 protocol_generation"
+      }
+    },
+    "the-validator-links-the-row-generations-g82": {
+      "fail": [
+        "tests/test_gate82_residuals.py::test_g82_n3_02_the_validator_refuses_plan_and_record_that_agree_on_v5_under_sig6"
+      ],
+      "witness": {
+        "tests/test_gate82_residuals.py::test_g82_n3_02_the_validator_refuses_plan_and_record_that_agree_on_v5_under_sig6": "AssertionError: 통과"
+      }
+    }
+  },
+  "execution_limit": "Static reason/branch/definition review only; 19 tests, 12 mutations and full suite not executed by reviewer."
+}

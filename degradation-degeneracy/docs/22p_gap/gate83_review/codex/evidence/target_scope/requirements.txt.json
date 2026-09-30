@@ -1,0 +1,9 @@
+{
+  "content": "# ── 핵심 ──\n# 검증 완료 조합 (2026-08-05, docs/ENV_REPORT.md):\n#   pybamm 26.7.1.0 / numpy 2.4.6 / scipy 1.17.1 / pandas 3.0.5 / Python 3.11\n#   IDAKLU OK, composite DFN OK, 1 solve ≈ 2 s\npybamm[all]>=24.5        # [all] 이 IDAKLU solver 포함. 이거 없으면 2~5배 느림\nnumpy>=1.24\nscipy>=1.11\npandas>=2.0\nmatplotlib>=3.7\nPyYAML>=6.0\n\n# ── 병렬 / 저장 ──\njoblib>=1.3\npyarrow>=14.0            # parquet\ntqdm>=4.65\nopenpyxl>=3.1            # 원본 xlsx export 호환용\n\n# ── 테스트 ──\npytest>=7.4\n# ★ 48차 P1 — 변이 재현(`docs/22p_gap/mutation_replay.py`)이 **node 단위 결과**를\n#   읽어 \"선언한 시험이 선언한 이유로 빨개졌는가\" 를 판정한다. 이 플러그인이\n#   없으면 그 판정 자체가 불가능하다 (runner 는 fail-closed 로 멈춘다). 증거\n#   생성 도구의 의존성이 환경마다 다르면 증거를 재현할 수 없다.\npytest-json-report>=1.5\n\n# ── GPU (Phase 7, 선택) ──\n# requirements-gpu.txt 참조\n",
+  "encoding": "utf-8",
+  "sha": "221a5470c5fc0632fb1e10c57c33337b9c30579f",
+  "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/ea2af59e68a85b561c3e185f66b815aec877ca57/degradation-degeneracy/requirements.txt",
+  "display_title": "requirements.txt",
+  "path": "degradation-degeneracy/requirements.txt",
+  "ref": "ea2af59e68a85b561c3e185f66b815aec877ca57"
+}
