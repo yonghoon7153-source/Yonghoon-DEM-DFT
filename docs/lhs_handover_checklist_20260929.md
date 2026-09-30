@@ -67,6 +67,8 @@
 
 ## 3. 넘겨줄 것 (배포 묶음 · 제안 — ⬜ 비준 ⓒ)
 
+> ✅ **10-01 1저자 배포 보류 해제 → 배포 v1** `docs/data/lhs_release_20261001/` (J20-o · 아래 "안 넘기는 것" 그대로 · τ 는 벽 τ 로 닫혀 포함).
+
 | 파일 | 내용 |
 |---|---|
 | `lhs_handover_<날짜>.csv` (130) · `lhsx_handover_<날짜>.csv` (64) | **09-30 이번 판 = §0** (설계 + 두께 (mass-conserving) + porosity union + `se_rich` + φ_SE · φ_AM (라) + 계면 개수 + SE–SE CN + AM–AM CN).  그 뒤 같이 확인하는 대로: ① 나머지 열 → coverage (갱신 뒤) → ② 퍼콜레이션 → ③~⑦ |

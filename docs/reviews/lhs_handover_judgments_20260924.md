@@ -933,6 +933,19 @@
 - **인계표** (같은 날 판 덮어씀 · 7c 판은 `8c18a7558` 이력): `docs/data/lhs_handover_20261001.csv` 130×**177** · `lhsx_handover_20261001.csv` 64×**179** (+22 = ② 7 + 벽 τ 7 + 벽 접촉 8) · **옛 칸 변경 0** · 관문 G1–G7 · P1–P3 · τ T1–T3 **130/130 · 64/64** · 재생성 바이트 동일 · 명령 = `--harvest docs/data/{lhs,lhsx}_descriptors_cov_1e09f661d --webapp docs/data/{lhs,lhsx}_webapp_coverage_1e09f661d --webapp-groups contact,percolation` (+ union · lhsx `--design docs/data/lhsx_design_adapted_20260929.csv`).
 - ⬜ 남은 것: τ_Laplace (망 단계 배치 · 1저자 *"차근차근"*) · lhsx perc 감사기 1 회 · 배포 보류 해제 (1저자) · ③ 이후 묶음 (σ_VM · F1 · Auerbach · A_dem_geometric).
 
+## J20-o. ✅ 배포 보류 해제 · 배포 v1 (10-01 · 1저자 *"해제하고 최소 단위로 나가고 프롬프트에 관련해서 잘 작성해주고"*)
+
+- **배포 묶음** `docs/data/lhs_release_20261001/` — `lhs_release_20261001.csv` 130×74 · `lhsx_release_20261001.csv` 64×73 (설계 입력 16–17 + 측정 디스크립터 57) ·
+  열 사전 (정본 인계표 사전의 같은 줄) · `README.md` (규약 · 이름 주의 · 안 넣은 것 · 한계 · **AI 도구에 붙여 넣을 프롬프트**).  값은 정본 인계표
+  `lhs_handover_20261001.csv` 의 **열 부분집합** (한 글자도 안 바꿈) · 안 넣은 것 = 체크리스트 §3 그대로 (구 부피 합 porosity 계열 · 내부 QC · 상태 열 · 감사 전 ③–⑦).
+- **고립 위험 ↔ 고립 구분** (1저자 10-01 *"내가 알고 있는 고립은 저 얘기"* · *"'고립 위험' 이렇게 나누면 좋을거 같고"*): `*_vulnerable_pct` = SE 접촉 0–1 개 = **고립 위험** ·
+  경로 기준 **고립** (이온이 못 가는 AM) = `100 − ionic_active_pct` (SE 무접촉 + 닿은 SE 가 분리막 쪽으로 안 이어짐).  예 `lhs00_083`: 위험 0.1 % · 고립 89 % ·
+  130 의 비관통 24 침대 고립 61–97 % (중앙 89) vs 위험 0–95 % (중앙 4).  열 사전 · README 문구 정정 (값 변화 없음).
+- ⬜ **v1.1 제안 (비준 대기)**: ① 경로 기준 고립 열 `am_ionic_isolated_pct = 100 − ionic_active_pct` (재실행 없음 · 항등식) ② 그 분해 (SE 무접촉 · 경로 단절 · 상별)
+  = 웹앱 `calc_ionic_active_am` 의 `dead_pct` · `no_se_pct` 내보내기 + 접촉 단계 배치 재실행 ③ 비관통 24 침대의 연속 디스크립터 — 수확 v3
+  `tau_detail.band_detail.largest_comp_z_span_frac` (가장 큰 SE 덩어리가 두께를 얼마나 가로지르나 · 비관통 0.10–0.90 중앙 0.37 · 관통 0.88–0.99) ·
+  `largest_comp_frac` (재실행 없음 · 함수 검토 필요).  τ 는 빈칸 유지 (두 단계 모델 권고 — README §7).
+
 ## 인계 판정 (지금)
 
 **↪ 갱신 09-28 밤 (J20-a)** — ⏸ **일괄 실행 보류**: ✅ 열을 묶음별로 코드 정의부터 감사한 뒤 실행 (① 접촉 위상 1차 감사 = J20-a).

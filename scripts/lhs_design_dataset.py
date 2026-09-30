@@ -989,8 +989,9 @@ WA_DEFINE = {
     'am_am_cn_std': ('z_AM-AM 의 입자간 표준편차 (모집단)', CAVEAT_WALL),
     'am_am_n_contacts': ('AM–AM 접촉 개수', CAVEAT_COUNT),
     #  7c (J20-k · 1저자 비준 10-01) — 고립 비율 · 전체 AM–SE 분포 (7a 새 키)
-    'am_vulnerable_pct': ('AM 고립 비율 (%) — SE 접촉이 0–1 개인 AM 의 비율, AM 전 입자 (AM_P + AM_S) · 접촉 개수 기준 '
-                          '(coverage 문턱이 아니다 — 09-19 census 의 COND_cov 는 오분류 · LHS-23)', CAVEAT_WALL),
+    'am_vulnerable_pct': ('AM 고립 **위험** 비율 (%) (취약 AM) — SE 접촉이 0–1 개인 AM 의 비율, AM 전 입자 (AM_P + AM_S) · 접촉 개수 기준 '
+                          '(coverage 문턱이 아니다 — 09-19 census 의 COND_cov 는 오분류 · LHS-23) · ⚠ 경로 기준 고립 (이온이 못 가는 AM) 이 아니다 — '
+                          '그것은 100 − ionic_active_pct (1저자 10-01 질문)', CAVEAT_WALL),
     'am_se_cn_std': ('z_AM-SE 의 입자간 표준편차 (모집단) — AM 전 입자 (접촉 0 · 벽 입자 포함) · mono = 단일 상 값 (J20-k 7a)', CAVEAT_WALL),
     'am_se_cn_median': ('z_AM-SE 의 중앙값 — AM 전 입자 (짝수 개면 가운데 둘의 평균 · np.median) · mono = 단일 상 값 (J20-k 7a)', CAVEAT_WALL),
     'am_se_cn_max': ('z_AM-SE 의 최댓값 — AM 전 입자 · = 상별 max 의 최댓값 (J20-k 7a)', CAVEAT_WALL),
@@ -1001,7 +1002,8 @@ WA_DEFINE = {
                           CAVEAT_PERC),
     'n_components': ('SE 접촉 그래프의 성분 수 — 외톨이 SE (크기 1) 포함 → 단절 침대에서는 사실상 외톨이 수 (LHS-06 · LHS-19)', CAVEAT_COUNT),
     'n_large_components': ('크기 ≥ 10 인 SE 성분 수 — 문턱 10 은 출처 없는 코드 상수 (LHS-19)', CAVEAT_COUNT),
-    'ionic_active_pct': ('이온 활성 AM 비율 (%) — 위 밴드에 닿는 SE 성분 (top-reachable) 의 SE 와 접촉한 AM / 전 AM (calc_ionic_active_am) · 접촉 유무만 '
+    'ionic_active_pct': ('이온 활성 AM 비율 (%) — 위 밴드 (분리막 쪽) 에 닿는 SE 성분 (top-reachable) 의 SE 와 접촉한 AM / 전 AM (calc_ionic_active_am) · '
+                         '**100 − 이 값 = 경로 기준 고립 AM** (SE 무접촉 + 닿은 SE 가 위로 안 이어짐) · 접촉 유무만 '
                          '본다 (coverage 무관 — LHS-20) · 외톨이 SE 가 위 밴드에 있으면 그것도 센다 (LHS-19)', CAVEAT_PERC),
     'se_se_cn_perc': ('관통 SE 성분에 속한 SE 만의 평균 SE–SE CN — 관통 성분이 없으면 빈칸 (N/A · 키 자체가 없다 · LHS-19)', CAVEAT_WALL),
     'se_se_cn_n_perc': ('관통 SE 성분에 속한 SE 개수 — = percolation_pct × N_SE / 100 (생성기 관문 P3) · 관통 없으면 빈칸 (N/A)', CAVEAT_COUNT),
@@ -1025,8 +1027,8 @@ def wa_define(col):
                 CAVEAT_WALL)
     m = re.fullmatch(r'(AM_P|AM_S)_vulnerable_pct', col)
     if m:
-        return (f'{m.group(1)} 고립 비율 (%) — SE 접촉이 0–1 개인 {m.group(1)} 의 비율 · 접촉 개수 기준 (coverage 문턱이 아니다 — '
-                'LHS-23) · 상이 없으면 빈칸 (N/A)', CAVEAT_WALL)
+        return (f'{m.group(1)} 고립 **위험** 비율 (%) (취약) — SE 접촉이 0–1 개인 {m.group(1)} 의 비율 · 접촉 개수 기준 (coverage 문턱이 아니다 — '
+                'LHS-23 · 경로 기준 고립은 ionic_active_pct 쪽) · 상이 없으면 빈칸 (N/A)', CAVEAT_WALL)
     m = re.fullmatch(r'area_(.+)_n', col)
     if m:
         return (f'{m.group(1)} 접촉 개수 (쌍 종류별 덤프 행 수)', CAVEAT_COUNT)
