@@ -1,0 +1,5 @@
+[n1_02 padded hex64]    STARTED_AND_FINISHED fits=True
+[n1_03 foreign hex64]   STARTED_AND_FINISHED fits=True
+[n3_00 other source]    STARTED_AND_FINISHED fits=True
+[n3_02 plan ref=halfcell] STARTED_AND_FINISHED fits=True
+[n1_01 null digest]     STARTED_AND_FINISHED fits=True

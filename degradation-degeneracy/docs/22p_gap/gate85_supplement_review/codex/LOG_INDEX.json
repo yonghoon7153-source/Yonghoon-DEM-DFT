@@ -1,0 +1,46 @@
+{
+  "original_probe_lines": [
+    "[n1_02 padded hex64]    STARTED_AND_FINISHED fits=True",
+    "[n1_03 foreign hex64]   STARTED_AND_FINISHED fits=True",
+    "[n3_00 other source]    STARTED_AND_FINISHED fits=True",
+    "[n3_02 plan ref=halfcell] STARTED_AND_FINISHED fits=True",
+    "[n1_01 null digest]     STARTED_AND_FINISHED fits=True"
+  ],
+  "full_replay_tail": [
+    "신고         proof-until-equals-lease       — horizon 의 정본은 lease record 이고 verifier 가 exact ID 로 다시 확인한다. 이 assert 는 필드가 이름만 갖지 않게 하는 계약이며, 현재 production 경로에서 둘이 갈라지는 반례가 없다.",
+    "신고         warm-consumer-wiring           — positive wiring 회귀는 배선이 **끊길 때** 빨개진다. assert 를 지우는 변이는 그 시험 자신만 무력화하므로 다른 시험이 물지 않는다 — 이것은 회귀의 성질이지 결함이 아니다.",
+    "신고         interpreter-set-is-pinned      — 이 변이는 **지금 도는 인터프리터에서 관측할 수 없다.** 검사를 지우면 지원 집합 밖 버전에서 identity 를 계산하게 되는데, 이 기계에는 그 버전이 없다 — 관측하려면 지원 집합 밖 인터프리터를 하나 설치해 같은 시험을 거기서 돌려야 한다. 대신 회귀(`..._supported_interpreter_set_is_pinned_with_golden_vectors`)가 (a) 지금 인터프리터가 선언 집합 안이고 (b) 대표 구문 넷의 정규형이 golden 과 같음을 매번 확인한다. 즉 '정규형이 버전에 안 묶인다' 는 주장이 깨지면 golden 이 먼저 빨개진다.",
+    "신고         release-cleanup-holds-the-attempt-path — 이 lock 순서(`LOCK_ORDER`: attempt_path → claim → ledger)는 그대로 지킬 규칙이다. 그런데 그것을 물던 회귀(`release_cleanup_cannot_delete_another_legs_token`)는 **caller 가 다른 다리의 token 경로를 고르는** 상황을 겨눴고, 57차 P0-1 이 그 인자를 없애면서 시나리오 자체가 표현 불가가 되어 지웠다. 12조각 전수 재생이 이것을 `수집 rc 5`(고른 시험 0건)로 드러냈다 — 조각으로 나눠 돌리지 않았으면 안 보였을 자리다. 표현 불가가 된 상황을 흉내 내는 시험을 새로 지어내면 그것은 증거가 아니라 장식이므로, **회귀 없는 방어**임을 신고하고 남긴다. 같은 lock 을 쓰는 다른 자리(`finalize-holds-the-claim-lock`)는 여전히 executable 이다.",
+    "신고         module-expr-binds-its-target   — 55차 P0-5① 이 module-level 표현식을 예약 이름 `MODULE_EFFECTS` 로 **무조건** 닫힘에 넣었다. 그래서 뿌리 이름에 결속하는 것은 더 이상 identity 를 지키는 **고유한 자리가 아니다** — 결속을 지워도 그 문은 여전히 digest 안에 있고, 그것이 54차보다 강한 상태다 (54차는 뿌리를 모르면 **멈췄고**, 지금은 **담는다**). 호출 지점만 되돌려도 시험이 초록인 것은 시험이 약해서가 아니라 자리가 하나로 합쳐졌기 때문이다 — 48차 `idempotent-shares-the-validator` 와 같은 형태다. 없는 자리를 만들어 내는 대신 신고한다. 그 성질은 `module-effects-are-an-unconditional-root` 가 관측하고, 회귀(`..._module_scope_expression_statement_is_fail_closed`)는 뿌리를 정할 수 없는 표현식도 digest 를 움직이는지 매번 확인한다.",
+    "신고         coverage-checks-the-recorded-head — 이 변이는 **변이 sandbox 안에서 관측할 수 없다.** 검사(`git cat-file -e <head>^{commit}`)는 git 역사가 있어야 물을 수 있는데, sandbox 는 추적 파일만 복사한 사본이라 `.git` 이 없다. 그래서 sandbox 에서는 변이 전 baseline 부터 이미 빨갛고(회귀가 '이 저장소에 없는 HEAD' 를 만들 수 없다), 빨간 것은 검사가 지워져서가 아니라 **환경이 다르기** 때문이다 — 그런 빨강은 증거가 아니다. 대신 회귀(`..._the_recorded_head_must_exist_in_this_repository`)가 실저장소에서 매번 돌며, 모든 HEAD 를 40개의 `0` 으로 바꾼 조각이 `rc 1` 로 거부되는지 확인한다 (리뷰어 반례를 그대로 고정한 것이다).",
+    "신고         shadows-are-scoped-g60         — 60차 P0-11 은 shadow 를 **scope 별**로 좁혔다 (59차는 `ast.walk` 로 중첩 함수의 매개변수까지 한 set 에 합쳤다). 의미는 그것이 맞다. 그런데 평평한 shadow 와 결과가 **갈라지는** 형태를 두 벌 지어 실측했더니 둘 다 변이 rc 0 이었다: ① 능력을 부르는 형태는 P0-10 의 둘째 층(호출자가 준 이름을 부르는 것은 거부)이 평평한 shadow 아래서 오히려 **더 넓게** 문다. ② 능력을 이름으로 들고 나오는 형태는 58차 L9-b(`능력을 값으로 옮긴다`)가 shadow 와 무관하게 문다. 평평한 shadow 는 좁힌 것보다 **더 허용적**인데, 더 허용된 자리를 전부 다른 규칙이 이미 막고 있어 관측 가능한 차이가 비어 있다 — 48차 `idempotent-shares-the-validator` 와 같은 형태다. 없는 자리를 만들어 내는 대신 신고한다. 회귀(`..._a_nested_scope_binding_does_not_exempt_the_outer_scope` 와 `..._a_binding_still_shadows_inside_its_own_scope`)는 남긴다.",
+    "신고         class-locals-stay-in-the-class-body-g62 — 62차 자체 리뷰 F3 가 class 본문·module 문장의 결속 shadow 를 없애 (`_own_shadows` 는 함수·lambda 만) class 의 `here == inherited` 가 됐다 — `nested = here` 는 의미를 안 바꾼다. 같은 방어는 `class-body-bindings-are-not-shadows-g62` 가 잰다. 축을 남기는 이유: P0-6(a) 의 규칙(자식 scope 는 class 의 바깥 집합을 받는다)이 코드에 그대로 있고, F3 가 되돌려지면 이 변이가 다시 물어야 한다.",
+    "신고         generation-owns-its-bytes      — 옛 exploit(스테이징 디렉터리를 통째로 rename)을 **복원할 수 없다**. 46차에 caller staging 이 sink 에 도달하지 않게 바뀌었고(병합은 메모리, 자재화는 publisher 소유 temp), 그래서 sink 가 옮길 수 있는 것은 이미 `_write_owned` 로 만든 owned 파일뿐이다. 47차에 2-site 로 충실히 되살리려 했으나 결과가 여전히 owned inode 라 관측되지 않았다 — 이것은 시험이 약한 것이 아니라 그 상태가 **표현 불가능**해진 것이다. 회귀(`..._published_generation_owns_its_bytes`)는 남긴다.",
+    "",
+    "scenario_total 356 · scenario_executable 345 · scenario_declared 11 · site_total 394 · site_executable 383 · site_declared 11 · ran 345",
+    "",
+    "=== 문제 ===",
+    "incomplete_receipt_is_refused-g61: tests/test_evidence_receipt_61.py::test_an_incomplete_receipt_is_refused_by_the_reader 이 빨개졌지만 **선언한 이유**가 아니다 — 증인 'Failed: DID NOT RAISE _ReplayError' 이 실패 메시지에 없다 ('AssertionError: 환경 영수증의 customization 이 부모가 본 것과 양립하지 않는다: sitecustomize: child 가 바이트를 냈는데 startup 이력에 없다 — startup 코드가 자기 파일을 세탁했거나 검색 순서가 어긋났다. 못 믿는 영수증으로 증거를 만들지 않는다 (62차 자체 리뷰 F1 · 65차 N1a)')"
+  ],
+  "complete_replay_counts": {
+    "killed": 344,
+    "unmatched": 1,
+    "total_ran": 345
+  },
+  "aborted_stdout_counts": {
+    "killed_lines": 190,
+    "unmatched_lines": 3,
+    "error_prefix_lines_including_partial_final_line": 15
+  },
+  "aborted_readme_claim": {
+    "killed": 193,
+    "unmatched": 3,
+    "execution_errors": 1
+  },
+  "original_script_matches_command_heredoc": true,
+  "lines_with_unmatched_witness": [
+    "★ 안 물었다    incomplete_receipt_is_refused-g61 node 2 · -k an_incomplete_receipt_is_refused_by_the_reader or a_failed_package_listing_is_also_refused"
+  ],
+  "preimages": [],
+  "limits": "Only submitted text inspected. Runtime facts are supplied evidence, not direct reviewer remote observation or OS audit."
+}

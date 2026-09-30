@@ -1,0 +1,331 @@
+{
+  "input_zip": {
+    "path": "C:\\Users\\Administrator\\Downloads\\README (1).zip",
+    "bytes": 24843,
+    "sha256": "bd21e18a142705c45b013b8168fb295e8a10e56d59f0bbf31304edf03b2e7b95",
+    "entries": 9,
+    "CRC_path_case_link_checks": true
+  },
+  "commit": "1b49700e65fb6408caa48124df365264e32480a9",
+  "listed_payload": 25,
+  "committed_payload": 18,
+  "attached_payload": 8,
+  "listed_available": 21,
+  "attachment_readme_matches_commit": true,
+  "not_available": [
+    "full_regression_91f00a72/g84_full.log",
+    "full_replay_aborted/g84_replay_all.log",
+    "g61/g61_mutant.log",
+    "request_commit/g85_send.log"
+  ],
+  "uncommitted_attachment_payload": [
+    "g61/g61_replay_clean.log",
+    "g61/g61_replay2.log",
+    "full_replay/g85_replay_all.log"
+  ],
+  "files": [
+    {
+      "path": "full_regression_91f00a72/g84_full.log",
+      "readme": {
+        "bytes": 572,
+        "sha256_prefix": "e53511443fb62351"
+      },
+      "in_commit": false,
+      "in_attachment": false,
+      "available": false,
+      "actual_bytes": null,
+      "actual_sha256": null
+    },
+    {
+      "path": "full_regression_91f00a72/g84_pytest_full.txt",
+      "readme": {
+        "bytes": 2930,
+        "sha256_prefix": "2a8cc540bc174e3f"
+      },
+      "in_commit": true,
+      "in_attachment": false,
+      "available": true,
+      "actual_bytes": 2930,
+      "actual_sha256": "2a8cc540bc174e3f519e366586b003b10bb18577e8bd32b8f2abb4cbb531cb0b"
+    },
+    {
+      "path": "full_regression_91f00a72/g84_smoke.txt",
+      "readme": {
+        "bytes": 5591,
+        "sha256_prefix": "9960c8e762bff1b0"
+      },
+      "in_commit": true,
+      "in_attachment": false,
+      "available": true,
+      "actual_bytes": 5591,
+      "actual_sha256": "9960c8e762bff1b09e1081721c6656a00dc39ab49883695b085ee72aecd9d84b"
+    },
+    {
+      "path": "full_regression_91f00a72/run_g84_full.sh",
+      "readme": {
+        "bytes": 1329,
+        "sha256_prefix": "56d1081b188ff55c"
+      },
+      "in_commit": true,
+      "in_attachment": false,
+      "available": true,
+      "actual_bytes": 1329,
+      "actual_sha256": "56d1081b188ff55c6ccdc310d7b95bde0615e4b5ce200468d35f176f8ec62969"
+    },
+    {
+      "path": "full_replay/g85_replay_all.log",
+      "readme": {
+        "bytes": 878,
+        "sha256_prefix": "c4987e6c81f557ba"
+      },
+      "in_commit": false,
+      "in_attachment": true,
+      "available": true,
+      "actual_bytes": 878,
+      "actual_sha256": "c4987e6c81f557ba9b6cf6ede811f1141d6ffc750ae48dcd43e18da9581d6849"
+    },
+    {
+      "path": "full_replay/g85_replay_all.txt",
+      "readme": {
+        "bytes": 48101,
+        "sha256_prefix": "b11b827cc7b57c1b"
+      },
+      "in_commit": true,
+      "in_attachment": true,
+      "available": true,
+      "actual_bytes": 48101,
+      "actual_sha256": "b11b827cc7b57c1bdf84517e941b134fabdbcd13bb984b955f4d7a5de8a1d7f8"
+    },
+    {
+      "path": "full_replay/run_g84_replay_all.sh",
+      "readme": {
+        "bytes": 648,
+        "sha256_prefix": "3cbee4e205d1952a"
+      },
+      "in_commit": true,
+      "in_attachment": false,
+      "available": true,
+      "actual_bytes": 648,
+      "actual_sha256": "3cbee4e205d1952ae10f0e0237639b0c0dd1b87f6005589bd126db1110df953d"
+    },
+    {
+      "path": "full_replay_aborted/g84_replay_all.log",
+      "readme": {
+        "bytes": 355,
+        "sha256_prefix": "c50227eb92ba2c0d"
+      },
+      "in_commit": false,
+      "in_attachment": false,
+      "available": false,
+      "actual_bytes": null,
+      "actual_sha256": null
+    },
+    {
+      "path": "full_replay_aborted/g84_replay_all.txt",
+      "readme": {
+        "bytes": 25643,
+        "sha256_prefix": "dcefdb656c456988"
+      },
+      "in_commit": true,
+      "in_attachment": false,
+      "available": true,
+      "actual_bytes": 25643,
+      "actual_sha256": "dcefdb656c4569886d90745eab661d2c81460d6d243cdb4f494626c6ac94cfb0"
+    },
+    {
+      "path": "g61/g61_mutant.log",
+      "readme": {
+        "bytes": 2095,
+        "sha256_prefix": "fbe6b2fabd3ed559"
+      },
+      "in_commit": false,
+      "in_attachment": false,
+      "available": false,
+      "actual_bytes": null,
+      "actual_sha256": null
+    },
+    {
+      "path": "g61/g61_replay2.log",
+      "readme": {
+        "bytes": 588,
+        "sha256_prefix": "e086304270b35904"
+      },
+      "in_commit": false,
+      "in_attachment": true,
+      "available": true,
+      "actual_bytes": 588,
+      "actual_sha256": "e086304270b35904c4b322489f58e5b5fd3f84e59ec929bd535b78bc5a418f53"
+    },
+    {
+      "path": "g61/g61_replay_clean.log",
+      "readme": {
+        "bytes": 1679,
+        "sha256_prefix": "c51dcb2b092b2493"
+      },
+      "in_commit": false,
+      "in_attachment": true,
+      "available": true,
+      "actual_bytes": 1679,
+      "actual_sha256": "c51dcb2b092b24936f3e0c1a0bf8519b4af047370e26663054a498ae210ba0d3"
+    },
+    {
+      "path": "g61/run_g61_mutant.sh",
+      "readme": {
+        "bytes": 331,
+        "sha256_prefix": "48fd3bd20ebce31b"
+      },
+      "in_commit": true,
+      "in_attachment": false,
+      "available": true,
+      "actual_bytes": 331,
+      "actual_sha256": "48fd3bd20ebce31ba77a4673a7cd17fd39b24cb89507e5fa3212b1217b71542d"
+    },
+    {
+      "path": "g61/run_g61_replay.sh",
+      "readme": {
+        "bytes": 363,
+        "sha256_prefix": "b26ffea5a3acdd21"
+      },
+      "in_commit": true,
+      "in_attachment": false,
+      "available": true,
+      "actual_bytes": 363,
+      "actual_sha256": "b26ffea5a3acdd21f5090317e98b17910a29f049af9b986592526fa6aa31be99"
+    },
+    {
+      "path": "g61/run_g61_replay_clean.sh",
+      "readme": {
+        "bytes": 623,
+        "sha256_prefix": "a710c0dd6f9b8608"
+      },
+      "in_commit": true,
+      "in_attachment": false,
+      "available": true,
+      "actual_bytes": 623,
+      "actual_sha256": "a710c0dd6f9b8608e3744d5310aa1773ac9bc3fb5c485cb71fec9bc99ea6d565"
+    },
+    {
+      "path": "probe/g84_probe_real_reasons.txt",
+      "readme": {
+        "bytes": 277,
+        "sha256_prefix": "ff44f18d9fe09760"
+      },
+      "in_commit": true,
+      "in_attachment": true,
+      "available": true,
+      "actual_bytes": 277,
+      "actual_sha256": "ff44f18d9fe09760048e92b216ca5fa41f1d70375e9dcc54e6d5978c50df2177"
+    },
+    {
+      "path": "probe/probe_g84_before_after.py",
+      "readme": {
+        "bytes": 3579,
+        "sha256_prefix": "077567b84c523be4"
+      },
+      "in_commit": true,
+      "in_attachment": false,
+      "available": true,
+      "actual_bytes": 3579,
+      "actual_sha256": "077567b84c523be465d04649fcccd1baaed4b4aa1165a47659a37068b989a55c"
+    },
+    {
+      "path": "probe/probe_g84_real_reasons.as_run.command.txt",
+      "readme": {
+        "bytes": 1810,
+        "sha256_prefix": "3ec8c77df037cf46"
+      },
+      "in_commit": true,
+      "in_attachment": false,
+      "available": true,
+      "actual_bytes": 1810,
+      "actual_sha256": "3ec8c77df037cf46f19cdedbb764115e74d36c60d26d60f961d8f2ac518b1918"
+    },
+    {
+      "path": "probe/probe_g84_real_reasons.as_run.py",
+      "readme": {
+        "bytes": 1630,
+        "sha256_prefix": "7ee047bc0a153e55"
+      },
+      "in_commit": true,
+      "in_attachment": true,
+      "available": true,
+      "actual_bytes": 1630,
+      "actual_sha256": "7ee047bc0a153e55e51aaae9472bb2a82107d7ffb18d0b68f093b5f3d0d6cabf"
+    },
+    {
+      "path": "probe/probe_rerun_d81fdc01.txt",
+      "readme": {
+        "bytes": 1939,
+        "sha256_prefix": "b4e5408179749fcd"
+      },
+      "in_commit": true,
+      "in_attachment": true,
+      "available": true,
+      "actual_bytes": 1939,
+      "actual_sha256": "b4e5408179749fcdf5b2061db0691dc3df991a30d04021012c80b89b9c541c3a"
+    },
+    {
+      "path": "probe/probe_rerun_f89b1401.txt",
+      "readme": {
+        "bytes": 2730,
+        "sha256_prefix": "5b4e1b703cee95fc"
+      },
+      "in_commit": true,
+      "in_attachment": true,
+      "available": true,
+      "actual_bytes": 2730,
+      "actual_sha256": "5b4e1b703cee95fcb95feb77d5ab1da31190011a244af82fa4846a384992eccb"
+    },
+    {
+      "path": "request_commit/g85_pytest_full.txt",
+      "readme": {
+        "bytes": 2930,
+        "sha256_prefix": "188b55c11ef12ee7"
+      },
+      "in_commit": true,
+      "in_attachment": false,
+      "available": true,
+      "actual_bytes": 2930,
+      "actual_sha256": "188b55c11ef12ee7221ee223d2f5f3e90970337f4d0bf471ff5e52db04b4bd7c"
+    },
+    {
+      "path": "request_commit/g85_send.log",
+      "readme": {
+        "bytes": 316,
+        "sha256_prefix": "f3bf87d941cc7df6"
+      },
+      "in_commit": false,
+      "in_attachment": false,
+      "available": false,
+      "actual_bytes": null,
+      "actual_sha256": null
+    },
+    {
+      "path": "request_commit/g85_smoke.txt",
+      "readme": {
+        "bytes": 5591,
+        "sha256_prefix": "e6c5eb1c26aec15a"
+      },
+      "in_commit": true,
+      "in_attachment": false,
+      "available": true,
+      "actual_bytes": 5591,
+      "actual_sha256": "e6c5eb1c26aec15ac311ddcb5865f48c65f612f08a718533e2c94de9b8bce5a6"
+    },
+    {
+      "path": "request_commit/run_g85_send.sh",
+      "readme": {
+        "bytes": 1039,
+        "sha256_prefix": "aa019d5f5a7f3ab8"
+      },
+      "in_commit": true,
+      "in_attachment": false,
+      "available": true,
+      "actual_bytes": 1039,
+      "actual_sha256": "aa019d5f5a7f3ab8c7209c76e84ab11f2844b257afee748db3e7d10bf4333d7d"
+    }
+  ],
+  "RUN_SCOPE_changed": false,
+  "source_digest_inherited_from_verified_previous_head": "ba51cd20caa10b7b",
+  "received_code_executed": false
+}

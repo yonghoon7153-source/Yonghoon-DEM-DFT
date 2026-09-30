@@ -1,0 +1,26 @@
+## as_run 본문 (원 실행 그대로) · commit=d81fdc015d06c4f76c46b6017c715de09747bb6b · 2026-09-30T17:40:00Z
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/ev85/tree_d81fdc01/degradation-degeneracy/probe_g84_real_reasons.as_run.py", line 9, in <module>
+    tmp = Path(tempfile.mkdtemp(prefix="g84probe-", dir=str(Path("results/_smoke/_unit").resolve())))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/tempfile.py", line 524, in mkdtemp
+    _os.mkdir(file, 0o700)
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/ev85/tree_d81fdc01/degradation-degeneracy/results/_smoke/_unit/g84probe-pfbllwm3'
+rc=1
+
+## before_after 본문 · 2026-09-30T17:40:04Z
+# commit=d81fdc015d06c4f76c46b6017c715de09747bb6b source_digest=7187bd31740514d4 has_config_closure_sha256=False
+[n1_01 null digest]        STARTED_AND_FINISHED fits=True
+[n1_02 padded hex64]       STARTED_AND_FINISHED fits=True
+[n1_03 foreign hex64]      STARTED_AND_FINISHED fits=True
+[n3_00 other source]       STARTED_AND_FINISHED fits=True
+[n3_02 plan ref=halfcell]  STARTED_AND_FINISHED fits=True
+[control real hex64]       (패치 전 — config_closure_sha256 없음 · 결속 자체가 없으므로 위 다섯 경우가 곧 대조)
+rc=0
+## as_run 본문 재실행 (results/_smoke/_unit 존재 — git 무시 경로 · 원 작업 트리에는 있었다) · commit=d81fdc015d06c4f76c46b6017c715de09747bb6b · 2026-09-30T17:40:41Z
+[n1_02 padded hex64]    STARTED_AND_FINISHED fits=True
+[n1_03 foreign hex64]   STARTED_AND_FINISHED fits=True
+[n3_00 other source]    STARTED_AND_FINISHED fits=True
+[n3_02 plan ref=halfcell] STARTED_AND_FINISHED fits=True
+[n1_01 null digest]     STARTED_AND_FINISHED fits=True
+rc=0

@@ -1,0 +1,9 @@
+{
+  "content": "#!/bin/bash\ncd /home/user/Yonghoon-DEM-DFT/degradation-degeneracy\necho \"START_HEAD=$(git rev-parse HEAD) status=$(git status --porcelain | wc -l) $(date -u +%FT%TZ)\"\npython docs/22p_gap/mutation_replay.py > /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/g85_replay_all.txt 2>&1\necho \"replay rc=$? $(date -u +%FT%TZ)\"; tail -3 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/g85_replay_all.txt\npython docs/22p_gap/mutation_replay.py --check-preimages 2>&1 | tail -1\necho \"END_HEAD=$(git rev-parse HEAD) status=$(git status --porcelain | wc -l) $(date -u +%FT%TZ)\"\n",
+  "encoding": "utf-8",
+  "sha": "9e990933a64d6d0581cb14360fd43ba056e9f21e",
+  "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/1b49700e65fb6408caa48124df365264e32480a9/degradation-degeneracy/docs/22p_gap/gate85_evidence/full_replay/run_g84_replay_all.sh",
+  "display_title": "run_g84_replay_all.sh",
+  "requested_path": "degradation-degeneracy/docs/22p_gap/gate85_evidence/full_replay/run_g84_replay_all.sh",
+  "requested_ref": "1b49700e65fb6408caa48124df365264e32480a9"
+}

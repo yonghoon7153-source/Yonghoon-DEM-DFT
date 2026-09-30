@@ -1,0 +1,9 @@
+{
+  "content": "#!/bin/bash\ncd /home/user/Yonghoon-DEM-DFT/degradation-degeneracy\necho \"START_HEAD=$(git rev-parse HEAD) status=$(git status --porcelain | wc -l) $(date -u +%FT%TZ)\"\npython -m pytest tests/ -q --no-header -p no:cacheprovider > /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/g85_pytest_full.txt 2>&1\nrc=$?\ntail -40 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/g85_pytest_full.txt | grep -E \"^FAILED|^ERROR|passed|failed\"\necho \"pytest rc=$rc $(date -u +%FT%TZ)\"\npython -m pytest tests/test_docs_lint.py -q --no-header -p no:cacheprovider --co 2>/dev/null | tail -1\nt0=$(date +%s); ./scripts/smoke_e2e.sh > /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/g85_smoke.txt 2>&1; src=$?\necho \"smoke rc=$src $(( $(date +%s) - t0 ))s\"\npython -c \"from src.io import source_digest; print('source_digest', source_digest())\"\necho \"END_HEAD=$(git rev-parse HEAD) status=$(git status --porcelain | wc -l) $(date -u +%FT%TZ)\"\n",
+  "encoding": "utf-8",
+  "sha": "fb1caf573e2c89b2fdcb8367dcac827427929613",
+  "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/1b49700e65fb6408caa48124df365264e32480a9/degradation-degeneracy/docs/22p_gap/gate85_evidence/request_commit/run_g85_send.sh",
+  "display_title": "run_g85_send.sh",
+  "requested_path": "degradation-degeneracy/docs/22p_gap/gate85_evidence/request_commit/run_g85_send.sh",
+  "requested_ref": "1b49700e65fb6408caa48124df365264e32480a9"
+}

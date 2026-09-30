@@ -1,0 +1,9 @@
+{
+  "content": "#!/bin/bash\ncd /home/user/Yonghoon-DEM-DFT/degradation-degeneracy\necho \"START_HEAD=$(git rev-parse HEAD) status=$(git status --porcelain | wc -l) $(date -u +%FT%TZ)\"\npython docs/22p_gap/mutation_replay.py --emit-expect -k incomplete_receipt_is_refused-g61 2>&1\necho \"rc=$?\"\necho \"END_HEAD=$(git rev-parse HEAD) $(date -u +%FT%TZ)\"\n",
+  "encoding": "utf-8",
+  "sha": "b796de2b9323e68248060883857296d83d3588d1",
+  "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/1b49700e65fb6408caa48124df365264e32480a9/degradation-degeneracy/docs/22p_gap/gate85_evidence/g61/run_g61_mutant.sh",
+  "display_title": "run_g61_mutant.sh",
+  "requested_path": "degradation-degeneracy/docs/22p_gap/gate85_evidence/g61/run_g61_mutant.sh",
+  "requested_ref": "1b49700e65fb6408caa48124df365264e32480a9"
+}

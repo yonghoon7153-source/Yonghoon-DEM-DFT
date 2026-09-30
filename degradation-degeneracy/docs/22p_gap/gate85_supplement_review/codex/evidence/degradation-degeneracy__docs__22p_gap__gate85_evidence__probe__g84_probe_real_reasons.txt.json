@@ -1,0 +1,9 @@
+{
+  "content": "[n1_02 padded hex64]    STARTED_AND_FINISHED fits=True\n[n1_03 foreign hex64]   STARTED_AND_FINISHED fits=True\n[n3_00 other source]    STARTED_AND_FINISHED fits=True\n[n3_02 plan ref=halfcell] STARTED_AND_FINISHED fits=True\n[n1_01 null digest]     STARTED_AND_FINISHED fits=True\n",
+  "encoding": "utf-8",
+  "sha": "3785ed72683a8e40014f165d84d000e3071aee15",
+  "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/1b49700e65fb6408caa48124df365264e32480a9/degradation-degeneracy/docs/22p_gap/gate85_evidence/probe/g84_probe_real_reasons.txt",
+  "display_title": "g84_probe_real_reasons.txt",
+  "requested_path": "degradation-degeneracy/docs/22p_gap/gate85_evidence/probe/g84_probe_real_reasons.txt",
+  "requested_ref": "1b49700e65fb6408caa48124df365264e32480a9"
+}

@@ -1,0 +1,35 @@
+{
+  "type": "GATE85_EVIDENCE_SUPPLEMENT_REVIEW",
+  "date_kst": "2026-10-01",
+  "evidence_commit": "1b49700e65fb6408caa48124df365264e32480a9",
+  "decision": "SUPPLEMENT_PARTIALLY_ACCEPTED_PRIOR_P1_UNCHANGED",
+  "original_decision_unchanged": true,
+  "G85_N1": "OPEN_P1",
+  "round2a_closed": false,
+  "accepted": [
+    "Original probe stdout and reconstructed script as source-qualified evidence",
+    "Explicit-null corrected after-probe and positive control",
+    "Full 28d replay 344 matched / 1 g61 unmatched",
+    "ZIP-supplied clean b49 g61 replay and emit-expect evidence"
+  ],
+  "corrections": [
+    "First g61 corrected replay actually 28d dirty/truncated, not clean f89 execution",
+    "Only 21 of 25 listed payload available; 18 committed plus 3 attachment-only logs",
+    "Aborted stdout line counts 190/3/15(error prefix including partial line) disagree with README 193/3/1"
+  ],
+  "missing_payload": [
+    "full_regression_91f00a72/g84_full.log",
+    "full_replay_aborted/g84_replay_all.log",
+    "g61/g61_mutant.log",
+    "request_commit/g85_send.log"
+  ],
+  "received_code_executed": false,
+  "project_tests_run": 0,
+  "mutation_replays": 0,
+  "COMSOL_calls": 0,
+  "restore_runs": 0,
+  "execution_go": false,
+  "implementation_authorized": false,
+  "round2b_authorized": false,
+  "external_messages_sent": 0
+}

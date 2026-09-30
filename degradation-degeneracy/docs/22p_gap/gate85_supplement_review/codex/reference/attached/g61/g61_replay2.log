@@ -1,0 +1,7 @@
+START_HEAD=28d0effeddc1ce8ed9dedeeabe189fd45eeb4595 status=1 2026-09-30T16:24:15Z
+sandbox: /tmp/mutation_replay_21hzeqta/degradation-degeneracy
+물었다        incomplete_receipt_is_refused-g61 node 2 · -k an_incomplete_receipt_is_refused_by_the_reader or a_failed_package_listing_is_also_refused
+scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1
+실행한 변이 1건이 전부 기대 node 를 call 단계에서 물었다
+replay rc=0
+END_HEAD=28d0effeddc1ce8ed9dedeeabe189fd45eeb4595 2026-09-30T16:24:36Z
