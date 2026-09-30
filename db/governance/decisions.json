@@ -5080,7 +5080,7 @@
    "title": "A′ 카드 v5 개정 3 (초안 v6.1 · Codex CK GO) — V5 를 VASP 외주로 돌리는 경로 (준비만 · 실행 미정 · Codex CE·CF·CG·CI·CJ NO-GO 반영)",
    "statement": "`db/properties/wad_aprime_pilot_prereg_v5_amendment_3_vasp_v5_2026_09_27.json` v6.1 (sha256:8a1554e945d36dbc56c45637b002507caa6edee19e92004a33554ff6a53067e3 · 문구 정리만 · v6 = sha256:eb5e36fa09b25ba1f3c394e404963d0bdb256a959fa03b4111e5354eb5e14153). 봉인 S3v2 기하 · 표본 ①–⑤ · 끝점 · G3/G4/G5 식·문턱 · 개정 1 의 D3 장부 구조는 그대로 두고, V5 18 단일점만 VASP (PAW_PBE PBE_54 전체 TITEL 고정 · ENCUT 520 · MP1 σ 0.136 · IVDW 12 명시 계수 + VDW_RADIUS 50.2 / VDW_CNRADIUS 21.17 Å · LDIPOL IDIPOL 3 · Γ 3×2×1) 로 옮긴다. W = MP1 σ 0.136 eV 에서의 TOTEN 차. VASP V5 는 별도 비교군. 파일럿과 본 배치 같은 VASP 빌드. 반송 판정은 증거 모순을 실행 상태보다 먼저 (모순 = r1 자격 없음) · 최종 집계는 봉인 PP 등록부 필수 (파일럿 단계는 --pilot 만) + 파일럿 두 잡의 채택 시도가 봉인한 그 실행(run_id · attempt.json·OUTCAR sha)이어야 한다 (PILOT_NOT_SEALED) · G4 변형은 같은 기하 Edisp 동일성(≤ 1e-4 eV) · 에너지는 마지막 레코드의 유한수 · 설정은 INCAR 에코를 뺀 해석값 · DIPOL 은 해석값 줄 또는 min pos cut · 미완료 출력의 정상 TITEL 접두는 결측(모순 아님) · 반송 묶음은 허용 목록으로만 (POTCAR 본문·WAVECAR·CHGCAR 제외 · 구성원 검사) · 포장은 단계마다 성공 확인 + 관리 파일 목록은 쓰기마다 검사 + 목록 내용 검증(실패 = 종료 4 · 기존 쌍 보존) · 보내는 것 = 종료 0 또는 1 + sha256sum -c 통과 쌍 · 지원 환경 Linux/GNU · 잘린 마지막 TITEL 은 TITEL_TRUNCATED (자동 확인 불가 · 모순 확정 아님). G3 FAIL 이면 G5 = INCOMPLETE (오차표만) (3c) · 3b′ 는 문턱 없는 잔차 진단 · D3 운영 예산 (쌍 0.005 / G3 차이의 차이 0.001 J/m²). 패키지 db/inputs/wad_aprime_v5_vasp_2026_09_27 v6 (MANIFEST.sha256 파일 sha256 8118bbc023d6699cd7cd1b6e6afd32872e0699af70b412e15b89365e556ee2f1). 업체·예산 미정 — 준비본. **Codex CK GO (2026-09-27 · 기술 검토 · 실행·인용 승인 아님)** → 1저자 비준 대기.",
    "rationale": "V5 는 우리 GPU 로 RESOURCE_BLOCKED 라 G5 가 NOT_TESTED 다. 외주 CPU 노드면 메모리 벽이 없다. UMA(OMat24) 학습 기준이 VASP PBE 라 코드 계열 차이를 줄인 설계다 (오차 감소 보증은 아님). v1 → Codex CE NO-GO (P0 4 · P1 5) → v2 → Codex CF NO-GO (모순+실패 조합을 r1 이 덮음 · 등록부 없이 최종 승인 · G4 D3 불일치가 수렴 실패를 가림 · 마지막 NaN 에너지 · 실물 Edisp 무콜론 · 포장 실패 exit 0) → v3 → Codex CG NO-GO (POTCAR 본문 누출 · 봉인 파일럿 미대조 · TITEL 접두 오판) → v4 → Codex CI NO-GO (포장 단계 실패를 성공으로 승격) → v5 → Codex CJ NO-GO (관리 파일 목록 쓰기 실패를 성공으로 승격) → v6 이 전부 반영. 결과 전 D3 만 예측 V5 G3(ii) +0.00954 (문턱 0.01) 경계선 — 'FAIL 예측' 아님.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "prospective",
    "results_seen": false,
    "results_seen_note": "V5 DFT 결과 0 — s-dftd3 2체 D3 (기하 고정) 만 계산",
@@ -5109,7 +5109,7 @@
    ],
    "enforcement": "빌더: 구조 sha · 쌍극자 여유 < 4 Å · V5 잡 ≠ 18 · D3 기대값 계산 불가면 패키지 안 만듦 · 러너: MANIFEST 대조 실패 · 성능 파일 문법 위반·읽기 불가면 실행 안 함 · 기존 시도 폴더 거부(원자적) · 포장 실패 종료 4 · 검사기: 고정 MANIFEST 불일치·틀린 등록부면 시작 안 함 · 증거 모순은 r1 자격 없음 · OK 아닌 잡은 판정 제외 · 최종 집계는 봉인 등록부 없으면 종료 2 · G4 같은 기하 D3 불일치면 G4 PASS 불가 · UMA 출처·유한성 실패면 G5 BLOCKED",
    "proposed_by": "claude-session-2026-09-27",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-09-27",
@@ -5145,10 +5145,21 @@
      "at": "2026-09-27",
      "state": "proposed",
      "note": "**Codex CK GO** (준비본 v6 기술 검토 · 커밋 f4441c426 · CJ 해제조건 충족 · 새 P0/P1 없음 · 실행·인용 승인 아님) → 개정 v6.1 (P2 문구 정리 · 패키지·도구 불변) · 1저자 비준 대기 — 비준하면 active · 업체·예산은 1저자 몫"
+    },
+    {
+     "at": "2026-09-30",
+     "state": "active",
+     "note": "1저자 비준 (scientific_owner). 사전등록 재봉인과 함께."
     }
    ],
    "ratification": {
-    "state": "proposed"
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-30T03:25:17Z",
+    "commit": "e5e854e0962205496ba052f52a1b511340d5028e",
+    "decision_digest": "sha256:02fa02d577f197aa327a20eb7ca8b3c21ca92e5fd5f26cea3721925f64f791a7",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
   },
   {

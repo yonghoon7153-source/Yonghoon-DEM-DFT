@@ -1,7 +1,7 @@
 {
  "schema": "adhesion_pipeline/1",
  "title": "점착 파이프라인 — DFT → DEM (→ COMSOL)",
- "updated": "2026-09-27",
+ "updated": "2026-09-30",
  "purpose": "Ag–C 인터레이어·SE 계면의 점착일(W)을 DFT 에서 재서 DEM(JKR 접촉)으로 넘기는 흐름을 **한 곳에 누적**한다. 새 사실은 `log` 에 한 줄씩 덧붙이고, 상태가 바뀌면 해당 항목만 고친다.",
  "⛔_이_원장이_하지_않는_것": [
   "판정 전 물리값(W·γ)은 싣지 않는다 — 결과는 판정이 끝난 뒤 기록 파일에 따로 남기고 여기서는 경로만 건다 (인용 방지).",
@@ -712,8 +712,8 @@
    "state": "인계 1 남음"
   },
   {
-   "state": "Codex CK GO · 배포 zip 사용자 보관 · 1저자 비준·발송 시점 대기",
-   "text": "**V5 VASP 외주** (1저자 '준비는 해둬볼게' · 업체·예산 미정): CE → v2 → CF → v3 → CG → v4 → CI → v5 → CJ → **v6 → Codex CK GO** (09-27 · 기술 검토 · MANIFEST 8118bbc0… · 개정 v6.1 digest 8a1554e9… · 문구 정리만) → ⏭ **1저자 비준** (개정 v6.1 → 결정 active) → 업체·예산 → 파일럿 2 잡 → --seal_pp (schema v3 · 파일럿 결속) → 16 잡 → --collect (등록부 필수 · PILOT_NOT_SEALED 게이트). 결과 전 D3 만 예측 G3(ii) +0.00954 (경계선). GO ≠ 실행·인용 승인. · 배포 zip `wad_aprime_v5_vasp_2026_09_27_v6_f4441c426.zip` (sha256 5b7cad0b897cb54c… · 기록 db/properties/wad_aprime_v5_vasp_handoff_v6_2026_09_27.json) 을 1저자가 보관 — 외주 보낼 때 알려 주기로 (09-27)."
+   "state": "외주 발송 (09-30) · 파일럿 2 잡 반송 대기",
+   "text": "**V5 VASP 외주** (1저자 '준비는 해둬볼게' · 업체·예산 미정): CE → v2 → CF → v3 → CG → v4 → CI → v5 → CJ → **v6 → Codex CK GO** (09-27 · 기술 검토 · MANIFEST 8118bbc0… · 개정 v6.1 digest 8a1554e9… · 문구 정리만) → ✅ **1저자 비준 = 발송 (09-30 · \"이거 외주 보냈엉\" · 개정 v6.1 ratified · 결정 active · ⚠ 비준 기록이 발송 뒤)** → ⏭ 업체 → 파일럿 2 잡 → --seal_pp (schema v3 · 파일럿 결속) → 16 잡 → --collect (등록부 필수 · PILOT_NOT_SEALED 게이트). 결과 전 D3 만 예측 G3(ii) +0.00954 (경계선). GO ≠ 실행·인용 승인. · 배포 zip `wad_aprime_v5_vasp_2026_09_27_v6_f4441c426.zip` (sha256 5b7cad0b897cb54c… · 기록 db/properties/wad_aprime_v5_vasp_handoff_v6_2026_09_27.json) 을 1저자가 보관하다 **09-30 업체에 발송** (업로드 사본 sha 대조 일치). ⏭ 반송 오면 `python3 tools/wad/build_v5_vasp_package.py --check --out db/inputs/wad_aprime_v5_vasp_2026_09_27 --manifest_sha256 8118bbc0… --ret <반송 폴더>`."
   }
  ],
  "log": [
@@ -1011,6 +1011,11 @@
    "date": "2026-09-27",
    "stage": "dft",
    "text": "V5 VASP 패키지 v6 배포 zip 생성 (git archive · 커밋 f4441c426 · MANIFEST 대조 ✓ · 작업 트리와 동일) → 1저자 보관 · sha256 5b7cad0b897cb54c… · 기록 db/properties/wad_aprime_v5_vasp_handoff_v6_2026_09_27.json. 발송 시점은 1저자가 알린다 — 비준 전 발송 없음."
+  },
+  {
+   "date": "2026-09-30",
+   "stage": "dft",
+   "text": "V5 VASP 패키지 v6 **외주 발송** (1저자 '이거 외주 보냈엉') — 업로드 사본 sha256 5b7cad0b… = 보관 zip. 개정 3 v6.1 비준 → 결정 D-2026-09-27-wad-aprime-v5-vasp-route active (⚠ 비준 기록이 발송 뒤 · 발송을 비준으로 기록 · 빌더 selftest 194/194). 다음: 업체 파일럿 2 잡 반송 → --check → --seal_pp → 16 잡."
   }
  ],
  "related_decisions": [
