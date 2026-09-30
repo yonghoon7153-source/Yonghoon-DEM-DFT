@@ -40,8 +40,9 @@ gunzip -c contact_v4_1710000.liggghts.gz | sha256sum   # 18014070…1b4d
 
 | 파일 | 행 | sha256 앞 16 | 만든 방법 |
 |---|---|---|---|
-| `case15_am_scaffold.csv` | 104 (전부 AM_P · r 6 µm) | 80e5f9242dc82d8d | `scripts/mpm_input_from_case.py` (blob 9d53b981e2ad) · `--type-map "1:AM_P,2:SE"` · 입력 = 이 폴더 atom 덤프 → atoms.csv (id,type,x,y,z,radius) · box 0.1 |
-| `case15_se_scaffold.csv` | 65,866 (SE · r 0.5 µm · 형 열 = 덤프 형 2 — MPM `--se-dump` 은 형 열을 안 쓴다) | 6fd7526f172baadd | 같은 명령 |
+| `case15_am_scaffold.csv` | 104 (전부 AM_P · r 6 µm) | 275c56e12fe11294 | `scripts/mpm_input_from_case.py` (blob 9d53b981e2ad) · `--type-map "1:AM_P,2:SE"` · 입력 = 이 폴더 atom 덤프 → atoms.csv (id,type,x,y,z,radius) · box 0.1 |
+| `case15_se_scaffold.csv` | 65,866 (SE · r 0.5 µm · 형 열 = 덤프 형 2 — MPM `--se-dump` 은 형 열을 안 쓴다) | 929a495e4599dc55 | 같은 명령 |
 
+- sha256 은 **리포에 저장된 LF 바이트** 기준 (도구의 csv.writer 는 CRLF 로 쓰고, 리포는 CSV 를 LF 로 고정한다 — cf5103c94 의 README 초판 값은 CRLF 작업본 값이었다 · 정정).
 - 도구 검증: 같은 명령으로 real_14 덤프 (`atom_2060000`) 에서 만든 스캐폴드가 커밋된 `docs/data/real14_{am,se}_scaffold.csv` 와
   **행 집합이 글자까지 같다** (457 · 32,832 행) ⇒ real_14 스캐폴드와 같은 생성기.
