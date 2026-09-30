@@ -2081,7 +2081,7 @@ _PAPER_LABEL_MAP = {
     '  └ AM-SE CN (surface-weighted)':
         '  └ AM-SE coordination number (surface-area weighted)',
     'Ionic Active AM(%)':          'Ionically-active AM, SE-touching (%)',
-    'AM Vulnerable(%)':            'Ionically-vulnerable AM, low-coverage (%)',
+    'AM Vulnerable(%)':            'Ionically-vulnerable AM, 0–1 SE contacts (%)',   # 접촉 개수 기준 · coverage 아님 (LHS-23 · 7c)
     '  ├ AM_P Vulnerable(%)':      '  ├ AM_P ionically-vulnerable (%)',
     '  └ AM_S Vulnerable(%)':      '  └ AM_S ionically-vulnerable (%)',
     # Bruggeman EMT
@@ -9512,8 +9512,8 @@ _GRADE_PLAIN = {
         '통로가 여러 개라 안정적입니다.',
     'ionic_active_pct': '이온이 실제로 도달할 수 있는 활물질의 비율이에요. 100%면 모든 활물질이 작동하고, '
         '낮으면 이온이 못 가는 "죽은 활물질"이 생겨 용량을 못 씁니다.',
-    '__vulnerable_pct': '지금은 연결돼 있지만 고체전해질이 살짝만 덮여 있어서, 충·방전을 반복하면 끊길 '
-        '위험이 큰 활물질 비율이에요. 적을수록 좋습니다.',
+    '__vulnerable_pct': '고체전해질과 닿은 곳이 0–1 군데뿐인 활물질 비율이에요. 닿은 곳이 하나면 그 하나만 끊겨도 '
+        '이온이 못 가서, 충·방전을 반복하면 먼저 죽을 수 있어요. 덮인 넓이가 아니라 닿은 개수로 셉니다. 적을수록 좋습니다.',
     '__am_percolation_pct': '활물질끼리 서로 닿아 전자가 위→아래로 통하는 비율이에요. 낮으면 도전재(탄소)를 '
         '넣어 보완할 수 있어 그렇게 치명적이진 않습니다.',
     '__electronic_active_pct': '전자가 아래 집전체(전류 받는 판)까지 도달할 수 있는 활물질 비율이에요. '

@@ -98,7 +98,8 @@ def section_k():
         '표면 한도' in src and 'LHS-25' in src)
     #  (σ · 등급에서 physics 를 어떻게 쓸지는 이 결정이 닫지 않는다 — σ_ionic T1 의 면적 선택은 코드 함수 검토 전 ·
     #   1저자 10-01 "이걸로 닫지 말고 아직".  그래서 등급 축 · σ 채널을 고정하는 시험을 두지 않는다.)
-    for rel in ('docs/data/lhs_handover_20260930.csv', 'docs/data/lhsx_handover_20260930.csv'):
+    for rel in ('docs/data/lhs_handover_20260930.csv', 'docs/data/lhsx_handover_20260930.csv',
+                'docs/data/lhs_handover_20261001.csv', 'docs/data/lhsx_handover_20261001.csv'):    # 7c 판도 같은 규약
         p = os.path.join(ROOT, rel)
         with open(p, encoding='utf-8', newline='') as fh:
             head = next(csv.reader(fh))

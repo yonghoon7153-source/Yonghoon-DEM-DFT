@@ -647,7 +647,7 @@ def generate_report(data_list, names, outdir):
     L.append("  Kirchhoff 네트워크의 redundant 병렬 경로 한계. φ × log(CN) coupling 형태 (Stage 15 nested CV).\n")
 
     L.append("#### exp(β_v · v_AM) — AM vulnerability")
-    L.append("- **v_AM = AM_S_vulnerable_pct/100** — coverage 낮아 SE에 노출 덜 된 AM 비율.")
+    L.append("- **v_AM = AM_S_vulnerable_pct/100** — SE 접촉이 0–1 개인 AM_S 의 비율 (접촉 개수 기준 · coverage 아님 · LHS-23).")
     L.append("- **물리**: 'vulnerable'한 AM은 fracture 위험 → 일부 전도 잃음. β_v 음수 (vulnerable 많을수록 σ_e 감소).\n")
 
     L.append("#### exp(β_bi · p(1-p) · log φ_AM) — bimodal coupling")

@@ -1913,7 +1913,7 @@ const METRIC_TIPS = {
   'AM Vulnerable(%)': {
     title: 'AM Vulnerable (취약 AM 비율)',
     formula: 'Vulnerable = (SE 0개 접촉 AM + SE 1개 접촉 AM) / 전체 AM × 100',
-    desc: 'SE와 접촉이 없거나 1개의 SE와만 접촉한 AM 입자의 비율입니다. SE 1개 접촉 = single point of failure.',
+    desc: 'SE와 접촉이 없거나 1개의 SE와만 접촉한 AM 입자의 비율입니다. SE 1개 접촉 = single point of failure. 접촉 개수 기준 — coverage (덮인 넓이) 문턱이 아니다 (LHS-23 · LHS 인계 7c).',
     meaning: '취약 AM은 하나의 SE-AM 접촉이 끊기면 즉시 ionic dead가 됩니다. 이 비율이 높으면 사이클링 중 접촉 손실에 의한 용량 감소 위험이 큽니다.'
   },
   'AM-SE CN mean': {
@@ -1943,13 +1943,13 @@ const METRIC_TIPS = {
   '  ├ AM_P Vulnerable(%)': {
     title: 'AM_P Vulnerable (1차 입자 취약 비율)',
     formula: 'AM_P 중 SE 접촉 0개 또는 1개인 비율 (%)',
-    desc: '큰 1차 입자가 SE와 충분히 연결 안 된 비율.',
+    desc: '큰 1차 입자가 SE와 충분히 연결 안 된 비율. 접촉 개수 기준 (coverage 아님 · LHS-23).',
     meaning: '1차 입자 vulnerable이 높으면 bulk 용량 손실이 큼 (1차 입자는 용량 대부분 차지). cycling 중 chemomechanical gap 발생 시 가장 먼저 영향.'
   },
   '  └ AM_S Vulnerable(%)': {
     title: 'AM_S Vulnerable (2차 입자 취약 비율)',
     formula: 'AM_S 중 SE 접촉 0개 또는 1개인 비율 (%)',
-    desc: '작은 2차 입자가 SE와 충분히 연결 안 된 비율.',
+    desc: '작은 2차 입자가 SE와 충분히 연결 안 된 비율. 접촉 개수 기준 (coverage 아님 · LHS-23).',
     meaning: '2차 입자 vulnerable이 높아도 개별 영향은 작지만, 입자 수가 많아 전체 용량에 누적 영향.'
   },
   'σ_brug/σ_grain (Bruggeman)': {
@@ -2573,7 +2573,7 @@ const PAPER_TO_ORIG = {
       '  ├ AM_S-SE CN mean',
   '  └ AM-SE coordination number (surface-area weighted)':
       '  └ AM-SE CN (surface-weighted)',
-  'Ionically-vulnerable AM, low-coverage (%)': 'AM Vulnerable(%)',
+  'Ionically-vulnerable AM, 0–1 SE contacts (%)': 'AM Vulnerable(%)',
   '  ├ AM_P ionically-vulnerable (%)': '  ├ AM_P Vulnerable(%)',
   '  └ AM_S ionically-vulnerable (%)': '  └ AM_S Vulnerable(%)',
   'Mean Hertzian contact radius, ⟨a⟩ (μm)': '접촉 반경(µm)',

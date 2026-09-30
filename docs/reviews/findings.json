@@ -6042,9 +6042,11 @@
    "found_by": "claude (09-30 · 접촉 ① 넷째 함수 `calc_am_isolation_risk` 코드 검토)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "09-19 census 가 `am_vulnerable_pct` · `AM_P_vulnerable_pct` · `AM_S_vulnerable_pct` 를 `COND_cov` (\"coverage 문턱 기반 → Hertz 채널 종속\") 로 분류했는데 코드 (`dem_analysis_core.py:732–764`) 는 **SE 접촉이 0–1 개인 AM 의 비율** — 접촉 위상만 센다 (coverage 를 읽지 않고 다른 단계가 덮어쓰지도 않는다) · 웹앱 설명문 (`webapp/app.py:9146`) · 피팅 보고서 (`scripts/generate_fitting_report.py:650`) 도 coverage 처럼 설명",
-   "note": "`LHS-20` 과 같은 부류 (census 오분류 · 방향 보수적 — 빠지는 쪽).  대조 09-30: 전체 = 상별 개수 가중 130/130 · 64/64 · 값 130 0–94.8 % (중앙 0) · 64 0–0.26 %.  1저자 09-30: 고립 비율 3 열은 coverage 묶음이 닫힌 뒤 싣는다 (J20-k 7c · 관문 = 개수 가중 항등식).  처방: census 판정 ✅ 로 승격 기록 + 설명문 두 곳 정정 (접촉 개수 기준).",
+   "note": "`LHS-20` 과 같은 부류 (census 오분류 · 방향 보수적 — 빠지는 쪽).  대조 09-30: 전체 = 상별 개수 가중 130/130 · 64/64 · 값 130 0–94.8 % (중앙 0) · 64 0–0.26 %.  1저자 09-30: 고립 비율 3 열은 coverage 묶음이 닫힌 뒤 싣는다 (J20-k 7c · 관문 = 개수 가중 항등식).  처방: census 판정 ✅ 로 승격 기록 + 설명문 두 곳 정정 (접촉 개수 기준). · ✅ 10-01 7c 수정 (커밋 뒤 claimed_fixed): 생성기 WA_VERDICT_OVERRIDE 가 census COND_cov 를 ✅ 로 바꿔 싣고 열 사전에 옛 판정 병기 (`lhs_design_dataset --selftest` ㉑d) · 웹앱 영문 라벨 · 쉬운 설명 · 툴팁 · 피팅 보고서 v_AM 설명을 \"SE 접촉 0–1 개\" 로 (`webapp/test_am_isolation_labels.py` 옛 0/7 → 7/7) · 인계표 lhs_handover_20261001 · lhsx_handover_20261001 (J20-k 7c)",
    "evidence_tests": [
-    "scripts/dem_analysis_core.py"
+    "scripts/dem_analysis_core.py",
+    "scripts/lhs_design_dataset.py --selftest",
+    "webapp/test_am_isolation_labels.py"
    ]
   },
   {

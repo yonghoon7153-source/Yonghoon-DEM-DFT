@@ -946,6 +946,12 @@ WA_DEFINE = {
     'am_am_cn': ('z_AM-AM — AM 1 개당 AM 접촉 수 (AM_P–AM_S 교차 포함), AM 전 입자 평균', CAVEAT_WALL),
     'am_am_cn_std': ('z_AM-AM 의 입자간 표준편차 (모집단)', CAVEAT_WALL),
     'am_am_n_contacts': ('AM–AM 접촉 개수', CAVEAT_COUNT),
+    #  7c (J20-k · 1저자 비준 10-01) — 고립 비율 · 전체 AM–SE 분포 (7a 새 키)
+    'am_vulnerable_pct': ('AM 고립 비율 (%) — SE 접촉이 0–1 개인 AM 의 비율, AM 전 입자 (AM_P + AM_S) · 접촉 개수 기준 '
+                          '(coverage 문턱이 아니다 — 09-19 census 의 COND_cov 는 오분류 · LHS-23)', CAVEAT_WALL),
+    'am_se_cn_std': ('z_AM-SE 의 입자간 표준편차 (모집단) — AM 전 입자 (접촉 0 · 벽 입자 포함) · mono = 단일 상 값 (J20-k 7a)', CAVEAT_WALL),
+    'am_se_cn_median': ('z_AM-SE 의 중앙값 — AM 전 입자 (짝수 개면 가운데 둘의 평균 · np.median) · mono = 단일 상 값 (J20-k 7a)', CAVEAT_WALL),
+    'am_se_cn_max': ('z_AM-SE 의 최댓값 — AM 전 입자 · = 상별 max 의 최댓값 (J20-k 7a)', CAVEAT_WALL),
     'A_binding_AM_SE_n_contacts': ('Physics 모듈 (coverage_physics_vs_hertzian) 이 센 AM–SE 접촉 개수 — area_AM전체_SE_n 과 같은 '
                                    '집합인지는 한 건 대조 전', CAVEAT_COUNT),
     'A_binding_total_n_contacts': ('Physics 모듈이 센 전체 접촉 개수 — 같은 집합인지는 한 건 대조 전', CAVEAT_COUNT),
@@ -964,6 +970,10 @@ def wa_define(col):
         ph, st = m.groups()
         return (f'{ph} 1 개당 SE 접촉 수의 {_STAT_KO[st]} — {ph} 전 입자 (접촉 0 · 벽 입자 포함) · 상이 없으면 빈칸 (N/A)',
                 CAVEAT_WALL)
+    m = re.fullmatch(r'(AM_P|AM_S)_vulnerable_pct', col)
+    if m:
+        return (f'{m.group(1)} 고립 비율 (%) — SE 접촉이 0–1 개인 {m.group(1)} 의 비율 · 접촉 개수 기준 (coverage 문턱이 아니다 — '
+                'LHS-23) · 상이 없으면 빈칸 (N/A)', CAVEAT_WALL)
     m = re.fullmatch(r'area_(.+)_n', col)
     if m:
         return (f'{m.group(1)} 접촉 개수 (쌍 종류별 덤프 행 수)', CAVEAT_COUNT)
@@ -976,14 +986,19 @@ def wa_define(col):
 #:   A_binding_AM_SE_n_contacts · A_binding_total_n_contacts (`coverage_physics_vs_hertzian.py`) ·
 #:   n_am_am_contacts_total · n_am_am_contacts_excluded (`run_network_fracture_aware.py`).
 WA_GROUP_CONTACT_EXACT = ('se_se_cn', 'se_se_cn_std', 'am_se_cn_mean', 'am_se_cn_surface_weighted',
-                          'am_am_cn', 'am_am_cn_std', 'am_am_n_contacts')
+                          'am_am_cn', 'am_am_cn_std', 'am_am_n_contacts',
+                          #  7c — calc_am_isolation_risk 의 나머지 출력 (같은 접촉 단계 · analyze_contacts.py:452–468)
+                          'am_se_cn_std', 'am_se_cn_median', 'am_se_cn_max', 'am_vulnerable_pct')
 WA_GROUPS = ('contact',)
+#: 7c — 웹앱 배치 단계 (`lhs_webapp_batch --stop-after`) → 그 배치가 **다 낸** 묶음.  coverage 단계는 접촉 단계를 포함한다 (접촉 분석 → 피복)
+#:   — 5번 배치 (`--stop-after coverage`) 를 contact 묶음으로 받는다.  묶음 제한 없이 (전체) 부르면 여전히 거부 (뒤 단계 열이 빈칸).
+WA_STAGE_GROUPS = {'contact': ('contact',), 'coverage': ('contact',)}
 
 
 def wa_group_contact(col):
     """① 접촉 위상 묶음 중 **접촉 분석 단계**가 내는 열인가."""
     return (col in WA_GROUP_CONTACT_EXACT
-            or re.fullmatch(r'(AM_P|AM_S)_se_cn_(mean|std|median|max)', col) is not None
+            or re.fullmatch(r'(AM_P|AM_S)_(se_cn_(mean|std|median|max)|vulnerable_pct)', col) is not None
             or re.fullmatch(r'area_(.+)_n', col) is not None)
 
 
@@ -997,7 +1012,38 @@ WA_REVIEWED = (
     (r'am_am_(cn(_std)?|n_contacts)', 'calc_am_am_cn (dem_analysis_core.py:347–375) — 1저자 검토 09-30 · 수정 불요 · am_am_n_contacts = AM–AM '
                                       '쌍 개수 합 · am_am_cn = 2 × am_am_n_contacts / AM 입자 수 (생성기 관문 · 09-30 실측 130/130 · 64/64 차이 0) · '
                                       'mono 포함 (상별 열 아님) · am_am_mean_area · am_am_total_area 는 ⑦ 차례 · J20-j'),
+    (r'am_se_cn_(mean|surface_weighted|std|median|max)|(AM_P|AM_S)_se_cn_(mean|std|median|max)|(am|AM_P|AM_S)_vulnerable_pct',
+     'calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 '
+     'std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · '
+     'max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c'),
 )
+#: 7c (J20-k · 1저자 비준 10-01 *"ㄱㄱ 하자"*) — 09-19 census 판정을 **바꿔 싣는** 열 (열 사전에 옛 판정을 병기한다).  census 에 없는 키
+#:   (7a 새 키) 는 웹앱 배치 머리 (metrics_flat) 에 있을 때만 싣는다 — 옛 배치에 없는 키가 빈칸 = '측정된 N/A' 로 읽히지 않게.
+_WA_OVR_VUL = ('✅ 쓴다 (승격 · LHS-23)', 'SE 접촉 0–1 개인 AM 의 비율 — 접촉 위상만 센다 (calc_am_isolation_risk · coverage 값을 읽지 않고 '
+               '다른 단계가 덮어쓰지도 않는다) · 09-19 census 의 COND_cov ("coverage 문턱 기반") 는 오분류 (LHS-23)')
+_WA_OVR_7A = ('✅ 쓴다 (새 키 · J20-k 7a)', 'AM 전 입자 AM–SE CN 분포 — 7a (09-30) 에 웹앱이 내보내기 시작한 키 · 09-19 census 에 없다 · '
+              '상별 통계와 같은 counts · 같은 함수 (calc_am_isolation_risk)')
+WA_VERDICT_OVERRIDE = {'am_vulnerable_pct': _WA_OVR_VUL, 'AM_P_vulnerable_pct': _WA_OVR_VUL, 'AM_S_vulnerable_pct': _WA_OVR_VUL,
+                       'am_se_cn_std': _WA_OVR_7A, 'am_se_cn_median': _WA_OVR_7A, 'am_se_cn_max': _WA_OVR_7A}
+
+
+def wa_verdicts(wv):
+    """7c — census 판정 + `WA_VERDICT_OVERRIDE` → (verdict, why).  census 에 있는 키는 판정을 바꾸고 옛 판정을 why 에 병기 ·
+    census 밖 키는 웹앱 배치 머리 (행 키) 에 있을 때만 더한다.  `build_handover` 와 `column_dictionary` 가 같은 것을 쓴다."""
+    v = dict((wv or {}).get('verdict') or {})
+    why = dict((wv or {}).get('why') or {})
+    hdr = set()
+    for row in ((wv or {}).get('rows') or {}).values():
+        hdr.update(row.keys())
+    for c, (vd, reason) in WA_VERDICT_OVERRIDE.items():
+        if c in v:
+            why[c] = f'{reason} (09-19 census: {v[c]} — {why.get(c) or "사유 없음"})'
+            v[c] = vd
+        elif c in hdr:
+            v[c], why[c] = vd, reason
+    return v, why
+
+
 #: J20-i — 표에 함께 실린 se_se_cn 과 area_SE_SE_n 의 항등식 (se_se_cn = 2 × area_SE_SE_n / N_SE) 허용 상대차.  metrics_flat 은 repr
 #:   정밀도라 실측 차이는 0 이다 — 부동소수 여유일 뿐 물리 허용치가 아니다.
 WA_CN_IDENTITY_TOL = 1e-9
@@ -1163,6 +1209,7 @@ def column_dictionary(cols, webapp=None):
     tauw.update({n: w for n, _p, _s, w in HANDOVER_WALL_TOUCH})
     warow = dict(WA_ROW_COLS)
     qc = {n: w for n, _a, _b, w in WA_QC}
+    wverd, wwhy = wa_verdicts(webapp) if webapp is not None else ({}, {})      # 7c — 판정 바꿔 싣기 (LHS-23 · 7a) 를 표와 같게
     out = []
     for c in cols:
         d = {'column': c, 'source': '', 'verdict': '', 'meaning': '', 'caveat': ''}
@@ -1182,11 +1229,12 @@ def column_dictionary(cols, webapp=None):
             d.update(source='webapp_batch', meaning=warow[c])
         elif c in qc:
             d.update(source='qc', meaning=qc[c])
-        elif webapp is not None and c in webapp.get('verdict', {}):
-            v = webapp['verdict'][c]
-            why = webapp.get('why', {}).get(c) or '웹앱 파이프라인 산출 (코퍼스 case_master 와 같은 이름 · 같은 계산)'
+        elif webapp is not None and c in wverd:
+            v = wverd[c]
+            why = wwhy.get(c) or '웹앱 파이프라인 산출 (코퍼스 case_master 와 같은 이름 · 같은 계산)'
             dfn = wa_define(c)                       # J20-a ⓒ — 접촉 위상 열은 정의를 먼저 (판정 근거는 괄호로 남긴다)
-            meaning = f'{dfn[0]} (09-19 판정 근거: {why})' if dfn else why
+            _lab = '09-19 판정 근거' if c in (webapp.get('verdict') or {}) else '판정 근거 (09-19 census 밖 키)'   # 7c — 7a 새 키
+            meaning = f'{dfn[0]} ({_lab}: {why})' if dfn else why
             note = wa_review_note(c)                 # J20-g — 1저자 검토 기록
             if note:
                 meaning += f' · 1저자 검토: {note}'
@@ -1261,6 +1309,97 @@ def _dig(h, path):
     return cur
 
 
+#: 7c — AM–SE CN · 고립 열 (calc_am_isolation_risk 산출)
+WA_AMSE_COL = re.compile(r'am_se_cn_(mean|surface_weighted|std|median|max)|(AM_P|AM_S)_se_cn_(mean|std|median|max)|'
+                         r'(am|AM_P|AM_S)_vulnerable_pct')
+WA_AMSE_PHASE_COL = re.compile(r'(AM_P|AM_S)_(se_cn_(mean|std|median|max)|vulnerable_pct)')
+WA_COUNT_INT_TOL = 1e-6          # 고립 비율 × 입자 수 / 100 = 정수 개수 (부동소수 여유 — 물리 허용치 아님)
+
+
+def _wa_amse_gates(case, o, take, h, dp, drow):
+    """7c 관문 (fail-closed) — 표에 실린 AM–SE CN · 고립 값 (o, mono 는 설계 상 칸으로 옮긴 뒤) 이 **같은 counts** (AM 입자별 SE 접촉 수 ·
+    `calc_am_isolation_risk`) 에서 나왔는가.  09-30 실측 (J20-k) 은 전부 차이 0 · 5번 배치 max · median 194/194.
+
+      상 있음/없음 — 상 (수확 phase_counts · mono 는 설계 상 = 수확 AM) 이 있으면 실린 상별 열은 값이 있어야 · 없으면 빈칸이어야 · 전체 열도 값
+      G1 상별 평균 × 상 입자 수 = area_<상>_SE_n · G2 전체 평균 × AM 수 = area_AM전체_SE_n
+      G3 고립: 비율 × 입자 수 / 100 = 정수 개수 · 전체 개수 = 상별 개수 합
+      G4 전체 max = 상별 max 의 최댓값 · G5 median: mono = 단일 상 값 · bimodal = 상별 median 사이 (합집합의 중앙값 성질)
+      G6 std: mono = 단일 상 값 · bimodal = 합동 (Σ N (σ² + μ²) / N − μ²) · G7 표면 가중: mono = 전체 평균 · bimodal = Σ N r² μ / Σ N r² (설계 반경)
+    반환 1 (검사함).  어긋나면 `FillRefusal` (메시지에 '7c G<n>')."""
+    pc = h.get('phase_counts')
+    if not isinstance(pc, dict):
+        raise FillRefusal(f'{case}: 수확 JSON 에 phase_counts 가 없다 — 상 입자 수를 몰라 AM–SE CN · 고립 관문을 볼 수 없다 (7c)')
+    n = {ph: _phase_n_mono(pc, ph, dp) for ph in ('AM_P', 'AM_S')}
+    n_am = _phase_n(pc, 'AM전체')
+    present = [ph for ph in ('AM_P', 'AM_S') if n[ph] > 0]
+
+    def num(c):
+        v = o.get(c, '')
+        return None if v in (None, '') else float(v)
+
+    def close(a, b):
+        return a is not None and b is not None and abs(a - b) <= WA_CN_IDENTITY_TOL * max(1.0, abs(b))
+
+    for c in take:                                                   # 상 있음/없음
+        m = WA_AMSE_PHASE_COL.fullmatch(c)
+        has = o.get(c, '') not in (None, '')
+        if m and n[m.group(1)] > 0 and not has:
+            raise FillRefusal(f'{case}: {m.group(1)} 입자 {n[m.group(1)]} 개인데 {c} 가 빈칸 — 상이 있는데 값이 없다 (7c 상 있음)')
+        if m and n[m.group(1)] == 0 and has:
+            raise FillRefusal(f'{case}: {m.group(1)} 가 없는 침대 (수확 phase_counts) 인데 {c} = {o[c]} — 다른 침대의 값이다 (7c 상 없음)')
+        if not m and WA_AMSE_COL.fullmatch(c) and n_am > 0 and not has:
+            raise FillRefusal(f'{case}: AM {n_am} 개인데 {c} 가 빈칸 (7c 상 있음)')
+    for ph in present:                                               # G1
+        cm, ca = f'{ph}_se_cn_mean', f'area_{ph}_SE_n'
+        if cm in take and ca in take and not close(num(cm) * n[ph], num(ca)):
+            raise FillRefusal(f'{case}: {cm} {num(cm)!r} × {ph} {n[ph]} ≠ {ca} {num(ca)!r} — 같은 접촉 집합의 값이 아니다 (7c G1)')
+    mu = num('am_se_cn_mean') if 'am_se_cn_mean' in take else None
+    if mu is not None and 'area_AM전체_SE_n' in take and not close(mu * n_am, num('area_AM전체_SE_n')):  # G2
+        raise FillRefusal(f'{case}: am_se_cn_mean {mu!r} × AM {n_am} ≠ area_AM전체_SE_n {num("area_AM전체_SE_n")!r} (7c G2)')
+    if 'am_vulnerable_pct' in take:                                  # G3
+        parts = {ph: num(f'{ph}_vulnerable_pct') * n[ph] / 100.0 for ph in present if f'{ph}_vulnerable_pct' in take}
+        tot = num('am_vulnerable_pct') * n_am / 100.0
+        for lab, x in [('am', tot)] + list(parts.items()):
+            if abs(x - round(x)) > WA_COUNT_INT_TOL:
+                raise FillRefusal(f'{case}: {lab} 고립 비율 × 입자 수 / 100 = {x!r} 이 정수 개수가 아니다 (7c G3)')
+        if len(parts) == len(present) and round(tot) != sum(round(x) for x in parts.values()):
+            raise FillRefusal(f'{case}: 고립 개수 전체 {round(tot)} ≠ 상별 합 {sum(round(x) for x in parts.values())} (7c G3)')
+    st = {s: {ph: num(f'{ph}_se_cn_{s}') for ph in present if f'{ph}_se_cn_{s}' in take} for s in ('mean', 'std', 'median', 'max')}
+    full = {s: len(st[s]) == len(present) and len(present) > 0 for s in st}
+    if 'am_se_cn_max' in take and full['max'] and num('am_se_cn_max') != max(st['max'].values()):     # G4 (정수)
+        raise FillRefusal(f'{case}: am_se_cn_max {num("am_se_cn_max")!r} ≠ 상별 max 의 최댓값 {max(st["max"].values())!r} (7c G4)')
+    if 'am_se_cn_median' in take and full['median']:                 # G5
+        md, lo, hi = num('am_se_cn_median'), min(st['median'].values()), max(st['median'].values())
+        ok5 = close(md, lo) if len(present) == 1 else (lo - WA_CN_IDENTITY_TOL * max(1.0, lo) <= md <= hi + WA_CN_IDENTITY_TOL * max(1.0, hi))
+        if not ok5:
+            raise FillRefusal(f'{case}: am_se_cn_median {md!r} — 상별 median {st["median"]} ' + ('과 같아야 (mono)' if len(present) == 1 else '사이여야')
+                              + ' (7c G5)')
+    if 'am_se_cn_std' in take and mu is not None and full['std'] and full['mean']:    # G6
+        sd = num('am_se_cn_std')
+        if len(present) == 1:
+            ok6 = close(sd, st['std'][present[0]])
+        else:
+            m2 = sum(n[ph] * (st['std'][ph] ** 2 + st['mean'][ph] ** 2) for ph in present) / n_am
+            ok6 = abs(sd * sd - (m2 - mu * mu)) <= WA_CN_IDENTITY_TOL * max(1.0, m2)
+        if not ok6:
+            raise FillRefusal(f'{case}: am_se_cn_std {sd!r} — 상별 (N · 평균 · std) 의 합동 표준편차와 다르다 (7c G6)')
+    if 'am_se_cn_surface_weighted' in take and mu is not None:        # G7
+        sw = num('am_se_cn_surface_weighted')
+        if len(present) == 1:
+            exp7 = mu
+        else:
+            if not full['mean']:
+                raise FillRefusal(f'{case}: 표면 가중을 확인할 상별 평균이 표에 없다 (7c G7)')
+            try:
+                rr = {ph: float(drow.get(f'r_{ph}_um')) for ph in present}
+            except (TypeError, ValueError):
+                raise FillRefusal(f'{case}: bimodal 인데 설계 반경 r_AM_P_um · r_AM_S_um 이 없다 — 표면 가중을 확인할 수 없다 (7c G7 반경)')
+            exp7 = (sum(n[ph] * rr[ph] ** 2 * st['mean'][ph] for ph in present) / sum(n[ph] * rr[ph] ** 2 for ph in present))
+        if not close(sw, exp7):
+            raise FillRefusal(f'{case}: am_se_cn_surface_weighted {sw!r} ≠ {exp7!r} (Σ N r² CN / Σ N r² · 설계 반경) (7c G7)')
+    return 1
+
+
 def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp_groups=None, wa_reviewed_only=True):
     """설계행 + 수확 (+ union) (+ 웹앱) → 인계용 행 리스트.  **순수 함수**(파일을 안 쓴다) 라 시험 가능하다.
 
@@ -1315,13 +1454,14 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
         raise FillRefusal(f'webapp_groups {webapp_groups!r} — 아는 묶음은 {WA_GROUPS} 뿐이다 (① 접촉 위상 = contact)')
     if wv is not None:
         #  묶음별 — 접촉 단계만 돈 배치는 그 묶음으로만 부른다 (뒤 단계 열이 빈칸 = 측정된 N/A 로 읽히지 않게)
-        if wv.get('stop_after') and wv.get('stop_after') != webapp_groups:
-            raise FillRefusal(f'웹앱 배치가 stop_after={wv.get("stop_after")!r} 로 돌았다 — webapp_groups={webapp_groups!r} 로는 '
-                              '싣지 않는다 (그 묶음만: --webapp-groups ' + str(wv.get('stop_after')) + ')')
+        _sa = wv.get('stop_after')
+        if _sa and webapp_groups not in WA_STAGE_GROUPS.get(_sa, (_sa,)):
+            raise FillRefusal(f'웹앱 배치가 stop_after={_sa!r} 로 돌았다 — webapp_groups={webapp_groups!r} 로는 싣지 않는다 '
+                              f'(그 배치가 다 낸 묶음만: --webapp-groups {"|".join(WA_STAGE_GROUPS.get(_sa, (_sa,)))})')
         miss_w = [r[key] for r in rows if r[key] not in (wv.get('status') or {})]
         if miss_w:
             raise FillRefusal(f'웹앱 배치가 시도하지 않은 설계행 {len(miss_w)} 건: {miss_w[:5]} — 배치 미완 (재개로 채울 것)')
-        ok_cols = [c for c, v in (wv.get('verdict') or {}).items() if str(v).startswith('✅')]
+        ok_cols = [c for c, v in wa_verdicts(wv)[0].items() if str(v).startswith('✅')]     # 7c — 판정 바꿔 싣기 포함
         if webapp_groups == 'contact':
             ok_cols = [c for c in ok_cols if wa_group_contact(c)]
         n_census_ok = len(ok_cols)
@@ -1342,7 +1482,7 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                    wa_porosity_absmax=0.0, wa_reviewed_only=bool(wa_reviewed_only),
                    wa_unreviewed_dropped=n_census_ok - len(ok_cols), wa_pair_zero_filled=0,
                    wa_mono_renamed_cases=0, wa_mono_design_filled=0, wa_mono_absent_blanked=0,
-                   wa_cn_identity_checked=0, wa_am_identity_checked=0)
+                   wa_cn_identity_checked=0, wa_am_identity_checked=0, wa_amse_identity_checked=0)
     for r in rows:
         h = hv[r[key]]
         o = {c: r.get(c, '') for c in design_cols}
@@ -1481,6 +1621,9 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                         raise FillRefusal(f'{r[key]}: am_am_cn {cn_am!r} ≠ 2 × am_am_n_contacts {n_pairs_am:g} / AM {n_am} = {expect_am!r} — '
                                           '같은 접촉 집합의 값이 아니다 (J20-j)')
                 rep['wa_am_identity_checked'] += 1
+            #  7c — AM–SE CN · 고립 (G1–G7 · 상 있음/없음): 표에 실린 값들이 calc_am_isolation_risk 의 counts 하나에서 나왔는가
+            if wr is not None and any(WA_AMSE_COL.fullmatch(c) for c in wa_take):
+                rep['wa_amse_identity_checked'] += _wa_amse_gates(r[key], o, wa_take, h, dp, r)
             for name, wcol, hcol, _w in WA_QC:
                 o[name] = ''
             if wr is not None:
@@ -2228,12 +2371,13 @@ def _selftest():
         w['stop_after'] = 'contact'
         #  se_se_cn = 2 × area_SE_SE_n / SE 입자 수 (수확 phase_counts SE 100) — J20-i 항등식에 맞춘 값 · 같은 함수의 나머지 출력도 싣는다
         #  J20-j — am_am_n_contacts = AM–AM 쌍 개수 합 · am_am_cn = 2 × am_am_n_contacts / AM 입자 수 (11) 에 맞춘 값
-        w['rows']['q1'].update(am_am_cn='2.0', AM_S_se_cn_mean='3.0', area_SE_SE_n='900', area_AM_S_SE_n='40',
+        #  7c G1 — 상별 AM–SE 평균 × 상 입자 수 = area_<상>_SE_n (q1 mono 40 / 11 · q2 30 / 1 · 50 / 10) — 옛 값 3.0 · 7.0 · 3.5 는 모순이었다
+        w['rows']['q1'].update(am_am_cn='2.0', AM_S_se_cn_mean=repr(40 / 11), area_SE_SE_n='900', area_AM_S_SE_n='40',
                                se_se_cn='18.0', se_se_cn_std='2.5', se_se_cn_perc='18.5', se_se_cn_eff_area='0.07',
                                se_se_cn_aug='19.0', area_AM_S_AM_S_n='11', am_am_n_contacts='11', am_am_cn_std='1.0',
                                am_am_mean_area='0.02', am_am_total_area='0.22',
                                **{'area_AM전체_SE_n': '40'})   # q1 = mono (웹앱 반지름 이름 AM_S)
-        w['rows']['q2'].update(am_am_cn='4.0', AM_P_se_cn_mean='7.0', AM_S_se_cn_mean='3.5', area_SE_SE_n='800',
+        w['rows']['q2'].update(am_am_cn='4.0', AM_P_se_cn_mean='30.0', AM_S_se_cn_mean='5.0', area_SE_SE_n='800',
                                area_AM_P_SE_n='30', area_AM_S_SE_n='50', se_se_cn='16.0', se_se_cn_std='3.0',
                                se_se_cn_perc='16.5', se_se_cn_eff_area='0.06', se_se_cn_aug='17.0',
                                area_AM_P_AM_S_n='5', area_AM_S_AM_S_n='17', am_am_n_contacts='22', am_am_cn_std='1.5',
@@ -2258,22 +2402,24 @@ def _selftest():
         _o20, _c20, _r20, _e20 = [], [], {}, f'{type(e).__name__}: {e}'
     _m20 = next((r for r in _o20 if r['case_id'] == 'q1'), {})
     _b20 = next((r for r in _o20 if r['case_id'] == 'q2'), {})
-    chk('⑳a ★ J20-g — 기본은 같이 확인한 열만: 접촉 묶음 중 area_<쌍>_n (· J20-i se_se_cn · J20-j am_am_*) — AM_*_se_cn_* 은 아직 없다'
-        + (f' — {_e20}' if _e20 else ''),
-        not _e20 and all(c in _c20 for c in ('area_SE_SE_n', 'area_AM_S_SE_n', 'area_AM_P_SE_n', 'area_AM전체_SE_n'))
-        and not any(c in _c20 for c in ('AM_P_se_cn_mean', 'AM_S_se_cn_mean')))
+    chk('⑳a ★ J20-g — 같이 확인한 열만: 접촉 묶음 중 area_<쌍>_n (· J20-i se_se_cn · J20-j am_am_* · 7c AM_*_se_cn_* — 7c 부터 실린다 · '
+        'mono 는 설계 상 칸)' + (f' — {_e20}' if _e20 else ''),
+        not _e20 and all(c in _c20 for c in ('area_SE_SE_n', 'area_AM_S_SE_n', 'area_AM_P_SE_n', 'area_AM전체_SE_n',
+                                             'AM_P_se_cn_mean', 'AM_S_se_cn_mean'))
+        and _m20.get('AM_P_se_cn_mean') == repr(40 / 11) and _m20.get('AM_S_se_cn_mean') == ''
+        and _b20.get('AM_P_se_cn_mean') == '30.0' and _b20.get('AM_S_se_cn_mean') == '5.0')
     chk('⑳b ★ J20-k (B) — mono (설계 mono_AM_P · 웹앱 이름 AM_S) 의 상별 쌍 값은 **설계 상 칸** (area_AM_P_SE_n) 으로 · 없는 상 칸 (area_AM_S_SE_n) '
-        '빈칸 · 총량 쌍 그대로 · 웹앱 이름을 wa_mono_phase_name_webapp 에 · 보고 (옮김 1 건 · 채움 1 · 빈칸 1)',
+        '빈칸 · 총량 쌍 그대로 · 웹앱 이름을 wa_mono_phase_name_webapp 에 · 보고 (옮김 1 건 · 채움 2 · 빈칸 2 — 쌍 개수 + 7c AM–SE 평균)',
         _m20.get('area_AM_P_SE_n') == '40' and _m20.get('area_AM_S_SE_n') == ''
         and _m20.get('area_AM전체_SE_n') == '40' and _m20.get('area_SE_SE_n') == '900'
         and _m20.get('wa_mono_phase_name_webapp') == 'AM_S' and _b20.get('wa_mono_phase_name_webapp') == ''
         and _m20.get('block') == 'mono_AM_P'
-        and _r20.get('wa_mono_renamed_cases') == 1 and _r20.get('wa_mono_design_filled') == 1
-        and _r20.get('wa_mono_absent_blanked') == 1 and 'wa_mono_phase_blanked' not in _r20)
+        and _r20.get('wa_mono_renamed_cases') == 1 and _r20.get('wa_mono_design_filled') == 2
+        and _r20.get('wa_mono_absent_blanked') == 2 and 'wa_mono_phase_blanked' not in _r20)
     chk('⑳c bimodal (n_types 3) 은 상별 쌍 값 그대로',
         _b20.get('area_AM_P_SE_n') == '30' and _b20.get('area_AM_S_SE_n') == '50' and _b20.get('area_AM전체_SE_n') == '80')
-    chk('⑳d 판별 — wa_reviewed (area_<쌍>_n · se_se_cn(_std) · am_am_cn(_std) · am_am_n_contacts — _perc · _eff_area · _aug · am_am 면적 · '
-        'AM_*_se_cn_* 은 아님) · '
+    chk('⑳d 판별 — wa_reviewed (area_<쌍>_n · se_se_cn(_std) · am_am_cn(_std) · am_am_n_contacts · 7c AM–SE CN · 고립 — _perc · _eff_area · _aug · '
+        'am_am 면적 · AM_*_n_particles 는 아님) · '
         'wa_phase_specific (AM_P/AM_S 이름이 든 열 · AM전체 · 소문자 am_ 은 아님)',
         'wa_reviewed' in globals() and 'wa_phase_specific' in globals()
         and globals()['wa_reviewed']('area_AM_P_SE_n') and globals()['wa_reviewed']('se_se_cn')
@@ -2281,7 +2427,9 @@ def _selftest():
         and not globals()['wa_reviewed']('se_se_cn_eff_area') and not globals()['wa_reviewed']('se_se_cn_aug')
         and globals()['wa_reviewed']('am_am_cn') and globals()['wa_reviewed']('am_am_cn_std')
         and globals()['wa_reviewed']('am_am_n_contacts') and not globals()['wa_reviewed']('am_am_mean_area')
-        and not globals()['wa_reviewed']('am_am_total_area') and not globals()['wa_reviewed']('AM_P_se_cn_mean')
+        and not globals()['wa_reviewed']('am_am_total_area') and globals()['wa_reviewed']('AM_P_se_cn_mean')
+        and globals()['wa_reviewed']('am_se_cn_median') and globals()['wa_reviewed']('AM_S_vulnerable_pct')
+        and not globals()['wa_reviewed']('AM_P_n_particles') and not globals()['wa_reviewed']('am_se_cn_mean_x')
         and globals()['wa_phase_specific']('area_AM_S_AM_S_n') and globals()['wa_phase_specific']('AM_P_se_cn_mean')
         and not globals()['wa_phase_specific']('area_AM전체_SE_n') and not globals()['wa_phase_specific']('am_am_cn'))
     _neg('⑳e ★ 상별 열을 싣는데 수확 JSON 에 n_types 가 없으면 거부 (mono 인지 모른다 — 반지름 이름을 그대로 싣지 않는다)',
@@ -2322,6 +2470,7 @@ def _selftest():
     _hq4 = dict(_hq3, q2=dict(_hq3['q2'], phase_counts={'AM_P': 0, 'AM_S': 10, 'SE': 100}))
     _wa4i = _wa4()
     _wa4i['rows']['q2'].pop('area_AM_P_AM_S_n', None)                # AM_P 가 없는 침대 — AM_P 가 낀 쌍도 없다 (J20-j 항등식과 앞뒤를 맞춤)
+    _wa4i['rows']['q2'].pop('AM_P_se_cn_mean', None)                 # · AM_P 의 AM–SE 값도 없다 (7c 상 없음 관문과 앞뒤를 맞춤)
     _wa4i['rows']['q2'].update(am_am_n_contacts='17', am_am_cn='3.4')  # 2 × 17 / AM 10
     try:
         _b22 = next((r for r in build_handover(_dq, _hq4, webapp=_wa4i, webapp_groups='contact')[0] if r['case_id'] == 'q2'), {})
@@ -2423,7 +2572,7 @@ def _selftest():
     chk('⑳y 이름이 같은 mono (설계 mono_AM_S · 웹앱 AM_S) — AM_S 칸에 값 · AM_P 칸 빈칸 · 옮김 0 건' + (f' — {_e26}' if _e26 else ''),
         not _e26 and _m26.get('area_AM_S_SE_n') == '40' and _m26.get('area_AM_P_SE_n') == ''
         and _m26.get('wa_mono_phase_name_webapp') == 'AM_S' and _r26.get('wa_mono_renamed_cases') == 0
-        and _r26.get('wa_mono_design_filled') == 1 and _r26.get('wa_mono_absent_blanked') == 1
+        and _r26.get('wa_mono_design_filled') == 2 and _r26.get('wa_mono_absent_blanked') == 2
         and _m26.get('coverage_AM_S_hertz_pct') == repr(17.5) and _m26.get('coverage_AM_P_hertz_pct') == ''
         and _m26.get('n_AM_S_measured') == '11' and _m26.get('n_AM_P_measured') == '')
     _wa_both = _wa3()
@@ -2484,6 +2633,150 @@ def _selftest():
     _neg('⑳af ★ 설계 block mono 인데 웹앱 상별 열을 실을 때 수확 n_types 가 없으면 거부 (J20-f 관문 그대로)',
          lambda: build_handover(_dq, {'q1': {k: v for k, v in _hq3['q1'].items() if k != 'n_types'}, 'q2': _hq3['q2']},
                                 webapp=_wa3(), webapp_groups='contact'))
+
+    #  ═══ ㉑ 7c (1저자 비준 10-01 *"ㄱㄱ 하자"* · J20-k 7c · 원장 LHS-23) — AM–SE CN 10 열 + 고립 비율 3 + 전체 분포 3 (7a 새 키) ═══════════
+    #   5번 배치 (`--stop-after coverage` = 접촉 단계 포함) 를 contact 묶음으로 받는다 · 고립 비율의 09-19 census 🔶 COND_cov 는 오분류 (LHS-23)
+    #   → ✅ 승격 (옛 판정을 열 사전에 병기) · census 에 없는 7a 키는 배치 머리에 있을 때만 · 관문 G1–G7 (calc_am_isolation_risk 의 counts 하나에서
+    #   나온 값인가) + 상이 있는데 값이 없거나 없는데 값이 있으면 거부.  값은 손으로 정한 입자별 SE 접촉 수에서 만든다.
+    import math as _mth
+    _cs1 = [0, 1, 3, 3, 4, 4, 4, 5, 5, 5, 6]                          # q1 mono (설계 AM_P · 웹앱 이름 AM_S) — 11 개 · 합 40 = area_AM_S_SE_n
+    _cp2, _cs2 = [30], [1, 3, 4, 5, 5, 5, 5, 6, 7, 9]                 # q2 bimodal — AM_P 1 개 (합 30) · AM_S 10 개 (합 50)
+    _RP, _RS = 5.0, 2.0                                                # 설계 반경 (µm) — 표면 가중 항등식
+
+    def _stat7(v):
+        n_ = len(v)
+        mu_ = sum(v) / n_
+        return {'mean': repr(mu_), 'std': repr(_mth.sqrt(sum((x - mu_) ** 2 for x in v) / n_)),
+                'median': repr(float(np.median(v))), 'max': str(max(v)), 'vul': repr(100.0 * sum(1 for x in v if x <= 1) / n_)}
+
+    def _wa7(stop='coverage'):
+        w = _wa3()
+        w['stop_after'] = stop
+        for k in ['am_se_cn_mean', 'am_se_cn_surface_weighted'] + [f'{p}_se_cn_{s}' for p in ('AM_P', 'AM_S')
+                                                                    for s in ('mean', 'std', 'median', 'max')]:
+            w['verdict'][k] = '✅ 쓴다'
+        for k in ('am_vulnerable_pct', 'AM_P_vulnerable_pct', 'AM_S_vulnerable_pct'):
+            w['verdict'][k] = '🔶 채널 종속'                          # 09-19 census 그대로 (COND_cov 오분류 — LHS-23)
+        w['why'] = {k: f'why:{k}' for k in w['verdict']}
+
+        def _put(row, ph, v):
+            s_ = _stat7(v)
+            row.update({f'{ph}_se_cn_mean': s_['mean'], f'{ph}_se_cn_std': s_['std'], f'{ph}_se_cn_median': s_['median'],
+                        f'{ph}_se_cn_max': s_['max'], f'{ph}_vulnerable_pct': s_['vul']})
+        _put(w['rows']['q1'], 'AM_S', _cs1)
+        _put(w['rows']['q2'], 'AM_P', _cp2)
+        _put(w['rows']['q2'], 'AM_S', _cs2)
+        for q, v, sw in (('q1', _cs1, sum(_cs1) / len(_cs1)),
+                         ('q2', _cp2 + _cs2, (_RP ** 2 * sum(_cp2) + _RS ** 2 * sum(_cs2)) / (_RP ** 2 * len(_cp2) + _RS ** 2 * len(_cs2)))):
+            s_ = _stat7(v)
+            w['rows'][q].update(am_se_cn_mean=s_['mean'], am_se_cn_std=s_['std'], am_se_cn_median=s_['median'],
+                                am_se_cn_max=s_['max'], am_vulnerable_pct=s_['vul'], am_se_cn_surface_weighted=repr(sw))
+        return w
+    _dq7 = [{'case_id': 'q1', 'block': 'mono_AM_P', 'r_AM_P_um': repr(_RP), 'r_AM_S_um': ''},
+            {'case_id': 'q2', 'block': 'bimodal', 'r_AM_P_um': repr(_RP), 'r_AM_S_um': repr(_RS)}]
+
+    def _b7(w=None, hv=None, dq=None):
+        return build_handover(dq or _dq7, hv or _hq3, webapp=w or _wa7(), webapp_groups='contact')
+    try:
+        _o7, _c7, _r7 = _b7()
+        _e7 = ''
+    except Exception as e:                                                # noqa: BLE001
+        _o7, _c7, _r7, _e7 = [], [], {}, f'{type(e).__name__}: {e}'
+    _m7 = next((r for r in _o7 if r['case_id'] == 'q1'), {})
+    _p7 = next((r for r in _o7 if r['case_id'] == 'q2'), {})
+    _cols7 = (['am_se_cn_mean', 'am_se_cn_surface_weighted', 'am_se_cn_std', 'am_se_cn_median', 'am_se_cn_max',
+               'am_vulnerable_pct', 'AM_P_vulnerable_pct', 'AM_S_vulnerable_pct']
+              + [f'{p}_se_cn_{s}' for p in ('AM_P', 'AM_S') for s in ('mean', 'std', 'median', 'max')])
+    chk('㉑a ★ 7c — coverage 배치 (stop_after=coverage · 접촉 단계 포함) 를 contact 묶음으로 받고 16 열이 실린다 · 관문 검사 2 행'
+        + (f' — {_e7}' if _e7 else ''),
+        not _e7 and all(c in _c7 for c in _cols7) and _r7.get('wa_amse_identity_checked') == 2)
+    chk('㉑b 값 — bimodal 은 상별 그대로 · mono 는 설계 상 칸 (AM_P) 에 웹앱 AM_S 값 · 없는 상 칸 빈칸 · 전체 열 그대로',
+        _p7.get('AM_P_se_cn_mean') == repr(30.0) and _p7.get('AM_S_se_cn_max') == '9' and _p7.get('am_se_cn_max') == '30'
+        and _p7.get('am_se_cn_median') == repr(5.0) and _p7.get('AM_S_vulnerable_pct') == repr(10.0)
+        and _m7.get('AM_P_se_cn_mean') == repr(40 / 11) and _m7.get('AM_S_se_cn_mean') == ''
+        and _m7.get('AM_S_vulnerable_pct') == '' and _m7.get('AM_P_vulnerable_pct') == repr(200 / 11)
+        and _m7.get('am_se_cn_mean') == repr(40 / 11))
+    _neg('㉑c ★ coverage 배치를 묶음 제한 없이 부르면 여전히 거부 (뒤 단계 열이 빈칸 = N/A 로 읽힌다)',
+         lambda: build_handover(_dq7, _hq3, webapp=_wa7()))
+    _dm7 = {d['column']: d for d in column_dictionary(_c7, webapp=_wa7())} if _c7 else {}
+    chk('㉑d ★ 고립 비율 — census 🔶 COND_cov 를 ✅ 로 승격 (LHS-23) · 열 사전에 옛 판정 병기 · 뜻 = SE 접촉 0–1 개 · coverage 문턱 아님',
+        bool(_dm7) and all(_dm7.get(c, {}).get('verdict', '').startswith('✅') and 'LHS-23' in _dm7.get(c, {}).get('verdict', '')
+                           and '🔶' in _dm7.get(c, {}).get('meaning', '') and '0–1' in _dm7.get(c, {}).get('meaning', '')
+                           and 'coverage' in _dm7.get(c, {}).get('meaning', '')
+                           for c in ('am_vulnerable_pct', 'AM_P_vulnerable_pct', 'AM_S_vulnerable_pct')))
+    chk('㉑e ★ 7a 새 키 (census 밖) — 배치 머리에 있으면 ✅ (J20-k 7a) · 출처 webapp · 뜻 = AM 전 입자 분포 · 검토 기록 7c',
+        bool(_dm7) and all(_dm7.get(c, {}).get('source') == 'webapp' and 'J20-k' in _dm7.get(c, {}).get('verdict', '')
+                           and 'AM 전 입자' in _dm7.get(c, {}).get('meaning', '') and '7c' in _dm7.get(c, {}).get('meaning', '')
+                           for c in ('am_se_cn_std', 'am_se_cn_median', 'am_se_cn_max')))
+    _w7h = _wa7()
+    for _r_ in _w7h['rows'].values():
+        _r_.pop('am_se_cn_median', None)
+    try:
+        _c7h = _b7(w=_w7h)[1]
+    except Exception as e:                                                # noqa: BLE001
+        _c7h = [f'ERR {type(e).__name__}: {e}']
+    chk('㉑f census 밖 키가 배치 머리에 없으면 열도 없다 (옛 배치의 빈칸이 측정된 N/A 로 읽히지 않게) · 있는 키는 그대로',
+        'am_se_cn_median' not in _c7h and 'am_se_cn_max' in _c7h)
+
+    def _neg7(name, fn, tag):
+        """거부 + **그 관문**이 거부했는가 (메시지에 tag) — 다른 관문이 먼저 막으면 이 반례는 그 관문을 시험하지 못한 것이다."""
+        nonlocal ok
+        try:
+            fn()
+        except FillRefusal as e:
+            if tag in str(e):
+                ok += 1
+                print(f'  PASS  {name} — 거부: {str(e)[:64]}')
+            else:
+                fail.append(name)
+                print(f'  FAIL  {name} — 다른 관문이 거부: {str(e)[:120]}')
+            return
+        except Exception as e:                                            # noqa: BLE001
+            fail.append(name)
+            print(f'  FAIL  {name} — {type(e).__name__}: {e}')
+            return
+        fail.append(name)
+        print(f'  FAIL  {name} — 거부하지 않았다')
+
+    def _bad7(q, **kv):
+        w = _wa7()
+        w['rows'][q].update(kv)
+        return lambda: _b7(w=w)
+    _neg7('㉑g ★ G1 — 상별 평균 × 상 입자 수 ≠ area_<상>_SE_n (5.5 × 10 ≠ 50) 이면 거부', _bad7('q2', AM_S_se_cn_mean='5.5'), '7c G1')
+    _neg7('㉑h ★ G1 mono — 설계 상 칸으로 옮긴 평균 × AM 수 ≠ 옮긴 쌍 개수 (3.0 × 11 ≠ 40) 이면 거부', _bad7('q1', AM_S_se_cn_mean='3.0'), '7c G1')
+    _neg7('㉑i ★ G2 — 전체 평균 × AM 수 ≠ area_AM전체_SE_n (7.0 × 11 ≠ 80) 이면 거부', _bad7('q2', am_se_cn_mean='7.0'), '7c G2')
+    _neg7('㉑j ★ G3 — 고립 개수: 전체 2 ≠ 상별 합 (AM_P 0 + AM_S 1) 이면 거부', _bad7('q2', am_vulnerable_pct=repr(200 / 11)), '7c G3')
+    _neg7('㉑k ★ G3 — 고립 비율 × 입자 수 / 100 이 정수 개수가 아니면 거부 (25 % × 10 = 2.5)', _bad7('q2', AM_S_vulnerable_pct='25.0'), '7c G3')
+    _neg7('㉑l ★ G4 — 전체 max ≠ 상별 max 의 최댓값 (9 ≠ 30) 이면 거부', _bad7('q2', am_se_cn_max='9'), '7c G4')
+    _neg7('㉑m ★ G5 — bimodal 전체 median 이 상별 median 사이 밖 (31 ∉ [5, 30]) 이면 거부', _bad7('q2', am_se_cn_median='31.0'), '7c G5')
+    _neg7('㉑n ★ G5 mono — 전체 median ≠ 단일 상 median (4.5 ≠ 4.0) 이면 거부', _bad7('q1', am_se_cn_median='4.5'), '7c G5')
+    _neg7('㉑o ★ G6 — 전체 std ≠ 합동 표준편차 (상별 N · 평균 · std) 이면 거부', _bad7('q2', am_se_cn_std='7.0'), '7c G6')
+    _neg7('㉑p ★ G6 mono — 전체 std ≠ 단일 상 std 이면 거부', _bad7('q1', am_se_cn_std='1.8'), '7c G6')
+    _neg7('㉑q ★ G7 — 표면 가중 ≠ Σ N r² CN / Σ N r² (설계 반경) 이면 거부', _bad7('q2', am_se_cn_surface_weighted='15.0'), '7c G7')
+    _neg7('㉑r ★ G7 — bimodal 인데 설계 반경이 없으면 거부 (표면 가중을 확인할 수 없다)',
+          lambda: _b7(dq=[_dq7[0], dict(_dq7[1], r_AM_S_um='')]), '7c G7')
+    _neg7('㉑s ★ 상이 있는데 상별 값이 비면 거부 (bimodal AM_S std 빈칸)', _bad7('q2', AM_S_se_cn_std=''), '7c 상 있음')
+    _neg7('㉑t ★ 상이 없는데 (phase_counts AM_P 0) 상별 값이 있으면 거부',
+          lambda: _b7(hv=dict(_hq3, q2=dict(_hq3['q2'], phase_counts={'AM_P': 0, 'AM_S': 11, 'SE': 100}))), '7c 상 없음')
+    _neg7('㉑u ★ 수확 JSON 에 phase_counts 가 없으면 거부 (상 입자 수를 몰라 관문을 못 본다 · bimodal 행 — mono 는 J20-k (B) 가 먼저 막는다)',
+          lambda: _b7(hv=dict(_hq3, q2={kk: vv for kk, vv in _hq3['q2'].items() if kk != 'phase_counts'}), w=(lambda w_: (
+              [w_['verdict'].pop(k_, None) for k_ in ('se_se_cn', 'se_se_cn_std', 'am_am_cn', 'am_am_cn_std', 'am_am_n_contacts')], w_)[1])(_wa7())),
+          '(7c)')
+    _w7r = _wa7()
+    _w7r['status']['q2']['status'] = 'REFUSED'
+    _w7r['rows']['q2']['AM_S_se_cn_mean'] = '99.0'
+    try:
+        _r7r = _b7(w=_w7r)[2]
+        _e7r = ''
+    except Exception as e:                                                # noqa: BLE001
+        _r7r, _e7r = {}, f'{type(e).__name__}: {e}'
+    chk('㉑v 배치가 거부한 행 (REFUSED) 은 값을 싣지 않으므로 관문도 보지 않는다 (검사 1 행 = q1)' + (f' — {_e7r}' if _e7r else ''),
+        not _e7r and _r7r.get('wa_amse_identity_checked') == 1)
+    _dm7b = {d['column']: d for d in column_dictionary(_c7, webapp=_wa7())} if _c7 else {}
+    chk('㉑w 열 사전 — AM–SE CN · 고립 열에 검토 기록 (7c · 관문 G1–G7) · 상별 열은 mono 설계 상 칸 표지 · 전체 열은 아님',
+        all('7c' in _dm7b.get(c, {}).get('meaning', '') for c in _cols7)
+        and '설계 상 칸' in _dm7b.get('AM_P_vulnerable_pct', {}).get('meaning', '')
+        and '설계 상 칸' not in _dm7b.get('am_vulnerable_pct', {}).get('meaning', ''))
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -2606,7 +2899,8 @@ if __name__ == '__main__':
                   f'J20-k (B) mono 웹앱 상별 칸: 설계 상 칸 채움 {_rep["wa_mono_design_filled"]} 셀 · 이름 옮김 {_rep["wa_mono_renamed_cases"]} 건 · '
                   f'없는 상 빈칸 {_rep["wa_mono_absent_blanked"]} 셀 · J20-h 접촉 0 쌍 = 0 채움 {_rep["wa_pair_zero_filled"]} · '
                   f'J20-i se_se_cn = 2·area_SE_SE_n/N_SE 확인 {_rep["wa_cn_identity_checked"]} 행 · '
-                  f'J20-j AM–AM 접촉 수 = 쌍 합 · am_am_cn = 2·n/N_AM 확인 {_rep["wa_am_identity_checked"]} 행')
+                  f'J20-j AM–AM 접촉 수 = 쌍 합 · am_am_cn = 2·n/N_AM 확인 {_rep["wa_am_identity_checked"]} 행 · '
+                  f'7c AM–SE CN · 고립 관문 G1–G7 확인 {_rep["wa_amse_identity_checked"]} 행')
         print(f'   J20-k (B) mono {_rep["mono_rows"]} 행 — 수확기 상별 칸 (coverage · n_AM_*_measured · cov_*_n_valid · 벽 접촉) 설계 상 칸 채움 '
               f'{_rep["mono_harvest_filled"]} 셀 (설계에 없는 상은 빈칸)')
         print(f'   빈칸 사유: {dict(_rep["blank_by_status"])}')
