@@ -2512,7 +2512,10 @@
    "pattern": "228413",
    "claim": "CL-90",
    "why": "CL-90 — 실재가 확인되지 않는 인용 ('Wang 2020, JPS 470').  04-29 주석에서 원문 확인 없이 생겨 NCM 경도·NCM 영률·LPSCl 영률 세 값의 출처로 퍼졌고 원고 SI 표에 제목까지 붙었다 (SELF-51)",
-   "allowed_in": []
+   "allowed_in": [
+    "docs/data/mixer_final10_20260930/LC_s32452843_c16x4.json",
+    "docs/data/mixer_final10_20260930/LC_s49979687_c16x4.json"
+   ]
   },
   {
    "pattern": "Elastic properties of layered lithium transition-metal oxides",
