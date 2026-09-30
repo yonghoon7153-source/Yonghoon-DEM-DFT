@@ -1,0 +1,82 @@
+{
+  "review": "GATE82",
+  "date": "2026-09-30",
+  "review_mode": "READ_ONLY_SOURCE_AND_DATA_REVIEW",
+  "code_target": "c82231c49460f79bb5474185648594b3a6c9fc02",
+  "request_commit": "de5b34bf59bdf82c637b27a2d940319a7e9da364",
+  "send_head": "8f54427c9eb4a6d335bba65685a4c28dc24064d8",
+  "source_digest": "02a776a7a0a3f4ba",
+  "verdict": "PARTIAL_ACCEPTANCE_ROUND1_CLOSURE_DEFERRED",
+  "findings": [
+    {
+      "id": "G82-N1",
+      "priority": "P1",
+      "title": "Observed roster is not rederived from output observations",
+      "evidence": [
+        "src/io.py:1528",
+        "src/io.py:1801",
+        "src/fitting.py:1394",
+        "src/fitting.py:1881"
+      ],
+      "method": "STATIC_DATA_FLOW"
+    },
+    {
+      "id": "G82-N2",
+      "priority": "P1",
+      "title": "Declared bank profile is not bound to the implemented generator and byte representation",
+      "evidence": [
+        "tools/design_wire.py:404",
+        "tools/design_wire.py:578",
+        "tools/design_wire.py:593",
+        "tools/preserve.py:3230",
+        "src/fitting.py:1372",
+        "src/io.py:1569"
+      ],
+      "method": "STATIC_DATA_FLOW"
+    },
+    {
+      "id": "G82-N3",
+      "priority": "P2",
+      "title": "Protocol generation is not bound to sig6 and v6 row declaration",
+      "evidence": [
+        "tools/preserve.py:3183",
+        "tools/preserve.py:3305",
+        "src/fitting.py:1992",
+        "src/io.py:1727"
+      ],
+      "method": "STATIC_DATA_FLOW"
+    }
+  ],
+  "receipt2": "ACCEPTED_AS_EXISTING_VALIDATOR_GENERATION_EVIDENCE_NOT_ROUND1_FUNCTIONAL_CLOSURE",
+  "reported_suite": {
+    "passed": 2004,
+    "xfailed": 1,
+    "failed": 0,
+    "source": "sender report; not rerun by reviewer"
+  },
+  "directly_verified": {
+    "known_run_scope_files": 58,
+    "changed_files_vs_gate81": 4,
+    "git_blob_checks": true,
+    "source_digest_recomputed": true,
+    "receipt_data_compared": true
+  },
+  "execution_go_requested": false,
+  "execution_go_granted": false,
+  "round2_authorized": false,
+  "comsol_calls": 0,
+  "supplied_module_imports": 0,
+  "supplied_function_calls": 0,
+  "repository_suite_runs": 0,
+  "mutation_replays": 0,
+  "restore_calls": 0,
+  "receipt_regeneration_calls": 0,
+  "counterexamples_executed": false,
+  "limitations": [
+    "Compare API 300-file list is not an exhaustive repository inventory",
+    "58 known RUN_SCOPE paths fetched individually",
+    "Receipt text/field comparison, no YAML canonical core recomputation",
+    "Human authorization and sender runtime logs are reported provenance, not independent historical observation"
+  ],
+  "approved": false
+}

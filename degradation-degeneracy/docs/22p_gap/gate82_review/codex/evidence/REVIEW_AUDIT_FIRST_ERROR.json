@@ -1,0 +1,1 @@
+{"scope":"reviewer-owned audit, not submitted production/test code","chunk_id":"b2570a","exit_code":1,"failure":"ModuleNotFoundError: No module named yaml","action":"No dependency installation. Replaced YAML parse with bounded text/scalar comparison, declared limitations. No supplied code executed."}

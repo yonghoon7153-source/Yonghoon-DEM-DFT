@@ -1,0 +1,107 @@
+# 82차 게이트 라운드 1 독립 검토
+
+2026-09-30. 판정은 **부분 수용, 라운드 1 전체 종결 보류**다. 잔여는 G82-N1 P1, G82-N2 P1, G82-N3 P2 세 건으로 한정한다. 영수증 2차본은 해당 코드 세대의 보존·검증 기록으로 수용하며, 그 수용을 새 v6 경로 전체의 검증 완료로 확대하지 않는다.
+
+실행 GO, 라운드 2 착수, 새 연구 leg, 복원, class 변경, 투영 게시를 승인하지 않는다. 76차 종결과 grid_fit_v5 진단 전용 상태는 유지한다.
+
+## 1 검토 대상과 확인 범위
+
+- 코드: `c82231c49460f79bb5474185648594b3a6c9fc02`.
+- 요청문: `de5b34bf59bdf82c637b27a2d940319a7e9da364`.
+- 발송 HEAD: `8f54427c9eb4a6d335bba65685a4c28dc24064d8`.
+- 알려진 RUN_SCOPE 58개 경로를 발송 HEAD에서 각각 읽어 Git blob SHA와 텍스트 바이트를 확인했다. 독립 재계산한 source digest는 `02a776a7a0a3f4ba`다.
+- 이전 81차 식별과 다른 파일은 src/fitting.py, src/io.py, tools/design_wire.py, tools/preserve.py 네 개다. 이 네 파일의 판정 커밋 사본과 발송 HEAD 바이트도 같다.
+- 원격 compare의 merge base가 c82231c4이고 상태가 ahead인 것을 확인했다. 요청문의 옛 서브 브랜치·본진 동결 안내는 작성 당시 기록이다. 현재 발송문에 적힌 본진 복귀와 구분한다.
+- compare 응답은 300개 파일이므로 저장소 전체 diff의 완전한 열거라고 주장하지 않는다. 위 58개는 별도 파일별 확인이다. 새 경로를 포함한 저장소 전체 목록을 독립 재귀 열거한 것은 아니다.
+
+근거: IDENTITY_AUDIT.json, evidence/TARGET_TO_SEND_HEAD.json, reference의 커밋 고정 소스.
+
+받은 모듈 import, 함수 추출 실행, pytest, mutation replay, smoke, 분석 프로그램, COMSOL/JVM, 영수증 생성·복원은 모두 실행하지 않았다. 아래 반례는 **실제 소스의 데이터 흐름에 근거한 정적 반례 명세**이지, 이번 리뷰에서 실행해 PASS/FAIL을 실측한 시험이 아니다. 2004 passed·1 xfailed·20/20·smoke rc0은 발신자의 해당 커밋 관측으로 남긴다.
+
+## 2 G82 N1 실제 관측 roster 재구성이 빠져 있다
+
+**P1. G81-N1 및 F3 종결 보류.**
+
+시작 전의 roster 대조는 구현돼 있다. fitting.py:1329–1345는 입력 curves의 실제 조건으로 roster를 만들고 계획 SHA와 비교한다. 그러나 이것이 종료 후 fits 행의 관측 쌍을 검증하는 것까지 대신하지는 않는다.
+
+- io.py:1528의 `realized_from_fits`는 count, 고유 cond_id 수, provider 소비 수를 계산하지만 roster SHA를 반환하지 않는다.
+- fitting.py:1394의 writer는 시작 전에 계산해 전달받은 `roster_sha256`를 record의 `roster_observed_sha256`로 적는다.
+- io.py:1801–1802는 그 record 값과 계획 roster SHA를 비교할 뿐, 현재 fits의 관측 쌍에서 SHA를 다시 만들지 않는다.
+- `_stage3_rederive`의 pair_group 재유도는 물리 좌표를 사용한다. noise·noise realization은 pair_group에서 의도적으로 제외되는 축이다.
+- 기존 출력 봉인·격자 완전성은 파일 해시 및 (cond_id, objective)를 확인한다. 같은 cond_id의 noise 의미를 봉인 입력과 다시 맞추는 검사는 아니다. fitting.py:1881–1882의 truth 복사에는 noise가 있지만 원래 관측 seed는 없다. task의 optimizer seed와 관측 noise seed를 같은 것으로 취급하면 안 된다.
+
+따라서 요청문 F3의 “roster_observed를 행에서 다시 센 값과 대조”는 현재 코드보다 강한 설명이다.
+
+**정적 반례:** 정상 v6 산출에서 한 objective 행의 noise만 다른 유한 값으로 바꾸되 cond_id·물리 좌표·candidate_map·restart·record는 보존하고 fits 파일 봉인만 정상 방식으로 갱신한 경우를 검토한다. 현재 후보 재유도와 실현 count 계산에 이 noise 차이가 들어가지 않으며, record/계획 roster SHA도 그대로다. 원자료의 올바른 출력 봉인까지 함께 보는 검증이 필요하다는 뜻이다. 수정하지 않은 봉인 아래 한 바이트 변조가 통과한다는 주장은 아니다.
+
+**닫힘 조건:** 봉인된 입력 조건과 실제 출력의 cond_id/objective/obs_key 연결을 대조하고, 관측 roster를 독립 재구성해 계획·record에 모두 연결한다. 출력에 없는 noise realization은 봉인 입력 또는 명시적으로 보존한 roster에서 가져와야 하며 임의 추론하지 않는다. 같은 pair_group의 두 noise 실현 양성 대조와 한쪽 objective의 noise 변경·교차 realization·같은 개수의 다른 roster를 이유별로 거부하는 회귀를 추가한다. 기존 수치 fitting 알고리즘을 변경할 이유는 없다.
+
+## 3 G82 N2 bank 선언과 실제 생성 방식이 일치하는지 검사하지 않는다
+
+**P1. Q1 bank 재유도 수용은 이 조건이 닫힌 범위까지다.**
+
+구현의 실제 방식은 명확하다. design_wire.py:563–597은 bank-seed/v1, PCG64, float64를 사용하고, bank_bytes는 little-endian float64 C-order로 직렬화한다.
+
+그러나 선언 검사는 더 넓다.
+
+- preserve.py:3230–3231은 envelope bank.generator/version을 비어 있지 않은 문자열로만 검사한다.
+- design_wire.py:404–412의 설계 검사는 generator/version/seed_derivation/dtype를 비어 있지 않은 문자열로, endian을 little 또는 big으로 받는다.
+- fitting.py:1286–1391은 설계 digest, parameter order, bounds, 길이, curves, roster를 대조하지만 설계 bank 선언과 envelope bank 선언 및 실제 구현의 일치를 강제하지 않는다.
+- io.py:1569의 재유도 역시 실제 고정 함수로 다시 계산할 뿐, 지원하지 않는 선언을 거부하지 않는다.
+
+**정적 반례:** 설계는 pcg64인 정상 계획에서 envelope의 generator만 philox로 바꾸고 계획 식별을 정상 재생성한다. 비어 있지 않은 문자열 검사는 통과하지만 실제 생성은 여전히 PCG64다. 설계의 dtype/endian/seed_derivation을 다른 유효 문자열·big으로 선언하고 관련 설계 식별을 다시 만드는 경우도 “선언대로 생성했는가”를 묻는 검사가 없다. 양쪽이 같은 고정 함수를 사용하므로 writer와 재유도 결과가 일치하는 것만으로 이 오류가 드러나지 않는다.
+
+**닫힘 조건:** 이번 라운드가 지원하는 bank profile 하나를 명시하고 실행 전 소비자와 validator가 모두 검사한다. envelope와 설계의 generator/version, 설계의 seed rule·dtype·endian·space가 실제 구현과 맞아야 한다. 다른 generator를 새로 구현할 필요는 없다. 지원하지 않는 선언은 거부하면 된다. ID 도메인·기존 골든·정상 bank 바이트를 바꾸지 않는다. 별칭이 필요하면 허용 대응표를 명시하며, 임의 문자열을 성공으로 취급하지 않는다.
+
+## 4 G82 N3 계획의 protocol generation과 sig 6 선언이 연결되지 않는다
+
+**P2. G81-N2의 reader 양방향 충돌 방지는 수용하지만 세대 선언 전체 종결은 보류한다.**
+
+preserve.py:3183의 protocol_generation 검사는 v숫자 계열 문법을 허용한다. check_execution_record:3305는 record와 계획의 문자열이 같은지만 확인한다. 반면 fitting.py:1992는 stage3 문맥이 있으면 sig_version을 6으로 쓰고, io.py:1727–1731은 계획 schema와 digest를 확인하지만 계획의 protocol_generation이 이 v6 경로에 대응하는지 확인하지 않는다.
+
+**정적 반례:** 같은 v6 계획의 protocol_generation만 문법상 유효한 v5로 바꾸고 새 planned_id를 사용하면 record도 v5를 복사하는 반면 실제 run_spec과 행 표식은 6/v6다. 현재의 계획↔record 문자열 일치는 이 모순을 잡지 않는다. v6 행을 prep으로 내리는 기존 반례와 다른 경계다.
+
+**닫힘 조건:** v6 실행/검증 경로가 지원하는 protocol generation을 명시적으로 연결한다. sig_version, plan.protocol_generation, execution_record.protocol_generation, 행 record_generation의 불일치를 구조 오류로 거부한다. 일반 v3/v4 계획 자료의 역사적 읽기를 일괄 금지하거나 기존 기록을 소급 수정하지 않는다.
+
+## 5 수용하는 구현과 질문별 답
+
+| 질문 | 판정 |
+| --- | --- |
+| Q1 dead normalize 정의 | 뒤 정의가 앞 정의를 가리는 것을 AST로 확인했다. 동작과 무관한 정리는 다음 승인된 코드 라운드에 묶어도 된다. 이번 판정의 차단 조건으로 삼지 않는다. |
+| Q2 count 의미 | 조건당 계획 × 사전 n_obs와 다리 전체 실현 합이라는 구분은 수용한다. 이것만으로 관측 쌍 결속을 증명하지는 않으므로 N1은 별도다. 조건별 count 열을 무조건 더 만들 필요는 없다. |
+| Q3 세대 정책 | v6 ID 삭제 시 mixed_invalid, sig5의 v6 전용 키/열/블록 거부는 수용한다. 계획·record 세대까지는 N3 보완이 필요하다. |
+| Q4 provider null | 이번 condition-stage 범위에서 첫 objective 또는 warm-off arm의 명시 no-provider와 warm-required 오류 구분을 수용한다. p_ini와 미래 arm 전체로 일반화하지 않는다. |
+| Q5 라운드 2 | 제안 자체는 기록하되 착수 승인은 아니다. 우선 N1–N3를 좁게 보완한다. 이후 leg gate·세대 등록·계약 정정 등은 별도 사용자 승인 대상이다. p_ini 구현은 정책 결정만으로 자동 포함하지 않는다. |
+| Q6 영수증 2차본 | 해당 validator 세대의 영수증으로 수용한다. 같은 코드에서 회신 때문에 세 번째 재생성할 필요는 없다. 새 보완으로 RUN_SCOPE가 바뀌면 기존 2차본을 보존하고 최종 새 세대 영수증 범위를 다시 승인받는다. |
+| Q7 비유한 J returned | returned를 “함수가 결과를 반환함”으로 정의했다면 그대로 둘 수 있다. 유한/수렴/outer 종료 건전성과 구분하고 수치 PASS로 세지 않는다. legacy 계산 경로 또는 count schema를 이 사유만으로 바꿀 필요는 없다. |
+| Q8 pairing_design 본체 | run_dir에 canonical 설계 본체를 두고 계획 digest와 대조하는 방식을 수용한다. 원문 공백까지 같은 파일 바이트라는 의미와 canonical 의미 동일성을 구분한다. N2의 실제 bank profile 대조는 추가 필요하다. |
+| Q9 provider 재생성 | fits 바이트·run_spec·objective·PARAM_NAMES에서 map을 다시 만들고 edge SHA 대조 후 사본으로 x0를 재유도하는 한정 설계를 수용한다. provider 연구 leg 승인, 수렴, 보존 backend canary까지 증명하는 것은 아니다. |
+
+legacy 숫자 골든 통과는 발신 시험 관측으로 유지한다. 수용된 solver 동작을 고쳐 보이게 할 이유는 없다. stage3 필수 키의 존재와 그 모든 값이 실제로 대조된다는 주장은 구분해야 한다. 라운드 2의 실제 leg 배선에서는 plan source/input/base-config와 runtime 대응도 명시적으로 닫아야 하며, 이번에는 그 미구현 통합 전체를 새 차단 항목으로 늘리지 않는다.
+
+## 6 영수증과 절차 신고의 판정
+
+두 leg의 세 세대 영수증을 데이터로 비교했다.
+
+- 최초 eda3feb8 history는 현지의 기존 80차 시점 영수증과 바이트가 같다.
+- 원본→1차는 validator_source_digest, src_io_sha256, core_sha256 및 stamp 변화다.
+- 원본→2차는 위 항목에 n_checks와 세대_선언_일치 검사 한 개가 더해진다. paired는 34→35, grid는 33→34다.
+- bundle, restore, outputs의 텍스트 내용은 세 세대에서 같다. 원장의 receipt core SHA, validator digest, n_checks가 현재 영수증과 맞는다.
+- grid 영수증의 validator_tree_dirty는 세 세대 모두 true다. paired 생성 후 grid를 기록한 순서라는 발신 설명과 부합하지만, 두 개별 영수증 모두 clean=true라고 쓰지 않는다.
+- 이번에는 YAML 텍스트/명시 필드 대조만 수행했다. core canonicalizer 실행, payload 재복원, 재채점, 원격 실행 당시의 독립 관측은 하지 않았다.
+
+사용자가 추가 보완·영수증 재생성을 승인했다는 요청문 기록과 그 한계를 유지한다. 검토자가 당시에 사람의 승인을 직접 관측했다는 주장은 하지 않는다.
+
+§8-a의 시험 반례 개선은 수용한다. 무관 예외로 통과하던 음성 시험을 올바른 이유·도달 단계에 맞추는 것은 대조군을 억지로 RED로 만드는 행위가 아니다. §8-i의 12개 무관 예외는 기능 RED 증거에서 계속 제외한다. 동봉되지 않은 트리 밖 탐침은 발신 보고이지 이번 직접 확인 증거가 아니다.
+
+§8-h의 영수증→전체 회귀 순서는 이번에는 수용한다. 영수증 identity를 요구하는 전체 suite라면 최종 코드·영수증·원장 앵커를 맞춘 뒤 전체 검증하는 순서가 타당하다. 이번 순서 때문에 같은 전체 회귀를 한 번 더 요구하지 않는다. 앞선 red를 삭제하거나 첫 시도부터 통과했다고 바꾸지는 않는다.
+
+§8-l의 F11/F12는 승인된 네 파일과 기존 닫힘 조건 안의 좌표/예산 소비 오류 정정으로 볼 수 있어 기술 범위 확장으로 분류하지 않는다. 다만 질문에 나열했던 일곱 항목보다 실제 작업이 늘었다는 기록은 유지한다. 이것은 향후 범위 확대의 포괄 승인이 아니다.
+
+## 7 문서 정정과 다음 최소 작업
+
+요청문 §1b F3의 roster 재계산 문장을 위 N1 수준에 맞게 정정한다. §3 solution map entries의 p,J는 실제 구현/시작 전 표 C의 p-only와 다르므로 문서만 맞춘다. 이 오기를 맞추려고 map에 J를 새로 넣을 필요는 없다. 옛 branch 안내는 원문을 보존하고 발송문 정정 링크를 둔다.
+
+다음은 **N1–N3 변경부 보완 및 이유별 회귀의 별도 승인안**이다. 곧바로 전체 라운드 2나 연구 실행을 열지 않는다. 최소 반례와 양성 대조를 먼저 고정하고, 이미 수용된 범위를 다시 개괄 계획으로 돌리지 않는다. 상세 비활성 범위는 NEXT_SCOPE_DRAFT.md를 참조한다.
+
+이번 리뷰에서 실행한 것은 검토자가 작성한 파일 해시·AST·텍스트 대조뿐이다. 첫 점검은 외부 YAML 모듈 부재로 중단됐고 의존성 설치 없이 텍스트 대조로 바꿨다. 이 검토 도구의 오류를 생산 코드/발신 시험 실패로 세지 않는다. 자료의 기능 시험을 재실행하거나 원본을 고치지 않았다.

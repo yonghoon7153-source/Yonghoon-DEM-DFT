@@ -1,0 +1,450 @@
+{
+  "mode": "read-only remote bytes and local inert copies; no repository execution",
+  "send_head": "8f54427c9eb4a6d335bba65685a4c28dc24064d8",
+  "code_target": "c82231c49460f79bb5474185648594b3a6c9fc02",
+  "known_run_scope_files": 58,
+  "source_digest_recomputed": "02a776a7a0a3f4ba",
+  "known_scope_changed_vs_gate81": [
+    "src/fitting.py",
+    "src/io.py",
+    "tools/design_wire.py",
+    "tools/preserve.py"
+  ],
+  "files": [
+    {
+      "path": "degradation-degeneracy/configs/base.yaml",
+      "git_blob_sha1": "37a3a34cfc06f954c330298537633a03a1cc5620",
+      "sha256": "26fe6c7cc2a2d719815a6aed7db7350917747d352de0bd3d9f7823a8cdc6fc71",
+      "bytes": 5498
+    },
+    {
+      "path": "degradation-degeneracy/configs/grid_22p.yaml",
+      "git_blob_sha1": "9fd6d492a933b2d521897dfc403738554f2ca64c",
+      "sha256": "e3718c62f6fc92e6f4e6381762c970293d2cef9a3dab4f6198e6855149be4b45",
+      "bytes": 2747
+    },
+    {
+      "path": "degradation-degeneracy/configs/grid_22p_dense.yaml",
+      "git_blob_sha1": "0d0c9aab7a0dd5abb9edd7afb78ee48ed1fbadef",
+      "sha256": "142c5081d893f664d377499205e7ed39fc26089b4b8e7b6483e3ea8293d8fb63",
+      "bytes": 2824
+    },
+    {
+      "path": "degradation-degeneracy/configs/grid_22p_fine.yaml",
+      "git_blob_sha1": "8371363cdafbff4920ab5a2ac90b9c6d07075875",
+      "sha256": "ed8c96053efebc8dcf0eba9ce73104cea4358749a706177b44e18630820e2650",
+      "bytes": 1630
+    },
+    {
+      "path": "degradation-degeneracy/configs/grid_22p_seed.yaml",
+      "git_blob_sha1": "db355960391f6fe486f90c4a06b7b62688920d5a",
+      "sha256": "1fa2168e676fe89d05cb077d12c014705a8bcb57153371d8f572190cc0db960c",
+      "bytes": 3145
+    },
+    {
+      "path": "degradation-degeneracy/configs/grid_coarse.yaml",
+      "git_blob_sha1": "7a7fba7b8a5136f5912c22d52c5965ff915a4859",
+      "sha256": "4a0b949dab492cf7e7a25333d7f499bdbe6668628fcfa1c4b1e8358e574b4082",
+      "bytes": 425
+    },
+    {
+      "path": "degradation-degeneracy/configs/grid_fine.yaml",
+      "git_blob_sha1": "fdd160112bd8d3ee1c517d33e05b7bb4231d5ff5",
+      "sha256": "15ea258a338081848f745c353763dc8ba8189657a3b51526f9f390e730626040",
+      "bytes": 461
+    },
+    {
+      "path": "degradation-degeneracy/configs/objectives.yaml",
+      "git_blob_sha1": "299c04276cd336e62f8615ed47d476736bd860af",
+      "sha256": "70ec9517eb4e711f682d854eb7a15950cf243a4ea43aa51613ced6c97f8673d4",
+      "bytes": 3994
+    },
+    {
+      "path": "degradation-degeneracy/configs/objectives_optimized.yaml",
+      "git_blob_sha1": "30bd03ea7b72977c169b9c58e5573272a5429348",
+      "sha256": "ec9d48c4e3089d6b6d1e372125e9d87fa3512a552c414c4e69004a000f8b3ea6",
+      "bytes": 930
+    },
+    {
+      "path": "degradation-degeneracy/configs/sweep1d.yaml",
+      "git_blob_sha1": "a2efadfa629ff6fded6ec23c3f8ed031378f6fdc",
+      "sha256": "3ff4bcf922b9f52c6773a6f6e5ff028e6874f18f12a9c948861fe1ea7ad9e7e8",
+      "bytes": 420
+    },
+    {
+      "path": "degradation-degeneracy/requirements-gpu.txt",
+      "git_blob_sha1": "aa2882b2bcad47446775b3e2e77b517479cbfedd",
+      "sha256": "8e04e2ae6e8d3a93cc912be9b4825c33316fd949e5d592ac8f0634357b0478bb",
+      "bytes": 541
+    },
+    {
+      "path": "degradation-degeneracy/requirements.txt",
+      "git_blob_sha1": "221a5470c5fc0632fb1e10c57c33337b9c30579f",
+      "sha256": "51496f89996c6de208281743bbba85cb0a822653d293a8752392d6a0528c1458",
+      "bytes": 1031
+    },
+    {
+      "path": "degradation-degeneracy/run.sh",
+      "git_blob_sha1": "c0828f0aea1a2021d59f1c66bfa4338c45e58341",
+      "sha256": "9af9fd1bad2cf613b9ca1d24287c9c79886033fb787036df6a928fff98ef8703",
+      "bytes": 29922
+    },
+    {
+      "path": "degradation-degeneracy/scripts/archive_results.sh",
+      "git_blob_sha1": "a01a88aaa2610602bf67ae07df9ec75864d66864",
+      "sha256": "033369ab2c39578cc2d3750fa5c459a2b04e72d8f07c447025caf22cff605e03",
+      "bytes": 24405
+    },
+    {
+      "path": "degradation-degeneracy/scripts/bg.sh",
+      "git_blob_sha1": "cf25309bd031db0d01733b695e5eafd2c447040f",
+      "sha256": "699f4198ed7189cd4c5d9027a696b7b669b6aa299039fbaa0cd20088f5429536",
+      "bytes": 3617
+    },
+    {
+      "path": "degradation-degeneracy/scripts/check_run.py",
+      "git_blob_sha1": "2e395bf8efc0d8eae3d6d793d21b267c6bf1ca9a",
+      "sha256": "5baaebee5b401ca40ee73360e487486f8bd22824c70e50a16efa8a6ade9f1ce6",
+      "bytes": 4182
+    },
+    {
+      "path": "degradation-degeneracy/scripts/diagnose_objective.py",
+      "git_blob_sha1": "400217b57579e7accebdcd6e699c03f4655592e1",
+      "sha256": "87af8d00a9e0de263b9c944f0b43464f187b1b6906fdc656ca5b0ef0bf67ede5",
+      "bytes": 16182
+    },
+    {
+      "path": "degradation-degeneracy/scripts/recompute_lli.py",
+      "git_blob_sha1": "459e23bdc3ef565a1063d26134d639d33d454eb7",
+      "sha256": "f2d96112237c697ba89864febc32b896ff7cf3112ecb1c179b7cdb140b364e8d",
+      "bytes": 3650
+    },
+    {
+      "path": "degradation-degeneracy/scripts/setup_env.sh",
+      "git_blob_sha1": "af7e90fb53466eba11d6e98dd6ac5e104a24983c",
+      "sha256": "60b530f7aa475309e78ad291ba76ba5cadc3af769c95cee0fb876eaf500de7f0",
+      "bytes": 5528
+    },
+    {
+      "path": "degradation-degeneracy/scripts/smoke_e2e.sh",
+      "git_blob_sha1": "0ed80ce467f6602482e4663c87d6875700f15836",
+      "sha256": "b188fc73fb32da6f6bb5e928450c0d8f8734c57fe92e4358e47799e064762ba9",
+      "bytes": 40941
+    },
+    {
+      "path": "degradation-degeneracy/scripts/verify_env.py",
+      "git_blob_sha1": "9b91fa4a52d9e78ae5e210470901b0955eb190b6",
+      "sha256": "18068c72c73394a5f74a82291ad3ee93fa432fc2d386d4983e8daac1b86fd6c0",
+      "bytes": 9934
+    },
+    {
+      "path": "degradation-degeneracy/scripts/watch_fit.sh",
+      "git_blob_sha1": "075efeb0dba31377a7b25e95aa6cd5e777805a1d",
+      "sha256": "8a3d942ecb9cd224ba28281f031cc01155fd6d8be9e36dde8297d9793f1f4ea0",
+      "bytes": 6667
+    },
+    {
+      "path": "degradation-degeneracy/scripts/watch_grid.sh",
+      "git_blob_sha1": "ecbe1fb6f8908efa4943b242c9c84263a3c49605",
+      "sha256": "b3d6b87e3a0724c95bc44a80f3d5d81eecb1f4b677dabac021b8f50b8565e796",
+      "bytes": 2638
+    },
+    {
+      "path": "degradation-degeneracy/src/__init__.py",
+      "git_blob_sha1": "d639d01e2bd3b35bbc5df7dabe90e2a4540de2f2",
+      "sha256": "5165e2618734da76cdc2eaf8830456de2e62ffe4bd457b08ef36dfa209a2afba",
+      "bytes": 92
+    },
+    {
+      "path": "degradation-degeneracy/src/baseline.py",
+      "git_blob_sha1": "8c7c0a8664cb52b95c1fec2b8a56e52bb7af1edc",
+      "sha256": "ce2288e9ad9bdf924a67d4809b23cfc12853aac9090642b9c3cd9f3faf677a14",
+      "bytes": 13605
+    },
+    {
+      "path": "degradation-degeneracy/src/config.py",
+      "git_blob_sha1": "71cd84003c0827558664f1cba6181e2e0748a7bd",
+      "sha256": "bb484b08796f11c8affc6bf8f4505d296c812fe206b104c994d120386bc94057",
+      "bytes": 5241
+    },
+    {
+      "path": "degradation-degeneracy/src/curves.py",
+      "git_blob_sha1": "ac1a337e5cde52bf4fe572738c682b589e529a95",
+      "sha256": "161c21ca3813071969cfb5679ae701b95059235a0612dd5464694a96e31a11d1",
+      "bytes": 4168
+    },
+    {
+      "path": "degradation-degeneracy/src/fitting.py",
+      "git_blob_sha1": "1acfdb3e986f5c0012830c2b7cc42ccd8f1824cf",
+      "sha256": "f93d2a3c0ad95b0a391a90b406c01a23da42cd18f510190db463393f2e8779d5",
+      "bytes": 134870
+    },
+    {
+      "path": "degradation-degeneracy/src/grid.py",
+      "git_blob_sha1": "5702c0d061d980d44018fc2b746c04fc6423f827",
+      "sha256": "0b70f3f109ee79654c40535ea22c1f87f57feccde77ed45afaadcea6b9ef6f01",
+      "bytes": 50583
+    },
+    {
+      "path": "degradation-degeneracy/src/halfcell.py",
+      "git_blob_sha1": "51b30edec0dd19edda4e6461bed6fc694d4f9a06",
+      "sha256": "75073523310d54c76df4fd1f4d30a1e9006b1ddb9cb963b5399a20c6c8ef5c25",
+      "bytes": 34552
+    },
+    {
+      "path": "degradation-degeneracy/src/hessian.py",
+      "git_blob_sha1": "13895858d80a553b461444464bffe755186c317b",
+      "sha256": "eb0c6afee492ea0fec114d9a83a40be21148b348d5644565b8b3a09f4600f047",
+      "bytes": 17102
+    },
+    {
+      "path": "degradation-degeneracy/src/inventory.py",
+      "git_blob_sha1": "ea33221fab0cd74868587e4b5e78fb2633931666",
+      "sha256": "ea8b5e2a1f8fa7c417610bc18d478e9842c65e9ade0cdb471bb7052b40237847",
+      "bytes": 4529
+    },
+    {
+      "path": "degradation-degeneracy/src/io.py",
+      "git_blob_sha1": "0b9c0eaa683c7e98713ecb5116f4f2e6905687b4",
+      "sha256": "9c71bf42711ff18436600305d3259dd22b2ed8b6798e11456a355ed500c6ae4e",
+      "bytes": 125820
+    },
+    {
+      "path": "degradation-degeneracy/src/model.py",
+      "git_blob_sha1": "50cb5d479841977948ada4ed0be09569fd5440a8",
+      "sha256": "ae5faf879011d376073eb843e6f09e5ffd246f1855143967b6c1ba87e6defe01",
+      "bytes": 1284
+    },
+    {
+      "path": "degradation-degeneracy/src/modes.py",
+      "git_blob_sha1": "68b94790a58929b211fb21b3534b10b569fedafa",
+      "sha256": "3e5ba16720b6d9d3dd716e4f88d0a4d369787773675fd6061c6c85bebc287e46",
+      "bytes": 10869
+    },
+    {
+      "path": "degradation-degeneracy/src/objective.py",
+      "git_blob_sha1": "d8b0f2771e4cd72d5a204a09d6fdd2260b0042f7",
+      "sha256": "b60e5e9b1be320e8d7aee04cec6813e3deabf0a86043170b093015b65eb02d2c",
+      "bytes": 11313
+    },
+    {
+      "path": "degradation-degeneracy/src/protocol.py",
+      "git_blob_sha1": "350eb61d81b9d7bb512dc725d0f5448184be5825",
+      "sha256": "47ca32d35a483ff4923dfd0e51b81628e4dfe930d2e7430ea78adf14be6c6c84",
+      "bytes": 1541
+    },
+    {
+      "path": "degradation-degeneracy/src/runner.py",
+      "git_blob_sha1": "aa0351e32595de255d1dc9924f9eac8a504ba27d",
+      "sha256": "d7938749a23624bd3ff18056fe3538a18f16996f12bb3e3d6835984386cb6a82",
+      "bytes": 4421
+    },
+    {
+      "path": "degradation-degeneracy/src/scoring.py",
+      "git_blob_sha1": "434324c889c4febff1905cfec884272e07fe7d93",
+      "sha256": "69e69cb046f4b4aee2acf039faa9d69fc9ed032eab96093e54b0ca68b860a43d",
+      "bytes": 32192
+    },
+    {
+      "path": "degradation-degeneracy/src/sweep.py",
+      "git_blob_sha1": "ac06f021dc0d9ed1f551c8cdcfc18d34f2693b75",
+      "sha256": "5db99fd0f77e03ef613cc8390d3cd4e320b80240abe7e579b314364425c42524",
+      "bytes": 4310
+    },
+    {
+      "path": "degradation-degeneracy/src/weight_sweep.py",
+      "git_blob_sha1": "3bd1f1dc36f2000ce4b4ddfdd33d18e9eeb5c4e7",
+      "sha256": "b68077d76c12268f07fa638b53847d24f6c4d026793efc226b03a4cd73e413c1",
+      "bytes": 21984
+    },
+    {
+      "path": "degradation-degeneracy/tools/analyze_22p_gap.py",
+      "git_blob_sha1": "315ebee3b225239ec0532c1b5589fff2039622fe",
+      "sha256": "b4f18bfa86eed8b5cf86507dd3f0dbd58a83edb2937e129452b3aef19039a164",
+      "bytes": 24121
+    },
+    {
+      "path": "degradation-degeneracy/tools/archive_bundle.py",
+      "git_blob_sha1": "43db05edca3803a00cd9f75ec570ab880dfcb216",
+      "sha256": "5f7fc3c89dfe5dba5a6653c0f162c6615c1449808ba83f8e724683a0ed903d41",
+      "bytes": 29529
+    },
+    {
+      "path": "degradation-degeneracy/tools/check_derived_fresh.py",
+      "git_blob_sha1": "c7094cc9f25a1849780e76fa209fcac97ff439e7",
+      "sha256": "8819cb2acd2d920189832b03cd41c90c61de0faeffb07ed186e6d8fdfce6aa53",
+      "bytes": 2010
+    },
+    {
+      "path": "degradation-degeneracy/tools/check_sweep_consistency.py",
+      "git_blob_sha1": "f48826b6048e7cb3449f67dbe0c8e96e3b2d9475",
+      "sha256": "5c31f80c97460bf7c6bfed05aa59969ae1686a363d5246e9f1633651700c6f20",
+      "bytes": 14037
+    },
+    {
+      "path": "degradation-degeneracy/tools/compare_cases.py",
+      "git_blob_sha1": "9e91a6198010335d0b4f7c684ef1e66ce0a0b4e8",
+      "sha256": "918271276a73dfc155692a2e5df4180cc1dae6272cd24c6b8d2525d92310225a",
+      "bytes": 14675
+    },
+    {
+      "path": "degradation-degeneracy/tools/compare_objectives.py",
+      "git_blob_sha1": "6227d1b394a4e8b0519f9102444311fe829d26bf",
+      "sha256": "9b2b1bc22404568362202d8d67fa4d398a4864384242e54e6885a076d561e890",
+      "bytes": 43112
+    },
+    {
+      "path": "degradation-degeneracy/tools/design_golden.yaml",
+      "git_blob_sha1": "280c1b904d54ff2152a71f025654f058916c69b5",
+      "sha256": "6dde9078c31f9f2ffa4bd6ef57b71a9f1fd8521b5cf3fd24998b2a26f5107b9b",
+      "bytes": 5313
+    },
+    {
+      "path": "degradation-degeneracy/tools/design_wire.py",
+      "git_blob_sha1": "46013b9b7f119ca51c0c7b4c0f8a7dc48c46eb8c",
+      "sha256": "4554e7f3863404535ce91adac831e85724fe335b2650f0084229edc71d2a471d",
+      "bytes": 44432
+    },
+    {
+      "path": "degradation-degeneracy/tools/diagnose_pini_transition.py",
+      "git_blob_sha1": "725b8b8ffaa380bed3f74a468e5b7a0e730815d3",
+      "sha256": "68234373abaffa97f8bc5debc68a81b2e7e3990e2334df7f579deacf8088f62b",
+      "bytes": 7566
+    },
+    {
+      "path": "degradation-degeneracy/tools/gen_design_golden.py",
+      "git_blob_sha1": "907ba3ec7c028d4a969282215b870f5484b56a82",
+      "sha256": "5b3c96735948ab650833337b0830083418d2bed4f9fbd1d4188774e7f7040183",
+      "bytes": 5640
+    },
+    {
+      "path": "degradation-degeneracy/tools/index_yaml.py",
+      "git_blob_sha1": "2bfed95fdc864ebe33a5ec0c826ddc1c1e837a64",
+      "sha256": "c199b7da2aa23dd4003143de2fcdc6cc65f06b81a3e06d4fd8cba1183c1cdb6e",
+      "bytes": 4642
+    },
+    {
+      "path": "degradation-degeneracy/tools/interactive_ab.py",
+      "git_blob_sha1": "1b06e3c5e168f6f26bdabe52053219c7428e4a34",
+      "sha256": "fd6686c5d122317f902b0302e28cda8307240842fd39d2bd4d6e40ef93c5f402",
+      "bytes": 3667
+    },
+    {
+      "path": "degradation-degeneracy/tools/make_results.py",
+      "git_blob_sha1": "6d53940881313130af6bf4c835e63346ccbe718a",
+      "sha256": "db6a3186f430b283cc7be1eec5f1c4a4f0af1ed6fb38f20c220e073450003e22",
+      "bytes": 108627
+    },
+    {
+      "path": "degradation-degeneracy/tools/plot_grid_summary.py",
+      "git_blob_sha1": "3c51850d21f0c07093f71280599470b925ffdcf1",
+      "sha256": "7ec2076a57031dbeecf8ed98eb6c7e1a36b565d0354af53a7477b7c24557d400",
+      "bytes": 2494
+    },
+    {
+      "path": "degradation-degeneracy/tools/plot_map.py",
+      "git_blob_sha1": "a0f57fe5ecac6b592078ac9453f9bff569b1e330",
+      "sha256": "421670597eb994bd689564c56e807af2b9c501bf6f8008e575213960ac8be06e",
+      "bytes": 4734
+    },
+    {
+      "path": "degradation-degeneracy/tools/plot_sweep1d.py",
+      "git_blob_sha1": "d8e7acce385dddd410f72fca4b61aaf183d49a66",
+      "sha256": "df911d7cc60d38088bb1329733af16387b4fa55beb537e2f31b158754a42a89b",
+      "bytes": 3070
+    },
+    {
+      "path": "degradation-degeneracy/tools/preserve.py",
+      "git_blob_sha1": "9b62144ea5c1e313c5f430938e76aeb1c2c814ef",
+      "sha256": "af92ee68724848878747d730518427b20dfcd1d73db09d047046a02fa70db93f",
+      "bytes": 507146
+    }
+  ],
+  "target_reference_blobs": [
+    {
+      "path": "docs/22p_gap/LEG_PRESERVATION.yaml",
+      "git_blob_sha1": "7b2ea458809e7c0d5de0393ae5659e860fea3023",
+      "bytes": 65166,
+      "sha256": "f681aee899782747cc02aa75fb96758393edf6dd50f81e86347d0da17d26897a"
+    },
+    {
+      "path": "docs/22p_gap/mutation_replay.py",
+      "git_blob_sha1": "6955160be7c07c2acca924b98e448d51bb2e3fcc",
+      "bytes": 477234,
+      "sha256": "8835b874d24efb8e56053e416661154a9003cb73fb2cb9fc15afcbbf9882031e"
+    },
+    {
+      "path": "docs/22p_gap/receipts/grid_fit_v5.validate.yaml",
+      "git_blob_sha1": "46a7423dd90db3abaf90ede1c9094aa9407fea88",
+      "bytes": 3738,
+      "sha256": "ec1dc5fb9027187c77bce21bf98df0ed8d06a6135f3bdfb315b53f7febb46f02"
+    },
+    {
+      "path": "docs/22p_gap/receipts/history/grid_fit_v5.validate.eda3feb8f4536511.yaml",
+      "git_blob_sha1": "643180ba317289514fec395b851ce3edff72deeb",
+      "bytes": 3703,
+      "sha256": "8ccb43359e48537ec07e5ead7e205ee7443dc10a5c4d99220cbe0c9932e5208b"
+    },
+    {
+      "path": "docs/22p_gap/receipts/history/grid_fit_v5.validate.eea5977f4faf9685.yaml",
+      "git_blob_sha1": "461cc893166ccc1bcbdce8c6ee851594d90d1cd4",
+      "bytes": 3703,
+      "sha256": "d522e54cb5836aa0c80e80c98396df976802969780212cace3b451927e41556c"
+    },
+    {
+      "path": "docs/22p_gap/receipts/history/paired_fixed5_v4.validate.eda3feb8f4536511.yaml",
+      "git_blob_sha1": "b13455b32af0d60a4837016a2de9e35bd7c38f27",
+      "bytes": 3768,
+      "sha256": "a3851a971b99242ba7407d0233b856c2750961cb760440c57dd8bebdff6b470c"
+    },
+    {
+      "path": "docs/22p_gap/receipts/history/paired_fixed5_v4.validate.eea5977f4faf9685.yaml",
+      "git_blob_sha1": "40f458a7f49bc8ab1988e4788bfce1b3bf2074ef",
+      "bytes": 3768,
+      "sha256": "cb9aa4cc905941fe2579f5336760155fad83757afa22356c4af00e131661fcad"
+    },
+    {
+      "path": "docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml",
+      "git_blob_sha1": "3cb0255097d5f074207b1cbf76ad8f32f6aa6330",
+      "bytes": 3803,
+      "sha256": "e2f6853151bd124b46c070c5bc85795bb27273b099cf6d83a7b1d81346052451"
+    },
+    {
+      "path": "docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md",
+      "git_blob_sha1": "b8cac8b177b08c9bf5ffb238ca1eb9e48cc94fc5",
+      "bytes": 25193,
+      "sha256": "98bd58c6507e7c3ac1e4abf6f0518e371acbd379f4a9ccaba94f60c4930823d2"
+    },
+    {
+      "path": "src/fitting.py",
+      "git_blob_sha1": "1acfdb3e986f5c0012830c2b7cc42ccd8f1824cf",
+      "bytes": 134870,
+      "sha256": "f93d2a3c0ad95b0a391a90b406c01a23da42cd18f510190db463393f2e8779d5"
+    },
+    {
+      "path": "src/io.py",
+      "git_blob_sha1": "0b9c0eaa683c7e98713ecb5116f4f2e6905687b4",
+      "bytes": 125820,
+      "sha256": "9c71bf42711ff18436600305d3259dd22b2ed8b6798e11456a355ed500c6ae4e"
+    },
+    {
+      "path": "tests/test_gate81_stage3_wire.py",
+      "git_blob_sha1": "8f6a2e31f5e5cc1587af735980de7faf4fc8ab40",
+      "bytes": 68807,
+      "sha256": "6fde690dc7f8367825e1f6f1ee8b14743a4ff20fa666d5f5d886757d3382cf54"
+    },
+    {
+      "path": "tools/design_wire.py",
+      "git_blob_sha1": "46013b9b7f119ca51c0c7b4c0f8a7dc48c46eb8c",
+      "bytes": 44432,
+      "sha256": "4554e7f3863404535ce91adac831e85724fe335b2650f0084229edc71d2a471d"
+    },
+    {
+      "path": "tools/preserve.py",
+      "git_blob_sha1": "9b62144ea5c1e313c5f430938e76aeb1c2c814ef",
+      "bytes": 507146,
+      "sha256": "af92ee68724848878747d730518427b20dfcd1d73db09d047046a02fa70db93f"
+    }
+  ],
+  "inventory_limit": "58 known RUN_SCOPE paths fetched individually. Compare API returned 300 files; not used as proof of an exhaustive repository diff."
+}

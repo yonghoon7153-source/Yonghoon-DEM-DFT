@@ -1,0 +1,2431 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "Action completed."
+    }
+  ],
+  "structuredContent": {
+    "repository_full_name": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "base": "c82231c49460f79bb5474185648594b3a6c9fc02",
+    "head": "8f54427c9eb4a6d335bba65685a4c28dc24064d8",
+    "status": "ahead",
+    "ahead_by": 86,
+    "behind_by": 0,
+    "total_commits": 86,
+    "too_large": null,
+    "base_commit": {
+      "sha": "c82231c49460f79bb5474185648594b3a6c9fc02",
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/c82231c49460f79bb5474185648594b3a6c9fc02",
+      "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/c82231c49460f79bb5474185648594b3a6c9fc02"
+    },
+    "merge_base_commit": {
+      "sha": "c82231c49460f79bb5474185648594b3a6c9fc02",
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/c82231c49460f79bb5474185648594b3a6c9fc02",
+      "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/c82231c49460f79bb5474185648594b3a6c9fc02"
+    },
+    "files": [
+      {
+        "filename": ".claude/agents/paper-curator.md",
+        "status": "modified",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "BRANCHES.md",
+        "status": "modified",
+        "additions": 38,
+        "deletions": 1,
+        "changes": 39,
+        "previous_filename": null
+      },
+      {
+        "filename": "CLAUDE.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 3,
+        "changes": 3,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/.gitattributes",
+        "status": "modified",
+        "additions": 12,
+        "deletions": 0,
+        "changes": 12,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/ASSB_TRANSFER_NOTE.md",
+        "status": "modified",
+        "additions": 58,
+        "deletions": 28,
+        "changes": 86,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/ASSB_WANTED_PAPERS.md",
+        "status": "modified",
+        "additions": 322,
+        "deletions": 69,
+        "changes": 391,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/COMSOL_REBUILD_SPEC.md",
+        "status": "modified",
+        "additions": 334,
+        "deletions": 0,
+        "changes": 334,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/MSC_CODEX_HANDOVER_PROMPT_2026-09-29.md",
+        "status": "added",
+        "additions": 273,
+        "deletions": 0,
+        "changes": 273,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/MSC_HANDOVER_DIAGNOSTICS_2026-09-29.md",
+        "status": "added",
+        "additions": 539,
+        "deletions": 0,
+        "changes": 539,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/MSC_SEMINAR_2026-09-23_APPLICATION.md",
+        "status": "modified",
+        "additions": 185,
+        "deletions": 3,
+        "changes": 188,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/NEW_MODEL_REQUIREMENTS.md",
+        "status": "modified",
+        "additions": 7,
+        "deletions": 0,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/msc_handover_review_20260930/FIRST_AUTHOR_PROMPT_KO.md",
+        "status": "added",
+        "additions": 74,
+        "deletions": 0,
+        "changes": 74,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/msc_handover_review_20260930/HANDOVER_MANIFEST.json",
+        "status": "added",
+        "additions": 41,
+        "deletions": 0,
+        "changes": 41,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/msc_handover_review_20260930/LOCAL_SETUP_GUIDE_KO.md",
+        "status": "added",
+        "additions": 81,
+        "deletions": 0,
+        "changes": 81,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/msc_handover_review_20260930/MSC_HANDOVER_DIAGNOSTICS_2026-09-29.md",
+        "status": "added",
+        "additions": 539,
+        "deletions": 0,
+        "changes": 539,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/msc_handover_review_20260930/README_SEND_KO.md",
+        "status": "added",
+        "additions": 29,
+        "deletions": 0,
+        "changes": 29,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/msc_handover_review_20260930/REVIEW_KO.md",
+        "status": "added",
+        "additions": 118,
+        "deletions": 0,
+        "changes": 118,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/msc_handover_review_20260930/SCIENCE_QUALIFICATIONS_KO.md",
+        "status": "added",
+        "additions": 36,
+        "deletions": 0,
+        "changes": 36,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/msc_handover_review_20260930/SETUP_EXECUTION_PROMPT_KO.md",
+        "status": "added",
+        "additions": 18,
+        "deletions": 0,
+        "changes": 18,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/claude_normal30_long_horizon_review_20260930/CALCULATION_AUDIT.json",
+        "status": "added",
+        "additions": 339,
+        "deletions": 0,
+        "changes": 339,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/claude_normal30_long_horizon_review_20260930/CLAUDE_REPLY_KO.md",
+        "status": "added",
+        "additions": 25,
+        "deletions": 0,
+        "changes": 25,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/claude_normal30_long_horizon_review_20260930/DECISION.json",
+        "status": "added",
+        "additions": 25,
+        "deletions": 0,
+        "changes": 25,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/claude_normal30_long_horizon_review_20260930/MANIFEST.json",
+        "status": "added",
+        "additions": 42,
+        "deletions": 0,
+        "changes": 42,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/claude_normal30_long_horizon_review_20260930/NEXT_CODEX_INSTRUCTION_KO.md",
+        "status": "added",
+        "additions": 40,
+        "deletions": 0,
+        "changes": 40,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/claude_normal30_long_horizon_review_20260930/REVIEW_EXECUTION_NOTE.md",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/claude_normal30_long_horizon_review_20260930/REVIEW_KO.md",
+        "status": "added",
+        "additions": 101,
+        "deletions": 0,
+        "changes": 101,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/claude_normal30_long_horizon_review_20260930/SOURCE_IDENTITIES.json",
+        "status": "added",
+        "additions": 168,
+        "deletions": 0,
+        "changes": 168,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/claude_normal30_long_horizon_review_20260930/package_review.py",
+        "status": "added",
+        "additions": 54,
+        "deletions": 0,
+        "changes": 54,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/claude_normal30_long_horizon_review_20260930/received/CLAUDE_REPLY_NORMAL30_LONG_HORIZON_KO_v2.md",
+        "status": "added",
+        "additions": 95,
+        "deletions": 0,
+        "changes": 95,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/claude_normal30_long_horizon_review_20260930/review_arithmetic.py",
+        "status": "added",
+        "additions": 229,
+        "deletions": 0,
+        "changes": 229,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/ARCHIVE_AUDIT.json",
+        "status": "added",
+        "additions": 24,
+        "deletions": 0,
+        "changes": 24,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/CLAUDE_UPDATE_KO.md",
+        "status": "added",
+        "additions": 18,
+        "deletions": 0,
+        "changes": 18,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/DECISION.json",
+        "status": "added",
+        "additions": 29,
+        "deletions": 0,
+        "changes": 29,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/FINAL_SOURCE_CHECK.json",
+        "status": "added",
+        "additions": 12,
+        "deletions": 0,
+        "changes": 12,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/NEXT_CODEX_REPLY_KO.md",
+        "status": "added",
+        "additions": 31,
+        "deletions": 0,
+        "changes": 31,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/NUMERIC_AUDIT.json",
+        "status": "added",
+        "additions": 504,
+        "deletions": 0,
+        "changes": 504,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/README_SEND_KO.md",
+        "status": "added",
+        "additions": 15,
+        "deletions": 0,
+        "changes": 15,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/RECIPIENT_AUDIT_NOTE.md",
+        "status": "added",
+        "additions": 9,
+        "deletions": 0,
+        "changes": 9,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/RECORDS_AUDIT.json",
+        "status": "added",
+        "additions": 388,
+        "deletions": 0,
+        "changes": 388,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/REVIEW_KO.md",
+        "status": "added",
+        "additions": 111,
+        "deletions": 0,
+        "changes": 111,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/REVIEW_MANIFEST.json",
+        "status": "added",
+        "additions": 81,
+        "deletions": 0,
+        "changes": 81,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/SOURCE_PRESERVATION.json",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/audit_archives.py",
+        "status": "added",
+        "additions": 34,
+        "deletions": 0,
+        "changes": 34,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/audit_numeric.py",
+        "status": "added",
+        "additions": 190,
+        "deletions": 0,
+        "changes": 190,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/audit_records.py",
+        "status": "added",
+        "additions": 123,
+        "deletions": 0,
+        "changes": 123,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_native_recipient_review_20260930/seal_review.py",
+        "status": "added",
+        "additions": 63,
+        "deletions": 0,
+        "changes": 63,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/CLAUDE_UPDATE_KO.md",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/DECISION.json",
+        "status": "added",
+        "additions": 24,
+        "deletions": 0,
+        "changes": 24,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/EVIDENCE_AUDIT.json",
+        "status": "added",
+        "additions": 840,
+        "deletions": 0,
+        "changes": 840,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/EVIDENCE_AUDIT_FIRST_PASS.json",
+        "status": "added",
+        "additions": 851,
+        "deletions": 0,
+        "changes": 851,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/INDEPENDENT_SOURCE_DIFF.patch",
+        "status": "added",
+        "additions": 126,
+        "deletions": 0,
+        "changes": 126,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/NEXT_CODEX_REPLY_KO.md",
+        "status": "added",
+        "additions": 27,
+        "deletions": 0,
+        "changes": 27,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/PACKAGE_AUDIT.json",
+        "status": "added",
+        "additions": 29,
+        "deletions": 0,
+        "changes": 29,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/README_SEND_KO.md",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/REVIEWER_NOTES.json",
+        "status": "added",
+        "additions": 13,
+        "deletions": 0,
+        "changes": 13,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/REVIEW_KO.md",
+        "status": "added",
+        "additions": 86,
+        "deletions": 0,
+        "changes": 86,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/REVIEW_MANIFEST.json",
+        "status": "added",
+        "additions": 85,
+        "deletions": 0,
+        "changes": 85,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/SOURCE_PRESERVATION.json",
+        "status": "added",
+        "additions": 17,
+        "deletions": 0,
+        "changes": 17,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/SUPPLEMENT_AUDIT.json",
+        "status": "added",
+        "additions": 19,
+        "deletions": 0,
+        "changes": 19,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/audit_evidence.py",
+        "status": "added",
+        "additions": 148,
+        "deletions": 0,
+        "changes": 148,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/audit_package.py",
+        "status": "added",
+        "additions": 63,
+        "deletions": 0,
+        "changes": 63,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/audit_supplement.py",
+        "status": "added",
+        "additions": 43,
+        "deletions": 0,
+        "changes": 43,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_validation_recipient_review_20260930/package_review.py",
+        "status": "added",
+        "additions": 37,
+        "deletions": 0,
+        "changes": 37,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/ARCHIVE_AUDIT.json",
+        "status": "added",
+        "additions": 24,
+        "deletions": 0,
+        "changes": 24,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/CLAUDE_UPDATE_KO.md",
+        "status": "added",
+        "additions": 11,
+        "deletions": 0,
+        "changes": 11,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/DECISION.json",
+        "status": "added",
+        "additions": 38,
+        "deletions": 0,
+        "changes": 38,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/INPUT_ZIPS_PRESERVATION.json",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/NEXT_CODEX_REPLY_KO.md",
+        "status": "added",
+        "additions": 23,
+        "deletions": 0,
+        "changes": 23,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/RECIPIENT_AUDIT_NOTE.md",
+        "status": "added",
+        "additions": 11,
+        "deletions": 0,
+        "changes": 11,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/REVIEW_KO.md",
+        "status": "added",
+        "additions": 70,
+        "deletions": 0,
+        "changes": 70,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/REVIEW_MANIFEST.json",
+        "status": "added",
+        "additions": 200,
+        "deletions": 0,
+        "changes": 200,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/STATIC_DATA_AUDIT.json",
+        "status": "added",
+        "additions": 668,
+        "deletions": 0,
+        "changes": 668,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/audit_package.py",
+        "status": "added",
+        "additions": 38,
+        "deletions": 0,
+        "changes": 38,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/audit_static.py",
+        "status": "added",
+        "additions": 139,
+        "deletions": 0,
+        "changes": 139,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/BASELINE_IDENTITIES.json",
+        "status": "added",
+        "additions": 68,
+        "deletions": 0,
+        "changes": 68,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/CHANGE_BOUNDARIES.json",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/CODE_MANIFEST.json",
+        "status": "added",
+        "additions": 35,
+        "deletions": 0,
+        "changes": 35,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/COMMAND_MAP.json",
+        "status": "added",
+        "additions": 100,
+        "deletions": 0,
+        "changes": 100,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/CONTRACT.json",
+        "status": "added",
+        "additions": 2164,
+        "deletions": 0,
+        "changes": 2164,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/FINAL_STATIC_BINDING.json",
+        "status": "added",
+        "additions": 265,
+        "deletions": 0,
+        "changes": 265,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/LIMITED_VALIDATION_PLAN.json",
+        "status": "added",
+        "additions": 403,
+        "deletions": 0,
+        "changes": 403,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/LITERAL_CHANGE_MAP.json",
+        "status": "added",
+        "additions": 195,
+        "deletions": 0,
+        "changes": 195,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/NATIVE60_APPROVAL_DRAFT_KO.md",
+        "status": "added",
+        "additions": 21,
+        "deletions": 0,
+        "changes": 21,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/NATIVE_APPROVAL_FIELD_SPEC.json",
+        "status": "added",
+        "additions": 67,
+        "deletions": 0,
+        "changes": 67,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/PARENT_COMMAND.ps1",
+        "status": "added",
+        "additions": 196,
+        "deletions": 0,
+        "changes": 196,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/PREPARATION_KO.md",
+        "status": "added",
+        "additions": 45,
+        "deletions": 0,
+        "changes": 45,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/PRESERVATION_AFTER.json",
+        "status": "added",
+        "additions": 197,
+        "deletions": 0,
+        "changes": 197,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/PRESERVATION_BEFORE.json",
+        "status": "added",
+        "additions": 197,
+        "deletions": 0,
+        "changes": 197,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/RESOURCE_BUDGET_KO.md",
+        "status": "added",
+        "additions": 20,
+        "deletions": 0,
+        "changes": 20,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/STATIC_AUDIT.json",
+        "status": "added",
+        "additions": 274,
+        "deletions": 0,
+        "changes": 274,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/VALIDATION_REQUEST_KO.md",
+        "status": "added",
+        "additions": 25,
+        "deletions": 0,
+        "changes": 25,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/basis/source30/CODE_MANIFEST.json",
+        "status": "added",
+        "additions": 35,
+        "deletions": 0,
+        "changes": 35,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/basis/source30/CONTRACT.json",
+        "status": "added",
+        "additions": 1394,
+        "deletions": 0,
+        "changes": 1394,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/basis/source30/PARENT_COMMAND.ps1",
+        "status": "added",
+        "additions": 185,
+        "deletions": 0,
+        "changes": 185,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/basis/source30/src/Normal30Candidate.java",
+        "status": "added",
+        "additions": 694,
+        "deletions": 0,
+        "changes": 694,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/basis/source30/src/candidate_entry.py",
+        "status": "added",
+        "additions": 182,
+        "deletions": 0,
+        "changes": 182,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/basis/source30/src/diagnostic_consumer.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/delivery/DELIVERY_RECEIPT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/delivery/PACKAGING_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/src/Normal60Candidate.java",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/src/candidate_entry.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/src/diagnostic_consumer.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/seal_review.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/ARCHIVE_AUDIT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/CLAUDE_V3_ACCEPTANCE_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/DECISION.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/EVIDENCE_AUDIT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/MANIFEST.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/NEXT_CODEX_REPLY_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/REVIEW_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/audit_package.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/audit_records.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/evidence/CASE_RECONCILIATION.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/evidence/EXTRACTED_SOURCES.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/evidence/FINAL_STATUS.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/evidence/HARNESS_CACHE_BINDING.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/evidence/LONG_HORIZON_REVIEW_ACK.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/evidence/NEXT_NATIVE60_INACTIVE.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/evidence/PRESERVATION_AFTER.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/evidence/PRE_TEST_SEAL.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/evidence/candidate/CODE_MANIFEST.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/evidence/previous_failed_attempt/FIRST_FAILURE.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/evidence/supplement/DELIVERY_CLOSEOUT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/evidence/supplement/DELIVERY_RECEIPT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/evidence/supplement/PACKAGING_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/package_review.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/source/CLAUDE_REPLY_NORMAL30_LONG_HORIZON_KO_v3.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/08_REVIEW_RESPONSE.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/GATE82_REQUEST.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/GATE70_WORKING_STATE.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "webapp/README.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "webapp/app.py",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "webapp/static/css/style.css",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "webapp/templates/bms.html",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "webapp/templates/microshort.html",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "webapp/templates/pipeline.html",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "webapp/templates/trust.html",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/assb-apparent-capacity-decomposition.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/assb-interphase-vs-contact-loss-attribution.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/assb-lampe-contact-product-degeneracy.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/assb-li-in-reference-potential-window.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/assb-operando-pressure-signal-attribution.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/assb-pressure-reapplication-separation-test.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/assb-sensitivity-sweep-vs-identifiability.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/assb-stack-pressure-operating-window.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/assb-synthetic-truth-contact-loss-requirements.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/assb-tortuosity-factor-effective-conductivity-split.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/composite-cathode-percolation-utilization.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/drt-peak-count-nonidentifiability.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/li-metal-yield-creep-vs-stack-pressure.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/nmc-lattice-li-content-calibration.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/reference-electrode-halfcell-dma.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/spm-grouped-parameter-identifiability.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/index.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/log.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/questions/assb-contact-loss-vs-lampe.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/_sources.json",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance/fig_1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance/fig_10.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance/fig_11.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance/fig_2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance/fig_3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance/fig_4.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance/fig_5.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance/fig_6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance/fig_7.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance/fig_8.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance/fig_9.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance/figures.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance/tab_III_manual_p10.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance/tab_II_manual_p9.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance/tab_I_manual_p8.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/chen2013_sofc-miec-composite-electrode-percolation-theory/fig_1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/chen2013_sofc-miec-composite-electrode-percolation-theory/fig_10.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/chen2013_sofc-miec-composite-electrode-percolation-theory/fig_11.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/chen2013_sofc-miec-composite-electrode-percolation-theory/fig_12.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/chen2013_sofc-miec-composite-electrode-percolation-theory/fig_2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/chen2013_sofc-miec-composite-electrode-percolation-theory/fig_3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/chen2013_sofc-miec-composite-electrode-percolation-theory/fig_4.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/chen2013_sofc-miec-composite-electrode-percolation-theory/fig_5.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/chen2013_sofc-miec-composite-electrode-percolation-theory/fig_6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/chen2013_sofc-miec-composite-electrode-percolation-theory/fig_7.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/chen2013_sofc-miec-composite-electrode-percolation-theory/fig_8.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/chen2013_sofc-miec-composite-electrode-percolation-theory/fig_9.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/chen2013_sofc-miec-composite-electrode-percolation-theory/figures.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/chen2013_sofc-miec-composite-electrode-percolation-theory/tab_1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/chen2013_sofc-miec-composite-electrode-percolation-theory/tab_1_manual_p14.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si/fig_S1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si/fig_S2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si/fig_S3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si/fig_S4.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si/fig_S5.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si/fig_S6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si/fig_S7_manual_p8.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si/fig_S8.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si/fig_S9.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si/figures.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_4.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_5.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S10.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S11.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S12.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S12_manual_si_p15.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S13.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S14.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S14_manual_si_p17.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S15.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S16.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S17.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S18.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S4.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S5.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S7.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S8.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_S9.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/fig_TOC_manual_p1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/figures.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing/tab_S1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/fig_1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/fig_10.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/fig_2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/fig_3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/fig_4.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/fig_5.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/fig_6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/fig_7.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/fig_8.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/fig_9.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/fig_S1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/fig_S2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/fig_S3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/fig_S4.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/fig_S5.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/fig_S6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/fig_S7.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/fig_TOC_manual_p1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/figures.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/tab_1_manual_p4.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/tab_2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/tab_S1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/tab_S1_manual_p7.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/tab_S1_manual_p8.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density/tab_S1_manual_p9.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade/fig_1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade/fig_1_manual_p2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade/fig_2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade/fig_3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade/fig_3_manual_p3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade/fig_4.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade/fig_5.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade/figures.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade/tab_1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade/tab_1_manual_p2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade/tab_2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade/tab_2_manual_p3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_4.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_5.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_7.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S10.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S10_manual_p10.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S11.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S11_manual_p11.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S12.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S13.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S14.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S15.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S15_manual_p13.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S16.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S17.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S17_manual_p14.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S18.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S19.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S1_manual_p4.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S20.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S20_manual_p15.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S21.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S22.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S22_manual_p16.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S23.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S3_manual_p5.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S4.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S5.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S5_manual_p7.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm/fig_S7.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      }
+    ]
+  },
+  "isError": false
+}

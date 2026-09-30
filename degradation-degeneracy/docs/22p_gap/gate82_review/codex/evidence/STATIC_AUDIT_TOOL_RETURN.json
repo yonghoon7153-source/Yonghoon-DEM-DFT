@@ -1,0 +1,19 @@
+{
+  "chunk_id": "f8ab75",
+  "exit_code": 0,
+  "wall_time_seconds": 1.2135925,
+  "provenance": "Subsequently transcribed reviewer-owned audit tool return; not a source-repository test",
+  "output": {
+    "status": "STATIC_DATA_AUDIT_COMPLETE",
+    "known_scope": 58,
+    "digest": "02a776a7a0a3f4ba",
+    "changed": [
+      "src/fitting.py",
+      "src/io.py",
+      "tools/design_wire.py",
+      "tools/preserve.py"
+    ],
+    "receipt_pairs": 2,
+    "repository_calls": 0
+  }
+}

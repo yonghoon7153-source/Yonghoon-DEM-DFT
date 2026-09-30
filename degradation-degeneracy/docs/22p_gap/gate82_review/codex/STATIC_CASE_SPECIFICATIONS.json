@@ -1,0 +1,56 @@
+{
+  "status": "STATIC_COUNTEREXAMPLE_SPECIFICATIONS_NOT_EXECUTED",
+  "note": "Expected outcomes below are review requirements, not measured existing test results.",
+  "cases": [
+    {
+      "id": "R82-01",
+      "finding": "G82-N1",
+      "positive": "Two noise realizations of one pair group with paired objectives",
+      "change": "None",
+      "expected": "Accept exact observed roster"
+    },
+    {
+      "id": "R82-02",
+      "finding": "G82-N1",
+      "change": "Change one finite fits.noise value for one objective; retain cond_id/physical axes/candidates/record; refresh fits seal normally",
+      "expected": "Reject output/input observation binding mismatch"
+    },
+    {
+      "id": "R82-03",
+      "finding": "G82-N1",
+      "change": "Cross noise realizations or replace roster with equal-cardinality different observations, keeping data valid and hashes self-consistent",
+      "expected": "Reject exact observation set/pair mismatch, not just missing data"
+    },
+    {
+      "id": "R82-04",
+      "finding": "G82-N2",
+      "change": "Envelope generator=philox, design generator=pcg64, recompute plan identity",
+      "expected": "Reject before fitting and in independent validator"
+    },
+    {
+      "id": "R82-05",
+      "finding": "G82-N2",
+      "change": "Both declarations select same unsupported generator; or declared dtype/endian/seed rule disagrees with implementation",
+      "expected": "Reject unsupported execution profile even if producer/rederiver agree"
+    },
+    {
+      "id": "R82-06",
+      "finding": "G82-N2",
+      "change": "Envelope bank.version differs from canonical design bank.version",
+      "expected": "Reject declaration mismatch"
+    },
+    {
+      "id": "R82-07",
+      "finding": "G82-N3",
+      "change": "Set plan protocol_generation=v5 and derived record=v5 while stage3/sig6/rows are v6; recompute appropriate plan/record identities",
+      "expected": "Reject declaration conflict"
+    },
+    {
+      "id": "R82-08",
+      "finding": "G82-N3",
+      "positive": "Existing legacy/prep and consistent v6 declarations",
+      "change": "No unsupported relabeling",
+      "expected": "Preserve supported historical reads and consistent v6 validation"
+    }
+  ]
+}

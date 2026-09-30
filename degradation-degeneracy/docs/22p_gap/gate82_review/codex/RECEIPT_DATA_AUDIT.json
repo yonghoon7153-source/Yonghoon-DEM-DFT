@@ -1,0 +1,53 @@
+{
+  "mode": "YAML text diff/scalar inspection only; not semantic parse or core-hash regeneration; no make_receipt/restore/validate execution",
+  "legs": [
+    {
+      "leg": "paired_fixed5_v4",
+      "original_history_byte_identical": true,
+      "generation_digests": [
+        "eda3feb8f4536511",
+        "eea5977f4faf9685",
+        "02a776a7a0a3f4ba"
+      ],
+      "difference_original_to_first": "--- original\n+++ first\n@@ -1,7 +1,7 @@\n schema_version: 2\n _주의: 이 파일은 손으로 쓰지 않는다. `python3 docs/22p_gap/make_receipt.py <leg>` 가 만들고 `--check` 가 **core 바이트 동일**\n   재생성을 확인한다.\n-core_sha256: 00db82af4377c3e0a70c521139dde8cc2ccf746a018d6f5a4e63a6b2c62803d7\n+core_sha256: 18d78e15f9bd7506c57c02536cc653c1805440f5320163d10a5322ffe17e7280\n core:\n   leg_id: paired_fixed5_v4\n   bundle:\n@@ -61,8 +61,8 @@\n       필수_입력_존재: 통과\n       행별_서명: 통과\n   identity:\n-    validator_source_digest: eda3feb8f4536511\n-    src_io_sha256: d96e78b236696cff\n+    validator_source_digest: eea5977f4faf9685\n+    src_io_sha256: da6f7a0e265b55aa\n     src_scoring_sha256: 69e69cb046f4b4ae\n     archive_bundle_sha256: 5f7fc3c89dfe5dba\n     make_receipt_sha256: 9c8cf71af310de03\n@@ -93,9 +93,9 @@\n   outputs_agree: true\n stamp:\n   _주의: 기록용. core 재생성 대조에서 제외된다.\n-  validator_commit: 6ffa98d4df542aa42abde2f94685beffec33312c\n+  validator_commit: 20ab9655dd647272cdeb10b9af1cb6b1678768da\n   validator_tree_dirty: false\n-  generated_at_utc: '2026-09-27T15:48:50Z'\n+  generated_at_utc: '2026-09-28T04:24:48Z'\n   runtime:\n     python: 3.11.15\n     platform: Linux-6.18.44-fc-v37-x86_64-with-glibc2.39\n",
+      "difference_original_to_second": "--- original\n+++ second\n@@ -1,7 +1,7 @@\n schema_version: 2\n _주의: 이 파일은 손으로 쓰지 않는다. `python3 docs/22p_gap/make_receipt.py <leg>` 가 만들고 `--check` 가 **core 바이트 동일**\n   재생성을 확인한다.\n-core_sha256: 00db82af4377c3e0a70c521139dde8cc2ccf746a018d6f5a4e63a6b2c62803d7\n+core_sha256: acbe879119fe866a0154fc09867a71ddf22a0172d94701c1644577e11a6dc848\n core:\n   leg_id: paired_fixed5_v4\n   bundle:\n@@ -24,7 +24,7 @@\n     validator: src.io.validate_provenance\n     ok: true\n     fail: []\n-    n_checks: 34\n+    n_checks: 35\n     checks:\n       _참고_코드재계산불가: 통과\n       attempt_파일_일치: 통과\n@@ -46,6 +46,7 @@\n       곡선_producer_재검: 통과\n       단일_서명: 통과\n       목적함수_순서: 통과\n+      세대_선언_일치: 통과\n       시작_provenance: 통과\n       시작종료_서명일치: 통과\n       실행중_코드불변: 통과\n@@ -61,8 +62,8 @@\n       필수_입력_존재: 통과\n       행별_서명: 통과\n   identity:\n-    validator_source_digest: eda3feb8f4536511\n-    src_io_sha256: d96e78b236696cff\n+    validator_source_digest: 02a776a7a0a3f4ba\n+    src_io_sha256: 9c71bf42711ff184\n     src_scoring_sha256: 69e69cb046f4b4ae\n     archive_bundle_sha256: 5f7fc3c89dfe5dba\n     make_receipt_sha256: 9c8cf71af310de03\n@@ -93,9 +94,9 @@\n   outputs_agree: true\n stamp:\n   _주의: 기록용. core 재생성 대조에서 제외된다.\n-  validator_commit: 6ffa98d4df542aa42abde2f94685beffec33312c\n+  validator_commit: 23670e588a127c90c08fda1106f7b7566fc3953f\n   validator_tree_dirty: false\n-  generated_at_utc: '2026-09-27T15:48:50Z'\n+  generated_at_utc: '2026-09-28T05:58:29Z'\n   runtime:\n     python: 3.11.15\n     platform: Linux-6.18.44-fc-v37-x86_64-with-glibc2.39\n",
+      "bundle_restore_outputs_identical": true,
+      "ledger_anchors_match": true,
+      "checks_per_generation": [
+        34,
+        34,
+        35
+      ],
+      "stamp_tree_dirty": [
+        "false",
+        "false",
+        "false"
+      ],
+      "second_core_sha256": "acbe879119fe866a0154fc09867a71ddf22a0172d94701c1644577e11a6dc848"
+    },
+    {
+      "leg": "grid_fit_v5",
+      "original_history_byte_identical": true,
+      "generation_digests": [
+        "eda3feb8f4536511",
+        "eea5977f4faf9685",
+        "02a776a7a0a3f4ba"
+      ],
+      "difference_original_to_first": "--- original\n+++ first\n@@ -1,7 +1,7 @@\n schema_version: 2\n _주의: 이 파일은 손으로 쓰지 않는다. `python3 docs/22p_gap/make_receipt.py <leg>` 가 만들고 `--check` 가 **core 바이트 동일**\n   재생성을 확인한다.\n-core_sha256: ffc2e9354215e3b6deb257478fc810547ac664097a4e448c55b9402beca6bfc6\n+core_sha256: 39d27dca88ecfb9111e9c1cb2e647b79f6c2c44b1bb5eca99209802abdc2f639\n core:\n   leg_id: grid_fit_v5\n   bundle:\n@@ -59,8 +59,8 @@\n       필수_입력_존재: 통과\n       행별_서명: 통과\n   identity:\n-    validator_source_digest: eda3feb8f4536511\n-    src_io_sha256: d96e78b236696cff\n+    validator_source_digest: eea5977f4faf9685\n+    src_io_sha256: da6f7a0e265b55aa\n     src_scoring_sha256: 69e69cb046f4b4ae\n     archive_bundle_sha256: 5f7fc3c89dfe5dba\n     make_receipt_sha256: 9c8cf71af310de03\n@@ -91,9 +91,9 @@\n   outputs_agree: true\n stamp:\n   _주의: 기록용. core 재생성 대조에서 제외된다.\n-  validator_commit: 6ffa98d4df542aa42abde2f94685beffec33312c\n+  validator_commit: 20ab9655dd647272cdeb10b9af1cb6b1678768da\n   validator_tree_dirty: true\n-  generated_at_utc: '2026-09-27T15:49:46Z'\n+  generated_at_utc: '2026-09-28T04:25:34Z'\n   runtime:\n     python: 3.11.15\n     platform: Linux-6.18.44-fc-v37-x86_64-with-glibc2.39\n",
+      "difference_original_to_second": "--- original\n+++ second\n@@ -1,7 +1,7 @@\n schema_version: 2\n _주의: 이 파일은 손으로 쓰지 않는다. `python3 docs/22p_gap/make_receipt.py <leg>` 가 만들고 `--check` 가 **core 바이트 동일**\n   재생성을 확인한다.\n-core_sha256: ffc2e9354215e3b6deb257478fc810547ac664097a4e448c55b9402beca6bfc6\n+core_sha256: e7f3a62472e53b3016ac0a66bbac76cf363caf281c76a5b1219801e50457d8db\n core:\n   leg_id: grid_fit_v5\n   bundle:\n@@ -23,7 +23,7 @@\n     validator: src.io.validate_provenance\n     ok: true\n     fail: []\n-    n_checks: 33\n+    n_checks: 34\n     checks:\n       _참고_코드재계산불가: 통과\n       attempt_파일_일치: 통과\n@@ -44,6 +44,7 @@\n       곡선_producer_재검: 통과\n       단일_서명: 통과\n       목적함수_순서: 통과\n+      세대_선언_일치: 통과\n       시작_provenance: 통과\n       시작종료_서명일치: 통과\n       실행중_코드불변: 통과\n@@ -59,8 +60,8 @@\n       필수_입력_존재: 통과\n       행별_서명: 통과\n   identity:\n-    validator_source_digest: eda3feb8f4536511\n-    src_io_sha256: d96e78b236696cff\n+    validator_source_digest: 02a776a7a0a3f4ba\n+    src_io_sha256: 9c71bf42711ff184\n     src_scoring_sha256: 69e69cb046f4b4ae\n     archive_bundle_sha256: 5f7fc3c89dfe5dba\n     make_receipt_sha256: 9c8cf71af310de03\n@@ -91,9 +92,9 @@\n   outputs_agree: true\n stamp:\n   _주의: 기록용. core 재생성 대조에서 제외된다.\n-  validator_commit: 6ffa98d4df542aa42abde2f94685beffec33312c\n+  validator_commit: 23670e588a127c90c08fda1106f7b7566fc3953f\n   validator_tree_dirty: true\n-  generated_at_utc: '2026-09-27T15:49:46Z'\n+  generated_at_utc: '2026-09-28T05:59:15Z'\n   runtime:\n     python: 3.11.15\n     platform: Linux-6.18.44-fc-v37-x86_64-with-glibc2.39\n",
+      "bundle_restore_outputs_identical": true,
+      "ledger_anchors_match": true,
+      "checks_per_generation": [
+        33,
+        33,
+        34
+      ],
+      "stamp_tree_dirty": [
+        "true",
+        "true",
+        "true"
+      ],
+      "second_core_sha256": "e7f3a62472e53b3016ac0a66bbac76cf363caf281c76a5b1219801e50457d8db"
+    }
+  ]
+}

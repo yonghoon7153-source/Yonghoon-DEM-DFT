@@ -1,0 +1,2431 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "Action completed."
+    }
+  ],
+  "structuredContent": {
+    "repository_full_name": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "base": "88ac144a8bb9a0e805b06e8240d1d64a4ca6a16e",
+    "head": "c82231c49460f79bb5474185648594b3a6c9fc02",
+    "status": "ahead",
+    "ahead_by": 35,
+    "behind_by": 0,
+    "total_commits": 35,
+    "too_large": null,
+    "base_commit": {
+      "sha": "88ac144a8bb9a0e805b06e8240d1d64a4ca6a16e",
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/88ac144a8bb9a0e805b06e8240d1d64a4ca6a16e",
+      "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/88ac144a8bb9a0e805b06e8240d1d64a4ca6a16e"
+    },
+    "merge_base_commit": {
+      "sha": "88ac144a8bb9a0e805b06e8240d1d64a4ca6a16e",
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/88ac144a8bb9a0e805b06e8240d1d64a4ca6a16e",
+      "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/88ac144a8bb9a0e805b06e8240d1d64a4ca6a16e"
+    },
+    "files": [
+      {
+        "filename": "bms-balancing/.gitattributes",
+        "status": "modified",
+        "additions": 4,
+        "deletions": 0,
+        "changes": 4,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/ASSB_TRANSFER_NOTE.md",
+        "status": "modified",
+        "additions": 52,
+        "deletions": 1,
+        "changes": 53,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/ASSB_WANTED_PAPERS.md",
+        "status": "modified",
+        "additions": 42,
+        "deletions": 14,
+        "changes": 56,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/COMSOL_REBUILD_SPEC.md",
+        "status": "modified",
+        "additions": 211,
+        "deletions": 0,
+        "changes": 211,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/DATA_STATIC_AUDIT.json",
+        "status": "added",
+        "additions": 256,
+        "deletions": 0,
+        "changes": 256,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/DECISION.json",
+        "status": "added",
+        "additions": 22,
+        "deletions": 0,
+        "changes": 22,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/FAILURE_SCHEMA_EVIDENCE.json",
+        "status": "added",
+        "additions": 36,
+        "deletions": 0,
+        "changes": 36,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/NEXT_LIMITED_VALIDATION_DIRECTIVE_KO.md",
+        "status": "added",
+        "additions": 69,
+        "deletions": 0,
+        "changes": 69,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/PACKAGE_AUDIT.json",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/PARENT_COMMAND.ps1.numbered.txt",
+        "status": "added",
+        "additions": 103,
+        "deletions": 0,
+        "changes": 103,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/PARENT_SCHEMA_CASES.json",
+        "status": "added",
+        "additions": 17,
+        "deletions": 0,
+        "changes": 17,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/README_KO.md",
+        "status": "added",
+        "additions": 9,
+        "deletions": 0,
+        "changes": 9,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/REVIEWER_REPLY_KO.md",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/REVIEW_KO.md",
+        "status": "added",
+        "additions": 91,
+        "deletions": 0,
+        "changes": 91,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/REVIEW_PACKAGE_MANIFEST.json",
+        "status": "added",
+        "additions": 121,
+        "deletions": 0,
+        "changes": 121,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/SHA256SUMS.tsv",
+        "status": "added",
+        "additions": 24,
+        "deletions": 0,
+        "changes": 24,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/TRANSFER_IDENTITY.json",
+        "status": "added",
+        "additions": 25,
+        "deletions": 0,
+        "changes": 25,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/audit_package.py",
+        "status": "added",
+        "additions": 27,
+        "deletions": 0,
+        "changes": 27,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/candidate_entry.py.numbered.txt",
+        "status": "added",
+        "additions": 166,
+        "deletions": 0,
+        "changes": 166,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/reference/CODE_MANIFEST.json",
+        "status": "added",
+        "additions": 34,
+        "deletions": 0,
+        "changes": 34,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/reference/CONTRACT.json",
+        "status": "added",
+        "additions": 923,
+        "deletions": 0,
+        "changes": 923,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/reference/LIMITED_VALIDATION_PLAN.json",
+        "status": "added",
+        "additions": 207,
+        "deletions": 0,
+        "changes": 207,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/reference/PARENT_COMMAND.ps1",
+        "status": "added",
+        "additions": 103,
+        "deletions": 0,
+        "changes": 103,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/reference/TRANSFORM_RECORD.json",
+        "status": "added",
+        "additions": 71,
+        "deletions": 0,
+        "changes": 71,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/reference/src/Guard1198Candidate.java",
+        "status": "added",
+        "additions": 694,
+        "deletions": 0,
+        "changes": 694,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/reference/src/candidate_entry.py",
+        "status": "added",
+        "additions": 166,
+        "deletions": 0,
+        "changes": 166,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/reference/src/trigger_consumer.py",
+        "status": "added",
+        "additions": 190,
+        "deletions": 0,
+        "changes": 190,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/seal_review.py",
+        "status": "added",
+        "additions": 84,
+        "deletions": 0,
+        "changes": 84,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/static_data_audit.py",
+        "status": "added",
+        "additions": 82,
+        "deletions": 0,
+        "changes": 82,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_independent_review_20260928/trigger_consumer.py.numbered.txt",
+        "status": "added",
+        "additions": 190,
+        "deletions": 0,
+        "changes": 190,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/CLAUDE_AND_CODEX_REPLY_KO.md",
+        "status": "added",
+        "additions": 18,
+        "deletions": 0,
+        "changes": 18,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/DECISION.json",
+        "status": "added",
+        "additions": 27,
+        "deletions": 0,
+        "changes": 27,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/EVIDENCE_AUDIT.json",
+        "status": "added",
+        "additions": 190,
+        "deletions": 0,
+        "changes": 190,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/NEXT_30S_PREPARATION_DIRECTIVE_KO.md",
+        "status": "added",
+        "additions": 66,
+        "deletions": 0,
+        "changes": 66,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/NUMERIC_AUDIT.json",
+        "status": "added",
+        "additions": 215,
+        "deletions": 0,
+        "changes": 215,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/PACKAGE_AUDIT.json",
+        "status": "added",
+        "additions": 27,
+        "deletions": 0,
+        "changes": 27,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/REVIEWER_DIAGNOSTIC_NOTE.json",
+        "status": "added",
+        "additions": 16,
+        "deletions": 0,
+        "changes": 16,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/REVIEW_KO.md",
+        "status": "added",
+        "additions": 118,
+        "deletions": 0,
+        "changes": 118,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/REVIEW_PACKAGE_MANIFEST.json",
+        "status": "added",
+        "additions": 250,
+        "deletions": 0,
+        "changes": 250,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/SHA256SUMS.tsv",
+        "status": "added",
+        "additions": 50,
+        "deletions": 0,
+        "changes": 50,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/SOURCE_AFTER_CHECK.json",
+        "status": "added",
+        "additions": 7,
+        "deletions": 0,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/SOURCE_BEFORE.json",
+        "status": "added",
+        "additions": 8828,
+        "deletions": 0,
+        "changes": 8828,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/TRANSFER_IDENTITY.json",
+        "status": "added",
+        "additions": 31,
+        "deletions": 0,
+        "changes": 31,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/audit_evidence.py",
+        "status": "added",
+        "additions": 105,
+        "deletions": 0,
+        "changes": 105,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/audit_numeric.py",
+        "status": "added",
+        "additions": 159,
+        "deletions": 0,
+        "changes": 159,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/audit_package.py",
+        "status": "added",
+        "additions": 41,
+        "deletions": 0,
+        "changes": 41,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/package_review.py",
+        "status": "added",
+        "additions": 36,
+        "deletions": 0,
+        "changes": 36,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/APPROVAL_FIELD_MAPPING_KO.md",
+        "status": "added",
+        "additions": 37,
+        "deletions": 0,
+        "changes": 37,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/NEXT_1198_APPROVAL_DRAFT_KO.md",
+        "status": "added",
+        "additions": 39,
+        "deletions": 0,
+        "changes": 39,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/POLICY_OBSERVATION.json",
+        "status": "added",
+        "additions": 96,
+        "deletions": 0,
+        "changes": 96,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/ROUTE_ASSESSMENT_KO.md",
+        "status": "added",
+        "additions": 44,
+        "deletions": 0,
+        "changes": 44,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/EXCLUDED_FILES.json",
+        "status": "added",
+        "additions": 20,
+        "deletions": 0,
+        "changes": 20,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/REVIEW_REQUEST_KO.md",
+        "status": "added",
+        "additions": 27,
+        "deletions": 0,
+        "changes": 27,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/authorization/USER_DECISION.txt",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/authorization/VALIDATION_RELEASE.json",
+        "status": "added",
+        "additions": 89,
+        "deletions": 0,
+        "changes": 89,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/authorization/guard1198_001.json",
+        "status": "added",
+        "additions": 65,
+        "deletions": 0,
+        "changes": 65,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/candidate/CODE_MANIFEST.json",
+        "status": "added",
+        "additions": 35,
+        "deletions": 0,
+        "changes": 35,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/candidate/COMMAND_MAP.json",
+        "status": "added",
+        "additions": 94,
+        "deletions": 0,
+        "changes": 94,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/candidate/CONTRACT.json",
+        "status": "added",
+        "additions": 923,
+        "deletions": 0,
+        "changes": 923,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/candidate/PARENT_COMMAND.ps1",
+        "status": "added",
+        "additions": 146,
+        "deletions": 0,
+        "changes": 146,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/candidate/src/candidate_entry.py",
+        "status": "added",
+        "additions": 179,
+        "deletions": 0,
+        "changes": 179,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/candidate/src/trigger_consumer.py",
+        "status": "added",
+        "additions": 194,
+        "deletions": 0,
+        "changes": 194,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/local/RESULT_OBSERVATION.json",
+        "status": "added",
+        "additions": 54,
+        "deletions": 0,
+        "changes": 54,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/parent/ANALYSIS_PARENT_RETURN.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/parent/FINAL_BOUNDARY.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/parent/NATIVE_PARENT_RETURN.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/parent/PARENT_LOCAL_DECISION.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/parent/PARENT_START.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/prior/preexec_DELIVERY_RECEIPT.json",
+        "status": "added",
+        "additions": 29,
+        "deletions": 0,
+        "changes": 29,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/prior/validation_DELIVERY_RECEIPT.json",
+        "status": "added",
+        "additions": 32,
+        "deletions": 0,
+        "changes": 32,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/run/CLASS_IDENTITY.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/run/NATIVE_STATE.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/run/OUTPUT_MPH_IDENTITY.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/run/POLICY_BEFORE.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/run/batch.log",
+        "status": "added",
+        "additions": 2128,
+        "deletions": 0,
+        "changes": 2128,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/run/batch_RESERVATION.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/run/batch_RETURN.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/run/compile_RESERVATION.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/run/compile_RETURN.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/run/tables/axes_runtime_settings.csv",
+        "status": "added",
+        "additions": 23,
+        "deletions": 0,
+        "changes": 23,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/run/tables/electrolyte_guard.csv",
+        "status": "added",
+        "additions": 924,
+        "deletions": 0,
+        "changes": 924,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_native_acceptance_20260928/reference/received/run/tables/guard_binding.csv",
+        "status": "added",
+        "additions": 2,
+        "deletions": 0,
+        "changes": 2,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/CANDIDATE_NORMALIZED.diff",
+        "status": "added",
+        "additions": 183,
+        "deletions": 0,
+        "changes": 183,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/CLAUDE_AND_CODEX_REPLY_KO.md",
+        "status": "added",
+        "additions": 13,
+        "deletions": 0,
+        "changes": 13,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/DECISION.json",
+        "status": "added",
+        "additions": 19,
+        "deletions": 0,
+        "changes": 19,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/EVIDENCE_AUDIT.json",
+        "status": "added",
+        "additions": 1162,
+        "deletions": 0,
+        "changes": 1162,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/HARNESS_NORMALIZED.diff",
+        "status": "added",
+        "additions": 12,
+        "deletions": 0,
+        "changes": 12,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/NEXT_PREEXEC_DIRECTIVE_KO.md",
+        "status": "added",
+        "additions": 62,
+        "deletions": 0,
+        "changes": 62,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/PACKAGE_AUDIT.json",
+        "status": "added",
+        "additions": 42,
+        "deletions": 0,
+        "changes": 42,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/REVIEWER_DIAGNOSTIC_NOTE.json",
+        "status": "added",
+        "additions": 8,
+        "deletions": 0,
+        "changes": 8,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/REVIEW_KO.md",
+        "status": "added",
+        "additions": 81,
+        "deletions": 0,
+        "changes": 81,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/REVIEW_PACKAGE_MANIFEST.json",
+        "status": "added",
+        "additions": 171,
+        "deletions": 0,
+        "changes": 171,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/SHA256SUMS.tsv",
+        "status": "added",
+        "additions": 34,
+        "deletions": 0,
+        "changes": 34,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/TRANSFER_IDENTITY.json",
+        "status": "added",
+        "additions": 29,
+        "deletions": 0,
+        "changes": 29,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/audit_evidence.py",
+        "status": "added",
+        "additions": 100,
+        "deletions": 0,
+        "changes": 100,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/audit_received.py",
+        "status": "added",
+        "additions": 56,
+        "deletions": 0,
+        "changes": 56,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/CASE_MAP.json",
+        "status": "added",
+        "additions": 572,
+        "deletions": 0,
+        "changes": 572,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/CORRECTION.json",
+        "status": "added",
+        "additions": 7,
+        "deletions": 0,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/FINAL_SOURCE_BINDING.json",
+        "status": "added",
+        "additions": 127,
+        "deletions": 0,
+        "changes": 127,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/PRE_TEST_SEAL.json",
+        "status": "added",
+        "additions": 122,
+        "deletions": 0,
+        "changes": 122,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/RESULTS.json",
+        "status": "added",
+        "additions": 742,
+        "deletions": 0,
+        "changes": 742,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/candidate/CODE_MANIFEST.json",
+        "status": "added",
+        "additions": 35,
+        "deletions": 0,
+        "changes": 35,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/candidate/CONTRACT.json",
+        "status": "added",
+        "additions": 923,
+        "deletions": 0,
+        "changes": 923,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/candidate/PARENT_COMMAND.ps1",
+        "status": "added",
+        "additions": 146,
+        "deletions": 0,
+        "changes": 146,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/candidate/src/Guard1198Candidate.java",
+        "status": "added",
+        "additions": 694,
+        "deletions": 0,
+        "changes": 694,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/candidate/src/candidate_entry.py",
+        "status": "added",
+        "additions": 179,
+        "deletions": 0,
+        "changes": 179,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/candidate/src/trigger_consumer.py",
+        "status": "added",
+        "additions": 194,
+        "deletions": 0,
+        "changes": 194,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/records/JAVA_COMPILE_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 7,
+        "deletions": 0,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/records/JAVA_STUB_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 7,
+        "deletions": 0,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/records/POWERSHELL_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 7,
+        "deletions": 0,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/records/PS_RESULT.json",
+        "status": "added",
+        "additions": 180,
+        "deletions": 0,
+        "changes": 180,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/records/PYTHON_RESULT.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/records/PYTHON_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 7,
+        "deletions": 0,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/tests/GuardHarness.java",
+        "status": "added",
+        "additions": 91,
+        "deletions": 0,
+        "changes": 91,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/tests/JAVA_SOURCE_BINDING.json",
+        "status": "added",
+        "additions": 61,
+        "deletions": 0,
+        "changes": 61,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/tests/run_parent.ps1",
+        "status": "added",
+        "additions": 59,
+        "deletions": 0,
+        "changes": 59,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/reference/tests/run_python.py",
+        "status": "added",
+        "additions": 178,
+        "deletions": 0,
+        "changes": 178,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/guard1198_validation_acceptance_20260928/seal_review.py",
+        "status": "added",
+        "additions": 48,
+        "deletions": 0,
+        "changes": 48,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/CLAUDE_UPDATE_KO.md",
+        "status": "added",
+        "additions": 18,
+        "deletions": 0,
+        "changes": 18,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/DECISION.json",
+        "status": "added",
+        "additions": 21,
+        "deletions": 0,
+        "changes": 21,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/NEXT_CODEX_DIRECTIVE_KO.md",
+        "status": "added",
+        "additions": 34,
+        "deletions": 0,
+        "changes": 34,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/PACKAGE_AUDIT.json",
+        "status": "added",
+        "additions": 18,
+        "deletions": 0,
+        "changes": 18,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/REVIEWER_TOOL_NOTES.json",
+        "status": "added",
+        "additions": 7,
+        "deletions": 0,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/REVIEW_KO.md",
+        "status": "added",
+        "additions": 79,
+        "deletions": 0,
+        "changes": 79,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/REVIEW_PACKAGE_MANIFEST.json",
+        "status": "added",
+        "additions": 305,
+        "deletions": 0,
+        "changes": 305,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/SHA256SUMS.tsv",
+        "status": "added",
+        "additions": 61,
+        "deletions": 0,
+        "changes": 61,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/SOURCE_AFTER_CHECK.json",
+        "status": "added",
+        "additions": 7,
+        "deletions": 0,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/STATIC_COUNTEREXAMPLES.json",
+        "status": "added",
+        "additions": 26,
+        "deletions": 0,
+        "changes": 26,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/STATIC_REVIEW_AUDIT.json",
+        "status": "added",
+        "additions": 144,
+        "deletions": 0,
+        "changes": 144,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/TRANSFER_IDENTITY.json",
+        "status": "added",
+        "additions": 29,
+        "deletions": 0,
+        "changes": 29,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/audit_package.py",
+        "status": "added",
+        "additions": 34,
+        "deletions": 0,
+        "changes": 34,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/audit_source.py",
+        "status": "added",
+        "additions": 69,
+        "deletions": 0,
+        "changes": 69,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/package_review.py",
+        "status": "added",
+        "additions": 31,
+        "deletions": 0,
+        "changes": 31,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/BUILD_COMPLETED.json",
+        "status": "added",
+        "additions": 8,
+        "deletions": 0,
+        "changes": 8,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/CHANGE_AND_INVARIANCE_KO.md",
+        "status": "added",
+        "additions": 20,
+        "deletions": 0,
+        "changes": 20,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/CODE_MANIFEST.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/COMMAND_MAP.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/CONSUMPTION_CONTRACT_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/CONTRACT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/CORRECTION_1198_COMPARISON_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/DELIVERY_STATUS.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/EXECUTION_CONNECTION_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/FINAL_STATIC_CHECKS.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/JAVA_ALLOWED_REPLACEMENTS.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/LIMITED_VALIDATION_APPROVAL_DRAFT_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/LIMITED_VALIDATION_PLAN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/NATIVE30_APPROVAL_DRAFT_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/NATIVE_APPROVAL_FIELD_SPEC.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/PACKAGE_MANIFEST.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/PARENT_COMMAND.ps1",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/PRESERVATION_AFTER.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/PRESERVATION_AFTER_BUILD.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/PRESERVATION_BEFORE.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/README_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/RESOURCE_BUDGET_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/SOURCE_DIFF.patch",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/START.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/STATIC_SOURCE_CHECKS.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/TIME_ACCOUNTING.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/TOOL_NOTES.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/basis/CODE_MANIFEST.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/basis/CONTRACT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/basis/PARENT_COMMAND.ps1",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/basis/RECEIVED_REVIEW.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/basis/native_NATIVE_STATE.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/basis/native_OUTPUT_MPH_IDENTITY.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/basis/native_batch_RETURN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/basis/native_compile_RETURN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/basis/prior_FINAL_BOUNDARY.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/basis/src/Guard1198Candidate.java",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/basis/src/candidate_entry.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/basis/src/trigger_consumer.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/preparation/INITIAL_CODE_MANIFEST.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/preparation/INITIAL_STATIC_SOURCE_CHECKS.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/preparation/build_candidate.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/preparation/consumer_changes.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/preparation/decision.ps1.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/preparation/finalize_preparation.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/src/Normal30Candidate.java",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/src/candidate_entry.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/normal30_offline_review_20260928/received/src/diagnostic_consumer.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/.gitattributes",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/08_REVIEW_RESPONSE.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/GATE81_REQUEST.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/LEG_PRESERVATION.yaml",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/STAGE3_CONTRACT.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/GATE81_REVIEW_20260928.zip",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/CLAUDE_REPLY.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/DECISION.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/FINAL_PRESERVATION.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/MANIFEST.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/NEXT_APPROVAL_SCOPE_DRAFT.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/REVIEW_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/SEND_SUPPLEMENT_AUDIT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/SOURCE_AFTER_CHECK.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/SOURCE_BEFORE.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/STATIC_DATA_AUDIT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/audit.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/evidence/REMOTE_COMMIT_SUMMARY.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/evidence/REMOTE_COMPARE.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/evidence/REMOTE_REQUEST_RESPONSE.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/package_review.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/prior_gate80/DECISION.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/prior_gate80/REVIEW_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/reference/GATE81_REQUEST.received.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/reference/GATE81_REQUEST.repository.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/reference/GATE81_SEND.received.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/reference/docs/22p_gap/CLAIM_STATUS.yaml",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/reference/docs/22p_gap/GATE78_REQUEST.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/reference/docs/22p_gap/GATE79_REQUEST.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/reference/docs/22p_gap/GATE80_REQUEST.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/reference/docs/22p_gap/STAGE3_CONTRACT.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/reference/docs/22p_gap/row_projection.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/reference/src/fitting.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/reference/src/grid.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/reference/src/io.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/reference/tests/test_design_wire.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/reference/tests/test_gate79_stage3_logging.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/reference/tools/design_golden.yaml",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/reference/tools/design_wire.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/reference/tools/gen_design_golden.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate81_review/codex/reference/tools/preserve.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/mutation_replay.py",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/receipts/grid_fit_v5.validate.yaml",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/receipts/history/grid_fit_v5.validate.eda3feb8f4536511.yaml",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/receipts/history/grid_fit_v5.validate.eea5977f4faf9685.yaml",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/receipts/history/paired_fixed5_v4.validate.eda3feb8f4536511.yaml",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/receipts/history/paired_fixed5_v4.validate.eea5977f4faf9685.yaml",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/GATE70_WORKING_STATE.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/src/fitting.py",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/src/io.py",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/tests/conftest.py",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/tests/test_gate81_stage3_wire.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/tools/design_wire.py",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/tools/preserve.py",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/assb-interphase-vs-contact-loss-attribution.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/assb-lampe-contact-product-degeneracy.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/assb-li-in-reference-potential-window.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/assb-operando-pressure-signal-attribution.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/assb-pressure-reapplication-separation-test.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/assb-stack-pressure-operating-window.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/composite-cathode-percolation-utilization.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/concepts/li-metal-yield-creep-vs-stack-pressure.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/index.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/log.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/questions/assb-contact-loss-vs-lampe.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/_sources.json",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/li2025_stack-pressure-critical-importance-perspective/fig_1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/li2025_stack-pressure-critical-importance-perspective/fig_2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/li2025_stack-pressure-critical-importance-perspective/fig_2_manual_p3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/li2025_stack-pressure-critical-importance-perspective/fig_3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/li2025_stack-pressure-critical-importance-perspective/fig_4.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/li2025_stack-pressure-critical-importance-perspective/fig_5.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/li2025_stack-pressure-critical-importance-perspective/fig_5_manual_p7.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/li2025_stack-pressure-critical-importance-perspective/fig_6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/li2025_stack-pressure-critical-importance-perspective/fig_6_manual_p8.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/li2025_stack-pressure-critical-importance-perspective/figures.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal/fig_10_manual_p14.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal/fig_1_manual_p5.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal/fig_2_manual_p7.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal/fig_3_manual_p8.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal/fig_4.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal/fig_5_manual_p10.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal/fig_6_manual_p10.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal/fig_7_manual_p12.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal/fig_8_manual_p12.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal/fig_9_manual_p13.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal/figures.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal/tab_1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal/tab_2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal/tab_3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal/tab_S1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal/tab_S2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_in-situ-pressure-electrochemical-expansion-assb/fig_1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_in-situ-pressure-electrochemical-expansion-assb/fig_2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_in-situ-pressure-electrochemical-expansion-assb/fig_3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_in-situ-pressure-electrochemical-expansion-assb/fig_4.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_in-situ-pressure-electrochemical-expansion-assb/fig_5.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_in-situ-pressure-electrochemical-expansion-assb/fig_S1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_in-situ-pressure-electrochemical-expansion-assb/fig_S2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_in-situ-pressure-electrochemical-expansion-assb/fig_S3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_in-situ-pressure-electrochemical-expansion-assb/fig_S4.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_in-situ-pressure-electrochemical-expansion-assb/fig_S5.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_in-situ-pressure-electrochemical-expansion-assb/fig_S6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_in-situ-pressure-electrochemical-expansion-assb/fig_S7.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_in-situ-pressure-electrochemical-expansion-assb/figures.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb/fig_1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb/fig_2.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb/fig_3.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb/fig_4.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb/fig_5.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb/fig_6.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb/fig_7.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb/fig_8.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb/fig_9.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb/fig_S1.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb/fig_S10.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/raw/figures/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb/fig_S11.png",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      }
+    ]
+  },
+  "isError": false
+}
