@@ -73,11 +73,12 @@ CAP_RE = re.compile(
     r"(?P<kind>F[i1l][gq9](?:ure|s)?\.?|Tab[l1]e|Sche[mn]e)\s*"
     r"(?P<label>S?\d+)(?![a-z0-9])\s*(?P<sep>[.|:,–—]|\s)\s*(?P<rest>.*)",
     re.S | re.I)
-# 본문 문단이 흔히 쓰는 동사 — 구두점이 없을 때 최종 판별
-VERBS = re.compile(
-    r"^(shows?|displays?|presents?|illustrates?|summari[sz]es?|gives?|depicts?|compares?|"
-    r"plots?|reports?|indicates?|reveals?|lists?|contains?|provides?|demonstrates?|"
-    r"and|in|of|for|to|is|are|was|were|we|it|this|which|shown|show|see|from|the)\b", re.I)
+# 구두점이 없을 때(RSC · Springer 형식 "Fig. 2 The …")는 **첫 글자의 대소문자**로만 가른다 —
+#   소문자면 본문 참조("Figure 3 shows …"), 아니면 캡션. 본문 오탐은 뒤의 그래픽 검사(②)가 거른다.
+# ⚠ 여기 예전에 본문 동사 목록 `VERBS`(shows · in · the …, 대소문자 무시)가 있었다 — 실측
+#   (2026-09-30 assb 89호): 대문자로 시작하는 RSC 캡션 "Fig. 2 The mechanism …" · "Fig. 7 In situ …"
+#   를 본문으로 버렸다. 3차 묶음 PDF 55 개 dry 재추출: 목록을 빼면 누락 6 개가 돌아오고
+#   (89호 2 · 5 · 80호 2 · 4 · 6 · 64호 7) 오탐 · 기존 크롭 변화 0. 소문자 쪽은 위 판정과 중복이었다.
 
 
 def is_caption(text):
@@ -92,7 +93,7 @@ def is_caption(text):
     rest, sep = m.group("rest"), m.group("sep")
     if sep in ".|:,–—":              # "Figure 1." / "Figure 5 |" → 캡션 확정
         pass
-    elif rest[:1].islower() or VERBS.match(rest):
+    elif rest[:1].islower():
         return None                            # "Figure 3 shows ..." → 본문
     if len(t) < 12:                            # "Figure 1" 만 있는 상호참조 조각
         return None
@@ -1254,6 +1255,37 @@ def selftest():
         and not is_si("Superionic_conductor"))
     chk("한계(고정): 전부 소문자 제목의 _si_ 는 SI 로 본다 — 원소 기호와 대소문자로 못 가른다",
         is_si("fast_si_anode_design"))
+
+    # --- 구두점 없는 캡션 (RSC · Springer 형식 "Fig. 2 The …"). 2026-09-30 assb 89호 실측:
+    #     번호 뒤 구분 부호가 없으면 첫 낱말로 본문/캡션을 가르는데, 옛 VERBS 목록(the · in …)이
+    #     대소문자 무시로 걸려 캡션을 본문으로 버렸다. 3차 묶음 PDF 55 개 dry 재추출에서 같은
+    #     원인 누락 6 개 (89호 그림 2 · 5 · 80호 그림 2 · 4 · 6 · 64호 그림 7) — 전부 수동 크롭으로 메웠다.
+    chk("양성(RSC): 89호 'Fig. 2 The mechanism …' 은 그림 2 캡션",
+        is_caption("Fig. 2 The mechanism of the spontaneous reaction. (a1–b3) HAADF-STEM images")
+        == ("figure", "2", False))
+    chk("양성(RSC): 89호 'Fig. 5 The eﬀect …' (합자 ﬀ 그대로) 은 그림 5 캡션",
+        is_caption("Fig. 5 The eﬀect of Li21Si5 alloy content on electrochemical characteristics of ASSBs.")
+        == ("figure", "5", False))
+    chk("양성(RSC): 80호 'Fig. 2 The false color …' 은 그림 2 캡션",
+        is_caption("Fig. 2 The false color representation of background corrected EDXRD spectra")
+        == ("figure", "2", False))
+    chk("양성(RSC): 64호 'Fig. 7 In situ XPS …' 은 그림 7 캡션",
+        is_caption("Fig. 7 In situ XPS measurements of the SE b-Li3PS4 dispersed with C65 conductive carbon")
+        == ("figure", "7", False))
+    chk("양성(그대로): 구분 부호 캡션 'Figure 1.' · 'Fig. 1 |' · 'Table 2:'",
+        is_caption("Figure 1. The capacity of the cell") == ("figure", "1", False)
+        and is_caption("Fig. 1 | The capacity of the cell") == ("figure", "1", False)
+        and is_caption("Table 2: The composition of the cathode") == ("table", "2", False))
+    chk("음성⑭: 본문 참조 — 소문자 동사 · 접속사 'Fig. 2 shows …' · 'Figure 3 and 4 …' · 'Fig. 2 in …'",
+        is_caption("Fig. 2 shows the mechanism of the spontaneous reaction") is None
+        and is_caption("Figure 3 and 4 compare the capacity of the two cells") is None
+        and is_caption("Fig. 2 in the main text shows the same trend") is None)
+    chk("음성⑭: 번호에 소문자가 붙은 참조 'Fig. 2a shows …' · 조각 'Figure 1'",
+        is_caption("Fig. 2a shows the mechanism of the reaction") is None and is_caption("Figure 1") is None)
+    chk("한계(고정): 대문자로 시작하는 본문 조각 ('FIGURE 3 SHOWS …' · 'Fig. 2 (a) shows …') 은 캡션 "
+        "후보가 된다 — 그래픽 검사(②)가 거른다",
+        is_caption("FIGURE 3 SHOWS THE CAPACITY OF THE CELL") == ("figure", "3", False)
+        and is_caption("Fig. 2 (a) shows the capacity of the cell") == ("figure", "2", False))
 
     with tempfile.TemporaryDirectory() as td:
         root = Path(td)
