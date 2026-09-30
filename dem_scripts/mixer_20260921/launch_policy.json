@@ -1,6 +1,6 @@
 {
  "schema": "mixer_highbo_launch_policy/2",
- "policy_id": "STIFF-DEV7-2026-09-30-dev-e0-rot",
+ "policy_id": "STIFF-DEV7-2026-09-30-v26-dev-e0-rot",
  "allowed_stages": [
   "first",
   "rest",
@@ -58,7 +58,7 @@
     "E0_soft_s104395301",
     "E0_ref_s104395301"
    ],
-   "soft_range_pct": 5.8,
+   "soft_range_pct": 7.37,
    "time": "5-00:00:00"
   },
   "confirm-rest": {
@@ -78,11 +78,12 @@
    ]
   }
  },
- "registered_in": "docs/reviews/mixer_highbo_stiffness_prereg_20260929.md (v2.5) §8-2 ② (DEV-ONLY 7: E0 5 + NP 프로브 → 통과 시 회전 2) · §8-2 ④ ⑤ (확인 18: first-seed-block 6 → rest 12 · held · 관문 release · 시작 직전 대조) · §6 (soft 5.8 %) — 옛 first · rest = docs/reviews/mixer_highbo_prereg_20260927.md §0 Q8 · §9 D-4 (의미 그대로)",
+ "registered_in": "docs/reviews/mixer_highbo_stiffness_prereg_20260929.md (v2.6) §8-2 ② (DEV-ONLY 7: E0 5 + NP 프로브 → 통과 시 회전 2) · §8-2 ④ ⑤ (확인 18: first-seed-block 6 → rest 12 · held · 관문 release · 시작 직전 대조) · §6 (soft 7.37 % · v2.6) — 옛 first · rest = docs/reviews/mixer_highbo_prereg_20260927.md §0 Q8 · §9 D-4 (의미 그대로)",
  "history": [
   "2026-09-28 밤: all (세 시드 동시) = 저자 편차 (caba30c7a · DEVIATION 문구) → 18:07 발사 → 20:23 정지 (§0 Q8)",
   "Codex 5 차 v2 ADD-Q7-01 · 6 차 §7-2: 정책 ID/해시에 허용 stage 를 고정 — 옛 DEVIATION 환경변수만 남았다고 all 이 다시 열리지 않게",
-  "2026-09-30: v2 — 강성 축 DEV 단계 dev-e0 · dev-rot 허용 (코드 선행조건 2 단계 piece 1).  확인 단계 confirm-first · confirm-rest 는 **정의만** (allowed_stages 에 없다 = Codex GO 전 거부) — 허용할 때는 이 파일을 고쳐 **새 policy_id** 로 커밋하고 사전등록에 적는다 (§8-2 ④ '기존 first/rest 정책 ID 를 재사용하지 않는다').  이전 id: Q8-2026-09-29-first-smoke-rest"
+  "2026-09-30: v2 — 강성 축 DEV 단계 dev-e0 · dev-rot 허용 (코드 선행조건 2 단계 piece 1).  확인 단계 confirm-first · confirm-rest 는 **정의만** (allowed_stages 에 없다 = Codex GO 전 거부) — 허용할 때는 이 파일을 고쳐 **새 policy_id** 로 커밋하고 사전등록에 적는다 (§8-2 ④ '기존 first/rest 정책 ID 를 재사용하지 않는다').  이전 id: Q8-2026-09-29-first-smoke-rest",
+  "2026-09-30 밤: v2.6 (1저자 \"권고하는걸로\") — E_ref ×20 · ref2 ×40 · soft 진단 범위 7.37 % · §4 b·c 보고 전용 · 상별 수 MPI 허용폭 (SELF-70) — 값이 바뀌었으므로 policy_id 갱신 (허용 stage 는 그대로 dev-e0 · dev-rot). 이전 id: STIFF-DEV7-2026-09-30-dev-e0-rot"
  ],
  "note": "stages.<단계> 는 mixer_deck_diff.COHORTS (등록 코호트) 와 **정확히** 같아야 한다 (scripts/mixer_stage_gate.py stage_params — holdout seed 를 DEV 에 · DEV 셀을 확인에 넣으면 거부).  time = 그 단계 러너의 SLURM 시간 한도 (SB_TIME 은 새 단계에서 거부) — confirm-first 의 5 일은 NP 프로브 (§8-3) 뒤 다시 정한다 (ref 8 바퀴 NP20 가정 92–100 h).  soft_range_pct = 등록 5.8 (null · 다른 값이면 확인 발사 거부).  DEVIATION 환경변수는 허가가 아니다."
 }

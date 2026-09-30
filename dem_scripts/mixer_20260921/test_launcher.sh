@@ -717,7 +717,7 @@ for n, blk in [(n, 'dev') for n in dd.DEV_E0] + [(n, 'probe') for n in dd.DEV_PR
                   and g.get('expect_deck_sha256') == hashlib.sha256(dd.cell_expected_deck(n).encode()).hexdigest(),
           'pre': (r.get('stage_gate') or {}).get('preflight', {}).get('sha256') is not None,
           'policy': (r.get('policy') or {}).get('policy_id', '').startswith('STIFF-'), 'np': (r.get('slurm') or {}).get('np') == (20 if blk == 'dev' else int(n[7:n.index('_')])),
-          'disk': (r.get('disk_estimate') or {}).get('frames') == {'E0_ref_s32452843': 867, 'E0_ref2_s32452843': 1227}.get(n, (r.get('disk_estimate') or {}).get('frames')),
+          'disk': (r.get('disk_estimate') or {}).get('frames') == {'E0_ref_s32452843': 1037, 'E0_ref2_s32452843': 1467}.get(n, (r.get('disk_estimate') or {}).get('frames')),
           'probe': (('probe' in r) == (blk == 'probe')), 'no_legacy': 'cohort' not in r and 'deviation' not in r}
     bad += [f'{n}:{k}' for k, v in ok.items() if not v]
 print('OK' if not bad else 'NG ' + ' '.join(bad))
@@ -817,7 +817,7 @@ if not (m['complete'] is True and m['held_query']['held_ok'] is True and len(m['
 for n in dd.COHORTS['confirm']:
     r = json.load(open(os.path.join(out, n, 'launch_record.json'), encoding='utf-8'))
     want_ap = n in dd.CONFIRM_REST
-    if ('approval' in r) != want_ap or r.get('soft_range_pct') != 5.8 or r.get('stage') != 'confirm-first':
+    if ('approval' in r) != want_ap or r.get('soft_range_pct') != 7.37 or r.get('stage') != 'confirm-first':
         bad.append(n)
 print('OK' if not bad else 'NG ' + ' '.join(bad))
 PY

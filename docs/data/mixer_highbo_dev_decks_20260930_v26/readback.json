@@ -1,0 +1,5301 @@
+{
+ "tool": "scripts/mixer_deck_readback.py",
+ "tool_version": "mixer_deck_readback/1 (2026-09-30)",
+ "tool_sha256": "7c00876ad5dfd225af025b2b648c398381570a70b9f49aa916ad0f2b6a6867ba",
+ "argv": [
+  "--table",
+  "E",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/compare/LC_soft_r2_s32452843/in.mixer",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer",
+  "--table",
+  "E",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/compare/LH_soft_r2_s32452843/in.mixer",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer",
+  "--table",
+  "E",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/compare/LC_soft_r2_s32452843/in.mixer",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/check_only/LC_ref2_r2_s32452843/in.mixer",
+  "--table",
+  "E",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/compare/LH_soft_r2_s32452843/in.mixer",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/check_only/LH_ref2_r2_s32452843/in.mixer",
+  "--table",
+  "E",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/check_only/LC_ref2_r2_s32452843/in.mixer",
+  "--table",
+  "E0",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/compare/E0_soft_s32452843/in.mixer",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref_s32452843/in.mixer",
+  "--table",
+  "E0",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/compare/E0_soft_s49979687/in.mixer",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref_s49979687/in.mixer",
+  "--table",
+  "E0",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/compare/E0_soft_s67867967/in.mixer",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref_s67867967/in.mixer",
+  "--table",
+  "E0",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref_s32452843/in.mixer",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref2_s32452843/in.mixer",
+  "--table",
+  "DT",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref_s32452843/in.mixer",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref_dthalf_s32452843/in.mixer",
+  "--table",
+  "B",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/compare/LC_soft_r2_s32452843/in.mixer",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/compare/LH_soft_r2_s32452843/in.mixer",
+  "--table",
+  "B",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer",
+  "--table",
+  "B",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/check_only/LC_ref2_r2_s32452843/in.mixer",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/check_only/LH_ref2_r2_s32452843/in.mixer",
+  "--json",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/readback.json",
+  "--md",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/readback.md"
+ ],
+ "tolerances": {
+  "ced_value_rel": 5e-06,
+  "ced_mult_rel": 1e-05,
+  "f0_ratio": 3.0000000000000004e-05,
+  "radius_ratio_rel": 1e-05,
+  "rayleigh_rel": 0.000505,
+  "codex_estar_rel": 1e-09,
+  "dt_print_rel": 0.0005,
+  "exact_rel": 1e-12
+ },
+ "tolerances_why": {
+  "ced_value_rel": "CED 는 %g (6 유효숫자) 로 찍힌다 — 한 값의 반올림 상한 0.5×10^(1−6)",
+  "ced_mult_rel": "두 CED 의 배수 = 두 반올림",
+  "f0_ratio": "F₀ ∝ CED³ ⇒ 비의 상한 = 3 × 두 반올림.  E · ν 는 덱 값 = 시뮬레이션 값 (생성기가 인쇄 밖 배수를 거부) 이라 넣지 않는다",
+  "radius_ratio_rel": "템플릿 반지름 :.6g 두 값",
+  "rayleigh_rel": "덱 dt 는 .4g · 다시 낸 규칙 dt 는 반지름 :.6g 에서 — 둘의 인쇄 반올림 (dt 가 규칙과 2 배 넘게 어긋나는 것을 잡는 검사다)",
+  "codex_estar_rel": "Codex 7 차 §5 표는 9–10 자리로 적혀 있다",
+  "dt_print_rel": "timestep 은 .4g — 생성기가 반올림 전 dt 로 step 을 세므로 두 덱의 물리 시간이 이만큼 어긋날 수 있다",
+  "exact_rel": "DT 표 (dt 정확히 1/k · step 정확히 k 배) · 부동소수 비교 여유"
+ },
+ "registered": {
+  "types": {
+   "1": "AM_P",
+   "2": "AM_S",
+   "3": "SE",
+   "4": "WALL"
+  },
+  "template_seeds": {
+   "10487": "AM_P",
+   "11887": "AM_S",
+   "13901": "SE"
+  },
+  "density": {
+   "AM": 4800.0,
+   "SE": 2000.0
+  },
+  "d_um": {
+   "AM_P": 9.0,
+   "AM_S": 4.0,
+   "SE": 1.0
+  },
+  "E_fixed": {
+   "AM_P": 1037000000.0,
+   "AM_S": 1037000000.0,
+   "WALL": 1480000000.0
+  },
+  "E_SE_levels": {
+   "1e+07": "soft (×1)",
+   "2e+08": "ref (×20 · v2.6)",
+   "4e+08": "ref2 (×40 · v2.6)",
+   "1.4e+08": "v2.5 ref (×14 · DEV7 실측 뒤 개정)",
+   "2.8e+08": "v2.5 ref2 (×28)"
+  },
+  "nu": {
+   "AM_P": 0.25,
+   "AM_S": 0.25,
+   "SE": 0.3,
+   "WALL": 0.3
+  },
+  "B_pairs": [
+   "AM_P–AM_P",
+   "AM_P–AM_S",
+   "AM_P–WALL",
+   "AM_S–AM_S",
+   "AM_S–WALL"
+  ],
+  "dt_k": 2,
+  "dump_rule": "dump 간격 = max(1000, 회전 step // 200)",
+  "restart_rule": "restart 간격 = max(50000, min(200000, (회전 step 또는 2·정착 step) // 20))",
+  "rayleigh_rule": "dt = min_t 0.2·π·r_t·√(ρ_t/G_t)/(0.1631ν_t + 0.8766) · G = E/(2(1+ν)) (생성기 plan() 의 식 사본)",
+  "codex_section5": {
+   "14": {
+    "AM_P–AM_P": [
+     1.0,
+     1.0
+    ],
+    "AM_P–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_S–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_P–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_S–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_P–SE": [
+     12.412672571,
+     5.360971926
+    ],
+    "AM_S–SE": [
+     12.412672571,
+     5.360971926
+    ],
+    "SE–SE": [
+     14.0,
+     5.808785734
+    ],
+    "SE–WALL": [
+     12.87654321,
+     5.493715853
+    ]
+   },
+   "28": {
+    "AM_P–AM_P": [
+     1.0,
+     1.0
+    ],
+    "AM_P–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_S–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_P–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_S–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_P–SE": [
+     22.123962626,
+     7.880890212
+    ],
+    "AM_S–SE": [
+     22.123962626,
+     7.880890212
+    ],
+    "SE–SE": [
+     28.0,
+     9.220872584
+    ],
+    "SE–WALL": [
+     23.704545455,
+     8.251908834
+    ]
+   },
+   "20": {
+    "AM_P–AM_P": [
+     1.0,
+     1.0
+    ],
+    "AM_P–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_S–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_P–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_S–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_P–SE": [
+     16.85060601,
+     6.572698075
+    ],
+    "AM_S–SE": [
+     16.85060601,
+     6.572698075
+    ],
+    "SE–SE": [
+     20.0,
+     7.368062997
+    ],
+    "SE–WALL": [
+     17.738095238,
+     6.801499256
+    ]
+   },
+   "40": {
+    "AM_P–AM_P": [
+     1.0,
+     1.0
+    ],
+    "AM_P–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_S–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_P–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_S–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_P–SE": [
+     28.909279805,
+     9.419434887
+    ],
+    "AM_S–SE": [
+     28.909279805,
+     9.419434887
+    ],
+    "SE–SE": [
+     40.0,
+     11.696070953
+    ],
+    "SE–WALL": [
+     31.70212766,
+     10.016721683
+    ]
+   }
+  }
+ },
+ "decks": {
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/compare/LC_soft_r2_s32452843/in.mixer": {
+   "label": "LC_soft_r2_s32452843",
+   "path": "docs/data/mixer_highbo_dev_decks_20260930_v26/compare/LC_soft_r2_s32452843/in.mixer",
+   "sha256": "56e372912d972ad4067cae1880b0d45c7f522e2d0ac750e050939bb9e8e51f3c",
+   "bytes": 8679,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out docs/data/mixer_highbo_dev_decks_20260930_v26/compare/LC_soft_r2_s32452843 --n-total 100000 --cgf 151.4 --arm LC --seed 32452843 --revolutions 2",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    10000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "7.055e-07",
+   "runs": [
+    1,
+    192668,
+    192668,
+    2266689
+   ],
+   "dump_every": 11333,
+   "restart_every": 113334,
+   "period_s": 0.799562,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4800.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4800.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 2000.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "108795",
+    "1-2": "108795",
+    "1-3": "10458.2",
+    "1-4": "59063.2",
+    "2-2": "142562",
+    "2-3": "10458.2",
+    "2-4": "77394.6",
+    "3-3": "10458.2",
+    "3-4": "5677.6",
+    "4-4": "0"
+   },
+   "comment_lines": 54,
+   "t0_planned": 385322,
+   "t0_planned_s": 0.271844671,
+   "steps_per_rev": 1133326.718639263,
+   "settle_s": 0.271854548,
+   "rotation_s": 1.5991490895
+  },
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer": {
+   "label": "LC_ref_r2_s32452843",
+   "path": "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer",
+   "sha256": "5405067f8360651b34cfdcdbb07e355132f6f9cdaa6053e70f62e2560c6924a2",
+   "bytes": 11284,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843 --n-total 100000 --cgf 151.4 --arm LC --seed 32452843 --revolutions 2 --stiffen-se 20 --hold-bo-pairwise",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    200000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "2.62e-07",
+   "runs": [
+    1,
+    518714,
+    518714,
+    6102533
+   ],
+   "dump_every": 30512,
+   "restart_every": 200000,
+   "period_s": 0.799562,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4800.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4800.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 2000.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "108795",
+    "1-2": "108795",
+    "1-3": "68738.8",
+    "1-4": "59063.2",
+    "2-2": "142562",
+    "2-3": "68738.8",
+    "2-4": "77394.6",
+    "3-3": "77056.9",
+    "3-4": "38616.2",
+    "4-4": "0"
+   },
+   "comment_lines": 72,
+   "t0_planned": 1037408,
+   "t0_planned_s": 0.271800896,
+   "steps_per_rev": 3051763.358778626,
+   "settle_s": 0.271806136,
+   "rotation_s": 1.5988636459999999
+  },
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/compare/LH_soft_r2_s32452843/in.mixer": {
+   "label": "LH_soft_r2_s32452843",
+   "path": "docs/data/mixer_highbo_dev_decks_20260930_v26/compare/LH_soft_r2_s32452843/in.mixer",
+   "sha256": "17026064918fcb950ab16f8588ddf20115740ea52a4b0a80a3977d33e7301ff1",
+   "bytes": 8707,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out docs/data/mixer_highbo_dev_decks_20260930_v26/compare/LH_soft_r2_s32452843 --n-total 100000 --cgf 151.4 --arm LH --seed 32452843 --revolutions 2",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    10000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "7.055e-07",
+   "runs": [
+    1,
+    192668,
+    192668,
+    2266689
+   ],
+   "dump_every": 11333,
+   "restart_every": 113334,
+   "period_s": 0.799562,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4800.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4800.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 2000.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "3.56348e+06",
+    "1-2": "2.71944e+06",
+    "1-3": "10458.2",
+    "1-4": "1.93455e+06",
+    "2-2": "2.71944e+06",
+    "2-3": "10458.2",
+    "2-4": "1.47634e+06",
+    "3-3": "10458.2",
+    "3-4": "5677.6",
+    "4-4": "0"
+   },
+   "comment_lines": 54,
+   "t0_planned": 385322,
+   "t0_planned_s": 0.271844671,
+   "steps_per_rev": 1133326.718639263,
+   "settle_s": 0.271854548,
+   "rotation_s": 1.5991490895
+  },
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer": {
+   "label": "LH_ref_r2_s32452843",
+   "path": "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer",
+   "sha256": "3125d2443004300f274cc8b16fa218a7d509c4b9352c125cdfaec726807605fd",
+   "bytes": 11312,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843 --n-total 100000 --cgf 151.4 --arm LH --seed 32452843 --revolutions 2 --stiffen-se 20 --hold-bo-pairwise",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    200000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "2.62e-07",
+   "runs": [
+    1,
+    518714,
+    518714,
+    6102533
+   ],
+   "dump_every": 30512,
+   "restart_every": 200000,
+   "period_s": 0.799562,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4800.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4800.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 2000.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "3.56348e+06",
+    "1-2": "2.71944e+06",
+    "1-3": "68738.8",
+    "1-4": "1.93455e+06",
+    "2-2": "2.71944e+06",
+    "2-3": "68738.8",
+    "2-4": "1.47634e+06",
+    "3-3": "77056.9",
+    "3-4": "38616.2",
+    "4-4": "0"
+   },
+   "comment_lines": 72,
+   "t0_planned": 1037408,
+   "t0_planned_s": 0.271800896,
+   "steps_per_rev": 3051763.358778626,
+   "settle_s": 0.271806136,
+   "rotation_s": 1.5988636459999999
+  },
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/check_only/LC_ref2_r2_s32452843/in.mixer": {
+   "label": "LC_ref2_r2_s32452843",
+   "path": "docs/data/mixer_highbo_dev_decks_20260930_v26/check_only/LC_ref2_r2_s32452843/in.mixer",
+   "sha256": "0cca86293ace9ed955c3774b43de6beb52cd9fde4552f02ac11fc89049d17a4e",
+   "bytes": 11281,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out docs/data/mixer_highbo_dev_decks_20260930_v26/check_only/LC_ref2_r2_s32452843 --n-total 100000 --cgf 151.4 --arm LC --seed 32452843 --revolutions 2 --stiffen-se 40 --hold-bo-pairwise",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    400000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "1.853e-07",
+   "runs": [
+    1,
+    733573,
+    733573,
+    8630285
+   ],
+   "dump_every": 43151,
+   "restart_every": 200000,
+   "period_s": 0.799562,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4800.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4800.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 2000.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "108795",
+    "1-2": "108795",
+    "1-3": "98510.6",
+    "1-4": "59063.2",
+    "2-2": "142562",
+    "2-3": "98510.6",
+    "2-4": "77394.6",
+    "3-3": "122320",
+    "3-4": "56871",
+    "4-4": "0"
+   },
+   "comment_lines": 72,
+   "t0_planned": 1467134,
+   "t0_planned_s": 0.2718599302,
+   "steps_per_rev": 4314959.525094441,
+   "settle_s": 0.2718621538,
+   "rotation_s": 1.5991918105
+  },
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/check_only/LH_ref2_r2_s32452843/in.mixer": {
+   "label": "LH_ref2_r2_s32452843",
+   "path": "docs/data/mixer_highbo_dev_decks_20260930_v26/check_only/LH_ref2_r2_s32452843/in.mixer",
+   "sha256": "02ab777fcc18b3c851a75bc369a5c797ac9fae26a338f7598ba47d46ced7b65a",
+   "bytes": 11309,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out docs/data/mixer_highbo_dev_decks_20260930_v26/check_only/LH_ref2_r2_s32452843 --n-total 100000 --cgf 151.4 --arm LH --seed 32452843 --revolutions 2 --stiffen-se 40 --hold-bo-pairwise",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    400000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "1.853e-07",
+   "runs": [
+    1,
+    733573,
+    733573,
+    8630285
+   ],
+   "dump_every": 43151,
+   "restart_every": 200000,
+   "period_s": 0.799562,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4800.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4800.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 2000.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "3.56348e+06",
+    "1-2": "2.71944e+06",
+    "1-3": "98510.6",
+    "1-4": "1.93455e+06",
+    "2-2": "2.71944e+06",
+    "2-3": "98510.6",
+    "2-4": "1.47634e+06",
+    "3-3": "122320",
+    "3-4": "56871",
+    "4-4": "0"
+   },
+   "comment_lines": 72,
+   "t0_planned": 1467134,
+   "t0_planned_s": 0.2718599302,
+   "steps_per_rev": 4314959.525094441,
+   "settle_s": 0.2718621538,
+   "rotation_s": 1.5991918105
+  },
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/compare/E0_soft_s32452843/in.mixer": {
+   "label": "E0_soft_s32452843",
+   "path": "docs/data/mixer_highbo_dev_decks_20260930_v26/compare/E0_soft_s32452843/in.mixer",
+   "sha256": "a38cdc7494671979400c2037fac551b3a2567a64204def8b4b8338064130039c",
+   "bytes": 7779,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out docs/data/mixer_highbo_dev_decks_20260930_v26/compare/E0_soft_s32452843 --n-total 100000 --cgf 151.4 --arm E0 --seed 32452843 --revolutions 0",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    10000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "7.055e-07",
+   "runs": [
+    1,
+    192668,
+    192668,
+    0
+   ],
+   "dump_every": 1000,
+   "restart_every": 50000,
+   "period_s": 0.799562,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4800.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4800.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 2000.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "0",
+    "1-2": "0",
+    "1-3": "0",
+    "1-4": "0",
+    "2-2": "0",
+    "2-3": "0",
+    "2-4": "0",
+    "3-3": "0",
+    "3-4": "0",
+    "4-4": "0"
+   },
+   "comment_lines": 50,
+   "t0_planned": 385000,
+   "t0_planned_s": 0.27161749999999996,
+   "steps_per_rev": 1133326.718639263,
+   "settle_s": 0.271854548,
+   "rotation_s": 0.0
+  },
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref_s32452843/in.mixer": {
+   "label": "E0_ref_s32452843",
+   "path": "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref_s32452843/in.mixer",
+   "sha256": "78ad92356373e00ae8eeee666256e250571fad6acfba90c7d491ccc3d6954adb",
+   "bytes": 10449,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref_s32452843 --n-total 100000 --cgf 151.4 --arm E0 --seed 32452843 --revolutions 0 --stiffen-se 20 --hold-bo-pairwise",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    200000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "2.62e-07",
+   "runs": [
+    1,
+    518714,
+    518714,
+    0
+   ],
+   "dump_every": 1000,
+   "restart_every": 51871,
+   "period_s": 0.799562,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4800.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4800.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 2000.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "0",
+    "1-2": "0",
+    "1-3": "0",
+    "1-4": "0",
+    "2-2": "0",
+    "2-3": "0",
+    "2-4": "0",
+    "3-3": "0",
+    "3-4": "0",
+    "4-4": "0"
+   },
+   "comment_lines": 68,
+   "t0_planned": 1037000,
+   "t0_planned_s": 0.271694,
+   "steps_per_rev": 3051763.358778626,
+   "settle_s": 0.271806136,
+   "rotation_s": 0.0
+  },
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/compare/E0_soft_s49979687/in.mixer": {
+   "label": "E0_soft_s49979687",
+   "path": "docs/data/mixer_highbo_dev_decks_20260930_v26/compare/E0_soft_s49979687/in.mixer",
+   "sha256": "b8ba25ace11e1300741d49e0ff6e2aadf47bf0ccd8fd1dd97de2283486582230",
+   "bytes": 7779,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out docs/data/mixer_highbo_dev_decks_20260930_v26/compare/E0_soft_s49979687 --n-total 100000 --cgf 151.4 --arm E0 --seed 49979687 --revolutions 0",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    10000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "7.055e-07",
+   "runs": [
+    1,
+    192668,
+    192668,
+    0
+   ],
+   "dump_every": 1000,
+   "restart_every": 50000,
+   "period_s": 0.799562,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4800.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4800.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 2000.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "0",
+    "1-2": "0",
+    "1-3": "0",
+    "1-4": "0",
+    "2-2": "0",
+    "2-3": "0",
+    "2-4": "0",
+    "3-3": "0",
+    "3-4": "0",
+    "4-4": "0"
+   },
+   "comment_lines": 50,
+   "t0_planned": 385000,
+   "t0_planned_s": 0.27161749999999996,
+   "steps_per_rev": 1133326.718639263,
+   "settle_s": 0.271854548,
+   "rotation_s": 0.0
+  },
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref_s49979687/in.mixer": {
+   "label": "E0_ref_s49979687",
+   "path": "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref_s49979687/in.mixer",
+   "sha256": "0544fffbf5c7ae26e7c7c36df93d873691503e0b36a5baad28caae9bd9cd4a14",
+   "bytes": 10449,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref_s49979687 --n-total 100000 --cgf 151.4 --arm E0 --seed 49979687 --revolutions 0 --stiffen-se 20 --hold-bo-pairwise",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    200000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "2.62e-07",
+   "runs": [
+    1,
+    518714,
+    518714,
+    0
+   ],
+   "dump_every": 1000,
+   "restart_every": 51871,
+   "period_s": 0.799562,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4800.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4800.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 2000.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "0",
+    "1-2": "0",
+    "1-3": "0",
+    "1-4": "0",
+    "2-2": "0",
+    "2-3": "0",
+    "2-4": "0",
+    "3-3": "0",
+    "3-4": "0",
+    "4-4": "0"
+   },
+   "comment_lines": 68,
+   "t0_planned": 1037000,
+   "t0_planned_s": 0.271694,
+   "steps_per_rev": 3051763.358778626,
+   "settle_s": 0.271806136,
+   "rotation_s": 0.0
+  },
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/compare/E0_soft_s67867967/in.mixer": {
+   "label": "E0_soft_s67867967",
+   "path": "docs/data/mixer_highbo_dev_decks_20260930_v26/compare/E0_soft_s67867967/in.mixer",
+   "sha256": "f38f0093433d251a5045a9da70f3750a8e4a8318a77265e413c01ef2afb36439",
+   "bytes": 7779,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out docs/data/mixer_highbo_dev_decks_20260930_v26/compare/E0_soft_s67867967 --n-total 100000 --cgf 151.4 --arm E0 --seed 67867967 --revolutions 0",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    10000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "7.055e-07",
+   "runs": [
+    1,
+    192668,
+    192668,
+    0
+   ],
+   "dump_every": 1000,
+   "restart_every": 50000,
+   "period_s": 0.799562,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4800.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4800.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 2000.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "0",
+    "1-2": "0",
+    "1-3": "0",
+    "1-4": "0",
+    "2-2": "0",
+    "2-3": "0",
+    "2-4": "0",
+    "3-3": "0",
+    "3-4": "0",
+    "4-4": "0"
+   },
+   "comment_lines": 50,
+   "t0_planned": 385000,
+   "t0_planned_s": 0.27161749999999996,
+   "steps_per_rev": 1133326.718639263,
+   "settle_s": 0.271854548,
+   "rotation_s": 0.0
+  },
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref_s67867967/in.mixer": {
+   "label": "E0_ref_s67867967",
+   "path": "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref_s67867967/in.mixer",
+   "sha256": "b79e0d73c8a36c78f1b362a7a23865117006309efc2f942e01697f9865964952",
+   "bytes": 10449,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref_s67867967 --n-total 100000 --cgf 151.4 --arm E0 --seed 67867967 --revolutions 0 --stiffen-se 20 --hold-bo-pairwise",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    200000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "2.62e-07",
+   "runs": [
+    1,
+    518714,
+    518714,
+    0
+   ],
+   "dump_every": 1000,
+   "restart_every": 51871,
+   "period_s": 0.799562,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4800.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4800.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 2000.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "0",
+    "1-2": "0",
+    "1-3": "0",
+    "1-4": "0",
+    "2-2": "0",
+    "2-3": "0",
+    "2-4": "0",
+    "3-3": "0",
+    "3-4": "0",
+    "4-4": "0"
+   },
+   "comment_lines": 68,
+   "t0_planned": 1037000,
+   "t0_planned_s": 0.271694,
+   "steps_per_rev": 3051763.358778626,
+   "settle_s": 0.271806136,
+   "rotation_s": 0.0
+  },
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref2_s32452843/in.mixer": {
+   "label": "E0_ref2_s32452843",
+   "path": "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref2_s32452843/in.mixer",
+   "sha256": "cc470941768ae5dd5b312f9b5432730566870615d4a28c7485e731b78c91a9a2",
+   "bytes": 10451,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref2_s32452843 --n-total 100000 --cgf 151.4 --arm E0 --seed 32452843 --revolutions 0 --stiffen-se 40 --hold-bo-pairwise",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    400000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "1.853e-07",
+   "runs": [
+    1,
+    733573,
+    733573,
+    0
+   ],
+   "dump_every": 1000,
+   "restart_every": 73357,
+   "period_s": 0.799562,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4800.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4800.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 2000.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "0",
+    "1-2": "0",
+    "1-3": "0",
+    "1-4": "0",
+    "2-2": "0",
+    "2-3": "0",
+    "2-4": "0",
+    "3-3": "0",
+    "3-4": "0",
+    "4-4": "0"
+   },
+   "comment_lines": 68,
+   "t0_planned": 1467000,
+   "t0_planned_s": 0.2718351,
+   "steps_per_rev": 4314959.525094441,
+   "settle_s": 0.2718621538,
+   "rotation_s": 0.0
+  },
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref_dthalf_s32452843/in.mixer": {
+   "label": "E0_ref_dthalf_s32452843",
+   "path": "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref_dthalf_s32452843/in.mixer",
+   "sha256": "819c8a7f2310d2b574c995f2b4bb8e9ab443ede3e767f23cab2bcab3a8b120e4",
+   "bytes": 10673,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref_dthalf_s32452843 --n-total 100000 --cgf 151.4 --arm E0 --seed 32452843 --revolutions 0 --stiffen-se 20 --hold-bo-pairwise --dt-factor 0.5",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    200000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "1.31e-07",
+   "runs": [
+    1,
+    1037428,
+    1037428,
+    0
+   ],
+   "dump_every": 2000,
+   "restart_every": 103742,
+   "period_s": 0.799562,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4800.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4800.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 2000.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "0",
+    "1-2": "0",
+    "1-3": "0",
+    "1-4": "0",
+    "2-2": "0",
+    "2-3": "0",
+    "2-4": "0",
+    "3-3": "0",
+    "3-4": "0",
+    "4-4": "0"
+   },
+   "comment_lines": 69,
+   "t0_planned": 2074000,
+   "t0_planned_s": 0.271694,
+   "steps_per_rev": 6103526.717557252,
+   "settle_s": 0.271806136,
+   "rotation_s": 0.0
+  }
+ },
+ "tables": [
+  {
+   "kind": "E",
+   "old": "LC_soft_r2_s32452843",
+   "new": "LC_ref_r2_s32452843",
+   "old_sha256": "56e372912d972ad4067cae1880b0d45c7f522e2d0ac750e050939bb9e8e51f3c",
+   "new_sha256": "5405067f8360651b34cfdcdbb07e355132f6f9cdaa6053e70f62e2560c6924a2",
+   "rows": [
+    {
+     "pair": "AM_P–AM_P",
+     "types": "1-1",
+     "CED_old": 108795.0,
+     "CED_new": 108795.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.00034065,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 6.816332377493232e-08,
+     "F0_new": 6.816332377493232e-08,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "types": "1-2",
+     "CED_old": 108795.0,
+     "CED_new": 108795.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.00020963076923076926,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 2.581332971358384e-08,
+     "F0_new": 2.581332971358384e-08,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "types": "2-2",
+     "CED_old": 142562.0,
+     "CED_new": 142562.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0001514,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 3.029495082428705e-08,
+     "F0_new": 3.029495082428705e-08,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_P–SE",
+     "types": "1-3",
+     "CED_old": 10458.2,
+     "CED_new": 68738.8,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 6.813e-05,
+     "Estar_old": 10880913.28321328,
+     "Estar_new": 183349982.76121184,
+     "Estar_mult": 16.850606009706762,
+     "CED_mult": 6.572718058556922,
+     "F0_old": 6.257185643297787e-09,
+     "F0_new": 6.257242716720929e-09,
+     "F0_ratio": 1.0000091212609623,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 16.85060601,
+      "CED_mult": 6.572698075
+     }
+    },
+    {
+     "pair": "AM_S–SE",
+     "types": "2-3",
+     "CED_old": 10458.2,
+     "CED_new": 68738.8,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 6.0559999999999996e-05,
+     "Estar_old": 10880913.28321328,
+     "Estar_new": 183349982.76121184,
+     "Estar_mult": 16.850606009706762,
+     "CED_mult": 6.572718058556922,
+     "F0_old": 4.943949150259981e-09,
+     "F0_new": 4.9439942453103625e-09,
+     "F0_ratio": 1.0000091212609619,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 16.85060601,
+      "CED_mult": 6.572698075
+     }
+    },
+    {
+     "pair": "SE–SE",
+     "types": "3-3",
+     "CED_old": 10458.2,
+     "CED_new": 77056.9,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 3.785e-05,
+     "Estar_old": 5494505.494505494,
+     "Estar_new": 109890109.89010988,
+     "Estar_mult": 20.0,
+     "CED_mult": 7.36808437398405,
+     "F0_old": 7.573689638476448e-09,
+     "F0_new": 7.573755558509656e-09,
+     "F0_ratio": 1.0000087038202456,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 20.0,
+      "CED_mult": 7.368062997
+     }
+    },
+    {
+     "pair": "AM_P–WALL",
+     "types": "1-4",
+     "CED_old": 59063.2,
+     "CED_new": 59063.2,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0006813,
+     "Estar_old": 658364683.8282923,
+     "Estar_new": 658364683.8282923,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 3.078624889848187e-08,
+     "F0_new": 3.078624889848187e-08,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_S–WALL",
+     "types": "2-4",
+     "CED_old": 77394.6,
+     "CED_new": 77394.6,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0003028,
+     "Estar_old": 658364683.8282923,
+     "Estar_new": 658364683.8282923,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 1.3682731380340462e-08,
+     "F0_new": 1.3682731380340462e-08,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "SE–WALL",
+     "types": "3-4",
+     "CED_old": 5677.6,
+     "CED_new": 38616.2,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 7.57e-05,
+     "Estar_old": 10915259.237406887,
+     "Estar_new": 193615907.90162218,
+     "Estar_mult": 17.73809523809524,
+     "CED_mult": 6.801500634070734,
+     "F0_old": 1.2282312930332312e-09,
+     "F0_new": 1.2282320394996759e-09,
+     "F0_ratio": 1.000000607757227,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 17.738095238,
+      "CED_mult": 6.801499256
+     }
+    },
+    {
+     "pair": "WALL–WALL",
+     "types": "4-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "N/A",
+     "reason": "",
+     "ok": true,
+     "F0_ratio": null
+    }
+   ],
+   "checks": [
+    {
+     "check": "덱 파싱 — LC_soft_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "덱 파싱 — LC_ref_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LC_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LC_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LC_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LC_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LC_soft_r2_s32452843",
+     "ok": true,
+     "detail": "SE 1e+07 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — LC_soft_r2_s32452843",
+     "ok": true,
+     "detail": "덱 7.055e-07 vs 규칙 7.05489e-07 s (AM_S 가 정함 · 비 1.000016 · 허용 ±5.05e-04)"
+    },
+    {
+     "check": "dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": "덱 2.62e-07 vs 규칙 2.62043e-07 s (SE 가 정함 · 비 0.999837 · 허용 ±5.05e-04)"
+    },
+    {
+     "check": "허용 밖 명령은 토큰까지 같다 (허용: SE 영률 · CED 값 · timestep · run · dump 간격 · restart 간격)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "SE 영률만 바뀌었다 — AM_P · AM_S · 벽 영률 정확히 같다 · ν 전부 같다 · SE 는 **달라야** 한다 (E 비교)",
+     "ok": true,
+     "detail": "SE ×20"
+    },
+    {
+     "check": "물리 시간 — 정착 2F·dt 같다 (허용 = dt 인쇄 2 × 5e-4 · T + 반올림 1 step 씩)",
+     "ok": true,
+     "detail": "0.271854548 → 0.271806136 s (차 -4.84e-05 · 허용 0.000273)"
+    },
+    {
+     "check": "물리 시간 — 회전 N·dt 같다 (= 바퀴 수 같다 · Drum 주기는 명령 대조로 같다)",
+     "ok": true,
+     "detail": "1.59914909 → 1.59886365 s = 2.000031 → 1.999674 바퀴 (차 -0.000285 s · 허용 0.0016)"
+    },
+    {
+     "check": "덤프 간격 = 등록 규칙 (dump 간격 = max(1000, 회전 step // 200)) — 두 덱",
+     "ok": true,
+     "detail": "11333 (규칙 11333) → 30512 (규칙 30512)"
+    },
+    {
+     "check": "체크포인트 간격 = 등록 규칙 (restart 간격 = max(50000, min(200000, (회전 step 또는 2·정착 step) // 20))) — 두 덱",
+     "ok": true,
+     "detail": "113334 (규칙 113334) → 200000 (규칙 200000)"
+    },
+    {
+     "check": "계획 t₀ 물리 시각 — 차 ≤ 덤프 간격 하나 (t₀ = 정착 끝 직전 덤프 격자점)",
+     "ok": true,
+     "detail": "0.271844671 → 0.271800896 s (step 385322 → 1037408)"
+    }
+   ],
+   "meta": {
+    "comment_only_old": 1,
+    "comment_only_new": 19,
+    "examples_new": [
+     "★ 강성 축 (사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3 · Codex 6 차 HBR6-02 · 7 차 §5)",
+     "SE 영률만 ×20: 1e+07 → 2e+08 Pa (AM_P · AM_S · 벽 영률 · 전 상 ν 불변 · AM/SE 영률비 103.7 → 5.185)",
+     "dt = 생성기 Rayleigh 규칙 (상별 최소) 을 이 덱의 E 로: 7.055e-07 s (soft · AM_S) → 2.62e-07 s (SE) · 정착 · 회전 물리 시간"
+    ],
+    "note": "주석 (팔 설명 · 강성 머리 블록 · 출처) — 허용 메타 (판정 밖)"
+   },
+   "k": null,
+   "level": {
+    "old": "soft (×1)",
+    "new": "ref (×20 · v2.6)",
+    "F": 20.0
+   },
+   "verdict": "PASS",
+   "failures": [],
+   "codex_level": 20.0
+  },
+  {
+   "kind": "E",
+   "old": "LH_soft_r2_s32452843",
+   "new": "LH_ref_r2_s32452843",
+   "old_sha256": "17026064918fcb950ab16f8588ddf20115740ea52a4b0a80a3977d33e7301ff1",
+   "new_sha256": "3125d2443004300f274cc8b16fa218a7d509c4b9352c125cdfaec726807605fd",
+   "rows": [
+    {
+     "pair": "AM_P–AM_P",
+     "types": "1-1",
+     "CED_old": 3563480.0,
+     "CED_new": 3563480.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.00034065,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 0.002395228368766602,
+     "F0_new": 0.002395228368766602,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "types": "1-2",
+     "CED_old": 2719440.0,
+     "CED_new": 2719440.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.00020963076923076926,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 0.0004031397878278201,
+     "F0_new": 0.0004031397878278201,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "types": "2-2",
+     "CED_old": 2719440.0,
+     "CED_new": 2719440.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0001514,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 0.00021027970414475795,
+     "F0_new": 0.00021027970414475795,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_P–SE",
+     "types": "1-3",
+     "CED_old": 10458.2,
+     "CED_new": 68738.8,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 6.813e-05,
+     "Estar_old": 10880913.28321328,
+     "Estar_new": 183349982.76121184,
+     "Estar_mult": 16.850606009706762,
+     "CED_mult": 6.572718058556922,
+     "F0_old": 6.257185643297787e-09,
+     "F0_new": 6.257242716720929e-09,
+     "F0_ratio": 1.0000091212609623,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 16.85060601,
+      "CED_mult": 6.572698075
+     }
+    },
+    {
+     "pair": "AM_S–SE",
+     "types": "2-3",
+     "CED_old": 10458.2,
+     "CED_new": 68738.8,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 6.0559999999999996e-05,
+     "Estar_old": 10880913.28321328,
+     "Estar_new": 183349982.76121184,
+     "Estar_mult": 16.850606009706762,
+     "CED_mult": 6.572718058556922,
+     "F0_old": 4.943949150259981e-09,
+     "F0_new": 4.9439942453103625e-09,
+     "F0_ratio": 1.0000091212609619,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 16.85060601,
+      "CED_mult": 6.572698075
+     }
+    },
+    {
+     "pair": "SE–SE",
+     "types": "3-3",
+     "CED_old": 10458.2,
+     "CED_new": 77056.9,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 3.785e-05,
+     "Estar_old": 5494505.494505494,
+     "Estar_new": 109890109.89010988,
+     "Estar_mult": 20.0,
+     "CED_mult": 7.36808437398405,
+     "F0_old": 7.573689638476448e-09,
+     "F0_new": 7.573755558509656e-09,
+     "F0_ratio": 1.0000087038202456,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 20.0,
+      "CED_mult": 7.368062997
+     }
+    },
+    {
+     "pair": "AM_P–WALL",
+     "types": "1-4",
+     "CED_old": 1934550.0,
+     "CED_new": 1934550.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0006813,
+     "Estar_old": 658364683.8282923,
+     "Estar_new": 658364683.8282923,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 0.0010817969030911896,
+     "F0_new": 0.0010817969030911896,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_S–WALL",
+     "types": "2-4",
+     "CED_old": 1476340.0,
+     "CED_new": 1476340.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0003028,
+     "Estar_old": 658364683.8282923,
+     "Estar_new": 658364683.8282923,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 9.497296158913908e-05,
+     "F0_new": 9.497296158913908e-05,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "SE–WALL",
+     "types": "3-4",
+     "CED_old": 5677.6,
+     "CED_new": 38616.2,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 7.57e-05,
+     "Estar_old": 10915259.237406887,
+     "Estar_new": 193615907.90162218,
+     "Estar_mult": 17.73809523809524,
+     "CED_mult": 6.801500634070734,
+     "F0_old": 1.2282312930332312e-09,
+     "F0_new": 1.2282320394996759e-09,
+     "F0_ratio": 1.000000607757227,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 17.738095238,
+      "CED_mult": 6.801499256
+     }
+    },
+    {
+     "pair": "WALL–WALL",
+     "types": "4-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "N/A",
+     "reason": "",
+     "ok": true,
+     "F0_ratio": null
+    }
+   ],
+   "checks": [
+    {
+     "check": "덱 파싱 — LH_soft_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "덱 파싱 — LH_ref_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LH_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LH_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LH_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LH_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LH_soft_r2_s32452843",
+     "ok": true,
+     "detail": "SE 1e+07 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — LH_soft_r2_s32452843",
+     "ok": true,
+     "detail": "덱 7.055e-07 vs 규칙 7.05489e-07 s (AM_S 가 정함 · 비 1.000016 · 허용 ±5.05e-04)"
+    },
+    {
+     "check": "dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": "덱 2.62e-07 vs 규칙 2.62043e-07 s (SE 가 정함 · 비 0.999837 · 허용 ±5.05e-04)"
+    },
+    {
+     "check": "허용 밖 명령은 토큰까지 같다 (허용: SE 영률 · CED 값 · timestep · run · dump 간격 · restart 간격)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "SE 영률만 바뀌었다 — AM_P · AM_S · 벽 영률 정확히 같다 · ν 전부 같다 · SE 는 **달라야** 한다 (E 비교)",
+     "ok": true,
+     "detail": "SE ×20"
+    },
+    {
+     "check": "물리 시간 — 정착 2F·dt 같다 (허용 = dt 인쇄 2 × 5e-4 · T + 반올림 1 step 씩)",
+     "ok": true,
+     "detail": "0.271854548 → 0.271806136 s (차 -4.84e-05 · 허용 0.000273)"
+    },
+    {
+     "check": "물리 시간 — 회전 N·dt 같다 (= 바퀴 수 같다 · Drum 주기는 명령 대조로 같다)",
+     "ok": true,
+     "detail": "1.59914909 → 1.59886365 s = 2.000031 → 1.999674 바퀴 (차 -0.000285 s · 허용 0.0016)"
+    },
+    {
+     "check": "덤프 간격 = 등록 규칙 (dump 간격 = max(1000, 회전 step // 200)) — 두 덱",
+     "ok": true,
+     "detail": "11333 (규칙 11333) → 30512 (규칙 30512)"
+    },
+    {
+     "check": "체크포인트 간격 = 등록 규칙 (restart 간격 = max(50000, min(200000, (회전 step 또는 2·정착 step) // 20))) — 두 덱",
+     "ok": true,
+     "detail": "113334 (규칙 113334) → 200000 (규칙 200000)"
+    },
+    {
+     "check": "계획 t₀ 물리 시각 — 차 ≤ 덤프 간격 하나 (t₀ = 정착 끝 직전 덤프 격자점)",
+     "ok": true,
+     "detail": "0.271844671 → 0.271800896 s (step 385322 → 1037408)"
+    }
+   ],
+   "meta": {
+    "comment_only_old": 1,
+    "comment_only_new": 19,
+    "examples_new": [
+     "★ 강성 축 (사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3 · Codex 6 차 HBR6-02 · 7 차 §5)",
+     "SE 영률만 ×20: 1e+07 → 2e+08 Pa (AM_P · AM_S · 벽 영률 · 전 상 ν 불변 · AM/SE 영률비 103.7 → 5.185)",
+     "dt = 생성기 Rayleigh 규칙 (상별 최소) 을 이 덱의 E 로: 7.055e-07 s (soft · AM_S) → 2.62e-07 s (SE) · 정착 · 회전 물리 시간"
+    ],
+    "note": "주석 (팔 설명 · 강성 머리 블록 · 출처) — 허용 메타 (판정 밖)"
+   },
+   "k": null,
+   "level": {
+    "old": "soft (×1)",
+    "new": "ref (×20 · v2.6)",
+    "F": 20.0
+   },
+   "verdict": "PASS",
+   "failures": [],
+   "codex_level": 20.0
+  },
+  {
+   "kind": "E",
+   "old": "LC_soft_r2_s32452843",
+   "new": "LC_ref2_r2_s32452843",
+   "old_sha256": "56e372912d972ad4067cae1880b0d45c7f522e2d0ac750e050939bb9e8e51f3c",
+   "new_sha256": "0cca86293ace9ed955c3774b43de6beb52cd9fde4552f02ac11fc89049d17a4e",
+   "rows": [
+    {
+     "pair": "AM_P–AM_P",
+     "types": "1-1",
+     "CED_old": 108795.0,
+     "CED_new": 108795.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.00034065,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 6.816332377493232e-08,
+     "F0_new": 6.816332377493232e-08,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "types": "1-2",
+     "CED_old": 108795.0,
+     "CED_new": 108795.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.00020963076923076926,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 2.581332971358384e-08,
+     "F0_new": 2.581332971358384e-08,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "types": "2-2",
+     "CED_old": 142562.0,
+     "CED_new": 142562.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0001514,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 3.029495082428705e-08,
+     "F0_new": 3.029495082428705e-08,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_P–SE",
+     "types": "1-3",
+     "CED_old": 10458.2,
+     "CED_new": 98510.6,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 6.813e-05,
+     "Estar_old": 10880913.28321328,
+     "Estar_new": 314559366.6345636,
+     "Estar_mult": 28.909279804651657,
+     "CED_mult": 9.41946032778107,
+     "F0_old": 6.257185643297787e-09,
+     "F0_new": 6.257236342604697e-09,
+     "F0_ratio": 1.000008102573553,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 28.909279805,
+      "CED_mult": 9.419434887
+     }
+    },
+    {
+     "pair": "AM_S–SE",
+     "types": "2-3",
+     "CED_old": 10458.2,
+     "CED_new": 98510.6,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 6.0559999999999996e-05,
+     "Estar_old": 10880913.28321328,
+     "Estar_new": 314559366.6345636,
+     "Estar_mult": 28.909279804651657,
+     "CED_mult": 9.41946032778107,
+     "F0_old": 4.943949150259981e-09,
+     "F0_new": 4.943989208971613e-09,
+     "F0_ratio": 1.0000081025735528,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 28.909279805,
+      "CED_mult": 9.419434887
+     }
+    },
+    {
+     "pair": "SE–SE",
+     "types": "3-3",
+     "CED_old": 10458.2,
+     "CED_new": 122320.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 3.785e-05,
+     "Estar_old": 5494505.494505494,
+     "Estar_new": 219780219.78021976,
+     "Estar_mult": 40.0,
+     "CED_mult": 11.69608536841904,
+     "F0_old": 7.573689638476448e-09,
+     "F0_new": 7.573717642539464e-09,
+     "F0_ratio": 1.0000036975456288,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 40.0,
+      "CED_mult": 11.696070953
+     }
+    },
+    {
+     "pair": "AM_P–WALL",
+     "types": "1-4",
+     "CED_old": 59063.2,
+     "CED_new": 59063.2,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0006813,
+     "Estar_old": 658364683.8282923,
+     "Estar_new": 658364683.8282923,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 3.078624889848187e-08,
+     "F0_new": 3.078624889848187e-08,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_S–WALL",
+     "types": "2-4",
+     "CED_old": 77394.6,
+     "CED_new": 77394.6,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0003028,
+     "Estar_old": 658364683.8282923,
+     "Estar_new": 658364683.8282923,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 1.3682731380340462e-08,
+     "F0_new": 1.3682731380340462e-08,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "SE–WALL",
+     "types": "3-4",
+     "CED_old": 5677.6,
+     "CED_new": 56871.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 7.57e-05,
+     "Estar_old": 10915259.237406887,
+     "Estar_new": 346036941.7816226,
+     "Estar_mult": 31.70212765957447,
+     "CED_mult": 10.016732422150204,
+     "F0_old": 1.2282312930332312e-09,
+     "F0_new": 1.22823524332351e-09,
+     "F0_ratio": 1.000003216242984,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 31.70212766,
+      "CED_mult": 10.016721683
+     }
+    },
+    {
+     "pair": "WALL–WALL",
+     "types": "4-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "N/A",
+     "reason": "",
+     "ok": true,
+     "F0_ratio": null
+    }
+   ],
+   "checks": [
+    {
+     "check": "덱 파싱 — LC_soft_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "덱 파싱 — LC_ref2_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LC_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LC_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LC_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LC_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LC_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LC_soft_r2_s32452843",
+     "ok": true,
+     "detail": "SE 1e+07 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LC_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LC_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LC_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LC_ref2_r2_s32452843",
+     "ok": true,
+     "detail": "SE 4e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — LC_soft_r2_s32452843",
+     "ok": true,
+     "detail": "덱 7.055e-07 vs 규칙 7.05489e-07 s (AM_S 가 정함 · 비 1.000016 · 허용 ±5.05e-04)"
+    },
+    {
+     "check": "dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — LC_ref2_r2_s32452843",
+     "ok": true,
+     "detail": "덱 1.853e-07 vs 규칙 1.85292e-07 s (SE 가 정함 · 비 1.000043 · 허용 ±5.05e-04)"
+    },
+    {
+     "check": "허용 밖 명령은 토큰까지 같다 (허용: SE 영률 · CED 값 · timestep · run · dump 간격 · restart 간격)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "SE 영률만 바뀌었다 — AM_P · AM_S · 벽 영률 정확히 같다 · ν 전부 같다 · SE 는 **달라야** 한다 (E 비교)",
+     "ok": true,
+     "detail": "SE ×40"
+    },
+    {
+     "check": "물리 시간 — 정착 2F·dt 같다 (허용 = dt 인쇄 2 × 5e-4 · T + 반올림 1 step 씩)",
+     "ok": true,
+     "detail": "0.271854548 → 0.271862154 s (차 +7.61e-06 · 허용 0.000273)"
+    },
+    {
+     "check": "물리 시간 — 회전 N·dt 같다 (= 바퀴 수 같다 · Drum 주기는 명령 대조로 같다)",
+     "ok": true,
+     "detail": "1.59914909 → 1.59919181 s = 2.000031 → 2.000085 바퀴 (차 +4.27e-05 s · 허용 0.0016)"
+    },
+    {
+     "check": "덤프 간격 = 등록 규칙 (dump 간격 = max(1000, 회전 step // 200)) — 두 덱",
+     "ok": true,
+     "detail": "11333 (규칙 11333) → 43151 (규칙 43151)"
+    },
+    {
+     "check": "체크포인트 간격 = 등록 규칙 (restart 간격 = max(50000, min(200000, (회전 step 또는 2·정착 step) // 20))) — 두 덱",
+     "ok": true,
+     "detail": "113334 (규칙 113334) → 200000 (규칙 200000)"
+    },
+    {
+     "check": "계획 t₀ 물리 시각 — 차 ≤ 덤프 간격 하나 (t₀ = 정착 끝 직전 덤프 격자점)",
+     "ok": true,
+     "detail": "0.271844671 → 0.27185993 s (step 385322 → 1467134)"
+    }
+   ],
+   "meta": {
+    "comment_only_old": 1,
+    "comment_only_new": 19,
+    "examples_new": [
+     "★ 강성 축 (사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3 · Codex 6 차 HBR6-02 · 7 차 §5)",
+     "SE 영률만 ×40: 1e+07 → 4e+08 Pa (AM_P · AM_S · 벽 영률 · 전 상 ν 불변 · AM/SE 영률비 103.7 → 2.592)",
+     "dt = 생성기 Rayleigh 규칙 (상별 최소) 을 이 덱의 E 로: 7.055e-07 s (soft · AM_S) → 1.853e-07 s (SE) · 정착 · 회전 물리 시"
+    ],
+    "note": "주석 (팔 설명 · 강성 머리 블록 · 출처) — 허용 메타 (판정 밖)"
+   },
+   "k": null,
+   "level": {
+    "old": "soft (×1)",
+    "new": "ref2 (×40 · v2.6)",
+    "F": 40.0
+   },
+   "verdict": "PASS",
+   "failures": [],
+   "codex_level": 40.0
+  },
+  {
+   "kind": "E",
+   "old": "LH_soft_r2_s32452843",
+   "new": "LH_ref2_r2_s32452843",
+   "old_sha256": "17026064918fcb950ab16f8588ddf20115740ea52a4b0a80a3977d33e7301ff1",
+   "new_sha256": "02ab777fcc18b3c851a75bc369a5c797ac9fae26a338f7598ba47d46ced7b65a",
+   "rows": [
+    {
+     "pair": "AM_P–AM_P",
+     "types": "1-1",
+     "CED_old": 3563480.0,
+     "CED_new": 3563480.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.00034065,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 0.002395228368766602,
+     "F0_new": 0.002395228368766602,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "types": "1-2",
+     "CED_old": 2719440.0,
+     "CED_new": 2719440.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.00020963076923076926,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 0.0004031397878278201,
+     "F0_new": 0.0004031397878278201,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "types": "2-2",
+     "CED_old": 2719440.0,
+     "CED_new": 2719440.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0001514,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 0.00021027970414475795,
+     "F0_new": 0.00021027970414475795,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_P–SE",
+     "types": "1-3",
+     "CED_old": 10458.2,
+     "CED_new": 98510.6,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 6.813e-05,
+     "Estar_old": 10880913.28321328,
+     "Estar_new": 314559366.6345636,
+     "Estar_mult": 28.909279804651657,
+     "CED_mult": 9.41946032778107,
+     "F0_old": 6.257185643297787e-09,
+     "F0_new": 6.257236342604697e-09,
+     "F0_ratio": 1.000008102573553,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 28.909279805,
+      "CED_mult": 9.419434887
+     }
+    },
+    {
+     "pair": "AM_S–SE",
+     "types": "2-3",
+     "CED_old": 10458.2,
+     "CED_new": 98510.6,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 6.0559999999999996e-05,
+     "Estar_old": 10880913.28321328,
+     "Estar_new": 314559366.6345636,
+     "Estar_mult": 28.909279804651657,
+     "CED_mult": 9.41946032778107,
+     "F0_old": 4.943949150259981e-09,
+     "F0_new": 4.943989208971613e-09,
+     "F0_ratio": 1.0000081025735528,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 28.909279805,
+      "CED_mult": 9.419434887
+     }
+    },
+    {
+     "pair": "SE–SE",
+     "types": "3-3",
+     "CED_old": 10458.2,
+     "CED_new": 122320.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 3.785e-05,
+     "Estar_old": 5494505.494505494,
+     "Estar_new": 219780219.78021976,
+     "Estar_mult": 40.0,
+     "CED_mult": 11.69608536841904,
+     "F0_old": 7.573689638476448e-09,
+     "F0_new": 7.573717642539464e-09,
+     "F0_ratio": 1.0000036975456288,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 40.0,
+      "CED_mult": 11.696070953
+     }
+    },
+    {
+     "pair": "AM_P–WALL",
+     "types": "1-4",
+     "CED_old": 1934550.0,
+     "CED_new": 1934550.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0006813,
+     "Estar_old": 658364683.8282923,
+     "Estar_new": 658364683.8282923,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 0.0010817969030911896,
+     "F0_new": 0.0010817969030911896,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_S–WALL",
+     "types": "2-4",
+     "CED_old": 1476340.0,
+     "CED_new": 1476340.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0003028,
+     "Estar_old": 658364683.8282923,
+     "Estar_new": 658364683.8282923,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 9.497296158913908e-05,
+     "F0_new": 9.497296158913908e-05,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "SE–WALL",
+     "types": "3-4",
+     "CED_old": 5677.6,
+     "CED_new": 56871.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 7.57e-05,
+     "Estar_old": 10915259.237406887,
+     "Estar_new": 346036941.7816226,
+     "Estar_mult": 31.70212765957447,
+     "CED_mult": 10.016732422150204,
+     "F0_old": 1.2282312930332312e-09,
+     "F0_new": 1.22823524332351e-09,
+     "F0_ratio": 1.000003216242984,
+     "tol": 3.0000000000000004e-05,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 31.70212766,
+      "CED_mult": 10.016721683
+     }
+    },
+    {
+     "pair": "WALL–WALL",
+     "types": "4-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "N/A",
+     "reason": "",
+     "ok": true,
+     "F0_ratio": null
+    }
+   ],
+   "checks": [
+    {
+     "check": "덱 파싱 — LH_soft_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "덱 파싱 — LH_ref2_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LH_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LH_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LH_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LH_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LH_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LH_soft_r2_s32452843",
+     "ok": true,
+     "detail": "SE 1e+07 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LH_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LH_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LH_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LH_ref2_r2_s32452843",
+     "ok": true,
+     "detail": "SE 4e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — LH_soft_r2_s32452843",
+     "ok": true,
+     "detail": "덱 7.055e-07 vs 규칙 7.05489e-07 s (AM_S 가 정함 · 비 1.000016 · 허용 ±5.05e-04)"
+    },
+    {
+     "check": "dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — LH_ref2_r2_s32452843",
+     "ok": true,
+     "detail": "덱 1.853e-07 vs 규칙 1.85292e-07 s (SE 가 정함 · 비 1.000043 · 허용 ±5.05e-04)"
+    },
+    {
+     "check": "허용 밖 명령은 토큰까지 같다 (허용: SE 영률 · CED 값 · timestep · run · dump 간격 · restart 간격)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "SE 영률만 바뀌었다 — AM_P · AM_S · 벽 영률 정확히 같다 · ν 전부 같다 · SE 는 **달라야** 한다 (E 비교)",
+     "ok": true,
+     "detail": "SE ×40"
+    },
+    {
+     "check": "물리 시간 — 정착 2F·dt 같다 (허용 = dt 인쇄 2 × 5e-4 · T + 반올림 1 step 씩)",
+     "ok": true,
+     "detail": "0.271854548 → 0.271862154 s (차 +7.61e-06 · 허용 0.000273)"
+    },
+    {
+     "check": "물리 시간 — 회전 N·dt 같다 (= 바퀴 수 같다 · Drum 주기는 명령 대조로 같다)",
+     "ok": true,
+     "detail": "1.59914909 → 1.59919181 s = 2.000031 → 2.000085 바퀴 (차 +4.27e-05 s · 허용 0.0016)"
+    },
+    {
+     "check": "덤프 간격 = 등록 규칙 (dump 간격 = max(1000, 회전 step // 200)) — 두 덱",
+     "ok": true,
+     "detail": "11333 (규칙 11333) → 43151 (규칙 43151)"
+    },
+    {
+     "check": "체크포인트 간격 = 등록 규칙 (restart 간격 = max(50000, min(200000, (회전 step 또는 2·정착 step) // 20))) — 두 덱",
+     "ok": true,
+     "detail": "113334 (규칙 113334) → 200000 (규칙 200000)"
+    },
+    {
+     "check": "계획 t₀ 물리 시각 — 차 ≤ 덤프 간격 하나 (t₀ = 정착 끝 직전 덤프 격자점)",
+     "ok": true,
+     "detail": "0.271844671 → 0.27185993 s (step 385322 → 1467134)"
+    }
+   ],
+   "meta": {
+    "comment_only_old": 1,
+    "comment_only_new": 19,
+    "examples_new": [
+     "★ 강성 축 (사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3 · Codex 6 차 HBR6-02 · 7 차 §5)",
+     "SE 영률만 ×40: 1e+07 → 4e+08 Pa (AM_P · AM_S · 벽 영률 · 전 상 ν 불변 · AM/SE 영률비 103.7 → 2.592)",
+     "dt = 생성기 Rayleigh 규칙 (상별 최소) 을 이 덱의 E 로: 7.055e-07 s (soft · AM_S) → 1.853e-07 s (SE) · 정착 · 회전 물리 시"
+    ],
+    "note": "주석 (팔 설명 · 강성 머리 블록 · 출처) — 허용 메타 (판정 밖)"
+   },
+   "k": null,
+   "level": {
+    "old": "soft (×1)",
+    "new": "ref2 (×40 · v2.6)",
+    "F": 40.0
+   },
+   "verdict": "PASS",
+   "failures": [],
+   "codex_level": 40.0
+  },
+  {
+   "kind": "E",
+   "old": "LC_ref_r2_s32452843",
+   "new": "LC_ref2_r2_s32452843",
+   "old_sha256": "5405067f8360651b34cfdcdbb07e355132f6f9cdaa6053e70f62e2560c6924a2",
+   "new_sha256": "0cca86293ace9ed955c3774b43de6beb52cd9fde4552f02ac11fc89049d17a4e",
+   "rows": [
+    {
+     "pair": "AM_P–AM_P",
+     "types": "1-1",
+     "CED_old": 108795.0,
+     "CED_new": 108795.0,
+     "codex": "N/A",
+     "reason": "",
+     "R_star": 0.00034065,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 6.816332377493232e-08,
+     "F0_new": 6.816332377493232e-08,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "types": "1-2",
+     "CED_old": 108795.0,
+     "CED_new": 108795.0,
+     "codex": "N/A",
+     "reason": "",
+     "R_star": 0.00020963076923076926,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 2.581332971358384e-08,
+     "F0_new": 2.581332971358384e-08,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "types": "2-2",
+     "CED_old": 142562.0,
+     "CED_new": 142562.0,
+     "codex": "N/A",
+     "reason": "",
+     "R_star": 0.0001514,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 3.029495082428705e-08,
+     "F0_new": 3.029495082428705e-08,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true
+    },
+    {
+     "pair": "AM_P–SE",
+     "types": "1-3",
+     "CED_old": 68738.8,
+     "CED_new": 98510.6,
+     "codex": "N/A",
+     "reason": "",
+     "R_star": 6.813e-05,
+     "Estar_old": 183349982.76121184,
+     "Estar_new": 314559366.6345636,
+     "Estar_mult": 1.7156225590936323,
+     "CED_mult": 1.433114921994565,
+     "F0_old": 6.257242716720929e-09,
+     "F0_new": 6.257236342604697e-09,
+     "F0_ratio": 0.9999989813218824,
+     "tol": 3.0000000000000004e-05,
+     "ok": true
+    },
+    {
+     "pair": "AM_S–SE",
+     "types": "2-3",
+     "CED_old": 68738.8,
+     "CED_new": 98510.6,
+     "codex": "N/A",
+     "reason": "",
+     "R_star": 6.0559999999999996e-05,
+     "Estar_old": 183349982.76121184,
+     "Estar_new": 314559366.6345636,
+     "Estar_mult": 1.7156225590936323,
+     "CED_mult": 1.433114921994565,
+     "F0_old": 4.9439942453103625e-09,
+     "F0_new": 4.943989208971613e-09,
+     "F0_ratio": 0.9999989813218827,
+     "tol": 3.0000000000000004e-05,
+     "ok": true
+    },
+    {
+     "pair": "SE–SE",
+     "types": "3-3",
+     "CED_old": 77056.9,
+     "CED_new": 122320.0,
+     "codex": "N/A",
+     "reason": "",
+     "R_star": 3.785e-05,
+     "Estar_old": 109890109.89010988,
+     "Estar_new": 219780219.78021976,
+     "Estar_mult": 2.0,
+     "CED_mult": 1.587398402998304,
+     "F0_old": 7.573755558509656e-09,
+     "F0_new": 7.573717642539464e-09,
+     "F0_ratio": 0.9999949937689565,
+     "tol": 3.0000000000000004e-05,
+     "ok": true
+    },
+    {
+     "pair": "AM_P–WALL",
+     "types": "1-4",
+     "CED_old": 59063.2,
+     "CED_new": 59063.2,
+     "codex": "N/A",
+     "reason": "",
+     "R_star": 0.0006813,
+     "Estar_old": 658364683.8282923,
+     "Estar_new": 658364683.8282923,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 3.078624889848187e-08,
+     "F0_new": 3.078624889848187e-08,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true
+    },
+    {
+     "pair": "AM_S–WALL",
+     "types": "2-4",
+     "CED_old": 77394.6,
+     "CED_new": 77394.6,
+     "codex": "N/A",
+     "reason": "",
+     "R_star": 0.0003028,
+     "Estar_old": 658364683.8282923,
+     "Estar_new": 658364683.8282923,
+     "Estar_mult": 1.0,
+     "CED_mult": 1.0,
+     "F0_old": 1.3682731380340462e-08,
+     "F0_new": 1.3682731380340462e-08,
+     "F0_ratio": 1.0,
+     "tol": 3.0000000000000004e-05,
+     "ok": true
+    },
+    {
+     "pair": "SE–WALL",
+     "types": "3-4",
+     "CED_old": 38616.2,
+     "CED_new": 56871.0,
+     "codex": "N/A",
+     "reason": "",
+     "R_star": 7.57e-05,
+     "Estar_old": 193615907.90162218,
+     "Estar_new": 346036941.7816226,
+     "Estar_mult": 1.7872340425531914,
+     "CED_mult": 1.4727238827227953,
+     "F0_old": 1.2282320394996759e-09,
+     "F0_new": 1.22823524332351e-09,
+     "F0_ratio": 1.0000026084841716,
+     "tol": 3.0000000000000004e-05,
+     "ok": true
+    },
+    {
+     "pair": "WALL–WALL",
+     "types": "4-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "N/A",
+     "reason": "",
+     "ok": true,
+     "F0_ratio": null
+    }
+   ],
+   "checks": [
+    {
+     "check": "덱 파싱 — LC_ref_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "덱 파싱 — LC_ref2_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LC_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LC_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LC_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LC_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LC_ref2_r2_s32452843",
+     "ok": true,
+     "detail": "SE 4e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": "덱 2.62e-07 vs 규칙 2.62043e-07 s (SE 가 정함 · 비 0.999837 · 허용 ±5.05e-04)"
+    },
+    {
+     "check": "dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — LC_ref2_r2_s32452843",
+     "ok": true,
+     "detail": "덱 1.853e-07 vs 규칙 1.85292e-07 s (SE 가 정함 · 비 1.000043 · 허용 ±5.05e-04)"
+    },
+    {
+     "check": "허용 밖 명령은 토큰까지 같다 (허용: SE 영률 · CED 값 · timestep · run · dump 간격 · restart 간격)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "SE 영률만 바뀌었다 — AM_P · AM_S · 벽 영률 정확히 같다 · ν 전부 같다 · SE 는 **달라야** 한다 (E 비교)",
+     "ok": true,
+     "detail": "SE ×2"
+    },
+    {
+     "check": "물리 시간 — 정착 2F·dt 같다 (허용 = dt 인쇄 2 × 5e-4 · T + 반올림 1 step 씩)",
+     "ok": true,
+     "detail": "0.271806136 → 0.271862154 s (차 +5.6e-05 · 허용 0.000272)"
+    },
+    {
+     "check": "물리 시간 — 회전 N·dt 같다 (= 바퀴 수 같다 · Drum 주기는 명령 대조로 같다)",
+     "ok": true,
+     "detail": "1.59886365 → 1.59919181 s = 1.999674 → 2.000085 바퀴 (차 +0.000328 s · 허용 0.0016)"
+    },
+    {
+     "check": "덤프 간격 = 등록 규칙 (dump 간격 = max(1000, 회전 step // 200)) — 두 덱",
+     "ok": true,
+     "detail": "30512 (규칙 30512) → 43151 (규칙 43151)"
+    },
+    {
+     "check": "체크포인트 간격 = 등록 규칙 (restart 간격 = max(50000, min(200000, (회전 step 또는 2·정착 step) // 20))) — 두 덱",
+     "ok": true,
+     "detail": "200000 (규칙 200000) → 200000 (규칙 200000)"
+    },
+    {
+     "check": "계획 t₀ 물리 시각 — 차 ≤ 덤프 간격 하나 (t₀ = 정착 끝 직전 덤프 격자점)",
+     "ok": true,
+     "detail": "0.271800896 → 0.27185993 s (step 1037408 → 1467134)"
+    }
+   ],
+   "meta": {
+    "comment_only_old": 9,
+    "comment_only_new": 9,
+    "examples_new": [
+     "★ 강성 축 (사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3 · Codex 6 차 HBR6-02 · 7 차 §5)",
+     "SE 영률만 ×40: 1e+07 → 4e+08 Pa (AM_P · AM_S · 벽 영률 · 전 상 ν 불변 · AM/SE 영률비 103.7 → 2.592)",
+     "dt = 생성기 Rayleigh 규칙 (상별 최소) 을 이 덱의 E 로: 7.055e-07 s (soft · AM_S) → 1.853e-07 s (SE) · 정착 · 회전 물리 시"
+    ],
+    "note": "주석 (팔 설명 · 강성 머리 블록 · 출처) — 허용 메타 (판정 밖)"
+   },
+   "k": null,
+   "level": {
+    "old": "ref (×20 · v2.6)",
+    "new": "ref2 (×40 · v2.6)",
+    "F": 2.0
+   },
+   "verdict": "PASS",
+   "failures": [],
+   "codex_level": null
+  },
+  {
+   "kind": "E0",
+   "old": "E0_soft_s32452843",
+   "new": "E0_ref_s32452843",
+   "old_sha256": "a38cdc7494671979400c2037fac551b3a2567a64204def8b4b8338064130039c",
+   "new_sha256": "78ad92356373e00ae8eeee666256e250571fad6acfba90c7d491ccc3d6954adb",
+   "rows": [
+    {
+     "pair": "AM_P–AM_P",
+     "types": "1-1",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.00034065,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "types": "1-2",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.00020963076923076926,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "types": "2-2",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0001514,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_P–SE",
+     "types": "1-3",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 6.813e-05,
+     "Estar_old": 10880913.28321328,
+     "Estar_new": 183349982.76121184,
+     "Estar_mult": 16.850606009706762,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 16.85060601,
+      "CED_mult": 6.572698075
+     }
+    },
+    {
+     "pair": "AM_S–SE",
+     "types": "2-3",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 6.0559999999999996e-05,
+     "Estar_old": 10880913.28321328,
+     "Estar_new": 183349982.76121184,
+     "Estar_mult": 16.850606009706762,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 16.85060601,
+      "CED_mult": 6.572698075
+     }
+    },
+    {
+     "pair": "SE–SE",
+     "types": "3-3",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 3.785e-05,
+     "Estar_old": 5494505.494505494,
+     "Estar_new": 109890109.89010988,
+     "Estar_mult": 20.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 20.0,
+      "CED_mult": 7.368062997
+     }
+    },
+    {
+     "pair": "AM_P–WALL",
+     "types": "1-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0006813,
+     "Estar_old": 658364683.8282923,
+     "Estar_new": 658364683.8282923,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_S–WALL",
+     "types": "2-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0003028,
+     "Estar_old": 658364683.8282923,
+     "Estar_new": 658364683.8282923,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "SE–WALL",
+     "types": "3-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 7.57e-05,
+     "Estar_old": 10915259.237406887,
+     "Estar_new": 193615907.90162218,
+     "Estar_mult": 17.73809523809524,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 17.738095238,
+      "CED_mult": 6.801499256
+     }
+    },
+    {
+     "pair": "WALL–WALL",
+     "types": "4-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "N/A",
+     "reason": "",
+     "ok": true,
+     "F0_ratio": null
+    }
+   ],
+   "checks": [
+    {
+     "check": "덱 파싱 — E0_soft_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "덱 파싱 — E0_ref_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — E0_soft_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — E0_ref_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — E0_soft_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — E0_soft_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — E0_soft_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — E0_soft_s32452843",
+     "ok": true,
+     "detail": "SE 1e+07 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — E0_ref_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — E0_ref_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — E0_ref_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — E0_ref_s32452843",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — E0_soft_s32452843",
+     "ok": true,
+     "detail": "덱 7.055e-07 vs 규칙 7.05489e-07 s (AM_S 가 정함 · 비 1.000016 · 허용 ±5.05e-04)"
+    },
+    {
+     "check": "dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — E0_ref_s32452843",
+     "ok": true,
+     "detail": "덱 2.62e-07 vs 규칙 2.62043e-07 s (SE 가 정함 · 비 0.999837 · 허용 ±5.05e-04)"
+    },
+    {
+     "check": "허용 밖 명령은 토큰까지 같다 (허용: SE 영률 · CED 값 · timestep · run · dump 간격 · restart 간격)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "SE 영률만 바뀌었다 — AM_P · AM_S · 벽 영률 정확히 같다 · ν 전부 같다 · SE 는 **달라야** 한다 (E 비교)",
+     "ok": true,
+     "detail": "SE ×20"
+    },
+    {
+     "check": "전 점착 0 — 두 덱 CED 전 원소 정확히 0 (E0)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "물리 시간 — 정착 2F·dt 같다 (허용 = dt 인쇄 2 × 5e-4 · T + 반올림 1 step 씩)",
+     "ok": true,
+     "detail": "0.271854548 → 0.271806136 s (차 -4.84e-05 · 허용 0.000273)"
+    },
+    {
+     "check": "물리 시간 — 회전 N·dt 같다 (= 바퀴 수 같다 · Drum 주기는 명령 대조로 같다)",
+     "ok": true,
+     "detail": "0 → 0 s = 0.000000 → 0.000000 바퀴 (차 +0 s · 허용 4.84e-07)"
+    },
+    {
+     "check": "덤프 간격 = 등록 규칙 (dump 간격 = max(1000, 회전 step // 200)) — 두 덱",
+     "ok": true,
+     "detail": "1000 (규칙 1000) → 1000 (규칙 1000)"
+    },
+    {
+     "check": "체크포인트 간격 = 등록 규칙 (restart 간격 = max(50000, min(200000, (회전 step 또는 2·정착 step) // 20))) — 두 덱",
+     "ok": true,
+     "detail": "50000 (규칙 50000) → 51871 (규칙 51871)"
+    },
+    {
+     "check": "계획 t₀ 물리 시각 — 차 ≤ 덤프 간격 하나 (t₀ = 정착 끝 직전 덤프 격자점)",
+     "ok": true,
+     "detail": "0.2716175 → 0.271694 s (step 385000 → 1037000)"
+    }
+   ],
+   "meta": {
+    "comment_only_old": 0,
+    "comment_only_new": 18,
+    "examples_new": [
+     "★ 강성 축 (사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3 · Codex 6 차 HBR6-02 · 7 차 §5)",
+     "SE 영률만 ×20: 1e+07 → 2e+08 Pa (AM_P · AM_S · 벽 영률 · 전 상 ν 불변 · AM/SE 영률비 103.7 → 5.185)",
+     "dt = 생성기 Rayleigh 규칙 (상별 최소) 을 이 덱의 E 로: 7.055e-07 s (soft · AM_S) → 2.62e-07 s (SE) · 정착 · 회전 물리 시간"
+    ],
+    "note": "주석 (팔 설명 · 강성 머리 블록 · 출처) — 허용 메타 (판정 밖)"
+   },
+   "k": null,
+   "level": {
+    "old": "soft (×1)",
+    "new": "ref (×20 · v2.6)",
+    "F": 20.0
+   },
+   "verdict": "PASS",
+   "failures": [],
+   "codex_level": 20.0
+  },
+  {
+   "kind": "E0",
+   "old": "E0_soft_s49979687",
+   "new": "E0_ref_s49979687",
+   "old_sha256": "b8ba25ace11e1300741d49e0ff6e2aadf47bf0ccd8fd1dd97de2283486582230",
+   "new_sha256": "0544fffbf5c7ae26e7c7c36df93d873691503e0b36a5baad28caae9bd9cd4a14",
+   "rows": [
+    {
+     "pair": "AM_P–AM_P",
+     "types": "1-1",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.00034065,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "types": "1-2",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.00020963076923076926,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "types": "2-2",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0001514,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_P–SE",
+     "types": "1-3",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 6.813e-05,
+     "Estar_old": 10880913.28321328,
+     "Estar_new": 183349982.76121184,
+     "Estar_mult": 16.850606009706762,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 16.85060601,
+      "CED_mult": 6.572698075
+     }
+    },
+    {
+     "pair": "AM_S–SE",
+     "types": "2-3",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 6.0559999999999996e-05,
+     "Estar_old": 10880913.28321328,
+     "Estar_new": 183349982.76121184,
+     "Estar_mult": 16.850606009706762,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 16.85060601,
+      "CED_mult": 6.572698075
+     }
+    },
+    {
+     "pair": "SE–SE",
+     "types": "3-3",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 3.785e-05,
+     "Estar_old": 5494505.494505494,
+     "Estar_new": 109890109.89010988,
+     "Estar_mult": 20.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 20.0,
+      "CED_mult": 7.368062997
+     }
+    },
+    {
+     "pair": "AM_P–WALL",
+     "types": "1-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0006813,
+     "Estar_old": 658364683.8282923,
+     "Estar_new": 658364683.8282923,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_S–WALL",
+     "types": "2-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0003028,
+     "Estar_old": 658364683.8282923,
+     "Estar_new": 658364683.8282923,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "SE–WALL",
+     "types": "3-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 7.57e-05,
+     "Estar_old": 10915259.237406887,
+     "Estar_new": 193615907.90162218,
+     "Estar_mult": 17.73809523809524,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 17.738095238,
+      "CED_mult": 6.801499256
+     }
+    },
+    {
+     "pair": "WALL–WALL",
+     "types": "4-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "N/A",
+     "reason": "",
+     "ok": true,
+     "F0_ratio": null
+    }
+   ],
+   "checks": [
+    {
+     "check": "덱 파싱 — E0_soft_s49979687 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "덱 파싱 — E0_ref_s49979687 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — E0_soft_s49979687",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — E0_ref_s49979687",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — E0_soft_s49979687",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — E0_soft_s49979687",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — E0_soft_s49979687",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — E0_soft_s49979687",
+     "ok": true,
+     "detail": "SE 1e+07 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — E0_ref_s49979687",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — E0_ref_s49979687",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — E0_ref_s49979687",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — E0_ref_s49979687",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — E0_soft_s49979687",
+     "ok": true,
+     "detail": "덱 7.055e-07 vs 규칙 7.05489e-07 s (AM_S 가 정함 · 비 1.000016 · 허용 ±5.05e-04)"
+    },
+    {
+     "check": "dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — E0_ref_s49979687",
+     "ok": true,
+     "detail": "덱 2.62e-07 vs 규칙 2.62043e-07 s (SE 가 정함 · 비 0.999837 · 허용 ±5.05e-04)"
+    },
+    {
+     "check": "허용 밖 명령은 토큰까지 같다 (허용: SE 영률 · CED 값 · timestep · run · dump 간격 · restart 간격)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "SE 영률만 바뀌었다 — AM_P · AM_S · 벽 영률 정확히 같다 · ν 전부 같다 · SE 는 **달라야** 한다 (E 비교)",
+     "ok": true,
+     "detail": "SE ×20"
+    },
+    {
+     "check": "전 점착 0 — 두 덱 CED 전 원소 정확히 0 (E0)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "물리 시간 — 정착 2F·dt 같다 (허용 = dt 인쇄 2 × 5e-4 · T + 반올림 1 step 씩)",
+     "ok": true,
+     "detail": "0.271854548 → 0.271806136 s (차 -4.84e-05 · 허용 0.000273)"
+    },
+    {
+     "check": "물리 시간 — 회전 N·dt 같다 (= 바퀴 수 같다 · Drum 주기는 명령 대조로 같다)",
+     "ok": true,
+     "detail": "0 → 0 s = 0.000000 → 0.000000 바퀴 (차 +0 s · 허용 4.84e-07)"
+    },
+    {
+     "check": "덤프 간격 = 등록 규칙 (dump 간격 = max(1000, 회전 step // 200)) — 두 덱",
+     "ok": true,
+     "detail": "1000 (규칙 1000) → 1000 (규칙 1000)"
+    },
+    {
+     "check": "체크포인트 간격 = 등록 규칙 (restart 간격 = max(50000, min(200000, (회전 step 또는 2·정착 step) // 20))) — 두 덱",
+     "ok": true,
+     "detail": "50000 (규칙 50000) → 51871 (규칙 51871)"
+    },
+    {
+     "check": "계획 t₀ 물리 시각 — 차 ≤ 덤프 간격 하나 (t₀ = 정착 끝 직전 덤프 격자점)",
+     "ok": true,
+     "detail": "0.2716175 → 0.271694 s (step 385000 → 1037000)"
+    }
+   ],
+   "meta": {
+    "comment_only_old": 0,
+    "comment_only_new": 18,
+    "examples_new": [
+     "★ 강성 축 (사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3 · Codex 6 차 HBR6-02 · 7 차 §5)",
+     "SE 영률만 ×20: 1e+07 → 2e+08 Pa (AM_P · AM_S · 벽 영률 · 전 상 ν 불변 · AM/SE 영률비 103.7 → 5.185)",
+     "dt = 생성기 Rayleigh 규칙 (상별 최소) 을 이 덱의 E 로: 7.055e-07 s (soft · AM_S) → 2.62e-07 s (SE) · 정착 · 회전 물리 시간"
+    ],
+    "note": "주석 (팔 설명 · 강성 머리 블록 · 출처) — 허용 메타 (판정 밖)"
+   },
+   "k": null,
+   "level": {
+    "old": "soft (×1)",
+    "new": "ref (×20 · v2.6)",
+    "F": 20.0
+   },
+   "verdict": "PASS",
+   "failures": [],
+   "codex_level": 20.0
+  },
+  {
+   "kind": "E0",
+   "old": "E0_soft_s67867967",
+   "new": "E0_ref_s67867967",
+   "old_sha256": "f38f0093433d251a5045a9da70f3750a8e4a8318a77265e413c01ef2afb36439",
+   "new_sha256": "b79e0d73c8a36c78f1b362a7a23865117006309efc2f942e01697f9865964952",
+   "rows": [
+    {
+     "pair": "AM_P–AM_P",
+     "types": "1-1",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.00034065,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "types": "1-2",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.00020963076923076926,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "types": "2-2",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0001514,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_P–SE",
+     "types": "1-3",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 6.813e-05,
+     "Estar_old": 10880913.28321328,
+     "Estar_new": 183349982.76121184,
+     "Estar_mult": 16.850606009706762,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 16.85060601,
+      "CED_mult": 6.572698075
+     }
+    },
+    {
+     "pair": "AM_S–SE",
+     "types": "2-3",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 6.0559999999999996e-05,
+     "Estar_old": 10880913.28321328,
+     "Estar_new": 183349982.76121184,
+     "Estar_mult": 16.850606009706762,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 16.85060601,
+      "CED_mult": 6.572698075
+     }
+    },
+    {
+     "pair": "SE–SE",
+     "types": "3-3",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 3.785e-05,
+     "Estar_old": 5494505.494505494,
+     "Estar_new": 109890109.89010988,
+     "Estar_mult": 20.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 20.0,
+      "CED_mult": 7.368062997
+     }
+    },
+    {
+     "pair": "AM_P–WALL",
+     "types": "1-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0006813,
+     "Estar_old": 658364683.8282923,
+     "Estar_new": 658364683.8282923,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "AM_S–WALL",
+     "types": "2-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 0.0003028,
+     "Estar_old": 658364683.8282923,
+     "Estar_new": 658364683.8282923,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 1.0,
+      "CED_mult": 1.0
+     }
+    },
+    {
+     "pair": "SE–WALL",
+     "types": "3-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "PASS",
+     "reason": "",
+     "R_star": 7.57e-05,
+     "Estar_old": 10915259.237406887,
+     "Estar_new": 193615907.90162218,
+     "Estar_mult": 17.73809523809524,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true,
+     "codex_expect": {
+      "Estar_mult": 17.738095238,
+      "CED_mult": 6.801499256
+     }
+    },
+    {
+     "pair": "WALL–WALL",
+     "types": "4-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "N/A",
+     "reason": "",
+     "ok": true,
+     "F0_ratio": null
+    }
+   ],
+   "checks": [
+    {
+     "check": "덱 파싱 — E0_soft_s67867967 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "덱 파싱 — E0_ref_s67867967 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — E0_soft_s67867967",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — E0_ref_s67867967",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — E0_soft_s67867967",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — E0_soft_s67867967",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — E0_soft_s67867967",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — E0_soft_s67867967",
+     "ok": true,
+     "detail": "SE 1e+07 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — E0_ref_s67867967",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — E0_ref_s67867967",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — E0_ref_s67867967",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — E0_ref_s67867967",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — E0_soft_s67867967",
+     "ok": true,
+     "detail": "덱 7.055e-07 vs 규칙 7.05489e-07 s (AM_S 가 정함 · 비 1.000016 · 허용 ±5.05e-04)"
+    },
+    {
+     "check": "dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — E0_ref_s67867967",
+     "ok": true,
+     "detail": "덱 2.62e-07 vs 규칙 2.62043e-07 s (SE 가 정함 · 비 0.999837 · 허용 ±5.05e-04)"
+    },
+    {
+     "check": "허용 밖 명령은 토큰까지 같다 (허용: SE 영률 · CED 값 · timestep · run · dump 간격 · restart 간격)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "SE 영률만 바뀌었다 — AM_P · AM_S · 벽 영률 정확히 같다 · ν 전부 같다 · SE 는 **달라야** 한다 (E 비교)",
+     "ok": true,
+     "detail": "SE ×20"
+    },
+    {
+     "check": "전 점착 0 — 두 덱 CED 전 원소 정확히 0 (E0)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "물리 시간 — 정착 2F·dt 같다 (허용 = dt 인쇄 2 × 5e-4 · T + 반올림 1 step 씩)",
+     "ok": true,
+     "detail": "0.271854548 → 0.271806136 s (차 -4.84e-05 · 허용 0.000273)"
+    },
+    {
+     "check": "물리 시간 — 회전 N·dt 같다 (= 바퀴 수 같다 · Drum 주기는 명령 대조로 같다)",
+     "ok": true,
+     "detail": "0 → 0 s = 0.000000 → 0.000000 바퀴 (차 +0 s · 허용 4.84e-07)"
+    },
+    {
+     "check": "덤프 간격 = 등록 규칙 (dump 간격 = max(1000, 회전 step // 200)) — 두 덱",
+     "ok": true,
+     "detail": "1000 (규칙 1000) → 1000 (규칙 1000)"
+    },
+    {
+     "check": "체크포인트 간격 = 등록 규칙 (restart 간격 = max(50000, min(200000, (회전 step 또는 2·정착 step) // 20))) — 두 덱",
+     "ok": true,
+     "detail": "50000 (규칙 50000) → 51871 (규칙 51871)"
+    },
+    {
+     "check": "계획 t₀ 물리 시각 — 차 ≤ 덤프 간격 하나 (t₀ = 정착 끝 직전 덤프 격자점)",
+     "ok": true,
+     "detail": "0.2716175 → 0.271694 s (step 385000 → 1037000)"
+    }
+   ],
+   "meta": {
+    "comment_only_old": 0,
+    "comment_only_new": 18,
+    "examples_new": [
+     "★ 강성 축 (사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3 · Codex 6 차 HBR6-02 · 7 차 §5)",
+     "SE 영률만 ×20: 1e+07 → 2e+08 Pa (AM_P · AM_S · 벽 영률 · 전 상 ν 불변 · AM/SE 영률비 103.7 → 5.185)",
+     "dt = 생성기 Rayleigh 규칙 (상별 최소) 을 이 덱의 E 로: 7.055e-07 s (soft · AM_S) → 2.62e-07 s (SE) · 정착 · 회전 물리 시간"
+    ],
+    "note": "주석 (팔 설명 · 강성 머리 블록 · 출처) — 허용 메타 (판정 밖)"
+   },
+   "k": null,
+   "level": {
+    "old": "soft (×1)",
+    "new": "ref (×20 · v2.6)",
+    "F": 20.0
+   },
+   "verdict": "PASS",
+   "failures": [],
+   "codex_level": 20.0
+  },
+  {
+   "kind": "E0",
+   "old": "E0_ref_s32452843",
+   "new": "E0_ref2_s32452843",
+   "old_sha256": "78ad92356373e00ae8eeee666256e250571fad6acfba90c7d491ccc3d6954adb",
+   "new_sha256": "cc470941768ae5dd5b312f9b5432730566870615d4a28c7485e731b78c91a9a2",
+   "rows": [
+    {
+     "pair": "AM_P–AM_P",
+     "types": "1-1",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "N/A",
+     "reason": "",
+     "R_star": 0.00034065,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "types": "1-2",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "N/A",
+     "reason": "",
+     "R_star": 0.00020963076923076926,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "types": "2-2",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "N/A",
+     "reason": "",
+     "R_star": 0.0001514,
+     "Estar_old": 553066666.6666666,
+     "Estar_new": 553066666.6666666,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true
+    },
+    {
+     "pair": "AM_P–SE",
+     "types": "1-3",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "N/A",
+     "reason": "",
+     "R_star": 6.813e-05,
+     "Estar_old": 183349982.76121184,
+     "Estar_new": 314559366.6345636,
+     "Estar_mult": 1.7156225590936323,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true
+    },
+    {
+     "pair": "AM_S–SE",
+     "types": "2-3",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "N/A",
+     "reason": "",
+     "R_star": 6.0559999999999996e-05,
+     "Estar_old": 183349982.76121184,
+     "Estar_new": 314559366.6345636,
+     "Estar_mult": 1.7156225590936323,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true
+    },
+    {
+     "pair": "SE–SE",
+     "types": "3-3",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "N/A",
+     "reason": "",
+     "R_star": 3.785e-05,
+     "Estar_old": 109890109.89010988,
+     "Estar_new": 219780219.78021976,
+     "Estar_mult": 2.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true
+    },
+    {
+     "pair": "AM_P–WALL",
+     "types": "1-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "N/A",
+     "reason": "",
+     "R_star": 0.0006813,
+     "Estar_old": 658364683.8282923,
+     "Estar_new": 658364683.8282923,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true
+    },
+    {
+     "pair": "AM_S–WALL",
+     "types": "2-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "N/A",
+     "reason": "",
+     "R_star": 0.0003028,
+     "Estar_old": 658364683.8282923,
+     "Estar_new": 658364683.8282923,
+     "Estar_mult": 1.0,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true
+    },
+    {
+     "pair": "SE–WALL",
+     "types": "3-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "N/A",
+     "reason": "",
+     "R_star": 7.57e-05,
+     "Estar_old": 193615907.90162218,
+     "Estar_new": 346036941.7816226,
+     "Estar_mult": 1.7872340425531914,
+     "CED_mult": null,
+     "F0_old": 0.0,
+     "F0_new": 0.0,
+     "F0_ratio": null,
+     "tol": null,
+     "ok": true
+    },
+    {
+     "pair": "WALL–WALL",
+     "types": "4-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "codex": "N/A",
+     "reason": "",
+     "ok": true,
+     "F0_ratio": null
+    }
+   ],
+   "checks": [
+    {
+     "check": "덱 파싱 — E0_ref_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "덱 파싱 — E0_ref2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — E0_ref_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — E0_ref2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — E0_ref_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — E0_ref_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — E0_ref_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — E0_ref_s32452843",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — E0_ref2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — E0_ref2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — E0_ref2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — E0_ref2_s32452843",
+     "ok": true,
+     "detail": "SE 4e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — E0_ref_s32452843",
+     "ok": true,
+     "detail": "덱 2.62e-07 vs 규칙 2.62043e-07 s (SE 가 정함 · 비 0.999837 · 허용 ±5.05e-04)"
+    },
+    {
+     "check": "dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — E0_ref2_s32452843",
+     "ok": true,
+     "detail": "덱 1.853e-07 vs 규칙 1.85292e-07 s (SE 가 정함 · 비 1.000043 · 허용 ±5.05e-04)"
+    },
+    {
+     "check": "허용 밖 명령은 토큰까지 같다 (허용: SE 영률 · CED 값 · timestep · run · dump 간격 · restart 간격)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "SE 영률만 바뀌었다 — AM_P · AM_S · 벽 영률 정확히 같다 · ν 전부 같다 · SE 는 **달라야** 한다 (E 비교)",
+     "ok": true,
+     "detail": "SE ×2"
+    },
+    {
+     "check": "전 점착 0 — 두 덱 CED 전 원소 정확히 0 (E0)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "물리 시간 — 정착 2F·dt 같다 (허용 = dt 인쇄 2 × 5e-4 · T + 반올림 1 step 씩)",
+     "ok": true,
+     "detail": "0.271806136 → 0.271862154 s (차 +5.6e-05 · 허용 0.000272)"
+    },
+    {
+     "check": "물리 시간 — 회전 N·dt 같다 (= 바퀴 수 같다 · Drum 주기는 명령 대조로 같다)",
+     "ok": true,
+     "detail": "0 → 0 s = 0.000000 → 0.000000 바퀴 (차 +0 s · 허용 2.24e-07)"
+    },
+    {
+     "check": "덤프 간격 = 등록 규칙 (dump 간격 = max(1000, 회전 step // 200)) — 두 덱",
+     "ok": true,
+     "detail": "1000 (규칙 1000) → 1000 (규칙 1000)"
+    },
+    {
+     "check": "체크포인트 간격 = 등록 규칙 (restart 간격 = max(50000, min(200000, (회전 step 또는 2·정착 step) // 20))) — 두 덱",
+     "ok": true,
+     "detail": "51871 (규칙 51871) → 73357 (규칙 73357)"
+    },
+    {
+     "check": "계획 t₀ 물리 시각 — 차 ≤ 덤프 간격 하나 (t₀ = 정착 끝 직전 덤프 격자점)",
+     "ok": true,
+     "detail": "0.271694 → 0.2718351 s (step 1037000 → 1467000)"
+    }
+   ],
+   "meta": {
+    "comment_only_old": 8,
+    "comment_only_new": 8,
+    "examples_new": [
+     "★ 강성 축 (사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3 · Codex 6 차 HBR6-02 · 7 차 §5)",
+     "SE 영률만 ×40: 1e+07 → 4e+08 Pa (AM_P · AM_S · 벽 영률 · 전 상 ν 불변 · AM/SE 영률비 103.7 → 2.592)",
+     "dt = 생성기 Rayleigh 규칙 (상별 최소) 을 이 덱의 E 로: 7.055e-07 s (soft · AM_S) → 1.853e-07 s (SE) · 정착 · 회전 물리 시"
+    ],
+    "note": "주석 (팔 설명 · 강성 머리 블록 · 출처) — 허용 메타 (판정 밖)"
+   },
+   "k": null,
+   "level": {
+    "old": "ref (×20 · v2.6)",
+    "new": "ref2 (×40 · v2.6)",
+    "F": 2.0
+   },
+   "verdict": "PASS",
+   "failures": [],
+   "codex_level": null
+  },
+  {
+   "kind": "DT",
+   "old": "E0_ref_s32452843",
+   "new": "E0_ref_dthalf_s32452843",
+   "old_sha256": "78ad92356373e00ae8eeee666256e250571fad6acfba90c7d491ccc3d6954adb",
+   "new_sha256": "819c8a7f2310d2b574c995f2b4bb8e9ab443ede3e767f23cab2bcab3a8b120e4",
+   "rows": [
+    {
+     "pair": "AM_P–AM_P",
+     "types": "1-1",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "types": "1-2",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "types": "2-2",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–SE",
+     "types": "1-3",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–SE",
+     "types": "2-3",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "SE–SE",
+     "types": "3-3",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–WALL",
+     "types": "1-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–WALL",
+     "types": "2-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "SE–WALL",
+     "types": "3-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "WALL–WALL",
+     "types": "4-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "ok": true,
+     "reason": ""
+    }
+   ],
+   "checks": [
+    {
+     "check": "덱 파싱 — E0_ref_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "덱 파싱 — E0_ref_dthalf_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — E0_ref_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — E0_ref_dthalf_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — E0_ref_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — E0_ref_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — E0_ref_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — E0_ref_s32452843",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — E0_ref_dthalf_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — E0_ref_dthalf_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — E0_ref_dthalf_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — E0_ref_dthalf_s32452843",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — E0_ref_s32452843",
+     "ok": true,
+     "detail": "덱 2.62e-07 vs 규칙 2.62043e-07 s (SE 가 정함 · 비 0.999837 · 허용 ±5.05e-04)"
+    },
+    {
+     "check": "허용 밖 명령은 토큰까지 같다 (허용: timestep · run · dump 간격 · restart 간격)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "dt 가 정확히 1/k (k 정수 ≥ 2 · 인쇄된 dt 대조 1e-12)",
+     "ok": true,
+     "detail": "2.62e-07 → 1.31e-07 (비 2)"
+    },
+    {
+     "check": "k = 2 (등록 E0_ref@dt/2)",
+     "ok": true,
+     "detail": "k 2"
+    },
+    {
+     "check": "E · ν · CED (인쇄 토큰) · 템플릿 정확히 같다 — dt 만 다르다",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "run 1 (삽입 step) 그대로 · 정착 · 회전 step 정확히 k 배",
+     "ok": true,
+     "detail": "[1, 518714, 518714, 0] → [1, 1037428, 1037428, 0]"
+    },
+    {
+     "check": "덤프 간격 step 정확히 k 배 (덤프 시각 불변)",
+     "ok": true,
+     "detail": "1000 → 2000"
+    },
+    {
+     "check": "체크포인트 간격 = 등록 규칙 (새 step · restart 간격 = max(50000, min(200000, (회전 step 또는 2·정착 step) // 20)))",
+     "ok": true,
+     "detail": "103742 (규칙 103742)"
+    },
+    {
+     "check": "계획 t₀ 물리 시각 같다 (1e-12)",
+     "ok": true,
+     "detail": "step 1037000 → 2074000 · 0.271694 → 0.271694 s"
+    },
+    {
+     "check": "바퀴당 step 정확히 k 배 (bin 경계 물리 시각 같다)",
+     "ok": true,
+     "detail": "3051763.36 → 6103526.72"
+    }
+   ],
+   "meta": {
+    "comment_only_old": 1,
+    "comment_only_new": 2,
+    "examples_new": [
+     "★ 강성 축 (사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3 · Codex 6 차 HBR6-02 · 7 차 §5)",
+     "dt_factor 0.5 — dt 만 정확히 1/2 (2.62e-07 → 1.31e-07) · 정착 · 회전 · 덤프 간격 step 정확히 ×2 (run 1 삽입 step 은 그대"
+    ],
+    "note": "주석 (팔 설명 · 강성 머리 블록 · 출처) — 허용 메타 (판정 밖)"
+   },
+   "k": 2,
+   "level": null,
+   "verdict": "PASS",
+   "failures": []
+  },
+  {
+   "kind": "B",
+   "old": "LC_soft_r2_s32452843",
+   "new": "LH_soft_r2_s32452843",
+   "old_sha256": "56e372912d972ad4067cae1880b0d45c7f522e2d0ac750e050939bb9e8e51f3c",
+   "new_sha256": "17026064918fcb950ab16f8588ddf20115740ea52a4b0a80a3977d33e7301ff1",
+   "rows": [
+    {
+     "pair": "AM_P–AM_P",
+     "types": "1-1",
+     "LC": 108795.0,
+     "LH": 3563480.0,
+     "diff": 3454685.0,
+     "ratio": 32.75407877200239,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "types": "1-2",
+     "LC": 108795.0,
+     "LH": 2719440.0,
+     "diff": 2610645.0,
+     "ratio": 24.9960016544878,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "types": "2-2",
+     "LC": 142562.0,
+     "LH": 2719440.0,
+     "diff": 2576878.0,
+     "ratio": 19.075489962262033,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–SE",
+     "types": "1-3",
+     "LC": 10458.2,
+     "LH": 10458.2,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–SE",
+     "types": "2-3",
+     "LC": 10458.2,
+     "LH": 10458.2,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "SE–SE",
+     "types": "3-3",
+     "LC": 10458.2,
+     "LH": 10458.2,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–WALL",
+     "types": "1-4",
+     "LC": 59063.2,
+     "LH": 1934550.0,
+     "diff": 1875486.8,
+     "ratio": 32.753897519944736,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–WALL",
+     "types": "2-4",
+     "LC": 77394.6,
+     "LH": 1476340.0,
+     "diff": 1398945.4,
+     "ratio": 19.07549105493148,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "SE–WALL",
+     "types": "3-4",
+     "LC": 5677.6,
+     "LH": 5677.6,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "WALL–WALL",
+     "types": "4-4",
+     "LC": 0.0,
+     "LH": 0.0,
+     "diff": 0.0,
+     "ratio": null,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    }
+   ],
+   "checks": [
+    {
+     "check": "덱 파싱 — LC_soft_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "덱 파싱 — LH_soft_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LC_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LH_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LC_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LC_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LC_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LC_soft_r2_s32452843",
+     "ok": true,
+     "detail": "SE 1e+07 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LH_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LH_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LH_soft_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LH_soft_r2_s32452843",
+     "ok": true,
+     "detail": "SE 1e+07 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — LC_soft_r2_s32452843",
+     "ok": true,
+     "detail": "덱 7.055e-07 × 1 vs 규칙 7.05489e-07 s (AM_S)"
+    },
+    {
+     "check": "dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — LH_soft_r2_s32452843",
+     "ok": true,
+     "detail": "덱 7.055e-07 × 1 vs 규칙 7.05489e-07 s (AM_S)"
+    },
+    {
+     "check": "허용 밖 명령은 토큰까지 같다 (허용: CED 값)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "같은 강성 — E · ν 정확히 같다",
+     "ok": true,
+     "detail": ""
+    }
+   ],
+   "meta": {
+    "comment_only_old": 1,
+    "comment_only_new": 1,
+    "examples_new": [
+     "★ 스윕 축 — 표면에너지 대리 (SJKR, J/m³).  **팔 LH: 고-Bo 확장 · AM–AM Bo_code 38.4 (벽 CED 동반 = 공동 개입 B) — 내부 탐색값,"
+    ],
+    "note": "주석 (팔 설명 · 강성 머리 블록 · 출처) — 허용 메타 (판정 밖)"
+   },
+   "k": 1,
+   "level": null,
+   "verdict": "PASS",
+   "failures": []
+  },
+  {
+   "kind": "B",
+   "old": "LC_ref_r2_s32452843",
+   "new": "LH_ref_r2_s32452843",
+   "old_sha256": "5405067f8360651b34cfdcdbb07e355132f6f9cdaa6053e70f62e2560c6924a2",
+   "new_sha256": "3125d2443004300f274cc8b16fa218a7d509c4b9352c125cdfaec726807605fd",
+   "rows": [
+    {
+     "pair": "AM_P–AM_P",
+     "types": "1-1",
+     "LC": 108795.0,
+     "LH": 3563480.0,
+     "diff": 3454685.0,
+     "ratio": 32.75407877200239,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "types": "1-2",
+     "LC": 108795.0,
+     "LH": 2719440.0,
+     "diff": 2610645.0,
+     "ratio": 24.9960016544878,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "types": "2-2",
+     "LC": 142562.0,
+     "LH": 2719440.0,
+     "diff": 2576878.0,
+     "ratio": 19.075489962262033,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–SE",
+     "types": "1-3",
+     "LC": 68738.8,
+     "LH": 68738.8,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–SE",
+     "types": "2-3",
+     "LC": 68738.8,
+     "LH": 68738.8,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "SE–SE",
+     "types": "3-3",
+     "LC": 77056.9,
+     "LH": 77056.9,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–WALL",
+     "types": "1-4",
+     "LC": 59063.2,
+     "LH": 1934550.0,
+     "diff": 1875486.8,
+     "ratio": 32.753897519944736,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–WALL",
+     "types": "2-4",
+     "LC": 77394.6,
+     "LH": 1476340.0,
+     "diff": 1398945.4,
+     "ratio": 19.07549105493148,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "SE–WALL",
+     "types": "3-4",
+     "LC": 38616.2,
+     "LH": 38616.2,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "WALL–WALL",
+     "types": "4-4",
+     "LC": 0.0,
+     "LH": 0.0,
+     "diff": 0.0,
+     "ratio": null,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    }
+   ],
+   "checks": [
+    {
+     "check": "덱 파싱 — LC_ref_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "덱 파싱 — LH_ref_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": "덱 2.62e-07 × 1 vs 규칙 2.62043e-07 s (SE)"
+    },
+    {
+     "check": "dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": "덱 2.62e-07 × 1 vs 규칙 2.62043e-07 s (SE)"
+    },
+    {
+     "check": "허용 밖 명령은 토큰까지 같다 (허용: CED 값)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "같은 강성 — E · ν 정확히 같다",
+     "ok": true,
+     "detail": ""
+    }
+   ],
+   "meta": {
+    "comment_only_old": 6,
+    "comment_only_new": 6,
+    "examples_new": [
+     "AM_P–AM_P   0.00034065 5.53067e+08 5.53067e+08 3.56348e+06 3.56348e+06  0.00239522  0.00239522 1.000",
+     "AM_P–AM_S  0.000209631 5.53067e+08 5.53067e+08 2.71944e+06 2.71944e+06  0.00040314  0.00040314 1.000",
+     "AM_P–WALL    0.0006813 6.58365e+08 6.58365e+08 1.93455e+06 1.93455e+06   0.0010818   0.0010818 1.000"
+    ],
+    "note": "주석 (팔 설명 · 강성 머리 블록 · 출처) — 허용 메타 (판정 밖)"
+   },
+   "k": 1,
+   "level": null,
+   "verdict": "PASS",
+   "failures": []
+  },
+  {
+   "kind": "B",
+   "old": "LC_ref2_r2_s32452843",
+   "new": "LH_ref2_r2_s32452843",
+   "old_sha256": "0cca86293ace9ed955c3774b43de6beb52cd9fde4552f02ac11fc89049d17a4e",
+   "new_sha256": "02ab777fcc18b3c851a75bc369a5c797ac9fae26a338f7598ba47d46ced7b65a",
+   "rows": [
+    {
+     "pair": "AM_P–AM_P",
+     "types": "1-1",
+     "LC": 108795.0,
+     "LH": 3563480.0,
+     "diff": 3454685.0,
+     "ratio": 32.75407877200239,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "types": "1-2",
+     "LC": 108795.0,
+     "LH": 2719440.0,
+     "diff": 2610645.0,
+     "ratio": 24.9960016544878,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "types": "2-2",
+     "LC": 142562.0,
+     "LH": 2719440.0,
+     "diff": 2576878.0,
+     "ratio": 19.075489962262033,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–SE",
+     "types": "1-3",
+     "LC": 98510.6,
+     "LH": 98510.6,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–SE",
+     "types": "2-3",
+     "LC": 98510.6,
+     "LH": 98510.6,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "SE–SE",
+     "types": "3-3",
+     "LC": 122320.0,
+     "LH": 122320.0,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–WALL",
+     "types": "1-4",
+     "LC": 59063.2,
+     "LH": 1934550.0,
+     "diff": 1875486.8,
+     "ratio": 32.753897519944736,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–WALL",
+     "types": "2-4",
+     "LC": 77394.6,
+     "LH": 1476340.0,
+     "diff": 1398945.4,
+     "ratio": 19.07549105493148,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "SE–WALL",
+     "types": "3-4",
+     "LC": 56871.0,
+     "LH": 56871.0,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "WALL–WALL",
+     "types": "4-4",
+     "LC": 0.0,
+     "LH": 0.0,
+     "diff": 0.0,
+     "ratio": null,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    }
+   ],
+   "checks": [
+    {
+     "check": "덱 파싱 — LC_ref2_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "덱 파싱 — LH_ref2_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LC_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LH_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LC_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LC_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LC_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LC_ref2_r2_s32452843",
+     "ok": true,
+     "detail": "SE 4e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LH_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LH_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LH_ref2_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LH_ref2_r2_s32452843",
+     "ok": true,
+     "detail": "SE 4e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — LC_ref2_r2_s32452843",
+     "ok": true,
+     "detail": "덱 1.853e-07 × 1 vs 규칙 1.85292e-07 s (SE)"
+    },
+    {
+     "check": "dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — LH_ref2_r2_s32452843",
+     "ok": true,
+     "detail": "덱 1.853e-07 × 1 vs 규칙 1.85292e-07 s (SE)"
+    },
+    {
+     "check": "허용 밖 명령은 토큰까지 같다 (허용: CED 값)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "같은 강성 — E · ν 정확히 같다",
+     "ok": true,
+     "detail": ""
+    }
+   ],
+   "meta": {
+    "comment_only_old": 6,
+    "comment_only_new": 6,
+    "examples_new": [
+     "AM_P–AM_P   0.00034065 5.53067e+08 5.53067e+08 3.56348e+06 3.56348e+06  0.00239522  0.00239522 1.000",
+     "AM_P–AM_S  0.000209631 5.53067e+08 5.53067e+08 2.71944e+06 2.71944e+06  0.00040314  0.00040314 1.000",
+     "AM_P–WALL    0.0006813 6.58365e+08 6.58365e+08 1.93455e+06 1.93455e+06   0.0010818   0.0010818 1.000"
+    ],
+    "note": "주석 (팔 설명 · 강성 머리 블록 · 출처) — 허용 메타 (판정 밖)"
+   },
+   "k": 1,
+   "level": null,
+   "verdict": "PASS",
+   "failures": []
+  }
+ ],
+ "verdict": "PASS",
+ "failures": []
+}

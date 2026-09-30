@@ -1,0 +1,425 @@
+{
+ "tool": "scripts/mixer_deck_diff.py",
+ "tool_sha256": "b5cb7acca3cc99877beafac19a25f731ea65265c55e91ca9734943074ae817f8",
+ "note": "--expect-deck = 같은 생성 명령을 임시 폴더에 다시 돌린 덱 (E · EB 는 전 명령 토큰 동일 · B 는 CED 목표)",
+ "verdict": "PASS",
+ "comparisons": [
+  {
+   "allow": "E",
+   "ref": "compare/LC_soft_r2_s32452843",
+   "new": "decks/LC_ref_r2_s32452843",
+   "verdict": "PASS",
+   "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+   "changed": [
+    [
+     "AM_P",
+     "SE"
+    ],
+    [
+     "AM_S",
+     "SE"
+    ],
+    [
+     "SE",
+     "SE"
+    ],
+    [
+     "SE",
+     "WALL"
+    ]
+   ],
+   "non_ced_diffs": [],
+   "e_rule": [],
+   "missing": [],
+   "wrong_direction": [],
+   "target_mismatch": []
+  },
+  {
+   "allow": "E",
+   "ref": "compare/LH_soft_r2_s32452843",
+   "new": "decks/LH_ref_r2_s32452843",
+   "verdict": "PASS",
+   "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+   "changed": [
+    [
+     "AM_P",
+     "SE"
+    ],
+    [
+     "AM_S",
+     "SE"
+    ],
+    [
+     "SE",
+     "SE"
+    ],
+    [
+     "SE",
+     "WALL"
+    ]
+   ],
+   "non_ced_diffs": [],
+   "e_rule": [],
+   "missing": [],
+   "wrong_direction": [],
+   "target_mismatch": []
+  },
+  {
+   "allow": "E",
+   "ref": "compare/E0_soft_s32452843",
+   "new": "decks/E0_ref_s32452843",
+   "verdict": "PASS",
+   "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+   "changed": [],
+   "non_ced_diffs": [],
+   "e_rule": [],
+   "missing": [],
+   "wrong_direction": [],
+   "target_mismatch": []
+  },
+  {
+   "allow": "E",
+   "ref": "compare/E0_soft_s49979687",
+   "new": "decks/E0_ref_s49979687",
+   "verdict": "PASS",
+   "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+   "changed": [],
+   "non_ced_diffs": [],
+   "e_rule": [],
+   "missing": [],
+   "wrong_direction": [],
+   "target_mismatch": []
+  },
+  {
+   "allow": "E",
+   "ref": "compare/E0_soft_s67867967",
+   "new": "decks/E0_ref_s67867967",
+   "verdict": "PASS",
+   "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+   "changed": [],
+   "non_ced_diffs": [],
+   "e_rule": [],
+   "missing": [],
+   "wrong_direction": [],
+   "target_mismatch": []
+  },
+  {
+   "allow": "E",
+   "ref": "decks/E0_ref_s32452843",
+   "new": "decks/E0_ref2_s32452843",
+   "verdict": "PASS",
+   "e_case": "경화 ×2 (SE 2e+08 → 4e+08)",
+   "changed": [],
+   "non_ced_diffs": [],
+   "e_rule": [],
+   "missing": [],
+   "wrong_direction": [],
+   "target_mismatch": []
+  },
+  {
+   "allow": "E",
+   "ref": "decks/E0_ref_s32452843",
+   "new": "decks/E0_ref_dthalf_s32452843",
+   "verdict": "PASS",
+   "e_case": "dt ×1/2 (영률 같음)",
+   "changed": [],
+   "non_ced_diffs": [],
+   "e_rule": [],
+   "missing": [],
+   "wrong_direction": [],
+   "target_mismatch": []
+  },
+  {
+   "allow": "E",
+   "ref": "compare/LC_soft_r2_s32452843",
+   "new": "check_only/LC_ref2_r2_s32452843",
+   "verdict": "PASS",
+   "e_case": "경화 ×40 (SE 1e+07 → 4e+08)",
+   "changed": [
+    [
+     "AM_P",
+     "SE"
+    ],
+    [
+     "AM_S",
+     "SE"
+    ],
+    [
+     "SE",
+     "SE"
+    ],
+    [
+     "SE",
+     "WALL"
+    ]
+   ],
+   "non_ced_diffs": [],
+   "e_rule": [],
+   "missing": [],
+   "wrong_direction": [],
+   "target_mismatch": []
+  },
+  {
+   "allow": "E",
+   "ref": "compare/LH_soft_r2_s32452843",
+   "new": "check_only/LH_ref2_r2_s32452843",
+   "verdict": "PASS",
+   "e_case": "경화 ×40 (SE 1e+07 → 4e+08)",
+   "changed": [
+    [
+     "AM_P",
+     "SE"
+    ],
+    [
+     "AM_S",
+     "SE"
+    ],
+    [
+     "SE",
+     "SE"
+    ],
+    [
+     "SE",
+     "WALL"
+    ]
+   ],
+   "non_ced_diffs": [],
+   "e_rule": [],
+   "missing": [],
+   "wrong_direction": [],
+   "target_mismatch": []
+  },
+  {
+   "allow": "E",
+   "ref": "decks/LC_ref_r2_s32452843",
+   "new": "check_only/LC_ref2_r2_s32452843",
+   "verdict": "PASS",
+   "e_case": "경화 ×2 (SE 2e+08 → 4e+08)",
+   "changed": [
+    [
+     "AM_P",
+     "SE"
+    ],
+    [
+     "AM_S",
+     "SE"
+    ],
+    [
+     "SE",
+     "SE"
+    ],
+    [
+     "SE",
+     "WALL"
+    ]
+   ],
+   "non_ced_diffs": [],
+   "e_rule": [],
+   "missing": [],
+   "wrong_direction": [],
+   "target_mismatch": []
+  },
+  {
+   "allow": "EB",
+   "ref": "compare/LC_soft_r2_s32452843",
+   "new": "decks/LH_ref_r2_s32452843",
+   "verdict": "PASS",
+   "e_case": "경화 ×20 (SE 1e+07 → 2e+08)",
+   "changed": [
+    [
+     "AM_P",
+     "AM_P"
+    ],
+    [
+     "AM_P",
+     "AM_S"
+    ],
+    [
+     "AM_P",
+     "SE"
+    ],
+    [
+     "AM_P",
+     "WALL"
+    ],
+    [
+     "AM_S",
+     "AM_S"
+    ],
+    [
+     "AM_S",
+     "SE"
+    ],
+    [
+     "AM_S",
+     "WALL"
+    ],
+    [
+     "SE",
+     "SE"
+    ],
+    [
+     "SE",
+     "WALL"
+    ]
+   ],
+   "non_ced_diffs": [],
+   "e_rule": [],
+   "missing": [],
+   "wrong_direction": [],
+   "target_mismatch": []
+  },
+  {
+   "allow": "EB",
+   "ref": "compare/LC_soft_r2_s32452843",
+   "new": "check_only/LH_ref2_r2_s32452843",
+   "verdict": "PASS",
+   "e_case": "경화 ×40 (SE 1e+07 → 4e+08)",
+   "changed": [
+    [
+     "AM_P",
+     "AM_P"
+    ],
+    [
+     "AM_P",
+     "AM_S"
+    ],
+    [
+     "AM_P",
+     "SE"
+    ],
+    [
+     "AM_P",
+     "WALL"
+    ],
+    [
+     "AM_S",
+     "AM_S"
+    ],
+    [
+     "AM_S",
+     "SE"
+    ],
+    [
+     "AM_S",
+     "WALL"
+    ],
+    [
+     "SE",
+     "SE"
+    ],
+    [
+     "SE",
+     "WALL"
+    ]
+   ],
+   "non_ced_diffs": [],
+   "e_rule": [],
+   "missing": [],
+   "wrong_direction": [],
+   "target_mismatch": []
+  },
+  {
+   "allow": "B",
+   "ref": "compare/LC_soft_r2_s32452843",
+   "new": "compare/LH_soft_r2_s32452843",
+   "verdict": "PASS",
+   "e_case": null,
+   "changed": [
+    [
+     "AM_P",
+     "AM_P"
+    ],
+    [
+     "AM_P",
+     "AM_S"
+    ],
+    [
+     "AM_P",
+     "WALL"
+    ],
+    [
+     "AM_S",
+     "AM_S"
+    ],
+    [
+     "AM_S",
+     "WALL"
+    ]
+   ],
+   "non_ced_diffs": [],
+   "e_rule": [],
+   "missing": [],
+   "wrong_direction": [],
+   "target_mismatch": []
+  },
+  {
+   "allow": "B",
+   "ref": "decks/LC_ref_r2_s32452843",
+   "new": "decks/LH_ref_r2_s32452843",
+   "verdict": "PASS",
+   "e_case": null,
+   "changed": [
+    [
+     "AM_P",
+     "AM_P"
+    ],
+    [
+     "AM_P",
+     "AM_S"
+    ],
+    [
+     "AM_P",
+     "WALL"
+    ],
+    [
+     "AM_S",
+     "AM_S"
+    ],
+    [
+     "AM_S",
+     "WALL"
+    ]
+   ],
+   "non_ced_diffs": [],
+   "e_rule": [],
+   "missing": [],
+   "wrong_direction": [],
+   "target_mismatch": []
+  },
+  {
+   "allow": "B",
+   "ref": "check_only/LC_ref2_r2_s32452843",
+   "new": "check_only/LH_ref2_r2_s32452843",
+   "verdict": "PASS",
+   "e_case": null,
+   "changed": [
+    [
+     "AM_P",
+     "AM_P"
+    ],
+    [
+     "AM_P",
+     "AM_S"
+    ],
+    [
+     "AM_P",
+     "WALL"
+    ],
+    [
+     "AM_S",
+     "AM_S"
+    ],
+    [
+     "AM_S",
+     "WALL"
+    ]
+   ],
+   "non_ced_diffs": [],
+   "e_rule": [],
+   "missing": [],
+   "wrong_direction": [],
+   "target_mismatch": []
+  }
+ ]
+}

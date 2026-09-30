@@ -432,7 +432,7 @@ def expected_deck(arm, seed, n_total=GEN_ARGS['n_total'], cgf=GEN_ARGS['cgf'], r
 #    경화 (ref · ref2) 면 --stiffen-se F --hold-bo-pairwise · soft 는 강성 옵션 없음 (§3 "생성기 옵션 --stiffen-se 14 --hold-bo-pairwise").
 #  NP 프로브 폴더 = `npprobe<NP>_<셀 이름>` — 같은 덱 (사전등록 §8-2 ②: "NP 프로브 = E0_ref 첫 시드를 NP 5/10/20 으로 1 h 씩 (같은 덱 ·
 #    처리량만 · 확인 자료 전용 금지)").  parse_cell 은 프로브를 **거부**한다 (자료 셀이 아니다) — parse_run 만 받는다.
-STIFF_LEVELS = {'soft': 1.0, 'ref': 14.0, 'ref2': 28.0}           # 사전등록 §3 — E_ref = SE ×14 · E_ref2 = SE ×28 (개발 · 진단 전용)
+STIFF_LEVELS = {'soft': 1.0, 'ref': 20.0, 'ref2': 40.0}           # 사전등록 §3 v2.6 (09-30 밤 · 1저자 비준) — E_ref = SE ×20 · E_ref2 = SE ×40 (옛 v2.5: ×14 · ×28 = DEV7 ×14 실측 뒤 개정)
 _TAG_PAT = r'(E0|LC|LH)_(soft|ref|ref2)(_dthalf)?(?:_r([1-9][0-9]*))?'
 _TAG_RE = re.compile(_TAG_PAT)
 _CELL_RE = re.compile(_TAG_PAT + r'_s([1-9][0-9]*)')
@@ -1128,7 +1128,7 @@ def _selftest():
     #    ★ 반례를 먼저 옮겼다 — 옛 판: expected_deck 에 강성 인자가 없다 (TypeError) · parse_cell · check_cohort · --cohort 없음 ·
     #      --runs 는 `<생성기 팔>_s<seed>` 만 읽고 E · EB 를 거부 (rc 2) ⇒ ㉟~㊷ 전부 FAIL.
     G = globals()
-    EVD = os.path.normpath(os.path.join(_HERE, '..', 'docs', 'data', 'mixer_highbo_dev_decks_20260930'))
+    EVD = os.path.normpath(os.path.join(_HERE, '..', 'docs', 'data', 'mixer_highbo_dev_decks_20260930_v26'))   # v2.6 ×20 · ×40 (옛 ×14 폴더는 이력)
 
     def _evd_dirs():
         out_ = []
@@ -1142,17 +1142,17 @@ def _selftest():
         ds = _evd_dirs()
         return (len(ds) == 14 and all(G['cell_expected_deck'](os.path.basename(d_)) == open(os.path.join(d_, 'in.mixer'), encoding='utf-8').read()
                                       for d_ in ds)
-                and G['expected_deck']('E0', 32452843, revolutions=0, stiffen_se=14.0, hold_bo_pairwise=True, dt_factor=0.5)
+                and G['expected_deck']('E0', 32452843, revolutions=0, stiffen_se=20.0, hold_bo_pairwise=True, dt_factor=0.5)
                 == open(os.path.join(EVD, 'decks', 'E0_ref_dthalf_s32452843', 'in.mixer'), encoding='utf-8').read())
     chk('㉟ ★ expected_deck(팔, seed, revolutions, stiffen_se, hold_bo_pairwise, dt_factor) · cell_expected_deck(이름) = 커밋된 DEV 증거 덱 14 '
         '(decks 7 · compare 5 · check_only 2) 와 **바이트 동일** — 이름에서 생성 인자를 다시 낸다 (build.sh 의 gen_cmd 와 같은 규칙)', _ok(_t35))
 
     def _t36():
         pc = G['parse_cell']
-        good = {'E0_ref_s32452843': ('E0', 'ref', 14.0, True, 1.0, 0, 32452843),
-                'E0_ref_dthalf_s32452843': ('E0', 'ref', 14.0, True, 0.5, 0, 32452843),
-                'E0_ref2_s32452843': ('E0', 'ref2', 28.0, True, 1.0, 0, 32452843),
-                'LC_ref_r2_s32452843': ('LC', 'ref', 14.0, True, 1.0, 2, 32452843),
+        good = {'E0_ref_s32452843': ('E0', 'ref', 20.0, True, 1.0, 0, 32452843),
+                'E0_ref_dthalf_s32452843': ('E0', 'ref', 20.0, True, 0.5, 0, 32452843),
+                'E0_ref2_s32452843': ('E0', 'ref2', 40.0, True, 1.0, 0, 32452843),
+                'LC_ref_r2_s32452843': ('LC', 'ref', 20.0, True, 1.0, 2, 32452843),
                 'LH_soft_r8_s15485863': ('LH', 'soft', 1.0, False, 1.0, 8, 15485863),
                 'E0_soft_s104395301': ('E0', 'soft', 1.0, False, 1.0, 0, 104395301)}
         bad = ('E0_ref_r2_s32452843', 'LC_ref_s32452843', 'LC_ref_r0_s32452843', 'LC_ref_r02_s32452843', 'LC_ref_r2_s032452843',
@@ -1188,7 +1188,7 @@ def _selftest():
             f'— rc {cE[0]!r} · {cEB[0]!r} · {cB[0]!r} (옛 판: E · EB rc 2 "--runs 는 A · B 전용")',
             all(c_[0] == 0 and '1/1 PASS' in c_[1] for c_ in (cE, cEB, cB)))
         #  ㊳ 반례 — 새 이름 폴더에 다른 seed (holdout) 의 덱 · stale dt 덱 · --expect-deck 혼용
-        hold_ = G['expected_deck']('LC', 15485863, revolutions=2, stiffen_se=14.0, hold_bo_pairwise=True)
+        hold_ = G['expected_deck']('LC', 15485863, revolutions=2, stiffen_se=20.0, hold_bo_pairwise=True)
         open(os.path.join(rE, 'LC_ref_r2_s32452843', 'in.mixer'), 'w', encoding='utf-8').write(hold_)
         c1 = _cli(['--runs', rE, '--ref-arm', 'LC_soft_r2', '--arm', 'LC_ref_r2', '--allow', 'E', '--expect-seeds', '32452843'])
         soft_ = open(os.path.join(rE, 'LC_soft_r2_s32452843', 'in.mixer'), encoding='utf-8').read()

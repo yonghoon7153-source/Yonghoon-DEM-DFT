@@ -1,0 +1,1 @@
+python3 scripts/make_mixer_deck.py --out docs/data/mixer_highbo_dev_decks_20260930_v26/compare/LC_soft_r2_s32452843 --n-total 100000 --cgf 151.4 --arm LC --seed 32452843 --revolutions 2

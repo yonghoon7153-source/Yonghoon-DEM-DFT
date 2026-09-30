@@ -24,7 +24,7 @@ rc 0 = 증서 씀 (합격 여부는 관문이 판정한다 — 이 래퍼는 판
     회전 팔 (LC · LH): bin 0 스모크 허용목록 (위 그대로) + `contact` 블록 (검사기 check_window 를 bin 0 창으로 · 등록 인자) —
     E0 팔: `{run, kind 'e0-contract', contact (전 창 = 계획 t₀), completion (log 마지막 thermo step = run 합 — HBR6-03)}` (판독기 없음 · --ref 불요).
   contact.status = 세 축 분리 (§6 표): 기술 · 원 1 % · soft 범위 → TECH_FAIL / CONTRACT_MET / CONTRACT_NOT_MET / OUT_OF_RANGE.
-    ref/ref2 = 계약 팔 (1 % · 범위 없음) · soft = 진단 팔 (등록 5.8 % = 1 % × 14^(2/3) · 넘으면 OUT_OF_RANGE · **올리지 않는다**).
+    ref/ref2 = 계약 팔 (1 % · 범위 없음) · soft = 진단 팔 (등록 7.37 % = 1 % × 20^(2/3) · v2.6 · 넘으면 OUT_OF_RANGE · **올리지 않는다**).
   GATE_TABLE = arm × E × 검사 → rest 해제 관문 (셀프테스트 ⑧ 이 36 칸을 고정 — Codex 7 차 HBR7-02 해결 증거).  M 은 여전히 맹검 (허용목록 투영만).
     python3 scripts/mixer_smoke_blind.py <OUT>/LC_ref_r8_s15485863 --ref <OUT>/E0_ref_s15485863 --cert <증서> --contract [--phase-receipt R]
     python3 scripts/mixer_smoke_blind.py <OUT>/E0_ref_s15485863 --cert <증서> --contract
@@ -92,7 +92,7 @@ GATE_WHY = {
     ('ref', 'OUT_OF_RANGE'): 'ref 에는 soft 범위가 없다 (상태 모순)',
     ('soft', 'TECH_FAIL'): '기술 실패 — soft 도 같은 기술 계약 필수 (§6)',
     ('soft', 'CONTRACT_NOT_MET'): 'soft 원 1 % NOT_MET 보존 (계약 밖 진단) — 관문 통과',
-    ('soft', 'OUT_OF_RANGE'): 'soft 진단 범위 5.8 % 초과 — OUT_OF_RANGE 한정어 · 값 보존 · 관문 통과',
+    ('soft', 'OUT_OF_RANGE'): 'soft 진단 범위 (등록 7.37 %) 초과 — OUT_OF_RANGE 한정어 · 값 보존 · 관문 통과',
 }
 
 
@@ -247,9 +247,28 @@ def _expected_counts(c):
     return {i + 1: int(p['n'][t]) for i, t in enumerate(dd._gen.TYPES)}
 
 
+def _launch_np(run_dir):
+    """발사 봉인의 MPI 랭크 수 (SELF-70 · 상별 허용폭) — `launch_record.json` 의 slurm.np (양의 정수) · 봉인 없음 또는 slurm 없음 (로컬
+    lmp_serial) = 1 · 봉인 형식 깨짐 · np 가 정수 아님 = None (허용폭 없음 → 검사기가 정확 일치로 본다 · fail-closed)."""
+    p = Path(run_dir, 'launch_record.json')
+    if not p.is_file():
+        return 1
+    try:
+        lr = json.loads(p.read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return None
+    if not isinstance(lr, dict):
+        return None
+    s = lr.get('slurm')
+    if s is None:
+        return 1
+    v = s.get('np') if isinstance(s, dict) else None
+    return v if isinstance(v, int) and not isinstance(v, bool) and v >= 1 else None
+
+
 def contact_eval(run_dir, name, bins=None, phase_receipt=None):
     """등록 인자로 check_window → (전체 결과, contact 블록).  인자: n_expected 파일 · 계획 상별 수 · **이름에서 재생성한 기대 덱** (정지 벽 계약 ·
-    HBR4-07) · 캠페인 STL · soft 면 등록 범위 5.8 % (ref/ref2 는 없음 = 계약 팔) · (회전 팔) 재개-위상 영수증.
+    HBR4-07) · 캠페인 STL · soft 면 등록 범위 (v2.6 7.37 %) (ref/ref2 는 없음 = 계약 팔) · (회전 팔) 재개-위상 영수증.
     contact 블록 = 허용목록: 상태 (세 축) · 판정 · 창 · 벽 근거 · 출처 sha256 (검사기 · 덱 · 발사 봉인 · 기대 덱) · 본 프레임 묶음.  M 과 무관."""
     c = dd.parse_cell(name)
     soft = cv.SOFT_RANGE_PCT if c['level'] == 'soft' else None
@@ -258,14 +277,18 @@ def contact_eval(run_dir, name, bins=None, phase_receipt=None):
     except (OSError, ValueError):
         ne = None
     exp_text = dd.cell_expected_deck(name)
+    #  ★ SELF-70 — t₀ 상별 허용폭 = 기대 덱의 삽입 묶음 (템플릿 수) × 발사 봉인 NP (LIGGGHTS MPI 삽입 분배) · 못 정하면 None = 정확 일치
+    np_ = _launch_np(run_dir)
+    tol, grp, why_ = cv.count_tolerance(exp_text, np_) if np_ is not None else (None, None, '발사 봉인의 slurm.np 형식이 깨졌다')
     fd, exp = tempfile.mkstemp(suffix='.mixer')
     try:
         with os.fdopen(fd, 'w', encoding='utf-8') as fh:
             fh.write(exp_text)
         w = cv.check_window(run_dir, ne, expect_counts=_expected_counts(c), phase_receipt=phase_receipt, expect_deck=exp,
-                            stl_ref_dir=cv.STL_REF_DIR, bins=bins, soft_range_pct=soft)
+                            stl_ref_dir=cv.STL_REF_DIR, bins=bins, soft_range_pct=soft, count_tol=tol, group_totals=grp)
     finally:
         os.remove(exp)
+    w['count_np'], w['count_tol_why'] = np_, why_
     lrp = Path(run_dir, 'launch_record.json')
     block = dict(schema=CONTACT_CERT_SCHEMA, run=name, level=c['level'], arm=c['arm'], bins=w.get('bins'), soft_range_pct=soft,
                  status=copy.deepcopy(w.get('status')), verdict=w.get('verdict'),
@@ -347,9 +370,12 @@ def e0_diag(out, record, reg=REG):
       b          E0_ref2 CONTRACT_MET ∧ x_hi(E0_ref2) ≤ x_hi(E0_ref_s32452843) + 1e-9 % (§4 b "계약 안 · E_ref 대비 증가하지 않음")
       c          E0_ref@dt/2 CONTRACT_MET ∧ |x_hi 차| ≤ 0.1 %p ∧ |ΔS_R²| / S_R² ≤ 1 % (§4 c) — S_R² = 판독기 e0_t0_stats (등록 칸 · 계획 t₀)
     x = 저장 프레임 최대 (입자–입자 · 벽) — contact_eval (검사기 check_window · 정지 벽 계약 · 이름에서 재생성한 기대 덱).
-    ⚠ c 의 사전등록 지위는 '진단' 이다 — 여기서는 fail-closed 로 회전 관문 (dev-rot) 에 넣었다 (보고의 모호점) · dt/2 · ref2 도 ref 수준이라
-      CONTRACT_MET 을 요구한다 (fail-closed).  M 은 계산하지 않는다 (E0 뿐) · S_R² 원값은 봉인 파일에만 (기록 = 상대 변화).
-    soft 일관성 (§6: "DEV E0_ref 실측 최대 × 5.81 이 5.8 % 를 넘으면 그 사실을 보고하되 범위를 올리지 않는다") 은 **보고만**."""
+    ★ v2.6 (09-30 밤 · 1저자 비준 "권고하는걸로") — **verdict = 관문 검사 (complete · technical · a) 만** · b · c 는 값 · pass 를 그대로 기록하는
+      보고 전용 (sg.E0_DIAG_ROLE · 통과선 불변).  옛 판 (v2.5 까지) 은 c 의 등록 지위가 '진단' 인데도 fail-closed 로 넣었다 (보고의 모호점) —
+      DEV7 (×14) 에서 b 는 스냅샷 최대의 주인 교체 (+0.0026 %p) 로, c 는 dt/2 가 궤적을 바꿔 두 실현을 비교해 깨졌다.
+      상별 입자 수는 SELF-70 허용폭 (계획 ± (템플릿−1)·NP) · 실현 조성은 runs[].contact.count_check 에 보고.
+      M 은 계산하지 않는다 (E0 뿐) · S_R² 원값은 봉인 파일에만 (기록 = 상대 변화).
+    soft 일관성 (§6: "DEV E0_ref 실측 최대 × F_ref^(2/3) 이 등록 범위를 넘으면 그 사실을 보고하되 범위를 올리지 않는다") 은 **보고만**."""
     out = os.path.normpath(out)
     vault = Path(out) / '.e0_diag'
     rg = sg.E0_DIAG_REG
@@ -375,7 +401,8 @@ def e0_diag(out, record, reg=REG):
                                last_thermo_step=lc['last_thermo_step'], run_total=tot,
                                contact=dict({k: st_.get(k) for k in ('status', 'technical', 'original_1pct', 'x_lo_pct', 'x_hi_pct')},
                                             verdict=block['verdict'], wall_basis=block['wall_basis'], window=block['window'],
-                                            frames_sha256=block['frames']['sha256']))
+                                            frames_sha256=block['frames']['sha256'],
+                                            count_check=copy.deepcopy(w.get('count_check')), count_np=w.get('count_np')))   # SELF-70 · 실현 조성 보고
             for n in ('E0_ref_s32452843', 'E0_ref_dthalf_s32452843'):
                 st0, p0, cs = mi.e0_t0_stats(os.path.join(out, n), reg['r_container'], cells=reg['cells'], x_cells=reg['x_cells'],
                                              n_min=reg['n_min'], axis=reg['axis'])
@@ -405,14 +432,18 @@ def e0_diag(out, record, reg=REG):
         checks['c'] = dict(pass_=(st['E0_ref_dthalf_s32452843'] == 'CONTRACT_MET' and dmax is not None and rel is not None
                                   and dmax <= rg['c_dmax_pp'] + rg['eps_pct'] and rel <= rg['c_sr2_rel'] + rg['eps_rel']),
                            dmax_pp=dmax, sr2_rel=rel)
-        for v in checks.values():
+        for k_, v in checks.items():
             v['pass'] = bool(v.pop('pass_'))
+            v['role'] = sg.E0_DIAG_ROLE[k_]
     nps_all = {runs[n]['np'] for n in runs}
     np_rec = next(iter(nps_all)) if len(nps_all) == 1 else None
     fp, fsha = _vault(vault, 'e0_diag_full', dict(schema='mixer_e0_diag_full/1', out=out, reg=dict(reg), contact=fulls, sr2=sr2,
                                                      stdout=buf_out.getvalue(), stderr=buf_err.getvalue(), refused=refused))
-    verdict = 'PASS' if (refused is None and checks and all(v['pass'] for v in checks.values())) else 'FAIL'
-    k14 = 14 ** (2.0 / 3.0)
+    #  ★ v2.6 (09-30 밤 · 1저자 비준) — verdict = 관문 검사 (complete · technical · a) 만.  b · c 는 값 · pass 를 그대로 기록하는 **보고 전용**
+    #    (통과선 불변 · 등록 §4 표 v2.6 · Codex 10 차 질의).  근거 = DEV7 (×14) 실측: b 는 스냅샷 최대의 주인이 바뀌어 +0.0026 %p 로 깨졌고
+    #    (쌍별로는 예측대로 줄었다) · c 는 dt/2 가 궤적을 바꿔 두 실현을 비교한다 (0.1 %p · 1 % 문턱은 실현 잡음보다 좁다).
+    verdict = 'PASS' if (refused is None and checks and all(v['pass'] for v in checks.values() if v['role'] == 'gate')) else 'FAIL'
+    k14 = dd.STIFF_LEVELS['ref'] ** (2.0 / 3.0)                     # 등록 E_ref 배수의 Hertz 환산 (v2.6 ×20 → 7.37)
     rec = dict(schema=sg.E0_DIAG_SCHEMA, verdict=verdict, time_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
                out=os.path.realpath(out), np=np_rec, registered=dict(rg), reader=dict(sg.READER_REG), tools=sg.e0_record_tools(),
                runs=runs, checks=checks, refused_kind=(refused or {}).get('kind'),
@@ -819,7 +850,7 @@ def interim_look(out, eps_path, phase_receipt=None, reg=REG):
             soft_ok = False
         for c_ in cells_:
             if (contact.get(c_) or {}).get('status') == 'OUT_OF_RANGE':
-                quals.append(f'{c_}: soft 진단 범위 5.8 % 초과 (OUT_OF_RANGE) — soft 수준 d 는 이 한정어와 함께')
+                quals.append(f'{c_}: soft 진단 범위 (등록 7.37 %) 초과 (OUT_OF_RANGE) — soft 수준 d 는 이 한정어와 함께')
         for c_ in cells_[:2]:
             if not (floor.get(c_) or {}).get('pass'):
                 quals.append(f'{c_}: 바닥 검사 (8×8×2 S₀²/S_R² ≥ 5) 불합격')
@@ -936,7 +967,8 @@ def main(argv=None):
             ap.error('--e0-diag <OUT> --record <기록> 만 (런 · --contract 와 섞지 않는다)')
         rc, rec = e0_diag(a.e0_diag, a.record)
         ck = rec.get('checks') or {}
-        print(f"{'✓' if rc == 0 else '⛔'} E0 진단 {rec['verdict']} → {a.record} · " + ' · '.join(f'{k} {"✓" if v.get("pass") else "✗"}' for k, v in ck.items())
+        print(f"{'✓' if rc == 0 else '⛔'} E0 진단 {rec['verdict']} → {a.record} · "
+              + ' · '.join(f'{k} {"✓" if v.get("pass") else "✗"}{"" if v.get("role") == "gate" else "(보고)"}' for k, v in ck.items())
               + (f" · 거부 {rec['refused_kind']}" if rec.get('refused_kind') else '') + ' — M 은 계산하지 않았다 (E0 뿐)')
         return rc
     if a.contract:
@@ -1163,10 +1195,10 @@ def selftest():
             plan_n = {1: 176, 2: 859, 3: 98965}
             shown = out_.getvalue() + err_.getvalue()
             return (rc_ == 0 and rc2 == 0 and sorted(e_) == sorted(G['ROT_CERT_KEYS']) and c_['schema'] == G['CONTACT_CERT_SCHEMA']
-                    and c_['run'] == 'LC_soft_r8_s15485863' and c_['level'] == 'soft' and c_['bins'] == [0] and c_['soft_range_pct'] == 5.8
+                    and c_['run'] == 'LC_soft_r8_s15485863' and c_['level'] == 'soft' and c_['bins'] == [0] and c_['soft_range_pct'] == cv.SOFT_RANGE_PCT
                     and c_['status']['status'] == 'CONTRACT_NOT_MET' and not mi.verify_frames(str(tgt['soft'][0] / 'post'), c_['frames'])
                     and c_['frames']['files'] and leak_check(e_) == []
-                    and k_soft['bins'] == (0,) and k_soft['soft_range_pct'] == 5.8 and k_soft['expect_counts'] == plan_n
+                    and k_soft['bins'] == (0,) and k_soft['soft_range_pct'] == cv.SOFT_RANGE_PCT and k_soft['expect_counts'] == plan_n
                     and os.path.samefile(k_soft['stl_ref_dir'], G['cv'].STL_REF_DIR)
                     and k_soft['expect_text'] == G['dd'].cell_expected_deck('LC_soft_r8_s15485863')
                     and k_ref['soft_range_pct'] is None and e2['contact']['level'] == 'ref' and e2['contact']['soft_range_pct'] is None
@@ -1174,6 +1206,37 @@ def selftest():
                     and f"{orig_['M_final']:.4f}"[:5] not in shown and 'M_final' not in shown)
     chk('⑨ ★ --contract 회전 증서 = bin 0 스모크 허용목록 + contact (bins [0] · 상태 · 출처 sha256 · 본 프레임 묶음 — 다시 해시 일치) · soft 는 5.8 % 로 · '
         'ref 는 범위 없이 (계약 팔) 검사기를 부른다 · 계획 상별 수 · 캠페인 STL · 이름에서 재생성한 기대 덱 · 화면에 M 없음', okx(_t9))
+
+    def _t9b():
+        """★ SELF-70 — 반례 먼저: 래퍼가 상별 허용폭 없이 검사기를 불러 ibb NP 20 런이 전부 TECH_FAIL 이었다.  계약: 허용폭 = 이름에서 재생성한
+        기대 덱의 삽입 묶음 (템플릿 수) × 발사 봉인 NP · 봉인 없음 · slurm 없음 (로컬 lmp_serial) = NP 1 · NP 형식 깨짐 = 허용폭 없음 (정확 일치)."""
+        with tempfile.TemporaryDirectory(prefix='sb_n_') as tmp_:
+            td_ = Path(tmp_)
+            tgt, _o = _cells(td_)
+            G['cv'].check_window = _fake_cw('CONTRACT_MET', pp=0.004)
+            got = {}
+            try:
+                for key, d_ in (('lc', tgt['ref'][0]), ('e0', tgt['ref'][1])):
+                    lrp = d_ / 'launch_record.json'
+                    for tag, rec_ in (('np20', {'stage': 'dev-e0', 'slurm': {'np': 20}}), ('local', {'backend': 'local'}),
+                                      ('bad', {'slurm': {'np': '20'}}), ('none', None)):
+                        if rec_ is None:
+                            if lrp.exists():
+                                lrp.unlink()
+                        else:
+                            lrp.write_text(json.dumps(rec_), encoding='utf-8')
+                        calls.clear()
+                        w_, _b = contact_eval(str(d_), d_.name)
+                        got[(key, tag)] = (calls[-1].get('count_tol'), calls[-1].get('group_totals'), w_.get('count_np'))
+            finally:
+                G['cv'].check_window = real_cw
+            print('        ' + ' · '.join(f'{k[0]}/{k[1]}: {v[0]} np {v[2]}' for k, v in got.items()))
+            return (got[('lc', 'np20')] == ({1: 20, 2: 20, 3: 0}, [((1, 2), 1035), ((3,), 98965)], 20)
+                    and got[('e0', 'np20')] == ({1: 40, 2: 40, 3: 40}, [((1, 2, 3), 100000)], 20)
+                    and got[('e0', 'local')][:1] == ({1: 2, 2: 2, 3: 2},) and got[('e0', 'none')][:1] == ({1: 2, 2: 2, 3: 2},)
+                    and got[('e0', 'bad')][:2] == (None, None) and got[('lc', 'bad')][:2] == (None, None))
+    chk('⑨b ★ SELF-70: 래퍼가 검사기에 상별 허용폭을 넘긴다 — 이름에서 재생성한 덱의 삽입 묶음 × 발사 봉인 NP (LC 층상 NP 20 → AM ±20 · SE 정확 · '
+        'E0 균일 → ±40) · 봉인 없음 · 로컬 = NP 1 (±2) · NP 형식 깨짐 = 허용폭 없음 (정확 일치 · fail-closed)', okx(_t9b))
 
     def _t10():
         with tempfile.TemporaryDirectory(prefix='sb_e_') as tmp_:

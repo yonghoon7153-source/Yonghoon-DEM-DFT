@@ -29,7 +29,7 @@
 usage
   python3 scripts/check_contact_validity.py <덤프디렉터리> [...] [--label L]          # 옛 빠른 점검 (계약 아님)
   python3 scripts/check_contact_validity.py --contract <런디렉터리> [...] --n-expected 100000 --json out.json
-  python3 scripts/check_contact_validity.py --contract <soft 셀> --soft-range 5.8 [--bins 0] …   # 강성 축 §6 — 상태 (TECH_FAIL · CONTRACT_MET ·
+  python3 scripts/check_contact_validity.py --contract <soft 셀> --soft-range 7.37 [--bins 0] …   # 강성 축 §6 — 상태 (TECH_FAIL · CONTRACT_MET ·
                                                                                                 # CONTRACT_NOT_MET · OUT_OF_RANGE) · 원 1 % · soft 범위
   python3 scripts/check_contact_validity.py --selftest
 """
@@ -165,7 +165,7 @@ PHASE_FRAMES = 5                 # 위상을 데이터로 확인할 프레임 �
 #:   에서 어차피 NOT_MET 유지 · q 를 공식 판정에 안 씀 · 같은 조건 재시도로 지우는 TECH 사유 아님 · 팔은 완주 · 값 보존 · 보고 · 짝 블록의 다른
 #:   팔 계속 …)" · "DEV E0_ref 실측 최대 × 5.81 이 5.8 % 를 넘으면 그 사실을 보고하되 **범위를 올리지 않는다**".
 #:   ⛔ CLI `--soft-range` 는 이 값 외를 거부한다 (올리거나 내리지 않는다 · 결과를 보고 고르지 않는다 — Codex 9 차 Q6).
-SOFT_RANGE_PCT = 5.8
+SOFT_RANGE_PCT = 7.37            # ★ v2.6 (09-30 밤 · 1저자 비준 "권고하는걸로") = 1 % × 20^(2/3) 둘째 자리 (E_ref ×14 → ×20 · 옛 5.8 은 거부)
 SOFT_RANGE_EPS = 1e-9            # 경계 비교 규약 (부동소수 · % 단위) — 물리 허용치 아님
 #: 스모크 · 관문이 구분해 내보낼 상태 (§6 — "`TECH_FAIL` / `CONTRACT_MET` / `CONTRACT_NOT_MET` / `OUT_OF_RANGE`")
 CONTRACT_STATUSES = ('TECH_FAIL', 'CONTRACT_MET', 'CONTRACT_NOT_MET', 'OUT_OF_RANGE')
@@ -792,9 +792,62 @@ def container_from_stl(path, spec):
     raise ValueError('container_from_stl 은 폐기 — mesh_dump_container (완결성 · 예정각 대조) 를 쓴다 (Codex 3차 HBR3-04)')
 
 
+def count_tolerance(deck_text, np_):
+    """★ SELF-70 (09-30 밤 · 1저자 비준 *"권고하는걸로"*) — t₀ 상별 입자 수의 **계획 대비 허용폭**과 삽입 묶음 총수.
+
+    LIGGGHTS `insert/pack` (exact_number = 1 기본 · 공개 3d5c00f `fix_insert.cpp:414`) 은 총수를 MPI 랭크별 영역 부피 비로 **정확히**
+    나누고 (`distribute_ninsert_this` 829–906), 랭크마다 `particledistribution/discrete` 가 템플릿별 int(n_r·w_i) 를 절삭한 뒤 빈자리
+    (< 템플릿 수 T) 를 나머지 비중으로 추첨한다 (`fix_particledistribution_discrete.cpp` `randomize_list` 398–460).  ⇒ 랭크마다
+    상별 − n_r·w_i ∈ (−1, T−1] · 랭크 R ≤ NP 개의 합 · 계획의 반올림 (±0.5) 을 더하면 정수로 **상별 − 계획 ∈ [−NP, (T−1)·NP]** (T ≥ 2) ·
+    T = 1 이면 그 상은 묶음 총수 그대로 (정확).  한 분포를 쓰는 삽입 묶음의 총수는 정확하다.  NP 1 (lmp_serial) 도 계획 반올림 때문에
+    ±(T−1) 까지는 흔들릴 수 있다 (09-28 WSL E0 셋은 우연히 0).
+    반환 (tol {type: (T−1)·NP}, group_totals [((types…), 총수)], why) · 못 읽거나 지원 밖 (비구형 템플릿 · insert/pack 아님 · 한 상이 두 묶음 ·
+    NP 무효) 이면 (None, None, 사유) — 호출자는 **정확 일치**로 둔다 (fail-closed)."""
+    if isinstance(np_, bool) or not isinstance(np_, int) or np_ < 1:
+        return None, None, f'NP {np_!r} 가 양의 정수가 아니다'
+    import re as _re
+    lines = [ln.split('#', 1)[0].strip() for ln in _re.sub(r'&[ \t]*\r?\n', ' ', deck_text).splitlines()]
+    tpl = {}
+    for ln in lines:
+        m = _re.match(r'fix\s+(\S+)\s+\S+\s+particletemplate/(\S+)\s+\d+\s.*?\batom_type\s+(\d+)', ln)
+        if m:
+            if m.group(2) != 'sphere':
+                return None, None, f'템플릿 {m.group(1)} = particletemplate/{m.group(2)} (구가 아니다 — 원자/템플릿 ≠ 1)'
+            tpl[m.group(1)] = int(m.group(3))
+    pdd = {}
+    for ln in lines:
+        m = _re.match(r'fix\s+(\S+)\s+\S+\s+particledistribution/discrete\s+\d+\s+(\d+)\s+(.*)$', ln)
+        if m:
+            T, tok = int(m.group(2)), m.group(3).split()
+            ids = tok[0:2 * T:2]
+            if T < 1 or len(tok) < 2 * T or any(i not in tpl for i in ids):
+                return None, None, f'분포 {m.group(1)} 의 템플릿 목록을 못 읽었다'
+            pdd[m.group(1)] = (T, tuple(sorted({tpl[i] for i in ids})))
+    groups = []
+    for ln in lines:
+        if _re.search(r'\binsert/\S+', ln) and ln.startswith('fix'):
+            if not _re.match(r'fix\s+\S+\s+\S+\s+insert/pack\b', ln):
+                return None, None, f'insert/pack 아닌 삽입 ({ln[:60]})'
+            m1, m2 = _re.search(r'\bdistributiontemplate\s+(\S+)', ln), _re.search(r'\bparticles_in_region\s+(\d+)', ln)
+            if not (m1 and m2) or m1.group(1) not in pdd:
+                return None, None, f'삽입 줄의 분포 · particles_in_region 을 못 읽었다 ({ln[:60]})'
+            T, types = pdd[m1.group(1)]
+            groups.append((types, int(m2.group(1)), T))
+    if not groups:
+        return None, None, '삽입 묶음 (insert/pack) 이 없다'
+    tol = {}
+    for types, _tot, T in groups:
+        for t in types:
+            if t in tol:
+                return None, None, f'type {t} 이 두 삽입 묶음에 있다'
+            tol[t] = (T - 1) * np_
+    return tol, [(types, tot) for types, tot, _T in groups], ''
+
+
 def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None, walls=True,
                  phase_receipt=None, expect_counts=None, diag_fit=False, progress=False,
-                 launch_record=None, expect_deck=None, stl_ref_dir=None, bins=None, soft_range_pct=None):
+                 launch_record=None, expect_deck=None, stl_ref_dir=None, bins=None, soft_range_pct=None,
+                 count_tol=None, group_totals=None):
     """★ 등록 계약 판정 — 분석 창 **전 프레임** (정착 끝 t₀ = `measure_mixing_index` 와 같은 정의 → 마지막 덤프).
 
       ① 입자–입자 최대 δ/r_min ≤ max_ovl (강체 내부 쌍 제외)
@@ -975,8 +1028,27 @@ def check_window(run_dir, n_expected=None, max_ovl=CONTRACT_MAX_OVL, label=None,
             out['counts_t0'] = cnt0
             if n_expected is not None and len(r) != n_expected:
                 reject.append(f't₀ 입자 {len(r)} ≠ 계획 {n_expected}')
-            if expect_counts is not None and {int(a): int(b) for a, b in expect_counts.items()} != cnt0:
-                reject.append(f't₀ 상별 입자 수 {cnt0} ≠ 계획 {expect_counts}')
+            if expect_counts is not None:
+                exp_ = {int(a): int(b) for a, b in expect_counts.items()}
+                if count_tol is None:                                  # 허용폭을 모르면 정확 일치 (fail-closed · 옛 규칙)
+                    out['count_check'] = dict(mode='exact', counts_t0=cnt0, plan=exp_)
+                    if exp_ != cnt0:
+                        reject.append(f't₀ 상별 입자 수 {cnt0} ≠ 계획 {expect_counts}')
+                else:
+                    #  ★ SELF-70 — 상별 = 계획 ± count_tol (MPI 삽입 분배 · count_tolerance) · 삽입 묶음 총수 정확 · 상 집합 같음
+                    tol_ = {int(a): int(b) for a, b in count_tol.items()}
+                    dev_ = {t: cnt0.get(t, 0) - n_ for t, n_ in exp_.items()}
+                    bad_ = [f'상 집합 {sorted(cnt0)} ≠ 계획 {sorted(exp_)}'] if set(cnt0) != set(exp_) else []
+                    bad_ += [f'type {t}: {cnt0.get(t, 0)} − 계획 {exp_[t]} = {d_:+d} (허용 ±{tol_.get(t, 0)})'
+                             for t, d_ in sorted(dev_.items()) if abs(d_) > tol_.get(t, 0)]
+                    for types_, tot_ in (group_totals or []):
+                        s_ = sum(cnt0.get(int(t), 0) for t in types_)
+                        if s_ != int(tot_):
+                            bad_.append(f'삽입 묶음 {tuple(types_)} 총수 {s_} ≠ 덱 {tot_}')
+                    out['count_check'] = dict(mode='tolerance', counts_t0=cnt0, plan=exp_, deviation=dev_, tol=tol_,
+                                              group_totals=[[list(t_), int(n_)] for t_, n_ in (group_totals or [])], problems=bad_)
+                    if bad_:
+                        reject.append(f't₀ 상별 입자 수 {cnt0} — 계획 {exp_} 대비 허용폭 밖 (SELF-70): ' + '; '.join(bad_))
             if ids is None:
                 tech.append('덤프에 id 열이 없다 — id 보존을 확인할 수 없다')
         else:
@@ -1123,7 +1195,7 @@ def contract_status(w, soft_range_pct=None):
     세 축을 **따로** 적는다 (§6 표 — 기술적 관측 가능 / 원 1 % 물리 적격성 / soft 진단 범위 · Codex 9 차 §7 "하나의 PASS/FAIL 로 두 사실을 덮지 않는다"):
       technical     'OK' · 'FAIL' — 보존 · 형식 · 계획 프레임 · 창 결손 · 기하 · 출처 (tech 중 벽 위상 불확실만 뺀 것 + 겹침 아닌 기각)
       original_1pct 'MET' · 'NOT_MET' · None (벽 위상 불확실이 1 % 를 걸친다) — x_lo > 1 % 면 NOT_MET · x_hi ≤ 1 % 면 MET (check_window 와 같은 비교)
-      soft_range    None (ref/ref2 = 계약 팔) · 'WITHIN' · 'OUT_OF_RANGE' · 'UNIDENTIFIED' — 경계 x ≤ 5.8 + 1e-9 (%)
+      soft_range    None (ref/ref2 = 계약 팔) · 'WITHIN' · 'OUT_OF_RANGE' · 'UNIDENTIFIED' — 경계 x ≤ SOFT_RANGE_PCT + 1e-9 (%)
     x = 저장 프레임 최대 max(입자–입자, 벽) — 벽은 근거별 구간 (static · mesh-dump = 한 값 · receipt = [하한, 상한] · bounded/unidentified =
     [회전각-무관 하한, 상한]).  status (하나로 요약): TECH_FAIL (기술 실패 · 판정 불가) > OUT_OF_RANGE > CONTRACT_NOT_MET > CONTRACT_MET.
     ⚠ soft 의 1 % 초과 (CONTRACT_NOT_MET) 는 **기술 실패가 아니다** — 값 보존 · 보고 · 관문은 막지 않는다 (§6).  ref 의 NOT_MET 은 확인 주장 HOLD.
@@ -1165,7 +1237,7 @@ def contract_status(w, soft_range_pct=None):
     thr = float(soft_range_pct) + SOFT_RANGE_EPS
     out['soft_range'] = ('OUT_OF_RANGE' if x_lo * 100.0 > thr else ('WITHIN' if x_hi * 100.0 <= thr else 'UNIDENTIFIED'))
     if out['soft_range'] == 'OUT_OF_RANGE':
-        out['status'] = 'OUT_OF_RANGE'                           # 원 1 % 는 NOT_MET 그대로 (5.8 % > 1 %)
+        out['status'] = 'OUT_OF_RANGE'                           # 원 1 % 는 NOT_MET 그대로 (등록 범위 > 1 %)
     elif out['soft_range'] == 'WITHIN' and out['original_1pct'] is not None:
         out['status'] = 'CONTRACT_MET' if out['original_1pct'] == 'MET' else 'CONTRACT_NOT_MET'
     else:
@@ -1445,6 +1517,52 @@ def _selftest():
         chk(f'⑫ ★ 창 안에서 입자를 잃거나 상이 바뀌면 기각한다 ({"; ".join(w["reject"])[:90]})',
             w['verdict'] == 'REJECT' and any('2500' in b for b in w['reject'])
             and any('3000' in b for b in w['reject']))
+    #  ⑫c ★ SELF-70 (09-30 밤 · 1저자 비준) — 반례 먼저: ibb NP 20 의 DEV E0 다섯이 **전부** "t₀ 상별 입자 수 ≠ 계획" 한 사유로 TECH_FAIL
+    #     (170/854/98976 vs 176/859/98965 · 총수 100,000 정확).  LIGGGHTS insert/pack 이 MPI 랭크마다 템플릿 수를 절삭·분배하기 때문이다
+    #     (NP 1 = lmp_serial 은 계획과 같았다).  계약: 상별 = 계획 ± (템플릿 수 − 1)·NP · 삽입 묶음 (한 분포) 총수 정확 · 창 안 보존은 정확 그대로 ·
+    #     허용폭을 못 읽으면 정확 일치 (fail-closed).  옛 판은 expect_counts 를 쓰는 셀프테스트가 **하나도 없었다**.
+    with tempfile.TemporaryDirectory() as td:
+        run = _run(td)
+        for st in (2000, 2500, 3000):
+            _dump(run, st, BASE + _pair(0.0025))                     # t₀ 상별 = {1: 3, 2: 1, 3: 2} · 총 6
+        plan_ = {1: 2, 2: 2, 3: 2}                                    # 계획 대비 +1 · −1 (MPI 분배 흉내) · 총수 같음
+        w_old = check_window(run, expect_counts=plan_)
+        _ct = globals().get('count_tolerance')
+        r12 = {'old_exact_rejects': w_old['status']['status'] == 'TECH_FAIL'}
+        if _ct is not None:
+            deck3 = ('fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4800 radius constant 0.001\n'
+                     'fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4800 radius constant 0.0005\n'
+                     'fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 2000 radius constant 0.0002\n'
+                     'fix pdd all particledistribution/discrete 32452867 3 &\n    pt1 0.5 pt2 0.3 pt3 0.2\n'
+                     'fix ins all insert/pack seed 32452843 distributiontemplate pdd &\n'
+                     '    maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 &\n'
+                     '    region ins_reg particles_in_region 6 ntry_mc 20000   # 템플릿 수\n')
+            tol1, grp1, _ = _ct(deck3, 1)
+            r12['np1'] = tol1 == {1: 2, 2: 2, 3: 2} and grp1 == [((1, 2, 3), 6)]
+            w_in = check_window(run, expect_counts=plan_, count_tol=tol1, group_totals=grp1)
+            r12['within'] = (w_in['status']['status'] == 'CONTRACT_MET'
+                             and (w_in.get('count_check') or {}).get('deviation') == {1: 1, 2: -1, 3: 0})
+            r12['tight'] = check_window(run, expect_counts=plan_, count_tol={1: 0, 2: 0, 3: 0},
+                                        group_totals=grp1)['status']['status'] == 'TECH_FAIL'
+            r12['gross'] = check_window(run, expect_counts={1: 30, 2: 1, 3: 2}, count_tol=tol1,          # 744 → 6 류 결손
+                                        group_totals=grp1)['status']['status'] == 'TECH_FAIL'
+            r12['group_total'] = check_window(run, expect_counts=plan_, count_tol=tol1,
+                                              group_totals=[((1, 2, 3), 7)])['status']['status'] == 'TECH_FAIL'
+            import mixer_deck_diff as _dd12
+            tE, gE, _ = _ct(_dd12.cell_expected_deck('E0_ref_s32452843'), 20)
+            tC, gC, _ = _ct(_dd12.cell_expected_deck('LC_ref_r8_s15485863'), 20)
+            r12['deck_E0'] = tE == {1: 40, 2: 40, 3: 40} and gE == [((1, 2, 3), 100000)]
+            r12['deck_LC'] = tC == {1: 20, 2: 20, 3: 0} and gC == [((1, 2), 1035), ((3,), 98965)]
+            pl12 = {1: 176, 2: 859, 3: 98965}
+            r12['dev7_counts'] = all(all(abs(c_[t] - pl12[t]) <= tE[t] for t in pl12) and sum(c_.values()) == 100000
+                                     for c_ in ({1: 170, 2: 854, 3: 98976}, {1: 173, 2: 850, 3: 98977}))
+            r12['parse_fail'] = _ct('fix ins all insert/pack seed 1 distributiontemplate pdd particles_in_region 6\n', 20)[0] is None
+            r12['np_bad'] = all(_ct(deck3, x)[0] is None for x in (0, -1, True, 2.0, None))
+            r12['multisphere'] = _ct(deck3.replace('particletemplate/sphere 13901', 'particletemplate/multisphere 13901'), 20)[0] is None
+        chk(f'⑫c ★ SELF-70: t₀ 상별 = 계획 ± (템플릿−1)·NP · 묶음 총수 정확 — 흔들림 ±1 통과 · 허용 0 · 큰 결손 · 묶음 총수 어긋남 거부 · '
+            f'실제 E0 덱 NP 20 → ±40 · LC 덱 → AM ±20 · SE 정확 · DEV7 실측 둘 통과 · 못 읽음 · NP 무효 · 비구형 템플릿 = None (정확 일치) '
+            f'— 어긋남 {[k for k, v in r12.items() if v is not True]}',
+            _ct is not None and all(v is True for v in r12.values()))
     #  ⑬ 되읽기 (입자 배치에서 회전각 fitting) 는 **진단일 뿐 증거가 아니다** (Codex HBR2-01 — ⑮ 가 그 반례) — 판정에 안 쓴다.
     #     면을 따라 넓게 깔린 침대 (실제 런) 는 꼭짓점 쪽 알의 최악 겹침이 크므로 근거 없이는 늘 unidentified 다 — 그래서
     #     실제 런의 벽 판정은 영수증 (또는 mesh 덤프) 이 있어야 나온다.
@@ -1901,7 +2019,7 @@ def _selftest():
         chk(f'㉜b ★ bins=(0,) = 판독기 bin 0 창만 (§4 a′) — bin 0 (2000 · 2500) PASS · bin 1 은 2 % REJECT · bin 0 격자 결손 (2500 없음) = TECH · '
             f'빈 bin (5) = TECH {r32}', _okx(_t32))
 
-    #  ㉝ contract_status 표 — ref (계약 팔) · soft (진단 팔 · 5.8 %) × 기술 / 1 % / 범위 (§6 세 축)
+    #  ㉝ contract_status 표 — ref (계약 팔) · soft (진단 팔 · 등록 범위) × 기술 / 1 % / 범위 (§6 세 축)
     def _W(**k_):
         d_ = dict(max_ovl=0.01, tech=[], reject=[], reject_overlap=[], tech_wall_uncertain=[], phase_status='static',
                   pp_max=0.005, wall_max=0.004)
@@ -1909,24 +2027,25 @@ def _selftest():
         return d_
     PPR = 'pp 기각'
     U_ = '위상 불확실성으로 미식별 (합성)'
+    SR = G_['SOFT_RANGE_PCT']                                      # 등록 soft 진단 범위 (v2.6: 1 % × 20^(2/3) = 7.37) — 표는 이 값 기준 (숫자를 박지 않는다)
     TAB = [  # (이름, 입력, soft 범위, 기대 status, 기대 original, 기대 soft)
         ('ref 0.5 %', _W(), None, 'CONTRACT_MET', 'MET', None),
         ('ref 2 %', _W(pp_max=0.02, reject=[PPR], reject_overlap=[PPR]), None, 'CONTRACT_NOT_MET', 'NOT_MET', None),
-        ('soft 0.5 %', _W(), 5.8, 'CONTRACT_MET', 'MET', 'WITHIN'),
-        ('soft 5 %', _W(pp_max=0.05, reject=[PPR], reject_overlap=[PPR]), 5.8, 'CONTRACT_NOT_MET', 'NOT_MET', 'WITHIN'),
-        ('soft 경계 5.8 % (= 등록 · 여유 1e-9 안)', _W(pp_max=0.058, reject=[PPR], reject_overlap=[PPR]), 5.8, 'CONTRACT_NOT_MET', 'NOT_MET', 'WITHIN'),
-        ('soft 5.8001 %', _W(pp_max=0.058001, reject=[PPR], reject_overlap=[PPR]), 5.8, 'OUT_OF_RANGE', 'NOT_MET', 'OUT_OF_RANGE'),
-        ('soft 벽 7 % (static)', _W(wall_max=0.07, reject=['벽'], reject_overlap=['벽']), 5.8, 'OUT_OF_RANGE', 'NOT_MET', 'OUT_OF_RANGE'),
+        ('soft 0.5 %', _W(), SR, 'CONTRACT_MET', 'MET', 'WITHIN'),
+        ('soft 5 %', _W(pp_max=0.05, reject=[PPR], reject_overlap=[PPR]), SR, 'CONTRACT_NOT_MET', 'NOT_MET', 'WITHIN'),
+        ('soft 경계 = 등록 (여유 1e-9 안)', _W(pp_max=SR / 100, reject=[PPR], reject_overlap=[PPR]), SR, 'CONTRACT_NOT_MET', 'NOT_MET', 'WITHIN'),
+        ('soft 등록 + 1e-4 %p', _W(pp_max=SR / 100 + 1e-6, reject=[PPR], reject_overlap=[PPR]), SR, 'OUT_OF_RANGE', 'NOT_MET', 'OUT_OF_RANGE'),
+        ('soft 벽 등록 + 1 %p (static)', _W(wall_max=SR / 100 + 0.01, reject=['벽'], reject_overlap=['벽']), SR, 'OUT_OF_RANGE', 'NOT_MET', 'OUT_OF_RANGE'),
         ('ref 창 결손 (기술)', _W(tech=['창 안 덤프 결손 1 개']), None, 'TECH_FAIL', None, None),
-        ('soft 창 결손 (기술)', _W(pp_max=0.05, tech=['창 안 덤프 결손 1 개'], reject=[PPR], reject_overlap=[PPR]), 5.8, 'TECH_FAIL', None, None),
-        ('soft 보존 실패 (겹침 아닌 기각 = 기술)', _W(reject=['step 2500: 상별 입자 수 {1: 3} ≠ t₀ {1: 4}']), 5.8, 'TECH_FAIL', None, None),
+        ('soft 창 결손 (기술)', _W(pp_max=0.05, tech=['창 안 덤프 결손 1 개'], reject=[PPR], reject_overlap=[PPR]), SR, 'TECH_FAIL', None, None),
+        ('soft 보존 실패 (겹침 아닌 기각 = 기술)', _W(reject=['step 2500: 상별 입자 수 {1: 3} ≠ t₀ {1: 4}']), SR, 'TECH_FAIL', None, None),
         ('ref 벽 위상 불확실 (1 % 걸침)', _W(phase_status='receipt', pp_max=0.002, wall_lower_max=0.008, wall_max=0.012, tech=[U_],
                                         tech_wall_uncertain=[U_]), None, 'TECH_FAIL', None, None),
         ('soft 벽 위상 불확실 + 입자 5 % (1 % 는 확정 NOT_MET)', _W(phase_status='receipt', pp_max=0.05, wall_lower_max=0.008, wall_max=0.012,
                                                             tech=[U_], tech_wall_uncertain=[U_], reject=[PPR], reject_overlap=[PPR]),
-         5.8, 'CONTRACT_NOT_MET', 'NOT_MET', 'WITHIN'),
-        ('soft 범위 걸침 (벽 5.5–6.0 %)', _W(phase_status='receipt', pp_max=0.03, wall_lower_max=0.055, wall_max=0.060, reject=[PPR, '벽 명백'],
-                                          reject_overlap=[PPR, '벽 명백']), 5.8, 'TECH_FAIL', 'NOT_MET', 'UNIDENTIFIED'),
+         SR, 'CONTRACT_NOT_MET', 'NOT_MET', 'WITHIN'),
+        ('soft 범위 걸침 (벽 등록 −0.3 ~ +0.2 %p)', _W(phase_status='receipt', pp_max=0.03, wall_lower_max=SR / 100 - 0.003, wall_max=SR / 100 + 0.002,
+                                                  reject=[PPR, '벽 명백'], reject_overlap=[PPR, '벽 명백']), SR, 'TECH_FAIL', 'NOT_MET', 'UNIDENTIFIED'),
         ('ref unidentified (상·하한 0.4–3 %)', _W(phase_status='unidentified', pp_max=0.002, wall_bound_best=0.004, wall_bound_worst=0.03,
                                                 tech=[U_], tech_wall_uncertain=[U_]), None, 'TECH_FAIL', None, None),
     ]
@@ -1938,17 +2057,22 @@ def _selftest():
             r_ = cs(w_, sr_)
             if (r_['status'], r_['original_1pct'], r_['soft_range']) != (st_, og_, so_) or r_['status'] not in G_['CONTRACT_STATUSES']:
                 bad.append(f'{nm_}: {r_["status"]}/{r_["original_1pct"]}/{r_["soft_range"]}')
-        try:
-            cs(_W(), 6.0)
-            bad.append('soft 6.0 을 받았다')
-        except ValueError:
-            pass
+        for x_ in (6.0, 5.8):                                      # 등록 밖 · 옛 등록 (v2.5 까지 5.8) 둘 다 거부
+            try:
+                cs(_W(), x_)
+                bad.append(f'soft {x_} 을 받았다')
+            except ValueError:
+                pass
+        import mixer_deck_diff as _dd33
+        derived = round(_dd33.STIFF_LEVELS['ref'] ** (2.0 / 3.0), 2)   # v2.6 등록: 1 % × F_ref^(2/3) 둘째 자리 (×20 → 7.37)
         if bad:
             print('        ' + ' | '.join(bad))
-        return not bad and G_['SOFT_RANGE_PCT'] == 5.8 and abs(0.01 * 14 ** (2 / 3) * 100 - 5.81) < 0.005
-    chk(f'㉝ ★ 상태 표 (§6 세 축 분리 · {len(TAB)} 행) — ref: MET · NOT_MET · 기술 실패 · 1 % 걸침 = TECH_FAIL / soft (5.8 %): 1 % 초과는 '
-        'CONTRACT_NOT_MET (기술 실패 아님) · 경계 5.8 % 는 WITHIN (여유 1e-9) · 5.8001 % · 벽 7 % = OUT_OF_RANGE · 보존 실패 · 창 결손 = TECH_FAIL · '
-        '벽 위상 불확실이어도 입자 5 % 면 1 % 는 확정 NOT_MET · 범위 걸침 = TECH_FAIL · 등록 밖 범위 (6.0) 거부 · 5.8 = 1 % × 14^(2/3) 반올림',
+        print(f'        SOFT_RANGE_PCT {SR} · 등록 배수 ×{_dd33.STIFF_LEVELS["ref"]:g} → 1 % × F^(2/3) = {derived}')
+        return not bad and SR == derived == 7.37 and _dd33.STIFF_LEVELS['ref'] == 20.0
+    chk(f'㉝ ★ 상태 표 (§6 세 축 분리 · {len(TAB)} 행) — ref: MET · NOT_MET · 기술 실패 · 1 % 걸침 = TECH_FAIL / soft (등록 범위): 1 % 초과는 '
+        'CONTRACT_NOT_MET (기술 실패 아님) · 경계 = 등록 은 WITHIN (여유 1e-9) · 등록 + 1e-4 %p · 벽 등록 + 1 %p = OUT_OF_RANGE · 보존 실패 · 창 결손 = TECH_FAIL · '
+        '벽 위상 불확실이어도 입자 5 % 면 1 % 는 확정 NOT_MET · 범위 걸침 = TECH_FAIL · 등록 밖 (6.0) · 옛 등록 (5.8) 거부 · '
+        '★ v2.6: 등록 = 1 % × 20^(2/3) = 7.37 (STIFF_LEVELS ref ×20 에서 유도)',
         _okx(_t33))
 
     #  ㉞ 실제 check_window 에 상태가 붙는다 (합성 덱)
@@ -1956,37 +2080,40 @@ def _selftest():
         def _t34():
             ok_ = []
             r2 = _run_rev(td, {2000: 0.0025, 2500: 0.00198}, 'r2')             # bin 0 에 2 %
-            ok_.append(check_window(r2, bins=(0,), soft_range_pct=5.8)['status']['status'] == 'CONTRACT_NOT_MET')
+            ok_.append(check_window(r2, bins=(0,), soft_range_pct=SOFT_RANGE_PCT)['status']['status'] == 'CONTRACT_NOT_MET')
             ok_.append(check_window(r2, bins=(0,))['status']['status'] == 'CONTRACT_NOT_MET')
-            r7 = _run_rev(td, {2000: 0.0025, 2500: 0.00193}, 'r7')             # bin 0 에 7 %
-            s7 = check_window(r7, bins=(0,), soft_range_pct=5.8)['status']
-            ok_.append(s7['status'] == 'OUT_OF_RANGE' and s7['original_1pct'] == 'NOT_MET' and abs(s7['x_hi_pct'] - 7.0) < 1e-6)
+            r7 = _run_rev(td, {2000: 0.0025, 2500: 0.00193}, 'r7')             # bin 0 에 7 % — v2.6 범위 (7.37) 안
+            s7 = check_window(r7, bins=(0,), soft_range_pct=SOFT_RANGE_PCT)['status']
+            ok_.append(s7['status'] == 'CONTRACT_NOT_MET' and s7['soft_range'] == 'WITHIN' and abs(s7['x_hi_pct'] - 7.0) < 1e-6)
+            r10 = _run_rev(td, {2000: 0.0025, 2500: 0.00190}, 'r10')           # bin 0 에 10 % — 범위 밖
+            s10 = check_window(r10, bins=(0,), soft_range_pct=SOFT_RANGE_PCT)['status']
+            ok_.append(s10['status'] == 'OUT_OF_RANGE' and s10['original_1pct'] == 'NOT_MET' and abs(s10['x_hi_pct'] - 10.0) < 1e-6)
             r0 = _run_rev(td, {2000: 0.0025, 2500: 0.0025}, 'r0')
-            ok_.append(check_window(r0, bins=(0,), soft_range_pct=5.8)['status']['status'] == 'CONTRACT_MET')
+            ok_.append(check_window(r0, bins=(0,), soft_range_pct=SOFT_RANGE_PCT)['status']['status'] == 'CONTRACT_MET')
             os.remove(os.path.join(r0, 'post', 'mix_2500.liggghts'))
-            ok_.append(check_window(r0, bins=(0,), soft_range_pct=5.8)['status']['status'] == 'TECH_FAIL')
+            ok_.append(check_window(r0, bins=(0,), soft_range_pct=SOFT_RANGE_PCT)['status']['status'] == 'TECH_FAIL')
             rl = _run_rev(td, {2000: 0.0025}, 'rl')                             # 입자 하나 잃음 (보존 실패 = 기각이지만 상태는 기술 실패)
             _dump(rl, 2500, BASE[:3] + _pair(0.0025))
-            wl = check_window(rl, bins=(0,), soft_range_pct=5.8)
+            wl = check_window(rl, bins=(0,), soft_range_pct=SOFT_RANGE_PCT)
             ok_.append(wl['verdict'] == 'REJECT' and wl['status']['status'] == 'TECH_FAIL' and wl['status']['technical'] == 'FAIL')
             print(f'        {ok_}')
             return all(ok_)
-        chk('㉞ ★ check_window 결과에 상태가 붙는다 — bin 0 에 2 % (soft · ref 둘 다 CONTRACT_NOT_MET) · 7 % soft = OUT_OF_RANGE (x_hi 7 %) · '
+        chk('㉞ ★ check_window 결과에 상태가 붙는다 — bin 0 에 2 % (soft · ref 둘 다 CONTRACT_NOT_MET) · 7 % soft = WITHIN (v2.6 · 7.37) · 10 % = OUT_OF_RANGE · '
             '0.25 % = CONTRACT_MET · bin 0 결손 = TECH_FAIL · 입자 잃음 = 판정 REJECT 이지만 상태는 TECH_FAIL (기술 실패 ≠ 계약 미달)', _okx(_t34))
 
-    #  ㉟ CLI — --soft-range 는 등록값 5.8 만 · --bins · JSON 에 상태
+    #  ㉟ CLI — --soft-range 는 등록값만 · --bins · JSON 에 상태
     with tempfile.TemporaryDirectory() as td:
         def _t35():
             import subprocess as _spx
             r2 = _run_rev(td, {2000: 0.0025, 2500: 0.00198}, 'c2')
             js = os.path.join(td, 'o.json')
             me = os.path.abspath(__file__)
-            p1 = _spx.run([sys.executable, me, '--contract', r2, '--bins', '0', '--soft-range', '5.8', '--json', js], capture_output=True, text=True)
+            p1 = _spx.run([sys.executable, me, '--contract', r2, '--bins', '0', '--soft-range', f'{SOFT_RANGE_PCT:g}', '--json', js], capture_output=True, text=True)
             j1 = _json.load(open(js))[0]
-            p2 = _spx.run([sys.executable, me, '--contract', r2, '--bins', '0', '--soft-range', '6'], capture_output=True, text=True)
+            p2 = _spx.run([sys.executable, me, '--contract', r2, '--bins', '0', '--soft-range', '5.8'], capture_output=True, text=True)   # 옛 등록 거부
             return (j1['status']['status'] == 'CONTRACT_NOT_MET' and j1['status']['soft_range'] == 'WITHIN' and j1['bins'] == [0]
-                    and '상태 CONTRACT_NOT_MET' in p1.stdout and p2.returncode == 2 and '5.8' in p2.stderr)
-        chk('㉟ CLI: --contract --bins 0 --soft-range 5.8 → JSON · 화면에 상태 (CONTRACT_NOT_MET · WITHIN) · --soft-range 6 → rc 2 (등록 5.8 만 · '
+                    and '상태 CONTRACT_NOT_MET' in p1.stdout and p2.returncode == 2 and f'{SOFT_RANGE_PCT:g}' in p2.stderr)
+        chk('㉟ CLI: --contract --bins 0 --soft-range <등록> → JSON · 화면에 상태 (CONTRACT_NOT_MET · WITHIN) · --soft-range 5.8 (옛 등록) → rc 2 (등록값만 · '
             '올리지 않는다)', _okx(_t35))
     print(f'\ncheck_contact_validity selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))

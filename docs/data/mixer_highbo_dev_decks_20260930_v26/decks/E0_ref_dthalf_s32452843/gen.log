@@ -1,0 +1,11 @@
+조성 → 개수 (N=100,000)
+   AM_P  φ 0.4545 · d  1.363 mm · n      176
+   AM_S  φ 0.1948 · d  0.606 mm · n      859
+   SE    φ 0.3506 · d  0.151 mm · n   98,965
+
+드럼  R 13.138 mm (지름 26.3 mm) · L 5.255 mm · 부피 3 mL · STL scale 0.0263
+시간  dt 2.62e-07 s · 임계 261 rpm · 75.0 rpm 에서 Fr 0.0827  (밴드 (0.055, 0.086))
+비용  0 바퀴 = 0 step · 직렬 추정 0.0 h  (실측 처리율 2.99e6 p·step/s)
+강성  SE 영률 ×20 (1e+07 → 2e+08 Pa) · hold_bo_pairwise yes · dt_factor 0.5 → 덱 dt 1.31e-07 s (soft 7.055e-07 s · AM_S → 규칙 2.62e-07 s · SE) · 정착 1,037,428 ×2 · 회전 0 · 덤프 2,000 step  (위 비용 줄은 규칙 dt 기준)
+   → docs/data/mixer_highbo_dev_decks_20260930_v26/decks/E0_ref_dthalf_s32452843/in.mixer   [E0] 음성 대조 — 점착 0.  지표가 0 을 내는가
+⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다

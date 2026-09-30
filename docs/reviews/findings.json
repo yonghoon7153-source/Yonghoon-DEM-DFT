@@ -6264,9 +6264,23 @@
    "found_by": "claude (09-30 밤 · ibb DEV7 E0 진단 봉인 파일 사유 문자열 투영 (1저자 실행 · blind_log 기록) + 공개 LIGGGHTS 3d5c00f 소스 판독)",
    "opened_in": "docs/reviews/mixer_highbo_stiffness_prereg_20260929.md",
    "title": "접촉 검사기 (`check_window` · `mixer_smoke_blind.e0_diag`) 의 \"t₀ 상별 입자 수 = 생성기 계획\" 불변식은 직렬 삽입 가정이다 — LIGGGHTS `fix insert/pack` 은 MPI 랭크마다 템플릿 수를 따로 절삭·분배하므로 (fix_insert.cpp distribute_ninsert_this 829–906 · fix_particledistribution_discrete.cpp randomize_list 398–460 · exact_number=1 기본) 총수는 정확하고 상별 수는 랭크 수만큼 흔들린다.  ibb NP 20 의 DEV E0 다섯이 전부 이 한 사유로 TECH_FAIL (170/854/98976 · 173/850/98977 vs 계획 176/859/98965 · 총 100,000 = 계획) — WSL lmp_serial (NP 1) 09-28 E0 셋은 계획과 정확히 같았다",
-   "note": "판정 결함이 아니라 등록·검사기 결함 (09-23 바닥 검사 Popoviciu 천장과 같은 부류 — NP 20 에서는 어떤 런도 이 검사를 통과할 수 없다 · 확인 18 런도 NP20).  같은 seed 의 ref · ref2 · dt/2 는 상별 수가 서로 같다 (pdd 시드 32452867 이 셀 공통 · 삽입 시드는 랭크 분배만 흔든다) ⇒ b · c 비교는 이 결함과 무관.  수정안 (비준 대기 · 반례 먼저): 총수 = 계획 정확 · 창 안 상별 · id · type/radius 보존 정확 (그대로) · 상별 수 = 계획 ± (템플릿 수 − 1)·NP (소스 상한: 랭크마다 절삭 −1 ~ 빈자리 +(템플릿−1)) · NP 는 발사 봉인 launch_record.slurm.np (없으면 1 = 정확) · 실현 조성 (wt%) 편차를 상태에 보고.  §8-4 재시도 1 회는 해당 없음 (같은 NP 재실행 = 같은 분배).  a (seed 67867967 x_hi 1.018 % > 1 %) · b · c 는 값으로 깨진 것이라 이 수정으로 바뀌지 않는다.  status 는 수정 커밋이 HEAD 조상이 된 뒤 claimed_fixed.",
+   "note": "판정 결함이 아니라 등록·검사기 결함 (09-23 바닥 검사 Popoviciu 천장과 같은 부류 — NP 20 에서는 어떤 런도 이 검사를 통과할 수 없다 · 확인 18 런도 NP20).  같은 seed 의 ref · ref2 · dt/2 는 상별 수가 서로 같다 (pdd 시드 32452867 이 셀 공통 · 삽입 시드는 랭크 분배만 흔든다) ⇒ b · c 비교는 이 결함과 무관.  수정안 (비준 대기 · 반례 먼저): 총수 = 계획 정확 · 창 안 상별 · id · type/radius 보존 정확 (그대로) · 상별 수 = 계획 ± (템플릿 수 − 1)·NP (소스 상한: 랭크마다 절삭 −1 ~ 빈자리 +(템플릿−1)) · NP 는 발사 봉인 launch_record.slurm.np (없으면 1 = 정확) · 실현 조성 (wt%) 편차를 상태에 보고.  §8-4 재시도 1 회는 해당 없음 (같은 NP 재실행 = 같은 분배).  a (seed 67867967 x_hi 1.018 % > 1 %) · b · c 는 값으로 깨진 것이라 이 수정으로 바뀌지 않는다.  status 는 수정 커밋이 HEAD 조상이 된 뒤 claimed_fixed. ▶ 09-30 밤 수정 (1저자 비준 *\"권고하는걸로\"* · 반례 먼저): `check_contact_validity.count_tolerance` (덱 텍스트 · NP → 상별 허용폭 (T−1)·NP · 삽입 묶음 총수 · 못 읽으면 None = 정확 일치) · `check_window(count_tol · group_totals)` = 상 집합 · 허용폭 · 묶음 총수 · `count_check` 보고 · `mixer_smoke_blind._launch_np` (발사 봉인 slurm.np · 없음 = 1 · 형식 깨짐 = None) — 셀프테스트 ⑫c (옛 코드 88/89 → 89/89 · DEV7 실측 둘 통과 · 큰 결손 · 묶음 총수 어긋남 거부) · ⑨b (래퍼 허용폭 전달 · 옛 코드 ✗) · 등록 v2.6 ④.  status 는 수정 커밋이 HEAD 조상이 된 뒤 claimed_fixed.",
    "evidence_tests": [
     "scripts/check_contact_validity.py",
+    "scripts/mixer_smoke_blind.py"
+   ]
+  },
+  {
+   "id": "SELF-71",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (09-30 밤 · DEV7 ×14 E0 다섯 실측 투영 (1저자 ibb · M 미열람) 판독)",
+   "opened_in": "docs/reviews/mixer_highbo_stiffness_prereg_20260929.md",
+   "title": "강성 축 사전등록 §4 b (ref2 최대 겹침 ≤ ref + 1e-9 %) · c (dt/2 에서 최대 겹침 변화 ≤ 0.1 %p · S_R² 변화 ≤ 1 %) 는 스냅샷 최대 · 단일 실현의 잡음보다 좁은 통과선이라 어떤 후보도 통과할 수 없다 — b 는 최대의 주인 교체 (ref AM_S–SE 0.715 → ref2 AM_P–SE 0.734 · 다른 SE 쌍은 예측대로 감소) 로 +0.0026 %p · c 는 dt/2 가 궤적을 바꿔 두 실현을 비교 (|Δx_hi| 0.24 %p · |ΔS_R²|/S_R² 10 % vs 1024 칸 분산의 실현 SD ≈ 4 %)",
+   "note": "등록 결함 (SELF-70 · 09-23 Popoviciu 천장과 같은 부류) — 통과선 값은 손대지 않는다.  1저자 결정 09-30 밤 (권고대로): b · c = **보고 전용** (값 · pass 기록 · dev-rot 관문 = complete · technical · a 만) · 등록 v2.6 ③ · `mixer_stage_gate.E0_DIAG_ROLE` · `mixer_smoke_blind.e0_diag` verdict · `verify_e0_record` (ref2 · dt/2 는 기술적으로 관측 가능하면 됨) — 반례 먼저 S⑦ (옛 코드 DEV7 모양 FAIL → PASS · 보고 필드 누락 거부 · ref2 기술 실패 거부).  Codex 10 차 질의 (관문 역할 변경이 등록 취지에 맞는지).  status 는 수정 커밋 뒤 claimed_fixed · Codex 검토 뒤 verified.",
+   "evidence_tests": [
+    "scripts/mixer_stage_gate.py",
     "scripts/mixer_smoke_blind.py"
    ]
   }

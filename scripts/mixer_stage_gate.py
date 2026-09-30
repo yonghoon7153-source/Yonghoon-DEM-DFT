@@ -15,7 +15,7 @@
          관문은 release 순간뿐 아니라 실제 시작 직전 (러너 시작 스크립트) 에 봉인 · 유효 승인 증서를 다시 대조한다.  해제 증거 = seed × arm × E
          18 칸 manifest + job ID + 덱 · 바이너리 · 도구 · policy 해시 + E0 경로 · "처음부터 held" 조회 증거 · 반례 (제출 일부 실패 · 오래된 증서 ·
          다른 seed/E · E0 누락 · release 재시도 · 대기 중 파일 변경) 셀프테스트."
-  §6    "soft 진단 범위 = 5.8 % … soft 범위 null 이면 확인 soft 발사 거부" · 세 상태 (기술 / 원 1 % / 권위) 분리 · arm × E × 검사 허용/거부표.
+  §6    "soft 진단 범위 = 7.37 % (v2.6 · 옛 5.8) … soft 범위 null 이면 확인 soft 발사 거부" · 세 상태 (기술 / 원 1 % / 권위) 분리 · arm × E × 검사 허용/거부표.
   Codex 9 차 §6-2 "DEV 목록 밖 arm/seed/단계 요청 거부; DEV 증서가 확인/rest 발사 권한으로 쓰이지 않음".
 
 부명령 (런처가 부른다 · rc 0 = 통과):
@@ -59,7 +59,7 @@ LEGACY_STAGES = ('first', 'rest', 'all')
 NEW_STAGES = ('dev-e0', 'dev-rot', 'confirm-first', 'confirm-rest')
 STAGE_COHORT = {'dev-e0': 'dev-e0', 'dev-rot': 'dev-rot', 'confirm-first': 'confirm', 'confirm-rest': 'confirm'}
 #: §6 v2.4 "soft 진단 범위 = 5.8 %" — check_contact_validity.SOFT_RANGE_PCT 와 같아야 한다 (셀프테스트가 대조 · 이 파일은 numpy 없이 돈다)
-SOFT_RANGE_PCT = 5.8
+SOFT_RANGE_PCT = 7.37   # ★ v2.6 (09-30 밤 · 1저자 비준) = 1 % × 20^(2/3) · check_contact_validity.SOFT_RANGE_PCT 와 같아야 한다
 REG_N_EXPECTED = dd.GEN_ARGS['n_total']                  # gen_all.sh N_TOTAL · README §6 "n_expected (gen.log 의 N = 100,000)"
 REG_R_CONTAINER = 0.013138                                # 모체 §2-3 · README §6 "r_container (0.013138)"
 READER_REG = dict(cells=16, x_cells=4, n_min=20, axis='x', r_container=0.013138)   # 모체 §2-3 판독 칸 · 규약 (관문 REG 와 같다)
@@ -70,6 +70,9 @@ FLOAT_FIELD_BYTES = 12                                    # dump custom 기본 %
 RESTART_BYTES_PER_ATOM = 400                              # 체크포인트 a.bin · b.bin · settled.bin (보수 · 원자당)
 E0_DIAG_SCHEMA = 'mixer_dev_e0_diag/1'
 E0_DIAG_REG = dict(max_ovl=0.01, c_dmax_pp=0.1, c_sr2_rel=0.01, eps_pct=1e-9, eps_rel=1e-12)   # §4 a · b · c 통과선 (등록)
+#: ★ v2.6 (09-30 밤 · 1저자 비준 "권고하는걸로") — 검사의 역할.  gate = verdict · dev-rot 관문에 들어감 · report = 값 · pass 를 기록만 (통과선은 그대로).
+#:   b · c 가 보고 전용인 근거 = DEV7 (×14) 실측: b 는 스냅샷 최대의 **주인 교체** (+0.0026 %p) 로 깨졌고 · c 는 dt/2 가 궤적을 바꿔 두 실현을 비교한다.
+E0_DIAG_ROLE = dict(complete='gate', technical='gate', a='gate', b='report', c='report')
 MANIFEST_SCHEMA = 'mixer_confirm_manifest/1'
 APPROVAL_SCHEMA = 'mixer_highbo_release_approval/1'
 APPROVAL_FILE = 'release_approval.json'
@@ -166,7 +169,7 @@ def load_policy(path):
 
 def stage_params(pol, stage):
     """새 단계의 정책 인자 → dict.  **등록 코호트와 정확히 같아야** 한다 (holdout seed 를 DEV 에 · DEV 셀을 확인에 · 이름 추가/누락 = 거부).
-    soft 범위 (confirm-first) 는 등록값 5.8 만 — null · 다른 값이면 거부 (§6 "soft 범위 null 이면 확인 soft 발사 거부")."""
+    soft 범위 (confirm-first) 는 등록값 (v2.6 7.37) 만 — null · 다른 값이면 거부 (§6 "soft 범위 null 이면 확인 soft 발사 거부")."""
     if stage not in NEW_STAGES:
         raise GateError(f'새 단계가 아니다: {stage!r} — {list(NEW_STAGES)}')
     if pol.get('schema') != POLICY_V2:
@@ -302,9 +305,11 @@ def e0_record_tools():
 def verify_e0_record(out, path, np_now):
     """dev-rot 이 여는 조건 = **봉인된 E0 진단 PASS 기록** (mixer_smoke_blind.py --e0-diag 이 쓴다) 이 지금 폴더와 이어진다 → 문제 목록.
 
-    필수 필드: schema · verdict "PASS" · checks {complete · technical · a · b · c}.pass 가 JSON true · registered = E0_DIAG_REG · reader = READER_REG ·
-    runs = DEV E0 다섯 정확히 · 런마다 dir (realpath) · deck · 발사 봉인 · job_start · log.lmp 의 sha256 = 지금 파일 · 봉인 stage dev-e0 · 봉인 np =
-    기록 np · complete · contact.status CONTRACT_MET · np = 지금 NP (블록 NP 통일) · tools = 지금 리포 도구 sha256 · 봉인 파일 (vault) sha256."""
+    필수 필드: schema · verdict "PASS" · checks 다섯 (E0_DIAG_ROLE) 이 {pass: JSON bool · role} 모양 · **관문 검사 (complete · technical · a) 는 pass true** ·
+    보고 검사 (b · c · v2.6) 는 값 · pass 를 기록만 · registered = E0_DIAG_REG · reader = READER_REG · runs = DEV E0 다섯 정확히 · 런마다 dir (realpath) ·
+    deck · 발사 봉인 · job_start · log.lmp 의 sha256 = 지금 파일 · 봉인 stage dev-e0 · 봉인 np = 기록 np · complete · contact.status (E0_ref 셋 =
+    CONTRACT_MET (§4 a) · ref2 · dt/2 = 기술적으로 관측 가능 (CONTRACT_MET · CONTRACT_NOT_MET)) · np = 지금 NP (블록 NP 통일) · tools = 지금 리포 도구
+    sha256 · 봉인 파일 (vault) sha256."""
     pr = []
     try:
         rec = _load_json(path, 'E0 진단 기록')
@@ -317,10 +322,13 @@ def verify_e0_record(out, path, np_now):
     if rec.get('verdict') != 'PASS':
         pr.append(f'E0 진단 verdict = {rec.get("verdict")!r} (PASS 가 아니면 회전 보류 — §8-2 ②)')
     ch = rec.get('checks') if isinstance(rec.get('checks'), dict) else {}
-    for k in ('complete', 'technical', 'a', 'b', 'c'):
+    for k, role in E0_DIAG_ROLE.items():
         v = ch.get(k)
-        if not (isinstance(v, dict) and v.get('pass') is True):
-            pr.append(f'E0 진단 checks.{k}.pass ≠ true ({json.dumps(v, ensure_ascii=False)[:80]})')
+        if not (isinstance(v, dict) and isinstance(v.get('pass'), bool) and v.get('role') == role):
+            pr.append(f'E0 진단 checks.{k} 가 없거나 모양이 다르다 (pass 는 JSON bool · role {role!r} 필수 · '
+                      f'{json.dumps(v, ensure_ascii=False)[:80]})')
+        elif role == 'gate' and v['pass'] is not True:
+            pr.append(f'E0 진단 checks.{k}.pass ≠ true (관문 검사 · {json.dumps(v, ensure_ascii=False)[:80]})')
     if rec.get('registered') != E0_DIAG_REG:
         pr.append(f'E0 진단 registered {rec.get("registered")!r} ≠ 등록 {E0_DIAG_REG}')
     if rec.get('reader') != READER_REG:
@@ -354,8 +362,12 @@ def verify_e0_record(out, path, np_now):
             pr.append(f'{n}: 발사 봉인 stage {lr.get("stage")!r} · np {(lr.get("slurm") or {}).get("np")!r} ≠ dev-e0 · {np_r!r}')
         if r.get('complete') is not True:
             pr.append(f'{n}: 완주 아님')
-        if (r.get('contact') or {}).get('status') != 'CONTRACT_MET':
-            pr.append(f'{n}: 접촉 상태 {(r.get("contact") or {}).get("status")!r} ≠ CONTRACT_MET')
+        st_n = (r.get('contact') or {}).get('status')
+        if n in dd.DEV_E0[:3]:                                     # a (관문) — E0_ref 세 seed 는 원 1 % 계약 통과
+            if st_n != 'CONTRACT_MET':
+                pr.append(f'{n}: 접촉 상태 {st_n!r} ≠ CONTRACT_MET (§4 a)')
+        elif st_n not in ('CONTRACT_MET', 'CONTRACT_NOT_MET'):     # ref2 · dt/2 (b · c 보고 전용 · v2.6) — 기술적으로 관측 가능해야 한다
+            pr.append(f'{n}: 접촉 상태 {st_n!r} — 기술 실패 · 모르는 상태 (ref2 · dt/2 는 b · c 보고 전용이지만 technical 은 관문)')
     vt = rec.get('vault') if isinstance(rec.get('vault'), dict) else {}
     if not vt.get('file') or sha_or_none(str(vt.get('file'))) != vt.get('sha256'):
         pr.append('E0 진단 봉인 파일 (vault) 이 없거나 sha256 이 다르다')
@@ -978,14 +990,14 @@ def _fx_certs(out, certdir, status=None, names=None):
         sb.mi.analyse, sb.cv.check_window = real_a, real_c
 
 
-def _fx_e0_record(out, record, x_pct=None, s2=None):
-    """DEV E0 다섯의 진단 기록을 **진짜 생산자** (mixer_smoke_blind.e0_diag) 로 — 검사기 · S_R² 만 대역."""
+def _fx_e0_record(out, record, x_pct=None, s2=None, status=None):
+    """DEV E0 다섯의 진단 기록을 **진짜 생산자** (mixer_smoke_blind.e0_diag) 로 — 검사기 · S_R² 만 대역 (status = 이름 → 상태 덮어쓰기)."""
     import contextlib
     import io
     sb = _sb()
     real_c, real_s = sb.cv.check_window, sb.mi.e0_t0_stats
-    xs = dict(x_pct or {})
-    sb.cv.check_window = _fx_fake_cw(lambda n: 'CONTRACT_MET' if xs.get(n, 0.8) <= 1.0 else 'CONTRACT_NOT_MET', x_pct=xs)
+    xs, st_over = dict(x_pct or {}), dict(status or {})
+    sb.cv.check_window = _fx_fake_cw(lambda n: st_over.get(n) or ('CONTRACT_MET' if xs.get(n, 0.8) <= 1.0 else 'CONTRACT_NOT_MET'), x_pct=xs)
     s2v = dict(s2 or {})
 
     def fake_s(ref_dir, r_container, **kw):
@@ -1062,7 +1074,7 @@ def selftest():
                 and stage_params(p, 'dev-e0')['runs'] == list(dd.DEV_E0) and stage_params(p, 'dev-rot')['requires'] == 'dev-e0'
                 and refuses(lambda: stage_params(p, 'confirm-first'), '허용하지 않는다')
                 and refuses(lambda: stage_params(p, 'confirm-rest'), '허용하지 않는다')
-                and stage_params(pol_v2(), 'confirm-first')['soft_range_pct'] == 5.8)
+                and stage_params(pol_v2(), 'confirm-first')['soft_range_pct'] == 7.37)
     chk('S① 리포 정책 = v2 · 새 policy_id (옛 Q8 first/rest id 재사용 안 함 §8-2 ④) · dev-e0 · dev-rot 허용 · confirm-first/rest 는 정의만 (Codex GO 전 거부) · '
         '옛 first · rest 는 허용 그대로', okx(_s1))
 
@@ -1084,7 +1096,7 @@ def selftest():
         bad.append(refuses(lambda: stage_params(c4, 'confirm-first'), 'null'))
         c5 = copy.deepcopy(p)
         c5['stages']['confirm-first']['soft_range_pct'] = 6.0
-        bad.append(refuses(lambda: stage_params(c5, 'confirm-first'), '5.8'))
+        bad.append(refuses(lambda: stage_params(c5, 'confirm-first'), f'{SOFT_RANGE_PCT:g}'))
         c6 = copy.deepcopy(p)
         c6['stages']['dev-e0']['np_probe'] = dict(base='E0_ref_s32452843', nps=[5, 10, 20, 40], time='01:00:00')
         bad.append(refuses(lambda: stage_params(c6, 'dev-e0'), 'np_probe'))
@@ -1141,13 +1153,13 @@ def selftest():
         fr = {n: v['frames'] for n, v in e.items()}
         line = e['E0_ref_s32452843']['line_bytes_max']
         want_line = 6 + 2 + 10 * FLOAT_FIELD_BYTES + 12                         # id 6 자리 · type 2 · 실수 10 열 · 구분자 12
-        return (fr['E0_soft_s32452843'] == 385 and fr['E0_ref_s32452843'] == 867 and fr['E0_ref2_s32452843'] == 1227
-                and fr['E0_ref_dthalf_s32452843'] == 867 and line == want_line
+        return (fr['E0_soft_s32452843'] == 385 and fr['E0_ref_s32452843'] == 1037 and fr['E0_ref2_s32452843'] == 1467
+                and fr['E0_ref_dthalf_s32452843'] == 1037 and line == want_line
                 and e['E0_ref_s32452843']['columns'] == ['id', 'type', 'x', 'y', 'z', 'vx', 'vy', 'vz', 'fx', 'fy', 'fz', 'radius']
-                and 1.1e10 < e['E0_ref_s32452843']['dump_bytes'] < 1.3e10 and fr['LC_ref_r2_s32452843'] > 200
+                and 1.4e10 < e['E0_ref_s32452843']['dump_bytes'] < 1.5e10 and fr['LC_ref_r2_s32452843'] > 200
                 and e['E0_ref2_s32452843']['total_bytes'] > e['E0_ref_s32452843']['total_bytes'])
-    chk('S⑤ ★ 디스크 추정 (piece 5) — E0 프레임 soft 385 → ×14 867 → ×28 1,227 · dt/2 867 (덤프 간격 1000 고정 규칙) · 한 줄 최악 폭 = id 6 + type 2 + '
-        '실수 10 × 12 (%g) + 구분자 · E0_ref 한 런 ≈ 12 GB (필요 × 1.10 ≤ df 가용이어야 발사)', okx(_s5))
+    chk('S⑤ ★ 디스크 추정 (piece 5 · v2.6) — E0 프레임 soft 385 → ×20 1,037 → ×40 1,467 · dt/2 1,037 (덤프 간격 1000 고정 규칙 · 옛 ×14 867 · ×28 1,227) · '
+        '한 줄 최악 폭 = id 6 + type 2 + 실수 10 × 12 (%g) + 구분자 · E0_ref 한 런 ≈ 14.5 GB (필요 × 1.10 ≤ df 가용이어야 발사)', okx(_s5))
 
     #  S⑥ 폴더 계약 · fresh
     def _s6():
@@ -1213,17 +1225,35 @@ def selftest():
             _fx_seal(td, 'E0_ref_s67867967', 'first', 20)
             res['seal'] = verify_e0_record(td, rp, 20)
             _fx_seal(td, 'E0_ref_s67867967', 'dev-e0', 20)
-            rc2, rec2 = _fx_e0_record(td, rp + '.f', x_pct={'E0_ref2_s32452843': 0.95, 'E0_ref_s32452843': 0.6})    # b: ×28 > ×14 (증가)
-            res['b'] = [] if rc2 == 0 else ['b 실패'] if rec2['checks']['b']['pass'] is False else []
+            #  ★ v2.6 (09-30 밤 · 1저자 비준 "권고하는걸로") — b · c 는 **보고 전용** (값 · pass 는 기록 · 관문 아님 · 통과선 불변).  반례 먼저: 옛 판은
+            #    DEV7 실측 모양 (b = 최대 주인 교체 +0.0026 %p · c = 두 실현의 |Δx| 0.24 %p · S_R² 10 %) 으로 a 가 통과해도 회전을 막았다.
+            rc2, rec2 = _fx_e0_record(td, rp + '.f', x_pct={'E0_ref2_s32452843': 0.95, 'E0_ref_s32452843': 0.6})    # b: ref2 > ref (증가)
+            res['b_report'] = (rc2 == 0 and rec2.get('verdict') == 'PASS' and rec2['checks']['b']['pass'] is False
+                               and rec2['checks']['b'].get('role') == 'report' and verify_e0_record(td, rp + '.f', 20) == [])
             rc3, rec3 = _fx_e0_record(td, rp + '.g', s2={'E0_ref_s32452843': 0.0100, 'E0_ref_dthalf_s32452843': 0.0102})   # c: S_R² 2 %
-            res['c'] = [] if rc3 == 0 else ['c 실패'] if rec3['checks']['c']['pass'] is False else []
+            res['c_report'] = (rc3 == 0 and rec3.get('verdict') == 'PASS' and rec3['checks']['c']['pass'] is False
+                               and rec3['checks']['c'].get('role') == 'report' and verify_e0_record(td, rp + '.g', 20) == [])
+            rc5, rec5 = _fx_e0_record(td, rp + '.i', x_pct={'E0_ref_s32452843': 0.7319, 'E0_ref2_s32452843': 0.7345,
+                                                           'E0_ref_dthalf_s32452843': 0.9725},
+                                      s2={'E0_ref_s32452843': 0.0100, 'E0_ref_dthalf_s32452843': 0.0110})             # DEV7 모양 · a 통과
+            res['dev7_shape'] = (rc5 == 0 and rec5.get('verdict') == 'PASS' and rec5['checks']['b']['pass'] is False
+                                 and rec5['checks']['c']['pass'] is False and verify_e0_record(td, rp + '.i', 20) == [])
+            rc6, rec6 = _fx_e0_record(td, rp + '.j', x_pct={'E0_ref2_s32452843': 1.3})        # ref2 1 % 초과 = b 보고 (기술 실패 아님)
+            res['ref2_notmet_report'] = rc6 == 0 and verify_e0_record(td, rp + '.j', 20) == []
+            rc7, rec7 = _fx_e0_record(td, rp + '.k', status={'E0_ref2_s32452843': 'TECH_FAIL'})  # ref2 기술 실패 = technical → FAIL
+            res['ref2_tech'] = (rc7 != 0 and rec7['checks']['technical']['pass'] is False and verify_e0_record(td, rp + '.k', 20) != [])
+            j5 = copy.deepcopy(j)
+            j5['checks'].pop('b')
+            open(rp + '.l', 'w').write(json.dumps(j5))
+            res['b_missing'] = verify_e0_record(td, rp + '.l', 20)                            # 보고 필드가 빠진 기록 = 불완전 → 거부
             rc4, rec4 = _fx_e0_record(td, rp + '.h', x_pct={'E0_ref_s49979687': 1.2})                                # a: 1 % 초과
             res['a'] = [] if rc4 == 0 else ['a 실패'] if rec4['checks']['a']['pass'] is False else []
             res['fail_verdict'] = verify_e0_record(td, rp + '.h', 20)
-            print('        ' + ' · '.join(f'{k}:{len(v)}' for k, v in res.items()))
+            print('        ' + ' · '.join(f'{k}:{v if isinstance(v, bool) else len(v)}' for k, v in res.items()))
             return all(res.values()) and rec['verdict'] == 'PASS' and rec['np'] == 20
     chk('S⑦ ★ E0 진단 PASS 기록 (dev-rot 관문) — 진짜 생산자가 쓴 PASS 기록은 이어진다 · 반례 전부 거부: 다른 NP (블록 통일) · pass 가 "true" 문자열 · '
-        'runs 빠짐 · 도구 sha 다름 · 기록 뒤 log 변경 · 봉인 stage ≠ dev-e0 · b (×28 이 ×14 보다 큼) · c (S_R² 2 %) · a (1 % 초과) → FAIL 기록은 거부',
+        'runs 빠짐 · 도구 sha 다름 · 기록 뒤 log 변경 · 봉인 stage ≠ dev-e0 · a (1 % 초과) · ref2 기술 실패 · b 보고 필드 누락 → 거부 / '
+        '★ v2.6: b (ref2 > ref) · c (S_R² 2 %) · DEV7 모양 (b · c 동시) · ref2 1 % 초과는 **보고 전용** (pass false · role report 로 기록 · PASS)',
         okx(_s7))
 
     #  S⑧ 승인 증서 ↔ 시작 대조 (start_check.approval_problems) — 같은 형식 (쓰는 쪽 = 이 모듈 · 읽는 쪽 = job 안의 표준 라이브러리)
@@ -1384,7 +1414,7 @@ def selftest():
         g = re.search(r"^REG = (\{[^\n]*\})", src, re.M)
         leg = eval(g.group(1)) if g else None                                     # noqa: S307 — 리포 파일의 리터럴 한 줄
         sc = _fx_start_check()
-        return (SOFT_RANGE_PCT == sb.cv.SOFT_RANGE_PCT == 5.8 and READER_REG == dict(sb.REG) and leg == READER_REG
+        return (SOFT_RANGE_PCT == sb.cv.SOFT_RANGE_PCT == 7.37 and READER_REG == dict(sb.REG) and leg == READER_REG
                 and LAUNCH_SCHEMA == sb.cv.LAUNCH_SCHEMA == sc.LAUNCH_SCHEMA and APPROVAL_SCHEMA == sc.APPROVAL_SCHEMA
                 and REG_N_EXPECTED == 100000 and REG_R_CONTAINER == READER_REG['r_container'])
     chk('S⑩ 등록값 한 벌 — soft 범위 5.8 (검사기 = 관문) · 판독 규약 (관문 = 맹검 래퍼 = 옛 rest 관문 REG) · 봉인 · 승인 스키마 (관문 = 시작 대조기) · '
