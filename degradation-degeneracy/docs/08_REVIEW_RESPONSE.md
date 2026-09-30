@@ -8586,3 +8586,23 @@ docstring 변경도 RUN_SCOPE 규칙대로 digest 를 움직인다: `c78d7969ef4
 **다음:** 사용자 승인 요청은 **N1–N3 제한 보완 · 이유별 회귀로만** 좁힌다 (검토자 `NEXT_SCOPE_DRAFT.md` — 비활성 초안). 승인 전에는 코드 · 시험을 만들지 않는다. 라운드 2 (실물 leg 배선 · p_ini · 세대 등록) · 새 연구 계산 · 실행 GO 는 이번 승인 대상이 아니다. 76차 종결 · grid_fit_v5 진단 전용 유지.
 
 **사용자 승인 (2026-09-30, §116 접수 뒤):** 질문 — "G82-N1·N2·N3 제한 보완 코드 라운드를 지금 시작해도 될까요? 범위는 검토자 초안 그대로입니다: 승인된 4 파일(fitting · io · design_wire · preserve)만 최소 수정, RED 회귀 먼저, 변이, 2차 영수증 보존 후 새 세대 영수증 1회, 전체 회귀·smoke, GATE83 요청. 라운드 2·p_ini·연구 계산·실행 GO 는 제외입니다." → **"승인 — 지금 착수"**. 시작 전 고정 표 `docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md` §10 (이 기록과 같은 커밋 · 코드 변경 전). 4 파일 밖이 필요하면 멈추고 다시 묻는다.
+
+## §117 83차 요청 — 82차 잔여 **G82-N1 · N2 · N3 제한 보완** 결과 (라운드 1 종결 판정 요청 · 실행 GO 아님 · 라운드 2 착수 아님) · 판정 대상 HEAD `ea2af59e`
+
+**범위 (§116 끝 사용자 승인 그대로):** RUN_SCOPE 4 파일만 (`src/fitting.py` · `src/io.py` · `tools/design_wire.py` · `tools/preserve.py`) · 새 production 파일 0 · 수치 알고리즘 · ID 도메인 · 골든 불변. 커밋 사슬: 승인 기록 + 시작 전 고정 표 (`STAGE3_IMPL_ROUND1_SPEC.md` §10) `dfdd91a9` → RED `6bc46caf` (`tests/test_gate82_residuals.py` 19 node · 18 failed / 1 passed · 무관 예외 n1_05 · n2_00 · n2_01×5 는 RED 증거에서 제외) → GREEN `7d291fbc` (19 passed · stage3 이웃 109 passed) → 변이 EXPECT 12 `8e18ae83` (첫 관측 12/12 · 재생 12/12) → 등록부 규칙 시험 3 failed (증인 끝 공백 — 요청문 §6-f) → 정정 `6723b2ad` → 2차 영수증 보존 `5313731c` → 새 세대 영수증 + 원장 앵커 `4307b6f8` (clean `5313731c`) → 계약 줄번호 `ea2af59e`. 사이의 RUN_SCOPE 밖 커밋: COMSOL 보존 `58bc7eef` · §36 `393f747e`.
+
+**코드 identity:** `source_digest 02a776a7a0a3f4ba → 7187bd31740514d4` (`7d291fbc`). 영수증 두 leg: core paired `acbe8791… → 1eb98e21…` · grid `e7f3a624… → ee7c405a…` · 차이 = `validator_source_digest` · `src_io_sha256` · stamp 뿐 · **n_checks 35 · 34 불변** (새 검사 `관측_roster_재구성` · `세대_연결` 은 sig 6 경로에만) · producer cut · bundle · outputs · restore 불변. 원장 `LEG_PRESERVATION.yaml` 두 값 × 2 leg 는 영수증과 같은 커밋.
+
+**G82-N1:** 공유 함수 `src.io.observed_roster` (봉인 curves 스냅샷 — 계획 `inputs.curves_sha256` 와 바이트 동일 — 의 cond_id 별 truth · noise · seed ↔ fits 행 정확 비교 · objective 쌍 완전성 · `roster_from_conditions` 재구성) 를 writer (`write_execution_record` — 인자 `roster_sha256` 폐지 · 계산 · 불일치면 기록 안 씀) 와 validator 새 검사 `관측_roster_재구성` (스냅샷 없음 → 실패 · 재구성 sha ↔ 계획 · record · n_obs) 가 쓴다. 시험 n1_00–05 (음성은 `fits_seal` 을 다시 맞춘 위조 — `출력봉인_재계산` 통과를 시험 안에서 확인). 변이 4.
+
+**G82-N2:** `design_wire.STAGE3_BANK_PROFILE` (pcg64 · `H(pair_group_id, bank_version)` · float64 · little · unit_cube) · `STAGE3_BANK_VERSIONS = ("v6.0",)` · `check_bank_profile` (별칭 없음) 을 envelope 봉인 (`check_envelope_v4`) · 시작 전 (`_prepare_stage3`) · validator (`_stage3_rederive`) 셋에서. `check_design` 선언 문법은 그대로 (요청문 §6-c). 골든 bank sha `c3009d16…` 불변 (n2_00b). 시험 n2_00–04 (9 node). 변이 4.
+
+**G82-N3:** `design_wire.STAGE3_PROTOCOL_GENERATION = "v6"` — `_prepare_stage3` 시작 거부 · validator 새 검사 `세대_연결` (sig 6 · 계획 · record · 행 `record_generation`). 세대 문법 검사 · 역사적 reader 불변 · v4 envelope 문법도 좁히지 않음 (요청문 §6-e). 시험 n3_00–02. 변이 4 (계획 · record 대조는 서로를 가려 시험이 두 이유 문장을 각각 본다).
+
+**실측 (clean `ea2af59e` · 시작 HEAD = 끝 HEAD · status 0 · 2026-09-30T06:18:27Z → 07:26:04Z):** 전체 pytest 0 failed · 2023 passed · 1 xfailed (58:45) · strict smoke rc 0 (191 s) · 변이 재생 `-k g82` 12/12 · `--check-preimages -k g82` 통과. 이웃 회귀 (`7d291fbc`, 영수증 전) 644 passed · 17 failed — 전부 영수증 identity 가족 → 새 세대 뒤 통과.
+
+**스스로 신고 (요청문 §6):** (a) N1 출처 = 봉인 스냅샷 (fits 에 seed 열을 쓰지 않음) (b) 행 대조는 정확 비교 (c) `check_design` 불변 (d) envelope 검사가 봉인 단계에서 거부 → n2_03 (b) 는 stub 계획 (e) v4 envelope 세대 문법 불변 (f) 등록부 규칙 시험 첫 실행 3 failed (증인 끝 공백) (g) writer 인자 폐지 (h) 계약 §1 줄번호 세 번째 갱신 (i) 이월 — Q1 dead 정의 · Q7 비유한 J · 라운드 2.
+
+**하지 않은 것:** 실행 GO 0 · 새 연구 leg 0 · 라운드 2 (실물 leg 배선 · 세대표 등록 · p_ini · dead 정의 · 계약 §0) 0 · class/투영 게시 0.
+
+**다음:** `docs/22p_gap/GATE83_REQUEST.md` 발송 (SHA 는 발송문) → 83차 회신 대기. 라운드 1 종결이어도 라운드 2 는 사용자 별도 승인 뒤.
