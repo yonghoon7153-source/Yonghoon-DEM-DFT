@@ -313,9 +313,13 @@ def test_g84_n4_01_v1_records_are_read_as_written_and_are_not_upgraded_or_mixed(
 
 
 def test_g84_n4_02_finite_counts_the_stored_J_and_converged_counts_the_legacy_flag_not_healthy_termination(tmp_path):
-    """행의 한 원소를 J=NaN · converged=True (유한 성공 뒤 nonfinite 종료 모양) 로 · 다른 원소를 converged=False 로 바꾸고
-    봉인을 다시 맞춘다 → validator 가 record 의 finite/converged 를 행에서 다시 센 값과 대조해 거부한다. 기록을 맞추면
-    통과 — 두 계수는 정상 종료 판정이 아니다."""
+    """**합성 NaN / legacy-flag 계수 재대조** — 행의 한 원소를 J=NaN · converged=True 로 · 다른 원소를 converged=False
+    로 바꾸고 봉인을 다시 맞춘다 → validator 의 `실현_재계산` 이 record 의 finite/converged 를 행에서 다시 센 값과
+    대조해 거부한다. 기록을 맞추면 **그 한 항목**이 통과한다 (전체 validator PASS 가 아니다).
+
+    ★ 85차 G85-C2 — 이 합성 행은 실제 legacy 의 "유한 성공 다음 nonfinite round" 의 반환 모습이 **아니다**. 그 경로는
+    이전 best 의 유한 J 를 반환하면서 ok=True · outer=nonfinite 가 공존할 수 있다 (80차 회귀가 다루는 경로). 여기서
+    재는 것은 계수 정의 (저장 J 유한 수 · legacy True 수) 뿐이고, 두 계수가 정상 종료 판정이 아니라는 점이다."""
     from tests.test_fitting import _tiny_curves
     in_dir = _tiny_curves(tmp_path / "in")
     out = _run(tmp_path, "o", _hex64_plan_ctx(in_dir), in_dir)
