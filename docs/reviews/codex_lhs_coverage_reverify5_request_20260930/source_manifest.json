@@ -1,0 +1,39 @@
+{
+ "schema": "reverify5_source_manifest/1",
+ "base": "9ab4bc3203e64930f860ec805ae9fb09fdb898f5 (= 재검증 4 의 tip · Codex 후보 10 파일과 LF 정규화 뒤 동일)",
+ "tip": "6e4ef69256a075c5cf5cee337bf30a465cf125d4",
+ "commits": [
+  "6e4ef69256a075c5cf5cee337bf30a465cf125d4 lhs_descriptor_harvest — producer_pin: hosts 형식 오류는 예외 대신 미검증 + 사유 (Codex LHSC-04-R5-PIN-TYPE · P3 · 반례 먼저)",
+  "b0f581e1420abe4b9c350d41933b7ddd190948a5 run_pipeline — coverage v2 검증기: 전체 클립 끝점 (n_clip = n_am) 의 상별 평균 100 · std 0 (Codex LHSC-03-R5 · 반례 먼저)"
+ ],
+ "patches": {
+  "0018-run_pipeline-coverage-v2-n_clip-n_am-100-std-0-Codex.patch": {
+   "bytes": 10774,
+   "sha256": "d68c6bbd708674e32f02385a216fd88f4a68eecf40e105057931079736e8c3eb"
+  },
+  "0019-lhs_descriptor_harvest-producer_pin-hosts-Codex-LHSC.patch": {
+   "bytes": 6176,
+   "sha256": "ae8ed175b771c1f80316db722bd3434a591066d924e2da1df053cd141233b1c7"
+  }
+ },
+ "changed_files_after_apply": {
+  "scripts/lhs_descriptor_harvest.py": {
+   "bytes": 214611,
+   "sha256": "89479ff7e68f824681a183fbbbe6710f4fa1afff07a3d5d6dd83db5c60ce5e65",
+   "git_blob": "ce0fdf141529b8d3dfe174efbcfba5ca704c303a"
+  },
+  "webapp/app.py": {
+   "bytes": 594985,
+   "sha256": "fa4b76d78cb8e75204351a9274ae52cfd941cf10ae124680e99ecf4fd58ffffd",
+   "git_blob": "26a13ca8aa2d91b4886011bbee17de5b644e5ede"
+  },
+  "webapp/test_pipeline_provenance.py": {
+   "bytes": 129532,
+   "sha256": "37fe73f8fcb3ae8244309e0177ce86fc8df03a6faaa447c83313a96ada55adc4",
+   "git_blob": "5fbaee0faa1ec335659c48d0ff2b2c7ff8d08f62"
+  }
+ },
+ "apply": "재검증 4 후보 (= base) 위에 0018 → 0019 (git apply --check 뒤) · 적용 후 3 파일의 sha256 · git blob 이 위와 같아야 한다",
+ "selftests": "selftests_6e4ef6925.log — 수확기 · lens · plastic · coverage · 배치 · 파이프라인 (rc 0 × 6 · Linux · Python 3.11)",
+ "fixed_tree_reproduction": "Codex 재검증 4 스크립트 (audit_r5 · audit_r4 · audit_schema · audit_numeric_domain · audit_producer) 를 한 글자도 안 바꾸고 tip 에서 실행 (candidate → worktree 심볼릭 링크)"
+}

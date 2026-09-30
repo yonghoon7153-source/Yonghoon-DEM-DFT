@@ -1,0 +1,86 @@
+From 6e4ef69256a075c5cf5cee337bf30a465cf125d4 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Wed, 30 Sep 2026 06:46:54 +0000
+Subject: [PATCH 19/19] =?UTF-8?q?lhs=5Fdescriptor=5Fharvest=20=E2=80=94=20?=
+ =?UTF-8?q?producer=5Fpin:=20hosts=20=ED=98=95=EC=8B=9D=20=EC=98=A4?=
+ =?UTF-8?q?=EB=A5=98=EB=8A=94=20=EC=98=88=EC=99=B8=20=EB=8C=80=EC=8B=A0=20?=
+ =?UTF-8?q?=EB=AF=B8=EA=B2=80=EC=A6=9D=20+=20=EC=82=AC=EC=9C=A0=20(Codex?=
+ =?UTF-8?q?=20LHSC-04-R5-PIN-TYPE=20=C2=B7=20P3=20=C2=B7=20=EB=B0=98?=
+ =?UTF-8?q?=EB=A1=80=20=EB=A8=BC=EC=A0=80)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Codex 재검증 4: 형식 맞는 자기 신고에 `hosts: 1` 을 넣으면 producer_pin 이 TypeError 로 죽어
+contact_area_check 까지 중단됐다 (False 인증이 True 가 되는 결함은 아니다 · 비차단).
+
+- hosts 는 {path, sha256?} 목록 — 아니면 자기 신고 (claim_present) 는 그대로 · source_hash_verified_locally
+  None · verify_note 에 사유 · installed_build_pinned 는 여전히 False.
+- 셀프테스트 ㉑⁗ R5-PIN-TYPE (반례 먼저 · 옛 코드 ✗): 1 · "x" · [1] · path 없음 · sha 형식 다섯 → 예외 없음 ·
+  contact_area_check 의 producer_model 도 자기 신고 True · 로컬 대조 None · 설치 False.
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft
+---
+ scripts/lhs_descriptor_harvest.py | 38 ++++++++++++++++++++++++++++++-
+ 1 file changed, 37 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/lhs_descriptor_harvest.py b/scripts/lhs_descriptor_harvest.py
+index 585fd1749..ce0fdf141 100755
+--- a/scripts/lhs_descriptor_harvest.py
++++ b/scripts/lhs_descriptor_harvest.py
+@@ -605,7 +605,16 @@ def producer_pin(path=None):
+         return out
+     out['claim_present'] = True
+     out['claim'] = {k: raw.get(k) for k in ('source_file', 'sha256', 'host', 'date', 'build')}
+-    cands = [(h_.get('path'), h_.get('sha256') or raw['sha256']) for h_ in (raw.get('hosts') or []) if isinstance(h_, dict)]
++    hosts = raw.get('hosts')
++    #  LHSC-04-R5-PIN-TYPE (Codex 재검증 4 · P3): hosts 가 {path, sha256?} 목록이 아니면 예외 (옛 판 TypeError → contact_area_check 중단)
++    #  대신 자기 신고는 그대로 두고 로컬 대조만 None + 사유 — 선택 진단의 잘못된 메타데이터가 판정을 세우지 않는다 (설치 인증은 여전히 False).
++    if hosts is not None and not (isinstance(hosts, list) and all(
++            isinstance(h_, dict) and isinstance(h_.get('path'), str)
++            and (h_.get('sha256') is None or (isinstance(h_['sha256'], str) and re.fullmatch(r'[0-9a-f]{64}', h_['sha256'])))
++            for h_ in hosts)):
++        out['verify_note'] = 'hosts 가 {path, sha256?} 목록이 아니다 — 로컬 대조 불가 (미검증 · 사유만 · LHSC-04-R5-PIN-TYPE)'
++        return out
++    cands = [(h_['path'], h_.get('sha256') or raw['sha256']) for h_ in (hosts or [])]
+     if os.path.isabs(raw['source_file']):
+         cands.append((raw['source_file'], raw['sha256']))
+     seen = []
+@@ -2737,6 +2746,33 @@ def selftest():
+                 '(source_claim_present · source_hash_verified_locally)',
+                 _pm4.get('installed_build_pinned') is False and _pm4.get('source_claim_present') is True
+                 and _pm4.get('source_hash_verified_locally') is True and 'pinned' not in _pm4)
++            # ── ㉑⁗ ★ Codex LHSC-04-R5-PIN-TYPE (09-30 밤 재검증 4 · P3 비차단) — 반례 먼저: 형식 맞는 자기 신고에 `hosts: 1` 을 넣으면
++            #    `producer_pin` 이 TypeError 로 죽어 contact_area_check 까지 중단됐다.  계약: hosts 는 {path, sha256?} 목록 — 아니면 예외 대신
++            #    자기 신고는 그대로 · 로컬 대조 None · 사유 문자열 (설치 인증은 여전히 False).  False 인증이 True 가 되는 결함이 아니다.
++            _r5t = {}
++            for _nm, _hosts in (('int', 1), ('str', 'x'), ('list_of_int', [1]), ('dict_no_path', [{'sha256': _sha_ok}]),
++                                ('bad_sha', [{'path': _src_ok, 'sha256': 'zz'}])):
++                try:
++                    _r5t[_nm] = _pinw(dict(_base4, source_file=_src_ok, sha256=_sha_ok, hosts=_hosts), f'r5_{_nm}.json')
++                except Exception as _ex:                          # noqa: BLE001 — 예외 자체가 반례
++                    _r5t[_nm] = {'exception': type(_ex).__name__}
++            _env5 = os.environ.pop('LHS_PRODUCER_PIN_FILE', None)
++            try:
++                os.environ['LHS_PRODUCER_PIN_FILE'] = os.path.join(_d4, 'r5_int.json')
++                _pm5 = ((_cac([1, 2], ['AM_P', 'SE'], [2.0, 0.5], [1], [2], [_g6(_ida(2.0, 0.5, 0.05))], [0.05], [0])
++                         if (_cac is not None and _ida is not None) else {}).get('producer_model') or {})
++            except Exception as _ex:                              # noqa: BLE001
++                _pm5 = {'exception': type(_ex).__name__}
++            finally:
++                os.environ.pop('LHS_PRODUCER_PIN_FILE', None)
++                if _env5 is not None:
++                    os.environ['LHS_PRODUCER_PIN_FILE'] = _env5
++            chk('㉑⁗ ★ R5-PIN-TYPE: hosts 가 목록이 아니거나 원소가 {path, sha256?} 가 아니면 (1 · "x" · [1] · path 없음 · sha 형식) 예외 없이 '
++                '자기 신고 그대로 · 로컬 대조 None · 사유 문자열 · 설치 인증 False — contact_area_check 도 중단되지 않는다',
++                all(r.get('claim_present') is True and r.get('source_hash_verified_locally') is None and 'hosts' in (r.get('verify_note') or '')
++                    and r.get('installed_build_pinned') is False for r in _r5t.values())
++                and _pm5.get('source_claim_present') is True and _pm5.get('source_hash_verified_locally') is None
++                and _pm5.get('installed_build_pinned') is False)
+         else:
+             chk('㉑⁗ R4-PIN: producer_pin 함수가 있다', False)
+         if _pae is not None and _peb is not None:
+-- 
+2.43.0
+

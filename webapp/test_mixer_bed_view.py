@@ -44,6 +44,73 @@ DT, PERIOD, SCALE = 1e-3, 0.5, 0.0262
 ROT0 = 1 + 100 + 100                                   # run 1 · run 100 · run 100 → 회전 시작 step
 
 
+#  ⑰d GIF 색 — 페이지의 인코더 (lzwBlocks … gifEnd) 를 **그대로 잘라** node 로 돌리고 Pillow (독립 디코더) 로 푼다.
+#  반례 (1저자 09-30 밤 *"gif 하면 흑백으로 나온다"*): 층상 런은 첫 프레임 (정착 ①) 에 SE 가 없다 — 회색 AM 둘 (#5b5b5b · #8f8f8f) 뿐.
+#  옛 인코더는 팔레트를 첫 프레임에서만 뽑아 뒤 프레임의 SE 베이지 (#c9b88a) 를 가장 가까운 회색으로 칠했다.
+GIF_HARNESS = r"""
+const fs = require('fs'), W = 48, H = 32;
+function frame(withSE) {
+  const f = new Uint8ClampedArray(W * H * 4);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const s = 0.5 + 0.5 * y / (H - 1);                                  // 3D 음영처럼 밝기 사다리
+    let c = [251, 251, 248];                                            // 배경 #fbfbf8
+    if (x < 16) c = [0x5b, 0x5b, 0x5b].map(v => Math.round(v * s));    // AM_P
+    else if (x < 32) c = [0x8f, 0x8f, 0x8f].map(v => Math.round(v * s)); // AM_S
+    else if (withSE) c = [0xc9, 0xb8, 0x8a].map(v => Math.round(v * s)); // SE (둘째 프레임에만)
+    const p = 4 * (y * W + x); f[p] = c[0]; f[p + 1] = c[1]; f[p + 2] = c[2]; f[p + 3] = 255;
+  }
+  return f;
+}
+const f0 = frame(false), f1 = frame(true), g = gifBegin(f0, W, H);
+gifAdd(g, f0, 10); gifAdd(g, f1, 10);
+const parts = gifEnd(g), out = Buffer.alloc(parts.reduce((a, c) => a + c.length, 0));
+let o = 0; for (const c of parts) { Buffer.from(c.buffer, c.byteOffset, c.length).copy(out, o); o += c.length; }
+fs.writeFileSync(process.argv[2], out);
+"""
+
+
+def gif_encoder_src(html):
+    """페이지에서 GIF 인코더 부분 (function lzwBlocks( … function gifEnd( 가 있는 줄 끝) 을 그대로 잘라 낸다.  못 찾으면 None."""
+    a = html.find('  function lzwBlocks(')
+    b = html.find('function gifEnd(', a if a >= 0 else 0)
+    if a < 0 or b < 0:
+        return None
+    e = html.find('\n', b)
+    return html[a:e if e >= 0 else len(html)]
+
+
+def gif_color_check(html, tmp):
+    """→ (None = node 없음) 또는 (ok, 설명).  둘째 프레임의 SE 칸이 베이지로 풀리고 (±8) · 두 프레임의 회색이 그대로인가."""
+    import subprocess
+    node = shutil.which('node')
+    if node is None:
+        return None
+    src = gif_encoder_src(html)
+    if src is None:
+        return False, '인코더 (lzwBlocks … gifEnd) 를 페이지에서 못 찾았다'
+    js, gif = os.path.join(tmp, 'gif_harness.js'), os.path.join(tmp, 'gif_out.gif')
+    with open(js, 'w', encoding='utf-8') as fh:
+        fh.write(src + '\n' + GIF_HARNESS)
+    r = subprocess.run([node, js, gif], capture_output=True, text=True, timeout=60)
+    if r.returncode != 0 or not os.path.isfile(gif):
+        return False, f'node 실패 rc {r.returncode}: {r.stderr[-300:]}'
+    from PIL import Image
+    im = Image.open(gif)
+    n = getattr(im, 'n_frames', 1)
+    im.seek(0)
+    a0 = np.asarray(im.convert('RGB'), dtype=int)
+    im.seek(1)
+    a1 = np.asarray(im.convert('RGB'), dtype=int)
+    se = a1[:, 32:]                                                     # 둘째 프레임 SE 칸
+    want = np.array([0xc9, 0xb8, 0x8a])
+    top = np.abs(se[-1] - want).max()                                   # 맨 아래 줄 = 밝기 1.0 = 상 색 그대로
+    hue = float((se[..., 0] - se[..., 2]).mean())                       # 베이지는 R − B ≈ 63 (회색이면 0)
+    gray_ok = all(np.abs(a[:, :16][-1] - 0x5b).max() <= 8 and np.abs(a[:, 16:32][-1] - 0x8f).max() <= 8 for a in (a0, a1))
+    ok = n == 2 and top <= 8 and hue > 40 and gray_ok
+    return ok, (f'프레임 {n} · SE 맨 아래 줄 최대 편차 {top} (≤ 8) · SE 평균 R−B {hue:.1f} (> 40) · 회색 둘 보존 {gray_ok} · '
+                f'SE 픽셀 예 {tuple(int(v) for v in se[-1, 0])}')
+
+
 def frame_txt(step, rows=ROWS, n_hdr=None, step_hdr=None):
     L = ['ITEM: TIMESTEP', str(step if step_hdr is None else step_hdr), 'ITEM: NUMBER OF ATOMS',
          str(len(rows) if n_hdr is None else n_hdr), 'ITEM: BOX BOUNDS mm mm mm', '-0.02 0.02', '-0.02 0.02',
@@ -349,6 +416,12 @@ def main():
     chk('⑰c 3D: 메시를 프레임 사이에 재사용하고 (InstancedMesh.dispose 로 GPU 버퍼를 푼다) · WebGL 컨텍스트가 끊기면 복구 / 재생성한다',
         'mesh.count = cnt' in html and 'o.dispose()' in html and 'webglcontextlost' in html and 'webglcontextrestored' in html
         and 'function rebuild3(' in html)
+    gc = gif_color_check(html, pdir)
+    if gc is None:
+        print('  —     ⑰d GIF 색 시험 건너뜀 (node 없음 · CI 에서 돈다)')
+    else:
+        chk(f'⑰d GIF: 첫 프레임에 없던 상 색 (층상 런의 SE) 도 뒤 프레임에서 그 색으로 나온다 — 팔레트를 첫 프레임에서만 뽑지 않는다 '
+            f'(1저자 09-30 밤 "gif 하면 흑백") · {gc[1]}', gc[0])
     shutil.rmtree(tmp, ignore_errors=True)
     shutil.rmtree(pdir, ignore_errors=True)
     print(f'\ntest_mixer_bed_view: {_ok}/{_ok + len(_fail)} PASS' + (f'   FAILED: {_fail}' if _fail else ''))

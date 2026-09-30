@@ -1,0 +1,282 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+{
+  "pin": {
+    "match": {
+      "claim_present": true,
+      "claim": {
+        "source_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+        "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+        "host": "local-fixture",
+        "date": "2026-09-30",
+        "build": "not-an-engine"
+      },
+      "claim_reason": "",
+      "source_hash_verified_locally": true,
+      "verify_note": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt: 일치",
+      "installed_build_pinned": false,
+      "installed_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+      "file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/match.json"
+    },
+    "mismatch": {
+      "claim_present": true,
+      "claim": {
+        "source_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "host": "local-fixture",
+        "date": "2026-09-30",
+        "build": "not-an-engine"
+      },
+      "claim_reason": "",
+      "source_hash_verified_locally": false,
+      "verify_note": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt: 불일치",
+      "installed_build_pinned": false,
+      "installed_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+      "file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/mismatch.json"
+    },
+    "remote": {
+      "claim_present": true,
+      "claim": {
+        "source_file": "/nonexistent-review-host/src/file.cpp",
+        "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+        "host": "local-fixture",
+        "date": "2026-09-30",
+        "build": "not-an-engine"
+      },
+      "claim_reason": "",
+      "source_hash_verified_locally": null,
+      "verify_note": "신고한 source 경로가 이 기계에 없다 — 로컬 대조 불가 (다른 기계의 소스)",
+      "installed_build_pinned": false,
+      "installed_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+      "file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/remote.json"
+    },
+    "relative_with_hosts": {
+      "claim_present": true,
+      "claim": {
+        "source_file": "src/compute_pair_gran_local.cpp",
+        "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+        "host": "local-fixture",
+        "date": "2026-09-30",
+        "build": "not-an-engine"
+      },
+      "claim_reason": "",
+      "source_hash_verified_locally": true,
+      "verify_note": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt: 일치",
+      "installed_build_pinned": false,
+      "installed_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+      "file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/relative_with_hosts.json"
+    },
+    "mixed_hosts": {
+      "claim_present": true,
+      "claim": {
+        "source_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+        "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+        "host": "local-fixture",
+        "date": "2026-09-30",
+        "build": "not-an-engine"
+      },
+      "claim_reason": "",
+      "source_hash_verified_locally": false,
+      "verify_note": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt: 불일치 · /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt: 일치",
+      "installed_build_pinned": false,
+      "installed_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+      "file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/mixed_hosts.json"
+    },
+    "missing_build": {
+      "claim_present": false,
+      "claim": null,
+      "claim_reason": "build 가 비었다",
+      "source_hash_verified_locally": null,
+      "verify_note": "",
+      "installed_build_pinned": false,
+      "installed_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+      "file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/missing_build.json"
+    },
+    "bad_hosts_type": {
+      "claim_present": true,
+      "claim": {
+        "source_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+        "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+        "host": "local-fixture",
+        "date": "2026-09-30",
+        "build": "not-an-engine"
+      },
+      "claim_reason": "",
+      "source_hash_verified_locally": null,
+      "verify_note": "hosts 가 {path, sha256?} 목록이 아니다 — 로컬 대조 불가 (미검증 · 사유만 · LHSC-04-R5-PIN-TYPE)",
+      "installed_build_pinned": false,
+      "installed_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+      "file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/bad_hosts_type.json"
+    },
+    "date_shape_only": {
+      "claim_present": true,
+      "claim": {
+        "source_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+        "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+        "host": "local-fixture",
+        "date": "2026-99-99",
+        "build": "not-an-engine"
+      },
+      "claim_reason": "",
+      "source_hash_verified_locally": true,
+      "verify_note": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt: 일치",
+      "installed_build_pinned": false,
+      "installed_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+      "file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/date_shape_only.json"
+    }
+  },
+  "producer_controls": {
+    "zero": {
+      "accepted": true,
+      "mean": 0.0,
+      "diag": {
+        "n_am": 2,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 0,
+        "n_radius_invalid": 0
+      }
+    },
+    "partial_clip": {
+      "accepted": true,
+      "mean": 75.0,
+      "diag": {
+        "n_am": 2,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 1,
+        "n_radius_invalid": 0
+      }
+    },
+    "full_clip": {
+      "accepted": true,
+      "mean": 100.0,
+      "diag": {
+        "n_am": 2,
+        "n_free_surface_nonpositive": 0,
+        "n_coverage_clipped_100": 2,
+        "n_radius_invalid": 0
+      }
+    }
+  },
+  "mutations": {
+    "below_clip_lower_bound": {
+      "accepted": false,
+      "pipeline_status": "failed"
+    },
+    "all_clipped_but_phase_mean_zero": {
+      "accepted": false,
+      "pipeline_status": "failed"
+    },
+    "all_clipped_but_phase_std_40": {
+      "accepted": false,
+      "pipeline_status": "failed"
+    },
+    "unverified_phase_weight_example": {
+      "accepted": true,
+      "pipeline_status": "done"
+    }
+  },
+  "domain": {
+    "previous_underflow": {
+      "inputs": [
+        1e-100,
+        1e-100,
+        1e-101
+      ],
+      "result": {
+        "E": Infinity,
+        "uncertified": true,
+        "all": {
+          "n_rows": 1,
+          "n_tested": 0,
+          "n_area_dump_zero": 1,
+          "n_beyond_tol": 0,
+          "n_producer_uncertified": 1,
+          "n_area_dump_negative": 0,
+          "n_lower_bound_zero": 1,
+          "n_boundary_branch": 0,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "producer_bound_rel_median": null,
+          "producer_bound_rel_max": null,
+          "excess_rel_max": null
+        }
+      }
+    },
+    "huge_radii": {
+      "inputs": [
+        1e+160,
+        1e+160,
+        1e+159
+      ],
+      "result": {
+        "E": Infinity,
+        "uncertified": true,
+        "entry_exception": {
+          "type": "OverflowError",
+          "message": "(34, 'Numerical result out of range')"
+        }
+      }
+    },
+    "normal": {
+      "inputs": [
+        0.001,
+        0.001,
+        0.0001
+      ],
+      "result": {
+        "E": 1.0155810315773286e-20,
+        "uncertified": false,
+        "all": {
+          "n_rows": 1,
+          "n_tested": 1,
+          "n_area_dump_zero": 1,
+          "n_beyond_tol": 1,
+          "n_producer_uncertified": 0,
+          "n_area_dump_negative": 0,
+          "n_lower_bound_zero": 0,
+          "n_boundary_branch": 0,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 1,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": 2.0000200143552778e-05,
+          "producer_bound_rel_median": 3.315617592727079e-14,
+          "producer_bound_rel_max": 3.315617592727079e-14,
+          "excess_rel_max": null
+        }
+      }
+    },
+    "small_supported": {
+      "inputs": [
+        1e-60,
+        1e-60,
+        1e-61
+      ],
+      "result": {
+        "E": 1.0155810315773284e-134,
+        "uncertified": false,
+        "all": {
+          "n_rows": 1,
+          "n_tested": 1,
+          "n_area_dump_zero": 1,
+          "n_beyond_tol": 1,
+          "n_producer_uncertified": 0,
+          "n_area_dump_negative": 0,
+          "n_lower_bound_zero": 0,
+          "n_boundary_branch": 0,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 1,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": 2.0000200143085866e-05,
+          "producer_bound_rel_median": 3.315617592727078e-14,
+          "producer_bound_rel_max": 3.315617592727078e-14,
+          "excess_rel_max": null
+        }
+      }
+    }
+  }
+}

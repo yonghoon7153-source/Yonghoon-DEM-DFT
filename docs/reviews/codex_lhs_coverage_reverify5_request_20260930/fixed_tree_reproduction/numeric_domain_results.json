@@ -1,0 +1,12 @@
+{
+  "radii_sim": [
+    1e-100,
+    1e-100
+  ],
+  "distance_sim": 1.9e-100,
+  "producer_area_sim2": 0.0,
+  "exact_area_sim2": "3.06305283725005004487766007977531494925742006379556510210609940015080883976710991585270500E-201",
+  "E_sim2": Infinity,
+  "error_exceeds_E": false,
+  "limitation": "Deliberately nonphysical LHS scale; underflow of intermediate product; not evidence of affected real beds"
+}

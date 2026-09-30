@@ -1,0 +1,838 @@
+{
+  "pin": {
+    "match": {
+      "input": {
+        "schema": "liggghts_add_pair_pin/1",
+        "source_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+        "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+        "host": "local-fixture",
+        "date": "2026-09-30",
+        "build": "not-an-engine",
+        "formula_confirmed": true
+      },
+      "parsed": {
+        "claim_present": true,
+        "claim": {
+          "source_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+          "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+          "host": "local-fixture",
+          "date": "2026-09-30",
+          "build": "not-an-engine"
+        },
+        "claim_reason": "",
+        "source_hash_verified_locally": true,
+        "verify_note": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt: 일치",
+        "installed_build_pinned": false,
+        "installed_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+        "file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/match.json"
+      },
+      "emitted": {
+        "formula": "A = -π/4 · (r−r1−r2)(r+r1−r2)(r−r1+r2)(r+r1+r2) / rsq,  r = sqrt(rsq) (rsq = dx²+dy²+dz²),  δ = r1 + r2 − r  (binary64 · 음수 · 0 을 자르지 않는다 · C++ 괄호 · 좌결합 순서 그대로 = producer_area_binary64)",
+        "source": "LIGGGHTS-PUBLIC master src/compute_pair_gran_local.cpp add_pair (Codex 열람 2026-09-30) — 설치 빌드와 같은 소스인지는 pin 파일 (docs/data/liggghts_add_pair_pin.json · 환경변수 LHS_PRODUCER_PIN_FILE) 의 sha256 · formula_confirmed 로만 인증",
+        "error_bound": "상자 (토큰 반올림 상자 + 생산자 δ 형성 오차 Δδ) 전체에서 |A_p − A_e| ≤ E = (π/4)/d_min² · [Π_k(m_k + Δ_k)·(1 + 13·eps) − Π_k m_k]  — m_k = 인수 (δ, 2r1−δ, 2r2−δ, 2r1+2r2−δ) 의 상자 최대 절댓값 · Δ_k = eps·(3·S + m_k) (sqrt 뒤 두 뺄셈의 인수 형성 절대오차 · S = r + r1 + r2 = 2r1+2r2−δ 의 상자 최대) · 13·eps ≥ 곱 3 · rsq 5 · 나눗셈 1 · π/4 2 (단위 반올림 u = eps/2 로 세면 11u) · eps = 2^-52 · d_min ≤ 0 이면 E 가 서지 않아 미인증 (n_producer_uncertified).  실증 = --selftest ㉑‴ (공개 식 binary64 4000 점 · 여섯 영역 · Decimal 60 자리) — 설치 빌드의 실행이 아니다.  13·eps 는 곱 · π/4 · 나눗셈 · rsq 반올림에 분모의 1/(1−γ₅) 팽창 (γ₅ ≈ 5u) 을 1 차로 덮는 여유다 (1/rsq ≤ 1/d_min² 를 반올림된 rsq 의 독립 부등식으로 쓰지 않는다).  지원 수치영역 = 중간 연산이 정상 binary64 (네 인수 곱 1e-280–1e280 · d_min 1e-140–1e140 · 반올림 round-to-nearest) — 밖이면 미인증 (LHSC-04-R4-DOMAIN · 1e-100 반경 언더플로 반례).  구형 입자 경로만 (superquadric 은 다른 가지).",
+        "source_claim_present": true,
+        "source_claim": {
+          "source_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+          "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+          "host": "local-fixture",
+          "date": "2026-09-30",
+          "build": "not-an-engine"
+        },
+        "source_claim_reason": "",
+        "source_hash_verified_locally": true,
+        "source_verify_note": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt: 일치",
+        "installed_build_pinned": false,
+        "installed_build_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+        "pin_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/match.json"
+      }
+    },
+    "mismatch": {
+      "input": {
+        "schema": "liggghts_add_pair_pin/1",
+        "source_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "host": "local-fixture",
+        "date": "2026-09-30",
+        "build": "not-an-engine",
+        "formula_confirmed": true
+      },
+      "parsed": {
+        "claim_present": true,
+        "claim": {
+          "source_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "host": "local-fixture",
+          "date": "2026-09-30",
+          "build": "not-an-engine"
+        },
+        "claim_reason": "",
+        "source_hash_verified_locally": false,
+        "verify_note": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt: 불일치",
+        "installed_build_pinned": false,
+        "installed_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+        "file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/mismatch.json"
+      },
+      "emitted": {
+        "formula": "A = -π/4 · (r−r1−r2)(r+r1−r2)(r−r1+r2)(r+r1+r2) / rsq,  r = sqrt(rsq) (rsq = dx²+dy²+dz²),  δ = r1 + r2 − r  (binary64 · 음수 · 0 을 자르지 않는다 · C++ 괄호 · 좌결합 순서 그대로 = producer_area_binary64)",
+        "source": "LIGGGHTS-PUBLIC master src/compute_pair_gran_local.cpp add_pair (Codex 열람 2026-09-30) — 설치 빌드와 같은 소스인지는 pin 파일 (docs/data/liggghts_add_pair_pin.json · 환경변수 LHS_PRODUCER_PIN_FILE) 의 sha256 · formula_confirmed 로만 인증",
+        "error_bound": "상자 (토큰 반올림 상자 + 생산자 δ 형성 오차 Δδ) 전체에서 |A_p − A_e| ≤ E = (π/4)/d_min² · [Π_k(m_k + Δ_k)·(1 + 13·eps) − Π_k m_k]  — m_k = 인수 (δ, 2r1−δ, 2r2−δ, 2r1+2r2−δ) 의 상자 최대 절댓값 · Δ_k = eps·(3·S + m_k) (sqrt 뒤 두 뺄셈의 인수 형성 절대오차 · S = r + r1 + r2 = 2r1+2r2−δ 의 상자 최대) · 13·eps ≥ 곱 3 · rsq 5 · 나눗셈 1 · π/4 2 (단위 반올림 u = eps/2 로 세면 11u) · eps = 2^-52 · d_min ≤ 0 이면 E 가 서지 않아 미인증 (n_producer_uncertified).  실증 = --selftest ㉑‴ (공개 식 binary64 4000 점 · 여섯 영역 · Decimal 60 자리) — 설치 빌드의 실행이 아니다.  13·eps 는 곱 · π/4 · 나눗셈 · rsq 반올림에 분모의 1/(1−γ₅) 팽창 (γ₅ ≈ 5u) 을 1 차로 덮는 여유다 (1/rsq ≤ 1/d_min² 를 반올림된 rsq 의 독립 부등식으로 쓰지 않는다).  지원 수치영역 = 중간 연산이 정상 binary64 (네 인수 곱 1e-280–1e280 · d_min 1e-140–1e140 · 반올림 round-to-nearest) — 밖이면 미인증 (LHSC-04-R4-DOMAIN · 1e-100 반경 언더플로 반례).  구형 입자 경로만 (superquadric 은 다른 가지).",
+        "source_claim_present": true,
+        "source_claim": {
+          "source_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "host": "local-fixture",
+          "date": "2026-09-30",
+          "build": "not-an-engine"
+        },
+        "source_claim_reason": "",
+        "source_hash_verified_locally": false,
+        "source_verify_note": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt: 불일치",
+        "installed_build_pinned": false,
+        "installed_build_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+        "pin_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/mismatch.json"
+      }
+    },
+    "remote": {
+      "input": {
+        "schema": "liggghts_add_pair_pin/1",
+        "source_file": "/nonexistent-review-host/src/file.cpp",
+        "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+        "host": "local-fixture",
+        "date": "2026-09-30",
+        "build": "not-an-engine",
+        "formula_confirmed": true
+      },
+      "parsed": {
+        "claim_present": true,
+        "claim": {
+          "source_file": "/nonexistent-review-host/src/file.cpp",
+          "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+          "host": "local-fixture",
+          "date": "2026-09-30",
+          "build": "not-an-engine"
+        },
+        "claim_reason": "",
+        "source_hash_verified_locally": null,
+        "verify_note": "신고한 source 경로가 이 기계에 없다 — 로컬 대조 불가 (다른 기계의 소스)",
+        "installed_build_pinned": false,
+        "installed_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+        "file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/remote.json"
+      },
+      "emitted": {
+        "formula": "A = -π/4 · (r−r1−r2)(r+r1−r2)(r−r1+r2)(r+r1+r2) / rsq,  r = sqrt(rsq) (rsq = dx²+dy²+dz²),  δ = r1 + r2 − r  (binary64 · 음수 · 0 을 자르지 않는다 · C++ 괄호 · 좌결합 순서 그대로 = producer_area_binary64)",
+        "source": "LIGGGHTS-PUBLIC master src/compute_pair_gran_local.cpp add_pair (Codex 열람 2026-09-30) — 설치 빌드와 같은 소스인지는 pin 파일 (docs/data/liggghts_add_pair_pin.json · 환경변수 LHS_PRODUCER_PIN_FILE) 의 sha256 · formula_confirmed 로만 인증",
+        "error_bound": "상자 (토큰 반올림 상자 + 생산자 δ 형성 오차 Δδ) 전체에서 |A_p − A_e| ≤ E = (π/4)/d_min² · [Π_k(m_k + Δ_k)·(1 + 13·eps) − Π_k m_k]  — m_k = 인수 (δ, 2r1−δ, 2r2−δ, 2r1+2r2−δ) 의 상자 최대 절댓값 · Δ_k = eps·(3·S + m_k) (sqrt 뒤 두 뺄셈의 인수 형성 절대오차 · S = r + r1 + r2 = 2r1+2r2−δ 의 상자 최대) · 13·eps ≥ 곱 3 · rsq 5 · 나눗셈 1 · π/4 2 (단위 반올림 u = eps/2 로 세면 11u) · eps = 2^-52 · d_min ≤ 0 이면 E 가 서지 않아 미인증 (n_producer_uncertified).  실증 = --selftest ㉑‴ (공개 식 binary64 4000 점 · 여섯 영역 · Decimal 60 자리) — 설치 빌드의 실행이 아니다.  13·eps 는 곱 · π/4 · 나눗셈 · rsq 반올림에 분모의 1/(1−γ₅) 팽창 (γ₅ ≈ 5u) 을 1 차로 덮는 여유다 (1/rsq ≤ 1/d_min² 를 반올림된 rsq 의 독립 부등식으로 쓰지 않는다).  지원 수치영역 = 중간 연산이 정상 binary64 (네 인수 곱 1e-280–1e280 · d_min 1e-140–1e140 · 반올림 round-to-nearest) — 밖이면 미인증 (LHSC-04-R4-DOMAIN · 1e-100 반경 언더플로 반례).  구형 입자 경로만 (superquadric 은 다른 가지).",
+        "source_claim_present": true,
+        "source_claim": {
+          "source_file": "/nonexistent-review-host/src/file.cpp",
+          "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+          "host": "local-fixture",
+          "date": "2026-09-30",
+          "build": "not-an-engine"
+        },
+        "source_claim_reason": "",
+        "source_hash_verified_locally": null,
+        "source_verify_note": "신고한 source 경로가 이 기계에 없다 — 로컬 대조 불가 (다른 기계의 소스)",
+        "installed_build_pinned": false,
+        "installed_build_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+        "pin_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/remote.json"
+      }
+    },
+    "relative_with_hosts": {
+      "input": {
+        "schema": "liggghts_add_pair_pin/1",
+        "source_file": "src/compute_pair_gran_local.cpp",
+        "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+        "host": "local-fixture",
+        "date": "2026-09-30",
+        "build": "not-an-engine",
+        "formula_confirmed": true,
+        "hosts": [
+          {
+            "path": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+            "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87"
+          }
+        ]
+      },
+      "parsed": {
+        "claim_present": true,
+        "claim": {
+          "source_file": "src/compute_pair_gran_local.cpp",
+          "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+          "host": "local-fixture",
+          "date": "2026-09-30",
+          "build": "not-an-engine"
+        },
+        "claim_reason": "",
+        "source_hash_verified_locally": true,
+        "verify_note": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt: 일치",
+        "installed_build_pinned": false,
+        "installed_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+        "file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/relative_with_hosts.json"
+      },
+      "emitted": {
+        "formula": "A = -π/4 · (r−r1−r2)(r+r1−r2)(r−r1+r2)(r+r1+r2) / rsq,  r = sqrt(rsq) (rsq = dx²+dy²+dz²),  δ = r1 + r2 − r  (binary64 · 음수 · 0 을 자르지 않는다 · C++ 괄호 · 좌결합 순서 그대로 = producer_area_binary64)",
+        "source": "LIGGGHTS-PUBLIC master src/compute_pair_gran_local.cpp add_pair (Codex 열람 2026-09-30) — 설치 빌드와 같은 소스인지는 pin 파일 (docs/data/liggghts_add_pair_pin.json · 환경변수 LHS_PRODUCER_PIN_FILE) 의 sha256 · formula_confirmed 로만 인증",
+        "error_bound": "상자 (토큰 반올림 상자 + 생산자 δ 형성 오차 Δδ) 전체에서 |A_p − A_e| ≤ E = (π/4)/d_min² · [Π_k(m_k + Δ_k)·(1 + 13·eps) − Π_k m_k]  — m_k = 인수 (δ, 2r1−δ, 2r2−δ, 2r1+2r2−δ) 의 상자 최대 절댓값 · Δ_k = eps·(3·S + m_k) (sqrt 뒤 두 뺄셈의 인수 형성 절대오차 · S = r + r1 + r2 = 2r1+2r2−δ 의 상자 최대) · 13·eps ≥ 곱 3 · rsq 5 · 나눗셈 1 · π/4 2 (단위 반올림 u = eps/2 로 세면 11u) · eps = 2^-52 · d_min ≤ 0 이면 E 가 서지 않아 미인증 (n_producer_uncertified).  실증 = --selftest ㉑‴ (공개 식 binary64 4000 점 · 여섯 영역 · Decimal 60 자리) — 설치 빌드의 실행이 아니다.  13·eps 는 곱 · π/4 · 나눗셈 · rsq 반올림에 분모의 1/(1−γ₅) 팽창 (γ₅ ≈ 5u) 을 1 차로 덮는 여유다 (1/rsq ≤ 1/d_min² 를 반올림된 rsq 의 독립 부등식으로 쓰지 않는다).  지원 수치영역 = 중간 연산이 정상 binary64 (네 인수 곱 1e-280–1e280 · d_min 1e-140–1e140 · 반올림 round-to-nearest) — 밖이면 미인증 (LHSC-04-R4-DOMAIN · 1e-100 반경 언더플로 반례).  구형 입자 경로만 (superquadric 은 다른 가지).",
+        "source_claim_present": true,
+        "source_claim": {
+          "source_file": "src/compute_pair_gran_local.cpp",
+          "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+          "host": "local-fixture",
+          "date": "2026-09-30",
+          "build": "not-an-engine"
+        },
+        "source_claim_reason": "",
+        "source_hash_verified_locally": true,
+        "source_verify_note": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt: 일치",
+        "installed_build_pinned": false,
+        "installed_build_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+        "pin_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/relative_with_hosts.json"
+      }
+    },
+    "mixed_hosts": {
+      "input": {
+        "schema": "liggghts_add_pair_pin/1",
+        "source_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+        "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+        "host": "local-fixture",
+        "date": "2026-09-30",
+        "build": "not-an-engine",
+        "formula_confirmed": true,
+        "hosts": [
+          {
+            "path": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+          }
+        ]
+      },
+      "parsed": {
+        "claim_present": true,
+        "claim": {
+          "source_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+          "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+          "host": "local-fixture",
+          "date": "2026-09-30",
+          "build": "not-an-engine"
+        },
+        "claim_reason": "",
+        "source_hash_verified_locally": false,
+        "verify_note": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt: 불일치 · /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt: 일치",
+        "installed_build_pinned": false,
+        "installed_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+        "file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/mixed_hosts.json"
+      },
+      "emitted": {
+        "formula": "A = -π/4 · (r−r1−r2)(r+r1−r2)(r−r1+r2)(r+r1+r2) / rsq,  r = sqrt(rsq) (rsq = dx²+dy²+dz²),  δ = r1 + r2 − r  (binary64 · 음수 · 0 을 자르지 않는다 · C++ 괄호 · 좌결합 순서 그대로 = producer_area_binary64)",
+        "source": "LIGGGHTS-PUBLIC master src/compute_pair_gran_local.cpp add_pair (Codex 열람 2026-09-30) — 설치 빌드와 같은 소스인지는 pin 파일 (docs/data/liggghts_add_pair_pin.json · 환경변수 LHS_PRODUCER_PIN_FILE) 의 sha256 · formula_confirmed 로만 인증",
+        "error_bound": "상자 (토큰 반올림 상자 + 생산자 δ 형성 오차 Δδ) 전체에서 |A_p − A_e| ≤ E = (π/4)/d_min² · [Π_k(m_k + Δ_k)·(1 + 13·eps) − Π_k m_k]  — m_k = 인수 (δ, 2r1−δ, 2r2−δ, 2r1+2r2−δ) 의 상자 최대 절댓값 · Δ_k = eps·(3·S + m_k) (sqrt 뒤 두 뺄셈의 인수 형성 절대오차 · S = r + r1 + r2 = 2r1+2r2−δ 의 상자 최대) · 13·eps ≥ 곱 3 · rsq 5 · 나눗셈 1 · π/4 2 (단위 반올림 u = eps/2 로 세면 11u) · eps = 2^-52 · d_min ≤ 0 이면 E 가 서지 않아 미인증 (n_producer_uncertified).  실증 = --selftest ㉑‴ (공개 식 binary64 4000 점 · 여섯 영역 · Decimal 60 자리) — 설치 빌드의 실행이 아니다.  13·eps 는 곱 · π/4 · 나눗셈 · rsq 반올림에 분모의 1/(1−γ₅) 팽창 (γ₅ ≈ 5u) 을 1 차로 덮는 여유다 (1/rsq ≤ 1/d_min² 를 반올림된 rsq 의 독립 부등식으로 쓰지 않는다).  지원 수치영역 = 중간 연산이 정상 binary64 (네 인수 곱 1e-280–1e280 · d_min 1e-140–1e140 · 반올림 round-to-nearest) — 밖이면 미인증 (LHSC-04-R4-DOMAIN · 1e-100 반경 언더플로 반례).  구형 입자 경로만 (superquadric 은 다른 가지).",
+        "source_claim_present": true,
+        "source_claim": {
+          "source_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+          "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+          "host": "local-fixture",
+          "date": "2026-09-30",
+          "build": "not-an-engine"
+        },
+        "source_claim_reason": "",
+        "source_hash_verified_locally": false,
+        "source_verify_note": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt: 불일치 · /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt: 일치",
+        "installed_build_pinned": false,
+        "installed_build_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+        "pin_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/mixed_hosts.json"
+      }
+    },
+    "missing_build": {
+      "input": {
+        "schema": "liggghts_add_pair_pin/1",
+        "source_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+        "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+        "host": "local-fixture",
+        "date": "2026-09-30",
+        "formula_confirmed": true
+      },
+      "parsed": {
+        "claim_present": false,
+        "claim": null,
+        "claim_reason": "build 가 비었다",
+        "source_hash_verified_locally": null,
+        "verify_note": "",
+        "installed_build_pinned": false,
+        "installed_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+        "file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/missing_build.json"
+      },
+      "emitted": {
+        "formula": "A = -π/4 · (r−r1−r2)(r+r1−r2)(r−r1+r2)(r+r1+r2) / rsq,  r = sqrt(rsq) (rsq = dx²+dy²+dz²),  δ = r1 + r2 − r  (binary64 · 음수 · 0 을 자르지 않는다 · C++ 괄호 · 좌결합 순서 그대로 = producer_area_binary64)",
+        "source": "LIGGGHTS-PUBLIC master src/compute_pair_gran_local.cpp add_pair (Codex 열람 2026-09-30) — 설치 빌드와 같은 소스인지는 pin 파일 (docs/data/liggghts_add_pair_pin.json · 환경변수 LHS_PRODUCER_PIN_FILE) 의 sha256 · formula_confirmed 로만 인증",
+        "error_bound": "상자 (토큰 반올림 상자 + 생산자 δ 형성 오차 Δδ) 전체에서 |A_p − A_e| ≤ E = (π/4)/d_min² · [Π_k(m_k + Δ_k)·(1 + 13·eps) − Π_k m_k]  — m_k = 인수 (δ, 2r1−δ, 2r2−δ, 2r1+2r2−δ) 의 상자 최대 절댓값 · Δ_k = eps·(3·S + m_k) (sqrt 뒤 두 뺄셈의 인수 형성 절대오차 · S = r + r1 + r2 = 2r1+2r2−δ 의 상자 최대) · 13·eps ≥ 곱 3 · rsq 5 · 나눗셈 1 · π/4 2 (단위 반올림 u = eps/2 로 세면 11u) · eps = 2^-52 · d_min ≤ 0 이면 E 가 서지 않아 미인증 (n_producer_uncertified).  실증 = --selftest ㉑‴ (공개 식 binary64 4000 점 · 여섯 영역 · Decimal 60 자리) — 설치 빌드의 실행이 아니다.  13·eps 는 곱 · π/4 · 나눗셈 · rsq 반올림에 분모의 1/(1−γ₅) 팽창 (γ₅ ≈ 5u) 을 1 차로 덮는 여유다 (1/rsq ≤ 1/d_min² 를 반올림된 rsq 의 독립 부등식으로 쓰지 않는다).  지원 수치영역 = 중간 연산이 정상 binary64 (네 인수 곱 1e-280–1e280 · d_min 1e-140–1e140 · 반올림 round-to-nearest) — 밖이면 미인증 (LHSC-04-R4-DOMAIN · 1e-100 반경 언더플로 반례).  구형 입자 경로만 (superquadric 은 다른 가지).",
+        "source_claim_present": false,
+        "source_claim": null,
+        "source_claim_reason": "build 가 비었다",
+        "source_hash_verified_locally": null,
+        "source_verify_note": "",
+        "installed_build_pinned": false,
+        "installed_build_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+        "pin_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/missing_build.json"
+      }
+    },
+    "bad_hosts_type": {
+      "input": {
+        "schema": "liggghts_add_pair_pin/1",
+        "source_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+        "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+        "host": "local-fixture",
+        "date": "2026-09-30",
+        "build": "not-an-engine",
+        "formula_confirmed": true,
+        "hosts": 1
+      },
+      "exception": "TypeError",
+      "message": "'int' object is not iterable"
+    },
+    "date_shape_only": {
+      "input": {
+        "schema": "liggghts_add_pair_pin/1",
+        "source_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+        "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+        "host": "local-fixture",
+        "date": "2026-99-99",
+        "build": "not-an-engine",
+        "formula_confirmed": true
+      },
+      "parsed": {
+        "claim_present": true,
+        "claim": {
+          "source_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+          "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+          "host": "local-fixture",
+          "date": "2026-99-99",
+          "build": "not-an-engine"
+        },
+        "claim_reason": "",
+        "source_hash_verified_locally": true,
+        "verify_note": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt: 일치",
+        "installed_build_pinned": false,
+        "installed_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+        "file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/date_shape_only.json"
+      },
+      "emitted": {
+        "formula": "A = -π/4 · (r−r1−r2)(r+r1−r2)(r−r1+r2)(r+r1+r2) / rsq,  r = sqrt(rsq) (rsq = dx²+dy²+dz²),  δ = r1 + r2 − r  (binary64 · 음수 · 0 을 자르지 않는다 · C++ 괄호 · 좌결합 순서 그대로 = producer_area_binary64)",
+        "source": "LIGGGHTS-PUBLIC master src/compute_pair_gran_local.cpp add_pair (Codex 열람 2026-09-30) — 설치 빌드와 같은 소스인지는 pin 파일 (docs/data/liggghts_add_pair_pin.json · 환경변수 LHS_PRODUCER_PIN_FILE) 의 sha256 · formula_confirmed 로만 인증",
+        "error_bound": "상자 (토큰 반올림 상자 + 생산자 δ 형성 오차 Δδ) 전체에서 |A_p − A_e| ≤ E = (π/4)/d_min² · [Π_k(m_k + Δ_k)·(1 + 13·eps) − Π_k m_k]  — m_k = 인수 (δ, 2r1−δ, 2r2−δ, 2r1+2r2−δ) 의 상자 최대 절댓값 · Δ_k = eps·(3·S + m_k) (sqrt 뒤 두 뺄셈의 인수 형성 절대오차 · S = r + r1 + r2 = 2r1+2r2−δ 의 상자 최대) · 13·eps ≥ 곱 3 · rsq 5 · 나눗셈 1 · π/4 2 (단위 반올림 u = eps/2 로 세면 11u) · eps = 2^-52 · d_min ≤ 0 이면 E 가 서지 않아 미인증 (n_producer_uncertified).  실증 = --selftest ㉑‴ (공개 식 binary64 4000 점 · 여섯 영역 · Decimal 60 자리) — 설치 빌드의 실행이 아니다.  13·eps 는 곱 · π/4 · 나눗셈 · rsq 반올림에 분모의 1/(1−γ₅) 팽창 (γ₅ ≈ 5u) 을 1 차로 덮는 여유다 (1/rsq ≤ 1/d_min² 를 반올림된 rsq 의 독립 부등식으로 쓰지 않는다).  지원 수치영역 = 중간 연산이 정상 binary64 (네 인수 곱 1e-280–1e280 · d_min 1e-140–1e140 · 반올림 round-to-nearest) — 밖이면 미인증 (LHSC-04-R4-DOMAIN · 1e-100 반경 언더플로 반례).  구형 입자 경로만 (superquadric 은 다른 가지).",
+        "source_claim_present": true,
+        "source_claim": {
+          "source_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt",
+          "sha256": "afef424b18e1a1ba20316162b221e1dd75eac4f4fb75d3cc87bd2b6e31127b87",
+          "host": "local-fixture",
+          "date": "2026-99-99",
+          "build": "not-an-engine"
+        },
+        "source_claim_reason": "",
+        "source_hash_verified_locally": true,
+        "source_verify_note": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/source.txt: 일치",
+        "installed_build_pinned": false,
+        "installed_build_reason": "설치 빌드 인증 증거 (실행파일 sha256 · 실제 컴파일 명령 · 그 실행파일로 이 dump 를 만든 실행 영수증) 를 받는 경로가 없다 — 결과는 공개 식 (PRODUCER_AREA_MODEL) 가정하의 진단이다 (LHSC-04-R4-PIN)",
+        "pin_file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/cx6r_repro/lhs_coverage_reverify4_20260930/evidence/r5_fixtures/pins/date_shape_only.json"
+      }
+    }
+  },
+  "producer_controls": {
+    "zero": {
+      "accepted": true,
+      "record": {
+        "coverage_AM_P_mean_physics_v2": 0.0,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 0.0,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 0.0,
+        "area_AM전체_SE_total_physics_v2": 0.0,
+        "area_SE_SE_total_physics_v2": 0.0,
+        "area_AM전체_AM_total_physics_v2": 0.0,
+        "n_contacts_physics_v2": 0,
+        "n_cap_branch_physics_v2": 0,
+        "cap_conflict_n_physics_v2": 0,
+        "cap_conflict_frac_physics_v2": null,
+        "cap_conflict_frac_cap_branch_physics_v2": null,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 0,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 0,
+          "tabor": 0,
+          "volume": 0,
+          "geom": 0,
+          "none": 0
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 0,
+          "tabor": 0,
+          "volume": 0,
+          "geom": 0,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 0,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 0,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    },
+    "partial_clip": {
+      "accepted": true,
+      "record": {
+        "coverage_AM_P_mean_physics_v2": 100.0,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 50.0,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 75.0,
+        "area_AM전체_SE_total_physics_v2": 31.42,
+        "area_SE_SE_total_physics_v2": 0.0,
+        "area_AM전체_AM_total_physics_v2": 0.0,
+        "n_contacts_physics_v2": 5,
+        "n_cap_branch_physics_v2": 5,
+        "cap_conflict_n_physics_v2": 0,
+        "cap_conflict_frac_physics_v2": 0.0,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.0,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 0,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 0,
+          "tabor": 0,
+          "volume": 0,
+          "geom": 5,
+          "none": 0
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 0,
+          "tabor": 0,
+          "volume": 0,
+          "geom": 5,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 1,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 0,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    },
+    "full_clip": {
+      "accepted": true,
+      "record": {
+        "coverage_AM_P_mean_physics_v2": 100.0,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 100.0,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 100.0,
+        "area_AM전체_SE_total_physics_v2": 50.27,
+        "area_SE_SE_total_physics_v2": 0.0,
+        "area_AM전체_AM_total_physics_v2": 0.0,
+        "n_contacts_physics_v2": 8,
+        "n_cap_branch_physics_v2": 8,
+        "cap_conflict_n_physics_v2": 0,
+        "cap_conflict_frac_physics_v2": 0.0,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.0,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 0,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 0,
+          "tabor": 0,
+          "volume": 0,
+          "geom": 8,
+          "none": 0
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 0,
+          "tabor": 0,
+          "volume": 0,
+          "geom": 8,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 2,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 0,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    }
+  },
+  "mutations": {
+    "below_clip_lower_bound": {
+      "accepted": false,
+      "stage": {
+        "step": "Coverage Physics vs Hertzian",
+        "stdout": "synthetic mutation delivery only",
+        "stderr": "",
+        "rc": 0,
+        "ok": false,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": true
+      },
+      "pipeline_status": "failed",
+      "record": {
+        "coverage_AM_P_mean_physics_v2": 100.0,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 50.0,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 1.0,
+        "area_AM전체_SE_total_physics_v2": 31.42,
+        "area_SE_SE_total_physics_v2": 0.0,
+        "area_AM전체_AM_total_physics_v2": 0.0,
+        "n_contacts_physics_v2": 5,
+        "n_cap_branch_physics_v2": 5,
+        "cap_conflict_n_physics_v2": 0,
+        "cap_conflict_frac_physics_v2": 0.0,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.0,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 0,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 0,
+          "tabor": 0,
+          "volume": 0,
+          "geom": 5,
+          "none": 0
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 0,
+          "tabor": 0,
+          "volume": 0,
+          "geom": 5,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 1,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 0,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    },
+    "all_clipped_but_phase_mean_zero": {
+      "accepted": true,
+      "stage": {
+        "step": "Coverage Physics vs Hertzian",
+        "stdout": "synthetic mutation delivery only",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      },
+      "pipeline_status": "done",
+      "record": {
+        "coverage_AM_P_mean_physics_v2": 0.0,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 100.0,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 100.0,
+        "area_AM전체_SE_total_physics_v2": 50.27,
+        "area_SE_SE_total_physics_v2": 0.0,
+        "area_AM전체_AM_total_physics_v2": 0.0,
+        "n_contacts_physics_v2": 8,
+        "n_cap_branch_physics_v2": 8,
+        "cap_conflict_n_physics_v2": 0,
+        "cap_conflict_frac_physics_v2": 0.0,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.0,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 0,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 0,
+          "tabor": 0,
+          "volume": 0,
+          "geom": 8,
+          "none": 0
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 0,
+          "tabor": 0,
+          "volume": 0,
+          "geom": 8,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 2,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 0,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    },
+    "all_clipped_but_phase_std_40": {
+      "accepted": true,
+      "stage": {
+        "step": "Coverage Physics vs Hertzian",
+        "stdout": "synthetic mutation delivery only",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      },
+      "pipeline_status": "done",
+      "record": {
+        "coverage_AM_P_mean_physics_v2": 100.0,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 100.0,
+        "coverage_AM_S_std_physics_v2": 40.0,
+        "coverage_AM_mean_physics_v2": 100.0,
+        "area_AM전체_SE_total_physics_v2": 50.27,
+        "area_SE_SE_total_physics_v2": 0.0,
+        "area_AM전체_AM_total_physics_v2": 0.0,
+        "n_contacts_physics_v2": 8,
+        "n_cap_branch_physics_v2": 8,
+        "cap_conflict_n_physics_v2": 0,
+        "cap_conflict_frac_physics_v2": 0.0,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.0,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 0,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 0,
+          "tabor": 0,
+          "volume": 0,
+          "geom": 8,
+          "none": 0
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 0,
+          "tabor": 0,
+          "volume": 0,
+          "geom": 8,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 2,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 0,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    },
+    "unverified_phase_weight_example": {
+      "accepted": true,
+      "stage": {
+        "step": "Coverage Physics vs Hertzian",
+        "stdout": "synthetic mutation delivery only",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      },
+      "pipeline_status": "done",
+      "record": {
+        "coverage_AM_P_mean_physics_v2": 100.0,
+        "coverage_AM_P_std_physics_v2": 0.0,
+        "coverage_AM_S_mean_physics_v2": 50.0,
+        "coverage_AM_S_std_physics_v2": 0.0,
+        "coverage_AM_mean_physics_v2": 99.0,
+        "area_AM전체_SE_total_physics_v2": 31.42,
+        "area_SE_SE_total_physics_v2": 0.0,
+        "area_AM전체_AM_total_physics_v2": 0.0,
+        "n_contacts_physics_v2": 5,
+        "n_cap_branch_physics_v2": 5,
+        "cap_conflict_n_physics_v2": 0,
+        "cap_conflict_frac_physics_v2": 0.0,
+        "cap_conflict_frac_cap_branch_physics_v2": 0.0,
+        "cap_conflict_n_by_pair_physics_v2": {
+          "AM_SE": 0,
+          "SE_SE": 0,
+          "AM_AM": 0,
+          "other": 0
+        },
+        "A_binding_counts_total_physics_v2": {
+          "elastic": 0,
+          "tabor": 0,
+          "volume": 0,
+          "geom": 5,
+          "none": 0
+        },
+        "A_binding_counts_AM_SE_physics_v2": {
+          "elastic": 0,
+          "tabor": 0,
+          "volume": 0,
+          "geom": 5,
+          "none": 0
+        },
+        "am_denominator_physics_v2": {
+          "n_am": 2,
+          "n_free_surface_nonpositive": 0,
+          "n_coverage_clipped_100": 1,
+          "n_radius_invalid": 0
+        },
+        "n_contacts_unknown_id_physics_v2": 0,
+        "n_contact_failures_physics_v2": 0,
+        "coverage_status_physics_v2": "ok",
+        "rule_physics_v2": "physics_v2 (2026-09-29): δ/R* < DR_YIELD_ONSET → A = πR*δ (Hertz, legacy 와 같다) · 그 위 → A = U = min(A_tabor, A_volume, A_geom) = cap 은 **전체 접촉면적**의 한계 (L = max(πR*δ, A_LIGG) > U 면 cap_conflict 로 세고 U 를 낸다 — A 는 A_LIGG · πR*δ 보다 작을 수 있다) · A_volume = 정확한 전체 lens(r1, r2, δ) / (H_FILM_MIN × length_scale) · 모든 상 쌍에 AM–SE E* · SE H 를 쓴다 (L1-03 은 그대로 열려 있다) · 피복률 분모 = 4πr² − Σ A_v2(AM–AM) > 0 이고 반경 · 표면적이 유한 양수인 AM 만 — 아니면 침대 빈칸 + 사유 · 제외 수 진단 (LHSC-01 (a) · 2026-09-30)",
+        "h_film_sim_physics_v2": 5e-06
+      }
+    }
+  },
+  "domain": {
+    "previous_underflow": {
+      "inputs": [
+        1e-100,
+        1e-100,
+        1e-101
+      ],
+      "result": {
+        "E": Infinity,
+        "uncertified": true,
+        "all": {
+          "n_rows": 1,
+          "n_tested": 0,
+          "n_area_dump_zero": 1,
+          "n_beyond_tol": 0,
+          "n_producer_uncertified": 1,
+          "n_area_dump_negative": 0,
+          "n_lower_bound_zero": 1,
+          "n_boundary_branch": 0,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 0,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": null,
+          "producer_bound_rel_median": null,
+          "producer_bound_rel_max": null,
+          "excess_rel_max": null
+        }
+      }
+    },
+    "huge_radii": {
+      "inputs": [
+        1e+160,
+        1e+160,
+        1e+159
+      ],
+      "result": {
+        "E": Infinity,
+        "uncertified": true,
+        "entry_exception": {
+          "type": "OverflowError",
+          "message": "(34, 'Numerical result out of range')"
+        }
+      }
+    },
+    "normal": {
+      "inputs": [
+        0.001,
+        0.001,
+        0.0001
+      ],
+      "result": {
+        "E": 1.0155810315773286e-20,
+        "uncertified": false,
+        "all": {
+          "n_rows": 1,
+          "n_tested": 1,
+          "n_area_dump_zero": 1,
+          "n_beyond_tol": 1,
+          "n_producer_uncertified": 0,
+          "n_area_dump_negative": 0,
+          "n_lower_bound_zero": 0,
+          "n_boundary_branch": 0,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 1,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": 2.0000200143552778e-05,
+          "producer_bound_rel_median": 3.315617592727079e-14,
+          "producer_bound_rel_max": 3.315617592727079e-14,
+          "excess_rel_max": null
+        }
+      }
+    },
+    "small_supported": {
+      "inputs": [
+        1e-60,
+        1e-60,
+        1e-61
+      ],
+      "result": {
+        "E": 1.0155810315773284e-134,
+        "uncertified": false,
+        "all": {
+          "n_rows": 1,
+          "n_tested": 1,
+          "n_area_dump_zero": 1,
+          "n_beyond_tol": 1,
+          "n_producer_uncertified": 0,
+          "n_area_dump_negative": 0,
+          "n_lower_bound_zero": 0,
+          "n_boundary_branch": 0,
+          "n_wide_enclosure": 0,
+          "n_detect_1pct": 1,
+          "rel_diff_max": null,
+          "rel_diff_median": null,
+          "enclosure_rel_width_median": 2.0000200143085866e-05,
+          "producer_bound_rel_median": 3.315617592727078e-14,
+          "producer_bound_rel_max": 3.315617592727078e-14,
+          "excess_rel_max": null
+        }
+      }
+    }
+  }
+}

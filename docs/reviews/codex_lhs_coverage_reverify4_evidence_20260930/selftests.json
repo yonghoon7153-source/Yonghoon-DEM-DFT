@@ -1,0 +1,68 @@
+[
+  {
+    "test": "scripts/lens_geometry.py",
+    "returncode": 0,
+    "tail": [
+      "  ✓ ⑥ 다른 반경은 δ 에 단조가 아니다 — r1 .002 · r2 .001: δ .00160 → .00161 에서 A 감소 (Codex 반례) · 극대 d² = |r1² − r2²| 에서 π·min(r)² (상대 1e-9)",
+      "  ✓ ⑦ 포함 경계 d → |r1 − r2|⁺ 에서 A → 0 (연속 · r1 2 · r2 1) · 동일 반경 d → 0⁺ 은 A → π r² 인데 d ≤ 0 은 0 (이 퇴화에서만 어긋남)",
+      "  ✓ ⑤ math.pi == np.pi — 옮기기 전 (np.pi) 과 같은 부동소수 결과",
+      "",
+      "lens_geometry SELFTEST PASS"
+    ]
+  },
+  {
+    "test": "scripts/plastic_coverage.py",
+    "returncode": 0,
+    "tail": [
+      "  ✓ ⑰ ★ 정의역 밖 입력 9 가지 → 예외 (조용히 면적을 내지 않는다)   []",
+      "  ✓ ⑰b δ ≤ 0 → 면적 0 · binding none (겹침 없음 = 겹침 모델의 답)   none none ",
+      "  ✓ ⑱ 결속 다섯 가지가 전부 나온다 (elastic · tabor · volume · geom · none)   ['elastic', 'geom', 'none', 'tabor', 'volume']",
+      "  ✓ ⑲ _intersection_disc_area 는 lens_geometry.intersection_disc_area 와 같은 객체 (별칭 · 한 구현 · LHSC-05 (a))",
+      "plastic_coverage SELFTEST PASS"
+    ]
+  },
+  {
+    "test": "scripts/coverage_physics_vs_hertzian.py",
+    "returncode": 0,
+    "tail": [
+      "  ✓ ⑬ ★ LHSC-01 ①: 유한 입력인데 v2 분모 ≤ 0 인 AM 4 (geom cap 셋 = 6πr² > 4πr²) → 침대 v2 빈칸 + 사유 (분모) · 제외 수 (n_free_surface_nonpositive 4 / n_am 5 · 반경 무효 0) 는 빈칸에도 실린다 · legacy 는 계산된다   status='blank: AM 4 개의 v2 자유 표면 ≤ 0 = 분모 무효 (첫 사례 id 2: 4πr² 1.257e-05 − ΣA_v2(AM–AM) 2.142e-05 = -8.851e-06 — 이웃 AM–AM v2 면적 합이 표면적 이상) (LHSC-01)' · diag={'n_am': 5, 'n_free_surface_nonpositive': 4, 'n_coverage_clipped_100': 0, 'n_radius_invalid': 0} · AM_S v2=None",
+      "  ✓ ⑭ ★ LHSC-01 ②: 고립 AM 의 반경 NaN (접촉 0 이라 접촉별 검사를 안 지난다) → 침대 v2 빈칸 + 사유 (반경) · n_radius_invalid 1 · 분모 ≤ 0 은 0 · 값 키 전부 None   status='blank: AM 1 개의 반경 · 표면적이 유한 양수가 아니다 (첫 사례 id 14: r=nan) — 분모를 만들 수 없다 (LHSC-01)' · diag={'n_am': 3, 'n_free_surface_nonpositive': 0, 'n_coverage_clipped_100': 0, 'n_radius_invalid': 1}",
+      "  ✓ ⑮ LHSC-01 ③ 양성 대조: 정상 반경 · 접촉 0 인 고립 AM 은 참 피복률 0 — 침대 v2 는 ok 그대로 · AM_S 평균 = (cov₂ + 0)/2 · 제외 수 0 · n_am 3   status='ok' · diag={'n_am': 3, 'n_free_surface_nonpositive': 0, 'n_coverage_clipped_100': 0, 'n_radius_invalid': 0} · AM_S 0.621 vs 0.621",
+      "",
+      "coverage_physics_vs_hertzian SELFTEST PASS"
+    ]
+  },
+  {
+    "test": "scripts/lhs_descriptor_harvest.py",
+    "returncode": 1,
+    "tail": [
+      "                                 [--mesh MESH] [--plate-z PLATE_Z]",
+      "                                 [--n-types {2,3}] [--deck DECK] [--case CASE]",
+      "                                 [--allow-any-bc] [--n-pairs N_PAIRS]",
+      "                                 [--out OUT] [--selftest]",
+      "lhs_descriptor_harvest.py: error: --atom · --contact · --n-types · --deck 는 필수다 (--deck: 바닥 벽 위치를 덱에서 확인한다, LHS-12)"
+    ]
+  },
+  {
+    "test": "webapp/test_pipeline_provenance.py",
+    "returncode": 0,
+    "tail": [
+      "  PASS  17) 파일 lock 획득",
+      "  PASS  18) ★ lock 미획득 → LockUnavailable (fail-open 아님)",
+      "  PASS  19) require=False 는 진단용으로 False 를 돌려준다",
+      "",
+      "test_pipeline_provenance: 214/214 PASS"
+    ]
+  },
+  {
+    "test": "scripts/lhs_webapp_batch.py",
+    "returncode": 1,
+    "tail": [
+      "           ^^^^^^^^^^^",
+      "  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs_coverage_reverify4_20260930\\candidate\\scripts\\lhs_webapp_batch.py\", line 422, in _selftest",
+      "    calls[0]['files'] == sorted(['atom_100.liggghts', 'contact_100.liggghts', 'mesh_100.stl',",
+      "    ~~~~~^^^",
+      "IndexError: list index out of range"
+    ]
+  }
+]
