@@ -121,7 +121,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
+import re
 import sys
 
 import numpy as np
@@ -160,24 +162,45 @@ PLASTIC_COVERAGE_ALLOWED = frozenset()
 #: item 2 — 접촉 면적 대조 (진단 기록) 의 유효숫자 전제: LIGGGHTS `dump local` 기본 `%g` = 6 유효숫자 (`lhs_contact_audit.SIGFIG_FLOOR`
 #:   와 같은 값 · WSL 감사 v2 130/130 관측 최대 6).  전제가 틀린 침대는 `n_values_beyond_6sig` 가 0 이 아니다 (그때 허용폭이 헐겁다).
 AREA_CHECK_SIGFIG = 6
-#: LHSC-04 R2 (Codex 09-30 밤 · 1저자 비준 09-30 낮) — 포괄 구간이 넓은 행 = 검출력이 약한 행: (hi − lo) > 이 비율 × A_dump.
-#:   1 % 치환을 못 잡는 행이라는 뜻 (셈만 · 판정은 그대로 한다).
+#: LHSC-04 R2 — 포괄 구간이 넓은 행 (기술량 · **lo 기준** · A_dump 무관 · R3b 에서 분모를 바꿨다): (hi − lo) > 이 비율 × lo.
+#:   1 % 검출 **보증**은 이것이 아니라 `n_detect_1pct` (규칙 문자열) 가 준다.
 AREA_CHECK_WIDE_REL = 1e-2
+#: LHSC-04 R3a (Codex 재검증 2 · 09-30 밤 · 1저자 비준 "비준이야") — 생산자 (LIGGGHTS `compute pair/gran/local` add_pair) 면적 산술의 모델.
+#:   공개 PUBLIC master 의 식 (Codex 열람 2026-09-30).  설치 빌드 (WSL lmp_serial · ibb lmp_mpi) 가 같은 소스인지는 **pin 파일**로만 인증한다
+#:   (`producer_pin`) — 핀 없이는 결과에 installed_build_pinned=False 가 실린다 (짐작하지 않는다).
+PRODUCER_AREA_MODEL = dict(
+    formula=('A = -π/4 · (r−r1−r2)(r+r1−r2)(r−r1+r2)(r+r1+r2) / rsq,  r = sqrt(rsq) (rsq = dx²+dy²+dz²),  δ = r1 + r2 − r  '
+             '(binary64 · 음수 · 0 을 자르지 않는다 · C++ 괄호 · 좌결합 순서 그대로 = producer_area_binary64)'),
+    source=('LIGGGHTS-PUBLIC master src/compute_pair_gran_local.cpp add_pair (Codex 열람 2026-09-30) — 설치 빌드와 같은 소스인지는 '
+            'pin 파일 (docs/data/liggghts_add_pair_pin.json · 환경변수 LHS_PRODUCER_PIN_FILE) 의 sha256 · formula_confirmed 로만 인증'),
+    error_bound=('상자 (토큰 반올림 상자 + 생산자 δ 형성 오차 Δδ) 전체에서 |A_p − A_e| ≤ E = (π/4)/d_min² · [Π_k(m_k + Δ_k)·(1 + 13·eps) − Π_k m_k]  '
+                 '— m_k = 인수 (δ, 2r1−δ, 2r2−δ, 2r1+2r2−δ) 의 상자 최대 절댓값 · Δ_k = eps·(3·S + m_k) (sqrt 뒤 두 뺄셈의 인수 형성 절대오차 · '
+                 'S = r + r1 + r2 = 2r1+2r2−δ 의 상자 최대) · 13·eps ≥ 곱 3 · rsq 5 · 나눗셈 1 · π/4 2 (단위 반올림 u = eps/2 로 세면 11u) · '
+                 'eps = 2^-52 · d_min ≤ 0 이면 E 가 서지 않아 미인증 (n_producer_uncertified).  실증 = --selftest ㉑‴ (공개 식 binary64 '
+                 '4000 점 · 여섯 영역 · Decimal 60 자리) — 설치 빌드의 실행이 아니다.'),
+)
+PRODUCER_PIN_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'docs', 'data',
+                                 'liggghts_add_pair_pin.json')
+PRODUCER_PIN_ENV = 'LHS_PRODUCER_PIN_FILE'
+PRODUCER_PIN_SCHEMA = 'liggghts_add_pair_pin/1'
 AREA_CHECK_TOL_RULE = (
-    '행마다 덤프 토큰 구간 [A_dump ± h(A_dump)] 이 반올림 상자 {r1 ± h(r1)} × {r2 ± h(r2)} × {δ ± h(δ)} 위 교차 원판 A 의 '
-    '포괄 구간 [lo, hi] 와 만나지 않으면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  '
-    'A = lens_geometry.intersection_disc_area 와 같은 식의 인수형 π·δ(2r1−δ)(2r2−δ)(2r1+2r2−δ)/(4d²) (d = r1 + r2 − δ · 상쇄 없음).  '
-    '포괄 구간 (LHSC-04 R2 · 09-30): 인수마다 선형 구간 (끝점 + 부동소수 바깥 여유) → ① 상자가 δ ≤ 0 · d ≤ 0 · 한 구가 다른 구 안 '
-    '(2r_i − δ ≤ 0) 에 통째로 있으면 A ≡ 0 · ② 네 인수가 상자 전체에서 양수이고 ln A 의 편도함수 세 구간 (인수 역수의 합) 이 0 을 '
-    '포함하지 않으면 두 꼭짓점 값이 정확한 최소 · 최대 (각 인수의 형성 오차만큼 상대 여유) · ③ 아니면 인수 구간의 곱 ∩ 덧셈형 '
-    '항별 구간 π/4·[2(r1²+r2²) − d² − (r1²−r2²)²/d²] ∩ 기하 상한 π·min(r1, r2)² · ④ 인수가 상자 안에서 부호를 바꾸면 (포함 경계 · '
-    'd → 0 · δ → 0 이 상자 안) 하한 0 (n_lower_bound_zero) · 상한 = 덧셈형 항별 상한 ∩ 기하 상한.  마지막에 생산자 (LIGGGHTS) '
-    '계산의 부동소수 바닥 32·eps·π·max(r1, r2)² 를 바깥으로 더한다.  h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 '
-    '(E = 십진 지수 · 끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  기하: A 는 δ 에 따라 0 에서 d² = |r1² − r2²| 의 극대 '
-    'π·min(r1, r2)² 까지 올랐다가 포함 경계 d = |r1 − r2| 에서 다시 0 으로 **연속**해서 내려간다 (동일 반경 d → 0 퇴화만 식의 극한 π r² '
-    '과 코드의 d ≤ 0 → 0 이 어긋난다).  보고: n_tested (이 규칙을 적용한 행 = 비교 행 전부) · n_beyond_tol · '
-    'n_lower_bound_zero (하한 0 — 너무 작은 면적은 못 잡는다) · n_wide_enclosure ((hi − lo) > AREA_CHECK_WIDE_REL·A_dump — 1 % 치환을 '
-    '못 잡는다) · n_power_1pct (둘 다 아닌 행 = 1 % 치환을 잡을 수 있는 행).')
+    '행마다 덤프 토큰 구간 [A_dump ± h(A_dump)] 이 허용 구간 [lo − E, hi + E] 와 만나지 않으면 초과로 센다 (셈만 · 거부 없음 · 피복률 값 불변).  '
+    '[lo, hi] = 반올림 상자 {r1 ± h(r1)} × {r2 ± h(r2)} × {δ ± (h(δ) + Δδ)} (Δδ = eps·(3S + |δ|) = 생산자 δ 형성 오차 — 상자가 정확한 δ 를 담게) '
+    '위 교차 원판 A 의 포괄 구간 (LHSC-04 R2): A = lens_geometry.intersection_disc_area 와 같은 식의 인수형 '
+    'π·δ(2r1−δ)(2r2−δ)(2r1+2r2−δ)/(4d²) (d = r1 + r2 − δ · 상쇄 없음) · ① 상자가 δ ≤ 0 · d ≤ 0 · 한 구가 다른 구 안 (2r_i − δ ≤ 0) 에 '
+    '통째로 있으면 A ≡ 0 · ② 네 인수가 상자 전체에서 양수이고 ln A 의 편도함수 세 구간 (인수 역수의 합) 이 0 을 포함하지 않으면 두 꼭짓점 값이 '
+    '정확한 최소 · 최대 (각 인수의 형성 오차만큼 상대 여유) · ③ 아니면 인수 구간의 곱 ∩ 덧셈형 항별 구간 π/4·[2(r1²+r2²) − d² − (r1²−r2²)²/d²] ∩ '
+    '기하 상한 π·min(r1, r2)² · ④ 인수가 상자 안에서 부호를 바꾸면 (포함 경계 · d → 0 · δ → 0 이 상자 안) 하한 0 (boundary 가지) · 상한 = 덧셈형 '
+    '항별 상한 ∩ 기하 상한.  [lo, hi] 에는 기준 평가 여유 16·eps·π·max(r1, r2)² (부동소수 덧셈형 원판으로 대조할 때의 상쇄 오차 · 생산자 여유 아님) 만 바깥으로 더한다.  E = 생산자 (PRODUCER_AREA_MODEL) 산술의 상자 절대 오차 상한 (LHSC-04 R3a — 옛 고정 "생산자 바닥" 여유는 없앴다): '
+    'd_min ≤ 0 이면 E 가 서지 않아 **미인증** (n_producer_uncertified · 시험 · 초과에서 뺀다) · 음수 A_dump 는 정의역 밖 생산값 '
+    '(n_area_dump_negative · 초과 아님 · 시험에서 뺀다).  h(v) = 0.5·10^(E(v) − 5) = 6 유효숫자 %g 토큰의 반올림 반폭 (E = 십진 지수 · '
+    '끝 0 이 지워진 토큰도 형식 정밀도 6 으로).  기하: A 는 δ 에 따라 0 에서 d² = |r1² − r2²| 의 극대 π·min(r1, r2)² 까지 올랐다가 포함 경계 '
+    'd = |r1 − r2| 에서 다시 0 으로 **연속**해서 내려간다 (동일 반경 d → 0 퇴화만 식의 극한 π r² 과 코드의 d ≤ 0 → 0 이 어긋난다).  '
+    '보고: n_tested (인증 · 비음수 행) · n_beyond_tol · n_producer_uncertified · n_area_dump_negative · n_area_dump_zero · '
+    'n_lower_bound_zero (실제 lo == 0 — 너무 작은 면적은 못 잡는다) · n_boundary_branch (④ 가지 수) · n_wide_enclosure ((hi − lo) > '
+    'AREA_CHECK_WIDE_REL·lo · lo > 0 · 기술량) · n_detect_1pct = 검출 보증 (LHSC-04 R3b): 참 면적이 [lo, hi] 어디에 있어도 ±1 % 치환의 '
+    '토큰 구간이 허용 구간과 분리 — 1.01·(lo − E) − 2h₊ > hi + E ∧ 0.99·(hi + E) + 2h₋ < lo − E (h± = 그 크기 범위의 출력 반올림 반폭 최대 · '
+    '인증 행 · lo − E > 0) — A_dump 와 무관 (치환해도 분류가 안 바뀐다).')
 #: L1-04 — 이 열이 **무엇인지** 매 행에 박는다 (별칭의 `hertz` 는 물려받은 오해다).
 AREA_CHANNEL = ('dem_geometric_c_cpl22 — LIGGGHTS 기하 교차 원판 pi(r d - d^2/4); '
                 'Hertz 탄성 pi R* d 가 **아니다** (동일 반경 비 = 2 - d/(2r))')
@@ -392,35 +415,56 @@ def _lens_factored(a, b, dl):
     return float(np.pi * dl * (2.0 * a - dl) * (2.0 * b - dl) * (2.0 * a + 2.0 * b - dl) / (4.0 * d * d))
 
 
+def _token_box(r1, r2, delta, sig=AREA_CHECK_SIGFIG):
+    """한 행의 토큰 반올림 상자 → 인수 구간 (A · B · D · f1 · f2 · f3 · dd · dpad) — `_area_enclosure` · `_producer_error_bound` 가 **같은 상자**를 쓴다.
+
+    sig=None 이면 반폭 0 (점 — 끝점의 부동소수 바깥 여유만).  δ 상자는 반폭 h(δ) 에 **생산자 δ 형성 오차** Δδ = eps·(3S + |δ|) 를 더한다 —
+    덤프의 δ = r1 + r2 − sqrt(rsq) 는 binary64 로 만들어져 정확한 δ 와 그만큼 다를 수 있고, 상자가 정확한 δ 를 담아야 [lo, hi] 가 정확한
+    면적을 담는다 (LHSC-04 R3a).  반지름은 생산자가 그대로 쓰는 double 이라 토큰 반폭만.  (Δδ ≈ 1e-18·(r 1e-3) ≪ h ≥ 5e-10·(δ 1e-3))."""
+    a, b, dl = float(r1), float(r2), float(delta)
+    if sig is None:
+        h1 = h2 = hd = 0.0
+    else:
+        h1, h2, hd = (float(_half_unit(v, sig)) for v in (a, b, dl))
+    s_up = 2.0 * (abs(a) + h1) + 2.0 * (abs(b) + h2) + abs(dl) + hd          # S = 2r1 + 2r2 − δ 의 상자 상한
+    dpad = _EPS * (3.0 * s_up + abs(dl) + hd)
+    A0, A1 = _iv_lin([(1.0, a - h1, a - h1)])[0], _iv_lin([(1.0, a + h1, a + h1)])[1]
+    B0, B1 = _iv_lin([(1.0, b - h2, b - h2)])[0], _iv_lin([(1.0, b + h2, b + h2)])[1]
+    D0, D1 = _iv_lin([(1.0, dl - hd - dpad, dl - hd - dpad)])[0], _iv_lin([(1.0, dl + hd + dpad, dl + hd + dpad)])[1]
+    A0, B0 = max(A0, 0.0), max(B0, 0.0)
+    return dict(A=(A0, A1), B=(B0, B1), D=(D0, D1), dpad=dpad,
+                f1=_iv_lin([(2.0, A0, A1), (-1.0, D0, D1)]),                  # 2r1 − δ
+                f2=_iv_lin([(2.0, B0, B1), (-1.0, D0, D1)]),                  # 2r2 − δ
+                f3=_iv_lin([(2.0, A0, A1), (2.0, B0, B1), (-1.0, D0, D1)]),   # 2r1 + 2r2 − δ  (= r + r1 + r2 = S)
+                dd=_iv_lin([(1.0, A0, A1), (1.0, B0, B1), (-1.0, D0, D1)]))   # d = r1 + r2 − δ
+
+
 def _area_enclosure(r1, r2, delta, sig=AREA_CHECK_SIGFIG):
-    """LHSC-04 R2 (Codex 09-30 밤) — 행마다 6 유효숫자 토큰의 **반올림 상자** 위 교차 원판 A 의 포괄 구간 (lo, hi) · 하한 0 표지 · 방법.
+    """LHSC-04 R2 (Codex 09-30 밤) — 행마다 토큰 반올림 상자 (`_token_box`) 위 교차 원판 A 의 포괄 구간 (lo, hi) · 하한 0 표지 · 방법.
 
     규칙 = `AREA_CHECK_TOL_RULE` ①–④.  옛 판 (축별 탐침의 합 B) 은 "A 가 각 입력에 단조" 라는 틀린 가정 위에 있었고, 다른 두 반지름이
     한 토큰으로 합쳐지는 **공동** 반올림을 덮지 못했다 (Codex 반례 diff/B 1.332).  여기서는 상자 전체를 감싼다 — 꼭짓점 두 개가 정확한
     최소 · 최대인 것은 ln A 의 편도함수 세 구간이 0 을 포함하지 않을 때뿐이고 (인수 역수의 합으로 상자 위에서 잰다), 그렇지 않으면
     구간 곱 · 덧셈형 항별 구간 · 기하 상한의 교집합으로 **넓게** 감싼다 (넓다는 것은 `n_wide_enclosure` 로 따로 센다).
-    반환: lo · hi (배열) · lb0 (하한 0 = 상자가 포함 경계 · d = 0 · δ = 0 에 걸침) · how ('zero' · 'corner' · 'interval' · 'boundary')."""
+    ★ R3a (Codex 재검증 2): 옛 판이 바깥에 더하던 고정 여유 32·eps·π·max(r)² ("생산자 부동소수 바닥") 은 없앴다 — 생산자 산술 오차는
+    상자 위 절대 상한 E (`_producer_error_bound`) 가 행마다 따로 준다 (거리 하한이 0 에 닿는 상자는 인증하지 않는다).
+    반환: lo · hi (배열) · lb0 (하한 0 = ④ 가지) · how ('zero' · 'corner' · 'interval' · 'boundary')."""
     r1, r2, delta = (np.asarray(v, dtype=np.float64).ravel() for v in (r1, r2, delta))
-    h1, h2, hd = _half_unit(r1, sig), _half_unit(r2, sig), _half_unit(delta, sig)
     n = int(r1.size)
     lo, hi = np.zeros(n), np.zeros(n)
     lb0 = np.zeros(n, dtype=bool)
     how = np.empty(n, dtype=object)
     for i in range(n):
-        a, b, dl = float(r1[i]), float(r2[i]), float(delta[i])
-        #  상자 끝점 (바깥으로 2 eps — 끝점 자체의 뺄셈 반올림)
-        A0, A1 = _iv_lin([(1.0, a - float(h1[i]), a - float(h1[i]))])[0], _iv_lin([(1.0, a + float(h1[i]), a + float(h1[i]))])[1]
-        B0, B1 = _iv_lin([(1.0, b - float(h2[i]), b - float(h2[i]))])[0], _iv_lin([(1.0, b + float(h2[i]), b + float(h2[i]))])[1]
-        D0, D1 = _iv_lin([(1.0, dl - float(hd[i]), dl - float(hd[i]))])[0], _iv_lin([(1.0, dl + float(hd[i]), dl + float(hd[i]))])[1]
-        A0, B0 = max(A0, 0.0), max(B0, 0.0)
-        f1 = _iv_lin([(2.0, A0, A1), (-1.0, D0, D1)])                 # 2r1 − δ
-        f2 = _iv_lin([(2.0, B0, B1), (-1.0, D0, D1)])                 # 2r2 − δ
-        f3 = _iv_lin([(2.0, A0, A1), (2.0, B0, B1), (-1.0, D0, D1)])  # 2r1 + 2r2 − δ
-        dd = _iv_lin([(1.0, A0, A1), (1.0, B0, B1), (-1.0, D0, D1)])  # d = r1 + r2 − δ
+        bx = _token_box(float(r1[i]), float(r2[i]), float(delta[i]), sig)
+        (A0, A1), (B0, B1), (D0, D1) = bx['A'], bx['B'], bx['D']
+        f1, f2, f3, dd = bx['f1'], bx['f2'], bx['f3'], bx['dd']
         cap = np.pi * min(A1, B1) ** 2 * (1.0 + 4.0 * _EPS)           # 0 ≤ A ≤ π·min(r1, r2)² (교차원 반지름 ≤ 작은 구의 반지름)
-        fp = 32.0 * _EPS * np.pi * max(A1, B1) ** 2                   # 생산자 (덧셈형) 계산의 부동소수 상쇄 바닥
+        #  기준 평가 여유 — 정확한 A 의 포괄에는 불필요하나, 원판을 **부동소수** 덧셈형 (lens_geometry 의 a² − p² · 큰 반지름끼리 상쇄) 으로
+        #  평가해 대조할 때 (㉑″ · Codex audit_geometry 의 actual_float) 극값 근처에서 ~2·eps·(max r)² 만큼 넘을 수 있다.  생산자 여유가 아니다
+        #  (그것은 E · `_producer_error_bound`).
+        refpad = 16.0 * _EPS * np.pi * max(A1, B1) ** 2
         if D1 <= 0.0 or dd[1] <= 0.0 or f1[1] <= 0.0 or f2[1] <= 0.0:
-            lo[i], hi[i], how[i] = 0.0, fp, 'zero'                    # ① 상자 전체가 안 닿음 · d ≤ 0 · 포함 → A ≡ 0
+            lo[i], hi[i], how[i] = 0.0, refpad, 'zero'                # ① 상자 전체가 안 닿음 · d ≤ 0 · 포함 → A ≡ 0
             continue
         #  덧셈형 항별 상한 (d > 0 인 점에서 성립 — ③ · ④ 공통)
         t1 = (2.0 * (A0 * A0 + B0 * B0), 2.0 * (A1 * A1 + B1 * B1))
@@ -443,8 +487,8 @@ def _area_enclosure(r1, r2, delta, sig=AREA_CHECK_SIGFIG):
                     dz = x + y - z
                     return _EPS * (8.0 + (2 * x + abs(z)) / (2 * x - z) + (2 * y + abs(z)) / (2 * y - z)
                                    + (2 * x + 2 * y + abs(z)) / (2 * x + 2 * y - z) + 2.0 * (x + y + abs(z)) / dz)
-                lo[i] = _lens_factored(*dn) * (1.0 - 2.0 * _rel(*dn)) - fp
-                hi[i] = _lens_factored(*up) * (1.0 + 2.0 * _rel(*up)) + fp
+                lo[i] = _lens_factored(*dn) * (1.0 - 2.0 * _rel(*dn)) - refpad
+                hi[i] = _lens_factored(*up) * (1.0 + 2.0 * _rel(*up)) + refpad
                 how[i] = 'corner'
                 continue
             #  ③ 인수 구간 곱 ∩ 덧셈형 항별 구간 ∩ 기하 상한
@@ -453,26 +497,108 @@ def _area_enclosure(r1, r2, delta, sig=AREA_CHECK_SIGFIG):
             t3hi = nhi / (dd[0] * dd[0])
             add_lo = (np.pi * (t1[0] - dd[1] * dd[1] - t3hi) / 4.0
                       - 8.0 * _EPS * np.pi * (t1[1] + dd[1] * dd[1] + t3hi))
-            lo[i] = max(p_lo, add_lo, 0.0) - fp
-            hi[i] = min(p_hi, add_hi, cap) + fp
+            lo[i] = max(p_lo, add_lo, 0.0) - refpad
+            hi[i] = min(p_hi, add_hi, cap) + refpad
             how[i] = 'interval'
             continue
         #  ④ 인수가 상자 안에서 부호를 바꾼다 (포함 경계 · d → 0 · δ → 0 이 상자 안) — 그 점에서 A = 0 이 되므로 하한 0
-        lo[i], hi[i], lb0[i], how[i] = 0.0, min(add_hi, cap) + fp, True, 'boundary'
+        lo[i], hi[i], lb0[i], how[i] = 0.0, min(add_hi, cap) + refpad, True, 'boundary'
     return np.maximum(lo, 0.0), hi, lb0, how
 
 
+def _producer_abs_error(dl, f1, f2, f3, dd):
+    """`PRODUCER_AREA_MODEL['error_bound']` — 인수 구간 다섯 ((lo, hi) · δ · 2r1−δ · 2r2−δ · 2r1+2r2−δ · d) 위 생산자 면적의 **절대** 오차 상한.
+
+    d 하한 ≤ 0 이면 inf (미인증 — 상자가 동심 · 그 너머를 담아 1/rsq 가 서지 않는다).  유도 (LHSC-04 R3a): 생산 식은 (π/4)·Π_k f_k / rsq 의
+    binary64 계산이고 f_k 는 sqrt(rsq) 뒤 두 뺄셈으로 만들어진다 → |δf_k| ≤ eps·(3S + |f_k|) (단위 반올림 u = eps/2 로 세면 상수 2.75 · 0.5 —
+    여유를 둔 값) · 곱 3 · rsq 5 · 나눗셈 1 · π/4 2 회 반올림 = 11u ≤ 13·eps 의 상대 오차 → |Π(f+δf)(1+ε) − Π f| ≤ Π(m+Δ)(1+13eps) − Π m
+    (m = |f| 의 상자 최대 · 전개가 전부 양수라 2 차 이상 항까지 포함 — 상쇄 없이 항별로 더한다) · 1/rsq ≤ 1/d_min².  실증 ㉑‴."""
+    dmin = float(dd[0])
+    if not dmin > 0.0:
+        return float('inf')
+    m = [max(abs(float(v[0])), abs(float(v[1]))) for v in (dl, f1, f2, f3)]
+    S = m[3]
+    dlt = [_EPS * (3.0 * S + mk) for mk in m]
+    err = 0.0                                                          # Σ_{T ≠ ∅} Π_{k∈T} Δ_k Π_{k∉T} m_k (상쇄 없음)
+    for mask in range(1, 16):
+        term = 1.0
+        for k in range(4):
+            term *= dlt[k] if (mask >> k) & 1 else m[k]
+        err += term
+    pmd = (m[0] + dlt[0]) * (m[1] + dlt[1]) * (m[2] + dlt[2]) * (m[3] + dlt[3])
+    return float((np.pi / 4.0) / (dmin * dmin) * (err + 13.0 * _EPS * pmd))
+
+
+def _producer_error_bound(r1, r2, delta, sig=AREA_CHECK_SIGFIG):
+    """행마다 (E, 미인증) — E = `_producer_abs_error` (같은 `_token_box`) · 미인증 = E 가 유한하지 않다 (d 하한 ≤ 0)."""
+    r1, r2, delta = (np.asarray(v, dtype=np.float64).ravel() for v in (r1, r2, delta))
+    E = np.empty(int(r1.size), dtype=np.float64)
+    for i in range(int(r1.size)):
+        bx = _token_box(float(r1[i]), float(r2[i]), float(delta[i]), sig)
+        E[i] = _producer_abs_error(bx['D'], bx['f1'], bx['f2'], bx['f3'], bx['dd'])
+    return E, ~np.isfinite(E)
+
+
+def producer_area_binary64(radi, radj, dx):
+    """공개 LIGGGHTS-PUBLIC add_pair 의 면적 · δ 를 **연산 순서대로** 옮긴 binary64 스칼라 (`PRODUCER_AREA_MODEL`) — 시험 · 감사용.
+
+    ⚠ DEM 실행도 설치 빌드의 인증도 아니다 (Codex 재검증 2 `audit_producer.py` 와 같은 이식 · dy = dz = 0).  C++ `(r-radi-radj)` 는
+    `((r-radi)-radj)` · 곱은 좌결합 · 그 뒤 rsq 로 나눈다 · 음수 · 0 을 자르지 않는다."""
+    rsq = dx * dx + 0.0 * 0.0 + 0.0 * 0.0
+    r = math.sqrt(rsq)
+    area = -math.pi / 4 * ((r - radi - radj) * (r + radi - radj) * (r - radi + radj) * (r + radi + radj)) / rsq
+    return area, radi + radj - r
+
+
+def producer_pin(path=None):
+    """설치된 생산자 (LIGGGHTS 빌드) 의 add_pair 소스 핀 → {pinned, pin, reason, file}.
+
+    파일 = `path` · 환경변수 `LHS_PRODUCER_PIN_FILE` · 기본 `docs/data/liggghts_add_pair_pin.json` 순.  형식 (`liggghts_add_pair_pin/1`):
+    source_file (빌드 소스의 compute_pair_gran_local.cpp 경로) · sha256 (64 hex) · host · date · build · formula_confirmed (사람이 add_pair
+    본문이 `PRODUCER_AREA_MODEL['formula']` 와 같음을 확인했다는 뜻 · true 여야 핀).  없거나 깨지면 pinned False + 사유 — 결과
+    (`contact_area_check`.producer_model) 에 그대로 실린다 (짐작하지 않는다 · 규율 ④)."""
+    file = path or os.environ.get(PRODUCER_PIN_ENV) or PRODUCER_PIN_FILE
+    try:
+        with open(file, encoding='utf-8') as fh:
+            raw = json.load(fh)
+    except (OSError, ValueError) as e:
+        return dict(pinned=False, pin=None, file=file, reason=f'pin 파일 없음 또는 못 읽음 ({type(e).__name__}) — 설치 빌드 add_pair 미인증')
+    if not isinstance(raw, dict) or raw.get('schema') != PRODUCER_PIN_SCHEMA:
+        return dict(pinned=False, pin=None, file=file, reason=f'pin schema 가 {PRODUCER_PIN_SCHEMA} 가 아니다')
+    sha = raw.get('sha256')
+    if not (isinstance(sha, str) and re.fullmatch(r'[0-9a-f]{64}', sha)):
+        return dict(pinned=False, pin=None, file=file, reason='pin sha256 이 64 hex 가 아니다')
+    if not (isinstance(raw.get('source_file'), str) and raw['source_file'].strip()):
+        return dict(pinned=False, pin=None, file=file, reason='pin source_file 이 비었다')
+    if raw.get('formula_confirmed') is not True:
+        return dict(pinned=False, pin=None, file=file, reason='formula_confirmed 가 true 가 아니다 (add_pair 본문 대조를 사람이 확인해야 핀)')
+    pin = {k: raw.get(k) for k in ('source_file', 'sha256', 'host', 'date', 'build')}
+    return dict(pinned=True, pin=pin, file=file, reason='')
+
+
 def _contact_area_rows(r1, r2, delta, area):
-    """행마다 (A_calc, lo, hi, lb0, 초과 여부) — 규칙 `AREA_CHECK_TOL_RULE`.  A_calc = lens_geometry 의 교차 원판 (점 값 · 기술 통계용 ·
-    재구현 없음) · 초과 = 덤프 토큰 구간 [A ± h(A)] 이 포괄 구간 [lo, hi] 와 만나지 않는다 (LHSC-04 R2)."""
+    """행마다 (A_calc, lo, hi, lb0, 초과 여부, 진단 dict) — 규칙 `AREA_CHECK_TOL_RULE`.  A_calc = lens_geometry 의 교차 원판 (점 값 ·
+    기술 통계용 · 재구현 없음) · 초과 = 인증 · 비음수 행에서 덤프 토큰 구간 [A ± h(A)] 이 허용 구간 [lo − E, hi + E] 와 만나지 않는다.
+    진단 dict (배열): producer_err E · uncertified · negative · detect_1pct (R3b 검출 보증) · how · wide (lo 기준) · lo_zero."""
     r1, r2 = np.asarray(r1, dtype=np.float64).ravel(), np.asarray(r2, dtype=np.float64).ravel()
     delta, area = np.asarray(delta, dtype=np.float64).ravel(), np.asarray(area, dtype=np.float64).ravel()
     ac = np.asarray([_intersection_disc_area(a, b, d) for a, b, d in zip(r1.tolist(), r2.tolist(), delta.tolist())],
                     dtype=np.float64).reshape(r1.shape)
-    lo, hi, lb0, _how = _area_enclosure(r1, r2, delta)
+    lo, hi, lb0, how = _area_enclosure(r1, r2, delta)
+    E, unc = _producer_error_bound(r1, r2, delta)
+    Ef = np.where(unc, 0.0, E)
+    neg = area < 0.0
     ha = _half_unit(area)
-    beyond = (area - ha > hi) | (area + ha < lo)
-    return ac, lo, hi, lb0, beyond
+    lo_p, hi_p = lo - Ef, hi + Ef
+    beyond = (~unc) & (~neg) & ((area - ha > hi_p) | (area + ha < lo_p))
+    #  R3b — 검출 보증: 참 면적이 [lo, hi] 어디에 있어도 ±1 % 치환의 토큰 구간 (출력 반올림 2h 포함) 이 허용 구간과 분리
+    okp = (~unc) & (lo_p > 0.0)
+    hplus = np.maximum(_half_unit(1.01 * np.maximum(lo_p, 0.0)), _half_unit(1.01 * np.maximum(hi_p, 0.0)))
+    hminus = np.maximum(_half_unit(0.99 * np.maximum(lo_p, 0.0)), _half_unit(0.99 * np.maximum(hi_p, 0.0)))
+    det = okp & (1.01 * lo_p - 2.0 * hplus > hi_p) & (0.99 * hi_p + 2.0 * hminus < lo_p)
+    extra = dict(producer_err=E, uncertified=unc, negative=neg, detect_1pct=det, how=how,
+                 wide=(lo > 0.0) & ((hi - lo) > AREA_CHECK_WIDE_REL * lo), lo_zero=(lo == 0.0))
+    return ac, lo, hi, lb0, beyond, extra
 
 
 def contact_area_check(ids, labels, radius, c1, c2, carea, delta, pflag):
@@ -485,10 +611,13 @@ def contact_area_check(ids, labels, radius, c1, c2, carea, delta, pflag):
     δ 열이 없으면 대조하지 않고 `NO_DELTA_COLUMN` 으로 적는다.
     """
     n = int(len(c1))
+    _pin = producer_pin()
     base = dict(role='진단 기록 — 거부하지 않는다 · 피복률 값에 쓰지 않는다 (item 2)',
                 reference='lens_geometry.intersection_disc_area(r1, r2, delta = c_cpl[23]) — 두 구의 교차 원판 (L1-04 A_LIGG)',
                 compared_to=COL_AREA, delta_col=COL_DELTA, flag_col=COL_PERIODIC,
-                tolerance_rule=AREA_CHECK_TOL_RULE, sigfig_assumed=AREA_CHECK_SIGFIG, n_rows=n)
+                tolerance_rule=AREA_CHECK_TOL_RULE, sigfig_assumed=AREA_CHECK_SIGFIG, n_rows=n,
+                producer_model=dict(PRODUCER_AREA_MODEL, installed_build_pinned=_pin['pinned'], pin=_pin['pin'],
+                                    pin_reason=_pin['reason'], pin_file=_pin['file']))
     if delta is None:
         return dict(base, status='NO_DELTA_COLUMN')
     labs = np.asarray([str(q) for q in labels], dtype=object)
@@ -502,25 +631,34 @@ def contact_area_check(ids, labels, radius, c1, c2, carea, delta, pflag):
     dl, ad = np.asarray(delta, dtype=np.float64), np.asarray(carea, dtype=np.float64)
     fin = ok & np.isfinite(r1) & np.isfinite(r2) & np.isfinite(dl) & np.isfinite(ad)
     idx = np.flatnonzero(fin)
-    ac, elo, ehi, lb0, beyond = _contact_area_rows(r1[idx], r2[idx], dl[idx], ad[idx])
+    ac, elo, ehi, lb0, beyond, xd = _contact_area_rows(r1[idx], r2[idx], dl[idx], ad[idx])
     A = ad[idx]
     diff = np.abs(A - ac)
-    #  LHSC-04 R2 — 범위로 빼는 행은 없다: 모든 비교 행을 포괄 구간으로 **시험**하고, 검출력이 약한 행 (하한 0 · 폭 넓음) 은 따로 센다
-    wide = (A > 0) & ((ehi - elo) > AREA_CHECK_WIDE_REL * A)
-    gap = np.maximum.reduce([elo - (A + _half_unit(A)), (A - _half_unit(A)) - ehi, np.zeros_like(A)])
+    unc, neg, det = xd['uncertified'], xd['negative'], xd['detect_1pct']
+    E = np.where(unc, 0.0, xd['producer_err'])
+    tested = (~unc) & (~neg)
+    #  LHSC-04 R2 · R3: 범위로 빼는 행은 없다 — 인증 · 비음수 행을 전부 포괄 구간 + 생산자 오차 상한으로 **시험**하고, 미인증 (d ≤ 0 이 상자 안)
+    #  · 음수 덤프 면적 · 하한 0 · 폭 넓음 · 검출 보증은 따로 센다 (A_dump 에 걸리지 않는 행 성질)
+    gap = np.maximum.reduce([(elo - E) - (A + _half_unit(A)), (A - _half_unit(A)) - (ehi + E), np.zeros_like(A)])
 
     def _grp(m):
         k = int(m.sum())
         p = m & (A > 0)
-        rel, wid = diff[p] / A[p], (ehi[p] - elo[p]) / A[p]
+        q = m & (elo > 0)
+        c = m & (~unc) & (elo > 0)
+        rel, wid = diff[p] / A[p], (ehi[q] - elo[q]) / elo[q]
+        pb = E[c] / elo[c]
         bx = m & beyond & (A > 0)
-        return dict(n_rows=k, n_tested=k, n_area_dump_zero=int((m & (A == 0)).sum()),
+        return dict(n_rows=k, n_tested=int((m & tested).sum()), n_area_dump_zero=int((m & (A == 0)).sum()),
                     n_beyond_tol=int((m & beyond).sum()),
-                    n_lower_bound_zero=int((m & lb0).sum()), n_wide_enclosure=int((m & wide).sum()),
-                    n_power_1pct=int((m & ~lb0 & ~wide & (A > 0)).sum()),
+                    n_producer_uncertified=int((m & unc).sum()), n_area_dump_negative=int((m & neg).sum()),
+                    n_lower_bound_zero=int((m & xd['lo_zero']).sum()), n_boundary_branch=int((m & (xd['how'] == 'boundary')).sum()),
+                    n_wide_enclosure=int((m & xd['wide']).sum()), n_detect_1pct=int((m & det).sum()),
                     rel_diff_max=(float(rel.max()) if rel.size else None),
                     rel_diff_median=(float(np.median(rel)) if rel.size else None),
                     enclosure_rel_width_median=(float(np.median(wid)) if wid.size else None),
+                    producer_bound_rel_median=(float(np.median(pb)) if pb.size else None),
+                    producer_bound_rel_max=(float(pb.max()) if pb.size else None),
                     excess_rel_max=(float((gap[bx] / A[bx]).max()) if bx.any() else None))
 
     every = np.ones(idx.size, dtype=bool)
@@ -2195,7 +2333,7 @@ def selftest():
             _At = np.asarray([_ida(a, b, d) for a, b, d in zip(_r1.tolist(), _r2.tolist(), _dd.tolist())])
             _R1, _R2 = np.asarray([_g6(x) for x in _r1]), np.asarray([_g6(x) for x in _r2])
             _D, _Ad = np.asarray([_g6(x) for x in _dd]), np.asarray([_g6(x) for x in _At])
-            _ac, _lo21, _hi21, _lb21, _bz = _car(_R1, _R2, _D, _Ad)
+            _ac, _lo21, _hi21, _lb21, _bz = _car(_R1, _R2, _D, _Ad)[:5]
             _bz3 = _car(_R1, _R2, _D, _Ad * (1.0 + 3e-5))[4]
             _Rs = _R1 * _R2 / (_R1 + _R2)
             _bzh = _car(_R1, _R2, _D, np.asarray([_g6(x) for x in np.pi * _Rs * _D]))[4]
@@ -2244,13 +2382,14 @@ def selftest():
         r21b = harvest(_a21b, _c21b, 3, 'areaboundary', mesh_path=_stl(tmp))
         _ac21b = r21b.get('contact_area_check') or {}
         _all21b, _bk21b = (_ac21b.get('all') or {}), (_ac21b.get('by_pair_kind') or {})
-        chk('㉑′ ★ LHSC-04 (R2 에서 개정 — 범위로 빼지 않고 하한 0 으로 시험): 포함 경계 두 행 (반올림 · 깊은 겹침 Hertz 치환) 은 초과 0 · '
-            '전체: 비교 3 · 시험 3 · 초과 1 (1 % 행) · 하한 0 두 행 · AM-SE (초과 1 · 하한 0 1) · SE-SE (초과 0 · 하한 0 1)',
-            _ac21b.get('status') == STATUS_OK and _ac21b.get('n_compared') == 3 and _all21b.get('n_tested') == 3
-            and _all21b.get('n_beyond_tol') == 1 and _all21b.get('n_lower_bound_zero') == 2
+        chk('㉑′ ★ LHSC-04 (R2 에서 개정 · R3a 에서 재개정): 포함 경계 반올림 행은 초과 0 · 깊은 겹침 (d → 0 이 상자 안) Hertz 치환 행은 '
+            '**미인증** (생산자 오차 상한이 서지 않는다 · 시험에서 뺀다) · 전체: 비교 3 · 시험 2 · 초과 1 (1 % 행) · 미인증 1 · '
+            '실제 하한 0 두 행 (경계 가지 1 + 미인증 행) · AM-SE (초과 1 · 하한 0 1) · SE-SE (초과 0 · 하한 0 1 · 미인증 1)',
+            _ac21b.get('status') == STATUS_OK and _ac21b.get('n_compared') == 3 and _all21b.get('n_tested') == 2
+            and _all21b.get('n_beyond_tol') == 1 and _all21b.get('n_lower_bound_zero') == 2 and _all21b.get('n_producer_uncertified') == 1
             and (_bk21b.get('AM-SE') or {}).get('n_beyond_tol') == 1 and (_bk21b.get('AM-SE') or {}).get('n_lower_bound_zero') == 1
             and (_bk21b.get('SE-SE') or {}).get('n_beyond_tol') == 0 and (_bk21b.get('SE-SE') or {}).get('n_lower_bound_zero') == 1
-            and 'n_boundary_excluded' not in _all21b)
+            and (_bk21b.get('SE-SE') or {}).get('n_producer_uncertified') == 1 and 'n_boundary_excluded' not in _all21b)
         chk('㉑′ LHSC-04 R2: 옛 범위 분류 함수 `_in_domain_rows` 는 없다 (범위 밖으로 빼던 행도 이제 포괄 구간으로 시험한다)', _idr is None)
         _aenc21 = globals().get('_area_enclosure')
         if _car is not None and _ida is not None and _aenc21 is not None:
@@ -2335,6 +2474,164 @@ def selftest():
         chk('㉑″ LHSC-04 R2: 규칙 문자열에 틀린 서술 ("단조" · "불연속" · 축별 탐침 합) 이 없고 포괄 구간 · 하한 0 · 폭 넓은 행을 적는다',
             '단조' not in AREA_CHECK_TOL_RULE and '불연속' not in AREA_CHECK_TOL_RULE and 'Σ_{x∈r1,r2,δ}' not in AREA_CHECK_TOL_RULE
             and '포괄' in AREA_CHECK_TOL_RULE and 'n_lower_bound_zero' in AREA_CHECK_TOL_RULE and 'n_wide_enclosure' in AREA_CHECK_TOL_RULE)
+
+        # ── ㉑‴ ★ Codex LHSC-04 R3a · R3b (09-30 밤 재검증 2 · P2 · 1저자 비준 09-30 밤 "비준이야") — 반례 먼저 ──
+        #  R3a: 고정 여유 fp = 32·eps·π·max(r)² 가 "LIGGGHTS 생산자 계산 오차를 덮는다" 는 전역 주장에 반례 — 공개 PUBLIC add_pair 는
+        #    r = sqrt(rsq) 뒤 (r−r1−r2)(r+r1−r2)(r−r1+r2)(r+r1+r2)/rsq (거리 인수 곱 / rsq · 음수를 0 으로 안 자름) 라 동심 근접
+        #    (r1 = r2 = 0.001 · d = 1e-15) 에서 변조 없이 A 3.142020e-6 > π r² → 6 자리 토큰이 구간 밖 = 초과 1.  완전 포함 · 비접촉에서는
+        #    생산 식이 **음수** — 정의역 밖 생산값과 클립된 기준 기하의 의미 차이 (반올림 검사와 다른 사유).
+        #  계약: 생산 식 형태를 핀하고 (PRODUCER_AREA_MODEL · 설치 빌드 sha 는 pin 파일) 상자 전체의 절대 오차 상한 E 를 유도해 허용폭에
+        #    넣는다 · 상자가 d ≤ 0 에 닿거나 δ 토큰 반폭이 생산자 δ 오차보다 작으면 E 가 서지 않아 **미인증** (n_producer_uncertified ·
+        #    시험 · 초과에서 뺀다) · 음수 덤프 면적은 n_area_dump_negative (초과 아님) · 고정 fp 는 없앤다.
+        #  R3b: n_power_1pct 는 분모가 검사 대상 A_dump 라 +1 % 치환이 폭 분류까지 바꿨다 (놓치면서 power 1).  계약: 검출 보증
+        #    n_detect_1pct = ±1 % 치환의 **토큰 구간**이 허용 구간과 분리 (출력 반올림 2h · E 포함 · A_dump 무관) · 폭 기술량은 lo 기준 ·
+        #    n_lower_bound_zero = 실제 lo == 0 · n_boundary_branch = 가지 진입 수.
+        _peb = globals().get('_producer_error_bound')
+        _pae = globals().get('_producer_abs_error')
+        _ppa = globals().get('producer_area_binary64')
+        _ppin = globals().get('producer_pin')
+        _pam = globals().get('PRODUCER_AREA_MODEL')
+
+        def _cac1(r1, r2, dl, A):                                          # 한 행 (AM_P–SE · 플래그 0) 의 all 그룹
+            return ((_cac([1, 2], ['AM_P', 'SE'], [r1, r2], [1], [2], [A], [dl], [0]) if _cac is not None else {}).get('all') or {})
+        _u12 = _cac1(0.001, 0.001, 0.002, 3.14202e-6)                      # Codex equal_deep_1e-12 (생산 식 그대로 · 변조 없음)
+        _u13 = _cac1(0.001, 0.001, 0.002, 3.1393e-6)                       # equal_deep_1e-13 (아래쪽 오차)
+        chk(f'㉑‴ ★ R3a: 동심 근접 (r1 = r2 = 0.001 · δ 토큰 0.002 → 상자가 d ≤ 0 에 닿음) 두 행은 **미인증** — 초과 0 · 시험 0 · '
+            f'미인증 1 (옛: 3.14202e-6 이 초과 1) · {_u12.get("n_beyond_tol")!r}/{_u12.get("n_producer_uncertified")!r}',
+            all(g.get('n_producer_uncertified') == 1 and g.get('n_beyond_tol') == 0 and g.get('n_tested') == 0 for g in (_u12, _u13)))
+        _ng1 = _cac1(0.002, 0.001, 0.0021, -1.5088371383490986e-6)         # Codex contained (생산 식 음수)
+        _ng2 = _cac1(0.001, 0.001, -0.0001, -3.2201324699295325e-7)        # Codex no_contact (생산 식 음수)
+        chk('㉑‴ ★ R3a: 음수 덤프 면적 (완전 포함 · 비접촉의 생산 식 값) 은 n_area_dump_negative 로 따로 센다 — 초과 0 · 시험 0',
+            all(g.get('n_area_dump_negative') == 1 and g.get('n_beyond_tol') == 0 and g.get('n_tested') == 0 for g in (_ng1, _ng2)))
+        _nc = _cac1(0.001, 0.001, 0.0, 1e-6)                               # δ = 0 인데 양수 면적 — 검출 유지
+        _nz = _cac1(0.001, 0.001, -0.0001, 0.0)
+        chk('㉑‴ R3a: 비접촉 (δ = 0 · 음수 δ) 에 0 면적은 통과 · δ = 0 에 양수 면적 (1e-6) 은 여전히 초과 (미인증 아님 · 고정 fp 없이)',
+            _nc.get('n_beyond_tol') == 1 and _nc.get('n_producer_uncertified') == 0 and _nz.get('n_beyond_tol') == 0
+            and _nz.get('n_area_dump_zero') == 1)
+        # R3b — Codex 검출력 반례 (seed 4813 · 431 번째 상자): 정상 토큰과 +1 % 토큰의 분류가 **같아야** 한다 (A_dump 무관)
+        _pw = (0.00348428, 0.00164629, 0.00328959)
+        _pw_ok, _pw_mut = _cac1(*_pw, 5.81675e-8), _cac1(*_pw, 5.87492e-8)
+        chk(f'㉑‴ ★ R3b: Codex 검출력 반례 — 정상 토큰 · +1 % 토큰 둘 다 초과 0 · 폭 넓음 1 (lo 기준) · **검출 보증 0** (옛: 치환 행이 '
+            f'power 1) · {(_pw_ok.get("n_detect_1pct"), _pw_mut.get("n_detect_1pct"), _pw_mut.get("n_wide_enclosure"))}',
+            all(g.get('n_beyond_tol') == 0 and g.get('n_wide_enclosure') == 1 and g.get('n_detect_1pct') == 0 and 'n_power_1pct' not in g
+                for g in (_pw_ok, _pw_mut)))
+        # 보증 = 실제 검출: 조밀한 행 (2.0 · 0.5 · 0.05 — ㉑′ 세 번째 행) 은 검출 보증 1 이고 ±1 % 토큰이 실제로 초과
+        if _ida is not None:
+            _tA = _ida(2.0, 0.5, 0.05)
+            _tg = [_cac1(2.0, 0.5, 0.05, _g6(f * _tA)) for f in (1.0, 1.01, 0.99)]
+            chk('㉑‴ R3b: 조밀한 행 (2.0 · 0.5 · 0.05) 은 검출 보증 1 · 정상 토큰 초과 0 · +1 % · −1 % 토큰은 실제로 초과 1',
+                _tg[0].get('n_detect_1pct') == 1 and _tg[0].get('n_beyond_tol') == 0
+                and _tg[1].get('n_beyond_tol') == 1 and _tg[2].get('n_beyond_tol') == 1)
+            #  3000 합성 행: 검출 보증 행의 ±1 % 치환은 **전부** 실제 초과 (보증 ⇒ 검출 · 반대 방향은 요구하지 않는다)
+            if _car is not None:
+                _rows3 = _car(_R1, _R2, _D, _Ad)
+                _det3 = (_rows3[5] or {}).get('detect_1pct') if len(_rows3) > 5 else None
+                _bp = _car(_R1, _R2, _D, np.asarray([_g6(x) for x in 1.01 * _Ad]))[4]
+                _bm = _car(_R1, _R2, _D, np.asarray([_g6(x) for x in 0.99 * _Ad]))[4]
+                chk(f'㉑‴ R3b: 합성 3000 행 — 검출 보증 행 {int(_det3.sum()) if _det3 is not None else "?"} 개의 +1 % · −1 % 치환은 전부 초과 · '
+                    f'정상 토큰은 초과 0 · 미인증 0',
+                    _det3 is not None and _det3.size == _R1.size and bool(np.all(_bp[_det3]) and np.all(_bm[_det3]))
+                    and int(_det3.sum()) > 2900 and not bool(_car(_R1, _R2, _D, _Ad)[4].any())
+                    and not bool((_rows3[5] or {}).get('uncertified').any()))
+        # P3 — n_lower_bound_zero = 실제 lo == 0 · n_boundary_branch = 가지 진입 수
+        _z = _cac1(0.002, 0.001, 0.0021, 0.0)                              # Codex 예: zero 가지 · lo 0
+        _bd = _cac1(2.0, 1.0000049 if False else _g6(1.0000049), _g6(2.0000051), _g6(_ida(2.0, 1.0000049, 2.0000051)) if _ida else 0.0)
+        chk('㉑‴ P3: zero 가지 행 (.002 · .001 · .0021 · A 0) 은 실제 하한 0 = 1 · 경계 가지 0 · 경계 가지 행은 둘 다 1',
+            _z.get('n_lower_bound_zero') == 1 and _z.get('n_boundary_branch') == 0
+            and _bd.get('n_lower_bound_zero') == 1 and _bd.get('n_boundary_branch') == 1)
+        # 생산자 오차 모델 — 공개 add_pair 를 연산 순서대로 옮긴 binary64 스칼라 (DEM 실행 아님) 를 Decimal 60 자리 정확값과 대조:
+        #  ① 절대 오차 |A_p − A_e| ≤ E(점) (모델 자체) · ② 6 자리 토큰 경로 전체에서 인증 행의 거짓 초과 0 (허용폭 = 상자 + E + 출력 반올림)
+        if _ppa is not None and _pae is not None and _car is not None and _aenc is not None:
+            from decimal import Decimal as _Dc, localcontext as _lc
+            _PI = _Dc('3.14159265358979323846264338327950288419716939937510582097494459230781640628620899')
+            _rg3 = np.random.default_rng(20260930)
+            _viol_e, _viol_t, _ncert, _nunc, _ratio = 0, 0, 0, 0, 0.0
+            _rel_e = []
+            for _k in range(4000):
+                _a = 10.0 ** _rg3.uniform(-5.0, -2.0)
+                _b = _a * 10.0 ** _rg3.uniform(-1.5, 1.5)
+                _m = _k % 6
+                if _m == 0:
+                    _dl = min(_a, _b) * 10.0 ** _rg3.uniform(-6.0, -0.3)           # 보통 부분 겹침
+                elif _m == 1:
+                    _dl = min(_a, _b) * _rg3.uniform(0.5, 1.9)                     # 깊은 겹침
+                elif _m == 2:
+                    _dl = _a + _b - abs(_a - _b) * (1.0 + _rg3.choice([-1.0, 1.0]) * 10.0 ** _rg3.uniform(-9.0, -3.0))   # 포함 경계 근처
+                elif _m == 3:
+                    _b = _a * (1.0 + 10.0 ** _rg3.uniform(-9.0, -4.0)); _dl = _a + _b - _a * 10.0 ** _rg3.uniform(-12.0, -4.0)  # 동심 근접
+                elif _m == 4:
+                    _dl = min(_a, _b) * 10.0 ** _rg3.uniform(-9.0, -6.0)           # 아주 얕음
+                else:
+                    _dl = -min(_a, _b) * 10.0 ** _rg3.uniform(-6.0, 0.0)           # 비접촉 (생산 식 음수)
+                _dist = _a + _b - _dl
+                if _dist <= 0.0:
+                    continue
+                _Ap, _dp = _ppa(_a, _b, _dist)                                     # 생산 식 (binary64 · 연산 순서 보존)
+                with _lc() as _cx3:
+                    _cx3.prec = 60
+                    _A_, _B_, _R_ = (_Dc(float(v)) for v in (_a, _b, _dist))
+                    _Ae = -_PI / 4 * ((_R_ - _A_ - _B_) * (_R_ + _A_ - _B_) * (_R_ - _A_ + _B_) * (_R_ + _A_ + _B_)) / (_R_ * _R_)
+                    _de = _A_ + _B_ - _R_
+                    _fs = [(abs(_de), abs(2 * _A_ - _de), abs(2 * _B_ - _de), abs(2 * _A_ + 2 * _B_ - _de), _R_)]
+                    _E = _pae(*[(float(v), float(v)) for v in _fs[0]])            # 점 (상자 폭 0) 의 절대 오차 상한
+                    _err = abs(_Dc(float(_Ap)) - _Ae)
+                    if _err > _Dc(float(_E)):
+                        _viol_e += 1
+                    if _Ae > 0:
+                        _rel_e.append(float(_Dc(float(_E)) / _Ae))
+                        _ratio = max(_ratio, float(_err / _Dc(float(_E))) if _E > 0 else float('inf'))
+                #  토큰 경로 — 인증된 행은 거짓 초과가 없어야 한다 (변조 없음)
+                _t = (_g6(_a), _g6(_b), _g6(_dp), _g6(_Ap))
+                _rw = _car(np.array([_t[0]]), np.array([_t[1]]), np.array([_t[2]]), np.array([_t[3]]))
+                _ex = _rw[5] if len(_rw) > 5 else {}
+                if bool(_ex.get('uncertified', np.array([True]))[0]):
+                    _nunc += 1
+                elif _t[3] >= 0.0:
+                    _ncert += 1
+                    _viol_t += int(bool(_rw[4][0]))
+            chk(f'㉑‴ ★ R3a: 생산자 오차 모델 — 공개 add_pair binary64 재현 4000 점 (여섯 영역) 의 |A_p − A_e| ≤ E(점) 위반 {_viol_e} · '
+                f'실측/상한 최대 비 {_ratio:.3g} (< 1 이어야) · 헐겁지 않은지: E/A 중앙 {np.median(_rel_e):.1e} < 1e-8 (얕은 접촉은 E/A ∝ S/δ · '
+                f'출력 반올림 5e-7 의 1/1000 아래)',
+                _viol_e == 0 and _ratio < 1.0 and float(np.median(_rel_e)) < 1e-8)
+            chk(f'㉑‴ ★ R3a: 6 자리 토큰 경로 — 인증 행 {_ncert} 의 거짓 초과 {_viol_t} (0 이어야) · 미인증 {_nunc} (동심 근접 · 상자가 d ≤ 0 · '
+                f'δ 반폭 < 생산자 δ 오차) — 미인증은 초과가 아니라 따로 센다',
+                _viol_t == 0 and _ncert > 2300 and 0 < _nunc < 1500)
+        else:
+            chk('㉑‴ R3a: 생산자 오차 모델 함수 (producer_area_binary64 · _producer_abs_error · _producer_error_bound) 가 있다', False)
+        # pin 파일 — 설치 빌드의 add_pair 소스 sha 를 대조하기 전에는 "핀 안 됨" 을 결과에 적는다 (짐작하지 않는다)
+        if _ppin is not None:
+            import json as _js
+            _env_prev = os.environ.pop('LHS_PRODUCER_PIN_FILE', None)
+            try:
+                _pin0 = _ppin(os.path.join(tmp, 'no_such_pin.json'))
+                _pf = os.path.join(tmp, 'pin.json')
+                with open(_pf, 'w', encoding='utf-8') as _fh:
+                    _js.dump({'schema': 'liggghts_add_pair_pin/1', 'source_file': 'src/compute_pair_gran_local.cpp',
+                              'sha256': 'ab' * 32, 'host': 'wsl', 'date': '2026-09-30', 'formula_confirmed': True,
+                              'build': 'lmp_serial'}, _fh)
+                _pin1 = _ppin(_pf)
+                with open(_pf, 'w', encoding='utf-8') as _fh:
+                    _js.dump({'schema': 'liggghts_add_pair_pin/1', 'source_file': 'x', 'sha256': 'zz', 'formula_confirmed': True}, _fh)
+                _pin2 = _ppin(_pf)
+                os.environ['LHS_PRODUCER_PIN_FILE'] = _pf
+                _r_env = (_cac([1, 2], ['AM_P', 'SE'], [2.0, 0.5], [1], [2], [_g6(_ida(2.0, 0.5, 0.05))], [0.05], [0])
+                          if (_cac is not None and _ida is not None) else {})
+            finally:
+                os.environ.pop('LHS_PRODUCER_PIN_FILE', None)
+                if _env_prev is not None:
+                    os.environ['LHS_PRODUCER_PIN_FILE'] = _env_prev
+            _pm = _r_env.get('producer_model') or {}
+            chk('㉑‴ R3a: pin 파일 — 없음 → pinned False + 사유 · 형식 맞음 → True + sha 회신 · sha 형식 깨짐 → False + 사유 · 결과의 '
+                'producer_model 에 식 · 출처 · 오차 상한 문장 · pinned 가 실린다',
+                _pin0.get('pinned') is False and _pin0.get('reason') and _pin1.get('pinned') is True
+                and (_pin1.get('pin') or {}).get('sha256') == 'ab' * 32 and _pin2.get('pinned') is False and _pin2.get('reason')
+                and _pm.get('installed_build_pinned') is False and all(k in _pm for k in ('formula', 'source', 'error_bound'))
+                and isinstance(_pam, dict) and 'add_pair' in _pam.get('source', ''))
+        else:
+            chk('㉑‴ R3a: producer_pin 함수가 있다', False)
+        chk('㉑‴ R3a · R3b: 규칙 문자열 — 생산자 오차 모델 · 미인증 · 음수 면적 · 검출 보증 (n_detect_1pct) 을 적고 n_power_1pct · 고정 32·eps 는 없다',
+            'n_producer_uncertified' in AREA_CHECK_TOL_RULE and 'n_detect_1pct' in AREA_CHECK_TOL_RULE and 'n_area_dump_negative' in AREA_CHECK_TOL_RULE
+            and 'n_boundary_branch' in AREA_CHECK_TOL_RULE and 'n_power_1pct' not in AREA_CHECK_TOL_RULE and '32·eps' not in AREA_CHECK_TOL_RULE)
 
         # ── ㉒ item 3 (09-29 · 1저자 "권고대로") — 접촉 행의 문: 중복 · 자기쌍 **거부** · 고아 행 **기록** · 반례 먼저 ──
         #  ★ 반례: 같은 AM–SE 행이 두 번 — 옛 코드는 면적을 두 번 더해 AM_S 피복률 25 → 50 % 를 status OK 로 냈다.
