@@ -1,0 +1,666 @@
+{
+  "status": "PASS",
+  "scope": "Reviewer Decimal50 arithmetic, exact time/coordinate products and native log decoding, not simulation",
+  "checks": [
+    {
+      "check": "2140 ordered stored times shared by six series, 0 to 120",
+      "pass": true
+    },
+    {
+      "check": "1337 strict requests all present",
+      "pass": true
+    },
+    {
+      "check": "stored interval cap",
+      "pass": true
+    },
+    {
+      "check": "threshold0 and three guards zero at all stored times",
+      "pass": true
+    },
+    {
+      "check": "surface global extrema in declared OCP ranges",
+      "pass": true
+    },
+    {
+      "check": "coupling/domain consistency and positive min/max",
+      "pass": true
+    },
+    {
+      "check": "voltage decomposition <=1e-8V; total Li drift <=1e-6",
+      "pass": true
+    },
+    {
+      "check": "normal60 exact prefix time coverage",
+      "pass": true
+    },
+    {
+      "check": "normal60 voltage and initial Li",
+      "pass": true
+    },
+    {
+      "check": "B020 exact prefix time coverage",
+      "pass": true
+    },
+    {
+      "check": "B020 voltage and initial Li",
+      "pass": true
+    },
+    {
+      "check": "N coordinates sorted distinct241",
+      "pass": true
+    },
+    {
+      "check": "N normal60 complete finite time/coordinate/domain product",
+      "pass": true
+    },
+    {
+      "check": "N B020 complete finite time/coordinate/domain product",
+      "pass": true
+    },
+    {
+      "check": "N target complete finite time/coordinate/domain product",
+      "pass": true
+    },
+    {
+      "check": "N normal60 surface <=1e-4",
+      "pass": true
+    },
+    {
+      "check": "N B020 surface <=1e-4",
+      "pass": true
+    },
+    {
+      "check": "P coordinates sorted distinct241",
+      "pass": true
+    },
+    {
+      "check": "P normal60 complete finite time/coordinate/domain product",
+      "pass": true
+    },
+    {
+      "check": "P B020 complete finite time/coordinate/domain product",
+      "pass": true
+    },
+    {
+      "check": "P target complete finite time/coordinate/domain product",
+      "pass": true
+    },
+    {
+      "check": "P normal60 surface <=1e-4",
+      "pass": true
+    },
+    {
+      "check": "P B020 surface <=1e-4",
+      "pass": true
+    },
+    {
+      "check": "runtime settings readback",
+      "pass": true
+    },
+    {
+      "check": "study requested time list",
+      "pass": true
+    },
+    {
+      "check": "guard actual binding",
+      "pass": true
+    },
+    {
+      "check": "unit readback units_eguard_configured.csv",
+      "pass": true
+    },
+    {
+      "check": "unit readback units_eguard_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "unit readback units_eguard_inferred.csv",
+      "pass": true
+    },
+    {
+      "check": "unit readback units_MaxLinece_configured.csv",
+      "pass": true
+    },
+    {
+      "check": "unit readback units_MaxLinece_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "unit readback units_MinLinece_configured.csv",
+      "pass": true
+    },
+    {
+      "check": "unit readback units_MinLinece_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "unit readback units_nglobal_configured.csv",
+      "pass": true
+    },
+    {
+      "check": "unit readback units_nglobal_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "unit readback units_point1_configured.csv",
+      "pass": true
+    },
+    {
+      "check": "unit readback units_point1_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "unit readback units_point4_configured.csv",
+      "pass": true
+    },
+    {
+      "check": "unit readback units_point4_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "unit readback units_profileN_configured.csv",
+      "pass": true
+    },
+    {
+      "check": "unit readback units_profileN_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "unit readback units_profileP_configured.csv",
+      "pass": true
+    },
+    {
+      "check": "unit readback units_profileP_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "unit readback units_profiletimes_configured.csv",
+      "pass": true
+    },
+    {
+      "check": "unit readback units_profiletimes_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "19 unit evidence records",
+      "pass": true
+    },
+    {
+      "check": "35 raw tables directly match native console bytes",
+      "pass": true
+    },
+    {
+      "check": "native producer completion once and no fatal signature",
+      "pass": true
+    },
+    {
+      "check": "coupling minguardall",
+      "pass": true
+    },
+    {
+      "check": "coupling minguard1",
+      "pass": true
+    },
+    {
+      "check": "coupling minguard2",
+      "pass": true
+    },
+    {
+      "check": "coupling minguard3",
+      "pass": true
+    },
+    {
+      "check": "native rounded2140 steps match exact saved times",
+      "pass": true
+    },
+    {
+      "check": "single time solver normal end and no subsequent integration",
+      "pass": true
+    },
+    {
+      "check": "reported drift and residual match independent exact arithmetic",
+      "pass": true
+    },
+    {
+      "check": "normal60 reported voltage/surface match",
+      "pass": true
+    },
+    {
+      "check": "B020 reported voltage/surface match",
+      "pass": true
+    },
+    {
+      "check": "post-initial native step column layout",
+      "pass": true
+    }
+  ],
+  "stored_times": 2140,
+  "requested_times": 1337,
+  "profile_rows": 1031480,
+  "comparisons": {
+    "normal60": {
+      "stored_common_count": 1537,
+      "requested_count": 737,
+      "voltage_difference_V": {
+        "exact_common": "5E-15",
+        "requested": "4.9E-15"
+      },
+      "surface_difference": {
+        "N": {
+          "exact_common": "3.7E-17",
+          "requested": "3.7E-17"
+        },
+        "P": {
+          "exact_common": "3.0E-15",
+          "requested": "3.0E-15"
+        }
+      },
+      "initial_Li_delta_mol_m2": {
+        "Li_N_mol_m2": "0E-18",
+        "Li_P_mol_m2": "0E-16",
+        "Li_electrolyte_mol_m2": "0E-18"
+      },
+      "ce_delta_observation_only": {
+        "ce_min_all_mol_m3": "1.5E-12",
+        "ce_min_d1_mol_m3": "1.5E-12",
+        "ce_min_d2_mol_m3": "7E-13",
+        "ce_min_d3_mol_m3": "2.3E-12"
+      }
+    },
+    "B020": {
+      "stored_common_count": 987,
+      "requested_count": 187,
+      "voltage_difference_V": {
+        "exact_common": "4.4E-15",
+        "requested": "4.4E-15"
+      },
+      "surface_difference": {
+        "N": {
+          "exact_common": "3.3E-17",
+          "requested": "2.8E-17"
+        },
+        "P": {
+          "exact_common": "2.7E-15",
+          "requested": "2.1E-15"
+        }
+      },
+      "initial_Li_delta_mol_m2": {
+        "Li_N_mol_m2": "0E-18",
+        "Li_P_mol_m2": "0E-16",
+        "Li_electrolyte_mol_m2": "0E-18"
+      },
+      "ce_delta_observation_only": {
+        "ce_min_all_mol_m3": "9E-13",
+        "ce_min_d1_mol_m3": "9E-13",
+        "ce_min_d2_mol_m3": "6E-13",
+        "ce_min_d3_mol_m3": "2.3E-12"
+      }
+    }
+  },
+  "profiles": {
+    "N": {
+      "statistics": {
+        "normal60": {
+          "rows": 370417,
+          "minimum": "0.011720682053235166",
+          "maximum": "0.019016308103964045"
+        },
+        "B020": {
+          "rows": 237867,
+          "minimum": "0.011720682053235166",
+          "maximum": "0.013710016446472456"
+        },
+        "target": {
+          "rows": 515740,
+          "minimum": "0.011720682053235166",
+          "maximum": "0.022482291326248884"
+        }
+      },
+      "selected_ranges": {
+        "0.0": {
+          "min": "0.011720682053235166",
+          "max": "0.011720682075714426"
+        },
+        "5.0": {
+          "min": "0.013684919669079273",
+          "max": "0.013710016446472458"
+        },
+        "30.0": {
+          "min": "0.016696690733322292",
+          "max": "0.016755553268263938"
+        },
+        "45.0": {
+          "min": "0.017891040196025703",
+          "max": "0.017968977972238388"
+        },
+        "60.0": {
+          "min": "0.0189212616120657",
+          "max": "0.01901630810396404"
+        },
+        "90.0": {
+          "min": "0.02067006733845438",
+          "max": "0.020890914277125198"
+        },
+        "120.0": {
+          "min": "0.02221266127961617",
+          "max": "0.022482291326248884"
+        }
+      }
+    },
+    "P": {
+      "statistics": {
+        "normal60": {
+          "rows": 370417,
+          "minimum": "0.9211143171347925",
+          "maximum": "0.9240638862998453"
+        },
+        "B020": {
+          "rows": 237867,
+          "minimum": "0.9232990524335143",
+          "maximum": "0.9240638862998453"
+        },
+        "target": {
+          "rows": 515740,
+          "minimum": "0.9195516410145989",
+          "maximum": "0.9240638862998453"
+        }
+      },
+      "selected_ranges": {
+        "0.0": {
+          "min": "0.9240638860887889",
+          "max": "0.9240638862998453"
+        },
+        "5.0": {
+          "min": "0.9232990524335143",
+          "max": "0.9235530696399319"
+        },
+        "30.0": {
+          "min": "0.9220711121667057",
+          "max": "0.9226439451486552"
+        },
+        "45.0": {
+          "min": "0.9215644391424564",
+          "max": "0.9222440924518078"
+        },
+        "60.0": {
+          "min": "0.9211143171347922",
+          "max": "0.9218832192781694"
+        },
+        "90.0": {
+          "min": "0.9203019690280138",
+          "max": "0.9212242994516981"
+        },
+        "120.0": {
+          "min": "0.9195516410145989",
+          "max": "0.9206096118892695"
+        }
+      }
+    }
+  },
+  "maximum_Li_relative_drift": "3.1360584566163041157679886301048822327737978139443E-15",
+  "maximum_voltage_identity_V": "5.98E-16",
+  "minimum_operator_consistency": "0E-13",
+  "selected_times": {
+    "0": {
+      "voltage_V": "2.230611589013168",
+      "ce_min_mol_m3": "1199.9999999743102",
+      "ce_max_mol_m3": "1200.000000030611",
+      "xavg_N": "0.01172068149051505",
+      "xavg_P": "0.92406388669441",
+      "xsurf_N_min": "0.011720682053235162",
+      "xsurf_N_max": "0.011720682075714426",
+      "xsurf_P_min": "0.9240638860887889",
+      "xsurf_P_max": "0.9240638862998453"
+    },
+    "5": {
+      "voltage_V": "2.3521763195338847",
+      "ce_min_mol_m3": "1194.4372136345678",
+      "ce_max_mol_m3": "1206.6573637907056",
+      "xavg_N": "0.011849446988354813",
+      "xavg_P": "0.923961977228037",
+      "xsurf_N_min": "0.013684919667202804",
+      "xsurf_N_max": "0.013710016446472458",
+      "xsurf_P_min": "0.9232990524335143",
+      "xsurf_P_max": "0.9235530696399319"
+    },
+    "30": {
+      "voltage_V": "2.540976430032923",
+      "ce_min_mol_m3": "1167.3169518472375",
+      "ce_max_mol_m3": "1231.664040224201",
+      "xavg_N": "0.012493274480128862",
+      "xavg_P": "0.9234524298941409",
+      "xsurf_N_min": "0.01669669073199133",
+      "xsurf_N_max": "0.016755553268263938",
+      "xsurf_P_min": "0.9220711121667057",
+      "xsurf_P_max": "0.9226439451486552"
+    },
+    "45": {
+      "voltage_V": "2.616359137950282",
+      "ce_min_mol_m3": "1152.9877605963304",
+      "ce_max_mol_m3": "1241.7644334230497",
+      "xavg_N": "0.012879570975193285",
+      "xavg_P": "0.9231467014938023",
+      "xsurf_N_min": "0.017891040195925474",
+      "xsurf_N_max": "0.017968977972238388",
+      "xsurf_P_min": "0.9215644391424564",
+      "xsurf_P_max": "0.9222440924518078"
+    },
+    "60": {
+      "voltage_V": "2.681442723295173",
+      "ce_min_mol_m3": "1140.6458948804939",
+      "ce_max_mol_m3": "1249.5300934919437",
+      "xavg_N": "0.013265867470257696",
+      "xavg_P": "0.922840973093464",
+      "xsurf_N_min": "0.0189212616120657",
+      "xsurf_N_max": "0.01901630810396404",
+      "xsurf_P_min": "0.9211143171347922",
+      "xsurf_P_max": "0.9218832192781694"
+    },
+    "90": {
+      "voltage_V": "2.770524242406344",
+      "ce_min_mol_m3": "1121.550755322692",
+      "ce_max_mol_m3": "1260.5646518993844",
+      "xavg_N": "0.014038460460386572",
+      "xavg_P": "0.9222295162927873",
+      "xsurf_N_min": "0.02067006733845438",
+      "xsurf_N_max": "0.020890914277125198",
+      "xsurf_P_min": "0.9203019690280138",
+      "xsurf_P_max": "0.9212242994516981"
+    },
+    "120": {
+      "voltage_V": "2.819292928143002",
+      "ce_min_mol_m3": "1108.181019310265",
+      "ce_max_mol_m3": "1267.8074590631065",
+      "xavg_N": "0.01481105345051545",
+      "xavg_P": "0.9216180594921117",
+      "xsurf_N_min": "0.02221266127961617",
+      "xsurf_N_max": "0.022482291326248884",
+      "xsurf_P_min": "0.9195516410145989",
+      "xsurf_P_max": "0.9206096118892695"
+    }
+  },
+  "late_count": 603,
+  "native_last_step": [
+    "2139",
+    "120",
+    "0.1",
+    "out",
+    "4288",
+    "2148",
+    "4294",
+    "2",
+    "0",
+    "0",
+    "5.7e-12",
+    "2.5e-16"
+  ],
+  "native_Tfail_max_post_initial": 0,
+  "native_NLfail_max_post_initial": 0,
+  "initial_Tfail": "NOT_PRINTED",
+  "native_log_summary": [
+    "Using 1 socket with 16 cores in total on DESKTOP-L60RV2M.",
+    "Using 1 socket with 16 cores in total on DESKTOP-L60RV2M.",
+    "Physical memory: 832 MB",
+    "Virtual memory: 867 MB",
+    "Solution time: 0 s.",
+    "Physical memory: 843 MB",
+    "Virtual memory: 887 MB",
+    "Solution time: 2 s.",
+    "Physical memory: 864 MB",
+    "Virtual memory: 946 MB",
+    "Physical memory: 891 MB",
+    "Virtual memory: 926 MB",
+    "Solution time: 1 s.",
+    "Physical memory: 898 MB",
+    "Virtual memory: 927 MB",
+    "Solution time: 1133 s. (18 minutes, 53 seconds)",
+    "Physical memory: 1.13 GB",
+    "Virtual memory: 1.42 GB",
+    "Class run time: 2578 s.",
+    "Save time: 17 s.",
+    "Total time: 2595 s."
+  ],
+  "embedded_tables": {
+    "guard_binding.csv": {
+      "bytes": 169,
+      "sha256": "8991642de32728f1170ca72f54be478476e121b5407a3a0a13ebbc2a8a843396"
+    },
+    "axes_runtime_settings.csv": {
+      "bytes": 7310,
+      "sha256": "0ea9d2b10f443976e61696654d9aa794117b145dc36e745462085439f7dabf43"
+    },
+    "units_eguard_inferred.csv": {
+      "bytes": 168,
+      "sha256": "f82c7dba5860b79a232859ca23b45bc498476f00c12e48e8e4541d3ee1163814"
+    },
+    "units_eguard_configured.csv": {
+      "bytes": 176,
+      "sha256": "91bb7ce3c022838c6e65541332bda16b5329bc2af8b588f24031077c08f2d8a8"
+    },
+    "units_eguard_evaluated.csv": {
+      "bytes": 169,
+      "sha256": "d11a345d52d7af0674f6d63e43e071957d49f5df91ff4edd8ff1830d1e7b5bac"
+    },
+    "electrolyte_guard.csv": {
+      "bytes": 252852,
+      "sha256": "145fd2886fe808074fa5142f444c03449d03dfd73d4885a0695255442e57524e"
+    },
+    "units_nglobal_configured.csv": {
+      "bytes": 207,
+      "sha256": "f9b403119e11edb233f5d4fb2a073bd0bfa30b35e587c7b1fe19df3bb71b6812"
+    },
+    "units_nglobal_evaluated.csv": {
+      "bytes": 204,
+      "sha256": "8f868b1410c49e065b2e9553b99d9587009fb776f84fb2c3e9e2b08495d09881"
+    },
+    "preflight_global.csv": {
+      "bytes": 599667,
+      "sha256": "0dab3d1c8f9c25d9c77314779c0e40d413527c3429fbc5f1a817ab122c6c8704"
+    },
+    "units_point1_configured.csv": {
+      "bytes": 184,
+      "sha256": "111606db006e443946e213f6d700166f3aa09de167da4efd9f65fe3ea4f714bf"
+    },
+    "units_point1_evaluated.csv": {
+      "bytes": 183,
+      "sha256": "fc58c637b39bf77d9d1984de87369e454725afe3e9e613f44c2d8bf993441823"
+    },
+    "preflight_boundary1.csv": {
+      "bytes": 522764,
+      "sha256": "6c3435e0a5f6e27f2e46abd746d26cfa712610e6cdb6feb7352bc994b1d3a2da"
+    },
+    "units_point4_configured.csv": {
+      "bytes": 184,
+      "sha256": "38806405a5e9457305b513c4a8f77b2bb9277ff2a78217487d4929fa95ad0564"
+    },
+    "units_point4_evaluated.csv": {
+      "bytes": 183,
+      "sha256": "df5da0745d91e1b053a284061da1344cf539266e3e05dc6add30898940d9706a"
+    },
+    "preflight_boundary4.csv": {
+      "bytes": 543714,
+      "sha256": "70b7f6d2d517bbebb7b258f9a95a8fffedc080ef2e98d788d495e5daf955ad42"
+    },
+    "units_MinLinece_configured.csv": {
+      "bytes": 89,
+      "sha256": "fd2a90de460070fee31e767e44123a9019ce0f088179c511a40e49d1a120df61"
+    },
+    "units_MinLinece_evaluated.csv": {
+      "bytes": 88,
+      "sha256": "aed890896ff541549d82c4ce88c2ee8895f33c0ebf33ba54007c146a919edbf5"
+    },
+    "preflight_MinLine_ce.csv": {
+      "bytes": 68191,
+      "sha256": "824dbd23abea07af48ffa0412775a251f7808f77423c4b274557bdbe8be92ab5"
+    },
+    "units_MaxLinece_configured.csv": {
+      "bytes": 89,
+      "sha256": "74da5bc44c75477296f4eac8e554255f6a4905c1dac7a1c7fb0f59c42bcea2b9"
+    },
+    "units_MaxLinece_evaluated.csv": {
+      "bytes": 88,
+      "sha256": "3c771b482d816ef577a0ce5c079bedcaa0372e068c08d1476ced903d7811c18e"
+    },
+    "preflight_MaxLine_ce.csv": {
+      "bytes": 68175,
+      "sha256": "6a03f8be3ed1852cc630ebe23e46790c6616150cefcb46f88781e0f034d0d838"
+    },
+    "equations_pce1_per1_Expression.csv": {
+      "bytes": 5444,
+      "sha256": "8fa9a0d0eaa8bc3ce84b006e9be50d6d6b11aa4637215868762f2e3df746203b"
+    },
+    "equations_pce1_per1_Weak.csv": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "equations_pce1_per1_Constraint.csv": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "equations_pce2_per1_Expression.csv": {
+      "bytes": 5446,
+      "sha256": "41581b938c4b59467d12d4ef57022f6bf13a789e7009364d4dd5c51956574c7c"
+    },
+    "equations_pce2_per1_Weak.csv": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "equations_pce2_per1_Constraint.csv": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "units_profiletimes_configured.csv": {
+      "bytes": 74,
+      "sha256": "f900463c0bfa0b77ee1420d71a596f610809e83b323757a799318ac12ee03456"
+    },
+    "units_profiletimes_evaluated.csv": {
+      "bytes": 73,
+      "sha256": "95e1a2a5088b1b7ad736bc75ba32f4e7e291a1efc5dbeb6b07fc39cd50a3bddb"
+    },
+    "units_profileN_configured.csv": {
+      "bytes": 112,
+      "sha256": "9517943f6b72a1166127f9996a584fc49e7e512616d83db235a7dba09064d672"
+    },
+    "units_profileN_evaluated.csv": {
+      "bytes": 109,
+      "sha256": "47d68bc694fbb184bf3bfa23928bf7db8e9872a79d3b75b6420b28d58f06add9"
+    },
+    "axes_profile_N.csv": {
+      "bytes": 76939824,
+      "sha256": "cf08e611e6d51e31e94b6adc3270300902b87007c9947b76f6c1f05403901ef4"
+    },
+    "units_profileP_configured.csv": {
+      "bytes": 112,
+      "sha256": "194632661d16eb60ee456c0d6f14633e219849c1a434a5f22d323c4f0890ca7e"
+    },
+    "units_profileP_evaluated.csv": {
+      "bytes": 109,
+      "sha256": "699397502dfcdd5697f0f7fd29f992db453c2ae7e7436bb16a179383530d13fd"
+    },
+    "axes_profile_P.csv": {
+      "bytes": 74482047,
+      "sha256": "c89165bf2f4132de339964ebfcdb865c9ff437f8d9fe22eb9e5d145c143bdb43"
+    }
+  }
+}

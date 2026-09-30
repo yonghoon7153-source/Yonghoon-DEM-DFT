@@ -1,0 +1,85 @@
+{
+  "scope": "Recipient review only. Original raw evidence is not repackaged.",
+  "files": [
+    {
+      "file": "REVIEW_KO.md",
+      "bytes": 9722,
+      "sha256": "fa7322abb5d82140a5b994ecfa92355735ed40b290e61ed2a29b1eed0a73704e"
+    },
+    {
+      "file": "NEXT_CODEX_REPLY_KO.md",
+      "bytes": 3832,
+      "sha256": "5f5f9c7dac56c42fe693cfaab660f28d83c21760ecfb95af4c4b3a40b1952826"
+    },
+    {
+      "file": "CLAUDE_UPDATE_KO.md",
+      "bytes": 5346,
+      "sha256": "ad16b6cfbe66592c397b92efbfae420ce85cefda68395b30758053a5586fed34"
+    },
+    {
+      "file": "DECISION.json",
+      "bytes": 1407,
+      "sha256": "cf1215e5627f10b6f32afb94dc99b6ee02a895ef6d2c7225efeec519d61e5af6"
+    },
+    {
+      "file": "ARCHIVE_AUDIT.json",
+      "bytes": 850362,
+      "sha256": "805a268a1f1a4832ec46ea2c67c2ead4d35d3a9b6c041522359b2c94685c0de0"
+    },
+    {
+      "file": "NUMERIC_AUDIT.json",
+      "bytes": 19470,
+      "sha256": "0c3d67e135e560151487c0b3c0dfa70e42fe46382d5537c8afaa1e2e4ad57521"
+    },
+    {
+      "file": "RECORDS_AUDIT.json",
+      "bytes": 2506109,
+      "sha256": "1d9f2b410736effd391e8ee94a415699811696cf4d544f3f23e17440b2e51d25"
+    },
+    {
+      "file": "SUPPLEMENTAL_AUDIT.json",
+      "bytes": 5424,
+      "sha256": "e712b1d3482789bfe4d5491353e0d0a5481e875f601646d6f6c7a2b221eb6daa"
+    },
+    {
+      "file": "USER_SUPPLIED_FINAL_RETURN.json",
+      "bytes": 651,
+      "sha256": "a5c1a976b175f9dc90507f7d9185025ad13adc1c7665e370ba2bd4e0534de45b"
+    },
+    {
+      "file": "REVIEWER_PROCESS_NOTE.md",
+      "bytes": 2420,
+      "sha256": "1786f3b49ce05dd6feb0cde48196591b64873f06b78e3a745c883a273022f841"
+    },
+    {
+      "file": "FINAL_SOURCE_CHECK.json",
+      "bytes": 487,
+      "sha256": "eb24772ce37c83a1138e1978b5a211e37e8228fb5c481bd16cc4155cfc0b6c8e"
+    },
+    {
+      "file": "audit_archives.py",
+      "bytes": 2808,
+      "sha256": "001cbee7516c1d4d0d6fe083bd618a2b35d8277058838d906882de3f3fb2275b"
+    },
+    {
+      "file": "audit_numeric.py",
+      "bytes": 11354,
+      "sha256": "52cd63ba4c060a83c422969753adcc212004a7758c12869aecdb9a8cbb27e570"
+    },
+    {
+      "file": "audit_records.py",
+      "bytes": 12455,
+      "sha256": "9480c003dd4b4d1b6b542c11a4599d77e0213a48bc44ff38ce7afb451407b011"
+    },
+    {
+      "file": "audit_supplemental.py",
+      "bytes": 6608,
+      "sha256": "74438e4918ede4ba9584c6ecf024f8d69ac2bb9aec7c119ff5c2174a92dc75db"
+    },
+    {
+      "file": "seal_review.py",
+      "bytes": 3072,
+      "sha256": "0aba09f1ca5362cbf4fb6d040e9e222ee369d74912a26d0bf03ef173b667e597"
+    }
+  ]
+}

@@ -59,3 +59,5 @@ reviews/r14_repros/codex63/claude_normal30_long_horizon_review_20260930/** -text
 reviews/r14_repros/codex63/normal60_validation_recipient_review_20260930/** -text
 # 2026-09-30: 정상 fresh 0→60 s native 결과 독립 수신 검토 묶음 (ACCEPT_NORMAL60_LIMITED_NATIVE_DIAGNOSTIC · 재실행 불필요 · 다음 120 s 준비 권고, 미승인) — bytes 그대로
 reviews/r14_repros/codex63/normal60_native_recipient_review_20260930/** -text
+# 2026-09-30: 정상 fresh 0→120 s native 결과 독립 수신 검토 묶음 (ACCEPTED_NORMAL120_LIMITED_DIAGNOSTIC · 재실행 불필요 · 다음 240 s 준비 제안, 미승인) — bytes 그대로
+reviews/r14_repros/codex63/normal120_native_recipient_review_20260930/** -text

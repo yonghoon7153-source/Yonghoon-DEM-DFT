@@ -1,0 +1,10 @@
+{
+  "provenance": "Reviewer transcription of the current user message. Not a directly observed host return or original sender file bytes. No new sender execution.",
+  "result": {
+    "chunk_id": "ed5452",
+    "wall_time_seconds": 1.0329236,
+    "exit_code": 0,
+    "original_token_count": 78,
+    "output": "{\"status\": \"SUPPLEMENT_VERIFIED\", \"supplement\": {\"file\": \"NORMAL120_NATIVE_DELIVERY_SUPPLEMENT_20260930.zip\", \"bytes\": 32212, \"sha256\": \"a0356e253b14eee6d676acbbea37a60287dff6c0baea0dbf34c6840ad570c0bb\"}, \"elapsed_seconds\": 0.125, \"scope\": \"After supplement readback, before tool return\", \"recipient\": null}\r\n"
+  }
+}

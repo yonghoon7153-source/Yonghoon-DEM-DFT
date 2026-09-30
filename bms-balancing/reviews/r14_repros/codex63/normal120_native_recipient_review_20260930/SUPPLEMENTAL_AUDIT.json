@@ -1,0 +1,205 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "check": "eguard inferred",
+      "pass": true
+    },
+    {
+      "check": "eguard configured",
+      "pass": true
+    },
+    {
+      "check": "eguard evaluated",
+      "pass": true
+    },
+    {
+      "check": "nglobal configured",
+      "pass": true
+    },
+    {
+      "check": "nglobal evaluated",
+      "pass": true
+    },
+    {
+      "check": "point1 configured",
+      "pass": true
+    },
+    {
+      "check": "point1 evaluated",
+      "pass": true
+    },
+    {
+      "check": "point4 configured",
+      "pass": true
+    },
+    {
+      "check": "point4 evaluated",
+      "pass": true
+    },
+    {
+      "check": "MinLinece configured",
+      "pass": true
+    },
+    {
+      "check": "MinLinece evaluated",
+      "pass": true
+    },
+    {
+      "check": "MaxLinece configured",
+      "pass": true
+    },
+    {
+      "check": "MaxLinece evaluated",
+      "pass": true
+    },
+    {
+      "check": "profiletimes configured",
+      "pass": true
+    },
+    {
+      "check": "profiletimes evaluated",
+      "pass": true
+    },
+    {
+      "check": "profileN configured",
+      "pass": true
+    },
+    {
+      "check": "profileN evaluated",
+      "pass": true
+    },
+    {
+      "check": "profileP configured",
+      "pass": true
+    },
+    {
+      "check": "profileP evaluated",
+      "pass": true
+    },
+    {
+      "check": "AXES_PHYSICAL_MESH_DOMAIN=1|numelem=120",
+      "pass": true
+    },
+    {
+      "check": "AXES_PHYSICAL_MESH_DOMAIN=2|numelem=60",
+      "pass": true
+    },
+    {
+      "check": "AXES_PHYSICAL_MESH_DOMAIN=3|numelem=120",
+      "pass": true
+    },
+    {
+      "check": "AXES_PARTICLE=pce1|Nel=320|Nord=1|Distribution=CubicRoot",
+      "pass": true
+    },
+    {
+      "check": "AXES_PARTICLE=pce2|Nel=320|Nord=1|Distribution=CubicRoot",
+      "pass": true
+    },
+    {
+      "check": "AXES_ACTUAL_MESH=mesh1|edges=300|vertices=301",
+      "pass": true
+    },
+    {
+      "check": "PREFLIGHT_SOLVE_BEGIN=0..120 seconds; NO full protocol or sweep",
+      "pass": true
+    },
+    {
+      "check": "ELECTROLYTE_THRESHOLD_EXPRESSION=0[mol/m^3]",
+      "pass": true
+    },
+    {
+      "check": "ELECTROLYTE_THRESHOLD_SI=0.0",
+      "pass": true
+    },
+    {
+      "check": "one textual runAll call",
+      "pass": true
+    },
+    {
+      "check": "reported STOP is literal parent instruction",
+      "pass": true
+    },
+    {
+      "check": "declared one-opening-brace normalization only",
+      "pass": true
+    },
+    {
+      "check": "user return identifies final boundary bytes",
+      "pass": true
+    },
+    {
+      "check": "post-write follows pre-write",
+      "pass": true
+    },
+    {
+      "check": "post-write budget and error list",
+      "pass": true
+    },
+    {
+      "check": "NoExit boundary does not invent process rc",
+      "pass": true
+    },
+    {
+      "check": "last supplied external return rc0 with explicit provenance",
+      "pass": true
+    },
+    {
+      "check": "last return binds actual supplemental bytes",
+      "pass": true
+    },
+    {
+      "check": "last return still generation recipient null",
+      "pass": true
+    },
+    {
+      "check": "last snapshot source is before tool return",
+      "pass": true
+    },
+    {
+      "check": "main packaging rc and raw identity",
+      "pass": true
+    },
+    {
+      "check": "main packaging native counts",
+      "pass": true
+    },
+    {
+      "check": "prior validation supplied final return matches historical recipient audit identity",
+      "pass": true
+    },
+    {
+      "check": "prior validation final return rc0 and snapshot within 1500",
+      "pass": true
+    },
+    {
+      "check": "prior validation return not new native approval",
+      "pass": true
+    }
+  ],
+  "check_count": 44,
+  "scope": "Reviewer data checks, not functionality tests or new sender execution.",
+  "final_return_provenance": "Current user message transcribed by reviewer; not independently observed sender host call.",
+  "prior_validation_boundary": "Additional historical transcription matches prior recipient archive-audit identity, not a fresh rehash of the prior ZIP; no historical receipt changed.",
+  "prior_recipient_audit": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal120_validation_review_20260930\\ARCHIVE_AUDIT.json",
+    "bytes": 890,
+    "sha256": "c281f21ba39572ef36ca6b7f6661895bc3a944abbb4e59d0bdac23450a600675",
+    "supplement_record": {
+      "file": "C:\\Users\\Administrator\\Downloads\\NORMAL120_VALIDATION_DELIVERY_SUPPLEMENT_20260930.zip",
+      "bytes": 3636,
+      "sha256": "8da15b8fcf835fb693b71147f0fe519ca66aba12f897b70fc30358e16f7f6ef7",
+      "payload_count": 4,
+      "entries": 5,
+      "manifest_sha256": "4a284fdd9eeca6a5a36d70fae1c1eedcd7b68fd6c4198ed7aea14839ac77eb14",
+      "exact_set_size_sha_crc_path_case_link": "PASS",
+      "source_unchanged": true
+    }
+  },
+  "parent_boundary": "User-console script final record with null outer PowerShell process rc.",
+  "final_return_call_wall_seconds": 1.0329236,
+  "final_return_snapshot_seconds": 0.125,
+  "native_post_write_seconds": 2794.5360419,
+  "separate_collection_post_receipt_seconds": 135.84400000004098
+}
