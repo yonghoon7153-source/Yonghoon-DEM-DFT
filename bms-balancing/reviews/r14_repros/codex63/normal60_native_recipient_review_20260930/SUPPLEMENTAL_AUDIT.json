@@ -1,0 +1,122 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "check": "eguard inferred",
+      "pass": true
+    },
+    {
+      "check": "eguard configured",
+      "pass": true
+    },
+    {
+      "check": "eguard evaluated",
+      "pass": true
+    },
+    {
+      "check": "nglobal configured",
+      "pass": true
+    },
+    {
+      "check": "nglobal evaluated",
+      "pass": true
+    },
+    {
+      "check": "point1 configured",
+      "pass": true
+    },
+    {
+      "check": "point1 evaluated",
+      "pass": true
+    },
+    {
+      "check": "point4 configured",
+      "pass": true
+    },
+    {
+      "check": "point4 evaluated",
+      "pass": true
+    },
+    {
+      "check": "MinLinece configured",
+      "pass": true
+    },
+    {
+      "check": "MinLinece evaluated",
+      "pass": true
+    },
+    {
+      "check": "MaxLinece configured",
+      "pass": true
+    },
+    {
+      "check": "MaxLinece evaluated",
+      "pass": true
+    },
+    {
+      "check": "profiletimes configured",
+      "pass": true
+    },
+    {
+      "check": "profiletimes evaluated",
+      "pass": true
+    },
+    {
+      "check": "profileN configured",
+      "pass": true
+    },
+    {
+      "check": "profileN evaluated",
+      "pass": true
+    },
+    {
+      "check": "profileP configured",
+      "pass": true
+    },
+    {
+      "check": "profileP evaluated",
+      "pass": true
+    },
+    {
+      "check": "AXES_PHYSICAL_MESH_DOMAIN=1|numelem=120",
+      "pass": true
+    },
+    {
+      "check": "AXES_PHYSICAL_MESH_DOMAIN=2|numelem=60",
+      "pass": true
+    },
+    {
+      "check": "AXES_PHYSICAL_MESH_DOMAIN=3|numelem=120",
+      "pass": true
+    },
+    {
+      "check": "AXES_PARTICLE=pce1|Nel=320|Nord=1|Distribution=CubicRoot",
+      "pass": true
+    },
+    {
+      "check": "AXES_PARTICLE=pce2|Nel=320|Nord=1|Distribution=CubicRoot",
+      "pass": true
+    },
+    {
+      "check": "AXES_ACTUAL_MESH=mesh1|edges=300|vertices=301",
+      "pass": true
+    },
+    {
+      "check": "PREFLIGHT_SOLVE_BEGIN=0..60 seconds; NO full protocol or sweep",
+      "pass": true
+    },
+    {
+      "check": "ELECTROLYTE_THRESHOLD_EXPRESSION=0[mol/m^3]",
+      "pass": true
+    },
+    {
+      "check": "ELECTROLYTE_THRESHOLD_SI=0.0",
+      "pass": true
+    },
+    {
+      "check": "one textual model runAll call",
+      "pass": true
+    }
+  ],
+  "scope": "Contracted units, source text and native log markers; not executing source."
+}
