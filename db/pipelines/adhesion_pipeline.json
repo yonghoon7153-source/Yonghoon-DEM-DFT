@@ -519,47 +519,88 @@
      "rc": 0,
      "wall_s": 9276,
      "peak_vram_mib": 39238,
+     "started": "2026-09-27 10:52",
      "host_free_min_mib": 49389
     },
     {
      "dir": "V4_s_outer_A_far",
-     "state": "run",
+     "state": "done",
+     "rc": 0,
+     "wall_s": 7989,
+     "peak_vram_mib": 39230,
      "started": "2026-09-27 13:27",
-     "note": "14:02 실측 SCF 21 회 · accuracy 4.53 Ry · GPU 39,212 MiB"
+     "host_free_min_mib": 49383
     },
     {
      "dir": "V4_s_outer_A_G3_c2_bound",
-     "state": "wait"
+     "state": "done",
+     "rc": 0,
+     "wall_s": 14804,
+     "peak_vram_mib": 41520,
+     "started": "2026-09-27 15:40",
+     "host_free_min_mib": 49047
     },
     {
      "dir": "V4_s_outer_A_G3_c2_far_i",
-     "state": "wait"
+     "state": "done",
+     "rc": 0,
+     "wall_s": 13070,
+     "peak_vram_mib": 41518,
+     "started": "2026-09-27 19:47",
+     "host_free_min_mib": 49029
     },
     {
      "dir": "V4_s_outer_A_G3_c2_far_ii",
-     "state": "wait"
+     "state": "done",
+     "rc": 0,
+     "wall_s": 12287,
+     "peak_vram_mib": 41518,
+     "started": "2026-09-27 23:24",
+     "host_free_min_mib": 49012
     },
     {
      "dir": "V4_s_outer_A_G4_k1_bound",
-     "state": "wait"
+     "state": "done",
+     "rc": 0,
+     "wall_s": 14961,
+     "peak_vram_mib": 39238,
+     "started": "2026-09-28 02:49",
+     "host_free_min_mib": 49423
     },
     {
      "dir": "V4_s_outer_A_G4_k1_far",
-     "state": "wait"
+     "state": "done",
+     "rc": 0,
+     "wall_s": 22404,
+     "peak_vram_mib": 39238,
+     "started": "2026-09-28 06:59",
+     "host_free_min_mib": 49366
     },
     {
      "dir": "V4_s_outer_A_G4_s05_bound",
-     "state": "wait"
+     "state": "done",
+     "rc": 0,
+     "wall_s": 12667,
+     "peak_vram_mib": 39230,
+     "started": "2026-09-28 13:12",
+     "host_free_min_mib": 48613
     },
     {
      "dir": "V4_s_outer_A_G4_s05_far",
-     "state": "wait"
+     "state": "done",
+     "rc": 0,
+     "wall_s": 13947,
+     "peak_vram_mib": 39230,
+     "started": "2026-09-28 16:43",
+     "host_free_min_mib": 48543
     }
    ],
-   "verdict": "진행 중 — 마지막 실측 09-27 14:02 (bound 끝 · far 진행) · 판정은 9 잡 끝난 뒤",
+   "verdict": "✅ **9/9 끝** (마지막 잡 09-28 21:32 · 전부 rc 0 · 원자료 ebd0abe7a `db/raw/wad_aprime_s4_v4_2026_09_27/jobs_run.tsv`) — 판정·값은 결과 기록 `db/properties/wad_aprime_pilot_result_v4_2026_09_28.json` 에서만. ⚠ 이 run 항목은 09-27 14:02 실측(1/9)에서 멈춰 있다가 10-01 에 jobs_run.tsv 로 채웠다.",
    "values_policy": "9 잡이 끝나면 collect_aprime_s4.py --v4 로 한 번에 집계 (ΔE_frag eV/조각 · G3 5 · G4 10 meV = 변화 · J/m² 환산 금지) — 그 전엔 에너지를 어디에도 쓰지 않는다",
    "records": [
-    "db/inputs/wad_aprime_s3v2_2026_09_26/qe/jobs.json"
+    "db/inputs/wad_aprime_s3v2_2026_09_26/qe/jobs.json",
+    "db/properties/wad_aprime_pilot_result_v4_2026_09_28.json",
+    "db/raw/wad_aprime_s4_v4_2026_09_27/jobs_run.tsv"
    ]
   },
   {
@@ -1444,6 +1485,11 @@
    "date": "2026-10-01",
    "stage": "dft",
    "text": "**SE 쌍 전체 계면 UMA+D3 예측 끝** (gabia · 탄성 strain_23_m 을 EXIT 로 약 1 시간 세운 동안 · 이완 8 + W 8 ≈ 49 분) — 카드 게이트 G1 8/8 · G2 8/8 · G3 대표 2/2 · registry 합쳐짐 0/4. 흑연 쪽 A·B 값이 거의 같아 같은 모델을 두 번 잰 건 아닌지 확인했다: sha 가 다르고 이완 뒤에도 1.31 Å 떨어져 있다 — 이 모형에서 흑연 면이 옆으로 거의 평평하다. 원자료 80c398511 (사용자 · gabia) · 집계 `relax_uma_d3.py --collect` (새 · selftest 36/36 · 돌연변이 6/6) · registry 거리 `build_aprime_interfaces.registry_distance` (새 · 44/44 · 4/4). 값·라벨은 결과 기록에서만. 탄성은 03:28 새 러너로 재개 (파일에서 기하·밀도·wfc 읽음 확인)."
+  },
+  {
+   "date": "2026-10-01",
+   "stage": "dft",
+   "text": "원장 정정 — V4 본 잡 run 항목이 09-27 14:02 실측(1/9 done)에서 멈춰 있었다 → 원자료 jobs_run.tsv 로 9/9 done · rc 0 · wall · 피크 VRAM 을 채웠다 (9월 증빙 스크립트가 '1/9' 를 찍어 드러났다)."
   }
  ],
  "related_decisions": [
