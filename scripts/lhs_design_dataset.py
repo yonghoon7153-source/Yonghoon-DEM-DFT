@@ -803,11 +803,15 @@ HANDOVER_EXTRA = (
     ('floor_deepest_r_um',   ('handover_qc', 'floor_deepest_r_um'),         '그 입자의 반지름'),
     ('floor_deepest_z_um',   ('handover_qc', 'floor_deepest_z_um'),         '그 입자의 중심 z'),
     ('plate_outside_cap_depth_over_r_max', ('handover_qc', 'plate_outside_cap_depth_over_r_max'), '플래튼 쪽 가장 깊은 입자의 cap 깊이/r'),
-    ('boundary_state',       ('handover_qc', 'boundary_state'),             'INSIDE | CENTER_CROSSED | FULLY_OUT'),
+    ('boundary_state',       ('handover_qc', 'boundary_state'),             'INSIDE | CENTER_CROSSED | FULLY_OUT — 바닥 (z = 0) · 플래튼 평면 기준 (같은 프레임 · 수확기 wall_record): '
+                                                                            '중심이 평면을 넘은 입자가 있으면 CENTER_CROSSED · 통째로 평면 밖인 입자가 있으면 FULLY_OUT · 없으면 INSIDE'),
     #  ── 적격성 (HND-04) — 숫자 산출 성공과 물리/ML 용도 허용을 분리 ──
     ('calculation_status',   ('handover_qc', 'calculation_status'),         '계산 상태 (명목 규약값)'),
-    ('physical_target_status', ('handover_qc', 'physical_target_status'),   'OK | HOLD — 물리적 전극 구조 타깃으로 쓸 수 있는가'),
-    ('hold_reason_codes',    ('handover_qc', 'hold_reason_codes'),          'BOUNDARY_CENTER_OUT · NEGATIVE_POROSITY (| 로 이음)'),
+    ('physical_target_status', ('handover_qc', 'physical_target_status'),   'OK | HOLD — 물리적 전극 구조 타깃으로 쓸 수 있는가 (HND-04 — 계산 상태와 분리) · HOLD = hold_reason_codes 가 하나라도 있다 · '
+                                                                            '값은 그대로 계산됐다 (calculation_status OK) · 배포 v1.1 부터 함께 싣는다 — 거를지는 쓰는 쪽이 정한다'),
+    ('hold_reason_codes',    ('handover_qc', 'hold_reason_codes'),          'BOUNDARY_CENTER_OUT = 중심이 바닥 · 플래튼 평면 밖인 입자 ≥ 1 (정상 압입과 구분 · HND-03) · '
+                                                                            'NEGATIVE_POROSITY = 구 부피 합 porosity < 0 (= 구 부피 합 φ_SE + φ_AM > 1 · 겹침이 큰 침대 · HND-04 · LHS-15) — '
+                                                                            '배포 porosity (정확 union) 는 이 경우에도 양수다 · 여러 개면 | 로 잇는다'),
     ('phi_sum_gt_one',       ('handover_qc', 'phi_sum_gt_one'),             'phi_se + phi_am > 1'),
     #  ── τ 밴드 진단 (LHS-08 · Codex §8-3) — 보고 τ 는 여전히 보류 열 ──
     ('tau_n_bot',            ('tau_detail', 'band_detail', 'n_bot'),        'solid_zrange 아래 밴드의 SE 인원'),

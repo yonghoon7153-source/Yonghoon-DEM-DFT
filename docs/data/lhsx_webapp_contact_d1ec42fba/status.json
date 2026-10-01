@@ -1,0 +1,2783 @@
+{
+ "schema": "lhs_webapp_batch/v1",
+ "cases": {
+  "lhsx_001": {
+   "case": "lhsx_001",
+   "when": "2026-10-01T11:30:47",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "6b9ec42859119f5646f3a1d5e11f3954293edacc286a7784db47ae0b5e6445c2",
+    "contact": "2c12e9efd2ea34061a18b34b5e408e300c1b52a0409f94587248b93a25912a4a",
+    "mesh": "a3a98b22dbb08ecac90a8fcec190bf687e5c81279651ac4ce0660a4c006de11f",
+    "deck": "c013d3ba5f78e1321889b69c9e2779fbcc41ca1fe06f7d7b79307dfd9a2d5308"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 295514,
+    "n_unique_pairs": 295514,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 2.42582e-09,
+    "n_periodic_flag": 10055,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 52.7
+  },
+  "lhsx_002": {
+   "case": "lhsx_002",
+   "when": "2026-10-01T11:31:40",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "91714aa922c8616bf78bd5cedd37f3121d42a4a7573f9deb781b5d35d8cf949c",
+    "contact": "5435ccd699aafdfd423f1b1737c96e70386300d350c07809d250dd57add85207",
+    "mesh": "b18e84e06da9fd6119c1f78da4e4695986448852e31a12ae81a4349ef51738ec",
+    "deck": "632fc6195ef49bf29178eef170f6b328a7c0abde7936ae41d390ad37ecf07781"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 95539,
+    "n_unique_pairs": 95539,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 6.45569e-09,
+    "n_periodic_flag": 4609,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 16.7
+  },
+  "lhsx_003": {
+   "case": "lhsx_003",
+   "when": "2026-10-01T11:31:57",
+   "type_map_fold": "2-type: 덱 판독 1:AM_S,2:SE ≡ 수확 JSON {'1': 'AM', '2': 'SE'} — 단일 AM 상의 이름만 다르다 (수확기 = AM · 웹앱 = 반지름 규칙 AM_P/AM_S)",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "standard",
+   "type_map": "1:AM_S,2:SE",
+   "sha": {
+    "atom": "f5ff448a024731f5ee02936b41a9cb2a17bc72b51026c073ab98baf0889ae773",
+    "contact": "301b972d29b8bf525fe378bfd525c70aee63cb7da84201b39c8f422dd6eab4ef",
+    "mesh": "95b53b6f845b8edc36df1be59a9e76b072bc675e8d316196cedc7ab40fb64a11",
+    "deck": "158e0bd8215a207641103744e77564654320d36b929aa51023c250a32df34fd9"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 252107,
+    "n_unique_pairs": 252107,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 1.85196e-08,
+    "n_periodic_flag": 9780,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 50.0
+  },
+  "lhsx_004": {
+   "case": "lhsx_004",
+   "when": "2026-10-01T11:32:47",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "a0d2d8a9dd0d9fce737a3b30a85cf80598ce1d9ca8baa13cb0adb7ebf2c0ca3f",
+    "contact": "022927d50657103f97a9e2788a58a731d1c1d5a81235eef3fd08cac1745b40e3",
+    "mesh": "1f46884399cfa4f665270fbcc1ac49f2b2033d46686533777f72903e50f02196",
+    "deck": "e466860c5c4b1e4c7706cabf9e7d12f7ad30be9080d6fa43a651f41c6160191e"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 85339,
+    "n_unique_pairs": 85339,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 1.06388e-08,
+    "n_periodic_flag": 3776,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 15.1
+  },
+  "lhsx_005": {
+   "case": "lhsx_005",
+   "when": "2026-10-01T11:33:02",
+   "type_map_fold": "2-type: 덱 판독 1:AM_S,2:SE ≡ 수확 JSON {'1': 'AM', '2': 'SE'} — 단일 AM 상의 이름만 다르다 (수확기 = AM · 웹앱 = 반지름 규칙 AM_P/AM_S)",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "standard",
+   "type_map": "1:AM_S,2:SE",
+   "sha": {
+    "atom": "89798cd5ff3116200433bf71e6836624026b4b13cf44cfc7873779898a4eb9a4",
+    "contact": "3ce9f2e1db055fc4f8d9353c5140d178bcf4f11e86d2fe81aa643fdf9a209d83",
+    "mesh": "6bc5559b5a3d2229a8389cfdc5cb1a46a1933e31e8cd97d85b905c96c1fc2fa8",
+    "deck": "5902447dd81e4545edea1ea01d897705a6833707dd193d5962045da3dc9ce971"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 158808,
+    "n_unique_pairs": 158808,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 1.62581e-08,
+    "n_periodic_flag": 6870,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 24.1
+  },
+  "lhsx_006": {
+   "case": "lhsx_006",
+   "when": "2026-10-01T11:33:26",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "86be7b10e24ec368be73c223e37fa67b881ec993f84eb9fad7476cf2f743a2c7",
+    "contact": "700f6bf8576f7d5a5c1f1ee07602a4ea6a873a9353c9855177a033e9d6be50b8",
+    "mesh": "5a73f56b69381ae6f6e6a578a1aef5ceab2769f464ceffa564e7619276595149",
+    "deck": "b41aaf3f36c96c584ce55a308fc18090e2bce822484e71a0dcd1a1f9c1c7bce3"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 193973,
+    "n_unique_pairs": 193973,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 1.62443e-09,
+    "n_periodic_flag": 6521,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 26.8
+  },
+  "lhsx_007": {
+   "case": "lhsx_007",
+   "when": "2026-10-01T11:33:53",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "875b69b227ee0f35c0a3e3c7d9d8200c82d626011f014a138ebaa38b936124db",
+    "contact": "76f0f8747415589edac622e77d3c8dc42531bd4be98e36af86ffd95851df1df6",
+    "mesh": "f7f61533d5b4898b2afb935a1194fbf0697819f1d26b5bd103d8c24f2076e468",
+    "deck": "06190854acfb213abcdf18c3aab3ee8db850cac24006f45d0cb49352da5ff5ee"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 53623,
+    "n_unique_pairs": 53623,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 1.38163e-08,
+    "n_periodic_flag": 2729,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 6.8
+  },
+  "lhsx_008": {
+   "case": "lhsx_008",
+   "when": "2026-10-01T11:34:00",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "31ff696c9b873927732f19840683447ea9e52346ce4b37ec6354530a95750bcc",
+    "contact": "52e184e2497baa2eb3feb2f8ca99d4d3a9ccb1025bf5db6a64b0821c96721347",
+    "mesh": "de68f89df784f81197755e6b4be3c9a29a436fb9c89426c65c03fb126c0f0212",
+    "deck": "3c3bc9c62a1ce7bb9f65b18afe44ca65f1695ba3fb764e3a33aee366fe8af545"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 362080,
+    "n_unique_pairs": 362080,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 4.50679e-09,
+    "n_periodic_flag": 10413,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 60.3
+  },
+  "lhsx_009": {
+   "case": "lhsx_009",
+   "when": "2026-10-01T11:35:00",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "fa0ae7095bd13a8f601a242ec2a29eb43822f88b8cc8c7454726b7d02ef6e5c8",
+    "contact": "5527d9b6d6686b5116ce7f22857ede2caa49cd20b6ab48304bee3b54cc4f100e",
+    "mesh": "2557dfad38e03359ccaa79cdac514e5831d08b1a9b90293722558da645f03a4c",
+    "deck": "9afcb680f545268dc081fe61f3de0e4122856c19618ab01b7b26fcb595b80fa6"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 119773,
+    "n_unique_pairs": 119773,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 4.80603e-09,
+    "n_periodic_flag": 5159,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 17.9
+  },
+  "lhsx_010": {
+   "case": "lhsx_010",
+   "when": "2026-10-01T11:35:18",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "15b653a17de393df5a8a017979e7ded705bdbd6fcdd48c78e856dea9394ce047",
+    "contact": "012eca2db7e7ee71ba9b6171004699e36744e8e370da55a7eae5cc4f4eed0aba",
+    "mesh": "d55284261c4014b539e2e9097f73813a23a1c3e056e8f307f0d29f08a5c9ed17",
+    "deck": "1003d9521d6dc114aa47bd8c09fa4f6241a3b4b12dbab432fc09d4fcc9b23051"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 341925,
+    "n_unique_pairs": 341925,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 1.97396e-09,
+    "n_periodic_flag": 10923,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 62.1
+  },
+  "lhsx_011": {
+   "case": "lhsx_011",
+   "when": "2026-10-01T11:36:20",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "0e0657c5dfd105ad1978d8a9bdffc3663ac8aaa7b0fa0da3c575ac4448623acf",
+    "contact": "e7962a791335ae969f9e05c84f45ef830dbf8ac6016add215bbe8cc0bcb409d5",
+    "mesh": "a4506665c42fb3f9ca8e6f7fe2dc9e8f91503d853db6aa4fb0ddd989f5945853",
+    "deck": "d19f63ef8cfb9ae9494131ed4dea773001e8f73339fcd307df76900db32530a1"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 355746,
+    "n_unique_pairs": 355746,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 3.85052e-08,
+    "n_periodic_flag": 9852,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 63.3
+  },
+  "lhsx_012": {
+   "case": "lhsx_012",
+   "when": "2026-10-01T11:37:23",
+   "type_map_fold": "2-type: 덱 판독 1:AM_S,2:SE ≡ 수확 JSON {'1': 'AM', '2': 'SE'} — 단일 AM 상의 이름만 다르다 (수확기 = AM · 웹앱 = 반지름 규칙 AM_P/AM_S)",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "standard",
+   "type_map": "1:AM_S,2:SE",
+   "sha": {
+    "atom": "949a4fe9489194f551710637f248a9573cc03df7f07e523fa6181f7cd35c5a7b",
+    "contact": "3b2d641e6d5fb45fb9504745b442126628abcb97c001c55552c17a3a557b7f22",
+    "mesh": "010d29681ddc3363c8a6800f4ba9bc4db3ebf141c8ed3adbbbeb15ef6f3b406a",
+    "deck": "7c959b2c29c8c17ce1f87333a116ff425cf1939cbfd490c0260f08d36ce1d769"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 82331,
+    "n_unique_pairs": 82331,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 5.46698e-08,
+    "n_periodic_flag": 3636,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 10.6
+  },
+  "lhsx_013": {
+   "case": "lhsx_013",
+   "when": "2026-10-01T11:37:34",
+   "type_map_fold": "2-type: 덱 판독 1:AM_P,2:SE ≡ 수확 JSON {'1': 'AM', '2': 'SE'} — 단일 AM 상의 이름만 다르다 (수확기 = AM · 웹앱 = 반지름 규칙 AM_P/AM_S)",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "standard",
+   "type_map": "1:AM_P,2:SE",
+   "sha": {
+    "atom": "2b3ac1203dd3b9eea2ff0eb179f064d5011cd1ef7193fada0e20e038aa2e0706",
+    "contact": "43db2a63fa776f482ff9f4bf78dbc4cb0557f34d7641de63e0f29d35a7d59615",
+    "mesh": "99317a1b9e6ba0989abd641b4888075509b448a5f7b2bc266e2a0c7dcfc03761",
+    "deck": "109ed624d5c8460c89794aba406f2f0e1d9c87e3d69ebf11bc564b6c6e1e1f30"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 110913,
+    "n_unique_pairs": 110913,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 2.31658e-08,
+    "n_periodic_flag": 4784,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 21.0
+  },
+  "lhsx_014": {
+   "case": "lhsx_014",
+   "when": "2026-10-01T11:37:55",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "33857a67ab1b0db32668930647f8dc887c5b655cdf20c60caf43379748fe99f4",
+    "contact": "f789a0e9160d49b903cdbdd9c7bca6e5cb6937879a54170150c5b7fd868717cf",
+    "mesh": "5249e2c9c2809eee696acdafdb9a114848e2d20a5abc32e42a5ea6156a8a9f2b",
+    "deck": "0f85a6a022efcd67954121640f46556241e15af717bda5a71ef2b3f712bbc92c"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 143646,
+    "n_unique_pairs": 143646,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 6.17927e-09,
+    "n_periodic_flag": 5282,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 22.0
+  },
+  "lhsx_015": {
+   "case": "lhsx_015",
+   "when": "2026-10-01T11:38:17",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "ce732f106a3298b08b0b5110677fe9edaeac3f27d7c42b71bd8cdf28fe070612",
+    "contact": "b8cffab2850c1ce1aca206e54d16a1d657eb53bbc4121abd0cc1c4b1ac4e1c47",
+    "mesh": "8c05e10ae83dbc29a0cada2354321c1905f9285a12d498cf6c0a4a4bd7fc0eba",
+    "deck": "03c79b635950a06dae3da4d223192422385d4fe70fa79c3fb823cbf0b8d56a62"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 143286,
+    "n_unique_pairs": 143286,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 4.74735e-09,
+    "n_periodic_flag": 5804,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 20.5
+  },
+  "lhsx_016": {
+   "case": "lhsx_016",
+   "when": "2026-10-01T11:38:37",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "eb2d99c576ee5903cac3919f6ede14567f654cdcd69e52a4f722c8e182a57a73",
+    "contact": "3a5d8992636ca9465c1310c17cdc68233d596ab572a7145675bac954bee51371",
+    "mesh": "f818967ac4663c18af11f1e14cd7e7af50cc11cbaea59640ab508098217cf201",
+    "deck": "17abaf187f7d0440e925166a26fc7247dc67a018357f9c80d68048c4f333274b"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 255628,
+    "n_unique_pairs": 255628,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 7.11016e-09,
+    "n_periodic_flag": 9732,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 50.5
+  },
+  "lhsx_017": {
+   "case": "lhsx_017",
+   "when": "2026-10-01T11:39:28",
+   "type_map_fold": "2-type: 덱 판독 1:AM_S,2:SE ≡ 수확 JSON {'1': 'AM', '2': 'SE'} — 단일 AM 상의 이름만 다르다 (수확기 = AM · 웹앱 = 반지름 규칙 AM_P/AM_S)",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "standard",
+   "type_map": "1:AM_S,2:SE",
+   "sha": {
+    "atom": "ad424579f061d03c212ac00277f12d31346e14b05be1b80b65c8131fa4e83daf",
+    "contact": "33791f8840f05e7097ade7fa927d6eaea4bc3ff377e8f6c93af7dea4e59a8c90",
+    "mesh": "44173a9e6d161b410222dfb50208a5878954a41836f0cdf6396dcf2d6acb5b12",
+    "deck": "ffd6da28d14fe0b265e3f6a5e8eefde6ad3efd29e1b563007eac89ddcc2afb47"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 134476,
+    "n_unique_pairs": 134476,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 4.17661e-08,
+    "n_periodic_flag": 5721,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 19.4
+  },
+  "lhsx_018": {
+   "case": "lhsx_018",
+   "when": "2026-10-01T11:39:47",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "d0a48ac8f24327e53727339378cff42118b98f66c00955b99b5974b71ae9005b",
+    "contact": "f0af6e55cf0e66725ade40730118433856a42604bd9ca8372afa2fbdf17667cd",
+    "mesh": "1699476a5c8d177eb004e5946c5bbe949304eeb5aafd4fe8394e7fcc9823064c",
+    "deck": "235ae2569bc6764973526e663ab6c31e9566bd963adf140d282a26b27a68f6f2"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 94921,
+    "n_unique_pairs": 94921,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 6.11095e-09,
+    "n_periodic_flag": 3589,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 14.0
+  },
+  "lhsx_019": {
+   "case": "lhsx_019",
+   "when": "2026-10-01T11:40:01",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "769c31ad6923ea6a1eea09016d50cb32ed2fa71ea15fbd9873548d701d99ac06",
+    "contact": "9ead127433dd92b8b1248c5b3534c16cafafef12a813518d3dd4090746de4e0c",
+    "mesh": "a17b25b57f3f3074a110ce4036857f0d20739cf3c64707bba721802f72cf0f9d",
+    "deck": "781d8e4af9a354b410b52ec22be20b7b84ad2c981122d1c5bc8f05bc1e820e09"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 131545,
+    "n_unique_pairs": 131545,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 9.84413e-09,
+    "n_periodic_flag": 4544,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 18.5
+  },
+  "lhsx_020": {
+   "case": "lhsx_020",
+   "when": "2026-10-01T11:40:20",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "cde03e893a32773d6c67aa44d39d3de65d01a3ea7223a46dc387d2dda4f2d929",
+    "contact": "7a9826d4a0b1c0b91b10634e739739c977be78e2a0e651a4fdac371310249e36",
+    "mesh": "4762c58bc3da9d7f9c55d776eabdd6cb4966cd025e92b4822ca2ef785fcff6a4",
+    "deck": "8ac57aa70a007aeeb9035001f296060ea5929653af2d8cd208925f45f5a70701"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 252855,
+    "n_unique_pairs": 252855,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 1.66554e-09,
+    "n_periodic_flag": 8052,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 42.8
+  },
+  "lhsx_021": {
+   "case": "lhsx_021",
+   "when": "2026-10-01T11:41:02",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "ae4413d8b184b1f9284067eadf4e351bc4c516ed5522dacdc2907d24a217b55e",
+    "contact": "568ff8185a57ca7f7e55e67dc3f914ca845ed6001266a0dc061453ec61775c00",
+    "mesh": "47d1498d44555d5153f9d84b559e0abb7971c97b262b5f3dd5367af7e47cf125",
+    "deck": "8573ca8ab3345cfadde5f552bc1e0725f11c0d0313fcd788e1368ad29c6b7f82"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 374182,
+    "n_unique_pairs": 374182,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 4.47885e-08,
+    "n_periodic_flag": 11237,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 71.6
+  },
+  "lhsx_022": {
+   "case": "lhsx_022",
+   "when": "2026-10-01T11:42:14",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "b304082322afb212cfcf908ef804d1ab67ac13b0dd35c23a6781d5c94422502d",
+    "contact": "1ae83a6da4ba7f3d49113ba8d9f3a05aca44442149ff52a2fb05ae5606a2347f",
+    "mesh": "9aa84ee6f4ee590efe0aa55bc30423bb93199301451f7b60615d7337146dea85",
+    "deck": "97a2a9bc09aaa741d9c4ae9f3872d9dfaac63e1fdd116e2cd16cdb98ccdcf204"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 155748,
+    "n_unique_pairs": 155748,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 4.63606e-08,
+    "n_periodic_flag": 6546,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 26.7
+  },
+  "lhsx_023": {
+   "case": "lhsx_023",
+   "when": "2026-10-01T11:42:41",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "cb9b8263754b7c607a2898727b20bf068201047e4cba440044826130dc82cbe9",
+    "contact": "1f9084c5a9952526146c43185aa93ad413e21cd42e80a2b4b59c79a3b249e8d7",
+    "mesh": "5d045c164a6dba16ec9666532f26d4924cf1f3d4124bcf4ae73d6070ddd53259",
+    "deck": "9914ff3b3a6c9ffdea3049d0fbe25861677a826103e65dd64c4df01175610a85"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 445622,
+    "n_unique_pairs": 445622,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 8.16567e-10,
+    "n_periodic_flag": 11885,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 91.7
+  },
+  "lhsx_024": {
+   "case": "lhsx_024",
+   "when": "2026-10-01T11:44:12",
+   "type_map_fold": "2-type: 덱 판독 1:AM_S,2:SE ≡ 수확 JSON {'1': 'AM', '2': 'SE'} — 단일 AM 상의 이름만 다르다 (수확기 = AM · 웹앱 = 반지름 규칙 AM_P/AM_S)",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "standard",
+   "type_map": "1:AM_S,2:SE",
+   "sha": {
+    "atom": "4070a0715330b5f89b0e72560a8af0a85d6deb1ab0ee962005e7cc90ee60eb12",
+    "contact": "b18146ec0a4c9d33c49b413dba41f86ffc7658d483b6dda124ef5c75c2d9f73f",
+    "mesh": "692ac22331ff34a2e1d54cb48e593af60896083a293d117c4272686a37511be0",
+    "deck": "d9ba53ddb15b06faee92807dd49f8e01a10ae482f789c95128eae0826200d6e9"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 109808,
+    "n_unique_pairs": 109808,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 3.18573e-08,
+    "n_periodic_flag": 4886,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 15.5
+  },
+  "lhsx_025": {
+   "case": "lhsx_025",
+   "when": "2026-10-01T11:44:28",
+   "type_map_fold": "2-type: 덱 판독 1:AM_P,2:SE ≡ 수확 JSON {'1': 'AM', '2': 'SE'} — 단일 AM 상의 이름만 다르다 (수확기 = AM · 웹앱 = 반지름 규칙 AM_P/AM_S)",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "standard",
+   "type_map": "1:AM_P,2:SE",
+   "sha": {
+    "atom": "0e3c1f267f637b56ccf626216480018da292ede1491662d8be6b5f40da9e31c2",
+    "contact": "fae542caded0a26e1e03dfd89324357a4af2b16b8f3e5282847ec8b3b41b0aba",
+    "mesh": "bf1c2fc5296296e1d7430c811d0381597d66cbe17a5ea634aa5e46a46668d69f",
+    "deck": "77188ccae0efdb5872b8168fd003e3922af6684780fd8d52f918e148ba5bdcd1"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 129679,
+    "n_unique_pairs": 129679,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 1.89444e-08,
+    "n_periodic_flag": 5524,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 24.0
+  },
+  "lhsx_026": {
+   "case": "lhsx_026",
+   "when": "2026-10-01T11:44:52",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "a8d80c77b0eaf3b4bebf0ca349ddd87d3dab512d66849ea06d51c15eb6b49532",
+    "contact": "f9f3dbcb6d24875ecfa2081310cffe2496fbfafa013bc3b38f9c4c5211ab0b06",
+    "mesh": "13fea0ae49b7435c39d4a56001e77ae1e7c4cb7690efc0078877cfb4a5e05196",
+    "deck": "d865139a4973b934b9a5592e41afba0e436e8674ae22b240e0aee69ff5738df4"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 68539,
+    "n_unique_pairs": 68539,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 9.06821e-09,
+    "n_periodic_flag": 3130,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 8.8
+  },
+  "lhsx_027": {
+   "case": "lhsx_027",
+   "when": "2026-10-01T11:45:01",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "9b7e6f41469de5dc146a6fcc8c7692d7e39f24ce5b2883ba48d1f434180bdb88",
+    "contact": "aae754e4f94c41e80a12272897c5a48e6eb5c8f916f02369165d2e2048a56b30",
+    "mesh": "05fb5ae27392f6a0f9d98d1dd5fce2770cb439c8769ce3ac13685e8f01130848",
+    "deck": "9e83fd875b8372ebf4ead979280ddf6b5b22a50bf857723ccd4807cd9046b79d"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 408679,
+    "n_unique_pairs": 408679,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 1.11743e-08,
+    "n_periodic_flag": 11327,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 68.2
+  },
+  "lhsx_028": {
+   "case": "lhsx_028",
+   "when": "2026-10-01T11:46:09",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "488ef4d6f16e0f04ed3438a99637f0226574f6944627b6a7bc259cddf340de5c",
+    "contact": "36f45005a0fcc74165c2a9fb0c1b6ffe4a0f2ae25c8d57492f76a69e87e592a8",
+    "mesh": "e8484a7bba9111c340354f8b3f2540085dd71791e345fdb0c2fc441faea774cf",
+    "deck": "281bc80c0c74601c2b21403f29f75ebdddfe7383e8bc09e948a4c74a4e25eb44"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 129556,
+    "n_unique_pairs": 129556,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 5.0599e-08,
+    "n_periodic_flag": 5454,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 22.5
+  },
+  "lhsx_029": {
+   "case": "lhsx_029",
+   "when": "2026-10-01T11:46:32",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "9653ab90a3f4f97bd2cd71ffc3b613de75813ed76e07700c90066c39c7744a63",
+    "contact": "578fb16d73bf9b08958faa2389608fe259d45f736bf6a5118f04c43c100f4be8",
+    "mesh": "94a7c2cfc5ab0382897f5c7e9244d472ce1508732ed04cfeaeab7a7434f637b6",
+    "deck": "e0487bdfa464ff64c3e4d58a588fe46039e7fbb6c8935b607184588394f32aa7"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 149353,
+    "n_unique_pairs": 149353,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 4.10491e-08,
+    "n_periodic_flag": 5733,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 22.0
+  },
+  "lhsx_030": {
+   "case": "lhsx_030",
+   "when": "2026-10-01T11:46:54",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "c17c002cc5278087e0ded8e08732948cf8dcb4ce9a7a672a4beb7c45f91d568f",
+    "contact": "b79507e50134b334256d8d249b5e59dcd90f17591a0e04144220dc84a40498ee",
+    "mesh": "d426f2449835f8499fdb30253fa22b9ace6a4e29281e5a77f181cf3d8d12eeb5",
+    "deck": "e73a262718baafda1e95a72f11c540476e0600bd2a93dbab3d5413e954705392"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 353729,
+    "n_unique_pairs": 353729,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 9.90018e-08,
+    "n_periodic_flag": 11214,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 70.4
+  },
+  "lhsx_031": {
+   "case": "lhsx_031",
+   "when": "2026-10-01T11:48:04",
+   "type_map_fold": "2-type: 덱 판독 1:AM_S,2:SE ≡ 수확 JSON {'1': 'AM', '2': 'SE'} — 단일 AM 상의 이름만 다르다 (수확기 = AM · 웹앱 = 반지름 규칙 AM_P/AM_S)",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "standard",
+   "type_map": "1:AM_S,2:SE",
+   "sha": {
+    "atom": "d033880cf2e2f1accf487220296b39787240454f2d8ea77c5ca0fa243e237533",
+    "contact": "2cc7c5cfbdf61dd19f924b6fb178dc9a8d1753e48a524644d4e3162e5a3d0e91",
+    "mesh": "a7183e0b08787a638ebca8c9fb14a7d300a86d1ab6d22a8236d0416a899aa94e",
+    "deck": "26399c738fa99450aa8808894688dcd5a277102ba7cfece4b2efa26756bffc37"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 333870,
+    "n_unique_pairs": 333870,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 2.80173e-08,
+    "n_periodic_flag": 8532,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 57.9
+  },
+  "lhsx_032": {
+   "case": "lhsx_032",
+   "when": "2026-10-01T11:49:02",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "3cc7f91df282c4b5e22493e29dcaa0a5306b90fa632ec99b07b30e30263b67dd",
+    "contact": "87b76e41bc1c153ee3490421d1e6d397099f10f4717dd000d9a260adbbe01d67",
+    "mesh": "4c9b95d37335a2b4af9a55343b2407de14c188015cbb91a5f1ff8573e70785f5",
+    "deck": "f6a0dee67f07afcaa2f53041b59a69f034e5d36471b219a81ee10a3792086217"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 214668,
+    "n_unique_pairs": 214668,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 6.11212e-09,
+    "n_periodic_flag": 7247,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 33.6
+  },
+  "lhsx_033": {
+   "case": "lhsx_033",
+   "when": "2026-10-01T11:49:36",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "0fd6af7c7d7568e157a88a9704a8bca3dd8623a13bdef1ccf1f830d695f5e3d1",
+    "contact": "f7e1e919a9f858105251af9f123ad17393f56cefe7086099d964f865189d1c39",
+    "mesh": "04864753e4f711cb24e1b57d98415ff14dbe15862e7b0c9eb7a680d6b4f8da57",
+    "deck": "f2c19129e95bc37766779b5cb711d07eb31249d557c9804cd5aca7538d44d155"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 143867,
+    "n_unique_pairs": 143867,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 2.75663e-08,
+    "n_periodic_flag": 5168,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 24.0
+  },
+  "lhsx_034": {
+   "case": "lhsx_034",
+   "when": "2026-10-01T11:50:00",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "b514ac998ea043752e7d8e6962919758db8c4bfaac9fd8c14e7b406cc0e9dbf8",
+    "contact": "3a014ead32b59bec25390721c4471f44777f7d3cab7e4b4681ae48f192cc2790",
+    "mesh": "2bed15a26d4f5ceaa02422c188834e47818e9a8f38867fb7f3a9ce5f07657cca",
+    "deck": "d157a9045a8096917b04974fbf541911c39c799d86bb6b61aaf3b343c2d45806"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 205553,
+    "n_unique_pairs": 205553,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 4.56809e-08,
+    "n_periodic_flag": 7447,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 36.2
+  },
+  "lhsx_035": {
+   "case": "lhsx_035",
+   "when": "2026-10-01T11:50:36",
+   "type_map_fold": "2-type: 덱 판독 1:AM_P,2:SE ≡ 수확 JSON {'1': 'AM', '2': 'SE'} — 단일 AM 상의 이름만 다르다 (수확기 = AM · 웹앱 = 반지름 규칙 AM_P/AM_S)",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "standard",
+   "type_map": "1:AM_P,2:SE",
+   "sha": {
+    "atom": "7adf0ecdbd65a3c236ca0d6a4f363f247ccbdf925322db9fa39731e3c64029b1",
+    "contact": "261f7fde401747f7ea97d97f78d72d96e3cb4ef5b0448533a5e8c8da7ad7a307",
+    "mesh": "2059ca1f7b670cf6ec5f052feb77d2a3acf7f3a80016141b2f35cb9f87360ed0",
+    "deck": "a26d9641c0cee8920e4f8996897299f57b1bc947ac16e6f2311496e1b450f06e"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 84700,
+    "n_unique_pairs": 84700,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 1.22204e-08,
+    "n_periodic_flag": 3858,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 12.1
+  },
+  "lhsx_036": {
+   "case": "lhsx_036",
+   "when": "2026-10-01T11:50:48",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "00a0a857be2ae72eb9bd6ac22d991fbc080451713a8c8e88941b848793e1c070",
+    "contact": "e83e73af4460001fb49c8d8b5116fac519e142f40717d19311872b6877c6ad2a",
+    "mesh": "b79fa4bcfe1365f3bbe95666f8a53c43cd55532bbb8d1065c9b35537107eaa88",
+    "deck": "559d3dd1f82cc97a6b333020ef97edb1b5b905f1afd948cb5965540f487d526d"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 131072,
+    "n_unique_pairs": 131072,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 1.44362e-08,
+    "n_periodic_flag": 5661,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 21.4
+  },
+  "lhsx_037": {
+   "case": "lhsx_037",
+   "when": "2026-10-01T11:51:09",
+   "type_map_fold": "2-type: 덱 판독 1:AM_S,2:SE ≡ 수확 JSON {'1': 'AM', '2': 'SE'} — 단일 AM 상의 이름만 다르다 (수확기 = AM · 웹앱 = 반지름 규칙 AM_P/AM_S)",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "standard",
+   "type_map": "1:AM_S,2:SE",
+   "sha": {
+    "atom": "8c216c7bf17525c0c468c34dc9d5c3b5ec99b1622319feb278ef6f8b17128aed",
+    "contact": "442bd450168e713507a5203f405fa3771e26c30038300cb6bd51cbaaff4c5f62",
+    "mesh": "1604d9f81ab0de1efc20aa242b797314d585e7b8ada5eeb0a2305c3531eb59f4",
+    "deck": "ab4bb32ac544e29767bd7cfa0542e77fa5e8da4d631fb17c301bc3e80fec2559"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 115946,
+    "n_unique_pairs": 115946,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 4.83322e-08,
+    "n_periodic_flag": 4061,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 14.5
+  },
+  "lhsx_038": {
+   "case": "lhsx_038",
+   "when": "2026-10-01T11:51:24",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "c2d3d40773e02ed5a30f4e497295b0df7ba93b567a4025e19b856fd4b6a56db2",
+    "contact": "3f920e4f8e4fc9117b191df3edad3c4f5b88bea37b7632a76e3943a3f8e2ee3f",
+    "mesh": "3fef33d046d8b756b5b2e8757a2289ab2a95baa9f756696f548294e1840d7140",
+    "deck": "40acfa4e4ea24eedb4a90de27aa9ff56abe10f8e560a91e1c9973b7529d07fed"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 361549,
+    "n_unique_pairs": 361549,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 9.58777e-09,
+    "n_periodic_flag": 10261,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 67.2
+  },
+  "lhsx_039": {
+   "case": "lhsx_039",
+   "when": "2026-10-01T11:52:31",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "1466f78ac0602ce6f7276533f36af65679debab559b7b26ce420654ffb7b0b85",
+    "contact": "69b99b446122105dd1867094219b5d7db6ddcd84c5bb5fca293d20eca9488282",
+    "mesh": "cd86e027bd880e0a30bf972a8c5f1e3241c3629db0302b7a745c9df6a49dd70c",
+    "deck": "217e8c8047f4811577eedb0cded5b5fd59900ebaa62f7d9d700e763ec4078993"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 330136,
+    "n_unique_pairs": 330136,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 1.67397e-09,
+    "n_periodic_flag": 10040,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 65.0
+  },
+  "lhsx_040": {
+   "case": "lhsx_040",
+   "when": "2026-10-01T11:53:36",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "59a584311ded3f25381771ed16f83276510630380abc8e84fff4b2a72cdd27cd",
+    "contact": "a110fbe3c3beb933e4545165f1ea03eb452519f9c3c713784b07aa83de4f9fb2",
+    "mesh": "8249317e9d03ff051d418cdd74bbecedfc7e3fc193619a176727f9964e4b15d7",
+    "deck": "af0fd788ecdb6f2415465fbb896ccc4afbedcd7ec3759a85b7d678d8660af20f"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 619716,
+    "n_unique_pairs": 619716,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 3.75217e-09,
+    "n_periodic_flag": 24605,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 114.3
+  },
+  "lhsx_041": {
+   "case": "lhsx_041",
+   "when": "2026-10-01T11:55:30",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "2897b62d002d1b8e9e37c89cdebd6ca25524e1bac56253f5aa968baf6a4f579d",
+    "contact": "d9ca2e140b85b187b6acc8bd5ea1b06c841e204936d1de8d57d50a9b88469a37",
+    "mesh": "7d08e32cd40a7a4dbd519be202288a102ffb2dce476322afe8b289eaaa76efbd",
+    "deck": "b024d957cd1d390f76e29b1bf6e8bb7f8db741e06fabf2b1b584e246173655f1"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 457991,
+    "n_unique_pairs": 457991,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 5.01589e-08,
+    "n_periodic_flag": 12536,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 98.5
+  },
+  "lhsx_042": {
+   "case": "lhsx_042",
+   "when": "2026-10-01T11:57:09",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "3a82dcd91e5b458a1a8c0f59fe328f159d75e32375d5228e7fb9133581140c97",
+    "contact": "d0997c9304d114fc6f95a3bae26517de8e5390d60c7e0d050f39d84494330cea",
+    "mesh": "1197adef7a914e301e5f1976bae453798d3c7c1f0cc755efc32508a736e24ef7",
+    "deck": "ee708a78af508cb212f428b038fde526c234a5c01e7757ff1379bcc95c86acda"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 174436,
+    "n_unique_pairs": 174436,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 3.36424e-08,
+    "n_periodic_flag": 6719,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 31.7
+  },
+  "lhsx_043": {
+   "case": "lhsx_043",
+   "when": "2026-10-01T11:57:41",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "8e1da04693b011d4493215b2ffa4fa823f0efe833efd174126f123f04d43e688",
+    "contact": "879c8929fa0553fcdcd69c77bfa8e9fc7ba5164582aea97f0e3e0b73ffea4f32",
+    "mesh": "e4bb17d0be3a91afbf7d6603661f11fd8f8dfd0c95a22e97417ece27ae73e2eb",
+    "deck": "be15682f265e54ef4a42d130b3f24b5ab19f39e5667825b76da005bf0eff8b9e"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 135931,
+    "n_unique_pairs": 135931,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 6.93453e-08,
+    "n_periodic_flag": 5358,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 20.6
+  },
+  "lhsx_044": {
+   "case": "lhsx_044",
+   "when": "2026-10-01T11:58:01",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "3848c2b33bc57c94bae5a7bf1ea66b3a04512e9065f16b0e94cc669ec1458b54",
+    "contact": "d846a88e9398528af36fc0ca1403c2b0b392f288b755ee798710b467750249c2",
+    "mesh": "9a7096ebc7eb0c7eb0c9ff75d8e9a732b5f6ccf3959ea23f99880b82d57bb168",
+    "deck": "e9ab3490662410852cd18b5fbb572d07d3dac6c4dcb463cb9740fbcdd12fa68a"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 249107,
+    "n_unique_pairs": 249107,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 6.14755e-08,
+    "n_periodic_flag": 7320,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 43.6
+  },
+  "lhsx_045": {
+   "case": "lhsx_045",
+   "when": "2026-10-01T11:58:45",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "51fffe3f5feee4d38f604896fa1efc20e46b0b93b3ad0d2ba2945386ae60414a",
+    "contact": "85549ad313cf71dbaf4b98a9015aa6659395ddae02b1e3614ce695a5cf198ef2",
+    "mesh": "52397697b9aeb9fb6852eac508cfc2657c87a558f2586d191cf3cb43ef5c849f",
+    "deck": "d23f1471095ba2a9e42d744082d5b5e10ac0db294207ae348a4f6c4f56be5190"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 416313,
+    "n_unique_pairs": 416313,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 1.4141e-08,
+    "n_periodic_flag": 10053,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 75.9
+  },
+  "lhsx_046": {
+   "case": "lhsx_046",
+   "when": "2026-10-01T12:00:01",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "b6e985e810a8e78b5f02d75d4f7b6abdbfebcd42749f55ebd60e89799da233fb",
+    "contact": "28c3b255feb6ed39c27f544d7ed3c3fbb7d7b3085ffe86553588c9f19e64980d",
+    "mesh": "0e313c3f66ffd92034eb7f7a0fd6c37c84dce0b4b80343d46e1db0a8d2cab04a",
+    "deck": "3506e3eec02334d52370b7f22ad7c91f164a20357da10d40a5646e061e61aae8"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 293881,
+    "n_unique_pairs": 293881,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 1.56648e-08,
+    "n_periodic_flag": 8217,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 46.1
+  },
+  "lhsx_047": {
+   "case": "lhsx_047",
+   "when": "2026-10-01T12:00:47",
+   "type_map_fold": "2-type: 덱 판독 1:AM_S,2:SE ≡ 수확 JSON {'1': 'AM', '2': 'SE'} — 단일 AM 상의 이름만 다르다 (수확기 = AM · 웹앱 = 반지름 규칙 AM_P/AM_S)",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "standard",
+   "type_map": "1:AM_S,2:SE",
+   "sha": {
+    "atom": "572b92447b2e8c99e24dbaca63f1e9c3b84da87ade5ace16442bf58c45069be6",
+    "contact": "f9259839f66871aebcb8d6be33d79aeaa2c4d30d6bd74d8cc3550b876925bfeb",
+    "mesh": "5f9fecee7faeec5fc1e344c7a8d85f8c3827682354931e82ed115069b03fbbe6",
+    "deck": "5fd4acfc7659f714f3fb958204a80b2a93427a150c5d59fc37596d56be798d51"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 165355,
+    "n_unique_pairs": 165355,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 4.93524e-09,
+    "n_periodic_flag": 5925,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 28.2
+  },
+  "lhsx_048": {
+   "case": "lhsx_048",
+   "when": "2026-10-01T12:01:15",
+   "type_map_fold": "2-type: 덱 판독 1:AM_S,2:SE ≡ 수확 JSON {'1': 'AM', '2': 'SE'} — 단일 AM 상의 이름만 다르다 (수확기 = AM · 웹앱 = 반지름 규칙 AM_P/AM_S)",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "standard",
+   "type_map": "1:AM_S,2:SE",
+   "sha": {
+    "atom": "95cd35ab97b0cf1ea3d68e81c9aed9b0f9d6609f9e16acfc5675a6bcb737341f",
+    "contact": "5c8275729f0493d2bb9ad782354013c7e2104493d78fe144e356d806ae9e72c4",
+    "mesh": "eb6b6244265a19bae6a9eab9bf5793ff2651803f0f77bc8dbee85aa762912f26",
+    "deck": "e2da1e8125ed5532e067e63518607873132e5dd724ac2436329a2a5e04b6defa"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 80034,
+    "n_unique_pairs": 80034,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 2.48056e-08,
+    "n_periodic_flag": 3514,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 10.9
+  },
+  "lhsx_049": {
+   "case": "lhsx_049",
+   "when": "2026-10-01T12:01:26",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "65d9cae74b5504ac9aae9ac3e64cdedaf0fb676462ac53cd8051613a90a6ac42",
+    "contact": "d2eb842eaab85a1f112902041dd64cb50274d38793dd3199e90b1832d9d4e539",
+    "mesh": "f8556c5e98f378112be1cabab0c50616c05198ca2740b5c51e99ae56b7fcd92b",
+    "deck": "12e5608cd04e15ba5f29b794a71280dd41452d8595577cc4652b8f118bc98e7a"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 493717,
+    "n_unique_pairs": 493717,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 2.64036e-09,
+    "n_periodic_flag": 11472,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 95.4
+  },
+  "lhsx_050": {
+   "case": "lhsx_050",
+   "when": "2026-10-01T12:03:02",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "9d7c0b26ff12a39b45a5ef62ce8e3eb197f7776c902b6af6410ba0510ee0733f",
+    "contact": "fddac0ff415c40b9183343d5e93b2288178cf850c079ec3e0de847f979aefa90",
+    "mesh": "d4609c6c3855bedb568776e0d924921222fe0a5c22221ac61904d82a3e523aaa",
+    "deck": "e5191dabda09eb8fbce6d9caea4b3c0dfa5fb9a3c5d50c49e7986301770bff3c"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 244113,
+    "n_unique_pairs": 244113,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 2.9272e-08,
+    "n_periodic_flag": 6981,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 40.9
+  },
+  "lhsx_051": {
+   "case": "lhsx_051",
+   "when": "2026-10-01T12:03:43",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "a31ff724516d889e650c63e638e331bea594dd9f380c662411c0340239a8c91f",
+    "contact": "b3c36a6d0fc82ea8baf4ef8e72e99cb777ba5662fe5cfa5daaeb8f65196bc6ab",
+    "mesh": "598a50d06cac18ccdacd36cf6d5bef98eab9a2cfbc92d8d5d18eafd3dd8e254f",
+    "deck": "e172bacb83ec16ffc4367632788c409d8465d495133c3384dccf46ef93a1ef4a"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 204089,
+    "n_unique_pairs": 204089,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 8.39195e-08,
+    "n_periodic_flag": 7327,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 39.2
+  },
+  "lhsx_052": {
+   "case": "lhsx_052",
+   "when": "2026-10-01T12:04:22",
+   "type_map_fold": "2-type: 덱 판독 1:AM_S,2:SE ≡ 수확 JSON {'1': 'AM', '2': 'SE'} — 단일 AM 상의 이름만 다르다 (수확기 = AM · 웹앱 = 반지름 규칙 AM_P/AM_S)",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "standard",
+   "type_map": "1:AM_S,2:SE",
+   "sha": {
+    "atom": "2725f5f1dddf950ed8e523ee4e03a7946f98571542eed1a6d10466ec656483cd",
+    "contact": "9f72ec2b8a2491f68f7765b4231a63512640e0022a80767cb306202c38766858",
+    "mesh": "e6fd42fddd265a949a241c0dd27364f41a4e68b964cc9b53d996edcc2711e473",
+    "deck": "f01044004bc0ef6d20b4ab43b1682beefc46be8072da5e9dd64b2e81c631e479"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 124407,
+    "n_unique_pairs": 124407,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 3.20677e-08,
+    "n_periodic_flag": 4671,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 20.6
+  },
+  "lhsx_053": {
+   "case": "lhsx_053",
+   "when": "2026-10-01T12:04:42",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "14ed62116ad48b0c6668d8ecabf1c88b898c64ed50269b64f5f08691a4975dd1",
+    "contact": "c243b7c80f59aa26af62e72d76264231f9982250c6cee071700a52d37c60b86f",
+    "mesh": "85caf660dcf545faaeac59fc08b7cdb85adfb6be1ad38d5dd9db996c113da394",
+    "deck": "5e3734b1f19a261b3cae36983052b12ec199a3db7a6158bf84d10a0edac0ae44"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 199264,
+    "n_unique_pairs": 199264,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 3.8662e-08,
+    "n_periodic_flag": 6509,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 33.1
+  },
+  "lhsx_054": {
+   "case": "lhsx_054",
+   "when": "2026-10-01T12:05:16",
+   "type_map_fold": "2-type: 덱 판독 1:AM_P,2:SE ≡ 수확 JSON {'1': 'AM', '2': 'SE'} — 단일 AM 상의 이름만 다르다 (수확기 = AM · 웹앱 = 반지름 규칙 AM_P/AM_S)",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "standard",
+   "type_map": "1:AM_P,2:SE",
+   "sha": {
+    "atom": "c366c68da122454d7bc883a8c43aaaec990a718f8350bcdda9b77f6902046c99",
+    "contact": "8e13f5cbcaf42381363f2985e3c56bd839500a050fb49e1926f37b27b839f20a",
+    "mesh": "c280c5e741b29be8a3591ae0c2b9f5720163c8211d24aa1c0bd896984650b29e",
+    "deck": "735a08e0770024ff669f3f64ca1d18c49e855479ee4997906b1662caba49de18"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 207740,
+    "n_unique_pairs": 207740,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 1.18335e-08,
+    "n_periodic_flag": 7360,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 37.6
+  },
+  "lhsx_055": {
+   "case": "lhsx_055",
+   "when": "2026-10-01T12:05:53",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "f361c88657e97b2a0b4ea0199312e1b97600054a2cdffc50f3b0d942677e5378",
+    "contact": "7cc591902e50c1e1f8943245c6760d37702cfcc2a9890a572d65c8dacd416420",
+    "mesh": "5b3ea56d86baae3146892bd600080e5969e1b881f403040cef32453537755288",
+    "deck": "ff601203764feccdb310be53e143fc421b4a3aa73209b9d74021ffd219ae510a"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 153445,
+    "n_unique_pairs": 153445,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 3.91866e-09,
+    "n_periodic_flag": 5466,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 20.9
+  },
+  "lhsx_056": {
+   "case": "lhsx_056",
+   "when": "2026-10-01T12:06:14",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "4497d64d7842c4f92648ddb1ab1009036ca5d9a194ae4054fc8a627a36b56a13",
+    "contact": "f7873635665eb7e536220372ae303730742d833956b1abf5fce22933beee3e00",
+    "mesh": "ee5ca66401e8abc85b206867c795cc3a42d39a8479f035b458977db876ad64c5",
+    "deck": "4242629fce20fb0b38c40567671282cefe03ec77d58d8dc521607a982a0f90ad"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 442861,
+    "n_unique_pairs": 442861,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 3.86687e-09,
+    "n_periodic_flag": 10658,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 71.8
+  },
+  "lhsx_057": {
+   "case": "lhsx_057",
+   "when": "2026-10-01T12:07:26",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "f4ddb9585a6a4c4dcc5c5c190071084f4f80b1eae035b0289fb5e4846376642b",
+    "contact": "76242d278b6d2f45302cf5718b28b13a02546f3c03e09b60c7a795c28a2b38ce",
+    "mesh": "140b72512a1bbde8cb21b1c814e8451f4eb5a50152e2b20a510b26ed3c88d573",
+    "deck": "857e5c9e8a5a512aa4a8665c28add675d6313d5c2b518d5ec0736959e6941400"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 504245,
+    "n_unique_pairs": 504245,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 3.60837e-08,
+    "n_periodic_flag": 11421,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 95.0
+  },
+  "lhsx_058": {
+   "case": "lhsx_058",
+   "when": "2026-10-01T12:09:01",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "9c22f398911bdd959f7c1a5ee692fc8a3ec55da9a01829247e2e9f63bd46a3b8",
+    "contact": "03164060a40cb8cee17223a5e087e93259ce353eb7908b63164d674262de2e8e",
+    "mesh": "212b9bb107ff42621e960d5b59ac50e9ed56dad2bbc0a709d9bef1083613189b",
+    "deck": "76fd4cd9e30520fafa0c523effebe27d8c636e0ab1bfbe026d352ca658b61bed"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 504152,
+    "n_unique_pairs": 504152,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 3.23353e-09,
+    "n_periodic_flag": 10934,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 80.3
+  },
+  "lhsx_059": {
+   "case": "lhsx_059",
+   "when": "2026-10-01T12:10:21",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "f84ea8bee50aa249b53cf90e337c6bd13ee7f889365e8cc2077172ab0622cde5",
+    "contact": "066052633c568c7cd1b2c85eb134b81c789ff6f1e655aae1361cb0355a062efa",
+    "mesh": "2f744619c5da33685c5b598bbefa058a9dc50f3ba7a494cd2f2815fc63ce5003",
+    "deck": "702273b32fee2a29f790c136c0bc51ae880b6c802b9c1198c43738136583f27c"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 318704,
+    "n_unique_pairs": 318704,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 5.24396e-08,
+    "n_periodic_flag": 9015,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 58.6
+  },
+  "lhsx_060": {
+   "case": "lhsx_060",
+   "when": "2026-10-01T12:11:20",
+   "type_map_fold": "2-type: 덱 판독 1:AM_S,2:SE ≡ 수확 JSON {'1': 'AM', '2': 'SE'} — 단일 AM 상의 이름만 다르다 (수확기 = AM · 웹앱 = 반지름 규칙 AM_P/AM_S)",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "standard",
+   "type_map": "1:AM_S,2:SE",
+   "sha": {
+    "atom": "eb26c3c96287121b5bd84672dc4a17b513d888509b44a34214643173120d3ed8",
+    "contact": "daf9290288ccf93c10d6dd44a198b76954f4aeef9698c4e5f7a21530524e7c17",
+    "mesh": "e1c6a6346ea48e40c0132fdaac91798bc082e56d3c7f7cb4d7d4526f12fc54e9",
+    "deck": "7146f72635124e137153aaa69d838d42e26bdfec5775df4dd58704fa3d1abea3"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 160366,
+    "n_unique_pairs": 160366,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 7.91578e-08,
+    "n_periodic_flag": 5759,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 28.1
+  },
+  "lhsx_061": {
+   "case": "lhsx_061",
+   "when": "2026-10-01T12:11:48",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "154094ae87d6e332f4d08bd874162e7f98958eb258db81a29a42ca33ecf7e035",
+    "contact": "eeb749e960da83e50d111a25e9078a92603587befd00a684d203b1cce8c0032a",
+    "mesh": "7cce08be4dd4c4f36c0e38a78a150f6d27093e5666d895ccf9c8513e6bcc20e5",
+    "deck": "866e39bae4296175ecd4dee721572b353bd5d957cfd53b18d7f133838da2854e"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 175328,
+    "n_unique_pairs": 175328,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 4.27324e-08,
+    "n_periodic_flag": 6536,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 33.4
+  },
+  "lhsx_062": {
+   "case": "lhsx_062",
+   "when": "2026-10-01T12:12:21",
+   "type_map_fold": "2-type: 덱 판독 1:AM_S,2:SE ≡ 수확 JSON {'1': 'AM', '2': 'SE'} — 단일 AM 상의 이름만 다르다 (수확기 = AM · 웹앱 = 반지름 규칙 AM_P/AM_S)",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "standard",
+   "type_map": "1:AM_S,2:SE",
+   "sha": {
+    "atom": "99e1e2e27f880494441be796bc553d9f8e21f0a11b6feb5b74d7c84060965214",
+    "contact": "ff514a32fe78fb090a9797f6bb3ec5aba36d1f5efe9ebc00f3225be929ba86d6",
+    "mesh": "11d9684fa988848cd73d2a8f399bc09456a5618520fc108695305d54a8326916",
+    "deck": "3a1fc3451277dee3938d89bfe126d685c8d2c6179409fde6f9bbd0f522f42163"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 185490,
+    "n_unique_pairs": 185490,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 3.98093e-08,
+    "n_periodic_flag": 5750,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 30.4
+  },
+  "lhsx_063": {
+   "case": "lhsx_063",
+   "when": "2026-10-01T12:12:52",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "34d19b463239cce7d1cf0bf08e07c1b4c05e78259afa99e32f621e7141d111a5",
+    "contact": "01e68d415cc210d572ceb30f748ddf331b34ad7fe75cccd78b3f26ef15b77650",
+    "mesh": "ece2f3ec274af01d606d5dba0cf912fed2164e9370fb1c89259a24de178c7947",
+    "deck": "a6051ef907d3a5ee798b6ec448c734415804fed63de1ae92451fd093fb5084fa"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 114978,
+    "n_unique_pairs": 114978,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 8.4719e-08,
+    "n_periodic_flag": 4779,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 18.1
+  },
+  "lhsx_064": {
+   "case": "lhsx_064",
+   "when": "2026-10-01T12:13:10",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "8421206aaf16657da224cb7aa088cc1032d051a9da6d58b6e1aa81cdb61be825",
+    "contact": "a467e7f65fdc2fdc9318661e526e4e319b8a5539a5ae3bd35d6bf181b60cb4ec",
+    "mesh": "61240b911e27acd1ea9ad2448df74055dc05f979e4b668ea37f678f201f2baa2",
+    "deck": "7641febdc49d99c2c88a7955813c3795eba6e16e5457921fa8f77026ca8eb17e"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 158774,
+    "n_unique_pairs": 158774,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 7.25131e-09,
+    "n_periodic_flag": 5220,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 26.3
+  }
+ },
+ "stop_after": "contact",
+ "harvest_dir": "docs/data/lhsx_descriptors_cov_1e09f661d",
+ "cohort": "docs/data/lhsx_descriptors_20260925/_cohort.tsv",
+ "runs": [
+  {
+   "started": "2026-10-01T11:30:47",
+   "git_sha": "d1ec42fbad2a5995059577c77031d8573a3ce3cd",
+   "dirty": true
+  }
+ ]
+}
