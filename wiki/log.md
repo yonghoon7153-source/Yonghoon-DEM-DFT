@@ -140,3 +140,14 @@
 - 검증(내가 독립 실행): sha256 일치 · doi 가 **본문 머리 30행에 2회** · 제1저자 Qu 머리에 있음 · **Lee 오염어 0**(Chung·cej·Eunbyoul·KIST·Solartron·cryo-milling 전부 0) · Qu 고유어 LVDT 12·fixture 26·정압 47·정용적 46 · **절 0–18 연속** · raw 15편 본문 해시 전부 고유 · lint 0 errors · smoke 0 failures(207건).
 - 질문 카드 2장의 `sources:` 를 **복원**하고 임시 경고 블록을 제거했다.
 - **재발 방지 확장** (에이전트 제안을 받아 `paper-curator.md` Procedure 4 에 박았다): 봉인 직후 **① 본문 첫 300자 출력 ② frontmatter 의 doi 가 본문 머리 30행 안에 있는지 카운트** 를 의무화하고 보고에 출력을 붙이게 했다. 그리고 **조각을 concat 할 때는 직전에 각 조각의 바이트 수를 확인**하라고 적었다 — 이번 사고의 실제 기전이 그것이다.
+
+## [2026-10-05] update | 복합양극 ball milling 조건 전수 대조표 (digest 12편) + 중복 2편 차단
+- 사용자 요청: "모든 논문의 복합양극 제작 방법도 표에 추가 — ball milling 조건만 간단히". `comparisons/composite-cathode-mixing-routes.md` 에 **ball milling 조건 전수 대조표**를 추가했다 (논문 · 경로 · 장비 · rpm · 시간 · BPR · 볼·용기 · 분위기). 수치는 각 digest 의 `compare:` 블록에서 왔고 이 표는 **사본**이다 (정본은 digest → 원문).
+- ★ **표에서 읽힌 것 중 가장 큰 것: BPR 을 적은 논문이 12편 중 3편뿐이다** (cronk 1:30 · jeong 50:1 · zhang ≈30:1). BPR 은 밀링 에너지를 정하는 1차 변수인데 대부분이 안 적는다 → **논문 간 "밀링 강도" 비교가 원리적으로 불가능하다.** 볼 재질·지름은 2편, 분위기는 5편, rpm·시간은 8편만 적는다. **4편(kim2023·wan2021·wang2026·yu2024)은 한 글자도 안 적고**, 그중 wang2026 은 Experimental 절 자체가 없고 yu2024 는 Methods 가 SI 에만 있다.
+- 같은 Fritsch P7 안에서도 좌표가 제각각이다 — qu2025 **300 rpm 4 h one-step** · lee2026 250 rpm 6.5 h · huang2026 350 rpm 4 h · wang2023 **350 rpm 10 h** · kim2025 **600 rpm 6 h**. cronk2026 은 Retsch **500 rpm 1 h** 로 가장 짧고 세다. zhang2026 **1400 rpm** 은 3D 스윙밀이라 계열이 달라 직접 비교 불가. → **밀링 조건과 성능의 대응은 이 표로 안 나온다**(조성·활물질·SE 가 전부 다르다). 한 논문 안에서 밀링만 바꾼 스캔을 한 것은 **kim2025 뿐**(200/400/600/800 rpm, 600 최적).
+- **간헐 밀링(on/off)을 쓰는 논문이 셋** — jeong 5/10 min · zhang 15/5 min · lee 30/10 min. `[해석]` 황의 m.p. 115 °C 를 의식한 설계로 보이고, **연속 밀링(cronk 1 h)과는 같은 "시간" 이어도 열 이력이 다르다** — Cronk↔Jeong 이 밀링 효과를 정반대로 보고하는 이유의 후보다.
+- **S8 계는 밀링 전 멜트 함침(155–160 °C, 10–12 h)을 넣는다**(huang·jeong·kim2025·wang2023 넷). **우리 Li2S 계에는 해당하지 않는다**(Li2S m.p. 938 °C).
+- 우리 조성과 겹치는 둘의 밀링이 반대다 — **qu2025(33:17:50) one-step** vs **lee2026(30:20:50) two-step**. 둘 다 작동하고 절대 용량을 적은 쪽은 lee2026 뿐이다.
+- 표의 **빈칸이 곧 우리 기록 체크리스트**다: 장비·용기 부피·볼 재질/지름/개수·총 투입량·**BPR**·rpm·순 밀링 시간과 on/off 주기·분위기·단계별 조성·(S8 계면) 멜트 함침·성형 압력.
+- **중복 업로드 2편을 digest 만들기 전에 차단했다**: `01b016c2…`(= kim2025, DOI 10.1002/aenm.202500867) · `f18c115a…`(= zhang2026, DOI 10.1002/aenm.71471). 업로드 PDF 의 DOI 를 기존 digest 의 `doi:` 키와 대조하는 방식으로 잡았다 — 파일 바이트는 달라도 같은 논문이었다.
+- 검증(실행 출력): lint 0 errors · smoke 0 failures(219건) · `/doc/comparisons/composite-cathode-mixing-routes` 200 (표 렌더 확인).
