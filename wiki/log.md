@@ -3076,3 +3076,9 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 격리: 버리는 venv 2 (pybamm 26.9.0.0 · PyProBE 2.6.0) · `git archive 9ca6df54` 사본 · 운영 환경 · 등록부 · 산출물 불변 · 저장소 읽기만 (grid_curves_v4 parquet)
 - 갱신: [[pybamm]] (#5755 열린 물음 → 실측 2.7 mV 로 닫힘 · 상한 고정 승인 후보) · [[pyprobe]] (confidence low → medium · 실측 표) · [[22p-physics-or-degeneracy]] Evidence For + Status Log · [[fitting-degeneracy]] · [[daily-github-briefing-triage]] (결과 기록 규약 · heredoc 금지) · index 2 줄
 - 하지 않은 것: requirements 변경 (RUN_SCOPE) · PyProBE 형상만 시험 · 격자 수렴 물음
+
+## [2026-10-01] ingest | PyProBE 형상만 (용량 비제공) 시험 — np-lip 2 자유도 정리의 수치 확인
+- raw: `raw/repositories/2026-10-01-pyprobe-shape-only-on-synthetic-truth.md` (출력 원문 · 손계산 대조 · 추가 함수 임베드) · 버리는 venv 재설치 · 운영 환경 불변 · 12 s
+- 결과: 적합 창은 용량과 무관 · 모드는 `1 − (1 − mode)/SOH` 로 되감김 · 균일 10 % 손실 조건 → 0/0/0
+- 갱신: [[pyprobe]] 표 행 추가 · [[np-lip-ocv-reparametrization]] 수치 확인 절 · [[22p-physics-or-degeneracy]] Evidence For + Status Log
+

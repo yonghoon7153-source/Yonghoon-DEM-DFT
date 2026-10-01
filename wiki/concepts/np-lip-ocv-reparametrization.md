@@ -2,7 +2,7 @@
 title: N/P·Li/P 재매개화와 2 자유도 정리
 description: "The SOC-normalized full-cell OCV shape is governed by exactly two ratios, so LLI/LAM_PE/LAM_NE enter it only projectively — Lin & Khoo 2024"
 created: 2026-09-03
-updated: 2026-09-03
+updated: 2026-10-01
 type: concept
 tags: [battery, degradation, research]
 sources: [raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md]
@@ -201,6 +201,15 @@ inventory results in a shift in electrode-specific utilization"). `[해석]`
 pristine 값)이 Cui 원문에 없으므로 **정량 환산식은 없다** — 정의의 대응만
 확인됐고 수치 변환은 안 된다.
 
+
+## 수치 확인 (2026-10-01 · 우리 합성 truth × PyProBE)
+
+[[pyprobe]] 에 우리 PyBaMM 합성 truth 를 넣고 **용량 열만** 바꿔 보았다 (`raw/repositories/2026-10-01-pyprobe-shape-only-on-synthetic-truth.md`). 적합된 전극 창 4 개는
+용량과 무관하게 같고 (형상이 정한다), 모드는 용량이 없으면 `1 − (1 − mode_true)/SOH_true` 로 되감긴다 — 세 모드가
+똑같이 10 % 줄어든 조건은 **0 / 0 / 0** 으로 보인다 (LLI 0.10 단독은 LLI −0.025 · LAM_pe −0.137 · LAM_ne −0.161). 이 정리가
+말하는 "형상은 2 자유도" 가 공개 도구에서 그대로 나온 것이고, 세 번째 자유도 (공통 인수) 는 **절대 용량 한 숫자**가 닫는다.
+우리 파이프라인이 용량을 쓰는 방식이 그래서 결과를 좌우한다 ([[fitting-degeneracy]] · [[22p-physics-or-degeneracy]]).
+
 ## 관련
 - [[halfcell-window-parametrization-lineage]]
 - [[nullspace-coefficient-interpretation]]
@@ -209,3 +218,4 @@ pristine 값)이 Cui 원문에 없으므로 **정량 환산식은 없다** — �
 - [[dubarry-mechanistic-mode-synthesis]]
 - [[22p-physics-or-degeneracy]]
 - [[pvs-sev-lli-lampe-separability]]
+- [[pyprobe]]

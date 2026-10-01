@@ -200,6 +200,10 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   SOC 범위를 5–10 % 자르면 **RMSE 는 내려가면서 답이 1–2 %p 움직이고** (혼합 LAM_pe 0.101 → 0.083), 초기값을 바꾸면
   RMSE 2–4 배의 먼 골 (LAM_pe −0.5 · LAM_ne −2.6) 에 떨어진다. dVdQ target 은 완벽한 합성 곡선에서도 불안정 (RMSE 18–283 mV).
   → flat valley (범위 의존 · 컷오프 끝의 정보) 와 multimodal (초기값 의존) 이 **둘 다** 보이고, 전자는 RMSE 로 걸러지지 않는다.
+- **[2026-10-01 추가] 같은 PyProBE 실험에서 용량 열을 빼면 (형상만)** 세 모드가 똑같이 10 % 줄어든 조건이 **0/0/0**
+  으로, LLI 0.10 단독이 LLI −0.025 · LAM_pe −0.137 · LAM_ne −0.161 로 나온다 — 모드가 `1 − (1 − mode)/SOH` 로 되감긴다
+  (`raw/repositories/2026-10-01-pyprobe-shape-only-on-synthetic-truth.md`). [[np-lip-ocv-reparametrization]] 의 2 자유도가 수치로 확인됐고, 그 셋째 자유도를 닫는 것은 **절대 용량
+  한 숫자**다. 위 "복원" 은 용량을 알려 준 덕이고, 범위 · 초기값 의존 (1–2 %p) 은 그 위에 더해지는 별개의 축이다.
 
 ## Evidence Against
 - (방향성 관측, 인용 금지 등급) half-cell 기준(Case 1)과 dQ/dV 항 추가가 복원
@@ -1063,6 +1067,7 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   합성 truth 가 **최대 2.7 mV** (방전 끝) 움직인다 · 균일 격자 강제 시 6e-8 V → 상한 고정은 게이트 승인 후보. 참값
   자체의 "정답" 이 바뀌는지는 별도 물음. ② [[pyprobe]] 판정 대상 실험 — Evidence For 에 새 항목 (위). 미착수로 남는 것:
   **형상만** (용량 비제공) 으로 같은 시험 — [[np-lip-ocv-reparametrization]] 2 자유도의 직접 검증.
+- **[2026-10-01 추가] PyProBE 형상만 시험 완료** — Evidence For 에 추가. 미착수로 남는 것 없음 (이 도구 축에서).
 
 ### 이 카드가 속한 논지 (2026-09-03)
 
