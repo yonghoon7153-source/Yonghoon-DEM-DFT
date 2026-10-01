@@ -252,3 +252,69 @@ R2-a "production 진입점이 없다" → 내부 전달 호출 (`src/fitting.py:
 | m06 재배치 양성 | 산출 디렉터리를 다른 자리로 복사해도 `base_config_결속` 통과 (논리 키 · 스냅샷만 씀) |
 
 RED 에서 "통과" 로 실패하는 node 가 실제 결함 증거다 (m01–m04). 새 helper 부재로 떨어지는 node (m05) 는 무관 예외로 따로 센다 (84차 §6-a 교훈).
+
+## §13 라운드 2b 시작 전 고정 표 — R2-a 실물 v6 leg gate · R2-c 이름 체계 · G84-N2 (2026-10-01 · 코드 변경 전 · 사용자 승인 "1번 3번 진행하자" · 원장 §126)
+
+> §1–§12 불변. 86차 접수 (원장 §125) 로 라운드 2a 가 종결됐고, 2b 는 84차 회신 (원장 §120) 의 R2-a 방향 수용 · R2-c 방향 수용 · G84-N2 (P1 · 2b) 를 닫는다. 좌표는 `632e4b0a` (RUN_SCOPE digest `f1f4378f46610f08`) 실측. **실행 GO 아님** — 진입점을 만들되 운영 원장에 v6 계획 항목을 적지 않는다 (그것은 실행 승인 뒤 사람의 일).
+
+### 13-1. 범위
+
+| 항목 | 내용 |
+|---|---|
+| 항목 | R2-a (1) 승인 spec 의 v6 버전 분기 (2) 원장 계획 index 의 `planned-leg/v4` 자리 (3) v6 문맥을 구성해 `run_fit(stage3=…)` 에 넘기는 production 진입점 **한 곳** · R2-c 세대 이름 체계 · G84-N2 (v5 spec digest 골든 · v6 stage3 필수 · legacy fallback 거부) |
+| 생산 파일 상한 | `tools/preserve.py` (spec 축 · 계획 index) · `src/fitting.py` (진입점 함수 · CLI 인자 · 승인 분기) · `run.sh` (옵션 전달) — 셋 다 고쳐야 한다는 뜻 아님 · **`src/io.py` 는 손대지 않는다** (validator 불변 → 두 leg 영수증 검사 집합 불변) · 밖 (`scripts/` · `configs/` · `requirements*.txt`) 이 필요하면 멈추고 묻는다 |
+| 함께 | `tests/test_gate87_round2b.py` (RED 먼저 · `conftest._GATED_ENTRYPOINT_MODULES` 등록) · `docs/22p_gap/mutation_replay.py` (`-g87`) · 현행 영수증 (`ba51cd20caa10b7b`) history 보존 → validator identity 가 움직이면 기존 두 leg 영수증 **1 회** 재생성 (안 움직이면 재검증만 — 실측으로 정한다) → 전체 회귀 · smoke · **등록부 전체 변이 재생** → GATE87 |
+| 하지 않음 | 실행 GO · 새 연구 leg · 운영 원장 (`LEG_PRESERVATION.yaml`) 에 v6 계획 항목 작성 · `source_digest_generations` 등록 · p_ini 구현 · `--mode all` 의 v6 지원 · `scripts/plan_leg.py` (존재하지 않음 — 만들지 않음) · validator (`src/io.py`) · 영수증 schema · v5 spec/claim 바이트 변경 · 환경변수 우회문 |
+
+### 13-2. G84-N2 — 승인 spec 의 버전 분기 (R2-a (1))
+
+| # | 규칙 |
+|---|---|
+| a | `leg_run_spec(leg_id, grid, fit)` (`leg_spec_version: 2`) 의 키 · 검사 · canonical 바이트 · `run_spec_digest` **불변** — `stage3` 키 자체가 없다 (`stage3: null` 도 넣지 않는다 · §11-5). 골든: 고정 입력의 digest 상수 (RED 작성 시 지금 코드로 계산해 적는다) + 운영 원장 `grid_fit_v5` 항목 `0838df84…` 가 `planned_index()` 를 그대로 통과 |
+| b | 새 builder `leg_run_spec_v3(leg_id, grid, fit, stage3)` → `{"leg_spec_version": 3, "leg_id", "grid", "fit", "stage3"}`. grid · fit 축은 v2 와 **같은 닫힌 집합 · 같은 검사** (검사 본체를 한 함수로 두고 둘이 부른다 — 두 벌 금지). `stage3` 는 닫힌 `LEG_SPEC_STAGE3_KEYS = ("planned_id", "pairing_design_sha256", "parameter_order_sha256", "bank", "roster_sha256", "provider_edges_sha256", "arm", "stage", "candidate_mode")` · `bank` 는 `_BANK_KEYS` 로 닫힘 · hex64 자리는 hex64 · 열림/누락/추가/타입 위반은 `PreserveError("plan")` |
+| c | stage3 축의 값은 **envelope 에서 유도**한다: `stage3_axis_from_envelope(env: planned-leg/v4) -> dict` 하나 (`planned_id = digest(env)` · `provider_edges_sha256 = digest(env["provider_edges"])` · `roster_sha256 = env["roster"]["roster_sha256"]` · `arm/stage/candidate_mode` = `env["stages"][0]` 의 값 · `bank = env["bank"]`). 손으로 적은 축이 유도값과 다르면 거부 (13-3 b) |
+| d | 소비자 분기는 `leg_spec_version` 하나로: `2` → 실행에 stage3 문맥이 **없어야** 한다 (있으면 거부 — "v5 계획으로 v6 실행 금지") · `3` → stage3 문맥이 **있어야** 한다 (없으면 거부 — legacy fallback 금지) · 그 밖 (부재 · 1 · 4 · 문자열) → 거부. 분기 자리는 `_assert_fit_authorized(live_fit, out_dir, leg, may_open, stage3=None)` — v3 면 `leg_run_spec_v3(leg, declared.grid, fit_axis, stage3_axis_from_envelope(stage3["planned"].envelope()))` 로 claim 과 대조. smoke namespace 면제는 그대로 (그 안에서는 원장을 읽지 않으므로 기존 v6 시험 실행 바이트 불변) |
+| e | 표시용 view 를 만들지 않는다 — v2 spec 에 `stage3` 키를 붙여 보여 주는 함수 없음. 어느 버전인지는 `leg_spec_version` 이 말한다 (봉인 preimage 와 표시가 갈릴 자리를 만들지 않는 것이 §11-5 의 "구분") |
+
+### 13-3. 원장 계획 index 의 v4 자리 (R2-a (2))
+
+| # | 규칙 |
+|---|---|
+| a | prospective 항목의 **선택 키** 둘을 `PLANNED_KEYS_PROSPECTIVE_OPTIONAL` 에 더한다: `planned_envelope` (dict · `planned-leg/v4`) · `stage3_context` (`{"design": <저장소 상대 경로>, "provider_runs": {<consumer_objective>: <저장소 상대 디렉터리>}}`). 기존 항목 (v2 spec · `planned-leg/v3` 영수증) 은 키가 없으므로 읽기 그대로 — 운영 원장 바이트 불변 · `planned_index()` 결과 불변 |
+| b | 결속 (`planned_index` 안 · 조회 전에 전체): `run_spec.leg_spec_version == 3` ⇔ `planned_envelope` · `stage3_context` **둘 다** 존재 (하나만 있어도 거부 · v2 항목에 있어도 거부) · `check_planned_envelope(env) == []` 且 `schema == "planned-leg/v4"` · `env.leg_id == leg_id` · `env.source_digest == authorized_source_digest` · `env.protocol_generation == design_wire.STAGE3_PROTOCOL_GENERATION` (`v6`) · `run_spec.stage3 == stage3_axis_from_envelope(env)` (planned_id 포함) · `stage3_context.design` 과 각 provider 경로는 저장소 상대 문자열 (절대 · `..` 세그먼트 · 빈 문자열 거부) · `provider_runs` 의 키 집합 == envelope `stages[0].warm_provider_map` 에서 provider 가 non-null 인 consumer 집합 (누락 · 추가 거부) |
+| c | index 는 설계 파일 · provider 디렉터리의 **존재 · 내용을 보지 않는다** (순수 함수 유지). 바이트 대조는 진입점 (13-4 a) 과 `_prepare_stage3` (map 재생성 · sha) 가 한다 — 세 자리에 같은 검사를 두지 않는다 |
+| d | `_assert_prospective_plan_is_startable` 의 G74-1 (`grid.discharged_cache_sha256` hex64) · G74-3 (`claim_scope`) 는 v3 spec 에도 그대로 — v6 leg 도 grid 축 (밖 producer 의 curves) 을 가진다 |
+
+### 13-4. production 진입점 — 한 곳 (R2-a (3))
+
+| # | 규칙 |
+|---|---|
+| a | `src/fitting.py::stage3_context_from_plan(leg_id, *, ledger=None, repo_root=None) -> dict` 하나가 `{planned, design, provider_runs}` 를 만든다. 순서: `planned_index(ledger)[leg_id]` (없으면 거부) → 13-3 결속은 index 가 이미 했다 → `PlannedLegV4(**envelope 필드)` 재구성 (생성자가 `check_envelope_v4` 재검) → `planned_id() == run_spec.stage3.planned_id` → 설계 파일을 **JSON** 으로 읽어 (`json.loads` · YAML 아님) `pairing_design_sha256(design) == env.pairing_design_sha256` 且 `parameter_order_sha256(design.parameter_order) == env.parameter_order_sha256` → provider 디렉터리마다 존재 · `manifest.yaml` 존재 (내용 대조는 `_prepare_stage3` 의 몫) → 반환. 모든 거부는 **`run_fit` 호출 전** (`PreserveError("plan")` 또는 `ValueError`) |
+| b | CLI `python -m src.fitting --stage3-plan <leg_id>`: (i) `--leg` 가 함께 오면 같은 이름이어야 한다 — 다르면 rc 2, **원장 읽기 전** (argv 층) · 없으면 `--leg` = `<leg_id>` (환경변수 `LEG` 는 `leg_name` 규칙대로 argv 뒤) (ii) `--no-adaptive` · `--no-warm-start` 를 **명시**해야 한다 — 없으면 rc 2 (조용히 덮어쓰지 않는다 · `_prepare_stage3` 의 거부 조건을 argv 층에서 먼저 말한다) (iii) `--reference` 는 CLI 가 거부하지 **않는다** — `_stage3_preflight` 의 몫 (G84-N3 공통 경계 · 중복 금지) (iv) 그 밖의 인자 조립은 legacy 와 같고 `run_fit(..., stage3=stage3_context_from_plan(leg))` 한 자리만 다르다 · `--stage3-plan` 이 없으면 argv · 동작 바이트 불변 |
+| c | `run.sh --stage3-plan NAME`: `--mode fit` 에서만 유효 (다른 모드 · `all` 은 "지원 안 함" rc 1 · 파싱 직후) · `--leg` 와 함께 오면 같아야 한다 (다르면 rc 1) · 없으면 `LEG=NAME` export (`plan_gate` 가 같은 다리를 본다) · `FIT_ARGS` 에 `--stage3-plan NAME` 을 넣고 `RUN_SH_DRY=1` 출력에 보인다 · `--no-adaptive --no-warm-start` 는 run.sh 가 **붙이지 않는다** (사용자가 적는다 — Python 층이 거부) · 옵션 없는 fit 의 dry argv 불변 |
+| d | 우회 금지: 진입점은 `run_fit` 을 부른다 → `_stage3_preflight` · `_prepare_stage3` 를 **모두** 지난다. 계획과 다른 설계 바이트는 진입점에서 (run_fit 호출 0) · 진입점을 건너 손으로 만든 어긋난 문맥은 `_prepare_stage3` 가 거부 (83차 N2 "다른 진입점도 profile 검사를 우회하지 않는다") |
+
+### 13-5. R2-c — 세대 이름 체계
+
+| 고정 | 세대 이름은 **`v6` 하나** = `design_wire.STAGE3_PROTOCOL_GENERATION` = `CLAIM_STATUS.yaml::protocol_generations` 의 `v6` (이미 선언됨 · "아직 산출물 없음"). validator 세대 (`a72c0f3a…` 뒤의 `eea5977f…` · `02a776a7…` · `7187bd31…` · `ba51cd20…` 와 이번 라운드의 새 digest) 는 세대가 아니라 영수증 identity → `source_digest_generations` 에 **등록하지 않는다**. 실물 v6 leg 가 그 digest 를 얻은 뒤에만 등록하고 그때도 값은 `v6` · `v6_r1` 같은 변형 금지 |
+|---|---|
+| 회귀 | `STAGE3_PROTOCOL_GENERATION == "v6"` 且 `"v6" ∈ protocol_generations` · `source_digest_generations` 의 값 집합 ⊆ `protocol_generations` (이름 집합 검사 — 값→leg 결속은 기존 `test_every_generation_entry_names_the_legs_that_attained_it` 가 이미 한다) · 계획 index 의 `planned_envelope.protocol_generation` 은 13-3 b 로 `v6` 고정 |
+
+### 13-6. 회귀 (RED 먼저 · node 이름 `s00`–`s07`)
+
+| node | 내용 |
+|---|---|
+| s00 v5 골든 | 고정 입력의 `run_spec_digest(leg_run_spec(…))` == 상수 · 결과에 `stage3` 키 없음 · 운영 원장 `planned_index()` 통과 · `grid_fit_v5` 의 `run_spec_digest` 그대로 |
+| s01 v3 builder | 닫힌 키 (누락 · 추가 · `bank` 열림 · hex64 아님) 거부 · 유도값으로 만든 spec 양성 · planned_id 한 자리만 바꿔도 digest 변동 · v2 와 v3 digest 는 다른 주소 |
+| s02 분기 | tmp 원장 + 비-smoke out 경로: v3 계획 + stage3 없음 → 거부 (`_fit_one` 도달 0) · v2 계획 + stage3 있음 → 거부 · 버전 부재/미지 → 거부 · v3 + 맞는 문맥 → claim 발급까지 도달 (`assert_run_is_authorized` 통과) |
+| s03 index | v3 항목 양성 · `planned_envelope` 만 / `stage3_context` 만 · v2 + envelope · envelope leg_id / source_digest / protocol_generation 불일치 · `run_spec.stage3` ≠ 유도 · provider 키 집합 누락 / 추가 · 절대 경로 / `..` → 각각 이유별 거부 · 운영 원장 바이트 그대로 통과 |
+| s04 진입점 | tmp 원장 + 설계 JSON + tiny curves: 양성은 `run_fit` 완주 (sig 6 · validator 실패 0, dirty 제외) · 설계 바이트 한 자리 변경 → 진입점 거부 · provider 디렉터리 누락 → 거부 · `run_spec.stage3.planned_id` 어긋남 → 거부 — 모두 `run_fit` 호출 0 (sentinel) |
+| s05 CLI argv | `--stage3-plan X --leg Y` rc 2 (원장 읽기 전) · `--no-adaptive` / `--no-warm-start` 누락 rc 2 · 둘 다 있으면 `stage3_context_from_plan("X")` 가 불리고 그 결과가 `run_fit(stage3=…)` 에 들어간다 (monkeypatch) · `--stage3-plan` 없는 argv 는 `run_fit(stage3=None)` |
+| s06 run.sh dry | `--mode fit --stage3-plan X …` dry 출력에 `--stage3-plan X` 정확히 한 번 · `--leg` 없으면 LEG=X · `--leg Y` 충돌 rc 1 · `--mode all --stage3-plan X` rc 1 · 옵션 없는 fit dry 출력 골든 불변 |
+| s07 세대 | 13-5 회귀 |
+
+RED 에서 "통과" 로 떨어지는 node 가 실제 결함 증거다 (s00 의 운영 원장 통과는 처음부터 GREEN 이어야 한다 — 그것은 골든이다). 새 함수 부재 (`AttributeError` · argparse `unrecognized`) 로 떨어지는 node 는 무관 예외로 따로 센다.
+
+### 13-7. 보류 (이 라운드에 넣지 않음)
+
+`requirements.txt` 의 pybamm 상한 고정 (26.9 #5755 가 합성 truth 를 ≤2.7 mV 움직임 — `wiki/entities/pybamm.md`) 은 RUN_SCOPE 변경이라 같은 영수증 사이클을 탈 수 있지만 **범위가 섞인다**. 사용자가 따로 정하기 전에는 넣지 않는다.

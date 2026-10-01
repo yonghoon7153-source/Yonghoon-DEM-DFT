@@ -8831,3 +8831,13 @@ pytest **2046 passed / 1 xfailed / rc 0** · smoke **rc 0 / 168 s** · 같은 so
 
 **다음:** 2b (R2-a 실물 v6 leg gate — spec 버전 분기 · 계획 index v4 · CLI · R2-c 세대표 · G84-N2 조건) 범위와 착수는
 **사용자 별도 승인**. 이 접수는 구현 · 새 연구 실행 지시가 아니다.
+
+## §126 라운드 2b 착수 승인 기록 — R2-a 실물 v6 leg gate · R2-c 이름 체계 · G84-N2 (2026-10-01 · 구현 전 · 실행 GO 아님)
+
+**사용자 결정 (2026-10-01):** "1번 3번 진행하자" — (1) 라운드 2b 착수 · (3) PyProBE 형상만 시험 (후자는 위키에 기록, `632e4b0a`). 86차 접수 (§125) 가 "2b 범위와 착수는 사용자 별도 승인" 으로 남긴 자리가 이것이다. COMSOL 0–480 s 분석 위치는 사용자가 "걱정안해도" 로 이 작업 밖에 둠.
+
+**범위 · 고정:** `docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md` **§13** (코드 변경 전 커밋). 요지 — 생산 파일 상한 `tools/preserve.py` · `src/fitting.py` · `run.sh` (`src/io.py` 불변 → validator 불변) · v5 spec (`leg_spec_version: 2`) 바이트 · digest 골든 · v6 는 `leg_run_spec_v3` + 닫힌 `stage3` 축 (envelope 유도값) · 계획 index 의 `planned_envelope` · `stage3_context` 선택 키 (v3 ⇔ 둘 다) · 진입점 `stage3_context_from_plan` 한 곳 · CLI `--stage3-plan <leg_id>` (`--leg` 충돌 rc 2 · `--no-adaptive --no-warm-start` 명시 요구) · `run.sh --stage3-plan` (fit 만) · 세대 이름 `v6` 하나 · validator digest 미등록.
+
+**하지 않음 (승인 밖 그대로):** 실행 GO · 새 연구 leg · 운영 원장에 v6 계획 항목 작성 · 세대표 등록 · p_ini · class 변경 · 투영 게시 · requirements 상한 (§13-7 보류 — 사용자 별도 결정).
+
+**절차:** RED (`tests/test_gate87_round2b.py`) → 최소 GREEN → 변이 `-g87` → 영수증 (validator identity 실측 뒤 결정) → 전체 회귀 · smoke · 등록부 전체 재생 → GATE87 요청문.
