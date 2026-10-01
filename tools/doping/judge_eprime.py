@@ -4,6 +4,7 @@
     python3 tools/doping/judge_eprime.py --out_root ~/runs/eprime_2026_09_14
     python3 tools/doping/judge_eprime.py --out_root ... --ignore_eligibility   # ⛔ 인용금지
     python3 tools/doping/judge_eprime.py --selftest
+    python3 tools/doping/judge_eprime.py --card v6 --out_root ~/work/runs/cascade_v6_40run_0921   # 카드 v6 (부모 10 · 600 K · t(n−1))
 
 무엇을 하나
   ① 런마다 `msd_diffusive_check.aggregation_eligible(t, y, events_per_run)` 로 **자격** 판정
@@ -13,6 +14,12 @@
        판정 = **구간의 위치** 3 갈래 (δ = ln 1.5)
   ③ 2차: (p,k) 마다 600/800/1000 K × 시드 2 = 6 점 겉보기 아레니우스 →
        a_k = Ea(P1_k) − Ea(P2_k) [meV] · ā · SE_a · 구간 ± 12.706·SE_a · δ_Ea = 30 meV
+
+v6 (카드 cascade_estimand_card_v6_10parents_2026_09_19 §4 — v5.2 df 1 식의 일반형)
+  · 부모 목록 = db/properties/cascade_v6_parents_2026_09_19.json 의 4_parents (코드에 안 박는다) · 600 K 만 · 2차 ΔEa 없음
+  · L̄ = mean(L_k) · SE = sd(L_k)/√n (표본 sd) · 95 % 구간 = L̄ ± t(0.975, n−1)·SE · n = 유효 부모 수 · δ = ln 1.5
+  · ⛔ 40 런(부모 × 처방 × 시드)의 msd.json 이 하나라도 없으면 **집계하지 않는다** (카드 §4 'n=10 을 다 채우기 전에 집계하지 않는다')
+    — 있는데 자격 미달·실패인 런은 결과다(결측 규칙으로 n 이 준다). --allow_partial 은 ⛔ 인용·판정 금지 표시를 단다.
 
 ⛔ 이 도구가 **하지 못하는 것**
   · **사건 수를 만들어내지 못한다.** `--save_traj` 없이 돈 라운드에는 궤적이 없고,
@@ -48,6 +55,59 @@ SEEDS = (1, 2)
 KB_EV = 8.617333262e-5
 V_COMMON_A3 = 4066.479695
 PAIRS = {"A": ("P1_Al2O3_A", "P2_Al2S3_A"), "B": ("P1_Al2O3_B", "P2_Al2S3_B")}
+#: t(0.975, df) — NIST 표 (df 1–30). 카드 v6 §4 의 일반 n 용. 표 밖이면 판정하지 않는다.
+T975 = {1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571, 6: 2.447, 7: 2.365, 8: 2.306, 9: 2.262, 10: 2.228,
+        11: 2.201, 12: 2.179, 13: 2.160, 14: 2.145, 15: 2.131, 16: 2.120, 17: 2.110, 18: 2.101, 19: 2.093, 20: 2.086,
+        21: 2.080, 22: 2.074, 23: 2.069, 24: 2.064, 25: 2.060, 26: 2.056, 27: 2.052, 28: 2.048, 29: 2.045, 30: 2.042}
+V6_PARENTS = REPO / "db" / "properties" / "cascade_v6_parents_2026_09_19.json"
+
+
+def load_v6_pairs(path=V6_PARENTS):
+    """카드 v6 부모 목록 → {부모: (P1 구조, P2 구조)}. 원장의 P1_xyz/P2_xyz 파일 이름과 맞는지 확인한다 (어긋나면 거부)."""
+    d = json.load(open(path, encoding="utf-8"))
+    out = {}
+    for e in d["4_parents"]:
+        k = e["parent"]
+        p1, p2 = f"P1_Al2O3_{k}", f"P2_Al2S3_{k}"
+        if Path(e["P1_xyz"]).stem != p1 or Path(e["P2_xyz"]).stem != p2:
+            raise SystemExit(f"⛔ 부모 {k} 의 구조 이름이 원장과 다르다 ({e['P1_xyz']} · {e['P2_xyz']})")
+        out[k] = (p1, p2)
+    return out
+
+
+def missing_runs(runs, pairs, T=PRIMARY_T, seeds=SEEDS):
+    """카드 v6 §4 완결성 — 있어야 할 (구조, T, 시드) 중 msd.json 이 **없는** 것. 있는데 실패한 런은 여기 안 든다 (그건 결과다)."""
+    return [(st, T, sd) for k in sorted(pairs) for st in pairs[k] for sd in seeds if (st, T, sd) not in runs]
+
+
+def aggregate_n(j, pairs, T=PRIMARY_T):
+    """카드 v6 §4 — 부모 n 개 일반형. 유효 부모가 2 미만이거나 t 표 밖이면 **구간 판정을 만들지 않는다**."""
+    res = {"primary": {"T_K": T, "delta_lnD": round(DELTA_LND, 6), "n_parents_declared": len(pairs)}, "parents": {}}
+    Ls = {}
+    for k, (p1, p2) in sorted(pairs.items()):
+        d1, d2 = dbar(j, p1, T), dbar(j, p2, T)
+        row = {"D_bar_P1": d1, "D_bar_P2": d2}
+        if d1 and d2:
+            row["R"] = d1 / d2; row["lnR"] = math.log(row["R"]); Ls[k] = row["lnR"]
+        else:
+            row["⛔"] = "결측 — 시드 하나라도 실패·자격 미달이면 그 부모는 빠진다 (대체 금지 · 카드 §3)"
+        res["parents"][k] = row
+    n = len(Ls)
+    res["primary"]["n_valid"] = n
+    if n < 2 or (n - 1) not in T975:
+        res["primary"]["⛔"] = f"유효 부모 {n} — 구간 판정 없음 (n ≥ 2 · df ≤ 30 이어야 한다)"
+        return res
+    v = list(Ls.values())
+    Lb = sum(v) / n
+    sd = math.sqrt(sum((x - Lb) ** 2 for x in v) / (n - 1))
+    se, t = sd / math.sqrt(n), T975[n - 1]
+    lo, hi = Lb - t * se, Lb + t * se
+    pos = sum(1 for x in v if x > 0)
+    res["primary"].update({"L_bar": Lb, "sd": sd, "SE": se, "t": t, "df": n - 1, "ci_ln": [lo, hi],
+                           "ratio": math.exp(Lb), "ci_ratio": [math.exp(lo), math.exp(hi)],
+                           "verdict": verdict_interval(lo, hi, DELTA_LND),
+                           "sign_count": f"L_k > 0 : {pos}/{n} · < 0 : {sum(1 for x in v if x < 0)}/{n}"})
+    return res
 
 
 def parse_tag(tag: str):
@@ -205,9 +265,13 @@ def main() -> int:
                     help="⛔ 자격 게이트를 무시하고 집계한다. **인용 금지** — "
                          "'배선을 고쳐 다시 돌리면 결론이 바뀌나' 만 보는 가정 계산이다")
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--card", choices=["v5.2", "v6"], default="v5.2", help="v6 = 부모 10 · 600 K · t(n−1) 일반형 (카드 v6 §4)")
+    ap.add_argument("--allow_partial", action="store_true", help="⛔ v6: 40 런이 다 없어도 집계 (중간 집계 — 인용·판정 금지 표시)")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
+    if a.card == "v6":
+        return main_v6(a)
 
     runs = scan(a.out_root)
     print(f"런 {len(runs)} 개 · out_root {a.out_root}")
@@ -251,6 +315,53 @@ def main() -> int:
     print(f"\n→ {q}")
     if a.ignore_eligibility:
         print("⛔ 이 산출물은 **인용 금지**다 (자격 게이트를 무시했다)")
+    return 0
+
+
+def main_v6(a) -> int:
+    pairs = load_v6_pairs()
+    runs = scan(a.out_root)
+    print(f"카드 v6 · 부모 {len(pairs)} ({''.join(sorted(pairs))}) · 600 K · 런 {len(runs)} 개 · out_root {a.out_root}")
+    miss = missing_runs(runs, pairs)
+    if miss:
+        print(f"⛔ 있어야 할 런 {len(miss)} 개의 msd.json 이 없다 — 카드 §4: n=10 을 다 채우기 전에 집계하지 않는다")
+        for m in miss[:12]:
+            print(f"    없음: {m[0]}__s{m[2]} (T {m[1]})")
+        if not a.allow_partial:
+            return 3
+        print("  ⛔ --allow_partial — 아래는 **중간 집계**다. 인용·판정에 쓰지 않는다")
+    j = judge_runs(runs, ignore_eligibility=a.ignore_eligibility)
+    want = {(st, PRIMARY_T, sd) for k in pairs for st in pairs[k] for sd in SEEDS}
+    jj = {k: v for k, v in j.items() if k in want}
+    ok = sum(1 for r in jj.values() if r["eligible"])
+    noev = [k for k, r in jj.items() if r["events_per_run"] is None]
+    print(f"판정 대상 런 {len(jj)} · 자격 통과 {ok}" + ("  ⛔ **자격 무시 모드**" if a.ignore_eligibility else "")
+          + (f" · 사건 수 못 센 런 {len(noev)} (궤적 없음 = 자격 없음)" if noev else ""))
+    res = aggregate_n(jj, pairs)
+    res["card"] = "db/properties/cascade_estimand_card_v6_10parents_2026_09_19.json §4"
+    res["⚠_부피_조건"] = f"V = {V_COMMON_A3} Å³ · P̄ = **결측** (msd.json 에 없다)"
+    res["⚠_인용정책"] = "1저자 2026-09-18 — 계 간 상대차로만. 절대 D 인용 금지 · UMA·표집·부피 조건부 (카드 1a)"
+    res["eligibility"] = {"n_runs": len(jj), "n_eligible": ok, "ignore_eligibility": bool(a.ignore_eligibility),
+                          "n_events_uncountable": len(noev), "partial": bool(miss)}
+    print(f"\n{'부모':4s}{'D̄_P1':>12s}{'D̄_P2':>12s}{'L_k = ln R':>12s}")
+    for k, r in res["parents"].items():
+        print(f"  {k:2s}{(r['D_bar_P1'] or float('nan')):12.3e}{(r['D_bar_P2'] or float('nan')):12.3e}"
+              + (f"{r['lnR']:12.4f}" if "lnR" in r else "        결측"))
+    p = res["primary"]
+    if "ratio" in p:
+        print(f"\n1차 D_rel(P1/P2; 600 K) — n {p['n_valid']}/{p['n_parents_declared']} · L̄ {p['L_bar']:+.4f} · sd {p['sd']:.4f} · "
+              f"t({p['df']}) {p['t']} · 95 % [{p['ci_ln'][0]:+.4f}, {p['ci_ln'][1]:+.4f}] (δ ±{DELTA_LND:.4f})")
+        print(f"  비율 {p['ratio']:.3f} [{p['ci_ratio'][0]:.3f}, {p['ci_ratio'][1]:.3f}] · **{p['verdict']}** · {p['sign_count']}")
+    else:
+        print(f"\n1차: {p['⛔']}")
+    res["rows"] = [{"structure": k[0], "T_K": k[1], "seed": k[2], "D": r["D"], "eligible": r["eligible"],
+                    "events_per_run": r["events_per_run"], "t_end_ps": r["t_end_ps"], "reasons": r["reasons"]}
+                   for k, r in sorted(jj.items())]
+    q = a.out_json or os.path.join(a.out_root, "cascade_v6_judgement.json")
+    Path(q).write_text(json.dumps(res, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"\n→ {q}")
+    if a.ignore_eligibility or miss:
+        print("⛔ 이 산출물은 **인용 금지**다 (자격 무시 또는 중간 집계)")
     return 0
 
 
@@ -319,6 +430,43 @@ def _selftest() -> int:
     e = ea_mev(flat, "X")
     chk(e is not None and abs(e - 250.0) < 1.0, f"Ea 를 meV 로 되돌린다 (기대 250, 실제 {e:.1f})")
 
+    #: ── 카드 v6 (부모 n 일반형) ──
+    chk(T975[1] == T_DF1 and T975[9] == 2.262 and T975[8] == 2.306, "t 표: df 1 = 12.706 (v5.2 와 같다) · df 9 = 2.262 · df 8 = 2.306")
+    pv6 = load_v6_pairs()
+    chk(len(pv6) == 10 and sorted(pv6) == list("ABCDEFGHIJ") and pv6["C"] == ("P1_Al2O3_C", "P2_Al2S3_C"),
+        f"원장에서 부모 10 개 (A–J) · 이름 규칙 확인 ({sorted(pv6)})")
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as td6:
+        bad = json.load(open(V6_PARENTS, encoding="utf-8")); bad["4_parents"][2]["P1_xyz"] = "db/structures/cascade_pilot/P1_Al2O3_Z.xyz"
+        bp = Path(td6) / "bad_parents.json"; bp.write_text(json.dumps(bad), encoding="utf-8")
+        try:
+            load_v6_pairs(bp); rej = False
+        except SystemExit:
+            rej = True
+        chk(rej, "⛔음성: 원장의 구조 파일 이름이 규칙과 어긋나면 부모 목록을 거부한다 (조용히 엉뚱한 런을 짝짓지 않는다)")
+    Lk = {k: v for k, v in zip("ABCDEFGHIJ", (0.10, -0.20, 0.30, 0.05, -0.10, 0.25, 0.00, 0.15, -0.05, 0.20))}
+    j6 = {}
+    for k, L in Lk.items():
+        for sd in SEEDS:
+            j6[(f"P1_Al2O3_{k}", 600, sd)] = mk(1e-6 * math.exp(L))
+            j6[(f"P2_Al2S3_{k}", 600, sd)] = mk(1e-6)
+    r6 = aggregate_n(j6, pv6)
+    v = list(Lk.values()); m = sum(v) / 10; sdv = math.sqrt(sum((x - m) ** 2 for x in v) / 9)
+    chk(abs(r6["primary"]["L_bar"] - m) < 1e-9 and abs(r6["primary"]["sd"] - sdv) < 1e-9,
+        f"L̄ = 평균 · sd = **표본** sd (n−1) — {r6['primary']['L_bar']:.4f} · {r6['primary']['sd']:.4f}")
+    lo_x, hi_x = m - 2.262 * sdv / math.sqrt(10), m + 2.262 * sdv / math.sqrt(10)
+    chk(abs(r6["primary"]["ci_ln"][0] - lo_x) < 1e-9 and abs(r6["primary"]["ci_ln"][1] - hi_x) < 1e-9 and r6["primary"]["df"] == 9,
+        f"구간 = L̄ ± t(9)·sd/√10 = [{lo_x:+.4f}, {hi_x:+.4f}]")
+    chk(r6["primary"]["verdict"] == verdict_interval(lo_x, hi_x, DELTA_LND) == "실질_동등_지지", f"판정 = 구간 위치 ({r6['primary']['verdict']})")
+    j6b = dict(j6); j6b[("P1_Al2O3_D", 600, 2)] = mk(1e-6, used=False)
+    r6b = aggregate_n(j6b, pv6)
+    chk(r6b["primary"]["n_valid"] == 9 and r6b["primary"]["t"] == 2.306 and "⛔" in r6b["parents"]["D"],
+        "⛔음성: 시드 하나 실패 → 그 부모 결측 · n 9 · t(8) (대체 안 함)")
+    one = {k: j6[k] for k in j6 if k[0].endswith("_A")}
+    chk("ratio" not in aggregate_n(one, pv6)["primary"], "⛔음성: 유효 부모 1 개면 구간 판정을 안 만든다")
+    have = {k: {} for k in j6}; del have[("P2_Al2S3_J", 600, 1)]
+    chk(missing_runs(have, pv6) == [("P2_Al2S3_J", 600, 1)] and missing_runs({k: {} for k in j6}, pv6) == [],
+        "⛔음성: msd.json 없는 런을 찾아낸다 (n=10 다 채우기 전 집계 금지 게이트) · 다 있으면 빈 목록")
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
