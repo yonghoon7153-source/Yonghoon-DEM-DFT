@@ -6621,6 +6621,70 @@
     "commit": "4eece44863239d91cc97c8c8b17be7f7840a7731",
     "decision_digest": "sha256:6ada371884775ceac578890c78532350ba7555594f6e8a1b18ef99ff1542288c"
    }
+  },
+  {
+   "id": "D-2026-10-01-cascade-esw-no-stable-window",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": null,
+   "slot": "esw_no_stable_window_reading",
+   "applies_to": {
+    "systems": [
+     "lpscl_dopant_designs"
+    ],
+    "tasks": [
+     "esw_window",
+     "screening_funnel"
+    ],
+    "methods": [
+     "mp_grand_potential_esw"
+    ],
+    "use_cases": [
+     "diagnostic"
+    ]
+   },
+   "title": "ESW 의 OCV 빈칸은 결측이 아니라 '교환 0 구간 없음' = 안정창 없음이다 — 깔때기 G2 탈락 21 · v3_pinned 82 행 정정 (트랙 ESW · 사용자 = 1저자)",
+   "statement": "옛 `esw_cascade_batch.py` 는 OCV 를 `min(V | evo == 0)` 로 적고 교환 0 단계가 없으면 None 을 남겼다 — ocv = null 은 **자료 결측이 아니라 그 조성에 교환 0 구간이 없다는 뜻**이다(82/82 기록 산화·환원 값 있음 · 오류 0). 그 조성은 어떤 전압에서도 Li 를 주고받는다 = **안정창 없음(폭 0)**. ⇒ ① 89종 깔때기 G2: 해당 21 종은 **탈락** (판정 불가는 ESW 기록 자체가 없을 때만 · 현재 0) — waterfall 89→89→68→41→25→0 은 그대로 ② `oxidation_stability_cascade_v3_pinned.json` 82 행: reduction_limit_V · window_V = null + edge_note (현행 esw_window_edges() 출력과 같다) · 옛 값은 first_reduction_plateau_V · legacy_window_V_2026_09_22 로 보존 ③ D-2026-10-01-cascade-funnel-esw-corrected-window 의 '판정 불가 16 · 상한 탈락 5' 분류와 재개 경로 'OCV 계산으로 메우기' 는 이 오독에 근거했다 — 이 결정이 갈음한다 (정정 창 규칙 ox − ocv 자체는 그대로).",
+   "rationale": "오늘 오전 결정은 내가 'OCV 가 없어 판정할 수 없다' 고 설명한 데 근거했다. 생성 코드(commit 8a0e202d3~1 · 422 행)를 보니 None 은 교환 0 단계가 없을 때의 기본값이었고, 그 경우 현행 정의(교환 0 의 최저 V = 환원 가장자리)로는 안정창이 존재하지 않는다 — G2 가 막으려는 창 붕괴 그 자체다. 재실행해도 같은 답이 나오므로 09-22 의 '재실행 필요' 도 오해였다. 화학적으로도 해당 종은 대부분 환원되기 쉬운 양이온이다(W⁶⁺ · Mo⁶⁺ · Cr⁶⁺ · Nb⁵⁺ · Ta⁵⁺ · Fe · Co · Ni · Mn · Sb). 사용자(ESW 1저자)가 정정을 골랐다.",
+   "decision_state": "active",
+   "results_seen": true,
+   "record": "db/properties/oxidation_stability_cascade_v3_pinned.json",
+   "amends": [
+    "D-2026-10-01-cascade-funnel-esw-corrected-window"
+   ],
+   "depends_on": [
+    "D-2026-10-01-cascade-funnel-esw-corrected-window"
+   ],
+   "evidence": [
+    "db/properties/oxidation_stability_cascade_v3_pinned.json",
+    "db/properties/cascade_screening_funnel_v2.json",
+    "db/properties/oxidation_stability_cascade_v2.json",
+    "tools/oxidation/constrained_esw.py",
+    "tools/cascade/build_screening_funnel.py"
+   ],
+   "reopen_criteria": [
+    "MP 스냅샷이 바뀌어 그 조성의 상도에 교환 0 구간이 생기면 (esw_cascade_batch 재실행으로만 확인) 그 행을 정정 창으로 다시 판정한다.",
+    "산화 한 변(0.246 V) 원인이 확정되면 G2·G3 를 다시 본다 (HZ-esw-reduction-limit-label)."
+   ],
+   "enforcement": "① build_screening_funnel.esw_gate_window: ox 있고 ocv 없음 → no_stable_window → G2 탈락 · 판정 불가는 ESW 기록이 없을 때만 (selftest 5 · 깨기 3) ② v3_pinned 82 행은 현행 esw_window_edges 출력과 같은 필드 ③ 화면 문구는 funnel JSON counts 에서 파생",
+   "proposed_by": "claude-session-2026-10-01",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-01",
+     "state": "active",
+     "by": "사용자 (ESW 1저자)",
+     "note": "AskUserQuestion — 'OCV 빈칸 21 종 → G2 탈락(안정창 없음)' 바로잡는다 · 'v3_pinned 82 행' 바로잡는다 (둘 다 권고안). 트랙 = ESW (사용자 = 1저자)."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-01T15:23:18Z",
+    "commit": "12aaf523dc8df1e2055784bb0764b730db0431a3",
+    "decision_digest": "sha256:b0ad5dea02a93651d6a95bc2adaa786eaffd5f1d47dfbf81d574ce9ae9685945"
+   }
   }
  ]
 }

@@ -2160,8 +2160,8 @@ def _derive_funnel_v2_meta(meta: dict, f2, f1) -> dict:
     cnt = (f2.get("esw_window_rule") or {}).get("counts") or {}
     n_pool = (f2.get("pool_provenance") or {}).get("pool_size") or (wf[0] if wf else "—")
     uniq = " · ".join(f"{g} {v[1]}" for g, v in gp.items() if v[1])
-    note = (f"G2 는 정정 창(ox − ocv)으로 판정한다 — OCV 가 없는 {cnt.get('no_ocv_not_assessable', '—')}종은 "
-            f"판정 불가(통과 아님), {cnt.get('no_ocv_fail_by_upper_bound', '—')}종은 옛 창(상한)으로 확정 탈락. "
+    note = (f"G2 는 정정 창(ox − ocv)으로 판정한다 — 교환 0 구간이 없는 {cnt.get('no_stable_window', '—')}종은 "
+            f"안정창 없음(탈락), ESW 기록이 없어 판정 불가 {cnt.get('no_esw_data', '—')}종. "
             + (f"고유 기여(unique kill): {uniq}. " if uniq else "")
             + "⚠ G4 의 탈락은 blocking kill 과 bvs kill 이 섞인 수다 — 순환 때문에 분리해서 인용해야 한다 "
               "(funnel JSON 의 G4 selection_pressure 블록).")
@@ -2171,7 +2171,7 @@ def _derive_funnel_v2_meta(meta: dict, f2, f1) -> dict:
     m["status"]["funnel"] = (
         m["status"]["funnel"][0],
         f"{n_pool}종 waterfall {'–'.join(map(str, wf))} (47종판 {'–'.join(map(str, can))}) · "
-        f"G2 = 정정 창(ox − ocv) · 판정 불가 {cnt.get('no_ocv_not_assessable', '—')}종. "
+        f"G2 = 정정 창(ox − ocv) · 안정창 없음 {cnt.get('no_stable_window', '—')}종. "
         "⛔ 게이트 정의 자체가 미해결: G4 순환(blocking 이 BVS 를 덮어씀) · "
         "G5 median 컷이 로스터 의존 · G3 phase set 미기록")
     return m

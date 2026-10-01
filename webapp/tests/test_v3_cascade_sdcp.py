@@ -493,21 +493,25 @@ def test_cascade_lineage_fail_closed_on_missing_card(monkeypatch):
 _F2 = ROOT / "db" / "properties" / "cascade_screening_funnel_v2.json"
 
 
-def test_funnel_v2_g2_uses_corrected_window_and_not_assessable_is_not_pass():
-    """G2 창 = ox − ocv. OCV 없는 행은 옛 창을 상한으로만 — 판정 불가는 통과가 아니다."""
+def test_funnel_v2_g2_uses_corrected_window_and_no_stable_window_fails():
+    """G2 창 = ox − ocv. OCV 빈칸 = 교환 0 단계 없음 = 안정창 없음 → **탈락** (판정 불가는 ESW 기록이 없을 때만).
+
+    ⛔ 2026-10-01 같은 날 정정 — 처음엔 OCV 빈칸을 '자료 없음' 으로 읽어 16 종을 판정 불가로 뒀다.
+    """
     f2 = json.loads(_F2.read_text(encoding="utf-8"))
     rule = f2.get("esw_window_rule") or {}
-    assert rule.get("decision") == "D-2026-10-01-cascade-funnel-esw-corrected-window", "정정 창 규칙 블록이 없다"
+    assert "D-2026-10-01-cascade-esw-no-stable-window" in (rule.get("decisions") or []), "정정 규칙 블록이 없다"
     pool = {r["dopant"]: r for r in f2["pool"]}
-    corrected = [r for r in pool.values() if r.get("window_rule") == "ox−ocv"]
-    assert corrected and all(r["window_V"] is not None and r["window_V_upper"] is None for r in corrected)
+    corrected = [r for r in pool.values() if r.get("window_status") == "ox−ocv"]
+    assert corrected and all(r["window_V"] is not None for r in corrected)
     g2 = [g for g in f2["gates"] if g["id"] == "G2"][0]
     assert "ocv" in g2["metric"], f"G2 metric 이 옛 정의다: {g2['metric']}"
-    miss = set(g2["in_representative_order"]["missing"])
-    # ⛔음성: OCV 없는 WO3 는 옛 창 0.423 V 로 '통과' 하면 안 된다 — 판정 불가여야 한다
-    assert "WO3" in miss and pool["WO3"]["window_V"] is None and pool["WO3"]["window_V_upper"] is not None
-    assert "G2" not in pool["WO3"]["gates_passed"], "판정 불가 종이 G2 통과로 기록됐다"
-    assert len(miss) == rule["counts"]["no_ocv_not_assessable"]
+    seq = g2["in_representative_order"]
+    # ⛔음성: OCV 빈칸 WO3 는 옛 창 0.423 V 로 '통과' 해서도, '판정 불가' 로 빠져서도 안 된다 — 탈락이다
+    assert pool["WO3"]["window_status"] == "no_stable_window" and pool["WO3"]["window_V"] is None
+    assert "G2" not in pool["WO3"]["gates_passed"] and "WO3" not in seq["missing"]
+    assert seq["n_missing"] == rule["counts"]["no_esw_data"]
+    assert rule["counts"]["no_stable_window"] == sum(1 for r in pool.values() if r["window_status"] == "no_stable_window")
 
 
 def test_cascade_page_funnel_numbers_come_from_the_json_not_a_copy():

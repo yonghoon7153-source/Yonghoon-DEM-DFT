@@ -58,20 +58,31 @@ COLLAPSE_WINDOW_V = 0.05
 #  옛 `window_V = ox_V − red_V` 의 red_V 는 **안정창 가장자리가 아니라 마지막 환원 계단**이었다
 #  (HZ-esw-reduction-limit-label · commit 8a0e202d3). 맞는 아래 가장자리 = **교환 0 의 최저 V
 #  = ocv_self_decomposition_V** ⇒ G2 창 = **ox_V − ocv_V**. 정정 창은 옛 창보다 **언제나 같거나 좁다**.
-#  OCV 가 없는 행은 재유도가 안 된다 → 옛 창은 **상한으로만** 쓴다:
-#     · 상한이 이미 문턱 아래 → **확정 탈락** (정정 창은 그보다 좁다)
-#     · 아니면 → **판정 불가(missing)** — 통과로 읽지 않는다 (사용자 결정 2026-10-01)
-#  ⛔ 옛 창을 **게이트 값으로** 쓰지 않는다. `window_V_legacy` 는 옛 숫자의 출처 보존용이다.
-ESW_WINDOW_DECISION = "D-2026-10-01-cascade-funnel-esw-corrected-window"
+#  ⛔⛔ 2026-10-01 (같은 날 정정) — **OCV 빈칸은 결측이 아니다.** 옛 batch 는 OCV 를
+#    `min(V | evo == 0)` (교환 0 단계의 시작 전압)로 적고, 그런 단계가 **없으면 None** 으로 남겼다
+#    (`git show 8a0e202d3~1:tools/oxidation/esw_cascade_batch.py` 422 행). 실측: ocv = null 82 기록 전부
+#    산화·환원 값은 있고 오류 0. ⇒ 그 조성은 **어떤 전압에서도 Li 를 주고받는다 = 안정창 없음(폭 0)**
+#    — G2 가 막으려는 '창 붕괴' 그 자체다 → **탈락**. 현행 `esw_window_edges()` 의 출력과 같은 판정이다.
+#    처음 판(같은 날)은 이걸 '자료 없음' 으로 읽어 16 종을 '판정 불가' 로 뒀다 — 내 오독이었다.
+#  ⇒ 판정 불가(missing)는 **ESW 기록 자체가 없을 때만**이다.
+#  ⛔ 옛 창(ox − 마지막 환원 계단)을 **게이트 값으로** 쓰지 않는다. `window_V_legacy` 는 출처 보존용이다.
+ESW_WINDOW_DECISIONS = ["D-2026-10-01-cascade-funnel-esw-corrected-window",
+                        "D-2026-10-01-cascade-esw-no-stable-window"]
+#: 현행 `constrained_esw.esw_window_edges()` 가 교환 0 단계가 없을 때 남기는 문구 — 같은 말을 쓴다.
+NO_STABLE_WINDOW_NOTE = ("교환 0 인 단계가 없다 — 이 계는 모든 전압에서 Li 을 주고받는다. "
+                         "안정창을 정의할 수 없다(`reduction_limit_V = None`).")
 
 
-def esw_gate_window(ox_v, ocv_v, legacy_window):
-    """G2 창 → (window_V, upper_bound_V, rule). 정정 창이 없으면 window_V = None (0 이 아니다)."""
-    if ox_v is not None and ocv_v is not None:
-        return round(ox_v - ocv_v, 3), None, "ox−ocv"
-    if legacy_window is not None:
-        return None, legacy_window, "재유도 불가 (ocv 없음) — 옛 창은 상한으로만"
-    return None, None, "ESW 자료 없음"
+def esw_gate_window(ox_v, ocv_v, has_esw_row=True):
+    """G2 창 → (window_V, status).  status ∈ {"ox−ocv", "no_stable_window", "no_esw_data"}.
+
+    window_V = None 은 0 이 아니다 — status 가 왜 없는지를 말한다.
+    """
+    if not has_esw_row or ox_v is None:
+        return None, "no_esw_data"
+    if ocv_v is None:
+        return None, "no_stable_window"
+    return round(ox_v - ocv_v, 3), "ox−ocv"
 
 
 def g2_pass(r):
@@ -79,11 +90,8 @@ def g2_pass(r):
 
 
 def g2_missing(r):
-    """판정 불가 = 정정 창이 없고, 상한으로도 탈락이 확정되지 않는 행."""
-    if r.get("window_V") is not None:
-        return False
-    ub = r.get("window_V_upper")
-    return not (ub is not None and ub < COLLAPSE_WINDOW_V - 1e-12)
+    """판정 불가 = ESW 기록 자체가 없는 행뿐. 안정창 없음(교환 0 단계 없음)은 **탈락**이다."""
+    return r.get("window_status") == "no_esw_data"
 # build_cascade_themes.py 의 ionic_transport 게이트 규약
 BLOCKING_GATE = 0.60
 GATE_FLOOR, GATE_EPS = 0.05, 0.05
@@ -142,16 +150,15 @@ def load_pool():
         ox = oxid.get(d, {})
         l5 = lit.get(d, {}).get("005", {})
         ox_v = fnum(ox.get("ox_V")) if ox else fnum(r.get("ox_V"))
-        win, win_ub, win_rule = esw_gate_window(ox_v, fnum(ox.get("ocv_V")), fnum(ox.get("window_V")))
+        win, win_status = esw_gate_window(fnum(ox.get("ox_V")), fnum(ox.get("ocv_V")), has_esw_row=bool(ox))
         rows.append({
             "dopant": d,
             "group": r.get("group"),
             "de": fnum(r.get("de")),
             "ox_V": ox_v,
             "window_V": win,                         # G2 게이트 값 = ox − ocv (정정 창)
-            "window_V_upper": win_ub,                # OCV 없을 때만 — 옛 창 = 상한
+            "window_status": win_status,             # ox−ocv · no_stable_window · no_esw_data
             "window_V_legacy": fnum(ox.get("window_V")),   # ⛔ 게이트에 안 쓴다 (출처 보존)
-            "window_rule": win_rule,
             "esw_note": (ox.get("note") or "").strip(),
             "bvs_x005": fnum(l5.get("bvs_li_proxy_score")),
             "blocking": fnum(l5.get("tier2_dopant_blocking_fraction")),
@@ -279,8 +286,8 @@ def build_gates(rows):
             "threshold": f"window_V ≥ {COLLAPSE_WINDOW_V} V",
             "predicate": g2_pass,
             "missing": g2_missing,
-            "window_rule": ("OCV 가 없으면 옛 창(ox − 마지막 환원 계단)을 **상한으로만** 쓴다 — 상한 < 문턱이면 "
-                            "확정 탈락, 아니면 판정 불가(missing · 통과 아님). " + ESW_WINDOW_DECISION),
+            "window_rule": ("OCV 빈칸 = 교환 0 단계 없음 = 안정창 없음 → **탈락**. 판정 불가는 ESW 기록 자체가 "
+                            "없을 때만. " + " · ".join(ESW_WINDOW_DECISIONS)),
             "concentration_convention": ("champion composition 단일 (농도 평균 아님). "
                                          "실측 x = 0.25 — 라벨 x002/x005/x010 은 농도값이 아니다."),
             "threshold_basis": (
@@ -600,18 +607,17 @@ def _selftest():
         return d
 
     #: ── G2 정정 창 (2026-10-01) — 옛 창을 게이트 값으로 쓰지 않는다 ──
-    w, ub, rule = esw_gate_window(2.14, 1.914, 0.417)
-    chk(w == 0.226 and ub is None and rule == "ox−ocv", f"정정 창 = ox − ocv (2.14 − 1.914 = {w})")
-    _r = lambda w_, ub_: {"window_V": w_, "window_V_upper": ub_}
-    chk(g2_pass(_r(0.06, None)) and not g2_missing(_r(0.06, None)), "정정 창 0.06 ≥ 0.05 → 통과")
-    chk(not g2_pass(_r(0.04, None)) and not g2_missing(_r(0.04, None)), "⛔음성: 정정 창 0.04 → 탈락 (판정 불가 아님)")
-    w2, ub2, _ = esw_gate_window(2.14, None, 0.423)
-    chk(w2 is None and ub2 == 0.423 and not g2_pass(_r(w2, ub2)) and g2_missing(_r(w2, ub2)),
-        "⛔음성: OCV 없고 옛 창 0.423 → **판정 불가** (옛 창으로 통과시키지 않는다)")
-    w3, ub3, _ = esw_gate_window(1.808, None, 0.004)
-    chk(not g2_pass(_r(w3, ub3)) and not g2_missing(_r(w3, ub3)),
-        "OCV 없고 옛 창 0.004 < 0.05 → 상한으로 **확정 탈락** (정정 창은 더 좁다)")
-    chk(g2_missing(_r(*esw_gate_window(None, None, None)[:2])), "⛔음성: ESW 자료 없음 → 판정 불가 (0 으로 읽지 않는다)")
+    _r = lambda w_, st_: {"window_V": w_, "window_status": st_}
+    w, st = esw_gate_window(2.14, 1.914)
+    chk(w == 0.226 and st == "ox−ocv", f"정정 창 = ox − ocv (2.14 − 1.914 = {w})")
+    chk(g2_pass(_r(0.06, "ox−ocv")) and not g2_missing(_r(0.06, "ox−ocv")), "정정 창 0.06 ≥ 0.05 → 통과")
+    chk(not g2_pass(_r(0.04, "ox−ocv")) and not g2_missing(_r(0.04, "ox−ocv")), "⛔음성: 정정 창 0.04 → 탈락 (판정 불가 아님)")
+    w2, st2 = esw_gate_window(2.14, None)
+    chk(w2 is None and st2 == "no_stable_window" and not g2_pass(_r(w2, st2)) and not g2_missing(_r(w2, st2)),
+        "⛔음성: ox 있고 OCV 없음(교환 0 단계 없음) → **안정창 없음 = 탈락** (판정 불가도 통과도 아님)")
+    chk(esw_gate_window(2.14, None, has_esw_row=False)[1] == "no_esw_data"
+        and g2_missing(_r(*esw_gate_window(None, None))),
+        "⛔음성: ESW 기록 자체가 없을 때만 판정 불가 (0 으로 읽지 않는다)")
     mk("Al2O3_x002", axes=("esw", "elastic", "bvse"))
     mk("ZrCl4_x002", axes=("esw",))                      # 2축 결손
     mk("As2S3_x002", axes=(), seed0=True)                # seed 실패
@@ -1352,14 +1358,14 @@ def main():
             "rule": "G2 창 = ox_V − ocv_V (아래 가장자리 = 교환 0 의 최저 V = OCV 자가분해 전압)",
             "why": ("옛 window_V = ox_V − red_V 의 red_V 는 마지막 환원 계단이었다 — 계통적으로 넓다 "
                     "(HZ-esw-reduction-limit-label · commit 8a0e202d3 · 2026-09-22 정정 A)"),
-            "no_ocv": ("OCV 없는 행은 옛 창을 상한으로만 쓴다 — 상한 < 문턱이면 확정 탈락, "
-                       "아니면 G2 판정 불가(missing · 통과 아님)"),
-            "decision": ESW_WINDOW_DECISION,
+            "no_ocv": ("OCV 빈칸은 결측이 아니다 — 옛 batch 가 교환 0 단계가 없을 때 남긴 None 이다. "
+                       "그 조성은 안정창이 없다(폭 0) → G2 **탈락**. " + NO_STABLE_WINDOW_NOTE),
+            "missing_only_when": "ESW 기록 자체가 없을 때만 G2 판정 불가",
+            "decisions": ESW_WINDOW_DECISIONS,
             "counts": {
-                "corrected_ox_minus_ocv": sum(1 for r in rows if r["window_rule"] == "ox−ocv"),
-                "no_ocv_fail_by_upper_bound": sum(1 for r in rows if r["window_V"] is None and not g2_missing(r)),
-                "no_ocv_not_assessable": sum(1 for r in rows if g2_missing(r) and r["window_V_upper"] is not None),
-                "no_esw_data": sum(1 for r in rows if r["window_V"] is None and r["window_V_upper"] is None),
+                "corrected_ox_minus_ocv": sum(1 for r in rows if r["window_status"] == "ox−ocv"),
+                "no_stable_window": sum(1 for r in rows if r["window_status"] == "no_stable_window"),
+                "no_esw_data": sum(1 for r in rows if r["window_status"] == "no_esw_data"),
             },
             "legacy_field": "pool[].window_V_legacy — 게이트에 안 쓴다 (옛 숫자의 출처 보존)",
         },
@@ -1448,8 +1454,8 @@ def main():
                                "litdb/papers/ong2013_lgps_family_substitution.md",
                                "litdb/papers/fujimura2013_ml_conductivity_origin.md"],
         "pool": [{"dopant": r["dopant"], "group": r["group"], "de": r["de"], "ox_V": r["ox_V"],
-                  "window_V": r["window_V"], "window_V_upper": r["window_V_upper"],
-                  "window_V_legacy": r["window_V_legacy"], "window_rule": r["window_rule"],
+                  "window_V": r["window_V"], "window_status": r["window_status"],
+                  "window_V_legacy": r["window_V_legacy"],
                   "transport_norm": r["transport_norm"],
                   "blocking": r["blocking"], "E_GPa": r["E_GPa"], "GoverB": r["GoverB"],
                   "esw_note": r["esw_note"],
