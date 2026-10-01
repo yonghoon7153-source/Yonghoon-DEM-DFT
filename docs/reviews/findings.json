@@ -1999,7 +1999,7 @@
   {
    "id": "DESC-01",
    "severity": "P1",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
@@ -2011,12 +2011,15 @@
     "webapp/test_closed_param_values.py"
    ],
    "claimed_fixed_sha": "f3cb141ae",
-   "verification_note": "f3cb141ae (웹앱 ②-a · 시험 먼저 — webapp/test_closed_param_values.py 옛 코드 12/28 → 28/28): calc_effective_conductivity 가 τ 가 없어도 phi_se 를 내고 (tau · sigma_ratio = None) analyze_contacts 가 phi_se · phi_am 을 τ 조건 밖에서 싣는다 — σ_Bruggeman 두 행만 τ 조건 · 시험 [C] 절 (SE–SE 접촉 0 → 관통 없음 침대에서 φ 두 키 존재)"
+   "verification_note": "f3cb141ae (웹앱 ②-a · 시험 먼저 — webapp/test_closed_param_values.py 옛 코드 12/28 → 28/28): calc_effective_conductivity 가 τ 가 없어도 phi_se 를 내고 (tau · sigma_ratio = None) analyze_contacts 가 phi_se · phi_am 을 τ 조건 밖에서 싣는다 — σ_Bruggeman 두 행만 τ 조건 · 시험 [C] 절 (SE–SE 접촉 0 → 관통 없음 침대에서 φ 두 키 존재)  ↪ 10-01 Codex 최종 (§6): verified [범위: 배포 경로 — 웹앱 전체 포괄 승인 아님].",
+   "verified_sha": "8b3bc3d9c",
+   "verified_by": "codex",
+   "verified_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md"
   },
   {
    "id": "DESC-02",
    "severity": "P1",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
@@ -2027,7 +2030,10 @@
     "scripts/lhs_design_dataset.py::selftest ㉓"
    ],
    "claimed_fixed_sha": "6870a85a5",
-   "verification_note": "[범위: LHS 인계 · 배포 경로] 716850ced · 5f3836afc · 6870a85a5: 배포 τ = 수확기 벽 τ (같은 성분 쌍 · 폴백 없음 · T1–T3 — 관통 ⟺ 값 · 비관통 = 빈칸).  웹앱 calc_tortuosity 잔여 = DESC-02W."
+   "verification_note": "[범위: LHS 인계 · 배포 경로] 716850ced · 5f3836afc · 6870a85a5: 배포 τ = 수확기 벽 τ (같은 성분 쌍 · 폴백 없음 · T1–T3 — 관통 ⟺ 값 · 비관통 = 빈칸).  웹앱 calc_tortuosity 잔여 = DESC-02W.  ↪ 10-01 Codex 최종 (§6): verified [범위: 배포 τ 경로 — DESC-02W open 유지].",
+   "verified_sha": "8b3bc3d9c",
+   "verified_by": "codex",
+   "verified_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md"
   },
   {
    "id": "DESC-02W",
@@ -2047,7 +2053,7 @@
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
    "title": "Physics 피복률이 **확대 DEM 길이와 미확대 5 nm 두께를 혼용**한다 — cap 선택이 뒤집힌다",
-   "note": "(Codex 판정문 라벨: **P1-DESC-03**)\n`coverage_physics_vs_hertzian.py:205-207` 이 `delta_sim`·`r` 를 sim 단위 그대로 `film_area_from_overlap` 에 넘기는데 `plastic_coverage.py:50` 의 `H_FILM_MIN = 5.0e-9` 은 **SI 미터**다.  `:284` 의 `A_volume = V_overlap / H_FILM_MIN` 은 분자만 길이³(1e9)로 스케일되어 **부피 cap 이 1000배 부풀고 사실상 안 걸린다**.\n★★ **이 리포에서 수치까지 독립 재현**: AM/SE 반지름 0.5 um, delta/R* = 0.05 를 실제 함수에 넣으면 binding cap 이 `tabor`(현행 sim) -> `volume`(SI 통일) 로 **뒤집히고** A_physics/A_hertz 가 **2.502607 -> 1.229167** (비의 비 **2.036019**).  요청서의 Hertz 0.312500 % 를 곱하면 **0.782065 % -> 0.384115 %** = 판정문의 두 수치와 일치.\n⇒ 내가 요청서에 쓴 *\"큰 델타는 정의 차이뿐이며 단위 문제는 없다\"* 는 **반증됐다**.\n⚠ **경계**: Hertz 는 두 경우 모두 불변(0.312500 %)이므로 등록 타깃이 Hertz 전용인 한 이 오류는 일곱 열로 **전이되지 않는다**.  화면 델타 세 수치(+281.6/+299.4/+270.3 %)의 원인이 이것이라고 **단정하지 않는다** — 원자료 미확인.\n처방: 표준 scale 에서 Hertz 보존을 확인하고 Physics helper 의 단위를 일관화 (수확 계약 4번).\n\n★ **결과 2026-09-13 — 이 결함이 `L1-02` 를 가리고 있다** (LHS 30 케이스 실측, 3,619,759 간선):\n정확 lens 로 바꿔도 `A_final`·`a_eff`·ψ 분기 변화 **0/3,619,759** 인데, 그 이유가 이 항목이다 —\nmm 를 m 로 읽어 `A_volume` 이 다른 항보다 **1000배** 부풀어 volume cap 이 **원리적으로 결속 불가**.\n⇒ ① `case_master.csv` 의 `volume` 결속 0/163 은 물리가 아니라 이 단위 교란의 산물 ② DESC-03 을\n고치면 `L1-02` 의 크기가 **0 이 아니게 될 수 있다** — 고친 직후 같은 L1 블록으로 재측정할 것.\n⚠ `L1-01` 의 5.240 % 는 이 교란과 **무관**하다 (`A_tabor/A_hertz` 가 무차원).",
+   "note": "(Codex 판정문 라벨: **P1-DESC-03**)\n`coverage_physics_vs_hertzian.py:205-207` 이 `delta_sim`·`r` 를 sim 단위 그대로 `film_area_from_overlap` 에 넘기는데 `plastic_coverage.py:50` 의 `H_FILM_MIN = 5.0e-9` 은 **SI 미터**다.  `:284` 의 `A_volume = V_overlap / H_FILM_MIN` 은 분자만 길이³(1e9)로 스케일되어 **부피 cap 이 1000배 부풀고 사실상 안 걸린다**.\n★★ **이 리포에서 수치까지 독립 재현**: AM/SE 반지름 0.5 um, delta/R* = 0.05 를 실제 함수에 넣으면 binding cap 이 `tabor`(현행 sim) -> `volume`(SI 통일) 로 **뒤집히고** A_physics/A_hertz 가 **2.502607 -> 1.229167** (비의 비 **2.036019**).  요청서의 Hertz 0.312500 % 를 곱하면 **0.782065 % -> 0.384115 %** = 판정문의 두 수치와 일치.\n⇒ 내가 요청서에 쓴 *\"큰 델타는 정의 차이뿐이며 단위 문제는 없다\"* 는 **반증됐다**.\n⚠ **경계**: Hertz 는 두 경우 모두 불변(0.312500 %)이므로 등록 타깃이 Hertz 전용인 한 이 오류는 일곱 열로 **전이되지 않는다**.  화면 델타 세 수치(+281.6/+299.4/+270.3 %)의 원인이 이것이라고 **단정하지 않는다** — 원자료 미확인.\n처방: 표준 scale 에서 Hertz 보존을 확인하고 Physics helper 의 단위를 일관화 (수확 계약 4번).\n\n★ **결과 2026-09-13 — 이 결함이 `L1-02` 를 가리고 있다** (LHS 30 케이스 실측, 3,619,759 간선):\n정확 lens 로 바꿔도 `A_final`·`a_eff`·ψ 분기 변화 **0/3,619,759** 인데, 그 이유가 이 항목이다 —\nmm 를 m 로 읽어 `A_volume` 이 다른 항보다 **1000배** 부풀어 volume cap 이 **원리적으로 결속 불가**.\n⇒ ① `case_master.csv` 의 `volume` 결속 0/163 은 물리가 아니라 이 단위 교란의 산물 ② DESC-03 을\n고치면 `L1-02` 의 크기가 **0 이 아니게 될 수 있다** — 고친 직후 같은 L1 블록으로 재측정할 것.\n⚠ `L1-01` 의 5.240 % 는 이 교란과 **무관**하다 (`A_tabor/A_hertz` 가 무차원).  ↪ 10-01 Codex 최종 (§6): 배포 MOOT · 원 항목 open (배제는 수정이 아님).",
    "evidence_tests": [
     "scripts/plastic_coverage.py",
     "scripts/coverage_physics_vs_hertzian.py"
@@ -2061,7 +2067,7 @@
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
    "title": "`tortuosity_dijkstra_SE` 라는 **이름만으로 통계량·경계·절단이 정해지지 않는다**",
-   "note": "(Codex 판정문 라벨: **P2-DESC-04**)\n같은 등록 이름 아래 **mean / median / recommended** 세 키가 있고 값이 갈린다.\n· `dem_analysis_core.py:545` — 경로 [1,1,10] -> mean **4**, recommended **1**.\n· `:533` — [1, 20.024984] 에서 `1 <= tau < 20` 절단이 긴 경로를 지워 mean **1** (무절단 평균 10.512492 와 다름).\n· `:404` — 경계가 own-radius x2 -> 벽높이 15/85 % -> **관측 SE z 범위 15/85 %** 로 내려간다.  실제 양판 접촉 0 인 구조도 마지막 fallback 에서 관통 100 %, tau = 1 을 낸다.\n⇒ 수확기가 임의로 recommended 를 고르면 기존 mean 과 **다른 target** 이 된다.  legacy 값과 교정값을 같은 컬럼에 섞지 않는다.  (설계 재추첨 요구가 아니다.)",
+   "note": "(Codex 판정문 라벨: **P2-DESC-04**)\n같은 등록 이름 아래 **mean / median / recommended** 세 키가 있고 값이 갈린다.\n· `dem_analysis_core.py:545` — 경로 [1,1,10] -> mean **4**, recommended **1**.\n· `:533` — [1, 20.024984] 에서 `1 <= tau < 20` 절단이 긴 경로를 지워 mean **1** (무절단 평균 10.512492 와 다름).\n· `:404` — 경계가 own-radius x2 -> 벽높이 15/85 % -> **관측 SE z 범위 15/85 %** 로 내려간다.  실제 양판 접촉 0 인 구조도 마지막 fallback 에서 관통 100 %, tau = 1 을 낸다.\n⇒ 수확기가 임의로 recommended 를 고르면 기존 mean 과 **다른 target** 이 된다.  legacy 값과 교정값을 같은 컬럼에 섞지 않는다.  (설계 재추첨 요구가 아니다.)  ↪ 10-01 Codex 최종 (§6): 부분 verified — 별도 mean/median · 벽 규약 · 절단 기록은 성립 · README 의 τ 분모 문구는 LREL-05 로 재개방 (이 커밋 README 정정) · 웹앱 범위 open.",
    "evidence_tests": [
     "scripts/lhs_design_dataset.py::selftest ㉓"
    ],
@@ -2081,7 +2087,7 @@
   {
    "id": "DESC-05",
    "severity": "P2",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
@@ -2092,7 +2098,10 @@
     "scripts/lhs_design_dataset.py::selftest"
    ],
    "claimed_fixed_sha": "06b24cdd0",
-   "verification_note": "[범위: LHS 수확 · 생성 · 웹앱 type_map] 716850ced · 514691646 · 06b24cdd0: 수확기 N_A_PHASE_ABSENT · 분모 ≤ 0 제외 + 셈 · 덱에서 type 매핑 · mono 설계 상 칸 (B).  웹앱 calc_coverage:288 분모 붕괴 → 0 은 SELF-49 류로 남김."
+   "verification_note": "[범위: LHS 수확 · 생성 · 웹앱 type_map] 716850ced · 514691646 · 06b24cdd0: 수확기 N_A_PHASE_ABSENT · 분모 ≤ 0 제외 + 셈 · 덱에서 type 매핑 · mono 설계 상 칸 (B).  웹앱 calc_coverage:288 분모 붕괴 → 0 은 SELF-49 류로 남김.  ↪ 10-01 Codex 최종 (§6): verified [범위: 현 배포의 N/A · 0 · mono — 웹앱 calc_coverage 의 invalid→0 은 닫지 않음].",
+   "verified_sha": "8b3bc3d9c",
+   "verified_by": "codex",
+   "verified_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md"
   },
   {
    "id": "DESC-06",
@@ -2102,7 +2111,7 @@
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
    "title": "덤프를 읽었다고 **같은 최종 프레임**인 것은 아니다",
-   "note": "(Codex 판정문 라벨: **P2-DESC-06**)\n`parse_liggghts.py:243` 의 파일 선택은 atom/contact/mesh **각 종류의 최신 파일을 독립 선택**한다.  Codex: 합성 `atom_100 + contact_200 + mesh_100` 을 **rc=0** 으로 받았다.  다중 프레임 파일은 행을 이어 붙이고, atom loader 는 ID 사전으로 마지막 값을 쓰는 반면 contact 는 중복될 수 있다.\n`dem_analysis_core.py:110` — mesh 가 없으면 **최고 입자 중심으로 벽을 추정**한다.  실제 벽 .020 · 최고 중심 .019 이면 부피 분율에 **5.263 % 상대차**.\n⇒ 수확 계약은 **같은 최종 timestep · 상자/벽 실물 · type map · 완료 압력 · 원파일 해시**를 검사해야 한다.  기본값·추정값으로 조용히 메우지 않는다.  ⚠ 130 배치가 이런 입력을 가진다고 **단정하지 않는다**.  ⊕ 09-28 밤 (LHS J20-a · 접촉 위상 감사): **CN 에 직접 걸린다** — 합성 2 프레임 접촉 덤프를 웹앱 경로 (`parse_liggghts.parse_contact_file` → `dem_analysis_core.calc_se_se_cn`) 로 읽으면 SE-SE CN 이 정확히 2 배 (1.333 → 2.667) · 접촉 수 · 면적 · AM–SE CN 도 같은 부류.  LHS 배치 (`lhs_webapp_batch.stage_case`) 는 수확과 **같은 파일** (sha) 을 쓰지만 **파일 안 프레임 수**는 검사하지 않는다 (수확기 `read_contact_dump` 는 마지막 블록만) ⇒ ⬜ 130 접촉 덤프의 ENTRIES 블록 수 실측 · 관문 추가는 비준 대기.  ⊕ 09-28 밤 (J20-a ⓑ · 비준): LHS 배치 관문 — atom · contact 프레임 ≠ 1 · contact 중복 행 · 자기쌍이면 REFUSED (`lhs_webapp_batch` selftest ⑧–⑪, 옛 코드에서 실패 확인 뒤 수정) · 읽기 전용 감사 `scripts/lhs_contact_audit.py` 가 130 덤프를 센다 (WSL 대기).  ⚠ 웹앱 파서 (`parse_liggghts`) 자체는 그대로 — 일반 업로드 경로의 다중 프레임은 여전히 이어 붙인다 (열림).  ⊕ 09-29 WSL 실측 (감사 v1 · 봉인 코호트 130): 접촉 · 원자 프레임 **전부 1** · 중복 행 0 ⇒ 이 코호트에서는 CN 배가 경로가 실현되지 않는다 (관문 `stage_case` 는 그대로 — 다른 입력을 막는다).  ↪ 10-01 대조: 배포 경로는 같은 timestep · 같은 step 메시 · sha · 한 프레임 · 같은 프레임 porosity 관문.  남은 것 = 목표 압력 도달 검사 없음 (수확 · 배치 · 봉인 grep 0) · 웹앱 파서는 여전히 프레임을 섞는다.",
+   "note": "(Codex 판정문 라벨: **P2-DESC-06**)\n`parse_liggghts.py:243` 의 파일 선택은 atom/contact/mesh **각 종류의 최신 파일을 독립 선택**한다.  Codex: 합성 `atom_100 + contact_200 + mesh_100` 을 **rc=0** 으로 받았다.  다중 프레임 파일은 행을 이어 붙이고, atom loader 는 ID 사전으로 마지막 값을 쓰는 반면 contact 는 중복될 수 있다.\n`dem_analysis_core.py:110` — mesh 가 없으면 **최고 입자 중심으로 벽을 추정**한다.  실제 벽 .020 · 최고 중심 .019 이면 부피 분율에 **5.263 % 상대차**.\n⇒ 수확 계약은 **같은 최종 timestep · 상자/벽 실물 · type map · 완료 압력 · 원파일 해시**를 검사해야 한다.  기본값·추정값으로 조용히 메우지 않는다.  ⚠ 130 배치가 이런 입력을 가진다고 **단정하지 않는다**.  ⊕ 09-28 밤 (LHS J20-a · 접촉 위상 감사): **CN 에 직접 걸린다** — 합성 2 프레임 접촉 덤프를 웹앱 경로 (`parse_liggghts.parse_contact_file` → `dem_analysis_core.calc_se_se_cn`) 로 읽으면 SE-SE CN 이 정확히 2 배 (1.333 → 2.667) · 접촉 수 · 면적 · AM–SE CN 도 같은 부류.  LHS 배치 (`lhs_webapp_batch.stage_case`) 는 수확과 **같은 파일** (sha) 을 쓰지만 **파일 안 프레임 수**는 검사하지 않는다 (수확기 `read_contact_dump` 는 마지막 블록만) ⇒ ⬜ 130 접촉 덤프의 ENTRIES 블록 수 실측 · 관문 추가는 비준 대기.  ⊕ 09-28 밤 (J20-a ⓑ · 비준): LHS 배치 관문 — atom · contact 프레임 ≠ 1 · contact 중복 행 · 자기쌍이면 REFUSED (`lhs_webapp_batch` selftest ⑧–⑪, 옛 코드에서 실패 확인 뒤 수정) · 읽기 전용 감사 `scripts/lhs_contact_audit.py` 가 130 덤프를 센다 (WSL 대기).  ⚠ 웹앱 파서 (`parse_liggghts`) 자체는 그대로 — 일반 업로드 경로의 다중 프레임은 여전히 이어 붙인다 (열림).  ⊕ 09-29 WSL 실측 (감사 v1 · 봉인 코호트 130): 접촉 · 원자 프레임 **전부 1** · 중복 행 0 ⇒ 이 코호트에서는 CN 배가 경로가 실현되지 않는다 (관문 `stage_case` 는 그대로 — 다른 입력을 막는다).  ↪ 10-01 대조: 배포 경로는 같은 timestep · 같은 step 메시 · sha · 한 프레임 · 같은 프레임 porosity 관문.  남은 것 = 목표 압력 도달 검사 없음 (수확 · 배치 · 봉인 grep 0) · 웹앱 파서는 여전히 프레임을 섞는다.  ↪ 10-01 Codex 최종 (§6): PARTIAL · open — 배치 프레임/SHA 관문은 작동.  raw 파일 · 완료 압력 · dirty 실행코드 미확인 + **최종 join 이 접촉 status 의 raw SHA 변이를 놓친다** (초기 배치 관문은 거부 · 현 194 행의 네 SHA 는 일치).",
    "evidence_tests": [
     "scripts/parse_liggghts.py",
     "scripts/dem_analysis_core.py"
@@ -2116,7 +2125,7 @@
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
    "title": "일곱 열을 **일곱 독립 회귀**로 세면 안 된다 — 두 개는 정의 종속",
-   "note": "(Codex 판정문 라벨: **P2-DESC-07**)\n① `eps_sphere(%) = 100(1 - phi_SE - phi_AM)` — AM+SE 만, 동일 프레임/상자일 때.  291 코퍼스 DEM 열에서 최대 절댓값 **2.22e-16** 으로 재현된다(부동소수 오차).\n② `C_total = (N_P C_P + N_S C_S)/(N_P + N_S)` — **실측 입자수까지 주어지면** 전체 피복률에 추가 정보가 없다.  ⚠ 행마다 가중치가 달라지므로 *세 coverage 열의 고정계수 행렬 rank 가 항상 2* 라는 뜻은 **아니다**.\n권고 기본 출력 = `phi_SE`·`phi_AM`, **존재상별** Hertz `C_P`·`C_S`, **검증된 관통** graph 의 Dijkstra tau.  전체 coverage 와 eps 는 파생/QC 로 보관.\n⚠ 예측 시점에 실현 `N_P`/`N_S` 를 모르는 모델이면 관측 N 을 몰래 넣어 total 을 예측했다고 하면 안 된다.  설계 추정 N 과 dump 실측 N 도 구분한다.\n\n## ★ 실측 검증 2026-09-19 (`c540de993`) — **두 항등식 다 성립한다** (열린 채 둔다)\n수확 130 에서 직접 쟀다: ① `|ε − 100(1−φ_SE−φ_AM)|` 최대 **2.842e-14** (부동소수) ·\n② `|C_total − (N_P C_P + N_S C_S)/(N_P+N_S)|` 최대 **정확히 0** (100건; mono 30 은 상이\n하나라 정의상 제외).  ⇒ 이 코퍼스에서 **두 열은 독립 정보가 아니다.**\n✅ 기계 강제 완료: `lhs_design_dataset.fill_descriptors` 가 병합마다 다시 재고 위반 시\n**거부**한다 (selftest ⑮b 가 두 방향 위반을 심어 거부를 확인).  유도열은 매니페스트\n`derived_not_independent_targets` 에 적힌다.\n⛔ **그래서 닫지 않는다**: 이 항목의 나머지 절반 — *\"예측 시점에 실현 `N_P`/`N_S` 를 모르는\n모델이 관측 N 을 몰래 넣어 `C_total` 을 예측했다고 하면 안 된다\"* · *\"설계 추정 N 과 dump\n실측 N 을 구분한다\"* — 은 **아무 코드도 강제하지 않는다**.  회귀 단계에서 걸린다.",
+   "note": "(Codex 판정문 라벨: **P2-DESC-07**)\n① `eps_sphere(%) = 100(1 - phi_SE - phi_AM)` — AM+SE 만, 동일 프레임/상자일 때.  291 코퍼스 DEM 열에서 최대 절댓값 **2.22e-16** 으로 재현된다(부동소수 오차).\n② `C_total = (N_P C_P + N_S C_S)/(N_P + N_S)` — **실측 입자수까지 주어지면** 전체 피복률에 추가 정보가 없다.  ⚠ 행마다 가중치가 달라지므로 *세 coverage 열의 고정계수 행렬 rank 가 항상 2* 라는 뜻은 **아니다**.\n권고 기본 출력 = `phi_SE`·`phi_AM`, **존재상별** Hertz `C_P`·`C_S`, **검증된 관통** graph 의 Dijkstra tau.  전체 coverage 와 eps 는 파생/QC 로 보관.\n⚠ 예측 시점에 실현 `N_P`/`N_S` 를 모르는 모델이면 관측 N 을 몰래 넣어 total 을 예측했다고 하면 안 된다.  설계 추정 N 과 dump 실측 N 도 구분한다.\n\n## ★ 실측 검증 2026-09-19 (`c540de993`) — **두 항등식 다 성립한다** (열린 채 둔다)\n수확 130 에서 직접 쟀다: ① `|ε − 100(1−φ_SE−φ_AM)|` 최대 **2.842e-14** (부동소수) ·\n② `|C_total − (N_P C_P + N_S C_S)/(N_P+N_S)|` 최대 **정확히 0** (100건; mono 30 은 상이\n하나라 정의상 제외).  ⇒ 이 코퍼스에서 **두 열은 독립 정보가 아니다.**\n✅ 기계 강제 완료: `lhs_design_dataset.fill_descriptors` 가 병합마다 다시 재고 위반 시\n**거부**한다 (selftest ⑮b 가 두 방향 위반을 심어 거부를 확인).  유도열은 매니페스트\n`derived_not_independent_targets` 에 적힌다.\n⛔ **그래서 닫지 않는다**: 이 항목의 나머지 절반 — *\"예측 시점에 실현 `N_P`/`N_S` 를 모르는\n모델이 관측 N 을 몰래 넣어 `C_total` 을 예측했다고 하면 안 된다\"* · *\"설계 추정 N 과 dump\n실측 N 을 구분한다\"* — 은 **아무 코드도 강제하지 않는다**.  회귀 단계에서 걸린다.  ↪ 10-01 Codex 최종 (§6): 부분 verified — 현재 항등식 일치 · 종속 경고 있음.  total coverage 변이는 관문을 통과 (일반 강제 미완) · 다운스트림 독립 타깃/누설 방지는 별도.",
    "evidence_tests": [
     "scripts/lhs_design_dataset.py::selftest"
    ],
@@ -2131,7 +2140,7 @@
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
    "title": "291 코퍼스와 **그대로 합치면 안 된다** — `d_am` 과 MPM/DEM 혼합이 현행에 잔존",
-   "note": "(Codex 판정문 라벨: **P2-DESC-08**)\nCodex 가 실제 `ml_design_structure.py:540` loader 를 호출해 재확인:\n· `d_am = 0` **40 개 전부 학습 입력에 수용**된다 (ps=0 36 · ps=1 2 · ps=.7 2) ⇒ *'ps=0 만 고치기'* 로 부족하다.\n· 추가 **18 행**은 `d_am = 12` 인데 기록된 존재상은 AM_S 반지름 2 um 뿐 (예: `ps=0, fm_n_AM_P` 빈칸, `fm_n_AM_S=1555, fm_r_AM_S=2`) = **존재상 메타자료와 특징의 불일치 확정**.  ⚠ 원 dump 실측 지름이라고 확대하지 않는다.\n· `predictor_engine.py:231` 의 입력 반경 max 경로는 **존재하지 않는 상의 입력 반경까지** 포함할 수 있다.\n· `use_porosity_pct` 를 넣은 closure 235 행: 최대 **10.816 %p**, 잔차 SD **2.975 %p** = eps SD 3.823 %p 의 **77.82 %** ⇒ MPM/DEM 상태 혼합이 저장 파일에 남아 있다 (기존 판정 재확인).\n⇒ **DEM-only 130 에는 MPM·첨가제 단계가 필요 없다**.  대신 '대표값 선택' 규칙을 복사하지 말 것: 첨가제 없음 = **확인된 0** · MPM 미실행 = **NOT_RUN/N-A** (0 % porosity 아님) · 없는 AM 하위상 = 직경/coverage **N-A**, 개수 **0** · 미퍼콜/표본실패/입력누락/추출예외는 **서로 다른 상태**.\n\n## ★ 범위 갱신 2026-09-19 (`c540de993`) — 130 표는 **분리돼 있고 기계가 본다**\n새 병합기는 291 코퍼스를 **읽지 않는다** (AST 정적 검사 + 변이 대조, selftest ⑮e).\n설계 130 ↔ 수확 130 **전단사**만 허용한다.\n⛔ **그래도 닫지 않는다** — 이 항목의 실제 결함은 `ml_design_structure.py:540` loader 가\n`d_am = 0` **40 행**을 학습 입력으로 받고 `use_porosity_pct` closure 잔차가 ε SD 의\n**77.82 %** 라는 것이고, 그 코드는 **손대지 않았다**.  130 표를 그쪽에 붙이는 순간 같은\n오염이 옮는다.  ↪ 10-01: 배포 v1.1 README §3-8 에 \"다른 코퍼스와 섞지 말 것\" (c981d77f0).  291 로더 (ml_design_structure.load_corpus) 가 d_am 0 인 40 행을 받는 것은 그대로 → open.",
+   "note": "(Codex 판정문 라벨: **P2-DESC-08**)\nCodex 가 실제 `ml_design_structure.py:540` loader 를 호출해 재확인:\n· `d_am = 0` **40 개 전부 학습 입력에 수용**된다 (ps=0 36 · ps=1 2 · ps=.7 2) ⇒ *'ps=0 만 고치기'* 로 부족하다.\n· 추가 **18 행**은 `d_am = 12` 인데 기록된 존재상은 AM_S 반지름 2 um 뿐 (예: `ps=0, fm_n_AM_P` 빈칸, `fm_n_AM_S=1555, fm_r_AM_S=2`) = **존재상 메타자료와 특징의 불일치 확정**.  ⚠ 원 dump 실측 지름이라고 확대하지 않는다.\n· `predictor_engine.py:231` 의 입력 반경 max 경로는 **존재하지 않는 상의 입력 반경까지** 포함할 수 있다.\n· `use_porosity_pct` 를 넣은 closure 235 행: 최대 **10.816 %p**, 잔차 SD **2.975 %p** = eps SD 3.823 %p 의 **77.82 %** ⇒ MPM/DEM 상태 혼합이 저장 파일에 남아 있다 (기존 판정 재확인).\n⇒ **DEM-only 130 에는 MPM·첨가제 단계가 필요 없다**.  대신 '대표값 선택' 규칙을 복사하지 말 것: 첨가제 없음 = **확인된 0** · MPM 미실행 = **NOT_RUN/N-A** (0 % porosity 아님) · 없는 AM 하위상 = 직경/coverage **N-A**, 개수 **0** · 미퍼콜/표본실패/입력누락/추출예외는 **서로 다른 상태**.\n\n## ★ 범위 갱신 2026-09-19 (`c540de993`) — 130 표는 **분리돼 있고 기계가 본다**\n새 병합기는 291 코퍼스를 **읽지 않는다** (AST 정적 검사 + 변이 대조, selftest ⑮e).\n설계 130 ↔ 수확 130 **전단사**만 허용한다.\n⛔ **그래도 닫지 않는다** — 이 항목의 실제 결함은 `ml_design_structure.py:540` loader 가\n`d_am = 0` **40 행**을 학습 입력으로 받고 `use_porosity_pct` closure 잔차가 ε SD 의\n**77.82 %** 라는 것이고, 그 코드는 **손대지 않았다**.  130 표를 그쪽에 붙이는 순간 같은\n오염이 옮는다.  ↪ 10-01: 배포 v1.1 README §3-8 에 \"다른 코퍼스와 섞지 말 것\" (c981d77f0).  291 로더 (ml_design_structure.load_corpus) 가 d_am 0 인 40 행을 받는 것은 그대로 → open.  ↪ 10-01 Codex 최종 (§6): open · 현 배포 밖 (291 을 병합하지 않는 한 직접 오염 경로 아님).",
    "evidence_tests": [
     "scripts/ml_design_structure.py",
     "docs/data/design_performance_corpus.csv"
@@ -2140,7 +2149,7 @@
   {
    "id": "DESC-09",
    "severity": "P2",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
@@ -2150,7 +2159,10 @@
     "scripts/lhs_design_dataset.py::selftest"
    ],
    "claimed_fixed_sha": "c981d77f0",
-   "verification_note": "c981d77f0: 130/130 수확 · 부분 인계 거부 + 배포 README §3-6 에 상수 열 (rve_um 50 · pressure_MPa 300 · e_se_gpa 1.35 · loading_mAh_cm2 2.0) = 고정 상자 · 조건 안의 예측 · 특징 아님 (프롬프트 규칙 1 정정)."
+   "verification_note": "c981d77f0: 130/130 수확 · 부분 인계 거부 + 배포 README §3-6 에 상수 열 (rve_um 50 · pressure_MPa 300 · e_se_gpa 1.35 · loading_mAh_cm2 2.0) = 고정 상자 · 조건 안의 예측 · 특징 아님 (프롬프트 규칙 1 정정).  ↪ 10-01 Codex 최종 (§6): verified [범위: 현재 130/64 완전성 · 상수 표기 — 미래 생성기 완전성은 LREL-03].",
+   "verified_sha": "8b3bc3d9c",
+   "verified_by": "codex",
+   "verified_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md"
   },
   {
    "id": "SELF-21",
@@ -4749,7 +4761,7 @@
   {
    "id": "HND-01",
    "severity": "P1",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "found_by": "codex (LHS 인계표 적대 리뷰 2026-09-24~25, 대상 425cee222)",
    "opened_in": "docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md",
@@ -4759,12 +4771,15 @@
     "scripts/lhs_descriptor_harvest.py::selftest ⑮"
    ],
    "claimed_fixed_sha": "af528e24d",
-   "verification_note": "af528e24d: 이름을 규약으로 고정 (*_spheresum_nominal_gap · *_pushback_equiv \"hard-bottom 예측 아님\" · *_clipped_spheresum_gap · boundary_model_id) · J18 이 J17 의 \"(나) ≈ 단단한 바닥\" 철회 · 배포는 (가)(나)(다) 를 싣지 않는다.  ⚠ 배포 두께 thickness_mass_conserving_um 은 Codex 미검토 — 최종 리뷰 질문. scratchpad 대조 조사 (10-01 · 읽기 전용 · HEAD d1ec42fba) — Codex 최종 리뷰 요청서 §2-A 에 옮김"
+   "verification_note": "af528e24d: 이름을 규약으로 고정 (*_spheresum_nominal_gap · *_pushback_equiv \"hard-bottom 예측 아님\" · *_clipped_spheresum_gap · boundary_model_id) · J18 이 J17 의 \"(나) ≈ 단단한 바닥\" 철회 · 배포는 (가)(나)(다) 를 싣지 않는다.  ⚠ 배포 두께 thickness_mass_conserving_um 은 Codex 미검토 — 최종 리뷰 질문. scratchpad 대조 조사 (10-01 · 읽기 전용 · HEAD d1ec42fba) — Codex 최종 리뷰 요청서 §2-A 에 옮김  ↪ 10-01 Codex 최종 (§6): verified [범위: 옛 보정량 배제 · 명명 — H_mc 는 등가 장부량으로만 (판정문 §5)].",
+   "verified_sha": "8b3bc3d9c",
+   "verified_by": "codex",
+   "verified_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md"
   },
   {
    "id": "HND-02",
    "severity": "P2",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "found_by": "codex (LHS 인계표 적대 리뷰 2026-09-24~25, 대상 425cee222)",
    "opened_in": "docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md",
@@ -4774,7 +4789,10 @@
     "scripts/lhs_descriptor_harvest.py::selftest ⑮"
    ],
    "claimed_fixed_sha": "af528e24d",
-   "verification_note": "af528e24d: check_deck_floor 가 fix id 생명주기 (unfix · 재정의) · group = all · include/read_restart 등 검증 불가 거부 · Codex 세 변이 + include 상주 · 배포 원천 194 수확 전부 새 문법.  남은 한계: 정적 판독 (마지막 run 뒤 정의 · 움직이는 벽). scratchpad 대조 조사 (10-01 · 읽기 전용 · HEAD d1ec42fba) — Codex 최종 리뷰 요청서 §2-A 에 옮김"
+   "verification_note": "af528e24d: check_deck_floor 가 fix id 생명주기 (unfix · 재정의) · group = all · include/read_restart 등 검증 불가 거부 · Codex 세 변이 + include 상주 · 배포 원천 194 수확 전부 새 문법.  남은 한계: 정적 판독 (마지막 run 뒤 정의 · 움직이는 벽). scratchpad 대조 조사 (10-01 · 읽기 전용 · HEAD d1ec42fba) — Codex 최종 리뷰 요청서 §2-A 에 옮김  ↪ 10-01 Codex 최종 (§6): verified [범위: 정적 덱 문법 — 실행 중 벽 상태 인증 아님].",
+   "verified_sha": "8b3bc3d9c",
+   "verified_by": "codex",
+   "verified_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md"
   },
   {
    "id": "HND-03",
@@ -4784,7 +4802,7 @@
    "found_by": "codex (LHS 인계표 적대 리뷰 2026-09-24~25, 대상 425cee222)",
    "opened_in": "docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md",
    "title": "겹침/반지름 1.98 자리 9 건 = **양면 평면 아래쪽의 점착–중력 평형** (hooke/hysteresis 포화 이력 가지) 후보 — 좌표를 소수 여섯째 자리까지 재현.  중심이 평면을 넘은 입자를 \"정상 압입\" 으로 기록만 하는 것은 불충분",
-   "note": "기하 깊이 d = r − z 와 접촉 겹침 δn = r − |z| 를 분리 — z = −0.98r 이면 d/r 1.98 이지만 접촉 겹침은 0.02r (필드명 `overlap_over_r` 은 오도).  포화 가지 Fn = k2(δn − 2φf r) 에서 평면 아래 정지: δn/r = 2φf − mg/(k2 r) ⇒ d/r = 2 − 2φf + mg/(k2 r).  q = 3 (`coefficientMaxElasticStiffness` AM–SE 칸) · φf = 0.01 (`coefficientPlasticityDepth` AM–SE 칸) 은 생산 덱 `docs/data/phase_a_6mah/in.real_4.liggghts` m6 · m8 에 실재 — ★ 09-25 재계산 (LIGGGHTS hooke kn 식, Y* 1,468,923.8): r 1 µm → z −0.980075994 (JSON −0.980076) · r 0.5 µm → −0.490018998 (JSON −0.490019).  LHS 덱의 m6 · m8 이 같은지는 **사용자 grep 대기**.  관통이 언제 (삽입 · 98.1 중력 · 시간간격) 일어났는지는 모른다 — 최종 좌표로 역확정하지 않는다.  처방: 상태 분리 (중심 통과 · 완전 이탈 · 정상 겹침) · 43 케이스의 물리 타깃 `HOLD_BOUNDARY` · \"부피가 작으니 무영향\" 을 해제 근거로 쓰지 않는다 (τ 밴드 · 접촉망은 극값에 걸린다).\n★ LHS 덱 확인 (사용자 grep 09-25, lhs00_037 bimodal · lhs00_110 mono): m6 `coefficientMaxElasticStiffness` · m8 `coefficientPlasticityDepth` · m7 `coefficientAdhesionStiffness` 이 생산 덱과 **동일** — AM–SE 칸 q 3.0 · φf 0.01 · kc 2.0e5.  ⇒ 재현 조건 충족: 9 건 = 바닥 평면 아래쪽 점착–중력 평형 (**재현됨, 조건부** — 실행 바이너리 · 관통 시점 · 접촉 이력은 미확인).  ↪ 10-01 대조: 경계 상태 · HOLD 는 인계표에 있었으나 배포 v1 에서 빠졌다 (130 HOLD 59 · 64 HOLD 62) → 배포 v1.1 (c981d77f0) 에 boundary_state · physical_target_status · hold_reason_codes 를 싣고 README §3-7 에 뜻을 적었다.  1.98r 기전 자체는 조건부 확인 그대로 → open 유지.",
+   "note": "기하 깊이 d = r − z 와 접촉 겹침 δn = r − |z| 를 분리 — z = −0.98r 이면 d/r 1.98 이지만 접촉 겹침은 0.02r (필드명 `overlap_over_r` 은 오도).  포화 가지 Fn = k2(δn − 2φf r) 에서 평면 아래 정지: δn/r = 2φf − mg/(k2 r) ⇒ d/r = 2 − 2φf + mg/(k2 r).  q = 3 (`coefficientMaxElasticStiffness` AM–SE 칸) · φf = 0.01 (`coefficientPlasticityDepth` AM–SE 칸) 은 생산 덱 `docs/data/phase_a_6mah/in.real_4.liggghts` m6 · m8 에 실재 — ★ 09-25 재계산 (LIGGGHTS hooke kn 식, Y* 1,468,923.8): r 1 µm → z −0.980075994 (JSON −0.980076) · r 0.5 µm → −0.490018998 (JSON −0.490019).  LHS 덱의 m6 · m8 이 같은지는 **사용자 grep 대기**.  관통이 언제 (삽입 · 98.1 중력 · 시간간격) 일어났는지는 모른다 — 최종 좌표로 역확정하지 않는다.  처방: 상태 분리 (중심 통과 · 완전 이탈 · 정상 겹침) · 43 케이스의 물리 타깃 `HOLD_BOUNDARY` · \"부피가 작으니 무영향\" 을 해제 근거로 쓰지 않는다 (τ 밴드 · 접촉망은 극값에 걸린다).\n★ LHS 덱 확인 (사용자 grep 09-25, lhs00_037 bimodal · lhs00_110 mono): m6 `coefficientMaxElasticStiffness` · m8 `coefficientPlasticityDepth` · m7 `coefficientAdhesionStiffness` 이 생산 덱과 **동일** — AM–SE 칸 q 3.0 · φf 0.01 · kc 2.0e5.  ⇒ 재현 조건 충족: 9 건 = 바닥 평면 아래쪽 점착–중력 평형 (**재현됨, 조건부** — 실행 바이너리 · 관통 시점 · 접촉 이력은 미확인).  ↪ 10-01 대조: 경계 상태 · HOLD 는 인계표에 있었으나 배포 v1 에서 빠졌다 (130 HOLD 59 · 64 HOLD 62) → 배포 v1.1 (c981d77f0) 에 boundary_state · physical_target_status · hold_reason_codes 를 싣고 README §3-7 에 뜻을 적었다.  1.98r 기전 자체는 조건부 확인 그대로 → open 유지.  ↪ 10-01 Codex 최종 (§6): open 유지 (물리 타깃 P1) — 표지 · 데이터 보존만 verified · 원인 기전 · 교정 후 값 미확인.  HOLD 의 인과적 크기는 현 자료로 계산 불가 (판정문 §4).",
    "evidence_tests": [
     "docs/data/lhs_descriptors_20260924/README.md",
     "scripts/lhs_descriptor_harvest.py"
@@ -4793,7 +4811,7 @@
   {
    "id": "HND-04",
    "severity": "P1",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "found_by": "codex (LHS 인계표 적대 리뷰 2026-09-24~25, 대상 425cee222)",
    "opened_in": "docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md",
@@ -4804,12 +4822,15 @@
     "scripts/lhs_design_dataset.py::selftest"
    ],
    "claimed_fixed_sha": "af528e24d",
-   "verification_note": "[범위: 인계표 생성기] af528e24d: 생성기가 벽 진단 · 덱 확인 · 적격성 (calculation_status · physical_target_status · hold_reason_codes) 을 싣는다 · 음수 porosity · φ 합 > 1 은 HOLD.  배포 묶음에서 다시 빠진 것은 REL-01 로 따로."
+   "verification_note": "[범위: 인계표 생성기] af528e24d: 생성기가 벽 진단 · 덱 확인 · 적격성 (calculation_status · physical_target_status · hold_reason_codes) 을 싣는다 · 음수 porosity · φ 합 > 1 은 HOLD.  배포 묶음에서 다시 빠진 것은 REL-01 로 따로.  ↪ 10-01 Codex 최종 (§6): verified [범위: 현재 v1.1 전달 — 일반 관문의 누락 · None 허용은 LREL-02].",
+   "verified_sha": "8b3bc3d9c",
+   "verified_by": "codex",
+   "verified_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md"
   },
   {
    "id": "HND-05",
    "severity": "P2",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "found_by": "codex (LHS 인계표 적대 리뷰 2026-09-24~25, 대상 425cee222)",
    "opened_in": "docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md",
@@ -4819,12 +4840,15 @@
     "webapp/test_closed_param_exact_union.py"
    ],
    "claimed_fixed_sha": "90c6c9670",
-   "verification_note": "[범위: 인계 · 배포 porosity] 42e3ca460 (정확 union 130 + 64 · 전부 양수) · 90c6c9670 (분석 단계 정확 union) — 배포 porosity = porosity_union_exact_pct.  웹앱 calc_porosity_dual 의 쌍 렌즈 ε_union (porosity_union 이름) 은 그대로 — SELF-72 · SELF-49 소관."
+   "verification_note": "[범위: 인계 · 배포 porosity] 42e3ca460 (정확 union 130 + 64 · 전부 양수) · 90c6c9670 (분석 단계 정확 union) — 배포 porosity = porosity_union_exact_pct.  웹앱 calc_porosity_dual 의 쌍 렌즈 ε_union (porosity_union 이름) 은 그대로 — SELF-72 · SELF-49 소관.  ↪ 10-01 Codex 최종 (§6): verified [범위: 배포 union 정의 · 경로 — 웹앱 쌍 렌즈 경로 open (SELF-72)].",
+   "verified_sha": "8b3bc3d9c",
+   "verified_by": "codex",
+   "verified_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md"
   },
   {
    "id": "HND-06",
    "severity": "P2",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "found_by": "codex (LHS 인계표 적대 리뷰 2026-09-24~25, 대상 425cee222)",
    "opened_in": "docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md",
@@ -4834,12 +4858,15 @@
     "scripts/lhs_descriptor_harvest.py::selftest ⑮"
    ],
    "claimed_fixed_sha": "af528e24d",
-   "verification_note": "[범위: LHS 수확기 · 배포 경로] af528e24d: 수확기 plate_z_from_stl 평판 검사 (폭 > 1e-7 sim 거부) · 194 수확 plate_z_source = mesh_stl.  웹앱 parse_liggghts.parse_mesh_stl 은 그대로 (SELF-49 소관)."
+   "verification_note": "[범위: LHS 수확기 · 배포 경로] af528e24d: 수확기 plate_z_from_stl 평판 검사 (폭 > 1e-7 sim 거부) · 194 수확 plate_z_source = mesh_stl.  웹앱 parse_liggghts.parse_mesh_stl 은 그대로 (SELF-49 소관).  ↪ 10-01 Codex 최종 (§6): verified [범위: 수확기 평판 판독 — 웹앱 일반 mesh parser 아님].",
+   "verified_sha": "8b3bc3d9c",
+   "verified_by": "codex",
+   "verified_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md"
   },
   {
    "id": "REL-01",
    "severity": "P2",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "found_by": "claude (10-01 · DESC/HND 대조 조사 — 내가 다시 셈)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
@@ -4849,7 +4876,70 @@
    "evidence_tests": [
     "scripts/lhs_release_build.py::selftest"
    ],
-   "verification_note": "c981d77f0: 배포 v1.1 이 세 표지를 싣고 README §3-7 에 뜻 · 빈도 · 쓰는 법 (HOLD 를 지우지 말고 뺀 결과와 넣은 결과 둘 다) · scripts/lhs_release_build.py (배포 = 인계표 열 부분집합 · 만들 때 대조 · v1 바이트 재현 · 시험 8/8)."
+   "verification_note": "c981d77f0: 배포 v1.1 이 세 표지를 싣고 README §3-7 에 뜻 · 빈도 · 쓰는 법 (HOLD 를 지우지 말고 뺀 결과와 넣은 결과 둘 다) · scripts/lhs_release_build.py (배포 = 인계표 열 부분집합 · 만들 때 대조 · v1 바이트 재현 · 시험 8/8).  ↪ 10-01 Codex 최종 (§6): verified [범위: 해시 고정 v1.1 산출물 — \"재발 방지 완결\" 은 LREL-02 때문에 불가].",
+   "verified_sha": "8b3bc3d9c",
+   "verified_by": "codex",
+   "verified_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md"
+  },
+  {
+   "id": "LREL-01",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex LHS 배포 v1.1 최종 리뷰 (1저자 경유 · 2026-10-01)",
+   "opened_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md",
+   "title": "D1–D5 이온 분할 관문이 음수 개수를 수용한다 — 정수 · 합 검사만 있어 무접촉 −1 개 (전체 no_SE −0.0025 % · P −2.17 %) 가 통과 (lhs_design_dataset.py:1667–1689)",
+   "note": "현재 194 행에는 음수 없음 · 생산 함수는 집합을 실제로 센다.  해제: 전체 · 상별 active/dead/no_SE 각 유한 · [0,100] · 정수 개수 [0,N] 검사 + 본 반례 거부 (단순 합 오류 음성대조와 별도).  (판정문 표기 = LHSREL-01 · 원장 ID 형식 5 자 제한으로 LREL)"
+  },
+  {
+   "id": "LREL-02",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex LHS 배포 v1.1 최종 리뷰 (1저자 경유 · 2026-10-01)",
+   "opened_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md",
+   "title": "적격성 표지 누락을 생성기와 배포 부분집합 검사기가 막지 않는다 — 수확의 status/reason/boundary None → 빈칸 행 정상 생성 · 3 열을 뺀 배포 130×86 이 check() 문제 []",
+   "note": "고정 v1.1 에는 3 열이 다 있고 194/194 재계산 일치 (REL-01 인스턴스는 verified).  해제: v1.1 전용 schema/profile 에서 3 열 필수 · 허용 enum · status/reason/boundary 정합 · missing/None/열 제외 거부.  (판정문 표기 = LHSREL-02 · 원장 ID 형식 5 자 제한으로 LREL)"
+  },
+  {
+   "id": "LREL-03",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex LHS 배포 v1.1 최종 리뷰 (1저자 경유 · 2026-10-01)",
+   "opened_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md",
+   "title": "\"130 행\" 이 \"130 개 고유 설계\" 를 보증하지 않는다 — 설계 행 중복 (lhs00_001 → lhs00_000) 을 생성기 · 배포 빌더가 통과 (130 행 · 129 고유 · 문제 [])",
+   "note": "현재 배포 키 집합 · 순서는 130/64 정확.  해제: 최종 생성기 · 릴리스 프로파일에 unique-key · 고정 ID 집합 대조 · 같은 행 수 대체/중복 변이 검사.  (판정문 표기 = LHSREL-03 · 원장 ID 형식 5 자 제한으로 LREL)"
+  },
+  {
+   "id": "LREL-04",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex LHS 배포 v1.1 최종 리뷰 (1저자 경유 · 2026-10-01)",
+   "opened_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md",
+   "title": "union 행의 SE 고체 몫이 φ 장부와 독립적으로 바뀌어도 통과 — se_of_solid_vol 0.5 로 바꿔도 φ 합 닫힘만 보는 관문이 못 잡는다 (lhs_design_dataset.py:1454–1486)",
+   "note": "현재 194 행은 φ_SE = (1−ε)·se_of_solid_vol 이 기계 정밀도로 성립 (README v1.1 개정판 검산).  해제: SE 몫을 수확의 V_SE/(V_SE+V_AM) 에서 재계산해 교차대조 · [0,1] 강제.  (판정문 표기 = LHSREL-04 · 원장 ID 형식 5 자 제한으로 LREL)"
+  },
+  {
+   "id": "LREL-05",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex LHS 배포 v1.1 최종 리뷰 (1저자 경유 · 2026-10-01)",
+   "opened_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md",
+   "title": "README 의 τ 분모 (\"길 / 두께\") 와 \"실제 이온 도달\" 문구가 계산량을 바꿔 적었다 — 실제 τ 분모는 쌍의 z 중심 간격 (반례 1.25 vs 1.0) · 이온 고립은 상단 2r 띠 기준 그래프 지표 (위 평면 접촉 0 개인데 active 100 % 반례)",
+   "note": "열 사전의 쌍 Δz 설명은 맞다.  README 를 판정문 권고 문안으로 정정 (README v1.1 개정판 · 이 커밋) → 다음 커밋에서 claimed_fixed.  (판정문 표기 = LHSREL-05 · 원장 ID 형식 5 자 제한으로 LREL)"
+  },
+  {
+   "id": "LREL-06",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "Codex LHS 배포 v1.1 최종 리뷰 (1저자 경유 · 2026-10-01)",
+   "opened_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md",
+   "title": "열 사전 · 상수 · 학습 안내의 축약 — am_pct (AM 질량 %) · ps_frac (AM 중 P 질량 몫) 분모 미기재 · 확장 사전이 130 설계만 가리킴 · \"n_large_components · ionic_dead_pct 0\" 붙여 씀 · exact union 의 MC 오차 · 15:1 을 보증처럼 씀",
+   "note": "README v1.1 개정판에서 문구 정정 (이 커밋) · 열 사전 TSV 문구는 다음 생성 때 (배포 TSV 는 Codex 승인 바이트 그대로 둠).  (판정문 표기 = LHSREL-06 · 원장 ID 형식 5 자 제한으로 LREL)"
   },
   {
    "id": "MIX-01",

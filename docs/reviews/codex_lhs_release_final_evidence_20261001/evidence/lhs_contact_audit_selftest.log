@@ -1,0 +1,48 @@
+  ✓ ① 깨끗한 침대 → CLEAN (프레임 1 · 중복 0 · 기하 = 덤프 · 플래그 = 경계 넘음)
+  ✓ ①b 경계를 넘는 기하 쌍 1 = 플래그 행 1 (쌍 단위로 일치)
+  ✓ ①c CN: SE-SE 덤프 = 기하 = 2/3 (SE 3 개 · 1–2 쌍 하나 · 외톨이 5 포함 분모)
+  ✓ ①d 벽 접촉 비율: SE 바닥 2/3 · 플래튼 1/3 · AM_P 바닥 1 · AM_S 0 · AM (합친) 바닥 1/2
+  ✓ ② ★ 접촉 프레임 2 개 → FLAG (웹앱 파서는 이어 붙여 CN 이 2 배가 된다)
+  ✓ ③ ★ 같은 쌍이 두 행 (순서 뒤집힘) → FLAG · 덤프 행 CN > 기하 CN
+  ✓ ④ ★ 경계를 넘는 접촉이 덤프에 없다 → 기하에만 1 · FLAG · 덤프 CN < 기하 CN
+  ✓ ⑤ ★ 떨어진 쌍 (δ ≤ 0) 이 행으로 있다 → 덤프에만 1 · δ≤0 1 · FLAG
+  ✓ ⑥ ★ 플래그가 뒤바뀐 덤프 (넘는 쌍 0 · 안쪽 쌍 1) → 플래그만 1 · 넘음만 1 · FLAG
+  ✓ ⑦ 원자 프레임 2 개 → FLAG (웹앱 atoms.csv 에 id 가 두 번)
+  ✓ ⑧ 접촉 판정 경계 쌍 (틈 1e-9 · 토큰 10 자리 → 폭 2e-9) 은 반올림으로 센다 · CLEAN
+  ✓ ⑨ 2-type 침대: AM–SE CN 1 · AM_P · AM_S 벽 비율은 빈칸 (N/A · 0 아님)
+  ✓ ⑩ 웹앱 경로 (parse_liggghts → calc_se_se_cn) 는 2 프레임 파일에서 SE-SE CN = 2 × 기하 (4/3 vs 2/3)
+  [1/1] c1: OK CLEAN 
+→ C:\Users\ADMINI~1\AppData\Local\Temp\tmp8k41_h2p\out/contact_audit.tsv · contact_audit.json
+  요약: {"n": 1, "status": {"OK": 1}, "verdict": {"CLEAN": 1}, "contact_frames": {"max": 1, "n_nonzero": 0}, "atom_frames": {"max": 1, "n_nonzero": 0}, "dup_rows": {"max": 0, "n_nonzero": 0}, "self_pairs": {"max": 0, "n_nonzero": 0}, "delta_nonpos": {"max": 0, "n_nonzero": 0}, "geom_only": {"max": 0, "n_nonzero": 0}, "dump_only": {"max": 0, "n_nonzero": 0}, "rounding_pairs": {"max": 0, "n_nonzero": 0}, "geom_only_far": {"max": 0, "n_nonzero": 0}, "dump_only_far": {"max": 0, "n_nonzero": 0}, "both_inconsistent": {"max": 0, "n_nonzero": 0}, "flag_not_cross": {"max": 0, "n_nonzero": 0}, "cross_not_flag": {"max": 0, "n_nonzero": 0}, "orphan_rows": {"max": 0, "n_nonzero": 0}, "nonfinite_rows": {"max": 0, "n_nonzero": 0}, "flag_id_order_bad": {"max": null, "n_nonzero": 0}, "predicted_flag_missing": {"max": null, "n_nonzero": 0}, "n_periodic_rows_total": 1, "n_geom_cross_total": 1, "sigfigs": [6], "bound_max": 2e-05, "flag_only_cases": {"n": 0, "explained": 0, "grids": []}, "skin_missing": 1}
+  ✓ ⑪ CLI: rc 0 · TSV · JSON (schema · 요약 · 코드 sha 칸)
+  ✓ ⑫a 유효숫자 · 반올림 반폭: "0.0304637"→6 · "0.005"→1 · "3.34479e-06"→6 · "0"→0 · 반폭(0.005, S=6) = 5e-9
+  ✓ ⑫ ★ 반올림 폭 안의 "덤프에만" 쌍 (틈 1e-7 + δ 5e-9 ≤ 1.1e-7) → rounding 1 · far 0 · CLEAN · 유효숫자 6
+  ✓ ⑬ ★ 반올림 폭 (1.1e-7) 밖의 "덤프에만" 쌍 (틈 5e-6) → dump_only_far 1 · FLAG · 예시 기록
+  ✓ ⑬b ★ 반올림 폭 밖의 "기하에만" 쌍 (겹침 5e-6 · 덤프 행 없음) → geom_only_far 1 · FLAG
+  ✓ ⑭ ★ 양쪽에 있는 쌍의 δ_덤프 9e-5 ≠ 재계산 겹침 1e-4 (차 1e-5 ≫ 폭 1.1e-7) → both_inconsistent 1 · FLAG
+  ✓ ⑭b 같은 쌍 · δ_덤프 = 재계산 겹침 → both_inconsistent 0 · CLEAN
+  ✓ ⑮ ★ 플래그만 1 쌍 = id2 주기면 띠 안 · 내부 z 분할면 걸침 → 설명됨 (격자 1x1x2) · CLEAN · cutneighmax 0.012 · skin 0.002
+  ✓ ⑮b ★ 플래그만 1 쌍인데 id2 가 띠 밖 (안쪽) → 설명 안 됨 · FLAG
+  ✓ ⑮c ★ 덱 (skin) 없으면 띠를 못 정한다 → fail-closed FLAG (skin · cutneighmax 빈칸)
+  ✓ ⑮d 같은 침대 · 플래그 0 → 플래그만 0 · 설명 대상 없음 (None) · CLEAN
+  ✓ ⑯ ★ δ = nan 행 → nonfinite 1 · FLAG (자기리뷰 #2)
+  ✓ ⑰ ★ 접촉 step 200 ≠ 원자 step 100 → FLAG (자기리뷰 #4)
+  ✓ ⑱ 주기 플래그 열 없음 → FLAG (자기리뷰 #8)
+  ✓ ⑲ ★ 한 원자의 토큰이 분할면 (z = Lz/2) 위 → τ (반폭 + skin/2) 로 걸침 인정 · 설명됨 · CLEAN
+  ✓ ⑳ ★ 같은 격자가 플래그를 예측하는 쌍 (4–5: 분명히 걸침 · 작은 id 4 띠 안) 에 플래그 0 → 예측 누락 1 · FLAG (자기리뷰 #5c)
+  ✓ ⑳b 둘 다 플래그 → 예측 누락 0 · 설명됨 · CLEAN · newton off 규칙 (id1 > id2) 위반 0
+  ✓ ⑳c 플래그 행의 id 순서가 뒤집힘 (1 < 2) → newton off 규칙 위반 1 · FLAG (자기리뷰 #11)
+  ✓ ㉑ ★ 토큰 자릿수 ≤ 3 인 침대 (S_obs 3 → 적용 6): 겹침 2e-4 접촉 누락 → geom_only_far 1 · FLAG
+  [1/4] c1: OK CLEAN 
+  [2/4] c2: OK FLAG 접촉 프레임 2 · 원자 step 100 ≠ 접촉 step 200
+  [3/4] perc: SKIPPED (DECK_MISSING+RAW_MISSING_ATOM)
+  [4/4] c3: INPUT_ERROR  atom sha256 ≠ 코호트 봉인 (C:\Users\ADMINI~1\AppData\Local\Temp\tmp8k41_h2p\cohort\c1\post\atom_100.liggghts)
+→ C:\Users\ADMINI~1\AppData\Local\Temp\tmp8k41_h2p\out2/contact_audit.tsv · contact_audit.json
+  요약: {"n": 4, "status": {"OK": 2, "SKIPPED": 1, "INPUT_ERROR": 1}, "verdict": {"CLEAN": 1, "FLAG": 1}, "contact_frames": {"max": 2, "n_nonzero": 1}, "atom_frames": {"max": 1, "n_nonzero": 0}, "dup_rows": {"max": 0, "n_nonzero": 0}, "self_pairs": {"max": 0, "n_nonzero": 0}, "delta_nonpos": {"max": 0, "n_nonzero": 0}, "geom_only": {"max": 0, "n_nonzero": 0}, "dump_only": {"max": 0, "n_nonzero": 0}, "rounding_pairs": {"max": 0, "n_nonzero": 0}, "geom_only_far": {"max": 0, "n_nonzero": 0}, "dump_only_far": {"max": 0, "n_nonzero": 0}, "both_inconsistent": {"max": 0, "n_nonzero": 0}, "flag_not_cross": {"max": 0, "n_nonzero": 0}, "cross_not_flag": {"max": 0, "n_nonzero": 0}, "orphan_rows": {"max": 0, "n_nonzero": 0}, "nonfinite_rows": {"max": 0, "n_nonzero": 0}, "flag_id_order_bad": {"max": null, "n_nonzero": 0}, "predicted_flag_missing": {"max": null, "n_nonzero": 0}, "n_periodic_rows_total": 2, "n_geom_cross_total": 2, "sigfigs": [6], "bound_max": 2e-05, "flag_only_cases": {"n": 0, "explained": 0, "grids": []}, "skin_missing": 2}
+  ✓ ㉒ CLI: perc → SKIPPED · c3 (sha 불일치) → INPUT_ERROR · c2 FLAG → rc 3 (FLAG 가 입력 오류보다 앞선다 · 자기리뷰 #6)
+  [1/1] c1: NO_MESH 메시 없음 (mesh_*.stl 없음)
+→ C:\Users\ADMINI~1\AppData\Local\Temp\tmp8k41_h2p\out3/contact_audit.tsv · contact_audit.json
+  요약: {"n": 1, "status": {"NO_MESH": 1}, "verdict": {}, "contact_frames": {"max": null, "n_nonzero": 0}, "atom_frames": {"max": null, "n_nonzero": 0}, "dup_rows": {"max": null, "n_nonzero": 0}, "self_pairs": {"max": null, "n_nonzero": 0}, "delta_nonpos": {"max": null, "n_nonzero": 0}, "geom_only": {"max": null, "n_nonzero": 0}, "dump_only": {"max": null, "n_nonzero": 0}, "rounding_pairs": {"max": null, "n_nonzero": 0}, "geom_only_far": {"max": null, "n_nonzero": 0}, "dump_only_far": {"max": null, "n_nonzero": 0}, "both_inconsistent": {"max": null, "n_nonzero": 0}, "flag_not_cross": {"max": null, "n_nonzero": 0}, "cross_not_flag": {"max": null, "n_nonzero": 0}, "orphan_rows": {"max": null, "n_nonzero": 0}, "nonfinite_rows": {"max": null, "n_nonzero": 0}, "flag_id_order_bad": {"max": null, "n_nonzero": 0}, "predicted_flag_missing": {"max": null, "n_nonzero": 0}, "n_periodic_rows_total": 0, "n_geom_cross_total": 0, "sigfigs": [], "bound_max": null, "flag_only_cases": {"n": 0, "explained": 0, "grids": []}, "skin_missing": 0}
+  ✓ ㉒b 같은 step 메시 없음 → NO_MESH (CLEAN 아님) · rc 2 (자기리뷰 #7)
+
+✓ 전부 통과 — 감사기가 반례 (다중 프레임 · 중복 · 주기 누락 · δ≤0 · 플래그 어긋남) 를 잡는다.  ⚠ 실제 130 덤프가 깨끗하다는 뜻은 아니다 (WSL 실행 결과를 볼 것)

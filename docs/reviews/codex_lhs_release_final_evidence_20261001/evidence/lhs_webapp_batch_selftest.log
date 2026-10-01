@@ -1,0 +1,15 @@
+[1/1] lhs00_900 failed 0.0 s · OSError: [WinError 1314] 클라이언트가 필요한 권한을 가지고 있지 않습니다: 'C:\\Users\\Administrator\\AppData\\Local\\Temp\\lhswb_7gvg0ju3\\raw\\lhs00_900\\post\\atom_100.liggghts' -> 'C:\\Users\\Administrator\\AppData\\Local\\Temp\\lhswb_7gvg0ju3\\work\\uploads\\lhs00_900\\atom_100.liggghts'
+상태: {'failed': 1}
+  ✗ ① 정상 — done · 한 번 실행 · 그림/자동 DB 끔 (figures=False · auto_db=False)
+  ✓ ① 원격 저장소 끔 — SUPABASE_URL · KEY 가 빈 값 (pop 이 아니라 빈 문자열)
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_release_review_20261001\snapshot\scripts\lhs_webapp_batch.py", line 637, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_release_review_20261001\snapshot\scripts\lhs_webapp_batch.py", line 629, in main
+    return _selftest()
+           ^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_release_review_20261001\snapshot\scripts\lhs_webapp_batch.py", line 422, in _selftest
+    calls[0]['files'] == sorted(['atom_100.liggghts', 'contact_100.liggghts', 'mesh_100.stl',
+    ~~~~~^^^
+IndexError: list index out of range

@@ -1,0 +1,17 @@
+[
+  "docs/data/lhs_union_20260927/lhs130_union.tsv",
+  "docs/data/lhs_union_20260927/lhsx64_union.tsv",
+  "docs/data/lhs_perc_audit_20261001/lhsx_20261001_1e09f661d/perc_audit.tsv",
+  "docs/data/lhs_perc_audit_20261001/lhsx_20261001_d1ec42fba/perc_audit.tsv",
+  "docs/data/lhs_perc_audit_20261001/lhs_20260929_c0c2d4f44/perc_audit.tsv",
+  "docs/data/lhs_perc_audit_20261001/lhs_20261001_d1ec42fba/perc_audit.tsv",
+  "docs/reviews/codex_lhs_coverage_reverify2_evidence_20260930/producer_results.json",
+  "docs/reviews/codex_lhs_coverage_reverify2_evidence_20260930/_reproduction_producer_results_wtcov_ca0471d19.json",
+  "docs/reviews/codex_lhs_coverage_reverify3_evidence_20260930/producer_results.json",
+  "docs/reviews/codex_lhs_coverage_reverify3_evidence_20260930/_reproduction_producer_results_wtcov_220b1426e.json",
+  "docs/reviews/codex_lhs_coverage_reverify4_evidence_20260930/producer_results.json",
+  "docs/reviews/codex_lhs_coverage_reverify5_evidence_20260930/producer_results.json",
+  "docs/reviews/codex_lhs_coverage_reverify3_request_20260930/fixed_tree_reproduction/producer_results.json",
+  "docs/reviews/codex_lhs_coverage_reverify4_request_20260930/fixed_tree_reproduction/producer_results.json",
+  "docs/reviews/codex_lhs_coverage_reverify5_request_20260930/fixed_tree_reproduction/producer_results.json"
+]

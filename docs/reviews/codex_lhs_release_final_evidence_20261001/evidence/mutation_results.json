@@ -1,0 +1,160 @@
+[
+  {
+    "probe": "G1_single_contact_count",
+    "accepted": false,
+    "error": "FillRefusal: lhs00_000: AM_P_se_cn_mean 44.78260869565217 × AM_P 46 ≠ area_AM_P_SE_n 2061.0 — 같은 접촉 집합의 값이 아니다 (7c G1)"
+  },
+  {
+    "probe": "P2_top_reachable_negative",
+    "accepted": false,
+    "error": "FillRefusal: lhs00_000: top_reachable_pct -1.0 ∉ [0, 100] (② P2)"
+  },
+  {
+    "probe": "T2_tau_25",
+    "accepted": false,
+    "error": "FillRefusal: lhs00_000: 벽 τ 평균 25 · 중앙값 2.112080612689959 이 [1, 20) 밖 (τ T2)"
+  },
+  {
+    "probe": "D1_sum_change",
+    "accepted": false,
+    "error": "FillRefusal: lhs00_000: 활성 + 단절 + 무접촉 = 135.7022507229976 ≠ 100 — 같은 세 집합이 아니다 (v1.1 D1)"
+  },
+  {
+    "probe": "C1_noninteger_component_size",
+    "accepted": false,
+    "error": "FillRefusal: lhs00_000: largest_comp_frac 0.5 × SE 5265 = 2632.5 이 정수 개수가 아니다 (v1.1 C1)"
+  },
+  {
+    "probe": "coverage_total_plus_1",
+    "accepted": true,
+    "row": {
+      "case_id": "lhs00_000",
+      "physical_target_status": "HOLD",
+      "hold_reason_codes": "BOUNDARY_CENTER_OUT",
+      "boundary_state": "FULLY_OUT",
+      "coverage_AM_total_hertz_pct": "14.643988681252257",
+      "ionic_active_pct": "81.55413051678612",
+      "ionic_dead_pct": "4.2977492770023895",
+      "ionic_no_se_pct": "14.148120206211493",
+      "AM_P_ionic_no_se_pct": "0.0",
+      "AM_S_ionic_no_se_pct": "14.164505652206753",
+      "porosity_union_exact_pct": "15.055575",
+      "phi_se_mass_conserving": "0.2500862671512949",
+      "phi_am_mass_conserving": "0.599357982848705"
+    }
+  },
+  {
+    "probe": "negative_ionic_no_se_counts",
+    "accepted": true,
+    "row": {
+      "case_id": "lhs00_000",
+      "physical_target_status": "HOLD",
+      "hold_reason_codes": "BOUNDARY_CENTER_OUT",
+      "boundary_state": "FULLY_OUT",
+      "coverage_AM_total_hertz_pct": "13.643988681252257",
+      "ionic_active_pct": "81.55413051678612",
+      "ionic_dead_pct": "18.44838425751289",
+      "ionic_no_se_pct": "-0.002514774299006664",
+      "AM_P_ionic_no_se_pct": "-2.1739130434782608",
+      "AM_S_ionic_no_se_pct": "0.0",
+      "porosity_union_exact_pct": "15.055575",
+      "phi_se_mass_conserving": "0.2500862671512949",
+      "phi_am_mass_conserving": "0.599357982848705"
+    }
+  },
+  {
+    "probe": "drop_eligibility",
+    "accepted": true,
+    "row": {
+      "case_id": "lhs00_000",
+      "physical_target_status": "",
+      "hold_reason_codes": "",
+      "boundary_state": "",
+      "coverage_AM_total_hertz_pct": "13.643988681252257",
+      "ionic_active_pct": "81.55413051678612",
+      "ionic_dead_pct": "4.2977492770023895",
+      "ionic_no_se_pct": "14.148120206211493",
+      "AM_P_ionic_no_se_pct": "0.0",
+      "AM_S_ionic_no_se_pct": "14.164505652206753",
+      "porosity_union_exact_pct": "15.055575",
+      "phi_se_mass_conserving": "0.2500862671512949",
+      "phi_am_mass_conserving": "0.599357982848705"
+    }
+  },
+  {
+    "probe": "union_SE_fraction_half",
+    "accepted": true,
+    "row": {
+      "case_id": "lhs00_000",
+      "physical_target_status": "HOLD",
+      "hold_reason_codes": "BOUNDARY_CENTER_OUT",
+      "boundary_state": "FULLY_OUT",
+      "coverage_AM_total_hertz_pct": "13.643988681252257",
+      "ionic_active_pct": "81.55413051678612",
+      "ionic_dead_pct": "4.2977492770023895",
+      "ionic_no_se_pct": "14.148120206211493",
+      "AM_P_ionic_no_se_pct": "0.0",
+      "AM_S_ionic_no_se_pct": "14.164505652206753",
+      "porosity_union_exact_pct": "15.055575",
+      "phi_se_mass_conserving": "0.2500862671512949",
+      "phi_am_mass_conserving": "0.599357982848705"
+    }
+  },
+  {
+    "probe": "union_MC_SE_fraction_swap",
+    "accepted": true,
+    "row": {
+      "case_id": "lhs00_000",
+      "physical_target_status": "HOLD",
+      "hold_reason_codes": "BOUNDARY_CENTER_OUT",
+      "boundary_state": "FULLY_OUT",
+      "coverage_AM_total_hertz_pct": "13.643988681252257",
+      "ionic_active_pct": "81.55413051678612",
+      "ionic_dead_pct": "4.2977492770023895",
+      "ionic_no_se_pct": "14.148120206211493",
+      "AM_P_ionic_no_se_pct": "0.0",
+      "AM_S_ionic_no_se_pct": "14.164505652206753",
+      "porosity_union_exact_pct": "15.055575",
+      "phi_se_mass_conserving": "0.2500862671512949",
+      "phi_am_mass_conserving": "0.599357982848705"
+    }
+  },
+  {
+    "probe": "raw_sha_mismatch",
+    "accepted": true,
+    "row": {
+      "case_id": "lhs00_000",
+      "physical_target_status": "HOLD",
+      "hold_reason_codes": "BOUNDARY_CENTER_OUT",
+      "boundary_state": "FULLY_OUT",
+      "coverage_AM_total_hertz_pct": "13.643988681252257",
+      "ionic_active_pct": "81.55413051678612",
+      "ionic_dead_pct": "4.2977492770023895",
+      "ionic_no_se_pct": "14.148120206211493",
+      "AM_P_ionic_no_se_pct": "0.0",
+      "AM_S_ionic_no_se_pct": "14.164505652206753",
+      "porosity_union_exact_pct": "15.055575",
+      "phi_se_mass_conserving": "0.2500862671512949",
+      "phi_am_mass_conserving": "0.599357982848705"
+    }
+  },
+  {
+    "probe": "design_row_duplicate",
+    "accepted": true,
+    "row": {
+      "case_id": "lhs00_000",
+      "physical_target_status": "HOLD",
+      "hold_reason_codes": "BOUNDARY_CENTER_OUT",
+      "boundary_state": "FULLY_OUT",
+      "coverage_AM_total_hertz_pct": "13.643988681252257",
+      "ionic_active_pct": "81.55413051678612",
+      "ionic_dead_pct": "4.2977492770023895",
+      "ionic_no_se_pct": "14.148120206211493",
+      "AM_P_ionic_no_se_pct": "0.0",
+      "AM_S_ionic_no_se_pct": "14.164505652206753",
+      "porosity_union_exact_pct": "15.055575",
+      "phi_se_mass_conserving": "0.2500862671512949",
+      "phi_am_mass_conserving": "0.599357982848705"
+    }
+  }
+]

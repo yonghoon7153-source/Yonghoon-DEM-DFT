@@ -1,0 +1,1418 @@
+[
+  {
+    "dataset": "lhs",
+    "column": "case_id",
+    "source": "design",
+    "blank": 0,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "block",
+    "source": "design",
+    "blank": 0,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "am_pct",
+    "source": "design",
+    "blank": 0,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "ps_frac",
+    "source": "design",
+    "blank": 0,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "ps_label",
+    "source": "design",
+    "blank": 0,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "d_am_p_um",
+    "source": "design",
+    "blank": 15,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "d_am_s_um",
+    "source": "design",
+    "blank": 15,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "d_se_um",
+    "source": "design",
+    "blank": 0,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "r_AM_P_um",
+    "source": "design",
+    "blank": 15,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "r_AM_S_um",
+    "source": "design",
+    "blank": 15,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "r_SE_um",
+    "source": "design",
+    "blank": 0,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "size_ratio_P_over_S",
+    "source": "design",
+    "blank": 30,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "size_ratio_AM_over_SE",
+    "source": "design",
+    "blank": 0,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "loading_mAh_cm2",
+    "source": "design",
+    "blank": 0,
+    "constant": "2.0000",
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "pressure_MPa",
+    "source": "design",
+    "blank": 0,
+    "constant": "300.0000",
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "e_se_gpa",
+    "source": "design",
+    "blank": 0,
+    "constant": "1.3500",
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "rve_um",
+    "source": "design",
+    "blank": 0,
+    "constant": "50.0000",
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "n_AM_P_measured",
+    "source": "harvest",
+    "blank": 15,
+    "constant": null,
+    "meaning": "실측 입자수 (설계의 n_*_est 는 추정) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "n_AM_S_measured",
+    "source": "harvest",
+    "blank": 15,
+    "constant": null,
+    "meaning": "실측 입자수 · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "n_SE_measured",
+    "source": "harvest",
+    "blank": 0,
+    "constant": null,
+    "meaning": "실측 입자수"
+  },
+  {
+    "dataset": "lhs",
+    "column": "thickness_mass_conserving_um",
+    "source": "union",
+    "blank": 0,
+    "constant": null,
+    "meaning": "질량 보존 두께 = 두께 × (1 − ε_sphere)/(1 − ε_union) — union 을 실제 공극률로 받을 때 **같은 고체**의 두께 (DEM 에서 겹친 부피는 사라지므로 union 과 DEM 간격 두께를 둘 다 실제 값으로 받을 수 없다)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "porosity_union_exact_pct",
+    "source": "union",
+    "blank": 0,
+    "constant": null,
+    "meaning": "★ 겹침 보정 porosity (정확 union — 상자 [0,Lx)×[0,Ly)×[0,plate_z) 무작위 점 · 세 입자 이상 겹침까지) — 물리 porosity 열 (J19)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "se_rich",
+    "source": "union",
+    "blank": 0,
+    "constant": null,
+    "meaning": "SE / 고체 ≥ 0.5 (구 부피 합이 겹침 이중계상으로 퇴화하는 영역 — 문턱은 도구 선택, 연속값 옆 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "se_of_solid_vol",
+    "source": "union",
+    "blank": 0,
+    "constant": null,
+    "meaning": "SE / 고체 (구 부피) — SE-rich 표지의 연속값"
+  },
+  {
+    "dataset": "lhs",
+    "column": "phi_se_mass_conserving",
+    "source": "union",
+    "blank": 0,
+    "constant": null,
+    "meaning": "★ 인계용 SE 부피분율 (J20-e (라) · 1저자 09-29 밤) — 질량 보존 φ = phi_se × (1 − ε_union)/(1 − ε_sphere) = SE 구 부피 / (L² · thickness_mass_conserving_um) = (1 − porosity_union_exact_pct/100) × se_of_solid_vol.  인계 두께 · union porosity 와 **같은 장부**: φ_SE + φ_AM + ε_union = 1 (정확) · φ × 인계 두께 = 레시피 적재량.  유도량 (두께 · 레시피로 정해짐 — 독립 측정 아님) · union 과 같은 상한 규약의 짝 (소성으로 밀려난 재료를 빈틈이 아니라 두께로 보낸다)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "phi_am_mass_conserving",
+    "source": "union",
+    "blank": 0,
+    "constant": null,
+    "meaning": "인계용 AM 부피분율 (J20-e (라)) — 같은 규약 = (1 − porosity_union_exact_pct/100) × (1 − se_of_solid_vol)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "coverage_AM_P_hertz_pct",
+    "source": "harvest",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_P 표면 피복률 (%) — 접촉 면적 c_cpl[22] 합 / 표면적, 입자 평균 · 이름의 hertz 는 물려받은 오해 (A_dem_geometric · L1-04) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "coverage_AM_S_hertz_pct",
+    "source": "harvest",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_S 표면 피복률 (%) — 같은 채널 · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "coverage_AM_total_hertz_pct",
+    "source": "harvest",
+    "blank": 0,
+    "constant": null,
+    "meaning": "AM 전체 피복률 (%) — 위 둘에서 유도 (독립 타깃 아님)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "area_AM_P_AM_P_n",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_P_AM_P 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g · 접촉 0 인 쌍 = 0 — 웹앱 `calc_interface_area` 는 접촉이 없는 쌍의 키를 만들지 않아 빈칸이 되므로, 두 상이 다 있는 침대 (수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · mono 는 설계 상으로 판단 (J20-k (B)) · 상이 없으면 빈칸 (N/A) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "area_AM_P_AM_S_n",
+    "source": "webapp",
+    "blank": 30,
+    "constant": null,
+    "meaning": "AM_P_AM_S 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g · 접촉 0 인 쌍 = 0 — 웹앱 `calc_interface_area` 는 접촉이 없는 쌍의 키를 만들지 않아 빈칸이 되므로, 두 상이 다 있는 침대 (수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · mono 는 설계 상으로 판단 (J20-k (B)) · 상이 없으면 빈칸 (N/A) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "area_AM_P_SE_n",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_P_SE 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g · 접촉 0 인 쌍 = 0 — 웹앱 `calc_interface_area` 는 접촉이 없는 쌍의 키를 만들지 않아 빈칸이 되므로, 두 상이 다 있는 침대 (수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · mono 는 설계 상으로 판단 (J20-k (B)) · 상이 없으면 빈칸 (N/A) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "area_AM_S_AM_S_n",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_S_AM_S 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g · 접촉 0 인 쌍 = 0 — 웹앱 `calc_interface_area` 는 접촉이 없는 쌍의 키를 만들지 않아 빈칸이 되므로, 두 상이 다 있는 침대 (수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · mono 는 설계 상으로 판단 (J20-k (B)) · 상이 없으면 빈칸 (N/A) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "area_AM_S_SE_n",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_S_SE 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g · 접촉 0 인 쌍 = 0 — 웹앱 `calc_interface_area` 는 접촉이 없는 쌍의 키를 만들지 않아 빈칸이 되므로, 두 상이 다 있는 침대 (수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · mono 는 설계 상으로 판단 (J20-k (B)) · 상이 없으면 빈칸 (N/A) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "area_AM전체_SE_n",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "AM전체_SE 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g · 접촉 0 인 쌍 = 0 — 웹앱 `calc_interface_area` 는 접촉이 없는 쌍의 키를 만들지 않아 빈칸이 되므로, 두 상이 다 있는 침대 (수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · mono 는 설계 상으로 판단 (J20-k (B)) · 상이 없으면 빈칸 (N/A)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "area_SE_SE_n",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "SE_SE 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g · 접촉 0 인 쌍 = 0 — 웹앱 `calc_interface_area` 는 접촉이 없는 쌍의 키를 만들지 않아 빈칸이 되므로, 두 상이 다 있는 침대 (수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · mono 는 설계 상으로 판단 (J20-k (B)) · 상이 없으면 빈칸 (N/A)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "se_se_cn",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "z_SE-SE — SE 1 개당 SE 접촉 수, SE 전 입자 평균 (접촉 0 · 벽 · 플래튼에 닿은 입자 포함) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_se_se_cn (dem_analysis_core.py:232–344) — 1저자 검토 09-30 · 수정 불요 · 평균 = 2 × area_SE_SE_n / SE 입자 수 (생성기 관문 · 09-30 실측 130/130 · 64/64 차이 0) · 같은 함수의 _perc · _eff_area · _aug 는 ② · ⑦ · ⑤ 차례 · J20-i"
+  },
+  {
+    "dataset": "lhs",
+    "column": "se_se_cn_std",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "z_SE-SE 의 입자간 표준편차 (모집단 · SE 전 입자) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_se_se_cn (dem_analysis_core.py:232–344) — 1저자 검토 09-30 · 수정 불요 · 평균 = 2 × area_SE_SE_n / SE 입자 수 (생성기 관문 · 09-30 실측 130/130 · 64/64 차이 0) · 같은 함수의 _perc · _eff_area · _aug 는 ② · ⑦ · ⑤ 차례 · J20-i"
+  },
+  {
+    "dataset": "lhs",
+    "column": "am_am_cn",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "z_AM-AM — AM 1 개당 AM 접촉 수 (AM_P–AM_S 교차 포함), AM 전 입자 평균 (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_am_cn (dem_analysis_core.py:347–375) — 1저자 검토 09-30 · 수정 불요 · am_am_n_contacts = AM–AM 쌍 개수 합 · am_am_cn = 2 × am_am_n_contacts / AM 입자 수 (생성기 관문 · 09-30 실측 130/130 · 64/64 차이 0) · mono 포함 (상별 열 아님) · am_am_mean_area · am_am_total_area 는 ⑦ 차례 · J20-j"
+  },
+  {
+    "dataset": "lhs",
+    "column": "am_am_cn_std",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "z_AM-AM 의 입자간 표준편차 (모집단) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_am_cn (dem_analysis_core.py:347–375) — 1저자 검토 09-30 · 수정 불요 · am_am_n_contacts = AM–AM 쌍 개수 합 · am_am_cn = 2 × am_am_n_contacts / AM 입자 수 (생성기 관문 · 09-30 실측 130/130 · 64/64 차이 0) · mono 포함 (상별 열 아님) · am_am_mean_area · am_am_total_area 는 ⑦ 차례 · J20-j"
+  },
+  {
+    "dataset": "lhs",
+    "column": "am_am_n_contacts",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "AM–AM 접촉 개수 (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_am_cn (dem_analysis_core.py:347–375) — 1저자 검토 09-30 · 수정 불요 · am_am_n_contacts = AM–AM 쌍 개수 합 · am_am_cn = 2 × am_am_n_contacts / AM 입자 수 (생성기 관문 · 09-30 실측 130/130 · 64/64 차이 0) · mono 포함 (상별 열 아님) · am_am_mean_area · am_am_total_area 는 ⑦ 차례 · J20-j"
+  },
+  {
+    "dataset": "lhs",
+    "column": "am_se_cn_mean",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "z_AM-SE — AM 1 개당 SE 접촉 수, AM 전 입자 (AM_P + AM_S) 의 개수 가중 평균 (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c"
+  },
+  {
+    "dataset": "lhs",
+    "column": "am_se_cn_surface_weighted",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "Σ r²·CN_AM-SE / Σ r² (AM 전 입자) — 표면적 가중 AM–SE CN (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c"
+  },
+  {
+    "dataset": "lhs",
+    "column": "am_se_cn_std",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "z_AM-SE 의 입자간 표준편차 (모집단) — AM 전 입자 (접촉 0 · 벽 입자 포함) · mono = 단일 상 값 (J20-k 7a) (판정 근거 (09-19 census 밖 키): AM 전 입자 AM–SE CN 분포 — 7a (09-30) 에 웹앱이 내보내기 시작한 키 · 09-19 census 에 없다 · 상별 통계와 같은 counts · 같은 함수 (calc_am_isolation_risk)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c"
+  },
+  {
+    "dataset": "lhs",
+    "column": "am_se_cn_median",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "z_AM-SE 의 중앙값 — AM 전 입자 (짝수 개면 가운데 둘의 평균 · np.median) · mono = 단일 상 값 (J20-k 7a) (판정 근거 (09-19 census 밖 키): AM 전 입자 AM–SE CN 분포 — 7a (09-30) 에 웹앱이 내보내기 시작한 키 · 09-19 census 에 없다 · 상별 통계와 같은 counts · 같은 함수 (calc_am_isolation_risk)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c"
+  },
+  {
+    "dataset": "lhs",
+    "column": "am_se_cn_max",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "z_AM-SE 의 최댓값 — AM 전 입자 · = 상별 max 의 최댓값 (J20-k 7a) (판정 근거 (09-19 census 밖 키): AM 전 입자 AM–SE CN 분포 — 7a (09-30) 에 웹앱이 내보내기 시작한 키 · 09-19 census 에 없다 · 상별 통계와 같은 counts · 같은 함수 (calc_am_isolation_risk)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c"
+  },
+  {
+    "dataset": "lhs",
+    "column": "AM_P_se_cn_mean",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_P 1 개당 SE 접촉 수의 평균 — AM_P 전 입자 (접촉 0 · 벽 입자 포함) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "AM_P_se_cn_std",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_P 1 개당 SE 접촉 수의 표준편차 (모집단) — AM_P 전 입자 (접촉 0 · 벽 입자 포함) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "AM_P_se_cn_median",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_P 1 개당 SE 접촉 수의 중앙값 — AM_P 전 입자 (접촉 0 · 벽 입자 포함) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "AM_P_se_cn_max",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_P 1 개당 SE 접촉 수의 최댓값 — AM_P 전 입자 (접촉 0 · 벽 입자 포함) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "AM_S_se_cn_mean",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_S 1 개당 SE 접촉 수의 평균 — AM_S 전 입자 (접촉 0 · 벽 입자 포함) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "AM_S_se_cn_std",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_S 1 개당 SE 접촉 수의 표준편차 (모집단) — AM_S 전 입자 (접촉 0 · 벽 입자 포함) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "AM_S_se_cn_median",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_S 1 개당 SE 접촉 수의 중앙값 — AM_S 전 입자 (접촉 0 · 벽 입자 포함) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "AM_S_se_cn_max",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_S 1 개당 SE 접촉 수의 최댓값 — AM_S 전 입자 (접촉 0 · 벽 입자 포함) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "am_vulnerable_pct",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "AM 고립 **위험** 비율 (%) (취약 AM) — SE 접촉이 0–1 개인 AM 의 비율, AM 전 입자 (AM_P + AM_S) · 접촉 개수 기준 (coverage 문턱이 아니다 — 09-19 census 의 COND_cov 는 오분류 · LHS-23) · ⚠ 경로 기준 고립 (이온이 못 가는 AM) 이 아니다 — 그것은 100 − ionic_active_pct (1저자 10-01 질문) (09-19 판정 근거: SE 접촉 0–1 개인 AM 의 비율 — 접촉 위상만 센다 (calc_am_isolation_risk · coverage 값을 읽지 않고 다른 단계가 덮어쓰지도 않는다) · 09-19 census 의 COND_cov (\"coverage 문턱 기반\") 는 오분류 (LHS-23) (09-19 census: 🔶 채널 종속 — coverage 문턱 기반 → Hertz(기하 교차 원판) 채널에 종속)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c"
+  },
+  {
+    "dataset": "lhs",
+    "column": "AM_P_vulnerable_pct",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_P 고립 **위험** 비율 (%) (취약) — SE 접촉이 0–1 개인 AM_P 의 비율 · 접촉 개수 기준 (coverage 문턱이 아니다 — LHS-23 · 경로 기준 고립은 ionic_active_pct 쪽) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: SE 접촉 0–1 개인 AM 의 비율 — 접촉 위상만 센다 (calc_am_isolation_risk · coverage 값을 읽지 않고 다른 단계가 덮어쓰지도 않는다) · 09-19 census 의 COND_cov (\"coverage 문턱 기반\") 는 오분류 (LHS-23) (09-19 census: 🔶 채널 종속 — coverage 문턱 기반 → Hertz(기하 교차 원판) 채널에 종속)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "AM_S_vulnerable_pct",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_S 고립 **위험** 비율 (%) (취약) — SE 접촉이 0–1 개인 AM_S 의 비율 · 접촉 개수 기준 (coverage 문턱이 아니다 — LHS-23 · 경로 기준 고립은 ionic_active_pct 쪽) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: SE 접촉 0–1 개인 AM 의 비율 — 접촉 위상만 센다 (calc_am_isolation_risk · coverage 값을 읽지 않고 다른 단계가 덮어쓰지도 않는다) · 09-19 census 의 COND_cov (\"coverage 문턱 기반\") 는 오분류 (LHS-23) (09-19 census: 🔶 채널 종속 — coverage 문턱 기반 → Hertz(기하 교차 원판) 채널에 종속)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "percolation_pct",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "SE 관통 비율 (%) — 바닥 밴드 (z ≤ 2r) 와 위 밴드 (z ≥ plate_z − 2r) 에 다 닿는 SE 성분의 SE / 전 SE · 0.0 = 관통 성분 없음 (진짜 미퍼콜 · J20-b) · **밴드 규칙의 그래프 관통** — 솔버 (전류) 관통 · σ 와 다른 정의 (LHS-19) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_percolation (dem_analysis_core.py:451–) · calc_ionic_active_am (:631–) · calc_se_se_cn 관통 부분 (:320–361) → analyze_contacts.py:404–413 — J20-b 감사 (WSL 130/130 CLEAN · 밴드 L0 130/130 · 폴백 0 · 겹침 0 · 재현 = 정본) · 1저자 비준 10-01 · 관문 P1–P3 (관통 일관 + 수확기 독립 재현 · 범위 · 관통 SE 개수 = percolation_pct × N_SE) · F3 한정어 (LHS-19) · top_reachable · ionic_active = census 오분류 → ✅ (LHS-20) · J20-b ②"
+  },
+  {
+    "dataset": "lhs",
+    "column": "top_reachable_pct",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "위 밴드에 닿는 SE 성분의 SE / 전 SE (%) — 위 밴드에 앉은 외톨이 SE 도 센다 (LHS-19) · SE 그래프 양 (coverage 무관 — LHS-20) (09-19 판정 근거: SE 그래프 양 — calc_percolation 의 위 밴드 성분 · calc_ionic_active_am 의 AM–SE 접촉 유무 × top-reachable SE (coverage 값을 읽지 않는다) · 09-19 census 의 COND_cov 는 오분류 (LHS-20 · 1저자 비준 10-01) (09-19 census: 🔶 채널 종속 — coverage 문턱 기반 → Hertz(기하 교차 원판) 채널에 종속)) · 1저자 검토: calc_percolation (dem_analysis_core.py:451–) · calc_ionic_active_am (:631–) · calc_se_se_cn 관통 부분 (:320–361) → analyze_contacts.py:404–413 — J20-b 감사 (WSL 130/130 CLEAN · 밴드 L0 130/130 · 폴백 0 · 겹침 0 · 재현 = 정본) · 1저자 비준 10-01 · 관문 P1–P3 (관통 일관 + 수확기 독립 재현 · 범위 · 관통 SE 개수 = percolation_pct × N_SE) · F3 한정어 (LHS-19) · top_reachable · ionic_active = census 오분류 → ✅ (LHS-20) · J20-b ②"
+  },
+  {
+    "dataset": "lhs",
+    "column": "n_components",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "SE 접촉 그래프의 성분 수 — 외톨이 SE (크기 1) 포함 → 단절 침대에서는 사실상 외톨이 수 (LHS-06 · LHS-19) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_percolation (dem_analysis_core.py:451–) · calc_ionic_active_am (:631–) · calc_se_se_cn 관통 부분 (:320–361) → analyze_contacts.py:404–413 — J20-b 감사 (WSL 130/130 CLEAN · 밴드 L0 130/130 · 폴백 0 · 겹침 0 · 재현 = 정본) · 1저자 비준 10-01 · 관문 P1–P3 (관통 일관 + 수확기 독립 재현 · 범위 · 관통 SE 개수 = percolation_pct × N_SE) · F3 한정어 (LHS-19) · top_reachable · ionic_active = census 오분류 → ✅ (LHS-20) · J20-b ②"
+  },
+  {
+    "dataset": "lhs",
+    "column": "n_large_components",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "크기 ≥ 10 인 SE 성분 수 — 문턱 10 은 출처 없는 코드 상수 (LHS-19) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_percolation (dem_analysis_core.py:451–) · calc_ionic_active_am (:631–) · calc_se_se_cn 관통 부분 (:320–361) → analyze_contacts.py:404–413 — J20-b 감사 (WSL 130/130 CLEAN · 밴드 L0 130/130 · 폴백 0 · 겹침 0 · 재현 = 정본) · 1저자 비준 10-01 · 관문 P1–P3 (관통 일관 + 수확기 독립 재현 · 범위 · 관통 SE 개수 = percolation_pct × N_SE) · F3 한정어 (LHS-19) · top_reachable · ionic_active = census 오분류 → ✅ (LHS-20) · J20-b ②"
+  },
+  {
+    "dataset": "lhs",
+    "column": "ionic_active_pct",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "이온 활성 AM 비율 (%) — 위 밴드 (분리막 쪽) 에 닿는 SE 성분 (top-reachable) 의 SE 와 접촉한 AM / 전 AM (calc_ionic_active_am) · **100 − 이 값 = 경로 기준 고립 AM** (SE 무접촉 + 닿은 SE 가 위로 안 이어짐) · 접촉 유무만 본다 (coverage 무관 — LHS-20) · 외톨이 SE 가 위 밴드에 있으면 그것도 센다 (LHS-19) (09-19 판정 근거: SE 그래프 양 — calc_percolation 의 위 밴드 성분 · calc_ionic_active_am 의 AM–SE 접촉 유무 × top-reachable SE (coverage 값을 읽지 않는다) · 09-19 census 의 COND_cov 는 오분류 (LHS-20 · 1저자 비준 10-01) (09-19 census: 🔶 채널 종속 — coverage 문턱 기반 → Hertz(기하 교차 원판) 채널에 종속)) · 1저자 검토: calc_percolation (dem_analysis_core.py:451–) · calc_ionic_active_am (:631–) · calc_se_se_cn 관통 부분 (:320–361) → analyze_contacts.py:404–413 — J20-b 감사 (WSL 130/130 CLEAN · 밴드 L0 130/130 · 폴백 0 · 겹침 0 · 재현 = 정본) · 1저자 비준 10-01 · 관문 P1–P3 (관통 일관 + 수확기 독립 재현 · 범위 · 관통 SE 개수 = percolation_pct × N_SE) · F3 한정어 (LHS-19) · top_reachable · ionic_active = census 오분류 → ✅ (LHS-20) · J20-b ②"
+  },
+  {
+    "dataset": "lhs",
+    "column": "se_se_cn_perc",
+    "source": "webapp",
+    "blank": 24,
+    "constant": null,
+    "meaning": "관통 SE 성분에 속한 SE 만의 평균 SE–SE CN — 관통 성분이 없으면 빈칸 (N/A · 키 자체가 없다 · LHS-19) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_percolation (dem_analysis_core.py:451–) · calc_ionic_active_am (:631–) · calc_se_se_cn 관통 부분 (:320–361) → analyze_contacts.py:404–413 — J20-b 감사 (WSL 130/130 CLEAN · 밴드 L0 130/130 · 폴백 0 · 겹침 0 · 재현 = 정본) · 1저자 비준 10-01 · 관문 P1–P3 (관통 일관 + 수확기 독립 재현 · 범위 · 관통 SE 개수 = percolation_pct × N_SE) · F3 한정어 (LHS-19) · top_reachable · ionic_active = census 오분류 → ✅ (LHS-20) · J20-b ②"
+  },
+  {
+    "dataset": "lhs",
+    "column": "se_se_cn_n_perc",
+    "source": "webapp",
+    "blank": 24,
+    "constant": null,
+    "meaning": "관통 SE 성분에 속한 SE 개수 — = percolation_pct × N_SE / 100 (생성기 관문 P3) · 관통 없으면 빈칸 (N/A) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_percolation (dem_analysis_core.py:451–) · calc_ionic_active_am (:631–) · calc_se_se_cn 관통 부분 (:320–361) → analyze_contacts.py:404–413 — J20-b 감사 (WSL 130/130 CLEAN · 밴드 L0 130/130 · 폴백 0 · 겹침 0 · 재현 = 정본) · 1저자 비준 10-01 · 관문 P1–P3 (관통 일관 + 수확기 독립 재현 · 범위 · 관통 SE 개수 = percolation_pct × N_SE) · F3 한정어 (LHS-19) · top_reachable · ionic_active = census 오분류 → ✅ (LHS-20) · J20-b ②"
+  },
+  {
+    "dataset": "lhs",
+    "column": "tortuosity_SE_wall",
+    "source": "harvest_v3",
+    "blank": 24,
+    "constant": null,
+    "meaning": "★ SE τ (벽 규약 · **기하 최단경로**) — 바닥 벽 (z = 0) 밴드와 플래튼 밴드 (밴드 두께 = r_SE,max · 입자 표면 기준) 를 **같은 SE 성분 안에서** 잇는 쌍의 SE 중심 경로 최단 길이 (Dijkstra · 가중 = 중심 거리 · x·y 주기) / 두 끝 중심의 z 거리 · 무작위 200 쌍 (seed 42 · 쌍 평균이라 쌍이 많은 큰 성분 쪽으로 가중) · [1, 20) 절단 평균.  접촉 = 원자 좌표 기하 (d ≤ r_i + r_j) — 덤프 접촉과 같은 집합 (J20-a 130/130).  status OK 일 때만 값 · 비관통은 빈칸 (N/A · 0 이 아니다).  ⚠ **수송 τ 가 아니다** — 협착 · 단면 병목을 보지 않아 1 근처에 모인다 (LHS 1.29–4.15 · lhsx 1.26–1.60) · COMSOL/EIS 입력 τ 는 τ_Laplace,eff = √(φ_SE·σ_grain/σ_full) (망 단계 · 이 표에 없음) · 관문 T1–T3 (10-01)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "tortuosity_SE_wall_median",
+    "source": "harvest_v3",
+    "blank": 24,
+    "constant": null,
+    "meaning": "같은 표본의 중앙값 (status OK 일 때만) · 같은 한정어 (기하 최단경로 · 수송 τ 아님)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "wall_touch_frac_SE_floor",
+    "source": "harvest_v3",
+    "blank": 0,
+    "constant": null,
+    "meaning": "SE 입자 중 바닥 벽 (z − r < 0) 에 닿은 비율 (0–1) · 닿음 = 겹침 깊이 > 0 (접선은 안 셈 · 수확기 WALL_TOUCH_RULE) · 상이 없으면 빈칸 (N/A)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "wall_touch_frac_SE_plate",
+    "source": "harvest_v3",
+    "blank": 0,
+    "constant": null,
+    "meaning": "SE 입자 중 플래튼 (z + r > plate_z) 에 닿은 비율 (0–1) · 닿음 = 겹침 깊이 > 0 (접선은 안 셈 · 수확기 WALL_TOUCH_RULE) · 상이 없으면 빈칸 (N/A)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "wall_touch_frac_AM_P_floor",
+    "source": "harvest_v3",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_P 입자 중 바닥 벽 (z − r < 0) 에 닿은 비율 (0–1) · 닿음 = 겹침 깊이 > 0 (접선은 안 셈 · 수확기 WALL_TOUCH_RULE) · 상이 없으면 빈칸 (N/A) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "wall_touch_frac_AM_P_plate",
+    "source": "harvest_v3",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_P 입자 중 플래튼 (z + r > plate_z) 에 닿은 비율 (0–1) · 닿음 = 겹침 깊이 > 0 (접선은 안 셈 · 수확기 WALL_TOUCH_RULE) · 상이 없으면 빈칸 (N/A) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "wall_touch_frac_AM_S_floor",
+    "source": "harvest_v3",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_S 입자 중 바닥 벽 (z − r < 0) 에 닿은 비율 (0–1) · 닿음 = 겹침 깊이 > 0 (접선은 안 셈 · 수확기 WALL_TOUCH_RULE) · 상이 없으면 빈칸 (N/A) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "wall_touch_frac_AM_S_plate",
+    "source": "harvest_v3",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_S 입자 중 플래튼 (z + r > plate_z) 에 닿은 비율 (0–1) · 닿음 = 겹침 깊이 > 0 (접선은 안 셈 · 수확기 WALL_TOUCH_RULE) · 상이 없으면 빈칸 (N/A) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "wall_touch_frac_AM_floor",
+    "source": "harvest_v3",
+    "blank": 0,
+    "constant": null,
+    "meaning": "AM 입자 중 바닥 벽 (z − r < 0) 에 닿은 비율 (0–1) · 닿음 = 겹침 깊이 > 0 (접선은 안 셈 · 수확기 WALL_TOUCH_RULE) · AM = AM_P + AM_S 합친 모집단 (am_se_cn_mean 과 같은 분모) · 상이 없으면 빈칸 (N/A)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "wall_touch_frac_AM_plate",
+    "source": "harvest_v3",
+    "blank": 0,
+    "constant": null,
+    "meaning": "AM 입자 중 플래튼 (z + r > plate_z) 에 닿은 비율 (0–1) · 닿음 = 겹침 깊이 > 0 (접선은 안 셈 · 수확기 WALL_TOUCH_RULE) · AM = AM_P + AM_S 합친 모집단 (am_se_cn_mean 과 같은 분모) · 상이 없으면 빈칸 (N/A)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "am_ionic_isolated_pct",
+    "source": "webapp_derived",
+    "blank": 0,
+    "constant": null,
+    "meaning": "★ 경로 기준 고립 AM 비율 (%) (v1.1 ① · 1저자 비준 10-01) = 100 − ionic_active_pct — 이온이 분리막 쪽 (위 밴드) 에서 닿을 수 없는 AM: SE 무접촉 + 닿은 SE 가 top-reachable 이 아님 (calc_ionic_active_am · 접촉 그래프 · coverage 무관) · ⚠ 고립 위험 (am_vulnerable_pct · SE 접촉 0–1 개 · 접촉 개수) 과 다른 양 — 접촉이 둘 이상이어도 그 SE 가 끊긴 덩어리면 고립, 하나뿐이어도 이어져 있으면 활성 (예: lhs00_083 고립 위험 0.1 % · 경로 고립 89 %) · 분해 = ionic_dead_pct + ionic_no_se_pct (v1.1 ② 배치부터) · 생성기가 ionic_active_pct 에서 유도 · 관문 v1.1 D1–D5"
+  },
+  {
+    "dataset": "lhs",
+    "column": "ionic_dead_pct",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "경로 기준 고립 중 **단절** 비율 (%) (v1.1 ②) — SE 와 닿았지만 닿은 SE 가 전부 위 밴드 (분리막 쪽) 로 안 이어지는 AM / 전 AM (calc_ionic_active_am 의 dead) · SE 망이 끊긴 문제 (접촉을 늘려도 안 풀린다) (판정 근거 (09-19 census 밖 키): 경로 기준 고립의 분해 — 웹앱 v1.1 (10-01) 이 내보내기 시작한 키 · calc_ionic_active_am 이 계산하고 버리던 단절 · 무접촉 (상별 단절 · 무접촉은 이번에 계산 추가) · 활성 · 단절 · 무접촉 세 집합 하나에서 · 09-19 census 에 없다) · 1저자 검토: calc_ionic_active_am (dem_analysis_core.py:631–) → analyze_contacts — v1.1 ② (1저자 비준 10-01): 계산하고 버리던 단절 · 무접촉 내보내기 + 상별 단절 · 무접촉 계산 추가 (시험 먼저 · analyze_contacts --selftest ⑬–⑱) · 관문 v1.1 D1–D5 (합 100 · 상별 합 100 · 정수 개수 · 상별 개수 합 = 전체 · 무접촉 ≤ 고립 위험)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "ionic_no_se_pct",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "경로 기준 고립 중 **무접촉** 비율 (%) (v1.1 ②) — SE 접촉 0 인 AM / 전 AM (calc_ionic_active_am 의 no_se) · 고립 위험 (SE 접촉 0–1 개) 의 부분집합 (관문 D5) · 계면 형성 문제 (판정 근거 (09-19 census 밖 키): 경로 기준 고립의 분해 — 웹앱 v1.1 (10-01) 이 내보내기 시작한 키 · calc_ionic_active_am 이 계산하고 버리던 단절 · 무접촉 (상별 단절 · 무접촉은 이번에 계산 추가) · 활성 · 단절 · 무접촉 세 집합 하나에서 · 09-19 census 에 없다) · 1저자 검토: calc_ionic_active_am (dem_analysis_core.py:631–) → analyze_contacts — v1.1 ② (1저자 비준 10-01): 계산하고 버리던 단절 · 무접촉 내보내기 + 상별 단절 · 무접촉 계산 추가 (시험 먼저 · analyze_contacts --selftest ⑬–⑱) · 관문 v1.1 D1–D5 (합 100 · 상별 합 100 · 정수 개수 · 상별 개수 합 = 전체 · 무접촉 ≤ 고립 위험)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "AM_P_ionic_active_pct",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_P 의 이온 활성 (위 밴드에 닿는 SE 와 접촉) 비율 (%) (v1.1 ②) — AM_P 전 입자 기준 · 활성 + 단절 + 무접촉 = 100 (관문 D2) · 상이 없으면 빈칸 (N/A) (판정 근거 (09-19 census 밖 키): 경로 기준 고립의 분해 — 웹앱 v1.1 (10-01) 이 내보내기 시작한 키 · calc_ionic_active_am 이 계산하고 버리던 단절 · 무접촉 (상별 단절 · 무접촉은 이번에 계산 추가) · 활성 · 단절 · 무접촉 세 집합 하나에서 · 09-19 census 에 없다) · 1저자 검토: calc_ionic_active_am (dem_analysis_core.py:631–) → analyze_contacts — v1.1 ② (1저자 비준 10-01): 계산하고 버리던 단절 · 무접촉 내보내기 + 상별 단절 · 무접촉 계산 추가 (시험 먼저 · analyze_contacts --selftest ⑬–⑱) · 관문 v1.1 D1–D5 (합 100 · 상별 합 100 · 정수 개수 · 상별 개수 합 = 전체 · 무접촉 ≤ 고립 위험) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "AM_P_ionic_dead_pct",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_P 의 단절 (SE 와 닿았지만 위 밴드로 안 이어짐) 비율 (%) (v1.1 ②) — AM_P 전 입자 기준 · 활성 + 단절 + 무접촉 = 100 (관문 D2) · 상이 없으면 빈칸 (N/A) (판정 근거 (09-19 census 밖 키): 경로 기준 고립의 분해 — 웹앱 v1.1 (10-01) 이 내보내기 시작한 키 · calc_ionic_active_am 이 계산하고 버리던 단절 · 무접촉 (상별 단절 · 무접촉은 이번에 계산 추가) · 활성 · 단절 · 무접촉 세 집합 하나에서 · 09-19 census 에 없다) · 1저자 검토: calc_ionic_active_am (dem_analysis_core.py:631–) → analyze_contacts — v1.1 ② (1저자 비준 10-01): 계산하고 버리던 단절 · 무접촉 내보내기 + 상별 단절 · 무접촉 계산 추가 (시험 먼저 · analyze_contacts --selftest ⑬–⑱) · 관문 v1.1 D1–D5 (합 100 · 상별 합 100 · 정수 개수 · 상별 개수 합 = 전체 · 무접촉 ≤ 고립 위험) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "AM_P_ionic_no_se_pct",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_P 의 무접촉 (SE 접촉 0) 비율 (%) (v1.1 ②) — AM_P 전 입자 기준 · 활성 + 단절 + 무접촉 = 100 (관문 D2) · 상이 없으면 빈칸 (N/A) (판정 근거 (09-19 census 밖 키): 경로 기준 고립의 분해 — 웹앱 v1.1 (10-01) 이 내보내기 시작한 키 · calc_ionic_active_am 이 계산하고 버리던 단절 · 무접촉 (상별 단절 · 무접촉은 이번에 계산 추가) · 활성 · 단절 · 무접촉 세 집합 하나에서 · 09-19 census 에 없다) · 1저자 검토: calc_ionic_active_am (dem_analysis_core.py:631–) → analyze_contacts — v1.1 ② (1저자 비준 10-01): 계산하고 버리던 단절 · 무접촉 내보내기 + 상별 단절 · 무접촉 계산 추가 (시험 먼저 · analyze_contacts --selftest ⑬–⑱) · 관문 v1.1 D1–D5 (합 100 · 상별 합 100 · 정수 개수 · 상별 개수 합 = 전체 · 무접촉 ≤ 고립 위험) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "AM_S_ionic_active_pct",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_S 의 이온 활성 (위 밴드에 닿는 SE 와 접촉) 비율 (%) (v1.1 ②) — AM_S 전 입자 기준 · 활성 + 단절 + 무접촉 = 100 (관문 D2) · 상이 없으면 빈칸 (N/A) (판정 근거 (09-19 census 밖 키): 경로 기준 고립의 분해 — 웹앱 v1.1 (10-01) 이 내보내기 시작한 키 · calc_ionic_active_am 이 계산하고 버리던 단절 · 무접촉 (상별 단절 · 무접촉은 이번에 계산 추가) · 활성 · 단절 · 무접촉 세 집합 하나에서 · 09-19 census 에 없다) · 1저자 검토: calc_ionic_active_am (dem_analysis_core.py:631–) → analyze_contacts — v1.1 ② (1저자 비준 10-01): 계산하고 버리던 단절 · 무접촉 내보내기 + 상별 단절 · 무접촉 계산 추가 (시험 먼저 · analyze_contacts --selftest ⑬–⑱) · 관문 v1.1 D1–D5 (합 100 · 상별 합 100 · 정수 개수 · 상별 개수 합 = 전체 · 무접촉 ≤ 고립 위험) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "AM_S_ionic_dead_pct",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_S 의 단절 (SE 와 닿았지만 위 밴드로 안 이어짐) 비율 (%) (v1.1 ②) — AM_S 전 입자 기준 · 활성 + 단절 + 무접촉 = 100 (관문 D2) · 상이 없으면 빈칸 (N/A) (판정 근거 (09-19 census 밖 키): 경로 기준 고립의 분해 — 웹앱 v1.1 (10-01) 이 내보내기 시작한 키 · calc_ionic_active_am 이 계산하고 버리던 단절 · 무접촉 (상별 단절 · 무접촉은 이번에 계산 추가) · 활성 · 단절 · 무접촉 세 집합 하나에서 · 09-19 census 에 없다) · 1저자 검토: calc_ionic_active_am (dem_analysis_core.py:631–) → analyze_contacts — v1.1 ② (1저자 비준 10-01): 계산하고 버리던 단절 · 무접촉 내보내기 + 상별 단절 · 무접촉 계산 추가 (시험 먼저 · analyze_contacts --selftest ⑬–⑱) · 관문 v1.1 D1–D5 (합 100 · 상별 합 100 · 정수 개수 · 상별 개수 합 = 전체 · 무접촉 ≤ 고립 위험) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "AM_S_ionic_no_se_pct",
+    "source": "webapp",
+    "blank": 15,
+    "constant": null,
+    "meaning": "AM_S 의 무접촉 (SE 접촉 0) 비율 (%) (v1.1 ②) — AM_S 전 입자 기준 · 활성 + 단절 + 무접촉 = 100 (관문 D2) · 상이 없으면 빈칸 (N/A) (판정 근거 (09-19 census 밖 키): 경로 기준 고립의 분해 — 웹앱 v1.1 (10-01) 이 내보내기 시작한 키 · calc_ionic_active_am 이 계산하고 버리던 단절 · 무접촉 (상별 단절 · 무접촉은 이번에 계산 추가) · 활성 · 단절 · 무접촉 세 집합 하나에서 · 09-19 census 에 없다) · 1저자 검토: calc_ionic_active_am (dem_analysis_core.py:631–) → analyze_contacts — v1.1 ② (1저자 비준 10-01): 계산하고 버리던 단절 · 무접촉 내보내기 + 상별 단절 · 무접촉 계산 추가 (시험 먼저 · analyze_contacts --selftest ⑬–⑱) · 관문 v1.1 D1–D5 (합 100 · 상별 합 100 · 정수 개수 · 상별 개수 합 = 전체 · 무접촉 ≤ 고립 위험) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "se_largest_comp_frac",
+    "source": "harvest_v3",
+    "blank": 0,
+    "constant": null,
+    "meaning": "★ 가장 큰 SE 덩어리 (SE 수 기준 가장 큰 연결 성분 · 원자 좌표 기하 접촉 d ≤ r_i + r_j · x·y 주기 — 벽 τ 와 같은 그래프) 에 든 SE 의 비율 (0–1) = 그 성분의 SE 수 / 전 SE (v1.1 ③ · 1저자 비준 10-01) · 관통 침대는 1 근처 (LHS 중앙 0.997) · 비관통 침대 0.002–0.91 · 관문 C1 (× N_SE = 정수 개수 · N_SE = 수확 phase_counts)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "se_largest_comp_wall_span_frac",
+    "source": "harvest_v3",
+    "blank": 0,
+    "constant": null,
+    "meaning": "★ 그 덩어리의 두께 방향 폭 / 벽 간격 (v1.1 ③) — 폭 = 덩어리 SE 의 max(z + r) − min(z − r) (입자 표면 기준) · 벽 간격 = 플래튼 plate_z − 바닥 z 0 · 수확 기록값으로 정확히 환산 (= 수확 원값 × 전 입자 z 범위 / 벽 간격 · 재실행 없음) · 표면이 벽 · 플래튼과 겹쳐 1 을 넘을 수 있다 (관통 침대 LHS 1.01–1.05 · lhsx 1.02–1.06) · 비관통 침대 0.11–0.96 · ⚠ SE 수로 **가장 큰** 덩어리의 폭 — 가장 멀리 뻗은 덩어리가 아닐 수 있다 · 관문 C3 (플래튼 = 수확 plate_z_sim · 바닥 = z_floor_sim)"
+  },
+  {
+    "dataset": "lhs",
+    "column": "thickness_wall_gap_um",
+    "source": "harvest",
+    "blank": 0,
+    "constant": null,
+    "meaning": "주 두께 — 같은 프레임의 플래튼 − 바닥 (z = 0) 간격, sim × 1e3"
+  },
+  {
+    "dataset": "lhs",
+    "column": "physical_target_status",
+    "source": "harvest",
+    "blank": 0,
+    "constant": null,
+    "meaning": "OK | HOLD — 물리적 전극 구조 타깃으로 쓸 수 있는가 (HND-04 — 계산 상태와 분리) · HOLD = hold_reason_codes 가 하나라도 있다 · 값은 그대로 계산됐다 (calculation_status OK) · 배포 v1.1 부터 함께 싣는다 — 거를지는 쓰는 쪽이 정한다"
+  },
+  {
+    "dataset": "lhs",
+    "column": "hold_reason_codes",
+    "source": "harvest",
+    "blank": 71,
+    "constant": null,
+    "meaning": "BOUNDARY_CENTER_OUT = 중심이 바닥 · 플래튼 평면 밖인 입자 ≥ 1 (정상 압입과 구분 · HND-03) · NEGATIVE_POROSITY = 구 부피 합 porosity < 0 (= 구 부피 합 φ_SE + φ_AM > 1 · 겹침이 큰 침대 · HND-04 · LHS-15) — 배포 porosity (정확 union) 는 이 경우에도 양수다 · 여러 개면 | 로 잇는다"
+  },
+  {
+    "dataset": "lhs",
+    "column": "boundary_state",
+    "source": "harvest",
+    "blank": 0,
+    "constant": null,
+    "meaning": "INSIDE | CENTER_CROSSED | FULLY_OUT — 바닥 (z = 0) · 플래튼 평면 기준 (같은 프레임 · 수확기 wall_record): 중심이 평면을 넘은 입자가 있으면 CENTER_CROSSED · 통째로 평면 밖인 입자가 있으면 FULLY_OUT · 없으면 INSIDE"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "case_id",
+    "source": "design",
+    "blank": 0,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "block",
+    "source": "design",
+    "blank": 0,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "am_pct",
+    "source": "design",
+    "blank": 0,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "ps_frac",
+    "source": "design",
+    "blank": 0,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "ps_label",
+    "source": "design",
+    "blank": 0,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "d_am_p_um",
+    "source": "design",
+    "blank": 8,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "d_am_s_um",
+    "source": "design",
+    "blank": 8,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "d_se_um",
+    "source": "design",
+    "blank": 0,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "r_AM_P_um",
+    "source": "design",
+    "blank": 8,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "r_AM_S_um",
+    "source": "design",
+    "blank": 8,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "r_SE_um",
+    "source": "design",
+    "blank": 0,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "size_ratio_P_over_S",
+    "source": "design",
+    "blank": 16,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "size_ratio_AM_over_SE",
+    "source": "design",
+    "blank": 0,
+    "constant": null,
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "pressure_MPa",
+    "source": "design",
+    "blank": 0,
+    "constant": "300.0",
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "e_se_gpa",
+    "source": "design",
+    "blank": 0,
+    "constant": "1.35",
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "rve_um",
+    "source": "design",
+    "blank": 0,
+    "constant": "50.0",
+    "meaning": "LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "n_AM_P_measured",
+    "source": "harvest",
+    "blank": 8,
+    "constant": null,
+    "meaning": "실측 입자수 (설계의 n_*_est 는 추정) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "n_AM_S_measured",
+    "source": "harvest",
+    "blank": 8,
+    "constant": null,
+    "meaning": "실측 입자수 · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "n_SE_measured",
+    "source": "harvest",
+    "blank": 0,
+    "constant": null,
+    "meaning": "실측 입자수"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "thickness_mass_conserving_um",
+    "source": "union",
+    "blank": 0,
+    "constant": null,
+    "meaning": "질량 보존 두께 = 두께 × (1 − ε_sphere)/(1 − ε_union) — union 을 실제 공극률로 받을 때 **같은 고체**의 두께 (DEM 에서 겹친 부피는 사라지므로 union 과 DEM 간격 두께를 둘 다 실제 값으로 받을 수 없다)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "porosity_union_exact_pct",
+    "source": "union",
+    "blank": 0,
+    "constant": null,
+    "meaning": "★ 겹침 보정 porosity (정확 union — 상자 [0,Lx)×[0,Ly)×[0,plate_z) 무작위 점 · 세 입자 이상 겹침까지) — 물리 porosity 열 (J19)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "se_rich",
+    "source": "union",
+    "blank": 0,
+    "constant": "True",
+    "meaning": "SE / 고체 ≥ 0.5 (구 부피 합이 겹침 이중계상으로 퇴화하는 영역 — 문턱은 도구 선택, 연속값 옆 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "se_of_solid_vol",
+    "source": "union",
+    "blank": 0,
+    "constant": null,
+    "meaning": "SE / 고체 (구 부피) — SE-rich 표지의 연속값"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "phi_se_mass_conserving",
+    "source": "union",
+    "blank": 0,
+    "constant": null,
+    "meaning": "★ 인계용 SE 부피분율 (J20-e (라) · 1저자 09-29 밤) — 질량 보존 φ = phi_se × (1 − ε_union)/(1 − ε_sphere) = SE 구 부피 / (L² · thickness_mass_conserving_um) = (1 − porosity_union_exact_pct/100) × se_of_solid_vol.  인계 두께 · union porosity 와 **같은 장부**: φ_SE + φ_AM + ε_union = 1 (정확) · φ × 인계 두께 = 레시피 적재량.  유도량 (두께 · 레시피로 정해짐 — 독립 측정 아님) · union 과 같은 상한 규약의 짝 (소성으로 밀려난 재료를 빈틈이 아니라 두께로 보낸다)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "phi_am_mass_conserving",
+    "source": "union",
+    "blank": 0,
+    "constant": null,
+    "meaning": "인계용 AM 부피분율 (J20-e (라)) — 같은 규약 = (1 − porosity_union_exact_pct/100) × (1 − se_of_solid_vol)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "coverage_AM_P_hertz_pct",
+    "source": "harvest",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_P 표면 피복률 (%) — 접촉 면적 c_cpl[22] 합 / 표면적, 입자 평균 · 이름의 hertz 는 물려받은 오해 (A_dem_geometric · L1-04) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "coverage_AM_S_hertz_pct",
+    "source": "harvest",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_S 표면 피복률 (%) — 같은 채널 · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "coverage_AM_total_hertz_pct",
+    "source": "harvest",
+    "blank": 0,
+    "constant": null,
+    "meaning": "AM 전체 피복률 (%) — 위 둘에서 유도 (독립 타깃 아님)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "area_AM_P_AM_P_n",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_P_AM_P 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g · 접촉 0 인 쌍 = 0 — 웹앱 `calc_interface_area` 는 접촉이 없는 쌍의 키를 만들지 않아 빈칸이 되므로, 두 상이 다 있는 침대 (수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · mono 는 설계 상으로 판단 (J20-k (B)) · 상이 없으면 빈칸 (N/A) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "area_AM_P_AM_S_n",
+    "source": "webapp",
+    "blank": 16,
+    "constant": null,
+    "meaning": "AM_P_AM_S 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g · 접촉 0 인 쌍 = 0 — 웹앱 `calc_interface_area` 는 접촉이 없는 쌍의 키를 만들지 않아 빈칸이 되므로, 두 상이 다 있는 침대 (수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · mono 는 설계 상으로 판단 (J20-k (B)) · 상이 없으면 빈칸 (N/A) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "area_AM_P_SE_n",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_P_SE 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g · 접촉 0 인 쌍 = 0 — 웹앱 `calc_interface_area` 는 접촉이 없는 쌍의 키를 만들지 않아 빈칸이 되므로, 두 상이 다 있는 침대 (수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · mono 는 설계 상으로 판단 (J20-k (B)) · 상이 없으면 빈칸 (N/A) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "area_AM_S_AM_S_n",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_S_AM_S 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g · 접촉 0 인 쌍 = 0 — 웹앱 `calc_interface_area` 는 접촉이 없는 쌍의 키를 만들지 않아 빈칸이 되므로, 두 상이 다 있는 침대 (수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · mono 는 설계 상으로 판단 (J20-k (B)) · 상이 없으면 빈칸 (N/A) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "area_AM_S_SE_n",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_S_SE 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g · 접촉 0 인 쌍 = 0 — 웹앱 `calc_interface_area` 는 접촉이 없는 쌍의 키를 만들지 않아 빈칸이 되므로, 두 상이 다 있는 침대 (수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · mono 는 설계 상으로 판단 (J20-k (B)) · 상이 없으면 빈칸 (N/A) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "area_AM전체_SE_n",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "AM전체_SE 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g · 접촉 0 인 쌍 = 0 — 웹앱 `calc_interface_area` 는 접촉이 없는 쌍의 키를 만들지 않아 빈칸이 되므로, 두 상이 다 있는 침대 (수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · mono 는 설계 상으로 판단 (J20-k (B)) · 상이 없으면 빈칸 (N/A)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "area_SE_SE_n",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "SE_SE 접촉 개수 (쌍 종류별 덤프 행 수) (09-19 판정 근거: L1-04 — c_cpl[22] 는 기하 교차 원판(πrδ−δ²/4), Hertz 탄성 아님. A_dem_geometric 로 부를 것) · 1저자 검토: calc_interface_area (dem_analysis_core.py:131–168) — 1저자 검토 09-30 · 수정 불요 · J20-g · 접촉 0 인 쌍 = 0 — 웹앱 `calc_interface_area` 는 접촉이 없는 쌍의 키를 만들지 않아 빈칸이 되므로, 두 상이 다 있는 침대 (수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · mono 는 설계 상으로 판단 (J20-k (B)) · 상이 없으면 빈칸 (N/A)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "se_se_cn",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "z_SE-SE — SE 1 개당 SE 접촉 수, SE 전 입자 평균 (접촉 0 · 벽 · 플래튼에 닿은 입자 포함) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_se_se_cn (dem_analysis_core.py:232–344) — 1저자 검토 09-30 · 수정 불요 · 평균 = 2 × area_SE_SE_n / SE 입자 수 (생성기 관문 · 09-30 실측 130/130 · 64/64 차이 0) · 같은 함수의 _perc · _eff_area · _aug 는 ② · ⑦ · ⑤ 차례 · J20-i"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "se_se_cn_std",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "z_SE-SE 의 입자간 표준편차 (모집단 · SE 전 입자) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_se_se_cn (dem_analysis_core.py:232–344) — 1저자 검토 09-30 · 수정 불요 · 평균 = 2 × area_SE_SE_n / SE 입자 수 (생성기 관문 · 09-30 실측 130/130 · 64/64 차이 0) · 같은 함수의 _perc · _eff_area · _aug 는 ② · ⑦ · ⑤ 차례 · J20-i"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "am_am_cn",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "z_AM-AM — AM 1 개당 AM 접촉 수 (AM_P–AM_S 교차 포함), AM 전 입자 평균 (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_am_cn (dem_analysis_core.py:347–375) — 1저자 검토 09-30 · 수정 불요 · am_am_n_contacts = AM–AM 쌍 개수 합 · am_am_cn = 2 × am_am_n_contacts / AM 입자 수 (생성기 관문 · 09-30 실측 130/130 · 64/64 차이 0) · mono 포함 (상별 열 아님) · am_am_mean_area · am_am_total_area 는 ⑦ 차례 · J20-j"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "am_am_cn_std",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "z_AM-AM 의 입자간 표준편차 (모집단) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_am_cn (dem_analysis_core.py:347–375) — 1저자 검토 09-30 · 수정 불요 · am_am_n_contacts = AM–AM 쌍 개수 합 · am_am_cn = 2 × am_am_n_contacts / AM 입자 수 (생성기 관문 · 09-30 실측 130/130 · 64/64 차이 0) · mono 포함 (상별 열 아님) · am_am_mean_area · am_am_total_area 는 ⑦ 차례 · J20-j"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "am_am_n_contacts",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "AM–AM 접촉 개수 (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_am_cn (dem_analysis_core.py:347–375) — 1저자 검토 09-30 · 수정 불요 · am_am_n_contacts = AM–AM 쌍 개수 합 · am_am_cn = 2 × am_am_n_contacts / AM 입자 수 (생성기 관문 · 09-30 실측 130/130 · 64/64 차이 0) · mono 포함 (상별 열 아님) · am_am_mean_area · am_am_total_area 는 ⑦ 차례 · J20-j"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "am_se_cn_mean",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "z_AM-SE — AM 1 개당 SE 접촉 수, AM 전 입자 (AM_P + AM_S) 의 개수 가중 평균 (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "am_se_cn_surface_weighted",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "Σ r²·CN_AM-SE / Σ r² (AM 전 입자) — 표면적 가중 AM–SE CN (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "am_se_cn_std",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "z_AM-SE 의 입자간 표준편차 (모집단) — AM 전 입자 (접촉 0 · 벽 입자 포함) · mono = 단일 상 값 (J20-k 7a) (판정 근거 (09-19 census 밖 키): AM 전 입자 AM–SE CN 분포 — 7a (09-30) 에 웹앱이 내보내기 시작한 키 · 09-19 census 에 없다 · 상별 통계와 같은 counts · 같은 함수 (calc_am_isolation_risk)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "am_se_cn_median",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "z_AM-SE 의 중앙값 — AM 전 입자 (짝수 개면 가운데 둘의 평균 · np.median) · mono = 단일 상 값 (J20-k 7a) (판정 근거 (09-19 census 밖 키): AM 전 입자 AM–SE CN 분포 — 7a (09-30) 에 웹앱이 내보내기 시작한 키 · 09-19 census 에 없다 · 상별 통계와 같은 counts · 같은 함수 (calc_am_isolation_risk)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "am_se_cn_max",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "z_AM-SE 의 최댓값 — AM 전 입자 · = 상별 max 의 최댓값 (J20-k 7a) (판정 근거 (09-19 census 밖 키): AM 전 입자 AM–SE CN 분포 — 7a (09-30) 에 웹앱이 내보내기 시작한 키 · 09-19 census 에 없다 · 상별 통계와 같은 counts · 같은 함수 (calc_am_isolation_risk)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "AM_P_se_cn_mean",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_P 1 개당 SE 접촉 수의 평균 — AM_P 전 입자 (접촉 0 · 벽 입자 포함) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "AM_P_se_cn_std",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_P 1 개당 SE 접촉 수의 표준편차 (모집단) — AM_P 전 입자 (접촉 0 · 벽 입자 포함) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "AM_P_se_cn_median",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_P 1 개당 SE 접촉 수의 중앙값 — AM_P 전 입자 (접촉 0 · 벽 입자 포함) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "AM_P_se_cn_max",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_P 1 개당 SE 접촉 수의 최댓값 — AM_P 전 입자 (접촉 0 · 벽 입자 포함) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "AM_S_se_cn_mean",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_S 1 개당 SE 접촉 수의 평균 — AM_S 전 입자 (접촉 0 · 벽 입자 포함) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "AM_S_se_cn_std",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_S 1 개당 SE 접촉 수의 표준편차 (모집단) — AM_S 전 입자 (접촉 0 · 벽 입자 포함) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "AM_S_se_cn_median",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_S 1 개당 SE 접촉 수의 중앙값 — AM_S 전 입자 (접촉 0 · 벽 입자 포함) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "AM_S_se_cn_max",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_S 1 개당 SE 접촉 수의 최댓값 — AM_S 전 입자 (접촉 0 · 벽 입자 포함) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "am_vulnerable_pct",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "AM 고립 **위험** 비율 (%) (취약 AM) — SE 접촉이 0–1 개인 AM 의 비율, AM 전 입자 (AM_P + AM_S) · 접촉 개수 기준 (coverage 문턱이 아니다 — 09-19 census 의 COND_cov 는 오분류 · LHS-23) · ⚠ 경로 기준 고립 (이온이 못 가는 AM) 이 아니다 — 그것은 100 − ionic_active_pct (1저자 10-01 질문) (09-19 판정 근거: SE 접촉 0–1 개인 AM 의 비율 — 접촉 위상만 센다 (calc_am_isolation_risk · coverage 값을 읽지 않고 다른 단계가 덮어쓰지도 않는다) · 09-19 census 의 COND_cov (\"coverage 문턱 기반\") 는 오분류 (LHS-23) (09-19 census: 🔶 채널 종속 — coverage 문턱 기반 → Hertz(기하 교차 원판) 채널에 종속)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "AM_P_vulnerable_pct",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_P 고립 **위험** 비율 (%) (취약) — SE 접촉이 0–1 개인 AM_P 의 비율 · 접촉 개수 기준 (coverage 문턱이 아니다 — LHS-23 · 경로 기준 고립은 ionic_active_pct 쪽) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: SE 접촉 0–1 개인 AM 의 비율 — 접촉 위상만 센다 (calc_am_isolation_risk · coverage 값을 읽지 않고 다른 단계가 덮어쓰지도 않는다) · 09-19 census 의 COND_cov (\"coverage 문턱 기반\") 는 오분류 (LHS-23) (09-19 census: 🔶 채널 종속 — coverage 문턱 기반 → Hertz(기하 교차 원판) 채널에 종속)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "AM_S_vulnerable_pct",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_S 고립 **위험** 비율 (%) (취약) — SE 접촉이 0–1 개인 AM_S 의 비율 · 접촉 개수 기준 (coverage 문턱이 아니다 — LHS-23 · 경로 기준 고립은 ionic_active_pct 쪽) · 상이 없으면 빈칸 (N/A) (09-19 판정 근거: SE 접촉 0–1 개인 AM 의 비율 — 접촉 위상만 센다 (calc_am_isolation_risk · coverage 값을 읽지 않고 다른 단계가 덮어쓰지도 않는다) · 09-19 census 의 COND_cov (\"coverage 문턱 기반\") 는 오분류 (LHS-23) (09-19 census: 🔶 채널 종속 — coverage 문턱 기반 → Hertz(기하 교차 원판) 채널에 종속)) · 1저자 검토: calc_am_isolation_risk (dem_analysis_core.py:781–855) → analyze_contacts.py:452–468 — 1저자 검토 09-30 · 수정 불요 (7a 로 전체 std · median · max 추가) · 관문 G1–G7 (상별 평균 × 상 입자 수 = area_<상>_SE_n · 전체 평균 × AM 수 = area_AM전체_SE_n · 고립 개수 가중 · max · median · 합동 std · 표면 가중 = 설계 반경) · 고립 비율 = SE 접촉 0–1 개 (census COND_cov 오분류 → ✅ 승격 · LHS-23) · J20-k 7c · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "percolation_pct",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "SE 관통 비율 (%) — 바닥 밴드 (z ≤ 2r) 와 위 밴드 (z ≥ plate_z − 2r) 에 다 닿는 SE 성분의 SE / 전 SE · 0.0 = 관통 성분 없음 (진짜 미퍼콜 · J20-b) · **밴드 규칙의 그래프 관통** — 솔버 (전류) 관통 · σ 와 다른 정의 (LHS-19) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_percolation (dem_analysis_core.py:451–) · calc_ionic_active_am (:631–) · calc_se_se_cn 관통 부분 (:320–361) → analyze_contacts.py:404–413 — J20-b 감사 (WSL 130/130 CLEAN · 밴드 L0 130/130 · 폴백 0 · 겹침 0 · 재현 = 정본) · 1저자 비준 10-01 · 관문 P1–P3 (관통 일관 + 수확기 독립 재현 · 범위 · 관통 SE 개수 = percolation_pct × N_SE) · F3 한정어 (LHS-19) · top_reachable · ionic_active = census 오분류 → ✅ (LHS-20) · J20-b ②"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "top_reachable_pct",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "위 밴드에 닿는 SE 성분의 SE / 전 SE (%) — 위 밴드에 앉은 외톨이 SE 도 센다 (LHS-19) · SE 그래프 양 (coverage 무관 — LHS-20) (09-19 판정 근거: SE 그래프 양 — calc_percolation 의 위 밴드 성분 · calc_ionic_active_am 의 AM–SE 접촉 유무 × top-reachable SE (coverage 값을 읽지 않는다) · 09-19 census 의 COND_cov 는 오분류 (LHS-20 · 1저자 비준 10-01) (09-19 census: 🔶 채널 종속 — coverage 문턱 기반 → Hertz(기하 교차 원판) 채널에 종속)) · 1저자 검토: calc_percolation (dem_analysis_core.py:451–) · calc_ionic_active_am (:631–) · calc_se_se_cn 관통 부분 (:320–361) → analyze_contacts.py:404–413 — J20-b 감사 (WSL 130/130 CLEAN · 밴드 L0 130/130 · 폴백 0 · 겹침 0 · 재현 = 정본) · 1저자 비준 10-01 · 관문 P1–P3 (관통 일관 + 수확기 독립 재현 · 범위 · 관통 SE 개수 = percolation_pct × N_SE) · F3 한정어 (LHS-19) · top_reachable · ionic_active = census 오분류 → ✅ (LHS-20) · J20-b ②"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "n_components",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "SE 접촉 그래프의 성분 수 — 외톨이 SE (크기 1) 포함 → 단절 침대에서는 사실상 외톨이 수 (LHS-06 · LHS-19) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_percolation (dem_analysis_core.py:451–) · calc_ionic_active_am (:631–) · calc_se_se_cn 관통 부분 (:320–361) → analyze_contacts.py:404–413 — J20-b 감사 (WSL 130/130 CLEAN · 밴드 L0 130/130 · 폴백 0 · 겹침 0 · 재현 = 정본) · 1저자 비준 10-01 · 관문 P1–P3 (관통 일관 + 수확기 독립 재현 · 범위 · 관통 SE 개수 = percolation_pct × N_SE) · F3 한정어 (LHS-19) · top_reachable · ionic_active = census 오분류 → ✅ (LHS-20) · J20-b ②"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "n_large_components",
+    "source": "webapp",
+    "blank": 0,
+    "constant": "1",
+    "meaning": "크기 ≥ 10 인 SE 성분 수 — 문턱 10 은 출처 없는 코드 상수 (LHS-19) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_percolation (dem_analysis_core.py:451–) · calc_ionic_active_am (:631–) · calc_se_se_cn 관통 부분 (:320–361) → analyze_contacts.py:404–413 — J20-b 감사 (WSL 130/130 CLEAN · 밴드 L0 130/130 · 폴백 0 · 겹침 0 · 재현 = 정본) · 1저자 비준 10-01 · 관문 P1–P3 (관통 일관 + 수확기 독립 재현 · 범위 · 관통 SE 개수 = percolation_pct × N_SE) · F3 한정어 (LHS-19) · top_reachable · ionic_active = census 오분류 → ✅ (LHS-20) · J20-b ②"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "ionic_active_pct",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "이온 활성 AM 비율 (%) — 위 밴드 (분리막 쪽) 에 닿는 SE 성분 (top-reachable) 의 SE 와 접촉한 AM / 전 AM (calc_ionic_active_am) · **100 − 이 값 = 경로 기준 고립 AM** (SE 무접촉 + 닿은 SE 가 위로 안 이어짐) · 접촉 유무만 본다 (coverage 무관 — LHS-20) · 외톨이 SE 가 위 밴드에 있으면 그것도 센다 (LHS-19) (09-19 판정 근거: SE 그래프 양 — calc_percolation 의 위 밴드 성분 · calc_ionic_active_am 의 AM–SE 접촉 유무 × top-reachable SE (coverage 값을 읽지 않는다) · 09-19 census 의 COND_cov 는 오분류 (LHS-20 · 1저자 비준 10-01) (09-19 census: 🔶 채널 종속 — coverage 문턱 기반 → Hertz(기하 교차 원판) 채널에 종속)) · 1저자 검토: calc_percolation (dem_analysis_core.py:451–) · calc_ionic_active_am (:631–) · calc_se_se_cn 관통 부분 (:320–361) → analyze_contacts.py:404–413 — J20-b 감사 (WSL 130/130 CLEAN · 밴드 L0 130/130 · 폴백 0 · 겹침 0 · 재현 = 정본) · 1저자 비준 10-01 · 관문 P1–P3 (관통 일관 + 수확기 독립 재현 · 범위 · 관통 SE 개수 = percolation_pct × N_SE) · F3 한정어 (LHS-19) · top_reachable · ionic_active = census 오분류 → ✅ (LHS-20) · J20-b ②"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "se_se_cn_perc",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "관통 SE 성분에 속한 SE 만의 평균 SE–SE CN — 관통 성분이 없으면 빈칸 (N/A · 키 자체가 없다 · LHS-19) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_percolation (dem_analysis_core.py:451–) · calc_ionic_active_am (:631–) · calc_se_se_cn 관통 부분 (:320–361) → analyze_contacts.py:404–413 — J20-b 감사 (WSL 130/130 CLEAN · 밴드 L0 130/130 · 폴백 0 · 겹침 0 · 재현 = 정본) · 1저자 비준 10-01 · 관문 P1–P3 (관통 일관 + 수확기 독립 재현 · 범위 · 관통 SE 개수 = percolation_pct × N_SE) · F3 한정어 (LHS-19) · top_reachable · ionic_active = census 오분류 → ✅ (LHS-20) · J20-b ②"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "se_se_cn_n_perc",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "관통 SE 성분에 속한 SE 개수 — = percolation_pct × N_SE / 100 (생성기 관문 P3) · 관통 없으면 빈칸 (N/A) (09-19 판정 근거: 기하·위상·설계·응력·파괴 — cap 선택과 무관 (Hertz/Physics Δ=0%)) · 1저자 검토: calc_percolation (dem_analysis_core.py:451–) · calc_ionic_active_am (:631–) · calc_se_se_cn 관통 부분 (:320–361) → analyze_contacts.py:404–413 — J20-b 감사 (WSL 130/130 CLEAN · 밴드 L0 130/130 · 폴백 0 · 겹침 0 · 재현 = 정본) · 1저자 비준 10-01 · 관문 P1–P3 (관통 일관 + 수확기 독립 재현 · 범위 · 관통 SE 개수 = percolation_pct × N_SE) · F3 한정어 (LHS-19) · top_reachable · ionic_active = census 오분류 → ✅ (LHS-20) · J20-b ②"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "tortuosity_SE_wall",
+    "source": "harvest_v3",
+    "blank": 0,
+    "constant": null,
+    "meaning": "★ SE τ (벽 규약 · **기하 최단경로**) — 바닥 벽 (z = 0) 밴드와 플래튼 밴드 (밴드 두께 = r_SE,max · 입자 표면 기준) 를 **같은 SE 성분 안에서** 잇는 쌍의 SE 중심 경로 최단 길이 (Dijkstra · 가중 = 중심 거리 · x·y 주기) / 두 끝 중심의 z 거리 · 무작위 200 쌍 (seed 42 · 쌍 평균이라 쌍이 많은 큰 성분 쪽으로 가중) · [1, 20) 절단 평균.  접촉 = 원자 좌표 기하 (d ≤ r_i + r_j) — 덤프 접촉과 같은 집합 (J20-a 130/130).  status OK 일 때만 값 · 비관통은 빈칸 (N/A · 0 이 아니다).  ⚠ **수송 τ 가 아니다** — 협착 · 단면 병목을 보지 않아 1 근처에 모인다 (LHS 1.29–4.15 · lhsx 1.26–1.60) · COMSOL/EIS 입력 τ 는 τ_Laplace,eff = √(φ_SE·σ_grain/σ_full) (망 단계 · 이 표에 없음) · 관문 T1–T3 (10-01)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "tortuosity_SE_wall_median",
+    "source": "harvest_v3",
+    "blank": 0,
+    "constant": null,
+    "meaning": "같은 표본의 중앙값 (status OK 일 때만) · 같은 한정어 (기하 최단경로 · 수송 τ 아님)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "wall_touch_frac_SE_floor",
+    "source": "harvest_v3",
+    "blank": 0,
+    "constant": null,
+    "meaning": "SE 입자 중 바닥 벽 (z − r < 0) 에 닿은 비율 (0–1) · 닿음 = 겹침 깊이 > 0 (접선은 안 셈 · 수확기 WALL_TOUCH_RULE) · 상이 없으면 빈칸 (N/A)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "wall_touch_frac_SE_plate",
+    "source": "harvest_v3",
+    "blank": 0,
+    "constant": null,
+    "meaning": "SE 입자 중 플래튼 (z + r > plate_z) 에 닿은 비율 (0–1) · 닿음 = 겹침 깊이 > 0 (접선은 안 셈 · 수확기 WALL_TOUCH_RULE) · 상이 없으면 빈칸 (N/A)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "wall_touch_frac_AM_P_floor",
+    "source": "harvest_v3",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_P 입자 중 바닥 벽 (z − r < 0) 에 닿은 비율 (0–1) · 닿음 = 겹침 깊이 > 0 (접선은 안 셈 · 수확기 WALL_TOUCH_RULE) · 상이 없으면 빈칸 (N/A) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "wall_touch_frac_AM_P_plate",
+    "source": "harvest_v3",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_P 입자 중 플래튼 (z + r > plate_z) 에 닿은 비율 (0–1) · 닿음 = 겹침 깊이 > 0 (접선은 안 셈 · 수확기 WALL_TOUCH_RULE) · 상이 없으면 빈칸 (N/A) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "wall_touch_frac_AM_S_floor",
+    "source": "harvest_v3",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_S 입자 중 바닥 벽 (z − r < 0) 에 닿은 비율 (0–1) · 닿음 = 겹침 깊이 > 0 (접선은 안 셈 · 수확기 WALL_TOUCH_RULE) · 상이 없으면 빈칸 (N/A) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "wall_touch_frac_AM_S_plate",
+    "source": "harvest_v3",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_S 입자 중 플래튼 (z + r > plate_z) 에 닿은 비율 (0–1) · 닿음 = 겹침 깊이 > 0 (접선은 안 셈 · 수확기 WALL_TOUCH_RULE) · 상이 없으면 빈칸 (N/A) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "wall_touch_frac_AM_floor",
+    "source": "harvest_v3",
+    "blank": 0,
+    "constant": null,
+    "meaning": "AM 입자 중 바닥 벽 (z − r < 0) 에 닿은 비율 (0–1) · 닿음 = 겹침 깊이 > 0 (접선은 안 셈 · 수확기 WALL_TOUCH_RULE) · AM = AM_P + AM_S 합친 모집단 (am_se_cn_mean 과 같은 분모) · 상이 없으면 빈칸 (N/A)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "wall_touch_frac_AM_plate",
+    "source": "harvest_v3",
+    "blank": 0,
+    "constant": null,
+    "meaning": "AM 입자 중 플래튼 (z + r > plate_z) 에 닿은 비율 (0–1) · 닿음 = 겹침 깊이 > 0 (접선은 안 셈 · 수확기 WALL_TOUCH_RULE) · AM = AM_P + AM_S 합친 모집단 (am_se_cn_mean 과 같은 분모) · 상이 없으면 빈칸 (N/A)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "am_ionic_isolated_pct",
+    "source": "webapp_derived",
+    "blank": 0,
+    "constant": null,
+    "meaning": "★ 경로 기준 고립 AM 비율 (%) (v1.1 ① · 1저자 비준 10-01) = 100 − ionic_active_pct — 이온이 분리막 쪽 (위 밴드) 에서 닿을 수 없는 AM: SE 무접촉 + 닿은 SE 가 top-reachable 이 아님 (calc_ionic_active_am · 접촉 그래프 · coverage 무관) · ⚠ 고립 위험 (am_vulnerable_pct · SE 접촉 0–1 개 · 접촉 개수) 과 다른 양 — 접촉이 둘 이상이어도 그 SE 가 끊긴 덩어리면 고립, 하나뿐이어도 이어져 있으면 활성 (예: lhs00_083 고립 위험 0.1 % · 경로 고립 89 %) · 분해 = ionic_dead_pct + ionic_no_se_pct (v1.1 ② 배치부터) · 생성기가 ionic_active_pct 에서 유도 · 관문 v1.1 D1–D5"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "ionic_dead_pct",
+    "source": "webapp",
+    "blank": 0,
+    "constant": "0.0",
+    "meaning": "경로 기준 고립 중 **단절** 비율 (%) (v1.1 ②) — SE 와 닿았지만 닿은 SE 가 전부 위 밴드 (분리막 쪽) 로 안 이어지는 AM / 전 AM (calc_ionic_active_am 의 dead) · SE 망이 끊긴 문제 (접촉을 늘려도 안 풀린다) (판정 근거 (09-19 census 밖 키): 경로 기준 고립의 분해 — 웹앱 v1.1 (10-01) 이 내보내기 시작한 키 · calc_ionic_active_am 이 계산하고 버리던 단절 · 무접촉 (상별 단절 · 무접촉은 이번에 계산 추가) · 활성 · 단절 · 무접촉 세 집합 하나에서 · 09-19 census 에 없다) · 1저자 검토: calc_ionic_active_am (dem_analysis_core.py:631–) → analyze_contacts — v1.1 ② (1저자 비준 10-01): 계산하고 버리던 단절 · 무접촉 내보내기 + 상별 단절 · 무접촉 계산 추가 (시험 먼저 · analyze_contacts --selftest ⑬–⑱) · 관문 v1.1 D1–D5 (합 100 · 상별 합 100 · 정수 개수 · 상별 개수 합 = 전체 · 무접촉 ≤ 고립 위험)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "ionic_no_se_pct",
+    "source": "webapp",
+    "blank": 0,
+    "constant": null,
+    "meaning": "경로 기준 고립 중 **무접촉** 비율 (%) (v1.1 ②) — SE 접촉 0 인 AM / 전 AM (calc_ionic_active_am 의 no_se) · 고립 위험 (SE 접촉 0–1 개) 의 부분집합 (관문 D5) · 계면 형성 문제 (판정 근거 (09-19 census 밖 키): 경로 기준 고립의 분해 — 웹앱 v1.1 (10-01) 이 내보내기 시작한 키 · calc_ionic_active_am 이 계산하고 버리던 단절 · 무접촉 (상별 단절 · 무접촉은 이번에 계산 추가) · 활성 · 단절 · 무접촉 세 집합 하나에서 · 09-19 census 에 없다) · 1저자 검토: calc_ionic_active_am (dem_analysis_core.py:631–) → analyze_contacts — v1.1 ② (1저자 비준 10-01): 계산하고 버리던 단절 · 무접촉 내보내기 + 상별 단절 · 무접촉 계산 추가 (시험 먼저 · analyze_contacts --selftest ⑬–⑱) · 관문 v1.1 D1–D5 (합 100 · 상별 합 100 · 정수 개수 · 상별 개수 합 = 전체 · 무접촉 ≤ 고립 위험)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "AM_P_ionic_active_pct",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_P 의 이온 활성 (위 밴드에 닿는 SE 와 접촉) 비율 (%) (v1.1 ②) — AM_P 전 입자 기준 · 활성 + 단절 + 무접촉 = 100 (관문 D2) · 상이 없으면 빈칸 (N/A) (판정 근거 (09-19 census 밖 키): 경로 기준 고립의 분해 — 웹앱 v1.1 (10-01) 이 내보내기 시작한 키 · calc_ionic_active_am 이 계산하고 버리던 단절 · 무접촉 (상별 단절 · 무접촉은 이번에 계산 추가) · 활성 · 단절 · 무접촉 세 집합 하나에서 · 09-19 census 에 없다) · 1저자 검토: calc_ionic_active_am (dem_analysis_core.py:631–) → analyze_contacts — v1.1 ② (1저자 비준 10-01): 계산하고 버리던 단절 · 무접촉 내보내기 + 상별 단절 · 무접촉 계산 추가 (시험 먼저 · analyze_contacts --selftest ⑬–⑱) · 관문 v1.1 D1–D5 (합 100 · 상별 합 100 · 정수 개수 · 상별 개수 합 = 전체 · 무접촉 ≤ 고립 위험) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "AM_P_ionic_dead_pct",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_P 의 단절 (SE 와 닿았지만 위 밴드로 안 이어짐) 비율 (%) (v1.1 ②) — AM_P 전 입자 기준 · 활성 + 단절 + 무접촉 = 100 (관문 D2) · 상이 없으면 빈칸 (N/A) (판정 근거 (09-19 census 밖 키): 경로 기준 고립의 분해 — 웹앱 v1.1 (10-01) 이 내보내기 시작한 키 · calc_ionic_active_am 이 계산하고 버리던 단절 · 무접촉 (상별 단절 · 무접촉은 이번에 계산 추가) · 활성 · 단절 · 무접촉 세 집합 하나에서 · 09-19 census 에 없다) · 1저자 검토: calc_ionic_active_am (dem_analysis_core.py:631–) → analyze_contacts — v1.1 ② (1저자 비준 10-01): 계산하고 버리던 단절 · 무접촉 내보내기 + 상별 단절 · 무접촉 계산 추가 (시험 먼저 · analyze_contacts --selftest ⑬–⑱) · 관문 v1.1 D1–D5 (합 100 · 상별 합 100 · 정수 개수 · 상별 개수 합 = 전체 · 무접촉 ≤ 고립 위험) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "AM_P_ionic_no_se_pct",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_P 의 무접촉 (SE 접촉 0) 비율 (%) (v1.1 ②) — AM_P 전 입자 기준 · 활성 + 단절 + 무접촉 = 100 (관문 D2) · 상이 없으면 빈칸 (N/A) (판정 근거 (09-19 census 밖 키): 경로 기준 고립의 분해 — 웹앱 v1.1 (10-01) 이 내보내기 시작한 키 · calc_ionic_active_am 이 계산하고 버리던 단절 · 무접촉 (상별 단절 · 무접촉은 이번에 계산 추가) · 활성 · 단절 · 무접촉 세 집합 하나에서 · 09-19 census 에 없다) · 1저자 검토: calc_ionic_active_am (dem_analysis_core.py:631–) → analyze_contacts — v1.1 ② (1저자 비준 10-01): 계산하고 버리던 단절 · 무접촉 내보내기 + 상별 단절 · 무접촉 계산 추가 (시험 먼저 · analyze_contacts --selftest ⑬–⑱) · 관문 v1.1 D1–D5 (합 100 · 상별 합 100 · 정수 개수 · 상별 개수 합 = 전체 · 무접촉 ≤ 고립 위험) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "AM_S_ionic_active_pct",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_S 의 이온 활성 (위 밴드에 닿는 SE 와 접촉) 비율 (%) (v1.1 ②) — AM_S 전 입자 기준 · 활성 + 단절 + 무접촉 = 100 (관문 D2) · 상이 없으면 빈칸 (N/A) (판정 근거 (09-19 census 밖 키): 경로 기준 고립의 분해 — 웹앱 v1.1 (10-01) 이 내보내기 시작한 키 · calc_ionic_active_am 이 계산하고 버리던 단절 · 무접촉 (상별 단절 · 무접촉은 이번에 계산 추가) · 활성 · 단절 · 무접촉 세 집합 하나에서 · 09-19 census 에 없다) · 1저자 검토: calc_ionic_active_am (dem_analysis_core.py:631–) → analyze_contacts — v1.1 ② (1저자 비준 10-01): 계산하고 버리던 단절 · 무접촉 내보내기 + 상별 단절 · 무접촉 계산 추가 (시험 먼저 · analyze_contacts --selftest ⑬–⑱) · 관문 v1.1 D1–D5 (합 100 · 상별 합 100 · 정수 개수 · 상별 개수 합 = 전체 · 무접촉 ≤ 고립 위험) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "AM_S_ionic_dead_pct",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_S 의 단절 (SE 와 닿았지만 위 밴드로 안 이어짐) 비율 (%) (v1.1 ②) — AM_S 전 입자 기준 · 활성 + 단절 + 무접촉 = 100 (관문 D2) · 상이 없으면 빈칸 (N/A) (판정 근거 (09-19 census 밖 키): 경로 기준 고립의 분해 — 웹앱 v1.1 (10-01) 이 내보내기 시작한 키 · calc_ionic_active_am 이 계산하고 버리던 단절 · 무접촉 (상별 단절 · 무접촉은 이번에 계산 추가) · 활성 · 단절 · 무접촉 세 집합 하나에서 · 09-19 census 에 없다) · 1저자 검토: calc_ionic_active_am (dem_analysis_core.py:631–) → analyze_contacts — v1.1 ② (1저자 비준 10-01): 계산하고 버리던 단절 · 무접촉 내보내기 + 상별 단절 · 무접촉 계산 추가 (시험 먼저 · analyze_contacts --selftest ⑬–⑱) · 관문 v1.1 D1–D5 (합 100 · 상별 합 100 · 정수 개수 · 상별 개수 합 = 전체 · 무접촉 ≤ 고립 위험) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "AM_S_ionic_no_se_pct",
+    "source": "webapp",
+    "blank": 8,
+    "constant": null,
+    "meaning": "AM_S 의 무접촉 (SE 접촉 0) 비율 (%) (v1.1 ②) — AM_S 전 입자 기준 · 활성 + 단절 + 무접촉 = 100 (관문 D2) · 상이 없으면 빈칸 (N/A) (판정 근거 (09-19 census 밖 키): 경로 기준 고립의 분해 — 웹앱 v1.1 (10-01) 이 내보내기 시작한 키 · calc_ionic_active_am 이 계산하고 버리던 단절 · 무접촉 (상별 단절 · 무접촉은 이번에 계산 추가) · 활성 · 단절 · 무접촉 세 집합 하나에서 · 09-19 census 에 없다) · 1저자 검토: calc_ionic_active_am (dem_analysis_core.py:631–) → analyze_contacts — v1.1 ② (1저자 비준 10-01): 계산하고 버리던 단절 · 무접촉 내보내기 + 상별 단절 · 무접촉 계산 추가 (시험 먼저 · analyze_contacts --selftest ⑬–⑱) · 관문 v1.1 D1–D5 (합 100 · 상별 합 100 · 정수 개수 · 상별 개수 합 = 전체 · 무접촉 ≤ 고립 위험) · mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "se_largest_comp_frac",
+    "source": "harvest_v3",
+    "blank": 0,
+    "constant": null,
+    "meaning": "★ 가장 큰 SE 덩어리 (SE 수 기준 가장 큰 연결 성분 · 원자 좌표 기하 접촉 d ≤ r_i + r_j · x·y 주기 — 벽 τ 와 같은 그래프) 에 든 SE 의 비율 (0–1) = 그 성분의 SE 수 / 전 SE (v1.1 ③ · 1저자 비준 10-01) · 관통 침대는 1 근처 (LHS 중앙 0.997) · 비관통 침대 0.002–0.91 · 관문 C1 (× N_SE = 정수 개수 · N_SE = 수확 phase_counts)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "se_largest_comp_wall_span_frac",
+    "source": "harvest_v3",
+    "blank": 0,
+    "constant": null,
+    "meaning": "★ 그 덩어리의 두께 방향 폭 / 벽 간격 (v1.1 ③) — 폭 = 덩어리 SE 의 max(z + r) − min(z − r) (입자 표면 기준) · 벽 간격 = 플래튼 plate_z − 바닥 z 0 · 수확 기록값으로 정확히 환산 (= 수확 원값 × 전 입자 z 범위 / 벽 간격 · 재실행 없음) · 표면이 벽 · 플래튼과 겹쳐 1 을 넘을 수 있다 (관통 침대 LHS 1.01–1.05 · lhsx 1.02–1.06) · 비관통 침대 0.11–0.96 · ⚠ SE 수로 **가장 큰** 덩어리의 폭 — 가장 멀리 뻗은 덩어리가 아닐 수 있다 · 관문 C3 (플래튼 = 수확 plate_z_sim · 바닥 = z_floor_sim)"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "thickness_wall_gap_um",
+    "source": "harvest",
+    "blank": 0,
+    "constant": null,
+    "meaning": "주 두께 — 같은 프레임의 플래튼 − 바닥 (z = 0) 간격, sim × 1e3"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "physical_target_status",
+    "source": "harvest",
+    "blank": 0,
+    "constant": null,
+    "meaning": "OK | HOLD — 물리적 전극 구조 타깃으로 쓸 수 있는가 (HND-04 — 계산 상태와 분리) · HOLD = hold_reason_codes 가 하나라도 있다 · 값은 그대로 계산됐다 (calculation_status OK) · 배포 v1.1 부터 함께 싣는다 — 거를지는 쓰는 쪽이 정한다"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "hold_reason_codes",
+    "source": "harvest",
+    "blank": 2,
+    "constant": null,
+    "meaning": "BOUNDARY_CENTER_OUT = 중심이 바닥 · 플래튼 평면 밖인 입자 ≥ 1 (정상 압입과 구분 · HND-03) · NEGATIVE_POROSITY = 구 부피 합 porosity < 0 (= 구 부피 합 φ_SE + φ_AM > 1 · 겹침이 큰 침대 · HND-04 · LHS-15) — 배포 porosity (정확 union) 는 이 경우에도 양수다 · 여러 개면 | 로 잇는다"
+  },
+  {
+    "dataset": "lhsx",
+    "column": "boundary_state",
+    "source": "harvest",
+    "blank": 0,
+    "constant": null,
+    "meaning": "INSIDE | CENTER_CROSSED | FULLY_OUT — 바닥 (z = 0) · 플래튼 평면 기준 (같은 프레임 · 수확기 wall_record): 중심이 평면을 넘은 입자가 있으면 CENTER_CROSSED · 통째로 평면 밖인 입자가 있으면 FULLY_OUT · 없으면 INSIDE"
+  }
+]

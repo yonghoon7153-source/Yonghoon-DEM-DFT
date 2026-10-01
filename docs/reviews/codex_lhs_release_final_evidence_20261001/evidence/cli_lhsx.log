@@ -1,0 +1,11 @@
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\lhs_release_review_20261001\evidence\regenerated_lhsx.csv   64행 × 191열   (열 사전 regenerated_lhsx_columns.tsv)
+   J20 벽 τ: {'OK': 64}
+   J20 웹앱 ✅ 43 열 · 행 상태 {'done': 64} · 같은 프레임 |Δporosity| 최대 2.503e-10 %p · 이름 충돌 (수확 열 정본) []
+   J20-g 같이 확인한 웹앱 열만 (6 패턴) — 뺀 census ✅ 열 0 · J20-k (B) mono 웹앱 상별 칸: 설계 상 칸 채움 160 셀 · 이름 옮김 4 건 · 없는 상 빈칸 176 셀 · J20-h 접촉 0 쌍 = 0 채움 0 · J20-i se_se_cn = 2·area_SE_SE_n/N_SE 확인 64 행 · J20-j AM–AM 접촉 수 = 쌍 합 · am_am_cn = 2·n/N_AM 확인 64 행 · 7c AM–SE CN · 고립 관문 G1–G7 확인 64 행 · ② 퍼콜레이션 관문 P1–P3 확인 64 행
+   벽 τ 관문 T1–T2 확인 64 행 · T3 (↔ 퍼콜레이션) 64 행
+   v1.1 ①② 이온 활성 · 경로 기준 고립 관문 D1–D5 확인 64 행
+   v1.1 ③ 가장 큰 SE 덩어리 관문 C1–C3 확인 64 행
+   J20-k (B) mono 16 행 — 수확기 상별 칸 (coverage · n_AM_*_measured · cov_*_n_valid · 벽 접촉) 설계 상 칸 채움 80 셀 (설계에 없는 상은 빈칸)
+   빈칸 사유: {'N_A_PHASE_ABSENT': 16}
+   ⛔ 보류 열 `tortuosity_dijkstra_SE` — LHS-08 열림 — 130 중 14 만 값이 있고 `NOT_PERCOLATING` 이 규약 실패와 물리 미관통을 **한 값으로 접는다**.  재수확 뒤 공급.  ↪ J20 (09-28): 벽 규약 τ 를 **새 열** `tortuosity_SE_wall` 로 공급 — 이 옛 규약 열은 계속 보류.
+   J19 union 병기: docs/data/lhs_union_20260927/lhsx64_union.tsv · 설계 밖 union 행 [] (인계표에 안 넣음) · SE-rich (≥ 0.5) 64 행 · 구 부피 합 열은 그대로

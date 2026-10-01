@@ -1,0 +1,86 @@
+[
+  {
+    "name": "lhs_design_dataset",
+    "rc": 0,
+    "seconds": 1.56,
+    "tail": [
+      "  PASS  ㉔p ★ C2 — 전 입자 z 범위 대비 z 폭 > 1 이면 거부 (덩어리 ⊂ 전 입자) — 거부: q1: largest_comp_z_span_frac 1.2 ∉ (0, 1] — 덩어리는 전 입자의 부분집합이다 (v",
+      "  PASS  ㉔q ★ C3 — 벽 간격의 플래튼 ≠ 수확 plate_z_sim 이면 거부 (다른 판) — 거부: q1: 덩어리 기록의 벽 간격 (플래튼 39.0 · 바닥 0.0) ≠ 수확 plate_z_sim 40.0 · z_f",
+      "  PASS  ㉔r ★ ③ 수확 세대 혼합 — 일부 행만 덩어리 기록이 있으면 거부 — 거부: 가장 큰 SE 덩어리 기록 (largest_comp_*) 이 1/2 수확에만 있다 — 수확 세대가 섞였다 (없는 행",
+      "",
+      "lhs_design_dataset selftest: 207/207 PASS"
+    ]
+  },
+  {
+    "name": "lhs_descriptor_harvest",
+    "rc": 1,
+    "seconds": 4.22,
+    "tail": [
+      "                                 [--mesh MESH] [--plate-z PLATE_Z]",
+      "                                 [--n-types {2,3}] [--deck DECK] [--case CASE]",
+      "                                 [--allow-any-bc] [--n-pairs N_PAIRS]",
+      "                                 [--out OUT] [--selftest]",
+      "lhs_descriptor_harvest.py: error: --atom · --contact · --n-types · --deck 는 필수다 (--deck: 바닥 벽 위치를 덱에서 확인한다, LHS-12)"
+    ]
+  },
+  {
+    "name": "lhs_webapp_batch",
+    "rc": 1,
+    "seconds": 0.28,
+    "tail": [
+      "           ^^^^^^^^^^^",
+      "  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs_release_review_20261001\\snapshot\\scripts\\lhs_webapp_batch.py\", line 422, in _selftest",
+      "    calls[0]['files'] == sorted(['atom_100.liggghts', 'contact_100.liggghts', 'mesh_100.stl',",
+      "    ~~~~~^^^",
+      "IndexError: list index out of range"
+    ]
+  },
+  {
+    "name": "lhs_perc_audit",
+    "rc": 0,
+    "seconds": 1.39,
+    "tail": [
+      "",
+      "✓ 전부 통과 — 검사기가 반례 (폴백 L1/L2 · 겹침 인공물 · ≥10 문턱 · 밴드/접촉 귀속 · 덱 바닥 · 프레임 · 고아 행 · 변이) 를 잡고 재현이 웹앱 정본 · 수확기 정본에 묶여 있다.  ⚠ 실제 130 덤프의 상태는 WSL 실행 결과가 말한다",
+      "⛔ 감사된 케이스가 0 이다 (전부 SKIPPED) — CLEAN 을 주장하지 않는다",
+      "⛔ legacy CSV 읽기 실패 — C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\tmp3yd3ybr9\\legacy3.csv: ionic_percolates 값을 모른다 'maybe' (case c1) — true/false/1/0 만 받는다",
+      "⛔ legacy CSV 읽기 실패 — C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\tmp3yd3ybr9\\legacy4.csv: legacy CSV 에 case_id 열이 없다 (있는 열: ['case', 'ionic_percolates'])"
+    ]
+  },
+  {
+    "name": "lhs_contact_audit",
+    "rc": 0,
+    "seconds": 1.08,
+    "tail": [
+      "→ C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\tmp8k41_h2p\\out3/contact_audit.tsv · contact_audit.json",
+      "  요약: {\"n\": 1, \"status\": {\"NO_MESH\": 1}, \"verdict\": {}, \"contact_frames\": {\"max\": null, \"n_nonzero\": 0}, \"atom_frames\": {\"max\": null, \"n_nonzero\": 0}, \"dup_rows\": {\"max\": null, \"n_nonzero\": 0}, \"self_pairs\": {\"max\": null, \"n_nonzero\": 0}, \"delta_nonpos\": {\"max\": null, \"n_nonzero\": 0}, \"geom_only\": {\"max\": null, \"n_nonzero\": 0}, \"dump_only\": {\"max\": null, \"n_nonzero\": 0}, \"rounding_pairs\": {\"max\": null, \"n_nonzero\": 0}, \"geom_only_far\": {\"max\": null, \"n_nonzero\": 0}, \"dump_only_far\": {\"max\": null, \"n_nonzero\": 0}, \"both_inconsistent\": {\"max\": null, \"n_nonzero\": 0}, \"flag_not_cross\": {\"max\": null, \"n_nonzero\": 0}, \"cross_not_flag\": {\"max\": null, \"n_nonzero\": 0}, \"orphan_rows\": {\"max\": null, \"n_nonzero\": 0}, \"nonfinite_rows\": {\"max\": null, \"n_nonzero\": 0}, \"flag_id_order_bad\": {\"max\": null, \"n_nonzero\": 0}, \"predicted_flag_missing\": {\"max\": null, \"n_nonzero\": 0}, \"n_periodic_rows_total\": 0, \"n_geom_cross_total\": 0, \"sigfigs\": [], \"bound_max\": null, \"flag_only_cases\": {\"n\": 0, \"explained\": 0, \"grids\": []}, \"skin_missing\": 0}",
+      "  ✓ ㉒b 같은 step 메시 없음 → NO_MESH (CLEAN 아님) · rc 2 (자기리뷰 #7)",
+      "",
+      "✓ 전부 통과 — 감사기가 반례 (다중 프레임 · 중복 · 주기 누락 · δ≤0 · 플래그 어긋남) 를 잡는다.  ⚠ 실제 130 덤프가 깨끗하다는 뜻은 아니다 (WSL 실행 결과를 볼 것)"
+    ]
+  },
+  {
+    "name": "analyze_contacts",
+    "rc": 0,
+    "seconds": 6.12,
+    "tail": [
+      "  ✓ ⑲e 경계 너머로 겹친 쌍 · 틈이 h 보다 큰 쌍은 근접쌍이 아니다 (0 · 0)",
+      "  ✓ ⑲f 여러 쌍 — 쌍마다 한 번만 (x 1 + y 1 = 2) · mean_aug = 2·2/4 = 1.0",
+      "  ✓ ⑲g 생산 경로 (run_full_analysis) 가 상자 크기를 넘긴다 — box_x=box_x · box_y=box_y",
+      "",
+      "25/25  ✓ 전부 통과"
+    ]
+  },
+  {
+    "name": "lhs_release_build",
+    "rc": 0,
+    "seconds": 0.09,
+    "tail": [
+      "  ✓ ⑤ 값 한 칸 바꿈 → 대조 실패",
+      "  ✓ ⑥ 행 빠짐 → 대조 실패",
+      "  ✓ ⑦ 열 사전 문구 바뀜 → 대조 실패",
+      "  ✓ ⑧ 중복 열 → 거부",
+      "8/8  ✓ 전부 통과"
+    ]
+  }
+]

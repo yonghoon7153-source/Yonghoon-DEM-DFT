@@ -1,0 +1,1377 @@
+{
+  "lhs": {
+    "rows": 130,
+    "cols": 89,
+    "unique_ids": 130,
+    "build_cols": 189,
+    "build_diffs": [],
+    "n_build_diffs": 0,
+    "release_check": [],
+    "report": {
+      "n": 130,
+      "blank_by_status": {
+        "N_A_PHASE_ABSENT": 30
+      },
+      "held_back": {
+        "tortuosity_dijkstra_SE": "LHS-08 열림 — 130 중 14 만 값이 있고 `NOT_PERCOLATING` 이 규약 실패와 물리 미관통을 **한 값으로 접는다**.  재수확 뒤 공급.  ↪ J20 (09-28): 벽 규약 τ 를 **새 열** `tortuosity_SE_wall` 로 공급 — 이 옛 규약 열은 계속 보류."
+      },
+      "mono_rows": 30,
+      "mono_harvest_filled": 150,
+      "union_extra": [
+        "perc"
+      ],
+      "tau_wall_status": {
+        "OK": 106,
+        "NOT_PERCOLATING": 24
+      },
+      "tau_wall_checked": 130,
+      "tau_perc_crosschecked": 130,
+      "se_cluster_checked": 130,
+      "wa_collisions": [],
+      "wa_n_cols": 43,
+      "wa_status_counts": {
+        "done": 130
+      },
+      "wa_porosity_absmax": 1.2383427616668996e-10,
+      "wa_reviewed_only": true,
+      "wa_unreviewed_dropped": 0,
+      "wa_pair_zero_filled": 0,
+      "wa_mono_renamed_cases": 5,
+      "wa_mono_design_filled": 300,
+      "wa_mono_absent_blanked": 330,
+      "wa_cn_identity_checked": 130,
+      "wa_am_identity_checked": 130,
+      "wa_amse_identity_checked": 130,
+      "wa_perc_checked": 130,
+      "wa_ionic_checked": 130
+    },
+    "source_hash_disagreements": [],
+    "hold": {
+      "HOLD": 59,
+      "OK": 71
+    },
+    "reasons": {
+      "BOUNDARY_CENTER_OUT": 41,
+      "NEGATIVE_POROSITY": 16,
+      "": 71,
+      "BOUNDARY_CENTER_OUT|NEGATIVE_POROSITY": 2
+    },
+    "boundary": {
+      "FULLY_OUT": 16,
+      "INSIDE": 87,
+      "CENTER_CROSSED": 27
+    },
+    "nonfinite": [],
+    "negative_rates": [],
+    "blank_columns": {
+      "case_id": 0,
+      "block": 0,
+      "am_pct": 0,
+      "ps_frac": 0,
+      "ps_label": 0,
+      "d_am_p_um": 15,
+      "d_am_s_um": 15,
+      "d_se_um": 0,
+      "r_AM_P_um": 15,
+      "r_AM_S_um": 15,
+      "r_SE_um": 0,
+      "size_ratio_P_over_S": 30,
+      "size_ratio_AM_over_SE": 0,
+      "loading_mAh_cm2": 0,
+      "pressure_MPa": 0,
+      "e_se_gpa": 0,
+      "rve_um": 0,
+      "n_AM_P_measured": 15,
+      "n_AM_S_measured": 15,
+      "n_SE_measured": 0,
+      "thickness_mass_conserving_um": 0,
+      "porosity_union_exact_pct": 0,
+      "se_rich": 0,
+      "se_of_solid_vol": 0,
+      "phi_se_mass_conserving": 0,
+      "phi_am_mass_conserving": 0,
+      "coverage_AM_P_hertz_pct": 15,
+      "coverage_AM_S_hertz_pct": 15,
+      "coverage_AM_total_hertz_pct": 0,
+      "area_AM_P_AM_P_n": 15,
+      "area_AM_P_AM_S_n": 30,
+      "area_AM_P_SE_n": 15,
+      "area_AM_S_AM_S_n": 15,
+      "area_AM_S_SE_n": 15,
+      "area_AM전체_SE_n": 0,
+      "area_SE_SE_n": 0,
+      "se_se_cn": 0,
+      "se_se_cn_std": 0,
+      "am_am_cn": 0,
+      "am_am_cn_std": 0,
+      "am_am_n_contacts": 0,
+      "am_se_cn_mean": 0,
+      "am_se_cn_surface_weighted": 0,
+      "am_se_cn_std": 0,
+      "am_se_cn_median": 0,
+      "am_se_cn_max": 0,
+      "AM_P_se_cn_mean": 15,
+      "AM_P_se_cn_std": 15,
+      "AM_P_se_cn_median": 15,
+      "AM_P_se_cn_max": 15,
+      "AM_S_se_cn_mean": 15,
+      "AM_S_se_cn_std": 15,
+      "AM_S_se_cn_median": 15,
+      "AM_S_se_cn_max": 15,
+      "am_vulnerable_pct": 0,
+      "AM_P_vulnerable_pct": 15,
+      "AM_S_vulnerable_pct": 15,
+      "percolation_pct": 0,
+      "top_reachable_pct": 0,
+      "n_components": 0,
+      "n_large_components": 0,
+      "ionic_active_pct": 0,
+      "se_se_cn_perc": 24,
+      "se_se_cn_n_perc": 24,
+      "tortuosity_SE_wall": 24,
+      "tortuosity_SE_wall_median": 24,
+      "wall_touch_frac_SE_floor": 0,
+      "wall_touch_frac_SE_plate": 0,
+      "wall_touch_frac_AM_P_floor": 15,
+      "wall_touch_frac_AM_P_plate": 15,
+      "wall_touch_frac_AM_S_floor": 15,
+      "wall_touch_frac_AM_S_plate": 15,
+      "wall_touch_frac_AM_floor": 0,
+      "wall_touch_frac_AM_plate": 0,
+      "am_ionic_isolated_pct": 0,
+      "ionic_dead_pct": 0,
+      "ionic_no_se_pct": 0,
+      "AM_P_ionic_active_pct": 15,
+      "AM_P_ionic_dead_pct": 15,
+      "AM_P_ionic_no_se_pct": 15,
+      "AM_S_ionic_active_pct": 15,
+      "AM_S_ionic_dead_pct": 15,
+      "AM_S_ionic_no_se_pct": 15,
+      "se_largest_comp_frac": 0,
+      "se_largest_comp_wall_span_frac": 0,
+      "thickness_wall_gap_um": 0,
+      "physical_target_status": 0,
+      "hold_reason_codes": 71,
+      "boundary_state": 0
+    },
+    "constant_columns": {
+      "loading_mAh_cm2": "2.0000",
+      "pressure_MPa": "300.0000",
+      "e_se_gpa": "1.3500",
+      "rve_um": "50.0000"
+    },
+    "nonpercolating": 24,
+    "tau_truncated": 0,
+    "hold_target_cells_populated": {
+      "thickness_wall_gap_um": 59,
+      "thickness_mass_conserving_um": 59,
+      "porosity_union_exact_pct": 59,
+      "coverage_AM_total_hertz_pct": 59,
+      "tortuosity_SE_wall": 48,
+      "ionic_active_pct": 59
+    },
+    "identity_max_errors": {
+      "closure": 4.440892098500626e-16,
+      "SE_CN": 5.820766091346741e-11,
+      "AM_CN": 5.820766091346741e-11,
+      "AM_SE_CN": 1.4551915228366852e-11,
+      "ionic_sum": 1.4210854715202004e-14,
+      "ionic_isolation": 1.4210854715202004e-14,
+      "volume_fraction": 2.220446049250313e-16,
+      "coverage_total": 0.0,
+      "thickness": 0.0
+    },
+    "identity_bad": [],
+    "MC_SE_mass_outside_geometric_interval": [
+      {
+        "case": "lhs00_002",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 47.357406795511224,
+        "SE_exclusive_pct": 43.889275,
+        "SE_union_inclusive_pct": 46.655525,
+        "phi_minus_upper_pp": 0.7018817955112264,
+        "porosity": 6.451625,
+        "thickness_ratio": 1.087046807876168,
+        "boundary_out_pct": 0.9538333630487508
+      },
+      {
+        "case": "lhs00_003",
+        "status": "OK",
+        "phi_SE_mass_pct": 33.445209126940895,
+        "SE_exclusive_pct": 31.411275,
+        "SE_union_inclusive_pct": 33.317525,
+        "phi_minus_upper_pp": 0.12768412694089548,
+        "porosity": 10.6401,
+        "thickness_ratio": 1.0486018842094933,
+        "boundary_out_pct": 0.831443791955322
+      },
+      {
+        "case": "lhs00_004",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 33.53735214961951,
+        "SE_exclusive_pct": 32.308825,
+        "SE_union_inclusive_pct": 33.31715,
+        "phi_minus_upper_pp": 0.22020214961950946,
+        "porosity": 9.77435,
+        "thickness_ratio": 1.0395256394264583,
+        "boundary_out_pct": 1.1564147098252266
+      },
+      {
+        "case": "lhs00_009",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 33.49520107004437,
+        "SE_exclusive_pct": 32.690475,
+        "SE_union_inclusive_pct": 33.169125,
+        "phi_minus_upper_pp": 0.3260760700443672,
+        "porosity": 9.687800000000001,
+        "thickness_ratio": 1.033850397635869,
+        "boundary_out_pct": 1.213134420911934
+      },
+      {
+        "case": "lhs00_010",
+        "status": "OK",
+        "phi_SE_mass_pct": 25.822889394588977,
+        "SE_exclusive_pct": 24.78415,
+        "SE_union_inclusive_pct": 25.6263,
+        "phi_minus_upper_pp": 0.19658939458897629,
+        "porosity": 12.057125000000001,
+        "thickness_ratio": 1.0257904748747173,
+        "boundary_out_pct": 0.646215068081593
+      },
+      {
+        "case": "lhs00_017",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 47.28961061615321,
+        "SE_exclusive_pct": 43.546225,
+        "SE_union_inclusive_pct": 46.879225,
+        "phi_minus_upper_pp": 0.4103856161532118,
+        "porosity": 6.74085,
+        "thickness_ratio": 1.0903498200769997,
+        "boundary_out_pct": 0.8713947556633431
+      },
+      {
+        "case": "lhs00_024",
+        "status": "OK",
+        "phi_SE_mass_pct": 40.982055671228956,
+        "SE_exclusive_pct": 38.410675,
+        "SE_union_inclusive_pct": 40.1815,
+        "phi_minus_upper_pp": 0.8005556712289581,
+        "porosity": 7.244250000000001,
+        "thickness_ratio": 1.061937794427318,
+        "boundary_out_pct": 0.8577788583860583
+      },
+      {
+        "case": "lhs00_025",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 47.07640698741065,
+        "SE_exclusive_pct": 43.190225,
+        "SE_union_inclusive_pct": 46.92245,
+        "phi_minus_upper_pp": 0.15395698741065145,
+        "porosity": 7.145575,
+        "thickness_ratio": 1.090172052836039,
+        "boundary_out_pct": 0.5369252556427906
+      },
+      {
+        "case": "lhs00_031",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 47.092423383353946,
+        "SE_exclusive_pct": 42.9699,
+        "SE_union_inclusive_pct": 46.86085,
+        "phi_minus_upper_pp": 0.23157338335394329,
+        "porosity": 6.6988,
+        "thickness_ratio": 1.0935729429618608,
+        "boundary_out_pct": 0.48890010533225914
+      },
+      {
+        "case": "lhs00_032",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 26.487988251243046,
+        "SE_exclusive_pct": 25.012375,
+        "SE_union_inclusive_pct": 26.108674999999998,
+        "phi_minus_upper_pp": 0.3793132512430468,
+        "porosity": 9.959075,
+        "thickness_ratio": 1.0326964955725648,
+        "boundary_out_pct": 0.7682286920449369
+      },
+      {
+        "case": "lhs00_033",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 47.09191449244504,
+        "SE_exclusive_pct": 43.14455,
+        "SE_union_inclusive_pct": 46.922975,
+        "phi_minus_upper_pp": 0.1689394924450398,
+        "porosity": 7.110975,
+        "thickness_ratio": 1.0910772265279955,
+        "boundary_out_pct": 0.5463500098679164
+      },
+      {
+        "case": "lhs00_039",
+        "status": "OK",
+        "phi_SE_mass_pct": 34.008565434119895,
+        "SE_exclusive_pct": 32.304025,
+        "SE_union_inclusive_pct": 33.4771,
+        "phi_minus_upper_pp": 0.5314654341198917,
+        "porosity": 9.145225,
+        "thickness_ratio": 1.037904920565863,
+        "boundary_out_pct": 0.5675555560923266
+      },
+      {
+        "case": "lhs00_042",
+        "status": "OK",
+        "phi_SE_mass_pct": 40.93127396019779,
+        "SE_exclusive_pct": 38.9808,
+        "SE_union_inclusive_pct": 40.092475,
+        "phi_minus_upper_pp": 0.8387989601977903,
+        "porosity": 8.034775,
+        "thickness_ratio": 1.0445749758442626,
+        "boundary_out_pct": 0.44911820275140973
+      },
+      {
+        "case": "lhs00_048",
+        "status": "OK",
+        "phi_SE_mass_pct": 33.731996793101715,
+        "SE_exclusive_pct": 31.5436,
+        "SE_union_inclusive_pct": 33.4003,
+        "phi_minus_upper_pp": 0.3316967931017132,
+        "porosity": 9.940999999999999,
+        "thickness_ratio": 1.0440223987479962,
+        "boundary_out_pct": 0.4475432141038663
+      },
+      {
+        "case": "lhs00_049",
+        "status": "OK",
+        "phi_SE_mass_pct": 25.47199112828108,
+        "SE_exclusive_pct": 24.4237,
+        "SE_union_inclusive_pct": 25.32105,
+        "phi_minus_upper_pp": 0.15094112828107897,
+        "porosity": 14.048350000000001,
+        "thickness_ratio": 1.0355320178373517,
+        "boundary_out_pct": 1.2583663806644918
+      },
+      {
+        "case": "lhs00_051",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 41.25132241177019,
+        "SE_exclusive_pct": 37.619525,
+        "SE_union_inclusive_pct": 40.8141,
+        "phi_minus_upper_pp": 0.4372224117701866,
+        "porosity": 6.99515,
+        "thickness_ratio": 1.0780070360118856,
+        "boundary_out_pct": 0.7122426009159486
+      },
+      {
+        "case": "lhs00_057",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 47.06817238960078,
+        "SE_exclusive_pct": 43.230675,
+        "SE_union_inclusive_pct": 46.465624999999996,
+        "phi_minus_upper_pp": 0.6025473896007845,
+        "porosity": 6.068725,
+        "thickness_ratio": 1.0884102514325684,
+        "boundary_out_pct": 0.5928610147538701
+      },
+      {
+        "case": "lhs00_061",
+        "status": "OK",
+        "phi_SE_mass_pct": 40.46695875226873,
+        "SE_exclusive_pct": 37.9782,
+        "SE_union_inclusive_pct": 40.098325,
+        "phi_minus_upper_pp": 0.36863375226872996,
+        "porosity": 8.940825,
+        "thickness_ratio": 1.0546110563160618,
+        "boundary_out_pct": 0.37996151544066936
+      },
+      {
+        "case": "lhs00_064",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 47.2993202529533,
+        "SE_exclusive_pct": 43.6436,
+        "SE_union_inclusive_pct": 46.905825,
+        "phi_minus_upper_pp": 0.39349525295330157,
+        "porosity": 6.767975,
+        "thickness_ratio": 1.0863892761564595,
+        "boundary_out_pct": 0.6322019852775396
+      },
+      {
+        "case": "lhs00_066",
+        "status": "OK",
+        "phi_SE_mass_pct": 34.00266495468467,
+        "SE_exclusive_pct": 31.964875,
+        "SE_union_inclusive_pct": 33.547475,
+        "phi_minus_upper_pp": 0.45518995468466916,
+        "porosity": 9.034325,
+        "thickness_ratio": 1.0420864671068455,
+        "boundary_out_pct": 0.5176191518425288
+      },
+      {
+        "case": "lhs00_071",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 34.00260379723871,
+        "SE_exclusive_pct": 32.559225,
+        "SE_union_inclusive_pct": 33.445025,
+        "phi_minus_upper_pp": 0.5575787972387151,
+        "porosity": 8.9148,
+        "thickness_ratio": 1.035723774224719,
+        "boundary_out_pct": 0.7219935896987947
+      },
+      {
+        "case": "lhs00_088",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 46.805707090866825,
+        "SE_exclusive_pct": 43.906325,
+        "SE_union_inclusive_pct": 46.639175,
+        "phi_minus_upper_pp": 0.16653209086682264,
+        "porosity": 7.738525,
+        "thickness_ratio": 1.07184002146964,
+        "boundary_out_pct": 0.587213733955192
+      },
+      {
+        "case": "lhs00_089",
+        "status": "OK",
+        "phi_SE_mass_pct": 40.478505065481706,
+        "SE_exclusive_pct": 38.00185,
+        "SE_union_inclusive_pct": 39.9905,
+        "phi_minus_upper_pp": 0.4880050654817081,
+        "porosity": 8.8786,
+        "thickness_ratio": 1.0532774981612265,
+        "boundary_out_pct": 0.37839885462034023
+      },
+      {
+        "case": "lhs00_090",
+        "status": "OK",
+        "phi_SE_mass_pct": 41.063422120453936,
+        "SE_exclusive_pct": 38.09795,
+        "SE_union_inclusive_pct": 40.497825,
+        "phi_minus_upper_pp": 0.5655971204539383,
+        "porosity": 7.592849999999999,
+        "thickness_ratio": 1.0724045637228954,
+        "boundary_out_pct": 1.0951217276804246
+      },
+      {
+        "case": "lhs00_098",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 40.6734754037231,
+        "SE_exclusive_pct": 38.49695,
+        "SE_union_inclusive_pct": 39.9161,
+        "phi_minus_upper_pp": 0.7573754037231046,
+        "porosity": 7.989775000000001,
+        "thickness_ratio": 1.047564188514976,
+        "boundary_out_pct": 0.5007722673438609
+      },
+      {
+        "case": "lhs00_099",
+        "status": "OK",
+        "phi_SE_mass_pct": 33.722480212604786,
+        "SE_exclusive_pct": 31.543175,
+        "SE_union_inclusive_pct": 33.308800000000005,
+        "phi_minus_upper_pp": 0.4136802126047847,
+        "porosity": 9.729975,
+        "thickness_ratio": 1.0563143258439842,
+        "boundary_out_pct": 1.2164103838026956
+      },
+      {
+        "case": "lhs00_100",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 47.03398053815255,
+        "SE_exclusive_pct": 43.17,
+        "SE_union_inclusive_pct": 46.895225,
+        "phi_minus_upper_pp": 0.13875553815254626,
+        "porosity": 7.22525,
+        "thickness_ratio": 1.0905488806914538,
+        "boundary_out_pct": 0.5487586633037742
+      },
+      {
+        "case": "lhs00_103",
+        "status": "OK",
+        "phi_SE_mass_pct": 40.32900447581185,
+        "SE_exclusive_pct": 37.76345,
+        "SE_union_inclusive_pct": 40.0128,
+        "phi_minus_upper_pp": 0.31620447581185074,
+        "porosity": 9.234399999999999,
+        "thickness_ratio": 1.0558773937408292,
+        "boundary_out_pct": 0.3763491638663264
+      },
+      {
+        "case": "lhs00_115",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 32.39968144105619,
+        "SE_exclusive_pct": 31.5218,
+        "SE_union_inclusive_pct": 32.2883,
+        "phi_minus_upper_pp": 0.1113814410561893,
+        "porosity": 12.588450000000002,
+        "thickness_ratio": 1.0478220406588357,
+        "boundary_out_pct": 1.9815332247623252
+      },
+      {
+        "case": "lhs00_116",
+        "status": "OK",
+        "phi_SE_mass_pct": 33.81964259427603,
+        "SE_exclusive_pct": 32.033825,
+        "SE_union_inclusive_pct": 33.566075,
+        "phi_minus_upper_pp": 0.2535675942760327,
+        "porosity": 9.611225,
+        "thickness_ratio": 1.052409912375479,
+        "boundary_out_pct": 1.429760813138126
+      },
+      {
+        "case": "lhs00_121",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 47.27688024286452,
+        "SE_exclusive_pct": 44.051225,
+        "SE_union_inclusive_pct": 46.381350000000005,
+        "phi_minus_upper_pp": 0.8955302428645195,
+        "porosity": 6.5875,
+        "thickness_ratio": 1.0774539228684452,
+        "boundary_out_pct": 0.6135794064179759
+      },
+      {
+        "case": "lhs00_123",
+        "status": "OK",
+        "phi_SE_mass_pct": 8.087047568072615,
+        "SE_exclusive_pct": 8.206925,
+        "SE_union_inclusive_pct": 8.265325,
+        "phi_minus_upper_pp": -0.1782774319273852,
+        "porosity": 27.3349,
+        "thickness_ratio": 1.0333116450246143,
+        "boundary_out_pct": 2.710731586578431
+      },
+      {
+        "case": "lhs00_125",
+        "status": "OK",
+        "phi_SE_mass_pct": 40.78380694859451,
+        "SE_exclusive_pct": 38.69215,
+        "SE_union_inclusive_pct": 39.963875,
+        "phi_minus_upper_pp": 0.8199319485945118,
+        "porosity": 8.237075,
+        "thickness_ratio": 1.0462731416923694,
+        "boundary_out_pct": 0.44338569893953916
+      },
+      {
+        "case": "lhs00_127",
+        "status": "OK",
+        "phi_SE_mass_pct": 25.41525511855365,
+        "SE_exclusive_pct": 24.63335,
+        "SE_union_inclusive_pct": 25.279575,
+        "phi_minus_upper_pp": 0.1356801185536487,
+        "porosity": 14.104625,
+        "thickness_ratio": 1.037787839253223,
+        "boundary_out_pct": 1.6710954069038189
+      },
+      {
+        "case": "lhs00_128",
+        "status": "OK",
+        "phi_SE_mass_pct": 7.934520174361494,
+        "SE_exclusive_pct": 8.127925,
+        "SE_union_inclusive_pct": 8.247675,
+        "phi_minus_upper_pp": -0.3131548256385053,
+        "porosity": 27.557474999999997,
+        "thickness_ratio": 1.053356326367974,
+        "boundary_out_pct": 4.490889912089699
+      },
+      {
+        "case": "lhs00_129",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 40.43465551796503,
+        "SE_exclusive_pct": 38.806625,
+        "SE_union_inclusive_pct": 39.444599999999994,
+        "phi_minus_upper_pp": 0.9900555179650299,
+        "porosity": 8.189200000000001,
+        "thickness_ratio": 1.0393092039261709,
+        "boundary_out_pct": 0.5814977221095337
+      }
+    ],
+    "thickness_ratio": [
+      1.0153067003164515,
+      1.0429845720172657,
+      1.1138811207361097
+    ],
+    "status_summaries": {
+      "OK": {
+        "am_pct": {
+          "min": 70.0,
+          "median": 85.0,
+          "max": 95.0
+        },
+        "ps_frac": {
+          "min": 0.0,
+          "median": 0.4,
+          "max": 1.0
+        },
+        "se_of_solid_vol": {
+          "min": 0.1095284872298625,
+          "median": 0.2966030243450802,
+          "max": 0.5070472792149867
+        },
+        "thickness_wall_gap_um": {
+          "min": 29.511599999999998,
+          "median": 33.441500000000005,
+          "max": 42.492599999999996
+        },
+        "porosity_union_exact_pct": {
+          "min": 7.244250000000001,
+          "median": 15.248425,
+          "max": 27.557474999999997
+        },
+        "coverage_AM_total_hertz_pct": {
+          "min": 2.438639984545235,
+          "median": 20.072281922454415,
+          "max": 41.99077284010401
+        },
+        "percolation_pct": {
+          "min": 0.0,
+          "median": 97.98665309354145,
+          "max": 100.0
+        },
+        "ionic_active_pct": {
+          "min": 9.826589595375722,
+          "median": 100.0,
+          "max": 100.0
+        },
+        "am_ionic_isolated_pct": {
+          "min": 0.0,
+          "median": 0.0,
+          "max": 90.17341040462428
+        }
+      },
+      "HOLD": {
+        "am_pct": {
+          "min": 70.0,
+          "median": 80.0,
+          "max": 95.0
+        },
+        "ps_frac": {
+          "min": 0.0,
+          "median": 0.6,
+          "max": 1.0
+        },
+        "se_of_solid_vol": {
+          "min": 0.11080342181850254,
+          "median": 0.37492147254680247,
+          "max": 0.5075171605558346
+        },
+        "thickness_wall_gap_um": {
+          "min": 28.700100000000003,
+          "median": 37.3918,
+          "max": 47.0228
+        },
+        "porosity_union_exact_pct": {
+          "min": 6.068725,
+          "median": 12.315900000000001,
+          "max": 28.805799999999998
+        },
+        "coverage_AM_total_hertz_pct": {
+          "min": 3.0212822786451663,
+          "median": 27.547812399864085,
+          "max": 50.00706900897016
+        },
+        "percolation_pct": {
+          "min": 0.0,
+          "median": 99.85296612565742,
+          "max": 100.0
+        },
+        "ionic_active_pct": {
+          "min": 3.1395309938781653,
+          "median": 99.90850869167429,
+          "max": 100.0
+        },
+        "am_ionic_isolated_pct": {
+          "min": 0.0,
+          "median": 0.09149130832571473,
+          "max": 96.86046900612183
+        }
+      }
+    }
+  },
+  "lhsx": {
+    "rows": 64,
+    "cols": 88,
+    "unique_ids": 64,
+    "build_cols": 191,
+    "build_diffs": [],
+    "n_build_diffs": 0,
+    "release_check": [],
+    "report": {
+      "n": 64,
+      "blank_by_status": {
+        "N_A_PHASE_ABSENT": 16
+      },
+      "held_back": {
+        "tortuosity_dijkstra_SE": "LHS-08 열림 — 130 중 14 만 값이 있고 `NOT_PERCOLATING` 이 규약 실패와 물리 미관통을 **한 값으로 접는다**.  재수확 뒤 공급.  ↪ J20 (09-28): 벽 규약 τ 를 **새 열** `tortuosity_SE_wall` 로 공급 — 이 옛 규약 열은 계속 보류."
+      },
+      "mono_rows": 16,
+      "mono_harvest_filled": 80,
+      "union_extra": [],
+      "tau_wall_status": {
+        "OK": 64
+      },
+      "tau_wall_checked": 64,
+      "tau_perc_crosschecked": 64,
+      "se_cluster_checked": 64,
+      "wa_collisions": [],
+      "wa_n_cols": 43,
+      "wa_status_counts": {
+        "done": 64
+      },
+      "wa_porosity_absmax": 2.502886786714953e-10,
+      "wa_reviewed_only": true,
+      "wa_unreviewed_dropped": 0,
+      "wa_pair_zero_filled": 0,
+      "wa_mono_renamed_cases": 4,
+      "wa_mono_design_filled": 160,
+      "wa_mono_absent_blanked": 176,
+      "wa_cn_identity_checked": 64,
+      "wa_am_identity_checked": 64,
+      "wa_amse_identity_checked": 64,
+      "wa_perc_checked": 64,
+      "wa_ionic_checked": 64
+    },
+    "source_hash_disagreements": [],
+    "hold": {
+      "OK": 2,
+      "HOLD": 62
+    },
+    "reasons": {
+      "": 2,
+      "NEGATIVE_POROSITY": 51,
+      "BOUNDARY_CENTER_OUT|NEGATIVE_POROSITY": 9,
+      "BOUNDARY_CENTER_OUT": 2
+    },
+    "boundary": {
+      "INSIDE": 53,
+      "CENTER_CROSSED": 6,
+      "FULLY_OUT": 5
+    },
+    "nonfinite": [],
+    "negative_rates": [],
+    "blank_columns": {
+      "case_id": 0,
+      "block": 0,
+      "am_pct": 0,
+      "ps_frac": 0,
+      "ps_label": 0,
+      "d_am_p_um": 8,
+      "d_am_s_um": 8,
+      "d_se_um": 0,
+      "r_AM_P_um": 8,
+      "r_AM_S_um": 8,
+      "r_SE_um": 0,
+      "size_ratio_P_over_S": 16,
+      "size_ratio_AM_over_SE": 0,
+      "pressure_MPa": 0,
+      "e_se_gpa": 0,
+      "rve_um": 0,
+      "n_AM_P_measured": 8,
+      "n_AM_S_measured": 8,
+      "n_SE_measured": 0,
+      "thickness_mass_conserving_um": 0,
+      "porosity_union_exact_pct": 0,
+      "se_rich": 0,
+      "se_of_solid_vol": 0,
+      "phi_se_mass_conserving": 0,
+      "phi_am_mass_conserving": 0,
+      "coverage_AM_P_hertz_pct": 8,
+      "coverage_AM_S_hertz_pct": 8,
+      "coverage_AM_total_hertz_pct": 0,
+      "area_AM_P_AM_P_n": 8,
+      "area_AM_P_AM_S_n": 16,
+      "area_AM_P_SE_n": 8,
+      "area_AM_S_AM_S_n": 8,
+      "area_AM_S_SE_n": 8,
+      "area_AM전체_SE_n": 0,
+      "area_SE_SE_n": 0,
+      "se_se_cn": 0,
+      "se_se_cn_std": 0,
+      "am_am_cn": 0,
+      "am_am_cn_std": 0,
+      "am_am_n_contacts": 0,
+      "am_se_cn_mean": 0,
+      "am_se_cn_surface_weighted": 0,
+      "am_se_cn_std": 0,
+      "am_se_cn_median": 0,
+      "am_se_cn_max": 0,
+      "AM_P_se_cn_mean": 8,
+      "AM_P_se_cn_std": 8,
+      "AM_P_se_cn_median": 8,
+      "AM_P_se_cn_max": 8,
+      "AM_S_se_cn_mean": 8,
+      "AM_S_se_cn_std": 8,
+      "AM_S_se_cn_median": 8,
+      "AM_S_se_cn_max": 8,
+      "am_vulnerable_pct": 0,
+      "AM_P_vulnerable_pct": 8,
+      "AM_S_vulnerable_pct": 8,
+      "percolation_pct": 0,
+      "top_reachable_pct": 0,
+      "n_components": 0,
+      "n_large_components": 0,
+      "ionic_active_pct": 0,
+      "se_se_cn_perc": 0,
+      "se_se_cn_n_perc": 0,
+      "tortuosity_SE_wall": 0,
+      "tortuosity_SE_wall_median": 0,
+      "wall_touch_frac_SE_floor": 0,
+      "wall_touch_frac_SE_plate": 0,
+      "wall_touch_frac_AM_P_floor": 8,
+      "wall_touch_frac_AM_P_plate": 8,
+      "wall_touch_frac_AM_S_floor": 8,
+      "wall_touch_frac_AM_S_plate": 8,
+      "wall_touch_frac_AM_floor": 0,
+      "wall_touch_frac_AM_plate": 0,
+      "am_ionic_isolated_pct": 0,
+      "ionic_dead_pct": 0,
+      "ionic_no_se_pct": 0,
+      "AM_P_ionic_active_pct": 8,
+      "AM_P_ionic_dead_pct": 8,
+      "AM_P_ionic_no_se_pct": 8,
+      "AM_S_ionic_active_pct": 8,
+      "AM_S_ionic_dead_pct": 8,
+      "AM_S_ionic_no_se_pct": 8,
+      "se_largest_comp_frac": 0,
+      "se_largest_comp_wall_span_frac": 0,
+      "thickness_wall_gap_um": 0,
+      "physical_target_status": 0,
+      "hold_reason_codes": 2,
+      "boundary_state": 0
+    },
+    "constant_columns": {
+      "pressure_MPa": "300.0",
+      "e_se_gpa": "1.35",
+      "rve_um": "50.0",
+      "se_rich": "True",
+      "n_large_components": "1",
+      "ionic_dead_pct": "0.0"
+    },
+    "nonpercolating": 0,
+    "tau_truncated": 0,
+    "hold_target_cells_populated": {
+      "thickness_wall_gap_um": 62,
+      "thickness_mass_conserving_um": 62,
+      "porosity_union_exact_pct": 62,
+      "coverage_AM_total_hertz_pct": 62,
+      "tortuosity_SE_wall": 62,
+      "ionic_active_pct": 62
+    },
+    "identity_max_errors": {
+      "closure": 4.440892098500626e-16,
+      "SE_CN": 1.1641532182693481e-10,
+      "AM_CN": 1.4210854715202004e-14,
+      "AM_SE_CN": 1.4551915228366852e-11,
+      "ionic_sum": 1.4210854715202004e-14,
+      "ionic_isolation": 1.0075273948473296e-14,
+      "volume_fraction": 3.3306690738754696e-16,
+      "coverage_total": 0.0,
+      "thickness": 0.0
+    },
+    "identity_bad": [],
+    "MC_SE_mass_outside_geometric_interval": [
+      {
+        "case": "lhsx_001",
+        "status": "OK",
+        "phi_SE_mass_pct": 48.1605576361865,
+        "SE_exclusive_pct": 45.000525,
+        "SE_union_inclusive_pct": 47.422675000000005,
+        "phi_minus_upper_pp": 0.7378826361865003,
+        "porosity": 7.1576249999999995,
+        "thickness_ratio": 1.075158591042257,
+        "boundary_out_pct": 0.5018880769398092
+      },
+      {
+        "case": "lhsx_003",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 49.94210272456986,
+        "SE_exclusive_pct": 46.647025,
+        "SE_union_inclusive_pct": 49.125775,
+        "phi_minus_upper_pp": 0.8163277245698577,
+        "porosity": 6.679499999999999,
+        "thickness_ratio": 1.080563200878353,
+        "boundary_out_pct": 0.4826561937629473
+      },
+      {
+        "case": "lhsx_004",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 49.91995935476674,
+        "SE_exclusive_pct": 46.307675,
+        "SE_union_inclusive_pct": 49.201550000000005,
+        "phi_minus_upper_pp": 0.7184093547667358,
+        "porosity": 7.0222999999999995,
+        "thickness_ratio": 1.092309942466365,
+        "boundary_out_pct": 0.9632544776014366
+      },
+      {
+        "case": "lhsx_010",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 56.145307216853354,
+        "SE_exclusive_pct": 52.973725,
+        "SE_union_inclusive_pct": 55.366525,
+        "phi_minus_upper_pp": 0.7787822168533522,
+        "porosity": 6.778025,
+        "thickness_ratio": 1.08996658381039,
+        "boundary_out_pct": 0.46260229751881693
+      },
+      {
+        "case": "lhsx_011",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 54.74786787360208,
+        "SE_exclusive_pct": 51.709425,
+        "SE_union_inclusive_pct": 53.618225,
+        "phi_minus_upper_pp": 1.1296428736020794,
+        "porosity": 6.822725,
+        "thickness_ratio": 1.0837613519200306,
+        "boundary_out_pct": 0.6376462001837453
+      },
+      {
+        "case": "lhsx_013",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 55.674705126521594,
+        "SE_exclusive_pct": 52.70535,
+        "SE_union_inclusive_pct": 54.195775000000005,
+        "phi_minus_upper_pp": 1.4789301265215915,
+        "porosity": 6.141475,
+        "thickness_ratio": 1.087861298588674,
+        "boundary_out_pct": 0.9038098192272821
+      },
+      {
+        "case": "lhsx_015",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 56.65673692609528,
+        "SE_exclusive_pct": 52.69835,
+        "SE_union_inclusive_pct": 56.32705,
+        "phi_minus_upper_pp": 0.3296869260952797,
+        "porosity": 6.273375000000001,
+        "thickness_ratio": 1.1127750144585495,
+        "boundary_out_pct": 0.7534204146552954
+      },
+      {
+        "case": "lhsx_016",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 54.422370907838236,
+        "SE_exclusive_pct": 50.910475,
+        "SE_union_inclusive_pct": 53.71865,
+        "phi_minus_upper_pp": 0.7037209078382376,
+        "porosity": 6.342275,
+        "thickness_ratio": 1.09484964387077,
+        "boundary_out_pct": 0.5566506963884331
+      },
+      {
+        "case": "lhsx_017",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 57.64121639758679,
+        "SE_exclusive_pct": 53.815425,
+        "SE_union_inclusive_pct": 57.157174999999995,
+        "phi_minus_upper_pp": 0.48404139758679054,
+        "porosity": 6.273475,
+        "thickness_ratio": 1.111965506936636,
+        "boundary_out_pct": 0.7640151789687777
+      },
+      {
+        "case": "lhsx_019",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 60.718889415515,
+        "SE_exclusive_pct": 57.26605,
+        "SE_union_inclusive_pct": 59.79335,
+        "phi_minus_upper_pp": 0.9255394155150012,
+        "porosity": 6.118175,
+        "thickness_ratio": 1.113185673450812,
+        "boundary_out_pct": 0.9960687545412683
+      },
+      {
+        "case": "lhsx_020",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 58.94311143072547,
+        "SE_exclusive_pct": 55.7364,
+        "SE_union_inclusive_pct": 58.206525000000006,
+        "phi_minus_upper_pp": 0.7365864307254699,
+        "porosity": 6.417225,
+        "thickness_ratio": 1.1014159783583246,
+        "boundary_out_pct": 0.7481265445474451
+      },
+      {
+        "case": "lhsx_021",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 60.88703715535748,
+        "SE_exclusive_pct": 57.76395,
+        "SE_union_inclusive_pct": 60.268950000000004,
+        "phi_minus_upper_pp": 0.6180871553574816,
+        "porosity": 6.730825,
+        "thickness_ratio": 1.1007487893028793,
+        "boundary_out_pct": 0.48981499184670985
+      },
+      {
+        "case": "lhsx_023",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 58.39164967243398,
+        "SE_exclusive_pct": 56.265375,
+        "SE_union_inclusive_pct": 57.5814,
+        "phi_minus_upper_pp": 0.8102496724339792,
+        "porosity": 8.314924999999999,
+        "thickness_ratio": 1.074149479214441,
+        "boundary_out_pct": 0.6341458255503973
+      },
+      {
+        "case": "lhsx_025",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 63.158054064552324,
+        "SE_exclusive_pct": 60.059975,
+        "SE_union_inclusive_pct": 61.5535,
+        "phi_minus_upper_pp": 1.6045540645523229,
+        "porosity": 5.429625,
+        "thickness_ratio": 1.108977071900983,
+        "boundary_out_pct": 0.9080809620316446
+      },
+      {
+        "case": "lhsx_029",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 63.98670567824985,
+        "SE_exclusive_pct": 60.5115,
+        "SE_union_inclusive_pct": 63.36325,
+        "phi_minus_upper_pp": 0.6234556782498499,
+        "porosity": 5.828175,
+        "thickness_ratio": 1.123101939981434,
+        "boundary_out_pct": 0.8798862595635879
+      },
+      {
+        "case": "lhsx_030",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 64.96965022929146,
+        "SE_exclusive_pct": 62.25585,
+        "SE_union_inclusive_pct": 63.6466,
+        "phi_minus_upper_pp": 1.3230502292914579,
+        "porosity": 6.18745,
+        "thickness_ratio": 1.0991041254912808,
+        "boundary_out_pct": 0.5039470193449433
+      },
+      {
+        "case": "lhsx_032",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 64.75115614497618,
+        "SE_exclusive_pct": 61.49405,
+        "SE_union_inclusive_pct": 64.4456,
+        "phi_minus_upper_pp": 0.305556144976177,
+        "porosity": 6.3773,
+        "thickness_ratio": 1.1195472519074483,
+        "boundary_out_pct": 0.7821928804933452
+      },
+      {
+        "case": "lhsx_033",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 67.3562323751564,
+        "SE_exclusive_pct": 64.344175,
+        "SE_union_inclusive_pct": 66.60025,
+        "phi_minus_upper_pp": 0.7559823751563881,
+        "porosity": 6.035375,
+        "thickness_ratio": 1.1245926268747224,
+        "boundary_out_pct": 1.0725392218308778
+      },
+      {
+        "case": "lhsx_034",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 69.5593073413028,
+        "SE_exclusive_pct": 66.407025,
+        "SE_union_inclusive_pct": 69.364625,
+        "phi_minus_upper_pp": 0.19468234130279383,
+        "porosity": 6.02615,
+        "thickness_ratio": 1.1313482148656309,
+        "boundary_out_pct": 0.618895528489414
+      },
+      {
+        "case": "lhsx_035",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 67.25850834028296,
+        "SE_exclusive_pct": 63.923875,
+        "SE_union_inclusive_pct": 66.19055,
+        "phi_minus_upper_pp": 1.0679583402829556,
+        "porosity": 5.497925,
+        "thickness_ratio": 1.1289134610200218,
+        "boundary_out_pct": 1.029005764930688
+      },
+      {
+        "case": "lhsx_038",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 68.05531763532352,
+        "SE_exclusive_pct": 65.4669,
+        "SE_union_inclusive_pct": 67.156275,
+        "phi_minus_upper_pp": 0.8990426353235232,
+        "porosity": 6.578975,
+        "thickness_ratio": 1.1078625755464462,
+        "boundary_out_pct": 0.5714307473364724
+      },
+      {
+        "case": "lhsx_039",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 67.86756045334725,
+        "SE_exclusive_pct": 65.043125,
+        "SE_union_inclusive_pct": 67.044825,
+        "phi_minus_upper_pp": 0.8227354533472488,
+        "porosity": 6.3875,
+        "thickness_ratio": 1.1111789248587354,
+        "boundary_out_pct": 0.4817308354291263
+      },
+      {
+        "case": "lhsx_041",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 72.19113423835182,
+        "SE_exclusive_pct": 70.081675,
+        "SE_union_inclusive_pct": 71.396,
+        "phi_minus_upper_pp": 0.7951342383518176,
+        "porosity": 7.194075,
+        "thickness_ratio": 1.1047845691878382,
+        "boundary_out_pct": 0.42119564254315955
+      },
+      {
+        "case": "lhsx_042",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 71.8905839302169,
+        "SE_exclusive_pct": 69.00275,
+        "SE_union_inclusive_pct": 71.43207500000001,
+        "phi_minus_upper_pp": 0.45850893021689965,
+        "porosity": 5.8281,
+        "thickness_ratio": 1.1339852188070987,
+        "boundary_out_pct": 0.6754651602966162
+      },
+      {
+        "case": "lhsx_044",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 71.94590613146006,
+        "SE_exclusive_pct": 69.1775,
+        "SE_union_inclusive_pct": 71.804175,
+        "phi_minus_upper_pp": 0.14173113146006822,
+        "porosity": 6.470625000000001,
+        "thickness_ratio": 1.1310383882845292,
+        "boundary_out_pct": 0.7053586287681755
+      },
+      {
+        "case": "lhsx_045",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 68.27670331942022,
+        "SE_exclusive_pct": 66.47595,
+        "SE_union_inclusive_pct": 67.74867499999999,
+        "phi_minus_upper_pp": 0.5280283194202238,
+        "porosity": 7.91985,
+        "thickness_ratio": 1.0982688217803185,
+        "boundary_out_pct": 0.9881382882802299
+      },
+      {
+        "case": "lhsx_049",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 71.97721091649308,
+        "SE_exclusive_pct": 70.465275,
+        "SE_union_inclusive_pct": 71.15897500000001,
+        "phi_minus_upper_pp": 0.8182359164930728,
+        "porosity": 8.2701,
+        "thickness_ratio": 1.0930521550233536,
+        "boundary_out_pct": 0.7192341728375047
+      },
+      {
+        "case": "lhsx_050",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 75.36924148871836,
+        "SE_exclusive_pct": 72.985425,
+        "SE_union_inclusive_pct": 74.9916,
+        "phi_minus_upper_pp": 0.37764148871835257,
+        "porosity": 6.3450500000000005,
+        "thickness_ratio": 1.1343884825946906,
+        "boundary_out_pct": 0.7749874475220166
+      },
+      {
+        "case": "lhsx_051",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 76.06812543382794,
+        "SE_exclusive_pct": 73.740975,
+        "SE_union_inclusive_pct": 75.25137500000001,
+        "phi_minus_upper_pp": 0.8167504338279385,
+        "porosity": 5.796075,
+        "thickness_ratio": 1.132136611357347,
+        "boundary_out_pct": 0.6325487996715458
+      },
+      {
+        "case": "lhsx_053",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 75.20368407243113,
+        "SE_exclusive_pct": 72.7204,
+        "SE_union_inclusive_pct": 74.62067499999999,
+        "phi_minus_upper_pp": 0.5830090724311325,
+        "porosity": 5.959475,
+        "thickness_ratio": 1.1358630858565277,
+        "boundary_out_pct": 0.7998307216664622
+      },
+      {
+        "case": "lhsx_054",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 75.57353913722137,
+        "SE_exclusive_pct": 73.7076,
+        "SE_union_inclusive_pct": 74.435175,
+        "phi_minus_upper_pp": 1.1383641372213749,
+        "porosity": 6.235650000000001,
+        "thickness_ratio": 1.1191260127961695,
+        "boundary_out_pct": 0.8188170951548528
+      },
+      {
+        "case": "lhsx_057",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 76.9798888179862,
+        "SE_exclusive_pct": 75.443575,
+        "SE_union_inclusive_pct": 76.6332,
+        "phi_minus_upper_pp": 0.3466888179861978,
+        "porosity": 8.0705,
+        "thickness_ratio": 1.1086735679890714,
+        "boundary_out_pct": 0.5039580906944073
+      },
+      {
+        "case": "lhsx_060",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 79.76854583670003,
+        "SE_exclusive_pct": 77.68835,
+        "SE_union_inclusive_pct": 79.65355,
+        "phi_minus_upper_pp": 0.11499583670002811,
+        "porosity": 5.9401,
+        "thickness_ratio": 1.148586850661328,
+        "boundary_out_pct": 0.7618504494635561
+      },
+      {
+        "case": "lhsx_061",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 78.73850797086247,
+        "SE_exclusive_pct": 76.561725,
+        "SE_union_inclusive_pct": 78.36892499999999,
+        "phi_minus_upper_pp": 0.36958297086247605,
+        "porosity": 5.803125,
+        "thickness_ratio": 1.1427523502296157,
+        "boundary_out_pct": 0.664290710038915
+      },
+      {
+        "case": "lhsx_062",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 78.52324397547656,
+        "SE_exclusive_pct": 76.39985,
+        "SE_union_inclusive_pct": 77.64185,
+        "phi_minus_upper_pp": 0.8813939754765601,
+        "porosity": 5.898225,
+        "thickness_ratio": 1.1400726419887905,
+        "boundary_out_pct": 0.9524351527686176
+      },
+      {
+        "case": "lhsx_063",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 77.78746041000277,
+        "SE_exclusive_pct": 75.4161,
+        "SE_union_inclusive_pct": 77.21515,
+        "phi_minus_upper_pp": 0.5723104100027652,
+        "porosity": 5.529225,
+        "thickness_ratio": 1.1467543506262188,
+        "boundary_out_pct": 0.8475057289291474
+      },
+      {
+        "case": "lhsx_064",
+        "status": "HOLD",
+        "phi_SE_mass_pct": 77.53897607171905,
+        "SE_exclusive_pct": 75.270575,
+        "SE_union_inclusive_pct": 76.813475,
+        "phi_minus_upper_pp": 0.7255010717190546,
+        "porosity": 5.78155,
+        "thickness_ratio": 1.1424002818567314,
+        "boundary_out_pct": 0.9427420547006478
+      }
+    ],
+    "thickness_ratio": [
+      1.074149479214441,
+      1.1181011469231756,
+      1.1533362044037976
+    ],
+    "status_summaries": {
+      "OK": {
+        "am_pct": {
+          "min": 48.7334,
+          "median": 58.802800000000005,
+          "max": 68.8722
+        },
+        "ps_frac": {
+          "min": 0.24077942437835242,
+          "median": 0.3384581055322087,
+          "max": 0.43613678668606487
+        },
+        "se_of_solid_vol": {
+          "min": 0.5187346579208741,
+          "median": 0.6165445394619408,
+          "max": 0.7143544210030074
+        },
+        "thickness_wall_gap_um": {
+          "min": 32.4311,
+          "median": 33.028099999999995,
+          "max": 33.625099999999996
+        },
+        "porosity_union_exact_pct": {
+          "min": 7.1576249999999995,
+          "median": 8.293825,
+          "max": 9.430025
+        },
+        "coverage_AM_total_hertz_pct": {
+          "min": 44.44658028677255,
+          "median": 45.30925788109346,
+          "max": 46.17193547541437
+        },
+        "percolation_pct": {
+          "min": 99.99815516875594,
+          "median": 99.99907758437797,
+          "max": 100.0
+        },
+        "ionic_active_pct": {
+          "min": 100.0,
+          "median": 100.0,
+          "max": 100.0
+        },
+        "am_ionic_isolated_pct": {
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0
+        }
+      },
+      "HOLD": {
+        "am_pct": {
+          "min": 30.058799999999998,
+          "median": 50.0287,
+          "max": 69.3885
+        },
+        "ps_frac": {
+          "min": 0.0,
+          "median": 0.5226493841294504,
+          "max": 1.0
+        },
+        "se_of_solid_vol": {
+          "min": 0.5141850665455661,
+          "median": 0.7049268835944636,
+          "max": 0.8480611380269384
+        },
+        "thickness_wall_gap_um": {
+          "min": 22.476200000000002,
+          "median": 31.568550000000002,
+          "max": 41.3344
+        },
+        "porosity_union_exact_pct": {
+          "min": 5.429625,
+          "median": 6.492925,
+          "max": 9.189375
+        },
+        "coverage_AM_total_hertz_pct": {
+          "min": 37.93230418377502,
+          "median": 52.801545712711004,
+          "max": 61.42900995422624
+        },
+        "percolation_pct": {
+          "min": 99.92344706911635,
+          "median": 100.0,
+          "max": 100.0
+        },
+        "ionic_active_pct": {
+          "min": 99.87046632124353,
+          "median": 100.0,
+          "max": 100.0
+        },
+        "am_ionic_isolated_pct": {
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.1295336787564736
+        }
+      }
+    }
+  }
+}

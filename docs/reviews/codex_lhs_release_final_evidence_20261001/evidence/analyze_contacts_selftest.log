@@ -1,0 +1,27 @@
+  ✓ ① 3 상 침대 — analyze_contacts_bimodal.py (웹앱 cmd 그대로) rc 0 · full_metrics.json
+  ✓ ② 옛 전체 키 그대로 — am_se_cn_mean 13/7 · am_vulnerable_pct 3/7 (접촉 0 · 1 인 AM) · surface_weighted = Σr²·CN/Σr²
+  ✓ ③ 옛 상별 키 그대로 — AM_P (3,0,1) · AM_S (2,2,5,0) 의 평균 · 표준편차 · 중앙값 · 최댓값 · 입자 수 · 취약 비율
+  ✓ ④ ★ 7a am_se_cn_std = AM 전 입자 7 개 (접촉 0 인 AM 포함) 의 모집단 표준편차
+  ✓ ⑤ ★ 7a am_se_cn_median = 2 (7 개 · 가운데 값) · float
+  ✓ ⑥ ★ 7a am_se_cn_max = 5 · int (JSON 문자열 아님) · = max(AM_P_se_cn_max, AM_S_se_cn_max)
+  ✓ ⑦ 항등식 — am_se_cn_mean × N_AM = area_AM전체_SE_n (13) · 상별 평균 × 입자 수 = area_AM_P_SE_n (4) · area_AM_S_SE_n (9)
+  ✓ ⑧ AM–AM 행 (1–4) · SE 사슬 19 행은 AM–SE 로 세지 않는다 — area_AM_P_AM_S_n 1 · area_SE_SE_n 19 · AM_P 1 의 SE 수 3
+  ✓ ⑨ AM 고립 키 집합 = 계약 18 (전체 6 · 상별 6 × 2) — 빠지거나 더 붙으면 실패
+  ✓ ⑩ mono (1:AM_S,2:SE) — analyze_contacts.py rc 0 · 옛 키 그대로 (평균 1.75 · 취약 50 % · AM_S 중앙값 1.5 · 최댓값 4) · AM_P 키 없음
+  ✓ ⑪ ★ 7a mono 전체 분포 = 그 상 — std · 중앙값 (짝수 개 = 가운데 둘의 평균 1.5) · 최댓값 4 가 AM_S_* 와 같다 (7b 근거)
+  ✓ ⑫ mono AM 고립 키 집합 = 계약 12 (전체 6 · AM_S 6)
+  ✓ ⑬ ★ v1.1 ② 3 상 — ionic_dead_pct 200/7 · ionic_no_se_pct 200/7 를 내보낸다 · 옛 ionic_active_pct 300/7 그대로 · 셋의 합 = 100
+  ✓ ⑭ ★ v1.1 ② 상별 — AM_P (활성 · 단절 · 무접촉 = 1/3 씩) · AM_S (2/4 · 1/4 · 1/4) · 상마다 합 = 100
+  ✓ ⑮ ★ v1.1 ② mono (1:AM_S,2:SE) — 전체 = AM_S = 25 · 25 · 50 · AM_P 분해 키 없음
+  ✓ ⑯ ★ v1.1 ② 분해 키 집합 = 계약 (3 상 9 · mono 6) — 빠지거나 더 붙으면 실패 · 값은 숫자 (문자열 아님)
+  ✓ ⑰ ★ v1.1 ① 경로 기준 고립 am_ionic_isolated_pct = 100 − ionic_active_pct = 단절 + 무접촉 (3 상 400/7 · mono 75) — 인계표와 같은 이름 · 고립 위험 (am_vulnerable_pct · SE 접촉 0–1 개 = 3 상 500/7 · mono 100) 과 다른 양
+  ✓ ⑱ ★ v1.1 ①② 케이스 표 (network_summary.csv) — 활성 바로 뒤에 "Ionic Isolated AM(%)" · 그 아래 단절 · 무접촉 두 줄 (값 = 57.1 · 28.6 · 28.6)
+  ✓ ⑲a ★ x 주기 경계 너머 근접쌍 (틈 < h) 을 센다 — 상자를 주면 n_extra_aug 1 (옛 코드 0 = LHS-22)
+  ✓ ⑲b ★ y 주기 경계 너머도 같다 — n_extra_aug 1
+  ✓ ⑲c 상자를 안 주면 옛 동작 그대로 (경계 너머 0 · 비주기 호출부 호환)
+  ✓ ⑲d 내부 근접쌍은 상자 유무와 무관하게 1
+  ✓ ⑲e 경계 너머로 겹친 쌍 · 틈이 h 보다 큰 쌍은 근접쌍이 아니다 (0 · 0)
+  ✓ ⑲f 여러 쌍 — 쌍마다 한 번만 (x 1 + y 1 = 2) · mean_aug = 2·2/4 = 1.0
+  ✓ ⑲g 생산 경로 (run_full_analysis) 가 상자 크기를 넘긴다 — box_x=box_x · box_y=box_y
+
+25/25  ✓ 전부 통과
