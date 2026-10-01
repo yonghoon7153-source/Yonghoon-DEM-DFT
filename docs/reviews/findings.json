@@ -6030,15 +6030,17 @@
   {
    "id": "LHS-22",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (09-30 · 접촉 ① 둘째 함수 `calc_se_se_cn` 코드 검토 — J20-i)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "F1 근접쌍 CN (`se_se_cn_aug*`) 의 격자 탐색 (`scripts/dem_analysis_core.py:297–342`) 이 주기 영상을 보지 않는다 — 원자 좌표를 그대로 칸에 넣어 x · y 주기 경계 너머의 근접쌍 (틈 ≤ h_spread) 을 못 센다.  탄성 접촉 `cn` 은 LIGGGHTS 덤프라 경계 너머 접촉을 포함하므로 `mean_aug` 는 두 규칙 (경계 포함 · 경계 제외) 이 섞인 값이다",
    "note": "인계 열 아님 (J20-i 는 `se_se_cn` · `se_se_cn_std` 만 싣는다) — 영향 = `se_se_cn_aug` · `_aug_std` · `_aug_n_extra` (과소 · 상자 크기에 따라 다름) · `_aug_h_spread_sim` 은 설정값.  함수는 상자 크기를 인자로 받지 않는다 (`box_x` · `box_y` 는 퍼콜레이션에만 넘어간다).  크기 미측정.  처방 = ⑤ F1 근접쌍 묶음 차례에: 반례 먼저 (경계 양쪽에 틈 < h 인 두 SE — 옛 코드 0 건) → 최소영상 · 주기 칸 감싸기 · 상자 크기 인자.  census 는 ✅ 라 ⑤ 전에는 싣지 않는다.",
    "evidence_tests": [
-    "scripts/dem_analysis_core.py"
-   ]
+    "scripts/analyze_contacts.py::selftest ⑲a–g"
+   ],
+   "claimed_fixed_sha": "724823000",
+   "verification_note": "724823000: `calc_se_se_cn(..., box_x, box_y)` — 상자 크기가 주어지면 x · y 칸을 주기로 감싸고 (칸 수 = floor(L/cell) · 칸 폭 = L/칸 수) 거리는 최소영상 · z 는 비주기 · None = 옛 동작.  `run_full_analysis` 가 퍼콜레이션과 같은 box_x · box_y 를 넘긴다.  시험 먼저 — analyze_contacts --selftest ⑲a–g (x 경계 건너 · y 경계 건너 · 상자 없음 = 옛 동작 · 내부 쌍 · 겹침/먼 쌍 · 붐빔 2 · 호출부 전달 소스) 가 옛 코드에서 TypeError → 수정 뒤 25/25 · 웹앱 F1 툴팁에 '근접쌍 탐색은 x · y 주기 영상 포함 (LHS-22)' 한정어 (J20-l).  값 = WSL d1ec42fba 접촉 단계 130 · 64 재실행 (10-01 진행 중 · 반입 대기) — 옛 값 대비 크기는 그때 잰다.  인계 · 배포 열 아님 (J20-i)."
   },
   {
    "id": "LHS-23",
@@ -6500,6 +6502,31 @@
    "opened_in": "docs/reviews/lhs_coverage_batch5_comparison_20261001.md",
    "title": "피복 단계 scripts/coverage_physics_vs_hertzian.py 가 요약 CSV 를 실행 위치 기준 경로 (Path('docs/figures/physics_regime')/coverage_hertz_vs_physics_summary.csv) 에 매 호출 덮어쓴다 — 리포 루트에서 도는 웹앱 파이프라인 · LHS 배치가 추적 파일을 바꿔 run 의 dirty=true 를 만든다 (5번 193/194 케이스) · 여러 케이스를 돌면 마지막 케이스 요약만 남는다",
    "note": "코드 변경이 아닌데 코드 출처 표지 (dirty) 가 켜져 '깨끗한 봉인 커밋에서 돌았다' 는 증명을 스스로 무너뜨린다 — 5번은 기존 키 · 공통 열 비트 동일로 완화됐다 (보고서 §2).  처방 후보 (비준 대상): 요약 CSV 를 케이스 출력 폴더 · 명시적 --summary-out 으로 옮기거나 --all 일 때만 쓰기 · 추적 파일에서 빼기.  배치 쪽 dirty 판정에서 이 파일만 예외로 두는 것은 권하지 않는다 (가림)."
+  },
+  {
+   "id": "SELF-75",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (10-01 · 자기 정정 — 1저자에게 같은 날 정정)",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "퍼콜 감사기 `scripts/lhs_perc_audit.py` 의 lhsx 실행 rc=3 을 1저자에게 '관통하지 않는 침대가 있다' 는 뜻으로 설명했다 — 실제 뜻은 'verdict FLAG 인 케이스가 하나 이상' 이다 (docstring :29 · 코드 :598–605 · selftest ⑭) · 그 FLAG 5 건은 단분산 SE 띠 경계 동률이었고 SE 관통 판정은 네 방법 64/64 일치",
+   "note": "코드 · docstring 은 처음부터 맞았다 (rc 0 = 전부 CLEAN · rc 3 = FLAG 있음 · rc 2 = 입력 오류 · NO_MESH · 감사 0 건) — 틀린 것은 내 설명뿐이다.  숫자의 뜻을 코드에서 확인하지 않고 그럴듯한 쪽으로 읽었다 (SELF-74 와 같은 부류: 원자료 · 코드 확인 전 설명).  정정 = 같은 날 1저자에게 · 퍼콜 감사 반입 README 에 rc 의 뜻을 코드 줄과 함께 적는다 → 그 커밋 SHA 로 claimed_fixed.",
+   "evidence_tests": [
+    "scripts/lhs_perc_audit.py::selftest ⑭"
+   ]
+  },
+  {
+   "id": "SELF-76",
+   "severity": "P3",
+   "status": "wontfix",
+   "owner": "claude",
+   "found_by": "claude (10-01 · 1저자가 두 터미널 출력을 함께 보냄 — '요넘이랑 다른거지?')",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "WSL 에서 d8663fe05 접촉 단계 배치 (②) 가 같은 작업 트리 `~/dem-audit` 에서 돌고 있는 줄 알면서 그 트리를 `git checkout d1ec42fba` 하는 명령을 보냈다 — 웹앱 파이프라인은 케이스마다 `analyze_contacts*.py` 를 새 프로세스로 띄워 디스크에서 다시 읽으므로 (webapp/app.py:3625 · 3711) 돌던 배치의 lhsx 뒷부분이 새 코드로 계산되고 산출 폴더 이름은 `_d8663fe05` 로 붙었다 (한 폴더 안 세대 혼합)",
+   "note": "피해 없음 — 1저자가 첫 실행을 멈췄고 (lhsx 45/64) 그 산출은 반입하지 않는다.  d8663fe05 ⊂ d1ec42fba 이고 접촉 단계 차이는 `dem_analysis_core.py` F1 하나뿐 (analyze_contacts 는 selftest 만) — 필요한 값은 둘째 실행 (d1ec42fba · 시작 전 checkout) 이 낸다.  배치의 출처 기록 (`code_provenance`) 은 실행 시작 때 HEAD 를 한 번만 적어 중간 교체를 못 잡는다.",
+   "decision_note": "1저자 10-01: 코드 가드 (케이스마다 HEAD 재확인 · 바뀌면 멈춤) 는 '굳이' — 넣지 않는다.  대신 명령 규칙: 원격 · WSL 명령에 checkout 을 넣을 때는 같은 작업 트리에서 도는 배치를 먼저 확인하고 (`pgrep -f lhs_webapp_batch` 가 있으면 멈춤) · 동시에 돌려야 하면 git worktree 를 따로 쓴다.",
+   "evidence_tests": []
   },
   {
    "id": "MIX-11",

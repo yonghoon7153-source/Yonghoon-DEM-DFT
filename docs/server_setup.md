@@ -1,6 +1,6 @@
 # New-server setup — DEM (LIGGGHTS) + MPM (Taichi) + Python + webapp
 
-Setup for a fresh GPU server (e.g. `kgy@59.12.161.91`) to run this repo's DEM/MPM
+Setup for a fresh GPU server (e.g. `kgy@<주소>`) to run this repo's DEM/MPM
 pipeline.  Assumes a conda env named **uma** (`conda activate uma`).
 
 ## What runs where

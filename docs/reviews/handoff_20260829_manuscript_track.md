@@ -33,7 +33,7 @@
 | ~~V100~~ | **죽음** | — | ⚠ centerline A트랙 **48팔이 거기서만 살아 있다가 사라졌다** |
 
 **접속**: kgy `kgy@esp-Z590-AORUS-MASTER` (러너는 `~/sdcp` 에서, python 은 `~/dem-venv/bin/python3`) ·
-ibb `ssh -p 43612 yonghoon@166.104.39.171`.
+ibb `ssh -p <포트> 사용자@<주소>`.
 
 ## 3. ⛔ 하면 안 되는 것
 

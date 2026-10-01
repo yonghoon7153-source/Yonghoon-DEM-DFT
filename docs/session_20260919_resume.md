@@ -110,7 +110,7 @@ TSV `docs/data/area_s2_cohort.tsv` `:49` · `:104` 에 행은 **이미 있고** 
 089 atom_2855000     b775db1c616dbd2096e83abbb1bb4f35221b39f03d2fbc92d8061f7e6170b362
 089 contact_2850000  670ed92b061b17e2362e710fd72c1c924586e091d9f60e8d897b11b94bf8f4ea
 ```
-⛔ **WSL 에 파일이 없다** — 전송 필요.  ibb = `ssh -p 43612 yonghoon@166.104.39.171`
+⛔ **WSL 에 파일이 없다** — 전송 필요.  ibb = `ssh -p <포트> 사용자@<주소>`
 (⚠ `scp` 는 **`-P`**).  ibb 의 `lhs` 경로가 `~/lhs` 가 **아니다** — `pwd` 로 확인 필요
 (`find /data /home /scratch /work -maxdepth 6 -name lhs00_034` 가 빈손이었다).
 전송 후 **양쪽 sha256 이 일치**해야 봉인한다.  덱 기대값:
