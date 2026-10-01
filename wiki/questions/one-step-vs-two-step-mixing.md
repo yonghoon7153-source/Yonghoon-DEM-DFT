@@ -2,10 +2,10 @@
 title: One-step 일괄 ball milling 과 two-step(Li2S–C 선제작) 중 어느 쪽이 Li2S 이용률을 높이는가
 description: "세 성분을 한 번에 가는가, Li2S–C 계면을 먼저 만들고 SE 를 나중에 붙이는가 — 같은 장비·같은 총 에너지에서 순서만 바꿨을 때 무엇이 달라지는가"
 created: 2026-09-11
-updated: 2026-09-30
+updated: 2026-10-03
 type: research-question
 tags: [mixing-process, composite-cathode, li2s, sulfide-electrolyte]
-sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md]
+sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -36,9 +36,12 @@ feedsInto: "[[li2s-assb-reference-cell]] 의 혼합 공정 선택 · [[composite
   부반응)하므로 SE 를 고에너지 단계에서 빼는 것이 이득. **2026-09-30: 근거가 양쪽으로 들어왔다 —
   "손상은 실재하지만 그것이 성능을 정하지는 않는다" 가 현재 그림이다** (아래).
 - **H3 (one-step 우세)**: 세 상을 나노 스케일로 동시에 섞어야 삼상 계면 밀도가 최대; two-step 의
-  mild mixing 은 SE 를 Li2S–C 도메인 바깥에만 둔다.
-- **H4 (밀링 시간 상한) — 2026-09-30 신설.** 순서가 아니라 **에너지 총량에 최적점이 있다**.
-  적으면 계면이 안 생기고, 많으면 SE 가 죽는다. 이쪽이 one-step/two-step 논쟁보다 실효 변수일 수 있다.
+  mild mixing 은 SE 를 Li2S–C 도메인 바깥에만 둔다. **2026-10-03: 저로딩 한정으로 범위가 좁아졌다.**
+- **H4 (밀링 에너지 상한) — 2026-09-30 신설, 2026-10-03 에 스캔으로 확정 방향.** 순서가 아니라
+  **에너지 총량에 최적점이 있다**. 적으면 계면이 안 생기고, 많으면 SE 가 죽는다.
+- **★ H5 (로딩 의존) — 2026-10-03 신설.** **최적 혼합 경로는 로딩의 함수다.** 교차점이 존재하고
+  그 아래에서는 one-step, 위에서는 two-step 이 이긴다. 그렇다면 이 카드의 질문은
+  **"어느 쪽이 이기나" 가 아니라 "교차점이 어느 로딩인가" 로 바뀌어야 한다.**
 - **H0 (차이 없음)**: 총 에너지가 같으면 순서는 무관.
 
 ## Evidence For
@@ -84,6 +87,63 @@ feedsInto: "[[li2s-assb-reference-cell]] 의 혼합 공정 선택 · [[composite
   (Fritsch P7, ZrO2, 300 rpm 4 h) 으로 갈아 SE 50 wt% 복합양극을 만들었다 — **우리 조성과 같다.**
   단 절대 용량을 안 적어(digest G1) 우열 비교에는 못 쓴다.
 
+### ★ 2026-10-03 — Kim 2025 가 이 카드를 부분적으로 답했다 (선양국 그룹)
+
+이 카드가 2026-09-30 에 "우리가 말하는 two-step 은 아직 시험되지 않았다 — 그것이 다음 실험이다"
+라고 적었다. **그 조건을 다룬 논문이 들어왔다.** 다만 두 가지 단서가 있다(아래).
+
+**로딩 스캔 — 교차점이 보인다** (2차 방전, 0.1 C, 같은 최종 조성 S : LPSCl : CNT = 25 : 50 : 25):
+
+| S 로딩 | one-step (M600) | two-step (M&M37) | 승자 |
+|---|---|---|---|
+| **3 mg cm⁻²** | **5.00 mAh cm⁻²** | 4.05 | ★ **one-step** |
+| 6 mg cm⁻² | 4.80 | **7.43** | two-step |
+| **10 mg cm⁻²** | 4.46 | **10.85** | **two-step (2.4배)** |
+
+→ **H5 의 근거다. 교차점이 3–6 mg(S) cm⁻² 사이에 있다.**
+
+- **H2(SE 보호) — 이 위키 최초의 직접 지지.** SE 보호를 설계의 **명시적 목표**로 삼고 효과를
+  숫자로 보인 첫 논문이다. LPSCl 을 밀링 단계와 손혼합 단계로 **쪼갠 비율**만 바꿔 복합양극
+  σ_Li⁺ 가 `[인쇄]` **0.07 → 0.14 → 0.16 → 0.42 mS cm⁻¹** (밀링 SE 10:0 → 5:5 → 3:7 → 1:9).
+  밀링은 LPSCl 을 비정질화하고 Young's modulus 를 `[인쇄]` **21.98 → 4.63 GPa** 로 떨어뜨린다.
+  ⚠ **단 이득은 고로딩에서만 나온다** → **"SE 보호는 전극이 두꺼울 때만 이득이다" 로 조건화**한다.
+- **H4(밀링 에너지 상한) — 가장 강한 지지, 이 위키 최초의 "스캔".** 같은 장비·같은 6 h 에서
+  rpm 만 바꾼 네 점이 **600 rpm 에 꼭지**를 만든다 (0.5 C 20사이클 `[도표]`
+  **160 / 620 / 870 / 670 mAh g⁻¹(S)** @ 200 / 400 / 600 / 800 rpm). 저자 결론 `[인쇄]`:
+  "excessive milling may deteriorate the ionic conductivity … crucial to optimize the milling
+  conditions **within an appropriate range**."
+  ⚠ 단 M800 의 방전/충전 쌍이 본문과 그림에서 어긋난다(digest G6) — **"과도한 밀링의 실패" 를
+  M800 으로 인용하는 문장은 검증 불가**다. 꼭지의 존재는 다른 세 점으로도 선다.
+- **H1(계면 이유) — 부분 지지하되 주체가 바뀐다.** 이 논문의 "계면" 은 탄소–활물질이 아니라
+  **활물질–SE catenation 계면(3Li⁺–PS4+n³⁻)** 이고, 그것은 **1단계에서 SE 와 함께 갈아야** 생긴다.
+  "탄소가 먼저 감싸야 한다" 는 여전히 반증이고(밀링 SE 10 % 인 M&M19 는 실패),
+  **"활물질–SE 계면을 먼저 만들어야 한다" 로 대체**된다.
+- **H3(one-step 우세) — 저로딩에서 지지, 고로딩에서 반증.** 틀린 가설이 아니라 **범위가 좁은 가설**이다.
+- **H0 재반증** — 같은 최종 조성에서 순서만 바꿔 10 mg cm⁻² 에서 2.4배.
+
+### Cronk 2026 과의 충돌은 세 축으로 해소된다
+
+| | Cronk 2026 | Kim 2025 |
+|---|---|---|
+| 승리 경로 | one-step (밀링 SE **100 %**) | two-step (밀링 SE **60 %**) |
+| 패배 경로 | multi-step (밀링 SE **0 %**) · hand-mix | **M&M19 (밀링 SE 10 %)** · M200 · M600 고로딩 |
+| 로딩 | **1 mg(S) cm⁻²** | **3 / 6 / 10 / 12** |
+| 밀링 | Retsch 500 rpm 1 h, BPR 30:1 | Fritsch P7 600 rpm 6 h, BPR ≈6:1 |
+| 중간상 | Li3PS4+n (Raman·XANES·cryo-TEM) | 3Li⁺–PS4+n³⁻ (XPS S_B⁰ 162.1 eV·Raman·TGA) |
+
+`[해석]` 셋으로 해소된다. ① Cronk 의 1 mg cm⁻² 은 Kim 의 교차점 **왼쪽**이다 — one-step 이 이기는
+구간. ② **"two-step" 의 정의가 다르다** — Cronk 의 multi-step 은 밀링 SE 0 % 이고, Kim 의
+M&M19(10 %)도 **똑같이 실패한다.** 즉 **두 논문은 "SE 를 밀링에서 완전히 빼면 안 된다" 에
+합의한다.** ③ 밀링 좌표가 다르다(세고 짧게 vs 빠르고 길게, BPR 5배 차이).
+**중간상이 독립적으로 같은 종으로 동정됐다**는 것도 큰 수확이다.
+
+### ⚠ 그래도 우리 실험은 여전히 필요하다 — 두 가지 단서
+
+1. **활물질이 S8 이지 Li2S 가 아니다.** 이 논문에 Li2S 데이터는 한 줄도 없다.
+2. **"mild mixing" 의 정체가 유발(agate mortar) 손혼합 15 분이다** — Thinky 도 저속 BM 도 아니다.
+   우리가 말하는 two-step(SE 를 **mild BM** 으로 붙임)은 **아직도 시험되지 않았다.**
+→ 즉 이 카드의 "다음 실험" 은 유효하고, **로딩을 변수로 넣어야 한다**는 조건이 추가됐다.
+
 ## Evidence Against
 
 - **[2026-09-30] H1(two-step 우세, 계면 이유) 에 대한 반증 — Cronk 2026.** Li2S–C 를 먼저 만들고
@@ -101,6 +161,12 @@ feedsInto: "[[li2s-assb-reference-cell]] 의 혼합 공정 선택 · [[composite
 2. 지표: 첫 충전 활성화량(mAh g⁻¹(Li2S)), 이후 비용량, 탄소+SE 펠릿 전자 전도도, SE 의 XRD/
    이온 전도도(H2 분리용).
 3. H2 를 가르려면 **LPSCl 만** 같은 BM 조건에 노출한 뒤 이온 전도도를 재는 대조가 필요하다.
+4. **★ 2026-10-03 추가 — 로딩을 축으로 넣는다.** Kim 2025 의 교차점이 3–6 mg(S) cm⁻² 이므로
+   우리 Li2S 계에서도 **최소 두 로딩**(교차점 추정 아래·위)에서 각 경로를 돌려야 한다.
+   한 로딩에서만 비교하면 "어느 쪽이 이긴다" 는 결론이 그 로딩에만 유효하다.
+5. **SE 분할비를 변수로.** Kim 2025 는 밀링 SE : 손혼합 SE 를 10:0 / 5:5 / 3:7 / 1:9 / 3:2 로
+   쪼갰고 조성(S 함량)에 따라 최적비가 달랐다(25 wt% → 3:7, 35 wt% → 3:2).
+   **0:10 과 10:0 만 보는 이분법을 버린다** → [[composite-cathode-mixing-routes]].
 
 ## Status Log
 - [2026-09-11] open — 카드 개설. 근거는 액체계 선례 하나. ASSB 혼합 공정 논문 ingest 가 다음.
@@ -111,3 +177,12 @@ feedsInto: "[[li2s-assb-reference-cell]] 의 혼합 공정 선택 · [[composite
   **H4(밀링 시간 상한) 신설** — 순서보다 에너지 총량이 실효 변수일 수 있다.
   남은 판정: Cronk 의 multi-step 은 SE 를 **손으로** 붙인 것이므로 **우리가 말하는 two-step
   (SE 를 mild BM)은 아직 시험되지 않았다.** 그것이 이 카드의 다음 실험이다.
+- [2026-10-03] active — **Kim 2025(선양국 그룹)가 이 카드를 부분적으로 답했다.**
+  **H5(로딩 의존) 신설** — 최적 경로가 로딩의 함수이고 **교차점이 3–6 mg(S) cm⁻²** 에 있다.
+  카드의 질문을 "어느 쪽이 이기나" 에서 **"교차점이 어느 로딩인가"** 로 고쳐야 한다.
+  **H2(SE 보호)에 이 위키 최초의 직접 지지**가 들어왔으나 **고로딩 한정**으로 조건화했다.
+  **H4 에 최초의 rpm 스캔**(600 rpm 꼭지). **H3 는 저로딩 한정으로 범위 축소.**
+  Cronk 와의 충돌은 세 축(로딩·two-step 정의·밀링 좌표)으로 해소되고, **두 논문이 "SE 를 밀링에서
+  완전히 빼면 안 된다" 에 합의**한다.
+  **우리 실험은 여전히 필요하다** — 그 논문은 S8 이고 mild mixing 이 유발 손혼합이라,
+  Li2S + mild **BM** 조건은 미시험이다. 설계에 **로딩 축을 추가**한다.

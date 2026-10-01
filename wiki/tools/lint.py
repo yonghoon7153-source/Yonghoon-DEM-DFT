@@ -23,7 +23,9 @@ Checks (SCHEMA.md conventions):
  16. no model identifier in wiki pages or tools (root CLAUDE.md hard rule 6)
  17. Parity Contract — CLAUDE.md and AGENTS.md carry the same Essential Rules
  18. canonical-copy — research constants (cathode ratio, target capacity) copied
-     into webapp templates/index must match the reference-cell entity page
+     into webapp templates/index/README must match the reference-cell entity page.
+     Wiki CONTENT pages are exempt: citing other papers' compositions is their job
+     (2026-10-03: the check flagged Kim 2025's 25:50:25 as our drift).
  19. no two raw files share the same body sha256 (2026-09-30: a parallel paper-agent
      run sealed one digest with another paper's body; each file's own hash matched)
  20. a digest's frontmatter `doi` must also appear in its body (same failure, caught
@@ -276,15 +278,31 @@ if not CANON_PAGE.exists():
     errors.append(f'canonical-copy: 정본 페이지가 없다: {CANON_PAGE.name}')
 else:
     canon_comp, canon_cap = _consts(CANON_PAGE.read_text(encoding='utf-8'))
-    copies = [BASE / 'index.md', BASE / 'README.md', BASE / 'SCHEMA.md']
-    copies += sorted(pages.values())
+    #     ★ 2026-10-03: 검사 대상을 **"우리 사양의 사본" 파일로 좁혔다.**
+    #     두 번째 오탐 — `25:50:25`(Kim 2025 논문의 조성)를 "우리 조성이 바뀌었다" 로 잡았다.
+    #     위키 **콘텐츠 페이지**(questions/syntheses/comparisons/concepts)는 **남의 논문 수치를
+    #     인용하는 것이 본업**이다. 그걸 drift 로 보면 문헌을 비교할 수 없다.
+    #     그래서 콘텐츠 페이지를 대상에서 뺀다. 원래 이 검사가 잡으려던 자리는 2026-09-11
+    #     전수조사에서 발견한 **webapp 템플릿·index·README** — 우리 사양을 그대로 베껴 적어 둔
+    #     파일들이고, 거기서는 어떤 다른 값도 drift 다.
+    #     대가: 위키 콘텐츠 페이지의 우리 수치 drift 는 이 검사가 못 잡는다. 그쪽은 산문이라
+    #     문맥에서 눈에 띄고, 정본(entity)과 index 는 계속 검사된다.
+    copies = [BASE / 'index.md', BASE / 'README.md']
     copies += sorted((BASE.parent / 'webapp').rglob('*.html'))
+    #     index.md 의 `## Raw 논문` 절은 **설계상 문헌 색인**이다 — 남의 논문 조성을 적는 자리다
+    #     (2026-10-03 세 번째 오탐: Lee 2026 의 `30:20:50`). 그 절부터는 보지 않는다.
+    #     index.md 의 앞부분(우리 프로젝트·개념 요약)은 계속 검사된다.
+    SECTION_CUT = {'index.md': '## Raw 논문'}
     copies += [BASE.parent / 'webapp' / 'app.py', BASE.parent / 'webapp' / 'README.md',
                BASE.parent / 'README.md']
     for f in copies:
         if not f.exists() or f == CANON_PAGE:
             continue
-        comp, cap = _consts(f.read_text(encoding='utf-8'))
+        _txt = f.read_text(encoding='utf-8')
+        _cut = SECTION_CUT.get(f.name)
+        if _cut and _cut in _txt:
+            _txt = _txt.split(_cut)[0]
+        comp, cap = _consts(_txt)
         for hit in sorted(comp - canon_comp):
             errors.append(f'{f.name}: 복합양극 조성 `{hit}` 가 정본과 다르다 — '
                           f'정본 {sorted(canon_comp)} ({CANON_PAGE.name})')

@@ -2,10 +2,10 @@
 title: 무엇이 reference cell 을 500–600 mAh g⁻¹ 에서 막는가
 description: "pristine Li2S ASSB reference cell 이 문헌 수준(500–600, 기준 미확인)에 못 미친다면 병목은 활성화인가, 퍼콜레이션인가, 입자인가, 아니면 단위 착시인가"
 created: 2026-09-11
-updated: 2026-09-30
+updated: 2026-10-03
 type: research-question
 tags: [li2s, assb, activation, composite-cathode, units]
-sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md]
+sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -35,8 +35,13 @@ feedsInto: "[[li2s-assb-reference-cell]] 의 실험 설계 · [[anode-free-li2s-
   이온이냐" 를 섞어 두면 판정이 안 된다는 게 드러났다.
   - **H2a (전자 네트워크)**: AB 단일 탄소가 접촉 또는 두께 방향 경로 중 하나를 못 채운다
     → [[carbon-dimensionality-electron-network]]. **2026-09-30 크게 약화** (아래 Evidence Against).
-  - **H2b (이온 네트워크 / SE 부피)**: LPSCl 이 Li2S 표면까지 못 닿거나 SE 부피분율이 모자라다.
-    **2026-09-30 거의 배제** — Wang 2023 기준으로 우리는 이미 SE 48–52 vol% 다.
+  - **H2b (이온 네트워크)** — **2026-10-03 에 질문 자체를 고쳐 썼다.**
+    처음에는 "SE 부피분율이 모자라다" 였고 2026-09-30 에 "거의 배제" 로 적었다 (Wang 2023 기준으로
+    우리는 이미 SE 48–52 vol%). **그 배제는 성급했다.** Kim 2025 가 **같은 조성·같은 부피분율**에서
+    **혼합 이력만으로 복합양극 σ_Li⁺ 를 6배** 바꿨다 (0.07 → 0.42 mS cm⁻¹).
+    → 올바른 질문은 **"SE 가 모자란가" 가 아니라 "밀링을 겪은 SE 가 아직 superionic 인가"** 다.
+    **우리 one-step 셀의 LPSCl 은 전량이 밀링을 겪었다.** 부피는 충분한데 그 부피가 이온을 못
+    나를 수 있다 — 이쪽이 살아 있는 가설이다.
   - 남는 것은 **삼상 계면의 "질"**(활물질–황화물 계면 친화)이지 전자·이온의 "양" 이 아니다.
 - **H3 (입자 제한)**: pristine Li2S 의 입자 크기·결정성이 커서 표면적이 부족; 나노화 정도가
   혼합 경로에 따라 다름. **단 "작을수록 좋다" 는 아니다** (아래 Cronk 2026).
@@ -140,6 +145,63 @@ Lee 2026 digest 가 이 충돌을 날카롭게 정리한다 — **병목은 "활
   micron(0.5–5 µm) 81 % > sub-micron(0.25–0.5 µm) 61 %**, bulk 는 급사. 우리 H3 를
   "작게 만들면 된다" 로 읽으면 안 된다. 단 이 논문도 기전 논증은 약하다(digest §13-2).
 
+### 2026-10-02 — Wang 2026 추가
+
+- **H4 — 가장 강한 근거가 또 나왔다.** Wang 2026 의 각 plateau 용량을 **그 plateau 자신의
+  이론용량**으로 나누면 `[재현]` **plateau II = 111.2 % · plateau III = 100.3 %** 다. 황만으로는
+  불가능하므로 **LGPS 환원이 섞였다**(하한 0.6 V vs Li–In + Ge 함유 SE). 그런데 이 논문도
+  **SE 기여 대조셀이 없다.**
+  → **0번 실험(`LPSCl + AB 80:20` 대조셀)의 우선순위가 다시 올라간다.** 이제 digest 10편 중
+  **5편이 이론 초과 용량을 보고**했고(Cronk 129 % · Lee 101–107 % · Yu 124 % · Zhang 114 % ·
+  Wang 2026 111 %), **그 중 어느 논문도 SE 몫을 분리하지 않았다.** 우리가 셀 하나로 그것을
+  하면 이 문헌군 전체를 읽는 기준이 생긴다.
+- **H2b — 측정 규율 하나가 확정됐다 (방법론적 기여).** Wang 2026 은 같은 셀에서
+  **CV(Randles–Ševčík) 로 D_Li⁺ ≈ 2 cm² s⁻¹**(물리적으로 불가능)를, **EIS/DRT 로 ≈5×10⁻¹⁰**
+  를 얻어 **10¹⁰배** 어긋났다. → **우리는 고체셀 D_Li⁺ 를 CV 로 재지 않는다. GITT 또는
+  EIS–DRT 를 쓴다.**
+- **H2b — 약한 반증 추가.** 그 논문의 믿을 만한 측정(EIS/DRT)이 **"차이 없음"**(10 전압점 중
+  9점 겹침, 최대 2.0배)인데도 이용률이 2배가 됐다 → 이온 수송 **속도**조차 지배 변수가 아닐
+  수 있다. 논지와 반론은 [[interface-quality-not-bulk-conductivity]] 반론 8.
+- **H1·H2a·H3 — 이 논문은 근거를 주지 않는다.** S8 출발이라 Li2S 첫 충전이 없고(H1),
+  σ_e⁻·σ_Li⁺ 를 **아예 측정하지 않았고**(H2a), 입도 정보가 전무하다(H3).
+- ⚠ **실험 안전 메모**: 그 논문의 첨가제는 DABDT **dihydrochloride** 이고 EDS 에 Cl 이 잡히는데
+  본문이 한 번도 언급하지 않는다. 이작용기 소분자 첨가제를 후보로 올릴 경우 **염산 2당량 →
+  H2S 발생 가능성 확인을 선행조건으로** 묶어야 한다.
+
+### 2026-10-03 — Kim 2025 · Wan 2021 추가
+
+- **★ H2b — 배제를 철회하고 질문을 고쳐 썼다 (Kim 2025).** 같은 조성(S : LPSCl : CNT)·같은 부피
+  분율에서 **LPSCl 을 밀링 단계와 손혼합 단계로 나눈 비율만** 바꿔 복합양극 σ_Li⁺ 가
+  `[인쇄]` **0.07 → 0.14 → 0.16 → 0.42 mS cm⁻¹** (밀링 SE 10:0 → 5:5 → 3:7 → 1:9) 로 **6배** 움직였다.
+  그리고 그 차이가 고로딩에서 면적용량 **4.46 → 10.85 mAh cm⁻²** (10 mg(S) cm⁻²) 로 나타난다.
+  → "SE 부피가 충분한가" 는 닫혔지만 **"그 SE 가 아직 superionic 인가" 는 열려 있다.**
+  밀링이 LPSCl 을 비정질화하고 Young's modulus 를 `[인쇄]` **21.98 → 4.63 GPa** 로 떨어뜨린다.
+- **H2a — 추가 반증 (Kim 2025).** 복합양극에서 σ_e⁻ `[도표]` ≈22–34 mS cm⁻¹ 가 σ_Li⁺ 0.07–0.42 의
+  **50–400배**다. 전자는 남고 이온이 모자란 구조 — Huang 2026 과 같은 방향이고
+  [[interface-quality-not-bulk-conductivity]] ①을 보강한다.
+- **H1 — Wan 2021 이 고체계 Li2S 직접 대조를 준다.** `[도표]` **첨가제 없는 Li2S 는 첫 충전
+  plateau 자체가 없고** 3.5 V 까지 단조 상승하며 ≈900 mAh g⁻¹(Li2S)(이론 77 %) 에 그친다.
+  할로겐화물(LiI–LiBr)을 넣으면 **≈2.80 V 에 평탄 plateau** 가 생기고 ≈1165(≈100 %) 가 된다.
+  → **plateau 의 유무가 활성화 경로가 열렸는지의 지표다.** 활성화 전위 사다리는
+  [[li2s-activation-first-charge]] 에 표로 정리했다 (Cronk 2.4 V / 무게 0 · Wan 2.80 V / 39.9 wt% ·
+  Zhang 2.87 V / 43.8 wt% · Lee 컷오프 3.62 V).
+  ⚠ 단 Wan 2021 의 주 활물질은 **MoS2** 이고 그 Li2S 는 in-situ 생성물이라 우리 상용 분말과 태생이
+  다르다. 그리고 그 논문도 **할로겐화물 자신의 용량 기여를 분리하지 않았다.**
+- **H4 — 이론 초과 용량이 이제 digest 10편 중 6편이다** (Cronk 129 % · Lee 101–107 % ·
+  Yu 124 % · Zhang 114 % · Wang 2026 111 % · **Kim 2025 Φc 137.6 %**). Kim 2025 는 그것을 숨기지
+  않고 `[인쇄]` **LPSCl 산화분해물의 S–S bridging/cleavage 리독스로 명시 귀속**하고 2차 방전이
+  1차 충전과 일치함으로 가역성을 보인다 — **이 위키에서 SE 기여를 정면으로 인정한 첫 논문**이다.
+  그런데도 `[재현]` 1차 충전 초과분 468.4 mAh g⁻¹(S) = 충전의 **27.3 %** 가 LPSCl 몫이고,
+  "2차 방전 이용률 99.5 %" 와 **TGA 의 22 % 미반응**이 공존한다.
+  → **0번 실험(`LPSCl + AB` 대조셀)에 더해 `LiI + LPSCl + AB` 대조셀도 필요하다** — Wan 2021 과
+  Zhang 2026 이 **둘 다 빠뜨린** 실험이고, 할로겐화물 첨가제를 검토할 때 요오드 몫을 가른다.
+- **H5 — 부분 근거 (Kim 2025).** 밀링이 LPSCl 의 Young's modulus 를 21.98 → 4.63 GPa 로 떨어뜨리고
+  복합양극은 M200 13.64 / M600 8.98 / M&M37 **14.03 GPa + `[인쇄]` "broader distribution"** —
+  dual-phase 설계의 가장 직접적인 물리 증거다. 단 사이클 중 부피변화·균열·스택압은 없다.
+- **H3 — 간접 (Kim 2025).** LPSCl D50 2.0 → 0.7 µm 로 작아져도 800 rpm 은 성능이 꺾인다 →
+  "작을수록 좋다" 가 아니다 (Cronk 의 micron > sub-micron 과 같은 방향). 단 이건 활물질이 아니라
+  **SE** 의 입도다.
+
 ## Evidence Against
 
 - **[2026-09-30] H2 에 대한 부분 반증 (Zhang 2026).** 탄소가 **MWCNT 10 wt% 뿐**인데 971
@@ -207,3 +269,11 @@ Lee 2026 digest 가 이 충돌을 날카롭게 정리한다 — **병목은 "활
   → H5 셀 높이·구속 방식. 앞의 둘은 셀을 거의 안 쓴다.
   아직 없는 것: LPSCl **산화 개시 전위의 실측 근거**(Wang 2023 이 Li–In = 0.62 V vs Li/Li⁺ 의
   출처는 줬지만 LSV 곡선은 SI 에 있고 미확보다). 이게 H1 판정의 마지막 조각이다.
+- [2026-10-03] active — digest 14편. **H2b 의 "거의 배제" 를 철회했다** — Kim 2025 가 같은 조성·
+  같은 부피분율에서 혼합 이력만으로 σ_Li⁺ 를 6배 바꿨다. 질문을 "SE 가 모자란가" 에서
+  **"밀링을 겪은 SE 가 아직 superionic 인가"** 로 고쳐 썼고, **우리 one-step 셀의 LPSCl 은 전량이
+  밀링을 겪었다**는 점이 이 가설을 되살린다.
+  H1 에 고체계 Li2S 직접 대조가 들어왔다(Wan 2021 — 첨가제 없으면 plateau 자체가 없다).
+  이론 초과 용량이 **10편 중 6편**이 됐다 → 대조셀 **두 개**(`LPSCl+AB`, `LiI+LPSCl+AB`)가 필요하다.
+  실험 순서는 그대로: 0번 대조셀 → H2a·H2b DC 분극 → H1 컷오프 스윕 → H5 셀 높이·구속 방식.
+  **다만 DC 분극을 돌릴 때 AB 함량만 바꾸지 말고 "밀링 이력" 도 변수로 넣어야 한다**(Kim 2025).

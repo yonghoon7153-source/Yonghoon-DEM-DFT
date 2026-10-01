@@ -2,10 +2,10 @@
 title: 고체 복합양극의 병목은 벌크 전도도가 아니라 계면의 질이다
 description: "ASSB 논문 네 편이 서로 반대 방향으로 전도도를 움직이면서 비슷한 이용률 개선을 냈다 — 수렴하는 변수는 활물질–황화물 계면의 질이고, 그것이 우리 다음 실험의 표적을 바꾼다"
 created: 2026-10-01
-updated: 2026-10-01
+updated: 2026-10-02
 type: synthesis
 tags: [assb, composite-cathode, li2s, sulfide-electrolyte, carbon, activation]
-sources: [raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md]
+sources: [raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -70,7 +70,22 @@ Cronk 2026 은 첨가제도 호스트도 쓰지 않았다. 같은 조성(**활�
 없이"** 를 달성한다. **무게 대가가 0 이다** — Yu 의 호스트(활물질만큼 무겁다)나 Huang 의
 첨가제(활물질을 밀어낸다)와 달리.
 
-### ④ 그래서 우리 실험 순서가 바뀐다
+### ④ 세 번째 논문도 같은 자리를 가리킨다 — 그런데 근거가 다시 DFT 뿐이다 (2026-10-02 추가)
+
+Wang 2026 (molecular coordination, S8 / LGPS)이 이용률을 `[인쇄]` 48.5 → 97.04 % 로 올렸다.
+그런데 **σ_e⁻ 도 σ_Li⁺ 도 측정하지 않았다** — 그러므로 ①의 σ 논쟁에는 참여하지 못한다
+(즉 "σ_e 가 클수록 좋다" 기각을 흔들지도, 보강하지도 않는다).
+
+이 논문이 보탠 것은 두 가지다:
+- **σ_Li⁺ 축에 약한 반증**: 믿을 만한 측정(Fig. 4j EIS/DRT)이 **"차이 없음"**(10 전압점 중 9점
+  겹침, 최대 2.0배)인데도 이용률이 2배가 됐다. → 이온 수송 **속도**조차 지배 변수가 아닐 수 있다.
+- **계면 친화 축에 세 번째 사례**: DFT Li2S 결합에너지 −4.21 vs −2.39 eV.
+
+그래서 세 논문(Yu · Huang · Wang 2026)이 **공통으로 같은 방향으로 움직인 양은 다시 활물질–황화물
+계면 친화뿐**이다. 이것이 ①을 강화한다 — **그러나 셋 다 그 근거가 `DFT 흡착·결합에너지` 뿐이다.**
+실측으로 계면의 질을 잰 논문은 **하나도 없다.** 아래 반론 8 과 Gap 을 보라.
+
+### ⑤ 그래서 우리 실험 순서가 바뀐다
 
 세 변수(전자 벌크 · 이온 벌크 · 계면)에서 앞의 둘이 우리 병목이 아닐 공산이 크다면,
 [[reference-cell-500-600-mahg]] 의 다음 실험은 **계면을 만드는 공정 변수**(혼합 에너지·시간·순서)와
@@ -100,7 +115,18 @@ Cronk 2026 은 첨가제도 호스트도 쓰지 않았다. 같은 조성(**활�
    보고한다** (Cronk 첫 CE 129 % · Lee 101–107 % · Yu 60 °C 124 % · Zhang 114 %) — 황화물 SE
    자신의 리독스가 섞인 것이다. 네 논문의 "개선폭" 중 얼마가 활물질이고 얼마가 SE 인지 분리되지
    않았다 → [[capacity-normalization-li2s-vs-sulfur]].
-7. **전부 단일 셀이고 오차 막대가 없다.** 네 편 모두 그렇다.
+7. **전부 단일 셀이고 오차 막대가 없다.** 다섯 편 모두 그렇다.
+8. **★ 가장 무거운 반론 (2026-10-02) — 이 논지의 핵심 변수에 실측 방법이 없다.**
+   "계면의 질" 을 지지하는 세 논문(Yu 2024 · Huang 2026 · Wang 2026)이 그 변수를 재는 방식이
+   **전부 DFT 흡착·결합에너지**다 (−3.2 vs −2.1 / NEB 0.20 vs 0.25 eV / −4.21 vs −2.39 eV).
+   Cronk 2026 조차 계면상을 Raman 이동·XANES pre-edge·TGA 미계상 황으로 **간접 추정**하고
+   **두께·조성·전도도를 직접 재지 않았다**. 즉 이 논지는 지금 **계산값들의 수렴** 위에 서 있고,
+   "벌크 전도도는 측정됐지만 무관했고, 계면은 측정되지 않았는데 중요하다" 는 구조다 —
+   **측정 가능한 쪽을 배제하고 측정 불가능한 쪽을 남긴 것일 수 있다.** 조작적 정의가 생기기
+   전까지 이 논지는 처방이 아니라 **탐색 방향**으로만 쓴다.
+9. **Wang 2026 의 숫자 자체를 신뢰하기 어렵다.** 같은 `with DABDT` 이름 아래 **최소 3–4개의
+   서로 다른 셀**이 섞여 있고(1643 / ≈1300 / ≈1350 / 1270 mAh g⁻¹(S)), 본문에 Experimental 절이
+   통째로 없다. 이 논문을 ③의 근거로 올릴 때는 **방향만** 쓰고 수치는 인용하지 않는다.
 
 ## Gap
 
@@ -109,9 +135,14 @@ Cronk 2026 은 첨가제도 호스트도 쓰지 않았다. 같은 조성(**활�
 - **우리 셀의 σ_e⁻·σ_Li⁺ 가 측정되지 않았다.** DC 분극(Huang digest §10.4 · Yu 2024;
   원 출처 Kwok 2023 *EES* 16, 610 — Yu 논문의 공저자다)으로 **셀 조립 없이** 잴 수 있다.
   AB 10/20/30 wt% 로 반복하면 반론 3 이 바로 갈린다. **이것이 이 논지의 첫 시험이다.**
-- **"계면의 질" 이 아직 조작적으로 정의되지 않았다.** Cronk 는 Raman 이동·XANES pre-edge·TGA
-  미계상 황으로 간접 추정하고 **두께·조성·전도도를 직접 재지 않았다**. 측정 가능한 지표가
+- **★ "계면의 질" 이 아직 조작적으로 정의되지 않았다 — 이것이 최우선 Gap 이다** (반론 8).
+  지지 논문 세 편이 전부 **DFT 흡착·결합에너지**로만 그 변수를 다루고, Cronk 조차 간접 추정이다.
+  필요한 것: 계면상의 **두께·조성·이온/전자 전도도를 직접 재는 방법**. 측정 가능한 지표가
   없으면 이 논지는 처방이 되지 못한다.
+- **측정 방법론 하나는 반대로 확정됐다 (2026-10-02)**: 고체셀의 D_Li⁺ 를 **CV(Randles–Ševčík)로
+  재면 안 된다.** Wang 2026 이 같은 셀에서 CV 로 D ≈ 2 cm² s⁻¹(물리적으로 불가능한 값)를,
+  EIS/DRT 로 D ≈ 5×10⁻¹⁰ cm² s⁻¹ 를 얻어 **10¹⁰배**가 어긋났다. 우리가 D_Li⁺ 를 잴 때는
+  **GITT 또는 EIS–DRT** 를 쓴다.
 - LPSCl **산화 개시 전위의 실측 근거**가 이 위키에 없다 (Wang 2023 이 Li–In = 0.62 V vs Li/Li⁺ 의
   출처는 줬지만 LSV 곡선은 SI 에 있고 미확보). 계면상이 활성화 전위를 낮춘다는 주장을 검증하려면
   그 기준선이 필요하다.

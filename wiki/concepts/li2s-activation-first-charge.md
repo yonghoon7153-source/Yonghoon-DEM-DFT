@@ -2,15 +2,15 @@
 title: Li2S 첫 충전 활성화
 description: "절연체 Li2S 의 첫 탈리튬화 장벽 — 첫 충전에서 활성화한 만큼만 이후 용량이 된다(Kim 2023 Fig. S1), 3.2 V 단조 plateau 와 직접 전환, 활성화를 정하는 요인"
 created: 2026-09-11
-updated: 2026-09-11
+updated: 2026-10-02
 type: concept
-tags: [activation, li2s, carbon, liquid-electrolyte]
-sources: [raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md]
+tags: [activation, li2s, carbon, liquid-electrolyte, assb, sulfide-electrolyte]
+sources: [raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
 claimType: empirical
-evidenceScope: single-source
+evidenceScope: multi-source-primary
 ---
 
 # Li2S 첫 충전 활성화
@@ -35,6 +35,57 @@ Li2S 는 전자·이온 모두 절연에 가깝고(`[인쇄]` ~10⁻¹³ S cm⁻
 3. **활성화를 늘린 요인** (저자 귀속): 2D 그래핀의 큰 접촉면적, 소량 CNT 의 네트워크(전기적
    고립부 제거), 1 GPa compact geometry, 고압 성형으로 생긴 준안정 orthorhombic Li2S.
    → [[carbon-dimensionality-electron-network]].
+
+## ★ 활성화 전위 사다리 (2026-10-02 — 고체계 digest 4편)
+
+이 개념의 중심 질문이 2026-09-30 에 바뀌었다. **"얼마나 활성화되나" 가 아니라 "활성화를 끝내는
+전위가 SE 가 견디는 전위보다 높은가" 다** ([[reference-cell-500-600-mahg]] H1). 그 전위를 낮추려는
+네 가지 시도를 digest 에서 꺼내 나란히 놓으면 사다리가 된다:
+
+| 논문 | 활성화 전위 | 수단 | **무게 대가** | 사후 기여 분해 |
+|---|---|---|---|---|
+| **Cronk 2026** | **2.4 V** `[인쇄]` | 밀링이 만든 thiophosphate 계면상, `[인쇄]` **"촉매 없이"** | **0** | ✓ dQ/dV 4영역 + XANES LCF |
+| **Wan 2021** | ≈**2.80 V** `[도표]` | LiI–LiBr 할로겐화물 | **39.9 wt%** `[재현]` | ✗ 사후 분석 0건 |
+| **Zhang 2026** | 2.87 V | PI3 → in-situ LiI | **43.8 wt%** `[재현]` | ✗ |
+| **Lee 2026** | — (컷오프 **3.62 V** vs Li/Li⁺) | 없음 — 전위를 올려서 끝낸다 | 0 | ✗ (대가는 이론 초과 용량 101–107 %) |
+
+`[해석]` 두 가지가 읽힌다.
+1. **요오드 경로는 2.8 V 아래로 내려가지 못한다.** 두 논문이 독립적으로 2.80·2.87 V 에 머문다.
+2. **무촉매파(Cronk)가 더 낮은 전위를 무게 대가 0으로 달성한다.** 그리고 **기여 분해를 한 것도
+   Cronk 뿐이다.** 우리 30:50:20 에는 39.9 wt% 짜리 첨가제가 들어갈 자리가 없으므로,
+   이식 가능성에서도 Cronk 쪽이 앞선다.
+
+### 첨가제가 없으면 plateau 자체가 없다 (Wan 2021 Fig. 2a)
+
+같은 셀에서 Li2S 양극을 직접 대조한 `[도표]` 관측이 이 개념의 가장 선명한 그림이다:
+
+| | Li2S@LiI–LiBr | **첨가제 없는 Li2S** |
+|---|---|---|
+| 첫 충전 | ≈1165 mAh g⁻¹(Li2S) = 이론의 ≈100 % | ≈900 = **77 %** |
+| 첫 충전 **plateau** | **≈2.80 V 평탄** | **plateau 가 없다** — 2.5 → 3.5 V 단조 상승 |
+| 첫 방전 | ≈835 (Li2S) = `[재현]` ≈1196 (S) | ≈510 = `[재현]` ≈731 |
+
+→ **plateau 의 유무 자체가 활성화 경로가 열렸는지의 지표다.** 우리 첫 충전 곡선에서 가장 먼저
+볼 것이 이것이다 (평탄한가, 컷오프까지 끌려가는가).
+
+### ⚠ "촉매" 인지 "매개체" 인지 이 위키는 아직 모른다
+
+Wan 2021 digest 의 가장 날카로운 관측: **2.80 V plateau 는 Li2S 산화치고 너무 평탄하고 너무
+길다**(이론용량 거의 전부). 그건 전형적인 **매개체(mediator) 반응의 모양**이고 후보는 I⁻/I₃⁻ 다.
+**그 논문은 "catalyzer" 를 10회 쓰면서 "mediator" 를 한 번도 쓰지 않는다.**
+
+그리고 **Wan 2021 도 Zhang 2026 도 할로겐화물 자신의 용량 기여를 분리하지 않았다.**
+`[재현]` LiI 1 e⁻ 몫은 Wan 쪽 **109.4**, Zhang 쪽 **152 mAh g⁻¹(Li2S)** — 같은 급이다. 빼면
+Wan 의 "이용률 100 %" 가 **≈90.5 %** 로 내려간다.
+→ 그래서 이 위키는 이것을 **"촉매" 라 부르지 않고 "할로겐화물 첨가제"** 라고 적는다.
+판정하려면 **`LiI + LPSCl + AB`(활물질 없음) 대조셀**이 필요하고, **두 논문 다 그것을 빠뜨렸다.**
+
+### 우리 노선에 대한 반례 (같은 digest)
+
+`[인쇄]` **Li2S@LiI–LiBr 30사이클 유지 79.7 % < MoS2@LiI–LiBr 94.7 %** — 첨가제 비율이 더 높은
+Li2S 쪽이 **더 빨리 죽는다**. 할로겐화물이 첫 충전은 열어주되 수명은 보장하지 않는다는 뜻이다.
+(단 Wan 2021 의 주 활물질은 MoS2 이고 그 Li2S 는 MoS2 분해로 **in-situ 나노 생성**된 것이라
+우리 상용 분말과 태생이 다르다 — 이식 한계.)
 
 ## 활성화를 정하는 변수 (이 위키의 작업 목록)
 
