@@ -1,0 +1,111 @@
+{
+ "slug": "kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-01",
+ "sources": [
+  "55de9e68-high_capacity_S_cathode_enabled_by_dual-phase_electrolyte.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) Illustration demonstrating the one-step mixing and proposed two-step mixing method for S cathode composite preparation for ASSLSBs. In the one-step mixing procedure, and during the ﬁrst step of the two-step protocol (i), the sulfur-impregnated CNTs are mixed with LPSCl via ball-milling. During the second step of the two-step procedure (ii), the obtained S/CNT/LPSCl composite is mixed with additional LPSCl through mild hand mixing. SEM images of the composite cathode cross-sections were prepared using b,d) one-step mixing and c,e) two-step mixing, followed by focused ion beam (FIB) polishing. The inset in panel e) illustrates the composite cathode prepared via the two-step mixing method and shows its Li-ion conduction pathways.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.3,
+    552.9,
+    439.7
+   ],
+   "w": 2118,
+   "h": 1540,
+   "dpi": 300,
+   "src": "55de9e68-high_capacity_S_cathode_enabled_by_dual-phase_electrolyte.pdf",
+   "blank": 0.497
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Changes in the composite cathodes upon variation in the milling energy. SEM images, corresponding Auger maps (S, P, and overlay), and TOF-SIMS (LiS–) 3D mapping results for the composite cathodes prepared using a,c) M200 and b,d) M600. Galvanostatic charge/discharge proﬁles of the ASSLSBs during the e) ﬁrst and f) second cycles, operated at 0.1 C. g) dQ/dV plots of the ASSLSBs obtained from the second cycle at 0.1 C. h) Cycling of the ASSLSBs with an S loading of 3 mg cm−2. The batteries were operated at 0.5 C in the voltage range of 0.8–2.5 V.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.9,
+    550.1,
+    405.7
+   ],
+   "w": 2118,
+   "h": 1396,
+   "dpi": 300,
+   "src": "55de9e68-high_capacity_S_cathode_enabled_by_dual-phase_electrolyte.pdf",
+   "blank": 0.756
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a,b) Schematic illustration showing the formation of an inorganic conducting layer between sulfur and LPSCl at a milling intensity of 600 rpm. No such layer was observed at 200 rpm. XPS S 2p spectra of the as-prepared c) M200 and d) M600 composite cathodes. For peak ﬁtting, a doublet separation of 1.21 eV and a peak ratio of 1:2 were applied. e) TGA proﬁles of the as-prepared M200 and M600 cathodes, along with the corresponding cathodes after the second discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.7,
+    552.9,
+    355.7
+   ],
+   "w": 2118,
+   "h": 1189,
+   "dpi": 300,
+   "src": "55de9e68-high_capacity_S_cathode_enabled_by_dual-phase_electrolyte.pdf",
+   "blank": 0.608
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Inﬂuence of the M&M method on the cathode properties. a) Ionic and electronic conductivities of the M600, M&M55, M&M37, and M&M19 cathodes. Selected CV proﬁles of the ASSLSBs were prepared using the b) M600 and c) M&M37 cathodes with an S loading of 6 mg cm−2. The CV tests were conducted over three cycles in the voltage range of 0.8–2.5 V with scan rates ranging from 0.2 to 0.6 mV s−1, and with 0.1 mV s−1 increments. The proﬁle recorded during the third cycle is presented for each scan rate. d) Areal capacities of the ASSLSBs (second cycle at 0.1 C) as a function of the S loading. e) Cross-sectional SEM images of the M600 and M&M37 cathodes following retrieval from their corresponding ASSLSBs and FIB polishing (second cycle at 0.1 C).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.4,
+    550.1,
+    320.7
+   ],
+   "w": 2118,
+   "h": 1044,
+   "dpi": 300,
+   "src": "55de9e68-high_capacity_S_cathode_enabled_by_dual-phase_electrolyte.pdf",
+   "blank": 0.778
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Electrochemical performances of the ASSBs prepared using the M&M method. Galvanostatic cycling curves and columbic eﬃciencies of the ASSLSBs prepared using the M600 and M&M32 cathodes with S loadings of (a) 6 mg cm−2 and (b) 12 mg cm−2, with cycling at a current density of 1.0 mA cm−2. (c) Galvanostatic cycling curves for the ASeS2Bs with SeS2 loadings of 6–20 mg cm−2 and cycled at 1.0 mA cm−2. (d) Galvanostatic cycling curves for the ASeS2Bs with a SeS2 loading of 6 mg cm−2 and a SeS2 content of 40 wt.% (within the composite cathode), under cycling at 1.0 mA cm−2. (e) Comparison of the areal capacities (after cycling) with previously reported ASSBs based on S, Li2S, or SeS2. The results are plotted as a function of the cycle number. (f) Illustration of the dry-processed electrode prepared using the M&M method. (g) Digital photograph of the dry-processed electrode prepared usin",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.6,
+    550.1,
+    436.7
+   ],
+   "w": 2118,
+   "h": 1526,
+   "dpi": 300,
+   "src": "55de9e68-high_capacity_S_cathode_enabled_by_dual-phase_electrolyte.pdf",
+   "blank": 0.783
+  }
+ ]
+}

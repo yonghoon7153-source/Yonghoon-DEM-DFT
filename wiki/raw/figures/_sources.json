@@ -22,6 +22,13 @@
    "cey2308sup0002supporting_information_1.docx"
   ]
  },
+ "kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb": {
+  "figures": 5,
+  "generated": "2026-10-01",
+  "pdfs": [
+   "55de9e68-high_capacity_S_cathode_enabled_by_dual-phase_electrolyte.pdf"
+  ]
+ },
  "lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb": {
   "figures": 6,
   "generated": "2026-09-30",
@@ -36,11 +43,25 @@
    "08d276a4-deciphering_volume_changes_in_ASSLSB_components_during_cycling.pdf"
   ]
  },
+ "wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions": {
+  "figures": 5,
+  "generated": "2026-10-01",
+  "pdfs": [
+   "9835470f-LiI-LiBr_catalyst_for_ASSLSBs.pdf"
+  ]
+ },
  "wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte": {
-  "figures": 3,
+  "figures": 4,
   "generated": "2026-09-30",
   "pdfs": [
    "9ada0d4c-High_capacity_ASSLSBs_with_low_density_SE.pdf"
+  ]
+ },
+ "wang2026_molecular-coordination-triple-synergy-cathode-assb": {
+  "figures": 6,
+  "generated": "2026-10-01",
+  "pdfs": [
+   "024d57f9-Molecular_coordination_engineering_enables_triple-synergy_cathode_design_for_all-solid-state_Li-S_batteries.pdf"
   ]
  },
  "yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s": {

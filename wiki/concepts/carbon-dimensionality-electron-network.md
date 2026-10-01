@@ -2,7 +2,7 @@
 title: 도전재 차원 분리 — 2D 접촉 vs 1D 네트워크
 description: "절연체 Li2S 양극에서 탄소의 두 역할(접촉면적 vs 장거리 전자 경로)을 차원이 다른 탄소로 나눠 맡기는 설계 — Kim 2023 의 Gr/CNT 근거와 우리 AB 단일 탄소에의 함의"
 created: 2026-09-11
-updated: 2026-09-11
+updated: 2026-10-01
 type: concept
 tags: [carbon, composite-cathode, li2s, activation, liquid-electrolyte]
 sources: [raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md]
@@ -47,6 +47,15 @@ evidenceScope: single-source
 - [[reference-cell-500-600-mahg]] H2(퍼콜레이션 제한) 의 구체안.
 - [[composite-cathode-mixing-routes]] ② two-step 은 탄소 골격을 먼저 만드는 경로라 이 개념과 결합된다.
 - [[li2s-activation-first-charge]] — 접촉 탄소가 활성화를, 네트워크 탄소가 수명을 맡는다는 분업.
+
+## 2026-10-01 — 고체계에서는 이 개념의 전제가 흔들린다
+
+이 개념은 **액체계 논문 하나**(Kim 2023)에서 왔고 "전자 경로를 잘 잇는 것이 좋다" 를 전제한다.
+고체계 ASSB digest 네 편이 그 전제를 직접 건드렸다 — Yu 2024 는 복합체 전자 전도도를 **200배
+낮추고도** 이용률을 올렸고, Huang 2026 은 **14배 올려서** 비슷한 개선을 얻었다.
+→ 논지와 반론은 [[interface-quality-not-bulk-conductivity]] 에 있다.
+이 개념의 "접촉 vs 네트워크" 분업 자체는 유효하지만, **고체계에서 그 분업의 상대가 탄소가
+아니라 SE·첨가제·계면상일 수 있다**는 단서를 달고 읽어야 한다.
 
 ## 한계·불확실성
 

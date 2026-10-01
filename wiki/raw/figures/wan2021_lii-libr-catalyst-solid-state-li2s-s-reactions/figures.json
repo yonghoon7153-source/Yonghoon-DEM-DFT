@@ -1,0 +1,111 @@
+{
+ "slug": "wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-01",
+ "sources": [
+  "9835470f-LiI-LiBr_catalyst_for_ASSLSBs.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) XRD patterns of MoS2, MoS2@LiI-LiBr, and MoS2@LiI-LiBr@C. (b) Ex-situ Raman spectrum for MoS2 in the ﬁrst discharge/charge process in the solid-state cell. CV curves of (c) MoS2 and (d) MoS2@LiI-LiBr.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    291.6
+   ],
+   "w": 2150,
+   "h": 953,
+   "dpi": 300,
+   "src": "9835470f-LiI-LiBr_catalyst_for_ASSLSBs.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Galvanostatic discharge/charge proﬁles for (a) Li2S@LiI-LiBr and (b) Li2S. (c) Raman spectra of Li2S, Li2S@LiI, and Li2S@LiI-LiBr. (d) Impedance spectra for Li2S@LiI and Li2S@LiI-LiBr. Li7P3S11 solid electrolyte coated MoS2 was 75%,17 and the initial reversible capacity of the MoS2 nanosheet is 439 mAh g−1 due to the incomplete solid-state reaction.16 Narrowing the cutoﬀvoltage to 1.0−3.0 V can suppress the generation of the Li2S/S redox couple with low reaction kinetics, however, the reversible reaction between MoS2 and LixMoS2 signiﬁcantly reduced the capacity. To achieve both high capacity and long cycle life, the reversibility and reaction kinetics of Li||S chemistry need to be improved. the MoS2@LiI-LiBr composite by ball-milling the mixture to decrease the particle size of MoS2 and ensure a suﬃcient electronic conduction pathway in the cathode. Under charge/ discharge pro",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    320.2,
+    570.5,
+    541.0
+   ],
+   "w": 2151,
+   "h": 921,
+   "dpi": 300,
+   "src": "9835470f-LiI-LiBr_catalyst_for_ASSLSBs.pdf",
+   "blank": 0.948
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. DFT calculations of the Li2S-I-Br system. (a) Defect formation energies in Li2S. (b) Crystal orbital Hamilton population (COHP) of the Li−S bond in Li2S bulk and around complex defects. (c) Defect formation energies in LiI. (d) Defect formation energies in Li4I3Br. cathode in the solid-state cell using ex-situ Raman tests. As shown in Figure 1b, for the pristine MoS2 electrode, the Raman shifts at 376 and 401 cm−1 are assigned to vibrational modes of 2H-MoS2. adding the LiI-LiBr compound into Li2S induced a red-shift for the Li−S bond due to the reduced interaction between Li+ and S2−,21 which can facilitate the delithiation of Li2S. Moreover, the ionic conductivity of Li2S was also improved by incorporation of the LiI-LiBr compound (Figure 2d). It is reported that Li2S has a low ionic conductivity of 10−13 S cm−1;22 after introducing LiI, the ionic conductivity was improved to",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    299.8
+   ],
+   "w": 2151,
+   "h": 987,
+   "dpi": 300,
+   "src": "9835470f-LiI-LiBr_catalyst_for_ASSLSBs.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Galvanostatic discharge/charge proﬁles for (a) MoS2, (b) MoS2@LiI-LiBr, and (c) MoS2@LiI-LiBr@C. (d) Cyclic performances of MoS2, MoS2@LiI-LiBr, and MoS2@LiI-LiBr@C at a current density of 200 mA g−1. SEM images of (e) MoS2, (f) MoS2@LiI-LiBr, and (g) MoS2@ LiI-LiBr@C. electrochemical performance of the all-solid-state lithium battery.23 S bond, which will enhance the electrochemical performances of MoS2 since Li2S will be formed during charge/discharge cycles at a wide voltage window of 0.5−3.0 V. The electrochemical performances of MoS2, MoS2@LiI-LiBr, and MoS2@LiI-LiBr@C cathodes were evaluated in all-solid-state lithium batteries. All the batteries are cycled at a cutoﬀvoltage of 0.5−3 V (vs. Li/Li+) in the ﬁrst cycle and then tested at a cutoﬀvoltage of 1.0−2.8 V (vs. Li/Li+) in the following cycles at a current density of 200 mA g−1. As shown in Figure 4a−c, the overpoten",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    364.8
+   ],
+   "w": 2151,
+   "h": 1258,
+   "dpi": 300,
+   "src": "9835470f-LiI-LiBr_catalyst_for_ASSLSBs.pdf",
+   "blank": 0.8
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. CV curves of (a) MoS2@LiI-LiBr@C and (b) MoS2 at diﬀerent scan rates from 0.2 mV s−1 to 1.0 mV s−1. Plots of log(v) vs log(i) for (c) MoS2@LiI-LiBr@C and (d) MoS2. (e) Fitting b values for MoS2@LiI-LiBr@C and MoS2. (f) Galvanostatic discharge/charge proﬁles and (g) cyclic performance of the MoS2@LiI-LiBr@C electrode at diﬀerent cathode loadings (the speciﬁc capacity was based on the mass of MoS2). The electrochemical performance of the MoS2@LiI-LiBr@C electrode at diﬀerent cathode loadings was also tested. As shown in Figure 5f, at low current density of 100 mA g−1, the MoS2@LiI-LiBr@C electrode shows a reversible capacity of 819.6 mAh g−1 (based on the mass of MoS2) after 20 cycles at an areal capacity of 0.87 mAh cm−2 (active material: 0.922 mg cm−2). When increasing the current density to 200 mA g−1, a high reversible capacity of 711.3 mAh g−1 was still maintained after 20 c",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    497.8
+   ],
+   "w": 2151,
+   "h": 1812,
+   "dpi": 300,
+   "src": "9835470f-LiI-LiBr_catalyst_for_ASSLSBs.pdf",
+   "blank": 0.938
+  }
+ ]
+}
