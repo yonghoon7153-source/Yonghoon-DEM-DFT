@@ -1,0 +1,111 @@
+{
+ "slug": "feng2026_anode-free-asslsb-fe-stabilized-polysulfides",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-01",
+ "sources": [
+  "d46c4936-_______AF-ASSLSBs_enabled_by_Fe-stabilized_polysulfides.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) X-ray diffraction (Cu Kα, λ = 1.5418 Å) of FeCl3, Li2S, and FLS, respectively; (b) PDF analysis and peak fitting of Li2S and FLS; (c) S K-edge XAS analysis of Li2S and FLS; (d) S2p high-resolution XPS of Li2S and FLS; (e) Cryo-TEM HAADF (high-angle annular dark-field) and EDX mapping images of FLS. is widely used in Fe−S cluster synthesis.25,29 We thus posit the reaction to be S and Li2S, which are two materials of poor conductivity and reactivity. Recently, we have reported a S9.3I cathode featuring rapid kinetics due to the formation of lithium polysulfides during the solid reaction processes.28 We then ask the question: can a similar strategy be used to facilitate the activation of Li2S by stabilizing polysulfides in the solid state? + + + FeCl Li S(excess) FeS LiCl Li S x 3 2 2 Here, Fe3+ is reduced to Fe2+. A corresponding amount of S2− is oxidized, which forms FeSx. T",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    420.1
+   ],
+   "w": 2151,
+   "h": 1525,
+   "dpi": 300,
+   "src": "d46c4936-_______AF-ASSLSBs_enabled_by_Fe-stabilized_polysulfides.pdf",
+   "blank": 0.779
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Electrochemical kinetics comparison between Li2S and FLS; (a) electrical conductivity and ionic conductivity comparison; (b) charge− discharge profiles of Li2S and FLS cathode at the first cycle; (c) EIS-DRT analysis of Li2S and FLS cathode before and after the first cycle; (d) GITT analysis of Li2S and FLS cathode during the first cycle. diffraction (XRD) patterns (Figure 1a) confirm the occurrence of a chemical reaction between Li2S and FeCl3 with the formation of LiCl (labeled by dashed lines). This is further supported by energy-dispersive X-ray spectroscopy (EDX) mapping in STEM, where Cl signals are detected in localized regions with no detectable S or Fe in Figure 1e, corresponding to LiCl nanoparticles on the order of ∼150−250 nm. No distinct peaks from FeCl3, FeS, or FeS2, are observed, suggesting that the reaction between FeCl3 and Li2S are completed with Fe-containin",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    370.3
+   ],
+   "w": 2151,
+   "h": 1317,
+   "dpi": 300,
+   "src": "d46c4936-_______AF-ASSLSBs_enabled_by_Fe-stabilized_polysulfides.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Electrochemical performance of Li2S and FLS cathode; (a) rate capability of Li2S and FLS cathode; (b) charge−discharge profiles of FLS cathode at 0.2 C cycling and different cycles; (c) long-term cycling performance of FLS and pristine Li2S cathode at 0.2 C and 60 °C. introduction of Fe led to the emergence of Fe−S interactions and stabilized polysulfide species,38,39 which we will show to be essential for enhancing the electrochemical reactivity of the Li2S cathode. Enhanced Li2S Electrochemical Reactivity The insulating nature of Li2S induces significant activation challenges and impedes its practical application. By incorporat- ing FeCl3 and facilitating the formation of polysulfides, a substantial enhancement in the electrochemical activity of Li2S was achieved (Figures 2a and S6, Table S1). The FLS composite exhibits an average ionic conductivity of 4.27 × 10−6 S/cm, which",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    351.8
+   ],
+   "w": 2151,
+   "h": 1240,
+   "dpi": 300,
+   "src": "d46c4936-_______AF-ASSLSBs_enabled_by_Fe-stabilized_polysulfides.pdf",
+   "blank": 0.878
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Working mechanism of FLS cathode. (a) Charge−discharge profile of FLS cathode; (b) S K-edge XAS analysis of FLS cathode during cycling; (c) S 2p XPS analysis of FLS cathode during cycling. FLS cathode consistently maintains lower interfacial charge transfer resistances for all states of charge. To further investigate the electrochemical kinetic behaviors with/without FeCl3 activation, the galvanostatic intermittent titration technique (GITT) was conducted under the same conditions and cell configurations during the initial cycle (Figure 2d). The FLS cathode exhibited significantly lower internal resistance, with average values of ∼547 Ω·cm2 during charging and ∼870 Ω·cm2 during discharging, compared to ∼952 Ω·cm2 and ∼1234 Ω·cm2 for the pristine Li2S cathode, respectively. These findings have demonstrated that FeCl3 promotes the formation of polysulfide species in Li2S, which i",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    318.9
+   ],
+   "w": 2151,
+   "h": 1103,
+   "dpi": 300,
+   "src": "d46c4936-_______AF-ASSLSBs_enabled_by_Fe-stabilized_polysulfides.pdf",
+   "blank": 0.8
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Fabrication and test of a Li-metal-free (anode-less) battery with FLS cathode. (a) Battery configuration of Li-free full cell; (b) cross-sectional SEM image of the interface between FLS cathode and LPS electrolyte after cycling; (c) cross-sectional SEM image of the interface between FLS cathode and LPSC electrolyte before cycling; (d) long-term cycling performance of FLS/LPS/LPSC/KB-MCMB at 0.2 C, 60 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.4,
+    231.0,
+    561.5,
+    377.1
+   ],
+   "w": 1051,
+   "h": 610,
+   "dpi": 300,
+   "src": "d46c4936-_______AF-ASSLSBs_enabled_by_Fe-stabilized_polysulfides.pdf",
+   "blank": 0.623
+  }
+ ]
+}

@@ -5,7 +5,7 @@ created: 2026-09-11
 updated: 2026-10-06
 type: concept
 tags: [units, li2s, composite-cathode]
-sources: [raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md]
+sources: [raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/wangx2026_dual-conductivity-optimization-high-rate-ultralong-life-asslsb.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -68,6 +68,31 @@ Lee 101–107 → **202–214 %** · Yu 124 → **248 %** · Zhang 114 → **228
 Kim 2025 Φc 137.6 → **275 %** · Park 2026 105.6 → **211 %**.
 → **SE 리독스 귀속이 유지되고 오히려 강화된다.** 외부 눈금은 `[재현]` Wang Daiwei 2025 의
 4–6 % 와 Gao 2024 의 28–52 mAh g⁻¹(composite) 이다.
+
+### ★★ 2026-10-06 — 제3의 분모가 나타났다: 환산 인자를 쓰면 안 되는 경우
+
+이 페이지의 환산 ×0.69783 은 **활물질이 Li2S 라는 전제** 위에 있다. `wangx2026_…` 는 활물질이
+**Li2SexS1−x**(Se 를 황 자리에 치환한 고용체)이고, 원문의 모든 `mAh g⁻¹` 분모가 **그 고용체 전체
+질량**이다. **여기에 ×0.69783 을 적용하면 틀린다** — Se 질량이 분모에 들어 있는데 환산 인자는
+그것을 모른다.
+
+조성별 이론 천장 `[재현]` (2 F / M, M(Li)=6.94 · M(S)=32.06 · M(Se)=78.97):
+
+| 활물질 | M (g mol⁻¹) | **2 e⁻** | 1 e⁻ | S 질량분율 | Se 질량분율 |
+|---|---|---|---|---|---|
+| **Li2S** | 45.942 | **1166.7** | 583.4 | 0.6979 | 0 |
+| Li2Se0.1S0.9 | 50.633 | 1058.7 | 529.3 | 0.5699 | 0.1560 |
+| **Li2Se0.2S0.8** (그 논문 최적) | 55.324 | **968.9** | 484.4 | 0.4636 | **0.2855** |
+| Li2Se0.3S0.7 | 60.015 | 893.2 | 446.6 | 0.3739 | 0.3948 |
+
+★ **그래서 "첨가제의 무게 대가" 가 이 계열에서는 다른 형태로 나타난다.** 요오드·CuI·ZrS2 는
+활물질에 **섞는** 것이라 분모가 그대로이고 자기 용량이 **더해지는** 항으로 보였다. Se 치환은
+**대체**이므로 **이론 천장 자체가 내려간다** — `[재현]` 1166.7 → 968.9 = **−17.0 %**.
+즉 **같은 mAh g⁻¹ 숫자라도 천장이 다르고, 이용률을 계산할 때 분모와 천장을 함께 바꿔야 한다.**
+
+**규율**: digest 의 `compare:` 블록에 `_mAh_gS` / `_mAh_gLi2S` 를 채울 때, **활물질이 Li2S 가
+아니면 환산하지 말고 "환산 불가 — 분모가 ○○ 전체" 라고 적는다.** 그 논문의 수치를 우리
+500–600 mAh g⁻¹(Li2S) 와 **같은 표에 나란히 두면 안 된다.**
 
 ### ★★ 측정 규율 — 황 분광을 찍기 전에 "SE 유래 황" 을 먼저 계산한다
 

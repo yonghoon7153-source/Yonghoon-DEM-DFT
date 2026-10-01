@@ -1,0 +1,111 @@
+{
+ "slug": "hao2025_nanosized-li2s-amorphous-matrix-asslsb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-01",
+ "sources": [
+  "836cda33-1._JACS_Nanosized_Li2S_in_an_amorphous_matrix_for_ASSLSBs.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic representation of the cathode design principles for high-performance ASSLSBs. (a) Illustration of universal solid reaction between Li2S and various metal chlorides. (b) Details of the screening process employed to identify the most suitable conductor. Battery structure and performance are depicted for the (c) Li2S cathode and (d) 92Li2S@8LiFeS2 composite cathode. SSEs: solid-state electrolytes. capacity retention of over 99% after 320 cycles. With an active material content of 48% and a mass loading of 19.1 mg/cm2, the cathode achieves an areal capacity of 13.2 mAh/cm2. Furthermore, the solid-state reaction is simple and cost- effective, making large scale production possible.28 Although inhomogeneous mixing for large scale production remains a common challenge in conventional solid-state synthesis, this work presents a facile and novel approach to designing Li2S cath",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    450.4
+   ],
+   "w": 2151,
+   "h": 1651,
+   "dpi": 300,
+   "src": "836cda33-1._JACS_Nanosized_Li2S_in_an_amorphous_matrix_for_ASSLSBs.pdf",
+   "blank": 0.749
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Computational screening of lithium metal sulfide and metal sulfide-based materials based on the criteria of (a) Fermi energy, (b) band gap, (c) reaction energy (T = 0 K), (d) density of states (DOS), and (e) energy landscape of Li2S2 and Li2S reduction adsorbed on the LiVS2 (blue line) and LiFeS2 (red line) phase. (f) The binding energy between the LiVS2, LiFeS2, and sulfur-based molecules (S8, Li2S2, Li2S). (g) The illustration of catalyst behavior of LiFeS2. conductivity compared to that of pristine Li2S, confirming the positive contribution of the MClx additives. These results strongly support the effectiveness of our material design strategy, especially for FeCl3, which showed the most pronounced enhancement in electronic conductivity. Both the computational and experimental results indicate that LiVS2, ZnS2, CuS, and LiFeS2 exhibit significantly higher Fermi energies compa",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    498.4
+   ],
+   "w": 2151,
+   "h": 1851,
+   "dpi": 300,
+   "src": "836cda33-1._JACS_Nanosized_Li2S_in_an_amorphous_matrix_for_ASSLSBs.pdf",
+   "blank": 0.753
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Structural and morphology analysis. Synchrotron-based XRD results of (a) 9Li2S + MClx (M = Al, Ga, Zn, Cu, Fe, V, Zr, Hf, and Y) and (b) Rietveld refinements of 92Li2S@8LiFeS2 cathode. (c) PDF of 92Li2S@8LiFeS2, Li2S, and LiCl. (d) Raman spectrum of 92Li2S@8LiFeS2. (e) Fe K-edge EXAFS in R-space with k3-weighting. (f) XANES spectrum of the S K-edge of 92Li2S@8LiFeS2 and Li2S. (g) The Cl K-edge of 92Li2S@ 8LiFeS2 and standard LiCl, FeCl3 samples. TEM images with corresponding FFT patterns: (h, k) low magnification TEM images of 92Li2S@ 8LiFeS2 and Li2S; (i, l) corresponding FFT pattern of 92Li2S@8LiFeS2 and Li2S; (j, m) atomic resolution TEM images of 92Li2S@8LiFeS2 and Li2S. presents a cost-effective and ecofriendly choice, making LiFeS2 a favorable option. Consequently, FeCl3 was selected as the chemical reactant, aligning with both the performance and sustainability objective",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    534.2
+   ],
+   "w": 2151,
+   "h": 2000,
+   "dpi": 300,
+   "src": "836cda33-1._JACS_Nanosized_Li2S_in_an_amorphous_matrix_for_ASSLSBs.pdf",
+   "blank": 0.71
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Electronic conductivity and (b) ionic conductivity of Li2S and 92Li2S@8LiFeS2. CV curves at various scan rates ranging from 0.1 to 0.6 mV s−1 and corresponding log i vs log v plots at each redox peak (peak current: i, scan rate: v) for (c, e) Li2S cathode and (d, f) 92Li2S@ 8LiFeS2 cathode. The scanning electron microscopy (SEM) results for (g) 92Li2S@8LiFeS2 and (h) Li2S after battery cycling. The evolution of S XAS spectrum during the 1st charge and discharge process using the (i) 92Li2S@8LiFeS2 cathode and (j) Li2S cathode. (k) The Fe XAS spectrum during the 1st charge and discharge process for the 92Li2S@8LiFeS2 cathode. intensity of the Li2S peaks decreases and their broadening becomes more pronounced. This suggests that FeCl3 reacts with Li2S, leading to the formation of an amorphous product. At higher FeCl3 concentrations (20, 30, and 50 wt %), the XRD patterns revea",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    410.6
+   ],
+   "w": 2151,
+   "h": 1485,
+   "dpi": 300,
+   "src": "836cda33-1._JACS_Nanosized_Li2S_in_an_amorphous_matrix_for_ASSLSBs.pdf",
+   "blank": 0.755
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (a) Charge and discharge profiles at an active cathode loading of 1.3 mg/cm2 under a current density of 0.4 mA/cm2 based on Li2S/ Li6PS5Cl/C = 6:3:1. Electrochemical performance of ASSLSBs based on 92Li2S@8LiFeS2/Li6PS5Cl/C = 6:3:1: (b) Charge and discharge profiles and (c) cycling profile at an active cathode loading of 1.3 mg/cm2 under a current density of 0.4 mA/cm2. (d) The cycling performance for the 92Li2S@8LiFeS2 cathode at an active cathode loading of 2.54 mg/cm2 active cathode loading. (e) The rate performance at an active cathode loading of 2.54 mg/cm2. (f) Electrochemical charge and discharge profile at high Li2S cathode loading. structural integrity. The 92Li2S@8LiFeS2 cathode exhibits a negligible volume change, indicating enhanced stability throughout cycling. In contrast, the Li2S cathode shows substantial volume expansion, leading to the formation of cracks due ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    297.2
+   ],
+   "w": 2151,
+   "h": 1013,
+   "dpi": 300,
+   "src": "836cda33-1._JACS_Nanosized_Li2S_in_an_amorphous_matrix_for_ASSLSBs.pdf",
+   "blank": 0.876
+  }
+ ]
+}

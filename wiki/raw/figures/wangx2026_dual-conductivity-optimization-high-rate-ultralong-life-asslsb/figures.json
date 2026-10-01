@@ -1,0 +1,111 @@
+{
+ "slug": "wangx2026_dual-conductivity-optimization-high-rate-ultralong-life-asslsb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-01",
+ "sources": [
+  "675c8923-3._dual-conductivity_optimization_toward_high-rate_and_ultralong_life_ASSLSBs.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Schematic illustration the evolution of the cathode microstructure during charging for (a) a conventional Li2S cathode and (b) the proposed Li2SexS1−x (x = 0.1–0.3) composite cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.2,
+    26.4,
+    555.8,
+    338.3
+   ],
+   "w": 2153,
+   "h": 1301,
+   "dpi": 300,
+   "src": "675c8923-3._dual-conductivity_optimization_toward_high-rate_and_ultralong_life_ASSLSBs.pdf",
+   "blank": 0.52
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 (a) XRD patterns of Li2SexS1−x (x = 0.1–0.3). (b) Rietveld refinement profile for Li2Se0.2S0.8. (c) SEM image and corresponding EDS elemental maps of Li2Se0.2S0.8. (d) XPS spectra of Li2Se0.2S0.8. (e) 7Li MAS NMR spectra of Li2Se0.2S0.8 and Li2S. (f) Ionic conductivity for Li2Se0.2S0.8 and Li2S. (g) Charge-discharge profiles of Li2SexS1−x (x = 0–0.3) cathodes at a current density of 200 mA g−1. (h) Fitted slope values of the reduction and oxidation peaks for Li2SexS1−x (x = 0–0.3) cathodes. (i) Average Li+ diffusion coefficients in Li2SexS1−x (x = 0–0.3) cathodes. fivefold enhancement in Li+ transport capability. These kinetic benefits lead to a more than twofold increase in discharge capacity utilization and a remarkable improvement in cycle life under high current, from 31.79% (1 A g−1 for 89 cycles) to 74.41% (1 A g−1 for 1000 cycles), demonstrating substantially enhanced ele",
+   "rotated_deg": 0,
+   "bbox": [
+    39.2,
+    26.0,
+    555.8,
+    444.3
+   ],
+   "w": 2153,
+   "h": 1744,
+   "dpi": 300,
+   "src": "675c8923-3._dual-conductivity_optimization_toward_high-rate_and_ultralong_life_ASSLSBs.pdf",
+   "blank": 0.783
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 (a) Initial charge-discharge profile of the Li2Se0.2S0.8 cathode at 50 mA g−1. (b,c) Ex situ XPS analysis of the Li2Se0.2S0.8 cathode at different discharge-charge states. (d) Ex situ XRD patterns of the Li2Se0.2S0.8 cathode at different discharge-charge status. In situ electrochemical impedance spectroscopy analysis presented as Nyquist plots with corresponding distribution of relaxation times (DRT) curves during (e) the first charge and (f) first discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.2,
+    26.0,
+    555.8,
+    491.3
+   ],
+   "w": 2153,
+   "h": 1940,
+   "dpi": 300,
+   "src": "675c8923-3._dual-conductivity_optimization_toward_high-rate_and_ultralong_life_ASSLSBs.pdf",
+   "blank": 0.685
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 (a) Initial CV activation profiles of Li2S and Li2Se0.2S0.8 at a scan rate of 0.1 mV s−1. (b) Initial charge profiles and schematic illustration of Li2S and Li2Se0.2S0.8 cathodes. (c) Crystal structure and its Li+ migration pathway of Li2S. (d) Li+ migration energy barrier of Li2S and Li2Se0.2S0.8. (e) Crystal structure and its Li+ migration pathway of Li2Se0.2S0.8.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.2,
+    26.0,
+    555.8,
+    312.3
+   ],
+   "w": 2153,
+   "h": 1194,
+   "dpi": 300,
+   "src": "675c8923-3._dual-conductivity_optimization_toward_high-rate_and_ultralong_life_ASSLSBs.pdf",
+   "blank": 0.803
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 Electrochemical performance of Li2SexS1−x|Li6PS5Cl|Li cells. (a) Long-term cycling performance. (b) Actual and theoretical specific capacity. (c) High current density cycling performance. (d) Performance comparisons between this work and the reference works. (e) Rate performance. (f) Charge–discharge profiles of Li2Se0.2S0.8|Li6PS5Cl|Li cell at different current density. (g) Charge–discharge profiles of Li2Se0.2S0.8|Li6PS5Cl|Si cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.2,
+    26.5,
+    555.8,
+    440.3
+   ],
+   "w": 2153,
+   "h": 1725,
+   "dpi": 300,
+   "src": "675c8923-3._dual-conductivity_optimization_toward_high-rate_and_ultralong_life_ASSLSBs.pdf",
+   "blank": 0.828
+  }
+ ]
+}

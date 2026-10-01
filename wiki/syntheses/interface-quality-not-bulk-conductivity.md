@@ -5,7 +5,7 @@ created: 2026-10-01
 updated: 2026-10-02
 type: synthesis
 tags: [assb, composite-cathode, li2s, sulfide-electrolyte, carbon, activation]
-sources: [raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md]
+sources: [raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/wangx2026_dual-conductivity-optimization-high-rate-ultralong-life-asslsb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -153,6 +153,38 @@ TiS2, 비정질)** 로 바꾸면서 **σ_Li⁺ 를 60 °C 에서 네 시료 모�
 of Li2S and ZrS2 similarly exhibit undetectable conductivity"*. 즉 **섞는 것만으로는 안 되고
 공밀링이 무언가를 바꿨다**는 것이 음성대조로 받쳐진다. ⚠ 단 그 음성대조는 **σ 축에만 있고
 전기화학 축으로 확장되지 않았다**(활물질 없는 대조셀은 여전히 없다 — **여섯 편 연속**).
+
+### ★ 2026-10-06 — "dual-conductivity" 를 간판에 건 논문이 이 논지를 보강한다 (Wang XinXu 2026)
+
+`wangx2026_…` 는 제목에 **dual-conductivity** 를 걸고 활물질(Li2Se0.2S0.8) 자신의 σ_Li⁺ 와 σ_e 를
+둘 다 올렸다고 주장한다. 이 논지에 대한 **정면 시험대**로 보였지만, 읽어 보면 **반례가 아니라
+보강**이다.
+
+| | 값 | 배수 |
+|---|---|---|
+| σ_Li⁺ (활물질 입자 자신) | 1.64×10⁻⁶ → **4.80×10⁻⁶ S cm⁻¹** | ×2.93 |
+| σ_e (활물질 입자 자신) | 2.26×10⁻⁹ → **4.58×10⁻⁹ S cm⁻¹** | ×2.03 |
+
+세 가지가 읽힌다.
+
+1. **σ_e 는 올린 뒤에도 4.58×10⁻⁹ 다.** 논증 ⑥ 이 "결정적" 이라 한 구간(10⁻⁸ → 10⁻⁴)의
+   **아래쪽 끝보다도 낮다.** 같은 시료의 `[재현]` **σ_Li⁺/σ_e = 1048** (대조 Li2S 726) — 이 물질은
+   처리 후에도 **이온전도성 절연체**다.
+2. ★★ **그 ×2.03 은 밴드갭 산술로 거의 전부 설명된다.** `[인쇄]` 밴드갭 3.418 → 3.391 eV,
+   ΔEg = **27 meV** → `[재현]` 진성 캐리어 비 exp(0.027 / (2 × 0.02585)) = **1.69** ≈ 관측 2.03.
+   즉 **새 전도 기구(갭 내 상태·전자 도핑)의 증거가 아니다.** 본문의 "supplying extra free charge
+   carriers" 는 이 산술과 정합하지 않고, 27 meV / 3.4 eV = **0.8 %** 는 DFT 계통오차 수준이다.
+3. **그래서 성능 개선(이용률 31.8 → 74.4 %)의 설명력은 이온 쪽에 있다.** 저자들 자신도 x=0.2 가
+   최적인 이유를 "활성자리 부족 vs 부피팽창" 으로 설명하고 **σ 로 설명하지 않는다** — σ 의
+   최적점 논의가 논문 안에 없다.
+
+→ **Hong 2026 의 교훈과 합치면 더 분명하다**: 입자 칸에서 **×8500** 을 올려도 복합체 칸에서는
+**×1.36** 으로 묻혔다. 입자 칸 **×2.03** 은 복합체에서 **측정 한계 아래**일 것이다.
+**논증 ①(σ_e 는 방향조차 무관)은 그대로 서 있다.**
+
+⚠ **그리고 이 논문은 Gap 의 "결정적 실험" 두 번째 사례가 되지 못한다.** Se 치환이라는 **단일
+손잡이**가 σ_Li⁺(×2.93) · σ_e(×2.03) · 격자(a 5.72 → 5.79 Å) · 부피팽창 · **이론 천장(−17.0 %)** 을
+**전부 동시에** 움직인다. → **Wang Daiwei 2025 가 여전히 유일한 분리 사례다.**
 
 ⚠ 그리고 이 논문의 σ 값에는 두 공백이 있다 — **DC 분극의 인가 전압이 미기재**라 우리 표준
 20–50 mV 와 대조할 수 없고, **차단전극 재질·두께·실제 면적이 없어** σ = L/(RA) 를 재현할 수 없다.

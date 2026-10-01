@@ -5,7 +5,7 @@ created: 2026-10-01
 updated: 2026-10-06
 type: concept
 tags: [assb, sulfide-electrolyte, composite-cathode, units]
-sources: [raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md]
+sources: [raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/wangx2026_dual-conductivity-optimization-high-rate-ultralong-life-asslsb.md, raw/papers/hao2025_nanosized-li2s-amorphous-matrix-asslsb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -60,7 +60,7 @@ evidenceScope: multi-source-primary
 `[재현]` 네 값을 σ = d/(A·R) 로 직접 검산하면 Table 1 의 인쇄값이 그대로 나온다
 (0.12 Ω·500 µm → 5.31×10⁻¹ vs 인쇄 5.1×10⁻¹ 등). **레시피가 완결됐다는 증거다.**
 
-## ★★ 같은 레시피를 다섯 편이 다르게 썼다 — 그래서 절대값을 비교할 수 없다
+## ★★ 같은 레시피를 여덟 편이 다르게 썼다 — 그래서 절대값을 비교할 수 없다
 
 | 논문 | 전자용 셀 시료 정체 | 이온용 셀 시료 정체 | 인가 전압 | 성형압 |
 |---|---|---|---|---|
@@ -69,6 +69,9 @@ evidenceScope: multi-source-primary
 | **Jeong 2026** | 명시 (복합체 50 mg 펠릿) | 명시 (양면 LPSBI) | **±50 mV** | ⚠ **이온 700 / 전자 200 MPa — 서로 다르다** |
 | **Yu 2024** | **미기재** | **미기재** | `[도표]` ±100/±50/±25 mV | 미기재 |
 | **Huang 2026** | **미기재** (셀 구성 출처로 Kwok 인용) | **미기재** | ⚠ **본문에 없음** — `[재현]` 역산 **전자 ≈1 V** | 미기재 |
+| **Hong 2026** | 시료 분말 **단독 펠릿** — 명시 | Li–In ¦ LPSC ¦ 시료 ¦ LPSC ¦ Li–In — 명시 | ⚠ **미기재** (dwell 120 min/step 은 적었다) | **625 MPa** |
+| **Hao 2025** | `[해석]` 분말 **단독 펠릿**(본문은 "cathode" 라 쓰지만 AB 10 wt% 전극이 2.5×10⁻¹¹ 일 수 없다) | `Li/In ¦ LPSCl ¦ 시료 ¦ LPSCl ¦ Li/In` | ⚠ **미기재** — "Based on Ohm's law" 뿐, Methods 전량 SI 미확보 | **미기재** |
+| **Wang (XinXu) 2026** | ⚠ **Fig. S6 로 밀렸다 — 셀 구성조차 모른다** | `Steel ¦ Li ¦ SE ¦ 시료 ¦ SE ¦ Li ¦ Steel` — 그림으로 명시 | ⚠ **미기재.** 유지 **3600 s = 1 h** 는 원전과 일치, 단일 I–t 곡선(다점 아님) | **미기재** |
 
 `[해석]` 넷이 읽힌다.
 
@@ -82,6 +85,21 @@ evidenceScope: multi-source-primary
    σ_e⁻ 가 실제보다 크게 나온다. **레시피를 이식할 때 이 한 줄이 가장 위험하다.**
 4. **성형압이 두 셀에서 다르면 두 수치를 나눌 수 없다** (Jeong 700 vs 200 MPa). 압력이 바뀌면
    접촉과 기공률이 바뀌고, 그것이 두 캐리어에 같은 비율로 작용한다는 보장이 없다.
+5. ★★ **인가 전압을 적은 논문이 여덟 편 중 넷뿐이다** (Kwok ±20/±40 · Jeong ±50 · Yu ±100/±50/±25 ·
+   Huang 은 역산 ≈1 V). **Hong 2026 · Wang XinXu 2026 · Hao 2025 는 아예 없고**, Wang XinXu 는 **σ_e 측정
+   셀 구성조차 SI 로 밀렸다** — 제목의 절반(dual-**conductivity**)을 뒷받침하는 측정이 본문에서
+   가장 안 보이는 자리에 있다.
+   → **규율**: 인가 전압을 모르는 σ 값은 **다른 논문의 σ 와 나란히 두지 않는다.** digest 에 그
+   값을 쓸 때는 **"인가 전압 미상" 주석을 붙인다.**
+5-a. ★★ **입자 칸만 재고 복합체 칸을 안 잰 논문이 둘이다** — **Hong 2026**(입자 > ×8500 vs
+   복합체 ×1.36 — 두 칸을 다 쟀다) 과 달리 **Hao 2025 는 입자 칸만 쟀다**(σ_e ×88,000).
+   `[해석]` Hong 의 결과대로라면 **그 ×88,000 도 복합체에서는 거의 사라졌을 것**이다.
+   → **규율: 입자 칸 수치를 성능 설명에 쓰려면 복합체 칸을 같이 재야 한다.** 우리 스윕은
+   **같은 재료에 대해 두 칸을 모두** 잰다 (분말 단독 펠릿 + 복합양극 펠릿).
+
+6. `[해석]` **유지 시간 1 h 는 거의 모두 지킨다** — 일곱 편 중 어긋난 곳이 없다. 그러나
+   **"정상상태" 의 판정 기준(전류 변화율 임계값)을 적은 논문은 0편**이고, Wang XinXu 처럼
+   **단일 I–t 곡선 하나**로 끝내면 V–I 직선성을 확인할 길이 없다. **우리는 다점으로 간다.**
 
 ## ★ 우리가 쓸 프로토콜 (이 페이지가 확정한다)
 

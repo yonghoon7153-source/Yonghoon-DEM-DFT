@@ -1,11 +1,11 @@
 ---
 title: 복합양극 혼합 경로 비교 — one-step · two-step · 탄화 · 용액
-description: "복합양극 혼합 경로 비교 — one-step·two-step·탄화·용액 네 경로의 제어 변수와 위험, 그리고 digest 20편의 ball milling 조건 전수 대조표(장비·rpm·시간·BPR·볼·분위기)"
+description: "복합양극 혼합 경로 비교 — one-step·two-step·탄화·용액·고상 소결 코팅·반응성 밀링 여섯 경로의 제어 변수와 위험, 그리고 digest 22편의 ball milling 조건 전수 대조표(장비·rpm·시간·BPR·볼·분위기)"
 created: 2026-09-11
 updated: 2026-10-06
 type: comparison
 tags: [mixing-process, composite-cathode, li2s, sulfide-electrolyte]
-sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md]
+sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/wangx2026_dual-conductivity-optimization-high-rate-ultralong-life-asslsb.md, raw/papers/hao2025_nanosized-li2s-amorphous-matrix-asslsb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -35,7 +35,7 @@ evidenceScope: multi-source-primary
 
 장비별 성격은 [[mixing-equipment-ball-mill-thinky]].
 
-## ★ ball milling 조건 전수 대조 (digest 20편, 2026-10-05 / 2026-10-06 갱신)
+## ★ ball milling 조건 전수 대조 (digest 22편, 2026-10-05 / 2026-10-06 갱신)
 
 사용자 요청으로 봉인된 digest 전부의 **복합양극 제작 ball milling 조건만** 뽑았다.
 수치의 정본은 각 digest 의 `compare:` 블록 → 원문이다. 이 표는 사본이다.
@@ -68,18 +68,25 @@ evidenceScope: multi-source-primary
 | **kimjt2023** (Nat. Commun., UWO) | **one-step** (S8 계) | "high-speed ball-milling machine" — **모델 미기재**이고 "high-speed" 와 200 rpm 이 본문 내부 모순 | **200** | **4 h** | ★ **계산 불가** — 볼 40 g·⌀5 mm·50 mL 마노 jar 까지 적고 **시료 질량만 빠뜨렸다** | **ZrO2 ⌀5 mm 40 g** `[재현]` ≈102개 / **마노 jar 50 mL** | **Ar** (<0.1 ppm) |
 | **hong2026** (Adv. Mater., ZrS2) ① 도핑 | **공밀링** | 미기재 | **550** | **6 h** | 미기재 | 미기재 | **Ar** |
 | 〃 ② 복합양극 | two-step ② (40:40:20 또는 65:25:10) | 미기재 | **550** | **10 h** | 미기재 | 미기재 | **미기재** (①에는 Ar 이라 적었는데 ②에는 없다) |
+| **wangx2026** (Adv. Mater., Li2SexS1−x) | ★ **혼합 기술 자체가 없다** — Experimental 절이 통째로 부재(SI 미확보). 활물질 합성은 `[인쇄]` "Se, S, LiH 의 ball milling + subsequent heat treatment" 다섯 단어가 전부 | **미기재 — rpm 조차 없다** | 〃 | 〃 | 〃 | 〃 |
+| **hao2025** (JACS, 반응성 밀링) ① | ★ **반응성 밀링(in-situ 치환)** — Li2S + FeCl3 **85:15 wt%** | **전량 SI 미확보** — 본문 10쪽에 `rpm`·`MPa`·`°C` 가 **한 번도 없다** | 〃 | 〃 | 〃 | 〃 |
+| 〃 ② 복합양극 | **6:3:1 wt%**(Li2S:LPSCl:AB) — ★ **방식 자체가 미기재**(볼밀인지 손혼합인지 모른다) | 〃 | 〃 | 〃 | 〃 | 〃 |
 
 ### 이 표에서 읽히는 것 `[해석]`
 
-1. **★ BPR 을 적은 논문이 20편 중 **4편**뿐이다** (cronk 1:30 · jeong 50:1 · zhang ≈30:1 · **gao 20:1**).
+1. **★ BPR 을 적은 논문이 22편 중 **4편**뿐이다** (cronk 1:30 · jeong 50:1 · zhang ≈30:1 · **gao 20:1**).
    BPR 은 밀링 에너지를 정하는 1차 변수인데 대부분이 안 적는다 → **논문 간 "밀링 강도" 비교가
    원리적으로 불가능하다.** 우리는 반드시 적는다 ([[mixing-equipment-ball-mill-thinky]] 양식).
 2. **볼 재질·지름을 적은 논문은 2편**(jeong 3 mm ZrO2 50 g · kim2025 ⌀5 mm 1 ball/mL).
    **분위기는 8편**(Ar 7 · 불활성 1). **rpm·시간은 11편**이 적는다. **볼 재질·지름은 3편**(jeong · kim2025 · **gao ⌀4 mm**).
-3. **6편은 ball milling 조건을 한 글자도 안 적는다** — kim2023(액체계) · wan2021 · wang2026 ·
-   yu2024 · liu2026 · **kwok2023**. 그중 **wang2026 은 Experimental 절 자체가 없고**, yu2024·liu2026 은 Methods 가
+3. **8편은 ball milling 조건을 한 글자도 안 적는다** — kim2023(액체계) · wan2021 · wang2026 ·
+   yu2024 · liu2026 · **kwok2023** · **wangx2026** · **hao2025**. 그중 **wang2026 은 Experimental 절 자체가 없고**, yu2024·liu2026 은 Methods 가
    SI 에만 있다. **혼합 조건 미기재가 이 분야의 예외가 아니라 다수 관행에 가깝다** — 17편 중 6편이면,
    우리가 "문헌 조건을 따라 한다" 는 말을 할 수 있는 대상이 애초에 좁다.
+   ★ **wangx2026 은 rpm 조차 없다** — 복합양극 혼합은 **기술 자체가 없고**(Fig. 1 범례로 3성분인
+   것만 안다) **조성비·탄소 종류도 미기재**이며, 간접 상한은 `[인쇄]` "48 wt% 로 늘려" 한 줄뿐이다.
+   ⚠ 그리고 그 논문은 **도입부에서 "과도한 압력은 내부 응력과 SE 내 Li 석출을 유발한다" 며 압력을
+   비판하면서 자기 셀의 성형압·구속압을 둘 다 안 적는다** — 공백의 새 유형이다.
    ★ **그중 kwok2023 이 가장 심하다**: 이 위키에서 **가장 긴 상온 수명(1 mA cm⁻² 1,000 사이클, 77 %)**
    을 낸 논문인데 **혼합 방식이 `[인쇄]` "physical blending" 두 단어이고 성형압·운전 구속압·셀 형식이
    본문에 아예 없다** (Methods 전량 ESI). `[해석]` 그래도 하나는 읽힌다 — **core–shell 껍질이 깨지면
@@ -135,12 +142,33 @@ evidenceScope: multi-source-primary
    볼밀이 아니라 **Hummer 음향 혼합기(HAM100) + 반복 섬유화 롤프레스**로 만든 자립 필름이다.
    같은 논문 안에서 **0.05 C · 55 °C 펠릿 868.4 vs 파우치 615.8** `[재현]` **29 % 낮다** — 다만
    로딩도 다르므로 혼합 경로 단독에 귀속할 수 없다. kim2025 도 유발 손혼합 단계를 쓰지만
-   **밀링 ↔ 비밀링 혼합의 직접 대조는 20편 중 0편**이다. `[해석]` 스케일업하면 밀링을 못 쓰는데,
+   **밀링 ↔ 비밀링 혼합의 직접 대조는 22편 중 0편**이다. `[해석]` 스케일업하면 밀링을 못 쓰는데,
    **그때 성능이 어떻게 변하는지 아무도 측정하지 않았다.**
+
+10. ★★ **여섯째 경로 — "반응성 밀링(in-situ 치환)" (2026-10-06, Hao 2025).**
+   지금까지 다섯 갈래였다: one-step BM · two-step BM · 탄화 · 용액 · **고상 소결 코팅**(Liu 2026).
+   Hao 2025 는 어디에도 안 들어간다 — **활물질과 반응성 전구체를 함께 밀링해 밀링 중 고상 치환
+   반응을 일으킨다**: `2 Li2S + FeCl3 → LiFeS2 + 3 LiCl`. 한 공정이 **(i) 활물질을 ≈4 nm 로 쪼개고
+   (ii) 비정질 혼합전도 매트릭스를 새로 만든다.** 보편성도 보였다 — M = Al·Ga·Zn·Cu·Fe·V·Zr·Hf·Y
+   아홉 가지에서 같은 반응이 XRD 로 확인된다.
+
+   ★ **이 경로가 앞의 다섯과 근본적으로 다른 점**: **밀링이 분산 공정이 아니라 합성 반응기**다.
+   그래서 **투입 조성 ≠ 생성 조성**이고 **활물질 질량 자체가 반응으로 줄어든다**
+   (`[재현]` 투입 Li2S 85 wt% → 잔존 **76.5 wt%**, 생성 LiFeS2 11.7 + **LiCl 11.8 wt%**).
+   `[해석]` 우리에게 두 가지를 뜻한다 —
+   **(a) 밀링 조건을 기록하는 양식에 "반응이 일어났는가" 칸이 필요하다.** 우리 one-step 셀에서
+   Li2S·LPSCl·AB 를 함께 밀 때 **LPSCl 이 반응물로 참여할 수 있다**(Park 2026 은 밀링 없이
+   접촉만으로도 Raman 425 → 418 cm⁻¹ 의 PS₄³⁻ 변화를 보였다 — 소견 9-a).
+   **(b) 조성을 "투입 기준" 으로만 적으면 틀린다.** 이름 `92Li2S@8LiFeS2` 는 **LiCl 11.8 wt% 를
+   통째로 숨기고**, 그 논문의 "활물질 함량 48 %" 는 `[재현]` **mol% 를 wt% 로 쓴 값**이다
+   (화학량론 wt% 로는 45.9 %, 저자 자신의 XRD 모델로는 41.0 %).
+   → **우리는 투입 조성과 "밀링 후 XRD 로 확인한 상" 을 따로 적는다.**
+   ⚠ 밀링 조건은 **전량 SI 미확보**라 이 경로를 지금 시도할 수는 없다.
 
 ### 우리가 기록해야 할 항목 (이 표의 빈칸이 곧 체크리스트다)
 
 장비·용기 부피·**볼 재질·지름·개수** · **총 투입량** · **BPR** · rpm · **순 밀링 시간과 on/off 주기** ·
+**밀링 후 XRD 로 확인한 상(= 반응이 일어났는가)** ·
 분위기 · 단계 수와 각 단계의 조성 · (S8 계면) 멜트 함침 온도·시간 · 성형 압력과 시간.
 
 ## 결론
