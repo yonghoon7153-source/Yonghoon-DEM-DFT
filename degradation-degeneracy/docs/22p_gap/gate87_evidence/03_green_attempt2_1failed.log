@@ -1,0 +1,29 @@
+
+[conftest] 시험 authority: /tmp/dd-test-authority-oa13ymqm/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+
+[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+................................................F..............          [100%]
+=================================== FAILURES ===================================
+_ test_s04_06_a_context_that_disagrees_with_the_plan_is_still_refused_by_prepare_stage3 _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s04_06_a_context_that_disagrees_wit_c7c6eabf')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f86be0536d0>
+
+    def test_s04_06_a_context_that_disagrees_with_the_plan_is_still_refused_by_prepare_stage3(tmp_path, monkeypatch):
+        """진입점을 건너 손으로 어긋난 문맥을 만들어도 `run_fit` 안의 대조가 거부한다 (83차 N2 — 우회 없음)."""
+        from tests.test_fitting import _tiny_curves
+        in_dir = _tiny_curves(tmp_path / "in")
+        ctx = G81._v6_context(in_dir)
+        other = copy.deepcopy(ctx["design"]); _add_arm(other)
+        calls = G84._sentinel(monkeypatch)
+        with pytest.raises(ValueError) as ei:
+            G84._run(tmp_path, "o", {**ctx, "design": other}, in_dir)
+>       assert "pairing_design_sha256" in str(ei.value) and calls == []
+E       AssertionError: assert ('pairing_design_sha256' in 'design spec nested schema 위반: arm G_A 의 내용이 registry 와 다르다')
+E        +  where 'design spec nested schema 위반: arm G_A 의 내용이 registry 와 다르다' = str(WireError('design spec nested schema 위반: arm G_A 의 내용이 registry 와 다르다'))
+E        +    where WireError('design spec nested schema 위반: arm G_A 의 내용이 registry 와 다르다') = <ExceptionInfo WireError('design spec nested schema 위반: arm G_A 의 내용이 registry 와 다르다') tblen=7>.value
+
+tests/test_gate87_round2b.py:546: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_gate87_round2b.py::test_s04_06_a_context_that_disagrees_with_the_plan_is_still_refused_by_prepare_stage3
+1 failed, 62 passed in 12.65s
