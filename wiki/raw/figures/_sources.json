@@ -43,6 +43,13 @@
    "55de9e68-high_capacity_S_cathode_enabled_by_dual-phase_electrolyte.pdf"
   ]
  },
+ "kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb": {
+  "figures": 4,
+  "generated": "2026-10-01",
+  "pdfs": [
+   "c718a1ea-1._mixed_discharge_products_of_asslsbs.pdf"
+  ]
+ },
  "kwok2023_interfacial-redox-mediator-high-performance-asslsb": {
   "figures": 9,
   "generated": "2026-10-01",
@@ -62,6 +69,13 @@
   "generated": "2026-10-01",
   "pdfs": [
    "3d10dc0c-2._Li4SnS4_mediator_for_low-barrier_Li2S_chemistry.pdf"
+  ]
+ },
+ "park2026_low-pressure-operation-carbon-coated-current-collector-asslsb": {
+  "figures": 7,
+  "generated": "2026-10-01",
+  "pdfs": [
+   "88e08e46-3._AFM_Realizing_low_pressure_operation_of_ASSLSBs_enabled_by_carbon_coated_current_collectors.pdf"
   ]
  },
  "qu2025_volume-changes-li-s-solid-state-battery-components-cycling": {

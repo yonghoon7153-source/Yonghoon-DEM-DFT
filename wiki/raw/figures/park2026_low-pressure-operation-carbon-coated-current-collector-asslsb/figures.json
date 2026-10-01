@@ -1,0 +1,151 @@
+{
+ "slug": "park2026_low-pressure-operation-carbon-coated-current-collector-asslsb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-01",
+ "sources": [
+  "88e08e46-3._AFM_Realizing_low_pressure_operation_of_ASSLSBs_enabled_by_carbon_coated_current_collectors.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Interface engineering of CCs for Li2S cathodes. Schematic comparison of cathode/collector interfaces using bare Al and carbon-coated Al CCs at 75 and 10 MPa in ASSBs. The carbon coating improves adhesion, increases surface contact, and lowers interfacial resistance, enabling stable Li2S cycling under low stack pressure.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.0,
+    552.9,
+    324.7
+   ],
+   "w": 2118,
+   "h": 1058,
+   "dpi": 300,
+   "src": "88e08e46-3._AFM_Realizing_low_pressure_operation_of_ASSLSBs_enabled_by_carbon_coated_current_collectors.pdf",
+   "blank": 0.64
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Characterization and comparison of powder and dry-processed Li2S cathode. a) X-ray diﬀraction (XRD) patterns and b) Raman spectra of the bulk-state powder of the milled Li2S composite and raw materials. c) Initial charge/discharge curves of Li2S//Li0.5In half-cell at 0.05 C under 75 MPa using powder and dry-processed Li2S cathode at the 6.8 mAh cm−2 level. d) Diﬀerential capacity (dQ/dV) analysis of ASSBs of the initial cycle using powder and dry-processed Li2S cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    71.1,
+    550.0,
+    376.7
+   ],
+   "w": 2118,
+   "h": 1274,
+   "dpi": 300,
+   "src": "88e08e46-3._AFM_Realizing_low_pressure_operation_of_ASSLSBs_enabled_by_carbon_coated_current_collectors.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Surface roughness measurement. SEM and 3D views and top views of AFM images of each a,d,g) bare Al, b,e,h) graphite-coated Al and c,f,i) carbon black coated Al foils.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.0,
+    552.9,
+    319.7
+   ],
+   "w": 2118,
+   "h": 1038,
+   "dpi": 300,
+   "src": "88e08e46-3._AFM_Realizing_low_pressure_operation_of_ASSLSBs_enabled_by_carbon_coated_current_collectors.pdf",
+   "blank": 0.7
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Adhesion test of dry-processed Li2S cathode layer with diﬀerent CC via ASTM D3359 Method-B (cross-hatch). Obtained zoomed-out and zoomed-in cross-sectional SEM images of ASSBs based on a) bare Al, b) graphite-coated Al, and c) carbon black coated Al CCs at pristine state with Li2S cathode composite. d) Schematic steps of the adhesion test using the cross-hatch pattern-transfer method. e) Images of the cathode materials on the tested CCs after detachment. f) Classiﬁcation of the adhesion results based on ASTM D3359.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.5,
+    550.1,
+    469.7
+   ],
+   "w": 2118,
+   "h": 1665,
+   "dpi": 300,
+   "src": "88e08e46-3._AFM_Realizing_low_pressure_operation_of_ASSLSBs_enabled_by_carbon_coated_current_collectors.pdf",
+   "blank": 0.55
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Investigation of critical pressure of dry-processed Li2S cathode layer with diﬀerent CC using constant pressure setup. a) Initial charge/discharge curves and b) diﬀerential capacity (dQ/dV) analysis of Li2S//Li0.5In half cell using diﬀerent Al CCs at 0.05 C in 6.8 mAh cm−2 level under 75 MPa. c) Plot of resistance of CC/Li2S/CC conﬁguration and d) discharge capacity of Li2S//Li0.5In half-cell of 0.33 C in 6.8 mAh cm−2 level at varying operating pressure in the range between 1 and 75 MPa with constant pressure pellet cell set up.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.8,
+    552.9,
+    360.7
+   ],
+   "w": 2118,
+   "h": 1209,
+   "dpi": 300,
+   "src": "88e08e46-3._AFM_Realizing_low_pressure_operation_of_ASSLSBs_enabled_by_carbon_coated_current_collectors.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Cycling performance at 75 and 10 MPa with diﬀerent CC. a–c) Initial charge/discharge curves and d–f) corresponding dQ/dV curves of 0.33 C at 10 and 75 MPa after formation cycles with bare Al, graphite-coated Al, and carbon black coated Al CCs, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.4,
+    550.0,
+    327.7
+   ],
+   "w": 2118,
+   "h": 1073,
+   "dpi": 300,
+   "src": "88e08e46-3._AFM_Realizing_low_pressure_operation_of_ASSLSBs_enabled_by_carbon_coated_current_collectors.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Cyclability and EIS analysis at 10 MPa with diﬀerent CC. a) Discharge capacity of Li2S//Li0.5In half-cells for various C-rates from 0.05 C to 1.0 C at 10 MPa at the 6.8 mAh cm−2 level based on Table S3. b) Discharge capacity of Li2S//Li0.5In half-cells at room temperature over 350 charging/discharging cycles at the C-rate of 0.33 C under 10 MPa at the 6.8 mAh cm−2 level. The open circles represent the calculated coulombic eﬃciency at each cycle. c) Li2S utilization from the C-rate test calculated based on the designed Li2S cathode capacity of 6.8 mAhcm−2. Nyquist plot from the measured electrochemical impedance spectroscopy (EIS) results d) before and e) after 100 cycles with equivalent circuit used for ﬁtting the measured impedance data.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.6,
+    552.9,
+    308.7
+   ],
+   "w": 2118,
+   "h": 993,
+   "dpi": 300,
+   "src": "88e08e46-3._AFM_Realizing_low_pressure_operation_of_ASSLSBs_enabled_by_carbon_coated_current_collectors.pdf",
+   "blank": 0.853
+  }
+ ]
+}

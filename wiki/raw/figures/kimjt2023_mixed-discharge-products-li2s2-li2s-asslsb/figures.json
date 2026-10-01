@@ -1,0 +1,91 @@
+{
+ "slug": "kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-01",
+ "sources": [
+  "c718a1ea-1._mixed_discharge_products_of_asslsbs.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Postulating a mixed discharge product of ASSLSBs. a Voltage proﬁle showing the theoretical discharge curve of ASSLSBs. b Initial dischargecapacities of ASSLSBs recently reported in literature. c Voltage proﬁle of an ASSLSB tested using different lower limit potentials. d Computational Gibbs-free formation energies of",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    546.5,
+    391.3
+   ],
+   "w": 2138,
+   "h": 1453,
+   "dpi": 300,
+   "src": "c718a1ea-1._mixed_discharge_products_of_asslsbs.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Probing the ﬁnal discharge products of ASSLSBs via X-ray absorption spectroscopy and time-of-ﬂight secondary ion mass spectrometry. a, b S K-edge XANES spectra of S composite electrodes without LiI. c, d S K-edge XANES spectra of LiI-incorporated S composite electrodes. e S K-edge XANES spectra of S scom- posite electrode without LiI at different discharge/charge states. f S K-edge XANES spectra of LiI-incorporated S compossite electrode at different discharge/charge",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    546.5,
+    500.5
+   ],
+   "w": 2138,
+   "h": 1908,
+   "dpi": 300,
+   "src": "c718a1ea-1._mixed_discharge_products_of_asslsbs.pdf",
+   "blank": 0.866
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Electrochemical behavior of all-solid-state Li-S batteries with Li2S2- dominant discharge product. a Schematic illustration showing all-solid-state lithium-sulfur battery conﬁguration. b Voltage proﬁle showing the reversibility of ASSLSBs with and without LiI in the ﬁrst cycle at 0.2 A g−1 and 25 °C. c Rate",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    379.8,
+    546.5,
+    696.0
+   ],
+   "w": 2138,
+   "h": 1319,
+   "dpi": 300,
+   "src": "c718a1ea-1._mixed_discharge_products_of_asslsbs.pdf",
+   "blank": 0.844
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Electrochemical behavior of all-solid-state Li-S batteries under various operating temperatures. a Voltage proﬁle of ASSLSB tested at 60 °C, with enlarged discharge proﬁle shown between 1.3–1.5 V (vs. Li-In/Li+). b Cycling per- formance of ASSLSB at 0.4 A g−1 and 60 °C. c Voltage proﬁle of ASSLSB with active",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    386.0,
+    546.5,
+    696.1
+   ],
+   "w": 2138,
+   "h": 1293,
+   "dpi": 300,
+   "src": "c718a1ea-1._mixed_discharge_products_of_asslsbs.pdf",
+   "blank": 0.886
+  }
+ ]
+}
