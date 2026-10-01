@@ -2,10 +2,10 @@
 title: 무엇이 reference cell 을 500–600 mAh g⁻¹ 에서 막는가
 description: "pristine Li2S ASSB reference cell 이 문헌 수준(500–600, 기준 미확인)에 못 미친다면 병목은 활성화인가, 퍼콜레이션인가, 입자인가, 아니면 단위 착시인가"
 created: 2026-09-11
-updated: 2026-10-04
+updated: 2026-10-06
 type: research-question
 tags: [li2s, assb, activation, composite-cathode, units]
-sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md]
+sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -202,6 +202,62 @@ Lee 2026 digest 가 이 충돌을 날카롭게 정리한다 — **병목은 "활
   "작을수록 좋다" 가 아니다 (Cronk 의 micron > sub-micron 과 같은 방향). 단 이건 활물질이 아니라
   **SE** 의 입도다.
 
+### 2026-10-06 — Liu 2026 (Li4SnS4 소결 코팅) · Zhang (Jiaxu) 2026 (strain coordination) 추가
+
+- **★★ H1 재정의판에 가장 직접적인 고체계 근거 (Liu 2026).** 첫 충전 **개시 전위를 2.94 → 2.41 V**
+  로 0.53 V 낮췄는데도 **두 셀 모두 컷오프 4.0 V 까지 끌려가고**, 저자가 `[인쇄]` 그 구간에서
+  **"partial oxidative decomposition of the sulfide electrolyte"** 를 **자인한다**. ICE 89 %.
+  → **개시 전위를 낮추는 것과 "활성화를 SE 산화 전위 아래에서 끝내는 것" 은 다른 문제다.**
+  사다리 6편 중 후자를 해낸 논문은 **아직 없다** ([[li2s-activation-first-charge]]).
+  H1 을 "활성화 완료 전위 > SE 산화 전위" 로 고쳐 쓴 2026-09-30 의 판단이 이 논문으로 확인됐다.
+- **H1 보조 — `disputed` pristine 값에 네 번째 수 (Liu 2026).** `[도표]` 상온·0.1 C·1.2 mg cm⁻²
+  에서 **pristine Li2S 첫 방전 ≈430 mAh g⁻¹(Li2S)** = `[재현]` 616 (S). 기존 270(Zhang) /
+  723(Cronk) / 1095.9 사이의 **중간값**이다. → **네 값이 270–1096 으로 4배 갈린 상태가 유지된다.**
+  우리 기준선은 여전히 조성이 같은 **Cronk 723** 이 가장 믿을 만하고, **이 분산 자체가 0번 실험
+  (분모 확정)을 1순위로 유지하는 이유다.**
+- **★ H4 — 미분리 항이 네 편 연속이다 (Liu 2026).** Li4SnS4 가 4 e⁻ 만 내놓아도 `[재현]`
+  390 mAh g⁻¹(Li4SnS4) 이고, 함량 10–20 wt% 면 Li2S 기준 겉보기 과잉이 **43–98 mAh g⁻¹(Li2S)**.
+  **관측된 첫 충전 개선폭이 `[도표]` ≈100** 이다 — 거의 전부가 설명된다. Wan 109.4 · Zhang 152 ·
+  Kim 2025 468.4(S) 에 이어 네 번째다. ★ Liu 는 **Rietveld(Rp 5.83 %)를 하고도 상 분율을
+  인쇄하지 않았다** — 답을 손에 쥐고도 안 적었다.
+  → **0번 실험(`LPSCl + AB` 활물질 없는 대조셀)의 근거가 또 한 편 늘었다.** 지금까지 이 실험을
+  한 논문은 **0편**이다.
+- **H2b — 간접 For (Liu 2026).** SE 를 **밀링하지 않고** 활물질 쪽만 소결 처리했는데 복합양극
+  σ_Li⁺ 가 `[인쇄]` **3.99×10⁻⁵ S cm⁻¹ = 0.04 mS cm⁻¹** 다. Kim 2025 의 0.07 → 0.42 mS cm⁻¹ 과
+  비교하면 **여전히 낮은 쪽**이다. → "밀링을 피하면 SE 가 멀쩡하다" 로 바로 읽히지 않는다
+  (조성·SE 종류가 달라 단독 귀속 불가). 다만 **밀링을 피하는 경로가 존재한다**는 것 자체가
+  H2b 를 실험으로 가를 길을 하나 더 준다 ([[composite-cathode-mixing-routes]] 소견 8).
+- **H2a — 뒤집히지 않았다 (Liu 2026).** σ_e 1.5 → 3.6 ×10⁻¹ S cm⁻¹ (**×2.4 상승**). 이 위키의
+  축적은 Yu 200배↓ · Huang 14배↑ · Jeong 6배↓ · Liu 2.4배↑ — **네 편이 정반대 방향인데 모두
+  개선**이다. "σ_e 클수록 좋다" 는 기각 상태가 유지된다 ([[interface-quality-not-bulk-conductivity]]).
+  ★ 그리고 이 논문은 **전자 절연체(SE)를 30 nm 입혔는데 σ_e 가 올라간 것을 설명하지 않는다** —
+  Yu 2024 의 거울상이다. `[재현]` σ_e/σ_Li⁺ 가 6,700 → 9,000 — **이온이 10⁴배 병목인데 간판이
+  "전자구조 재구성" 이다.**
+- **★★ H5 — 측정 도구 3종이 들어왔다 (Zhang Jiaxu 2026).** 이 논문은 활물질이 **FeS2** 라
+  우리 Li2S 양극 논문이 아니지만, **H5 를 판정할 도구를 준다**:
+  1. **LTO zero-strain 대극을 기준자로 쓴다** (Qu 2025 와 같은 트릭). 그 위에서 **용량당 응력
+     σc (MPa mAh⁻¹)** 를 전극별로 분해한다 — FeS2 0.80 · LiSi 0.71 · Li2Si 0.88 · Li3Si 0.94 ·
+     **Li 금속 1.03** · NCM 0.213 · LCO −0.1558 · 실셀 Li2Si‖FeS2 **0.16**.
+     → **우리도 `Li2S∣LPSCl∣LTO` 기준자 반쪽셀로 양극의 σc 를 분리할 수 있다.**
+  2. **★ 압력별 EIS 스윕 — 무압에서 356 Ω, 15 MPa 이상은 저항이 거의 불변(포화).**
+     셀 1개 반나절이면 **우리 운전 압력의 근거가 생긴다.** 지금 우리는 근거 없이 압력을 고른다.
+  3. **셀 수준 ΔV 와 양극 수준 ΔV 를 반드시 구분해야 한다**는 단위 함정. 같은 논문이 **−17.2 %
+     (셀, 리튬 포함)** 와 **+259 % (양극, 리튬 제외)** 를 함께 쓴다. **Cronk −42 % · Jeong
+     +46.6 % · Qu −19 µm 는 양극 수준**이므로 −17.2 % 를 같은 표에 나란히 두면 안 된다.
+- **H5 — 운전 압력에 "표준" 이 없다는 것이 확정됐다.** 문헌 좌표가 **7 MPa(Qu) / 15(Zhang J) /
+  50(Jeong)** 로 **7배** 흩어진다. → 이 위키는 "ASSB 표준 운전 압력" 같은 것을 가정하지 않고,
+  **우리 fixture 의 압력을 측정해 적는다**.
+  ⚠ 그리고 같은 논문 안에서 **15 MPa 50사이클 `[도표]` ≈69 % vs 30 MPa 50사이클 94.3 %** —
+  **압력 2배로 유지율이 25 %p** 바뀐다. 저압이 공짜가 아니다.
+- **H4 보조 — "용량이 오르는 전지" 두 사례 (Zhang Jiaxu 2026).** 55 °C 50사이클 765 → 807,
+  4 C 30,000사이클 `[도표]` ≈250 → ≈340. 저자가 그 원인을 `[인쇄]` **"LPSC reduction to Li2S by
+  VGCF and Fe particles"** 로 **지목하면서 대조셀을 안 돌렸다.** → 0번 실험의 열세 번째 근거.
+- **★ 방법론 경고 (Zhang Jiaxu 2026 의 최대 결함).** 주장군(Li2Si‖FeS2)은 최종 성형 **500 MPa**,
+  대조군(Li‖FeS2)은 **15 MPa** — **33배 차이**다. 용량·수명·율속·DRT·GITT **전부가 "음극 종류 ×
+  성형 압력" 의 교락 위에 서 있고** 논문은 결과 어디에서도 그것을 언급하지 않는다(Methods 한
+  문장에만 있다). → **우리 대조실험 설계의 체크리스트**: 변수 하나를 바꿀 때 **성형압·운전압·
+  로딩·온도가 같은지** 먼저 적어 둔다.
+
 ## Evidence Against
 
 - **[2026-09-30] H2 에 대한 부분 반증 (Zhang 2026).** 탄소가 **MWCNT 10 wt% 뿐**인데 971
@@ -277,3 +333,14 @@ Lee 2026 digest 가 이 충돌을 날카롭게 정리한다 — **병목은 "활
   이론 초과 용량이 **10편 중 6편**이 됐다 → 대조셀 **두 개**(`LPSCl+AB`, `LiI+LPSCl+AB`)가 필요하다.
   실험 순서는 그대로: 0번 대조셀 → H2a·H2b DC 분극 → H1 컷오프 스윕 → H5 셀 높이·구속 방식.
   **다만 DC 분극을 돌릴 때 AB 함량만 바꾸지 말고 "밀링 이력" 도 변수로 넣어야 한다**(Kim 2025).
+- [2026-10-06] active — digest 16편. **H1 재정의판이 확인됐고 여전히 미해결이다** — Liu 2026 이
+  개시 전위를 2.41 V 로 낮추고도 컷오프 4.0 V 까지 끌려가며 저자가 SE 산화를 자인한다. 사다리
+  6편 중 **활성화를 SE 산화 전위 아래에서 끝낸 논문은 0편**이다.
+  **H5 에 처음으로 측정 도구가 생겼다** (Zhang Jiaxu 2026 — LTO 기준자 · 용량당 응력 σc ·
+  압력별 EIS). **실험 순서를 고친다**: 0번 대조셀 → **압력-EIS 스윕(셀 1개 반나절, 새로 2순위로
+  올림)** → H2a·H2b DC 분극 → H1 컷오프 스윕 → H5 셀 높이·구속 방식.
+  압력-EIS 를 올린 이유: 문헌 운전 압력이 **7/15/50 MPa 로 7배 흩어져** 참조할 표준이 없는데,
+  같은 논문 안에서 **15 → 30 MPa 로 유지율이 25 %p** 바뀐다. 우리 압력에 근거가 없으면 다른
+  모든 비교가 흔들린다.
+  **pristine Li2S 첫 방전은 `disputed` 유지** — Liu 의 ≈430 이 네 번째 수로 들어와 270–1096
+  분산이 그대로다. 아직 없는 것도 그대로다: **LPSCl 산화 개시 전위의 실측 근거.**

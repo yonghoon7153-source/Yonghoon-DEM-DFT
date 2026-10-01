@@ -1,0 +1,191 @@
+{
+ "slug": "kwok2023_interfacial-redox-mediator-high-performance-asslsb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-01",
+ "sources": [
+  "4e355caa-3._EES_high-performance_ASSLSBs_using_redox_mediator.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 All-solid-state Li–S cathode architecture. Illustration of the charge-carrier transport process for (A) a typical three-boundary interface and (B) a two-phase dual-carrier conductor. The purple color in both schemes outlines the location where electrochemical reaction would take place. The use of a mixed conductor in (B) allows 2D reaction zones and straightforward charge transport path throughout the cathode, in contrast to the one-dimensional points in (A).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    298.0,
+    215.9
+   ],
+   "w": 1090,
+   "h": 718,
+   "dpi": 300,
+   "src": "4e355caa-3._EES_high-performance_ASSLSBs_using_redox_mediator.pdf",
+   "blank": 0.638
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Characterization of the Li2S–LiVS2 core–shell nanocomposite. (A) XRD pattern; the peaks at 2y = 141, 31, 341, 431, 541, 561, 601, and 651 are assigned to the (001), (010), (011), (012), (110), (111), (004) and (201) reflections of LiVS2. The remaining peaks are assigned to Li2S. (B) SEM and (C) TEM image of the LVS active material. (D) Expanded TEM image showing the LiVS2 coating on the surface of the Li2S. (E) EDX analysis of the same material confirming its composition. The unlabeled signals between 1–2 keV are ascribed to traces of decomposed THF from the preparation process.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    298.0,
+    362.6
+   ],
+   "w": 1090,
+   "h": 1329,
+   "dpi": 300,
+   "src": "4e355caa-3._EES_high-performance_ASSLSBs_using_redox_mediator.pdf",
+   "blank": 0.744
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Electrochemical performance of the all-solid-state Li2S battery at an active material loading of 2 mg cm\u00022. (A) Electrochemical profiles of the (A) Li2S/LiVS2 and (B) Li2S/VC cathodes at a current density of 0.15 mA cm\u00022. (C and D) Voltage profile and rate performance of the LVS cathode as a function of current density. (E) Long-term cycling stability of the same electrode at 1 mA cm\u00022.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.7,
+    264.0
+   ],
+   "w": 2177,
+   "h": 919,
+   "dpi": 300,
+   "src": "4e355caa-3._EES_high-performance_ASSLSBs_using_redox_mediator.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Charge-carrier transport in the solid-state Li2S cathode composites. Eﬀective (A–C) electronic and (D and E) ionic conductivity determination by DC polarization. The thickness of the LVS and Li2S specimens are 500 and 600 mm. Schematic of the experimental setup under (A) ion-blocking conditions, and data for (B) LVS and (C) the Li2S cathode composite. Similarly, (D) shows the electron-blocking measurement setup while (E and F) present the results. The resistance for each of the composites is shown in the panel.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    401.8,
+    558.7,
+    676.5
+   ],
+   "w": 2177,
+   "h": 1145,
+   "dpi": 300,
+   "src": "4e355caa-3._EES_high-performance_ASSLSBs_using_redox_mediator.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Transmission line model for the LVS cathode. The resistance for the components is shown in each figure. (A) Nyquist plot and (B) schematic diagram and equivalent circuit for the impedance data, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    573.1,
+    558.8,
+    696.4
+   ],
+   "w": 2177,
+   "h": 515,
+   "dpi": 300,
+   "src": "4e355caa-3._EES_high-performance_ASSLSBs_using_redox_mediator.pdf",
+   "blank": 0.682
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Lithium sulfide redox in the presence of LiVS2. (A and B) GITT profiles of the same electrode under first (A) charge and (B) discharge at a current density of 0.15 mA cm\u00022 (C/10) for 30 min with a rest time of 2.5 h between pulses. The voltage profiles under closed- and open-circuit voltage conditions are marked by grey and green traces, respectively. (C) Schematic illustration of the VS2-mediated Li2S oxidation pathway.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    229.4
+   ],
+   "w": 2177,
+   "h": 774,
+   "dpi": 300,
+   "src": "4e355caa-3._EES_high-performance_ASSLSBs_using_redox_mediator.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 Electrochemical performance of the core–shell LVS cathode at high active material loading. (A) Electrochemical profile and (B and C) long-term cycling profile at an active loading of (A and B) 4 mg cm\u00022 and (C) 6 mg cm\u00022. All cells were conditioned at 0.25 mA cm\u00022 for a few activation cycles (not shown) before undergoing long-term cycling at 1 mA cm\u00022.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.7,
+    256.8
+   ],
+   "w": 2177,
+   "h": 888,
+   "dpi": 300,
+   "src": "4e355caa-3._EES_high-performance_ASSLSBs_using_redox_mediator.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1 Summary of the eﬀective electronic and ionic conductivities of LVS and Li2S cathodes, measured by the DC polarization technique. The electronic and ionic conductivities of Li2S are obtained from the literature42,45",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    6.4,
+    557.8,
+    760.8
+   ],
+   "w": 2216,
+   "h": 2997,
+   "dpi": 286,
+   "src": "4e355caa-3._EES_high-performance_ASSLSBs_using_redox_mediator.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2 Selection of long-term cycling performance of recent solid-state Li–S batteries",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    6.4,
+    557.8,
+    760.8
+   ],
+   "w": 2216,
+   "h": 2997,
+   "dpi": 286,
+   "src": "4e355caa-3._EES_high-performance_ASSLSBs_using_redox_mediator.pdf",
+   "blank": 0.893
+  }
+ ]
+}

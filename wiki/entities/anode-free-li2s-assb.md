@@ -2,10 +2,10 @@
 title: Anode-free Li2S ASSB
 description: "reference cell 이 끝난 뒤 Li–In 음극을 anode-free 구성으로 바꾸는 2단계 프로젝트 — Li 원천이 양극(Li2S)에만 있으므로 첫 사이클 손실과 Li 침적 균일성이 전부다"
 created: 2026-09-11
-updated: 2026-09-30
+updated: 2026-10-06
 type: entity
 tags: [project, satellite, anode-free, li2s, assb]
-sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md]
+sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -57,6 +57,46 @@ Li2S 는 방전 상태의 활물질이라 **Li 원천이 양극에 있다**. 그
 `[인쇄]` 운전 스택압 **0 / 1 / 4 MPa** 를 비교했고 in-situ 실측은 3.2–3.8 / 1.2–1.4 MPa.
 **0 MPa 는 60 사이클에 붕괴한다.** 성형 압력(SE 250 MPa · 양극 400 MPa)과 운전 압력은
 **다른 축**이며 이 논문은 둘을 구분해 적은 드문 사례다 (Huang 2026 은 운전압을 아예 안 적었다).
+
+#### ★ 2026-10-06 — "표준 운전 압력" 같은 것은 문헌에 없다
+
+digest 가 16편이 된 지금 운전 압력의 문헌 좌표는 이렇다:
+
+| 논문 | 운전 압력 | 근거를 댔는가 |
+|---|---|---|
+| **Qu 2025** | **7 MPa** | 정압/정용적 fixture 를 자작해 **변위·압력을 실측** ✓ |
+| **Zhang 2026** (이 절) | **0 / 1 / 4 MPa** 비교 | in-situ 실측 ✓, **0 MPa 는 60사이클에 붕괴** |
+| **Zhang (Jiaxu) 2026** | **15 / 30 / 100 MPa** | **압력별 EIS 로 골랐다** ✓ — `[인쇄]` **무압 356 Ω**, 1·3·5·10 MPa 에서 감소, **15–100 MPa 거의 불변(포화)** |
+| **Jeong 2026** | **50 MPa** | 근거 없음 |
+
+→ **7배 흩어진다.** 그래서 이 위키는 어떤 문헌값도 "표준" 으로 가져오지 않고 **우리 fixture 의
+압력을 재서 적는다.**
+
+★ 두 가지를 더 기억한다.
+1. **무압이 불가하다는 독립 근거가 둘이 됐다** — Zhang 2026 의 "0 MPa 60사이클 붕괴" 와
+   Zhang Jiaxu 2026 의 **"0 MPa 에서 356 Ω"** 이다. 후자는 **셀을 죽이지 않고 숫자로** 보여준다.
+2. **저압은 공짜가 아니다.** 같은 Zhang Jiaxu 2026 안에서 **15 MPa 50사이클 `[도표]` ≈69 %
+   vs 30 MPa 50사이클 94.3 %** — 압력 2배로 유지율이 **25 %p** 바뀐다. 그 논문의 헤드라인
+   사이클 수(4,500 / 30,000 / 140,000)는 **전부 100 MPa** 이고 저자 스스로 `[인쇄]`
+   "impractical for real-world applications" 라 쓴다.
+
+→ **우리가 가장 먼저 할 측정은 압력-EIS 스윕(0/1/3/5/10/15/30 MPa)** 이다. 셀 1개 반나절이면
+우리 운전 압력에 근거가 생긴다 ([[reference-cell-500-600-mahg]] 2026-10-06 에서 2순위로 올렸다).
+
+#### Li 재고를 먹지 않는 첨가제 — Liu 2026 이 반례를 준다 (2026-10-06)
+
+anode-free 에서 첨가제의 1차 비용은 **무게가 아니라 Li 재고**다. 첫 사이클에 Li 을 먹는
+첨가제는 음극에 깔 Li 을 그만큼 줄인다. 두 사례가 정반대다:
+
+| | **Yu 2024 CuS** | **Liu 2026 Li4SnS4** |
+|---|---|---|
+| 첫 사이클 CE | **110–113 %** (방전 > 충전) | **89 %** (방전 < 충전) |
+| 중심금속 | CuS ↔ Cu₂₋ₓS **가역** (Li 을 왕복시킨다) | **Sn⁴⁺ 불변** (ex situ XPS 9지점) |
+| anode-free 관점 | **순손실** — 먹은 Li 이 양극에 갇힌다 | **먹는 서명이 없다** |
+
+`[해석]` 그래서 첨가제를 검토할 때 **ICE 와 중심금속의 산화상태 가역성을 함께** 본다.
+Liu 의 ICE 89 % 는 **Cronk 2026 의 anode-free 파우치 ICE 83 % 보다 높다.**
+⚠ 단 Liu 의 셀은 anode-free 가 아니라 **Si 음극 파우치**이고, 펠릿셀 음극은 논문에 안 적혀 있다.
 
 ### anode-free 의 진짜 손실 구간 `[해석]`
 

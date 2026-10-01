@@ -1,0 +1,151 @@
+{
+ "slug": "gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-01",
+ "sources": [
+  "76bd381c-Small_-_2024_-_Gao_-_Activating_Redox_Kinetics_of_Li2S_via_Cu___I__Co_Doping_Toward_High_Performance_All_Solid_State.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. The a) SEM image, b) TEM image, c) high-resolution TEM (HRTEM) image of the 85Li2S-15CuI materials. d) Fast Fourier transform for (c). e) TEM image and corresponding EDS mappings of S, I, and Cu for 85Li2S-15CuI. f) XRD patterns of (100-x)Li2S-xCuI (x = 5, 10, 15, 20, 25) materials, CuI, and identiﬁed phases for Li2S (PDF# 23–0369). g) Rietveld reﬁnement pattern for 85Li2S-15CuI material. h) The framework structure of Li2S-CuI. i) Raman spectra of (100-x)Li2S-xCuI (x = 0, 5, 10, 15, 20, 25) materials and CuI. j) XPS spectra of S 2p, Cu 2p, I 3d, and Li 1s for the 85Li2S-15CuI, Li2S and CuI material.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.0,
+    552.9,
+    573.8
+   ],
+   "w": 2118,
+   "h": 2096,
+   "dpi": 300,
+   "src": "76bd381c-Small_-_2024_-_Gao_-_Activating_Redox_Kinetics_of_Li2S_via_Cu___I__Co_Doping_Toward_High_Performance_All_Solid_State.pdf",
+   "blank": 0.51
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) Charge–discharge curves and b) rate capacity of the all-solid-state cells with (100-x)Li2S-xCuI (x = 5, 10, 15, 20). The charge–discharge curves of the all-solid-state cells with 85Li2S-15CuI c) at diﬀerent rates, and diﬀerent cycles at d) 0.2 C and f) 2 C. e) The cycling performance of the all-solid-state cells with 85Li2S-15CuI and 85Li2S-15LiI at 0.2 C. g) The cycling performance of the all-solid-state cells with 85Li2S-15CuI. h) Charge–discharge curves, and i) cycling performance of the all-solid-state cells with diﬀerent active material mass loading at the rate of 0.2 C. j) Comparison of electrochemical performance of the 85Li2S-15CuI cathode with the state-of-the-art ASSLSBs reported in kinds of literature. Cell conﬁgurations, testing conditions, and performance of the selected literature-reported ASSLSBs are listed in Table S7 (Supporting Information).",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.8,
+    552.9,
+    590.7
+   ],
+   "w": 2118,
+   "h": 2167,
+   "dpi": 300,
+   "src": "76bd381c-Small_-_2024_-_Gao_-_Activating_Redox_Kinetics_of_Li2S_via_Cu___I__Co_Doping_Toward_High_Performance_All_Solid_State.pdf",
+   "blank": 0.816
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) The charge–discharge curves of the all-solid-state cells with 85Li2S-15CuI at 0.05 C. b) Ex situ XRD patterns of 85Li2S-15CuI cathode at diﬀerent states of charge. c–e) XPS spectra of S 2p, Cu 2p, and I 3d for the 85Li2S-15CuI cathode at diﬀerent states of charge.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    71.1,
+    550.0,
+    327.7
+   ],
+   "w": 2118,
+   "h": 1070,
+   "dpi": 300,
+   "src": "76bd381c-Small_-_2024_-_Gao_-_Activating_Redox_Kinetics_of_Li2S_via_Cu___I__Co_Doping_Toward_High_Performance_All_Solid_State.pdf",
+   "blank": 0.824
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Cyclic voltammetry proﬁles of ASSLSBs with (100-x)Li2S-xCuI a) x = 0, b) x = 5, c) x = 10, d) x = 15, and e) x = 20 cathode materials cycled at 25 °C in the voltage range of 0.9–2.4 V versus Li─In under a scan rate of 0.1–1 mV s−1. f) The maximum anodic and cathodic peaks, Ip, as a function of the square root of scan rate in (a–e).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.9,
+    550.0,
+    346.7
+   ],
+   "w": 2118,
+   "h": 1150,
+   "dpi": 300,
+   "src": "76bd381c-Small_-_2024_-_Gao_-_Activating_Redox_Kinetics_of_Li2S_via_Cu___I__Co_Doping_Toward_High_Performance_All_Solid_State.pdf",
+   "blank": 0.837
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) Minimum energy path for the diﬀusion of Li+ in Li2S, Cu-doped Li2S, I-doped Li2S, Cu, I co-doped Li2S. b) The diagram of crystal structure and Li+ diﬀusion paths in Li2S, Cu-doped Li2S, I-doped Li2S, and Cu, I co-doped Li2S, respectively. The Li, S, Cu, and I atoms are shown in green, orange, turquoise, and purple. The diﬀusion path of Li+ is shown in blue.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.3,
+    552.9,
+    211.0
+   ],
+   "w": 2118,
+   "h": 587,
+   "dpi": 300,
+   "src": "76bd381c-Small_-_2024_-_Gao_-_Activating_Redox_Kinetics_of_Li2S_via_Cu___I__Co_Doping_Toward_High_Performance_All_Solid_State.pdf",
+   "blank": 0.804
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. a) Schematic of the 85Li2S-15CuI/Si─C all-solid-state full cell. Aluminum and copper foil were used as current collectors for the cathode and anode, respectively. b) Cross-sectional SEM image of the cell, and c) corresponding EDS mapping of Si, C, S, and I. d) Charge–discharge curves and e) rate performance of the 85Li2S-15CuI/Si─C full cell at diﬀerent current densities. f) Cycling performance of the cell at the rate of 0.5 C and 25 °C. g) The initial and second charge–discharge curves of a prototype pouch cell at 0.05 C and 25 °C. h) The safety test of the prototype pouch cell in charge state.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    269.7,
+    552.9,
+    649.9
+   ],
+   "w": 2118,
+   "h": 1585,
+   "dpi": 300,
+   "src": "76bd381c-Small_-_2024_-_Gao_-_Activating_Redox_Kinetics_of_Li2S_via_Cu___I__Co_Doping_Toward_High_Performance_All_Solid_State.pdf",
+   "blank": 0.57
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 8,
+   "file": "tab_1.png",
+   "caption": "Table 1. The lithium-ion diﬀusion coeﬃcient for each cathode with (100-x)Li2S-xCuI (x = 0, 5, 10, 15, 20). (100-x)Li2S-xCuI x = 0 x = 5 x = 10 x = 15 x = 20 anodic (cm2 s−1) 1.329 × 10−12 8.202 × 10−12 1.425 × 10−10 2.332 × 10−10 1.069 × 10−10 DLi cathodic (cm2 s−1) 2.941 × 10−12 1.135 × 10−11 2.028 × 10−10 4.584 × 10−10 1.608 × 10−10 DLi",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    11.9,
+    589.2,
+    771.7
+   ],
+   "w": 2156,
+   "h": 2999,
+   "dpi": 284,
+   "src": "76bd381c-Small_-_2024_-_Gao_-_Activating_Redox_Kinetics_of_Li2S_via_Cu___I__Co_Doping_Toward_High_Performance_All_Solid_State.pdf",
+   "blank": 0.876
+  }
+ ]
+}
