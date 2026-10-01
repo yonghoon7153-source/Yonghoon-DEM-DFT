@@ -551,7 +551,9 @@ scp v100:~/Yonghoon-DEM-DFT/latest_run/mpm_payload.json v100:~/Yonghoon-DEM-DFT/
 <script>
 // MPM result params → the table in the MPM-pipeline card.  Filled on page load from the
 // server (_INIT_MPM, present if a payload was already uploaded) and again on each upload.
-{% set _demp = (metrics.porosity_spheresum if (metrics and metrics.porosity_spheresum is defined and metrics.porosity_spheresum is not none) else (metrics.porosity if metrics else none)) %}
+{#- ★ 10-02 — atoms-only 케이스는 full_metrics 에 porosity 가 없다.  옛 판은 `metrics.porosity if metrics` 가 Undefined 를
+    tojson 에 넘겨 페이지 전체가 500 (3D 뷰어가 안 붙음 · webapp/test_atoms_only_viewer.py).  값이 없으면 null. -#}
+{% set _demp = (metrics.porosity_spheresum if (metrics and metrics.porosity_spheresum is defined and metrics.porosity_spheresum is not none) else (metrics.porosity if (metrics and metrics.porosity is defined) else none)) %}
 const _DEM_POR = {{ _demp | tojson }};   // DEM porosity (production sphere-sum) for the MPM↔DEM regime flag
 const _INIT_MPM = {{ (mpm_metrics or {}) | tojson }};
 function fillMpmTable(m) {

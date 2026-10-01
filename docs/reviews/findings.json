@@ -6758,6 +6758,19 @@
    "opened_in": "docs/reviews/codex_ps45_porosity_verdict_20261001.md",
    "title": "\"정확 union\" 의 MC 적분 정밀도 (±0.02 %p) 를 물리 정확도 · 혼합 이득으로 승격하지 말 것 — 7:3 최소 (sphere 0.871 · union 0.405 %p) 는 이 다섯 침대의 기술일 뿐 · 시드 / 유한크기 산포 없음",
    "note": "해제 = MC 라벨 유지 · DEM 반복 / 유한크기와 실험 불확실성 별도 보고 (판정문 §2 · §4)."
+  },
+  {
+   "id": "WEB-01",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "1저자 WSL (10-02 00:40 · 케이스 261002_004049_699e1b — atom 파일 하나 (0:10 투입 스냅샷 atom_1) 를 올렸더니 3D 가 안 뜸 · *\"예전에는 파일 하나만 넣어도 3d는 나오게 했었는데\"*) · 컨테이너 재현",
+   "opened_in": "webapp/templates/single.html",
+   "title": "atom 파일만 올린 케이스 (atoms-only 모드 · 04-24 부터) 의 결과 페이지 /single/<id> 가 500 — `_DEM_POR` (06-28 afb9112e0 · MPM↔DEM 영역 표시) 가 `metrics.porosity` 를 읽는데 atoms-only full_metrics 에는 그 키가 없어 Jinja Undefined 가 tojson 에서 죽는다 → 3D 뷰어가 붙을 페이지가 없다 (06-28 이후 줄곧)",
+   "note": "3D 데이터 (/3d-data) 자체는 200 이었다 — 페이지만 죽었다.  처방 = `metrics.porosity is defined` 조건 (값이 없으면 null · 0 으로 채우지 않는다) · 공극률이 있는 케이스의 _DEM_POR 은 그대로 (sphere-sum 우선 · 없으면 porosity).  atom + 판 메시 STL 을 같이 올리면 판 삼각형이 3D 에 같이 그려진다 (기존 경로 — 막혀 있던 것은 페이지뿐 · 시험 ⑥ 으로 고정).  별건 (고치지 않음 · 1저자 보류): 덱 없이 타입 2·3 만 있는 덤프를 올리면 업로드의 반지름 되돌림 규칙이 `1:AM_S,2:SE` 를 가정해 상 이름이 틀린다 (AM_S → SE · SE → T3) — 우회 = 업로드 type_map 칸에 `2:AM_S,3:SE`.",
+   "evidence_tests": [
+    "webapp/test_atoms_only_viewer.py ② ③ ③b ⑥b (옛 템플릿에서 실패 확인 · 10/14 → 14/14)"
+   ]
   }
  ]
 }
