@@ -8799,3 +8799,35 @@ production 진입점 탐침은 pytest 안이나 `git archive` 사본에서만) �
 e `load_config` 이름 fallback 미재현 · f m05 이유 대조 좁힘 · g 증인 형식 위반 → 정정.
 
 **묻는 것:** Q1 G85-N1 닫힘 · Q2 2a 종결 · Q3 §6-b 영향 · c · d · e · Q4 새 세대 영수증. **묻지 않는 것:** 2b · p_ini · 실행 GO · 새 연구 leg.
+
+## §125 86차 회신 접수 — `ACCEPTED_ROUND2A_CLOSED_NO_EXECUTION_GO` · **G85-N1 종결 · 라운드 2a 종결** · 비차단 C1 문구 정정 · C2 보충으로 해소
+
+**패키지:** `docs/22p_gap/gate86_review/` (`GATE86_REVIEW_20261001.zip` 1,628,391 B · SHA-256
+`5eaf1a3b8b7c161457af67555e37e2938c02672425a3427987df771895e0714e` · codex/ payload 153 · 전부 manifest 일치 · manifest
+`6d069268…` · 규칙 `631a71ad` → 보존 `77020f8a`). 검토자 스크립트 실행 · import 0. 검토자 쪽 실행: 수신 코드 · pytest ·
+변이 · 복원 · COMSOL **0** · 자체 바이트/AST/로그 검사 228 + 45 = 273 건 · 원문 payload 12 + 5 의 크기 · 전체 SHA 확인
+(제품 기능 시험 재실행 아님). 요청 HEAD `27bfeed6` · 판정 코드 `b4876b0b` · 독립 재계산 source_digest `f1f4378f46610f08`.
+
+| 항목 | 판정 |
+|---|---|
+| G85-N1 | **수용 · 종결** — root 봉인 스냅샷에서 extends 구성원 독립 유도 · 중복 · 누락 · 추가 거부 · 유도 집합 해시 · 자기일관 위조 4 건이 서명/fits 봉인까지 맞춘 뒤 실패 목록 `[base_config_결속]` 하나인지 검사 · RED 실제 결함 4 / helper 부재 1 분리 설명 수용 |
+| **라운드 2a** | **종결** — 85차 마지막 P1 닫힘 · G84-N3 · N4 · R2-e · R2-f 수용 유지 · 새 차단 항목 없음 |
+| Q3 c · d · e | 수용 (범위 한정): 중복 fail-closed 방어는 별도 도달 증거로 세지 않음 · closure 키 목록은 대조 대상으로 유지 가능 · basename fallback 미지원은 현재 지원 집합의 의도적 제한 — `load_config` 전체와 동등하다고 쓰지 않는다 |
+| Q4 새 영수증 | 한정 수용 — 이전 history 바이트 동일 · 새 core 의 validator identity 외 텍스트 불변 · 35/34 · 원장 앵커 확인 · paired dirty=false / grid dirty=true 유지 · canonical core 재생성 · restore · 재채점은 검토자가 하지 않음 |
+| 미승인 | 2b (R2-a · R2-c · G84-N2) · p_ini 구현 · 새 연구 leg · 실행 GO · class 변경 · 투영 게시 — 전부 별도 사용자 승인. 76차 · 라운드 1 종결 · grid_fit_v5 진단 전용 유지 |
+
+**G86-C1 (비차단 · 문구 정정 — 이 절이 정정이다).** 요청문 §6-b 의 "커밋되지 않았으므로 영향 없음" 은 근거가 아니다 —
+**미커밋 기록도 운영 reader 가 읽을 수 있다.** 정정된 표현: *탐침의 운영 등록부 일시 쓰기라는 **격리 절차 이탈**이
+있었고, 사본 보존 · 제거 보고와 고정 이력 / 영수증 범위에서는 기존 판정 · 산출 오염이 확인되지 않았다. 당시 원격 전체
+상태의 무영향까지 증명한 것은 아니다.* 추가 정리 · 재시험 요구 없음. 재발 방지 (production 탐침은 pytest 시험 authority
+또는 격리 archive 사본으로 한정) 수용.
+
+**G86-C2 (해소).** 보충 `92c50f90` 의 5 기록 (`gate86_evidence/request_commit_27bfeed6/`) 으로 요청문 커밋 clean 시작/끝 ·
+pytest **2046 passed / 1 xfailed / rc 0** · smoke **rc 0 / 168 s** · 같은 source_digest 를 원문으로 확인 → 마지막 전체 회귀 자료
+요청 닫힘. 남는 한계 그대로: 22:32:40Z 첫 시도는 시작 줄만 (부분 pytest 출력 덮임) · 첫 RED 원문 미보존.
+
+**변이 근거 표기 (검토자 구분 유지):** `0be169b1` 등록부 전체 352/352 + pytest 1 failed / 2045 / 1 xfailed · `b4876b0b` 증인 정정
+한정 확인 · `27bfeed6` 2046 / 1 xfailed. 하나로 합치지 않는다.
+
+**다음:** 2b (R2-a 실물 v6 leg gate — spec 버전 분기 · 계획 index v4 · CLI · R2-c 세대표 · G84-N2 조건) 범위와 착수는
+**사용자 별도 승인**. 이 접수는 구현 · 새 연구 실행 지시가 아니다.
